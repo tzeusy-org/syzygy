@@ -574,6 +574,22 @@ const EXPECTED_REASON: Record<AuthorityKind, string> = {
   registry: 'source-uncaptured-or-unreachable',
 };
 
+describe('the repository identity grammar is 046\'s, and an identity is compared exactly (the owner\'s ruling of 2026-11-14)', () => {
+  const caseOf = (fixture: TripleFixture, kind: AuthorityKind): string | null => {
+    const state = evaluateBodyReadAuthority(inputs(fixture))[kind];
+    return state.kind === 'invalid' ? state.caseId : null;
+  };
+  it('a well-formed other identity, "." and "_" and a leading "-" included, is wrong; one outside the grammar is malformed', () => {
+    for (const other of ['repository:butlers.configured_poc', 'repository:-butlers', 'repository:_x', 'repository:butlers-configured-poc.']) {
+      expect(caseOf({ consent: { artifactText: consentArtifact({ subject: `\`(${PROJECT}, ${other})\`` }) } }, 'consent')).toBe('consent:configured-repository-wrong');
+      expect(caseOf({ registry: { artifactText: registryArtifact({ subject: { observedRepository: other } }) } }, 'registry')).toBe('registry:repository-wrong');
+    }
+    for (const bad of ['repository:Butlers-configured-poc', 'repository:', 'repository:a/b']) {
+      expect(caseOf({ registry: { artifactText: registryArtifact({ subject: { observedRepository: bad } }) } }, 'registry')).toBe('registry:repository-malformed');
+    }
+  });
+});
+
 describe('PWB-REQ-005 invalid cases (195)', () => {
   for (const [caseId, fixture] of EXPECTED_INVALID) {
     const authority = caseId.split(':')[0] as AuthorityKind;

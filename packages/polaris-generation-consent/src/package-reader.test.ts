@@ -142,6 +142,36 @@ describe('package admission reader', () => {
     ];
     for (const [name, over] of cases) await expect(reader(world(over)).read(), name).rejects.toBeInstanceOf(AdmissionRecordError);
   });
+  it('reads a repository identity by 046\'s grammar (a-z, 0-9, ".", "_", "-"), exactly and with no folding (the owner\'s ruling of 2026-11-14)', async () => {
+    const act = `${DECISIONS_DIR}/PUBLIC-REPO-ADMISSION-REDIS-OBSERVATION-ACT.md`;
+    const observed = async (subject: string) => {
+      const t = obsText({ subject });
+      const records = await reader(world({ [REDIS_PATH]: t, [act]: actText('consent-observation', REDIS_PATH, t) })).read();
+      return records.find(r => r.class === 'observation')!.repositoryId;
+    };
+    for (const id of ['nodejs-node.js', '_a', '-x', '.dotfiles-config', 'a_b.c-d', '9']) expect(await observed(`(project:syzygy, repository:${id})`)).toBe(id);
+    for (const id of ['', 'Redis-redis', 'a/b', 'a b', 'a~b']) {
+      const t = obsText({ subject: `(project:syzygy, repository:${id})` });
+      await expect(reader(world({ [REDIS_PATH]: t, [act]: actText('consent-observation', REDIS_PATH, t) })).read(), id).rejects.toBeInstanceOf(AdmissionRecordError);
+    }
+    const scoped = (line: string) => egressText().replace('- `(project:syzygy, repository:psf-requests)`', line);
+    const egressAct = `${DECISIONS_DIR}/PUBLIC-REPO-ADMISSION-EGRESS-ANTHROPIC-ACT.md`;
+    const scope = async (line: string) => {
+      const t = scoped(line);
+      const records = await reader(world({ [EGRESS_PATH]: t, [egressAct]: actText('consent-egress', EGRESS_PATH, t) })).read();
+      return records.find(r => r.class === 'egress')!.admittedRepositories;
+    };
+    expect(await scope('- `(project:syzygy, repository:nodejs-node.js)`')).toEqual(['nodejs-node.js', 'redis-redis']);
+    // A scope line outside the grammar is not a grant: it is left out, never folded into another identity.
+    expect(await scope('- `(project:syzygy, repository:Nodejs-Node.js)`')).toEqual(['redis-redis']);
+    // A scope line is the bullet and nothing after it (R-PDJA-33-RULINGS-2 mutant O1): trailing text makes it no grant.
+    expect(await scope('- `(project:syzygy, repository:nodejs-node.js)` withdrawn')).toEqual(['redis-redis']);
+    expect(await scope('- `(project:syzygy, repository:nodejs-node.js)`x')).toEqual(['redis-redis']);
+    // Nor is a bullet that only holds a scope line after other text.
+    expect(await scope('- not - `(project:syzygy, repository:nodejs-node.js)`')).toEqual(['redis-redis']);
+    // Nor is an indented line inside the list: it is a continuation, never a scope bullet of its own.
+    expect(await scope('- `(project:syzygy, repository:psf-requests)`\n  - `(project:syzygy, repository:nodejs-node.js)`')).toEqual(['psf-requests', 'redis-redis']);
+  });
   it('refuses when the decisions directory cannot be listed', async () => {
     await expect(createPackageAdmissionReader({ root: '/missing', fs: memoryFs(world()) }).read()).rejects.toBeInstanceOf(AdmissionRecordError);
   });
@@ -207,6 +237,38 @@ describe('admission records port', () => {
     expect((await p.check(requirement('egress-consent'))).satisfied).toBe(true);
     files[`${DECISIONS_DIR}/PUBLIC-REPO-ADMISSION-EGRESS-ANTHROPIC-WITHDRAWAL.md`] = 'withdrawn';
     expect((await p.check(requirement('egress-consent'))).satisfied).toBe(false);
+  });
+});
+
+describe('every observation record, in any state, for REQ-polaris-generation-046\'s matching of records made by other acts', () => {
+  const port = (files: Record<string, string>, now: number) => createAdmissionRecordsPort({ reader: reader(files), now: () => now });
+  it('lists the record with its subject, Upstream as written (this fixture states none), admitted revisions and state', async () => {
+    const read = await port(world(), AT).observationRecords!();
+    expect(read).toEqual({ ok: true, records: [{ record: 'PUBLIC-OBS-REDIS-2026-10-03@0.1.0-candidate.7', repositoryId: 'redis-redis', upstream: null, admittedRevisions: [REDIS_REV, OTHER_REV], state: 'in force' }] });
+  });
+  it('names a record not yet in force by its state, and refuses when the records cannot be read', async () => {
+    const early = await port(world(), AT - 1).observationRecords!();
+    expect(early.ok && early.records.map(r => r.state)).toEqual(['is not in force yet']);
+    expect(await port(world({ [`${DECISIONS_DIR}/PUBLIC-REPO-ADMISSION-X-WITHDRAWAL.md`]: 'x' }), AT).observationRecords!()).toMatchObject({ ok: false });
+  });
+});
+
+describe('an observation consent naming a revision, for any repository (REQ-polaris-generation-047\'s class rule)', () => {
+  const port = (files: Record<string, string>, now: number) => createAdmissionRecordsPort({ reader: reader(files), now: () => now });
+  it('is satisfied by any observation record in force whose admitted revisions include it, whatever its repository', async () => {
+    expect(await port(world(), AT).observationConsentNaming!(REDIS_REV)).toEqual({ satisfied: true, record: 'PUBLIC-OBS-REDIS-2026-10-03@0.1.0-candidate.7' });
+    expect(await port(world(), AT).observationConsentNaming!(OTHER_REV)).toEqual({ satisfied: true, record: 'PUBLIC-OBS-REDIS-2026-10-03@0.1.0-candidate.7' });
+  });
+  it('is unsatisfied for a revision no record admits, before the act, for stale bytes and when the records cannot be read', async () => {
+    expect(await port(world(), AT).observationConsentNaming!('f'.repeat(40))).toEqual({ satisfied: false, why: `no record found: no owner act puts an observation consent naming ${'f'.repeat(40)} in force` });
+    expect((await port(world(), AT - 1).observationConsentNaming!(REDIS_REV)).satisfied).toBe(false);
+    expect((await port(world({ [REDIS_PATH]: obsText() + 'x' }), AT).observationConsentNaming!(REDIS_REV)).satisfied).toBe(false);
+    expect(await port(world({ [`${DECISIONS_DIR}/PUBLIC-REPO-ADMISSION-X-WITHDRAWAL.md`]: 'x' }), AT).observationConsentNaming!(REDIS_REV))
+      .toEqual({ satisfied: false, why: 'no record found: the admission act records could not be read' });
+  });
+  it('is not satisfied by an egress record that admits the repository', async () => {
+    const records = [{ recordId: 'E', version: '1', class: 'egress' as const, project: 'project:syzygy', repositoryId: null, providerId: 'anthropic', upstream: null, digest: '1'.repeat(64), inForceAt: 1, withdrawnAt: null, supersedes: null, supersessionAt: null, admittedRevisions: [REDIS_REV], revisionLabels: [], admittedRepositories: ['redis-redis'], contentClasses: [] }];
+    expect((await createAdmissionRecordsPort({ reader: { read: async () => records }, now: () => 5 }).observationConsentNaming!(REDIS_REV)).satisfied).toBe(false);
   });
 });
 
@@ -323,13 +385,15 @@ describe('public-source policy act', () => {
       'a prepared packet quoting an act': `# PREPARED packet\n\n${policyAct()}`,
       'a fenced quotation': `# Notes\n\n\`\`\`text\n${line}\n\`\`\`\n`,
       'another act type under another name': policyAct({ type: 'adopt-doctrine' }),
+      // a block-quoted field line counts, as it does for every other family (syzygy-bpyt.1.24; before, the policy sweep skipped it)
+      'a block-quoted mention': `> ${line}\n`,
     };
     for (const [name, text] of Object.entries(forms)) await expect(policyReader(policyWorld(policyText(), policyAct(), { [`${DECISIONS_DIR}/SOME-OTHER-RECORD.md`]: text })).read(), name).rejects.toBeInstanceOf(AdmissionRecordError);
-    // a block-quoted mention is not a line that names the artifact, and the three historical acts are skipped by name
+    // the three historical acts are skipped by name
     const repoRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../../..');
     const historical = ['PWB-SECRET-CLASSIFICATION-POLICY-ACT.md', 'PWB-SECRET-CLASSIFICATION-POLICY-AMENDMENT-ACT.md', 'PWB-SECRET-CLASSIFICATION-POLICY-BEHAVIOR-CONTRACT-REPIN-ACT.md'];
     const realBytes = Object.fromEntries(historical.map(name => [`${DECISIONS_DIR}/${name}`, readFileSync(path.join(repoRoot, DECISIONS_DIR, name), 'utf8')]));
-    const quiet = { [`${DECISIONS_DIR}/NOTES.md`]: `> ${line}\n`, ...realBytes };
+    const quiet = { ...realBytes };
     const files = policyWorld(policyText(false), policyAct({}, policyText(false)), quiet); delete files[POLICY_ACT];
     expect(await policyReader(files).read()).toEqual([]);
     // the same file names, edited: a forged withdrawal in a historical act refuses the read, whichever file it is placed in
@@ -1009,7 +1073,7 @@ describe('round-3 review notes', () => {
   });
 });
 
-describe('every stem counts wherever it sits, save exact tooling citations in an allowlisted file (R-361-1)', () => {
+describe('every stem counts wherever it sits, in an allowlisted file too (R-361-1; syzygy-bpyt.1.24)', () => {
   const repoRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../../..');
   const v2Text = readFileSync(path.join(repoRoot, EGRESS_V2_INSTANCE), 'utf8');
   const MODULE = '.syzygy/governance/contracts/rfcs/RFC-0005/consent-egress-secrets.md';
@@ -1154,24 +1218,26 @@ describe('every stem counts wherever it sits, save exact tooling citations in an
   });
 
   // The allowlist (mocked above, empty everywhere else in this file): an entry is a path under the decisions directory and the
-  // sha256 of exact bytes.
+  // sha256 of exact bytes. Since syzygy-bpyt.1.24 (owner answer A to consent-withdrawal-knobs, R-GP-IMPL-CONSENT-KNOBS-REFUSAL-1 F1)
+  // an allowlisted file is swept whole as well as with its citations set aside, and refuses on either: so an entry never removes a
+  // whole-text refusal. Before, these rows read `[]` once allowlisted (R-361-1); each now reads what the unallowlisted file reads.
   const allow = (rel: string, text: string): void => { ALLOWLIST.set(rel, { sha256: sha(text), reason: 'test' }); };
   afterEach(() => { ALLOWLIST.clear(); });
   const REL = 'OWNER-DIRECTION-SITTING-2026-10-06.md';
   const CITING = 'Run `scripts/build_public_egress_v2.py --check`, then record_public_repo_admission_acts.py; the brief is public-egress-v2/REVIEW-BRIEF.md.\n'
     + 'The class recorder is scripts/record_rfc5_project_documentation_act.py.\n';
-  it('a file at its allowlisted path with its allowlisted bytes has its exact tooling citations set aside, and only those', async () => {
+  it('a file at its allowlisted path with its allowlisted bytes still refuses every read its whole text refuses', async () => {
     expect(await allReads(full({ [NOTE]: CITING }))).toEqual(ACE);
     allow(REL, CITING);
-    expect(await allReads(full({ [NOTE]: CITING }))).toEqual([]);
+    expect(await allReads(full({ [NOTE]: CITING }))).toEqual(ACE);
     for (const [line, expected] of [
-      ['PUBLIC-EGRESS-anthropic is withdrawn.', AE], ['The public egress v2 consent ends.', AE], ['RFC5-PROJECT-DOCUMENTATION-AMEND-2026-10-03 is revoked.', ACE],
-      ['Run scripts/BUILD_PUBLIC_EGRESS_V2.py.', AE], ['Run tools/build_public_egress_v2.py.', AE], ['Run scripts/build_public_egress_v3.py.', AE],
-      ['Ran scripts/withdraw_public_obs_redis_2026_10_03.py.', AE], ['Run scripts/build_public_egress_openai.py.', AE],
-      [`See ${PKG}/public-repo-admission/PUBLIC-OBS-REDIS-2026-10-03-NOTES.md.`, AE], ['See PUBLIC-EGRESS-V2-MANIFEST.txt.', AE],
-      ['Every consent under public-repo-admission/ ends.', AE], [`See \`${EGRESS_V2_INSTANCE}\`.`, AE],
-      [`See ${PKG}/public-repo-admission/templates/instances/x.md.`, AE], [`See ${PKG}/public-repo-admission/Instances/x.md.`, AE],
-      [`See ${PKG}/public-repo-admission/instances.md.`, AE], [`See ${PKG}/public-repo-admission/instance/x.md.`, AE],
+      ['PUBLIC-EGRESS-anthropic is withdrawn.', ACE], ['The public egress v2 consent ends.', ACE], ['RFC5-PROJECT-DOCUMENTATION-AMEND-2026-10-03 is revoked.', ACE],
+      ['Run scripts/BUILD_PUBLIC_EGRESS_V2.py.', ACE], ['Run tools/build_public_egress_v2.py.', ACE], ['Run scripts/build_public_egress_v3.py.', ACE],
+      ['Ran scripts/withdraw_public_obs_redis_2026_10_03.py.', ACE], ['Run scripts/build_public_egress_openai.py.', ACE],
+      [`See ${PKG}/public-repo-admission/PUBLIC-OBS-REDIS-2026-10-03-NOTES.md.`, ACE], ['See PUBLIC-EGRESS-V2-MANIFEST.txt.', ACE],
+      ['Every consent under public-repo-admission/ ends.', ACE], [`See \`${EGRESS_V2_INSTANCE}\`.`, ACE],
+      [`See ${PKG}/public-repo-admission/templates/instances/x.md.`, ACE], [`See ${PKG}/public-repo-admission/Instances/x.md.`, ACE],
+      [`See ${PKG}/public-repo-admission/instances.md.`, ACE], [`See ${PKG}/public-repo-admission/instance/x.md.`, ACE],
     ] as Array<[string, string[]]>) {
       const text = `${CITING}${line}\n`;
       ALLOWLIST.clear(); allow(REL, text);
@@ -1192,10 +1258,10 @@ describe('every stem counts wherever it sits, save exact tooling citations in an
       expect(await allReads(full({ [NOTE]: CITING, [`${D}/${rel}`]: CITING })), `${rel} beside the allowlisted file`).toEqual(ACE);
     }
   });
-  it('an allowlisted file named for a stem still refuses: the allowlist sets aside citations in the text, never the name', async () => {
+  it('an allowlisted file named for a stem still refuses, by its name and by its whole text', async () => {
     const rel = 'PUBLIC-EGRESS-V2-NOTES.md';
     allow(rel, CITING);
-    expect(await allReads(full({ [`${D}/${rel}`]: CITING }))).toEqual(AE);
+    expect(await allReads(full({ [`${D}/${rel}`]: CITING }))).toEqual(ACE);
   });
 });
 

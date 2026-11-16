@@ -121,6 +121,7 @@ async function runLifetimeScenario(mode: 'SIGTERM' | 'SIGKILL' | 'startup'): Pro
         after: { procFamilyDenominator: number; proc: unknown[]; psFamily: unknown[] };
         afterRecovery: { proc: unknown[] };
         unexpectedReaps: unknown[]; refusals: string[];
+        guardians: { pid: number }[]; guardianExits: { pid: number; exited: boolean; code: number }[];
         deniedSibling: { uid: number; namespaceDenied: boolean }; ownedUnreadableRefusals: string[]; scanRefusals: string[];
       };
       expect(report.deniedSibling.uid).toBe(process.getuid?.());
@@ -128,8 +129,19 @@ async function runLifetimeScenario(mode: 'SIGTERM' | 'SIGKILL' | 'startup'): Pro
       expect(report.scanRefusals).toEqual(['guardian-scan-reused', 'observer-scan-reused']);
       expect(report.ownedUnreadableRefusals).toEqual(['guardian-scan', 'observer-scan', 'guardian-signal']);
       expect(report.milestone.helpers).toHaveLength(mode === 'startup' ? 0 : 1);
+      if (mode !== 'startup') {
+        expect(report.guardians).toHaveLength(1);
+        expect(report.guardianExits).toHaveLength(1);
+        expect(report.guardianExits[0]?.pid).toBe(report.guardians[0]?.pid);
+        expect(report.guardianExits[0]?.exited).toBe(true);
+        // This controlled Chrome either exits normally or is terminated by
+        // the guardian. Unexpected statuses (including Python flush failure
+        // 120 and cleanup refusal 70) cannot establish successful cleanup.
+        expect([0, 137, 143]).toContain(report.guardianExits[0]?.code);
+      }
       expect(report.decoySurvived).toBe(true);
-      expect(report.refusals).toEqual(['start-reused', 'other-uid', 'other-namespace', 'outside-family']);
+      expect(report.refusals).toEqual(['start-reused', 'other-uid', 'other-namespace', 'outside-family',
+        'owned-sibling-unreadable', 'owned-sibling-reused']);
       expect(report.unexpectedReaps).toEqual([]);
       expect(report.after.procFamilyDenominator).toBe(0);
       expect(report.after.proc).toEqual([]);

@@ -4,32 +4,37 @@ import * as path from 'node:path';
 import { describe, expect, it } from 'vitest';
 import { resolveCloneHead } from './clone-head.js';
 import { providerStatementGate, registryEntryUsable, type ProviderStatementRecord } from './gate-sources.js';
-import { dossierRepositoryUrl } from './github-url.js';
 import { governedSubject, type DrawerStatement } from './governed.js';
+import { dossierLocator, isNormalisedLocator } from './launch-identity.js';
 import { tempDir } from '@syzygy/test-kit';
 
 // The pure parts of the S3 start gates (syzygy-qkea.4): the repository URL, the clone's HEAD, the governed predicate
 // (REQ-polaris-generation-033, R3-F9), the per-project statement gate and the registry entry's usability. Expected values are literals.
 
-describe('repository URL (parsed, never fetched)', () => {
+describe('repository URL (parsed, never fetched): an admitted locator on any host, normalised (REQ-polaris-generation-046, line 17)', () => {
   it.each([
-    ['https://github.com/redis/redis', 'https://github.com/redis/redis'],
-    ['https://github.com/redis/redis.git', 'https://github.com/redis/redis'],
-    ['https://github.com/redis/redis/', 'https://github.com/redis/redis'],
+    ['https://github.com/redis/redis', 'github.com/redis/redis'],
+    ['https://github.com/redis/redis.git', 'github.com/redis/redis'],
+    ['https://github.com/redis/redis/', 'github.com/redis/redis'],
+    ['git@github.com:redis/redis.git', 'github.com/redis/redis'],
+    ['http://github.com/redis/redis', 'github.com/redis/redis'],
+    ['https://gitlab.com/redis/redis', 'gitlab.com/redis/redis'],
+    ['ssh://git@git.example.org:2222/team/sub/tool.git', 'git.example.org/team/sub/tool'],
+    ['https://github.com/redis', 'github.com/redis'],
+    ['https://github.com/redis/redis/tree/8.0.0', 'github.com/redis/redis/tree/8.0.0'],
   ])('%s is %s', (input, url) => {
-    expect(dossierRepositoryUrl(input)).toEqual({ ok: true, url });
+    expect(dossierLocator(input)).toEqual({ ok: true, url });
   });
-  it.each([
-    'http://github.com/redis/redis', 'https://gitlab.com/redis/redis', 'https://user:token@github.com/redis/redis',
-    'https://github.com/redis', 'https://github.com/redis/..', 'git@github.com:redis/redis.git',
-  ])('refuses %s', (input) => {
-    expect(dossierRepositoryUrl(input).ok).toBe(false);
+  it('refuses a URL that is not admitted, by its rule, never quoting it', () => {
+    expect(dossierLocator('https://user:token@github.com/redis/redis')).toEqual({ ok: false,
+      reason: 'the --url URL is not admitted: an https://, http:// or git:// locator carries no user information; it is not printed, stored or recorded' });
+    expect(dossierLocator('file:///srv/redis', 'repository')).toEqual({ ok: false,
+      reason: 'the repository URL is not admitted: it is not in an admitted locator form (https://, http://, git:// or ssh:// with a host and a path, or the scp form [user@]host:path); file URLs, other transports and local paths are not admitted; it is not printed, stored or recorded' });
   });
-  it('refuses a ref in the URL: the revision is the clone\'s HEAD, checked against the consent', () => {
-    expect(dossierRepositoryUrl('https://github.com/redis/redis/tree/8.0.0')).toEqual({
-      ok: false,
-      reason: 'the URL names the ref 8.0.0; name the repository only — the run\'s revision is the clone\'s HEAD, which must be a revision the observation consent names',
-    });
+  it('tells the normalised form a run record carries', () => {
+    expect(['github.com/redis/redis', 'git.example.org/team/sub/tool'].map(isNormalisedLocator)).toEqual([true, true]);
+    expect(['https://github.com/redis/redis', 'GitHub.com/redis/redis', 'www.github.com/a/b', 'github.com/a/b.git', 'github.com/a/b/', 'github.com'].map(isNormalisedLocator))
+      .toEqual([false, false, false, false, false, false]);
   });
 });
 

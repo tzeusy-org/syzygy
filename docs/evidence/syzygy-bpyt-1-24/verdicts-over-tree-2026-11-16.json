@@ -1,0 +1,152 @@
+{
+ "bead": "syzygy-bpyt.1.24",
+ "authority": ".syzygy/governance/decisions/OWNER-DIRECTION-QUESTIONNAIRE-ANSWERS-2026-11-15.md (pr640-policy-stem, answer A)",
+ "condition": "a re-run of the verdict differential over the current decisions/ tree, after the rebase, showing no verdict change; any change stops the work",
+ "result": {
+  "population": 357,
+  "changedCount": 0,
+  "changed": []
+ },
+ "tools": {
+  "verdicts_over_tree_2.mjs": "1f28b56b1dcbdfa4f7dd86821f36da3cdf0eeb6408e580282bb966b3a69b284f",
+  "compare_verdicts.py": "cc0a2224bacb734cd69cf452d7b7675f2cb2c7583f839b662983f2ae3d514ee9",
+  "verdicts_over_tree.mjs": "7ac639ada9de5a5ff04a2dfab78510c348ecea6c6db5b8ab97ff58026e452b78"
+ },
+ "method": "verdicts_over_tree_2.mjs run once against a detached checkout of the base (origin/main) and once against the head checkout, each built with npx tsc -b packages/polaris-generation-consent packages/polaris-dossier after npm ci; each reads its own decisions tree (the same bytes). compare_verdicts.py compares every answer as its whole canonical JSON, keyed by instant and answer name.",
+ "subject": {
+  "decisionsFiles": 223,
+  "decisionsTreeSha256": "d91011d59681c637a66297baef6ba722dff44d69a2dd6629cd026ecc859933ec",
+  "sameDecisionsTree": true,
+  "base": {
+   "commit": "ba0d8af6bb7db75638f28f4df20031be5355d455",
+   "packageReaderSha256": "ae01b576dc08602518fc0cc331d63179eefe3faa92b28a4c444d387d4a345450",
+   "runsSha256": "b0892ec30c6480a597f7b659b88f062dee53144310e2da85698862ef003dd0e5"
+  },
+  "head": {
+   "commit": "ffca5d2daa0bd3e305cbd28f30e8072cfcffb84c",
+   "packageReaderSha256": "15240c6ae8430ed450b9f6ba82e032831f9c0791786336a45dacf288626c487f",
+   "runsSha256": "b0892ec30c6480a597f7b659b88f062dee53144310e2da85698862ef003dd0e5",
+   "runsFile": "docs/evidence/syzygy-bpyt-1-24/verdicts-over-tree-runs-2026-11-16.json"
+  },
+  "note": "The head commit is a pre-push commit of the rebased branch; a rebase-merge re-hashes it. packageReaderSha256 is the stable anchor. Base and head runs are byte-identical as canonical JSON (equal runsSha256), so only the head runs are retained."
+ },
+ "instants": [
+  "2026-10-08T09:30:00.000Z",
+  "2026-10-22T12:00:00.000Z",
+  "2026-11-03T12:00:00.000Z",
+  "2026-11-04T23:59:00.000Z",
+  "2026-11-15T12:00:00.000Z",
+  "2026-11-16T12:00:00.000Z",
+  "2027-06-01T00:00:00.000Z"
+ ],
+ "answersPerInstant": 51,
+ "forms": [
+  "consent.LOCAL_AGENT_GIT_SOURCE_SIGNOFF_FORM PUBLIC-GIT-SOURCE-ACQUISITION-LOCAL-AGENT-SIGNOFF-v1.1.md",
+  "consent.LOCAL_AGENT_GIT_SOURCE_SIGNOFF_FORM_V1_0 PUBLIC-GIT-SOURCE-ACQUISITION-LOCAL-AGENT-SIGNOFF-v1.0.md",
+  "consent.REGISTRY_GIT_SOURCE_ACT_FORM PUBLIC-ADMISSION-REGISTRY-GIT-SOURCE-ACT.md",
+  "gates.D9_ACT_FORM DOSSIER-LOCAL-AGENT-D9-IN-FORCE-ACT.md",
+  "gates.DRAWER_FORMS.redis-redis DOSSIER-LOCAL-AGENT-REDIS-NO-EVIDENCE-DRAWER-ACT.md",
+  "gates.PROVIDER_V2_FORM DOSSIER-AGENT-PROVIDER-V2-REDIS-ANTHROPIC-ACT.md",
+  "gates.RFC7_20_RULING_ACT_FORM DOSSIER-LOCAL-AGENT-RFC7-20-READING-IN-FORCE-ACT.md",
+  "gates.STATEMENT_FORMS.redis-redis.0.form DOSSIER-LOCAL-AGENT-REDIS-AGENT-ANTHROPIC-ACT.md",
+  "gates.STATEMENT_FORMS.redis-redis.0.successor DOSSIER-AGENT-PROVIDER-V2-REDIS-ANTHROPIC-ACT.md",
+  "gates.STATEMENT_FORMS.redis-redis.1.form DOSSIER-LOCAL-AGENT-REDIS-AGENT-OPENAI-ACT.md"
+ ],
+ "nonVacuity": {
+  "baseShapes": {
+   "admission list[1]": 7,
+   "classAct state=ok": 7,
+   "form state=absent": 27,
+   "form state=ok": 36,
+   "form state=refused": 7,
+   "gate list[0]": 14,
+   "gate list[1]": 7,
+   "gate list[4]": 7,
+   "gate ok=True": 7,
+   "gate satisfied=False": 14,
+   "gate satisfied=True": 56,
+   "gate state=absent": 4,
+   "gate state=ok": 20,
+   "gate state=refused": 4,
+   "gate stated=False": 14,
+   "inForceEgress state=absent": 7,
+   "policyChain state=ok": 3,
+   "policyChain state=refused": 4,
+   "policyReader list[1]": 7,
+   "port satisfied=False": 62,
+   "port satisfied=True": 43
+  }
+ },
+ "secondMethod": {
+  "tool": "docs/evidence/syzygy-bpyt-1-24/verdicts_over_tree.mjs (the 2026-11-04 tool, unchanged)",
+  "instants": [
+   "2026-10-08T09:30:00Z",
+   "2026-11-03T12:00:00Z",
+   "2026-11-16T12:00:00Z"
+  ],
+  "answersPerInstant": 17,
+  "baseVersusHeadChanged": 0,
+  "baseVersusCounterfactualChanged": [
+   "policyChain",
+   "policyReader",
+   "port:public-source-policy"
+  ],
+  "scope": "run at the rebased head before the prose commit (16f67515, package-reader sha256 6746e4de\u2026); the prose commit changes comments only, and the first method re-ran at the final head"
+ },
+ "counterfactual": {
+  "purpose": "the policy stem aligned as a text needle, for the owner only; not committed to the branch, not pushed",
+  "commit": "8815f1b7d6a4c028e93993b46cd0edb8abe78800",
+  "parent": "16f6751566e061c989afbea95b80c33e6f0b0ba9",
+  "file": "packages/polaris-generation-consent/src/package-reader.ts",
+  "old": "needles: [POLICY_PATH], fields: everyField([POLICY_PATH, POLICY_STEM])",
+  "new": "needles: [POLICY_PATH, POLICY_STEM], fields: everyField([POLICY_PATH, POLICY_STEM])",
+  "packageReaderSha256": "95cd8c2e7274482bfb57f62cda4db56c9931dce064dc2818a5cde0927b89127d",
+  "population": 357,
+  "changedCount": 56,
+  "changedByAnswerAndDirection": [
+   {
+    "answer": "gate:screeningPolicy",
+    "base": "ok",
+    "counterfactual": "refused: invalid-records",
+    "count": 3
+   },
+   {
+    "answer": "gate:screeningPolicy",
+    "base": "refused",
+    "counterfactual": "refused: invalid-records",
+    "count": 4
+   },
+   {
+    "answer": "policyChain",
+    "base": "ok",
+    "counterfactual": "refused: invalid-records",
+    "count": 3
+   },
+   {
+    "answer": "policyChain",
+    "base": "refused",
+    "counterfactual": "refused: invalid-records",
+    "count": 4
+   },
+   {
+    "answer": "policyReader",
+    "base": "list",
+    "counterfactual": "threw AdmissionRecordError: invalid-records",
+    "count": 7
+   },
+   {
+    "answer": "port:public-source-policy:redis-redis",
+    "base": "satisfied=False",
+    "counterfactual": "satisfied=False",
+    "count": 20
+   },
+   {
+    "answer": "port:public-source-policy:redis-redis",
+    "base": "satisfied=True",
+    "counterfactual": "satisfied=False",
+    "count": 15
+   }
+  ],
+  "reading": "Aligning the stem changes 56 of 357 answers, all in the policy family and all toward refusal; 28 go from an acceptance to a refusal (the policy reader's record list to a throw at all 7 instants, screeningPolicy and policyChain ok to refused at the 3 instants where the chain reads ok, the port public-source-policy check satisfied to unsatisfied at 15 instant-pairs). That is why the knob stays unaligned under the stop clause. It also shows the comparator detects a change (rule 6)."
+ }
+}

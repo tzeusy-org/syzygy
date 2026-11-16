@@ -11,7 +11,7 @@
   "scripts": {
     "test": "node scripts/check_unit_tmpdir.mjs",
     "test:integration": "node scripts/check_unit_tmpdir.mjs --selftest && vitest run --project integration",
-    "test:e2e": "vitest run --project e2e && npm run test:system",
+    "test:e2e": "vitest run --project e2e apps/three-surface-poc/src/cdp-browser.browser.test.ts && vitest run --project e2e --exclude apps/three-surface-poc/src/cdp-browser.browser.test.ts && npm run test:system",
     "test:live": "vitest run --project live",
     "test:tiers": "node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON scripts/check_test_tiers.mjs",
     "check": "npm run typecheck && npm test",
