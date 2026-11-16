@@ -405,13 +405,14 @@ const HISTORICAL_POLICY_ACTS: ReadonlyMap<string, string> = new Map([
 
 const POLICY_STEM = 'pwb-secret-classification-policy';
 const SCOPE_STEM = 'public-source-scope';
-/** The policy family: its five forms, the historical acts pinned above, and its sweep. A decisions file names the policy when any of
- * the four field lines (any case, spacing, dash spelling, `>` or bullet before it) carries its path or the policy stem, or when its
- * name or (outside the aggregate acceptance record) its text carries the public-source-scope stem of the acts' identities and file
- * names, or its text there carries the policy path, or its name carries the policy stem and a withdrawal word. The policy stem alone
- * in text does not name it: the earlier Butlers-only policy acts and the decisions that cite them carry it. That reading is a knob
- * the owner left unaligned (decisions/OWNER-DIRECTION-QUESTIONNAIRE-ANSWERS-2026-11-15.md, `pr640-policy-stem`, answer A: the stop
- * clause halts this knob alone), since as a text needle it refuses the current tree. Its records are read under `Recorded at (UTC)`. */
+/** The policy family: its eight forms (`POLICY_ACT_FORMS`: the public-source-scope act and its V2 to V8 successors), the historical
+ * acts pinned above, and its sweep. A decisions file names the policy when any of the four field lines (any case, spacing, dash
+ * spelling, `>` or bullet before it) carries its path or the policy stem, or when its name or (outside the aggregate acceptance
+ * record) its text carries the public-source-scope stem of the acts' identities and file names, or its text there carries the policy
+ * path, or its name carries the policy stem and a withdrawal word. The policy stem alone in text does not name it: the earlier
+ * Butlers-only policy acts and the decisions that cite them carry it. That reading is a knob the owner left unaligned
+ * (decisions/OWNER-DIRECTION-QUESTIONNAIRE-ANSWERS-2026-11-15.md, `pr640-policy-stem`, answer A: the stop clause halts this knob
+ * alone), since as a text needle it refuses the current tree. Its records are read under `Recorded at (UTC)`. */
 const POLICY_FAMILY: ParsedActFamily<PolicyActForm> = {
   forms: POLICY_ACT_FORMS,
   pins: HISTORICAL_POLICY_ACTS,
