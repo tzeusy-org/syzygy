@@ -328,7 +328,7 @@ function readingNamesEntry(reading: string, scheme: string): boolean {
 
 // What the WHATWG parser strips from either end of a URL string: C0
 // controls and U+0020. Anything else at an end is kept (and encoded).
-const URL_EDGE = /^[\u0000- ]+|[\u0000- ]+$/g;
+const URL_EDGE = /^[\u0000-\u0020]+|[\u0000-\u0020]+$/g;
 // A control character left inside an href: the WHATWG parser removes tab
 // and newline and encodes the rest; other renderers may not.
 const CONTROL = /[\u0000-\u001F\u007F]/;
