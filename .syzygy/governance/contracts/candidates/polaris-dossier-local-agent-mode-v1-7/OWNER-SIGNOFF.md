@@ -75,6 +75,8 @@ ones. The two v1.6 notes are carried as `syzygy-pdja.27` asked.
   after a ready fidelity review until that candidate moves; `SEMANTIC-DELTA.md`,
   "For the owner", item 1, gives four ways to move it.
 - It changes no RFC 0007 clause. It reads RFC7-12 as allowing a mechanically
-  cleaned quotation with the exact text one step away; item 2 there.
+  cleaned quotation with the exact text one step away; item 2 there. It does
+  add RFC7-12 to REQ-034's warrants, as you chose on 2026-11-15, so the
+  change's generated `GOVERNING-DEPENDENCIES.md` gains RFC7-12 at install.
 - It does not let a run past its deadline close; that stays as it is.
 - No code changes until you release the gate `syzygy-fj2q`.

@@ -12,7 +12,7 @@
  > implementation. It contains no code. The command surface below is a design
  > for implementation after the owner's sign-off (direction item 5); the
  > requirements are the controlling text, and doctrine, accepted contracts,
-@@ -546,6 +546,62 @@
+@@ -546,6 +546,63 @@
  Syzygy still accepts `polaris-dossier-local-draft-v2` and `-v3` drafts; in those,
  every Inferred block still cites, since only v4 has the `judgement` field.
  
@@ -59,8 +59,9 @@
 +  paragraph (other pages keep the region at their foot), and the legend moves
 +  into a closed `How to read this page` details element just after it.
 +- **Annotated code walks.** A `codeWalk` element is a code excerpt plus
-+  margin notes; each note is a claim block placed by a line range of the
-+  excerpt, rendered after the code as an ordered list.
++  margin notes; each note is a claim block placed by a line range in the
++  cited blob's own line numbers, within the excerpt's cited range, rendered
++  after the code as an ordered list.
 +- **Clean quotations.** The reading view shows the run of the blob's
 +  normalised text that the quotation check matched, taken through the
 +  locator's offset map at render; the evidence view and machine form keep

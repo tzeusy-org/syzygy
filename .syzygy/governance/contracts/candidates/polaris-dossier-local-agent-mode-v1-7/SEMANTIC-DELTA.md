@@ -161,10 +161,14 @@ the launch-consent change.
   freezes a revision, renders pages or records a verdict, read from the
   objects it verifies, never by an instant, so the choice is re-derivable.
   REQ-033 keeps v1.6's refusal of "a check or review check beyond the
-  repair-cycle limit" for every check (an inventory check and a review check
-  among them) other than the check of a design-repair revision, which it
-  refuses beyond the design-repair limit and never because the repair-cycle
-  limit is spent.
+  repair-cycle limit", now measuring a draft check by REQ-034's count, for
+  every check (an inventory check and a review check among them) other than
+  the check of a design-repair revision and a review check of that revision
+  or of pages rendered from it, which it refuses beyond the design-repair
+  limit and never because the repair-cycle limit is spent. So a design repair
+  made after the repair-cycle limit is spent can still be reviewed, and a
+  design repair earlier in the stream never brings a repair-cycle refusal
+  forward.
   **Checks that report findings still count** (owner direction
   `OWNER-DIRECTION-QUESTIONNAIRE-ANSWERS-2026-11-05`, item 3, "Keep the rule;
   the operator chooses the limit when asked"): that direction kept the rule
@@ -202,9 +206,11 @@ the launch-consent change.
   close names that as a condition. That is intended: render a passed
   revision before resubmitting.
 - **Cases the counting rule decides, stated.** An inventory resubmission is
-  never a design repair: only a draft revision can be one. Inventory and
-  review checks stay under REQ-033's v1.6 refusal beyond the repair-cycle
-  limit, unchanged. A
+  never a design repair: only a draft revision can be one. Inventory checks,
+  and review checks of a revision that counted against the repair-cycle
+  limit, stay under REQ-033's v1.6 refusal beyond that limit; review checks
+  of a design-repair revision and its pages fall under the design-repair
+  limit instead. A
   design-repair revision refused at a spent design-repair limit cannot be
   followed by a resubmission that counts against the repair-cycle limit
   instead: the previous revision, and so the class, is unchanged, so the run
@@ -302,8 +308,9 @@ the launch-consent change.
   notes. Each note names a line range in the cited blob's own line numbers,
   within the excerpt's cited range, which places it and is no citation, and is a claim block under every rule (own label, citations,
   check, fidelity entry). Notes render after the code as an ordered list,
-  never inside the preformatted code. Findings: no note; a note range that is
-  malformed, reversed or outside the excerpt. A withheld excerpt's notes still
+  never inside the preformatted code. Findings: no note; a note range, in
+  the cited blob's own line numbers, that is malformed, reversed or outside
+  the excerpt's cited line range. A withheld excerpt's notes still
   render under their own citations, their ranges marked agent-supplied and
   unverified.
 
@@ -532,7 +539,7 @@ it SHALL refuse a check or review check beyond the repair-cycle limit and any st
 Proposed:
 
 ```text
-it SHALL refuse a check or review check beyond the repair-cycle limit, other than the check of a design-repair revision (REQ-polaris-generation-034), which it SHALL refuse beyond the design-repair limit and never because the repair-cycle limit is spent, and SHALL refuse any step after the deadline,
+it SHALL refuse a check or review check beyond the repair-cycle limit, a draft check being beyond it as REQ-polaris-generation-034 counts it, other than the check of a design-repair revision and a review check of that revision or of pages rendered from it (REQ-polaris-generation-034), which it SHALL refuse beyond the design-repair limit and never because the repair-cycle limit is spent, and SHALL refuse any step after the deadline,
 ```
 
 ### P1b-3 — `spec.md` — REQ-033: values shown from stored records
@@ -910,7 +917,7 @@ a page lacks the one sentence, its link or its machine disclosure; a Pole rule p
 Proposed:
 
 ```text
-a page lacks the one sentence, its link or its machine disclosure; a Pole rule passes when broken; a narrative page lacks its ribbon, carries its legend outside the ribbon's details element or its ribbon below other text Syzygy writes about the run, the draft or its review, or carries a fragment target inside the ribbon; a resubmission counts against a limit other than the one this requirement assigns it, against both or against none, or a design-repair revision is refused while the design-repair limit is unspent; a passed latest revision is refused a render because of the state of a review of it, or a rendered-design verdict on pages of one revision counts for pages of another; reader advice renders on a page, enters a review packet, is a repair finding or changes readiness; a schema-v5 landing page opens otherwise than with the title, the thesis and the named hero in that order, or carries text Syzygy writes above the end of that opening other than navigation and what the thesis and the hero carry under their own rules, or lacks one of those, or the thesis lacks its draft mark; a schema-v5 thesis, pillar or cost escapes a check a claim block meets or lacks its fidelity entry; a schema-v5 rule on Poles, thesis length, pillar count, cost or served Pole passes when broken, or a missing hero is a repair finding; a hero or an annotated walk's excerpt renders the agent's text, or any code excerpt renders normalised in either view; a rendered page carries no review-status region or more than one, or its region at render states a standing other than Syzygy's records give or states the pages reviewed or ready while a standing is not ready; a margin note renders inside the preformatted code or lacks its fidelity entry, or a walk with no note, or a note whose line range is malformed, reversed or outside its excerpt, passes.
+a page lacks the one sentence, its link or its machine disclosure; a Pole rule passes when broken; a narrative page lacks its ribbon, carries its legend outside the ribbon's details element or its ribbon below other text Syzygy writes about the run, the draft or its review, or carries a fragment target inside the ribbon; a resubmission counts against a limit other than the one this requirement assigns it, against both or against none, or a design-repair revision is refused while the design-repair limit is unspent; a draft check is refused while REQ-polaris-generation-034's count against the repair-cycle limit is below that limit, or a review check of a design-repair revision or of pages rendered from it is refused because the repair-cycle limit is spent; a passed latest revision is refused a render because of the state of a review of it, or a rendered-design verdict on pages of one revision counts for pages of another; reader advice renders on a page, enters a review packet, is a repair finding or changes readiness; a schema-v5 landing page opens otherwise than with the title, the thesis and the named hero in that order, or carries text Syzygy writes above the end of that opening other than navigation and what the thesis and the hero carry under their own rules, or lacks one of those, or the thesis lacks its draft mark; a schema-v5 thesis, pillar or cost escapes a check a claim block meets or lacks its fidelity entry; a schema-v5 rule on Poles, thesis length, pillar count, cost or served Pole passes when broken, or a missing hero is a repair finding; a hero or an annotated walk's excerpt renders the agent's text, or any code excerpt renders normalised in either view; a rendered page carries no review-status region or more than one, or its region at render states a standing other than Syzygy's records give or states the pages reviewed or ready while a standing is not ready; a margin note renders inside the preformatted code or lacks its fidelity entry, or a walk with no note, or a note whose line range, in the cited blob's own line numbers, is malformed, reversed or outside its excerpt's cited line range, passes.
 ```
 
 ### N3-1 — `spec.md` — REQ-035: the base round is a fidelity round (carried v1.6 note 3)
@@ -1149,8 +1156,9 @@ close sealed pages no counted review had found ready.
   paragraph (other pages keep the region at their foot), and the legend moves
   into a closed `How to read this page` details element just after it.
 - **Annotated code walks.** A `codeWalk` element is a code excerpt plus
-  margin notes; each note is a claim block placed by a line range of the
-  excerpt, rendered after the code as an ordered list.
+  margin notes; each note is a claim block placed by a line range in the
+  cited blob's own line numbers, within the excerpt's cited range, rendered
+  after the code as an ordered list.
 - **Clean quotations.** The reading view shows the run of the blob's
   normalised text that the quotation check matched, taken through the
   locator's offset map at render; the evidence view and machine form keep
