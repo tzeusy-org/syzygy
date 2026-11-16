@@ -1,0 +1,1 @@
+clean,symlink-devnull,symlink-regular-file,symlink-to-real-record,crlf-one,crlf-all,bom-one,trailing-cr,bare-cr-one,version-line-cr,u2028-in-record,empty-regular,hardlink-record,symlink-to-directory,directory,symlink-to-fifo,not-utf8,utf16-bom,symlink-dev-zero,fifo-no-writer,fifo-live-writer

@@ -1,0 +1,6 @@
+{"case": "fifo-no-writer", "mode": "--check", "verdict": "IDENTICAL (hangs on both)", "main": [124, "e3b0c44298fc1c14", "TIMEOUT", "TIMEOUT"], "head": [124, "e3b0c44298fc1c14", "TIMEOUT", "TIMEOUT"], "tree_same": true}
+{"case": "fifo-no-writer", "mode": "--census", "verdict": "IDENTICAL (hangs on both)", "main": [124, "e3b0c44298fc1c14", "TIMEOUT", "TIMEOUT"], "head": [124, "e3b0c44298fc1c14", "TIMEOUT", "TIMEOUT"], "tree_same": true}
+{"case": "fifo-no-writer", "mode": "--regenerate", "verdict": "IDENTICAL (hangs on both)", "main": [124, "e3b0c44298fc1c14", "TIMEOUT", "TIMEOUT"], "head": [124, "e3b0c44298fc1c14", "TIMEOUT", "TIMEOUT"], "tree_same": true}
+{"case": "fifo-live-writer", "mode": "--check", "verdict": "IDENTICAL", "main": [0, "61e6a2f379fcf7c7", "7 of 7 predicates without FAIL; PASS \u2014 counts derived, not asserted", ""], "head": [0, "61e6a2f379fcf7c7", "7 of 7 predicates without FAIL; PASS \u2014 counts derived, not asserted", ""], "tree_same": true}
+{"case": "fifo-live-writer", "mode": "--census", "verdict": "IDENTICAL", "main": [0, "768f7a235e81aadd", "}", ""], "head": [0, "768f7a235e81aadd", "}", ""], "tree_same": true}
+{"case": "fifo-live-writer", "mode": "--regenerate", "verdict": "IDENTICAL", "main": [0, "e3b0c44298fc1c14", "", ""], "head": [0, "e3b0c44298fc1c14", "", ""], "tree_same": true}

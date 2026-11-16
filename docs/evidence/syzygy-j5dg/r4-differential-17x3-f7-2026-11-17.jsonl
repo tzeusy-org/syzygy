@@ -1,0 +1,51 @@
+{"case": "fifo-live-writer", "mode": "--check", "verdict": "IDENTICAL", "main": "exit 0", "head": "exit 0", "main_out": "7 of 7 predicates without FAIL; PASS \u2014 counts derived, not a", "head_out": "7 of 7 predicates without FAIL; PASS \u2014 counts derived, not a", "dirty": ["", ""]}
+{"case": "fifo-live-writer", "mode": "--census", "verdict": "IDENTICAL", "main": "exit 0", "head": "exit 0", "main_out": "}", "head_out": "}", "dirty": ["", ""]}
+{"case": "fifo-live-writer", "mode": "--regenerate", "verdict": "IDENTICAL", "main": "exit 0", "head": "exit 0", "main_out": "", "head_out": "", "dirty": ["", ""]}
+{"case": "fifo-no-writer", "mode": "--check", "verdict": "IDENTICAL", "main": "HANG", "head": "HANG", "main_out": "", "head_out": "", "dirty": ["", ""]}
+{"case": "fifo-no-writer", "mode": "--census", "verdict": "IDENTICAL", "main": "HANG", "head": "HANG", "main_out": "", "head_out": "", "dirty": ["", ""]}
+{"case": "fifo-no-writer", "mode": "--regenerate", "verdict": "IDENTICAL", "main": "HANG", "head": "HANG", "main_out": "", "head_out": "", "dirty": ["", ""]}
+{"case": "symlink-to-fifo-live-writer", "mode": "--check", "verdict": "IDENTICAL", "main": "exit 0", "head": "exit 0", "main_out": "7 of 7 predicates without FAIL; PASS \u2014 counts derived, not a", "head_out": "7 of 7 predicates without FAIL; PASS \u2014 counts derived, not a", "dirty": ["", ""]}
+{"case": "symlink-to-fifo-live-writer", "mode": "--census", "verdict": "IDENTICAL", "main": "exit 0", "head": "exit 0", "main_out": "}", "head_out": "}", "dirty": ["", ""]}
+{"case": "symlink-to-fifo-live-writer", "mode": "--regenerate", "verdict": "IDENTICAL", "main": "exit 0", "head": "exit 0", "main_out": "", "head_out": "", "dirty": ["", ""]}
+{"case": "symlink-to-fifo-no-writer", "mode": "--check", "verdict": "IDENTICAL", "main": "HANG", "head": "HANG", "main_out": "", "head_out": "", "dirty": ["", ""]}
+{"case": "symlink-to-fifo-no-writer", "mode": "--census", "verdict": "IDENTICAL", "main": "HANG", "head": "HANG", "main_out": "", "head_out": "", "dirty": ["", ""]}
+{"case": "symlink-to-fifo-no-writer", "mode": "--regenerate", "verdict": "IDENTICAL", "main": "HANG", "head": "HANG", "main_out": "", "head_out": "", "dirty": ["", ""]}
+{"case": "fifo-live-before-refused-dir", "mode": "--check", "verdict": "crash->REFUSED", "main": "CRASH(exit 1: IsADirectoryError)", "head": "REFUSED(exit 1)", "main_out": "", "head_out": "", "dirty": ["", ""]}
+{"case": "fifo-live-before-refused-dir", "mode": "--census", "verdict": "crash->REFUSED", "main": "CRASH(exit 1: IsADirectoryError)", "head": "REFUSED(exit 1)", "main_out": "", "head_out": "", "dirty": ["", ""]}
+{"case": "fifo-live-before-refused-dir", "mode": "--regenerate", "verdict": "crash->REFUSED", "main": "CRASH(exit 1: IsADirectoryError)", "head": "REFUSED(exit 1)", "main_out": "", "head_out": "", "dirty": ["", ""]}
+{"case": "fifo-nowriter-before-refused-dir", "mode": "--check", "verdict": "IDENTICAL", "main": "HANG", "head": "HANG", "main_out": "", "head_out": "", "dirty": ["", ""]}
+{"case": "fifo-nowriter-before-refused-dir", "mode": "--census", "verdict": "IDENTICAL", "main": "HANG", "head": "HANG", "main_out": "", "head_out": "", "dirty": ["", ""]}
+{"case": "fifo-nowriter-before-refused-dir", "mode": "--regenerate", "verdict": "IDENTICAL", "main": "HANG", "head": "HANG", "main_out": "", "head_out": "", "dirty": ["", ""]}
+{"case": "refused-dir-before-fifo-live", "mode": "--check", "verdict": "crash->REFUSED", "main": "CRASH(exit 1: IsADirectoryError)", "head": "REFUSED(exit 1)", "main_out": "", "head_out": "", "dirty": ["", ""]}
+{"case": "refused-dir-before-fifo-live", "mode": "--census", "verdict": "crash->REFUSED", "main": "CRASH(exit 1: IsADirectoryError)", "head": "REFUSED(exit 1)", "main_out": "", "head_out": "", "dirty": ["", ""]}
+{"case": "refused-dir-before-fifo-live", "mode": "--regenerate", "verdict": "crash->REFUSED", "main": "CRASH(exit 1: IsADirectoryError)", "head": "REFUSED(exit 1)", "main_out": "", "head_out": "", "dirty": ["", ""]}
+{"case": "refused-dir-before-fifo-nowriter", "mode": "--check", "verdict": "crash->REFUSED", "main": "CRASH(exit 1: IsADirectoryError)", "head": "REFUSED(exit 1)", "main_out": "", "head_out": "", "dirty": ["", ""]}
+{"case": "refused-dir-before-fifo-nowriter", "mode": "--census", "verdict": "crash->REFUSED", "main": "CRASH(exit 1: IsADirectoryError)", "head": "REFUSED(exit 1)", "main_out": "", "head_out": "", "dirty": ["", ""]}
+{"case": "refused-dir-before-fifo-nowriter", "mode": "--regenerate", "verdict": "crash->REFUSED", "main": "CRASH(exit 1: IsADirectoryError)", "head": "REFUSED(exit 1)", "main_out": "", "head_out": "", "dirty": ["", ""]}
+{"case": "refused-dir-before-symfifo-nowriter", "mode": "--check", "verdict": "crash->REFUSED", "main": "CRASH(exit 1: IsADirectoryError)", "head": "REFUSED(exit 1)", "main_out": "", "head_out": "", "dirty": ["", ""]}
+{"case": "refused-dir-before-symfifo-nowriter", "mode": "--census", "verdict": "crash->REFUSED", "main": "CRASH(exit 1: IsADirectoryError)", "head": "REFUSED(exit 1)", "main_out": "", "head_out": "", "dirty": ["", ""]}
+{"case": "refused-dir-before-symfifo-nowriter", "mode": "--regenerate", "verdict": "crash->REFUSED", "main": "CRASH(exit 1: IsADirectoryError)", "head": "REFUSED(exit 1)", "main_out": "", "head_out": "", "dirty": ["", ""]}
+{"case": "directory", "mode": "--check", "verdict": "crash->REFUSED", "main": "CRASH(exit 1: IsADirectoryError)", "head": "REFUSED(exit 1)", "main_out": "", "head_out": "", "dirty": ["", ""]}
+{"case": "directory", "mode": "--census", "verdict": "crash->REFUSED", "main": "CRASH(exit 1: IsADirectoryError)", "head": "REFUSED(exit 1)", "main_out": "", "head_out": "", "dirty": ["", ""]}
+{"case": "directory", "mode": "--regenerate", "verdict": "crash->REFUSED", "main": "CRASH(exit 1: IsADirectoryError)", "head": "REFUSED(exit 1)", "main_out": "", "head_out": "", "dirty": ["", ""]}
+{"case": "unreadable", "mode": "--check", "verdict": "crash->REFUSED", "main": "CRASH(exit 1: PermissionError)", "head": "REFUSED(exit 1)", "main_out": "", "head_out": "", "dirty": ["", ""]}
+{"case": "unreadable", "mode": "--census", "verdict": "crash->REFUSED", "main": "CRASH(exit 1: PermissionError)", "head": "REFUSED(exit 1)", "main_out": "", "head_out": "", "dirty": ["", ""]}
+{"case": "unreadable", "mode": "--regenerate", "verdict": "crash->REFUSED", "main": "CRASH(exit 1: PermissionError)", "head": "REFUSED(exit 1)", "main_out": "", "head_out": "", "dirty": ["", ""]}
+{"case": "invalid-utf8", "mode": "--check", "verdict": "crash->REFUSED", "main": "CRASH(exit 1: UnicodeDecodeError)", "head": "REFUSED(exit 1)", "main_out": "", "head_out": "", "dirty": ["", ""]}
+{"case": "invalid-utf8", "mode": "--census", "verdict": "crash->REFUSED", "main": "CRASH(exit 1: UnicodeDecodeError)", "head": "REFUSED(exit 1)", "main_out": "", "head_out": "", "dirty": ["", ""]}
+{"case": "invalid-utf8", "mode": "--regenerate", "verdict": "crash->REFUSED", "main": "CRASH(exit 1: UnicodeDecodeError)", "head": "REFUSED(exit 1)", "main_out": "", "head_out": "", "dirty": ["", ""]}
+{"case": "refused-dir-before-devzero", "mode": "--check", "verdict": "crash->REFUSED", "main": "CRASH(exit 1: IsADirectoryError)", "head": "REFUSED(exit 1)", "main_out": "", "head_out": "", "dirty": ["", ""]}
+{"case": "refused-dir-before-devzero", "mode": "--census", "verdict": "crash->REFUSED", "main": "CRASH(exit 1: IsADirectoryError)", "head": "REFUSED(exit 1)", "main_out": "", "head_out": "", "dirty": ["", ""]}
+{"case": "refused-dir-before-devzero", "mode": "--regenerate", "verdict": "crash->REFUSED", "main": "CRASH(exit 1: IsADirectoryError)", "head": "REFUSED(exit 1)", "main_out": "", "head_out": "", "dirty": ["", ""]}
+{"case": "devzero-alone", "mode": "--check", "verdict": "IDENTICAL", "main": "CRASH(exit 1: MemoryError)", "head": "CRASH(exit 1: MemoryError)", "main_out": "", "head_out": "", "dirty": ["", ""]}
+{"case": "devzero-alone", "mode": "--census", "verdict": "IDENTICAL", "main": "CRASH(exit 1: MemoryError)", "head": "CRASH(exit 1: MemoryError)", "main_out": "", "head_out": "", "dirty": ["", ""]}
+{"case": "devzero-alone", "mode": "--regenerate", "verdict": "IDENTICAL", "main": "CRASH(exit 1: MemoryError)", "head": "CRASH(exit 1: MemoryError)", "main_out": "", "head_out": "", "dirty": ["", ""]}
+{"case": "refused-dir-before-ptmx", "mode": "--check", "verdict": "crash->REFUSED", "main": "CRASH(exit 1: IsADirectoryError)", "head": "REFUSED(exit 1)", "main_out": "", "head_out": "", "dirty": ["", ""]}
+{"case": "refused-dir-before-ptmx", "mode": "--census", "verdict": "crash->REFUSED", "main": "CRASH(exit 1: IsADirectoryError)", "head": "REFUSED(exit 1)", "main_out": "", "head_out": "", "dirty": ["", ""]}
+{"case": "refused-dir-before-ptmx", "mode": "--regenerate", "verdict": "crash->REFUSED", "main": "CRASH(exit 1: IsADirectoryError)", "head": "REFUSED(exit 1)", "main_out": "", "head_out": "", "dirty": ["", ""]}
+{"case": "ptmx-alone", "mode": "--check", "verdict": "IDENTICAL", "main": "HANG", "head": "HANG", "main_out": "", "head_out": "", "dirty": ["", ""]}
+{"case": "ptmx-alone", "mode": "--census", "verdict": "IDENTICAL", "main": "HANG", "head": "HANG", "main_out": "", "head_out": "", "dirty": ["", ""]}
+{"case": "ptmx-alone", "mode": "--regenerate", "verdict": "IDENTICAL", "main": "HANG", "head": "HANG", "main_out": "", "head_out": "", "dirty": ["", ""]}
+{"case": "refused-dir-before-regular-unreadable", "mode": "--check", "verdict": "crash->REFUSED", "main": "CRASH(exit 1: IsADirectoryError)", "head": "REFUSED(exit 1)", "main_out": "", "head_out": "", "dirty": ["", ""]}
+{"case": "refused-dir-before-regular-unreadable", "mode": "--census", "verdict": "crash->REFUSED", "main": "CRASH(exit 1: IsADirectoryError)", "head": "REFUSED(exit 1)", "main_out": "", "head_out": "", "dirty": ["", ""]}
+{"case": "refused-dir-before-regular-unreadable", "mode": "--regenerate", "verdict": "crash->REFUSED", "main": "CRASH(exit 1: IsADirectoryError)", "head": "REFUSED(exit 1)", "main_out": "", "head_out": "", "dirty": ["", ""]}

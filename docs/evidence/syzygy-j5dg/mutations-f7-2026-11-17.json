@@ -1,0 +1,110 @@
+{
+  "subject": "scripts/check_spec_reconciliation.py",
+  "subjectSha256": "7de29ea0218b061cf4a7d0dc3e32723305f850949f04567476d09b171a8a9645",
+  "ranAt": "77a5d38193378e154cb2c06a1ba0829466259253",
+  "harnessSha256": "170af91ef32a1f1c4538f54610fbd729337bc297f959892a1e31becb22efd8ae",
+  "baseline": {
+    "exit": 0,
+    "tail": [
+      "killed signoff-entry-symlink-to-dev-zero-after-refusal []",
+      "killed signoff-entry-symlink-to-regular-after-refusal []",
+      "FAILED []",
+      "FAILURES 0"
+    ],
+    "seconds": 291.1
+  },
+  "mutants": [
+    {
+      "id": "F7-M1-open-everything-after-refusal",
+      "old": "        if refused and not _is_regular(path):\n",
+      "new": "        if False and refused and not _is_regular(path):\n",
+      "exit": 1,
+      "outcome": "killed",
+      "tail": [
+        "SURVIVED signoff-entry-symlink-to-dev-zero-after-refusal ['collection exited 1: MemoryError']",
+        "killed signoff-entry-symlink-to-regular-after-refusal []",
+        "FAILED ['signoff-entry-fifo-after-refusal', 'signoff-entry-symlink-to-fifo-after-refusal', 'signoff-entry-symlink-to-ptmx-after-refusal', 'signoff-entry-symlink-to-dev-zero-after-refusal']",
+        "FAILURES 4"
+      ],
+      "seconds": 438.3,
+      "mutatedSha256": "1caec485235a9eb76d48006dd3b8a2d515f4acfad678693de7c19f98cadc1d2d"
+    },
+    {
+      "id": "F7-M2-fifo-only-guard",
+      "old": "        if refused and not _is_regular(path):\n",
+      "new": "        if refused and stat.S_ISFIFO(path.stat().st_mode):\n",
+      "exit": 1,
+      "outcome": "killed",
+      "tail": [
+        "SURVIVED signoff-entry-symlink-to-dev-zero-after-refusal ['collection exited 1: MemoryError']",
+        "killed signoff-entry-symlink-to-regular-after-refusal []",
+        "FAILED ['signoff-entry-symlink-to-ptmx-after-refusal', 'signoff-entry-symlink-to-dev-zero-after-refusal']",
+        "FAILURES 2"
+      ],
+      "seconds": 399.9,
+      "mutatedSha256": "34e4a17b5e7af4d8f352bd93d28ec66dcf06ef36e3c5372f95b627f7cee8f79a"
+    },
+    {
+      "id": "F7-M3-is-regular-lstat",
+      "old": "        return stat.S_ISREG(path.stat().st_mode)\n",
+      "new": "        return stat.S_ISREG(path.lstat().st_mode)\n",
+      "exit": 1,
+      "outcome": "killed",
+      "tail": [
+        "killed signoff-entry-symlink-to-dev-zero-after-refusal []",
+        "SURVIVED signoff-entry-symlink-to-regular-after-refusal [\"collected: ['`.syzygy/governance/decisions/J5DG-DIR-SIGNOFF-v1.0.md`: directory', '`.syzygy/governance/decisions/J5DG-LATER-SIGNOFF-v1.0.md`: symlink to regular file, not opened because an earlier entry is refused']\"]",
+        "FAILED ['signoff-entry-symlink-to-regular-after-refusal']",
+        "FAILURES 1"
+      ],
+      "seconds": 307.3,
+      "mutatedSha256": "ade4e43c45f828a53f60216f1a3ce9b2221ccb9c8624a9426e53eb71ae00e69f"
+    },
+    {
+      "id": "F7-M4-symlinks-always-opened",
+      "old": "        if refused and not _is_regular(path):\n",
+      "new": "        if refused and not _is_regular(path) and not path.is_symlink():\n",
+      "exit": 1,
+      "outcome": "killed",
+      "tail": [
+        "SURVIVED signoff-entry-symlink-to-dev-zero-after-refusal ['collection exited 1: MemoryError']",
+        "killed signoff-entry-symlink-to-regular-after-refusal []",
+        "FAILED ['signoff-entry-symlink-to-fifo-after-refusal', 'signoff-entry-symlink-to-ptmx-after-refusal', 'signoff-entry-symlink-to-dev-zero-after-refusal']",
+        "FAILURES 3"
+      ],
+      "seconds": 491.4,
+      "mutatedSha256": "14b533dfd5229183fe0326c0bbdbd8a5b2e2627e37fbd7bf2d1f43d54f0b9ec4"
+    },
+    {
+      "id": "F7-M5-unnamed-kind",
+      "old": "            refused.append((path, f\"`{rel}`: {entry_kind(path)}, not opened \"\n",
+      "new": "            refused.append((path, f\"`{rel}`: not opened \"\n",
+      "exit": 1,
+      "outcome": "killed",
+      "tail": [
+        "SURVIVED signoff-entry-symlink-to-dev-zero-after-refusal [\"collected: ['`.syzygy/governance/decisions/J5DG-DIR-SIGNOFF-v1.0.md`: directory', '`.syzygy/governance/decisions/J5DG-LATER-SIGNOFF-v1.0.md`: not opened because an earlier entry is refused']\"]",
+        "killed signoff-entry-symlink-to-regular-after-refusal []",
+        "FAILED ['signoff-entry-fifo-after-refusal', 'signoff-entry-symlink-to-fifo-after-refusal', 'signoff-entry-symlink-to-ptmx-after-refusal', 'signoff-entry-symlink-to-dev-zero-after-refusal']",
+        "FAILURES 4"
+      ],
+      "seconds": 283.1,
+      "mutatedSha256": "f0a86426f0ccec25103fb013712d1d6f00542718b100eee82e1294b16eca69eb"
+    },
+    {
+      "id": "F7-M6-guard-before-refusal",
+      "old": "        if refused and not _is_regular(path):\n",
+      "new": "        if not _is_regular(path):\n",
+      "exit": 1,
+      "outcome": "killed",
+      "tail": [
+        "SURVIVED signoff-entry-symlink-to-dev-zero-after-refusal [\"collected: ['`.syzygy/governance/decisions/J5DG-DIR-SIGNOFF-v1.0.md`: directory, not opened because an earlier entry is refused', '`.syzygy/governance/decisions/J5DG-LATER-SIGNOFF-v1.0.md`: symlink to character device, not opened because an earlier entry is refused']\"]",
+        "SURVIVED signoff-entry-symlink-to-regular-after-refusal [\"collected: ['`.syzygy/governance/decisions/J5DG-DIR-SIGNOFF-v1.0.md`: directory, not opened because an earlier entry is refused', '`.syzygy/governance/decisions/J5DG-LATER-SIGNOFF-v1.0.md`: regular file that is not UTF-8']\"]",
+        "FAILED ['signoff-entry-directory', 'signoff-entry-socket', 'signoff-entry-dangling-symlink', 'signoff-entry-symlink-loop', 'signoff-entry-symlink-to-directory', 'signoff-entry-symlink-to-block-device', 'signoff-entry-control-symlink-to-dev-null', 'signoff-entry-control-live-writer-fifo', 'signoff-entry-fifo-after-refusal', 'signoff-entry-symlink-to-fifo-after-refusal', 'signoff-entry-symlink-to-ptmx-after-refusal', 'signoff-entry-symlink-to-dev-zero-after-refusal', 'signoff-entry-symlink-to-regular-after-refusal']",
+        "FAILURES 13"
+      ],
+      "seconds": 236.5,
+      "mutatedSha256": "e30c6fb3135ae535ac3aa9000af12d56c7cbbd67caa9ea7c0a2b8f622dbc673f"
+    }
+  ],
+  "killed": 6,
+  "total": 6
+}
