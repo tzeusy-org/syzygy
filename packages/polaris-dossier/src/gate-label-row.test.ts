@@ -7,8 +7,6 @@ import { templateFields, type RecorderTemplate } from '@syzygy/polaris-generatio
 import { loadRecorderForms, renderDossierLocalAgentAct, renderProviderV2Act, type DossierLocalAgentActKey } from '@syzygy/polaris-generation-consent/testing';
 import { beforeAll, describe, expect, it } from 'vitest';
 import { D9_ACT_FORM, DRAWER_FORMS, PROVIDER_V2_FORM, RFC7_20_RULING_ACT_FORM, STATEMENT_FORMS } from './gate-sources.js';
-
-// The recorder forms render once, before the file collects its tests: some tables render at collection (syzygy-bpyt.4.8).
 await loadRecorderForms();
 
 // syzygy-bpyt.8.21: the sitting templates' row `| "{label}" | "{description}" |` holds two line slots. Read as two plain groups, a
