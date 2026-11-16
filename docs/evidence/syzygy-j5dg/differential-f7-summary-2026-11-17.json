@@ -1,0 +1,42 @@
+{
+  "subject": "scripts/check_spec_reconciliation.py",
+  "main": "d065b481e0674cc98c21102c789fef7865653f60",
+  "mainCheckerSha256": "113cd6e9a8dbd3765fa37d12d8c91b6ce11e23e3166d39cfbfe3cbbae70367b8",
+  "head": "77a5d38193378e154cb2c06a1ba0829466259253",
+  "headCheckerSha256": "7de29ea0218b061cf4a7d0dc3e32723305f850949f04567476d09b171a8a9645",
+  "harnesses": {
+    "parity-f6.py": {
+      "sha256": "a4496419a072c802bb4833cd62c8b3136aecfa12ebfe0fcab408c4bdeb87ed20",
+      "rows": "docs/evidence/syzygy-j5dg/parity-21x3-f7-2026-11-17.jsonl",
+      "timeoutSeconds": 60,
+      "counts": {
+        "IDENTICAL": 42,
+        "crash->REFUSED": 12,
+        "IDENTICAL (hangs on both)": 6,
+        "both-crash": 3,
+        "DIFFERENT": 0
+      },
+      "treeSame": 63,
+      "changedVsF6Run": "none (all 63 rows keep the verdict of parity-19x3-2026-11-17.jsonl plus parity-fifo-2x3-2026-11-17.jsonl)",
+      "bothCrash": "symlink-dev-zero alone: MemoryError on both, before any refusal; unchanged since round 2, disclosed remainder"
+    },
+    "r4-differential.py": {
+      "sha256": "967c3a9c99788af6cc3b3a28577672bc3b44b58179761795448e0399134be52d",
+      "origin": "round-4 reviewer harness diff714-v2.py, copied unchanged from /home/orca/.tmp/syzygy-looper-20261116/r714-4-evidence/",
+      "rows": "docs/evidence/syzygy-j5dg/r4-differential-17x3-f7-2026-11-17.jsonl",
+      "timeoutSeconds": 25,
+      "addressSpace": "3 GiB",
+      "counts": {
+        "IDENTICAL": 21,
+        "crash->REFUSED": 30,
+        "DIFFERENT": 0
+      },
+      "changedVsRound4": [
+        "refused-dir-before-ptmx x3: DIFFERENT (main crash, head HANG) -> crash->REFUSED",
+        "refused-dir-before-devzero x3: DIFFERENT (main IsADirectoryError, head MemoryError) -> crash->REFUSED"
+      ],
+      "unchanged": "the other 45 rows keep the round-4 verdict"
+    }
+  },
+  "secondCount": "grep -F -c per verdict literal on the r4 rows: IDENTICAL 21, crash->REFUSED 30, DIFFERENT 0"
+}
