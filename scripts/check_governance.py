@@ -427,6 +427,7 @@ EXTERNAL = ("http://", "https://", "mailto:", "ftp://")
 #: one is correct, not broken. Declared, counted, and printed on every run.
 FORWARD_REFS = (
     ".syzygy/governance/decisions/ACCEPTANCE-ACT-RECORD.md",  # created by act 1
+    ".syzygy/governance/decisions/AGENT-ADOPTIONS.md",        # created by the D10 act
     ".syzygy/governance/contracts/rfcs/",                     # wave-act install home
     ".syzygy/governance/contracts/wave-manifests/",           # wave-act install home
     ".syzygy/governance/contracts/history/",                  # first-wave companion
@@ -3748,6 +3749,16 @@ def _activate_governance_simplification_d10_copy_registry():
         ACT_DIGEST_COPY_FILES[f"{GOV_SIMPLIFICATION_D10_DIR}/OWNER-SIGNOFF.md"] = (
             GOV_SIMPLIFICATION_D10_LABEL,)
     if not os.path.isfile(os.path.join(ROOT, GOV_SIMPLIFICATION_D10_ACT)):
+        # Before the act, the manifest's `[base]` rows are copies of the
+        # current arguments of the acts whose subjects D10 replaces: a moved
+        # target makes the copy stale here exactly as it makes the recorder
+        # refuse. After the act those rows are history; FOLLOW-ON.md F-0
+        # settles them with the rest of the post-install checks.
+        ACT_DIGEST_COPY_FILES[GOV_SIMPLIFICATION_D10_MANIFEST] = (
+            "AMEND RFC5-14 WITH THE PROJECT-DOCUMENTATION CONTENT CLASS",
+            "CONFIRM CRAFT AMENDMENT: CC-IMPACT",
+            "CONFIRM CRAFT AMENDMENT: CC-SPEC",
+        )
         return
     aggregate = f"{DECISIONS}/ACCEPTANCE-ACT-RECORD.md"
     present = ACT_DIGEST_COPY_FILES.get(aggregate, ())

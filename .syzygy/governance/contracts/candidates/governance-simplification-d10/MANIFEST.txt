@@ -1,0 +1,36 @@
+# GOVERNANCE-SIMPLIFICATION-D10 MANIFEST
+# The sha256 of this file is the argument of the owner's phrase.
+# [package] binds every package file the act adopts or installs.
+# [base] binds the bytes each install target held when this file was built
+# ("absent" = a new file); the recorder refuses if a target has moved since.
+# Regenerate: python3 scripts/record_governance_simplification_d10.py --write-manifest
+[package]
+901f49387874d52dae3079d5c4244d674e6c5b7ec844f0f450ad8dfdfe65519f  .syzygy/governance/contracts/candidates/governance-simplification-d10/PROPOSAL.md
+9d65907b7353dea2a4723eeed4fdf1bd95b6db6694525b79d1fe532bb3665124  .syzygy/governance/contracts/candidates/governance-simplification-d10/D10-SEMANTIC-DELTA.md
+df76536105973ea95f87eefaa75b4c5d24ebb1fe8cefe24f69059d101d4d6981  .syzygy/governance/contracts/candidates/governance-simplification-d10/RETIREMENTS.md
+0c4c52d9c98f101fe57f43d49e630317604944f552b08b0d92ba44f9a0797977  .syzygy/governance/contracts/candidates/governance-simplification-d10/D10-LOG-ROW.txt
+06f0f01cc69ef6ec93715d578a82267bfe7d0d215c2a02768895f2fe433171af  .syzygy/governance/contracts/candidates/governance-simplification-d10/proposed/.syzygy/governance/contracts/candidates/policy-candidates/SHAPE-TO-SPEC-IMPACT-POLICY-CANDIDATE.md.proposed
+d64d08293eaace39ce02f020e88b25507ed8d9220b6516e791f2a2c584a48a70  .syzygy/governance/contracts/candidates/governance-simplification-d10/proposed/.syzygy/governance/contracts/candidates/policy-candidates/SPECIFICATION-ACCEPTANCE-POLICY-CANDIDATE.md.proposed
+9148b47bfef4ce507ff6919a73dabc4b359bc6a2bc4f11c9190b182ed88fabcb  .syzygy/governance/contracts/candidates/governance-simplification-d10/proposed/.syzygy/governance/contracts/rfcs/RFC-0003/governance-homes-and-owner-acts.md.proposed
+9ad92640a523a817b5da3a5b03feff280ce4d5a0b393be399471a2db3ec5b269  .syzygy/governance/contracts/candidates/governance-simplification-d10/proposed/.syzygy/governance/contracts/rfcs/RFC-0005/consent-egress-secrets.md.proposed
+695ef3aeb3b33ec7bb83de64c456d986ed95a7566addedea6460a7330d62c17c  .syzygy/governance/contracts/candidates/governance-simplification-d10/proposed/.syzygy/governance/decisions/AGENT-ADOPTIONS.md.proposed
+ed203b71c770a3dfb206ddf3b6dbfb46a75d7bb446c3453a50c0d5b7c5dc01f2  .syzygy/governance/contracts/candidates/governance-simplification-d10/proposed/.syzygy/governance/doctrine/README.md.proposed
+2b5fb3097ead676281811da87cfa24ad2516d6ac4182c938d9af8e0da352ba98  .syzygy/governance/contracts/candidates/governance-simplification-d10/proposed/.syzygy/governance/doctrine/architecture.md.proposed
+3ab42b33ffbd9fbb18d11deba2a13a341d8994a1165fc2ffa6e75683e9acbec8  .syzygy/governance/contracts/candidates/governance-simplification-d10/proposed/.syzygy/governance/doctrine/security.md.proposed
+c0c3f18e04768537e90463d61c437d0b6504086ab1b7ae687bcb62c05cc67f85  .syzygy/governance/contracts/candidates/governance-simplification-d10/proposed/.syzygy/governance/doctrine/trust-and-evidence.md.proposed
+b50e1f4d47546124afbe191649a396468dfedca5fba390ef07b44808a4a7e3ae  .syzygy/governance/contracts/candidates/governance-simplification-d10/proposed/.syzygy/governance/doctrine/v1.md.proposed
+15ac0c776833834d3ef43c44bff7f0cfa4ffba812f8134d2564adb213d7bdddd  .syzygy/governance/contracts/candidates/governance-simplification-d10/proposed/.syzygy/governance/doctrine/vision.md.proposed
+[base]
+e08270a2d2589aafaad59d9958683f094fb6170b38cfaa30e49f48c41645989c  .syzygy/governance/contracts/candidates/policy-candidates/SHAPE-TO-SPEC-IMPACT-POLICY-CANDIDATE.md
+38c0e629efa6fb6acdb3c7d0f63b02518191d03221ae290a6bbc691fc697a90e  .syzygy/governance/contracts/candidates/policy-candidates/SPECIFICATION-ACCEPTANCE-POLICY-CANDIDATE.md
+457a3d3d1a1f9d94d1f76751c8f6eb1022eeb938ecd20b4e631e965ba4298c82  .syzygy/governance/contracts/rfcs/RFC-0003/governance-homes-and-owner-acts.md
+457a3d3d1a1f9d94d1f76751c8f6eb1022eeb938ecd20b4e631e965ba4298c82  .syzygy/governance/contracts/candidates/rfcs/RFC-0003/governance-homes-and-owner-acts.md
+a69a606cc7c14da5de03ec26aaec435af2fee3fa4c7bfb8a92fc30deefa40c91  .syzygy/governance/contracts/rfcs/RFC-0005/consent-egress-secrets.md
+a69a606cc7c14da5de03ec26aaec435af2fee3fa4c7bfb8a92fc30deefa40c91  .syzygy/governance/contracts/candidates/rfcs/RFC-0005/consent-egress-secrets.md
+absent  .syzygy/governance/decisions/AGENT-ADOPTIONS.md
+329ff235400c63c2d068f7fb3c50fe0cac2b0f82fda13e1faebf8238f300548c  .syzygy/governance/doctrine/README.md
+096918a12478c1e5e2fd645668a83e8eff6d03c203d2dd5ed98f18703386ecec  .syzygy/governance/doctrine/architecture.md
+766c953d01d1a7bba3319b538a35851c88b9901d8fe79399af0f23ec3011bc00  .syzygy/governance/doctrine/security.md
+a62742ba79886fa9a300f08f9a33412919286f6442a0c90a42b14f91dc80a52a  .syzygy/governance/doctrine/trust-and-evidence.md
+88675bc7aa12a3cdc61b930a748e2a24038db0345dff54f4772bc6e8922fc6ca  .syzygy/governance/doctrine/v1.md
+ff8410443dee3b53e4c8aad2e3b4072239e18ca9c16e3bef2518c8a44ae9ceeb  .syzygy/governance/doctrine/vision.md
