@@ -1840,6 +1840,18 @@ LAUNCH_WRITE_CONSENT_ACTS = (
     ("CONSENT TO WRITE LAUNCH CONSENT RECORDS ON THE DEDICATED BRANCH",
      f"{LAUNCH_WRITE_CONSENT_DIR}/instances/syzygy/WRITE-CONSENT-LAUNCH-RECORDS.md"),
 )
+#: The governance simplification, doctrine amendment D10 (drafted 2026-11-17):
+#: one owner act over the package's `MANIFEST.txt`, recorded by
+#: `scripts/record_governance_simplification_d10.py`. Registered before its
+#: packet exists so a stale argument copy fails CG-7d and CG-7e; the phrase
+#: and the packet copy are existence-gated on the manifest, the performed
+#: record and the aggregate on the dedicated record. Any chain link or battery
+#: line arrives with the act.
+GOV_SIMPLIFICATION_D10_DIR = f"{CANDIDATES}/governance-simplification-d10"
+GOV_SIMPLIFICATION_D10_MANIFEST = f"{GOV_SIMPLIFICATION_D10_DIR}/MANIFEST.txt"
+GOV_SIMPLIFICATION_D10_LABEL = "ADOPT GOVERNANCE SIMPLIFICATION D10"
+GOV_SIMPLIFICATION_D10_ACT = (
+    f"{DECISIONS}/GOVERNANCE-SIMPLIFICATION-D10-ACT.md")
 #: The act's dedicated record, written by
 #: `record_launch_consent_write_consent_act.py` (performed 2026-11-08); it
 #: and the aggregate become copy files once the record exists.
@@ -2778,6 +2790,13 @@ def _act_subjects():
             if not any(l == label for l, _rel, _pat in out):
                 out.append((label, subject, re.compile(
                     re.escape(label) + r"\s*:\s*`?([0-9a-f]{64})")))
+    if (os.path.isfile(os.path.join(ROOT, GOV_SIMPLIFICATION_D10_MANIFEST))
+            and not any(l == GOV_SIMPLIFICATION_D10_LABEL
+                        for l, _rel, _pat in out)):
+        out.append((GOV_SIMPLIFICATION_D10_LABEL,
+                    GOV_SIMPLIFICATION_D10_MANIFEST, re.compile(
+                        re.escape(GOV_SIMPLIFICATION_D10_LABEL)
+                        + r"\s*:\s*`?([0-9a-f]{64})")))
     return tuple(out)
 
 
@@ -3717,6 +3736,28 @@ def _activate_launch_write_consent_copy_registry():
 
 
 _activate_launch_write_consent_copy_registry()
+
+
+def _activate_governance_simplification_d10_copy_registry():
+    """The D10 owner packet quotes the argument; the records join with the act.
+
+    Existence-gated: the packet copy registers once the manifest exists, and
+    the dedicated record and the aggregate once the dedicated record exists.
+    """
+    if os.path.isfile(os.path.join(ROOT, GOV_SIMPLIFICATION_D10_MANIFEST)):
+        ACT_DIGEST_COPY_FILES[f"{GOV_SIMPLIFICATION_D10_DIR}/OWNER-SIGNOFF.md"] = (
+            GOV_SIMPLIFICATION_D10_LABEL,)
+    if not os.path.isfile(os.path.join(ROOT, GOV_SIMPLIFICATION_D10_ACT)):
+        return
+    aggregate = f"{DECISIONS}/ACCEPTANCE-ACT-RECORD.md"
+    present = ACT_DIGEST_COPY_FILES.get(aggregate, ())
+    if GOV_SIMPLIFICATION_D10_LABEL not in present:
+        ACT_DIGEST_COPY_FILES[aggregate] = present + (GOV_SIMPLIFICATION_D10_LABEL,)
+    ACT_DIGEST_COPY_FILES[GOV_SIMPLIFICATION_D10_ACT] = (
+        GOV_SIMPLIFICATION_D10_LABEL,)
+
+
+_activate_governance_simplification_d10_copy_registry()
 
 
 #: The public-source screening scope, version 2 (sitting row 12): one state-(1)
