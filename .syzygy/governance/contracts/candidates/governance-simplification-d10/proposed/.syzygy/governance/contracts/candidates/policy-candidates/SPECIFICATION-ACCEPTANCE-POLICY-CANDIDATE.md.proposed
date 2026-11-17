@@ -7,8 +7,10 @@
 > digest. The path, file name and title still say "candidate"; the act
 > record, not the path, decides status.
 >
-> **Amended by GOVERNANCE-SIMPLIFICATION-D10** (drafted 2026-11-17; in force from the owner's
-> act recorded in `.syzygy/governance/decisions/GOVERNANCE-SIMPLIFICATION-D10-ACT.md`): CC-SPEC-8's owner judgment and CC-SPEC-10's owner
+> **Amended by GOVERNANCE-SIMPLIFICATION-D10** (drafted 2026-11-17): this file,
+> `SPECIFICATION-ACCEPTANCE-POLICY-CANDIDATE.md`, is in force at the bytes that act installs, from
+> the owner's act recorded in
+> `.syzygy/governance/decisions/GOVERNANCE-SIMPLIFICATION-D10-ACT.md`. CC-SPEC-8's owner judgment and CC-SPEC-10's owner
 > adoption become agent adoption under VIS-4 as amended. Specification changes
 > are agent-decided, recorded and reported, except in VIS-4's four owner
 > classes.

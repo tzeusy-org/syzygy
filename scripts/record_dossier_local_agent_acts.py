@@ -739,5 +739,26 @@ def main(argv: list[str]) -> int:
     return fn(ROOT, ACT_BY_KEY[key], argument, args.date, sel, args.instant)
 
 
+def _d10_superseded(modes):
+    """True, after one SUPERSEDED line, when this run is one of `modes` and D10 is in effect.
+
+    This run holds a performed act to bytes doctrine amendment D10 replaces;
+    under RFC3-16 as D10 amends it, those bytes are history, not a lock, so the
+    run stops instead of failing forever (`scripts/d10_supersession.py`).
+    Without the helper beside this file (a partial copy) it always runs."""
+    import importlib.util
+    from pathlib import Path as _Path
+    mode = next((m for m in modes if m in sys.argv[1:]), None)
+    helper = _Path(__file__).resolve().with_name("d10_supersession.py")
+    if mode is None or not helper.is_file():
+        return False
+    spec = importlib.util.spec_from_file_location("d10_supersession", helper)
+    d10 = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(d10)
+    return d10.superseded(f"{_Path(__file__).name} {mode}")
+
+
+if __name__ == "__main__" and _d10_superseded(('--check',)):
+    sys.exit(0)
 if __name__ == "__main__":
     sys.exit(main(sys.argv))

@@ -1,0 +1,645 @@
+# Documentation and governance checks only.
+#
+# The repository now holds application code and an npm toolchain (Capability
+# 1's `packages/cap1-core`/`cap1-daemon`, the Three-Surface POC, and their
+# build/test scripts) alongside the still-pre-specification governance
+# plane. This workflow covers only the governance plane: it installs a
+# Python interpreter and one pinned test-only package (PyYAML, for the
+# contract index's YAML-validity selftest) and runs the read-only checkers
+# below, every one of which is otherwise stdlib-only. It does not install npm, build, lint, or run the application test
+# suites — those gates live in the repo's other hosted workflow(s); adding
+# them here would duplicate that coverage rather than add to it.
+#
+# The step list below is the hosted denominator. It is meant to match the
+# battery `PROJECT-STATUS.md` publishes, so that "hosted CI is green" and
+# "the battery is clean" are the same claim rather than two claims a reader
+# conflates. When a check is added there, add it here.
+#
+# The steps run in four parallel jobs: `governance` holds every check but the
+# three slow selftests, which have a job each. The aggregate `checks` job is
+# the required check. Time-to-green target: 7 minutes (CONTRIBUTING.md,
+# "CI time budget").
+name: governance-docs
+
+on:
+  pull_request:
+    branches: [main]
+  merge_group:
+    types: [checks_requested]
+
+# Supersede stale pull_request runs (a newer head cancels the older one). The group is per workflow and per PR, and
+# only pull_request events cancel: merge_group runs fall back to a per-run
+# group (run_id), so they are never cancelled.
+#
+# No push trigger (syzygy-j5m0): main moves only through the merge queue, whose
+# merge_group run already tested the exact tree that lands, so a push run on
+# main re-ran the same tree a third time.
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.run_id }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
+permissions:
+  contents: read
+
+jobs:
+  # Every check but the three parallel selftests, in step order.
+  governance:
+    name: checks (governance)
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          # Full history: the launch-administration validator resolves the
+          # commit a record names, and a depth-1 checkout would make every
+          # such check silently unrunnable rather than red.
+          fetch-depth: 0
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      # Repository-wide governance checks: links, retired tokens, candidate
+      # banners, manifest digests, context budgets, authority homes.
+      - name: check_governance
+        run: python3 scripts/check_governance.py
+
+      # Candidate contract package: clause continuity, citations, ceilings.
+      - name: verify_final_prespec
+        run: python3 .syzygy/governance/contracts/candidates/scripts/verify_final_prespec.py
+
+      # Contract index drift: the generated index must match regeneration.
+      - name: build_contract_index --check
+        run: python3 .syzygy/governance/contracts/candidates/scripts/build_contract_index.py --check
+
+      # The index's own fixtures, including the YAML round trip that kills an
+      # unquoted emit (syzygy-ejm3, syzygy-prn1). PyYAML is test-only and
+      # pinned; without it the selftest fails rather than skipping.
+      - name: install PyYAML (test-only, for build_contract_index --selftest)
+        run: pip install 'PyYAML==6.0.3'
+
+      - name: build_contract_index --selftest
+        run: python3 .syzygy/governance/contracts/candidates/scripts/build_contract_index.py --selftest
+
+      # Dependency index drift: same guard, for the declared edges.
+      - name: build_dependency_index --check
+        run: python3 .syzygy/governance/contracts/candidates/scripts/build_dependency_index.py --check
+
+      # Every volatile measurement: fixture anchors and the generated report.
+      - name: build_budget_report --check
+        run: python3 .syzygy/governance/contracts/candidates/scripts/build_budget_report.py --check
+
+      # Wave manifest drift: the digests an owner act binds are generated,
+      # and a stale manifest would offer an act over bytes that moved.
+      - name: build_active_manifest --check
+        run: python3 .syzygy/governance/contracts/candidates/scripts/build_active_manifest.py --check
+
+      # Task-router drift, and the router's own fixtures. The router is the
+      # single generated answer to "what do I read for this task"; a drifted
+      # router misroutes silently, which no other check here would notice.
+      - name: build_task_router --check
+        run: python3 .syzygy/governance/contracts/candidates/scripts/build_task_router.py --check
+
+      - name: build_task_router --selftest
+        run: python3 .syzygy/governance/contracts/candidates/scripts/build_task_router.py --selftest
+
+      # Capability 1's five views against their one source. Owner charter
+      # §10: the route and the first-spec sequence may not be independently
+      # maintained enumerations, and a drift check nobody runs is a plan.
+      - name: build_capability_1_views --check
+        run: python3 .syzygy/governance/contracts/candidates/scripts/build_capability_1_views.py --check
+
+      - name: build_capability_1_views --selftest
+        run: python3 .syzygy/governance/contracts/candidates/scripts/build_capability_1_views.py --selftest
+
+      # The Capability 1 specification's CC-IMPACT-1 dependency declaration
+      # against its one source: the requirement warrant blocks in spec.md.
+      # Stdlib-only, like every checker this job runs.
+      - name: build_capability_1_spec_dependencies --check
+        run: python3 scripts/build_capability_1_spec_dependencies.py --check
+
+      - name: build_capability_1_spec_dependencies --selftest
+        run: python3 scripts/build_capability_1_spec_dependencies.py --selftest
+
+      - name: build_cap1_trusted_bootstrap_consent_adoption --check
+        run: python3 scripts/build_cap1_trusted_bootstrap_consent_adoption.py --check
+
+      - name: build_cap1_trusted_bootstrap_consent_adoption --selftest
+        run: python3 scripts/build_cap1_trusted_bootstrap_consent_adoption.py --selftest
+
+      # Generated evidence and dependency projections that guard performed
+      # transaction history and the current Polaris/PWB specifications.
+      - name: build_general_trusted_bootstrap_impact_ledger --check
+        run: python3 scripts/build_general_trusted_bootstrap_impact_ledger.py --check
+
+      - name: build_general_trusted_bootstrap_transaction --check
+        run: python3 scripts/build_general_trusted_bootstrap_transaction.py --check
+
+      - name: build_polaris_project_wide_contract_coverage --check
+        run: python3 scripts/build_polaris_project_wide_contract_coverage.py --check
+
+      - name: build_polaris_project_wide_spec_dependencies --check
+        run: python3 scripts/build_polaris_project_wide_spec_dependencies.py --check
+
+      - name: build_pwb_truth_policy_amendment --check
+        run: python3 scripts/build_pwb_truth_policy_amendment.py --check
+
+      - name: record_versioned_signoff --check pwb-missing-currency-disclosure-scenario
+        run: python3 scripts/record_versioned_signoff.py --check pwb-missing-currency-disclosure-scenario --version 1.0
+
+      - name: record_versioned_signoff --check pwb-dismissal-expiry-amendment
+        run: python3 scripts/record_versioned_signoff.py --check pwb-dismissal-expiry-amendment --version 1.0
+
+      - name: record_versioned_signoff --check pwb-container-shape-profile-amendment
+        run: python3 scripts/record_versioned_signoff.py --check pwb-container-shape-profile-amendment --version 1.0
+
+      - name: record_versioned_signoff --check pwb-item-depth-amendment
+        run: python3 scripts/record_versioned_signoff.py --check pwb-item-depth-amendment --version 1.0
+
+      - name: record_versioned_signoff --check pwb-readability-successor
+        run: python3 scripts/record_versioned_signoff.py --check pwb-readability-successor --version 1.0
+
+      - name: record_versioned_signoff --check pwb-tree-framing-amendment
+        run: python3 scripts/record_versioned_signoff.py --check pwb-tree-framing-amendment --version 1.0
+
+      - name: record_versioned_signoff --check pwb-anchor-resolution-amendment
+        run: python3 scripts/record_versioned_signoff.py --check pwb-anchor-resolution-amendment --version 1.0
+
+      - name: record_versioned_signoff --check three-surface-poc-block-provenance-amendment
+        run: python3 scripts/record_versioned_signoff.py --check three-surface-poc-block-provenance-amendment --version 1.0
+
+      - name: record_versioned_signoff --check pwb-class-granular-extraction-amendment
+        run: python3 scripts/record_versioned_signoff.py --check pwb-class-granular-extraction-amendment --version 1.0
+
+      - name: record_versioned_signoff --check pwb-accessible-name-amendment
+        run: python3 scripts/record_versioned_signoff.py --check pwb-accessible-name-amendment --version 1.0
+
+      - name: record_versioned_signoff --check pwb-opening-index-amendment
+        run: python3 scripts/record_versioned_signoff.py --check pwb-opening-index-amendment --version 1.0
+
+      - name: record_versioned_signoff --check three-surface-poc-governing-intent-amendment
+        run: python3 scripts/record_versioned_signoff.py --check three-surface-poc-governing-intent-amendment --version 1.0
+
+      - name: record_versioned_signoff --check three-surface-poc-vocabulary-epistemic-amendment
+        run: python3 scripts/record_versioned_signoff.py --check three-surface-poc-vocabulary-epistemic-amendment --version 1.0
+
+      - name: record_versioned_signoff --check three-surface-poc-governedby-reference-amendment
+        run: python3 scripts/record_versioned_signoff.py --check three-surface-poc-governedby-reference-amendment --version 1.0
+
+      - name: record_versioned_signoff --check cap1-trusted-bootstrap-consent
+        run: python3 scripts/record_versioned_signoff.py --check cap1-trusted-bootstrap-consent --version 1.0
+
+      - name: record_versioned_signoff --check polaris-dossier-local-agent-mode
+        run: python3 scripts/record_versioned_signoff.py --check polaris-dossier-local-agent-mode --version 1.0
+
+      - name: record_versioned_signoff --check polaris-dossier-local-agent-mode v1.1
+        run: python3 scripts/record_versioned_signoff.py --check polaris-dossier-local-agent-mode --version 1.1
+
+      - name: record_versioned_signoff --check polaris-dossier-local-agent-mode v1.2
+        run: python3 scripts/record_versioned_signoff.py --check polaris-dossier-local-agent-mode --version 1.2
+
+      - name: record_versioned_signoff --check polaris-dossier-local-agent-mode v1.3
+        run: python3 scripts/record_versioned_signoff.py --check polaris-dossier-local-agent-mode --version 1.3
+
+      - name: record_versioned_signoff --check polaris-dossier-local-agent-mode v1.4
+        run: python3 scripts/record_versioned_signoff.py --check polaris-dossier-local-agent-mode --version 1.4
+
+      - name: record_versioned_signoff --check polaris-dossier-local-agent-mode v1.5
+        run: python3 scripts/record_versioned_signoff.py --check polaris-dossier-local-agent-mode --version 1.5
+
+      - name: record_versioned_signoff --check polaris-dossier-local-agent-mode v1.6
+        run: python3 scripts/record_versioned_signoff.py --check polaris-dossier-local-agent-mode --version 1.6
+
+      - name: record_versioned_signoff --check polaris-dossier-launch-consent
+        run: python3 scripts/record_versioned_signoff.py --check polaris-dossier-launch-consent --version 1.0
+
+      - name: record_versioned_signoff --check polaris-dossier-launch-consent v1.1
+        run: python3 scripts/record_versioned_signoff.py --check polaris-dossier-launch-consent --version 1.1
+
+      - name: record_versioned_signoff --check polaris-dossier-launch-consent v1.2
+        run: python3 scripts/record_versioned_signoff.py --check polaris-dossier-launch-consent --version 1.2
+
+      - name: record_pwb_behavior_amendment_acts --check render-mode
+        run: python3 scripts/record_pwb_behavior_amendment_acts.py --check render-mode 527be5ac3732619608355ae9658c92cee45341e831521bc526398481dd915785 --date 2026-10-02
+
+      - name: record_pwb_behavior_amendment_acts --check machine-view
+        run: python3 scripts/record_pwb_behavior_amendment_acts.py --check machine-view acabc7915e4461186b5878ce40cc0c62ed7cf91eadd7eead1cb179c80f672e72 --date 2026-10-02
+
+      - name: record_versioned_signoff --selftest
+        run: python3 scripts/record_versioned_signoff.py --selftest
+
+      - name: prepare_three_surface_poc_governedby_reference_recording --check
+        run: python3 scripts/prepare_three_surface_poc_governedby_reference_recording.py --check
+
+      - name: build_three_surface_poc_vocabulary_epistemic_amendment --selftest
+        run: python3 scripts/build_three_surface_poc_vocabulary_epistemic_amendment.py --selftest
+
+      # The six version-signed PWB builders' fixtures and the helper that
+      # reruns them (syzygy-tmkb, syzygy-6scq). After sign-off each builder's
+      # --selftest runs its current bytes against the pre-adoption tree from
+      # `git archive` of the last candidate commit, which is why this job
+      # checks out with fetch-depth: 0; a shallow clone refuses with exit 1.
+      - name: pwb_signed_selftest --selftest
+        run: python3 scripts/pwb_signed_selftest.py --selftest
+
+      - name: build_pwb_missing_currency_disclosure_scenario --selftest
+        run: python3 scripts/build_pwb_missing_currency_disclosure_scenario.py --selftest
+
+      - name: build_pwb_dismissal_expiry_amendment --selftest
+        run: python3 scripts/build_pwb_dismissal_expiry_amendment.py --selftest
+
+      - name: build_pwb_container_shape_profile_amendment --selftest
+        run: python3 scripts/build_pwb_container_shape_profile_amendment.py --selftest
+
+      - name: build_pwb_item_depth_amendment --selftest
+        run: python3 scripts/build_pwb_item_depth_amendment.py --selftest
+
+      - name: build_pwb_readability_successor --selftest
+        run: python3 scripts/build_pwb_readability_successor.py --selftest
+
+      - name: build_pwb_tree_framing_amendment --selftest
+        run: python3 scripts/build_pwb_tree_framing_amendment.py --selftest
+
+      # The Polaris dossier local-agent builder (#353, #364): --check passes
+      # while the change is absent, unapplied or applied; its fixtures run
+      # before and after the package's version-tagged sign-off.
+      - name: build_polaris_dossier_local_agent_mode --check
+        run: python3 scripts/build_polaris_dossier_local_agent_mode.py --check
+
+      - name: build_polaris_dossier_local_agent_mode --selftest
+        run: python3 scripts/build_polaris_dossier_local_agent_mode.py --selftest
+
+      # The dossier v1.1 builder (#368): patches over the signed v1.0 bytes;
+      # its --check, and the v1.0 builder's, fail on unsigned v1.1 bytes.
+      - name: build_polaris_dossier_local_agent_mode_v1_1 --check
+        run: python3 scripts/build_polaris_dossier_local_agent_mode_v1_1.py --check
+
+      - name: build_polaris_dossier_local_agent_mode_v1_1 --selftest
+        run: python3 scripts/build_polaris_dossier_local_agent_mode_v1_1.py --selftest
+
+      # The dossier v1.2 builder (#408): patches over the signed v1.1 bytes
+      # (waiting sessions); the earlier builders fail on unsigned v1.2 bytes.
+      - name: build_polaris_dossier_local_agent_mode_v1_2 --check
+        run: python3 scripts/build_polaris_dossier_local_agent_mode_v1_2.py --check
+
+      - name: build_polaris_dossier_local_agent_mode_v1_2 --selftest
+        run: python3 scripts/build_polaris_dossier_local_agent_mode_v1_2.py --selftest
+
+      # The dossier v1.3 builder (#734): patches over the signed v1.2 bytes
+      # (presentation elements); the earlier builders peel or fail on unsigned v1.3 bytes.
+      - name: build_polaris_dossier_local_agent_mode_v1_3 --check
+        run: python3 scripts/build_polaris_dossier_local_agent_mode_v1_3.py --check
+
+      - name: build_polaris_dossier_local_agent_mode_v1_3 --selftest
+        run: python3 scripts/build_polaris_dossier_local_agent_mode_v1_3.py --selftest
+
+      # Signed v1.4 layer: verify applied subject and preserved signed predecessors.
+      - name: build_polaris_dossier_local_agent_mode_v1_4 --check
+        run: python3 scripts/build_polaris_dossier_local_agent_mode_v1_4.py --check
+
+      - name: build_polaris_dossier_local_agent_mode_v1_4 --selftest
+        run: python3 scripts/build_polaris_dossier_local_agent_mode_v1_4.py --selftest
+
+      # Signed v1.5 layer: verify applied subject and preserved signed predecessors.
+      - name: build_polaris_dossier_local_agent_mode_v1_5 --check
+        run: python3 scripts/build_polaris_dossier_local_agent_mode_v1_5.py --check
+
+      - name: build_polaris_dossier_local_agent_mode_v1_5 --selftest
+        run: python3 scripts/build_polaris_dossier_local_agent_mode_v1_5.py --selftest
+
+      # Signed v1.6 layer: verify applied subject and preserved signed predecessors.
+      - name: build_polaris_dossier_local_agent_mode_v1_6 --check
+        run: python3 scripts/build_polaris_dossier_local_agent_mode_v1_6.py --check
+
+      - name: build_polaris_dossier_local_agent_mode_v1_6 --selftest
+        run: python3 scripts/build_polaris_dossier_local_agent_mode_v1_6.py --selftest
+
+      # Signed launch-consent v1.0: verify the applied subject and its status figure.
+      - name: build_polaris_dossier_launch_consent --check
+        run: python3 scripts/build_polaris_dossier_launch_consent.py --check
+
+      - name: build_polaris_dossier_launch_consent --selftest
+        run: python3 scripts/build_polaris_dossier_launch_consent.py --selftest
+
+      # Signed launch-consent v1.1: verify the applied warning.
+      - name: build_polaris_dossier_launch_consent_v1_1 --check
+        run: python3 scripts/build_polaris_dossier_launch_consent_v1_1.py --check
+
+      - name: build_polaris_dossier_launch_consent_v1_1 --selftest
+        run: python3 scripts/build_polaris_dossier_launch_consent_v1_1.py --selftest
+
+      # Signed launch-consent v1.2: verify the applied copy-step and URL-scope delta.
+      - name: build_polaris_dossier_launch_consent_v1_2 --check
+        run: python3 scripts/build_polaris_dossier_launch_consent_v1_2.py --check
+
+      - name: build_polaris_dossier_launch_consent_v1_2 --selftest
+        run: python3 scripts/build_polaris_dossier_launch_consent_v1_2.py --selftest
+
+      - name: record_pwb_behavior_amendment_acts --check opening-band
+        run: python3 scripts/record_pwb_behavior_amendment_acts.py --check opening-band 7f80cb05f644dd1e4f49e7b212d6972ee4754e40682450e59a6c3245546d5c46 --date 2026-10-01
+
+      - name: build_pwb_registry_currency_briefing_amendment --check
+        run: python3 scripts/build_pwb_registry_currency_briefing_amendment.py --check
+
+      - name: build_pwb_registry_currency_briefing_amendment --selftest
+        run: python3 scripts/build_pwb_registry_currency_briefing_amendment.py --selftest
+
+      - name: record_pwb_registry_currency_amendment --check
+        run: python3 scripts/record_pwb_registry_currency_amendment.py --check 2356b9ed3235b3dff79caeb352803a30c446b7365a2a7ea74df302b9fa51386a --date 2026-09-30
+
+      - name: record_pwb_registry_currency_amendment --selftest
+        run: python3 scripts/record_pwb_registry_currency_amendment.py --selftest
+
+      - name: build_pwb_behavior_contract_repin --selftest
+        run: python3 scripts/build_pwb_behavior_contract_repin.py --selftest
+
+      - name: record_pwb_behavior_contract_repin_acts --check registry
+        run: python3 scripts/record_pwb_behavior_contract_repin_acts.py --check registry ad9cd6769bffbb1a3ef94625c73226dec133fb7c9f1e0bc40186b09b15e165fa --date 2026-10-02
+
+      - name: record_pwb_behavior_contract_repin_acts --selftest
+        run: python3 scripts/record_pwb_behavior_contract_repin_acts.py --selftest
+
+      - name: build_pwb_registry_machine_ceiling_amendment --check
+        run: python3 scripts/build_pwb_registry_machine_ceiling_amendment.py --check
+
+      - name: record_pwb_registry_machine_ceiling_act --builder-selftest
+        run: python3 scripts/record_pwb_registry_machine_ceiling_act.py --builder-selftest
+
+      - name: record_pwb_registry_machine_ceiling_act --check
+        run: python3 scripts/record_pwb_registry_machine_ceiling_act.py --check
+
+      - name: record_pwb_registry_machine_ceiling_act --selftest
+        run: python3 scripts/record_pwb_registry_machine_ceiling_act.py --selftest
+
+      - name: record_public_source_screening_scope_v8_act --check
+        run: python3 scripts/record_public_source_screening_scope_v8_act.py --check 44153bbe210c7a724f224f2bc1c9255db43cf0887b6ad22dd24884514f21bbe8 --date 2026-11-09 --owner-words 'Sign screening scope version 8, variant pv'
+
+      - name: record_public_source_screening_scope_v8_act --selftest
+        run: python3 scripts/record_public_source_screening_scope_v8_act.py --selftest
+
+      - name: check_polaris_response_ceiling_reading --check
+        run: python3 scripts/check_polaris_response_ceiling_reading.py --check
+
+      - name: check_polaris_response_ceiling_reading --selftest
+        run: python3 scripts/check_polaris_response_ceiling_reading.py --selftest
+
+      # The contract readability restyle: the candidate package regenerates
+      # exactly, and its act recorder reports "not performed" (exit 0) until
+      # the owner's act is recorded, then verifies both records.
+      - name: build_contract_readability_restyle --check
+        run: python3 scripts/build_contract_readability_restyle.py --check
+
+      - name: build_contract_readability_restyle --selftest
+        run: python3 scripts/build_contract_readability_restyle.py --selftest
+
+      - name: record_contract_readability_restyle --check
+        run: python3 scripts/record_contract_readability_restyle.py --check
+
+      - name: record_contract_readability_restyle --selftest
+        run: python3 scripts/record_contract_readability_restyle.py --selftest
+
+      # The specification-policy readability restyle: the same shape, over
+      # CC-SPEC and CC-IMPACT.
+      - name: build_spec_policy_readability_restyle --check
+        run: python3 scripts/build_spec_policy_readability_restyle.py --check
+
+      - name: build_spec_policy_readability_restyle --selftest
+        run: python3 scripts/build_spec_policy_readability_restyle.py --selftest
+
+      - name: record_spec_policy_readability_restyle --check
+        run: python3 scripts/record_spec_policy_readability_restyle.py --check
+
+      - name: record_spec_policy_readability_restyle --selftest
+        run: python3 scripts/record_spec_policy_readability_restyle.py --selftest
+
+      - name: build_three_surface_poc_readability_successor --check
+        run: python3 scripts/build_three_surface_poc_readability_successor.py --check
+
+      - name: record_three_surface_poc_readability_successor --check
+        run: python3 scripts/record_three_surface_poc_readability_successor.py --check
+
+      - name: record_three_surface_poc_readability_successor --selftest
+        run: python3 scripts/record_three_surface_poc_readability_successor.py --selftest
+
+      - name: readability_successor --all --check
+        run: python3 scripts/readability_successor.py --all --check
+
+      - name: readability_successor --selftest
+        run: python3 scripts/readability_successor.py --selftest
+
+      - name: build_polaris_dependency_unions --check
+        run: python3 scripts/build_polaris_dependency_unions.py --check
+
+      - name: build_polaris_dependency_unions --selftest
+        run: python3 scripts/build_polaris_dependency_unions.py --selftest
+
+      # Reconciled specification composition (syzygy-73e.5.6): the five
+      # readability outcomes are terminal and still bind the bytes on disk;
+      # requirement/scenario populations agree by two methods.
+      - name: check_spec_reconciliation --check
+        run: python3 scripts/check_spec_reconciliation.py --check
+
+      - name: build_three_surface_poc_spec_dependencies --check
+        run: python3 scripts/build_three_surface_poc_spec_dependencies.py --check
+
+      # The directive register: every governing identifier and its definition
+      # site, across all five trees. --check fails when a clause moves, is
+      # renumbered against CC-REV-7, or gains a definition the page has not
+      # seen; --selftest holds the predicate's fixtures, including the
+      # leading-possessive-citation line that is not a definition.
+      - name: build_directive_register --check
+        run: python3 scripts/build_directive_register.py --check
+
+      - name: build_directive_register --selftest
+        run: python3 scripts/build_directive_register.py --selftest
+
+      # A quotation written beside a path:line locator must have been said by
+      # that file in some committed revision (RD-6 F-2's class, syzygy-0wf).
+      # It reads history, which is why the checkout above is full depth.
+      - name: check_quotations
+        run: python3 scripts/check_quotations.py
+
+      - name: check_quotations --selftest
+        run: python3 scripts/check_quotations.py --selftest
+
+      # docs/reviews/ is partitioned by the fragments under
+      # docs/review-campaigns/: every file in exactly one campaign (syzygy-gkvu,
+      # syzygy-5pem). A raw whose basename matches no campaign pattern, or two,
+      # fails here instead of only in a local run. --check reads the HEAD-bound
+      # tree and its fragments; it prints no dates.
+      - name: check_docs_review_campaign_partition --check
+        run: python3 scripts/check_docs_review_campaign_partition.py --check
+
+      - name: check_docs_review_campaign_partition --selftest
+        run: python3 scripts/check_docs_review_campaign_partition.py --selftest
+
+      # The surface merge freeze, when scripts/surface-merge-freeze.json says it
+      # is active (owner direction of 2026-11-06, after PR #774 merged through it
+      # unnoticed). The diff step has no local form: it needs the event's base.
+      - name: check_surface_freeze --selftest
+        run: python3 scripts/check_surface_freeze.py --selftest
+
+      - name: surface freeze against this change's base
+        env:
+          FREEZE_BASE: ${{ github.event.pull_request.base.sha || github.event.merge_group.base_sha }}
+        run: if [ -n "$FREEZE_BASE" ]; then python3 scripts/check_surface_freeze.py --base "$FREEZE_BASE"; fi
+
+      # The evidence index is generated on demand and never committed, so
+      # only its builder's fixtures run here (syzygy-bpyt.9.1).
+      - name: build_evidence_index --selftest
+        run: python3 scripts/build_evidence_index.py --selftest
+
+      # The checkers' own fixtures. A hosted run that exercises the checks
+      # but never the checks' checks reports a denominator it does not have.
+      # Every one is stdlib-only, which is why they can run here at all —
+      # the hosted job installs no packages, so a checker that imported one
+      # would be unrunnable here and its coverage would be local-only.
+      - name: check_governance --selftest
+        run: python3 scripts/check_governance.py --selftest
+
+      - name: understanding adoption exact-digest chain
+        run: python3 scripts/d10_supersession.py --unless-in-effect python3 scripts/record_polaris_understanding_adoption.py --check
+
+      - name: understanding adoption chain selftests
+        run: python3 scripts/record_polaris_understanding_adoption.py --selftest
+
+      - name: launch_gate_results --selftest        # historical Markdown records
+        run: python3 scripts/launch_gate_results.py --selftest
+
+      - name: validate_launch_administration --selftest
+        run: python3 scripts/validate_launch_administration.py --selftest
+
+      - name: render_launch_administration --selftest
+        run: python3 scripts/render_launch_administration.py --selftest
+
+      # The worked v2.0 record: it validates, and its report regenerates to
+      # the committed bytes. A generated file that drifts from its source is
+      # the one failure mode a generator cannot report about itself.
+      - name: dry-run administration record validates
+        run: python3 scripts/validate_launch_administration.py .syzygy/governance/contracts/candidates/round-2026-08f/fixtures/DRY-RUN-ADMINISTRATION.json
+
+      - name: dry-run administration report is regenerable
+        run: python3 scripts/render_launch_administration.py .syzygy/governance/contracts/candidates/round-2026-08f/fixtures/DRY-RUN-ADMINISTRATION.json --check
+
+      - name: rfc5 --check
+        run: python3 scripts/record_rfc5_project_documentation_act.py --check a69a606cc7c14da5de03ec26aaec435af2fee3fa4c7bfb8a92fc30deefa40c91 --date 2026-10-07 --question-opening 'Do you sign the RFC5-14 project-documentation class amendment at its row of the contract amendment manifest?' --selection-label 'Sign it, at the manifest row; direct the SOURCE-POLICY.md readability successor' --selection-description 'Act form 1, which makes screening scope version 2 performable; the six-class sentence in SOURCE-POLICY.md gets a readability successor.'
+
+      - name: public-git-source-acquisition-local-agent v1.0 --check
+        run: python3 scripts/record_versioned_signoff.py --check public-git-source-acquisition-local-agent --version 1.0
+
+      - name: public-git-source-acquisition-local-agent v1.1 --check
+        run: python3 scripts/record_versioned_signoff.py --check public-git-source-acquisition-local-agent --version 1.1
+
+      - name: redis-agent-anthropic --check
+        run: python3 scripts/record_dossier_local_agent_acts.py --check redis-agent-anthropic fbbcd3c0e3d49aab3384a4ab18bf35816dbd8fb952e658d1edbac3d1c50e48a7 --date 2026-10-07 --question-opening 'Which statement do you sign for Redis at its row of the dossier local-agent acts manifest?' --selection-label 'Anthropic provider statement' --selection-description 'Claude Code may receive Redis content even if Redis counts as governed.'
+
+      - name: agent-provider statement version 2 --check
+        run: python3 scripts/record_dossier_agent_provider_v2_act.py --check b7a8d099ce108bfd70133b729327534f29806cb0118ee0b3e0f9ca077a946df3 --date 2026-10-08 --question-opening 'Decision 2 (P-106):'' your Redis Anthropic provider statement predates the README/docs class, so Syzygy withholds docs text from the packets it gives your own Claude Code sessions, and README-based claims render Unknown. Version 2 adds `project-documentation` and changes nothing else. Sign it?' --selection-label 'Sign version 2 (Recommended)' --selection-description 'Docs text goes to your own Claude Code sessions, which can already read the whole clone. Phrase:'' "Sign the Redis Anthropic provider statement, version 2".' --packet-words 'Sign the Redis Anthropic provider statement, version 2'
+
+      - name: agent-provider statement version 2 --selftest
+        run: python3 scripts/record_dossier_agent_provider_v2_act.py --selftest
+
+      - name: launch-record write consent builder --check
+        run: python3 scripts/build_launch_consent_write_consent.py --check
+
+      - name: launch-record write consent builder --selftest
+        run: python3 scripts/build_launch_consent_write_consent.py --selftest
+
+      - name: launch-record write consent act --check
+        run: python3 scripts/record_launch_consent_write_consent_act.py --check 53efd343b0ed5302628374fbb503758d2bfe56bf1b27715f0ec616f33b5aa092 --date 2026-11-08 --selection-quote 'Sign the write consent for launch consent records? (structured question, Claude Code session) — selected option "Sign the launch-record write consent"'
+
+      - name: record_launch_consent_write_consent_act --selftest
+        run: python3 scripts/record_launch_consent_write_consent_act.py --selftest
+
+      - name: d9-in-force --check
+        run: python3 scripts/record_dossier_local_agent_acts.py --check d9-in-force 41fdfaea8cbde4cd8220910113fb5b376c7834a470d8c2d9badd9ab0fec9ac66 --date 2026-10-07 --question-opening 'Do you sign the D9 in-force record at its row of the dossier local-agent acts manifest?' --selection-label 'Sign it' --selection-description 'Binds D9 to the current security.md and v1.md bytes; it runs nothing until a choice for one run is recorded.'
+
+      - name: rfc7-20-reading-in-force --check
+        run: python3 scripts/record_dossier_local_agent_acts.py --check rfc7-20-reading-in-force f0725a204b6e6ccbccb211441e26e139502ef42a6447d0f4a40df2d09062f3d9 --date 2026-10-07 --question-opening 'Do you sign the RFC7-20 reading in-force record at its row of the dossier local-agent acts manifest?' --selection-label 'Sign it' --selection-description 'The agent draft renders as an editorial draft; it binds item 1 of the direction, whole-file.'
+
+      - name: narrative profile --check
+        run: python3 scripts/record_narrative_profile_adoption.py --check --date 2026-10-07 --question-opening 'Do you adopt the non-governed narrative profile, requirement 032, at its row of the profile manifest?' --selection-label 'Adopt as recommended' --selection-description 'O1 to O7 as the packet recommends; Scope A is not read to cover it; the two known limitations stand.'
+
+      - name: rfc5 --selftest
+        run: python3 scripts/record_rfc5_project_documentation_act.py --selftest
+
+  # The slow selftests run beside the governance job, each on its own
+  # runner, so the wall clock is the longest job rather than the sum
+  # (syzygy-j5m0). Their steps are unchanged; CG-26 compares run lines, not
+  # jobs.
+  reconciliation-selftest:
+    name: checks (reconciliation selftest)
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          # Full history, as in the governance job: the selftests clone the
+          # checkout and resolve recorded commits.
+          fetch-depth: 0
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: check_spec_reconciliation --selftest
+        run: python3 scripts/check_spec_reconciliation.py --selftest
+
+  p115-selftest:
+    name: checks (P115 recording selftest)
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          # Full history, as in the governance job: the selftests clone the
+          # checkout and resolve recorded commits.
+          fetch-depth: 0
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: prepare_three_surface_poc_governedby_reference_recording --selftest
+        run: python3 scripts/prepare_three_surface_poc_governedby_reference_recording.py --selftest
+
+  readability-selftest:
+    name: checks (readability selftest)
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          # Full history, as in the governance job: the selftests clone the
+          # checkout and resolve recorded commits.
+          fetch-depth: 0
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: build_three_surface_poc_readability_successor --selftest
+        run: python3 scripts/build_three_surface_poc_readability_successor.py --selftest
+
+  # The one required check. Branch protection and the merge queue require a
+  # check named `checks`; this job reports it and passes only when every job
+  # above succeeded. `if: always()` makes a failed, skipped or cancelled job
+  # fail it instead of leaving it unreported. Never give another job the name
+  # `checks`.
+  checks:
+    runs-on: ubuntu-latest
+    needs: [governance, reconciliation-selftest, p115-selftest, readability-selftest]
+    if: ${{ always() }}
+    steps:
+      - name: every job passed
+        env:
+          GOVERNANCE: ${{ needs.governance.result }}
+          RECONCILIATION: ${{ needs.reconciliation-selftest.result }}
+          P115: ${{ needs.p115-selftest.result }}
+          READABILITY: ${{ needs.readability-selftest.result }}
+        run: |
+          echo "governance=${GOVERNANCE} reconciliation=${RECONCILIATION} p115=${P115} readability=${READABILITY}"
+          test "${GOVERNANCE}" = success
+          test "${RECONCILIATION}" = success
+          test "${P115}" = success
+          test "${READABILITY}" = success

@@ -2474,7 +2474,7 @@ def check(root: pathlib.Path, pkg: Package, version: str) -> int:
         block = render_aggregate(pkg, version, f["Date"], f["Review"], verdict, disposition)
         if aggregate_text(root).count(block) != 1:
             raise ValueError("aggregate block differs from its regeneration")
-        if latest and not pkg.applied(root):
+        if latest and not pkg.applied(root) and not _d10_applied_superseded(root, pkg):
             raise ValueError("the latest signed version is not applied to the tree")
         if latest and pkg.applied_options and (
                 pkg.applied_options(root) != parse_options(pkg, text)):
@@ -3695,6 +3695,22 @@ def selftest() -> int:
         print(f"{'PASS' if ok else 'FAIL'} {name}")
     print(f"{len(results)} fixtures, {failing} failing")
     return 0 if failing == 0 else 1
+
+
+
+def _d10_applied_superseded(root, pkg):
+    """True, after one SUPERSEDED line, when D10 is in effect in `root`: a signed
+    version's applied-tree comparison then no longer locks the files D10
+    replaced (RFC3-16 as D10 amends it). The record and aggregate checks above
+    still run. Without `d10_supersession.py` beside this file it is False."""
+    import importlib.util
+    helper = pathlib.Path(__file__).resolve().with_name("d10_supersession.py")
+    if not helper.is_file():
+        return False
+    spec = importlib.util.spec_from_file_location("d10_supersession", helper)
+    d10 = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(d10)
+    return d10.superseded(f"record_versioned_signoff.py --check {pkg.key}: applied-tree comparison", root)
 
 
 def main(argv: list[str]) -> int:

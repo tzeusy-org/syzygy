@@ -7,8 +7,10 @@
 > digest. The path, file name and title still say "candidate"; the act
 > record, not the path, decides status.
 >
-> **Amended by GOVERNANCE-SIMPLIFICATION-D10** (drafted 2026-11-17; in force from the owner's
-> act recorded in `.syzygy/governance/decisions/GOVERNANCE-SIMPLIFICATION-D10-ACT.md`): CC-IMPACT-5 and CC-IMPACT-6 lose their owner
+> **Amended by GOVERNANCE-SIMPLIFICATION-D10** (drafted 2026-11-17): this file,
+> `SHAPE-TO-SPEC-IMPACT-POLICY-CANDIDATE.md`, is in force at the bytes that act installs, from
+> the owner's act recorded in
+> `.syzygy/governance/decisions/GOVERNANCE-SIMPLIFICATION-D10-ACT.md`. CC-IMPACT-5 and CC-IMPACT-6 lose their owner
 > routes, and CC-IMPACT-7 is retired. CC-IMPACT-1 to CC-IMPACT-4 are
 > unchanged and, like the whole bar, agent-maintained under VIS-4.
 >

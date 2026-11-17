@@ -6,7 +6,7 @@ import { afterEach, beforeAll, describe, expect, it, vi } from 'vitest';
 import { AdmissionRecordError } from './admission-record.js';
 import { inForceRecords } from './consent-ports.js';
 import { loadRecorderForms, HEAD_FIELD_ALTERATION, PROSE_ALTERATIONS, renderClassAct, renderPolicyAct, renderRecorderAct } from './recorder-fixtures.testkit.js';
-import { DECISIONS_DIR, EGRESS_V2_INSTANCE, INSTANCES_DIR, POLICY_ACT_FILE, POLICY_PATH, createAdmissionRecordsPort, createPackageAdmissionReader, createPackageAdmissionRecordsPort, createPackagePolicyReader, readClassActState, readInForceEgress, readPolicyActChain, type PackageReaderFs } from './package-reader.js';
+import { D10_MANIFEST, D10_RECORD, DECISIONS_DIR, EGRESS_V2_INSTANCE, INSTANCES_DIR, POLICY_ACT_FILE, POLICY_PATH, createAdmissionRecordsPort, createPackageAdmissionReader, createPackageAdmissionRecordsPort, createPackagePolicyReader, readClassActState, readInForceEgress, readPolicyActChain, type PackageReaderFs } from './package-reader.js';
 
 // The recorder forms render once, before the file collects its tests: some tables render at collection (syzygy-bpyt.4.8).
 await loadRecorderForms();
@@ -996,6 +996,26 @@ describe('strict act reads', () => {
     expect(await classRead({ [CLASS]: `${act}\n<!--\nAct instant: 2026-10-03T00:00:01Z\n-->\n` })).toMatchObject({ state: 'refused' });
     expect(await classRead({ [CLASS]: act, [`${DECISIONS_DIR}/archive/RFC5-CLASS-WITHDRAWN.md`]: 'Revokes RFC5-PROJECT-DOCUMENTATION-AMEND-2026-10-03.' })).toMatchObject({ state: 'refused' });
     expect(await classRead({ [CLASS]: act, [`${DECISIONS_DIR}/sub/x.md`]: `Artifact identity: \`${MODULE}\`\n` })).toMatchObject({ state: 'refused' });
+  });
+
+  it('class act: stays ok once D10 replaces the module it bound, and only then (supersededByD10)', async () => {
+    const bound = sha(moduleText()), act = renderClassAct(bound, '2026-10-03', '2026-10-03T09:30:00Z');
+    const replaced = `${moduleText()}\nAmended by D10.\n`;
+    const manifest = (baseDigest: string): string => `# D10 MANIFEST\n[package]\n${'b'.repeat(64)}  ${D10_MANIFEST.replace('MANIFEST.txt', 'PROPOSAL.md')}\n[base]\n${baseDigest}  ${MODULE}\n`;
+    const record = (m: string): string => `# Governance simplification D10 — owner act\n\nThe owner performed the act by writing exactly:\n\n\`\`\`text\nADOPT GOVERNANCE SIMPLIFICATION D10: ${sha(m)}\n\`\`\`\n`;
+    const read = (extra: Record<string, string>) => readClassActState({ root: '/r', fs: memoryFs({ [MODULE]: replaced, [`${DECISIONS_DIR}/README.md`]: '# decisions\n', [CLASS]: act, ...extra }), now: AT });
+    const m = manifest(bound);
+    expect(await read({}), 'replaced without D10').toMatchObject({ state: 'refused' });
+    expect(await read({ [D10_MANIFEST]: m, [`${DECISIONS_DIR}/${D10_RECORD}`]: record(m) }), 'D10 recorded over the bound bytes').toMatchObject({ state: 'ok', moduleDigest: sha(replaced) });
+    expect(await read({ [D10_MANIFEST]: m }), 'manifest without the D10 record').toMatchObject({ state: 'refused' });
+    expect(await read({ [D10_MANIFEST]: m, [`${DECISIONS_DIR}/${D10_RECORD}`]: record(`${m}x`) }), 'record binding another manifest').toMatchObject({ state: 'refused' });
+    expect(await read({ [D10_MANIFEST]: m, [`${DECISIONS_DIR}/${D10_RECORD}`]: `${record(m)}${record(m)}` }), 'two binding lines').toMatchObject({ state: 'refused' });
+    const other = manifest('c'.repeat(64));
+    expect(await read({ [D10_MANIFEST]: other, [`${DECISIONS_DIR}/${D10_RECORD}`]: record(other) }), 'D10 replaced other bytes').toMatchObject({ state: 'refused' });
+    const twice = `${m}${'d'.repeat(64)}  ${MODULE}\n`;
+    expect(await read({ [D10_MANIFEST]: twice, [`${DECISIONS_DIR}/${D10_RECORD}`]: record(twice) }), 'two base rows for the module').toMatchObject({ state: 'refused' });
+    const packageOnly = `# D10 MANIFEST\n[package]\n${bound}  ${MODULE}\n[base]\n`;
+    expect(await read({ [D10_MANIFEST]: packageOnly, [`${DECISIONS_DIR}/${D10_RECORD}`]: record(packageOnly) }), 'a package row is not a base row').toMatchObject({ state: 'refused' });
   });
 
   it('egress: returns the in-force record\'s listed content classes, absent before any act and refused when the read is', async () => {

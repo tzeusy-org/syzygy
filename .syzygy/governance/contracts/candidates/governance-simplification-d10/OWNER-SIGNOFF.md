@@ -8,13 +8,16 @@ The governance simplification in `PROPOSAL.md`: you decide doctrine,
 secrets, writes into repositories you do not own, and exposure beyond the
 tailnet or release; agents decide the rest, record each adoption in
 `AGENT-ADOPTIONS.md`, report it, and revert it if you veto. One phrase adopts
-the whole package: doctrine amendment D10, the four successor files, the new
-adoption log and the retirements register, as bound by `MANIFEST.txt`.
+the whole package: doctrine amendment D10, the five successor files, the
+derived indexes regenerated from them, the new adoption log, your list of
+owned repositories (`decisions/OWNED-REPOSITORIES.md`, one row: Syzygy's own
+repository; only you change it) and the retirements register, as bound by
+`MANIFEST.txt`.
 
 ## The phrase
 
 ```text
-ADOPT GOVERNANCE SIMPLIFICATION D10: 9b8975f4c2fc80b59cfdc35ed926352c088390c9d91d287a57fa8f404759bc82
+ADOPT GOVERNANCE SIMPLIFICATION D10: b336fbc75d33201660d85e296d117ed2f9b84196a8449b7442366b3e6d66aebb
 ```
 
 The argument is the sha256 of `MANIFEST.txt`, computed by script when this
@@ -27,20 +30,23 @@ digest on this page is stale.
 ## The command the recording session runs with your words
 
 ```text
-python3 scripts/record_governance_simplification_d10.py --record --phrase "ADOPT GOVERNANCE SIMPLIFICATION D10: 9b8975f4c2fc80b59cfdc35ed926352c088390c9d91d287a57fa8f404759bc82"
+python3 scripts/record_governance_simplification_d10.py --record --phrase "ADOPT GOVERNANCE SIMPLIFICATION D10: b336fbc75d33201660d85e296d117ed2f9b84196a8449b7442366b3e6d66aebb"
 ```
 
 The recorder refuses unless the phrase is exactly the line above, its digest
 equals the current manifest, and every package file and install target still
-matches its manifest row. It then installs the files, appends row D10 to the
+matches its manifest row, and unless the working tree is clean. It then
+installs the files, appends row D10 to the
 doctrine amendment log, and writes the act record and its section in
-`ACCEPTANCE-ACT-RECORD.md`. `--check` confirms the record afterwards.
+`ACCEPTANCE-ACT-RECORD.md`; if any step fails it restores every file it
+wrote. `--check` confirms the record afterwards.
 
 ## Then, in the same change
 
-`FOLLOW-ON.md` F-0: regenerate the derived files, fix the checks that pin the
-replaced bytes, run the battery, commit, and tag
-`governance-simplification-d10-adopted-<date>`.
+Run the battery from `PROJECT-STATUS.md`, commit, and tag
+`governance-simplification-d10-adopted-<date>` (`FOLLOW-ON.md` F-0). The
+package already carries the derived files and the battery changes, so
+nothing needs fixing first.
 
 ## Review
 

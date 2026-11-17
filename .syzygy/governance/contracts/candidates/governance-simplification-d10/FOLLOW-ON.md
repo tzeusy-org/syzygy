@@ -5,28 +5,18 @@ is ordinary agent work, adopted with an `AGENT-ADOPTIONS.md` row and reported
 in its pull request. Each item is sized for one bead. F-0 belongs in the
 adoption change itself.
 
-## F-0 — Make the battery pass in the adoption change
+## F-0 — Clean-up after the act
 
-The recorder installs the files; the same change must then regenerate what
-derives from them and fix the checks that pin the old bytes, then run the
-battery from `PROJECT-STATUS.md`. Known pins on the replaced files
-[Observed: each script names the path]:
+Nothing in this item is needed for the battery: the adoption change itself
+carries the derived files, the two dossier readers' D10 acceptance and the
+supersession of the checks that hold performed acts to replaced bytes
+(`RETIREMENTS.md`, "Code that keeps working on adoption day"). What is left:
 
-- `scripts/check_governance.py`: the installed RFC 0003 and RFC 0005 modules
-  no longer match their rows in `ACTIVE-CONTRACT-MANIFEST.txt`, and CC-SPEC
-  and CC-IMPACT no longer match their performed digests (the CG-6 and CG-7
-  families). Add D10 as the successor link those checks read, or retire the
-  checks (F-5).
-- `scripts/check_governance.py` registers this package's `MANIFEST.txt`
-  `[base]` rows as current act-argument copies only until the act record
-  exists (CG-7e); after the act they are history and need a historical
-  registration or the check's retirement.
-- `scripts/record_polaris_understanding_adoption.py --check` admits a later
-  `vision.md` only under a reconciliation raw (its `VISION` constant).
-- `scripts/build_dossier_local_agent_acts.py` hashes `doctrine/security.md`.
-- Regenerate `DIRECTIVE-REGISTER.md`, the contract index and
-  `TASK-ROUTER.md`, and the context fixtures, with their builders.
-- Tag the commit `governance-simplification-d10-adopted-<date>`.
+- Tag the adoption commit `governance-simplification-d10-adopted-<date>`.
+- Once F-5 has removed the superseded checks and recorders, remove
+  `scripts/d10_supersession.py` and its call sites, and the D10 branch in
+  `package-reader.ts` (`supersededByD10`) once F-1 has rewritten its two
+  readers.
 
 ## F-1 — One consolidated dossier specification without consent gates
 
@@ -39,6 +29,20 @@ the refusal of non-public repositories. Keep: the pinned revision as a
 recorded fact; the run's declared provider in its record; secret screening;
 SEC-3's sandbox or attended session, chosen by the agent and recorded.
 Supersedes the open v1.7 delta, draft PR #817.
+
+The code that implements those gates goes with it (review finding R-5):
+
+- `packages/polaris-dossier/src/screen.ts` (`loadDossierScreen`): decide the
+  content class from the policy at its committed bytes, with no class act
+  (`readClassActState`), no policy-act chain (`readPolicyActChain`) and no
+  visibility read from observation-consent records (`pairVisibilityAt`).
+- `packages/polaris-generation-consent/src/package-reader.ts`:
+  `readClassActState`, `readPolicyActChain`, and the D10 acceptance added by
+  this package (`supersededByD10`), which the rewrite makes unnecessary.
+- `packages/polaris-dossier/src/launch-sources.ts` (`consentedRevisionsFor`,
+  `providerStatements`), `session-statement.ts` (`providerStatementGate`)
+  and `run-record.ts` (the required `providerStatement` and `startGates`
+  fields; the run records its declared provider instead).
 
 - `openspec/changes/polaris-dossier-local-agent-mode/specs/polaris-generation/spec.md`
 - `openspec/changes/polaris-dossier-launch-consent/specs/polaris-generation/spec.md`
@@ -62,7 +66,7 @@ Remove the record gates from the dossier path and fix the clone shape.
 FETCH_HEAD`, so it has one commit, no `origin` remote and no `main` branch;
 :364-365 run `preflight`, which must report `ready`; :385 runs `init`.]
 
-- `packages/polaris-dossier/src/preflight.ts`, `init.ts`, `launch.ts`,
+- The F-1 code above, then `packages/polaris-dossier/src/preflight.ts`, `init.ts`, `launch.ts`,
   `launch-cli.ts`, `launch-write-consent.ts`, `gate-sources.ts`,
   `reverify.ts`, `source-visibility-gate.ts`, `class-gate.ts`,
   `execution-choice.ts`, `execution-rule.ts` (`PERMITTING_ARM_ENABLED`),
@@ -86,7 +90,11 @@ and version (RFC4-3). `packages/polaris-dossier/src/gate-sources.ts`
 - In `scripts/check_governance.py`: the checks that only police retired
   ceremonies (CG-7a to CG-7h digest copies, CG-6, CG-2e, CG-15, the act
   registries, `CONTRACT_SUCCESSOR_CHAIN`), and the rationale strings that
-  quote the old VIS-4 (CG-4, CG-6, CG-16).
+  quote the old VIS-4 (CG-4, CG-6, CG-16). CG-7e and CG-7h already stop
+  running once D10 is in effect; this item deletes them.
+- The `PROJECT-STATUS.md` battery lines whose recorder prints
+  `SUPERSEDED` once D10 is in effect (`scripts/d10_supersession.py` names
+  them at its call sites).
 - `.syzygy/governance/contracts/candidates/ACCEPTANCE-PHRASE-REGISTRY.yaml`.
 - Runtime readers of digest-bound act records:
   `packages/polaris-generation-consent/src/package-reader.ts`
@@ -109,6 +117,8 @@ package `README.md` files.
 - `contracts/candidates/policy-candidates/NORMATIVE-CHANGE-WORKFLOW.md` and
   `contracts/candidates/HOW-TO-AUTHOR-A-SYZYGY-SPEC.md`: adoption by agent
   row; review as a norm.
+- `contracts/candidates/policy-candidates/TERM-REGISTRY.md` and any rendered label "dismissed by human decision":
+  *dismissed by decision* (trust-and-evidence.md as amended).
 
 ## F-8 — AGENTS.md and the skills
 

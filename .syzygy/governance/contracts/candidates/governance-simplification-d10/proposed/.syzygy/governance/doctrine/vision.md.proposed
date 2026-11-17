@@ -1,7 +1,7 @@
 # Vision
 
 Syzygy shows the owner the truth about their projects — what is intended,
-what is real, what work is under way — and, when a human triggers it,
+what is real, what work is under way — and, when someone triggers it,
 harnesses existing tools to close the difference. Showing the truth comes
 before everything else.
 
@@ -24,7 +24,8 @@ vision → spec → code hierarchy legible, truthful, and navigable, for the
 owner and for the agents that do the work.
 
 - **Three kinds of state stay apart.**
-  - **Desired state** — human-guided doctrine and specifications.
+  - **Desired state** — doctrine the owner adopts, and the specifications
+  agents adopt within it.
   - **Observed state** — code, tests, CI, and runtime evidence.
   - **Execution state** — work-scheduler records.
 - **Work is never proof.** Scheduled or completed work never shows that the
@@ -42,7 +43,7 @@ state feeds nothing back into the difference: work records are never proof.
 flowchart LR
     D["Desired state<br/>doctrine, specs"] --> G["Difference, shown<br/>(absences at V0, gaps at V1)"]
     O["Observed state<br/>code, tests, CI, runtime"] --> G
-    G -->|"human-triggered work"| A["Actuator toolchain"]
+    G -->|"deliberately triggered work"| A["Actuator toolchain"]
     A -->|"recorded as"| E["Execution state<br/>work-scheduler records"]
     A -->|"changes code, observed again"| O
 ```
@@ -102,10 +103,11 @@ autonomous about intent.
   secondary and cuttable.
   - Inward it does enforce: the integrity of its own claims, authority
     boundaries, and write contract (VIS-4–VIS-7) is non-negotiable.
-- **Not autonomous about intent.** People start the work, and the owner
-  holds doctrine and the four owner classes (VIS-4). Agents may work
-  unattended and adopt other changes, but only within VIS-4's bounds, always
-  recorded and reported, never by reinterpretation.
+- **Not autonomous about intent.** A person or an agent session starts the
+  work, never Syzygy by itself, and the owner holds doctrine and the four
+  owner classes (VIS-4). Agents may work unattended and adopt other changes,
+  but only within VIS-4's bounds, always recorded and reported, never by
+  reinterpretation.
 
 ## Non-negotiable rules
 
@@ -172,9 +174,12 @@ record it and report it, and the owner may veto any of it afterwards.
 - **The owner decides, and only the owner:**
   1. **Doctrine** — any change to `governance/doctrine/` (heart-and-soul).
   2. **Secrets** — anything that would weaken secret detection or SEC-5's
-     fail-closed rule, or let a secret be indexed, rendered or sent.
+     fail-closed rule, or let a secret be indexed, rendered or sent; and
+     running observed code outside a sandbox, where it can reach the owner's
+     credentials (SEC-3).
   3. **Writes to other people's repositories** — any write or push into a
-     repository the owner does not own (SEC-4).
+     repository the owner does not own, and any change to the owner's list
+     of the repositories the owner owns (SEC-4).
   4. **Exposure and release** — any network exposure beyond the owner's
      tailnet (SEC-1), and any release, deployment or multi-user operation.
 - **Agents decide everything else.** That includes behavioral specifications
@@ -182,7 +187,8 @@ record it and report it, and the owner may veto any of it afterwards.
   bars, topology, screening and classification policy within SEC-5, review
   practice, when implementation starts, fixes that change behavior,
   unattended agent work, which repositories Syzygy reads and which provider
-  receives their content (SEC-2), and running observed code under SEC-3.
+  receives their content (SEC-2), and building and running observed code in
+  a sandbox (SEC-3).
 - **How an agent adopts.** The change lands on the default branch with one
   row in `governance/decisions/AGENT-ADOPTIONS.md` naming the commit, what
   changed, why, and the command that reverts it; a specification version also
@@ -200,10 +206,14 @@ record it and report it, and the owner may veto any of it afterwards.
 - **Lower rules follow this one.** Where a contract, policy, specification,
   decision or direction requires an owner act, sign-off, consent or ruling for
   something this rule leaves to agents, this rule governs and an agent
-  adoption satisfies it, until the lower rule is amended.
+  adoption satisfies it, until the lower rule is amended. A lower rule that
+  asks for consent, a statement or a record before a repository is read, or
+  before its content goes to a declared provider, needs nothing at all: not
+  an adoption row, not a per-repository record.
 - *Violation:* an agent changing doctrine, weakening secret detection,
-  pushing into a repository the owner does not own, or exposing Syzygy beyond
-  the tailnet without the owner's decision; an agent adoption with no log row
+  pushing into a repository the owner does not own, adding a repository to
+  the owner's list, running observed code outside a sandbox, or exposing
+  Syzygy beyond the tailnet without the owner's decision; an agent adoption with no log row
   or no revert command; an agent editing a spec to match code it just wrote
   without saying so in the row; a vetoed change adopted again without the
   owner.

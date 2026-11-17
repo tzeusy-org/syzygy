@@ -514,12 +514,13 @@ async function readClassAct(fs: PackageReaderFs, root: string): Promise<{ readon
   let module: string;
   try { module = await fs.readFile(path.join(root, CLASS_MODULE)); } catch { return refuse(); }
   const act = parseActRecord(record.text, record.form, CLASS_FAMILY.instant);
-  if (act.digest !== sha256(module)) refuse();
+  if (act.digest !== sha256(module) && !(await supersededByD10(fs, root, CLASS_MODULE, act.digest))) refuse();
   return { act, moduleDigest: sha256(module) };
 }
 /** The RFC5-14 project-documentation class amendment act at `now`: `ok` when the recorder's record exists in form, its argument is the
  * sha256 of the installed RFC-0005 module and its instant is not after `now`; `absent` when none is recorded or it is not in force
- * yet; `refused` for any bad form, a file elsewhere in the decisions tree that names it, or an installed module that no longer matches. */
+ * yet; `refused` for any bad form, a file elsewhere in the decisions tree that names it, or an installed module that no longer matches
+ * (unless D10 replaced exactly the bytes the act bound: `supersededByD10`). */
 export type ClassActRead = { readonly act: ParsedAct; readonly moduleDigest: string };
 export function readClassActState(options: StrictReadOptions): Promise<ActState<ClassActRead>> {
   return strict<ClassActRead>(async () => {
@@ -739,6 +740,32 @@ function parseActRecord(text: string, form: ActForm, instant: InstantLabel): Par
   return { file: form.file, identity, type, artifact, project, digest, date, recordedAt: actInstant(text, date, instant), supersession: supersessionText(text), text };
 }
 
+/** Doctrine amendment D10, the governance simplification (scripts/record_governance_simplification_d10.py), replaces whole files that
+ * earlier acts bound by digest, and under RFC3-16 as it amends a later edit is a new adoption, not a broken one: the earlier act stays in
+ * force. So a file whose bytes differ from what an earlier act bound still counts as bound when D10 is recorded and replaced exactly
+ * those bytes: the D10 dedicated record carries exactly one binding line, its argument is the sha256 of the D10 manifest, and that
+ * manifest's `[base]` section holds one row for `file` whose digest is `boundDigest`. Nothing else in either file is read. */
+export const D10_RECORD = 'GOVERNANCE-SIMPLIFICATION-D10-ACT.md';
+export const D10_MANIFEST = '.syzygy/governance/contracts/candidates/governance-simplification-d10/MANIFEST.txt';
+const D10_LABEL = 'ADOPT GOVERNANCE SIMPLIFICATION D10';
+export async function supersededByD10(fs: PackageReaderFs, root: string, file: string, boundDigest: string): Promise<boolean> {
+  let record: string, manifest: string;
+  try {
+    record = await fs.readFile(path.join(root, DECISIONS_DIR, D10_RECORD));
+    manifest = await fs.readFile(path.join(root, D10_MANIFEST));
+  } catch { return false; }
+  const binding = record.split('\n').filter(line => line.includes(D10_LABEL));
+  if (binding.length !== 1 || binding[0] !== `${D10_LABEL}: ${sha256(manifest)}`) return false;
+  const rows: string[] = [];
+  let section = '';
+  for (const line of manifest.split('\n')) {
+    if (/^\[[a-z]+\]$/.test(line)) { section = line; continue; }
+    const row = /^([0-9a-f]{64}|absent) {2}(\S[^\n]*)$/.exec(line);
+    if (section === '[base]' && row !== null && row[2] === file) rows.push(row[1]!);
+  }
+  return rows.length === 1 && rows[0] === boundDigest;
+}
+
 /** Why the artifact's bound-files table does not hold for `bound`, or null when every listed file still hashes to its row. */
 async function boundMismatch(fs: PackageReaderFs, root: string, artifact: string, bound: readonly string[]): Promise<string | null> {
   const HEAD = '| File | SHA-256 |';
@@ -754,7 +781,7 @@ async function boundMismatch(fs: PackageReaderFs, root: string, artifact: string
   for (const [file, digest] of rows) {
     let text: string;
     try { text = await fs.readFile(path.join(root, file)); } catch { return `the bound file ${file} cannot be read`; }
-    if (sha256(text) !== digest) return `the bytes of ${file} differ from the digest the act's artifact binds`;
+    if (sha256(text) !== digest && !(await supersededByD10(fs, root, file, digest))) return `the bytes of ${file} differ from the digest the act's artifact binds`;
   }
   return null;
 }

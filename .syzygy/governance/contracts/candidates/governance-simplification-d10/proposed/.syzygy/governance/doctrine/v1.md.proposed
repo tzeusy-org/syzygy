@@ -86,11 +86,11 @@ of work exists. This is directional; RFCs and specs make it concrete.
 
 - **Gap computation** between declared intent and observed state, surfaced as
   navigable objects with an upward path: evidence may indict the spec.
-- **Human-triggered propagation at full breadth** — from a tuned vision or
-  spec, dispatch scheduled work for workers to materialize. "Specifications
-  for features, beads for bugs": a bug goes straight to work only when an
-  existing spec already defines the correct behavior; otherwise it is a spec
-  gap first.
+- **Deliberately triggered propagation at full breadth** — from a tuned
+  vision or spec, dispatch scheduled work for workers to materialize.
+  "Specifications for features, beads for bugs": a bug goes straight to work
+  only when an existing spec already defines the correct behavior; otherwise
+  it is a spec gap first.
 - **Provenance surfaces** — structured summaries linking each unit of work to
   the spec and vision that motivated it.
 
@@ -117,8 +117,9 @@ open-source public second, with no stack chosen by doctrine.
     access limited to the owner's own devices on the owner's tailnet (SEC-1).
   - Remote backing dependencies fall under SEC-2's declared-provider rule.
 - **Observed code:** Syzygy never runs it; an agent session may build and run
-  it in a sandbox, or in the owner's own attended session, without a per-run
-  owner choice (SEC-3).
+  it in a sandbox without a per-run owner choice, and outside a sandbox only
+  in the owner's own attended session on the owner's recorded choice for
+  that run (SEC-3).
 - **Audience:** the owner's portfolio practice first, the open-source public
   second.
   - Substrate tools are adapters (architecture.md); the designated initial

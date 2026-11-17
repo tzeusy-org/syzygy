@@ -47,7 +47,7 @@ flowchart LR
 ```
 
 **SEC-2 — Portfolio data leaves owner-controlled infrastructure only for a
-run's declared provider, and secrets never leave.** Repository content, or
+declared provider.** Secrets never leave. Repository content, or
 anything derived from it, is sent to a store or service the owner does not
 control only when that service is a provider declared for the run. No
 per-project or per-repository consent is needed.
@@ -72,8 +72,8 @@ per-project or per-repository consent is needed.
   secret in a prompt.
 
 **SEC-3 — Observed code is untrusted, everywhere.** Syzygy itself never runs
-observed-project code; agent sessions may build and run it, contained as
-below, without an owner choice per run or per project.
+observed-project code. Agents may build and run it in a sandbox without
+asking; running it outside a sandbox is the owner's decision.
 
 - **It is untrusted whoever owns the project.**
 - **The daemon never executes observed code**, and neither does any other
@@ -81,35 +81,45 @@ below, without an owner choice per run or per project.
 - **What this binds:** Syzygy, every process Syzygy launches or schedules,
   and every instruction a Syzygy feature gives an agent (a brief, prompt,
   skill or work item).
-- **Where observed code may run:**
-  - **In a sandbox** — an execution profile: default-deny, isolated
-    credentials (no Syzygy credential and none of the owner's readable),
-    declared network access, resource limits, and gates on destructive
-    operations. Any agent session, attended or not, may be told to run
-    observed code there.
-  - **In the owner's attended session** — a session on the owner's own host
-    that the owner started and attends, being present to see and stop what it
-    does. The code runs with the owner's own credentials and network,
-    including Syzygy's endpoints and any Syzygy credential readable on that
-    host, and nothing contains it: it gives none of a sandbox's guarantees.
-    The owner accepted that risk (D9). Syzygy never gives this instruction to
-    a session it started or to one left running unattended, and never asks
-    for a process that outlives the session. Work the session hands to its
-    own subagents is part of the session.
-- **Who decides:** the agent, not the owner. Whether to build or run, and
-  where, is recorded in the run's record before the instruction is given.
+- **In a sandbox, the agent decides.** A sandbox is an execution profile:
+  default-deny, isolated credentials (no Syzygy credential and none of the
+  owner's readable), declared network access, resource limits, and gates on
+  destructive operations. Any agent session, attended or not, may be told to
+  build and run observed code there. Whether to, and in which profile, is
+  the agent's call, recorded in the run's record before the instruction is
+  given; no owner choice per run or per project is needed.
+- **Outside a sandbox, the owner decides (VIS-4, secrets).** Observed code
+  running outside a sandbox can reach the owner's credentials, so it is an
+  owner decision of the secrets class. A Syzygy instruction may let a session
+  build and run observed code outside a profile only when three things hold:
+  the session is on the owner's own host; the owner started it and attends
+  it, being present to see and stop what it does; and the owner has recorded
+  a choice for that one run, naming what the instruction covers, before
+  Syzygy issues the instruction. A standing or per-project record does not
+  qualify. Syzygy never gives this instruction to a session it started or to
+  one left running unattended, and never asks for a process that outlives
+  the session. Work the session hands to its own subagents is part of the
+  session.
+- **What the permitted case costs:** the session runs with the owner's own
+  credentials and network, including Syzygy's endpoints and any Syzygy
+  credential readable on that host. Observed code it runs can reach them,
+  and can change any file the owner can, the clone it runs in included.
+  Nothing contains it, so it gives none of a profile's guarantees. The owner
+  accepted that risk (D9) over two alternatives: allowing execution only in
+  a sandbox, and forbidding it.
 - **Wherever it runs:** every claim that rests on that execution is labelled
   Inferred, never Observed; every command the session reports having run is
   disclosed, as the session's own report; and Syzygy keeps every credential
   it holds for its typed adapters where neither the session nor any process
   it starts can read it at the operating-system level, for as long as any of
   them runs.
-- **The owner's trade-off:** observed code may be built and run by agents
-  without a per-run owner choice.
+- **The owner's trade-off:** observed code may be built and run by agents in
+  a sandbox without a per-run owner choice.
 - *Violation:* the daemon executing observed code; a sandbox that inherits
-  the host user's ambient credentials "for convenience"; an unattended
-  session told to run observed code outside a sandbox; a claim that rests on
-  observed-code execution rendered Observed.
+  the host user's ambient credentials "for convenience"; Syzygy instructing a
+  session to run observed code outside a sandbox before the owner's choice
+  for that run is recorded, on a standing record, or in an unattended
+  session; a claim that rests on observed-code execution rendered Observed.
 
 **SEC-4 — Writes are consented, attributed, and revertable.** Syzygy writes
 or pushes into a repository the owner does not own only with the owner's
@@ -118,14 +128,19 @@ repositories need none. Every write can be traced and undone.
 
 - **Consent first, where it applies:** a write or push into a repository the
   owner does not own needs the owner's recorded consent for that repository
-  (VIS-4). Which repositories the owner owns is declared in Syzygy's
-  configuration; an undeclared repository counts as not owned.
+  (VIS-4).
+- **Which repositories the owner owns is the owner's list.** It lives in
+  `.syzygy/governance/decisions/OWNED-REPOSITORIES.md`, and only the owner
+  changes it: adding a repository, removing one or changing a row is itself
+  an owner decision of this class (VIS-4). An agent never edits the list,
+  and a repository not on it counts as not owned.
 - **Every write** is attributed to Syzygy, atomic, and individually
   revertable.
 - **No silent overwrite:** Syzygy never overwrites a governance artifact it
   did not author without surfacing the conflict.
 - *Violation:* a push into a repository the owner does not own without the
-  owner's consent; first-pass doctrine drafting silently replacing an
+  owner's consent; an agent adding a repository to the owner's list;
+  first-pass doctrine drafting silently replacing an
   existing `.syzygy/governance/` tree.
 
 **SEC-5 — Secrets are never indexed.** Anything that matches the declared

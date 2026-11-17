@@ -170,6 +170,17 @@ transcribed. Consequences that bind:
   `unadopted-draft`).
 - A vetoed adoption is reverted, and the artifact's effective status is that
   of the adoption before it.
+- **How other clauses read this one.** Wherever another contract clause
+  says an artifact, policy, entry, bound, judgment or amendment is honored
+  only through an "effective owner act under RFC3-16(a)", an "owner-act
+  record", an "owner decision", an "owner ruling" or "owner sign-off", it
+  reads "an adoption record under RFC3-16 as amended": an agent adoption row,
+  or an owner decision record where the matter falls in an owner class
+  (VIS-4). Wherever a clause requires a consent record before a repository is
+  observed or before content goes to a provider, it reads as RFC3-7 and
+  RFC5-12 as amended: observation needs no record, and egress needs the
+  provider's declaration in the run's own record. Write consent, secret
+  screening and the other owner classes are unchanged.
 
 **Scope.** This clause and the RFC3-16(a) predicate govern
 **authorization-bearing and normative artifacts** — the adoptable class,

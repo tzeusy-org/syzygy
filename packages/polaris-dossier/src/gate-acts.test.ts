@@ -297,6 +297,28 @@ describe('the sitting\'s acts fail closed', () => {
       expect(await sources(root).d9()).toEqual({ state: 'refused', why: `the bytes of ${file} differ from the digest the act's artifact binds` });
     }
   });
+  it('keep D9 once D10 replaces the doctrine files it binds, at exactly the bound bytes (supersededByD10)', async () => {
+    const MANIFEST = '.syzygy/governance/contracts/candidates/governance-simplification-d10/MANIFEST.txt';
+    const RECORD = `${DECISIONS_DIR}/GOVERNANCE-SIMPLIFICATION-D10-ACT.md`;
+    const digestOf = (root: string, file: string): string => createHash('sha256').update(fs.readFileSync(path.join(root, file))).digest('hex');
+    const recordD10 = (root: string, base: string): void => {
+      fs.mkdirSync(path.dirname(path.join(root, MANIFEST)), { recursive: true });
+      const manifest = `# D10 MANIFEST\n[package]\n[base]\n${base}`;
+      fs.writeFileSync(path.join(root, MANIFEST), manifest);
+      const sha = createHash('sha256').update(manifest).digest('hex');
+      fs.writeFileSync(path.join(root, RECORD), `# Governance simplification D10 — owner act\n\n\`\`\`text\nADOPT GOVERNANCE SIMPLIFICATION D10: ${sha}\n\`\`\`\n`);
+    };
+    const root = world(['d9-in-force']);
+    const base = `${digestOf(root, SECURITY)}  ${SECURITY}\n${digestOf(root, V1)}  ${V1}\n`;
+    fs.appendFileSync(path.join(root, SECURITY), '\nD10\n');
+    fs.appendFileSync(path.join(root, V1), '\nD10\n');
+    recordD10(root, base);
+    expect(await sources(root).d9()).toEqual({ state: 'ok', record: 'D9-IN-FORCE-OPERATOR-AGENT-2026-10-07' });
+    const other = world(['d9-in-force']);
+    fs.appendFileSync(path.join(other, SECURITY), '\nD10\n');
+    recordD10(other, `${'c'.repeat(64)}  ${SECURITY}\n`);
+    expect(await sources(other).d9()).toEqual({ state: 'refused', why: `the bytes of ${SECURITY} differ from the digest the act's artifact binds` });
+  });
   it('refuse the reading once the direction file changes, and when it is missing', async () => {
     const root = world(['rfc7-20-reading-in-force']);
     fs.appendFileSync(path.join(root, DIRECTION), '\nedit\n');
