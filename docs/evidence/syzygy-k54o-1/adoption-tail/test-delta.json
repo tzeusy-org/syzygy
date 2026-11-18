@@ -1,0 +1,234 @@
+{
+  "sourceBase": "182a703b2dbae97a16ae7334cd84a32b634cedc0",
+  "definition": "New explicit case identities in the two existing Python selftests; parameter cases counted as executed, unlike the separate source-package TypeScript AST ledger.",
+  "added": 44,
+  "changed": 0,
+  "removed": 0,
+  "newReconciliationRefusals": 38,
+  "newReconciliationControls": 2,
+  "newUnionRefusals": 4,
+  "typeScriptTestChanges": 0,
+  "cases": [
+    {
+      "id": "declared-why-missing",
+      "kind": "refusal mutation",
+      "sourceFile": "scripts/check_spec_reconciliation.py"
+    },
+    {
+      "id": "declared-why-whitespace",
+      "kind": "refusal mutation",
+      "sourceFile": "scripts/check_spec_reconciliation.py"
+    },
+    {
+      "id": "declared-revert-mainline-missing",
+      "kind": "refusal mutation",
+      "sourceFile": "scripts/check_spec_reconciliation.py"
+    },
+    {
+      "id": "declared-revert-mainline-wrong",
+      "kind": "refusal mutation",
+      "sourceFile": "scripts/check_spec_reconciliation.py"
+    },
+    {
+      "id": "declared-row-missing",
+      "kind": "refusal mutation",
+      "sourceFile": "scripts/check_spec_reconciliation.py"
+    },
+    {
+      "id": "declared-row-duplicate",
+      "kind": "refusal mutation",
+      "sourceFile": "scripts/check_spec_reconciliation.py"
+    },
+    {
+      "id": "declared-row-shape",
+      "kind": "refusal mutation",
+      "sourceFile": "scripts/check_spec_reconciliation.py"
+    },
+    {
+      "id": "declared-commit-mismatch",
+      "kind": "refusal mutation",
+      "sourceFile": "scripts/check_spec_reconciliation.py"
+    },
+    {
+      "id": "declared-tag-mismatch",
+      "kind": "refusal mutation",
+      "sourceFile": "scripts/check_spec_reconciliation.py"
+    },
+    {
+      "id": "declared-revert-mismatch",
+      "kind": "refusal mutation",
+      "sourceFile": "scripts/check_spec_reconciliation.py"
+    },
+    {
+      "id": "declared-scope-missing",
+      "kind": "refusal mutation",
+      "sourceFile": "scripts/check_spec_reconciliation.py"
+    },
+    {
+      "id": "declared-spec-reference-missing",
+      "kind": "refusal mutation",
+      "sourceFile": "scripts/check_spec_reconciliation.py"
+    },
+    {
+      "id": "declared-policy-reference-missing",
+      "kind": "refusal mutation",
+      "sourceFile": "scripts/check_spec_reconciliation.py"
+    },
+    {
+      "id": "declared-d10-invalid",
+      "kind": "refusal mutation",
+      "sourceFile": "scripts/check_spec_reconciliation.py"
+    },
+    {
+      "id": "declared-spec-changed",
+      "kind": "refusal mutation",
+      "sourceFile": "scripts/check_spec_reconciliation.py"
+    },
+    {
+      "id": "declared-policy-changed",
+      "kind": "refusal mutation",
+      "sourceFile": "scripts/check_spec_reconciliation.py"
+    },
+    {
+      "id": "declared-applicability-changed",
+      "kind": "refusal mutation",
+      "sourceFile": "scripts/check_spec_reconciliation.py"
+    },
+    {
+      "id": "declared-union-changed",
+      "kind": "refusal mutation",
+      "sourceFile": "scripts/check_spec_reconciliation.py"
+    },
+    {
+      "id": "declared-composition-control",
+      "kind": "control",
+      "sourceFile": "scripts/check_spec_reconciliation.py"
+    },
+    {
+      "id": "declared-compose-added-section",
+      "kind": "refusal mutation",
+      "sourceFile": "scripts/check_spec_reconciliation.py"
+    },
+    {
+      "id": "declared-compose-extra-id",
+      "kind": "refusal mutation",
+      "sourceFile": "scripts/check_spec_reconciliation.py"
+    },
+    {
+      "id": "declared-compose-duplicate-id",
+      "kind": "refusal mutation",
+      "sourceFile": "scripts/check_spec_reconciliation.py"
+    },
+    {
+      "id": "declared-compose-missing-id",
+      "kind": "refusal mutation",
+      "sourceFile": "scripts/check_spec_reconciliation.py"
+    },
+    {
+      "id": "declared-compose-noncanonical-header",
+      "kind": "refusal mutation",
+      "sourceFile": "scripts/check_spec_reconciliation.py"
+    },
+    {
+      "id": "declared-compose-unexpected-rename",
+      "kind": "refusal mutation",
+      "sourceFile": "scripts/check_spec_reconciliation.py"
+    },
+    {
+      "id": "declared-compose-hidden-delta",
+      "kind": "refusal mutation",
+      "sourceFile": "scripts/check_spec_reconciliation.py"
+    },
+    {
+      "id": "declared-compose-duplicate-section",
+      "kind": "refusal mutation",
+      "sourceFile": "scripts/check_spec_reconciliation.py"
+    },
+    {
+      "id": "declared-compose-bom",
+      "kind": "refusal mutation",
+      "sourceFile": "scripts/check_spec_reconciliation.py"
+    },
+    {
+      "id": "declared-compose-crlf",
+      "kind": "refusal mutation",
+      "sourceFile": "scripts/check_spec_reconciliation.py"
+    },
+    {
+      "id": "declared-compose-fenced-header",
+      "kind": "refusal mutation",
+      "sourceFile": "scripts/check_spec_reconciliation.py"
+    },
+    {
+      "id": "declared-historical-control",
+      "kind": "control",
+      "sourceFile": "scripts/check_spec_reconciliation.py"
+    },
+    {
+      "id": "declared-historical-partial-directory",
+      "kind": "refusal mutation",
+      "sourceFile": "scripts/check_spec_reconciliation.py"
+    },
+    {
+      "id": "declared-historical-partial-row",
+      "kind": "refusal mutation",
+      "sourceFile": "scripts/check_spec_reconciliation.py"
+    },
+    {
+      "id": "declared-historical-partial-act",
+      "kind": "refusal mutation",
+      "sourceFile": "scripts/check_spec_reconciliation.py"
+    },
+    {
+      "id": "declared-historical-partial-subject-1",
+      "kind": "refusal mutation",
+      "sourceFile": "scripts/check_spec_reconciliation.py"
+    },
+    {
+      "id": "declared-historical-partial-subject-2",
+      "kind": "refusal mutation",
+      "sourceFile": "scripts/check_spec_reconciliation.py"
+    },
+    {
+      "id": "declared-historical-partial-subject-3",
+      "kind": "refusal mutation",
+      "sourceFile": "scripts/check_spec_reconciliation.py"
+    },
+    {
+      "id": "declared-historical-dangling-directory",
+      "kind": "refusal mutation",
+      "sourceFile": "scripts/check_spec_reconciliation.py"
+    },
+    {
+      "id": "declared-historical-dangling-act",
+      "kind": "refusal mutation",
+      "sourceFile": "scripts/check_spec_reconciliation.py"
+    },
+    {
+      "id": "declared-historical-dangling-policy",
+      "kind": "refusal mutation",
+      "sourceFile": "scripts/check_spec_reconciliation.py"
+    },
+    {
+      "id": "a declared-source warrant added",
+      "kind": "refusal mutation",
+      "sourceFile": "scripts/build_polaris_dependency_unions.py"
+    },
+    {
+      "id": "the declared-source union edited",
+      "kind": "refusal mutation",
+      "sourceFile": "scripts/build_polaris_dependency_unions.py"
+    },
+    {
+      "id": "the declared-source union removed",
+      "kind": "refusal mutation",
+      "sourceFile": "scripts/build_polaris_dependency_unions.py"
+    },
+    {
+      "id": "the declared-source specification removed",
+      "kind": "refusal mutation",
+      "sourceFile": "scripts/build_polaris_dependency_unions.py"
+    }
+  ],
+  "verification": "Historical executions remain bound to421dc8/1560b6/bc5d7c; final exact-head comprehensive execution remains pending."
+}

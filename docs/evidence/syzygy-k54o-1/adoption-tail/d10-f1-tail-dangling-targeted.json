@@ -1,0 +1,155 @@
+{
+  "subjectCommit": "bc5d7c0494b42a83f1cbfa723dfaafc197bfe3de",
+  "cases": [
+    {
+      "mutant": "declared-historical-control",
+      "path": "openspec/changes/dossier-declared-source-model",
+      "old": "<no amendment, row, subjects or D10 act>",
+      "new": "<unchanged>",
+      "expected": "inactive; no phantom R1/R2 subjects",
+      "failed": [],
+      "outcome": "held"
+    },
+    {
+      "mutant": "declared-historical-partial-directory",
+      "path": "openspec/changes/dossier-declared-source-model",
+      "old": "<absent>",
+      "new": "<empty directory>",
+      "source_sha256": null,
+      "expected": "R1/R2 refusal; no amendment",
+      "failed": [
+        "declared-source: D10 record does not verify; applicability Unknown",
+        "declared-source: expected one seven-column A-4 row in `.syzygy/governance/decisions/AGENT-ADOPTIONS.md`",
+        "declared-source: `openspec/changes/dossier-declared-source-model/proposed/polaris-generation/spec.md` differs from the reviewed v2.0 subject; applicability Unknown",
+        "declared-source: `.syzygy/governance/policies/POLARIS-DOSSIER-DECLARED-SOURCE-POLICY-v1.json` differs from the reviewed v2.0 subject; applicability Unknown",
+        "declared-source: `.syzygy/governance/decisions/DOSSIER-DECLARED-SOURCE-CONTRACT-APPLICABILITY.md` differs from the reviewed v2.0 subject; applicability Unknown"
+      ],
+      "outcome": "killed"
+    },
+    {
+      "mutant": "declared-historical-partial-row",
+      "path": ".syzygy/governance/decisions/AGENT-ADOPTIONS.md",
+      "old": "# Agent adoptions\n\nEvery change an agent adopts under VIS-4 (doctrine `vision.md`, as amended\nby D10), one row each. Rows are appended and never edited. A veto is a new\nrow that reverts an earlier one. The report to the owner is the pull request\nor session summary that links the row.\n\nOwner-class changes (doctrine; secrets; writes into repositories the owner\ndoes not own; exposure beyond the tailnet, release, deployment, multi-user)\nare not adopted here: the owner decides them, and the decision is recorded\nas the owner's words with the commit that applies it.\n\nHow to add a row: land the change on the default branch, then append one\nrow naming the commit, what changed, why, and the command that reverts it.\nA specification version also gets a git tag, named in the last column.\n\n| Id | Date | Commit | What changed | Why | Revert | Tag |\n|---|---|---|---|---|---|---|\n| A-1 | 2026-11-18 | `dd932da5a` | CC-REV-2 names the CC-IMPACT-6 recorded spec lag as its one exception | The two clauses contradicted each other once D10 amended CC-IMPACT-6 (R-D10-PACKAGE-RESUME-1) | `git revert dd932da5a` (reverts A-2 too) | \u2014 |\n| A-2 | 2026-11-18 | `dd932da5a` | `d10_supersession.py` treats D10 as in effect only when its record verifies | A bare or forged record file, or a recordless install, silenced the superseded checks (R-D10-PACKAGE-RESUME-1) | `git revert dd932da5a` (reverts A-1 too) | \u2014 |\n| A-3 | 2026-11-18 | `f3298b88b` | `supersededByD10` also requires the replaced file to hold exactly the bytes D10 installed; dossier tests follow the adopted doctrine | A later doctrine or RFC-0005 edit kept the D9 and class acts in force; 30 tests failed on the adopted tree | `git revert f3298b88b` | \u2014 |\n",
+      "new": "| A-4 | 2026-11-18 | `182a703b2dbae97a16ae7334cd84a32b634cedc0` | [specification2.0](https://github.com/tzeusy-org/syzygy/blob/182a703b2dbae97a16ae7334cd84a32b634cedc0/openspec/changes/dossier-declared-source-model/proposed/polaris-generation/spec.md); [screening policy](https://github.com/tzeusy-org/syzygy/blob/182a703b2dbae97a16ae7334cd84a32b634cedc0/.syzygy/governance/policies/POLARIS-DOSSIER-DECLARED-SOURCE-POLICY-v1.json); [four scoped N/A judgments](https://github.com/tzeusy-org/syzygy/blob/182a703b2dbae97a16ae7334cd84a32b634cedc0/.syzygy/governance/decisions/DOSSIER-DECLARED-SOURCE-CONTRACT-APPLICABILITY.md) | Replace retired dossier consent gates with declared pinned local sources under D10, preserving SEC-5 and the reviewed034\u2013036 behavior; F-3/F-4/F-5 remain separate | `git revert -m 1 182a703b2dbae97a16ae7334cd84a32b634cedc0` ([tail preparation](https://github.com/tzeusy-org/syzygy/pull/825)) | `polaris-dossier-declared-source-model-v2.0` |\n",
+      "source_sha256": "8a4667a7cc9a10934be06a6ec6546810d05248481dd3078b089ffe26dcf8fa38",
+      "expected": "R1/R2 refusal; no amendment",
+      "failed": [
+        "declared-source: D10 record does not verify; applicability Unknown",
+        "declared-source: `openspec/changes/dossier-declared-source-model/proposed/polaris-generation/spec.md` differs from the reviewed v2.0 subject; applicability Unknown",
+        "declared-source: `.syzygy/governance/policies/POLARIS-DOSSIER-DECLARED-SOURCE-POLICY-v1.json` differs from the reviewed v2.0 subject; applicability Unknown",
+        "declared-source: `.syzygy/governance/decisions/DOSSIER-DECLARED-SOURCE-CONTRACT-APPLICABILITY.md` differs from the reviewed v2.0 subject; applicability Unknown"
+      ],
+      "outcome": "killed"
+    },
+    {
+      "mutant": "declared-historical-partial-act",
+      "path": ".syzygy/governance/decisions/GOVERNANCE-SIMPLIFICATION-D10-ACT.md",
+      "old": "<absent>",
+      "new": "Synthetic invalid presence fixture; grants no authority.\n",
+      "source_sha256": "d1cf9bdd191ea1140d960ac22c0265c34ae534b4e5fa1deb14d4c2e910d27bfe",
+      "expected": "R1/R2 refusal; no amendment",
+      "failed": [
+        "declared-source: D10 record does not verify; applicability Unknown",
+        "declared-source: expected one seven-column A-4 row in `.syzygy/governance/decisions/AGENT-ADOPTIONS.md`",
+        "declared-source: `openspec/changes/dossier-declared-source-model/proposed/polaris-generation/spec.md` differs from the reviewed v2.0 subject; applicability Unknown",
+        "declared-source: `.syzygy/governance/policies/POLARIS-DOSSIER-DECLARED-SOURCE-POLICY-v1.json` differs from the reviewed v2.0 subject; applicability Unknown",
+        "declared-source: `.syzygy/governance/decisions/DOSSIER-DECLARED-SOURCE-CONTRACT-APPLICABILITY.md` differs from the reviewed v2.0 subject; applicability Unknown"
+      ],
+      "outcome": "killed"
+    },
+    {
+      "mutant": "declared-historical-partial-subject-1",
+      "path": "openspec/changes/dossier-declared-source-model/proposed/polaris-generation/spec.md",
+      "old": "<absent>",
+      "new": "Synthetic invalid presence fixture; grants no authority.\n",
+      "source_sha256": "d1cf9bdd191ea1140d960ac22c0265c34ae534b4e5fa1deb14d4c2e910d27bfe",
+      "expected": "R1/R2 refusal; no amendment",
+      "failed": [
+        "declared-source: D10 record does not verify; applicability Unknown",
+        "declared-source: expected one seven-column A-4 row in `.syzygy/governance/decisions/AGENT-ADOPTIONS.md`",
+        "declared-source: `openspec/changes/dossier-declared-source-model/proposed/polaris-generation/spec.md` differs from the reviewed v2.0 subject; applicability Unknown",
+        "declared-source: `.syzygy/governance/policies/POLARIS-DOSSIER-DECLARED-SOURCE-POLICY-v1.json` differs from the reviewed v2.0 subject; applicability Unknown",
+        "declared-source: `.syzygy/governance/decisions/DOSSIER-DECLARED-SOURCE-CONTRACT-APPLICABILITY.md` differs from the reviewed v2.0 subject; applicability Unknown"
+      ],
+      "outcome": "killed"
+    },
+    {
+      "mutant": "declared-historical-partial-subject-2",
+      "path": ".syzygy/governance/policies/POLARIS-DOSSIER-DECLARED-SOURCE-POLICY-v1.json",
+      "old": "<absent>",
+      "new": "Synthetic invalid presence fixture; grants no authority.\n",
+      "source_sha256": "d1cf9bdd191ea1140d960ac22c0265c34ae534b4e5fa1deb14d4c2e910d27bfe",
+      "expected": "R1/R2 refusal; no amendment",
+      "failed": [
+        "declared-source: D10 record does not verify; applicability Unknown",
+        "declared-source: expected one seven-column A-4 row in `.syzygy/governance/decisions/AGENT-ADOPTIONS.md`",
+        "declared-source: `openspec/changes/dossier-declared-source-model/proposed/polaris-generation/spec.md` differs from the reviewed v2.0 subject; applicability Unknown",
+        "declared-source: `.syzygy/governance/policies/POLARIS-DOSSIER-DECLARED-SOURCE-POLICY-v1.json` differs from the reviewed v2.0 subject; applicability Unknown",
+        "declared-source: `.syzygy/governance/decisions/DOSSIER-DECLARED-SOURCE-CONTRACT-APPLICABILITY.md` differs from the reviewed v2.0 subject; applicability Unknown"
+      ],
+      "outcome": "killed"
+    },
+    {
+      "mutant": "declared-historical-partial-subject-3",
+      "path": ".syzygy/governance/decisions/DOSSIER-DECLARED-SOURCE-CONTRACT-APPLICABILITY.md",
+      "old": "<absent>",
+      "new": "Synthetic invalid presence fixture; grants no authority.\n",
+      "source_sha256": "d1cf9bdd191ea1140d960ac22c0265c34ae534b4e5fa1deb14d4c2e910d27bfe",
+      "expected": "R1/R2 refusal; no amendment",
+      "failed": [
+        "declared-source: D10 record does not verify; applicability Unknown",
+        "declared-source: expected one seven-column A-4 row in `.syzygy/governance/decisions/AGENT-ADOPTIONS.md`",
+        "declared-source: `openspec/changes/dossier-declared-source-model/proposed/polaris-generation/spec.md` differs from the reviewed v2.0 subject; applicability Unknown",
+        "declared-source: `.syzygy/governance/policies/POLARIS-DOSSIER-DECLARED-SOURCE-POLICY-v1.json` differs from the reviewed v2.0 subject; applicability Unknown",
+        "declared-source: `.syzygy/governance/decisions/DOSSIER-DECLARED-SOURCE-CONTRACT-APPLICABILITY.md` differs from the reviewed v2.0 subject; applicability Unknown"
+      ],
+      "outcome": "killed"
+    },
+    {
+      "mutant": "declared-historical-dangling-directory",
+      "path": "openspec/changes/dossier-declared-source-model",
+      "old": "<absent>",
+      "new": "<symlink to __missing_declared_source_fixture__>",
+      "expected": "R1/R2 refusal; dangling entry is present",
+      "failed": [
+        "declared-source: D10 record does not verify; applicability Unknown",
+        "declared-source: expected one seven-column A-4 row in `.syzygy/governance/decisions/AGENT-ADOPTIONS.md`",
+        "declared-source: `openspec/changes/dossier-declared-source-model/proposed/polaris-generation/spec.md` differs from the reviewed v2.0 subject; applicability Unknown",
+        "declared-source: `.syzygy/governance/policies/POLARIS-DOSSIER-DECLARED-SOURCE-POLICY-v1.json` differs from the reviewed v2.0 subject; applicability Unknown",
+        "declared-source: `.syzygy/governance/decisions/DOSSIER-DECLARED-SOURCE-CONTRACT-APPLICABILITY.md` differs from the reviewed v2.0 subject; applicability Unknown"
+      ],
+      "outcome": "killed"
+    },
+    {
+      "mutant": "declared-historical-dangling-act",
+      "path": ".syzygy/governance/decisions/GOVERNANCE-SIMPLIFICATION-D10-ACT.md",
+      "old": "<absent>",
+      "new": "<symlink to __missing_declared_source_fixture__>",
+      "expected": "R1/R2 refusal; dangling entry is present",
+      "failed": [
+        "declared-source: D10 record does not verify; applicability Unknown",
+        "declared-source: expected one seven-column A-4 row in `.syzygy/governance/decisions/AGENT-ADOPTIONS.md`",
+        "declared-source: `openspec/changes/dossier-declared-source-model/proposed/polaris-generation/spec.md` differs from the reviewed v2.0 subject; applicability Unknown",
+        "declared-source: `.syzygy/governance/policies/POLARIS-DOSSIER-DECLARED-SOURCE-POLICY-v1.json` differs from the reviewed v2.0 subject; applicability Unknown",
+        "declared-source: `.syzygy/governance/decisions/DOSSIER-DECLARED-SOURCE-CONTRACT-APPLICABILITY.md` differs from the reviewed v2.0 subject; applicability Unknown"
+      ],
+      "outcome": "killed"
+    },
+    {
+      "mutant": "declared-historical-dangling-policy",
+      "path": ".syzygy/governance/policies/POLARIS-DOSSIER-DECLARED-SOURCE-POLICY-v1.json",
+      "old": "<absent>",
+      "new": "<symlink to __missing_declared_source_fixture__>",
+      "expected": "R1/R2 refusal; dangling entry is present",
+      "failed": [
+        "declared-source: D10 record does not verify; applicability Unknown",
+        "declared-source: expected one seven-column A-4 row in `.syzygy/governance/decisions/AGENT-ADOPTIONS.md`",
+        "declared-source: `openspec/changes/dossier-declared-source-model/proposed/polaris-generation/spec.md` differs from the reviewed v2.0 subject; applicability Unknown",
+        "declared-source: `.syzygy/governance/policies/POLARIS-DOSSIER-DECLARED-SOURCE-POLICY-v1.json` differs from the reviewed v2.0 subject; applicability Unknown",
+        "declared-source: `.syzygy/governance/decisions/DOSSIER-DECLARED-SOURCE-CONTRACT-APPLICABILITY.md` differs from the reviewed v2.0 subject; applicability Unknown"
+      ],
+      "outcome": "killed"
+    }
+  ],
+  "failures": []
+}

@@ -1,0 +1,21 @@
+{
+  "subject": "1c76b0a4c6d49498e76b27bcc87d7e26947c313f",
+  "historicalCore": "da9fde040ec188612310549782fccc0227869c79",
+  "helperSha256": "fc360dbca472ab8a2bbbe933d665350c25608e57378654acbef1452bb6367e87",
+  "historicalEntries": [
+    {
+      "path": "scripts/record_governance_simplification_d10.py",
+      "present": false
+    },
+    {
+      "path": ".syzygy/governance/decisions/GOVERNANCE-SIMPLIFICATION-D10-ACT.md",
+      "present": false
+    }
+  ],
+  "absentD10Probe": {
+    "recorderAbsent": true,
+    "state": null
+  },
+  "reconciliationAndThreeSubjectsUnchanged": true,
+  "rollbackProofLogVerified": true
+}

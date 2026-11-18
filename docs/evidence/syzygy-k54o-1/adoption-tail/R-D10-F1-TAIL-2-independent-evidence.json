@@ -1,0 +1,80 @@
+{
+  "subject": "421dc862ea2026d50c254d40deab4031726abd1c",
+  "tree": "ed1351f0265048ddb01b70fb6215796bcbe29c93",
+  "predicates": [
+    {
+      "name": "declared-why-missing",
+      "held": true,
+      "records": [
+        "declared-source: adoption row has no required Why reason"
+      ],
+      "predecessorScenarios": 329
+    },
+    {
+      "name": "declared-why-whitespace",
+      "held": true,
+      "records": [
+        "declared-source: adoption row has no required Why reason"
+      ],
+      "predecessorScenarios": 329
+    },
+    {
+      "name": "declared-revert-mainline-missing",
+      "held": true,
+      "records": [
+        "declared-source: adoption row does not name its subject's revert"
+      ],
+      "predecessorScenarios": 329
+    },
+    {
+      "name": "declared-revert-mainline-wrong",
+      "held": true,
+      "records": [
+        "declared-source: adoption row does not name its subject's revert"
+      ],
+      "predecessorScenarios": 329
+    },
+    {
+      "name": "declared-scope-missing",
+      "held": true,
+      "records": [
+        "declared-source: adoption row does not name `.syzygy/governance/decisions/DOSSIER-DECLARED-SOURCE-CONTRACT-APPLICABILITY.md`"
+      ],
+      "predecessorScenarios": 329
+    },
+    {
+      "name": "declared-spec-reference-missing",
+      "held": true,
+      "records": [
+        "declared-source: adoption row does not name `openspec/changes/dossier-declared-source-model/proposed/polaris-generation/spec.md`"
+      ],
+      "predecessorScenarios": 329
+    },
+    {
+      "name": "declared-policy-reference-missing",
+      "held": true,
+      "records": [
+        "declared-source: adoption row does not name `.syzygy/governance/policies/POLARIS-DOSSIER-DECLARED-SOURCE-POLICY-v1.json`"
+      ],
+      "predecessorScenarios": 329
+    }
+  ],
+  "rollback": {
+    "syntheticMerge": "7f1bd419ae8b920e927acdc1b2bed2ac0f9dc843",
+    "sourcePathDenominator": 109,
+    "sourcePathMatches": 109,
+    "onlyDifferenceFromPreSource": [
+      ".syzygy/governance/decisions/AGENT-ADOPTIONS.md"
+    ],
+    "ledgerPreserved": true,
+    "tailPatchSha256": "e3231e29997ad698e48b3177830e3a9c66d7a57ce2395c8e370600da8c1f8eb2",
+    "appliesAmendment": false,
+    "recordFindings": [],
+    "subjectFindings": [
+      "declared-source: `openspec/changes/dossier-declared-source-model/proposed/polaris-generation/spec.md` differs from the reviewed v2.0 subject; applicability Unknown",
+      "declared-source: `.syzygy/governance/policies/POLARIS-DOSSIER-DECLARED-SOURCE-POLICY-v1.json` differs from the reviewed v2.0 subject; applicability Unknown",
+      "declared-source: `.syzygy/governance/decisions/DOSSIER-DECLARED-SOURCE-CONTRACT-APPLICABILITY.md` differs from the reviewed v2.0 subject; applicability Unknown"
+    ]
+  },
+  "reviewedSubjectsUnchanged": true
+}

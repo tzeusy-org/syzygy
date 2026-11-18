@@ -1,0 +1,53 @@
+{
+  "subject": "bc5d7c0494b42a83f1cbfa723dfaafc197bfe3de",
+  "tree": "968ed87245f57bed67e0bfd5275a4dd0edb4b1c9",
+  "independentDanglingCases": [
+    {
+      "case": "change-directory",
+      "inactive": false,
+      "applies": false,
+      "findings": [
+        "declared-source: D10 record does not verify; applicability Unknown",
+        "declared-source: expected one seven-column A-4 row in `.syzygy/governance/decisions/AGENT-ADOPTIONS.md`",
+        "declared-source: `openspec/changes/dossier-declared-source-model/proposed/polaris-generation/spec.md` differs from the reviewed v2.0 subject; applicability Unknown",
+        "declared-source: `.syzygy/governance/policies/POLARIS-DOSSIER-DECLARED-SOURCE-POLICY-v1.json` differs from the reviewed v2.0 subject; applicability Unknown",
+        "declared-source: `.syzygy/governance/decisions/DOSSIER-DECLARED-SOURCE-CONTRACT-APPLICABILITY.md` differs from the reviewed v2.0 subject; applicability Unknown"
+      ]
+    },
+    {
+      "case": "d10-act",
+      "inactive": false,
+      "applies": false,
+      "findings": [
+        "declared-source: D10 record does not verify; applicability Unknown",
+        "declared-source: expected one seven-column A-4 row in `.syzygy/governance/decisions/AGENT-ADOPTIONS.md`",
+        "declared-source: `openspec/changes/dossier-declared-source-model/proposed/polaris-generation/spec.md` differs from the reviewed v2.0 subject; applicability Unknown",
+        "declared-source: `.syzygy/governance/policies/POLARIS-DOSSIER-DECLARED-SOURCE-POLICY-v1.json` differs from the reviewed v2.0 subject; applicability Unknown",
+        "declared-source: `.syzygy/governance/decisions/DOSSIER-DECLARED-SOURCE-CONTRACT-APPLICABILITY.md` differs from the reviewed v2.0 subject; applicability Unknown"
+      ]
+    },
+    {
+      "case": "policy-subject",
+      "inactive": false,
+      "applies": false,
+      "findings": [
+        "declared-source: D10 record does not verify; applicability Unknown",
+        "declared-source: expected one seven-column A-4 row in `.syzygy/governance/decisions/AGENT-ADOPTIONS.md`",
+        "declared-source: `openspec/changes/dossier-declared-source-model/proposed/polaris-generation/spec.md` differs from the reviewed v2.0 subject; applicability Unknown",
+        "declared-source: `.syzygy/governance/policies/POLARIS-DOSSIER-DECLARED-SOURCE-POLICY-v1.json` differs from the reviewed v2.0 subject; applicability Unknown",
+        "declared-source: `.syzygy/governance/decisions/DOSSIER-DECLARED-SOURCE-CONTRACT-APPLICABILITY.md` differs from the reviewed v2.0 subject; applicability Unknown"
+      ]
+    }
+  ],
+  "targetedOutcomeCounts": {
+    "held": 1,
+    "killed": 9
+  },
+  "exactMarkerWitnessDenominator": 4,
+  "exactA4RowWitness": true,
+  "performedArgumentAbsentFromWitnesses": true,
+  "no64HexArgumentInNewFragments": true,
+  "rollbackPatchAndLogVerified": true,
+  "unchangedReviewedSubjectDenominator": 3,
+  "earlierP115CasesRead": 229
+}

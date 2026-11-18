@@ -1,0 +1,24 @@
+{
+  "subject": "58bcb2138c757a569c2cfcc96401c25699e5a11b",
+  "malformed_row_missing_why": {
+    "mutation": "A-4 Why cell emptied; remaining cells unchanged",
+    "applies_amendment": true,
+    "record_findings": [],
+    "byte_findings": [],
+    "census_findings": [],
+    "requirements": 38,
+    "scenarios": 277
+  },
+  "recorded_revert": {
+    "command": "git revert --no-commit 182a703b2dbae97a16ae7334cd84a32b634cedc0",
+    "returncode": 128,
+    "stdout": "",
+    "stderr": "error: commit 182a703b2dbae97a16ae7334cd84a32b634cedc0 is a merge but no -m option was given.\nfatal: revert failed\n"
+  },
+  "mainline_revert_control": {
+    "command": "git revert --no-commit -m 1 182a703b2dbae97a16ae7334cd84a32b634cedc0",
+    "returncode": 0,
+    "stdout": "",
+    "stderr": ""
+  }
+}

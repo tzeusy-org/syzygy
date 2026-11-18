@@ -1,0 +1,163 @@
+{
+  "absent": true,
+  "binding": [
+    null,
+    [],
+    []
+  ],
+  "failed": [],
+  "lines": [
+    "OK    R1  terminal outcome for every child \u2014 18 examined, 0 findings \u2014 5 children and 2 installed Polaris additions; digest acts: phrase = manifest sha256 and in the aggregate; versioned: package/version/tag and one aggregate block; adopted additions: the declared record names the spec; declared-source: one VIS-4 ledger row and verified D10 record when present; wholly absent pre-D10 amendment is inactive",
+    "OK    R2  reviewed and signed subjects hash to their rows \u2014 56 examined, 0 findings"
+  ],
+  "partial": [
+    {
+      "signal": "directory",
+      "inactive": false,
+      "applies": false,
+      "recordFindings": [
+        "declared-source: D10 record does not verify; applicability Unknown",
+        "declared-source: expected one seven-column A-4 row in `.syzygy/governance/decisions/AGENT-ADOPTIONS.md`"
+      ],
+      "subjectFindings": [
+        "declared-source: `openspec/changes/dossier-declared-source-model/proposed/polaris-generation/spec.md` differs from the reviewed v2.0 subject; applicability Unknown",
+        "declared-source: `.syzygy/governance/policies/POLARIS-DOSSIER-DECLARED-SOURCE-POLICY-v1.json` differs from the reviewed v2.0 subject; applicability Unknown",
+        "declared-source: `.syzygy/governance/decisions/DOSSIER-DECLARED-SOURCE-CONTRACT-APPLICABILITY.md` differs from the reviewed v2.0 subject; applicability Unknown"
+      ]
+    },
+    {
+      "signal": "row",
+      "inactive": false,
+      "applies": false,
+      "recordFindings": [
+        "declared-source: D10 record does not verify; applicability Unknown"
+      ],
+      "subjectFindings": [
+        "declared-source: `openspec/changes/dossier-declared-source-model/proposed/polaris-generation/spec.md` differs from the reviewed v2.0 subject; applicability Unknown",
+        "declared-source: `.syzygy/governance/policies/POLARIS-DOSSIER-DECLARED-SOURCE-POLICY-v1.json` differs from the reviewed v2.0 subject; applicability Unknown",
+        "declared-source: `.syzygy/governance/decisions/DOSSIER-DECLARED-SOURCE-CONTRACT-APPLICABILITY.md` differs from the reviewed v2.0 subject; applicability Unknown"
+      ]
+    },
+    {
+      "signal": "act",
+      "inactive": false,
+      "applies": false,
+      "recordFindings": [
+        "declared-source: D10 record does not verify; applicability Unknown",
+        "declared-source: expected one seven-column A-4 row in `.syzygy/governance/decisions/AGENT-ADOPTIONS.md`"
+      ],
+      "subjectFindings": [
+        "declared-source: `openspec/changes/dossier-declared-source-model/proposed/polaris-generation/spec.md` differs from the reviewed v2.0 subject; applicability Unknown",
+        "declared-source: `.syzygy/governance/policies/POLARIS-DOSSIER-DECLARED-SOURCE-POLICY-v1.json` differs from the reviewed v2.0 subject; applicability Unknown",
+        "declared-source: `.syzygy/governance/decisions/DOSSIER-DECLARED-SOURCE-CONTRACT-APPLICABILITY.md` differs from the reviewed v2.0 subject; applicability Unknown"
+      ]
+    },
+    {
+      "signal": "subject-1",
+      "inactive": false,
+      "applies": false,
+      "recordFindings": [
+        "declared-source: D10 record does not verify; applicability Unknown",
+        "declared-source: expected one seven-column A-4 row in `.syzygy/governance/decisions/AGENT-ADOPTIONS.md`"
+      ],
+      "subjectFindings": [
+        "declared-source: `.syzygy/governance/policies/POLARIS-DOSSIER-DECLARED-SOURCE-POLICY-v1.json` differs from the reviewed v2.0 subject; applicability Unknown",
+        "declared-source: `.syzygy/governance/decisions/DOSSIER-DECLARED-SOURCE-CONTRACT-APPLICABILITY.md` differs from the reviewed v2.0 subject; applicability Unknown"
+      ]
+    },
+    {
+      "signal": "subject-2",
+      "inactive": false,
+      "applies": false,
+      "recordFindings": [
+        "declared-source: D10 record does not verify; applicability Unknown",
+        "declared-source: expected one seven-column A-4 row in `.syzygy/governance/decisions/AGENT-ADOPTIONS.md`"
+      ],
+      "subjectFindings": [
+        "declared-source: `openspec/changes/dossier-declared-source-model/proposed/polaris-generation/spec.md` differs from the reviewed v2.0 subject; applicability Unknown",
+        "declared-source: `.syzygy/governance/decisions/DOSSIER-DECLARED-SOURCE-CONTRACT-APPLICABILITY.md` differs from the reviewed v2.0 subject; applicability Unknown"
+      ]
+    },
+    {
+      "signal": "subject-3",
+      "inactive": false,
+      "applies": false,
+      "recordFindings": [
+        "declared-source: D10 record does not verify; applicability Unknown",
+        "declared-source: expected one seven-column A-4 row in `.syzygy/governance/decisions/AGENT-ADOPTIONS.md`"
+      ],
+      "subjectFindings": [
+        "declared-source: `openspec/changes/dossier-declared-source-model/proposed/polaris-generation/spec.md` differs from the reviewed v2.0 subject; applicability Unknown",
+        "declared-source: `.syzygy/governance/policies/POLARIS-DOSSIER-DECLARED-SOURCE-POLICY-v1.json` differs from the reviewed v2.0 subject; applicability Unknown"
+      ]
+    }
+  ],
+  "currentRefusals": [
+    {
+      "name": "declared-why-missing",
+      "applies": false,
+      "recordFindings": [
+        "declared-source: adoption row has no required Why reason"
+      ],
+      "subjectFindings": []
+    },
+    {
+      "name": "declared-why-whitespace",
+      "applies": false,
+      "recordFindings": [
+        "declared-source: adoption row has no required Why reason"
+      ],
+      "subjectFindings": []
+    },
+    {
+      "name": "declared-revert-mainline-missing",
+      "applies": false,
+      "recordFindings": [
+        "declared-source: adoption row does not name its subject's revert"
+      ],
+      "subjectFindings": []
+    },
+    {
+      "name": "declared-revert-mainline-wrong",
+      "applies": false,
+      "recordFindings": [
+        "declared-source: adoption row does not name its subject's revert"
+      ],
+      "subjectFindings": []
+    },
+    {
+      "name": "declared-row-missing",
+      "applies": false,
+      "recordFindings": [
+        "declared-source: expected one seven-column A-4 row in `.syzygy/governance/decisions/AGENT-ADOPTIONS.md`"
+      ],
+      "subjectFindings": []
+    },
+    {
+      "name": "declared-scope-missing",
+      "applies": false,
+      "recordFindings": [
+        "declared-source: adoption row does not name `.syzygy/governance/decisions/DOSSIER-DECLARED-SOURCE-CONTRACT-APPLICABILITY.md`"
+      ],
+      "subjectFindings": []
+    },
+    {
+      "name": "declared-spec-reference-missing",
+      "applies": false,
+      "recordFindings": [
+        "declared-source: adoption row does not name `openspec/changes/dossier-declared-source-model/proposed/polaris-generation/spec.md`"
+      ],
+      "subjectFindings": []
+    },
+    {
+      "name": "declared-policy-reference-missing",
+      "applies": false,
+      "recordFindings": [
+        "declared-source: adoption row does not name `.syzygy/governance/policies/POLARIS-DOSSIER-DECLARED-SOURCE-POLICY-v1.json`"
+      ],
+      "subjectFindings": []
+    }
+  ],
+  "subject": "1560b6ee103b5161f23c8768a00f7827c09a438b",
+  "historicalCore": "da9fde040ec188612310549782fccc0227869c79"
+}
