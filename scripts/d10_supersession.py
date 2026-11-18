@@ -7,21 +7,16 @@ forever on bytes D10 replaced (RFC3-16 as amended by D10: a later edit is a new
 adoption, and earlier acts and their digests are history, not locks). They
 print one line saying so and exit 0; the performed records stay as they are.
 
-D10 is in effect in two states:
+D10 is in effect only when it is **recorded and verified**:
+`scripts/record_governance_simplification_d10.py --check` passes over the tree
+(the dedicated record, its aggregate section and its log row match the
+manifest). A record file that merely exists does not count, and neither does
+an install with no record: either would silence the checks below without the
+owner's act (finding of R-D10-PACKAGE-RESUME-1, 2026-11-18).
 
-- **recorded**: the dedicated record
-  `.syzygy/governance/decisions/GOVERNANCE-SIMPLIFICATION-D10-ACT.md` exists
-  (`scripts/record_governance_simplification_d10.py --check` verifies it);
-- **installed**: no record exists, and every install target holds exactly the
-  bytes of its `[package]` row. The recorder installs and records in one
-  transaction and rolls both back on failure, so this state stands only in a
-  scratch tree where the install path ran on its own (the test the package
-  uses to show the installed tree passes the battery).
-
-Anything else (the package absent, unread, partly installed) is not in effect,
-and every check runs as before.
+Anything else (the package absent, unread, partly installed, recorded but not
+verifying) is not in effect, and every check runs as before.
 """
-import hashlib
 import importlib.util
 from pathlib import Path
 
@@ -53,20 +48,14 @@ def installed_targets(root=ROOT):
 
 
 def state(root=ROOT):
-    """'recorded', 'installed', or None."""
+    """'recorded' when the D10 record exists and its recorder's check passes; None otherwise."""
     root = Path(root)
-    if rec is None:
+    if rec is None or not (root / rec.ACT).is_file():
         return None
-    if (root / rec.ACT).is_file():
-        return "recorded"
-    targets = installed_targets(root)
-    if not targets:
+    try:
+        return "recorded" if rec.check(root) else None
+    except (ValueError, OSError, UnicodeDecodeError):
         return None
-    for target, sha in targets.items():
-        path = root / target
-        if not path.is_file() or hashlib.sha256(path.read_bytes()).hexdigest() != sha:
-            return None
-    return "installed"
 
 
 def superseded(what, root=ROOT):
@@ -74,8 +63,7 @@ def superseded(what, root=ROOT):
     now = state(root)
     if now is None:
         return False
-    how = ("its record is present" if now == "recorded"
-           else "its install is present with no record yet: a scratch install")
+    how = "its record is present and verifies"
     print(f"SUPERSEDED  {what}: not run. {NAME} is in effect ({how}) and replaced the bytes this "
           f"check holds a performed act to; the act and its record stay as history (RFC3-16 as amended).")
     return True
