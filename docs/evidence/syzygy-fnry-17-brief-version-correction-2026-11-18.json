@@ -1,0 +1,88 @@
+{
+  "asOf": "2026-11-18T13:00:48.168723+00:00",
+  "subject": {
+    "baseCommit": "e8c5c70cfdf4b5eeea7553cd6e58e243da95a2dc",
+    "sourceFiles": {
+      "packages/polaris-dossier/src/brief.ts": {
+        "baseSha256": "9a3f69bd37cbe4b62d2fd3a053c486dab567226da4b0b4c3af492a782d302a46",
+        "correctedSha256": "76b1ee897fa4f46665d800a94b354d7104d76bf5154a652a38fca0e749da74ed",
+        "literalReplacements": 1
+      },
+      "packages/polaris-dossier/src/brief.test.ts": {
+        "baseSha256": "ce3a671b1251f179f1c32e7913730949d020c2ddab6bacb3018a229334b03af2",
+        "correctedSha256": "eecf3a1e2d1494f39886a465774f96df7eef1da4267e46ac3508d555390cc7f2",
+        "literalReplacements": 2
+      }
+    },
+    "interpretation": "Onlythree version literals changed; sourcefiles named anddigested ratherthan self-referential evidencecommit."
+  },
+  "finding": "Canonical whole reviewR1: main separately usesv7, audience brief musthave distinctv8 underREQ-polaris-generation-034. Same7acceptance obligations; own technical target3explicitlyadjustedwithoriginalretainedincanonicalnotes.",
+  "nextSlice": "Freshfnry.18 AC4relative; nextversionv9ifthisv8lands. No foreignbeadedit.",
+  "verification": {
+    "red": {
+      "command": [
+        "./node_modules/.bin/vitest",
+        "run",
+        "--project",
+        "integration",
+        "packages/polaris-dossier/src/brief.test.ts",
+        "-t",
+        "writes the brief, the schema and the brief record"
+      ],
+      "exit": 1,
+      "subject": "e8c5c70c plus two v8 expected values; production remainsv7",
+      "logSha256": "94026282b99c8954f2bfddf80480234ba12849865ee87bb9a157708cb7181948"
+    },
+    "focused": {
+      "command": [
+        "./node_modules/.bin/vitest",
+        "run",
+        "packages/polaris-dossier/src/brief.test.ts",
+        "packages/polaris-dossier/src/reader-standards.test.ts"
+      ],
+      "exit": 0,
+      "logSha256": "1cb7348387f52df87973414877ccdc6af244aa1b046dfdfcad13366f51881a6c",
+      "files": 2,
+      "passed": 116,
+      "cases": {
+        "brief": 34,
+        "readerStandards": 82
+      }
+    },
+    "typecheck": {
+      "command": [
+        "npm",
+        "run",
+        "typecheck"
+      ],
+      "exit": 0,
+      "logSha256": "396901319daac4a4413b23478852db3c572014f86c71d148273565f0f3332696"
+    },
+    "unchangedReaderStandardsSourceSha256": "1bd87dafaeed00309ae458812c67017cb2b972049040543c0f6789eb0db61de2"
+  },
+  "testDelta": "Thiscorrection Tests:+0 ~1 -0; two assertions in oneexistingcase. Originalaudiencemutants remain historical; norecentmutationclaim.",
+  "retainedReviews": [
+    {
+      "source": "/home/orca/.tmp/syzygy-beads-looper-20261114-54ebc9f1/fnry17-retention-review-RAW.md",
+      "retained": "docs/reviews/R-DOSSIER-DECLARED-AUDIENCE-RETENTION-C206-1-RAW.md",
+      "sha256": "9ac4aa244c26f2bea6136609e526caea5e10e62f72033d4f39d9750f230abce7"
+    },
+    {
+      "source": "/home/orca/.tmp/syzygy-beads-looper-20261114-54ebc9f1/fnry17-verification-event-assessment-RAW.md",
+      "retained": "docs/reviews/R-DOSSIER-DECLARED-AUDIENCE-VERIFICATION-C206-1-RAW.md",
+      "sha256": "0e0e48bd40d6e276b1ae103106d30f4cfbdd2f2a14922f1d4072c6576bfbd6fd"
+    },
+    {
+      "source": "/home/orca/.tmp/syzygy-looper-20261116/R-DOSSIER-DECLARED-AUDIENCE-WHOLE-1-RAW.md",
+      "retained": "docs/reviews/R-DOSSIER-DECLARED-AUDIENCE-WHOLE-1-RAW.md",
+      "sha256": "cbaa474e87fd00c2297d4f61d2ba4dd24e512d37bd32c53de25afa3017ff536b"
+    },
+    {
+      "source": "/home/orca/.tmp/syzygy-looper-20261116/R-DOSSIER-DECLARED-AUDIENCE-WHOLE-1-mutants.json",
+      "retained": "docs/evidence/syzygy-fnry-17-canonical-review-mutations-2026-11-17.json",
+      "sha256": "d1f6eba33663b6753075790f74a72d57ad1601e9cd5c21057de5404557e76b3c"
+    }
+  ],
+  "remaining": "Fullcleanclone verification atnewcommittedsubject, independentcurrentcontentreview, hosted/owner/queue/currentruntimecensus/landing. No merge/readiness fromthisrecord.",
+  "preemption": "AdmittedP0k54oindependentreviewnowreturnsconcretedraftfindings; publishthisboundedcorrectionthenparkwithclaimretained."
+}

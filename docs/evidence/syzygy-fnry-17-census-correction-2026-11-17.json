@@ -1,0 +1,323 @@
+{
+  "schema": "syzygy-fnry17-census-correction-evidence/1",
+  "recordedAt": "2026-11-16T17:56:59.803705+00:00",
+  "subject": {
+    "commit": "2020c29bb05cce19cf7cff8f1fd640448f632475",
+    "tree": "bf13fbc7abd943f14e7d46107f6565dd37ecd8a1",
+    "files": {
+      "packages/polaris-dossier/src/census.test.ts": "8672c904b2ff025c035022e307c9b75bba5e44de7296e5118e19dc203558e451",
+      "vitest.tiers.ts": "286510d00221b51dc5b3213f7f0becf50746ff758b80ddf41206ebc9bdc8316b"
+    }
+  },
+  "classification": "Observed evidence; no act, infrastructure exception or merge authorization",
+  "priorFailure": {
+    "subjectCommit": "80e409087f49dc413b3a57ebbfb9f83466ef82d8",
+    "integrationBase": "d065b481e0674cc98c21102c789fef7865653f60",
+    "previousSubject": "c206d7bbb68aebc22b4bbe6f72f8e8f0cfc6e597",
+    "priorFailureTreatment": "Previous gate remains failed; new subject integrates actual changed guardian code. No infrastructure disposition or unchanged retry claimed.",
+    "startedAt": "2026-11-16T17:33:01.282402+00:00",
+    "state": "finished",
+    "setupCommand": [
+      "npm",
+      "ci"
+    ],
+    "command": [
+      "flock",
+      "-n",
+      "-E",
+      "75",
+      "/home/orca/.tmp/syzygy-full-suite-20261104.lock",
+      "npm",
+      "run",
+      "check:all"
+    ],
+    "subjectTree": "bafc167c0f89b1bbfc47d4d874a9d9cad583c3c9",
+    "changedFiles": {
+      "docs/evidence/syzygy-fnry-17-audience-mutations-2026-11-14.json": "31816cc15ac0278ab9bc13e70134ee8d590a225efa953169be11e54bd7dd0f87",
+      "docs/review-campaigns/dossier-declared-audience.md": "0e5d6a366033f6c224795349f25616b4569c7b99e40bf800dce04e745e371d98",
+      "docs/reviews/R-DOSSIER-DECLARED-AUDIENCE-1-RAW.md": "f3ee0ac57509e387bd1bdc30761652605dd3eeadae6630622094fe44adcfb4e4",
+      "packages/polaris-dossier/src/audience.ts": "8876e28ba61be04c2337d729f0fc9e71a19a0ce3ead7fad3fbf5a58f6440befb",
+      "packages/polaris-dossier/src/brief.test.ts": "ce3a671b1251f179f1c32e7913730949d020c2ddab6bacb3018a229334b03af2",
+      "packages/polaris-dossier/src/brief.ts": "9a3f69bd37cbe4b62d2fd3a053c486dab567226da4b0b4c3af492a782d302a46",
+      "packages/polaris-dossier/src/cli.test.ts": "51dc64df73081dddb9a8de4b1bf7584df16713305e30afc51a33509c7703b876",
+      "packages/polaris-dossier/src/design-review.test.ts": "0687aeddf68086b575a7bbe8fb34c9f4207e946d1123911229a41b330112e8f1",
+      "packages/polaris-dossier/src/design-review.ts": "d536122563346dcf89ccfb3316ef8559ec5a940355d4a98d60722ee962195a85",
+      "packages/polaris-dossier/src/polaris-launch-guidance.test.ts": "cb8e3f986fbdbe5f985966c94467566707845c30c28699e26852adce291d5f3e",
+      "packages/polaris-dossier/src/polaris.ts": "ced5f03e891031af5f2111e20b55c7f7d4300829f8b0fcc4bff941e966be55c4",
+      "packages/polaris-dossier/src/reader-standards.test.ts": "a42448bb24af14d98ad1df535dbd0962a196139a2f7720ae2996516e912f10bd",
+      "packages/polaris-dossier/src/render.test.ts": "3dff0912eebf383a77509a9460b987ffca2faed5b17e8e03e734ede9c80821aa",
+      "packages/polaris-dossier/src/render.ts": "a3b1257bb9b183421be4a7c4300699c056eaeb859b3ef78c6fadcdf9a4d7fca1",
+      "packages/polaris-dossier/src/review-packet.ts": "7565afdbe5737f0d2309e59e6c4197d8a25f5fd2c4383b1a7793357d29c2d48a"
+    },
+    "gateStartedAt": "2026-11-16T17:33:36.127384+00:00",
+    "exit": 1,
+    "seconds": 64.3348818430677,
+    "finishedAt": "2026-11-16T17:34:40.464846+00:00",
+    "log": "/home/orca/.tmp/syzygy-beads-looper-20261114-54ebc9f1/fnry17-guardian-full-check.log",
+    "logSha256": "1d7cd1e2267dbf87b60e51e6cf561398e5d3511f8b6ef9c3af27d66963ff8b91",
+    "changedFilesUnchanged": true,
+    "headUnchanged": true,
+    "trackedClean": true,
+    "summaries": [
+      {
+        "line": 2,
+        "text": "> check:all"
+      },
+      {
+        "line": 3,
+        "text": "> npm run check && npm run test:tiers && npm run test:integration && npm run test:e2e && npm run check:battery"
+      },
+      {
+        "line": 10,
+        "text": "> typecheck"
+      },
+      {
+        "line": 530,
+        "text": "Test Files  1 failed | 187 passed (188)"
+      },
+      {
+        "line": 531,
+        "text": "Tests  1 failed | 4513 passed | 1 skipped (4515)"
+      }
+    ],
+    "mergeReadiness": "Not established by this record; output assessment and independent changed-subject review still required."
+  },
+  "priorFailurePreserved": true,
+  "earlierGuardianFailure": {
+    "subject": "c206d7bbb68aebc22b4bbe6f72f8e8f0cfc6e597",
+    "logPath": "/home/orca/.tmp/syzygy-beads-looper-20261114-54ebc9f1/fnry17-clean-clone-check-all.log",
+    "logSha256": "5e17fef5f0f686cc591f8c204b88e3b4fae7342667746725daad5a6c48e2ae7c",
+    "assessmentPath": "/home/orca/.tmp/syzygy-beads-looper-20261114-54ebc9f1/fnry17-verification-event-assessment-RAW.md",
+    "assessmentSha256": "0e0e48bd40d6e276b1ae103106d30f4cfbdd2f2a14922f1d4072c6576bfbd6fd",
+    "disposition": "Remains failed. Concrete guardian changes integrated; no infrastructure waiver."
+  },
+  "diagnostics": {
+    "isolated": {
+      "purpose": "diagnostic only; does not dispose of failed gate",
+      "subject": "80e409087f49dc413b3a57ebbfb9f83466ef82d8",
+      "command": [
+        "./node_modules/.bin/vitest",
+        "run",
+        "--project",
+        "unit",
+        "packages/polaris-dossier/src/census.test.ts",
+        "-t",
+        "loads the checkout's own screen for the placement subject when no loader is given",
+        "--reporter=json",
+        "--outputFile=/home/orca/.tmp/syzygy-beads-looper-20261114-54ebc9f1/fnry17-census-isolated-diagnostic-vitest.json"
+      ],
+      "exit": 0,
+      "wallSeconds": 8.536556968931109
+    },
+    "actBoundaries": {
+      "purpose": "diagnostic only, not a gate disposition",
+      "subject": "80e409087f49dc413b3a57ebbfb9f83466ef82d8",
+      "records": [
+        {
+          "mode": "async",
+          "calls": {
+            "readdir": 904,
+            "readFile": 896
+          },
+          "elapsed": {
+            "readdir": 90.55650200000157,
+            "readFile": 594.8973969999995
+          },
+          "wallMs": 1552.18408,
+          "cpuMicros": {
+            "user": 985913,
+            "system": 159497
+          },
+          "boundaries": [
+            {
+              "iteration": 0,
+              "boundary": "policy",
+              "state": "ok",
+              "wallMs": 436.69426899999996
+            },
+            {
+              "iteration": 0,
+              "boundary": "class",
+              "state": "ok",
+              "wallMs": 354.67422999999997
+            },
+            {
+              "iteration": 1,
+              "boundary": "policy",
+              "state": "ok",
+              "wallMs": 273.31127300000014
+            },
+            {
+              "iteration": 1,
+              "boundary": "class",
+              "state": "ok",
+              "wallMs": 487.0930719999999
+            }
+          ]
+        },
+        {
+          "mode": "sync-adapter",
+          "calls": {
+            "readdir": 904,
+            "readFile": 896
+          },
+          "elapsed": {
+            "readdir": 13.916757000009284,
+            "readFile": 53.91983800000162
+          },
+          "wallMs": 1012.987014,
+          "cpuMicros": {
+            "user": 805673,
+            "system": 82376
+          },
+          "boundaries": [
+            {
+              "iteration": 0,
+              "boundary": "policy",
+              "state": "ok",
+              "wallMs": 287.457932
+            },
+            {
+              "iteration": 0,
+              "boundary": "class",
+              "state": "ok",
+              "wallMs": 219.20449399999984
+            },
+            {
+              "iteration": 1,
+              "boundary": "policy",
+              "state": "ok",
+              "wallMs": 211.4806910000002
+            },
+            {
+              "iteration": 1,
+              "boundary": "class",
+              "state": "ok",
+              "wallMs": 294.8111650000001
+            }
+          ]
+        }
+      ]
+    },
+    "controlledDelay": {
+      "purpose": "controlled delayed-filesystem diagnostic; not verification pass or infrastructure waiver",
+      "subject": "80e409087f49dc413b3a57ebbfb9f83466ef82d8",
+      "delayPerFsOperationMs": 3,
+      "testTimeoutMs": 5000,
+      "observations": [
+        {
+          "commit": "498ecd0d6d007db11ddb3aea9428552598a78622",
+          "wallMs": 3744.121449,
+          "fsCalls": 900,
+          "ok": true,
+          "unknown": [],
+          "version": "1.9.0-public-source-candidate.1.none.code-all.redact-span.v5-bcd.v6-p.v7-s.v8-pv"
+        },
+        {
+          "commit": "d2c8a4b91e8c0e6aefd1f5bc0bf582cddbe046b7",
+          "wallMs": 3899.495474,
+          "fsCalls": 900,
+          "ok": true,
+          "unknown": [
+            "TLS.md",
+            "modules/MODULES.md",
+            "redis.conf"
+          ],
+          "version": "1.9.0-public-source-candidate.1.none.code-all.redact-span.v5-bcd.v6-p.v7-s.v8-pv"
+        }
+      ],
+      "combinedMs": 7643.616923,
+      "combinedExceedsBudget": true,
+      "eachFitsBudget": true
+    },
+    "artifactProvenance": {
+      "subject": "80e409087f49dc413b3a57ebbfb9f83466ef82d8",
+      "purpose": "diagnosis, not gate or waiver",
+      "artifacts": {
+        "fnry17-census-diagnostic-plan.md": "c67e55d1edf52c73b35b66143dcd1eb7b2c975b749797a3abfb2cbd8e3ef74a9",
+        "fnry17-census-isolated-diagnostic-result.json": "50a12c42d424d322f9288e538892d81f26987aa5ab5e6ff68914a39929ecc120",
+        "fnry17-census-isolated-diagnostic-vitest.json": "c6083e76a69204bda5dd5e309be840e9ae030cd55294ebee8602d34354987aea",
+        "fnry17-census-act-boundary-diagnostic-entry.mjs": "e4bc123a2b03aa4420ff61f9c111e3ff0169a335d5af598929298005fd2b5e22",
+        "fnry17-census-act-boundary-diagnostic-bundle.mjs": "5f6b3ed2ff06ff54772ac9ba4117f0492f55c2a92bd43a741c3599489e8feb97",
+        "fnry17-census-act-boundary-diagnostic.json": "7381d27c8e51698e30c616985b158f6b87702af0a98432c31192f3bc7eb262a8",
+        "fnry17-census-controlled-delay-entry.mjs": "9fdbd6b238e3bc0d544b49278749b26a8b1df33b856c9bb99905ab2eb5065246",
+        "fnry17-census-controlled-delay-bundle-v2.mjs": "14d3626e11b0bec0b39e02468058c204ded8eccefbdd968f9f6f64cef526438d",
+        "fnry17-census-controlled-delay-diagnostic.json": "b52244b83f042778ab468ffda3f9dd14e68af1a1ebd26e1df2c97f395b25f41c",
+        "fnry17-census-controlled-delay-setup-failure.json": "fdab77f3d2bc52fb6ff751ad61c44837b30d0964799e7795ec1e55db379d81b2"
+      }
+    },
+    "reproductionEntryPath": "/home/orca/.tmp/syzygy-beads-looper-20261114-54ebc9f1/fnry17-census-controlled-delay-entry.mjs",
+    "reproductionExecutablePath": "/home/orca/.tmp/syzygy-beads-looper-20261114-54ebc9f1/fnry17-census-controlled-delay-bundle-v2.mjs",
+    "scope": "Injects 3ms latency only into the local act-reader filesystem boundary; original synthetic object listing and public visibility decision preserved. Measures shared versus individual budgets, not historical host latency."
+  },
+  "correction": {
+    "base": "80e409087f49dc413b3a57ebbfb9f83466ef82d8",
+    "description": "Classify real-tree census file as integration; parameterize its trial/other placement scenarios independently, preserving default-loader/membership assertions and 5000ms timeout; version assertion applies to both.",
+    "collectedCasesBefore": 23,
+    "collectedCasesAfter": 24,
+    "netCaseDelta": 1,
+    "logicalPlacementsBefore": 2,
+    "logicalPlacementsAfter": 2,
+    "productionChanges": false,
+    "timeoutIncrease": false
+  },
+  "focusedResults": [
+    {
+      "name": "tiers",
+      "command": [
+        "npm",
+        "run",
+        "test:tiers"
+      ],
+      "exit": 0,
+      "seconds": 2.4144033959601074
+    },
+    {
+      "name": "integration",
+      "command": [
+        "./node_modules/.bin/vitest",
+        "run",
+        "--project",
+        "integration",
+        "packages/polaris-dossier/src/census.test.ts",
+        "--reporter=json",
+        "--outputFile=/home/orca/.tmp/syzygy-beads-looper-20261114-54ebc9f1/fnry17-census-correction-focused-vitest.json"
+      ],
+      "exit": 0,
+      "seconds": 3.898519180016592
+    },
+    {
+      "name": "typecheck",
+      "command": [
+        "npm",
+        "run",
+        "typecheck"
+      ],
+      "exit": 0,
+      "seconds": 17.35605553793721
+    },
+    {
+      "name": "diff",
+      "command": [
+        "git",
+        "diff",
+        "--check",
+        "d065b481e0674cc98c21102c789fef7865653f60"
+      ],
+      "exit": 0,
+      "seconds": 0.029739371966570616
+    }
+  ],
+  "retainedRawIdentities": {
+    "docs/reviews/R-DOSSIER-DECLARED-AUDIENCE-GUARDIAN-1-RAW.md": "c8175523d0d11831d6e9b6db5487e6a1b5a396f18fc620661aa3063e2e755ca0",
+    "docs/reviews/R-DOSSIER-DECLARED-AUDIENCE-CENSUS-DIAGNOSTIC-1-RAW.md": "af8e4cc7245260a8c6936412548daca17abdf4f8f1340b3c066c8bf6b6a856ed",
+    "docs/reviews/R-DOSSIER-DECLARED-AUDIENCE-CENSUS-CORRECTION-1-RAW.md": "6b6e036e52a5594973ca324e03bf73f55ee7173c09bde413bf5c2fa3b55c5597"
+  },
+  "remainingVerification": {
+    "sourceGateSubject": "2020c29bb05cce19cf7cff8f1fd640448f632475",
+    "sourceGateResultPath": "/home/orca/.tmp/syzygy-beads-looper-20261114-54ebc9f1/fnry17-census-full-check-result.json",
+    "stateAtRecord": "running canonical governance battery after runtime tiers passed",
+    "finalMainRetentionSubject": "not yet committed at record time",
+    "required": "Fresh full verification at final main/retention subject, campaign partition, hosted/queue and actual landing runtime census remain separate. No readiness claim."
+  }
+}
