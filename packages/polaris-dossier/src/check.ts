@@ -8,6 +8,7 @@ import { executionFlags } from './execution-flags.js';
 import { GitObjectReadRefusal, openPinnedObjectReader } from './git-object-reader.js';
 import { isoOf } from './iso-of.js';
 import type { Outcome } from './outcome.js';
+import { readRunRecord } from './run-record.js';
 import { reverifyPinnedRevision } from './reverify.js';
 import { poleLimitOf, type RunConfig } from './run-config.js';
 import { placementSubjectOf, screenLoaderOf } from './screen.js';
@@ -144,6 +145,8 @@ export async function checkSubject<R extends object, G>(runDir: string, file: st
   const { noun } = plan;
   const log = (entry: Record<string, unknown>): void => {
     try {
+      const stored = readRunRecord(fs.readFileSync(path.join(run, RUN_LAYOUT.config), 'utf8'));
+      if (!stored.ok && stored.legacy) return;
       fs.appendFileSync(path.join(run, RUN_LAYOUT.steps), `${JSON.stringify({ format: STEP_LOG_FORMAT, step: plan.command, at: isoOf(started), ...entry })}\n`, { mode: 0o600 });
     } catch { /* the step log is a convenience within the agent's reach; a failure to append changes no result */ }
   };

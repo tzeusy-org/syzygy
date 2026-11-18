@@ -1,0 +1,15 @@
+
+ RUN  v3.2.7 /home/orca/orca/projects/syzygy/.worktrees/parallel-agents/syzygy-k54o.1
+
+ ✓ |e2e| apps/three-surface-poc/src/cdp-browser.browser.test.ts (5 tests) 8564ms
+   ✓ disposable Chrome teardown in a real browser > reaps the browser family after its worker dies by SIGTERM  1652ms
+   ✓ disposable Chrome teardown in a real browser > reaps the browser family after its worker dies by SIGKILL  1465ms
+   ✓ disposable Chrome teardown in a real browser > reaps children after failed endpoint and version initialization  1988ms
+   ✓ disposable Chrome teardown in a real browser > closes and drains even when a helper cannot exit on its own  1713ms
+   ✓ disposable Chrome teardown in a real browser > leaves no Chrome singleton directory behind when the leader is killed  1744ms
+
+ Test Files  1 passed (1)
+      Tests  5 passed (5)
+   Start at  01:16:33
+   Duration  8.89s (transform 71ms, setup 9ms, collect 62ms, tests 8.56s, environment 0ms, prepare 60ms)
+

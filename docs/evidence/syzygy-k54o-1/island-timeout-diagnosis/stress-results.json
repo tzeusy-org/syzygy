@@ -1,0 +1,212 @@
+[
+  {
+    "mode": "normal",
+    "workers": 4,
+    "cpu": 11,
+    "cohortWallMs": 9720.484366000164,
+    "runs": [
+      {
+        "tag": "DEBUG-island-timeout",
+        "snapshot": "head",
+        "mode": "normal",
+        "population": 303,
+        "parseCalls": 304,
+        "parseMs": 4853.068236999989,
+        "readMs": 47.363008999996055,
+        "wallMs": 7518.5254700000005,
+        "cpuUserMs": 1652.609,
+        "cpuSystemMs": 223.991,
+        "resolution": {
+          "calls": 43820,
+          "uniqueEdges": 1332,
+          "cacheHits": 0,
+          "underlyingCalls": 43820,
+          "resolveMs": 2120.7706449998195,
+          "isFileCalls": 39883
+        },
+        "violations": [],
+        "unresolved": [],
+        "unsupported": [],
+        "allOriginResultsSha256": "22682a63a2ef1907b868e56f31e1ec91df205b64643a8e11fb383a0efefdb2f7"
+      },
+      {
+        "tag": "DEBUG-island-timeout",
+        "snapshot": "head",
+        "mode": "normal",
+        "population": 303,
+        "parseCalls": 304,
+        "parseMs": 4838.801916999999,
+        "readMs": 58.43921199999863,
+        "wallMs": 7365.652894999999,
+        "cpuUserMs": 1652.478,
+        "cpuSystemMs": 206.434,
+        "resolution": {
+          "calls": 43820,
+          "uniqueEdges": 1332,
+          "cacheHits": 0,
+          "underlyingCalls": 43820,
+          "resolveMs": 2002.4526570000107,
+          "isFileCalls": 39883
+        },
+        "violations": [],
+        "unresolved": [],
+        "unsupported": [],
+        "allOriginResultsSha256": "22682a63a2ef1907b868e56f31e1ec91df205b64643a8e11fb383a0efefdb2f7"
+      },
+      {
+        "tag": "DEBUG-island-timeout",
+        "snapshot": "head",
+        "mode": "normal",
+        "population": 303,
+        "parseCalls": 304,
+        "parseMs": 4715.0390710000065,
+        "readMs": 49.803540999998404,
+        "wallMs": 7371.717298,
+        "cpuUserMs": 1599.888,
+        "cpuSystemMs": 230.409,
+        "resolution": {
+          "calls": 43820,
+          "uniqueEdges": 1332,
+          "cacheHits": 0,
+          "underlyingCalls": 43820,
+          "resolveMs": 2182.7053819997795,
+          "isFileCalls": 39883
+        },
+        "violations": [],
+        "unresolved": [],
+        "unsupported": [],
+        "allOriginResultsSha256": "22682a63a2ef1907b868e56f31e1ec91df205b64643a8e11fb383a0efefdb2f7"
+      },
+      {
+        "tag": "DEBUG-island-timeout",
+        "snapshot": "head",
+        "mode": "normal",
+        "population": 303,
+        "parseCalls": 304,
+        "parseMs": 4827.208079000014,
+        "readMs": 122.30190700000139,
+        "wallMs": 7472.867025,
+        "cpuUserMs": 1631.347,
+        "cpuSystemMs": 214.745,
+        "resolution": {
+          "calls": 43820,
+          "uniqueEdges": 1332,
+          "cacheHits": 0,
+          "underlyingCalls": 43820,
+          "resolveMs": 2091.9761099995526,
+          "isFileCalls": 39883
+        },
+        "violations": [],
+        "unresolved": [],
+        "unsupported": [],
+        "allOriginResultsSha256": "22682a63a2ef1907b868e56f31e1ec91df205b64643a8e11fb383a0efefdb2f7"
+      }
+    ],
+    "overFiveSecondBudget": 4
+  },
+  {
+    "mode": "cached",
+    "workers": 4,
+    "cpu": 11,
+    "cohortWallMs": 7836.68693999789,
+    "runs": [
+      {
+        "tag": "DEBUG-island-timeout",
+        "snapshot": "head",
+        "mode": "cached",
+        "population": 303,
+        "parseCalls": 304,
+        "parseMs": 4929.9594989999905,
+        "readMs": 31.288719999998648,
+        "wallMs": 5456.717893,
+        "cpuUserMs": 1297.857,
+        "cpuSystemMs": 45.959,
+        "resolution": {
+          "calls": 43820,
+          "uniqueEdges": 1332,
+          "cacheHits": 42488,
+          "underlyingCalls": 1332,
+          "resolveMs": 238.44328699999733,
+          "isFileCalls": 1054
+        },
+        "violations": [],
+        "unresolved": [],
+        "unsupported": [],
+        "allOriginResultsSha256": "22682a63a2ef1907b868e56f31e1ec91df205b64643a8e11fb383a0efefdb2f7"
+      },
+      {
+        "tag": "DEBUG-island-timeout",
+        "snapshot": "head",
+        "mode": "cached",
+        "population": 303,
+        "parseCalls": 304,
+        "parseMs": 4856.351398000003,
+        "readMs": 98.02691699999605,
+        "wallMs": 5390.387011000001,
+        "cpuUserMs": 1329.537,
+        "cpuSystemMs": 39.268,
+        "resolution": {
+          "calls": 43820,
+          "uniqueEdges": 1332,
+          "cacheHits": 42488,
+          "underlyingCalls": 1332,
+          "resolveMs": 113.16089999999394,
+          "isFileCalls": 1054
+        },
+        "violations": [],
+        "unresolved": [],
+        "unsupported": [],
+        "allOriginResultsSha256": "22682a63a2ef1907b868e56f31e1ec91df205b64643a8e11fb383a0efefdb2f7"
+      },
+      {
+        "tag": "DEBUG-island-timeout",
+        "snapshot": "head",
+        "mode": "cached",
+        "population": 303,
+        "parseCalls": 304,
+        "parseMs": 4817.332300000005,
+        "readMs": 119.71533699999372,
+        "wallMs": 5420.873718999999,
+        "cpuUserMs": 1285.168,
+        "cpuSystemMs": 65.998,
+        "resolution": {
+          "calls": 43820,
+          "uniqueEdges": 1332,
+          "cacheHits": 42488,
+          "underlyingCalls": 1332,
+          "resolveMs": 170.9217650000187,
+          "isFileCalls": 1054
+        },
+        "violations": [],
+        "unresolved": [],
+        "unsupported": [],
+        "allOriginResultsSha256": "22682a63a2ef1907b868e56f31e1ec91df205b64643a8e11fb383a0efefdb2f7"
+      },
+      {
+        "tag": "DEBUG-island-timeout",
+        "snapshot": "head",
+        "mode": "cached",
+        "population": 303,
+        "parseCalls": 304,
+        "parseMs": 4869.635270999995,
+        "readMs": 66.83541000000605,
+        "wallMs": 5450.488116,
+        "cpuUserMs": 1305.226,
+        "cpuSystemMs": 50.993,
+        "resolution": {
+          "calls": 43820,
+          "uniqueEdges": 1332,
+          "cacheHits": 42488,
+          "underlyingCalls": 1332,
+          "resolveMs": 238.1329499999938,
+          "isFileCalls": 1054
+        },
+        "violations": [],
+        "unresolved": [],
+        "unsupported": [],
+        "allOriginResultsSha256": "22682a63a2ef1907b868e56f31e1ec91df205b64643a8e11fb383a0efefdb2f7"
+      }
+    ],
+    "overFiveSecondBudget": 4
+  }
+]

@@ -78,7 +78,7 @@ export function processLaunchPorts(root: string, now: () => number, nonPublic: (
     writeConsent: () => readWriteConsent({ root, now: now() }),
     nonPublic,
     previewClasses: async (identity, commit, paths) => {
-      const load = await loadDossierScreen(root, now(), undefined, { repository: identity, commit });
+      const load = await loadDossierScreen(root, now(), { repository: identity, commit });
       if (!load.ok) return { why: load.why };
       const classes = new Set<string>();
       for (const p of paths) { const c = load.screen.contentClass(p); if (c !== undefined) classes.add(c); }

@@ -16,11 +16,11 @@ import type { CredentialProbe } from './execution-rule.js';
 import { RECORDS_WITHIN_REACH } from './gate-sources.js';
 import { GitObjectReadRefusal, openPinnedObjectReader } from './git-object-reader.js';
 import { errno, latestInventorySession, logStep, openRun, promptRecordName, readRecord, type OpenedRun } from './inventory.js';
-import { launchDisclosureItems, launchDisclosureUnknown, readLaunchDisclosure, storedBriefItem } from './launch-disclosure.js';
 import { buildDesignPacket } from './design-review.js';
 import type { Outcome } from './outcome.js';
 import { designReviewOfRecord, latestPassedDraft, reviewOfRecord, type DesignReviewOfRecord, type ReviewDeps, type ReviewOfRecord } from './review.js';
 import type { ReverifyRefusal } from './reverify.js';
+import { readRunRecord } from './run-record.js';
 import { NO_WORK_ITEM_REASON } from './run-record.js';
 import { CLASS_NOT_CONSENTED, unconsentedClass, unconsentedText } from './class-gate.js';
 import { placementSubjectOf, screenLoaderOf, type DossierScreen, type ScreenExclusion } from './screen.js';
@@ -46,11 +46,8 @@ import { poleLimitOf } from './run-config.js';
  * the path a label. A claim block is Inferred only where the agent labels it so, no quotation of it is withheld and the counted fidelity
  * review judges it supported; an Unknown block carries its RFC2-24 reason; a non-normative block is no claim and carries no anchor.
  *
- * The draft layer renders as an editorial draft only while the owner's reading of RFC7-20 holds: the disclosure on every page and in the
- * machine view, the tool and provider declared and recorded, every rendered quotation byte-verified, and the ruling in force by its act.
- * Otherwise it renders Unknown (`unconsented-source-or-provider`) and no draft content renders, while the source pages, the run's
- * disclosure, discovery, executions and review pages stay. No owner-act record binds the ruling yet (`RFC7_20_RULING_ACT_FORM`), so in
- * production the draft layer is Unknown.
+ * The draft layer is an editorial draft attributed to the declared tool and provider. Its provenance remains Inferred; the declaration
+ * establishes neither actual provider transmission nor independent verification. Missing declarations render Unknown.
  *
  * Every string of the agent's that Syzygy renders passes the screen's secret detector first; a match withholds the string. */
 
@@ -105,7 +102,7 @@ export interface RenderReport {
   readonly run: string;
   readonly site: string;
   readonly draftRevision: number;
-  readonly draftLayer: { readonly state: 'editorial-draft' } | { readonly state: 'unknown'; readonly reason: 'unconsented-source-or-provider'; readonly why: readonly string[] };
+  readonly draftLayer: { readonly state: 'editorial-draft' } | { readonly state: 'unknown'; readonly reason: 'missing-declaration' | 'unconsented-source-or-provider'; readonly why: readonly string[] };
   readonly fidelityReview: { readonly counts: true; readonly packetSha256: string; readonly label: 'Observed' } | { readonly counts: false; readonly why: string };
   /** The rendered-design review, decided from the design packet of these pages; its digest is what a design verdict must name. */
   readonly designReview: { readonly counts: true; readonly packetSha256: string; readonly label: 'Observed' } | { readonly counts: false; readonly packetSha256: string; readonly why: string };
@@ -140,6 +137,12 @@ export async function renderRun(runDir: string, deps: RenderDeps): Promise<Rende
     if (logRun !== undefined) logStep(logRun, 'render', now, { outcome: 'refused', stage, reason });
     return { ok: false, refusal: { command: 'render', outcome: 'refused', stage, reason, ...extra, disclosures: DISCLOSURES } };
   };
+  // A retained legacy run is read-only and gets its restart explanation even
+  // when no renderer is installed; do not append a step or inspect its sources.
+  try {
+    const stored = readRunRecord(fs.readFileSync(path.join(runDir, RUN_LAYOUT.config), 'utf8'));
+    if (!stored.ok && stored.legacy) return refuse('run', stored.detail);
+  } catch { /* existing missing-run / missing-renderer handling below */ }
   if (deps.renderer === undefined) return refuse('renderer', NO_RENDERER);
   const opened = await openRun(runDir, deps.sources, now, 'nothing is rendered', deps.openReader ? { openReader: deps.openReader } : {});
   if (!opened.ok) return refuse(opened.stage, opened.reason, { ...(opened.reasons ? { reasons: opened.reasons } : {}), ...(opened.refusals ? { refusals: opened.refusals } : {}) });
@@ -177,9 +180,8 @@ export async function renderRun(runDir: string, deps: RenderDeps): Promise<Rende
   }
 
   const review = await reviewOfRecord(opened, deps);
-  const ruling = await deps.sources.rfc720Ruling();
 
-  const built = buildLocalInput({ opened, doc, derived, review, ruling, screen, credential, algorithm: reader.algorithm });
+  const built = buildLocalInput({ opened, doc, derived, review, screen, credential, algorithm: reader.algorithm });
   if (!built.ok) return refuse(built.stage, built.reason);
 
   const renderer = deps.renderer;
@@ -280,7 +282,6 @@ interface BuildInputs {
   readonly review: ReviewOfRecord;
   /** The rendered-design review of record; absent while it is not yet decided, before the pages it is decided from are rendered. */
   readonly design?: DesignReviewOfRecord;
-  readonly ruling: Awaited<ReturnType<RenderDeps['sources']['rfc720Ruling']>>;
   readonly screen: DossierScreen;
   readonly credential: CredentialStepResult;
   readonly algorithm: 'sha1' | 'sha256';
@@ -314,14 +315,14 @@ export function languageOf(repositoryPath: string): string {
 }
 
 export function buildLocalInput(inputs: BuildInputs): Built {
-  const { opened, doc, derived, review, design, ruling, screen, credential, algorithm } = inputs;
+  const { opened, doc, derived, review, design, screen, credential, algorithm } = inputs;
   const { run, runId, subject, declared } = opened;
   const pinned = subject.pinnedRevision.commit;
   const clean = (value: string): string => (screen.screenBody(value) === 'secret-detector-match' ? WITHHELD_TEXT : value);
   const shownPath = (repositoryPath: string): string => (screen.screenPath(repositoryPath) === 'secret-detector-match' ? SECRET_PATH : repositoryPath);
 
   // The class gate (`class-gate.ts`): the design packet carries these pages to a review session, so a blob screening admitted under a
-  // class the run's statement does not list is neither quoted nor put on a source page; it is a counted row naming the class.
+  // class the run does not declare is neither quoted nor put on a source page; it is a counted row naming the class.
   const consented = opened.contentClasses;
   const withheldClass = new Map<string, string>();
   for (const repositoryPath of derived.admitted.keys()) {
@@ -742,11 +743,10 @@ export function buildLocalInput(inputs: BuildInputs): Built {
   // RFC7-20 as the owner's reading applies it. The disclosure condition is checked on the rendered output (renderRun); the tool and
   // provider are declared in the run record, which refuses any run without them; every quotation is located at this render.
   const why: string[] = [];
-  if (ruling.state !== 'ok') why.push(`the owner's reading of RFC7-20 (POLARIS-DOSSIER-LOCAL-AGENT-RULINGS-2026-10-05, item 1) is not in force: ${ruling.why}`);
   if (declared.agentTool.trim() === '' || declared.agentProvider.trim() === '') why.push('the agent tool or provider is not declared and recorded');
-  const draftLayer: LocalDraftLayer = why.length === 0 && ruling.state === 'ok'
-    ? { state: 'editorial-draft', ruling: ruling.record, inferenceProvenance: { modelIdentity: declared.model, modelVersion: declared.modelVersion, declaredBy: 'operator', label: 'Inferred' } }
-    : { state: 'unknown', reason: 'unconsented-source-or-provider', why };
+  const draftLayer: LocalDraftLayer = why.length === 0
+    ? { state: 'editorial-draft', inferenceProvenance: { provider: declared.agentProvider, modelIdentity: declared.model, modelVersion: declared.modelVersion, declaredBy: 'operator', label: 'Inferred' } }
+    : { state: 'unknown', reason: 'missing-declaration', why };
 
   const quotationCount = [...blocks.values()].reduce((n, block) => n + block.segments.filter((part) => part.kind === 'quotation').length, 0);
   const disclosure = disclosureItems({ opened, draftLayer, executionList, flags, quotationCount, credential, clean, run });
@@ -826,21 +826,11 @@ function disclosureItems(inputs: {
   const brief = readRecord(path.join(run, RUN_LAYOUT.briefRecord));
   const rule = isRecord(brief) && isRecord(brief['executionRule']) ? brief['executionRule'] : {};
   const commands = executionList.map((entry) => clean(text(entry['command']) ?? ''));
-  // The run record's launch disclosure (REQ-polaris-generation-046, line 37), with the brief stage's statement each issued brief stored in
-  // its own record: the authoring brief's record, and each inventory session's prompt record (R-PDJA-33-SLICE-D-1 findings 5 and 10).
-  const launch = readLaunchDisclosure(run);
-  const issuedBriefs = [
-    ...(fs.existsSync(path.join(run, RUN_LAYOUT.briefRecord)) ? [storedBriefItem(brief, 'The authoring brief', 'authoring')] : []),
-    ...Array.from({ length: latestInventorySession(run) }, (_, i) => i + 1).flatMap(session => {
-      const file = path.join(run, RUN_LAYOUT.inventory, promptRecordName(session));
-      return fs.existsSync(file) ? [storedBriefItem(readRecord(file), `The inventory brief for session ${session}`, `inventory-${session}`)] : [];
-    }),
-  ];
-  const launchItems = launch.state === 'ok' ? launchDisclosureItems(launch.disclosure, issuedBriefs) : [launchDisclosureUnknown(launch)];
   const items: LocalDisclosureItem[] = [
     { id: 'mode', text: 'Authoring mode: operator-agent. The operator\'s own agent session read the clone and wrote the draft; Syzygy pinned the revision, checked the draft and rendered these pages.', label: null },
     { id: 'agent', text: `Agent tool ${declared.agentTool} ${declared.agentToolVersion}, provider ${declared.agentProvider}, model ${declared.model}${declared.modelVersion === null ? ' (version not shown by the agent tool)' : ` ${declared.modelVersion}`}, as the operator declared them; no provider-reported model version exists in this mode.`, label: 'Inferred' },
-    { id: 'unrestricted-reading', text: 'The agent read the clone without restriction: neither the content classes a per-project statement names nor the observing project\'s classification and screening policies bound what it read or sent to its provider. They bind only what Syzygy reads, stores and renders.', label: null },
+    { id: 'declared-content-classes', text: `Eligible content classes: ${subject.contentClasses.join(', ')}; declarations, not an account of what the agent transmitted.`, label: 'Inferred' },
+    { id: 'source-screening-boundary', text: 'SEC-2 and SEC-5 require the agent to send content only to its declared provider and never send secrets. Syzygy screens its own reads and artifacts; actual agent transmissions and compliance are not observed.', label: null },
     { id: 'read-account', text: 'The agent\'s account of what it read is its own report (Discovery): self-reported, never complete or verified.', label: 'Inferred' },
     rule['arm'] === 'permitting'
       ? { id: 'execution-rule', text: `The brief permitted building and running the observed project from the authoring session, under the owner's execution choice it names (who entered the choice is the operator's declaration). What that costs, as D9 states: ${isRecord(rule['cost']) ? text(rule['cost']['text']) ?? '' : ''}`, label: 'Inferred' }
@@ -848,16 +838,17 @@ function disclosureItems(inputs: {
     { id: 'reported-commands', text: commands.length === 0 ? 'The agent reports building or running nothing.' : `The agent reports running ${commands.length} command(s), whether or not a claim rests on them: ${commands.join('; ')}. This is its own report, not complete and not observed.`, label: 'Inferred' },
     ...(flags.applies ? [{ id: 'execution-flags', text: `Flagged reported commands: ${flags.flagged} of ${flags.commands.length}, each flag shown beside its command on the Executions page: a command without a reported working directory, with one outside the clone, or that the agent states falls outside the owner's execution choice. ${EXECUTION_FLAGS_BASIS}`, label: 'Inferred' as const }] : []),
     { id: 'no-provider-call', text: 'Syzygy made no provider call and transmitted no project content.', label: null },
-    { id: 'pinned-revision', text: `Pinned revision ${subject.pinnedRevision.commit} of ${subject.repository.url}; which consented revision the run was pinned to rests on the stored run record.`, label: 'Inferred' },
-    { id: 'pinned-revision-verified', text: `At this render Syzygy verified again that the in-force observation consent ${opened.revision.consentRecord} names the pinned revision${opened.revision.label === null ? ', under more than one label' : ` as ${opened.revision.label}`}, and that the source-acquisition registry entry and the screening policy are in force.`, label: 'Observed' },
-    ...launchItems,
+    { id: 'pinned-revision', text: `Pinned revision ${subject.pinnedRevision.commit} of ${subject.repository.url}; declared Repository role ${subject.repository.role}; governance-root material keeps the same repository identity. Selection history comes from the writable run record.`, label: 'Inferred' },
+    { id: 'pinned-revision-verified', text: 'At this render Syzygy rehashed the pinned commit, trees and used blobs, and checked the committed screening policy against this run binding. No consent, registry act or provider statement was verified.', label: 'Observed' },
+    { id: 'source-visibility', text: `Source visibility ${subject.visibility.value}, from ${subject.visibility.source}, attributed to ${subject.visibility.declaredBy}; no network or credential check verifies it.`, label: 'Inferred' },
+    { id: 'screening-policy-binding', text: `Screening policy ${subject.screeningPolicy.policyId} ${subject.screeningPolicy.policyVersion}, digest ${subject.screeningPolicy.sha256}; its selected commit is stored run provenance.`, label: 'Inferred' },
     { id: 'quotations', text: `Each of the ${quotationCount} quotation(s) shown was located by Syzygy at this render in the blob it read at the pinned revision, the object identifiers recomputed from the bytes read; never the agent's copy or a stored byte range.`, label: 'Observed' },
-    { id: 'stored-records', text: 'Every value shown from Syzygy\'s stored records rather than re-derived at this render is Inferred: the repair-cycle count, the instants of earlier steps, the run record\'s history, the pinned revision chosen, the brief and the execution rule it carried, the execution choice and who entered it, the per-project statement cited, session identifiers and launch forms, and which objects earlier steps read.', label: 'Inferred' },
-    { id: 'records-within-reach', text: `The records the gates read and the run directory lie within the agent sessions' write reach: ${RECORDS_WITHIN_REACH}.`, label: null },
+    { id: 'stored-records', text: 'Every value shown from Syzygy\'s stored records rather than re-derived at this render is Inferred: the repair-cycle count, the instants of earlier steps, the run record\'s history, the pinned revision chosen, the brief and the execution rule it carried, the execution choice and who entered it, session identifiers and launch forms, and which objects earlier steps read.', label: 'Inferred' },
+    { id: 'records-within-reach', text: `The run and its declarations lie within the agent sessions' write reach: ${RECORDS_WITHIN_REACH}.`, label: null },
     { id: 'unattributed-execution', text: `This run has no scheduler work item: ${NO_WORK_ITEM_REASON}.`, label: null },
     draftLayer.state === 'editorial-draft'
-      ? { id: 'draft-layer', text: `Draft layer: an editorial draft under the owner's reading of RFC7-20 (${draftLayer.ruling}); the generated prose's inference provenance is the operator-declared model.`, label: null }
-      : { id: 'draft-layer', text: `Draft layer: Unknown (unconsented-source-or-provider), so no part of the draft is shown: ${draftLayer.why.join('; ')}.`, label: 'Unknown' },
+      ? { id: 'draft-layer', text: 'Draft layer: an editorial draft with the declared model as inference provenance; provider identity is declared, not observed transmission.', label: null }
+      : { id: 'draft-layer', text: `Draft layer: Unknown (missing-declaration), so no part of the draft is shown: ${draftLayer.why.join('; ')}.`, label: 'Unknown' },
   ];
   if (credential.required) {
     items.push(credential.passed

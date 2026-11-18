@@ -1,0 +1,10 @@
+{
+  "subject": "e940f2c496160da6040a1ab7300016be11ec95cf",
+  "ranked": [
+    {"id":"H1","cause":"Repeated per-origin import resolution and filesystem/manifest work dominates despite one AST parse per module","kill":"Cached resolution of identical from/specifier edges does not materially lower resolution calls or sweep wall time"},
+    {"id":"H2","cause":"TypeScript syntax parsing dominates the sweep","kill":"Measured parsing is a minority of uncached sweep time, and unchanged parsing under edge caching still gives a large reduction"},
+    {"id":"H3","cause":"F1 source/module/import growth alone causes a qualitatively new sweep cost","kill":"Base/head populations and repeated-resolution work are comparable under the same harness"},
+    {"id":"H4","cause":"The five-second assertion is load-sensitive rather than a logic failure","kill":"The sweep finds a guard violation/unresolved edge or consistently crosses5s even in isolated unloaded execution; compare deterministic results and wall/CPU time"}
+  ],
+  "boundary":"Scratch instrumentation only, no actual test/production edits, no proof-clone mutation; source is captured from committed Git objects."
+}

@@ -1,3 +1,4 @@
+import { declaredSubjectFixture, policyFixture } from './full-run.testkit.js';
 import { execFileSync } from 'node:child_process';
 import { createHash } from 'node:crypto';
 import * as fs from 'node:fs';
@@ -15,6 +16,7 @@ import { writeLaunchedMarker } from './launched.js';
 import { parseRunConfig, type RunConfig } from './run-config.js';
 import { NO_WORK_ITEM_REASON, encodeRunRecord, type RunSubject } from './run-record.js';
 import { tempDir } from '@syzygy/test-kit';
+import { reverifyPinnedRevision } from './reverify.js';
 
 // syzygy-qkea.6 (S5): `syzygy dossier brief <run>` (REQ-polaris-generation-033, 034, 036). The gate sources are a fixture whose answers
 // each test sets; the doctrine is the live security.md of this checkout. Expected values are literals or computed here from the files
@@ -31,13 +33,13 @@ const REV = '498ecd0d6d007db11ddb3aea9428552598a78622';
 const RUN_ID = `run-${'a'.repeat(32)}`;
 
 const SUBJECT: RunSubject = {
-  repository: { url: 'github.com/redis/redis', repositoryId: 'redis-redis' },
+  repository: { url: 'github.com/redis/redis', repositoryId: 'redis-redis', role: 'observed-source' },
   clone: { path: '/srv/clones/redis', declaredBy: 'operator', label: 'Inferred', use: 'read' },
   // The recorded label is the agent-writable copy; the brief shows the live consent's label ('8.10.2') instead.
-  pinnedRevision: { commit: REV, label: 'label-in-run-json', consentRecord: 'PUBLIC-OBS-REDIS-2026-10-03@0.1.0-candidate.7', pinnedAt: '2026-10-07T10:00:00.000Z' },
-  startGates: { registryEntry: 'REGISTRY-ACT-FIXTURE', screeningPolicy: 'POLICY-ACT-FIXTURE' },
+  pinnedRevision: { commit: REV, label: 'label-in-run-json', pinnedAt: '2026-10-07T10:00:00.000Z' },
+  ...declaredSubjectFixture(),
   governed: { kind: 'non-governed', because: ['the project input fixture states that no kernel evidence drawer exists'] },
-  providerStatement: null,
+
   workItem: { identity: null, reason: NO_WORK_ITEM_REASON },
 };
 const configOf = (over: Record<string, unknown> = {}): RunConfig => {
@@ -59,6 +61,7 @@ const runDirectory = (subject: RunSubject = SUBJECT, config: RunConfig = configO
 const OK: GateState = { state: 'ok', record: 'FIXTURE-ACT' };
 const sources = (over: Partial<GateSources> = {}): GateSources => ({
   recordsRoot: REAL_ROOT,
+  declaredPolicy: async () => policyFixture(),
   repositoryIdsFor: async () => ['redis-redis'],
   consentedRevisionsFor: async () => [{ label: '8.10.2', commitId: REV }],
   observationConsentFor: async (_id, revision) => (revision === REV ? { satisfied: true, record: 'PUBLIC-OBS-REDIS-2026-10-03@0.1.0-candidate.7' } : { satisfied: false, why: 'not named' }),
@@ -77,16 +80,28 @@ const tree = (paths: readonly string[] = ['src/server.c']) => (): PinnedObjectRe
 const read = (run: string, name: string): string => fs.readFileSync(path.join(run, name), 'utf8');
 
 describe('brief: issued', () => {
+  it.each(['repository', 'clone', 'visibility'] as const)('refuses a changed %s declaration after the brief binds its source', async field => {
+    const run = runDirectory(); const ports = { sources: sources(), openReader: tree(), now: () => NOW };
+    expect((await issueBrief(run, ports)).ok).toBe(true);
+    const file = path.join(run, 'run.json'); const record = JSON.parse(fs.readFileSync(file, 'utf8'));
+    if (field === 'repository') record.subject.repository.repositoryId = 'another-repository';
+    else if (field === 'clone') record.subject.clone.path = '/srv/clones/another';
+    else record.subject.visibility.value = 'private';
+    fs.writeFileSync(file, JSON.stringify(record));
+    const result = await reverifyPinnedRevision(run, ports.sources, NOW, { openReader: tree() });
+    expect(result).toMatchObject({ ok: false, refusals: expect.arrayContaining([{ code: 'source-changed', reason: expect.any(String) }]) });
+  });
   it('writes the brief, the schema and the brief record, binding the run, the pinned revision and the schema version', async () => {
     const run = runDirectory();
     const result = await issueBrief(run, { sources: sources(), openReader: tree(), now: () => NOW });
     expect(result).toMatchObject({ ok: true, report: {
-      command: 'brief', outcome: 'issued', run, briefVersion: 'polaris-dossier-brief-v8', schemaVersion: 'polaris-dossier-local-draft-v4',
+      command: 'brief', outcome: 'issued', run, briefVersion: 'polaris-dossier-brief-v9', schemaVersion: 'polaris-dossier-local-draft-v4',
       pinnedRevision: REV, issuedAt: '2026-10-07T12:00:00.000Z', deadlineEndsAt: '2026-10-07T13:00:00.000Z', executionRule: { arm: 'sec-3' },
     } });
     const brief = read(run, 'brief.md'), schema = read(run, 'draft.schema.json');
+    expect(brief).toContain('Repository role: observed-source (Inferred); governance-root material keeps this same repository identity.');
     expect(brief).toContain(`- Run: \`${RUN_ID}\``);
-    expect(brief).toContain(`- Pinned revision: \`${REV}\` (8.10.2)`);
+    expect(brief).toContain(`- Pinned revision: \`${REV}\` (label-in-run-json)`);
     expect(brief).toContain(`- Draft schema: \`polaris-dossier-local-draft-v4\`, in \`draft.schema.json\` beside this brief (sha256 \`${sha(schema)}\`)`);
     expect(brief).toContain('Your draft names that revision in `pinnedRevision`');
     expect(brief).toContain('Write it to `drafts/next.json` in the run directory and run `syzygy dossier check <run>`;');
@@ -104,10 +119,13 @@ describe('brief: issued', () => {
     expect(brief).not.toContain('Version: `polaris-reader-standards-v1`');
     expect(brief).toContain('Read them before you outline: write every page as an abstraction tree, and give the technology choices their table.');
     // The heading's digest is the reference file's; the carried, re-levelled text says it does not hash to it (R-PDJA-17-STANDARDS-1 note 1).
+    expect(brief).toContain('SEC-2 and SEC-5 bind your own reads and sends');
+    expect(brief).toContain('Never send secrets or unclassifiable content.');
+    expect(brief).toContain('Eligible content classes: code-content, project-documentation, governance-text');
     expect(brief).toContain('The heading below names the digest of the skill\'s `references/reader-standards.md`; the text under it is that file without its version line and with every heading one level down, so it does not itself hash to that digest.');
     const record = JSON.parse(read(run, 'brief.json'));
     expect(record).toMatchObject({
-      format: 'polaris-dossier-brief/1', briefVersion: 'polaris-dossier-brief-v8', role: 'authoring', runId: RUN_ID, pinnedRevision: REV,
+      format: 'polaris-dossier-brief/1', briefVersion: 'polaris-dossier-brief-v9', role: 'authoring', runId: RUN_ID, pinnedRevision: REV,
       schemaVersion: 'polaris-dossier-local-draft-v4', guidanceVersion: 'polaris-author-dossier-v2', issuedAt: '2026-10-07T12:00:00.000Z',
       readerStandards: { version: 'polaris-reader-standards-v1', sha256: sha(STANDARDS) },
       deadline: { declared: 'PT1H', seconds: 3600, endsAt: '2026-10-07T13:00:00.000Z' },
@@ -159,7 +177,7 @@ describe('brief: issued', () => {
       '## Citation rules', '- Cite every `inferred` block: Syzygy strongly encourages it', 'Mark it `judgement: true`. It stays `inferred`, may cite nothing',
       '- A fact is never a judgement.', 'the fidelity review blocks a marked judgement that asserts a fact', 'A `non-normative` block carries no citation and no anchor.',
       // syzygy-pdja.20: the review-reach rule, with no project content, beside the other citation rules.
-      '- Syzygy refuses a cited path that names no file at the pinned revision, and a line range beyond the file\'s end.\n- The fidelity review is given a cited span\'s text only when screening admits its file and the run\'s consent covers that file\'s class.',
+      '- Syzygy refuses a cited path that names no file at the pinned revision, and a line range beyond the file\'s end.\n- The fidelity review is given a cited span\'s text only when screening admits its file and the policy recognizes that file\'s content class.',
       'An Inferred block none of whose cited spans the review is given cannot be confirmed by a review', '`syzygy dossier check` lists such blocks under `reviewReach`, and under its `elements` the understanding items and diagram nodes and edges every cited span of which screening withholds: no review judges those, but each renders Unknown and none of its text renders.', 'resubmitting such a block unchanged spends a repair cycle and cannot confirm it.',
       '## Quotation rule', 'A quotation is optional: a claim in your own words, with its citation, is the norm.', 'without elision, joining or alteration',
       '## Discovery', '## Clarifications', 'the consequential questions the clone does not settle: at most 2.',
@@ -197,11 +215,11 @@ describe('brief: issued', () => {
   it('carries no project content beyond the repository identity and the pinned revision', async () => {
     const other: RunSubject = {
       ...SUBJECT,
-      repository: { url: 'github.com/example/other', repositoryId: 'example-other' },
-      pinnedRevision: { commit: 'c'.repeat(40), label: 'v9', consentRecord: 'OTHER-CONSENT@1', pinnedAt: '2026-10-07T11:00:00.000Z' },
-      startGates: { registryEntry: 'OTHER-REGISTRY', screeningPolicy: 'OTHER-POLICY' },
+      repository: { url: 'github.com/example/other', repositoryId: 'example-other', role: 'observed-source' },
+      pinnedRevision: { commit: 'c'.repeat(40), label: 'v9', pinnedAt: '2026-10-07T11:00:00.000Z' },
+      ...declaredSubjectFixture(),
       governed: { kind: 'governed', because: ['an openspec path in the pinned tree: openspec/specs/secret-name.md'] },
-      providerStatement: 'STATEMENT@1',
+
     };
     const first = runDirectory(), second = runDirectory(other);
     await issueBrief(first, { sources: sources(), openReader: tree(), now: () => NOW });
@@ -209,7 +227,7 @@ describe('brief: issued', () => {
     // The label shown is the live consent's for the commit, not the run record's.
     const blank = (text: string, subject: RunSubject, liveLabel: string): string => [subject.repository.url, subject.repository.repositoryId, subject.pinnedRevision.commit, `(${liveLabel})`]
       .reduce((acc, value) => acc.split(value).join('<identity>'), text).replace(/sha256 `[0-9a-f]{64}`\)/, 'sha256 `<schema>`)');
-    expect(blank(read(second, 'brief.md'), other, 'v9')).toBe(blank(read(first, 'brief.md'), SUBJECT, '8.10.2'));
+    expect(blank(read(second, 'brief.md'), other, 'v9')).toBe(blank(read(first, 'brief.md'), SUBJECT, 'label-in-run-json'));
     for (const leaked of ['OTHER-CONSENT', 'OTHER-REGISTRY', 'OTHER-POLICY', 'secret-name', 'STATEMENT@1']) expect(read(second, 'brief.md')).not.toContain(leaked);
   });
 
@@ -229,11 +247,11 @@ describe('brief: issued', () => {
     const plain = renderBrief({ ...input, copy: null });
     const copied = renderBrief({ ...input, copy: { dir: '/state/copies/copy-AbC123', operatorClone: '/home/op/redis' } });
     const pinnedLine = `- Pinned revision: \`${REV}\` (8.10.2)\n`;
-    expect(copied).toBe(plain.replace(pinnedLine, `${pinnedLine}${[
+    expect(copied).toBe(plain.replace(/^- Clone:.*\n/mu, '').replace(pinnedLine, `${pinnedLine}${[
       '- Clone: `/state/copies/copy-AbC123`, a copy of the pinned commit alone, which Syzygy made from the operator\'s clone (Inferred, from the run\'s launch disclosure); this copy is the run\'s clone: work in it, and read it by this path, never as your working directory',
       '- The operator\'s clone, at `/home/op/redis`: do not read it, or anything under it. Everything this brief says of the clone means the copy. Whether you stayed in the copy is your own report.',
     ].join('\n')}\n`));
-    expect(plain).not.toContain('- Clone:');
+    expect(plain).toContain('- Clone: `/srv/clones/redis`, declared at init');
   });
 
   it('carries the readability rules, after the profile guidance (syzygy-mea.10.4)', async () => {
@@ -334,27 +352,19 @@ describe('brief: refused', () => {
     expect(fs.readdirSync(run)).toEqual(['run.json']);
   };
 
-  it('refuses when the pinned revision is no longer consented, naming every reason, and writes nothing', async () => {
+  it('refuses an unavailable committed policy and writes no brief', async () => {
     const run = runDirectory();
-    const result = await issueBrief(run, { sources: sources({ observationConsentFor: async () => ({ satisfied: false, why: 'withdrawn' }), screeningPolicy: async () => ({ state: 'absent', why: 'no act' }) }), openReader: tree(), now: () => NOW });
-    expect(result).toEqual({ ok: false, refusal: expect.objectContaining({
-      command: 'brief', outcome: 'refused', stage: 'reverify', reason: 'the pinned revision could not be verified again, so no brief is issued',
-      reasons: [`the recorded pinned revision ${REV} is not a revision the in-force observation consent for redis-redis names: withdrawn`, 'the classification and screening policy is no longer in force: no act'],
-    }) });
+    const result = await issueBrief(run, { sources: sources({ declaredPolicy: async () => ({ ok: false, why: 'fixture policy unavailable' }) }), openReader: tree(), now: () => NOW });
+    expect(result).toMatchObject({ ok: false, refusal: { stage: 'reverify', refusals: [{ code: 'policy' }] } });
     nothingWritten(run);
   });
 
-  it('carries the guard\'s object-read refusal and its disclosures when the pinned tree cannot be listed (R-POLARIS-DOSSIER-S3-GATES-2 note 10)', async () => {
+  it('carries the object-read refusal and current evidence disclosures', async () => {
     const run = runDirectory();
-    const failing = () => ({ listTree: async () => { throw new GitObjectReadRefusal('object-missing', `object ${REV} is in neither a loose object nor a pack of this clone`); } }) as unknown as PinnedObjectReader;
+    const failing = () => ({ listTree: async () => { throw new GitObjectReadRefusal('object-missing', 'fixture object missing'); } }) as unknown as PinnedObjectReader;
     const result = await issueBrief(run, { sources: sources(), openReader: failing, now: () => NOW });
     expect(result).toMatchObject({ ok: false, refusal: { stage: 'reverify', refusals: [{ code: 'listing' }], objectRead: { reason: 'object-missing' } } });
-    expect(!result.ok && result.refusal.disclosures).toEqual([
-      'the consent, registry, policy and statement records the gates read lie in Syzygy\'s checkout, which the agent sessions can write; Syzygy re-reads and re-checks them at every step, and cannot rule out that a session changed them',
-      'The brief, the draft schema and the brief record are stored in the run directory, which the agent sessions can write; read back, each is Inferred.',
-      'the run record names the repository, the clone and the pinned commit to look at; whether that commit is consented, whether the subject is governed and whether a per-project statement is in force were decided again at this step from the records in force now and the pinned tree listed now',
-      'which per-project statement applies is selected by the agent provider the run record declares: that provider, the statement citation it selects and the clone location are Inferred and lie within the agent sessions\' write reach; a tool or provider that differs from the one the brief record states refuses, but the brief record lies within the same reach, so an edit of both records together is not detected',
-    ]);
+    expect(!result.ok && result.refusal.disclosures).toContain('Pinned Git objects are rehashed at this step and the committed policy binding is checked again. No consent, registry act, drawer or provider statement is read.');
     nothingWritten(run);
   });
 
@@ -367,63 +377,13 @@ describe('brief: refused', () => {
     expect(read(run, 'brief.json')).toBe(before);
   });
 
-  describe('a copy-class run (REQ-polaris-generation-046, 047): the launch disclosure decides whether the brief names a copy', () => {
-    const QUESTION = { id: 'question', stage: 'question asked', runClass: 'both', reached: false, label: 'Inferred', text: 'No question was asked.' };
-    const NOT_REACHED = { id: 'briefs', stage: 'brief or packet delivered', runClass: 'both', reached: false, label: 'Inferred', text: 'Syzygy issued no brief and delivered no packet.' };
-    const fields = (over: Record<string, unknown> = {}) => ({
-      format: 'polaris-dossier-launch-disclosure/1', runClass: 'copy-class', launched: true, operatorClone: '/home/op/redis', copy: '/srv/clones/redis',
-      consents: { recorded: [], commit: null, relied: ['launch observation consent X'] },
-      subject: { identity: 'repository:redis-redis', url: 'github.com/redis/redis', source: 'the clone\'s remote origin', proposedBy: 'derived', publicDeclaration: null },
-      drawer: null, statements: [QUESTION, NOT_REACHED],
-      label: 'Inferred', ...over,
-    });
-    // As init writes it.
-    const disclosure = (over: Record<string, unknown> = {}) => `${JSON.stringify(fields(over), null, 2)}\n`;
-
-    it('names the copy and the operator\'s clone, in the brief and its record', async () => {
-      const run = runDirectory();
-      fs.writeFileSync(path.join(run, 'launch.json'), disclosure());
-      expect((await issueBrief(run, { sources: sources(), openReader: tree(), now: () => NOW })).ok).toBe(true);
-      expect(read(run, 'brief.md')).toContain(`- Pinned revision: \`${REV}\` (8.10.2)\n- Clone: \`/srv/clones/redis\`, a copy of the pinned commit alone, which Syzygy made from the operator's clone (Inferred, from the run's launch disclosure); this copy is the run's clone: work in it, and read it by this path, never as your working directory\n- The operator's clone, at \`/home/op/redis\`: do not read it, or anything under it. Everything this brief says of the clone means the copy. Whether you stayed in the copy is your own report.\n`);
-      expect(JSON.parse(read(run, 'brief.json')).copy).toEqual({ dir: '/srv/clones/redis', operatorClone: '/home/op/redis' });
-      // launch.json's brief stage now says what the brief's record stores (the owner's ruling of 2026-11-14); every other field as it was.
-      const reached = { id: 'briefs/authoring', stage: 'brief or packet delivered', runClass: 'copy-class', reached: true, label: 'Inferred', text: 'The authoring brief Syzygy issued directed its session to work in the copy and not to read the operator\'s clone. Whether the session stayed in the copy is its own report [Inferred].' };
-      expect(read(run, 'launch.json')).toBe(disclosure({ statements: [QUESTION, reached] }));
-      expect(JSON.parse(read(run, 'brief.json')).stageStatement).toEqual(reached);
-      expect(fs.readdirSync(run).sort()).toEqual(['brief.json', 'brief.md', 'draft.schema.json', 'launch.json', 'run.json']);
-    });
-
-    it('a no-copy run\'s brief names none', async () => {
-      const run = runDirectory();
-      fs.writeFileSync(path.join(run, 'launch.json'), disclosure({ runClass: 'no-copy', copy: null }));
-      expect((await issueBrief(run, { sources: sources(), openReader: tree(), now: () => NOW })).ok).toBe(true);
-      expect(read(run, 'brief.md')).not.toContain('- Clone:');
-      expect(JSON.parse(read(run, 'brief.json')).copy).toBeNull();
-      expect(read(run, 'launch.json')).toBe(disclosure({ runClass: 'no-copy', copy: null, statements: [QUESTION, { id: 'briefs/authoring', stage: 'brief or packet delivered', runClass: 'no-copy', reached: true, label: 'Inferred', text: 'The authoring brief Syzygy issued named the operator\'s clone as the run\'s clone, where its session is to work; whether the session worked there is its own report [Inferred]. No copy was made.' }] }));
-    });
-
-    it('a launch.json not in the exact form init writes is left as it is: the brief stays issued, and the refusal says the record disagrees', async () => {
-      const run = runDirectory();
-      const compact = JSON.stringify(fields({ runClass: 'no-copy', copy: null }));
-      fs.writeFileSync(path.join(run, 'launch.json'), compact);
-      expect(await issueBrief(run, { sources: sources(), openReader: tree(), now: () => NOW })).toMatchObject({ ok: false, refusal: { stage: 'write',
-        reason: 'the brief was issued and its files stay, but the run\'s launch.json is not in the exact form init writes, so it cannot be rewritten keeping every other field byte-identical, so the run record still says no brief was issued and every page says the two disagree; the run cannot be briefed again' } });
-      expect(read(run, 'launch.json')).toBe(compact);
-      expect(fs.readdirSync(run).sort()).toEqual(['brief.json', 'brief.md', 'draft.schema.json', 'launch.json', 'run.json']);
-    });
-
-    it('refuses where the disclosure cannot be read, or names a copy that is not the run record\'s clone; nothing is written', async () => {
-      const unreadable = runDirectory();
-      fs.writeFileSync(path.join(unreadable, 'launch.json'), disclosure({ label: 'Observed' }));
-      expect(await issueBrief(unreadable, { sources: sources(), openReader: tree(), now: () => NOW })).toMatchObject({ ok: false, refusal: { stage: 'launch-record',
-        reason: 'the run\'s launch.json cannot be read as the record init writes (it is not a polaris-dossier-launch-disclosure/1 record), so whether the brief must direct its session to a copy cannot be decided; no brief is issued' } });
-      expect(fs.readdirSync(unreadable)).toEqual(['launch.json', 'run.json']);
-      const elsewhere = runDirectory();
-      fs.writeFileSync(path.join(elsewhere, 'launch.json'), disclosure({ copy: '/state/copies/copy-Other1' }));
-      expect(await issueBrief(elsewhere, { sources: sources(), openReader: tree(), now: () => NOW })).toMatchObject({ ok: false, refusal: { stage: 'launch-record',
-        reason: 'the run\'s launch.json names the copy /state/copies/copy-Other1, but the run record\'s clone is /srv/clones/redis; no brief is issued' } });
-      expect(fs.readdirSync(elsewhere)).toEqual(['launch.json', 'run.json']);
-    });
+  it('ignores legacy launch artifacts while issuing a declared-source brief, leaving their bytes unchanged', async () => {
+    const run = runDirectory(); const legacy = '{"historical":"retained without current admission authority"}';
+    fs.writeFileSync(path.join(run, 'launch.json'), legacy);
+    expect((await issueBrief(run, { sources: sources(), openReader: tree(), now: () => NOW })).ok).toBe(true);
+    expect(read(run, 'launch.json')).toBe(legacy);
+    expect(read(run, 'brief.md')).toContain('- Clone: `/srv/clones/redis`, declared at init');
+    expect(JSON.parse(read(run, 'brief.json')).copy).toBeNull();
   });
 
   it('refuses when SEC-3 cannot be quoted as adopted', async () => {
@@ -459,7 +419,7 @@ describe('syzygy dossier brief', () => {
 
   it('exits 1 on a refusal and 2 on malformed arguments', async () => {
     const run = runDirectory();
-    expect((await cli(['brief', run], { registryEntry: async () => ({ state: 'absent', why: 'no act' }) })).code).toBe(1);
+    expect((await cli(['brief', run], { declaredPolicy: async () => ({ ok: false, why: 'policy unavailable' }) })).code).toBe(1);
     expect((await cli(['brief'])).code).toBe(2);
     expect((await cli(['brief', run, 'extra'])).code).toBe(2);
     expect((await cli(['brief', '--allow', run])).code).toBe(2);

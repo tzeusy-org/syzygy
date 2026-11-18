@@ -1,0 +1,306 @@
+[
+  {
+    "label": "chrome148-normal",
+    "count": 4,
+    "fixtureExit0": 4,
+    "fullReportAssertionsPass": 4,
+    "failedChecks": [
+      [],
+      [],
+      [],
+      []
+    ],
+    "readyMsRange": [
+      421.634,
+      1200.138
+    ],
+    "durationMsRange": [
+      1768.708,
+      2540.704
+    ],
+    "guardianExitCodes": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "recoveryProcPsEmpty": true
+  },
+  {
+    "label": "chrome157-50-delay-navigation",
+    "count": 2,
+    "fixtureExit0": 0,
+    "fullReportAssertionsPass": 0,
+    "failedChecks": [
+      [],
+      []
+    ],
+    "readyMsRange": null,
+    "durationMsRange": [
+      31246.557,
+      31277.823
+    ],
+    "guardianExitCodes": [],
+    "recoveryProcPsEmpty": true
+  },
+  {
+    "label": "chrome157-50-delay-navigation-page-only",
+    "count": 2,
+    "fixtureExit0": 2,
+    "fullReportAssertionsPass": 2,
+    "failedChecks": [
+      [],
+      []
+    ],
+    "readyMsRange": [
+      670.649,
+      684.437
+    ],
+    "durationMsRange": [
+      1950.292,
+      1977.12
+    ],
+    "guardianExitCodes": [
+      0,
+      0
+    ],
+    "recoveryProcPsEmpty": true
+  },
+  {
+    "label": "chrome157-50-normal",
+    "count": 8,
+    "fixtureExit0": 8,
+    "fullReportAssertionsPass": 8,
+    "failedChecks": [
+      [],
+      [],
+      [],
+      [],
+      [],
+      [],
+      [],
+      []
+    ],
+    "readyMsRange": [
+      580.33,
+      2501.952
+    ],
+    "durationMsRange": [
+      1826.987,
+      3764.264
+    ],
+    "guardianExitCodes": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    "recoveryProcPsEmpty": true
+  },
+  {
+    "label": "chrome157-50-same-core-eight",
+    "count": 2,
+    "fixtureExit0": 2,
+    "fullReportAssertionsPass": 0,
+    "failedChecks": [
+      [
+        "guardian"
+      ],
+      [
+        "guardian"
+      ]
+    ],
+    "readyMsRange": [
+      4843.269,
+      5021.883
+    ],
+    "durationMsRange": [
+      16359.004,
+      16474.13
+    ],
+    "guardianExitCodes": [
+      120,
+      120
+    ],
+    "recoveryProcPsEmpty": true
+  },
+  {
+    "label": "chrome157-78-normal",
+    "count": 4,
+    "fixtureExit0": 4,
+    "fullReportAssertionsPass": 4,
+    "failedChecks": [
+      [],
+      [],
+      [],
+      []
+    ],
+    "readyMsRange": [
+      451.761,
+      507.119
+    ],
+    "durationMsRange": [
+      1716.141,
+      1848.693
+    ],
+    "guardianExitCodes": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "recoveryProcPsEmpty": true
+  },
+  {
+    "label": "delayed-navigation",
+    "count": 2,
+    "fixtureExit0": 0,
+    "fullReportAssertionsPass": 0,
+    "failedChecks": [
+      [],
+      []
+    ],
+    "readyMsRange": null,
+    "durationMsRange": [
+      31312.633,
+      31336.121
+    ],
+    "guardianExitCodes": [],
+    "recoveryProcPsEmpty": true
+  },
+  {
+    "label": "delayed-navigation-launch-only",
+    "count": 2,
+    "fixtureExit0": 2,
+    "fullReportAssertionsPass": 2,
+    "failedChecks": [
+      [],
+      []
+    ],
+    "readyMsRange": [
+      312.275,
+      386.977
+    ],
+    "durationMsRange": [
+      1627.801,
+      1702.652
+    ],
+    "guardianExitCodes": [
+      0,
+      0
+    ],
+    "recoveryProcPsEmpty": true
+  },
+  {
+    "label": "exact-base",
+    "count": 2,
+    "fixtureExit0": 2,
+    "fullReportAssertionsPass": 2,
+    "failedChecks": [
+      [],
+      []
+    ],
+    "readyMsRange": [
+      342.168,
+      389.877
+    ],
+    "durationMsRange": [
+      1538.663,
+      1578.43
+    ],
+    "guardianExitCodes": [
+      0,
+      0
+    ],
+    "recoveryProcPsEmpty": true
+  },
+  {
+    "label": "exact-head",
+    "count": 2,
+    "fixtureExit0": 2,
+    "fullReportAssertionsPass": 2,
+    "failedChecks": [
+      [],
+      []
+    ],
+    "readyMsRange": [
+      243.47,
+      289.388
+    ],
+    "durationMsRange": [
+      1349.992,
+      1422.427
+    ],
+    "guardianExitCodes": [
+      0,
+      0
+    ],
+    "recoveryProcPsEmpty": true
+  },
+  {
+    "label": "same-core-eight",
+    "count": 4,
+    "fixtureExit0": 4,
+    "fullReportAssertionsPass": 0,
+    "failedChecks": [
+      [
+        "guardian"
+      ],
+      [
+        "guardian"
+      ],
+      [
+        "guardian"
+      ],
+      [
+        "guardian"
+      ]
+    ],
+    "readyMsRange": [
+      3278.628,
+      3474.096
+    ],
+    "durationMsRange": [
+      16407.34,
+      16902.675
+    ],
+    "guardianExitCodes": [
+      120,
+      120,
+      120,
+      120
+    ],
+    "recoveryProcPsEmpty": true
+  },
+  {
+    "label": "tagged-normal",
+    "count": 4,
+    "fixtureExit0": 4,
+    "fullReportAssertionsPass": 4,
+    "failedChecks": [
+      [],
+      [],
+      [],
+      []
+    ],
+    "readyMsRange": [
+      337.559,
+      398.363
+    ],
+    "durationMsRange": [
+      1495.141,
+      1601.284
+    ],
+    "guardianExitCodes": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "recoveryProcPsEmpty": true
+  }
+]

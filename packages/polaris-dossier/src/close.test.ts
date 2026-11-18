@@ -36,7 +36,7 @@ describe('close (S10)', () => {
   it('records the operator-declared usage, labelled Inferred and attributed to the operator, never a receipt', async () => {
     const { run, steps } = await fullRun({ closeArgs: ['--usage-tokens', '48213', '--usage-turns', '37'] });
     const record = readJson(path.join(run, 'record.json'));
-    expect(record.format).toBe('polaris-dossier-execution-record/1');
+    expect(record.format).toBe('polaris-dossier-execution-record/2');
     expect(record.agentUsage).toEqual({
       state: 'declared', tokens: 48213, turns: 37, declaredBy: 'operator', label: 'Inferred',
       basis: 'the figure the operator declared at close, as their agent tool showed it; Syzygy cannot observe the agent sessions\' usage, and this is not a provider receipt',
@@ -108,10 +108,10 @@ describe('close (S10)', () => {
     expect(fs.readFileSync(path.join(run, 'record.json'), 'utf8')).toBe('the other close\'s record\n');
   });
 
-  it('refuses when the consent no longer names the pinned revision', async () => {
+  it('refuses unavailable policy before writing a close record', async () => {
     const { run, commit } = await fullRun();
     fs.rmSync(path.join(run, 'record.json'));
-    const sources = { ...fixtureSources(commit), observationConsentFor: async () => ({ satisfied: false as const, why: 'withdrawn' }) };
+    const sources = { ...fixtureSources(commit), declaredPolicy: async () => ({ ok: false as const, why: 'fixture unavailable' }) };
     expect(await closeRun(run, {}, { sources, now: () => LATER, probe: { probe: async () => ({ passed: true as const, checked: 0, source: 'x' }) } })).toMatchObject({ ok: false, refusal: { stage: 'reverify' } });
     expect(fs.existsSync(path.join(run, 'record.json'))).toBe(false);
   });

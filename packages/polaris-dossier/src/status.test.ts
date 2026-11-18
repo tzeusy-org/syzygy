@@ -1,3 +1,4 @@
+import { declaredSubjectFixture, policyFixture } from './full-run.testkit.js';
 import * as fs from 'node:fs';
 import * as path from 'node:path';
 import { beforeEach, describe, expect, it } from 'vitest';
@@ -15,12 +16,12 @@ const CONFIG = {
   operatorIsOwner: false,
 };
 const SUBJECT: RunSubject = {
-  repository: { url: 'github.com/redis/redis', repositoryId: 'redis-redis' },
+  repository: { url: 'github.com/redis/redis', repositoryId: 'redis-redis', role: 'observed-source' },
   clone: { path: '/srv/clones/redis', declaredBy: 'operator', label: 'Inferred', use: 'read' },
-  pinnedRevision: { commit: '498ecd0d6d007db11ddb3aea9428552598a78622', label: '8.10.2', consentRecord: 'PUBLIC-OBS-REDIS-2026-10-03@0.1.0-candidate.7', pinnedAt: '2026-10-07T10:00:00.000Z' },
-  startGates: { registryEntry: 'PUBLIC-ADMISSION-REGISTRY-GIT-SOURCE-2026-10-07', screeningPolicy: 'PWB-SECRET-CLASSIFICATION-POLICY-PUBLIC-SOURCE-SCOPE-APPROVAL-2026-10-04' },
+  pinnedRevision: { commit: '498ecd0d6d007db11ddb3aea9428552598a78622', label: '8.10.2', pinnedAt: '2026-10-07T10:00:00.000Z' },
+  ...declaredSubjectFixture(),
   governed: { kind: 'non-governed', because: ['the project input fixture states that no kernel evidence drawer exists'] },
-  providerStatement: null,
+
   workItem: { identity: null, reason: NO_WORK_ITEM_REASON },
 };
 let runDir: string;
@@ -159,14 +160,14 @@ describe('status (REQ-polaris-generation-033)', () => {
     fs.writeFileSync(file, bytes);
     const result = runStatus(runDir);
     if (!result.ok) throw new Error(result.reason);
-    expect(result.report.subject.repository).toEqual({ url: read, repositoryId: 'redis-redis' });
+    expect(result.report.subject.repository).toEqual({ url: read, repositoryId: 'redis-redis', role: 'observed-source' });
     expect(fs.readFileSync(file, 'utf8')).toBe(bytes);
   });
 
   it('writes a run record only with the normalised URL', () => {
     const parsed = parseRunConfig(JSON.stringify(CONFIG));
     if (!parsed.ok) throw new Error('fixture configuration refused');
-    expect(() => encodeRunRecord(parsed.config, { ...SUBJECT, repository: { url: 'https://github.com/redis/redis', repositoryId: 'redis-redis' } })).toThrow('a run record carries the normalised URL only');
+    expect(() => encodeRunRecord(parsed.config, { ...SUBJECT, repository: { url: 'https://github.com/redis/redis', repositoryId: 'redis-redis', role: 'observed-source' } })).toThrow('a run record carries the normalised URL only');
   });
 
   it('refuses a missing run directory', () => {
@@ -183,15 +184,19 @@ describe('status (REQ-polaris-generation-033)', () => {
 
   it.each([
     ['a stored limit made unlimited', (record: Record<string, any>) => { record['declared']['maxRepairCycles'] = null; }, 'run.json declares an invalid run configuration'],
-    ['the label changed to Observed', (record: Record<string, any>) => { record['label'] = 'Observed'; }, 'run.json is not a polaris-dossier-run/1 record of the operator-agent mode'],
+    ['the label changed to Observed', (record: Record<string, any>) => { record['label'] = 'Observed'; }, 'run.json is not a polaris-dossier-run/2 record of the operator-agent mode'],
     ['a fabricated credential identity', (record: Record<string, any>) => { record['principal']['credentialIdentity'] = 'token-abc'; }, 'run.json principal must be the declared operator, operator-declared, with credential identity Unknown'],
     ['a principal other than the operator', (record: Record<string, any>) => { record['principal']['name'] = 'someone-else'; }, 'run.json principal must be the declared operator, operator-declared, with credential identity Unknown'],
     ['an execution choice smuggled into the record', (record: Record<string, any>) => { record['declared']['executionChoice'] = 'allow'; }, 'run.json declares an invalid run configuration'],
     ['an extra top-level field', (record: Record<string, any>) => { record['observed'] = true; }, 'run.json carries fields declared, declaredBy, format, label, mode, modelVersionProvider, observed, principal, subject; expected declared, declaredBy, format, label, mode, modelVersionProvider, principal, subject'],
     ['the subject removed', (record: Record<string, any>) => { delete record['subject']; }, 'run.json carries fields declared, declaredBy, format, label, mode, modelVersionProvider, principal; expected declared, declaredBy, format, label, mode, modelVersionProvider, principal, subject'],
+    ['a missing Repository role', (record: Record<string, any>) => { delete record['subject']['repository']['role']; }, 'run.json subject is invalid: repository must carry a url, repositoryId and declared observed-source role'],
+    ['a different Repository role', (record: Record<string, any>) => { record['subject']['repository']['role'] = 'governance-root'; }, 'run.json subject is invalid: repository must carry a url, repositoryId and declared observed-source role'],
+    ['a fabricated policy digest', (record: Record<string, any>) => { record['subject']['screeningPolicy']['sha256'] = 'bad'; }, 'run.json subject is invalid: screeningPolicy must bind the committed dossier policy identity, version and digest'],
+    ['an undeclared content class', (record: Record<string, any>) => { record['subject']['contentClasses'].push('secret-content'); }, 'run.json subject is invalid: contentClasses must name exactly code-content, project-documentation and governance-text in that order'],
+    ['a visibility declaration called observed', (record: Record<string, any>) => { record['subject']['visibility']['label'] = 'Observed'; }, 'run.json subject is invalid: visibility must carry an attributed declaration or conservative private default, labelled Inferred'],
+    ['a conservative default claiming public', (record: Record<string, any>) => { record['subject']['visibility']['source'] = 'conservative-default'; record['subject']['visibility']['value'] = 'public'; }, 'run.json subject is invalid: visibility must carry an attributed declaration or conservative private default, labelled Inferred'],
     ['a pinned revision that is not a full commit id', (record: Record<string, any>) => { record['subject']['pinnedRevision']['commit'] = '498ecd0'; }, 'run.json subject is invalid: the pinned commit is not a full commit identifier'],
-    ['a governed subject citing no statement', (record: Record<string, any>) => { record['subject']['governed']['kind'] = 'governed'; }, 'run.json subject is invalid: a governed subject must cite the per-project statement it relies on'],
-    ['an unstated subject citing no statement', (record: Record<string, any>) => { record['subject']['governed']['kind'] = 'unstated'; }, 'run.json subject is invalid: an unstated subject must cite the per-project statement it relies on'],
     ['a work item identity filled in', (record: Record<string, any>) => { record['subject']['workItem']['identity'] = 'WI-1'; }, 'run.json subject is invalid: workItem must record an absent identity with its reason'],
     ['a repository URL neither normalised nor in the form the retired rule wrote', (record: Record<string, any>) => { record['subject']['repository']['url'] = 'https://github.com/redis/redis.git'; }, 'run.json subject is invalid: repository url or repositoryId is malformed'],
     ['a repository URL on another scheme', (record: Record<string, any>) => { record['subject']['repository']['url'] = 'http://github.com/redis/redis'; }, 'run.json subject is invalid: repository url or repositoryId is malformed'],
@@ -200,7 +205,7 @@ describe('status (REQ-polaris-generation-033)', () => {
     ['a repositoryId in upper case', (record: Record<string, any>) => { record['subject']['repository']['repositoryId'] = 'Redis-redis'; }, 'run.json subject is invalid: repository url or repositoryId is malformed'],
     ['a repositoryId holding a "/"', (record: Record<string, any>) => { record['subject']['repository']['repositoryId'] = 'redis/redis'; }, 'run.json subject is invalid: repository url or repositoryId is malformed'],
     ['a repositoryId holding a "~"', (record: Record<string, any>) => { record['subject']['repository']['repositoryId'] = 'redis~redis'; }, 'run.json subject is invalid: repository url or repositoryId is malformed'],
-    ['a record naming no clone', (record: Record<string, any>) => { delete record['subject']['clone']; }, 'run.json subject is invalid: it must carry exactly repository, clone, pinnedRevision, startGates, governed, providerStatement and workItem'],
+    ['a record naming no clone', (record: Record<string, any>) => { delete record['subject']['clone']; }, 'run.json subject is invalid: it must carry exactly repository, clone, pinnedRevision, screeningPolicy, contentClasses, visibility, governed and workItem'],
     ['a relative clone path', (record: Record<string, any>) => { record['subject']['clone']['path'] = 'clones/redis'; }, 'run.json subject is invalid: the clone path is not an absolute, normalised path'],
     ['a clone path that is not normalised', (record: Record<string, any>) => { record['subject']['clone']['path'] = '/srv/clones/../redis'; }, 'run.json subject is invalid: the clone path is not an absolute, normalised path'],
     ['a clone path holding a NUL', (record: Record<string, any>) => { record['subject']['clone']['path'] = '/srv/clones/re\u0000dis'; }, 'run.json subject is invalid: the clone path is not an absolute, normalised path'],

@@ -1,0 +1,36 @@
+{
+  "meaning": "Verbatim retained raws moved to the existing recognized implementation-review lane; no raw bytes edited",
+  "population": 6,
+  "subjects": [
+    {
+      "from": "docs/evidence/syzygy-k54o-1/R-D10-F1-POLICY-1-RAW.md",
+      "to": "docs/reviews/syzygy-k54o-1/R-D10-F1-POLICY-1-RAW.md",
+      "sha256": "49d27e692a80cb40a7c1e48e7fb829494183f83439a04e446a688cba0cea98a2"
+    },
+    {
+      "from": "docs/evidence/syzygy-k54o-1/R-D10-F1-SCOPE-1-RAW.md",
+      "to": "docs/reviews/syzygy-k54o-1/R-D10-F1-SCOPE-1-RAW.md",
+      "sha256": "1ebc47494e2dca2a2fcb10f59883bcd7f6133a94598dc1a7b13b4408f7f6dd38"
+    },
+    {
+      "from": "docs/evidence/syzygy-k54o-1/R-D10-F1-SOURCE-1-RAW.md",
+      "to": "docs/reviews/syzygy-k54o-1/R-D10-F1-SOURCE-1-RAW.md",
+      "sha256": "ac007c785d72f93778fbbc3ac93be40849ba9fb5a78d680b29d7f0207bee91ac"
+    },
+    {
+      "from": "docs/evidence/syzygy-k54o-1/R-D10-F1-SOURCE-2-RAW.md",
+      "to": "docs/reviews/syzygy-k54o-1/R-D10-F1-SOURCE-2-RAW.md",
+      "sha256": "bacbc019b88372c86d75ba158574d34b84d7e0307f9c9a118f6ee4c5d2a97501"
+    },
+    {
+      "from": "docs/evidence/syzygy-k54o-1/R-D10-F1-SPEC-1-RAW.md",
+      "to": "docs/reviews/syzygy-k54o-1/R-D10-F1-SPEC-1-RAW.md",
+      "sha256": "ac15cb814f4697c29e9cbbb085dc8fa0cd278cb5b3ee50d2e3080258c0b636b4"
+    },
+    {
+      "from": "docs/evidence/syzygy-k54o-1/R-D10-F1-SPEC-2-RAW.md",
+      "to": "docs/reviews/syzygy-k54o-1/R-D10-F1-SPEC-2-RAW.md",
+      "sha256": "d1f169ec1dfb999614e6e705994db1cada25bf71fea44ebc9574fa58f4a3f8ba"
+    }
+  ]
+}

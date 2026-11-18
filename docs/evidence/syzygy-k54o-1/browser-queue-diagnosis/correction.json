@@ -1,0 +1,60 @@
+{
+  "subjectBefore": "3c31e749897416c68179734d6980e25332570d96",
+  "path": "apps/three-surface-poc/src/cdp-browser.browser.test.ts",
+  "beforeSha256": "d5a59ac51c69dce9bff12e1ab3a1da324f8e38a3eb806f7ea90ef9683194923a",
+  "afterSha256": "8091cd73f33f8132aa45d849907beeae18661afbb29ad440793cbcda6caf75c2",
+  "changes": [
+    {
+      "old": "const page = await browser.newPage(); await page.navigate('data:text/html,<p>parent lifetime</p>');",
+      "new": "await browser.newPage();"
+    },
+    {
+      "old": "expect(code, errors).toBe(0);",
+      "new": "expect(code, [errors, output].filter(Boolean).join('\\n')).toBe(0);"
+    }
+  ],
+  "historicalQueueCause": "Unknown; controlled injection proves avoidable navigation dependency, not historical root cause.",
+  "controls": [
+    {
+      "chromeVersion": "157.0.8103.50",
+      "command": "SYZYGY_POC_BROWSER=/home/orca/.tmp/syzygy-beads-looper-20261114-54ebc9f1/chrome-for-testing-157/chrome-linux64/chrome npx vitest run --project e2e apps/three-surface-poc/src/cdp-browser.browser.test.ts",
+      "passed": 5,
+      "failed": 0,
+      "logSha256": "8e08fabef981d81a79f1e82ddd5833c6bfcd760b2901688a2e0c8012dfdac4d6",
+      "log": "/home/orca/.tmp/syzygy-beads-looper-20261114-54ebc9f1/d10-f1-browser-fix-157-50.log"
+    },
+    {
+      "chromeVersion": "157.0.8103.78",
+      "command": "SYZYGY_POC_BROWSER=/home/orca/.tmp/syzygy-beads-looper-20261114-54ebc9f1/chrome-for-testing-157.0.8103.78/chrome-linux64/chrome npx vitest run --project e2e apps/three-surface-poc/src/cdp-browser.browser.test.ts",
+      "passed": 5,
+      "failed": 0,
+      "logSha256": "3163b4be618f0cd92aa4e0106fb68cbc8fe61512a2a9e2e8156daa86e0b36c10",
+      "log": "/home/orca/.tmp/syzygy-beads-looper-20261114-54ebc9f1/d10-f1-browser-fix-157-78.log"
+    }
+  ],
+  "failureMessageProbe": {
+    "samples": 2,
+    "actualSourceAssertionExtracted": true,
+    "predecessorMessageOmitsReport": true,
+    "successorMessageContainsReportAndTraceback": true,
+    "firstProbeAttempt": "Failed due to wrong scratch input shape; corrected to read retained stdout/stderr files. No repository change resulted.",
+    "artifacts": [
+      {
+        "path": "/home/orca/.tmp/syzygy-beads-looper-20261114-54ebc9f1/browser-diagnostic-message-proof/result.log",
+        "sha256": "8e15dc510d90ef66cf39439b93b43bca5ebfd9105d7aff9c3df88847529c6375"
+      },
+      {
+        "path": "/home/orca/.tmp/syzygy-beads-looper-20261114-54ebc9f1/browser-diagnostic-message-proof/visibility.test.ts",
+        "sha256": "314e4c3b2c1241ad88279cf0fe5bfa8479dc3366ea1c5e4148d2e1b6d6e60080"
+      },
+      {
+        "path": "/home/orca/.tmp/syzygy-beads-looper-20261114-54ebc9f1/browser-diagnostic-message-proof/vitest.config.mjs",
+        "sha256": "497a7871050dadc0984ae39c8bc0fdb04dbd9e8062f2ea943420f09fcfce3860"
+      },
+      {
+        "path": "/home/orca/.tmp/syzygy-beads-looper-20261114-54ebc9f1/browser-diagnostic-message-proof/attempt-1-failed-probe-input.log",
+        "sha256": "7a3678c5d52ec66154f76acf8d8a157e68d3ecd4702ec62d4b37a5b268e33598"
+      }
+    ]
+  }
+}

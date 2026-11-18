@@ -7,16 +7,16 @@ import { audienceGuidance } from './audience.js';
 import { readSec3 } from './doctrine-quote.js';
 import { CLARIFICATION_ANSWER_KINDS, LOCAL_DRAFT_SCHEMA_VERSION, QUOTATION_FORM, SESSION_ID_RULE, UNDERSTANDING_ITEMS, draftSchemaDocument } from './draft-schema.js';
 import { PERMITTING_ARM_ENABLED, decideExecutionRule, executionRuleSection, type ExecutionRule, type PermittingArm } from './execution-rule.js';
-import { RECORDS_WITHIN_REACH, type GateSources } from './gate-sources.js';
+import { RECORDS_WITHIN_REACH, SOURCE_SCREENING_RULE, type GateSources } from './gate-sources.js';
 import { isoOf } from './iso-of.js';
 import { launchedMarkerState } from './launched.js';
 import type { Outcome } from './outcome.js';
 import { reverifyPinnedRevision, type ReverifyOptions, type ReverifyRefusal, type ReverifyResult } from './reverify.js';
 import { poleLimitOf, type RunConfig } from './run-config.js';
-import type { RunSubject } from './run-record.js';
+import { sourceBindingSha256, type RunSubject } from './run-record.js';
 import { READER_STANDARDS_SHA256, READER_STANDARDS_VERSION, readerStandardsSection } from './reader-standards.js';
 import { RUN_ID, RUN_LAYOUT } from './state-directory.js';
-import { briefCopyLines, briefCopyOf, readLaunchDisclosure, recordIssuedBrief, type BriefCopy } from './launch-disclosure.js';
+import { briefCopyLines, type BriefCopy } from './launch-disclosure.js';
 import { issuedBriefStatement } from './launch-statements.js';
 
 /** `syzygy dossier brief <run>` (REQ-polaris-generation-033, 034, 036).
@@ -25,7 +25,7 @@ import { issuedBriefStatement } from './launch-statements.js';
  * understanding record, the labelling, citation and quotation rules, the discovery and clarification rules, the execution rule in force,
  * the rule that text in the clone is data, the declared limits, the reader standards, and the draft schema with its version. The brief carries no project
  * content beyond the repository identity and the pinned revision: it is built from the run record, the revision label the step guard
- * returns from the live consent, Syzygy-authored text and the doctrine file. It reads no blob of the subject; the step guard lists the
+ * returns from the pinned run, Syzygy-authored text and the doctrine file. It reads no blob of the subject; the step guard lists the
  * pinned commit's trees through the re-hashing reader to decide again whether the subject is governed. Issuing it starts the deadline
  * clock, on Syzygy's own clock.
  *
@@ -35,11 +35,11 @@ import { issuedBriefStatement } from './launch-statements.js';
  * step guard compares at every later step (R-POLARIS-DOSSIER-S3-GATES-2 finding 6), and the reader standards' version and digest. It lies within the agent sessions' write reach, so read back it is
  * Inferred. */
 
-export const BRIEF_VERSION = 'polaris-dossier-brief-v8';
+export const BRIEF_VERSION = 'polaris-dossier-brief-v9';
 
 /** Which blocks the fidelity review can never confirm (syzygy-pdja.20), and which elements render with none of their text (syzygy-pdja.24):
  * the brief's rule, which carries no project content; `check` names them under `reviewReach` (`review-reach.ts`). Advice: no check refuses a draft for it. */
-export const REVIEW_REACH_RULE = 'The fidelity review is given a cited span\'s text only when screening admits its file and the run\'s consent covers that file\'s class. An Inferred block none of whose cited spans the review is given cannot be confirmed by a review: where screening withholds them all, the block renders Unknown and none of its text renders; otherwise its row stays unresolved and blocks readiness. `syzygy dossier check` lists such blocks under `reviewReach`, and under its `elements` the understanding items and diagram nodes and edges every cited span of which screening withholds: no review judges those, but each renders Unknown and none of its text renders. Before you resubmit, cite an admitted file that states the same fact, as well or instead, or state it as `unknown`: resubmitting such a block unchanged spends a repair cycle and cannot confirm it.';
+export const REVIEW_REACH_RULE = 'The fidelity review is given a cited span\'s text only when screening admits its file and the policy recognizes that file\'s content class. An Inferred block none of whose cited spans the review is given cannot be confirmed by a review: where screening withholds them all, the block renders Unknown and none of its text renders; otherwise its row stays unresolved and blocks readiness. `syzygy dossier check` lists such blocks under `reviewReach`, and under its `elements` the understanding items and diagram nodes and edges every cited span of which screening withholds: no review judges those, but each renders Unknown and none of its text renders. Before you resubmit, cite an admitted file that states the same fact, as well or instead, or state it as `unknown`: resubmitting such a block unchanged spends a repair cycle and cannot confirm it.';
 
 /** The reader topics of an operator-agent dossier, in the owner's order (dossier spec v1.5, "Why-first topics and voice"): why the
  * project exists first, holding the advantages its maintainers state, then core ideas, end-to-end workflows, and mechanisms and
@@ -99,8 +99,7 @@ export interface BriefInput {
   readonly issuedAt: number;
   readonly schemaSha256: string;
   readonly executionRule: ExecutionRule;
-  /** The revision's label as the in-force consent gives it at this step (`reverifyPinnedRevision`), never the run record's copy; null
-   * when it gives the commit more than one label. */
+  /** The stored selection label, Inferred provenance. */
   readonly revisionLabel: string | null;
   /** A copy-class run's copy and the operator's clone (`briefCopyOf`); null otherwise. */
   readonly copy: BriefCopy | null;
@@ -120,13 +119,17 @@ export function renderBrief(input: BriefInput): string {
     '',
     `- Brief version: \`${BRIEF_VERSION}\``,
     `- Run: \`${input.runId}\``,
+    `- Repository role: ${subject.repository.role} (Inferred); governance-root material keeps this same repository identity.`,
     `- Repository: ${subject.repository.url} (\`${subject.repository.repositoryId}\`)`,
-    `- Pinned revision: \`${commit}\` (${input.revisionLabel ?? 'the in-force consent gives it no single label'})`,
-    ...(input.copy === null ? [] : briefCopyLines(input.copy)),
+    `- Pinned revision: \`${commit}\` (${input.revisionLabel ?? 'pinned commit'})`,
+    ...(input.copy === null ? [`- Clone: \`${subject.clone.path}\`, declared at init (Inferred); use this exact read location`] : briefCopyLines(input.copy)),
     `- Draft schema: \`${LOCAL_DRAFT_SCHEMA_VERSION}\`, in \`${RUN_LAYOUT.draftSchema}\` beside this brief (sha256 \`${input.schemaSha256}\`)`,
     `- Issued: ${isoOf(input.issuedAt)}, on Syzygy's clock`,
     '',
     `Write one dossier of this repository at the pinned revision. Your draft names that revision in \`pinnedRevision\` and the schema version in \`schemaVersion\`; a draft naming another revision is refused. Write it to \`${RUN_LAYOUT.drafts}/next.json\` in the run directory and run \`syzygy dossier check <run>\`; repair every finding and check again. Write nothing else of Syzygy's: Syzygy re-checks everything it relies on.`,
+    '',
+    `Declared provider: ${declared.agentProvider}. Eligible content classes: ${subject.contentClasses.join(', ')} (declarations, Inferred; not an account of transmission).`,
+    SOURCE_SCREENING_RULE,
     '',
     SESSION_ID_RULE('draft'),
     '',
@@ -288,8 +291,7 @@ export async function issueBrief(runDir: string, deps: BriefDeps): Promise<Brief
   const issued = [RUN_LAYOUT.brief, RUN_LAYOUT.draftSchema, RUN_LAYOUT.briefRecord].filter((name) => fs.existsSync(path.join(run, name)));
   if (issued.length > 0) return refuse('issued-already', `the run already holds ${issued.join(', ')}: a run is briefed once, and its deadline clock has started`);
 
-  const copy = briefCopyOf(readLaunchDisclosure(run), { dir: run, clone: subject.clone.path, pinnedAt: subject.pinnedRevision.pinnedAt });
-  if (!copy.ok) return refuse('launch-record', `${copy.reason}; no brief is issued`);
+  const copy = { copy: null } as const;
 
   const doctrine = readSec3(deps.sources.recordsRoot);
   if (!doctrine.ok) return refuse('doctrine', `SEC-3 cannot be quoted as adopted: ${doctrine.reason}`);
@@ -309,6 +311,7 @@ export async function issueBrief(runDir: string, deps: BriefDeps): Promise<Brief
     role: 'authoring',
     runId,
     pinnedRevision: subject.pinnedRevision.commit,
+    sourceBindingSha256: sourceBindingSha256(subject),
     schemaVersion: LOCAL_DRAFT_SCHEMA_VERSION,
     guidanceVersion: DOSSIER_GUIDANCE_VERSION,
     readerStandards: { version: READER_STANDARDS_VERSION, sha256: READER_STANDARDS_SHA256 },
@@ -323,7 +326,6 @@ export async function issueBrief(runDir: string, deps: BriefDeps): Promise<Brief
     stageStatement: issuedBriefStatement({ role: 'authoring' }, copy.copy !== null),
     label: 'Inferred',
   };
-  const stageStatement = record.stageStatement;
   try {
     fs.writeFileSync(path.join(run, RUN_LAYOUT.brief), briefText, { mode: 0o600, flag: 'wx' });
     fs.writeFileSync(path.join(run, RUN_LAYOUT.draftSchema), schemaText, { mode: 0o600, flag: 'wx' });
@@ -331,9 +333,6 @@ export async function issueBrief(runDir: string, deps: BriefDeps): Promise<Brief
   } catch (cause) {
     return refuse('write', `the brief could not be written (${(cause as NodeJS.ErrnoException).code ?? 'unknown-error'}); any file already written stays, and the run cannot be briefed again`);
   }
-  // The run record's brief stage, rewritten to the reached form the brief's record stores (the owner's ruling of 2026-11-14).
-  const rewritten = recordIssuedBrief(run, stageStatement);
-  if (!rewritten.ok) return refuse('write', `the brief was issued and its files stay, but ${rewritten.reason}, so the run record still says no brief was issued and every page says the two disagree; the run cannot be briefed again`);
   return {
     ok: true,
     report: {

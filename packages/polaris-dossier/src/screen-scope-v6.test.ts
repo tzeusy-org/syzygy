@@ -1,3 +1,5 @@
+import { commitPolicyFixture, policyFixture } from './full-run.testkit.js';
+import { tempDir as declaredTempDir } from '@syzygy/test-kit';
 import { execFile } from 'node:child_process';
 import { createHash } from 'node:crypto';
 import * as fs from 'node:fs';
@@ -216,28 +218,15 @@ describe('P: the config-secret-directive scope detector', () => {
   });
 });
 
-// The any-repo reader's checkout port reads the act chain, so both loaders put the version-8 bytes in force from this checkout at a time
-// after that act, and neither before it (the version-7 act then in force binds other bytes). Version 8 keeps version 7's rules for a
-// public pair, so version 6's detector and placement still hold; each load is given the pair's visibility, public.
-describe('the real checkout after the version-8 act', () => {
-  const V8_VERSION = '1.9.0-public-source-candidate.1.none.code-all.redact-span.v5-bcd.v6-p.v7-s.v8-pv';
-  const V8_INSTANT = Date.parse('2026-11-09T09:27:14Z');
-  const AFTER = Date.UTC(2026, 10, 9, 10, 0, 0);
-  it('loads the version-8 policy in both loaders', async () => {
-    const app = await import(APP_SCREENING);
-    const theirs = await app.loadPublicSourceScreen(app.checkoutPolicyActPort(REAL_ROOT, () => AFTER), new Uint8Array(32).fill(7), AT_TRIAL, 'public');
-    const loaded = await loadDossierScreen(REAL_ROOT, AFTER, undefined, AT_TRIAL, PUBLIC);
-    if (!loaded.ok) throw new Error(loaded.why);
-    for (const screen of [loaded.screen, theirs]) {
-      expect([screen.policyVersion, screen.policySha256]).toEqual([V8_VERSION, '44153bbe210c7a724f224f2bc1c9255db43cf0887b6ad22dd24884514f21bbe8']);
-      expect([screen.governanceText, screen.documentationExemption, screen.scopeDetectors, screen.contentClass('redis.conf')]).toEqual([true, true, 4, 'project-documentation']);
+// Historical PWB admission stays separate from D10 dossier declarations.
+describe('the declared dossier policy preserves version-8 detector and placement behavior', () => {
+  it('loads a committed policy with no act records at any timestamp', async () => {
+    const root = commitPolicyFixture(declaredTempDir('dossier-declared-v6-'), policyFixture().bytes);
+    for (const now of [0, Date.UTC(2026, 10, 10)]) {
+      const loaded = await loadDossierScreen(root, now, { ...AT_TRIAL, visibility: 'public' });
+      if (!loaded.ok) throw new Error(loaded.why);
+      expect([loaded.screen.policyVersion, loaded.screen.governanceText, loaded.screen.documentationExemption, loaded.screen.scopeDetectors, loaded.screen.contentClass('redis.conf')])
+        .toEqual(['dossier-declared-source/1.0.0', true, true, 4, 'project-documentation']);
     }
-  });
-  it('refuses the checkout\'s bytes before the version-8 act\'s instant', async () => {
-    const loaded = await loadDossierScreen(REAL_ROOT, V8_INSTANT - 1_000, undefined, AT_TRIAL, PUBLIC);
-    expect(loaded.ok).toBe(false);
-    const own = screenLoaderOf(undefined, REAL_ROOT, V8_INSTANT, PUBLIC);
-    const at = await own(AT_TRIAL);
-    expect(at.ok && [at.screen.policyVersion, at.screen.contentClass('redis.conf')]).toEqual([V8_VERSION, 'project-documentation']);
   });
 });

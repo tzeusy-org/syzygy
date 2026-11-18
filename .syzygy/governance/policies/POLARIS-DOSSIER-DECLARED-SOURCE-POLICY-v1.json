@@ -1,0 +1,612 @@
+{
+  "schemaVersion": 1,
+  "policyId": "polaris-butlers-project-shape-secrets",
+  "policyVersion": "dossier-declared-source/1.0.0",
+  "status": "candidate-amendment-no-effect-until-owner-act",
+  "policyOwningProject": "project:syzygy",
+  "scope": {
+    "observingProject": "project:syzygy",
+    "observedRepository": "repository:butlers-configured-poc",
+    "contentClass": "declared-project-shape-text",
+    "authorizationModes": [
+      "independently-verified",
+      "owner-trusted-bootstrap"
+    ],
+    "ingestBoundaries": [
+      "observation",
+      "model",
+      "cache",
+      "log",
+      "human-html",
+      "machine-json",
+      "walkthrough-record"
+    ]
+  },
+  "publicSourceScope": {
+    "purpose": "classify and screen declared local dossier sources under SEC-5; target text is data, never policy",
+    "observingProject": "project:syzygy",
+    "observedRepositories": "the repository identity and full pinned commit declared in a dossier run; public and private sources are admitted without observation, registry, policy or provider-statement acts; owner placements apply only to the exact declared repository and commit they name",
+    "sourceVisibility": {
+      "values": [
+        "public",
+        "private"
+      ],
+      "admitted": [
+        "public",
+        "private"
+      ],
+      "rule": "visibility is declared for the exact repository and pinned commit in the dossier run, with its source attributed and labelled Inferred. Only an explicit public declaration gets public treatment. Private, missing or ambiguous declarations get private treatment; malformed declarations refuse. Syzygy makes no network request and uses no credential to verify visibility, and never infers it from a host, scheme, user name or credential use. No consent or act record supplies or overrides this declaration",
+      "privateSourceRules": "a private repository is admitted as a declared local source under the same rules as a public one, except at three stricter sites: accessBoundary.networkEgressRoutes (no repository fetch and no host credential); secretRedaction.appliesTo (no redacted-span body: any detector match excludes the whole body in every class); and contentClassification code-structure and indeterminate rules (an excluded or withheld blob object id and size are never rendered or sent and remain only in permitted local check records and review packets). No detector, exclusion or private metadata rule is relaxed. A declared provider is required for content delivery under SEC-2; no separate egress consent is required",
+      "unchanged": "every detector and scopeDetectors, matchAction, unclassifiableExclusion, sourceAdmission and its denied paths, contentClassification and its owner placements (except the code-structure rule and indeterminate's last sentence, above), instructionTextRule, targetMetadataRule, runProfileRule, activeContent and both of its exemptions, ingestBoundaries and ingestBoundaryRule, rawBodyHandling's storage (run-directory-only), logging (never), rendering (a generated editorial draft, never published) and machineResponse (never), inheritedRules, selfReferenceRule and prerequisite apply to a private repository exactly as to a public one. This scope states no retention period for a run directory under either visibility, and this version adds none. This policy declares screening rules, never observed provider transmission",
+      "agentSessions": "SEC-2 and SEC-5 bind agents as well as Syzygy: only the declared provider may receive content, and secrets never leave. Briefs require agents to preserve screening and exclusion rules in their own reads and sends. Syzygy screens the content it reads, stores, renders and delivers; it cannot observe or attest an agent tool own transmissions or compliance, which are never presented as Observed",
+      "consequence": "A private or undeclared-visibility local source is admitted with stricter whole-body exclusion and private withheld metadata protection; it may therefore yield more Unknown items. No provider transmission is observed merely because a provider is declared. The reason for the redaction rule: a retained redacted-span body shows every line but the withheld ones, and the whole body's content digest and Git object id stay recorded (RFC5-17), so a guess at a short withheld line can be confirmed against them offline; for a public repository the body is published already and this adds nothing, for a private one it would. Whole exclusion does not close the guess either: the content digest, and the Git object id, which is itself a digest of the whole body, are a confirmation oracle wherever a guesser knows the rest of the body (a private fork of a public upstream whose file differs by one secret line, a template, earlier public history), and the size narrows the secret's length. For a public repository the object id and size are code-structure, rendered on the dossier's pages and eligible as classified content for the declared provider. For a private repository this version withholds them for every blob excluded or withheld on any ground, a denied path, an indeterminate blob and a detector match among them: they are kept, if at all, only in the run directory's check records and its local review packets, and are never rendered or sent. What is left: the run directory itself and the operator's clone, which holds every object id, so whoever can read either can still confirm a guess; the pinned commit id, rendered on every discovery row and recorded in the run record, which is a digest of the commit header and the root tree and so of every object id in it, the withheld blob's included, a narrower confirmation oracle open only to a guesser who also knows the commit header (its author, dates, message and parent) and the rest of the tree, and one this scope cannot withhold; and a secret no detector matches in a body this scope admits, which is admitted and rendered under either visibility (SEC-5's general residual, unchanged here).",
+      "consentRecordMetadata": "No launch consent record, dedicated recording reference or governance write is made for source admission. Repository identity, normalized locator, visibility and pinned revision are stored as Inferred run declarations in the local state directory, within the agent sessions write reach; they are not authorization records"
+    },
+    "authorizationModes": [
+      "declared-source"
+    ],
+    "ingestBoundaries": [
+      "observation",
+      "model",
+      "run-directory",
+      "human-html"
+    ],
+    "ingestBoundaryRule": "run-directory is a per-run directory under project:syzygy's state directory, outside git; human-html is a generated editorial draft shown only on the local daemon's draft view or as a static file in the run directory, never published; there is no cache, log, machine-json or walkthrough-record boundary for this scope",
+    "sourceAdmission": {
+      "discoveryMode": "all-tracked-blobs-at-admitted-commit",
+      "gitObjectsOnly": true,
+      "admittedSnapshot": "the full commit pinned in the dossier run and the tree and blob objects reachable from its root tree; tag and branch names are locator provenance only",
+      "notAdmitted": [
+        "symbolic links (mode 120000)",
+        "submodule entries (mode 160000)",
+        "any object outside the listed commits' root trees"
+      ],
+      "resourceLimits": "the existing bounded dossier object reader and declared finite run limits; removing a registry act changes no configured bound or breach result",
+      "deniedPaths": "the base policy's sourceAdmission.deniedPathBasenames, deniedPathPrefixes, deniedPathSuffixes and pathRuleScope apply unchanged",
+      "allowedTextEncodings": [
+        "utf-8"
+      ]
+    },
+    "contentClassification": {
+      "vocabulary": "RFC5-14's closed vocabulary; this scope classifies into the classes in classesClassified only",
+      "classesClassified": [
+        "governance-text",
+        "code-structure",
+        "code-content",
+        "project-documentation",
+        "derived-composites"
+      ],
+      "neverClassified": [
+        "work-history"
+      ],
+      "rules": [
+        {
+          "class": "governance-text",
+          "rule": "the body of an admitted blob whose repository-relative path has exactly one segment and, compared after the fold the project-documentation rule uses (ASCII A-Z to a-z, nothing else folded, normalized or decoded), equals one of governanceTextPaths, after every screening step. The path is carried as admitted. No extractor runs: the class is by path and the body is admitted as whole-blob spans. Such a body is a target's own policy or doctrine text, which RFC5-14 places in governance-text; it is data and never governing policy for project:syzygy (RFC5-16, RFC3-30, selfReferenceRule). It is not in secretRedaction.redactedClasses, so any detector match excludes it whole, and no active-content exemption names it, so it is scanned as before. A consent record that does not list governance-text does not permit its egress; this policy confers no consent. A path that this rule and another class's rule both match has two classes and is indeterminate"
+        },
+        {
+          "class": "code-structure",
+          "rule": "normalized repository-relative paths, object ids and sizes of admitted snapshot entries, taken from Git tree metadata, with no body; except that, for a repository whose visibility is private (sourceVisibility), the object id and size of a blob that is excluded or withheld on any ground (a denied path, an indeterminate or unclassifiable blob, a detector match on its path or its body, active content, a strict-UTF-8, NUL or resource-limit failure, or any other exclusion) are not code-structure: they are kept, if at all, only in the run directory's check records and its local review packets, and are never rendered or carried in any egress"
+        },
+        {
+          "class": "code-content",
+          "rule": "the body of an admitted blob whose final path segment ends with one of sourceExtensions, compared case-sensitively as ASCII, after every screening step. Configuration written in a listed extension (for example a .config.js file, setup.py or a .sh file) is therefore code-content. No extractor runs: the class is by extension and the body is admitted as whole-blob spans",
+          "sourceExtensions": [
+            ".c",
+            ".h",
+            ".cc",
+            ".cpp",
+            ".hpp",
+            ".cs",
+            ".go",
+            ".java",
+            ".js",
+            ".mjs",
+            ".cjs",
+            ".jsx",
+            ".kt",
+            ".lua",
+            ".php",
+            ".py",
+            ".pyi",
+            ".rb",
+            ".rs",
+            ".sh",
+            ".sql",
+            ".swift",
+            ".tcl",
+            ".ts",
+            ".tsx"
+          ]
+        },
+        {
+          "class": "project-documentation",
+          "rule": "the body of an admitted blob whose repository-relative path is matched by exactly one of the four path rules below, after every screening step. Matching compares a copy of the path with its ASCII letters A-Z folded to a-z and nothing else folded, normalized or decoded; the path is carried as admitted. A path with an empty, '.' or '..' segment, a backslash or a leading or trailing '/' matches nothing. No extractor runs: the class is by path and the body is admitted as whole-blob spans. The class is decided by these paths alone: a file's own claim about itself, or a directory name outside the four rules, places nothing in it (RFC5-14); an ownerPlacements entry is the owner's declared placement of named paths, which RFC5-14 lets the declared policy make",
+          "pathRules": [
+            {
+              "id": "root-document",
+              "rule": "a path with one segment whose name, after removing rootStemNumericPrefix when it is present and then one suffix from documentSuffixes (any that fits), is one of rootStems"
+            },
+            {
+              "id": "docs-tree",
+              "rule": "a path of two or more segments whose first segment is one of docTreeRoots, whose name ends with one of docTreeExtensions and is longer than it, in which no directory name after the first, and no file name without its extension, has a word in docExcludedTokens (a name is split into words at each character of docTokenSeparators, after the ASCII fold), and which is not a name ending in .txt that equals one of docTxtExcludedNames or starts with one of docTxtExcludedPrefixes"
+            },
+            {
+              "id": "licenses-tree",
+              "rule": "a path of exactly two segments whose first segment is one of licenseTreeRoots and whose name ends with one of licenseTreeSuffixes and is longer than it, and in which no word of the file name without its extension is in docExcludedTokens (split as for docs-tree)"
+            },
+            {
+              "id": "owner-placement",
+              "rule": "a path that, after the same fold, equals one of the paths of an ownerPlacements entry (each listed already folded, so it is compared as given) whose repository is the repository the blob is read from and whose commits list the admitted commit it is read at. An entry places those paths and nothing else: it admits no repository, commit or object (the observation consent decides those), it is not inherited by any other repository or commit, and every screening step still applies to the body"
+            }
+          ],
+          "rootStemNumericPrefix": {
+            "digitCount": 2,
+            "digits": "0123456789",
+            "separator": "-",
+            "optional": true,
+            "note": "exactly the ASCII characters listed in digits; no other character, including any Unicode digit, is a digit here"
+          },
+          "rootStems": [
+            "readme",
+            "changelog",
+            "changes",
+            "release-notes",
+            "release_notes",
+            "releasenotes",
+            "contributing",
+            "license",
+            "licence",
+            "copying",
+            "notice",
+            "notices",
+            "news",
+            "history",
+            "authors",
+            "faq"
+          ],
+          "documentSuffixes": [
+            "",
+            ".md",
+            ".rst",
+            ".txt"
+          ],
+          "docTreeRoots": [
+            "docs",
+            "doc"
+          ],
+          "docTreeExtensions": [
+            ".md",
+            ".rst",
+            ".txt"
+          ],
+          "docExcludedTokens": [
+            "adr",
+            "adrs",
+            "decision",
+            "decisions",
+            "rfc",
+            "rfcs",
+            "spec",
+            "specs",
+            "specification",
+            "specifications",
+            "design",
+            "designs",
+            "governance",
+            "policy",
+            "policies",
+            "security",
+            "conduct",
+            "doctrine",
+            "doctrines",
+            "principle",
+            "principles",
+            "architecture",
+            "architectures",
+            "manifesto",
+            "manifestos"
+          ],
+          "docTokenSeparators": "-_. ",
+          "docTxtExcludedNames": [
+            "cmakelists.txt",
+            "robots.txt"
+          ],
+          "docTxtExcludedPrefixes": [
+            "requirements"
+          ],
+          "licenseTreeRoots": [
+            "licenses"
+          ],
+          "licenseTreeSuffixes": [
+            ".md",
+            ".txt"
+          ],
+          "ownerPlacements": [
+            {
+              "repository": "repository:redis-redis",
+              "commits": [
+                "498ecd0d6d007db11ddb3aea9428552598a78622"
+              ],
+              "paths": [
+                "tls.md",
+                "modules/modules.md",
+                "redis.conf"
+              ]
+            }
+          ],
+          "disjointFromSourceExtensions": "none of documentSuffixes, docTreeExtensions or licenseTreeSuffixes is in sourceExtensions, so no blob has two classes by extension; a blob matched here is never code-content",
+          "notMapped": "nested and vendored documentation (a README below the root outside docs-tree and licenses-tree, unless an ownerPlacements entry names its path); root files named design, governance, security or code of conduct; docs-tree and licenses-tree paths whose directory or file name has a word in docExcludedTokens (decision, specification, design, governance, policy, security and conduct records, and the opt-in words unless the variant adds them); build and tooling .txt files named in docTxtExcludedNames or docTxtExcludedPrefixes; committed reports; and any other prose that no ownerPlacements entry names. The class is decided by these names alone: a governance document under docs whose path carries none of those words is mapped"
+        },
+        {
+          "class": "derived-composites",
+          "rule": "computed from the classes of what a composite embeds (RFC5-14); a composite embedding any unclassified or excluded content is refused"
+        }
+      ],
+      "governanceTextPaths": [
+        "security",
+        "security.md",
+        "security.rst",
+        "security.txt",
+        "manifesto",
+        "manifesto.md",
+        "manifesto.rst",
+        "manifesto.txt"
+      ],
+      "evidenceContentPaths": [],
+      "indeterminate": "every other admitted blob, including documentation outside the project-documentation rule's paths (for example src/README.md), documents whose path carries a word of the rule's docExcludedTokens (decision, specification, design, governance, policy, security and conduct records) other than a root file the governance-text rule classifies, committed reports, and configuration or data in an extension outside sourceExtensions, is indeterminate and is treated as unclassifiable under unclassifiableExclusion: excluded from reading and from egress (fail closed), recorded hash-not-body, and never stored or rendered. Its path, object id and size remain code-structure, except that, for a repository whose visibility is private (sourceVisibility), its object id and size do not, under the code-structure rule"
+    },
+    "instructionTextRule": {
+      "class": "code-content",
+      "classOwner": "project:syzygy",
+      "closedList": [
+        {
+          "path": "packages/polaris-generation-core/src/prompts.ts",
+          "symbol": "promptForStage"
+        },
+        {
+          "path": "packages/polaris-generation-core/src/provider-draft.ts",
+          "symbol": "stageSchema"
+        }
+      ],
+      "rule": "the generator's instruction text is the text produced by exactly these two symbols at the prompt and schema versions a request names; it is not target content and is not read from a target. No other file or symbol of project:syzygy's repository is classified by this rule. Every detector in this policy applies to it before the first request of a run"
+    },
+    "classificationBasis": "a class is decided at the runtime check from the origin of the content, tracked from where it entered the choke point (RFC5-14); a field name never assigns it. The field-level table in a public-target egress record is a gate on which fields may be carried and cannot confer a class, so content under a classed field name keeps the class of its origin (REQ-polaris-generation-025: composition preserves embedded classifications and origins)",
+    "targetMetadataRule": {
+      "class": "code-structure",
+      "fields": [
+        "sourceId",
+        "classificationBasis",
+        "excluded",
+        "reason"
+      ],
+      "fieldsDerivedFrom": "the sourcePopulation entry in packages/polaris-generation-core/src/pipeline.ts, read by this builder; the confirmed admission egress record's generated table classes the field sourcePopulation as target-metadata",
+      "rule": "the metadata the generator carries for each admitted-snapshot source, admitted or excluded alike, is exactly the fields listed and nothing else; reason is carried only for an excluded source and only as a member of the closed set that exclusionReasonSymbol names. No body, no content digest and no policy detail is carried under this rule. A path of an excluded source is not in the list and is not carried: the sourceId of an excluded source is an opaque identifier not derived from its path or body. [Inferred] this bytes-level rule is enforced only by the reader implementation, which the generator's lane is asked to write that way; nothing else in these bytes checks it",
+      "exclusionReasonSymbol": {
+        "path": "packages/polaris-generation-core/src/generation-source.ts",
+        "symbol": "GENERATION_EXCLUSION_REASONS"
+      },
+      "reasonRule": "the closed set of exclusion reasons is exactly the values of the exported constant named by exclusionReasonSymbol, read from code at the commit a run names; this policy lists no reason, so the set cannot differ from the values the constant declares. A reason outside that constant is not carried, and the generator's validator refuses it before a request. [Inferred] the constant and the validator are requested of the generator's lane and are not in code at this package's base; the package is not ready for an act until the constant exists (the builder fails closed while it is absent)"
+    },
+    "runProfileRule": {
+      "class": "code-content",
+      "classOwner": "project:syzygy",
+      "closedList": [
+        {
+          "path": "packages/polaris-generation-core/src/dossier-profile.ts",
+          "symbol": "DOSSIER_READER_QUESTIONS"
+        },
+        {
+          "path": "packages/polaris-generation-core/src/dossier-profile.ts",
+          "symbol": "DOSSIER_REQUESTED_ASSETS"
+        }
+      ],
+      "rule": "the run's reader questions and requested assets are classified only when they are the values of exactly these code-declared symbols, selected by a profile id a request carries (which id and which carrier is an open owner question: the base has no request field for one). A value from any other origin, including a run-directory file or an operator-supplied string, is unclassified under this scope and is not carried until a later policy version defines its origin and a validation. [Observed on the branch of PR #259] these symbols are readonly constants in dossier-profile.ts; [Observed on the base] the pipeline types readerQuestions as unknown, validates only requestedAssets and forwards readerQuestions unchanged, and no code reads a run-profile file. The typed reader-question validation the owner asked for is not yet in code and is not assumed here"
+    },
+    "detectors": "every detector in this policy, and every detector in scopeDetectors, applies unchanged to every body under this scope, including inert code contexts; public visibility exempts nothing, and a match excludes the whole artifact with hash-not-body provenance (matchAction, RFC5-17), except where secretRedaction retains a body as redacted-span; every detector still runs over the complete body first",
+    "scopeDetectors": {
+      "rule": "these detectors are added to the policy's detectors for this scope only; the base scope and any sibling scope do not read them. Wherever this scope, its secretRedaction or its inheritedRules says every detector or a detector, these are included: they run over every path and every body under this scope, including inert code contexts, over a retained body's retained text and a cited span's text, and everywhere else this scope runs the policy's detectors. Each is read as the policy's detectors are (id, kind, pattern, flags), and a match is handled by matchAction and secretRedaction exactly as a match of the policy's detectors",
+      "detectors": [
+        {
+          "id": "private-key-header",
+          "kind": "regular-expression",
+          "pattern": "(?:-{4,5} ?BEGIN [A-Z0-9 ]*(?:PRIVATE|SECRET) KEY|PuTTY-User-Key-File-[0-9]+:|LS0tLS1CRUdJT|LS0tLSBCRUdJT)",
+          "flags": "g"
+        },
+        {
+          "id": "credential-url-any-scheme",
+          "kind": "regular-expression",
+          "pattern": "[a-z][a-z0-9+.-]{0,31}://[^/@\\s:]*:[^/@\\s]+@",
+          "flags": "gi"
+        },
+        {
+          "id": "known-token-formats-extended",
+          "kind": "regular-expression",
+          "pattern": "(?:ASIA[0-9A-Z]{16}|github_pat_[A-Za-z0-9_]{22,}|glpat-[A-Za-z0-9_-]{20,}|xapp-[0-9]+-[A-Za-z0-9-]{10,}|hooks\\.slack\\.com/services/T[A-Za-z0-9]+/B[A-Za-z0-9]+/[A-Za-z0-9]{8,}|[rs]k_live_[A-Za-z0-9]{20,}|AIza[0-9A-Za-z_-]{35}|npm_[A-Za-z0-9]{36}|pypi-AgEIcHlwaS5vcmc[A-Za-z0-9_-]{50,}|SG\\.[A-Za-z0-9_-]{22}\\.[A-Za-z0-9_-]{43}|sk-ant-[A-Za-z0-9_-]{20,}|sk-proj-[A-Za-z0-9_-]{20,}|AccountKey=[A-Za-z0-9+/]{86}==)",
+          "flags": "g"
+        },
+        {
+          "id": "config-secret-directive",
+          "kind": "regular-expression",
+          "pattern": "(?<![^\\r\\n])[ \\t\\v\\f]*(?:#[ \\t\\v\\f]*)*(?:[\\\"']?(?:requirepass|masterauth|tls-key-file-pass|tls-client-key-file-pass)[\\\"']?[ \\t\\v\\f]+|[\\\"']?user[\\\"']?[ \\t\\v\\f][^\\r\\n]*?[ \\t\\v\\f\\\"'](?:[<>]|[#!](?=[0-9a-fA-F]{64})))[^ \\t\\v\\f\\r\\n]+",
+          "flags": "gi"
+        }
+      ],
+      "consequence": "[Inferred] a body whose only secret is a private key with a header the private-key-material literals do not list (EC, DSA, ENCRYPTED, PGP, RFC 4716, PuTTY, or a base64 PEM start), a password in a non-http connection string, or a listed vendor token, is no longer admitted: code-content and every class secretRedaction does not redact are excluded whole, and in project-documentation the URL form withholds its lines while the other two keep the body whole. The cost runs the other way: a body these match for a non-secret reason (a base64 certificate, a sample connection string with a password placeholder) is withheld where version 4 admitted it. config-secret-directive is paired with the redis.conf placement: [Inferred] a line opening, after blanks and any number of # comment marks, with requirepass, masterauth, tls-key-file-pass or tls-client-key-file-pass (quoted or not) and a value, or with an ACL rule user <name> (user quoted or not) carrying >password, <password, or # or ! with a 64-hex password hash, is withheld with its guard lines in project-documentation, as credential-bearing-url is, and withholds a body of any other class whole; a password written any other way in such a file (named mid-line, in a prose comment, as a rename-command target, as a module's own option, under a directive this pattern does not name, on a following line, or with a name or operator spelled through an escape or an inner quote) is not matched, and a prose or code line that opens with the word user and later has a blank and > or < is matched"
+    },
+    "activeContent": {
+      "rule": "the base activeContentClassification, inertContextRule and the active-content condition of classificationSuccess apply unchanged to every admitted body, Markdown or not, except the steps codeContentExemption.rule and projectDocumentationExemption.rule lift for a body each exempts: a body neither exempts with an active-content form outside a valid inert code context is excluded whole as active content, and renderRule binds every body",
+      "codeContentExemption": {
+        "appliesTo": "a body this scope classifies code-content whose final path segment ends with one of exemptExtensions, compared case-sensitively as ASCII as sourceExtensions are",
+        "exemptExtensions": [
+          ".c",
+          ".h",
+          ".cc",
+          ".cpp",
+          ".hpp",
+          ".cs",
+          ".go",
+          ".java",
+          ".js",
+          ".mjs",
+          ".cjs",
+          ".jsx",
+          ".kt",
+          ".lua",
+          ".php",
+          ".py",
+          ".pyi",
+          ".rb",
+          ".rs",
+          ".sh",
+          ".sql",
+          ".swift",
+          ".tcl",
+          ".ts",
+          ".tsx"
+        ],
+        "rule": "such a body is admitted without the active-content scan: neither step 4 of classificationOrder, nor the active-content condition of classificationSuccess, nor the malformed-code-context exclusion applies to it, because the Markdown code-context profile does not describe source code (it reads a comparison such as a<b && c>d as an HTML tag, and an unpaired backtick in source as a code context that never closes). Every detector still runs over the whole body; the denied-path, strict-UTF-8, NUL and resource-limit rules are unchanged; a code-content body this exemption does not name, and a body of any other class that projectDocumentationExemption does not name, is scanned as before. The exemption reaches those three steps and nothing else: activeContentClassification.renderRule, and the encoding of selected text for its destination, still bind such a body at every place it reaches",
+        "renderCondition": "a page is a document an HTML or SVG parser reads, and a page sink is a place where such a body's bytes, or a span of them, are written into a page. The exemption holds for a page sink only while it writes the body or span as text: every one of the characters & < > \" ' is written as a character reference, the bytes are never parsed as Markdown or HTML and never mint a link, element, attribute, script or handler, and the page carries an enforced Content-Security-Policy, delivered before any of the body's bytes, whose directives are exactly default-src 'none', style-src 'unsafe-inline', base-uri 'none' and form-action 'none', each once with that one source, and at most one script-src, which comes with require-trusted-types-for 'script' and trusted-types 'none' and only then; no other directive is lawful, every token is written exactly as here in lower case, and a policy holding any non-ASCII byte, whitespace included, fails this condition. A script-src's source list is one or more 'sha256-<base64>' hash sources and nothing else. Each such hash is of one inline script with no src attribute that the renderer itself writes: its bytes are fixed in the renderer and derive from no body; it opens no connection and loads nothing (no fetch, XMLHttpRequest, sendBeacon, WebSocket, EventSource, WebTransport, RTCPeerConnection, Worker or window.open); it creates no element outside a list the renderer fixes, which never holds script, link, meta, base, form, iframe, object, embed, img, audio, video, source, track or style, and it sets no attribute that holds a URL; it never turns page text into code or markup (no eval, no Function, no string timer, no innerHTML, outerHTML, insertAdjacentHTML, setHTMLUnsafe, document.write, DOMParser or createContextualFragment, no handler attribute); it writes page text only as text; it navigates only by a fragment of the current page or an href the renderer wrote; and it stores no page text. Every page reads and navigates completely with scripts off. A consumer that cannot confirm this for a page sink scans the body as before for that sink, and excludes it whole there on a finding. Every other place such a body or a span of it reaches is not a page sink; egress governs it",
+        "egress": "the exemption changes no egress or consent rule. At every place that is not a page sink (a review packet, a provider request, a discovery excerpt, a stored record), an exempt body or a span of it counts as screening-admitted code-content, reaches an agent session or a provider only under the rules that already govern code-content, and is encoded for that destination's format as renderRule requires"
+      },
+      "projectDocumentationExemption": {
+        "appliesTo": "a body this scope classifies project-documentation, under any of its path rules",
+        "rule": "such a body is admitted without the active-content scan: neither step 4 of classificationOrder, nor the active-content condition of classificationSuccess, nor the malformed-code-context exclusion applies to it, because activeContentClassification.renderRule already says admitted Markdown is never rendered as HTML, so markup in it is inert bytes wherever this scope lets it reach a page. Every detector still runs over the whole body, and secretRedaction applies as before; the denied-path, strict-UTF-8, NUL and resource-limit rules are unchanged; a governance-text body is scanned as before. The exemption reaches those three steps and nothing else: activeContentClassification.renderRule, and the encoding of selected text for its destination, still bind such a body at every place it reaches",
+        "renderCondition": "codeContentExemption.renderCondition, read for a body this exemption names: the exemption holds for a page sink only while that condition holds for it, and a consumer that cannot confirm it for a page sink scans the body as before for that sink and excludes it whole there on a finding. Where that condition says egress governs every other place, it is this exemption's egress that governs, never codeContentExemption.egress",
+        "egress": "the exemption changes no egress or consent rule. At every place that is not a page sink (a review packet, a provider request, a discovery excerpt, a stored record), such a body or a span of it counts as screening-admitted project-documentation, reaches an agent session or a provider only under the rules that already govern that class (prerequisite.consentRule included), and is encoded for that destination's format as renderRule requires. Markup in it is data at every such place: an HTML comment, element or link destination is carried as text, never rendered or followed",
+        "consequence": "[Inferred] a README, release-notes or licence file whose only active-content finding is markup (an HTML badge, a centred heading, a placeholder written in angle brackets, an HTML comment) is admitted; the 2026-10-14 trial withheld two such root files for active content. The cost: markup that a reader of the upstream page does not see, such as an HTML comment, now reaches the review packet and agent sessions as text; and a documentation body version 4 withheld only for markup now carries the residuals of any admitted documentation body, a secret no detector matches and a secret beyond a guard line"
+      },
+      "consequence": "[Inferred] a source file whose only active-content finding was markup-like bytes outside a Markdown code context (a comparison, a generic type, a template literal, a string holding HTML) is admitted when its extension is exempt; the first public-target run (2026-10-08) withheld seven C files of its target for active content. A body a secret detector matches stays excluded whole"
+    },
+    "secretRedaction": {
+      "appliesTo": "a body of an admitted snapshot of a repository whose visibility is public (sourceVisibility), whose path this scope classifies in one of redactedClasses, after the denied-path, strict-UTF-8, NUL and resource-limit rules pass. A body of any other class, code-content included, is excluded whole on any detector match exactly as before, and so is a body of a private repository in every class: it is never retained as redacted-span. Text an agent session writes (a draft, an inventory, a verdict, a finding) is not such a body and is screened as before",
+      "redactedClasses": [
+        "project-documentation"
+      ],
+      "redactionClass": "redacted-span",
+      "wholeArtifactDetectors": [
+        "private-key-material",
+        "known-token-formats",
+        "private-key-header",
+        "known-token-formats-extended"
+      ],
+      "wholeArtifactLinePattern": "^[ \\t]*-{4,}[ \\t]*BEGIN",
+      "wholeArtifactFragments": [
+        "-----BEGIN ",
+        "---- BEGIN ",
+        "LS0tLS1CRUdJT",
+        "LS0tLSBCRUdJT"
+      ],
+      "guardLines": 1,
+      "rule": "every detector runs over the complete transient body exactly as before, including inert code contexts. Here a detector's matches are every match it makes starting at any offset of the text, overlapping matches included, not only those a left-to-right non-overlapping scan reports. When at least one detector matches, none of the matches is from a detector in wholeArtifactDetectors, no line of the body matches wholeArtifactLinePattern (a regular expression applied to each line without its terminator: optional spaces or tabs, four or more '-', optional spaces or tabs, then BEGIN), and the body holds none of wholeArtifactFragments (compared exactly, case-sensitively), the body is retained as redacted-span (RFC5-17) instead of excluded whole. Lines are split at LF, CRLF or CR, as the generator counts lines; a match touches every line that holds any of its characters. A line a match touches, and guardLines lines before and after it, is a withheld line. Every detector then runs again over the retained text, which is the body with each withheld line replaced by an empty line of the same terminator; a match there excludes the whole artifact as excluded-artifact. A body with a match from a detector in wholeArtifactDetectors, a body with a line matching wholeArtifactLinePattern or holding one of wholeArtifactFragments, and a body with a match the consumer cannot place on lines, is excluded whole as before",
+      "withheldLines": "a withheld line is never stored, logged, rendered, sent, quoted, used to verify a quotation, or given to an agent session, and no digest of a withheld line, or of any part of one, is recorded. Wherever the retained body is shown or carried, each run of consecutive withheld lines is replaced by one marker that names the redaction and the total count of withheld lines in the body. The whole body's content digest and its Git object id remain recorded (RFC5-17 requires the digest), so a guess at short withheld lines can be checked against them; the target being public does not lift this residual",
+      "citedSpanRule": "a cited span (a start line and an end line of the body) that includes a withheld line is withheld whole, never shown in part, and every claim that depends on it renders Unknown with reason excluded-content (RFC5-17). A cited span that includes no withheld line is screening-admitted content of the body's class and is carried with the body's redaction count disclosed beside it; its own text is screened by every detector before it is carried, and a match withholds it",
+      "provenance": "the retained body's exclusion record is hash-not-body: the content digest of the complete body, its repository-relative path, policyId, policyVersion, the redaction class redacted-span, the id of each detector that matched, and the numbers of the withheld lines",
+      "unchanged": "the active-content scan, its malformed-code-context exclusion, activeContent.codeContentExemption and activeContent.projectDocumentationExemption run over the complete body exactly as their rules say, and an active-content finding in a body they do not exempt excludes the body whole; the content classes, the consent and egress rules and rawBodyHandling are unchanged; a withheld line changes no class",
+      "consequence": "[Inferred] a project-documentation body whose only detector matches are credential-assignment or credential-bearing-url forms (a token in a badge URL, a placeholder password in an example) keeps every line outside the matched lines and their guards; the trial of 2026-10-14 withheld all 41 cited spans of one README for one match on its first line. The cost: a body with a match is evidence that the file carries credentials, and whole-blob screening withheld everything in it; under this rule a secret in such a body that no detector matches (one beyond the guard line, or one continuing past it) is admitted"
+    },
+    "accessBoundary": {
+      "postgresql": false,
+      "credentialApi": false,
+      "processEnvironment": false,
+      "workingTree": false,
+      "untrackedFiles": false,
+      "observedCodeExecution": false,
+      "networkEgress": false,
+      "networkEgressRoutes": [
+        "no network acquisition in the declared local-clone entry; private sources use no repository-host credential",
+        "classified and screened content only to the declared provider under SEC-2; no secrets"
+      ],
+      "routeRule": "the networkEgress boolean stays false as the base reads it; the only permitted network use is these two routes, carried beside it, and a consumer that reads the boolean alone fails closed. The base accessBoundary is otherwise unchanged"
+    },
+    "rawBodyHandling": {
+      "storage": "run-directory-only",
+      "logging": "never",
+      "rendering": "quoted-context-encoded-spans-in-editorial-draft",
+      "machineResponse": "never",
+      "externalEgress": "classified-content-only-to-the-declared-provider",
+      "rule": "storage is permitted only inside the local run directory outside git; no raw body logging or machine response; rendering is an editorial draft only. Content delivered to a provider must be classified and screened and the provider declared under SEC-2. Secrets never leave. Excluded or withheld private object identifiers and sizes are never rendered or sent and remain only in permitted local check records and review packets"
+    },
+    "inheritedRules": "every other rule in this policy applies to this scope unchanged: detectors, matchAction and redactionClasses (except that secretRedaction retains a body of an admitted snapshot as redacted-span where its rule says so, and for such a body reads the detector condition of classificationSuccess as no detector matching its retained text), unclassifiableExclusion, activeContentClassification (except that, for a body activeContent.codeContentExemption or activeContent.projectDocumentationExemption exempts, its active-content forms are not scanned for and malformedContextAction does not apply; its renderRule binds every body) and the strict-UTF-8 and NUL rules. 'Every other rule' means the policy's rules outside any named scope object; the rules inside the base scope object, and inside any sibling scope object another act adds, do not govern this scope, and the other way round: the routes, boundaries, rawBodyHandling and rules written inside this object govern only the repositories in observedRepositories and never the base scope or a sibling scope. The base classificationOrder and classificationSuccess name the signed PWB grammar; under this scope they read: membership in the admitted snapshot replaces membership in a PWB phase, and the content-classification rules above replace the PWB closed extraction class, so a blob with no class under those rules has an unknown extraction class and is excluded whole (step 6), while a code-content body needs no extractor and is admitted as whole-blob spans. The dossier declared-source specification names this reading; adoption follows VIS-4 and changes no other inherited rule",
+    "selfReferenceRule": "a target repository's policy, configuration or documentation text is never an input to this policy's evaluation (RFC3-30); authority for a pair is evaluated only for that pair and is never inherited from another pair, including through expectations keyed only by the observing project",
+    "prerequisite": {
+      "requires": "the RFC-0005 amendment that defines the class project-documentation in the closed vocabulary of RFC5-14",
+      "rule": "the committed classification rule defines project-documentation; a malformed or unrecognized rule refuses rather than guessing its class",
+      "consentRule": "A declared provider is required for agent-bound content. The committed policy classifies project-documentation without a separate class or consent act; an undefined or unreadable class remains excluded. No provider declaration overrides screening"
+    }
+  },
+  "governingBehaviorContract": {
+    "id": "polaris-project-wide-butlers-model",
+    "version": "sha256:0d50f8f496aada5e89a0ab2d7de29e487fc2d4f4ce66435f7a2abdab7a7a5bc1",
+    "signedBy": "version-tagged sign-off pwb-readability-successor-v1.0, recorded at .syzygy/governance/decisions/PWB-READABILITY-SUCCESSOR-SIGNOFF-v1.0.md"
+  },
+  "accessBoundary": {
+    "postgresql": false,
+    "credentialApi": false,
+    "processEnvironment": false,
+    "workingTree": false,
+    "untrackedFiles": false,
+    "observedCodeExecution": false,
+    "networkEgress": false
+  },
+  "sourceAdmission": {
+    "discoveryMode": "two-phase-at-one-git-revision",
+    "phaseA": {
+      "fixedSeedPaths": [
+        "about/README.md"
+      ],
+      "derivedSeedRule": "after the root index is admitted, read only the README index named for each declared pillar root; use Git tree metadata, not bodies, to enumerate baseline openspec/specs/*/spec.md paths and top-level roster/*/butler.toml candidates",
+      "output": "revision-bound source manifest with extraction classes and sha256 digest"
+    },
+    "phaseB": {
+      "requiresRevisionBoundSourceManifest": true,
+      "manifestRule": "manifest must validate against the signed PWB source grammar; it is derived data, not a separate owner-approved artifact"
+    },
+    "gitObjectsOnly": true,
+    "allowedTextEncodings": [
+      "utf-8"
+    ],
+    "deniedPathBasenames": [
+      ".env",
+      ".env.local",
+      ".env.production",
+      "credentials.json",
+      "secrets.json",
+      "id_rsa",
+      "id_ed25519"
+    ],
+    "deniedPathPrefixes": [
+      ".env."
+    ],
+    "deniedPathSuffixes": [
+      ".pem",
+      ".key",
+      ".p12",
+      ".pfx"
+    ],
+    "pathRuleScope": "apply basename and prefix rules to the final segment, and suffix rules to the complete final segment, of each normalized repository-relative path",
+    "unclassifiableAction": "exclude-whole-artifact"
+  },
+  "detectors": [
+    {
+      "id": "private-key-material",
+      "kind": "literal-fragment",
+      "values": [
+        "-----BEGIN PRIVATE KEY-----",
+        "-----BEGIN RSA PRIVATE KEY-----",
+        "-----BEGIN OPENSSH PRIVATE KEY-----"
+      ]
+    },
+    {
+      "id": "known-token-formats",
+      "kind": "regular-expression",
+      "pattern": "(?:AKIA[0-9A-Z]{16}|gh[pousr]_[A-Za-z0-9_]{20,}|xox[baprs]-[A-Za-z0-9-]{10,})",
+      "flags": "g"
+    },
+    {
+      "id": "credential-assignment",
+      "kind": "regular-expression",
+      "pattern": "(?:password|passwd|secret|token|api[_-]?key|client[_-]?secret)\\s*[:=]\\s*[\\\"']?[^\\s\\\"'<>$]{8,}",
+      "flags": "gi"
+    },
+    {
+      "id": "credential-bearing-url",
+      "kind": "regular-expression",
+      "pattern": "https?://[^/@\\s]+:[^/@\\s]+@",
+      "flags": "gi"
+    }
+  ],
+  "activeContentClassification": {
+    "inertMarkdownContexts": [
+      "inline-code-span",
+      "fenced-code-block"
+    ],
+    "inertContextRule": "markup-like bytes wholly inside a syntactically closed inline code span or fenced code block do not by themselves match an active-content form; they remain untrusted text, are scanned by every secret detector before parsing, and are context-encoded at every sink",
+    "markdownProfile": {
+      "dialect": "closed-pwb-code-context-v1",
+      "fencedOpener": "zero to three spaces, then at least three identical backticks or tildes; a backtick opener info string contains no backtick",
+      "fencedCloser": "zero to three spaces, then the opener character repeated at least the opener length, then spaces only; the first qualifying closer ends the fence",
+      "inlineOpener": "outside a fence, a run of one or more backticks",
+      "inlineCloser": "the next backtick run of exactly the opener length; different-length runs are content and backslash does not escape a delimiter",
+      "notInert": [
+        "indented-code",
+        "html-code-element",
+        "unclosed-fence",
+        "unclosed-inline-span",
+        "backtick-fence-with-backtick-in-info-string"
+      ],
+      "precedence": "fenced context is recognized before inline context; the resulting mask applies only to active-content detection and never to secret detectors"
+    },
+    "excludedOutsideInertContexts": [
+      "html-element",
+      "html-comment-or-declaration",
+      "svg",
+      "script",
+      "event-handler-attribute",
+      "unsafe-url-scheme-in-markdown-destination",
+      "unsafe-url-scheme-in-autolink",
+      "unsafe-url-scheme-in-html-attribute"
+    ],
+    "unsafeUrlSchemes": [
+      "javascript",
+      "vbscript",
+      "data",
+      "file"
+    ],
+    "malformedContextAction": "exclude-whole-artifact",
+    "renderRule": "admitted Markdown is never rendered as HTML; selected text is encoded for its destination and code-context bytes never mint a link, element, attribute, script or handler"
+  },
+  "matchAction": {
+    "action": "exclude-whole-artifact",
+    "redactionClass": "excluded-artifact",
+    "retainedFields": [
+      "contentDigest",
+      "repositoryRelativePath",
+      "policyId",
+      "policyVersion",
+      "detectorId"
+    ],
+    "retainBody": false
+  },
+  "unclassifiableExclusion": {
+    "appliesTo": "every artifact excluded by classificationOrder step 6 for a reason other than a detector or active-content match: NUL byte, strict UTF-8 failure, malformed code context, unknown extraction class, parse failure or resource-limit failure",
+    "action": "exclude-whole-artifact",
+    "redactionClass": "unclassifiable-excluded",
+    "retainedFields": [
+      "contentDigest",
+      "repositoryRelativePath",
+      "policyId",
+      "policyVersion",
+      "exclusionReason"
+    ],
+    "retainBody": false
+  },
+  "redactionClasses": {
+    "vocabulary": "closed by RFC5-17: excluded-artifact, redacted-span, unclassifiable-excluded",
+    "emitted": [
+      "excluded-artifact",
+      "unclassifiable-excluded"
+    ],
+    "neverEmitted": [
+      "redacted-span"
+    ],
+    "unknownRendering": "both emitted classes withhold the whole artifact, so every claim that depended on it renders Unknown with reason excluded-content and the exclusion count shown"
+  },
+  "classificationOrder": [
+    "verify exact Git-object membership in the phase-A seed algorithm or the phase-B revision-bound manifest against the signed PWB grammar",
+    "reject denied path or unsupported encoding",
+    "run every detector over transient bytes before parsing",
+    "classify active content with Markdown code-context awareness; exclude a genuine active form and fail closed on malformed code context",
+    "parse only the closed extraction class assigned by the manifest",
+    "exclude the whole artifact on any match, NUL byte, strict UTF-8 failure, unknown extraction class, parse failure or resource-limit failure",
+    "admit only parsed project-shape facts"
+  ],
+  "classificationSuccess": "a body is classifiable only when its normalized path is admitted by its current discovery phase, it decodes as strict UTF-8 without NUL, no detector matches anywhere in the complete body including inert code contexts, no active-content form occurs outside a valid inert code context, its extraction class is in the signed PWB closed set, and that extractor completes within declared deterministic limits",
+  "rawBodyHandling": {
+    "storage": "never",
+    "logging": "never",
+    "rendering": "never",
+    "machineResponse": "never",
+    "externalEgress": "never"
+  }
+}

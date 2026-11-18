@@ -196,14 +196,14 @@ export const entryModules = (): Record<string, string> => entryModulesIn(WORKSPA
 
 /** Every module `entry` reaches by the specifiers `specifiersOf` gives for each module, in the order it reaches them: every edge
  * between workspace modules, and any workspace specifier that names no module. */
-export function reach(entry: string, specifiersOf: (module: string) => readonly string[]): { reachable: string[]; edges: ReachEdge[]; unresolved: Omit<ReachEdge, 'to'>[] } {
+export function reach(entry: string, specifiersOf: (module: string) => readonly string[], resolveModule: typeof resolve = resolve): { reachable: string[]; edges: ReachEdge[]; unresolved: Omit<ReachEdge, 'to'>[] } {
   const seen = new Set([entry]);
   const queue = [entry];
   const edges: ReachEdge[] = [];
   const unresolved: Omit<ReachEdge, 'to'>[] = [];
   for (let file = queue.shift(); file !== undefined; file = queue.shift()) {
     for (const specifier of specifiersOf(file)) {
-      const to = resolve(file, specifier);
+      const to = resolveModule(file, specifier);
       if (to === null) continue;
       if (to === undefined) { unresolved.push({ from: file, specifier }); continue; }
       edges.push({ from: file, specifier, to });

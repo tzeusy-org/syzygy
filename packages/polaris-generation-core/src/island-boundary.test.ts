@@ -2,7 +2,7 @@ import { readdirSync } from 'node:fs';
 import { join } from 'node:path';
 import ts from 'typescript';
 import { describe, expect, it } from 'vitest';
-import { ROOT, isFile, reach as reachBy, readModule } from './workspace-reach.testkit.js';
+import { ROOT, isFile, reach as reachBy, readModule, resolve } from './workspace-reach.testkit.js';
 
 // syzygy-bpyt.8.1/.8.23: the CLI and the broker-client process it launches
 // never load the parked provider island (owner packet Q8). Read TypeScript
@@ -138,14 +138,14 @@ function importsOf(file: string, text: string): { specifiers: string[]; unsuppor
 
 /** Every module and unresolved/unsupported edge, with an originating path for
  * island entries. Walking the consent root deliberately reaches the island. */
-function reach(entry: string, readImports = (file: string) => importsOf(file, readModule(file))): { reachable: string[]; intoIsland: string[]; unresolved: string[]; unsupported: string[] } {
+function reach(entry: string, readImports = (file: string) => importsOf(file, readModule(file)), resolveModule: typeof resolve = resolve): { reachable: string[]; intoIsland: string[]; unresolved: string[]; unsupported: string[] } {
   const island = new Set(ISLAND);
   const unsupported: string[] = [];
   const { reachable, edges, unresolved } = reachBy(entry, (file) => {
     const imports = readImports(file);
     for (const form of imports.unsupported) unsupported.push(form);
     return imports.specifiers;
-  });
+  }, resolveModule);
   const paths = new Map([[entry, entry]]);
   for (const edge of edges) {
     if (!paths.has(edge.to)) paths.set(edge.to, `${paths.get(edge.from)} -> ${edge.from} imports ${edge.specifier} (${edge.to})`);
@@ -175,16 +175,31 @@ describe('the live Node entries and the parked provider island', () => {
       if (imports === undefined) { imports = importsOf(file, readModule(file)); cache.set(file, imports); }
       return imports;
     };
+    // The source snapshot is fixed for this census. Share edge resolution across
+    // origins, including null/undefined results, while retaining each full walk.
+    let resolutionCalls = 0;
+    const resolveCounted: typeof resolve = (from, specifier) => { resolutionCalls += 1; return resolve(from, specifier); };
+    const resolutions = new Map<string, Map<string, ReturnType<typeof resolve>>>();
+    const resolveOnce: typeof resolve = (from, specifier) => {
+      let targets = resolutions.get(from);
+      if (targets === undefined) { targets = new Map(); resolutions.set(from, targets); }
+      if (!targets.has(specifier)) targets.set(specifier, resolveCounted(from, specifier));
+      return targets.get(specifier);
+    };
     const violations: string[] = [];
     const unresolved: string[] = [];
     const unsupported: string[] = [];
     for (const module of population) {
-      const result = reach(module, readImports);
+      const result = reach(module, readImports, resolveOnce);
       for (const edge of result.unresolved) unresolved.push(edge);
       for (const form of result.unsupported) unsupported.push(form);
       if (!allowed.has(module) && result.intoIsland.length > 0) violations.push(result.intoIsland[0]!);
     }
     expect(population.length, 'production-source enumeration must not be empty').toBeGreaterThan(0);
+    // The independent AST input population defines the cost bound: one
+    // underlying resolution per distinct edge, regardless of origin count.
+    const uniqueEdges = [...cache.values()].reduce((sum, imports) => sum + new Set(imports.specifiers).size, 0);
+    expect(resolutionCalls, 'whole-census resolutions must not repeat shared edges').toBe(uniqueEdges);
     expect([...new Set(unsupported)], `${population.length} production sources: unsupported loaders`).toEqual([]);
     expect([...new Set(unresolved)], `${population.length} production sources: unresolved workspace edges`).toEqual([]);
     expect(violations, `${population.length} production sources: unlisted transitive ingress\n${violations.join('\n')}`).toEqual([]);

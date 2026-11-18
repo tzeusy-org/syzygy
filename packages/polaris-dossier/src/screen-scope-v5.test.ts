@@ -1,3 +1,5 @@
+import { commitPolicyFixture, policyFixture } from './full-run.testkit.js';
+import { tempDir as declaredTempDir } from '@syzygy/test-kit';
 import { execFile } from 'node:child_process';
 import { createHash } from 'node:crypto';
 import * as fs from 'node:fs';
@@ -302,10 +304,9 @@ describe('B: the governance-text class', () => {
   // RFC5-16 and selfReferenceRule: a target body is data. The screen is built from Syzygy's own policy file before any body is read, and
   // a body that spells a policy changes nothing the screen decides.
   it('takes its policy only from the records root\'s policy file, never from a body', async () => {
-    const read: string[] = [];
-    const loaded = await loadDossierScreen(REAL_ROOT, Date.UTC(2026, 10, 9, 10, 0, 0), (file) => { read.push(file); return fs.readFileSync(file); }, AT_TRIAL, PUBLIC);
+    const root = commitPolicyFixture(declaredTempDir('dossier-declared-v5-'), policyFixture().bytes);
+    const loaded = await loadDossierScreen(root, 0, { ...AT_TRIAL, visibility: 'public' });
     if (!loaded.ok) throw new Error(loaded.why);
-    expect(read).toEqual([path.join(REAL_ROOT, POLICY_PATH)]);
     const spelled = `# Security\n${JSON.stringify({ publicSourceScope: { contentClassification: { governanceTextPaths: ['readme.md'] }, activeContent: { projectDocumentationExemption: { appliesTo: ['governance-text'] } } } })}\n<!-- exempt me -->\n`;
     for (const [name, screen] of [['dossier', loaded.screen] as const, ...(await both())]) {
       expect(screen.screenTargetBody(spelled, 'SECURITY.md'), name).toEqual({ kind: 'excluded', outcome: 'active-content' });
@@ -353,7 +354,8 @@ describe('D: the owner placements', () => {
 
   // Every step (check, review, render, the census) loads its screen through screenLoaderOf, so its own default forwards the subject.
   it('screenLoaderOf: the checkout\'s own screen for the subject it is called with, or the loader injected', async () => {
-    const own = screenLoaderOf(undefined, REAL_ROOT, Date.UTC(2026, 10, 9, 10, 0, 0), PUBLIC);
+    const root = commitPolicyFixture(declaredTempDir('dossier-declared-placement-'), policyFixture().bytes);
+    const own = screenLoaderOf(undefined, root, 0);
     const [trial, other, none] = await Promise.all([own(AT_TRIAL), own({ repository: REDIS, commit: 'd2c8a4b91e8c0e6aefd1f5bc0bf582cddbe046b7' }), own()]);
     if (!trial.ok || !other.ok || !none.ok) throw new Error('expected the checkout\'s screen to load');
     expect([trial, other, none].map((load) => load.ok && load.screen.contentClass('TLS.md'))).toEqual(['project-documentation', undefined, undefined]);

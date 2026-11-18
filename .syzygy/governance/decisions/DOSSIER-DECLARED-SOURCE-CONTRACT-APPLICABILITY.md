@@ -1,0 +1,12 @@
+# Dossier declared-source contract applicability
+
+[Inferred] Candidate agent judgment for the local declared-source2.0 amendment. It binds nothing before a default-branch agent-adoption row names the commit containing this file. No owner decision or already-effective N/A is claimed. The adoption report must name this judgment with the specification and policy, and include the revert command.
+
+Scope: a static, non-citable local editorial dossier over a supplied pinned clone. It does not render, store, transition, query or cross the following kernel/curated/live-control-plane behaviors. These are the only proposed N/A consequences; CONTRACT-COVERAGE.json names each row separately. Applicable consequences of the same clauses remain mapped to actual requirements.
+
+- RFC2-23: rolling observer failure fallback to a persisted last-good observation marked stale/broken (NG-live-control-plane). This static pinned command run has no rolling capture store or last-good observer branch. Its local failures still disclose unavailable sources/absence, dependent Unknown, partial scope and exclusions; the judgment does not waive these or provider-withdrawal labels.
+- RFC5-13: kernel challenge admission/resolution and provider-overlay suspension lifecycle (NG-kernel-lifecycle). The local run has no challenge lifecycle; changed provider declaration still refuses dependent local continuation and preserves historical artifacts.
+- RFC7-25: curated adoption/freezing and its governance-write machinery (NG-curated-publication). Local generated pages remain editorial and non-citable; whole-subject fresh fidelity/design review, retired evidence and review-status disclosure remain035 obligations. No curated adoption or materiality shortcut is implied.
+- RFC7-33: live kernel endpoint/drawer/evaluation/authority-band state transitions not emitted by static pinned editorial pages (NG-live-control-plane). Every distinction the local artifact does emit remains machine-readable and non-visually recoverable under033–035; a static export is not an endpoint omission waiver.
+
+These judgments preserve SEC-5 and change no secret predicate. They concern no doctrine amendment, repository write outside owner scope or exposure/release. If this scope later emits any excluded behavior, its consequence becomes applicable and must receive a new mapped requirement/adoption; this record supplies no permission for that future behavior. Effective status comes from RFC3-16 as amended, not this candidate banner.

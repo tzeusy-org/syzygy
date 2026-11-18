@@ -1,3 +1,5 @@
+import { commitPolicyFixture } from './full-run.testkit.js';
+import { DOSSIER_POLICY_PATH } from './policy-snapshot.js';
 import { execFile, execFileSync } from 'node:child_process';
 import { createHash } from 'node:crypto';
 import * as fs from 'node:fs';
@@ -259,22 +261,15 @@ describe('parity with the any-repo reader\'s screen (syzygy-qkea.17)', () => {
   // R-PR403-SCREEN-DOCS-1 finding 2: each screen decides the class prerequisite from the same records at the same `now`, so a class act
   // not yet in force, a withdrawn one, or one that binds other module bytes leaves both screens with the class unclassified.
   it.each<[string, ClassAct, boolean]>([
-    ['in force', {}, true],
-    ['absent', null, false],
-    ['dated after now', { date: '2026-10-08' }, false],
-    ['withdrawn', { withdrawn: true }, false],
-    ['binding other module bytes', { argument: sha(`${MODULE_TEXT} `) }, false],
-  ])('decides the class prerequisite as the app does from the same records at now: %s', async (_name, classAct, classified) => {
-    const root = recordsRoot(policyOf(DOC_SCOPE), undefined, classAct);
-    const ours = await loadDossierScreen(root, NOW);
+    ['in force', {}, true], ['absent', null, false], ['future', { date: '2026-10-08' }, false], ['withdrawn', { withdrawn: true }, false], ['different module', { argument: sha(`${MODULE_TEXT} `) }, false],
+  ])('keeps legacy app class admission separate from the declared dossier policy: %s', async (_name, classAct, classified) => {
+    const legacyRoot = recordsRoot(policyOf(DOC_SCOPE), undefined, classAct);
+    const dossierRoot = commitPolicyFixture(tempDir('dossier-class-only-'), encode(policyOf(DOC_SCOPE)));
+    const ours = await loadDossierScreen(dossierRoot, NOW, { repository: 'repository:fixture', commit: 'a'.repeat(40), visibility: 'public' });
     if (!ours.ok) throw new Error(ours.why);
-    const theirs = await checkoutAppScreen(root, NOW);
-    expect([ours.screen.projectDocumentation, theirs.projectDocumentation]).toEqual([classified, classified]);
-    expect(['README.md', 'licenses/MIT.txt', 'src/server.c'].map((p) => [ours.screen.screenPath(p), theirs.screenPath(p), ours.screen.contentClass(p), theirs.contentClass(p)])).toEqual([
-      classified ? [undefined, undefined, 'project-documentation', 'project-documentation'] : ['unknown-extraction-class', 'unknown-extraction-class', undefined, undefined],
-      classified ? [undefined, undefined, 'project-documentation', 'project-documentation'] : ['unknown-extraction-class', 'unknown-extraction-class', undefined, undefined],
-      [undefined, undefined, 'code-content', 'code-content'],
-    ]);
+    const theirs = await checkoutAppScreen(legacyRoot, NOW);
+    expect([ours.screen.projectDocumentation, theirs.projectDocumentation]).toEqual([true, classified]);
+    expect(ours.screen.contentClass('README.md')).toBe('project-documentation');
   });
 
   it.each<[string, string]>([
@@ -480,66 +475,23 @@ sys.stdout.write(json.dumps({'body': [{'name': n, 'body': body, 'oracle': srt(b.
   });
 });
 
-describe('the screen of the policy in force', () => {
-  it('loads the policy the act chain puts in force, naming its digest', async () => {
+describe('the screen of the committed dossier policy', () => {
+  it('loads without an act and binds the exact policy bytes', async () => {
     const policy = policyOf();
-    const result = await loadDossierScreen(recordsRoot(policy), NOW);
+    const root = commitPolicyFixture(tempDir('dossier-committed-screen-'), encode(policy));
+    const result = await loadDossierScreen(root, NOW, { repository: 'repository:fixture', commit: 'a'.repeat(40), visibility: 'public' });
     expect(result).toMatchObject({ ok: true, screen: { policyId: 'fixture', policyVersion: '1', policySha256: sha(policy) } });
   });
-
-  it('refuses a policy whose bytes are not the act\'s argument', async () => {
-    const policy = policyOf();
-    expect(await loadDossierScreen(recordsRoot(policy, sha(`${policy} `)), NOW)).toMatchObject({ ok: false, why: expect.stringContaining('no screening policy is in force') });
+  it('refuses worktree policy drift and missing committed policy', async () => {
+    const root = commitPolicyFixture(tempDir('dossier-screen-changed-'), encode(policyOf()));
+    fs.appendFileSync(path.join(root, DOSSIER_POLICY_PATH), ' ');
+    expect(await loadDossierScreen(root, NOW)).toMatchObject({ ok: false });
+    expect(await loadDossierScreen(tempDir('dossier-screen-missing-'), NOW)).toMatchObject({ ok: false });
   });
-
-  it('refuses a policy changed between the act check and the read the screen is built from', async () => {
-    const policy = policyOf();
-    const edited = policyOf({ contentClassification: { rules: [{ class: 'code-content', sourceExtensions: ['.md'] }] } });
-    expect(await loadDossierScreen(recordsRoot(policy), NOW, () => Buffer.from(edited))).toEqual({
-      ok: false, why: 'the screening policy changed after its act was checked; its bytes differ from the act\'s argument',
-    });
-  });
-
-  it('refuses before the act takes effect', async () => {
-    expect(await loadDossierScreen(recordsRoot(policyOf()), Date.UTC(2026, 9, 3))).toMatchObject({ ok: false });
-  });
-
-  // syzygy-2coz, the scope's prerequisite: the class is classified only while the RFC5-14 class amendment act is in force.
-  it.each<[string, ClassAct, boolean]>([
-    ['in force', {}, true],
-    ['absent', null, false],
-    ['naming another module digest', { argument: sha(`${MODULE_TEXT} `) }, false],
-    ['not yet in force', { date: '2026-10-08' }, false],
-    ['withdrawn', { withdrawn: true }, false],
-  ])('classifies project documentation only while the class act is in force: %s', async (_name, classAct, classified) => {
-    const result = await loadDossierScreen(recordsRoot(policyOf(DOC_SCOPE), undefined, classAct), NOW);
-    if (!result.ok) throw new Error(result.why);
-    expect(result.screen.projectDocumentation).toBe(classified);
-    expect(result.screen.screenPath('README.md')).toBe(classified ? undefined : 'unknown-extraction-class');
-    expect(result.screen.screenPath('src/server.c')).toBeUndefined();
-  });
-
-  // syzygy-s6xo: this checkout's own state, read from the tree, so the pin holds on either side of the sitting that records the
-  // screening acts: refused while no screening-scope act is recorded, built once one is and the policy declares the scope.
-  it('builds the screen on this checkout exactly when a screening-scope act is recorded and the policy declares the scope', async () => {
-    const recorded = ['PWB-SECRET-CLASSIFICATION-POLICY-PUBLIC-SOURCE-SCOPE-ACT.md', 'PWB-SECRET-CLASSIFICATION-POLICY-PUBLIC-SOURCE-SCOPE-V2-ACT.md']
-      .some(file => fs.existsSync(path.join(REAL_ROOT, DECISIONS_DIR, file)));
-    const load = await loadDossierScreen(REAL_ROOT, Date.now());
-    if (!recorded) expect(load).toEqual({ ok: false, why: 'no screening policy is in force: no screening-scope policy act is recorded' });
-    else if (Object.hasOwn(LIVE, 'publicSourceScope')) expect(load).toMatchObject({ ok: true });
-    else expect(load).toEqual({ ok: false, why: 'the screening policy cannot be applied: it carries no publicSourceScope' });
-  });
-
-  // syzygy-2coz: on this checkout the class is classified exactly when its act is recorded and the policy carries its rule.
-  it('classifies project documentation on this checkout exactly when the class act is recorded and the policy carries the rule', async () => {
-    const load = await loadDossierScreen(REAL_ROOT, Date.now());
-    if (!load.ok) {
-      expect(fs.existsSync(path.join(REAL_ROOT, DECISIONS_DIR, 'PWB-SECRET-CLASSIFICATION-POLICY-PUBLIC-SOURCE-SCOPE-V2-ACT.md'))).toBe(false);
-      return;
-    }
-    const hasRule = JSON.stringify(LIVE.publicSourceScope ?? {}).includes('"class":"project-documentation"');
-    const recorded = fs.existsSync(path.join(REAL_ROOT, CLASS_ACT_FILE));
-    expect(load.screen.projectDocumentation).toBe(hasRule && recorded);
-    expect(load.screen.screenPath('README.md')).toBe(hasRule && recorded ? undefined : 'unknown-extraction-class');
+  it('classifies documentation from the policy without a class act', async () => {
+    const root = commitPolicyFixture(tempDir('dossier-screen-doc-class-'), encode(policyOf(DOC_SCOPE)));
+    const result = await loadDossierScreen(root, 0, { repository: 'repository:fixture', commit: 'a'.repeat(40), visibility: 'public' });
+    expect(result.ok && [result.screen.projectDocumentation, result.screen.contentClass('README.md'), result.screen.contentClass('src/server.c')])
+      .toEqual([true, 'project-documentation', 'code-content']);
   });
 });

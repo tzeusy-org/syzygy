@@ -9,7 +9,7 @@ import { checkSubject, declaredSessionId, type CheckDeps, type CheckFinding, typ
 import { readSec3 } from './doctrine-quote.js';
 import { INVENTORY_ENTRY_KINDS, INVENTORY_QUOTATION_FORM, LOCAL_INVENTORY_SCHEMA_VERSION, SESSION_ID_RULE, inventorySchemaDocument, localInventorySchema } from './draft-schema.js';
 import { PERMITTING_ARM_ENABLED, decideExecutionRule, executionRuleSection, type ExecutionRule } from './execution-rule.js';
-import { RECORDS_WITHIN_REACH, type GateSources } from './gate-sources.js';
+import { RECORDS_WITHIN_REACH, SOURCE_SCREENING_RULE, type GateSources } from './gate-sources.js';
 import { isoOf } from './iso-of.js';
 import { expectedLaunch, launchFormRefusal, launchedMarkerState } from './launched.js';
 import type { Outcome } from './outcome.js';
@@ -19,7 +19,7 @@ import type { RunConfig } from './run-config.js';
 import type { RunSubject } from './run-record.js';
 import { placementSubjectOf } from './screen.js';
 import { REVISION_FILE, RUN_LAYOUT, within } from './state-directory.js';
-import { briefCopyLines, briefCopyOf, readLaunchDisclosure, type BriefCopy } from './launch-disclosure.js';
+import { briefCopyLines, type BriefCopy } from './launch-disclosure.js';
 import { issuedBriefStatement, type LaunchStatement } from './launch-statements.js';
 import { type OpenedRun, errno, openRun, readRecord, sessionDirectory } from './run-dir.js';
 export { SESSION_DIR, sessionDirName, sessionsRoot, sessionDirectory, sessionsRootViolation, errno, openRun, logStep, readRecord } from './run-dir.js';
@@ -37,7 +37,7 @@ export type { OpenedRun } from './run-dir.js';
  * (`inventoryOfRecord`, `session-statement.ts`). Every stored value is within the agent sessions' write reach and Inferred; the
  * inventory's completeness over the clone is the inventory session's self-report and never verified. */
 
-export const INVENTORY_BRIEF_VERSION = 'polaris-dossier-inventory-brief-v2';
+export const INVENTORY_BRIEF_VERSION = 'polaris-dossier-inventory-brief-v3';
 export const INVENTORY_CHECK_FORMAT = 'polaris-dossier-inventory-check/1';
 export const INVENTORY_BRIEF_FILE = 'inventory-brief.md';
 export const INVENTORY_FILE = 'inventory.json';
@@ -125,6 +125,8 @@ export function renderInventoryBrief(input: InventoryBriefInput): string {
     '',
     `Write \`${INVENTORY_FILE}\` in this directory, naming the pinned revision in \`pinnedRevision\` and the schema version in \`schemaVersion\`, and run \`syzygy dossier inventory-check ${input.runDir} --inventory ${INVENTORY_FILE}\` from here; repair every finding and check again.`,
     '',
+    SOURCE_SCREENING_RULE,
+    '',
     SESSION_ID_RULE('inventory'),
     '',
     '## Entries',
@@ -173,8 +175,7 @@ export type InventoryBriefLoad = { readonly ok: true; readonly text: string; rea
 
 /** Syzygy's rendering of session `session`'s inventory brief, with the execution rule it carries: always SEC-3's, never the permission. */
 export async function buildInventoryBrief(opened: Extract<OpenedRun, { ok: true }>, session: number, sources: GateSources, now: number, deps: CensusDeps = {}): Promise<InventoryBriefLoad> {
-  const copy = briefCopyOf(readLaunchDisclosure(opened.run), { dir: opened.run, clone: opened.subject.clone.path, pinnedAt: opened.subject.pinnedRevision.pinnedAt });
-  if (!copy.ok) return { ok: false, stage: 'launch-record', reason: `${copy.reason}; no inventory brief is rendered` };
+  const copy = { copy: null } as const;
   const doctrine = readSec3(sources.recordsRoot);
   if (!doctrine.ok) return { ok: false, stage: 'doctrine', reason: `SEC-3 cannot be quoted as adopted: ${doctrine.reason}` };
   const executionRule = await decideExecutionRule({

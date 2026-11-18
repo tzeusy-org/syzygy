@@ -1,3 +1,5 @@
+import { tempDir } from '@syzygy/test-kit';
+import { commitPolicyFixture, policyFixture } from './full-run.testkit.js';
 import * as fs from 'node:fs';
 import * as path from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -101,7 +103,7 @@ describe('censusSection', () => {
   });
 
   it('lists each group with its count and every named path as a JSON string, under the policy that decided it', () => {
-    expect(text).toContain(`Syzygy listed the 8 file(s) at the pinned revision and screened each path under the screening policy in force (\`fixture-public-source\` version \`1\`, sha256 \`${SCREEN.policySha256}\`), reading no file body.`);
+    expect(text).toContain(`Syzygy listed the 8 file(s) at the pinned revision and screened each path under the bound screening policy (\`fixture-public-source\` version \`1\`, sha256 \`${SCREEN.policySha256}\`), reading no file body.`);
     expect(text).toContain([
       '- `denied-path`, a denied-path rule names the file and no secret detector matches its path: 2',
       '  - ".env"',
@@ -111,7 +113,7 @@ describe('censusSection', () => {
       '  - "README.md"',
       '  - "docs/link.md"',
       '- `secret-detector-match` on the path itself, whether or not a denied-path rule also names it: 1. Such a path is never named.',
-      '- `class-not-consented`, admitted by screening under a class the per-project statement does not list: 2',
+      '- `class-not-consented`, admitted by screening under a class outside this artifact classification: 2',
       '  - "src/main.c" (code-content)',
       '  - "tools/run.c" (code-content)',
     ].join('\n'));
@@ -207,11 +209,11 @@ describe('withheldCensus under the screening scope version 6', () => {
   ])('loads the checkout\'s own screen for the placement subject at the $name when no loader is given', async ({ commit, expectedUnknown }) => {
     const listing = () => ({ listTree: async () => V6_ENTRIES.map((e) => ({ ...e, id: 'x' })) }) as unknown as PinnedObjectReader;
     const loaded = await loadCensus({ clonePath: '/nonexistent/clone', pinned: commit, consented: ['code-content', 'project-documentation', 'governance-text'],
-      recordsRoot: REAL_ROOT, now: Date.UTC(2026, 10, 9, 10, 0, 0), placement: { repository: 'repository:redis-redis', commit } },
+      recordsRoot: commitPolicyFixture(tempDir('dossier-census-policy-'), policyFixture().bytes), now: 0, placement: { repository: 'repository:redis-redis', commit, visibility: 'public' } },
       // Version 8 asks the pair's visibility; the decision is injected (public, as the Redis consent states), so no process runs here.
-      { openReader: listing, visibilityOf: async () => ({ ok: true, visibility: 'public', carriers: [] }) });
+      { openReader: listing });
     if (!loaded.ok) throw new Error('expected the census to load');
-    expect(loaded.census.policy.policyVersion).toBe('1.9.0-public-source-candidate.1.none.code-all.redact-span.v5-bcd.v6-p.v7-s.v8-pv');
+    expect(loaded.census.policy.policyVersion).toBe('dossier-declared-source/1.0.0');
     expect(loaded.census.unknownExtractionClass).toEqual(expectedUnknown);
   });
 });
@@ -273,12 +275,12 @@ describe('round-1 repairs', () => {
     expect(none).toContain('- `class-not-consented`, admitted by screening under a class no consent record lists, since the run relies on no per-project statement: 0\n');
     expect(none).not.toContain('the per-project statement the run relies on lists');
     const listing = censusSection({ ok: true, census: withheldCensus(ENTRIES, SCREEN, ['code-content']) });
-    expect(listing).toContain('The fidelity review session is given a cited span\'s text only when screening admits its file and the per-project statement the run relies on lists that file\'s class.');
-    expect(listing).toContain('- `class-not-consented`, admitted by screening under a class the per-project statement does not list: 0\n');
+    expect(listing).toContain('The fidelity review session is given a cited span\'s text only when screening admits its file under a recognized content class.');
+    expect(listing).toContain('- `class-not-consented`, admitted by screening under a class outside this artifact classification: 0\n');
     expect(censusSection({ ok: false, why: 'x', consented: null })).toContain('that file is code-content. The run relies on no per-project statement');
     const report = screenCensusReport({ ok: true, census: withheldCensus(ENTRIES, SCREEN, null) });
     expect(report.note).toContain('The review session is given a cited span\'s text only when screening admits its file and that file is code-content. The run relies on no per-project statement');
-    expect(screenCensusReport({ ok: false, why: 'x', consented: ['code-content'] }).note).toBe('Which files screening withholds by path is Unknown at this check. The review session is given a cited span\'s text only when screening admits its file and the per-project statement the run relies on lists that file\'s class. A block that cites only withheld files therefore cannot be confirmed in review, and an unconfirmed row blocks readiness. Prefer admitted sources: where an admitted file states the same thing, cite it as well or instead; never leave out what only a withheld file states.');
+    expect(screenCensusReport({ ok: false, why: 'x', consented: ['code-content'] }).note).toBe('Which files screening withholds by path is Unknown at this check. The review session is given a cited span\'s text only when screening admits its file under a recognized content class. A block that cites only withheld files therefore cannot be confirmed in review, and an unconfirmed row blocks readiness. Prefer admitted sources: where an admitted file states the same thing, cite it as well or instead; never leave out what only a withheld file states.');
   });
 
   it('refuses, never drops, a path outcome the census does not sort (note 8)', () => {

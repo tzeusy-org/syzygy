@@ -1,3 +1,5 @@
+import { commitPolicyFixture, policyFixture } from './full-run.testkit.js';
+import { DOSSIER_POLICY_PATH } from './policy-snapshot.js';
 import * as fs from 'node:fs';
 import * as path from 'node:path';
 import { DECISIONS_DIR, POLICY_PATH } from '@syzygy/polaris-generation-consent';
@@ -76,40 +78,32 @@ describe.runIf(V7 !== null)('a policy without sourceVisibility (version 7)', () 
   });
 });
 
-describe('loadDossierScreen decides the subject\'s visibility under version 8 only', () => {
+describe('declared source visibility and committed policy loading', () => {
   const NOW = Date.UTC(2026, 10, 10);
   const recordsRoot = (policy: string): string => {
-    const root = tempDir('dossier-screen-v8-');
+    const root = tempDir('dossier-screen-v8-legacy-');
     for (const [rel, body] of [[POLICY_PATH, policy], [`${DECISIONS_DIR}/PWB-SECRET-CLASSIFICATION-POLICY-PUBLIC-SOURCE-SCOPE-ACT.md`, renderPolicyAct(sha256(policy), '2026-10-04', '2026-10-04T10:00:00Z')]] as const) {
-      fs.mkdirSync(path.dirname(path.join(root, rel)), { recursive: true });
-      fs.writeFileSync(path.join(root, rel), body);
+      fs.mkdirSync(path.dirname(path.join(root, rel)), { recursive: true }); fs.writeFileSync(path.join(root, rel), body);
     }
     return root;
   };
-  const asked: unknown[] = [];
-  const decide = (decision: VisibilityDecision) => async (subject: unknown) => { asked.push(subject); return decision; };
-  it('builds the screen for the decided visibility', async () => {
-    const root = recordsRoot(V8);
-    const pub = await loadDossierScreen(root, NOW, undefined, REDIS, decide({ ok: true, visibility: 'public', carriers: [] }));
-    const priv = await loadDossierScreen(root, NOW, undefined, REDIS, decide({ ok: true, visibility: 'private', carriers: [] }));
-    expect([pub.ok && pub.screen.visibility, priv.ok && priv.screen.visibility]).toEqual(['public', 'private']);
-    expect(asked).toEqual([REDIS, REDIS]);
+  it('uses the declaration, with private as the conservative default', async () => {
+    const root = commitPolicyFixture(tempDir('dossier-screen-declared-'), policyFixture().bytes);
+    const pub = await loadDossierScreen(root, NOW, { ...REDIS, visibility: 'public' });
+    const priv = await loadDossierScreen(root, NOW, { ...REDIS, visibility: 'private' });
+    const absent = await loadDossierScreen(root, NOW);
+    expect([pub.ok && pub.screen.visibility, priv.ok && priv.screen.visibility, absent.ok && absent.screen.visibility]).toEqual(['public', 'private', 'private']);
   });
-  it('refuses when a consent record cannot be read', async () => {
-    const load = await loadDossierScreen(recordsRoot(V8), NOW, undefined, REDIS, decide({ ok: false, why: 'a launch consent record cannot be read: x' }));
-    expect(load).toEqual({ ok: false, why: 'the screening policy cannot be applied: a launch consent record cannot be read: x' });
-  });
-  it('builds a screen for no subject as private', async () => {
-    const load = await loadDossierScreen(recordsRoot(V8), NOW, undefined, null, async () => { throw new Error('not asked'); });
-    expect(load.ok && load.screen.visibility).toBe('private');
+  it('refuses changed policy bytes, and a run bound to another digest', async () => {
+    const bytes = policyFixture().bytes;
+    const root = commitPolicyFixture(tempDir('dossier-screen-drift-'), bytes);
+    expect(await loadDossierScreen(root, NOW, { ...REDIS, policySha256: '0'.repeat(64) })).toMatchObject({ ok: false });
+    fs.appendFileSync(path.join(root, DOSSIER_POLICY_PATH), ' ');
+    expect(await loadDossierScreen(root, NOW)).toMatchObject({ ok: false });
   });
   it('the launch admits a repository not declared public only under version 8 (REQ-polaris-generation-046, line 25)', async () => {
     expect(await policyAdmitsNonPublic(recordsRoot(V8), NOW)).toEqual({ admitted: true, successor: NON_PUBLIC_SUCCESSOR });
     if (V7 !== null) expect(await policyAdmitsNonPublic(recordsRoot(V7), NOW)).toEqual({ admitted: false, successor: NON_PUBLIC_SUCCESSOR });
     expect(await policyAdmitsNonPublic(recordsRoot(V8), Date.UTC(2026, 9, 1))).toEqual({ admitted: false, successor: NON_PUBLIC_SUCCESSOR });
-  });
-  it.runIf(V7 !== null)('under version 7 asks nothing and builds public', async () => {
-    const load = await loadDossierScreen(recordsRoot(V7!), NOW, undefined, REDIS, async () => { throw new Error('not asked'); });
-    expect(load.ok && load.screen.visibility).toBe('public');
   });
 });

@@ -129,11 +129,11 @@ export type LocalDraftLayer =
   | {
     readonly state: 'editorial-draft';
     /** The in-force record of the owner's reading the run relies on. */
-    readonly ruling: string;
+    readonly ruling?: string;
     /** The generated prose's inference provenance: the operator-declared model identity and version. */
-    readonly inferenceProvenance: { readonly modelIdentity: string; readonly modelVersion: string | null; readonly declaredBy: 'operator'; readonly label: 'Inferred' };
+    readonly inferenceProvenance: { readonly provider?: string; readonly modelIdentity: string; readonly modelVersion: string | null; readonly declaredBy: 'operator'; readonly label: 'Inferred' };
   }
-  | { readonly state: 'unknown'; readonly reason: 'unconsented-source-or-provider'; readonly why: readonly string[] };
+  | { readonly state: 'unknown'; readonly reason: 'unconsented-source-or-provider' | 'missing-declaration'; readonly why: readonly string[] };
 
 export interface LocalRenderInput {
   /** The checked draft in the renderer's shape. `sourceIds` name only sources Syzygy read and screening admitted, and may be empty. No

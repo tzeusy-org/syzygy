@@ -6,6 +6,7 @@ import {
 } from '@syzygy/polaris-generation-consent/live';
 import { readdir } from 'node:fs/promises';
 import * as path from 'node:path';
+import { readCommittedPolicy, type PolicySnapshot } from './policy-snapshot.js';
 import type { DrawerStatement } from './governed.js';
 import { normaliseUrl } from './launch-identity.js';
 
@@ -47,6 +48,8 @@ export interface ProviderStatementSource {
 }
 
 export interface GateSources {
+  /** D10 local dossier policy source; missing refuses, never falls back to act admission. */
+  readonly declaredPolicy?: () => Promise<PolicySnapshot>;
   /** Where the records are read from, for the disclosure. */
   readonly recordsRoot: string;
   /** Repository ids of the observation consents in force whose `Upstream:` URL, normalised by REQ-polaris-generation-046's rule, equals
@@ -520,6 +523,7 @@ export function createPackageGateSources(options: PackageGateSourceOptions): Gat
   };
   return {
     recordsRoot: options.root,
+    declaredPolicy: async () => readCommittedPolicy(options.root),
     // By the whole normalised `Upstream:` URL, for every host (046, line 17), from the port's own listing of its records.
     repositoryIdsFor: async url => {
       const read = port.observationRecords === undefined ? null : await port.observationRecords();
@@ -585,4 +589,6 @@ export function registryEntryUsable(entryText: string, actIdentity: string): Gat
   return { state: 'ok', record: actIdentity };
 }
 
-export const RECORDS_WITHIN_REACH = 'the consent, registry, policy and statement records the gates read lie in Syzygy\'s checkout, which the agent sessions can write; Syzygy re-reads and re-checks them at every step, and cannot rule out that a session changed them';
+export const SOURCE_SCREENING_RULE = 'SEC-2 and SEC-5 bind your own reads and sends: use only content classified and screened under the bound screening policy for this run, preserve its exclusions and private metadata protections, and send content only to the declared provider for this run. Never send secrets or unclassifiable content. A provider declaration grants no screening exception. Your read account and tool transmissions are self-reported, never observed compliance.';
+
+export const RECORDS_WITHIN_REACH = 'the Syzygy checkout and local run records lie within the agent sessions write reach; stored history and declarations remain Inferred';
