@@ -14,7 +14,7 @@ const LIVE = fs.readFileSync(path.join(REAL_ROOT, '.syzygy/governance/doctrine/s
 const lines = (first: number, last: number): string => LIVE.split('\n').slice(first - 1, last).join('\n');
 
 const DOC = (section: string, after = ''): string => `# Security\n\n**SEC-2 — Two.** Text.\n\n${section}\n\n**SEC-4 — Four.** Text.\n${after}`;
-const HEAD = '**SEC-3 — Observed code is untrusted, everywhere.** Syzygy runs\nobserved-project code only inside a profile.';
+const HEAD = '**SEC-3 — Observed code is untrusted, everywhere.** Syzygy itself never runs\nobserved-project code only inside a profile.';
 const COST = '- **What the permitted case costs:** the session runs with the owner\'s\n  credentials and network.';
 
 describe('cutSec3', () => {
@@ -53,11 +53,11 @@ describe('readSec3 over the adopted security.md, read live', () => {
     const read = readSec3(REAL_ROOT);
     expect(read.ok).toBe(true);
     if (!read.ok) return;
-    expect(read.sec3.head).toEqual({ text: lines(61, 62), startLine: 61, endLine: 62 });
-    expect(read.sec3.head.text.startsWith('**SEC-3 — Observed code is untrusted, everywhere.** Syzygy runs\n')).toBe(true);
-    expect(read.sec3.cost).toEqual({ text: lines(95, 101), startLine: 95, endLine: 101 });
+    expect(read.sec3.head).toEqual({ text: lines(74, 76), startLine: 74, endLine: 76 });
+    expect(read.sec3.head.text.startsWith('**SEC-3 — Observed code is untrusted, everywhere.** Syzygy itself never runs\n')).toBe(true);
+    expect(read.sec3.cost).toEqual({ text: lines(103, 109), startLine: 103, endLine: 109 });
     expect(read.sec3.cost?.text.startsWith('- **What the permitted case costs:** the session runs with the owner\'s own\n')).toBe(true);
-    expect(read.sec3.cost?.text.endsWith('  sandbox, and forbidding it.')).toBe(true);
+    expect(read.sec3.cost?.text.endsWith('  a sandbox, and forbidding it.')).toBe(true);
     expect(read.sec3.sha256).toBe(createHash('sha256').update(fs.readFileSync(path.join(REAL_ROOT, '.syzygy/governance/doctrine/security.md'))).digest('hex'));
   });
 

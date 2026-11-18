@@ -1001,7 +1001,9 @@ describe('strict act reads', () => {
   it('class act: stays ok once D10 replaces the module it bound, and only then (supersededByD10)', async () => {
     const bound = sha(moduleText()), act = renderClassAct(bound, '2026-10-03', '2026-10-03T09:30:00Z');
     const replaced = `${moduleText()}\nAmended by D10.\n`;
-    const manifest = (baseDigest: string): string => `# D10 MANIFEST\n[package]\n${'b'.repeat(64)}  ${D10_MANIFEST.replace('MANIFEST.txt', 'PROPOSAL.md')}\n[base]\n${baseDigest}  ${MODULE}\n`;
+    const proposedModule = D10_MANIFEST.replace('MANIFEST.txt', `proposed/${MODULE}.proposed`);
+    const manifest = (baseDigest: string, installed = sha(replaced)): string =>
+      `# D10 MANIFEST\n[package]\n${'b'.repeat(64)}  ${D10_MANIFEST.replace('MANIFEST.txt', 'PROPOSAL.md')}\n${installed}  ${proposedModule}\n[base]\n${baseDigest}  ${MODULE}\n`;
     const record = (m: string): string => `# Governance simplification D10 — owner act\n\nThe owner performed the act by writing exactly:\n\n\`\`\`text\nADOPT GOVERNANCE SIMPLIFICATION D10: ${sha(m)}\n\`\`\`\n`;
     const read = (extra: Record<string, string>) => readClassActState({ root: '/r', fs: memoryFs({ [MODULE]: replaced, [`${DECISIONS_DIR}/README.md`]: '# decisions\n', [CLASS]: act, ...extra }), now: AT });
     const m = manifest(bound);
@@ -1016,6 +1018,9 @@ describe('strict act reads', () => {
     expect(await read({ [D10_MANIFEST]: twice, [`${DECISIONS_DIR}/${D10_RECORD}`]: record(twice) }), 'two base rows for the module').toMatchObject({ state: 'refused' });
     const packageOnly = `# D10 MANIFEST\n[package]\n${bound}  ${MODULE}\n[base]\n`;
     expect(await read({ [D10_MANIFEST]: packageOnly, [`${DECISIONS_DIR}/${D10_RECORD}`]: record(packageOnly) }), 'a package row is not a base row').toMatchObject({ state: 'refused' });
+    const notInstalled = manifest(bound, 'e'.repeat(64));
+    expect(await read({ [D10_MANIFEST]: notInstalled, [`${DECISIONS_DIR}/${D10_RECORD}`]: record(notInstalled) }), 'module bytes are not the ones D10 installed').toMatchObject({ state: 'refused' });
+    expect(await read({ [D10_MANIFEST]: m, [`${DECISIONS_DIR}/${D10_RECORD}`]: record(m), [MODULE]: `${replaced}edited after D10\n` }), 'module edited after D10').toMatchObject({ state: 'refused' });
   });
 
   it('egress: returns the in-force record\'s listed content classes, absent before any act and refused when the read is', async () => {

@@ -744,10 +744,15 @@ function parseActRecord(text: string, form: ActForm, instant: InstantLabel): Par
  * earlier acts bound by digest, and under RFC3-16 as it amends a later edit is a new adoption, not a broken one: the earlier act stays in
  * force. So a file whose bytes differ from what an earlier act bound still counts as bound when D10 is recorded and replaced exactly
  * those bytes: the D10 dedicated record carries exactly one binding line, its argument is the sha256 of the D10 manifest, and that
- * manifest's `[base]` section holds one row for `file` whose digest is `boundDigest`. Nothing else in either file is read. */
+ * manifest's `[base]` section holds one row for `file` whose digest is `boundDigest`, and `file`'s current bytes are still exactly the
+ * bytes D10 installed (the `[package]` row of its proposed file). A later edit after D10 is not D10's replacement, so it refuses as
+ * before (R-D10-PACKAGE-RESUME-1 follow-up, 2026-11-18). Nothing else in either file is read. */
 export const D10_RECORD = 'GOVERNANCE-SIMPLIFICATION-D10-ACT.md';
 export const D10_MANIFEST = '.syzygy/governance/contracts/candidates/governance-simplification-d10/MANIFEST.txt';
 const D10_LABEL = 'ADOPT GOVERNANCE SIMPLIFICATION D10';
+const D10_PROPOSED = '.syzygy/governance/contracts/candidates/governance-simplification-d10/proposed/';
+/** The recorder's MIRRORS: an installed contract module is also installed under the candidates mirror. */
+const D10_MIRRORS: readonly (readonly [string, string])[] = [['.syzygy/governance/contracts/rfcs/', '.syzygy/governance/contracts/candidates/rfcs/']];
 export async function supersededByD10(fs: PackageReaderFs, root: string, file: string, boundDigest: string): Promise<boolean> {
   let record: string, manifest: string;
   try {
@@ -756,14 +761,20 @@ export async function supersededByD10(fs: PackageReaderFs, root: string, file: s
   } catch { return false; }
   const binding = record.split('\n').filter(line => line.includes(D10_LABEL));
   if (binding.length !== 1 || binding[0] !== `${D10_LABEL}: ${sha256(manifest)}`) return false;
-  const rows: string[] = [];
+  const homes = [file, ...D10_MIRRORS.flatMap(([source, mirror]) => (file.startsWith(mirror) ? [source + file.slice(mirror.length)] : []))];
+  const proposed = new Set(homes.map(home => `${D10_PROPOSED}${home}.proposed`));
+  const rows: string[] = [], installed: string[] = [];
   let section = '';
   for (const line of manifest.split('\n')) {
     if (/^\[[a-z]+\]$/.test(line)) { section = line; continue; }
     const row = /^([0-9a-f]{64}|absent) {2}(\S[^\n]*)$/.exec(line);
     if (section === '[base]' && row !== null && row[2] === file) rows.push(row[1]!);
+    if (section === '[package]' && row !== null && proposed.has(row[2]!)) installed.push(row[1]!);
   }
-  return rows.length === 1 && rows[0] === boundDigest;
+  if (rows.length !== 1 || rows[0] !== boundDigest || installed.length !== 1) return false;
+  let current: string;
+  try { current = await fs.readFile(path.join(root, file)); } catch { return false; }
+  return sha256(current) === installed[0];
 }
 
 /** Why the artifact's bound-files table does not hold for `bound`, or null when every listed file still hashes to its row. */

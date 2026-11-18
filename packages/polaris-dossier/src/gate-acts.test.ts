@@ -47,6 +47,9 @@ const V2_RECORD = '.syzygy/governance/contracts/candidates/dossier-agent-provide
 const V2_ACT = `${DECISIONS_DIR}/DOSSIER-AGENT-PROVIDER-V2-REDIS-ANTHROPIC-ACT.md`;
 const V2_INSTANT = '2026-10-07T10:30:00Z';
 const V2_AT = Date.UTC(2026, 9, 7, 10, 30, 0);
+/** The real tree's D10 record and manifest: D10 replaced the doctrine files the D9 act binds, and the D9 reading holds over the
+ * replaced bytes only beside them (`supersededByD10`), so a world that copies the real doctrine copies them too. */
+const D10_FILES = [`${DECISIONS_DIR}/GOVERNANCE-SIMPLIFICATION-D10-ACT.md`, '.syzygy/governance/contracts/candidates/governance-simplification-d10/MANIFEST.txt'];
 const real = (rel: string): string => fs.readFileSync(path.join(REAL_ROOT, rel), 'utf8');
 
 const write = (root: string, rel: string, text: string): void => {
@@ -59,7 +62,7 @@ const write = (root: string, rel: string, text: string): void => {
  * the real v1.0 record, byte for byte, which still names v1.0's bytes. An unrelated decisions file keeps the directory present. */
 function world(acts: readonly DossierLocalAgentActKey[], signoff = false, v2 = false): string {
   const root = tempDir('dossier-gate-acts-');
-  for (const rel of [...KEYS.map(k => ACTS[k].record), SECURITY, V1, DIRECTION, V2_RECORD]) write(root, rel, real(rel));
+  for (const rel of [...KEYS.map(k => ACTS[k].record), SECURITY, V1, DIRECTION, V2_RECORD, ...D10_FILES]) write(root, rel, real(rel));
   write(root, `${DECISIONS_DIR}/UNRELATED.md`, '# Unrelated\n');
   for (const key of acts) write(root, ACTS[key].file, renderDossierLocalAgentAct(key, sha(real(ACTS[key].record)), DATE, INSTANT));
   if (signoff) {
@@ -297,27 +300,28 @@ describe('the sitting\'s acts fail closed', () => {
       expect(await sources(root).d9()).toEqual({ state: 'refused', why: `the bytes of ${file} differ from the digest the act's artifact binds` });
     }
   });
-  it('keep D9 once D10 replaces the doctrine files it binds, at exactly the bound bytes (supersededByD10)', async () => {
-    const MANIFEST = '.syzygy/governance/contracts/candidates/governance-simplification-d10/MANIFEST.txt';
-    const RECORD = `${DECISIONS_DIR}/GOVERNANCE-SIMPLIFICATION-D10-ACT.md`;
-    const digestOf = (root: string, file: string): string => createHash('sha256').update(fs.readFileSync(path.join(root, file))).digest('hex');
-    const recordD10 = (root: string, base: string): void => {
-      fs.mkdirSync(path.dirname(path.join(root, MANIFEST)), { recursive: true });
-      const manifest = `# D10 MANIFEST\n[package]\n[base]\n${base}`;
+  it('keep D9 once D10 replaces the doctrine files it binds, at exactly the bound and installed bytes (supersededByD10)', async () => {
+    const MANIFEST = D10_FILES[1]!, RECORD = D10_FILES[0]!;
+    const PROPOSED_SECURITY = `.syzygy/governance/contracts/candidates/governance-simplification-d10/proposed/${SECURITY}.proposed`;
+    /** Rewrite one manifest row's digest and re-record D10 over the new manifest, as a recorder would. */
+    const rerecord = (root: string, rowPath: string): void => {
+      const manifest = real(MANIFEST).replace(new RegExp(`^[0-9a-f]{64}(  ${rowPath.replace(/[.*+?^${}()|[\]\\/]/g, '\\$&')})$`, 'm'), `${'c'.repeat(64)}$1`);
+      expect(manifest).not.toBe(real(MANIFEST));
       fs.writeFileSync(path.join(root, MANIFEST), manifest);
       const sha = createHash('sha256').update(manifest).digest('hex');
-      fs.writeFileSync(path.join(root, RECORD), `# Governance simplification D10 — owner act\n\n\`\`\`text\nADOPT GOVERNANCE SIMPLIFICATION D10: ${sha}\n\`\`\`\n`);
+      fs.writeFileSync(path.join(root, RECORD), real(RECORD).replace(/^(ADOPT GOVERNANCE SIMPLIFICATION D10: )[0-9a-f]{64}$/m, `$1${sha}`));
     };
-    const root = world(['d9-in-force']);
-    const base = `${digestOf(root, SECURITY)}  ${SECURITY}\n${digestOf(root, V1)}  ${V1}\n`;
-    fs.appendFileSync(path.join(root, SECURITY), '\nD10\n');
-    fs.appendFileSync(path.join(root, V1), '\nD10\n');
-    recordD10(root, base);
-    expect(await sources(root).d9()).toEqual({ state: 'ok', record: 'D9-IN-FORCE-OPERATOR-AGENT-2026-10-07' });
-    const other = world(['d9-in-force']);
-    fs.appendFileSync(path.join(other, SECURITY), '\nD10\n');
-    recordD10(other, `${'c'.repeat(64)}  ${SECURITY}\n`);
-    expect(await sources(other).d9()).toEqual({ state: 'refused', why: `the bytes of ${SECURITY} differ from the digest the act's artifact binds` });
+    expect(await sources(world(['d9-in-force'])).d9()).toEqual({ state: 'ok', record: 'D9-IN-FORCE-OPERATOR-AGENT-2026-10-07' });
+    const refused = { state: 'refused', why: `the bytes of ${SECURITY} differ from the digest the act's artifact binds` };
+    const wrongBase = world(['d9-in-force']);
+    rerecord(wrongBase, SECURITY);
+    expect(await sources(wrongBase).d9()).toEqual(refused);
+    const wrongInstall = world(['d9-in-force']);
+    rerecord(wrongInstall, PROPOSED_SECURITY);
+    expect(await sources(wrongInstall).d9()).toEqual(refused);
+    const noRecord = world(['d9-in-force']);
+    fs.rmSync(path.join(noRecord, RECORD));
+    expect(await sources(noRecord).d9()).toEqual(refused);
   });
   it('refuse the reading once the direction file changes, and when it is missing', async () => {
     const root = world(['rfc7-20-reading-in-force']);

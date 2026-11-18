@@ -1121,7 +1121,9 @@ describe('preflight', () => {
   }, TREE_TIMEOUT);
   it('reports D9 and the RFC7-20 reading established once the sitting\'s acts bind their records, and only while the bound bytes hold', async () => {
     const sitting = '.syzygy/governance/contracts/candidates/dossier-local-agent-acts/instances/in-force';
-    const copied = [`${sitting}/D9-IN-FORCE-RECORD.md`, `${sitting}/RFC7-20-READING-IN-FORCE-RECORD.md`, '.syzygy/governance/doctrine/security.md', '.syzygy/governance/doctrine/v1.md', `${DECISIONS_DIR}/POLARIS-DOSSIER-LOCAL-AGENT-RULINGS-DIRECTION.md`];
+    const copied = [`${sitting}/D9-IN-FORCE-RECORD.md`, `${sitting}/RFC7-20-READING-IN-FORCE-RECORD.md`, '.syzygy/governance/doctrine/security.md', '.syzygy/governance/doctrine/v1.md', `${DECISIONS_DIR}/POLARIS-DOSSIER-LOCAL-AGENT-RULINGS-DIRECTION.md`,
+      // D10 replaced the doctrine files D9 binds; the D9 reading holds over the replaced bytes only beside its record and manifest.
+      `${DECISIONS_DIR}/GOVERNANCE-SIMPLIFICATION-D10-ACT.md`, '.syzygy/governance/contracts/candidates/governance-simplification-d10/MANIFEST.txt'];
     const real = (rel: string): string => fs.readFileSync(path.join(REAL_ROOT, rel), 'utf8');
     const root = records({
       ...Object.fromEntries(copied.map(rel => [rel, real(rel)])),

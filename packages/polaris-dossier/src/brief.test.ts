@@ -112,7 +112,7 @@ describe('brief: issued', () => {
       readerStandards: { version: 'polaris-reader-standards-v1', sha256: sha(STANDARDS) },
       deadline: { declared: 'PT1H', seconds: 3600, endsAt: '2026-10-07T13:00:00.000Z' },
       files: { brief: { name: 'brief.md', sha256: sha(brief) }, draftSchema: { name: 'draft.schema.json', sha256: sha(schema) } },
-      executionRule: { arm: 'sec-3', cites: 'SEC-3', sec3Head: { text: lines(61, 62), startLine: 61, endLine: 62 } },
+      executionRule: { arm: 'sec-3', cites: 'SEC-3', sec3Head: { text: lines(74, 76), startLine: 74, endLine: 76 } },
       agent: { tool: 'claude-code', provider: 'anthropic', declaredBy: 'operator', label: 'Inferred' },
       copy: null,
       label: 'Inferred',
@@ -175,7 +175,7 @@ describe('brief: issued', () => {
   it('quotes SEC-3\'s head byte-equal to the adopted security.md, read live', async () => {
     const run = runDirectory();
     await issueBrief(run, { sources: sources(), openReader: tree(), now: () => NOW });
-    expect(read(run, 'brief.md')).toContain(`\`\`\`text\n${lines(61, 62)}\n\`\`\``);
+    expect(read(run, 'brief.md')).toContain(`\`\`\`text\n${lines(74, 76)}\n\`\`\``);
   });
 
   it('carries no project content beyond the repository identity and the pinned revision', async () => {
@@ -250,10 +250,10 @@ describe('brief: the permitting arm, switched on with fixture ports', () => {
     const result = await issueBrief(run, { sources: sources(), openReader: tree(), now: () => NOW, permitting: permitting(CHOICE) });
     expect(result).toMatchObject({ ok: true, report: { executionRule: { arm: 'permitting' } } });
     const record = JSON.parse(read(run, 'brief.json'));
-    expect(record.executionRule).toMatchObject({ arm: 'permitting', cites: 'SEC-3 (D9)', choice: CHOICE, choiceLabel: 'Inferred', cost: { text: lines(95, 101), startLine: 95, endLine: 101 } });
+    expect(record.executionRule).toMatchObject({ arm: 'permitting', cites: 'SEC-3 (D9)', choice: CHOICE, choiceLabel: 'Inferred', cost: { text: lines(103, 109), startLine: 103, endLine: 109 } });
     const brief = read(run, 'brief.md');
     expect(brief).toContain('This permission lapses if the owner stops attending this session');
-    expect(brief).toContain(`\`\`\`text\n${lines(95, 101)}\n\`\`\``);
+    expect(brief).toContain(`\`\`\`text\n${lines(103, 109)}\n\`\`\``);
   });
 
   it('a choice recorded in run.json is never read: the record is refused and no brief is issued', async () => {
