@@ -1,0 +1,89 @@
+{
+  "subject": {
+    "commit": "bfe08caa9ae434e14514c847d7ec72a5636bcde8",
+    "branch": "agent/syzygy-fnry.17",
+    "fileSha256": {
+      "packages/polaris-dossier/src/audience.ts": "8876e28ba61be04c2337d729f0fc9e71a19a0ce3ead7fad3fbf5a58f6440befb",
+      "packages/polaris-dossier/src/brief.ts": "21d22295dcf34c34fbc1820a877ccd682d2ace8811389f5db94921fbd345f0ee",
+      "packages/polaris-dossier/src/design-review.ts": "d536122563346dcf89ccfb3316ef8559ec5a940355d4a98d60722ee962195a85"
+    },
+    "testFileSha256": {
+      "packages/polaris-dossier/src/brief.test.ts": "b5e42dcb0abdacdb4a3b04435857e6e2062bdc4844d4fb7e92ee82127cb65f3c",
+      "packages/polaris-dossier/src/render.test.ts": "febb43ea7a4f3247f9dbb2b979f2b99d9c9890ccedabaa99e2cb2f303d359ff8"
+    }
+  },
+  "runnerPath": "scripts/rule6_mutation_runner.py",
+  "runnerSha256": "1b404998373bbb866040714e0cc11ef81429ce2321f1b4d270a7f3ffa873d737",
+  "runner": "single-occurrence textual replacement of `old` by `new` in `file`, then `npx vitest run --project <project> <testFiles>` in the tree; killed = at least one failed test; file restored from git after each run",
+  "project": "integration",
+  "helperSha256": "12d0ec8a95463664225bf4636a3edb4a506f018e0e06526d4ba04adea512e453",
+  "ranAt": "2026-11-14T07:52:37+00:00",
+  "mutants": [
+    {
+      "id": "brief-audience-omitted",
+      "file": "packages/polaris-dossier/src/brief.ts",
+      "old": "    ...audienceGuidance(declared.audience),",
+      "new": "    // declared audience omitted by mutation",
+      "tests": [
+        "packages/polaris-dossier/src/brief.test.ts"
+      ],
+      "command": "npx vitest run --project integration packages/polaris-dossier/src/brief.test.ts",
+      "outcome": "killed",
+      "failedTests": 2,
+      "totalTests": 29,
+      "skippedTests": 0,
+      "exitCode": 1,
+      "timedOut": false,
+      "failures": [
+        {
+          "test": "brief: issued states the four reader topics in the owner's order, the voice rules, the understanding record and every rule 034 and 036 name",
+          "firstErrorLine": "AssertionError: expected '\\n\\nThe owner set four reader topics \u2026' to contain '\\n\"Operators and integrators deployin\u2026'"
+        },
+        {
+          "test": "brief: issued keeps a multiline audience on one quoted line without introducing Markdown headings",
+          "firstErrorLine": "AssertionError: expected '\\n\\nThe owner set four reader topics \u2026' to contain '\\n\"Operators and integrators deployin\u2026'"
+        }
+      ]
+    },
+    {
+      "id": "criteria-audience-omitted",
+      "file": "packages/polaris-dossier/src/design-review.ts",
+      "old": "    ...audienceGuidance(audience),",
+      "new": "    // declared audience omitted by mutation",
+      "tests": [
+        "packages/polaris-dossier/src/render.test.ts"
+      ],
+      "command": "npx vitest run --project integration packages/polaris-dossier/src/render.test.ts",
+      "outcome": "killed",
+      "failedTests": 1,
+      "totalTests": 80,
+      "skippedTests": 0,
+      "exitCode": 1,
+      "timedOut": false,
+      "failures": [
+        {
+          "test": "readability guidance and diagram-led sections (syzygy-mea.10.4) puts the readability rules in the brief, after the profile guidance, and the newcomer test in the design criteria",
+          "firstErrorLine": "AssertionError: expected 'You are the rendered-design review se\u2026' to contain '\\n\"Operators and integrators deployin\u2026'"
+        }
+      ]
+    }
+  ],
+  "currentContentEquivalence": {
+    "commit": "4ed8f87fc7d1beea21c1ec852b160e9efd662b07",
+    "unchangedFilesSha256": {
+      "packages/polaris-dossier/src/audience.ts": "8876e28ba61be04c2337d729f0fc9e71a19a0ce3ead7fad3fbf5a58f6440befb",
+      "packages/polaris-dossier/src/brief.ts": "21d22295dcf34c34fbc1820a877ccd682d2ace8811389f5db94921fbd345f0ee",
+      "packages/polaris-dossier/src/design-review.ts": "d536122563346dcf89ccfb3316ef8559ec5a940355d4a98d60722ee962195a85",
+      "packages/polaris-dossier/src/brief.test.ts": "b5e42dcb0abdacdb4a3b04435857e6e2062bdc4844d4fb7e92ee82127cb65f3c",
+      "packages/polaris-dossier/src/render.test.ts": "febb43ea7a4f3247f9dbb2b979f2b99d9c9890ccedabaa99e2cb2f303d359ff8"
+    },
+    "note": "The later commit changes only the no-egress source census to include audience.ts; mutation source and tests match the clean control commit."
+  },
+  "unmutatedControl": {
+    "command": "npx vitest run --project integration packages/polaris-dossier/src/brief.test.ts packages/polaris-dossier/src/render.test.ts",
+    "commit": "bfe08caa9ae434e14514c847d7ec72a5636bcde8",
+    "filesPassed": 2,
+    "testsPassed": 109,
+    "exitCode": 0
+  }
+}
