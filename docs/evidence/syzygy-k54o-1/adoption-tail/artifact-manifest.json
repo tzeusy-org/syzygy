@@ -245,6 +245,13 @@
       "sourceSha256": "bf53b212665b5d96e391c85b0f2a2c56a0f5f58e1d1e992d7414c9246bd7d550",
       "storedSha256": "bf53b212665b5d96e391c85b0f2a2c56a0f5f58e1d1e992d7414c9246bd7d550",
       "storage": "verbatim"
+    },
+    {
+      "sourceLaneFile": "d10-f1-tail-787ec185e6-final-rollback-probe.json",
+      "path": "docs/evidence/syzygy-k54o-1/adoption-tail/d10-f1-tail-787ec185e6-final-rollback-probe.json",
+      "sourceSha256": "4352e260da33fb9f3c89dab802d1f2eef604bbea1e23e3f62ed0fe442f5304a5",
+      "storedSha256": "4352e260da33fb9f3c89dab802d1f2eef604bbea1e23e3f62ed0fe442f5304a5",
+      "storage": "verbatim"
     }
   ]
 }

@@ -1,0 +1,20 @@
+{
+  "subjectCommit": "787ec185e60f3717fa71dec05fdada37e7e7585d",
+  "sourceLanding": "182a703b2dbae97a16ae7334cd84a32b634cedc0",
+  "operativePaths": [
+    "PROJECT-STATUS.md",
+    "docs/evidence/spec-readability-reconciliation-2026-10-02/census.json",
+    "openspec/README.md",
+    "openspec/changes/dossier-declared-source-model/README.md",
+    "openspec/changes/dossier-declared-source-model/tasks.md",
+    "scripts/check_spec_reconciliation.py",
+    "scripts/build_polaris_dependency_unions.py",
+    "scripts/prepare_three_surface_poc_governedby_reference_recording.py"
+  ],
+  "revertExit": 1,
+  "conflicts": [
+    "docs/evidence/syzygy-k54o-1/README.md"
+  ],
+  "patchSha256": "b1a17ab45ec160c9d24f2271dcf5a45bc75239df2b63019c1604cc79610b9327",
+  "scope": "Disposable synthetic own-repo Git rollback; no actual veto or external write"
+}
