@@ -1,6 +1,6 @@
 {
   "sourceBase": "182a703b2dbae97a16ae7334cd84a32b634cedc0",
-  "definition": "New explicit case identities in the two existing Python selftests; parameter cases counted as executed, unlike the separate source-package TypeScript AST ledger.",
+  "definition": "New explicit case identities in the existing Python selftests; parameter cases counted as executed, unlike the separate source-package TypeScript AST ledger.",
   "added": 49,
   "changed": 0,
   "removed": 0,
