@@ -87,12 +87,12 @@ Owner-approved craft. 55 identifiers, defined across 8 files.
 | `CC-PROV-7` | Inherited mutations are accounted in the parent run summary | `.syzygy/governance/policies/craft-and-care/agent-provenance-and-execution-evidence.md`:152 |
 | `CC-REV-1` | Mandatory independent review classes | `.syzygy/governance/policies/craft-and-care/review-and-documentation.md`:16 |
 | `CC-REV-2` | The same-logical-change rule | `.syzygy/governance/policies/craft-and-care/review-and-documentation.md`:71 |
-| `CC-REV-3` | No hidden duplicate authority | `.syzygy/governance/policies/craft-and-care/review-and-documentation.md`:110 |
-| `CC-REV-4` | Fresh-reader review for normative artifacts | `.syzygy/governance/policies/craft-and-care/review-and-documentation.md`:129 |
-| `CC-REV-5` | Epistemic labels in documentation | `.syzygy/governance/policies/craft-and-care/review-and-documentation.md`:145 |
-| `CC-REV-6` | Review findings are dispositioned, never dropped | `.syzygy/governance/policies/craft-and-care/review-and-documentation.md`:161 |
-| `CC-REV-7` | Identifiers are stable; retire, never renumber | `.syzygy/governance/policies/craft-and-care/review-and-documentation.md`:176 |
-| `CC-REV-8` | Documents are abstraction trees, with diagrams where structure beats prose | `.syzygy/governance/policies/craft-and-care/review-and-documentation.md`:188 |
+| `CC-REV-3` | No hidden duplicate authority | `.syzygy/governance/policies/craft-and-care/review-and-documentation.md`:115 |
+| `CC-REV-4` | Fresh-reader review for normative artifacts | `.syzygy/governance/policies/craft-and-care/review-and-documentation.md`:134 |
+| `CC-REV-5` | Epistemic labels in documentation | `.syzygy/governance/policies/craft-and-care/review-and-documentation.md`:150 |
+| `CC-REV-6` | Review findings are dispositioned, never dropped | `.syzygy/governance/policies/craft-and-care/review-and-documentation.md`:166 |
+| `CC-REV-7` | Identifiers are stable; retire, never renumber | `.syzygy/governance/policies/craft-and-care/review-and-documentation.md`:181 |
+| `CC-REV-8` | Documents are abstraction trees, with diagrams where structure beats prose | `.syzygy/governance/policies/craft-and-care/review-and-documentation.md`:193 |
 | `CC-SEC-1` | Default-deny is the born state of every surface | `.syzygy/governance/policies/craft-and-care/security-and-secrets.md`:28 |
 | `CC-SEC-2` | Egress is consent-checked in code, at every path | `.syzygy/governance/policies/craft-and-care/security-and-secrets.md`:46 |
 | `CC-SEC-3` | Observed code never executes outside an accepted profile | `.syzygy/governance/policies/craft-and-care/security-and-secrets.md`:63 |
