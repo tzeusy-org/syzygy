@@ -696,7 +696,9 @@ def declared_source_binding(root):
         cells = rows[0]
         if cells[2] != f"`{DECLARED_SOURCE_COMMIT}`" or cells[6] != f"`{DECLARED_SOURCE_TAG}`":
             records.append("declared-source: adoption commit or specification tag declaration differs")
-        if cells[5] != f"`git revert {DECLARED_SOURCE_COMMIT}`":
+        if not cells[4]:
+            records.append("declared-source: adoption row has no required Why reason")
+        if not cells[5].startswith(f"`git revert -m 1 {DECLARED_SOURCE_COMMIT}`"):
             records.append("declared-source: adoption row does not name its subject's revert")
         for rel in DECLARED_SOURCE_SUBJECTS:
             if f"`{rel}`" not in cells[3]:
@@ -2313,7 +2315,27 @@ def mutants(root):
 
 def declared_source_mutants():
     row_start = f"| {DECLARED_SOURCE_ROW} |"
+
+    def reason(value):
+        def edit(text):
+            lines = text.splitlines()
+            for index, line in enumerate(lines):
+                if line.startswith(row_start):
+                    cells = line.split("|")
+                    cells[5] = value
+                    lines[index] = "|".join(cells)
+            return "\n".join(lines) + "\n"
+        return edit
+
     return [
+        ("declared-why-missing", AGENT_ADOPTIONS, reason(""), "R1"),
+        ("declared-why-whitespace", AGENT_ADOPTIONS, reason("   "), "R1"),
+        ("declared-revert-mainline-missing", AGENT_ADOPTIONS,
+         _replace(f"git revert -m 1 {DECLARED_SOURCE_COMMIT}",
+                  f"git revert {DECLARED_SOURCE_COMMIT}"), "R1"),
+        ("declared-revert-mainline-wrong", AGENT_ADOPTIONS,
+         _replace(f"git revert -m 1 {DECLARED_SOURCE_COMMIT}",
+                  f"git revert -m 2 {DECLARED_SOURCE_COMMIT}"), "R1"),
         ("declared-row-missing", AGENT_ADOPTIONS,
          lambda text: "\n".join(line for line in text.splitlines()
                                if not line.startswith(row_start)) + "\n", "R1"),
@@ -2327,7 +2349,7 @@ def declared_source_mutants():
         ("declared-tag-mismatch", AGENT_ADOPTIONS,
          _replace(DECLARED_SOURCE_TAG, "polaris-dossier-declared-source-model-v9.9"), "R1"),
         ("declared-revert-mismatch", AGENT_ADOPTIONS,
-         _replace(f"git revert {DECLARED_SOURCE_COMMIT}", "git revert " + "0" * 40), "R1"),
+         _replace(f"git revert -m 1 {DECLARED_SOURCE_COMMIT}", "git revert -m 1 " + "0" * 40), "R1"),
         ("declared-scope-missing", AGENT_ADOPTIONS,
          _replace("`.syzygy/governance/decisions/DOSSIER-DECLARED-SOURCE-CONTRACT-APPLICABILITY.md`",
                   "the unrecorded applicability judgment"), "R1"),
