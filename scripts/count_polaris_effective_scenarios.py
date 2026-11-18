@@ -33,6 +33,12 @@ after the overlay. The base is then derived, not named: it is the one
 ADDED-only file that carries every requirement the overlay MODIFIES, REMOVES
 or RENAMES. If none or more than one does, the script refuses.
 
+The explicit declared-source version2.0 amendment follows those additions
+only when its existing adoption record, D10 record and reviewed bytes verify.
+Its five MODIFIED requirements are counted independently by this tool's two
+parsers, with046's declared name change applied before replacement. Invalid
+binding inputs refuse counting; a wholly absent historical amendment is inactive.
+
 ## Overlay semantics
 
 Applied in the order the real OpenSpec tool uses at archive time (confirmed
@@ -80,6 +86,7 @@ from __future__ import annotations
 import argparse
 import contextlib
 import re
+import shutil
 import subprocess
 import sys
 import tempfile
@@ -404,6 +411,15 @@ class CompositionResult:
     total: int
 
 
+def declared_source_amendment(root: Path) -> str | None:
+    """Verified text, no historical amendment, or an explicit counting refusal."""
+    import check_spec_reconciliation as adoption
+    text, records, subjects = adoption.declared_source_binding(root)
+    if records or subjects:
+        raise ScenarioCountError("declared-source adoption findings:\n" + "\n".join(records + subjects))
+    return text
+
+
 def build_composition(root: Path) -> CompositionResult:
     files = discover_composition_files(root)
     per_file: list[tuple[str, FileDelta, FileDelta]] = []
@@ -417,16 +433,41 @@ def build_composition(root: Path) -> CompositionResult:
         per_file.append((label, d1, d2))
         deltas_1.append((label, d1))
         deltas_2.append((label, d2))
+    # The one adopted MODIFIED amendment follows the historical additions.
+    # Share its record/byte binding, but count it with this tool's own parsers.
+    import check_spec_reconciliation as adoption
+    amendment = declared_source_amendment(root)
+    if amendment is not None:
+        label = adoption.DECLARED_SOURCE_SPEC
+        d1 = parse_regex(amendment, label)
+        d2 = parse_manual(amendment, label)
+        # REQ-046 keeps its identity but changes its name in version2.0.
+        rename = ("Launch-time consent", "Declared local-source admission")
+        deltas_1.append((label + " (REQ-046 rename)", FileDelta(renamed=[rename])))
+        deltas_2.append((label + " (REQ-046 rename)", FileDelta(renamed=[rename])))
+        per_file.append((label, d1, d2))
+        deltas_1.append((label, d1))
+        deltas_2.append((label, d2))
     composed_1 = compose(deltas_1)
     composed_2 = compose(deltas_2)
     _assert_composed_agree(composed_1, composed_2, "method 1 (regex)", "method 2 (manual scan)")
     total = sum(count for _name, count in composed_1.values())
     return CompositionResult(
-        files=[f.relative_to(root).as_posix() for f in files],
+        files=[label for label, _d1, _d2 in per_file],
         per_file=per_file,
         per_requirement=composed_1,
         total=total,
     )
+
+
+def composition_inputs(root: Path) -> list[Path]:
+    """Composition files plus the adoption inputs a projected install must keep."""
+    import check_spec_reconciliation as adoption
+    declared_source_amendment(root)
+    files = discover_composition_files(root)
+    files += [root / rel for rel in sorted(adoption.declared_source_inputs(root))
+              if (root / rel).is_file()]
+    return list(dict.fromkeys(files))
 
 
 def read_status_assertion(root: Path) -> tuple[int, int]:
@@ -479,7 +520,7 @@ def with_proposed_scratch(root: Path, package_dir: Path):
     patch_files = sorted(proposed.glob("*.patch"))
     if not patch_files:
         raise ScenarioCountError(f"no *.patch files found under {proposed}")
-    comp_files = discover_composition_files(root)
+    comp_files = composition_inputs(root)
     targets = {_patch_target_path(p) for p in patch_files}
     needed = {f.relative_to(root).as_posix() for f in comp_files} | {STATUS_PAGE_REL} | targets
     with tempfile.TemporaryDirectory(prefix="polaris-scenario-recount-") as tmp:
@@ -672,11 +713,57 @@ def _expect_fail(label: str, fn) -> None:
     raise ScenarioCountError(f"selftest fixture '{label}' did not fail: the check passed on a mutated input")
 
 
+def _declared_source_selftest(base: Path) -> None:
+    """Exercise the real reviewed layer and its record inputs in owned copies."""
+    if declared_source_amendment(ROOT) is None:
+        return  # Historical tools/trees have no such amendment to project.
+    import check_spec_reconciliation as adoption
+    fixture = base / "declared-source"
+    for source in [*composition_inputs(ROOT), ROOT / STATUS_PAGE_REL]:
+        target = fixture / source.relative_to(ROOT)
+        target.parent.mkdir(parents=True, exist_ok=True)
+        target.write_bytes(source.read_bytes())
+    result, _reqs, _scenarios = _run_check(fixture)
+    expected = {"Operator-agent authoring mode": 5,
+                "Agent brief and mechanically checked draft": 28,
+                "Fresh-context review in the operator-agent mode": 17,
+                "Self-reported discovery and in-session clarification": 6,
+                "Declared local-source admission": 3}
+    if (len(result.per_requirement), result.total) != (38, 277) or any(
+            result.per_requirement.get(normalize_name(name)) != (name, count)
+            for name, count in expected.items()):
+        raise ScenarioCountError("declared-source control differs from literal five-requirement counts")
+    print("  [ok] declared-source: verified five replacements and046 rename total38/277")
+    projected = base / "declared-source-projected"
+    for source in [*composition_inputs(fixture), fixture / STATUS_PAGE_REL]:
+        target = projected / source.relative_to(fixture)
+        target.parent.mkdir(parents=True, exist_ok=True)
+        target.write_bytes(source.read_bytes())
+    if _run_check(projected)[0].per_requirement != result.per_requirement:
+        raise ScenarioCountError("projected declared-source inputs lose the effective composition")
+    print("  [ok] declared-source: projected install keeps binding inputs and effective composition")
+    for name, target_kind in (("missing-row", "row"), ("changed-spec", "spec")):
+        tree = base / ("declared-source-" + name)
+        shutil.copytree(fixture, tree)
+        target = tree / (adoption.AGENT_ADOPTIONS if target_kind == "row" else adoption.DECLARED_SOURCE_SPEC)
+        text = target.read_text()
+        if target_kind == "row":
+            row = next(line for line in text.splitlines() if line.startswith("| A-4 |"))
+            target.write_text(text.replace(row + "\n", "", 1))
+        else:
+            target.write_text(text + "\nchanged\n")
+        _expect_fail("declared-source " + name + " refuses counting", lambda: build_composition(tree))
+    (projected / adoption.AGENT_ADOPTIONS).unlink()
+    _expect_fail("projected declared-source missing binding refuses instead of recounting329",
+                 lambda: build_composition(projected))
+
+
 def selftest() -> None:
     print("Running rule-6 mutation fixtures (each must make the check fail closed)...")
 
     with tempfile.TemporaryDirectory(prefix="polaris-scenario-count-selftest-") as tmp:
         base = Path(tmp)
+        _declared_source_selftest(base)
 
         # Sanity: the good fixture itself must pass, with the exact literal
         # totals hard-coded above (never imported from the module).
@@ -811,7 +898,7 @@ def selftest() -> None:
         ov10.write_text(ov10.read_text().replace("### Requirement: Alpha", "### Requirement: Unrelated"))
         _expect_fail("overlay references no ADDED-only file's requirement", lambda: build_composition(f10))
 
-    print("selftest: all 11 checks failed closed (or passed, for the good fixtures) as expected.")
+    print("selftest PASS: expected refusals and positive controls held.")
 
 
 # --------------------------------------------------------------------------

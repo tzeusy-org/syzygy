@@ -115,7 +115,7 @@ def recount_installed(root: pathlib.Path) -> tuple[int, int, set[str]]:
     """Recount a scratch copy of the composition with the proposed spec installed."""
     with tempfile.TemporaryDirectory(prefix="launch-consent-recount-") as tmp:
         scratch = pathlib.Path(tmp)
-        for path in counter.discover_composition_files(root):
+        for path in counter.composition_inputs(root):
             rel = path.relative_to(root)
             (scratch / rel).parent.mkdir(parents=True, exist_ok=True)
             (scratch / rel).write_bytes(path.read_bytes())
@@ -153,7 +153,11 @@ def check(root: pathlib.Path = ROOT, signed: bool = True) -> list[str]:
                             f"{(reqs, scenarios)}")
         if current == "unapplied":
             _r, _s, names = recount_installed(root)
-        missing = {counter.normalize_name(n) for n in REQUIREMENTS} - names
+        expected = set(REQUIREMENTS)
+        if counter.declared_source_amendment(root) is not None:
+            expected.remove("Launch-time consent")
+            expected.add("Declared local-source admission")
+        missing = {counter.normalize_name(n) for n in expected} - names
         if missing:
             findings.append(f"the composition does not carry {sorted(missing)}")
     except (counter.ScenarioCountError, lam.Refusal, Refusal, OSError) as exc:

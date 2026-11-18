@@ -12,7 +12,7 @@ F-1 remains open until the adoption tail's actual default landing and verificati
 
 Keep A-4 as history and append a new row recording the veto after the rollback lands; a vetoed change is not adopted again without the owner. The source landing is a merge commit, so its recorded reversal selects mainline1.
 
-First reverse this tail's eight operative paths using PR825's actual merge delta. This removes its composition hooks and restores the source-era routes/census without deleting the adoption ledger or later evidence. Then apply A-4's source reversal. Use a clean branch; changes made after this tail may require conflict resolution. Inspect the staged changes before committing the rollback and record its actual landing in the new veto row.
+First reverse this tail's eleven operative paths using PR825's actual merge delta. This removes its composition hooks and restores the source-era routes/census without deleting the adoption ledger or later evidence. Then apply A-4's source reversal. Use a clean branch; changes made after this tail may require conflict resolution. Inspect the staged changes before committing the rollback and record its actual landing in the new veto row.
 
 ```sh
 set -euo pipefail
@@ -23,7 +23,10 @@ git diff --binary "$tail_merge^1" "$tail_merge" -- \
   openspec/README.md openspec/changes/dossier-declared-source-model/README.md \
   openspec/changes/dossier-declared-source-model/tasks.md \
   scripts/check_spec_reconciliation.py scripts/build_polaris_dependency_unions.py \
-  scripts/prepare_three_surface_poc_governedby_reference_recording.py | \
+  scripts/prepare_three_surface_poc_governedby_reference_recording.py \
+  scripts/count_polaris_effective_scenarios.py \
+  scripts/build_polaris_dossier_local_agent_mode.py \
+  scripts/build_polaris_dossier_launch_consent.py | \
   git apply --reverse --index
 git revert --no-commit -m 1 182a703b2dbae97a16ae7334cd84a32b634cedc0
 git diff --cached --stat

@@ -155,12 +155,16 @@ def _recount_scratch(root: pathlib.Path, files: list[pathlib.Path],
 
 def recount_installed(root: pathlib.Path) -> tuple[int, int, set[str]]:
     """Recount a scratch copy of the composition with the proposed spec installed."""
-    return _recount_scratch(root, counter.discover_composition_files(root),
+    return _recount_scratch(root, counter.composition_inputs(root),
                             (root / PROPOSED_SPEC).read_bytes())
 
 
 def recount_without(root: pathlib.Path) -> tuple[int, int, set[str]]:
-    """Recount a scratch copy of the composition without the installed spec."""
+    """The historical predecessor counterfactual, before the dependent v2.0.
+
+    Removing requirements033–036 also removes the amendment's predecessors;
+    this deliberately projects the earlier composition, without its adoption.
+    """
     files = [p for p in counter.discover_composition_files(root)
              if p.relative_to(root) != INSTALLED_SPEC]
     return _recount_scratch(root, files, None)

@@ -48,6 +48,7 @@ authority and no model yet called on the current path.
     and the adopted
     [non-governed narrative profile](openspec/changes/polaris-non-governed-narrative-profile/specs/polaris-generation/spec.md)
     ([adoption record](.syzygy/governance/decisions/POLARIS-NON-GOVERNED-NARRATIVE-PROFILE-ADOPTION.md)):
+    the historical predecessor counterfactual (before declared-source2.0) has
     34 requirements and 249 scenarios without the signed-off
     [dossier local-agent addition](openspec/changes/polaris-dossier-local-agent-mode/specs/polaris-generation/spec.md)
     ([v1.0 sign-off](.syzygy/governance/decisions/POLARIS-DOSSIER-LOCAL-AGENT-MODE-SIGNOFF-v1.0.md);

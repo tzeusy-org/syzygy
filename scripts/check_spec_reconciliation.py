@@ -2044,6 +2044,18 @@ def run(root):
 # Self-test: rule-6 mutations over a scratch copy of the inputs.
 # --------------------------------------------------------------------------
 
+def declared_source_inputs(root):
+    """Only the inputs needed to recheck the explicit adoption in a projection."""
+    paths = {AGENT_ADOPTIONS, DECLARED_SOURCE_UNION, *DECLARED_SOURCE_SUBJECTS}
+    sys.path.insert(0, str(Path(__file__).resolve().parent))
+    import d10_supersession
+    if d10_supersession.rec is not None:
+        rec = d10_supersession.rec
+        paths |= set(tracked(root, rec.PACKAGE.rstrip("/")))
+        paths |= {rec.ACT, rec.AGGREGATE, rec.LOG}
+    return paths
+
+
 def inputs(root):
     paths = {AGGREGATE, CENSUS, STATUS, REGISTRY, POLICY, *ROUTE_PAGES}
     for child in CHILDREN:
@@ -2061,13 +2073,7 @@ def inputs(root):
         paths |= {r for r, _t, _v in addition_terminals(root, change)}
         if change in ADOPTED_ADDITIONS:
             paths.add(adopted_binding(ADOPTED_ADDITIONS[change][1])[1])
-    paths |= {AGENT_ADOPTIONS, DECLARED_SOURCE_UNION, *DECLARED_SOURCE_SUBJECTS}
-    sys.path.insert(0, str(Path(__file__).resolve().parent))
-    import d10_supersession
-    if d10_supersession.rec is not None:
-        rec = d10_supersession.rec
-        paths |= set(tracked(root, rec.PACKAGE.rstrip("/")))
-        paths |= {rec.ACT, rec.AGGREGATE, rec.LOG}
+    paths |= declared_source_inputs(root)
     paths |= poc_reference().validation_inputs(root)
     return sorted(paths)
 
