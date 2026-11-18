@@ -23,7 +23,7 @@ const REV = '498ecd0d6d007db11ddb3aea9428552598a78622';
 const RUN_ID = `run-${'a'.repeat(32)}`;
 const ALL = ['owner-started-session', 'owners-own-host', 'owner-attends'];
 const SUBJECT: RunSubject = {
-  repository: { url: 'github.com/redis/redis', repositoryId: 'redis-redis' },
+  repository: { url: 'github.com/redis/redis', repositoryId: 'redis-redis', role: 'observed-source' },
   clone: { path: '/srv/clones/redis', declaredBy: 'operator', label: 'Inferred', use: 'read' },
   pinnedRevision: { commit: REV, label: '8.10.2', pinnedAt: '2026-10-07T10:00:00.000Z' },
   ...declaredSubjectFixture(),

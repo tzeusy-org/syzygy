@@ -40,7 +40,7 @@ export interface RunClone {
 }
 
 export interface RunSubject {
-  readonly repository: { readonly url: string; readonly repositoryId: string };
+  readonly repository: { readonly url: string; readonly repositoryId: string; readonly role: 'observed-source' };
   readonly clone: RunClone;
   readonly pinnedRevision: { readonly commit: string; readonly label: string; readonly pinnedAt: string };
   readonly screeningPolicy: PolicyBinding;
@@ -163,7 +163,7 @@ export function readRecordedUrl(text: string): string | null {
 function readSubject(value: unknown): RunSubject | string {
   if (!isRecord(value) || !hasKeys(value, ['repository', 'clone', 'pinnedRevision', 'screeningPolicy', 'contentClasses', 'visibility', 'governed', 'workItem'])) return 'it must carry exactly repository, clone, pinnedRevision, screeningPolicy, contentClasses, visibility, governed and workItem';
   const { repository, clone, pinnedRevision, screeningPolicy, contentClasses, visibility, governed, workItem } = value;
-  if (!isRecord(repository) || !hasKeys(repository, ['url', 'repositoryId']) || !isText(repository['url']) || !isText(repository['repositoryId'])) return 'repository must carry a url and a repositoryId';
+  if (!isRecord(repository) || !hasKeys(repository, ['url', 'repositoryId', 'role']) || !isText(repository['url']) || !isText(repository['repositoryId']) || repository['role'] !== 'observed-source') return 'repository must carry a url, repositoryId and declared observed-source role';
   // The normalised URL, for every host (046, line 17: "The normalised URL is the locator every launch consent record, the run record and
   // every page carry, for every host"). A record written before that rule carries the canonical https://github.com/<owner>/<repo> URL
   // the retired GitHub-only rule wrote; it is read, and normalised on reading, so an existing run is neither refused nor rewritten.
@@ -191,7 +191,7 @@ function readSubject(value: unknown): RunSubject | string {
   const kind = governed['kind'] as GovernedKind;
   if (!isRecord(workItem) || !hasKeys(workItem, ['identity', 'reason']) || workItem['identity'] !== null || workItem['reason'] !== NO_WORK_ITEM_REASON) return 'workItem must record an absent identity with its reason';
   return {
-    repository: { url, repositoryId: repository['repositoryId'] },
+    repository: { url, repositoryId: repository['repositoryId'], role: 'observed-source' },
     clone: { path: clone['path'], declaredBy: 'operator', label: 'Inferred', use: 'read' },
     pinnedRevision: { commit: pinnedRevision['commit'], label: pinnedRevision['label'], pinnedAt: pinnedRevision['pinnedAt'] },
     contentClasses: DOSSIER_CONTENT_CLASSES,
@@ -205,7 +205,7 @@ function readSubject(value: unknown): RunSubject | string {
 /** Fixed tuple of the source facts a brief binds. History labels and an unrelated
  * Syzygy commit do not change the source; declaration/pin/policy changes do. */
 export const sourceBindingSha256 = (subject: RunSubject): string => sha256(JSON.stringify([
-  subject.repository.url, subject.repository.repositoryId, subject.clone.path, subject.pinnedRevision.commit,
+  subject.repository.url, subject.repository.repositoryId, subject.repository.role, subject.clone.path, subject.pinnedRevision.commit,
   subject.screeningPolicy.path, subject.screeningPolicy.policyId, subject.screeningPolicy.policyVersion, subject.screeningPolicy.sha256,
   subject.visibility.value, ...subject.contentClasses,
 ]));

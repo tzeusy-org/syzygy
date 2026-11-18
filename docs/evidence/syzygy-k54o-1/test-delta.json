@@ -1,12 +1,42 @@
 {
   "base": "26b2ef360431ab71c02dcde47643665dc153b8c7",
   "definition": "TypeScript AST test declarations in changed test files, keyed by file and describe/title; parameter rows are not expanded. Changed describes rename keys and count as removal/addition.",
-  "files": 19,
+  "files": 21,
   "added": 61,
-  "changed": 42,
+  "changed": 46,
   "removed": 108,
-  "unchanged": 513,
+  "unchanged": 524,
   "rows": [
+    {
+      "file": "apps/three-surface-poc/src/polaris-authority-sweep.test.ts",
+      "title": "Zero downstream citations of Polaris as authority (PWB-REQ-014) > no machine reference on the model or its narrative anchors targets the Polaris surface",
+      "state": "unchanged"
+    },
+    {
+      "file": "apps/three-surface-poc/src/polaris-authority-sweep.test.ts",
+      "title": "Zero downstream citations of Polaris as authority (PWB-REQ-014) > every OpenSpec warrant entry belongs to a known id family and none targets Polaris (POLARIS-DIR-* ids are owner decisions)",
+      "state": "changed"
+    },
+    {
+      "file": "apps/three-surface-poc/src/polaris-authority-sweep.test.ts",
+      "title": "Zero downstream citations of Polaris as authority (PWB-REQ-014) > reads a Decision ID declaration only at the line end or before a parenthetical (mutant: leave the end unanchored)",
+      "state": "unchanged"
+    },
+    {
+      "file": "apps/three-surface-poc/src/polaris-authority-sweep.test.ts",
+      "title": "Zero downstream citations of Polaris as authority (PWB-REQ-014) > recognizes dossier decision identity syntax without accepting presentation references",
+      "state": "unchanged"
+    },
+    {
+      "file": "apps/three-surface-poc/src/polaris-authority-sweep.test.ts",
+      "title": "Zero downstream citations of Polaris as authority (PWB-REQ-014) > recognizes generator requirement identity syntax without accepting presentation references",
+      "state": "unchanged"
+    },
+    {
+      "file": "apps/three-surface-poc/src/polaris-authority-sweep.test.ts",
+      "title": "Zero downstream citations of Polaris as authority (PWB-REQ-014) > no source/authority/provenance field in the governance, spec, code or docs trees names the Polaris surface",
+      "state": "unchanged"
+    },
     {
       "file": "packages/polaris-dossier/src/agent-texts.test.ts",
       "title": "agent texts (S11) > reads every command synopsis from the usage text",
@@ -3130,12 +3160,12 @@
     {
       "file": "packages/polaris-dossier/src/status.test.ts",
       "title": "status (REQ-polaris-generation-033) > reads a run record the retired GitHub-only rule wrote (%s), normalising its URL on reading and rewriting nothing",
-      "state": "unchanged"
+      "state": "changed"
     },
     {
       "file": "packages/polaris-dossier/src/status.test.ts",
       "title": "status (REQ-polaris-generation-033) > writes a run record only with the normalised URL",
-      "state": "unchanged"
+      "state": "changed"
     },
     {
       "file": "packages/polaris-dossier/src/status.test.ts",
@@ -3626,6 +3656,51 @@
       "file": "packages/polaris-dossier/src/waiting-sessions.test.ts",
       "title": "delivery to a waiting review session > says no packet is delivered when the waiting session record has no provider",
       "state": "added"
+    },
+    {
+      "file": "packages/polaris-generation-core/src/island-boundary.test.ts",
+      "title": "the live Node entries and the parked provider island > lists twenty-four island modules, each a file in the tree",
+      "state": "unchanged"
+    },
+    {
+      "file": "packages/polaris-generation-core/src/island-boundary.test.ts",
+      "title": "the live Node entries and the parked provider island > admits transitive island ingress only from the island and exact parked remainder",
+      "state": "changed"
+    },
+    {
+      "file": "packages/polaris-generation-core/src/island-boundary.test.ts",
+      "title": "the live Node entries and the parked provider island > resolves every workspace import both entries reach, dynamic ones included",
+      "state": "unchanged"
+    },
+    {
+      "file": "packages/polaris-generation-core/src/island-boundary.test.ts",
+      "title": "the live Node entries and the parked provider island > reaches no island module from either live entry",
+      "state": "unchanged"
+    },
+    {
+      "file": "packages/polaris-generation-core/src/island-boundary.test.ts",
+      "title": "the live Node entries and the parked provider island > reaches the island from the consent package root, which neither live entry imports",
+      "state": "unchanged"
+    },
+    {
+      "file": "packages/polaris-generation-core/src/island-boundary.test.ts",
+      "title": "the live Node entries and the parked provider island > refuses computed import arguments, including template expressions",
+      "state": "unchanged"
+    },
+    {
+      "file": "packages/polaris-generation-core/src/island-boundary.test.ts",
+      "title": "the live Node entries and the parked provider island > refuses require calls and import-equals loaders",
+      "state": "unchanged"
+    },
+    {
+      "file": "packages/polaris-generation-core/src/island-boundary.test.ts",
+      "title": "the live Node entries and the parked provider island > refuses createRequire calls, including imported aliases and module properties",
+      "state": "unchanged"
+    },
+    {
+      "file": "packages/polaris-generation-core/src/island-boundary.test.ts",
+      "title": "the live Node entries and the parked provider island > follows a no-substitution template and the existing static, type and literal dynamic forms",
+      "state": "unchanged"
     }
   ]
 }

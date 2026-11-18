@@ -82,7 +82,7 @@ afterEach(() => { world = null; });
 const worldPolicy = (): Uint8Array => world?.policy ?? POLICY;
 const STATEMENT_ID = 'STATEMENT-KESTREL-ANTHROPIC';
 const subject = (clone: string): RunSubject => ({
-  repository: { url: 'github.com/redis/redis', repositoryId: 'redis-redis' },
+  repository: { url: 'github.com/redis/redis', repositoryId: 'redis-redis', role: 'observed-source' },
   clone: { path: clone, declaredBy: 'operator', label: 'Inferred', use: 'read' },
   pinnedRevision: { commit, label: 'fixture', pinnedAt: '2026-10-07T11:00:00.000Z' },
   ...declaredSubjectFixture(worldPolicy()),

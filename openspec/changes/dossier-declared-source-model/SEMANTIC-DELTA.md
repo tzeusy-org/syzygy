@@ -147,3 +147,11 @@ Exact retained034 scenario replacement:
   }
 ]
 ```
+
+## Round5 specification corrections
+
+[Inferred] The fifth independent review returned REVISE.033/046 now name the material CC-SPEC-8/10 policy warrants for their explicit published change-status duties, and the generated union follows those individual declarations. Their status contract cites RFC3-16's owning veto/reverted-adoption and invalid-record consequences, with bounded A/B/veto and sole-reverted/mismatched fixture branches, independent expected effective-predecessor versus Unknown results and falsifiers. Two distinct contract rows make the veto and no-effective-applicability outcomes explicit. This is published specification/policy/judgment status, never a retired repository-read/provider gate. The contract population is recomputed139=135proposed mapped+4unresolved candidateN/A; capability40 remains33proposed covered+7namednongoads. These are candidate mappings, not effective adoption or implementation PASS.
+
+## Review 6 correction — RFC1-2 role consequence
+
+[Inferred] Requirement 046 now declares the local subject's observed-source Repository role in the run, brief and page disclosures and keeps one identity when the subject contains governance-root material. Its case, literal independent oracle and falsifier cover the role and no-second-entity consequence. The existing RFC1-2 coverage row now has a requirement edge; no graph subsystem, second identity, source-read gate or permitting execution arm is introduced.

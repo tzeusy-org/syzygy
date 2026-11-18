@@ -33,7 +33,7 @@ const REV = '498ecd0d6d007db11ddb3aea9428552598a78622';
 const RUN_ID = `run-${'a'.repeat(32)}`;
 
 const SUBJECT: RunSubject = {
-  repository: { url: 'github.com/redis/redis', repositoryId: 'redis-redis' },
+  repository: { url: 'github.com/redis/redis', repositoryId: 'redis-redis', role: 'observed-source' },
   clone: { path: '/srv/clones/redis', declaredBy: 'operator', label: 'Inferred', use: 'read' },
   // The recorded label is the agent-writable copy; the brief shows the live consent's label ('8.10.2') instead.
   pinnedRevision: { commit: REV, label: 'label-in-run-json', pinnedAt: '2026-10-07T10:00:00.000Z' },
@@ -99,6 +99,7 @@ describe('brief: issued', () => {
       pinnedRevision: REV, issuedAt: '2026-10-07T12:00:00.000Z', deadlineEndsAt: '2026-10-07T13:00:00.000Z', executionRule: { arm: 'sec-3' },
     } });
     const brief = read(run, 'brief.md'), schema = read(run, 'draft.schema.json');
+    expect(brief).toContain('Repository role: observed-source (Inferred); governance-root material keeps this same repository identity.');
     expect(brief).toContain(`- Run: \`${RUN_ID}\``);
     expect(brief).toContain(`- Pinned revision: \`${REV}\` (label-in-run-json)`);
     expect(brief).toContain(`- Draft schema: \`polaris-dossier-local-draft-v4\`, in \`draft.schema.json\` beside this brief (sha256 \`${sha(schema)}\`)`);
@@ -214,7 +215,7 @@ describe('brief: issued', () => {
   it('carries no project content beyond the repository identity and the pinned revision', async () => {
     const other: RunSubject = {
       ...SUBJECT,
-      repository: { url: 'github.com/example/other', repositoryId: 'example-other' },
+      repository: { url: 'github.com/example/other', repositoryId: 'example-other', role: 'observed-source' },
       pinnedRevision: { commit: 'c'.repeat(40), label: 'v9', pinnedAt: '2026-10-07T11:00:00.000Z' },
       ...declaredSubjectFixture(),
       governed: { kind: 'governed', because: ['an openspec path in the pinned tree: openspec/specs/secret-name.md'] },

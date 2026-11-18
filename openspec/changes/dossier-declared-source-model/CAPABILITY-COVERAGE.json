@@ -10,7 +10,7 @@
   "obligations": [
     {
       "id": "local-input",
-      "obligation": "Accept a normalized credential-free locator and declared/derived identity without stdin or retired records",
+      "obligation": "Accept a normalized credential-free locator and declared/derived identity without stdin or retired records; declare the observed-source Repository role and retain one identity for governance-root material",
       "partition": "covered",
       "requirements": [
         "REQ-polaris-generation-046"
@@ -324,7 +324,7 @@
     },
     {
       "id": "change-status",
-      "obligation": "Published specification/policy/judgment status distinguishes candidate stamps from actual default-branch adoption, names adopter/record/tag/revert and new semantic adoptions, with candidate N/A unresolved; never a per-repository admission gate",
+      "obligation": "Published specification/policy/judgment status distinguishes candidate stamps from actual default-branch adoption, names adopter/record/tag/revert and new semantic adoptions, with candidate N/A unresolved; never a per-repository admission gate; veto/revert restores the effective predecessor, invalid/reverted sole record leaves applicability Unknown with retained provenance",
       "partition": "covered",
       "requirements": [
         "REQ-polaris-generation-033",

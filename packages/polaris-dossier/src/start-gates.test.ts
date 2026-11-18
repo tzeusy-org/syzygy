@@ -2,7 +2,8 @@ import { commitPolicyFixture, policyFixture } from './full-run.testkit.js';
 import { DOSSIER_POLICY_PATH, readCommittedPolicy } from './policy-snapshot.js';
 import { createHash } from 'node:crypto';
 import { buildSync } from 'esbuild';
-import { execFileSync } from 'node:child_process';
+import { execFile, execFileSync } from 'node:child_process';
+import { promisify } from 'node:util';
 import * as fs from 'node:fs';
 import * as path from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -27,6 +28,7 @@ await loadRecorderForms();
 // root is a temporary Syzygy checkout whose act records are rendered by the real recorders; the clone is a real Git repository built
 // here with the git CLI (the code under test runs no process). Expected values are literals, never imported from the module under test.
 
+const execFileAsync = promisify(execFile);
 const sha = (text: string): string => createHash('sha256').update(text, 'utf8').digest('hex');
 const NOW = Date.UTC(2026, 9, 7, 12, 0, 0);
 const URL_ = 'https://github.com/redis/redis';
@@ -186,8 +188,9 @@ describe('init: a declared pinned source', () => {
     const { result, clone, stateRoot } = await init({ clone: cloneAt(commits.U) });
     expect(result.ok).toBe(true);
     if (!result.ok) return;
-    expect(result.report.subject).toMatchObject({ repository: { repositoryId: 'redis-redis' }, pinnedRevision: { commit: commits.U, label: 'detached HEAD' },
+    expect(result.report.subject).toMatchObject({ repository: { repositoryId: 'redis-redis', role: 'observed-source' }, pinnedRevision: { commit: commits.U, label: 'detached HEAD' },
       visibility: { value: 'private', source: 'conservative-default', label: 'Inferred' }, screeningPolicy: { policyVersion: 'dossier-declared-source/1.0.0' } });
+    expect(Object.keys(result.report.subject).filter(key => key.toLowerCase().includes('repository'))).toEqual(['repository']);
     expect(fs.readdirSync(result.report.run)).toEqual(['run.json']);
     expect(fs.readdirSync(stateRoot)).toHaveLength(1);
     expect(JSON.parse(fs.readFileSync(path.join(result.report.run, 'run.json'), 'utf8')).format).toBe('polaris-dossier-run/2');
@@ -685,12 +688,12 @@ describe('declared-source admission and continuation boundaries', () => {
     }
     expect(readCommittedPolicy(root)).toMatchObject({ ok: false });
   });
-  it('refuses a FIFO policy without waiting for a writer', () => {
+  it('refuses a FIFO policy without waiting for a writer', async () => {
     const root = records(); const policy = path.join(root, DOSSIER_POLICY_PATH); fs.unlinkSync(policy); execFileSync('mkfifo', [policy]);
     const bundle = path.join(tempDir('declared-policy-fifo-'), 'read.mjs');
     buildSync({ stdin: { contents: `import { readCommittedPolicy } from ${JSON.stringify(path.join(REAL_ROOT, 'packages/polaris-dossier/src/policy-snapshot.ts'))}; process.stdout.write(JSON.stringify(readCommittedPolicy(process.argv[2])));`, resolveDir: REAL_ROOT }, bundle: true, platform: 'node', format: 'esm', conditions: ['source'], outfile: bundle });
-    const result = execFileSync(process.execPath, [bundle, root], { encoding: 'utf8', timeout: 3000, stdio: ['ignore', 'pipe', 'pipe'] });
-    expect(JSON.parse(result)).toEqual({ ok: false, why: 'the dossier policy must be a bounded regular file' });
+    const { stdout } = await execFileAsync(process.execPath, [bundle, root], { encoding: 'utf8', timeout: 3000 });
+    expect(JSON.parse(stdout)).toEqual({ ok: false, why: 'the dossier policy must be a bounded regular file' });
   });
   it('does not invalidate the policy binding for an unrelated Syzygy commit', async () => {
     const { run, root } = await started(); fs.writeFileSync(path.join(root, 'note.txt'), 'unrelated fixture'); gitIn(root, 'add', 'note.txt'); gitIn(root, '-c', 'user.name=t', '-c', 'user.email=t@example.invalid', 'commit', '-qm', 'unrelated');

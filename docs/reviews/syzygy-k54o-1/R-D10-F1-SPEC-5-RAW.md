@@ -1,0 +1,67 @@
+# Independent frozen specification review: D10 F-1, review 5
+
+VERDICT: REVISE
+
+[Inferred] Two material specification findings remain. This verdict concerns the supplied candidate specification and its coverage declarations. It is not an implementation verdict, an adoption, a policy waiver, or source/provider authorization.
+
+## Subject, independence, and evidence boundary
+
+[Observed] The sole review packet is `/home/orca/.tmp/syzygy-beads-looper-20261114-54ebc9f1/d10-f1-spec-review-5/`. Its manifest SHA256 is `cc19888fd8be6a83a3a52fe0782f45efe68ca06773fc6c499367d8e178d15c52`. The manifest names base commit `26b2ef360431ab71c02dcde47643665dc153b8c7` and previous candidate commit `333c4cd7d0f470b1d9e3f4ae9f58ecda27285608`; I did not inspect those commits or infer their working-tree contents. The candidate subject is `openspec/changes/dossier-declared-source-model/proposed/polaris-generation/spec.md`, SHA256 `3487c9e98266c93f7c0ac7dd41b77585ee60392513b38fbcbd8632e45beaf757`. The manifest, not a mutable live branch, identifies the other 36 input subjects and their hashes.
+
+[Observed] Python hashlib and byte-length checks verified 37/37 manifest entries. A separate `sha256sum` subprocess sweep independently verified 37/37 hashes. The packet contains 38 regular files: the 37 listed inputs and manifest. An initial path attempt incorrectly assumed a `snapshot/` subdirectory and failed without reading anything; verification was then performed against the manifest-relative files at the actual packet root.
+
+[Observed] This review had the frozen packet and supplied acceptance criteria, without the authoring conversation, earlier raw reviews, live implementation/tracker, external repository bodies, or provider operations. I read the heart-and-soul and engineering-bar skill instructions as requested; the frozen current doctrine and policies governed the review. References below are relative to this frozen packet. `S` means the candidate spec above, `M` its sibling `CONTRACT-COVERAGE.json`, `U` its sibling `GOVERNING-DEPENDENCIES.json`, and `D` means `defined-contract-clauses.md`. `P` means `.syzygy/governance/contracts/candidates/policy-candidates/SPECIFICATION-ACCEPTANCE-POLICY-CANDIDATE.md`.
+
+## Fresh-reader restatement
+
+[Inferred] This coherent change lets the existing operator-agent dossier flow start from a supplied local clone, full pin, declared provider/tool and committed screening policy. Retired consent, statement and owner-act read-admission ceremonies disappear. Verified pinned object reads, classification, secret/private exclusions, exact quotations, finite limits, independent inventory, whole-packet reviews, strict new records and honest provenance remain. New runs use `/2`; `/1` continuation refuses with a restart explanation and leaves its files untouched. Syzygy dispatches no provider call and enables no execution arm. Agent reads/sends remain bound by SEC-2/SEC-5, while actual compliance/transmission is not observed. Specification/policy/applicability adoption status is a separate published process fact, not a replacement per-repository read gate. F-3 acquisition/clone/execution orchestration, F-4 build identity and F-5 generic machinery are not delivered here.
+
+## Finding F1 -- The new status duties have incomplete material policy warrants
+
+Severity: REVISE, CC-SPEC-2.
+
+[Observed] S:49 now requires the specification version to land on the default branch with an AGENT-ADOPTIONS row and version tag; it also requires the four candidate N/A consequences to map nothing until actual judgment adoption. S:109 expressly makes 046 use this change-status contract. These are normative duties of both requirements, not merely introductory submission notes.
+
+[Observed] P:355-372, CC-SPEC-10, owns specification adoption at the adopting commit, including the version tag. P:274-317, CC-SPEC-8, owns the specification-side N/A/coverage production obligation and explicitly says that absent or invalid adoption records map nothing, with the consequence Unknown rather than covered. These adopted policies are direct material warrants for the new duties. CC-SPEC-2 says, at P:103-105, "none may be hidden merely because another is more specific."
+
+[Observed] Nevertheless, the policies arrays for 033 and 046 at S:95 and S:143 contain only CC-SPEC-2, CC-SPEC-4, CC-SPEC-3 and CC-REV-2. The generated union U:40-45 likewise contains neither CC-SPEC-8 nor CC-SPEC-10. I inspected all five six-class declarations and independently parsed their union; the generated union is mechanically correct, so editing only U would create a second problem rather than fix this one. RFC3-16 and VIS-4 being present does not discharge the all-material-warrants rule.
+
+[Inferred] Consequence: the newly expanded status/adoption requirements claim complete governing traceability while omitting the policies that directly own their adoption-tag and unresolved-N/A consequences. This is a concrete failure of the requested per-requirement warrant completeness, despite the successful matrix-edge and union checks.
+
+Required correction: declare CC-SPEC-8 and CC-SPEC-10 where these new duties materially apply (033 and its explicit 046 status reading), then regenerate the union from those declarations. Do not introduce a runtime policy/adoption lookup before a local read or declared-provider admission.
+
+## Finding F2 -- The effective-status mapping drops veto/reverted-adoption consequences
+
+Severity: REVISE, CC-SPEC-8 and CC-SPEC-4.
+
+[Observed] The candidate explicitly puts published specification/policy/applicability effective status in scope at S:49 and S:109. M:111-164 has six RFC3-16 rows: candidate stamps, initial default-branch adoption, later edits, owner classes, retired read/provider gates and the initially unadopted judgment. None addresses a vetoed or reverted adoption. The candidate's five requirement sections and all 137 matrix rows were inspected; the status case/oracle/falsifier at S:84-88 varies stamps, missing adoption, actual commit/row/tag and later semantic edits, but does not supply this branch either.
+
+[Observed] This is a present, applicable consequence in the supplied definition, not retired consent machinery: D:215-216, RFC3-16, states "A vetoed adoption is reverted, and the artifact's effective status is that of the adoption before it." D's RFC3-16(b), under "Effect when the adoption record is missing", also makes a missing, mismatched or reverted record block the dependent effect and render its authorization Unknown, while retaining the artifact and record state. The applicability candidate proposes no N/A judgment for these status consequences. VIS-4 expressly retains the owner's later veto.
+
+[Inferred] Concrete producible counterexample: prepare process-status fixtures for an adopted policy/judgment version A, a later adopted version B with its commit and valid row, and a recorded veto/revert of B. Retain the historical B record as history. A status publisher that keeps calling B effective merely because its original default-branch commit/row exists satisfies the candidate's listed initial-adoption/history checks yet violates RFC3-16. A second fixture with only the first adoption reverted must not honor that reverted adoption or its N/A effect. This is about the amendment's published process status; neither fixture requires a repository-consent question or body/provider operation.
+
+[Inferred] The 137-row count and the existence of a generic RFC3-16 warrant do not demonstrate this missing observable consequence. The new `change-status` capability row cannot be semantically confirmed as fully covered while this status branch is unmapped.
+
+Required correction: ground the veto/reverted-record outcomes in 033/046's process-status contract, preferably by citing RFC3-16's owning predicate rather than duplicating it; add the corresponding per-consequence matrix edges and bounded independent status fixtures/oracles/falsifiers. Prior-version effective status, and no effective authorization where the governing record is invalid/reverted, must be distinguishable. Keep this entirely separate from the retired per-repository read/provider admission records.
+
+## Verified positives and coverage assessment
+
+[Observed] A scripted comparison extracted predecessor 034, 035 and 036 and applied every relevant exact old/new replacement from each JSON block in `SEMANTIC-DELTA.md`, asserting one occurrence per applied fragment. After excluding their warrant blocks, each candidate body, scenario population and oracle matched its mapped predecessor exactly. I also read the retained operative text and review/reading/exclusion consequences. Thus this review found no undeclared replacement within those three retained bodies/scenarios/oracles; the permitted-script scenario now uses the bound committed-policy condition.
+
+[Observed] The scenario ledger has exactly the 135 source/requirement/scenario triples independently extracted from the two complete predecessor specs; source hashes match. Its dispositions account for 72 retained scenarios, 12 replaced admission scenarios, 3 retained-conditional/F-3 execution scenarios, 19 retired admission/record scenarios, 24 F-3 acquisition scenarios, and five individual metadata/policy/declaration/normalization dispositions. This confirms inventory and arithmetic, not every semantic disposition by counting alone.
+
+[Inferred] Rewritten 033 retains material finite configuration, own-step enforcement, Inferred historical records, quotation/object/packet rederivation, disclosures, unattributed work, local/no-route/no-credential boundary, strict policy capture, private fail-closed treatment, source-reader resource/typed-failure semantics, independent review obligations and the strict `/2` versus nonmutating `/1` distinction. Its conditional credential probes do not activate a new execution arm. Rewritten 046 preserves normalized locator/identity provenance, credential suppression, state separation and surviving host/path/hyphen/port/case collisions without retaining record-sharing ceremonies. No execution activation or detector/private-exclusion weakening was established by the specification review. Whether an implementation satisfies these obligations is Unknown here.
+
+[Observed] All five requirements have the six machine-readable warrant fields. The union matches their actual declarations across all six classes. All 22 supplied contract definitions appear among the 137 matrix rows; 133 rows claim coverage and four remain candidate N/A. Every direct edge from a matrix row to one of these five requirements has that clause in its contracts array. These are useful integrity checks, not semantic completeness proof; F1 and F2 survive them.
+
+[Inferred] The four scoped proposed N/A judgments are intelligible for this static editorial scope: rolling last-good-observer fallback, kernel challenge/overlay lifecycle, curated adoption/freeze machinery, and live kernel/drawer/band transitions. Their candidate record expressly preserves the applicable local consequences of the same clauses and requires actual adoption. They remain unresolved and map nothing today; this review does not adopt them or turn them into waivers.
+
+[Observed] The capability ledger contains 40 distinct obligation identities with a disjoint accounting of 33 candidate-covered and seven named non-goals. [Inferred] Against the stated local flow, its groups account for admission/identity/pin, clone/state, integrity/policy/provider/classes/visibility/security, records/limits/usage, checked authorship and rendering, independent inventory/reviews/handover, discovery/clarification, disclosures, retained reader contract and change-status. The seven excluded groups correspond to the declared F-3 URL and execution work, F-4, F-5, kernel lifecycle, curated publication and live control-plane behavior. I confirm that population and partition as a bounded declaration of scope, but do not confirm its full satisfaction: the change-status covered row is qualified by F1/F2. The table is not evidence of implementation PASS.
+
+[Inferred] Named controlled-clone/draft/packet cases, independently fixed literals, byte/process/filesystem captures and concrete refusal/render/packet counterexamples make the ordinary local behaviors falsifiable in bounded effort. The newly missing status branch needs the explicit case and independent oracle described in F2. Actual agent compliance, top-level context freshness, historical pin/usage and transmission remain appropriately Inferred or Unknown rather than being turned Observed by a declaration.
+
+## Limits and disposition
+
+[Unknown] Implementation correctness, actual source screening-policy semantic equivalence, final default-branch adoption, version tagging, live tracker state, provider behavior and any real dossier outcome were not tested. This packet review ran only read-only inspections and integrity/comparison scripts. No implementation, governed artifact, tracker, source repository, adoption record or prior raw review was edited; no consent command/question/answer or source/provider run was performed. The only output written is this new raw review.
+
+[Inferred] Repair F1 and F2 and obtain an independent review of the resulting frozen subject. This verdict requires no new owner decision: it applies the supplied current policies and RFC3-16, while preserving the four owner classes and the separation between change status and read/provider admission.

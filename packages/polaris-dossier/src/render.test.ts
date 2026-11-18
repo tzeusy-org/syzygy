@@ -86,7 +86,7 @@ let statementClasses: readonly string[] | null = null;
 afterEach(() => { statementClasses = null; fixturePolicy = policy(['.c', '.txt']); fixtureVisibility = 'public'; });
 const STATEMENT_ID = 'STATEMENT-KESTREL-ANTHROPIC';
 const subject = (clone: string): RunSubject => ({
-  repository: { url: 'github.com/redis/redis', repositoryId: 'redis-redis' },
+  repository: { url: 'github.com/redis/redis', repositoryId: 'redis-redis', role: 'observed-source' },
   clone: { path: clone, declaredBy: 'operator', label: 'Inferred', use: 'read' },
   pinnedRevision: { commit, label: 'fixture', pinnedAt: '2026-10-07T11:00:00.000Z' },
   ...declaredSubjectFixture(fixturePolicy),
@@ -492,6 +492,7 @@ describe('render', () => {
     const run = await prepared(); const legacy = '{"retired-marker":"LEGACY-LAUNCH-SHOULD-NOT-RENDER"}'; const file = path.join(run, 'launch.json'); fs.writeFileSync(file, legacy);
     const result = await renderRun(run, renderDeps()); if (!result.ok) throw new Error(result.refusal.reason);
     const files = readSite(result.report.site); const machine = JSON.parse(files.get('machine.json')!);
+    expect(machine.disclosure).toContainEqual({ id: 'pinned-revision', text: expect.stringContaining('declared Repository role observed-source; governance-root material keeps the same repository identity.'), label: 'Inferred' });
     expect(machine.disclosure).toContainEqual({ id: 'source-visibility', text: expect.stringContaining('attributed to fixture-operator'), label: 'Inferred' });
     expect(machine.disclosure).toContainEqual({ id: 'pinned-revision-verified', text: expect.stringContaining('No consent, registry act or provider statement was verified.'), label: 'Observed' });
     expect([...files.values()].join('')).not.toContain('LEGACY-LAUNCH-SHOULD-NOT-RENDER'); expect(fs.readFileSync(file, 'utf8')).toBe(legacy);

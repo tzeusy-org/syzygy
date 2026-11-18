@@ -1,0 +1,92 @@
+{
+  "scope": "Scratch diagnosis only; no implementation/test edits or merge/readiness attestation",
+  "subjects": [
+    {
+      "snapshot": "head",
+      "commit": "e940f2c496160da6040a1ab7300016be11ec95cf",
+      "path": "packages/polaris-generation-core/src/island-boundary.test.ts",
+      "bytes": 15243,
+      "sha256": "93a4b56edda38cfd7a070f67e0218640367893d5b6048e30b4db19341858f443"
+    },
+    {
+      "snapshot": "head",
+      "commit": "e940f2c496160da6040a1ab7300016be11ec95cf",
+      "path": "packages/polaris-generation-core/src/workspace-reach.testkit.ts",
+      "bytes": 16683,
+      "sha256": "507902f321862807841993fdba82a4fa4fa5eb4ff952f468bc8fd74bdfa38869"
+    },
+    {
+      "snapshot": "head",
+      "commit": "e940f2c496160da6040a1ab7300016be11ec95cf",
+      "path": "package.json",
+      "bytes": 3933,
+      "sha256": "6194b03e996421a09893f3751f8e0377475f003499aa8fec6036f664a57a7592"
+    },
+    {
+      "snapshot": "base",
+      "commit": "26b2ef360431ab71c02dcde47643665dc153b8c7",
+      "path": "packages/polaris-generation-core/src/island-boundary.test.ts",
+      "bytes": 15243,
+      "sha256": "93a4b56edda38cfd7a070f67e0218640367893d5b6048e30b4db19341858f443"
+    },
+    {
+      "snapshot": "base",
+      "commit": "26b2ef360431ab71c02dcde47643665dc153b8c7",
+      "path": "packages/polaris-generation-core/src/workspace-reach.testkit.ts",
+      "bytes": 16683,
+      "sha256": "507902f321862807841993fdba82a4fa4fa5eb4ff952f468bc8fd74bdfa38869"
+    },
+    {
+      "snapshot": "base",
+      "commit": "26b2ef360431ab71c02dcde47643665dc153b8c7",
+      "path": "package.json",
+      "bytes": 3933,
+      "sha256": "6194b03e996421a09893f3751f8e0377475f003499aa8fec6036f664a57a7592"
+    }
+  ],
+  "artifacts": [
+    {
+      "path": "build-harness.mjs",
+      "sha256": "c02c8e33ca6612503a6501d77c1cf4d611b1a2e30b4a9480791e8833038e5dfb",
+      "bytes": 3051
+    },
+    {
+      "path": "hypotheses.json",
+      "sha256": "9c5ed766640b0d8c83e63fa57158392c9a495ee4751366a4c71092acc631a814",
+      "bytes": 1166
+    },
+    {
+      "path": "measure.mjs",
+      "sha256": "86bd7ba389dd316965781fedc271731a99ea0dbedabe3992cb102acec028c707",
+      "bytes": 1675
+    },
+    {
+      "path": "measurements.json",
+      "sha256": "f9d3bd56e97e5b2f149856ee11e269d51d960e6572e799af261044f42c10a6b9",
+      "bytes": 3888
+    },
+    {
+      "path": "stress-results.json",
+      "sha256": "d00a785826aace9f446da6b6faf0c3d6bc5addd0186dae0c88b8a9da3072ffb1",
+      "bytes": 6270
+    },
+    {
+      "path": "stress.py",
+      "sha256": "36aff81536aeeddd2edee48b1dc0b2e85e131a293a2208373ffef71e2b3fa184",
+      "bytes": 837
+    }
+  ],
+  "hypothesisOutcomes": {
+    "H1": "Repeated resolution is substantial removable work, not the sole dominant cost:~40% normal wall; cache preserves all-origin hashes",
+    "H2": "Parsing is the largest isolated component (~52\u201354% normal); already one parse per reached module. Parsing alone remains near5s under4-way same-core stress",
+    "H3": "Not supported as qualitative F1 regression:302->303roots,1330->1332unique edges,42171->43820resolution calls; shared guard/helper identical",
+    "H4": "Controlled CPU contention reproduces budget crossings4/4 normal and4/4cached; real failed-run load not measured, so historical load attribution remains Inferred"
+  },
+  "wholeOriginComparisons": {
+    "measurements": 14,
+    "allReportedViolationsUnresolvedUnsupportedEmpty": true,
+    "headResultSha256": "22682a63a2ef1907b868e56f31e1ec91df205b64643a8e11fb383a0efefdb2f7",
+    "baseResultSha256": "144050f05e71a420079d2a8cd766bad0a6fe7fe58db8995f1766371d624de9fa"
+  },
+  "proposedApproach": "Per-census nested from/specifier resolution cache with Map.has preserves undefined/null; optional resolver callback default remains unchanged; all per-origin walks/path/error outputs retained. No global cache, no pruning or timeout increase. Actual final Vitest/full-suite validation remains required."
+}

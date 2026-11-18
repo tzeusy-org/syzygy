@@ -1,8 +1,8 @@
 {
   "label": "Inferred",
   "meaning": "Candidate per-observable-consequence interpretation; independent confirmation and adoption remain required, not a source verification result",
-  "population": 137,
-  "covered_in_candidate": 133,
+  "population": 139,
+  "covered_in_candidate": 135,
   "candidate_na_unresolved": 4,
   "rows": [
     {
@@ -1233,6 +1233,26 @@
       "non_goal": "NG-live-control-plane",
       "judgment": ".syzygy/governance/decisions/DOSSIER-DECLARED-SOURCE-CONTRACT-APPLICABILITY.md",
       "scope": "This static pinned command capability stores no rolling observer observations or last-good capture. Local source failure/Unknown/absence and historical provider-withdrawal render duties remain applicable."
+    },
+    {
+      "clause": "RFC3-16",
+      "observable_consequence": "A vetoed/reverted later adoption restores the preceding effective adoption, with veto provenance and historical records retained",
+      "requirements": [
+        "REQ-polaris-generation-033",
+        "REQ-polaris-generation-046"
+      ],
+      "disposition": "covered in candidate requirement set",
+      "scope": "RFC3-16 effective lifecycle consequence"
+    },
+    {
+      "clause": "RFC3-16",
+      "observable_consequence": "A missing, mismatched or reverted sole governing adoption supplies no effective applicability authorization; published status/record state disclose Unknown rather than honoring an N/A",
+      "requirements": [
+        "REQ-polaris-generation-033",
+        "REQ-polaris-generation-046"
+      ],
+      "disposition": "covered in candidate requirement set",
+      "scope": "RFC3-16(b) effect consequence, limited to change-status/applicability, never read/provider admission"
     }
   ]
 }

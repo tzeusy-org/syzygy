@@ -16,7 +16,7 @@ const CONFIG = {
   operatorIsOwner: false,
 };
 const SUBJECT: RunSubject = {
-  repository: { url: 'github.com/redis/redis', repositoryId: 'redis-redis' },
+  repository: { url: 'github.com/redis/redis', repositoryId: 'redis-redis', role: 'observed-source' },
   clone: { path: '/srv/clones/redis', declaredBy: 'operator', label: 'Inferred', use: 'read' },
   pinnedRevision: { commit: '498ecd0d6d007db11ddb3aea9428552598a78622', label: '8.10.2', pinnedAt: '2026-10-07T10:00:00.000Z' },
   ...declaredSubjectFixture(),
@@ -160,14 +160,14 @@ describe('status (REQ-polaris-generation-033)', () => {
     fs.writeFileSync(file, bytes);
     const result = runStatus(runDir);
     if (!result.ok) throw new Error(result.reason);
-    expect(result.report.subject.repository).toEqual({ url: read, repositoryId: 'redis-redis' });
+    expect(result.report.subject.repository).toEqual({ url: read, repositoryId: 'redis-redis', role: 'observed-source' });
     expect(fs.readFileSync(file, 'utf8')).toBe(bytes);
   });
 
   it('writes a run record only with the normalised URL', () => {
     const parsed = parseRunConfig(JSON.stringify(CONFIG));
     if (!parsed.ok) throw new Error('fixture configuration refused');
-    expect(() => encodeRunRecord(parsed.config, { ...SUBJECT, repository: { url: 'https://github.com/redis/redis', repositoryId: 'redis-redis' } })).toThrow('a run record carries the normalised URL only');
+    expect(() => encodeRunRecord(parsed.config, { ...SUBJECT, repository: { url: 'https://github.com/redis/redis', repositoryId: 'redis-redis', role: 'observed-source' } })).toThrow('a run record carries the normalised URL only');
   });
 
   it('refuses a missing run directory', () => {
@@ -190,6 +190,8 @@ describe('status (REQ-polaris-generation-033)', () => {
     ['an execution choice smuggled into the record', (record: Record<string, any>) => { record['declared']['executionChoice'] = 'allow'; }, 'run.json declares an invalid run configuration'],
     ['an extra top-level field', (record: Record<string, any>) => { record['observed'] = true; }, 'run.json carries fields declared, declaredBy, format, label, mode, modelVersionProvider, observed, principal, subject; expected declared, declaredBy, format, label, mode, modelVersionProvider, principal, subject'],
     ['the subject removed', (record: Record<string, any>) => { delete record['subject']; }, 'run.json carries fields declared, declaredBy, format, label, mode, modelVersionProvider, principal; expected declared, declaredBy, format, label, mode, modelVersionProvider, principal, subject'],
+    ['a missing Repository role', (record: Record<string, any>) => { delete record['subject']['repository']['role']; }, 'run.json subject is invalid: repository must carry a url, repositoryId and declared observed-source role'],
+    ['a different Repository role', (record: Record<string, any>) => { record['subject']['repository']['role'] = 'governance-root'; }, 'run.json subject is invalid: repository must carry a url, repositoryId and declared observed-source role'],
     ['a fabricated policy digest', (record: Record<string, any>) => { record['subject']['screeningPolicy']['sha256'] = 'bad'; }, 'run.json subject is invalid: screeningPolicy must bind the committed dossier policy identity, version and digest'],
     ['an undeclared content class', (record: Record<string, any>) => { record['subject']['contentClasses'].push('secret-content'); }, 'run.json subject is invalid: contentClasses must name exactly code-content, project-documentation and governance-text in that order'],
     ['a visibility declaration called observed', (record: Record<string, any>) => { record['subject']['visibility']['label'] = 'Observed'; }, 'run.json subject is invalid: visibility must carry an attributed declaration or conservative private default, labelled Inferred'],

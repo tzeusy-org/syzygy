@@ -39,9 +39,11 @@
     ],
     "policies": [
       "CC-REV-2",
+      "CC-SPEC-10",
       "CC-SPEC-2",
       "CC-SPEC-3",
-      "CC-SPEC-4"
+      "CC-SPEC-4",
+      "CC-SPEC-8"
     ],
     "decisions": [
       "GOVERNANCE-SIMPLIFICATION-D10",

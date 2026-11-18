@@ -119,6 +119,7 @@ export function renderBrief(input: BriefInput): string {
     '',
     `- Brief version: \`${BRIEF_VERSION}\``,
     `- Run: \`${input.runId}\``,
+    `- Repository role: ${subject.repository.role} (Inferred); governance-root material keeps this same repository identity.`,
     `- Repository: ${subject.repository.url} (\`${subject.repository.repositoryId}\`)`,
     `- Pinned revision: \`${commit}\` (${input.revisionLabel ?? 'pinned commit'})`,
     ...(input.copy === null ? [`- Clone: \`${subject.clone.path}\`, declared at init (Inferred); use this exact read location`] : briefCopyLines(input.copy)),

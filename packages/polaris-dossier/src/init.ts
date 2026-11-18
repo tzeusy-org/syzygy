@@ -137,7 +137,7 @@ export async function initRun(request: InitRequest, ports: InitPorts): Promise<I
   }
   const governed = governedSubject({ stated: false, why: 'D10 source admission does not require a drawer declaration' }, paths);
   const subject: RunSubject = {
-    repository: { url: parsed.url.url, repositoryId },
+    repository: { url: parsed.url.url, repositoryId, role: 'observed-source' },
     clone: { path: clonePath, declaredBy: 'operator', label: 'Inferred', use: 'read' },
     pinnedRevision: { commit: head.commit, label: request.revision === undefined ? head.via : 'explicit-full-commit', pinnedAt: isoOf(ports.now()) },
     screeningPolicy: snapshot.binding,

@@ -17,7 +17,7 @@ const run = async (argv: readonly string[]): Promise<{ code: number; stdout: str
   return { code, stdout, stderr };
 };
 const SUBJECT: RunSubject = {
-  repository: { url: 'github.com/redis/redis', repositoryId: 'redis-redis' },
+  repository: { url: 'github.com/redis/redis', repositoryId: 'redis-redis', role: 'observed-source' },
   clone: { path: '/srv/clones/redis', declaredBy: 'operator', label: 'Inferred', use: 'read' },
   pinnedRevision: { commit: '498ecd0d6d007db11ddb3aea9428552598a78622', label: '8.10.2', pinnedAt: '2026-10-07T10:00:00.000Z' },
   ...declaredSubjectFixture(),
