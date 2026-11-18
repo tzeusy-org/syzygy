@@ -2814,6 +2814,7 @@ def selftest(root: Path) -> int:
     current_tools = (
         Path(__file__).name, "record_versioned_signoff.py",
         "record_pwb_behavior_amendment_acts.py", "check_spec_reconciliation.py",
+        "d10_supersession.py",
         "check_governance.py", "build_three_surface_poc_readability_successor.py",
         "build_three_surface_poc_vocabulary_epistemic_amendment.py",
     ) + tuple(name + ".py" for name in LATER_SIGNED_INPUT_BUILDERS)
