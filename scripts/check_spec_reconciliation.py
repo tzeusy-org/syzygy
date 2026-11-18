@@ -107,6 +107,17 @@ Predicates, each printed with its denominator:
   `scripts/build_polaris_dependency_unions.py`, so a difference is Unknown
   and needs a signed successor.
 
+The D10 declared-source2.0 amendment is separate from those ADDED-only
+additions. One explicit VIS-4 ledger row names its actual default source
+landing, specification tag, reviewed policy and scoped applicability judgment.
+R1 checks that row and the verified D10 record; R2 checks the three reviewed
+subjects. R3 applies exactly five MODIFIED requirements after all additions,
+by independent ID and name methods, including only046's declared rename.
+An invalid binding applies none of it. R4 cross-checks its existing JSON
+warrant union, and R5 routes it to the one adoption ledger. This is published
+specification applicability only, never source/provider admission. The tag's
+actual target is checked at publication, not asserted from a row's text.
+
 `--selftest` copies every input into a scratch tree, confirms it passes,
 then applies each rule-6 mutant and requires its expected predicate to fail
 (or, for R6 and R7, to change what it reports); `--witnesses FILE` stores
@@ -362,6 +373,25 @@ POLARIS_ID = "REQ-polaris-generation-"
 POLARIS_ADDITION_GLOB = "*/specs/polaris-generation/spec.md"
 SIGNOFF_RECORD_GLOB = "*-SIGNOFF-v*.md"
 VERSION_LINE = re.compile(r"^Version: (\d+\.\d+)$", re.M)
+
+
+# The reviewed five-ID amendment is distinct from every ADDED-only addition.
+# Its one VIS-4 ledger row names the actual source landing and version tag.
+DECLARED_SOURCE_CHANGE = "dossier-declared-source-model"
+DECLARED_SOURCE_SPEC = f"{CHANGES}/{DECLARED_SOURCE_CHANGE}/proposed/polaris-generation/spec.md"
+DECLARED_SOURCE_UNION = f"{CHANGES}/{DECLARED_SOURCE_CHANGE}/GOVERNING-DEPENDENCIES.json"
+AGENT_ADOPTIONS = f"{DECISIONS}/AGENT-ADOPTIONS.md"
+DECLARED_SOURCE_ROW = 'A-4'
+DECLARED_SOURCE_COMMIT = '182a703b2dbae97a16ae7334cd84a32b634cedc0'
+DECLARED_SOURCE_TAG = 'polaris-dossier-declared-source-model-v2.0'
+DECLARED_SOURCE_SUBJECTS = {
+    'openspec/changes/dossier-declared-source-model/proposed/polaris-generation/spec.md':
+        'd17dad153f030bd935059a8b0df24286d72370b275a5fb4052de901b2af4e040',
+    '.syzygy/governance/policies/POLARIS-DOSSIER-DECLARED-SOURCE-POLICY-v1.json':
+        '516cb1f2dba9ceb3e55166077c0800be6022012406b9b9b5f0df25bcb73aa499',
+    '.syzygy/governance/decisions/DOSSIER-DECLARED-SOURCE-CONTRACT-APPLICABILITY.md':
+        'a698de216484ee2f221988142e70de3b661c9fb095b0e3eb3cf10390517588d1',
+}
 
 
 def polaris_additions(root):
@@ -640,6 +670,42 @@ def read_text(root, rel):
 # --------------------------------------------------------------------------
 
 ACT_INSTANT = re.compile(r"^Act instant: (\S+)$", re.M)
+
+
+def declared_source_binding(root):
+    """(applicable text, record findings, byte findings) for the explicit v2.0.
+
+    This reads published-spec applicability only. No source/provider admission
+    path calls it. The tag's actual target is checked at publication; R1 checks
+    the append-only row's declaration, as it does older versioned records.
+    Missing, malformed or changed inputs map no part of the amendment.
+    """
+    records, subjects = [], []
+    sys.path.insert(0, str(Path(__file__).resolve().parent))
+    import d10_supersession
+    if d10_supersession.state(root) != "recorded":
+        records.append("declared-source: D10 record does not verify; applicability Unknown")
+    rows = []
+    for line in (read_text(root, AGENT_ADOPTIONS) or "").splitlines():
+        cells = [cell.strip() for cell in line.split("|")[1:-1]]
+        if cells and cells[0] == DECLARED_SOURCE_ROW:
+            rows.append(cells)
+    if len(rows) != 1 or len(rows[0]) != 7:
+        records.append(f"declared-source: expected one seven-column {DECLARED_SOURCE_ROW} row in `{AGENT_ADOPTIONS}`")
+    else:
+        cells = rows[0]
+        if cells[2] != f"`{DECLARED_SOURCE_COMMIT}`" or cells[6] != f"`{DECLARED_SOURCE_TAG}`":
+            records.append("declared-source: adoption commit or specification tag declaration differs")
+        if cells[5] != f"`git revert {DECLARED_SOURCE_COMMIT}`":
+            records.append("declared-source: adoption row does not name its subject's revert")
+        for rel in DECLARED_SOURCE_SUBJECTS:
+            if f"`{rel}`" not in cells[3]:
+                records.append(f"declared-source: adoption row does not name `{rel}`")
+    for rel, digest in DECLARED_SOURCE_SUBJECTS.items():
+        body = read_bytes(root, rel)
+        if body is None or sha(body) != digest:
+            subjects.append(f"declared-source: `{rel}` differs from the reviewed v2.0 subject; applicability Unknown")
+    return (None if records or subjects else read_text(root, DECLARED_SOURCE_SPEC), records, subjects)
 
 
 def check_digest_act(act, tag, aggregate, record, manifest_bytes, r1, r2):
@@ -953,12 +1019,18 @@ def check_outcomes(root, report):
                 continue
             check_versioned({"package": change, "version": version},
                             f"{tag} ({Path(rel).name})", aggregate, text, r1)
+    _amendment, agent_records, agent_subjects = declared_source_binding(root)
+    records += 1
+    subjects_seen += len(DECLARED_SOURCE_SUBJECTS)
+    r1 += agent_records
+    r2 += agent_subjects
     report.add("R1", "terminal outcome for every child", records, r1,
                f"{len(CHILDREN)} children and {len(additions)} installed Polaris "
                "additions; digest acts: phrase = manifest sha256 and in the "
                "aggregate; versioned: package/version/tag and one aggregate "
-               "block; adopted additions: the declared record names the spec")
-    report.add("R2", "signed subjects hash to their rows", subjects_seen, r2)
+               "block; adopted additions: the declared record names the spec; "
+               "declared-source: one VIS-4 ledger row and verified D10 record")
+    report.add("R2", "reviewed and signed subjects hash to their rows", subjects_seen, r2)
 
 
 # --------------------------------------------------------------------------
@@ -1225,6 +1297,70 @@ def compose_polaris_by_name(base, overlay, *additions):
     return by_id, problems
 
 
+DECLARED_SOURCE_SUFFIXES = ('033', '034', '035', '036', '046')
+DECLARED_SOURCE_OLD_NAME = 'Launch-time consent'
+DECLARED_SOURCE_NEW_NAME = 'Declared local-source admission'
+DECLARED_SOURCE_MODIFIED = '## MODIFIED Requirements'
+
+
+def compose_declared_source_by_id(current, text):
+    """Compose the explicit five replacements by ID; refuse partial application."""
+    problems = []
+    translated = re.sub(r'^## MODIFIED Requirements$', ADDED_HEADING, text, flags=re.M)
+    problems += _header_problems_regex(translated)
+    problems += _foreign_headings_regex(translated)
+    if len(re.findall(r'^## MODIFIED Requirements$', text, re.M)) != 1:
+        problems.append('expected one canonical MODIFIED section')
+    if re.search('[\ufeff\r]', text):
+        problems.append('noncanonical line bytes')
+    blocks = _polaris_blocks_regex(text)
+    ids = [xs[0] for _kind, xs, _name, _scen in blocks if len(xs) == 1]
+    if len(blocks) != 5 or len(ids) != 5 or set(ids) != {POLARIS_ID+s for s in DECLARED_SOURCE_SUFFIXES}:
+        problems.append('expected exactly five replacement identities')
+    composed = dict(current)
+    for kind, xs, name, scenarios in blocks:
+        if kind != 'MODIFIED' or len(xs) != 1 or xs[0] not in current:
+            problems.append('dangling or non-MODIFIED replacement')
+            continue
+        ident = xs[0]
+        want = DECLARED_SOURCE_NEW_NAME if ident == POLARIS_ID+'046' else current[ident]['name']
+        if name != want or (ident == POLARIS_ID+'046' and current[ident]['name'] != DECLARED_SOURCE_OLD_NAME):
+            problems.append('unexpected requirement rename')
+        composed[ident] = {'name': name, 'scenarios': scenarios}
+    return (dict(current) if problems else composed), problems
+
+
+def compose_declared_source_by_name(current, text):
+    """Independently replace by normalized predecessor name, then recover IDs."""
+    lines = text.split('\n')
+    translated = '\n'.join(ADDED_HEADING if line == DECLARED_SOURCE_MODIFIED else line for line in lines)
+    problems = _header_problems_manual(translated) + _foreign_headings_manual(translated)
+    if lines.count(DECLARED_SOURCE_MODIFIED) != 1:
+        problems.append('expected one canonical MODIFIED section')
+    if '\ufeff' in text or '\r' in text:
+        problems.append('noncanonical line bytes')
+    blocks = _polaris_blocks_manual(text)
+    ids = [b['ids'][0] for b in blocks if len(b['ids']) == 1]
+    if len(blocks) != 5 or len(ids) != 5 or sorted(ids) != [POLARIS_ID+s for s in DECLARED_SOURCE_SUFFIXES]:
+        problems.append('expected exactly five replacement identities')
+    def norm(name):
+        return ' '.join(name.split()).casefold()
+    names = {norm(row['name']): (ident, row) for ident, row in current.items()}
+    for block in blocks:
+        old = DECLARED_SOURCE_OLD_NAME if block['name'] == DECLARED_SOURCE_NEW_NAME else block['name']
+        key = norm(old)
+        if block['section'] != 'MODIFIED' or len(block['ids']) != 1 or key not in names:
+            problems.append('dangling or non-MODIFIED replacement')
+            continue
+        ident, predecessor = names[key]
+        if block['ids'] != [ident] or predecessor['name'] != old:
+            problems.append('replacement identity/name mismatch')
+        names.pop(key)
+        names[norm(block['name'])] = (ident, {'name':block['name'], 'scenarios':block['scenarios']})
+    composed = {ident: row for ident, row in names.values()}
+    return (dict(current) if problems else composed), problems
+
+
 def _cap1_overlay_guard_regex(text):
     """Method A: refusals for the CAP1 overlay, independent of its blocks.
 
@@ -1415,6 +1551,12 @@ def census(root):
     else:
         a, pa = compose_polaris_by_id(base, overlay, *additions)
         b, pb = compose_polaris_by_name(base, overlay, *additions)
+        amendment, _records, _subjects = declared_source_binding(root)
+        if amendment is not None:
+            a, extra_a = compose_declared_source_by_id(a, amendment)
+            b, extra_b = compose_declared_source_by_name(b, amendment)
+            pa += extra_a
+            pb += extra_b
         findings += [f"POLARIS method A: {p}" for p in pa]
         findings += [f"POLARIS method B: {p}" for p in pb]
         if a != b:
@@ -1467,6 +1609,23 @@ def polaris_expected(root, findings):
         ids |= added
         n_req += len(by_regex)
         n_scen += sum(s for _i, s in by_regex)
+    amendment, _records, _subjects = declared_source_binding(root)
+    if amendment is not None:
+        base = read_text(root, POLARIS_BASE_SPEC) or ""
+        overlay = read_text(root, POLARIS_OVERLAY_SPEC) or ""
+        additions = [(change, read_text(root, rel) or "")
+                     for change, rel in polaris_additions(root)]
+        before_a, _pa = compose_polaris_by_id(base, overlay, *additions)
+        before_b, _pb = compose_polaris_by_name(base, overlay, *additions)
+        after_a, pa = compose_declared_source_by_id(before_a, amendment)
+        after_b, pb = compose_declared_source_by_name(before_b, amendment)
+        delta_a = sum(len(r["scenarios"]) for r in after_a.values()) - sum(
+            len(r["scenarios"]) for r in before_a.values())
+        delta_b = sum(len(r["scenarios"]) for r in after_b.values()) - sum(
+            len(r["scenarios"]) for r in before_b.values())
+        if pa or pb or delta_a != delta_b or set(after_a) != set(before_a):
+            findings.append("POLARIS declared-source: replacement delta methods disagree or change identities")
+        n_scen += delta_a
     return n_req, n_scen, ids
 
 
@@ -1585,6 +1744,9 @@ def check_generated(root, pop, report):
                           for change, _rel in polaris_additions(root))
     for prefix in addition_dirs:
         files += tracked(root, prefix.rstrip("/"))
+    amendment, _records, _subjects = declared_source_binding(root)
+    if amendment is not None:
+        files += tracked(root, f"{CHANGES}/{DECLARED_SOURCE_CHANGE}")
     files += list(ROUTE_PAGES)
     # An addition may cite a candidate Polaris requirement still under
     # another change's `proposed/` (no act binds it); such a mention resolves
@@ -1627,6 +1789,17 @@ def check_generated(root, pop, report):
         if computed != declared:
             findings.append(f"`{rel}`: differs from its spec's warrants; run "
                             "`--regenerate`")
+    if amendment is not None:
+        examined += 1
+        try:
+            declared = json.loads(read_text(root, DECLARED_SOURCE_UNION) or "null")["warrants"]
+            declared = {key: set(values) for key, values in declared.items()}
+        except (ValueError, TypeError, KeyError, AttributeError):
+            declared = None
+        computed = warrant_union(amendment)
+        computed.pop("primary", None)
+        if computed != declared:
+            findings.append(f"`{DECLARED_SOURCE_UNION}` differs from its amendment's warrants")
     report.add("R4", "generated dependency and coverage rows resolve",
                examined + mentions, findings,
                f"{examined} generated anchors, {mentions} identifier mentions "
@@ -1685,6 +1858,14 @@ def check_routes(root, pop, report):
                         f"does not name its terminal record `{name}`")
     if CAP1_OVERLAY_RECORD not in status and name not in status:
         findings.append(f"`{STATUS}` cites no terminal record `{name}`")
+    amendment, _records, _subjects = declared_source_binding(root)
+    if amendment is not None:
+        examined += 2
+        if not any(Path(AGENT_ADOPTIONS).name in line
+                   for line in rows.get(DECLARED_SOURCE_CHANGE, [])):
+            findings.append(f"`{OPENSPEC_README}` does not route the declared-source amendment to `{AGENT_ADOPTIONS}`")
+        if AGENT_ADOPTIONS not in status:
+            findings.append(f"`{STATUS}` cites no declared-source agent-adoption ledger")
     figures = STATUS_FIGURE.findall(status)
     examined += 1
     reqs = pop.get("POLARIS", {})
@@ -1861,6 +2042,13 @@ def inputs(root):
         paths |= {r for r, _t, _v in addition_terminals(root, change)}
         if change in ADOPTED_ADDITIONS:
             paths.add(adopted_binding(ADOPTED_ADDITIONS[change][1])[1])
+    paths |= {AGENT_ADOPTIONS, DECLARED_SOURCE_UNION, *DECLARED_SOURCE_SUBJECTS}
+    sys.path.insert(0, str(Path(__file__).resolve().parent))
+    import d10_supersession
+    if d10_supersession.rec is not None:
+        rec = d10_supersession.rec
+        paths |= set(tracked(root, rec.PACKAGE.rstrip("/")))
+        paths |= {rec.ACT, rec.AGGREGATE, rec.LOG}
     paths |= poc_reference().validation_inputs(root)
     return sorted(paths)
 
@@ -2121,6 +2309,93 @@ def mutants(root):
          "R7~"),
         ("status-figure", STATUS, _status_figure_moved, "R5"),
     )
+
+
+def declared_source_mutants():
+    row_start = f"| {DECLARED_SOURCE_ROW} |"
+    return [
+        ("declared-row-missing", AGENT_ADOPTIONS,
+         lambda text: "\n".join(line for line in text.splitlines()
+                               if not line.startswith(row_start)) + "\n", "R1"),
+        ("declared-row-duplicate", AGENT_ADOPTIONS,
+         lambda text: text + next(line for line in text.splitlines()
+                                  if line.startswith(row_start)) + "\n", "R1"),
+        ("declared-row-shape", AGENT_ADOPTIONS,
+         _replace(f"| `{DECLARED_SOURCE_TAG}` |", "|"), "R1"),
+        ("declared-commit-mismatch", AGENT_ADOPTIONS,
+         _replace(f"`{DECLARED_SOURCE_COMMIT}`", "`" + "0" * 40 + "`"), "R1"),
+        ("declared-tag-mismatch", AGENT_ADOPTIONS,
+         _replace(DECLARED_SOURCE_TAG, "polaris-dossier-declared-source-model-v9.9"), "R1"),
+        ("declared-revert-mismatch", AGENT_ADOPTIONS,
+         _replace(f"git revert {DECLARED_SOURCE_COMMIT}", "git revert " + "0" * 40), "R1"),
+        ("declared-scope-missing", AGENT_ADOPTIONS,
+         _replace("`.syzygy/governance/decisions/DOSSIER-DECLARED-SOURCE-CONTRACT-APPLICABILITY.md`",
+                  "the unrecorded applicability judgment"), "R1"),
+        ("declared-d10-invalid", f"{DECISIONS}/GOVERNANCE-SIMPLIFICATION-D10-ACT.md",
+         lambda text: text + "changed\n", "R1"),
+        ("declared-spec-changed", DECLARED_SOURCE_SPEC,
+         lambda text: text + "changed\n", "R2"),
+        ("declared-policy-changed", ".syzygy/governance/policies/POLARIS-DOSSIER-DECLARED-SOURCE-POLICY-v1.json",
+         lambda text: text + "\n", "R2"),
+        ("declared-applicability-changed", f"{DECISIONS}/DOSSIER-DECLARED-SOURCE-CONTRACT-APPLICABILITY.md",
+         lambda text: text + "changed\n", "R2"),
+        ("declared-union-changed", DECLARED_SOURCE_UNION,
+         _replace('"SEC-5"', '"SEC-99"'), "R4"),
+    ]
+
+
+def declared_source_composition_cases(witnesses, failures):
+    """Exercise both structural guards directly, apart from byte-binding refusal."""
+    additions = [(change, read_text(ROOT, rel) or "")
+                 for change, rel in polaris_additions(ROOT)]
+    base = read_text(ROOT, POLARIS_BASE_SPEC) or ""
+    overlay = read_text(ROOT, POLARIS_OVERLAY_SPEC) or ""
+    before_a, pa = compose_polaris_by_id(base, overlay, *additions)
+    before_b, pb = compose_polaris_by_name(base, overlay, *additions)
+    original = read_text(ROOT, DECLARED_SOURCE_SPEC) or ""
+    a, aa = compose_declared_source_by_id(before_a, original)
+    b, bb = compose_declared_source_by_name(before_b, original)
+    expected = {"033": 5, "034": 28, "035": 17, "036": 6, "046": 3}
+    control = (not (pa or pb or aa or bb) and before_a == before_b and a == b
+               and set(a) == set(before_a)
+               and all(len(a[POLARIS_ID + suffix]["scenarios"]) == count
+                       for suffix, count in expected.items())
+               and a[POLARIS_ID + "046"]["name"] == "Declared local-source admission"
+               and all(a[ident] == row for ident, row in before_a.items()
+                       if ident[-3:] not in expected))
+    witnesses.append({"mutant": "declared-composition-control", "path": DECLARED_SOURCE_SPEC,
+                      "old": "", "new": "", "expected": "both independent compositions agree; exact replacements and untouched remainder",
+                      "failed": [], "outcome": "held" if control else "SURVIVED"})
+    if not control:
+        failures.append("declared-composition-control")
+    cases = [
+        ("added-section", "## MODIFIED Requirements", "## ADDED Requirements"),
+        ("extra-id", "ID: REQ-polaris-generation-033", "ID: REQ-polaris-generation-099"),
+        ("duplicate-id", "ID: REQ-polaris-generation-034", "ID: REQ-polaris-generation-033"),
+        ("missing-id", "ID: REQ-polaris-generation-034", ""),
+        ("noncanonical-header", "### Requirement: Operator-agent authoring mode",
+         "### requirement: Operator-agent authoring mode"),
+        ("unexpected-rename", "Declared local-source admission", "Unexpected admission"),
+        ("hidden-delta", "## MODIFIED Requirements", "## MODIFIED Requirements\n\n### REMOVED Requirements"),
+        ("duplicate-section", "## MODIFIED Requirements", "## MODIFIED Requirements\n\n## MODIFIED Requirements"),
+        ("bom", "## MODIFIED Requirements", "\ufeff## MODIFIED Requirements"),
+        ("crlf", "\n", "\r\n"),
+        ("fenced-header", "### Requirement: Operator-agent authoring mode",
+         "```\n### Requirement: Operator-agent authoring mode\n```"),
+    ]
+    for name, old, new in cases:
+        if old not in original:
+            raise AssertionError(f"declared-source mutation target absent: {name}")
+        mutant = original.replace(old, new, 1)
+        a, pa = compose_declared_source_by_id(before_a, mutant)
+        b, pb = compose_declared_source_by_name(before_b, mutant)
+        caught = bool(pa and pb and a == b == before_a)
+        witnesses.append({"mutant": "declared-compose-" + name,
+                          "path": DECLARED_SOURCE_SPEC, "old": old, "new": new,
+                          "expected": "COMPOSE-A/B refuse without partial application", "failed": [],
+                          "outcome": "killed" if caught else "SURVIVED"})
+        if not caught:
+            failures.append("declared-compose-" + name)
 
 
 def cap1_overlay_mutants():
@@ -2516,6 +2791,7 @@ def _selftest_cases(tmp, commit, witnesses, failures, witness_path, base, clean,
                     added, with_addition, adopted, with_adopted):
     cases = ([(base, clean, m) for m in mutants(ROOT)]
              + [(base, clean, m) for m in cap1_overlay_mutants()]
+             + [(base, clean, m) for m in declared_source_mutants()]
              + [(added, with_addition, m)
                 for m in addition_mutants()]
              + [(adopted, with_adopted, m) for m in adopted_mutants()])
@@ -2535,6 +2811,7 @@ def _selftest_cases(tmp, commit, witnesses, failures, witness_path, base, clean,
         if failure is not None:
             failures.append(failure)
     _entry_kind_cases(tmp, base, witnesses, failures)
+    declared_source_composition_cases(witnesses, failures)
     # Two cases a one-file mutation cannot express. A second record of the
     # same version fails R1 by its own finding; --regenerate refuses an
     # unsigned addition and writes nothing.
@@ -2699,6 +2976,16 @@ def _run_case(index):
                       for line in got.lines) if m))
     else:
         caught = expect in got.failed
+    if name.startswith("declared-") and expect in ("R1", "R2"):
+        # A refusal must restore the predecessor population, not merely print
+        # an error while still applying the unbound amendment.
+        population, _findings = census(tree)
+        additions = [(change, read_text(tree, path) or "")
+                     for change, path in polaris_additions(tree)]
+        predecessor, _problems = compose_polaris_by_id(
+            read_text(tree, POLARIS_BASE_SPEC) or "",
+            read_text(tree, POLARIS_OVERLAY_SPEC) or "", *additions)
+        caught = caught and population.get("POLARIS") == predecessor
     witness = {"mutant": name, "path": rel, "old": old, "new": new,
                "expected": expect, "failed": sorted(got.failed),
                "outcome": "killed" if caught else "SURVIVED"}
