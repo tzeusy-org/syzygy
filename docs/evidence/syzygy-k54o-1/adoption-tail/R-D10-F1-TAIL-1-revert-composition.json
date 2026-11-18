@@ -1,0 +1,74 @@
+{
+  "subject": "58bcb2138c757a569c2cfcc96401c25699e5a11b",
+  "composition_cases": 12,
+  "composition_failures": [],
+  "composition_outcomes": [
+    {
+      "mutant": "declared-composition-control",
+      "outcome": "held"
+    },
+    {
+      "mutant": "declared-compose-added-section",
+      "outcome": "killed"
+    },
+    {
+      "mutant": "declared-compose-extra-id",
+      "outcome": "killed"
+    },
+    {
+      "mutant": "declared-compose-duplicate-id",
+      "outcome": "killed"
+    },
+    {
+      "mutant": "declared-compose-missing-id",
+      "outcome": "killed"
+    },
+    {
+      "mutant": "declared-compose-noncanonical-header",
+      "outcome": "killed"
+    },
+    {
+      "mutant": "declared-compose-unexpected-rename",
+      "outcome": "killed"
+    },
+    {
+      "mutant": "declared-compose-hidden-delta",
+      "outcome": "killed"
+    },
+    {
+      "mutant": "declared-compose-duplicate-section",
+      "outcome": "killed"
+    },
+    {
+      "mutant": "declared-compose-bom",
+      "outcome": "killed"
+    },
+    {
+      "mutant": "declared-compose-crlf",
+      "outcome": "killed"
+    },
+    {
+      "mutant": "declared-compose-fenced-header",
+      "outcome": "killed"
+    }
+  ],
+  "mainline_revert_from_tail": {
+    "returncode": 1,
+    "stdout": "Auto-merging openspec/README.md\nCONFLICT (content): Merge conflict in openspec/README.md\nCONFLICT (modify/delete): openspec/changes/dossier-declared-source-model/README.md deleted in parent of 182a703b2 (Merge pull request #824 from tzeusy-org/agent/syzygy-k54o.1) and modified in HEAD.  Version HEAD of openspec/changes/dossier-declared-source-model/README.md left in tree.\nCONFLICT (modify/delete): openspec/changes/dossier-declared-source-model/tasks.md deleted in parent of 182a703b2 (Merge pull request #824 from tzeusy-org/agent/syzygy-k54o.1) and modified in HEAD.  Version HEAD of openspec/changes/dossier-declared-source-model/tasks.md left in tree.\n",
+    "stderr": "error: could not revert 182a703b2... Merge pull request #824 from tzeusy-org/agent/syzygy-k54o.1\nhint: after resolving the conflicts, mark the corrected paths\nhint: with 'git add <paths>' or 'git rm <paths>'\nhint: Disable this message with \"git config set advice.mergeConflict false\"\n",
+    "conflicts": [
+      "openspec/README.md",
+      "openspec/changes/dossier-declared-source-model/README.md",
+      "openspec/changes/dossier-declared-source-model/tasks.md"
+    ]
+  },
+  "partial_revert_binding": {
+    "applies_amendment": false,
+    "record_findings": [],
+    "byte_findings": [
+      "declared-source: `openspec/changes/dossier-declared-source-model/proposed/polaris-generation/spec.md` differs from the reviewed v2.0 subject; applicability Unknown",
+      "declared-source: `.syzygy/governance/policies/POLARIS-DOSSIER-DECLARED-SOURCE-POLICY-v1.json` differs from the reviewed v2.0 subject; applicability Unknown",
+      "declared-source: `.syzygy/governance/decisions/DOSSIER-DECLARED-SOURCE-CONTRACT-APPLICABILITY.md` differs from the reviewed v2.0 subject; applicability Unknown"
+    ]
+  }
+}

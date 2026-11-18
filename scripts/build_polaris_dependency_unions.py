@@ -26,6 +26,11 @@ record: whether the addition is signed, and ADDED-only, is
 `check_spec_reconciliation.py`'s R1 and R3, and `--regenerate` refuses an
 unsigned one before it calls `--write-additions`.
 
+The explicit declared-source amendment keeps its reviewed MODIFIED text in
+`proposed/` and its generated union in JSON. Its warrants are checked by the
+same independent line parser here and by the regex parser in reconciliation.
+This reads no adoption record and grants no source/provider permission.
+
 The base and understanding files are signed subjects, so this script never
 writes them. `--check`
 requires each file on disk to equal its regeneration. One exception is
@@ -171,8 +176,20 @@ def regenerate(root: pathlib.Path, key: str) -> str:
     return RENDER[key](warrants(spec))
 
 
+DECLARED_SOURCE_SPEC = CHANGES / "dossier-declared-source-model/proposed/polaris-generation/spec.md"
+DECLARED_SOURCE_UNION = CHANGES / "dossier-declared-source-model/GOVERNING-DEPENDENCIES.json"
+
+
+def render_declared_source(root: pathlib.Path) -> str:
+    """The existing JSON-format union, independently read by line state machine."""
+    union = warrants((root / DECLARED_SOURCE_SPEC).read_text(encoding="utf-8"))
+    body = {"generated": "Union of spec.md per-requirement warrants; no independent normative declaration",
+            "warrants": {key: sorted(union[key]) for key in CLASSES if key != "primary"}}
+    return json.dumps(body, indent=2) + "\n"
+
+
 def write_additions(root: pathlib.Path = ROOT) -> list[str]:
-    """Write every installed addition's generated union; return the paths written."""
+    """Write addition and declared-source generated unions; return changed paths."""
     written = []
     for change in additions(root):
         target = root / union_file(change)
@@ -180,6 +197,12 @@ def write_additions(root: pathlib.Path = ROOT) -> list[str]:
         if not target.is_file() or target.read_bytes() != body:
             target.write_bytes(body)
             written.append(union_file(change).as_posix())
+    if (root / DECLARED_SOURCE_SPEC).is_file():
+        target = root / DECLARED_SOURCE_UNION
+        body = render_declared_source(root).encode("utf-8")
+        if not target.is_file() or target.read_bytes() != body:
+            target.write_bytes(body)
+            written.append(DECLARED_SOURCE_UNION.as_posix())
     return written
 
 
@@ -235,6 +258,13 @@ def check(root: pathlib.Path = ROOT) -> list[str]:
         elif target.read_bytes() != expected:
             findings.append(f"{change}: {rel} differs from its regeneration "
                             "(installed addition; run --write-additions)")
+    if (root / DECLARED_SOURCE_SPEC).exists() or (root / DECLARED_SOURCE_UNION).exists():
+        try:
+            expected = render_declared_source(root).encode("utf-8")
+            if (root / DECLARED_SOURCE_UNION).read_bytes() != expected:
+                findings.append("declared-source: JSON union differs from its warrants regeneration")
+        except (OSError, ValueError) as error:
+            findings.append(f"declared-source: cannot regenerate JSON union: {error}")
     return findings
 
 
@@ -247,6 +277,8 @@ def _inputs(root: pathlib.Path) -> list[pathlib.Path]:
     package = root / SUCCESSOR_PACKAGE
     if package.is_dir():
         paths += [p.relative_to(root) for p in package.rglob("*") if p.is_file()]
+    paths += [rel for rel in (DECLARED_SOURCE_SPEC, DECLARED_SOURCE_UNION)
+              if (root / rel).is_file()]
     return paths
 
 
@@ -332,6 +364,17 @@ def selftest() -> int:
                      "act"]).write_text("record\n"),
              "differs from its regeneration"),
         )
+        if (clean / DECLARED_SOURCE_SPEC).is_file():
+            mutants += (
+                ("a declared-source warrant added", _edit(DECLARED_SOURCE_SPEC,
+                    "  topology: []", "  topology: [UNDECLARED-TOPOLOGY]"), "declared-source: "),
+                ("the declared-source union edited", _edit(DECLARED_SOURCE_UNION,
+                    '"SEC-5"', '"SEC-99"'), "declared-source: "),
+                ("the declared-source union removed", lambda r: (r / DECLARED_SOURCE_UNION).unlink(),
+                    "declared-source: "),
+                ("the declared-source specification removed", lambda r: (r / DECLARED_SOURCE_SPEC).unlink(),
+                    "declared-source: "),
+            )
         for name, mutate, expect in mutants:
             tree = pathlib.Path(tmp) / name.replace(" ", "-")
             shutil.copytree(clean, tree)
@@ -423,7 +466,8 @@ def main(argv: list[str]) -> int:
     note = ("" if state is None or state[0] else
             "; understanding: signed predecessor installed, the unperformed successor "
             "package proposes the regeneration")
-    count = 2 + len(additions(ROOT))
+    count = 2 + len(additions(ROOT)) + int(
+        (ROOT / DECLARED_SOURCE_SPEC).exists() or (ROOT / DECLARED_SOURCE_UNION).exists())
     print(f"{count} Polaris dependency unions match their warrants{note}")
     return 0
 

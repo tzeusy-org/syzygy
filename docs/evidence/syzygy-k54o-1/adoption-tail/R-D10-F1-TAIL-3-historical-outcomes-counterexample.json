@@ -1,0 +1,40 @@
+{
+  "failed": [
+    "R1",
+    "R2"
+  ],
+  "lines": [
+    "FAIL  R1  terminal outcome for every child \u2014 19 examined, 2 findings \u2014 5 children and 2 installed Polaris additions; digest acts: phrase = manifest sha256 and in the aggregate; versioned: package/version/tag and one aggregate block; adopted additions: the declared record names the spec; declared-source: one VIS-4 ledger row and verified D10 record",
+    "        declared-source: D10 record does not verify; applicability Unknown",
+    "        declared-source: expected one seven-column A-4 row in `.syzygy/governance/decisions/AGENT-ADOPTIONS.md`",
+    "        declared-source: `openspec/changes/dossier-declared-source-model/proposed/polaris-generation/spec.md` differs from the reviewed v2.0 subject; applicability Unknown",
+    "        declared-source: `.syzygy/governance/policies/POLARIS-DOSSIER-DECLARED-SOURCE-POLICY-v1.json` differs from the reviewed v2.0 subject; applicability Unknown",
+    "        declared-source: `.syzygy/governance/decisions/DOSSIER-DECLARED-SOURCE-CONTRACT-APPLICABILITY.md` differs from the reviewed v2.0 subject; applicability Unknown"
+  ],
+  "findings": {
+    "R1": [
+      "declared-source: D10 record does not verify; applicability Unknown",
+      "declared-source: expected one seven-column A-4 row in `.syzygy/governance/decisions/AGENT-ADOPTIONS.md`"
+    ],
+    "R2": [
+      "declared-source: `openspec/changes/dossier-declared-source-model/proposed/polaris-generation/spec.md` differs from the reviewed v2.0 subject; applicability Unknown",
+      "declared-source: `.syzygy/governance/policies/POLARIS-DOSSIER-DECLARED-SOURCE-POLICY-v1.json` differs from the reviewed v2.0 subject; applicability Unknown",
+      "declared-source: `.syzygy/governance/decisions/DOSSIER-DECLARED-SOURCE-CONTRACT-APPLICABILITY.md` differs from the reviewed v2.0 subject; applicability Unknown"
+    ]
+  },
+  "subject": "1c76b0a4c6d49498e76b27bcc87d7e26947c313f",
+  "historicalCore": "da9fde040ec188612310549782fccc0227869c79",
+  "currentTools": [
+    "prepare_three_surface_poc_governedby_reference_recording.py",
+    "record_versioned_signoff.py",
+    "record_pwb_behavior_amendment_acts.py",
+    "check_spec_reconciliation.py",
+    "d10_supersession.py",
+    "check_governance.py",
+    "build_three_surface_poc_readability_successor.py",
+    "build_three_surface_poc_vocabulary_epistemic_amendment.py",
+    "build_polaris_dossier_local_agent_mode_v1_1.py",
+    "build_polaris_dossier_local_agent_mode_v1_2.py",
+    "build_polaris_dossier_local_agent_mode_v1_3.py"
+  ]
+}

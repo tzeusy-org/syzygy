@@ -1,0 +1,181 @@
+{
+  "subjectCommit": "787ec185e60f3717fa71dec05fdada37e7e7585d",
+  "integrationBase": "182a703b2dbae97a16ae7334cd84a32b634cedc0",
+  "startedAt": "2026-11-18T18:44:55.483984+00:00",
+  "state": "finished",
+  "priorFailureTreatment": "Earlier failed tests, reviews, direct-layout OpenSpec validation and CI remain failed on their subjects. No prior PASS transfers to this commit.",
+  "mergeReadiness": "Not established; complete output assessment, independent review, hosted checks, owner hold and actual queue landing remain separate.",
+  "browser": {
+    "path": "/home/orca/.tmp/syzygy-beads-looper-20261114-54ebc9f1/chrome-for-testing-157/chrome-linux64/chrome",
+    "version": "Google Chrome for Testing 157.0.8103.50",
+    "executableSha256": "061f752aa63d26ee05581742df728a2f8f5097446e85e04145ebaea49e469e15"
+  },
+  "command": [
+    "flock",
+    "-n",
+    "-E",
+    "75",
+    "/home/orca/.tmp/syzygy-full-suite-20261104.lock",
+    "npm",
+    "run",
+    "check:all"
+  ],
+  "subjectTree": "e7f0dbcb204b518d9885f9fab95987019c8810b8",
+  "changedFiles": {
+    ".syzygy/governance/decisions/AGENT-ADOPTIONS.md": "379248028689975547c5c5776dfd19d131f4d6254a1a32050651413718a209a8",
+    "PROJECT-STATUS.md": "2dca867af2dad7f4c9b1129bdadb604feb2bbdcbccca5a5df99af6b9ad9ff39a",
+    "docs/evidence/spec-readability-reconciliation-2026-10-02/census.json": "a7d8ffeff91dcb2d168f0466bf055722123663d0f15c77832db451cb8c3be8a4",
+    "docs/evidence/syzygy-k54o-1/README.md": "3b7e30d79fc87e208c4b723922760df2e0927622b84f2c8ec6f8232b9001e939",
+    "docs/evidence/syzygy-k54o-1/adoption-tail/R-D10-F1-TAIL-1-counterexamples.json": "77205a34e6bf027199c8209ecd9851d3c5430b154182114c1752a44193c093bf",
+    "docs/evidence/syzygy-k54o-1/adoption-tail/R-D10-F1-TAIL-1-revert-composition.json": "814ba62afa5e103e3a20bb7c70a9cc54c9c1502c6d175daf6602f117a1655ecc",
+    "docs/evidence/syzygy-k54o-1/adoption-tail/R-D10-F1-TAIL-2-independent-evidence.json": "e76fa3b48b01da13fc5f342d43316620d1849218b0a24656969649213126c2ed",
+    "docs/evidence/syzygy-k54o-1/adoption-tail/R-D10-F1-TAIL-3-historical-outcomes-counterexample.json": "5c089625602c27469e8271a1da4d047874e6b20c5cfb199ba5b77f88c704731a",
+    "docs/evidence/syzygy-k54o-1/adoption-tail/R-D10-F1-TAIL-3-independent-evidence.json": "357b6a822c08ed732ca43059ebf957d5e7d5e7eb3e587aa28e74725649a9b75c",
+    "docs/evidence/syzygy-k54o-1/adoption-tail/R-D10-F1-TAIL-4-dangling-presence-counterexamples.json": "169f931f017157ce7b3e638c3d8f8a4b3dc5bdd396836a1c09d9a5733bd5ef3a",
+    "docs/evidence/syzygy-k54o-1/adoption-tail/R-D10-F1-TAIL-4-independent-evidence.json": "9218bfb65894a098f2227be42aca1f27edfee178a39ecc64be0327b78b148a6e",
+    "docs/evidence/syzygy-k54o-1/adoption-tail/R-D10-F1-TAIL-5-independent-evidence.json": "bf53b212665b5d96e391c85b0f2a2c56a0f5f58e1d1e992d7414c9246bd7d550",
+    "docs/evidence/syzygy-k54o-1/adoption-tail/README.md": "7aa90b79a94698233f8b5cea0c8cc1ba9f590353903a422d5ddeb2b3f230caf0",
+    "docs/evidence/syzygy-k54o-1/adoption-tail/artifact-manifest.json": "008308c5110b89c145140bfb79015f2a5d5951f5b53afcee325b73b25180c2f1",
+    "docs/evidence/syzygy-k54o-1/adoption-tail/d10-f1-tail-1560b6-reconciliation-selftest.log.gz": "95c16896b9bfc5a28b5c82073da9119b1c48ae67e00298dc40f2452d80b37f3f",
+    "docs/evidence/syzygy-k54o-1/adoption-tail/d10-f1-tail-1560b6-rollback-governance.log.gz": "aac2bf85f15796d5efea458e77abb9bc84ab322337b9a3dd5bf3add0682b2afb",
+    "docs/evidence/syzygy-k54o-1/adoption-tail/d10-f1-tail-1560b6-rollback-proof.json": "663da1e34caabdb3697f58021e545a0108175d5f370661c89af02d4ddeaf6f94",
+    "docs/evidence/syzygy-k54o-1/adoption-tail/d10-f1-tail-1560b6-selftest-witnesses.json": "781e5022a7d18a2fcf60ad37099a3357a959e275d096d4c8d5c2933ecdb61d23",
+    "docs/evidence/syzygy-k54o-1/adoption-tail/d10-f1-tail-1c76b0-rollback-governance.log.gz": "f80a871297336dab63158daac8c7ec703a36f465a458fea84319e23f7e807a10",
+    "docs/evidence/syzygy-k54o-1/adoption-tail/d10-f1-tail-1c76b0-rollback-proof.json": "4ddfb7eb0d5258fdb1d1a26b98dd6e92b49516bb717b582e4c11adc1cd2274f3",
+    "docs/evidence/syzygy-k54o-1/adoption-tail/d10-f1-tail-421dc8-p115-hosted.log.gz": "f0c17629ab64c3dc2ee827b7e3a24b45a074aab9a9ebca49dbd41b9fe750f5d3",
+    "docs/evidence/syzygy-k54o-1/adoption-tail/d10-f1-tail-421dc8-reconciliation-selftest.log.gz": "aeabe100b140f1c67c525131c6a7e72595a2a0f8cf7ee686d01f70a3ef273422",
+    "docs/evidence/syzygy-k54o-1/adoption-tail/d10-f1-tail-421dc8-rollback-governance.log.gz": "a8dad3556064a8bf146dfb35d873d47aa89e28d7c8b6a9e7f760a6ee306ec684",
+    "docs/evidence/syzygy-k54o-1/adoption-tail/d10-f1-tail-421dc8-rollback-proof.json": "7022071442d3d88abbd12cd8447a8e0c3e5181a8c888fb7afb7d041ba8cdeaf5",
+    "docs/evidence/syzygy-k54o-1/adoption-tail/d10-f1-tail-421dc8-selftest-witnesses.json": "6dd594dab6ba67f7b15857f9449807bda386fd064a26949b8f7a9992f41ad29d",
+    "docs/evidence/syzygy-k54o-1/adoption-tail/d10-f1-tail-acd300-reconciliation-selftest.log.gz": "7cd3003f72afc1fd9e87c131cbab8e04650a79b44dccc71006de3aa98cc407d7",
+    "docs/evidence/syzygy-k54o-1/adoption-tail/d10-f1-tail-acd300-rollback-governance.log.gz": "68083b0026c5bf43c2a7dedd40e1959cea4840d4634d318eac8baf7f086fc1b5",
+    "docs/evidence/syzygy-k54o-1/adoption-tail/d10-f1-tail-acd300-rollback-proof.json": "f97c24b467ecf9422287ad0e7c56e35cbfb1d982ef8676b682351e7e92bd48b1",
+    "docs/evidence/syzygy-k54o-1/adoption-tail/d10-f1-tail-acd300-selftest-witnesses.json": "4fdbe9bbfe4d9f96cc043faa49c8a993443a07567e78938322ba15da85820752",
+    "docs/evidence/syzygy-k54o-1/adoption-tail/d10-f1-tail-bc5d7c-rollback-governance.log.gz": "69f17338f338739022283e1e65ec740fd0b98f6054a66fec30c00206830d33af",
+    "docs/evidence/syzygy-k54o-1/adoption-tail/d10-f1-tail-bc5d7c-rollback-proof.json": "5d7029749bc0918bfedad39f7e3f03952cb74a669830a703318c1cba80406ba8",
+    "docs/evidence/syzygy-k54o-1/adoption-tail/d10-f1-tail-dangling-targeted.json": "c2715a056d8752078f305e1c8be908d5e24a87ca80aa08e747cb122830bffd7f",
+    "docs/evidence/syzygy-k54o-1/adoption-tail/d10-f1-tail-dangling-targeted.log.gz": "89fcb9747f597ca6301fa38e47f797be9f36c53951092e9c8b7dfabbf6a4c79d",
+    "docs/evidence/syzygy-k54o-1/adoption-tail/d10-f1-tail-failure-matrix-v2.json": "0949f4e93449a557c5c4b8d89922eee4d55e6746e9becc9946e8d3f847165c83",
+    "docs/evidence/syzygy-k54o-1/adoption-tail/d10-f1-tail-p115-helper-selftest.log.gz": "d9b9e988429ad69b054d31762a3830882ce048a364018d889a2456a5d2b2b02c",
+    "docs/evidence/syzygy-k54o-1/adoption-tail/d10-f1-tail-p115-historical-selftest.log.gz": "21dde84df0244625ce0da6a1a67919a684bec734518d23023db7fdb0f1bc36ce",
+    "docs/evidence/syzygy-k54o-1/adoption-tail/test-delta.json": "9bb25dc1cfeb9260e20f46583e8bf708c6e77fd7516f09a2a4dc0b73d38ae197",
+    "docs/reviews/syzygy-k54o-1/R-D10-F1-TAIL-1-RAW.md": "a34262583218acd45cdd55eb1b5ad753e4cf4b701ff5e68725321ebaccafa579",
+    "docs/reviews/syzygy-k54o-1/R-D10-F1-TAIL-2-RAW.md": "09fd004781e5ee8ea4a8627433ae4789a6306b869e33ea2337a7040017f190c7",
+    "docs/reviews/syzygy-k54o-1/R-D10-F1-TAIL-3-RAW.md": "cedd8e6b7a7dc935e894dc55901895648c6e50323e8c91cfaa031e42790cd1bf",
+    "docs/reviews/syzygy-k54o-1/R-D10-F1-TAIL-4-RAW.md": "100712dab225e5a9e13d3fe73bf3a27b6504abc7fc6856b229225a2a7f56020d",
+    "docs/reviews/syzygy-k54o-1/R-D10-F1-TAIL-5-RAW.md": "5e6f5e56cbb98486bf1c2aaf5869a50feefb39bc2b392bd988568deb6f395230",
+    "openspec/README.md": "6fb1566286c26267a55531de26ffcd72b9d8a2d6c282b0354e0a7918403aff34",
+    "openspec/changes/dossier-declared-source-model/README.md": "9fc3c6eaecfae376f65913b854702af9cca0474a2f2dd90a78006adae0ea8f93",
+    "openspec/changes/dossier-declared-source-model/tasks.md": "cf873195db4397091d38d3b027f61a96f21f53218486d734d92dfd81657a92ab",
+    "scripts/build_polaris_dependency_unions.py": "4b910c855a7d1f5624c32386904d17f2061ef852025dbb1f576e15833ae4567a",
+    "scripts/check_spec_reconciliation.py": "66d738a2b83d61e808e0609f1416e9c89e4ed531bcccfa3ef32bde84c29da159",
+    "scripts/prepare_three_surface_poc_governedby_reference_recording.py": "d276d6cee68988a3278b0d90eaba1b5dbf5f11cdc835c6c1ae34c0a0731ce128"
+  },
+  "gateStartedAt": "2026-11-18T18:44:59.205750+00:00",
+  "exit": 1,
+  "seconds": 626.9870022399991,
+  "finishedAt": "2026-11-18T18:55:26.193234+00:00",
+  "log": "/home/orca/.tmp/syzygy-beads-looper-20261114-54ebc9f1/d10-f1-tail-full-787ec185e6.log",
+  "logSha256": "eb140368ebb8efcec7a4b7181fb61373c5045a5e675cf603e28f07458bc49de2",
+  "changedFilesUnchanged": true,
+  "headUnchanged": true,
+  "trackedClean": true,
+  "summaries": [
+    {
+      "line": 2,
+      "text": "> check:all"
+    },
+    {
+      "line": 10,
+      "text": "> typecheck"
+    },
+    {
+      "line": 462,
+      "text": "Test Files  187 passed (187)"
+    },
+    {
+      "line": 463,
+      "text": "Tests  4496 passed | 1 skipped (4497)"
+    },
+    {
+      "line": 471,
+      "text": "> test:tiers"
+    },
+    {
+      "line": 479,
+      "text": "> test:integration"
+    },
+    {
+      "line": 538,
+      "text": "Test Files  1 failed (1)"
+    },
+    {
+      "line": 539,
+      "text": "Tests  1 failed (1)"
+    },
+    {
+      "line": 564,
+      "text": "Test Files  1 failed (1)"
+    },
+    {
+      "line": 565,
+      "text": "Tests  no tests"
+    },
+    {
+      "line": 593,
+      "text": "Test Files  1 failed (1)"
+    },
+    {
+      "line": 594,
+      "text": "Tests  1 failed (1)"
+    },
+    {
+      "line": 906,
+      "text": "Test Files  96 passed (96)"
+    },
+    {
+      "line": 907,
+      "text": "Tests  2882 passed | 3 skipped (2885)"
+    },
+    {
+      "line": 912,
+      "text": "> test:e2e"
+    },
+    {
+      "line": 925,
+      "text": "Test Files  1 passed (1)"
+    },
+    {
+      "line": 926,
+      "text": "Tests  5 passed (5)"
+    },
+    {
+      "line": 1014,
+      "text": "Test Files  14 passed (14)"
+    },
+    {
+      "line": 1015,
+      "text": "Tests  135 passed | 2 skipped (137)"
+    },
+    {
+      "line": 1020,
+      "text": "> test:system"
+    },
+    {
+      "line": 1051,
+      "text": "Test Files  10 passed | 1 skipped (11)"
+    },
+    {
+      "line": 1052,
+      "text": "Tests  52 passed | 1 skipped (53)"
+    },
+    {
+      "line": 1057,
+      "text": "> check:battery"
+    },
+    {
+      "line": 1244,
+      "text": "battery: 134 ok, 10 failed, 144 commands"
+    }
+  ]
+}

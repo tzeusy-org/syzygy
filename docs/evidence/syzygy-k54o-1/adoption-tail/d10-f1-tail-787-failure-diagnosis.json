@@ -1,0 +1,41 @@
+{
+  "subjectCommit": "787ec185e60f3717fa71dec05fdada37e7e7585d",
+  "result": "FAILED",
+  "seconds": 626.9870022399991,
+  "unit": {
+    "passed": 4496,
+    "skipped": 1
+  },
+  "integration": {
+    "passed": 2882,
+    "skipped": 3
+  },
+  "browser": {
+    "passed": 140,
+    "skipped": 2
+  },
+  "system": {
+    "passed": 52,
+    "skipped": 1
+  },
+  "battery": {
+    "ok": 134,
+    "failed": 10,
+    "commands": 144
+  },
+  "failedCommandLabels": [
+    "python3 scripts/build_polaris_dossier_local_agent_mode.py --check # dossier local-agent package: absent, un...",
+    "python3 scripts/build_polaris_dossier_local_agent_mode_v1_1.py --check # dossier v1.1 package: absent, unap...",
+    "python3 scripts/build_polaris_dossier_local_agent_mode_v1_2.py --check # dossier v1.2 package: absent, unap...",
+    "python3 scripts/build_polaris_dossier_local_agent_mode_v1_3.py --check # dossier v1.3 package: absent, unap...",
+    "python3 scripts/build_polaris_dossier_local_agent_mode_v1_4.py --check # dossier v1.4: signed layer over v1...",
+    "python3 scripts/build_polaris_dossier_local_agent_mode_v1_5.py --check # dossier v1.5: signed layer over v1...",
+    "python3 scripts/build_polaris_dossier_local_agent_mode_v1_6.py --check # dossier v1.6: signed layer over v1...",
+    "python3 scripts/build_polaris_dossier_launch_consent.py --check # dossier launch-consent package: absent, u...",
+    "python3 scripts/build_polaris_dossier_launch_consent_v1_1.py --check # dossier launch-consent v1.1 package:...",
+    "python3 scripts/build_polaris_dossier_launch_consent_v1_2.py --check # dossier launch-consent v1.2 package:..."
+  ],
+  "commonFinding": "PROJECT-STATUS.md figure (38,277) differs from predecessor recount (38,329)",
+  "logSha256": "eb140368ebb8efcec7a4b7181fb61373c5045a5e675cf603e28f07458bc49de2",
+  "tracking": "Historical failure; no readiness or waiver; counter correction on6383bc, new finalhead gate required."
+}

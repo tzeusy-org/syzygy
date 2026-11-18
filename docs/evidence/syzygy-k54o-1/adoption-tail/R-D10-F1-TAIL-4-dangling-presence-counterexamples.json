@@ -1,0 +1,32 @@
+{
+  "subject": "1560b6ee103b5161f23c8768a00f7827c09a438b",
+  "cases": [
+    {
+      "case": "change-directory",
+      "path": "openspec/changes/dossier-declared-source-model",
+      "symlinkPresent": true,
+      "inactive": true,
+      "bindingApplies": false,
+      "recordFindings": [],
+      "subjectFindings": []
+    },
+    {
+      "case": "d10-act",
+      "path": ".syzygy/governance/decisions/GOVERNANCE-SIMPLIFICATION-D10-ACT.md",
+      "symlinkPresent": true,
+      "inactive": true,
+      "bindingApplies": false,
+      "recordFindings": [],
+      "subjectFindings": []
+    },
+    {
+      "case": "policy-subject",
+      "path": ".syzygy/governance/policies/POLARIS-DOSSIER-DECLARED-SOURCE-POLICY-v1.json",
+      "symlinkPresent": true,
+      "inactive": true,
+      "bindingApplies": false,
+      "recordFindings": [],
+      "subjectFindings": []
+    }
+  ]
+}

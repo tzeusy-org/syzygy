@@ -1,0 +1,277 @@
+{
+  "subject": "787ec185e60f3717fa71dec05fdada37e7e7585d",
+  "tree": "e7f0dbcb204b518d9885f9fab95987019c8810b8",
+  "retentionPathDenominator": 39,
+  "manifestArtifactDenominator": 35,
+  "manifestChecks": [
+    {
+      "path": "docs/reviews/syzygy-k54o-1/R-D10-F1-TAIL-1-RAW.md",
+      "storedDigestMatches": true,
+      "sourceDigestMatches": true,
+      "decodedDigestMatches": true,
+      "exactBytesMatch": true
+    },
+    {
+      "path": "docs/reviews/syzygy-k54o-1/R-D10-F1-TAIL-2-RAW.md",
+      "storedDigestMatches": true,
+      "sourceDigestMatches": true,
+      "decodedDigestMatches": true,
+      "exactBytesMatch": true
+    },
+    {
+      "path": "docs/evidence/syzygy-k54o-1/adoption-tail/R-D10-F1-TAIL-1-counterexamples.json",
+      "storedDigestMatches": true,
+      "sourceDigestMatches": true,
+      "decodedDigestMatches": true,
+      "exactBytesMatch": true
+    },
+    {
+      "path": "docs/evidence/syzygy-k54o-1/adoption-tail/R-D10-F1-TAIL-1-revert-composition.json",
+      "storedDigestMatches": true,
+      "sourceDigestMatches": true,
+      "decodedDigestMatches": true,
+      "exactBytesMatch": true
+    },
+    {
+      "path": "docs/evidence/syzygy-k54o-1/adoption-tail/R-D10-F1-TAIL-2-independent-evidence.json",
+      "storedDigestMatches": true,
+      "sourceDigestMatches": true,
+      "decodedDigestMatches": true,
+      "exactBytesMatch": true
+    },
+    {
+      "path": "docs/evidence/syzygy-k54o-1/adoption-tail/d10-f1-tail-acd300-selftest-witnesses.json",
+      "storedDigestMatches": true,
+      "sourceDigestMatches": true,
+      "decodedDigestMatches": true,
+      "exactBytesMatch": true
+    },
+    {
+      "path": "docs/evidence/syzygy-k54o-1/adoption-tail/d10-f1-tail-acd300-reconciliation-selftest.log.gz",
+      "storedDigestMatches": true,
+      "sourceDigestMatches": true,
+      "decodedDigestMatches": true,
+      "exactBytesMatch": true
+    },
+    {
+      "path": "docs/evidence/syzygy-k54o-1/adoption-tail/d10-f1-tail-421dc8-selftest-witnesses.json",
+      "storedDigestMatches": true,
+      "sourceDigestMatches": true,
+      "decodedDigestMatches": true,
+      "exactBytesMatch": true
+    },
+    {
+      "path": "docs/evidence/syzygy-k54o-1/adoption-tail/d10-f1-tail-421dc8-reconciliation-selftest.log.gz",
+      "storedDigestMatches": true,
+      "sourceDigestMatches": true,
+      "decodedDigestMatches": true,
+      "exactBytesMatch": true
+    },
+    {
+      "path": "docs/evidence/syzygy-k54o-1/adoption-tail/d10-f1-tail-acd300-rollback-proof.json",
+      "storedDigestMatches": true,
+      "sourceDigestMatches": true,
+      "decodedDigestMatches": true,
+      "exactBytesMatch": true
+    },
+    {
+      "path": "docs/evidence/syzygy-k54o-1/adoption-tail/d10-f1-tail-acd300-rollback-governance.log.gz",
+      "storedDigestMatches": true,
+      "sourceDigestMatches": true,
+      "decodedDigestMatches": true,
+      "exactBytesMatch": true
+    },
+    {
+      "path": "docs/evidence/syzygy-k54o-1/adoption-tail/d10-f1-tail-421dc8-rollback-proof.json",
+      "storedDigestMatches": true,
+      "sourceDigestMatches": true,
+      "decodedDigestMatches": true,
+      "exactBytesMatch": true
+    },
+    {
+      "path": "docs/evidence/syzygy-k54o-1/adoption-tail/d10-f1-tail-421dc8-rollback-governance.log.gz",
+      "storedDigestMatches": true,
+      "sourceDigestMatches": true,
+      "decodedDigestMatches": true,
+      "exactBytesMatch": true
+    },
+    {
+      "path": "docs/evidence/syzygy-k54o-1/adoption-tail/d10-f1-tail-1c76b0-rollback-proof.json",
+      "storedDigestMatches": true,
+      "sourceDigestMatches": true,
+      "decodedDigestMatches": true,
+      "exactBytesMatch": true
+    },
+    {
+      "path": "docs/evidence/syzygy-k54o-1/adoption-tail/d10-f1-tail-1c76b0-rollback-governance.log.gz",
+      "storedDigestMatches": true,
+      "sourceDigestMatches": true,
+      "decodedDigestMatches": true,
+      "exactBytesMatch": true
+    },
+    {
+      "path": "docs/evidence/syzygy-k54o-1/adoption-tail/d10-f1-tail-421dc8-p115-hosted.log.gz",
+      "storedDigestMatches": true,
+      "sourceDigestMatches": true,
+      "decodedDigestMatches": true,
+      "exactBytesMatch": true
+    },
+    {
+      "path": "docs/reviews/syzygy-k54o-1/R-D10-F1-TAIL-3-RAW.md",
+      "storedDigestMatches": true,
+      "sourceDigestMatches": true,
+      "decodedDigestMatches": true,
+      "exactBytesMatch": true
+    },
+    {
+      "path": "docs/evidence/syzygy-k54o-1/adoption-tail/R-D10-F1-TAIL-3-independent-evidence.json",
+      "storedDigestMatches": true,
+      "sourceDigestMatches": true,
+      "decodedDigestMatches": true,
+      "exactBytesMatch": true
+    },
+    {
+      "path": "docs/evidence/syzygy-k54o-1/adoption-tail/R-D10-F1-TAIL-3-historical-outcomes-counterexample.json",
+      "storedDigestMatches": true,
+      "sourceDigestMatches": true,
+      "decodedDigestMatches": true,
+      "exactBytesMatch": true
+    },
+    {
+      "path": "docs/evidence/syzygy-k54o-1/adoption-tail/d10-f1-tail-failure-matrix-v2.json",
+      "storedDigestMatches": true,
+      "sourceDigestMatches": true,
+      "decodedDigestMatches": true,
+      "exactBytesMatch": true
+    },
+    {
+      "path": "docs/evidence/syzygy-k54o-1/adoption-tail/d10-f1-tail-1560b6-rollback-proof.json",
+      "storedDigestMatches": true,
+      "sourceDigestMatches": true,
+      "decodedDigestMatches": true,
+      "exactBytesMatch": true
+    },
+    {
+      "path": "docs/evidence/syzygy-k54o-1/adoption-tail/d10-f1-tail-1560b6-rollback-governance.log.gz",
+      "storedDigestMatches": true,
+      "sourceDigestMatches": true,
+      "decodedDigestMatches": true,
+      "exactBytesMatch": true
+    },
+    {
+      "path": "docs/reviews/syzygy-k54o-1/R-D10-F1-TAIL-4-RAW.md",
+      "storedDigestMatches": true,
+      "sourceDigestMatches": true,
+      "decodedDigestMatches": true,
+      "exactBytesMatch": true
+    },
+    {
+      "path": "docs/evidence/syzygy-k54o-1/adoption-tail/R-D10-F1-TAIL-4-independent-evidence.json",
+      "storedDigestMatches": true,
+      "sourceDigestMatches": true,
+      "decodedDigestMatches": true,
+      "exactBytesMatch": true
+    },
+    {
+      "path": "docs/evidence/syzygy-k54o-1/adoption-tail/R-D10-F1-TAIL-4-dangling-presence-counterexamples.json",
+      "storedDigestMatches": true,
+      "sourceDigestMatches": true,
+      "decodedDigestMatches": true,
+      "exactBytesMatch": true
+    },
+    {
+      "path": "docs/evidence/syzygy-k54o-1/adoption-tail/d10-f1-tail-1560b6-selftest-witnesses.json",
+      "storedDigestMatches": true,
+      "sourceDigestMatches": true,
+      "decodedDigestMatches": true,
+      "exactBytesMatch": true
+    },
+    {
+      "path": "docs/evidence/syzygy-k54o-1/adoption-tail/d10-f1-tail-1560b6-reconciliation-selftest.log.gz",
+      "storedDigestMatches": true,
+      "sourceDigestMatches": true,
+      "decodedDigestMatches": true,
+      "exactBytesMatch": true
+    },
+    {
+      "path": "docs/evidence/syzygy-k54o-1/adoption-tail/d10-f1-tail-p115-helper-selftest.log.gz",
+      "storedDigestMatches": true,
+      "sourceDigestMatches": true,
+      "decodedDigestMatches": true,
+      "exactBytesMatch": true
+    },
+    {
+      "path": "docs/evidence/syzygy-k54o-1/adoption-tail/d10-f1-tail-p115-historical-selftest.log.gz",
+      "storedDigestMatches": true,
+      "sourceDigestMatches": true,
+      "decodedDigestMatches": true,
+      "exactBytesMatch": true
+    },
+    {
+      "path": "docs/evidence/syzygy-k54o-1/adoption-tail/d10-f1-tail-dangling-targeted.json",
+      "storedDigestMatches": true,
+      "sourceDigestMatches": true,
+      "decodedDigestMatches": true,
+      "exactBytesMatch": true
+    },
+    {
+      "path": "docs/evidence/syzygy-k54o-1/adoption-tail/d10-f1-tail-dangling-targeted.log.gz",
+      "storedDigestMatches": true,
+      "sourceDigestMatches": true,
+      "decodedDigestMatches": true,
+      "exactBytesMatch": true
+    },
+    {
+      "path": "docs/evidence/syzygy-k54o-1/adoption-tail/d10-f1-tail-bc5d7c-rollback-proof.json",
+      "storedDigestMatches": true,
+      "sourceDigestMatches": true,
+      "decodedDigestMatches": true,
+      "exactBytesMatch": true
+    },
+    {
+      "path": "docs/evidence/syzygy-k54o-1/adoption-tail/d10-f1-tail-bc5d7c-rollback-governance.log.gz",
+      "storedDigestMatches": true,
+      "sourceDigestMatches": true,
+      "decodedDigestMatches": true,
+      "exactBytesMatch": true
+    },
+    {
+      "path": "docs/reviews/syzygy-k54o-1/R-D10-F1-TAIL-5-RAW.md",
+      "storedDigestMatches": true,
+      "sourceDigestMatches": true,
+      "decodedDigestMatches": true,
+      "exactBytesMatch": true
+    },
+    {
+      "path": "docs/evidence/syzygy-k54o-1/adoption-tail/R-D10-F1-TAIL-5-independent-evidence.json",
+      "storedDigestMatches": true,
+      "sourceDigestMatches": true,
+      "decodedDigestMatches": true,
+      "exactBytesMatch": true
+    }
+  ],
+  "extraDocumentationPaths": [
+    "docs/evidence/syzygy-k54o-1/README.md",
+    "docs/evidence/syzygy-k54o-1/adoption-tail/README.md",
+    "docs/evidence/syzygy-k54o-1/adoption-tail/artifact-manifest.json",
+    "docs/evidence/syzygy-k54o-1/adoption-tail/test-delta.json"
+  ],
+  "unchangedSourcePathDenominator": 9,
+  "unchangedSourcePaths": [
+    ".syzygy/governance/decisions/AGENT-ADOPTIONS.md",
+    "PROJECT-STATUS.md",
+    "docs/evidence/spec-readability-reconciliation-2026-10-02/census.json",
+    "openspec/README.md",
+    "openspec/changes/dossier-declared-source-model/README.md",
+    "openspec/changes/dossier-declared-source-model/tasks.md",
+    "scripts/build_polaris_dependency_unions.py",
+    "scripts/check_spec_reconciliation.py",
+    "scripts/prepare_three_surface_poc_governedby_reference_recording.py"
+  ],
+  "caseIdentityDenominator": 44,
+  "caseKinds": {
+    "refusal mutation": 42,
+    "control": 2
+  },
+  "raw5ExactVerbatim": true
+}

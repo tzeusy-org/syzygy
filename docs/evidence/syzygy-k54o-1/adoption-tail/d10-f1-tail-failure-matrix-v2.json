@@ -1,0 +1,18 @@
+{
+  "subjectBefore": "1c76b0a4c6d49498e76b27bcc87d7e26947c313f",
+  "actualFailure": "P115 historical/current-tools replay229cases,3failed; helper import fixed but wholly absent amendment adds current-adoption R1/R2 errors",
+  "acceptedBehavior": [
+    "Actual current adoption requires one complete A4 with Why/mainline/3immutable subject identities, verified D10 and exact reviewed bytes",
+    "Wholly absent historical amendment has no change directory/A4/3subjects/D10act; inactive with no phantom record/subject denominator",
+    "Any one presence signal restores strict binding refusal without partial application",
+    "Actual P115 historical/current-tools replay must pass; no synthetic D10 act installed",
+    "Actual tail rollback restores source109paths, preserves append-only ledger and passes governance"
+  ],
+  "existingProtectionsRetained": [
+    "current missing-row",
+    "invalidD10",
+    "three changedsubjects",
+    "five exactMODIFIED IDs and only046rename",
+    "no source/provider runtime use"
+  ]
+}
