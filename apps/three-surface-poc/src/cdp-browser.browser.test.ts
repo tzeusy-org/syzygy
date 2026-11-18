@@ -101,7 +101,8 @@ async function runLifetimeScenario(mode: 'SIGTERM' | 'SIGKILL' | 'startup'): Pro
           `process.stdout.write('ready\\n');\n`
         :
         `const browser = await launchBrowser(${JSON.stringify(executable)});\n` +
-        `const page = await browser.newPage(); await page.navigate('data:text/html,<p>parent lifetime</p>');\n` +
+        // The lifetime oracle needs a live page and helper, without waiting for a document load.
+        `await browser.newPage();\n` +
         `process.stdout.write('ready\\n'); setInterval(() => {}, 1000);\n`;
       writeFileSync(worker, `import { launchBrowser } from ${JSON.stringify(module)};\n` + body);
       const child = spawn('python3', [fileURLToPath(new URL('./test-fixtures/browser-parent-death.py', import.meta.url)), mode, worker, process.execPath,
@@ -115,7 +116,7 @@ async function runLifetimeScenario(mode: 'SIGTERM' | 'SIGKILL' | 'startup'): Pro
         child.once('error', reject);
         child.once('exit', resolve);
       });
-      expect(code, errors).toBe(0);
+      expect(code, [errors, output].filter(Boolean).join('\n')).toBe(0);
       const report = JSON.parse(output) as {
         milestone: { helpers: unknown[] }; decoySurvived: boolean;
         after: { procFamilyDenominator: number; proc: unknown[]; psFamily: unknown[] };

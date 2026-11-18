@@ -1,0 +1,87 @@
+[
+  {
+    "subject": "26b2ef360431ab71c02dcde47643665dc153b8c7",
+    "path": "apps/three-surface-poc/src/test-fixtures/browser-parent-death.py",
+    "gitBlob": "301cfe6b1988e71c559511d6df329c64e4d21642",
+    "sha256": "6f0a59ffab17a810b5e410e97e1ae44adbd080174280c02fcb9e61dd90edf308"
+  },
+  {
+    "subject": "26b2ef360431ab71c02dcde47643665dc153b8c7",
+    "path": "apps/three-surface-poc/src/cdp-browser.browser.test.ts",
+    "gitBlob": "4d1a6bc2b1046d263729865e468c33425caca6c3",
+    "sha256": "d5a59ac51c69dce9bff12e1ab3a1da324f8e38a3eb806f7ea90ef9683194923a"
+  },
+  {
+    "subject": "26b2ef360431ab71c02dcde47643665dc153b8c7",
+    "path": "apps/three-surface-poc/src/cdp-browser.ts",
+    "gitBlob": "894598eab7e4a4ff5dbf1c123cdd90713a0fee73",
+    "sha256": "aa617d7cc22df8857cfe70fe3617d0e36964b5abf558af55645fae053846ae6f"
+  },
+  {
+    "subject": "26b2ef360431ab71c02dcde47643665dc153b8c7",
+    "path": "apps/three-surface-poc/src/temporary-directory.ts",
+    "gitBlob": "dec34c2e3e462db7120f851402e4835eb66badcf",
+    "sha256": "d96620743f61f2e9eae9adc78a50e797554f4352b492776ccde23eb6597e88f1"
+  },
+  {
+    "subject": "26b2ef360431ab71c02dcde47643665dc153b8c7",
+    "path": "scripts/poc_browser_lifetime.py",
+    "gitBlob": "44f5171b9bba95774b023e30429e861c7d09c73f",
+    "sha256": "27e36020e866e16c086baf6ff744423a0b9e7186ecda7c87f5941784492bda4e"
+  },
+  {
+    "subject": "3c31e749897416c68179734d6980e25332570d96",
+    "path": "apps/three-surface-poc/src/test-fixtures/browser-parent-death.py",
+    "gitBlob": "301cfe6b1988e71c559511d6df329c64e4d21642",
+    "sha256": "6f0a59ffab17a810b5e410e97e1ae44adbd080174280c02fcb9e61dd90edf308"
+  },
+  {
+    "subject": "3c31e749897416c68179734d6980e25332570d96",
+    "path": "apps/three-surface-poc/src/cdp-browser.browser.test.ts",
+    "gitBlob": "4d1a6bc2b1046d263729865e468c33425caca6c3",
+    "sha256": "d5a59ac51c69dce9bff12e1ab3a1da324f8e38a3eb806f7ea90ef9683194923a"
+  },
+  {
+    "subject": "3c31e749897416c68179734d6980e25332570d96",
+    "path": "apps/three-surface-poc/src/cdp-browser.ts",
+    "gitBlob": "894598eab7e4a4ff5dbf1c123cdd90713a0fee73",
+    "sha256": "aa617d7cc22df8857cfe70fe3617d0e36964b5abf558af55645fae053846ae6f"
+  },
+  {
+    "subject": "3c31e749897416c68179734d6980e25332570d96",
+    "path": "apps/three-surface-poc/src/temporary-directory.ts",
+    "gitBlob": "dec34c2e3e462db7120f851402e4835eb66badcf",
+    "sha256": "d96620743f61f2e9eae9adc78a50e797554f4352b492776ccde23eb6597e88f1"
+  },
+  {
+    "subject": "3c31e749897416c68179734d6980e25332570d96",
+    "path": "scripts/poc_browser_lifetime.py",
+    "gitBlob": "44f5171b9bba95774b023e30429e861c7d09c73f",
+    "sha256": "27e36020e866e16c086baf6ff744423a0b9e7186ecda7c87f5941784492bda4e"
+  },
+  {
+    "path": "/home/orca/.tmp/syzygy-beads-looper-20261114-54ebc9f1/d10-f1-queue-e2e.log",
+    "sha256": "a5fdeea5ba7b7ba0b0b6797a00f957b18a2eaf8077cc9afaa0ccfbd290946fe7",
+    "bytes": 59169
+  },
+  {
+    "path": "/home/orca/.tmp/syzygy-beads-looper-20261114-54ebc9f1/d10-f1-queue-node-jobs.json",
+    "sha256": "3473e519d813c24559ed03c93a37410ac669030fa71e54eb8adbfc3ce43e6f43",
+    "bytes": 498
+  },
+  {
+    "path": "/home/orca/.tmp/syzygy-beads-looper-20261114-54ebc9f1/d10-f1-queue-watch-result.json",
+    "sha256": "a0d8f9690231a613a60b77bd6fedf885f9c7870876269db4f64673c7e4b58510",
+    "bytes": 1281
+  },
+  {
+    "path": "/home/orca/.tmp/syzygy-beads-looper-20261114-54ebc9f1/d10-f1-confirmed-queue-state.json",
+    "sha256": "82b50fea19cf2e76fc8a8d885d4902755462f9632e707f70c6f4e2172589c010",
+    "bytes": 313
+  },
+  {
+    "path": "/home/orca/.tmp/syzygy-beads-looper-20261114-54ebc9f1/d10-f1-prequeue-e2e.log",
+    "sha256": "83d6eabe4ddf1798368d19e0790fe8cfe213f555e4f8590ae380c52a96be67e4",
+    "bytes": 81575
+  }
+]
