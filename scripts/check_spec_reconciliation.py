@@ -672,6 +672,17 @@ def read_text(root, rel):
 ACT_INSTANT = re.compile(r"^Act instant: (\S+)$", re.M)
 
 
+def declared_source_absent(root):
+    """True only for a wholly absent pre-D10 amendment, never a partial one."""
+    rows = ([cell.strip() for cell in line.split("|")[1:-1]]
+            for line in (read_text(root, AGENT_ADOPTIONS) or "").splitlines())
+    has_row = any(cells and cells[0] == DECLARED_SOURCE_ROW for cells in rows)
+    paths = [f"{CHANGES}/{DECLARED_SOURCE_CHANGE}",
+             f"{DECISIONS}/GOVERNANCE-SIMPLIFICATION-D10-ACT.md",
+             *DECLARED_SOURCE_SUBJECTS]
+    return not has_row and not any((root / rel).exists() for rel in paths)
+
+
 def declared_source_binding(root):
     """(applicable text, record findings, byte findings) for the explicit v2.0.
 
@@ -680,6 +691,8 @@ def declared_source_binding(root):
     the append-only row's declaration, as it does older versioned records.
     Missing, malformed or changed inputs map no part of the amendment.
     """
+    if declared_source_absent(root):
+        return None, [], []
     records, subjects = [], []
     sys.path.insert(0, str(Path(__file__).resolve().parent))
     import d10_supersession
@@ -1023,8 +1036,9 @@ def check_outcomes(root, report):
             check_versioned({"package": change, "version": version},
                             f"{tag} ({Path(rel).name})", aggregate, text, r1)
     _amendment, agent_records, agent_subjects = declared_source_binding(root)
-    records += 1
-    subjects_seen += len(DECLARED_SOURCE_SUBJECTS)
+    if not declared_source_absent(root):
+        records += 1
+        subjects_seen += len(DECLARED_SOURCE_SUBJECTS)
     r1 += agent_records
     r2 += agent_subjects
     report.add("R1", "terminal outcome for every child", records, r1,
@@ -1032,7 +1046,8 @@ def check_outcomes(root, report):
                "additions; digest acts: phrase = manifest sha256 and in the "
                "aggregate; versioned: package/version/tag and one aggregate "
                "block; adopted additions: the declared record names the spec; "
-               "declared-source: one VIS-4 ledger row and verified D10 record")
+               "declared-source: one VIS-4 ledger row and verified D10 record "
+               "when present; wholly absent pre-D10 amendment is inactive")
     report.add("R2", "reviewed and signed subjects hash to their rows", subjects_seen, r2)
 
 
@@ -2373,6 +2388,73 @@ def declared_source_mutants():
     ]
 
 
+def declared_source_historical_cases(tmp, base, clean, witnesses, failures):
+    """Absent historical amendment is inactive; each partial presence refuses."""
+    tree = Path(tmp) / "declared-historical"
+    shutil.copytree(base, tree)
+    change = f"{CHANGES}/{DECLARED_SOURCE_CHANGE}"
+    act = f"{DECISIONS}/GOVERNANCE-SIMPLIFICATION-D10-ACT.md"
+    shutil.rmtree(tree / change)
+    for rel in (*DECLARED_SOURCE_SUBJECTS, act):
+        (tree / rel).unlink(missing_ok=True)
+    ledger = tree / AGENT_ADOPTIONS
+    original = ledger.read_text()
+    row = next(line for line in original.splitlines()
+               if line.startswith(f"| {DECLARED_SOURCE_ROW} |"))
+    absent_ledger = original.replace(row + "\n", "")
+    ledger.write_text(absent_ledger)
+    report = Report()
+    check_outcomes(tree, report)
+
+    def examined(result, rid):
+        return next(int(match.group(1)) for line in result.lines
+                    if (match := re.match(rf"OK +{rid}  .* — (\d+) examined", line)))
+
+    held = (declared_source_absent(tree)
+            and declared_source_binding(tree) == (None, [], [])
+            and not report.failed
+            and examined(report, "R1") == examined(clean, "R1") - 1
+            and examined(report, "R2") == examined(clean, "R2") - 3)
+    witnesses.append({"mutant": "declared-historical-control", "path": change,
+                      "old": "<no amendment, row, subjects or D10 act>",
+                      "new": "<unchanged>", "expected": "inactive; no phantom R1/R2 subjects",
+                      "failed": sorted(report.failed), "outcome": "held" if held else "FAILED"})
+    if not held:
+        failures.append("declared-historical-control: wholly absent amendment must be inactive")
+    signals = [("directory", change, None), ("row", AGENT_ADOPTIONS, row + "\n"),
+               ("act", act, (base / act).read_text())]
+    signals += [(f"subject-{index}", rel, (base / rel).read_text())
+                for index, rel in enumerate(DECLARED_SOURCE_SUBJECTS, 1)]
+    for name, rel, body in signals:
+        target = tree / rel
+        if body is None:
+            target.mkdir(parents=True)
+        elif rel == AGENT_ADOPTIONS:
+            target.write_text(absent_ledger + body)
+        else:
+            target.parent.mkdir(parents=True, exist_ok=True)
+            target.write_text(body)
+        text, records, subjects = declared_source_binding(tree)
+        caught = not declared_source_absent(tree) and text is None and bool(records or subjects)
+        witnesses.append({"mutant": f"declared-historical-partial-{name}", "path": rel,
+                          "old": "<absent>" if rel != AGENT_ADOPTIONS else absent_ledger,
+                          "new": "<empty directory>" if body is None else "<restore subject file>",
+                          "source_sha256": None if body is None else sha(body.encode("utf-8")),
+                          "expected": "R1/R2 refusal; no amendment",
+                          "failed": records + subjects, "outcome": "killed" if caught else "SURVIVED"})
+        if not caught:
+            failures.append(f"declared-historical-partial-{name}: partial presence must refuse")
+        if rel == AGENT_ADOPTIONS:
+            target.write_text(absent_ledger)
+        elif body is None:
+            target.rmdir()
+        else:
+            target.unlink()
+            # A restored spec creates the change directory, itself a presence signal.
+            if rel.startswith(change + "/"):
+                shutil.rmtree(tree / change)
+
+
 def declared_source_composition_cases(witnesses, failures):
     """Exercise both structural guards directly, apart from byte-binding refusal."""
     additions = [(change, read_text(ROOT, rel) or "")
@@ -2840,6 +2922,7 @@ def _selftest_cases(tmp, commit, witnesses, failures, witness_path, base, clean,
         if failure is not None:
             failures.append(failure)
     _entry_kind_cases(tmp, base, witnesses, failures)
+    declared_source_historical_cases(tmp, base, clean, witnesses, failures)
     declared_source_composition_cases(witnesses, failures)
     # Two cases a one-file mutation cannot express. A second record of the
     # same version fails R1 by its own finding; --regenerate refuses an
