@@ -132,3 +132,18 @@ Additional exact fragment replacements:
 ## Round2 specification corrections
 
 [Inferred] The second independent specification review returned REVISE.033 now explicitly states bounded committed-policy capture and unchanged-policy/later-commit behavior, successor input-to-snapshot mapping, local provider-withdrawal/Unknown and deterministic fallback, composite origin inheritance, exclusion support distinctions and inherited conditional envelope semantics.046 expressly retains normalization/collision/attribution/configuration-write-reach disclosures; only its retired record-reliance and terminal carriers disappear.034–036 bodies/scenarios/oracles remain unchanged. The contract matrix adds individually falsifiable branches from the eight identified clause groups and a separately unresolved candidate RFC2-23 last-good-observer N/A judgment. Per-requirement material warrant edges are checked against the matrix before generating their union; counts are recomputed rather than targets. The capability population now separately names identity disclosures and033 actually specifies the policy guarantee its policy row names. None of these mappings is an implementation PASS, effective N/A judgment or adoption.
+
+## Round3 specification corrections
+
+[Inferred] The third independent review returned REVISE. The permitted-script scenario's remaining act antecedent is replaced by the exactly bound policy condition; its script-on/off equality and navigation consequence is unchanged. VIS-7 is declared where directly served by deterministic integrity, resolving anchors/faithful legends, frozen packet identities/parity, faithful distinct read populations and stable identity/locator handling.033 now states the change-adoption/status/adopter/new-version and unresolved-applicability consequences mapped by RFC3-16;046 explicitly uses that change-status contract. These are published specification/policy/judgment status duties, never per-repository admission conditions. The137-row contract and40-obligation capability populations remain candidates; counts establish no implementation PASS or adoption.
+
+Exact retained034 scenario replacement:
+
+```json
+[
+  {
+    "old": "- **WHEN** such an act is in force and a page carries a script that scope describes",
+    "new": "- **WHEN** the exactly bound committed policy has a recognized version7 script renderCondition or equally restrictive successor and a page carries only the script that condition describes"
+  }
+]
+```

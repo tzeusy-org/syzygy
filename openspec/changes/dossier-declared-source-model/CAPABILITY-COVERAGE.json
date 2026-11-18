@@ -1,9 +1,9 @@
 {
   "label": "Inferred",
   "meaning": "Candidate requirement coverage, not implementation PASS; independent confirmation pending",
-  "population": 39,
+  "population": 40,
   "partition": {
-    "covered": 32,
+    "covered": 33,
     "lawfully out of scope": 7,
     "Unknown / unresolved": 0
   },
@@ -320,6 +320,15 @@
       "requirements": [
         "REQ-polaris-generation-046",
         "REQ-polaris-generation-033"
+      ]
+    },
+    {
+      "id": "change-status",
+      "obligation": "Published specification/policy/judgment status distinguishes candidate stamps from actual default-branch adoption, names adopter/record/tag/revert and new semantic adoptions, with candidate N/A unresolved; never a per-repository admission gate",
+      "partition": "covered",
+      "requirements": [
+        "REQ-polaris-generation-033",
+        "REQ-polaris-generation-046"
       ]
     }
   ]

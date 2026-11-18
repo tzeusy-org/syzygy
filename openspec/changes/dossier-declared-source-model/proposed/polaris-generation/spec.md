@@ -46,6 +46,8 @@ Retained018 supplies the execution envelope: historical time derivation bounds c
 
 The successor reader input declaration SHALL map the declared repository/pin, Git object database, tree entries and blobs to RFC2-1 item1; the committed classification/screening policy to item7; finite resource limits to item8; and effective descriptor/policy adoption provenance to item11. The provider and eligible-class declaration is run provenance, not a consent instance. No observation-consent input survives; neither descriptor nor policy owner-act stamps are read-admission conditions. The retained per-output identity schemes, capture/derivation determinism and typed failure/empty-write boundary remain unchanged.
 
+This amendment's specification, screening policy and applicability judgment SHALL remain candidate until the change lands on the default branch and an AGENT-ADOPTIONS.md row names that commit, what changed, why and the revert command; the specification version SHALL also have its git tag. Published change-status documentation SHALL distinguish a candidate banner or content stamp from effective adoption, name who adopted (the agent adoption row and reporting PR/session, or the actual owner where an owner class applies), and link the adoption record. A later semantic edit SHALL require a new adoption and specification version tag as applicable; previous artifacts and acts remain history. Doctrine changes, SEC-5 weakening or unsafe outside-sandbox execution, writes to repositories the owner does not own, and exposure/release/deployment/multi-user changes remain owner decisions. This change-status contract is not a command admission gate: no per-repository adoption, consent, statement, registry act or provider act is required before a local read or a send to the declared provider. The four candidate N/A consequences SHALL map nothing and remain explicitly unresolved until the applicability judgment's actual adoption; its adoption, not this text or a candidate stamp, makes the scoped judgment effective.
+
 ID: REQ-polaris-generation-033
 Source: VIS-2; SEC-2; SEC-3; SEC-5; GOVERNANCE-SIMPLIFICATION-D10.
 Scope: v1-mandatory
@@ -79,16 +81,16 @@ Scope: v1-mandatory
 
 Form: event-response.
 
-- **Case:** Controlled public/private/unstated fixture repositories and bounded configurations, with absent legacy records; independently mutate one object, pin, provider, policy, record field or class at a time. Include regular, symlink and writerless-FIFO policy entries; invalid UTF-8, over-bound JSON/bytes and dirty policy; a policy-byte change versus an unrelated commit with identical bytes; composite origin/class loss; whole versus removed-span versus surviving-span support; provider withdrawal and missing-provider fallback; primary/secondary/aggregate reason and envelope conditional branches.
+- **Case:** Controlled public/private/unstated fixture repositories and bounded configurations, with absent legacy records; independently mutate one object, pin, provider, policy, record field or class at a time. Include regular, symlink and writerless-FIFO policy entries; invalid UTF-8, over-bound JSON/bytes and dirty policy; a policy-byte change versus an unrelated commit with identical bytes; composite origin/class loss; whole versus removed-span versus surviving-span support; provider withdrawal and missing-provider fallback; primary/secondary/aggregate reason and envelope conditional branches. For published change status, vary candidate stamps, missing adoption, actual default-branch commit/row/tag and later semantic edits independently; compare status/adopter/record links with literal expected outcomes without creating a per-repository admission gate.
 - **Observable:** Command reports, state-file byte differences, process/network capture, rendered pages and machine disclosures.
-- **Oracle:** Literal expected pins, refusal codes and redacted/withheld outcomes prepared independently from fixture bytes; independently recompute object identifiers and compare retained legacy files. Use literal expected policy bindings/bounds and child-process timeout capture; independently prepared composite origins, exclusion tuples/counts, Unknown reasons/routes, withdrawal labels and report-fact ceilings; do not import policy capture or rendering helpers.
+- **Oracle:** Literal expected pins, refusal codes and redacted/withheld outcomes prepared independently from fixture bytes; independently recompute object identifiers and compare retained legacy files. Use literal expected policy bindings/bounds and child-process timeout capture; independently prepared composite origins, exclusion tuples/counts, Unknown reasons/routes, withdrawal labels, report-fact ceilings and change-status/adopter/adoption-record bindings; do not import policy capture or rendering helpers.
 - **Oracle independence:** Expectations and the byte/process capture do not import admission, screening or serialization helpers from the implementation.
-- **Falsifier:** A retired gate is called, a terminal question or governance write occurs, invalid content is admitted, a private exclusion leaks metadata, a changed packet reuses a verdict, or a stored declaration is presented as observed transmission; a special policy file blocks, invalid policy bytes enter use, unchanged policy bytes are refused only for a different commit, a composite launders origin/class, surviving support is blanket-degraded, a withdrawal is hidden, a reason is invented, or an editorial draft becomes evidence/green.
+- **Falsifier:** A retired gate is called, a terminal question or governance write occurs, invalid content is admitted, a private exclusion leaks metadata, a changed packet reuses a verdict, or a stored declaration is presented as observed transmission; a special policy file blocks, invalid policy bytes enter use, unchanged policy bytes are refused only for a different commit, a composite launders origin/class, surviving support is blanket-degraded, a withdrawal is hidden, a reason is invented, or an editorial draft becomes evidence/green; a candidate stamp or unadopted N/A maps as effective, or change-adoption status is mistaken for a per-repository admission prerequisite.
 
 ```yaml
 warrants:
   primary: SEC-5
-  doctrine: [SEC-1, SEC-2, SEC-3, SEC-5, VIS-1, VIS-2, VIS-4]
+  doctrine: [SEC-1, SEC-2, SEC-3, SEC-5, VIS-1, VIS-2, VIS-4, VIS-7]
   contracts: [RFC2-24, RFC3-16, RFC4-2, RFC4-19, RFC5-12, RFC7-20, RFC7-33, RFC7-34, RFC2-23, RFC5-14, RFC5-17, RFC1-3, RFC3-7, RFC5-13]
   policies: [CC-SPEC-2, CC-SPEC-4, CC-SPEC-3, CC-REV-2]
   decisions: [POLARIS-DOSSIER-LOCAL-AGENT-MODE-2026-10-05, POLARIS-DOSSIER-LOCAL-AGENT-RULINGS-2026-10-05, POLARIS-DOSSIER-LOCAL-AGENT-SCOPE-REVIEW-SIGNOFF-2026-10-05, POLARIS-DOSSIER-LOCAL-AGENT-REVIEW-1-RULINGS-2026-10-05, POLARIS-DOSSIER-LOCAL-AGENT-RECORDS-2026-10-05, GOVERNANCE-SIMPLIFICATION-D10]
@@ -103,6 +105,8 @@ The local init command SHALL accept a normalized credential-free locator and dec
 Initialization SHALL validate the run configuration and state-root separation before using content, verify the selected commit through the pinned reader, and bind the committed screening policy before issuing a brief. It SHALL never ask a consent question or read/write an observation consent, provider/drawer statement, launch recording reference or write-consent record. A valid public or private local source requires no such record. Existing state-directory separation and interrupted-write safety continue to apply. URL acquisition and automatic trunk selection remain a separate F-3 delivery and are not reported as successful by this local command.
 
 The run record and every rendered page SHALL disclose in human and machine form the normalized credential-free locator and repository identity, their attributed Inferred source, whether the identity was operator-supplied or derived by the retained last-two-segments rule, and that the clone configuration is writable by the agent sessions. Locator hints are never repository identity. Surviving normalization residuals SHALL be explicit: hosts and earlier path segments do not distinguish derived identities; replacement/joining with hyphens can collide; dropping ports and case folding can merge distinct locators. An explicit identity can distinguish subjects, but a declaration is not observed identity proof. Record matching, reliance on another subject's consent/statement, record-list warnings, terminal phrases and recording-reference publication warnings retire because no such records are read or written. These retirements do not erase the normalization collisions. Per-page033's sentence/appendix/machine arrangement carries these human disclosures without a terminal question.
+
+For this replacement's change-adoption/status consequences,046 SHALL use033's change-status contract: effective default-branch adoption and its adopter/record are distinct from candidate stamps, semantic successors require new adoption, and candidate N/A judgments map nothing before actual adoption. This is specification/policy/judgment provenance, never a per-repository record lookup or a read/provider admission prerequisite.
 
 ID: REQ-polaris-generation-046
 Source: VIS-2; VIS-4; SEC-2; SEC-5; GOVERNANCE-SIMPLIFICATION-D10.
@@ -134,7 +138,7 @@ Form: event-response.
 ```yaml
 warrants:
   primary: SEC-5
-  doctrine: [SEC-2, SEC-3, SEC-4, SEC-5, VIS-2, VIS-4]
+  doctrine: [SEC-2, SEC-3, SEC-4, SEC-5, VIS-2, VIS-4, VIS-7]
   contracts: [RFC1-2, RFC1-3, RFC3-6, RFC3-7, RFC3-16, RFC5-12, RFC5-13, RFC4-19, RFC5-14, RFC5-17]
   policies: [CC-SPEC-2, CC-SPEC-4, CC-SPEC-3, CC-REV-2]
   decisions: [POLARIS-DOSSIER-LAUNCH-CONSENT-2026-11-08, OWNER-DIRECTION-QUESTIONNAIRE-ANSWERS-2026-11-08, OWNER-DIRECTION-QUESTIONNAIRE-ANSWERS-2026-11-08-2, OWNER-DIRECTION-CLONE-AND-URL-SCOPE-2026-11-09, POLARIS-DOSSIER-LOCAL-AGENT-MODE-2026-10-05, POLARIS-DOSSIER-LOCAL-AGENT-SCOPE-REVIEW-SIGNOFF-2026-10-05, GOVERNANCE-SIMPLIFICATION-D10]
@@ -264,7 +268,7 @@ Scope: v1-mandatory
 
 #### Scenario: Permitted script adds behaviour only
 
-- **WHEN** such an act is in force and a page carries a script that scope describes
+- **WHEN** the exactly bound committed policy has a recognized version7 script renderCondition or equally restrictive successor and a page carries only the script that condition describes
 - **THEN** the page's text, claims, markings and links with scripts off equal those with scripts on, and navigation works with scripts off
 
 #### Scenario: Repository that states no reason
@@ -362,7 +366,7 @@ Form: event-response.
 ```yaml
 warrants:
   primary: VIS-2
-  doctrine: [SEC-3, SEC-5, VIS-1, VIS-2, VIS-3, VIS-4, SEC-2]
+  doctrine: [SEC-3, SEC-5, VIS-1, VIS-2, VIS-3, VIS-4, SEC-2, VIS-7]
   contracts: [RFC2-23, RFC2-24, RFC5-17, RFC7-2, RFC7-9, RFC7-10, RFC7-13, RFC7-19, RFC7-20, RFC7-33, RFC7-34, RFC4-19, RFC5-14]
   policies: [CC-SPEC-2, CC-SPEC-4, CC-SPEC-3, CC-REV-2]
   decisions: [POLARIS-DOSSIER-LOCAL-AGENT-MODE-2026-10-05, POLARIS-DOSSIER-LOCAL-AGENT-RULINGS-2026-10-05, POLARIS-DOSSIER-LOCAL-AGENT-REVIEW-1-RULINGS-2026-10-05, POLARIS-DOSSIER-LOCAL-AGENT-RECORDS-2026-10-05, OWNER-DIRECTION-DOSSIER-RICH-ELEMENTS-2026-11-04, OWNER-DIRECTION-P115-LATER-SIGNED-INPUTS-2026-11-04, OWNER-DIRECTION-DOSSIER-VOICE-AND-SCRIPTS-2026-11-06, OWNER-DIRECTION-QUESTIONNAIRE-ANSWERS-2026-11-06, GOVERNANCE-SIMPLIFICATION-D10]
@@ -501,7 +505,7 @@ Form: lifecycle transition.
 ```yaml
 warrants:
   primary: VIS-2
-  doctrine: [VIS-1, VIS-2, VIS-3, VIS-4, SEC-2, SEC-3, SEC-5]
+  doctrine: [VIS-1, VIS-2, VIS-3, VIS-4, SEC-2, SEC-3, SEC-5, VIS-7]
   contracts: [RFC2-23, RFC5-17, RFC7-9, RFC7-13, RFC7-25, RFC2-24, RFC4-19, RFC5-14, RFC7-20, RFC7-33]
   policies: [CC-SPEC-2, CC-SPEC-4, CC-SPEC-3, CC-REV-2]
   decisions: [POLARIS-DOSSIER-LOCAL-AGENT-SCOPE-REVIEW-SIGNOFF-2026-10-05, POLARIS-DOSSIER-WAITING-SESSIONS-2026-10-08, OWNER-DIRECTION-DOSSIER-VOICE-AND-SCRIPTS-2026-11-06, OWNER-DIRECTION-QUESTIONNAIRE-ANSWERS-2026-11-06, OWNER-DIRECTION-FIDELITY-REVIEW-ROUNDS-2026-11-09, GOVERNANCE-SIMPLIFICATION-D10]
@@ -569,7 +573,7 @@ Form: event-response.
 ```yaml
 warrants:
   primary: VIS-2
-  doctrine: [SEC-2, SEC-3, VIS-1, VIS-2, VIS-4, VIS-3, SEC-5]
+  doctrine: [SEC-2, SEC-3, VIS-1, VIS-2, VIS-4, VIS-3, SEC-5, VIS-7]
   contracts: [RFC2-24, RFC7-20, RFC2-23, RFC4-19, RFC5-14, RFC5-17]
   policies: [CC-SPEC-2, CC-SPEC-4, CC-SPEC-3, CC-REV-2]
   decisions: [POLARIS-DOSSIER-LOCAL-AGENT-MODE-2026-10-05, POLARIS-DOSSIER-LOCAL-AGENT-REVIEW-1-RULINGS-2026-10-05, GOVERNANCE-SIMPLIFICATION-D10]

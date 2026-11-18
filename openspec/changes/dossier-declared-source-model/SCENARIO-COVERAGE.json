@@ -353,8 +353,8 @@
       "source": "openspec/changes/polaris-dossier-local-agent-mode/specs/polaris-generation/spec.md",
       "requirement": "REQ-polaris-generation-034",
       "scenario": "Permitted script adds behaviour only",
-      "disposition": "retained",
-      "current_obligation": "034\u2013036 full replacement sections retain this behavior; declaration references follow033",
+      "disposition": "retained consequence with policy-bound condition",
+      "current_obligation": "034 recognized exactly bound committed policy condition, with no screening act; script-on/off text/claims/markings/links equality and navigation unchanged",
       "evidence_scope": "Existing dossier quotation, check, inventory, review, render, discovery and clarification suites; final run receipt required."
     },
     {
