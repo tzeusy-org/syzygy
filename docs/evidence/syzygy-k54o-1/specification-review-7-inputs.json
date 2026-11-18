@@ -1,0 +1,193 @@
+{
+  "baseCommit": "26b2ef360431ab71c02dcde47643665dc153b8c7",
+  "previousCandidateCommit": "e940f2c496160da6040a1ab7300016be11ec95cf",
+  "state": "corrected unadopted proposed specification; four N/A consequences unresolved until agent adoption",
+  "population": 37,
+  "inputs": [
+    {
+      "snapshot": ".syzygy/governance/contracts/candidates/policy-candidates/SPECIFICATION-ACCEPTANCE-POLICY-CANDIDATE.md",
+      "bytes": 23156,
+      "sha256": "98342d0a85e9cdb3bf80567bf37c8ddc1845901066500bb5a9bcc12323200857"
+    },
+    {
+      "snapshot": ".syzygy/governance/decisions/DOSSIER-DECLARED-SOURCE-CONTRACT-APPLICABILITY.md",
+      "bytes": 2504,
+      "sha256": "a698de216484ee2f221988142e70de3b661c9fb095b0e3eb3cf10390517588d1"
+    },
+    {
+      "snapshot": ".syzygy/governance/decisions/OWNER-DIRECTION-CLONE-AND-URL-SCOPE-2026-11-09.md",
+      "bytes": 10220,
+      "sha256": "c52d712046011399a4fa18de3a0570ab51cacc7e2db4d6ee99fa246b30073d8c"
+    },
+    {
+      "snapshot": ".syzygy/governance/decisions/OWNER-DIRECTION-DOSSIER-RICH-ELEMENTS-2026-11-04.md",
+      "bytes": 3652,
+      "sha256": "5feab8de6b2bb33860c0e068bbad2ff2546789297cf8628fc3da2a3994a159fd"
+    },
+    {
+      "snapshot": ".syzygy/governance/decisions/OWNER-DIRECTION-DOSSIER-VOICE-AND-SCRIPTS-2026-11-06.md",
+      "bytes": 1868,
+      "sha256": "d716f486c4705914e658aba77bb43808617eaa1c1c79ca26c532280ea731906c"
+    },
+    {
+      "snapshot": ".syzygy/governance/decisions/OWNER-DIRECTION-FIDELITY-REVIEW-ROUNDS-2026-11-09.md",
+      "bytes": 2818,
+      "sha256": "bd4a94a46234dc855e52d73cfc606ba61c1576c827cfa92a642098b48eab5e69"
+    },
+    {
+      "snapshot": ".syzygy/governance/decisions/OWNER-DIRECTION-P115-LATER-SIGNED-INPUTS-2026-11-04.md",
+      "bytes": 4175,
+      "sha256": "96928fbd20bf8f89b90c6b5fc62b441c0112eac3cc4367015854c70290aed08d"
+    },
+    {
+      "snapshot": ".syzygy/governance/decisions/OWNER-DIRECTION-QUESTIONNAIRE-ANSWERS-2026-11-06.md",
+      "bytes": 3194,
+      "sha256": "943f96e72b1fc9efb03d5cd2f2d37f527f555a1b2270c43516eca3fa752cb3c1"
+    },
+    {
+      "snapshot": ".syzygy/governance/decisions/OWNER-DIRECTION-QUESTIONNAIRE-ANSWERS-2026-11-08-2.md",
+      "bytes": 4064,
+      "sha256": "6084ead9f0f4285893302d1dd97d3fd2d39c509442185b57d7de9dee01efcbf0"
+    },
+    {
+      "snapshot": ".syzygy/governance/decisions/OWNER-DIRECTION-QUESTIONNAIRE-ANSWERS-2026-11-08.md",
+      "bytes": 6945,
+      "sha256": "c1c355dd3927bedb0d672862c7bd89b70247fcc752997d81bde81784522367f5"
+    },
+    {
+      "snapshot": ".syzygy/governance/decisions/POLARIS-DOSSIER-LAUNCH-CONSENT-DIRECTION.md",
+      "bytes": 2583,
+      "sha256": "811bf3c0abfae508878b90dd9043a7626848e0c1b2095d2429ec519dee26c70f"
+    },
+    {
+      "snapshot": ".syzygy/governance/decisions/POLARIS-DOSSIER-LOCAL-AGENT-MODE-DIRECTION.md",
+      "bytes": 5130,
+      "sha256": "9ac262d71901cdda85d0fd9e9048062d1fd5808b3b72567806e843b02a0a7640"
+    },
+    {
+      "snapshot": ".syzygy/governance/decisions/POLARIS-DOSSIER-LOCAL-AGENT-RECORDS-DIRECTION.md",
+      "bytes": 1866,
+      "sha256": "4ac92f9f903abaf0f095e918c6939216ff3dda6dc3a0af40d4cf75b083d45c6f"
+    },
+    {
+      "snapshot": ".syzygy/governance/decisions/POLARIS-DOSSIER-LOCAL-AGENT-REVIEW-1-RULINGS-DIRECTION.md",
+      "bytes": 4375,
+      "sha256": "07cfed95b9bf7652027051a93b58074cc65a48eda2a479908258d8bfdf77b5bd"
+    },
+    {
+      "snapshot": ".syzygy/governance/decisions/POLARIS-DOSSIER-LOCAL-AGENT-RULINGS-DIRECTION.md",
+      "bytes": 3170,
+      "sha256": "1cd4639a49cf97ef19f9fb7f34a29e373c864ecad88a375ec4c611cdf60d509b"
+    },
+    {
+      "snapshot": ".syzygy/governance/decisions/POLARIS-DOSSIER-LOCAL-AGENT-SCOPE-REVIEW-SIGNOFF-DIRECTION.md",
+      "bytes": 3439,
+      "sha256": "2e01b12660961fc5bc715cb620887d01607269fa6d4ab079841218961fdbcd13"
+    },
+    {
+      "snapshot": ".syzygy/governance/decisions/POLARIS-DOSSIER-WAITING-SESSIONS-DIRECTION.md",
+      "bytes": 6755,
+      "sha256": "a209325dac89eaacd13f6e0ecd07e4d501e9b5a869aa20664a760c7a13073d87"
+    },
+    {
+      "snapshot": ".syzygy/governance/declarations/adapter-registry/POLARIS-PUBLIC-GIT-SOURCE-ACQUISITION-LOCAL-AGENT-CANDIDATE.json",
+      "bytes": 22912,
+      "sha256": "384f7b603d49ab953a71deb526cdf43e7e65f6e9a7160c3893500b6bd6385f00"
+    },
+    {
+      "snapshot": ".syzygy/governance/doctrine/security.md",
+      "bytes": 9313,
+      "sha256": "9d3f46528e37143ae1d63c755c7a50c6a5b139d28bef5c9de45d62b5c1ac71bf"
+    },
+    {
+      "snapshot": ".syzygy/governance/doctrine/vision.md",
+      "bytes": 19969,
+      "sha256": "fc222427c85c6ce39f02cb2b595b75fec23f6890c013d249f0b43baa52788bc3"
+    },
+    {
+      "snapshot": ".syzygy/governance/policies/craft-and-care/review-and-documentation.md",
+      "bytes": 11479,
+      "sha256": "a7fb4418c6903626121b97b869036501fac07e45e86c6533455336e4c6a82184"
+    },
+    {
+      "snapshot": "defined-contract-clauses.md",
+      "bytes": 57590,
+      "sha256": "cfa855d32e81f9f7f1df05f1aaefeaf7a0e0e993a09dc741d955462d19f443a1"
+    },
+    {
+      "snapshot": "openspec/changes/dossier-declared-source-model/.openspec.yaml",
+      "bytes": 40,
+      "sha256": "277c3c07d7ab9927f15fff0d9c08afbbb9cc808d563ada95016a72a464a761e0"
+    },
+    {
+      "snapshot": "openspec/changes/dossier-declared-source-model/CAPABILITY-COVERAGE.json",
+      "bytes": 11742,
+      "sha256": "ac76d38cc065b73879488d14b71a525aba96cda8a29430ea374d58747508748b"
+    },
+    {
+      "snapshot": "openspec/changes/dossier-declared-source-model/CONTRACT-COVERAGE.json",
+      "bytes": 46292,
+      "sha256": "b76c22676b182ccb7ae9f116160072c989addeddf767054ee7349bde6e49077e"
+    },
+    {
+      "snapshot": "openspec/changes/dossier-declared-source-model/GOVERNING-DEPENDENCIES.json",
+      "bytes": 2467,
+      "sha256": "457f8ff8ceeee19331bc60dc91612f9e1a133a4ff25d231676b750931f0cc486"
+    },
+    {
+      "snapshot": "openspec/changes/dossier-declared-source-model/README.md",
+      "bytes": 583,
+      "sha256": "e7b176ede721184384defe31847fa8cdd9d67a4049818f95815cee9fcf1b8491"
+    },
+    {
+      "snapshot": "openspec/changes/dossier-declared-source-model/SCENARIO-COVERAGE.json",
+      "bytes": 72774,
+      "sha256": "cf36630e92e068a79f595f0557cdf9044b9bd814462004728154531ff5b8bf5b"
+    },
+    {
+      "snapshot": "openspec/changes/dossier-declared-source-model/SEMANTIC-DELTA.md",
+      "bytes": 18918,
+      "sha256": "9d3a6ae7c935d3c6a223b0a70427e6ca3e433c44e5cdf4830edd4b4386fe71d4"
+    },
+    {
+      "snapshot": "openspec/changes/dossier-declared-source-model/design.md",
+      "bytes": 12911,
+      "sha256": "f752be8ecdc2d152ca4c77f72edd024477fcd1f48bda4da9ff8113a54d3e8c67"
+    },
+    {
+      "snapshot": "openspec/changes/dossier-declared-source-model/proposal.md",
+      "bytes": 2789,
+      "sha256": "b2a3fae4f4dcb8ef53358480ef6352e49676d71f2e6dd096dd188a95ec7ed63b"
+    },
+    {
+      "snapshot": "openspec/changes/dossier-declared-source-model/proposed/polaris-generation/spec.md",
+      "bytes": 115180,
+      "sha256": "d17dad153f030bd935059a8b0df24286d72370b275a5fb4052de901b2af4e040"
+    },
+    {
+      "snapshot": "openspec/changes/dossier-declared-source-model/tasks.md",
+      "bytes": 688,
+      "sha256": "9eee9c154e751e5bf7a6dfdc655f3723618f341a42836786dd658478e5ea5e26"
+    },
+    {
+      "snapshot": "openspec/changes/polaris-dossier-launch-consent/specs/polaris-generation/spec.md",
+      "bytes": 80208,
+      "sha256": "21caa65841e76784bbab015320cd0348ebeb092465e135f040901cefcf6e1c84"
+    },
+    {
+      "snapshot": "openspec/changes/polaris-dossier-local-agent-mode/specs/polaris-generation/spec.md",
+      "bytes": 128180,
+      "sha256": "2dbf5fc5378fa4e0cdcb90b4f9261f6b34882403bf20048948bd58c495490d4e"
+    },
+    {
+      "snapshot": "openspec/changes/polaris-manifesto-generation/specs/polaris-generation/spec.md",
+      "bytes": 146216,
+      "sha256": "a8199646c3b7953e8c4101d70d0307813dd1b3927d0b403f76c22d280dd6a89b"
+    },
+    {
+      "snapshot": "openspec/changes/polaris-manifesto-understanding-amendment/specs/polaris-generation/spec.md",
+      "bytes": 59815,
+      "sha256": "6841e63cda0ccdb81966a6fabbdfaf3721910df8ea04959711eb59843859ba58"
+    }
+  ]
+}

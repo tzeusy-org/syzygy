@@ -1,0 +1,11 @@
+{
+  "subjectCommit": "9103d5a6a144f5ea45974b18ccb182db950e629c",
+  "subjectPath": "openspec/changes/dossier-declared-source-model/proposed/polaris-generation/spec.md",
+  "subjectSha256": "d17dad153f030bd935059a8b0df24286d72370b275a5fb4052de901b2af4e040",
+  "scope": "CLI delta syntax validation of unchanged proposed candidate in disposable conventional specs/ layout; not installation, adoption, effective-composition or semantic confirmation",
+  "stage": "/home/orca/.tmp/syzygy-beads-looper-20261114-54ebc9f1/d10-f1-openspec-stage-d17dad153f03-a859xks0",
+  "exit": 0,
+  "stagedBytesEqual": true,
+  "log": "/home/orca/.tmp/syzygy-beads-looper-20261114-54ebc9f1/d10-f1-openspec-stage-d17dad153f03-a859xks0.log",
+  "logSha256": "818f76e9bc297b465f8b94782b1b526e9eec016073c778d6a1666979c782f45e"
+}

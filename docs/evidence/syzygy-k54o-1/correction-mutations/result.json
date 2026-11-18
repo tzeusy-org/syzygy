@@ -1,0 +1,478 @@
+{
+  "subjectCommit": "9103d5a6a144f5ea45974b18ccb182db950e629c",
+  "subjectTree": "443eea56c69a316bdd1b2334fdd4cada38382aed",
+  "complete": true,
+  "finishedAt": "2026-11-18T16:33:33.890282+00:00",
+  "scope": "Seven bounded correction predicates, four controls before/after; no complete-suite or universal robustness claim. Prior488 mutation receipt remains bound to its earlier subject.",
+  "trackedClean": true,
+  "rows": [
+    {
+      "id": "control-census",
+      "runAtCommit": "9103d5a6a144f5ea45974b18ccb182db950e629c",
+      "command": [
+        "npx",
+        "vitest",
+        "run",
+        "--project",
+        "unit",
+        "packages/polaris-generation-core/src/island-boundary.test.ts",
+        "-t",
+        "admits transitive island ingress only",
+        "--reporter=json",
+        "--outputFile",
+        "/home/orca/.tmp/syzygy-beads-looper-20261114-54ebc9f1/d10-f1-correction-mutations/control-census.json"
+      ],
+      "exit": 0,
+      "tests": 9,
+      "passed": 1,
+      "failed": 0,
+      "pending": 8,
+      "failedAssertions": [],
+      "logSha256": "1f11613d7e74a9f8214dc15a65a5dc4f17cc8c8533767fe6e9fb476336fdfae3",
+      "reportSha256": "018c3647b69130a9e0ad653c28c2a079fb4ebc2bd7d95777fb22b4279076be9b"
+    },
+    {
+      "id": "control-fifo",
+      "runAtCommit": "9103d5a6a144f5ea45974b18ccb182db950e629c",
+      "command": [
+        "npx",
+        "vitest",
+        "run",
+        "--project",
+        "integration",
+        "packages/polaris-dossier/src/start-gates.test.ts",
+        "-t",
+        "refuses a FIFO policy",
+        "--reporter=json",
+        "--outputFile",
+        "/home/orca/.tmp/syzygy-beads-looper-20261114-54ebc9f1/d10-f1-correction-mutations/control-fifo.json"
+      ],
+      "exit": 0,
+      "tests": 68,
+      "passed": 1,
+      "failed": 0,
+      "pending": 67,
+      "failedAssertions": [],
+      "logSha256": "52d494382902191399313399a889b74e8fc99edc775d9d41cb37f409096202aa",
+      "reportSha256": "2ea9fe9731749e80df144ea895ac36bb97a3f65f92294a78bcdaef7c081d2ce4"
+    },
+    {
+      "id": "control-authority",
+      "runAtCommit": "9103d5a6a144f5ea45974b18ccb182db950e629c",
+      "command": [
+        "npx",
+        "vitest",
+        "run",
+        "--project",
+        "integration",
+        "apps/three-surface-poc/src/polaris-authority-sweep.test.ts",
+        "--reporter=json",
+        "--outputFile",
+        "/home/orca/.tmp/syzygy-beads-looper-20261114-54ebc9f1/d10-f1-correction-mutations/control-authority.json"
+      ],
+      "exit": 0,
+      "tests": 6,
+      "passed": 6,
+      "failed": 0,
+      "pending": 0,
+      "failedAssertions": [],
+      "logSha256": "407c85b3fb84a37ccb10de66eeb0a0010afac1cdab1f2d1750f41f50b192c7d5",
+      "reportSha256": "795f4afd7f19e89ffc52b1134684b5560d40a3589158fac83c33d61fce81e02b"
+    },
+    {
+      "id": "control-role",
+      "runAtCommit": "9103d5a6a144f5ea45974b18ccb182db950e629c",
+      "command": [
+        "npx",
+        "vitest",
+        "run",
+        "--project",
+        "unit",
+        "packages/polaris-dossier/src/status.test.ts",
+        "--reporter=json",
+        "--outputFile",
+        "/home/orca/.tmp/syzygy-beads-looper-20261114-54ebc9f1/d10-f1-correction-mutations/control-role.json"
+      ],
+      "exit": 0,
+      "tests": 48,
+      "passed": 48,
+      "failed": 0,
+      "pending": 0,
+      "failedAssertions": [],
+      "logSha256": "6fcb77a49b78f6a56e688dd09dd06180ef9b31fca6ac4fbde35e2b33b619652b",
+      "reportSha256": "21b13e26ba19908a0966b32520affe952a66115fe8552624b8132f976c63644a"
+    },
+    {
+      "id": "repeated-edge-resolution",
+      "runAtCommit": "9103d5a6a144f5ea45974b18ccb182db950e629c",
+      "command": [
+        "npx",
+        "vitest",
+        "run",
+        "--project",
+        "unit",
+        "packages/polaris-generation-core/src/island-boundary.test.ts",
+        "-t",
+        "admits transitive island ingress only",
+        "--reporter=json",
+        "--outputFile",
+        "/home/orca/.tmp/syzygy-beads-looper-20261114-54ebc9f1/d10-f1-correction-mutations/repeated-edge-resolution.json"
+      ],
+      "exit": 1,
+      "tests": 9,
+      "passed": 0,
+      "failed": 1,
+      "pending": 8,
+      "failedAssertions": [
+        {
+          "name": "the live Node entries and the parked provider island admits transitive island ingress only from the island and exact parked remainder",
+          "messages": [
+            "AssertionError: whole-census resolutions must not repeat shared edges: expected 43820 to be 1332 // Object.is equality\n    at /home/orca/.tmp/syzygy-beads-looper-20261114-54ebc9f1/d10-f1-correction-mutation-clone/packages/polaris-generation-core/src/island-boundary.test.ts:202:86\n    at file:///home/orca/.tmp/syzygy-beads-looper-20261114-54ebc9f1/d10-f1-correction-mutation-clone/node_modules/@vitest/runner/dist/chunk-hooks.js:155:11\n    at file:///home/orca/.tmp/syzygy-beads-looper-20261114-54ebc9f1/d10-f1-correction-mutation-clone/node_modules/@vitest/runner/dist/chunk-hooks.js:752:26\n    at file:///home/orca/.tmp/syzygy-beads-looper-20261114-54ebc9f1/d10-f1-correction-mutation-clone/node_modules/@vitest/runner/dist/chunk-hooks.js:1897:20\n    at new Promise (<anonymous>)\n    at runWithTimeout (file:///home/orca/.tmp/syzygy-beads-looper-20261114-54ebc9f1/d10-f1-correction-mutation-clone/node_modules/@vitest/runner/dist/chunk-hooks.js:1863:10)\n    at runTest (file:///home/orca/.tmp/syzygy-beads-looper-20261114-54ebc9f1/d10-f1-correction-mutation-clone/node_modules/@vitest/runner/dist/chunk-hooks.js:1574:12)\n    at runSuite (file:///home/orca/.tmp/syzygy-beads-looper-20261114-54ebc9f1/d10-f1-correction-mutation-clone/node_modules/@vitest/runner/dist/chunk-hooks.js:1729:8)\n    at runSuite (file:///home/orca/.tmp/syzygy-beads-looper-20261114-54ebc9f1/d10-f1-correction-mutation-clone/node_modules/@vitest/runner/dist/chunk-hooks.js:1729:8)\n    at runFiles (file:///home/orca/.tmp/syzygy-beads-looper-20261114-54ebc9f1/d10-f1-correction-mutation-clone/node_modules/@vitest/runner/dist/chunk-hooks.js:1787:3)"
+          ]
+        }
+      ],
+      "logSha256": "71db3db95e689f1648eb61113ff0c36ffb5ef87940088051126efa3bdb580741",
+      "reportSha256": "f294e1c244a4354eb787c776db0cd837653b494441a18de8988fa70358bc9bbb",
+      "mutation": {
+        "path": "packages/polaris-generation-core/src/island-boundary.test.ts",
+        "old": "if (!targets.has(specifier)) targets.set(specifier, resolveCounted(from, specifier));",
+        "new": "targets.set(specifier, resolveCounted(from, specifier));",
+        "beforeSha256": "ae0eb8b1c37e87b28269fa63d3029165d7a2dcd053e497a3209c0643053bf928"
+      },
+      "restored": true,
+      "afterSha256": "ae0eb8b1c37e87b28269fa63d3029165d7a2dcd053e497a3209c0643053bf928"
+    },
+    {
+      "id": "disconnected-island-import",
+      "runAtCommit": "9103d5a6a144f5ea45974b18ccb182db950e629c",
+      "command": [
+        "npx",
+        "vitest",
+        "run",
+        "--project",
+        "unit",
+        "packages/polaris-generation-core/src/island-boundary.test.ts",
+        "-t",
+        "admits transitive island ingress only",
+        "--reporter=json",
+        "--outputFile",
+        "/home/orca/.tmp/syzygy-beads-looper-20261114-54ebc9f1/d10-f1-correction-mutations/disconnected-island-import.json"
+      ],
+      "exit": 1,
+      "tests": 9,
+      "passed": 0,
+      "failed": 1,
+      "pending": 8,
+      "failedAssertions": [
+        {
+          "name": "the live Node entries and the parked provider island admits transitive island ingress only from the island and exact parked remainder",
+          "messages": [
+            "AssertionError: 304 production sources: unlisted transitive ingress\npackages/polaris-dossier/src/d10-negative-probe.ts -> packages/polaris-dossier/src/d10-negative-probe.ts imports @syzygy/polaris-generation-core (packages/polaris-generation-core/src/index.ts) -> packages/polaris-generation-core/src/index.ts imports ./admitted-input.js (packages/polaris-generation-core/src/admitted-input.ts): expected [ Array(1) ] to deeply equal []\n    at /home/orca/.tmp/syzygy-beads-looper-20261114-54ebc9f1/d10-f1-correction-mutation-clone/packages/polaris-generation-core/src/island-boundary.test.ts:205:122\n    at file:///home/orca/.tmp/syzygy-beads-looper-20261114-54ebc9f1/d10-f1-correction-mutation-clone/node_modules/@vitest/runner/dist/chunk-hooks.js:155:11\n    at file:///home/orca/.tmp/syzygy-beads-looper-20261114-54ebc9f1/d10-f1-correction-mutation-clone/node_modules/@vitest/runner/dist/chunk-hooks.js:752:26\n    at file:///home/orca/.tmp/syzygy-beads-looper-20261114-54ebc9f1/d10-f1-correction-mutation-clone/node_modules/@vitest/runner/dist/chunk-hooks.js:1897:20\n    at new Promise (<anonymous>)\n    at runWithTimeout (file:///home/orca/.tmp/syzygy-beads-looper-20261114-54ebc9f1/d10-f1-correction-mutation-clone/node_modules/@vitest/runner/dist/chunk-hooks.js:1863:10)\n    at runTest (file:///home/orca/.tmp/syzygy-beads-looper-20261114-54ebc9f1/d10-f1-correction-mutation-clone/node_modules/@vitest/runner/dist/chunk-hooks.js:1574:12)\n    at runSuite (file:///home/orca/.tmp/syzygy-beads-looper-20261114-54ebc9f1/d10-f1-correction-mutation-clone/node_modules/@vitest/runner/dist/chunk-hooks.js:1729:8)\n    at runSuite (file:///home/orca/.tmp/syzygy-beads-looper-20261114-54ebc9f1/d10-f1-correction-mutation-clone/node_modules/@vitest/runner/dist/chunk-hooks.js:1729:8)\n    at runFiles (file:///home/orca/.tmp/syzygy-beads-looper-20261114-54ebc9f1/d10-f1-correction-mutation-clone/node_modules/@vitest/runner/dist/chunk-hooks.js:1787:3)"
+          ]
+        }
+      ],
+      "logSha256": "8f18412dd036dd00b1cef87f2e320b7a7d5fb7db2955d2812b34fe9d4dbee3d0",
+      "reportSha256": "4875c21496f5a31444d1c736e63a7eddc6b64033e2dc6587deef8bb4e5d9eba0",
+      "mutation": {
+        "path": "packages/polaris-dossier/src/d10-negative-probe.ts",
+        "old": null,
+        "new": "import '@syzygy/polaris-generation-core';\n",
+        "beforeSha256": null
+      },
+      "restored": true,
+      "afterSha256": null
+    },
+    {
+      "id": "unresolved-workspace-import",
+      "runAtCommit": "9103d5a6a144f5ea45974b18ccb182db950e629c",
+      "command": [
+        "npx",
+        "vitest",
+        "run",
+        "--project",
+        "unit",
+        "packages/polaris-generation-core/src/island-boundary.test.ts",
+        "-t",
+        "admits transitive island ingress only",
+        "--reporter=json",
+        "--outputFile",
+        "/home/orca/.tmp/syzygy-beads-looper-20261114-54ebc9f1/d10-f1-correction-mutations/unresolved-workspace-import.json"
+      ],
+      "exit": 1,
+      "tests": 9,
+      "passed": 0,
+      "failed": 1,
+      "pending": 8,
+      "failedAssertions": [
+        {
+          "name": "the live Node entries and the parked provider island admits transitive island ingress only from the island and exact parked remainder",
+          "messages": [
+            "AssertionError: 304 production sources: unresolved workspace edges: expected [ Array(1) ] to deeply equal []\n    at /home/orca/.tmp/syzygy-beads-looper-20261114-54ebc9f1/d10-f1-correction-mutation-clone/packages/polaris-generation-core/src/island-boundary.test.ts:204:109\n    at file:///home/orca/.tmp/syzygy-beads-looper-20261114-54ebc9f1/d10-f1-correction-mutation-clone/node_modules/@vitest/runner/dist/chunk-hooks.js:155:11\n    at file:///home/orca/.tmp/syzygy-beads-looper-20261114-54ebc9f1/d10-f1-correction-mutation-clone/node_modules/@vitest/runner/dist/chunk-hooks.js:752:26\n    at file:///home/orca/.tmp/syzygy-beads-looper-20261114-54ebc9f1/d10-f1-correction-mutation-clone/node_modules/@vitest/runner/dist/chunk-hooks.js:1897:20\n    at new Promise (<anonymous>)\n    at runWithTimeout (file:///home/orca/.tmp/syzygy-beads-looper-20261114-54ebc9f1/d10-f1-correction-mutation-clone/node_modules/@vitest/runner/dist/chunk-hooks.js:1863:10)\n    at runTest (file:///home/orca/.tmp/syzygy-beads-looper-20261114-54ebc9f1/d10-f1-correction-mutation-clone/node_modules/@vitest/runner/dist/chunk-hooks.js:1574:12)\n    at runSuite (file:///home/orca/.tmp/syzygy-beads-looper-20261114-54ebc9f1/d10-f1-correction-mutation-clone/node_modules/@vitest/runner/dist/chunk-hooks.js:1729:8)\n    at runSuite (file:///home/orca/.tmp/syzygy-beads-looper-20261114-54ebc9f1/d10-f1-correction-mutation-clone/node_modules/@vitest/runner/dist/chunk-hooks.js:1729:8)\n    at runFiles (file:///home/orca/.tmp/syzygy-beads-looper-20261114-54ebc9f1/d10-f1-correction-mutation-clone/node_modules/@vitest/runner/dist/chunk-hooks.js:1787:3)"
+          ]
+        }
+      ],
+      "logSha256": "54567fbd154e9724f415c5e9ee69e2e5c5db0edcbf4fd96ce0e9475c6c445c3f",
+      "reportSha256": "06ac2981227ea49eaefb641bc22e6717c5d72f7746813a8b27cc23cfc5b8e821",
+      "mutation": {
+        "path": "packages/polaris-dossier/src/d10-negative-probe.ts",
+        "old": null,
+        "new": "import '@syzygy/nonexistent-negative-probe';\n",
+        "beforeSha256": null
+      },
+      "restored": true,
+      "afterSha256": null
+    },
+    {
+      "id": "unsupported-computed-import",
+      "runAtCommit": "9103d5a6a144f5ea45974b18ccb182db950e629c",
+      "command": [
+        "npx",
+        "vitest",
+        "run",
+        "--project",
+        "unit",
+        "packages/polaris-generation-core/src/island-boundary.test.ts",
+        "-t",
+        "admits transitive island ingress only",
+        "--reporter=json",
+        "--outputFile",
+        "/home/orca/.tmp/syzygy-beads-looper-20261114-54ebc9f1/d10-f1-correction-mutations/unsupported-computed-import.json"
+      ],
+      "exit": 1,
+      "tests": 9,
+      "passed": 0,
+      "failed": 1,
+      "pending": 8,
+      "failedAssertions": [
+        {
+          "name": "the live Node entries and the parked provider island admits transitive island ingress only from the island and exact parked remainder",
+          "messages": [
+            "AssertionError: 304 production sources: unsupported loaders: expected [ Array(1) ] to deeply equal []\n    at /home/orca/.tmp/syzygy-beads-looper-20261114-54ebc9f1/d10-f1-correction-mutation-clone/packages/polaris-generation-core/src/island-boundary.test.ts:203:103\n    at file:///home/orca/.tmp/syzygy-beads-looper-20261114-54ebc9f1/d10-f1-correction-mutation-clone/node_modules/@vitest/runner/dist/chunk-hooks.js:155:11\n    at file:///home/orca/.tmp/syzygy-beads-looper-20261114-54ebc9f1/d10-f1-correction-mutation-clone/node_modules/@vitest/runner/dist/chunk-hooks.js:752:26\n    at file:///home/orca/.tmp/syzygy-beads-looper-20261114-54ebc9f1/d10-f1-correction-mutation-clone/node_modules/@vitest/runner/dist/chunk-hooks.js:1897:20\n    at new Promise (<anonymous>)\n    at runWithTimeout (file:///home/orca/.tmp/syzygy-beads-looper-20261114-54ebc9f1/d10-f1-correction-mutation-clone/node_modules/@vitest/runner/dist/chunk-hooks.js:1863:10)\n    at runTest (file:///home/orca/.tmp/syzygy-beads-looper-20261114-54ebc9f1/d10-f1-correction-mutation-clone/node_modules/@vitest/runner/dist/chunk-hooks.js:1574:12)\n    at runSuite (file:///home/orca/.tmp/syzygy-beads-looper-20261114-54ebc9f1/d10-f1-correction-mutation-clone/node_modules/@vitest/runner/dist/chunk-hooks.js:1729:8)\n    at runSuite (file:///home/orca/.tmp/syzygy-beads-looper-20261114-54ebc9f1/d10-f1-correction-mutation-clone/node_modules/@vitest/runner/dist/chunk-hooks.js:1729:8)\n    at runFiles (file:///home/orca/.tmp/syzygy-beads-looper-20261114-54ebc9f1/d10-f1-correction-mutation-clone/node_modules/@vitest/runner/dist/chunk-hooks.js:1787:3)"
+          ]
+        }
+      ],
+      "logSha256": "9cf4631cf51fff7f8bdc5a094d9545cd48e178c22b33435f5279996ddf9a817a",
+      "reportSha256": "5d70661ff4d8f0c8ac01a1d22ec86df7c62996340cf2c1896c9e3cb4cd544d3f",
+      "mutation": {
+        "path": "packages/polaris-dossier/src/d10-negative-probe.ts",
+        "old": null,
+        "new": "const target = './run-record.js'; void import(target);\n",
+        "beforeSha256": null
+      },
+      "restored": true,
+      "afterSha256": null
+    },
+    {
+      "id": "blocking-policy-fifo",
+      "runAtCommit": "9103d5a6a144f5ea45974b18ccb182db950e629c",
+      "command": [
+        "npx",
+        "vitest",
+        "run",
+        "--project",
+        "integration",
+        "packages/polaris-dossier/src/start-gates.test.ts",
+        "-t",
+        "refuses a FIFO policy",
+        "--reporter=json",
+        "--outputFile",
+        "/home/orca/.tmp/syzygy-beads-looper-20261114-54ebc9f1/d10-f1-correction-mutations/blocking-policy-fifo.json"
+      ],
+      "exit": 1,
+      "tests": 68,
+      "passed": 0,
+      "failed": 1,
+      "pending": 67,
+      "failedAssertions": [
+        {
+          "name": "declared-source admission and continuation boundaries refuses a FIFO policy without waiting for a writer",
+          "messages": [
+            "Error: Command failed: /home/orca/.nvm/versions/node/v24.6.0/bin/node /tmp/declared-policy-fifo-1SKDQc/read.mjs /tmp/dossier-records-GUJGyV\n\n    at genericNodeError (node:internal/errors:985:15)\n    at wrappedFn (node:internal/errors:539:14)\n    at ChildProcess.exithandler (node:child_process:417:12)\n    at ChildProcess.emit (node:events:508:28)\n    at maybeClose (node:internal/child_process:1101:16)\n    at Process.ChildProcess._handle.onexit (node:internal/child_process:305:5)"
+          ]
+        }
+      ],
+      "logSha256": "5d92fe5f6d10b7b0c5ec4af01966b0f05c07df92a821342de256eecc3e748077",
+      "reportSha256": "5fac1a0b15aa03b6f3f50f2995a8c1eadf75fea2c9ee2e416e85bdf758ddaa8e",
+      "mutation": {
+        "path": "packages/polaris-dossier/src/policy-snapshot.ts",
+        "old": " | constants.O_NONBLOCK",
+        "new": "",
+        "beforeSha256": "f69a5582f285733cb1b79d3f9f5e29f0fe71594725f05326385d11a9210e3b66"
+      },
+      "restored": true,
+      "afterSha256": "f69a5582f285733cb1b79d3f9f5e29f0fe71594725f05326385d11a9210e3b66"
+    },
+    {
+      "id": "forged-d10-warrant",
+      "runAtCommit": "9103d5a6a144f5ea45974b18ccb182db950e629c",
+      "command": [
+        "npx",
+        "vitest",
+        "run",
+        "--project",
+        "integration",
+        "apps/three-surface-poc/src/polaris-authority-sweep.test.ts",
+        "--reporter=json",
+        "--outputFile",
+        "/home/orca/.tmp/syzygy-beads-looper-20261114-54ebc9f1/d10-f1-correction-mutations/forged-d10-warrant.json"
+      ],
+      "exit": 1,
+      "tests": 6,
+      "passed": 5,
+      "failed": 1,
+      "pending": 0,
+      "failedAssertions": [
+        {
+          "name": "Zero downstream citations of Polaris as authority (PWB-REQ-014) every OpenSpec warrant entry belongs to a known id family and none targets Polaris (POLARIS-DIR-* ids are owner decisions)",
+          "messages": [
+            "AssertionError: warrant entries outside every hand-typed id family: expected [ { \u2026(3) } ] to deeply equal []\n    at /home/orca/.tmp/syzygy-beads-looper-20261114-54ebc9f1/d10-f1-correction-mutation-clone/apps/three-surface-poc/src/polaris-authority-sweep.test.ts:146:81\n    at file:///home/orca/.tmp/syzygy-beads-looper-20261114-54ebc9f1/d10-f1-correction-mutation-clone/node_modules/@vitest/runner/dist/chunk-hooks.js:155:11\n    at file:///home/orca/.tmp/syzygy-beads-looper-20261114-54ebc9f1/d10-f1-correction-mutation-clone/node_modules/@vitest/runner/dist/chunk-hooks.js:752:26\n    at file:///home/orca/.tmp/syzygy-beads-looper-20261114-54ebc9f1/d10-f1-correction-mutation-clone/node_modules/@vitest/runner/dist/chunk-hooks.js:1897:20\n    at new Promise (<anonymous>)\n    at runWithTimeout (file:///home/orca/.tmp/syzygy-beads-looper-20261114-54ebc9f1/d10-f1-correction-mutation-clone/node_modules/@vitest/runner/dist/chunk-hooks.js:1863:10)\n    at runTest (file:///home/orca/.tmp/syzygy-beads-looper-20261114-54ebc9f1/d10-f1-correction-mutation-clone/node_modules/@vitest/runner/dist/chunk-hooks.js:1574:12)\n    at runSuite (file:///home/orca/.tmp/syzygy-beads-looper-20261114-54ebc9f1/d10-f1-correction-mutation-clone/node_modules/@vitest/runner/dist/chunk-hooks.js:1729:8)\n    at runSuite (file:///home/orca/.tmp/syzygy-beads-looper-20261114-54ebc9f1/d10-f1-correction-mutation-clone/node_modules/@vitest/runner/dist/chunk-hooks.js:1729:8)\n    at runFiles (file:///home/orca/.tmp/syzygy-beads-looper-20261114-54ebc9f1/d10-f1-correction-mutation-clone/node_modules/@vitest/runner/dist/chunk-hooks.js:1787:3)"
+          ]
+        }
+      ],
+      "logSha256": "ad1375b1fd36dfc9b59dec0c0b373a7d0bd501b27e4cea7843681927e0943482",
+      "reportSha256": "48cab80a323c412fefa1166807061b05c08f929f743bf5423619e1d3566aa11e",
+      "mutation": {
+        "path": "openspec/changes/dossier-declared-source-model/proposed/polaris-generation/spec.md",
+        "old": "  decisions: [POLARIS-DOSSIER-LOCAL-AGENT-MODE-2026-10-05, POLARIS-DOSSIER-LOCAL-AGENT-RULINGS-2026-10-05, POLARIS-DOSSIER-LOCAL-AGENT-SCOPE-REVIEW-SIGNOFF-2026-10-05, POLARIS-DOSSIER-LOCAL-AGENT-REVIEW-1-RULINGS-2026-10-05, POLARIS-DOSSIER-LOCAL-AGENT-RECORDS-2026-10-05, GOVERNANCE-SIMPLIFICATION-D10]",
+        "new": "  decisions: [POLARIS-DOSSIER-LOCAL-AGENT-MODE-2026-10-05, POLARIS-DOSSIER-LOCAL-AGENT-RULINGS-2026-10-05, POLARIS-DOSSIER-LOCAL-AGENT-SCOPE-REVIEW-SIGNOFF-2026-10-05, POLARIS-DOSSIER-LOCAL-AGENT-REVIEW-1-RULINGS-2026-10-05, POLARIS-DOSSIER-LOCAL-AGENT-RECORDS-2026-10-05, GOVERNANCE-SIMPLIFICATION-D10-FORGED]",
+        "beforeSha256": "d17dad153f030bd935059a8b0df24286d72370b275a5fb4052de901b2af4e040"
+      },
+      "restored": true,
+      "afterSha256": "d17dad153f030bd935059a8b0df24286d72370b275a5fb4052de901b2af4e040"
+    },
+    {
+      "id": "wrong-role-admission",
+      "runAtCommit": "9103d5a6a144f5ea45974b18ccb182db950e629c",
+      "command": [
+        "npx",
+        "vitest",
+        "run",
+        "--project",
+        "unit",
+        "packages/polaris-dossier/src/status.test.ts",
+        "--reporter=json",
+        "--outputFile",
+        "/home/orca/.tmp/syzygy-beads-looper-20261114-54ebc9f1/d10-f1-correction-mutations/wrong-role-admission.json"
+      ],
+      "exit": 1,
+      "tests": 48,
+      "passed": 47,
+      "failed": 1,
+      "pending": 0,
+      "failedAssertions": [
+        {
+          "name": "status (REQ-polaris-generation-033) re-validates the stored record and refuses a different Repository role",
+          "messages": [
+            "AssertionError: expected true to be false // Object.is equality\n    at /home/orca/.tmp/syzygy-beads-looper-20261114-54ebc9f1/d10-f1-correction-mutation-clone/packages/polaris-dossier/src/status.test.ts:222:23\n    at file:///home/orca/.tmp/syzygy-beads-looper-20261114-54ebc9f1/d10-f1-correction-mutation-clone/node_modules/@vitest/runner/dist/chunk-hooks.js:861:59\n    at file:///home/orca/.tmp/syzygy-beads-looper-20261114-54ebc9f1/d10-f1-correction-mutation-clone/node_modules/@vitest/runner/dist/chunk-hooks.js:155:11\n    at file:///home/orca/.tmp/syzygy-beads-looper-20261114-54ebc9f1/d10-f1-correction-mutation-clone/node_modules/@vitest/runner/dist/chunk-hooks.js:752:26\n    at file:///home/orca/.tmp/syzygy-beads-looper-20261114-54ebc9f1/d10-f1-correction-mutation-clone/node_modules/@vitest/runner/dist/chunk-hooks.js:1897:20\n    at new Promise (<anonymous>)\n    at runWithTimeout (file:///home/orca/.tmp/syzygy-beads-looper-20261114-54ebc9f1/d10-f1-correction-mutation-clone/node_modules/@vitest/runner/dist/chunk-hooks.js:1863:10)\n    at runTest (file:///home/orca/.tmp/syzygy-beads-looper-20261114-54ebc9f1/d10-f1-correction-mutation-clone/node_modules/@vitest/runner/dist/chunk-hooks.js:1574:12)\n    at runSuite (file:///home/orca/.tmp/syzygy-beads-looper-20261114-54ebc9f1/d10-f1-correction-mutation-clone/node_modules/@vitest/runner/dist/chunk-hooks.js:1729:8)\n    at runSuite (file:///home/orca/.tmp/syzygy-beads-looper-20261114-54ebc9f1/d10-f1-correction-mutation-clone/node_modules/@vitest/runner/dist/chunk-hooks.js:1729:8)"
+          ]
+        }
+      ],
+      "logSha256": "3eb839600ba90e1c2879ec2c5dd77d1485295bc75ca2e0e7bab6c9e526c50ac8",
+      "reportSha256": "347ba0c5c90d721def7a8193e2ff8da93d1ea25045e75636e7ae30d926a329ca",
+      "mutation": {
+        "path": "packages/polaris-dossier/src/run-record.ts",
+        "old": " || repository['role'] !== 'observed-source'",
+        "new": "",
+        "beforeSha256": "3bd1a52bb77c6fdc86765fe81d664f936763c4247c00ec922f79289830cd7c12"
+      },
+      "restored": true,
+      "afterSha256": "3bd1a52bb77c6fdc86765fe81d664f936763c4247c00ec922f79289830cd7c12"
+    },
+    {
+      "id": "restored-control-census",
+      "runAtCommit": "9103d5a6a144f5ea45974b18ccb182db950e629c",
+      "command": [
+        "npx",
+        "vitest",
+        "run",
+        "--project",
+        "unit",
+        "packages/polaris-generation-core/src/island-boundary.test.ts",
+        "-t",
+        "admits transitive island ingress only",
+        "--reporter=json",
+        "--outputFile",
+        "/home/orca/.tmp/syzygy-beads-looper-20261114-54ebc9f1/d10-f1-correction-mutations/restored-control-census.json"
+      ],
+      "exit": 0,
+      "tests": 9,
+      "passed": 1,
+      "failed": 0,
+      "pending": 8,
+      "failedAssertions": [],
+      "logSha256": "97c72dd7f4e4c6677db7f22ab5df831160baf8466005af1b11a87e18f5ebfbcf",
+      "reportSha256": "f72edac55d6ddcfc5805baddd3d4aa454569a8e7d1e17b3e893c729bcf52edc5"
+    },
+    {
+      "id": "restored-control-fifo",
+      "runAtCommit": "9103d5a6a144f5ea45974b18ccb182db950e629c",
+      "command": [
+        "npx",
+        "vitest",
+        "run",
+        "--project",
+        "integration",
+        "packages/polaris-dossier/src/start-gates.test.ts",
+        "-t",
+        "refuses a FIFO policy",
+        "--reporter=json",
+        "--outputFile",
+        "/home/orca/.tmp/syzygy-beads-looper-20261114-54ebc9f1/d10-f1-correction-mutations/restored-control-fifo.json"
+      ],
+      "exit": 0,
+      "tests": 68,
+      "passed": 1,
+      "failed": 0,
+      "pending": 67,
+      "failedAssertions": [],
+      "logSha256": "90f7ed33d6487c2ff772da17439223d519aa4ed93c5c956592ef7eeeda678866",
+      "reportSha256": "403a2ce9243dd62fd9de8e04d4cc35f04194568fe22ba4cb449a4db624e213c3"
+    },
+    {
+      "id": "restored-control-authority",
+      "runAtCommit": "9103d5a6a144f5ea45974b18ccb182db950e629c",
+      "command": [
+        "npx",
+        "vitest",
+        "run",
+        "--project",
+        "integration",
+        "apps/three-surface-poc/src/polaris-authority-sweep.test.ts",
+        "--reporter=json",
+        "--outputFile",
+        "/home/orca/.tmp/syzygy-beads-looper-20261114-54ebc9f1/d10-f1-correction-mutations/restored-control-authority.json"
+      ],
+      "exit": 0,
+      "tests": 6,
+      "passed": 6,
+      "failed": 0,
+      "pending": 0,
+      "failedAssertions": [],
+      "logSha256": "d4b675065397f7887166a1d08da782cbab08aaffdbcdc43e98d3ead7ef75206e",
+      "reportSha256": "027ef46dff8958e3ba76b5a489b6b2129ae912423cbcb5d66036e8ef03c8ec4b"
+    },
+    {
+      "id": "restored-control-role",
+      "runAtCommit": "9103d5a6a144f5ea45974b18ccb182db950e629c",
+      "command": [
+        "npx",
+        "vitest",
+        "run",
+        "--project",
+        "unit",
+        "packages/polaris-dossier/src/status.test.ts",
+        "--reporter=json",
+        "--outputFile",
+        "/home/orca/.tmp/syzygy-beads-looper-20261114-54ebc9f1/d10-f1-correction-mutations/restored-control-role.json"
+      ],
+      "exit": 0,
+      "tests": 48,
+      "passed": 48,
+      "failed": 0,
+      "pending": 0,
+      "failedAssertions": [],
+      "logSha256": "5c7776de85418ee540b8bc4fc340e87bd4520d92578d2da9c26f2ad984d02f59",
+      "reportSha256": "1fd8784ca7baa992209f827580b2ca7d840b2961b21ac965229b8aac1f580e9e"
+    }
+  ]
+}

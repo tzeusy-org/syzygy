@@ -10,4 +10,4 @@
 
 ## Last verdict of record, and where the findings landed
 
-[Observed] Specification review 6 records `REVISE` (`syzygy-k54o-1/R-D10-F1-SPEC-6-RAW.md:3`): RFC1-2's declared Repository role had no grounded requirement edge. The proposed 046 text and its independent case/oracle/falsifier were corrected; fresh review remains pending. Source review 2 confirms the two earlier source fixes for its bounded subject, while the complete gate and later corrections remain separate. Earlier raw verdicts and diagnosis are retained verbatim in this campaign.
+[Observed] Specification review 7 records `CONFIRM` (`syzygy-k54o-1/R-D10-F1-SPEC-7-RAW.md:3`) for its frozen candidate specification and proposed applicability partition. Its four candidate N/A consequences remain unresolved until actual adoption, and it establishes no implementation or policy-byte verification. The earlier specification findings and source-fix reviews remain verbatim; source review 3 records bounded `CONFIRM` (`syzygy-k54o-1/R-D10-F1-SOURCE-3-RAW.md:5`) at its exact source subject and `Ready to merge? No` (`syzygy-k54o-1/R-D10-F1-SOURCE-3-RAW.md:3`) pending complete gates.
