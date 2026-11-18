@@ -680,7 +680,8 @@ def declared_source_absent(root):
     paths = [f"{CHANGES}/{DECLARED_SOURCE_CHANGE}",
              f"{DECISIONS}/GOVERNANCE-SIMPLIFICATION-D10-ACT.md",
              *DECLARED_SOURCE_SUBJECTS]
-    return not has_row and not any((root / rel).exists() for rel in paths)
+    return not has_row and not any((root / rel).exists() or (root / rel).is_symlink()
+                                  for rel in paths)
 
 
 def declared_source_binding(root):
@@ -2421,9 +2422,10 @@ def declared_source_historical_cases(tmp, base, clean, witnesses, failures):
                       "failed": sorted(report.failed), "outcome": "held" if held else "FAILED"})
     if not held:
         failures.append("declared-historical-control: wholly absent amendment must be inactive")
+    marker = "Synthetic invalid presence fixture; grants no authority.\n"
     signals = [("directory", change, None), ("row", AGENT_ADOPTIONS, row + "\n"),
-               ("act", act, (base / act).read_text())]
-    signals += [(f"subject-{index}", rel, (base / rel).read_text())
+               ("act", act, marker)]
+    signals += [(f"subject-{index}", rel, marker)
                 for index, rel in enumerate(DECLARED_SOURCE_SUBJECTS, 1)]
     for name, rel, body in signals:
         target = tree / rel
@@ -2438,7 +2440,7 @@ def declared_source_historical_cases(tmp, base, clean, witnesses, failures):
         caught = not declared_source_absent(tree) and text is None and bool(records or subjects)
         witnesses.append({"mutant": f"declared-historical-partial-{name}", "path": rel,
                           "old": "<absent>" if rel != AGENT_ADOPTIONS else absent_ledger,
-                          "new": "<empty directory>" if body is None else "<restore subject file>",
+                          "new": "<empty directory>" if body is None else body,
                           "source_sha256": None if body is None else sha(body.encode("utf-8")),
                           "expected": "R1/R2 refusal; no amendment",
                           "failed": records + subjects, "outcome": "killed" if caught else "SURVIVED"})
@@ -2453,6 +2455,20 @@ def declared_source_historical_cases(tmp, base, clean, witnesses, failures):
             # A restored spec creates the change directory, itself a presence signal.
             if rel.startswith(change + "/"):
                 shutil.rmtree(tree / change)
+    for name, rel in (("directory", change), ("act", act),
+                      ("policy", ".syzygy/governance/policies/POLARIS-DOSSIER-DECLARED-SOURCE-POLICY-v1.json")):
+        target = tree / rel
+        missing = "__missing_declared_source_fixture__"
+        target.symlink_to(missing)
+        text, records, subjects = declared_source_binding(tree)
+        caught = not declared_source_absent(tree) and text is None and bool(records or subjects)
+        witnesses.append({"mutant": f"declared-historical-dangling-{name}", "path": rel,
+                          "old": "<absent>", "new": f"<symlink to {missing}>",
+                          "expected": "R1/R2 refusal; dangling entry is present",
+                          "failed": records + subjects, "outcome": "killed" if caught else "SURVIVED"})
+        if not caught:
+            failures.append(f"declared-historical-dangling-{name}: dangling entry must refuse")
+        target.unlink()
 
 
 def declared_source_composition_cases(witnesses, failures):
