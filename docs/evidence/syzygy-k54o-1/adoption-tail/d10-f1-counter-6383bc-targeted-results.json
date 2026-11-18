@@ -1,0 +1,155 @@
+{
+  "subjectCommit": "6383bcec1d3de951ae75edc2d272a231785a3848",
+  "changedFiles": {
+    "PROJECT-STATUS.md": "c9e8676f357b3c2f229af183c2275383395db736c35a643f2af90b7cf220bd70",
+    "openspec/changes/dossier-declared-source-model/README.md": "b02197c6443b443134430ae6519407b2689264a7f00cf47507e8e8c6e99c8466",
+    "scripts/build_polaris_dossier_launch_consent.py": "b2845ceffdc67412a1df625a9dba98cfa80867687a591e764bee3a47b088b3e7",
+    "scripts/build_polaris_dossier_local_agent_mode.py": "41e6f1acc172be0c64bdc0356098613687588a6e13064e2a093601fb102a4fbd",
+    "scripts/check_spec_reconciliation.py": "e65455edaab8b9b1d237e93253f42fd47d9ac0692ddbdcf536f3d8b2608aa5ff",
+    "scripts/count_polaris_effective_scenarios.py": "0ba55053e93dc46f454a5f79c12a95aafa0164c2e67eac68f2fb891402790846"
+  },
+  "headUnchanged": true,
+  "trackedClean": true,
+  "results": [
+    {
+      "command": [
+        "python3",
+        "scripts/count_polaris_effective_scenarios.py",
+        "--check"
+      ],
+      "exit": 0,
+      "log": "d10-f1-counter-6383bc-targeted-0.log",
+      "sha256": "f1ce897037eed8c3b3ef99b1da2420d98728a9088970ef08108e969999f6d054"
+    },
+    {
+      "command": [
+        "python3",
+        "scripts/count_polaris_effective_scenarios.py",
+        "--selftest"
+      ],
+      "exit": 0,
+      "log": "d10-f1-counter-6383bc-targeted-1.log",
+      "sha256": "ad9dd7d14b1a41fa76940b24a2ae22ec0b33e13731e0b00d62d504258b5564a3"
+    },
+    {
+      "command": [
+        "python3",
+        "scripts/build_polaris_dossier_local_agent_mode.py",
+        "--check"
+      ],
+      "exit": 0,
+      "log": "d10-f1-counter-6383bc-targeted-2.log",
+      "sha256": "1db0f3ffb715393f1f668d60de9eeddbf97d8a478c61769ac7bd229e415fdbbb"
+    },
+    {
+      "command": [
+        "python3",
+        "scripts/build_polaris_dossier_local_agent_mode_v1_1.py",
+        "--check"
+      ],
+      "exit": 0,
+      "log": "d10-f1-counter-6383bc-targeted-3.log",
+      "sha256": "b3c6fe3185d1768ef9ee93ff28dd82ccad66c3f7da15968ad4699dcd9b965dba"
+    },
+    {
+      "command": [
+        "python3",
+        "scripts/build_polaris_dossier_local_agent_mode_v1_2.py",
+        "--check"
+      ],
+      "exit": 0,
+      "log": "d10-f1-counter-6383bc-targeted-4.log",
+      "sha256": "c4fac66eb68580218fe2e79451bef786b64415346ec0b5a2606fecd7cec37efa"
+    },
+    {
+      "command": [
+        "python3",
+        "scripts/build_polaris_dossier_local_agent_mode_v1_3.py",
+        "--check"
+      ],
+      "exit": 0,
+      "log": "d10-f1-counter-6383bc-targeted-5.log",
+      "sha256": "b6786c36b1313cbdf6b19965138e7da07552febba6692bfea1be19a7f91c06f8"
+    },
+    {
+      "command": [
+        "python3",
+        "scripts/build_polaris_dossier_local_agent_mode_v1_4.py",
+        "--check"
+      ],
+      "exit": 0,
+      "log": "d10-f1-counter-6383bc-targeted-6.log",
+      "sha256": "a2de695082673b3a4342055731d59ed942a080c0b7d02a9d10605475bb3799dd"
+    },
+    {
+      "command": [
+        "python3",
+        "scripts/build_polaris_dossier_local_agent_mode_v1_5.py",
+        "--check"
+      ],
+      "exit": 0,
+      "log": "d10-f1-counter-6383bc-targeted-7.log",
+      "sha256": "afc234daf2367f022b6685cc509aaee13853f81c1f0bc2a4a5ea4c0d39d5eeb6"
+    },
+    {
+      "command": [
+        "python3",
+        "scripts/build_polaris_dossier_local_agent_mode_v1_6.py",
+        "--check"
+      ],
+      "exit": 0,
+      "log": "d10-f1-counter-6383bc-targeted-8.log",
+      "sha256": "277d191b596dbc5426903a3fee0836e6232e7c1e2a0bd882a8a1b62198b5e9b2"
+    },
+    {
+      "command": [
+        "python3",
+        "scripts/build_polaris_dossier_launch_consent.py",
+        "--check"
+      ],
+      "exit": 0,
+      "log": "d10-f1-counter-6383bc-targeted-9.log",
+      "sha256": "1db0f3ffb715393f1f668d60de9eeddbf97d8a478c61769ac7bd229e415fdbbb"
+    },
+    {
+      "command": [
+        "python3",
+        "scripts/build_polaris_dossier_launch_consent_v1_1.py",
+        "--check"
+      ],
+      "exit": 0,
+      "log": "d10-f1-counter-6383bc-targeted-10.log",
+      "sha256": "470b19f6a89e4878fb86487c821b285df63d72c307018db6f85335af43fa4b4f"
+    },
+    {
+      "command": [
+        "python3",
+        "scripts/build_polaris_dossier_launch_consent_v1_2.py",
+        "--check"
+      ],
+      "exit": 0,
+      "log": "d10-f1-counter-6383bc-targeted-11.log",
+      "sha256": "c4fac66eb68580218fe2e79451bef786b64415346ec0b5a2606fecd7cec37efa"
+    },
+    {
+      "command": [
+        "python3",
+        "scripts/build_polaris_dossier_local_agent_mode.py",
+        "--selftest"
+      ],
+      "exit": 0,
+      "log": "d10-f1-counter-6383bc-targeted-12.log",
+      "sha256": "0f576043a68f2038d9457894794432be1358bb6b0ba90330d05371f56558fe4a"
+    },
+    {
+      "command": [
+        "python3",
+        "scripts/build_polaris_dossier_launch_consent.py",
+        "--selftest"
+      ],
+      "exit": 0,
+      "log": "d10-f1-counter-6383bc-targeted-13.log",
+      "sha256": "e04072290fbde2accd7ff3b1bd0a9c5f8ee5d43bf5a3f7113212e15b98115f1a"
+    }
+  ]
+}

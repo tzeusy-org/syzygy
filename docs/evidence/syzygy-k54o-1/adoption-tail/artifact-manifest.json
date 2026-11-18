@@ -252,6 +252,181 @@
       "sourceSha256": "4352e260da33fb9f3c89dab802d1f2eef604bbea1e23e3f62ed0fe442f5304a5",
       "storedSha256": "4352e260da33fb9f3c89dab802d1f2eef604bbea1e23e3f62ed0fe442f5304a5",
       "storage": "verbatim"
+    },
+    {
+      "sourceLaneFile": "d10-f1-tail-full-787ec185e6-result.json",
+      "path": "docs/evidence/syzygy-k54o-1/adoption-tail/d10-f1-tail-full-787ec185e6-result.json",
+      "sourceSha256": "9286baf685ac064bda58fabce4ff4d76c507c96359cdce17e0a8d8f71a25c25b",
+      "storedSha256": "9286baf685ac064bda58fabce4ff4d76c507c96359cdce17e0a8d8f71a25c25b",
+      "storage": "verbatim"
+    },
+    {
+      "sourceLaneFile": "d10-f1-tail-787-failure-diagnosis.json",
+      "path": "docs/evidence/syzygy-k54o-1/adoption-tail/d10-f1-tail-787-failure-diagnosis.json",
+      "sourceSha256": "017454ac09b067325acd764dde64df8b579df5000c368c7b94965e0cab28c93c",
+      "storedSha256": "017454ac09b067325acd764dde64df8b579df5000c368c7b94965e0cab28c93c",
+      "storage": "verbatim"
+    },
+    {
+      "sourceLaneFile": "d10-f1-tail-787-hosted-outcomes.json",
+      "path": "docs/evidence/syzygy-k54o-1/adoption-tail/d10-f1-tail-787-hosted-outcomes.json",
+      "sourceSha256": "9253d9c7288a41fc262d93348aa50e5d4ccb466c36e8280443e3d4940cb472d1",
+      "storedSha256": "9253d9c7288a41fc262d93348aa50e5d4ccb466c36e8280443e3d4940cb472d1",
+      "storage": "verbatim"
+    },
+    {
+      "sourceLaneFile": "d10-f1-tail-failure-matrix-v3.json",
+      "path": "docs/evidence/syzygy-k54o-1/adoption-tail/d10-f1-tail-failure-matrix-v3.json",
+      "sourceSha256": "c1aa711bdec3bc9076359a71850f96d823277d924701474ffa6a1cbd6e3bb5f2",
+      "storedSha256": "c1aa711bdec3bc9076359a71850f96d823277d924701474ffa6a1cbd6e3bb5f2",
+      "storage": "verbatim"
+    },
+    {
+      "sourceLaneFile": "d10-f1-counter-6383bc-targeted-results.json",
+      "path": "docs/evidence/syzygy-k54o-1/adoption-tail/d10-f1-counter-6383bc-targeted-results.json",
+      "sourceSha256": "937fd3e660f8fe6bd8b5156ce1bdf0c420804061ac35b9c095616ed0473443a9",
+      "storedSha256": "937fd3e660f8fe6bd8b5156ce1bdf0c420804061ac35b9c095616ed0473443a9",
+      "storage": "verbatim"
+    },
+    {
+      "sourceLaneFile": "d10-f1-tail-6383bc-rollback-proof.json",
+      "path": "docs/evidence/syzygy-k54o-1/adoption-tail/d10-f1-tail-6383bc-rollback-proof.json",
+      "sourceSha256": "394139db2f0f702d2ed124422d2041756b5ebcfdc61ee9529ead2e19de8236f8",
+      "storedSha256": "394139db2f0f702d2ed124422d2041756b5ebcfdc61ee9529ead2e19de8236f8",
+      "storage": "verbatim"
+    },
+    {
+      "sourceLaneFile": "d10-f1-tail-6383bc-rollback-governance.log",
+      "path": "docs/evidence/syzygy-k54o-1/adoption-tail/d10-f1-tail-6383bc-rollback-governance.log.gz",
+      "sourceSha256": "4ba354247e4db92c03a441af08a37d781c77606a437c7761f6c210035c724714",
+      "storedSha256": "d8c2d76f5e621686cd6ac282d660602d192120bbdd6ac51c43a13f9c8ad5edb6",
+      "storage": "gzip, original bytes recover exactly"
+    },
+    {
+      "sourceLaneFile": "d10-f1-counter-6383bc-targeted-0.log",
+      "path": "docs/evidence/syzygy-k54o-1/adoption-tail/d10-f1-counter-6383bc-targeted-0.log.gz",
+      "sourceSha256": "f1ce897037eed8c3b3ef99b1da2420d98728a9088970ef08108e969999f6d054",
+      "storedSha256": "9dd96cd1e19b1620e30d45e10266213cf75becbe3bec1e27da63f5943deef160",
+      "storage": "gzip, original bytes recover exactly"
+    },
+    {
+      "sourceLaneFile": "d10-f1-counter-6383bc-targeted-1.log",
+      "path": "docs/evidence/syzygy-k54o-1/adoption-tail/d10-f1-counter-6383bc-targeted-1.log.gz",
+      "sourceSha256": "ad9dd7d14b1a41fa76940b24a2ae22ec0b33e13731e0b00d62d504258b5564a3",
+      "storedSha256": "0565a37deaaae9c57db6cea1157ce16898afefa72aba2f2bd30441f8c48f8ff5",
+      "storage": "gzip, original bytes recover exactly"
+    },
+    {
+      "sourceLaneFile": "d10-f1-counter-6383bc-targeted-2.log",
+      "path": "docs/evidence/syzygy-k54o-1/adoption-tail/d10-f1-counter-6383bc-targeted-2.log.gz",
+      "sourceSha256": "1db0f3ffb715393f1f668d60de9eeddbf97d8a478c61769ac7bd229e415fdbbb",
+      "storedSha256": "452d29224c57ff2d6e3fe68ba1a497fcf649b43897d96cd456321735be17150e",
+      "storage": "gzip, original bytes recover exactly"
+    },
+    {
+      "sourceLaneFile": "d10-f1-counter-6383bc-targeted-3.log",
+      "path": "docs/evidence/syzygy-k54o-1/adoption-tail/d10-f1-counter-6383bc-targeted-3.log.gz",
+      "sourceSha256": "b3c6fe3185d1768ef9ee93ff28dd82ccad66c3f7da15968ad4699dcd9b965dba",
+      "storedSha256": "d07d353a72fad3fbde789cf77c0d0b1ef1bfb24f41a7af00e8700a97e721837b",
+      "storage": "gzip, original bytes recover exactly"
+    },
+    {
+      "sourceLaneFile": "d10-f1-counter-6383bc-targeted-4.log",
+      "path": "docs/evidence/syzygy-k54o-1/adoption-tail/d10-f1-counter-6383bc-targeted-4.log.gz",
+      "sourceSha256": "c4fac66eb68580218fe2e79451bef786b64415346ec0b5a2606fecd7cec37efa",
+      "storedSha256": "008a10325a9535a9aa3036fe335ea511e49c8598c0a1656e16a0dcf3b70d051b",
+      "storage": "gzip, original bytes recover exactly"
+    },
+    {
+      "sourceLaneFile": "d10-f1-counter-6383bc-targeted-5.log",
+      "path": "docs/evidence/syzygy-k54o-1/adoption-tail/d10-f1-counter-6383bc-targeted-5.log.gz",
+      "sourceSha256": "b6786c36b1313cbdf6b19965138e7da07552febba6692bfea1be19a7f91c06f8",
+      "storedSha256": "4cd1ade5879f33509ced04e604eda6e3432f33846aa98443e94a656d3ae974a4",
+      "storage": "gzip, original bytes recover exactly"
+    },
+    {
+      "sourceLaneFile": "d10-f1-counter-6383bc-targeted-6.log",
+      "path": "docs/evidence/syzygy-k54o-1/adoption-tail/d10-f1-counter-6383bc-targeted-6.log.gz",
+      "sourceSha256": "a2de695082673b3a4342055731d59ed942a080c0b7d02a9d10605475bb3799dd",
+      "storedSha256": "9ead82fde4149766c204f832302ad3a1684d891e5b8810c0abb820e495835693",
+      "storage": "gzip, original bytes recover exactly"
+    },
+    {
+      "sourceLaneFile": "d10-f1-counter-6383bc-targeted-7.log",
+      "path": "docs/evidence/syzygy-k54o-1/adoption-tail/d10-f1-counter-6383bc-targeted-7.log.gz",
+      "sourceSha256": "afc234daf2367f022b6685cc509aaee13853f81c1f0bc2a4a5ea4c0d39d5eeb6",
+      "storedSha256": "66d51e078bbd7148cdf660e9b45de73bf67643e5a38ad9f09fd8a85feeb8203f",
+      "storage": "gzip, original bytes recover exactly"
+    },
+    {
+      "sourceLaneFile": "d10-f1-counter-6383bc-targeted-8.log",
+      "path": "docs/evidence/syzygy-k54o-1/adoption-tail/d10-f1-counter-6383bc-targeted-8.log.gz",
+      "sourceSha256": "277d191b596dbc5426903a3fee0836e6232e7c1e2a0bd882a8a1b62198b5e9b2",
+      "storedSha256": "e9ef42be89e30a007525e8bbaeafc3f721857a1c73aa6a653fc990d039cee76f",
+      "storage": "gzip, original bytes recover exactly"
+    },
+    {
+      "sourceLaneFile": "d10-f1-counter-6383bc-targeted-9.log",
+      "path": "docs/evidence/syzygy-k54o-1/adoption-tail/d10-f1-counter-6383bc-targeted-9.log.gz",
+      "sourceSha256": "1db0f3ffb715393f1f668d60de9eeddbf97d8a478c61769ac7bd229e415fdbbb",
+      "storedSha256": "452d29224c57ff2d6e3fe68ba1a497fcf649b43897d96cd456321735be17150e",
+      "storage": "gzip, original bytes recover exactly"
+    },
+    {
+      "sourceLaneFile": "d10-f1-counter-6383bc-targeted-10.log",
+      "path": "docs/evidence/syzygy-k54o-1/adoption-tail/d10-f1-counter-6383bc-targeted-10.log.gz",
+      "sourceSha256": "470b19f6a89e4878fb86487c821b285df63d72c307018db6f85335af43fa4b4f",
+      "storedSha256": "51584c9b012c85c7e7de66616e980cdb4d47510bf627cc9c643fb503cc8a0feb",
+      "storage": "gzip, original bytes recover exactly"
+    },
+    {
+      "sourceLaneFile": "d10-f1-counter-6383bc-targeted-11.log",
+      "path": "docs/evidence/syzygy-k54o-1/adoption-tail/d10-f1-counter-6383bc-targeted-11.log.gz",
+      "sourceSha256": "c4fac66eb68580218fe2e79451bef786b64415346ec0b5a2606fecd7cec37efa",
+      "storedSha256": "008a10325a9535a9aa3036fe335ea511e49c8598c0a1656e16a0dcf3b70d051b",
+      "storage": "gzip, original bytes recover exactly"
+    },
+    {
+      "sourceLaneFile": "d10-f1-counter-6383bc-targeted-12.log",
+      "path": "docs/evidence/syzygy-k54o-1/adoption-tail/d10-f1-counter-6383bc-targeted-12.log.gz",
+      "sourceSha256": "0f576043a68f2038d9457894794432be1358bb6b0ba90330d05371f56558fe4a",
+      "storedSha256": "2a702dc6b1d6f3ea0fc9cca4d72ff7d77fc5c23b61a971e933438fe35f5f7c0e",
+      "storage": "gzip, original bytes recover exactly"
+    },
+    {
+      "sourceLaneFile": "d10-f1-counter-6383bc-targeted-13.log",
+      "path": "docs/evidence/syzygy-k54o-1/adoption-tail/d10-f1-counter-6383bc-targeted-13.log.gz",
+      "sourceSha256": "e04072290fbde2accd7ff3b1bd0a9c5f8ee5d43bf5a3f7113212e15b98115f1a",
+      "storedSha256": "fee97dfc45ebb7e7734912e917914a89417012a0feb450725895edde13bb8baa",
+      "storage": "gzip, original bytes recover exactly"
+    },
+    {
+      "sourceLaneFile": "R-D10-F1-TAIL-6-RAW.md",
+      "path": "docs/reviews/syzygy-k54o-1/R-D10-F1-TAIL-6-RAW.md",
+      "sourceSha256": "0866ccb1f51542cdb5117b31d6bd76d3e5c4c2324e045b4204d665588eb9766e",
+      "storedSha256": "0866ccb1f51542cdb5117b31d6bd76d3e5c4c2324e045b4204d665588eb9766e",
+      "storage": "verbatim"
+    },
+    {
+      "sourceLaneFile": "R-D10-F1-TAIL-6-retention-evidence.json",
+      "path": "docs/evidence/syzygy-k54o-1/adoption-tail/R-D10-F1-TAIL-6-retention-evidence.json",
+      "sourceSha256": "b680039c98f5bb00698986145c51ec03d56f920c6f0a1b9ef636b9e5f852b187",
+      "storedSha256": "b680039c98f5bb00698986145c51ec03d56f920c6f0a1b9ef636b9e5f852b187",
+      "storage": "verbatim"
+    },
+    {
+      "sourceLaneFile": "R-D10-F1-TAIL-6-corrected-retention-evidence.json",
+      "path": "docs/evidence/syzygy-k54o-1/adoption-tail/R-D10-F1-TAIL-6-corrected-retention-evidence.json",
+      "sourceSha256": "1c7e82c076abed8e8705f19edf84c9de72634eb16445fb8f5b57359c83a3ffd0",
+      "storedSha256": "1c7e82c076abed8e8705f19edf84c9de72634eb16445fb8f5b57359c83a3ffd0",
+      "storage": "verbatim"
+    },
+    {
+      "sourceLaneFile": "R-D10-F1-TAIL-6-counter-independent-evidence.json",
+      "path": "docs/evidence/syzygy-k54o-1/adoption-tail/R-D10-F1-TAIL-6-counter-independent-evidence.json",
+      "sourceSha256": "c39754505194698c17c14db124ba318fa35a35d20c60cbc937ab408c956a5fa0",
+      "storedSha256": "c39754505194698c17c14db124ba318fa35a35d20c60cbc937ab408c956a5fa0",
+      "storage": "verbatim"
     }
   ]
 }

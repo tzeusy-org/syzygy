@@ -1,0 +1,1998 @@
+{
+  "subjectCommit": "6383bcec1d3de951ae75edc2d272a231785a3848",
+  "sourceLanding": "182a703b2dbae97a16ae7334cd84a32b634cedc0",
+  "scope": "Disposable own-repository Git fixture; no actual veto, adoption or deployed changes",
+  "commands": [
+    {
+      "argv": [
+        "git",
+        "clone",
+        "--shared",
+        "--no-checkout",
+        "/home/orca/orca/projects/syzygy/.worktrees/parallel-agents/syzygy-k54o.1",
+        "/home/orca/.tmp/syzygy-beads-looper-20261114-54ebc9f1/d10-f1-rollback-bopx69l4/clone"
+      ],
+      "exit": 0,
+      "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderrSha256": "93ecb98471755b7280dd5ba788903441792307f9f0b81bf6e032c60d7a5c882b"
+    },
+    {
+      "argv": [
+        "git",
+        "config",
+        "user.name",
+        "Rollback Fixture"
+      ],
+      "exit": 0,
+      "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "argv": [
+        "git",
+        "config",
+        "user.email",
+        "rollback@example.invalid"
+      ],
+      "exit": 0,
+      "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "argv": [
+        "git",
+        "config",
+        "commit.gpgsign",
+        "false"
+      ],
+      "exit": 0,
+      "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "argv": [
+        "git",
+        "config",
+        "core.hooksPath",
+        "/dev/null"
+      ],
+      "exit": 0,
+      "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "argv": [
+        "git",
+        "checkout",
+        "--detach",
+        "182a703b2dbae97a16ae7334cd84a32b634cedc0"
+      ],
+      "exit": 0,
+      "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderrSha256": "327b4c0de79a00b84583e5cdaf4ece1d88da2504906b4493df7130af9cefb766"
+    },
+    {
+      "argv": [
+        "git",
+        "rev-parse",
+        "182a703b2dbae97a16ae7334cd84a32b634cedc0^1^{tree}"
+      ],
+      "exit": 0,
+      "stdoutSha256": "411b2a61e18663f8ec7c9825c6f9f9901adc66cc2938a393430515704d55a7a5",
+      "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "argv": [
+        "git",
+        "revert",
+        "--no-commit",
+        "182a703b2dbae97a16ae7334cd84a32b634cedc0"
+      ],
+      "exit": 128,
+      "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderrSha256": "311bafff000dfe15d8bde07113f41af0891ecac988611dfe680f2db45de59116"
+    },
+    {
+      "argv": [
+        "git",
+        "revert",
+        "--no-commit",
+        "-m",
+        "1",
+        "182a703b2dbae97a16ae7334cd84a32b634cedc0"
+      ],
+      "exit": 0,
+      "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "argv": [
+        "git",
+        "write-tree"
+      ],
+      "exit": 0,
+      "stdoutSha256": "411b2a61e18663f8ec7c9825c6f9f9901adc66cc2938a393430515704d55a7a5",
+      "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "argv": [
+        "git",
+        "reset",
+        "--hard",
+        "182a703b2dbae97a16ae7334cd84a32b634cedc0"
+      ],
+      "exit": 0,
+      "stdoutSha256": "327b4c0de79a00b84583e5cdaf4ece1d88da2504906b4493df7130af9cefb766",
+      "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "argv": [
+        "git",
+        "checkout",
+        "--detach",
+        "6383bcec1d3de951ae75edc2d272a231785a3848"
+      ],
+      "exit": 0,
+      "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderrSha256": "94f517ca0f486236bc42926c8a47abd42ec2182da00349661d3e7a104e924daf"
+    },
+    {
+      "argv": [
+        "git",
+        "revert",
+        "--no-commit",
+        "-m",
+        "1",
+        "182a703b2dbae97a16ae7334cd84a32b634cedc0"
+      ],
+      "exit": 1,
+      "stdoutSha256": "784072fa9b5ae58c47512bdd3997a9636effcf023d4f502f6565e9f5a37f3799",
+      "stderrSha256": "9c3cb0b6dd74f91076011107978ab81e764cd9e7054658fda2831771ae657f2b"
+    },
+    {
+      "argv": [
+        "git",
+        "diff",
+        "--name-only",
+        "--diff-filter=U",
+        "-z"
+      ],
+      "exit": 0,
+      "stdoutSha256": "61ad36ef86aa90a85f9d381b571657ac2115eb2f3f7e2d72c35914584b42abe6",
+      "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "argv": [
+        "git",
+        "revert",
+        "--abort"
+      ],
+      "exit": 0,
+      "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "argv": [
+        "git",
+        "rev-parse",
+        "HEAD"
+      ],
+      "exit": 0,
+      "stdoutSha256": "8022858382a1994db0fa9709f105bcf3fcc017bdfa02645c3cecf485278af5f6",
+      "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "argv": [
+        "git",
+        "checkout",
+        "--detach",
+        "182a703b2dbae97a16ae7334cd84a32b634cedc0"
+      ],
+      "exit": 0,
+      "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderrSha256": "a7d186c243769cbcdc7433d1b8f0fb02d678ace38908028799eb661914f9f7b0"
+    },
+    {
+      "argv": [
+        "git",
+        "merge",
+        "--no-ff",
+        "--no-edit",
+        "6383bcec1d3de951ae75edc2d272a231785a3848"
+      ],
+      "exit": 0,
+      "stdoutSha256": "8267b3ecf9eb96229330ce3aa5bcf7646f4684d7568bd9c5c449065066cd0dc4",
+      "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "argv": [
+        "git",
+        "rev-parse",
+        "HEAD"
+      ],
+      "exit": 0,
+      "stdoutSha256": "7a98a679a07bad2df7e651d3517f7278e15b2665c0f81a2e24245fa8e535f4b1",
+      "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "argv": [
+        "git",
+        "diff",
+        "--binary",
+        "45ba0e6b70affca9ffbe5dd08f18f38b060f486d^1",
+        "45ba0e6b70affca9ffbe5dd08f18f38b060f486d",
+        "--",
+        "PROJECT-STATUS.md",
+        "docs/evidence/spec-readability-reconciliation-2026-10-02/census.json",
+        "openspec/README.md",
+        "openspec/changes/dossier-declared-source-model/README.md",
+        "openspec/changes/dossier-declared-source-model/tasks.md",
+        "scripts/check_spec_reconciliation.py",
+        "scripts/build_polaris_dependency_unions.py",
+        "scripts/prepare_three_surface_poc_governedby_reference_recording.py",
+        "scripts/count_polaris_effective_scenarios.py",
+        "scripts/build_polaris_dossier_local_agent_mode.py",
+        "scripts/build_polaris_dossier_launch_consent.py"
+      ],
+      "exit": 0,
+      "stdoutSha256": "5222718d8efa75ef8c3791d190765e53922775c786002b6cb3e4bbb4fde7c971",
+      "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "argv": [
+        "git",
+        "apply",
+        "--reverse",
+        "--index"
+      ],
+      "exit": 0,
+      "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "argv": [
+        "git",
+        "revert",
+        "--no-commit",
+        "-m",
+        "1",
+        "182a703b2dbae97a16ae7334cd84a32b634cedc0"
+      ],
+      "exit": 0,
+      "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "argv": [
+        "git",
+        "diff",
+        "--name-only",
+        "182a703b2dbae97a16ae7334cd84a32b634cedc0^1",
+        "-z"
+      ],
+      "exit": 0,
+      "stdoutSha256": "171716b46f62764fe536a66660a4d89f9afbc99e7586aaba1d2d99c35783db31",
+      "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "argv": [
+        "git",
+        "diff",
+        "--name-only",
+        "-z",
+        "182a703b2dbae97a16ae7334cd84a32b634cedc0",
+        "6383bcec1d3de951ae75edc2d272a231785a3848",
+        "--",
+        "docs/evidence/syzygy-k54o-1/adoption-tail",
+        "docs/reviews/syzygy-k54o-1"
+      ],
+      "exit": 0,
+      "stdoutSha256": "0bb21cbd39cb8b5d6410b432ccc5f18762e2ed1482242c776f6295abf9bbb724",
+      "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "argv": [
+        "git",
+        "show",
+        "6383bcec1d3de951ae75edc2d272a231785a3848:docs/evidence/syzygy-k54o-1/adoption-tail/R-D10-F1-TAIL-1-counterexamples.json"
+      ],
+      "exit": 0,
+      "stdoutSha256": "77205a34e6bf027199c8209ecd9851d3c5430b154182114c1752a44193c093bf",
+      "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "argv": [
+        "git",
+        "show",
+        "6383bcec1d3de951ae75edc2d272a231785a3848:docs/evidence/syzygy-k54o-1/adoption-tail/R-D10-F1-TAIL-1-revert-composition.json"
+      ],
+      "exit": 0,
+      "stdoutSha256": "814ba62afa5e103e3a20bb7c70a9cc54c9c1502c6d175daf6602f117a1655ecc",
+      "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "argv": [
+        "git",
+        "show",
+        "6383bcec1d3de951ae75edc2d272a231785a3848:docs/evidence/syzygy-k54o-1/adoption-tail/R-D10-F1-TAIL-2-independent-evidence.json"
+      ],
+      "exit": 0,
+      "stdoutSha256": "e76fa3b48b01da13fc5f342d43316620d1849218b0a24656969649213126c2ed",
+      "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "argv": [
+        "git",
+        "show",
+        "6383bcec1d3de951ae75edc2d272a231785a3848:docs/evidence/syzygy-k54o-1/adoption-tail/R-D10-F1-TAIL-3-historical-outcomes-counterexample.json"
+      ],
+      "exit": 0,
+      "stdoutSha256": "5c089625602c27469e8271a1da4d047874e6b20c5cfb199ba5b77f88c704731a",
+      "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "argv": [
+        "git",
+        "show",
+        "6383bcec1d3de951ae75edc2d272a231785a3848:docs/evidence/syzygy-k54o-1/adoption-tail/R-D10-F1-TAIL-3-independent-evidence.json"
+      ],
+      "exit": 0,
+      "stdoutSha256": "357b6a822c08ed732ca43059ebf957d5e7d5e7eb3e587aa28e74725649a9b75c",
+      "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "argv": [
+        "git",
+        "show",
+        "6383bcec1d3de951ae75edc2d272a231785a3848:docs/evidence/syzygy-k54o-1/adoption-tail/R-D10-F1-TAIL-4-dangling-presence-counterexamples.json"
+      ],
+      "exit": 0,
+      "stdoutSha256": "169f931f017157ce7b3e638c3d8f8a4b3dc5bdd396836a1c09d9a5733bd5ef3a",
+      "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "argv": [
+        "git",
+        "show",
+        "6383bcec1d3de951ae75edc2d272a231785a3848:docs/evidence/syzygy-k54o-1/adoption-tail/R-D10-F1-TAIL-4-independent-evidence.json"
+      ],
+      "exit": 0,
+      "stdoutSha256": "9218bfb65894a098f2227be42aca1f27edfee178a39ecc64be0327b78b148a6e",
+      "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "argv": [
+        "git",
+        "show",
+        "6383bcec1d3de951ae75edc2d272a231785a3848:docs/evidence/syzygy-k54o-1/adoption-tail/R-D10-F1-TAIL-5-independent-evidence.json"
+      ],
+      "exit": 0,
+      "stdoutSha256": "bf53b212665b5d96e391c85b0f2a2c56a0f5f58e1d1e992d7414c9246bd7d550",
+      "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "argv": [
+        "git",
+        "show",
+        "6383bcec1d3de951ae75edc2d272a231785a3848:docs/evidence/syzygy-k54o-1/adoption-tail/README.md"
+      ],
+      "exit": 0,
+      "stdoutSha256": "22701efa910ebc8036b392daeb4e41a455e8e9b4461ce3594c4c8dc7377cb61f",
+      "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "argv": [
+        "git",
+        "show",
+        "6383bcec1d3de951ae75edc2d272a231785a3848:docs/evidence/syzygy-k54o-1/adoption-tail/artifact-manifest.json"
+      ],
+      "exit": 0,
+      "stdoutSha256": "e7bdfdb1895f634da4cfb80b415cafb95695be6698269fa5c74e7efdf70ec883",
+      "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "argv": [
+        "git",
+        "show",
+        "6383bcec1d3de951ae75edc2d272a231785a3848:docs/evidence/syzygy-k54o-1/adoption-tail/d10-f1-tail-1560b6-reconciliation-selftest.log.gz"
+      ],
+      "exit": 0,
+      "stdoutSha256": "95c16896b9bfc5a28b5c82073da9119b1c48ae67e00298dc40f2452d80b37f3f",
+      "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "argv": [
+        "git",
+        "show",
+        "6383bcec1d3de951ae75edc2d272a231785a3848:docs/evidence/syzygy-k54o-1/adoption-tail/d10-f1-tail-1560b6-rollback-governance.log.gz"
+      ],
+      "exit": 0,
+      "stdoutSha256": "aac2bf85f15796d5efea458e77abb9bc84ab322337b9a3dd5bf3add0682b2afb",
+      "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "argv": [
+        "git",
+        "show",
+        "6383bcec1d3de951ae75edc2d272a231785a3848:docs/evidence/syzygy-k54o-1/adoption-tail/d10-f1-tail-1560b6-rollback-proof.json"
+      ],
+      "exit": 0,
+      "stdoutSha256": "663da1e34caabdb3697f58021e545a0108175d5f370661c89af02d4ddeaf6f94",
+      "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "argv": [
+        "git",
+        "show",
+        "6383bcec1d3de951ae75edc2d272a231785a3848:docs/evidence/syzygy-k54o-1/adoption-tail/d10-f1-tail-1560b6-selftest-witnesses.json"
+      ],
+      "exit": 0,
+      "stdoutSha256": "781e5022a7d18a2fcf60ad37099a3357a959e275d096d4c8d5c2933ecdb61d23",
+      "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "argv": [
+        "git",
+        "show",
+        "6383bcec1d3de951ae75edc2d272a231785a3848:docs/evidence/syzygy-k54o-1/adoption-tail/d10-f1-tail-1c76b0-rollback-governance.log.gz"
+      ],
+      "exit": 0,
+      "stdoutSha256": "f80a871297336dab63158daac8c7ec703a36f465a458fea84319e23f7e807a10",
+      "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "argv": [
+        "git",
+        "show",
+        "6383bcec1d3de951ae75edc2d272a231785a3848:docs/evidence/syzygy-k54o-1/adoption-tail/d10-f1-tail-1c76b0-rollback-proof.json"
+      ],
+      "exit": 0,
+      "stdoutSha256": "4ddfb7eb0d5258fdb1d1a26b98dd6e92b49516bb717b582e4c11adc1cd2274f3",
+      "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "argv": [
+        "git",
+        "show",
+        "6383bcec1d3de951ae75edc2d272a231785a3848:docs/evidence/syzygy-k54o-1/adoption-tail/d10-f1-tail-421dc8-p115-hosted.log.gz"
+      ],
+      "exit": 0,
+      "stdoutSha256": "f0c17629ab64c3dc2ee827b7e3a24b45a074aab9a9ebca49dbd41b9fe750f5d3",
+      "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "argv": [
+        "git",
+        "show",
+        "6383bcec1d3de951ae75edc2d272a231785a3848:docs/evidence/syzygy-k54o-1/adoption-tail/d10-f1-tail-421dc8-reconciliation-selftest.log.gz"
+      ],
+      "exit": 0,
+      "stdoutSha256": "aeabe100b140f1c67c525131c6a7e72595a2a0f8cf7ee686d01f70a3ef273422",
+      "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "argv": [
+        "git",
+        "show",
+        "6383bcec1d3de951ae75edc2d272a231785a3848:docs/evidence/syzygy-k54o-1/adoption-tail/d10-f1-tail-421dc8-rollback-governance.log.gz"
+      ],
+      "exit": 0,
+      "stdoutSha256": "a8dad3556064a8bf146dfb35d873d47aa89e28d7c8b6a9e7f760a6ee306ec684",
+      "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "argv": [
+        "git",
+        "show",
+        "6383bcec1d3de951ae75edc2d272a231785a3848:docs/evidence/syzygy-k54o-1/adoption-tail/d10-f1-tail-421dc8-rollback-proof.json"
+      ],
+      "exit": 0,
+      "stdoutSha256": "7022071442d3d88abbd12cd8447a8e0c3e5181a8c888fb7afb7d041ba8cdeaf5",
+      "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "argv": [
+        "git",
+        "show",
+        "6383bcec1d3de951ae75edc2d272a231785a3848:docs/evidence/syzygy-k54o-1/adoption-tail/d10-f1-tail-421dc8-selftest-witnesses.json"
+      ],
+      "exit": 0,
+      "stdoutSha256": "6dd594dab6ba67f7b15857f9449807bda386fd064a26949b8f7a9992f41ad29d",
+      "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "argv": [
+        "git",
+        "show",
+        "6383bcec1d3de951ae75edc2d272a231785a3848:docs/evidence/syzygy-k54o-1/adoption-tail/d10-f1-tail-787ec185e6-final-rollback-probe.json"
+      ],
+      "exit": 0,
+      "stdoutSha256": "4352e260da33fb9f3c89dab802d1f2eef604bbea1e23e3f62ed0fe442f5304a5",
+      "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "argv": [
+        "git",
+        "show",
+        "6383bcec1d3de951ae75edc2d272a231785a3848:docs/evidence/syzygy-k54o-1/adoption-tail/d10-f1-tail-acd300-reconciliation-selftest.log.gz"
+      ],
+      "exit": 0,
+      "stdoutSha256": "7cd3003f72afc1fd9e87c131cbab8e04650a79b44dccc71006de3aa98cc407d7",
+      "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "argv": [
+        "git",
+        "show",
+        "6383bcec1d3de951ae75edc2d272a231785a3848:docs/evidence/syzygy-k54o-1/adoption-tail/d10-f1-tail-acd300-rollback-governance.log.gz"
+      ],
+      "exit": 0,
+      "stdoutSha256": "68083b0026c5bf43c2a7dedd40e1959cea4840d4634d318eac8baf7f086fc1b5",
+      "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "argv": [
+        "git",
+        "show",
+        "6383bcec1d3de951ae75edc2d272a231785a3848:docs/evidence/syzygy-k54o-1/adoption-tail/d10-f1-tail-acd300-rollback-proof.json"
+      ],
+      "exit": 0,
+      "stdoutSha256": "f97c24b467ecf9422287ad0e7c56e35cbfb1d982ef8676b682351e7e92bd48b1",
+      "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "argv": [
+        "git",
+        "show",
+        "6383bcec1d3de951ae75edc2d272a231785a3848:docs/evidence/syzygy-k54o-1/adoption-tail/d10-f1-tail-acd300-selftest-witnesses.json"
+      ],
+      "exit": 0,
+      "stdoutSha256": "4fdbe9bbfe4d9f96cc043faa49c8a993443a07567e78938322ba15da85820752",
+      "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "argv": [
+        "git",
+        "show",
+        "6383bcec1d3de951ae75edc2d272a231785a3848:docs/evidence/syzygy-k54o-1/adoption-tail/d10-f1-tail-bc5d7c-rollback-governance.log.gz"
+      ],
+      "exit": 0,
+      "stdoutSha256": "69f17338f338739022283e1e65ec740fd0b98f6054a66fec30c00206830d33af",
+      "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "argv": [
+        "git",
+        "show",
+        "6383bcec1d3de951ae75edc2d272a231785a3848:docs/evidence/syzygy-k54o-1/adoption-tail/d10-f1-tail-bc5d7c-rollback-proof.json"
+      ],
+      "exit": 0,
+      "stdoutSha256": "5d7029749bc0918bfedad39f7e3f03952cb74a669830a703318c1cba80406ba8",
+      "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "argv": [
+        "git",
+        "show",
+        "6383bcec1d3de951ae75edc2d272a231785a3848:docs/evidence/syzygy-k54o-1/adoption-tail/d10-f1-tail-dangling-targeted.json"
+      ],
+      "exit": 0,
+      "stdoutSha256": "c2715a056d8752078f305e1c8be908d5e24a87ca80aa08e747cb122830bffd7f",
+      "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "argv": [
+        "git",
+        "show",
+        "6383bcec1d3de951ae75edc2d272a231785a3848:docs/evidence/syzygy-k54o-1/adoption-tail/d10-f1-tail-dangling-targeted.log.gz"
+      ],
+      "exit": 0,
+      "stdoutSha256": "89fcb9747f597ca6301fa38e47f797be9f36c53951092e9c8b7dfabbf6a4c79d",
+      "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "argv": [
+        "git",
+        "show",
+        "6383bcec1d3de951ae75edc2d272a231785a3848:docs/evidence/syzygy-k54o-1/adoption-tail/d10-f1-tail-failure-matrix-v2.json"
+      ],
+      "exit": 0,
+      "stdoutSha256": "0949f4e93449a557c5c4b8d89922eee4d55e6746e9becc9946e8d3f847165c83",
+      "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "argv": [
+        "git",
+        "show",
+        "6383bcec1d3de951ae75edc2d272a231785a3848:docs/evidence/syzygy-k54o-1/adoption-tail/d10-f1-tail-p115-helper-selftest.log.gz"
+      ],
+      "exit": 0,
+      "stdoutSha256": "d9b9e988429ad69b054d31762a3830882ce048a364018d889a2456a5d2b2b02c",
+      "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "argv": [
+        "git",
+        "show",
+        "6383bcec1d3de951ae75edc2d272a231785a3848:docs/evidence/syzygy-k54o-1/adoption-tail/d10-f1-tail-p115-historical-selftest.log.gz"
+      ],
+      "exit": 0,
+      "stdoutSha256": "21dde84df0244625ce0da6a1a67919a684bec734518d23023db7fdb0f1bc36ce",
+      "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "argv": [
+        "git",
+        "show",
+        "6383bcec1d3de951ae75edc2d272a231785a3848:docs/evidence/syzygy-k54o-1/adoption-tail/test-delta.json"
+      ],
+      "exit": 0,
+      "stdoutSha256": "9bb25dc1cfeb9260e20f46583e8bf708c6e77fd7516f09a2a4dc0b73d38ae197",
+      "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "argv": [
+        "git",
+        "show",
+        "6383bcec1d3de951ae75edc2d272a231785a3848:docs/reviews/syzygy-k54o-1/R-D10-F1-TAIL-1-RAW.md"
+      ],
+      "exit": 0,
+      "stdoutSha256": "a34262583218acd45cdd55eb1b5ad753e4cf4b701ff5e68725321ebaccafa579",
+      "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "argv": [
+        "git",
+        "show",
+        "6383bcec1d3de951ae75edc2d272a231785a3848:docs/reviews/syzygy-k54o-1/R-D10-F1-TAIL-2-RAW.md"
+      ],
+      "exit": 0,
+      "stdoutSha256": "09fd004781e5ee8ea4a8627433ae4789a6306b869e33ea2337a7040017f190c7",
+      "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "argv": [
+        "git",
+        "show",
+        "6383bcec1d3de951ae75edc2d272a231785a3848:docs/reviews/syzygy-k54o-1/R-D10-F1-TAIL-3-RAW.md"
+      ],
+      "exit": 0,
+      "stdoutSha256": "cedd8e6b7a7dc935e894dc55901895648c6e50323e8c91cfaa031e42790cd1bf",
+      "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "argv": [
+        "git",
+        "show",
+        "6383bcec1d3de951ae75edc2d272a231785a3848:docs/reviews/syzygy-k54o-1/R-D10-F1-TAIL-4-RAW.md"
+      ],
+      "exit": 0,
+      "stdoutSha256": "100712dab225e5a9e13d3fe73bf3a27b6504abc7fc6856b229225a2a7f56020d",
+      "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "argv": [
+        "git",
+        "show",
+        "6383bcec1d3de951ae75edc2d272a231785a3848:docs/reviews/syzygy-k54o-1/R-D10-F1-TAIL-5-RAW.md"
+      ],
+      "exit": 0,
+      "stdoutSha256": "5e6f5e56cbb98486bf1c2aaf5869a50feefb39bc2b392bd988568deb6f395230",
+      "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "argv": [
+        "git",
+        "show",
+        "182a703b2dbae97a16ae7334cd84a32b634cedc0^1:.syzygy/governance/decisions/DOSSIER-DECLARED-SOURCE-CONTRACT-APPLICABILITY.md"
+      ],
+      "exit": 128,
+      "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderrSha256": "7f420b8a1dfd0f9b80d125f10b2eca48cbf038cb33c0cccbe41a25ed29ca80bb"
+    },
+    {
+      "argv": [
+        "git",
+        "show",
+        "182a703b2dbae97a16ae7334cd84a32b634cedc0^1:.syzygy/governance/policies/POLARIS-DOSSIER-DECLARED-SOURCE-POLICY-v1.json"
+      ],
+      "exit": 128,
+      "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderrSha256": "73a52dd6e23f6ab1a4f215e39bd287c75f5866689dc270447f8b7598a859cabb"
+    },
+    {
+      "argv": [
+        "git",
+        "show",
+        "182a703b2dbae97a16ae7334cd84a32b634cedc0^1:apps/three-surface-poc/src/cdp-browser.browser.test.ts"
+      ],
+      "exit": 0,
+      "stdoutSha256": "d5a59ac51c69dce9bff12e1ab3a1da324f8e38a3eb806f7ea90ef9683194923a",
+      "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "argv": [
+        "git",
+        "show",
+        "182a703b2dbae97a16ae7334cd84a32b634cedc0^1:apps/three-surface-poc/src/polaris-authority-sweep.test.ts"
+      ],
+      "exit": 0,
+      "stdoutSha256": "59cf072585a92d4747303b5dcc1917f56de48163c67f8c5f2be44bbcbf92b938",
+      "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "argv": [
+        "git",
+        "show",
+        "182a703b2dbae97a16ae7334cd84a32b634cedc0^1:docs/evidence/syzygy-k54o-1/README.md"
+      ],
+      "exit": 128,
+      "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderrSha256": "f3adcd4e39db81a805674902790443f1921bed0916a756e2308e2ba0998c325a"
+    },
+    {
+      "argv": [
+        "git",
+        "show",
+        "182a703b2dbae97a16ae7334cd84a32b634cedc0^1:docs/evidence/syzygy-k54o-1/browser-queue-diagnosis/artifact-manifest.json"
+      ],
+      "exit": 128,
+      "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderrSha256": "3dfeeff4173d75dc00772206a8f2785ae518cc3309fbfca31297d851f43ca577"
+    },
+    {
+      "argv": [
+        "git",
+        "show",
+        "182a703b2dbae97a16ae7334cd84a32b634cedc0^1:docs/evidence/syzygy-k54o-1/browser-queue-diagnosis/assertion-validation.json"
+      ],
+      "exit": 128,
+      "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderrSha256": "81e4f166c7ab10b8b5df5e47f084c00f31517c1c147209dc3aeb8fa6c619dd8e"
+    },
+    {
+      "argv": [
+        "git",
+        "show",
+        "182a703b2dbae97a16ae7334cd84a32b634cedc0^1:docs/evidence/syzygy-k54o-1/browser-queue-diagnosis/control-157-50.log"
+      ],
+      "exit": 128,
+      "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderrSha256": "42e2ead0b4af10a1b1a302d049b28b4a9165f526f20b3c99827dd3197fd6fb1b"
+    },
+    {
+      "argv": [
+        "git",
+        "show",
+        "182a703b2dbae97a16ae7334cd84a32b634cedc0^1:docs/evidence/syzygy-k54o-1/browser-queue-diagnosis/control-157-78.log"
+      ],
+      "exit": 128,
+      "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderrSha256": "24f84125b5c6e8dea2ca5f57d868bc6e7f9143cf446122e97f888592c67916ae"
+    },
+    {
+      "argv": [
+        "git",
+        "show",
+        "182a703b2dbae97a16ae7334cd84a32b634cedc0^1:docs/evidence/syzygy-k54o-1/browser-queue-diagnosis/correction.json"
+      ],
+      "exit": 128,
+      "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderrSha256": "0b01cf87113f0f2c74134e14eedb8b01a174714606c7523d7f247face46ba39d"
+    },
+    {
+      "argv": [
+        "git",
+        "show",
+        "182a703b2dbae97a16ae7334cd84a32b634cedc0^1:docs/evidence/syzygy-k54o-1/browser-queue-diagnosis/environment.json"
+      ],
+      "exit": 128,
+      "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderrSha256": "a987d7ede1e91ff595949d177bb74a78addbf0c8a57ef0a57f5e23e9d82b3d0b"
+    },
+    {
+      "argv": [
+        "git",
+        "show",
+        "182a703b2dbae97a16ae7334cd84a32b634cedc0^1:docs/evidence/syzygy-k54o-1/browser-queue-diagnosis/experiment-summary.json"
+      ],
+      "exit": 128,
+      "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderrSha256": "fd5bf6589bad631f24a28d6afcaddadc62429d0e2b3a2e3547f10fdbaa7014c1"
+    },
+    {
+      "argv": [
+        "git",
+        "show",
+        "182a703b2dbae97a16ae7334cd84a32b634cedc0^1:docs/evidence/syzygy-k54o-1/browser-queue-diagnosis/samples.json"
+      ],
+      "exit": 128,
+      "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderrSha256": "345b5922e919f3a41cf66c89280009bfaea61ae035647e90f8f6fb8ff92d0ad6"
+    },
+    {
+      "argv": [
+        "git",
+        "show",
+        "182a703b2dbae97a16ae7334cd84a32b634cedc0^1:docs/evidence/syzygy-k54o-1/browser-queue-diagnosis/subjects.json"
+      ],
+      "exit": 128,
+      "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderrSha256": "ea05a7d6c712b87b67ee5977b87599e3be1bd808c1b42537b35d1ddd2a3827cf"
+    },
+    {
+      "argv": [
+        "git",
+        "show",
+        "182a703b2dbae97a16ae7334cd84a32b634cedc0^1:docs/evidence/syzygy-k54o-1/correction-mutations/blocking-policy-fifo.json"
+      ],
+      "exit": 128,
+      "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderrSha256": "2e2f5c257e0e7bfbff8660995f88888fc8aa540e117a752c9476399b0e585c78"
+    },
+    {
+      "argv": [
+        "git",
+        "show",
+        "182a703b2dbae97a16ae7334cd84a32b634cedc0^1:docs/evidence/syzygy-k54o-1/correction-mutations/control-authority.json"
+      ],
+      "exit": 128,
+      "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderrSha256": "f1984f256754281eb0ba3acff9faae08d045274451a05f6c0cf522cd9fd46df5"
+    },
+    {
+      "argv": [
+        "git",
+        "show",
+        "182a703b2dbae97a16ae7334cd84a32b634cedc0^1:docs/evidence/syzygy-k54o-1/correction-mutations/control-census.json"
+      ],
+      "exit": 128,
+      "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderrSha256": "4c09328678c63b2a291a93acd36369738e57decd40cb53252698c31d0a78d895"
+    },
+    {
+      "argv": [
+        "git",
+        "show",
+        "182a703b2dbae97a16ae7334cd84a32b634cedc0^1:docs/evidence/syzygy-k54o-1/correction-mutations/control-fifo.json"
+      ],
+      "exit": 128,
+      "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderrSha256": "7528ac087e4aefd800acd138422e1824e55d4910414cc9e4b422f7b92e3803c1"
+    },
+    {
+      "argv": [
+        "git",
+        "show",
+        "182a703b2dbae97a16ae7334cd84a32b634cedc0^1:docs/evidence/syzygy-k54o-1/correction-mutations/control-role.json"
+      ],
+      "exit": 128,
+      "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderrSha256": "3f709b9a072faf84c875d65df55c5d576fd0454997a591f55b417080741bbe7d"
+    },
+    {
+      "argv": [
+        "git",
+        "show",
+        "182a703b2dbae97a16ae7334cd84a32b634cedc0^1:docs/evidence/syzygy-k54o-1/correction-mutations/disconnected-island-import.json"
+      ],
+      "exit": 128,
+      "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderrSha256": "0fb645ac9b74fcfef9a1f7e269ed3de27027ab271b6b55f7340f278830ae41ae"
+    },
+    {
+      "argv": [
+        "git",
+        "show",
+        "182a703b2dbae97a16ae7334cd84a32b634cedc0^1:docs/evidence/syzygy-k54o-1/correction-mutations/forged-d10-warrant.json"
+      ],
+      "exit": 128,
+      "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderrSha256": "a01ab08f76dfc650637dbb754d1c9538a1dc779efcc1b72c8bd045707873375e"
+    },
+    {
+      "argv": [
+        "git",
+        "show",
+        "182a703b2dbae97a16ae7334cd84a32b634cedc0^1:docs/evidence/syzygy-k54o-1/correction-mutations/repeated-edge-resolution.json"
+      ],
+      "exit": 128,
+      "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderrSha256": "e7dabb9d21141c96fcd6f4e028e8d9da049496d8cfdce38e619a7fc9cbf0ba92"
+    },
+    {
+      "argv": [
+        "git",
+        "show",
+        "182a703b2dbae97a16ae7334cd84a32b634cedc0^1:docs/evidence/syzygy-k54o-1/correction-mutations/restored-control-authority.json"
+      ],
+      "exit": 128,
+      "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderrSha256": "23559dbd281eff35e0a68e09f478543bff5f0cda82a4c5e082cb7bcbb6f18377"
+    },
+    {
+      "argv": [
+        "git",
+        "show",
+        "182a703b2dbae97a16ae7334cd84a32b634cedc0^1:docs/evidence/syzygy-k54o-1/correction-mutations/restored-control-census.json"
+      ],
+      "exit": 128,
+      "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderrSha256": "60beaae38d391fd0fd6d5bc3a83c2fef7a27db3257e0ee68287f947e293f922a"
+    },
+    {
+      "argv": [
+        "git",
+        "show",
+        "182a703b2dbae97a16ae7334cd84a32b634cedc0^1:docs/evidence/syzygy-k54o-1/correction-mutations/restored-control-fifo.json"
+      ],
+      "exit": 128,
+      "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderrSha256": "b536b1051d3bc61f4f14e093eda4ced141c069d5aa37a20b7ba43e5aada4fd93"
+    },
+    {
+      "argv": [
+        "git",
+        "show",
+        "182a703b2dbae97a16ae7334cd84a32b634cedc0^1:docs/evidence/syzygy-k54o-1/correction-mutations/restored-control-role.json"
+      ],
+      "exit": 128,
+      "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderrSha256": "81b869fefb76ead0148bc2ea6a426387752f38aa814112acdc7b8f55a7e6b73a"
+    },
+    {
+      "argv": [
+        "git",
+        "show",
+        "182a703b2dbae97a16ae7334cd84a32b634cedc0^1:docs/evidence/syzygy-k54o-1/correction-mutations/result.json"
+      ],
+      "exit": 128,
+      "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderrSha256": "2e19ec165e4fecad432f601a772d814002eab98137f7069fc096b79c5a859b65"
+    },
+    {
+      "argv": [
+        "git",
+        "show",
+        "182a703b2dbae97a16ae7334cd84a32b634cedc0^1:docs/evidence/syzygy-k54o-1/correction-mutations/unresolved-workspace-import.json"
+      ],
+      "exit": 128,
+      "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderrSha256": "f4edae26e52128bdcfe587dab3ad13916aa7a6278fce91b0a369ca894a7ce609"
+    },
+    {
+      "argv": [
+        "git",
+        "show",
+        "182a703b2dbae97a16ae7334cd84a32b634cedc0^1:docs/evidence/syzygy-k54o-1/correction-mutations/unsupported-computed-import.json"
+      ],
+      "exit": 128,
+      "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderrSha256": "014802e4cdbbb0320a9cefa0f45ab66f1d0923766401cbbbd7c2c690d29cf01f"
+    },
+    {
+      "argv": [
+        "git",
+        "show",
+        "182a703b2dbae97a16ae7334cd84a32b634cedc0^1:docs/evidence/syzygy-k54o-1/correction-mutations/wrong-role-admission.json"
+      ],
+      "exit": 128,
+      "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderrSha256": "af42b68215885fea884820f080dae18e6049d6831db1d355a4ea4d986f8c22dd"
+    },
+    {
+      "argv": [
+        "git",
+        "show",
+        "182a703b2dbae97a16ae7334cd84a32b634cedc0^1:docs/evidence/syzygy-k54o-1/full-check-e940-FAILED.json"
+      ],
+      "exit": 128,
+      "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderrSha256": "344832f88fd45f87baae98691b05f907f4012b242d3193cfe63223f0aa0ac46c"
+    },
+    {
+      "argv": [
+        "git",
+        "show",
+        "182a703b2dbae97a16ae7334cd84a32b634cedc0^1:docs/evidence/syzygy-k54o-1/island-timeout-diagnosis/diagnosis-result.json"
+      ],
+      "exit": 128,
+      "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderrSha256": "b71b6357958076f1e12ab6a99a78c630e309b2f62e8308d054281a4e40f95a46"
+    },
+    {
+      "argv": [
+        "git",
+        "show",
+        "182a703b2dbae97a16ae7334cd84a32b634cedc0^1:docs/evidence/syzygy-k54o-1/island-timeout-diagnosis/hypotheses.json"
+      ],
+      "exit": 128,
+      "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderrSha256": "4228acbf90d768d275656c2bad74918e603fdb4674f8dbc6f4925b47ba8ebe9f"
+    },
+    {
+      "argv": [
+        "git",
+        "show",
+        "182a703b2dbae97a16ae7334cd84a32b634cedc0^1:docs/evidence/syzygy-k54o-1/island-timeout-diagnosis/measurements.json"
+      ],
+      "exit": 128,
+      "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderrSha256": "9d17e0c4f34a693d70cb99949c4cb9f15ff3555c960a7328c79d0c76f6d1b266"
+    },
+    {
+      "argv": [
+        "git",
+        "show",
+        "182a703b2dbae97a16ae7334cd84a32b634cedc0^1:docs/evidence/syzygy-k54o-1/island-timeout-diagnosis/stress-results.json"
+      ],
+      "exit": 128,
+      "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderrSha256": "5636304f0240708956a15f56a3ae454fc79a4e81f73c0ccbf293493c33c70a56"
+    },
+    {
+      "argv": [
+        "git",
+        "show",
+        "182a703b2dbae97a16ae7334cd84a32b634cedc0^1:docs/evidence/syzygy-k54o-1/mutation-probes.json"
+      ],
+      "exit": 128,
+      "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderrSha256": "bddea52f3af1836be29e56d5fa694bd0720756983bae6d05d5f6cc2618990d07"
+    },
+    {
+      "argv": [
+        "git",
+        "show",
+        "182a703b2dbae97a16ae7334cd84a32b634cedc0^1:docs/evidence/syzygy-k54o-1/policy-review-subject.json"
+      ],
+      "exit": 128,
+      "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderrSha256": "7954ce9b50cc19c036cd7f1efde4e714779045d71abf1177dd7d14ce75a2c982"
+    },
+    {
+      "argv": [
+        "git",
+        "show",
+        "182a703b2dbae97a16ae7334cd84a32b634cedc0^1:docs/evidence/syzygy-k54o-1/policy-semantic-delta.json"
+      ],
+      "exit": 128,
+      "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderrSha256": "acce6aef2f0e0caf2b84ec0857cee63ae3b4fe9d0fc6a71a43fc500b05a41854"
+    },
+    {
+      "argv": [
+        "git",
+        "show",
+        "182a703b2dbae97a16ae7334cd84a32b634cedc0^1:docs/evidence/syzygy-k54o-1/proposed-syntax-validation.json"
+      ],
+      "exit": 128,
+      "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderrSha256": "763ef7bfddc4847c91c4729cf2286b8f7876c2f7b6e74fad415fb2cb0e68c6f5"
+    },
+    {
+      "argv": [
+        "git",
+        "show",
+        "182a703b2dbae97a16ae7334cd84a32b634cedc0^1:docs/evidence/syzygy-k54o-1/raw-review-locations.json"
+      ],
+      "exit": 128,
+      "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderrSha256": "b24287f24a669bdb6036dda5e4142919ed7695730892bbb32f41c970a8d376dc"
+    },
+    {
+      "argv": [
+        "git",
+        "show",
+        "182a703b2dbae97a16ae7334cd84a32b634cedc0^1:docs/evidence/syzygy-k54o-1/specification-review-7-inputs.json"
+      ],
+      "exit": 128,
+      "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderrSha256": "ef69f30b18f6e354999512b5f713fe743286d15746066040f326983aa5ea3620"
+    },
+    {
+      "argv": [
+        "git",
+        "show",
+        "182a703b2dbae97a16ae7334cd84a32b634cedc0^1:docs/evidence/syzygy-k54o-1/test-delta.json"
+      ],
+      "exit": 128,
+      "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderrSha256": "ec1a19718106a013c7ad15e82554e311adddcbdf807b15b363c453f31dc3462a"
+    },
+    {
+      "argv": [
+        "git",
+        "show",
+        "182a703b2dbae97a16ae7334cd84a32b634cedc0^1:docs/review-campaigns/d10-f1-declared-source.md"
+      ],
+      "exit": 128,
+      "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderrSha256": "b49713d6f1cb18ee78265acd5f03543537758cce90c581e86e34a45d3acc8058"
+    },
+    {
+      "argv": [
+        "git",
+        "show",
+        "182a703b2dbae97a16ae7334cd84a32b634cedc0^1:docs/reviews/syzygy-k54o-1/R-D10-F1-BROWSER-DIAGNOSIS-1-RAW.md"
+      ],
+      "exit": 128,
+      "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderrSha256": "13ec94ac6881a0f004633a01dbb57fb28e7f672e8e76f053469920327c6f6332"
+    },
+    {
+      "argv": [
+        "git",
+        "show",
+        "182a703b2dbae97a16ae7334cd84a32b634cedc0^1:docs/reviews/syzygy-k54o-1/R-D10-F1-ISLAND-DIAGNOSIS-1-RAW.md"
+      ],
+      "exit": 128,
+      "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderrSha256": "32e54279a86967453d1ceb111099a3e7f025ab6df227b24cf886712c705d222f"
+    },
+    {
+      "argv": [
+        "git",
+        "show",
+        "182a703b2dbae97a16ae7334cd84a32b634cedc0^1:docs/reviews/syzygy-k54o-1/R-D10-F1-POLICY-1-RAW.md"
+      ],
+      "exit": 128,
+      "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderrSha256": "4544360b489a3a0835a4596e60774d9316c1e3555c47eb3e9f11963bb01f0dc4"
+    },
+    {
+      "argv": [
+        "git",
+        "show",
+        "182a703b2dbae97a16ae7334cd84a32b634cedc0^1:docs/reviews/syzygy-k54o-1/R-D10-F1-SCOPE-1-RAW.md"
+      ],
+      "exit": 128,
+      "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderrSha256": "42b08b5e19d1e64a62f1d429ca672c2ed4e63babf00609cf038f4c675d641571"
+    },
+    {
+      "argv": [
+        "git",
+        "show",
+        "182a703b2dbae97a16ae7334cd84a32b634cedc0^1:docs/reviews/syzygy-k54o-1/R-D10-F1-SOURCE-1-RAW.md"
+      ],
+      "exit": 128,
+      "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderrSha256": "d83e394b6f7f270f3d57c8672b1d7c7538abe14f8c400bb1bdf0ba37be562299"
+    },
+    {
+      "argv": [
+        "git",
+        "show",
+        "182a703b2dbae97a16ae7334cd84a32b634cedc0^1:docs/reviews/syzygy-k54o-1/R-D10-F1-SOURCE-2-RAW.md"
+      ],
+      "exit": 128,
+      "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderrSha256": "207b691c90e6b65501593f65e1206373888aea98c66053b6b5a210882a94d9e3"
+    },
+    {
+      "argv": [
+        "git",
+        "show",
+        "182a703b2dbae97a16ae7334cd84a32b634cedc0^1:docs/reviews/syzygy-k54o-1/R-D10-F1-SOURCE-3-RAW.md"
+      ],
+      "exit": 128,
+      "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderrSha256": "0bb45f1660faa0cd3376dcb1402afc8dcb23c9486fbdadf4bfdbd30e724b3221"
+    },
+    {
+      "argv": [
+        "git",
+        "show",
+        "182a703b2dbae97a16ae7334cd84a32b634cedc0^1:docs/reviews/syzygy-k54o-1/R-D10-F1-SPEC-1-RAW.md"
+      ],
+      "exit": 128,
+      "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderrSha256": "80713075a728ab0378d994f6ccb534de51e5526b9e7701b75fab084d6d7ac4a2"
+    },
+    {
+      "argv": [
+        "git",
+        "show",
+        "182a703b2dbae97a16ae7334cd84a32b634cedc0^1:docs/reviews/syzygy-k54o-1/R-D10-F1-SPEC-2-RAW.md"
+      ],
+      "exit": 128,
+      "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderrSha256": "9216d8b1e29b0ba7fc77ed227703d4363313e23e0b96882d3a9e6b98f50c7113"
+    },
+    {
+      "argv": [
+        "git",
+        "show",
+        "182a703b2dbae97a16ae7334cd84a32b634cedc0^1:docs/reviews/syzygy-k54o-1/R-D10-F1-SPEC-3-RAW.md"
+      ],
+      "exit": 128,
+      "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderrSha256": "516c5d2f9e815b5461238f26ebea6944e5e84e47ec42f36d93a9eac1c7aefe4c"
+    },
+    {
+      "argv": [
+        "git",
+        "show",
+        "182a703b2dbae97a16ae7334cd84a32b634cedc0^1:docs/reviews/syzygy-k54o-1/R-D10-F1-SPEC-5-RAW.md"
+      ],
+      "exit": 128,
+      "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderrSha256": "364dff0d5e67e46e5441314582995791f1db1f747fbd015efb6d1e58aa023046"
+    },
+    {
+      "argv": [
+        "git",
+        "show",
+        "182a703b2dbae97a16ae7334cd84a32b634cedc0^1:docs/reviews/syzygy-k54o-1/R-D10-F1-SPEC-6-RAW.md"
+      ],
+      "exit": 128,
+      "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderrSha256": "02f49a5ca37f6ff1f21d913b8b7ca7a36e49db8c82c7d4ffed698eb5f09f7792"
+    },
+    {
+      "argv": [
+        "git",
+        "show",
+        "182a703b2dbae97a16ae7334cd84a32b634cedc0^1:docs/reviews/syzygy-k54o-1/R-D10-F1-SPEC-7-RAW.md"
+      ],
+      "exit": 128,
+      "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderrSha256": "77185fea9e1ff78854cbb2c53e383c857516b8381c8d8a599d403082734b4966"
+    },
+    {
+      "argv": [
+        "git",
+        "show",
+        "182a703b2dbae97a16ae7334cd84a32b634cedc0^1:openspec/README.md"
+      ],
+      "exit": 0,
+      "stdoutSha256": "add1cac1b3362f628152ddce9478fa35ce3a110d5f0d205f62deb0427fe448b3",
+      "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "argv": [
+        "git",
+        "show",
+        "182a703b2dbae97a16ae7334cd84a32b634cedc0^1:openspec/changes/dossier-declared-source-model/.openspec.yaml"
+      ],
+      "exit": 128,
+      "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderrSha256": "387a6a5b4ce3430f70816f2b754c4ba939dc9f0f9f4edd70f6d4dd7ae248bd0a"
+    },
+    {
+      "argv": [
+        "git",
+        "show",
+        "182a703b2dbae97a16ae7334cd84a32b634cedc0^1:openspec/changes/dossier-declared-source-model/CAPABILITY-COVERAGE.json"
+      ],
+      "exit": 128,
+      "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderrSha256": "9d5af0931ae4c58e8deed50c35245ac253a80379b5d680e7eafa62fda44a8bf3"
+    },
+    {
+      "argv": [
+        "git",
+        "show",
+        "182a703b2dbae97a16ae7334cd84a32b634cedc0^1:openspec/changes/dossier-declared-source-model/CONTRACT-COVERAGE.json"
+      ],
+      "exit": 128,
+      "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderrSha256": "832f743c1d2cc482c2e3b5327387058603c7309895bb3580d2329030c6fdfc0c"
+    },
+    {
+      "argv": [
+        "git",
+        "show",
+        "182a703b2dbae97a16ae7334cd84a32b634cedc0^1:openspec/changes/dossier-declared-source-model/GOVERNING-DEPENDENCIES.json"
+      ],
+      "exit": 128,
+      "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderrSha256": "e15b72471e8ce8dea60ac5479b980f3caf0ae5a37acfe7101111899b2e7bccba"
+    },
+    {
+      "argv": [
+        "git",
+        "show",
+        "182a703b2dbae97a16ae7334cd84a32b634cedc0^1:openspec/changes/dossier-declared-source-model/README.md"
+      ],
+      "exit": 128,
+      "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderrSha256": "0dec68b50933a3d413bf45f8415e4984941094abbf764683a1ab8cb8d8b850a1"
+    },
+    {
+      "argv": [
+        "git",
+        "show",
+        "182a703b2dbae97a16ae7334cd84a32b634cedc0^1:openspec/changes/dossier-declared-source-model/SCENARIO-COVERAGE.json"
+      ],
+      "exit": 128,
+      "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderrSha256": "82a0e973e5e01949ca17962c6ffb5d61dbdd15ba282cf4f156825a570a353009"
+    },
+    {
+      "argv": [
+        "git",
+        "show",
+        "182a703b2dbae97a16ae7334cd84a32b634cedc0^1:openspec/changes/dossier-declared-source-model/SEMANTIC-DELTA.md"
+      ],
+      "exit": 128,
+      "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderrSha256": "47b779b5f0d78a894f0b8dc2a53b2b4ead78596ccf108a8a6fab1c0d65495c66"
+    },
+    {
+      "argv": [
+        "git",
+        "show",
+        "182a703b2dbae97a16ae7334cd84a32b634cedc0^1:openspec/changes/dossier-declared-source-model/design.md"
+      ],
+      "exit": 128,
+      "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderrSha256": "5f5b555b3603938825ea90918f4960309667d50fd93e65ad01d6e1d2f21b341c"
+    },
+    {
+      "argv": [
+        "git",
+        "show",
+        "182a703b2dbae97a16ae7334cd84a32b634cedc0^1:openspec/changes/dossier-declared-source-model/proposal.md"
+      ],
+      "exit": 128,
+      "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderrSha256": "9a982bb22db5afc54254ae87e839a054e7fb599ee445451e42b5162b23161437"
+    },
+    {
+      "argv": [
+        "git",
+        "show",
+        "182a703b2dbae97a16ae7334cd84a32b634cedc0^1:openspec/changes/dossier-declared-source-model/proposed/polaris-generation/spec.md"
+      ],
+      "exit": 128,
+      "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderrSha256": "26ec376666fd01709eed2fef79dc97c76d270ecbe943ee61fd0c8cf2e4f48b9b"
+    },
+    {
+      "argv": [
+        "git",
+        "show",
+        "182a703b2dbae97a16ae7334cd84a32b634cedc0^1:openspec/changes/dossier-declared-source-model/tasks.md"
+      ],
+      "exit": 128,
+      "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderrSha256": "0239f8dcbaff20780f93fc613898b3d9500f89181fec06c5ca7605baec0a95da"
+    },
+    {
+      "argv": [
+        "git",
+        "show",
+        "182a703b2dbae97a16ae7334cd84a32b634cedc0^1:packages/polaris-dossier/src/agent-texts.test.ts"
+      ],
+      "exit": 0,
+      "stdoutSha256": "29bf57e96e92f652a31231991c1dec43609b28ba8cf44dafe9b36679a783bf2e",
+      "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "argv": [
+        "git",
+        "show",
+        "182a703b2dbae97a16ae7334cd84a32b634cedc0^1:packages/polaris-dossier/src/brief.test.ts"
+      ],
+      "exit": 0,
+      "stdoutSha256": "c44120ef74b96237e9143a0040ad48eb6c9e62718876b95ff9ba709c62495747",
+      "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "argv": [
+        "git",
+        "show",
+        "182a703b2dbae97a16ae7334cd84a32b634cedc0^1:packages/polaris-dossier/src/brief.ts"
+      ],
+      "exit": 0,
+      "stdoutSha256": "76b1ee897fa4f46665d800a94b354d7104d76bf5154a652a38fca0e749da74ed",
+      "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "argv": [
+        "git",
+        "show",
+        "182a703b2dbae97a16ae7334cd84a32b634cedc0^1:packages/polaris-dossier/src/census.test.ts"
+      ],
+      "exit": 0,
+      "stdoutSha256": "8672c904b2ff025c035022e307c9b75bba5e44de7296e5118e19dc203558e451",
+      "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "argv": [
+        "git",
+        "show",
+        "182a703b2dbae97a16ae7334cd84a32b634cedc0^1:packages/polaris-dossier/src/census.ts"
+      ],
+      "exit": 0,
+      "stdoutSha256": "decf2e9c19adc725ce68c006f0dcd44a46f5ab6265e3d637feabdefd8d6fa16a",
+      "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "argv": [
+        "git",
+        "show",
+        "182a703b2dbae97a16ae7334cd84a32b634cedc0^1:packages/polaris-dossier/src/check.test.ts"
+      ],
+      "exit": 0,
+      "stdoutSha256": "3a0e2469274c1589028f8f773c5b0222d5262f64dce7ea4b56063488e3abdf6c",
+      "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "argv": [
+        "git",
+        "show",
+        "182a703b2dbae97a16ae7334cd84a32b634cedc0^1:packages/polaris-dossier/src/check.ts"
+      ],
+      "exit": 0,
+      "stdoutSha256": "bb8934a46acb5175a154100aa7e6f744a325c654e0936faf4969fa6b1e4ebc9d",
+      "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "argv": [
+        "git",
+        "show",
+        "182a703b2dbae97a16ae7334cd84a32b634cedc0^1:packages/polaris-dossier/src/cli-table.test.ts"
+      ],
+      "exit": 0,
+      "stdoutSha256": "e5de002aee09678c03d17e5b0aecf832fa01f71412c9c5f7cc2422850adc8cac",
+      "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "argv": [
+        "git",
+        "show",
+        "182a703b2dbae97a16ae7334cd84a32b634cedc0^1:packages/polaris-dossier/src/cli.test.ts"
+      ],
+      "exit": 0,
+      "stdoutSha256": "51dc64df73081dddb9a8de4b1bf7584df16713305e30afc51a33509c7703b876",
+      "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "argv": [
+        "git",
+        "show",
+        "182a703b2dbae97a16ae7334cd84a32b634cedc0^1:packages/polaris-dossier/src/cli.ts"
+      ],
+      "exit": 0,
+      "stdoutSha256": "5ecfc70f860af790278cfa81d1a719eaa93ac4bacf5e180fbc9e3fe674d3259f",
+      "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "argv": [
+        "git",
+        "show",
+        "182a703b2dbae97a16ae7334cd84a32b634cedc0^1:packages/polaris-dossier/src/close.test.ts"
+      ],
+      "exit": 0,
+      "stdoutSha256": "440057eb9d908498ffdab0e6e5770675bd0290f7d81811da9abfa05d05273687",
+      "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "argv": [
+        "git",
+        "show",
+        "182a703b2dbae97a16ae7334cd84a32b634cedc0^1:packages/polaris-dossier/src/close.ts"
+      ],
+      "exit": 0,
+      "stdoutSha256": "9857d608328faba4db19cbe874324bfe21ca1bde080190aa4c03de0c6de814d3",
+      "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "argv": [
+        "git",
+        "show",
+        "182a703b2dbae97a16ae7334cd84a32b634cedc0^1:packages/polaris-dossier/src/execution-choice.test.ts"
+      ],
+      "exit": 0,
+      "stdoutSha256": "b46c996565741d2d7d2d3cc57f1d4488f0e99727440052defd43cff09cb960df",
+      "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "argv": [
+        "git",
+        "show",
+        "182a703b2dbae97a16ae7334cd84a32b634cedc0^1:packages/polaris-dossier/src/full-run.testkit.ts"
+      ],
+      "exit": 0,
+      "stdoutSha256": "41e80ab6a55db9c6c72ea6e0ae79ab782deb8435bf33bf7dbcb423f8af06358c",
+      "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "argv": [
+        "git",
+        "show",
+        "182a703b2dbae97a16ae7334cd84a32b634cedc0^1:packages/polaris-dossier/src/gate-sources.ts"
+      ],
+      "exit": 0,
+      "stdoutSha256": "0902df14cd62984ebceb955a3bf56f8e37018e06cd4370bb91f8629531825516",
+      "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "argv": [
+        "git",
+        "show",
+        "182a703b2dbae97a16ae7334cd84a32b634cedc0^1:packages/polaris-dossier/src/init.ts"
+      ],
+      "exit": 0,
+      "stdoutSha256": "f652873daf98d3524089a87a308bee117ed77a8edcdb3f4f59e278de5f1db2fc",
+      "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "argv": [
+        "git",
+        "show",
+        "182a703b2dbae97a16ae7334cd84a32b634cedc0^1:packages/polaris-dossier/src/inventory.test.ts"
+      ],
+      "exit": 0,
+      "stdoutSha256": "2169103d70990450a68e5807135b1c9729bbee2a82faad820d4ae882db1346dc",
+      "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "argv": [
+        "git",
+        "show",
+        "182a703b2dbae97a16ae7334cd84a32b634cedc0^1:packages/polaris-dossier/src/inventory.ts"
+      ],
+      "exit": 0,
+      "stdoutSha256": "07804655f22a583d746569b678000f8d72a20147e60ea2334735697465688a6e",
+      "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "argv": [
+        "git",
+        "show",
+        "182a703b2dbae97a16ae7334cd84a32b634cedc0^1:packages/polaris-dossier/src/launch-cli.ts"
+      ],
+      "exit": 0,
+      "stdoutSha256": "7ef81da4c02b0c62f9a3b1222f1f356d5b6428d430c30f07f0db353e7dd37504",
+      "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "argv": [
+        "git",
+        "show",
+        "182a703b2dbae97a16ae7334cd84a32b634cedc0^1:packages/polaris-dossier/src/launch.test.ts"
+      ],
+      "exit": 0,
+      "stdoutSha256": "65a894d37f0641b1c4b89a4100ac203bf787182ba60904932ceb84eccfef902f",
+      "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "argv": [
+        "git",
+        "show",
+        "182a703b2dbae97a16ae7334cd84a32b634cedc0^1:packages/polaris-dossier/src/policy-snapshot.ts"
+      ],
+      "exit": 128,
+      "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderrSha256": "cf8959ab61c82b034718a3e9dd10df0442c9b1cae04b1feda0d79e72a1ad8ff5"
+    },
+    {
+      "argv": [
+        "git",
+        "show",
+        "182a703b2dbae97a16ae7334cd84a32b634cedc0^1:packages/polaris-dossier/src/render.test.ts"
+      ],
+      "exit": 0,
+      "stdoutSha256": "3dff0912eebf383a77509a9460b987ffca2faed5b17e8e03e734ede9c80821aa",
+      "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "argv": [
+        "git",
+        "show",
+        "182a703b2dbae97a16ae7334cd84a32b634cedc0^1:packages/polaris-dossier/src/render.ts"
+      ],
+      "exit": 0,
+      "stdoutSha256": "a3b1257bb9b183421be4a7c4300699c056eaeb859b3ef78c6fadcdf9a4d7fca1",
+      "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "argv": [
+        "git",
+        "show",
+        "182a703b2dbae97a16ae7334cd84a32b634cedc0^1:packages/polaris-dossier/src/reverify.ts"
+      ],
+      "exit": 0,
+      "stdoutSha256": "d4454b3dec0178ee3e615acbd745ec23a79b37e4c2f129129eb56052f9ea3ffd",
+      "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "argv": [
+        "git",
+        "show",
+        "182a703b2dbae97a16ae7334cd84a32b634cedc0^1:packages/polaris-dossier/src/review.test.ts"
+      ],
+      "exit": 0,
+      "stdoutSha256": "af05b2a5c63c9fd5209f50b292e385ba060dc724537a6de9d49bafa286fd244b",
+      "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "argv": [
+        "git",
+        "show",
+        "182a703b2dbae97a16ae7334cd84a32b634cedc0^1:packages/polaris-dossier/src/run-dir.ts"
+      ],
+      "exit": 0,
+      "stdoutSha256": "b6be18f50d7ec16a5d0d3140635fc960a0f3f0b2e409fc543155aebc615e0ee2",
+      "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "argv": [
+        "git",
+        "show",
+        "182a703b2dbae97a16ae7334cd84a32b634cedc0^1:packages/polaris-dossier/src/run-record.ts"
+      ],
+      "exit": 0,
+      "stdoutSha256": "b64279e651138283623fa41518bd1f0510eb7a884cc122f11b1f2676d0c56ea9",
+      "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "argv": [
+        "git",
+        "show",
+        "182a703b2dbae97a16ae7334cd84a32b634cedc0^1:packages/polaris-dossier/src/screen-scope-v5.test.ts"
+      ],
+      "exit": 0,
+      "stdoutSha256": "37098f0bf7856e0c669f1236c4bab14e010005f18be77602fc9d3337d2e65c5d",
+      "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "argv": [
+        "git",
+        "show",
+        "182a703b2dbae97a16ae7334cd84a32b634cedc0^1:packages/polaris-dossier/src/screen-scope-v6.test.ts"
+      ],
+      "exit": 0,
+      "stdoutSha256": "5c4e09ba64447d96d5a525cba9b5f3de2c415327c4fecbdff3bae3d1d47572a8",
+      "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "argv": [
+        "git",
+        "show",
+        "182a703b2dbae97a16ae7334cd84a32b634cedc0^1:packages/polaris-dossier/src/screen-scope-v8.test.ts"
+      ],
+      "exit": 0,
+      "stdoutSha256": "65e71aba7c0dbed8d897aac8ade2a5c1d682654d858f11e0bec794e12f29402e",
+      "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "argv": [
+        "git",
+        "show",
+        "182a703b2dbae97a16ae7334cd84a32b634cedc0^1:packages/polaris-dossier/src/screen.test.ts"
+      ],
+      "exit": 0,
+      "stdoutSha256": "a8b8c67b17df924ebbcbc768ed7fe846ddd40b904aa10470a680a28d25701071",
+      "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "argv": [
+        "git",
+        "show",
+        "182a703b2dbae97a16ae7334cd84a32b634cedc0^1:packages/polaris-dossier/src/screen.ts"
+      ],
+      "exit": 0,
+      "stdoutSha256": "07ac33d257355c78d6f706f798aa9d68f97b481f68c8289ea7be1dc4079fbab8",
+      "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "argv": [
+        "git",
+        "show",
+        "182a703b2dbae97a16ae7334cd84a32b634cedc0^1:packages/polaris-dossier/src/session-handover.ts"
+      ],
+      "exit": 0,
+      "stdoutSha256": "f7a377815be436c03bf4fbdb1fcd7befd0498475356fd681a7d52b3ea0eb4664",
+      "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "argv": [
+        "git",
+        "show",
+        "182a703b2dbae97a16ae7334cd84a32b634cedc0^1:packages/polaris-dossier/src/session-statement.ts"
+      ],
+      "exit": 0,
+      "stdoutSha256": "04101d9ebbd6387f503f7635951a7fb8e81d98a745ecfaff1974eabdbbff0a1d",
+      "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "argv": [
+        "git",
+        "show",
+        "182a703b2dbae97a16ae7334cd84a32b634cedc0^1:packages/polaris-dossier/src/start-gates.test.ts"
+      ],
+      "exit": 0,
+      "stdoutSha256": "4a840f87a864ba7b6301a82c4463f62cbaa0b147abae902a04066faf57bdf516",
+      "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "argv": [
+        "git",
+        "show",
+        "182a703b2dbae97a16ae7334cd84a32b634cedc0^1:packages/polaris-dossier/src/status.test.ts"
+      ],
+      "exit": 0,
+      "stdoutSha256": "dc730c92f1f9dd863bfab6deb97a167e0d21ad078656e91d1c4fb7682e826dd4",
+      "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "argv": [
+        "git",
+        "show",
+        "182a703b2dbae97a16ae7334cd84a32b634cedc0^1:packages/polaris-dossier/src/waiting-sessions.test.ts"
+      ],
+      "exit": 0,
+      "stdoutSha256": "6d0b4fb2be96b660077d38eb89201a6ad29afb0dd1b79611be79a8d6c6d08a5c",
+      "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "argv": [
+        "git",
+        "show",
+        "182a703b2dbae97a16ae7334cd84a32b634cedc0^1:packages/polaris-generation-core/src/island-boundary.test.ts"
+      ],
+      "exit": 0,
+      "stdoutSha256": "93a4b56edda38cfd7a070f67e0218640367893d5b6048e30b4db19341858f443",
+      "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "argv": [
+        "git",
+        "show",
+        "182a703b2dbae97a16ae7334cd84a32b634cedc0^1:packages/polaris-generation-core/src/local-render.ts"
+      ],
+      "exit": 0,
+      "stdoutSha256": "3468742ff7f200f4732da430836365c631b0e91194b87b5615501954488a25c1",
+      "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "argv": [
+        "git",
+        "show",
+        "182a703b2dbae97a16ae7334cd84a32b634cedc0^1:packages/polaris-generation-core/src/source-visibility.ts"
+      ],
+      "exit": 0,
+      "stdoutSha256": "bd0a91792f40e237d96f7717d1c062df3a64d2fac6b7ff61b41dba08060f0310",
+      "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "argv": [
+        "git",
+        "show",
+        "182a703b2dbae97a16ae7334cd84a32b634cedc0^1:packages/polaris-generation-core/src/workspace-reach.testkit.ts"
+      ],
+      "exit": 0,
+      "stdoutSha256": "507902f321862807841993fdba82a4fa4fa5eb4ff952f468bc8fd74bdfa38869",
+      "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "argv": [
+        "python3",
+        "scripts/check_governance.py"
+      ],
+      "exit": 0,
+      "stdoutSha256": "0bcba20fa8e8481389384b7cf3b1988710ab2d35a46bb23d79ae69a575f87044",
+      "stderrSha256": "9bcb4f8699e85034201a062c11251167fb6cd3dd81cd368fde2620c96841fa28"
+    }
+  ],
+  "bareCommand": {
+    "exit": 128,
+    "stderr": "error: commit 182a703b2dbae97a16ae7334cd84a32b634cedc0 is a merge but no -m option was given.\nfatal: revert failed\n"
+  },
+  "sourceMainline1RestoresFirstParent": true,
+  "directTailSourceReversalConflicts": [
+    "openspec/README.md",
+    "openspec/changes/dossier-declared-source-model/README.md",
+    "openspec/changes/dossier-declared-source-model/tasks.md"
+  ],
+  "syntheticTailMerge": "45ba0e6b70affca9ffbe5dd08f18f38b060f486d",
+  "tailPreparationPatchSha256": "5222718d8efa75ef8c3791d190765e53922775c786002b6cb3e4bbb4fde7c971",
+  "retainedEvidencePaths": [
+    "docs/evidence/syzygy-k54o-1/adoption-tail/R-D10-F1-TAIL-1-counterexamples.json",
+    "docs/evidence/syzygy-k54o-1/adoption-tail/R-D10-F1-TAIL-1-revert-composition.json",
+    "docs/evidence/syzygy-k54o-1/adoption-tail/R-D10-F1-TAIL-2-independent-evidence.json",
+    "docs/evidence/syzygy-k54o-1/adoption-tail/R-D10-F1-TAIL-3-historical-outcomes-counterexample.json",
+    "docs/evidence/syzygy-k54o-1/adoption-tail/R-D10-F1-TAIL-3-independent-evidence.json",
+    "docs/evidence/syzygy-k54o-1/adoption-tail/R-D10-F1-TAIL-4-dangling-presence-counterexamples.json",
+    "docs/evidence/syzygy-k54o-1/adoption-tail/R-D10-F1-TAIL-4-independent-evidence.json",
+    "docs/evidence/syzygy-k54o-1/adoption-tail/R-D10-F1-TAIL-5-independent-evidence.json",
+    "docs/evidence/syzygy-k54o-1/adoption-tail/README.md",
+    "docs/evidence/syzygy-k54o-1/adoption-tail/artifact-manifest.json",
+    "docs/evidence/syzygy-k54o-1/adoption-tail/d10-f1-tail-1560b6-reconciliation-selftest.log.gz",
+    "docs/evidence/syzygy-k54o-1/adoption-tail/d10-f1-tail-1560b6-rollback-governance.log.gz",
+    "docs/evidence/syzygy-k54o-1/adoption-tail/d10-f1-tail-1560b6-rollback-proof.json",
+    "docs/evidence/syzygy-k54o-1/adoption-tail/d10-f1-tail-1560b6-selftest-witnesses.json",
+    "docs/evidence/syzygy-k54o-1/adoption-tail/d10-f1-tail-1c76b0-rollback-governance.log.gz",
+    "docs/evidence/syzygy-k54o-1/adoption-tail/d10-f1-tail-1c76b0-rollback-proof.json",
+    "docs/evidence/syzygy-k54o-1/adoption-tail/d10-f1-tail-421dc8-p115-hosted.log.gz",
+    "docs/evidence/syzygy-k54o-1/adoption-tail/d10-f1-tail-421dc8-reconciliation-selftest.log.gz",
+    "docs/evidence/syzygy-k54o-1/adoption-tail/d10-f1-tail-421dc8-rollback-governance.log.gz",
+    "docs/evidence/syzygy-k54o-1/adoption-tail/d10-f1-tail-421dc8-rollback-proof.json",
+    "docs/evidence/syzygy-k54o-1/adoption-tail/d10-f1-tail-421dc8-selftest-witnesses.json",
+    "docs/evidence/syzygy-k54o-1/adoption-tail/d10-f1-tail-787ec185e6-final-rollback-probe.json",
+    "docs/evidence/syzygy-k54o-1/adoption-tail/d10-f1-tail-acd300-reconciliation-selftest.log.gz",
+    "docs/evidence/syzygy-k54o-1/adoption-tail/d10-f1-tail-acd300-rollback-governance.log.gz",
+    "docs/evidence/syzygy-k54o-1/adoption-tail/d10-f1-tail-acd300-rollback-proof.json",
+    "docs/evidence/syzygy-k54o-1/adoption-tail/d10-f1-tail-acd300-selftest-witnesses.json",
+    "docs/evidence/syzygy-k54o-1/adoption-tail/d10-f1-tail-bc5d7c-rollback-governance.log.gz",
+    "docs/evidence/syzygy-k54o-1/adoption-tail/d10-f1-tail-bc5d7c-rollback-proof.json",
+    "docs/evidence/syzygy-k54o-1/adoption-tail/d10-f1-tail-dangling-targeted.json",
+    "docs/evidence/syzygy-k54o-1/adoption-tail/d10-f1-tail-dangling-targeted.log.gz",
+    "docs/evidence/syzygy-k54o-1/adoption-tail/d10-f1-tail-failure-matrix-v2.json",
+    "docs/evidence/syzygy-k54o-1/adoption-tail/d10-f1-tail-p115-helper-selftest.log.gz",
+    "docs/evidence/syzygy-k54o-1/adoption-tail/d10-f1-tail-p115-historical-selftest.log.gz",
+    "docs/evidence/syzygy-k54o-1/adoption-tail/test-delta.json",
+    "docs/reviews/syzygy-k54o-1/R-D10-F1-TAIL-1-RAW.md",
+    "docs/reviews/syzygy-k54o-1/R-D10-F1-TAIL-2-RAW.md",
+    "docs/reviews/syzygy-k54o-1/R-D10-F1-TAIL-3-RAW.md",
+    "docs/reviews/syzygy-k54o-1/R-D10-F1-TAIL-4-RAW.md",
+    "docs/reviews/syzygy-k54o-1/R-D10-F1-TAIL-5-RAW.md"
+  ],
+  "retainedEvidencePathDenominator": 39,
+  "twoStageRollbackSucceeded": true,
+  "preservedLedgerSha256": "379248028689975547c5c5776dfd19d131f4d6254a1a32050651413718a209a8",
+  "onlyDifferenceFromPreSource": [
+    ".syzygy/governance/decisions/AGENT-ADOPTIONS.md",
+    "docs/evidence/syzygy-k54o-1/adoption-tail/R-D10-F1-TAIL-1-counterexamples.json",
+    "docs/evidence/syzygy-k54o-1/adoption-tail/R-D10-F1-TAIL-1-revert-composition.json",
+    "docs/evidence/syzygy-k54o-1/adoption-tail/R-D10-F1-TAIL-2-independent-evidence.json",
+    "docs/evidence/syzygy-k54o-1/adoption-tail/R-D10-F1-TAIL-3-historical-outcomes-counterexample.json",
+    "docs/evidence/syzygy-k54o-1/adoption-tail/R-D10-F1-TAIL-3-independent-evidence.json",
+    "docs/evidence/syzygy-k54o-1/adoption-tail/R-D10-F1-TAIL-4-dangling-presence-counterexamples.json",
+    "docs/evidence/syzygy-k54o-1/adoption-tail/R-D10-F1-TAIL-4-independent-evidence.json",
+    "docs/evidence/syzygy-k54o-1/adoption-tail/R-D10-F1-TAIL-5-independent-evidence.json",
+    "docs/evidence/syzygy-k54o-1/adoption-tail/README.md",
+    "docs/evidence/syzygy-k54o-1/adoption-tail/artifact-manifest.json",
+    "docs/evidence/syzygy-k54o-1/adoption-tail/d10-f1-tail-1560b6-reconciliation-selftest.log.gz",
+    "docs/evidence/syzygy-k54o-1/adoption-tail/d10-f1-tail-1560b6-rollback-governance.log.gz",
+    "docs/evidence/syzygy-k54o-1/adoption-tail/d10-f1-tail-1560b6-rollback-proof.json",
+    "docs/evidence/syzygy-k54o-1/adoption-tail/d10-f1-tail-1560b6-selftest-witnesses.json",
+    "docs/evidence/syzygy-k54o-1/adoption-tail/d10-f1-tail-1c76b0-rollback-governance.log.gz",
+    "docs/evidence/syzygy-k54o-1/adoption-tail/d10-f1-tail-1c76b0-rollback-proof.json",
+    "docs/evidence/syzygy-k54o-1/adoption-tail/d10-f1-tail-421dc8-p115-hosted.log.gz",
+    "docs/evidence/syzygy-k54o-1/adoption-tail/d10-f1-tail-421dc8-reconciliation-selftest.log.gz",
+    "docs/evidence/syzygy-k54o-1/adoption-tail/d10-f1-tail-421dc8-rollback-governance.log.gz",
+    "docs/evidence/syzygy-k54o-1/adoption-tail/d10-f1-tail-421dc8-rollback-proof.json",
+    "docs/evidence/syzygy-k54o-1/adoption-tail/d10-f1-tail-421dc8-selftest-witnesses.json",
+    "docs/evidence/syzygy-k54o-1/adoption-tail/d10-f1-tail-787ec185e6-final-rollback-probe.json",
+    "docs/evidence/syzygy-k54o-1/adoption-tail/d10-f1-tail-acd300-reconciliation-selftest.log.gz",
+    "docs/evidence/syzygy-k54o-1/adoption-tail/d10-f1-tail-acd300-rollback-governance.log.gz",
+    "docs/evidence/syzygy-k54o-1/adoption-tail/d10-f1-tail-acd300-rollback-proof.json",
+    "docs/evidence/syzygy-k54o-1/adoption-tail/d10-f1-tail-acd300-selftest-witnesses.json",
+    "docs/evidence/syzygy-k54o-1/adoption-tail/d10-f1-tail-bc5d7c-rollback-governance.log.gz",
+    "docs/evidence/syzygy-k54o-1/adoption-tail/d10-f1-tail-bc5d7c-rollback-proof.json",
+    "docs/evidence/syzygy-k54o-1/adoption-tail/d10-f1-tail-dangling-targeted.json",
+    "docs/evidence/syzygy-k54o-1/adoption-tail/d10-f1-tail-dangling-targeted.log.gz",
+    "docs/evidence/syzygy-k54o-1/adoption-tail/d10-f1-tail-failure-matrix-v2.json",
+    "docs/evidence/syzygy-k54o-1/adoption-tail/d10-f1-tail-p115-helper-selftest.log.gz",
+    "docs/evidence/syzygy-k54o-1/adoption-tail/d10-f1-tail-p115-historical-selftest.log.gz",
+    "docs/evidence/syzygy-k54o-1/adoption-tail/test-delta.json",
+    "docs/reviews/syzygy-k54o-1/R-D10-F1-TAIL-1-RAW.md",
+    "docs/reviews/syzygy-k54o-1/R-D10-F1-TAIL-2-RAW.md",
+    "docs/reviews/syzygy-k54o-1/R-D10-F1-TAIL-3-RAW.md",
+    "docs/reviews/syzygy-k54o-1/R-D10-F1-TAIL-4-RAW.md",
+    "docs/reviews/syzygy-k54o-1/R-D10-F1-TAIL-5-RAW.md"
+  ],
+  "restoredSourcePathDenominator": 109,
+  "restoredSourcePaths": [
+    ".syzygy/governance/decisions/DOSSIER-DECLARED-SOURCE-CONTRACT-APPLICABILITY.md",
+    ".syzygy/governance/policies/POLARIS-DOSSIER-DECLARED-SOURCE-POLICY-v1.json",
+    "apps/three-surface-poc/src/cdp-browser.browser.test.ts",
+    "apps/three-surface-poc/src/polaris-authority-sweep.test.ts",
+    "docs/evidence/syzygy-k54o-1/README.md",
+    "docs/evidence/syzygy-k54o-1/browser-queue-diagnosis/artifact-manifest.json",
+    "docs/evidence/syzygy-k54o-1/browser-queue-diagnosis/assertion-validation.json",
+    "docs/evidence/syzygy-k54o-1/browser-queue-diagnosis/control-157-50.log",
+    "docs/evidence/syzygy-k54o-1/browser-queue-diagnosis/control-157-78.log",
+    "docs/evidence/syzygy-k54o-1/browser-queue-diagnosis/correction.json",
+    "docs/evidence/syzygy-k54o-1/browser-queue-diagnosis/environment.json",
+    "docs/evidence/syzygy-k54o-1/browser-queue-diagnosis/experiment-summary.json",
+    "docs/evidence/syzygy-k54o-1/browser-queue-diagnosis/samples.json",
+    "docs/evidence/syzygy-k54o-1/browser-queue-diagnosis/subjects.json",
+    "docs/evidence/syzygy-k54o-1/correction-mutations/blocking-policy-fifo.json",
+    "docs/evidence/syzygy-k54o-1/correction-mutations/control-authority.json",
+    "docs/evidence/syzygy-k54o-1/correction-mutations/control-census.json",
+    "docs/evidence/syzygy-k54o-1/correction-mutations/control-fifo.json",
+    "docs/evidence/syzygy-k54o-1/correction-mutations/control-role.json",
+    "docs/evidence/syzygy-k54o-1/correction-mutations/disconnected-island-import.json",
+    "docs/evidence/syzygy-k54o-1/correction-mutations/forged-d10-warrant.json",
+    "docs/evidence/syzygy-k54o-1/correction-mutations/repeated-edge-resolution.json",
+    "docs/evidence/syzygy-k54o-1/correction-mutations/restored-control-authority.json",
+    "docs/evidence/syzygy-k54o-1/correction-mutations/restored-control-census.json",
+    "docs/evidence/syzygy-k54o-1/correction-mutations/restored-control-fifo.json",
+    "docs/evidence/syzygy-k54o-1/correction-mutations/restored-control-role.json",
+    "docs/evidence/syzygy-k54o-1/correction-mutations/result.json",
+    "docs/evidence/syzygy-k54o-1/correction-mutations/unresolved-workspace-import.json",
+    "docs/evidence/syzygy-k54o-1/correction-mutations/unsupported-computed-import.json",
+    "docs/evidence/syzygy-k54o-1/correction-mutations/wrong-role-admission.json",
+    "docs/evidence/syzygy-k54o-1/full-check-e940-FAILED.json",
+    "docs/evidence/syzygy-k54o-1/island-timeout-diagnosis/diagnosis-result.json",
+    "docs/evidence/syzygy-k54o-1/island-timeout-diagnosis/hypotheses.json",
+    "docs/evidence/syzygy-k54o-1/island-timeout-diagnosis/measurements.json",
+    "docs/evidence/syzygy-k54o-1/island-timeout-diagnosis/stress-results.json",
+    "docs/evidence/syzygy-k54o-1/mutation-probes.json",
+    "docs/evidence/syzygy-k54o-1/policy-review-subject.json",
+    "docs/evidence/syzygy-k54o-1/policy-semantic-delta.json",
+    "docs/evidence/syzygy-k54o-1/proposed-syntax-validation.json",
+    "docs/evidence/syzygy-k54o-1/raw-review-locations.json",
+    "docs/evidence/syzygy-k54o-1/specification-review-7-inputs.json",
+    "docs/evidence/syzygy-k54o-1/test-delta.json",
+    "docs/review-campaigns/d10-f1-declared-source.md",
+    "docs/reviews/syzygy-k54o-1/R-D10-F1-BROWSER-DIAGNOSIS-1-RAW.md",
+    "docs/reviews/syzygy-k54o-1/R-D10-F1-ISLAND-DIAGNOSIS-1-RAW.md",
+    "docs/reviews/syzygy-k54o-1/R-D10-F1-POLICY-1-RAW.md",
+    "docs/reviews/syzygy-k54o-1/R-D10-F1-SCOPE-1-RAW.md",
+    "docs/reviews/syzygy-k54o-1/R-D10-F1-SOURCE-1-RAW.md",
+    "docs/reviews/syzygy-k54o-1/R-D10-F1-SOURCE-2-RAW.md",
+    "docs/reviews/syzygy-k54o-1/R-D10-F1-SOURCE-3-RAW.md",
+    "docs/reviews/syzygy-k54o-1/R-D10-F1-SPEC-1-RAW.md",
+    "docs/reviews/syzygy-k54o-1/R-D10-F1-SPEC-2-RAW.md",
+    "docs/reviews/syzygy-k54o-1/R-D10-F1-SPEC-3-RAW.md",
+    "docs/reviews/syzygy-k54o-1/R-D10-F1-SPEC-5-RAW.md",
+    "docs/reviews/syzygy-k54o-1/R-D10-F1-SPEC-6-RAW.md",
+    "docs/reviews/syzygy-k54o-1/R-D10-F1-SPEC-7-RAW.md",
+    "openspec/README.md",
+    "openspec/changes/dossier-declared-source-model/.openspec.yaml",
+    "openspec/changes/dossier-declared-source-model/CAPABILITY-COVERAGE.json",
+    "openspec/changes/dossier-declared-source-model/CONTRACT-COVERAGE.json",
+    "openspec/changes/dossier-declared-source-model/GOVERNING-DEPENDENCIES.json",
+    "openspec/changes/dossier-declared-source-model/README.md",
+    "openspec/changes/dossier-declared-source-model/SCENARIO-COVERAGE.json",
+    "openspec/changes/dossier-declared-source-model/SEMANTIC-DELTA.md",
+    "openspec/changes/dossier-declared-source-model/design.md",
+    "openspec/changes/dossier-declared-source-model/proposal.md",
+    "openspec/changes/dossier-declared-source-model/proposed/polaris-generation/spec.md",
+    "openspec/changes/dossier-declared-source-model/tasks.md",
+    "packages/polaris-dossier/src/agent-texts.test.ts",
+    "packages/polaris-dossier/src/brief.test.ts",
+    "packages/polaris-dossier/src/brief.ts",
+    "packages/polaris-dossier/src/census.test.ts",
+    "packages/polaris-dossier/src/census.ts",
+    "packages/polaris-dossier/src/check.test.ts",
+    "packages/polaris-dossier/src/check.ts",
+    "packages/polaris-dossier/src/cli-table.test.ts",
+    "packages/polaris-dossier/src/cli.test.ts",
+    "packages/polaris-dossier/src/cli.ts",
+    "packages/polaris-dossier/src/close.test.ts",
+    "packages/polaris-dossier/src/close.ts",
+    "packages/polaris-dossier/src/execution-choice.test.ts",
+    "packages/polaris-dossier/src/full-run.testkit.ts",
+    "packages/polaris-dossier/src/gate-sources.ts",
+    "packages/polaris-dossier/src/init.ts",
+    "packages/polaris-dossier/src/inventory.test.ts",
+    "packages/polaris-dossier/src/inventory.ts",
+    "packages/polaris-dossier/src/launch-cli.ts",
+    "packages/polaris-dossier/src/launch.test.ts",
+    "packages/polaris-dossier/src/policy-snapshot.ts",
+    "packages/polaris-dossier/src/render.test.ts",
+    "packages/polaris-dossier/src/render.ts",
+    "packages/polaris-dossier/src/reverify.ts",
+    "packages/polaris-dossier/src/review.test.ts",
+    "packages/polaris-dossier/src/run-dir.ts",
+    "packages/polaris-dossier/src/run-record.ts",
+    "packages/polaris-dossier/src/screen-scope-v5.test.ts",
+    "packages/polaris-dossier/src/screen-scope-v6.test.ts",
+    "packages/polaris-dossier/src/screen-scope-v8.test.ts",
+    "packages/polaris-dossier/src/screen.test.ts",
+    "packages/polaris-dossier/src/screen.ts",
+    "packages/polaris-dossier/src/session-handover.ts",
+    "packages/polaris-dossier/src/session-statement.ts",
+    "packages/polaris-dossier/src/start-gates.test.ts",
+    "packages/polaris-dossier/src/status.test.ts",
+    "packages/polaris-dossier/src/waiting-sessions.test.ts",
+    "packages/polaris-generation-core/src/island-boundary.test.ts",
+    "packages/polaris-generation-core/src/local-render.ts",
+    "packages/polaris-generation-core/src/source-visibility.ts",
+    "packages/polaris-generation-core/src/workspace-reach.testkit.ts"
+  ],
+  "postRollbackGovernance": {
+    "exit": 0,
+    "logSha256": "4ba354247e4db92c03a441af08a37d781c77606a437c7761f6c210035c724714",
+    "log": "/home/orca/.tmp/syzygy-beads-looper-20261114-54ebc9f1/d10-f1-tail-6383bc-rollback-governance.log"
+  }
+}

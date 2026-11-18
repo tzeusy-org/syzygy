@@ -1,0 +1,174 @@
+{
+  "subject": "6383bcec1d3de951ae75edc2d272a231785a3848",
+  "tree": "9253592594d0c543eea1b63768e8f569cbce374e",
+  "requirements": 38,
+  "scenarios": 277,
+  "literalCounts": {
+    "Operator-agent authoring mode": 5,
+    "Agent brief and mechanically checked draft": 28,
+    "Fresh-context review in the operator-agent mode": 17,
+    "Self-reported discovery and in-session clarification": 6,
+    "Declared local-source admission": 3
+  },
+  "rawAmendmentModifiedRequirements": 5,
+  "rawAmendmentScenarios": 59,
+  "counterIndependentOfReconciliationCensus": true,
+  "counterParserDisagreementRefuses": true,
+  "projectedCompositionMatches": true,
+  "missingProjectedRowRefuses": true,
+  "changedProjectedSpecRefuses": true,
+  "targetedReceiptCommands": 14,
+  "targetedSummaries": [
+    {
+      "command": [
+        "python3",
+        "scripts/count_polaris_effective_scenarios.py",
+        "--check"
+      ],
+      "lastLines": [
+        "",
+        "PROJECT-STATUS.md asserts: 38 requirements, 277 scenarios",
+        "CHECK PASS: recomputed total 277 matches expected 277."
+      ]
+    },
+    {
+      "command": [
+        "python3",
+        "scripts/count_polaris_effective_scenarios.py",
+        "--selftest"
+      ],
+      "lastLines": [
+        "  [ok] two ADDED-only files both hold the overlay's predecessor: check failed closed as expected",
+        "  [ok] overlay references no ADDED-only file's requirement: check failed closed as expected",
+        "selftest PASS: expected refusals and positive controls held."
+      ]
+    },
+    {
+      "command": [
+        "python3",
+        "scripts/build_polaris_dossier_local_agent_mode.py",
+        "--check"
+      ],
+      "lastLines": [
+        "OK: the package verifies (applied)"
+      ]
+    },
+    {
+      "command": [
+        "python3",
+        "scripts/build_polaris_dossier_local_agent_mode_v1_1.py",
+        "--check"
+      ],
+      "lastLines": [
+        "OK: the v1.1 package verifies (applied, options ['n6'])"
+      ]
+    },
+    {
+      "command": [
+        "python3",
+        "scripts/build_polaris_dossier_local_agent_mode_v1_2.py",
+        "--check"
+      ],
+      "lastLines": [
+        "OK: the v1.2 package verifies (applied)"
+      ]
+    },
+    {
+      "command": [
+        "python3",
+        "scripts/build_polaris_dossier_local_agent_mode_v1_3.py",
+        "--check"
+      ],
+      "lastLines": [
+        "OK: the v1.3 package verifies (applied)"
+      ]
+    },
+    {
+      "command": [
+        "python3",
+        "scripts/build_polaris_dossier_local_agent_mode_v1_4.py",
+        "--check"
+      ],
+      "lastLines": [
+        "OK: the v1.4 package verifies (applied)"
+      ]
+    },
+    {
+      "command": [
+        "python3",
+        "scripts/build_polaris_dossier_local_agent_mode_v1_5.py",
+        "--check"
+      ],
+      "lastLines": [
+        "OK: the v1.5 package verifies (applied)"
+      ]
+    },
+    {
+      "command": [
+        "python3",
+        "scripts/build_polaris_dossier_local_agent_mode_v1_6.py",
+        "--check"
+      ],
+      "lastLines": [
+        "OK: the v1.6 package verifies (applied)"
+      ]
+    },
+    {
+      "command": [
+        "python3",
+        "scripts/build_polaris_dossier_launch_consent.py",
+        "--check"
+      ],
+      "lastLines": [
+        "OK: the package verifies (applied)"
+      ]
+    },
+    {
+      "command": [
+        "python3",
+        "scripts/build_polaris_dossier_launch_consent_v1_1.py",
+        "--check"
+      ],
+      "lastLines": [
+        "OK: the v1.1 package verifies (applied)"
+      ]
+    },
+    {
+      "command": [
+        "python3",
+        "scripts/build_polaris_dossier_launch_consent_v1_2.py",
+        "--check"
+      ],
+      "lastLines": [
+        "OK: the v1.2 package verifies (applied)"
+      ]
+    },
+    {
+      "command": [
+        "python3",
+        "scripts/build_polaris_dossier_local_agent_mode.py",
+        "--selftest"
+      ],
+      "lastLines": [
+        "PASS applied: a short span in any package file fails",
+        "PASS unapplied: a short citer without the span fails",
+        "36 fixtures, 0 failing"
+      ]
+    },
+    {
+      "command": [
+        "python3",
+        "scripts/build_polaris_dossier_launch_consent.py",
+        "--selftest"
+      ],
+      "lastLines": [
+        "PASS  absent change with no record passes",
+        "PASS  absent change with a record fails",
+        "25 fixtures, 0 failing"
+      ]
+    }
+  ],
+  "rollbackOperativePathCount": 11,
+  "rollbackPatchAndGovernanceLogVerified": true,
+  "reviewedNormativeSubjectCount": 3
+}

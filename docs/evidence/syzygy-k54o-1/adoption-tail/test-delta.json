@@ -1,7 +1,7 @@
 {
   "sourceBase": "182a703b2dbae97a16ae7334cd84a32b634cedc0",
   "definition": "New explicit case identities in the two existing Python selftests; parameter cases counted as executed, unlike the separate source-package TypeScript AST ledger.",
-  "added": 44,
+  "added": 49,
   "changed": 0,
   "removed": 0,
   "newReconciliationRefusals": 38,
@@ -228,7 +228,34 @@
       "id": "the declared-source specification removed",
       "kind": "refusal mutation",
       "sourceFile": "scripts/build_polaris_dependency_unions.py"
+    },
+    {
+      "id": "declared-source: verified five replacements and046 rename total38/277",
+      "kind": "control",
+      "sourceFile": "scripts/count_polaris_effective_scenarios.py"
+    },
+    {
+      "id": "declared-source: projected install keeps binding inputs and effective composition",
+      "kind": "control",
+      "sourceFile": "scripts/count_polaris_effective_scenarios.py"
+    },
+    {
+      "id": "declared-source missing-row refuses counting",
+      "kind": "refusal mutation",
+      "sourceFile": "scripts/count_polaris_effective_scenarios.py"
+    },
+    {
+      "id": "declared-source changed-spec refuses counting",
+      "kind": "refusal mutation",
+      "sourceFile": "scripts/count_polaris_effective_scenarios.py"
+    },
+    {
+      "id": "projected declared-source missing binding refuses instead of recounting329",
+      "kind": "refusal mutation",
+      "sourceFile": "scripts/count_polaris_effective_scenarios.py"
     }
   ],
-  "verification": "Historical executions remain bound to421dc8/1560b6/bc5d7c; final exact-head comprehensive execution remains pending."
+  "verification": "6383bc exact fourteen-command receipt covers the new counter cases; earlier executions keep their own subjects. Final exact-head comprehensive gate remains pending.",
+  "newCounterRefusals": 3,
+  "newCounterControls": 2
 }
