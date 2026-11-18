@@ -16,3 +16,5 @@ A specification version also gets a git tag, named in the last column.
 
 | Id | Date | Commit | What changed | Why | Revert | Tag |
 |---|---|---|---|---|---|---|
+| A-1 | 2026-11-18 | `dd932da5a` | CC-REV-2 names the CC-IMPACT-6 recorded spec lag as its one exception | The two clauses contradicted each other once D10 amended CC-IMPACT-6 (R-D10-PACKAGE-RESUME-1) | `git revert dd932da5a` (reverts A-2 too) | — |
+| A-2 | 2026-11-18 | `dd932da5a` | `d10_supersession.py` treats D10 as in effect only when its record verifies | A bare or forged record file, or a recordless install, silenced the superseded checks (R-D10-PACKAGE-RESUME-1) | `git revert dd932da5a` (reverts A-1 too) | — |
