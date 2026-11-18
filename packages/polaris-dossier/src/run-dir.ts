@@ -7,7 +7,7 @@ import { type GateSources } from './gate-sources.js';
 import { isoOf } from './iso-of.js';
 import { reverifyPinnedRevision, type ReverifiedRevision, type ReverifyOptions, type ReverifyRefusal } from './reverify.js';
 import type { RunConfig } from './run-config.js';
-import type { RunSubject } from './run-record.js';
+import { readRunRecord, type RunSubject } from './run-record.js';
 import { RUN_ID, RUN_LAYOUT, resolvePathIntent, within } from './state-directory.js';
 
 /** A run step's opening, step log, stored-record reader and the sessions root's paths; split out of `inventory.ts` unchanged. */
@@ -42,7 +42,7 @@ const RECORD_JSON_LIMITS = Object.freeze({ maxBytes: 262_144, maxNodes: 4096, ma
 export const errno = (cause: unknown): string => (cause as NodeJS.ErrnoException).code ?? 'unknown-error';
 
 /** A run step's common opening: the run directory, the pinned revision verified again, a brief issued and its deadline not passed.
- * `revision` is the label and consent record the live consent gives the pinned commit now, never the run record's copy. */
+ * `revision` carries stored selection provenance; object integrity is rechecked now. */
 export type OpenedRun =
   | { readonly ok: true; readonly run: string; readonly runId: string; readonly subject: RunSubject; readonly declared: RunConfig; readonly deadlineEnds: number; readonly revision: ReverifiedRevision; readonly contentClasses: readonly string[] | null }
   | { readonly ok: false; readonly stage: 'run' | 'reverify' | 'not-briefed' | 'deadline'; readonly reason: string; readonly reasons?: readonly string[]; readonly refusals?: readonly ReverifyRefusal[] };
@@ -64,6 +64,8 @@ export async function openRun(runDir: string, sources: GateSources, now: number,
 /** Append one entry to the run's step log; a failure to append changes no result. */
 export function logStep(run: string, step: string, at: number, entry: Record<string, unknown>): void {
   try {
+    const stored = readRunRecord(fs.readFileSync(path.join(run, RUN_LAYOUT.config), 'utf8'));
+    if (!stored.ok && stored.legacy) return;
     fs.appendFileSync(path.join(run, RUN_LAYOUT.steps), `${JSON.stringify({ format: 'polaris-dossier-step/1', step, at: isoOf(at), ...entry })}\n`, { mode: 0o600 });
   } catch { /* the step log is a convenience within the agent's reach */ }
 }

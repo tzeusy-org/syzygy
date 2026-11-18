@@ -99,7 +99,7 @@ export function encodeRunRecord(config: RunConfig, subject: RunSubject): string 
 
 export type ReadRunRecordResult =
   | { readonly ok: true; readonly record: RecordedRunConfig }
-  | { readonly ok: false; readonly detail: string; readonly refusals?: readonly RunConfigRefusal[] };
+  | { readonly ok: false; readonly detail: string; readonly legacy?: true; readonly refusals?: readonly RunConfigRefusal[] };
 
 const RECORD_JSON_LIMITS = Object.freeze({ maxBytes: 65_536, maxNodes: 256, maxDepth: 4 });
 const RECORD_KEYS = ['declared', 'declaredBy', 'format', 'label', 'mode', 'modelVersionProvider', 'principal', 'subject'];
@@ -118,7 +118,7 @@ export function readRunRecord(text: string): ReadRunRecordResult {
   }
   const fields = document as Readonly<Record<string, unknown>>;
   if (fields['format'] === 'polaris-dossier-run/1') {
-    return { ok: false, detail: 'legacy polaris-dossier-run/1 cannot continue under the declared-source model; keep its artifacts and start a new run with dossier init; no file was migrated or changed' };
+    return { ok: false, legacy: true, detail: 'legacy polaris-dossier-run/1 cannot continue under the declared-source model; keep its artifacts and start a new run with dossier init; no file was migrated or changed' };
   }
   const keys = Object.keys(fields).sort();
   if (keys.join(',') !== RECORD_KEYS.join(',')) {

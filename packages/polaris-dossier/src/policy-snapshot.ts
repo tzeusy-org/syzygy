@@ -36,7 +36,7 @@ export function readCommittedPolicy(root: string): PolicySnapshot {
     const commit = git('rev-parse', '--verify', 'HEAD^{commit}').toString('ascii').trim();
     if (!/^(?:[0-9a-f]{40}|[0-9a-f]{64})$/u.test(commit)) return { ok: false, why: 'the Syzygy policy commit is unreadable' };
     const bytes = git('show', `${commit}:${DOSSIER_POLICY_PATH}`);
-    const fd = openSync(path.join(root, DOSSIER_POLICY_PATH), constants.O_RDONLY | constants.O_NOFOLLOW);
+    const fd = openSync(path.join(root, DOSSIER_POLICY_PATH), constants.O_RDONLY | constants.O_NOFOLLOW | constants.O_NONBLOCK);
     let current: Buffer;
     try {
       const stats = fstatSync(fd);

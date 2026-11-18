@@ -1,6 +1,7 @@
 import { commitPolicyFixture, policyFixture } from './full-run.testkit.js';
 import { DOSSIER_POLICY_PATH, readCommittedPolicy } from './policy-snapshot.js';
 import { createHash } from 'node:crypto';
+import { buildSync } from 'esbuild';
 import { execFileSync } from 'node:child_process';
 import * as fs from 'node:fs';
 import * as path from 'node:path';
@@ -626,6 +627,14 @@ describe('init: the clone holds the consented commit alone (syzygy-qkea.24)', ()
   });
 });
 
+  const cli = async (argv: readonly string[], root: string, env: Record<string, string> = {}, projectInput: ProjectInputSource = NO_DRAWER) => {
+    let stdout = '';
+    let stderr = '';
+    const sources = createPackageGateSources({ root, now: () => NOW, projectInput });
+    const code = await runDossierCli(argv, { stdout: t => { stdout += t; }, stderr: t => { stderr += t; } }, { env, now: () => NOW, sources });
+    return { code, stdout, stderr };
+  };
+
 describe('declared-source admission and continuation boundaries', () => {
   const edit = (run: string, change: (record: any) => void): void => {
     const file = path.join(run, 'run.json'); const record = JSON.parse(fs.readFileSync(file, 'utf8')); change(record); fs.writeFileSync(file, JSON.stringify(record));
@@ -676,6 +685,13 @@ describe('declared-source admission and continuation boundaries', () => {
     }
     expect(readCommittedPolicy(root)).toMatchObject({ ok: false });
   });
+  it('refuses a FIFO policy without waiting for a writer', () => {
+    const root = records(); const policy = path.join(root, DOSSIER_POLICY_PATH); fs.unlinkSync(policy); execFileSync('mkfifo', [policy]);
+    const bundle = path.join(tempDir('declared-policy-fifo-'), 'read.mjs');
+    buildSync({ stdin: { contents: `import { readCommittedPolicy } from ${JSON.stringify(path.join(REAL_ROOT, 'packages/polaris-dossier/src/policy-snapshot.ts'))}; process.stdout.write(JSON.stringify(readCommittedPolicy(process.argv[2])));`, resolveDir: REAL_ROOT }, bundle: true, platform: 'node', format: 'esm', conditions: ['source'], outfile: bundle });
+    const result = execFileSync(process.execPath, [bundle, root], { encoding: 'utf8', timeout: 3000, stdio: ['ignore', 'pipe', 'pipe'] });
+    expect(JSON.parse(result)).toEqual({ ok: false, why: 'the dossier policy must be a bounded regular file' });
+  });
   it('does not invalidate the policy binding for an unrelated Syzygy commit', async () => {
     const { run, root } = await started(); fs.writeFileSync(path.join(root, 'note.txt'), 'unrelated fixture'); gitIn(root, 'add', 'note.txt'); gitIn(root, '-c', 'user.name=t', '-c', 'user.email=t@example.invalid', 'commit', '-qm', 'unrelated');
     expect((await guard(run, root)).ok).toBe(true);
@@ -688,6 +704,15 @@ describe('declared-source admission and continuation boundaries', () => {
     const { run, root } = await started(); fs.writeFileSync(path.join(run, 'brief.json'), JSON.stringify({ pinnedRevision: commits.A, sourceBindingSha256: 'a'.repeat(64), agent: { tool: 'claude-code', provider: 'anthropic' } }));
     edit(run, r => { r.declared.agentProvider = 'openai'; });
     expect(await guard(run, root)).toMatchObject({ ok: false, refusals: expect.arrayContaining([{ code: 'declared-changed', reason: expect.any(String) }]) });
+  });
+  it('every local continuation command leaves a legacy run and its retained log byte-equal', async () => {
+    const { run, root } = await started(); edit(run, r => { r.format = 'polaris-dossier-run/1'; });
+    fs.writeFileSync(path.join(run, 'steps.jsonl'), '{"retained":"original history"}\n');
+    const capture = (): Record<string, string> => Object.fromEntries(fs.readdirSync(run, { recursive: true }).map(String).sort().map(name => [name, fs.readFileSync(path.join(run, name)).toString('base64')]));
+    const before = capture();
+    for (const argv of [['brief', run], ['check', run], ['inventory-brief', run], ['inventory-check', run], ['review-packet', run, '--kind', 'fidelity'], ['review-check', run], ['render', run], ['close', run], ['session-prompt', run, 'inventory'], ['launch-form', run, 'inventory', 'terminal'], ['status', run]]) {
+      const result = await cli(argv, root); expect.soft(result.code, argv[0]).toBe(1); expect.soft(result.stdout + result.stderr, argv[0]).toContain('start a new run'); expect.soft(capture(), argv[0]).toEqual(before);
+    }
   });
   it('refuses legacy /1 without rewriting its bytes or artifacts', async () => {
     const { run, root } = await started(); edit(run, r => { r.format = 'polaris-dossier-run/1'; });
@@ -792,13 +817,6 @@ describe('preflight', () => {
 });
 
 describe('the CLI: preflight and init', () => {
-  const cli = async (argv: readonly string[], root: string, env: Record<string, string> = {}, projectInput: ProjectInputSource = NO_DRAWER) => {
-    let stdout = '';
-    let stderr = '';
-    const sources = createPackageGateSources({ root, now: () => NOW, projectInput });
-    const code = await runDossierCli(argv, { stdout: t => { stdout += t; }, stderr: t => { stderr += t; } }, { env, now: () => NOW, sources });
-    return { code, stdout, stderr };
-  };
   const configFile = (): string => { const file = path.join(tempDir('dossier-config-'), 'run.json'); fs.writeFileSync(file, CONFIG); return file; };
 
   it('init refuses with no state root, there being no default', async () => {

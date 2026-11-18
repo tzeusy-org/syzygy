@@ -81,3 +81,50 @@ New records are `/2`; exact eligible classes name artifact eligibility, never ac
 ## Predecessor scenario coverage
 
 SCENARIO-COVERAGE.json enumerates every scenario heading in the two predecessor specifications with source hash, owning requirement and a disposition. It separates unchanged scenario assertions, replacement of retired admission semantics and F-3 acquisition/execution scope. This is an obligation map; execution evidence lives in the test/review records, and no row claims unperformed F-3 behavior delivered.
+
+## Round1 specification corrections
+
+[Inferred] The first frozen specification review returned REVISE. The updated033 explicitly restores its complete page/appendix/machine disclosure and principal/unattributed-work duties, with retired gate and unrestricted-send claims replaced. Its conditional credential probes/command flags are retained for a retained permitting record; F-1 issues no new permitting instruction, and F-3 owns future execution orchestration. Per-requirement warrants retain the predecessor material clauses/product decisions and add current D10, instead of substituting one common list. A product decision remains a warrant only for its retained product consequence; its old admission/owner-act limb is superseded by D10 and is not a new record gate.
+
+Additional exact fragment replacements:
+
+```json
+[
+  {
+    "old": "A page SHALL carry no script and the pages' content security policy SHALL stay as it was at version 1.4, unless an owner act has put `public-source screening scope version 7` or a successor in force. While one is in force, a page MAY carry only a script that scope's renderCondition describes, under the policy it describes.",
+    "new": "A page SHALL carry no script and the pages' content security policy SHALL stay as it was at version 1.4, unless the run's bound committed screening policy recognizes the exact version7 script renderCondition or its equally restrictive successor. With that recognized condition, a page MAY carry only the script and content security policy that condition describes; a policy identity, version or digest mismatch refuses under033, without an owner-act gate."
+  },
+  {
+    "old": "- **AND** the brief contains no project content other than the repository identity and the pinned revision",
+    "new": "- **AND** the brief contains no source body; the repository identity, pin, clone read location, provider/classes, visibility, committed policy binding and finite configuration are declared run metadata"
+  },
+  {
+    "old": "#### Scenario: Script rule follows the screening act",
+    "new": "#### Scenario: Script rule follows the committed policy"
+  },
+  {
+    "old": "- **WHEN** no owner act has put screening scope version 7 or a successor in force",
+    "new": "- **WHEN** the bound committed policy has no recognized version7 script renderCondition or equally restrictive successor"
+  },
+  {
+    "old": "the screening act's presence",
+    "new": "the committed policy script condition and its exact binding"
+  },
+  {
+    "old": "with the screening act absent",
+    "new": "with no recognized script condition in the bound policy"
+  },
+  {
+    "old": "a page carries a script or a changed content security policy with no screening act in force, or a script or policy that act does not describe",
+    "new": "a page carries a script or a changed content security policy without the recognized bound renderCondition, or a script or policy that condition does not describe"
+  },
+  {
+    "old": "from the clone it read without restriction",
+    "new": "from the pinned clone under SEC-2/SEC-5 screening and exclusion rules; its actual reads and transmissions are not observed by Syzygy"
+  },
+  {
+    "old": "or is made without the waiting session's provider statement in force",
+    "new": "or is made with a missing or mismatching declared provider/tool, pin or committed policy binding"
+  }
+]
+```

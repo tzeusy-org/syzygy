@@ -146,7 +146,7 @@
       "requirement": "REQ-polaris-generation-033",
       "scenario": "Adapter credential readable",
       "disposition": "retained",
-      "current_obligation": "033 retains finite limits, object integrity, rederived evidence, Inferred history/usage and self-reported command disclosures",
+      "current_obligation": "033 conditional operating-system probe/source/step schedule/breach disclosure retained for a retained permitting record; F-1 issues no permitting arm",
       "evidence_scope": "start-gates.test.ts, run-config/status/brief/check/close/render and execution-choice suites."
     },
     {
@@ -202,7 +202,7 @@
       "requirement": "REQ-polaris-generation-033",
       "scenario": "Reported command outside the named scope",
       "disposition": "retained",
-      "current_obligation": "033 retains finite limits, object integrity, rederived evidence, Inferred history/usage and self-reported command disclosures",
+      "current_obligation": "033 conditional command-directory/scope flags retained for a permitting record; disclosed Inferred, hide/refuse nothing; F-3 creates no new permission here",
       "evidence_scope": "start-gates.test.ts, run-config/status/brief/check/close/render and execution-choice suites."
     },
     {
@@ -210,7 +210,7 @@
       "requirement": "REQ-polaris-generation-033",
       "scenario": "Mode disclosed on every page",
       "disposition": "retained",
-      "current_obligation": "033 retains finite limits, object integrity, rederived evidence, Inferred history/usage and self-reported command disclosures",
+      "current_obligation": "033 full human sentence, appendix, per-page machine form and parity explicitly retained; obsolete gate/unrestricted-read claims replaced",
       "evidence_scope": "start-gates.test.ts, run-config/status/brief/check/close/render and execution-choice suites."
     },
     {
@@ -249,8 +249,8 @@
       "source": "openspec/changes/polaris-dossier-local-agent-mode/specs/polaris-generation/spec.md",
       "requirement": "REQ-polaris-generation-034",
       "scenario": "Brief carries topics, rules and schema",
-      "disposition": "retained",
-      "current_obligation": "034\u2013036 full replacement sections retain this behavior; declaration references follow033",
+      "disposition": "retained with metadata allowance",
+      "current_obligation": "034 no source body; required clone/provider/classes/visibility/policy/configuration metadata permitted and attributed",
       "evidence_scope": "Existing dossier quotation, check, inventory, review, render, discovery and clarification suites; final run receipt required."
     },
     {
@@ -346,7 +346,7 @@
       "requirement": "REQ-polaris-generation-034",
       "scenario": "Script rule follows the screening act",
       "disposition": "retained with policy binding",
-      "current_obligation": "034 script policy predicate unchanged; committed policy binding replaces act provenance under033",
+      "current_obligation": "034 Script rule follows the committed policy, including scenario/case/oracle/falsifier; script/CSP predicate retained, policy act prerequisite retired",
       "evidence_scope": "Existing script/render/screen cases retained; committed-policy drift refusal added."
     },
     {

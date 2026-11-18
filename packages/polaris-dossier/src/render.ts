@@ -20,6 +20,7 @@ import { buildDesignPacket } from './design-review.js';
 import type { Outcome } from './outcome.js';
 import { designReviewOfRecord, latestPassedDraft, reviewOfRecord, type DesignReviewOfRecord, type ReviewDeps, type ReviewOfRecord } from './review.js';
 import type { ReverifyRefusal } from './reverify.js';
+import { readRunRecord } from './run-record.js';
 import { NO_WORK_ITEM_REASON } from './run-record.js';
 import { CLASS_NOT_CONSENTED, unconsentedClass, unconsentedText } from './class-gate.js';
 import { placementSubjectOf, screenLoaderOf, type DossierScreen, type ScreenExclusion } from './screen.js';
@@ -136,6 +137,12 @@ export async function renderRun(runDir: string, deps: RenderDeps): Promise<Rende
     if (logRun !== undefined) logStep(logRun, 'render', now, { outcome: 'refused', stage, reason });
     return { ok: false, refusal: { command: 'render', outcome: 'refused', stage, reason, ...extra, disclosures: DISCLOSURES } };
   };
+  // A retained legacy run is read-only and gets its restart explanation even
+  // when no renderer is installed; do not append a step or inspect its sources.
+  try {
+    const stored = readRunRecord(fs.readFileSync(path.join(runDir, RUN_LAYOUT.config), 'utf8'));
+    if (!stored.ok && stored.legacy) return refuse('run', stored.detail);
+  } catch { /* existing missing-run / missing-renderer handling below */ }
   if (deps.renderer === undefined) return refuse('renderer', NO_RENDERER);
   const opened = await openRun(runDir, deps.sources, now, 'nothing is rendered', deps.openReader ? { openReader: deps.openReader } : {});
   if (!opened.ok) return refuse(opened.stage, opened.reason, { ...(opened.reasons ? { reasons: opened.reasons } : {}), ...(opened.refusals ? { refusals: opened.refusals } : {}) });

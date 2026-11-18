@@ -1,0 +1,317 @@
+{
+  "label": "Inferred",
+  "meaning": "Candidate requirement coverage, not implementation PASS; independent confirmation pending",
+  "population": 38,
+  "partition": {
+    "covered": 31,
+    "lawfully out of scope": 7,
+    "Unknown / unresolved": 0
+  },
+  "obligations": [
+    {
+      "id": "local-input",
+      "obligation": "Accept a normalized credential-free locator and declared/derived identity without stdin or retired records",
+      "partition": "covered",
+      "requirements": [
+        "REQ-polaris-generation-046"
+      ]
+    },
+    {
+      "id": "pin",
+      "obligation": "Select full local HEAD, verify explicit full pin, preserve it for the run",
+      "partition": "covered",
+      "requirements": [
+        "REQ-polaris-generation-033",
+        "REQ-polaris-generation-046"
+      ]
+    },
+    {
+      "id": "real-clone",
+      "obligation": "Record the real read path, preserve strict clone form and leave source clone unchanged",
+      "partition": "covered",
+      "requirements": [
+        "REQ-polaris-generation-033",
+        "REQ-polaris-generation-046"
+      ]
+    },
+    {
+      "id": "state",
+      "obligation": "Validate state separation/interrupted writes and keep run state outside clone",
+      "partition": "covered",
+      "requirements": [
+        "REQ-polaris-generation-033",
+        "REQ-polaris-generation-046"
+      ]
+    },
+    {
+      "id": "object-rehash",
+      "obligation": "Read reachable pinned commit/tree/blob by identifier, rehash every used object, refuse invalid bytes",
+      "partition": "covered",
+      "requirements": [
+        "REQ-polaris-generation-033"
+      ]
+    },
+    {
+      "id": "policy",
+      "obligation": "Bind committed policy path/commit/id/version/digest; bounded regular-file strictUTF8/JSON; refuse missing/dirty/changed policy",
+      "partition": "covered",
+      "requirements": [
+        "REQ-polaris-generation-033"
+      ]
+    },
+    {
+      "id": "provider",
+      "obligation": "Declare tool/provider/model/initiator and forbid undeclared-provider content; no provider dispatch",
+      "partition": "covered",
+      "requirements": [
+        "REQ-polaris-generation-033"
+      ]
+    },
+    {
+      "id": "classes",
+      "obligation": "Record exact eligible artifact classes; actual transmission remains unobserved",
+      "partition": "covered",
+      "requirements": [
+        "REQ-polaris-generation-033"
+      ]
+    },
+    {
+      "id": "visibility",
+      "obligation": "Attribute Inferred visibility; absent/ambiguous is private, malformed refuses",
+      "partition": "covered",
+      "requirements": [
+        "REQ-polaris-generation-033"
+      ]
+    },
+    {
+      "id": "screening",
+      "obligation": "Preserve detector, unknownclass, deniedpath, invalidtext and activecontent exclusion rules",
+      "partition": "covered",
+      "requirements": [
+        "REQ-polaris-generation-033",
+        "REQ-polaris-generation-034"
+      ]
+    },
+    {
+      "id": "private",
+      "obligation": "Preserve private wholebody exclusion and excluded/withheld metadata suppression",
+      "partition": "covered",
+      "requirements": [
+        "REQ-polaris-generation-033",
+        "REQ-polaris-generation-034"
+      ]
+    },
+    {
+      "id": "agents",
+      "obligation": "Instruct agentownreads/sends to preserve SEC2/5; never claim observed compliance",
+      "partition": "covered",
+      "requirements": [
+        "REQ-polaris-generation-033",
+        "REQ-polaris-generation-036"
+      ]
+    },
+    {
+      "id": "format",
+      "obligation": "Strict bounded exact /2 fields and normalized locators; reject malformed values",
+      "partition": "covered",
+      "requirements": [
+        "REQ-polaris-generation-033"
+      ]
+    },
+    {
+      "id": "legacy",
+      "obligation": "Refuse /1 continuation with restart explanation, no file population/byte changes",
+      "partition": "covered",
+      "requirements": [
+        "REQ-polaris-generation-033"
+      ]
+    },
+    {
+      "id": "binding",
+      "obligation": "Refuse changed brief source/provider/tool and policy; rebuild packet bindings and retire stale verdicts",
+      "partition": "covered",
+      "requirements": [
+        "REQ-polaris-generation-033",
+        "REQ-polaris-generation-035"
+      ]
+    },
+    {
+      "id": "limits",
+      "obligation": "Positive finite deadline/token-or-turn and nonnegative repair/question limits; enforce own clock/steps",
+      "partition": "covered",
+      "requirements": [
+        "REQ-polaris-generation-033"
+      ]
+    },
+    {
+      "id": "usage",
+      "obligation": "Attribute selfreported usage and commands; missing usage Unknown, never zero",
+      "partition": "covered",
+      "requirements": [
+        "REQ-polaris-generation-033"
+      ]
+    },
+    {
+      "id": "principal",
+      "obligation": "Declared principal, Unknown credential/session identity, no issued credential or route",
+      "partition": "covered",
+      "requirements": [
+        "REQ-polaris-generation-033"
+      ]
+    },
+    {
+      "id": "no-execution",
+      "obligation": "No new execution arm; no observed-code execution by Syzygy",
+      "partition": "covered",
+      "requirements": [
+        "REQ-polaris-generation-033"
+      ]
+    },
+    {
+      "id": "conditional-safety",
+      "obligation": "Retain conditional credential probes/breach response/command flags for retained permitting records",
+      "partition": "covered",
+      "requirements": [
+        "REQ-polaris-generation-033"
+      ]
+    },
+    {
+      "id": "brief",
+      "obligation": "Versioned body-free brief with required metadata, topics, voice, understanding, schema and limitations",
+      "partition": "covered",
+      "requirements": [
+        "REQ-polaris-generation-034"
+      ]
+    },
+    {
+      "id": "quotation",
+      "obligation": "Rederive exact quotations, anchors and source pages from pinned screened bytes",
+      "partition": "covered",
+      "requirements": [
+        "REQ-polaris-generation-034"
+      ]
+    },
+    {
+      "id": "claims",
+      "obligation": "Enforce claim labels, citation and withheld/Unknown rules, judgment, elements and inert rendering",
+      "partition": "covered",
+      "requirements": [
+        "REQ-polaris-generation-034"
+      ]
+    },
+    {
+      "id": "inventory",
+      "obligation": "Independent inventory with no author draft and selfreported completeness",
+      "partition": "covered",
+      "requirements": [
+        "REQ-polaris-generation-035"
+      ]
+    },
+    {
+      "id": "reviews",
+      "obligation": "Independent whole-packet fidelity/design review, exact digests, criteria, verdict validation and invalidation",
+      "partition": "covered",
+      "requirements": [
+        "REQ-polaris-generation-035"
+      ]
+    },
+    {
+      "id": "handover",
+      "obligation": "Bounded session delivery/await, declared context, packet rehash, narrow tools and no shell expansion",
+      "partition": "covered",
+      "requirements": [
+        "REQ-polaris-generation-035"
+      ]
+    },
+    {
+      "id": "discovery",
+      "obligation": "Keep selfreported and Syzygy read populations separate; no Observed not-read claim",
+      "partition": "covered",
+      "requirements": [
+        "REQ-polaris-generation-036"
+      ]
+    },
+    {
+      "id": "questions",
+      "obligation": "Bounded attributed in-session clarification and answer/invalidation rules",
+      "partition": "covered",
+      "requirements": [
+        "REQ-polaris-generation-036"
+      ]
+    },
+    {
+      "id": "disclosures",
+      "obligation": "Complete human sentence, appendix and per-page machine disclosures with parity/accessibility",
+      "partition": "covered",
+      "requirements": [
+        "REQ-polaris-generation-033",
+        "REQ-polaris-generation-034"
+      ]
+    },
+    {
+      "id": "record",
+      "obligation": "Close identified local record without prompt/transcript bodies, preserve Inferred history and unattributed work",
+      "partition": "covered",
+      "requirements": [
+        "REQ-polaris-generation-033"
+      ]
+    },
+    {
+      "id": "reader-contract",
+      "obligation": "Retain reader descriptor identities/versions/inputs/outputs/determinism/failure/read-only authority and resource limits",
+      "partition": "covered",
+      "requirements": [
+        "REQ-polaris-generation-033"
+      ]
+    },
+    {
+      "id": "F-3-url",
+      "obligation": "URL/default-branch selection, acquisition/copy and clone-shape changes",
+      "partition": "lawfully out of scope",
+      "non_goal": "F-3-url",
+      "reason": "Explicit local static editorial capability non-goal; no such behavior is delivered or authorized here"
+    },
+    {
+      "id": "F-3-execution",
+      "obligation": "Agent-selected sandbox or outside-sandbox permitting orchestration",
+      "partition": "lawfully out of scope",
+      "non_goal": "F-3-execution",
+      "reason": "Explicit local static editorial capability non-goal; no such behavior is delivered or authorized here"
+    },
+    {
+      "id": "F-4-build",
+      "obligation": "New reader implementation build identity fact",
+      "partition": "lawfully out of scope",
+      "non_goal": "F-4-build",
+      "reason": "Explicit local static editorial capability non-goal; no such behavior is delivered or authorized here"
+    },
+    {
+      "id": "F-5-machinery",
+      "obligation": "Generic recorder/checker/versioned-reader retirement",
+      "partition": "lawfully out of scope",
+      "non_goal": "F-5-machinery",
+      "reason": "Explicit local static editorial capability non-goal; no such behavior is delivered or authorized here"
+    },
+    {
+      "id": "NG-kernel-lifecycle",
+      "obligation": "Kernel challenge/overlay lifecycle and identity-resolution work",
+      "partition": "lawfully out of scope",
+      "non_goal": "NG-kernel-lifecycle",
+      "reason": "Explicit local static editorial capability non-goal; no such behavior is delivered or authorized here"
+    },
+    {
+      "id": "NG-curated-publication",
+      "obligation": "Publishing/adopting curated narrative or release/deployment/multi-user/exposure",
+      "partition": "lawfully out of scope",
+      "non_goal": "NG-curated-publication",
+      "reason": "Explicit local static editorial capability non-goal; no such behavior is delivered or authorized here"
+    },
+    {
+      "id": "NG-live-control-plane",
+      "obligation": "Live kernel endpoints/drawers/bands/evaluation transitions",
+      "partition": "lawfully out of scope",
+      "non_goal": "NG-live-control-plane",
+      "reason": "Explicit local static editorial capability non-goal; no such behavior is delivered or authorized here"
+    }
+  ]
+}

@@ -2,7 +2,7 @@
   "base": "26b2ef360431ab71c02dcde47643665dc153b8c7",
   "definition": "TypeScript AST test declarations in changed test files, keyed by file and describe/title; parameter rows are not expanded. Changed describes rename keys and count as removal/addition.",
   "files": 19,
-  "added": 59,
+  "added": 61,
   "changed": 42,
   "removed": 108,
   "unchanged": 513,
@@ -3069,6 +3069,11 @@
     },
     {
       "file": "packages/polaris-dossier/src/start-gates.test.ts",
+      "title": "declared-source admission and continuation boundaries > refuses a FIFO policy without waiting for a writer",
+      "state": "added"
+    },
+    {
+      "file": "packages/polaris-dossier/src/start-gates.test.ts",
       "title": "declared-source admission and continuation boundaries > does not invalidate the policy binding for an unrelated Syzygy commit",
       "state": "added"
     },
@@ -3080,6 +3085,11 @@
     {
       "file": "packages/polaris-dossier/src/start-gates.test.ts",
       "title": "declared-source admission and continuation boundaries > refuses provider and tool drift after a brief binds their declarations",
+      "state": "added"
+    },
+    {
+      "file": "packages/polaris-dossier/src/start-gates.test.ts",
+      "title": "declared-source admission and continuation boundaries > every local continuation command leaves a legacy run and its retained log byte-equal",
       "state": "added"
     },
     {
