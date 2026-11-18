@@ -7,6 +7,13 @@
 > digest. The path, file name and title still say "candidate"; the act
 > record, not the path, decides status.
 >
+> **Amended by GOVERNANCE-SIMPLIFICATION-D10** (drafted 2026-11-17): this file,
+> `SHAPE-TO-SPEC-IMPACT-POLICY-CANDIDATE.md`, is in force at the bytes that act installs, from
+> the owner's act recorded in
+> `.syzygy/governance/decisions/GOVERNANCE-SIMPLIFICATION-D10-ACT.md`. CC-IMPACT-5 and CC-IMPACT-6 lose their owner
+> routes, and CC-IMPACT-7 is retired. CC-IMPACT-1 to CC-IMPACT-4 are
+> unchanged and, like the whole bar, agent-maintained under VIS-4.
+>
 > Proposed at the 2026-08-11 structured-closure pass to close launch-gate
 > question **E6** — "is there a defined propagation path for a shape change
 > *after* specs exist: how affected specs are detected, who amends them, and
@@ -43,8 +50,8 @@ every accepted specification carries a generated declaration of what
 governs it; a change to any identity that can warrant a requirement carries
 a counted reverse-reference sweep; undecidable impact renders as Unknown or
 contradiction; every amendment, and the sweep itself, has a named actor;
-affected specifications move in the same logical change; and a passing
-blind run against a named fixture precedes any reliance on the path. It is one model with
+affected specifications move in the same logical change unless an adoption
+row records the lag. It is one model with
 the sibling specification-acceptance policy: CC-IMPACT-1 generates from
 CC-SPEC-2, and CC-IMPACT-2's trigger set is CC-SPEC-2's warrant set.
 
@@ -62,13 +69,13 @@ flowchart TD
     A --> M["Amendment owned by a named actor<br/>before the change lands (CC-IMPACT-5)"]
     M --> L{"Spec amendments land with<br/>the shape change? (CC-IMPACT-6)"}
     L -->|"yes"| G["Land together in the same<br/>logical change (CC-REV-2)"]
-    L -->|"no"| X["Does not merge: no lawful lag exists<br/>until CC-REV-2 is itself amended"]
+    L -->|"no"| X["Lag recorded in the adoption row,<br/>rendered as a gap until closed"]
 ```
 
 ## The rule
 
 Seven clauses, CC-IMPACT-1…7: declare, sweep, record the sets, render the
-undecidable, name the actors, land together, exercise first. Italic
+undecidable, name the actors, land together; the seventh is retired. Italic
 parentheticals mostly record dated history.
 
 **CC-IMPACT-1 — Every accepted specification declares what governs it, and
@@ -195,31 +202,25 @@ names one too.**
   CC-TEST-4 pattern, because a sweeper grading their own denominator is the
   unassigned judgment E5 exists to remove.
 - "The author" is a name; "someone" is not.
-- Where the actor is the owner (VIS-4), the amendment waits on the owner
-  and the wait is visible.
+- Where the amendment falls in one of VIS-4's four owner classes, it waits
+  on the owner and the wait is visible; otherwise its actor is an agent
+  *(amended by GOVERNANCE-SIMPLIFICATION-D10)*.
 
 *(Sweep actor added 2026-08-13, RD-51's finding that CC-IMPACT-2's "the
 change carries a sweep" is passive voice, and that after CC-IMPACT-1…7
 detection had acquired a *requirement* and still had **no owner** — which
 was the exact words of the hole the policy was written to close.)*
 
-**CC-IMPACT-6 — Affected specs move in the same logical change. There is no
-exception today.** CC-REV-2's merge invariant governs, unmodified and
-uncarved: the shape change and its spec amendments land together, so
-mainline never asserts the old truth, and **behavioral specs are the first
-population CC-REV-2 names**. CC-REV-2 admits no exception limb of its own;
-its only carve-out is doctrine's owner gate.
+**CC-IMPACT-6 — Affected specs move in the same logical change, or the lag
+is recorded.** *(Amended by GOVERNANCE-SIMPLIFICATION-D10; formerly "There is no exception
+today".)* By default the shape change and its spec amendments land
+together, so mainline never asserts the old truth (CC-REV-2).
 
-**This clause creates no alternative.**
-
-- A lagging specification is lawful only if CC-REV-2 is **itself amended**,
-  in place, through the craft cluster's own amendment act.
-- That amendment is offered separately —
-  `CC-REV-2-LAGGING-SPECIFICATION-AMENDMENT-OFFER.md` in this directory,
-  queued as **P-44** — and it carries five required elements plus a
-  confirmer distinct from the change's author.
-- **Until that act is performed, no lawful lag exists**, and a shape change
-  whose spec amendments cannot land with it does not merge.
+- When an affected specification cannot move in the same change, the agent
+  may let it lag: the adoption row names the lagging specification and the
+  follow-up item, and the lag renders as a gap until it is closed.
+- No owner act is needed for a lag, except where the specification falls in
+  one of VIS-4's four owner classes.
 
 *(Rewritten 2026-08-13, RD-51 f1 (blocking). The clause previously said it
 "adds exactly one lawful alternative" permitting an affected specification
@@ -239,43 +240,11 @@ it, and the candidate reinstated it. Creating a rule by act is lawful;
 creating one that overrides a different approved clause without amending it
 is not.)*
 
-**CC-IMPACT-7 — The path is exercised before it is relied on.** Before the
-first real shape amendment after specifications exist, the propagation path
-is run **blind** against a named fixture with a known answer:
-
-```text
-fixture   ../round-2026-08g/SHAPE-TO-SPEC-PROPAGATION-FIXTURE-2.md
-sha256    685a71f7a52652a314f144ba1599982812921ede88220e69a0d5d327272ed4e0
-answer    ../round-2026-08g/SHAPE-TO-SPEC-PROPAGATION-FIXTURE-2-ANSWER-KEY.md
-          — a separate file, which the administrator does not open
-```
-
-Four requirements, each of which the clause previously lacked:
-
-1. **The administrator is fresh-context** per CC-REV-1 — not the author of
-   the sweep method, not sharing its session.
-2. **The pass criterion is the answer key's**, quoted there and not
-   restated here: the derived `affected` set contains every golden affected
-   requirement, the designated undecidable relationship is never filed as
-   `explicitly unaffected`, and the population is stated with every
-   requirement placed in exactly one set.
-3. **Every divergence carries a recorded disposition** (CC-REV-6), whether
-   the run passes or fails.
-4. **The consequence of failure is stated: the path is not relied on until
-   a passing run exists.** A recorded failing run satisfies this clause's
-   *record* obligation and does not satisfy the clause.
-
-If the fixture's bytes no longer match the digest above, the run is void:
-supersede the fixture rather than editing it.
-
-*(Rewritten 2026-08-13, RD-51 f13 and f8. The clause previously required
-only that "the comparison is recorded" — so a blind run that missed every
-impacted specification, recorded honestly, satisfied it in full — and named
-no fixture, no administrator standard, and no consequence. The only fixture
-then in the corpus was itself defective: its golden ANSWER graded "a
-recorded exception" as correct while its own governing step 4 said CC-REV-2
-admits no such limb, so a reviewer answering correctly was marked divergent.
-Fixture 2 supersedes it.)*
+**CC-IMPACT-7 — Retired by GOVERNANCE-SIMPLIFICATION-D10.** *(Formerly "The path is
+exercised before it is relied on": a blind run against a digest-pinned
+fixture before the first real shape amendment. Whether to exercise the path
+first, and how, is now an engineering choice the agent records in the
+adoption row.)*
 
 ## What this rule set does not do
 
@@ -312,8 +281,8 @@ One line per clause: the failure it prevents.
 | CC-IMPACT-3 | a numerator with no denominator, and a true reason producing a wrong answer |
 | CC-IMPACT-4 | "not listed" quietly reading as "not affected" |
 | CC-IMPACT-5 | an amendment everyone agrees is needed and nobody owns; a sweeper grading their own sweep |
-| CC-IMPACT-6 | an approved clause weakened by a side-clause nobody had to amend |
-| CC-IMPACT-7 | a propagation path first exercised on the day it is needed, with no pass mark |
+| CC-IMPACT-6 | a spec silently lagging its shape change |
+| CC-IMPACT-7 | retired by GOVERNANCE-SIMPLIFICATION-D10 |
 
 ## Acceptance
 

@@ -498,7 +498,7 @@ jobs:
         run: python3 scripts/check_governance.py --selftest
 
       - name: understanding adoption exact-digest chain
-        run: python3 scripts/record_polaris_understanding_adoption.py --check
+        run: python3 scripts/d10_supersession.py --unless-in-effect python3 scripts/record_polaris_understanding_adoption.py --check
 
       - name: understanding adoption chain selftests
         run: python3 scripts/record_polaris_understanding_adoption.py --selftest

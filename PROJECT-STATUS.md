@@ -375,7 +375,7 @@ output; it is the canonical battery.
 ```sh
 python3 scripts/check_governance.py
 python3 scripts/check_governance.py --selftest
-python3 scripts/record_polaris_understanding_adoption.py --check
+python3 scripts/d10_supersession.py --unless-in-effect python3 scripts/record_polaris_understanding_adoption.py --check
 python3 scripts/record_polaris_understanding_adoption.py --selftest
 python3 scripts/launch_gate_results.py --selftest            # historical Markdown records
 python3 scripts/validate_launch_administration.py --selftest # the structured record path

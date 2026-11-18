@@ -20,6 +20,16 @@ uncorrelated) or Syzygy-verified, with the exact provenance state always
 visible (RFC3-16). Absent such a record, this
 contract binds nothing.
 
+**Amended by GOVERNANCE-SIMPLIFICATION-D10** (drafted 2026-11-17; in force
+from the owner's act recorded in
+`.syzygy/governance/decisions/GOVERNANCE-SIMPLIFICATION-D10-ACT.md`).
+RFC3-5's authority column, RFC3-6, RFC3-7, RFC3-8 and RFC3-9 are amended in
+place to security.md SEC-2 and SEC-4 and vision.md VIS-4 as amended by D10:
+reading a repository needs no consent and no record; content goes only to a
+run's declared provider; write consent remains, for repositories the owner
+does not own. Identifiers are unchanged. Effective status now follows
+RFC3-16 as amended (`governance-homes-and-owner-acts.md`).
+
 **Package:** one of two modules of RFC 0003; see `README.md` for the clause-set
 map and lookup rule. Governance categories, artifact lifecycles and the
 owner-act provenance predicate (RFC3-15…RFC3-17(a)) are in
@@ -246,40 +256,54 @@ file's location cannot — history §6.)*
 Additions to this field set require an amendment to this RFC. Sub-schemas
 beneath `declarations` targets belong to RFCs 0004 and 0007–0009.
 
-**RFC3-6.** **Repository entries.** Repository identity is the declared
-opaque identifier — never a URL, path, or branch (RFC1-2); locator hints may
-change without touching identity. An entry whose consent reference does not
-resolve to an in-force consent record is **not observed**: its content
-renders Unknown (`unconsented-source-or-provider`, RFC2-24 #6), never an
-empty graph read as absence (RFC1-3).
+*(Amended by GOVERNANCE-SIMPLIFICATION-D10.)* In the Authority column,
+"Owner-adopted" and "owner-adopted" read "adopted under RFC3-16 as amended":
+an agent adoption, or the owner's decision where the field falls in an owner
+class (vision.md VIS-4). A `repositories[]` entry's consent-record reference
+is needed only for a write consent (RFC3-7); `consents[]` references write
+consents only.
 
-**RFC3-7.** **Consent records** are governance acts stored in
+**RFC3-6.** **Repository entries.** *(Amended by
+GOVERNANCE-SIMPLIFICATION-D10.)* Repository identity is the declared opaque
+identifier — never a URL, path, or branch (RFC1-2); locator hints may change
+without touching identity. A declared entry may be observed with no consent
+record (security.md SEC-2 and SEC-4 as amended). An entry Syzygy cannot read
+renders Unknown, never an empty graph read as absence (RFC1-3).
+`unconsented-source-or-provider` (RFC2-24 #6) is no longer rendered for a
+read; it remains for content withheld because no provider is declared for
+the run.
+
+**RFC3-7.** **Consent records** *(amended by
+GOVERNANCE-SIMPLIFICATION-D10)* are governance acts stored in
 `.syzygy/governance/decisions/`, referenced — never embedded — from the
-declaration. Two kinds:
+declaration. One kind remains:
 
-- **Observation/write consent** (SEC-4): subject is the pair *(observing
-  Project, repository)*; scope enumerates what is consented — observe, write
-  (governance-root plane only), and, when the execution-profile RFC exists,
-  execute (SEC-3). Every observed repository requires one, governed root or
-  not.
-- **Egress consent** (SEC-2): subject is the pair *(Project, external
-  provider)*; content names the permitted provider and the **set** of content
-  classes that may be sent. **One record per *(Project, provider)* pair,
-  naming the permitted set — never one record per content class** (SEC-2's
-  own wording; aligned with RFC5-12/RFC5-14; owner decision **B8**, which
-  declined both the per-content-class and the per-repository alternative).
-  Model providers are such providers; providers not named require fresh
-  consent.
+- **Write consent** (SEC-4): subject is the pair *(Project, repository)* for
+  a repository that is not on the owner's list of owned repositories
+  (`.syzygy/governance/decisions/OWNED-REPOSITORIES.md`, which only the
+  owner changes); scope is write (governance-root plane only). A repository
+  on the owner's list needs no write consent.
 
-Every consent record carries attribution, grant timestamp, and scope, and is
+Observation consent and egress consent are retired. Reading a repository,
+public or private, needs no record of any kind; content goes only to a
+provider the run declares in its own record, and secrets never leave
+(RFC5-12 and RFC5-14 as amended). Execution is governed by SEC-3 as amended:
+the agent decides sandboxed runs and records them in the run's record; a run
+outside a sandbox is the owner's per-run decision.
+
+Every write consent carries attribution, grant timestamp, and scope, and is
 individually revertable. Attribution is a stored field and therefore a
 *claim* about who granted it; it is honored only under RFC3-16(a).
-[Inferred] Scoping observation consent to the *(Project, repository)* pair,
-not the bare repository, is required by §2.8's dual-role rule: consenting to
-observation by one project must not silently admit another.
+[Inferred] Scoping write consent to the *(Project, repository)* pair, not
+the bare repository, follows §2.8's dual-role rule: consenting to writes by
+one project must not silently admit another.
 
-**RFC3-8.** **Revocation and withdrawal.** Revoking consent is a recorded
-governance act — narrowing or withdrawal — never deletion of the record.
+**RFC3-8.** **Revocation and withdrawal.** *(Amended by
+GOVERNANCE-SIMPLIFICATION-D10: it governs revoking a write consent and
+withdrawing a provider from a run's declaration. With observation consent
+retired, no read-dependent claim turns Unknown by revocation.)* Revoking
+consent is a recorded governance act — narrowing or withdrawal — never
+deletion of the record.
 
 - Effect on **claim values**, always through the next identified evaluation
   (RFC2-4):
@@ -300,10 +324,11 @@ Withdrawal never rewrites history and never silently empties a surface.
 - On a newly governed or undeclared project, Syzygy may draft declaration
   content (membership, declaration references) as first-pass work [Observed:
   v1.md, non-code writes]; drafted values render unadopted and bind nothing
-  until owner sign-off.
+  until adopted (RFC3-16 as amended by GOVERNANCE-SIMPLIFICATION-D10: an
+  agent adoption, or the owner's decision in an owner class).
 - An unparseable or invalid `project.yaml` renders every dependent claim
   Unknown; Syzygy never auto-repairs it — a repair is a Proposal (RFC1-27)
-  through the owner gate, and Syzygy never overwrites a governance artifact it
+  adopted like any other change (RFC3-16 as amended), and Syzygy never overwrites a governance artifact it
   did not author without surfacing the conflict (SEC-4).
 
 ### 2.3 The workspace manifest (platform level)

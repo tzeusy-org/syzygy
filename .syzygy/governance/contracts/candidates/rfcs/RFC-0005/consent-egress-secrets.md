@@ -3,7 +3,7 @@ id: RFC-0005
 title: Consent, Egress and Secret Screening — what may leave, what may enter
 status_source: owner-act-record
 module: consent-egress-secrets
-clauses: RFC5-12..RFC5-17 (no gaps, no retirements, no merges)
+clauses: RFC5-12..RFC5-17 (no gaps, no retirements, no merges; RFC5-12..RFC5-16 amended by GOVERNANCE-SIMPLIFICATION-D10)
 governs: [consent-classes, consent-records, egress, content-classes, model-providers, secret-screening, ingest-boundaries, exclusions, redaction-classes]
 applies_to: [kernel, all-surfaces]
 depends_on: [RFC-0001, RFC-0002, RFC-0003]
@@ -16,6 +16,16 @@ this file's exact content digest — either owner-adopted (bootstrap,
 uncorrelated) or Syzygy-verified, with the exact provenance state always
 visible (RFC3-16). Absent such a record, this contract binds
 nothing.
+
+**Amended by GOVERNANCE-SIMPLIFICATION-D10** (drafted 2026-11-17; in force from the
+owner's act recorded in `.syzygy/governance/decisions/GOVERNANCE-SIMPLIFICATION-D10-ACT.md`).
+RFC5-12 to RFC5-16 are amended in place to match doctrine as amended by
+D10: no observation, egress or execution consent; content goes only to a
+provider declared for the run; write consent only for a repository the owner
+does not own; secret screening unchanged, and weakening it is the owner's
+decision. Where this module and VIS-4 or SEC-1 to SEC-5 disagree, doctrine
+governs. Since D10, contracts are agent-maintained under VIS-4 and their
+status is read from adoption records (RFC3-16 as amended).
 
 **Package:** module 2 of 3 of the RFC 0005 contract package. Index, clause map,
 lookup rule, package-spanning integration and the package question list:
@@ -45,19 +55,14 @@ closed on anything it cannot classify.
     under RFC5-3/RFC5-5.
   - Every egress check emits into the audit trail of RFC5-25.
 - **Four rules carry most of the weight.**
-  - **Consent is four separately revocable classes** — observation, write,
-    egress, execution — one class per record instance, so revoking one never
-    silently revokes or preserves another (RFC5-12).
-  - **One egress choke point** (RFC5-15) with a three-part check, all of
-    which must pass:
-    - consent in force;
-    - content class determinable and consented under a policy carrying an
-      effective owner act;
-    - the consent record carrying its own effective owner act under
-      RFC3-16(a).
-
-    Either act may be state (1) or state (2), and each exact state remains
-    visible.
+  - **One consent class remains** — write consent, for a repository the
+    owner does not own; observation, egress and execution consent are retired
+    (RFC5-12, D10).
+  - **One egress choke point** (RFC5-15) with a two-part check, both of which
+    must pass:
+    - the provider is declared for the run;
+    - the content's class is determinable and the content passed secret
+      screening.
   - **Undeterminable fails closed, in both directions** — a composite whose
     class cannot be determined is refused egress (RFC5-14); content that
     cannot be classified at ingest is excluded, not indexed (RFC5-16).
@@ -67,11 +72,8 @@ closed on anything it cannot classify.
 - **The untrusted-tree premise runs through this module.**
   - The governed tree is writable by fleet workers (SEC-3's untrusted actor
     class, extended to committed artifacts by RFC3-16(a)).
-  - So a consent record, a classification policy, and a secret-detection
-    policy are each honored **only** under RFC3-16(a).
-  - Each clause below states why, because in each case a permissive artifact
-    minted from inside the tree would defeat the gate while every other field
-    reads as satisfied.
+  - So the secret-detection policy is honored only at its adopted bytes,
+    and only the owner may weaken it (RFC5-16; SEC-5; RFC3-16 as amended).
 - **Where each clause lives.**
   - §3.6 consent classes and revocation: RFC5-12, RFC5-13.
   - §3.7 egress and model providers: RFC5-14, RFC5-15.
@@ -92,27 +94,32 @@ rather than renumber.
 
 ### 3.6 Consent classes and consent records
 
-**RFC5-12.** RFC 0001's **Consent record** entity (RFC1-3) carries a closed set
-of **consent classes**; one record instance grants exactly one class, so each is
-individually revocable and individually renderable:
+**RFC5-12.** RFC 0001's **Consent record** entity (RFC1-3) carries one
+**consent class**, **write consent** — per repository, for a repository the
+owner does not own: Syzygy may write its two namespaces there, push to it, and
+reach declared adapter effects in it (SEC-4). Absent: read-only. Syzygy's own
+repository and the owner's repositories need none (SEC-4).
+*(Amended by GOVERNANCE-SIMPLIFICATION-D10.)*
 
-- **Observation consent** — per repository: Syzygy may read and index it
-  (RFC1-3). Absent: no observation, Unknown — never an empty graph read as
-  absence.
-- **Write consent** — per repository: Syzygy may write its two namespaces and
-  reach declared adapter effects (SEC-4). Absent: read-only.
-- **Egress consent** — **one record per *(Project, provider)* pair, naming the
-  set of permitted content classes** (§3.7; SEC-2's own wording; RFC3-7). Not one
-  record per content class. *(Granularity answered at acceptance by owner
-  decision B8; the per-repository alternative was declined — history §RFC5-12.)*
-- **Execution consent** — per project: the owner's approval Decision for a
-  specific execution-profile version (RFC5-18). Absent: no observed code runs.
+- **Observation consent — retired by GOVERNANCE-SIMPLIFICATION-D10.** Any repository the
+  operator points Syzygy at may be read and indexed, public or private, with
+  no per-repository record (SEC-2). A repository Syzygy has not been pointed
+  at is still not observed: Unknown, never an empty graph read as absence.
+- **Egress consent — retired by GOVERNANCE-SIMPLIFICATION-D10.** Content goes only to a provider
+  declared for the run (RFC5-14; SEC-2); the declaration is part of the run's
+  record, not a consent.
+- **Execution consent — retired by GOVERNANCE-SIMPLIFICATION-D10.** Whether a run builds or runs
+  observed code, and in which execution profile, is the agent's choice,
+  recorded in the run's record (SEC-3; RFC5-18).
 
-Every consent record names its class, subject, scope, granting principal, grant
-instant, and revocation state. Representation (`project.yaml`, governance-plane
-schema) is RFC 0003 material.
+A consent record names its class, subject, scope, granting principal (the
+owner), grant instant, and revocation state. Representation (`project.yaml`,
+governance-plane schema) is RFC 0003 material.
 
-**RFC5-13.** Consent revocation is prospective: it stops future acts (RFC5-11)
+**RFC5-13.** *(Amended by GOVERNANCE-SIMPLIFICATION-D10: this clause now governs the revocation
+of write consent and the withdrawal of a provider declared for a run; the
+retired consent classes leave nothing else to revoke.)*
+Consent revocation is prospective: it stops future acts (RFC5-11)
 and renders dependent claims Unknown (`unconsented-source-or-provider`,
 RFC2-24 #6) at the next evaluation — **while every render served in the
 interim already carries the withdrawal label under RFC5-11**, so that interval
@@ -131,9 +138,10 @@ never presents withdrawn-source content as current.
 
 ### 3.7 Egress consent and model providers
 
-**RFC5-14.** Governed-project content leaves owner-controlled infrastructure
-only under a recorded egress-consent record naming the **provider** and the
-permitted **content classes** (SEC-2). Model providers are such providers. The
+**RFC5-14.** Repository content leaves owner-controlled infrastructure only
+for a **provider declared for the run** (SEC-2); the run's record names the
+provider and the **content classes** sent. Model providers are such
+providers. *(Amended by GOVERNANCE-SIMPLIFICATION-D10: no egress-consent record.)* The
 content-class vocabulary is closed at this RFC (amend to extend):
 
 | Class | Contents |
@@ -159,22 +167,20 @@ content-class vocabulary is closed at this RFC (amend to extend):
     fails closed (RFC5-15); a file extension, a directory name or a file's
     own claim about itself places a file in this class only through a rule of
     the declared policy, never on its own.
-  - A consent record that does not list `project-documentation` does not
-    permit its egress, and no consent granted before this class existed is
-    read as covering it.
+  - A run whose record does not list `project-documentation` among the
+    classes it sends does not send that class.
   - The class adds no ordering among classes and changes neither the composite
     rule above nor secret screening at ingest (RFC5-16), which applies to it
     in full.
-- The vocabulary is closed here, but the **declared policy that classifies
-  concrete content into it** is a governance artifact honored **only under
-  RFC3-16(a)** — a policy an untrusted writer could mint would classify
-  `code-content` as `code-structure` and pass RFC5-15's check on a consent
-  record that is genuinely in force, defeating the choke point without
-  forging a consent record at all; RFC5-15 accordingly verifies both
-  provenances, not one.
-- Providers not named require fresh consent; absent consent the inferred
-  layer **is not computed** and renders Unknown (RFC2-7).
-- Active consents are rendered on the project's surface (SEC-2).
+- The vocabulary is closed here; the **declared policy that classifies
+  concrete content into it** is agent-maintained (VIS-4) and honored at its
+  adopted bytes on the default branch. A change that would let content the
+  secret-detection policy matches, or cannot classify, reach a provider is
+  the owner's decision (SEC-5).
+- A provider not declared for the run receives nothing; with no declared
+  provider the inferred layer **is not computed** and renders Unknown
+  (RFC2-7).
+- The run's declared providers are rendered on the project's surface (SEC-2).
 
 **Classification is determinable, provenance-tracked, and fails closed.**
 
@@ -193,55 +199,44 @@ content-class vocabulary is closed at this RFC (amend to extend):
 [Inferred] Without the undeterminable case the highest-embedded-class rule has
 no floor: a composer that cannot say whether it emitted `code-structure` or an
 inlined `code-content` body would default to whatever it claimed, defeating
-SEC-2's per-content-class scoping with every RFC5-15 field nominally
-satisfied.
+the run's declared classes and secret screening with every RFC5-15 field
+nominally satisfied.
 
 **RFC5-15.** Egress enforcement sits at a **single choke point**: every network
-transmission of governed-project content passes one consent check naming
-(provider, content classes, project) and emits an audit record (RFC5-25).
-Three parts must all pass:
+transmission of repository content passes one check naming (provider,
+content classes, project) and emits an audit record (RFC5-25). Both parts
+must pass:
 
-- the consent record is **in force**;
-- the content's class is **determinable and within the consented set** under
-  a classification policy carrying an effective owner act under RFC3-16(a)
-  (RFC5-14 — undeterminable fails closed, and so does a missing or invalid
-  act, since a forged classification passes this part while telling the truth
-  about the consent record); and
-- the consent record carries an **effective owner act under RFC3-16(a)**.
+- the provider is **declared for the run** (RFC5-14); and
+- the content's class is **determinable** (RFC5-14 — undeterminable fails
+  closed) and the content **passed secret screening** under RFC5-16 (SEC-5:
+  matching or unclassifiable content never leaves).
 
-State (1) and state (2) are both effective, and the exact state of each act is
-disclosed.
+*(Amended by GOVERNANCE-SIMPLIFICATION-D10. The retired third part — a consent record carrying an
+effective owner act under RFC3-16(a) — and the owner-act requirement on the
+classification policy went with the egress consent class.)*
 
-- A consent record present in the governed tree without a valid act does not
-  authorize an egress, blocks the transmission, and mints a contradiction,
-  because the tree the consent lives in is writable by fleet workers, SEC-3's
-  untrusted actor class, extended to committed artifacts by the premise
-  RFC3-16(a) states.
-- The classification-policy and consent acts warrant only the scoped
-  classification and egress; they are never evidence that the transmission
-  succeeded or any transmitted claim is true.
+- A declaration is a warrant to send, never evidence that the transmission
+  succeeded or that any transmitted claim is true.
 - A feature that transmits as a side effect without traversing the choke
   point is the SEC-2 violation, whatever its intent.
 - Remote backing dependencies (a remote database, FD-009) are permitted under
-  the same rule — a backing store the owner does not control is a provider.
+  the same rule — a backing store the owner does not control is a provider and
+  is declared.
 
 *Diagram (non-normative; the clauses govern):* the single egress choke point
-and its three parts, which must all pass; a consent record without a valid act
-also mints a contradiction, whatever the other two parts return.
+and its two parts, which must both pass.
 
 ```mermaid
 flowchart TD
-    T["Network transmission of governed-project content"] --> CP["Single choke point:<br/>one consent check naming provider, content classes, project"]
+    T["Network transmission of repository content"] --> CP["Single choke point:<br/>one check naming provider, content classes, project"]
     CP --> AR["Audit record (RFC5-25)"]
-    CP --> P1{"Consent record in force?"}
-    CP --> P2{"Class determinable and within the consented set,<br/>under a classification policy with an effective<br/>owner act (RFC3-16(a))?"}
-    CP --> P3{"Consent record carries an effective<br/>owner act (RFC3-16(a))?"}
-    P1 --> ALL{"All three pass?"}
+    CP --> P1{"Provider declared for the run?"}
+    CP --> P2{"Class determinable and content<br/>passed secret screening (RFC5-16)?"}
+    P1 --> ALL{"Both pass?"}
     P2 --> ALL
-    P3 --> ALL
     ALL -->|yes| OK["Egress permitted (a warrant, never evidence of success)"]
-    ALL -->|"no: any one fails"| NO["Refused: the transmission is blocked"]
-    P3 -->|"no: record in the governed tree without a valid act"| CX["Contradiction minted"]
+    ALL -->|"no: either fails"| NO["Refused: the transmission is blocked"]
 ```
 
 ### 3.8 Secret handling at ingest boundaries
@@ -270,18 +265,15 @@ Syzygy store, it crossed an ingest boundary.
 - Screening is fail-closed: content matching the policy is excluded; content
   that **cannot be classified is excluded, not indexed**.
 - The policy version is a snapshot input (RFC2-1 item 7), so what was
-  screened is part of every evaluation's identity — and the policy is honored
-  **only under RFC3-16(a)**, through an effective owner act bound to its exact
-  digest: it is an owner-approved declaration whose effect is to widen what
-  Syzygy may take in, so a permissive version an untrusted writer could mint
-  would admit at every ingest boundary exactly the content SEC-5 requires
-  excluded, and the exclusion counts would render honest about a screen that
-  never screened.
-  - State (1) and state (2) are both effective, with the exact state
-    disclosed.
-  - A missing or invalid act does not fail open: the ingest is blocked on
-    RFC3-16(a)'s effect rule, never performed under that policy.
-  - The act warrants use of the policy; it is never evidence that screening
+  screened is part of every evaluation's identity.
+- **Who may change the policy** *(amended by GOVERNANCE-SIMPLIFICATION-D10)*: a change that detects
+  less, admits unclassifiable content, or lets a secret be indexed, rendered
+  or sent is the owner's decision (SEC-5; VIS-4); any other change is an
+  agent adoption. The policy is honored at its adopted bytes on the default
+  branch.
+  - A missing or unreadable policy does not fail open: the ingest is
+    blocked, never performed without a screen.
+  - Adoption warrants use of the policy; it is never evidence that screening
     succeeded or that admitted content is secret-free.
 
 *Diagram (non-normative; the clauses govern):* screening at an ingest
@@ -289,7 +281,7 @@ boundary, under the observing project's policy.
 
 ```mermaid
 flowchart TD
-    C["Content crossing any ingest boundary<br/>(before any store, surface or endpoint)"] --> A{"Observing project's policy carries<br/>an effective owner act (RFC3-16(a))?"}
+    C["Content crossing any ingest boundary<br/>(before any store, surface or endpoint)"] --> A{"Observing project's adopted policy<br/>present and readable?"}
     A -->|no| BLK["Ingest blocked, never performed under that policy"]
     A -->|yes| S{"Screened under that policy"}
     S -->|matches the policy| EX["Excluded; recorded hash-not-body (RFC5-17)"]
