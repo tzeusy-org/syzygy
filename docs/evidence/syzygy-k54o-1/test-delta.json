@@ -1,0 +1,3621 @@
+{
+  "base": "26b2ef360431ab71c02dcde47643665dc153b8c7",
+  "definition": "TypeScript AST test declarations in changed test files, keyed by file and describe/title; parameter rows are not expanded. Changed describes rename keys and count as removal/addition.",
+  "files": 19,
+  "added": 59,
+  "changed": 42,
+  "removed": 108,
+  "unchanged": 513,
+  "rows": [
+    {
+      "file": "packages/polaris-dossier/src/agent-texts.test.ts",
+      "title": "agent texts (S11) > reads every command synopsis from the usage text",
+      "state": "changed"
+    },
+    {
+      "file": "packages/polaris-dossier/src/agent-texts.test.ts",
+      "title": "agent texts (S11) > quotes D9-N5 and the never-run sentence from the v1.6 spec bytes",
+      "state": "unchanged"
+    },
+    {
+      "file": "packages/polaris-dossier/src/agent-texts.test.ts",
+      "title": "agent texts (S11) > each predicate fires on a mutated copy of the skill",
+      "state": "unchanged"
+    },
+    {
+      "file": "packages/polaris-dossier/src/agent-texts.test.ts",
+      "title": "agent texts (S11) > the description lint holds the trigger phrase against the Codex text too",
+      "state": "unchanged"
+    },
+    {
+      "file": "packages/polaris-dossier/src/brief.test.ts",
+      "title": "brief: issued > writes the brief, the schema and the brief record, binding the run, the pinned revision and the schema version",
+      "state": "changed"
+    },
+    {
+      "file": "packages/polaris-dossier/src/brief.test.ts",
+      "title": "brief: issued > asks for Poles under the run's Pole limit, five unless declared, and keeps run.json free of an undeclared limit (dossier spec v1.5)",
+      "state": "unchanged"
+    },
+    {
+      "file": "packages/polaris-dossier/src/brief.test.ts",
+      "title": "brief: issued > states the four reader topics in the owner's order, the voice rules, the understanding record and every rule 034 and 036 name",
+      "state": "changed"
+    },
+    {
+      "file": "packages/polaris-dossier/src/brief.test.ts",
+      "title": "brief: issued > keeps a multiline audience on one quoted line without introducing Markdown headings",
+      "state": "unchanged"
+    },
+    {
+      "file": "packages/polaris-dossier/src/brief.test.ts",
+      "title": "brief: issued > quotes SEC-3's head byte-equal to the adopted security.md, read live",
+      "state": "unchanged"
+    },
+    {
+      "file": "packages/polaris-dossier/src/brief.test.ts",
+      "title": "brief: issued > carries no project content beyond the repository identity and the pinned revision",
+      "state": "changed"
+    },
+    {
+      "file": "packages/polaris-dossier/src/brief.test.ts",
+      "title": "brief: issued > is pure: the same run record, instant and rule render the same bytes",
+      "state": "unchanged"
+    },
+    {
+      "file": "packages/polaris-dossier/src/brief.test.ts",
+      "title": "brief: issued > a copy-class run's brief names the copy as the clone to work in and tells the session not to read the operator's clone (REQ-polaris-generation-046, 047)",
+      "state": "changed"
+    },
+    {
+      "file": "packages/polaris-dossier/src/brief.test.ts",
+      "title": "brief: issued > carries the readability rules, after the profile guidance (syzygy-mea.10.4)",
+      "state": "unchanged"
+    },
+    {
+      "file": "packages/polaris-dossier/src/brief.test.ts",
+      "title": "brief: issued > carries its own writing guidance, byte-identical to the author-prompt cut it replaced",
+      "state": "unchanged"
+    },
+    {
+      "file": "packages/polaris-dossier/src/brief.test.ts",
+      "title": "brief: the permitting arm, switched on with fixture ports > records the choice and D9's cost bullet verbatim from the adopted security.md (R3-F3)",
+      "state": "unchanged"
+    },
+    {
+      "file": "packages/polaris-dossier/src/brief.test.ts",
+      "title": "brief: the permitting arm, switched on with fixture ports > a choice recorded in run.json is never read: the record is refused and no brief is issued",
+      "state": "unchanged"
+    },
+    {
+      "file": "packages/polaris-dossier/src/brief.test.ts",
+      "title": "brief: the permitting arm, switched on with fixture ports > a choice made for an earlier run gives SEC-3's rule",
+      "state": "unchanged"
+    },
+    {
+      "file": "packages/polaris-dossier/src/brief.test.ts",
+      "title": "brief: the permitting arm, switched on with fixture ports > a run with %s gives SEC-3's rule, whatever choice it holds",
+      "state": "unchanged"
+    },
+    {
+      "file": "packages/polaris-dossier/src/brief.test.ts",
+      "title": "brief: the permitting arm, switched on with fixture ports > opens the launched marker only to decide the arm: never with the arm off, once with it on (R-GP-IMPL-LAUNCHED-MARKER-2 R2-N4)",
+      "state": "unchanged"
+    },
+    {
+      "file": "packages/polaris-dossier/src/brief.test.ts",
+      "title": "brief: the permitting arm off, whatever the launched marker > with %s, carries only the arm-off reason",
+      "state": "unchanged"
+    },
+    {
+      "file": "packages/polaris-dossier/src/brief.test.ts",
+      "title": "brief: refused > refuses when the pinned revision is no longer consented, naming every reason, and writes nothing",
+      "state": "removed"
+    },
+    {
+      "file": "packages/polaris-dossier/src/brief.test.ts",
+      "title": "brief: refused > carries the guard's object-read refusal and its disclosures when the pinned tree cannot be listed (R-POLARIS-DOSSIER-S3-GATES-2 note 10)",
+      "state": "removed"
+    },
+    {
+      "file": "packages/polaris-dossier/src/brief.test.ts",
+      "title": "brief: refused > refuses a second brief: the deadline clock has started",
+      "state": "unchanged"
+    },
+    {
+      "file": "packages/polaris-dossier/src/brief.test.ts",
+      "title": "brief: refused > a copy-class run (REQ-polaris-generation-046, 047): the launch disclosure decides whether the brief names a copy > names the copy and the operator's clone, in the brief and its record",
+      "state": "removed"
+    },
+    {
+      "file": "packages/polaris-dossier/src/brief.test.ts",
+      "title": "brief: refused > a copy-class run (REQ-polaris-generation-046, 047): the launch disclosure decides whether the brief names a copy > a no-copy run's brief names none",
+      "state": "removed"
+    },
+    {
+      "file": "packages/polaris-dossier/src/brief.test.ts",
+      "title": "brief: refused > a copy-class run (REQ-polaris-generation-046, 047): the launch disclosure decides whether the brief names a copy > a launch.json not in the exact form init writes is left as it is: the brief stays issued, and the refusal says the record disagrees",
+      "state": "removed"
+    },
+    {
+      "file": "packages/polaris-dossier/src/brief.test.ts",
+      "title": "brief: refused > a copy-class run (REQ-polaris-generation-046, 047): the launch disclosure decides whether the brief names a copy > refuses where the disclosure cannot be read, or names a copy that is not the run record's clone; nothing is written",
+      "state": "removed"
+    },
+    {
+      "file": "packages/polaris-dossier/src/brief.test.ts",
+      "title": "brief: refused > refuses when SEC-3 cannot be quoted as adopted",
+      "state": "unchanged"
+    },
+    {
+      "file": "packages/polaris-dossier/src/brief.test.ts",
+      "title": "brief: refused > refuses a directory that is not a run directory",
+      "state": "unchanged"
+    },
+    {
+      "file": "packages/polaris-dossier/src/brief.test.ts",
+      "title": "syzygy dossier brief > exits 0 and reports the brief in JSON",
+      "state": "unchanged"
+    },
+    {
+      "file": "packages/polaris-dossier/src/brief.test.ts",
+      "title": "syzygy dossier brief > exits 1 on a refusal and 2 on malformed arguments",
+      "state": "changed"
+    },
+    {
+      "file": "packages/polaris-dossier/src/brief.test.ts",
+      "title": "brief: issued > refuses a changed %s declaration after the brief binds its source",
+      "state": "added"
+    },
+    {
+      "file": "packages/polaris-dossier/src/brief.test.ts",
+      "title": "brief: refused > refuses an unavailable committed policy and writes no brief",
+      "state": "added"
+    },
+    {
+      "file": "packages/polaris-dossier/src/brief.test.ts",
+      "title": "brief: refused > carries the object-read refusal and current evidence disclosures",
+      "state": "added"
+    },
+    {
+      "file": "packages/polaris-dossier/src/brief.test.ts",
+      "title": "brief: refused > ignores legacy launch artifacts while issuing a declared-source brief, leaving their bytes unchanged",
+      "state": "added"
+    },
+    {
+      "file": "packages/polaris-dossier/src/census.test.ts",
+      "title": "withheldCensus > sorts each path-level outcome into its group, counts a secret path without naming it, and skips non-blob entries",
+      "state": "unchanged"
+    },
+    {
+      "file": "packages/polaris-dossier/src/census.test.ts",
+      "title": "withheldCensus > applies the class gate to the paths screening admits: a statement that lists no class withholds code-content too",
+      "state": "unchanged"
+    },
+    {
+      "file": "packages/polaris-dossier/src/census.test.ts",
+      "title": "withheldCensus > never names the path a secret detector matches anywhere in the census or its section",
+      "state": "unchanged"
+    },
+    {
+      "file": "packages/polaris-dossier/src/census.test.ts",
+      "title": "withheldCensus, a path both a denied-path rule and a secret detector match (round-2 review finding 1) > counts such a path under secretPath and names it nowhere: not in the census, the brief section or the check report",
+      "state": "unchanged"
+    },
+    {
+      "file": "packages/polaris-dossier/src/census.test.ts",
+      "title": "censusPath > writes a path as one inert JSON string: no raw backtick, line break or separator survives",
+      "state": "unchanged"
+    },
+    {
+      "file": "packages/polaris-dossier/src/census.test.ts",
+      "title": "censusSection > tells the session to prefer admitted sources and never to drop a fact only a withheld file states",
+      "state": "unchanged"
+    },
+    {
+      "file": "packages/polaris-dossier/src/census.test.ts",
+      "title": "censusSection > lists each group with its count and every named path as a JSON string, under the policy that decided it",
+      "state": "changed"
+    },
+    {
+      "file": "packages/polaris-dossier/src/census.test.ts",
+      "title": "censusSection > says what a path-only census cannot see, and which command names those files",
+      "state": "unchanged"
+    },
+    {
+      "file": "packages/polaris-dossier/src/census.test.ts",
+      "title": "censusSection > names at most the limit per group and counts the rest",
+      "state": "unchanged"
+    },
+    {
+      "file": "packages/polaris-dossier/src/census.test.ts",
+      "title": "censusSection > puts the missing class beside each listed class-gate path and none beside the remainder line",
+      "state": "unchanged"
+    },
+    {
+      "file": "packages/polaris-dossier/src/census.test.ts",
+      "title": "censusSection > says the census is Unknown, with the reason, when the screen or the tree is unavailable; never an empty list",
+      "state": "unchanged"
+    },
+    {
+      "file": "packages/polaris-dossier/src/census.test.ts",
+      "title": "loadCensus > lists the pinned tree with the reader it is given and screens it with the screen it is given",
+      "state": "unchanged"
+    },
+    {
+      "file": "packages/polaris-dossier/src/census.test.ts",
+      "title": "loadCensus > gives the reason when the screen cannot load or the tree cannot be listed",
+      "state": "unchanged"
+    },
+    {
+      "file": "packages/polaris-dossier/src/census.test.ts",
+      "title": "loadCensus > loads the screen for the run's placement subject (syzygy-mea.4)",
+      "state": "unchanged"
+    },
+    {
+      "file": "packages/polaris-dossier/src/census.test.ts",
+      "title": "withheldCensus under the screening scope version 6 > lists a governance-text path as class-not-consented when the statement does not list governance-text",
+      "state": "unchanged"
+    },
+    {
+      "file": "packages/polaris-dossier/src/census.test.ts",
+      "title": "withheldCensus under the screening scope version 6 > admits the placed paths at the trial commit of repository:redis-redis and lists them as unknown-extraction-class elsewhere",
+      "state": "unchanged"
+    },
+    {
+      "file": "packages/polaris-dossier/src/census.test.ts",
+      "title": "withheldCensus under the screening scope version 6 > loads the checkout's own screen for the placement subject at the $name when no loader is given",
+      "state": "changed"
+    },
+    {
+      "file": "packages/polaris-dossier/src/census.test.ts",
+      "title": "screenCensusReport (the author's census on check output) > reports the brief's groups: counts, escaped paths, the class beside a class-gate path, and the secret path counted only",
+      "state": "unchanged"
+    },
+    {
+      "file": "packages/polaris-dossier/src/census.test.ts",
+      "title": "screenCensusReport (the author's census on check output) > uses the brief's escaping and cap",
+      "state": "unchanged"
+    },
+    {
+      "file": "packages/polaris-dossier/src/census.test.ts",
+      "title": "screenCensusReport (the author's census on check output) > is Unknown with the reason, never an empty list, when the census could not be taken",
+      "state": "unchanged"
+    },
+    {
+      "file": "packages/polaris-dossier/src/census.test.ts",
+      "title": "round-1 repairs > cuts a path at the per-path limit and counts the characters left out (note 4)",
+      "state": "unchanged"
+    },
+    {
+      "file": "packages/polaris-dossier/src/census.test.ts",
+      "title": "round-1 repairs > words the class gate from the run's consent: a statement's list, or no statement at all (note 5)",
+      "state": "changed"
+    },
+    {
+      "file": "packages/polaris-dossier/src/census.test.ts",
+      "title": "round-1 repairs > refuses, never drops, a path outcome the census does not sort (note 8)",
+      "state": "unchanged"
+    },
+    {
+      "file": "packages/polaris-dossier/src/check.test.ts",
+      "title": "check: a draft that follows every rule > freezes revision 0, verifies every quotation against the committed blob and records its byte range",
+      "state": "unchanged"
+    },
+    {
+      "file": "packages/polaris-dossier/src/check.test.ts",
+      "title": "check: a draft that follows every rule > never reads the working tree: a quotation of the uncommitted text fails",
+      "state": "unchanged"
+    },
+    {
+      "file": "packages/polaris-dossier/src/check.test.ts",
+      "title": "check: the screen subject > loads the screen for repository:<id> at the pinned commit",
+      "state": "changed"
+    },
+    {
+      "file": "packages/polaris-dossier/src/check.test.ts",
+      "title": "check: schema v4 (dossier spec v1.5) > passes an uncited judgement and a list repeating a diagram of its own section",
+      "state": "unchanged"
+    },
+    {
+      "file": "packages/polaris-dossier/src/check.test.ts",
+      "title": "check: schema v4 (dossier spec v1.5) > never lets the mark excuse an uncited block in a v3 draft: both the field and the missing citation are findings",
+      "state": "unchanged"
+    },
+    {
+      "file": "packages/polaris-dossier/src/check.test.ts",
+      "title": "check: each rule refuses its own violation > reports %s",
+      "state": "unchanged"
+    },
+    {
+      "file": "packages/polaris-dossier/src/check.test.ts",
+      "title": "check: each rule refuses its own violation > says why a list that %s cannot repeat it",
+      "state": "unchanged"
+    },
+    {
+      "file": "packages/polaris-dossier/src/check.test.ts",
+      "title": "check: each rule refuses its own violation > Poles > accepts one Pole and five, each section in exactly one, with a named why section",
+      "state": "unchanged"
+    },
+    {
+      "file": "packages/polaris-dossier/src/check.test.ts",
+      "title": "check: each rule refuses its own violation > Poles > reports %s",
+      "state": "unchanged"
+    },
+    {
+      "file": "packages/polaris-dossier/src/check.test.ts",
+      "title": "check: each rule refuses its own violation > reports no range finding for an excerpt of a file screening read and excluded, within its lines, nor for a path-excluded file it never reads",
+      "state": "unchanged"
+    },
+    {
+      "file": "packages/polaris-dossier/src/check.test.ts",
+      "title": "check: each rule refuses its own violation > passes plain labels, a snake_case name and a multiplication among them (syzygy-mea.10.5)",
+      "state": "unchanged"
+    },
+    {
+      "file": "packages/polaris-dossier/src/check.test.ts",
+      "title": "check: each rule refuses its own violation > checks invalid-UTF-8 excerpt ending at line %i without disclosing its body or length",
+      "state": "unchanged"
+    },
+    {
+      "file": "packages/polaris-dossier/src/check.test.ts",
+      "title": "check: each rule refuses its own violation > checks read-then-excluded %s (%s) ending at %i throughout %s",
+      "state": "unchanged"
+    },
+    {
+      "file": "packages/polaris-dossier/src/check.test.ts",
+      "title": "check: each rule refuses its own violation > reports a draft that is not JSON, and still freezes it as a revision",
+      "state": "unchanged"
+    },
+    {
+      "file": "packages/polaris-dossier/src/check.test.ts",
+      "title": "check: each rule refuses its own violation > reports schema faults beside every other finding in one submission",
+      "state": "unchanged"
+    },
+    {
+      "file": "packages/polaris-dossier/src/check.test.ts",
+      "title": "check: a quotation from a body retained as redacted-span > verifies a quotation from a line no match or guard touches, and records the redaction count, detector ids and line ranges, not the lines",
+      "state": "unchanged"
+    },
+    {
+      "file": "packages/polaris-dossier/src/check.test.ts",
+      "title": "check: a quotation from a body retained as redacted-span > keeps original line and byte coordinates across a bare CR before withheld LF lines",
+      "state": "unchanged"
+    },
+    {
+      "file": "packages/polaris-dossier/src/check.test.ts",
+      "title": "check: a quotation from a body retained as redacted-span > renders a quotation from a withheld guard line Unknown (excluded-content), with no finding",
+      "state": "unchanged"
+    },
+    {
+      "file": "packages/polaris-dossier/src/check.test.ts",
+      "title": "check: a quotation from a body retained as redacted-span > excludes the body whole without the redaction rule, as before",
+      "state": "unchanged"
+    },
+    {
+      "file": "packages/polaris-dossier/src/check.test.ts",
+      "title": "check: a quotation from an excluded file > renders its block Unknown (excluded-content) for %s, with no finding and none of its bytes",
+      "state": "unchanged"
+    },
+    {
+      "file": "packages/polaris-dossier/src/check.test.ts",
+      "title": "check: a quotation from an excluded file > records each cited blob with its screening outcome, and reads no blob a path rule excludes",
+      "state": "unchanged"
+    },
+    {
+      "file": "packages/polaris-dossier/src/check.test.ts",
+      "title": "check: a quotation from an excluded file > reports no review visibility note when every cited file is admitted, and never names a secret path",
+      "state": "unchanged"
+    },
+    {
+      "file": "packages/polaris-dossier/src/check.test.ts",
+      "title": "check: a quotation from an excluded file > lists a cited file the class gate withholds from review as class-not-consented, with its class (round-2 review note 3)",
+      "state": "unchanged"
+    },
+    {
+      "file": "packages/polaris-dossier/src/check.test.ts",
+      "title": "check: a quotation from an excluded file > names a path a secret detector matches by neither path nor object identifier, in the record or a finding",
+      "state": "unchanged"
+    },
+    {
+      "file": "packages/polaris-dossier/src/check.test.ts",
+      "title": "check: limits Syzygy enforces > counts each resubmission against the repair-cycle limit and refuses past it, writing nothing",
+      "state": "unchanged"
+    },
+    {
+      "file": "packages/polaris-dossier/src/check.test.ts",
+      "title": "check: limits Syzygy enforces > accepts a zero repair-cycle limit and refuses the first resubmission",
+      "state": "unchanged"
+    },
+    {
+      "file": "packages/polaris-dossier/src/check.test.ts",
+      "title": "check: limits Syzygy enforces > refuses every check after the deadline, on Syzygy's clock from the brief, and records the refusal with its instant",
+      "state": "unchanged"
+    },
+    {
+      "file": "packages/polaris-dossier/src/check.test.ts",
+      "title": "check: limits Syzygy enforces > accepts a zero question limit and reports the first recorded question",
+      "state": "unchanged"
+    },
+    {
+      "file": "packages/polaris-dossier/src/check.test.ts",
+      "title": "check: limits Syzygy enforces > refuses a run that was never briefed",
+      "state": "unchanged"
+    },
+    {
+      "file": "packages/polaris-dossier/src/check.test.ts",
+      "title": "check: nothing Observed rests on a stored record > re-derives every result: an altered stored range, check result or frozen draft changes nothing the next check reports",
+      "state": "unchanged"
+    },
+    {
+      "file": "packages/polaris-dossier/src/check.test.ts",
+      "title": "check: nothing Observed rests on a stored record > refuses the step and reads no object when the consent stops naming the pinned revision",
+      "state": "removed"
+    },
+    {
+      "file": "packages/polaris-dossier/src/check.test.ts",
+      "title": "check: nothing Observed rests on a stored record > refuses the step when the recorded pinned revision is altered to another commit in the clone",
+      "state": "unchanged"
+    },
+    {
+      "file": "packages/polaris-dossier/src/check.test.ts",
+      "title": "check: nothing Observed rests on a stored record > reads objects only from the clone the run record names, and refuses a record that names none",
+      "state": "unchanged"
+    },
+    {
+      "file": "packages/polaris-dossier/src/check.test.ts",
+      "title": "check: nothing Observed rests on a stored record > refuses the step when the recorded clone holds no object store, freezing nothing",
+      "state": "changed"
+    },
+    {
+      "file": "packages/polaris-dossier/src/check.test.ts",
+      "title": "check: nothing Observed rests on a stored record > refuses the step when an object cannot be read and verified, freezing nothing",
+      "state": "unchanged"
+    },
+    {
+      "file": "packages/polaris-dossier/src/check.test.ts",
+      "title": "check: nothing Observed rests on a stored record > refuses the step when no screening policy can be applied",
+      "state": "unchanged"
+    },
+    {
+      "file": "packages/polaris-dossier/src/check.test.ts",
+      "title": "check: the adapter-credential check after a permitting brief > reports a readable credential as a finding of the step, telling the agent to run nothing further, and logs it",
+      "state": "unchanged"
+    },
+    {
+      "file": "packages/polaris-dossier/src/check.test.ts",
+      "title": "check: the command > reports the path-only census of every withheld file on the author's first check, outside the check record",
+      "state": "changed"
+    },
+    {
+      "file": "packages/polaris-dossier/src/check.test.ts",
+      "title": "check: the command > reports the counted reader standards as advice on the report alone, never a finding and never in the check record",
+      "state": "unchanged"
+    },
+    {
+      "file": "packages/polaris-dossier/src/check.test.ts",
+      "title": "check: the command > lists on the report the blocks the review can never confirm, and leaves the outcome, the findings and the record as they were",
+      "state": "changed"
+    },
+    {
+      "file": "packages/polaris-dossier/src/check.test.ts",
+      "title": "check: the command > states zero blocks for a draft every cited span of which reaches the review",
+      "state": "unchanged"
+    },
+    {
+      "file": "packages/polaris-dossier/src/check.test.ts",
+      "title": "check: the command > never names a path both a denied-path rule and a secret detector match in screenCensus (round-2 review finding 1)",
+      "state": "unchanged"
+    },
+    {
+      "file": "packages/polaris-dossier/src/check.test.ts",
+      "title": "check: the command > puts a cited file the class gate withholds on the report's reviewVisibility, with its class (round-2 review note 3)",
+      "state": "removed"
+    },
+    {
+      "file": "packages/polaris-dossier/src/check.test.ts",
+      "title": "check: the command > keeps a clone path that holds a line break on one line of human output (round-1 note 3)",
+      "state": "unchanged"
+    },
+    {
+      "file": "packages/polaris-dossier/src/check.test.ts",
+      "title": "check: the command > says the census is Unknown, with the reason, when the tree cannot be listed again",
+      "state": "unchanged"
+    },
+    {
+      "file": "packages/polaris-dossier/src/check.test.ts",
+      "title": "check: the command > exits 0 on a passing draft and 1 on findings, printing the same document with --json",
+      "state": "unchanged"
+    },
+    {
+      "file": "packages/polaris-dossier/src/check.test.ts",
+      "title": "check: the command > loads the policy in force from the records root by default, and refuses at the screen while no screening act is in force there",
+      "state": "unchanged"
+    },
+    {
+      "file": "packages/polaris-dossier/src/check.test.ts",
+      "title": "check: the command > is a usage error: %j",
+      "state": "unchanged"
+    },
+    {
+      "file": "packages/polaris-dossier/src/check.test.ts",
+      "title": "redacted-span provenance > collapses ascending withheld line numbers into inclusive ranges of consecutive lines",
+      "state": "unchanged"
+    },
+    {
+      "file": "packages/polaris-dossier/src/check.test.ts",
+      "title": "redacted-span provenance > states the class, the count, the detector ids and the ranges, and copies the ids",
+      "state": "unchanged"
+    },
+    {
+      "file": "packages/polaris-dossier/src/check.test.ts",
+      "title": "check: nothing Observed rests on a stored record > refuses unavailable policy before reading objects or freezing a check",
+      "state": "added"
+    },
+    {
+      "file": "packages/polaris-dossier/src/check.test.ts",
+      "title": "check: the command > admits a recognized documentation class without a provider statement grant",
+      "state": "added"
+    },
+    {
+      "file": "packages/polaris-dossier/src/cli-table.test.ts",
+      "title": "the dossier command table > holds every command the usage text lists but help, in usage order, each under its own name and with its usage line",
+      "state": "unchanged"
+    },
+    {
+      "file": "packages/polaris-dossier/src/cli-table.test.ts",
+      "title": "the dossier command table > %s refuses no argument and an unknown option as before, exit 2",
+      "state": "unchanged"
+    },
+    {
+      "file": "packages/polaris-dossier/src/cli.test.ts",
+      "title": "syzygy dossier > exits 2 with usage when no command is given",
+      "state": "unchanged"
+    },
+    {
+      "file": "packages/polaris-dossier/src/cli.test.ts",
+      "title": "syzygy dossier > exits 2 for a command this build does not have (%j)",
+      "state": "unchanged"
+    },
+    {
+      "file": "packages/polaris-dossier/src/cli.test.ts",
+      "title": "syzygy dossier > exits 2 for malformed arguments (%j)",
+      "state": "unchanged"
+    },
+    {
+      "file": "packages/polaris-dossier/src/cli.test.ts",
+      "title": "syzygy dossier > prints usage and exits 0 for %j",
+      "state": "unchanged"
+    },
+    {
+      "file": "packages/polaris-dossier/src/cli.test.ts",
+      "title": "syzygy dossier > reports status, exit 0, with the human form carrying every JSON leaf in order",
+      "state": "unchanged"
+    },
+    {
+      "file": "packages/polaris-dossier/src/cli.test.ts",
+      "title": "syzygy dossier > accepts --json before the command",
+      "state": "unchanged"
+    },
+    {
+      "file": "packages/polaris-dossier/src/cli.test.ts",
+      "title": "syzygy dossier > refuses an unreadable run with exit 1, the reason on stderr and, with --json, the same reason as JSON",
+      "state": "unchanged"
+    },
+    {
+      "file": "packages/polaris-dossier/src/cli.test.ts",
+      "title": "syzygy dossier > renders an empty list or object as (none)",
+      "state": "unchanged"
+    },
+    {
+      "file": "packages/polaris-dossier/src/cli.test.ts",
+      "title": "syzygy dossier > writes a string leaf that could break its line as a JSON string, and leaves every other leaf as it was (syzygy-mea.3 round-1 note 3)",
+      "state": "unchanged"
+    },
+    {
+      "file": "packages/polaris-dossier/src/cli.test.ts",
+      "title": "no route and no credential > sweeps a non-empty population of source files",
+      "state": "changed"
+    },
+    {
+      "file": "packages/polaris-dossier/src/cli.test.ts",
+      "title": "no route and no credential > %s imports no network module",
+      "state": "unchanged"
+    },
+    {
+      "file": "packages/polaris-dossier/src/cli.test.ts",
+      "title": "no route and no credential > %s uses node:net for Unix-domain sockets only",
+      "state": "unchanged"
+    },
+    {
+      "file": "packages/polaris-dossier/src/cli.test.ts",
+      "title": "no route and no credential > the sweep pattern catches a network import (its own mutant)",
+      "state": "unchanged"
+    },
+    {
+      "file": "packages/polaris-dossier/src/close.test.ts",
+      "title": "close (S10) > records the operator-declared usage, labelled Inferred and attributed to the operator, never a receipt",
+      "state": "changed"
+    },
+    {
+      "file": "packages/polaris-dossier/src/close.test.ts",
+      "title": "close (S10) > records undeclared usage as not recorded, never zero",
+      "state": "unchanged"
+    },
+    {
+      "file": "packages/polaris-dossier/src/close.test.ts",
+      "title": "close (S10) > refuses a zero, negative, fractional or non-decimal figure before it opens the run, and writes nothing",
+      "state": "unchanged"
+    },
+    {
+      "file": "packages/polaris-dossier/src/close.test.ts",
+      "title": "close (S10) > closes a run once, and refuses after the deadline",
+      "state": "unchanged"
+    },
+    {
+      "file": "packages/polaris-dossier/src/close.test.ts",
+      "title": "close (S10) > runs the adapter-credential check at close after a permitting brief: a readable credential is a finding recorded in the record",
+      "state": "unchanged"
+    },
+    {
+      "file": "packages/polaris-dossier/src/close.test.ts",
+      "title": "close (S10) > never overwrites a record that appears while it closes: a concurrent close loses, and the first record stands",
+      "state": "unchanged"
+    },
+    {
+      "file": "packages/polaris-dossier/src/close.test.ts",
+      "title": "close (S10) > refuses when the consent no longer names the pinned revision",
+      "state": "removed"
+    },
+    {
+      "file": "packages/polaris-dossier/src/close.test.ts",
+      "title": "close (S10) > carries the agent's reported commands as its report, screened, and copies no prompt, brief or transcript body",
+      "state": "unchanged"
+    },
+    {
+      "file": "packages/polaris-dossier/src/close.test.ts",
+      "title": "close (S10) > leaves no credential in the state directory: a sweep of every file under the state root, with its denominator",
+      "state": "unchanged"
+    },
+    {
+      "file": "packages/polaris-dossier/src/close.test.ts",
+      "title": "close (S10) > refuses unavailable policy before writing a close record",
+      "state": "added"
+    },
+    {
+      "file": "packages/polaris-dossier/src/execution-choice.test.ts",
+      "title": "allow-execution: recorded > records one run and its pinned revision, what it covers, the three declarations as Inferred, and that it is no consent",
+      "state": "unchanged"
+    },
+    {
+      "file": "packages/polaris-dossier/src/execution-choice.test.ts",
+      "title": "allow-execution: recorded > is what a permitting brief cites, when the arm is switched on and the probe passes",
+      "state": "unchanged"
+    },
+    {
+      "file": "packages/polaris-dossier/src/execution-choice.test.ts",
+      "title": "allow-execution: recorded > a choice copied from an earlier run never yields a permitting brief",
+      "state": "unchanged"
+    },
+    {
+      "file": "packages/polaris-dossier/src/execution-choice.test.ts",
+      "title": "allow-execution: refused > refuses another revision",
+      "state": "unchanged"
+    },
+    {
+      "file": "packages/polaris-dossier/src/execution-choice.test.ts",
+      "title": "allow-execution: refused > refuses while D9 is not established in force, and so never asks for the choice",
+      "state": "unchanged"
+    },
+    {
+      "file": "packages/polaris-dossier/src/execution-choice.test.ts",
+      "title": "allow-execution: refused > refuses when the configuration does not declare the operator to be the owner",
+      "state": "unchanged"
+    },
+    {
+      "file": "packages/polaris-dossier/src/execution-choice.test.ts",
+      "title": "allow-execution: refused > refuses after the brief",
+      "state": "unchanged"
+    },
+    {
+      "file": "packages/polaris-dossier/src/execution-choice.test.ts",
+      "title": "allow-execution: refused > refuses the declarations %j (R3-F2)",
+      "state": "unchanged"
+    },
+    {
+      "file": "packages/polaris-dossier/src/execution-choice.test.ts",
+      "title": "allow-execution: refused > refuses a second choice for the run",
+      "state": "unchanged"
+    },
+    {
+      "file": "packages/polaris-dossier/src/execution-choice.test.ts",
+      "title": "allow-execution: refused > refuses when the pinned revision is no longer consented",
+      "state": "removed"
+    },
+    {
+      "file": "packages/polaris-dossier/src/execution-choice.test.ts",
+      "title": "allow-execution: refused > refuses when the project input now records a drawer: the subject is decided again, never read from run.json",
+      "state": "removed"
+    },
+    {
+      "file": "packages/polaris-dossier/src/execution-choice.test.ts",
+      "title": "allow-execution: refused > refuses a directory that is not a run directory",
+      "state": "unchanged"
+    },
+    {
+      "file": "packages/polaris-dossier/src/execution-choice.test.ts",
+      "title": "allow-execution: refused > refuses a launched run and records nothing",
+      "state": "unchanged"
+    },
+    {
+      "file": "packages/polaris-dossier/src/execution-choice.test.ts",
+      "title": "allow-execution: refused > refuses a run whose launched marker is %s, as a launched run, and records nothing",
+      "state": "unchanged"
+    },
+    {
+      "file": "packages/polaris-dossier/src/execution-choice.test.ts",
+      "title": "allow-execution: refused > checks the marker before every other refusal, where the CLI checked it before",
+      "state": "unchanged"
+    },
+    {
+      "file": "packages/polaris-dossier/src/execution-choice.test.ts",
+      "title": "the stored choice is read strictly and never as a consent (R3-F7) > refuses a stored choice with %s",
+      "state": "unchanged"
+    },
+    {
+      "file": "packages/polaris-dossier/src/execution-choice.test.ts",
+      "title": "the stored choice is read strictly and never as a consent (R3-F7) > is absent without a record",
+      "state": "unchanged"
+    },
+    {
+      "file": "packages/polaris-dossier/src/execution-choice.test.ts",
+      "title": "the stored choice is read strictly and never as a consent (R3-F7) > writes only into the run directory, never into the records the consent reader reads",
+      "state": "unchanged"
+    },
+    {
+      "file": "packages/polaris-dossier/src/execution-choice.test.ts",
+      "title": "the stored choice is read strictly and never as a consent (R3-F7) > has no form among the consent records the consent package reads",
+      "state": "unchanged"
+    },
+    {
+      "file": "packages/polaris-dossier/src/execution-choice.test.ts",
+      "title": "syzygy dossier allow-execution > exits 0 with the record in JSON",
+      "state": "unchanged"
+    },
+    {
+      "file": "packages/polaris-dossier/src/execution-choice.test.ts",
+      "title": "syzygy dossier allow-execution > exits 1 while D9 is not in force and 2 on malformed arguments",
+      "state": "unchanged"
+    },
+    {
+      "file": "packages/polaris-dossier/src/execution-choice.test.ts",
+      "title": "syzygy dossier allow-execution > refuses a launched run and records nothing",
+      "state": "unchanged"
+    },
+    {
+      "file": "packages/polaris-dossier/src/execution-choice.test.ts",
+      "title": "syzygy dossier allow-execution > refuses a run whose launched marker is %s, as a launched run, and records nothing",
+      "state": "unchanged"
+    },
+    {
+      "file": "packages/polaris-dossier/src/execution-choice.test.ts",
+      "title": "syzygy dossier allow-execution > renders the launched refusal's four disclosures as text lines disclosures.0 to disclosures.3, in order",
+      "state": "unchanged"
+    },
+    {
+      "file": "packages/polaris-dossier/src/execution-choice.test.ts",
+      "title": "allow-execution: refused > refuses when the committed policy is unavailable",
+      "state": "added"
+    },
+    {
+      "file": "packages/polaris-dossier/src/execution-choice.test.ts",
+      "title": "allow-execution: refused > refuses a changed committed policy binding",
+      "state": "added"
+    },
+    {
+      "file": "packages/polaris-dossier/src/inventory.test.ts",
+      "title": "session-prompt inventory > makes a session directory holding only the inventory brief, outside the clone, carrying nothing of the draft",
+      "state": "changed"
+    },
+    {
+      "file": "packages/polaris-dossier/src/inventory.test.ts",
+      "title": "session-prompt inventory > rewrites launch.json's brief stage to each inventory brief it issues, every other field byte-identical (the owner's ruling of 2026-11-14)",
+      "state": "removed"
+    },
+    {
+      "file": "packages/polaris-dossier/src/inventory.test.ts",
+      "title": "session-prompt inventory > puts the session directory where no ancestor below the state root reaches a draft, so `..` never finds drafts/",
+      "state": "unchanged"
+    },
+    {
+      "file": "packages/polaris-dossier/src/inventory.test.ts",
+      "title": "session-prompt inventory > refuses a sessions root that resolves %s, and writes nothing",
+      "state": "unchanged"
+    },
+    {
+      "file": "packages/polaris-dossier/src/inventory.test.ts",
+      "title": "session-prompt inventory > prints one fixed prompt line and a command that starts the session in that directory, and records the prompt's digest",
+      "state": "changed"
+    },
+    {
+      "file": "packages/polaris-dossier/src/inventory.test.ts",
+      "title": "session-prompt inventory > carries SEC-3's rule in the brief and the prompt, never the permission, though the operator is the owner",
+      "state": "unchanged"
+    },
+    {
+      "file": "packages/polaris-dossier/src/inventory.test.ts",
+      "title": "session-prompt inventory > states the inventory's quotation form, its session-identifier rule, its schema and where to check it",
+      "state": "unchanged"
+    },
+    {
+      "file": "packages/polaris-dossier/src/inventory.test.ts",
+      "title": "session-prompt inventory > takes the next number for a second hand-over and never reuses a directory",
+      "state": "changed"
+    },
+    {
+      "file": "packages/polaris-dossier/src/inventory.test.ts",
+      "title": "session-prompt inventory > refuses %s and writes nothing",
+      "state": "unchanged"
+    },
+    {
+      "file": "packages/polaris-dossier/src/inventory.test.ts",
+      "title": "session-prompt inventory > refuses after the deadline",
+      "state": "unchanged"
+    },
+    {
+      "file": "packages/polaris-dossier/src/inventory.test.ts",
+      "title": "session-prompt inventory > quotes any text as one shell word",
+      "state": "unchanged"
+    },
+    {
+      "file": "packages/polaris-dossier/src/inventory.test.ts",
+      "title": "launch-form > records terminal once, bound to the session's prompt, operator-declared and Inferred",
+      "state": "unchanged"
+    },
+    {
+      "file": "packages/polaris-dossier/src/inventory.test.ts",
+      "title": "launch-form > refuses the launch form %j, records the refusal and writes no record",
+      "state": "unchanged"
+    },
+    {
+      "file": "packages/polaris-dossier/src/inventory.test.ts",
+      "title": "launch-form > refuses before any hand-over, for a review session and for an unknown role",
+      "state": "unchanged"
+    },
+    {
+      "file": "packages/polaris-dossier/src/inventory.test.ts",
+      "title": "launch-form > refuses a declared form in a run with %s and writes no record",
+      "state": "unchanged"
+    },
+    {
+      "file": "packages/polaris-dossier/src/inventory.test.ts",
+      "title": "launch-form > writes nothing into a directory that is not a run",
+      "state": "unchanged"
+    },
+    {
+      "file": "packages/polaris-dossier/src/inventory.test.ts",
+      "title": "inventory-check > checks the inventory as a draft is checked, freezes it outside the session directory and records its session",
+      "state": "unchanged"
+    },
+    {
+      "file": "packages/polaris-dossier/src/inventory.test.ts",
+      "title": "inventory-check > reports a quotation the cited file does not carry, a quotation in an unknown entry and an absent coverage path",
+      "state": "unchanged"
+    },
+    {
+      "file": "packages/polaris-dossier/src/inventory.test.ts",
+      "title": "inventory-check > refuses an inventory under the authoring session's identifier, freezing nothing",
+      "state": "unchanged"
+    },
+    {
+      "file": "packages/polaris-dossier/src/inventory.test.ts",
+      "title": "inventory-check > fails closed when %s",
+      "state": "unchanged"
+    },
+    {
+      "file": "packages/polaris-dossier/src/inventory.test.ts",
+      "title": "inventory-check > refuses before any hand-over and past the repair-cycle limit",
+      "state": "unchanged"
+    },
+    {
+      "file": "packages/polaris-dossier/src/inventory.test.ts",
+      "title": "the inventory of record > does not count without a launch form, counts once terminal is recorded, and stops counting when its frozen bytes change",
+      "state": "unchanged"
+    },
+    {
+      "file": "packages/polaris-dossier/src/inventory.test.ts",
+      "title": "the inventory of record > does not count an inventory with findings, or a launch record altered to another form",
+      "state": "unchanged"
+    },
+    {
+      "file": "packages/polaris-dossier/src/inventory.test.ts",
+      "title": "the inventory of record > stops counting a declared launch once the run's launched marker is present but unreadable (syzygy-bpyt.8.8)",
+      "state": "unchanged"
+    },
+    {
+      "file": "packages/polaris-dossier/src/inventory.test.ts",
+      "title": "the inventory of record > does not count an inventory whose session identifier a later draft revision declares",
+      "state": "unchanged"
+    },
+    {
+      "file": "packages/polaris-dossier/src/inventory.test.ts",
+      "title": "labels: nothing self-declared is shown or recorded as Observed > labels every session identifier, launch form, tool context, independence and completeness Inferred, everywhere it appears",
+      "state": "unchanged"
+    },
+    {
+      "file": "packages/polaris-dossier/src/inventory.test.ts",
+      "title": "labels: nothing self-declared is shown or recorded as Observed > the sweep finds an Observed label planted in a record (its own mutant)",
+      "state": "unchanged"
+    },
+    {
+      "file": "packages/polaris-dossier/src/inventory.test.ts",
+      "title": "inventory-brief > prints Syzygy's own rendering and says whether the stored copy matches it",
+      "state": "unchanged"
+    },
+    {
+      "file": "packages/polaris-dossier/src/inventory.test.ts",
+      "title": "inventory-brief > never opens the launched marker, at the hand-over or after it, where recording a launch form opens it once (R-GP-IMPL-LAUNCHED-MARKER-2 R2-N4)",
+      "state": "unchanged"
+    },
+    {
+      "file": "packages/polaris-dossier/src/inventory.test.ts",
+      "title": "what the review will not see (syzygy-mea.3) > the inventory brief names, by path only, the files screening withholds, and tells the session to prefer admitted sources",
+      "state": "changed"
+    },
+    {
+      "file": "packages/polaris-dossier/src/inventory.test.ts",
+      "title": "what the review will not see (syzygy-mea.3) > the census applies the class gate with the classes the run's statement lists, read at this step",
+      "state": "changed"
+    },
+    {
+      "file": "packages/polaris-dossier/src/inventory.test.ts",
+      "title": "what the review will not see (syzygy-mea.3) > a copy-class run's inventory brief names the copy as the clone to work in and tells the session not to read the operator's clone (REQ-polaris-generation-046, 047)",
+      "state": "removed"
+    },
+    {
+      "file": "packages/polaris-dossier/src/inventory.test.ts",
+      "title": "what the review will not see (syzygy-mea.3) > loads the census screen for repository:<id> at the pinned commit (syzygy-mea.4: the version-5 owner placements)",
+      "state": "changed"
+    },
+    {
+      "file": "packages/polaris-dossier/src/inventory.test.ts",
+      "title": "what the review will not see (syzygy-mea.3) > never names a path both a denied-path rule and a secret detector match in the inventory brief (round-2 review finding 1)",
+      "state": "unchanged"
+    },
+    {
+      "file": "packages/polaris-dossier/src/inventory.test.ts",
+      "title": "what the review will not see (syzygy-mea.3) > inventory-check reports the cited files the review will not see, as check does, and nothing when every cited file is admitted",
+      "state": "removed"
+    },
+    {
+      "file": "packages/polaris-dossier/src/inventory.test.ts",
+      "title": "the step guard runs before every inventory step (syzygy-qkea.23) > refuses each step when %s, with the guard's codes, and freezes nothing",
+      "state": "changed"
+    },
+    {
+      "file": "packages/polaris-dossier/src/inventory.test.ts",
+      "title": "the commands > runs the hand-over from the command line: session-prompt, inventory-check, launch-form, inventory-brief",
+      "state": "unchanged"
+    },
+    {
+      "file": "packages/polaris-dossier/src/inventory.test.ts",
+      "title": "the commands > lists the pinned tree with the object reader it is given, on every inventory command",
+      "state": "changed"
+    },
+    {
+      "file": "packages/polaris-dossier/src/inventory.test.ts",
+      "title": "Syzygy starts no session > the hand-over and inventory modules import no process module",
+      "state": "unchanged"
+    },
+    {
+      "file": "packages/polaris-dossier/src/inventory.test.ts",
+      "title": "session-prompt inventory > records each inventory brief without rewriting historical launch artifacts",
+      "state": "added"
+    },
+    {
+      "file": "packages/polaris-dossier/src/inventory.test.ts",
+      "title": "what the review will not see (syzygy-mea.3) > uses the declared clone and leaves historical launch artifacts untouched",
+      "state": "added"
+    },
+    {
+      "file": "packages/polaris-dossier/src/inventory.test.ts",
+      "title": "what the review will not see (syzygy-mea.3) > inventory-check reports unknown classes and refuses a screen differing from its policy binding",
+      "state": "added"
+    },
+    {
+      "file": "packages/polaris-dossier/src/launch.test.ts",
+      "title": "REQ-polaris-generation-046: first run, public, non-governed, no drawer > asks once before any blob, commits one observation consent and one drawer statement, and changes nothing else",
+      "state": "unchanged"
+    },
+    {
+      "file": "packages/polaris-dossier/src/launch.test.ts",
+      "title": "governed subjects and the provider statement > records an observation consent and a provider statement, separately, each binding its own digest",
+      "state": "unchanged"
+    },
+    {
+      "file": "packages/polaris-dossier/src/launch.test.ts",
+      "title": "governed subjects and the provider statement > drawer unknown on a non-governed tree: no drawer statement, the statement is asked for",
+      "state": "unchanged"
+    },
+    {
+      "file": "packages/polaris-dossier/src/launch.test.ts",
+      "title": "governed subjects and the provider statement > reuses a covering statement at a new revision, and widens one that does not cover, superseding it",
+      "state": "unchanged"
+    },
+    {
+      "file": "packages/polaris-dossier/src/launch.test.ts",
+      "title": "refusals before asking, and refusals of the answer, record nothing > standard input not a terminal: refuses, naming the missing consents and the command, and asks nothing",
+      "state": "unchanged"
+    },
+    {
+      "file": "packages/polaris-dossier/src/launch.test.ts",
+      "title": "refusals before asking, and refusals of the answer, record nothing > %s: refused, no record exists afterwards",
+      "state": "unchanged"
+    },
+    {
+      "file": "packages/polaris-dossier/src/launch.test.ts",
+      "title": "refusals before asking, and refusals of the answer, record nothing > an observation answer that is %s, before an exact drawer phrase: refused, no record exists afterwards",
+      "state": "unchanged"
+    },
+    {
+      "file": "packages/polaris-dossier/src/launch.test.ts",
+      "title": "refusals before asking, and refusals of the answer, record nothing > not declared public while no policy admits non-public sources: refused before any record, naming the successor",
+      "state": "unchanged"
+    },
+    {
+      "file": "packages/polaris-dossier/src/launch.test.ts",
+      "title": "refusals before asking, and refusals of the answer, record nothing > not declared public where a policy admits it: the warning precedes the phrase, asks nothing, and the phrase is unchanged",
+      "state": "unchanged"
+    },
+    {
+      "file": "packages/polaris-dossier/src/launch.test.ts",
+      "title": "refusals before asking, and refusals of the answer, record nothing > write consent absent: asks nothing and refuses, naming it",
+      "state": "unchanged"
+    },
+    {
+      "file": "packages/polaris-dossier/src/launch.test.ts",
+      "title": "refusals before asking, and refusals of the answer, record nothing > an unreadable launch-records reference: refuses before asking, naming why, and records nothing (review F5)",
+      "state": "unchanged"
+    },
+    {
+      "file": "packages/polaris-dossier/src/launch.test.ts",
+      "title": "refusals before asking, and refusals of the answer, record nothing > an A1 mechanism in force: refuses to record without a state selection",
+      "state": "unchanged"
+    },
+    {
+      "file": "packages/polaris-dossier/src/launch.test.ts",
+      "title": "refusals before asking, and refusals of the answer, record nothing > the clone from the governance home itself: refused before asking, printing the separate-clone command",
+      "state": "unchanged"
+    },
+    {
+      "file": "packages/polaris-dossier/src/launch.test.ts",
+      "title": "refusals before asking, and refusals of the answer, record nothing > matching records that disagree on identity: refused before asking, naming both",
+      "state": "unchanged"
+    },
+    {
+      "file": "packages/polaris-dossier/src/launch.test.ts",
+      "title": "records in force, revocation and self-observation > records already in force: asks nothing, writes nothing, names them",
+      "state": "unchanged"
+    },
+    {
+      "file": "packages/polaris-dossier/src/launch.test.ts",
+      "title": "records in force, revocation and self-observation > an earlier consent revoked: the question names it and its state; a new answer is a new grant and the old stays revoked",
+      "state": "unchanged"
+    },
+    {
+      "file": "packages/polaris-dossier/src/launch.test.ts",
+      "title": "records in force, revocation and self-observation > self-observation from a separate clone keeps the trunk tip stable, and a second run at that tip asks nothing",
+      "state": "unchanged"
+    },
+    {
+      "file": "packages/polaris-dossier/src/launch.test.ts",
+      "title": "REQ-polaris-generation-047 against real clones > HEAD elsewhere in a no-copy run: refused before asking, the clone unchanged, the checkout command printed",
+      "state": "unchanged"
+    },
+    {
+      "file": "packages/polaris-dossier/src/launch.test.ts",
+      "title": "REQ-polaris-generation-047 against real clones > a no-copy run's question states the no-copy form of each copy statement, and none of the copy-class forms (R-PDJA-33-SLICE-D-1 finding 4)",
+      "state": "unchanged"
+    },
+    {
+      "file": "packages/polaris-dossier/src/launch.test.ts",
+      "title": "REQ-polaris-generation-047 against real clones > a pinned commit whose commit object cannot be read: the committer date is Unknown, saying what happened, in each class (R-PDJA-33-SLICE-D-1 finding 2)",
+      "state": "unchanged"
+    },
+    {
+      "file": "packages/polaris-dossier/src/launch.test.ts",
+      "title": "REQ-polaris-generation-047 against real clones > an annotated tag or a blob named by --revision in a no-copy run refuses from its header alone; its body is never read (syzygy-pdja.30)",
+      "state": "unchanged"
+    },
+    {
+      "file": "packages/polaris-dossier/src/launch.test.ts",
+      "title": "REQ-polaris-generation-047 against real clones > a trunk named master with no remote default; an abbreviated --revision",
+      "state": "unchanged"
+    },
+    {
+      "file": "packages/polaris-dossier/src/launch.test.ts",
+      "title": "REQ-polaris-generation-047 against real clones > existing consent at HEAD made by another act: pins HEAD and returns to that path, asking nothing",
+      "state": "unchanged"
+    },
+    {
+      "file": "packages/polaris-dossier/src/launch.test.ts",
+      "title": "REQ-polaris-generation-046 line 17: the remote URL read as a remote locator, against real clones > a remote URL carrying user information: removed before the identity and URL derive, said so, and in no record, question or output",
+      "state": "unchanged"
+    },
+    {
+      "file": "packages/polaris-dossier/src/launch.test.ts",
+      "title": "REQ-polaris-generation-046 line 17: the remote URL read as a remote locator, against real clones > the user-information statement is made once, from the clone step on, whatever then happens to the URL; no credential appears anywhere (R-PDJA-33-SLICE-CD-3 finding 1)",
+      "state": "unchanged"
+    },
+    {
+      "file": "packages/polaris-dossier/src/launch.test.ts",
+      "title": "REQ-polaris-generation-046 line 17: the remote URL read as a remote locator, against real clones > the identity remote is the default's remote where it is not origin: its user information is said, never origin's want of it (R-PDJA-33-SLICE-CD-3 finding 1)",
+      "state": "unchanged"
+    },
+    {
+      "file": "packages/polaris-dossier/src/launch.test.ts",
+      "title": "REQ-polaris-generation-046 line 17: the remote URL read as a remote locator, against real clones > an alternates file that cannot be examined is refused before the configuration is read, so no user-information statement is owed (R-PDJA-33-SLICE-CD-4 finding 1)",
+      "state": "unchanged"
+    },
+    {
+      "file": "packages/polaris-dossier/src/launch.test.ts",
+      "title": "REQ-polaris-generation-046 line 17: the remote URL read as a remote locator, against real clones > a refusal after the identity carries the user-information statement too",
+      "state": "unchanged"
+    },
+    {
+      "file": "packages/polaris-dossier/src/launch.test.ts",
+      "title": "REQ-polaris-generation-046 line 17: the remote URL read as a remote locator, against real clones > an identity refusal after the remote URL is read carries the user-information statement: a one-segment path (R-PDJA-33-SLICE-CD-2 finding 1)",
+      "state": "unchanged"
+    },
+    {
+      "file": "packages/polaris-dossier/src/launch.test.ts",
+      "title": "REQ-polaris-generation-046 line 17: the remote URL read as a remote locator, against real clones > a remote URL that is no locator: refused before asking, naming the remote and the rule, the URL in no output",
+      "state": "unchanged"
+    },
+    {
+      "file": "packages/polaris-dossier/src/launch.test.ts",
+      "title": "REQ-polaris-generation-046 line 17: the remote URL read as a remote locator, against real clones > an --upstream not admitted is refused before asking, by its rule, and never printed",
+      "state": "unchanged"
+    },
+    {
+      "file": "packages/polaris-dossier/src/launch.test.ts",
+      "title": "REQ-polaris-generation-046 line 17: observation consents made by other acts are existing records, matched by their normalised Upstream: URL > scenario \"Consent found by its upstream URL\": it matches by URL, is named with how it matched, proposes its identity, and no new observation consent is asked",
+      "state": "unchanged"
+    },
+    {
+      "file": "packages/polaris-dossier/src/launch.test.ts",
+      "title": "REQ-polaris-generation-046 line 17: observation consents made by other acts are existing records, matched by their normalised Upstream: URL > by URL alone: a consent whose identity differs matches by its normalised Upstream: (host and whole path) and its identity is proposed",
+      "state": "unchanged"
+    },
+    {
+      "file": "packages/polaris-dossier/src/launch.test.ts",
+      "title": "REQ-polaris-generation-046 line 17: observation consents made by other acts are existing records, matched by their normalised Upstream: URL > scenario \"Same-named repository on two hosts\": an Upstream on another host does not match by URL, but the identity does, and is named so",
+      "state": "unchanged"
+    },
+    {
+      "file": "packages/polaris-dossier/src/launch.test.ts",
+      "title": "REQ-polaris-generation-046 line 17: observation consents made by other acts are existing records, matched by their normalised Upstream: URL > a same-named repository under another group does not match by URL alone",
+      "state": "unchanged"
+    },
+    {
+      "file": "packages/polaris-dossier/src/launch.test.ts",
+      "title": "REQ-polaris-generation-046 line 17: observation consents made by other acts are existing records, matched by their normalised Upstream: URL > a withdrawn consent made by another act still matches, named with its state; the URL match never stops a revision match",
+      "state": "unchanged"
+    },
+    {
+      "file": "packages/polaris-dossier/src/launch.test.ts",
+      "title": "REQ-polaris-generation-046 line 17: observation consents made by other acts are existing records, matched by their normalised Upstream: URL > records that cannot be read refuse the launch before asking: the records matching the run are not known",
+      "state": "unchanged"
+    },
+    {
+      "file": "packages/polaris-dossier/src/launch.test.ts",
+      "title": "REQ-polaris-generation-047: the launch reads of the operator's clone are the closed list (registry entry v1.1, item 1b) > a full clone with history, branches, tags, stash and a second remote: the values of the listed references alone",
+      "state": "unchanged"
+    },
+    {
+      "file": "packages/polaris-dossier/src/launch.test.ts",
+      "title": "REQ-polaris-generation-047: the launch reads of the operator's clone are the closed list (registry entry v1.1, item 1b) > a reference --revision names is read; a full identifier lists no store and opens nothing more",
+      "state": "unchanged"
+    },
+    {
+      "file": "packages/polaris-dossier/src/launch.test.ts",
+      "title": "REQ-polaris-generation-047: the launch reads of the operator's clone are the closed list (registry entry v1.1, item 1b) > references in the reftable backend: refused before any Git process starts and before any object is read",
+      "state": "unchanged"
+    },
+    {
+      "file": "packages/polaris-dossier/src/launch.test.ts",
+      "title": "REQ-polaris-generation-047: the launch reads of the operator's clone are the closed list (registry entry v1.1, item 1b) > a SHA-256 clone is not refused for its object format; a 40-digit --revision abbreviates at its 64-digit width",
+      "state": "unchanged"
+    },
+    {
+      "file": "packages/polaris-dossier/src/launch.test.ts",
+      "title": "REQ-polaris-generation-047: the launch reads of the operator's clone are the closed list (registry entry v1.1, item 1b) > the width comes from the configuration, not from HEAD: an unborn HEAD in a SHA-256 clone still abbreviates at 64 digits",
+      "state": "unchanged"
+    },
+    {
+      "file": "packages/polaris-dossier/src/launch.test.ts",
+      "title": "REQ-polaris-generation-047: the copy step of a copy-class run > HEAD elsewhere, on a branch with uncommitted changes: a copy at the trunk tip, the operator's checkout unchanged and absent from it",
+      "state": "unchanged"
+    },
+    {
+      "file": "packages/polaris-dossier/src/launch.test.ts",
+      "title": "REQ-polaris-generation-047: the copy step of a copy-class run > no Git variable of the operator's environment reaches the copy's processes",
+      "state": "unchanged"
+    },
+    {
+      "file": "packages/polaris-dossier/src/launch.test.ts",
+      "title": "REQ-polaris-generation-047: the copy step of a copy-class run > the operator's global attributes and identity do not reach the copy: its files are the pinned blobs, its reflog names Syzygy (R-PDJA-33-SLICE-B-1 findings 4 and 5)",
+      "state": "unchanged"
+    },
+    {
+      "file": "packages/polaris-dossier/src/launch.test.ts",
+      "title": "REQ-polaris-generation-047: the copy step of a copy-class run > an existing full clone with history, tags, stash and reflogs: the copy holds one commit and what its tree reaches",
+      "state": "unchanged"
+    },
+    {
+      "file": "packages/polaris-dossier/src/launch.test.ts",
+      "title": "REQ-polaris-generation-047: the copy step of a copy-class run > a configuration and hooks of the operator's clone naming commands: the copy is made and none of them runs",
+      "state": "unchanged"
+    },
+    {
+      "file": "packages/polaris-dossier/src/launch.test.ts",
+      "title": "REQ-polaris-generation-047: the copy step of a copy-class run > a SHA-256 clone is copied as a SHA-256 repository",
+      "state": "unchanged"
+    },
+    {
+      "file": "packages/polaris-dossier/src/launch.test.ts",
+      "title": "REQ-polaris-generation-047: the copy step of a copy-class run > the question states the copy statements before any answer, and the launch output states every stage reached (REQ-polaris-generation-046 line 11; 047)",
+      "state": "unchanged"
+    },
+    {
+      "file": "packages/polaris-dossier/src/launch.test.ts",
+      "title": "REQ-polaris-generation-047: the copy step of a copy-class run > a local branch of the remote default's name elsewhere: the output states both identifiers and that a local commit is not the trunk default (047)",
+      "state": "unchanged"
+    },
+    {
+      "file": "packages/polaris-dossier/src/launch.test.ts",
+      "title": "REQ-polaris-generation-047: the copy step of a copy-class run > a run resting on a launch observation consent version 1.1 recorded: the copy goes beyond its \"no fetch by Syzygy\" wording (047)",
+      "state": "unchanged"
+    },
+    {
+      "file": "packages/polaris-dossier/src/launch.test.ts",
+      "title": "REQ-polaris-generation-047: the copy step of a copy-class run > a failed fetch: the refusal states that a fetch was started and failed, as Git reported, and that the copy was removed",
+      "state": "unchanged"
+    },
+    {
+      "file": "packages/polaris-dossier/src/launch.test.ts",
+      "title": "REQ-polaris-generation-047: the copy step of a copy-class run > a copy step that throws before the fetch, in it and after it: Git read nothing; a fetch was started and failed; the step ended after the fetch",
+      "state": "unchanged"
+    },
+    {
+      "file": "packages/polaris-dossier/src/launch.test.ts",
+      "title": "REQ-polaris-generation-047: the copy step of a copy-class run > a repeat run at a launch-consented HEAD: a copy-class run that asks nothing",
+      "state": "unchanged"
+    },
+    {
+      "file": "packages/polaris-dossier/src/launch.test.ts",
+      "title": "REQ-polaris-generation-047: the copy step of a copy-class run > an annotated tag named by --revision: refused as not a commit, never followed, read by Syzygy not at all, and the copy removed",
+      "state": "unchanged"
+    },
+    {
+      "file": "packages/polaris-dossier/src/launch.test.ts",
+      "title": "REQ-polaris-generation-047: the copy step of a copy-class run > a blob named by --revision: the checkout fails, refused as not shown to be a commit, never as not a commit; the copy removed",
+      "state": "unchanged"
+    },
+    {
+      "file": "packages/polaris-dossier/src/launch.test.ts",
+      "title": "REQ-polaris-generation-047: the copy step of a copy-class run > a partial clone missing an object: the fetch fails, refused with Git's report, nothing fetched elsewhere, the copy removed",
+      "state": "unchanged"
+    },
+    {
+      "file": "packages/polaris-dossier/src/launch.test.ts",
+      "title": "REQ-polaris-generation-047: the copy step of a copy-class run > a clone with an alternate: refused before the copy step starts, and no copy was made",
+      "state": "unchanged"
+    },
+    {
+      "file": "packages/polaris-dossier/src/launch.test.ts",
+      "title": "REQ-polaris-generation-047: the copy step of a copy-class run > a copy root inside the operator's clone, or the governance home's working tree or a linked worktree: refused before the copy step",
+      "state": "unchanged"
+    },
+    {
+      "file": "packages/polaris-dossier/src/launch.test.ts",
+      "title": "REQ-polaris-generation-047: the copy step of a copy-class run > a copy that departs from the clone form after its checkout (an extra ref, an extra object): refused, the copy removed",
+      "state": "unchanged"
+    },
+    {
+      "file": "packages/polaris-dossier/src/launch.test.ts",
+      "title": "REQ-polaris-generation-047: the copy step of a copy-class run > a copy whose commit object cannot be read once pinned, and whose form check then fails: that read is the one stated (R-PDJA-33-SLICE-D-1 finding 2)",
+      "state": "unchanged"
+    },
+    {
+      "file": "packages/polaris-dossier/src/launch.test.ts",
+      "title": "REQ-polaris-generation-047: the copy step of a copy-class run > a port that throws after the copy step started: refused, the copy removed and the removal said (R-PDJA-33-SLICE-B-1 finding 2)",
+      "state": "unchanged"
+    },
+    {
+      "file": "packages/polaris-dossier/src/launch.test.ts",
+      "title": "REQ-polaris-generation-047: the copy step of a copy-class run > no answer at the question (an interrupt or the end of input): refused, the copy removed",
+      "state": "unchanged"
+    },
+    {
+      "file": "packages/polaris-dossier/src/launch.test.ts",
+      "title": "REQ-polaris-generation-047: the copy step of a copy-class run > a Git process for the copy that throws: the copy's directory is still returned, removed and said",
+      "state": "unchanged"
+    },
+    {
+      "file": "packages/polaris-dossier/src/launch.test.ts",
+      "title": "REQ-polaris-generation-047: the copy step of a copy-class run > a removal that fails: the copy is named as not removed, with its location and the failure, and kept",
+      "state": "unchanged"
+    },
+    {
+      "file": "packages/polaris-dossier/src/launch.test.ts",
+      "title": "REQ-polaris-generation-047: init runs a copy-class run on its copy, removing it when the run ends before its brief > a completed init keeps the copy outside the run directory, names it, and records it as the run's clone",
+      "state": "removed"
+    },
+    {
+      "file": "packages/polaris-dossier/src/launch.test.ts",
+      "title": "REQ-polaris-generation-047: init runs a copy-class run on its copy, removing it when the run ends before its brief > a repository on another host completes: the GitHub-only refusal is retired, and the run record carries the normalised URL",
+      "state": "removed"
+    },
+    {
+      "file": "packages/polaris-dossier/src/launch.test.ts",
+      "title": "REQ-polaris-generation-047: init runs a copy-class run on its copy, removing it when the run ends before its brief > a SHA-256 copy passes init's form check with the object-format setting its initialisation wrote",
+      "state": "removed"
+    },
+    {
+      "file": "packages/polaris-dossier/src/launch.test.ts",
+      "title": "REQ-polaris-generation-047: init runs a copy-class run on its copy, removing it when the run ends before its brief > init prints the user-information statement on every path: a recorded run, a covered run that asks nothing, and a refusal (R-PDJA-33-SLICE-D-1 finding 6)",
+      "state": "removed"
+    },
+    {
+      "file": "packages/polaris-dossier/src/launch.test.ts",
+      "title": "REQ-polaris-generation-047: init runs a copy-class run on its copy, removing it when the run ends before its brief > a repeat init --url at a HEAD only a launch consent names runs on a copy, with sources wrapped as the CLI wraps them (R-PDJA-33-SLICE-B-1 finding 1)",
+      "state": "removed"
+    },
+    {
+      "file": "packages/polaris-dossier/src/launch.test.ts",
+      "title": "REQ-polaris-generation-047: init runs a copy-class run on its copy, removing it when the run ends before its brief > a port that throws after the launch made the copy: init refuses, removes the copy and says so (R-PDJA-33-SLICE-B-1 finding 2)",
+      "state": "removed"
+    },
+    {
+      "file": "packages/polaris-dossier/src/launch.test.ts",
+      "title": "REQ-polaris-generation-047: init runs a copy-class run on its copy, removing it when the run ends before its brief > an interrupt from the copy step to the outcome removes the copy and says so: during the copy step, and after the records are written (R-PDJA-33-SLICE-C-1 finding 3)",
+      "state": "removed"
+    },
+    {
+      "file": "packages/polaris-dossier/src/launch.test.ts",
+      "title": "REQ-polaris-generation-047: init runs a copy-class run on its copy, removing it when the run ends before its brief > the launch's own checks: after the copy step, before the question and before the write, each ends the launch at the failure path",
+      "state": "removed"
+    },
+    {
+      "file": "packages/polaris-dossier/src/launch.test.ts",
+      "title": "REQ-polaris-generation-047: init runs a copy-class run on its copy, removing it when the run ends before its brief > the interrupt watch: armed once, a SIGINT is held until a check, and disarming removes its listener",
+      "state": "removed"
+    },
+    {
+      "file": "packages/polaris-dossier/src/launch.test.ts",
+      "title": "REQ-polaris-generation-047: init runs a copy-class run on its copy, removing it when the run ends before its brief > an interrupt after init's last check: the run is kept, and init's output says so (R-PDJA-33-SLICE-CD-2 finding 7)",
+      "state": "removed"
+    },
+    {
+      "file": "packages/polaris-dossier/src/launch.test.ts",
+      "title": "REQ-polaris-generation-047: init runs a copy-class run on its copy, removing it when the run ends before its brief > objectsRead is decided from the reads: a copy-stage refusal reads none, a refusal after the pre-answer reads read some (R-PDJA-33-SLICE-B-1 finding 6)",
+      "state": "removed"
+    },
+    {
+      "file": "packages/polaris-dossier/src/launch.test.ts",
+      "title": "REQ-polaris-generation-047: init runs a copy-class run on its copy, removing it when the run ends before its brief > a refusal after the launch removes the copy and says so",
+      "state": "removed"
+    },
+    {
+      "file": "packages/polaris-dossier/src/launch.test.ts",
+      "title": "declared local init and retained acquisition interruption behavior > initializes a supplied pinned clone without touching a legacy launch adapter",
+      "state": "added"
+    },
+    {
+      "file": "packages/polaris-dossier/src/launch.test.ts",
+      "title": "declared local init and retained acquisition interruption behavior > keeps the strict clone check and never substitutes a copy when it refuses",
+      "state": "added"
+    },
+    {
+      "file": "packages/polaris-dossier/src/launch.test.ts",
+      "title": "declared local init and retained acquisition interruption behavior > refuses a missing locator without reading objects or consulting a terminal",
+      "state": "added"
+    },
+    {
+      "file": "packages/polaris-dossier/src/launch.test.ts",
+      "title": "declared local init and retained acquisition interruption behavior > the launch's own checks: after the copy step, before the question and before the write, each ends the launch at the failure path",
+      "state": "added"
+    },
+    {
+      "file": "packages/polaris-dossier/src/launch.test.ts",
+      "title": "declared local init and retained acquisition interruption behavior > the interrupt watch: armed once, a SIGINT is held until a check, and disarming removes its listener",
+      "state": "added"
+    },
+    {
+      "file": "packages/polaris-dossier/src/render.test.ts",
+      "title": "render > refuses with no renderer wired, before it opens the run, and writes nothing",
+      "state": "unchanged"
+    },
+    {
+      "file": "packages/polaris-dossier/src/render.test.ts",
+      "title": "render > renders every quotation as the bytes Syzygy located in the blob it read now, with an RFC7-10 anchor",
+      "state": "unchanged"
+    },
+    {
+      "file": "packages/polaris-dossier/src/render.test.ts",
+      "title": "render > labels blocks by the agent's label, the counted review and screening, and keeps the pages and machine view in parity per tuple",
+      "state": "unchanged"
+    },
+    {
+      "file": "packages/polaris-dossier/src/render.test.ts",
+      "title": "render > the reading view and the evidence view (dossier spec v1.5) > shows no label token in the block text of a narrative page, and keeps every one for the evidence view",
+      "state": "unchanged"
+    },
+    {
+      "file": "packages/polaris-dossier/src/render.test.ts",
+      "title": "render > the reading view and the evidence view (dossier spec v1.5) > carries the legend and the evidence-view target once per narrative page, and the redaction legend elsewhere",
+      "state": "unchanged"
+    },
+    {
+      "file": "packages/polaris-dossier/src/render.test.ts",
+      "title": "render > the reading view and the evidence view (dossier spec v1.5) > gives each block an evidence note whose values equal its machine attributes",
+      "state": "unchanged"
+    },
+    {
+      "file": "packages/polaris-dossier/src/render.test.ts",
+      "title": "render > the reading view and the evidence view (dossier spec v1.5) > says in each citation pop which lines of which file the mark cites",
+      "state": "unchanged"
+    },
+    {
+      "file": "packages/polaris-dossier/src/render.test.ts",
+      "title": "render > the reading view and the evidence view (dossier spec v1.5) > puts the evidence view in the rendered-design packet: each narrative page holds both views",
+      "state": "unchanged"
+    },
+    {
+      "file": "packages/polaris-dossier/src/render.test.ts",
+      "title": "render > the reading view and the evidence view (dossier spec v1.5) > renders a checked v4 draft's Poles: the why section on the landing page, the other Pole on its own page, in the design packet too",
+      "state": "unchanged"
+    },
+    {
+      "file": "packages/polaris-dossier/src/render.test.ts",
+      "title": "render > the reading view and the evidence view (dossier spec v1.5) > refuses to render a v4 draft over the run's Pole limit, as check reports it",
+      "state": "unchanged"
+    },
+    {
+      "file": "packages/polaris-dossier/src/render.test.ts",
+      "title": "render > the reading view and the evidence view (dossier spec v1.5) > counts in the appendix what the machine view counts",
+      "state": "unchanged"
+    },
+    {
+      "file": "packages/polaris-dossier/src/render.test.ts",
+      "title": "render > carries the run record's launch disclosure on every page, with the brief stage's statement from what the run directory holds (REQ-polaris-generation-046, 047)",
+      "state": "removed"
+    },
+    {
+      "file": "packages/polaris-dossier/src/render.test.ts",
+      "title": "render > reads each brief's stored brief-stage statement, never deriving it from launch.json; a record without one is Unknown (R-PDJA-33-SLICE-D-1 findings 5 and 10)",
+      "state": "removed"
+    },
+    {
+      "file": "packages/polaris-dossier/src/render.test.ts",
+      "title": "render > carries the one sentence and the machine disclosure on every page, the human disclosure in the appendix, and one review-status region per page holding no claim",
+      "state": "changed"
+    },
+    {
+      "file": "packages/polaris-dossier/src/render.test.ts",
+      "title": "render > says on the sources list why the agent reports choosing each source, Inferred, never a secret-named path (syzygy-pdja.15)",
+      "state": "unchanged"
+    },
+    {
+      "file": "packages/polaris-dossier/src/render.test.ts",
+      "title": "render > says on the sources list which pages cite each source and how often (syzygy-pdja.15)",
+      "state": "unchanged"
+    },
+    {
+      "file": "packages/polaris-dossier/src/render.test.ts",
+      "title": "render > folds how the dossier was made under one Review report entry, apart from the product, open on the pages it holds (syzygy-pdja.13)",
+      "state": "unchanged"
+    },
+    {
+      "file": "packages/polaris-dossier/src/render.test.ts",
+      "title": "render > withholds the draft layer as Unknown while the RFC7-20 ruling is not in force, keeping sources, disclosure and discovery",
+      "state": "removed"
+    },
+    {
+      "file": "packages/polaris-dossier/src/render.test.ts",
+      "title": "render > withholds a quotation from a file screening excludes and renders its block Unknown, with no source page for that file",
+      "state": "unchanged"
+    },
+    {
+      "file": "packages/polaris-dossier/src/render.test.ts",
+      "title": "render > screens at render with the policy in force now, not the one the check applied",
+      "state": "removed"
+    },
+    {
+      "file": "packages/polaris-dossier/src/render.test.ts",
+      "title": "render > withholds a project-documentation quotation and source page under %s, naming the class",
+      "state": "removed"
+    },
+    {
+      "file": "packages/polaris-dossier/src/render.test.ts",
+      "title": "render > version 8, private: a class-gate-withheld blob is rendered with no object id, on the discovery row or in the source population",
+      "state": "removed"
+    },
+    {
+      "file": "packages/polaris-dossier/src/render.test.ts",
+      "title": "render > quotes a project-documentation body once the statement the run relies on lists the class",
+      "state": "removed"
+    },
+    {
+      "file": "packages/polaris-dossier/src/render.test.ts",
+      "title": "render > refuses when an object at the pinned revision can no longer be read, and writes nothing",
+      "state": "unchanged"
+    },
+    {
+      "file": "packages/polaris-dossier/src/render.test.ts",
+      "title": "render > renders an exempt body only through a renderer that declares the page-sink contract and pages that carry the CSP",
+      "state": "unchanged"
+    },
+    {
+      "file": "packages/polaris-dossier/src/render.test.ts",
+      "title": "render > draws retained spans with original coordinates and markers while withholding only the removed line",
+      "state": "unchanged"
+    },
+    {
+      "file": "packages/polaris-dossier/src/render.test.ts",
+      "title": "render > rescans a redacted exempt body over its complete body where the page sink is unconfirmed, and states no withheld text",
+      "state": "unchanged"
+    },
+    {
+      "file": "packages/polaris-dossier/src/render.test.ts",
+      "title": "render > loads the screen for the run's repository and pinned commit",
+      "state": "changed"
+    },
+    {
+      "file": "packages/polaris-dossier/src/render.test.ts",
+      "title": "render > refuses when the stored passed draft revision is altered, after the deadline, and when the output lacks the disclosure",
+      "state": "unchanged"
+    },
+    {
+      "file": "packages/polaris-dossier/src/render.test.ts",
+      "title": "render > writes each render into a new numbered site directory and never over an earlier one",
+      "state": "unchanged"
+    },
+    {
+      "file": "packages/polaris-dossier/src/render.test.ts",
+      "title": "render > discloses the consent record and label the live consent gives the pinned revision at this render",
+      "state": "removed"
+    },
+    {
+      "file": "packages/polaris-dossier/src/render.test.ts",
+      "title": "render > refuses before it renders when %s, with the step guard's codes, and writes no site (syzygy-qkea.23)",
+      "state": "changed"
+    },
+    {
+      "file": "packages/polaris-dossier/src/render.test.ts",
+      "title": "render > lists the pinned tree with the object reader the CLI is given",
+      "state": "changed"
+    },
+    {
+      "file": "packages/polaris-dossier/src/render.test.ts",
+      "title": "render > is the `render` command of the CLI, which refuses when the composition root injects no renderer",
+      "state": "changed"
+    },
+    {
+      "file": "packages/polaris-dossier/src/render.test.ts",
+      "title": "render: withheld items and judgements (dossier spec v1.5) > renders each withheld item Unknown in Syzygy's words with its count, and none of the agent's text for it",
+      "state": "unchanged"
+    },
+    {
+      "file": "packages/polaris-dossier/src/render.test.ts",
+      "title": "render: withheld items and judgements (dossier spec v1.5) > keeps a block citing a withheld span beside an admitted one, counting the withheld span",
+      "state": "unchanged"
+    },
+    {
+      "file": "packages/polaris-dossier/src/render.test.ts",
+      "title": "render: withheld items and judgements (dossier spec v1.5) > withholds an item whose span touches a redacted line, and keeps one over surviving lines of the same file",
+      "state": "unchanged"
+    },
+    {
+      "file": "packages/polaris-dossier/src/render.test.ts",
+      "title": "render: withheld items and judgements (dossier spec v1.5) > renders a list repeating a diagram collapsed, with Syzygy's summary and its Unknown count",
+      "state": "unchanged"
+    },
+    {
+      "file": "packages/polaris-dossier/src/render.test.ts",
+      "title": "render: withheld items and judgements (dossier spec v1.5) > renders an uncited judgement Inferred with its mark where the counted review finds it advisory",
+      "state": "unchanged"
+    },
+    {
+      "file": "packages/polaris-dossier/src/render.test.ts",
+      "title": "render: withheld items and judgements (dossier spec v1.5) > keeps an uncited judgement Unknown while no counted review finds it advisory",
+      "state": "unchanged"
+    },
+    {
+      "file": "packages/polaris-dossier/src/render.test.ts",
+      "title": "rendered-design review (S9b) > builds the design packet from the latest site, outside the review-status region, byte for byte, and names its digest at render",
+      "state": "unchanged"
+    },
+    {
+      "file": "packages/polaris-dossier/src/render.test.ts",
+      "title": "rendered-design review (S9b) > hands a design review session the packet under the sessions root with its own prompt",
+      "state": "changed"
+    },
+    {
+      "file": "packages/polaris-dossier/src/render.test.ts",
+      "title": "rendered-design review (S9b) > keeps a counted design review through a render that changes only the review-status region",
+      "state": "unchanged"
+    },
+    {
+      "file": "packages/polaris-dossier/src/render.test.ts",
+      "title": "rendered-design review (S9b) > retires a counted design review when a render changes anything outside the region",
+      "state": "changed"
+    },
+    {
+      "file": "packages/polaris-dossier/src/render.test.ts",
+      "title": "rendered-design review (S9b) > refuses a render whose statement of the design review leaks outside the region, and writes no site",
+      "state": "unchanged"
+    },
+    {
+      "file": "packages/polaris-dossier/src/render.test.ts",
+      "title": "rendered-design review (S9b) > counts a validated design verdict only once its launch form is recorded",
+      "state": "unchanged"
+    },
+    {
+      "file": "packages/polaris-dossier/src/render.test.ts",
+      "title": "rendered-design review (S9b) > states a counted review that declares the pages not ready beside its blocking finding",
+      "state": "unchanged"
+    },
+    {
+      "file": "packages/polaris-dossier/src/render.test.ts",
+      "title": "rendered-design review (S9b) > records and refuses a design verdict with %s, which never counts",
+      "state": "unchanged"
+    },
+    {
+      "file": "packages/polaris-dossier/src/render.test.ts",
+      "title": "rendered-design review (S9b) > records a validated design verdict, with what it observed and what stays Inferred, and a stored site altered since is a stale packet",
+      "state": "unchanged"
+    },
+    {
+      "file": "packages/polaris-dossier/src/render.test.ts",
+      "title": "rendered-design review (S9b) > refuses a design packet from a site holding anything but the renderer's files, and an unknown kind",
+      "state": "unchanged"
+    },
+    {
+      "file": "packages/polaris-dossier/src/render.test.ts",
+      "title": "rendered-design review (S9b) > names an excluded cited file alike in two renders of the same subject",
+      "state": "unchanged"
+    },
+    {
+      "file": "packages/polaris-dossier/src/render.test.ts",
+      "title": "rendered-design review (S9b) > version 8, %s: an excluded cited blob's object id is on the pages and in the source population: %s",
+      "state": "changed"
+    },
+    {
+      "file": "packages/polaris-dossier/src/render.test.ts",
+      "title": "rendered-design review (S9b) > keys an excluded cited file by the run, the pinned revision and its path alone, never its body or object",
+      "state": "unchanged"
+    },
+    {
+      "file": "packages/polaris-dossier/src/render.test.ts",
+      "title": "rendered-design review (S9b) > drives the design review through the CLI",
+      "state": "changed"
+    },
+    {
+      "file": "packages/polaris-dossier/src/render.test.ts",
+      "title": "redactionDetails > names the matched detectors and the withheld ranges, a single line as one number and a run with an en dash",
+      "state": "unchanged"
+    },
+    {
+      "file": "packages/polaris-dossier/src/render.test.ts",
+      "title": "redactedExtent > says partially retained while some line is kept, and retained with every line withheld when none is",
+      "state": "unchanged"
+    },
+    {
+      "file": "packages/polaris-dossier/src/render.test.ts",
+      "title": "readable operator-agent pages (syzygy-mea.10.1, syzygy-mea.10.2) > numbers each page's sources [1], [2] in first-cited order, keeping the identifier in data-source-id only",
+      "state": "unchanged"
+    },
+    {
+      "file": "packages/polaris-dossier/src/render.test.ts",
+      "title": "readable operator-agent pages (syzygy-mea.10.1, syzygy-mea.10.2) > draws complete backtick pairs in agent prose as inline code and leaves an unpaired backtick literal",
+      "state": "unchanged"
+    },
+    {
+      "file": "packages/polaris-dossier/src/render.test.ts",
+      "title": "readable operator-agent pages (syzygy-mea.10.1, syzygy-mea.10.2) > carries the soft dark theme with a light variant and tinted callouts",
+      "state": "unchanged"
+    },
+    {
+      "file": "packages/polaris-dossier/src/render.test.ts",
+      "title": "readability guidance and diagram-led sections (syzygy-mea.10.4) > draws a section's diagrams before its blocks on an operator-agent page",
+      "state": "unchanged"
+    },
+    {
+      "file": "packages/polaris-dossier/src/render.test.ts",
+      "title": "readability guidance and diagram-led sections (syzygy-mea.10.4) > puts the readability rules in the brief, after the profile guidance, and the newcomer test in the design criteria",
+      "state": "unchanged"
+    },
+    {
+      "file": "packages/polaris-dossier/src/render.test.ts",
+      "title": "rich presentation elements (syzygy-mea.10.5) > renders a table with a caption, column headers, row headers and an empty cell",
+      "state": "unchanged"
+    },
+    {
+      "file": "packages/polaris-dossier/src/render.test.ts",
+      "title": "rich presentation elements (syzygy-mea.10.5) > numbers a cell's citation as any block's",
+      "state": "unchanged"
+    },
+    {
+      "file": "packages/polaris-dossier/src/render.test.ts",
+      "title": "rich presentation elements (syzygy-mea.10.5) > renders a callout with its visible tone, steps, definitions, cards and details",
+      "state": "unchanged"
+    },
+    {
+      "file": "packages/polaris-dossier/src/render.test.ts",
+      "title": "rich presentation elements (syzygy-mea.10.5) > marks every element claim and carries it into the machine view",
+      "state": "unchanged"
+    },
+    {
+      "file": "packages/polaris-dossier/src/render.test.ts",
+      "title": "rich presentation elements (syzygy-mea.10.5) > renders a code excerpt from Syzygy's read, entity-encoded, Observed, with its language from the path and its anchor",
+      "state": "unchanged"
+    },
+    {
+      "file": "packages/polaris-dossier/src/render.test.ts",
+      "title": "rich presentation elements (syzygy-mea.10.5) > withholds a code excerpt of a file screening excludes, with none of its bytes",
+      "state": "unchanged"
+    },
+    {
+      "file": "packages/polaris-dossier/src/render.test.ts",
+      "title": "rich presentation elements (syzygy-mea.10.5) > withholds a code excerpt whose cited lines carry a raw tag: screening holds the file as active content",
+      "state": "unchanged"
+    },
+    {
+      "file": "packages/polaris-dossier/src/render.test.ts",
+      "title": "rich presentation elements (syzygy-mea.10.5) > puts no fragment target that any page links to inside any details element",
+      "state": "unchanged"
+    },
+    {
+      "file": "packages/polaris-dossier/src/render.test.ts",
+      "title": "rich presentation elements (syzygy-mea.10.5) > adds no script and keeps the content security policy",
+      "state": "unchanged"
+    },
+    {
+      "file": "packages/polaris-dossier/src/render.test.ts",
+      "title": "render > discloses declaration and screening evidence without treating historical launch records as authority",
+      "state": "added"
+    },
+    {
+      "file": "packages/polaris-dossier/src/render.test.ts",
+      "title": "render > keeps actual agent transmissions unobserved in the disclosure",
+      "state": "added"
+    },
+    {
+      "file": "packages/polaris-dossier/src/render.test.ts",
+      "title": "render > renders an attributed editorial draft without an RFC7-20 reading act",
+      "state": "added"
+    },
+    {
+      "file": "packages/polaris-dossier/src/render.test.ts",
+      "title": "render > refuses a different applied policy instead of upgrading a running render",
+      "state": "added"
+    },
+    {
+      "file": "packages/polaris-dossier/src/render.test.ts",
+      "title": "render > renders screened documentation without a legacy class grant %j",
+      "state": "added"
+    },
+    {
+      "file": "packages/polaris-dossier/src/render.test.ts",
+      "title": "render > suppresses a private unknown-class blob identifier on every page and in the source population",
+      "state": "added"
+    },
+    {
+      "file": "packages/polaris-dossier/src/render.test.ts",
+      "title": "render > keeps policy classification independent of a stale provider statement",
+      "state": "added"
+    },
+    {
+      "file": "packages/polaris-dossier/src/render.test.ts",
+      "title": "render > labels selection history Inferred and the current pin and policy check Observed",
+      "state": "added"
+    },
+    {
+      "file": "packages/polaris-dossier/src/review.test.ts",
+      "title": "review-packet --kind fidelity > emits the packet byte for byte as assembled independently, with its digest beside it and in its directory name",
+      "state": "unchanged"
+    },
+    {
+      "file": "packages/polaris-dossier/src/review.test.ts",
+      "title": "review-packet --kind fidelity > loads the screen for repository:<id> at the pinned commit",
+      "state": "changed"
+    },
+    {
+      "file": "packages/polaris-dossier/src/review.test.ts",
+      "title": "review-packet --kind fidelity > carries no authoring exchange, read account or excluded byte",
+      "state": "unchanged"
+    },
+    {
+      "file": "packages/polaris-dossier/src/review.test.ts",
+      "title": "review-packet --kind fidelity > holds no discovery, transcript or exchange field at any depth",
+      "state": "unchanged"
+    },
+    {
+      "file": "packages/polaris-dossier/src/review.test.ts",
+      "title": "review-packet --kind fidelity > refuses %s",
+      "state": "unchanged"
+    },
+    {
+      "file": "packages/polaris-dossier/src/review.test.ts",
+      "title": "session-prompt review --kind fidelity > copies the packet and its digest into a session directory under the sessions root, and prints the interactive command",
+      "state": "changed"
+    },
+    {
+      "file": "packages/polaris-dossier/src/review.test.ts",
+      "title": "session-prompt review --kind fidelity > refuses %j",
+      "state": "unchanged"
+    },
+    {
+      "file": "packages/polaris-dossier/src/review.test.ts",
+      "title": "review-check > validates a complete, consistent verdict bound to the rebuilt packet and records it; it counts once its launch form is recorded",
+      "state": "unchanged"
+    },
+    {
+      "file": "packages/polaris-dossier/src/review.test.ts",
+      "title": "review-check > records and refuses a verdict that %s",
+      "state": "unchanged"
+    },
+    {
+      "file": "packages/polaris-dossier/src/review.test.ts",
+      "title": "review-check > withheld and advisory entries (dossier spec v1.5) > %s",
+      "state": "unchanged"
+    },
+    {
+      "file": "packages/polaris-dossier/src/review.test.ts",
+      "title": "review-check > records an inventory omission as blocking: the verdict validates, and the draft does not become ready",
+      "state": "unchanged"
+    },
+    {
+      "file": "packages/polaris-dossier/src/review.test.ts",
+      "title": "review-check > retires a counted verdict when the draft is revised, the stored frozen draft is altered or the frozen verdict changes",
+      "state": "unchanged"
+    },
+    {
+      "file": "packages/polaris-dossier/src/review.test.ts",
+      "title": "review-check > validates a ready verdict with no blocking row",
+      "state": "unchanged"
+    },
+    {
+      "file": "packages/polaris-dossier/src/review.test.ts",
+      "title": "review-check > does not count a verdict whose launch record is altered to another form, role or prompt",
+      "state": "unchanged"
+    },
+    {
+      "file": "packages/polaris-dossier/src/review.test.ts",
+      "title": "review-check > stops counting a declared launch once the run's launched marker is present but unreadable (syzygy-bpyt.8.8)",
+      "state": "unchanged"
+    },
+    {
+      "file": "packages/polaris-dossier/src/review.test.ts",
+      "title": "review-check > refuses before any review session is handed over, and after the deadline",
+      "state": "unchanged"
+    },
+    {
+      "file": "packages/polaris-dossier/src/review.test.ts",
+      "title": "review-check > observes only the packet, its digest and that the verdict names it: the reviewer's reading, independence, completeness, identifiers and launch form stay Inferred",
+      "state": "unchanged"
+    },
+    {
+      "file": "packages/polaris-dossier/src/review.test.ts",
+      "title": "review-check > observes only the packet and its digest under a TMPDIR whose path holds a verdict leaf",
+      "state": "unchanged"
+    },
+    {
+      "file": "packages/polaris-dossier/src/review.test.ts",
+      "title": "the step guard runs before every review step (syzygy-qkea.23) > refuses review-packet, review-check and the review hand-over when %s, with the guard's codes",
+      "state": "changed"
+    },
+    {
+      "file": "packages/polaris-dossier/src/review.test.ts",
+      "title": "the step guard runs before every review step (syzygy-qkea.23) > lists the pinned tree with the object reader it is given, on review-packet and review-check",
+      "state": "changed"
+    },
+    {
+      "file": "packages/polaris-dossier/src/review.test.ts",
+      "title": "the content-class gate on the fidelity packet > withholds a project-documentation span under %s, naming the class",
+      "state": "removed"
+    },
+    {
+      "file": "packages/polaris-dossier/src/review.test.ts",
+      "title": "the content-class gate on the fidelity packet > admits the span with its text once the statement lists project-documentation",
+      "state": "removed"
+    },
+    {
+      "file": "packages/polaris-dossier/src/review.test.ts",
+      "title": "the content-class gate on the fidelity packet > gates every class by the statement: one that lists only project-documentation withholds the code-content spans",
+      "state": "removed"
+    },
+    {
+      "file": "packages/polaris-dossier/src/review.test.ts",
+      "title": "the fidelity packet over a body retained as redacted-span > carries a span that includes no withheld line, with the body's redaction count beside it",
+      "state": "unchanged"
+    },
+    {
+      "file": "packages/polaris-dossier/src/review.test.ts",
+      "title": "the fidelity packet over a body retained as redacted-span > withholds a span that includes a withheld line whole, carrying no byte of it",
+      "state": "unchanged"
+    },
+    {
+      "file": "packages/polaris-dossier/src/review.test.ts",
+      "title": "session-prompt --tool and the session pair's statement > refuses a fidelity, a design and an inventory session when %s, and writes nothing",
+      "state": "removed"
+    },
+    {
+      "file": "packages/polaris-dossier/src/review.test.ts",
+      "title": "session-prompt --tool and the session pair's statement > hands a codex session over when %s",
+      "state": "removed"
+    },
+    {
+      "file": "packages/polaris-dossier/src/review.test.ts",
+      "title": "session-prompt --tool and the session pair's statement > hands the declared tool's session over with no codex statement at all",
+      "state": "removed"
+    },
+    {
+      "file": "packages/polaris-dossier/src/review.test.ts",
+      "title": "session-prompt --tool and the session pair's statement > cites the codex statement in the inventory prompt record, and stops counting the inventory once that statement is withdrawn",
+      "state": "removed"
+    },
+    {
+      "file": "packages/polaris-dossier/src/review.test.ts",
+      "title": "session-prompt --tool and the session pair's statement > cites the codex statement in the review prompt record, and stops counting the verdict once that statement is withdrawn",
+      "state": "removed"
+    },
+    {
+      "file": "packages/polaris-dossier/src/review.test.ts",
+      "title": "session-prompt --tool and the session pair's statement > does not count work whose cited statement a successor replaced or whose classes narrowed; a record from before citations counts on the re-check, its citation Unknown",
+      "state": "removed"
+    },
+    {
+      "file": "packages/polaris-dossier/src/review.test.ts",
+      "title": "session-prompt --tool and the session pair's statement > does not count work whose prompt record cites its statement for %s",
+      "state": "removed"
+    },
+    {
+      "file": "packages/polaris-dossier/src/review.test.ts",
+      "title": "session-prompt --tool and the session pair's statement > does not count work once the run's own statement is withdrawn, though the session pair's cited statement still governs",
+      "state": "removed"
+    },
+    {
+      "file": "packages/polaris-dossier/src/review.test.ts",
+      "title": "session-prompt --tool and the session pair's statement > names the caller's consequence in every refusal kind, and leaves the counting texts as they were without one",
+      "state": "removed"
+    },
+    {
+      "file": "packages/polaris-dossier/src/review.test.ts",
+      "title": "the CLI > builds a packet and checks a verdict through syzygy dossier, exiting 1 on a refused verdict",
+      "state": "unchanged"
+    },
+    {
+      "file": "packages/polaris-dossier/src/review.test.ts",
+      "title": "fidelity criteria for presentation elements (syzygy-mea.10.5) > asks for a support entry for every claim an element carries, judged under a cell's headings",
+      "state": "unchanged"
+    },
+    {
+      "file": "packages/polaris-dossier/src/review.test.ts",
+      "title": "recognized content classes in the fidelity packet > admits screened documentation and code independently of legacy statement classes %j",
+      "state": "added"
+    },
+    {
+      "file": "packages/polaris-dossier/src/review.test.ts",
+      "title": "session tool and declared provider binding > hands supported tool overrides a packet without any statement and records the declared provider",
+      "state": "added"
+    },
+    {
+      "file": "packages/polaris-dossier/src/review.test.ts",
+      "title": "session tool and declared provider binding > stops counting an inventory with changed %s in its prompt context",
+      "state": "added"
+    },
+    {
+      "file": "packages/polaris-dossier/src/review.test.ts",
+      "title": "session tool and declared provider binding > stops counting a fidelity verdict when its recorded provider differs",
+      "state": "added"
+    },
+    {
+      "file": "packages/polaris-dossier/src/screen-scope-v5.test.ts",
+      "title": "screening scope version 5: the builder fixtures through both screens > holds the builder's populations, and its oracle agrees with each stated expectation",
+      "state": "unchanged"
+    },
+    {
+      "file": "packages/polaris-dossier/src/screen-scope-v5.test.ts",
+      "title": "screening scope version 5: the builder fixtures through both screens > changes, under version 6, only redis.conf at the trial commit and the two TLS.md directive counterexamples",
+      "state": "unchanged"
+    },
+    {
+      "file": "packages/polaris-dossier/src/screen-scope-v5.test.ts",
+      "title": "screening scope version 5: the builder fixtures through both screens > classifies every class fixture at its own repository and commit as the builder states, in both screens",
+      "state": "unchanged"
+    },
+    {
+      "file": "packages/polaris-dossier/src/screen-scope-v5.test.ts",
+      "title": "screening scope version 5: the builder fixtures through both screens > screens every counterexample at the trial commit as the builder states for bcd, with version 6's declared changes, in both screens",
+      "state": "unchanged"
+    },
+    {
+      "file": "packages/polaris-dossier/src/screen-scope-v5.test.ts",
+      "title": "screening scope version 5: the builder fixtures through both screens > screens every counterexample under the version-4 bytes as the builder's v4 column states, in both screens",
+      "state": "unchanged"
+    },
+    {
+      "file": "packages/polaris-dossier/src/screen-scope-v5.test.ts",
+      "title": "screening scope version 5: the builder fixtures through both screens > keeps every version-4 body fixture's answer as README.md under version 5, in both screens",
+      "state": "unchanged"
+    },
+    {
+      "file": "packages/polaris-dossier/src/screen-scope-v5.test.ts",
+      "title": "T: the scope detectors > declares four scope detectors in both screens under the live bytes, and none under the version-4 bytes",
+      "state": "unchanged"
+    },
+    {
+      "file": "packages/polaris-dossier/src/screen-scope-v5.test.ts",
+      "title": "T: the scope detectors > screens agent text carrying %s whole (screenBody), where the version-4 bytes passed it",
+      "state": "unchanged"
+    },
+    {
+      "file": "packages/polaris-dossier/src/screen-scope-v5.test.ts",
+      "title": "T: the scope detectors > keeps a project-documentation body whole on a private-key-header or extended-token match, and redacts a URL match by line",
+      "state": "unchanged"
+    },
+    {
+      "file": "packages/polaris-dossier/src/screen-scope-v5.test.ts",
+      "title": "T: the scope detectors > screens a path that carries a scope detector match as secret-detector-match",
+      "state": "unchanged"
+    },
+    {
+      "file": "packages/polaris-dossier/src/screen-scope-v5.test.ts",
+      "title": "T: the scope detectors > scans %s in linear time in both screens",
+      "state": "unchanged"
+    },
+    {
+      "file": "packages/polaris-dossier/src/screen-scope-v5.test.ts",
+      "title": "B: the governance-text class > classifies the eight folded root names as governance-text in both screens, with the class act in force or not",
+      "state": "unchanged"
+    },
+    {
+      "file": "packages/polaris-dossier/src/screen-scope-v5.test.ts",
+      "title": "B: the governance-text class > leaves %s outside the class",
+      "state": "unchanged"
+    },
+    {
+      "file": "packages/polaris-dossier/src/screen-scope-v5.test.ts",
+      "title": "B: the governance-text class > declares nothing under the version-4 bytes: a root SECURITY.md stays indeterminate",
+      "state": "unchanged"
+    },
+    {
+      "file": "packages/polaris-dossier/src/screen-scope-v5.test.ts",
+      "title": "B: the governance-text class > leaves a path that governance-text and code-content both match indeterminate in both screens",
+      "state": "unchanged"
+    },
+    {
+      "file": "packages/polaris-dossier/src/screen-scope-v5.test.ts",
+      "title": "B: the governance-text class > keeps a governance-text body whole on any detector match and scans it for active content",
+      "state": "unchanged"
+    },
+    {
+      "file": "packages/polaris-dossier/src/screen-scope-v5.test.ts",
+      "title": "B: the governance-text class > refuses a redaction that names governance-text as a redacted class",
+      "state": "unchanged"
+    },
+    {
+      "file": "packages/polaris-dossier/src/screen-scope-v5.test.ts",
+      "title": "B: the governance-text class > is withheld by the class gate unless the statement the run relies on lists it",
+      "state": "unchanged"
+    },
+    {
+      "file": "packages/polaris-dossier/src/screen-scope-v5.test.ts",
+      "title": "B: the governance-text class > reads the live rule and its eight paths",
+      "state": "unchanged"
+    },
+    {
+      "file": "packages/polaris-dossier/src/screen-scope-v5.test.ts",
+      "title": "B: the governance-text class > refuses %s",
+      "state": "unchanged"
+    },
+    {
+      "file": "packages/polaris-dossier/src/screen-scope-v5.test.ts",
+      "title": "B: the governance-text class > takes its policy only from the records root's policy file, never from a body",
+      "state": "changed"
+    },
+    {
+      "file": "packages/polaris-dossier/src/screen-scope-v5.test.ts",
+      "title": "D: the owner placements > places tls.md and modules/modules.md in project-documentation at the trial commit of repository:redis-redis only",
+      "state": "unchanged"
+    },
+    {
+      "file": "packages/polaris-dossier/src/screen-scope-v5.test.ts",
+      "title": "D: the owner placements > places nothing for %s: both paths stay indeterminate",
+      "state": "unchanged"
+    },
+    {
+      "file": "packages/polaris-dossier/src/screen-scope-v5.test.ts",
+      "title": "D: the owner placements > places nothing while the class act is not in force",
+      "state": "unchanged"
+    },
+    {
+      "file": "packages/polaris-dossier/src/screen-scope-v5.test.ts",
+      "title": "D: the owner placements > places nothing under the version-4 bytes",
+      "state": "unchanged"
+    },
+    {
+      "file": "packages/polaris-dossier/src/screen-scope-v5.test.ts",
+      "title": "D: the owner placements > forms the subject from the run's repository and pinned commit",
+      "state": "unchanged"
+    },
+    {
+      "file": "packages/polaris-dossier/src/screen-scope-v5.test.ts",
+      "title": "D: the owner placements > screenLoaderOf: the checkout's own screen for the subject it is called with, or the loader injected",
+      "state": "changed"
+    },
+    {
+      "file": "packages/polaris-dossier/src/screen-scope-v5.test.ts",
+      "title": "D: the owner placements > reads an empty list, which places nothing",
+      "state": "unchanged"
+    },
+    {
+      "file": "packages/polaris-dossier/src/screen-scope-v5.test.ts",
+      "title": "D: the owner placements > reads a path with an inner slash, and a second entry",
+      "state": "unchanged"
+    },
+    {
+      "file": "packages/polaris-dossier/src/screen-scope-v5.test.ts",
+      "title": "D: the owner placements > refuses %s",
+      "state": "unchanged"
+    },
+    {
+      "file": "packages/polaris-dossier/src/screen-scope-v5.test.ts",
+      "title": "D: the owner placements > refuses ownerPlacements beside the version-4 text, which names no fourth rule",
+      "state": "unchanged"
+    },
+    {
+      "file": "packages/polaris-dossier/src/screen-scope-v5.test.ts",
+      "title": "C: the project-documentation exemption from the active-content scan > declares the exemption in both screens, and not under the version-4 bytes",
+      "state": "unchanged"
+    },
+    {
+      "file": "packages/polaris-dossier/src/screen-scope-v5.test.ts",
+      "title": "C: the project-documentation exemption from the active-content scan > admits a project-documentation body holding %s, and still scans every other class and agent text",
+      "state": "unchanged"
+    },
+    {
+      "file": "packages/polaris-dossier/src/screen-scope-v5.test.ts",
+      "title": "C: the project-documentation exemption from the active-content scan > runs every detector on an exempt body",
+      "state": "unchanged"
+    },
+    {
+      "file": "packages/polaris-dossier/src/screen-scope-v5.test.ts",
+      "title": "C: the project-documentation exemption from the active-content scan > answers the scan as before over the complete body, for the render fallback",
+      "state": "unchanged"
+    },
+    {
+      "file": "packages/polaris-dossier/src/screen-scope-v5.test.ts",
+      "title": "C: the project-documentation exemption from the active-content scan > reads the live declaration, and none where the scope declares none",
+      "state": "unchanged"
+    },
+    {
+      "file": "packages/polaris-dossier/src/screen-scope-v5.test.ts",
+      "title": "C: the project-documentation exemption from the active-content scan > refuses %s",
+      "state": "unchanged"
+    },
+    {
+      "file": "packages/polaris-dossier/src/screen-scope-v5.test.ts",
+      "title": "the scope detectors reader > reads the live detectors: version 5's three, then version 6's config-secret-directive",
+      "state": "unchanged"
+    },
+    {
+      "file": "packages/polaris-dossier/src/screen-scope-v5.test.ts",
+      "title": "the scope detectors reader > refuses %s",
+      "state": "unchanged"
+    },
+    {
+      "file": "packages/polaris-dossier/src/screen-scope-v5.test.ts",
+      "title": "the scope detectors reader > refuses wholeArtifactDetectors naming a scope detector the scope does not declare",
+      "state": "unchanged"
+    },
+    {
+      "file": "packages/polaris-dossier/src/screen-scope-v6.test.ts",
+      "title": "screening scope version 6: the builder fixtures through both screens > holds the builder's populations, and its oracle agrees with each stated expectation in both columns",
+      "state": "unchanged"
+    },
+    {
+      "file": "packages/polaris-dossier/src/screen-scope-v6.test.ts",
+      "title": "screening scope version 6: the builder fixtures through both screens > classifies every class fixture at its own repository and commit as the builder states for p, in both screens",
+      "state": "unchanged"
+    },
+    {
+      "file": "packages/polaris-dossier/src/screen-scope-v6.test.ts",
+      "title": "screening scope version 6: the builder fixtures through both screens > screens every counterexample at its own repository and commit as the builder states for p, in both screens",
+      "state": "unchanged"
+    },
+    {
+      "file": "packages/polaris-dossier/src/screen-scope-v6.test.ts",
+      "title": "screening scope version 6: the builder fixtures through both screens > numbers the withheld lines the same under CRLF and bare CR line ends, in both screens and the oracle",
+      "state": "unchanged"
+    },
+    {
+      "file": "packages/polaris-dossier/src/screen-scope-v6.test.ts",
+      "title": "screening scope version 6: the builder fixtures through both screens > refuses the version-5 bytes in both screens: their scope-detector consequence is not the text these screens implement",
+      "state": "unchanged"
+    },
+    {
+      "file": "packages/polaris-dossier/src/screen-scope-v6.test.ts",
+      "title": "P: the redis.conf placement > places redis.conf beside tls.md and modules/modules.md at the trial commit of repository:redis-redis",
+      "state": "unchanged"
+    },
+    {
+      "file": "packages/polaris-dossier/src/screen-scope-v6.test.ts",
+      "title": "P: the redis.conf placement > places nothing for %s: redis.conf stays indeterminate",
+      "state": "unchanged"
+    },
+    {
+      "file": "packages/polaris-dossier/src/screen-scope-v6.test.ts",
+      "title": "P: the redis.conf placement > places nothing while the class act is not in force",
+      "state": "unchanged"
+    },
+    {
+      "file": "packages/polaris-dossier/src/screen-scope-v6.test.ts",
+      "title": "P: the redis.conf placement > reads the live placement entry with redis.conf appended",
+      "state": "unchanged"
+    },
+    {
+      "file": "packages/polaris-dossier/src/screen-scope-v6.test.ts",
+      "title": "P: the config-secret-directive scope detector > reads four scope detectors, the fourth config-secret-directive with flags gi, and declares four in both screens",
+      "state": "unchanged"
+    },
+    {
+      "file": "packages/polaris-dossier/src/screen-scope-v6.test.ts",
+      "title": "P: the config-secret-directive scope detector > is line-redactable: secretRedaction names it in no whole-artifact list",
+      "state": "unchanged"
+    },
+    {
+      "file": "packages/polaris-dossier/src/screen-scope-v6.test.ts",
+      "title": "P: the config-secret-directive scope detector > refuses agent text quoting a line that opens with a password directive, and passes one that names it mid-line",
+      "state": "unchanged"
+    },
+    {
+      "file": "packages/polaris-dossier/src/screen-scope-v6.test.ts",
+      "title": "P: the config-secret-directive scope detector > scans a long %s line in linear time in both screens",
+      "state": "unchanged"
+    },
+    {
+      "file": "packages/polaris-dossier/src/screen-scope-v6.test.ts",
+      "title": "the real checkout after the version-8 act > loads the version-8 policy in both loaders",
+      "state": "removed"
+    },
+    {
+      "file": "packages/polaris-dossier/src/screen-scope-v6.test.ts",
+      "title": "the real checkout after the version-8 act > refuses the checkout's bytes before the version-8 act's instant",
+      "state": "removed"
+    },
+    {
+      "file": "packages/polaris-dossier/src/screen-scope-v6.test.ts",
+      "title": "the declared dossier policy preserves version-8 detector and placement behavior > loads a committed policy with no act records at any timestamp",
+      "state": "added"
+    },
+    {
+      "file": "packages/polaris-dossier/src/screen-scope-v8.test.ts",
+      "title": "a public repository under version 8 is screened exactly as under version 7 > every path, its class, and every body of the population",
+      "state": "unchanged"
+    },
+    {
+      "file": "packages/polaris-dossier/src/screen-scope-v8.test.ts",
+      "title": "a public repository under version 8 is screened exactly as under version 7 > the credential body is still retained as redacted-span, its line and guard lines withheld",
+      "state": "unchanged"
+    },
+    {
+      "file": "packages/polaris-dossier/src/screen-scope-v8.test.ts",
+      "title": "a private repository under version 8 > excludes a detector-matched body whole in every class, never as redacted-span",
+      "state": "unchanged"
+    },
+    {
+      "file": "packages/polaris-dossier/src/screen-scope-v8.test.ts",
+      "title": "a private repository under version 8 > admits a clean body and screens paths as for a public one",
+      "state": "unchanged"
+    },
+    {
+      "file": "packages/polaris-dossier/src/screen-scope-v8.test.ts",
+      "title": "a private repository under version 8 > is what a version-8 screen built with no visibility gives: private, never the looser public",
+      "state": "unchanged"
+    },
+    {
+      "file": "packages/polaris-dossier/src/screen-scope-v8.test.ts",
+      "title": "a policy without sourceVisibility (version 7) > refuses a private repository",
+      "state": "unchanged"
+    },
+    {
+      "file": "packages/polaris-dossier/src/screen-scope-v8.test.ts",
+      "title": "loadDossierScreen decides the subject's visibility under version 8 only > builds the screen for the decided visibility",
+      "state": "removed"
+    },
+    {
+      "file": "packages/polaris-dossier/src/screen-scope-v8.test.ts",
+      "title": "loadDossierScreen decides the subject's visibility under version 8 only > refuses when a consent record cannot be read",
+      "state": "removed"
+    },
+    {
+      "file": "packages/polaris-dossier/src/screen-scope-v8.test.ts",
+      "title": "loadDossierScreen decides the subject's visibility under version 8 only > builds a screen for no subject as private",
+      "state": "removed"
+    },
+    {
+      "file": "packages/polaris-dossier/src/screen-scope-v8.test.ts",
+      "title": "loadDossierScreen decides the subject's visibility under version 8 only > the launch admits a repository not declared public only under version 8 (REQ-polaris-generation-046, line 25)",
+      "state": "removed"
+    },
+    {
+      "file": "packages/polaris-dossier/src/screen-scope-v8.test.ts",
+      "title": "loadDossierScreen decides the subject's visibility under version 8 only > under version 7 asks nothing and builds public",
+      "state": "removed"
+    },
+    {
+      "file": "packages/polaris-dossier/src/screen-scope-v8.test.ts",
+      "title": "declared source visibility and committed policy loading > uses the declaration, with private as the conservative default",
+      "state": "added"
+    },
+    {
+      "file": "packages/polaris-dossier/src/screen-scope-v8.test.ts",
+      "title": "declared source visibility and committed policy loading > refuses changed policy bytes, and a run bound to another digest",
+      "state": "added"
+    },
+    {
+      "file": "packages/polaris-dossier/src/screen-scope-v8.test.ts",
+      "title": "declared source visibility and committed policy loading > the launch admits a repository not declared public only under version 8 (REQ-polaris-generation-046, line 25)",
+      "state": "added"
+    },
+    {
+      "file": "packages/polaris-dossier/src/screen.test.ts",
+      "title": "the screen > screens the path %s",
+      "state": "unchanged"
+    },
+    {
+      "file": "packages/polaris-dossier/src/screen.test.ts",
+      "title": "the screen > screens a body with %s",
+      "state": "unchanged"
+    },
+    {
+      "file": "packages/polaris-dossier/src/screen.test.ts",
+      "title": "the screen > is refused for a policy with %s",
+      "state": "unchanged"
+    },
+    {
+      "file": "packages/polaris-dossier/src/screen.test.ts",
+      "title": "the loader reads each container as an object only when it is one > refuses a policy document that is %s",
+      "state": "unchanged"
+    },
+    {
+      "file": "packages/polaris-dossier/src/screen.test.ts",
+      "title": "the loader reads each container as an object only when it is one > refuses a public-source scope that is %s",
+      "state": "unchanged"
+    },
+    {
+      "file": "packages/polaris-dossier/src/screen.test.ts",
+      "title": "the loader reads each container as an object only when it is one > refuses source admission that is %s",
+      "state": "unchanged"
+    },
+    {
+      "file": "packages/polaris-dossier/src/screen.test.ts",
+      "title": "the loader reads each container as an object only when it is one > refuses a content classification that is %s, which names no code-content rule",
+      "state": "unchanged"
+    },
+    {
+      "file": "packages/polaris-dossier/src/screen.test.ts",
+      "title": "the loader reads each container as an object only when it is one > refuses a classification with no rules at all, which names no code-content rule",
+      "state": "unchanged"
+    },
+    {
+      "file": "packages/polaris-dossier/src/screen.test.ts",
+      "title": "the loader reads each container as an object only when it is one > passes over a rules entry that is not an object, as if it were not there",
+      "state": "unchanged"
+    },
+    {
+      "file": "packages/polaris-dossier/src/screen.test.ts",
+      "title": "the loader reads each container as an object only when it is one > passes over a detector entry that is not an object when it collects the detector ids, and leaves the refusal to the compiler",
+      "state": "unchanged"
+    },
+    {
+      "file": "packages/polaris-dossier/src/screen.test.ts",
+      "title": "the project-documentation class (syzygy-2coz) > screens %s while the class act is in force",
+      "state": "unchanged"
+    },
+    {
+      "file": "packages/polaris-dossier/src/screen.test.ts",
+      "title": "the project-documentation class (syzygy-2coz) > leaves %s indeterminate while the class act is not in force",
+      "state": "unchanged"
+    },
+    {
+      "file": "packages/polaris-dossier/src/screen.test.ts",
+      "title": "the project-documentation class (syzygy-2coz) > names the content class of %s (class act in force: %s)",
+      "state": "unchanged"
+    },
+    {
+      "file": "packages/polaris-dossier/src/screen.test.ts",
+      "title": "the project-documentation class (syzygy-2coz) > builds without the class act by default",
+      "state": "unchanged"
+    },
+    {
+      "file": "packages/polaris-dossier/src/screen.test.ts",
+      "title": "the project-documentation class (syzygy-2coz) > screens a documentation body with %s",
+      "state": "unchanged"
+    },
+    {
+      "file": "packages/polaris-dossier/src/screen.test.ts",
+      "title": "the project-documentation class (syzygy-2coz) > %s: a documentation body is withheld as active content or admitted as its LF form is",
+      "state": "unchanged"
+    },
+    {
+      "file": "packages/polaris-dossier/src/screen.test.ts",
+      "title": "the project-documentation class (syzygy-2coz) > refuses a policy whose project-documentation rule has %s, in force or not",
+      "state": "unchanged"
+    },
+    {
+      "file": "packages/polaris-dossier/src/screen.test.ts",
+      "title": "parity with the any-repo reader's screen (syzygy-qkea.17) > agrees on every path and body under %s",
+      "state": "unchanged"
+    },
+    {
+      "file": "packages/polaris-dossier/src/screen.test.ts",
+      "title": "parity with the any-repo reader's screen (syzygy-qkea.17) > decides the class prerequisite as the app does from the same records at now: %s",
+      "state": "removed"
+    },
+    {
+      "file": "packages/polaris-dossier/src/screen.test.ts",
+      "title": "parity with the any-repo reader's screen (syzygy-qkea.17) > refuses a policy with %s, as the app does",
+      "state": "unchanged"
+    },
+    {
+      "file": "packages/polaris-dossier/src/screen.test.ts",
+      "title": "the code-content exemption of screening scope version 3 > admits a C body whose comparisons read as tags, given its path, and scans it without one: both screens",
+      "state": "unchanged"
+    },
+    {
+      "file": "packages/polaris-dossier/src/screen.test.ts",
+      "title": "the code-content exemption of screening scope version 3 > still runs every detector over an exempt body",
+      "state": "unchanged"
+    },
+    {
+      "file": "packages/polaris-dossier/src/screen.test.ts",
+      "title": "the code-content exemption of screening scope version 3 > scans a project-documentation body as before, whatever path it is given",
+      "state": "unchanged"
+    },
+    {
+      "file": "packages/polaris-dossier/src/screen.test.ts",
+      "title": "the code-content exemption of screening scope version 3 > scans .js and the other web extensions as before under variant non-web, and exempts C",
+      "state": "unchanged"
+    },
+    {
+      "file": "packages/polaris-dossier/src/screen.test.ts",
+      "title": "the code-content exemption of screening scope version 3 > scans a body at a path no class admits as before",
+      "state": "unchanged"
+    },
+    {
+      "file": "packages/polaris-dossier/src/screen.test.ts",
+      "title": "the code-content exemption of screening scope version 3 > scans a body at a screened-out path as before, though it ends in an exempt extension: the class decides, not the extension",
+      "state": "unchanged"
+    },
+    {
+      "file": "packages/polaris-dossier/src/screen.test.ts",
+      "title": "the code-content exemption of screening scope version 3 > agrees with the app on every path and body under variant %s, given the path",
+      "state": "unchanged"
+    },
+    {
+      "file": "packages/polaris-dossier/src/screen.test.ts",
+      "title": "the code-content exemption of screening scope version 3 > refuses a policy whose exemption has %s, as the app does",
+      "state": "unchanged"
+    },
+    {
+      "file": "packages/polaris-dossier/src/screen.test.ts",
+      "title": "the secret redaction of screening scope version 4 > declares the redaction in both screens",
+      "state": "unchanged"
+    },
+    {
+      "file": "packages/polaris-dossier/src/screen.test.ts",
+      "title": "the secret redaction of screening scope version 4 > withholds the oracle's lines for every builder body fixture, as README.md, in both screens",
+      "state": "unchanged"
+    },
+    {
+      "file": "packages/polaris-dossier/src/screen.test.ts",
+      "title": "the secret redaction of screening scope version 4 > excludes every builder whole-file fixture whole at its own path, in both screens",
+      "state": "unchanged"
+    },
+    {
+      "file": "packages/polaris-dossier/src/screen.test.ts",
+      "title": "the secret redaction of screening scope version 4 > keeps screenBody whole-text: agent text and untaught consumers still exclude a redactable body whole",
+      "state": "unchanged"
+    },
+    {
+      "file": "packages/polaris-dossier/src/screen.test.ts",
+      "title": "the secret redaction of screening scope version 4 > runs the active-content scan over the complete body of a redacted one, excluding it whole (version 4), and not under version 5",
+      "state": "unchanged"
+    },
+    {
+      "file": "packages/polaris-dossier/src/screen.test.ts",
+      "title": "the secret redaction of screening scope version 4 > runs the active-content scan over the withheld lines too: active content only on a matched line excludes the body whole (version 4)",
+      "state": "unchanged"
+    },
+    {
+      "file": "packages/polaris-dossier/src/screen.test.ts",
+      "title": "the secret redaction of screening scope version 4 > refuses a policy whose redaction has %s, as the app does",
+      "state": "unchanged"
+    },
+    {
+      "file": "packages/polaris-dossier/src/screen.test.ts",
+      "title": "the screen of the policy in force > loads the policy the act chain puts in force, naming its digest",
+      "state": "removed"
+    },
+    {
+      "file": "packages/polaris-dossier/src/screen.test.ts",
+      "title": "the screen of the policy in force > refuses a policy whose bytes are not the act's argument",
+      "state": "removed"
+    },
+    {
+      "file": "packages/polaris-dossier/src/screen.test.ts",
+      "title": "the screen of the policy in force > refuses a policy changed between the act check and the read the screen is built from",
+      "state": "removed"
+    },
+    {
+      "file": "packages/polaris-dossier/src/screen.test.ts",
+      "title": "the screen of the policy in force > refuses before the act takes effect",
+      "state": "removed"
+    },
+    {
+      "file": "packages/polaris-dossier/src/screen.test.ts",
+      "title": "the screen of the policy in force > classifies project documentation only while the class act is in force: %s",
+      "state": "removed"
+    },
+    {
+      "file": "packages/polaris-dossier/src/screen.test.ts",
+      "title": "the screen of the policy in force > builds the screen on this checkout exactly when a screening-scope act is recorded and the policy declares the scope",
+      "state": "removed"
+    },
+    {
+      "file": "packages/polaris-dossier/src/screen.test.ts",
+      "title": "the screen of the policy in force > classifies project documentation on this checkout exactly when the class act is recorded and the policy carries the rule",
+      "state": "removed"
+    },
+    {
+      "file": "packages/polaris-dossier/src/screen.test.ts",
+      "title": "parity with the any-repo reader's screen (syzygy-qkea.17) > keeps legacy app class admission separate from the declared dossier policy: %s",
+      "state": "added"
+    },
+    {
+      "file": "packages/polaris-dossier/src/screen.test.ts",
+      "title": "the screen of the committed dossier policy > loads without an act and binds the exact policy bytes",
+      "state": "added"
+    },
+    {
+      "file": "packages/polaris-dossier/src/screen.test.ts",
+      "title": "the screen of the committed dossier policy > refuses worktree policy drift and missing committed policy",
+      "state": "added"
+    },
+    {
+      "file": "packages/polaris-dossier/src/screen.test.ts",
+      "title": "the screen of the committed dossier policy > classifies documentation from the policy without a class act",
+      "state": "added"
+    },
+    {
+      "file": "packages/polaris-dossier/src/start-gates.test.ts",
+      "title": "init: a run that passes every start gate > pins the consented HEAD, records the subject and writes only run.json and its launch disclosure under the state root",
+      "state": "removed"
+    },
+    {
+      "file": "packages/polaris-dossier/src/start-gates.test.ts",
+      "title": "init: a run that passes every start gate > records the clone by its real path, not the path typed: a symlink or a `..` segment is resolved (R-POLARIS-DOSSIER-S3-GATES-2 note 12)",
+      "state": "removed"
+    },
+    {
+      "file": "packages/polaris-dossier/src/start-gates.test.ts",
+      "title": "init: a run that passes every start gate > records the clone by its real path when the operator names it through a symbolic link",
+      "state": "removed"
+    },
+    {
+      "file": "packages/polaris-dossier/src/start-gates.test.ts",
+      "title": "init: a run that passes every start gate > starts from a clone of a commit with a parent, shallow at exactly that commit",
+      "state": "removed"
+    },
+    {
+      "file": "packages/polaris-dossier/src/start-gates.test.ts",
+      "title": "init: a run that passes every start gate > starts from a clone of a root commit shallow at it, or with no shallow file: a root commit has no parent to cut",
+      "state": "removed"
+    },
+    {
+      "file": "packages/polaris-dossier/src/start-gates.test.ts",
+      "title": "init: the clone holds the consented commit alone (syzygy-qkea.24) > runs the fixture git helpers with automatic gc and maintenance off (syzygy-y733)",
+      "state": "unchanged"
+    },
+    {
+      "file": "packages/polaris-dossier/src/start-gates.test.ts",
+      "title": "init: the clone holds the consented commit alone (syzygy-qkea.24) > leaves in .git exactly the entries the allowlist names, as the header derives them",
+      "state": "unchanged"
+    },
+    {
+      "file": "packages/polaris-dossier/src/start-gates.test.ts",
+      "title": "init: the clone holds the consented commit alone (syzygy-qkea.24) > starts from a clone whose objects are packed, with a reverse index",
+      "state": "unchanged"
+    },
+    {
+      "file": "packages/polaris-dossier/src/start-gates.test.ts",
+      "title": "init: the clone holds the consented commit alone (syzygy-qkea.24) > refuses a full clone, before reading any object",
+      "state": "unchanged"
+    },
+    {
+      "file": "packages/polaris-dossier/src/start-gates.test.ts",
+      "title": "init: the clone holds the consented commit alone (syzygy-qkea.24) > refuses HEAD on a branch at the consented commit: the branch is a ref",
+      "state": "unchanged"
+    },
+    {
+      "file": "packages/polaris-dossier/src/start-gates.test.ts",
+      "title": "init: the clone holds the consented commit alone (syzygy-qkea.24) > refuses an extra ref, loose or packed",
+      "state": "unchanged"
+    },
+    {
+      "file": "packages/polaris-dossier/src/start-gates.test.ts",
+      "title": "init: the clone holds the consented commit alone (syzygy-qkea.24) > refuses FETCH_HEAD naming another commit, and passes it naming the pinned commit alone",
+      "state": "unchanged"
+    },
+    {
+      "file": "packages/polaris-dossier/src/start-gates.test.ts",
+      "title": "init: the clone holds the consented commit alone (syzygy-qkea.24) > refuses every top-level name the consented form never leaves: commondir, modules, worktrees, pseudo-refs, bisect and rebase state",
+      "state": "unchanged"
+    },
+    {
+      "file": "packages/polaris-dossier/src/start-gates.test.ts",
+      "title": "init: the clone holds the consented commit alone (syzygy-qkea.24) > refuses objects/info/alternates and http-alternates, as a file or a link, and whatever they name",
+      "state": "unchanged"
+    },
+    {
+      "file": "packages/polaris-dossier/src/start-gates.test.ts",
+      "title": "init: the clone holds the consented commit alone (syzygy-qkea.24) > refuses in the object store anything but loose objects, an empty info/ and paired packs",
+      "state": "unchanged"
+    },
+    {
+      "file": "packages/polaris-dossier/src/start-gates.test.ts",
+      "title": "init: the clone holds the consented commit alone (syzygy-qkea.24) > refuses unknown files under the allowed directories: hooks that run, grafts, other logs",
+      "state": "unchanged"
+    },
+    {
+      "file": "packages/polaris-dossier/src/start-gates.test.ts",
+      "title": "init: the clone holds the consented commit alone (syzygy-qkea.24) > refuses logs/HEAD naming any commit but the pinned one or the zero identifier",
+      "state": "unchanged"
+    },
+    {
+      "file": "packages/polaris-dossier/src/start-gates.test.ts",
+      "title": "init: the clone holds the consented commit alone (syzygy-qkea.24) > refuses a symbolic link anywhere under .git, never following it",
+      "state": "unchanged"
+    },
+    {
+      "file": "packages/polaris-dossier/src/start-gates.test.ts",
+      "title": "init: the clone holds the consented commit alone (syzygy-qkea.24) > refuses an allowed name of the wrong kind",
+      "state": "unchanged"
+    },
+    {
+      "file": "packages/polaris-dossier/src/start-gates.test.ts",
+      "title": "init: the clone holds the consented commit alone (syzygy-qkea.24) > reads shallow without following a link, and only as a regular file",
+      "state": "unchanged"
+    },
+    {
+      "file": "packages/polaris-dossier/src/start-gates.test.ts",
+      "title": "init: the clone holds the consented commit alone (syzygy-qkea.24) > refuses a file over its bound, and a .git with more entries than the walk's bound",
+      "state": "unchanged"
+    },
+    {
+      "file": "packages/polaris-dossier/src/start-gates.test.ts",
+      "title": "init: the clone holds the consented commit alone (syzygy-qkea.24) > refuses a two-commit shallow clone, and a clone shallow at another commit or not shallow",
+      "state": "unchanged"
+    },
+    {
+      "file": "packages/polaris-dossier/src/start-gates.test.ts",
+      "title": "init: the clone holds the consented commit alone (syzygy-qkea.24) > refuses an object store that names an object beyond the pinned commit and its tree",
+      "state": "unchanged"
+    },
+    {
+      "file": "packages/polaris-dossier/src/start-gates.test.ts",
+      "title": "init: the clone holds the consented commit alone (syzygy-qkea.24) > reads config bounded and without following a link, and admits the [core] keys git init writes on each mainstream platform",
+      "state": "unchanged"
+    },
+    {
+      "file": "packages/polaris-dossier/src/start-gates.test.ts",
+      "title": "init: the clone holds the consented commit alone (syzygy-qkea.24) > refuses config naming a remote, a promisor, an include or a command the agent's git would run (R-POLARIS-DOSSIER-CLONE-SHAPE-2 finding 1)",
+      "state": "unchanged"
+    },
+    {
+      "file": "packages/polaris-dossier/src/start-gates.test.ts",
+      "title": "init: the clone holds the consented commit alone (syzygy-qkea.24) > starts from a clone made with an older git's template, which leaves an empty branches/, or an empty one; refuses anything in branches/",
+      "state": "unchanged"
+    },
+    {
+      "file": "packages/polaris-dossier/src/start-gates.test.ts",
+      "title": "init: the clone holds the consented commit alone (syzygy-qkea.24) > the fixture helpers ignore an ambient init.templateDir config too",
+      "state": "unchanged"
+    },
+    {
+      "file": "packages/polaris-dossier/src/start-gates.test.ts",
+      "title": "init: the clone holds the consented commit alone (syzygy-qkea.24) > the scale-measure script inits its origin through the owned-template helper, never a bare git init",
+      "state": "unchanged"
+    },
+    {
+      "file": "packages/polaris-dossier/src/start-gates.test.ts",
+      "title": "init: the clone holds the consented commit alone (syzygy-qkea.24) > the owned-template init runs under the fixture env, not the ambient process env",
+      "state": "unchanged"
+    },
+    {
+      "file": "packages/polaris-dossier/src/start-gates.test.ts",
+      "title": "init: the clone holds the consented commit alone (syzygy-qkea.24) > refuses an identifier in FETCH_HEAD or logs/HEAD in upper case or run on, even the pinned commit's",
+      "state": "unchanged"
+    },
+    {
+      "file": "packages/polaris-dossier/src/start-gates.test.ts",
+      "title": "init: the clone holds the consented commit alone (syzygy-qkea.24) > never reads the working tree: an uncommitted change, or a nested repository, does not change the listing or the decision",
+      "state": "changed"
+    },
+    {
+      "file": "packages/polaris-dossier/src/start-gates.test.ts",
+      "title": "init: every refusal arm (REQ-polaris-generation-033 scenarios \"Clone at an unconsented revision\" and the governed arms) > refuses before any object read when the observation consent is %s, naming why",
+      "state": "removed"
+    },
+    {
+      "file": "packages/polaris-dossier/src/start-gates.test.ts",
+      "title": "init: every refusal arm (REQ-polaris-generation-033 scenarios \"Clone at an unconsented revision\" and the governed arms) > refuses before any object read when the registry entry is %s",
+      "state": "removed"
+    },
+    {
+      "file": "packages/polaris-dossier/src/start-gates.test.ts",
+      "title": "init: every refusal arm (REQ-polaris-generation-033 scenarios \"Clone at an unconsented revision\" and the governed arms) > refuses when the signed registry entry names another implementation or no implementation version",
+      "state": "removed"
+    },
+    {
+      "file": "packages/polaris-dossier/src/start-gates.test.ts",
+      "title": "init: every refusal arm (REQ-polaris-generation-033 scenarios \"Clone at an unconsented revision\" and the governed arms) > refuses before any object read when the classification and screening policy is %s",
+      "state": "removed"
+    },
+    {
+      "file": "packages/polaris-dossier/src/start-gates.test.ts",
+      "title": "init: every refusal arm (REQ-polaris-generation-033 scenarios \"Clone at an unconsented revision\" and the governed arms) > names both the registry entry and the policy when both fail, not only the first",
+      "state": "removed"
+    },
+    {
+      "file": "packages/polaris-dossier/src/start-gates.test.ts",
+      "title": "init: every refusal arm (REQ-polaris-generation-033 scenarios \"Clone at an unconsented revision\" and the governed arms) > refuses a HEAD the consent does not name, before any object read, listing the consented revisions",
+      "state": "removed"
+    },
+    {
+      "file": "packages/polaris-dossier/src/start-gates.test.ts",
+      "title": "init: every refusal arm (REQ-polaris-generation-033 scenarios \"Clone at an unconsented revision\" and the governed arms) > refuses a clone whose .git is a gitdir pointer",
+      "state": "removed"
+    },
+    {
+      "file": "packages/polaris-dossier/src/start-gates.test.ts",
+      "title": "init: every refusal arm (REQ-polaris-generation-033 scenarios \"Clone at an unconsented revision\" and the governed arms) > refuses a listing whose object no longer hashes to its identifier (scenario \"Object store altered after pinning\")",
+      "state": "removed"
+    },
+    {
+      "file": "packages/polaris-dossier/src/start-gates.test.ts",
+      "title": "init: every refusal arm (REQ-polaris-generation-033 scenarios \"Clone at an unconsented revision\" and the governed arms) > refuses a subject with %s and no per-project statement, after listing the pinned tree",
+      "state": "removed"
+    },
+    {
+      "file": "packages/polaris-dossier/src/start-gates.test.ts",
+      "title": "init: every refusal arm (REQ-polaris-generation-033 scenarios \"Clone at an unconsented revision\" and the governed arms) > counts %s in the pinned tree as governing",
+      "state": "removed"
+    },
+    {
+      "file": "packages/polaris-dossier/src/start-gates.test.ts",
+      "title": "init: every refusal arm (REQ-polaris-generation-033 scenarios \"Clone at an unconsented revision\" and the governed arms) > treats the production project input as silent: with no statement every subject is refused",
+      "state": "removed"
+    },
+    {
+      "file": "packages/polaris-dossier/src/start-gates.test.ts",
+      "title": "init: every refusal arm (REQ-polaris-generation-033 scenarios \"Clone at an unconsented revision\" and the governed arms) > refuses a governed subject whose only statement %s",
+      "state": "removed"
+    },
+    {
+      "file": "packages/polaris-dossier/src/start-gates.test.ts",
+      "title": "init: every refusal arm (REQ-polaris-generation-033 scenarios \"Clone at an unconsented revision\" and the governed arms) > refuses a Codex run with Anthropic against the Claude Code statement: consent is to the declared tool and provider pair",
+      "state": "removed"
+    },
+    {
+      "file": "packages/polaris-dossier/src/start-gates.test.ts",
+      "title": "init: every refusal arm (REQ-polaris-generation-033 scenarios \"Clone at an unconsented revision\" and the governed arms) > starts a governed or unstated run that relies on an in-force statement, and cites it",
+      "state": "removed"
+    },
+    {
+      "file": "packages/polaris-dossier/src/start-gates.test.ts",
+      "title": "init: every refusal arm (REQ-polaris-generation-033 scenarios \"Clone at an unconsented revision\" and the governed arms) > refuses %s before reading anything",
+      "state": "removed"
+    },
+    {
+      "file": "packages/polaris-dossier/src/start-gates.test.ts",
+      "title": "init: every refusal arm (REQ-polaris-generation-033 scenarios \"Clone at an unconsented revision\" and the governed arms) > refuses a state root inside the clone, or one that contains it",
+      "state": "removed"
+    },
+    {
+      "file": "packages/polaris-dossier/src/start-gates.test.ts",
+      "title": "reverifyPinnedRevision: the guard every later step calls (scenario \"Recorded revision altered\") > passes while every gate stays in force, listing the pinned tree from the recorded clone and deciding the subject again",
+      "state": "removed"
+    },
+    {
+      "file": "packages/polaris-dossier/src/start-gates.test.ts",
+      "title": "reverifyPinnedRevision: the guard every later step calls (scenario \"Recorded revision altered\") > reads no object when a gate fails",
+      "state": "removed"
+    },
+    {
+      "file": "packages/polaris-dossier/src/start-gates.test.ts",
+      "title": "reverifyPinnedRevision: the guard every later step calls (scenario \"Recorded revision altered\") > shows the label and consent record the live consent gives, never the run record's (R-POLARIS-DOSSIER-S3-GATES-1 finding 2)",
+      "state": "removed"
+    },
+    {
+      "file": "packages/polaris-dossier/src/start-gates.test.ts",
+      "title": "reverifyPinnedRevision: the guard every later step calls (scenario \"Recorded revision altered\") > refuses when the pinned tree cannot be listed from the recorded clone",
+      "state": "removed"
+    },
+    {
+      "file": "packages/polaris-dossier/src/start-gates.test.ts",
+      "title": "reverifyPinnedRevision: the guard every later step calls (scenario \"Recorded revision altered\") > refuses when the recorded pin is changed to a commit in the clone the consent does not name",
+      "state": "removed"
+    },
+    {
+      "file": "packages/polaris-dossier/src/start-gates.test.ts",
+      "title": "reverifyPinnedRevision: the guard every later step calls (scenario \"Recorded revision altered\") > refuses when the consent stops naming the recorded revision",
+      "state": "removed"
+    },
+    {
+      "file": "packages/polaris-dossier/src/start-gates.test.ts",
+      "title": "reverifyPinnedRevision: the guard every later step calls (scenario \"Recorded revision altered\") > refuses every later step when %s",
+      "state": "removed"
+    },
+    {
+      "file": "packages/polaris-dossier/src/start-gates.test.ts",
+      "title": "reverifyPinnedRevision: the guard every later step calls (scenario \"Recorded revision altered\") > names why the consent is gone when %s",
+      "state": "removed"
+    },
+    {
+      "file": "packages/polaris-dossier/src/start-gates.test.ts",
+      "title": "reverifyPinnedRevision: the guard every later step calls (scenario \"Recorded revision altered\") > refuses when the statement a governed run relies on is withdrawn mid-run",
+      "state": "removed"
+    },
+    {
+      "file": "packages/polaris-dossier/src/start-gates.test.ts",
+      "title": "reverifyPinnedRevision: the guard every later step calls (scenario \"Recorded revision altered\") > re-checks the statement against the run's declared tool: a Codex run with OpenAI keeps its Codex statement, and no Claude Code one stands in",
+      "state": "removed"
+    },
+    {
+      "file": "packages/polaris-dossier/src/start-gates.test.ts",
+      "title": "reverifyPinnedRevision: the guard every later step calls (scenario \"Recorded revision altered\") > before the brief, selects the statement by the provider the run record declares, and discloses that the provider is Inferred",
+      "state": "removed"
+    },
+    {
+      "file": "packages/polaris-dossier/src/start-gates.test.ts",
+      "title": "reverifyPinnedRevision: the guard every later step calls (scenario \"Recorded revision altered\") > after the brief, refuses a provider or tool that differs from the one the brief record states, reading no object",
+      "state": "removed"
+    },
+    {
+      "file": "packages/polaris-dossier/src/start-gates.test.ts",
+      "title": "reverifyPinnedRevision: the guard every later step calls (scenario \"Recorded revision altered\") > passes when the brief record states the tool and provider the run record declares; a coordinated edit of both is the disclosed residual",
+      "state": "removed"
+    },
+    {
+      "file": "packages/polaris-dossier/src/start-gates.test.ts",
+      "title": "reverifyPinnedRevision: the guard every later step calls (scenario \"Recorded revision altered\") > refuses when the brief record exists but %s",
+      "state": "removed"
+    },
+    {
+      "file": "packages/polaris-dossier/src/start-gates.test.ts",
+      "title": "reverifyPinnedRevision: the guard every later step calls (scenario \"Recorded revision altered\") > refuses when the brief record exists but is not JSON",
+      "state": "removed"
+    },
+    {
+      "file": "packages/polaris-dossier/src/start-gates.test.ts",
+      "title": "reverifyPinnedRevision: the guard every later step calls (scenario \"Recorded revision altered\") > refuses a run record altered into an invalid shape",
+      "state": "removed"
+    },
+    {
+      "file": "packages/polaris-dossier/src/start-gates.test.ts",
+      "title": "reverifyPinnedRevision: the guard every later step calls (scenario \"Recorded revision altered\") > refuses a pin moved from a non-governed to a governed consented revision",
+      "state": "removed"
+    },
+    {
+      "file": "packages/polaris-dossier/src/start-gates.test.ts",
+      "title": "reverifyPinnedRevision: the guard every later step calls (scenario \"Recorded revision altered\") > refuses a governed run whose record was downgraded to non-governed, before and after the statement is withdrawn",
+      "state": "removed"
+    },
+    {
+      "file": "packages/polaris-dossier/src/start-gates.test.ts",
+      "title": "reverifyPinnedRevision: the guard every later step calls (scenario \"Recorded revision altered\") > refuses when the project input in force now records a drawer the run did not start under",
+      "state": "removed"
+    },
+    {
+      "file": "packages/polaris-dossier/src/start-gates.test.ts",
+      "title": "reverifyPinnedRevision: the guard every later step calls (scenario \"Recorded revision altered\") > passes a pin moved between non-governed consented revisions, and shows the live label of the revision now pinned",
+      "state": "removed"
+    },
+    {
+      "file": "packages/polaris-dossier/src/start-gates.test.ts",
+      "title": "preflight > reports a ready repository, its consented revisions and the clone commands, reading no object",
+      "state": "unchanged"
+    },
+    {
+      "file": "packages/polaris-dossier/src/start-gates.test.ts",
+      "title": "preflight > prints clone commands that leave the consented commit alone in the clone",
+      "state": "unchanged"
+    },
+    {
+      "file": "packages/polaris-dossier/src/start-gates.test.ts",
+      "title": "preflight > names each missing record and is not ready",
+      "state": "unchanged"
+    },
+    {
+      "file": "packages/polaris-dossier/src/start-gates.test.ts",
+      "title": "preflight > reports D9 and the RFC7-20 reading as not established: no owner-act record binds their digests",
+      "state": "unchanged"
+    },
+    {
+      "file": "packages/polaris-dossier/src/start-gates.test.ts",
+      "title": "preflight > reports D9 established on this checkout only once an act record binds it, though the doctrine amendment log records its adoption",
+      "state": "unchanged"
+    },
+    {
+      "file": "packages/polaris-dossier/src/start-gates.test.ts",
+      "title": "preflight > reports D9 and the RFC7-20 reading established once the sitting's acts bind their records, and only while the bound bytes hold",
+      "state": "unchanged"
+    },
+    {
+      "file": "packages/polaris-dossier/src/start-gates.test.ts",
+      "title": "preflight > refuses a URL that is not an admitted locator, by its rule and never quoting it, and never fetches",
+      "state": "unchanged"
+    },
+    {
+      "file": "packages/polaris-dossier/src/start-gates.test.ts",
+      "title": "preflight > a locator on another host, or under another path, is read and simply matches no consent (no GitHub-only refusal)",
+      "state": "unchanged"
+    },
+    {
+      "file": "packages/polaris-dossier/src/start-gates.test.ts",
+      "title": "the CLI: preflight and init > init refuses with no state root, there being no default",
+      "state": "unchanged"
+    },
+    {
+      "file": "packages/polaris-dossier/src/start-gates.test.ts",
+      "title": "the CLI: preflight and init > init takes the state root from the environment when no flag is given, and the flag over the environment",
+      "state": "unchanged"
+    },
+    {
+      "file": "packages/polaris-dossier/src/start-gates.test.ts",
+      "title": "the CLI: preflight and init > init refuses a missing configuration file and prints the refusal in both forms",
+      "state": "unchanged"
+    },
+    {
+      "file": "packages/polaris-dossier/src/start-gates.test.ts",
+      "title": "the CLI: preflight and init > exits 2 for %j",
+      "state": "unchanged"
+    },
+    {
+      "file": "packages/polaris-dossier/src/start-gates.test.ts",
+      "title": "the CLI: preflight and init > preflight exits 0 when ready and 1 when a record is missing, printing the report on stdout both times",
+      "state": "unchanged"
+    },
+    {
+      "file": "packages/polaris-dossier/src/start-gates.test.ts",
+      "title": "the package gate sources answer whether another act's observation consent names a revision (REQ-polaris-generation-047's class rule) > answers from the observation records in force, for any repository, and is unsatisfied for an identifier none names",
+      "state": "unchanged"
+    },
+    {
+      "file": "packages/polaris-dossier/src/start-gates.test.ts",
+      "title": "init: a declared pinned source > writes one /2 record without launch records or clone writes",
+      "state": "added"
+    },
+    {
+      "file": "packages/polaris-dossier/src/start-gates.test.ts",
+      "title": "init: a declared pinned source > records the clone by its real path, not the path typed: a symlink or a `..` segment is resolved (R-POLARIS-DOSSIER-S3-GATES-2 note 12)",
+      "state": "added"
+    },
+    {
+      "file": "packages/polaris-dossier/src/start-gates.test.ts",
+      "title": "init: a declared pinned source > records the clone by its real path when the operator names it through a symbolic link",
+      "state": "added"
+    },
+    {
+      "file": "packages/polaris-dossier/src/start-gates.test.ts",
+      "title": "init: a declared pinned source > starts from a clone of a commit with a parent, shallow at exactly that commit",
+      "state": "added"
+    },
+    {
+      "file": "packages/polaris-dossier/src/start-gates.test.ts",
+      "title": "init: a declared pinned source > starts from a clone of a root commit shallow at it, or with no shallow file: a root commit has no parent to cut",
+      "state": "added"
+    },
+    {
+      "file": "packages/polaris-dossier/src/start-gates.test.ts",
+      "title": "declared-source admission and continuation boundaries > never consults retired consent, registry, drawer, provider-statement or ruling ports",
+      "state": "added"
+    },
+    {
+      "file": "packages/polaris-dossier/src/start-gates.test.ts",
+      "title": "declared-source admission and continuation boundaries > records explicit %s visibility as an attributed declaration",
+      "state": "added"
+    },
+    {
+      "file": "packages/polaris-dossier/src/start-gates.test.ts",
+      "title": "declared-source admission and continuation boundaries > refuses a missing committed policy before any object read",
+      "state": "added"
+    },
+    {
+      "file": "packages/polaris-dossier/src/start-gates.test.ts",
+      "title": "declared-source admission and continuation boundaries > refuses malformed declarations before any object read",
+      "state": "added"
+    },
+    {
+      "file": "packages/polaris-dossier/src/start-gates.test.ts",
+      "title": "declared-source admission and continuation boundaries > refuses an explicit revision that differs from the supplied HEAD",
+      "state": "added"
+    },
+    {
+      "file": "packages/polaris-dossier/src/start-gates.test.ts",
+      "title": "declared-source admission and continuation boundaries > rechecks committed policy bytes and refuses both dirty and committed policy changes",
+      "state": "added"
+    },
+    {
+      "file": "packages/polaris-dossier/src/start-gates.test.ts",
+      "title": "declared-source admission and continuation boundaries > refuses %s policy files without using their contents",
+      "state": "added"
+    },
+    {
+      "file": "packages/polaris-dossier/src/start-gates.test.ts",
+      "title": "declared-source admission and continuation boundaries > does not invalidate the policy binding for an unrelated Syzygy commit",
+      "state": "added"
+    },
+    {
+      "file": "packages/polaris-dossier/src/start-gates.test.ts",
+      "title": "declared-source admission and continuation boundaries > refuses a pin whose objects do not exist in the bound clone",
+      "state": "added"
+    },
+    {
+      "file": "packages/polaris-dossier/src/start-gates.test.ts",
+      "title": "declared-source admission and continuation boundaries > refuses provider and tool drift after a brief binds their declarations",
+      "state": "added"
+    },
+    {
+      "file": "packages/polaris-dossier/src/start-gates.test.ts",
+      "title": "declared-source admission and continuation boundaries > refuses legacy /1 without rewriting its bytes or artifacts",
+      "state": "added"
+    },
+    {
+      "file": "packages/polaris-dossier/src/status.test.ts",
+      "title": "status (REQ-polaris-generation-033) > reports a configured run, every value Inferred and operator-declared",
+      "state": "unchanged"
+    },
+    {
+      "file": "packages/polaris-dossier/src/status.test.ts",
+      "title": "status (REQ-polaris-generation-033) > counts recorded steps by the layout's own names and lists, never reads, anything else",
+      "state": "unchanged"
+    },
+    {
+      "file": "packages/polaris-dossier/src/status.test.ts",
+      "title": "status (REQ-polaris-generation-033) > says why a run whose deadline passed before close has no Execution Record, and why its usage is not recorded",
+      "state": "unchanged"
+    },
+    {
+      "file": "packages/polaris-dossier/src/status.test.ts",
+      "title": "status (REQ-polaris-generation-033) > measures the deadline on the CLI's clock",
+      "state": "unchanged"
+    },
+    {
+      "file": "packages/polaris-dossier/src/status.test.ts",
+      "title": "status (REQ-polaris-generation-033) > derives the state %s from the files recorded",
+      "state": "unchanged"
+    },
+    {
+      "file": "packages/polaris-dossier/src/status.test.ts",
+      "title": "status (REQ-polaris-generation-033) > writes nothing",
+      "state": "unchanged"
+    },
+    {
+      "file": "packages/polaris-dossier/src/status.test.ts",
+      "title": "status (REQ-polaris-generation-033) > reads a run record the retired GitHub-only rule wrote (%s), normalising its URL on reading and rewriting nothing",
+      "state": "unchanged"
+    },
+    {
+      "file": "packages/polaris-dossier/src/status.test.ts",
+      "title": "status (REQ-polaris-generation-033) > writes a run record only with the normalised URL",
+      "state": "unchanged"
+    },
+    {
+      "file": "packages/polaris-dossier/src/status.test.ts",
+      "title": "status (REQ-polaris-generation-033) > refuses a missing run directory",
+      "state": "unchanged"
+    },
+    {
+      "file": "packages/polaris-dossier/src/status.test.ts",
+      "title": "status (REQ-polaris-generation-033) > refuses a directory with no run.json",
+      "state": "unchanged"
+    },
+    {
+      "file": "packages/polaris-dossier/src/status.test.ts",
+      "title": "status (REQ-polaris-generation-033) > re-validates the stored record and refuses %s",
+      "state": "changed"
+    },
+    {
+      "file": "packages/polaris-dossier/src/status.test.ts",
+      "title": "status (REQ-polaris-generation-033) > reads a repositoryId by 046's grammar, a tail opening with any of its characters: %s (the owner's ruling of 2026-11-14)",
+      "state": "unchanged"
+    },
+    {
+      "file": "packages/polaris-dossier/src/waiting-sessions.test.ts",
+      "title": "launch.json's brief stage (the owner's ruling of 2026-11-14, \"Update launch.json\") > init writes the not-reached form; brief and session-prompt all rewrite it to each brief they issue, every other field byte-identical",
+      "state": "removed"
+    },
+    {
+      "file": "packages/polaris-dossier/src/waiting-sessions.test.ts",
+      "title": "launch.json's brief stage (the owner's ruling of 2026-11-14, \"Update launch.json\") > a launch.json not in init's exact form is left as it is; the sessions stay prepared, and the refusal says the two disagree",
+      "state": "removed"
+    },
+    {
+      "file": "packages/polaris-dossier/src/waiting-sessions.test.ts",
+      "title": "the v1.2 gate > refuses session-prompt all, await and a delivery while v1.2 is not signed off (mutant: drop the signed check)",
+      "state": "unchanged"
+    },
+    {
+      "file": "packages/polaris-dossier/src/waiting-sessions.test.ts",
+      "title": "the v1.2 gate > reads the version statement at a line start, ended by a full stop or a comma (the signed v1.5 bytes use the comma)",
+      "state": "unchanged"
+    },
+    {
+      "file": "packages/polaris-dossier/src/waiting-sessions.test.ts",
+      "title": "the v1.2 gate > reads the sign-off from the decisions directory: 1.1 is not enough, 1.2 and later are (mutant: compare the minor only)",
+      "state": "unchanged"
+    },
+    {
+      "file": "packages/polaris-dossier/src/waiting-sessions.test.ts",
+      "title": "the v1.2 gate > opens on no file that only carries the name (mutant: drop the head check)",
+      "state": "unchanged"
+    },
+    {
+      "file": "packages/polaris-dossier/src/waiting-sessions.test.ts",
+      "title": "the v1.2 gate > opens on no record whose review did not confirm (mutant: drop the verdict check)",
+      "state": "unchanged"
+    },
+    {
+      "file": "packages/polaris-dossier/src/waiting-sessions.test.ts",
+      "title": "the v1.2 gate > opens on no record whose head misstates %s (mutant: drop that head field)",
+      "state": "unchanged"
+    },
+    {
+      "file": "packages/polaris-dossier/src/waiting-sessions.test.ts",
+      "title": "the v1.2 gate > opens on no record whose aggregate holds %s (mutant: drop the aggregate check)",
+      "state": "unchanged"
+    },
+    {
+      "file": "packages/polaris-dossier/src/waiting-sessions.test.ts",
+      "title": "the v1.2 gate > reads the recorder's real v1.1 record as one it wrote (the head predicate matches the recorder's output)",
+      "state": "unchanged"
+    },
+    {
+      "file": "packages/polaris-dossier/src/waiting-sessions.test.ts",
+      "title": "the v1.2 gate > opens on no hand-written head and bare markers, with no review and no applied patch (mutant: drop the applied-subject check)",
+      "state": "unchanged"
+    },
+    {
+      "file": "packages/polaris-dossier/src/waiting-sessions.test.ts",
+      "title": "the v1.2 gate > opens on no record when %s",
+      "state": "unchanged"
+    },
+    {
+      "file": "packages/polaris-dossier/src/waiting-sessions.test.ts",
+      "title": "the v1.2 gate > tells a drifted applied subject from no record, and opens on neither (mutant: report drifted as unsigned)",
+      "state": "unchanged"
+    },
+    {
+      "file": "packages/polaris-dossier/src/waiting-sessions.test.ts",
+      "title": "the v1.2 gate > says in its refusal which state the gate is in, for %j with a drifted record %s (mutant: one reason for both states)",
+      "state": "unchanged"
+    },
+    {
+      "file": "packages/polaris-dossier/src/waiting-sessions.test.ts",
+      "title": "session-prompt <run> all > makes the three session directories, writes only the inventory brief, and records each prompt as waiting",
+      "state": "changed"
+    },
+    {
+      "file": "packages/polaris-dossier/src/waiting-sessions.test.ts",
+      "title": "session-prompt <run> all > prints each command with only its role's permission rules and SEC-3's rule, never a permission (mutant: drop a rule or widen one)",
+      "state": "changed"
+    },
+    {
+      "file": "packages/polaris-dossier/src/waiting-sessions.test.ts",
+      "title": "session-prompt <run> all > prints no pre-approval for Codex, and says what a waiting Codex session does depends on the operator's Codex policy (mutant: print the Claude rules for Codex; state that it asks)",
+      "state": "unchanged"
+    },
+    {
+      "file": "packages/polaris-dossier/src/waiting-sessions.test.ts",
+      "title": "session-prompt <run> all > refuses a sessions root a permission rule cannot carry unquoted (mutant: drop the plain-path check)",
+      "state": "unchanged"
+    },
+    {
+      "file": "packages/polaris-dossier/src/waiting-sessions.test.ts",
+      "title": "session-prompt <run> all > keeps the session pair's provider-statement check from PR #406 (mutant: skip sessionStatementRefusal for all)",
+      "state": "removed"
+    },
+    {
+      "file": "packages/polaris-dossier/src/waiting-sessions.test.ts",
+      "title": "the wait-mode argument grammar (review-408 round 2, finding 6) > takes --stdin once only: given twice it is a usage error, exit 2 (mutant: allow --stdin twice)",
+      "state": "unchanged"
+    },
+    {
+      "file": "packages/polaris-dossier/src/waiting-sessions.test.ts",
+      "title": "the wait-mode argument grammar (review-408 round 2, finding 6) > takes --fresh once only: given twice it is a usage error, exit 2 (mutant: allow --fresh twice)",
+      "state": "unchanged"
+    },
+    {
+      "file": "packages/polaris-dossier/src/waiting-sessions.test.ts",
+      "title": "launch-form for a waiting session (review-408 round 2, finding 2) > records no bang form for a session started to wait, only the terminal form printed for it (mutant: drop the waiting-mode check)",
+      "state": "unchanged"
+    },
+    {
+      "file": "packages/polaris-dossier/src/waiting-sessions.test.ts",
+      "title": "await > re-hashes the inventory brief and refuses a changed one (mutant: skip the brief digest)",
+      "state": "unchanged"
+    },
+    {
+      "file": "packages/polaris-dossier/src/waiting-sessions.test.ts",
+      "title": "await > waits a bounded slice, on the local file system, and says to run it again (mutant: no slice bound)",
+      "state": "unchanged"
+    },
+    {
+      "file": "packages/polaris-dossier/src/waiting-sessions.test.ts",
+      "title": "await > never waits past the run's deadline (mutant: bound the slice by its minutes alone)",
+      "state": "unchanged"
+    },
+    {
+      "file": "packages/polaris-dossier/src/waiting-sessions.test.ts",
+      "title": "await > ends once the run is closed (mutant: ignore the Execution Record)",
+      "state": "unchanged"
+    },
+    {
+      "file": "packages/polaris-dossier/src/waiting-sessions.test.ts",
+      "title": "await > refuses a session directory given %s (mutant: drop that directory check)",
+      "state": "unchanged"
+    },
+    {
+      "file": "packages/polaris-dossier/src/waiting-sessions.test.ts",
+      "title": "await > refuses a session handed over at once, which does not wait (mutant: drop the waiting-mode check)",
+      "state": "unchanged"
+    },
+    {
+      "file": "packages/polaris-dossier/src/waiting-sessions.test.ts",
+      "title": "await > checks only a file inside the session directory (mutant: drop the containment check)",
+      "state": "unchanged"
+    },
+    {
+      "file": "packages/polaris-dossier/src/waiting-sessions.test.ts",
+      "title": "await > checks nothing from a session a newer one replaced (mutant: drop the latest-session check)",
+      "state": "unchanged"
+    },
+    {
+      "file": "packages/polaris-dossier/src/waiting-sessions.test.ts",
+      "title": "await > exits 1 when a submitted file has findings, and says to repair it (mutant: exit 0 on any submission)",
+      "state": "unchanged"
+    },
+    {
+      "file": "packages/polaris-dossier/src/waiting-sessions.test.ts",
+      "title": "await --submit --stdin: the session writes nothing, Syzygy writes its file > returns reviewVisibility for a cited file the review will not see, as inventory-check does (mutant: the CLI alone attaches it)",
+      "state": "unchanged"
+    },
+    {
+      "file": "packages/polaris-dossier/src/waiting-sessions.test.ts",
+      "title": "await --submit --stdin: the session writes nothing, Syzygy writes its file > writes the inventory from standard input into the session directory, byte for byte, and checks it (mutant: check without writing)",
+      "state": "unchanged"
+    },
+    {
+      "file": "packages/polaris-dossier/src/waiting-sessions.test.ts",
+      "title": "await --submit --stdin: the session writes nothing, Syzygy writes its file > replaces an earlier submission when the session resubmits after a repair (mutant: create the file only once)",
+      "state": "unchanged"
+    },
+    {
+      "file": "packages/polaris-dossier/src/waiting-sessions.test.ts",
+      "title": "await --submit --stdin: the session writes nothing, Syzygy writes its file > writes nothing for %s (mutant: drop the file-name rule)",
+      "state": "unchanged"
+    },
+    {
+      "file": "packages/polaris-dossier/src/waiting-sessions.test.ts",
+      "title": "await --submit --stdin: the session writes nothing, Syzygy writes its file > refuses standard input that is %s, writing nothing (mutant: drop the bound)",
+      "state": "unchanged"
+    },
+    {
+      "file": "packages/polaris-dossier/src/waiting-sessions.test.ts",
+      "title": "await --submit --stdin: the session writes nothing, Syzygy writes its file > never follows a link left at the pending name (mutant: write the pending file without removing it first)",
+      "state": "unchanged"
+    },
+    {
+      "file": "packages/polaris-dossier/src/waiting-sessions.test.ts",
+      "title": "await --submit --stdin: the session writes nothing, Syzygy writes its file > takes --stdin only with --submit (mutant: ignore a stray --stdin)",
+      "state": "unchanged"
+    },
+    {
+      "file": "packages/polaris-dossier/src/waiting-sessions.test.ts",
+      "title": "delivery to a waiting review session > delivers the packet as round 1, which await re-hashes and names (mutant: deliver into the session root)",
+      "state": "unchanged"
+    },
+    {
+      "file": "packages/polaris-dossier/src/waiting-sessions.test.ts",
+      "title": "delivery to a waiting review session > refuses a round whose %s no longer matches (mutant: compare one digest only)",
+      "state": "unchanged"
+    },
+    {
+      "file": "packages/polaris-dossier/src/waiting-sessions.test.ts",
+      "title": "delivery to a waiting review session > takes no new tool, version or model for a waiting session (mutant: let --tool through)",
+      "state": "unchanged"
+    },
+    {
+      "file": "packages/polaris-dossier/src/waiting-sessions.test.ts",
+      "title": "delivery to a waiting review session > checks the waiting session's own provider statement at delivery (mutant: check the run's pair instead)",
+      "state": "removed"
+    },
+    {
+      "file": "packages/polaris-dossier/src/waiting-sessions.test.ts",
+      "title": "delivery to a waiting review session > refuses a delivery when a successor replaced the statement the waiting session was started under (mutant: drop the citation recheck)",
+      "state": "removed"
+    },
+    {
+      "file": "packages/polaris-dossier/src/waiting-sessions.test.ts",
+      "title": "delivery to a waiting review session > says no packet is delivered when the waiting session's record cites no statement (mutant: string-replace the counting phrase)",
+      "state": "removed"
+    },
+    {
+      "file": "packages/polaris-dossier/src/waiting-sessions.test.ts",
+      "title": "delivery to a waiting review session > with --fresh hands the packet to a new session instead (mutant: ignore --fresh)",
+      "state": "unchanged"
+    },
+    {
+      "file": "packages/polaris-dossier/src/waiting-sessions.test.ts",
+      "title": "the per-round usage note of a delivery > states round 1's packet size as the delivered file's bytes, and records it (mutant: count UTF-16 code units, or drop the record field)",
+      "state": "unchanged"
+    },
+    {
+      "file": "packages/polaris-dossier/src/waiting-sessions.test.ts",
+      "title": "the per-round usage note of a delivery > states what a continuing session already holds, as Inferred, from the earlier delivery records (mutant: omit the earlier rounds)",
+      "state": "unchanged"
+    },
+    {
+      "file": "packages/polaris-dossier/src/waiting-sessions.test.ts",
+      "title": "the per-round usage note of a delivery > says Unknown, never zero, for an earlier round whose record states no size (mutant: sum a missing size as 0)",
+      "state": "unchanged"
+    },
+    {
+      "file": "packages/polaris-dossier/src/waiting-sessions.test.ts",
+      "title": "the per-round usage note of a delivery > counts UTF-8 bytes, not code units, for a packet with non-ASCII text (mutant: use the string length)",
+      "state": "unchanged"
+    },
+    {
+      "file": "packages/polaris-dossier/src/waiting-sessions.test.ts",
+      "title": "deliveryUsageNote > sums the sized rounds and counts the unsized ones apart (mutant: count every earlier round as sized)",
+      "state": "unchanged"
+    },
+    {
+      "file": "packages/polaris-dossier/src/waiting-sessions.test.ts",
+      "title": "deliveryUsageNote > counts an earlier round with no readable record as Unknown, never omits it (mutant: count only the records read)",
+      "state": "unchanged"
+    },
+    {
+      "file": "packages/polaris-dossier/src/waiting-sessions.test.ts",
+      "title": "deliveryUsageNote > reads a zero-byte claim, and only a zero-byte claim, as one (syzygy-pdja.28: a size ending in 0 is no such claim)",
+      "state": "unchanged"
+    },
+    {
+      "file": "packages/polaris-dossier/src/waiting-sessions.test.ts",
+      "title": "deliveryUsageNote > names the review kind in its --fresh advice (mutant: hard-code fidelity)",
+      "state": "unchanged"
+    },
+    {
+      "file": "packages/polaris-dossier/src/waiting-sessions.test.ts",
+      "title": "a reviewer that continues across revisions > discloses a first-round reviewer as such on the review page (mutant: omit the continuity item)",
+      "state": "unchanged"
+    },
+    {
+      "file": "packages/polaris-dossier/src/waiting-sessions.test.ts",
+      "title": "a reviewer that continues across revisions > delivers the repaired subject to the same session as round 2 and discloses it on the review page and in the machine view (mutant: never mark continuing)",
+      "state": "unchanged"
+    },
+    {
+      "file": "packages/polaris-dossier/src/waiting-sessions.test.ts",
+      "title": "a reviewer that continues across revisions > discloses a fresh session that declares an earlier verdict's session identifier as continuing (mutant: read delivery records only)",
+      "state": "unchanged"
+    },
+    {
+      "file": "packages/polaris-dossier/src/waiting-sessions.test.ts",
+      "title": "a reviewer that continues across revisions > does not mark a fresh session with a new identifier as continuing (mutant: mark every later verdict continuing)",
+      "state": "unchanged"
+    },
+    {
+      "file": "packages/polaris-dossier/src/waiting-sessions.test.ts",
+      "title": "a rendered-design reviewer's continuity, disclosed in the review-status region > says a first-round design reviewer had no earlier packet (mutant: disclose a continuing design reviewer only)",
+      "state": "unchanged"
+    },
+    {
+      "file": "packages/polaris-dossier/src/waiting-sessions.test.ts",
+      "title": "a rendered-design reviewer's continuity, disclosed in the review-status region > discloses a design reviewer that continued to round 2 (mutant: drop the design continuity sentence)",
+      "state": "unchanged"
+    },
+    {
+      "file": "packages/polaris-dossier/src/waiting-sessions.test.ts",
+      "title": "link-safe session directories (review-408 F1) > refuses to write an inventory through a session directory replaced by a link (mutant: skip the directory check in await)",
+      "state": "unchanged"
+    },
+    {
+      "file": "packages/polaris-dossier/src/waiting-sessions.test.ts",
+      "title": "link-safe session directories (review-408 F1) > refuses a session directory that is not a directory of its own (mutant: drop the lstat check)",
+      "state": "unchanged"
+    },
+    {
+      "file": "packages/polaris-dossier/src/waiting-sessions.test.ts",
+      "title": "link-safe session directories (review-408 F1) > refuses a directory whose real path is not the sessions root's entry of its name (mutant: drop the real-path check)",
+      "state": "unchanged"
+    },
+    {
+      "file": "packages/polaris-dossier/src/waiting-sessions.test.ts",
+      "title": "link-safe session directories (review-408 F1) > returns the real path it checked, which differs from a lexical path through a linked ancestor (mutant: return the lexical directory)",
+      "state": "unchanged"
+    },
+    {
+      "file": "packages/polaris-dossier/src/waiting-sessions.test.ts",
+      "title": "link-safe session directories (review-408 F1) > writes a delivery through the checked real path when an ancestor link is swapped after the check (mutant: write through the lexical directory)",
+      "state": "unchanged"
+    },
+    {
+      "file": "packages/polaris-dossier/src/waiting-sessions.test.ts",
+      "title": "link-safe session directories (review-408 F1) > delivers nothing into a review session directory replaced by a link (mutant: skip the directory check in delivery)",
+      "state": "unchanged"
+    },
+    {
+      "file": "packages/polaris-dossier/src/waiting-sessions.test.ts",
+      "title": "link-safe session directories (review-408 F1) > delivers nothing to a prompt record naming a directory outside the sessions root, even one that resolves into it (mutant: drop the lexical sessions-root check)",
+      "state": "unchanged"
+    },
+    {
+      "file": "packages/polaris-dossier/src/waiting-sessions.test.ts",
+      "title": "link-safe session directories (review-408 F1) > writes no verdict into a round directory that links to another session's round (mutant: drop the round containment check)",
+      "state": "unchanged"
+    },
+    {
+      "file": "packages/polaris-dossier/src/waiting-sessions.test.ts",
+      "title": "a link-safe sessions root (review-408 round 2, finding 1) > writes no inventory through a sessions root replaced by a link (mutant: skip the root checks)",
+      "state": "unchanged"
+    },
+    {
+      "file": "packages/polaris-dossier/src/waiting-sessions.test.ts",
+      "title": "a link-safe sessions root (review-408 round 2, finding 1) > delivers no packet through a sessions root replaced by a link (mutant: skip the root checks)",
+      "state": "unchanged"
+    },
+    {
+      "file": "packages/polaris-dossier/src/waiting-sessions.test.ts",
+      "title": "a link-safe sessions root (review-408 round 2, finding 1) > refuses a sessions root that is a link, by its own lstat (mutant: drop the root lstat check)",
+      "state": "unchanged"
+    },
+    {
+      "file": "packages/polaris-dossier/src/waiting-sessions.test.ts",
+      "title": "a link-safe sessions root (review-408 round 2, finding 1) > refuses a sessions root whose real path is not its parent's entry, here a link named with a trailing slash, which lstat follows (mutant: drop the root real-path check)",
+      "state": "unchanged"
+    },
+    {
+      "file": "packages/polaris-dossier/src/waiting-sessions.test.ts",
+      "title": "the predicates review-408 F4 named > reads standard input whole, and no further than its bound (mutant: drop the reader's bound)",
+      "state": "unchanged"
+    },
+    {
+      "file": "packages/polaris-dossier/src/waiting-sessions.test.ts",
+      "title": "the predicates review-408 F4 named > delivers nothing to a prompt record that names no directory (mutant: drop the directory-type check)",
+      "state": "unchanged"
+    },
+    {
+      "file": "packages/polaris-dossier/src/waiting-sessions.test.ts",
+      "title": "the predicates review-408 F4 named > hands a packet over at once when the latest session of its kind was not started to wait (mutant: drop the waiting-mode check on delivery)",
+      "state": "unchanged"
+    },
+    {
+      "file": "packages/polaris-dossier/src/waiting-sessions.test.ts",
+      "title": "the predicates review-408 F4 named > counts no delivery record with %s (mutant: drop that record check)",
+      "state": "unchanged"
+    },
+    {
+      "file": "packages/polaris-dossier/src/waiting-sessions.test.ts",
+      "title": "the predicates review-408 F4 named > refuses %s (mutant: loosen that grammar or drop the cap)",
+      "state": "unchanged"
+    },
+    {
+      "file": "packages/polaris-dossier/src/waiting-sessions.test.ts",
+      "title": "the predicates review-408 F4 named > refuses --submit with %s (mutant: let --submit take it)",
+      "state": "unchanged"
+    },
+    {
+      "file": "packages/polaris-dossier/src/waiting-sessions.test.ts",
+      "title": "the predicates review-408 F4 named > gives an inventory session one round only (mutant: drop the inventory round check)",
+      "state": "unchanged"
+    },
+    {
+      "file": "packages/polaris-dossier/src/waiting-sessions.test.ts",
+      "title": "the predicates review-408 F4 named > refuses a prompt record %s (mutant: drop that part of the prompt record check)",
+      "state": "unchanged"
+    },
+    {
+      "file": "packages/polaris-dossier/src/waiting-sessions.test.ts",
+      "title": "the predicates review-408 F4 named > refuses a delivery note that names %s, even with the right digest (mutant: drop that field of the note check)",
+      "state": "unchanged"
+    },
+    {
+      "file": "packages/polaris-dossier/src/waiting-sessions.test.ts",
+      "title": "the predicates review-408 F4 named > delivers nothing when the waiting session's record names no agent tool (mutant: drop the recorded-tool check)",
+      "state": "unchanged"
+    },
+    {
+      "file": "packages/polaris-dossier/src/waiting-sessions.test.ts",
+      "title": "the predicates review-408 F4 named > delivers no design packet before a render, and no fidelity packet before the inventory counts (mutant: deliver a packet that failed to build)",
+      "state": "unchanged"
+    },
+    {
+      "file": "packages/polaris-dossier/src/waiting-sessions.test.ts",
+      "title": "the predicates review-408 F4 named > refuses a prompt record that names another directory (mutant: drop the record's directory check)",
+      "state": "unchanged"
+    },
+    {
+      "file": "packages/polaris-dossier/src/waiting-sessions.test.ts",
+      "title": "the predicates review-408 F4 named > verifies the gates again when a packet arrives, and reads nothing past the deadline (mutant: drop the re-check)",
+      "state": "unchanged"
+    },
+    {
+      "file": "packages/polaris-dossier/src/waiting-sessions.test.ts",
+      "title": "the predicates review-408 F4 named > refuses %s once the run's deadline has passed (mutant: drop that step's gate check)",
+      "state": "unchanged"
+    },
+    {
+      "file": "packages/polaris-dossier/src/waiting-sessions.test.ts",
+      "title": "the predicates review-408 F4 named > refuses a sessions root that resolves into the clone (mutant: drop the sessions-root check of session-prompt all)",
+      "state": "unchanged"
+    },
+    {
+      "file": "packages/polaris-dossier/src/waiting-sessions.test.ts",
+      "title": "the predicates review-408 F4 named > refuses session-prompt for %s (mutant: drop that refusal)",
+      "state": "unchanged"
+    },
+    {
+      "file": "packages/polaris-dossier/src/waiting-sessions.test.ts",
+      "title": "await --stdin validates before it writes (review-408 F5) > keeps the inventory that passed when the next submission is %s (mutant: drop that check)",
+      "state": "unchanged"
+    },
+    {
+      "file": "packages/polaris-dossier/src/waiting-sessions.test.ts",
+      "title": "declared-source waiting session records > creates waiting sessions without creating a legacy launch disclosure",
+      "state": "added"
+    },
+    {
+      "file": "packages/polaris-dossier/src/waiting-sessions.test.ts",
+      "title": "declared-source waiting session records > leaves a historical launch artifact unchanged when starting waiting sessions",
+      "state": "added"
+    },
+    {
+      "file": "packages/polaris-dossier/src/waiting-sessions.test.ts",
+      "title": "session-prompt <run> all > starts supported tool overrides without provider statements",
+      "state": "added"
+    },
+    {
+      "file": "packages/polaris-dossier/src/waiting-sessions.test.ts",
+      "title": "delivery to a waiting review session > checks the waiting session declared provider at delivery",
+      "state": "added"
+    },
+    {
+      "file": "packages/polaris-dossier/src/waiting-sessions.test.ts",
+      "title": "delivery to a waiting review session > refuses a waiting session record naming an unsupported tool",
+      "state": "added"
+    },
+    {
+      "file": "packages/polaris-dossier/src/waiting-sessions.test.ts",
+      "title": "delivery to a waiting review session > says no packet is delivered when the waiting session record has no provider",
+      "state": "added"
+    }
+  ]
+}

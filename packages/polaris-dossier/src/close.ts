@@ -11,7 +11,7 @@ import { isoOf } from './iso-of.js';
 import type { Outcome } from './outcome.js';
 import { latestPassedDraft, type ReviewDeps } from './review.js';
 import type { ReverifyRefusal } from './reverify.js';
-import { loadDossierScreen } from './screen.js';
+import { screenLoaderOf, placementSubjectOf } from './screen.js';
 import { RUN_LAYOUT } from './state-directory.js';
 
 /** `syzygy dossier close <run> [--usage-tokens N] [--usage-turns N]` (REQ-polaris-generation-033, 018; design "Command surface",
@@ -29,9 +29,9 @@ import { RUN_LAYOUT } from './state-directory.js';
  * reach, and Inferred. The record copies no file body: no brief, prompt or transcript body enters it, only each stored file's digest.
  * Syzygy made no provider call for the run, issued no credential for it and wrote none to the state directory. */
 
-export const EXECUTION_RECORD_FORMAT = 'polaris-dossier-execution-record/1';
+export const EXECUTION_RECORD_FORMAT = 'polaris-dossier-execution-record/2';
 export const USAGE_NOT_RECORDED = 'not recorded: the operator declared no usage figure at close, and Syzygy cannot observe the agent sessions\' usage';
-export const NO_PROVIDER_CALL = 'Syzygy made no provider call for this run, resolved no provider route and transmitted no project content to any service; the agent sessions\' own transmissions to their provider are the operator\'s act and are not recorded, consented or observed by Syzygy.';
+export const NO_PROVIDER_CALL = 'Syzygy made no provider call for this run, resolved no provider route and transmitted no project content to any service; the agent sessions\' own transmissions to their declared provider are not observed by Syzygy. SEC-2 and SEC-5 still prohibit secret egress.';
 export const NO_CREDENTIAL_ISSUED = 'Syzygy issued no credential for this run and wrote none to the state directory.';
 const WITHHELD_TEXT = '[withheld: a secret detector matches this text]';
 const MAX_STORED_FILES = 20_000;
@@ -118,10 +118,9 @@ export async function closeRun(runDir: string, request: CloseRequest, deps: Clos
   if (fs.existsSync(recordFile)) return refuse('closed-already', `the run already holds ${RUN_LAYOUT.record}: a run is closed once`);
 
   const credential = await credentialStepCheck(run, 'close', deps.probe, now);
-  const screenLoad = await (deps.loadScreen ?? (() => loadDossierScreen(deps.sources.recordsRoot, now)))();
+  const screenLoad = await screenLoaderOf(deps.loadScreen, deps.sources.recordsRoot, now)(placementSubjectOf(subject));
   if (!screenLoad.ok) return refuse('screen', screenLoad.why);
   const secret = (value: string): boolean => screenLoad.screen.screenBody(value) === 'secret-detector-match';
-  const ruling = await deps.sources.rfc720Ruling();
 
   const brief = readRecord(path.join(run, RUN_LAYOUT.briefRecord));
   const stored = storedFiles(run);
@@ -134,7 +133,7 @@ export async function closeRun(runDir: string, request: CloseRequest, deps: Clos
     closedAt: isoOf(now),
     clock: 'Syzygy\'s own clock',
     subject,
-    pinnedRevisionAtClose: { commit: subject.pinnedRevision.commit, consentRecord: revision.consentRecord, revisionLabel: revision.label, label: 'Observed', basis: 'verified again at close against the in-force observation consent' },
+    pinnedRevisionAtClose: { commit: subject.pinnedRevision.commit, revisionLabel: revision.label, label: 'Observed', basis: 'pinned commit and tree rehashed at close; selection history remains Inferred' },
     configuration: { declared: { ...declared, deadline: declared.deadline.declared }, declaredBy: 'operator', label: 'Inferred' },
     principal: { name: declared.operator, declaredBy: 'operator', credentialIdentity: 'Unknown' },
     brief: isRecord(brief)
@@ -145,8 +144,7 @@ export async function closeRun(runDir: string, request: CloseRequest, deps: Clos
     agentUsage: usage,
     steps: stepInstants(run),
     credential: { atClose: credential, breaches: breachLog(run), ...(credential.required ? { disclosure: CREDENTIAL_CHECK_DISCLOSURE } : {}) },
-    rfc720Ruling: ruling.state === 'ok' ? { state: 'in-force', record: ruling.record } : { state: ruling.state, why: ruling.why },
-    providerStatement: subject.providerStatement,
+    declaredProvider: { provider: declared.agentProvider, contentClasses: subject.contentClasses, label: 'Inferred', actualTransmission: 'Unknown' },
     noProviderCall: NO_PROVIDER_CALL,
     credentialsIssued: NO_CREDENTIAL_ISSUED,
     stored: { label: 'Inferred', basis: 'the digest of each file in the run directory as Syzygy read it at close; no body is copied, so no brief, prompt or transcript body enters this record', ...stored },

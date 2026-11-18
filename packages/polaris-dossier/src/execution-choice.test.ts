@@ -1,3 +1,4 @@
+import { declaredSubjectFixture, policyFixture } from './full-run.testkit.js';
 import * as fs from 'node:fs';
 import * as path from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -24,10 +25,10 @@ const ALL = ['owner-started-session', 'owners-own-host', 'owner-attends'];
 const SUBJECT: RunSubject = {
   repository: { url: 'github.com/redis/redis', repositoryId: 'redis-redis' },
   clone: { path: '/srv/clones/redis', declaredBy: 'operator', label: 'Inferred', use: 'read' },
-  pinnedRevision: { commit: REV, label: '8.10.2', consentRecord: 'PUBLIC-OBS-REDIS-2026-10-03@0.1.0-candidate.7', pinnedAt: '2026-10-07T10:00:00.000Z' },
-  startGates: { registryEntry: 'REGISTRY-ACT-FIXTURE', screeningPolicy: 'POLICY-ACT-FIXTURE' },
+  pinnedRevision: { commit: REV, label: '8.10.2', pinnedAt: '2026-10-07T10:00:00.000Z' },
+  ...declaredSubjectFixture(),
   governed: { kind: 'non-governed', because: ['fixture'] },
-  providerStatement: null,
+
   workItem: { identity: null, reason: NO_WORK_ITEM_REASON },
 };
 
@@ -45,6 +46,7 @@ const runDirectory = (operatorIsOwner = true, name = RUN_ID): string => {
 const OK: GateState = { state: 'ok', record: 'FIXTURE-ACT' };
 const sources = (over: Partial<GateSources> = {}): GateSources => ({
   recordsRoot: REAL_ROOT,
+  declaredPolicy: async () => policyFixture(),
   repositoryIdsFor: async () => ['redis-redis'],
   consentedRevisionsFor: async () => [{ label: '8.10.2', commitId: REV }],
   observationConsentFor: async () => ({ satisfied: true, record: 'PUBLIC-OBS-REDIS-2026-10-03@0.1.0-candidate.7' }),
@@ -69,7 +71,7 @@ const UNREADABLE_REASON = 'this run\'s launched marker is present but cannot be 
 const REFUSAL_DISCLOSURES = [
   'Syzygy cannot observe who ran allow-execution or whether the owner attends the session: both are the operator\'s declaration, labelled Inferred.',
   'This per-run execution choice is not an execution consent (RFC5-12, SOURCE-POLICY.md): it is never read, stored or reported as one, and it approves no execution profile.',
-  'the consent, registry, policy and statement records the gates read lie in Syzygy\'s checkout, which the agent sessions can write; Syzygy re-reads and re-checks them at every step, and cannot rule out that a session changed them',
+  'the Syzygy checkout and local run records lie within the agent sessions write reach; stored history and declarations remain Inferred',
   'The choice is stored in the run directory, which the agent sessions can write; read back, it is Inferred.',
 ];
 const UNREADABLE_MARKERS: [string, (marker: string) => void][] = [
@@ -178,18 +180,18 @@ describe('allow-execution: refused', () => {
     expect(fs.readFileSync(path.join(run, 'execution-choice.json'), 'utf8')).toBe(first);
   });
 
-  it('refuses when the pinned revision is no longer consented', async () => {
+  it('refuses when the committed policy is unavailable', async () => {
     const run = runDirectory();
-    expect(await allow(run, REV, ALL, { observationConsentFor: async () => ({ satisfied: false, why: 'withdrawn' }) })).toMatchObject({
-      ok: false, refusal: { stage: 'reverify', refusals: [{ code: 'revision-unnamed', reason: `the recorded pinned revision ${REV} is not a revision the in-force observation consent for redis-redis names: withdrawn` }] },
+    expect(await allow(run, REV, ALL, { declaredPolicy: async () => ({ ok: false, why: 'fixture unavailable' }) })).toMatchObject({
+      ok: false, refusal: { stage: 'reverify', refusals: [{ code: 'policy', reason: 'fixture unavailable' }] },
     });
     nothingWritten(run);
   });
 
-  it('refuses when the project input now records a drawer: the subject is decided again, never read from run.json', async () => {
+  it('refuses a changed committed policy binding', async () => {
     const run = runDirectory();
-    const result = await allow(run, REV, ALL, { projectInput: { drawerFor: async () => ({ stated: true, drawer: 'present', record: 'PROJECT-INPUT-FIXTURE@2' }) } });
-    expect(!result.ok && result.refusal.refusals?.map(r => r.code)).toEqual(['governed-changed', 'statement']);
+    const result = await allow(run, REV, ALL, { declaredPolicy: async () => ({ ...policyFixture(), binding: { ...policyFixture().binding, sha256: '0'.repeat(64) } }) });
+    expect(!result.ok && result.refusal.refusals?.map(r => r.code)).toEqual(['policy-changed']);
     nothingWritten(run);
   });
 

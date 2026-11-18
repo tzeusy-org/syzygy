@@ -1,3 +1,5 @@
+import { createHash } from 'node:crypto';
+import { DOSSIER_POLICY_PATH, type PolicySnapshot } from './policy-snapshot.js';
 import { execFileSync } from 'node:child_process';
 import * as fs from 'node:fs';
 import * as path from 'node:path';
@@ -78,15 +80,17 @@ export function makeClone(dir: string): { readonly clone: string; readonly commi
 }
 
 const LIVE_POLICY = JSON.parse(fs.readFileSync(path.join(REAL_ROOT, '.syzygy/governance/policies/POLARIS-BUTLERS-SECRET-CLASSIFICATION-POLICY-CANDIDATE.json'), 'utf8'));
-export const FIXTURE_SCREEN = buildDossierScreen(new TextEncoder().encode(JSON.stringify({
+export const FIXTURE_POLICY = new TextEncoder().encode(JSON.stringify({
   policyId: 'fixture-public-source', policyVersion: '1', detectors: LIVE_POLICY.detectors, sourceAdmission: LIVE_POLICY.sourceAdmission,
   publicSourceScope: { contentClassification: { rules: [{ class: 'code-content', sourceExtensions: ['.c', '.txt'] }] } },
-})), false, null, 'public');
+}));
+export const FIXTURE_SCREEN = buildDossierScreen(FIXTURE_POLICY, false, null, 'public');
 
 export function fixtureSources(commit: string): GateSources {
   const ok = { state: 'ok', record: 'FIXTURE-ACT' } as const;
   return {
     recordsRoot: REAL_ROOT,
+    declaredPolicy: async () => policyFixture(FIXTURE_POLICY),
     repositoryIdsFor: async () => ['redis-redis'],
     consentedRevisionsFor: async () => [{ label: 'fixture', commitId: commit }],
     observationConsentFor: async (_id, revision) => (revision === commit ? { satisfied: true, record: 'PUBLIC-OBS-FIXTURE@1' } : { satisfied: false, why: 'the consent does not name it' }),
@@ -226,7 +230,7 @@ export async function fullFixtureRun(options: FullRunOptions): Promise<{ readonl
     operator: 'Tzeusy', agentTool: 'claude-code', agentToolVersion: '2.1.0', agentProvider: 'anthropic', model: 'claude-opus-5-5',
     deadline: 'PT1H', agentTokenBudget: 100_000, maxRepairCycles: 3, maxQuestions: 1, audience: 'an operator', operatorIsOwner: true,
   }));
-  const init = await cli(['init', clone, '--url', FIXTURE_URL, '--config', configFile, '--state-root', stateRoot]);
+  const init = await cli(['init', clone, '--visibility', 'public', '--url', FIXTURE_URL, '--config', configFile, '--state-root', stateRoot]);
   const run = init['run'] as string;
   await cli(['brief', run]);
   if (options.permitted === true) {
@@ -255,4 +259,31 @@ export async function fullFixtureRun(options: FullRunOptions): Promise<{ readonl
   await cli(['close', run, ...(options.closeArgs ?? [])]);
   await cli(['status', run]);
   return { run, steps };
+}
+
+/** Input fixtures only: source bytes and their transport binding, never expected screening outcomes. */
+const defaultPolicy = (): Uint8Array => new Uint8Array(fs.readFileSync(path.join(REAL_ROOT, DOSSIER_POLICY_PATH)));
+export function policyFixture(bytes: Uint8Array = defaultPolicy()): Extract<PolicySnapshot, { ok: true }> {
+  const document = JSON.parse(new TextDecoder().decode(bytes)) as { policyId: string; policyVersion: string };
+  return { ok: true, bytes, binding: {
+    path: DOSSIER_POLICY_PATH, commit: 'a'.repeat(40), policyId: document.policyId, policyVersion: document.policyVersion,
+    sha256: createHash('sha256').update(bytes).digest('hex'),
+  } };
+}
+export function declaredSubjectFixture(bytes: Uint8Array = defaultPolicy()) {
+  return { screeningPolicy: policyFixture(bytes).binding,
+    contentClasses: ['code-content', 'project-documentation', 'governance-text'] as const,
+    visibility: { value: 'public' as const, source: 'declaration' as const, declaredBy: 'fixture-operator', label: 'Inferred' as const } };
+}
+
+/** A synthetic Syzygy policy checkout with no act records. Only fixture bytes are committed. */
+export function commitPolicyFixture(root: string, bytes: Uint8Array): string {
+  gitInitFromEmptyTemplate(root, ['-b', 'main']);
+  const file = path.join(root, DOSSIER_POLICY_PATH);
+  fs.mkdirSync(path.dirname(file), { recursive: true });
+  fs.writeFileSync(file, bytes);
+  const git = (...args: string[]): string => execFileSync('git', ['-C', root, ...args], { encoding: 'utf8', env: GIT_ENV }).trim();
+  git('add', DOSSIER_POLICY_PATH);
+  git('-c', 'user.name=fixture', '-c', 'user.email=fixture@example.invalid', 'commit', '-q', '-m', 'fixture policy');
+  return root;
 }

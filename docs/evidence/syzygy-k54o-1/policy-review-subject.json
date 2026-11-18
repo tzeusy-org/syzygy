@@ -1,0 +1,43 @@
+{
+  "subject": "D10 F-1 dossier-only screening policy successor and its recognition",
+  "baseCommit": "26b2ef360431ab71c02dcde47643665dc153b8c7",
+  "state": "uncommitted candidate, not adopted",
+  "files": [
+    {
+      "source": ".syzygy/governance/policies/POLARIS-BUTLERS-SECRET-CLASSIFICATION-POLICY-CANDIDATE.json",
+      "snapshot": "predecessor.json",
+      "sha256": "44153bbe210c7a724f224f2bc1c9255db43cf0887b6ad22dd24884514f21bbe8",
+      "bytes": 55578
+    },
+    {
+      "source": ".syzygy/governance/policies/POLARIS-DOSSIER-DECLARED-SOURCE-POLICY-v1.json",
+      "snapshot": "successor.json",
+      "sha256": "516cb1f2dba9ceb3e55166077c0800be6022012406b9b9b5f0df25bcb73aa499",
+      "bytes": 51011
+    },
+    {
+      "source": "packages/polaris-generation-core/src/source-visibility.ts",
+      "snapshot": "source-visibility.ts",
+      "sha256": "e676a7eedf036e5bc57006fa7eadff49ea72e7782d2b1b8b7ec4c26212f0436d",
+      "bytes": 5660
+    },
+    {
+      "source": "packages/polaris-dossier/src/screen.ts",
+      "snapshot": "screen.ts",
+      "sha256": "8f350e7ae37644602e7fe8e08703fe486a4a5d948628d5019cfce50f4cf91116",
+      "bytes": 20276
+    },
+    {
+      "source": ".syzygy/governance/doctrine/security.md",
+      "snapshot": "security.md",
+      "sha256": "9d3f46528e37143ae1d63c755c7a50c6a5b139d28bef5c9de45d62b5c1ac71bf",
+      "bytes": 9313
+    },
+    {
+      "source": ".syzygy/governance/doctrine/vision.md",
+      "snapshot": "vision.md",
+      "sha256": "fc222427c85c6ce39f02cb2b595b75fec23f6890c013d249f0b43baa52788bc3",
+      "bytes": 19969
+    }
+  ]
+}

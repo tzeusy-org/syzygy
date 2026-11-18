@@ -20,6 +20,14 @@ const VISIBILITY_TEXTS = {
   consequence: '736dcc8867a30c1017ff5ba3c0a91f65b4020ec245463348ad6ac5142120c23b',
   consentRecordMetadata: 'ea60ad52e8817300c9a4800283a4237afccbe61cc1f3463844e78697c13c004c',
 } as const;
+const DECLARED_VISIBILITY_TEXTS = {
+  rule: '63927dfe2369afeebbe79cd0f74acfb876febcad87f87fdde18c6cd9ffd8eade',
+  privateSourceRules: 'c8137223612a5de18f625930e58326c3e4eef90e993cda360b458417eebafe7a',
+  unchanged: '36f7a6826646cd19239956141833751c32660ab41b8c3b048d641f689aa585bd',
+  agentSessions: '25be77db84eb54e9944dba3bb9ed488c385624b9e8ced6149867db821a62113d',
+  consequence: '9b77a15373d15cfa6bbd14c01e4dca1cd6a2d098ba9b315f354527cf05b0f088',
+  consentRecordMetadata: '4e7baf6e615604d2a6958f59af07e7c454ab9474deb5f2e90f36bdc0d9b1aa84',
+} as const;
 const VISIBILITY_KEYS = ['values', 'admitted', 'rule', 'privateSourceRules', 'unchanged', 'agentSessions', 'consequence', 'consentRecordMetadata'] as const;
 
 /** The two owner-act records whose form states public (`sourceVisibility.rule`), by path. */
@@ -37,8 +45,8 @@ export type SourceVisibilityRead =
 const exactly = (value: unknown, expected: readonly string[]): boolean =>
   Array.isArray(value) && value.length === expected.length && value.every((entry, i) => entry === expected[i]);
 
-/** Reads `sourceVisibility` from a policy's `publicSourceScope`. Absent: public only (versions 1 to 7). Present: exactly the version-8
- * object, or refused. */
+/** Reads sourceVisibility. Absent means public only. Present must match one complete pinned vocabulary: historical v8 or the
+ * declared-source dossier successor. Mixing texts from the two versions refuses. */
 export function readSourceVisibility(scope: unknown): SourceVisibilityRead {
   const refuse = (why: string): SourceVisibilityRead => ({ ok: false, why: `its source visibility ${why}` });
   if (!isRecord(scope) || !Object.hasOwn(scope, 'sourceVisibility')) return { ok: true, declared: false, admitsPrivate: false };
@@ -48,12 +56,14 @@ export function readSourceVisibility(scope: unknown): SourceVisibilityRead {
   if (!exactly(keys, VISIBILITY_KEYS)) return refuse(`carries the fields ${keys.join(', ')}, not exactly ${VISIBILITY_KEYS.join(', ')}`);
   if (!exactly(sv['values'], ['public', 'private'])) return refuse('values is not exactly public, private');
   if (!exactly(sv['admitted'], ['public', 'private'])) return refuse('admitted is not exactly public, private');
+  const texts = typeof sv['rule'] === 'string' && sha256(sv['rule']) === DECLARED_VISIBILITY_TEXTS.rule
+    ? DECLARED_VISIBILITY_TEXTS : VISIBILITY_TEXTS;
   for (const key of Object.keys(VISIBILITY_TEXTS) as (keyof typeof VISIBILITY_TEXTS)[]) {
     const value = sv[key];
-    if (typeof value !== 'string' || sha256(value) !== VISIBILITY_TEXTS[key]) return refuse(`${key} is not the text this screen implements`);
+    if (typeof value !== 'string' || sha256(value) !== texts[key]) return refuse(`${key} is not the text this screen implements`);
   }
   const rule = sv['rule'] as string;
-  if (!PUBLIC_BY_FORM_ACTS.every(file => rule.includes(file))) return refuse('rule does not name the acts this screen reads as public by form');
+  if (texts === VISIBILITY_TEXTS && !PUBLIC_BY_FORM_ACTS.every(file => rule.includes(file))) return refuse('rule does not name the acts this screen reads as public by form');
   return { ok: true, declared: true, admitsPrivate: true };
 }
 

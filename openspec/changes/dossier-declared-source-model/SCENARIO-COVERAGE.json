@@ -1,0 +1,1097 @@
+{
+  "label": "Inferred",
+  "meaning": "Obligation disposition, not a completed execution verdict",
+  "sources": [
+    {
+      "path": "openspec/changes/polaris-dossier-local-agent-mode/specs/polaris-generation/spec.md",
+      "sha256": "2dbf5fc5378fa4e0cdcb90b4f9261f6b34882403bf20048948bd58c495490d4e"
+    },
+    {
+      "path": "openspec/changes/polaris-dossier-launch-consent/specs/polaris-generation/spec.md",
+      "sha256": "21caa65841e76784bbab015320cd0348ebeb092465e135f040901cefcf6e1c84"
+    }
+  ],
+  "population": 135,
+  "scenarios": [
+    {
+      "source": "openspec/changes/polaris-dossier-local-agent-mode/specs/polaris-generation/spec.md",
+      "requirement": "REQ-polaris-generation-033",
+      "scenario": "Clone pinned to a consented revision",
+      "disposition": "replaced admission provenance",
+      "current_obligation": "033 local no-record admission, pin/policy/provider checks, editorial provenance; old record presence/withdrawal has no effect",
+      "evidence_scope": "start-gates.test.ts retired-port traps and drift cases, brief/render/waiting/review suites."
+    },
+    {
+      "source": "openspec/changes/polaris-dossier-local-agent-mode/specs/polaris-generation/spec.md",
+      "requirement": "REQ-polaris-generation-033",
+      "scenario": "Clone at an unconsented revision",
+      "disposition": "replaced admission provenance",
+      "current_obligation": "033 local no-record admission, pin/policy/provider checks, editorial provenance; old record presence/withdrawal has no effect",
+      "evidence_scope": "start-gates.test.ts retired-port traps and drift cases, brief/render/waiting/review suites."
+    },
+    {
+      "source": "openspec/changes/polaris-dossier-local-agent-mode/specs/polaris-generation/spec.md",
+      "requirement": "REQ-polaris-generation-033",
+      "scenario": "Recorded revision altered",
+      "disposition": "retained",
+      "current_obligation": "033 retains finite limits, object integrity, rederived evidence, Inferred history/usage and self-reported command disclosures",
+      "evidence_scope": "start-gates.test.ts, run-config/status/brief/check/close/render and execution-choice suites."
+    },
+    {
+      "source": "openspec/changes/polaris-dossier-local-agent-mode/specs/polaris-generation/spec.md",
+      "requirement": "REQ-polaris-generation-033",
+      "scenario": "Object store altered after pinning",
+      "disposition": "retained",
+      "current_obligation": "033 retains finite limits, object integrity, rederived evidence, Inferred history/usage and self-reported command disclosures",
+      "evidence_scope": "start-gates.test.ts, run-config/status/brief/check/close/render and execution-choice suites."
+    },
+    {
+      "source": "openspec/changes/polaris-dossier-local-agent-mode/specs/polaris-generation/spec.md",
+      "requirement": "REQ-polaris-generation-033",
+      "scenario": "No provider call and no egress record",
+      "disposition": "retained",
+      "current_obligation": "033 retains finite limits, object integrity, rederived evidence, Inferred history/usage and self-reported command disclosures",
+      "evidence_scope": "start-gates.test.ts, run-config/status/brief/check/close/render and execution-choice suites."
+    },
+    {
+      "source": "openspec/changes/polaris-dossier-local-agent-mode/specs/polaris-generation/spec.md",
+      "requirement": "REQ-polaris-generation-033",
+      "scenario": "Limits declared by the operator",
+      "disposition": "retained",
+      "current_obligation": "033 retains finite limits, object integrity, rederived evidence, Inferred history/usage and self-reported command disclosures",
+      "evidence_scope": "start-gates.test.ts, run-config/status/brief/check/close/render and execution-choice suites."
+    },
+    {
+      "source": "openspec/changes/polaris-dossier-local-agent-mode/specs/polaris-generation/spec.md",
+      "requirement": "REQ-polaris-generation-033",
+      "scenario": "Zero repair and question limits accepted",
+      "disposition": "retained",
+      "current_obligation": "033 retains finite limits, object integrity, rederived evidence, Inferred history/usage and self-reported command disclosures",
+      "evidence_scope": "start-gates.test.ts, run-config/status/brief/check/close/render and execution-choice suites."
+    },
+    {
+      "source": "openspec/changes/polaris-dossier-local-agent-mode/specs/polaris-generation/spec.md",
+      "requirement": "REQ-polaris-generation-033",
+      "scenario": "Agent usage is not observed",
+      "disposition": "retained",
+      "current_obligation": "033 retains finite limits, object integrity, rederived evidence, Inferred history/usage and self-reported command disclosures",
+      "evidence_scope": "start-gates.test.ts, run-config/status/brief/check/close/render and execution-choice suites."
+    },
+    {
+      "source": "openspec/changes/polaris-dossier-local-agent-mode/specs/polaris-generation/spec.md",
+      "requirement": "REQ-polaris-generation-033",
+      "scenario": "Syzygy's own limits enforced",
+      "disposition": "retained",
+      "current_obligation": "033 retains finite limits, object integrity, rederived evidence, Inferred history/usage and self-reported command disclosures",
+      "evidence_scope": "start-gates.test.ts, run-config/status/brief/check/close/render and execution-choice suites."
+    },
+    {
+      "source": "openspec/changes/polaris-dossier-local-agent-mode/specs/polaris-generation/spec.md",
+      "requirement": "REQ-polaris-generation-033",
+      "scenario": "Stored record altered within the agent's reach",
+      "disposition": "retained",
+      "current_obligation": "033 retains finite limits, object integrity, rederived evidence, Inferred history/usage and self-reported command disclosures",
+      "evidence_scope": "start-gates.test.ts, run-config/status/brief/check/close/render and execution-choice suites."
+    },
+    {
+      "source": "openspec/changes/polaris-dossier-local-agent-mode/specs/polaris-generation/spec.md",
+      "requirement": "REQ-polaris-generation-033",
+      "scenario": "Governed subject without a per-project provider statement",
+      "disposition": "replaced admission provenance",
+      "current_obligation": "033 local no-record admission, pin/policy/provider checks, editorial provenance; old record presence/withdrawal has no effect",
+      "evidence_scope": "start-gates.test.ts retired-port traps and drift cases, brief/render/waiting/review suites."
+    },
+    {
+      "source": "openspec/changes/polaris-dossier-local-agent-mode/specs/polaris-generation/spec.md",
+      "requirement": "REQ-polaris-generation-033",
+      "scenario": "Governed subject with a per-project provider statement",
+      "disposition": "replaced admission provenance",
+      "current_obligation": "033 local no-record admission, pin/policy/provider checks, editorial provenance; old record presence/withdrawal has no effect",
+      "evidence_scope": "start-gates.test.ts retired-port traps and drift cases, brief/render/waiting/review suites."
+    },
+    {
+      "source": "openspec/changes/polaris-dossier-local-agent-mode/specs/polaris-generation/spec.md",
+      "requirement": "REQ-polaris-generation-033",
+      "scenario": "Per-project statement withdrawn mid-run",
+      "disposition": "replaced admission provenance",
+      "current_obligation": "033 local no-record admission, pin/policy/provider checks, editorial provenance; old record presence/withdrawal has no effect",
+      "evidence_scope": "start-gates.test.ts retired-port traps and drift cases, brief/render/waiting/review suites."
+    },
+    {
+      "source": "openspec/changes/polaris-dossier-local-agent-mode/specs/polaris-generation/spec.md",
+      "requirement": "REQ-polaris-generation-033",
+      "scenario": "Non-governed subject needs no statement",
+      "disposition": "replaced admission provenance",
+      "current_obligation": "033 local no-record admission, pin/policy/provider checks, editorial provenance; old record presence/withdrawal has no effect",
+      "evidence_scope": "start-gates.test.ts retired-port traps and drift cases, brief/render/waiting/review suites."
+    },
+    {
+      "source": "openspec/changes/polaris-dossier-local-agent-mode/specs/polaris-generation/spec.md",
+      "requirement": "REQ-polaris-generation-033",
+      "scenario": "Execution rule follows SEC-3",
+      "disposition": "retained",
+      "current_obligation": "033 retains finite limits, object integrity, rederived evidence, Inferred history/usage and self-reported command disclosures",
+      "evidence_scope": "start-gates.test.ts, run-config/status/brief/check/close/render and execution-choice suites."
+    },
+    {
+      "source": "openspec/changes/polaris-dossier-local-agent-mode/specs/polaris-generation/spec.md",
+      "requirement": "REQ-polaris-generation-033",
+      "scenario": "Execution permission stays with the authoring session",
+      "disposition": "F-3 execution arm; conditions retained",
+      "current_obligation": "033 enables no execution arm; actual SEC-3 outside-sandbox owner conditions and credential restrictions remain; agent-selected sandbox orchestration belongs F-3",
+      "evidence_scope": "Current forbidding/default execution-choice coverage retained; no new permitting outcome claimed."
+    },
+    {
+      "source": "openspec/changes/polaris-dossier-local-agent-mode/specs/polaris-generation/spec.md",
+      "requirement": "REQ-polaris-generation-033",
+      "scenario": "Adapter credential readable",
+      "disposition": "retained",
+      "current_obligation": "033 retains finite limits, object integrity, rederived evidence, Inferred history/usage and self-reported command disclosures",
+      "evidence_scope": "start-gates.test.ts, run-config/status/brief/check/close/render and execution-choice suites."
+    },
+    {
+      "source": "openspec/changes/polaris-dossier-local-agent-mode/specs/polaris-generation/spec.md",
+      "requirement": "REQ-polaris-generation-033",
+      "scenario": "Execution permitted under the amendment",
+      "disposition": "F-3 execution arm; conditions retained",
+      "current_obligation": "033 enables no execution arm; actual SEC-3 outside-sandbox owner conditions and credential restrictions remain; agent-selected sandbox orchestration belongs F-3",
+      "evidence_scope": "Current forbidding/default execution-choice coverage retained; no new permitting outcome claimed."
+    },
+    {
+      "source": "openspec/changes/polaris-dossier-local-agent-mode/specs/polaris-generation/spec.md",
+      "requirement": "REQ-polaris-generation-033",
+      "scenario": "Permitting brief without the host and attendance declaration",
+      "disposition": "F-3 execution arm; conditions retained",
+      "current_obligation": "033 enables no execution arm; actual SEC-3 outside-sandbox owner conditions and credential restrictions remain; agent-selected sandbox orchestration belongs F-3",
+      "evidence_scope": "Current forbidding/default execution-choice coverage retained; no new permitting outcome claimed."
+    },
+    {
+      "source": "openspec/changes/polaris-dossier-local-agent-mode/specs/polaris-generation/spec.md",
+      "requirement": "REQ-polaris-generation-033",
+      "scenario": "Consent or policy record without its owner act",
+      "disposition": "replaced admission provenance",
+      "current_obligation": "033 local no-record admission, pin/policy/provider checks, editorial provenance; old record presence/withdrawal has no effect",
+      "evidence_scope": "start-gates.test.ts retired-port traps and drift cases, brief/render/waiting/review suites."
+    },
+    {
+      "source": "openspec/changes/polaris-dossier-local-agent-mode/specs/polaris-generation/spec.md",
+      "requirement": "REQ-polaris-generation-033",
+      "scenario": "D9 record without its owner act",
+      "disposition": "replaced admission provenance",
+      "current_obligation": "033 local no-record admission, pin/policy/provider checks, editorial provenance; old record presence/withdrawal has no effect",
+      "evidence_scope": "start-gates.test.ts retired-port traps and drift cases, brief/render/waiting/review suites."
+    },
+    {
+      "source": "openspec/changes/polaris-dossier-local-agent-mode/specs/polaris-generation/spec.md",
+      "requirement": "REQ-polaris-generation-033",
+      "scenario": "RFC7-20 reading record without its owner act",
+      "disposition": "replaced admission provenance",
+      "current_obligation": "033 local no-record admission, pin/policy/provider checks, editorial provenance; old record presence/withdrawal has no effect",
+      "evidence_scope": "start-gates.test.ts retired-port traps and drift cases, brief/render/waiting/review suites."
+    },
+    {
+      "source": "openspec/changes/polaris-dossier-local-agent-mode/specs/polaris-generation/spec.md",
+      "requirement": "REQ-polaris-generation-033",
+      "scenario": "Every reported command disclosed",
+      "disposition": "retained",
+      "current_obligation": "033 retains finite limits, object integrity, rederived evidence, Inferred history/usage and self-reported command disclosures",
+      "evidence_scope": "start-gates.test.ts, run-config/status/brief/check/close/render and execution-choice suites."
+    },
+    {
+      "source": "openspec/changes/polaris-dossier-local-agent-mode/specs/polaris-generation/spec.md",
+      "requirement": "REQ-polaris-generation-033",
+      "scenario": "Reported command outside the named scope",
+      "disposition": "retained",
+      "current_obligation": "033 retains finite limits, object integrity, rederived evidence, Inferred history/usage and self-reported command disclosures",
+      "evidence_scope": "start-gates.test.ts, run-config/status/brief/check/close/render and execution-choice suites."
+    },
+    {
+      "source": "openspec/changes/polaris-dossier-local-agent-mode/specs/polaris-generation/spec.md",
+      "requirement": "REQ-polaris-generation-033",
+      "scenario": "Mode disclosed on every page",
+      "disposition": "retained",
+      "current_obligation": "033 retains finite limits, object integrity, rederived evidence, Inferred history/usage and self-reported command disclosures",
+      "evidence_scope": "start-gates.test.ts, run-config/status/brief/check/close/render and execution-choice suites."
+    },
+    {
+      "source": "openspec/changes/polaris-dossier-local-agent-mode/specs/polaris-generation/spec.md",
+      "requirement": "REQ-polaris-generation-033",
+      "scenario": "Operator-computed draft admitted under the owner's reading",
+      "disposition": "replaced admission provenance",
+      "current_obligation": "033 local no-record admission, pin/policy/provider checks, editorial provenance; old record presence/withdrawal has no effect",
+      "evidence_scope": "start-gates.test.ts retired-port traps and drift cases, brief/render/waiting/review suites."
+    },
+    {
+      "source": "openspec/changes/polaris-dossier-local-agent-mode/specs/polaris-generation/spec.md",
+      "requirement": "REQ-polaris-generation-033",
+      "scenario": "Provider-mode draft keeps the adopted rule",
+      "disposition": "retained",
+      "current_obligation": "033 retains finite limits, object integrity, rederived evidence, Inferred history/usage and self-reported command disclosures",
+      "evidence_scope": "start-gates.test.ts, run-config/status/brief/check/close/render and execution-choice suites."
+    },
+    {
+      "source": "openspec/changes/polaris-dossier-local-agent-mode/specs/polaris-generation/spec.md",
+      "requirement": "REQ-polaris-generation-033",
+      "scenario": "A condition of the owner's reading fails",
+      "disposition": "replaced admission provenance",
+      "current_obligation": "033 local no-record admission, pin/policy/provider checks, editorial provenance; old record presence/withdrawal has no effect",
+      "evidence_scope": "start-gates.test.ts retired-port traps and drift cases, brief/render/waiting/review suites."
+    },
+    {
+      "source": "openspec/changes/polaris-dossier-local-agent-mode/specs/polaris-generation/spec.md",
+      "requirement": "REQ-polaris-generation-033",
+      "scenario": "Agent reports running the observed project",
+      "disposition": "retained",
+      "current_obligation": "033 retains finite limits, object integrity, rederived evidence, Inferred history/usage and self-reported command disclosures",
+      "evidence_scope": "start-gates.test.ts, run-config/status/brief/check/close/render and execution-choice suites."
+    },
+    {
+      "source": "openspec/changes/polaris-dossier-local-agent-mode/specs/polaris-generation/spec.md",
+      "requirement": "REQ-polaris-generation-034",
+      "scenario": "Brief carries topics, rules and schema",
+      "disposition": "retained",
+      "current_obligation": "034\u2013036 full replacement sections retain this behavior; declaration references follow033",
+      "evidence_scope": "Existing dossier quotation, check, inventory, review, render, discovery and clarification suites; final run receipt required."
+    },
+    {
+      "source": "openspec/changes/polaris-dossier-local-agent-mode/specs/polaris-generation/spec.md",
+      "requirement": "REQ-polaris-generation-034",
+      "scenario": "Understanding record self-reported",
+      "disposition": "retained",
+      "current_obligation": "034\u2013036 full replacement sections retain this behavior; declaration references follow033",
+      "evidence_scope": "Existing dossier quotation, check, inventory, review, render, discovery and clarification suites; final run receipt required."
+    },
+    {
+      "source": "openspec/changes/polaris-dossier-local-agent-mode/specs/polaris-generation/spec.md",
+      "requirement": "REQ-polaris-generation-034",
+      "scenario": "Quotation verified against the pinned blob",
+      "disposition": "retained",
+      "current_obligation": "034\u2013036 full replacement sections retain this behavior; declaration references follow033",
+      "evidence_scope": "Existing dossier quotation, check, inventory, review, render, discovery and clarification suites; final run receipt required."
+    },
+    {
+      "source": "openspec/changes/polaris-dossier-local-agent-mode/specs/polaris-generation/spec.md",
+      "requirement": "REQ-polaris-generation-034",
+      "scenario": "Quotation altered, elided or outside its range",
+      "disposition": "retained",
+      "current_obligation": "034\u2013036 full replacement sections retain this behavior; declaration references follow033",
+      "evidence_scope": "Existing dossier quotation, check, inventory, review, render, discovery and clarification suites; final run receipt required."
+    },
+    {
+      "source": "openspec/changes/polaris-dossier-local-agent-mode/specs/polaris-generation/spec.md",
+      "requirement": "REQ-polaris-generation-034",
+      "scenario": "Cited path absent at the pinned revision",
+      "disposition": "retained",
+      "current_obligation": "034\u2013036 full replacement sections retain this behavior; declaration references follow033",
+      "evidence_scope": "Existing dossier quotation, check, inventory, review, render, discovery and clarification suites; final run receipt required."
+    },
+    {
+      "source": "openspec/changes/polaris-dossier-local-agent-mode/specs/polaris-generation/spec.md",
+      "requirement": "REQ-polaris-generation-034",
+      "scenario": "Quotation from an excluded file",
+      "disposition": "retained",
+      "current_obligation": "034\u2013036 full replacement sections retain this behavior; declaration references follow033",
+      "evidence_scope": "Existing dossier quotation, check, inventory, review, render, discovery and clarification suites; final run receipt required."
+    },
+    {
+      "source": "openspec/changes/polaris-dossier-local-agent-mode/specs/polaris-generation/spec.md",
+      "requirement": "REQ-polaris-generation-034",
+      "scenario": "Judgement with no citation",
+      "disposition": "retained",
+      "current_obligation": "034\u2013036 full replacement sections retain this behavior; declaration references follow033",
+      "evidence_scope": "Existing dossier quotation, check, inventory, review, render, discovery and clarification suites; final run receipt required."
+    },
+    {
+      "source": "openspec/changes/polaris-dossier-local-agent-mode/specs/polaris-generation/spec.md",
+      "requirement": "REQ-polaris-generation-034",
+      "scenario": "Claim with only withheld citations",
+      "disposition": "retained",
+      "current_obligation": "034\u2013036 full replacement sections retain this behavior; declaration references follow033",
+      "evidence_scope": "Existing dossier quotation, check, inventory, review, render, discovery and clarification suites; final run receipt required."
+    },
+    {
+      "source": "openspec/changes/polaris-dossier-local-agent-mode/specs/polaris-generation/spec.md",
+      "requirement": "REQ-polaris-generation-034",
+      "scenario": "Mixed block and a partly redacted file",
+      "disposition": "retained",
+      "current_obligation": "034\u2013036 full replacement sections retain this behavior; declaration references follow033",
+      "evidence_scope": "Existing dossier quotation, check, inventory, review, render, discovery and clarification suites; final run receipt required."
+    },
+    {
+      "source": "openspec/changes/polaris-dossier-local-agent-mode/specs/polaris-generation/spec.md",
+      "requirement": "REQ-polaris-generation-034",
+      "scenario": "Reading view keeps every marking",
+      "disposition": "retained",
+      "current_obligation": "034\u2013036 full replacement sections retain this behavior; declaration references follow033",
+      "evidence_scope": "Existing dossier quotation, check, inventory, review, render, discovery and clarification suites; final run receipt required."
+    },
+    {
+      "source": "openspec/changes/polaris-dossier-local-agent-mode/specs/polaris-generation/spec.md",
+      "requirement": "REQ-polaris-generation-034",
+      "scenario": "Disclosure placed in the appendix",
+      "disposition": "retained",
+      "current_obligation": "034\u2013036 full replacement sections retain this behavior; declaration references follow033",
+      "evidence_scope": "Existing dossier quotation, check, inventory, review, render, discovery and clarification suites; final run receipt required."
+    },
+    {
+      "source": "openspec/changes/polaris-dossier-local-agent-mode/specs/polaris-generation/spec.md",
+      "requirement": "REQ-polaris-generation-034",
+      "scenario": "Poles within and over the limit",
+      "disposition": "retained",
+      "current_obligation": "034\u2013036 full replacement sections retain this behavior; declaration references follow033",
+      "evidence_scope": "Existing dossier quotation, check, inventory, review, render, discovery and clarification suites; final run receipt required."
+    },
+    {
+      "source": "openspec/changes/polaris-dossier-local-agent-mode/specs/polaris-generation/spec.md",
+      "requirement": "REQ-polaris-generation-034",
+      "scenario": "Script rule follows the screening act",
+      "disposition": "retained with policy binding",
+      "current_obligation": "034 script policy predicate unchanged; committed policy binding replaces act provenance under033",
+      "evidence_scope": "Existing script/render/screen cases retained; committed-policy drift refusal added."
+    },
+    {
+      "source": "openspec/changes/polaris-dossier-local-agent-mode/specs/polaris-generation/spec.md",
+      "requirement": "REQ-polaris-generation-034",
+      "scenario": "Permitted script adds behaviour only",
+      "disposition": "retained",
+      "current_obligation": "034\u2013036 full replacement sections retain this behavior; declaration references follow033",
+      "evidence_scope": "Existing dossier quotation, check, inventory, review, render, discovery and clarification suites; final run receipt required."
+    },
+    {
+      "source": "openspec/changes/polaris-dossier-local-agent-mode/specs/polaris-generation/spec.md",
+      "requirement": "REQ-polaris-generation-034",
+      "scenario": "Repository that states no reason",
+      "disposition": "retained",
+      "current_obligation": "034\u2013036 full replacement sections retain this behavior; declaration references follow033",
+      "evidence_scope": "Existing dossier quotation, check, inventory, review, render, discovery and clarification suites; final run receipt required."
+    },
+    {
+      "source": "openspec/changes/polaris-dossier-local-agent-mode/specs/polaris-generation/spec.md",
+      "requirement": "REQ-polaris-generation-034",
+      "scenario": "List repeating a diagram",
+      "disposition": "retained",
+      "current_obligation": "034\u2013036 full replacement sections retain this behavior; declaration references follow033",
+      "evidence_scope": "Existing dossier quotation, check, inventory, review, render, discovery and clarification suites; final run receipt required."
+    },
+    {
+      "source": "openspec/changes/polaris-dossier-local-agent-mode/specs/polaris-generation/spec.md",
+      "requirement": "REQ-polaris-generation-034",
+      "scenario": "Invalid Pole limit",
+      "disposition": "retained",
+      "current_obligation": "034\u2013036 full replacement sections retain this behavior; declaration references follow033",
+      "evidence_scope": "Existing dossier quotation, check, inventory, review, render, discovery and clarification suites; final run receipt required."
+    },
+    {
+      "source": "openspec/changes/polaris-dossier-local-agent-mode/specs/polaris-generation/spec.md",
+      "requirement": "REQ-polaris-generation-034",
+      "scenario": "Agent labels its own claim Observed",
+      "disposition": "retained",
+      "current_obligation": "034\u2013036 full replacement sections retain this behavior; declaration references follow033",
+      "evidence_scope": "Existing dossier quotation, check, inventory, review, render, discovery and clarification suites; final run receipt required."
+    },
+    {
+      "source": "openspec/changes/polaris-dossier-local-agent-mode/specs/polaris-generation/spec.md",
+      "requirement": "REQ-polaris-generation-034",
+      "scenario": "Repair loop counted",
+      "disposition": "retained",
+      "current_obligation": "034\u2013036 full replacement sections retain this behavior; declaration references follow033",
+      "evidence_scope": "Existing dossier quotation, check, inventory, review, render, discovery and clarification suites; final run receipt required."
+    },
+    {
+      "source": "openspec/changes/polaris-dossier-local-agent-mode/specs/polaris-generation/spec.md",
+      "requirement": "REQ-polaris-generation-034",
+      "scenario": "Claim inside a presentation element checked as a block",
+      "disposition": "retained",
+      "current_obligation": "034\u2013036 full replacement sections retain this behavior; declaration references follow033",
+      "evidence_scope": "Existing dossier quotation, check, inventory, review, render, discovery and clarification suites; final run receipt required."
+    },
+    {
+      "source": "openspec/changes/polaris-dossier-local-agent-mode/specs/polaris-generation/spec.md",
+      "requirement": "REQ-polaris-generation-034",
+      "scenario": "Short label carries no claim",
+      "disposition": "retained",
+      "current_obligation": "034\u2013036 full replacement sections retain this behavior; declaration references follow033",
+      "evidence_scope": "Existing dossier quotation, check, inventory, review, render, discovery and clarification suites; final run receipt required."
+    },
+    {
+      "source": "openspec/changes/polaris-dossier-local-agent-mode/specs/polaris-generation/spec.md",
+      "requirement": "REQ-polaris-generation-034",
+      "scenario": "Code excerpt rendered from Syzygy's read",
+      "disposition": "retained",
+      "current_obligation": "034\u2013036 full replacement sections retain this behavior; declaration references follow033",
+      "evidence_scope": "Existing dossier quotation, check, inventory, review, render, discovery and clarification suites; final run receipt required."
+    },
+    {
+      "source": "openspec/changes/polaris-dossier-local-agent-mode/specs/polaris-generation/spec.md",
+      "requirement": "REQ-polaris-generation-034",
+      "scenario": "Code excerpt over its limit",
+      "disposition": "retained",
+      "current_obligation": "034\u2013036 full replacement sections retain this behavior; declaration references follow033",
+      "evidence_scope": "Existing dossier quotation, check, inventory, review, render, discovery and clarification suites; final run receipt required."
+    },
+    {
+      "source": "openspec/changes/polaris-dossier-local-agent-mode/specs/polaris-generation/spec.md",
+      "requirement": "REQ-polaris-generation-034",
+      "scenario": "Code excerpt of an excluded file",
+      "disposition": "retained",
+      "current_obligation": "034\u2013036 full replacement sections retain this behavior; declaration references follow033",
+      "evidence_scope": "Existing dossier quotation, check, inventory, review, render, discovery and clarification suites; final run receipt required."
+    },
+    {
+      "source": "openspec/changes/polaris-dossier-local-agent-mode/specs/polaris-generation/spec.md",
+      "requirement": "REQ-polaris-generation-034",
+      "scenario": "Presentation element rendered inert",
+      "disposition": "retained",
+      "current_obligation": "034\u2013036 full replacement sections retain this behavior; declaration references follow033",
+      "evidence_scope": "Existing dossier quotation, check, inventory, review, render, discovery and clarification suites; final run receipt required."
+    },
+    {
+      "source": "openspec/changes/polaris-dossier-local-agent-mode/specs/polaris-generation/spec.md",
+      "requirement": "REQ-polaris-generation-034",
+      "scenario": "Empty table cell states nothing",
+      "disposition": "retained",
+      "current_obligation": "034\u2013036 full replacement sections retain this behavior; declaration references follow033",
+      "evidence_scope": "Existing dossier quotation, check, inventory, review, render, discovery and clarification suites; final run receipt required."
+    },
+    {
+      "source": "openspec/changes/polaris-dossier-local-agent-mode/specs/polaris-generation/spec.md",
+      "requirement": "REQ-polaris-generation-034",
+      "scenario": "Path-excluded code excerpt left unread",
+      "disposition": "retained",
+      "current_obligation": "034\u2013036 full replacement sections retain this behavior; declaration references follow033",
+      "evidence_scope": "Existing dossier quotation, check, inventory, review, render, discovery and clarification suites; final run receipt required."
+    },
+    {
+      "source": "openspec/changes/polaris-dossier-local-agent-mode/specs/polaris-generation/spec.md",
+      "requirement": "REQ-polaris-generation-034",
+      "scenario": "Collapsed section discloses Unknown claims",
+      "disposition": "retained",
+      "current_obligation": "034\u2013036 full replacement sections retain this behavior; declaration references follow033",
+      "evidence_scope": "Existing dossier quotation, check, inventory, review, render, discovery and clarification suites; final run receipt required."
+    },
+    {
+      "source": "openspec/changes/polaris-dossier-local-agent-mode/specs/polaris-generation/spec.md",
+      "requirement": "REQ-polaris-generation-035",
+      "scenario": "Review packet without the authoring exchange",
+      "disposition": "retained",
+      "current_obligation": "034\u2013036 full replacement sections retain this behavior; declaration references follow033",
+      "evidence_scope": "Existing dossier quotation, check, inventory, review, render, discovery and clarification suites; final run receipt required."
+    },
+    {
+      "source": "openspec/changes/polaris-dossier-local-agent-mode/specs/polaris-generation/spec.md",
+      "requirement": "REQ-polaris-generation-035",
+      "scenario": "Verdict bound to a stale packet",
+      "disposition": "retained",
+      "current_obligation": "034\u2013036 full replacement sections retain this behavior; declaration references follow033",
+      "evidence_scope": "Existing dossier quotation, check, inventory, review, render, discovery and clarification suites; final run receipt required."
+    },
+    {
+      "source": "openspec/changes/polaris-dossier-local-agent-mode/specs/polaris-generation/spec.md",
+      "requirement": "REQ-polaris-generation-035",
+      "scenario": "Reviewer or inventory declared as the author",
+      "disposition": "retained",
+      "current_obligation": "034\u2013036 full replacement sections retain this behavior; declaration references follow033",
+      "evidence_scope": "Existing dossier quotation, check, inventory, review, render, discovery and clarification suites; final run receipt required."
+    },
+    {
+      "source": "openspec/changes/polaris-dossier-local-agent-mode/specs/polaris-generation/spec.md",
+      "requirement": "REQ-polaris-generation-035",
+      "scenario": "Verdict incomplete or inconsistent",
+      "disposition": "retained",
+      "current_obligation": "034\u2013036 full replacement sections retain this behavior; declaration references follow033",
+      "evidence_scope": "Existing dossier quotation, check, inventory, review, render, discovery and clarification suites; final run receipt required."
+    },
+    {
+      "source": "openspec/changes/polaris-dossier-local-agent-mode/specs/polaris-generation/spec.md",
+      "requirement": "REQ-polaris-generation-035",
+      "scenario": "Independence and completeness disclosed as Inferred",
+      "disposition": "retained",
+      "current_obligation": "034\u2013036 full replacement sections retain this behavior; declaration references follow033",
+      "evidence_scope": "Existing dossier quotation, check, inventory, review, render, discovery and clarification suites; final run receipt required."
+    },
+    {
+      "source": "openspec/changes/polaris-dossier-local-agent-mode/specs/polaris-generation/spec.md",
+      "requirement": "REQ-polaris-generation-035",
+      "scenario": "Design review survives its status region",
+      "disposition": "retained",
+      "current_obligation": "034\u2013036 full replacement sections retain this behavior; declaration references follow033",
+      "evidence_scope": "Existing dossier quotation, check, inventory, review, render, discovery and clarification suites; final run receipt required."
+    },
+    {
+      "source": "openspec/changes/polaris-dossier-local-agent-mode/specs/polaris-generation/spec.md",
+      "requirement": "REQ-polaris-generation-035",
+      "scenario": "Inventory omission blocks readiness",
+      "disposition": "retained",
+      "current_obligation": "034\u2013036 full replacement sections retain this behavior; declaration references follow033",
+      "evidence_scope": "Existing dossier quotation, check, inventory, review, render, discovery and clarification suites; final run receipt required."
+    },
+    {
+      "source": "openspec/changes/polaris-dossier-local-agent-mode/specs/polaris-generation/spec.md",
+      "requirement": "REQ-polaris-generation-035",
+      "scenario": "Withheld and advisory verdict entries",
+      "disposition": "retained",
+      "current_obligation": "034\u2013036 full replacement sections retain this behavior; declaration references follow033",
+      "evidence_scope": "Existing dossier quotation, check, inventory, review, render, discovery and clarification suites; final run receipt required."
+    },
+    {
+      "source": "openspec/changes/polaris-dossier-local-agent-mode/specs/polaris-generation/spec.md",
+      "requirement": "REQ-polaris-generation-035",
+      "scenario": "Rendered-design packet carries its questions",
+      "disposition": "retained",
+      "current_obligation": "034\u2013036 full replacement sections retain this behavior; declaration references follow033",
+      "evidence_scope": "Existing dossier quotation, check, inventory, review, render, discovery and clarification suites; final run receipt required."
+    },
+    {
+      "source": "openspec/changes/polaris-dossier-local-agent-mode/specs/polaris-generation/spec.md",
+      "requirement": "REQ-polaris-generation-035",
+      "scenario": "Waiting session started before its packet",
+      "disposition": "retained",
+      "current_obligation": "034\u2013036 full replacement sections retain this behavior; declaration references follow033",
+      "evidence_scope": "Existing dossier quotation, check, inventory, review, render, discovery and clarification suites; final run receipt required."
+    },
+    {
+      "source": "openspec/changes/polaris-dossier-local-agent-mode/specs/polaris-generation/spec.md",
+      "requirement": "REQ-polaris-generation-035",
+      "scenario": "Packet delivered to a waiting session",
+      "disposition": "retained with declaration binding",
+      "current_obligation": "035 waiting delivery checks provider/tool/pin/policy instead of provider statement",
+      "evidence_scope": "waiting-sessions.test.ts provider drift, session context and packet digest/revision cases."
+    },
+    {
+      "source": "openspec/changes/polaris-dossier-local-agent-mode/specs/polaris-generation/spec.md",
+      "requirement": "REQ-polaris-generation-035",
+      "scenario": "Printed pre-approval for a waiting session",
+      "disposition": "retained",
+      "current_obligation": "034\u2013036 full replacement sections retain this behavior; declaration references follow033",
+      "evidence_scope": "Existing dossier quotation, check, inventory, review, render, discovery and clarification suites; final run receipt required."
+    },
+    {
+      "source": "openspec/changes/polaris-dossier-local-agent-mode/specs/polaris-generation/spec.md",
+      "requirement": "REQ-polaris-generation-035",
+      "scenario": "Continuing reviewer disclosed",
+      "disposition": "retained",
+      "current_obligation": "034\u2013036 full replacement sections retain this behavior; declaration references follow033",
+      "evidence_scope": "Existing dossier quotation, check, inventory, review, render, discovery and clarification suites; final run receipt required."
+    },
+    {
+      "source": "openspec/changes/polaris-dossier-local-agent-mode/specs/polaris-generation/spec.md",
+      "requirement": "REQ-polaris-generation-035",
+      "scenario": "Later round carries a changed-block list",
+      "disposition": "retained",
+      "current_obligation": "034\u2013036 full replacement sections retain this behavior; declaration references follow033",
+      "evidence_scope": "Existing dossier quotation, check, inventory, review, render, discovery and clarification suites; final run receipt required."
+    },
+    {
+      "source": "openspec/changes/polaris-dossier-local-agent-mode/specs/polaris-generation/spec.md",
+      "requirement": "REQ-polaris-generation-035",
+      "scenario": "Changed-block list confirms nothing",
+      "disposition": "retained",
+      "current_obligation": "034\u2013036 full replacement sections retain this behavior; declaration references follow033",
+      "evidence_scope": "Existing dossier quotation, check, inventory, review, render, discovery and clarification suites; final run receipt required."
+    },
+    {
+      "source": "openspec/changes/polaris-dossier-local-agent-mode/specs/polaris-generation/spec.md",
+      "requirement": "REQ-polaris-generation-035",
+      "scenario": "Changed-block list rebuilt with its packet",
+      "disposition": "retained",
+      "current_obligation": "034\u2013036 full replacement sections retain this behavior; declaration references follow033",
+      "evidence_scope": "Existing dossier quotation, check, inventory, review, render, discovery and clarification suites; final run receipt required."
+    },
+    {
+      "source": "openspec/changes/polaris-dossier-local-agent-mode/specs/polaris-generation/spec.md",
+      "requirement": "REQ-polaris-generation-035",
+      "scenario": "Changed-block list disclosed",
+      "disposition": "retained",
+      "current_obligation": "034\u2013036 full replacement sections retain this behavior; declaration references follow033",
+      "evidence_scope": "Existing dossier quotation, check, inventory, review, render, discovery and clarification suites; final run receipt required."
+    },
+    {
+      "source": "openspec/changes/polaris-dossier-local-agent-mode/specs/polaris-generation/spec.md",
+      "requirement": "REQ-polaris-generation-036",
+      "scenario": "Two read populations shown apart",
+      "disposition": "retained",
+      "current_obligation": "034\u2013036 full replacement sections retain this behavior; declaration references follow033",
+      "evidence_scope": "Existing dossier quotation, check, inventory, review, render, discovery and clarification suites; final run receipt required."
+    },
+    {
+      "source": "openspec/changes/polaris-dossier-local-agent-mode/specs/polaris-generation/spec.md",
+      "requirement": "REQ-polaris-generation-036",
+      "scenario": "Self-reported path absent at the pinned revision",
+      "disposition": "retained",
+      "current_obligation": "034\u2013036 full replacement sections retain this behavior; declaration references follow033",
+      "evidence_scope": "Existing dossier quotation, check, inventory, review, render, discovery and clarification suites; final run receipt required."
+    },
+    {
+      "source": "openspec/changes/polaris-dossier-local-agent-mode/specs/polaris-generation/spec.md",
+      "requirement": "REQ-polaris-generation-036",
+      "scenario": "No Observed not-read claim",
+      "disposition": "retained",
+      "current_obligation": "034\u2013036 full replacement sections retain this behavior; declaration references follow033",
+      "evidence_scope": "Existing dossier quotation, check, inventory, review, render, discovery and clarification suites; final run receipt required."
+    },
+    {
+      "source": "openspec/changes/polaris-dossier-local-agent-mode/specs/polaris-generation/spec.md",
+      "requirement": "REQ-polaris-generation-036",
+      "scenario": "Syzygy's reads wait for its start gates",
+      "disposition": "replaced admission provenance",
+      "current_obligation": "036 Syzygy reads require declared-source checks",
+      "evidence_scope": "Policy/pin refusal and separate read-account assertions; old consent/statement absence no longer refuses."
+    },
+    {
+      "source": "openspec/changes/polaris-dossier-local-agent-mode/specs/polaris-generation/spec.md",
+      "requirement": "REQ-polaris-generation-036",
+      "scenario": "Consequential question asked in-session",
+      "disposition": "retained",
+      "current_obligation": "034\u2013036 full replacement sections retain this behavior; declaration references follow033",
+      "evidence_scope": "Existing dossier quotation, check, inventory, review, render, discovery and clarification suites; final run receipt required."
+    },
+    {
+      "source": "openspec/changes/polaris-dossier-local-agent-mode/specs/polaris-generation/spec.md",
+      "requirement": "REQ-polaris-generation-036",
+      "scenario": "Question limit reached",
+      "disposition": "retained",
+      "current_obligation": "034\u2013036 full replacement sections retain this behavior; declaration references follow033",
+      "evidence_scope": "Existing dossier quotation, check, inventory, review, render, discovery and clarification suites; final run receipt required."
+    },
+    {
+      "source": "openspec/changes/polaris-dossier-launch-consent/specs/polaris-generation/spec.md",
+      "requirement": "REQ-polaris-generation-046",
+      "scenario": "First run on a repository asks once and records the consent",
+      "disposition": "retired admission/record ceremony",
+      "current_obligation": "046 accepts declared local locator/identity/pin without stdin, recording refs or legacy record lookup; visibility is attributed/default private",
+      "evidence_scope": "start-gates.test.ts declared-source and local-entry launch.test.ts cases; /1 read-only refusal retained."
+    },
+    {
+      "source": "openspec/changes/polaris-dossier-launch-consent/specs/polaris-generation/spec.md",
+      "requirement": "REQ-polaris-generation-046",
+      "scenario": "Governed subject records separate consents",
+      "disposition": "retired admission/record ceremony",
+      "current_obligation": "046 accepts declared local locator/identity/pin without stdin, recording refs or legacy record lookup; visibility is attributed/default private",
+      "evidence_scope": "start-gates.test.ts declared-source and local-entry launch.test.ts cases; /1 read-only refusal retained."
+    },
+    {
+      "source": "openspec/changes/polaris-dossier-launch-consent/specs/polaris-generation/spec.md",
+      "requirement": "REQ-polaris-generation-046",
+      "scenario": "Drawer unknown",
+      "disposition": "retired admission/record ceremony",
+      "current_obligation": "046 accepts declared local locator/identity/pin without stdin, recording refs or legacy record lookup; visibility is attributed/default private",
+      "evidence_scope": "start-gates.test.ts declared-source and local-entry launch.test.ts cases; /1 read-only refusal retained."
+    },
+    {
+      "source": "openspec/changes/polaris-dossier-launch-consent/specs/polaris-generation/spec.md",
+      "requirement": "REQ-polaris-generation-046",
+      "scenario": "Statement reused across revisions",
+      "disposition": "retired admission/record ceremony",
+      "current_obligation": "046 accepts declared local locator/identity/pin without stdin, recording refs or legacy record lookup; visibility is attributed/default private",
+      "evidence_scope": "start-gates.test.ts declared-source and local-entry launch.test.ts cases; /1 read-only refusal retained."
+    },
+    {
+      "source": "openspec/changes/polaris-dossier-launch-consent/specs/polaris-generation/spec.md",
+      "requirement": "REQ-polaris-generation-046",
+      "scenario": "Statement widened",
+      "disposition": "retired admission/record ceremony",
+      "current_obligation": "046 accepts declared local locator/identity/pin without stdin, recording refs or legacy record lookup; visibility is attributed/default private",
+      "evidence_scope": "start-gates.test.ts declared-source and local-entry launch.test.ts cases; /1 read-only refusal retained."
+    },
+    {
+      "source": "openspec/changes/polaris-dossier-launch-consent/specs/polaris-generation/spec.md",
+      "requirement": "REQ-polaris-generation-046",
+      "scenario": "Statement declined for a governed subject",
+      "disposition": "retired admission/record ceremony",
+      "current_obligation": "046 accepts declared local locator/identity/pin without stdin, recording refs or legacy record lookup; visibility is attributed/default private",
+      "evidence_scope": "start-gates.test.ts declared-source and local-entry launch.test.ts cases; /1 read-only refusal retained."
+    },
+    {
+      "source": "openspec/changes/polaris-dossier-launch-consent/specs/polaris-generation/spec.md",
+      "requirement": "REQ-polaris-generation-046",
+      "scenario": "No terminal or no phrase",
+      "disposition": "retired admission/record ceremony",
+      "current_obligation": "046 accepts declared local locator/identity/pin without stdin, recording refs or legacy record lookup; visibility is attributed/default private",
+      "evidence_scope": "start-gates.test.ts declared-source and local-entry launch.test.ts cases; /1 read-only refusal retained."
+    },
+    {
+      "source": "openspec/changes/polaris-dossier-launch-consent/specs/polaris-generation/spec.md",
+      "requirement": "REQ-polaris-generation-046",
+      "scenario": "Not declared public",
+      "disposition": "retired admission/record ceremony",
+      "current_obligation": "046 accepts declared local locator/identity/pin without stdin, recording refs or legacy record lookup; visibility is attributed/default private",
+      "evidence_scope": "start-gates.test.ts declared-source and local-entry launch.test.ts cases; /1 read-only refusal retained."
+    },
+    {
+      "source": "openspec/changes/polaris-dossier-launch-consent/specs/polaris-generation/spec.md",
+      "requirement": "REQ-polaris-generation-046",
+      "scenario": "Name and URL warning for a repository not declared public",
+      "disposition": "retired admission/record ceremony",
+      "current_obligation": "046 accepts declared local locator/identity/pin without stdin, recording refs or legacy record lookup; visibility is attributed/default private",
+      "evidence_scope": "start-gates.test.ts declared-source and local-entry launch.test.ts cases; /1 read-only refusal retained."
+    },
+    {
+      "source": "openspec/changes/polaris-dossier-launch-consent/specs/polaris-generation/spec.md",
+      "requirement": "REQ-polaris-generation-046",
+      "scenario": "Records already in force",
+      "disposition": "retired admission/record ceremony",
+      "current_obligation": "046 accepts declared local locator/identity/pin without stdin, recording refs or legacy record lookup; visibility is attributed/default private",
+      "evidence_scope": "start-gates.test.ts declared-source and local-entry launch.test.ts cases; /1 read-only refusal retained."
+    },
+    {
+      "source": "openspec/changes/polaris-dossier-launch-consent/specs/polaris-generation/spec.md",
+      "requirement": "REQ-polaris-generation-046",
+      "scenario": "Earlier consent revoked",
+      "disposition": "retired admission/record ceremony",
+      "current_obligation": "046 accepts declared local locator/identity/pin without stdin, recording refs or legacy record lookup; visibility is attributed/default private",
+      "evidence_scope": "start-gates.test.ts declared-source and local-entry launch.test.ts cases; /1 read-only refusal retained."
+    },
+    {
+      "source": "openspec/changes/polaris-dossier-launch-consent/specs/polaris-generation/spec.md",
+      "requirement": "REQ-polaris-generation-046",
+      "scenario": "Re-identified clone",
+      "disposition": "retired admission/record ceremony",
+      "current_obligation": "046 accepts declared local locator/identity/pin without stdin, recording refs or legacy record lookup; visibility is attributed/default private",
+      "evidence_scope": "start-gates.test.ts declared-source and local-entry launch.test.ts cases; /1 read-only refusal retained."
+    },
+    {
+      "source": "openspec/changes/polaris-dossier-launch-consent/specs/polaris-generation/spec.md",
+      "requirement": "REQ-polaris-generation-046",
+      "scenario": "A changed URL keeps the recorded identity",
+      "disposition": "retired admission/record ceremony",
+      "current_obligation": "046 accepts declared local locator/identity/pin without stdin, recording refs or legacy record lookup; visibility is attributed/default private",
+      "evidence_scope": "start-gates.test.ts declared-source and local-entry launch.test.ts cases; /1 read-only refusal retained."
+    },
+    {
+      "source": "openspec/changes/polaris-dossier-launch-consent/specs/polaris-generation/spec.md",
+      "requirement": "REQ-polaris-generation-046",
+      "scenario": "Matching records disagree on identity",
+      "disposition": "retired admission/record ceremony",
+      "current_obligation": "046 accepts declared local locator/identity/pin without stdin, recording refs or legacy record lookup; visibility is attributed/default private",
+      "evidence_scope": "start-gates.test.ts declared-source and local-entry launch.test.ts cases; /1 read-only refusal retained."
+    },
+    {
+      "source": "openspec/changes/polaris-dossier-launch-consent/specs/polaris-generation/spec.md",
+      "requirement": "REQ-polaris-generation-046",
+      "scenario": "Locator on another host over ssh",
+      "disposition": "retained",
+      "current_obligation": "046 retained locator/identity/screening/state constraints and current033; no consent question",
+      "evidence_scope": "start-gates.test.ts, launch.test.ts, status.test.ts and existing locator/placement/credential suites."
+    },
+    {
+      "source": "openspec/changes/polaris-dossier-launch-consent/specs/polaris-generation/spec.md",
+      "requirement": "REQ-polaris-generation-046",
+      "scenario": "GitHub identities keep their form",
+      "disposition": "retained",
+      "current_obligation": "046 retained locator/identity/screening/state constraints and current033; no consent question",
+      "evidence_scope": "start-gates.test.ts, launch.test.ts, status.test.ts and existing locator/placement/credential suites."
+    },
+    {
+      "source": "openspec/changes/polaris-dossier-launch-consent/specs/polaris-generation/spec.md",
+      "requirement": "REQ-polaris-generation-046",
+      "scenario": "Same-named repository on two hosts",
+      "disposition": "retained",
+      "current_obligation": "046 retained locator/identity/screening/state constraints and current033; no consent question",
+      "evidence_scope": "start-gates.test.ts, launch.test.ts, status.test.ts and existing locator/placement/credential suites."
+    },
+    {
+      "source": "openspec/changes/polaris-dossier-launch-consent/specs/polaris-generation/spec.md",
+      "requirement": "REQ-polaris-generation-046",
+      "scenario": "Consent found by its upstream URL",
+      "disposition": "retired admission/record ceremony",
+      "current_obligation": "046 accepts declared local locator/identity/pin without stdin, recording refs or legacy record lookup; visibility is attributed/default private",
+      "evidence_scope": "start-gates.test.ts declared-source and local-entry launch.test.ts cases; /1 read-only refusal retained."
+    },
+    {
+      "source": "openspec/changes/polaris-dossier-launch-consent/specs/polaris-generation/spec.md",
+      "requirement": "REQ-polaris-generation-046",
+      "scenario": "Remote or given URL over http or git",
+      "disposition": "retained",
+      "current_obligation": "046 retained locator/identity/screening/state constraints and current033; no consent question",
+      "evidence_scope": "start-gates.test.ts, launch.test.ts, status.test.ts and existing locator/placement/credential suites."
+    },
+    {
+      "source": "openspec/changes/polaris-dossier-launch-consent/specs/polaris-generation/spec.md",
+      "requirement": "REQ-polaris-generation-046",
+      "scenario": "Credentials in a given URL",
+      "disposition": "retained",
+      "current_obligation": "046 retained locator/identity/screening/state constraints and current033; no consent question",
+      "evidence_scope": "start-gates.test.ts, launch.test.ts, status.test.ts and existing locator/placement/credential suites."
+    },
+    {
+      "source": "openspec/changes/polaris-dossier-launch-consent/specs/polaris-generation/spec.md",
+      "requirement": "REQ-polaris-generation-046",
+      "scenario": "Credentials in a remote URL",
+      "disposition": "retained",
+      "current_obligation": "046 retained locator/identity/screening/state constraints and current033; no consent question",
+      "evidence_scope": "start-gates.test.ts, launch.test.ts, status.test.ts and existing locator/placement/credential suites."
+    },
+    {
+      "source": "openspec/changes/polaris-dossier-launch-consent/specs/polaris-generation/spec.md",
+      "requirement": "REQ-polaris-generation-046",
+      "scenario": "Locator not admitted",
+      "disposition": "retained",
+      "current_obligation": "046 retained locator/identity/screening/state constraints and current033; no consent question",
+      "evidence_scope": "start-gates.test.ts, launch.test.ts, status.test.ts and existing locator/placement/credential suites."
+    },
+    {
+      "source": "openspec/changes/polaris-dossier-launch-consent/specs/polaris-generation/spec.md",
+      "requirement": "REQ-polaris-generation-046",
+      "scenario": "Remote URL that is not a locator",
+      "disposition": "retained",
+      "current_obligation": "046 retained locator/identity/screening/state constraints and current033; no consent question",
+      "evidence_scope": "start-gates.test.ts, launch.test.ts, status.test.ts and existing locator/placement/credential suites."
+    },
+    {
+      "source": "openspec/changes/polaris-dossier-launch-consent/specs/polaris-generation/spec.md",
+      "requirement": "REQ-polaris-generation-046",
+      "scenario": "Visibility on another host",
+      "disposition": "retained",
+      "current_obligation": "046 retained locator/identity/screening/state constraints and current033; no consent question",
+      "evidence_scope": "start-gates.test.ts, launch.test.ts, status.test.ts and existing locator/placement/credential suites."
+    },
+    {
+      "source": "openspec/changes/polaris-dossier-launch-consent/specs/polaris-generation/spec.md",
+      "requirement": "REQ-polaris-generation-046",
+      "scenario": "Pre-answer classes shown as a preview",
+      "disposition": "retired admission/record ceremony",
+      "current_obligation": "046 accepts declared local locator/identity/pin without stdin, recording refs or legacy record lookup; visibility is attributed/default private",
+      "evidence_scope": "start-gates.test.ts declared-source and local-entry launch.test.ts cases; /1 read-only refusal retained."
+    },
+    {
+      "source": "openspec/changes/polaris-dossier-launch-consent/specs/polaris-generation/spec.md",
+      "requirement": "REQ-polaris-generation-046",
+      "scenario": "Write consent absent",
+      "disposition": "retired admission/record ceremony",
+      "current_obligation": "046 accepts declared local locator/identity/pin without stdin, recording refs or legacy record lookup; visibility is attributed/default private",
+      "evidence_scope": "start-gates.test.ts declared-source and local-entry launch.test.ts cases; /1 read-only refusal retained."
+    },
+    {
+      "source": "openspec/changes/polaris-dossier-launch-consent/specs/polaris-generation/spec.md",
+      "requirement": "REQ-polaris-generation-046",
+      "scenario": "Self-observation keeps the trunk tip stable",
+      "disposition": "retired admission/record ceremony",
+      "current_obligation": "046 accepts declared local locator/identity/pin without stdin, recording refs or legacy record lookup; visibility is attributed/default private",
+      "evidence_scope": "start-gates.test.ts declared-source and local-entry launch.test.ts cases; /1 read-only refusal retained."
+    },
+    {
+      "source": "openspec/changes/polaris-dossier-launch-consent/specs/polaris-generation/spec.md",
+      "requirement": "REQ-polaris-generation-046",
+      "scenario": "Self-observation from the governance home",
+      "disposition": "retired admission/record ceremony",
+      "current_obligation": "046 accepts declared local locator/identity/pin without stdin, recording refs or legacy record lookup; visibility is attributed/default private",
+      "evidence_scope": "start-gates.test.ts declared-source and local-entry launch.test.ts cases; /1 read-only refusal retained."
+    },
+    {
+      "source": "openspec/changes/polaris-dossier-launch-consent/specs/polaris-generation/spec.md",
+      "requirement": "REQ-polaris-generation-046",
+      "scenario": "Owner placements absent at the pinned revision",
+      "disposition": "retained",
+      "current_obligation": "046 retained locator/identity/screening/state constraints and current033; no consent question",
+      "evidence_scope": "start-gates.test.ts, launch.test.ts, status.test.ts and existing locator/placement/credential suites."
+    },
+    {
+      "source": "openspec/changes/polaris-dossier-launch-consent/specs/polaris-generation/spec.md",
+      "requirement": "REQ-polaris-generation-046",
+      "scenario": "Agent instructions forbid answering",
+      "disposition": "retained",
+      "current_obligation": "046 retained locator/identity/screening/state constraints and current033; no consent question",
+      "evidence_scope": "start-gates.test.ts, launch.test.ts, status.test.ts and existing locator/placement/credential suites."
+    },
+    {
+      "source": "openspec/changes/polaris-dossier-launch-consent/specs/polaris-generation/spec.md",
+      "requirement": "REQ-polaris-generation-046",
+      "scenario": "Launch consent never permits execution",
+      "disposition": "retained",
+      "current_obligation": "046 retained locator/identity/screening/state constraints and current033; no consent question",
+      "evidence_scope": "start-gates.test.ts, launch.test.ts, status.test.ts and existing locator/placement/credential suites."
+    },
+    {
+      "source": "openspec/changes/polaris-dossier-launch-consent/specs/polaris-generation/spec.md",
+      "requirement": "REQ-polaris-generation-047",
+      "scenario": "Existing consent at HEAD keeps today's behaviour",
+      "disposition": "F-3 acquisition scope",
+      "current_obligation": "047 acquisition/copy/default-branch behavior remains F-3; D10 retires any consent prerequisite directly",
+      "evidence_scope": "Not claimed delivered or reverified by this F-1 package."
+    },
+    {
+      "source": "openspec/changes/polaris-dossier-launch-consent/specs/polaris-generation/spec.md",
+      "requirement": "REQ-polaris-generation-047",
+      "scenario": "Fork remote at a consented commit",
+      "disposition": "F-3 acquisition scope",
+      "current_obligation": "047 acquisition/copy/default-branch behavior remains F-3; D10 retires any consent prerequisite directly",
+      "evidence_scope": "Not claimed delivered or reverified by this F-1 package."
+    },
+    {
+      "source": "openspec/changes/polaris-dossier-launch-consent/specs/polaris-generation/spec.md",
+      "requirement": "REQ-polaris-generation-047",
+      "scenario": "Default to the trunk tip",
+      "disposition": "F-3 acquisition scope",
+      "current_obligation": "047 acquisition/copy/default-branch behavior remains F-3; D10 retires any consent prerequisite directly",
+      "evidence_scope": "Not claimed delivered or reverified by this F-1 package."
+    },
+    {
+      "source": "openspec/changes/polaris-dossier-launch-consent/specs/polaris-generation/spec.md",
+      "requirement": "REQ-polaris-generation-047",
+      "scenario": "Trunk named master",
+      "disposition": "F-3 acquisition scope",
+      "current_obligation": "047 acquisition/copy/default-branch behavior remains F-3; D10 retires any consent prerequisite directly",
+      "evidence_scope": "Not claimed delivered or reverified by this F-1 package."
+    },
+    {
+      "source": "openspec/changes/polaris-dossier-launch-consent/specs/polaris-generation/spec.md",
+      "requirement": "REQ-polaris-generation-047",
+      "scenario": "No trunk",
+      "disposition": "F-3 acquisition scope",
+      "current_obligation": "047 acquisition/copy/default-branch behavior remains F-3; D10 retires any consent prerequisite directly",
+      "evidence_scope": "Not claimed delivered or reverified by this F-1 package."
+    },
+    {
+      "source": "openspec/changes/polaris-dossier-launch-consent/specs/polaris-generation/spec.md",
+      "requirement": "REQ-polaris-generation-047",
+      "scenario": "Explicit revision",
+      "disposition": "F-3 acquisition scope",
+      "current_obligation": "047 acquisition/copy/default-branch behavior remains F-3; D10 retires any consent prerequisite directly",
+      "evidence_scope": "Not claimed delivered or reverified by this F-1 package."
+    },
+    {
+      "source": "openspec/changes/polaris-dossier-launch-consent/specs/polaris-generation/spec.md",
+      "requirement": "REQ-polaris-generation-047",
+      "scenario": "HEAD elsewhere",
+      "disposition": "F-3 acquisition scope",
+      "current_obligation": "047 acquisition/copy/default-branch behavior remains F-3; D10 retires any consent prerequisite directly",
+      "evidence_scope": "Not claimed delivered or reverified by this F-1 package."
+    },
+    {
+      "source": "openspec/changes/polaris-dossier-launch-consent/specs/polaris-generation/spec.md",
+      "requirement": "REQ-polaris-generation-047",
+      "scenario": "HEAD elsewhere in a no-copy run",
+      "disposition": "F-3 acquisition scope",
+      "current_obligation": "047 acquisition/copy/default-branch behavior remains F-3; D10 retires any consent prerequisite directly",
+      "evidence_scope": "Not claimed delivered or reverified by this F-1 package."
+    },
+    {
+      "source": "openspec/changes/polaris-dossier-launch-consent/specs/polaris-generation/spec.md",
+      "requirement": "REQ-polaris-generation-047",
+      "scenario": "Existing full clone at the trunk tip",
+      "disposition": "F-3 acquisition scope",
+      "current_obligation": "047 acquisition/copy/default-branch behavior remains F-3; D10 retires any consent prerequisite directly",
+      "evidence_scope": "Not claimed delivered or reverified by this F-1 package."
+    },
+    {
+      "source": "openspec/changes/polaris-dossier-launch-consent/specs/polaris-generation/spec.md",
+      "requirement": "REQ-polaris-generation-047",
+      "scenario": "Repeat run at a launch-consented HEAD",
+      "disposition": "F-3 acquisition scope",
+      "current_obligation": "047 acquisition/copy/default-branch behavior remains F-3; D10 retires any consent prerequisite directly",
+      "evidence_scope": "Not claimed delivered or reverified by this F-1 package."
+    },
+    {
+      "source": "openspec/changes/polaris-dossier-launch-consent/specs/polaris-generation/spec.md",
+      "requirement": "REQ-polaris-generation-047",
+      "scenario": "Revision with launch records while HEAD is at another act's revision",
+      "disposition": "F-3 acquisition scope",
+      "current_obligation": "047 acquisition/copy/default-branch behavior remains F-3; D10 retires any consent prerequisite directly",
+      "evidence_scope": "Not claimed delivered or reverified by this F-1 package."
+    },
+    {
+      "source": "openspec/changes/polaris-dossier-launch-consent/specs/polaris-generation/spec.md",
+      "requirement": "REQ-polaris-generation-047",
+      "scenario": "Repeat run under a launch consent recorded by version 1.1",
+      "disposition": "F-3 acquisition scope",
+      "current_obligation": "047 acquisition/copy/default-branch behavior remains F-3; D10 retires any consent prerequisite directly",
+      "evidence_scope": "Not claimed delivered or reverified by this F-1 package."
+    },
+    {
+      "source": "openspec/changes/polaris-dossier-launch-consent/specs/polaris-generation/spec.md",
+      "requirement": "REQ-polaris-generation-047",
+      "scenario": "SHA-256 clone",
+      "disposition": "F-3 acquisition scope",
+      "current_obligation": "047 acquisition/copy/default-branch behavior remains F-3; D10 retires any consent prerequisite directly",
+      "evidence_scope": "Not claimed delivered or reverified by this F-1 package."
+    },
+    {
+      "source": "openspec/changes/polaris-dossier-launch-consent/specs/polaris-generation/spec.md",
+      "requirement": "REQ-polaris-generation-047",
+      "scenario": "Several remote defaults",
+      "disposition": "F-3 acquisition scope",
+      "current_obligation": "047 acquisition/copy/default-branch behavior remains F-3; D10 retires any consent prerequisite directly",
+      "evidence_scope": "Not claimed delivered or reverified by this F-1 package."
+    },
+    {
+      "source": "openspec/changes/polaris-dossier-launch-consent/specs/polaris-generation/spec.md",
+      "requirement": "REQ-polaris-generation-047",
+      "scenario": "Local branch ahead of the remote default",
+      "disposition": "F-3 acquisition scope",
+      "current_obligation": "047 acquisition/copy/default-branch behavior remains F-3; D10 retires any consent prerequisite directly",
+      "evidence_scope": "Not claimed delivered or reverified by this F-1 package."
+    },
+    {
+      "source": "openspec/changes/polaris-dossier-launch-consent/specs/polaris-generation/spec.md",
+      "requirement": "REQ-polaris-generation-047",
+      "scenario": "Partial clone missing an object",
+      "disposition": "F-3 acquisition scope",
+      "current_obligation": "047 acquisition/copy/default-branch behavior remains F-3; D10 retires any consent prerequisite directly",
+      "evidence_scope": "Not claimed delivered or reverified by this F-1 package."
+    },
+    {
+      "source": "openspec/changes/polaris-dossier-launch-consent/specs/polaris-generation/spec.md",
+      "requirement": "REQ-polaris-generation-047",
+      "scenario": "Clone with an alternate",
+      "disposition": "F-3 acquisition scope",
+      "current_obligation": "047 acquisition/copy/default-branch behavior remains F-3; D10 retires any consent prerequisite directly",
+      "evidence_scope": "Not claimed delivered or reverified by this F-1 package."
+    },
+    {
+      "source": "openspec/changes/polaris-dossier-launch-consent/specs/polaris-generation/spec.md",
+      "requirement": "REQ-polaris-generation-047",
+      "scenario": "Configuration and hooks of the operator's clone",
+      "disposition": "F-3 acquisition scope",
+      "current_obligation": "047 acquisition/copy/default-branch behavior remains F-3; D10 retires any consent prerequisite directly",
+      "evidence_scope": "Not claimed delivered or reverified by this F-1 package."
+    },
+    {
+      "source": "openspec/changes/polaris-dossier-launch-consent/specs/polaris-generation/spec.md",
+      "requirement": "REQ-polaris-generation-047",
+      "scenario": "Revision naming an annotated tag",
+      "disposition": "F-3 acquisition scope",
+      "current_obligation": "047 acquisition/copy/default-branch behavior remains F-3; D10 retires any consent prerequisite directly",
+      "evidence_scope": "Not claimed delivered or reverified by this F-1 package."
+    },
+    {
+      "source": "openspec/changes/polaris-dossier-launch-consent/specs/polaris-generation/spec.md",
+      "requirement": "REQ-polaris-generation-047",
+      "scenario": "Revision naming a blob",
+      "disposition": "F-3 acquisition scope",
+      "current_obligation": "047 acquisition/copy/default-branch behavior remains F-3; D10 retires any consent prerequisite directly",
+      "evidence_scope": "Not claimed delivered or reverified by this F-1 package."
+    },
+    {
+      "source": "openspec/changes/polaris-dossier-launch-consent/specs/polaris-generation/spec.md",
+      "requirement": "REQ-polaris-generation-047",
+      "scenario": "Commit whose checkout fails",
+      "disposition": "F-3 acquisition scope",
+      "current_obligation": "047 acquisition/copy/default-branch behavior remains F-3; D10 retires any consent prerequisite directly",
+      "evidence_scope": "Not claimed delivered or reverified by this F-1 package."
+    },
+    {
+      "source": "openspec/changes/polaris-dossier-launch-consent/specs/polaris-generation/spec.md",
+      "requirement": "REQ-polaris-generation-047",
+      "scenario": "Ambiguous abbreviation",
+      "disposition": "F-3 acquisition scope",
+      "current_obligation": "047 acquisition/copy/default-branch behavior remains F-3; D10 retires any consent prerequisite directly",
+      "evidence_scope": "Not claimed delivered or reverified by this F-1 package."
+    },
+    {
+      "source": "openspec/changes/polaris-dossier-launch-consent/specs/polaris-generation/spec.md",
+      "requirement": "REQ-polaris-generation-047",
+      "scenario": "References in the reftable backend",
+      "disposition": "F-3 acquisition scope",
+      "current_obligation": "047 acquisition/copy/default-branch behavior remains F-3; D10 retires any consent prerequisite directly",
+      "evidence_scope": "Not claimed delivered or reverified by this F-1 package."
+    },
+    {
+      "source": "openspec/changes/polaris-dossier-launch-consent/specs/polaris-generation/spec.md",
+      "requirement": "REQ-polaris-generation-047",
+      "scenario": "A consent that states the clone's form",
+      "disposition": "F-3 acquisition scope",
+      "current_obligation": "047 acquisition/copy/default-branch behavior remains F-3; D10 retires any consent prerequisite directly",
+      "evidence_scope": "Not claimed delivered or reverified by this F-1 package."
+    }
+  ]
+}

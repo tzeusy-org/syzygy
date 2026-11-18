@@ -2,57 +2,35 @@ import * as fs from 'node:fs';
 import * as path from 'node:path';
 import { isRecord } from '@syzygy/support';
 import { parseBoundedJson } from '@syzygy/polaris-generation-core/live';
-import { RECORDS_WITHIN_REACH, providerStatementGate, statementContentClasses, type GateSources } from './gate-sources.js';
+import type { GateSources } from './gate-sources.js';
+import { samePolicy } from './policy-snapshot.js';
+import { buildDossierScreen } from './screen.js';
 import { GitObjectReadRefusal, openPinnedObjectReader, type PinnedObjectReader, type PinnedObjectReaderOptions } from './git-object-reader.js';
 import { governedSubject, type GovernedDecision } from './governed.js';
-import { readRunRecord, type RecordedRunConfig } from './run-record.js';
+import { readRunRecord, sourceBindingSha256, type RecordedRunConfig } from './run-record.js';
 import { RUN_LAYOUT } from './state-directory.js';
 
-/** The step guard every later command calls before it reads an object for the run (REQ-polaris-generation-033: "At every later
- * check, review check and render, Syzygy SHALL verify again that the recorded pinned revision is a revision the in-force observation
- * consent names, and SHALL refuse the step otherwise").
- *
- * `run.json` lies within the agent sessions' write reach, so nothing the guard decides rests on what it says beyond which revision,
- * repository and clone to look at, and the operator's agent provider. The provider is the operator's declaration and nothing live can
- * attest it, so it is read from the run record, and the per-project statement it selects is selected by that Inferred value
- * (R-POLARIS-DOSSIER-S3-GATES-2 finding 6). Once the run is briefed, a tool or provider that differs from the one the brief record
- * states refuses; the brief record lies within the same reach, so an edit of both records together is not detected, and the disclosure
- * says so. Where the clone lies is likewise whoever last wrote the run record's choice. Every gate is re-read now: the consent found by the URL must still be the one for the recorded
- * repository and must still name the pinned commit; the registry entry and the policy must still be in force by their acts. Only then
- * is the pinned tree listed, through the re-hashing reader from the recorded clone, and whether the subject is governed is decided again
- * from the project input in force now and that listing. The recomputed kind must equal the recorded one, and whenever the subject needs
- * a per-project statement, one must be in force now and be the one the run relies on, whatever the record says
- * (R-POLARIS-DOSSIER-S3-GATES-1 finding 1). So a pin moved to another consented revision that is governed, or a record edited down to
- * non-governed, refuses once the statement it would need is not in force.
- *
- * The consented revision's label and the consent record are returned as the live records give them, never from the run record: a
- * later step that shows which revision and which consent the run read shows these (finding 2). HEAD is never read again. Every failing
- * reason is reported, not only the first, each with a machine code beside its prose (finding 3). */
-
+/** Recheck declarations, the committed policy and pinned objects. Stored subject
+ * history is Inferred; no retired consent or statement source is consulted. */
 export type ReverifyCode =
   | 'record-invalid' | 'consent-ids' | 'revision-unnamed' | 'registry' | 'policy' | 'listing' | 'governed-changed' | 'statement'
-  | 'statement-changed' | 'declared-changed';
+  | 'statement-changed' | 'source-changed' | 'declared-changed' | 'pin-changed' | 'policy-changed';
 
 export interface ReverifyRefusal { readonly code: ReverifyCode; readonly reason: string }
 
 export interface ReverifiedRevision {
   readonly commit: string;
-  /** The label the in-force consent gives the commit now; null when it gives the commit more than one label. */
+  /** The stored pin-selection label, Inferred provenance. */
   readonly label: string | null;
-  /** The consent record that names the commit now. */
-  readonly consentRecord: string;
 }
 
 export type ReverifyResult =
   | {
     readonly ok: true;
     readonly record: RecordedRunConfig;
-    readonly consentRecord: string;
     readonly revision: ReverifiedRevision;
     readonly governed: GovernedDecision;
-    /** The per-project statement in force now that the run relies on; null for a non-governed subject. */
-    readonly providerStatement: string | null;
-    /** The content classes that statement lists; null when the run relies on none (a non-governed subject). */
+    /** Recognized body classes eligible for artifacts; the screen must still classify each path and screen every body. */
     readonly contentClasses: readonly string[] | null;
     readonly disclosures: readonly string[];
   }
@@ -70,15 +48,15 @@ export interface ReverifyOptions {
 }
 
 const DISCLOSURES = [
-  RECORDS_WITHIN_REACH,
-  'the run record names the repository, the clone and the pinned commit to look at; whether that commit is consented, whether the subject is governed and whether a per-project statement is in force were decided again at this step from the records in force now and the pinned tree listed now',
-  'which per-project statement applies is selected by the agent provider the run record declares: that provider, the statement citation it selects and the clone location are Inferred and lie within the agent sessions\' write reach; a tool or provider that differs from the one the brief record states refuses, but the brief record lies within the same reach, so an edit of both records together is not detected',
+  'The run record, brief and declarations lie within the agent sessions write reach. Provider identity and historical pin provenance are Inferred, never observed transmission.',
+  'Pinned Git objects are rehashed at this step and the committed policy binding is checked again. No consent, registry act, drawer or provider statement is read.',
+  'A provider or tool differing from the bound brief refuses; coordinated edits to both writable records are not detected.',
 ];
 
 const BRIEF_RECORD_LIMITS = Object.freeze({ maxBytes: 262_144, maxNodes: 4096, maxDepth: 8 });
 
 /** The agent tool and provider the brief record states, once the run is briefed (R-POLARIS-DOSSIER-S3-GATES-2 finding 6). */
-function briefDeclaredAgent(run: string): { readonly state: 'unbriefed' } | { readonly state: 'ok'; readonly tool: string; readonly provider: string } | { readonly state: 'invalid'; readonly why: string } {
+function briefDeclaredAgent(run: string): { readonly state: 'unbriefed' } | { readonly state: 'ok'; readonly tool: string; readonly provider: string; readonly commit: string; readonly sourceBinding: string } | { readonly state: 'invalid'; readonly why: string } {
   let text: string;
   try {
     text = fs.readFileSync(path.join(run, RUN_LAYOUT.briefRecord), 'utf8');
@@ -92,7 +70,11 @@ function briefDeclaredAgent(run: string): { readonly state: 'unbriefed' } | { re
   if (agent === null || typeof agent !== 'object' || Array.isArray(agent)) return { state: 'invalid', why: 'it states no agent tool and provider' };
   const { tool, provider } = agent as Record<string, unknown>;
   if (typeof tool !== 'string' || typeof provider !== 'string') return { state: 'invalid', why: 'it states no agent tool and provider' };
-  return { state: 'ok', tool, provider };
+  const commit = (record as Record<string, unknown>)['pinnedRevision'];
+  if (typeof commit !== 'string' || !/^(?:[0-9a-f]{40}|[0-9a-f]{64})$/u.test(commit)) return { state: 'invalid', why: 'it states no full pinned revision' };
+  const sourceBinding = (record as Record<string, unknown>)['sourceBindingSha256'];
+  if (typeof sourceBinding !== 'string' || !/^[0-9a-f]{64}$/u.test(sourceBinding)) return { state: 'invalid', why: 'it states no declared-source binding' };
+  return { state: 'ok', tool, provider, commit, sourceBinding };
 }
 
 export async function reverifyPinnedRevision(runDir: string, sources: GateSources, now: number, options: ReverifyOptions = {}): Promise<ReverifyResult> {
@@ -112,69 +94,54 @@ export async function reverifyPinnedRevision(runDir: string, sources: GateSource
     return refuse();
   }
   const { subject, declared } = read.record;
-  const { repositoryId, url } = subject.repository;
+  const { repositoryId } = subject.repository;
   const commit = subject.pinnedRevision.commit;
 
-  const ids = await sources.repositoryIdsFor(url);
-  if (ids.length !== 1 || ids[0] !== repositoryId) {
-    const why = ids.length === 0 && sources.consentAbsenceFor !== undefined ? await sources.consentAbsenceFor(url)
-      : ids.length > 1 ? 'which one governs is ambiguous' : ids.length === 1 ? 'the consent in force for the URL names another repository' : 'none is in force';
-    refusals.push({ code: 'consent-ids', reason: `the observation consents in force for ${url} are [${ids.join(', ')}], not exactly the recorded ${repositoryId}: ${why}` });
+  const snapshot = await sources.declaredPolicy?.();
+  if (snapshot === undefined || !snapshot.ok) {
+    refusals.push({ code: 'policy', reason: snapshot === undefined ? 'no committed dossier policy source is available' : snapshot.why });
+    return refuse();
   }
-  const consent = await sources.observationConsentFor(repositoryId, commit);
-  if (!consent.satisfied) refusals.push({ code: 'revision-unnamed', reason: `the recorded pinned revision ${commit} is not a revision the in-force observation consent for ${repositoryId} names: ${consent.why}` });
-  const [registryEntry, screeningPolicy] = await Promise.all([sources.registryEntry(), sources.screeningPolicy()]);
-  if (registryEntry.state !== 'ok') refusals.push({ code: 'registry', reason: `the source-acquisition registry entry is no longer in force: ${registryEntry.why}` });
-  if (screeningPolicy.state !== 'ok') refusals.push({ code: 'policy', reason: `the classification and screening policy is no longer in force: ${screeningPolicy.why}` });
+  if (!samePolicy(snapshot.binding, subject.screeningPolicy)) {
+    refusals.push({ code: 'policy-changed', reason: 'the committed dossier policy identity, version or bytes differ from this run binding; start a new run instead of silently upgrading it' });
+    return refuse();
+  }
+  const screened = buildDossierScreen(snapshot.bytes, true, { repository: `repository:${repositoryId}`, commit }, subject.visibility.value);
+  if (!screened.ok || screened.screen.policySha256 !== snapshot.binding.sha256) {
+    refusals.push({ code: 'policy', reason: screened.ok ? 'the policy bytes do not match the committed binding' : screened.why });
+    return refuse();
+  }
   const briefed = briefDeclaredAgent(path.resolve(runDir));
   if (briefed.state === 'invalid') {
-    refusals.push({ code: 'declared-changed', reason: `the brief record ${RUN_LAYOUT.briefRecord} exists but ${briefed.why}, so whether the agent tool and provider changed since the brief cannot be decided` });
+    refusals.push({ code: 'declared-changed', reason: `the brief record exists but ${briefed.why}; the declared provider binding cannot be checked` });
+  } else if (briefed.state === 'ok' && briefed.commit !== commit) {
+    refusals.push({ code: 'pin-changed', reason: 'the run pin differs from the revision bound in the brief; start a new run instead of changing this pin' });
   } else if (briefed.state === 'ok' && (briefed.tool !== declared.agentTool || briefed.provider !== declared.agentProvider)) {
-    refusals.push({ code: 'declared-changed', reason: `the run record declares agent tool ${declared.agentTool} and provider ${declared.agentProvider}, not the tool ${briefed.tool} and provider ${briefed.provider} the brief record states the run was briefed for; the provider selects the per-project statement` });
+    refusals.push({ code: 'declared-changed', reason: 'the run agent tool or declared provider differs from the bound brief' });
   }
-  // No object is read for a revision, repository or reader the gates no longer admit.
-  if (refusals.length > 0 || !consent.satisfied) return refuse();
-
+  if (briefed.state === 'ok' && briefed.sourceBinding !== sourceBindingSha256(subject)) {
+    refusals.push({ code: 'source-changed', reason: 'the declared repository, clone, pin, visibility, policy or eligible classes differ from the bound brief; start a new run' });
+  }
+  if (refusals.length > 0) return refuse();
   let paths: readonly string[];
   try {
     const reader = (options.openReader ?? openPinnedObjectReader)({ gitDir: path.join(subject.clone.path, '.git'), revision: commit });
     paths = (await reader.listTree()).map(entry => entry.path);
   } catch (cause) {
     if (cause instanceof GitObjectReadRefusal) {
-      refusals.push({ code: 'listing', reason: `the pinned tree could not be listed from the recorded clone, so whether the subject is governed cannot be decided again: ${cause.message}` });
+      refusals.push({ code: 'listing', reason: `the pinned tree cannot be verified: ${cause.message}` });
       return refuse({ objectRead: cause.toJSON() });
     }
     throw cause;
   }
-  const governed = governedSubject(await sources.projectInput.drawerFor(repositoryId), paths);
-  if (governed.kind !== subject.governed.kind) {
-    refusals.push({ code: 'governed-changed', reason: `the subject at the pinned revision is ${governed.kind} now (${governed.because.join('; ')}), not the ${subject.governed.kind} the run record states` });
-  }
-  let providerStatement: string | null = null;
-  let contentClasses: readonly string[] | null = null;
-  if (governed.statementRequired) {
-    const records = await sources.providerStatements.statementsFor(repositoryId);
-    const statement = providerStatementGate(records, declared.agentTool, declared.agentProvider, now);
-    if (statement.state !== 'ok') {
-      refusals.push({ code: 'statement', reason: `the subject is ${governed.kind} now and has no per-project statement in force: ${statement.why}` });
-    } else if (statement.record !== subject.providerStatement) {
-      refusals.push({ code: 'statement-changed', reason: `the in-force per-project statement is ${statement.record}, not the ${subject.providerStatement ?? 'none'} the run relies on` });
-    } else {
-      providerStatement = statement.record;
-      contentClasses = statementContentClasses(records, declared.agentTool, declared.agentProvider, now);
-    }
-  }
-  if (refusals.length > 0) return refuse();
-  const labels = new Set((await sources.consentedRevisionsFor(repositoryId)).filter(r => r.commitId === commit).map(r => r.label));
-  const label = labels.size === 1 ? [...labels][0]! : null;
+  const governed = governedSubject({ stated: false, why: 'D10 source admission does not require a drawer declaration' }, paths);
   return {
-    ok: true,
-    record: read.record,
-    consentRecord: consent.record,
-    revision: { commit, label, consentRecord: consent.record },
+    ok: true, record: read.record,
+    revision: { commit, label: subject.pinnedRevision.label },
     governed,
-    providerStatement,
-    contentClasses,
+    // Eligibility still requires the screen to classify each path. This list
+    // grants nothing to an undefined class and is not a provider statement.
+    contentClasses: subject.contentClasses,
     disclosures: DISCLOSURES,
   };
 }

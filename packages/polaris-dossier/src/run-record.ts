@@ -1,7 +1,9 @@
 import * as path from 'node:path';
 import { BoundedJsonError, parseBoundedJson } from '@syzygy/polaris-generation-core/live';
-import { isRecord } from '@syzygy/support';
+import { isRecord, sha256 } from '@syzygy/support';
 import { dossierLocator, isNormalisedLocator } from './launch-identity.js';
+import type { SourceVisibility } from '@syzygy/polaris-generation-core/live';
+import { DOSSIER_POLICY_PATH, type PolicyBinding } from './policy-snapshot.js';
 import type { GovernedKind } from './governed.js';
 import { validateRunConfig, type RunConfig, type RunConfigRefusal } from './run-config.js';
 
@@ -13,18 +15,18 @@ import { validateRunConfig, type RunConfig, type RunConfigRefusal } from './run-
  * credential identity is Unknown, never fabricated. No provider-reported model version exists in
  * this mode, and the record says so.
  *
- * The subject block records what `init` established: the repository, the pinned revision and the consent that named it, the start
- * gates' records, the governed decision and the per-project statement it relied on. Read back, every one of these is Inferred: it is
- * which revision the run was pinned to, not that the revision is consented, which every later step verifies again
- * (`reverifyPinnedRevision`). The run makes no provider dispatch and no scheduler effect, so it has no work item; the record says why,
- * and the run is rendered as unattributed execution under RFC4-19.
+ * The /2 subject records the declared repository, selected pin, visibility and committed policy binding. Stored selection history is
+ * Inferred. Later steps rehash pinned Git objects and check the bound policy; they do not verify retired consent or act records.
+ * The run makes no provider dispatch or scheduler effect, so it records no work item and explains the unattributed execution.
  *
  * The clone's location is recorded once, at `init`, as the operator supplied it (resolved to a real path), and every later step reads
  * the objects it needs from that clone's object store, so no step takes a clone argument and an agent cannot move a step onto another
  * clone by passing one. It is a read location only: nothing is written there. It too is Inferred, since the record is within the agent
  * sessions' write reach; what makes a read trustworthy is that every object is read by identifier from the pinned commit and re-hashed. */
 
-export const RUN_RECORD_FORMAT = 'polaris-dossier-run/1' as const;
+export const RUN_RECORD_FORMAT = 'polaris-dossier-run/2' as const;
+/** Artifact classes this mode can carry, subject to per-file policy classification and screening; never observed egress. */
+export const DOSSIER_CONTENT_CLASSES = ['code-content', 'project-documentation', 'governance-text'] as const;
 export const NO_PROVIDER_MODEL_VERSION = 'no provider-reported model version is available in the operator-agent mode';
 
 export const NO_WORK_ITEM_REASON = 'the operator-agent run makes no provider dispatch and no scheduler effect, so no scheduler work item, Proposal or materialization record exists for it; it is rendered as unattributed execution under RFC4-19, never dropped';
@@ -40,11 +42,11 @@ export interface RunClone {
 export interface RunSubject {
   readonly repository: { readonly url: string; readonly repositoryId: string };
   readonly clone: RunClone;
-  readonly pinnedRevision: { readonly commit: string; readonly label: string; readonly consentRecord: string; readonly pinnedAt: string };
-  readonly startGates: { readonly registryEntry: string; readonly screeningPolicy: string };
+  readonly pinnedRevision: { readonly commit: string; readonly label: string; readonly pinnedAt: string };
+  readonly screeningPolicy: PolicyBinding;
+  readonly contentClasses: typeof DOSSIER_CONTENT_CLASSES;
+  readonly visibility: { readonly value: SourceVisibility; readonly source: 'declaration' | 'conservative-default'; readonly declaredBy: string; readonly label: 'Inferred' };
   readonly governed: { readonly kind: GovernedKind; readonly because: readonly string[] };
-  /** The per-project statement the run relies on (`recordId@version`); null only for a non-governed subject. */
-  readonly providerStatement: string | null;
   readonly workItem: { readonly identity: null; readonly reason: typeof NO_WORK_ITEM_REASON };
 }
 
@@ -115,6 +117,9 @@ export function readRunRecord(text: string): ReadRunRecordResult {
     return { ok: false, detail: 'run.json is not a JSON object' };
   }
   const fields = document as Readonly<Record<string, unknown>>;
+  if (fields['format'] === 'polaris-dossier-run/1') {
+    return { ok: false, detail: 'legacy polaris-dossier-run/1 cannot continue under the declared-source model; keep its artifacts and start a new run with dossier init; no file was migrated or changed' };
+  }
   const keys = Object.keys(fields).sort();
   if (keys.join(',') !== RECORD_KEYS.join(',')) {
     return { ok: false, detail: `run.json carries fields ${keys.join(', ')}; expected ${RECORD_KEYS.join(', ')}` };
@@ -156,8 +161,8 @@ export function readRecordedUrl(text: string): string | null {
 
 /** The subject block, validated in full; a description of the first fault otherwise. */
 function readSubject(value: unknown): RunSubject | string {
-  if (!isRecord(value) || !hasKeys(value, ['repository', 'clone', 'pinnedRevision', 'startGates', 'governed', 'providerStatement', 'workItem'])) return 'it must carry exactly repository, clone, pinnedRevision, startGates, governed, providerStatement and workItem';
-  const { repository, clone, pinnedRevision, startGates, governed, providerStatement, workItem } = value;
+  if (!isRecord(value) || !hasKeys(value, ['repository', 'clone', 'pinnedRevision', 'screeningPolicy', 'contentClasses', 'visibility', 'governed', 'workItem'])) return 'it must carry exactly repository, clone, pinnedRevision, screeningPolicy, contentClasses, visibility, governed and workItem';
+  const { repository, clone, pinnedRevision, screeningPolicy, contentClasses, visibility, governed, workItem } = value;
   if (!isRecord(repository) || !hasKeys(repository, ['url', 'repositoryId']) || !isText(repository['url']) || !isText(repository['repositoryId'])) return 'repository must carry a url and a repositoryId';
   // The normalised URL, for every host (046, line 17: "The normalised URL is the locator every launch consent record, the run record and
   // every page carry, for every host"). A record written before that rule carries the canonical https://github.com/<owner>/<repo> URL
@@ -168,24 +173,39 @@ function readSubject(value: unknown): RunSubject | string {
   if (url === null || !/^[a-z0-9._-]+$/.test(repository['repositoryId'])) return 'repository url or repositoryId is malformed';
   if (!isRecord(clone) || !hasKeys(clone, ['path', 'declaredBy', 'label', 'use']) || clone['declaredBy'] !== 'operator' || clone['label'] !== 'Inferred' || clone['use'] !== 'read') return 'clone must carry its path, declared by the operator, labelled Inferred, for reading only';
   if (typeof clone['path'] !== 'string' || clone['path'].length > 4096 || path.resolve(clone['path']) !== clone['path'] || clone['path'].includes('\0')) return 'the clone path is not an absolute, normalised path';
-  if (!isRecord(pinnedRevision) || !hasKeys(pinnedRevision, ['commit', 'label', 'consentRecord', 'pinnedAt'])) return 'pinnedRevision must carry commit, label, consentRecord and pinnedAt';
+  if (!isRecord(pinnedRevision) || !hasKeys(pinnedRevision, ['commit', 'label', 'pinnedAt'])) return 'pinnedRevision must carry commit, label and pinnedAt';
   if (typeof pinnedRevision['commit'] !== 'string' || !/^(?:[0-9a-f]{40}|[0-9a-f]{64})$/.test(pinnedRevision['commit'])) return 'the pinned commit is not a full commit identifier';
-  if (!isText(pinnedRevision['label']) || !isText(pinnedRevision['consentRecord'])) return 'the pinned revision must name its label and consent record';
+  if (!isText(pinnedRevision['label'])) return 'the pinned revision must name its selection label';
   if (typeof pinnedRevision['pinnedAt'] !== 'string' || !INSTANT.test(pinnedRevision['pinnedAt']) || Number.isNaN(Date.parse(pinnedRevision['pinnedAt']))) return 'pinnedAt is not a UTC instant';
-  if (!isRecord(startGates) || !hasKeys(startGates, ['registryEntry', 'screeningPolicy']) || !isText(startGates['registryEntry']) || !isText(startGates['screeningPolicy'])) return 'startGates must cite the registry entry and screening policy records';
+  if (!isRecord(screeningPolicy) || !hasKeys(screeningPolicy, ['path', 'commit', 'policyId', 'policyVersion', 'sha256'])
+    || screeningPolicy['path'] !== DOSSIER_POLICY_PATH || !isText(screeningPolicy['policyId']) || !isText(screeningPolicy['policyVersion'])
+    || typeof screeningPolicy['commit'] !== 'string' || !/^(?:[0-9a-f]{40}|[0-9a-f]{64})$/u.test(screeningPolicy['commit'])
+    || typeof screeningPolicy['sha256'] !== 'string' || !/^[0-9a-f]{64}$/u.test(screeningPolicy['sha256'])) return 'screeningPolicy must bind the committed dossier policy identity, version and digest';
+  if (!Array.isArray(contentClasses) || contentClasses.length !== DOSSIER_CONTENT_CLASSES.length || !contentClasses.every((value, i) => value === DOSSIER_CONTENT_CLASSES[i])) return 'contentClasses must name exactly code-content, project-documentation and governance-text in that order';
+  if (!isRecord(visibility) || !hasKeys(visibility, ['value', 'source', 'declaredBy', 'label'])
+    || !['public', 'private'].includes(visibility['value'] as string) || !['declaration', 'conservative-default'].includes(visibility['source'] as string)
+    || !isText(visibility['declaredBy']) || visibility['label'] !== 'Inferred'
+    || (visibility['source'] === 'conservative-default' && visibility['value'] !== 'private')) return 'visibility must carry an attributed declaration or conservative private default, labelled Inferred';
   if (!isRecord(governed) || !hasKeys(governed, ['kind', 'because']) || !GOVERNED_KINDS.includes(governed['kind'] as GovernedKind)
     || !Array.isArray(governed['because']) || governed['because'].length === 0 || !governed['because'].every(isText)) return 'governed must carry a kind and its reasons';
   const kind = governed['kind'] as GovernedKind;
-  if (providerStatement !== null && !isText(providerStatement)) return 'providerStatement must be a record citation or null';
-  if (kind !== 'non-governed' && providerStatement === null) return `${kind === 'unstated' ? 'an unstated' : 'a governed'} subject must cite the per-project statement it relies on`;
   if (!isRecord(workItem) || !hasKeys(workItem, ['identity', 'reason']) || workItem['identity'] !== null || workItem['reason'] !== NO_WORK_ITEM_REASON) return 'workItem must record an absent identity with its reason';
   return {
     repository: { url, repositoryId: repository['repositoryId'] },
     clone: { path: clone['path'], declaredBy: 'operator', label: 'Inferred', use: 'read' },
-    pinnedRevision: { commit: pinnedRevision['commit'], label: pinnedRevision['label'], consentRecord: pinnedRevision['consentRecord'], pinnedAt: pinnedRevision['pinnedAt'] },
-    startGates: { registryEntry: startGates['registryEntry'], screeningPolicy: startGates['screeningPolicy'] },
+    pinnedRevision: { commit: pinnedRevision['commit'], label: pinnedRevision['label'], pinnedAt: pinnedRevision['pinnedAt'] },
+    contentClasses: DOSSIER_CONTENT_CLASSES,
+    screeningPolicy: { path: DOSSIER_POLICY_PATH, commit: screeningPolicy['commit'], policyId: screeningPolicy['policyId'], policyVersion: screeningPolicy['policyVersion'], sha256: screeningPolicy['sha256'] },
+    visibility: { value: visibility['value'] as SourceVisibility, source: visibility['source'] as 'declaration' | 'conservative-default', declaredBy: visibility['declaredBy'], label: 'Inferred' },
     governed: { kind, because: [...(governed['because'] as string[])] },
-    providerStatement: providerStatement as string | null,
     workItem: { identity: null, reason: NO_WORK_ITEM_REASON },
   };
 }
+
+/** Fixed tuple of the source facts a brief binds. History labels and an unrelated
+ * Syzygy commit do not change the source; declaration/pin/policy changes do. */
+export const sourceBindingSha256 = (subject: RunSubject): string => sha256(JSON.stringify([
+  subject.repository.url, subject.repository.repositoryId, subject.clone.path, subject.pinnedRevision.commit,
+  subject.screeningPolicy.path, subject.screeningPolicy.policyId, subject.screeningPolicy.policyVersion, subject.screeningPolicy.sha256,
+  subject.visibility.value, ...subject.contentClasses,
+]));

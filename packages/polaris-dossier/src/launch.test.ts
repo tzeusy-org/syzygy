@@ -1,3 +1,4 @@
+import { fixtureSources, makeClone } from './full-run.testkit.js';
 import type { ObservationRecordSummary } from '@syzygy/polaris-generation-consent/live';
 import * as fs from 'node:fs';
 import * as path from 'node:path';
@@ -1084,178 +1085,33 @@ describe('REQ-polaris-generation-047: the copy step of a copy-class run', () => 
   });
 });
 
-describe('REQ-polaris-generation-047: init runs a copy-class run on its copy, removing it when the run ends before its brief', () => {
+describe('declared local init and retained acquisition interruption behavior', () => {
   const CONFIG = JSON.stringify({
     operator: 'Tzeusy', agentTool: 'claude-code', agentToolVersion: '2.1.0', agentProvider: 'anthropic', model: 'claude-opus-5-5',
     deadline: 'PT2H', agentTurnBudget: 200, maxRepairCycles: 2, maxQuestions: 3, audience: 'a new contributor', operatorIsOwner: true,
   });
-  const initWith = (clone: string, answers: readonly (string | null)[], over: { sources?: ReturnType<typeof noOtherActs>; home?: string; ports?: Partial<LaunchPorts>; isTTY?: boolean } = {}) => {
-    const s = setup(answers, { ...(over.home === undefined ? {} : { home: over.home }), ...(over.ports === undefined ? {} : { ports: over.ports }), ...(over.isTTY === undefined ? {} : { isTTY: over.isTTY }) });
-    const stateRoot = path.join(tempDir('syzygy-launch-init-'), 'runs');
-    const { sources: _sources, now: _now, openReader: _open, copyRoot: _root, ...launch } = s.ports;
-    return { s, stateRoot, result: initRun({ clone, configText: CONFIG, stateRoot }, { sources: over.sources ?? noOtherActs(), now: () => NOW, openReader: s.reads.open, launch }) };
-  };
-
-  it('a completed init keeps the copy outside the run directory, names it, and records it as the run\'s clone', async () => {
-    const up = makeUpstream({ 'a.c': 'x\n' }, [{ 'b.c': 'y\n' }]);
-    const clone = fullClone(up.dir, URL_RR);
-    gitIn(clone, 'checkout', '-q', '--detach', up.commits[0]!);
-    const r12 = up.commits[1]!.slice(0, 12);
-    const { s, stateRoot, result } = initWith(clone, ['public', 'none', `CONSENT TO OBSERVE repository:redis-redis AT ${r12}`, `STATE NO KERNEL EVIDENCE DRAWER FOR repository:redis-redis AT ${r12}`]);
-    const out = await result;
-    if (!out.ok) throw new Error(JSON.stringify(out.refusal));
-    const copyDir = out.report.subject.clone.path;
-    expect(path.dirname(copyDir)).toBe(path.join(fs.realpathSync(stateRoot), 'copies'));
-    expect(path.basename(copyDir)).toMatch(/^copy-[A-Za-z0-9]{6}$/);
-    // The layout init writes is the one the brief's fail-closed test reads: the run's clone lies under the state root's copy directory, so a
-    // brief decides the run is copy-class whatever launch.json says, and refuses once launch.json is gone (R-PDJA-33-SLICE-D-1 finding 7).
-    expect(cloneUnderCopies(out.report.run, copyDir)).toBe(true);
-    expect(cloneUnderCopies(out.report.run, clone)).toBe(false);
-    fs.rmSync(path.join(out.report.run, 'launch.json'));
-    expect(briefCopyOf(readLaunchDisclosure(out.report.run), { dir: out.report.run, clone: copyDir, pinnedAt: '2026-01-01T00:00:00.000Z' })).toMatchObject({ ok: false });
-    expect(out.report.subject.pinnedRevision.commit).toBe(up.commits[1]);
-    expect(out.report.disclosures).toContain(`The copy of the pinned commit at ${copyDir} is the run's clone; it is kept after the run, outside the run's state directory, until the operator removes it.`);
-    expect(fs.existsSync(path.join(copyDir, 'b.c'))).toBe(true);
-    expect(s.reads.log.dirs.every(d => d === path.join(copyDir, '.git'))).toBe(true);
+  it('initializes a supplied pinned clone without touching a legacy launch adapter', async () => {
+    const dir = tempDir('declared-init-no-launch-'); const { clone, commit } = makeClone(path.join(dir, 'repo')); const stateRoot = path.join(dir, 'state');
+    const before = listing(clone);
+    const result = await initRun({ clone, url: URL_RR, visibility: 'public', configText: CONFIG, stateRoot }, { sources: fixtureSources(commit), now: () => NOW,
+      get launch(): never { throw new Error('legacy launch adapter touched'); } });
+    if (!result.ok) throw new Error(result.refusal.reason);
+    expect(result.report.subject.clone.path).toBe(fs.realpathSync(clone)); expect(result.report.subject.pinnedRevision.commit).toBe(commit);
+    expect(fs.readdirSync(result.report.run)).toEqual(['run.json']); expect(fs.existsSync(path.join(stateRoot, 'copies'))).toBe(false); expect(listing(clone)).toEqual(before);
   });
 
-  it('a repository on another host completes: the GitHub-only refusal is retired, and the run record carries the normalised URL', async () => {
-    const up = makeUpstream({ 'a.c': 'x\n' });
-    const clone = fullClone(up.dir, 'git@git.example.org:team/sub/tool.git');
-    const r12 = up.commits[0]!.slice(0, 12);
-    const { result } = initWith(clone, ['public', 'none', `CONSENT TO OBSERVE repository:sub-tool AT ${r12}`, `STATE NO KERNEL EVIDENCE DRAWER FOR repository:sub-tool AT ${r12}`]);
-    const out = await result;
-    if (!out.ok) throw new Error(JSON.stringify(out.refusal));
-    expect(out.report.subject.repository).toEqual({ url: 'git.example.org/team/sub/tool', repositoryId: 'sub-tool' });
-    // The run record's launch disclosure of a run that recorded its consents at launch (046, line 37).
-    const disclosure = JSON.parse(fs.readFileSync(path.join(out.report.run, 'launch.json'), 'utf8')) as { consents: { recorded: string[]; commit: string | null }; subject: Record<string, unknown> };
-    expect(disclosure.subject).toEqual({ identity: 'repository:sub-tool', url: 'git.example.org/team/sub/tool', source: 'the clone\'s remote origin', proposedBy: 'derived', publicDeclaration: 'public' });
-    expect(disclosure.consents.recorded.map(id => id.replace(/[0-9a-f]{12}-20261109T120000Z-[0-9a-f]{8}$/, '…'))).toEqual(['LAUNCH-OBSERVATION-…', 'LAUNCH-DRAWER-…']);
-    expect(disclosure.consents.commit).toMatch(/^[0-9a-f]{40}$/);
-    expect(out.report.disclosures).toContain('The operator\'s declaration whether the repository is public: public [Inferred].');
+  it('keeps the strict clone check and never substitutes a copy when it refuses', async () => {
+    const up = makeUpstream({ 'a.c': 'x\n' }, [{ 'b.c': 'y\n' }]); const clone = fullClone(up.dir, URL_RR); const stateRoot = path.join(tempDir('declared-full-refusal-'), 'state');
+    const result = await initRun({ clone, url: URL_RR, visibility: 'public', configText: CONFIG, stateRoot }, { sources: fixtureSources(up.commits[1]!), now: () => NOW,
+      get launch(): never { throw new Error('legacy launch adapter touched'); } });
+    expect(result).toMatchObject({ ok: false, refusal: { stage: 'clone-shape' } }); expect(fs.existsSync(stateRoot)).toBe(false);
   });
 
-  it('a SHA-256 copy passes init\'s form check with the object-format setting its initialisation wrote', async () => {
-    const parent = tempDir('syzygy-launch-init256-'), dir = path.join(parent, 'up');
-    gitIn(parent, 'init', '-q', '--object-format=sha256', '-b', 'main', dir);
-    writeFiles(dir, { 'a.c': 'x\n' });
-    gitIn(dir, 'add', '-A');
-    gitIn(dir, 'commit', '-q', '-m', 'upstream');
-    const commit = gitIn(dir, 'rev-parse', 'HEAD');
-    const r12 = commit.slice(0, 12);
-    const { result } = initWith(fullClone(dir, URL_RR), ['public', 'none', `CONSENT TO OBSERVE repository:redis-redis AT ${r12}`, `STATE NO KERNEL EVIDENCE DRAWER FOR repository:redis-redis AT ${r12}`]);
-    const out = await result;
-    if (!out.ok) throw new Error(JSON.stringify(out.refusal));
-    expect(out.report.subject.pinnedRevision.commit).toBe(commit);
-    expect(gitIn(out.report.subject.clone.path, 'rev-parse', '--show-object-format')).toBe('sha256');
-  });
-
-  it('init prints the user-information statement on every path: a recorded run, a covered run that asks nothing, and a refusal (R-PDJA-33-SLICE-D-1 finding 6)', async () => {
-    const said = 'The URL of the clone\'s remote origin carried user information; Syzygy does not print, store or record it, and removes it before deriving anything from that URL.';
-    const up = makeUpstream({ 'a.c': 'x\n' });
-    const commit = up.commits[0]!, r12 = commit.slice(0, 12);
-    const home = makeHome();
-    const sources = () => withLaunchRecords(noOtherActs(), { home, now: () => NOW });
-    const withUser = 'https://bob:hunter2@github.com/redis/redis';
-    const recorded = await initWith(fullClone(up.dir, withUser), ['public', 'none', `CONSENT TO OBSERVE repository:redis-redis AT ${r12}`, `STATE NO KERNEL EVIDENCE DRAWER FOR repository:redis-redis AT ${r12}`], { home, sources: sources() }).result;
-    if (!recorded.ok) throw new Error(JSON.stringify(recorded.refusal));
-    expect(recorded.report.disclosures).toContain(said);
-    // Covered: the launch asks nothing, and so prints nothing on the terminal; init's output still says it.
-    const covered = initWith(fullClone(up.dir, withUser), [], { home, sources: sources() });
-    const out = await covered.result;
-    if (!out.ok) throw new Error(JSON.stringify(out.refusal));
-    expect(covered.s.terminal.prompts).toEqual([]);
-    expect(out.report.disclosures).toContain(said);
-    expect(JSON.stringify(out).includes('hunter2')).toBe(false);
-    // A refusal after the URL reading: no terminal to ask at.
-    const refused = await initWith(fullClone(makeUpstream({ 'b.c': 'y\n' }).dir, 'https://bob:hunter2@git.example.org/a/b.git'), [], { isTTY: false }).result;
-    expect(refused).toMatchObject({ ok: false, refusal: { stage: 'launch' } });
-    if (refused.ok) return;
-    expect(refused.refusal.disclosures).toContain(said);
-    // Once in init's document: the nested launch refusal does not repeat it (R-PDJA-33-SLICE-CD-4 finding 4).
-    expect(JSON.stringify(refused).split('carried user information').length - 1).toBe(1);
-    expect(refused.refusal.launch !== undefined && 'locatorStatements' in refused.refusal.launch).toBe(false);
-    expect(JSON.stringify(refused).includes('hunter2')).toBe(false);
-  }, 20_000);
-
-  it('a repeat init --url at a HEAD only a launch consent names runs on a copy, with sources wrapped as the CLI wraps them (R-PDJA-33-SLICE-B-1 finding 1)', async () => {
-    const up = makeUpstream({ 'a.c': 'x\n' });
-    const commit = up.commits[0]!, r12 = commit.slice(0, 12);
-    const home = makeHome();
-    // As cli.ts wires them: the other acts' sources with the launch records added.
-    const cliSources = () => withLaunchRecords(noOtherActs(), { home, now: () => NOW });
-    const first = await initWith(fullClone(up.dir, URL_RR), ['public', 'none', `CONSENT TO OBSERVE repository:redis-redis AT ${r12}`, `STATE NO KERNEL EVIDENCE DRAWER FOR repository:redis-redis AT ${r12}`], { home, sources: cliSources() }).result;
-    if (!first.ok) throw new Error(JSON.stringify(first.refusal));
-    // The operator's own clone in the one-commit form (the v1.1-era fetch form), at the launch-consented commit.
-    const parent = tempDir('syzygy-launch-repeat-'), clone = path.join(parent, 'one');
-    gitIn(parent, 'init', '-q', '--template=', clone);
-    gitIn(clone, 'remote', 'add', 'origin', URL_RR);
-    gitIn(clone, 'fetch', '-q', '--depth=1', '--no-tags', `file://${up.dir}`, commit);
-    gitIn(clone, 'checkout', '-q', '--detach', 'FETCH_HEAD');
-    const s = setup([], { home });
-    const stateRoot = path.join(tempDir('syzygy-launch-init-'), 'runs');
-    const { sources: _sources, now: _now, openReader: _open, copyRoot: _root, ...launch } = s.ports;
-    const again = await initRun({ clone, url: 'https://github.com/redis/redis', configText: CONFIG, stateRoot }, { sources: cliSources(), now: () => NOW, openReader: s.reads.open, launch });
-    if (!again.ok) throw new Error(JSON.stringify(again.refusal));
-    const copyDir = again.report.subject.clone.path;
-    expect(path.dirname(copyDir)).toBe(path.join(fs.realpathSync(stateRoot), 'copies'));
-    expect(copyDir).not.toBe(fs.realpathSync(clone));
-    expect(s.terminal.prompts).toEqual([]);
-    expect(fs.readdirSync(path.join(stateRoot, 'copies'))).toEqual([path.basename(copyDir)]);
-    expect(s.reads.log.dirs.length).toBeGreaterThan(0);
-    // The launch's records are named as launch records, once each: none satisfies the launch's "another act" lookups.
-    expect(again.report.disclosures.filter(d => d.includes('the run rests on'))).toEqual([expect.stringMatching(
-      /^No consent was recorded at launch: the run rests on launch consent records already in force: launch observation consent LAUNCH-OBSERVATION-[0-9a-f]{12}-20261109T120000Z-[0-9a-f]{8} \([0-9a-f]{40}\); drawer statement LAUNCH-DRAWER-[0-9a-f]{12}-20261109T120000Z-[0-9a-f]{8}\.$/)]);
-    expect(s.reads.log.dirs.every(d => d === path.join(copyDir, '.git'))).toBe(true);
-    // The run record's launch disclosure (046, line 37): a launched copy-class run that recorded nothing, its copy and the operator's clone.
-    const disclosure = JSON.parse(fs.readFileSync(path.join(again.report.run, 'launch.json'), 'utf8')) as Record<string, unknown> & { statements: { id: string; reached: boolean }[] };
-    expect({ ...disclosure, consents: { ...(disclosure['consents'] as object), relied: 'checked above' }, statements: disclosure.statements.map(x => [x.id, x.reached]) }).toEqual({
-      format: 'polaris-dossier-launch-disclosure/1', runClass: 'copy-class', launched: true, operatorClone: fs.realpathSync(clone), copy: copyDir,
-      consents: { recorded: [], commit: null, relied: 'checked above' },
-      subject: { identity: 'repository:redis-redis', url: 'github.com/redis/redis', source: 'the clone\'s remote origin', proposedBy: 'matching-records', publicDeclaration: 'public' },
-      drawer: expect.stringMatching(/^LAUNCH-DRAWER-[0-9a-f]{12}-20261109T120000Z-[0-9a-f]{8}$/),
-      statements: [['named-identifier', true], ['copy', true], ['copy-location', true], ['copy-reliance', true], ['pinned-commit', true], ['question', false], ['briefs', false]],
-      label: 'Inferred',
-    });
-  });
-
-  it('a port that throws after the launch made the copy: init refuses, removes the copy and says so (R-PDJA-33-SLICE-B-1 finding 2)', async () => {
-    const up = makeUpstream({ 'a.c': 'x\n' });
-    const clone = fullClone(up.dir, URL_RR);
-    const r12 = up.commits[0]!.slice(0, 12);
-    const base = noOtherActs();
-    const throwing = { ...base, consentedRevisionsFor: async () => { throw new Error('fixture records failure'); } };
-    const { stateRoot, result } = initWith(clone, ['public', 'none', `CONSENT TO OBSERVE repository:redis-redis AT ${r12}`, `STATE NO KERNEL EVIDENCE DRAWER FOR repository:redis-redis AT ${r12}`], { sources: throwing });
-    const out = await result;
-    expect(out).toMatchObject({ ok: false, refusal: { stage: 'failure', reason: expect.stringMatching(/^init failed after the launch made the copy: Error: fixture records failure; the launch's consent records stay recorded: LAUNCH-OBSERVATION-[0-9a-f]{12}-20261109T120000Z-[0-9a-f]{8}, LAUNCH-DRAWER-[0-9a-f]{12}-20261109T120000Z-[0-9a-f]{8}, in the recording commit [0-9a-f]{40}$/),
-      copy: { state: 'removed' }, copyStatement: expect.stringMatching(/^The copy at \S+\/copies\/copy-[A-Za-z0-9]{6} was removed, its directory included\.$/) } });
-    expect(fs.readdirSync(path.join(stateRoot, 'copies'))).toEqual([]);
-  });
-
-  it('an interrupt from the copy step to the outcome removes the copy and says so: during the copy step, and after the records are written (R-PDJA-33-SLICE-C-1 finding 3)', async () => {
-    const up = makeUpstream({ 'a.c': 'x\n' });
-    const r12 = up.commits[0]!.slice(0, 12);
-    const answers = ['public', 'none', `CONSENT TO OBSERVE repository:redis-redis AT ${r12}`, `STATE NO KERNEL EVIDENCE DRAWER FOR repository:redis-redis AT ${r12}`];
-    const real: CopyGitRun = (args, o) => { const r = spawnSync('git', args, { cwd: o.cwd, env: o.env, encoding: 'utf8' }); return { status: r.status ?? -1, stderr: r.stderr ?? '' }; };
-    // During the copy step: Ctrl-C while the fetch runs.
-    const duringCopy = new EventEmitter();
-    const atFetch: CopyGitRun = (args, o) => { if (args.includes('fetch')) duringCopy.emit('SIGINT'); return real(args, o); };
-    const copying = initWith(fullClone(up.dir, URL_RR), answers, { ports: { copyGit: atFetch, interrupt: interruptWatch(duringCopy) } });
-    expect(await copying.result).toMatchObject({ ok: false, refusal: { stage: 'launch', launch: { stage: 'failure', reason: 'the launch failed after its copy step started: Interrupted: the run was interrupted (SIGINT)', recorded: false, copy: { state: 'removed' } } } });
-    expect(fs.readdirSync(path.join(copying.stateRoot, 'copies'))).toEqual([]);
-    expect(copying.s.terminal.prompts).toEqual([]);
-    expect(duringCopy.listenerCount('SIGINT')).toBe(0);
-    // After the records are written: init refuses before it writes the run directory, and names the records that stay.
-    const afterWrite = new EventEmitter();
-    const writeStore: typeof writeLaunchRecords = (home, input) => { afterWrite.emit('SIGINT'); return writeLaunchRecords(home, input); };
-    const writing = initWith(fullClone(up.dir, URL_RR), answers, { ports: { writeStore, interrupt: interruptWatch(afterWrite) } });
-    const out = await writing.result;
-    expect(out).toMatchObject({ ok: false, refusal: { stage: 'failure', copy: { state: 'removed' } } });
-    if (out.ok) return;
-    expect(out.refusal.reason).toMatch(/^init failed after the launch made the copy: Interrupted: the run was interrupted \(SIGINT\); the launch's consent records stay recorded: LAUNCH-OBSERVATION-[0-9a-f]{12}-20261109T120000Z-[0-9a-f]{8}, LAUNCH-DRAWER-[0-9a-f]{12}-20261109T120000Z-[0-9a-f]{8}, in the recording commit [0-9a-f]{40}$/);
-    expect(fs.readdirSync(path.join(writing.stateRoot, 'copies'))).toEqual([]);
-    expect(fs.readdirSync(writing.stateRoot)).toEqual(['copies']);
-    expect(afterWrite.listenerCount('SIGINT')).toBe(0);
+  it('refuses a missing locator without reading objects or consulting a terminal', async () => {
+    const clone = tempDir('declared-missing-locator-'); const stateRoot = path.join(tempDir('declared-state-empty-'), 'state');
+    const result = await initRun({ clone, configText: CONFIG, stateRoot }, { sources: noOtherActs(), now: () => NOW,
+      get launch(): never { throw new Error('legacy launch adapter touched'); }, openReader: () => { throw new Error('object reader opened'); } });
+    expect(result).toMatchObject({ ok: false, refusal: { stage: 'url', objectsRead: false } }); expect(fs.existsSync(stateRoot)).toBe(false);
   });
 
   it('the launch\'s own checks: after the copy step, before the question and before the write, each ends the launch at the failure path', async () => {
@@ -1297,43 +1153,6 @@ describe('REQ-polaris-generation-047: init runs a copy-class run on its copy, re
     expect(signals.listenerCount('SIGINT')).toBe(0);
   });
 
-  it('an interrupt after init\'s last check: the run is kept, and init\'s output says so (R-PDJA-33-SLICE-CD-2 finding 7)', async () => {
-    const up = makeUpstream({ 'a.c': 'x\n' });
-    const r12 = up.commits[0]!.slice(0, 12);
-    const signals = new EventEmitter();
-    const s = setup(['public', 'none', `CONSENT TO OBSERVE repository:redis-redis AT ${r12}`, `STATE NO KERNEL EVIDENCE DRAWER FOR repository:redis-redis AT ${r12}`], { ports: { interrupt: interruptWatch(signals) } });
-    const stateRoot = path.join(tempDir('syzygy-launch-init-'), 'runs');
-    const { sources: _sources, now: _now, openReader: _open, copyRoot: _root, ...launch } = s.ports;
-    // The run id is drawn inside createRunDirectory, after init's last check: the interrupt lands there.
-    const out = await initRun({ clone: fullClone(up.dir, URL_RR), configText: CONFIG, stateRoot },
-      { sources: noOtherActs(), now: () => NOW, openReader: s.reads.open, launch, runId: () => { signals.emit('SIGINT'); return 'run-0123456789abcdef0123456789abcdef'; } });
-    if (!out.ok) throw new Error(JSON.stringify(out.refusal));
-    // In the run's class (R-PDJA-33-SLICE-CD-3 finding 5): this copy-class run names its copy.
-    expect(out.report.disclosures.at(-1)).toBe(`An interrupt arrived after the run was created; the run is kept, with its copy at ${out.report.subject.clone.path}, and nothing was undone. Remove the run directory and the copy to discard it.`);
-    expect(fs.existsSync(out.report.subject.clone.path)).toBe(true);
-    expect(signals.listenerCount('SIGINT')).toBe(0);
-    // A no-copy run's form: no copy was made.
-    expect(interruptAfterCreation(null)).toBe('An interrupt arrived after the run was created; the run is kept, and nothing was undone. No copy was made. Remove the run directory to discard it.');
-  });
-
-  it('objectsRead is decided from the reads: a copy-stage refusal reads none, a refusal after the pre-answer reads read some (R-PDJA-33-SLICE-B-1 finding 6)', async () => {
-    const up = makeUpstream({ 'a.c': 'x\n' });
-    const failingInit: CopyGitRun = () => ({ status: 128, stderr: 'fatal: fixture init failure' });
-    const atCopy = await initWith(fullClone(up.dir, URL_RR), [], { ports: { copyGit: failingInit } }).result;
-    expect(atCopy).toMatchObject({ ok: false, refusal: { stage: 'launch', launch: { stage: 'copy', reason: 'git init for the copy failed (exit 128): fatal: fixture init failure' }, objectsRead: false } });
-    const atTerminal = await initWith(fullClone(up.dir, URL_RR), [], { isTTY: false }).result;
-    expect(atTerminal).toMatchObject({ ok: false, refusal: { stage: 'launch', launch: { stage: 'terminal' }, objectsRead: true } });
-  });
-
-  it('a refusal after the launch removes the copy and says so', async () => {
-    const up = makeUpstream({ 'openspec/x.md': '# x\n' });
-    const clone = fullClone(up.dir, URL_RR);
-    const r12 = up.commits[0]!.slice(0, 12);
-    // A governed subject whose statement is declined: the launch records the observation consent, and init then refuses for the statement.
-    const { stateRoot, result } = initWith(clone, ['public', 'exists', `CONSENT TO OBSERVE repository:redis-redis AT ${r12}`, '']);
-    const out = await result;
-    expect(out).toMatchObject({ ok: false, refusal: { stage: 'statement', copy: { state: 'removed' } } });
-    expect(fs.readdirSync(path.join(stateRoot, 'copies'))).toEqual([]);
-  });
+  // Retired init launch/copy ceremony; declared-source admission is covered by start-gates.test.ts and the tests above.
 });
 

@@ -44,14 +44,12 @@ Commands:
                       in force for the repository, the revisions the consent names,
                       any per-project statement, and whether D9 and the RFC7-20
                       reading are in force; the URL is parsed, never fetched
-  init <clone> [--url <url>] --config <run.json> [--state-root <dir>] [--revision <rev>] [--identity <id>] [--upstream <url>]
-                      check the start gates, pin the clone's HEAD to a consented
-                      revision, decide whether the subject is governed, and make the
-                      run directory under the state root (or $${STATE_ROOT_ENV});
-                      there is no default state root. Where no consent covers the
-                      revision, pin the trunk tip (or --revision) and ask the owner,
-                      in person at this terminal, for the missing consents; only
-                      the owner answers, never an agent
+  init <clone> [--url <url>] --config <run.json> [--state-root <dir>] [--revision <rev>] [--identity <id>] [--upstream <url>] [--visibility public|private]
+                      record a declared local source and full pinned HEAD under the
+                      committed dossier screening policy. --visibility public|private
+                      declares visibility; absent means conservative private treatment.
+                      No consent question or governance record is made. URL acquisition
+                      and automatic revision selection are a separate command path.
   brief <run>         re-verify the pinned revision and issue the authoring brief
                       (brief.md) and the draft schema (draft.schema.json) in the run
                       directory, starting the deadline clock; a run is briefed once.
@@ -77,10 +75,9 @@ Commands:
                       the command that starts an interactive session there
                       (claude '<prompt>', also behind !, or codex '<prompt>'), and
                       record the prompt's digest; Syzygy starts nothing. The tool, version and
-                      model default to the run's declared values; when the run relies
-                      on a per-project statement, a tool whose pair with the run's
-                      provider has no statement in force listing the run's classes
-                      is refused. review --kind
+                      model default to the run's declared values; every session
+                      records the run's declared provider. No provider statement
+                      is required. review --kind
                       fidelity|design builds that review's packet and copies it,
                       with its digest, into the review session's directory there;
                       when a session of the kind is waiting (started by all), it delivers the
@@ -137,8 +134,8 @@ Commands:
                       site/<n>/ with the run disclosure on every page and in
                       machine.json; a design review counts only while these pages,
                       outside the review-status region, are the pages it reviewed;
-                      the draft layer is Unknown unless the owner's reading of
-                      RFC7-20 is in force; exit 1 when refused
+                      the draft layer requires declared provider/model provenance
+                      and verified quotations; exit 1 when refused
   close <run> [--usage-tokens <n>] [--usage-turns <n>]
                       verify the pinned revision again and write the run's
                       Execution Record (record.json), once, with the usage the
@@ -290,8 +287,8 @@ export const DOSSIER_COMMANDS: Readonly<Record<string, DossierCommand>> = Object
     },
   },
   init: {
-    synopsis: 'init <clone> [--url <url>] --config <run.json> [--state-root <dir>] [--revision <rev>] [--identity <id>] [--upstream <url>]',
-    args: { kind: 'options', options: ['--url', '--config', '--state-root', '--revision', '--identity', '--upstream'], noun: 'the clone directory' },
+    synopsis: 'init <clone> [--url <url>] --config <run.json> [--state-root <dir>] [--revision <rev>] [--identity <id>] [--upstream <url>] [--visibility public|private]',
+    args: { kind: 'options', options: ['--url', '--config', '--state-root', '--revision', '--identity', '--upstream', '--visibility'], noun: 'the clone directory' },
     run: async ({ positional: [clone], values }, ctx) => {
       const url = values.get('--url'), configPath = values.get('--config');
       if (configPath === undefined) return ctx.usageError('init requires --config <run.json>');
@@ -302,11 +299,10 @@ export const DOSSIER_COMMANDS: Readonly<Record<string, DossierCommand>> = Object
       const configText = readBounded(configPath, RUN_CONFIG_JSON_LIMITS.maxBytes);
       if (typeof configText !== 'string') return ctx.refused({ command: 'init', outcome: 'refused', stage: 'config', reason: configText.reason, objectsRead: false });
       const optional = (name: string, key: string) => (values.get(name) === undefined ? {} : { [key]: values.get(name)! });
-      const command = ['syzygy dossier init', clone!, ...['--url', '--config', '--state-root', '--revision', '--identity', '--upstream'].flatMap(o => (values.get(o) === undefined ? [] : [o, values.get(o)!]))].join(' ');
-      const launch = ctx.launch();
+      const command = ['syzygy dossier init', clone!, ...['--url', '--config', '--state-root', '--revision', '--identity', '--upstream', '--visibility'].flatMap(o => (values.get(o) === undefined ? [] : [o, values.get(o)!]))].join(' ');
       const result = await initRun({ clone: clone!, ...(url === undefined ? {} : { url }), configText, stateRoot, command,
-        ...optional('--revision', 'revision'), ...optional('--identity', 'identity'), ...optional('--upstream', 'upstream') },
-      { ...ctx.deps(), ...(launch === undefined ? {} : { launch }) });
+        ...optional('--revision', 'revision'), ...optional('--identity', 'identity'), ...optional('--upstream', 'upstream'), ...optional('--visibility', 'visibility') },
+      ctx.deps());
       return result.ok ? ctx.report(result.report, EXIT.clean) : ctx.refused(result.refusal);
     },
   },
