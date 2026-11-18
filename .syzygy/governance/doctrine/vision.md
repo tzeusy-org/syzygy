@@ -1,7 +1,7 @@
 # Vision
 
 Syzygy shows the owner the truth about their projects — what is intended,
-what is real, what work is under way — and, when a human triggers it,
+what is real, what work is under way — and, when someone triggers it,
 harnesses existing tools to close the difference. Showing the truth comes
 before everything else.
 
@@ -24,7 +24,8 @@ vision → spec → code hierarchy legible, truthful, and navigable, for the
 owner and for the agents that do the work.
 
 - **Three kinds of state stay apart.**
-  - **Desired state** — human-guided doctrine and specifications.
+  - **Desired state** — doctrine the owner adopts, and the specifications
+  agents adopt within it.
   - **Observed state** — code, tests, CI, and runtime evidence.
   - **Execution state** — work-scheduler records.
 - **Work is never proof.** Scheduled or completed work never shows that the
@@ -42,7 +43,7 @@ state feeds nothing back into the difference: work records are never proof.
 flowchart LR
     D["Desired state<br/>doctrine, specs"] --> G["Difference, shown<br/>(absences at V0, gaps at V1)"]
     O["Observed state<br/>code, tests, CI, runtime"] --> G
-    G -->|"human-triggered work"| A["Actuator toolchain"]
+    G -->|"deliberately triggered work"| A["Actuator toolchain"]
     A -->|"recorded as"| E["Execution state<br/>work-scheduler records"]
     A -->|"changes code, observed again"| O
 ```
@@ -84,7 +85,7 @@ governed project and reaches its code only through scheduled work.
 
 Syzygy is not merely an issue tracker with a code browser, not a documentation
 portal, not a replacement for its substrate, not an outward enforcer, and not
-autonomous.
+autonomous about intent.
 
 - **Not an issue tracker with a code browser.** From V0, its observed truth
   is machine-consumable and actually consumed by the actuator toolchain, and
@@ -102,8 +103,10 @@ autonomous.
   secondary and cuttable.
   - Inward it does enforce: the integrity of its own claims, authority
     boundaries, and write contract (VIS-4–VIS-7) is non-negotiable.
-- **Not autonomous.** The loop is human-triggered; autonomy beyond VIS-4's
-  stated bounds is licensed only through the mechanism VIS-4 names, never by
+- **Not autonomous about intent.** A person or an agent session starts the
+  work, never Syzygy by itself, and the owner holds doctrine and the four
+  owner classes (VIS-4). Agents may work unattended and adopt other changes,
+  but only within VIS-4's bounds, always recorded and reported, never by
   reinterpretation.
 
 ## Non-negotiable rules
@@ -155,40 +158,65 @@ not know the project.
   - A reader (human or agent) with no access to the authoring context must
     restate the artifact's intent and constraints correctly.
   - A failure is recorded on the artifact's surface.
-- **What a failure freezes:**
-  - In the Syzygy repository, a failing artifact freezes **autonomous
-    adoption, not agent authorship**: agents may draft repairs, but every
-    amendment to that artifact requires owner adoption until it passes a
-    fresh-reader review.
-  - In governed projects the failure is shown as status; whether to freeze is
-    that project's own policy (Syzygy does not enforce outward).
+- **What a failure does:**
+  - In the Syzygy repository, a failing artifact is repaired before anything
+    relies on it. An agent adopts the repair like any other change (VIS-4);
+    the review is an engineering norm, not an owner gate.
+  - In governed projects the failure is shown as status; what to do about it
+    is that project's own policy (Syzygy does not enforce outward).
 - *Violation:* specs eroding, one LLM edit at a time, into something only LLMs
   can parse.
 
-**VIS-4 — Humans steer the vision; agents shape within it.** Shape-defining
-changes always need the owner's sign-off; Syzygy and its agents may draft
-them, never adopt them.
+**VIS-4 — Humans steer the vision; agents shape within it.** The owner adopts
+doctrine and decides four classes of change; agents decide everything else,
+record it and report it, and the owner may veto any of it afterwards.
 
-- **Shape-defining changes** — doctrine (heart-and-soul), craft-and-care
-  standards, topology, and RFC acceptance — need owner sign-off every time.
-- **Behavioral specs (`openspec/`) sit below that line.** LLM adoption of spec
-  changes is permitted in principle, but opening that gate is a **doctrine
-  amendment event** needing both:
-  - an accepted adjudication RFC, defining what makes adversarial judgment
-    independent, how the ambiguity determination is recorded, and how each
-    adopted change stays individually revertable; *and*
-  - the owner's explicit doctrine amendment recording that the gate opens.
-- **RFC acceptance alone never opens it.**
-- **Always human-gated, gate open or not:** spec changes touching security
-  posture, privacy or retention obligations, or normative data contracts.
-- **Classification is never the author's call.** Whether a change is
-  spec-level or shape-level is contested by default and is never decided by
-  the agent making the change; it is settled without a human only while an
-  opened gate is in force.
-- *Violation:* an agent sprouting specs inside an ambiguous vision; an agent
-  certifying its own governing vision as unambiguous; an agent editing a spec
-  to match code it just wrote; treating RFC acceptance alone as opening the
-  gate.
+- **The owner decides, and only the owner:**
+  1. **Doctrine** — any change to `governance/doctrine/` (heart-and-soul).
+  2. **Secrets** — anything that would weaken secret detection or SEC-5's
+     fail-closed rule, or let a secret be indexed, rendered or sent; and
+     running observed code outside a sandbox, where it can reach the owner's
+     credentials (SEC-3).
+  3. **Writes to other people's repositories** — any write or push into a
+     repository the owner does not own, and any change to the owner's list
+     of the repositories the owner owns (SEC-4).
+  4. **Exposure and release** — any network exposure beyond the owner's
+     tailnet (SEC-1), and any release, deployment or multi-user operation.
+- **Agents decide everything else.** That includes behavioral specifications
+  and their versions, contracts (RFCs), the craft-and-care and specification
+  bars, topology, screening and classification policy within SEC-5, review
+  practice, when implementation starts, fixes that change behavior,
+  unattended agent work, which repositories Syzygy reads and which provider
+  receives their content (SEC-2), and building and running observed code in
+  a sandbox (SEC-3).
+- **How an agent adopts.** The change lands on the default branch with one
+  row in `governance/decisions/AGENT-ADOPTIONS.md` naming the commit, what
+  changed, why, and the command that reverts it; a specification version also
+  gets a git tag. The pull request or session summary that links the row is
+  the report to the owner.
+- **How the owner vetoes.** At any time, by saying so. A veto is a revert: an
+  agent runs the row's revert command and adds a row recording the veto. A
+  vetoed change is not adopted again without the owner.
+- **Classification is the agent's call, contested by veto.** The agent making
+  a change decides whether it falls in an owner class; when unsure, it treats
+  the change as owner-class and asks.
+- **Owner decisions need no ceremony.** A decision in the four classes is
+  recorded as the owner's words, dated, with the commit that applies it; no
+  typed phrase or digest is required.
+- **Lower rules follow this one.** Where a contract, policy, specification,
+  decision or direction requires an owner act, sign-off, consent or ruling for
+  something this rule leaves to agents, this rule governs and an agent
+  adoption satisfies it, until the lower rule is amended. A lower rule that
+  asks for consent, a statement or a record before a repository is read, or
+  before its content goes to a declared provider, needs nothing at all: not
+  an adoption row, not a per-repository record.
+- *Violation:* an agent changing doctrine, weakening secret detection,
+  pushing into a repository the owner does not own, adding a repository to
+  the owner's list, running observed code outside a sandbox, or exposing
+  Syzygy beyond the tailnet without the owner's decision; an agent adoption with no log row
+  or no revert command; an agent editing a spec to match code it just wrote
+  without saying so in the row; a vetoed change adopted again without the
+  owner.
 
 **VIS-5 — Syzygy never writes code; direct writes are confined to two
 namespaces.** Syzygy writes project content directly only in its two roots,
@@ -219,9 +247,9 @@ and never materializes implementation code.
     into the implementation tree or any implementation branch:
     materialization is only ever a worker acting on scheduled work.
 - **This rule is about attribution and separation, not human control of
-  code.** The human gates on code change are VIS-4's sign-offs and the worker
-  toolchain's own review gates, which live outside Syzygy and are not
-  guaranteed here.
+  code.** The human controls on code change are VIS-4's owner decisions and
+  veto, and the worker toolchain's own review gates, which live outside
+  Syzygy and are not guaranteed here.
 - *Violation:* Syzygy committing a source-file edit to a governed repository;
   a direct write outside `openspec/**` and `.syzygy/**`; a manifest claiming
   to widen the write set; an adapter effect without explicit authorization.
@@ -235,13 +263,13 @@ holds must be rebuildable from the artifact that owns it.
   - **Observed-only projects** (architecture.md): content Syzygy authors about
     such a project — a promoted annotation, an attributed answer — is
     committed out to the `.syzygy/**` of the observing project, the governed
-    project that records the consent to observe it. There it is Syzygy's
+    project that observes it. There it is Syzygy's
     attributed record about the project: it never anchors the project's
     capability map, is never presented as the project's own declaration, is
     never cited as the project's text, and never suppresses a gap of the
     project. A dismissal of such a project's gap is not committed there: it
-    takes effect only in the project's own governed plane, so it waits for an
-    act that names that write.
+    takes effect only in the project's own governed plane, so it waits until
+    Syzygy may write there (VIS-4; SEC-4).
 - **The only exceptions:**
   - **(a) The owner's personal presentation state** — layouts, filters,
     bookmarks, unpromoted notes.
@@ -301,7 +329,8 @@ current capability.
   foreclosure is the violation.
 - **The reverse flow is legitimate today:** deriving *candidate* vision and
   shape drafts, work, and map surfaces from an existing codebase. Inferred
-  intent becomes desired state only after owner adoption (VIS-4).
+  intent becomes desired state only once adopted under VIS-4: by the owner
+  for doctrine, and by an agent, recorded and reported, for the rest.
 - **[Unknown] whether full regeneration is achievable.** The biggest named
   risk is spec completeness, especially adapting existing durable state
   without freezing schemas into specs.

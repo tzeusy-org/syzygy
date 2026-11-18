@@ -1,0 +1,297 @@
+# Shape-to-spec impact policy — candidate craft rule set
+
+> **In force:** acts 6 and 7 confirmed this file,
+> `SHAPE-TO-SPEC-IMPACT-POLICY-CANDIDATE.md`, and its sibling on 2026-08-17,
+> and later performed acts amend them; the acceptance record
+> (`../../../decisions/ACCEPTANCE-ACT-RECORD.md`) lists every confirmed
+> digest. The path, file name and title still say "candidate"; the act
+> record, not the path, decides status.
+>
+> **Amended by GOVERNANCE-SIMPLIFICATION-D10** (drafted 2026-11-17): this file,
+> `SHAPE-TO-SPEC-IMPACT-POLICY-CANDIDATE.md`, is in force at the bytes that act installs, from
+> the owner's act recorded in
+> `.syzygy/governance/decisions/GOVERNANCE-SIMPLIFICATION-D10-ACT.md`. CC-IMPACT-5 and CC-IMPACT-6 lose their owner
+> routes, and CC-IMPACT-7 is retired. CC-IMPACT-1 to CC-IMPACT-4 are
+> unchanged and, like the whole bar, agent-maintained under VIS-4.
+>
+> Proposed at the 2026-08-11 structured-closure pass to close launch-gate
+> question **E6** — "is there a defined propagation path for a shape change
+> *after* specs exist: how affected specs are detected, who amends them, and
+> how the interim disagreement is surfaced rather than hidden?"
+>
+> **The specific hole it fills.** Detection is the open half of E6: the
+> propagation fixture states, of its own step 2, *"This step has no owner in
+> any authority today."* Steps 3 and 4 already have owners — VIS-2 and
+> CC-REV-2 — and this policy **cites** them.
+> Identifiers `CC-IMPACT-1…7`; amended in place, never renumbered.
+>
+> **Amended 2026-08-13** — the declaration is now generated rather than
+> hand-authored, the trigger set is defined as *the same set* as the warrant
+> set, the exception limb no longer weakens CC-REV-2 by side-clause, and the
+> fixture is named by path and digest. The delta is
+> `../round-2026-08g/SPEC-ACCEPTANCE-AND-IMPACT-SEMANTIC-DELTA.md`; the
+> findings it answers are RD-51's, raw at
+> `../round-2026-08f/reviews/RD-51-spec-acceptance-and-impact-RAW.md`.
+> **This file and `SPECIFICATION-ACCEPTANCE-POLICY-CANDIDATE.md` are one
+> model** and are reviewed and offered together.
+>
+> **2026-08-17** (convergence pass, round 2026-08i): no CC-IMPACT clause
+> changed in this amendment — the sibling file gained CC-SPEC-11 and a
+> completed CC-SPEC-8, neither of which alters the six-class identity this
+> file consumes. This banner line exists so the one-model pair carries the
+> same amendment history; the delta is
+> `../round-2026-08i/SPEC-ACCEPTANCE-AND-IMPACT-SEMANTIC-DELTA-2.md`. The
+> blind exercise CC-IMPACT-7 requires has been run and passed (RD-59,
+> `../round-2026-08g/reviews/DISPOSITION-REGISTER.md`), bound to the
+> fixture digest quoted in CC-IMPACT-7.
+
+A shape change reaches the specifications it affects by one defined path:
+every accepted specification carries a generated declaration of what
+governs it; a change to any identity that can warrant a requirement carries
+a counted reverse-reference sweep; undecidable impact renders as Unknown or
+contradiction; every amendment, and the sweep itself, has a named actor;
+affected specifications move in the same logical change unless an adoption
+row records the lag. It is one model with
+the sibling specification-acceptance policy: CC-IMPACT-1 generates from
+CC-SPEC-2, and CC-IMPACT-2's trigger set is CC-SPEC-2's warrant set.
+
+*Diagram (non-normative; the rules govern):* the propagation path, from a
+changed identity to a merged change.
+
+```mermaid
+flowchart TD
+    D["Shape delta: a changed identity in one of<br/>CC-SPEC-2's six warrant classes"] --> S["Reverse-reference sweep over the specification corpus<br/>(CC-IMPACT-2); the shape change's author performs it,<br/>another party confirms it is adequate (CC-IMPACT-5)"]
+    S --> P["Population: every specification and requirement<br/>examined, counted, with the method (CC-IMPACT-3)"]
+    P --> A["affected"]
+    P --> N["explicitly unaffected:<br/>reason and method"]
+    P --> U["undecidable"]
+    U --> K["Rendered Unknown or contradicted,<br/>never unaffected (CC-IMPACT-4)"]
+    A --> M["Amendment owned by a named actor<br/>before the change lands (CC-IMPACT-5)"]
+    M --> L{"Spec amendments land with<br/>the shape change? (CC-IMPACT-6)"}
+    L -->|"yes"| G["Land together in the same<br/>logical change (CC-REV-2)"]
+    L -->|"no"| X["Lag recorded in the adoption row,<br/>rendered as a gap until closed"]
+```
+
+## The rule
+
+Seven clauses, CC-IMPACT-1…7: declare, sweep, record the sets, render the
+undecidable, name the actors, land together; the seventh is retired. Italic
+parentheticals mostly record dated history.
+
+**CC-IMPACT-1 — Every accepted specification declares what governs it, and
+the declaration is generated.** A specification carries, in a fixed and
+machine-readable place, a declaration over the **same six classes**
+CC-SPEC-2 defines for a requirement:
+
+```text
+doctrine[]              contracts[]             policies[]
+decisions[]             topology[]              parent_requirements[]
+```
+
+Three rules:
+
+1. **The specification-level declaration is the union of its requirements'
+   CC-SPEC-2 declarations, generated — never hand-authored.** A declaration
+   narrower than that union is a defect, and a second hand-maintained list
+   beside it is the duplicate-authority CC-REV-3 forbids.
+2. **A specification specifies one capability** (CC-SPEC-1). The capability
+   identity is a property of the specification, not a list.
+3. An **empty** field asserts that the specification relies on nothing of
+   that kind, and is reviewable as such. An **absent** declaration is a
+   defect: it makes the specification invisible to every sweep below, and
+   invisibility is exactly what this rule set exists to prevent.
+
+*Diagram (non-normative; the rules govern):* where the specification-level
+declaration comes from, and what reads it.
+
+```mermaid
+flowchart LR
+    R1["Requirement declaration<br/>(CC-SPEC-2, six classes)"] --> U["Union, generated —<br/>never hand-authored"]
+    R2["Requirement declaration<br/>(CC-SPEC-2, six classes)"] --> U
+    U --> D["Specification-level declaration<br/>(CC-IMPACT-1)"]
+    D --> S["Reverse-reference sweep<br/>(CC-IMPACT-2)"]
+```
+
+*(Rewritten 2026-08-13, RD-51 f10 (blocking) and f16. The clause previously
+defined four spec-level declaration classes of its own — capability
+identities, doctrine rule IDs, contract clause IDs, topology identities —
+hand-authored, with **nothing requiring them to match the requirements'
+warrants**. A specification whose REQ-3 named `RFC6-19` while its
+declaration listed only `RFC6-18` satisfied both policies and was invisible
+to CC-IMPACT-2's sweep: the fixture's own headline failure case, reproduced
+inside the policy written to catch it. It also wrote "which capability (or
+capabilities) it specifies" while CC-SPEC-1 mandated **one**.)*
+
+**CC-IMPACT-2 — A shape delta performs a reverse-reference sweep, and the
+trigger set is the warrant set.**
+
+> **The identities that can trigger a sweep are exactly the identities that
+> can warrant a requirement** — CC-SPEC-2's six classes, and no others.
+
+When an adopted doctrine rule, an accepted contract clause, an approved
+craft/policy clause, a recorded owner decision, an accepted topology
+identity, or an accepted parent requirement or specification changes, the
+change carries a sweep over the specification corpus for every
+specification whose CC-IMPACT-1 declarations name the changed identity, or
+whose requirements consume its vocabulary. **The sweep is part of the
+change, not a follow-up task.**
+
+Stating the trigger set as an *identity* rather than as a second enumeration
+is deliberate: two lists drift, and the drift is silent.
+
+- Any class that becomes warrantable becomes sweepable in the same act.
+- Any class that cannot trigger a sweep may not warrant a requirement.
+
+*(Rewritten 2026-08-13, RD-51 f9 (blocking). The triggers were "an accepted
+doctrine rule, contract clause, or topology identity" — three classes —
+while CC-SPEC-2 admitted five warrant classes including owner decisions. A
+requirement lawfully warranted by an owner decision was invisible when that
+decision was amended: warrantable-but-unsweepable, which is silent staleness
+by construction. The two enumerations are now one set by definition.)*
+
+**CC-IMPACT-3 — The sweep records four sets, with its denominator and its
+method.** The sweep's output names:
+
+```text
+population              every specification and requirement examined, counted
+affected                those a declaration or a consumption ties to the change
+explicitly unaffected   those examined and found untied — each with the reason
+                        AND the method that established untiedness
+undecidable             those whose relationship the sweep could not settle,
+                        each with what would settle it
+```
+
+**The reason and the method are two different things, and both are
+required.**
+
+- "Does not declare the changed identity" is an *observation*; if
+  declaration-matching is the whole method, the sweep says so, and
+  everything that method cannot decide routes to `undecidable` under
+  CC-IMPACT-4 rather than to `explicitly unaffected`.
+- A true reason producing a wrong answer, carried by a denominator and full
+  compliance, is the failure mode this limb exists to prevent.
+
+A sweep that reports only the affected set has reported a numerator without
+a denominator, and satisfies nothing. The denominator discipline itself is
+**CC-KNOW-16**'s (candidate, P-12, `CRAFT-KNOWLEDGE-HYGIENE-POLICY.md`) —
+cited, not restated; this clause is that rule's application to the
+specification corpus, and if CC-KNOW-16 is not approved the discipline still
+rests on VIS-2.
+
+*(Amended 2026-08-13, RD-51 f11 and f20. Two defects: the clause named
+**CC-IMPACT-2** as "the defect this exists to fix" when the defect described
+was its own, contradicting the file's own table; and it justified itself by
+a claim of absence — that the denominator discipline "lives only in
+operating procedure" — made with no sweep, when CC-KNOW-16 in the same
+directory already carried it. The method limb is f20's repair.)*
+
+**CC-IMPACT-4 — Undecidable impact renders as Unknown or contradiction,
+never as unaffected.** A specification the sweep could not settle is
+rendered `Unknown` with its settling evidence named, or `contradicted`
+where the shape change and the requirement now disagree. Silence is not an
+answer, and "not listed as affected" is never evidence of being unaffected
+(VIS-2, applied to the sweep's own output).
+
+**CC-IMPACT-5 — Every required amendment names its actor, and the sweep
+names one too.**
+
+- Each affected specification's amendment is owned by a named actor before
+  the change lands.
+- **The sweep itself has an actor**: the shape change's author performs it,
+  and a party other than that author confirms it is adequate — the
+  CC-TEST-4 pattern, because a sweeper grading their own denominator is the
+  unassigned judgment E5 exists to remove.
+- "The author" is a name; "someone" is not.
+- Where the amendment falls in one of VIS-4's four owner classes, it waits
+  on the owner and the wait is visible; otherwise its actor is an agent
+  *(amended by GOVERNANCE-SIMPLIFICATION-D10)*.
+
+*(Sweep actor added 2026-08-13, RD-51's finding that CC-IMPACT-2's "the
+change carries a sweep" is passive voice, and that after CC-IMPACT-1…7
+detection had acquired a *requirement* and still had **no owner** — which
+was the exact words of the hole the policy was written to close.)*
+
+**CC-IMPACT-6 — Affected specs move in the same logical change, or the lag
+is recorded.** *(Amended by GOVERNANCE-SIMPLIFICATION-D10; formerly "There is no exception
+today".)* By default the shape change and its spec amendments land
+together, so mainline never asserts the old truth (CC-REV-2).
+
+- When an affected specification cannot move in the same change, the agent
+  may let it lag: the adoption row names the lagging specification and the
+  follow-up item, and the lag renders as a gap until it is closed.
+- No owner act is needed for a lag, except where the specification falls in
+  one of VIS-4's four owner classes.
+
+*(Rewritten 2026-08-13, RD-51 f1 (blocking). The clause previously said it
+"adds exactly one lawful alternative" permitting an affected specification
+to lag under a four-field recorded exception. Three independent problems.
+**It weakened an owner-approved clause by writing a new clause beside it
+rather than amending it** — and both would sit in cluster tier 2, where the
+cluster's own precedence rule addresses cross-tier weakening only, so
+nothing would arbitrate two clauses giving opposite answers to "may this
+merge land?". **It created a second home for the merge invariant**, which
+CC-REV-3 forbids. **The exception had no confirmer** — the author of the
+shape change would write their own exception to CC-REV-2 and merge, which is
+the CC-REV-2 violation with a form attached; compare CC-TEST-1 and CC-TEST-4,
+the cluster's two approved exception mechanisms, both of which name a second
+party. A fourth fact: the predecessor fixture records this same limb as
+previously **invented and withdrawn** for want of any craft clause containing
+it, and the candidate reinstated it. Creating a rule by act is lawful;
+creating one that overrides a different approved clause without amending it
+is not.)*
+
+**CC-IMPACT-7 — Retired by GOVERNANCE-SIMPLIFICATION-D10.** *(Formerly "The path is
+exercised before it is relied on": a blind run against a digest-pinned
+fixture before the first real shape amendment. Whether to exercise the path
+first, and how, is now an engineering choice the agent records in the
+adoption row.)*
+
+## What this rule set does not do
+
+Four limits: it leaves the sweep's implementation open, leaves "consumes
+its vocabulary" undefined, does not govern shape changes to candidates, and
+does not create, imply, or authorize the openspec directory.
+
+- It does not define *how* the sweep is implemented. There is no script
+  today, and this policy does not pretend one exists: the sweep may be
+  mechanical or manual, and either way CC-IMPACT-3's four sets, its
+  denominator and its **method** are what make it checkable. Claiming a
+  mechanical detector before one exists would be the precise failure VIS-2
+  forbids.
+- It does not define **"consumes its vocabulary"**. `[Unknown]` — the term
+  is undefined, and its undefinedness decides real cases: a requirement
+  impacted at one remove through another clause's composition rule can be
+  read either way. CC-IMPACT-4 is what keeps that honest — such a case is
+  `undecidable`, never `unaffected` — but the term itself remains an open
+  finding against this file (RD-51's G section), not a closed one.
+- It does not govern shape changes to *candidates*. Until a contract is
+  accepted, changing it propagates to nothing, because no specification may
+  cite an unaccepted clause.
+- It does not create, imply, or authorize `openspec/`. Every specification
+  it speaks of is future.
+
+## Why each rule is here, in one line each
+
+One line per clause: the failure it prevents.
+
+| Rule | The failure it prevents |
+|---|---|
+| CC-IMPACT-1 | a specification no sweep can see, and a declaration that may disagree with the requirements it summarizes |
+| CC-IMPACT-2 | a warrant class that can authorize a requirement but cannot trigger a sweep |
+| CC-IMPACT-3 | a numerator with no denominator, and a true reason producing a wrong answer |
+| CC-IMPACT-4 | "not listed" quietly reading as "not affected" |
+| CC-IMPACT-5 | an amendment everyone agrees is needed and nobody owns; a sweeper grading their own sweep |
+| CC-IMPACT-6 | a spec silently lagging its shape change |
+| CC-IMPACT-7 | retired by GOVERNANCE-SIMPLIFICATION-D10 |
+
+## Acceptance
+
+This is a **candidate**. It comes into force only by its own
+`CONFIRM CRAFT AMENDMENT` act, at a digest computed at the act — the route
+the craft cluster defines. Nothing in it binds today, and no verdict of the
+launch gate may cite it as in force until that act is performed. Its queue
+row is **P-42** in `../../../decisions/PENDING-OWNER-DECISIONS.md`, and it
+is offered **together with** the specification-acceptance policy (P-41):
+CC-IMPACT-1 generates from CC-SPEC-2, and CC-IMPACT-2's trigger set *is*
+CC-SPEC-2's warrant set, so accepting one without the other reintroduces the
+two blocking defects this amendment removed.

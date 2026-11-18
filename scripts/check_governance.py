@@ -92,8 +92,38 @@ import hashlib
 import json
 import os
 import re
+import importlib.util
 import subprocess
 import sys
+
+
+def _load_sibling(name):
+    """Import scripts/<name>.py by path, so importers from any directory find it."""
+    spec = importlib.util.spec_from_file_location(
+        name, os.path.join(os.path.dirname(os.path.abspath(__file__)), f"{name}.py"))
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    return module
+
+
+class _D10NotPresent:
+    """Stands in when `d10_supersession.py` is not beside this file (a selftest's partial copy of `scripts/`):
+    D10 is then never in effect, so every check runs as before."""
+    NAME = "GOVERNANCE-SIMPLIFICATION-D10"
+
+    @staticmethod
+    def state(root=None):
+        return None
+
+    @staticmethod
+    def installed_targets(root=None):
+        return None
+
+
+try:
+    d10_supersession = _load_sibling("d10_supersession")
+except FileNotFoundError:
+    d10_supersession = _D10NotPresent
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SELF_REL = os.path.relpath(os.path.abspath(__file__), ROOT).replace(os.sep, "/")
@@ -427,6 +457,9 @@ EXTERNAL = ("http://", "https://", "mailto:", "ftp://")
 #: one is correct, not broken. Declared, counted, and printed on every run.
 FORWARD_REFS = (
     ".syzygy/governance/decisions/ACCEPTANCE-ACT-RECORD.md",  # created by act 1
+    ".syzygy/governance/decisions/AGENT-ADOPTIONS.md",        # created by the D10 act
+    ".syzygy/governance/decisions/GOVERNANCE-SIMPLIFICATION-D10-ACT.md",  # the D10 act's record
+    ".syzygy/governance/decisions/OWNED-REPOSITORIES.md",     # the owner's list, created by the D10 act
     ".syzygy/governance/contracts/rfcs/",                     # wave-act install home
     ".syzygy/governance/contracts/wave-manifests/",           # wave-act install home
     ".syzygy/governance/contracts/history/",                  # first-wave companion
@@ -1364,6 +1397,10 @@ def _act_bound_names(paths):
     if not os.path.exists(record):
         return set()
     quoted = set(re.findall(r"\b[0-9a-f]{64}\b", read(PERFORMED_ACT_RECORD)))
+    # D10 binds its installed files through its manifest, whose digest the
+    # record quotes: a file D10 installed counts while it holds those bytes.
+    d10_bytes = (set((d10_supersession.installed_targets(ROOT) or {}).items())
+                 if d10_supersession.state(ROOT) else set())
     names = set()
     for rel in paths:
         if not rel.startswith(f"{CANDIDATES}/"):
@@ -1371,7 +1408,8 @@ def _act_bound_names(paths):
         full = os.path.join(ROOT, rel)
         if not os.path.isfile(full):
             continue
-        if sha256_file(full) in quoted:
+        digest = sha256_file(full)
+        if digest in quoted or (rel, digest) in d10_bytes:
             names.add(os.path.basename(rel))
             parent = os.path.basename(os.path.dirname(rel))
             if parent and parent != os.path.basename(CANDIDATES):
@@ -1840,6 +1878,18 @@ LAUNCH_WRITE_CONSENT_ACTS = (
     ("CONSENT TO WRITE LAUNCH CONSENT RECORDS ON THE DEDICATED BRANCH",
      f"{LAUNCH_WRITE_CONSENT_DIR}/instances/syzygy/WRITE-CONSENT-LAUNCH-RECORDS.md"),
 )
+#: The governance simplification, doctrine amendment D10 (drafted 2026-11-17):
+#: one owner act over the package's `MANIFEST.txt`, recorded by
+#: `scripts/record_governance_simplification_d10.py`. Registered before its
+#: packet exists so a stale argument copy fails CG-7d and CG-7e; the phrase
+#: and the packet copy are existence-gated on the manifest, the performed
+#: record and the aggregate on the dedicated record. Any chain link or battery
+#: line arrives with the act.
+GOV_SIMPLIFICATION_D10_DIR = f"{CANDIDATES}/governance-simplification-d10"
+GOV_SIMPLIFICATION_D10_MANIFEST = f"{GOV_SIMPLIFICATION_D10_DIR}/MANIFEST.txt"
+GOV_SIMPLIFICATION_D10_LABEL = "ADOPT GOVERNANCE SIMPLIFICATION D10"
+GOV_SIMPLIFICATION_D10_ACT = (
+    f"{DECISIONS}/GOVERNANCE-SIMPLIFICATION-D10-ACT.md")
 #: The act's dedicated record, written by
 #: `record_launch_consent_write_consent_act.py` (performed 2026-11-08); it
 #: and the aggregate become copy files once the record exists.
@@ -2516,7 +2566,36 @@ def cg7_manifest(paths, res):
             details=findings)
 
     cg7d_quoted_elsewhere(paths, res)
-    cg7e_act_digest_copies(paths, res)
+    if not _d10_retired("CG-7e  act-argument copies enumerated and current"):
+        cg7e_act_digest_copies(paths, res)
+
+
+#: Checks that police only a ceremony D10 retires, named as they were skipped
+#: in this run. Reported together as one WARN row, never dropped silently.
+_D10_RETIRED_RUN = []
+
+
+def _d10_retired(check):
+    """True, and noted, when D10 is in effect and `check` holds a performed
+    act's frozen subject bytes or its digest copies to a state D10 replaced.
+
+    Under RFC3-16 as D10 amends it, a later edit is a new adoption and the
+    earlier act's digest is history, not a lock; such a check would fail
+    forever on the installed tree. It stops running instead (existence-gated,
+    as the recorder notes in AGENTS.md require), and `_d10_retired_row` says
+    which checks did not run."""
+    if d10_supersession.state(ROOT) is None:
+        return False
+    _D10_RETIRED_RUN.append(check)
+    return True
+
+
+def _d10_retired_row(res):
+    if _D10_RETIRED_RUN:
+        res.add("WARN", "CG-7x  checks D10 retires are not run", len(_D10_RETIRED_RUN), 0, "check",
+                note=f"{d10_supersession.NAME} is in effect ({d10_supersession.state(ROOT)}); these "
+                     f"police performed acts' frozen bytes, which D10 replaced",
+                details=list(_D10_RETIRED_RUN))
 
 
 #: Every act phrase, with the artifact whose sha256 is its only valid
@@ -2778,6 +2857,13 @@ def _act_subjects():
             if not any(l == label for l, _rel, _pat in out):
                 out.append((label, subject, re.compile(
                     re.escape(label) + r"\s*:\s*`?([0-9a-f]{64})")))
+    if (os.path.isfile(os.path.join(ROOT, GOV_SIMPLIFICATION_D10_MANIFEST))
+            and not any(l == GOV_SIMPLIFICATION_D10_LABEL
+                        for l, _rel, _pat in out)):
+        out.append((GOV_SIMPLIFICATION_D10_LABEL,
+                    GOV_SIMPLIFICATION_D10_MANIFEST, re.compile(
+                        re.escape(GOV_SIMPLIFICATION_D10_LABEL)
+                        + r"\s*:\s*`?([0-9a-f]{64})")))
     return tuple(out)
 
 
@@ -3717,6 +3803,38 @@ def _activate_launch_write_consent_copy_registry():
 
 
 _activate_launch_write_consent_copy_registry()
+
+
+def _activate_governance_simplification_d10_copy_registry():
+    """The D10 owner packet quotes the argument; the records join with the act.
+
+    Existence-gated: the packet copy registers once the manifest exists, and
+    the dedicated record and the aggregate once the dedicated record exists.
+    """
+    if os.path.isfile(os.path.join(ROOT, GOV_SIMPLIFICATION_D10_MANIFEST)):
+        ACT_DIGEST_COPY_FILES[f"{GOV_SIMPLIFICATION_D10_DIR}/OWNER-SIGNOFF.md"] = (
+            GOV_SIMPLIFICATION_D10_LABEL,)
+    if not os.path.isfile(os.path.join(ROOT, GOV_SIMPLIFICATION_D10_ACT)):
+        # Before the act, the manifest's `[base]` rows are copies of the
+        # current arguments of the acts whose subjects D10 replaces: a moved
+        # target makes the copy stale here exactly as it makes the recorder
+        # refuse. After the act those rows are history; FOLLOW-ON.md F-0
+        # settles them with the rest of the post-install checks.
+        ACT_DIGEST_COPY_FILES[GOV_SIMPLIFICATION_D10_MANIFEST] = (
+            "AMEND RFC5-14 WITH THE PROJECT-DOCUMENTATION CONTENT CLASS",
+            "CONFIRM CRAFT AMENDMENT: CC-IMPACT",
+            "CONFIRM CRAFT AMENDMENT: CC-SPEC",
+        )
+        return
+    aggregate = f"{DECISIONS}/ACCEPTANCE-ACT-RECORD.md"
+    present = ACT_DIGEST_COPY_FILES.get(aggregate, ())
+    if GOV_SIMPLIFICATION_D10_LABEL not in present:
+        ACT_DIGEST_COPY_FILES[aggregate] = present + (GOV_SIMPLIFICATION_D10_LABEL,)
+    ACT_DIGEST_COPY_FILES[GOV_SIMPLIFICATION_D10_ACT] = (
+        GOV_SIMPLIFICATION_D10_LABEL,)
+
+
+_activate_governance_simplification_d10_copy_registry()
 
 
 #: The public-source screening scope, version 2 (sitting row 12): one state-(1)
@@ -11887,7 +12005,8 @@ def main():
     cg5_craft_banners(existing, res)
     cg6_accepted_homes(res)
     cg7_manifest(existing, res)
-    cg7h_general_bootstrap_act(res)
+    if not _d10_retired("CG-7h  performed bootstrap transaction subjects remain exact"):
+        cg7h_general_bootstrap_act(res)
     cg8_budgets(existing, res)
     cg9_duplicate_homes(existing, res)
     cg10_pending_asof(existing, res)
@@ -11913,6 +12032,7 @@ def main():
     cg26_battery_parity(res)
     cg27_default_path_currency(res)
     cg24_selftest_coverage(res)
+    _d10_retired_row(res)
     cg25_check_owners(res)
     res.report()
     return 1 if res.failed() else 0

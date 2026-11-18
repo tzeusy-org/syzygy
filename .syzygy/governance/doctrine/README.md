@@ -18,20 +18,28 @@ aspirational: every rule is written so that a violation is recognizable.
 - **Owner** — the single human accountable for a governed project's intent.
   Wherever doctrine says "human sign-off" or "consent," it means the owner.
   (Multi-user operation is deferred; see v1.md.)
+- **Owner classes** — the four kinds of change only the owner decides
+  (vision.md VIS-4): doctrine; secrets; writes into repositories the owner
+  does not own; and network exposure beyond the tailnet, release, deployment
+  and multi-user operation.
+- **Agent adoption** — a change an agent adopts under vision.md VIS-4: landed
+  on the default branch with one row in `decisions/AGENT-ADOPTIONS.md`
+  (commit, what changed, why, revert command), reported to the owner, and
+  undone by the owner's veto.
 - **Governed project** — one or more repositories with one owner and exactly
   one **designated governance root**: the repository that holds the project's
   single `openspec/**` + `.syzygy/**` plane. It is explicitly brought under
   Syzygy observation. Other repositories are declared observed-source
-  repositories, read-only to Syzygy unless separately onboarded, and every
-  observed repository needs consent (architecture.md; security.md SEC-4).
+  repositories, read-only to Syzygy unless separately onboarded. Reading a
+  repository needs no consent; writing into one the owner does not own does
+  (architecture.md; security.md SEC-2, SEC-4).
 - **Observed-only project** — a governed project whose governance root Syzygy
-  may read under the owner's consent but may not write: no act in force names
-  a write into it, and Syzygy writes nothing there until one does
-  (architecture.md).
+  may read but may not write: no write into it is allowed or adopted, and
+  Syzygy writes nothing there until one is (architecture.md).
 - **Attributed owner answer** — the owner's answer to a question about
   intent, attributed, dated and individually withdrawable. It is neither
   evidence nor a warrant: it renders Observed only as a fact about the record,
-  never as adopted intent without an applicable act, and never in place of an
+  never as adopted intent unless adopted under VIS-4, and never in place of an
   Unknown (trust-and-evidence.md).
 - **Self-observation** — Syzygy's observation pipeline evaluating Syzygy's own
   governance root as its subject. Its records never evidence a claim of

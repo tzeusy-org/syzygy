@@ -95,6 +95,11 @@ flowchart TD
   - Splitting one logical change across sequenced merges that pass through
     such a state *is* the violation — an open follow-up PR is "syncing
     later" by another name.
+  - *One recorded exception (amended 2026-11-18, agent adoption A-1 under
+    D10):* an affected specification may lag a shape change only as
+    CC-IMPACT-6 allows — the adoption row names the lagging specification
+    and its follow-up item, and the lag renders as a gap until closed. An
+    unrecorded lag is still the violation above; doctrine never lags.
 
 **The one structural carve-out: doctrine** is amended only through the owner
 gate (VIS-4).

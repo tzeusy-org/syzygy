@@ -23,14 +23,16 @@ under Syzygy observation.
 - Any other repository in the project is a declared **observed-source
   repository**, read-only to Syzygy unless separately onboarded as a governed
   project.
-- Onboarding is recorded, per-repository consent (security.md SEC-4).
-  **Every observed repository consents, governance root or not.**
+- Onboarding is a recorded declaration by the operator, not a consent: any
+  repository the operator points Syzygy at may be read, governance root or
+  not (security.md SEC-2). Writing into a repository the owner does not own
+  needs the owner's consent (security.md SEC-4).
 
 An **observed-only project** is a governed project whose governance root
-Syzygy may read under the owner's consent but may not write: no act in force
-names a write into it. It is still governed, and its plane is still its own;
-Syzygy writes nothing there until an act names the write (vision.md VIS-6 says
-where content Syzygy authors about it lives meanwhile).
+Syzygy may read but may not write: no write into it is allowed (security.md
+SEC-4) or adopted (vision.md VIS-4). It is still governed, and its plane is
+still its own; Syzygy writes nothing there until a write is (vision.md VIS-6
+says where content Syzygy authors about it lives meanwhile).
 
 Syzygy governs an orthogonal, **in-tree** plane at the governance root.
 
@@ -65,9 +67,10 @@ flowchart LR
     W["Workers, via scheduled work"] -->|"materialize"| CODE
 ```
 
-Every edge from Syzygy is gated: each observed repository, governance root
-included, has consented (SEC-4), and adapters act only when explicitly
-authorized.
+Every edge from Syzygy is declared: each observed repository, governance
+root included, is declared by the operator; a write into a repository the
+owner does not own has the owner's consent (SEC-4); and adapters act only
+when explicitly authorized.
 
 **The two roots have different schema owners.**
 
@@ -129,7 +132,9 @@ governance_root/
 ## Typed authority
 
 Authority is typed by question; a contradiction — across authorities or
-within one — renders Unknown and goes to the owner, never settled silently.
+within one — renders Unknown and is never settled silently: an agent
+resolves it by a recorded adoption, reported and open to the owner's veto,
+and the owner resolves it when it falls in an owner class (vision.md VIS-4).
 
 There is no single universal source of truth. Authority is typed by question,
 and each role names its current realization — all substitutable (see
@@ -334,15 +339,16 @@ flowchart LR
 
 **The loop:** intent → observation → gaps → reviewed work → fleet execution →
 verification. It has one upward arrow: verification and runtime evidence may
-open spec-indictment gaps that route to the owner. The loop is
-**human-triggered**: someone specs a desired shape, then deliberately triggers
-a propagate/sync pass. Work-to-code and code-to-deployment belong to the
+open spec-indictment gaps, which an agent resolves by a recorded adoption
+(the owner, in an owner class; vision.md VIS-4). The loop is **deliberately
+triggered**: a person or an agent session specs a desired shape, then
+triggers a propagate/sync pass; Syzygy never triggers one itself. Work-to-code and code-to-deployment belong to the
 orchestration toolchain, outside Syzygy's body.
 
 ```mermaid
 flowchart LR
     I["Intent"] --> O["Observation"] --> G["Gaps"] --> R["Reviewed work"] --> F["Fleet execution"] --> V["Verification"]
-    V -. "verification or runtime evidence:<br/>spec-indictment gap, to the owner" .-> I
+    V -. "verification or runtime evidence:<br/>spec-indictment gap, resolved by a recorded adoption" .-> I
 ```
 
 **Observation determinism and idempotence of authoritative effects are

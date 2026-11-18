@@ -7,6 +7,14 @@
 > digest. The path, file name and title still say "candidate"; the act
 > record, not the path, decides status.
 >
+> **Amended by GOVERNANCE-SIMPLIFICATION-D10** (drafted 2026-11-17): this file,
+> `SPECIFICATION-ACCEPTANCE-POLICY-CANDIDATE.md`, is in force at the bytes that act installs, from
+> the owner's act recorded in
+> `.syzygy/governance/decisions/GOVERNANCE-SIMPLIFICATION-D10-ACT.md`. CC-SPEC-8's owner judgment and CC-SPEC-10's owner
+> adoption become agent adoption under VIS-4 as amended. Specification changes
+> are agent-decided, recorded and reported, except in VIS-4's four owner
+> classes.
+>
 > Proposed at the 2026-08-10 launch-closure pass to close launch-gate
 > question E5 (no acceptance criteria existed for a specification itself —
 > "spec acceptance would be a vibe check"). Identifiers `CC-SPEC-1…11`;
@@ -62,7 +70,7 @@ declaration from CC-SPEC-2.
 - **Coverage:** applicable contract clauses covered or lawfully N/A
   (CC-SPEC-8); the capability's own obligations covered, demonstrably
   (CC-SPEC-11).
-- **Adoption:** lawful adoption recorded at the exact digest (CC-SPEC-10).
+- **Adoption:** lawful adoption recorded at the adopting commit (CC-SPEC-10).
 
 ## The rule
 
@@ -289,23 +297,24 @@ contract's, not this clause's.** They are stated by the nine confirmed
 contract phase rules **RFC1-33, RFC2-26, RFC3-33, RFC4-30, RFC5-27, RFC6-28,
 RFC7-38, RFC8-32, and RFC9-52**:
 
-- a reviewed N/A judgment is a recorded **owner** judgment homed in
-  `decisions/` (RFC3-15);
-- it is honored only through an effective owner act under **RFC3-16(a)**,
-  in state (1) or state (2), with that state rendered;
-- absent or invalid acts map nothing — the consequence remains unmapped and
+- a reviewed N/A judgment is a recorded judgment homed in `decisions/`
+  (RFC3-15): an agent adoption under VIS-4, or the owner's where the clause
+  falls in an owner class *(amended by GOVERNANCE-SIMPLIFICATION-D10; the phase rules' owner
+  gate is superseded by VIS-4's lower-rules sentence)*;
+- it is honored only with its adoption record under **RFC3-16** as
+  amended, with who adopted rendered;
+- absent or invalid records map nothing — the consequence remains unmapped and
   **renders Unknown, never covered** (VIS-2).
 
 This clause adds only the specification-side **production obligation**:
 
 - the specification ships with its coverage matrix;
-- every N/A row in that matrix cites the owner judgment's record in
-  `decisions/`, so the RFC3-16(a) gate can evaluate the act and expose its
-  exact provenance state.
+- every N/A row in that matrix cites the judgment's record in
+  `decisions/`, so the RFC3-16 gate can find its adoption record.
 
-A matrix whose N/A rows rest on anything less — the author's or a
-reviewer's say-so, a judgment recorded only inside the spec — does not
-discharge this clause.
+A matrix whose N/A rows rest on anything less — a judgment with no adoption
+record, or one recorded only inside the spec — does not discharge this
+clause.
 
 *Diagram (non-normative; the rules govern):* one row of the coverage
 matrix, from an applicable clause's observable consequence to what renders.
@@ -314,9 +323,9 @@ matrix, from an applicable clause's observable consequence to what renders.
 flowchart TD
     R["Row: one observable consequence<br/>of an applicable contract clause"] --> C{"Covered by<br/>requirements?"}
     C -->|"yes"| COV["Covered"]
-    C -->|"no"| NA["Reviewed N/A row citing the owner<br/>judgment's record in decisions/"]
-    NA --> G{"Effective owner act<br/>under RFC3-16(a)?"}
-    G -->|"yes: state (1) or state (2)"| H["N/A honored,<br/>with that state rendered"]
+    C -->|"no"| NA["Reviewed N/A row citing the<br/>judgment's record in decisions/"]
+    NA --> G{"Adoption record<br/>under RFC3-16?"}
+    G -->|"yes"| H["N/A honored,<br/>with who adopted rendered"]
     G -->|"absent or invalid"| U["Maps nothing: consequence unmapped,<br/>renders Unknown, never covered"]
     C -->|"neither, or N/A resting on say-so"| X["Clause not discharged;<br/>consequence unmapped, Unknown"]
 ```
@@ -343,37 +352,30 @@ restated CC-REV-4 normatively, which CC-REV-3 forbids: "documentation cites
 authoritative artifacts, it does not restate them normatively — a restated
 rule drifts and becomes a shadow authority.")*
 
-**CC-SPEC-10 — Lawful adoption is recorded at the exact digest.**
+**CC-SPEC-10 — Lawful adoption is recorded at the adopting commit.**
+*(Amended by GOVERNANCE-SIMPLIFICATION-D10; formerly "Lawful adoption is recorded at the exact
+digest".)*
 
-> Lawful adoption under VIS-4 is recorded at the exact digest, and the
-> record quotes what was adopted at which digest.
+> A specification or specification version is adopted by an agent under
+> VIS-4: it lands on the default branch with one row in
+> `decisions/AGENT-ADOPTIONS.md` naming the commit, what changed, why and the
+> revert command, and the version gets a git tag. The commit identifies the
+> exact bytes; no phrase or digest is transcribed.
 >
-> **Under the current doctrine state this means owner adoption**, because
-> VIS-4 opens the delegated gate only on **both** of two conditions —
-> *"an accepted adjudication RFC (defining what makes adversarial judgment
-> independent, how the ambiguity determination is recorded, and how each
-> adopted change stays individually revertable)* ***and*** *the owner's
-> explicit doctrine amendment recording that the gate opens; RFC acceptance
-> alone never opens it"* — and neither exists.
->
-> **One class is always human-gated, gate open or not:** VIS-4 —
-> *"spec changes touching security posture, privacy or retention
-> obligations, or normative data contracts."* No delegated mechanism ever
-> reaches this class.
+> A specification change that falls in one of VIS-4's four owner classes —
+> secrets, writes into repositories the owner does not own, exposure beyond
+> the tailnet, release — is adopted only by the owner, recorded as the
+> owner's words with the commit.
 
 Until the adoption record exists the spec is a candidate like everything
-else.
+else. Independent review stays the engineering norm (CC-REV-1, CC-REV-4); it
+is not an owner gate.
 
-*(Restated 2026-08-13, RD-51 f12. The clause previously read "Lawful
-adoption under VIS-4 is recorded at the exact digest. Under the current
-doctrine state, this means owner adoption." Word-by-word against VIS-4 it
-**added** the digest binding — its genuine contribution — **paraphrased
-correctly** for today, and **subtracted** two limbs: the two conjoined
-preconditions, and the always-human-gated class. The subtracted sentence is
-precisely the rule that binds in the future the restatement was written to
-anticipate: a reader in a gate-open future, reading CC-SPEC-10 alone, would
-conclude the entire spec corpus is LLM-adoptable at a digest. The clause now
-quotes both limbs rather than glossing them.)*
+*(History: the 2026-08-13 text tied adoption to owner adoption at an exact
+digest while VIS-4's delegated gate stayed closed, and quoted VIS-4's
+always-human-gated class. D10 replaced that gate and class with the four
+owner classes. The earlier text is in git history and in the 2026-08-13
+semantic delta.)*
 
 **CC-SPEC-11 — The requirement set covers the capability, and the coverage
 is demonstrated.** *(Minted 2026-08-17, on the owner's convergence

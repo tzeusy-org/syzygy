@@ -1,0 +1,597 @@
+# CONTRACT-INDEX — generated projection; rebuild with scripts/build_contract_index.py
+# Authoritative metadata lives in the active contract files' front matter.
+#
+# NOT AUTHORITY. This candidate-lane projection binds nothing and states no
+# contract's acceptance. A generated index is a rebuildable projection,
+# never a second truth store (RFC11-7); a contract's effective status lies
+# outside its content, in the owner act record its `status_source` names
+# (RFC3-16), and never in this file.
+# `status_source` is read from each module's front matter; a contract whose
+# modules omit it or disagree shows [Unknown] here and fails --check.
+#
+# clause kind: phase-rule for a clause or limb of RFC1-33, RFC2-26, RFC3-33,
+# RFC4-30, RFC5-27, RFC6-28, RFC7-38, RFC8-32, RFC9-52, RFC10-16, RFC11-12;
+# otherwise by the enclosing section number — §0, §6, §7 informative; §8
+# open-question; any other section normative.
+contracts:
+  - id: RFC-0001
+    title: "Project Graph, Identity and State Planes"
+    status_source: owner-act-record
+    governs: [entities, relations, identities, state-planes, evaluation-identity, claims, gaps, contradictions, proposals, lifecycles]
+    applies_to: [kernel, all-surfaces]
+    depends_on: []
+    tags: [foundational, kernel, closed-vocabulary, identity, state-planes, semantic-relation-class]
+    implementation_boundary:
+      clause: RFC1-33
+      kind: requires-openspec
+      declared_in: RFC-0001-project-graph-identity-state-planes.md
+    modules: [RFC-0001-project-graph-identity-state-planes.md]
+    clauses:
+      - {id: RFC1-1, module: RFC-0001-project-graph-identity-state-planes.md, kind: normative}
+      - {id: RFC1-2, module: RFC-0001-project-graph-identity-state-planes.md, kind: normative}
+      - {id: RFC1-3, module: RFC-0001-project-graph-identity-state-planes.md, kind: normative}
+      - {id: RFC1-4, module: RFC-0001-project-graph-identity-state-planes.md, kind: normative}
+      - {id: RFC1-5, module: RFC-0001-project-graph-identity-state-planes.md, kind: normative}
+      - {id: RFC1-6, module: RFC-0001-project-graph-identity-state-planes.md, kind: normative}
+      - {id: RFC1-7, module: RFC-0001-project-graph-identity-state-planes.md, kind: normative}
+      - {id: RFC1-8, module: RFC-0001-project-graph-identity-state-planes.md, kind: normative}
+      - {id: RFC1-9, module: RFC-0001-project-graph-identity-state-planes.md, kind: normative}
+      - {id: RFC1-10, module: RFC-0001-project-graph-identity-state-planes.md, kind: normative}
+      - {id: RFC1-11, module: RFC-0001-project-graph-identity-state-planes.md, kind: normative}
+      - {id: RFC1-12, module: RFC-0001-project-graph-identity-state-planes.md, kind: normative}
+      - {id: RFC1-13, module: RFC-0001-project-graph-identity-state-planes.md, kind: normative}
+      - {id: RFC1-14, module: RFC-0001-project-graph-identity-state-planes.md, kind: normative}
+      - {id: RFC1-15, module: RFC-0001-project-graph-identity-state-planes.md, kind: normative}
+      - {id: RFC1-16, module: RFC-0001-project-graph-identity-state-planes.md, kind: normative}
+      - {id: RFC1-17, module: RFC-0001-project-graph-identity-state-planes.md, kind: normative}
+      - {id: RFC1-18, module: RFC-0001-project-graph-identity-state-planes.md, kind: normative}
+      - {id: RFC1-18(a), module: RFC-0001-project-graph-identity-state-planes.md, kind: normative}
+      - {id: RFC1-18(b), module: RFC-0001-project-graph-identity-state-planes.md, kind: normative}
+      - {id: RFC1-19, module: RFC-0001-project-graph-identity-state-planes.md, kind: normative}
+      - {id: RFC1-20, module: RFC-0001-project-graph-identity-state-planes.md, kind: normative}
+      - {id: RFC1-21, module: RFC-0001-project-graph-identity-state-planes.md, kind: normative}
+      - {id: RFC1-22, module: RFC-0001-project-graph-identity-state-planes.md, kind: normative}
+      - {id: RFC1-23, module: RFC-0001-project-graph-identity-state-planes.md, kind: normative}
+      - {id: RFC1-24, module: RFC-0001-project-graph-identity-state-planes.md, kind: normative}
+      - {id: RFC1-25, module: RFC-0001-project-graph-identity-state-planes.md, kind: normative}
+      - {id: RFC1-25(a), module: RFC-0001-project-graph-identity-state-planes.md, kind: normative}
+      - {id: RFC1-25(b), module: RFC-0001-project-graph-identity-state-planes.md, kind: normative}
+      - {id: RFC1-25(c), module: RFC-0001-project-graph-identity-state-planes.md, kind: normative}
+      - {id: RFC1-25(d), module: RFC-0001-project-graph-identity-state-planes.md, kind: normative}
+      - {id: RFC1-26, module: RFC-0001-project-graph-identity-state-planes.md, kind: normative}
+      - {id: RFC1-27, module: RFC-0001-project-graph-identity-state-planes.md, kind: normative}
+      - {id: RFC1-28, module: RFC-0001-project-graph-identity-state-planes.md, kind: normative}
+      - {id: RFC1-29, module: RFC-0001-project-graph-identity-state-planes.md, kind: normative}
+      - {id: RFC1-30, module: RFC-0001-project-graph-identity-state-planes.md, kind: normative}
+      - {id: RFC1-31, module: RFC-0001-project-graph-identity-state-planes.md, kind: normative}
+      - {id: RFC1-32, module: RFC-0001-project-graph-identity-state-planes.md, kind: normative}
+      - {id: RFC1-33, module: RFC-0001-project-graph-identity-state-planes.md, kind: phase-rule}
+  - id: RFC-0002
+    title: "Observation, Evaluation and Reconciliation — contract package index"
+    status_source: owner-act-record
+    governs: [source-snapshot, evaluation-identity, observation-record, inference-overlay, currency, staleness, challenge, contradiction, gap, aligned, converged, reconciliation-chain, failure-states, unknown-reason, rendering-tier]
+    applies_to: [kernel, all-surfaces]
+    depends_on: [RFC-0001, RFC-0003, RFC-0004, RFC-0005]
+    tags: [foundational, temporal, epistemic, evidence, closed-vocabulary, v0-v1-staging]
+    implementation_boundary:
+      clause: RFC2-26
+      kind: requires-openspec
+      declared_in: RFC-0002/README.md
+    modules: [RFC-0002/README.md, RFC-0002/challenge-lifecycle.md, RFC-0002/reconciliation-chain.md, RFC-0002/rendering-vocabularies.md, RFC-0002/snapshot-and-evaluation-core.md]
+    module_ranges:
+      - {file: RFC-0002/challenge-lifecycle.md, clauses: "RFC2-12..RFC2-14 (no gaps, no retirements, no merges)"}
+      - {file: RFC-0002/reconciliation-chain.md, clauses: "RFC2-15..RFC2-22 (sub-clause RFC2-19(a); no gaps, no retirements, no merges)"}
+      - {file: RFC-0002/rendering-vocabularies.md, clauses: "RFC2-23..RFC2-26 (no gaps, no retirements, no merges)"}
+      - {file: RFC-0002/snapshot-and-evaluation-core.md, clauses: "RFC2-1..RFC2-11 (no gaps, no retirements, no merges)"}
+    clauses:
+      - {id: RFC2-12, module: RFC-0002/challenge-lifecycle.md, kind: normative}
+      - {id: RFC2-13, module: RFC-0002/challenge-lifecycle.md, kind: normative}
+      - {id: RFC2-14, module: RFC-0002/challenge-lifecycle.md, kind: normative}
+      - {id: RFC2-15, module: RFC-0002/reconciliation-chain.md, kind: normative}
+      - {id: RFC2-16, module: RFC-0002/reconciliation-chain.md, kind: normative}
+      - {id: RFC2-17, module: RFC-0002/reconciliation-chain.md, kind: normative}
+      - {id: RFC2-18, module: RFC-0002/reconciliation-chain.md, kind: normative}
+      - {id: RFC2-19, module: RFC-0002/reconciliation-chain.md, kind: normative}
+      - {id: RFC2-19(a), module: RFC-0002/reconciliation-chain.md, kind: normative}
+      - {id: RFC2-20, module: RFC-0002/reconciliation-chain.md, kind: normative}
+      - {id: RFC2-21, module: RFC-0002/reconciliation-chain.md, kind: normative}
+      - {id: RFC2-22, module: RFC-0002/reconciliation-chain.md, kind: normative}
+      - {id: RFC2-23, module: RFC-0002/rendering-vocabularies.md, kind: normative}
+      - {id: RFC2-24, module: RFC-0002/rendering-vocabularies.md, kind: normative}
+      - {id: RFC2-25, module: RFC-0002/rendering-vocabularies.md, kind: normative}
+      - {id: RFC2-26, module: RFC-0002/rendering-vocabularies.md, kind: phase-rule}
+      - {id: RFC2-1, module: RFC-0002/snapshot-and-evaluation-core.md, kind: normative}
+      - {id: RFC2-2, module: RFC-0002/snapshot-and-evaluation-core.md, kind: normative}
+      - {id: RFC2-3, module: RFC-0002/snapshot-and-evaluation-core.md, kind: normative}
+      - {id: RFC2-4, module: RFC-0002/snapshot-and-evaluation-core.md, kind: normative}
+      - {id: RFC2-5, module: RFC-0002/snapshot-and-evaluation-core.md, kind: normative}
+      - {id: RFC2-6, module: RFC-0002/snapshot-and-evaluation-core.md, kind: normative}
+      - {id: RFC2-7, module: RFC-0002/snapshot-and-evaluation-core.md, kind: normative}
+      - {id: RFC2-8, module: RFC-0002/snapshot-and-evaluation-core.md, kind: normative}
+      - {id: RFC2-9, module: RFC-0002/snapshot-and-evaluation-core.md, kind: normative}
+      - {id: RFC2-10, module: RFC-0002/snapshot-and-evaluation-core.md, kind: normative}
+      - {id: RFC2-11, module: RFC-0002/snapshot-and-evaluation-core.md, kind: normative}
+  - id: RFC-0003
+    title: "Project, Workspace and .syzygy/** Manifests — contract package index"
+    status_source: owner-act-record
+    governs: [manifests, governance-homes, lifecycles, owner-acts, workspace]
+    applies_to: [kernel, workspace, all-surfaces]
+    depends_on: [RFC-0001, RFC-0002, RFC-0005]
+    tags: [project-declaration, consent, governance-plane, owner-act-provenance, schema-migration, nesting]
+    implementation_boundary:
+      clause: RFC3-33
+      kind: requires-openspec
+      declared_in: RFC-0003/README.md
+    modules: [RFC-0003/README.md, RFC-0003/governance-homes-and-owner-acts.md, RFC-0003/manifests-and-namespace.md]
+    module_ranges:
+      - {file: RFC-0003/governance-homes-and-owner-acts.md, clauses: "RFC3-15, RFC3-15(a), RFC3-16, RFC3-16(a), RFC3-16(b), RFC3-16(c), RFC3-17, RFC3-17(a) (every other RFC3-n lives in manifests-and-namespace.md)"}
+      - {file: RFC-0003/manifests-and-namespace.md, clauses: RFC3-1..RFC3-14 and RFC3-18..RFC3-33 (no retired or merged numbers; RFC3-15..RFC3-17 and all lettered sub-clauses live in governance-homes-and-owner-acts.md)}
+    clauses:
+      - {id: RFC3-15, module: RFC-0003/governance-homes-and-owner-acts.md, kind: normative}
+      - {id: RFC3-15(a), module: RFC-0003/governance-homes-and-owner-acts.md, kind: normative}
+      - {id: RFC3-16, module: RFC-0003/governance-homes-and-owner-acts.md, kind: normative}
+      - {id: RFC3-16(a), module: RFC-0003/governance-homes-and-owner-acts.md, kind: normative}
+      - {id: RFC3-16(b), module: RFC-0003/governance-homes-and-owner-acts.md, kind: normative}
+      - {id: RFC3-16(c), module: RFC-0003/governance-homes-and-owner-acts.md, kind: normative}
+      - {id: RFC3-17, module: RFC-0003/governance-homes-and-owner-acts.md, kind: normative}
+      - {id: RFC3-17(a), module: RFC-0003/governance-homes-and-owner-acts.md, kind: normative}
+      - {id: RFC3-1, module: RFC-0003/manifests-and-namespace.md, kind: normative}
+      - {id: RFC3-2, module: RFC-0003/manifests-and-namespace.md, kind: normative}
+      - {id: RFC3-3, module: RFC-0003/manifests-and-namespace.md, kind: normative}
+      - {id: RFC3-4, module: RFC-0003/manifests-and-namespace.md, kind: normative}
+      - {id: RFC3-5, module: RFC-0003/manifests-and-namespace.md, kind: normative}
+      - {id: RFC3-6, module: RFC-0003/manifests-and-namespace.md, kind: normative}
+      - {id: RFC3-7, module: RFC-0003/manifests-and-namespace.md, kind: normative}
+      - {id: RFC3-8, module: RFC-0003/manifests-and-namespace.md, kind: normative}
+      - {id: RFC3-9, module: RFC-0003/manifests-and-namespace.md, kind: normative}
+      - {id: RFC3-10, module: RFC-0003/manifests-and-namespace.md, kind: normative}
+      - {id: RFC3-11, module: RFC-0003/manifests-and-namespace.md, kind: normative}
+      - {id: RFC3-12, module: RFC-0003/manifests-and-namespace.md, kind: normative}
+      - {id: RFC3-13, module: RFC-0003/manifests-and-namespace.md, kind: normative}
+      - {id: RFC3-14, module: RFC-0003/manifests-and-namespace.md, kind: normative}
+      - {id: RFC3-18, module: RFC-0003/manifests-and-namespace.md, kind: normative}
+      - {id: RFC3-19, module: RFC-0003/manifests-and-namespace.md, kind: normative}
+      - {id: RFC3-20, module: RFC-0003/manifests-and-namespace.md, kind: normative}
+      - {id: RFC3-21, module: RFC-0003/manifests-and-namespace.md, kind: normative}
+      - {id: RFC3-22, module: RFC-0003/manifests-and-namespace.md, kind: normative}
+      - {id: RFC3-23, module: RFC-0003/manifests-and-namespace.md, kind: normative}
+      - {id: RFC3-24, module: RFC-0003/manifests-and-namespace.md, kind: normative}
+      - {id: RFC3-25, module: RFC-0003/manifests-and-namespace.md, kind: normative}
+      - {id: RFC3-26, module: RFC-0003/manifests-and-namespace.md, kind: normative}
+      - {id: RFC3-27, module: RFC-0003/manifests-and-namespace.md, kind: normative}
+      - {id: RFC3-28, module: RFC-0003/manifests-and-namespace.md, kind: normative}
+      - {id: RFC3-29, module: RFC-0003/manifests-and-namespace.md, kind: normative}
+      - {id: RFC3-30, module: RFC-0003/manifests-and-namespace.md, kind: normative}
+      - {id: RFC3-31, module: RFC-0003/manifests-and-namespace.md, kind: normative}
+      - {id: RFC3-32, module: RFC-0003/manifests-and-namespace.md, kind: normative}
+      - {id: RFC3-33, module: RFC-0003/manifests-and-namespace.md, kind: phase-rule}
+  - id: RFC-0004
+    title: "Observation Sources, Evidence, Execution Records and Adapters — contract package index"
+    status_source: owner-act-record
+    governs: [observation-sources, observers, adapters, evidence, execution-records, trusted-external-oracles, governed-checkers, fidelity-labels, provenance-joins, code-mappings]
+    applies_to: [kernel, trajectory, orrery]
+    depends_on: [RFC-0001, RFC-0002, RFC-0003, RFC-0005]
+    tags: [observation, provenance, gate-tiering, unknown-never-zero, liveness, reduced-fidelity, capture-before-horizon]
+    implementation_boundary:
+      clause: RFC4-30
+      kind: requires-openspec
+      declared_in: RFC-0004/README.md
+    modules: [RFC-0004/README.md, RFC-0004/execution-record.md, RFC-0004/fidelity-joins-and-mappings.md, RFC-0004/general-contract.md, RFC-0004/named-adapters.md]
+    module_ranges:
+      - {file: RFC-0004/execution-record.md, clauses: "RFC4-18..RFC4-21 (no gaps, no retirements, no merges)"}
+      - {file: RFC-0004/fidelity-joins-and-mappings.md, clauses: "RFC4-22..RFC4-30 (no gaps, no retirements, no merges)"}
+      - {file: RFC-0004/general-contract.md, clauses: "RFC4-1..RFC4-9 (no gaps, no retirements, no merges)"}
+      - {file: RFC-0004/named-adapters.md, clauses: "RFC4-10..RFC4-17 (sub-clauses RFC4-13(a), RFC4-13(b); no gaps, no retirements, no merges)"}
+    clauses:
+      - {id: RFC4-18, module: RFC-0004/execution-record.md, kind: normative}
+      - {id: RFC4-19, module: RFC-0004/execution-record.md, kind: normative}
+      - {id: RFC4-20, module: RFC-0004/execution-record.md, kind: normative}
+      - {id: RFC4-21, module: RFC-0004/execution-record.md, kind: normative}
+      - {id: RFC4-22, module: RFC-0004/fidelity-joins-and-mappings.md, kind: normative}
+      - {id: RFC4-23, module: RFC-0004/fidelity-joins-and-mappings.md, kind: normative}
+      - {id: RFC4-24, module: RFC-0004/fidelity-joins-and-mappings.md, kind: normative}
+      - {id: RFC4-25, module: RFC-0004/fidelity-joins-and-mappings.md, kind: normative}
+      - {id: RFC4-26, module: RFC-0004/fidelity-joins-and-mappings.md, kind: normative}
+      - {id: RFC4-27, module: RFC-0004/fidelity-joins-and-mappings.md, kind: normative}
+      - {id: RFC4-28, module: RFC-0004/fidelity-joins-and-mappings.md, kind: normative}
+      - {id: RFC4-29, module: RFC-0004/fidelity-joins-and-mappings.md, kind: normative}
+      - {id: RFC4-30, module: RFC-0004/fidelity-joins-and-mappings.md, kind: phase-rule}
+      - {id: RFC4-1, module: RFC-0004/general-contract.md, kind: normative}
+      - {id: RFC4-2, module: RFC-0004/general-contract.md, kind: normative}
+      - {id: RFC4-3, module: RFC-0004/general-contract.md, kind: normative}
+      - {id: RFC4-4, module: RFC-0004/general-contract.md, kind: normative}
+      - {id: RFC4-5, module: RFC-0004/general-contract.md, kind: normative}
+      - {id: RFC4-6, module: RFC-0004/general-contract.md, kind: normative}
+      - {id: RFC4-7, module: RFC-0004/general-contract.md, kind: normative}
+      - {id: RFC4-8, module: RFC-0004/general-contract.md, kind: normative}
+      - {id: RFC4-9, module: RFC-0004/general-contract.md, kind: normative}
+      - {id: RFC4-10, module: RFC-0004/named-adapters.md, kind: normative}
+      - {id: RFC4-11, module: RFC-0004/named-adapters.md, kind: normative}
+      - {id: RFC4-12, module: RFC-0004/named-adapters.md, kind: normative}
+      - {id: RFC4-13, module: RFC-0004/named-adapters.md, kind: normative}
+      - {id: RFC4-13(a), module: RFC-0004/named-adapters.md, kind: normative}
+      - {id: RFC4-13(b), module: RFC-0004/named-adapters.md, kind: normative}
+      - {id: RFC4-14, module: RFC-0004/named-adapters.md, kind: normative}
+      - {id: RFC4-15, module: RFC-0004/named-adapters.md, kind: normative}
+      - {id: RFC4-16, module: RFC-0004/named-adapters.md, kind: normative}
+      - {id: RFC4-17, module: RFC-0004/named-adapters.md, kind: normative}
+  - id: RFC-0005
+    title: "Authentication, Consent and Execution Profiles — contract package index"
+    status_source: owner-act-record
+    governs: [principals, sessions, machine-credentials, client-classes, exposure-modes, consent, egress, secrets, execution-profiles, adapter-credentials, audit, revocation]
+    applies_to: [kernel, all-surfaces, machine-clients]
+    depends_on: [RFC-0001, RFC-0002, RFC-0003, RFC-0004]
+    tags: [security-boundary, sec-1, sec-2, sec-3, sec-4, sec-5, blocking, execution-gate, client-classes]
+    constrains: [RFC-0006, RFC-0009, RFC-0010, RFC-0011]
+    constrains_source: RFC5-3
+    implementation_boundary:
+      clause: RFC5-27
+      kind: requires-openspec
+      declared_in: RFC-0005/README.md
+    modules: [RFC-0005/README.md, RFC-0005/admission-and-boundary.md, RFC-0005/consent-egress-secrets.md, RFC-0005/execution-profiles.md]
+    module_ranges:
+      - {file: RFC-0005/admission-and-boundary.md, clauses: "RFC5-1..RFC5-11, RFC5-24..RFC5-27 (no gaps within either run, no retirements, no merges)"}
+      - {file: RFC-0005/consent-egress-secrets.md, clauses: "RFC5-12..RFC5-17 (no gaps, no retirements, no merges; RFC5-12..RFC5-16 amended by GOVERNANCE-SIMPLIFICATION-D10)"}
+      - {file: RFC-0005/execution-profiles.md, clauses: "RFC5-18..RFC5-23 (no gaps, no retirements, no merges)"}
+    clauses:
+      - {id: RFC5-1, module: RFC-0005/admission-and-boundary.md, kind: normative}
+      - {id: RFC5-2, module: RFC-0005/admission-and-boundary.md, kind: normative}
+      - {id: RFC5-3, module: RFC-0005/admission-and-boundary.md, kind: normative}
+      - {id: RFC5-4, module: RFC-0005/admission-and-boundary.md, kind: normative}
+      - {id: RFC5-5, module: RFC-0005/admission-and-boundary.md, kind: normative}
+      - {id: RFC5-6, module: RFC-0005/admission-and-boundary.md, kind: normative}
+      - {id: RFC5-7, module: RFC-0005/admission-and-boundary.md, kind: normative}
+      - {id: RFC5-8, module: RFC-0005/admission-and-boundary.md, kind: normative}
+      - {id: RFC5-9, module: RFC-0005/admission-and-boundary.md, kind: normative}
+      - {id: RFC5-10, module: RFC-0005/admission-and-boundary.md, kind: normative}
+      - {id: RFC5-11, module: RFC-0005/admission-and-boundary.md, kind: normative}
+      - {id: RFC5-24, module: RFC-0005/admission-and-boundary.md, kind: normative}
+      - {id: RFC5-25, module: RFC-0005/admission-and-boundary.md, kind: normative}
+      - {id: RFC5-26, module: RFC-0005/admission-and-boundary.md, kind: normative}
+      - {id: RFC5-27, module: RFC-0005/admission-and-boundary.md, kind: phase-rule}
+      - {id: RFC5-12, module: RFC-0005/consent-egress-secrets.md, kind: normative}
+      - {id: RFC5-13, module: RFC-0005/consent-egress-secrets.md, kind: normative}
+      - {id: RFC5-14, module: RFC-0005/consent-egress-secrets.md, kind: normative}
+      - {id: RFC5-15, module: RFC-0005/consent-egress-secrets.md, kind: normative}
+      - {id: RFC5-16, module: RFC-0005/consent-egress-secrets.md, kind: normative}
+      - {id: RFC5-17, module: RFC-0005/consent-egress-secrets.md, kind: normative}
+      - {id: RFC5-18, module: RFC-0005/execution-profiles.md, kind: normative}
+      - {id: RFC5-19, module: RFC-0005/execution-profiles.md, kind: normative}
+      - {id: RFC5-20, module: RFC-0005/execution-profiles.md, kind: normative}
+      - {id: RFC5-21, module: RFC-0005/execution-profiles.md, kind: normative}
+      - {id: RFC5-22, module: RFC-0005/execution-profiles.md, kind: normative}
+      - {id: RFC5-23, module: RFC-0005/execution-profiles.md, kind: normative}
+  - id: RFC-0006
+    title: "Cross-Surface Selection, Query and Evidence Drawer"
+    status_source: owner-act-record
+    governs: [selection-reference, url-identity, resolution-outcome, evidence-drawer, query-answer, label-parity, scenario-context]
+    applies_to: [all-surfaces, kernel, machine-clients]
+    depends_on: [RFC-0001, RFC-0002, RFC-0003, RFC-0004]
+    tags: [selection, urls, queries, drawer, machine-endpoints, equivalence, scenario, consent, secrets]
+    implementation_boundary:
+      clause: RFC6-28
+      kind: requires-openspec
+      declared_in: RFC-0006-cross-surface-selection-query-drawer.md
+    modules: [RFC-0006-cross-surface-selection-query-drawer.md]
+    clauses:
+      - {id: RFC6-1, module: RFC-0006-cross-surface-selection-query-drawer.md, kind: normative}
+      - {id: RFC6-2, module: RFC-0006-cross-surface-selection-query-drawer.md, kind: normative}
+      - {id: RFC6-3, module: RFC-0006-cross-surface-selection-query-drawer.md, kind: normative}
+      - {id: RFC6-4, module: RFC-0006-cross-surface-selection-query-drawer.md, kind: normative}
+      - {id: RFC6-5, module: RFC-0006-cross-surface-selection-query-drawer.md, kind: normative}
+      - {id: RFC6-6, module: RFC-0006-cross-surface-selection-query-drawer.md, kind: normative}
+      - {id: RFC6-7, module: RFC-0006-cross-surface-selection-query-drawer.md, kind: normative}
+      - {id: RFC6-8, module: RFC-0006-cross-surface-selection-query-drawer.md, kind: normative}
+      - {id: RFC6-9, module: RFC-0006-cross-surface-selection-query-drawer.md, kind: normative}
+      - {id: RFC6-10, module: RFC-0006-cross-surface-selection-query-drawer.md, kind: normative}
+      - {id: RFC6-11, module: RFC-0006-cross-surface-selection-query-drawer.md, kind: normative}
+      - {id: RFC6-12, module: RFC-0006-cross-surface-selection-query-drawer.md, kind: normative}
+      - {id: RFC6-13, module: RFC-0006-cross-surface-selection-query-drawer.md, kind: normative}
+      - {id: RFC6-14, module: RFC-0006-cross-surface-selection-query-drawer.md, kind: normative}
+      - {id: RFC6-15, module: RFC-0006-cross-surface-selection-query-drawer.md, kind: normative}
+      - {id: RFC6-16, module: RFC-0006-cross-surface-selection-query-drawer.md, kind: normative}
+      - {id: RFC6-17, module: RFC-0006-cross-surface-selection-query-drawer.md, kind: normative}
+      - {id: RFC6-18, module: RFC-0006-cross-surface-selection-query-drawer.md, kind: normative}
+      - {id: RFC6-19, module: RFC-0006-cross-surface-selection-query-drawer.md, kind: normative}
+      - {id: RFC6-20, module: RFC-0006-cross-surface-selection-query-drawer.md, kind: normative}
+      - {id: RFC6-21, module: RFC-0006-cross-surface-selection-query-drawer.md, kind: normative}
+      - {id: RFC6-22, module: RFC-0006-cross-surface-selection-query-drawer.md, kind: normative}
+      - {id: RFC6-23, module: RFC-0006-cross-surface-selection-query-drawer.md, kind: normative}
+      - {id: RFC6-24, module: RFC-0006-cross-surface-selection-query-drawer.md, kind: normative}
+      - {id: RFC6-25, module: RFC-0006-cross-surface-selection-query-drawer.md, kind: normative}
+      - {id: RFC6-26, module: RFC-0006-cross-surface-selection-query-drawer.md, kind: normative}
+      - {id: RFC6-27, module: RFC-0006-cross-surface-selection-query-drawer.md, kind: normative}
+      - {id: RFC6-28, module: RFC-0006-cross-surface-selection-query-drawer.md, kind: phase-rule}
+  - id: RFC-0007
+    title: Polaris (Intent Surface) — contract package index
+    status_source: owner-act-record
+    governs: [intent, narrative, section, claim-block, source-anchor, reading-order, citation-graph, curated-diagram, editorial-draft, portfolio-narrative, fixed-human-entry-point, front-door-discoverability]
+    applies_to: [polaris]
+    depends_on: [RFC-0001, RFC-0002, RFC-0003, RFC-0004, RFC-0005, RFC-0006, RFC-0009]
+    tags: [presentation, non-authoritative, progressive-disclosure, comprehension-test, machine-parity, editorial-draft, target-state-drift, entry-point, discoverability]
+    constrains: [RFC-0001, RFC-0002, RFC-0004, RFC-0008]
+    constrains_source: RFC7-3
+    implementation_boundary:
+      clause: RFC7-38
+      kind: requires-openspec
+      declared_in: RFC-0007/README.md
+    modules: [RFC-0007/README.md, RFC-0007/narrative-contract.md, RFC-0007/rendering-and-surface.md]
+    module_ranges:
+      - {file: RFC-0007/narrative-contract.md, clauses: "RFC7-1..RFC7-25 (sub-clauses RFC7-2(a)-(c), RFC7-9(a)-(c), RFC7-11(a); no gaps, no retirements, no merges)"}
+      - {file: RFC-0007/rendering-and-surface.md, clauses: "RFC7-26..RFC7-40 (no sub-clauses, no gaps, no retirements, no merges; RFC7-38, the phase rule, is defined before RFC7-39/40 in file order — deliberate)"}
+    clauses:
+      - {id: RFC7-1, module: RFC-0007/narrative-contract.md, kind: normative}
+      - {id: RFC7-2, module: RFC-0007/narrative-contract.md, kind: normative}
+      - {id: RFC7-3, module: RFC-0007/narrative-contract.md, kind: normative}
+      - {id: RFC7-4, module: RFC-0007/narrative-contract.md, kind: normative}
+      - {id: RFC7-5, module: RFC-0007/narrative-contract.md, kind: normative}
+      - {id: RFC7-6, module: RFC-0007/narrative-contract.md, kind: normative}
+      - {id: RFC7-7, module: RFC-0007/narrative-contract.md, kind: normative}
+      - {id: RFC7-8, module: RFC-0007/narrative-contract.md, kind: normative}
+      - {id: RFC7-9, module: RFC-0007/narrative-contract.md, kind: normative}
+      - {id: RFC7-10, module: RFC-0007/narrative-contract.md, kind: normative}
+      - {id: RFC7-11, module: RFC-0007/narrative-contract.md, kind: normative}
+      - {id: RFC7-11(a), module: RFC-0007/narrative-contract.md, kind: normative}
+      - {id: RFC7-12, module: RFC-0007/narrative-contract.md, kind: normative}
+      - {id: RFC7-13, module: RFC-0007/narrative-contract.md, kind: normative}
+      - {id: RFC7-14, module: RFC-0007/narrative-contract.md, kind: normative}
+      - {id: RFC7-15, module: RFC-0007/narrative-contract.md, kind: normative}
+      - {id: RFC7-16, module: RFC-0007/narrative-contract.md, kind: normative}
+      - {id: RFC7-17, module: RFC-0007/narrative-contract.md, kind: normative}
+      - {id: RFC7-18, module: RFC-0007/narrative-contract.md, kind: normative}
+      - {id: RFC7-19, module: RFC-0007/narrative-contract.md, kind: normative}
+      - {id: RFC7-20, module: RFC-0007/narrative-contract.md, kind: normative}
+      - {id: RFC7-21, module: RFC-0007/narrative-contract.md, kind: normative}
+      - {id: RFC7-22, module: RFC-0007/narrative-contract.md, kind: normative}
+      - {id: RFC7-23, module: RFC-0007/narrative-contract.md, kind: normative}
+      - {id: RFC7-24, module: RFC-0007/narrative-contract.md, kind: normative}
+      - {id: RFC7-25, module: RFC-0007/narrative-contract.md, kind: normative}
+      - {id: RFC7-26, module: RFC-0007/rendering-and-surface.md, kind: normative}
+      - {id: RFC7-27, module: RFC-0007/rendering-and-surface.md, kind: normative}
+      - {id: RFC7-28, module: RFC-0007/rendering-and-surface.md, kind: normative}
+      - {id: RFC7-29, module: RFC-0007/rendering-and-surface.md, kind: normative}
+      - {id: RFC7-30, module: RFC-0007/rendering-and-surface.md, kind: normative}
+      - {id: RFC7-31, module: RFC-0007/rendering-and-surface.md, kind: normative}
+      - {id: RFC7-32, module: RFC-0007/rendering-and-surface.md, kind: normative}
+      - {id: RFC7-33, module: RFC-0007/rendering-and-surface.md, kind: normative}
+      - {id: RFC7-34, module: RFC-0007/rendering-and-surface.md, kind: normative}
+      - {id: RFC7-35, module: RFC-0007/rendering-and-surface.md, kind: normative}
+      - {id: RFC7-36, module: RFC-0007/rendering-and-surface.md, kind: normative}
+      - {id: RFC7-37, module: RFC-0007/rendering-and-surface.md, kind: normative}
+      - {id: RFC7-38, module: RFC-0007/rendering-and-surface.md, kind: phase-rule}
+      - {id: RFC7-39, module: RFC-0007/rendering-and-surface.md, kind: normative}
+      - {id: RFC7-40, module: RFC-0007/rendering-and-surface.md, kind: normative}
+  - id: RFC-0008
+    title: Trajectory (Work Surface) — contract package index
+    status_source: owner-act-record
+    governs: [work, work-states, dispatch, execution-records, trajectory-surface, materialization-records, change-accounting-chain, reconciliation-chain-state, cost-measures, provenance, non-visual-parity]
+    applies_to: [trajectory]
+    depends_on: [RFC-0001, RFC-0002, RFC-0003, RFC-0004, RFC-0005, RFC-0006, RFC-0007]
+    tags: [work-state-vocabulary, reconciliation-chain, cost, provenance, compaction, phase-boundary, anti-thesis, closure-fallacy, substrate, non-visual, accessibility]
+    implementation_boundary:
+      clause: RFC8-32
+      kind: requires-openspec
+      declared_in: RFC-0008/README.md
+    modules: [RFC-0008/README.md, RFC-0008/accounting-reconciliation-and-release.md, RFC-0008/identity-authority-materialization.md, RFC-0008/state-vocabulary-and-cost.md]
+    module_ranges:
+      - {file: RFC-0008/accounting-reconciliation-and-release.md, clauses: "RFC8-21..RFC8-32 (no gaps, no retirements, no merges)"}
+      - {file: RFC-0008/identity-authority-materialization.md, clauses: "RFC8-1..RFC8-11 (no gaps, no retirements, no merges)"}
+      - {file: RFC-0008/state-vocabulary-and-cost.md, clauses: "RFC8-12..RFC8-20 (no gaps, no retirements, no merges)"}
+    clauses:
+      - {id: RFC8-21, module: RFC-0008/accounting-reconciliation-and-release.md, kind: normative}
+      - {id: RFC8-22, module: RFC-0008/accounting-reconciliation-and-release.md, kind: normative}
+      - {id: RFC8-23, module: RFC-0008/accounting-reconciliation-and-release.md, kind: normative}
+      - {id: RFC8-24, module: RFC-0008/accounting-reconciliation-and-release.md, kind: normative}
+      - {id: RFC8-25, module: RFC-0008/accounting-reconciliation-and-release.md, kind: normative}
+      - {id: RFC8-26, module: RFC-0008/accounting-reconciliation-and-release.md, kind: normative}
+      - {id: RFC8-27, module: RFC-0008/accounting-reconciliation-and-release.md, kind: normative}
+      - {id: RFC8-28, module: RFC-0008/accounting-reconciliation-and-release.md, kind: normative}
+      - {id: RFC8-29, module: RFC-0008/accounting-reconciliation-and-release.md, kind: normative}
+      - {id: RFC8-30, module: RFC-0008/accounting-reconciliation-and-release.md, kind: normative}
+      - {id: RFC8-31, module: RFC-0008/accounting-reconciliation-and-release.md, kind: normative}
+      - {id: RFC8-32, module: RFC-0008/accounting-reconciliation-and-release.md, kind: phase-rule}
+      - {id: RFC8-1, module: RFC-0008/identity-authority-materialization.md, kind: normative}
+      - {id: RFC8-2, module: RFC-0008/identity-authority-materialization.md, kind: normative}
+      - {id: RFC8-3, module: RFC-0008/identity-authority-materialization.md, kind: normative}
+      - {id: RFC8-4, module: RFC-0008/identity-authority-materialization.md, kind: normative}
+      - {id: RFC8-5, module: RFC-0008/identity-authority-materialization.md, kind: normative}
+      - {id: RFC8-6, module: RFC-0008/identity-authority-materialization.md, kind: normative}
+      - {id: RFC8-7, module: RFC-0008/identity-authority-materialization.md, kind: normative}
+      - {id: RFC8-8, module: RFC-0008/identity-authority-materialization.md, kind: normative}
+      - {id: RFC8-9, module: RFC-0008/identity-authority-materialization.md, kind: normative}
+      - {id: RFC8-10, module: RFC-0008/identity-authority-materialization.md, kind: normative}
+      - {id: RFC8-11, module: RFC-0008/identity-authority-materialization.md, kind: normative}
+      - {id: RFC8-12, module: RFC-0008/state-vocabulary-and-cost.md, kind: normative}
+      - {id: RFC8-13, module: RFC-0008/state-vocabulary-and-cost.md, kind: normative}
+      - {id: RFC8-14, module: RFC-0008/state-vocabulary-and-cost.md, kind: normative}
+      - {id: RFC8-15, module: RFC-0008/state-vocabulary-and-cost.md, kind: normative}
+      - {id: RFC8-16, module: RFC-0008/state-vocabulary-and-cost.md, kind: normative}
+      - {id: RFC8-17, module: RFC-0008/state-vocabulary-and-cost.md, kind: normative}
+      - {id: RFC8-18, module: RFC-0008/state-vocabulary-and-cost.md, kind: normative}
+      - {id: RFC8-19, module: RFC-0008/state-vocabulary-and-cost.md, kind: normative}
+      - {id: RFC8-20, module: RFC-0008/state-vocabulary-and-cost.md, kind: normative}
+  - id: RFC-0009
+    title: Orrery (Map Surface) — contract package index
+    status_source: owner-act-record
+    governs: [map-surface, home-geography, analytical-planes, layout-determinism, placement, portfolio-layout-governance, identity-counting, reserved-palette, channel-registry, lenses, scene-profiles, scenarios, aggregation, unmapped-code, non-3d-equivalence, release-gates, motion]
+    applies_to: [orrery, machine-clients]
+    depends_on: [RFC-0001, RFC-0002, RFC-0003, RFC-0004, RFC-0005, RFC-0006, RFC-0007, RFC-0008]
+    tags: [surface, spatial, legend-fidelity, unknown, determinism, sdr-19, sdr-20, sdr-21, sdr-22, sdr-23, sdr-24, sdr-25, sdr-26, sdr-27, vis-1, vis-7, sec-2, sec-3, sec-5]
+    implementation_boundary:
+      clause: RFC9-52
+      kind: requires-openspec
+      declared_in: RFC-0009/README.md
+    modules: [RFC-0009/README.md, RFC-0009/interaction-parity-and-release.md, RFC-0009/semantic-geography.md, RFC-0009/visual-grammar-and-lenses.md]
+    module_ranges:
+      - {file: RFC-0009/interaction-parity-and-release.md, clauses: "RFC9-46..RFC9-52 (sub-clause RFC9-47(a); no gaps, no retirements)"}
+      - {file: RFC-0009/semantic-geography.md, clauses: "RFC9-1..RFC9-23 (sub-clauses RFC9-8(a), RFC9-9(a), RFC9-9(b), RFC9-13(a), RFC9-14(a), RFC9-15(b), RFC9-16(d); no gaps, no retirements. RFC9-15(b) has no lettered sibling before it — no earlier letter was ever minted for RFC9-15, and none is retired — and it is defined after RFC9-16(d) in file order: both are deliberate. The \"no gaps\" claim is over the integer range; sub-clause letters are minted as needed and are not a series)"}
+      - {file: RFC-0009/visual-grammar-and-lenses.md, clauses: "RFC9-24..RFC9-45 (no lettered sub-clauses; no gaps, no retirements)"}
+    clauses:
+      - {id: RFC9-46, module: RFC-0009/interaction-parity-and-release.md, kind: normative}
+      - {id: RFC9-47, module: RFC-0009/interaction-parity-and-release.md, kind: normative}
+      - {id: RFC9-47(a), module: RFC-0009/interaction-parity-and-release.md, kind: normative}
+      - {id: RFC9-48, module: RFC-0009/interaction-parity-and-release.md, kind: normative}
+      - {id: RFC9-49, module: RFC-0009/interaction-parity-and-release.md, kind: normative}
+      - {id: RFC9-50, module: RFC-0009/interaction-parity-and-release.md, kind: normative}
+      - {id: RFC9-51, module: RFC-0009/interaction-parity-and-release.md, kind: normative}
+      - {id: RFC9-52, module: RFC-0009/interaction-parity-and-release.md, kind: phase-rule}
+      - {id: RFC9-1, module: RFC-0009/semantic-geography.md, kind: normative}
+      - {id: RFC9-2, module: RFC-0009/semantic-geography.md, kind: normative}
+      - {id: RFC9-3, module: RFC-0009/semantic-geography.md, kind: normative}
+      - {id: RFC9-4, module: RFC-0009/semantic-geography.md, kind: normative}
+      - {id: RFC9-5, module: RFC-0009/semantic-geography.md, kind: normative}
+      - {id: RFC9-6, module: RFC-0009/semantic-geography.md, kind: normative}
+      - {id: RFC9-7, module: RFC-0009/semantic-geography.md, kind: normative}
+      - {id: RFC9-8, module: RFC-0009/semantic-geography.md, kind: normative}
+      - {id: RFC9-8(a), module: RFC-0009/semantic-geography.md, kind: normative}
+      - {id: RFC9-9, module: RFC-0009/semantic-geography.md, kind: normative}
+      - {id: RFC9-9(a), module: RFC-0009/semantic-geography.md, kind: normative}
+      - {id: RFC9-9(b), module: RFC-0009/semantic-geography.md, kind: normative}
+      - {id: RFC9-10, module: RFC-0009/semantic-geography.md, kind: normative}
+      - {id: RFC9-11, module: RFC-0009/semantic-geography.md, kind: normative}
+      - {id: RFC9-12, module: RFC-0009/semantic-geography.md, kind: normative}
+      - {id: RFC9-13, module: RFC-0009/semantic-geography.md, kind: normative}
+      - {id: RFC9-13(a), module: RFC-0009/semantic-geography.md, kind: normative}
+      - {id: RFC9-14, module: RFC-0009/semantic-geography.md, kind: normative}
+      - {id: RFC9-14(a), module: RFC-0009/semantic-geography.md, kind: normative}
+      - {id: RFC9-15, module: RFC-0009/semantic-geography.md, kind: normative}
+      - {id: RFC9-16, module: RFC-0009/semantic-geography.md, kind: normative}
+      - {id: RFC9-16(d), module: RFC-0009/semantic-geography.md, kind: normative}
+      - {id: RFC9-15(b), module: RFC-0009/semantic-geography.md, kind: normative}
+      - {id: RFC9-17, module: RFC-0009/semantic-geography.md, kind: normative}
+      - {id: RFC9-18, module: RFC-0009/semantic-geography.md, kind: normative}
+      - {id: RFC9-19, module: RFC-0009/semantic-geography.md, kind: normative}
+      - {id: RFC9-20, module: RFC-0009/semantic-geography.md, kind: normative}
+      - {id: RFC9-21, module: RFC-0009/semantic-geography.md, kind: normative}
+      - {id: RFC9-22, module: RFC-0009/semantic-geography.md, kind: informative}
+      - {id: RFC9-23, module: RFC-0009/semantic-geography.md, kind: informative}
+      - {id: RFC9-24, module: RFC-0009/visual-grammar-and-lenses.md, kind: normative}
+      - {id: RFC9-25, module: RFC-0009/visual-grammar-and-lenses.md, kind: normative}
+      - {id: RFC9-26, module: RFC-0009/visual-grammar-and-lenses.md, kind: normative}
+      - {id: RFC9-27, module: RFC-0009/visual-grammar-and-lenses.md, kind: normative}
+      - {id: RFC9-28, module: RFC-0009/visual-grammar-and-lenses.md, kind: normative}
+      - {id: RFC9-29, module: RFC-0009/visual-grammar-and-lenses.md, kind: normative}
+      - {id: RFC9-30, module: RFC-0009/visual-grammar-and-lenses.md, kind: normative}
+      - {id: RFC9-31, module: RFC-0009/visual-grammar-and-lenses.md, kind: normative}
+      - {id: RFC9-32, module: RFC-0009/visual-grammar-and-lenses.md, kind: normative}
+      - {id: RFC9-33, module: RFC-0009/visual-grammar-and-lenses.md, kind: normative}
+      - {id: RFC9-34, module: RFC-0009/visual-grammar-and-lenses.md, kind: normative}
+      - {id: RFC9-35, module: RFC-0009/visual-grammar-and-lenses.md, kind: normative}
+      - {id: RFC9-36, module: RFC-0009/visual-grammar-and-lenses.md, kind: normative}
+      - {id: RFC9-37, module: RFC-0009/visual-grammar-and-lenses.md, kind: normative}
+      - {id: RFC9-38, module: RFC-0009/visual-grammar-and-lenses.md, kind: normative}
+      - {id: RFC9-39, module: RFC-0009/visual-grammar-and-lenses.md, kind: normative}
+      - {id: RFC9-40, module: RFC-0009/visual-grammar-and-lenses.md, kind: normative}
+      - {id: RFC9-41, module: RFC-0009/visual-grammar-and-lenses.md, kind: normative}
+      - {id: RFC9-42, module: RFC-0009/visual-grammar-and-lenses.md, kind: normative}
+      - {id: RFC9-43, module: RFC-0009/visual-grammar-and-lenses.md, kind: normative}
+      - {id: RFC9-44, module: RFC-0009/visual-grammar-and-lenses.md, kind: normative}
+      - {id: RFC9-45, module: RFC-0009/visual-grammar-and-lenses.md, kind: normative}
+  - id: RFC-0010
+    title: Mission Control and Autonomy Envelopes — contract package index
+    status_source: owner-act-record
+    governs: [missions, autonomy-envelopes, guardrails, attention-items, workspace-governance, service-boundary]
+    applies_to: [mission-control, workspace, all-surfaces, machine-clients]
+    depends_on: [RFC-0001, RFC-0002, RFC-0003, RFC-0004, RFC-0005, RFC-0006, RFC-0008]
+    tags: [autonomy, human-control, budgets, escalation, platform]
+    implementation_boundary:
+      clause: RFC10-16
+      kind: requires-openspec
+      declared_in: RFC-0010/README.md
+    modules: [RFC-0010/README.md, RFC-0010/budget-reservation.md, RFC-0010/effects-recovery-and-stop.md, RFC-0010/mission-identity-approval-and-lifecycle.md, RFC-0010/portfolio-and-cross-project-consent.md, RFC-0010/prevention-envelope-and-attention.md]
+    module_ranges:
+      - {file: RFC-0010/budget-reservation.md, clauses: RFC10-17 with sub-clause RFC10-17(a) (see the package clause map)}
+      - {file: RFC-0010/effects-recovery-and-stop.md, clauses: "RFC10-18..RFC10-20, RFC10-23, with sub-clauses RFC10-18(a), RFC10-19(a) (see the package clause map)"}
+      - {file: RFC-0010/mission-identity-approval-and-lifecycle.md, clauses: "RFC10-1..RFC10-6, RFC10-14, RFC10-16, RFC10-24 (non-contiguous — see the package clause map)"}
+      - {file: RFC-0010/portfolio-and-cross-project-consent.md, clauses: "RFC10-15, RFC10-21 (non-contiguous — see the package clause map)"}
+      - {file: RFC-0010/prevention-envelope-and-attention.md, clauses: "RFC10-7..RFC10-13, RFC10-22 (non-contiguous — see the package clause map)"}
+    clauses:
+      - {id: RFC10-17, module: RFC-0010/budget-reservation.md, kind: normative}
+      - {id: RFC10-17(a), module: RFC-0010/budget-reservation.md, kind: normative}
+      - {id: RFC10-18, module: RFC-0010/effects-recovery-and-stop.md, kind: normative}
+      - {id: RFC10-18(a), module: RFC-0010/effects-recovery-and-stop.md, kind: normative}
+      - {id: RFC10-19, module: RFC-0010/effects-recovery-and-stop.md, kind: normative}
+      - {id: RFC10-19(a), module: RFC-0010/effects-recovery-and-stop.md, kind: normative}
+      - {id: RFC10-20, module: RFC-0010/effects-recovery-and-stop.md, kind: normative}
+      - {id: RFC10-23, module: RFC-0010/effects-recovery-and-stop.md, kind: normative}
+      - {id: RFC10-1, module: RFC-0010/mission-identity-approval-and-lifecycle.md, kind: normative}
+      - {id: RFC10-2, module: RFC-0010/mission-identity-approval-and-lifecycle.md, kind: normative}
+      - {id: RFC10-3, module: RFC-0010/mission-identity-approval-and-lifecycle.md, kind: normative}
+      - {id: RFC10-4, module: RFC-0010/mission-identity-approval-and-lifecycle.md, kind: normative}
+      - {id: RFC10-5, module: RFC-0010/mission-identity-approval-and-lifecycle.md, kind: normative}
+      - {id: RFC10-6, module: RFC-0010/mission-identity-approval-and-lifecycle.md, kind: normative}
+      - {id: RFC10-14, module: RFC-0010/mission-identity-approval-and-lifecycle.md, kind: normative}
+      - {id: RFC10-16, module: RFC-0010/mission-identity-approval-and-lifecycle.md, kind: phase-rule}
+      - {id: RFC10-24, module: RFC-0010/mission-identity-approval-and-lifecycle.md, kind: normative}
+      - {id: RFC10-15, module: RFC-0010/portfolio-and-cross-project-consent.md, kind: normative}
+      - {id: RFC10-21, module: RFC-0010/portfolio-and-cross-project-consent.md, kind: normative}
+      - {id: RFC10-7, module: RFC-0010/prevention-envelope-and-attention.md, kind: normative}
+      - {id: RFC10-8, module: RFC-0010/prevention-envelope-and-attention.md, kind: normative}
+      - {id: RFC10-9, module: RFC-0010/prevention-envelope-and-attention.md, kind: normative}
+      - {id: RFC10-10, module: RFC-0010/prevention-envelope-and-attention.md, kind: normative}
+      - {id: RFC10-11, module: RFC-0010/prevention-envelope-and-attention.md, kind: normative}
+      - {id: RFC10-12, module: RFC-0010/prevention-envelope-and-attention.md, kind: normative}
+      - {id: RFC10-13, module: RFC-0010/prevention-envelope-and-attention.md, kind: normative}
+      - {id: RFC10-22, module: RFC-0010/prevention-envelope-and-attention.md, kind: normative}
+  - id: RFC-0011
+    title: Context Compiler and Governed Context Packets — contract package index
+    status_source: owner-act-record
+    governs: [context-packets, context-selection, governed-memory, agent-profiles]
+    applies_to: [mission-control, context, all-surfaces, machine-clients]
+    depends_on: [RFC-0001, RFC-0002, RFC-0003, RFC-0004, RFC-0005, RFC-0006, RFC-0008, RFC-0010]
+    tags: [context, provenance, memory, selection, agents]
+    implementation_boundary:
+      clause: RFC11-12
+      kind: requires-openspec
+      declared_in: RFC-0011/README.md
+    modules: [RFC-0011/README.md, RFC-0011/deterministic-selection-and-budget.md, RFC-0011/packet-identity-provenance-and-memory.md]
+    module_ranges:
+      - {file: RFC-0011/deterministic-selection-and-budget.md, clauses: "RFC11-4, RFC11-11, RFC11-13..RFC11-16 (non-contiguous — see the package clause map)"}
+      - {file: RFC-0011/packet-identity-provenance-and-memory.md, clauses: "RFC11-1..RFC11-3, RFC11-5..RFC11-10, RFC11-12 (non-contiguous — see the package clause map)"}
+    clauses:
+      - {id: RFC11-4, module: RFC-0011/deterministic-selection-and-budget.md, kind: normative}
+      - {id: RFC11-13, module: RFC-0011/deterministic-selection-and-budget.md, kind: normative}
+      - {id: RFC11-14, module: RFC-0011/deterministic-selection-and-budget.md, kind: normative}
+      - {id: RFC11-15, module: RFC-0011/deterministic-selection-and-budget.md, kind: normative}
+      - {id: RFC11-16, module: RFC-0011/deterministic-selection-and-budget.md, kind: normative}
+      - {id: RFC11-11, module: RFC-0011/deterministic-selection-and-budget.md, kind: normative}
+      - {id: RFC11-1, module: RFC-0011/packet-identity-provenance-and-memory.md, kind: normative}
+      - {id: RFC11-2, module: RFC-0011/packet-identity-provenance-and-memory.md, kind: normative}
+      - {id: RFC11-3, module: RFC-0011/packet-identity-provenance-and-memory.md, kind: normative}
+      - {id: RFC11-5, module: RFC-0011/packet-identity-provenance-and-memory.md, kind: normative}
+      - {id: RFC11-6, module: RFC-0011/packet-identity-provenance-and-memory.md, kind: normative}
+      - {id: RFC11-7, module: RFC-0011/packet-identity-provenance-and-memory.md, kind: normative}
+      - {id: RFC11-8, module: RFC-0011/packet-identity-provenance-and-memory.md, kind: normative}
+      - {id: RFC11-9, module: RFC-0011/packet-identity-provenance-and-memory.md, kind: normative}
+      - {id: RFC11-10, module: RFC-0011/packet-identity-provenance-and-memory.md, kind: normative}
+      - {id: RFC11-12, module: RFC-0011/packet-identity-provenance-and-memory.md, kind: phase-rule}
+# Non-contract governance sources (read from the canonical homes;
+# selection metadata only — the canonical homes stay authoritative):
+governance_sources:
+  - {file: doctrine/README.md, role: doctrine, words: 882, rule_ids: [SEC-1, SEC-2, SEC-4, SEC-5, VIS-1, VIS-4, VIS-5, VIS-7]}
+  - {file: doctrine/architecture.md, role: doctrine, words: 2863, rule_ids: [SEC-2, SEC-4, VIS-1, VIS-4, VIS-5, VIS-6, VIS-7]}
+  - {file: doctrine/security.md, role: doctrine, words: 1406, rule_ids: [SEC-1, SEC-2, SEC-3, SEC-4, SEC-5, VIS-4]}
+  - {file: doctrine/trust-and-evidence.md, role: doctrine, words: 1473, rule_ids: [SEC-5, VIS-1, VIS-2, VIS-4, VIS-6, VIS-7]}
+  - {file: doctrine/v1.md, role: doctrine, words: 1285, rule_ids: [SEC-1, SEC-2, SEC-3, VIS-2, VIS-4, VIS-5]}
+  - {file: doctrine/vision.md, role: doctrine, words: 2945, rule_ids: [SEC-1, SEC-2, SEC-3, SEC-4, SEC-5, VIS-1, VIS-2, VIS-3, VIS-4, VIS-5, VIS-6, VIS-7]}
+  - {file: craft-and-care/INSTALL-RECORD.md, role: craft-policy, words: 1535, rule_ids: [CC-BAR-1, CC-IMPACT-1, CC-REV-8, CC-SPEC-1, CC-SPEC-8, CC-SPEC-11, CC-TEST-1, CC-TEST-2, CC-TEST-7, CC-VIZ-5]}
+  - {file: craft-and-care/README.md, role: craft-policy, words: 934, rule_ids: [CC-BAR-1, CC-REV-3, CC-TEST-3, SEC-1, SEC-5, VIS-1, VIS-7]}
+  - {file: craft-and-care/agent-provenance-and-execution-evidence.md, role: craft-policy, words: 1160, rule_ids: [CC-PROV-1, CC-PROV-2, CC-PROV-3, CC-PROV-4, CC-PROV-5, CC-PROV-6, CC-PROV-7, CC-SEC-6, CC-TEST-2]}
+  - {file: craft-and-care/engineering-bar.md, role: craft-policy, words: 1429, rule_ids: [CC-BAR-1, CC-BAR-2, CC-BAR-3, CC-BAR-4, CC-BAR-5, CC-BAR-6, CC-BAR-7, CC-DEP-2, CC-REV-1, CC-REV-2, CC-REV-4, CC-REV-7, CC-TEST-1, CC-TEST-3, CC-TEST-4, CC-TEST-7, SEC-1, SEC-5, VIS-1, VIS-2, VIS-3, VIS-4, VIS-5, VIS-7]}
+  - {file: craft-and-care/interfaces-and-dependencies.md, role: craft-policy, words: 1206, rule_ids: [CC-BAR-6, CC-DEP-1, CC-DEP-2, CC-DEP-3, CC-DEP-4, CC-DEP-5, CC-DEP-6, CC-REV-1, VIS-1, VIS-5]}
+  - {file: craft-and-care/observability-and-operations.md, role: craft-policy, words: 921, rule_ids: [CC-OBS-1, CC-OBS-2, CC-OBS-3, CC-OBS-4, CC-OBS-5, CC-OBS-6, CC-PROV-4, VIS-1, VIS-7]}
+  - {file: craft-and-care/performance-and-visual-discipline.md, role: craft-policy, words: 1350, rule_ids: [CC-PERF-1, CC-PERF-2, CC-PERF-3, CC-VIZ-1, CC-VIZ-2, CC-VIZ-3, CC-VIZ-4, CC-VIZ-5, VIS-1, VIS-6, VIS-7]}
+  - {file: craft-and-care/review-and-documentation.md, role: craft-policy, words: 1573, rule_ids: [CC-BAR-6, CC-DEP-2, CC-DEP-3, CC-REV-1, CC-REV-2, CC-REV-3, CC-REV-4, CC-REV-5, CC-REV-6, CC-REV-7, CC-REV-8, SEC-1, SEC-5, VIS-2, VIS-3, VIS-4, VIS-5, VIS-6, VIS-7]}
+  - {file: craft-and-care/security-and-secrets.md, role: craft-policy, words: 993, rule_ids: [CC-BAR-5, CC-REV-1, CC-REV-3, CC-SEC-1, CC-SEC-2, CC-SEC-3, CC-SEC-4, CC-SEC-5, CC-SEC-6, SEC-1, SEC-2, SEC-3, SEC-4, SEC-5, VIS-4, VIS-7]}
+  - {file: craft-and-care/testing-and-verification.md, role: craft-policy, words: 1529, rule_ids: [CC-BAR-1, CC-PROV-1, CC-TEST-1, CC-TEST-2, CC-TEST-3, CC-TEST-4, CC-TEST-5, CC-TEST-6, CC-TEST-7, SEC-5, VIS-2, VIS-7]}
+  - {file: topology/01-system-context.md, role: topology, words: 745, rule_ids: [SEC-1, SEC-2, SEC-3, SEC-4, SEC-5, VIS-1, VIS-4, VIS-5]}
+  - {file: topology/02-project-workspace-repos.md, role: topology, words: 711, rule_ids: [SEC-4, VIS-6]}
+  - {file: topology/03-kernel-and-surfaces.md, role: topology, words: 705, rule_ids: [VIS-7]}
+  - {file: topology/04-authority-write-boundaries.md, role: topology, words: 1206, rule_ids: [SEC-3, SEC-4, SEC-5, VIS-5, VIS-6]}
+  - {file: topology/05-observation-evidence-flow.md, role: topology, words: 757, rule_ids: [SEC-2, SEC-4, SEC-5, VIS-6, VIS-7]}
+  - {file: topology/06-intent-to-reconciliation-flow.md, role: topology, words: 995, rule_ids: [VIS-4]}
+  - {file: topology/07-client-trust-boundaries.md, role: topology, words: 731, rule_ids: [SEC-1, SEC-3]}
+  - {file: topology/08-adapter-external-systems.md, role: topology, words: 1113, rule_ids: [SEC-3, SEC-4, SEC-5]}
+  - {file: topology/BUNDLE-MANIFEST.md, role: topology, words: 179}
+  - {file: topology/README.md, role: topology, words: 687}
+  - {file: topology/TRACKING-NOTE.md, role: topology, words: 144}

@@ -11,8 +11,8 @@ never present something false.
 
 ## Evidence, and the two other warrants
 
-Status rests on evidence; a recorded human decision and a work warrant
-authorize other acts, but neither is evidence.
+Status rests on evidence; a recorded decision and a work warrant authorize
+other acts, but neither is evidence.
 
 **Evidence is a durable, identified, integrity-verifiable artifact carrying
 its source, capture time, scope, and provenance.**
@@ -35,16 +35,18 @@ its source, capture time, scope, and provenance.**
 
 **Two acts are authorized by warrants that are *not* evidence:**
 
-- **A recorded human decision** — attributed, timestamped, and individually
-  revertable.
-  - It may suppress a gap, rendered as *dismissed by human decision* and
-    never as resolved, aligned, or green.
+- **A recorded decision** — the owner's, or an agent's adoption under
+  vision.md VIS-4 — attributed (to the owner or to the agent session),
+  timestamped, and individually revertable.
+  - It may suppress a gap, rendered as *dismissed by decision* and never as
+    resolved, aligned, or green. Dismissing a gap in an owner class is the
+    owner's decision.
   - It takes effect only once committed out to the governed plane with a
     reason and an expiry (vision.md VIS-6).
 - **A work warrant** — creating or prioritizing work needs traceable
   authority, not empirical evidence.
-  - Traceable authority means an approved requirement, a confirmed finding, a
-    declared policy, or an explicit owner decision.
+  - Traceable authority means an adopted requirement, a confirmed finding, a
+    declared policy, or a recorded decision.
   - Status describes; a warrant authorizes. A claim that both declares status
     and spawns work must pass both gates.
 
@@ -54,14 +56,14 @@ between two goals — the answer is attributed, dated and individually
 withdrawable, and is committed out to the governed plane like any decision
 (vision.md VIS-6). It renders as the owner's record: Observed as a fact about
 the record, never as evidence that the project does what the answer says, and
-never as adopted intent unless an applicable act adopts it (vision.md VIS-4).
+never as adopted intent unless it is adopted under vision.md VIS-4.
 It sits beside an Unknown, never in its place. Withdrawing it invalidates
 exactly what was built on it.
 
 ## Status claims vs narrative claims
 
 Anything that does a status claim's work needs evidence, whatever it looks
-like; a gap may also be dismissed by recorded human decision; narrative
+like; a gap may also be dismissed by recorded decision; narrative
 claims carry exactly one of three labels.
 
 **Certificate and status claims need evidence.** A claim is one if it:
@@ -92,7 +94,7 @@ interchangeable.**
 - *Factual resolution or absence* — the gap is closed, or never existed — is a
   status claim and needs evidence.
 - *Policy dismissal or suppression* — a decision not to act on a real or
-  asserted gap — is warranted only by a recorded human decision (above).
+  asserted gap — is warranted only by a recorded decision (above).
   - It claims nothing about the facts.
   - It always renders as **dismissed by decision**, with its reason and
     expiry visible.
@@ -142,8 +144,8 @@ challenge a status but never establish one.
     genome-completeness.
   - It may raise a **challenge**. By default an open inferred challenge
     suspends the displayed claim to Unknown, showing its inferred provenance
-    beside the deterministic evidence it questions, until a human or a
-    declared deterministic policy resolves it.
+    beside the deterministic evidence it questions, until a recorded
+    decision or a declared deterministic policy resolves it.
   - Inference never silently overrides or replaces deterministic evidence:
     the suspended claim's deterministic basis stays visible, and resolving
     the challenge is what restores or revises the status.
