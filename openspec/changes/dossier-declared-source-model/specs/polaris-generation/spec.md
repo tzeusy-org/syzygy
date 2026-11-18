@@ -34,6 +34,18 @@ This F-1 version SHALL issue only the no-execution arm to the author, inventory 
 
 The retained `polaris-public-git-source-acquisition` observer descriptor and `polaris-dossier/git-object-reader` implementation descriptor SHALL continue to declare their identities, implementation/contract versions, pinned object inputs, fact/identity schemes, per-output determinism, typed failures and read-only authority boundary. The local consolidation changes no configured source/object/tree/byte limit or reader implementation descriptor; a new build-identity fact remains F-4 scope. Descriptor presence or an owner-act stamp is not an admission gate.
 
+Policy capture SHALL name the Syzygy commit, repository-relative policy path, policy identity, version and SHA256 of the exact committed bytes. The worktree entry SHALL be a regular file, not a symlink or special file; special-file validation SHALL return a bounded refusal without waiting for a writer. Both committed and worktree input SHALL be bounded at 2,097,152 bytes, strict UTF-8 and bounded JSON (at most 65,536 nodes and depth 32). Invalid encoding, bounds, JSON, identity or version, missing policy, or worktree bytes differing from the committed bytes SHALL refuse before content use. Continuation SHALL compare path/identity/version/digest, not require the original Syzygy commit when a later unrelated commit contains identical policy bytes. Policy version remains an auditable snapshot input at every evaluation; recording an original commit is historical provenance, not a new adoption gate.
+
+The retained parent contracts apply to the local artifact with these explicit observable consequences. Unknown claims SHALL carry exactly one primary reason and only secondary reasons from the same closed RFC2-24 vocabulary, verbatim in human and machine forms. A condition outside that vocabulary SHALL be a named expandable fact with its resolving action, never an invented reason; an Unknown aggregate SHALL disclose reason counts, expand to its members and route every reason to its resolving action. Editorial draft is a sibling state, never an Unknown reason. Source-unavailable facts SHALL record absence and make dependent claims Unknown; a partial capture SHALL disclose its captured scope, leave uncaptured claims Unknown and never present a full-scope aggregate. An outside-six degradation SHALL be a render fact, never a new degradation state. Missing quantities SHALL remain Unknown and SHALL NOT silently contribute zero to aggregates. This static run maintains no rolling last-good observer store; that one consequence is separately proposed N/A, not silently fulfilled by a refusal.
+
+Under retained025, composition SHALL derive the inherited highest embedded class from actual source provenance, carry each embedded classification and origin forward, invent no class ordering or all-class permission union, and visibly refuse indeterminate composite egress. The run records eligible classes separately from actual transmissions, which Syzygy does not observe in this mode. Exclusion provenance SHALL contain only the permitted content digest, location reference, policy version and one of the three closed redaction classes: excluded-artifact, redacted-span, unclassifiable-excluded. No excluded body enters any store. Whole and unclassifiable exclusions SHALL make every dependent claim Unknown with excluded-content and count. A surviving redacted-span-supported claim SHALL retain its otherwise-earned tier with the redaction count on that claim; only claims needing removed spans become Unknown. Private excluded/withheld metadata suppression remains in force, so this tuple is not permission to expose private identifiers or sizes.
+
+A declared provider withdrawal or changed/missing declaration SHALL stop dependent continuation and never recompute under that declaration. At the next evaluation dependent claims SHALL become Unknown with unconsented-source-or-provider; every interim or retained rendering Syzygy emits SHALL visibly carry the withdrawal qualification. Immutable historical artifacts remain unchanged; where served again, the current withdrawal disclosure accompanies them. This is not kernel challenge or overlay lifecycle support. Without a declared provider the draft layer SHALL remain uncomputed and visibly Unknown as a policy state in both channels; the deterministic/source-backed view SHALL remain fully readable without generated prose under retained001. Under retained001/004 and034, editorial prose SHALL remain visibly distinct, non-visually recoverable and non-citable: never an anchor target, citation-graph member, evidence satisfying a claim, or green. Its declared model/version/input provenance does not confer authority.
+
+Retained018 supplies the execution envelope: historical time derivation bounds carry reduced-fidelity; unreachable post-squash commit detail is represented at PR granularity with reduced-fidelity; terminal outcomes use substrate-qualified verbatim closed report vocabulary with structured reported blockers. An unverifiable gate origin caps at report-fact even with a retained artifact. Conditional reports of an actual profile-policy violation terminate that run and cap its outputs at report-fact; absent violation knowledge stays Unknown. That positive violation branch is distinct from an out-of-scope command's disclosed non-refusing flag. No execution arm is enabled to exercise it.
+
+The successor reader input declaration SHALL map the declared repository/pin, Git object database, tree entries and blobs to RFC2-1 item1; the committed classification/screening policy to item7; finite resource limits to item8; and effective descriptor/policy adoption provenance to item11. The provider and eligible-class declaration is run provenance, not a consent instance. No observation-consent input survives; neither descriptor nor policy owner-act stamps are read-admission conditions. The retained per-output identity schemes, capture/derivation determinism and typed failure/empty-write boundary remain unchanged.
+
 ID: REQ-polaris-generation-033
 Source: VIS-2; SEC-2; SEC-3; SEC-5; GOVERNANCE-SIMPLIFICATION-D10.
 Scope: v1-mandatory
@@ -67,17 +79,17 @@ Scope: v1-mandatory
 
 Form: event-response.
 
-- **Case:** Controlled public/private/unstated fixture repositories and bounded configurations, with absent legacy records; independently mutate one object, pin, provider, policy, record field or class at a time.
+- **Case:** Controlled public/private/unstated fixture repositories and bounded configurations, with absent legacy records; independently mutate one object, pin, provider, policy, record field or class at a time. Include regular, symlink and writerless-FIFO policy entries; invalid UTF-8, over-bound JSON/bytes and dirty policy; a policy-byte change versus an unrelated commit with identical bytes; composite origin/class loss; whole versus removed-span versus surviving-span support; provider withdrawal and missing-provider fallback; primary/secondary/aggregate reason and envelope conditional branches.
 - **Observable:** Command reports, state-file byte differences, process/network capture, rendered pages and machine disclosures.
-- **Oracle:** Literal expected pins, refusal codes and redacted/withheld outcomes prepared independently from fixture bytes; independently recompute object identifiers and compare retained legacy files.
+- **Oracle:** Literal expected pins, refusal codes and redacted/withheld outcomes prepared independently from fixture bytes; independently recompute object identifiers and compare retained legacy files. Use literal expected policy bindings/bounds and child-process timeout capture; independently prepared composite origins, exclusion tuples/counts, Unknown reasons/routes, withdrawal labels and report-fact ceilings; do not import policy capture or rendering helpers.
 - **Oracle independence:** Expectations and the byte/process capture do not import admission, screening or serialization helpers from the implementation.
-- **Falsifier:** A retired gate is called, a terminal question or governance write occurs, invalid content is admitted, a private exclusion leaks metadata, a changed packet reuses a verdict, or a stored declaration is presented as observed transmission.
+- **Falsifier:** A retired gate is called, a terminal question or governance write occurs, invalid content is admitted, a private exclusion leaks metadata, a changed packet reuses a verdict, or a stored declaration is presented as observed transmission; a special policy file blocks, invalid policy bytes enter use, unchanged policy bytes are refused only for a different commit, a composite launders origin/class, surviving support is blanket-degraded, a withdrawal is hidden, a reason is invented, or an editorial draft becomes evidence/green.
 
 ```yaml
 warrants:
   primary: SEC-5
   doctrine: [SEC-1, SEC-2, SEC-3, SEC-5, VIS-1, VIS-2, VIS-4]
-  contracts: [RFC2-24, RFC3-16, RFC4-2, RFC4-19, RFC5-12, RFC7-20, RFC7-33, RFC7-34, RFC2-23, RFC5-14, RFC5-17]
+  contracts: [RFC2-24, RFC3-16, RFC4-2, RFC4-19, RFC5-12, RFC7-20, RFC7-33, RFC7-34, RFC2-23, RFC5-14, RFC5-17, RFC1-3, RFC3-7, RFC5-13]
   policies: [CC-SPEC-2, CC-SPEC-4, CC-SPEC-3, CC-REV-2]
   decisions: [POLARIS-DOSSIER-LOCAL-AGENT-MODE-2026-10-05, POLARIS-DOSSIER-LOCAL-AGENT-RULINGS-2026-10-05, POLARIS-DOSSIER-LOCAL-AGENT-SCOPE-REVIEW-SIGNOFF-2026-10-05, POLARIS-DOSSIER-LOCAL-AGENT-REVIEW-1-RULINGS-2026-10-05, POLARIS-DOSSIER-LOCAL-AGENT-RECORDS-2026-10-05, GOVERNANCE-SIMPLIFICATION-D10]
   topology: []
@@ -89,6 +101,8 @@ warrants:
 The local init command SHALL accept a normalized credential-free locator and declared repository identity, or derive the identity by the existing locator derivation rule when unambiguous without consulting consent records. Locator parsing, credential suppression and identity grammar remain unchanged. Invalid locators SHALL refuse without printing or storing the submitted secret-bearing URL. The local command SHALL record its inputs and pin as Inferred provenance, make no network request, and leave the supplied clone unchanged.
 
 Initialization SHALL validate the run configuration and state-root separation before using content, verify the selected commit through the pinned reader, and bind the committed screening policy before issuing a brief. It SHALL never ask a consent question or read/write an observation consent, provider/drawer statement, launch recording reference or write-consent record. A valid public or private local source requires no such record. Existing state-directory separation and interrupted-write safety continue to apply. URL acquisition and automatic trunk selection remain a separate F-3 delivery and are not reported as successful by this local command.
+
+The run record and every rendered page SHALL disclose in human and machine form the normalized credential-free locator and repository identity, their attributed Inferred source, whether the identity was operator-supplied or derived by the retained last-two-segments rule, and that the clone configuration is writable by the agent sessions. Locator hints are never repository identity. Surviving normalization residuals SHALL be explicit: hosts and earlier path segments do not distinguish derived identities; replacement/joining with hyphens can collide; dropping ports and case folding can merge distinct locators. An explicit identity can distinguish subjects, but a declaration is not observed identity proof. Record matching, reliance on another subject's consent/statement, record-list warnings, terminal phrases and recording-reference publication warnings retire because no such records are read or written. These retirements do not erase the normalization collisions. Per-page033's sentence/appendix/machine arrangement carries these human disclosures without a terminal question.
 
 ID: REQ-polaris-generation-046
 Source: VIS-2; VIS-4; SEC-2; SEC-5; GOVERNANCE-SIMPLIFICATION-D10.
@@ -111,11 +125,11 @@ Scope: v1-mandatory
 
 Form: event-response.
 
-- **Case:** Controlled clones and valid declarations, with non-terminal stdin, missing legacy records, malformed locators and overlapping state roots.
+- **Case:** Controlled clones and valid declarations, with non-terminal stdin, missing legacy records, malformed locators and overlapping state roots. Independently vary host/earlier segments, port, case and hyphen collisions with derived and explicit identities; inspect every page and machine form for attributed provenance, write reach and surviving collision disclosures.
 - **Observable:** Human/machine reports, stdin read count, governance/ref writes and before/after file capture.
-- **Oracle:** Independently prepared locator cases and realpath relationships, literal expected identity/pin and read/write counts.
+- **Oracle:** Independently prepared locator cases and realpath relationships, literal expected identity/pin and read/write counts, plus independently enumerated locator normalization collisions and literal required per-page disclosure fields.
 - **Oracle independence:** Expected outcomes use fixture literals and independent filesystem/process capture, never admission helpers.
-- **Falsifier:** A consent question or retired record read/write, credential-bearing locator output, unexpected network access or clone mutation.
+- **Falsifier:** A consent question or retired record read/write, credential-bearing locator output, unexpected network access or clone mutation; a surviving collision, attribution, configuration write reach or human/machine disclosure is omitted or treated as identity verification.
 
 ```yaml
 warrants:
@@ -488,7 +502,7 @@ Form: lifecycle transition.
 warrants:
   primary: VIS-2
   doctrine: [VIS-1, VIS-2, VIS-3, VIS-4, SEC-2, SEC-3, SEC-5]
-  contracts: [RFC2-23, RFC5-17, RFC7-9, RFC7-13, RFC7-25, RFC2-24, RFC4-19, RFC5-14, RFC7-20]
+  contracts: [RFC2-23, RFC5-17, RFC7-9, RFC7-13, RFC7-25, RFC2-24, RFC4-19, RFC5-14, RFC7-20, RFC7-33]
   policies: [CC-SPEC-2, CC-SPEC-4, CC-SPEC-3, CC-REV-2]
   decisions: [POLARIS-DOSSIER-LOCAL-AGENT-SCOPE-REVIEW-SIGNOFF-2026-10-05, POLARIS-DOSSIER-WAITING-SESSIONS-2026-10-08, OWNER-DIRECTION-DOSSIER-VOICE-AND-SCRIPTS-2026-11-06, OWNER-DIRECTION-QUESTIONNAIRE-ANSWERS-2026-11-06, OWNER-DIRECTION-FIDELITY-REVIEW-ROUNDS-2026-11-09, GOVERNANCE-SIMPLIFICATION-D10]
   topology: []

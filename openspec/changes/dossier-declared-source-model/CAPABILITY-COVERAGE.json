@@ -1,9 +1,9 @@
 {
   "label": "Inferred",
   "meaning": "Candidate requirement coverage, not implementation PASS; independent confirmation pending",
-  "population": 38,
+  "population": 39,
   "partition": {
-    "covered": 31,
+    "covered": 32,
     "lawfully out of scope": 7,
     "Unknown / unresolved": 0
   },
@@ -308,10 +308,19 @@
     },
     {
       "id": "NG-live-control-plane",
-      "obligation": "Live kernel endpoints/drawers/bands/evaluation transitions",
+      "obligation": "Live kernel endpoints/drawers/bands/evaluation transitions and rolling last-good observer fallback",
       "partition": "lawfully out of scope",
       "non_goal": "NG-live-control-plane",
       "reason": "Explicit local static editorial capability non-goal; no such behavior is delivered or authorized here"
+    },
+    {
+      "id": "identity-disclosures",
+      "obligation": "Disclose normalized locator/identity, attributed derivation source, configuration write reach and surviving normalization collisions on every page in both channels",
+      "partition": "covered",
+      "requirements": [
+        "REQ-polaris-generation-046",
+        "REQ-polaris-generation-033"
+      ]
     }
   ]
 }

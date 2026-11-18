@@ -785,8 +785,8 @@
       "source": "openspec/changes/polaris-dossier-launch-consent/specs/polaris-generation/spec.md",
       "requirement": "REQ-polaris-generation-046",
       "scenario": "Same-named repository on two hosts",
-      "disposition": "retained",
-      "current_obligation": "046 retained locator/identity/screening/state constraints and current033; no consent question",
+      "disposition": "retained normalization disclosure; record-reliance limbs retired",
+      "current_obligation": "046 explicitly retains last-two-segment/host/earlier-path/hyphen/port/case collision disclosures, derivation attribution and clone configuration write reach on each human/machine page; no record lookup or terminal question",
       "evidence_scope": "start-gates.test.ts, launch.test.ts, status.test.ts and existing locator/placement/credential suites."
     },
     {

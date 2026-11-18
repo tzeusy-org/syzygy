@@ -1,9 +1,9 @@
 {
   "label": "Inferred",
   "meaning": "Candidate per-observable-consequence interpretation; independent confirmation and adoption remain required, not a source verification result",
-  "population": 98,
-  "covered_in_candidate": 95,
-  "candidate_na_unresolved": 3,
+  "population": 137,
+  "covered_in_candidate": 133,
+  "candidate_na_unresolved": 4,
   "rows": [
     {
       "clause": "RFC1-2",
@@ -866,6 +866,373 @@
       "disposition": "candidate N/A; unresolved until agent adoption",
       "non_goal": "NG-live-control-plane",
       "judgment": ".syzygy/governance/decisions/DOSSIER-DECLARED-SOURCE-CONTRACT-APPLICABILITY.md"
+    },
+    {
+      "clause": "RFC2-23",
+      "observable_consequence": "Source unavailable is rendered as unavailable with absence captured as a fact and dependent claims Unknown",
+      "requirements": [
+        "REQ-polaris-generation-033",
+        "REQ-polaris-generation-034"
+      ],
+      "disposition": "covered in candidate requirement set"
+    },
+    {
+      "clause": "RFC2-23",
+      "observable_consequence": "Uncaptured portions of partial input remain Unknown, captured scope is explicit and no full-scope aggregate is claimed",
+      "requirements": [
+        "REQ-polaris-generation-033",
+        "REQ-polaris-generation-034"
+      ],
+      "disposition": "covered in candidate requirement set"
+    },
+    {
+      "clause": "RFC2-23",
+      "observable_consequence": "Exclusions render with counts and dependent claims become Unknown",
+      "requirements": [
+        "REQ-polaris-generation-033",
+        "REQ-polaris-generation-034"
+      ],
+      "disposition": "covered in candidate requirement set"
+    },
+    {
+      "clause": "RFC2-23",
+      "observable_consequence": "A condition outside the six degradation states renders as a fact, not a minted state",
+      "requirements": [
+        "REQ-polaris-generation-033",
+        "REQ-polaris-generation-034"
+      ],
+      "disposition": "covered in candidate requirement set"
+    },
+    {
+      "clause": "RFC2-23",
+      "observable_consequence": "Missing measures remain Unknown and do not silently contribute zero to aggregates",
+      "requirements": [
+        "REQ-polaris-generation-033",
+        "REQ-polaris-generation-034"
+      ],
+      "disposition": "covered in candidate requirement set"
+    },
+    {
+      "clause": "RFC2-24",
+      "observable_consequence": "Exactly one primary reason is required per Unknown claim",
+      "requirements": [
+        "REQ-polaris-generation-033",
+        "REQ-polaris-generation-034",
+        "REQ-polaris-generation-036"
+      ],
+      "disposition": "covered in candidate requirement set"
+    },
+    {
+      "clause": "RFC2-24",
+      "observable_consequence": "Secondary reasons use the same closed twelve-reason vocabulary, never an invented annotation",
+      "requirements": [
+        "REQ-polaris-generation-033",
+        "REQ-polaris-generation-034",
+        "REQ-polaris-generation-036"
+      ],
+      "disposition": "covered in candidate requirement set"
+    },
+    {
+      "clause": "RFC2-24",
+      "observable_consequence": "An out-of-vocabulary condition renders as a named expandable fact routed to its resolving action",
+      "requirements": [
+        "REQ-polaris-generation-033",
+        "REQ-polaris-generation-034",
+        "REQ-polaris-generation-036"
+      ],
+      "disposition": "covered in candidate requirement set"
+    },
+    {
+      "clause": "RFC2-24",
+      "observable_consequence": "Unknown aggregates disclose reason counts and expand to constituent claims",
+      "requirements": [
+        "REQ-polaris-generation-033",
+        "REQ-polaris-generation-034",
+        "REQ-polaris-generation-036"
+      ],
+      "disposition": "covered in candidate requirement set"
+    },
+    {
+      "clause": "RFC2-24",
+      "observable_consequence": "Each Unknown reason routes to its distinct resolving action",
+      "requirements": [
+        "REQ-polaris-generation-033",
+        "REQ-polaris-generation-034",
+        "REQ-polaris-generation-036"
+      ],
+      "disposition": "covered in candidate requirement set"
+    },
+    {
+      "clause": "RFC2-24",
+      "observable_consequence": "Human and machine forms carry reason values verbatim from the same vocabulary",
+      "requirements": [
+        "REQ-polaris-generation-033",
+        "REQ-polaris-generation-034",
+        "REQ-polaris-generation-036"
+      ],
+      "disposition": "covered in candidate requirement set"
+    },
+    {
+      "clause": "RFC2-24",
+      "observable_consequence": "Editorial-draft and other sibling states are not Unknown reasons",
+      "requirements": [
+        "REQ-polaris-generation-033",
+        "REQ-polaris-generation-034",
+        "REQ-polaris-generation-036"
+      ],
+      "disposition": "covered in candidate requirement set"
+    },
+    {
+      "clause": "RFC4-2",
+      "observable_consequence": "Each successor source class maps to its RFC2-1 snapshot input: objects/declaration item1, committed policies item7, limits item8 and effective adoption provenance item11; no consent input",
+      "requirements": [
+        "REQ-polaris-generation-033"
+      ],
+      "disposition": "covered in candidate requirement set"
+    },
+    {
+      "clause": "RFC4-19",
+      "observable_consequence": "Historical time derivation bounds carry reduced-fidelity",
+      "requirements": [
+        "REQ-polaris-generation-033",
+        "REQ-polaris-generation-018"
+      ],
+      "disposition": "covered in candidate requirement set"
+    },
+    {
+      "clause": "RFC4-19",
+      "observable_consequence": "Unreachable post-squash commit detail is represented at PR granularity with reduced-fidelity",
+      "requirements": [
+        "REQ-polaris-generation-033",
+        "REQ-polaris-generation-018"
+      ],
+      "disposition": "covered in candidate requirement set"
+    },
+    {
+      "clause": "RFC4-19",
+      "observable_consequence": "Terminal outcomes retain substrate-qualified verbatim closed report vocabulary",
+      "requirements": [
+        "REQ-polaris-generation-033",
+        "REQ-polaris-generation-018"
+      ],
+      "disposition": "covered in candidate requirement set"
+    },
+    {
+      "clause": "RFC4-19",
+      "observable_consequence": "Blockers remain structured as reported; absent report stays unknown-terminal with reason",
+      "requirements": [
+        "REQ-polaris-generation-033",
+        "REQ-polaris-generation-018"
+      ],
+      "disposition": "covered in candidate requirement set"
+    },
+    {
+      "clause": "RFC4-19",
+      "observable_consequence": "Unverifiable gate origin caps output at report-fact even where an artifact exists",
+      "requirements": [
+        "REQ-polaris-generation-033",
+        "REQ-polaris-generation-018"
+      ],
+      "disposition": "covered in candidate requirement set"
+    },
+    {
+      "clause": "RFC4-19",
+      "observable_consequence": "A reported actual profile-policy violation terminates the violating run and caps outputs at report-fact; this conditional retained018 rule enables no F-1 execution arm",
+      "requirements": [
+        "REQ-polaris-generation-033",
+        "REQ-polaris-generation-018"
+      ],
+      "disposition": "covered in candidate requirement set"
+    },
+    {
+      "clause": "RFC5-13",
+      "observable_consequence": "Provider-declaration withdrawal/change makes dependent claims Unknown at the next evaluation",
+      "requirements": [
+        "REQ-polaris-generation-033"
+      ],
+      "disposition": "covered in candidate requirement set"
+    },
+    {
+      "clause": "RFC5-13",
+      "observable_consequence": "Every interim or retained rendering Syzygy emits carries visible provider-withdrawal qualification, without rewriting immutable historical artifacts",
+      "requirements": [
+        "REQ-polaris-generation-033"
+      ],
+      "disposition": "covered in candidate requirement set"
+    },
+    {
+      "clause": "RFC5-14",
+      "observable_consequence": "Composite inherits highest embedded class from actual source provenance without inventing class ordering or permission unions",
+      "requirements": [
+        "REQ-polaris-generation-033",
+        "REQ-polaris-generation-025"
+      ],
+      "disposition": "covered in candidate requirement set"
+    },
+    {
+      "clause": "RFC5-14",
+      "observable_consequence": "Embedded class/origin attribution survives composition instead of trusting its output label",
+      "requirements": [
+        "REQ-polaris-generation-033",
+        "REQ-polaris-generation-025"
+      ],
+      "disposition": "covered in candidate requirement set"
+    },
+    {
+      "clause": "RFC5-14",
+      "observable_consequence": "Indeterminate composite egress is refused and the refusal rendered",
+      "requirements": [
+        "REQ-polaris-generation-033",
+        "REQ-polaris-generation-025"
+      ],
+      "disposition": "covered in candidate requirement set"
+    },
+    {
+      "clause": "RFC5-14",
+      "observable_consequence": "Classification policy version is an auditable snapshot input at each evaluation",
+      "requirements": [
+        "REQ-polaris-generation-033",
+        "REQ-polaris-generation-025"
+      ],
+      "disposition": "covered in candidate requirement set"
+    },
+    {
+      "clause": "RFC5-14",
+      "observable_consequence": "With no declared provider the inferred layer remains uncomputed and visibly Unknown, not a zero or old current draft",
+      "requirements": [
+        "REQ-polaris-generation-033",
+        "REQ-polaris-generation-025"
+      ],
+      "disposition": "covered in candidate requirement set"
+    },
+    {
+      "clause": "RFC5-17",
+      "observable_consequence": "Exclusion provenance contains only content digest, location reference, policy version and redaction class, never body",
+      "requirements": [
+        "REQ-polaris-generation-033",
+        "REQ-polaris-generation-034",
+        "REQ-polaris-generation-025"
+      ],
+      "disposition": "covered in candidate requirement set"
+    },
+    {
+      "clause": "RFC5-17",
+      "observable_consequence": "Redaction classes are exactly excluded-artifact, redacted-span and unclassifiable-excluded",
+      "requirements": [
+        "REQ-polaris-generation-033",
+        "REQ-polaris-generation-034",
+        "REQ-polaris-generation-025"
+      ],
+      "disposition": "covered in candidate requirement set"
+    },
+    {
+      "clause": "RFC5-17",
+      "observable_consequence": "Whole and unclassifiable exclusions make every dependent claim Unknown with excluded-content and count",
+      "requirements": [
+        "REQ-polaris-generation-033",
+        "REQ-polaris-generation-034",
+        "REQ-polaris-generation-025"
+      ],
+      "disposition": "covered in candidate requirement set"
+    },
+    {
+      "clause": "RFC5-17",
+      "observable_consequence": "Claims supported by surviving redacted content retain their otherwise-earned tier and disclose the redaction count on the claim",
+      "requirements": [
+        "REQ-polaris-generation-033",
+        "REQ-polaris-generation-034",
+        "REQ-polaris-generation-025"
+      ],
+      "disposition": "covered in candidate requirement set"
+    },
+    {
+      "clause": "RFC5-17",
+      "observable_consequence": "Only claims depending on removed spans become Unknown; surviving support is not blanket-degraded",
+      "requirements": [
+        "REQ-polaris-generation-033",
+        "REQ-polaris-generation-034",
+        "REQ-polaris-generation-025"
+      ],
+      "disposition": "covered in candidate requirement set"
+    },
+    {
+      "clause": "RFC7-20",
+      "observable_consequence": "Editorial prose never becomes an anchor target",
+      "requirements": [
+        "REQ-polaris-generation-033",
+        "REQ-polaris-generation-034",
+        "REQ-polaris-generation-001"
+      ],
+      "disposition": "covered in candidate requirement set"
+    },
+    {
+      "clause": "RFC7-20",
+      "observable_consequence": "Editorial prose never enters the citation graph",
+      "requirements": [
+        "REQ-polaris-generation-033",
+        "REQ-polaris-generation-034",
+        "REQ-polaris-generation-001"
+      ],
+      "disposition": "covered in candidate requirement set"
+    },
+    {
+      "clause": "RFC7-20",
+      "observable_consequence": "Editorial prose never satisfies an evidence claim",
+      "requirements": [
+        "REQ-polaris-generation-033",
+        "REQ-polaris-generation-034",
+        "REQ-polaris-generation-001"
+      ],
+      "disposition": "covered in candidate requirement set"
+    },
+    {
+      "clause": "RFC7-20",
+      "observable_consequence": "Editorial prose never renders green",
+      "requirements": [
+        "REQ-polaris-generation-033",
+        "REQ-polaris-generation-034",
+        "REQ-polaris-generation-001"
+      ],
+      "disposition": "covered in candidate requirement set"
+    },
+    {
+      "clause": "RFC7-20",
+      "observable_consequence": "Editorial-draft is visually distinct and non-visually recoverable with inference provenance",
+      "requirements": [
+        "REQ-polaris-generation-033",
+        "REQ-polaris-generation-034",
+        "REQ-polaris-generation-001"
+      ],
+      "disposition": "covered in candidate requirement set"
+    },
+    {
+      "clause": "RFC7-20",
+      "observable_consequence": "Missing provider gives an uncomputed visibly Unknown draft policy state in both channels",
+      "requirements": [
+        "REQ-polaris-generation-033",
+        "REQ-polaris-generation-034",
+        "REQ-polaris-generation-001"
+      ],
+      "disposition": "covered in candidate requirement set"
+    },
+    {
+      "clause": "RFC7-20",
+      "observable_consequence": "A fully readable deterministic/source-backed surface remains when generated prose is unavailable",
+      "requirements": [
+        "REQ-polaris-generation-033",
+        "REQ-polaris-generation-034",
+        "REQ-polaris-generation-001"
+      ],
+      "disposition": "covered in candidate requirement set"
+    },
+    {
+      "clause": "RFC2-23",
+      "observable_consequence": "Rolling observer-failure fallback to persisted last-good observations marked stale/broken",
+      "requirements": [],
+      "disposition": "candidate N/A; unresolved until agent adoption",
+      "non_goal": "NG-live-control-plane",
+      "judgment": ".syzygy/governance/decisions/DOSSIER-DECLARED-SOURCE-CONTRACT-APPLICABILITY.md",
+      "scope": "This static pinned command capability stores no rolling observer observations or last-good capture. Local source failure/Unknown/absence and historical provider-withdrawal render duties remain applicable."
     }
   ]
 }
