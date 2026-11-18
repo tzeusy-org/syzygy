@@ -701,7 +701,8 @@ def declared_source_binding(root):
         if not cells[5].startswith(f"`git revert -m 1 {DECLARED_SOURCE_COMMIT}`"):
             records.append("declared-source: adoption row does not name its subject's revert")
         for rel in DECLARED_SOURCE_SUBJECTS:
-            if f"`{rel}`" not in cells[3]:
+            snapshot = f"https://github.com/tzeusy-org/syzygy/blob/{DECLARED_SOURCE_COMMIT}/{rel}"
+            if f"]({snapshot})" not in cells[3]:
                 records.append(f"declared-source: adoption row does not name `{rel}`")
     for rel, digest in DECLARED_SOURCE_SUBJECTS.items():
         body = read_bytes(root, rel)
@@ -2351,8 +2352,14 @@ def declared_source_mutants():
         ("declared-revert-mismatch", AGENT_ADOPTIONS,
          _replace(f"git revert -m 1 {DECLARED_SOURCE_COMMIT}", "git revert -m 1 " + "0" * 40), "R1"),
         ("declared-scope-missing", AGENT_ADOPTIONS,
-         _replace("`.syzygy/governance/decisions/DOSSIER-DECLARED-SOURCE-CONTRACT-APPLICABILITY.md`",
-                  "the unrecorded applicability judgment"), "R1"),
+         _replace(f"/blob/{DECLARED_SOURCE_COMMIT}/.syzygy/governance/decisions/DOSSIER-DECLARED-SOURCE-CONTRACT-APPLICABILITY.md)",
+                  "/blob/unrecorded/applicability.md)"), "R1"),
+        ("declared-spec-reference-missing", AGENT_ADOPTIONS,
+         _replace(f"/blob/{DECLARED_SOURCE_COMMIT}/{DECLARED_SOURCE_SPEC})",
+                  "/blob/unrecorded/spec.md)"), "R1"),
+        ("declared-policy-reference-missing", AGENT_ADOPTIONS,
+         _replace(f"/blob/{DECLARED_SOURCE_COMMIT}/.syzygy/governance/policies/POLARIS-DOSSIER-DECLARED-SOURCE-POLICY-v1.json)",
+                  "/blob/unrecorded/policy.json)"), "R1"),
         ("declared-d10-invalid", f"{DECISIONS}/GOVERNANCE-SIMPLIFICATION-D10-ACT.md",
          lambda text: text + "changed\n", "R1"),
         ("declared-spec-changed", DECLARED_SOURCE_SPEC,
