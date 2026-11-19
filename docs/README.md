@@ -101,14 +101,11 @@ flowchart LR
 Both hold plan-and-design notes, split by which harness wrote them, not by
 what they are. Prefer `plans/` for anything new.
 
-**`superpowers/` is path-pinned and must not be moved or renamed.**
-
-- The general trusted-bootstrap authorization's impact ledger classifies
-  every path under that prefix as spent historical evidence.
-- `scripts/build_general_trusted_bootstrap_impact_ledger.py` hard-codes the
-  prefix string to do it.
-- Relocating a file out of that directory would silently re-classify it on
-  the next regeneration.
+**`superpowers/` is no longer path-pinned** *(2026-11-20, D10 F-5)*. The
+general trusted-bootstrap impact ledger classified every path under that
+prefix as spent evidence, and its builder hard-coded the prefix; D10 retired
+that builder, so the ledger is history and is not regenerated. Moving a file
+still breaks whatever cites it by path.
 
 **One of the four is not spent.** Read the table before treating any of these
 as history.

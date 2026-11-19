@@ -398,8 +398,6 @@ python3 $CS/build_capability_1_views.py --selftest
 python3 scripts/build_capability_1_spec_dependencies.py --check  # capability 1 spec: warrants -> generated union
 python3 scripts/build_capability_1_spec_dependencies.py --selftest
 python3 scripts/build_cap1_trusted_bootstrap_consent_adoption.py --selftest
-python3 scripts/build_general_trusted_bootstrap_impact_ledger.py --check
-python3 scripts/build_general_trusted_bootstrap_transaction.py --check
 python3 scripts/build_polaris_project_wide_contract_coverage.py --check
 python3 scripts/build_polaris_project_wide_spec_dependencies.py --check
 python3 scripts/build_pwb_truth_policy_amendment.py --check
@@ -517,7 +515,7 @@ python3 scripts/record_narrative_profile_adoption.py --check --date 2026-10-07 -
 python3 scripts/record_rfc5_project_documentation_act.py --selftest   # rfc5 --selftest
 ```
 
-The one hundred and thirty-three checks above are the same one hundred and thirty-three the hosted workflow runs
+The one hundred and thirty-one checks above are the same one hundred and thirty-one the hosted workflow runs
 (`.github/workflows/governance-docs.yml`), so "hosted CI is green" and "the
 battery is clean" are one claim rather than two a reader conflates. The
 `git tag` line is orientation, not a check — it prints and cannot fail.

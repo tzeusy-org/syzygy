@@ -712,6 +712,24 @@ def _candidate_twin(installed_rel, all_paths):
 #: A signed package's citation of a path that a later act moved. The package's
 #: bytes are what its version tag binds, so the citation is history, not a
 #: route: classified and printed under CG-1d, never silenced.
+#: Scripts D10 FOLLOW-ON F-5 deleted (the ceremony machinery D10 retired). A
+#: citation of one in a package, review or plan is history, like a frozen
+#: packet path: classified historical (WARN), never broken. A live routing
+#: page should stop citing them instead (`syzygy-k54o.5`).
+D10_RETIRED_SCRIPTS = frozenset(f"scripts/{name}.py" for name in (
+    "build_general_trusted_bootstrap_impact_ledger",
+    "build_general_trusted_bootstrap_transaction",
+    "build_pwb_release_label_amendment",
+    "build_pwb_scoped_attributes_amendment",
+    "build_rfc7_scoped_values_successor",
+    "build_three_surface_poc_identity_amendment",
+    "record_pwb_effect_acts",
+    "record_pwb_truth_amendment",
+    "record_rfc7_scoped_values_successor",
+    "simulate_public_source_screening_scope_act",
+    "simulate_redis_local_agent_sitting",
+))
+
 SIGNED_PACKAGE_MOVED_TARGETS = {
     (f"{CANDIDATES}/polaris-dossier-local-agent-mode-v1-1/IMPACT-LEDGER.md",
      "openspec/changes/polaris-non-governed-narrative-profile/proposed/polaris-generation/spec.md"):
@@ -754,6 +772,8 @@ def cg1_links(paths, res):
             dead_routes.append(f"{rel} -> {t}")
         elif _is_historical_packet(t):
             historical.append(f"{rel} -> {t}")
+        elif t in D10_RETIRED_SCRIPTS:
+            historical.append(f"{rel} -> {t} — deleted by D10 F-5")
         elif (rel, t) in SIGNED_PACKAGE_MOVED_TARGETS:
             historical.append(f"{rel} -> {t} — {SIGNED_PACKAGE_MOVED_TARGETS[(rel, t)]}")
         elif _is_frozen_lane(rel):

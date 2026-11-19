@@ -465,10 +465,6 @@ sweep lessons added 2026-09-23; the raw-head digest lesson the same day.
   `round-2026-08f/fixtures/DRY-RUN-ADMINISTRATION.json` is a live CI input of
   `.github/workflows/governance-docs.yml`, and rounds `h`–`k` are cited as
   evidence by acts in force.
-- `docs/superpowers/**` is **path-pinned**:
-  `scripts/build_general_trusted_bootstrap_impact_ledger.py` hard-codes the
-  prefix to classify those paths as spent evidence, so moving a file out
-  silently re-classifies it on the next regeneration. Do not move or rename.
 - A prepared act package may still carry the pre-act "candidate, binds
   nothing" banner it was drafted with. **Read the act record, never the
   package banner.**

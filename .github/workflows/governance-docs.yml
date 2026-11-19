@@ -126,12 +126,6 @@ jobs:
 
       # Generated evidence and dependency projections that guard performed
       # transaction history and the current Polaris/PWB specifications.
-      - name: build_general_trusted_bootstrap_impact_ledger --check
-        run: python3 scripts/build_general_trusted_bootstrap_impact_ledger.py --check
-
-      - name: build_general_trusted_bootstrap_transaction --check
-        run: python3 scripts/build_general_trusted_bootstrap_transaction.py --check
-
       - name: build_polaris_project_wide_contract_coverage --check
         run: python3 scripts/build_polaris_project_wide_contract_coverage.py --check
 
