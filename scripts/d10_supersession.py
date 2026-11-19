@@ -67,25 +67,3 @@ def superseded(what, root=ROOT):
     print(f"SUPERSEDED  {what}: not run. {NAME} is in effect ({how}) and replaced the bytes this "
           f"check holds a performed act to; the act and its record stay as history (RFC3-16 as amended).")
     return True
-
-
-def main(argv):
-    """`d10_supersession.py --unless-in-effect CMD...`: run CMD and return its exit code, unless D10 is in effect.
-
-    For a battery line whose script holds a performed act to bytes D10 replaces
-    and cannot carry the gate itself, because a review binds its bytes
-    (`record_polaris_understanding_adoption.py`); the D10 act installs the
-    battery with that line wrapped."""
-    import subprocess
-    import sys
-    if len(argv) < 2 or argv[0] != "--unless-in-effect":
-        print("usage: d10_supersession.py --unless-in-effect CMD...", file=sys.stderr)
-        return 2
-    if superseded(" ".join(argv[1:])):
-        return 0
-    return subprocess.run(argv[1:]).returncode
-
-
-if __name__ == "__main__":
-    import sys
-    sys.exit(main(sys.argv[1:]))
