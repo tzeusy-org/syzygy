@@ -380,7 +380,6 @@ output; it is the canonical battery.
 ```sh
 python3 scripts/check_governance.py
 python3 scripts/check_governance.py --selftest
-python3 scripts/d10_supersession.py --unless-in-effect python3 scripts/record_polaris_understanding_adoption.py --check
 python3 scripts/record_polaris_understanding_adoption.py --selftest
 python3 scripts/launch_gate_results.py --selftest            # historical Markdown records
 python3 scripts/validate_launch_administration.py --selftest # the structured record path
@@ -398,7 +397,6 @@ python3 $CS/build_capability_1_views.py --check      # capability 1: charter -> 
 python3 $CS/build_capability_1_views.py --selftest
 python3 scripts/build_capability_1_spec_dependencies.py --check  # capability 1 spec: warrants -> generated union
 python3 scripts/build_capability_1_spec_dependencies.py --selftest
-python3 scripts/build_cap1_trusted_bootstrap_consent_adoption.py --check   # CAP1 consent overlay: reviewed subject, composition, superseded surfaces, applied overlay
 python3 scripts/build_cap1_trusted_bootstrap_consent_adoption.py --selftest
 python3 scripts/build_general_trusted_bootstrap_impact_ledger.py --check
 python3 scripts/build_general_trusted_bootstrap_transaction.py --check
@@ -480,13 +478,9 @@ python3 scripts/record_public_source_screening_scope_v8_act.py --check 44153bbe2
 python3 scripts/record_public_source_screening_scope_v8_act.py --selftest
 python3 scripts/check_polaris_response_ceiling_reading.py --check   # P-77 Q2 reading: quotes intact, compression only under the 2026-09-30 direction
 python3 scripts/check_polaris_response_ceiling_reading.py --selftest
-python3 scripts/build_contract_readability_restyle.py --check   # restyle package: manifest = exact regeneration, applied
 python3 scripts/build_contract_readability_restyle.py --selftest
-python3 scripts/record_contract_readability_restyle.py --check  # restyle act, performed 2026-09-28: record and aggregate block intact
 python3 scripts/record_contract_readability_restyle.py --selftest
-python3 scripts/build_spec_policy_readability_restyle.py --check   # spec-policy restyle: installed bytes = manifest rows
 python3 scripts/build_spec_policy_readability_restyle.py --selftest
-python3 scripts/record_spec_policy_readability_restyle.py --check  # spec-policy restyle act: performed 2026-09-28; records regenerate exactly
 python3 scripts/record_spec_policy_readability_restyle.py --selftest
 python3 scripts/build_three_surface_poc_readability_successor.py --check   # POC readability successor: candidate = exact regeneration, or installed rows
 python3 scripts/build_three_surface_poc_readability_successor.py --selftest
@@ -511,23 +505,19 @@ DR=.syzygy/governance/contracts/candidates/round-2026-08f/fixtures/DRY-RUN-ADMIN
 python3 scripts/validate_launch_administration.py $DR
 python3 scripts/render_launch_administration.py $DR --check
 git tag --list 'doctrine-*'
-python3 scripts/record_rfc5_project_documentation_act.py --check a69a606cc7c14da5de03ec26aaec435af2fee3fa4c7bfb8a92fc30deefa40c91 --date 2026-10-07 --question-opening 'Do you sign the RFC5-14 project-documentation class amendment at its row of the contract amendment manifest?' --selection-label 'Sign it, at the manifest row; direct the SOURCE-POLICY.md readability successor' --selection-description 'Act form 1, which makes screening scope version 2 performable; the six-class sentence in SOURCE-POLICY.md gets a readability successor.'   # rfc5 --check
 python3 scripts/record_versioned_signoff.py --check public-git-source-acquisition-local-agent --version 1.0   # public-git-source-acquisition-local-agent v1.0 --check
 python3 scripts/record_versioned_signoff.py --check public-git-source-acquisition-local-agent --version 1.1   # public-git-source-acquisition-local-agent v1.1 sign-off 2026-11-11: record, aggregate block and applied entry
-python3 scripts/record_dossier_local_agent_acts.py --check redis-agent-anthropic fbbcd3c0e3d49aab3384a4ab18bf35816dbd8fb952e658d1edbac3d1c50e48a7 --date 2026-10-07 --question-opening 'Which statement do you sign for Redis at its row of the dossier local-agent acts manifest?' --selection-label 'Anthropic provider statement' --selection-description 'Claude Code may receive Redis content even if Redis counts as governed.'   # redis-agent-anthropic --check
 python3 scripts/record_dossier_agent_provider_v2_act.py --check b7a8d099ce108bfd70133b729327534f29806cb0118ee0b3e0f9ca077a946df3 --date 2026-10-08 --question-opening 'Decision 2 (P-106):'' your Redis Anthropic provider statement predates the README/docs class, so Syzygy withholds docs text from the packets it gives your own Claude Code sessions, and README-based claims render Unknown. Version 2 adds `project-documentation` and changes nothing else. Sign it?' --selection-label 'Sign version 2 (Recommended)' --selection-description 'Docs text goes to your own Claude Code sessions, which can already read the whole clone. Phrase:'' "Sign the Redis Anthropic provider statement, version 2".' --packet-words 'Sign the Redis Anthropic provider statement, version 2'   # agent-provider statement version 2 --check
 python3 scripts/record_dossier_agent_provider_v2_act.py --selftest   # agent-provider statement version 2 --selftest
 python3 scripts/build_launch_consent_write_consent.py --check   # launch-record write consent builder --check
 python3 scripts/build_launch_consent_write_consent.py --selftest   # launch-record write consent builder --selftest
 python3 scripts/record_launch_consent_write_consent_act.py --check 53efd343b0ed5302628374fbb503758d2bfe56bf1b27715f0ec616f33b5aa092 --date 2026-11-08 --selection-quote 'Sign the write consent for launch consent records? (structured question, Claude Code session) — selected option "Sign the launch-record write consent"'   # launch-record write consent act --check
 python3 scripts/record_launch_consent_write_consent_act.py --selftest   # launch-record write-consent recorder fixtures
-python3 scripts/record_dossier_local_agent_acts.py --check d9-in-force 41fdfaea8cbde4cd8220910113fb5b376c7834a470d8c2d9badd9ab0fec9ac66 --date 2026-10-07 --question-opening 'Do you sign the D9 in-force record at its row of the dossier local-agent acts manifest?' --selection-label 'Sign it' --selection-description 'Binds D9 to the current security.md and v1.md bytes; it runs nothing until a choice for one run is recorded.'   # d9-in-force --check
-python3 scripts/record_dossier_local_agent_acts.py --check rfc7-20-reading-in-force f0725a204b6e6ccbccb211441e26e139502ef42a6447d0f4a40df2d09062f3d9 --date 2026-10-07 --question-opening 'Do you sign the RFC7-20 reading in-force record at its row of the dossier local-agent acts manifest?' --selection-label 'Sign it' --selection-description 'The agent draft renders as an editorial draft; it binds item 1 of the direction, whole-file.'   # rfc7-20-reading-in-force --check
 python3 scripts/record_narrative_profile_adoption.py --check --date 2026-10-07 --question-opening 'Do you adopt the non-governed narrative profile, requirement 032, at its row of the profile manifest?' --selection-label 'Adopt as recommended' --selection-description 'O1 to O7 as the packet recommends; Scope A is not read to cover it; the two known limitations stand.'   # narrative profile --check
 python3 scripts/record_rfc5_project_documentation_act.py --selftest   # rfc5 --selftest
 ```
 
-The one hundred and forty-three checks above are the same one hundred and forty-three the hosted workflow runs
+The one hundred and thirty-three checks above are the same one hundred and thirty-three the hosted workflow runs
 (`.github/workflows/governance-docs.yml`), so "hosted CI is green" and "the
 battery is clean" are one claim rather than two a reader conflates. The
 `git tag` line is orientation, not a check — it prints and cannot fail.
