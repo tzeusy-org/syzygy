@@ -562,11 +562,6 @@ def selftest() -> int:
     results.append(("no label is a prefix of another (CG-7d reads LABEL: digest)",
                     not any(a.label != b.label and b.label.startswith(a.label)
                             for a in ACTS for b in ACTS)))
-    import check_governance as cg
-    results.append(("check_governance registers each label, subject and record as this recorder does",
-                    {(a.label, a.subject.as_posix()) for a in ACTS}
-                    == {(l, sub) for l, sub in cg.DOSSIER_LOCAL_AGENT_ACTS}
-                    and {a.label: a.record.as_posix() for a in ACTS} == cg.DOSSIER_LOCAL_AGENT_ACT_RECORDS))
     results.append(("every act subject is a builder record",
                     {a.subject.as_posix() for a in ACTS}
                     == {r.as_posix() for r, _t in build.instances(ROOT)}))

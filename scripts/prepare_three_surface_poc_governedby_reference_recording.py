@@ -1874,7 +1874,6 @@ def family_failure_selftest(root: Path, tree: Path, expect, before: dict, earlie
     import record_pwb_behavior_amendment_acts as behavior
     import build_three_surface_poc_readability_successor as readability
     import check_spec_reconciliation as reconciliation
-    import check_governance as governance
     from unittest import mock
     pkg = recorder.real_packages()[KEY]
     signed = {p: (tree / p).read_bytes() for p in (*SUBJECTS, RECORD, AGGREGATE)}
@@ -1936,25 +1935,13 @@ def family_failure_selftest(root: Path, tree: Path, expect, before: dict, earlie
         (tree / AGGREGATE).write_bytes(signed[AGGREGATE] if installed else aggregate.encode())
         (tree / census_path).write_bytes(census_signed if installed else census_base)
 
-    governance_reports = []
-    def bootstrap():
-        saved = governance.ROOT
-        try:
-            governance.ROOT = str(tree)
-            report = governance.Results()
-            governance.cg7h_general_bootstrap_act(report)
-            governance_reports.append({"failed": report.failed(), "summaries": report.summaries})
-            return not report.failed()
-        finally:
-            governance.ROOT = saved
-
     for installed in (True, False):
         setup(installed)
         control_findings, control_state = check_state(tree)
         control_preview = preview(tree)
         control_label = ("performed; current six rows verified; explicit historical builder replay" if installed
                          else "candidate; actual current subjects checked; not performed")
-        control = (is_signed(tree) == installed and not control_findings and bootstrap()
+        control = (is_signed(tree) == installed and not control_findings
                    and control_state == control_label and control_preview["state"] == control_label
                    and not control_preview["candidateFindings"])
         for label, mutation, path in vectors:
@@ -2013,7 +2000,6 @@ def family_failure_selftest(root: Path, tree: Path, expect, before: dict, earlie
                     raise PermissionError(13, "P115 synthetic family aggregate read refused", str(target))
                 return raw_read(target)
             outputs, codes, frontiers = {}, {}, {}
-            governance_reports.clear()
             saved_root = recorder.ROOT
             try:
                 recorder.ROOT = tree
@@ -2081,12 +2067,6 @@ def family_failure_selftest(root: Path, tree: Path, expect, before: dict, earlie
                         consumer_errors["census"] = recorder.p115_exception(reader_error)
                         frontiers["census"] = (reader_error.filename is not None
                             and Path(reader_error.filename) in {tree / AGGREGATE, tree / path if path else tree / AGGREGATE})
-                    try:
-                        frontiers["governance"] = not bootstrap() if installed or mutation == "missing" else bootstrap()
-                    except OSError as reader_error:
-                        consumer_errors["governance"] = recorder.p115_exception(reader_error)
-                        frontiers["governance"] = (reader_error.filename is not None
-                            and Path(reader_error.filename) in {tree / AGGREGATE, tree / path if path else tree / AGGREGATE})
             finally:
                 recorder.ROOT = saved_root
             after = {p: (tree / p).read_bytes() if (tree / p).exists() else None for p in physical}
@@ -2102,7 +2082,7 @@ def family_failure_selftest(root: Path, tree: Path, expect, before: dict, earlie
                 "old": "valid signed v1.0" if installed else "pristine unsigned BASE subjects",
                 "new": mutation, "entry": None if path is None else str(path), "familyState": state,
                 "findings": findings, "checkState": {"state": check_label, "findings": check_findings},
-                "preview": preview_result, "frontiers": frontiers, "codes": codes, "consumerErrors": consumer_errors, "governanceReports": governance_reports, "output": outputs}, sort_keys=True))
+                "preview": preview_result, "frontiers": frontiers, "codes": codes, "consumerErrors": consumer_errors, "output": outputs}, sort_keys=True))
     if only is None or "POP companion extended different package token stays outside family" in only:
         setup(False)
         unrelated = f"<!-- versioned-signoff:{KEY}-different:v2.0 -->"
@@ -2805,7 +2785,6 @@ def selftest(root: Path) -> int:
     import record_versioned_signoff as recorder
     import build_three_surface_poc_readability_successor as readability
     import check_spec_reconciliation as reconciliation
-    import check_governance as governance
     count = consumption_unknowns(root)
     if count:
         print(f"P115 recording preparation selftest BLOCKED: {count} undecidable "
@@ -2815,7 +2794,7 @@ def selftest(root: Path) -> int:
         Path(__file__).name, "record_versioned_signoff.py",
         "record_pwb_behavior_amendment_acts.py", "check_spec_reconciliation.py",
         "d10_supersession.py",
-        "check_governance.py", "build_three_surface_poc_readability_successor.py",
+        "build_three_surface_poc_readability_successor.py",
         "build_three_surface_poc_vocabulary_epistemic_amendment.py",
     ) + tuple(name + ".py" for name in LATER_SIGNED_INPUT_BUILDERS)
     if transaction_present(root):
@@ -2867,15 +2846,6 @@ def selftest(root: Path) -> int:
         report = reconciliation.Report()
         population = reconciliation.check_census(tree, report)
         return population, report
-    def bootstrap_ok(tree: Path) -> bool:
-        saved = governance.ROOT
-        try:
-            governance.ROOT = str(tree)
-            report = governance.Results()
-            governance.cg7h_general_bootstrap_act(report)
-            return not report.failed()
-        finally:
-            governance.ROOT = saved
     def core_phase(root, expect):
         global CORE_COMMIT
         with tempfile.TemporaryDirectory(prefix="p115-recording-selftest-") as temp:
@@ -2910,7 +2880,6 @@ def selftest(root: Path) -> int:
             (tree / reconciliation.CENSUS).write_text(reconciliation.census_json(population))
             expect("candidate reconciliation and baseline census pass",
                    not outcomes(tree).failed and not census_report(tree)[1].failed)
-            expect("candidate bootstrap history passes", bootstrap_ok(tree))
             pkg = recorder.real_packages()[KEY]
             expect("manifest-backed POC registration", pkg.subject == MANIFEST and not pkg.package_digest
                    and pkg.extension == recorder.POC_EXTENSION_REL and pkg.installed is None)
@@ -2965,8 +2934,8 @@ def selftest(root: Path) -> int:
                    applied == 0 and applied_rows_match(tree)
                    and all((tree / rel).read_bytes() == body for rel, body in proposed.items()))
             expect("unsigned installed proposal is refused", bool(check_state(tree)[0]) and not is_signed(tree))
-            expect("unsigned proposed census and bootstrap remain failures",
-                   "R3" in census_report(tree)[1].failed and not bootstrap_ok(tree))
+            expect("unsigned proposed census remains a failure",
+                   "R3" in census_report(tree)[1].failed)
             quote = "Synthetic fixture selection; no owner action"
             record = recorder.render_record(pkg, VERSION, "2026-10-21", quote, raw,
                                              CORE_COMMIT, "CONFIRM", None)
@@ -2987,7 +2956,6 @@ def selftest(root: Path) -> int:
                    and len(population["POC"]) == 26
                    and sum(len(row["scenarios"]) for row in population["POC"].values()) == 34
                    and len(population["POC"]["POC-REQ-014"]["scenarios"]) == 8)
-            expect("signed bootstrap current rows are recognized", bootstrap_ok(tree))
             route_report = reconciliation.Report()
             reconciliation.check_routes(tree, population, route_report)
             expect("signed route activation requires root-owned terminal entries",
@@ -3031,7 +2999,7 @@ def selftest(root: Path) -> int:
                            in signed_findings(tree))
                 if name == "record-only is partial":
                     expect("partial transaction cannot explain predecessor rows",
-                           not p108.applied(tree) and not bootstrap_ok(tree)
+                           not p108.applied(tree)
                            and "R1" in outcomes(tree).failed)
                 target.write_bytes(saved)
             end = recorder.block_markers(pkg, VERSION)[1]

@@ -5,8 +5,8 @@
 # ///
 """Record/check the owner's adoption of the contract readability restyle.
 
-The act is the second link of `CONTRACT_SUCCESSOR_CHAIN` in
-`check_governance.py`. The owner performs it by writing exactly
+The act was the second link of the contract successor chain
+`check_governance.py` held until D10 F-5 retired it. The owner performs it by writing exactly
 
     ADOPT CONTRACT READABILITY RESTYLE: <sha256>
 
