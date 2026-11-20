@@ -46,8 +46,9 @@ that no prompt reaches, and one idea that addresses all three priorities at once
    and others), admits docs only as a root document, under a top-level `docs/` or `doc/`, or
    under a licences folder, and admits code in 25 extensions with no YAML, TOML, JSON,
    Terraform, Dockerfile or notebook; every other file is "excluded from reading and from
-   egress" `[Observed]`. Those words were the owner's default when the scope was set, to keep
-   possible governance text away from a provider, so widening it is asked, not assumed (Q1).
+   egress" `[Observed]`. Withholding those words was the owner's signed choice when the scope
+   was set, to keep possible governance text away from a provider, so widening it is asked,
+   not assumed (Q1).
    The reader topics and the technology table describe a networked server. The newest author
    inspected 22 of Redis's 1,861 files and nothing measured that `[Observed]`.
 2. **Visually rich is bounded by one drawing.** The diagram kind never reaches the layout, so a
@@ -151,24 +152,30 @@ P1–P15 and the open Polaris beads. Slices, merged lane moves and evidence are 
 Docs at any depth and under any docs root, package READMEs, and configuration, infrastructure
 and notebook formats; and, as the part the owner chooses, the documents now withheld by name
 because they may be governance text (design, architecture, ADR, RFC, spec, manifesto), each
-sent under its true class per RFC5-14. Secret and active-content screening stay unchanged. It
-is first because no other move recovers a fact a dossier may not cite, Q2's manifest
-recognizers cannot read a manifest without it, and the generality probe is confounded before
-it. It reverses the owner's screening-scope-v2 default, so it is asked (owner item below).
+classified by rule and sent under its true class per RFC5-14. The same policy successor adds
+denied paths and detectors for the newly readable configuration formats; nothing existing is
+weakened. It is first because no other move recovers a fact a dossier may not cite, Q2's
+manifest recognizers cannot read a manifest without it, and the generality probe is confounded
+before it. It reverses the owner's signed screening-scope-v2 choice and enlarges the set of
+bodies that can carry an undetected secret, so it is asked (owner item below).
 
 **Q2 — A structure record of the pinned tree (generalizable, visual; 5/3; sharpens P9, P10).**
 A deterministic derive stage: path-only facts first (sizes, languages, vendored code set aside,
 citable or not), then manifest and configuration recognizers, later import graphs. Each fact
-carries its rule, version, path and lines. From it come a trait profile (has a CLI, a library
-API, a service, infrastructure, a docs site, a size class) and a coverage map. Slice 1 reads no
-file body and is itself the cheapest generality measurement. Slices 2 and 3 need Q1.
+carries its rule, version, path and lines, and states only what the rule matched, never an
+interpretation. For a private repository nothing is derived from the size or object id of a
+withheld blob. From it come a trait profile (has a CLI, a library API, a service,
+infrastructure, a docs site, a size class) and a coverage map. Slice 1 reads no file body and
+is itself the cheapest generality measurement. Slices 2 and 3 need Q1.
 
 **Q3 — Arrows with receipts (visual, truth; 5/2; new; owner answer before slice 2).** Widen one
 spec clause so a fact Syzygy derived by a declared rule renders Observed; an agent still labels
 nothing Observed. The reading carries conditions: the structure record is an evidence artifact,
 its fact class declares a currency bound, mixed figures carry machine-readable provenance and
-never imitate a computed map, and an authored arrow is upgraded only by a derived fact of the
-identical relation type (a manifest's "declares a dependency" does not witness "calls").
+never imitate a computed map, a derived fact states only what its rule matched, and an
+authored arrow is upgraded only by a derived fact of the identical relation type (a manifest's
+"declares a dependency" does not witness "calls"). It is staged: tree-metadata facts first, a
+recognizer's facts only once that recognizer has fixtures and a mutation run.
 Generate each legend from the encodings the figure uses, and print a tally under every figure
 ("14 relationships: 9 derived by Syzygy, 5 cited readings"). Slice 1 (legend and tally) needs
 nothing else and repairs theme 7.
@@ -298,8 +305,10 @@ path and decision ids are recorded on the plan-hold bead. Both are asked under V
 - `pursuit-2026-11-21-source-reach` (Q1): how far to widen what a dossier may read and send to
   the declared provider, and whether documents withheld as possible governance text are
   included. RFC5-14 reserves to the owner "a change that would let content the
-  secret-detection policy matches, or cannot classify, reach a provider"; Q1 classifies content
-  that is unclassifiable today, and it reverses an owner default.
+  secret-detection policy matches, or cannot classify, reach a provider"; Q1 admits
+  configuration formats that are unclassifiable today, which is the owner-class core. The
+  documents withheld by name are asked about only because admitting them reverses a signed
+  owner choice.
 - `pursuit-2026-11-21-observed-derived` (Q3): whether doctrine's definition of Observed covers
   a fact Syzygy derives by a declared deterministic rule. The spec clause is agent-decidable;
   the reading of doctrine is what is asked.
@@ -323,7 +332,7 @@ that to F-10.
 The reviewer's raw text is kept beside the owner packet. Corrected in this report:
 
 - The source policy was called "derived for the Butlers repository". It carries that
-  identifier, but its excluded words were the owner's default in screening scope v2.
+  identifier, but its excluded words were the owner's signed choice in screening scope v2.
 - The excluded words were given as two; there are 25, and the document rules include root
   documents and a licences folder.
 - Q2's manifest recognizers were said to need nothing; they need Q1.
@@ -332,6 +341,9 @@ The reviewer's raw text is kept beside the owner packet. Corrected in this repor
 - "A VIS-7 defect" overstated the legend problem; it is a comprehension defect.
 - "No reader-visible change" ignored a launch disclosure added to every page by `render.ts`.
 - Wave 1 listed a Redis re-run; this plan starts no run.
+- Round 2 added: withholding the 25 words was a signed choice, not a default; Q1 must harden
+  screening for configuration formats in the same successor; a derived fact states only what
+  its rule matched; and nothing is derived from a withheld private blob's size or object id.
 
 ## Known ledger and deviations
 
