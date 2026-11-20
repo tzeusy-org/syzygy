@@ -43,7 +43,7 @@ export const PWB_AUTHORITY_ARTIFACTS: Readonly<Record<AuthorityKind, string>> = 
   registry: '.syzygy/governance/declarations/adapter-registry/POLARIS-BUTLERS-PROJECT-SHAPE-OBSERVER-CANDIDATE.json',
 };
 
-// Parse anchor: scripts/{build_pwb_registry_machine_ceiling_amendment,record_pwb_registry_machine_ceiling_act,install_redis_sitting}.py find PWB_ACT_RECORDS by its `export const` text; keep the keyword.
+// Parse anchor: scripts/{build_pwb_registry_machine_ceiling_amendment,record_pwb_registry_machine_ceiling_act}.py find PWB_ACT_RECORDS by its `export const` text; keep the keyword.
 // The current act for each authority. Consent is the 2026-09-02 act; the
 // policy and registry acts are the 2026-10-02 behaviour-contract re-pin
 // acts, each superseding its own predecessor (the 2026-09-05 policy

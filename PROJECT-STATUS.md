@@ -482,8 +482,6 @@ python3 scripts/build_spec_policy_readability_restyle.py --selftest
 python3 scripts/record_spec_policy_readability_restyle.py --selftest
 python3 scripts/build_three_surface_poc_readability_successor.py --check   # POC readability successor: candidate = exact regeneration, or installed rows
 python3 scripts/build_three_surface_poc_readability_successor.py --selftest
-python3 scripts/record_three_surface_poc_readability_successor.py --check  # POC successor sign-off: performed 2026-09-29; record and aggregate block intact
-python3 scripts/record_three_surface_poc_readability_successor.py --selftest
 python3 scripts/readability_successor.py --all --check   # readability successors (Capability 1, Polaris base and understanding) performed 2026-09-29, the understanding dependency-union successor 2026-10-02: installed bytes = rows, or a later act's row over them
 python3 scripts/readability_successor.py --selftest
 python3 scripts/build_polaris_dependency_unions.py --check   # both Polaris dependency unions, and each signed addition's, = their regeneration from the warrants blocks
@@ -515,7 +513,7 @@ python3 scripts/record_narrative_profile_adoption.py --check --date 2026-10-07 -
 python3 scripts/record_rfc5_project_documentation_act.py --selftest   # rfc5 --selftest
 ```
 
-The one hundred and thirty-one checks above are the same one hundred and thirty-one the hosted workflow runs
+The one hundred and twenty-nine checks above are the same one hundred and twenty-nine the hosted workflow runs
 (`.github/workflows/governance-docs.yml`), so "hosted CI is green" and "the
 battery is clean" are one claim rather than two a reader conflates. The
 `git tag` line is orientation, not a check — it prints and cannot fail.
@@ -542,13 +540,6 @@ carried-content tables from the generator's code, so they run in the
 `node-ci` workflow (`.github/workflows/node-ci.yml`), which is the hosted
 denominator for node-dependent checks. Run both from the repository root
 after `npm ci` when a change touches the generator.
-
-Two historical generators are deliberately absent from both lists:
-`scripts/build_pwb_effect_acts_packet.py` and
-`scripts/build_pwb_state1_amendment_manifest.py`. Their 2026-09-02 packets
-were superseded by the 2026-09-05 acts, so `--check` now fails by design and
-the immutable historical manifests must not be regenerated. Their `--selftest`
-modes remain safe for exercising the generator predicates.
 
 **Read the output, not the exit code** — a PASS over zero examined items
 verified nothing. Every check prints its own denominator; the WARNs are
