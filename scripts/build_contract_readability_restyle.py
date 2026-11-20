@@ -4,9 +4,10 @@
 This script performs no owner act and writes no act record. The package
 restyles 29 of the 30 accepted RFC 0001-0009 modules the general
 trusted-bootstrap transaction binds (every one except
-`rfcs/RFC-0007/rendering-and-surface.md`). It is the second link of
-`CONTRACT_SUCCESSOR_CHAIN` in `check_governance.py`; its act phrase is
-`ADOPT CONTRACT READABILITY RESTYLE` over this package's manifest digest.
+`rfcs/RFC-0007/rendering-and-surface.md`). It was the second link of the
+contract successor chain `check_governance.py` held until D10 F-5 retired it;
+its act phrase was `ADOPT CONTRACT READABILITY RESTYLE` over this package's
+manifest digest.
 
 Layout, under `.syzygy/governance/contracts/candidates/contract-readability-restyle/`:
 
@@ -116,6 +117,48 @@ def _verifier():
 
 def _recorder():
     return _load("record_contract_readability_restyle_builder", ROOT / RECORDER)
+
+
+#: The restyle's closed, exact population: the 29 general trusted-bootstrap
+#: modules other than `rfcs/RFC-0007/rendering-and-surface.md`. Frozen here
+#: when D10 F-5 removed the copy `check_governance.py` used to hold.
+RESTYLE_PATHS = (
+    "rfcs/RFC-0001-project-graph-identity-state-planes.md",
+    "rfcs/RFC-0002/README.md",
+    "rfcs/RFC-0002/challenge-lifecycle.md",
+    "rfcs/RFC-0002/reconciliation-chain.md",
+    "rfcs/RFC-0002/rendering-vocabularies.md",
+    "rfcs/RFC-0002/snapshot-and-evaluation-core.md",
+    "rfcs/RFC-0003/README.md",
+    "rfcs/RFC-0003/governance-homes-and-owner-acts.md",
+    "rfcs/RFC-0003/manifests-and-namespace.md",
+    "rfcs/RFC-0004/README.md",
+    "rfcs/RFC-0004/execution-record.md",
+    "rfcs/RFC-0004/fidelity-joins-and-mappings.md",
+    "rfcs/RFC-0004/general-contract.md",
+    "rfcs/RFC-0004/named-adapters.md",
+    "rfcs/RFC-0005/README.md",
+    "rfcs/RFC-0005/admission-and-boundary.md",
+    "rfcs/RFC-0005/consent-egress-secrets.md",
+    "rfcs/RFC-0005/execution-profiles.md",
+    "rfcs/RFC-0006-cross-surface-selection-query-drawer.md",
+    "rfcs/RFC-0007/README.md",
+    "rfcs/RFC-0007/narrative-contract.md",
+    "rfcs/RFC-0008/README.md",
+    "rfcs/RFC-0008/accounting-reconciliation-and-release.md",
+    "rfcs/RFC-0008/identity-authority-materialization.md",
+    "rfcs/RFC-0008/state-vocabulary-and-cost.md",
+    "rfcs/RFC-0009/README.md",
+    "rfcs/RFC-0009/interaction-parity-and-release.md",
+    "rfcs/RFC-0009/semantic-geography.md",
+    "rfcs/RFC-0009/visual-grammar-and-lenses.md",
+)
+#: (subject manifest, act record) of each contract act after the restyle, in
+#: act order, as the retired CG-7h successor chain listed them.
+LATER_LINKS = (
+    (".syzygy/governance/contracts/candidates/rfc5-project-documentation-class/CONTRACT-AMENDMENT-MANIFEST.txt",
+     ".syzygy/governance/decisions/RFC5-PROJECT-DOCUMENTATION-CLASS-AMENDMENT-ACT.md"),
+)
 
 
 def _governance():
@@ -355,16 +398,9 @@ def verify_manifest(text: str, expected: str, paths: list[str]) -> list[str]:
 
 
 def later_links() -> list[tuple[str, str]]:
-    """(subject manifest, act record) of each link after the restyle in
-    CG-7h's contract successor chain, in act order."""
-    governance = _governance()
-    chain = [(label, subject, act)
-             for label, subject, act, *_ in governance.CONTRACT_SUCCESSOR_CHAIN]
-    labels = [label for label, _subject, _act in chain]
-    if governance.CONTRACT_RESTYLE_LABEL not in labels:
-        return []
-    return [(subject, act) for _label, subject, act
-            in chain[labels.index(governance.CONTRACT_RESTYLE_LABEL) + 1:]]
+    """(subject manifest, act record) of each contract act after the restyle,
+    in act order."""
+    return list(LATER_LINKS)
 
 
 def later_rows(root: pathlib.Path, links=None) -> dict[str, str]:
@@ -401,11 +437,11 @@ def applied(root: pathlib.Path, links=None) -> bool:
 def check(root: pathlib.Path = ROOT, scratch: bool = True) -> list[str]:
     findings: list[str] = []
     paths = population(root)
-    closed = list(_governance().CONTRACT_RESTYLE_PATHS)
+    closed = list(RESTYLE_PATHS)
     if paths != closed:
         findings.append(
-            f"restyle population differs from CG-7h's closed "
-            f"{len(closed)}-path CONTRACT_RESTYLE_PATHS")
+            f"restyle population differs from the closed "
+            f"{len(closed)}-path RESTYLE_PATHS")
     expected = [patch_for(path) for path in paths]
     actual = patch_files(root)
     missing = sorted(set(expected) - set(actual))

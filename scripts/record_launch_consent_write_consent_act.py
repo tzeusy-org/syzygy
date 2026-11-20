@@ -455,8 +455,6 @@ def selftest() -> int:
     results.append(("the shipped table covers exactly the frozen files",
                     set(FROZEN_FILE_DIGESTS) == set(frozen_rels())
                     and all(SHA_RE.fullmatch(d) for d in FROZEN_FILE_DIGESTS.values())))
-    results.append(("the label is the one check_governance registers",
-                    LABEL in (ROOT / "scripts/check_governance.py").read_text(encoding="utf-8")))
     results.append(("unset FROZEN_SUBJECT refused", refused("FROZEN_SUBJECT is unset", arg, make(frozen=None))))
     results.append(("non-hex argument refused", refused("not a 64-hex", "xyz", make())))
     results.append(("an argument that is not the row refused", refused("not the manifest row", "1" * 64, make())))

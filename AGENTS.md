@@ -338,9 +338,8 @@ sweep lessons added 2026-09-23; the raw-head digest lesson the same day.
   the commit it ran at; ids and outcomes alone are not re-runnable, and a
   rebase-merge leaves the recorded commit reachable from no ref.
 - A retained raw review's filename must end in `-RAW.md`: `check_governance`
-  exempts only that suffix from CG-1b and CG-15, so a raw named
-  `…-RAW-ADDENDUM.md` fails on the Butlers paths and truncated digests it
-  quotes verbatim. A re-issued raw is a second `-RAW.md` file, never an
+  exempts only that suffix from CG-1b, so a raw named
+  `…-RAW-ADDENDUM.md` fails on the Butlers paths it quotes verbatim. A re-issued raw is a second `-RAW.md` file, never an
   overwrite of the digest-cited first.
 - Fail-closed polarity: withdrawal defeats grant; future-dated evidence is
   stale; no evidence → Unknown.
@@ -356,9 +355,7 @@ sweep lessons added 2026-09-23; the raw-head digest lesson the same day.
 - Never wire `WORKER_CHANGE_SEAM` test-artifact evidence into the unrelated
   identity-resolution entities in `model.ts` — false "Verified" (reverted
   once already).
-- Never quote a performed act's argument or a truncated signed digest in a
-  new artifact unless it is in `ACT_DIGEST_COPY_FILES` (CG-7e/CG-15); cite
-  the record by path. Never backtick a Butlers path in a packet (CG-1b).
+- Never backtick a Butlers path in a packet (CG-1b).
 - Capability 1 has no runtime governed-plane write guard: the daemon
   performs no governed write and CAP1-REQ-061's write oracle is external
   (`syzygy-bpyt.7.2` removed `write-guard.ts`). `authorizeWrite` survives
@@ -574,7 +571,7 @@ sweep lessons added 2026-09-23; the raw-head digest lesson the same day.
   is rule 10 working: the review confirms history and the current bytes carry
   no confirmation. Before calling a governed file unreviewed, grep the raws
   for *any* digest cited against its path, not only its current one — and do
-  not copy the stale prefix into your finding, which is CG-15's whole point.
+  not copy the stale prefix into your finding.
 - **An *unperformed* act's prepared argument is just as untouchable, and
   nothing in the file says so.** `.syzygy/intent/OVERVIEW.md` is the argument
   of act 4, `ADOPT PROJECT OVERVIEW`, which has never been performed — so its
@@ -583,7 +580,7 @@ sweep lessons added 2026-09-23; the raw-head digest lesson the same day.
   confirmation bound to it. Grep
   `contracts/candidates/FINAL-FOUNDATIONAL-CONTRACT-ACCEPTANCE-RECORD.md` for
   the path too. An owner-directed edit is lawful: re-mint the act-4 row's
-  digest in the same commit (CG-7c/7d/7e fail until you do).
+  digest in the same commit.
 - Every `round-*` directory now carries a `README.md` naming what the round
   settled, where that settlement lives now, and its live-input cautions;
   `contracts/candidates/ROUND-ESTATE.md` is the route across all eleven. The
@@ -721,47 +718,13 @@ sweep lessons added 2026-09-23; the raw-head digest lesson the same day.
   count exactly one copy of its block, never assume it is the file tail.
   A superseding act gets a new record; the superseded record is never
   edited, and its recorder fails `--check` by design.
-- Register a new act phrase in `check_governance.py`'s `_act_subjects()`
-  and its packet copies in `ACT_DIGEST_COPY_FILES` before the packet
-  exists, or CG-7d cannot see them go stale; files that appear only after
-  an act are registered from an existence-gated activation function.
 - Plain owner directions (implementation authorization, continuation)
   bind no digest, add no acceptance-record row and register nothing.
-- **Candidate packets register a phrase and a copy, never a chain link.**
-  A `PWB_SUCCESSOR_CHAIN` entry asserts adoption *order*, which only the
-  performing act decides; register `LABEL/DIR/SUBJECT/ACT`, the
-  `ACT_DIGEST_COPY_FILES` row and an existence-gated activation at drafting
-  time, and add the chain link with the act. A packet that quotes a bare
-  digest (no `<PHRASE>: <digest>` form) is invisible to CG-7d. Until
-  `syzygy-eau` CG-7e missed it too: it only asked whether the current digest
-  appears *somewhere* in the file, so a stale bare `Manifest SHA-256:` copy
-  passed beside a correct phrase-linked one. CG-7e now checks every bare
-  digest *heading* — a line-start label ending `sha256`/`SHA-256` in any
-  case, colon optional (`BARE_DIGEST_HEADING`: 29 copies in 22 files over
-  12 spellings, only 4 the literal one; two review rounds each found the
-  sweep narrower than claimed) — against that file's own declared digests;
-  the two container-manifest headings are checked exemptions, hashed live.
-  Unlabeled copies (act-identity URNs, table cells, checksum rows, owner
-  phrases — 12 found live by a third review) are reached by a
-  shape-independent near-miss pass (`STANDALONE_DIGEST`, `syzygy-wh1`): any
-  standalone 64-hex token in a registered file that is not one of *that
-  file's* allowed arguments but is exactly one character from one fails,
-  whatever correct copies sit beside it. **Residual:** a copy corrupted in
-  two or more characters, or swapped whole for another digest, still passes
-  beside a correct copy; a digest cited inline that names a review raw or
-  container (3 in `pwb-effect-acts/OWNER-SIGNOFF-PACKET.md`) is unchecked
-  unless it lands one character from an argument. A rule-6 mutation
-  must still rewrite *every* copy (`sed s///g`), not the first match — a
-  `str.replace(..., 1)` hit an unregistered copy and reported a false pass.
 - **CG-26 is one coupled triple: register it once, at merge.** Several
   packages each adding their builder to the PROJECT-STATUS battery, the
   hosted workflow and the count sentence conflict pairwise and each counts
   the battery as of its own branch. Draft packages leave all three alone;
   one integration commit adds every line, step and the new number word.
-- Sibling packages patching the same CG-7h-bound tree (lane B and the three
-  spec-touching gate packages) each hash post-apply bytes against the
-  *current* tree: whichever act lands second must be regenerated with
-  `--write` first, or its manifest is stale on arrival. Say so in the packet.
 - A reviewer killed mid-write by a rate limit may already have a complete
   raw on disk: check the worktree before re-dispatching, and if the file is
   whole commit it verbatim (CC-REV-6) — a second reviewer run is a second

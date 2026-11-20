@@ -224,8 +224,7 @@ authority.
 - **Seven are unreachable from any route that matters; the eighth,
   `CONTEXT-BUDGET-REPORT.md`, is a live input to the everyday validator.**
   - `scripts/check_governance.py` hard-codes its filename as the single
-    sentence a contract module may use to point at a measurement (CG-21),
-    and exempts it by path from the digest-scope rule (CG-7e).
+    sentence a contract module may use to point at a measurement (CG-21).
   - Deleting or renaming it changes what the validator accepts.
   - *(Until 2026-09-06 this sentence read "None is authority, and none is
     reachable from any route that matters" — the first clause is still true;
