@@ -21,6 +21,10 @@ import time
 ROOT = os.getpid()
 UID = os.getuid()
 NAMESPACE = os.readlink('/proc/self/ns/pid')
+# `locale.getencoding` is Python 3.11+. Before it, a text-mode read decoded
+# with `getpreferredencoding(False)`, so that is the same codec there
+# (syzygy-kum6: the operator's python3 may predate 3.11).
+LOCALE_ENCODING = getattr(locale, 'getencoding', None) or (lambda: locale.getpreferredencoding(False))
 
 
 def read_stat_text(path):
@@ -35,7 +39,7 @@ def read_stat_text(path):
             chunks.append(chunk)
     finally:
         os.close(fd)
-    return b''.join(chunks).decode(locale.getencoding() if encoding == 'locale' else encoding)
+    return b''.join(chunks).decode(LOCALE_ENCODING() if encoding == 'locale' else encoding)
 
 
 def identity(pid, *, with_namespace=True):

@@ -24,7 +24,9 @@ def identity(pid, *, with_namespace=True):
     try:
         text = (p / 'stat').read_text()
         f = text[text.rfind(')') + 2:].split()
-        owner = p.stat().st_uid
+        # os.stat, not Path.stat: before 3.11 Path.stat binds its own accessor
+        # and a patch of os.stat never reaches it (syzygy-kum6).
+        owner = os.stat(p).st_uid
         return {'pid': pid, 'start': f[19], 'ppid': int(f[1]), 'pgid': int(f[2]),
                 'sid': int(f[3]), 'state': f[0], 'uid': owner,
                 'namespace': os.readlink(p / 'ns/pid') if with_namespace and owner == UID else None}
