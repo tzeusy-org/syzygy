@@ -72,13 +72,11 @@ claim with a resolvable evidence link". Only one dossier spec clause stands in t
 independent reviewer found survives the rest of doctrine and RFC 0007 with four conditions,
 stated under Q3; put to the owner below]`.
 
-**What a reader would get** `[Inferred]`: for a small Rust CLI, a six-page dossier whose first
-screen is a thesis and a hero figure in which the workspace crates are solid, derived boxes
-that link to their manifest lines, a four-lane "how a search runs" that collapses to a stepper
-on a phone, and a caption reading "5 relationships: 3 derived by Syzygy, 2 cited readings". For
-a 300-package monorepo, a landing figure of nine derived domains ("showing 9 groups of 300
-packages, full map"), zoom into each, deep prose for the most central packages and derived
-cards for the rest, with coverage stated in first-party bytes.
+**What a reader would get** `[Inferred]`: for a small Rust CLI, six pages opening on a thesis
+and a hero figure whose crates are solid, derived boxes linking to their manifest lines, with
+the caption "5 relationships: 3 derived by Syzygy, 2 cited readings". For a 300-package
+monorepo, a landing figure of nine derived domains ("showing 9 groups of 300 packages, full
+map"), zoom into each, and coverage stated in first-party bytes.
 
 ## Movement since run 3
 
@@ -277,19 +275,18 @@ element that must cite where the analogy stops holding.
 
 ### Retained, not ranked
 
-In `.units[]`: full-history views (churn, age), which need a new acquisition form and a privacy
-decision; a tag-and-changelog timeline that needs neither (I1-M5); tree-sitter-class parsing,
-deferred behind the three cheaper tiers; an image element for screenshots (A4 assumptions);
-optional zoom and pan script for very large computed maps.
+In `.units[]`: full-history views (churn, age), which need a new acquisition form; a
+tag-and-changelog timeline that does not (I1-M5); tree-sitter-class parsing; an image element
+for screenshots; optional zoom and pan script for very large computed maps.
 
 ## Strongest objections
 
 - **This builds generality machinery before any non-Redis run exists.** Answer: Q2 slice 1 and
   Q13 slice 1 are themselves the measurement, call no model and read no file body. The live
   probe follows Q1.
-- **A structure record could grow into a code-intelligence product, and a rich one pulls the
-  dossier toward a catalogue.** Answer: recognizers are capped at three structured formats and
-  line-oriented files; computed maps live on reference pages, one step from the argument.
+- **A structure record could grow into a code-intelligence product.** Answer: recognizers are
+  capped at three structured formats and line-oriented files; computed maps stay on reference
+  pages.
 - **One system model may raise repair cycles** (18 of 23 fidelity verdicts across five runs
   were not ready). Answer: seed the model from derived units, and ship the hero on today's
   schema first to measure whether one picture helps.
@@ -319,8 +316,8 @@ item's scope, correctly.
 
 ## Planned epic
 
-The epic and its plan-hold bead are named on the epic bead. Each move bead depends on the
-plan-hold, which is an ordinary sequencing bead, not an owner gate: this run was asked what to
+Epic `syzygy-3efd` (moves `.1` to `.14`, in Q order), plan-hold `syzygy-8f2t`. Each move bead
+depends on the plan-hold, which is an ordinary sequencing bead, not an owner gate: this run was asked what to
 consider, so it files a plan and starts nothing. A lead session releases wave 1 by filing its
 slices as ready beads and reporting them; the owner may veto any of it. Slices that wait on an
 owner answer say so in their bead. Run 3's gate `syzygy-fj2q` still says "closed only by the
@@ -329,21 +326,16 @@ that to F-10.
 
 ## Corrections after independent review
 
-The reviewer's raw text is kept beside the owner packet. Corrected in this report:
+Three review rounds; the raw texts are kept beside the owner packet. Corrected in this report:
 
-- The source policy was called "derived for the Butlers repository". It carries that
-  identifier, but its excluded words were the owner's signed choice in screening scope v2.
-- The excluded words were given as two; there are 25, and the document rules include root
-  documents and a licences folder.
+- The source policy was called "derived for the Butlers repository"; its excluded words (25,
+  not two) were the owner's signed choice in screening scope v2.
 - Q2's manifest recognizers were said to need nothing; they need Q1.
-- The Observed clause was cited to the predecessor spec; the adopted copy is line 159 of the
-  declared-source-model spec.
-- "A VIS-7 defect" overstated the legend problem; it is a comprehension defect.
-- "No reader-visible change" ignored a launch disclosure added to every page by `render.ts`.
-- Wave 1 listed a Redis re-run; this plan starts no run.
-- Round 2 added: withholding the 25 words was a signed choice, not a default; Q1 must harden
-  screening for configuration formats in the same successor; a derived fact states only what
-  its rule matched; and nothing is derived from a withheld private blob's size or object id.
+- The Observed clause was cited to the predecessor spec, not the adopted one.
+- "A VIS-7 defect" overstated the legend problem; "no reader-visible change" ignored a launch
+  disclosure added to every page; wave 1 listed a Redis re-run, and this plan starts no run.
+- Added: Q1 hardens screening for configuration formats in the same successor; a derived fact
+  states only what its rule matched; nothing is derived from a withheld private blob's size.
 
 ## Known ledger and deviations
 
@@ -352,7 +344,6 @@ The reviewer's raw text is kept beside the owner packet. Corrected in this repor
 - **Retention deviation.** The deliverables rule keeps only the two newest data files. Both
   older data files have live citers under `docs/evidence/` and `.syzygy/`, so neither was
   pruned.
-- **Lane structure.** The lanes ran their full unit lists in one dispatch each, checkpointing
-  per unit, not one turn per unit. No engineering audit lane ran: the question was about
-  features, and run 3's engineering findings stand unverified by this run `[Unknown]`.
+- **Lane structure.** Each lane ran its full unit list in one dispatch, checkpointing per unit.
+  No engineering audit lane ran; run 3's engineering findings were not re-verified `[Unknown]`.
 - **No harvest file is committed.** The data file holds every unit's structured output.
