@@ -1,7 +1,7 @@
 # Vision pursuit — Polaris dossier generation, run 4 — 2026-11-21
 
-This file is for planning only. It is not authority and not a review verdict. No bead filed
-from it can run until the owner closes the gate bead named under "Gated epic". Claims carry the
+This file is for planning only. It is not authority and not a review verdict. Every move bead
+filed from it depends on the plan-hold bead named under "Planned epic". Claims carry the
 labels `[Observed]`, `[Inferred]` or `[Unknown]` that the lanes gave them; where the
 orchestrator re-derived a claim, it says so. Every finding and move, with its full evidence,
 is in `docs/pursuits/2026-11-21-vision-pursuit-data.json`:
@@ -20,7 +20,8 @@ jq '.units[] | select(.lane=="audit" and .unit=="visual-vocabulary")' docs/pursu
 | Syzygy | Read at `origin/main` `c5e40bfe2`. |
 | Subject output | The newest real dossier: Redis 8.10.2, the dossier run closed 2026-11-15 (its full run id is `.subject_output` in the data file), final rendered site. It was compared with run 3's subject, the run closed 2026-11-08. Run directories were read only. |
 | Lanes | Two long-lived lanes, one checkpoint file per unit: an audit lane (6 units: movement, rendered visuals, visual vocabulary, generality, readability mechanism, sweep; screenshots at 1440×900 and 390×844) and an ideation lane (6 lenses and a synthesis; the outward lens used generic web searches and read summaries only, so every external claim is `[Inferred]`). |
-| Orchestrator checks | Re-derived from the files: the doctrine sentence at `trust-and-evidence.md:105`; the spec clause at line 236 of the local-agent-mode dossier spec; RFC7-28's text; the source policy's identifier and its excluded words `design` and `architecture`; the state of every `syzygy-fnry` bead. |
+| Orchestrator checks | Re-derived from the files: the doctrine sentences at `trust-and-evidence.md:17-18`, `:26-32`, `:105` and `:122`; the spec clause at line 159 of the adopted dossier spec; RFC7-28 and RFC5-14's text; the source policy's extension list, excluded words and line 257; the state of every `syzygy-fnry` bead. |
+| Independent review | A fresh reviewer challenged the owner packet and Q1 to Q3 before publication. It returned Revise on both items and found six factual errors in the first draft of this report; all are corrected here (see "Corrections after independent review"). |
 | Limit | All six real runs on disk are of redis/redis. Every statement here about another kind of repository is `[Inferred]`. |
 
 ## North star (quoted)
@@ -40,10 +41,13 @@ session to do more: a thesis, opinions, better diagrams. This run finds three st
 that no prompt reaches, and one idea that addresses all three priorities at once.
 
 1. **Generalizable is bounded by what a dossier may cite and by what Syzygy knows before
-   writing starts.** The source policy every dossier run uses was derived for the Butlers
-   repository. It refuses, as project documentation, any docs path with the word `design` or
-   `architecture` in it, admits docs only under a top-level `docs/` or `doc/`, and admits code
-   in 25 extensions with no YAML, TOML, JSON, Terraform, Dockerfile or notebook `[Observed]`.
+   writing starts.** The source policy every dossier run uses withholds, by name, any docs
+   path with one of 25 words in it (design, architecture, ADR, RFC, spec, decision, manifesto
+   and others), admits docs only as a root document, under a top-level `docs/` or `doc/`, or
+   under a licences folder, and admits code in 25 extensions with no YAML, TOML, JSON,
+   Terraform, Dockerfile or notebook; every other file is "excluded from reading and from
+   egress" `[Observed]`. Those words were the owner's default when the scope was set, to keep
+   possible governance text away from a provider, so widening it is asked, not assumed (Q1).
    The reader topics and the technology table describe a networked server. The newest author
    inspected 22 of Redis's 1,861 files and nothing measured that `[Observed]`.
 2. **Visually rich is bounded by one drawing.** The diagram kind never reaches the layout, so a
@@ -63,8 +67,9 @@ deployment topology. That one record is the scaffold for figures, the witness th
 challenges each arrow an author draws (Q3), the denominator for coverage, and the profile that
 chooses the page plan (Q9, Q10). Doctrine already calls such a fact Observed: "a deterministic
 claim with a resolvable evidence link". Only one dossier spec clause stands in the way, so run
-3's "needs a label amendment" was wrong `[Inferred: a reading of quoted clauses, put to the
-owner below]`.
+3's "needs a label amendment" was wrong `[Inferred: a reading of quoted clauses, which the
+independent reviewer found survives the rest of doctrine and RFC 0007 with four conditions,
+stated under Q3; put to the owner below]`.
 
 **What a reader would get** `[Inferred]`: for a small Rust CLI, a six-page dossier whose first
 screen is a thesis and a hero figure in which the workspace crates are solid, derived boxes
@@ -76,9 +81,12 @@ cards for the rest, with coverage stated in first-party bytes.
 
 ## Movement since run 3
 
-**No reader-visible mechanism has moved in twelve days `[Observed]`.** The renderer, the layout
-and the draft schema have 1, 0 and 0 commits since 2026-11-09, and every renderer-determined
-figure is identical on both sites: 141 words of apparatus before the thesis, sideways scroll at
+**None of the reading-experience mechanism has moved in twelve days `[Observed]`.** The site
+renderer (`dossier-site.ts`), the layout and the draft schema have 1, 0 and 0 commits since
+2026-11-09, and every renderer-determined figure is identical on both sites. (The run-side
+`render.ts` has 8 commits; one adds a launch disclosure to every page, which is reader-visible
+apparatus. The newest run also predates the source-policy bytes adopted on 2026-11-18.) The
+identical figures: 141 words of apparatus before the thesis, sideways scroll at
 390 px on every page, no current-page mark, no previous or next links, no line anchors. What
 differs is author variance under a near-identical brief: the glossary went from 1 entry to 10,
 reading words from 3,963 to 2,281, diagrams from 5 to 3, and the overview lost its figure.
@@ -88,8 +96,9 @@ reading words from 3,963 to 2,281, diagrams from 5 to 3, and the overview lost i
 - The newest run did close honestly (both reviews ready, the site of record is the final
   revision). That is the old supervisor on a run that converged, not P1.
 - The twelve days went to launch consent, the governance simplification D10 (performed
-  2026-11-18) and source binding. D10 matters here: spec changes are now agent-decidable, so
-  most prerequisites below no longer wait on an owner act.
+  2026-11-18) and source binding. D10 matters here: under the amended VIS-4, specifications,
+  screening policy within SEC-5 and "when implementation starts" are decided by agents and
+  open to owner veto, so most prerequisites below no longer wait on an owner act.
 - Correction to run 3: its finding that the left navigation is not sticky does not reproduce;
   the desktop panel computes `position: sticky` on run 3's own site.
 
@@ -105,7 +114,7 @@ Movement is against the run-3 row each surface corresponds to. Only measured cha
 | First screen | functional | unchanged, identical pixel positions | About 470 px of apparatus and a legend for marks the site never uses, before the title. |
 | Diagrams as rendered | weak | down from functional (5 → 3 figures; author variance) | Three all-dashed graphs, none showing what a list could not; one overflows 2.3× its column. |
 | Visual vocabulary | weak | none; newly measured | One layout under six kind labels; no nesting, lanes, time or order; deep dives barred from figures. |
-| Generality: source reach | weak | new row | A Butlers-derived policy excludes design and architecture documents and most configuration formats. |
+| Generality: source reach | weak | new row | The source policy withholds design, architecture and decision documents by name and cannot read most configuration formats. |
 | Generality: templates and exploration | weak | unchanged | Four fixed topics, seven server dimensions, at most three deep dives, 1.2% of files inspected, no coverage measure. |
 | Readability: sentences and voice | solid | unchanged | Plain and cost-paired; still 0 judgements and every quote opens the same way. |
 | Readability: page structure and wayfinding | weak | unchanged | No subheadings, heavy apparatus, citations land at the top of unnumbered files. |
@@ -124,10 +133,11 @@ Movement is against the run-3 row each surface corresponds to. Only measured cha
    27 findings mention overflow, scroll, mobile, width or pixels 0 times; nothing stores a
    metric from one run to the next. Exemplars: A5-F3, A1-F1.
 6. **Generality cannot be measured before it is enabled.** The planned probe
-   (`syzygy-fnry.22`) would today measure the Butlers policy and the server templates.
+   (`syzygy-fnry.22`) would today measure the source policy and the server templates.
    Exemplars: A4-F6.
-7. **The legend states an encoding that cannot occur.** A VIS-7 defect in every figure today.
-   Exemplar: I2-F3.
+7. **The legend states an encoding that cannot occur.** Every figure's legend offers a solid
+   "observed" line that no figure can draw. It gives no drawn mark a false meaning, so it is a
+   comprehension defect, not a breach of the VIS-7 floor. Exemplar: I2-F3.
 
 ## Ranked moves
 
@@ -137,26 +147,31 @@ distinct from M (2026-09-13), N (2026-09-22) and P (2026-11-09). Each was dedupl
 P1–P15 and the open Polaris beads. Slices, merged lane moves and evidence are under
 `.ranked_moves[]`. None touches doctrine.
 
-**Q1 — A dossier-own source policy (generalizable; 5/2; new).** Replace the Butlers-derived
-classification for dossier runs: docs at any depth and under any docs root, design and
-architecture documents admitted, package READMEs, and configuration, infrastructure and
-notebook formats. Secret and active-content screening stay unchanged. It is first because no
-other move can recover a fact a dossier may not cite, and because the generality probe is
-meaningless before it. Coordinate with the held policy successor, `syzygy-pdja.23`.
+**Q1 — Widen what a dossier may read and cite (generalizable; 5/2; new; owner answer first).**
+Docs at any depth and under any docs root, package READMEs, and configuration, infrastructure
+and notebook formats; and, as the part the owner chooses, the documents now withheld by name
+because they may be governance text (design, architecture, ADR, RFC, spec, manifesto), each
+sent under its true class per RFC5-14. Secret and active-content screening stay unchanged. It
+is first because no other move recovers a fact a dossier may not cite, Q2's manifest
+recognizers cannot read a manifest without it, and the generality probe is confounded before
+it. It reverses the owner's screening-scope-v2 default, so it is asked (owner item below).
 
 **Q2 — A structure record of the pinned tree (generalizable, visual; 5/3; sharpens P9, P10).**
 A deterministic derive stage: path-only facts first (sizes, languages, vendored code set aside,
 citable or not), then manifest and configuration recognizers, later import graphs. Each fact
 carries its rule, version, path and lines. From it come a trait profile (has a CLI, a library
 API, a service, infrastructure, a docs site, a size class) and a coverage map. Slice 1 reads no
-file body and is itself the cheapest generality measurement.
+file body and is itself the cheapest generality measurement. Slices 2 and 3 need Q1.
 
-**Q3 — Arrows with receipts (visual, truth; 5/2; new).** Widen one spec clause so a fact Syzygy
-derived by a declared rule renders Observed; an agent still labels nothing Observed. Give every
-edge a relation type; check upgrades an edge the structure record witnesses and challenges one
-it should have witnessed. Generate each legend from the encodings the figure uses, and print a
-tally under every figure ("14 relationships: 9 derived by Syzygy, 5 cited readings"). Slice 1
-(legend and tally) needs nothing else and repairs theme 7.
+**Q3 — Arrows with receipts (visual, truth; 5/2; new; owner answer before slice 2).** Widen one
+spec clause so a fact Syzygy derived by a declared rule renders Observed; an agent still labels
+nothing Observed. The reading carries conditions: the structure record is an evidence artifact,
+its fact class declares a currency bound, mixed figures carry machine-readable provenance and
+never imitate a computed map, and an authored arrow is upgraded only by a derived fact of the
+identical relation type (a manifest's "declares a dependency" does not witness "calls").
+Generate each legend from the encodings the figure uses, and print a tally under every figure
+("14 relationships: 9 derived by Syzygy, 5 cited readings"). Slice 1 (legend and tally) needs
+nothing else and repairs theme 7.
 
 **Q4 — A picture on the first page (visual, readable; 5/2; sharpens P3, P12).** Let a figure
 attach to any page, deep dives and the overview included (a cost-1 change that removes a
@@ -229,11 +244,14 @@ element that must cite where the analogy stops holding.
 
 ### What to build first
 
-- **Wave 1, cheap and independent:** Q1; Q2 slice 1; Q3 slice 1; Q4 slice 1; Q6 slice 1;
-  Q11 slices 1–3; Q13 slice 1. Together they remove the source bar, fix the overflow and the
-  untrue legend, put figures on any page, make movement measurable and start measuring
-  generality with no model call.
-- **Then the visual transformation:** Q3 slices 2–3, Q4 slice 2, Q5, Q7, Q6 slices 2–3, Q12.
+- **Wave 1, cheap, independent, and needing no owner answer:** Q1 slice 1 (measurement only);
+  Q2 slice 1; Q3 slice 1; Q4 slice 1; Q6 slice 1; Q11 slices 1–3; Q13 slice 1. Together they
+  fix the overflow and the untrue legend, put figures on any page, make movement measurable,
+  measure how much of real repositories the policy can cite, and start measuring generality
+  with no model call and no dossier run.
+- **After the owner's two answers:** Q1 slice 2 (the wider policy), then Q2 slices 2–3 and Q3
+  slices 2–3.
+- **Then the visual transformation:** Q4 slice 2, Q5, Q7, Q6 slices 2–3, Q12.
 - **Then breadth:** Q9, Q10, Q8, Q14, and the live probe.
 
 ### What this does to run 3's moves
@@ -247,7 +265,7 @@ element that must cite where the analogy stops holding.
 | P7 comprehension probe (`.7`) | Sharpen: per-depth questions (Q8) and the exactly graded figure probe (Q11). |
 | P3, P4, P5, P8, P13 | Unchanged and still wanted; Q3's tally fills P3's ribbon, Q5 absorbs P5's code walks, Q8 is P4's skim view. P8 needs a schema slot: a second run produced 0 judgements. |
 | P14 engine foundation (`.14`) | Re-rank up: its componentized renderer should precede Q6 slice 2 and Q7. |
-| `syzygy-fnry.22` generality probe | Sequence after Q1, or record the Butlers policy as its known confound. |
+| `syzygy-fnry.22` generality probe | Sequence after Q1, or record the source policy as its known confound. |
 | Retained "parser-derived Observed structure" | Replaced by Q2 and Q3; its stated prerequisite does not hold. |
 
 ### Retained, not ranked
@@ -274,21 +292,46 @@ optional zoom and pan script for very large computed maps.
 ## Owner gates this run
 
 One packet, two items, reviewed by an independent subagent before it was served. The packet
-path and decision ids are recorded on the gate bead.
+path and decision ids are recorded on the plan-hold bead. Both are asked under VIS-4's rule
+"when unsure, it treats the change as owner-class and asks".
 
-- `pursuit-2026-11-21-release`: the release scope for the gated epic.
-- `pursuit-2026-11-21-observed-derived`: whether a fact Syzygy derives by a declared
-  deterministic rule may render as Observed. It is a spec clause and agent-decidable under D10,
-  but it is a reading of the doctrine's definition of Observed, so it is asked.
+- `pursuit-2026-11-21-source-reach` (Q1): how far to widen what a dossier may read and send to
+  the declared provider, and whether documents withheld as possible governance text are
+  included. RFC5-14 reserves to the owner "a change that would let content the
+  secret-detection policy matches, or cannot classify, reach a provider"; Q1 classifies content
+  that is unclassifiable today, and it reverses an owner default.
+- `pursuit-2026-11-21-observed-derived` (Q3): whether doctrine's definition of Observed covers
+  a fact Syzygy derives by a declared deterministic rule. The spec clause is agent-decidable;
+  the reading of doctrine is what is asked.
 
-Q1 changes a screening policy. D10 makes that agent-decidable; it is named in the release item
-so the owner can veto it there.
+Release is not asked. Under VIS-4, when implementation starts is an agent decision, reported
+and open to veto. The first draft of this run asked it; the independent reviewer rejected that
+item's scope, correctly.
 
-## Gated epic
+## Planned epic
 
-The epic and gate ids are recorded on the epic bead. Each move bead depends on the `[HOLD]`
-gate, and the epic is assigned to the owner so it stays off `bd ready`. **Closing the gate is
-the owner's move, and it releases the children.**
+The epic and its plan-hold bead are named on the epic bead. Each move bead depends on the
+plan-hold, which is an ordinary sequencing bead, not an owner gate: this run was asked what to
+consider, so it files a plan and starts nothing. A lead session releases wave 1 by filing its
+slices as ready beads and reporting them; the owner may veto any of it. Slices that wait on an
+owner answer say so in their bead. Run 3's gate `syzygy-fj2q` still says "closed only by the
+owner"; D10's follow-on F-10 (`syzygy-k54o.10`) names it for unblocking, and this run leaves
+that to F-10.
+
+## Corrections after independent review
+
+The reviewer's raw text is kept beside the owner packet. Corrected in this report:
+
+- The source policy was called "derived for the Butlers repository". It carries that
+  identifier, but its excluded words were the owner's default in screening scope v2.
+- The excluded words were given as two; there are 25, and the document rules include root
+  documents and a licences folder.
+- Q2's manifest recognizers were said to need nothing; they need Q1.
+- The Observed clause was cited to the predecessor spec; the adopted copy is line 159 of the
+  declared-source-model spec.
+- "A VIS-7 defect" overstated the legend problem; it is a comprehension defect.
+- "No reader-visible change" ignored a launch disclosure added to every page by `render.ts`.
+- Wave 1 listed a Redis re-run; this plan starts no run.
 
 ## Known ledger and deviations
 
