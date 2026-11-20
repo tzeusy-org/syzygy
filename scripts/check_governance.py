@@ -31,9 +31,7 @@ Checks
 ------
   CG-1   internal links and path references resolve; an active route into
          `rfcs/**` is a broken pointer, not a by-design absence (CG-1g)
-  CG-2   retired acceptance phrases are confined, and `about/` is absent
-         from active instructions. Phrase population:
-         `candidates/ACCEPTANCE-PHRASE-REGISTRY.yaml`
+  CG-2   `about/` is absent from active instructions
   CG-3   stale bootstrap routing (`_bootstrap/prompts/`) absent
   CG-4   candidate homes carry candidate banners (CG-4a) and claim no
          acceptance (CG-4b)
@@ -154,11 +152,8 @@ DECISIONS = ".syzygy/governance/decisions"
 CHECK_OWNERS = {
     "CG-1": ("mechanical — a path reference resolves in a clone or it does "
              "not; the citing file states the claim"),
-    "CG-2": ("record: `FINAL-FOUNDATIONAL-CONTRACT-ACCEPTANCE-RECORD.md` §1 "
-             "— \"Two phrases are retired and satisfy nothing\". The "
-             "acceptance record is the acceptance authority; this is not a "
-             "doctrine clause. Population declared in "
-             "ACCEPTANCE-PHRASE-REGISTRY.yaml"),
+    "CG-2": ("mechanical — this repository has no `about/` tree, so an "
+             "instruction file that routes to one routes nowhere"),
     "CG-3": ("mechanical — `_bootstrap/prompts/` is absent from every clone, "
              "so a route to it is unexecutable"),
     "CG-4": ("VIS-4 (`doctrine/vision.md`) — \"Humans steer the vision; "
@@ -665,7 +660,7 @@ def _candidate_twin(installed_rel, all_paths):
 #: A signed package's citation of a path that a later act moved. The package's
 #: bytes are what its version tag binds, so the citation is history, not a
 #: route: classified and printed under CG-1d, never silenced.
-#: Scripts D10 FOLLOW-ON F-5 deleted (the ceremony machinery D10 retired). A
+#: Files D10 FOLLOW-ON F-5 deleted (the ceremony machinery D10 retired). A
 #: citation of one in a package, review or plan is history, like a frozen
 #: packet path: classified historical (WARN), never broken. A live routing
 #: page should stop citing them instead (`syzygy-k54o.5`).
@@ -681,7 +676,27 @@ D10_RETIRED_SCRIPTS = frozenset(f"scripts/{name}.py" for name in (
     "record_rfc7_scoped_values_successor",
     "simulate_public_source_screening_scope_act",
     "simulate_redis_local_agent_sitting",
-))
+    # slice 5
+    "build_polaris_edit_repair_deletion_scenario",
+    "build_provider_route_messages_api_entry",
+    "build_pwb_effect_acts_packet",
+    "build_pwb_state1_amendment_manifest",
+    "install_redis_local_agent_sitting",
+    "install_redis_sitting",
+    "polaris_generator_approval",
+    "record_messages_api_route_registry_act",
+    "record_pwb_effect_amendment_acts",
+    "record_pwb_state1_amendment",
+    "record_three_surface_poc_readability_successor",
+    "simulate_redis_sitting",
+)) | {f"{CANDIDATES}/ACCEPTANCE-PHRASE-REGISTRY.yaml"}
+
+
+def _d10_retired_target(target):
+    """True when `target` names a file D10 F-5 deleted: exactly, by a
+    repository-relative tail (`contracts/candidates/…`), or without `.py`."""
+    return (target in D10_RETIRED_SCRIPTS or f"{target}.py" in D10_RETIRED_SCRIPTS
+            or any(full.endswith("/" + target) for full in D10_RETIRED_SCRIPTS))
 
 SIGNED_PACKAGE_MOVED_TARGETS = {
     (f"{CANDIDATES}/polaris-dossier-local-agent-mode-v1-1/IMPACT-LEDGER.md",
@@ -725,7 +740,7 @@ def cg1_links(paths, res):
             dead_routes.append(f"{rel} -> {t}")
         elif _is_historical_packet(t):
             historical.append(f"{rel} -> {t}")
-        elif t in D10_RETIRED_SCRIPTS:
+        elif _d10_retired_target(t):
             historical.append(f"{rel} -> {t} — deleted by D10 F-5")
         elif (rel, t) in SIGNED_PACKAGE_MOVED_TARGETS:
             historical.append(f"{rel} -> {t} — {SIGNED_PACKAGE_MOVED_TARGETS[(rel, t)]}")
@@ -838,86 +853,6 @@ def cg1_links(paths, res):
 
 # --------------------------------------------------------------- CG-2
 
-#: The one structured home for "which acceptance phrase is current, which is
-#: retired, and how a file may lawfully quote a retired one". Every phrase
-#: population below is read out of it; **no phrase literal lives in this
-#: file**, deliberately.
-#:
-#: Why. CG-2 named the rev9 phrase in a Python constant. rev10's phrase was
-#: retired at round-2026-08d and the constant was not updated, so the
-#: successor was live in five artifacts and invisible to the whole battery —
-#: the launch-gate administration of 2026-08-09 (findings C1/E6/F3) found it
-#: by hand. A retirement is now one entry in the registry, and it reaches
-#: CG-2a on the next run.
-PHRASE_REGISTRY = f"{CANDIDATES}/ACCEPTANCE-PHRASE-REGISTRY.yaml"
-
-#: Keyed by `ROOT`, not a bare global: a caller that swaps ROOT to a temp tree
-#: would otherwise pin the *absent* registry for the rest of the process —
-#: every later fixture then passing over an empty phrase population, which is
-#: the vacuous pass this module is built to refuse.
-_PHRASE_REGISTRY_CACHE = {}
-
-
-def phrase_registry(text=None):
-    """The parsed registry, as (data, errors). Cached; `text` overrides.
-
-    Parsed with `_yaml_lite` — the same tolerant reader CG-19 uses on the
-    substrate lock, defined below and resolved at call time. Bringing in a
-    YAML dependency would break the "standard library only" design
-    constraint, and a second parser would be a second thing to go wrong.
-
-    An absent or unparseable registry is an **error**, never an empty
-    population: a phrase sweep over zero declared phrases is the vacuous pass
-    this battery exists to prevent (VIS-2).
-    """
-    if text is not None:
-        return _yaml_lite(text)
-    if ROOT not in _PHRASE_REGISTRY_CACHE:
-        if not os.path.exists(os.path.join(ROOT, PHRASE_REGISTRY)):
-            _PHRASE_REGISTRY_CACHE[ROOT] = ({}, [
-                f"{PHRASE_REGISTRY} is absent — the phrase population is "
-                f"Unknown, and Unknown is not empty"])
-        else:
-            data, errs = _yaml_lite(read(PHRASE_REGISTRY))
-            _PHRASE_REGISTRY_CACHE[ROOT] = (data, list(errs))
-    return _PHRASE_REGISTRY_CACHE[ROOT]
-
-
-def _reg_list(data, key):
-    v = data.get(key)
-    return [x for x in v if isinstance(x, dict)] if isinstance(v, list) else []
-
-
-def registry_retired(data=None):
-    """Retired acceptance phrases: [{label, retired_at, replaced_by, …}]."""
-    data = data if data is not None else phrase_registry()[0]
-    return _reg_list(data, "retired_phrases")
-
-
-def registry_convention(data=None):
-    """(markers, currency_signals, window) for historical quotation."""
-    data = data if data is not None else phrase_registry()[0]
-    conv = data.get("historical_marker_convention")
-    conv = conv if isinstance(conv, dict) else {}
-    mk = [m.lower() for m in conv.get("markers", []) if isinstance(m, str)]
-    cs = [c.lower() for c in conv.get("currency_signals", [])
-          if isinstance(c, str)]
-    try:
-        win = int(conv.get("marker_window_lines", 2))
-    except (TypeError, ValueError):
-        win = 2
-    return tuple(mk), tuple(cs), win
-
-
-#: **Whitespace-tolerant, case-sensitive.** Tolerant of whitespace because
-#: prose wraps and a phrase split over a line break is still the phrase — the
-#: launch-gate pilot's hand sweep missed two occurrences for exactly that
-#: reason, and a `str.__contains__` test cannot see any of them. Case-
-#: sensitive because these phrases are literal ceremony tokens: a lowercase
-#: rendering is prose *about* the act, not the act's words.
-def phrase_pattern(label):
-    return re.compile(r"\s+".join(re.escape(w) for w in label.split()))
-
 
 #: A whole artifact may be marked historical by its banner rather than at
 #: each quotation. A banner in the body is not a banner, because a reader
@@ -926,42 +861,6 @@ SUPERSEDED_BANNER = re.compile(
     r"^>?\s*[#*\s]*(SUPERSEDED|Superseded|Historical|RETIRED|Retired)\b", re.M)
 BANNER_SCAN_LINES = 12
 
-#: A retirement notice must be able to name the phrase it retires, and the
-#: historical record must be able to quote what was superseded. Allowlisted
-#: by path prefix, each with the reason it is allowed to carry the phrase.
-RETIRED_PHRASE_ALLOW = (
-    (f"{CRAFT}/INSTALL-RECORD.md", "states the phrase is retired and satisfies nothing"),
-    (f"{CANDIDATES}/round-2026-08/", "this round's process record and delta register"),
-    (f"{CANDIDATES}/history/", "frozen rev9 corpus and per-RFC amendment history"),
-    (f"{CANDIDATES}/reviews/", "raw reviewer output, stored verbatim"),
-    #: Opened one round at a time, never by a `round-*/reviews/` glob, on the
-    #: same terms CG-12's allowlist uses. The 08b and 08c directories were
-    #: added on 2026-08-10 when the registry taught CG-2a about the
-    #: *successor* phrase: three reviewers had quoted `ACCEPT COMPACTED
-    #: FOUNDATIONAL RFCS` in their own sweeps, and raw reviewer output is
-    #: never edited — the alternative to allowlisting it is editing evidence.
-    (f"{CANDIDATES}/round-2026-08b/reviews/",
-     "raw reviewer output, stored verbatim — a reviewer's retired-phrase "
-     "sweep must be able to name the phrases it swept for"),
-    (f"{CANDIDATES}/round-2026-08c/reviews/",
-     "raw reviewer output, stored verbatim — same rule as its predecessor"),
-    (f"{CANDIDATES}/round-2026-08d/reviews/",
-     "raw reviewer output, stored verbatim — a reviewer's retired-phrase "
-     "sweep must be able to name the phrases it swept for"),
-    (f"{CANDIDATES}/00-README.md", "records the phrase as retired at rev10"),
-    (f"{CANDIDATES}/10-EXIT-REPORT.md", "records the phrase as retired at rev10"),
-    (f"{CANDIDATES}/FINAL-FOUNDATIONAL-CONTRACT-ACCEPTANCE-RECORD.md",
-     "the acceptance record that retires it"),
-    (f"{DECISIONS}/OWNER-ANSWERS-2026-08-01.md",
-     "owner ruling that the phrase was not performed"),
-    (f"{DECISIONS}/PROCESS-LESSONS.md",
-     "records the acceptance-authority migration, of which the phrase's "
-     "unconditional retirement is one step"),
-    ("AGENTS.md", "states the phrase is retired and satisfies nothing"),
-    (f"{CANDIDATES}/round-2026-08/OWNER-ROUND-CHARTER.md",
-     "owner-supplied round charter; quotes the phrase as a search token"),
-    (SELF_REL, "this checker names the phrase in order to detect it"),
-)
 
 #: `about/**` is the upstream skill convention; this repository deliberately
 #: has no such tree. Naming it as *guidance not to create one*, or as a
@@ -983,121 +882,15 @@ def _allow_hit(rel, allow):
     return None
 
 
-def _phrase_window(lines, start_line, end_line, window):
-    lo = max(0, start_line - 1 - window)
-    hi = end_line + window
-    return " ".join(" ".join(lines[lo:hi]).split()).lower()
-
-
-def cg2_retired_tokens(paths, res, corpus=None, registry=None):
-    """Every retired acceptance phrase in the corpus is classified.
-
-    Four classes, and the split is the point — a retirement notice, a frozen
-    record and a live gate all contain the same characters, and only the
-    third is a defect:
-
-    1. **presented as current** — the quotation sits beside a currency signal
-       (`exact phrase`, `the gate is`, `in force`, …) with no historical
-       marker anywhere near it. This is the P-6 class, and it is what the
-       launch-gate administration found live in five artifacts after the
-       round-2026-08d retirement.
-    2. **unmarked quotation** — no currency signal either, but nothing says
-       the phrase is dead. A reader meets a performable-looking phrase.
-       Fail-closed: an unmarked quotation is assumed to be presenting.
-    3. **marked** — a historical marker inside the window, or a
-       SUPERSEDED/Historical banner in the file's first twelve lines. Lawful;
-       counted and printed under CG-2f, never silenced.
-    4. **path-allowlisted** — a declared file whose job is to preserve what
-       was offered. Counted and printed under CG-2b with its reason.
-
-    The population, the markers, the currency signals and the window all come
-    from `ACCEPTANCE-PHRASE-REGISTRY.yaml`. Adding a retirement is one entry
-    there; it does not touch this function.
-    """
-    data, reg_errors = phrase_registry(registry)
-    retired = registry_retired(data)
-    markers, signals, window = registry_convention(data)
-
-    items = corpus
-    if items is None:
-        items = [(p, read(p)) for p in paths
-                 if p.endswith((".md", ".txt", ".yaml", ".yml", ".py"))]
-
-    live, unmarked, allowed, marked = [], [], [], []
-    reg_findings = list(reg_errors)
-    if not retired:
-        reg_findings.append(
-            f"{PHRASE_REGISTRY} declares no retired phrase — the sweep below "
-            f"has an empty population and verifies nothing")
-    if not markers:
-        reg_findings.append(
-            f"{PHRASE_REGISTRY} declares no historical markers — every lawful "
-            f"quotation would be reported as a defect")
-
-    for rel, txt in items:
-        lines = txt.splitlines()
-        bannered = bool(SUPERSEDED_BANNER.search(
-            "\n".join(lines[:BANNER_SCAN_LINES])))
-        reason = _allow_hit(rel, RETIRED_PHRASE_ALLOW)
-        for entry in retired:
-            label = entry.get("label")
-            if not isinstance(label, str) or not label.strip():
-                continue
-            replacement = entry.get("replaced_by") or "[Unknown]"
-            retired_at = entry.get("retired_at") or "[Unknown]"
-            for m in phrase_pattern(label).finditer(txt):
-                start = txt[:m.start()].count("\n") + 1
-                end = start + m.group(0).count("\n")
-                wrap = " (quoted across a line wrap)" if end > start else ""
-                if reason:
-                    allowed.append(f"{rel}:{start} `{label}`{wrap} — {reason}")
-                    continue
-                win = _phrase_window(lines, start, end, window)
-                if bannered:
-                    marked.append(f"{rel}:{start} `{label}`{wrap} — "
-                                  f"SUPERSEDED/Historical banner in the first "
-                                  f"{BANNER_SCAN_LINES} lines marks the whole "
-                                  f"artifact")
-                elif any(mk in win for mk in markers):
-                    hit = next(mk for mk in markers if mk in win)
-                    marked.append(f"{rel}:{start} `{label}`{wrap} — marked "
-                                  f"historical by `{hit}` within "
-                                  f"{window} line(s)")
-                elif any(sig in win for sig in signals):
-                    sig = next(s for s in signals if s in win)
-                    live.append(
-                        f"{rel}:{start} — presents the retired phrase "
-                        f"`{label}` as current (`{sig}` in the same window, "
-                        f"no historical marker){wrap}. Retired "
-                        f"{retired_at}; the current form is `{replacement}`")
-                else:
-                    unmarked.append(
-                        f"{rel}:{start} — quotes the retired phrase "
-                        f"`{label}` with no historical marker, no banner, and "
-                        f"no allowlist entry{wrap}. Retired {retired_at}; a "
-                        f"reader cannot tell it from a live gate")
-
-    findings = live + unmarked
-    res.add("FAIL" if findings or reg_findings else "OK",
-            "CG-2a  retired acceptance phrase confined", len(items),
-            len(findings) + len(reg_findings), "file",
-            note=(f"{len(retired)} retired phrase(s) declared; "
-                  f"{len(live)} presented as current, "
-                  f"{len(unmarked)} unmarked"),
-            details=reg_findings + findings)
-    res.add("WARN", "CG-2b  retired-phrase path allowlist", len(allowed), 0,
-            "quotation", note="declared files whose job is to preserve what "
-                              "was offered", details=sorted(allowed))
-    res.add("WARN", "CG-2f  retired-phrase historical markers", len(marked), 0,
-            "quotation",
-            note="lawful quotations — marked at the line or by the "
-                 "artifact's banner; printed, never silenced",
-            details=sorted(marked))
-
+def cg2_about(paths, res, corpus=None):
+    """`about/` is absent from the active instruction files (CG-2c); the
+    files allowed to name it are counted and printed (CG-2d). `corpus`
+    ({path: text}) replaces the reads, for the selftest."""
+    text = corpus.get if corpus is not None else read
     scope = [p for p in ABOUT_SCOPE if p in set(paths)]
     hits = []
     for rel in scope:
-        for i, ln in enumerate(read(rel).splitlines(), 1):
+        for i, ln in enumerate(text(rel).splitlines(), 1):
             if ABOUT_PAT.search(ln):
                 hits.append(f"{rel}:{i} — `about/` named in an instruction file")
     res.add("FAIL" if hits else ("OK" if scope else "WARN"),
@@ -3253,75 +3046,17 @@ def selftest():
     cases[-1] = ("CG-13 dangling edge detected",
                  _selftest_dangling())
 
-    # ---- CG-2, registry-driven. Four classes of retired-phrase quotation,
-    # one fixture each, plus the wrap tolerance that the launch-gate pilot's
-    # hand sweep lacked. `REG` is a synthetic registry: the fixtures must
-    # exercise the parsing path too, or a registry that stopped parsing would
-    # leave every fixture passing over an empty population.
-    REG = (
-        'version: 1\n'
-        'current_phrases:\n'
-        '  - id: wave-a\n'
-        '    label: "ACCEPT FOUNDATIONAL WAVE A"\n'
-        '    form: accept\n'
-        '    argument: sha256\n'
-        '    subject: "wave-manifests/WAVE-A-MANIFEST.txt"\n'
-        'retired_phrases:\n'
-        '  - label: "ACCEPT OLD RFCS"\n'
-        '    retired_at: "2026-01-01"\n'
-        '    replaced_by: "ACCEPT FOUNDATIONAL WAVE A"\n'
-        'historical_marker_convention:\n'
-        '  markers:\n'
-        '    - "retired"\n'
-        '  marker_window_lines: 2\n'
-        '  currency_signals:\n'
-        '    - "exact phrase"\n')
-
     c = Cap()
-    cg2_retired_tokens([], c, registry=REG,
-                       corpus=[("f.md", "write the ACCEPT OLD RFCS phrase")])
-    cases.append(("CG-2a unmarked retired-phrase quotation detected",
+    cg2_about(["AGENTS.md"], c,
+              corpus={"AGENTS.md": "Read the doctrine under about/vision.md.\n"})
+    cases.append(("CG-2c `about/` route in an instruction file detected",
                   c.rows[0][0] == "FAIL" and len(c.rows[0][4]) == 1))
 
-    # (a) the wrap. `str.__contains__` and a line-based matcher both miss
-    # this, and both were what the corpus had.
     c = Cap()
-    cg2_retired_tokens([], c, registry=REG,
-                       corpus=[("f.md", "the ACCEPT OLD\nRFCS gate")])
-    cases.append(("CG-2a line-wrapped retired phrase detected",
-                  c.rows[0][0] == "FAIL"
-                  and "line wrap" in (c.rows[0][4] or [""])[0]))
-
-    # (b) presented as current — the worse class, reported as its own.
-    c = Cap()
-    cg2_retired_tokens([], c, registry=REG,
-                       corpus=[("f.md", "The exact phrase is\n"
-                                        "`ACCEPT OLD RFCS: <digest>`")])
-    cases.append(("CG-2a retired phrase presented as current detected",
-                  c.rows[0][0] == "FAIL"
-                  and any("presents the retired phrase" in d
-                          for d in c.rows[0][4])))
-
-    # (c) a marked quotation is lawful, counted under CG-2f, never silent.
-    c = Cap()
-    cg2_retired_tokens([], c, registry=REG,
-                       corpus=[("f.md", "the retired `ACCEPT OLD RFCS`")])
-    cases.append(("CG-2a marked historical quotation exempted and printed",
-                  c.rows[0][0] == "OK" and len(c.rows[2][4]) == 1))
-
-    c = Cap()
-    cg2_retired_tokens([], c, registry=REG, corpus=[
-        ("f.md", "# SUPERSEDED — old record\n\nACCEPT OLD RFCS\n")])
-    cases.append(("CG-2a superseded-bannered file exempted",
-                  c.rows[0][0] == "OK" and len(c.rows[2][4]) == 1))
-
-    # An empty or unparseable registry must fail loudly. A phrase sweep over
-    # zero declared phrases is the vacuous pass this battery exists to stop.
-    c = Cap()
-    cg2_retired_tokens([], c, registry="version: 1\n",
-                       corpus=[("f.md", "ACCEPT OLD RFCS")])
-    cases.append(("CG-2a empty phrase registry fails, never passes",
-                  c.rows[0][0] == "FAIL"))
+    cg2_about(["AGENTS.md"], c,
+              corpus={"AGENTS.md": "Doctrine lives in .syzygy/governance/doctrine/.\n"})
+    cases.append(("CG-2c instruction file without `about/` passes",
+                  c.rows[0][0] == "OK" and c.rows[0][2] == 1))
 
     # ---- CG-4b, the inverse predicate. RD-17's mutation M8b rewrote the
     # package README's banner to claim the acts had happened and the battery
@@ -5495,7 +5230,7 @@ def main():
 
     res = Results()
     cg1_links(existing, res)
-    cg2_retired_tokens(existing, res)
+    cg2_about(existing, res)
     cg3_stale_routing(existing, res)
     cg4_candidate_banners(existing, res)
     cg5_craft_banners(existing, res)
