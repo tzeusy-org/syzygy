@@ -239,6 +239,8 @@ describe('the no-README shape: a code-read thesis', () => {
     ['marked stated while citing nothing', 'stated', [], { judgement: true }, [{ kind: 'thesis-basis', at: '$.thesisBasis', detail: 'a `stated` thesis rests on a statement of the project\'s purpose by its maintainers: make the introduction an inferred block that cites that statement' }]],
     ['code-read from one file and its test', 'code-reading', ['cmd/server/main.go', 'internal/handler/handler_test.go'], {}, [{ kind: 'thesis-basis', at: '$.thesisBasis', detail: `${CODE_READ} it cites 1 such file` }]],
     ['code-read from main and the module file and checksums', 'code-reading', ['cmd/server/main.go', 'go.mod', 'go.sum'], {}, [{ kind: 'thesis-basis', at: '$.thesisBasis', detail: `${CODE_READ} it cites 1 such file` }]],
+    ['code-read with a quotations list and no lead-in', 'code-reading', ['cmd/server/main.go', 'internal/store/store.go'], { quotations: ['c-0'] }, [{ kind: 'thesis-basis', at: '$.thesisBasis', detail: `${CODE_READ} it cites 2 such files and quotes` }]],
+    ['code-read from an Unknown block that still names a source basis', 'code-reading', ['cmd/server/main.go', 'internal/store/store.go'], { label: 'unknown', reason: 'missing-evidence' }, [{ kind: 'thesis-basis', at: '$.thesisBasis', detail: `${CODE_READ} it cites 2 such files` }]],
     ['code-read with a quotation', 'code-reading', ['cmd/server/main.go', 'internal/store/store.go'], { text: 'The project states: "package main"', quotations: ['c-0'] }, [{ kind: 'thesis-basis', at: '$.thesisBasis', detail: `${CODE_READ} it cites 2 such files and quotes` }]],
   ])('refuses the no-README draft %s', (_name, basis, files, over, expected) => {
     expect(findings(draft(basis, intro(files, over)))).toEqual(expected);

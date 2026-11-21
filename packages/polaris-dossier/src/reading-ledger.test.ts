@@ -222,6 +222,30 @@ describe('reading difference', () => {
     expect(readingDifference(self, 'kestrel', NOW, LATER)).toMatchObject({ state: 'unknown', unreadableRuns: 0, unreadableCheckRecords: 1 });
   });
 
+  it('never takes a ledger checked at the same instant as this check', () => {
+    const root = tempDir('reading-difference-');
+    const self = runIn(root, id('c'), RUN_RECORD('kestrel'));
+    runIn(root, id('a'), RUN_RECORD('kestrel'), { 0: checkRecord(NOW, EARLIER) });
+    expect(readingDifference(self, 'kestrel', NOW, LATER)).toMatchObject({ state: 'unknown', why: 'no earlier run of this repository in the state root holds a reading ledger that could be read' });
+  });
+
+  it('counts a run with no run record as unreadable; a run with no checks directory holds no record, and a checks path it cannot list is counted', () => {
+    const root = tempDir('reading-difference-');
+    const self = runIn(root, id('c'), RUN_RECORD('kestrel'));
+    fs.mkdirSync(path.join(root, id('d'))); // a run-form directory with no run.json
+    const bare = path.join(root, id('e'));
+    fs.mkdirSync(bare);
+    fs.writeFileSync(path.join(bare, 'run.json'), RUN_RECORD('kestrel')); // no checks directory: nothing to count
+    expect(readingDifference(self, 'kestrel', NOW, LATER)).toEqual({
+      state: 'unknown', why: 'no earlier run of this repository in the state root holds a reading ledger that could be read', unreadableRuns: 1, unreadableCheckRecords: 0,
+    });
+    const notDir = path.join(root, id('f'));
+    fs.mkdirSync(notDir);
+    fs.writeFileSync(path.join(notDir, 'run.json'), RUN_RECORD('kestrel'));
+    fs.writeFileSync(path.join(notDir, 'checks'), 'a file where the directory should be');
+    expect(readingDifference(self, 'kestrel', NOW, LATER)).toMatchObject({ state: 'unknown', unreadableRuns: 1, unreadableCheckRecords: 1 });
+  });
+
   it('says why where the state root cannot be listed or the draft does not parse', () => {
     expect(readingDifference(path.join(tempDir('reading-difference-'), 'gone', id('c')), 'kestrel', NOW, LATER)).toEqual({ state: 'unknown', why: 'the state root could not be listed', unreadableRuns: 0, unreadableCheckRecords: 0 });
     expect(readingDifference('/nowhere/run', 'kestrel', NOW, undefined)).toEqual({ state: 'unknown', why: 'this draft does not parse, so it has no reading ledger', unreadableRuns: 0, unreadableCheckRecords: 0 });
