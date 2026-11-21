@@ -18,11 +18,13 @@ import { sessionHostTestPort, type SessionHost, type SessionHostOptions } from '
 import { createOrderedDesignSessionProfile, createSessionProfile, DEFAULT_SESSION_MODEL, isOrderedDesignSessionProfile, isSessionProfile,
   matchesOrderedDesignContinuationResponse, matchesOrderedDesignResultMessage, matchesOrderedDesignTerminalResponse, projectSessionProfileMetadata, SESSION_PROFILE_BETA,
   SESSION_PROFILE_SYNTHETIC_AUTHORIZATION, sessionProfileProviderHeaders, type NativeSessionProfile } from './session-profile.js';
-import { sessionRelayTestPort, type SessionAuditEvent } from './session-relay.js';
+import { sessionRelayTestPort, type SessionAuditEvent, type SessionRelay } from './session-relay.js';
 import { decodeSessionResponse, type SessionResponseUsage } from './session-response.js';
 import { buildDesignPacket, validateDesignVerdict } from './design-review.js';
 import { createUrlDesignView } from './url-design-view.js';
 import { materializeOrderedDesignPart, planOrderedDesignBytes } from './url-design-delivery.js';
+import { createOrderedDesignSession } from './url-ordered-design-session.js';
+import { createUrlSessionAudit } from './url-session-audit.js';
 import { urlSessionMcpSupportPath } from './url-runtime.js';
 import { URL_CLI_PROGRAM, URL_LAUNCH_LIMITS, launchRestrictedUrlSession, prepareRestrictedUrlSession, restrictedSessionCliArgs, verifySupportedUrlCli, type UrlSessionLaunchOptions } from './session-launch.js';
 import { URL_SESSION_BWRAP, urlSessionBwrapArgs, urlSessionCommand, urlSessionViewFor } from './session-url-view.js';
@@ -217,9 +219,8 @@ async function runOwnedPreparedCommand(launch: UrlSessionLaunchOptions, commandS
   });
 }
 
-/** The real namespace command, bridge, MCP, broker and relay run on owned data.
- * The expected transcript and provider response are fixture ports. In
- * particular, this does not use production ordered admission or eligibility. */
+/** The pinned CLI talks to the host's ordered session and physical audit store.
+ * Provider responses, source/currentness and ordinary verdict storage are fixture ports. */
 async function runNativeOrderedFixture(scenario: OrderedScenario) {
   const root = await mkdtemp(path.join(os.tmpdir(), 'so-'));
   cleanup.push(() => rm(root, { force: true, recursive: true }));
@@ -301,15 +302,42 @@ async function runNativeOrderedFixture(scenario: OrderedScenario) {
   const receivedParts: string[] = [];
   const responseUsage: SessionResponseUsage[] = [];
   let checked = 0, screened = 0, terminalResponseDecoded = false, verdictValidated = false;
-  const relay = await sessionRelayTestPort(async input => {
+  const { role: _design, ...scopeBinding } = binding;
+  const otherProfiles = (['author', 'inventory', 'fidelity'] as const).map(otherRole => {
+    const other = createSessionProfile({ ...profile.input, binding: { ...scopeBinding, role: otherRole } });
+    if (!other.ok) throw new Error('own audit role profile refused');
+    return other.value.profile;
+  });
+  const auditParent = path.join(root, 'hidden'), { project, originPolicySha256 } = plan.manifest.binding;
+  const principal = 'own-operator';
+  const protectedAudit = await createUrlSessionAudit({ parent: auditParent, name: 'audit', binding: scopeBinding, originPolicySha256,
+    project, pin, principal, profiles: [...otherProfiles, profile], declaredClasses: SESSION_CONTENT_CLASSES, screen, current: () => true });
+  if (!protectedAudit.ok) throw new Error('own protected audit refused');
+  cleanup.push(protectedAudit.close);
+  const writer = protectedAudit.beginOrderedDesignAudit(plan, () => true);
+  let relay: SessionRelay;
+  const orderedSession = createOrderedDesignSession({ profile, plan, principal, writer, relay: () => relay, envelope: () => view.bytes,
+    current: () => true, assertCurrent: () => {}, stageVerdict: async ({ stdin, assertCurrent }) => {
+      await expect(writer.readTerminal()).rejects.toThrow('url-ordered-design-audit-writer-refused');
+      assertCurrent();
+      if (receivedParts.length !== 2 || receivedParts.join('') !== new TextDecoder().decode(view.bytes)) throw new Error('own incomplete delivery');
+      const deliveredVerdict = parseBoundedJson(stdin, SESSION_POLICY_LIMITS) as Readonly<Record<string, unknown>>;
+      const problems = validateDesignVerdict(deliveredVerdict, packet, pin, new Set());
+      expect(problems.map(problem => problem.kind)).toEqual(scenario === 'stale-verdict' ? ['stale-packet'] : []);
+      verdictValidated = problems.length === 0;
+      return verdictValidated ? sha256(orderedCanonical({ verdictSha256: sha256(stdin), packetSha256: packet.sha256 })) : null;
+    },
+  });
+  relay = await sessionRelayTestPort(async input => {
     const index = forwarded.length;
     if (input.route !== '/v1/messages?beta=true' || index >= 5) throw new Error('own route refused');
+    expect(protectedAudit.summary().captured['design-ordered']).toBe([0, 2, 7, 12, 19][index]);
     forwarded.push(sha256(input.body));
     const next = scenario === 'out-of-order' && index === 1 ? steps[2]?.call : steps[index]?.call;
     const message = response(index, next);
     const body = scenario === 'truncated-terminal' && index === steps.length ? message.subarray(0, -10) : message;
     return { status: 200, contentType: 'text/event-stream', requestFlushed: true, body };
-  })(path.join(root, 'relay/r.sock'), { binding, project: 'project:syzygy', pin, principal: 'own-operator' }, {
+  })(path.join(root, 'relay/r.sock'), { binding, project, pin, principal }, {
     current: () => true,
     providerHeaders: incoming => {
       const prepared = sessionProfileProviderHeaders(profile, incoming);
@@ -363,7 +391,7 @@ async function runNativeOrderedFixture(scenario: OrderedScenario) {
             ...(checked === steps.length ? { acknowledgment: { ...result(3), input: submit } } : {}) };
           const detectors = { scanSecrets: (text: string) => screen.screenSecrets(text) !== undefined,
             scanDesignView: (text: string) => screen.screenBody(text) !== undefined };
-          const admission = screenOrderedDesignRequest(bytes, ordered, detectors);
+          const admission = orderedSession.checkRequest(bytes, detectors);
           if (!admission.ok) throw new Error(`ordered detector branches refused (${admission.code})`);
           if (!sameWireValue(admission.value.received, { bytes: bytes.length, sha256: sha256(bytes) })
             || !sameWireValue(admission.value.forwarded, { bytes: body.length, sha256: sha256(body) })
@@ -386,43 +414,60 @@ async function runNativeOrderedFixture(scenario: OrderedScenario) {
       } catch (error) { faults.push(error instanceof Error ? error.message : 'invalid owned request'); return { ok: false }; }
     },
     response: (bytes, contentType) => {
+      const scanSecrets = (text: string) => screen.screenSecrets(text) !== undefined;
+      if (scenario !== 'out-of-order' || checked !== 2) {
+        if (scenario === 'ready' && checked === 4) {
+          const oversized = response(3, { ...steps[3]!.call, input: { ...submit, stdin: 'overrun '.repeat(5_000) } });
+          expect(decodeSessionResponse(oversized, contentType, DEFAULT_SESSION_MODEL, scanSecrets).ok).toBe(true);
+          expect(orderedSession.checkResponse(oversized, contentType, scanSecrets, () => true).ok).toBe(false);
+        }
+        const accepted = orderedSession.checkResponse(bytes, contentType, scanSecrets, () => true);
+        if (!accepted.ok || accepted.usage === undefined) {
+          faults.push('fixture response codec refused');
+          return { ok: false };
+        }
+        if (accepted.observation.tool === null) terminalResponseDecoded = true;
+        else responseUsage.push(accepted.usage);
+        return accepted;
+      }
+      // Exercise refusal when the relay presents a well-formed response
+      // without the ordered session's independent admission.
       const decoded = decodeSessionResponse(bytes, contentType, DEFAULT_SESSION_MODEL, text => screen.screenSecrets(text) !== undefined);
       if (!decoded.ok) { faults.push('fixture response codec refused'); return { ok: false }; }
-      const call = steps[checked - 1]?.call;
-      if (call !== undefined) {
-        if (!matchesOrderedDesignContinuationResponse(profile, { expectedCall: call, resultIndex: checked - 1,
-          content: decoded.content, stopReason: decoded.stopReason })) { faults.push('fixture response order refused'); return { ok: false }; }
-        responseUsage.push(decoded.usage);
-        return { ok: true, observation: { stopReason: decoded.stopReason, textBlocks: 0,
-          tool: { id: call.id, name: call.name, inputSha256: sha256(orderedCanonical(call.input)) } } };
-      }
-      if (!matchesOrderedDesignTerminalResponse(profile, decoded.stopReason, decoded.content)
-        || !sameWireValue(decoded.content, [{ type: 'text', text: 'Owned ordered fixture complete.' }]))
-        return { ok: false };
-      terminalResponseDecoded = true;
-      return { ok: true, observation: { stopReason: decoded.stopReason, textBlocks: 1, tool: null } };
+      const call = steps[2]!.call;
+      if (!matchesOrderedDesignContinuationResponse(profile, { expectedCall: call, resultIndex: 1,
+        content: decoded.content, stopReason: decoded.stopReason })) { faults.push('fixture response order refused'); return { ok: false }; }
+      return { ok: true, usage: decoded.usage, observation: { stopReason: decoded.stopReason, textBlocks: 0,
+        tool: { id: call.id, name: call.name, inputSha256: sha256(orderedCanonical(call.input)) } } };
     },
-    audit: observed => { audit.push(observed); },
+    audit: async observed => {
+      audit.push(observed);
+      if (scenario === 'ready' && audit.length === 1)
+        await expect(orderedSession.observe(structuredClone(observed))).rejects.toThrow('url-ordered-design-session-refused');
+      try { await orderedSession.observe(observed); }
+      catch (error) { faults.push('ordered audit refused owned callback'); throw error; }
+    },
   });
   cleanup.push(relay.close);
   const broker = await startSessionBroker(path.join(root, 'broker/b.sock'), async (invocation, release) => {
     const step = steps[delivered.length];
     if (!relay.responseFlushed() || !step || !sameWireValue(invocation, { tool: step.tool, input: step.input })) throw new Error('own broker order refused');
-    if (delivered.length === 3) {
-      if (receivedParts.length !== 2 || receivedParts.join('') !== new TextDecoder().decode(view.bytes)) throw new Error('own incomplete delivery');
-      const { stdin } = (invocation as { input: typeof submit }).input;
-      const deliveredVerdict = parseBoundedJson(stdin, SESSION_POLICY_LIMITS) as Readonly<Record<string, unknown>>;
-      const problems = validateDesignVerdict(deliveredVerdict, packet, pin, new Set());
-      expect(problems.map(problem => problem.kind)).toEqual(scenario === 'stale-verdict' ? ['stale-packet'] : []);
-      verdictValidated = problems.length === 0;
-    }
-    delivered.push(sha256(step.reply));
-    release(parseBoundedJson(step.reply, SESSION_POLICY_LIMITS));
+    await orderedSession.issueReply(invocation, (reply, revalidate) => {
+      const text = orderedCanonical(reply);
+      if (text !== step.reply) throw new Error('own broker reply differed');
+      release(reply, revalidate);
+      delivered.push(sha256(text));
+    });
   }, () => { faults.push('own broker fault'); });
   cleanup.push(broker.close);
   const result = await runOwnedPreparedCommand(launch, preparation.commandSha256);
+  await orderedSession.retire('interrupted');
+  const terminal = await orderedSession.readTerminal().catch(() => null);
+  const stored = await readFile(path.join(auditParent, 'audit-design.jsonl'), 'utf8');
+  const orderedRecords = stored.trimEnd().split('\n').map(line => JSON.parse(line)).filter(row => row.event.kind === 'design-ordered')
+    .map(row => row.event.payload as { kind: string; payload: unknown });
   return { result, checked, screened, terminalResponseDecoded, verdictValidated, audit, forwarded, delivered, faults, cachePositions,
-    reconstructed: receivedParts.join('') === new TextDecoder().decode(view.bytes), plan };
+    reconstructed: receivedParts.join('') === new TextDecoder().decode(view.bytes), plan, terminal, orderedRecords };
 }
 
 /** Closed fields of an owned native fixture read. Each emitted frame is
@@ -552,26 +597,33 @@ describe('prepared private CLI launch',()=>{
     const observed = await runNativeOrderedFixture(scenario);
     const evidence = JSON.stringify({ faults: observed.faults, checked: observed.checked, delivered: observed.delivered.length,
       audit: observed.audit.map(event => event.event),
-      cachePositions: observed.cachePositions, launch: observed.result });
+      cachePositions: observed.cachePositions, launch: observed.result, saved: observed.orderedRecords.map(record => record.kind) });
+    if (scenario !== 'ready') {
+      expect(observed.terminal, evidence).toBeNull();
+      expect(observed.orderedRecords.map(record => record.kind)).not.toContain('eligible');
+      expect(observed.orderedRecords.at(-1)?.kind).toBe('retired');
+    }
     if (scenario === 'out-of-order') {
-      expect(observed.faults, evidence).toEqual(['fixture response order refused']);
+      expect(observed.faults, evidence).toEqual(['ordered audit refused owned callback']);
       expect(observed.delivered).toHaveLength(1);
       expect(observed.screened).toBe(1);
       expect(observed.cachePositions).toEqual([[], [0]]);
-      expect(observed.audit.at(-1)?.event).toBe('response-refused');
+      expect(observed.audit.at(-1)?.event).toBe('transport-failed');
+      expect(observed.orderedRecords.map(record => record.kind)).toEqual(['prepared', 'request-admitted', 'send-attempt', 'send-outcome', 'retired']);
       expect(observed.terminalResponseDecoded).toBe(false);
       expect(observed.verdictValidated).toBe(false);
       return;
     }
     if (scenario === 'stale-verdict') {
-      expect(observed.faults, evidence).toEqual(['ordered detector branches refused (invalid-input)']);
+      expect(observed.faults, evidence).toContain('own broker fault');
       expect(observed.checked).toBe(4);
       expect(observed.screened).toBe(3);
       expect(observed.forwarded).toHaveLength(4);
-      expect(observed.delivered).toHaveLength(4);
+      expect(observed.delivered).toHaveLength(3);
       expect(observed.reconstructed).toBe(true);
       expect(observed.verdictValidated).toBe(false);
       expect(observed.terminalResponseDecoded).toBe(false);
+      expect(observed.orderedRecords.map(record => record.kind)).not.toContain('verdict-staged');
       return;
     }
     expect(observed.checked).toBe(5);
@@ -590,11 +642,17 @@ describe('prepared private CLI launch',()=>{
       expect(observed.faults, evidence).toEqual(['fixture response codec refused']);
       expect(observed.audit.at(-1)?.event).toBe('response-refused');
       expect(observed.terminalResponseDecoded).toBe(false);
+      expect(observed.orderedRecords.map(record => record.kind)).toContain('verdict-staged');
     } else {
       expect(observed.faults, evidence).toEqual([]);
       expect(observed.result, evidence).toMatchObject({ exitCode: 0, signal: null });
       expect(observed.terminalResponseDecoded).toBe(true);
       expect(observed.audit.at(-1)?.response).toMatchObject({ stopReason: 'end_turn', tool: null, textBlocks: 1 });
+      expect(observed.orderedRecords).toHaveLength(23);
+      expect(observed.orderedRecords.slice(-6).map(record => record.kind)).toEqual([
+        'acknowledgment-receipt', 'request-admitted', 'send-attempt', 'send-outcome', 'response-admitted', 'eligible',
+      ]);
+      expect(observed.terminal, evidence).toMatchObject({ packetSha256: observed.plan.manifest.originalSha256 });
     }
   }, 60_000);
 

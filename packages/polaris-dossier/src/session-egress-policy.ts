@@ -285,6 +285,7 @@ export interface OrderedDesignRequestChecks {
   readonly forwarded: { readonly bytes: number; readonly sha256: string };
   readonly logical: { readonly bytes: number; readonly sha256: string };
   readonly transcriptSha256: string;
+  readonly resultWrappers: ReturnType<typeof projectOrderedDesignRequest>['resultWrappers'];
 }
 
 export function screenOrderedDesignRequest(bytes: Uint8Array, bindings: OrderedDesignRequestBindings,
@@ -311,9 +312,10 @@ export function screenOrderedDesignRequest(bytes: Uint8Array, bindings: OrderedD
     finish(screenSteps(logicalPrepared, options, [], wholeView));
     const identity = (text: string) => ({ bytes: Buffer.byteLength(text, 'utf8'), sha256: sha256(text) });
     const checks = { received: identity(raw), forwarded: identity(canonical(prepared, limits)), logical: identity(canonical(logicalPrepared, limits)) };
-    const transcriptSha256 = sha256(canonical({ ...checks, logicalReceived: identity(canonical(logical.request, limits)),
+    const { resultWrappers } = logical;
+    const transcriptSha256 = sha256(canonical({ ...checks, resultWrappers, logicalReceived: identity(canonical(logical.request, limits)),
       manifestSha256: bindings.plan.manifestSha256, profileSha256: profile.digest }, limits));
-    return deepFreeze({ ...checks, transcriptSha256 });
+    return deepFreeze({ ...checks, transcriptSha256, resultWrappers });
   });
 }
 

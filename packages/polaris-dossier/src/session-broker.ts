@@ -15,7 +15,7 @@ export interface SessionBroker {
   close(): Promise<{ readonly pendingInvocations: number; readonly termination: 'settled' | 'Unknown' }>;
 }
 const FAILURE = '{"ok":false,"reason":"session-broker-unavailable"}\n';
-type ReleaseReply = (reply: unknown, revalidate?: () => void) => void;
+export type ReleaseReply = (reply: unknown, revalidate?: () => void) => void;
 
 /** Fixed-role host endpoint, mounted only into that role. Socket possession is
  * the explicit filesystem capability; no role or execution authority is read

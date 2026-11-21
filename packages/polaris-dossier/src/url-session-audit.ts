@@ -535,7 +535,8 @@ export async function createUrlSessionAudit(given: UrlSessionAuditOptions): Prom
     const relayRequests = new Set<string>();
     type DurableEvent = { readonly offset: number; readonly bytes: Buffer; readonly digest: string };
     const relayLatest = new Map<ViewRole, { readonly payload: SessionAuditEvent; readonly events: readonly DurableEvent[] }>();
-    const commit = async (event: unknown, role: ViewRole, deadline: number, declaration: boolean): Promise<DurableEvent> => {
+    const commit = async (event: unknown, role: ViewRole, deadline: number, declaration: boolean,
+      checkEffectCurrent = checkCurrent): Promise<DurableEvent> => {
       guard(deadline); if (!declaration && records - declarations >= limits.events) poison();
       const segment = segments.get(role)!;
       const body = { format: URL_SESSION_AUDIT_FORMAT, sequence: records + 1, roleSequence: totals[role].records + 1,
@@ -554,7 +555,7 @@ export async function createUrlSessionAudit(given: UrlSessionAuditOptions): Prom
         const tail = await io(deadline, async (): Promise<SegmentPrefix> => {
           // Each sample after a filesystem stage also admits the next stage.
           await inspectIdentities(deadline);
-          await checkCurrent(deadline);
+          await checkEffectCurrent(deadline);
           const writerFd = segment.file.fd, name = `/proc/self/fd/${directory.fd}/${segment.name}`;
           if (!sameSegment(segment, segment, fstatSync(writerFd, { bigint: true }))
             || !sameSegment(segment, segment, lstatSync(name, { bigint: true }))) poison();
@@ -569,12 +570,13 @@ export async function createUrlSessionAudit(given: UrlSessionAuditOptions): Prom
             || (intent.full !== null && !sameSegment(segment, intent.full, stat))) poison();
           const full = { prefix: intent.prefix, modified: stat.mtimeNs, changed: stat.ctimeNs };
           intent.full = full;
-          await checkCurrent(deadline);
+          await checkEffectCurrent(deadline);
           await segment.file.sync();
-          await checkCurrent(deadline);
+          await checkEffectCurrent(deadline);
           await directory.sync();
-          await checkCurrent(deadline);
+          await checkEffectCurrent(deadline);
           await inspectIdentities(deadline, { ...full, role });
+          if (checkEffectCurrent !== checkCurrent) await checkEffectCurrent(deadline);
           return full;
         });
         guard(deadline);
@@ -611,14 +613,14 @@ export async function createUrlSessionAudit(given: UrlSessionAuditOptions): Prom
     for (const role of ROLES) await commit({ kind: 'declaration', role, scope: scopes.get(role), payload: { project: input.project, pin: input.pin,
       principal: input.principal, declaredClasses: input.declaredClasses, profile: roleProfiles.get(role)!.id, limits,
       capture: 'host-callbacks-only', providerReceipts: 'Unknown', nativeSendCensus: 'Unknown' } }, role, began, true);
-    const enqueue = (event: CapturedAuditEvent, privateKind: PrivateEventKind | null) => {
+    const enqueue = (event: CapturedAuditEvent, privateKind: PrivateEventKind | null, checkEffectCurrent = checkCurrent) => {
       const deadline = performance.now() + limits.milliseconds;
       let snapshot: CapturedAuditEvent;
       try { guard(deadline); if (pending >= limits.pending) poison(); snapshot = project(copy(event, limits.eventBytes), privateKind); }
       catch { poisoned = true; return Promise.reject(refused()); }
       pending++;
       const operation = queue.then(() => snapshot.kind === 'relay' ? commitRelay(snapshot, deadline)
-        : commit(snapshot, snapshot.role, deadline, false)).catch(() => poison());
+        : commit(snapshot, snapshot.role, deadline, false, checkEffectCurrent)).catch(() => poison());
       queue = operation.then(() => {}, () => {}).finally(() => { pending--; });
       return wait(operation, deadline).then(result => { guard(deadline); return result; }, () => poison());
     };
@@ -689,17 +691,18 @@ export async function createUrlSessionAudit(given: UrlSessionAuditOptions): Prom
       if (binding.project !== input.project || binding.pin !== input.pin || binding.originPolicySha256 !== input.originPolicySha256
         || binding.transferEpoch !== 1 || binding.round !== 1) throw refused();
       const scope = scopes.get('design')!;
-      const checkAttemptCurrent = async (): Promise<boolean> => {
-        const deadline = performance.now() + limits.milliseconds;
+      const attemptDeadline = Date.parse(binding.deadline);
+      const checkAttemptCurrent = async (deadline: number): Promise<void> => {
+        if (!(Date.now() < attemptDeadline)) throw refused();
         await checkCurrent(deadline);
         const allowed = await wait(track('callback', attemptCurrent), deadline);
         await checkCurrent(deadline);
-        return allowed === true;
+        if (allowed !== true || !(Date.now() < attemptDeadline)) throw refused();
       };
       const writer = createOrderedDesignAuditWriter({ profile: orderedDesignProfile, plan, principal: input.principal }, {
-        current: checkAttemptCurrent,
+        current: async () => { await checkAttemptCurrent(performance.now() + limits.milliseconds); return true; },
         append: async record => {
-          const event = await enqueue({ kind: 'design-ordered', role: 'design', scope, payload: record }, 'design-ordered');
+          const event = await enqueue({ kind: 'design-ordered', role: 'design', scope, payload: record }, 'design-ordered', checkAttemptCurrent);
           return () => {
             const bytes = verifyDurableEvent('design', event);
             const row = parseBoundedJson(bytes.toString('utf8'), { maxBytes: limits.eventBytes + 1, maxNodes: 4096, maxDepth: 12 });

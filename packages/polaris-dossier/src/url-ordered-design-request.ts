@@ -13,6 +13,10 @@ interface CheckedToolResult {
   readonly toolUseId: string;
   readonly usage: SessionProfileUsage;
 }
+interface CheckedResultWrapper {
+  readonly toolUseId: string;
+  readonly wrapper: { readonly bytes: number; readonly sha256: string };
+}
 
 /** Bindings from the host's checked prefix. The caller owns protected
  * currentness and the provenance of the corresponding response and receipt. */
@@ -28,7 +32,7 @@ export interface OrderedDesignRequestBindings {
 /** The returned request and whole reply are private detector inputs only. */
 export function projectOrderedDesignRequest(
   actual: Readonly<Record<string, unknown>>, bindings: OrderedDesignRequestBindings,
-): { readonly request: Readonly<Record<string, unknown>>; readonly wholeReply: string } {
+): { readonly request: Readonly<Record<string, unknown>>; readonly wholeReply: string; readonly resultWrappers: readonly CheckedResultWrapper[] } {
   const { profile, plan, envelope, prepared, parts, acknowledgment } = bindings;
   if (!isOrderedDesignSessionProfile(profile) || !isOrderedDesignPlanFor(plan, profile.transcript.partition)) return refuse();
   const { transcript } = profile;
@@ -57,10 +61,15 @@ export function projectOrderedDesignRequest(
   if (new Set(ids).size !== ids.length || ids.includes(transcript.logical.toolUseId)) return refuse();
   const call = (result: CheckedToolResult, name: string, input: Readonly<Record<string, unknown>>) =>
     ({ type: 'tool_use', id: result.toolUseId, name, input });
+  const resultWrappers: CheckedResultWrapper[] = [];
   const resultMatches = (block: unknown, index: number, canonicalReply: string): boolean => {
     const result = checked[index]!;
-    return matchesOrderedDesignResultMessage(profile, { actual: { role: 'user', content: [block] }, canonicalReply,
-      toolUseId: result.toolUseId, usage: result.usage, resultIndex: index, resultCount });
+    const actual = { role: 'user', content: [block] };
+    if (!matchesOrderedDesignResultMessage(profile, { actual, canonicalReply,
+      toolUseId: result.toolUseId, usage: result.usage, resultIndex: index, resultCount })) return false;
+    const text = canonical(actual);
+    resultWrappers.push({ toolUseId: result.toolUseId, wrapper: { bytes: Buffer.byteLength(text, 'utf8'), sha256: sha256(text) } });
+    return true;
   };
 
   const round = String(binding.round);
@@ -142,7 +151,7 @@ export function projectOrderedDesignRequest(
     return refuse();
   const request = { ...actual, messages: projected };
   canonical(request);
-  return { request, wholeReply };
+  return { request, wholeReply, resultWrappers };
 }
 
 function refuse(): never { throw new Error('url-ordered-design-request-refused'); }

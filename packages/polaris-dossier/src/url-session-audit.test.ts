@@ -147,6 +147,21 @@ describe('protected URL session audit', () => {
     expect(host.summary()).toMatchObject({ captured: { 'design-ordered': 1 }, durableRecords: 5 });
   });
 
+  it('withholds an ordered append when attempt authority is revoked during segment sync', async () => {
+    const { host, plan, prepared } = await orderedFixture();
+    const p = await prototype(), sync = p.sync;
+    let current = true;
+    const writer = host.beginOrderedDesignAudit(plan, () => current);
+    vi.spyOn(p, 'sync').mockImplementation(async function(this: FileHandle) {
+      await sync.call(this);
+      if (fs.fstatSync(this.fd).isFile()) current = false;
+    });
+    await expect(writer.append('prepared', prepared)).rejects.toThrow();
+    expect(host.summary()).toMatchObject({ poisoned: true, tail: 'Unknown', captured: { 'design-ordered': 0 }, durableRecords: 4 });
+    current = true;
+    await expect(writer.append('prepared', prepared)).rejects.toThrow();
+  });
+
   it('links the exact complete request exchange across interleaved accounting records', async () => {
     const f = fixture(), writer = await f.create();
     const [admission, send, flush, response] = relayTrace(f, writer);
