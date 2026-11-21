@@ -12,7 +12,7 @@
   {
    "id": "U1",
    "title": "Correct the fifth row before it lands: three populations, never 'verified N of N'",
-   "what": "Amend the released wave-1 slice syzygy-t3jk.16: the fifth answer renders Unknown-provenance n of N (reason, route), the reconciliation chain as an observed 0 with its chain-state-local 'reconciliation evidence absent' count (never an RFC2-24 reason), and orphaned work as Unknown(missing-declaration) until U2. No 'verified' wording, no sum.",
+   "what": "Amend the released wave-1 slice syzygy-t3jk.16: the fifth answer renders Unknown-provenance n of N (reason, route), the reconciliation chain as an observed 0 with its chain-state-local 'reconciliation evidence absent' count (never an RFC2-24 reason), and orphaned work stated as not checked, never 0. No 'verified' wording, no sum.",
    "why": "RFC2-18 'Every materialized work item that reaches merge enters a first-class chain'; RFC8-23 Unknown-provenance is its own counted state; RFC2-19(a) keeps the chain absence out of Unknown-reason aggregates. The slice as written ('verified = Unknown for N of N') merges them.",
    "finding_ids": [
     "B2-F7",
@@ -27,13 +27,13 @@
    ],
    "owner_value": 5,
    "build_cost": 1,
-   "prereq": "none",
+   "prereq": "none; syzygy-a4ry may refine which RFC2-18/19 reading binds",
    "owner_class": "no — specification change, agent adoption"
   },
   {
    "id": "U2",
    "title": "State the orphan predicate: which unrecorded items are Contradictions and which are Unknown-provenance",
-   "what": "Amend RFC1-29/RFC8-8/RFC8-23 (and POC-REQ-014's deferred limb) with a decidable predicate, e.g. an item is orphan-eligible only if it carries a Syzygy-written pointer (external_ref in the `syzygy:` namespace or a spec_id Syzygy wrote) or was created inside a declared Syzygy-governed scope after a declared onset instant, and no ledger record matches; every other unrecorded item is Unknown-provenance. Then detect it, mint the Contradiction, render it unfilterable.",
+   "what": "Amend RFC1-29, RFC8-8 and RFC8-23 so an item is an orphaned-work Contradiction only when a Syzygy record or a pointer Syzygy wrote claims it and no matching record agrees; every other unrecorded item is Unknown-provenance. Detect it, render it unfilterable, route it to the owner. Adjudicates nothing until the owner answers.",
    "why": "Read literally, RFC1-29 and RFC8-8 make all 10,971 proving-project items orphaned-work Contradictions ('Scheduler work items matching no materialization record are an orphaned-work contradiction'); RFC8-23 says pre-Syzygy backlog is Unknown-provenance. The first real record (T7) makes the contradiction live.",
    "finding_ids": [
     "B2-F3",
@@ -48,7 +48,26 @@
    "owner_value": 5,
    "build_cost": 2,
    "prereq": "none for the amendment; detection needs U4's ledger reader",
-   "owner_class": "no — contracts are agent-decided under VIS-4; see the one judgment question below about who adjudicates"
+   "owner_class": "amendment: no. Adjudication of a detected orphan: yes, doctrine architecture.md routes it to the owner"
+  },
+  {
+   "id": "U12",
+   "title": "The smallest approved plan item (execution-intent Proposal) under .syzygy/work/",
+   "what": "Define the minimal Proposal RFC1-29 and RFC8-10 require: a file under .syzygy/work/ naming the warrant at a pinned revision, approved by an adoption row; its identity goes into every materialization record.",
+   "why": "RFC1-29 materializes \"an approved execution-intent Proposal\"; RFC8-10 requires proposal identity; no Proposal lifecycle exists (CONTRACT-COVERAGE.md:357, :497). Added on independent review.",
+   "finding_ids": [
+    "B2-F2",
+    "B2-F11"
+   ],
+   "slices": [
+    "schema and adoption rule (RFC8-7)",
+    "reader",
+    "spec amendment"
+   ],
+   "owner_value": 4,
+   "build_cost": 2,
+   "prereq": "none",
+   "owner_class": "no"
   },
   {
    "id": "U3",
@@ -73,7 +92,7 @@
   {
    "id": "U4",
    "title": "A git-durable materialization ledger under `.syzygy/work/**`, joined into governedBy",
-   "what": "Replace the single 0600 state-dir record with append-only ledger records in the observed project's `.syzygy/work/materializations/`: proposal identity, work-item id set, pinned intent revision (requirement id, spec path, commit, blob digest), materializing evaluation, attribution; reuse records the bead's own created_at. The work-item observation reads external_ref under a closed `syzygy:` grammar only to join a record, and sets governedBy Observed (recorded-identity) for joined items.",
+   "what": "Replace the single 0600 state-dir record with append-only ledger records in the observed project's `.syzygy/work/materializations/`: proposal identity, work-item id set, pinned intent revision (requirement id, spec path, commit, blob digest), materializing evaluation, attribution; reuse records the bead's own created_at. The join uses the work-item id set the record holds; no new tracker field is read. Joined items show governedBy Observed (recorded-identity). Lands on Syzygy's own tree first.",
    "why": "RFC8-10 requires 'proposal identity, work-item identity set, and the pinned warranted intent revision … all three required'; SDR-7 and RFC8-26 place and preserve the record. Today it holds none of the first or third, lives in a state dir, and governedBy is hard-wired Unknown even for an item Syzygy created — so run-1 T7 would not give that item an intent.",
    "finding_ids": [
     "B1-F1",
@@ -93,8 +112,8 @@
    ],
    "owner_value": 5,
    "build_cost": 3,
-   "prereq": "reader: none; first record: T7 (syzygy-t3jk.7) and syzygy-mxas",
-   "owner_class": "no — Butlers is on OWNED-REPOSITORIES since 2026-11-21, so a `.syzygy/**` write there is not class 3; reading external_ref under a closed grammar is screening policy within SEC-5"
+   "prereq": "U12; first real record on the proving project: T7 (syzygy-t3jk.7) and syzygy-mxas",
+   "owner_class": "no — Butlers is on OWNED-REPOSITORIES since 2026-11-21; no external_ref read, so P-100 Q1 is not widened"
   },
   {
    "id": "U5",
@@ -167,7 +186,7 @@
    ],
    "owner_value": 5,
    "build_cost": 4,
-   "prereq": "U4 and one warrant for the item (U8 for a new item or one U10 row); T12 (syzygy-t3jk.12) to show it on Trajectory; coordinate with the V1 readiness drive (syzygy-rrrd)",
+   "prereq": "U4 and one warrant for the item (U8 for a new item or one U10 row); T12 (syzygy-t3jk.12) to show it on Trajectory; coordinate with the V1 readiness drive (syzygy-rrrd); syzygy-a4ry; validates the machinery only (v1.md: self-observation is not the credibility test), Butlers follow-on named",
    "owner_class": "no — avoids RFC4-13 route 3 (trusted-oracle policy) entirely"
   },
   {
@@ -188,7 +207,7 @@
    ],
    "owner_value": 5,
    "build_cost": 3,
-   "prereq": "U4, U2",
+   "prereq": "U12, U4, U2",
    "owner_class": "no — own tracker, own repository; unattended agent work is agent-decided"
   },
   {
@@ -232,7 +251,7 @@
    "owner_value": 4,
    "build_cost": 3,
    "prereq": "U2, U4",
-   "owner_class": "no; the judgment question below applies"
+   "owner_class": "declaring warrants: no. It never adjudicates a Contradiction"
   },
   {
    "id": "U11",
@@ -264,6 +283,7 @@
    "U5"
   ],
   "2": [
+   "U12",
    "U4",
    "U3",
    "U6"
@@ -405,7 +425,14 @@
   "The P-100 packet itself (read only its DECISION-HISTORY rows); what the unread external_ref values hold on Butlers.",
   "Whether syzygy-a4ry / syzygy-nosn already settle which merge-fact reading U9 should bind to."
  ],
- "owner_gates": [],
+ "owner_gates": [
+  {
+   "decision": "pursuit-2026-11-21-trajectory-orphan-adjudication",
+   "question": "May an agent adoption adjudicate an orphaned-work Contradiction, or does adjudication stay with the owner?",
+   "deciding_text": ".syzygy/governance/doctrine/architecture.md: a contradiction \"routes to adjudication by the owner\"; VIS-4 lower-rules clause lists contract, policy, specification, decision or direction, not doctrine",
+   "blocks": "adjudication only; U2 detection and rendering proceed"
+  }
+ ],
  "flagged_for_veto": [
   "U2",
   "U7",
@@ -413,16 +440,6 @@
   "U9",
   "U10"
  ],
- "judgment_question": {
-  "is_owner_class": "no by VIS-4's text; asked under its 'when unsure, … ask' clause",
-  "question": "Since D10, agent adoption rows satisfy the contract's owner-adjudication exits (orphaned-work Contradictions, RFC8-8) and can declare warrants for existing work (U10). Should agents adjudicate and warrant with a mechanical separation rule (adopter ≠ claimant, declared-after-work rendered), or does the owner want to see orphaned-work Contradictions first?",
-  "deciding_clauses": [
-   "VIS-4: \"Where a contract, policy, specification, decision or direction requires an owner act, sign-off, consent or ruling for something this rule leaves to agents, this rule governs and an agent adoption satisfies it\"",
-   "VIS-4: \"Classification is the agent's call, contested by veto. … when unsure, it treats the change as owner-class and asks.\"",
-   "RFC8-8: orphaned work routes \"to owner adjudication as its only lawful exit\""
-  ],
-  "recommendation": "Agents adjudicate and warrant under the separation rule; every orphaned-work adjudication and every warrant batch is reported in the session summary; owner vetoes."
- },
  "units": {
   "l1-warrant-sources": {
    "findings": [
@@ -974,5 +991,10 @@
   }
  },
  "epic": null,
- "review": null
+ "review": {
+  "reviewed_commit": "8360c84c1",
+  "verdict": "REVISE",
+  "rounds": 1,
+  "disposition": "nine findings, each repaired once; see the dossier section \"Corrections after independent review\""
+ }
 }
