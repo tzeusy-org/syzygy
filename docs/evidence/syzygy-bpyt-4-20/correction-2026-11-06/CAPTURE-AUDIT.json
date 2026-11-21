@@ -1,0 +1,12 @@
+{
+  "inspected_record_population": 33,
+  "distinct_cases": 11,
+  "old_admitted": 33,
+  "new_admitted": 9,
+  "new_refused": 24,
+  "all_records_equal_retained_inputs": true,
+  "source_versions_verified_against_git_and_both_copies": 2,
+  "original_repair_sources_byte_unchanged_second_method": 3,
+  "outer_before_after_bytes_identical": true,
+  "limits": "Author-side separate audit process, not independent review or ROOT execution."
+}

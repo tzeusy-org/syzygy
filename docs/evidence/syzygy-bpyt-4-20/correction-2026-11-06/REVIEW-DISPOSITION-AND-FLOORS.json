@@ -1,0 +1,77 @@
+{
+  "subject": "94e224be7209c7db8a31948f246ed856ca89b153",
+  "previous_ruling": [
+    1,
+    4,
+    6
+  ],
+  "author_proposed_classes": [
+    1,
+    4,
+    6
+  ],
+  "fresh_independent_ruling": "PENDING; previous ruling applies only to reviewed predecessor",
+  "floors": [
+    {
+      "id": 1,
+      "name": "truth",
+      "author_impact": "Source prefixes, record population and exact expected effects retained. No product rendering or identity change; no claim of full success."
+    },
+    {
+      "id": 2,
+      "name": "evidence",
+      "author_impact": "Distinct outer capture retained; ROOT read-time custody/independent execution remain distinct. Full outcome incomplete; fresh review and actual-tree hosted/protected checks open."
+    },
+    {
+      "id": 3,
+      "name": "inference",
+      "author_impact": "Tinypool cause remains inference beyond stock Node prerequisite failure, never completion proof."
+    },
+    {
+      "id": 4,
+      "name": "write",
+      "author_impact": "Only allocated additive task evidence changes. Child fixture mounted read-only; unsafe full predecessor writer never runs."
+    },
+    {
+      "id": 5,
+      "name": "sign-off",
+      "author_impact": "Actual source-specific owner direction predates original code. No adoption, changed approved semantics, new authority or hold release."
+    },
+    {
+      "id": 6,
+      "name": "security",
+      "author_impact": "Private HOME/temp/cache fixture and network-isolated child; no credentials/providers/observed bodies. Same-root races and mode/UID limitations unchanged."
+    },
+    {
+      "id": 7,
+      "name": "identity",
+      "author_impact": "No product schema or identity migration; original reviewed bytes and both original findings retained."
+    }
+  ],
+  "dispositions": [
+    {
+      "finding": "F1",
+      "state": "UNRESOLVED; BLOCKING",
+      "reason": "Actual fixed and original-suffix no-proc attempts both timed out300s. ROOT confirms memoryUsage prerequisite failure without sole-cause/completion proof. No new causal basis or separately authorized prerequisite; no unchanged retry."
+    },
+    {
+      "finding": "F2",
+      "state": "CORRECTION CAPTURED; FRESH REVIEW PENDING",
+      "evidence": [
+        "capture/INPUT-RECORDS.json",
+        "capture/RESULT.json",
+        "capture/CAPTURE.json"
+      ],
+      "reason": "Executed actual old/new pre-effect admission prefixes over33 structured input records with independent prose, expected24newrefusals9unchangedadmissions and retained source bindings. Existing16source-docstring rows remain supporting history."
+    }
+  ],
+  "GP-Q0": {
+    "differential": "Captured; independent disposition pending",
+    "predicate_mutants": "Prior15predicate/5wiring rows retained source-bound; N12 collision still not a completed kill",
+    "cycle_notice": "Non-blocking cycle-report notice pending; owner holds unchanged"
+  },
+  "merge_holds": [
+    "actual syzygy-1z3.22 owner judgment",
+    "actual syzygy-1z3.25 cycle report"
+  ]
+}

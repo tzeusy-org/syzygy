@@ -1,0 +1,416 @@
+{
+  "observer": "independent outer polling process + kernel exec trace, separate from guard emitter",
+  "command": [
+    "/usr/bin/python3",
+    "/home/orca/.tmp/syzygy-bpyt420-owner-approved-full-outcome-20261106/observe.py",
+    "n13-guard-probe-2",
+    "/home/orca/.tmp/syzygy-bpyt420-owner-approved-full-outcome-20261106/subject",
+    "strace",
+    "-f",
+    "-e",
+    "trace=execve",
+    "-o",
+    "/home/orca/.tmp/syzygy-bpyt420-owner-approved-full-outcome-20261106/guard-exec-2.trace",
+    "python3",
+    "-I",
+    "/home/orca/.tmp/syzygy-bpyt420-owner-approved-full-outcome-20261106/subject/docs/evidence/poc-fixture-leak-2026-10-22/guard_probe.py",
+    "/home/orca/.tmp/syzygy-bpyt420-owner-approved-full-outcome-20261106/subject",
+    "/home/orca/.tmp/syzygy-bpyt420-owner-approved-full-outcome-20261106/guard-probe-2.json",
+    "/home/orca/.tmp/syzygy-bpyt420-owner-approved-full-outcome-20261106/guard-private-2"
+  ],
+  "probe_outer_exit": 0,
+  "complete_canary_snapshots": 5466,
+  "canaries_baseline": [
+    {
+      "path": "home/canary",
+      "sha256": "4885ac8169b7ccc51fd3b6af4dfbf8c097330aa64d8b8789ad4903da6779d4fc",
+      "size": 13,
+      "inode": 14164276,
+      "mode": 33184,
+      "uid": 996,
+      "mtime_ns": 1793961405725767923
+    },
+    {
+      "path": "tmp/canary",
+      "sha256": "4885ac8169b7ccc51fd3b6af4dfbf8c097330aa64d8b8789ad4903da6779d4fc",
+      "size": 13,
+      "inode": 14164278,
+      "mode": 33184,
+      "uid": 996,
+      "mtime_ns": 1793961405726055877
+    },
+    {
+      "path": "work/occupied/canary",
+      "sha256": "4885ac8169b7ccc51fd3b6af4dfbf8c097330aa64d8b8789ad4903da6779d4fc",
+      "size": 13,
+      "inode": 14164281,
+      "mode": 33184,
+      "uid": 996,
+      "mtime_ns": 1793961405726422750
+    },
+    {
+      "path": "canary",
+      "sha256": "4885ac8169b7ccc51fd3b6af4dfbf8c097330aa64d8b8789ad4903da6779d4fc",
+      "size": 13,
+      "inode": 14164282,
+      "mode": 33184,
+      "uid": 996,
+      "mtime_ns": 1793961405726621345
+    }
+  ],
+  "every_complete_snapshot_bytes_and_metadata_equal": true,
+  "first_monotonic": 465616.984360552,
+  "last_monotonic": 465627.436564331,
+  "refusal_rows": 30,
+  "predicate_rows": 15,
+  "wiring_rows": 5,
+  "measurement_or_test_execs": [],
+  "successful_execs": [
+    {
+      "executable": "/usr/bin/python3",
+      "argv0": "python3"
+    },
+    {
+      "executable": "/usr/bin/git",
+      "argv0": "git"
+    },
+    {
+      "executable": "/usr/bin/python3",
+      "argv0": "/usr/bin/python3"
+    },
+    {
+      "executable": "/usr/bin/git",
+      "argv0": "git"
+    },
+    {
+      "executable": "/usr/bin/git",
+      "argv0": "git"
+    },
+    {
+      "executable": "/usr/bin/git",
+      "argv0": "git"
+    },
+    {
+      "executable": "/usr/bin/python3",
+      "argv0": "/usr/bin/python3"
+    },
+    {
+      "executable": "/usr/bin/git",
+      "argv0": "git"
+    },
+    {
+      "executable": "/usr/bin/git",
+      "argv0": "git"
+    },
+    {
+      "executable": "/usr/bin/git",
+      "argv0": "git"
+    },
+    {
+      "executable": "/usr/bin/python3",
+      "argv0": "/usr/bin/python3"
+    },
+    {
+      "executable": "/usr/bin/git",
+      "argv0": "git"
+    },
+    {
+      "executable": "/usr/bin/git",
+      "argv0": "git"
+    },
+    {
+      "executable": "/usr/bin/git",
+      "argv0": "git"
+    },
+    {
+      "executable": "/usr/bin/python3",
+      "argv0": "/usr/bin/python3"
+    },
+    {
+      "executable": "/usr/bin/git",
+      "argv0": "git"
+    },
+    {
+      "executable": "/usr/bin/git",
+      "argv0": "git"
+    },
+    {
+      "executable": "/usr/bin/git",
+      "argv0": "git"
+    },
+    {
+      "executable": "/usr/bin/python3",
+      "argv0": "/usr/bin/python3"
+    },
+    {
+      "executable": "/usr/bin/git",
+      "argv0": "git"
+    },
+    {
+      "executable": "/usr/bin/git",
+      "argv0": "git"
+    },
+    {
+      "executable": "/usr/bin/git",
+      "argv0": "git"
+    },
+    {
+      "executable": "/usr/bin/python3",
+      "argv0": "/usr/bin/python3"
+    },
+    {
+      "executable": "/usr/bin/git",
+      "argv0": "git"
+    },
+    {
+      "executable": "/usr/bin/git",
+      "argv0": "git"
+    },
+    {
+      "executable": "/usr/bin/git",
+      "argv0": "git"
+    },
+    {
+      "executable": "/usr/bin/python3",
+      "argv0": "/usr/bin/python3"
+    },
+    {
+      "executable": "/usr/bin/git",
+      "argv0": "git"
+    },
+    {
+      "executable": "/usr/bin/git",
+      "argv0": "git"
+    },
+    {
+      "executable": "/usr/bin/git",
+      "argv0": "git"
+    },
+    {
+      "executable": "/usr/bin/python3",
+      "argv0": "/usr/bin/python3"
+    },
+    {
+      "executable": "/usr/bin/git",
+      "argv0": "git"
+    },
+    {
+      "executable": "/usr/bin/git",
+      "argv0": "git"
+    },
+    {
+      "executable": "/usr/bin/git",
+      "argv0": "git"
+    },
+    {
+      "executable": "/usr/bin/python3",
+      "argv0": "/usr/bin/python3"
+    },
+    {
+      "executable": "/usr/bin/git",
+      "argv0": "git"
+    },
+    {
+      "executable": "/usr/bin/git",
+      "argv0": "git"
+    },
+    {
+      "executable": "/usr/bin/git",
+      "argv0": "git"
+    },
+    {
+      "executable": "/usr/bin/python3",
+      "argv0": "/usr/bin/python3"
+    },
+    {
+      "executable": "/usr/bin/git",
+      "argv0": "git"
+    },
+    {
+      "executable": "/usr/bin/git",
+      "argv0": "git"
+    },
+    {
+      "executable": "/usr/bin/git",
+      "argv0": "git"
+    },
+    {
+      "executable": "/usr/bin/python3",
+      "argv0": "/usr/bin/python3"
+    },
+    {
+      "executable": "/usr/bin/git",
+      "argv0": "git"
+    },
+    {
+      "executable": "/usr/bin/git",
+      "argv0": "git"
+    },
+    {
+      "executable": "/usr/bin/git",
+      "argv0": "git"
+    },
+    {
+      "executable": "/usr/bin/python3",
+      "argv0": "/usr/bin/python3"
+    },
+    {
+      "executable": "/usr/bin/git",
+      "argv0": "git"
+    },
+    {
+      "executable": "/usr/bin/git",
+      "argv0": "git"
+    },
+    {
+      "executable": "/usr/bin/git",
+      "argv0": "git"
+    },
+    {
+      "executable": "/usr/bin/python3",
+      "argv0": "/usr/bin/python3"
+    },
+    {
+      "executable": "/usr/bin/git",
+      "argv0": "git"
+    },
+    {
+      "executable": "/usr/bin/git",
+      "argv0": "git"
+    },
+    {
+      "executable": "/usr/bin/git",
+      "argv0": "git"
+    },
+    {
+      "executable": "/usr/bin/python3",
+      "argv0": "/usr/bin/python3"
+    },
+    {
+      "executable": "/usr/bin/git",
+      "argv0": "git"
+    },
+    {
+      "executable": "/usr/bin/git",
+      "argv0": "git"
+    },
+    {
+      "executable": "/usr/bin/git",
+      "argv0": "git"
+    },
+    {
+      "executable": "/usr/bin/python3",
+      "argv0": "/usr/bin/python3"
+    },
+    {
+      "executable": "/usr/bin/git",
+      "argv0": "git"
+    },
+    {
+      "executable": "/usr/bin/git",
+      "argv0": "git"
+    },
+    {
+      "executable": "/usr/bin/git",
+      "argv0": "git"
+    },
+    {
+      "executable": "/usr/bin/python3",
+      "argv0": "/usr/bin/python3"
+    },
+    {
+      "executable": "/usr/bin/git",
+      "argv0": "git"
+    },
+    {
+      "executable": "/usr/bin/git",
+      "argv0": "git"
+    },
+    {
+      "executable": "/usr/bin/git",
+      "argv0": "git"
+    },
+    {
+      "executable": "/usr/bin/python3",
+      "argv0": "/usr/bin/python3"
+    },
+    {
+      "executable": "/usr/bin/git",
+      "argv0": "git"
+    },
+    {
+      "executable": "/usr/bin/git",
+      "argv0": "git"
+    },
+    {
+      "executable": "/usr/bin/git",
+      "argv0": "git"
+    },
+    {
+      "executable": "/usr/bin/python3",
+      "argv0": "/usr/bin/python3"
+    },
+    {
+      "executable": "/usr/bin/git",
+      "argv0": "git"
+    },
+    {
+      "executable": "/usr/bin/git",
+      "argv0": "git"
+    },
+    {
+      "executable": "/usr/bin/git",
+      "argv0": "git"
+    },
+    {
+      "executable": "/usr/bin/python3",
+      "argv0": "/usr/bin/python3"
+    },
+    {
+      "executable": "/usr/bin/python3",
+      "argv0": "/usr/bin/python3"
+    },
+    {
+      "executable": "/usr/bin/python3",
+      "argv0": "/usr/bin/python3"
+    },
+    {
+      "executable": "/usr/bin/python3",
+      "argv0": "/usr/bin/python3"
+    },
+    {
+      "executable": "/usr/bin/python3",
+      "argv0": "/usr/bin/python3"
+    },
+    {
+      "executable": "/usr/bin/python3",
+      "argv0": "/usr/bin/python3"
+    },
+    {
+      "executable": "/usr/bin/python3",
+      "argv0": "/usr/bin/python3"
+    },
+    {
+      "executable": "/usr/bin/python3",
+      "argv0": "/usr/bin/python3"
+    },
+    {
+      "executable": "/usr/bin/python3",
+      "argv0": "/usr/bin/python3"
+    },
+    {
+      "executable": "/usr/bin/python3",
+      "argv0": "/usr/bin/python3"
+    },
+    {
+      "executable": "/usr/bin/python3",
+      "argv0": "/usr/bin/python3"
+    },
+    {
+      "executable": "/usr/bin/python3",
+      "argv0": "/usr/bin/python3"
+    }
+  ],
+  "probe_parent_removed_after_probe": true,
+  "limitation": "Polling is not a per-row read; kernel exec trace independently covers launched processes. Existing peers may launch trusted git metadata queries before guard; new leak tool has separate subprocess-boundary refusal controls."
+}

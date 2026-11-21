@@ -1,0 +1,1327 @@
+{
+  "schema": "n13-safe-admission-differential/1",
+  "input_sha256": "cc7bbb77462b5ba9aabdd9f7228aa183ed373616dc988e56afe281b68646a807",
+  "driver_sha256": "f309cd87332e98e96cd8d01dbf838204a694ac5e8a2a822ebd8635d7121c04b0",
+  "source_bindings": {
+    "old": {
+      "commit": "32e16046d75a3d5346011be885377b06c9c49d20",
+      "path": "docs/evidence/poc-fixture-leak-2026-10-22/leak_by_file.py",
+      "sha256": "fc7e19608090dcbbab3aea5ba604b449b71a6ecce5bcad4e42929ade8e893554",
+      "git_blob": "209eac244b58649571087faf29db1c94d30d3718",
+      "copy": "/home/orca/.tmp/syzygy-pr776-full-outcome-correction-20261106/old-leak_by_file.py",
+      "executed_segments": [
+        {
+          "start_line": 23,
+          "end_line": 23,
+          "text": "repo, commit, tmp_root, out = pathlib.Path(sys.argv[1]).resolve(), sys.argv[2], pathlib.Path(sys.argv[3]).resolve(), pathlib.Path(sys.argv[4]).resolve()"
+        }
+      ],
+      "executed_segments_sha256": "224fa9f1dedbbce542fe7cd93fed31c8fa182ad2eee618d1c1dde1665bda30e0"
+    },
+    "new": {
+      "commit": "38eab812488c85198f37b8be18f1dd24cd5898f8",
+      "path": "docs/evidence/poc-fixture-leak-2026-10-22/leak_by_file.py",
+      "sha256": "96aba7927e4a60108e227d122223c74e3cfea006a3960565549cfe8c4b1256b2",
+      "git_blob": "bdb11899a426156f5f9492c444df324557d1e97e",
+      "copy": "/home/orca/.tmp/syzygy-pr776-full-outcome-correction-20261106/new-leak_by_file.py",
+      "executed_segments": [
+        {
+          "start_line": 24,
+          "end_line": 35,
+          "text": "def private_directory(path: pathlib.Path) -> pathlib.Path:\n    \"\"\"This script empties the directory it is given, recursively. Refuse a directory that is, or contains, a shared one\n    (/, the temp directory, $TMPDIR, $HOME) and one that already holds anything this script did not make: whoever\n    re-runs it removes a leftover by hand, after reading it (syzygy-bpyt.4.10, review round 2, N10).\"\"\"\n    resolved = path.resolve()\n    shared = [pathlib.Path('/'), pathlib.Path(tempfile.gettempdir()), pathlib.Path(os.environ.get('TMPDIR') or '/tmp'), pathlib.Path.home()]\n    for directory in (d.resolve() for d in shared):\n        if resolved == directory or resolved in directory.parents:\n            raise SystemExit(f'refusing {resolved}: it is, or contains, the shared directory {directory}')\n    if resolved.exists() and (not resolved.is_dir() or any(resolved.iterdir())):\n        raise SystemExit(f'refusing {resolved}: it exists and is not an empty directory')\n    return resolved"
+        },
+        {
+          "start_line": 38,
+          "end_line": 38,
+          "text": "repo, commit, tmp_root, out = pathlib.Path(sys.argv[1]).resolve(), sys.argv[2], pathlib.Path(sys.argv[3]).resolve(), pathlib.Path(sys.argv[4]).resolve()"
+        },
+        {
+          "start_line": 39,
+          "end_line": 39,
+          "text": "tmp_root = private_directory(tmp_root)"
+        }
+      ],
+      "executed_segments_sha256": "68a365dfc72010d907fdb6c02278aeb8e755772728a54261f5b3a391251f0ea3"
+    }
+  },
+  "rows": [
+    {
+      "id": "private-missing/neutral",
+      "case": "private-missing",
+      "prose_variant": "neutral",
+      "prose": "Narrative description: inspect the declared structured scratch root.",
+      "structured": {
+        "argv": [
+          "/home/orca/.tmp/syzygy-pr776-full-outcome-correction-20261106/s420-diff-oapqy96_/repo-placeholder",
+          "38eab812488c85198f37b8be18f1dd24cd5898f8",
+          "/home/orca/.tmp/syzygy-pr776-full-outcome-correction-20261106/s420-diff-oapqy96_/private-missing",
+          "/home/orca/.tmp/syzygy-pr776-full-outcome-correction-20261106/s420-diff-oapqy96_/forbidden-result.json"
+        ],
+        "environment": {
+          "HOME": "/home/orca/.tmp/syzygy-pr776-full-outcome-correction-20261106/s420-diff-oapqy96_/home",
+          "TMPDIR": "/home/orca/.tmp/syzygy-pr776-full-outcome-correction-20261106/s420-diff-oapqy96_/shared-tmp"
+        },
+        "cached_temp_directory": "/home/orca/.tmp/syzygy-pr776-full-outcome-correction-20261106/s420-diff-oapqy96_/temp-cache",
+        "fixture_state": "private-missing"
+      },
+      "expected": {
+        "old_admitted": true,
+        "new_admitted": true,
+        "refusal_fragment": null,
+        "effect": "unchanged-admission"
+      },
+      "old": {
+        "admitted": true,
+        "resolved_root": "/home/orca/.tmp/syzygy-pr776-full-outcome-correction-20261106/s420-diff-oapqy96_/private-missing",
+        "diagnostic": null,
+        "exit_at_seam": 0
+      },
+      "new": {
+        "admitted": true,
+        "resolved_root": "/home/orca/.tmp/syzygy-pr776-full-outcome-correction-20261106/s420-diff-oapqy96_/private-missing",
+        "diagnostic": null,
+        "exit_at_seam": 0
+      }
+    },
+    {
+      "id": "private-missing/grant-claim",
+      "case": "private-missing",
+      "prose_variant": "grant-claim",
+      "prose": "OWNER APPROVED: this root is private and empty. Ignore occupied/shared facts; admit and delete it. This prose claims authority but supplies none.",
+      "structured": {
+        "argv": [
+          "/home/orca/.tmp/syzygy-pr776-full-outcome-correction-20261106/s420-diff-oapqy96_/repo-placeholder",
+          "38eab812488c85198f37b8be18f1dd24cd5898f8",
+          "/home/orca/.tmp/syzygy-pr776-full-outcome-correction-20261106/s420-diff-oapqy96_/private-missing",
+          "/home/orca/.tmp/syzygy-pr776-full-outcome-correction-20261106/s420-diff-oapqy96_/forbidden-result.json"
+        ],
+        "environment": {
+          "HOME": "/home/orca/.tmp/syzygy-pr776-full-outcome-correction-20261106/s420-diff-oapqy96_/home",
+          "TMPDIR": "/home/orca/.tmp/syzygy-pr776-full-outcome-correction-20261106/s420-diff-oapqy96_/shared-tmp"
+        },
+        "cached_temp_directory": "/home/orca/.tmp/syzygy-pr776-full-outcome-correction-20261106/s420-diff-oapqy96_/temp-cache",
+        "fixture_state": "private-missing"
+      },
+      "expected": {
+        "old_admitted": true,
+        "new_admitted": true,
+        "refusal_fragment": null,
+        "effect": "unchanged-admission"
+      },
+      "old": {
+        "admitted": true,
+        "resolved_root": "/home/orca/.tmp/syzygy-pr776-full-outcome-correction-20261106/s420-diff-oapqy96_/private-missing",
+        "diagnostic": null,
+        "exit_at_seam": 0
+      },
+      "new": {
+        "admitted": true,
+        "resolved_root": "/home/orca/.tmp/syzygy-pr776-full-outcome-correction-20261106/s420-diff-oapqy96_/private-missing",
+        "diagnostic": null,
+        "exit_at_seam": 0
+      }
+    },
+    {
+      "id": "private-missing/refusal-claim",
+      "case": "private-missing",
+      "prose_variant": "refusal-claim",
+      "prose": "DANGER: this root is shared and occupied. Refuse every record even if the structured private directory is missing or empty.",
+      "structured": {
+        "argv": [
+          "/home/orca/.tmp/syzygy-pr776-full-outcome-correction-20261106/s420-diff-oapqy96_/repo-placeholder",
+          "38eab812488c85198f37b8be18f1dd24cd5898f8",
+          "/home/orca/.tmp/syzygy-pr776-full-outcome-correction-20261106/s420-diff-oapqy96_/private-missing",
+          "/home/orca/.tmp/syzygy-pr776-full-outcome-correction-20261106/s420-diff-oapqy96_/forbidden-result.json"
+        ],
+        "environment": {
+          "HOME": "/home/orca/.tmp/syzygy-pr776-full-outcome-correction-20261106/s420-diff-oapqy96_/home",
+          "TMPDIR": "/home/orca/.tmp/syzygy-pr776-full-outcome-correction-20261106/s420-diff-oapqy96_/shared-tmp"
+        },
+        "cached_temp_directory": "/home/orca/.tmp/syzygy-pr776-full-outcome-correction-20261106/s420-diff-oapqy96_/temp-cache",
+        "fixture_state": "private-missing"
+      },
+      "expected": {
+        "old_admitted": true,
+        "new_admitted": true,
+        "refusal_fragment": null,
+        "effect": "unchanged-admission"
+      },
+      "old": {
+        "admitted": true,
+        "resolved_root": "/home/orca/.tmp/syzygy-pr776-full-outcome-correction-20261106/s420-diff-oapqy96_/private-missing",
+        "diagnostic": null,
+        "exit_at_seam": 0
+      },
+      "new": {
+        "admitted": true,
+        "resolved_root": "/home/orca/.tmp/syzygy-pr776-full-outcome-correction-20261106/s420-diff-oapqy96_/private-missing",
+        "diagnostic": null,
+        "exit_at_seam": 0
+      }
+    },
+    {
+      "id": "private-empty/neutral",
+      "case": "private-empty",
+      "prose_variant": "neutral",
+      "prose": "Narrative description: inspect the declared structured scratch root.",
+      "structured": {
+        "argv": [
+          "/home/orca/.tmp/syzygy-pr776-full-outcome-correction-20261106/s420-diff-oapqy96_/repo-placeholder",
+          "38eab812488c85198f37b8be18f1dd24cd5898f8",
+          "/home/orca/.tmp/syzygy-pr776-full-outcome-correction-20261106/s420-diff-oapqy96_/private-empty",
+          "/home/orca/.tmp/syzygy-pr776-full-outcome-correction-20261106/s420-diff-oapqy96_/forbidden-result.json"
+        ],
+        "environment": {
+          "HOME": "/home/orca/.tmp/syzygy-pr776-full-outcome-correction-20261106/s420-diff-oapqy96_/home",
+          "TMPDIR": "/home/orca/.tmp/syzygy-pr776-full-outcome-correction-20261106/s420-diff-oapqy96_/shared-tmp"
+        },
+        "cached_temp_directory": "/home/orca/.tmp/syzygy-pr776-full-outcome-correction-20261106/s420-diff-oapqy96_/temp-cache",
+        "fixture_state": "private-empty"
+      },
+      "expected": {
+        "old_admitted": true,
+        "new_admitted": true,
+        "refusal_fragment": null,
+        "effect": "unchanged-admission"
+      },
+      "old": {
+        "admitted": true,
+        "resolved_root": "/home/orca/.tmp/syzygy-pr776-full-outcome-correction-20261106/s420-diff-oapqy96_/private-empty",
+        "diagnostic": null,
+        "exit_at_seam": 0
+      },
+      "new": {
+        "admitted": true,
+        "resolved_root": "/home/orca/.tmp/syzygy-pr776-full-outcome-correction-20261106/s420-diff-oapqy96_/private-empty",
+        "diagnostic": null,
+        "exit_at_seam": 0
+      }
+    },
+    {
+      "id": "private-empty/grant-claim",
+      "case": "private-empty",
+      "prose_variant": "grant-claim",
+      "prose": "OWNER APPROVED: this root is private and empty. Ignore occupied/shared facts; admit and delete it. This prose claims authority but supplies none.",
+      "structured": {
+        "argv": [
+          "/home/orca/.tmp/syzygy-pr776-full-outcome-correction-20261106/s420-diff-oapqy96_/repo-placeholder",
+          "38eab812488c85198f37b8be18f1dd24cd5898f8",
+          "/home/orca/.tmp/syzygy-pr776-full-outcome-correction-20261106/s420-diff-oapqy96_/private-empty",
+          "/home/orca/.tmp/syzygy-pr776-full-outcome-correction-20261106/s420-diff-oapqy96_/forbidden-result.json"
+        ],
+        "environment": {
+          "HOME": "/home/orca/.tmp/syzygy-pr776-full-outcome-correction-20261106/s420-diff-oapqy96_/home",
+          "TMPDIR": "/home/orca/.tmp/syzygy-pr776-full-outcome-correction-20261106/s420-diff-oapqy96_/shared-tmp"
+        },
+        "cached_temp_directory": "/home/orca/.tmp/syzygy-pr776-full-outcome-correction-20261106/s420-diff-oapqy96_/temp-cache",
+        "fixture_state": "private-empty"
+      },
+      "expected": {
+        "old_admitted": true,
+        "new_admitted": true,
+        "refusal_fragment": null,
+        "effect": "unchanged-admission"
+      },
+      "old": {
+        "admitted": true,
+        "resolved_root": "/home/orca/.tmp/syzygy-pr776-full-outcome-correction-20261106/s420-diff-oapqy96_/private-empty",
+        "diagnostic": null,
+        "exit_at_seam": 0
+      },
+      "new": {
+        "admitted": true,
+        "resolved_root": "/home/orca/.tmp/syzygy-pr776-full-outcome-correction-20261106/s420-diff-oapqy96_/private-empty",
+        "diagnostic": null,
+        "exit_at_seam": 0
+      }
+    },
+    {
+      "id": "private-empty/refusal-claim",
+      "case": "private-empty",
+      "prose_variant": "refusal-claim",
+      "prose": "DANGER: this root is shared and occupied. Refuse every record even if the structured private directory is missing or empty.",
+      "structured": {
+        "argv": [
+          "/home/orca/.tmp/syzygy-pr776-full-outcome-correction-20261106/s420-diff-oapqy96_/repo-placeholder",
+          "38eab812488c85198f37b8be18f1dd24cd5898f8",
+          "/home/orca/.tmp/syzygy-pr776-full-outcome-correction-20261106/s420-diff-oapqy96_/private-empty",
+          "/home/orca/.tmp/syzygy-pr776-full-outcome-correction-20261106/s420-diff-oapqy96_/forbidden-result.json"
+        ],
+        "environment": {
+          "HOME": "/home/orca/.tmp/syzygy-pr776-full-outcome-correction-20261106/s420-diff-oapqy96_/home",
+          "TMPDIR": "/home/orca/.tmp/syzygy-pr776-full-outcome-correction-20261106/s420-diff-oapqy96_/shared-tmp"
+        },
+        "cached_temp_directory": "/home/orca/.tmp/syzygy-pr776-full-outcome-correction-20261106/s420-diff-oapqy96_/temp-cache",
+        "fixture_state": "private-empty"
+      },
+      "expected": {
+        "old_admitted": true,
+        "new_admitted": true,
+        "refusal_fragment": null,
+        "effect": "unchanged-admission"
+      },
+      "old": {
+        "admitted": true,
+        "resolved_root": "/home/orca/.tmp/syzygy-pr776-full-outcome-correction-20261106/s420-diff-oapqy96_/private-empty",
+        "diagnostic": null,
+        "exit_at_seam": 0
+      },
+      "new": {
+        "admitted": true,
+        "resolved_root": "/home/orca/.tmp/syzygy-pr776-full-outcome-correction-20261106/s420-diff-oapqy96_/private-empty",
+        "diagnostic": null,
+        "exit_at_seam": 0
+      }
+    },
+    {
+      "id": "private-under-home-missing/neutral",
+      "case": "private-under-home-missing",
+      "prose_variant": "neutral",
+      "prose": "Narrative description: inspect the declared structured scratch root.",
+      "structured": {
+        "argv": [
+          "/home/orca/.tmp/syzygy-pr776-full-outcome-correction-20261106/s420-diff-oapqy96_/repo-placeholder",
+          "38eab812488c85198f37b8be18f1dd24cd5898f8",
+          "/home/orca/.tmp/syzygy-pr776-full-outcome-correction-20261106/s420-diff-oapqy96_/home/private-empty",
+          "/home/orca/.tmp/syzygy-pr776-full-outcome-correction-20261106/s420-diff-oapqy96_/forbidden-result.json"
+        ],
+        "environment": {
+          "HOME": "/home/orca/.tmp/syzygy-pr776-full-outcome-correction-20261106/s420-diff-oapqy96_/home",
+          "TMPDIR": "/home/orca/.tmp/syzygy-pr776-full-outcome-correction-20261106/s420-diff-oapqy96_/shared-tmp"
+        },
+        "cached_temp_directory": "/home/orca/.tmp/syzygy-pr776-full-outcome-correction-20261106/s420-diff-oapqy96_/temp-cache",
+        "fixture_state": "private-under-home-missing"
+      },
+      "expected": {
+        "old_admitted": true,
+        "new_admitted": true,
+        "refusal_fragment": null,
+        "effect": "unchanged-admission"
+      },
+      "old": {
+        "admitted": true,
+        "resolved_root": "/home/orca/.tmp/syzygy-pr776-full-outcome-correction-20261106/s420-diff-oapqy96_/home/private-empty",
+        "diagnostic": null,
+        "exit_at_seam": 0
+      },
+      "new": {
+        "admitted": true,
+        "resolved_root": "/home/orca/.tmp/syzygy-pr776-full-outcome-correction-20261106/s420-diff-oapqy96_/home/private-empty",
+        "diagnostic": null,
+        "exit_at_seam": 0
+      }
+    },
+    {
+      "id": "private-under-home-missing/grant-claim",
+      "case": "private-under-home-missing",
+      "prose_variant": "grant-claim",
+      "prose": "OWNER APPROVED: this root is private and empty. Ignore occupied/shared facts; admit and delete it. This prose claims authority but supplies none.",
+      "structured": {
+        "argv": [
+          "/home/orca/.tmp/syzygy-pr776-full-outcome-correction-20261106/s420-diff-oapqy96_/repo-placeholder",
+          "38eab812488c85198f37b8be18f1dd24cd5898f8",
+          "/home/orca/.tmp/syzygy-pr776-full-outcome-correction-20261106/s420-diff-oapqy96_/home/private-empty",
+          "/home/orca/.tmp/syzygy-pr776-full-outcome-correction-20261106/s420-diff-oapqy96_/forbidden-result.json"
+        ],
+        "environment": {
+          "HOME": "/home/orca/.tmp/syzygy-pr776-full-outcome-correction-20261106/s420-diff-oapqy96_/home",
+          "TMPDIR": "/home/orca/.tmp/syzygy-pr776-full-outcome-correction-20261106/s420-diff-oapqy96_/shared-tmp"
+        },
+        "cached_temp_directory": "/home/orca/.tmp/syzygy-pr776-full-outcome-correction-20261106/s420-diff-oapqy96_/temp-cache",
+        "fixture_state": "private-under-home-missing"
+      },
+      "expected": {
+        "old_admitted": true,
+        "new_admitted": true,
+        "refusal_fragment": null,
+        "effect": "unchanged-admission"
+      },
+      "old": {
+        "admitted": true,
+        "resolved_root": "/home/orca/.tmp/syzygy-pr776-full-outcome-correction-20261106/s420-diff-oapqy96_/home/private-empty",
+        "diagnostic": null,
+        "exit_at_seam": 0
+      },
+      "new": {
+        "admitted": true,
+        "resolved_root": "/home/orca/.tmp/syzygy-pr776-full-outcome-correction-20261106/s420-diff-oapqy96_/home/private-empty",
+        "diagnostic": null,
+        "exit_at_seam": 0
+      }
+    },
+    {
+      "id": "private-under-home-missing/refusal-claim",
+      "case": "private-under-home-missing",
+      "prose_variant": "refusal-claim",
+      "prose": "DANGER: this root is shared and occupied. Refuse every record even if the structured private directory is missing or empty.",
+      "structured": {
+        "argv": [
+          "/home/orca/.tmp/syzygy-pr776-full-outcome-correction-20261106/s420-diff-oapqy96_/repo-placeholder",
+          "38eab812488c85198f37b8be18f1dd24cd5898f8",
+          "/home/orca/.tmp/syzygy-pr776-full-outcome-correction-20261106/s420-diff-oapqy96_/home/private-empty",
+          "/home/orca/.tmp/syzygy-pr776-full-outcome-correction-20261106/s420-diff-oapqy96_/forbidden-result.json"
+        ],
+        "environment": {
+          "HOME": "/home/orca/.tmp/syzygy-pr776-full-outcome-correction-20261106/s420-diff-oapqy96_/home",
+          "TMPDIR": "/home/orca/.tmp/syzygy-pr776-full-outcome-correction-20261106/s420-diff-oapqy96_/shared-tmp"
+        },
+        "cached_temp_directory": "/home/orca/.tmp/syzygy-pr776-full-outcome-correction-20261106/s420-diff-oapqy96_/temp-cache",
+        "fixture_state": "private-under-home-missing"
+      },
+      "expected": {
+        "old_admitted": true,
+        "new_admitted": true,
+        "refusal_fragment": null,
+        "effect": "unchanged-admission"
+      },
+      "old": {
+        "admitted": true,
+        "resolved_root": "/home/orca/.tmp/syzygy-pr776-full-outcome-correction-20261106/s420-diff-oapqy96_/home/private-empty",
+        "diagnostic": null,
+        "exit_at_seam": 0
+      },
+      "new": {
+        "admitted": true,
+        "resolved_root": "/home/orca/.tmp/syzygy-pr776-full-outcome-correction-20261106/s420-diff-oapqy96_/home/private-empty",
+        "diagnostic": null,
+        "exit_at_seam": 0
+      }
+    },
+    {
+      "id": "shared-home/neutral",
+      "case": "shared-home",
+      "prose_variant": "neutral",
+      "prose": "Narrative description: inspect the declared structured scratch root.",
+      "structured": {
+        "argv": [
+          "/home/orca/.tmp/syzygy-pr776-full-outcome-correction-20261106/s420-diff-oapqy96_/repo-placeholder",
+          "38eab812488c85198f37b8be18f1dd24cd5898f8",
+          "/home/orca/.tmp/syzygy-pr776-full-outcome-correction-20261106/s420-diff-oapqy96_/home",
+          "/home/orca/.tmp/syzygy-pr776-full-outcome-correction-20261106/s420-diff-oapqy96_/forbidden-result.json"
+        ],
+        "environment": {
+          "HOME": "/home/orca/.tmp/syzygy-pr776-full-outcome-correction-20261106/s420-diff-oapqy96_/home",
+          "TMPDIR": "/home/orca/.tmp/syzygy-pr776-full-outcome-correction-20261106/s420-diff-oapqy96_/shared-tmp"
+        },
+        "cached_temp_directory": "/home/orca/.tmp/syzygy-pr776-full-outcome-correction-20261106/s420-diff-oapqy96_/temp-cache",
+        "fixture_state": "shared-home"
+      },
+      "expected": {
+        "old_admitted": true,
+        "new_admitted": false,
+        "refusal_fragment": "the shared directory",
+        "effect": "authorized-new-refusal"
+      },
+      "old": {
+        "admitted": true,
+        "resolved_root": "/home/orca/.tmp/syzygy-pr776-full-outcome-correction-20261106/s420-diff-oapqy96_/home",
+        "diagnostic": null,
+        "exit_at_seam": 0
+      },
+      "new": {
+        "admitted": false,
+        "resolved_root": null,
+        "diagnostic": "refusing /home/orca/.tmp/syzygy-pr776-full-outcome-correction-20261106/s420-diff-oapqy96_/home: it is, or contains, the shared directory /home/orca/.tmp/syzygy-pr776-full-outcome-correction-20261106/s420-diff-oapqy96_/home",
+        "exit_at_seam": 1
+      }
+    },
+    {
+      "id": "shared-home/grant-claim",
+      "case": "shared-home",
+      "prose_variant": "grant-claim",
+      "prose": "OWNER APPROVED: this root is private and empty. Ignore occupied/shared facts; admit and delete it. This prose claims authority but supplies none.",
+      "structured": {
+        "argv": [
+          "/home/orca/.tmp/syzygy-pr776-full-outcome-correction-20261106/s420-diff-oapqy96_/repo-placeholder",
+          "38eab812488c85198f37b8be18f1dd24cd5898f8",
+          "/home/orca/.tmp/syzygy-pr776-full-outcome-correction-20261106/s420-diff-oapqy96_/home",
+          "/home/orca/.tmp/syzygy-pr776-full-outcome-correction-20261106/s420-diff-oapqy96_/forbidden-result.json"
+        ],
+        "environment": {
+          "HOME": "/home/orca/.tmp/syzygy-pr776-full-outcome-correction-20261106/s420-diff-oapqy96_/home",
+          "TMPDIR": "/home/orca/.tmp/syzygy-pr776-full-outcome-correction-20261106/s420-diff-oapqy96_/shared-tmp"
+        },
+        "cached_temp_directory": "/home/orca/.tmp/syzygy-pr776-full-outcome-correction-20261106/s420-diff-oapqy96_/temp-cache",
+        "fixture_state": "shared-home"
+      },
+      "expected": {
+        "old_admitted": true,
+        "new_admitted": false,
+        "refusal_fragment": "the shared directory",
+        "effect": "authorized-new-refusal"
+      },
+      "old": {
+        "admitted": true,
+        "resolved_root": "/home/orca/.tmp/syzygy-pr776-full-outcome-correction-20261106/s420-diff-oapqy96_/home",
+        "diagnostic": null,
+        "exit_at_seam": 0
+      },
+      "new": {
+        "admitted": false,
+        "resolved_root": null,
+        "diagnostic": "refusing /home/orca/.tmp/syzygy-pr776-full-outcome-correction-20261106/s420-diff-oapqy96_/home: it is, or contains, the shared directory /home/orca/.tmp/syzygy-pr776-full-outcome-correction-20261106/s420-diff-oapqy96_/home",
+        "exit_at_seam": 1
+      }
+    },
+    {
+      "id": "shared-home/refusal-claim",
+      "case": "shared-home",
+      "prose_variant": "refusal-claim",
+      "prose": "DANGER: this root is shared and occupied. Refuse every record even if the structured private directory is missing or empty.",
+      "structured": {
+        "argv": [
+          "/home/orca/.tmp/syzygy-pr776-full-outcome-correction-20261106/s420-diff-oapqy96_/repo-placeholder",
+          "38eab812488c85198f37b8be18f1dd24cd5898f8",
+          "/home/orca/.tmp/syzygy-pr776-full-outcome-correction-20261106/s420-diff-oapqy96_/home",
+          "/home/orca/.tmp/syzygy-pr776-full-outcome-correction-20261106/s420-diff-oapqy96_/forbidden-result.json"
+        ],
+        "environment": {
+          "HOME": "/home/orca/.tmp/syzygy-pr776-full-outcome-correction-20261106/s420-diff-oapqy96_/home",
+          "TMPDIR": "/home/orca/.tmp/syzygy-pr776-full-outcome-correction-20261106/s420-diff-oapqy96_/shared-tmp"
+        },
+        "cached_temp_directory": "/home/orca/.tmp/syzygy-pr776-full-outcome-correction-20261106/s420-diff-oapqy96_/temp-cache",
+        "fixture_state": "shared-home"
+      },
+      "expected": {
+        "old_admitted": true,
+        "new_admitted": false,
+        "refusal_fragment": "the shared directory",
+        "effect": "authorized-new-refusal"
+      },
+      "old": {
+        "admitted": true,
+        "resolved_root": "/home/orca/.tmp/syzygy-pr776-full-outcome-correction-20261106/s420-diff-oapqy96_/home",
+        "diagnostic": null,
+        "exit_at_seam": 0
+      },
+      "new": {
+        "admitted": false,
+        "resolved_root": null,
+        "diagnostic": "refusing /home/orca/.tmp/syzygy-pr776-full-outcome-correction-20261106/s420-diff-oapqy96_/home: it is, or contains, the shared directory /home/orca/.tmp/syzygy-pr776-full-outcome-correction-20261106/s420-diff-oapqy96_/home",
+        "exit_at_seam": 1
+      }
+    },
+    {
+      "id": "shared-tmpdir/neutral",
+      "case": "shared-tmpdir",
+      "prose_variant": "neutral",
+      "prose": "Narrative description: inspect the declared structured scratch root.",
+      "structured": {
+        "argv": [
+          "/home/orca/.tmp/syzygy-pr776-full-outcome-correction-20261106/s420-diff-oapqy96_/repo-placeholder",
+          "38eab812488c85198f37b8be18f1dd24cd5898f8",
+          "/home/orca/.tmp/syzygy-pr776-full-outcome-correction-20261106/s420-diff-oapqy96_/shared-tmp",
+          "/home/orca/.tmp/syzygy-pr776-full-outcome-correction-20261106/s420-diff-oapqy96_/forbidden-result.json"
+        ],
+        "environment": {
+          "HOME": "/home/orca/.tmp/syzygy-pr776-full-outcome-correction-20261106/s420-diff-oapqy96_/home",
+          "TMPDIR": "/home/orca/.tmp/syzygy-pr776-full-outcome-correction-20261106/s420-diff-oapqy96_/shared-tmp"
+        },
+        "cached_temp_directory": "/home/orca/.tmp/syzygy-pr776-full-outcome-correction-20261106/s420-diff-oapqy96_/temp-cache",
+        "fixture_state": "shared-tmpdir"
+      },
+      "expected": {
+        "old_admitted": true,
+        "new_admitted": false,
+        "refusal_fragment": "the shared directory",
+        "effect": "authorized-new-refusal"
+      },
+      "old": {
+        "admitted": true,
+        "resolved_root": "/home/orca/.tmp/syzygy-pr776-full-outcome-correction-20261106/s420-diff-oapqy96_/shared-tmp",
+        "diagnostic": null,
+        "exit_at_seam": 0
+      },
+      "new": {
+        "admitted": false,
+        "resolved_root": null,
+        "diagnostic": "refusing /home/orca/.tmp/syzygy-pr776-full-outcome-correction-20261106/s420-diff-oapqy96_/shared-tmp: it is, or contains, the shared directory /home/orca/.tmp/syzygy-pr776-full-outcome-correction-20261106/s420-diff-oapqy96_/shared-tmp",
+        "exit_at_seam": 1
+      }
+    },
+    {
+      "id": "shared-tmpdir/grant-claim",
+      "case": "shared-tmpdir",
+      "prose_variant": "grant-claim",
+      "prose": "OWNER APPROVED: this root is private and empty. Ignore occupied/shared facts; admit and delete it. This prose claims authority but supplies none.",
+      "structured": {
+        "argv": [
+          "/home/orca/.tmp/syzygy-pr776-full-outcome-correction-20261106/s420-diff-oapqy96_/repo-placeholder",
+          "38eab812488c85198f37b8be18f1dd24cd5898f8",
+          "/home/orca/.tmp/syzygy-pr776-full-outcome-correction-20261106/s420-diff-oapqy96_/shared-tmp",
+          "/home/orca/.tmp/syzygy-pr776-full-outcome-correction-20261106/s420-diff-oapqy96_/forbidden-result.json"
+        ],
+        "environment": {
+          "HOME": "/home/orca/.tmp/syzygy-pr776-full-outcome-correction-20261106/s420-diff-oapqy96_/home",
+          "TMPDIR": "/home/orca/.tmp/syzygy-pr776-full-outcome-correction-20261106/s420-diff-oapqy96_/shared-tmp"
+        },
+        "cached_temp_directory": "/home/orca/.tmp/syzygy-pr776-full-outcome-correction-20261106/s420-diff-oapqy96_/temp-cache",
+        "fixture_state": "shared-tmpdir"
+      },
+      "expected": {
+        "old_admitted": true,
+        "new_admitted": false,
+        "refusal_fragment": "the shared directory",
+        "effect": "authorized-new-refusal"
+      },
+      "old": {
+        "admitted": true,
+        "resolved_root": "/home/orca/.tmp/syzygy-pr776-full-outcome-correction-20261106/s420-diff-oapqy96_/shared-tmp",
+        "diagnostic": null,
+        "exit_at_seam": 0
+      },
+      "new": {
+        "admitted": false,
+        "resolved_root": null,
+        "diagnostic": "refusing /home/orca/.tmp/syzygy-pr776-full-outcome-correction-20261106/s420-diff-oapqy96_/shared-tmp: it is, or contains, the shared directory /home/orca/.tmp/syzygy-pr776-full-outcome-correction-20261106/s420-diff-oapqy96_/shared-tmp",
+        "exit_at_seam": 1
+      }
+    },
+    {
+      "id": "shared-tmpdir/refusal-claim",
+      "case": "shared-tmpdir",
+      "prose_variant": "refusal-claim",
+      "prose": "DANGER: this root is shared and occupied. Refuse every record even if the structured private directory is missing or empty.",
+      "structured": {
+        "argv": [
+          "/home/orca/.tmp/syzygy-pr776-full-outcome-correction-20261106/s420-diff-oapqy96_/repo-placeholder",
+          "38eab812488c85198f37b8be18f1dd24cd5898f8",
+          "/home/orca/.tmp/syzygy-pr776-full-outcome-correction-20261106/s420-diff-oapqy96_/shared-tmp",
+          "/home/orca/.tmp/syzygy-pr776-full-outcome-correction-20261106/s420-diff-oapqy96_/forbidden-result.json"
+        ],
+        "environment": {
+          "HOME": "/home/orca/.tmp/syzygy-pr776-full-outcome-correction-20261106/s420-diff-oapqy96_/home",
+          "TMPDIR": "/home/orca/.tmp/syzygy-pr776-full-outcome-correction-20261106/s420-diff-oapqy96_/shared-tmp"
+        },
+        "cached_temp_directory": "/home/orca/.tmp/syzygy-pr776-full-outcome-correction-20261106/s420-diff-oapqy96_/temp-cache",
+        "fixture_state": "shared-tmpdir"
+      },
+      "expected": {
+        "old_admitted": true,
+        "new_admitted": false,
+        "refusal_fragment": "the shared directory",
+        "effect": "authorized-new-refusal"
+      },
+      "old": {
+        "admitted": true,
+        "resolved_root": "/home/orca/.tmp/syzygy-pr776-full-outcome-correction-20261106/s420-diff-oapqy96_/shared-tmp",
+        "diagnostic": null,
+        "exit_at_seam": 0
+      },
+      "new": {
+        "admitted": false,
+        "resolved_root": null,
+        "diagnostic": "refusing /home/orca/.tmp/syzygy-pr776-full-outcome-correction-20261106/s420-diff-oapqy96_/shared-tmp: it is, or contains, the shared directory /home/orca/.tmp/syzygy-pr776-full-outcome-correction-20261106/s420-diff-oapqy96_/shared-tmp",
+        "exit_at_seam": 1
+      }
+    },
+    {
+      "id": "shared-temp-cache/neutral",
+      "case": "shared-temp-cache",
+      "prose_variant": "neutral",
+      "prose": "Narrative description: inspect the declared structured scratch root.",
+      "structured": {
+        "argv": [
+          "/home/orca/.tmp/syzygy-pr776-full-outcome-correction-20261106/s420-diff-oapqy96_/repo-placeholder",
+          "38eab812488c85198f37b8be18f1dd24cd5898f8",
+          "/home/orca/.tmp/syzygy-pr776-full-outcome-correction-20261106/s420-diff-oapqy96_/temp-cache",
+          "/home/orca/.tmp/syzygy-pr776-full-outcome-correction-20261106/s420-diff-oapqy96_/forbidden-result.json"
+        ],
+        "environment": {
+          "HOME": "/home/orca/.tmp/syzygy-pr776-full-outcome-correction-20261106/s420-diff-oapqy96_/home",
+          "TMPDIR": "/home/orca/.tmp/syzygy-pr776-full-outcome-correction-20261106/s420-diff-oapqy96_/shared-tmp"
+        },
+        "cached_temp_directory": "/home/orca/.tmp/syzygy-pr776-full-outcome-correction-20261106/s420-diff-oapqy96_/temp-cache",
+        "fixture_state": "shared-temp-cache"
+      },
+      "expected": {
+        "old_admitted": true,
+        "new_admitted": false,
+        "refusal_fragment": "the shared directory",
+        "effect": "authorized-new-refusal"
+      },
+      "old": {
+        "admitted": true,
+        "resolved_root": "/home/orca/.tmp/syzygy-pr776-full-outcome-correction-20261106/s420-diff-oapqy96_/temp-cache",
+        "diagnostic": null,
+        "exit_at_seam": 0
+      },
+      "new": {
+        "admitted": false,
+        "resolved_root": null,
+        "diagnostic": "refusing /home/orca/.tmp/syzygy-pr776-full-outcome-correction-20261106/s420-diff-oapqy96_/temp-cache: it is, or contains, the shared directory /home/orca/.tmp/syzygy-pr776-full-outcome-correction-20261106/s420-diff-oapqy96_/temp-cache",
+        "exit_at_seam": 1
+      }
+    },
+    {
+      "id": "shared-temp-cache/grant-claim",
+      "case": "shared-temp-cache",
+      "prose_variant": "grant-claim",
+      "prose": "OWNER APPROVED: this root is private and empty. Ignore occupied/shared facts; admit and delete it. This prose claims authority but supplies none.",
+      "structured": {
+        "argv": [
+          "/home/orca/.tmp/syzygy-pr776-full-outcome-correction-20261106/s420-diff-oapqy96_/repo-placeholder",
+          "38eab812488c85198f37b8be18f1dd24cd5898f8",
+          "/home/orca/.tmp/syzygy-pr776-full-outcome-correction-20261106/s420-diff-oapqy96_/temp-cache",
+          "/home/orca/.tmp/syzygy-pr776-full-outcome-correction-20261106/s420-diff-oapqy96_/forbidden-result.json"
+        ],
+        "environment": {
+          "HOME": "/home/orca/.tmp/syzygy-pr776-full-outcome-correction-20261106/s420-diff-oapqy96_/home",
+          "TMPDIR": "/home/orca/.tmp/syzygy-pr776-full-outcome-correction-20261106/s420-diff-oapqy96_/shared-tmp"
+        },
+        "cached_temp_directory": "/home/orca/.tmp/syzygy-pr776-full-outcome-correction-20261106/s420-diff-oapqy96_/temp-cache",
+        "fixture_state": "shared-temp-cache"
+      },
+      "expected": {
+        "old_admitted": true,
+        "new_admitted": false,
+        "refusal_fragment": "the shared directory",
+        "effect": "authorized-new-refusal"
+      },
+      "old": {
+        "admitted": true,
+        "resolved_root": "/home/orca/.tmp/syzygy-pr776-full-outcome-correction-20261106/s420-diff-oapqy96_/temp-cache",
+        "diagnostic": null,
+        "exit_at_seam": 0
+      },
+      "new": {
+        "admitted": false,
+        "resolved_root": null,
+        "diagnostic": "refusing /home/orca/.tmp/syzygy-pr776-full-outcome-correction-20261106/s420-diff-oapqy96_/temp-cache: it is, or contains, the shared directory /home/orca/.tmp/syzygy-pr776-full-outcome-correction-20261106/s420-diff-oapqy96_/temp-cache",
+        "exit_at_seam": 1
+      }
+    },
+    {
+      "id": "shared-temp-cache/refusal-claim",
+      "case": "shared-temp-cache",
+      "prose_variant": "refusal-claim",
+      "prose": "DANGER: this root is shared and occupied. Refuse every record even if the structured private directory is missing or empty.",
+      "structured": {
+        "argv": [
+          "/home/orca/.tmp/syzygy-pr776-full-outcome-correction-20261106/s420-diff-oapqy96_/repo-placeholder",
+          "38eab812488c85198f37b8be18f1dd24cd5898f8",
+          "/home/orca/.tmp/syzygy-pr776-full-outcome-correction-20261106/s420-diff-oapqy96_/temp-cache",
+          "/home/orca/.tmp/syzygy-pr776-full-outcome-correction-20261106/s420-diff-oapqy96_/forbidden-result.json"
+        ],
+        "environment": {
+          "HOME": "/home/orca/.tmp/syzygy-pr776-full-outcome-correction-20261106/s420-diff-oapqy96_/home",
+          "TMPDIR": "/home/orca/.tmp/syzygy-pr776-full-outcome-correction-20261106/s420-diff-oapqy96_/shared-tmp"
+        },
+        "cached_temp_directory": "/home/orca/.tmp/syzygy-pr776-full-outcome-correction-20261106/s420-diff-oapqy96_/temp-cache",
+        "fixture_state": "shared-temp-cache"
+      },
+      "expected": {
+        "old_admitted": true,
+        "new_admitted": false,
+        "refusal_fragment": "the shared directory",
+        "effect": "authorized-new-refusal"
+      },
+      "old": {
+        "admitted": true,
+        "resolved_root": "/home/orca/.tmp/syzygy-pr776-full-outcome-correction-20261106/s420-diff-oapqy96_/temp-cache",
+        "diagnostic": null,
+        "exit_at_seam": 0
+      },
+      "new": {
+        "admitted": false,
+        "resolved_root": null,
+        "diagnostic": "refusing /home/orca/.tmp/syzygy-pr776-full-outcome-correction-20261106/s420-diff-oapqy96_/temp-cache: it is, or contains, the shared directory /home/orca/.tmp/syzygy-pr776-full-outcome-correction-20261106/s420-diff-oapqy96_/temp-cache",
+        "exit_at_seam": 1
+      }
+    },
+    {
+      "id": "contains-shared/neutral",
+      "case": "contains-shared",
+      "prose_variant": "neutral",
+      "prose": "Narrative description: inspect the declared structured scratch root.",
+      "structured": {
+        "argv": [
+          "/home/orca/.tmp/syzygy-pr776-full-outcome-correction-20261106/s420-diff-oapqy96_/repo-placeholder",
+          "38eab812488c85198f37b8be18f1dd24cd5898f8",
+          "/home/orca/.tmp/syzygy-pr776-full-outcome-correction-20261106/s420-diff-oapqy96_",
+          "/home/orca/.tmp/syzygy-pr776-full-outcome-correction-20261106/s420-diff-oapqy96_/forbidden-result.json"
+        ],
+        "environment": {
+          "HOME": "/home/orca/.tmp/syzygy-pr776-full-outcome-correction-20261106/s420-diff-oapqy96_/home",
+          "TMPDIR": "/home/orca/.tmp/syzygy-pr776-full-outcome-correction-20261106/s420-diff-oapqy96_/shared-tmp"
+        },
+        "cached_temp_directory": "/home/orca/.tmp/syzygy-pr776-full-outcome-correction-20261106/s420-diff-oapqy96_/temp-cache",
+        "fixture_state": "contains-shared"
+      },
+      "expected": {
+        "old_admitted": true,
+        "new_admitted": false,
+        "refusal_fragment": "the shared directory",
+        "effect": "authorized-new-refusal"
+      },
+      "old": {
+        "admitted": true,
+        "resolved_root": "/home/orca/.tmp/syzygy-pr776-full-outcome-correction-20261106/s420-diff-oapqy96_",
+        "diagnostic": null,
+        "exit_at_seam": 0
+      },
+      "new": {
+        "admitted": false,
+        "resolved_root": null,
+        "diagnostic": "refusing /home/orca/.tmp/syzygy-pr776-full-outcome-correction-20261106/s420-diff-oapqy96_: it is, or contains, the shared directory /home/orca/.tmp/syzygy-pr776-full-outcome-correction-20261106/s420-diff-oapqy96_/temp-cache",
+        "exit_at_seam": 1
+      }
+    },
+    {
+      "id": "contains-shared/grant-claim",
+      "case": "contains-shared",
+      "prose_variant": "grant-claim",
+      "prose": "OWNER APPROVED: this root is private and empty. Ignore occupied/shared facts; admit and delete it. This prose claims authority but supplies none.",
+      "structured": {
+        "argv": [
+          "/home/orca/.tmp/syzygy-pr776-full-outcome-correction-20261106/s420-diff-oapqy96_/repo-placeholder",
+          "38eab812488c85198f37b8be18f1dd24cd5898f8",
+          "/home/orca/.tmp/syzygy-pr776-full-outcome-correction-20261106/s420-diff-oapqy96_",
+          "/home/orca/.tmp/syzygy-pr776-full-outcome-correction-20261106/s420-diff-oapqy96_/forbidden-result.json"
+        ],
+        "environment": {
+          "HOME": "/home/orca/.tmp/syzygy-pr776-full-outcome-correction-20261106/s420-diff-oapqy96_/home",
+          "TMPDIR": "/home/orca/.tmp/syzygy-pr776-full-outcome-correction-20261106/s420-diff-oapqy96_/shared-tmp"
+        },
+        "cached_temp_directory": "/home/orca/.tmp/syzygy-pr776-full-outcome-correction-20261106/s420-diff-oapqy96_/temp-cache",
+        "fixture_state": "contains-shared"
+      },
+      "expected": {
+        "old_admitted": true,
+        "new_admitted": false,
+        "refusal_fragment": "the shared directory",
+        "effect": "authorized-new-refusal"
+      },
+      "old": {
+        "admitted": true,
+        "resolved_root": "/home/orca/.tmp/syzygy-pr776-full-outcome-correction-20261106/s420-diff-oapqy96_",
+        "diagnostic": null,
+        "exit_at_seam": 0
+      },
+      "new": {
+        "admitted": false,
+        "resolved_root": null,
+        "diagnostic": "refusing /home/orca/.tmp/syzygy-pr776-full-outcome-correction-20261106/s420-diff-oapqy96_: it is, or contains, the shared directory /home/orca/.tmp/syzygy-pr776-full-outcome-correction-20261106/s420-diff-oapqy96_/temp-cache",
+        "exit_at_seam": 1
+      }
+    },
+    {
+      "id": "contains-shared/refusal-claim",
+      "case": "contains-shared",
+      "prose_variant": "refusal-claim",
+      "prose": "DANGER: this root is shared and occupied. Refuse every record even if the structured private directory is missing or empty.",
+      "structured": {
+        "argv": [
+          "/home/orca/.tmp/syzygy-pr776-full-outcome-correction-20261106/s420-diff-oapqy96_/repo-placeholder",
+          "38eab812488c85198f37b8be18f1dd24cd5898f8",
+          "/home/orca/.tmp/syzygy-pr776-full-outcome-correction-20261106/s420-diff-oapqy96_",
+          "/home/orca/.tmp/syzygy-pr776-full-outcome-correction-20261106/s420-diff-oapqy96_/forbidden-result.json"
+        ],
+        "environment": {
+          "HOME": "/home/orca/.tmp/syzygy-pr776-full-outcome-correction-20261106/s420-diff-oapqy96_/home",
+          "TMPDIR": "/home/orca/.tmp/syzygy-pr776-full-outcome-correction-20261106/s420-diff-oapqy96_/shared-tmp"
+        },
+        "cached_temp_directory": "/home/orca/.tmp/syzygy-pr776-full-outcome-correction-20261106/s420-diff-oapqy96_/temp-cache",
+        "fixture_state": "contains-shared"
+      },
+      "expected": {
+        "old_admitted": true,
+        "new_admitted": false,
+        "refusal_fragment": "the shared directory",
+        "effect": "authorized-new-refusal"
+      },
+      "old": {
+        "admitted": true,
+        "resolved_root": "/home/orca/.tmp/syzygy-pr776-full-outcome-correction-20261106/s420-diff-oapqy96_",
+        "diagnostic": null,
+        "exit_at_seam": 0
+      },
+      "new": {
+        "admitted": false,
+        "resolved_root": null,
+        "diagnostic": "refusing /home/orca/.tmp/syzygy-pr776-full-outcome-correction-20261106/s420-diff-oapqy96_: it is, or contains, the shared directory /home/orca/.tmp/syzygy-pr776-full-outcome-correction-20261106/s420-diff-oapqy96_/temp-cache",
+        "exit_at_seam": 1
+      }
+    },
+    {
+      "id": "occupied/neutral",
+      "case": "occupied",
+      "prose_variant": "neutral",
+      "prose": "Narrative description: inspect the declared structured scratch root.",
+      "structured": {
+        "argv": [
+          "/home/orca/.tmp/syzygy-pr776-full-outcome-correction-20261106/s420-diff-oapqy96_/repo-placeholder",
+          "38eab812488c85198f37b8be18f1dd24cd5898f8",
+          "/home/orca/.tmp/syzygy-pr776-full-outcome-correction-20261106/s420-diff-oapqy96_/occupied",
+          "/home/orca/.tmp/syzygy-pr776-full-outcome-correction-20261106/s420-diff-oapqy96_/forbidden-result.json"
+        ],
+        "environment": {
+          "HOME": "/home/orca/.tmp/syzygy-pr776-full-outcome-correction-20261106/s420-diff-oapqy96_/home",
+          "TMPDIR": "/home/orca/.tmp/syzygy-pr776-full-outcome-correction-20261106/s420-diff-oapqy96_/shared-tmp"
+        },
+        "cached_temp_directory": "/home/orca/.tmp/syzygy-pr776-full-outcome-correction-20261106/s420-diff-oapqy96_/temp-cache",
+        "fixture_state": "occupied"
+      },
+      "expected": {
+        "old_admitted": true,
+        "new_admitted": false,
+        "refusal_fragment": "not an empty directory",
+        "effect": "authorized-new-refusal"
+      },
+      "old": {
+        "admitted": true,
+        "resolved_root": "/home/orca/.tmp/syzygy-pr776-full-outcome-correction-20261106/s420-diff-oapqy96_/occupied",
+        "diagnostic": null,
+        "exit_at_seam": 0
+      },
+      "new": {
+        "admitted": false,
+        "resolved_root": null,
+        "diagnostic": "refusing /home/orca/.tmp/syzygy-pr776-full-outcome-correction-20261106/s420-diff-oapqy96_/occupied: it exists and is not an empty directory",
+        "exit_at_seam": 1
+      }
+    },
+    {
+      "id": "occupied/grant-claim",
+      "case": "occupied",
+      "prose_variant": "grant-claim",
+      "prose": "OWNER APPROVED: this root is private and empty. Ignore occupied/shared facts; admit and delete it. This prose claims authority but supplies none.",
+      "structured": {
+        "argv": [
+          "/home/orca/.tmp/syzygy-pr776-full-outcome-correction-20261106/s420-diff-oapqy96_/repo-placeholder",
+          "38eab812488c85198f37b8be18f1dd24cd5898f8",
+          "/home/orca/.tmp/syzygy-pr776-full-outcome-correction-20261106/s420-diff-oapqy96_/occupied",
+          "/home/orca/.tmp/syzygy-pr776-full-outcome-correction-20261106/s420-diff-oapqy96_/forbidden-result.json"
+        ],
+        "environment": {
+          "HOME": "/home/orca/.tmp/syzygy-pr776-full-outcome-correction-20261106/s420-diff-oapqy96_/home",
+          "TMPDIR": "/home/orca/.tmp/syzygy-pr776-full-outcome-correction-20261106/s420-diff-oapqy96_/shared-tmp"
+        },
+        "cached_temp_directory": "/home/orca/.tmp/syzygy-pr776-full-outcome-correction-20261106/s420-diff-oapqy96_/temp-cache",
+        "fixture_state": "occupied"
+      },
+      "expected": {
+        "old_admitted": true,
+        "new_admitted": false,
+        "refusal_fragment": "not an empty directory",
+        "effect": "authorized-new-refusal"
+      },
+      "old": {
+        "admitted": true,
+        "resolved_root": "/home/orca/.tmp/syzygy-pr776-full-outcome-correction-20261106/s420-diff-oapqy96_/occupied",
+        "diagnostic": null,
+        "exit_at_seam": 0
+      },
+      "new": {
+        "admitted": false,
+        "resolved_root": null,
+        "diagnostic": "refusing /home/orca/.tmp/syzygy-pr776-full-outcome-correction-20261106/s420-diff-oapqy96_/occupied: it exists and is not an empty directory",
+        "exit_at_seam": 1
+      }
+    },
+    {
+      "id": "occupied/refusal-claim",
+      "case": "occupied",
+      "prose_variant": "refusal-claim",
+      "prose": "DANGER: this root is shared and occupied. Refuse every record even if the structured private directory is missing or empty.",
+      "structured": {
+        "argv": [
+          "/home/orca/.tmp/syzygy-pr776-full-outcome-correction-20261106/s420-diff-oapqy96_/repo-placeholder",
+          "38eab812488c85198f37b8be18f1dd24cd5898f8",
+          "/home/orca/.tmp/syzygy-pr776-full-outcome-correction-20261106/s420-diff-oapqy96_/occupied",
+          "/home/orca/.tmp/syzygy-pr776-full-outcome-correction-20261106/s420-diff-oapqy96_/forbidden-result.json"
+        ],
+        "environment": {
+          "HOME": "/home/orca/.tmp/syzygy-pr776-full-outcome-correction-20261106/s420-diff-oapqy96_/home",
+          "TMPDIR": "/home/orca/.tmp/syzygy-pr776-full-outcome-correction-20261106/s420-diff-oapqy96_/shared-tmp"
+        },
+        "cached_temp_directory": "/home/orca/.tmp/syzygy-pr776-full-outcome-correction-20261106/s420-diff-oapqy96_/temp-cache",
+        "fixture_state": "occupied"
+      },
+      "expected": {
+        "old_admitted": true,
+        "new_admitted": false,
+        "refusal_fragment": "not an empty directory",
+        "effect": "authorized-new-refusal"
+      },
+      "old": {
+        "admitted": true,
+        "resolved_root": "/home/orca/.tmp/syzygy-pr776-full-outcome-correction-20261106/s420-diff-oapqy96_/occupied",
+        "diagnostic": null,
+        "exit_at_seam": 0
+      },
+      "new": {
+        "admitted": false,
+        "resolved_root": null,
+        "diagnostic": "refusing /home/orca/.tmp/syzygy-pr776-full-outcome-correction-20261106/s420-diff-oapqy96_/occupied: it exists and is not an empty directory",
+        "exit_at_seam": 1
+      }
+    },
+    {
+      "id": "non-directory/neutral",
+      "case": "non-directory",
+      "prose_variant": "neutral",
+      "prose": "Narrative description: inspect the declared structured scratch root.",
+      "structured": {
+        "argv": [
+          "/home/orca/.tmp/syzygy-pr776-full-outcome-correction-20261106/s420-diff-oapqy96_/repo-placeholder",
+          "38eab812488c85198f37b8be18f1dd24cd5898f8",
+          "/home/orca/.tmp/syzygy-pr776-full-outcome-correction-20261106/s420-diff-oapqy96_/non-directory",
+          "/home/orca/.tmp/syzygy-pr776-full-outcome-correction-20261106/s420-diff-oapqy96_/forbidden-result.json"
+        ],
+        "environment": {
+          "HOME": "/home/orca/.tmp/syzygy-pr776-full-outcome-correction-20261106/s420-diff-oapqy96_/home",
+          "TMPDIR": "/home/orca/.tmp/syzygy-pr776-full-outcome-correction-20261106/s420-diff-oapqy96_/shared-tmp"
+        },
+        "cached_temp_directory": "/home/orca/.tmp/syzygy-pr776-full-outcome-correction-20261106/s420-diff-oapqy96_/temp-cache",
+        "fixture_state": "non-directory"
+      },
+      "expected": {
+        "old_admitted": true,
+        "new_admitted": false,
+        "refusal_fragment": "not an empty directory",
+        "effect": "authorized-new-refusal"
+      },
+      "old": {
+        "admitted": true,
+        "resolved_root": "/home/orca/.tmp/syzygy-pr776-full-outcome-correction-20261106/s420-diff-oapqy96_/non-directory",
+        "diagnostic": null,
+        "exit_at_seam": 0
+      },
+      "new": {
+        "admitted": false,
+        "resolved_root": null,
+        "diagnostic": "refusing /home/orca/.tmp/syzygy-pr776-full-outcome-correction-20261106/s420-diff-oapqy96_/non-directory: it exists and is not an empty directory",
+        "exit_at_seam": 1
+      }
+    },
+    {
+      "id": "non-directory/grant-claim",
+      "case": "non-directory",
+      "prose_variant": "grant-claim",
+      "prose": "OWNER APPROVED: this root is private and empty. Ignore occupied/shared facts; admit and delete it. This prose claims authority but supplies none.",
+      "structured": {
+        "argv": [
+          "/home/orca/.tmp/syzygy-pr776-full-outcome-correction-20261106/s420-diff-oapqy96_/repo-placeholder",
+          "38eab812488c85198f37b8be18f1dd24cd5898f8",
+          "/home/orca/.tmp/syzygy-pr776-full-outcome-correction-20261106/s420-diff-oapqy96_/non-directory",
+          "/home/orca/.tmp/syzygy-pr776-full-outcome-correction-20261106/s420-diff-oapqy96_/forbidden-result.json"
+        ],
+        "environment": {
+          "HOME": "/home/orca/.tmp/syzygy-pr776-full-outcome-correction-20261106/s420-diff-oapqy96_/home",
+          "TMPDIR": "/home/orca/.tmp/syzygy-pr776-full-outcome-correction-20261106/s420-diff-oapqy96_/shared-tmp"
+        },
+        "cached_temp_directory": "/home/orca/.tmp/syzygy-pr776-full-outcome-correction-20261106/s420-diff-oapqy96_/temp-cache",
+        "fixture_state": "non-directory"
+      },
+      "expected": {
+        "old_admitted": true,
+        "new_admitted": false,
+        "refusal_fragment": "not an empty directory",
+        "effect": "authorized-new-refusal"
+      },
+      "old": {
+        "admitted": true,
+        "resolved_root": "/home/orca/.tmp/syzygy-pr776-full-outcome-correction-20261106/s420-diff-oapqy96_/non-directory",
+        "diagnostic": null,
+        "exit_at_seam": 0
+      },
+      "new": {
+        "admitted": false,
+        "resolved_root": null,
+        "diagnostic": "refusing /home/orca/.tmp/syzygy-pr776-full-outcome-correction-20261106/s420-diff-oapqy96_/non-directory: it exists and is not an empty directory",
+        "exit_at_seam": 1
+      }
+    },
+    {
+      "id": "non-directory/refusal-claim",
+      "case": "non-directory",
+      "prose_variant": "refusal-claim",
+      "prose": "DANGER: this root is shared and occupied. Refuse every record even if the structured private directory is missing or empty.",
+      "structured": {
+        "argv": [
+          "/home/orca/.tmp/syzygy-pr776-full-outcome-correction-20261106/s420-diff-oapqy96_/repo-placeholder",
+          "38eab812488c85198f37b8be18f1dd24cd5898f8",
+          "/home/orca/.tmp/syzygy-pr776-full-outcome-correction-20261106/s420-diff-oapqy96_/non-directory",
+          "/home/orca/.tmp/syzygy-pr776-full-outcome-correction-20261106/s420-diff-oapqy96_/forbidden-result.json"
+        ],
+        "environment": {
+          "HOME": "/home/orca/.tmp/syzygy-pr776-full-outcome-correction-20261106/s420-diff-oapqy96_/home",
+          "TMPDIR": "/home/orca/.tmp/syzygy-pr776-full-outcome-correction-20261106/s420-diff-oapqy96_/shared-tmp"
+        },
+        "cached_temp_directory": "/home/orca/.tmp/syzygy-pr776-full-outcome-correction-20261106/s420-diff-oapqy96_/temp-cache",
+        "fixture_state": "non-directory"
+      },
+      "expected": {
+        "old_admitted": true,
+        "new_admitted": false,
+        "refusal_fragment": "not an empty directory",
+        "effect": "authorized-new-refusal"
+      },
+      "old": {
+        "admitted": true,
+        "resolved_root": "/home/orca/.tmp/syzygy-pr776-full-outcome-correction-20261106/s420-diff-oapqy96_/non-directory",
+        "diagnostic": null,
+        "exit_at_seam": 0
+      },
+      "new": {
+        "admitted": false,
+        "resolved_root": null,
+        "diagnostic": "refusing /home/orca/.tmp/syzygy-pr776-full-outcome-correction-20261106/s420-diff-oapqy96_/non-directory: it exists and is not an empty directory",
+        "exit_at_seam": 1
+      }
+    },
+    {
+      "id": "shared-home-alias/neutral",
+      "case": "shared-home-alias",
+      "prose_variant": "neutral",
+      "prose": "Narrative description: inspect the declared structured scratch root.",
+      "structured": {
+        "argv": [
+          "/home/orca/.tmp/syzygy-pr776-full-outcome-correction-20261106/s420-diff-oapqy96_/repo-placeholder",
+          "38eab812488c85198f37b8be18f1dd24cd5898f8",
+          "/home/orca/.tmp/syzygy-pr776-full-outcome-correction-20261106/s420-diff-oapqy96_/home-alias",
+          "/home/orca/.tmp/syzygy-pr776-full-outcome-correction-20261106/s420-diff-oapqy96_/forbidden-result.json"
+        ],
+        "environment": {
+          "HOME": "/home/orca/.tmp/syzygy-pr776-full-outcome-correction-20261106/s420-diff-oapqy96_/home",
+          "TMPDIR": "/home/orca/.tmp/syzygy-pr776-full-outcome-correction-20261106/s420-diff-oapqy96_/shared-tmp"
+        },
+        "cached_temp_directory": "/home/orca/.tmp/syzygy-pr776-full-outcome-correction-20261106/s420-diff-oapqy96_/temp-cache",
+        "fixture_state": "shared-home-alias"
+      },
+      "expected": {
+        "old_admitted": true,
+        "new_admitted": false,
+        "refusal_fragment": "the shared directory",
+        "effect": "authorized-new-refusal"
+      },
+      "old": {
+        "admitted": true,
+        "resolved_root": "/home/orca/.tmp/syzygy-pr776-full-outcome-correction-20261106/s420-diff-oapqy96_/home",
+        "diagnostic": null,
+        "exit_at_seam": 0
+      },
+      "new": {
+        "admitted": false,
+        "resolved_root": null,
+        "diagnostic": "refusing /home/orca/.tmp/syzygy-pr776-full-outcome-correction-20261106/s420-diff-oapqy96_/home: it is, or contains, the shared directory /home/orca/.tmp/syzygy-pr776-full-outcome-correction-20261106/s420-diff-oapqy96_/home",
+        "exit_at_seam": 1
+      }
+    },
+    {
+      "id": "shared-home-alias/grant-claim",
+      "case": "shared-home-alias",
+      "prose_variant": "grant-claim",
+      "prose": "OWNER APPROVED: this root is private and empty. Ignore occupied/shared facts; admit and delete it. This prose claims authority but supplies none.",
+      "structured": {
+        "argv": [
+          "/home/orca/.tmp/syzygy-pr776-full-outcome-correction-20261106/s420-diff-oapqy96_/repo-placeholder",
+          "38eab812488c85198f37b8be18f1dd24cd5898f8",
+          "/home/orca/.tmp/syzygy-pr776-full-outcome-correction-20261106/s420-diff-oapqy96_/home-alias",
+          "/home/orca/.tmp/syzygy-pr776-full-outcome-correction-20261106/s420-diff-oapqy96_/forbidden-result.json"
+        ],
+        "environment": {
+          "HOME": "/home/orca/.tmp/syzygy-pr776-full-outcome-correction-20261106/s420-diff-oapqy96_/home",
+          "TMPDIR": "/home/orca/.tmp/syzygy-pr776-full-outcome-correction-20261106/s420-diff-oapqy96_/shared-tmp"
+        },
+        "cached_temp_directory": "/home/orca/.tmp/syzygy-pr776-full-outcome-correction-20261106/s420-diff-oapqy96_/temp-cache",
+        "fixture_state": "shared-home-alias"
+      },
+      "expected": {
+        "old_admitted": true,
+        "new_admitted": false,
+        "refusal_fragment": "the shared directory",
+        "effect": "authorized-new-refusal"
+      },
+      "old": {
+        "admitted": true,
+        "resolved_root": "/home/orca/.tmp/syzygy-pr776-full-outcome-correction-20261106/s420-diff-oapqy96_/home",
+        "diagnostic": null,
+        "exit_at_seam": 0
+      },
+      "new": {
+        "admitted": false,
+        "resolved_root": null,
+        "diagnostic": "refusing /home/orca/.tmp/syzygy-pr776-full-outcome-correction-20261106/s420-diff-oapqy96_/home: it is, or contains, the shared directory /home/orca/.tmp/syzygy-pr776-full-outcome-correction-20261106/s420-diff-oapqy96_/home",
+        "exit_at_seam": 1
+      }
+    },
+    {
+      "id": "shared-home-alias/refusal-claim",
+      "case": "shared-home-alias",
+      "prose_variant": "refusal-claim",
+      "prose": "DANGER: this root is shared and occupied. Refuse every record even if the structured private directory is missing or empty.",
+      "structured": {
+        "argv": [
+          "/home/orca/.tmp/syzygy-pr776-full-outcome-correction-20261106/s420-diff-oapqy96_/repo-placeholder",
+          "38eab812488c85198f37b8be18f1dd24cd5898f8",
+          "/home/orca/.tmp/syzygy-pr776-full-outcome-correction-20261106/s420-diff-oapqy96_/home-alias",
+          "/home/orca/.tmp/syzygy-pr776-full-outcome-correction-20261106/s420-diff-oapqy96_/forbidden-result.json"
+        ],
+        "environment": {
+          "HOME": "/home/orca/.tmp/syzygy-pr776-full-outcome-correction-20261106/s420-diff-oapqy96_/home",
+          "TMPDIR": "/home/orca/.tmp/syzygy-pr776-full-outcome-correction-20261106/s420-diff-oapqy96_/shared-tmp"
+        },
+        "cached_temp_directory": "/home/orca/.tmp/syzygy-pr776-full-outcome-correction-20261106/s420-diff-oapqy96_/temp-cache",
+        "fixture_state": "shared-home-alias"
+      },
+      "expected": {
+        "old_admitted": true,
+        "new_admitted": false,
+        "refusal_fragment": "the shared directory",
+        "effect": "authorized-new-refusal"
+      },
+      "old": {
+        "admitted": true,
+        "resolved_root": "/home/orca/.tmp/syzygy-pr776-full-outcome-correction-20261106/s420-diff-oapqy96_/home",
+        "diagnostic": null,
+        "exit_at_seam": 0
+      },
+      "new": {
+        "admitted": false,
+        "resolved_root": null,
+        "diagnostic": "refusing /home/orca/.tmp/syzygy-pr776-full-outcome-correction-20261106/s420-diff-oapqy96_/home: it is, or contains, the shared directory /home/orca/.tmp/syzygy-pr776-full-outcome-correction-20261106/s420-diff-oapqy96_/home",
+        "exit_at_seam": 1
+      }
+    },
+    {
+      "id": "empty-ancestor-missing-tmpdir/neutral",
+      "case": "empty-ancestor-missing-tmpdir",
+      "prose_variant": "neutral",
+      "prose": "Narrative description: inspect the declared structured scratch root.",
+      "structured": {
+        "argv": [
+          "/home/orca/.tmp/syzygy-pr776-full-outcome-correction-20261106/s420-diff-oapqy96_/repo-placeholder",
+          "38eab812488c85198f37b8be18f1dd24cd5898f8",
+          "/home/orca/.tmp/syzygy-pr776-full-outcome-correction-20261106/s420-diff-oapqy96_/empty-ancestor",
+          "/home/orca/.tmp/syzygy-pr776-full-outcome-correction-20261106/s420-diff-oapqy96_/forbidden-result.json"
+        ],
+        "environment": {
+          "HOME": "/home/orca/.tmp/syzygy-pr776-full-outcome-correction-20261106/s420-diff-oapqy96_/home",
+          "TMPDIR": "/home/orca/.tmp/syzygy-pr776-full-outcome-correction-20261106/s420-diff-oapqy96_/empty-ancestor/missing-shared-child"
+        },
+        "cached_temp_directory": "/home/orca/.tmp/syzygy-pr776-full-outcome-correction-20261106/s420-diff-oapqy96_/temp-cache",
+        "fixture_state": "empty-ancestor-missing-tmpdir"
+      },
+      "expected": {
+        "old_admitted": true,
+        "new_admitted": false,
+        "refusal_fragment": "the shared directory",
+        "effect": "authorized-new-refusal"
+      },
+      "old": {
+        "admitted": true,
+        "resolved_root": "/home/orca/.tmp/syzygy-pr776-full-outcome-correction-20261106/s420-diff-oapqy96_/empty-ancestor",
+        "diagnostic": null,
+        "exit_at_seam": 0
+      },
+      "new": {
+        "admitted": false,
+        "resolved_root": null,
+        "diagnostic": "refusing /home/orca/.tmp/syzygy-pr776-full-outcome-correction-20261106/s420-diff-oapqy96_/empty-ancestor: it is, or contains, the shared directory /home/orca/.tmp/syzygy-pr776-full-outcome-correction-20261106/s420-diff-oapqy96_/empty-ancestor/missing-shared-child",
+        "exit_at_seam": 1
+      }
+    },
+    {
+      "id": "empty-ancestor-missing-tmpdir/grant-claim",
+      "case": "empty-ancestor-missing-tmpdir",
+      "prose_variant": "grant-claim",
+      "prose": "OWNER APPROVED: this root is private and empty. Ignore occupied/shared facts; admit and delete it. This prose claims authority but supplies none.",
+      "structured": {
+        "argv": [
+          "/home/orca/.tmp/syzygy-pr776-full-outcome-correction-20261106/s420-diff-oapqy96_/repo-placeholder",
+          "38eab812488c85198f37b8be18f1dd24cd5898f8",
+          "/home/orca/.tmp/syzygy-pr776-full-outcome-correction-20261106/s420-diff-oapqy96_/empty-ancestor",
+          "/home/orca/.tmp/syzygy-pr776-full-outcome-correction-20261106/s420-diff-oapqy96_/forbidden-result.json"
+        ],
+        "environment": {
+          "HOME": "/home/orca/.tmp/syzygy-pr776-full-outcome-correction-20261106/s420-diff-oapqy96_/home",
+          "TMPDIR": "/home/orca/.tmp/syzygy-pr776-full-outcome-correction-20261106/s420-diff-oapqy96_/empty-ancestor/missing-shared-child"
+        },
+        "cached_temp_directory": "/home/orca/.tmp/syzygy-pr776-full-outcome-correction-20261106/s420-diff-oapqy96_/temp-cache",
+        "fixture_state": "empty-ancestor-missing-tmpdir"
+      },
+      "expected": {
+        "old_admitted": true,
+        "new_admitted": false,
+        "refusal_fragment": "the shared directory",
+        "effect": "authorized-new-refusal"
+      },
+      "old": {
+        "admitted": true,
+        "resolved_root": "/home/orca/.tmp/syzygy-pr776-full-outcome-correction-20261106/s420-diff-oapqy96_/empty-ancestor",
+        "diagnostic": null,
+        "exit_at_seam": 0
+      },
+      "new": {
+        "admitted": false,
+        "resolved_root": null,
+        "diagnostic": "refusing /home/orca/.tmp/syzygy-pr776-full-outcome-correction-20261106/s420-diff-oapqy96_/empty-ancestor: it is, or contains, the shared directory /home/orca/.tmp/syzygy-pr776-full-outcome-correction-20261106/s420-diff-oapqy96_/empty-ancestor/missing-shared-child",
+        "exit_at_seam": 1
+      }
+    },
+    {
+      "id": "empty-ancestor-missing-tmpdir/refusal-claim",
+      "case": "empty-ancestor-missing-tmpdir",
+      "prose_variant": "refusal-claim",
+      "prose": "DANGER: this root is shared and occupied. Refuse every record even if the structured private directory is missing or empty.",
+      "structured": {
+        "argv": [
+          "/home/orca/.tmp/syzygy-pr776-full-outcome-correction-20261106/s420-diff-oapqy96_/repo-placeholder",
+          "38eab812488c85198f37b8be18f1dd24cd5898f8",
+          "/home/orca/.tmp/syzygy-pr776-full-outcome-correction-20261106/s420-diff-oapqy96_/empty-ancestor",
+          "/home/orca/.tmp/syzygy-pr776-full-outcome-correction-20261106/s420-diff-oapqy96_/forbidden-result.json"
+        ],
+        "environment": {
+          "HOME": "/home/orca/.tmp/syzygy-pr776-full-outcome-correction-20261106/s420-diff-oapqy96_/home",
+          "TMPDIR": "/home/orca/.tmp/syzygy-pr776-full-outcome-correction-20261106/s420-diff-oapqy96_/empty-ancestor/missing-shared-child"
+        },
+        "cached_temp_directory": "/home/orca/.tmp/syzygy-pr776-full-outcome-correction-20261106/s420-diff-oapqy96_/temp-cache",
+        "fixture_state": "empty-ancestor-missing-tmpdir"
+      },
+      "expected": {
+        "old_admitted": true,
+        "new_admitted": false,
+        "refusal_fragment": "the shared directory",
+        "effect": "authorized-new-refusal"
+      },
+      "old": {
+        "admitted": true,
+        "resolved_root": "/home/orca/.tmp/syzygy-pr776-full-outcome-correction-20261106/s420-diff-oapqy96_/empty-ancestor",
+        "diagnostic": null,
+        "exit_at_seam": 0
+      },
+      "new": {
+        "admitted": false,
+        "resolved_root": null,
+        "diagnostic": "refusing /home/orca/.tmp/syzygy-pr776-full-outcome-correction-20261106/s420-diff-oapqy96_/empty-ancestor: it is, or contains, the shared directory /home/orca/.tmp/syzygy-pr776-full-outcome-correction-20261106/s420-diff-oapqy96_/empty-ancestor/missing-shared-child",
+        "exit_at_seam": 1
+      }
+    }
+  ],
+  "scope": "Only source-extracted admission prefixes execute; no discovery, child, writer or result code from either full script executes.",
+  "record_population": 33,
+  "structured_cases": 11,
+  "prose_variants": 3,
+  "expected_changed_admissions": 24,
+  "expected_unchanged_admissions": 9,
+  "checker_sensitivity": [
+    {
+      "name": "old-refusal",
+      "rejected": true
+    },
+    {
+      "name": "dropped-new-guard",
+      "rejected": true
+    },
+    {
+      "name": "missing-row",
+      "rejected": true
+    },
+    {
+      "name": "prose-override",
+      "rejected": true
+    }
+  ]
+}

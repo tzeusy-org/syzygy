@@ -1,0 +1,25 @@
+{
+  "at": "2026-11-06T10:54:43.556947+00:00",
+  "independent_executor": "ROOT",
+  "actual_controls": 4,
+  "readable_proc_success": 2,
+  "hidden_proc_expected_ENOENT": 2,
+  "stock_runtimes": [
+    "24.6.0",
+    "24.22.0"
+  ],
+  "source_bindings": [
+    {
+      "path": "/home/orca/.tmp/syzygy-bpyt420-owner-approved-full-outcome-20261106/subject/node_modules/tinypool/dist/entry/process.js",
+      "sha256": "a73d2103a366a3dfdbe65495eaa26df058af1e3ad12339fd4b0f679e7c70989f"
+    },
+    {
+      "path": "/home/orca/.tmp/syzygy-bpyt420-owner-approved-full-outcome-20261106/subject/node_modules/tinypool/dist/entry/worker.js",
+      "sha256": "e08e03c909cf9b5790f5969d09e4114d5b8908f3c0b75fbb487010f8cd54393e"
+    }
+  ],
+  "observed": "Without workspace imports or source/assertion/global/library substitutions, both declared stock Node runtimes succeed with real private procfs and throw ENOENT uv_resident_set_memory when proc is actual empty tmpfs. Stock Tinypool success and catch paths both call memoryUsage().heapUsed before response/send.",
+  "inference": "This independently establishes a framework prerequisite failure in the literal no-proc fixture and supports the proposed cause of framework nontermination after assertions; it does not prove sole cause or complete the original tests.",
+  "limits": "Actual fixed and collision 300-second timeouts remain incomplete, not passes/kills. No AC7/8 waiver, no universal unavailable-runtime claim, no platform/toolchain change authorized. Worker evidence/readable tests and all original full16 obligations remain separately reviewed.",
+  "prior_root_attempt": "Initial diagnostic script parse failed before any execution/files; corrected missing lexical whitespace only, not a product/tool substitution."
+}

@@ -1,0 +1,444 @@
+{
+  "original_trace_sha256": "1e99ba4dcd50951e2bc3bc1b34b06bda380f5f930d7f2ff5da471547e5d3f32f",
+  "successful_execs": [
+    {
+      "executable": "/usr/bin/python3",
+      "argv0": "python3",
+      "raw": "4     execve(\"/usr/bin/python3\", [\"python3\", \"-I\", \"/home/orca/.tmp/syzygy-bpyt420-o\"..., \"/home/orca/.tmp/syzygy-bpyt420-o\"..., \"/home/orca/.tmp/syzygy-bpyt420-o\"..., \"/home/orca/.tmp/syzygy-bpyt420-o\"...], 0x7fffa5b5beb0 /* 21 vars */) = 0"
+    },
+    {
+      "executable": "/usr/bin/git",
+      "argv0": "git",
+      "raw": "5     execve(\"/usr/bin/git\", [\"git\", \"rev-parse\", \"HEAD\"], 0x7ffc01c73d00 /* 21 vars */) = 0"
+    },
+    {
+      "executable": "/usr/bin/python3",
+      "argv0": "/usr/bin/python3",
+      "raw": "6     execve(\"/usr/bin/python3\", [\"/usr/bin/python3\", \"-I\", \"/home/orca/.tmp/syzygy-bpyt420-o\"..., \"/home/orca/.tmp/syzygy-bpyt420-o\"..., \"38eab812488c85198f37b8be18f1dd24\"..., \"/home/orca/.tmp/syzygy-bpyt420-o\"..., \"/home/orca/.tmp/syzygy-bpyt420-o\"..., \"sweep\"], 0x7c5d8f512ad0 /* 21 vars */) = 0"
+    },
+    {
+      "executable": "/usr/bin/git",
+      "argv0": "git",
+      "raw": "7     execve(\"/usr/bin/git\", [\"git\", \"rev-parse\", \"HEAD\"], 0x7ffcf5c2da20 /* 21 vars */) = 0"
+    },
+    {
+      "executable": "/usr/bin/git",
+      "argv0": "git",
+      "raw": "8     execve(\"/usr/bin/git\", [\"git\", \"status\", \"--porcelain\", \"--\", \"vitest.config.ts\", \"apps/three-surface-poc/src\"], 0x7ffcf5c2da20 /* 21 vars */) = 0"
+    },
+    {
+      "executable": "/usr/bin/git",
+      "argv0": "git",
+      "raw": "27    execve(\"/usr/bin/git\", [\"git\", \"rev-parse\", \"HEAD\"], 0x7ffcf5c2da20 /* 21 vars */) = 0"
+    },
+    {
+      "executable": "/usr/bin/python3",
+      "argv0": "/usr/bin/python3",
+      "raw": "28    execve(\"/usr/bin/python3\", [\"/usr/bin/python3\", \"-I\", \"/home/orca/.tmp/syzygy-bpyt420-o\"..., \"/home/orca/.tmp/syzygy-bpyt420-o\"..., \"38eab812488c85198f37b8be18f1dd24\"..., \"/home/orca/.tmp/syzygy-bpyt420-o\"..., \"/home/orca/.tmp/syzygy-bpyt420-o\"..., \"sweep\"], 0x7c5d8f512c30 /* 21 vars */) = 0"
+    },
+    {
+      "executable": "/usr/bin/git",
+      "argv0": "git",
+      "raw": "29    execve(\"/usr/bin/git\", [\"git\", \"rev-parse\", \"HEAD\"], 0x7ffe02445960 /* 21 vars */) = 0"
+    },
+    {
+      "executable": "/usr/bin/git",
+      "argv0": "git",
+      "raw": "30    execve(\"/usr/bin/git\", [\"git\", \"status\", \"--porcelain\", \"--\", \"vitest.config.ts\", \"apps/three-surface-poc/src\"], 0x7ffe02445960 /* 21 vars */) = 0"
+    },
+    {
+      "executable": "/usr/bin/git",
+      "argv0": "git",
+      "raw": "49    execve(\"/usr/bin/git\", [\"git\", \"rev-parse\", \"HEAD\"], 0x7ffe02445960 /* 21 vars */) = 0"
+    },
+    {
+      "executable": "/usr/bin/python3",
+      "argv0": "/usr/bin/python3",
+      "raw": "50    execve(\"/usr/bin/python3\", [\"/usr/bin/python3\", \"-I\", \"/home/orca/.tmp/syzygy-bpyt420-o\"..., \"/home/orca/.tmp/syzygy-bpyt420-o\"..., \"38eab812488c85198f37b8be18f1dd24\"..., \"/home/orca/.tmp/syzygy-bpyt420-o\"..., \"/home/orca/.tmp/syzygy-bpyt420-o\"..., \"sweep\"], 0x7c5d8f512c30 /* 21 vars */) = 0"
+    },
+    {
+      "executable": "/usr/bin/git",
+      "argv0": "git",
+      "raw": "51    execve(\"/usr/bin/git\", [\"git\", \"rev-parse\", \"HEAD\"], 0x7ffed49cc030 /* 21 vars */) = 0"
+    },
+    {
+      "executable": "/usr/bin/git",
+      "argv0": "git",
+      "raw": "52    execve(\"/usr/bin/git\", [\"git\", \"status\", \"--porcelain\", \"--\", \"vitest.config.ts\", \"apps/three-surface-poc/src\"], 0x7ffed49cc030 /* 21 vars */) = 0"
+    },
+    {
+      "executable": "/usr/bin/git",
+      "argv0": "git",
+      "raw": "71    execve(\"/usr/bin/git\", [\"git\", \"rev-parse\", \"HEAD\"], 0x7ffed49cc030 /* 21 vars */) = 0"
+    },
+    {
+      "executable": "/usr/bin/python3",
+      "argv0": "/usr/bin/python3",
+      "raw": "72    execve(\"/usr/bin/python3\", [\"/usr/bin/python3\", \"-I\", \"/home/orca/.tmp/syzygy-bpyt420-o\"..., \"/home/orca/.tmp/syzygy-bpyt420-o\"..., \"38eab812488c85198f37b8be18f1dd24\"..., \"/home/orca/.tmp/syzygy-bpyt420-o\"..., \"/home/orca/.tmp/syzygy-bpyt420-o\"..., \"sweep\"], 0x7c5d8f512c30 /* 21 vars */) = 0"
+    },
+    {
+      "executable": "/usr/bin/git",
+      "argv0": "git",
+      "raw": "73    execve(\"/usr/bin/git\", [\"git\", \"rev-parse\", \"HEAD\"], 0x7fffa2772a60 /* 21 vars */) = 0"
+    },
+    {
+      "executable": "/usr/bin/git",
+      "argv0": "git",
+      "raw": "74    execve(\"/usr/bin/git\", [\"git\", \"status\", \"--porcelain\", \"--\", \"vitest.config.ts\", \"apps/three-surface-poc/src\"], 0x7fffa2772a60 /* 21 vars */) = 0"
+    },
+    {
+      "executable": "/usr/bin/git",
+      "argv0": "git",
+      "raw": "93    execve(\"/usr/bin/git\", [\"git\", \"rev-parse\", \"HEAD\"], 0x7fffa2772a60 /* 21 vars */) = 0"
+    },
+    {
+      "executable": "/usr/bin/python3",
+      "argv0": "/usr/bin/python3",
+      "raw": "94    execve(\"/usr/bin/python3\", [\"/usr/bin/python3\", \"-I\", \"/home/orca/.tmp/syzygy-bpyt420-o\"..., \"/home/orca/.tmp/syzygy-bpyt420-o\"..., \"38eab812488c85198f37b8be18f1dd24\"..., \"/home/orca/.tmp/syzygy-bpyt420-o\"..., \"/home/orca/.tmp/syzygy-bpyt420-o\"..., \"sweep\"], 0x7c5d8f512d90 /* 21 vars */) = 0"
+    },
+    {
+      "executable": "/usr/bin/git",
+      "argv0": "git",
+      "raw": "95    execve(\"/usr/bin/git\", [\"git\", \"rev-parse\", \"HEAD\"], 0x7ffdca231f30 /* 21 vars */) = 0"
+    },
+    {
+      "executable": "/usr/bin/git",
+      "argv0": "git",
+      "raw": "96    execve(\"/usr/bin/git\", [\"git\", \"status\", \"--porcelain\", \"--\", \"vitest.config.ts\", \"apps/three-surface-poc/src\"], 0x7ffdca231f30 /* 21 vars */) = 0"
+    },
+    {
+      "executable": "/usr/bin/git",
+      "argv0": "git",
+      "raw": "115   execve(\"/usr/bin/git\", [\"git\", \"rev-parse\", \"HEAD\"], 0x7ffdca231f30 /* 21 vars */) = 0"
+    },
+    {
+      "executable": "/usr/bin/python3",
+      "argv0": "/usr/bin/python3",
+      "raw": "116   execve(\"/usr/bin/python3\", [\"/usr/bin/python3\", \"-I\", \"/home/orca/.tmp/syzygy-bpyt420-o\"..., \"/home/orca/.tmp/syzygy-bpyt420-o\"..., \"38eab812488c85198f37b8be18f1dd24\"..., \"/home/orca/.tmp/syzygy-bpyt420-o\"..., \"/home/orca/.tmp/syzygy-bpyt420-o\"..., \"sweep\"], 0x7c5d8f512ce0 /* 21 vars */) = 0"
+    },
+    {
+      "executable": "/usr/bin/git",
+      "argv0": "git",
+      "raw": "117   execve(\"/usr/bin/git\", [\"git\", \"rev-parse\", \"HEAD\"], 0x7ffde526c630 /* 21 vars */) = 0"
+    },
+    {
+      "executable": "/usr/bin/git",
+      "argv0": "git",
+      "raw": "118   execve(\"/usr/bin/git\", [\"git\", \"status\", \"--porcelain\", \"--\", \"vitest.config.ts\", \"apps/three-surface-poc/src\"], 0x7ffde526c630 /* 21 vars */) = 0"
+    },
+    {
+      "executable": "/usr/bin/git",
+      "argv0": "git",
+      "raw": "137   execve(\"/usr/bin/git\", [\"git\", \"rev-parse\", \"HEAD\"], 0x7ffde526c630 /* 21 vars */) = 0"
+    },
+    {
+      "executable": "/usr/bin/python3",
+      "argv0": "/usr/bin/python3",
+      "raw": "138   execve(\"/usr/bin/python3\", [\"/usr/bin/python3\", \"-I\", \"/home/orca/.tmp/syzygy-bpyt420-o\"..., \"/home/orca/.tmp/syzygy-bpyt420-o\"..., \"38eab812488c85198f37b8be18f1dd24\"..., \"/home/orca/.tmp/syzygy-bpyt420-o\"..., \"/home/orca/.tmp/syzygy-bpyt420-o\"..., \"KILL\", \"3\"], 0x7c5d8f512b80 /* 21 vars */) = 0"
+    },
+    {
+      "executable": "/usr/bin/git",
+      "argv0": "git",
+      "raw": "139   execve(\"/usr/bin/git\", [\"git\", \"rev-parse\", \"HEAD\"], 0x7ffec7c241e8 /* 21 vars */) = 0"
+    },
+    {
+      "executable": "/usr/bin/git",
+      "argv0": "git",
+      "raw": "140   execve(\"/usr/bin/git\", [\"git\", \"rev-parse\", \"38eab812488c85198f37b8be18f1dd24\"...], 0x7ffec7c241e8 /* 21 vars */) = 0"
+    },
+    {
+      "executable": "/usr/bin/git",
+      "argv0": "git",
+      "raw": "141   execve(\"/usr/bin/git\", [\"git\", \"rev-parse\", \"HEAD\"], 0x7ffec7c241e8 /* 21 vars */) = 0"
+    },
+    {
+      "executable": "/usr/bin/python3",
+      "argv0": "/usr/bin/python3",
+      "raw": "142   execve(\"/usr/bin/python3\", [\"/usr/bin/python3\", \"-I\", \"/home/orca/.tmp/syzygy-bpyt420-o\"..., \"/home/orca/.tmp/syzygy-bpyt420-o\"..., \"38eab812488c85198f37b8be18f1dd24\"..., \"/home/orca/.tmp/syzygy-bpyt420-o\"..., \"/home/orca/.tmp/syzygy-bpyt420-o\"..., \"KILL\", \"3\"], 0x7c5d8f512d90 /* 21 vars */) = 0"
+    },
+    {
+      "executable": "/usr/bin/git",
+      "argv0": "git",
+      "raw": "143   execve(\"/usr/bin/git\", [\"git\", \"rev-parse\", \"HEAD\"], 0x7ffe291fd0d8 /* 21 vars */) = 0"
+    },
+    {
+      "executable": "/usr/bin/git",
+      "argv0": "git",
+      "raw": "144   execve(\"/usr/bin/git\", [\"git\", \"rev-parse\", \"38eab812488c85198f37b8be18f1dd24\"...], 0x7ffe291fd0d8 /* 21 vars */) = 0"
+    },
+    {
+      "executable": "/usr/bin/git",
+      "argv0": "git",
+      "raw": "145   execve(\"/usr/bin/git\", [\"git\", \"rev-parse\", \"HEAD\"], 0x7ffe291fd0d8 /* 21 vars */) = 0"
+    },
+    {
+      "executable": "/usr/bin/python3",
+      "argv0": "/usr/bin/python3",
+      "raw": "146   execve(\"/usr/bin/python3\", [\"/usr/bin/python3\", \"-I\", \"/home/orca/.tmp/syzygy-bpyt420-o\"..., \"/home/orca/.tmp/syzygy-bpyt420-o\"..., \"38eab812488c85198f37b8be18f1dd24\"..., \"/home/orca/.tmp/syzygy-bpyt420-o\"..., \"/home/orca/.tmp/syzygy-bpyt420-o\"..., \"KILL\", \"3\"], 0x7c5d8f512b80 /* 21 vars */) = 0"
+    },
+    {
+      "executable": "/usr/bin/git",
+      "argv0": "git",
+      "raw": "147   execve(\"/usr/bin/git\", [\"git\", \"rev-parse\", \"HEAD\"], 0x7fffd05de308 /* 21 vars */) = 0"
+    },
+    {
+      "executable": "/usr/bin/git",
+      "argv0": "git",
+      "raw": "148   execve(\"/usr/bin/git\", [\"git\", \"rev-parse\", \"38eab812488c85198f37b8be18f1dd24\"...], 0x7fffd05de308 /* 21 vars */) = 0"
+    },
+    {
+      "executable": "/usr/bin/git",
+      "argv0": "git",
+      "raw": "149   execve(\"/usr/bin/git\", [\"git\", \"rev-parse\", \"HEAD\"], 0x7fffd05de308 /* 21 vars */) = 0"
+    },
+    {
+      "executable": "/usr/bin/python3",
+      "argv0": "/usr/bin/python3",
+      "raw": "150   execve(\"/usr/bin/python3\", [\"/usr/bin/python3\", \"-I\", \"/home/orca/.tmp/syzygy-bpyt420-o\"..., \"/home/orca/.tmp/syzygy-bpyt420-o\"..., \"38eab812488c85198f37b8be18f1dd24\"..., \"/home/orca/.tmp/syzygy-bpyt420-o\"..., \"/home/orca/.tmp/syzygy-bpyt420-o\"..., \"KILL\", \"3\"], 0x7c5d8f512d90 /* 21 vars */) = 0"
+    },
+    {
+      "executable": "/usr/bin/git",
+      "argv0": "git",
+      "raw": "151   execve(\"/usr/bin/git\", [\"git\", \"rev-parse\", \"HEAD\"], 0x7ffdd71ea888 /* 21 vars */) = 0"
+    },
+    {
+      "executable": "/usr/bin/git",
+      "argv0": "git",
+      "raw": "152   execve(\"/usr/bin/git\", [\"git\", \"rev-parse\", \"38eab812488c85198f37b8be18f1dd24\"...], 0x7ffdd71ea888 /* 21 vars */) = 0"
+    },
+    {
+      "executable": "/usr/bin/git",
+      "argv0": "git",
+      "raw": "153   execve(\"/usr/bin/git\", [\"git\", \"rev-parse\", \"HEAD\"], 0x7ffdd71ea888 /* 21 vars */) = 0"
+    },
+    {
+      "executable": "/usr/bin/python3",
+      "argv0": "/usr/bin/python3",
+      "raw": "154   execve(\"/usr/bin/python3\", [\"/usr/bin/python3\", \"-I\", \"/home/orca/.tmp/syzygy-bpyt420-o\"..., \"/home/orca/.tmp/syzygy-bpyt420-o\"..., \"38eab812488c85198f37b8be18f1dd24\"..., \"/home/orca/.tmp/syzygy-bpyt420-o\"..., \"/home/orca/.tmp/syzygy-bpyt420-o\"..., \"KILL\", \"3\"], 0x7c5d8f512c30 /* 21 vars */) = 0"
+    },
+    {
+      "executable": "/usr/bin/git",
+      "argv0": "git",
+      "raw": "155   execve(\"/usr/bin/git\", [\"git\", \"rev-parse\", \"HEAD\"], 0x7ffed168f778 /* 21 vars */) = 0"
+    },
+    {
+      "executable": "/usr/bin/git",
+      "argv0": "git",
+      "raw": "156   execve(\"/usr/bin/git\", [\"git\", \"rev-parse\", \"38eab812488c85198f37b8be18f1dd24\"...], 0x7ffed168f778 /* 21 vars */) = 0"
+    },
+    {
+      "executable": "/usr/bin/git",
+      "argv0": "git",
+      "raw": "157   execve(\"/usr/bin/git\", [\"git\", \"rev-parse\", \"HEAD\"], 0x7ffed168f778 /* 21 vars */) = 0"
+    },
+    {
+      "executable": "/usr/bin/python3",
+      "argv0": "/usr/bin/python3",
+      "raw": "158   execve(\"/usr/bin/python3\", [\"/usr/bin/python3\", \"-I\", \"/home/orca/.tmp/syzygy-bpyt420-o\"..., \"/home/orca/.tmp/syzygy-bpyt420-o\"..., \"38eab812488c85198f37b8be18f1dd24\"..., \"/home/orca/.tmp/syzygy-bpyt420-o\"..., \"/home/orca/.tmp/syzygy-bpyt420-o\"..., \"KILL\", \"3\"], 0x7c5d8f512c30 /* 21 vars */) = 0"
+    },
+    {
+      "executable": "/usr/bin/git",
+      "argv0": "git",
+      "raw": "159   execve(\"/usr/bin/git\", [\"git\", \"rev-parse\", \"HEAD\"], 0x7ffe2bf3f608 /* 21 vars */) = 0"
+    },
+    {
+      "executable": "/usr/bin/git",
+      "argv0": "git",
+      "raw": "160   execve(\"/usr/bin/git\", [\"git\", \"rev-parse\", \"38eab812488c85198f37b8be18f1dd24\"...], 0x7ffe2bf3f608 /* 21 vars */) = 0"
+    },
+    {
+      "executable": "/usr/bin/git",
+      "argv0": "git",
+      "raw": "161   execve(\"/usr/bin/git\", [\"git\", \"rev-parse\", \"HEAD\"], 0x7ffe2bf3f608 /* 21 vars */) = 0"
+    },
+    {
+      "executable": "/usr/bin/python3",
+      "argv0": "/usr/bin/python3",
+      "raw": "162   execve(\"/usr/bin/python3\", [\"/usr/bin/python3\", \"-I\", \"/home/orca/.tmp/syzygy-bpyt420-o\"..., \"/home/orca/.tmp/syzygy-bpyt420-o\"..., \"38eab812488c85198f37b8be18f1dd24\"..., \"/home/orca/.tmp/syzygy-bpyt420-o\"..., \"/home/orca/.tmp/syzygy-bpyt420-o\"..., \"head\"], 0x7c5d8f512b80 /* 21 vars */) = 0"
+    },
+    {
+      "executable": "/usr/bin/git",
+      "argv0": "git",
+      "raw": "163   execve(\"/usr/bin/git\", [\"git\", \"rev-parse\", \"HEAD\"], 0x7ffc1cfd7050 /* 21 vars */) = 0"
+    },
+    {
+      "executable": "/usr/bin/git",
+      "argv0": "git",
+      "raw": "164   execve(\"/usr/bin/git\", [\"git\", \"rev-parse\", \"38eab812488c85198f37b8be18f1dd24\"...], 0x7ffc1cfd7050 /* 21 vars */) = 0"
+    },
+    {
+      "executable": "/usr/bin/git",
+      "argv0": "git",
+      "raw": "165   execve(\"/usr/bin/git\", [\"git\", \"status\", \"--porcelain\", \"--\", \"apps\", \"packages\", \"vitest.config.ts\"], 0x7ffc1cfd7050 /* 21 vars */) = 0"
+    },
+    {
+      "executable": "/usr/bin/python3",
+      "argv0": "/usr/bin/python3",
+      "raw": "184   execve(\"/usr/bin/python3\", [\"/usr/bin/python3\", \"-I\", \"/home/orca/.tmp/syzygy-bpyt420-o\"..., \"/home/orca/.tmp/syzygy-bpyt420-o\"..., \"38eab812488c85198f37b8be18f1dd24\"..., \"/home/orca/.tmp/syzygy-bpyt420-o\"..., \"/home/orca/.tmp/syzygy-bpyt420-o\"..., \"head\"], 0x7c5d8f5128c0 /* 21 vars */) = 0"
+    },
+    {
+      "executable": "/usr/bin/git",
+      "argv0": "git",
+      "raw": "185   execve(\"/usr/bin/git\", [\"git\", \"rev-parse\", \"HEAD\"], 0x7fff8477b2d0 /* 21 vars */) = 0"
+    },
+    {
+      "executable": "/usr/bin/git",
+      "argv0": "git",
+      "raw": "186   execve(\"/usr/bin/git\", [\"git\", \"rev-parse\", \"38eab812488c85198f37b8be18f1dd24\"...], 0x7fff8477b2d0 /* 21 vars */) = 0"
+    },
+    {
+      "executable": "/usr/bin/git",
+      "argv0": "git",
+      "raw": "187   execve(\"/usr/bin/git\", [\"git\", \"status\", \"--porcelain\", \"--\", \"apps\", \"packages\", \"vitest.config.ts\"], 0x7fff8477b2d0 /* 21 vars */) = 0"
+    },
+    {
+      "executable": "/usr/bin/python3",
+      "argv0": "/usr/bin/python3",
+      "raw": "206   execve(\"/usr/bin/python3\", [\"/usr/bin/python3\", \"-I\", \"/home/orca/.tmp/syzygy-bpyt420-o\"..., \"/home/orca/.tmp/syzygy-bpyt420-o\"..., \"38eab812488c85198f37b8be18f1dd24\"..., \"/home/orca/.tmp/syzygy-bpyt420-o\"..., \"/home/orca/.tmp/syzygy-bpyt420-o\"..., \"head\"], 0x7c5d8f5128c0 /* 21 vars */) = 0"
+    },
+    {
+      "executable": "/usr/bin/git",
+      "argv0": "git",
+      "raw": "207   execve(\"/usr/bin/git\", [\"git\", \"rev-parse\", \"HEAD\"], 0x7fff1fa1b9c0 /* 21 vars */) = 0"
+    },
+    {
+      "executable": "/usr/bin/git",
+      "argv0": "git",
+      "raw": "208   execve(\"/usr/bin/git\", [\"git\", \"rev-parse\", \"38eab812488c85198f37b8be18f1dd24\"...], 0x7fff1fa1b9c0 /* 21 vars */) = 0"
+    },
+    {
+      "executable": "/usr/bin/git",
+      "argv0": "git",
+      "raw": "209   execve(\"/usr/bin/git\", [\"git\", \"status\", \"--porcelain\", \"--\", \"apps\", \"packages\", \"vitest.config.ts\"], 0x7fff1fa1b9c0 /* 21 vars */) = 0"
+    },
+    {
+      "executable": "/usr/bin/python3",
+      "argv0": "/usr/bin/python3",
+      "raw": "228   execve(\"/usr/bin/python3\", [\"/usr/bin/python3\", \"-I\", \"/home/orca/.tmp/syzygy-bpyt420-o\"..., \"/home/orca/.tmp/syzygy-bpyt420-o\"..., \"38eab812488c85198f37b8be18f1dd24\"..., \"/home/orca/.tmp/syzygy-bpyt420-o\"..., \"/home/orca/.tmp/syzygy-bpyt420-o\"..., \"head\"], 0x7c5d8f512ad0 /* 21 vars */) = 0"
+    },
+    {
+      "executable": "/usr/bin/git",
+      "argv0": "git",
+      "raw": "229   execve(\"/usr/bin/git\", [\"git\", \"rev-parse\", \"HEAD\"], 0x7fffc29c5c80 /* 21 vars */) = 0"
+    },
+    {
+      "executable": "/usr/bin/git",
+      "argv0": "git",
+      "raw": "230   execve(\"/usr/bin/git\", [\"git\", \"rev-parse\", \"38eab812488c85198f37b8be18f1dd24\"...], 0x7fffc29c5c80 /* 21 vars */) = 0"
+    },
+    {
+      "executable": "/usr/bin/git",
+      "argv0": "git",
+      "raw": "231   execve(\"/usr/bin/git\", [\"git\", \"status\", \"--porcelain\", \"--\", \"apps\", \"packages\", \"vitest.config.ts\"], 0x7fffc29c5c80 /* 21 vars */) = 0"
+    },
+    {
+      "executable": "/usr/bin/python3",
+      "argv0": "/usr/bin/python3",
+      "raw": "250   execve(\"/usr/bin/python3\", [\"/usr/bin/python3\", \"-I\", \"/home/orca/.tmp/syzygy-bpyt420-o\"..., \"/home/orca/.tmp/syzygy-bpyt420-o\"..., \"38eab812488c85198f37b8be18f1dd24\"..., \"/home/orca/.tmp/syzygy-bpyt420-o\"..., \"/home/orca/.tmp/syzygy-bpyt420-o\"..., \"head\"], 0x7c5d8f512c30 /* 21 vars */) = 0"
+    },
+    {
+      "executable": "/usr/bin/git",
+      "argv0": "git",
+      "raw": "251   execve(\"/usr/bin/git\", [\"git\", \"rev-parse\", \"HEAD\"], 0x7ffede0719f0 /* 21 vars */) = 0"
+    },
+    {
+      "executable": "/usr/bin/git",
+      "argv0": "git",
+      "raw": "252   execve(\"/usr/bin/git\", [\"git\", \"rev-parse\", \"38eab812488c85198f37b8be18f1dd24\"...], 0x7ffede0719f0 /* 21 vars */) = 0"
+    },
+    {
+      "executable": "/usr/bin/git",
+      "argv0": "git",
+      "raw": "253   execve(\"/usr/bin/git\", [\"git\", \"status\", \"--porcelain\", \"--\", \"apps\", \"packages\", \"vitest.config.ts\"], 0x7ffede0719f0 /* 21 vars */) = 0"
+    },
+    {
+      "executable": "/usr/bin/python3",
+      "argv0": "/usr/bin/python3",
+      "raw": "272   execve(\"/usr/bin/python3\", [\"/usr/bin/python3\", \"-I\", \"/home/orca/.tmp/syzygy-bpyt420-o\"..., \"/home/orca/.tmp/syzygy-bpyt420-o\"..., \"38eab812488c85198f37b8be18f1dd24\"..., \"/home/orca/.tmp/syzygy-bpyt420-o\"..., \"/home/orca/.tmp/syzygy-bpyt420-o\"..., \"head\"], 0x7c5d8f512ad0 /* 21 vars */) = 0"
+    },
+    {
+      "executable": "/usr/bin/git",
+      "argv0": "git",
+      "raw": "273   execve(\"/usr/bin/git\", [\"git\", \"rev-parse\", \"HEAD\"], 0x7fff1dced770 /* 21 vars */) = 0"
+    },
+    {
+      "executable": "/usr/bin/git",
+      "argv0": "git",
+      "raw": "274   execve(\"/usr/bin/git\", [\"git\", \"rev-parse\", \"38eab812488c85198f37b8be18f1dd24\"...], 0x7fff1dced770 /* 21 vars */) = 0"
+    },
+    {
+      "executable": "/usr/bin/git",
+      "argv0": "git",
+      "raw": "275   execve(\"/usr/bin/git\", [\"git\", \"status\", \"--porcelain\", \"--\", \"apps\", \"packages\", \"vitest.config.ts\"], 0x7fff1dced770 /* 21 vars */) = 0"
+    },
+    {
+      "executable": "/usr/bin/python3",
+      "argv0": "/usr/bin/python3",
+      "raw": "294   execve(\"/usr/bin/python3\", [\"/usr/bin/python3\", \"-I\", \"/home/orca/.tmp/syzygy-bpyt420-o\"..., \"/home/orca/.tmp/syzygy-bpyt420-o\"..., \"/home/orca/.tmp/syzygy-bpyt420-o\"..., \"/home/orca/.tmp/syzygy-bpyt420-o\"...], 0x7c5d8f512ad0 /* 21 vars */) = 0"
+    },
+    {
+      "executable": "/usr/bin/python3",
+      "argv0": "/usr/bin/python3",
+      "raw": "295   execve(\"/usr/bin/python3\", [\"/usr/bin/python3\", \"-I\", \"/home/orca/.tmp/syzygy-bpyt420-o\"..., \"/home/orca/.tmp/syzygy-bpyt420-o\"..., \"/home/orca/.tmp/syzygy-bpyt420-o\"..., \"/home/orca/.tmp/syzygy-bpyt420-o\"...], 0x7c5d8f512c30 /* 21 vars */) = 0"
+    },
+    {
+      "executable": "/usr/bin/python3",
+      "argv0": "/usr/bin/python3",
+      "raw": "296   execve(\"/usr/bin/python3\", [\"/usr/bin/python3\", \"-I\", \"/home/orca/.tmp/syzygy-bpyt420-o\"..., \"/home/orca/.tmp/syzygy-bpyt420-o\"..., \"/home/orca/.tmp/syzygy-bpyt420-o\"..., \"/home/orca/.tmp/syzygy-bpyt420-o\"...], 0x7c5d8f512c30 /* 21 vars */) = 0"
+    },
+    {
+      "executable": "/usr/bin/python3",
+      "argv0": "/usr/bin/python3",
+      "raw": "297   execve(\"/usr/bin/python3\", [\"/usr/bin/python3\", \"-I\", \"/home/orca/.tmp/syzygy-bpyt420-o\"..., \"/home/orca/.tmp/syzygy-bpyt420-o\"..., \"/home/orca/.tmp/syzygy-bpyt420-o\"..., \"/home/orca/.tmp/syzygy-bpyt420-o\"...], 0x7c5d8f512ef0 /* 21 vars */) = 0"
+    },
+    {
+      "executable": "/usr/bin/python3",
+      "argv0": "/usr/bin/python3",
+      "raw": "298   execve(\"/usr/bin/python3\", [\"/usr/bin/python3\", \"-I\", \"/home/orca/.tmp/syzygy-bpyt420-o\"..., \"/home/orca/.tmp/syzygy-bpyt420-o\"..., \"/home/orca/.tmp/syzygy-bpyt420-o\"..., \"/home/orca/.tmp/syzygy-bpyt420-o\"...], 0x7c5d8f512ad0 /* 21 vars */) = 0"
+    },
+    {
+      "executable": "/usr/bin/python3",
+      "argv0": "/usr/bin/python3",
+      "raw": "299   execve(\"/usr/bin/python3\", [\"/usr/bin/python3\", \"-I\", \"/home/orca/.tmp/syzygy-bpyt420-o\"..., \"/home/orca/.tmp/syzygy-bpyt420-o\"..., \"/home/orca/.tmp/syzygy-bpyt420-o\"..., \"/home/orca/.tmp/syzygy-bpyt420-o\"...], 0x7c5d8f512ad0 /* 21 vars */) = 0"
+    },
+    {
+      "executable": "/usr/bin/python3",
+      "argv0": "/usr/bin/python3",
+      "raw": "300   execve(\"/usr/bin/python3\", [\"/usr/bin/python3\", \"-I\", \"/home/orca/.tmp/syzygy-bpyt420-o\"..., \"/home/orca/.tmp/syzygy-bpyt420-o\"..., \"38eab812488c85198f37b8be18f1dd24\"..., \"/home/orca/.tmp/syzygy-bpyt420-o\"..., \"/home/orca/.tmp/syzygy-bpyt420-o\"...], 0x7c5d8f512c30 /* 21 vars */) = 0"
+    },
+    {
+      "executable": "/usr/bin/python3",
+      "argv0": "/usr/bin/python3",
+      "raw": "301   execve(\"/usr/bin/python3\", [\"/usr/bin/python3\", \"-I\", \"/home/orca/.tmp/syzygy-bpyt420-o\"..., \"/home/orca/.tmp/syzygy-bpyt420-o\"..., \"38eab812488c85198f37b8be18f1dd24\"..., \"/home/orca/.tmp/syzygy-bpyt420-o\"..., \"/home/orca/.tmp/syzygy-bpyt420-o\"...], 0x7c5d8f512ef0 /* 21 vars */) = 0"
+    },
+    {
+      "executable": "/usr/bin/python3",
+      "argv0": "/usr/bin/python3",
+      "raw": "302   execve(\"/usr/bin/python3\", [\"/usr/bin/python3\", \"-I\", \"/home/orca/.tmp/syzygy-bpyt420-o\"..., \"/home/orca/.tmp/syzygy-bpyt420-o\"..., \"38eab812488c85198f37b8be18f1dd24\"..., \"/home/orca/.tmp/syzygy-bpyt420-o\"..., \"/home/orca/.tmp/syzygy-bpyt420-o\"...], 0x7c5d8f512ef0 /* 21 vars */) = 0"
+    },
+    {
+      "executable": "/usr/bin/python3",
+      "argv0": "/usr/bin/python3",
+      "raw": "303   execve(\"/usr/bin/python3\", [\"/usr/bin/python3\", \"-I\", \"/home/orca/.tmp/syzygy-bpyt420-o\"..., \"/home/orca/.tmp/syzygy-bpyt420-o\"..., \"38eab812488c85198f37b8be18f1dd24\"..., \"/home/orca/.tmp/syzygy-bpyt420-o\"..., \"/home/orca/.tmp/syzygy-bpyt420-o\"...], 0x7c5d8f512ad0 /* 21 vars */) = 0"
+    },
+    {
+      "executable": "/usr/bin/python3",
+      "argv0": "/usr/bin/python3",
+      "raw": "304   execve(\"/usr/bin/python3\", [\"/usr/bin/python3\", \"-I\", \"/home/orca/.tmp/syzygy-bpyt420-o\"..., \"/home/orca/.tmp/syzygy-bpyt420-o\"..., \"38eab812488c85198f37b8be18f1dd24\"..., \"/home/orca/.tmp/syzygy-bpyt420-o\"..., \"/home/orca/.tmp/syzygy-bpyt420-o\"...], 0x7c5d8f512c30 /* 21 vars */) = 0"
+    },
+    {
+      "executable": "/usr/bin/python3",
+      "argv0": "/usr/bin/python3",
+      "raw": "305   execve(\"/usr/bin/python3\", [\"/usr/bin/python3\", \"-I\", \"/home/orca/.tmp/syzygy-bpyt420-o\"..., \"/home/orca/.tmp/syzygy-bpyt420-o\"..., \"38eab812488c85198f37b8be18f1dd24\"..., \"/home/orca/.tmp/syzygy-bpyt420-o\"..., \"/home/orca/.tmp/syzygy-bpyt420-o\"...], 0x7c5d8f512c30 /* 21 vars */) = 0"
+    }
+  ],
+  "unexpected_successful_executable": [],
+  "old_predicate_matches": 79,
+  "old_match_examples": [
+    "5     execve(\"/home/orca/.nvm/versions/node/v24.6.0/bin/git\", [\"git\", \"rev-parse\", \"HEAD\"], 0x7ffc01c73d00 /* 21 vars */) = -1 ENOENT (No such file or directory)",
+    "7     execve(\"/home/orca/.nvm/versions/node/v24.6.0/bin/git\", [\"git\", \"rev-parse\", \"HEAD\"], 0x7ffcf5c2da20 /* 21 vars */) = -1 ENOENT (No such file or directory)",
+    "8     execve(\"/home/orca/.tmp/syzygy-bpyt420-owner-approved-full-outcome-20261106/bin/git\", [\"git\", \"status\", \"--porcelain\", \"--\", \"vitest.config.ts\", \"apps/three-surface-poc/src\"], 0x7ffcf5c2da20 /* 21 vars */) = -1 ENOENT (No such file or directory)"
+  ],
+  "retained_canary_samples": false,
+  "classification": "Author diagnosis only; coordinator confirmation requested. This postprocess does not repair missing canary capture."
+}

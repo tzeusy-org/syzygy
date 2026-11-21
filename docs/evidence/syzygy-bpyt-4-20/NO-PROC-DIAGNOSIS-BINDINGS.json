@@ -1,0 +1,26 @@
+[
+  {
+    "path": "/home/orca/.tmp/syzygy-bpyt420-owner-approved-full-outcome-20261106/runs/n12-no-proc/capture.json",
+    "sha256": "341887debf0ff7ce077ca76fcced5168de83e8cc7c03e92b35b91ac0ec06edc7"
+  },
+  {
+    "path": "/home/orca/.tmp/syzygy-bpyt420-owner-approved-full-outcome-20261106/runs/n12-collision-no-proc/capture.json",
+    "sha256": "be8ae9fba236a882b037e5c52da2b8ce9a155f6427db5d7be93493e43a79976a"
+  },
+  {
+    "path": "/home/orca/.tmp/syzygy-bpyt420-owner-approved-full-outcome-20261106/runs/diagnose-node-memory-no-proc/stderr.log",
+    "sha256": "3547a762fc6b6230640951c1db37e8fc818f2a21984b0a53418c2f559e879ac2"
+  },
+  {
+    "path": "/home/orca/.tmp/syzygy-bpyt420-owner-approved-full-outcome-20261106/runs/diagnose-node2422-memory-no-proc/stderr.log",
+    "sha256": "5532f41b0bebf9ce37858fb25b2a93ceed71de5927ae41805714e2099ccd15c2"
+  },
+  {
+    "path": "/home/orca/.tmp/syzygy-bpyt420-owner-approved-full-outcome-20261106/subject/node_modules/tinypool/dist/entry/process.js",
+    "sha256": "a73d2103a366a3dfdbe65495eaa26df058af1e3ad12339fd4b0f679e7c70989f"
+  },
+  {
+    "path": "/home/orca/.tmp/syzygy-bpyt420-owner-approved-full-outcome-20261106/subject/node_modules/tinypool/dist/entry/worker.js",
+    "sha256": "e08e03c909cf9b5790f5969d09e4114d5b8908f3c0b75fbb487010f8cd54393e"
+  }
+]

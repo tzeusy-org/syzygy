@@ -151,7 +151,7 @@ describe('fixture directories a killed run left behind (syzygy-bpyt.4.10)', () =
     const unread = [
       `${FIXTURE_PREFIX}p${dead}-n0-AbCdEf`,
       `${FIXTURE_PREFIX}template-p${dead}-n0-AbCdEf`,
-      `${FIXTURE_PREFIX}p${dead}-n${NS}-AbCdEf`,
+      `${FIXTURE_PREFIX}p${dead}-n${NS}-Own123`,
     ];
     make(tmp, ...unread);
     const listings: string[] = [];

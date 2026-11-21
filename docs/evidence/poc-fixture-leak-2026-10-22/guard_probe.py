@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
-"""Do the four fixture-leak tools refuse a scratch directory they must not empty (review round 2, N10)?
+"""Do the five fixture-leak tools refuse a scratch directory they must not empty (review round 2, N10)?
 
 Usage: guard_probe.py <worktree> <out.json> <private-parent>
 
-kill_then_fresh_run.py, interrupt_probe.py, cli_sweep_probe.py and mutate_sweep.py empty their directory argument
+kill_then_fresh_run.py, interrupt_probe.py, cli_sweep_probe.py, mutate_sweep.py and leak_by_file.py empty their directory argument
 recursively. Each calls `private_directory` on it before the first removal. This probe never gives them a real shared
 directory: it builds <private-parent> (which must not exist or be empty) with a fake home and a fake temp directory,
 points HOME and TMPDIR at them, and passes six arguments to each tool:
@@ -38,8 +38,9 @@ INVOCATIONS = {
     'interrupt_probe.py': lambda d, out: [str(WT), HEAD, out, d, 'KILL', '3'],
     'cli_sweep_probe.py': lambda d, out: [str(WT), HEAD, out, d, 'head'],
     'mutate_sweep.py': lambda d, out: [str(WT), out, d],
+    'leak_by_file.py': lambda d, out: [str(WT), HEAD, d, out],
 }
-VARIABLE = {'kill_then_fresh_run.py': 'TMP', 'interrupt_probe.py': 'TMP', 'cli_sweep_probe.py': 'TMP', 'mutate_sweep.py': 'PRIVATE_TMP'}
+VARIABLE = {'kill_then_fresh_run.py': 'TMP', 'interrupt_probe.py': 'TMP', 'cli_sweep_probe.py': 'TMP', 'mutate_sweep.py': 'PRIVATE_TMP', 'leak_by_file.py': 'tmp_root'}
 
 assert not PARENT.exists() or not any(PARENT.iterdir()), f'{PARENT} must not exist or be empty'
 home, temp, occupied = PARENT / 'home', PARENT / 'tmp', PARENT / 'work' / 'occupied'
@@ -132,6 +133,7 @@ UNGUARD = {  # the tool's call, and what stands in for it
     'interrupt_probe.py': ('TMP = private_directory(TMP)', 'TMP = TMP.resolve()'),
     'cli_sweep_probe.py': ('TMP = private_directory(TMP)', 'TMP = TMP.resolve()'),
     'mutate_sweep.py': ('private_directory(pathlib.Path(sys.argv[3]))', 'pathlib.Path(sys.argv[3]).resolve()'),
+    'leak_by_file.py': ('tmp_root = private_directory(tmp_root)', 'tmp_root = tmp_root.resolve()'),
 }
 wiring: list[dict] = []
 for tool, (call, stand_in) in UNGUARD.items():

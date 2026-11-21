@@ -1,0 +1,39 @@
+{
+  "observer": "outer task-owned observe.py process; captures distinct child emitter stdio",
+  "observer_pid": 742076,
+  "observer_sha256": "ac665dc3dfcf9268e05bee07962fbf199d0a8ef2f9d565226207cea4db0a5ce2",
+  "captured_at": "2026-11-06T10:37:33.438968+00:00",
+  "cwd": "/home/orca/.tmp/syzygy-bpyt420-owner-approved-full-outcome-20261106/subject",
+  "argv": [
+    "/usr/bin/python3",
+    "/home/orca/.tmp/syzygy-bpyt420-owner-approved-full-outcome-20261106/isolated-node2422.py",
+    "/home/orca/.tmp/syzygy-bpyt420-owner-approved-full-outcome-20261106/subject",
+    "node",
+    "-e",
+    "console.log(process.version); console.log(\"before process.memoryUsage\");console.log(process.memoryUsage());console.log(\"after process.memoryUsage\")"
+  ],
+  "timeout_seconds": 15.0,
+  "no_proc": true,
+  "subject": "38eab812488c85198f37b8be18f1dd24cd5898f8",
+  "subject_status": "",
+  "sources": {
+    "apps/three-surface-poc/src/fixture-directories.test.ts": "7d6c805bff973d5cab16e2470db436d8351bfdf58cca9f84c5a315beb6a7e980",
+    "apps/three-surface-poc/src/fixture-directories.ts": "df5a319e02b9bbc3294bf0b0b90a987ecea86bfd219a41d0341855a3e9dc5ada",
+    "docs/evidence/poc-fixture-leak-2026-10-22/leak_by_file.py": "96aba7927e4a60108e227d122223c74e3cfea006a3960565549cfe8c4b1256b2",
+    "docs/evidence/poc-fixture-leak-2026-10-22/guard_probe.py": "c2db048db78e7064d2e7dd32e1fbe255eebb286110bd53a18005065d5c602e19"
+  },
+  "pid": 742133,
+  "pidfd_owned": true,
+  "exit": 1,
+  "timed_out": false,
+  "reaped_adopted_children": [
+    {
+      "pid": 742135,
+      "wait_status": 256
+    }
+  ],
+  "remaining_owned_direct_children": [],
+  "elapsed_seconds": 0.7556450060219504,
+  "stdout_sha256": "5a2d0666e5c16ef70894a89d60059717bfdd473d5f8fea4f9f52a26102a0ed61",
+  "stderr_sha256": "5532f41b0bebf9ce37858fb25b2a93ceed71de5927ae41805714e2099ccd15c2"
+}
