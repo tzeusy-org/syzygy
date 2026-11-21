@@ -62,7 +62,8 @@ interface LaidOutEdge {
   /** The label sits away from its line (a stacked diagram's lane edge): draw it a leader as if it had been moved. */
   readonly lead?: true;
 }
-interface DiagramLayout { readonly width: number; readonly height: number; readonly nodes: readonly LaidOutNode[]; readonly edges: readonly LaidOutEdge[] }
+/** `nodeWidth` is every node's width: `NODE_WIDTH`, except in a stacked diagram whose lanes leave less room in `STACK_COLUMN`. */
+interface DiagramLayout { readonly width: number; readonly height: number; readonly nodeWidth: number; readonly nodes: readonly LaidOutNode[]; readonly edges: readonly LaidOutEdge[] }
 
 const num = (value: number): string => String(Math.round(value * 10) / 10);
 
@@ -184,6 +185,7 @@ export function layoutDiagram(nodes: readonly LayoutNodeInput[], edges: readonly
   return {
     width: MARGIN * 2 + Math.min(layerCount, columns) * NODE_WIDTH + (Math.min(layerCount, columns) - 1) * gapX,
     height: Math.ceil(lowestBackEdge + MARGIN),
+    nodeWidth: NODE_WIDTH,
     nodes: laidNodes,
     edges: laidEdges,
   };
@@ -193,6 +195,8 @@ export function layoutDiagram(nodes: readonly LayoutNodeInput[], edges: readonly
  * least, until the stacked form fits `STACK_COLUMN`. */
 const LANE_STEP = 8;
 const LANE_STEP_LEAST = 4;
+/** The narrowest a stacked node gets when its lanes, at the least step, still outgrow `STACK_COLUMN`: past that the diagram scrolls. */
+const NODE_WIDTH_LEAST = 120;
 /** The narrowest box a dossier gives a diagram: 261 px on a 390 px screen, measured in Chrome on the reading fixture (syzygy-3efd.19). */
 const STACK_COLUMN = 261;
 /** Where a lane edge leaves its source's side and enters its target's, measured down from the node's top. */
@@ -202,7 +206,8 @@ const LANE_ENTRY = 36;
 /**
  * A diagram wider than the readable column that is not a plain chain, stacked top to bottom one node to a row, so it is no wider than one
  * node and its side lanes: 248 px with up to two lanes a side, and inside `STACK_COLUMN` with up to twelve lanes in all, the lanes drawn
- * closer as they grow (syzygy-3efd.19). Past that it scrolls in its own box, as any too-wide diagram does. Rows are in a topological
+ * closer as they grow (syzygy-3efd.19). Past that the nodes narrow to fit, down to `NODE_WIDTH_LEAST` (syzygy-3efd.58), which no graph of
+ * sixteen nodes reaches (at most sixteen lane groups a side, 68 px at the least step, leaving 125 px); only past that does it scroll in its own box, as any too-wide diagram does. Rows are in a topological
  * order of the forward edges, so every forward edge points down and every back edge up.
  * - A forward edge to the next row is a straight drop from the source's foot to the target's head.
  * - Any other forward edge leaves the source's left side, bulges into a lane left of every node and enters the target's left side; a back
@@ -267,6 +272,8 @@ function stackDiagram(
   let step = LANE_STEP;
   while (step > LANE_STEP_LEAST && gutterAt(laneCount.left, step) + NODE_WIDTH + gutterAt(laneCount.right, step) > STACK_COLUMN) step--;
   const gutter = (count: number): number => gutterAt(count, step);
+  // Still too wide at the least step: the nodes narrow, never below `NODE_WIDTH_LEAST` (syzygy-3efd.58).
+  const nodeWidth = Math.min(NODE_WIDTH, Math.max(NODE_WIDTH_LEAST, STACK_COLUMN - gutter(laneCount.left) - gutter(laneCount.right)));
   const nodeX = gutter(laneCount.left);
 
   // Label slots: gap g sits above row g (g = order.length is the space under the last row).
@@ -287,7 +294,7 @@ function stackDiagram(
   const bottom = next + gapHeight[order.length]!;
 
   const laidNodes: LaidOutNode[] = nodes.map((node, i) => ({ id: node.id, layer: layer[i]!, row: row[i]!, x: nodeX, y: top[position[i]!]! }));
-  const centre = nodeX + NODE_WIDTH / 2;
+  const centre = nodeX + nodeWidth / 2;
   const laidEdges: LaidOutEdge[] = edges.map((edge, e) => {
     const from = laidNodes[ends[e]!.from]!, to = laidNodes[ends[e]!.to]!;
     const { gap, k } = slotOf[e]!;
@@ -298,14 +305,14 @@ function stackDiagram(
       return { id: edge.id, from: edge.from, to: edge.to, back: false, d: `M ${num(centre)} ${num(y1)} C ${num(centre)} ${num(y1 + dy)}, ${num(centre)} ${num(y2 - dy)}, ${num(centre)} ${num(y2)}`, ...label };
     }
     const left = side[e] === 'left';
-    const x0 = left ? nodeX : nodeX + NODE_WIDTH, x3 = left ? nodeX - 2 : nodeX + NODE_WIDTH + 2;
+    const x0 = left ? nodeX : nodeX + nodeWidth, x3 = left ? nodeX - 2 : nodeX + nodeWidth + 2;
     const y0 = from.y + (left ? LANE_EXIT : LANE_ENTRY), y3 = to.y + (left ? LANE_ENTRY : LANE_EXIT);
     // The curve's farthest point, at t = 1/2, lies three quarters of the way to the control x: put it on the lane.
     const reach = (lane[e]! + 1) * step / 0.75;
     const c = left ? x0 - reach : x0 + reach;
     return { id: edge.id, from: edge.from, to: edge.to, back: back[e]!, d: `M ${num(x0)} ${num(y0)} C ${num(c)} ${num(y0)}, ${num(c)} ${num(y3)}, ${num(x3)} ${num(y3)}`, ...label, lead: true };
   });
-  return { width: nodeX + NODE_WIDTH + gutter(laneCount.right), height: Math.ceil(bottom + MARGIN), nodes: laidNodes, edges: laidEdges };
+  return { width: nodeX + nodeWidth + gutter(laneCount.right), height: Math.ceil(bottom + MARGIN), nodeWidth, nodes: laidNodes, edges: laidEdges };
 }
 
 // Test seam: exported for the tests; production code reaches it only inside this file.
@@ -461,12 +468,14 @@ export function renderDiagramSvg(
   };
   const textLines = (lines: readonly string[], x: number, firstBaseline: number, lineHeight: number): string =>
     `<text x="${num(x)}" y="${num(firstBaseline)}" text-anchor="middle">${lines.map((line, i) => `<tspan x="${num(x)}" dy="${i === 0 ? 0 : lineHeight}">${escape(line)}</tspan>`).join('')}</text>`;
+  // A node's label wraps to 22 characters at the full width, fewer in a narrowed stacked node (8 px a character, 12 px padding a side).
+  const nodeWidth = layout.nodeWidth, nodeChars = Math.min(22, Math.floor((nodeWidth - 24) / 8));
   const nodes = diagram.nodes.map((node, i) => {
     const at = layout.nodes[i]!;
-    const lines = shown(node.label, node.epistemic, 22, 2);
+    const lines = shown(node.label, node.epistemic, nodeChars, 2);
     const baseline = at.y + NODE_HEIGHT / 2 + 5 - (lines.length - 1) * 8;
-    const note = connected.has(node.id) ? '' : `<text class="note" x="${num(at.x + NODE_WIDTH / 2)}" y="${num(at.y + NODE_HEIGHT + 18)}" text-anchor="middle">No relationship supplied</text>`;
-    return `<g class="node ${node.epistemic}"><title>${escape(node.label)} (${node.epistemic})</title><rect x="${num(at.x)}" y="${num(at.y)}" width="${NODE_WIDTH}" height="${NODE_HEIGHT}" rx="6"/>${textLines(lines, at.x + NODE_WIDTH / 2, baseline, 16)}${note}</g>`;
+    const note = connected.has(node.id) ? '' : `<text class="note" x="${num(at.x + nodeWidth / 2)}" y="${num(at.y + NODE_HEIGHT + 18)}" text-anchor="middle">No relationship supplied</text>`;
+    return `<g class="node ${node.epistemic}"><title>${escape(node.label)} (${node.epistemic})</title><rect x="${num(at.x)}" y="${num(at.y)}" width="${nodeWidth}" height="${NODE_HEIGHT}" rx="6"/>${textLines(lines, at.x + nodeWidth / 2, baseline, 16)}${note}</g>`;
   }).join('');
   const edgeLines = diagram.edges.map(edge => shown(edge.label, edge.epistemic, spacing.edgeChars, spacing.edgeLines));
   const wanted = edgeLines.map((lines, i) => ({
@@ -475,25 +484,47 @@ export function renderDiagramSvg(
   }));
   const standing = diagram.nodes.map((node, i) => {
     const at = layout.nodes[i]!;
-    return { left: at.x, top: at.y, right: at.x + NODE_WIDTH, bottom: at.y + NODE_HEIGHT + (connected.has(node.id) ? 0 : NODE_NOTE_HEIGHT) };
+    return { left: at.x, top: at.y, right: at.x + nodeWidth, bottom: at.y + NODE_HEIGHT + (connected.has(node.id) ? 0 : NODE_NOTE_HEIGHT) };
   });
-  const placed = spacing.labelsOnTop ? placeEdgeLabels(wanted, standing, layout.width) : wanted;
+  const placed: { x: number; y: number }[] = [...(spacing.labelsOnTop ? placeEdgeLabels(wanted, standing, layout.width) : wanted)].map(({ x, y }) => ({ x, y }));
   const curves = spacing.labelsOnTop ? layout.edges.map(edge => curveSamples(edge.d)) : [];
   const heads = spacing.labelsOnTop ? layout.edges.map(edge => arrowheadOf(edge.d)) : [];
   const boxOf = (i: number): LabelBox => {
     const { width, height } = wanted[i]!, { x, y } = placed[i]!;
     return { left: x - width / 2, top: y - height / 2, right: x + width / 2, bottom: y + height / 2 };
   };
+  // A label the search moved keeps a thin leader to its own line where one can be seen, in the line's layer: without one, it can read as
+  // another line's label. So does a stacked lane edge's label, which sits in the column, away from its line (`lead`).
+  const moved = (i: number): boolean => placed[i]!.x !== layout.edges[i]!.labelX || placed[i]!.y !== layout.edges[i]!.labelY || layout.edges[i]!.lead === true;
+  const runOf = (i: number) => (moved(i)
+    ? leaderRun(curves[i]!, boxOf(i), [...standing, ...wanted.flatMap((_, j) => j === i ? [] : [boxOf(j)])], curves.filter((_, j) => layout.edges[j]!.d !== layout.edges[i]!.d),
+      heads.filter((_, j) => layout.edges[j]!.d !== layout.edges[i]!.d))
+    : undefined);
+  const runs = layout.edges.map((_, i) => runOf(i));
+  // A lane edge's label with no clear leader where it sits slides across its own gap, a step at a time and nearer first, to the first spot
+  // that clears every node, label and other leader and gives it one; it never leaves its gap, so no row moves (syzygy-3efd.58). A leader
+  // depends on other labels only through the boxes it must not enter, so a slide that enters no other leader keeps every other leader.
+  layout.edges.forEach((at, i) => {
+    if (at.lead !== true || !spacing.labelsOnTop || runs[i] !== undefined) return;
+    const home = placed[i]!, { width, height } = wanted[i]!;
+    const others = [...standing, ...wanted.flatMap((_, j) => j === i ? [] : [boxOf(j)])];
+    for (let k = 1; (k - 1) * LABEL_STEP < layout.width; k++) {
+      for (const dx of [k * LABEL_STEP, -k * LABEL_STEP]) {
+        const box = { left: home.x + dx - width / 2, top: home.y - height / 2, right: home.x + dx + width / 2, bottom: home.y + height / 2 };
+        if (box.left < 0 || box.right > layout.width
+          || others.some(o => box.left < o.right + LABEL_CLEARANCE && o.left < box.right + LABEL_CLEARANCE && box.top < o.bottom + LABEL_CLEARANCE && o.top < box.bottom + LABEL_CLEARANCE)
+          || runs.some((run, j) => j !== i && run !== undefined && segmentEntersBox(run.from.x, run.from.y, run.to.x, run.to.y, box))) continue;
+        placed[i] = { x: home.x + dx, y: home.y };
+        runs[i] = runOf(i);
+        if (runs[i] !== undefined) return;
+      }
+    }
+    placed[i] = home;
+  });
   const edges = diagram.edges.map((edge, i) => {
     const at = layout.edges[i]!, lines = edgeLines[i]!, { x, y, width, height } = { ...wanted[i]!, ...placed[i]! };
     const top = y - height / 2;
-    // A label the search moved keeps a thin leader to its own line where one can be seen, in the line's layer: without one, it can read as
-    // another line's label. So does a stacked lane edge's label, which sits in the column, away from its line (`lead`).
-    const moved = x !== at.labelX || y !== at.labelY || at.lead === true;
-    const run = moved
-      ? leaderRun(curves[i]!, boxOf(i), [...standing, ...wanted.flatMap((_, j) => j === i ? [] : [boxOf(j)])], curves.filter((_, j) => layout.edges[j]!.d !== at.d),
-        heads.filter((_, j) => layout.edges[j]!.d !== at.d))
-      : undefined;
+    const run = runs[i];
     const leader = run === undefined ? '' : `<path class="edge-leader" d="M ${num(run.from.x)} ${num(run.from.y)} L ${num(run.to.x)} ${num(run.to.y)}"/>`;
     const head = `<g class="edge ${edge.epistemic}${at.back ? ' back' : ''}"><title>${escape(edge.label)} (${edge.epistemic})</title><path d="${at.d}" marker-end="url(#${markerId})"/>${leader}`;
     const label = `<rect class="edge-label" x="${num(x - width / 2)}" y="${num(top)}" width="${num(width)}" height="${num(height)}" rx="3"/>${textLines(lines, x, top + 15, 15)}`;

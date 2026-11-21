@@ -8,6 +8,8 @@ const edge = (id: string, from: string, to: string) => ({ id, from, to });
  * (`.diagram-scroll` clientWidth, 2026-11-21, syzygy-3efd.19). */
 const STACK_COLUMN = 261;
 const WIDE_COLUMN = 966;
+const MEASURED_58 = { stacked: 118, narrowed: 7, laneLabels: 2132, leaders: 1991, slid: 288 };
+const MEASURED_DAG12 = [261, 193];
 const place = (layout: ReturnType<typeof layoutDiagram>) => layout.nodes.map(({ id, layer, row, x, y }) => [id, layer, row, x, y]);
 
 describe('layered left-to-right diagram layout', () => {
@@ -109,7 +111,7 @@ describe('layered left-to-right diagram layout', () => {
         d: ['M 124 80 C 124 112, 124 112, 124 144', 'M 124 202 C 124 262, 124 262, 124 322', 'M 124 380 C 124 412, 124 412, 124 444', 'M 124 502 C 124 534, 124 534, 124 566', 'M 224 604 C 234.7 604, 234.7 166, 226 166'],
       },
     } as const;
-    const inside = (x: number, y: number, box: { x: number; y: number }) => x > box.x + 0.5 && x < box.x + 199.5 && y > box.y + 0.5 && y < box.y + 55.5;
+    const inside = (x: number, y: number, box: { x: number; y: number }, width = 200) => x > box.x + 0.5 && x < box.x + width - 0.5 && y > box.y + 0.5 && y < box.y + 55.5;
     const along = (d: string, pieces = 2000) => {
       const [x0, y0, x1, y1, x2, y2, x3, y3] = [...d.matchAll(/-?[\d.]+/gu)].map(m => Number(m[0])) as [number, number, number, number, number, number, number, number];
       return Array.from({ length: pieces + 1 }, (_, i) => {
@@ -137,7 +139,7 @@ describe('layered left-to-right diagram layout', () => {
         expect(Number(/ width="(\d+)"/u.exec(svg)![1])).toBe(shape.size[0]);
         const labels = [...svg.matchAll(/<rect class="edge-label" x="([\d.]+)" y="([\d.]+)" width="([\d.]+)" height="([\d.]+)"/gu)].map(m => ({ left: Number(m[1]), top: Number(m[2]), right: Number(m[1]) + Number(m[3]), bottom: Number(m[2]) + Number(m[4]) }));
         expect(labels).toHaveLength(shape.edges.length);
-        expect(labels.filter(l => layout.nodes.some(n => l.left < n.x + 200 && n.x < l.right && l.top < n.y + 56 && n.y < l.bottom))).toEqual([]);
+        expect(labels.filter(l => layout.nodes.some(n => l.left < n.x + layout.nodeWidth && n.x < l.right && l.top < n.y + 56 && n.y < l.bottom))).toEqual([]);
         expect(labels.filter(l => l.left < 0 || l.right > layout.width)).toEqual([]);
       });
     }
@@ -159,20 +161,20 @@ describe('layered left-to-right diagram layout', () => {
         const linked = new Set(edges.flatMap(e => [e.from, e.to]));
         if (ids.some(id => !linked.has(id))) isolated++;
         for (const e of layout.edges) {
-          const touched = [...along(e.d, 200), ...arrowheadOf(e.d)].filter(at => layout.nodes.some(n => inside(at.x, at.y, n)));
+          const touched = [...along(e.d, 200), ...arrowheadOf(e.d)].filter(at => layout.nodes.some(n => inside(at.x, at.y, n, layout.nodeWidth)));
           expect(touched, `graph ${graph} ${e.id} line or arrowhead`).toEqual([]);
         }
         const svg = renderDiagramSvg({ nodes: ids.map(id => ({ id, label: id, epistemic: 'inferred' as const })), edges: edges.map(e => ({ ...e, label: LONG_LABEL, epistemic: 'inferred' as const })) }, graph, text => text, READABLE_SPACING);
         assertInertSvg(svg);
         leaders += (svg.match(/class="edge-leader"/gu) ?? []).length;
         // A node's box includes the note under it when it has no edges.
-        const boxes = layout.nodes.map(n => ({ left: n.x, right: n.x + 200, top: n.y, bottom: n.y + 56 + (linked.has(n.id) ? 0 : 24) }));
+        const boxes = layout.nodes.map(n => ({ left: n.x, right: n.x + layout.nodeWidth, top: n.y, bottom: n.y + 56 + (linked.has(n.id) ? 0 : 24) }));
         const labels = [...svg.matchAll(/<rect class="edge-label" x="([\d.]+)" y="([\d.]+)" width="([\d.]+)" height="([\d.]+)"/gu)].map(m => ({ left: Number(m[1]), top: Number(m[2]), right: Number(m[1]) + Number(m[3]), bottom: Number(m[2]) + Number(m[4]) }));
         expect(labels.filter(l => boxes.some(n => l.left < n.right && n.left < l.right && l.top < n.bottom && n.top < l.bottom)), `graph ${graph} on a node or note`).toEqual([]);
         expect(labels.filter((l, i) => labels.some((o, j) => j > i && l.left < o.right && o.left < l.right && l.top < o.bottom && o.top < l.bottom)), `graph ${graph} overprinted`).toEqual([]);
-        // Every label stays where the layout put it: the gaps hold their slots and notes.
-        // (The drawing rounds a label's box to a tenth.)
-        expect(labels.filter((l, i) => Math.abs((l.left + l.right) / 2 - layout.edges[i]!.labelX) > 0.15 || Math.abs((l.top + l.bottom) / 2 - layout.edges[i]!.labelY) > 0.15), `graph ${graph} moved`).toEqual([]);
+        // Every label stays in the gap the layout put it in: the gaps hold their slots and notes. Only a lane edge's label may slide across
+        // its gap, to find a leader (syzygy-3efd.58). (The drawing rounds a label's box to a tenth.)
+        expect(labels.filter((l, i) => (layout.edges[i]!.lead !== true && Math.abs((l.left + l.right) / 2 - layout.edges[i]!.labelX) > 0.15) || Math.abs((l.top + l.bottom) / 2 - layout.edges[i]!.labelY) > 0.15), `graph ${graph} moved`).toEqual([]);
       }
       // The population reaches what it claims to: many stacked graphs, some with an isolated node, and lane labels with leaders.
       expect(stacked).toBeGreaterThan(300);
@@ -188,6 +190,60 @@ describe('layered left-to-right diagram layout', () => {
       // Every edge of a complete DAG on eight nodes: six sources with an edge that skips a row, so six lanes, drawn 5 px apart (364 px before).
       const eight = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h'];
       expect(widthOf(eight, eight.flatMap((from, i) => eight.slice(i + 1).map(to => edge(`${from}${to}`, from, to))))).toBe(258);
+    });
+
+    it('fits the narrow column at any density: nodes narrow past the lanes the least step holds, and lane labels slide to find a leader (syzygy-3efd.58)', () => {
+      let seed = 58;
+      const next = (bound: number): number => { seed = (seed * 1103515245 + 12345) % 2147483648; return Math.floor(seed / 65536) % bound; };
+      let stacked = 0, narrowed = 0, laneLabels = 0, leaders = 0, slid = 0;
+      for (let graph = 0; graph < 160; graph++) {
+        const ids = Array.from({ length: 3 + next(14) }, (_, i) => `n${i}`);
+        const edges = Array.from({ length: 1 + next(ids.length * 4) }, (_, i) => edge(`e${i}`, ids[next(ids.length)]!, ids[next(ids.length)]!));
+        const layout = layoutDiagram(ids.map(id => ({ id })), edges, READABLE_SPACING);
+        if (layout.nodes.some(n => n.x !== layout.nodes[0]!.x) || !layout.edges.some(e => e.lead === true)) continue;
+        stacked++;
+        expect(layout.width, `graph ${graph} width`).toBeLessThanOrEqual(STACK_COLUMN);
+        expect(layout.nodeWidth, `graph ${graph} node width`).toBeGreaterThanOrEqual(120);
+        if (layout.nodeWidth < 200) { narrowed++; expect(layout.width, `graph ${graph} narrowed only to fit`).toBe(STACK_COLUMN); }
+        for (const e of layout.edges) {
+          const touched = [...along(e.d, 200), ...arrowheadOf(e.d)].filter(at => layout.nodes.some(n => inside(at.x, at.y, n, layout.nodeWidth)));
+          expect(touched, `graph ${graph} ${e.id} line or arrowhead`).toEqual([]);
+        }
+        const svg = renderDiagramSvg({ nodes: ids.map(id => ({ id, label: id, epistemic: 'inferred' as const })), edges: edges.map(e => ({ ...e, label: 'hands the parsed command onward', epistemic: 'inferred' as const })) }, graph, text => text, READABLE_SPACING);
+        assertInertSvg(svg);
+        const linked = new Set(edges.flatMap(e => [e.from, e.to]));
+        const boxes = layout.nodes.map(n => ({ left: n.x, right: n.x + layout.nodeWidth, top: n.y, bottom: n.y + 56 + (linked.has(n.id) ? 0 : 24) }));
+        const groups = [...svg.matchAll(/<g class="edge-text[^"]*">.*?<\/g>/gu)].map(m => m[0]);
+        const labels = groups.map(g => /<rect class="edge-label" x="([\d.]+)" y="([\d.]+)" width="([\d.]+)" height="([\d.]+)"/u.exec(g)!).map(m => ({ left: Number(m[1]), top: Number(m[2]), right: Number(m[1]) + Number(m[3]), bottom: Number(m[2]) + Number(m[4]) }));
+        expect(labels.filter(l => l.left < 0 || l.right > layout.width), `graph ${graph} off the canvas`).toEqual([]);
+        expect(labels.filter(l => boxes.some(n => l.left < n.right && n.left < l.right && l.top < n.bottom && n.top < l.bottom)), `graph ${graph} on a node or note`).toEqual([]);
+        expect(labels.filter((l, i) => labels.some((o, j) => j > i && l.left < o.right && o.left < l.right && l.top < o.bottom && o.top < l.bottom)), `graph ${graph} overprinted`).toEqual([]);
+        const lines = [...svg.matchAll(/<g class="edge [^"]*">.*?<\/g>/gu)].map(m => m[0]);
+        layout.edges.forEach((e, i) => {
+          if (e.lead !== true) return;
+          laneLabels++;
+          if (lines[i]!.includes('class="edge-leader"')) leaders++;
+          const centre = (labels[i]!.left + labels[i]!.right) / 2;
+          if (Math.abs(centre - e.labelX) > 0.15) { slid++; expect(lines[i], `graph ${graph} ${e.id} slid without a leader`).toContain('class="edge-leader"'); }
+        });
+      }
+      // The population and the remainder, measured on this seed. Before sliding and narrowing (the syzygy-3efd.19 layout, same seed) 7 of
+      // the 118 graphs were wider than the column and 431 of the 2132 lane labels had no leader; now none is wider and 141 (6.6%) still find
+      // no clear run, all in graphs denser than any named shape (each named shape gets every leader, above). A missing leader is honest; a
+      // wrong one would mislead.
+      expect({ stacked, narrowed, laneLabels, leaders, slid }).toEqual(MEASURED_58);
+    }, 120_000);
+
+    it('narrows the nodes of a complete DAG on twelve nodes to fit, and wraps their labels shorter', () => {
+      const twelve = Array.from({ length: 12 }, (_, i) => `n${i}`);
+      const edges = twelve.flatMap((from, i) => twelve.slice(i + 1).map(to => edge(`${from}-${to}`, from, to)));
+      const layout = layoutDiagram(twelve.map(id => ({ id })), edges, READABLE_SPACING);
+      expect([layout.width, layout.nodeWidth]).toEqual(MEASURED_DAG12);
+      const svg = renderDiagramSvg({ nodes: twelve.map(id => ({ id, label: 'twenty-two characters!', epistemic: 'inferred' as const })), edges: edges.map(e => ({ ...e, label: 'next', epistemic: 'inferred' as const })) }, 0, text => text, READABLE_SPACING);
+      expect(svg).toContain(`width="${MEASURED_DAG12[1]}" height="56"`);
+      // 22 characters fit one line of a full-width node; a 193 px node holds 21, so the label wraps.
+      expect(svg).toContain('>twenty-two</tspan>');
+      expect(svg).not.toContain('>twenty-two characters!</tspan>');
     });
 
     it('keeps the default spacing and a plain chain as they were', () => {
@@ -226,7 +282,7 @@ describe('layered left-to-right diagram layout', () => {
         expect(new Set(layout.nodes.map(n => n.y - (n.y % 144))).size >= shape.bands, 'band count').toBe(true);
         if (shape.stacked) expect(new Set(layout.nodes.map(n => n.x)).size === 1 && layout.width <= STACK_COLUMN, 'stacked in one column').toBe(true);
         else if (shape.bands === 1) expect(layout.nodes.filter(n => n.layer > 0).every(n => n.x > 24), 'one band').toBe(true);
-        const nodes = layout.nodes.map(n => ({ left: n.x, right: n.x + 200, top: n.y, bottom: n.y + 56 }));
+        const nodes = layout.nodes.map(n => ({ left: n.x, right: n.x + layout.nodeWidth, top: n.y, bottom: n.y + 56 }));
         const labels = [...svg.matchAll(/<rect class="edge-label" x="([\d.]+)" y="([\d.]+)" width="([\d.]+)" height="([\d.]+)"/gu)].map(m => ({ left: Number(m[1]), top: Number(m[2]), right: Number(m[1]) + Number(m[3]), bottom: Number(m[2]) + Number(m[4]) }));
         expect(labels).toHaveLength(shape.edges.length);
         const hits = labels.filter(l => nodes.some(n => l.left < n.right && n.left < l.right && l.top < n.bottom && n.top < l.bottom));
@@ -259,7 +315,7 @@ describe('layered left-to-right diagram layout', () => {
         const svg = renderDiagramSvg(renderOf(ids, edges, LONG), graph, text => text, READABLE_SPACING);
         assertInertSvg(svg);
         const layout = layoutDiagram(ids.map(id => ({ id })), edges, READABLE_SPACING);
-        const nodes = layout.nodes.map(n => ({ left: n.x, right: n.x + 200, top: n.y, bottom: n.y + 56 }));
+        const nodes = layout.nodes.map(n => ({ left: n.x, right: n.x + layout.nodeWidth, top: n.y, bottom: n.y + 56 }));
         const labels = placedLabels(svg);
         const canvasHeight = Number(/ height="(\d+)"/u.exec(svg)![1]);
         expect(labels.filter(l => nodes.some(n => l.left < n.right && n.left < l.right && l.top < n.bottom && n.top < l.bottom)), `graph ${graph} on a node`).toEqual([]);
@@ -319,7 +375,7 @@ describe('layered left-to-right diagram layout', () => {
         const svg = renderDiagramSvg(renderOf(ids, edges, graph % 2 === 0 ? 'carries the request onward' : 'sends'), graph, text => text, form);
         const layout = layoutDiagram(ids.map(id => ({ id })), edges, form);
         const labels = placedLabels(svg);
-        const blocks = [...labels, ...layout.nodes.map(n => ({ left: n.x, right: n.x + 200, top: n.y, bottom: n.y + 56 }))];
+        const blocks = [...labels, ...layout.nodes.map(n => ({ left: n.x, right: n.x + layout.nodeWidth, top: n.y, bottom: n.y + 56 }))];
         const curvesIn = leadersIn(svg).map(group => group.curve);
         // Another line as the layout sees it: 64 straight pieces (a literal; the code's LEADER_SAMPLES).
         const sampled = new Map(curvesIn.map(d => [d, curvePoints(d, 64)]));
