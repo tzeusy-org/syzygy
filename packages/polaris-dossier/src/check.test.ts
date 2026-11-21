@@ -252,18 +252,18 @@ describe('check: schema v5 diagram homes (syzygy-3efd.18)', () => {
 
   it.each<[string, (d: Draft) => void, { kind: string; at: string; detail: string }[]]>([
     ['a v5 diagram that names `sectionId`', (d) => { d.diagrams.push(DIAGRAM); },
-      [{ kind: 'diagram-home', at: '$.diagrams[0].sectionId', detail: 'a polaris-dossier-local-draft-v5 diagram names its page in `home`, not `sectionId`; it has exactly one home' },
-        { kind: 'diagram-home', at: '$.diagrams[0]', detail: 'the diagram names no page; give it a `home`: a section or a deep dive by `target`, or the overview' }]],
+      [{ kind: 'diagram-home', at: '$.diagrams[0].sectionId', detail: 'the diagram "flow-1": a polaris-dossier-local-draft-v5 diagram names its page in `home`, not `sectionId`; it has exactly one home' },
+        { kind: 'diagram-home', at: '$.diagrams[0]', detail: 'the diagram "flow-1": the diagram names no page; give it a `home`: a section or a deep dive by `target`, or the overview' }]],
     ['a v5 diagram with two homes', (d) => { d.diagrams.push({ ...DIAGRAM, home: { kind: 'overview' } }); },
-      [{ kind: 'diagram-home', at: '$.diagrams[0].sectionId', detail: 'a polaris-dossier-local-draft-v5 diagram names its page in `home`, not `sectionId`; it has exactly one home' }]],
+      [{ kind: 'diagram-home', at: '$.diagrams[0].sectionId', detail: 'the diagram "flow-1": a polaris-dossier-local-draft-v5 diagram names its page in `home`, not `sectionId`; it has exactly one home' }]],
     ['a home naming an unknown section', (d) => { d.diagrams.push(homed({ kind: 'section', target: 'nowhere' })); },
-      [{ kind: 'unresolved-reference', at: '$.diagrams[0].home.target', detail: 'no section has the identity "nowhere"' }]],
+      [{ kind: 'unresolved-reference', at: '$.diagrams[0].home.target', detail: 'the diagram "flow-1": no section has the identity "nowhere"' }]],
     ['a home naming an unknown deep dive', (d) => { d.diagrams.push(homed({ kind: 'deep-dive', target: 'core-ideas' })); },
-      [{ kind: 'unresolved-reference', at: '$.diagrams[0].home.target', detail: 'no deep dive has the identity "core-ideas"' }]],
+      [{ kind: 'unresolved-reference', at: '$.diagrams[0].home.target', detail: 'the diagram "flow-1": no deep dive has the identity "core-ideas"' }]],
     ['a section home without its id', (d) => { d.diagrams.push(homed({ kind: 'section' })); },
-      [{ kind: 'diagram-home', at: '$.diagrams[0].home', detail: 'a section home names its section in `target`' }]],
+      [{ kind: 'diagram-home', at: '$.diagrams[0].home', detail: 'the diagram "flow-1": a section home names its section in `target`' }]],
     ['an overview home with an id', (d) => { d.diagrams.push(homed({ kind: 'overview', target: 'core-ideas' })); },
-      [{ kind: 'diagram-home', at: '$.diagrams[0].home.target', detail: 'the overview is one page and takes no `target`' }]],
+      [{ kind: 'diagram-home', at: '$.diagrams[0].home.target', detail: 'the diagram "flow-1": the overview is one page and takes no `target`' }]],
   ])('reports %s', async (_name, change, expected) => {
     const run = await briefedRun();
     writeDraft(run, mutate((d) => { d.schemaVersion = 'polaris-dossier-local-draft-v5'; change(d); }));
@@ -277,15 +277,42 @@ describe('check: schema v5 diagram homes (syzygy-3efd.18)', () => {
     writeDraft(run, mutate((d) => { d.schemaVersion = 'polaris-dossier-local-draft-v4'; d.diagrams.push({ ...DIAGRAM, home: { kind: 'overview' } }); }));
     const result = report(await checkDraft(run, {}, deps()));
     expect(result.findings.map(({ kind, at, detail }) => ({ kind, at, detail }))).toEqual([
-      { kind: 'field-version', at: '$.diagrams[0].home', detail: '`home` needs draft schema polaris-dossier-local-draft-v5; an earlier draft names its diagram\'s section in `sectionId`' }]);
+      { kind: 'field-version', at: '$.diagrams[0].home', detail: 'the diagram "flow-1": `home` needs draft schema polaris-dossier-local-draft-v5; an earlier draft names its diagram\'s section in `sectionId`' }]);
   });
 
-  it('refuses a malformed home by the schema, naming the diagram', async () => {
+  it.each<[string, unknown, { at: string; detail: string }[]]>([
+    ['an unknown kind', { kind: 'appendix' }, [{ at: '$.diagrams[0].home.kind', detail: 'the diagram "flow-1": a home\'s `kind` is `section`, `deep-dive` or `overview`' }]],
+    ['a home that is not an object', 'core-ideas', [{ at: '$.diagrams[0].home', detail: 'the diagram "flow-1": a home is an object: `{"kind": "section" or "deep-dive", "target": <identity>}` or `{"kind": "overview"}`' }]],
+    ['a home with another member', { kind: 'section', target: 'core-ideas', id: 'core-ideas' }, [{ at: '$.diagrams[0].home.id', detail: 'the diagram "flow-1": a home has only `kind` and `target`; `id` is not one of them' }]],
+  ])('reports a malformed home, %s, as diagram-home naming the diagram, beside the schema\'s own finding', async (_name, home, expected) => {
     const run = await briefedRun();
-    writeDraft(run, mutate((d) => { d.schemaVersion = 'polaris-dossier-local-draft-v5'; d.diagrams.push(homed({ kind: 'appendix' })); }));
+    writeDraft(run, mutate((d) => { d.schemaVersion = 'polaris-dossier-local-draft-v5'; d.diagrams.push(homed(home)); }));
     const result = report(await checkDraft(run, {}, deps()));
     expect(result.outcome).toBe('findings');
-    expect(result.findings.filter((finding) => finding.kind === 'schema').map(({ at }) => at)).toEqual(['$.diagrams[0].home.kind']);
+    expect(result.findings.filter((finding) => finding.kind === 'diagram-home').map(({ at, detail }) => ({ at, detail }))).toEqual(expected);
+    expect(result.findings.some((finding) => finding.kind === 'schema')).toBe(true);
+  });
+
+  it('names a diagram with no well-formed identity by its index alone', async () => {
+    const run = await briefedRun();
+    writeDraft(run, mutate((d) => { d.schemaVersion = 'polaris-dossier-local-draft-v5'; const { id: _id, ...rest } = homed({ kind: 'overview', target: 'x' }); d.diagrams.push(rest); }));
+    const result = report(await checkDraft(run, {}, deps()));
+    expect(result.findings.filter((finding) => finding.kind === 'diagram-home').map(({ at, detail }) => ({ at, detail }))).toEqual([
+      { at: '$.diagrams[0].home.target', detail: 'the overview is one page and takes no `target`' }]);
+  });
+
+  // The v4 promise: a v4 draft's findings are those of the version before, byte for byte, except a `home` is field-version.
+  it.each<[string, (d: Draft) => void, { kind: string; at: string; detail: string }[]]>([
+    ['a diagram with no sectionId', (d) => { const { sectionId: _s, ...rest } = DIAGRAM; d.diagrams.push(rest); }, [{ kind: 'schema', at: '$.diagrams[0].sectionId', detail: 'is required' }]],
+    ['a diagram naming an unknown section, and a deep dive too', (d) => { d.diagrams.push({ ...DIAGRAM, sectionId: 'nowhere' }); d.deepDives.push({ ...DIVE, sectionId: 'elsewhere' }); },
+      [{ kind: 'unresolved-reference', at: '$.diagrams[0].sectionId', detail: 'no section has the identity "nowhere"' }, { kind: 'unresolved-reference', at: '$.deepDives[0].sectionId', detail: 'no section has the identity "elsewhere"' }]],
+    ['a malformed home beside its sectionId', (d) => { d.diagrams.push({ ...DIAGRAM, home: { kind: 'x' } }); },
+      [{ kind: 'field-version', at: '$.diagrams[0].home', detail: 'the diagram "flow-1": `home` needs draft schema polaris-dossier-local-draft-v5; an earlier draft names its diagram\'s section in `sectionId`' }]],
+  ])('keeps a v4 draft\'s findings: %s', async (_name, change, expected) => {
+    const run = await briefedRun();
+    writeDraft(run, mutate((d) => { d.schemaVersion = 'polaris-dossier-local-draft-v4'; change(d); }));
+    const result = report(await checkDraft(run, {}, deps()));
+    expect(result.findings.map(({ kind, at, detail }) => ({ kind, at, detail }))).toEqual(expected);
   });
 });
 

@@ -46,15 +46,17 @@ const list = (value: unknown): readonly unknown[] => (Array.isArray(value) ? val
 const str = (value: unknown): string => (typeof value === 'string' ? value : '');
 const marking = (value: unknown): 'observed' | 'inferred' | 'unknown' => (MARKINGS.has(value as string) ? value as 'observed' | 'inferred' | 'unknown' : 'unknown');
 
-/** Rounded half away from zero to two places; the fit itself compares the unrounded size. */
-const twoPlaces = (value: number): number => Math.sign(value) * Math.round(Math.abs(value) * 100) / 100;
+/** Rounded half away from zero to two places; the fit itself compares the unrounded size. The product is first cut to twelve significant
+ * digits, so a binary representation just under a true half (1.005 × 100 = 100.49999…) still rounds up. */
+const twoPlaces = (value: number): number => Math.sign(value) * Math.round(Number((Math.abs(value) * 100).toPrecision(12))) / 100;
 
 /** The width the stylesheet draws a figure of laid-out width `laidOut` at, in a box `column` wide. */
 export function drawnWidth(laidOut: number, column: number): number {
   return laidOut === SHRINKING_WIDTH_PX ? Math.min(laidOut, Math.max(column, SHRINK_FLOOR_PX)) : laidOut;
 }
 
-/** Figure fit over a parsed draft: depends only on its bytes, the constants above and the layout, so it is the same for the same draft. */
+/** Figure fit over a parsed draft: depends only on its bytes, the constants above and the layout, so it is the same for the same draft
+ * wherever the same layout is supplied (the `syzygy` CLI supplies it to every check; without it every produced figure is Unknown). */
 export function figureFit(doc: unknown, layout: FigureLayout | undefined): FigureFit {
   const entries: FigureFitEntry[] = [];
   let examined = 0;

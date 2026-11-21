@@ -158,7 +158,9 @@ export interface DraftSchemaParameters {
   readonly maxQuestions: number;
 }
 
-export function localDraftSchema(parameters: DraftSchemaParameters): DraftSchemaWithDefs {
+/** The draft schema. `diagramForm` says how a diagram names its page: `home` (schema v5, what the brief publishes) or `sectionId`
+ * (schema v4 and earlier, which `check` applies to such a draft so that its findings stay byte for byte those of the version before). */
+export function localDraftSchema(parameters: DraftSchemaParameters, diagramForm: 'home' | 'sectionId' = 'home'): DraftSchemaWithDefs {
   requirePinnedRevision(parameters.pinnedRevision);
   if (!Number.isSafeInteger(parameters.maxQuestions) || parameters.maxQuestions < 0) throw new Error('draft-schema: the question limit is not a nonnegative integer');
   return { defs: DEFS, root: object({
@@ -170,14 +172,16 @@ export function localDraftSchema(parameters: DraftSchemaParameters): DraftSchema
     understanding: object(Object.fromEntries(UNDERSTANDING_ITEMS.map((item) => [item, list(ref('understandingItem'), 1, 100)]))),
     sections: list(object({ id: handle, title: text, paragraphs: list(ref('content'), 1, 30), disposition: ref('disposition') }), 1, 30),
     diagrams: list(object({
-      // Exactly one of the two, by version: `sectionId` up to v4, `home` from v5 (checked with the draft's structure, where the finding can
-      // name the version). A home names a section or a deep dive in `target`, or is the overview and names none. Not `id`: every `id` in a
-      // draft is an identity of its own.
-      id: handle, title: text, sectionId: handle, home: object({ kind: choice(DIAGRAM_HOME_KINDS), target: handle }, ['target']), kind: choice(DIAGRAM_KINDS), relationship: text,
+      // One of the two, by version: `sectionId` up to v4, `home` from v5 (the draft's structure also reports a home in the wrong form, and
+      // names the version). A home names a section or a deep dive in `target`, or is the overview and names none. Not `id`: every `id` in
+      // a draft is an identity of its own.
+      id: handle, title: text,
+      ...(diagramForm === 'home' ? { home: object({ kind: choice(DIAGRAM_HOME_KINDS), target: handle }, ['target']) } : { sectionId: handle }),
+      kind: choice(DIAGRAM_KINDS), relationship: text,
       nodes: list(object({ id: handle, label: text, epistemic, citations: citations(1) }), 1, 40),
       edges: list(object({ id: handle, from: handle, to: handle, label: text, epistemic, citations: citations(1) }), 1, 80),
       disposition: ref('disposition'),
-    }, ['sectionId', 'home']), 0, 20),
+    }), 0, 20),
     deepDives: list(object({ id: handle, title: text, sectionId: handle, paragraphs: list(ref('content'), 1, 30), disposition: ref('disposition') }), 0, 30),
     unresolved: list(object({ id: handle, question: text, reason: text, citations: citations(0) }), 0, 100),
     discovery: object({

@@ -638,4 +638,19 @@ describe('figureLaidOutWidth (the layout check is handed)', () => {
     expect(Number(/<svg [^>]*\bwidth="(\d+(?:\.\d+)?)"/u.exec(svg)![1])).toBe(width);
     expect(figureLaidOutWidth(figure)).toBe(width);
   });
+
+  // Beyond chains: a fan-out with a back edge (layered) and a dense graph past the readable columns (stacked).
+  const fan = { nodes: ['a', 'b', 'c', 'd'].map((id) => ({ id, label: id, epistemic: 'inferred' as const })),
+    edges: [['a', 'b'], ['a', 'c'], ['b', 'd'], ['c', 'd'], ['d', 'a']].map(([from, to], i) => ({ id: `f${i}`, from: from!, to: to!, label: 'to', epistemic: 'inferred' as const })) };
+  const dense = { nodes: Array.from({ length: 12 }, (_, i) => ({ id: `n${i}`, label: `Node ${i}`, epistemic: 'inferred' as const })),
+    edges: Array.from({ length: 12 }, (_, i) => Array.from({ length: 12 - i - 1 }, (_, k) => ({ from: `n${i}`, to: `n${i + k + 1}` }))).flat().map((e, j) => ({ id: `d${j}`, ...e, label: 'calls', epistemic: 'inferred' as const })) };
+  it.each([['a fan-out with a back edge', fan], ['a dense graph that stacks', dense]] as const)('equals the readable SVG\'s width attribute for %s', async (_name, figure) => {
+    const { figureLaidOutWidth } = await import('./dossier-site.js');
+    const svg = renderDiagramSvg(figure, 0, (value) => value, READABLE_SPACING);
+    expect(figureLaidOutWidth(figure)).toBe(Number(/<svg [^>]*\bwidth="(\d+(?:\.\d+)?)"/u.exec(svg)![1]));
+  });
+  it('pins those two widths', async () => {
+    const { figureLaidOutWidth } = await import('./dossier-site.js');
+    expect([figureLaidOutWidth(fan), figureLaidOutWidth(dense)]).toEqual([1048, 261]);
+  });
 });

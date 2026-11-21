@@ -647,8 +647,10 @@ export function renderDossierSite(input: DossierSiteInput & { readonly local?: L
     termsShown.clear();
     const introduction = view.drafted ? paragraph(from, draft.introduction, 'p') : '';
     const missingList = view.notGenerated.length === 0 ? '' : `<section id="not-generated" data-reading-level="1" data-topics=""><h2>Not generated</h2>${view.notGenerated.map(item => notGenerated(item.id, item.kind)).join('')}</section>`;
-    // Figures whose home is the overview lead the first page, after its introduction and before its sections (syzygy-3efd.18).
-    const overviewFigures = draft.diagrams.map((d, i) => d.home?.kind === 'overview' ? diagram(from, d, i) : '').join('');
+    // Figures whose home is the overview lead the first page, after its introduction and before its sections, in a region of their own
+    // at reading level 1 with no topics; none where the page shows no part of the draft (syzygy-3efd.18).
+    const overviewDrawn = view.drafted ? draft.diagrams.map((d, i) => d.home?.kind === 'overview' ? diagram(from, d, i) : '').join('') : '';
+    const overviewFigures = overviewDrawn === '' ? '' : `<section id="overview-figures" data-reading-level="1" data-topics="">${overviewDrawn}</section>`;
     add(from, 0, 'Overview', `<header data-reading-level="0"><span class="eyebrow">Polaris · Editorial draft</span><h1>${escape(draft.title)}</h1>${banner}${introduction}${unresolved}</header>${overviewFigures}${sections}${poleMap}${missingList}`);
   }
 
@@ -816,8 +818,11 @@ export function renderDossierSite(input: DossierSiteInput & { readonly local?: L
 
 /** The laid-out width of an operator-agent figure, as `renderLocalDossier` draws it: what the `syzygy` CLI injects into the dossier
  * check step, which measures figure fit with it (syzygy-3efd.20). The layout reads identities and edges only, never labels, so a
- * withheld element's replaced label at render changes no width, and check's width depends on the draft's bytes alone. */
-export function figureLaidOutWidth(figure: { readonly nodes: readonly { readonly id: string }[]; readonly edges: readonly { readonly id: string; readonly from: string; readonly to: string }[] }): number {
+ * withheld element's replaced label at render changes no width, and check's width depends on the draft's bytes alone. It throws for a
+ * figure the site would not draw (one that is not inert), whose fit is then Unknown. */
+export function figureLaidOutWidth(figure: Parameters<typeof renderDiagramSvg>[0]): number {
+  // A figure the site cannot draw inertly renders a notice, not a drawing, so it has no width to fit: throwing makes its fit Unknown.
+  assertInertSvg(renderDiagramSvg(figure, 0, escape, READABLE_SPACING));
   return layoutDiagram(figure.nodes, figure.edges, READABLE_SPACING).width;
 }
 

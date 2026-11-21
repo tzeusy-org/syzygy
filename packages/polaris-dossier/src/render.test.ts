@@ -952,6 +952,12 @@ describe('render: figure homes (schema v5)', () => {
     // The overview figure sits after the header (the introduction) and before the first section; the section's figure inside its section.
     expect(index.indexOf('</header>')).toBeLessThan(index.indexOf(caption('zq-overview figure')));
     expect(index.indexOf(caption('zq-overview figure'))).toBeLessThan(index.indexOf('<section id="section-core-ideas"'));
+    // In a region of its own at reading level 1, carrying no topics, that holds the overview figure and nothing else.
+    const region = index.slice(index.indexOf('<section id="overview-figures"'), index.indexOf('<section id="section-core-ideas"'));
+    expect(region.startsWith('<section id="overview-figures" data-reading-level="1" data-topics="">')).toBe(true);
+    expect(region.endsWith('</section>')).toBe(true);
+    expect(count(region, '<figure')).toBe(1);
+    expect(region).toContain(caption('zq-overview figure'));
     expect(index.indexOf('<section id="section-core-ideas"')).toBeLessThan(index.indexOf(caption('zq-section figure')));
     const divePage = files.get('deep-dives/dive-1.html')!;
     expect(divePage.indexOf(caption('zq-dive figure'))).toBeLessThan(divePage.indexOf('zq-dive prose.'));
@@ -967,6 +973,12 @@ describe('render: figure homes (schema v5)', () => {
     if (!result.ok) throw new Error(result.refusal.reason);
     const files = readSite(result.report.site);
     expect(files.has('deep-dives/dive-1.html')).toBe(false);
+    // No overview region without an overview figure.
+    const noOverview = homedDraft();
+    noOverview.diagrams = noOverview.diagrams.filter((d: { id: string }) => d.id !== 'fig-o');
+    const bare = await renderRun(await prepared(noOverview, false), renderDeps());
+    if (!bare.ok) throw new Error(bare.refusal.reason);
+    expect(readSite(bare.report.site).get('index.html')).not.toContain('overview-figures');
     const index = files.get('index.html')!;
     expect(count(index, caption('zq-dive figure'))).toBe(1);
     expect(index.indexOf('<section id="section-core-ideas"')).toBeLessThan(index.indexOf(caption('zq-dive figure')));
