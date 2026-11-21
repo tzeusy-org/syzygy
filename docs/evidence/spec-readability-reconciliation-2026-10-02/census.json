@@ -600,7 +600,7 @@
     },
     "POLARIS": {
       "requirements": 39,
-      "scenarios": 400,
+      "scenarios": 413,
       "members": {
         "REQ-polaris-generation-001": {
           "name": "Admitted project input",
@@ -1064,7 +1064,20 @@
             "Derived record naming a directory not in the tree",
             "Deep-dive page named per code point",
             "Graph diagram with a missing or foreign member in schema v7",
-            "Records Syzygy wrote and the provider unchanged by the repairs"
+            "Records Syzygy wrote and the provider unchanged by the repairs",
+            "Directory map of a current record",
+            "Directory map counts are re-derived, never read from the record",
+            "Large directory map paginated, never shrunk",
+            "Directory map with no readable record",
+            "Unit map of a workspace",
+            "CI pipeline map of a workflow",
+            "Maps under a screen that admits no manifest",
+            "Maps never read the stored check record",
+            "Draft cannot reach or imitate a computed map",
+            "Provider mode has no computed maps",
+            "Graph figure too wide at 390 routed to the run file",
+            "Advice the author can act on stays in the packet",
+            "Unreadable check record in the run file"
           ]
         },
         "REQ-polaris-generation-035": {
