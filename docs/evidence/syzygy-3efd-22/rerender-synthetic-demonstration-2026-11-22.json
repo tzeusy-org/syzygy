@@ -1,0 +1,139 @@
+{
+  "format": "polaris-dossier-rerender-demonstration/1",
+  "bead": "syzygy-3efd.22",
+  "measuredAt": "2026-11-21T21:55:58.101Z",
+  "purpose": "Acceptance criteria 1-3 of syzygy-3efd.22 shown on a synthetic state root, because the real one could not be read from this session (it is outside the agent user's home). Not the baseline: no real draft is measured here.",
+  "subject": {
+    "what": "a scratch state root of synthetic drafts: one run directory with two frozen revisions (one admitted, one the schema refuses), a next.json, and a run-*.agents directory beside it",
+    "populationSha256": "c24f00f06e4d730153127c32f78c6dd743a0173c1861bce750fbe30759fe20d3",
+    "generatorSha256": "a8e4f73feb5282b63876c963a15250a2fc4e0a3cf40141cbbb85dfe24d5b0866",
+    "generator": "a scratch script (not committed) that writes schema-v2 drafts with two produced flow figures of 3 and 8 nodes"
+  },
+  "syzygy": {
+    "commit": "36df267fe078d4dee093e9b5428ecb26dc368b72",
+    "trackedChanges": 0
+  },
+  "command": "node scripts/dossier_rerender_measure.mjs --state-root <scratch root> --out <before.json>; again with --baseline <before.json>",
+  "criterion1": {
+    "counts": {
+      "found": 2,
+      "measured": 1,
+      "refused": 1,
+      "refusedBy": {
+        "not-utf8": 0,
+        "not-json": 0,
+        "unknown-schema-version": 0,
+        "no-pinned-revision": 0,
+        "schema": 1
+      }
+    },
+    "sums": true,
+    "otherDraftFiles": 1,
+    "runsListed": 1
+  },
+  "criterion2": {
+    "sameCommit": true,
+    "samePopulation": true,
+    "counts": {
+      "unchanged": 1,
+      "changed": 0,
+      "added": 0,
+      "removed": 0,
+      "bytes-changed": 0,
+      "now-refused": 0,
+      "now-measured": 0,
+      "refused-both": 1
+    },
+    "totalsEqual": true
+  },
+  "criterion3": {
+    "mutation": {
+      "file": "apps/three-surface-poc/dist/polaris-generation/diagram-layout.js (the built READABLE_SPACING, restored after)",
+      "old": "gapX: 200, gapY: 64, maxColumns: 3",
+      "new": "gapX: 400, gapY: 64, maxColumns: 3"
+    },
+    "counts": {
+      "unchanged": 0,
+      "changed": 1,
+      "added": 0,
+      "removed": 0,
+      "bytes-changed": 0,
+      "now-refused": 0,
+      "now-measured": 0,
+      "refused-both": 1
+    },
+    "totalsDelta": {
+      "proseWords": 0,
+      "readingMinutes": 0,
+      "figures": 0,
+      "advisories": {
+        "RS-13": 0,
+        "RS-14": 0,
+        "RS-16": 0,
+        "RS-17": 0,
+        "RS-19": 0
+      },
+      "figureFit": {
+        "notFittingAt1440": 2,
+        "notFittingAt390": 0,
+        "unknown": 0
+      },
+      "unplacedUnits": 0,
+      "figuresExamined": 0
+    },
+    "moved": [
+      {
+        "draft": "run-dddddddddddddddddddddddddddddddd/rev-0",
+        "change": "changed",
+        "delta": {
+          "proseWords": 0,
+          "readingMinutes": 0,
+          "figures": 0,
+          "advisories": {
+            "RS-13": 0,
+            "RS-14": 0,
+            "RS-16": 0,
+            "RS-17": 0,
+            "RS-19": 0
+          },
+          "figureFit": {
+            "notFittingAt1440": 2,
+            "notFittingAt390": 0,
+            "unknown": 0
+          },
+          "unplacedUnits": 0,
+          "figuresExamined": 0
+        },
+        "pages": [
+          {
+            "page": "index.html",
+            "change": "changed"
+          }
+        ]
+      },
+      {
+        "draft": "run-dddddddddddddddddddddddddddddddd/rev-1",
+        "change": "refused-both"
+      }
+    ]
+  },
+  "totals": {
+    "proseWords": 6,
+    "readingMinutes": 1,
+    "figures": 2,
+    "advisories": {
+      "RS-13": 0,
+      "RS-14": 0,
+      "RS-16": 0,
+      "RS-17": 0,
+      "RS-19": 0
+    },
+    "figureFit": {
+      "notFittingAt1440": 0,
+      "notFittingAt390": 2,
+      "unknown": 0
+    },
+    "unplacedUnits": 0,
+    "figuresExamined": 2
+  }
+}

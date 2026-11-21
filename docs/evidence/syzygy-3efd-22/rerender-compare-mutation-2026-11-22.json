@@ -1,0 +1,227 @@
+{
+  "format": "mutation-run/1",
+  "ranAt": "2026-11-21T21:55:51.355Z",
+  "subject": {
+    "bead": "syzygy-3efd.22",
+    "what": "the stored-draft re-render comparison and counting logic",
+    "commit": "36df267fe078d4dee093e9b5428ecb26dc368b72",
+    "files": [
+      {
+        "path": "packages/polaris-dossier/src/rerender-measure.ts",
+        "sha256": "74511f619b933f096414aff29c65c7e3c204cbb26ac2a7ccbdbe36f1d31c0093"
+      },
+      {
+        "path": "packages/polaris-dossier/src/rerender-measure.test.ts",
+        "sha256": "4b60dad64ba4eed88d8cced5032138da445342ddfdf2786509b0de5a07291934"
+      }
+    ]
+  },
+  "command": "npx vitest run --project unit packages/polaris-dossier/src/rerender-measure.test.ts --reporter=json --outputFile=<tmp>",
+  "method": "Each mutant replaces its old fragment (which occurs exactly once in the file) with the new one, runs the unit test file, and restores the source byte for byte; a mutant is killed when any test fails or no test runs. The unmutated run passed every test first.",
+  "unmutated": {
+    "tests": 8,
+    "failed": 0
+  },
+  "summary": {
+    "mutants": 17,
+    "killed": 17,
+    "survived": 0
+  },
+  "mutants": [
+    {
+      "id": "bytes-check-dropped",
+      "file": "packages/polaris-dossier/src/rerender-measure.ts",
+      "old": "if (before.sha256 !== after.sha256) {",
+      "new": "if (false) {",
+      "killed": true,
+      "killedBy": "unit tests",
+      "failedTests": [
+        "compareRecords reports what moved, draft by draft, with literal counts and deltas"
+      ]
+    },
+    {
+      "id": "refused-both-inverted",
+      "file": "packages/polaris-dossier/src/rerender-measure.ts",
+      "old": "before.outcome === after.outcome ? 'refused-both'",
+      "new": "before.outcome !== after.outcome ? 'refused-both'",
+      "killed": true,
+      "killedBy": "unit tests",
+      "failedTests": [
+        "compareRecords reports what moved, draft by draft, with literal counts and deltas",
+        "compareRecords finds nothing moved when a record is compared with itself"
+      ]
+    },
+    {
+      "id": "now-refused-swapped",
+      "file": "packages/polaris-dossier/src/rerender-measure.ts",
+      "old": "after.outcome === 'refused' ? 'now-refused' : 'now-measured'",
+      "new": "after.outcome === 'refused' ? 'now-measured' : 'now-refused'",
+      "killed": true,
+      "killedBy": "unit tests",
+      "failedTests": [
+        "compareRecords reports what moved, draft by draft, with literal counts and deltas"
+      ]
+    },
+    {
+      "id": "figures-examined-delta-zero",
+      "file": "packages/polaris-dossier/src/rerender-measure.ts",
+      "old": "figuresExamined: after.figuresExamined! - before.figuresExamined!",
+      "new": "figuresExamined: 0",
+      "killed": true,
+      "killedBy": "unit tests",
+      "failedTests": [
+        "compareRecords notices a move in the figures examined alone"
+      ]
+    },
+    {
+      "id": "totals-sign-flipped",
+      "file": "packages/polaris-dossier/src/rerender-measure.ts",
+      "old": "addInto(totals, delta, 1);",
+      "new": "addInto(totals, delta, -1);",
+      "killed": true,
+      "killedBy": "unit tests",
+      "failedTests": [
+        "compareRecords reports what moved, draft by draft, with literal counts and deltas",
+        "compareRecords notices a move in the figures examined alone"
+      ]
+    },
+    {
+      "id": "page-moves-dropped",
+      "file": "packages/polaris-dossier/src/rerender-measure.ts",
+      "old": "(page.change === 'unchanged' ? [] :",
+      "new": "(true ? [] :",
+      "killed": true,
+      "killedBy": "unit tests",
+      "failedTests": [
+        "compareRecords reports what moved, draft by draft, with literal counts and deltas",
+        "compareRecords notices a page added or removed, and a page-only move, even where the draft totals hold"
+      ]
+    },
+    {
+      "id": "page-only-move-ignored",
+      "file": "packages/polaris-dossier/src/rerender-measure.ts",
+      "old": "const still = pages.length === 0 &&",
+      "new": "const still = pages.length >= 0 &&",
+      "killed": true,
+      "killedBy": "unit tests",
+      "failedTests": [
+        "compareRecords notices a page added or removed, and a page-only move, even where the draft totals hold"
+      ]
+    },
+    {
+      "id": "removed-inverted",
+      "file": "packages/polaris-dossier/src/rerender-measure.ts",
+      "old": "for (const key of baseline.order) if (!current.rows.has(key))",
+      "new": "for (const key of baseline.order) if (current.rows.has(key))",
+      "killed": true,
+      "killedBy": "unit tests",
+      "failedTests": [
+        "compareRecords reports what moved, draft by draft, with literal counts and deltas",
+        "compareRecords finds nothing moved when a record is compared with itself",
+        "compareRecords notices a page added or removed, and a page-only move, even where the draft totals hold",
+        "compareRecords notices a move in the figures examined alone"
+      ]
+    },
+    {
+      "id": "same-population-constant",
+      "file": "packages/polaris-dossier/src/rerender-measure.ts",
+      "old": "samePopulation: baseline.populationSha256 === current.populationSha256",
+      "new": "samePopulation: true",
+      "killed": true,
+      "killedBy": "unit tests",
+      "failedTests": [
+        "compareRecords reports what moved, draft by draft, with literal counts and deltas"
+      ]
+    },
+    {
+      "id": "duplicate-row-admitted",
+      "file": "packages/polaris-dossier/src/rerender-measure.ts",
+      "old": "if (rows.has(key)) return fail(",
+      "new": "if (false) return fail(",
+      "killed": true,
+      "killedBy": "unit tests",
+      "failedTests": [
+        "compareRecords refuses a record not of its form, naming which"
+      ]
+    },
+    {
+      "id": "added-named-removed",
+      "file": "packages/polaris-dossier/src/rerender-measure.ts",
+      "old": "note({ draft: key, change: 'added' }); continue;",
+      "new": "note({ draft: key, change: 'removed' }); continue;",
+      "killed": true,
+      "killedBy": "unit tests",
+      "failedTests": [
+        "compareRecords reports what moved, draft by draft, with literal counts and deltas"
+      ]
+    },
+    {
+      "id": "unchanged-listed-as-moved",
+      "file": "packages/polaris-dossier/src/rerender-measure.ts",
+      "old": "if (entry.change !== 'unchanged') moved.push(entry);",
+      "new": "moved.push(entry);",
+      "killed": true,
+      "killedBy": "unit tests",
+      "failedTests": [
+        "compareRecords reports what moved, draft by draft, with literal counts and deltas",
+        "compareRecords finds nothing moved when a record is compared with itself"
+      ]
+    },
+    {
+      "id": "refusal-reason-uncounted",
+      "file": "packages/polaris-dossier/src/rerender-measure.ts",
+      "old": "if (row.result.outcome === 'refused') { refusedBy[row.result.why] += 1; continue; }",
+      "new": "if (row.result.outcome === 'refused') { continue; }",
+      "killed": true,
+      "killedBy": "unit tests",
+      "failedTests": [
+        "a state root listed and recorded counts a refused draft, never passing over it, and its counts sum to the drafts found"
+      ]
+    },
+    {
+      "id": "refused-count-zero",
+      "file": "packages/polaris-dossier/src/rerender-measure.ts",
+      "old": "refused: drafts.length - measured,",
+      "new": "refused: 0,",
+      "killed": true,
+      "killedBy": "unit tests",
+      "failedTests": [
+        "a state root listed and recorded counts a refused draft, never passing over it, and its counts sum to the drafts found"
+      ]
+    },
+    {
+      "id": "other-draft-files-uncounted",
+      "file": "packages/polaris-dossier/src/rerender-measure.ts",
+      "old": "if (match === null || !name.isFile()) { otherDraftFiles += 1; continue; }",
+      "new": "if (match === null || !name.isFile()) { continue; }",
+      "killed": true,
+      "killedBy": "unit tests",
+      "failedTests": [
+        "a state root listed and recorded counts a refused draft, never passing over it, and its counts sum to the drafts found"
+      ]
+    },
+    {
+      "id": "schema-findings-threshold",
+      "file": "packages/polaris-dossier/src/rerender-measure.ts",
+      "old": "if (findings > 0) return",
+      "new": "if (findings > 1) return",
+      "killed": true,
+      "killedBy": "unit tests",
+      "failedTests": [
+        "measureDraft refuses, and names why, a draft the current schema refuses",
+        "a state root listed and recorded counts a refused draft, never passing over it, and its counts sum to the drafts found"
+      ]
+    },
+    {
+      "id": "measured-numbers-unchecked",
+      "file": "packages/polaris-dossier/src/rerender-measure.ts",
+      "old": "if (ledger === undefined || !count(examined)) return fail(",
+      "new": "if (false) return fail(",
+      "killed": true,
+      "killedBy": "unit tests",
+      "failedTests": [
+        "compareRecords refuses a record not of its form, naming which"
+      ]
+    }
+  ]
+}
