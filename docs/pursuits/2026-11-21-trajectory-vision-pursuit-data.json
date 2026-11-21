@@ -1,0 +1,587 @@
+{
+ "run": {
+  "date": "2026-11-21",
+  "scope": "Trajectory (the work surface), run 1",
+  "syzygy_commit": "c62d4cf79a514d574882c337f605d40bfc04f838",
+  "chains_from": "docs/pursuits/2026-11-21-vision-pursuit.md",
+  "mode": "inline (six surfaces); one independent reviewer"
+ },
+ "measuredOn": {
+  "page": "the owner daemon's Trajectory human page, fetched once on 2026-11-21",
+  "bytes": 508101,
+  "observer_commit": "52f50f1c968bba025e57a2029d6c9489c491fa52",
+  "project_commit_prefix": "a2a5b731f8d7",
+  "evaluation_as_of": "2026-11-21T11:54:39.491Z",
+  "layout_method": "headless Chrome over the saved copy, viewport 1440x900 and 390x900",
+  "machine_answer": "not read (HTTP 401 without a credential)"
+ },
+ "north_star": [
+  "README: What remains, what is running, what changed, what it cost, and whether the result has been verified against intent.",
+  "SDR section 2: Not satisfied by a Kanban board, Beads mirror, or issue list that cannot account for execution and resulting changes.",
+  "v1.md: Work navigation - pending and completed work as navigable dependency graphs.",
+  "v1.md: from one signed-off spec delta, dispatch one scheduled work item end to end for a worker to materialize."
+ ],
+ "five_questions": [
+  {
+   "question": "What remains?",
+   "verdict": "weak",
+   "today": "Counts for a selection of 250 of 10971; no totals over the whole set, no titles, no dependencies, no readiness."
+  },
+  {
+   "question": "What is running?",
+   "verdict": "weak",
+   "today": "20 cards under In Progress from the tracker's word; no claimant, no last signal."
+  },
+  {
+   "question": "What changed?",
+   "verdict": "absent",
+   "today": "Nothing; the page states movement Unknown; 0 worker-change rows on the live page."
+  },
+  {
+   "question": "What did it cost?",
+   "verdict": "absent",
+   "today": "No measure and no stated Unknown."
+  },
+  {
+   "question": "Verified against intent?",
+   "verdict": "honest, empty",
+   "today": "Unknown for 10971 of 10971 with reason and route."
+  }
+ ],
+ "units": [
+  {
+   "lane": "audit",
+   "unit": "work-item-observation",
+   "tier": "weak",
+   "files": [
+    "packages/three-surface-poc-core/src/work-items.ts"
+   ],
+   "findings": [
+    {
+     "id": "A1-F1",
+     "label": "Observed",
+     "text": "One SQL statement reads seven columns of the issues table (id, state word, issue type, priority, created, updated, closed) plus the Dolt revision. No dependency, parent, claimant, closure reason or outward reference is read.",
+     "where": "work-items.ts:177-179"
+    },
+    {
+     "id": "A1-F2",
+     "label": "Observed",
+     "text": "On Syzygy's own tracker the dependencies table holds 1580 edges: 835 blocks, 641 parent-child, 75 discovered-from, 14 relates-to, 10 related, 5 tracks. Its columns include issue_id, depends_on_issue_id and type. For the proving project the counts are Unknown."
+    },
+    {
+     "id": "A1-F3",
+     "label": "Observed",
+     "text": "On Syzygy's own tracker dolt_diff_issues answers through the same read-only bd sql path: 193 modified and 63 added item rows with a commit date after 2026-11-20."
+    },
+    {
+     "id": "A1-F4",
+     "label": "Observed",
+     "text": "Titles are never read (SEC-5; owner answer 2026-10-20, syzygy-jytt). Issue type and priority are read and served but not rendered on a card."
+    }
+   ]
+  },
+  {
+   "lane": "audit",
+   "unit": "selection",
+   "tier": "functional",
+   "files": [
+    "packages/three-surface-poc-core/src/trajectory-projection.ts"
+   ],
+   "findings": [
+    {
+     "id": "A2-F1",
+     "label": "Observed",
+     "text": "Selection is up to 200 most recently updated non-closed items plus up to 50 most recently closed; the rule and the counts 250, 10721 and 10971 are stated on the page."
+    },
+    {
+     "id": "A2-F2",
+     "label": "Observed",
+     "text": "No route renders or narrows the 10721 items outside the selection; the coverage table records that limb of RFC8-23 as Unknown."
+    }
+   ]
+  },
+  {
+   "lane": "audit",
+   "unit": "board-page",
+   "tier": "weak",
+   "files": [
+    "apps/three-surface-poc/src/trajectory.ts"
+   ],
+   "findings": [
+    {
+     "id": "A3-F1",
+     "label": "Observed",
+     "text": "250 cards take 485107 of 508101 bytes (95.5%). The epistemic spans inside cards take 359474 bytes (70.7%). After removing the identifier and the bar offsets there are 5 distinct card bodies among 250."
+    },
+    {
+     "id": "A3-F2",
+     "label": "Observed",
+     "text": "753 elements carry the Unknown encoding and 4 the Observed one. A card's text holds no date, no priority and no issue type."
+    },
+    {
+     "id": "A3-F3",
+     "label": "Observed",
+     "text": "The closed column is headed Done (trajectory-projection.ts:10, trajectory.ts:36). RFC8-2(b) and RFC8-15 forbid a label meaning done for scheduler closure; CONTRACT-COVERAGE.md records RFC8-15 as covered by POC-REQ-043."
+    },
+    {
+     "id": "A3-F4",
+     "label": "Observed",
+     "text": "The claimed column is headed In Progress from the raw state word alone; RFC8-16 makes active unrenderable until a staleness bound is declared."
+    },
+    {
+     "id": "A3-F5",
+     "label": "Observed",
+     "text": "At 1440 px: document height 63731 px, width 2091 px in a 1425 px viewport (one code element overflows); four columns in the first row each 45963 px tall; Pinned, Hooked and Done start at 47139 px; a card is 301 px tall. At 390 px: height 68744 px, width 1984 px in 375 px; In Progress starts at 39965 px and Done at 54102 px."
+    },
+    {
+     "id": "A3-F6",
+     "label": "Observed",
+     "text": "205 words of apparatus precede the scope statement; two status paragraphs render at the left edge outside the page gutter."
+    },
+    {
+     "id": "A3-F7",
+     "label": "Observed",
+     "text": "Column counts are counts of the selection (Backlog 147, In Progress 20, Blocked 31, Deferred 2, Pinned 0, Hooked 0, Done 50); no count by state over all 10971 items is rendered."
+    },
+    {
+     "id": "A3-F8",
+     "label": "Observed",
+     "text": "Two per-card Unknowns (governing intent, withheld title) have a board-level statement; verification has none and no count (trajectory.ts:128-132, 278-284). The worker row labels are Active and Changed / merged (trajectory.ts:67-71)."
+    }
+   ]
+  },
+  {
+   "lane": "audit",
+   "unit": "time-visualization",
+   "tier": "weak",
+   "findings": [
+    {
+     "id": "A4-F1",
+     "label": "Observed",
+     "text": "Each card has one bar positioned from created to closed-or-updated within the selection's range, marked aria-hidden, with no axis and no dates in text (trajectory.ts:53-65)."
+    }
+   ]
+  },
+  {
+   "lane": "audit",
+   "unit": "dispatch-slice",
+   "tier": "weak",
+   "files": [
+    "apps/three-surface-poc/src/materialize-action.ts",
+    "packages/three-surface-poc-core/src/materialization.ts",
+    "packages/three-surface-poc-core/src/effect-authority.ts"
+   ],
+   "findings": [
+    {
+     "id": "A5-F1",
+     "label": "Observed",
+     "text": "The live panel reads: The write is not available, so nothing can be written from this page. Foreclosed by owner ruling P-71-Q5 ... Lifting it needs a dated owner act naming this write, then a registry-entry amendment, then a fresh implementation authorization."
+    },
+    {
+     "id": "A5-F2",
+     "label": "Observed",
+     "text": "At c62d4cf79 OWNED-REPOSITORIES.md lists the proving project's repository, added 2026-11-21 with the owner's words. D10 retired digest-bound acts and makes a registry entry an agent adoption."
+    },
+    {
+     "id": "A5-F3",
+     "label": "Inferred",
+     "text": "Lifting the foreclosure is an agent adoption; the trigger stays human (POC invariant: work dispatch is human-triggered)."
+    }
+   ]
+  },
+  {
+   "lane": "audit",
+   "unit": "worker-change-and-verification",
+   "tier": "functional",
+   "findings": [
+    {
+     "id": "A6-F1",
+     "label": "Observed",
+     "text": "The seam observes one bounded item's commits and caps an operator-reported test run at report-fact; there is no Verified arm. The live page has 0 worker-change rows."
+    }
+   ]
+  },
+  {
+   "lane": "audit",
+   "unit": "contract-coverage",
+   "tier": "n/a",
+   "findings": [
+    {
+     "id": "A7-F1",
+     "label": "Observed",
+     "text": "CONTRACT-COVERAGE.md: some limb covered for RFC8-2, 12, 15, 22, 23, 24, 30, 31 (8 clauses); RFC8-21 Unknown; out of scope RFC8-1, 3-11, 13, 14, 16-20, 25-29, 32 (23 clauses)."
+    }
+   ]
+  },
+  {
+   "lane": "ideation",
+   "unit": "progress-dashboard-lens",
+   "findings": [
+    {
+     "id": "A7-F1",
+     "label": "Observed",
+     "text": "The th-projects progress-dashboard skill keeps the tracker authoritative, projects in-progress, todo and complete under tracker ids, lists a session's agents with a status that is an observation and not a liveness lease, and measures token use from explicitly attached runtime logs, reading counters only and reporting coverage over measured sources."
+    },
+    {
+     "id": "A7-F2",
+     "label": "Inferred",
+     "text": "Its workspace state and usage cache are a structured producer of post-hoc execution telemetry for fleet sessions; its summaries are worker reports (report-fact, SDR-9)."
+    }
+   ]
+  },
+  {
+   "lane": "ideation",
+   "unit": "lenses",
+   "lenses": [
+    "five questions",
+    "edges",
+    "versioned substrate and time",
+    "joins from intent to work to code",
+    "Syzygy's own work as subject",
+    "agents as consumers",
+    "telemetry and cost",
+    "the session dashboard as a miniature"
+   ],
+   "retained_not_ranked": [
+    "A machine endpoint that serves the ready set with its evaluation identity for coordinator sessions (after T4).",
+    "Claimant and last-signal liveness (stale-or-dead) once a staleness bound is declared; folded into T11.",
+    "Closure reason rendered verbatim (free text; needs the T5 policy extended to it).",
+    "Live fleet monitoring: deferred by doctrine.",
+    "An owner note on a work item with a recorded disposition, modelled on the dashboard's feedback queue; borders the live control SDR-5 defers.",
+    "Closure reason rendered verbatim inherits the T5 owner gate."
+   ]
+  }
+ ],
+ "ranked_moves": [
+  {
+   "id": "T1",
+   "title": "Retire the closure words",
+   "owner_value": 5,
+   "build_cost": 1,
+   "class": "mandate-grounded",
+   "serves": [
+    "VIS-1",
+    "VIS-2",
+    "RFC8-2",
+    "RFC8-15",
+    "RFC8-16",
+    "RFC8-30"
+   ],
+   "prereq": "none",
+   "slices": [
+    "Rename the closed and claimed headings and the two worker-row labels; add the standing closed-is-not-verified line",
+    "CC-REV-2 amendment: POC-REQ-043 falsifier on closure wording; correct the RFC8-15 coverage row",
+    "Sweep test over headings, counts and prose"
+   ]
+  },
+  {
+   "id": "T2",
+   "title": "Say each Unknown once; give the card back to the item",
+   "owner_value": 5,
+   "build_cost": 2,
+   "class": "mandate-grounded",
+   "serves": [
+    "VIS-1",
+    "VIS-3",
+    "VIS-7",
+    "RFC2-24",
+    "POC-REQ-020",
+    "POC-REQ-060"
+   ],
+   "prereq": "POC shared-model WIP one; syzygy-z5ls before item type renders",
+   "slices": [
+    "Add the board-level verification Unknown with its count",
+    "Scope-hoist the three per-item Unknowns, markers kept per card, parity re-proved",
+    "Render priority and dates as text on the card",
+    "Fix the status-strip gutter, the overflowing code element and the column wrap"
+   ]
+  },
+  {
+   "id": "T3",
+   "title": "The five answers, first",
+   "owner_value": 5,
+   "build_cost": 2,
+   "class": "mandate-grounded",
+   "serves": [
+    "VIS-2",
+    "VIS-3",
+    "SDR section 2",
+    "RFC8-8",
+    "SDR-6"
+   ],
+   "prereq": "none",
+   "slices": [
+    "Counts by state over every served item",
+    "Five rows, each an answer or an Unknown with reason and route",
+    "Spec requirement and parity family for the five rows"
+   ]
+  },
+  {
+   "id": "T4",
+   "title": "Read the edges",
+   "owner_value": 5,
+   "build_cost": 3,
+   "class": "mandate-grounded",
+   "serves": [
+    "v1.md work navigation",
+    "RFC8-13",
+    "RFC8-17",
+    "RFC4-15"
+   ],
+   "prereq": "adoption row for the new read, citing the 2026-10-28 P-115 direction as superseded; closed edge-type list; named columns",
+   "slices": [
+    "Observe item, depends-on item and edge type; unknown types fail closed",
+    "Derive blocked-by, ready set and parent-child from the snapshot only",
+    "Epic outline with text equivalent; blockers linked from blocked cards"
+   ]
+  },
+  {
+   "id": "T5",
+   "title": "Titles, under a declared policy",
+   "owner_value": 5,
+   "build_cost": 3,
+   "class": "owner-decided",
+   "serves": [
+    "VIS-3",
+    "SEC-5"
+   ],
+   "prereq": "owner answered C on 2026-11-21: every observed tracker; recorded on syzygy-t3jk.5",
+   "slices": [
+    "Declare the work-item-title content class and policy",
+    "Run the unchanged detectors and active-content scan per title; withhold on match or failure, exclusion rendered",
+    "Mutation run over the detector path"
+   ]
+  },
+  {
+   "id": "T6",
+   "title": "What changed, from the substrate's own history",
+   "owner_value": 5,
+   "build_cost": 3,
+   "class": "mandate-grounded",
+   "serves": [
+    "RFC8-2",
+    "SDR section 2",
+    "VIS-6"
+   ],
+   "prereq": "T3; named columns so no title column is read",
+   "slices": [
+    "Read item diffs between two named Dolt revisions",
+    "Window chooser: since last evaluation, a day, a week",
+    "Each change fact carries both revisions"
+   ]
+  },
+  {
+   "id": "T7",
+   "title": "Lift the stale foreclosure and run the loop once",
+   "owner_value": 5,
+   "build_cost": 2,
+   "class": "mandate-grounded",
+   "serves": [
+    "v1.md propagation proof",
+    "VIS-5",
+    "SDR-7"
+   ],
+   "prereq": "adoption row quoting P-71-Q5; syzygy-mxas; reopens slice 6 of syzygy-dov.4; owner triggers the write",
+   "slices": [
+    "Registry entry names the one write; refusal text corrected",
+    "Owner-triggered run: materialize, worker change, test artifact",
+    "Evidence record; the materialized item renders its governing intent"
+   ]
+  },
+  {
+   "id": "T8",
+   "title": "Reach every item",
+   "owner_value": 4,
+   "build_cost": 2,
+   "class": "mandate-grounded",
+   "serves": [
+    "RFC8-23",
+    "POC-REQ-042"
+   ],
+   "prereq": "T2; syzygy-z5ls for narrowing by type",
+   "slices": [
+    "Server-side narrowing by state, type and parent",
+    "Default selection: the whole non-closed set grouped by parent"
+   ]
+  },
+  {
+   "id": "T9",
+   "title": "Time, drawn and written",
+   "owner_value": 4,
+   "build_cost": 2,
+   "class": "mandate-grounded",
+   "serves": [
+    "RFC8-18",
+    "RFC8-19",
+    "RFC8-31",
+    "POC-REQ-041"
+   ],
+   "prereq": "none",
+   "slices": [
+    "Lead time, age, arrivals and closures per week as independent measures with coverage",
+    "Chart with an axis and a table equivalent; remove the unlabelled bar"
+   ]
+  },
+  {
+   "id": "T10",
+   "title": "Commits by naming convention",
+   "owner_value": 5,
+   "build_cost": 3,
+   "class": "mandate-grounded",
+   "serves": [
+    "RFC8-21",
+    "RFC8-13",
+    "RFC4-22"
+   ],
+   "prereq": "adoption row; keep a token only when it equals an identifier observed in the tracker (RFC4-22: never fuzzy-matched); relation to syzygy-a4ry and syzygy-nosn not shown",
+   "slices": [
+    "Read commit subjects; keep only tokens equal to an observed item identifier; store no subject",
+    "Join item to commits to merge fact, basis naming-convention, reduced-fidelity",
+    "Render merged apart from closed-unmerged; a join that cannot be established renders Unknown"
+   ],
+   "measure": "85 of 175 commit subjects in seven days of Syzygy history carry a bracketed item identifier"
+  },
+  {
+   "id": "T11",
+   "title": "The contract's vocabulary",
+   "owner_value": 4,
+   "build_cost": 4,
+   "class": "mandate-grounded",
+   "serves": [
+    "RFC8-12",
+    "RFC8-13",
+    "RFC8-14",
+    "RFC8-28"
+   ],
+   "prereq": "T4, T10",
+   "slices": [
+    "Declared, versioned substrate-to-normalized mapping",
+    "Thirteen values and the chain state as two fields on both channels",
+    "Absence values counted apart from Unknown reasons"
+   ]
+  },
+  {
+   "id": "T12",
+   "title": "Syzygy's own work as the second project",
+   "owner_value": 5,
+   "build_cost": 4,
+   "class": "mandate-grounded",
+   "serves": [
+    "vision.md amnesiac orchestration day",
+    "VIS-3"
+   ],
+   "prereq": "adoption row changing the POC single-project bound; hard-coded project name in board, authorization and materialize route",
+   "slices": [
+    "Second registry entry and locator",
+    "Board, edges and change window over this repository's tracker"
+   ]
+  },
+  {
+   "id": "T13",
+   "title": "Sessions as execution records: who is running, and what it cost",
+   "owner_value": 5,
+   "build_cost": 3,
+   "class": "mandate-grounded",
+   "serves": [
+    "SDR-5",
+    "SDR-6",
+    "SDR-8",
+    "RFC8-18",
+    "RFC8-20"
+   ],
+   "prereq": "adoption row for reading session workspaces; identities, instants and counters only",
+   "slices": [
+    "Read session workspace state and usage counters; withhold summaries",
+    "Join sessions to work items by the tracker ids they name",
+    "Token measures with coverage; unmeasured stays Unknown"
+   ]
+  }
+ ],
+ "waves": {
+  "1": [
+   "T1",
+   "T2",
+   "T3",
+   "T9",
+   "T8"
+  ],
+  "2": [
+   "T4",
+   "T6",
+   "T5",
+   "T7"
+  ],
+  "3": [
+   "T13",
+   "T12",
+   "T10",
+   "T11"
+  ],
+  "waiting_on_owner": []
+ },
+ "owner_gates": [
+  "pursuit-2026-11-21-trajectory-titles"
+ ],
+ "flagged_for_veto": [
+  "T7",
+  "T10",
+  "T12"
+ ],
+ "epic": {
+  "epic": "syzygy-t3jk",
+  "plan_hold": "syzygy-4wuz",
+  "moves": {
+   "T1": "syzygy-t3jk.1",
+   "T2": "syzygy-t3jk.2",
+   "T3": "syzygy-t3jk.3",
+   "T4": "syzygy-t3jk.4",
+   "T5": "syzygy-t3jk.5",
+   "T6": "syzygy-t3jk.6",
+   "T7": "syzygy-t3jk.7",
+   "T8": "syzygy-t3jk.8",
+   "T9": "syzygy-t3jk.9",
+   "T10": "syzygy-t3jk.10",
+   "T11": "syzygy-t3jk.11",
+   "T12": "syzygy-t3jk.12",
+   "T13": "syzygy-t3jk.13"
+  }
+ },
+ "review": {
+  "round": 1,
+  "verdict": "REVISE",
+  "repaired": "every finding, once",
+  "findings": [
+   "No board-level verification notice exists; the 10971 of 10971 figure is governing intent's.",
+   "Lead time is the second listed V1 measure of RFC8-18, not the first cost measure.",
+   "A1-F1 cited work-items.ts:185-187; the statement is at 177-179.",
+   "Two quotations were not verbatim (2026-09-22 dossier line 384; CONTRACT-COVERAGE.md line 188).",
+   "The md and data file disagreed on the veto list.",
+   "T5 is owner-class under SEC-5 (security.md:152-155); ask.",
+   "T7 is agent-adoptable; syzygy-mxas is a prerequisite; quote P-71-Q5.",
+   "T12 is agent-adoptable; hard-coded project strings are unbudgeted.",
+   "T4 and T6 must name columns and cite the P-115 direction as superseded; T10 is unsure, gate with T5.",
+   "T2 and T8 depend on syzygy-z5ls.",
+   "T1 missed the worker-row labels Active and Changed / merged.",
+   "T7 partly duplicates syzygy-dov.4 slice 6.",
+   "T10's prerequisite was asserted, not shown."
+  ],
+  "not_reverified": "page byte, pixel and mark counts (daemon down during review)"
+ },
+ "owner_packet": {
+  "path": "/home/orca/.tmp/user-questionnaire/syzygy-2026-11-21-trajectory-pursuit/packet.md",
+  "items": 1,
+  "withdrawn": "commit-subjects item: an accepted contract (RFC4-22) names the message-convention join and worker-change-observation.ts already reads commit subjects, so T10 is an agent adoption",
+  "review": "scope Pass, recommendation Pass (round 2; round 1 Revise on both)",
+  "answer": {
+   "decision": "pursuit-2026-11-21-trajectory-titles",
+   "choice": "C",
+   "recorded_at": "2026-11-21T12:21:41+00:00",
+   "apply_now": true,
+   "routed_to": [
+    "syzygy-t3jk.5",
+    "syzygy-4wuz",
+    "syzygy-jytt"
+   ]
+  }
+ }
+}
