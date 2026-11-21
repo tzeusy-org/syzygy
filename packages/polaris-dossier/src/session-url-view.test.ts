@@ -116,12 +116,12 @@ describe('private URL role views', () => {
 
   it('bounds synthetic probe output and hangs without returning raw diagnostics', async () => {
     const f = await fixture(); const standIn = path.join(f.root, 'trusted-probe-node');
-    await writeFile(standIn, '#!/usr/bin/zsh\nprintf \'%20000s\' synthetic-probe-overflow\n', { mode: 0o755 });
+    await writeFile(standIn, '#!/bin/sh\nprintf \'%20000s\' synthetic-probe-overflow\n', { mode: 0o755 });
     const input = { ...f.input, nodeExecutable: standIn };
     const overflow = await probeUrlSessionView(input, f.canaries, f.hostPort);
     expect(overflow).toEqual({ ok: false, code: 'probe-bound-exceeded' });
     expect(JSON.stringify(overflow)).not.toContain('synthetic-probe-overflow');
-    await writeFile(standIn, '#!/usr/bin/zsh\nwhile [[ ! -e /work/release ]]; do /usr/bin/sleep .05; done\nprintf \'url-view-probe-ok\\n\'\n');
+    await writeFile(standIn, '#!/bin/sh\nwhile [ ! -e /work/release ]; do /usr/bin/sleep .05; done\nprintf \'url-view-probe-ok\\n\'\n');
     const began = performance.now(); const operation = probeUrlSessionView(input, f.canaries, f.hostPort);
     let timer: ReturnType<typeof setTimeout> | undefined;
     const result = await Promise.race([operation, new Promise(resolve => { timer = setTimeout(() => resolve({ code: 'still-pending' }), 6000); })]);
