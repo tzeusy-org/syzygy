@@ -8,11 +8,12 @@ import type { DossierRenderer, DossierRendererInput } from './render.js';
 // record and the site renderer with a canned draft, with no network, no model and no dossier run. Expected profiles are literals
 // (CC-TEST-3). The shapes and drafts live in the app's test kit and the renderer in the app; both are loaded by file URL, as the render
 // tests load the renderer, so this package keeps no build edge to the app.
+// Tier: unit (unlisted in vitest.tiers.ts). It starts no process and opens no socket; it only imports two modules by file URL.
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../../..');
 const KIT = 'apps/three-surface-poc/src/polaris-generation/synthetic-shapes.testkit.ts';
 const RENDERER = 'apps/three-surface-poc/src/polaris-generation/dossier-site.ts';
 
-interface Shape { readonly name: string; readonly diagram: { readonly title: string } }
+interface Shape { readonly name: string; readonly cited: string; readonly diagram: { readonly title: string } }
 interface Kit {
   readonly RUST_CLI: Shape; readonly PYTHON_LIBRARY: Shape; readonly TERRAFORM_MODULE: Shape; readonly SHAPES: readonly Shape[];
   readonly without: (shape: Shape, path: string, cited: string) => Shape;
@@ -29,9 +30,16 @@ beforeAll(async () => {
 
 const RULES = ['vendored-path@1', 'generated-path@1', 'language-by-extension@1', 'docs-tree@1', 'tests-path@1', 'manifest-names@1'];
 const none = { files: 0, listed: [], notListed: 0 };
+/** Each shape's one source page, by the cited file's source id: the path is the renderer's, written here as a literal. */
+const SOURCE_PAGE: Readonly<Record<string, string>> = {
+  'rust-cli': 'sources/4b3826b102b31de2fc42492d.html',
+  'python-library': 'sources/902ac2bc8a80cb36a4b5c848.html',
+  'terraform-module': 'sources/e8d2adb1183b29f3c5f85764.html',
+};
 const profile = (shape: Shape) => {
   const record = deriveStructure(kit.treeListing(shape), () => false);
   if (record.state !== 'derived') throw new Error(`${shape.name}: not derived`);
+  // The note is prose about the rules, not a measurement of the shape; it is left out of every literal here.
   const { note: _note, ...rest } = record;
   return rest;
 };
@@ -89,12 +97,15 @@ describe('three synthetic shapes through derive and render (syzygy-3efd.23)', ()
       expect(index, shape.name).toContain(`The ${shape.name} dossier`);
       expect(index, shape.name).toContain(`<figcaption>${shape.diagram.title}</figcaption>`);
       expect(index, shape.name).toContain('<p class="diagram-tally">3 boxes and 2 arrows, as marked: 0 observed, 5 inferred, 0 unknown.</p>');
-      expect([...files.keys()].some((p) => p.startsWith('sources/')), shape.name).toBe(true);
+      expect([...files.keys()].filter((p) => p.startsWith('sources/')).sort(), shape.name).toEqual([SOURCE_PAGE[shape.name], 'sources/index.html']);
+      expect(files.get(SOURCE_PAGE[shape.name]!), shape.name).toContain(`>${shape.cited}<`);
       for (const [p, html] of files) if (p.endsWith('.html')) expect(html, `${shape.name} ${p}`).not.toMatch(/<script/iu);
     }
   });
 
-  it('a shape with no README still derives and renders (canary)', () => {
+  // The renderer is handed the canned draft and its one cited source, never the tree, so only the derive half of this canary can see the
+  // missing README; the render half shows that a draft citing a source file still renders when the tree has no README.
+  it('a shape with no README still derives, and its draft still renders (canary)', () => {
     const bare = kit.without(kit.RUST_CLI, 'README.md', 'src/main.rs');
     expect(profile(bare)).toMatchObject({ files: 9, rootFiles: 3, languages: { counts: [{ language: 'Rust', files: 4 }, { language: 'Shell', files: 1 }, { language: 'TOML', files: 1 }, { language: 'YAML', files: 1 }], unrecognized: 1 } });
     expect(render(kit.shapeInput(bare)).files.get('index.html')).toContain('The rust-cli-without-README.md dossier');
