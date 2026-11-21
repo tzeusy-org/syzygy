@@ -246,13 +246,18 @@ async function checkOpenSubject<R extends object, G>(runDir: string, file: strin
       const entries = await reader.listTree();
       const listed = source();
       screenCensus = screenCensusReport({ ok: true, census: withheldCensus(entries, screen, checked.contentClasses) });
-      structureRecord = deriveStructure(entries, isSecretPath);
-      if (products === undefined) derivedRecord = encodeDerivedRecord(listed, deriveTreeFacts(entries, isSecretPath));
+      // A URL check needs a producer receipt before it can emit derived paths.
+      if (products === undefined) {
+        structureRecord = deriveStructure(entries, isSecretPath);
+        derivedRecord = encodeDerivedRecord(listed, deriveTreeFacts(entries, isSecretPath));
+      }
     } catch (cause) {
       if (!(cause instanceof GitObjectReadRefusal)) throw cause;
       screenCensus = screenCensusReport({ ok: false, why: `the pinned tree could not be listed (${cause.reason})`, consented: checked.contentClasses });
-      structureRecord = structureUnknown(`the pinned tree could not be listed (${cause.reason})`);
-      if (products === undefined) derivedRecord = encodeDerivedRecord(source(), { why: `the pinned tree could not be listed (${cause.reason})` });
+      if (products === undefined) {
+        structureRecord = structureUnknown(`the pinned tree could not be listed (${cause.reason})`);
+        derivedRecord = encodeDerivedRecord(source(), { why: `the pinned tree could not be listed (${cause.reason})` });
+      }
     }
   }
   if (credential.required && !credential.passed) {

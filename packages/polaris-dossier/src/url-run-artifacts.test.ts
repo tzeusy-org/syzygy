@@ -258,6 +258,29 @@ describe('trusted URL artifact producer bridge', () => {
         expect(fs.existsSync(path.join(f.run, 'drafts/rev-0.json'))).toBe(false);
         expect(fs.existsSync(path.join(f.run, 'checks/rev-0.json'))).toBe(false);
       } finally { checkReads.close(); }
+
+      const draft = b(f.draft);
+      const writeArgs = { path: 'drafts/next.json', content: draft.toString() };
+      const written = f.receipt('author', 'mcp__syzygy__artifact_write', writeArgs,
+        { ok: true, kind: 'artifact-written', path: writeArgs.path, sha256: sha256(draft) });
+      await bridge.toolReceipt('author', written, f.admission('author'));
+      bridge.committed('author', written.id);
+      const authorReads = beginRunProductReads(f.run, bridge, 'author-check', Date.now() + 4000);
+      try {
+        const result = await checkDraft(f.run, {}, { sources, openReader, productReads: authorReads,
+          now: () => readAt, loadScreen: async () => ({ ok: true, screen: f.screen }),
+          probe: { probe: async () => { throw Error('own check permits no execution'); } } });
+        expect(result).toMatchObject({ ok: true, report: { outcome: 'passed', figureFit: { examined: 0 } } });
+        if (!result.ok) throw Error('own protected check');
+        const response = { stdout: JSON.stringify(result.report), stderr: '', exit: 0 };
+        const argv = ['dossier', 'check', f.run];
+        f.replyQueue.push(response);
+        await expect(bridge.runDossier('author')(argv, null)).resolves.toEqual(response);
+        const receipt = f.receipt('author', 'mcp__syzygy__dossier_step', { argv }, { ok: true, kind: 'dossier-result', ...response });
+        await bridge.toolReceipt('author', receipt, f.admission('author'));
+        bridge.committed('author', receipt.id);
+        expect(bridge.latestStageCheck('author')).toMatchObject({ revision: 0, record: { figureFit: { examined: 0 } } });
+      } finally { authorReads.close(); }
     } finally { products.close(); }
     f.write('url-declaration.json', `${issued.text} `); expect(() => bridge.revalidateRead(ctx)).toThrow();
     expect(() => createUrlRunArtifacts({ ...f.options, effectiveDeclaration: { ...effectiveDeclaration, context: { ...effectiveDeclaration.context, expectedSidecarSha256: H } } })).toThrow();

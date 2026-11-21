@@ -244,7 +244,7 @@ export async function runPolarisCli(argv: readonly string[], ports: CliPorts = {
   const started = spawnSync('tmux', ['new-session', '-d', '-s', name, '-n', 'run', '-x', '220', '-y', '50', ...envArgs, '--', process.execPath, MAIN, 'polaris', ...forward], { stdio: 'inherit' });
   if (started.status !== 0) return refuse('tmux could not start the run\'s session');
   spawnSync('tmux', ['set-option', '-t', name, 'remain-on-exit', 'on'], { stdio: 'ignore' });
-  process.stdout.write(`Started launched run in tmux session ${name}.\n  attach: tmux attach -t ${name}   (inside tmux: tmux switch-client -t ${name})\n  stop:   syzygy polaris --stop <run>  (or tmux kill-session -t ${name})\n`);
+  process.stdout.write(`Started the Polaris supervisor in tmux session ${name}. See that session for role startup and run status.\n  attach: tmux attach -t ${name}   (inside tmux: tmux switch-client -t ${name})\n  stop:   syzygy polaris --stop <run>  (or tmux kill-session -t ${name})\n`);
   if (options.attach && process.stdout.isTTY) return attachTo(name);
   return 0;
 }

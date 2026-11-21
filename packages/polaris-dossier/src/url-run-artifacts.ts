@@ -425,7 +425,13 @@ function create(given: UrlRunArtifactsOptions) {
   const census = (v: unknown): boolean => shape({ state: lit('unknown'), why: text, note: text })(v)
     || shape({ state: lit('listed'), policy, files: integer, secretDetectorPathMatches: integer, note: text,
       groups: array(shape({ outcome: text, count: integer, listed: strings, notListed: integer })) })(v);
-  const advice = shape({ standards: text, note: text, advisories: array(shape({ standard: lit('RS-13', 'RS-14', 'RS-16', 'RS-19'), at: text, detail: text })) });
+  const advice = shape({ standards: text, note: text, advisories: array(shape({ standard: lit('RS-13', 'RS-14', 'RS-16', 'RS-17', 'RS-19'), at: text, detail: text })) });
+  const pixels: Predicate = v => typeof v === 'number' && Number.isFinite(v) && v >= 0;
+  const fitEntry = (v: unknown): boolean => shape({ diagram: text, unknown: text })(v)
+    || shape({ diagram: text, viewportPx: pixels, laidOutPx: pixels, drawnPx: pixels, columnPx: pixels,
+      textPx: pixels, minTextPx: pixels, failed: array(lit('width', 'text-size')) })(v);
+  const figureFit = shape({ textPx: pixels, minTextPx: pixels, viewports: array(shape({ viewportPx: pixels, columnPx: pixels })),
+    examined: integer, entries: array(fitEntry) });
   const reach = shape({ note: text, counts: shape({ unconfirmable: integer, withheldItems: integer, withheldElements: integer }),
     blocks: array(shape({ at: text, blockId: nullable(text), consequence: lit('withheld-item', 'unconfirmable'), detail: text })),
     elements: array(shape({ at: text, kind: lit('understanding-item', 'diagram-node', 'diagram-edge'), id: nullable(text), detail: text })) });
@@ -445,7 +451,9 @@ function create(given: UrlRunArtifactsOptions) {
       : { inventory: fileIdentity, session: shape({ number: integer, sessionId: nullable(text), declaredBy: lit('the inventory session'), label: lit('Inferred'),
         distinctFrom: text }), limits: shape({ repairCycles: repairs, deadline }), counts: text, completeness: shape({ label: lit('Inferred'), basis: text }) }),
       ...(report ? reportFields : {}) };
-    return shape(fields, report ? { screenCensus: census, readerAdvice: advice, reviewReach: reach, reviewVisibility: visibility } : {})(v)
+    const optional = { ...(command === 'check' ? { figureFit } : {}),
+      ...(report ? { screenCensus: census, readerAdvice: advice, reviewReach: reach, reviewVisibility: visibility } : {}) };
+    return shape(fields, optional)(v)
       && record(v)['format'] === (command === 'check' ? 'polaris-dossier-check/1' : 'polaris-dossier-inventory-check/1')
       && (!report || record(v)['command'] === command);
   }
