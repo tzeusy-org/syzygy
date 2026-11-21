@@ -100,7 +100,7 @@ authority and no model yet called on the current path.
     [AGENT-ADOPTIONS.md](.syzygy/governance/decisions/AGENT-ADOPTIONS.md), A-4.
     [URL dossier 2.1 amendment](openspec/changes/dossier-url-declared-source-run) is agent-adopted in A-14.
     [Unknown] Live acceptance of the four-role URL workflow (D10 F3).
-    [Figure homes and fit amendment 2.2](openspec/changes/dossier-figure-homes-and-fit) is agent-adopted in A-17.
+    [Figure homes and fit amendment 2.2](openspec/changes/dossier-figure-homes-and-fit) is agent-adopted in A-18.
     It replaces REQ-polaris-generation-034 (28 to 38 scenarios: draft schema v5 diagram homes and stored
     figure-fit advice); its implementation (syzygy-3efd.18, syzygy-3efd.20) is not yet landed.
     *(2026-11-21: the predecessor figure "333 scenarios" is superseded by that
