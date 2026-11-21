@@ -1473,8 +1473,8 @@ describe('readability guidance and diagram-led sections (syzygy-mea.10.4)', () =
     const index = readSite(result.report.site).get('index.html')!;
     const section = index.slice(index.indexOf('<section id="section-core-ideas"'));
     // An operator-agent page gives its first diagram the first hue (syzygy-pdja.14).
-    expect(section.indexOf('<figure data-hue="1">')).toBeGreaterThan(-1);
-    expect(section.indexOf('<figure data-hue="1">')).toBeLessThan(section.indexOf('data-claim-id="p1"'));
+    expect(section.indexOf('<figure data-hue="1" data-visual-provenance="curated">')).toBeGreaterThan(-1);
+    expect(section.indexOf('<figure data-hue="1" data-visual-provenance="curated">')).toBeLessThan(section.indexOf('data-claim-id="p1"'));
   });
 
   it('puts the readability rules in the brief, after the profile guidance, and the newcomer test in the design criteria', () => {
@@ -1625,5 +1625,205 @@ describe('rich presentation elements (syzygy-mea.10.5)', () => {
       expect(html, file).not.toMatch(/<script\b/iu);
       expect(html, file).toContain(`<meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'unsafe-inline'; base-uri 'none'; form-action 'none'">`);
     }
+  });
+});
+
+// syzygy-3efd.27: derived structural facts rendered Observed (REQ-polaris-generation-034 version 2.3). The expected facts are worked out
+// by hand from FILES: `README.md` and `.env` at the root, `docs/` with two files, `src/` with three, and `conf/` holding only the path a
+// secret detector matches, so it has no fact. The adopted policy digest is the literal the requirement states.
+describe('render: derived structure (version 2.3)', () => {
+  const ADOPTED_SHA256 = '95a3aa132041aa5dd8f860e8ce4c92b3e3c3380ebef4b1ada19bee6b8f50865e';
+  const R = { rule: 'top-level-unit', ruleVersion: 1 };
+  const FACTS = [
+    { id: '_tree-root', fact: 'tree-root', ...R, path: '.', rootFiles: 2 },
+    { id: '_tree-unit-1', fact: 'top-level-unit', ...R, path: 'docs', files: 2 },
+    { id: '_tree-unit-2', fact: 'top-level-unit', ...R, path: 'src', files: 3 },
+    { id: '_tree-contains-1', fact: 'contains', ...R, path: 'docs', from: '_tree-root', to: '_tree-unit-1' },
+    { id: '_tree-contains-2', fact: 'contains', ...R, path: 'src', from: '_tree-root', to: '_tree-unit-2' },
+  ];
+  const IDS = FACTS.map((fact) => fact.id);
+  const recordPath = (run: string, n = 0): string => path.join(run, 'derived', `rev-${n}.json`);
+  const regionOfIndex = (index: string): string => index.slice(index.indexOf('<section id="derived-structure"'), index.indexOf('<aside class="review-status"'));
+  const drawnGroups = (region: string): string[] => [...region.matchAll(/<g class="(node|edge) (observed|inferred|unknown)(?: back)?" data-derived-id="([^"]+)">/gu)].map((m) => `${m[1]} ${m[2]} ${m[3]}`);
+  const rendered = async (run: string, overrides: Partial<RenderDeps> = {}) => {
+    const result = await renderRun(run, renderDeps(overrides));
+    if (!result.ok) throw new Error(result.refusal.reason);
+    const files = readSite(result.report.site);
+    return { result, files, index: files.get('index.html')!, machine: JSON.parse(files.get('machine.json')!) };
+  };
+
+  it('keeps the record at check and draws the figure Observed with rule and version, publishing the record unchanged', async () => {
+    const run = await prepared(draft(), false);
+    const kept = fs.readFileSync(recordPath(run));
+    const record = JSON.parse(kept.toString('utf8'));
+    expect(record).toEqual({
+      format: 'polaris-dossier-derived-structure/1', repositoryId: 'redis-redis', revision: commit, capturedAt: '2026-10-07T12:01:00.000Z',
+      scope: 'tree-metadata: the paths and modes of the pinned tree\'s entries; no file body, size or object id', producer: 'syzygy dossier check',
+      rules: [{ id: 'top-level-unit', version: 1 }], state: 'derived', files: 8, secretPathsLeftOut: 1, submodules: 0, facts: FACTS, unitsNotListed: 0,
+    });
+    expect(kept.toString('utf8')).toBe(`${JSON.stringify(record, null, 2)}\n`);
+    // An inventory check keeps none.
+    expect(fs.readdirSync(path.join(run, 'derived'))).toEqual(['rev-0.json']);
+    const { files, index, machine } = await rendered(run);
+    const digest = sha(kept.toString('utf8'));
+    expect(files.get('derived-structure.json')).toBe(kept.toString('utf8'));
+    const region = regionOfIndex(index);
+    expect(region).toContain(`<figure class="derived-figure" data-visual-provenance="computed" data-derived-record="sha256:${digest}">`);
+    expect(index.indexOf('<section id="derived-structure"')).toBeGreaterThan(index.indexOf('<section id="section-core-ideas"'));
+    expect(region.endsWith('</figure></section>')).toBe(true);
+    expect(drawnGroups(region).sort()).toEqual(['edge observed _tree-contains-1', 'edge observed _tree-contains-2', 'node observed _tree-root', 'node observed _tree-unit-1', 'node observed _tree-unit-2']);
+    expect(region).toContain('<p class="diagram-tally">3 boxes and 2 arrows, derived by Syzygy: 5 observed, 0 inferred, 0 unknown.</p>');
+    for (const fact of FACTS) {
+      const entry = region.match(new RegExp(`<li data-derived-id="${fact.id}"[^>]*>.*?</li>`, 'u'))?.[0] ?? '';
+      expect(entry, fact.id).toContain(`data-derived-fact="${fact.fact}" data-epistemic="observed" data-derived-rule="top-level-unit" data-derived-rule-version="1" data-derived-path="${fact.path}" data-derived-record="sha256:${digest}" data-derived-revision="${commit}">`);
+      expect(entry, fact.id).toContain('<span class="derived-mark">Derived by Syzygy</span>');
+      expect(entry, fact.id).toContain(`<span class="visually-hidden ev"> Evidence: label Observed; derived by Syzygy by rule top-level-unit version 1; source path ${fact.path}; record sha256:${digest}; current for revision ${commit}.</span>`);
+    }
+    expect(machine.derivedStructure).toEqual({
+      file: 'derived-structure.json', sha256: digest, revision: commit, state: 'derived',
+      currencyPolicy: { policyId: 'POLARIS-DOSSIER-DERIVED-FACT-CURRENCY-POLICY-v1', policyVersion: '1.0.0', sha256: ADOPTED_SHA256 },
+      facts: FACTS.map((fact) => ({ id: fact.id, fact: fact.fact, epistemic: 'observed', unknownReason: null, rule: 'top-level-unit', ruleVersion: 1, path: fact.path })),
+    });
+    // Derived facts are no claim of the draft and take no part in the fidelity verdict or the draft's counts.
+    expect(JSON.stringify(machine.claims)).not.toContain('_tree-');
+  });
+
+  it('renders every derived element Unknown (no-currency-bound-declared) where no adopted policy applies', async () => {
+    const run = await prepared(draft(), false);
+    const uncommitted = tempDir('derived-currency-uncommitted-');
+    execFileSync('git', ['-C', uncommitted, 'init', '-q'], { env: GIT_ENV });
+    const policyFile = path.join(uncommitted, '.syzygy/governance/policies/POLARIS-DOSSIER-DERIVED-FACT-CURRENCY-POLICY-v1.json');
+    fs.mkdirSync(path.dirname(policyFile), { recursive: true });
+    fs.copyFileSync(path.join(REAL_ROOT, '.syzygy/governance/policies/POLARIS-DOSSIER-DERIVED-FACT-CURRENCY-POLICY-v1.json'), policyFile);
+    for (const root of [uncommitted, tempDir('derived-currency-absent-')]) {
+      const { index, machine } = await rendered(run, { sources: { ...sources(), recordsRoot: root } });
+      const region = regionOfIndex(index);
+      expect(drawnGroups(region).map((g) => g.split(' ')[1])).toEqual(['unknown', 'unknown', 'unknown', 'unknown', 'unknown']);
+      expect(region).toMatch(/>Repository root \?<\/tspan>/u);
+      expect(region).not.toContain('Solid: observed');
+      expect(region).not.toContain('data-epistemic="observed"');
+      expect(region).toContain('<p class="diagram-tally">3 boxes and 2 arrows, derived by Syzygy: 0 observed, 0 inferred, 5 unknown.</p>');
+      expect(machine.derivedStructure.currencyPolicy).toBeNull();
+      expect(machine.derivedStructure.facts.map((f: { epistemic: string; unknownReason: string }) => `${f.epistemic} ${f.unknownReason}`)).toEqual(IDS.map(() => 'unknown no-currency-bound-declared'));
+    }
+  });
+
+  it('renders every derived element Unknown (stale-beyond-currency-bound) for a record of another revision or with facts not re-derived', async () => {
+    const edits: ((doc: Doc) => void)[] = [(doc) => { doc.revision = 'e'.repeat(40); }, (doc) => { doc.facts[2].files = 4; }];
+    for (const edit of edits) {
+      const run = await prepared(draft(), false);
+      const doc = JSON.parse(fs.readFileSync(recordPath(run), 'utf8'));
+      edit(doc);
+      const text = `${JSON.stringify(doc, null, 2)}\n`;
+      fs.writeFileSync(recordPath(run), text);
+      const { files, index, machine } = await rendered(run);
+      const region = regionOfIndex(index);
+      expect(drawnGroups(region).every((g) => g.split(' ')[1] === 'unknown')).toBe(true);
+      expect(region).not.toContain('data-epistemic="observed"');
+      expect(region.match(/data-unknown-reason="stale-beyond-currency-bound"/gu)).toHaveLength(5);
+      expect(machine.derivedStructure.facts.map((f: { unknownReason: string }) => f.unknownReason)).toEqual(IDS.map(() => 'stale-beyond-currency-bound'));
+      // The record kept is the record published, whatever it holds.
+      expect(files.get('derived-structure.json')).toBe(text);
+    }
+  });
+
+  it('states Not established with no figure, list or published record where no record was kept, the record is Unknown, or the render cannot list the tree', async () => {
+    const sentence = (reason: string, words: string): string => `<section id="derived-structure" data-reading-level="1" data-topics=""><h2>Derived by Syzygy: top-level directories</h2><p class="derived-unknown" data-epistemic="unknown" data-unknown-reason="${reason}"><span class="not-established">Not established.</span> The top-level directories of the tree at revision ${commit} are Unknown at this render: ${words}.</p></section>`;
+    const expectNotEstablished = (out: Awaited<ReturnType<typeof rendered>>, reason: string, words: string, state: string): void => {
+      expect(regionOfIndex(out.index)).toBe(sentence(reason, words));
+      expect(out.files.has('derived-structure.json')).toBe(false);
+      expect(out.machine.derivedStructure).toEqual({ file: null, sha256: null, revision: commit, state, currencyPolicy: null, facts: [] });
+    };
+    // A draft revision checked before this version: no record.
+    const missing = await prepared(draft(), false);
+    fs.rmSync(recordPath(missing));
+    expectNotEstablished(await rendered(missing), 'missing-evidence', 'no derived record was kept when this draft revision was checked', 'missing');
+    // The check could not list the tree, so its record is Unknown: the step guard and the derivation list it, and the third listing fails.
+    const unknown = await prepared(draft(), false);
+    let listings = 0;
+    const flakyAtCheck = (options: PinnedObjectReaderOptions): PinnedObjectReader => {
+      const real = openPinnedObjectReader(options);
+      return { ...real, algorithm: real.algorithm, readBlobs: (paths) => real.readBlobs(paths), listTree: async () => {
+        if (++listings === 3) throw new GitObjectReadRefusal('object-missing' as never, 'gone');
+        return real.listTree();
+      } } as PinnedObjectReader;
+    };
+    fs.writeFileSync(path.join(unknown, 'drafts', 'next.json'), JSON.stringify(draft(), null, 2));
+    const checked = await checkDraft(unknown, {}, { ...checkDeps(), openReader: flakyAtCheck });
+    if (!checked.ok) throw new Error(checked.refusal.reason);
+    expect(JSON.parse(fs.readFileSync(recordPath(unknown, 1), 'utf8'))).toMatchObject({ state: 'unknown', why: 'the pinned tree could not be listed (object-missing)' });
+    expect(JSON.parse(fs.readFileSync(recordPath(unknown, 1), 'utf8'))).not.toHaveProperty('facts');
+    expectNotEstablished(await rendered(unknown), 'source-uncaptured-or-unreachable', 'the pinned tree could not be listed', 'unknown');
+    // The render's own listing for the derived structure fails.
+    const unlistable = await prepared(draft(), false);
+    const flakyAtRender = (options: PinnedObjectReaderOptions): PinnedObjectReader => {
+      const real = openPinnedObjectReader(options);
+      return { ...real, algorithm: real.algorithm, readBlobs: (paths) => real.readBlobs(paths), listTree: async () => {
+        if (new Error().stack?.includes('derivedStructureAt')) throw new GitObjectReadRefusal('object-missing' as never, 'gone');
+        return real.listTree();
+      } } as PinnedObjectReader;
+    };
+    expectNotEstablished(await rendered(unlistable, { openReader: flakyAtRender }), 'source-uncaptured-or-unreachable', 'the pinned tree could not be listed', 'unknown');
+  });
+
+  it('derives no size or object id for a private repository, and names no secret-matching path', async () => {
+    const raw = JSON.parse(new TextDecoder().decode(policy(['.c']))); raw.publicSourceScope.sourceVisibility = JSON.parse(new TextDecoder().decode(policyFixture().bytes)).publicSourceScope.sourceVisibility;
+    fixturePolicy = new TextEncoder().encode(JSON.stringify(raw)); fixtureVisibility = 'private';
+    const run = await prepared(draft(), false);
+    const { files, index, machine } = await rendered(run);
+    const record = files.get('derived-structure.json')!;
+    const derivedText = [record, JSON.stringify(machine.derivedStructure), regionOfIndex(index)].join('\n');
+    // The denied `.env`, the active-content `src/tagged.c`, the unknown-class `docs/notes.txt` and the secret path: no object id of any.
+    for (const [file, id] of Object.entries(objectIds)) expect(derivedText, file).not.toContain(id);
+    for (const name of ['conf', 'token=', 'abcdefghijk']) for (const [file, text] of files) expect(text, `${file} ${name}`).not.toContain(name);
+    expect(JSON.parse(record)).toMatchObject({ files: 8, secretPathsLeftOut: 1, facts: FACTS });
+    for (const fact of JSON.parse(record).facts as Record<string, unknown>[]) expect(Object.keys(fact).filter((key) => /size|bytes|object|blob|sha|id$/iu.test(key) && key !== 'id')).toEqual([]);
+  });
+
+  it('keeps an authored figure matching a derived fact dashed and curated, and a draft cannot set Observed', async () => {
+    const doc = draft();
+    doc.diagrams = [{ id: 'd-tree', title: 'zq-authored tree', sectionId: 'core-ideas', kind: 'flow', relationship: 'The root holds src.', disposition: { kind: 'produced', assetIds: ['d-tree'] },
+      nodes: [{ id: 'n-root', label: 'Repository root', epistemic: 'inferred', citations: [cite('c-n-root', 'src/kestrel.c', 1, 1)] }, { id: 'n-src', label: 'src/ (3 files)', epistemic: 'inferred', citations: [cite('c-n-src', 'src/kestrel.c', 1, 1)] }],
+      edges: [{ id: 'e-contains', from: 'n-root', to: 'n-src', label: 'contains', epistemic: 'inferred', citations: [cite('c-e-contains', 'src/kestrel.c', 1, 1)] }] }];
+    const run = await prepared(doc, false);
+    const { files, index } = await rendered(run);
+    const authored = index.slice(index.lastIndexOf('<figure', index.indexOf('<figcaption>zq-authored tree</figcaption>')), index.indexOf('</figure>', index.indexOf('zq-authored tree')));
+    expect(authored.startsWith('<figure data-hue="1" data-visual-provenance="curated">')).toBe(true);
+    expect([...authored.matchAll(/<g class="(?:node|edge) (\w+)/gu)].map((m) => m[1])).toEqual(['inferred', 'inferred', 'inferred']);
+    expect(authored).not.toContain('Solid: observed');
+    expect(authored).not.toContain('data-derived-id');
+    expect(drawnGroups(regionOfIndex(index)).every((g) => g.split(' ')[1] === 'observed')).toBe(true);
+    expect([...files.values()].join('').split('data-visual-provenance="computed"').length - 1).toBe(1);
+
+    // A draft element labelled Observed, and a draft member naming the derived figure, are findings: the draft does not proceed.
+    const observed = structuredClone(doc);
+    observed.diagrams[0].nodes[0].epistemic = 'observed';
+    const named = structuredClone(doc);
+    named.derivedStructure = { facts: [] };
+    for (const [bad, at] of [[observed, '$.diagrams[0].nodes[0]'], [named, '$']] as const) {
+      fs.writeFileSync(path.join(run, 'drafts', 'next.json'), JSON.stringify(bad, null, 2));
+      const checked = await checkDraft(run, {}, checkDeps());
+      if (!checked.ok) throw new Error(checked.refusal.reason);
+      expect(checked.report.outcome).toBe('findings');
+      expect(checked.report.findings.some((finding) => finding.at.startsWith(at)), JSON.stringify(checked.report.findings)).toBe(true);
+      expect(await renderRun(run, renderDeps())).toMatchObject({ ok: false, refusal: { stage: 'draft' } });
+    }
+  });
+
+  it('is stable across renders of one draft revision, and two checks of the same bytes differ only in capturedAt', async () => {
+    const run = await prepared();
+    const { site, digest } = await designReviewed(run);
+    const again = await renderRun(run, renderDeps());
+    if (!again.ok) throw new Error(again.refusal.reason);
+    const first = readSite(site), second = readSite(again.report.site);
+    expect(second.get('derived-structure.json')).toBe(first.get('derived-structure.json'));
+    expect(second.get('index.html')!.replace(REGION, '')).toBe(first.get('index.html')!.replace(REGION, ''));
+    expect(again.report.designReview).toEqual({ counts: true, packetSha256: digest, label: 'Observed' });
+    fs.writeFileSync(path.join(run, 'drafts', 'next.json'), JSON.stringify(draft(), null, 2));
+    const later = await checkDraft(run, {}, { ...checkDeps(), now: () => LATER + 5_000 });
+    if (!later.ok) throw new Error(later.refusal.reason);
+    const a = JSON.parse(fs.readFileSync(recordPath(run, 0), 'utf8')), b = JSON.parse(fs.readFileSync(recordPath(run, later.report.revision), 'utf8'));
+    expect(b.capturedAt).toBe('2026-10-07T12:01:05.000Z');
+    expect({ ...b, capturedAt: a.capturedAt }).toEqual(a);
   });
 });

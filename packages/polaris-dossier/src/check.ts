@@ -17,7 +17,8 @@ import { readerAdvice, type ReaderAdvice } from './reader-advice.js';
 import { figureFit, type FigureFit } from './figure-fit.js';
 import { reviewReachAdvice, type ReviewReachAdvice } from './review-reach.js';
 import { screenCensusReport, withheldCensus, type ScreenCensusReport } from './census.js';
-import { deriveStructure, structureUnknown, type StructureRecord } from './derive.js';
+import { deriveStructure, deriveTreeFacts, structureUnknown, type StructureRecord } from './derive.js';
+import { derivedRecordFile, encodeDerivedRecord, secretPathOf } from './derived-record.js';
 import { BRIEF_JSON_LIMITS, CHECK_RECORD_FORMAT, type CheckCommand, type CheckDeps, type CheckFinding, type CheckRecord, type CheckRefusal, type CheckRequest, type CheckResult, type CheckStage, type CitedBlob, DEFAULT_DRAFT, DISCLOSURES, DRAFT_JSON_LIMITS, DRAFT_MAX_BYTES, type ExcludedQuotation, type ReviewVisibility, STEP_LOG_FORMAT, type VerifiedQuotation, errno, reviewVisibility, text } from './check-model.js';
 import { type Derived, type SubjectRules, deriveFindings, draftRules } from './check-derive.js';
 export { CHECK_RECORD_FORMAT, STEP_LOG_FORMAT, DEFAULT_DRAFT, DRAFT_MAX_BYTES, reviewVisibility, lineRanges, blobRedaction } from './check-model.js';
@@ -218,16 +219,22 @@ export async function checkSubject<R extends object, G>(runDir: string, file: st
   // The author's path-only census of what the review will not see (syzygy-mea.3, lead ruling): every blob of the pinned tree, through the
   // same screen and the class gate, on every check from the first. The reader re-lists the tree it listed for the derivation.
   // The structure record (syzygy-3efd.16) is derived from the same listing: paths and modes alone, a secret path counted and never named.
-  let screenCensus: ScreenCensusReport | undefined, structureRecord: StructureRecord | undefined;
+  // The derived-structure record (REQ-polaris-generation-034 version 2.3) is derived from that listing too, by rule top-level-unit, and
+  // kept once beside the check record: what a render publishes unchanged and compares with its own re-derivation.
+  let screenCensus: ScreenCensusReport | undefined, structureRecord: StructureRecord | undefined, derivedRecord: string | undefined;
   if (plan.command === 'check') {
+    const source = { repositoryId: subject.repository.repositoryId, revision: pinned, capturedAt: isoOf(deps.now()) };
+    const isSecretPath = secretPathOf(screen);
     try {
       const entries = await reader.listTree();
       screenCensus = screenCensusReport({ ok: true, census: withheldCensus(entries, screen, checked.contentClasses) });
-      structureRecord = deriveStructure(entries, (p) => screen.screenPath(p) === 'secret-detector-match' || screen.screenBody(p, p) === 'secret-detector-match');
+      structureRecord = deriveStructure(entries, isSecretPath);
+      derivedRecord = encodeDerivedRecord(source, deriveTreeFacts(entries, isSecretPath));
     } catch (cause) {
       if (!(cause instanceof GitObjectReadRefusal)) throw cause;
       screenCensus = screenCensusReport({ ok: false, why: `the pinned tree could not be listed (${cause.reason})`, consented: checked.contentClasses });
       structureRecord = structureUnknown(`the pinned tree could not be listed (${cause.reason})`);
+      derivedRecord = encodeDerivedRecord(source, { why: `the pinned tree could not be listed (${cause.reason})` });
     }
   }
   if (credential.required && !credential.passed) {
@@ -266,6 +273,10 @@ export async function checkSubject<R extends object, G>(runDir: string, file: st
   const fit = plan.command === 'check' && parseFault === null ? figureFit(doc, deps.layoutFigure) : undefined;
   const stored = fit === undefined ? record : { ...record, figureFit: fit };
   try {
+    if (derivedRecord !== undefined) {
+      fs.mkdirSync(path.join(run, RUN_LAYOUT.derived), { recursive: true, mode: 0o700 });
+      fs.writeFileSync(derivedRecordFile(run, revision), derivedRecord, { mode: 0o600, flag: 'wx' });
+    }
     fs.mkdirSync(checksDir, { recursive: true, mode: 0o700 });
     fs.writeFileSync(checkFile, `${JSON.stringify(stored, null, 2)}\n`, { mode: 0o600, flag: 'wx' });
   } catch (cause) {

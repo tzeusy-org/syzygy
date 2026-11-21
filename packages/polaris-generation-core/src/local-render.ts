@@ -135,6 +135,45 @@ export type LocalDraftLayer =
   }
   | { readonly state: 'unknown'; readonly reason: 'unconsented-source-or-provider' | 'missing-declaration'; readonly why: readonly string[] };
 
+/** One derived structural fact as a render reads it from the kept record (REQ-polaris-generation-034 version 2.3), with the currency
+ * outcome the render decided: Observed only while the bound declared for its rule and version holds. */
+export interface LocalDerivedFact {
+  readonly id: string;
+  readonly fact: 'tree-root' | 'top-level-unit' | 'contains';
+  readonly rule: string;
+  readonly ruleVersion: number;
+  /** `.` for the root; a directory's raw first path segment otherwise. */
+  readonly path: string;
+  /** Files at the root (`tree-root`) or under the directory (`top-level-unit`); null for `contains`. */
+  readonly count: number | null;
+  /** A containment's target fact; null for any other fact. */
+  readonly to: string | null;
+  readonly epistemic: 'observed' | 'unknown';
+  readonly unknownReason: null | 'no-currency-bound-declared' | 'stale-beyond-currency-bound';
+}
+
+/** The derived-structure region of the landing page and its record, as the render decided them. */
+export type LocalDerivedStructure =
+  | {
+    readonly state: 'derived';
+    /** The render's pinned revision. */
+    readonly revision: string;
+    /** The record's own revision and capture instant: the figure's snapshot and as-of instant. */
+    readonly recordRevision: string;
+    readonly capturedAt: string;
+    /** The kept record's exact text, published unchanged as `derived-structure.json`, and the SHA-256 of its bytes. */
+    readonly recordText: string;
+    readonly sha256: string;
+    readonly currencyPolicy: { readonly policyId: string; readonly policyVersion: string; readonly sha256: string } | null;
+    readonly facts: readonly LocalDerivedFact[];
+    readonly unitsNotListed: number;
+  }
+  | {
+    readonly state: 'missing' | 'unknown';
+    readonly revision: string;
+    readonly unknownReason: 'missing-evidence' | 'source-uncaptured-or-unreachable';
+  };
+
 export interface LocalRenderInput {
   /** The checked draft in the renderer's shape. `sourceIds` name only sources Syzygy read and screening admitted, and may be empty. No
    * part of it renders while the draft layer is Unknown. */
@@ -166,4 +205,8 @@ export interface LocalRenderInput {
   /** A schema-v4 draft's Poles (dossier spec v1.5): page boundaries that carry no claim, each a short label and its sections in order,
    * with the section that answers why the project exists. Absent when the draft declares none: its sections then stay on one page. */
   readonly poles?: { readonly whySection: string; readonly poles: readonly { readonly label: string; readonly sections: readonly string[] }[] };
+  /** The structure Syzygy derived from the pinned tree (version 2.3): drawn in its own region at the end of the landing page, published
+   * as `derived-structure.json` and named in the machine view. Absent only for an input built by hand; `syzygy dossier render` always
+   * supplies it. */
+  readonly derivedStructure?: LocalDerivedStructure;
 }

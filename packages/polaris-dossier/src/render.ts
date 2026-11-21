@@ -17,6 +17,7 @@ import { RECORDS_WITHIN_REACH } from './gate-sources.js';
 import { GitObjectReadRefusal, openPinnedObjectReader } from './git-object-reader.js';
 import { errno, latestInventorySession, logStep, openRun, promptRecordName, readRecord, type OpenedRun } from './inventory.js';
 import { buildDesignPacket } from './design-review.js';
+import { derivedStructureAt, readCurrencyPolicy, secretPathOf, type CurrencyPolicy } from './derived-record.js';
 import type { Outcome } from './outcome.js';
 import { designReviewOfRecord, latestPassedDraft, reviewOfRecord, type DesignReviewOfRecord, type ReviewDeps, type ReviewOfRecord } from './review.js';
 import type { ReverifyRefusal } from './reverify.js';
@@ -79,6 +80,8 @@ export function pageSinkUnconfirmed(renderer: DossierRenderer, files: ReadonlyMa
 export interface RenderDeps extends ReviewDeps {
   readonly probe: CredentialProbe;
   readonly renderer?: DossierRenderer;
+  /** The derived-fact currency policy (version 2.3); by default the committed bytes at the records root's HEAD (`readCurrencyPolicy`). */
+  readonly currencyPolicy?: () => CurrencyPolicy | null;
 }
 
 export type RenderStage = 'renderer' | 'run' | 'reverify' | 'not-briefed' | 'deadline' | 'draft' | 'screen' | 'object-read' | 'rederive' | 'sources' | 'render' | 'write';
@@ -181,8 +184,15 @@ export async function renderRun(runDir: string, deps: RenderDeps): Promise<Rende
 
   const review = await reviewOfRecord(opened, deps);
 
-  const built = buildLocalInput({ opened, doc, derived, review, screen, credential, algorithm: reader.algorithm });
-  if (!built.ok) return refuse(built.stage, built.reason);
+  const input = buildLocalInput({ opened, doc, derived, review, screen, credential, algorithm: reader.algorithm });
+  if (!input.ok) return refuse(input.stage, input.reason);
+  // The derived structure (REQ-polaris-generation-034 version 2.3): the record check kept for this draft revision, compared with the facts
+  // re-derived now from the tree this reader lists, under the currency policy committed at the Syzygy checkout. No draft member reaches it.
+  const derivedStructure = await derivedStructureAt({
+    run, revision: draftRev.revision, pinned, reader, isSecretPath: secretPathOf(screen),
+    policy: (deps.currencyPolicy ?? (() => readCurrencyPolicy(deps.sources.recordsRoot)))(),
+  });
+  const built = { ...input, local: { ...input.local, derivedStructure } };
 
   const renderer = deps.renderer;
   const draw = (local: LocalRenderInput): ReadonlyMap<string, string> | string => {
