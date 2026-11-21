@@ -1,0 +1,135 @@
+{
+  "format": "mutation-run/1",
+  "bead": "syzygy-3efd.58",
+  "date": "2026-11-21",
+  "ranAt": "1079fbb477e5b550ebcd0c49448d5becbe5b3329",
+  "subject": {
+    "apps/three-surface-poc/src/polaris-generation/diagram-layout.ts": "f9c8ecec87f6a6b5dece69ca0e7232b2567943192945412a145d59f95e25a872",
+    "apps/three-surface-poc/src/polaris-generation/diagram-layout.test.ts": "8bfd549f2eb1a6ad5679ff3d6e756beda8e92afadb23db8eb4d9bbb122e1b158"
+  },
+  "command": "npx vitest run apps/three-surface-poc/src/polaris-generation/diagram-layout.test.ts --reporter=json",
+  "method": "each mutant replaces old with new exactly once in file, runs the command, restores the file; failedTests records each failing test and the first line of its message",
+  "mutants": [
+    {
+      "id": "no-narrowing",
+      "file": "apps/three-surface-poc/src/polaris-generation/diagram-layout.ts",
+      "old": "const nodeWidth = Math.min(NODE_WIDTH, Math.max(NODE_WIDTH_LEAST, STACK_COLUMN - gutter(laneCount.left) - gutter(laneCount.right)));",
+      "new": "const nodeWidth = NODE_WIDTH;",
+      "killed": true,
+      "failedTests": [
+        {
+          "test": "fits the narrow column at any density: nodes narrow past the lanes the least step holds, and lane labels slide to find a leader (syzygy-3efd.58)",
+          "message": "AssertionError: graph 7 width: expected 268 to be less than or equal to 261"
+        },
+        {
+          "test": "narrows the nodes of a complete DAG on twelve nodes to fit, and wraps their labels shorter",
+          "message": "AssertionError: expected [ 268, 200 ] to deeply equal [ 261, 193 ]"
+        }
+      ],
+      "killedBy": "assertion"
+    },
+    {
+      "id": "narrow-floor-raised",
+      "file": "apps/three-surface-poc/src/polaris-generation/diagram-layout.ts",
+      "old": "const NODE_WIDTH_LEAST = 120;",
+      "new": "const NODE_WIDTH_LEAST = 196;",
+      "killed": true,
+      "failedTests": [
+        {
+          "test": "fits the narrow column at any density: nodes narrow past the lanes the least step holds, and lane labels slide to find a leader (syzygy-3efd.58)",
+          "message": "AssertionError: graph 7 width: expected 264 to be less than or equal to 261"
+        },
+        {
+          "test": "narrows the nodes of a complete DAG on twelve nodes to fit, and wraps their labels shorter",
+          "message": "AssertionError: expected [ 264, 196 ] to deeply equal [ 261, 193 ]"
+        }
+      ],
+      "killedBy": "assertion"
+    },
+    {
+      "id": "node-chars-fixed",
+      "file": "apps/three-surface-poc/src/polaris-generation/diagram-layout.ts",
+      "old": "nodeChars = Math.min(22, Math.floor((nodeWidth - 24) / 8));",
+      "new": "nodeChars = 22;",
+      "killed": true,
+      "failedTests": [
+        {
+          "test": "narrows the nodes of a complete DAG on twelve nodes to fit, and wraps their labels shorter",
+          "message": "AssertionError: expected '<svg xmlns=\"http://www.w3.org/2000/sv\u2026' to contain '>twenty-two</tspan>'"
+        }
+      ],
+      "killedBy": "assertion"
+    },
+    {
+      "id": "rect-full-width",
+      "file": "apps/three-surface-poc/src/polaris-generation/diagram-layout.ts",
+      "old": "width=\"${nodeWidth}\" height=",
+      "new": "width=\"${NODE_WIDTH}\" height=",
+      "killed": true,
+      "failedTests": [
+        {
+          "test": "narrows the nodes of a complete DAG on twelve nodes to fit, and wraps their labels shorter",
+          "message": "AssertionError: expected '<svg xmlns=\"http://www.w3.org/2000/sv\u2026' to contain 'width=\"193\" height=\"56\"'"
+        }
+      ],
+      "killedBy": "assertion"
+    },
+    {
+      "id": "no-slide",
+      "file": "apps/three-surface-poc/src/polaris-generation/diagram-layout.ts",
+      "old": "if (at.lead !== true || !spacing.labelsOnTop || runs[i] !== undefined) return;",
+      "new": "return;",
+      "killed": true,
+      "failedTests": [
+        {
+          "test": "fits the narrow column at any density: nodes narrow past the lanes the least step holds, and lane labels slide to find a leader (syzygy-3efd.58)",
+          "message": "AssertionError: expected { stacked: 118, narrowed: 7, \u2026(3) } to deeply equal { stacked: 118, narrowed: 7, \u2026(3) }"
+        }
+      ],
+      "killedBy": "assertion"
+    },
+    {
+      "id": "slide-ignores-leaders",
+      "file": "apps/three-surface-poc/src/polaris-generation/diagram-layout.ts",
+      "old": "\n          || runs.some((run, j) => j !== i && run !== undefined && segmentEntersBox(run.from.x, run.from.y, run.to.x, run.to.y, box))) continue;",
+      "new": ") continue;",
+      "killed": true,
+      "failedTests": [
+        {
+          "test": "fits the narrow column at any density: nodes narrow past the lanes the least step holds, and lane labels slide to find a leader (syzygy-3efd.58)",
+          "message": "AssertionError: expected { stacked: 118, narrowed: 7, \u2026(3) } to deeply equal { stacked: 118, narrowed: 7, \u2026(3) }"
+        }
+      ],
+      "killedBy": "assertion"
+    },
+    {
+      "id": "slide-no-return-home",
+      "file": "apps/three-surface-poc/src/polaris-generation/diagram-layout.ts",
+      "old": "    placed[i] = home;\n  });",
+      "new": "  });",
+      "killed": true,
+      "failedTests": [
+        {
+          "test": "fits the narrow column at any density: nodes narrow past the lanes the least step holds, and lane labels slide to find a leader (syzygy-3efd.58)",
+          "message": "AssertionError: graph 4 e12 slid without a leader: expected '<g class=\"edge inferred back\"><title>\u2026' to contain 'class=\"edge-leader\"'"
+        }
+      ],
+      "killedBy": "assertion"
+    },
+    {
+      "id": "slide-ignores-labels",
+      "file": "apps/three-surface-poc/src/polaris-generation/diagram-layout.ts",
+      "old": "\n          || others.some(o => box.left < o.right + LABEL_CLEARANCE",
+      "new": "\n          || false && others.some(o => box.left < o.right + LABEL_CLEARANCE",
+      "killed": false,
+      "failedTests": [],
+      "killedBy": "survived",
+      "equivalent": "a stacked gap stacks its label slots at least slotHeight apart (edgeLines*15+11) and every label is at most edgeLines*15+6 tall, so a label sliding sideways in its own slot keeps more than LABEL_CLEARANCE from every other label, node and note; the check is kept as a guard should the slots change"
+    }
+  ],
+  "killed": 7,
+  "total": 8,
+  "equivalent": [
+    "slide-ignores-labels"
+  ]
+}
