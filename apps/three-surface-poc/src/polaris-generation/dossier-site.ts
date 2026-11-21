@@ -162,8 +162,10 @@ export const DOSSIER_THEME_CSS = ':root{--void:#262624;--panel:#30302e;--panel-r
   + '.cited-on,.selected-why{display:block;font-size:.88rem;color:var(--muted)}'
   + '.review-report{margin-top:1rem;border-top:1px solid var(--line);padding-top:.5rem}.review-report>summary{cursor:pointer;color:var(--muted);font-weight:600}.review-report>summary:focus-visible{outline:2px solid var(--focus);outline-offset:2px}'
   + '.nav-panel>summary{cursor:pointer;font-weight:600;color:var(--muted)}.layout:has(>.nav-panel:not([open])){grid-template-columns:auto minmax(0,1fr)}.nav-panel>summary:focus-visible,.mobile-contents>summary:focus-visible{outline-offset:-3px}'
-  // A three-column diagram, the widest a plain chain reaches, may shrink to fit its column (text no smaller than 10.7px); any wider one
-  // keeps its size and scrolls. The element under the pointer stands out.
+  // A three-column diagram (1048 px) may shrink to fit its column (text no smaller than 10.7px); any wider one keeps its size and scrolls.
+  // Since syzygy-3efd.66 the readable layout stacks every diagram of two or more layers, so no figure it draws is 1048 px wide and the
+  // shrink rule matches nothing; it stays because REQ-polaris-generation-034 (2.2) states it, and removing it is a change to that
+  // requirement. The element under the pointer stands out.
   + '.diagram-scroll svg[width="1048"]{max-width:max(100%,860px)}.diagram-scroll g.node:hover rect{stroke-width:3}.diagram-scroll g.edge:hover path{stroke-width:3}.diagram-scroll g.edge-text:hover rect.edge-label{stroke:var(--cyan);stroke-width:1.5}.diagram-scroll path.edge-leader{stroke-width:1;fill:none}.diagram-scroll path.edge-echo{display:none;fill:none;stroke:var(--cyan);stroke-width:3;pointer-events:none}.diagram-scroll g.edge-text:hover path.edge-echo{display:inline}'
   // A marker standing where withheld lines were, on a source page: present, and out of the reading.
   + 'pre.redaction-note{margin:.25rem 0;padding:.1rem .75rem;border-left:4px solid var(--line);color:var(--muted);font:.8rem/1.5 var(--font-mono);white-space:pre-wrap}'

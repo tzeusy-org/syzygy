@@ -174,14 +174,29 @@ describe('nine synthetic shapes through derive and render (syzygy-3efd.23, syzyg
     }
   });
 
-  // The canary for the claim above: the same lint does flag a figure that would not fit. A plain chain of three lays out in one band of
-  // three columns, 1048 px, which the phone draws at 860 px (syzygy-3efd follow-up on chains at 390 px).
-  it('flags a plain three-node chain at 390 px (canary)', () => {
+  // The canary for the claim above: the same lint does flag a figure that would not fit. Since syzygy-3efd.66 a plain chain and a small
+  // fan-out stack into the phone's column and fit, so the canary is a graph too dense to: a chain of nineteen nodes in which each of the
+  // first seventeen also points to the last, and the last points back to each of them. Stacked, those are 17 lane groups a side, more
+  // than the 261 px column holds with its nodes at their least width (120 px), so it lays out 264 px wide and scrolls at 390 px; its text
+  // is not scaled. At 1440 px it fits.
+  it('flags a stacked graph too dense for the 390 px column (canary)', () => {
+    const ids = Array.from({ length: 19 }, (_, i) => `n${i}`);
+    const to = (from: string, target: string) => ({ id: `${from}-${target}`, from, to: target, label: 'to', epistemic: 'inferred' });
+    const dense = { id: 'dense', disposition: { kind: 'produced' }, nodes: ids.map((id) => ({ id, label: id, epistemic: 'inferred', citations: [] })),
+      edges: [...ids.slice(1).map((id, i) => to(ids[i]!, id)), ...ids.slice(0, 17).map((id) => to(id, 'n18')), ...ids.slice(0, 17).map((id) => to('n18', id))] };
+    expect(figureFit({ diagrams: [dense] }, layoutFigure).entries).toEqual([
+      { diagram: 'dense', viewportPx: 390, laidOutPx: 264, drawnPx: 264, columnPx: 261, textPx: 13, minTextPx: 11, failed: ['width'] }]);
+  });
+
+  // A plain chain of three and a one-to-three fan-out, which laid out 1048 and 648 px wide before syzygy-3efd.66, now fit at both widths.
+  it('fits a plain three-node chain and a one-to-three fan-out at 1440 and 390 px', () => {
     const node = (id: string) => ({ id, label: id, epistemic: 'inferred', citations: [] });
-    const chain = { id: 'chain', disposition: { kind: 'produced' }, nodes: [node('a'), node('b'), node('c')],
-      edges: [{ id: 'ab', from: 'a', to: 'b', label: 'to', epistemic: 'inferred' }, { id: 'bc', from: 'b', to: 'c', label: 'to', epistemic: 'inferred' }] };
-    expect(figureFit({ diagrams: [chain] }, layoutFigure).entries).toEqual([
-      { diagram: 'chain', viewportPx: 390, laidOutPx: 1048, drawnPx: 860, columnPx: 261, textPx: 10.67, minTextPx: 11, failed: ['width', 'text-size'] }]);
+    const to = (from: string, target: string) => ({ id: `${from}${target}`, from, to: target, label: 'to', epistemic: 'inferred' });
+    const chain = { id: 'chain', disposition: { kind: 'produced' }, nodes: [node('a'), node('b'), node('c')], edges: [to('a', 'b'), to('b', 'c')] };
+    const fan = { id: 'fan', disposition: { kind: 'produced' }, nodes: [node('r'), node('x'), node('y'), node('z')], edges: [to('r', 'x'), to('r', 'y'), to('r', 'z')] };
+    expect(figureFit({ diagrams: [chain, fan] }, layoutFigure)).toEqual({
+      textPx: 13, minTextPx: 11, viewports: [{ viewportPx: 1440, columnPx: 966 }, { viewportPx: 390, columnPx: 261 }], examined: 2, entries: [] });
+    expect([layoutFigure(chain as never), layoutFigure(fan as never)]).toEqual([248, 248]);
   });
 
   it('renders each shape\'s canned draft: its title, its figure with a tally, its cited source page, and no script', () => {
