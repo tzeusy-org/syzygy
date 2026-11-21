@@ -49,6 +49,10 @@ const REDACTION_TEXTS = {
  * excluded whole on any detector match in every class, never retained as redacted-span. The screen applies it by passing no redaction
  * to `redactBody` for a private repository (`redactionFor`). */
 const APPLIES_TO_V8 = 'f326b181686b52640e825595317eeaec066838558b5393cc79b003e02e0e6117';
+/** sha256 of the dossier declared-source policy 2.0.0's `appliesTo`: version 8's, with the project-documentation class redacted only when
+ * classDecision's Stage 1 places the body, and agent text also screened by `configurationDetectors`. The screen applies it by passing no
+ * redaction to `redactBody` for a Stage-2 body. */
+const APPLIES_TO_TWO_STAGE = 'f30d5cea2bfe90ea2d51d7ca8a8ddbec3e9b700db2ecc7b1d586bbba727ab30f';
 const REDACTION_KEYS = ['appliesTo', 'redactedClasses', 'redactionClass', 'wholeArtifactDetectors', 'wholeArtifactLinePattern', 'wholeArtifactFragments',
   'guardLines', 'rule', 'withheldLines', 'citedSpanRule', 'provenance', 'unchanged', 'consequence'] as const;
 const KNOWN_CLASSES: readonly PublicSourceContentClass[] = ['project-documentation', 'code-content'];
@@ -73,7 +77,7 @@ export type SecretRedactionRead = { readonly ok: true; readonly redaction: Secre
 /** Reads `secretRedaction` from a policy's `publicSourceScope`. `detectorIds` are the ids of every detector this scope runs: the policy's
  * own and, from version 5, its `scopeDetectors` (`readScopeDetectors`); a whole-artifact detector that names none of them refuses. Any
  * malformed or unrecognised field refuses. */
-export function readSecretRedaction(scope: unknown, detectorIds: readonly string[]): SecretRedactionRead {
+export function readSecretRedaction(scope: unknown, detectorIds: readonly string[], twoStage = false): SecretRedactionRead {
   const refuse = (why: string): SecretRedactionRead => ({ ok: false, why: `its secret redaction ${why}` });
   if (!isRecord(scope) || !Object.hasOwn(scope, 'secretRedaction')) return { ok: true, redaction: null };
   const red = scope['secretRedaction'];
@@ -82,7 +86,9 @@ export function readSecretRedaction(scope: unknown, detectorIds: readonly string
   if (keys.length !== REDACTION_KEYS.length || REDACTION_KEYS.some(key => !keys.includes(key))) return refuse(`carries the fields ${keys.join(', ')}, not exactly ${REDACTION_KEYS.join(', ')}`);
   // Version 8 (`sourceVisibility`) restricts `appliesTo` to public repositories; its text is read only beside that key, and the
   // version-4 text only without it, so each text has one reading.
-  const texts = { ...REDACTION_TEXTS, appliesTo: Object.hasOwn(scope, 'sourceVisibility') ? APPLIES_TO_V8 : REDACTION_TEXTS.appliesTo };
+  // The dossier policy 2.0.0's text (`twoStage`, read only by a screen that implements its classDecision) names Stage-1 bodies only:
+  // a body Stage 2 places is excluded whole on any detector match, in every class and under either visibility.
+  const texts = { ...REDACTION_TEXTS, appliesTo: twoStage ? APPLIES_TO_TWO_STAGE : Object.hasOwn(scope, 'sourceVisibility') ? APPLIES_TO_V8 : REDACTION_TEXTS.appliesTo };
   for (const key of Object.keys(texts) as (keyof typeof texts)[]) {
     const value = red[key], accepted: string | readonly string[] = texts[key];
     if (typeof value !== 'string' || !(typeof accepted === 'string' ? [accepted] : accepted).includes(sha256(value))) return refuse(`${key} is not the text this screen implements`);
@@ -128,16 +134,51 @@ const SCOPE_DETECTOR_KEYS = ['rule', 'detectors', 'consequence'] as const;
 export type ScopeDetectorsRead = { readonly ok: true; readonly detectors: readonly RedactionDetector[] } | { readonly ok: false; readonly why: string };
 
 export function readScopeDetectors(scope: unknown, policyDetectorIds: readonly string[]): ScopeDetectorsRead {
-  const refuse = (why: string): ScopeDetectorsRead => ({ ok: false, why: `its scope detectors ${why}` });
-  if (!isRecord(scope) || !Object.hasOwn(scope, 'scopeDetectors')) return { ok: true, detectors: Object.freeze([]) };
-  const object = scope['scopeDetectors'];
+  return readDetectorBlock(scope, 'scopeDetectors', SCOPE_DETECTOR_TEXTS, policyDetectorIds, 'its scope detectors');
+}
+
+/** The dossier declared-source policy 2.0.0's `configurationDetectors` (REQ-polaris-generation-046 from specification version 2.6):
+ * read as the scope detectors are, with their own pinned `rule` and `consequence`. Their rule runs them over every body classDecision's
+ * Stage 2 places, every cited span of such a body and every text an agent session writes, and over no body Stage 1 places; the screen
+ * applies that scope. `priorDetectorIds` are the policy's and the scope detectors' ids, none of which a configuration detector may repeat. */
+const CONFIGURATION_DETECTOR_TEXTS = {
+  rule: '73ef736e3ce5b86d44a8f2c474219e43c29c352029935059f667e489d739c173',
+  consequence: 'ea51299727c1c553c3c13e3701634eef06a2ab4b4f3af4885fbdd365f9f0b6f0',
+} as const;
+export function readConfigurationDetectors(scope: unknown, priorDetectorIds: readonly string[]): ScopeDetectorsRead {
+  return readDetectorBlock(scope, 'configurationDetectors', CONFIGURATION_DETECTOR_TEXTS, priorDetectorIds, 'its configuration detectors');
+}
+
+/** A pattern the screens run in an equivalent form that matches the same text at the same offsets, because the policy's own form
+ * backtracks quadratically on an adversarial body. Keyed by the exact pattern and flags, never by a detector id, as the credential-URL
+ * recogniser is. `hcl-secret-variable-default` (dossier policy 2.0.0): `[^"\r\n]*(?:keyword)[^"\r\n]*"` reads one quoted variable name,
+ * which can hold no quote, so it ends at the name's first quote and matches exactly when that name holds a keyword; the policy's form tries
+ * every split of a long unterminated name (about 3.5 s over 160,000 characters), and a lookahead that finds the keyword lazily and then
+ * reads the name once is linear and consumes the same characters. `secret-redaction.test.ts` compares the two forms at every offset. */
+export const LINEAR_EQUIVALENTS: ReadonlyMap<string, string> = new Map([
+  [`${String.raw`variable[ \t]+"[^"\r\n]*(?:password|passwd|secret|token|key|credential)[^"\r\n]*"[ \t]*\{[^}]*?default[ \t]*=[ \t]*"[^"$\r\n]{8,}"`}/gi`,
+    String.raw`variable[ \t]+"(?=[^"\r\n]*?(?:password|passwd|secret|token|key|credential))[^"\r\n]*"[ \t]*\{[^}]*?default[ \t]*=[ \t]*"[^"$\r\n]{8,}"`],
+]);
+/** The detector as the screens run it: its linear equivalent when `LINEAR_EQUIVALENTS` names its pattern and flags, itself otherwise. */
+export function linearDetector(detector: RedactionDetector): RedactionDetector {
+  if (detector.kind !== 'regular-expression') return detector;
+  const equivalent = LINEAR_EQUIVALENTS.get(`${detector.pattern}/${detector.flags}`);
+  return equivalent === undefined ? detector : Object.freeze({ ...detector, pattern: equivalent });
+}
+
+function readDetectorBlock(scope: unknown, key: 'scopeDetectors' | 'configurationDetectors', texts: { readonly rule: string; readonly consequence: string },
+  priorDetectorIds: readonly string[], label: string): ScopeDetectorsRead {
+  const refuse = (why: string): ScopeDetectorsRead => ({ ok: false, why: `${label} ${why}` });
+  if (!isRecord(scope) || !Object.hasOwn(scope, key)) return { ok: true, detectors: Object.freeze([]) };
+  const object = scope[key];
   if (!isRecord(object)) return refuse('is not an object');
   const keys = Object.keys(object);
   if (keys.length !== SCOPE_DETECTOR_KEYS.length || SCOPE_DETECTOR_KEYS.some(key => !keys.includes(key))) return refuse(`carries the fields ${keys.join(', ')}, not exactly ${SCOPE_DETECTOR_KEYS.join(', ')}`);
-  for (const key of ['rule', 'consequence'] as const) {
-    const value = object[key];
-    if (typeof value !== 'string' || sha256(value) !== SCOPE_DETECTOR_TEXTS[key]) return refuse(`${key} is not the text this screen implements`);
+  for (const text of ['rule', 'consequence'] as const) {
+    const value = object[text];
+    if (typeof value !== 'string' || sha256(value) !== texts[text]) return refuse(`${text} is not the text this screen implements`);
   }
+  const policyDetectorIds = priorDetectorIds;
   const list = object['detectors'];
   if (!Array.isArray(list) || list.length === 0) return refuse('declares no detector');
   const seen = new Set(policyDetectorIds), out: RedactionDetector[] = [];

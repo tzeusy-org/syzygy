@@ -3,7 +3,7 @@ import { BoundedJsonError, parseBoundedJson } from '@syzygy/polaris-generation-c
 import { isRecord, sha256 } from '@syzygy/support';
 import { dossierLocator, isNormalisedLocator } from './launch-identity.js';
 import type { SourceVisibility } from '@syzygy/polaris-generation-core/live';
-import { DOSSIER_POLICY_PATH, type PolicyBinding } from './policy-snapshot.js';
+import { DOSSIER_POLICY_PATHS, type PolicyBinding } from './policy-snapshot.js';
 import type { GovernedKind } from './governed.js';
 import { validateRunConfig, type RunConfig, type RunConfigRefusal } from './run-config.js';
 
@@ -178,7 +178,7 @@ function readSubject(value: unknown): RunSubject | string {
   if (!isText(pinnedRevision['label'])) return 'the pinned revision must name its selection label';
   if (typeof pinnedRevision['pinnedAt'] !== 'string' || !INSTANT.test(pinnedRevision['pinnedAt']) || Number.isNaN(Date.parse(pinnedRevision['pinnedAt']))) return 'pinnedAt is not a UTC instant';
   if (!isRecord(screeningPolicy) || !hasKeys(screeningPolicy, ['path', 'commit', 'policyId', 'policyVersion', 'sha256'])
-    || screeningPolicy['path'] !== DOSSIER_POLICY_PATH || !isText(screeningPolicy['policyId']) || !isText(screeningPolicy['policyVersion'])
+    || typeof screeningPolicy['path'] !== 'string' || !DOSSIER_POLICY_PATHS.includes(screeningPolicy['path']) || !isText(screeningPolicy['policyId']) || !isText(screeningPolicy['policyVersion'])
     || typeof screeningPolicy['commit'] !== 'string' || !/^(?:[0-9a-f]{40}|[0-9a-f]{64})$/u.test(screeningPolicy['commit'])
     || typeof screeningPolicy['sha256'] !== 'string' || !/^[0-9a-f]{64}$/u.test(screeningPolicy['sha256'])) return 'screeningPolicy must bind the committed dossier policy identity, version and digest';
   if (!Array.isArray(contentClasses) || contentClasses.length !== DOSSIER_CONTENT_CLASSES.length || !contentClasses.every((value, i) => value === DOSSIER_CONTENT_CLASSES[i])) return 'contentClasses must name exactly code-content, project-documentation and governance-text in that order';
@@ -195,7 +195,7 @@ function readSubject(value: unknown): RunSubject | string {
     clone: { path: clone['path'], declaredBy: 'operator', label: 'Inferred', use: 'read' },
     pinnedRevision: { commit: pinnedRevision['commit'], label: pinnedRevision['label'], pinnedAt: pinnedRevision['pinnedAt'] },
     contentClasses: DOSSIER_CONTENT_CLASSES,
-    screeningPolicy: { path: DOSSIER_POLICY_PATH, commit: screeningPolicy['commit'], policyId: screeningPolicy['policyId'], policyVersion: screeningPolicy['policyVersion'], sha256: screeningPolicy['sha256'] },
+    screeningPolicy: { path: screeningPolicy['path'] as string, commit: screeningPolicy['commit'], policyId: screeningPolicy['policyId'], policyVersion: screeningPolicy['policyVersion'], sha256: screeningPolicy['sha256'] },
     visibility: { value: visibility['value'] as SourceVisibility, source: visibility['source'] as 'declaration' | 'conservative-default', declaredBy: visibility['declaredBy'], label: 'Inferred' },
     governed: { kind, because: [...(governed['because'] as string[])] },
     workItem: { identity: null, reason: NO_WORK_ITEM_REASON },

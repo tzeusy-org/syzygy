@@ -336,8 +336,9 @@ export function readCodeContentExemption(scope: unknown, sourceExtensions: reado
 /** Whether a body at `repositoryPath`, admitted under `contentClass`, skips the active-content scan: the exemption is declared, the
  * class is code-content and the final path segment ends with one of its extensions, compared case-sensitively as `sourceExtensions` are.
  * A project-documentation body never does, whatever it ends with. */
-export function codeContentExempt(repositoryPath: string, contentClass: PublicSourceContentClass | undefined, exemption: CodeContentExemption | null): boolean {
-  if (exemption === null || contentClass !== 'code-content') return false;
+export function codeContentExempt(repositoryPath: string, contentClass: PublicSourceContentClass | undefined, exemption: CodeContentExemption | null, stage: 1 | 2 = 1): boolean {
+  // A body classDecision's Stage 2 places is never exempt (dossier policy 2.0.0: code-content-extended's text and activeContent.rule).
+  if (exemption === null || contentClass !== 'code-content' || stage !== 1) return false;
   const name = repositoryPath.split('/').at(-1) ?? '';
   return exemption.exemptExtensions.some(entry => name.endsWith(entry));
 }
@@ -354,11 +355,15 @@ const DOCUMENTATION_EXEMPTION_TEXTS = {
   egress: 'cb5e93b4ed5e935a1b793100cdf89a895da1c7180545a4ae423abbcbea67b29d',
   consequence: 'cc2c14cbc95f157fd56886e222a09e26edb5fa1bb370efa602849c683e4488d4',
 } as const;
+/** sha256 of the dossier declared-source policy 2.0.0's `appliesTo` (read only with `twoStage`, by a screen that implements classDecision):
+ * the exemption names a body placed by one of the four path rules of the project-documentation rule without an id (Stage 1) and never
+ * one project-documentation-extended places. `documentationExempt` applies it by its `stage` argument. */
+const DOCUMENTATION_EXEMPTION_APPLIES_TO_TWO_STAGE = 'e8a0bec58c40456ecd038a5b0baeb89b746c402fb764ee8809ad51917f6b233b';
 /** `declared` is false when the scope declares no such exemption (versions 1 to 4). */
 export type DocumentationExemptionRead = { readonly ok: true; readonly declared: boolean } | { readonly ok: false; readonly why: string };
 
 /** Reads the exemption from a policy's `publicSourceScope`. Any other field set or text refuses. */
-export function readProjectDocumentationExemption(scope: unknown): DocumentationExemptionRead {
+export function readProjectDocumentationExemption(scope: unknown, twoStage = false): DocumentationExemptionRead {
   const refuse = (why: string): DocumentationExemptionRead => ({ ok: false, why: `its project-documentation exemption ${why}` });
   const active = isRecord(scope) ? scope['activeContent'] : undefined;
   if (!isRecord(active) || !Object.hasOwn(active, 'projectDocumentationExemption')) return { ok: true, declared: false };
@@ -369,14 +374,256 @@ export function readProjectDocumentationExemption(scope: unknown): Documentation
   if (keys.length !== expected.length || expected.some(key => !keys.includes(key))) return refuse(`carries the fields ${keys.join(', ')}, not exactly ${expected.join(', ')}`);
   for (const key of expected) {
     const value = exemption[key];
-    if (typeof value !== 'string' || sha256(value) !== DOCUMENTATION_EXEMPTION_TEXTS[key]) return refuse(`${key} is not the text this screen implements`);
+    const accepted = key === 'appliesTo' && twoStage ? DOCUMENTATION_EXEMPTION_APPLIES_TO_TWO_STAGE : DOCUMENTATION_EXEMPTION_TEXTS[key];
+    if (typeof value !== 'string' || sha256(value) !== accepted) return refuse(`${key} is not the text this screen implements`);
   }
   return { ok: true, declared: true };
 }
 
 /** Whether a body admitted under `contentClass` skips the active-content scan under the project-documentation exemption: the exemption
  * is declared and the class is project-documentation, whichever path rule placed it. A governance-text or code-content body never does. */
-export function documentationExempt(contentClass: PublicSourceContentClass | undefined, declared: boolean): boolean {
-  return declared && contentClass === 'project-documentation';
+export function documentationExempt(contentClass: PublicSourceContentClass | undefined, declared: boolean, stage: 1 | 2 = 1): boolean {
+  return declared && contentClass === 'project-documentation' && stage === 1;
 }
 
+
+/** The two-stage class decision of the dossier declared-source policy version 2.0.0 (`contentClassification.classDecision`, the three
+ * rules with an `id`; REQ-polaris-generation-046 from specification version 2.6, adoption row A-22).
+ *
+ * Stage 1 is the predecessor's decision, unchanged: `publicSourceContentClass` over the five rules without an id. Stage 2 reads only a
+ * path Stage 1 places in no class and does not find two classes for, places nothing below a directory named in `vendoredDirectoryNames`,
+ * and tries the three rules with an id; a path two of them match is indeterminate. As for the predecessor's rules, every text is pinned
+ * by digest and any other text refuses the screen; every list is read from the policy's bytes.
+ *
+ * Choices the texts leave open, each fail-closed:
+ * - A path Stage 1's project-documentation rule matches by more than one path rule is treated as one Stage 1 finds two classes for, so
+ *   Stage 2 never reads it.
+ * - Where more than one extension or suffix fits a final segment (or more than one path rule of project-documentation-extended matches
+ *   with different suffixes), every word and stem test must pass with each one removed.
+ * - Stage 2 runs only while Stage 1's project-documentation class is classified (`documentation` non-null): project-documentation-extended
+ *   reads that rule's lists, and a screen that does not classify the class must not place it, or anything Stage 1 would have placed in
+ *   it, by Stage 2.
+ * - governance-text-by-name and project-documentation-extended match nothing for a path with an empty, '.' or '..' segment or a
+ *   backslash, as their texts say; code-content-extended is by final segment name, as Stage 1's code-content rule is. */
+const SECOND_STAGE_TEXTS = {
+  classDecision: '1188fd8a5292f552c58e0185adf9668901740fe63e58696b47c3d6c0681cf02a',
+  'governance-text-by-name': '804abb62005190abee13f98f0b8990c782125a35b484f5aed7fd6b0009314400',
+  'project-documentation-extended': 'a426ca5a7d430d7221f396ad2b8fb888685d9aeef9652097c7c08c883e02a848',
+  'code-content-extended': '376e4917f1297e28276d4ef3f5bda7c20fda54f741273a6fd5580d08bb82f48f',
+  'prose-document': '1160da7cd2be57d99f67413e0c580481ab48125472f23cf4760107c2bdb7d08a',
+  'nested-root-document': 'c0e3e464a82a869a2313ca0ccba149596acda1de1a4ccdd99eff9d8afc186606',
+  'docs-tree-text': '651e966a116bc5ddfc0994a1b4d2ac52f49f814c676d04c98a17fd8fa438a06d',
+} as const;
+
+export type SecondStageRuleId = 'governance-text-by-name' | 'project-documentation-extended' | 'code-content-extended';
+const SECOND_STAGE_RULES: readonly { readonly id: SecondStageRuleId; readonly class: PublicSourceContentClass; readonly keys: readonly string[] }[] = [
+  { id: 'governance-text-by-name', class: 'governance-text', keys: ['id', 'class', 'rule', 'governanceTextExtensions', 'governanceTextTokens'] },
+  { id: 'project-documentation-extended', class: 'project-documentation', keys: ['id', 'class', 'rule', 'pathRules', 'proseExtensions', 'docTreeRootsAnyDepth'] },
+  { id: 'code-content-extended', class: 'code-content', keys: ['id', 'class', 'rule', 'configurationExtensions', 'languageExtensions', 'sourceFileNames', 'sourceFileNamePrefixes'] },
+];
+const EXTENDED_PATH_RULE_IDS = ['prose-document', 'nested-root-document', 'docs-tree-text'] as const;
+/** The `contentClassification` lists only the two-stage decision reads; a policy that carries any of them without `classDecision` refuses. */
+const SECOND_STAGE_LISTS = ['withheldTokens', 'vendoredDirectoryNames', 'withheldStems', 'evidenceWords', 'governanceStems'] as const;
+
+export interface SecondStageRules {
+  readonly governanceTextExtensions: readonly string[];
+  readonly governanceTextTokens: readonly string[];
+  readonly proseExtensions: readonly string[];
+  readonly docTreeRootsAnyDepth: readonly string[];
+  readonly configurationExtensions: readonly string[];
+  readonly languageExtensions: readonly string[];
+  readonly sourceFileNames: readonly string[];
+  readonly sourceFileNamePrefixes: readonly string[];
+  readonly withheldTokens: readonly string[];
+  readonly vendoredDirectoryNames: readonly string[];
+  readonly withheldStems: readonly string[];
+  readonly evidenceWords: readonly string[];
+  readonly governanceStems: readonly string[];
+}
+/** `stage` is null when the policy decides classes in one stage (every version before the dossier policy 2.0.0). */
+export type SecondStageRead = { readonly ok: true; readonly stage: SecondStageRules | null } | { readonly ok: false; readonly why: string };
+
+const sameKeys = (value: Readonly<Record<string, unknown>>, keys: readonly string[]): boolean => {
+  const own = Object.keys(value);
+  return own.length === keys.length && keys.every(key => own.includes(key));
+};
+// A case-sensitive name compared against the final segment as given (code-content-extended): no '/', no whitespace, never empty.
+const caseSensitiveName = (entry: string): boolean => entry.length > 0 && !/[/\\\s]/u.test(entry);
+const caseSensitiveExtension = (entry: string): boolean => EXTENSION_SHAPE.test(entry) && !entry.includes('..');
+const distinctList = (value: unknown, valid: (entry: string) => boolean): value is readonly string[] =>
+  Array.isArray(value) && value.length > 0 && value.every(entry => typeof entry === 'string' && valid(entry)) && new Set(value).size === value.length;
+
+/** Reads the second stage from a policy's `contentClassification`. `documentation` is the policy's four-rule project-documentation rule as
+ * read (`readProjectDocumentationRule`), whose lists project-documentation-extended reads; `sourceExtensions` is Stage 1's code-content
+ * list. Any malformed, missing or unrecognised field or text refuses. */
+export function readSecondStage(classification: unknown, documentation: ProjectDocumentationRule | null, sourceExtensions: readonly string[]): SecondStageRead {
+  const refuse = (why: string): SecondStageRead => ({ ok: false, why: `its two-stage class decision ${why}` });
+  if (!isRecord(classification)) return { ok: true, stage: null };
+  const rules = Array.isArray(classification['rules']) ? classification['rules'] : [];
+  const withId = rules.filter((rule: unknown) => isRecord(rule) && Object.hasOwn(rule, 'id')) as Readonly<Record<string, unknown>>[];
+  if (!Object.hasOwn(classification, 'classDecision')) {
+    return withId.length === 0 && SECOND_STAGE_LISTS.every(key => !Object.hasOwn(classification, key)) ? { ok: true, stage: null }
+      : refuse('is absent, yet the policy carries a rule with an id or a list only that decision reads');
+  }
+  const decision = classification['classDecision'];
+  if (typeof decision !== 'string' || sha256(decision) !== SECOND_STAGE_TEXTS.classDecision) return refuse('text is not the text this screen implements');
+  if (documentation === null) return refuse('reads a project-documentation rule the policy does not carry');
+  if (withId.length !== SECOND_STAGE_RULES.length || !SECOND_STAGE_RULES.every((expected, i) => withId[i]!['id'] === expected.id)) {
+    return refuse('rules with an id are not the three this screen implements (governance-text-by-name, project-documentation-extended, code-content-extended, in that order)');
+  }
+  // The rules with an id follow every rule without one, so Stage 1's rules keep their order and positions.
+  if (rules.findIndex((rule: unknown) => isRecord(rule) && Object.hasOwn(rule, 'id')) !== rules.length - SECOND_STAGE_RULES.length) return refuse('places a rule with an id before a rule without one');
+  for (const [i, expected] of SECOND_STAGE_RULES.entries()) {
+    const rule = withId[i]!;
+    if (!sameKeys(rule, expected.keys)) return refuse(`rule ${expected.id} carries the fields ${Object.keys(rule).join(', ')}, not exactly ${expected.keys.join(', ')}`);
+    if (rule['class'] !== expected.class) return refuse(`rule ${expected.id} names the class ${String(rule['class'])}, not ${expected.class}`);
+    if (typeof rule['rule'] !== 'string' || sha256(rule['rule']) !== SECOND_STAGE_TEXTS[expected.id]) return refuse(`rule ${expected.id} text is not the text this screen implements`);
+  }
+  const [byName, extended, code] = withId as [Readonly<Record<string, unknown>>, Readonly<Record<string, unknown>>, Readonly<Record<string, unknown>>];
+  const pathRules = extended['pathRules'];
+  if (!Array.isArray(pathRules) || pathRules.length !== EXTENDED_PATH_RULE_IDS.length
+    || !pathRules.every((pathRule: unknown, i) => isRecord(pathRule) && sameKeys(pathRule, ['id', 'rule']) && pathRule['id'] === EXTENDED_PATH_RULE_IDS[i]
+      && typeof pathRule['rule'] === 'string' && sha256(pathRule['rule']) === SECOND_STAGE_TEXTS[EXTENDED_PATH_RULE_IDS[i]!])) {
+    return refuse('project-documentation-extended path rules are not the three this screen implements (prose-document, nested-root-document, docs-tree-text, in that order and text)');
+  }
+  const separators = documentation.docTokenSeparators;
+  const word = (entry: string): boolean => entry.length > 0 && ![...separators].some(sep => entry.includes(sep));
+  const stem = (entry: string): boolean => entry.length > 0;
+  const fields: [Readonly<Record<string, unknown>>, keyof SecondStageRules, (entry: string) => boolean, boolean][] = [
+    [byName, 'governanceTextExtensions', extension, true], [byName, 'governanceTextTokens', word, true],
+    [extended, 'proseExtensions', extension, true], [extended, 'docTreeRootsAnyDepth', segment, true],
+    [code, 'configurationExtensions', caseSensitiveExtension, false], [code, 'languageExtensions', caseSensitiveExtension, false],
+    [code, 'sourceFileNames', caseSensitiveName, false], [code, 'sourceFileNamePrefixes', caseSensitiveName, false],
+    [classification, 'withheldTokens', word, true], [classification, 'vendoredDirectoryNames', segment, true],
+    [classification, 'withheldStems', stem, true], [classification, 'evidenceWords', word, true], [classification, 'governanceStems', stem, true],
+  ];
+  const out: Partial<Record<keyof SecondStageRules, readonly string[]>> = {};
+  for (const [holder, field, valid, folded] of fields) {
+    const value = holder[field];
+    // A list compared against the folded path can never match with an A-Z letter, a '/' or a backslash in an entry.
+    if (!distinctList(value, entry => valid(entry) && (!folded || !unmatchable(entry)))) return refuse(`${field} is unreadable`);
+    out[field] = Object.freeze([...value]);
+  }
+  const read = out as SecondStageRules;
+  // classDecision: "by construction governance-text-by-name and project-documentation-extended never both match: one requires a word of
+  // governanceTextTokens, the other forbids every word of docExcludedTokens". The statement holds only while the first list is in the second.
+  if (!read.governanceTextTokens.every(entry => documentation.docExcludedTokens.includes(entry))) return refuse('governanceTextTokens is not within docExcludedTokens, which classDecision says it is');
+  if (read.governanceTextTokens.some(entry => read.withheldTokens.includes(entry))) return refuse('governanceTextTokens and withheldTokens share a word');
+  const codeLists = [...read.configurationExtensions, ...read.languageExtensions];
+  if (codeLists.some(entry => sourceExtensions.includes(entry))) return refuse('code-content-extended repeats a sourceExtensions entry, which Stage 1 already places');
+  return { ok: true, stage: Object.freeze(read) };
+}
+
+const wordsOf = (part: string, separators: string): string[] => {
+  const out: string[] = [];
+  let word = '';
+  for (const character of `${part}${separators[0]}`) {
+    if (!separators.includes(character)) { word += character; continue; }
+    out.push(word);
+    word = '';
+  }
+  return out;
+};
+
+/** Whether the stem and evidence lists refuse the parts (each directory segment and the final segment with its suffix removed). */
+const refusedByStemOrEvidence = (parts: readonly string[], stage: SecondStageRules, separators: string): boolean =>
+  parts.some(part => stage.withheldStems.some(entry => part.includes(entry)) || wordsOf(part, separators).some(word => stage.evidenceWords.includes(word)));
+
+function governanceTextByName(segments: readonly string[], stage: SecondStageRules, documentation: ProjectDocumentationRule): boolean {
+  const stems = stemsWithout(segments.at(-1)!, stage.governanceTextExtensions);
+  if (stems.length === 0) return false;
+  const separators = documentation.docTokenSeparators;
+  return stems.every(stem => {
+    const parts = [...segments.slice(0, -1), stem];
+    const words = parts.flatMap(part => wordsOf(part, separators));
+    return words.some(word => stage.governanceTextTokens.includes(word)) && !words.some(word => stage.withheldTokens.includes(word))
+      && !refusedByStemOrEvidence(parts, stage, separators);
+  });
+}
+
+/** The final segment with the suffix each matching project-documentation-extended path rule removes; none when no path rule matches. */
+function extendedDocumentationStems(segments: readonly string[], stage: SecondStageRules, documentation: ProjectDocumentationRule): string[] {
+  const name = segments.at(-1)!;
+  const stems = stemsWithout(name, stage.proseExtensions);
+  if (segments.length >= 2) {
+    // nested-root-document: the root-document reading of a one-segment path, by a documentSuffixes entry other than the empty one.
+    const { digitCount, digits, separator, optional } = documentation.rootStemNumericPrefix;
+    const head = name.slice(0, digitCount);
+    const present = head.length === digitCount && [...head].every(character => digits.includes(character)) && name.startsWith(separator, digitCount);
+    const bare = present ? name.slice(digitCount + separator.length) : name;
+    if (present || optional) {
+      for (const suffix of documentation.documentSuffixes) {
+        if (suffix !== '' && bare.endsWith(suffix) && documentation.rootStems.includes(bare.slice(0, bare.length - suffix.length))) stems.push(name.slice(0, name.length - suffix.length));
+      }
+    }
+    // docs-tree-text.
+    if (segments.slice(0, -1).some(directory => stage.docTreeRootsAnyDepth.includes(directory)) && name.length > TXT.length && name.endsWith(TXT)
+      && !documentation.docTxtExcludedNames.includes(name) && !documentation.docTxtExcludedPrefixes.some(prefix => name.startsWith(prefix))) {
+      stems.push(name.slice(0, name.length - TXT.length));
+    }
+  }
+  return stems;
+}
+
+function projectDocumentationExtended(segments: readonly string[], stage: SecondStageRules, documentation: ProjectDocumentationRule): boolean {
+  const stems = extendedDocumentationStems(segments, stage, documentation);
+  if (stems.length === 0) return false;
+  const separators = documentation.docTokenSeparators;
+  return stems.every(stem => {
+    const parts = [...segments.slice(0, -1), stem];
+    return !parts.some(part => wordsOf(part, separators).some(word => documentation.docExcludedTokens.includes(word)))
+      && !parts.some(part => stage.governanceStems.some(entry => part.includes(entry)))
+      && !refusedByStemOrEvidence(parts, stage, separators);
+  });
+}
+
+function codeContentExtended(name: string, stage: SecondStageRules): boolean {
+  return [...stage.configurationExtensions, ...stage.languageExtensions].some(entry => name.endsWith(entry))
+    || stage.sourceFileNames.includes(name) || stage.sourceFileNamePrefixes.some(prefix => name.startsWith(prefix));
+}
+
+/** The Stage 2 rules that match a path Stage 1 leaves unplaced, before the two-match refusal; none below a vendored directory. */
+export function secondStageRules(repositoryPath: string, stage: SecondStageRules, documentation: ProjectDocumentationRule): SecondStageRuleId[] {
+  const folded = fold(repositoryPath);
+  const segments = folded.split('/');
+  if (segments.slice(0, -1).some(directory => stage.vendoredDirectoryNames.includes(directory))) return [];
+  const wellFormed = !folded.includes('\\') && segments.every(part => part !== '' && part !== '.' && part !== '..');
+  const matched: SecondStageRuleId[] = [];
+  if (wellFormed && governanceTextByName(segments, stage, documentation)) matched.push('governance-text-by-name');
+  if (wellFormed && projectDocumentationExtended(segments, stage, documentation)) matched.push('project-documentation-extended');
+  if (codeContentExtended(repositoryPath.split('/').at(-1) ?? '', stage)) matched.push('code-content-extended');
+  return matched;
+}
+
+/** A path's class and the stage that placed it. */
+export interface ClassDecision {
+  readonly contentClass: PublicSourceContentClass;
+  readonly stage: 1 | 2;
+}
+
+/** classDecision: Stage 1 exactly as `publicSourceContentClass`, then (when `stage` is the policy's second stage and the project-documentation
+ * class is classified) Stage 2 for a path Stage 1 places in no class and does not find two classes for. Undefined when indeterminate. */
+export function classDecision(repositoryPath: string, sourceExtensions: readonly string[], documentation: ProjectDocumentationRule | null,
+  context: ClassificationContext, stage: SecondStageRules | null): ClassDecision | undefined {
+  const first = publicSourceContentClass(repositoryPath, sourceExtensions, documentation, context);
+  if (first !== undefined) return { contentClass: first, stage: 1 };
+  if (stage === null || documentation === null) return undefined;
+  // Two classes, or two of the project-documentation path rules (read as two placements, fail closed): Stage 2 never reads the path.
+  const name = repositoryPath.split('/').at(-1) ?? '';
+  const rulesMatched = documentationPathRules(repositoryPath, documentation, context.subject ?? null).length;
+  const stageOne = [context.governanceTextPaths != null && context.governanceTextPaths.includes(fold(repositoryPath)), rulesMatched === 1,
+    rulesMatched === 0 && sourceExtensions.some(entry => name.endsWith(entry))].filter(Boolean).length;
+  if (stageOne > 1 || rulesMatched > 1) return undefined;
+  const matched = secondStageRules(repositoryPath, stage, documentation);
+  if (matched.length !== 1) return undefined;
+  const found = SECOND_STAGE_RULES.find(rule => rule.id === matched[0])!;
+  return { contentClass: found.class, stage: 2 };
+}
+
+/** The policy's `deniedDirectoryNames` (dossier policy 2.0.0, `sourceAdmission.pathRuleScope`): a path any directory segment of which,
+ * compared case-insensitively as the other denied-path rules are, is a listed name is denied wherever that directory sits. The final
+ * segment is not a directory and is never compared. */
+export function deniedDirectory(repositoryPath: string, names: readonly string[]): boolean {
+  const lowered = names.map(name => name.toLowerCase());
+  return repositoryPath.split('/').slice(0, -1).some(directory => lowered.includes(directory.toLowerCase()));
+}
