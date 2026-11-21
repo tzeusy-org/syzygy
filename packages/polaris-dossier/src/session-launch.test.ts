@@ -1,8 +1,10 @@
 import { mkdir, mkdtemp, rm, rmdir, unlink, writeFile, readFile, realpath, readdir, access } from 'node:fs/promises';
+import { spawn } from 'node:child_process';
 import * as net from 'node:net';
 import os from 'node:os';
 import path from 'node:path';
 import { afterEach, describe, expect, it, vi } from 'vitest';
+import { encodeCanonicalJson, parseBoundedJson, REVIEW_STATUS_REGION_OPEN } from '@syzygy/polaris-generation-core/live';
 import { sha256 } from '@syzygy/support';
 import { policyFixture } from './full-run.testkit.js';
 import { parseRunConfig } from './run-config.js';
@@ -10,12 +12,18 @@ import { DOSSIER_CONTENT_CLASSES, NO_WORK_ITEM_REASON, recordRunConfig, sourceBi
 import { DOSSIER_POLICY_PATH } from './policy-snapshot.js';
 import { buildDossierScreen } from './screen.js';
 import { loadSessionCredential } from './session-credential.js';
-import { SESSION_CONTENT_CLASSES } from './session-egress-policy.js';
+import { SESSION_CONTENT_CLASSES, SESSION_POLICY_LIMITS } from './session-egress-policy.js';
+import { startSessionBroker } from './session-broker.js';
 import { sessionHostTestPort, type SessionHost, type SessionHostOptions } from './session-host.js';
-import { createSessionProfile, DEFAULT_SESSION_MODEL, SESSION_PROFILE_BETA, SESSION_PROFILE_SYNTHETIC_AUTHORIZATION } from './session-profile.js';
-import { sessionRelayTestPort } from './session-relay.js';
+import { createSessionProfile, DEFAULT_SESSION_MODEL, projectSessionProfileMetadata, SESSION_PROFILE_BETA, SESSION_PROFILE_SYNTHETIC_AUTHORIZATION, sessionProfileProviderHeaders, type SessionProfile } from './session-profile.js';
+import { sessionRelayTestPort, type SessionAuditEvent } from './session-relay.js';
+import { decodeSessionResponse } from './session-response.js';
+import { buildDesignPacket, validateDesignVerdict } from './design-review.js';
+import { createUrlDesignView } from './url-design-view.js';
+import { materializeOrderedDesignPart, planOrderedDesignBytes } from './url-design-delivery.js';
 import ts from 'typescript';
-import { URL_CLI_PROGRAM, launchRestrictedUrlSession, prepareRestrictedUrlSession, restrictedSessionCliArgs, verifySupportedUrlCli, type UrlSessionLaunchOptions } from './session-launch.js';
+import { URL_CLI_PROGRAM, URL_LAUNCH_LIMITS, launchRestrictedUrlSession, prepareRestrictedUrlSession, restrictedSessionCliArgs, verifySupportedUrlCli, type UrlSessionLaunchOptions } from './session-launch.js';
+import { URL_SESSION_BWRAP, urlSessionBwrapArgs, urlSessionCommand, urlSessionViewFor } from './session-url-view.js';
 
 const cleanup: (() => Promise<unknown> | void)[] = [];
 const filesystem = vi.hoisted(() => ({
@@ -130,29 +138,292 @@ async function fixture() {
 }
 async function launchFixture(limits: UrlSessionLaunchOptions['limits'] = {}) {
   const f=await fixture();
+  const launch = await privateLaunchOptions(f.root, f.profile, 'author', event => {
+    expect(event.event).toBe('session-launch-attempt'); f.events.push('launch-audit');
+  }, limits);
+  return {...f,launch};
+}
+
+async function privateLaunchOptions(root: string, profile: SessionProfile, role: 'author' | 'design',
+  audit: UrlSessionLaunchOptions['audit'], limits: UrlSessionLaunchOptions['limits'] = {}, fixtureOrderedMcp = false,
+): Promise<UrlSessionLaunchOptions> {
   const supportSha256={} as Record<'session-bridge.js'|'session-mcp.js',string>;
   for(const name of ['session-bridge','session-mcp'] as const){
-    const source=await readFile(new URL(`./${name}.ts`,import.meta.url),'utf8');
+    let source=await readFile(new URL(`./${name}.ts`,import.meta.url),'utf8');
+    if (fixtureOrderedMcp && name === 'session-mcp') {
+      // Independently captured revision 251 test catalogue. It is never
+      // installed by the runtime manifest or supplied to a production role.
+      const anchor = "{ name: 'artifact_read',";
+      expect(source.split(anchor)).toHaveLength(2);
+      source = source.replace(anchor, `${anchor} _meta: { 'anthropic/maxResultSizeChars': 500000 },`);
+    }
     const compiled=ts.transpileModule(source,{compilerOptions:{target:ts.ScriptTarget.ES2022,module:ts.ModuleKind.ES2022,sourceMap:false}}).outputText;
-    await writeFile(path.join(f.root,'support',`${name}.js`),compiled);supportSha256[`${name}.js`]=sha256(compiled);
+    await writeFile(path.join(root,'support',`${name}.js`),compiled);supportSha256[`${name}.js`]=sha256(compiled);
   }
   const nodeExecutable=await realpath(process.execPath);
-  const canaries=['source','auth','audit'].map(name=>path.join(f.root,'hidden',name));
+  const canaries=['source','auth','audit'].map(name=>path.join(root,'hidden',name));
   for(const canary of canaries)await writeFile(canary,'OWN SYNTHETIC CANARY');
   const listener=net.createServer(socket=>socket.end());
   await new Promise<void>((resolve,reject)=>{listener.once('error',reject);listener.listen(0,'127.0.0.1',resolve)});
   cleanup.push(()=>new Promise<void>(resolve=>listener.close(()=>resolve())));
   const address=listener.address();if(!address||typeof address==='string')throw Error('own listener');
-  const options:UrlSessionLaunchOptions={view:{role:'author',cliExecutable:await realpath(path.join(os.homedir(), '.local/share/claude/versions', URL_CLI_PROGRAM.version)),nodeExecutable,
-    supportDirectory:path.join(f.root,'support'),homeDirectory:path.join(f.root,'home'),workDirectory:path.join(f.root,'work'),
-    brokerSocketDirectory:path.join(f.root,'broker'),relaySocketDirectory:path.join(f.root,'relay'),protectedPaths:[path.join(f.root,'hidden')]},
-    profile:f.profile,expected:{nodeSha256:sha256(await readFile(nodeExecutable)),supportSha256},current:()=>true,
-    audit:event=>{expect(event.event).toBe('session-launch-attempt');f.events.push('launch-audit');},canaries,hostLoopbackPort:address.port,
+  return {view:{role,cliExecutable:await realpath(path.join(os.homedir(), '.local/share/claude/versions', URL_CLI_PROGRAM.version)),nodeExecutable,
+    supportDirectory:path.join(root,'support'),homeDirectory:path.join(root,'home'),workDirectory:path.join(root,'work'),
+    brokerSocketDirectory:path.join(root,'broker'),relaySocketDirectory:path.join(root,'relay'),protectedPaths:[path.join(root,'hidden')]},
+    profile,expected:{nodeSha256:sha256(await readFile(nodeExecutable)),supportSha256},current:()=>true,
+    audit,canaries,hostLoopbackPort:address.port,
     limits:{milliseconds:8000,...limits}};
-  return {...f,launch:options};
 }
 
+const orderedCanonical = (value: unknown): string => encodeCanonicalJson(value, SESSION_POLICY_LIMITS);
+const sameWireValue = (actual: unknown, expected: unknown): boolean => orderedCanonical(actual) === orderedCanonical(expected);
+type OrderedScenario = 'ready' | 'stale-verdict' | 'out-of-order' | 'truncated-terminal';
+
+/** Run only the prepared byte-identical namespace command, with its native
+ * resource limits and an independent fixture timeout. The production sampled
+ * supervisor has separate tests. It grants no authority to this fixture. */
+async function runOwnedPreparedCommand(launch: UrlSessionLaunchOptions, commandSha256: string) {
+  const limits = { ...URL_LAUNCH_LIMITS, ...launch.limits };
+  const mountArgs = urlSessionBwrapArgs(urlSessionViewFor(launch.view));
+  mountArgs.splice(mountArgs.indexOf('--tmpfs'), 0, '--size', String(limits.storageBytes));
+  const program = '/usr/bin/prlimit';
+  const args = ['--core=0:0', `--cpu=${limits.cpuSeconds}:${limits.cpuSeconds}`, `--as=${limits.addressBytes}:${limits.addressBytes}`,
+    `--fsize=${limits.fileBytes}:${limits.fileBytes}`, `--nofile=${limits.descriptors}:${limits.descriptors}`, '--', URL_SESSION_BWRAP,
+    ...mountArgs, '--remount-ro', '/dev', '--remount-ro', '/', '--', ...urlSessionCommand(restrictedSessionCliArgs(launch.profile))];
+  expect(sha256(orderedCanonical({ program, args }))).toBe(commandSha256);
+  return await new Promise<{ exitCode: number | null; signal: NodeJS.Signals | null; stdoutBytes: number }>((resolve, reject) => {
+    const child = spawn(program, args, { env: { PATH: '/usr/bin:/bin', LANG: 'C.UTF-8' }, stdio: ['ignore', 'pipe', 'pipe'], detached: true });
+    const stop = (): void => {
+      if (child.pid !== undefined) {
+        try { process.kill(-child.pid, 'SIGKILL'); }
+        catch (error) { if ((error as NodeJS.ErrnoException).code !== 'ESRCH') reject(new Error('owned CLI process group unavailable')); }
+      }
+    };
+    const timer = setTimeout(stop, limits.milliseconds);
+    let stdoutBytes = 0, output = 0;
+    const collect = (chunk: Buffer, stdout: boolean): void => {
+      output += chunk.length;
+      if (stdout) stdoutBytes += chunk.length;
+      if (output > limits.outputBytes) stop();
+    };
+    child.stdout.on('data', (chunk: Buffer) => collect(chunk, true));
+    child.stderr.on('data', (chunk: Buffer) => collect(chunk, false));
+    child.once('error', () => { clearTimeout(timer); reject(new Error('owned CLI spawn unavailable')); });
+    child.once('close', (exitCode, signal) => { clearTimeout(timer); resolve({ exitCode, signal, stdoutBytes }); });
+  });
+}
+
+/** The real namespace command, bridge, MCP, broker and relay run on owned data.
+ * The expected transcript and provider response are fixture ports. In
+ * particular, this does not use production ordered admission or eligibility. */
+async function runNativeOrderedFixture(scenario: OrderedScenario) {
+  const root = await mkdtemp(path.join(os.tmpdir(), 'so-'));
+  cleanup.push(() => rm(root, { force: true, recursive: true }));
+  for (const name of ['support', 'home', 'work', 'broker', 'relay', 'hidden']) await mkdir(path.join(root, name), { mode: 0o700 });
+  const builtScreen = buildDossierScreen(policyFixture().bytes, true, null, 'private');
+  if (!builtScreen.ok) throw new Error('own ordered screen unavailable');
+  const screen = builtScreen.screen;
+  const run = 'own-ordered-review', pin = 'd'.repeat(40), role = 'design';
+  const sessionId = '12345678-1234-4234-8234-123456789012';
+  const binding = { run, role, sourceBinding: sha256('own source binding'), policy: screen.policySha256,
+    provider: 'anthropic', model: DEFAULT_SESSION_MODEL };
+  const compiled = createSessionProfile({ binding, sessionId, systemPrompt: 'Use the owned design fixture.',
+    initialPrompt: 'Inspect the exact ordered packet before submitting the owned verdict.',
+    utcDate: new Date().toISOString().slice(0, 10), kernelRelease: os.release() });
+  if (!compiled.ok) throw new Error('own ordered profile unavailable');
+  const profile = compiled.value.profile;
+  const packet = buildDesignPacket({ run: '/own-fixture/own-ordered-review', runId: run, pinnedRevision: pin, audience: 'Own fixture readers', files: new Map([
+    ['index.html', `<p>Own café &amp; "quotes". ${'Owned review text. '.repeat(1_500)}</p>\n`
+      + `${REVIEW_STATUS_REGION_OPEN}Review pending</aside>\n`],
+    ['machine.json', `${JSON.stringify({ title: 'Own design review', reviewStatus: [] }, null, 2)}\n`],
+  ]) });
+  if (!packet.ok) throw new Error(`own design packet unavailable (${packet.stage})`);
+  const original = Buffer.from(packet.bytes);
+  const view = createUrlDesignView({ original, screen, expected: { runId: run, pinnedRevision: pin, bytes: original.length, sha256: packet.sha256 } });
+  expect(view.rawActive.status).toBe('failed');
+  const plan = planOrderedDesignBytes({ envelope: view.bytes, envelopeSha256: view.sha256,
+    original: { bytes: original.length, sha256: packet.sha256 }, fileCount: packet.files.length, pageCount: packet.pages.length,
+    binding: { basePolicySha256: binding.policy, originPolicySha256: sha256('own origin policy'), originalReceiptSha256: sha256('own receipt'),
+      producerSha256: sha256('own fixture producer'), profileSha256: profile.digest, encoding: 'html-entities-five/1',
+      project: 'project:syzygy', provider: binding.provider, role, round: 1, run, session: sessionId, transferEpoch: 1, pin,
+      deadline: '2099-01-01T00:00:00.000Z' }, parents: [sha256('own parent')],
+    instructionProfileSha256: sha256(profile.input.systemPrompt),
+    limits: { partBytes: 32_768, partCount: 2, replyBytes: 45_000, preparedBytes: 4096 } });
+  expect(plan.manifest.parts).toHaveLength(2);
+  expect(plan.replies.every(reply => reply.bytes > 10_000)).toBe(true);
+  const verdict = { schemaVersion: 'polaris-dossier-local-design-verdict-v1', pinnedRevision: pin,
+    packetSha256: scenario === 'stale-verdict' ? sha256('own stale packet') : packet.sha256, sessionId, readiness: 'ready',
+    pageReview: packet.pages.map(page => ({ page, verdict: 'acceptable', reason: 'Owned fixture review.' })), findings: [] };
+  const submission = orderedCanonical(verdict);
+  const ack = orderedCanonical(scenario !== 'stale-verdict'
+    ? { kind: 'dossier-result', ok: true, stdout: orderedCanonical({ outcome: 'submitted', packetSha256: packet.sha256 }), stderr: '', exit: 0 }
+    : { kind: 'dossier-result', ok: true, stdout: '', stderr: 'Stale fixture packet.', exit: 1 });
+  const poll = { argv: ['dossier', 'poll', run] };
+  const submit = { argv: ['dossier', 'await', '/work', '--submit', 'round-1/verdict.json', '--stdin'], stdin: submission };
+  const step = (ordinal: number, tool: 'dossier_step' | 'artifact_read', input: typeof poll | typeof submit | { path: string }, reply: string) => ({
+    tool, input, reply, call: { type: 'tool_use', id: `toolu_ordered_${ordinal}`, name: `mcp__syzygy__${tool}` as const, input },
+  });
+  const steps = [step(1, 'dossier_step', poll,
+    orderedCanonical({ kind: 'session-control', ok: true, state: 'events', events: [{ event: 'design-round-prepared', ...plan.prepared }] })),
+  ...plan.manifest.parts.map(part => step(part.ordinal + 1, 'artifact_read', { path: part.path },
+    materializeOrderedDesignPart(plan, view.bytes, part.path))), step(4, 'dossier_step', submit, ack)];
+
+  const event = (type: string, value: Record<string, unknown>) => `event: ${type}\ndata: ${JSON.stringify({ type, ...value })}\n\n`;
+  function response(index: number, call?: typeof steps[number]['call']): Buffer {
+    return Buffer.from(event('message_start', { message: { id: `msg_own_ordered_${index}`, type: 'message', role: 'assistant', model: DEFAULT_SESSION_MODEL,
+      content: [], stop_reason: null, stop_sequence: null, usage: { input_tokens: 3, output_tokens: 0, cache_creation_input_tokens: 0, cache_read_input_tokens: 0 } } })
+      + event('content_block_start', { index: 0, content_block: call ? { ...call, input: {} } : { type: 'text', text: '' } })
+      + event('content_block_delta', { index: 0, delta: call ? { type: 'input_json_delta', partial_json: orderedCanonical(call.input) }
+        : { type: 'text_delta', text: 'Owned ordered fixture complete.' } })
+      + event('content_block_stop', { index: 0 })
+      + event('message_delta', { delta: { stop_reason: call ? 'tool_use' : 'end_turn', stop_sequence: null }, usage: { output_tokens: 4 } })
+      + event('message_stop', {}));
+  }
+  const launch = await privateLaunchOptions(root, profile, role, () => {}, { milliseconds: 30_000 }, true);
+  const preparation = await prepareRestrictedUrlSession(launch);
+  const audit: SessionAuditEvent[] = [], forwarded: string[] = [], delivered: string[] = [], faults: string[] = [], cachePositions: number[][] = [];
+  const receivedParts: string[] = [];
+  let checked = 0, terminalResponseDecoded = false, verdictValidated = false;
+  const relay = await sessionRelayTestPort(async input => {
+    const index = forwarded.length;
+    if (input.route !== '/v1/messages?beta=true' || index >= 5) throw new Error('own route refused');
+    forwarded.push(sha256(input.body));
+    const next = scenario === 'out-of-order' && index === 1 ? steps[2]?.call : steps[index]?.call;
+    const message = response(index, next);
+    const body = scenario === 'truncated-terminal' && index === steps.length ? message.subarray(0, -10) : message;
+    return { status: 200, contentType: 'text/event-stream', requestFlushed: true, body };
+  })(path.join(root, 'relay/r.sock'), { binding, project: 'project:syzygy', pin, principal: 'own-operator' }, {
+    current: () => true,
+    providerHeaders: incoming => {
+      const prepared = sessionProfileProviderHeaders(profile, incoming);
+      return prepared.ok ? { ...prepared.value.headers, authorization: SESSION_PROFILE_SYNTHETIC_AUTHORIZATION } : null;
+    },
+    request: bytes => {
+      try {
+        const raw = new TextDecoder('utf-8', { fatal: true }).decode(bytes);
+        const { messages, ...controls } = parseBoundedJson(raw, SESSION_POLICY_LIMITS) as NativeFixtureRequest;
+        const projected = projectSessionProfileMetadata(profile, controls.metadata);
+        if (!projected.ok || Object.hasOwn(controls, 'tool_choice')) throw new Error('unrecognized incoming controls');
+        const normalized = { ...controls, metadata: projected.value.metadata, tool_choice: profile.baseline.tool_choice };
+        const controlKeys = new Set([...Object.keys(normalized), ...Object.keys(profile.baseline)]);
+        const changedControls = [...controlKeys].filter(key => {
+          const actual = (normalized as Readonly<Record<string, unknown>>)[key], expected = profile.baseline[key];
+          return actual === undefined || expected === undefined || !sameWireValue(actual, expected);
+        });
+        if (changedControls.length !== 0) throw new Error(`unexpected native controls ${changedControls.join(',')}`);
+        if (checked !== delivered.length || messages.length !== 1 + checked * 2) throw new Error(`unexpected native message count ${messages.length}`);
+        const matchesInitial = sameWireValue(messages[0], profile.initialMessage);
+        const matchesHistory = checked > 0 && sameWireValue(messages[0], profile.historicalInitialMessage);
+        if (!matchesInitial && !matchesHistory) throw new Error('unrecognized native initial frame');
+        const caches: number[] = [];
+        for (let index = 0; index < checked; index++) {
+          const expected = steps[index]!;
+          if (!sameWireValue(messages[1 + index * 2], { role: 'assistant', content: [expected.call] })) throw new Error('unrecognized historical call');
+          const message = messages[2 + index * 2]!;
+          const [block] = message.content;
+          if (block === undefined) throw new Error('missing native result');
+          const { cache_control: cache, ...frame } = block;
+          if (cache !== undefined) {
+            if (!sameWireValue(cache, { type: 'ephemeral', ttl: '1h' })) throw new Error('unrecognized native cache control');
+            caches.push(index);
+          }
+          if (!sameWireValue({ ...message, content: [frame, ...message.content.slice(1)] }, { role: 'user', content: [
+            { type: 'tool_result', tool_use_id: expected.call.id, content: [{ type: 'text', text: `${expected.reply}\n` },
+              { type: 'text', text: '<system-reminder>\n<total_tokens>14999993 tokens left</total_tokens>\n</system-reminder>' }] },
+          ] })) throw new Error(`wrong native result frame ${index}`);
+          if (index === checked - 1 && expected.tool === 'artifact_read') {
+            const result = (frame.content as { readonly text: string }[])[0]!.text;
+            receivedParts.push((JSON.parse(result) as { text: string }).text);
+          }
+        }
+        cachePositions.push(caches);
+        const prior = checked === 0 ? undefined : steps[checked - 1];
+        const body = Buffer.from(orderedCanonical({ ...normalized, messages }));
+        checked++;
+        return { ok: true, body, admission: { digest: sha256(body), bytes: body.length, classes: ['derived-composites'], originIds: ['own:fixture'] },
+          consumedToolResults: prior === undefined ? [] : [{ receiptId: `own:receipt:${checked - 1}`, toolUseId: prior.call.id,
+            digest: sha256(prior.reply), bytes: Buffer.byteLength(prior.reply) }] };
+      } catch (error) { faults.push(error instanceof Error ? error.message : 'invalid owned request'); return { ok: false }; }
+    },
+    response: (bytes, contentType) => {
+      const decoded = decodeSessionResponse(bytes, contentType, DEFAULT_SESSION_MODEL, text => screen.screenSecrets(text) !== undefined);
+      if (!decoded.ok) { faults.push('fixture response codec refused'); return { ok: false }; }
+      const call = steps[checked - 1]?.call;
+      if (call !== undefined) {
+        if (!sameWireValue(decoded.content, [call]) || decoded.stopReason !== 'tool_use') { faults.push('fixture response order refused'); return { ok: false }; }
+        return { ok: true, observation: { stopReason: decoded.stopReason, textBlocks: 0,
+          tool: { id: call.id, name: call.name, inputSha256: sha256(orderedCanonical(call.input)) } } };
+      }
+      if (decoded.stopReason !== 'end_turn' || !sameWireValue(decoded.content, [{ type: 'text', text: 'Owned ordered fixture complete.' }]))
+        return { ok: false };
+      terminalResponseDecoded = true;
+      return { ok: true, observation: { stopReason: decoded.stopReason, textBlocks: 1, tool: null } };
+    },
+    audit: observed => { audit.push(observed); },
+  });
+  cleanup.push(relay.close);
+  const broker = await startSessionBroker(path.join(root, 'broker/b.sock'), async (invocation, release) => {
+    const step = steps[delivered.length];
+    if (!relay.responseFlushed() || !step || !sameWireValue(invocation, { tool: step.tool, input: step.input })) throw new Error('own broker order refused');
+    if (delivered.length === 3) {
+      if (receivedParts.length !== 2 || receivedParts.join('') !== new TextDecoder().decode(view.bytes)) throw new Error('own incomplete delivery');
+      const { stdin } = (invocation as { input: typeof submit }).input;
+      const deliveredVerdict = parseBoundedJson(stdin, SESSION_POLICY_LIMITS) as Readonly<Record<string, unknown>>;
+      const problems = validateDesignVerdict(deliveredVerdict, packet, pin, new Set());
+      expect(problems.map(problem => problem.kind)).toEqual(scenario === 'stale-verdict' ? ['stale-packet'] : []);
+      verdictValidated = problems.length === 0;
+    }
+    delivered.push(sha256(step.reply));
+    release(parseBoundedJson(step.reply, SESSION_POLICY_LIMITS));
+  }, () => { faults.push('own broker fault'); });
+  cleanup.push(broker.close);
+  const result = await runOwnedPreparedCommand(launch, preparation.commandSha256);
+  return { result, checked, terminalResponseDecoded, verdictValidated, audit, forwarded, delivered, faults, cachePositions,
+    reconstructed: receivedParts.join('') === new TextDecoder().decode(view.bytes), plan };
+}
+
+/** Closed fields of an owned native fixture read. Each emitted frame is
+ * independently compared, including the rest of the verified message. */
+type NativeFixtureRequest = Record<string, unknown> & { readonly messages: readonly { readonly content: readonly Record<string, unknown>[] }[] };
+
 describe('prepared private CLI launch',()=>{
+  it.each(['ready', 'stale-verdict', 'out-of-order', 'truncated-terminal'] as const)('observes the actual ordered design CLI exchange (%s)', async scenario => {
+    const observed = await runNativeOrderedFixture(scenario);
+    const evidence = JSON.stringify({ faults: observed.faults, checked: observed.checked, delivered: observed.delivered.length,
+      audit: observed.audit.map(event => event.event),
+      cachePositions: observed.cachePositions, launch: observed.result });
+    if (scenario === 'out-of-order') {
+      expect(observed.faults, evidence).toEqual(['fixture response order refused']);
+      expect(observed.delivered).toHaveLength(1);
+      expect(observed.cachePositions).toEqual([[], [0]]);
+      expect(observed.audit.at(-1)?.event).toBe('response-refused');
+      expect(observed.terminalResponseDecoded).toBe(false);
+      expect(observed.verdictValidated).toBe(false);
+      return;
+    }
+    expect(observed.checked).toBe(5);
+    expect(observed.delivered.slice(1, 3)).toEqual(observed.plan.replies.map(reply => reply.sha256));
+    expect(observed.reconstructed).toBe(true);
+    expect(observed.verdictValidated).toBe(scenario !== 'stale-verdict');
+    const sends = observed.audit.filter(event => event.event === 'send-outcome');
+    expect(sends.map(event => event.admission?.digest)).toEqual(observed.forwarded);
+    expect(sends.every(event => event.received?.digest !== event.admission?.digest)).toBe(true);
+    expect(sends.map(event => event.consumedToolResults.map(result => result.toolUseId))).toEqual([
+      [], ['toolu_ordered_1'], ['toolu_ordered_2'], ['toolu_ordered_3'], ['toolu_ordered_4'],
+    ]);
+    expect(observed.cachePositions).toEqual([[], [0], [1], [2], [3]]);
+    if (scenario === 'truncated-terminal') {
+      expect(observed.faults, evidence).toEqual(['fixture response codec refused']);
+      expect(observed.audit.at(-1)?.event).toBe('response-refused');
+      expect(observed.terminalResponseDecoded).toBe(false);
+    } else {
+      expect(observed.faults, evidence).toEqual([]);
+      expect(observed.result, evidence).toMatchObject({ exitCode: 0, signal: null });
+      expect(observed.terminalResponseDecoded).toBe(true);
+      expect(observed.audit.at(-1)?.response).toMatchObject({ stopReason: 'end_turn', tool: null, textBlocks: 1 });
+    }
+  }, 60_000);
+
   it('runs the pinned CLI through actual namespace, bridge, MCP and composed host without raw output',async()=>{
     const f=await launchFixture();expect(await verifySupportedUrlCli(f.launch.view.cliExecutable)).toBe(true);const preparation=await prepareRestrictedUrlSession(f.launch);
     expect(await readdir(f.launch.view.brokerSocketDirectory)).toEqual([]);expect(await readdir(f.launch.view.relaySocketDirectory)).toEqual([]);
