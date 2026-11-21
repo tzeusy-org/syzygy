@@ -61,6 +61,17 @@ P-5 and P-101 left earlier the same day (section below).
 | P-115 | Already performed 2026-10-27; row removed |
 | P-116 | Already performed 2026-11-03; row removed |
 
+## Resolved on 2026-11-21 (P-119 — doctrine amendment D11 adopted)
+
+The owner adopted D11 in the Claude Code CLI on 2026-11-21, in the owner's
+words: "Adopt D11". The five edits are applied to `doctrine/security.md`;
+the record is row D11 of [`DOCTRINE-AMENDMENT-LOG.md`](DOCTRINE-AMENDMENT-LOG.md).
+The row as it stood in the register:
+
+| # | Decision | Class | Owning record |
+|---|---|---|---|
+| P-119 | Doctrine amendment **D11**: an agent session's own raw reads may reach the run's declared provider unscreened, disclosed on every run page; everything Syzygy itself sends, keeps or renders stays screened. It writes the owner's 2026-11-21 answer A on `secrets-raw-clone-to-provider` into SEC-2 and SEC-5. Adopt, amend or decline; until adopted, SEC-2 and SEC-5 stand as written | doctrine; secrets | `../contracts/candidates/doctrine-amendment-session-raw-reads-d11/PROPOSAL.md`; [`OWNER-DIRECTION-QUESTIONNAIRE-ANSWERS-2026-11-21.md`](OWNER-DIRECTION-QUESTIONNAIRE-ANSWERS-2026-11-21.md) |
+
 ## Resolved on 2026-11-21 (P-5 and P-101 — doctrine amendments D3 and D7 withdrawn)
 
 The owner answered the D10 F-10 questionnaire on 2026-11-21 through its

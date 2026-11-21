@@ -44,11 +44,11 @@ defining its identifiers renders an empty table rather than a stale one.
 
 | Identifier | Title, as the corpus marks it | Defined at |
 |---|---|---|
-| `SEC-1` | Authenticated by default | `.syzygy/governance/doctrine/security.md`:15 |
-| `SEC-2` | Portfolio data leaves owner-controlled infrastructure only for a declared provider | `.syzygy/governance/doctrine/security.md`:49 |
-| `SEC-3` | Observed code is untrusted, everywhere | `.syzygy/governance/doctrine/security.md`:74 |
-| `SEC-4` | Writes are consented, attributed, and revertable | `.syzygy/governance/doctrine/security.md`:124 |
-| `SEC-5` | Secrets are never indexed | `.syzygy/governance/doctrine/security.md`:146 |
+| `SEC-1` | Authenticated by default | `.syzygy/governance/doctrine/security.md`:17 |
+| `SEC-2` | Portfolio data leaves owner-controlled infrastructure only for a declared provider | `.syzygy/governance/doctrine/security.md`:51 |
+| `SEC-3` | Observed code is untrusted, everywhere | `.syzygy/governance/doctrine/security.md`:97 |
+| `SEC-4` | Writes are consented, attributed, and revertable | `.syzygy/governance/doctrine/security.md`:147 |
+| `SEC-5` | Secrets are never indexed | `.syzygy/governance/doctrine/security.md`:169 |
 
 ## Craft-and-care policy — `CC`
 
