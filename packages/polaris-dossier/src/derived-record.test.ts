@@ -232,6 +232,7 @@ describe('the record', () => {
         ['a containment alone naming it', (doc) => { doc['facts'][4].path = 'zq-planted-dir'; }],
         ['a unit alone naming it', (doc) => { doc['facts'][3].path = 'zq-planted-dir'; }],
         ['a directory the tree holds only below the top level', (doc) => { doc['facts'][2].path = 'b'; doc['facts'][5].path = 'b'; }],
+        ['a unit and containment naming the root path', (doc) => { doc['facts'][3].path = '.'; doc['facts'][6].path = '.'; }],
       ];
       for (const [what, edit] of planted) {
         const text = kept(edit);
