@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { cliVisibilityOf } from './cli.js';
-import { supervisorClone, type CloneDeps } from './polaris.js';
+import { onlyConsentMissing, supervisorClone, trunkOf, urlSlug, type CloneDeps } from './polaris.js';
 import type { VisibilityDecision } from './source-visibility-gate.js';
 
 /** `syzygy polaris` without `--clone` makes its own one-commit clone, fetching from the URL (screening scope version 8, edit 4: for a
@@ -63,6 +63,63 @@ describe('supervisorClone', () => {
     expect(out).toBe(`/clones/o-r-trunk exists but is not a clone of ${COMMIT}; remove it or pass --clone`);
     expect([asked, fetched()]).toEqual([false, false]);
   });
+});
+
+describe('supervisorClone for a repository trunkOf read anonymously', () => {
+  it('fetches with no visibility record at all', async () => {
+    const { d, fetched } = deps();
+    const out = await supervisorClone({ ...input(undefined, null), publicByProbe: true }, d);
+    expect(out).toEqual({ clone: '/clones/o-r-trunk' });
+    expect(fetched()).toBe(true);
+  });
+  it('still refuses without the probe when no decision is wired', async () => {
+    const { d, fetched } = deps();
+    const out = await supervisorClone(input(undefined, null), d);
+    expect(typeof out === 'string' && out).toContain('pass --clone <dir>');
+    expect(fetched()).toBe(false);
+  });
+});
+
+describe('trunkOf: the commit a run pins with no --revision', () => {
+  const git = (r: { status: number; stdout: string; stderr?: string }) => {
+    const ran: string[][] = [];
+    return { ran, deps: { git: (args: readonly string[]) => { ran.push([...args]); return { stderr: '', ...r }; } } };
+  };
+  it('reads the remote HEAD with no credential helper', () => {
+    const { ran, deps: d } = git({ status: 0, stdout: `${COMMIT}\tHEAD\n` });
+    expect(trunkOf(URL, d)).toEqual({ commit: COMMIT });
+    expect(ran).toEqual([['-c', 'credential.helper=', 'ls-remote', URL, 'HEAD']]);
+  });
+  it('refuses a URL that does not answer without a credential, naming --clone', () => {
+    const out = trunkOf(URL, git({ status: 128, stdout: '', stderr: 'Authentication failed' }).deps);
+    expect(typeof out === 'string' && out).toContain('Authentication failed');
+    expect(typeof out === 'string' && out).toContain('--clone <dir>');
+  });
+  it('refuses an answer with no HEAD line', () => {
+    expect(trunkOf(URL, git({ status: 0, stdout: `${COMMIT}\trefs/heads/x\n` }).deps)).toBe(`${URL} names no HEAD commit`);
+  });
+});
+
+describe('onlyConsentMissing: the one gate D10 retired', () => {
+  it('is true when every missing gate is an observation-consent record', () => {
+    expect(onlyConsentMissing({ missing: ['observation consent: none in force'] })).toBe(true);
+  });
+  it.each([
+    ['another gate missing too', { missing: ['observation consent: none', 'screening policy: absent'] }],
+    ['only another gate', { missing: ['registry entry: absent'] }],
+    ['nothing missing', { missing: [] }],
+    ['no list', {}],
+  ])('is false with %s', (_name, doc) => {
+    expect(onlyConsentMissing(doc)).toBe(false);
+  });
+});
+
+describe('urlSlug', () => {
+  it.each([
+    ['https://github.com/tzeusy-org/butlers', 'tzeusy-org-butlers'],
+    ['https://github.com/redis/redis.git', 'redis-redis'],
+    ['git@github.com:o/r.git', 'o-r'],
+  ])('%s → %s', (url, slug) => { expect(urlSlug(url)).toBe(slug); });
 });
 
 describe('cliVisibilityOf: the decision the supervisor fetches by', () => {
