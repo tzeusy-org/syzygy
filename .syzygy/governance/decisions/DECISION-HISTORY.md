@@ -12,6 +12,55 @@
 > cells — are preserved verbatim in git history at commit `9c43fc5`
 > (`git show 9c43fc5:.syzygy/governance/decisions/PENDING-OWNER-DECISIONS.md`).
 
+## Triaged on 2026-11-21 (D10 FOLLOW-ON F-10: all 34 rows leave the owner register)
+
+Under doctrine VIS-4 as amended by D10 the owner decides four classes only.
+F-10 (`syzygy-k54o.10`) triaged every row of `PENDING-OWNER-DECISIONS.md`;
+agent adoption A-13 in `AGENT-ADOPTIONS.md` records it, open to the owner's
+veto. "Kept deferred" and "agent-class" are agent decisions, reversible by a
+later adoption; "not adopted by this triage" means the package still waits
+for an agent to adopt it after one review, or to withdraw it. The rows as
+they stood are at commit `9e919a293`
+(`git show 9e919a293:.syzygy/governance/decisions/PENDING-OWNER-DECISIONS.md`).
+P-5 and P-101 left earlier the same day (section below).
+
+| # | Disposition |
+|---|---|
+| P-1 | The two launch-path wave acts were performed 2026-08-17; Waves C1/C2/D1/D2 stay **deferred by agent decision** (no mission work is planned; taking one up is a new adoption) |
+| P-2 | CC-TEST-2: the owner's 2026-11-03 hold stands as decided; taking it up is an agent adoption, reported |
+| P-3 | Topology bundle: as P-2 |
+| P-4 | Project overview: as P-2 |
+| P-12 | Knowledge-hygiene policy: as P-2 |
+| P-10 | Routing-matrix confirming review: the owner's 2026-09-27 knowing deferral stands; RFC-0010 is deferred-wave material |
+| P-15 | **Decided: no compact FD register here.** The founder decision log stays founder-local; the two extracted warrants are enough. Reversible by adoption |
+| P-17 | Eight undefined public terms: kept deferred with the waves that define them |
+| P-19 | Mission-envelope residuals: kept deferred with the D waves |
+| P-20 | Fixture-set acceptance posture: kept deferred with P-29 |
+| P-21 | `constrains:` arm (a): kept deferred with Wave C2, its consumer |
+| P-23 | Mission-safety stage placement: kept deferred with the D waves |
+| P-27 | RFC10-18 correction-plane defects: kept deferred with the D waves |
+| P-29 | Wave C2 acceptance criterion: kept deferred with Wave C2 |
+| P-30 | Stop/containment repair form: kept deferred with the D waves |
+| P-32 | RFC11-15 ownership metadata: kept deferred with Wave C2 |
+| P-43 | **Decided:** under D10 a made owner decision is a dated record in this directory that quotes the owner's words (an `OWNER-DIRECTION-*`, sign-off or act record), and a made agent decision is a row in `AGENT-ADOPTIONS.md`; no further marker. Spec-policy follow-up stays in `syzygy-4x77` |
+| P-52 | POC test-coverage gaps: ordinary engineering backlog, tracked in `syzygy-k0np`, `syzygy-u05.13` and `syzygy-dov.16` |
+| P-84 | Identity amendment: agent-class (adopt after one review, or withdraw); its open questions ride `syzygy-vk3f`. Not adopted by this triage |
+| P-85 | Release-label amendment: agent-class; tracked in `syzygy-7yad`. Not adopted by this triage |
+| P-95 | Behaviour-contract re-pin: agent-class; its gate effect is folded into FOLLOW-ON F-2 (`syzygy-k54o.2`), the re-derivation in `syzygy-fxro`. Not adopted by this triage |
+| P-112 | Loaded-profile registry entry: agent-class; tracked in `syzygy-dov.24`. Not adopted by this triage |
+| P-111 | Local CLI runner: Q1 (sign-off) is agent-class, tracked in `syzygy-bc0g`. Q2 (unscreened content to the provider) is owner-class and was answered 2026-11-21 (`secrets-raw-clone-to-provider`, A); its doctrine text is P-119 below |
+| P-117 | CC-SEC-3 amendment: folded into CC-SEC-3 by agent adoption A-12 (2026-11-21). Credential-probe work that only tightens isolation is agent-class; anything letting observed code outside a sandbox reach a credential returns to the owner |
+| P-118 | Launch-time consent: retired by D10 (reading needs no consent record); the candidate binds nothing and is not offered |
+| P-53 | Already resolved 2026-09-15; row removed |
+| P-104 | Already resolved 2026-10-07; row removed |
+| P-105 | Already resolved 2026-10-08; row removed |
+| P-106 | Already resolved 2026-10-08; row removed |
+| P-107 | Already resolved 2026-10-14; row removed |
+| P-110 | Already performed 2026-10-20; row removed |
+| P-114 | Already performed 2026-10-20; row removed |
+| P-115 | Already performed 2026-10-27; row removed |
+| P-116 | Already performed 2026-11-03; row removed |
+
 ## Resolved on 2026-11-21 (P-5 and P-101 — doctrine amendments D3 and D7 withdrawn)
 
 The owner answered the D10 F-10 questionnaire on 2026-11-21 through its

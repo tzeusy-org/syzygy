@@ -415,9 +415,8 @@ describe('the sitting\'s acts fail closed', () => {
   // passes as any other line; a row that cites the sign-off's tag, the old open row's shape included, refuses like any other file's.
   it('read the resolved P-104 register row as any other line, and refuse a row that cites the sign-off\'s tag', async () => {
     const register = `${DECISIONS_DIR}/PENDING-OWNER-DECISIONS.md`;
-    const rows = real(register).split('\n').filter(line => line.startsWith('| P-104 |'));
-    expect(rows).toHaveLength(1);
-    const row = rows[0]!;
+    // The row as it stood in the register until D10 F-10 moved every row out on 2026-11-21 (commit 9e919a293).
+    const row = "| P-104 | [Observed] **Resolved 2026-10-07:** the local-agent Redis sitting recorded A (row 1), E (row 2), F (row 3a), G (row 4) and H (row 5), by the item letters of the sitting brief, each a separate act. Each act's record is listed in `ACCEPTANCE-ACT-RECORD.md`. | owner acts recorded | a local-agent Redis dossier run, once the post-sitting install and battery pass | `contracts/candidates/REDIS-LOCAL-AGENT-SITTING-BRIEF.md` |";
     expect(row.startsWith('| P-104 | [Observed] **Resolved ')).toBe(true);
     expect(row).not.toContain('public-git-source-acquisition-local-agent-v1.');
     const root = world([], true);
