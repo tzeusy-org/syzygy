@@ -97,8 +97,8 @@ authority and no model yet called on the current path.
     [v1.1 sign-off](.syzygy/governance/decisions/POLARIS-DOSSIER-LAUNCH-CONSENT-SIGNOFF-v1.1.md);
     [v1.2 sign-off](.syzygy/governance/decisions/POLARIS-DOSSIER-LAUNCH-CONSENT-SIGNOFF-v1.2.md)),
     then the five-requirement declared-source2.0 replacement in
-    [AGENT-ADOPTIONS.md](.syzygy/governance/decisions/AGENT-ADOPTIONS.md), A-4, followed by the reviewed
-    [URL dossier 2.1 amendment](openspec/changes/dossier-url-declared-source-run) in A-14.
+    [AGENT-ADOPTIONS.md](.syzygy/governance/decisions/AGENT-ADOPTIONS.md), A-4.
+    [URL dossier 2.1 amendment](openspec/changes/dossier-url-declared-source-run) is agent-adopted in A-14.
     [Unknown] Live acceptance of the four-role URL workflow (D10 F3).
     *(2026-11-18: the predecessor figure "329 scenarios" is superseded by that
     overlay; all38 identities remain, and046 is now Declared local-source admission.)*

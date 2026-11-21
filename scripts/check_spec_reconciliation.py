@@ -403,6 +403,7 @@ URL_SOURCE_HOME = f"{CHANGES}/{URL_SOURCE_CHANGE}"
 URL_SOURCE_SPEC = f"{URL_SOURCE_HOME}/proposed/polaris-generation/spec.md"
 URL_SOURCE_UNION = f"{URL_SOURCE_HOME}/GOVERNING-DEPENDENCIES.json"
 URL_SOURCE_TAG = "polaris-dossier-url-declared-source-run-v2.1"
+URL_STATUS_PREFIX = f"[URL dossier 2.1 amendment]({URL_SOURCE_HOME})"
 URL_SOURCE_REPLACEMENTS = f"{URL_SOURCE_HOME}/EXACT-REPLACEMENTS.json"
 URL_SOURCE_REPLACEMENTS_SHA = "e26793ab3ed9a614f892ff25b13209c15efaec62c3f8dcbf3f945a22f48dad8c"
 URL_SOURCE_RFC_MODULES = ("RFC-0003/manifests-and-namespace.md",
@@ -507,24 +508,31 @@ def recorded_disposition(root, identity, commit, tag, paths):
     subject, without interpreting mentions of earlier decisions as actions
     or claiming Git provenance from the projection.
     """
+    if not re.fullmatch(r"A-[1-9][0-9]*", identity) or not re.fullmatch(r"[0-9a-f]{40}", commit):
+        return None
     subjects = {identity, commit, tag, *paths}
-    adopted = False
+    adopted_date = None
     for line in adoption_table_rows(root):
         cells = [cell.strip() for cell in line.split("|")[1:-1]]
         if len(cells) != 7:
             continue
         row_id, date, oid, changed, why, revert, row_tag = cells
         if row_id == identity and oid == f"`{commit}`" and row_tag == f"`{tag}`":
-            adopted = True
+            prefix = f"https://github.com/tzeusy-org/syzygy/blob/{commit}/"
+            if (adopted_date is not None or not valid_adoption_date(date) or not why
+                    or not revert.startswith(f"`git revert -m 1 {commit}`")
+                    or not all(f"]({prefix}{path})" in changed for path in paths)):
+                return None
+            adopted_date = date
             continue
         action = DISPOSITION_PREFIX.match(changed)
-        if (not adopted or not action or not re.fullmatch(r"A-[1-9][0-9]*", row_id)
-                or not valid_adoption_date(date)
+        if (adopted_date is None or not action or not re.fullmatch(r"A-[1-9][0-9]*", row_id)
+                or int(row_id[2:]) <= int(identity[2:]) or not valid_adoption_date(date) or date < adopted_date
                 or not re.fullmatch(r"`[0-9a-f]{7,40}`", oid)
-                or oid == f"`{commit}`" or not why):
+                or not why):
             continue
         row_commit = oid[1:-1]
-        if revert not in (f"`git revert {row_commit}`", f"`git revert -m 1 {row_commit}`"):
+        if commit.startswith(row_commit) or revert not in (f"`git revert {row_commit}`", f"`git revert -m 1 {row_commit}`"):
             continue
         target = changed[action.end():].lstrip("(")
         link = DISPOSITION_LINK.match(target)
@@ -538,6 +546,11 @@ def recorded_disposition(root, identity, commit, tag, paths):
         if token in subjects:
             return row_id
     return None
+
+
+def url_inactive_text(disposition, predecessor):
+    state = f"inactive under recorded disposition {disposition}" if disposition else "Unknown"
+    return f"URL dossier 2.1 is {state}. Effective predecessor {predecessor}."
 
 
 def declared_source_disposition(root):
@@ -2251,17 +2264,16 @@ def check_routes(root, pop, report):
         if disposition is not None or url_records or url_subjects:
             examined += 2
             predecessor = DECLARED_SOURCE_TAG if amendment is not None else "Unknown"
-            for file, passages in ((OPENSPEC_README, rows.get(URL_SOURCE_CHANGE, [])),
-                                   (STATUS, [p for p in status.split("\n\n") if URL_SOURCE_HOME in p])):
-                matches = (passage for passage in passages
-                           if Path(AGENT_ADOPTIONS).name in passage and predecessor in passage)
-                if not any((disposition is not None
-                            and re.search(rf"(?<![\w-]){disposition}(?![\w-])", passage)
-                            and re.search(r"\b(?:veto|revert|retir)\w*", passage, re.I))
-                           or (disposition is None and "Unknown" in passage)
-                           for passage in matches):
-                    findings.append(f"`{file}` does not disclose inactive URL declared-source v2.1, "
-                                    f"its effective predecessor ({predecessor}) and recorded disposition or Unknown")
+            expected = url_inactive_text(disposition, predecessor)
+            url_index = rows.get(URL_SOURCE_CHANGE, [])
+            cells = [cell.strip() for cell in url_index[0].split("|")] if len(url_index) == 1 else []
+            index_current = len(cells) == 6 and cells[3] == expected and Path(AGENT_ADOPTIONS).name in cells[4]
+            status_fields = [line.strip() for line in status.splitlines() if line.strip().startswith(URL_STATUS_PREFIX)]
+            status_current = status_fields == [
+                f"{URL_STATUS_PREFIX}. {expected} [Agent adoptions]({AGENT_ADOPTIONS})"]
+            for file, current in ((OPENSPEC_README, index_current), (STATUS, status_current)):
+                if not current:
+                    findings.append(f"`{file}` does not disclose inactive URL declared-source v2.1: {expected}")
     figures = STATUS_FIGURE.findall(status)
     examined += 1
     reqs = pop.get("POLARIS", {})
@@ -3004,14 +3016,23 @@ def url_source_cases(tmp, base, witnesses, failures):
     valid_reversal = ("| A-1000 | 2026-11-22 | `8a468bc` | Veto A-999 | Test only | "
                       "`git revert 8a468bc` | — |\n")
     for name, old, bad in (("malformed-veto-date", "2026-11-22", "2026-99-99"),
-                            ("malformed-veto-revert", "git revert 8a468bc", "git revert 8a468bd")):
-        invalid = valid_reversal.replace(old, bad, 1)
+                           ("malformed-veto-revert", "git revert 8a468bc", "git revert 8a468bd"),
+                           ("earlier-effective-date", "2026-11-22", "2026-10-22"),
+                           ("duplicate-authority-id", "A-1000", "A-999"),
+                           ("same-commit-abbreviation", "8a468bc", oid[:9])):
+        invalid = valid_reversal.replace(old, bad)
         ledger.write_text(pending + row + invalid)
         pop, found = census(tree)
         held = (not found and pop["POLARIS"] == current
                 and url_source_disposition(tree, url_source_rows(tree)) is None)
         record(f"url-source-{name}", AGENT_ADOPTIONS, old, bad, "preserve current adoption",
                found, held, True)
+    malformed_original = row.replace("2026-11-21", "2026-99-99", 1)
+    ledger.write_text(pending + malformed_original + valid_reversal)
+    effective, findings, subjects = url_source_binding(tree)
+    record("url-source-veto-cannot-hide-invalid-adoption", AGENT_ADOPTIONS, row, malformed_original,
+           "report invalid adoption instead of substituting a subsequent disposition",
+           findings + subjects, effective is None and bool(findings) and not subjects, False)
     base_veto = ("| A-1000 | 2026-11-22 | `8a468bc` | Veto A-4 | Test only | "
                  "`git revert 8a468bc` | — |\n")
     ledger.write_text(pending + row + base_veto)
@@ -3046,19 +3067,30 @@ def url_source_cases(tmp, base, witnesses, failures):
     record("url-source-inactive-stale-routes", STATUS, old_figure.group(0), figure,
            "R5 requires both routes to disclose the effective predecessor and veto",
            stale_routes, len(stale_routes) == 2, False)
-    disclosure = (f"URL declared-source v2.1 reverted by [A-1000]({AGENT_ADOPTIONS}). "
-                  f"Effective predecessor `{DECLARED_SOURCE_TAG}`.")
-    (tree / STATUS).write_text(STATUS_FIGURE.sub(figure, prior_status)
-                               + f"\n\n[{URL_SOURCE_CHANGE}]({URL_SOURCE_HOME}). {disclosure}\n")
-    (tree / OPENSPEC_README).write_text("\n".join(
-        f"| [`{URL_SOURCE_CHANGE}`](changes/{URL_SOURCE_CHANGE}) | {disclosure} |"
-        if line.startswith(f"| [`{URL_SOURCE_CHANGE}`]") else line
-        for line in prior_readme.split("\n")))
+    def write_routes(disclosure):
+        current = f"    {URL_STATUS_PREFIX}. {disclosure} [Agent adoptions]({AGENT_ADOPTIONS})"
+        status_text = "\n".join(line for line in prior_status.split("\n")
+                                if not line.strip().startswith(URL_STATUS_PREFIX))
+        (tree / STATUS).write_text(STATUS_FIGURE.sub(figure, status_text) + f"\n\n{current}\n")
+        (tree / OPENSPEC_README).write_text("\n".join(
+            f"| [`{URL_SOURCE_CHANGE}`](changes/{URL_SOURCE_CHANGE}) | URL scope | {disclosure} | [{Path(AGENT_ADOPTIONS).name}]({AGENT_ADOPTIONS}) |"
+            if line.startswith(f"| [`{URL_SOURCE_CHANGE}`]") else line
+            for line in prior_readme.split("\n")))
+
+    disclosure = url_inactive_text("A-1000", DECLARED_SOURCE_TAG)
+    write_routes(disclosure)
     disclosed = Report()
     check_routes(tree, route_pop, disclosed)
     disclosed_routes = [line for line in disclosed.lines if "does not disclose inactive URL declared-source v2.1" in line]
     record("url-source-inactive-recorded-routes", STATUS, figure, disclosure,
            "R5 accepts both updated routes", disclosed_routes, not disclosed_routes, True)
+    contradiction = f"URL dossier 2.1 remains adopted. {disclosure}"
+    write_routes(contradiction)
+    contradictory = Report()
+    check_routes(tree, route_pop, contradictory)
+    contradiction_findings = [line for line in contradictory.lines if "does not disclose inactive URL declared-source v2.1" in line]
+    record("url-source-inactive-contradictory-routes", STATUS, disclosure, contradiction,
+           "R5 refuses contradictory status fields", contradiction_findings, len(contradiction_findings) == 2, False)
     (tree / STATUS).write_text(prior_status)
     (tree / OPENSPEC_README).write_text(prior_readme)
 
