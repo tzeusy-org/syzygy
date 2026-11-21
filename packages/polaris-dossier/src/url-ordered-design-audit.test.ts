@@ -3,7 +3,7 @@ import { encodeCanonicalJson } from '@syzygy/polaris-generation-core/live';
 import { sha256 } from '@syzygy/support';
 import { createOrderedDesignSessionProfile } from './session-profile.js';
 import { planOrderedDesignBytes } from './url-design-delivery.js';
-import { verifyOrderedDesignTerminalEvidence, type OrderedDesignAuditReference } from './url-ordered-design-audit.js';
+import { verifyOrderedDesignAuditPrefix, verifyOrderedDesignTerminalEvidence, type OrderedDesignAuditReference } from './url-ordered-design-audit.js';
 
 const encode = (value: unknown): string => encodeCanonicalJson(value, { maxBytes: 65_536, maxNodes: 4096, maxDepth: 12 });
 const bytes = (value: string) => ({ sha256: sha256(value), bytes: Buffer.byteLength(value, 'utf8') });
@@ -34,7 +34,7 @@ interface Event {
 /** Synthetic held archive of safe metadata, built independently of the reader.
  * Hashing a mutation and its descendants keeps them canonical and correctly
  * chained, so failures exercise protocol verification instead of hash drift. */
-function archive(mutate?: (event: Event, occurrence: number) => void) {
+function archive(mutate?: (event: Event, occurrence: number, index: number) => void) {
   const compiled = createOrderedDesignSessionProfile(input);
   if (!compiled.ok) throw new Error('own profile unavailable');
   const profile = compiled.value.profile, principal = 'operator:own';
@@ -58,7 +58,7 @@ function archive(mutate?: (event: Event, occurrence: number) => void) {
     occurrences.set(kind, occurrence);
     const event: Event = { id: `own-event-${records.length + 1}`, format: 'url-ordered-design-audit/1',
       at: new Date(start + records.length).toISOString(), attemptSha256, previous, kind, payload: structuredClone(payload) };
-    mutate?.(event, occurrence);
+    mutate?.(event, occurrence, records.length);
     const encoded = Buffer.from(encode(event));
     records.push(encoded);
     previous = { id: event.id, sha256: sha256(encoded) };
@@ -127,8 +127,51 @@ describe('protected ordered design terminal evidence verifier', () => {
     expect(verifyOrderedDesignTerminalEvidence({ ...evidence, asOf: Date.parse(deadline) + 1 })).toEqual(expected);
   });
 
+  it('names the next event at each verified canonical prefix, including both part ordinals', () => {
+    const { evidence, expected } = archive();
+    const expectedNext = [
+      'prepared', 'request-admitted', 'send-attempt', 'send-outcome', 'response-admitted',
+      'part-receipt', 'request-admitted', 'send-attempt', 'send-outcome', 'response-admitted',
+      'part-receipt', 'request-admitted', 'send-attempt', 'send-outcome', 'response-admitted',
+      'delivery-completed', 'verdict-staged', 'acknowledgment-receipt', 'request-admitted',
+      'send-attempt', 'send-outcome', 'response-admitted', 'eligible', null,
+    ];
+    const attemptSha256 = digest({ manifestSha256: evidence.plan.manifestSha256, sourceBinding: input.binding.sourceBinding, principal: evidence.principal });
+    for (const [count, next] of expectedNext.entries()) {
+      const records = evidence.records.slice(0, count);
+      expect(verifyOrderedDesignAuditPrefix({ ...evidence, records })).toEqual({
+        attemptSha256, tip: count === 0 ? null : { id: `own-event-${count}`, sha256: sha256(records[count - 1]!) },
+        next, nextPartOrdinal: count === 5 ? 1 : count === 10 ? 2 : null, terminalCandidate: next === null ? expected : null,
+      });
+      if (next !== null) expect(verifyOrderedDesignTerminalEvidence({ ...evidence, records })).toBeNull();
+    }
+  });
+
+  it('refuses a terminal proposal before the admitted acknowledgment response, even with a recomputed next-record link', () => {
+    const { evidence } = archive();
+    const eligible: Event = JSON.parse(evidence.records.at(-1)!.toString());
+    for (const count of [17, 18, 19, 20, 21]) {
+      const records = evidence.records.slice(0, count);
+      const last = records.at(-1)!;
+      const proposed = { ...eligible, previous: { id: `own-event-${count}`, sha256: sha256(last) } };
+      expect(verifyOrderedDesignAuditPrefix({ ...evidence, records: [...records, Buffer.from(encode(proposed))] })).toBeNull();
+    }
+  });
+
+  it('refuses absent entry slots, skipped events and extra records instead of accepting a shorter prefix', () => {
+    const { evidence } = archive();
+    const absent = evidence.records.slice(0, 4);
+    delete absent[2];
+    for (const records of [absent, [evidence.records[1]!], [...evidence.records, evidence.records.at(-1)!]]) {
+      expect(verifyOrderedDesignAuditPrefix({ ...evidence, records })).toBeNull();
+    }
+    expect(verifyOrderedDesignAuditPrefix({ ...evidence, records: [], plan: structuredClone(evidence.plan) })).toBeNull();
+    expect(verifyOrderedDesignAuditPrefix({ ...evidence, records: [], profile: structuredClone(evidence.profile) })).toBeNull();
+  });
+
   it.each([
     ['wrong first-part selector', 'response-admitted', 1, (e: Event) => { fields(fields(e.payload.native).tool).inputSha256 = digest({ path: 'round-1/design-view-part-2.json' }); }],
+    ['logical carrier reused as a real tool id', 'response-admitted', 1, (e: Event) => { fields(fields(e.payload.native).tool).id = 'toolu_syzygy_035_logical_view'; }],
     ['receipt linked to another response', 'part-receipt', 1, (e: Event) => { e.payload.issuedBy = changed; }],
     ['substituted planned reply', 'part-receipt', 2, (e: Event) => { e.payload.reply = bytes('other reply'); }],
     ['duplicated ordinal', 'part-receipt', 2, (e: Event) => { e.payload.ordinal = 1; }],
@@ -154,9 +197,16 @@ describe('protected ordered design terminal evidence verifier', () => {
     ['attempt retires instead of becoming eligible', 'eligible', 1, (e: Event) => { e.kind = 'retired'; }],
     ['record scope changes across epoch', 'verdict-staged', 1, (e: Event) => { e.attemptSha256 = sha256('other epoch'); }],
     ['event ID is replayed', 'response-admitted', 4, (e: Event) => { e.id = 'own-event-1'; }],
-  ] as const)('rejects a properly rehashed archive with %s', (_label, kind, ordinal, mutate) => {
-    const { evidence } = archive((event, occurrence) => { if (event.kind === kind && occurrence === ordinal) mutate(event); });
-    expect(verifyOrderedDesignTerminalEvidence(evidence)).toBeNull();
+  ] as const)('rejects a properly rehashed archive with %s at its first invalid record', (label, kind, ordinal, mutate) => {
+    let invalidAt = -1;
+    const { evidence } = archive((event, occurrence, index) => {
+      if (event.kind === kind && occurrence === ordinal) { invalidAt = index; mutate(event); }
+    });
+    const asOf = label === 'eligible is recorded at the deadline' ? Date.parse(deadline) + 1 : evidence.asOf;
+    expect(invalidAt).toBeGreaterThanOrEqual(0);
+    expect(verifyOrderedDesignAuditPrefix({ ...evidence, asOf, records: evidence.records.slice(0, invalidAt) })).not.toBeNull();
+    expect(verifyOrderedDesignAuditPrefix({ ...evidence, asOf, records: evidence.records.slice(0, invalidAt + 1) })).toBeNull();
+    expect(verifyOrderedDesignTerminalEvidence({ ...evidence, asOf })).toBeNull();
   });
 
   it('refuses missing, repeated, unanchored, malformed and out-of-scope records', () => {
