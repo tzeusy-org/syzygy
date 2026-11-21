@@ -85,6 +85,13 @@ describe('reader advice: the counted standards', () => {
     expect(readerAdvice(doc).advisories).toEqual([{ standard: 'RS-16', at: '$.sections[1]', detail: expect.stringContaining('"b"') }]);
   });
 
+  // syzygy-3efd.18: a v5 diagram draws the section its `home` names; one homed on the overview or a deep dive draws no section.
+  it('RS-16 with v5 homes: a section-home draws its section, an overview or deep-dive home draws none', () => {
+    const doc = { sections: [section('a', 5), section('b', 5), section('c', 5)], deepDives: [{ ...section('dd', 5), sectionId: 'c' }],
+      diagrams: [{ id: 'x', home: { kind: 'section', target: 'a' } }, { id: 'y', home: { kind: 'overview' } }, { id: 'z', home: { kind: 'deep-dive', target: 'dd' } }] };
+    expect(readerAdvice(doc).advisories.map(({ standard, at }) => ({ standard, at }))).toEqual([{ standard: 'RS-16', at: '$.sections[1]' }, { standard: 'RS-16', at: '$.sections[2]' }]);
+  });
+
   // syzygy-3efd.17: an edge whose cited files touch neither endpoint's.
   it('RS-17 locality: an edge citing no file either endpoint cites, and never one that shares a file with an end', () => {
     const cite = (path: string, line = 1) => ({ id: `c-${path}-${line}`, path, startLine: line, endLine: line });
