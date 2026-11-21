@@ -17,6 +17,7 @@ support a claim that a dossier wins.
 | `plain-synthesis.txt` | The plain author's synthesis (arm P). The protocol and the first result file call it by its working name, a Markdown file; it is stored as text because it quotes another repository's paths. |
 | `answers-D.json` … `answers-T.json` | One reader's answers per arm. D, E, F, G, H read one stored dossier each, P the synthesis, T the screened tree itself. |
 | `runs.json` | The six stored runs: brief version, schema version, page and word counts by page class. |
+| `runs-page-words.json` | The words per kept page of each run's last rendered site, from which the split in `runs.json` is re-derived. |
 | `grading/`, `grading2/`, `grading3/` | Each blind grading: the grader's input and the grades it returned. |
 | `labels-first-grading.json`, `labels-second-grading.json`, `labels-third-grading.json` | Which blind label was which arm. A grader is never given these. |
 | `claims/result.json` | The claim check of the newest dossier and the synthesis, under labels X and Y. |
@@ -59,6 +60,19 @@ Recorded shares of required facts (81 facts over 24 questions):
 
 These rows are copied from the result files as of 2026-11-22; the command
 above is the check, and the result files are the record.
+
+## Check the stored runs' page counts
+
+```
+python3 scripts/dossier_pilot_runs.py --check
+python3 scripts/dossier_pilot_runs.py --check --state-root <dossier state directory>
+```
+
+The first form re-derives each run's pages, words and split by page class
+(reader, navigation, run, other) from `runs-page-words.json` and compares
+them with `runs.json`. The second also converts each stored run's last site
+again and compares its words per page, brief version and schema version with
+the record; it needs the stored runs, so only the first runs in the battery.
 
 ## Run the comparison on another dossier
 
@@ -133,5 +147,9 @@ are for a new key, a new synthesis and a new claim check.
 - The totals script totals a new grading only when its grades, label map and
   result sit under the names it lists; reporting a new arm beside the kept
   ones on each change is slice 2 of the move.
-- `python3 scripts/test_dossier_pilot.py` runs the tests. They are not yet a
-  line of the status battery or a workflow step.
+- `python3 scripts/test_dossier_pilot.py` runs the tests. Since 2026-11-22 it,
+  the totals check and the selftests are lines of the status battery in
+  `PROJECT-STATUS.md` and steps of the hosted workflow.
+- When a change must report these shares, and what a drop may be called, is
+  in `CONTRIBUTING.md` ("Changing the dossier brief, draft schema or
+  renderer").

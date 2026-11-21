@@ -1,0 +1,106 @@
+{
+ "format": "polaris-dossier-pilot-page-words/1",
+ "wordCount": "whitespace-separated tokens of the converted <main> text (scripts/dossier_site_to_text.py)",
+ "runs": {
+  "2ecdcab0": {
+   "site": "site/0",
+   "sourcesPagesExcluded": 29,
+   "perPageWords": {
+    "appendix.html": 795,
+    "clarifications.html": 88,
+    "contents.html": 85,
+    "deep-dives/mechanism-deep-dive.html": 663,
+    "discovery.html": 1033,
+    "executions.html": 186,
+    "glossary.html": 147,
+    "index.html": 1291,
+    "poles/1.html": 1874,
+    "poles/2.html": 3860,
+    "poles/3.html": 3028,
+    "review.html": 438,
+    "size-report.html": 508,
+    "sources/index.html": 136,
+    "understanding.html": 1149
+   }
+  },
+  "36df95fa": {
+   "site": null
+  },
+  "4465d22f": {
+   "site": "site/0",
+   "sourcesPagesExcluded": 32,
+   "perPageWords": {
+    "clarifications.html": 88,
+    "contents.html": 84,
+    "deep-dives/mechanism-deep-dive.html": 246,
+    "discovery.html": 971,
+    "executions.html": 181,
+    "glossary.html": 190,
+    "index.html": 3870,
+    "review.html": 439,
+    "size-report.html": 496,
+    "sources/index.html": 167,
+    "understanding.html": 1151
+   }
+  },
+  "658f2f90": {
+   "site": "site/1",
+   "sourcesPagesExcluded": 27,
+   "perPageWords": {
+    "appendix.html": 1024,
+    "clarifications.html": 107,
+    "contents.html": 144,
+    "deep-dives/mechanism-deep-dive.html": 696,
+    "discovery.html": 945,
+    "executions.html": 198,
+    "glossary.html": 451,
+    "index.html": 1563,
+    "poles/1.html": 1172,
+    "poles/2.html": 1298,
+    "poles/3.html": 2015,
+    "review.html": 460,
+    "size-report.html": 511,
+    "sources/index.html": 777,
+    "understanding.html": 1213
+   }
+  },
+  "d9411d26": {
+   "site": "site/1",
+   "sourcesPagesExcluded": 51,
+   "perPageWords": {
+    "clarifications.html": 110,
+    "contents.html": 116,
+    "deep-dives/mechanism-deep-dive.html": 851,
+    "discovery.html": 1536,
+    "executions.html": 252,
+    "glossary.html": 683,
+    "index.html": 9338,
+    "review.html": 466,
+    "size-report.html": 670,
+    "sources/index.html": 298,
+    "understanding.html": 1577
+   }
+  },
+  "ffe579c7": {
+   "site": "site/0",
+   "sourcesPagesExcluded": 30,
+   "perPageWords": {
+    "appendix.html": 848,
+    "clarifications.html": 88,
+    "contents.html": 151,
+    "deep-dives/mechanism-deep-dive.html": 657,
+    "discovery.html": 1049,
+    "executions.html": 339,
+    "glossary.html": 116,
+    "index.html": 1642,
+    "poles/1.html": 1652,
+    "poles/2.html": 1848,
+    "poles/3.html": 3087,
+    "review.html": 444,
+    "size-report.html": 516,
+    "sources/index.html": 865,
+    "understanding.html": 925
+   }
+  }
+ }
+}

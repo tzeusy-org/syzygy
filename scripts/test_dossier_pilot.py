@@ -30,6 +30,7 @@ def load(name):
 totals = load("dossier_pilot_totals")
 grading_input = load("dossier_pilot_grading_input")
 site_to_text = load("dossier_site_to_text")
+runs = load("dossier_pilot_runs")
 
 FIRST = {"D": 0.34, "P": 0.481, "T": 0.944}
 SECOND = {"D": 0.327, "E": 0.574, "P": 0.457, "T": 0.951}
@@ -230,6 +231,74 @@ class SiteToTextTests(unittest.TestCase):
                     self.assertEqual(done.returncode, 2, flags)
                     self.assertIn(".agents or .sessions", done.stderr)
                     self.assertFalse(pathlib.Path(flags[0]).exists())
+
+
+class RunsTests(unittest.TestCase):
+    """The stored runs' page-class split (syzygy-5dhm.134)."""
+
+    @classmethod
+    def setUpClass(cls):
+        cls.runs = json.loads((PILOT / "runs.json").read_text())
+        cls.words = json.loads((PILOT / "runs-page-words.json").read_text())
+
+    def test_record_reproduces(self):
+        self.assertEqual(runs.record_differences(self.runs, self.words), [])
+        self.assertEqual(runs.selftest(), 0)
+
+    def test_split_literals(self):
+        # run prefix: (pages, words, reader words, navigation words, run words, reader share)
+        want = {"2ecdcab0": (15, 15281, 10863, 221, 4197, 0.711), "4465d22f": (11, 7883, 4306, 251, 3326, 0.546),
+                "658f2f90": (15, 12574, 7195, 921, 4458, 0.572), "d9411d26": (11, 15897, 10872, 414, 4611, 0.684),
+                "ffe579c7": (15, 14227, 9002, 1016, 4209, 0.633)}
+        self.assertEqual(sorted(self.words["runs"]), sorted([*want, "36df95fa"]))
+        self.assertEqual(self.words["runs"]["36df95fa"], {"site": None})
+        for prefix, (pages, words, reader, navigation, run, share) in want.items():
+            got = runs.split(self.words["runs"][prefix]["perPageWords"])
+            self.assertEqual((got["pages"], got["words"], got["wordsByClass"]["reader"], got["wordsByClass"]["navigation"],
+                              got["wordsByClass"]["run"], got["wordsByClass"]["other"], got["readerShareOfWords"]),
+                             (pages, words, reader, navigation, run, 0, share), prefix)
+
+    def test_a_changed_page_fails_the_check(self):
+        mutant = copy.deepcopy(self.words)
+        mutant["runs"]["658f2f90"]["perPageWords"]["review.html"] += 1
+        found = runs.record_differences(self.runs, mutant)
+        # One more word on a run page moves the total and the class split; the reader share still rounds to 0.572.
+        self.assertEqual(sorted(line.split(":")[0] for line in found), ["run 658f2f90, words", "run 658f2f90, wordsByClass"])
+
+    def test_commands(self):
+        script = str(SCRIPTS / "dossier_pilot_runs.py")
+        done = subprocess.run([sys.executable, script, "--check"], capture_output=True, text=True)
+        self.assertEqual((done.returncode, done.stdout),
+                         (0, "check: 6 runs (5 with a site) re-derived from the recorded words per page; 0 difference(s)\n"))
+        with tempfile.TemporaryDirectory() as scratch:
+            for root in (f"{scratch}/run-x.agents", f"{scratch}/run-x.sessions/inner"):
+                refused = subprocess.run([sys.executable, script, "--check", "--state-root", root], capture_output=True, text=True)
+                self.assertEqual(refused.returncode, 2)
+                self.assertIn(".agents or .sessions", refused.stderr)
+            absent = subprocess.run([sys.executable, script, "--check", "--state-root", scratch], capture_output=True, text=True)
+            self.assertEqual(absent.returncode, 2)
+            self.assertIn("0 run directories", absent.stderr)
+
+    def test_a_run_is_read_without_its_agent_or_session_directories(self):
+        with tempfile.TemporaryDirectory() as scratch:
+            root = pathlib.Path(scratch)
+            run = root / "run-abcd1234ffff"
+            for trap in (root / "run-abcd1234ffff.agents", root / "run-abcd1234ffff.sessions"):
+                trap.mkdir()
+            (run / "drafts").mkdir(parents=True)
+            (run / "brief.json").write_text(json.dumps({"briefVersion": "b-9", "guidanceVersion": "g-2"}))
+            for number in (0, 1, 2):
+                (run / "drafts" / f"rev-{number}.json").write_text(json.dumps({"schemaVersion": f"s-{number}"}))
+            for number, body in ((0, "<main>old</main>"), (1, "<main><p>one two three</p></main>")):
+                site = run / "site" / str(number)
+                (site / "sources").mkdir(parents=True)
+                (site / "index.html").write_text(body)
+                (site / "review.html").write_text("<main>four five</main>")
+                (site / "sources" / "a.html").write_text("<main>RAW</main>")
+            facts, measured = runs.read_run(root, "abcd1234", site_to_text)
+            self.assertEqual(facts, {"runDir": "run-abcd1234ffff", "briefVersion": "b-9", "guidanceVersion": "g-2",
+                                     "draftSchemaVersion": "s-2", "lastDraftRevision": 2})
+            self.assertEqual(measured, {"site": "site/1", "sourcesPagesExcluded": 1, "perPageWords": {"index.html": 3, "review.html": 2}})
 
 
 class ScreenedTreeTests(unittest.TestCase):

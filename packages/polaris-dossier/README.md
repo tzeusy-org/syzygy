@@ -43,6 +43,22 @@ still resolve.
 - `inventory.ts`: the inventory brief, check and record; `run-dir.ts` holds the run-opening code (`openRun`, `logStep`, `readRecord`,
   `errno`) and the sessions root paths.
 
+## Change checklist: brief, draft schema, renderer
+
+Before a change to `src/brief.ts` (or `BRIEF_VERSION`), `src/draft-schema.ts` or `src/render.ts` is merged:
+
+- [ ] The pull request reports the comprehension regression's reader share before and after, overall and per question kind, on at
+      least one stored run rendered again or one new run. Commands: `docs/evidence/pursuit-2026-11-21b/pilot/README.md`.
+- [ ] A drop of more than five points (0.05 of share), overall or in any kind, is explained in the change or repaired.
+- [ ] No result is called a regression on one run: five points is inside this instrument's noise on one repository (the same
+      answers regraded moved a kind's share by up to 8 points), so a drop is confirmed on two runs or under a second key first.
+      No result is reported as a win.
+- [ ] No question of the regression key is in the brief, a packet or an agent text: `src/regression-hold-out.test.ts` (unit) and
+      the rendered-brief case in `src/brief.test.ts` (integration) pass.
+
+The rule and its reasons are in `CONTRIBUTING.md` ("Changing the dossier brief, draft schema or renderer"). It is review
+practice adopted by agents (`.syzygy/governance/decisions/AGENT-ADOPTIONS.md`) and gates no merge.
+
 ## Waiting-session authorization
 
 [Observed, implementation of the 2026-11-05 owner direction]

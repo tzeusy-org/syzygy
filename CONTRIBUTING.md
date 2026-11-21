@@ -184,6 +184,46 @@ The clock is the slowest job of a workflow, not the sum of its steps.
   (`gh api repos/<owner>/<repo>/actions/jobs/<id>`); cite them when moving a
   check between jobs.
 
+## Changing the dossier brief, draft schema or renderer
+
+Review practice, adopted by agents under VIS-4 (the row is in
+`.syzygy/governance/decisions/AGENT-ADOPTIONS.md`); it gates no merge.
+
+A change to what a Polaris dossier author is told, may write or is rendered
+as reports the comprehension regression in its pull request. That is a change
+to `packages/polaris-dossier/src/brief.ts` (and the brief version), to
+`packages/polaris-dossier/src/draft-schema.ts`, or to a renderer:
+`packages/polaris-dossier/src/render.ts` and the `dossier-render*.ts` files
+under `apps/three-surface-poc/src/polaris-generation/`.
+
+1. **Report the reader's share before and after.** On at least one stored run
+   rendered again, or one new run, give the share of required facts a fresh
+   reader recovers from the dossier, overall and for each of the six question
+   kinds (purpose, structure, mechanism, rationale, change, limits), before
+   the change and after it. The steps and commands are in
+   `docs/evidence/pursuit-2026-11-21b/pilot/README.md`; the kept arms there
+   are the "before" for a stored run.
+2. **Explain a drop of more than five points.** A point is 0.01 of share. If
+   the overall share or any kind's share falls by more than five points, the
+   change says why, or is repaired.
+3. **Do not call one result a regression, and never call one a win.**
+   [Observed] Five points is inside the noise of this instrument on one
+   repository: the same stored answers, graded three times, gave overall
+   shares that moved by up to 3.1 points (arm E, 0.574 and 0.605) and
+   per-kind shares that moved by up to 8 points (arm E on "change", 0.42 and
+   0.50; arm P on "rationale", 0.19 to 0.27). [Unknown] How much a second
+   reader of the same dossier moves the share: the record has one reader per
+   arm. So a drop is reported and explained as a drop, and is called a
+   regression only after it holds on two runs or under a second key. The
+   pilot is uncalibrated (one repository, model readers, a model grader), so
+   a rise is reported as a number and never as evidence that a change is
+   better.
+4. **The key stays held out.** The regression's questions and key are never
+   put in a brief, a packet or any other text an authoring session is given.
+   `packages/polaris-dossier/src/regression-hold-out.test.ts` fails if a
+   question's text appears in the brief's sources, the installed agent texts
+   or the authoring kit, and `brief.test.ts` checks a rendered brief.
+
 ## Public-clone validation is part of done
 
 Any governance change must leave a fresh `git clone` able to reconstruct the

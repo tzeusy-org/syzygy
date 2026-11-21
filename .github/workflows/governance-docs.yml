@@ -521,6 +521,31 @@ jobs:
       - name: rfc5 --selftest
         run: python3 scripts/record_rfc5_project_documentation_act.py --selftest
 
+      # The comprehension-regression pilot (R29, syzygy-5dhm.133 and .134):
+      # its record under docs/evidence/pursuit-2026-11-21b/pilot/ is checked
+      # against the scripts that reproduce it. test_dossier_pilot runs the
+      # screened-tree selftest with the runner's own node.
+      - name: dossier_pilot_totals --check
+        run: python3 scripts/dossier_pilot_totals.py --check
+
+      - name: dossier_pilot_totals --selftest
+        run: python3 scripts/dossier_pilot_totals.py --selftest
+
+      - name: dossier_pilot_grading_input --selftest
+        run: python3 scripts/dossier_pilot_grading_input.py --selftest
+
+      - name: dossier_site_to_text --selftest
+        run: python3 scripts/dossier_site_to_text.py --selftest
+
+      - name: dossier_pilot_runs --check
+        run: python3 scripts/dossier_pilot_runs.py --check
+
+      - name: dossier_pilot_runs --selftest
+        run: python3 scripts/dossier_pilot_runs.py --selftest
+
+      - name: test_dossier_pilot
+        run: python3 scripts/test_dossier_pilot.py
+
   # The slow selftests run beside the governance job, each on its own
   # runner, so the wall clock is the longest job rather than the sum
   # (syzygy-j5m0). Their steps are unchanged; CG-26 compares run lines, not

@@ -586,9 +586,16 @@ python3 scripts/record_launch_consent_write_consent_act.py --check 53efd343b0ed5
 python3 scripts/record_launch_consent_write_consent_act.py --selftest   # launch-record write-consent recorder fixtures
 python3 scripts/record_narrative_profile_adoption.py --check --date 2026-10-07 --question-opening 'Do you adopt the non-governed narrative profile, requirement 032, at its row of the profile manifest?' --selection-label 'Adopt as recommended' --selection-description 'O1 to O7 as the packet recommends; Scope A is not read to cover it; the two known limitations stand.'   # narrative profile --check
 python3 scripts/record_rfc5_project_documentation_act.py --selftest   # rfc5 --selftest
+python3 scripts/dossier_pilot_totals.py --check   # comprehension-regression pilot (R29): recorded shares per arm and question kind recomputed from the stored grades
+python3 scripts/dossier_pilot_totals.py --selftest   # one in-memory mutation per predicate must fail that check
+python3 scripts/dossier_pilot_grading_input.py --selftest   # blind grader input: only id and answer carried, label draws
+python3 scripts/dossier_site_to_text.py --selftest   # dossier site to reader text, fixture page
+python3 scripts/dossier_pilot_runs.py --check   # stored runs: page-class split re-derived from the recorded words per page
+python3 scripts/dossier_pilot_runs.py --selftest   # page classes and one mutation per compared member
+python3 scripts/test_dossier_pilot.py   # the pilot harness tests, literal expectations; needs node and git for the screened-tree cases
 ```
 
-The one hundred and twenty-nine checks above are the same one hundred and twenty-nine the hosted workflow runs
+The one hundred and thirty-six checks above are the same one hundred and thirty-six the hosted workflow runs
 (`.github/workflows/governance-docs.yml`), so "hosted CI is green" and "the
 battery is clean" are one claim rather than two a reader conflates. The
 `git tag` line is orientation, not a check — it prints and cannot fail.
