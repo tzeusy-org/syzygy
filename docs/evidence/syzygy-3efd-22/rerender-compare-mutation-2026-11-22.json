@@ -1,5 +1,6 @@
 {
   "format": "mutation-run/1",
+  "supersededBy": "docs/evidence/syzygy-3efd-22/rerender-compare-mutation-2026-11-22-r2.json (30 mutants after the review repairs of notes 1-7; this record stays as the run at its own commit)",
   "ranAt": "2026-11-21T21:55:51.355Z",
   "subject": {
     "bead": "syzygy-3efd.22",
