@@ -134,7 +134,7 @@ requirement.]
 | 5 | `mapping-coverage-absent` | No executed mapping with stated coverage backs the claim (empty-plot rule: absence claims need a coverage record) | Run/declare the mapping |
 | 6 | `unconsented-source-or-provider` | SEC-2/SEC-4 consent absent or withdrawn for a needed repository or model provider | Record consent |
 | 7 | `excluded-content` | Secret-detection policy excluded the content, or it was unclassifiable (fails closed, SEC-5) | Policy change by the owner, or accept the exclusion |
-| 8 | `contradicted-pending-adjudication` | An unresolved contradiction touches the conclusion | Owner adjudication |
+| 8 | `contradicted-pending-adjudication` | An unresolved contradiction touches the conclusion | Adjudication: an agent's recorded adoption, or the owner in an owner class (VIS-4) |
 | 9 | `challenge-suspended` | An open admitted challenge conservatively suspends the claim (RFC2-8) | Challenge resolution (RFC2-13) |
 | 10 | `source-uncaptured-or-unreachable` | A deterministic input capable of affecting the claim was not captured in the snapshot (RFC2-2), including observer failure and unreachable sources | Repair the observer/source; new snapshot |
 | 11 | `reference-unresolvable` | The source **was** captured and the governing declaration **does** exist, but a cited internal anchor no longer resolves — an OpenSpec requirement or scenario reference broken by edit (RFC1-15), a topology or region anchor whose target is gone (RFC1-26) | Repair the reference, owned by the governed project |
