@@ -83,10 +83,10 @@ describe('the permitting arm, enabled with fixture ports', () => {
     const rule = await decideExecutionRule(inputs());
     expect(rule).toMatchObject({ arm: 'permitting', d9: 'D9-ACT', choice: CHOICE, choiceLabel: 'Inferred', probe: { checked: 2 } });
     if (rule.arm !== 'permitting') return;
-    expect(rule.cost.text).toBe(lines(103, 109));
+    expect(rule.cost.text).toBe(lines(126, 132));
     const text = executionRuleSection(rule);
     for (const sentence of [PERMISSION, LAPSE, SUBAGENTS, NO_LONG_LIVED, STOP_EVERY, '`choice-1`']) expect(text).toContain(sentence);
-    expect(text).toContain(`\`\`\`text\n${lines(103, 109)}\n\`\`\``);
+    expect(text).toContain(`\`\`\`text\n${lines(126, 132)}\n\`\`\``);
     expect(text).not.toContain(SEC3_RULE);
   });
 
@@ -134,8 +134,8 @@ describe('the SEC-3 arm\'s text', () => {
     const rule = await decideExecutionRule(inputs({ permitting: { enabled: false } }));
     const text = executionRuleSection(rule);
     expect(text).toContain('## Execution rule: SEC-3\n');
-    expect(text).toContain(`\`\`\`text\n${lines(74, 76)}\n\`\`\``);
-    expect(text).toContain('`.syzygy/governance/doctrine/security.md`, lines 74–76');
+    expect(text).toContain(`\`\`\`text\n${lines(97, 99)}\n\`\`\``);
+    expect(text).toContain('`.syzygy/governance/doctrine/security.md`, lines 97–99');
     expect(text).toContain(SEC3_RULE);
     for (const sentence of [PERMISSION, LAPSE, 'What the permitted case costs']) expect(text).not.toContain(sentence);
     expect(text).toContain('list in `executions` every command you run');
