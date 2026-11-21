@@ -7,8 +7,10 @@ import { type GateSources } from './gate-sources.js';
 import { isoOf } from './iso-of.js';
 import { reverifyPinnedRevision, type ReverifiedRevision, type ReverifyOptions, type ReverifyRefusal } from './reverify.js';
 import type { RunConfig } from './run-config.js';
-import { readRunRecord, type RunSubject } from './run-record.js';
+import { type RunSubject } from './run-record.js';
 import { RUN_ID, RUN_LAYOUT, resolvePathIntent, within } from './state-directory.js';
+import type { EffectiveRunDeclaration } from './url-run-record.js';
+import { mayAppendCompatibleStepLog } from './effective-run-record.js';
 
 /** A run step's opening, step log, stored-record reader and the sessions root's paths; split out of `inventory.ts` unchanged. */
 
@@ -44,7 +46,7 @@ export const errno = (cause: unknown): string => (cause as NodeJS.ErrnoException
 /** A run step's common opening: the run directory, the pinned revision verified again, a brief issued and its deadline not passed.
  * `revision` carries stored selection provenance; object integrity is rechecked now. */
 export type OpenedRun =
-  | { readonly ok: true; readonly run: string; readonly runId: string; readonly subject: RunSubject; readonly declared: RunConfig; readonly deadlineEnds: number; readonly revision: ReverifiedRevision; readonly contentClasses: readonly string[] | null }
+  | { readonly ok: true; readonly run: string; readonly runId: string; readonly subject: RunSubject; readonly declared: RunConfig; readonly deadlineEnds: number; readonly revision: ReverifiedRevision; readonly contentClasses: readonly string[] | null; readonly effective?: EffectiveRunDeclaration; readonly sidecarSha256?: string | null }
   | { readonly ok: false; readonly stage: 'run' | 'reverify' | 'not-briefed' | 'deadline'; readonly reason: string; readonly reasons?: readonly string[]; readonly refusals?: readonly ReverifyRefusal[] };
 
 export async function openRun(runDir: string, sources: GateSources, now: number, what: string, options: ReverifyOptions = {}): Promise<OpenedRun> {
@@ -54,18 +56,18 @@ export async function openRun(runDir: string, sources: GateSources, now: number,
   const checked = await reverifyPinnedRevision(run, sources, now, options);
   if (!checked.ok) return { ok: false, stage: 'reverify', reason: `the pinned revision could not be verified again, so ${what}`, reasons: checked.reasons, refusals: checked.refusals };
   const { subject, declared } = checked.record;
-  const issued = briefIssuedAt(run, subject.pinnedRevision.commit);
+  const issued = briefIssuedAt(run, subject.pinnedRevision.commit, 'draft', options.productReads);
   if (typeof issued === 'string') return { ok: false, stage: 'not-briefed', reason: issued };
   const deadlineEnds = issued + declared.deadline.seconds * 1000;
   if (now >= deadlineEnds) return { ok: false, stage: 'deadline', reason: `the deadline ${declared.deadline.declared} from the brief ended at ${isoOf(deadlineEnds)} on Syzygy's clock; no step runs after it` };
-  return { ok: true, run, runId, subject, declared, deadlineEnds, revision: checked.revision, contentClasses: checked.contentClasses };
+  return { ok: true, run, runId, subject, declared, deadlineEnds, revision: checked.revision, contentClasses: checked.contentClasses,
+    effective: checked.effective, sidecarSha256: checked.sidecarSha256 };
 }
 
 /** Append one entry to the run's step log; a failure to append changes no result. */
 export function logStep(run: string, step: string, at: number, entry: Record<string, unknown>): void {
   try {
-    const stored = readRunRecord(fs.readFileSync(path.join(run, RUN_LAYOUT.config), 'utf8'));
-    if (!stored.ok && stored.legacy) return;
+    if (!mayAppendCompatibleStepLog(run)) return;
     fs.appendFileSync(path.join(run, RUN_LAYOUT.steps), `${JSON.stringify({ format: 'polaris-dossier-step/1', step, at: isoOf(at), ...entry })}\n`, { mode: 0o600 });
   } catch { /* the step log is a convenience within the agent's reach */ }
 }

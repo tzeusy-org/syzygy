@@ -9,6 +9,7 @@ import * as path from 'node:path';
 import { readCommittedPolicy, type PolicySnapshot } from './policy-snapshot.js';
 import type { DrawerStatement } from './governed.js';
 import { normaliseUrl } from './launch-identity.js';
+import type { EffectiveRunAuthority } from './effective-run-record.js';
 
 /** The records Syzygy's start gates read (REQ-polaris-generation-033, 036), each re-read on every call and never cached.
  *
@@ -48,6 +49,8 @@ export interface ProviderStatementSource {
 }
 
 export interface GateSources {
+  /** Complete protected host mode lookup; production readers supply it across invocations. */
+  readonly effectiveRunDeclaration?: EffectiveRunAuthority;
   /** D10 local dossier policy source; missing refuses, never falls back to act admission. */
   readonly declaredPolicy?: () => Promise<PolicySnapshot>;
   /** Where the records are read from, for the disclosure. */

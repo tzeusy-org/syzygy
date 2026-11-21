@@ -13,6 +13,7 @@ import { latestPassedDraft, type ReviewDeps } from './review.js';
 import type { ReverifyRefusal } from './reverify.js';
 import { screenLoaderOf, placementSubjectOf } from './screen.js';
 import { RUN_LAYOUT } from './state-directory.js';
+import { effectiveUrlProjection } from './effective-run-record.js';
 
 /** `syzygy dossier close <run> [--usage-tokens N] [--usage-turns N]` (REQ-polaris-generation-033, 018; design "Command surface",
  * `close`; syzygy-qkea.11).
@@ -113,6 +114,7 @@ export async function closeRun(runDir: string, request: CloseRequest, deps: Clos
   const opened = await openRun(runDir, deps.sources, now, 'the run is not closed', deps.openReader ? { openReader: deps.openReader } : {});
   if (!opened.ok) return refuse(opened.stage, opened.reason, { ...(opened.reasons ? { reasons: opened.reasons } : {}), ...(opened.refusals ? { refusals: opened.refusals } : {}) });
   const { run, runId, subject, declared, revision } = opened;
+  const url = opened.effective?.kind === 'url' ? opened.effective.declaration : undefined;
   logRun = run;
   const recordFile = path.join(run, RUN_LAYOUT.record);
   if (fs.existsSync(recordFile)) return refuse('closed-already', `the run already holds ${RUN_LAYOUT.record}: a run is closed once`);
@@ -127,14 +129,14 @@ export async function closeRun(runDir: string, request: CloseRequest, deps: Clos
   const record = {
     format: EXECUTION_RECORD_FORMAT,
     runId,
-    mode: 'operator-agent',
+    mode: url?.mode ?? 'operator-agent',
     label: 'Inferred',
     basis: 'written by Syzygy at close from the run directory, which the agent sessions can write; every value carried from a stored record is Inferred, and the record itself lies within their write reach once written',
     closedAt: isoOf(now),
     clock: 'Syzygy\'s own clock',
-    subject,
+    subject: url === undefined ? subject : { ...subject, workItem: url.workItem },
     pinnedRevisionAtClose: { commit: subject.pinnedRevision.commit, revisionLabel: revision.label, label: 'Observed', basis: 'pinned commit and tree rehashed at close; selection history remains Inferred' },
-    configuration: { declared: { ...declared, deadline: declared.deadline.declared }, declaredBy: 'operator', label: 'Inferred' },
+    configuration: { declared: { ...declared, deadline: declared.deadline.declared }, declaredBy: url === undefined ? 'operator' : 'URL run configuration', label: 'Inferred' },
     principal: { name: declared.operator, declaredBy: 'operator', credentialIdentity: 'Unknown' },
     brief: isRecord(brief)
       ? { issuedAt: text(brief['issuedAt']) ?? null, files: brief['files'] ?? null, label: 'Inferred' }
@@ -144,8 +146,11 @@ export async function closeRun(runDir: string, request: CloseRequest, deps: Clos
     agentUsage: usage,
     steps: stepInstants(run),
     credential: { atClose: credential, breaches: breachLog(run), ...(credential.required ? { disclosure: CREDENTIAL_CHECK_DISCLOSURE } : {}) },
-    declaredProvider: { provider: declared.agentProvider, contentClasses: subject.contentClasses, label: 'Inferred', actualTransmission: 'Unknown' },
-    noProviderCall: NO_PROVIDER_CALL,
+    declaredProvider: { provider: declared.agentProvider, contentClasses: url?.plannedClasses ?? subject.contentClasses, label: 'Inferred', actualTransmission: 'Unknown' },
+    ...(url === undefined ? { noProviderCall: NO_PROVIDER_CALL } : {
+      effectiveRun: effectiveUrlProjection({ subject }, url), urlDeclarationSha256: opened.sidecarSha256,
+      providerDispatch: 'The declared local CLI uses the checked transport relay for supported inference requests; Git source transport is separately declared. This stored configuration establishes no completed send, receipt or complete capture.',
+    }),
     credentialsIssued: NO_CREDENTIAL_ISSUED,
     stored: { label: 'Inferred', basis: 'the digest of each file in the run directory as Syzygy read it at close; no body is copied, so no brief, prompt or transcript body enters this record', ...stored },
     disclosures: credential.required ? [...DISCLOSURES, CREDENTIAL_CHECK_DISCLOSURE] : DISCLOSURES,

@@ -116,36 +116,51 @@ describe('syzygy dossier', () => {
   });
 });
 
-describe('no route and no credential', () => {
-  // REQ-polaris-generation-033: the commands serve no route, accept no network request and hold no
-  // credential. A static sweep of the package's sources: no module that opens a socket is imported.
-  const SRC = path.dirname(fileURLToPath(import.meta.url));
-  const NETWORK = /from\s+['"](?:node:)?(?:net|http|https|http2|tls|dgram)['"]|import\(\s*['"](?:node:)?(?:net|http|https|http2|tls|dgram)['"]\s*\)/;
-  const all = fs.readdirSync(SRC).filter((name) => name.endsWith('.ts') && !name.endsWith('.test.ts')).sort();
-  // The launched run's broker (candidate REQ-polaris-generation-041, prototype under POLARIS-DOSSIER-ONE-COMMAND-RUN-2026-10-14) talks to
-  // its own sessions over Unix-domain sockets on the local file system: it imports node:net for that alone, listens on a path and never on
-  // a port or host. Those two files are checked by the test below instead.
-  const UNIX_SOCKET_ONLY = ['broker-client.ts', 'broker.ts'];
-  const sources = all.filter((name) => !UNIX_SOCKET_ONLY.includes(name));
+describe('dossier network module boundaries', () => {
+  // The ordinary dossier commands keep the no-route rule of REQ-polaris-generation-033.
+  // The supervised runtimes carry their own local socket paths and fixed provider relay.
+  const src = path.dirname(fileURLToPath(import.meta.url));
+  const network = /from\s+['"](?:node:)?(net|http|https|http2|tls|dgram)['"]|import\(\s*['"](?:node:)?(net|http|https|http2|tls|dgram)['"]\s*\)/gu;
+  const connections = /[^\n]*(?:\.listen\(|\bcreateConnection\(|\.request\(|\bnew Socket\()[^\n]*/gu;
+  const transport: Readonly<Record<string, { readonly modules: readonly string[]; readonly calls: readonly string[] }>> = {
+    'broker-client.ts': { modules: ['net'], calls: ['net.createConnection(socket)'] },
+    'broker.ts': { modules: ['net'], calls: ['server.listen(socket)'] },
+    'session-bridge.ts': { modules: ['http', 'net'], calls: [
+      "http.request({ socketPath, method: 'POST', path: incoming.url, headers, setHost: false, agent: false }",
+      "server.listen(0, '127.0.0.1',",
+    ] },
+    'session-broker.ts': { modules: ['net'], calls: ['server.listen(socket,'] },
+    'session-launch.ts': { modules: ['net'], calls: ['server.listen(path.join(dir, name), resolve)'] },
+    'session-mcp.ts': { modules: ['net'], calls: ['createConnection({ path: socketPath })'] },
+    'session-peer.ts': { modules: ['net'], calls: [] },
+    'session-relay.ts': { modules: ['http', 'https'], calls: [
+      "https.request({ hostname: 'api.anthropic.com', servername: 'api.anthropic.com', port: 443,",
+      'ports.request(body)',
+      'server.listen(socket,',
+    ] },
+    'url-role-plan.ts': { modules: ['net'], calls: ["server.listen(0, '127.0.0.1', resolve)"] },
+    'url-run-sessions.ts': { modules: ['net'], calls: ["probe.listen(0, '127.0.0.1', resolve)"] },
+  };
+  const readImports = (text: string): readonly string[] => [...text.matchAll(network)].map(match => (match[1] ?? match[2])!);
+  const files = fs.readdirSync(src).filter(name => name.endsWith('.ts') && !name.endsWith('.test.ts')).sort();
 
-  it('sweeps a non-empty population of source files', async () => {
-    expect(sources).toEqual(['argv.ts', 'audience.ts', 'brief.ts', 'census.ts', 'check-derive.ts', 'check-model.ts', 'check.ts', 'child-process.testkit.ts', 'class-gate.ts', 'cli.ts', 'clone-head.ts', 'clone-shape.ts', 'close.ts', 'credential-probe.ts', 'design-review.ts', 'doctrine-quote.ts', 'draft-schema.ts', 'execution-choice.ts', 'execution-flags.ts', 'execution-rule.ts', 'fs-patch.testkit.ts', 'full-run.testkit.ts', 'gate-sources.ts', 'git-object-reader.ts', 'governed.ts', 'index.ts', 'init.ts', 'inventory.ts', 'iso-of.ts', 'launch-cli.ts', 'launch-clone.ts', 'launch-copy.ts', 'launch-disclosure.ts', 'launch-identity.ts', 'launch-question.ts', 'launch-record.ts', 'launch-revision.ts', 'launch-sources.ts', 'launch-statements.ts', 'launch-store.ts', 'launch-write-consent.ts', 'launch.testkit.ts', 'launch.ts', 'launched.ts', 'outcome.ts', 'polaris.ts', 'policy-snapshot.ts', 'preflight.ts', 'reader-advice.ts', 'reader-standards.ts', 'render.ts', 'reverify.ts', 'review-model.ts', 'review-packet.ts', 'review-reach.ts', 'review-verdict.ts', 'review.ts', 'run-config.ts', 'run-dir.ts', 'run-record.ts', 'screen.ts', 'screening-v8.testkit.ts', 'session-handover.ts', 'session-statement.ts', 'session-view.ts', 'source-visibility-gate.ts', 'state-directory.ts', 'status.ts', 'waiting-sessions.ts', 'withheld-items.ts']);
+  it('finds each named transport and the ordinary command modules', () => {
+    expect(files).toEqual(expect.arrayContaining([...Object.keys(transport), 'cli.ts', 'init.ts', 'check.ts', 'render.ts', 'close.ts']));
+    expect(files.length).toBeGreaterThan(Object.keys(transport).length);
   });
 
-  it.each(sources.map((name) => [name]))('%s imports no network module', (name) => {
-    expect(NETWORK.test(fs.readFileSync(path.join(SRC, name), 'utf8'))).toBe(false);
+  it.each(files)('%s has the declared network imports and connection call sites', name => {
+    const text = fs.readFileSync(path.join(src, name), 'utf8');
+    const declared = transport[name];
+    expect(readImports(text)).toEqual(declared?.modules ?? []);
+    if (declared === undefined) return;
+    const actual = [...text.matchAll(connections)].map(match => match[0]);
+    expect(actual).toHaveLength(declared.calls.length);
+    for (const [index, call] of declared.calls.entries()) expect(actual[index]).toContain(call);
   });
 
-  it.each(UNIX_SOCKET_ONLY.map((name) => [name]))('%s uses node:net for Unix-domain sockets only', (name) => {
-    const text = fs.readFileSync(path.join(SRC, name), 'utf8');
-    expect(all).toContain(name);
-    expect(/from\s+['"](?:node:)?(?:http|https|http2|tls|dgram)['"]/.test(text)).toBe(false);
-    expect(/\.listen\(\s*(?!socket\b)/.test(text)).toBe(false);
-    expect(/createConnection\(\s*(?!socket\b)/.test(text)).toBe(false);
-  });
-
-  it('the sweep pattern catches a network import (its own mutant)', async () => {
-    expect(NETWORK.test("import * as net from 'node:net';")).toBe(true);
-    expect(NETWORK.test("const http = await import('http');")).toBe(true);
+  it('recognizes both static and dynamic network imports', () => {
+    expect(readImports("import * as net from 'node:net';")).toEqual(['net']);
+    expect(readImports("const http = await import('http');")).toEqual(['http']);
   });
 });

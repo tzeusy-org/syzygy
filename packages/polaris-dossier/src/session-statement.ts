@@ -1,3 +1,4 @@
+import { protectedProduct, type RunProductReads } from './url-operation-products.js';
 import * as fs from 'node:fs';
 import * as path from 'node:path';
 import { isRecord } from '@syzygy/support';
@@ -20,12 +21,18 @@ export type SessionStatementRecheck = { readonly ok: true; readonly statement: S
  * statement-shaped result stays null for callers retaining historical schemas;
  * no consent or statement reader participates. */
 export async function recheckSessionStatement(
-  run: string, noun: string, prompt: Readonly<Record<string, unknown>>, _sources: GateSources, _now: number, consequence?: string,
+  run: string, noun: string, prompt: Readonly<Record<string, unknown>>, _sources: GateSources, _now: number, consequence?: string, products?: RunProductReads,
 ): Promise<SessionStatementRecheck> {
   const no = (why: string): SessionStatementRecheck => ({ ok: false, why: `${why}; ${consequence ?? 'its work does not count'}` });
   let text: string;
-  try { text = fs.readFileSync(path.join(run, RUN_LAYOUT.config), 'utf8'); }
-  catch { return no(`the run record cannot be read to check ${noun} declared provider`); }
+  if (products !== undefined) {
+    const bytes = protectedProduct(products, run, RUN_LAYOUT.config);
+    if (bytes === null) return no(`the run record is absent when checking ${noun} declared provider`);
+    text = new TextDecoder('utf-8', { fatal: true }).decode(bytes);
+  } else {
+    try { text = fs.readFileSync(path.join(run, RUN_LAYOUT.config), 'utf8'); }
+    catch { return no(`the run record cannot be read to check ${noun} declared provider`); }
+  }
   const read = readRunRecord(text);
   if (!read.ok) return no(read.detail);
   const context = prompt['context'];

@@ -1,12 +1,14 @@
-import { execFileSync } from 'node:child_process';
-import { closeSync, constants, fstatSync, openSync, readSync } from 'node:fs';
+import { execFile, execFileSync } from 'node:child_process';
+import { closeSync, constants, fstatSync, lstatSync, openSync, readSync, type Stats } from 'node:fs';
 import { parseBoundedJson } from '@syzygy/polaris-generation-core/live';
 import * as path from 'node:path';
 import { isRecord, sha256 } from '@syzygy/support';
+import { URL_PARENT_DEFAULT_REF, URL_PARENT_TAG, type UrlParentAdoption } from './url-parent-adoption.js';
 
 /** The dossier successor is versioned separately from the PWB/provider policy.
  * Its screening predicates are preserved; its admission provenance follows D10. */
 export const DOSSIER_POLICY_PATH = '.syzygy/governance/policies/POLARIS-DOSSIER-DECLARED-SOURCE-POLICY-v1.json';
+export const DOSSIER_URL_ORIGIN_POLICY_PATH = '.syzygy/governance/policies/POLARIS-DOSSIER-URL-ORIGIN-SPECIES-POLICY-v1.json';
 const MAX_POLICY_BYTES = 2_097_152;
 
 export interface PolicyBinding {
@@ -25,6 +27,19 @@ export type PolicySnapshot =
  * read by that commit, so a concurrent ref update cannot mix policy subjects.
  * Uncommitted policy bytes are refused rather than silently adopted. */
 export function readCommittedPolicy(root: string): PolicySnapshot {
+  return committedPolicy(root, DOSSIER_POLICY_PATH);
+}
+
+/** URL origin policy has its own committed identity. Candidate proposal bytes
+ * never supply this source, and a base-policy snapshot cannot stand in for it. */
+export function readCommittedUrlOriginPolicy(root: string): PolicySnapshot {
+  const snapshot = committedPolicy(root, DOSSIER_URL_ORIGIN_POLICY_PATH);
+  return snapshot.ok && (snapshot.binding.policyId !== 'POLARIS-DOSSIER-URL-ORIGIN-SPECIES-POLICY-v1'
+    || snapshot.binding.policyVersion !== '1.0.0')
+    ? { ok: false, why: 'the committed URL origin policy has an unsupported identity or version' } : snapshot;
+}
+
+function committedPolicy(root: string, policyPath: typeof DOSSIER_POLICY_PATH | typeof DOSSIER_URL_ORIGIN_POLICY_PATH): PolicySnapshot {
   try {
     const env = Object.fromEntries(Object.entries(process.env).filter(([key]) => !key.startsWith('GIT_')));
     env['GIT_CONFIG_NOSYSTEM'] = '1';
@@ -35,8 +50,8 @@ export function readCommittedPolicy(root: string): PolicySnapshot {
     ], { env, maxBuffer: MAX_POLICY_BYTES, timeout: 10_000, stdio: ['ignore', 'pipe', 'pipe'] });
     const commit = git('rev-parse', '--verify', 'HEAD^{commit}').toString('ascii').trim();
     if (!/^(?:[0-9a-f]{40}|[0-9a-f]{64})$/u.test(commit)) return { ok: false, why: 'the Syzygy policy commit is unreadable' };
-    const bytes = git('show', `${commit}:${DOSSIER_POLICY_PATH}`);
-    const fd = openSync(path.join(root, DOSSIER_POLICY_PATH), constants.O_RDONLY | constants.O_NOFOLLOW | constants.O_NONBLOCK);
+    const bytes = git('show', `${commit}:${policyPath}`);
+    const fd = openSync(path.join(root, policyPath), constants.O_RDONLY | constants.O_NOFOLLOW | constants.O_NONBLOCK);
     let current: Buffer;
     try {
       const stats = fstatSync(fd);
@@ -57,12 +72,119 @@ export function readCommittedPolicy(root: string): PolicySnapshot {
       return { ok: false, why: 'the committed dossier policy has no readable identity and version' };
     }
     return { ok: true, bytes: new Uint8Array(bytes), binding: {
-      path: DOSSIER_POLICY_PATH, commit, policyId: document['policyId'], policyVersion: document['policyVersion'], sha256: sha256(bytes),
+      path: policyPath, commit, policyId: document['policyId'], policyVersion: document['policyVersion'], sha256: sha256(bytes),
     } };
   } catch {
     // Git diagnostics and malformed policy bytes are not content-safe output.
     return { ok: false, why: 'the committed dossier screening policy cannot be read as bounded UTF-8 JSON' };
   }
+}
+
+/** Check both documents by one commit identity, bracketed by live HEAD
+ * samples. The admitted commit lets the common case use one Git process. */
+export function committedUrlPoliciesCurrent(root: string, base: PolicyBinding, origin: PolicyBinding, parent?: UrlParentAdoption): boolean {
+  try {
+    const probe = currentPolicyProbe(root, base, origin, parent);
+    const read = (commit: string): boolean | string => probe.check(commit, execFileSync('git', probe.args,
+      { ...probe.options, input: probe.input(commit), stdio: ['pipe', 'pipe', 'pipe'] }));
+    const initial = read(base.commit);
+    return (typeof initial === 'string' ? read(initial) === true : initial) && probe.workingFilesCurrent();
+  } catch { return false; }
+}
+
+/** Session and audit callbacks can wait for Git while role resource samples run. */
+export async function committedUrlPoliciesCurrentAsync(root: string, base: PolicyBinding, origin: PolicyBinding, parent?: UrlParentAdoption): Promise<boolean> {
+  try {
+    const probe = currentPolicyProbe(root, base, origin, parent);
+    const read = async (commit: string): Promise<boolean | string> => {
+      const input = probe.input(commit);
+      const response = await new Promise<Buffer>((resolve, reject) => {
+        const child = execFile('git', probe.args, { ...probe.options, encoding: 'buffer' }, (error, stdout) => {
+          if (error) reject(error);
+          else resolve(stdout);
+        });
+        if (!child.stdin) throw new Error('current policy input');
+        child.stdin.on('error', reject);
+        child.stdin.end(input);
+      });
+      return probe.check(commit, response);
+    };
+    const initial = await read(base.commit);
+    return (typeof initial === 'string' ? await read(initial) === true : initial) && probe.workingFilesCurrent();
+  } catch { return false; }
+}
+
+function currentPolicyProbe(root: string, base: PolicyBinding, origin: PolicyBinding, parent: UrlParentAdoption | undefined) {
+  if (base.path !== DOSSIER_POLICY_PATH || origin.path !== DOSSIER_URL_ORIGIN_POLICY_PATH
+    || !/^(?:[a-f0-9]{40}|[a-f0-9]{64})$/u.test(base.commit)) throw new Error('current policy binding');
+  const subjects = new Map([[base.path, base.sha256], [origin.path, origin.sha256]]);
+  for (const subject of parent?.subjects ?? []) {
+    const previous = subjects.get(subject.path);
+    if (previous !== undefined && previous !== subject.sha256) throw new Error('conflicting URL parent binding');
+    subjects.set(subject.path, subject.sha256);
+  }
+  const working = [...subjects].map(([file, digest]) => {
+    const snapshot = readWorkingPolicy(path.join(root, file));
+    if (sha256(snapshot.bytes) !== digest) throw new Error('current policy bytes');
+    return snapshot;
+  });
+  const env = Object.fromEntries(Object.entries(process.env).filter(([key]) => !key.startsWith('GIT_')));
+  Object.assign(env, { GIT_CONFIG_NOSYSTEM: '1', GIT_CONFIG_GLOBAL: '/dev/null', GIT_OPTIONAL_LOCKS: '0', GIT_NO_LAZY_FETCH: '1' });
+  const args = ['--no-replace-objects', '-C', root, 'cat-file', '--batch-command'];
+  const options = { env, maxBuffer: working.reduce((bytes, file) => bytes + file.bytes.length + 128, 4096), timeout: 10_000 };
+  const refs = ['info HEAD^{commit}'];
+  if (parent !== undefined) refs.push(`info ${URL_PARENT_DEFAULT_REF}^{commit}`, `info refs/tags/${URL_PARENT_TAG}^{commit}`);
+  const input = (commit: string): string => [...refs, ...[...subjects.keys()].map(file => `contents ${commit}:${file}`), ...refs, ''].join('\n');
+  const check = (commit: string, response: Buffer): boolean | string => {
+    let offset = 0;
+    const header = (type: 'commit' | 'blob') => {
+      const end = response.indexOf(10, offset);
+      if (end < 0 || end - offset > 128) throw new Error('current policy header');
+      const line = response.toString('ascii', offset, end);
+      const fields = /^([a-f0-9]{40}|[a-f0-9]{64}) (commit|blob) ([1-9][0-9]*)$/u.exec(line);
+      const size = Number(fields?.[3]);
+      if (fields?.[2] !== type || !Number.isSafeInteger(size)) throw new Error('current policy type');
+      offset = end + 1;
+      return { id: fields[1]!, size };
+    };
+    const parentCurrent = (): boolean => parent === undefined
+      || (header('commit').id === parent.defaultCommit && header('commit').id === parent.landedCommit);
+    const first = header('commit').id;
+    if (first !== commit) return first;
+    if (!parentCurrent()) return false;
+    for (const file of working) {
+      const blob = header('blob'), end = offset + blob.size;
+      if (blob.size > MAX_POLICY_BYTES || response[end] !== 10) return false;
+      const bytes = response.subarray(offset, end);
+      if (!bytes.equals(file.bytes)) return false;
+      offset = end + 1;
+    }
+    return header('commit').id === commit && parentCurrent() && offset === response.length;
+  };
+  const workingFilesCurrent = (): boolean => working.every(file => sameWorkingFile(file.stats, lstatSync(file.path)));
+  return { args, options, input, check, workingFilesCurrent };
+}
+
+function sameWorkingFile(initial: Stats, sample: Stats): boolean {
+  return sample.isFile() && sample.dev === initial.dev && sample.ino === initial.ino
+    && sample.size === initial.size && sample.mtimeMs === initial.mtimeMs && sample.ctimeMs === initial.ctimeMs;
+}
+
+function readWorkingPolicy(file: string): { path: string; bytes: Buffer; stats: Stats } {
+  const fd = openSync(file, constants.O_RDONLY | constants.O_NOFOLLOW | constants.O_NONBLOCK);
+  try {
+    const initial = fstatSync(fd);
+    if (!initial.isFile() || initial.size < 1 || initial.size > MAX_POLICY_BYTES) throw new Error('current policy file');
+    const bytes = Buffer.alloc(initial.size + 1);
+    let size = 0;
+    while (size < bytes.length) {
+      const count = readSync(fd, bytes, size, bytes.length - size, null);
+      if (count === 0) break;
+      size += count;
+    }
+    if (size !== initial.size || !sameWorkingFile(initial, fstatSync(fd))) throw new Error('current policy changed');
+    return { path: file, bytes: bytes.subarray(0, size), stats: initial };
+  } finally { closeSync(fd); }
 }
 
 export const samePolicy = (a: PolicyBinding, b: PolicyBinding): boolean =>

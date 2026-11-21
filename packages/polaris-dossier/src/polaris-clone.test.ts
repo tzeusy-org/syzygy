@@ -1,67 +1,69 @@
 import { describe, expect, it } from 'vitest';
 import { cliVisibilityOf } from './cli.js';
-import { supervisorClone, type CloneDeps } from './polaris.js';
+import { supervisorSource, type SupervisorSourcePorts } from './polaris.js';
+import type { SelectedUrlSource } from './url-acquisition.js';
 import type { VisibilityDecision } from './source-visibility-gate.js';
 
-/** `syzygy polaris` without `--clone` makes its own one-commit clone, fetching from the URL (screening scope version 8, edit 4: for a
- * private repository Syzygy fetches nothing). Git and the file system are injected, so nothing here starts a process; each case records
- * every git command the step would have run. */
-
 const COMMIT = 'a'.repeat(40);
-const CHOSEN = { label: 'trunk', commit: COMMIT };
-const URL = 'https://example.invalid/o/r';
-const deps = (head: { status: number; stdout: string } = { status: 128, stdout: '' }, exists = false) => {
-  const ran: string[][] = [];
-  const d: CloneDeps = {
-    git: args => { ran.push([...args]); return args.includes('rev-parse') ? { ...head, stderr: '' } : { status: 0, stdout: '', stderr: '' }; },
-    exists: () => exists, mkdir: () => undefined, event: () => undefined,
-  };
-  return { d, ran, fetched: () => ran.some(args => args.includes('fetch')) };
+const SOURCE: SelectedUrlSource = {
+  transportLocator: 'https://example.invalid/o/r', normalizedLocator: 'example.invalid/o/r', transport: 'https', selector: null,
+  revision: { mode: 'remote-default', reference: 'refs/heads/release-next', identifier: COMMIT, objectFormat: 'sha1' },
+  provenance: { classification: 'source-metadata', label: 'Inferred', locatorSha256: '1'.repeat(64), selectorSha256: null,
+    advertisement: { sha256: '2'.repeat(64), bytes: 117 } },
 };
-const decided = (decision: VisibilityDecision) => async () => decision;
-const input = (visibilityOf: Parameters<typeof supervisorClone>[0]['visibilityOf'], repositoryId: unknown = 'o-r') =>
-  ({ url: URL, repositoryId, chosen: CHOSEN, clonesRoot: '/clones', visibilityOf });
+const INPUT = { url: 'https://example.invalid/o/r', scratchRoot: '/owned-clones', screen: { screenBody: () => undefined } };
+function fixture(head = COMMIT) {
+  const calls: { kind: string; value: unknown }[] = [];
+  const ports: SupervisorSourcePorts = {
+    select: async input => { calls.push({ kind: 'select', value: input }); return { ok: true, source: SOURCE, operations: [] }; },
+    acquire: async input => { calls.push({ kind: 'acquire', value: input }); return { ok: true, clone: '/owned-clones/unique/clone', workspace: '/owned-clones/unique', source: input.source, operations: [] }; },
+    head: clone => { calls.push({ kind: 'head', value: clone }); return { ok: true, commit: head, via: 'detached HEAD', gitDir: '/provided/.git' }; },
+  };
+  return { ports, calls };
+}
 
-describe('supervisorClone', () => {
-  it('fetches a public pair: init, a depth-1 fetch of the commit, a detached checkout', async () => {
-    const { d, ran } = deps();
-    expect(await supervisorClone(input(decided({ ok: true, visibility: 'public', carriers: [] })), d)).toEqual({ clone: '/clones/o-r-trunk' });
-    expect(ran).toEqual([
-      ['-C', '/clones/o-r-trunk', 'rev-parse', 'HEAD'],
-      ['init', '-q', '/clones/o-r-trunk'],
-      ['-C', '/clones/o-r-trunk', 'fetch', '-q', '--depth=1', URL, COMMIT],
-      ['-C', '/clones/o-r-trunk', 'checkout', '-q', '--detach', 'FETCH_HEAD'],
-    ]);
+describe('supervisor source selection and acquisition', () => {
+  it('resolves remote default once and passes the selected immutable source to fresh acquisition', async () => {
+    const { ports, calls } = fixture();
+    expect(await supervisorSource(INPUT, ports)).toMatchObject({ ok: true, clone: '/owned-clones/unique/clone', workspace: '/owned-clones/unique', source: { revision: { reference: 'refs/heads/release-next', identifier: COMMIT } } });
+    expect(calls.map(call => call.kind)).toEqual(['select', 'acquire']);
+    expect(calls[0]!.value).not.toHaveProperty('revision');
+    expect((calls[1]!.value as { source: SelectedUrlSource }).source).toBe(SOURCE);
   });
-  it.each([
-    ['a private pair', decided({ ok: true, visibility: 'private', carriers: [] }), 'repository:o-r is private at this commit'],
-    ['an undecidable pair', decided({ ok: false, why: 'a launch consent record cannot be read' }), 'cannot be decided (a launch consent record cannot be read)'],
-    ['no decision port', undefined, 'no visibility decision is wired'],
-  ] as const)('refuses %s before any fetch, naming --clone, and runs nothing but the head probe', async (_name, visibilityOf, message) => {
-    const { d, ran, fetched } = deps();
-    const out = await supervisorClone(input(visibilityOf), d);
-    expect(typeof out === 'string' && out).toContain(message);
-    expect(typeof out === 'string' && out).toContain('pass --clone <dir>');
-    expect(fetched()).toBe(false);
-    expect(ran).toEqual([['-C', '/clones/o-r-trunk', 'rev-parse', 'HEAD']]);
+
+  it('checks a supplied clone against the selected current remote tip without acquiring or modifying it', async () => {
+    const { ports, calls } = fixture();
+    expect(await supervisorSource({ ...INPUT, clone: '/provided' }, ports)).toMatchObject({ ok: true, clone: '/provided', workspace: null });
+    expect(calls.map(call => call.kind)).toEqual(['select', 'head']);
   });
-  it('reuses a clone already at the commit and fetches nothing, whatever the visibility', async () => {
-    const { d, fetched } = deps({ status: 0, stdout: `${COMMIT}\n` });
-    expect(await supervisorClone(input(decided({ ok: true, visibility: 'private', carriers: [] })), d)).toEqual({ clone: '/clones/o-r-trunk' });
-    expect(fetched()).toBe(false);
+
+  it('refuses a stale or unreadable supplied HEAD rather than fetching into it or silently changing the pin', async () => {
+    const { ports, calls } = fixture('b'.repeat(40));
+    expect(await supervisorSource({ ...INPUT, clone: '/provided' }, ports)).toMatchObject({ ok: false, code: 'pin-mismatch', reason: expect.stringContaining('was not modified') });
+    expect(calls.map(call => call.kind)).toEqual(['select', 'head']);
+    const unreadable: SupervisorSourcePorts = { ...ports, head: () => ({ ok: false, reason: 'unreadable nonsecret fixture' }) };
+    expect(await supervisorSource({ ...INPUT, clone: '/provided' }, unreadable)).toMatchObject({ ok: false, code: 'pin-mismatch' });
+    expect(calls.filter(call => call.kind === 'acquire')).toHaveLength(0);
   });
-  it('refuses a clone at another commit, never reusing it, and fetches nothing', async () => {
-    const { d, fetched } = deps({ status: 0, stdout: `${'b'.repeat(40)}\n` }, true);
-    const out = await supervisorClone(input(decided({ ok: true, visibility: 'public', carriers: [] })), d);
-    expect(out).toBe(`/clones/o-r-trunk exists but is not a clone of ${COMMIT}; remove it or pass --clone`);
-    expect(fetched()).toBe(false);
+
+  it('passes an explicit selector to selection and stops before a clone read when selection refuses', async () => {
+    const { ports, calls } = fixture();
+    const rejected: SupervisorSourcePorts = { ...ports, select: async input => {
+      calls.push({ kind: 'select', value: input });
+      return { ok: false, code: 'ref-ambiguous', stage: 'selection', reason: 'Use an exact remote reference.', operations: [] };
+    } };
+    expect(await supervisorSource({ ...INPUT, revision: 'release', clone: '/provided' }, rejected)).toMatchObject({ ok: false, code: 'ref-ambiguous' });
+    expect(calls).toEqual([{ kind: 'select', value: { locator: INPUT.url, revision: 'release', scratchRoot: INPUT.scratchRoot, screen: INPUT.screen } }]);
   });
-  it('refuses a path that holds something else, before asking visibility', async () => {
-    const { d, fetched } = deps({ status: 128, stdout: '' }, true);
-    let asked = false;
-    const out = await supervisorClone(input(async () => { asked = true; return { ok: true, visibility: 'public', carriers: [] }; }), d);
-    expect(out).toBe(`/clones/o-r-trunk exists but is not a clone of ${COMMIT}; remove it or pass --clone`);
-    expect([asked, fetched()]).toEqual([false, false]);
+
+  it('preserves an unconfirmed acquisition and retained path instead of claiming cleanup or trying again', async () => {
+    const { ports, calls } = fixture();
+    const unconfirmed: SupervisorSourcePorts = { ...ports, acquire: async () => {
+      calls.push({ kind: 'acquire', value: null });
+      return { ok: false, code: 'termination-unconfirmed', stage: 'fetch', reason: 'Inspect local processes.', operations: [], retainedWorkspace: '/owned-clones/retained' };
+    } };
+    expect(await supervisorSource(INPUT, unconfirmed)).toMatchObject({ ok: false, code: 'termination-unconfirmed', retainedWorkspace: '/owned-clones/retained' });
+    expect(calls.map(call => call.kind)).toEqual(['select', 'acquire']);
   });
 });
 

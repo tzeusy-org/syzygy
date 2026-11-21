@@ -1,3 +1,4 @@
+import { checkedProductPopulation, yieldForProductReads, parseProductRecord, protectedProduct, type RunProductReads } from './url-operation-products.js';
 import * as fs from 'node:fs';
 import * as path from 'node:path';
 import { bodyLines, parseBoundedJson, retainedWithMarkers, spanTouchesWithheld } from '@syzygy/polaris-generation-core/live';
@@ -10,7 +11,7 @@ import { INVENTORY_INFERRED, errno, inventoryOfRecord, type OpenedRun } from './
 import { buildDesignPacket, readLatestSite, type DesignPacketBuild } from './design-review.js';
 import { CLASS_NOT_CONSENTED, unconsentedClass } from './class-gate.js';
 import { placementSubjectOf, screenLoaderOf, type ScreenExclusion } from './screen.js';
-import { RUN_LAYOUT } from './state-directory.js';
+import { REVISION_FILE, RUN_LAYOUT } from './state-directory.js';
 import { FIDELITY_PACKET_FORMAT, PACKET_DIGEST_FILE, PACKET_FILE, type PacketBuild, type PacketSpan, type ReviewDeps, type ReviewKind, SUBJECT_JSON_LIMITS, type SpanCitation, type SpanRedaction, VERDICT_FILE, list, packetDirName, text } from './review-model.js';
 
 /** Building and writing the fidelity and design packets; split out of `review.ts` unchanged. */
@@ -30,16 +31,30 @@ export function fidelityCriteria(runDir: string): readonly string[] {
 }
 
 /** The latest frozen draft revision whose check passed and whose frozen bytes are the ones its check recorded, or why there is none. */
-export function latestPassedDraft(run: string): { readonly ok: true; readonly revision: number; readonly bytes: Uint8Array } | { readonly ok: false; readonly reason: string } {
-  const revision = nextRevision(path.join(run, RUN_LAYOUT.checks)) - 1;
-  if (revision < 0) return { ok: false, reason: 'no draft revision has been checked' };
+export function latestPassedDraft(run: string, products?: RunProductReads): { readonly ok: true; readonly revision: number; readonly bytes: Uint8Array } | { readonly ok: false; readonly reason: string } {
+  const newest = products === undefined ? undefined : checkedProductPopulation(products, run, 'author-checks', 'author-drafts').at(-1);
+  const revision = products === undefined ? nextRevision(path.join(run, RUN_LAYOUT.checks)) - 1
+    : newest === undefined ? -1 : Number(REVISION_FILE.exec(path.basename(newest))?.[1]);
+  if (revision === -1) return { ok: false, reason: 'no draft revision has been checked' };
+  if (!Number.isSafeInteger(revision) || revision < 0) throw new Error('url-product-revision-unavailable');
+  const checkFile = path.join(RUN_LAYOUT.checks, `rev-${revision}.json`);
   let check: unknown;
-  try { check = parseBoundedJson(fs.readFileSync(path.join(run, RUN_LAYOUT.checks, `rev-${revision}.json`), 'utf8'), SUBJECT_JSON_LIMITS); } catch { check = undefined; }
+  if (products !== undefined) {
+    const bytes = protectedProduct(products, run, checkFile);
+    check = bytes === null ? undefined : parseProductRecord(bytes, SUBJECT_JSON_LIMITS);
+  } else {
+    try { check = parseBoundedJson(fs.readFileSync(path.join(run, checkFile), 'utf8'), SUBJECT_JSON_LIMITS); } catch { check = undefined; }
+  }
   if (!isRecord(check) || check['format'] !== CHECK_RECORD_FORMAT || check['revision'] !== revision) return { ok: false, reason: `the check result of draft revision ${revision} cannot be read` };
   if (check['outcome'] !== 'passed') return { ok: false, reason: `draft revision ${revision}, the latest checked, has open findings; only a passed revision is reviewed` };
   const frozen = path.join(RUN_LAYOUT.drafts, `rev-${revision}.json`);
-  let bytes: Uint8Array;
-  try { bytes = new Uint8Array(fs.readFileSync(path.join(run, frozen))); } catch (cause) { return { ok: false, reason: `the frozen draft ${frozen} cannot be read (${errno(cause)})` }; }
+  let bytes: Uint8Array | null;
+  if (products !== undefined) {
+    bytes = protectedProduct(products, run, frozen);
+    if (bytes === null) return { ok: false, reason: `the frozen draft ${frozen} is absent` };
+  } else {
+    try { bytes = new Uint8Array(fs.readFileSync(path.join(run, frozen))); } catch (cause) { return { ok: false, reason: `the frozen draft ${frozen} cannot be read (${errno(cause)})` }; }
+  }
   const draft = isRecord(check['draft']) ? check['draft'] : {};
   if (draft['file'] !== frozen || draft['sha256'] !== sha256(bytes)) return { ok: false, reason: `the frozen draft ${frozen} is not the bytes its check recorded` };
   return { ok: true, revision, bytes };
@@ -57,14 +72,21 @@ export const parseSubject = (bytes: Uint8Array): Readonly<Record<string, unknown
 export async function buildFidelityPacket(opened: Extract<OpenedRun, { ok: true }>, deps: ReviewDeps): Promise<PacketBuild> {
   const { run, runId, subject } = opened;
   const pinned = subject.pinnedRevision.commit;
-  const draftRev = latestPassedDraft(run);
+  if (deps.productReads !== undefined) await yieldForProductReads(deps.productReads, run);
+  const draftRev = latestPassedDraft(run, deps.productReads);
   if (!draftRev.ok) return { ok: false, stage: 'draft', reason: draftRev.reason };
   const draftDoc = parseSubject(draftRev.bytes);
   if (draftDoc === undefined) return { ok: false, stage: 'draft', reason: `draft revision ${draftRev.revision} is not one bounded JSON object` };
-  const counted = await inventoryOfRecord(run, { sources: deps.sources, now: deps.now() });
+  if (deps.productReads !== undefined) await yieldForProductReads(deps.productReads, run);
+  const counted = await inventoryOfRecord(run, { sources: deps.sources, now: deps.now(), productReads: deps.productReads });
   if (!counted.counts) return { ok: false, stage: 'inventory', reason: `no inventory counts, so no fidelity packet is built: ${counted.why}` };
-  let inventoryBytes: Uint8Array;
-  try { inventoryBytes = new Uint8Array(fs.readFileSync(path.join(run, counted.file))); } catch (cause) { return { ok: false, stage: 'inventory', reason: `the frozen inventory ${counted.file} cannot be read (${errno(cause)})` }; }
+  let inventoryBytes: Uint8Array | null;
+  if (deps.productReads !== undefined) {
+    inventoryBytes = protectedProduct(deps.productReads, run, counted.file);
+    if (inventoryBytes === null) return { ok: false, stage: 'inventory', reason: `the frozen inventory ${counted.file} is absent` };
+  } else {
+    try { inventoryBytes = new Uint8Array(fs.readFileSync(path.join(run, counted.file))); } catch (cause) { return { ok: false, stage: 'inventory', reason: `the frozen inventory ${counted.file} cannot be read (${errno(cause)})` }; }
+  }
   if (sha256(inventoryBytes) !== counted.sha256) return { ok: false, stage: 'inventory', reason: `the frozen inventory ${counted.file} changed after it was counted` };
   const inventoryDoc = parseSubject(inventoryBytes);
   if (inventoryDoc === undefined) return { ok: false, stage: 'inventory', reason: `the frozen inventory ${counted.file} is not one bounded JSON object` };
@@ -85,6 +107,7 @@ export async function buildFidelityPacket(opened: Extract<OpenedRun, { ok: true 
     }
   }
 
+  if (deps.productReads !== undefined) await yieldForProductReads(deps.productReads, run);
   const screenLoad = await screenLoaderOf(deps.loadScreen, deps.sources.recordsRoot, deps.now())(placementSubjectOf(subject));
   if (!screenLoad.ok) return { ok: false, stage: 'screen', reason: screenLoad.why };
   const screen = screenLoad.screen;

@@ -12,6 +12,7 @@ import { type ScreenCensusReport } from './census.js';
 import type { ReaderAdvice } from './reader-advice.js';
 import type { ReviewReachAdvice } from './review-reach.js';
 import { CLASS_NOT_CONSENTED, unconsentedClass } from './class-gate.js';
+import type { RunProductReads } from './url-operation-products.js';
 
 /** The check's record formats, finding and result types, and the small shared readers; split out of `check.ts` unchanged. */
 
@@ -198,6 +199,7 @@ export interface CheckDeps {
   readonly sources: GateSources;
   readonly now: () => number;
   readonly probe: CredentialProbe;
+  readonly productReads?: RunProductReads;
   /** The screen; by default the policy the act chain puts in force, from the records root. */
   readonly loadScreen?: ScreenLoader;
   readonly openReader?: (options: PinnedObjectReaderOptions) => PinnedObjectReader;

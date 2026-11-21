@@ -313,20 +313,23 @@ describe('brief: the permitting arm, switched on with fixture ports', () => {
     ['an empty marker', (run: string) => fs.writeFileSync(path.join(run, 'launched.json'), ''), 'the run\'s launched marker is present but cannot be read as the one `syzygy polaris` writes, so the run is treated as launched'],
     ['a marker of another format', (run: string) => fs.writeFileSync(path.join(run, 'launched.json'), '{"format": "polaris-dossier-launched/2"}'), 'the run\'s launched marker is present but cannot be read as the one `syzygy polaris` writes, so the run is treated as launched'],
     ['a marker that is a directory', (run: string) => fs.mkdirSync(path.join(run, 'launched.json')), 'the run\'s launched marker is present but cannot be read as the one `syzygy polaris` writes, so the run is treated as launched'],
-  ])('a run with %s gives SEC-3\'s rule, whatever choice it holds', async (_name, plant, reason) => {
+  ])('refuses legacy URL run with %s before any execution instruction, whatever choice it holds', async (_name, plant, _reason) => {
     const run = runDirectory();
     plant(run);
-    await issueBrief(run, { sources: sources(), openReader: tree(), now: () => NOW, permitting: permitting(CHOICE) });
-    expect(JSON.parse(read(run, 'brief.json')).executionRule).toMatchObject({ arm: 'sec-3', notPermittedBecause: [reason] });
-    expect(read(run, 'brief.md')).not.toContain('You may build and run');
+    const result = await issueBrief(run, { sources: sources(), openReader: tree(), now: () => NOW, permitting: permitting(CHOICE) });
+    expect(result).toMatchObject({ ok: false, refusal: { stage: 'reverify', reasons: [expect.stringContaining('protected URL binding')] } });
+    expect(fs.existsSync(path.join(run, 'brief.json'))).toBe(false);
+    expect(fs.existsSync(path.join(run, 'brief.md'))).toBe(false);
   });
 
-  it('opens the launched marker only to decide the arm: never with the arm off, once with it on (R-GP-IMPL-LAUNCHED-MARKER-2 R2-N4)', async () => {
+  it('refuses legacy URL markers by presence without opening them under either execution arm', async () => {
     const off = runDirectory(), on = runDirectory();
     writeLaunchedMarker(off, RUN_ID, NOW);
     writeLaunchedMarker(on, RUN_ID, NOW);
     expect(await opensOf(path.join(off, 'launched.json'), () => issueBrief(off, { sources: sources(), openReader: tree(), now: () => NOW }))).toBe(0);
-    expect(await opensOf(path.join(on, 'launched.json'), () => issueBrief(on, { sources: sources(), openReader: tree(), now: () => NOW, permitting: permitting(CHOICE) }))).toBe(1);
+    expect(await opensOf(path.join(on, 'launched.json'), () => issueBrief(on, { sources: sources(), openReader: tree(), now: () => NOW, permitting: permitting(CHOICE) }))).toBe(0);
+    expect(fs.existsSync(path.join(on, 'brief.json'))).toBe(false);
+    expect(fs.existsSync(path.join(off, 'brief.json'))).toBe(false);
   });
 });
 
@@ -339,11 +342,17 @@ describe('brief: the permitting arm off, whatever the launched marker', () => {
     // reason; that the arm-off brief never opens the marker is the open count in the permitting-arm cases (R-GP-IMPL-LAUNCHED-MARKER-2 R2-N4).
     ['a FIFO at the marker', (run: string) => execFileSync('mkfifo', [path.join(run, 'launched.json')])],
     ['a link to a character device at the marker', (run: string) => fs.symlinkSync('/dev/zero', path.join(run, 'launched.json'))],
-  ])('with %s, carries only the arm-off reason', async (_name, plant) => {
+  ])('keeps the operator arm-off control and refuses legacy URL markers: %s', async (name, plant) => {
     const run = runDirectory();
     plant(run);
-    await issueBrief(run, { sources: sources(), openReader: tree(), now: () => NOW });
-    expect(JSON.parse(read(run, 'brief.json')).executionRule.notPermittedBecause).toEqual(['the permitting arm is not enabled in this build: it stays off until the execution choice (`syzygy dossier allow-execution`) and the adapter-credential probe (syzygy-qkea.5) are merged and the arm is switched on, so no brief may permit execution']);
+    const result = await issueBrief(run, { sources: sources(), openReader: tree(), now: () => NOW });
+    if (name === 'no marker') {
+      expect(result.ok).toBe(true);
+      expect(JSON.parse(read(run, 'brief.json')).executionRule.notPermittedBecause).toEqual(['the permitting arm is not enabled in this build: it stays off until the execution choice (`syzygy dossier allow-execution`) and the adapter-credential probe (syzygy-qkea.5) are merged and the arm is switched on, so no brief may permit execution']);
+    } else {
+      expect(result).toMatchObject({ ok: false, refusal: { stage: 'reverify', reasons: [expect.stringContaining('protected URL binding')] } });
+      expect(fs.existsSync(path.join(run, 'brief.json'))).toBe(false);
+    }
   });
 });
 

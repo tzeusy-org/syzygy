@@ -82,7 +82,7 @@ export function makeClone(dir: string): { readonly clone: string; readonly commi
 const LIVE_POLICY = JSON.parse(fs.readFileSync(path.join(REAL_ROOT, '.syzygy/governance/policies/POLARIS-BUTLERS-SECRET-CLASSIFICATION-POLICY-CANDIDATE.json'), 'utf8'));
 export const FIXTURE_POLICY = new TextEncoder().encode(JSON.stringify({
   policyId: 'fixture-public-source', policyVersion: '1', detectors: LIVE_POLICY.detectors, sourceAdmission: LIVE_POLICY.sourceAdmission,
-  publicSourceScope: { contentClassification: { rules: [{ class: 'code-content', sourceExtensions: ['.c', '.txt'] }] } },
+  publicSourceScope: { sourceVisibility: LIVE_POLICY.publicSourceScope.sourceVisibility, contentClassification: { rules: [{ class: 'code-content', sourceExtensions: ['.c', '.txt'] }] } },
 }));
 export const FIXTURE_SCREEN = buildDossierScreen(FIXTURE_POLICY, false, null, 'public');
 

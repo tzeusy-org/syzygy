@@ -1,0 +1,968 @@
+import { closeSync, constants, fstatSync, lstatSync, openSync, readSync, realpathSync } from 'node:fs';
+import { lstat, open, realpath, type FileHandle } from 'node:fs/promises';
+import path from 'node:path';
+import { encodeCanonicalJson, parseBoundedJson } from '@syzygy/polaris-generation-core/live';
+import { deepFreeze, isRecord, sha256 } from '@syzygy/support';
+import { CLARIFICATION_ANSWER_KINDS } from './draft-schema.js';
+import { SESSION_CONTENT_CLASSES, SESSION_TOOLS, type SessionAdmission, type SessionBinding, type SessionContentClass } from './session-egress-policy.js';
+import { isSessionProfile, SESSION_PROFILE_ID, type SessionProfile } from './session-profile.js';
+import type { DossierScreen } from './screen.js';
+import type { UrlSessionControlAudit } from './session-control.js';
+import type { UrlSessionLaunchOptions, UrlSessionLaunchOutcome } from './session-launch.js';
+import { SESSION_RELAY_EVENTS, type SessionAuditEvent } from './session-relay.js';
+import type { SessionResponseUsage } from './session-response.js';
+import type { ViewRole } from './session-view.js';
+import { inspectUrlDesignProduct, isUrlDesignProductLeaseOpen, readInertUrlDesignProduct, recheckUrlDesignProductInputs, sameReproducedUrlDesignProduct,
+  type UrlDesignProductBinding, type UrlDesignProductMetadata, type UrlInertDesignProduct, type ValidatedUrlDesignProduct } from './url-design-product.js';
+import { checkStoredUrlRender } from './url-stored-render.js';
+import { inspectUrlLaunchHistory, URL_HELPER_LAUNCH_FILES, type UrlLaunchHistoryCapability, type UrlLaunchHistoryRole } from './url-launch-history.js';
+
+export const URL_SESSION_AUDIT_FORMAT = 'url-session-audit/2' as const;
+export const URL_SESSION_AUDIT_LIMITS = Object.freeze({ events: 4096, eventBytes: 65_536, bytes: 16_777_216, pending: 8, milliseconds: 5000 });
+type Limits = { readonly [K in keyof typeof URL_SESSION_AUDIT_LIMITS]: number };
+export interface UrlSessionAuditScope {
+  readonly binding: SessionBinding; readonly originPolicySha256: string; readonly profileSha256: string;
+}
+export interface UrlSessionToolReceiptMetadata {
+  readonly id: string; readonly toolName: 'mcp__syzygy__source_read' | 'mcp__syzygy__artifact_read' | 'mcp__syzygy__artifact_write' | 'mcp__syzygy__dossier_step';
+  readonly inputSha256: string; readonly digest: string; readonly bytes: number;
+  readonly classes: readonly SessionContentClass[]; readonly originIds: readonly string[];
+}
+type Envelope<K, P> = { readonly kind: K; readonly role: ViewRole; readonly scope: UrlSessionAuditScope; readonly payload: P };
+export type UrlSessionAuditEvent = Envelope<'relay', SessionAuditEvent>
+  | Envelope<'control', UrlSessionControlAudit>
+  | Envelope<'launch-attempt', Parameters<UrlSessionLaunchOptions['audit']>[0]>
+  | Envelope<'before-tool', { readonly tool: 'source_read' | 'artifact_read' | 'artifact_write' | 'dossier_step'; readonly inputSha256: string }>
+  | Envelope<'tool-receipt', UrlSessionToolReceiptMetadata>
+  | Envelope<'usage', SessionResponseUsage>
+  | Envelope<'launch-terminal', UrlSessionLaunchOutcome>;
+type LaunchHistoryEvent = Envelope<'launch-history', {
+  readonly file: string; readonly recordSha256: string; readonly recordBytes: number;
+  readonly promptRecordSha256: string; readonly promptSha256: string; readonly sessionId: string;
+}>;
+export interface UrlDesignDeliveryAuditInput extends UrlDesignProductBinding {
+  readonly product: ValidatedUrlDesignProduct;
+  readonly expectedProduct: UrlDesignProductMetadata;
+  readonly launch: UrlCommittedLaunchHistory;
+  readonly sitePath: string;
+  readonly round: number;
+}
+interface DesignDeliveryIdentity {
+  readonly state: 'prepared';
+  readonly site: number;
+  readonly round: number;
+  readonly sessionId: string;
+  readonly draftRevision: number;
+  readonly original: UrlDesignProductMetadata['original'];
+  readonly payload: UrlDesignProductMetadata['payload'];
+  readonly view: UrlDesignProductMetadata['view'];
+  readonly files: number;
+  readonly pages: number;
+  readonly rendererSha256: string;
+  readonly basePolicySha256: string;
+  readonly originPolicySha256: string;
+  readonly registryProfileSha256: string;
+  readonly policyBindingsSha256: string;
+  readonly launchEventSha256: string;
+  readonly parentCount: number;
+  readonly parentsSha256: string;
+  readonly inputsSha256: string;
+  readonly storedPopulationSha256: string;
+}
+type DesignDeliveryEvent = Envelope<'design-delivery', DesignDeliveryIdentity>;
+export interface UrlCheckedDesignVerdict {
+  readonly number: number;
+  readonly checkSha256: string;
+  readonly verdictSha256: string;
+}
+type DesignVerdictEvent = Envelope<'design-verdict', {
+  readonly deliverySha256: string;
+  readonly artifactReadId: string;
+  readonly relayResponseSha256: string;
+  readonly verdictCallId: string;
+  readonly checked: UrlCheckedDesignVerdict;
+  readonly toolReceipt: UrlSessionToolReceiptMetadata;
+}>;
+type CapturedAuditEvent = UrlSessionAuditEvent | LaunchHistoryEvent | DesignDeliveryEvent | DesignVerdictEvent;
+type PrivateEventKind = LaunchHistoryEvent['kind'] | DesignDeliveryEvent['kind'] | DesignVerdictEvent['kind'];
+declare const designAuditBrand: unique symbol;
+export interface UrlDesignDeliveryAuditRecord {
+  readonly [designAuditBrand]: true;
+  readonly eventSha256: string;
+  readonly identity: DesignDeliveryIdentity;
+}
+export interface UrlDesignDeliveryView {
+  readonly receipt: UrlDesignDeliveryAuditRecord;
+  readonly view: Uint8Array;
+  readonly parents: UrlInertDesignProduct['parents'];
+}
+const authenticatedDesignViews = new WeakMap<UrlDesignDeliveryView, {
+  readonly current: () => void; readonly product: WeakRef<ValidatedUrlDesignProduct>;
+}>();
+
+/** Establish that the audit issued this exact envelope before accessing its fields. */
+export function isIssuedUrlDesignDeliveryView(delivery: UrlDesignDeliveryView): boolean {
+  return authenticatedDesignViews.has(delivery);
+}
+
+/** Check a protected, still-current handoff at its next local use. */
+export function assertUrlDesignDeliveryViewCurrent(delivery: UrlDesignDeliveryView): void {
+  const issued = authenticatedDesignViews.get(delivery);
+  const product = issued?.product.deref();
+  if (!issued || !product || delivery.view.byteLength !== delivery.receipt.identity.view.bytes
+    || sha256(delivery.view) !== delivery.receipt.identity.view.sha256) throw refused();
+  issued.current();
+  if (!recheckUrlDesignProductInputs(product)) throw refused();
+}
+const designIdentityDigest = (value: unknown): string => sha256(encodeCanonicalJson(value, { maxBytes: 2_097_152, maxNodes: 65_536, maxDepth: 32 }));
+export interface UrlDesignReviewProof {
+  readonly run: string;
+  readonly runId: string;
+  readonly pinnedRevision: string;
+  readonly round: number;
+  readonly site: number;
+  readonly sessionId: string;
+  readonly artifactReadId: string;
+  readonly relayResponseSha256: string;
+  readonly verdictCallId: string;
+  readonly verdictInputSha256: string;
+  readonly packet: { readonly sha256: string; readonly files: readonly string[]; readonly pages: readonly string[] };
+}
+const designReviewProofs = new WeakMap<UrlDesignReviewProof, () => void>();
+export function assertUrlDesignReviewProofCurrent(proof: UrlDesignReviewProof): void {
+  const current = designReviewProofs.get(proof);
+  if (!current) throw refused();
+  current();
+}
+export interface UrlDesignRenderContinuation {
+  readonly binding: UrlDesignProductBinding;
+  readonly checked: UrlCheckedDesignVerdict;
+  readonly delivery: UrlDesignDeliveryAuditRecord;
+  readonly verdictEventSha256: string;
+  readonly original: UrlDesignProductMetadata;
+  readonly earlierRounds: readonly number[];
+  readonly deadline: number;
+}
+const designRenderContinuations = new WeakMap<UrlDesignRenderContinuation, () => void>();
+export function assertUrlDesignRenderContinuationCurrent(continuation: UrlDesignRenderContinuation): void {
+  const current = designRenderContinuations.get(continuation);
+  if (!current) throw refused();
+  current();
+}
+
+/** A final render adds its checked design records to the already reviewed
+ * source and product population. The original design packet covers every
+ * file and excludes only the review-status region. */
+export function assertUrlFinalDesignProduct(continuation: UrlDesignRenderContinuation, product: UrlDesignProductMetadata): void {
+  const original = continuation.original;
+  const same = (left: unknown, right: unknown): boolean => designIdentityDigest(left) === designIdentityDigest(right);
+  const designRecord = (file: string): boolean =>
+    /^reviews\/(?:checks\/)?design-verdict-(?:0|[1-9][0-9]*)\.json$/u.test(file)
+    || file === 'reviews/design-session-1.json' || file === URL_HELPER_LAUNCH_FILES.design;
+  const designSelection = (selector: string): boolean => selector === 'design-checks' || selector === 'design-verdicts';
+  const additional = new Set([
+    ...product.products.records.filter(record => designRecord(record.path)).map(record => record.originId),
+    ...product.products.selections.filter(selection => designSelection(selection.selector)).map(selection => selection.originId),
+  ]);
+  const checkedFile = `design-verdict-${continuation.checked.number}.json`;
+  const recordedDigest = (file: string) => product.products.records.find(record => record.path === file)?.sha256;
+  if (product.run !== original.run || product.runId !== original.runId || product.pinnedRevision !== original.pinnedRevision
+    || product.draftRevision !== original.draftRevision || product.products.operation !== original.products.operation
+    || !same(product.renderer, original.renderer) || !same(product.basePolicy, original.basePolicy)
+    || !same(product.originPolicy, original.originPolicy) || !same(product.profile, original.profile)
+    || !same(product.original, original.original) || !same(product.view, original.view)
+    || !same(product.payload, original.payload) || !same(product.rawActive, original.rawActive)
+    || product.output.pages !== original.output.pages || product.output.files !== original.output.files
+    || !same(product.output.population.map(file => file.path), original.output.population.map(file => file.path))
+    || recordedDigest(`reviews/checks/${checkedFile}`) !== continuation.checked.checkSha256
+    || recordedDigest(`reviews/${checkedFile}`) !== continuation.checked.verdictSha256
+    || !same(product.products.records.filter(record => !designRecord(record.path)), original.products.records)
+    || !same(product.products.selections.filter(selection => !designSelection(selection.selector)), original.products.selections)
+    || !same(product.parents.filter(parent => !additional.has(parent.id)), original.parents)) throw refused();
+  assertUrlDesignRenderContinuationCurrent(continuation);
+}
+declare const committedLaunchBrand: unique symbol;
+export interface UrlCommittedLaunchHistory { readonly [committedLaunchBrand]: true }
+interface CommittedLaunchHistoryIdentity {
+  readonly history: ReturnType<typeof inspectUrlLaunchHistory>; readonly scope: UrlSessionAuditScope;
+  readonly eventSha256: string; readonly project: string;
+}
+const committedLaunches = new WeakMap<UrlCommittedLaunchHistory, () => CommittedLaunchHistoryIdentity>();
+export function inspectCommittedUrlLaunchHistory(capability: UrlCommittedLaunchHistory): CommittedLaunchHistoryIdentity {
+  try { const inspect = committedLaunches.get(capability); if (inspect) return inspect(); } catch { /* Unavailable. */ }
+  throw refused();
+}
+export interface UrlSessionAuditOptions {
+  /** Canonical owned0700 parent outside every role view; a fresh name prefix. */
+  readonly parent: string; readonly name: string; readonly binding: Omit<SessionBinding, 'role'>;
+  readonly originPolicySha256: string; readonly project: string; readonly pin: string; readonly principal: string;
+  /** Genuine independently compiled profiles, one per role. Never event-learned. */
+  readonly profiles: readonly SessionProfile[]; readonly declaredClasses: readonly SessionContentClass[];
+  readonly screen: DossierScreen; readonly current: () => boolean | Promise<boolean>;
+  readonly limits?: Partial<Limits>;
+}
+const ROLES: readonly ViewRole[] = ['author', 'inventory', 'fidelity', 'design'];
+const KINDS = ['relay', 'control', 'launch-attempt', 'before-tool', 'tool-receipt', 'usage', 'launch-terminal', 'launch-history', 'design-delivery', 'design-verdict'] as const;
+const RELAY_TRANSITIONS: Readonly<Record<SessionAuditEvent['event'], readonly SessionAuditEvent['event'][]>> = {
+  'attempt-allowed': ['send-attempt', 'attempt-refused', 'transport-failed'],
+  'send-attempt': ['send-outcome', 'transport-failed'],
+  'send-outcome': ['response-admitted', 'response-refused', 'transport-failed'],
+  'response-admitted': ['response-refused', 'transport-failed'],
+  'attempt-refused': [], 'response-refused': [], 'transport-failed': [],
+};
+const TOOLS = ['source_read', 'artifact_read', 'artifact_write', 'dossier_step'] as const;
+const SIGNALS = ['SIGABRT', 'SIGALRM', 'SIGBUS', 'SIGCHLD', 'SIGCONT', 'SIGFPE', 'SIGHUP', 'SIGILL', 'SIGINT', 'SIGIO', 'SIGIOT',
+  'SIGKILL', 'SIGPIPE', 'SIGPOLL', 'SIGPROF', 'SIGPWR', 'SIGQUIT', 'SIGSEGV', 'SIGSTKFLT', 'SIGSTOP', 'SIGSYS', 'SIGTERM', 'SIGTRAP',
+  'SIGTSTP', 'SIGTTIN', 'SIGTTOU', 'SIGUNUSED', 'SIGURG', 'SIGUSR1', 'SIGUSR2', 'SIGVTALRM', 'SIGWINCH', 'SIGXCPU', 'SIGXFSZ'];
+const exact = (v: unknown, keys: readonly string[]): v is Record<string, unknown> => isRecord(v)
+  && Object.keys(v).length === keys.length && keys.every(k => Object.hasOwn(v, k));
+const one = (v: unknown, values: readonly string[]): v is string => typeof v === 'string' && values.includes(v);
+const hex = (v: unknown): v is string => typeof v === 'string' && /^[a-f0-9]{64}$/u.test(v);
+const count = (v: unknown, max = Number.MAX_SAFE_INTEGER): v is number => typeof v === 'number' && Number.isSafeInteger(v) && v >= 0 && v <= max;
+const id = (v: unknown): v is string => typeof v === 'string' && /^[A-Za-z0-9][A-Za-z0-9._:/-]{0,255}$/u.test(v);
+const providerToolId = (v: unknown): v is string => typeof v === 'string' && /^toolu_[A-Za-z0-9_-]{0,250}$/u.test(v);
+const canonical = (v: unknown, maxBytes: number = URL_SESSION_AUDIT_LIMITS.eventBytes): string => encodeCanonicalJson(v, { maxBytes, maxNodes: 4096, maxDepth: 12 });
+const copy = <T>(v: T, maxBytes?: number): T => deepFreeze(parseBoundedJson(canonical(v, maxBytes), { maxBytes: maxBytes ?? URL_SESSION_AUDIT_LIMITS.eventBytes, maxNodes: 4096, maxDepth: 12 })) as T;
+const equal = (a: unknown, b: unknown): boolean => canonical(a) === canonical(b);
+const refused = (): Error => new Error('url-session-audit-refused');
+const zeroUsage = (): SessionResponseUsage => ({ inputTokens: 0, outputTokens: 0, cacheCreationInputTokens: 0, cacheReadInputTokens: 0 });
+const zeroKinds = () => Object.fromEntries(KINDS.map(k => [k, 0])) as Record<typeof KINDS[number], number>;
+interface Totals { records: number; bytes: number; tipSha256: string | null; usageReports: number; usage: SessionResponseUsage }
+export interface UrlSessionAuditSummary {
+  readonly format: typeof URL_SESSION_AUDIT_FORMAT; readonly closed: boolean; readonly poisoned: boolean;
+  readonly durableRecords: number; readonly durableBytes: number; readonly declarations: number;
+  readonly captured: Readonly<Record<typeof KINDS[number], number>>;
+  readonly relayEvents: Readonly<Record<SessionAuditEvent['event'], number>>; readonly tipSha256: string | null;
+  readonly roles: Readonly<Record<ViewRole, Readonly<Totals>>>;
+  readonly usageReports: number; readonly capturedUsage: SessionResponseUsage;
+  readonly pendingAppends: number; readonly pendingFilesystemOperations: number; readonly pendingCallbacks: number;
+  readonly tail: 'durable-prefix' | 'Unknown'; readonly termination: 'open' | 'closed' | 'Unknown';
+  readonly providerReceipts: 'Unknown'; readonly nativeSendCensus: 'Unknown'; readonly completeness: 'Unknown'; readonly hostileSameUidIsolation: 'Unknown';
+  readonly limits: Limits;
+}
+export type UrlSessionAuditResult = { readonly ok: true; readonly scope: (role: ViewRole) => UrlSessionAuditScope;
+  readonly append: (event: UrlSessionAuditEvent) => Promise<void>;
+  readonly commitLaunchHistory: (history: UrlLaunchHistoryCapability) => Promise<UrlCommittedLaunchHistory>;
+  readonly commitDesignDelivery: (input: UrlDesignDeliveryAuditInput, waitForSample?: () => Promise<boolean>) => Promise<UrlDesignDeliveryView>;
+  readonly revalidateDesignDelivery: (record: UrlDesignDeliveryAuditRecord, product: ValidatedUrlDesignProduct) => Promise<void>;
+  readonly readDesignDeliveryView: (record: UrlDesignDeliveryAuditRecord, product: ValidatedUrlDesignProduct) => Promise<UrlDesignDeliveryView>;
+  readonly commitDesignArtifactRead: (view: UrlDesignDeliveryView, receipt: UrlSessionToolReceiptMetadata) => Promise<void>;
+  readonly readDesignReviewProof: (record: UrlDesignDeliveryAuditRecord, product: ValidatedUrlDesignProduct,
+    admission: SessionAdmission) => Promise<UrlDesignReviewProof>;
+  readonly commitDesignVerdict: (proof: UrlDesignReviewProof, checked: UrlCheckedDesignVerdict, receipt: UrlSessionToolReceiptMetadata) => Promise<void>;
+  readonly readDesignRenderContinuation: (record: UrlDesignDeliveryAuditRecord, product: ValidatedUrlDesignProduct,
+    number: number) => Promise<UrlDesignRenderContinuation>;
+  readonly close: () => Promise<UrlSessionAuditSummary>;
+  readonly summary: () => UrlSessionAuditSummary }
+  | { readonly ok: false; readonly code: 'url-session-audit-unavailable'; readonly summary: () => UrlSessionAuditSummary };
+
+/** One serialized host writer, four new segments. Fsync proves only the checked
+ * local prefix; it is neither a provider receipt nor a complete send census. */
+export async function createUrlSessionAudit(given: UrlSessionAuditOptions): Promise<UrlSessionAuditResult> {
+  let poisoned = false, closing = false, pending = 0, filesystem = 0, callbacks = 0, records = 0, durableBytes = 0, declarations = 0;
+  let tip: string | null = null, limits: Limits = URL_SESSION_AUDIT_LIMITS;
+  const relayEvents = Object.fromEntries(SESSION_RELAY_EVENTS.map(event => [event, 0])) as Record<SessionAuditEvent['event'], number>;
+  const captured = zeroKinds(), totals = Object.fromEntries(ROLES.map(role => [role, { records: 0, bytes: 0, tipSha256: null, usageReports: 0, usage: zeroUsage() }])) as Record<ViewRole, Totals>;
+  const handles = new Set<FileHandle>(), shutting = new Map<FileHandle, Promise<void>>();
+  const summary = (): UrlSessionAuditSummary => copy({ format: URL_SESSION_AUDIT_FORMAT, closed: closing && handles.size === 0 && filesystem === 0 && callbacks === 0 && pending === 0,
+    poisoned, durableRecords: records, durableBytes, declarations, captured, relayEvents, tipSha256: tip, roles: totals,
+    usageReports: ROLES.reduce((n, r) => n + totals[r].usageReports, 0), capturedUsage: Object.fromEntries(Object.keys(zeroUsage()).map(k => [k, ROLES.reduce((n, r) => n + totals[r].usage[k as keyof SessionResponseUsage], 0)])) as unknown as SessionResponseUsage,
+    pendingAppends: pending, pendingFilesystemOperations: filesystem, pendingCallbacks: callbacks, tail: poisoned ? 'Unknown' : 'durable-prefix',
+    termination: closing ? (handles.size || filesystem || callbacks || pending ? 'Unknown' : 'closed') : 'open',
+    providerReceipts: 'Unknown', nativeSendCensus: 'Unknown', completeness: 'Unknown', hostileSameUidIsolation: 'Unknown', limits });
+  function poison(): never { poisoned = true; throw refused(); }
+  const guard = (deadline: number): void => { if (poisoned || closing || performance.now() >= deadline) poison(); };
+  const track = <T>(kind: 'filesystem' | 'callback', fn: () => Promise<T> | T): Promise<T> => {
+    if (kind === 'filesystem') filesystem++; else callbacks++;
+    return Promise.resolve().then(fn).finally(() => { if (kind === 'filesystem') filesystem--; else callbacks--; });
+  };
+  const wait = async <T>(operation: Promise<T>, deadline: number): Promise<T> => {
+    let timer: ReturnType<typeof setTimeout> | undefined;
+    try { return await Promise.race([operation, new Promise<never>((_, reject) => {
+      timer = setTimeout(() => { poisoned = true; reject(refused()); }, Math.max(1, deadline - performance.now()));
+    })]); } finally { clearTimeout(timer); }
+  };
+  const shut = (handle: FileHandle): Promise<void> => {
+    const old = shutting.get(handle); if (old) return old;
+    const operation = track('filesystem', () => handle.close()).then(() => { handles.delete(handle); }, () => { poisoned = true; });
+    shutting.set(handle, operation); return operation;
+  };
+  let queue = Promise.resolve();
+  let verifyOnClose: ((deadline: number) => Promise<void>) | undefined;
+  let closeOperation: Promise<UrlSessionAuditSummary> | undefined;
+  const close = (): Promise<UrlSessionAuditSummary> => {
+    if (closing && handles.size === 0 && filesystem === 0 && callbacks === 0 && pending === 0) return Promise.resolve(summary());
+    if (closeOperation) return closeOperation;
+    closing = true; const deadline = performance.now() + limits.milliseconds;
+    closeOperation = (async () => {
+      try { await wait(queue, deadline); if (!poisoned && verifyOnClose) await verifyOnClose(deadline); } catch { poisoned = true; }
+      try { await wait(Promise.all([...handles].map(shut)), deadline); } catch { poisoned = true; }
+      return summary();
+    })().finally(() => { closeOperation = undefined; });
+    return closeOperation;
+  };
+  try {
+    // Retain genuine profile identity for history binding. Snapshot the audit
+    // options and callback ports before the first await.
+    if (!Array.isArray(given.profiles) || given.profiles.length !== ROLES.length) poison();
+    const profiles = [given.profiles[0]!, given.profiles[1]!, given.profiles[2]!, given.profiles[3]!];
+    const input = copy({ parent: given.parent, name: given.name, binding: given.binding, originPolicySha256: given.originPolicySha256,
+      project: given.project, pin: given.pin, principal: given.principal, declaredClasses: given.declaredClasses, limits: given.limits ?? {} });
+    const current = given.current, screenBody = given.screen.screenBody, screenSecrets = given.screen.screenSecrets, policy = given.screen.policySha256;
+    if (!exact(given, ['parent', 'name', 'binding', 'originPolicySha256', 'project', 'pin', 'principal', 'profiles', 'declaredClasses', 'screen', 'current', ...(given.limits === undefined ? [] : ['limits'])])
+      || !exact(input.binding, ['run', 'sourceBinding', 'policy', 'provider', 'model']) || !Object.values(input.binding).every(id)
+      || !hex(input.binding.sourceBinding) || !hex(input.binding.policy) || input.binding.policy !== policy || !hex(input.originPolicySha256)
+      || !id(input.project) || !id(input.principal) || typeof input.pin !== 'string' || !/^(?:[a-f0-9]{40}|[a-f0-9]{64})$/u.test(input.pin)
+      || typeof input.parent !== 'string' || !path.isAbsolute(input.parent) || path.resolve(input.parent) !== input.parent
+      || typeof input.name !== 'string' || !/^[A-Za-z0-9][A-Za-z0-9._-]{0,80}$/u.test(input.name)
+      || !Array.isArray(input.declaredClasses) || !input.declaredClasses.length || input.declaredClasses.length > SESSION_CONTENT_CLASSES.length
+      || new Set(input.declaredClasses).size !== input.declaredClasses.length || input.declaredClasses.some(c => !one(c, SESSION_CONTENT_CLASSES))
+      || [current, screenBody, screenSecrets].some(f => typeof f !== 'function') || !exact(input.limits, Object.keys(input.limits))
+      || Object.entries(input.limits).some(([key, value]) => !Object.hasOwn(URL_SESSION_AUDIT_LIMITS, key) || !count(value, URL_SESSION_AUDIT_LIMITS[key as keyof Limits]) || value === 0)) poison();
+    limits = Object.freeze({ ...URL_SESSION_AUDIT_LIMITS, ...input.limits });
+    const safe = (value: unknown): void => {
+      const fields: string[] = [], values: string[] = [];
+      const field = (s: string): void => { if (Buffer.from(s).toString('utf8') !== s || /[\u0000-\u001f\u007f]/u.test(s)
+        || screenBody(s) !== undefined || screenSecrets(s) !== undefined) poison(); fields.push(s); };
+      const walk = (v: unknown): void => {
+        if (typeof v === 'string') { field(v); values.push(v); }
+        else if (typeof v === 'number' || typeof v === 'boolean') values.push(JSON.stringify(v));
+        else if (Array.isArray(v)) for (const child of v) walk(child);
+        else if (isRecord(v)) for (const [key, child] of Object.entries(v)) { field(key); walk(child); }
+      };
+      field(canonical(value)); walk(value);
+      for (const joined of [fields.join(''), values.join('')]) if (screenBody(joined) !== undefined || screenSecrets(joined) !== undefined) poison();
+    };
+    safe(input);
+    const scopes = new Map<ViewRole, UrlSessionAuditScope>();
+    if (profiles.length !== ROLES.length) poison();
+    for (const profile of profiles) {
+      if (!isSessionProfile(profile) || !one(profile.input.binding.role, ROLES) || scopes.has(profile.input.binding.role as ViewRole)
+        || !equal(profile.input.binding, { ...input.binding, role: profile.input.binding.role }) || profile.id !== SESSION_PROFILE_ID || !hex(profile.digest)) poison();
+      scopes.set(profile.input.binding.role as ViewRole, copy({ binding: profile.input.binding, originPolicySha256: input.originPolicySha256, profileSha256: profile.digest }));
+    }
+    const checkCurrent = async (deadline: number): Promise<void> => {
+      guard(deadline); if (await wait(track('callback', current), deadline) !== true) poison(); guard(deadline);
+    };
+    const io = async <T>(deadline: number, fn: () => Promise<T>, cleanup = false): Promise<T> => {
+      // Closing verifies the historical physical prefix only; it grants no new
+      // act and must still release descriptors after the run becomes stale.
+      if (!cleanup) await checkCurrent(deadline);
+      const result = await wait(track('filesystem', fn), deadline);
+      if (!cleanup) { guard(deadline); await checkCurrent(deadline); }
+      else if (poisoned || performance.now() >= deadline) poison();
+      return result;
+    };
+    const acquire = (deadline: number, fn: () => Promise<FileHandle>): Promise<FileHandle> => io(deadline, async () => {
+      const handle = await fn(); handles.add(handle);
+      if (poisoned || closing) { void shut(handle); throw refused(); } return handle;
+    });
+    const began = performance.now() + limits.milliseconds;
+    await checkCurrent(began); if (await io(began, () => realpath(input.parent)) !== input.parent) poison();
+    const directory = await acquire(began, () => open(input.parent, constants.O_RDONLY | constants.O_DIRECTORY | constants.O_NOFOLLOW));
+    const directoryStat = await io(began, () => directory.stat({ bigint: true }));
+    if (!directoryStat.isDirectory() || directoryStat.uid !== BigInt(process.getuid?.() ?? -1) || (directoryStat.mode & 0o777n) !== 0o700n) poison();
+    type Stat = typeof directoryStat;
+    interface Segment { readonly file: FileHandle; readonly name: string; readonly initial: Stat; prefix: Buffer; modified: bigint; changed: bigint }
+    const segments = new Map<ViewRole, Segment>();
+    const sameDirectory = (s: Stat): boolean => s.isDirectory() && s.dev === directoryStat.dev && s.ino === directoryStat.ino && s.uid === directoryStat.uid && s.mode === directoryStat.mode;
+    type SegmentPrefix = Pick<Segment, 'prefix' | 'modified' | 'changed'>;
+    interface ManagedAppend {
+      readonly role: ViewRole; readonly prefix: Buffer; full: SegmentPrefix | null;
+    }
+    let managedAppend: ManagedAppend | undefined;
+    const sameSegmentIdentity = (segment: Segment, stat: Stat): boolean => stat.isFile() && stat.dev === segment.initial.dev
+      && stat.ino === segment.initial.ino && stat.uid === segment.initial.uid && stat.mode === segment.initial.mode && stat.nlink === 1n;
+    const sameSegment = (segment: Segment, expected: SegmentPrefix, stat: Stat): boolean => sameSegmentIdentity(segment, stat)
+      && stat.size === BigInt(expected.prefix.length) && stat.mtimeNs === expected.modified && stat.ctimeNs === expected.changed;
+    // The caller brackets a complete read-only prefix check with currentness.
+    const inspectIdentities = async (deadline: number, changed?: SegmentPrefix & { readonly role: ViewRole }, cleanup = false): Promise<void> => {
+      const inspect = async <T>(fn: () => Promise<T>): Promise<T> => {
+        const value = await fn();
+        if (cleanup) { if (poisoned || performance.now() >= deadline) poison(); }
+        else guard(deadline);
+        return value;
+      };
+      if (await inspect(() => realpath(input.parent)) !== input.parent
+        || !sameDirectory(await inspect(() => lstat(input.parent, { bigint: true })))
+        || !sameDirectory(await inspect(() => directory.stat({ bigint: true })))) poison();
+      for (const [role, segment] of segments) {
+        const expected = changed?.role === role ? changed : segment;
+        for (const stat of [await inspect(() => segment.file.stat({ bigint: true })), await inspect(() => lstat(path.join(input.parent, segment.name), { bigint: true }))]) {
+          if (!sameSegment(segment, expected, stat)) poison();
+        }
+        const buffer = Buffer.alloc(Math.min(65_536, Math.max(1, expected.prefix.length))); let offset = 0;
+        while (offset < expected.prefix.length) {
+          const wanted = Math.min(buffer.length, expected.prefix.length - offset);
+          const read = await inspect(() => segment.file.read(buffer, 0, wanted, offset));
+          if (read.bytesRead !== wanted || !buffer.subarray(0, wanted).equals(expected.prefix.subarray(offset, offset + wanted))) poison();
+          offset += wanted;
+        }
+      }
+    };
+    for (const role of ROLES) {
+      const name = `${input.name}-${role}.jsonl`;
+      const file = await acquire(began, () => open(`/proc/self/fd/${directory.fd}/${name}`, constants.O_RDWR | constants.O_CREAT | constants.O_EXCL | constants.O_NOFOLLOW | constants.O_APPEND, 0o600));
+      const stat = await io(began, () => file.stat({ bigint: true }));
+      if (!stat.isFile() || stat.uid !== directoryStat.uid || (stat.mode & 0o777n) !== 0o600n || stat.nlink !== 1n || stat.size !== 0n) poison();
+      segments.set(role, { file, name, initial: stat, prefix: Buffer.alloc(0), modified: stat.mtimeNs, changed: stat.ctimeNs });
+    }
+    await io(began, () => directory.sync()); await io(began, () => inspectIdentities(began));
+    verifyOnClose = deadline => io(deadline, () => inspectIdentities(deadline, undefined, true), true);
+    const classes = (v: unknown): void => {
+      if (!Array.isArray(v) || v.length === 0 || v.length > SESSION_CONTENT_CLASSES.length || new Set(v).size !== v.length
+        || v.some(c => !one(c, SESSION_CONTENT_CLASSES) || !input.declaredClasses.includes(c as SessionContentClass))) poison();
+    };
+    const origins = (v: unknown): void => { if (!Array.isArray(v) || !v.length || v.length > 128 || new Set(v).size !== v.length || v.some(s => !id(s))) poison(); };
+    const admission = (v: unknown): void => {
+      if (!exact(v, ['digest', 'bytes', 'classes', 'originIds']) || !hex(v.digest) || !count(v.bytes, 2_097_152)) poison(); classes(v.classes); origins(v.originIds);
+    };
+    const toolReceipt = (p: unknown): void => {
+      if (!exact(p, ['id', 'toolName', 'inputSha256', 'digest', 'bytes', 'classes', 'originIds']) || !id(p.id)
+        || !one(p.toolName, TOOLS.map(tool => `mcp__syzygy__${tool}`)) || !hex(p.inputSha256) || !hex(p.digest) || !count(p.bytes, 2_097_152)) poison();
+      classes(p.classes); origins(p.originIds);
+    };
+    const usage = (v: unknown): void => { if (!exact(v, Object.keys(zeroUsage())) || Object.values(v).some(n => !count(n))) poison(); };
+    const project = (event: unknown, privateKind: PrivateEventKind | null): CapturedAuditEvent => {
+      if (!exact(event, ['kind', 'role', 'scope', 'payload']) || !one(event.kind, KINDS) || !one(event.role, ROLES)
+        || !equal(event.scope, scopes.get(event.role as ViewRole))) poison();
+      const p = event.payload, role = event.role as ViewRole;
+      switch (event.kind) {
+        case 'relay': {
+          if (!exact(p, ['event', 'subject', 'requestId', 'at', 'credentialIdentity', 'exposureMode', 'authority', 'admission', 'received',
+            'route', 'consumedToolResults', 'response', 'outcome', 'status'])
+            || !one(p.event, SESSION_RELAY_EVENTS)
+            || !exact(p.subject, ['binding', 'project', 'pin', 'principal']) || !equal(p.subject.binding, scopes.get(role)!.binding)
+            || p.subject.project !== input.project || p.subject.pin !== input.pin || p.subject.principal !== input.principal
+            || typeof p.requestId !== 'string' || !/^[a-f0-9]{8}-[a-f0-9]{4}-4[a-f0-9]{3}-[89ab][a-f0-9]{3}-[a-f0-9]{12}$/u.test(p.requestId)
+            || typeof p.at !== 'string' || !/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{3}Z$/u.test(p.at) || new Date(p.at).toISOString() !== p.at
+            || p.credentialIdentity !== 'Unknown' || p.exposureMode !== 'private-local-cli' || p.authority !== 'GOVERNANCE-SIMPLIFICATION-D10'
+            || (p.status !== null && (!count(p.status, 599) || p.status < 100))
+            || (p.route !== null && !one(p.route, ['messages', 'count-tokens']))) poison();
+          if (p.admission !== null) admission(p.admission);
+          if (p.received !== null && (!exact(p.received, ['digest', 'bytes']) || !hex(p.received.digest) || !count(p.received.bytes, 2_097_152))) poison();
+          if (!Array.isArray(p.consumedToolResults) || p.consumedToolResults.length > 1) poison();
+          for (const result of p.consumedToolResults as unknown[]) {
+            if (!exact(result, ['receiptId', 'toolUseId', 'digest', 'bytes']) || typeof result.receiptId !== 'string' || !/^tool-[0-9a-f]{64}$/u.test(result.receiptId)
+              || !providerToolId(result.toolUseId) || !hex(result.digest) || !count(result.bytes, 2_097_152) || result.bytes === 0
+              || !isRecord(p.admission) || !Array.isArray(p.admission.originIds) || !p.admission.originIds.includes(result.receiptId)) poison();
+          }
+          const expected = { 'attempt-allowed': 'allowed', 'attempt-refused': 'refused', 'send-attempt': 'attempted',
+            'send-outcome': 'local-request-flushed', 'transport-failed': 'Unknown', 'response-refused': 'refused', 'response-admitted': 'response-admitted' };
+          if (p.outcome !== expected[p.event as keyof typeof expected] || !p.event.startsWith('response-') && p.status !== null
+            || (p.event === 'attempt-allowed' || p.event.startsWith('send-') || p.event.startsWith('response-'))
+              && (p.admission === null || p.received === null || p.route === null)
+            || p.event !== 'response-admitted' && p.response !== null) poison();
+          if (p.event === 'response-admitted') {
+            const response = p.response;
+            if (p.status !== 200 || !exact(response, ['digest', 'bytes', 'content', 'stopReason', 'textBlocks', 'tool'])
+              || !hex(response.digest) || !count(response.bytes, 8_388_608) || response.bytes === 0
+              || !one(response.content, ['messages-json', 'messages-event-stream'])
+              || !one(response.stopReason, ['end_turn', 'tool_use', 'max_tokens', 'stop_sequence'])
+              || !count(response.textBlocks, 64) || (response.tool === null ? response.textBlocks === 0 : response.textBlocks >= 64)
+              || (response.stopReason === 'tool_use') !== (response.tool !== null)) poison();
+            if (response.tool !== null && (!exact(response.tool, ['id', 'name', 'inputSha256'])
+              || !providerToolId(response.tool.id) || !one(response.tool.name, SESSION_TOOLS) || !hex(response.tool.inputSha256))) poison();
+          }
+          break;
+        }
+        case 'control': {
+          if (!isRecord(p) || !one(p.event, ['control-published', 'clarification-question', 'clarification-answer'])) poison();
+          if (p.event === 'control-published') {
+            if (!exact(p, ['event', 'role', 'eventSha256', 'eventBytes']) || p.role !== role || !hex(p.eventSha256) || !count(p.eventBytes, 65_536)) poison();
+          } else {
+            if (role !== 'author' || !hex(p.questionSha256) || !hex(p.nonceSha256)) poison();
+            if (p.event === 'clarification-question') {
+              if (!exact(p, ['event', 'questionSha256', 'questionBytes', 'nonceSha256', 'questionNumber']) || !count(p.questionBytes, 65_536) || !count(p.questionNumber, 1000) || p.questionNumber === 0) poison();
+            } else if (!exact(p, ['event', 'questionSha256', 'answerSha256', 'answerBytes', 'nonceSha256', 'answerKind']) || !hex(p.answerSha256)
+              || !count(p.answerBytes, 8192) || !one(p.answerKind, CLARIFICATION_ANSWER_KINDS)) poison();
+          } break;
+        }
+        case 'launch-attempt':
+          if (!exact(p, ['event', 'profileSha256', 'commandSha256', 'viewSha256']) || p.event !== 'session-launch-attempt'
+            || p.profileSha256 !== scopes.get(role)!.profileSha256 || !hex(p.commandSha256) || !hex(p.viewSha256)) poison(); break;
+        case 'launch-history':
+          if (privateKind !== 'launch-history' || role === 'author' || !exact(p, ['file', 'recordSha256', 'recordBytes', 'promptRecordSha256', 'promptSha256', 'sessionId'])
+            || p.file !== URL_HELPER_LAUNCH_FILES[role] || !hex(p.recordSha256) || !count(p.recordBytes, 2_097_152) || p.recordBytes === 0
+            || !hex(p.promptRecordSha256) || !hex(p.promptSha256) || !id(p.sessionId)) poison();
+          break;
+        case 'design-delivery':
+          if (privateKind !== 'design-delivery' || role !== 'design') poison();
+          break;
+        case 'before-tool':
+          if (!exact(p, ['tool', 'inputSha256']) || !one(p.tool, TOOLS) || !hex(p.inputSha256)) poison(); break;
+        case 'design-verdict':
+          if (privateKind !== 'design-verdict' || role !== 'design'
+            || !exact(p, ['deliverySha256', 'artifactReadId', 'relayResponseSha256', 'verdictCallId', 'checked', 'toolReceipt'])
+            || !hex(p.deliverySha256) || typeof p.artifactReadId !== 'string' || !/^tool-[a-f0-9]{64}$/u.test(p.artifactReadId)
+            || !hex(p.relayResponseSha256) || !providerToolId(p.verdictCallId)
+            || !exact(p.checked, ['number', 'checkSha256', 'verdictSha256']) || !count(p.checked.number, 999_999)
+            || !hex(p.checked.checkSha256) || !hex(p.checked.verdictSha256)
+            || !isRecord(p.toolReceipt) || p.toolReceipt['toolName'] !== 'mcp__syzygy__dossier_step') poison();
+          toolReceipt(p.toolReceipt); break;
+        case 'tool-receipt': toolReceipt(p); break;
+        case 'usage': usage(p); break;
+        case 'launch-terminal': {
+          if (!exact(p, ['outcome', 'exitCode', 'signal', 'viewTermination', 'groupTermination', 'toolTermination', 'pendingInvocations', 'stdout', 'stderr', 'sampledStorageBytes', 'peakProcesses', 'aggregateEnforcement', 'betweenSamples'])
+            || !one(p.outcome, ['exited', 'launch-refused', 'stopped', 'wall-limit', 'output-limit', 'storage-limit', 'process-limit', 'inspection-failed'])
+            || (p.exitCode !== null && !count(p.exitCode, 255)) || (p.signal !== null && !one(p.signal, SIGNALS))
+            || !one(p.viewTermination, ['view-exited', 'Unknown']) || !one(p.groupTermination, ['confirmed', 'Unknown']) || !one(p.toolTermination, ['settled', 'Unknown'])
+            || p.toolTermination === 'settled' && p.pendingInvocations !== 0
+            || p.exitCode !== null && p.signal !== null || (p.pendingInvocations !== null && !count(p.pendingInvocations)) || (p.sampledStorageBytes !== null && !count(p.sampledStorageBytes))
+            || (p.peakProcesses !== null && !count(p.peakProcesses)) || p.aggregateEnforcement !== 'sampled-stop-only' || p.betweenSamples !== 'Unknown') poison();
+          for (const stream of [p.stdout, p.stderr]) if (!exact(stream, ['bytes', 'sha256']) || !count(stream.bytes) || !hex(stream.sha256)) poison();
+          break;
+        }
+        default: poison();
+      }
+      safe(event); return event as unknown as CapturedAuditEvent;
+    };
+    const attempts = new Map<ViewRole, { readonly commandSha256: string; readonly viewSha256: string }>();
+    const historyRoles = new Set<UrlLaunchHistoryRole>();
+    const relayRequests = new Set<string>();
+    type DurableEvent = { readonly offset: number; readonly bytes: Buffer; readonly digest: string };
+    const relayLatest = new Map<ViewRole, { readonly payload: SessionAuditEvent; readonly events: readonly DurableEvent[] }>();
+    const commit = async (event: unknown, role: ViewRole, deadline: number, declaration: boolean): Promise<DurableEvent> => {
+      guard(deadline); if (!declaration && records - declarations >= limits.events) poison();
+      const segment = segments.get(role)!;
+      const body = { format: URL_SESSION_AUDIT_FORMAT, sequence: records + 1, roleSequence: totals[role].records + 1,
+        previousSha256: tip, previousRoleSha256: totals[role].tipSha256, event };
+      const digest = sha256(canonical(body, limits.eventBytes)); const encoded = canonical({ ...body, sha256: digest }, limits.eventBytes); safe({ ...body, sha256: digest });
+      const offset = segment.prefix.length, bytes = Buffer.from(encoded + '\n'); if (durableBytes + bytes.length > limits.bytes) poison();
+      let nextUsage: SessionResponseUsage | undefined;
+      if (isRecord(event) && event.kind === 'usage') {
+        const reported = event.payload as SessionResponseUsage;
+        nextUsage = Object.fromEntries(Object.keys(zeroUsage()).map(k => [k, totals[role].usage[k as keyof SessionResponseUsage] + reported[k as keyof SessionResponseUsage]])) as unknown as SessionResponseUsage;
+        usage(nextUsage);
+        for (const key of Object.keys(zeroUsage()) as (keyof SessionResponseUsage)[]) if (!count(ROLES.reduce((n, r) => n + (r === role ? nextUsage![key] : totals[r].usage[key]), 0))) poison();
+      }
+      const intent: ManagedAppend = { role, prefix: Buffer.concat([segment.prefix, bytes]), full: null };
+      try {
+        const tail = await io(deadline, async (): Promise<SegmentPrefix> => {
+          // Each sample after a filesystem stage also admits the next stage.
+          await inspectIdentities(deadline);
+          await checkCurrent(deadline);
+          const writerFd = segment.file.fd, name = `/proc/self/fd/${directory.fd}/${segment.name}`;
+          if (!sameSegment(segment, segment, fstatSync(writerFd, { bigint: true }))
+            || !sameSegment(segment, segment, lstatSync(name, { bigint: true }))) poison();
+          // Stage the exact append before the underlying write can change the
+          // extent. The new event becomes durable only after both syncs.
+          managedAppend = intent;
+          const wrote = await segment.file.write(bytes, 0, bytes.length, null);
+          guard(deadline);
+          if (wrote.bytesWritten !== bytes.length) poison();
+          const stat = fstatSync(writerFd, { bigint: true });
+          if (!sameSegmentIdentity(segment, stat) || stat.size !== BigInt(intent.prefix.length)
+            || (intent.full !== null && !sameSegment(segment, intent.full, stat))) poison();
+          const full = { prefix: intent.prefix, modified: stat.mtimeNs, changed: stat.ctimeNs };
+          intent.full = full;
+          await checkCurrent(deadline);
+          await segment.file.sync();
+          await checkCurrent(deadline);
+          await directory.sync();
+          await checkCurrent(deadline);
+          await inspectIdentities(deadline, { ...full, role });
+          return full;
+        });
+        guard(deadline);
+        segment.prefix = tail.prefix; segment.modified = tail.modified; segment.changed = tail.changed;
+      } finally { managedAppend = undefined; }
+      records++; durableBytes += bytes.length; tip = digest; totals[role].records++; totals[role].bytes += bytes.length; totals[role].tipSha256 = digest;
+      if (declaration) declarations++; else {
+        const capturedEvent = event as CapturedAuditEvent; captured[capturedEvent.kind]++;
+        if (capturedEvent.kind === 'relay') relayEvents[capturedEvent.payload.event]++;
+        if (capturedEvent.kind === 'launch-attempt') attempts.set(role, capturedEvent.payload);
+      }
+      if (nextUsage) { totals[role].usageReports++; totals[role].usage = nextUsage; }
+      return { offset, bytes, digest };
+    };
+    async function commitRelay(snapshot: Extract<UrlSessionAuditEvent, { kind: 'relay' }>, deadline: number) {
+      const { payload, role } = snapshot;
+      const previous = relayLatest.get(role);
+      let earlierEvents: readonly DurableEvent[] = [];
+      if (previous?.payload.requestId === payload.requestId) {
+        if (!RELAY_TRANSITIONS[previous.payload.event].includes(payload.event)
+          || !equal(previous.payload.admission, payload.admission) || !equal(previous.payload.received, payload.received)
+          || !equal(previous.payload.consumedToolResults, payload.consumedToolResults) || previous.payload.route !== payload.route) poison();
+        earlierEvents = previous.events;
+      } else if (relayRequests.has(payload.requestId) || !['attempt-allowed', 'attempt-refused', 'transport-failed'].includes(payload.event)
+        || (previous && ['attempt-allowed', 'send-attempt', 'send-outcome'].includes(previous.payload.event))) {
+        poison();
+      }
+      const linked = { ...snapshot, payload: { ...payload, previousExchangeSha256: earlierEvents.at(-1)?.digest ?? null } };
+      const record = await commit(linked, role, deadline, false);
+      relayRequests.add(payload.requestId);
+      relayLatest.set(role, { payload, events: [...earlierEvents, record] });
+      return record;
+    }
+    for (const role of ROLES) await commit({ kind: 'declaration', role, scope: scopes.get(role), payload: { project: input.project, pin: input.pin,
+      principal: input.principal, declaredClasses: input.declaredClasses, profile: SESSION_PROFILE_ID, limits,
+      capture: 'host-callbacks-only', providerReceipts: 'Unknown', nativeSendCensus: 'Unknown' } }, role, began, true);
+    const enqueue = (event: CapturedAuditEvent, privateKind: PrivateEventKind | null) => {
+      const deadline = performance.now() + limits.milliseconds;
+      let snapshot: CapturedAuditEvent;
+      try { guard(deadline); if (pending >= limits.pending) poison(); snapshot = project(copy(event, limits.eventBytes), privateKind); }
+      catch { poisoned = true; return Promise.reject(refused()); }
+      pending++;
+      const operation = queue.then(() => snapshot.kind === 'relay' ? commitRelay(snapshot, deadline)
+        : commit(snapshot, snapshot.role, deadline, false)).catch(() => poison());
+      queue = operation.then(() => {}, () => {}).finally(() => { pending--; });
+      return wait(operation, deadline).then(result => { guard(deadline); return result; }, () => poison());
+    };
+    // A pending write may expose the unchanged prefix or its exact complete
+    // append. A short write has no supported intermediate extent. An event
+    // can authenticate a product only inside the already durable prefix.
+    const verifyDurableEvent = (role: ViewRole, event: Awaited<ReturnType<typeof commit>>): void => {
+      if (poisoned) throw refused();
+      const intent = managedAppend, writer = intent && segments.get(intent.role)!;
+      let extent: SegmentPrefix | undefined;
+      if (intent && writer) {
+        const stat = fstatSync(writer.file.fd, { bigint: true });
+        if (intent.full) extent = intent.full;
+        else if (sameSegment(writer, writer, stat)) extent = writer;
+        else {
+          if (!sameSegmentIdentity(writer, stat) || stat.size !== BigInt(intent.prefix.length)) throw refused();
+          extent = { prefix: intent.prefix, modified: stat.mtimeNs, changed: stat.ctimeNs };
+        }
+      }
+      const expected = (name: ViewRole, segment: Segment): SegmentPrefix => intent?.role === name && extent ? extent : segment;
+      const fd = openSync(input.parent, constants.O_RDONLY | constants.O_DIRECTORY | constants.O_NOFOLLOW);
+      try {
+        const anchor = `/proc/self/fd/${fd}`;
+        const verifyDirectory = (): void => {
+          if (!sameDirectory(fstatSync(fd, { bigint: true })) || !sameDirectory(lstatSync(input.parent, { bigint: true }))
+            || realpathSync(input.parent) !== input.parent) throw refused();
+        };
+        const verifyNames = (): void => {
+          for (const [name, segment] of segments) {
+            if (!sameSegment(segment, expected(name, segment), lstatSync(path.join(anchor, segment.name), { bigint: true }))) throw refused();
+          }
+        };
+        verifyDirectory(); verifyNames();
+        if (writer && extent) {
+          const writerFd = writer.file.fd;
+          if (!sameSegment(writer, extent, fstatSync(writerFd, { bigint: true }))) throw refused();
+          const chunk = Buffer.alloc(Math.min(65_536, extent.prefix.length));
+          for (let offset = 0; offset < extent.prefix.length; offset += chunk.length) {
+            const end = Math.min(offset + chunk.length, extent.prefix.length), length = end - offset;
+            if (readSync(writerFd, chunk, 0, length, offset) !== length
+              || !chunk.subarray(0, length).equals(extent.prefix.subarray(offset, end))) throw refused();
+          }
+          if (!sameSegment(writer, extent, fstatSync(writerFd, { bigint: true }))) throw refused();
+        }
+        const segment = segments.get(role)!;
+        if (event.offset + event.bytes.length > segment.prefix.length) throw refused();
+        const file = openSync(path.join(anchor, segment.name), constants.O_RDONLY | constants.O_NOFOLLOW | constants.O_NONBLOCK);
+        try {
+          const bytes = Buffer.alloc(event.bytes.length), prefix = expected(role, segment);
+          if (!sameSegment(segment, prefix, fstatSync(file, { bigint: true }))
+            || readSync(file, bytes, 0, bytes.length, event.offset) !== bytes.length || !bytes.equals(event.bytes)
+            || !sameSegment(segment, prefix, fstatSync(file, { bigint: true }))) throw refused();
+          verifyNames(); verifyDirectory();
+          // A checked full extent fixes its stamp while the write promise is
+          // outstanding. A later read or completion cannot accept new drift.
+          if (intent && extent?.prefix === intent.prefix) intent.full = extent;
+        } finally { closeSync(file); }
+      } finally { closeSync(fd); }
+    };
+    const ownLaunches = new WeakSet<UrlCommittedLaunchHistory>();
+    const commitLaunchHistory = async (capability: UrlLaunchHistoryCapability): Promise<UrlCommittedLaunchHistory> => {
+      if (poisoned || closing) throw refused();
+      let history: ReturnType<typeof inspectUrlLaunchHistory>;
+      try { history = inspectUrlLaunchHistory(capability); } catch { throw refused(); }
+      const { role, plan } = history, scope = scopes.get(role), attempt = attempts.get(role);
+      const containedBy = (parent: string, child: string): boolean => {
+        const relative = path.relative(parent, child);
+        return !path.isAbsolute(relative) && relative !== '..' && !relative.startsWith(`..${path.sep}`);
+      };
+      if (!scope || historyRoles.has(role) || history.pin !== input.pin || history.runId !== input.binding.run
+        || !profiles.includes(plan.profile) || scope.profileSha256 !== plan.declaration.compiledProfileSha256
+        || !equal(scope.binding, plan.profile.input.binding) || attempt?.commandSha256 !== plan.declaration.commandSha256
+        || attempt.viewSha256 !== plan.declaration.viewSha256
+        || !plan.view.protectedPaths.some(parent => containedBy(parent, input.parent))
+        || containedBy(history.run, input.parent) || containedBy(`${history.run}.sessions`, input.parent)) throw refused();
+      historyRoles.add(role);
+      const event = await enqueue({ kind: 'launch-history', role, scope, payload: { file: history.file, recordSha256: history.sha256,
+        recordBytes: history.bytes.length, promptRecordSha256: history.promptRecordSha256, promptSha256: history.promptSha256,
+        sessionId: plan.declaration.sessionId } }, 'launch-history');
+      const inspect = (): CommittedLaunchHistoryIdentity => {
+        verifyDurableEvent(role, event);
+        const latest = inspectUrlLaunchHistory(capability);
+        return Object.freeze({ history: latest, scope, eventSha256: event.digest, project: input.project });
+      };
+      inspect();
+      const committed = Object.freeze({}) as UrlCommittedLaunchHistory;
+      committedLaunches.set(committed, inspect);
+      ownLaunches.add(committed);
+      return committed;
+    };
+    let nextDesignRound = 1, designPending = false, designRetired = false;
+    const designReads = new WeakMap<UrlDesignDeliveryAuditRecord, {
+      readonly receipt: UrlSessionToolReceiptMetadata; readonly event: DurableEvent; readonly product: WeakRef<ValidatedUrlDesignProduct>;
+    }>();
+    const firstDesignReads = new Map<number, Awaited<ReturnType<typeof commit>>>();
+    const usedDesignProducts = new WeakSet<ValidatedUrlDesignProduct>();
+    const designRecords = new WeakMap<UrlDesignDeliveryAuditRecord, {
+      readonly binding: UrlDesignProductBinding;
+      readonly prepared: WeakRef<ValidatedUrlDesignProduct>;
+      readonly verify: (product: ValidatedUrlDesignProduct, material?: UrlDesignProductMetadata) => Promise<() => void>;
+      readonly verifyStored: (current: () => boolean) => void;
+    }>();
+    const designReviewDeliveries = new WeakMap<UrlDesignReviewProof, UrlDesignDeliveryAuditRecord>();
+    const committedDesignReviews = new WeakSet<UrlDesignReviewProof>();
+    const pendingDesignVerdicts = new WeakSet<UrlDesignDeliveryAuditRecord>();
+    const designVerdicts = new WeakMap<UrlDesignDeliveryAuditRecord, {
+      readonly checked: UrlCheckedDesignVerdict;
+      readonly verify: () => void;
+      readonly eventSha256: string;
+    }>();
+    function currentDesignRecord(receipt: UrlDesignDeliveryAuditRecord) {
+      const record = designRecords.get(receipt);
+      if (!record || poisoned || closing || designPending || designRetired || receipt.identity.round !== nextDesignRound - 1) throw refused();
+      return record;
+    }
+    const revalidateDesignDelivery: Extract<UrlSessionAuditResult, { ok: true }>['revalidateDesignDelivery'] = async (receipt, product) => {
+      await currentDesignRecord(receipt).verify(product);
+    };
+    function deliveryView(receipt: UrlDesignDeliveryAuditRecord, material: UrlInertDesignProduct): UrlDesignDeliveryView {
+      if (material.parents.length !== receipt.identity.parentCount || material.view.byteLength !== receipt.identity.view.bytes
+        || sha256(material.view) !== receipt.identity.view.sha256) throw refused();
+      return Object.freeze({ receipt, view: material.view, parents: Object.freeze([...material.parents]) });
+    }
+    // Only the host receives the inert bytes and their parent handles. The
+    // prepared audit event itself grants no role or outbound request access.
+    const readDesignDeliveryView: Extract<UrlSessionAuditResult, { ok: true }>['readDesignDeliveryView'] = async (receipt, product) => {
+      const record = currentDesignRecord(receipt);
+      const material = await readInertUrlDesignProduct(product, record.binding);
+      if (!material) throw refused();
+      const delivery = deliveryView(receipt, material);
+      const current = await record.verify(product, material.metadata);
+      currentDesignRecord(receipt);
+      if (!isUrlDesignProductLeaseOpen(product)) throw refused();
+      authenticatedDesignViews.set(delivery, { current, product: new WeakRef(product) });
+      return delivery;
+    };
+    const commitDesignArtifactRead: Extract<UrlSessionAuditResult, { ok: true }>['commitDesignArtifactRead'] = async (view, given) => {
+      assertUrlDesignDeliveryViewCurrent(view);
+      const product = authenticatedDesignViews.get(view)!.product;
+      if (product.deref() === currentDesignRecord(view.receipt).prepared.deref()) throw refused();
+      const receipt = copy(given), identity = view.receipt.identity;
+      const file = `round-${identity.round}/design-view.json`;
+      const text = new TextDecoder('utf-8', { fatal: true }).decode(view.view);
+      const reply = encodeCanonicalJson({ ok: true, kind: 'artifact', path: file, sha256: identity.view.sha256, text },
+        { maxBytes: 2_097_152, maxNodes: 65_536, maxDepth: 32 });
+      if (receipt.toolName !== 'mcp__syzygy__artifact_read' || receipt.inputSha256 !== sha256(canonical({ path: file }))
+        || receipt.digest !== sha256(reply) || receipt.bytes !== Buffer.byteLength(reply)) throw refused();
+      const event = await enqueue({ kind: 'tool-receipt', role: 'design', scope: scopes.get('design')!, payload: receipt }, null);
+      assertUrlDesignDeliveryViewCurrent(view);
+      verifyDurableEvent('design', event);
+      designReads.set(view.receipt, { receipt, event, product });
+      const validated = product.deref();
+      if (validated) usedDesignProducts.add(validated);
+      if (!firstDesignReads.has(identity.round)) firstDesignReads.set(identity.round, event);
+    };
+    const readDesignReviewProof: Extract<UrlSessionAuditResult, { ok: true }>['readDesignReviewProof'] = async (receipt, product, given) => {
+      const admission = copy(given);
+      const record = currentDesignRecord(receipt), read = designReads.get(receipt);
+      const relay = relayLatest.get('design');
+      const call = relay?.payload.response?.tool;
+      const consumed = relay?.payload.consumedToolResults[0];
+      // The durable exchange must have carried the actual read reply and
+      // admitted the dossier call for this proof. An origin inherited from
+      // message history cannot establish that exchange.
+      if (!read || product === record.prepared.deref() || product === read.product.deref()
+        || relay?.payload.event !== 'response-admitted' || relay.payload.route !== 'messages'
+        || !equal(admission, relay.payload.admission) || call?.name !== 'mcp__syzygy__dossier_step'
+        || relay.payload.consumedToolResults.length !== 1 || consumed?.receiptId !== read.receipt.id
+        || consumed.digest !== read.receipt.digest || consumed.bytes !== read.receipt.bytes) throw refused();
+      const metadata = await inspectUrlDesignProduct(product, record.binding);
+      if (!metadata) throw refused();
+      const validate = await record.verify(product, metadata);
+      const check = (): void => {
+        if (currentDesignRecord(receipt) !== record || designReads.get(receipt) !== read || relayLatest.get('design') !== relay)
+          throw refused();
+        verifyDurableEvent('design', read.event);
+        for (const event of relay.events) verifyDurableEvent('design', event);
+        validate();
+      };
+      const files = metadata.output.population.map(file => file.path);
+      const proof = deepFreeze({ ...record.binding, round: receipt.identity.round,
+        site: receipt.identity.site, sessionId: receipt.identity.sessionId, artifactReadId: read.receipt.id,
+        relayResponseSha256: relay.events.at(-1)!.digest, verdictCallId: call.id, verdictInputSha256: call.inputSha256,
+        packet: { sha256: metadata.original.sha256, files, pages: files.filter(file => file.endsWith('.html')) } });
+      check();
+      designReviewProofs.set(proof, check);
+      designReviewDeliveries.set(proof, receipt);
+      usedDesignProducts.add(product);
+      return proof;
+    };
+    const commitDesignVerdict: Extract<UrlSessionAuditResult, { ok: true }>['commitDesignVerdict'] = async (proof, checked, receipt) => {
+      const delivery = designReviewDeliveries.get(proof);
+      if (delivery === undefined || pendingDesignVerdicts.has(delivery) || committedDesignReviews.has(proof)
+        || receipt.toolName !== 'mcp__syzygy__dossier_step') throw refused();
+      assertUrlDesignReviewProofCurrent(proof);
+      const read = designReads.get(delivery), previous = designVerdicts.get(delivery);
+      const frozen = copy(checked);
+      const relay = relayLatest.get('design');
+      if (read?.receipt.id !== proof.artifactReadId || !relay || relay.events.at(-1)?.digest !== proof.relayResponseSha256
+        || receipt.inputSha256 !== proof.verdictInputSha256 || (previous && frozen.number <= previous.checked.number)) throw refused();
+      committedDesignReviews.add(proof);
+      // Stop issuing continuations while a successor is becoming durable.
+      designVerdicts.delete(delivery);
+      pendingDesignVerdicts.add(delivery);
+      // The checked bridge supplies only the exact frozen verdict, check and
+      // command reply identities. The role's verdict text stays out of audit.
+      try {
+        const event = await enqueue({ kind: 'design-verdict', role: 'design', scope: scopes.get('design')!,
+          payload: { deliverySha256: delivery.eventSha256, artifactReadId: proof.artifactReadId,
+            relayResponseSha256: proof.relayResponseSha256, verdictCallId: proof.verdictCallId, checked: frozen, toolReceipt: receipt } }, 'design-verdict');
+        assertUrlDesignReviewProofCurrent(proof);
+        verifyDurableEvent('design', event);
+        designVerdicts.set(delivery, { checked: frozen, eventSha256: event.digest, verify: () => {
+          verifyDurableEvent('design', read.event);
+          for (const prior of relay.events) verifyDurableEvent('design', prior);
+          verifyDurableEvent('design', event);
+        } });
+      } finally { pendingDesignVerdicts.delete(delivery); }
+    };
+    const readDesignRenderContinuation: Extract<UrlSessionAuditResult, { ok: true }>['readDesignRenderContinuation'] = async (delivery, product, number) => {
+      const record = currentDesignRecord(delivery), verdict = designVerdicts.get(delivery);
+      if (!verdict || verdict.checked.number !== number || product === record.prepared.deref() || usedDesignProducts.has(product)) throw refused();
+      const original = await inspectUrlDesignProduct(product, record.binding);
+      if (!original) throw refused();
+      const revalidate = await record.verify(product, original);
+      const deadline = Date.now() + URL_SESSION_AUDIT_LIMITS.milliseconds;
+      const current = (): boolean => Date.now() < deadline && currentDesignRecord(delivery) === record && designVerdicts.get(delivery) === verdict;
+      const check = (): void => {
+        if (!current()) throw refused();
+        record.verifyStored(current);
+        verdict.verify();
+        if (!current()) throw refused();
+      };
+      revalidate();
+      verdict.verify();
+      const earlierRounds: number[] = [];
+      for (const [round, event] of firstDesignReads) {
+        if (round >= delivery.identity.round) continue;
+        if (!current()) throw refused();
+        verifyDurableEvent('design', event);
+        earlierRounds.push(round);
+      }
+      if (!current() || usedDesignProducts.has(product) || !isUrlDesignProductLeaseOpen(product)) throw refused();
+      const result = deepFreeze({ binding: record.binding, checked: verdict.checked, delivery,
+        verdictEventSha256: verdict.eventSha256, original, earlierRounds, deadline });
+      designRenderContinuations.set(result, check);
+      usedDesignProducts.add(product);
+      return result;
+    };
+    /** Record identities only. A checked append can be cited by a later delivery
+     * verifier independently reproducing the subject under its own live read. */
+    const commitDesignDelivery: Extract<UrlSessionAuditResult, { ok: true }>['commitDesignDelivery'] = async (request, waitForSample) => {
+      if (poisoned || closing || designPending || designRetired
+        || !exact(request, ['product', 'expectedProduct', 'launch', 'run', 'runId', 'pinnedRevision', 'sitePath', 'round'])
+        || !count(request.round, 999_999) || request.round !== nextDesignRound
+        || !ownLaunches.has(request.launch) || request.runId !== input.binding.run || request.pinnedRevision !== input.pin) throw refused();
+      const { product, expectedProduct, launch, round, sitePath, run, runId, pinnedRevision } = request;
+      const binding = { run, runId, pinnedRevision }, scope = scopes.get('design')!;
+      const attempt = inspectCommittedUrlLaunchHistory(launch);
+      if (attempt.history.role !== 'design' || attempt.history.run !== run || !equal(scope, attempt.scope)) throw refused();
+
+      function capture(productIdentity: UrlDesignProductMetadata | null): { identity: DesignDeliveryIdentity; deadline: number; output: UrlDesignProductMetadata['output'] } {
+        if (!productIdentity || productIdentity.products.operation !== 'render' || productIdentity.rawActive.status !== 'failed'
+          || productIdentity.basePolicy.sha256 !== scope.binding.policy || productIdentity.originPolicy.sha256 !== scope.originPolicySha256
+          || productIdentity.profile.sha256 !== attempt.history.plan.declaration.configurationSha256) throw refused();
+        const { deadline, ...inputs } = productIdentity.products;
+        const current = (): boolean => !poisoned && !closing && Date.now() < deadline;
+        const site = checkStoredUrlRender(run, sitePath, productIdentity.output, current);
+        if (site === null) throw refused();
+        const identity: DesignDeliveryIdentity = {
+          state: 'prepared', site, round, sessionId: attempt.history.plan.declaration.sessionId, draftRevision: productIdentity.draftRevision,
+          original: productIdentity.original, payload: productIdentity.payload, view: productIdentity.view,
+          files: productIdentity.output.files, pages: productIdentity.output.pages,
+          rendererSha256: designIdentityDigest(productIdentity.renderer),
+          basePolicySha256: productIdentity.basePolicy.sha256, originPolicySha256: productIdentity.originPolicy.sha256,
+          registryProfileSha256: productIdentity.profile.sha256, launchEventSha256: attempt.eventSha256,
+          policyBindingsSha256: designIdentityDigest([productIdentity.basePolicy, productIdentity.originPolicy]),
+          parentCount: productIdentity.parents.length, parentsSha256: designIdentityDigest(productIdentity.parents),
+          inputsSha256: designIdentityDigest(inputs), storedPopulationSha256: designIdentityDigest(productIdentity.output),
+        };
+        if (!current()) throw refused();
+        return { identity, deadline, output: productIdentity.output };
+      }
+      const checkSample = async (): Promise<void> => {
+        if (waitForSample !== undefined && !(await waitForSample())) throw refused();
+        if (poisoned || closing || !isUrlDesignProductLeaseOpen(product)) throw refused();
+      };
+      designPending = true;
+      let appended = false;
+      try {
+        await checkSample();
+        const reproduced = await inspectUrlDesignProduct(product, binding);
+        if (!reproduced || !sameReproducedUrlDesignProduct(expectedProduct, reproduced)) throw refused();
+        await checkSample();
+        const before = capture(reproduced);
+        if (Date.now() >= before.deadline) throw refused();
+        const event = await enqueue({ kind: 'design-delivery', role: 'design', scope, payload: before.identity }, 'design-delivery');
+        appended = true;
+        await checkSample();
+        const material = await readInertUrlDesignProduct(product, binding);
+        if (!material) throw refused();
+        await checkSample();
+        const after = capture(material.metadata);
+        if (before.deadline !== after.deadline || !equal(before.identity, after.identity)) throw refused();
+        const result = copy({ eventSha256: event.digest, identity: after.identity }) as UrlDesignDeliveryAuditRecord;
+        const delivery = deliveryView(result, material);
+        const verifyStored = (current: () => boolean): void => {
+          if (!current()) throw refused();
+          try {
+            if (inspectCommittedUrlLaunchHistory(launch).eventSha256 !== attempt.eventSha256
+              || checkStoredUrlRender(run, sitePath, after.output, current) !== after.identity.site) throw refused();
+            verifyDurableEvent('design', event);
+          } catch {
+            if (current()) designRetired = true;
+            throw refused();
+          }
+          if (!current()) throw refused();
+        };
+        const verify = (checked: typeof after, candidate: ValidatedUrlDesignProduct): void =>
+          verifyStored(() => !poisoned && !closing && !designRetired && Date.now() < checked.deadline && isUrlDesignProductLeaseOpen(candidate));
+        await checkSample();
+        verify(after, product);
+        const preparedProduct = new WeakRef(product);
+        function checkDelivery(checked: typeof after, candidate: ValidatedUrlDesignProduct): () => void {
+          const ref = new WeakRef(candidate);
+          return () => {
+            currentDesignRecord(result);
+            const active = ref.deref();
+            if (!active) throw refused();
+            verify(checked, active);
+          };
+        }
+        designRecords.set(result, { binding, prepared: preparedProduct, verifyStored, verify: async (candidate, material) => {
+          // The receipt survives its operation lease. A later act needs a newly
+          // validated product whose full identity still matches the recorded one.
+          const currentMaterial = material ?? (candidate === preparedProduct.deref()
+            ? undefined : await inspectUrlDesignProduct(candidate, binding));
+          const checked = currentMaterial === undefined ? after : capture(currentMaterial);
+          currentDesignRecord(result);
+          if (!equal(after.identity, checked.identity)) { designRetired = true; throw refused(); }
+          verify(checked, candidate);
+          return checkDelivery(checked, candidate);
+        } });
+        authenticatedDesignViews.set(delivery, { current: checkDelivery(after, product), product: preparedProduct });
+        nextDesignRound++;
+        return delivery;
+      } catch {
+        // A durable unconfirmed event must remain visible and block continuation.
+        if (appended) designRetired = true;
+        throw refused();
+      } finally { designPending = false; }
+    };
+    const append = async (event: UrlSessionAuditEvent): Promise<void> => { await enqueue(event, null); };
+    return Object.freeze({ ok: true as const, scope: (role: ViewRole) => { const scope = scopes.get(role); if (!scope) poison(); return scope!; },
+      append, commitLaunchHistory, commitDesignDelivery, revalidateDesignDelivery, readDesignDeliveryView,
+      commitDesignArtifactRead, readDesignReviewProof, commitDesignVerdict, readDesignRenderContinuation, close, summary });
+  } catch {
+    poisoned = true; await close(); return Object.freeze({ ok: false as const, code: 'url-session-audit-unavailable' as const, summary });
+  }
+}

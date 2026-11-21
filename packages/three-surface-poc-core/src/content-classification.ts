@@ -134,6 +134,8 @@ interface CompiledDetector {
 }
 
 const DETECTOR_KINDS = ['literal-fragment', 'regular-expression'] as const;
+const CREDENTIAL_AUTHORITY = /:\/\/[^/@\s:]*:[^/@\s]+@/;
+const CREDENTIAL_URL_PATTERN = '[a-z][a-z0-9+.-]{0,31}' + CREDENTIAL_AUTHORITY.source;
 
 export function compileDetectors(policy: Pick<SecretClassificationPolicy, 'detectors'>): readonly CompiledDetector[] {
   if (!Array.isArray(policy.detectors) || policy.detectors.length === 0) throw new Error('secret policy declares no detectors');
@@ -159,9 +161,14 @@ export function compileDetectors(policy: Pick<SecretClassificationPolicy, 'detec
     } catch (error) {
       throw new Error(`secret policy detector does not compile: ${detector.id}: ${error instanceof Error ? error.message : String(error)}`);
     }
+    // This exact policy expression needs a credential-bearing authority.
+    // Searching for that suffix first avoids retrying the scheme at each
+    // position in long text. The compiled expression still decides matches.
+    const precheckAuthority = expression.source === CREDENTIAL_URL_PATTERN && expression.flags === 'gi';
     return {
       id: detector.id,
       matches: (text) => {
+        if (precheckAuthority && !CREDENTIAL_AUTHORITY.test(text)) return false;
         expression.lastIndex = 0;
         return expression.test(text);
       },

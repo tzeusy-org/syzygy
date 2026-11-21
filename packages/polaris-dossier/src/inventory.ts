@@ -1,3 +1,4 @@
+import { checkedProductPopulation, yieldForProductReads, parseProductRecord, productSelection, protectedHelperPrompt, protectedProduct, protectedProductRecord, type RunProductReads } from './url-operation-products.js';
 import * as fs from 'node:fs';
 import * as path from 'node:path';
 import { UNKNOWN_REASONS } from '@syzygy/cap1-core';
@@ -58,7 +59,18 @@ export function latestInventorySession(run: string): number {
 
 /** The session identifiers the frozen draft revisions declare, and how many revisions are frozen. Syzygy reads them; it never passes
  * them, or anything else of a draft, to the inventory session. */
-export function authoringSessionIds(run: string): { readonly frozen: number; readonly ids: ReadonlySet<string> } {
+export function authoringSessionIds(run: string, products?: RunProductReads): { readonly frozen: number; readonly ids: ReadonlySet<string> } {
+  if (products !== undefined) {
+    const files = productSelection(products, run, 'author-drafts');
+    const ids = new Set<string>();
+    for (const file of files) {
+      const bytes = protectedProduct(products, run, file);
+      if (bytes === null) throw new Error('url-product-selection-unavailable');
+      const id = declaredSessionId(parseProductRecord(bytes, DRAFT_JSON_LIMITS));
+      if (id !== null) ids.add(id);
+    }
+    return { frozen: files.length, ids };
+  }
   let names: string[];
   try { names = fs.readdirSync(path.join(run, RUN_LAYOUT.drafts)); } catch { return { frozen: 0, ids: new Set() }; }
   const ids = new Set<string>();
@@ -87,6 +99,7 @@ export interface InventoryBriefInput {
   readonly census: CensusLoad;
   /** A copy-class run's copy and the operator's clone (`briefCopyOf`); null otherwise. */
   readonly copy: BriefCopy | null;
+  readonly supervisorManaged?: boolean;
 }
 
 const KIND_GLOSS: Readonly<Record<(typeof INVENTORY_ENTRY_KINDS)[number], string>> = {
@@ -116,18 +129,23 @@ export function renderInventoryBrief(input: InventoryBriefInput): string {
     `- Run: \`${input.runId}\`, inventory session ${input.session}`,
     `- Repository: ${subject.repository.url} (\`${subject.repository.repositoryId}\`)`,
     `- Pinned revision: \`${commit}\` (${subject.pinnedRevision.label})`,
-    ...(input.copy === null
+    ...(input.supervisorManaged === true
+      ? ['- Source access: use source_read for screened objects at the pinned revision.'] : input.copy === null
       ? [`- Clone: \`${subject.clone.path}\`, as the operator gave it at init (operator-declared, Inferred); read it by this path, never as your working directory`]
       : briefCopyLines(input.copy)),
     `- Inventory schema: \`${LOCAL_INVENTORY_SCHEMA_VERSION}\`, at the end of this brief`,
     '',
-    `You are the inventory session. Prepare, from the clone at the pinned revision, an independent inventory of what the project itself states. Another session is writing a dossier of this project; you are not given its draft, and you must not look for it: never open the run directory's \`${RUN_LAYOUT.drafts}/\`, \`${RUN_LAYOUT.checks}/\`, \`${RUN_LAYOUT.brief}\` or any other session's directory. A reviewer will measure the dossier against your inventory, so cover what the project states, not what you expect a dossier to say.`,
+    input.supervisorManaged === true
+      ? 'Prepare an independent inventory of what the project states from your admitted source. The authoring draft is outside your role. A fidelity reviewer will compare the dossier to this inventory.'
+      : `You are the inventory session. Prepare, from the clone at the pinned revision, an independent inventory of what the project itself states. Another session is writing a dossier of this project; you are not given its draft, and you must not look for it: never open the run directory's \`${RUN_LAYOUT.drafts}/\`, \`${RUN_LAYOUT.checks}/\`, \`${RUN_LAYOUT.brief}\` or any other session's directory. A reviewer will measure the dossier against your inventory, so cover what the project states, not what you expect a dossier to say.`,
     '',
-    `Write \`${INVENTORY_FILE}\` in this directory, naming the pinned revision in \`pinnedRevision\` and the schema version in \`schemaVersion\`, and run \`syzygy dossier inventory-check ${input.runDir} --inventory ${INVENTORY_FILE}\` from here; repair every finding and check again.`,
+    input.supervisorManaged === true
+      ? 'Submit the inventory as JSON input through the dossier_step await operation in your checked role prompt. Use the pinned revision, schema version and the sessionId in that prompt. Repair reported findings before resubmitting.'
+      : `Write \`${INVENTORY_FILE}\` in this directory, naming the pinned revision in \`pinnedRevision\` and the schema version in \`schemaVersion\`, and run \`syzygy dossier inventory-check ${input.runDir} --inventory ${INVENTORY_FILE}\` from here; repair every finding and check again.`,
     '',
     SOURCE_SCREENING_RULE,
     '',
-    SESSION_ID_RULE('inventory'),
+    input.supervisorManaged === true ? 'Use the sessionId in the checked inventory role prompt for every submission.' : SESSION_ID_RULE('inventory'),
     '',
     '## Entries',
     '',
@@ -185,6 +203,7 @@ export async function buildInventoryBrief(opened: Extract<OpenedRun, { ok: true 
   const census = await loadCensus({ clonePath: opened.subject.clone.path, pinned: opened.subject.pinnedRevision.commit, consented: opened.contentClasses, recordsRoot: sources.recordsRoot, now, placement: placementSubjectOf(opened.subject) }, deps);
   const text = renderInventoryBrief({
     runDir: opened.run, runId: opened.runId, subject: opened.subject, declared: opened.declared, deadlineEnds: opened.deadlineEnds, session, executionRule, census, copy: copy.copy,
+    supervisorManaged: opened.effective?.kind === 'url',
   });
   return { ok: true, text, executionRule, stageStatement: issuedBriefStatement({ role: 'inventory', session }, copy.copy !== null) };
 }
@@ -282,10 +301,13 @@ const INVENTORY_PLAN: SubjectPlan<InventoryCheckRecord, { readonly session: numb
   checksDir: INVENTORY_CHECKS,
   defaultFile: (run) => path.join(sessionDirectory(run, Math.max(latestInventorySession(run), 1)), INVENTORY_FILE),
   rules: (pinned) => inventoryRules(pinned),
-  gate: (run, doc) => {
-    const session = latestInventorySession(run);
+  gate: (run, doc, products) => {
+    if (products !== undefined && protectedHelperPrompt(products, run, 'inventory') === undefined) {
+      return { ok: false, stage: 'session', reason: 'the protected inventory launch history could not be verified' };
+    }
+    const session = products === undefined ? latestInventorySession(run) : 1;
     if (session === 0) return { ok: false, stage: 'session', reason: `no inventory session has been handed over: the operator starts it from \`syzygy dossier session-prompt ${run} inventory\`, and an inventory from any other session is not checked` };
-    const authoring = authoringSessionIds(run);
+    const authoring = authoringSessionIds(run, products);
     if (authoring.frozen === 0) return { ok: false, stage: 'authoring-session', reason: 'no draft revision is frozen, so the authoring session has declared no identifier and the inventory\'s distinctness from it cannot be checked; nothing is frozen' };
     if (authoring.ids.size === 0) return { ok: false, stage: 'authoring-session', reason: 'no frozen draft revision declares a session identifier, so the inventory\'s distinctness from the authoring session cannot be checked; nothing is frozen' };
     const declared = isRecord(doc) && typeof doc['sessionId'] === 'string' ? doc['sessionId'] : null;
@@ -354,15 +376,25 @@ export type InventoryOfRecord =
  * whose prompt record cites the per-project statement that still, at `now`, is the one governing the session's agent tool with the run's
  * provider (`recheckSessionStatement`: a withdrawn statement stops the inventory counting; a prompt record from before citations counts
  * only when the re-check admits a statement now, its citation Unknown). */
-export async function inventoryOfRecord(runDir: string, recheck: { readonly sources: GateSources; readonly now: number }): Promise<InventoryOfRecord> {
+export async function inventoryOfRecord(runDir: string, recheck: { readonly sources: GateSources; readonly now: number; readonly productReads?: RunProductReads }): Promise<InventoryOfRecord> {
   const run = path.resolve(runDir);
   const no = (why: string): InventoryOfRecord => ({ counts: false, why });
-  let names: string[];
-  try { names = fs.readdirSync(path.join(run, INVENTORY_CHECKS)); } catch { return no('no inventory revision has been checked'); }
-  const revisions = names.flatMap((name) => { const match = REVISION_FILE.exec(name); return match === null ? [] : [Number(match[1])]; });
-  if (revisions.length === 0) return no('no inventory revision has been checked');
-  const revision = Math.max(...revisions);
-  const check = readRecord(path.join(run, INVENTORY_CHECKS, `rev-${revision}.json`));
+  const products = recheck.productReads;
+  const productRecord = (file: string) => products === undefined ? readRecord(path.join(run, file)) : protectedProductRecord(products, run, file);
+  let revision: number;
+  if (products !== undefined) {
+    const last = checkedProductPopulation(products, run, 'inventory-checks', 'inventory-revisions').at(-1);
+    if (last === undefined) return no('no inventory revision has been checked');
+    revision = Number(REVISION_FILE.exec(path.basename(last))?.[1]);
+    if (!Number.isSafeInteger(revision) || revision < 0) throw new Error('url-product-revision-unavailable');
+  } else {
+    let names: string[];
+    try { names = fs.readdirSync(path.join(run, INVENTORY_CHECKS)); } catch { return no('no inventory revision has been checked'); }
+    const revisions = names.flatMap((name) => { const match = REVISION_FILE.exec(name); return match === null ? [] : [Number(match[1])]; });
+    if (revisions.length === 0) return no('no inventory revision has been checked');
+    revision = Math.max(...revisions);
+  }
+  const check = productRecord(path.join(INVENTORY_CHECKS, `rev-${revision}.json`));
   if (check === undefined || check['format'] !== INVENTORY_CHECK_FORMAT || check['revision'] !== revision) return no(`the result of inventory revision ${revision} cannot be read`);
   if (check['outcome'] !== 'passed') return no(`inventory revision ${revision} has open findings`);
   const inventory = isRecord(check['inventory']) ? check['inventory'] : {};
@@ -370,28 +402,40 @@ export async function inventoryOfRecord(runDir: string, recheck: { readonly sour
   const number = session['number'], sessionId = session['sessionId'];
   if (typeof number !== 'number' || !Number.isSafeInteger(number) || number < 1) return no(`the result of inventory revision ${revision} names no session`);
   if (typeof sessionId !== 'string' || declaredSessionId({ sessionId }) === null) return no(`inventory revision ${revision} declares no session identifier`);
-  let bytes: Uint8Array;
+  let bytes: Uint8Array | null;
   const frozen = path.join(RUN_LAYOUT.inventory, `rev-${revision}.json`);
-  try { bytes = new Uint8Array(fs.readFileSync(path.join(run, frozen))); } catch (cause) { return no(`the frozen inventory ${frozen} cannot be read (${errno(cause)})`); }
+  if (products !== undefined) {
+    bytes = protectedProduct(products, run, frozen);
+    if (bytes === null) return no(`the frozen inventory ${frozen} is absent`);
+  } else {
+    try { bytes = new Uint8Array(fs.readFileSync(path.join(run, frozen))); } catch (cause) { return no(`the frozen inventory ${frozen} cannot be read (${errno(cause)})`); }
+  }
   if (inventory['file'] !== frozen || inventory['sha256'] !== sha256(bytes)) return no(`the frozen inventory ${frozen} is not the bytes its check recorded`);
-  if (authoringSessionIds(run).ids.has(sessionId)) return no(`inventory revision ${revision} declares the authoring session's identifier`);
-  const prompt = readRecord(path.join(run, RUN_LAYOUT.inventory, promptRecordName(number)));
+  if (products !== undefined) await yieldForProductReads(products, run);
+  if (authoringSessionIds(run, products).ids.has(sessionId)) return no(`inventory revision ${revision} declares the authoring session's identifier`);
+  if (products !== undefined) await yieldForProductReads(products, run);
+  const prompt = productRecord(path.join(RUN_LAYOUT.inventory, promptRecordName(number)));
   const promptSha = prompt !== undefined && typeof prompt['prompt'] === 'string' ? sha256(prompt['prompt']) : undefined;
   if (promptSha === undefined || prompt!['promptSha256'] !== promptSha) return no(`the prompt record of inventory session ${number} cannot be read or does not match its own digest`);
-  const launch = readRecord(path.join(run, RUN_LAYOUT.inventory, launchRecordName(number)));
-  if (launch === undefined) return no(`no launch form is recorded for inventory session ${number}: run \`syzygy dossier launch-form ${run} inventory terminal|bang\` with the operator's answer`);
+  const launch = productRecord(path.join(RUN_LAYOUT.inventory, launchRecordName(number)));
+  if (launch === undefined) return no(products === undefined
+    ? `no launch form is recorded for inventory session ${number}: run \`syzygy dossier launch-form ${run} inventory terminal|bang\` with the operator's answer`
+    : `the supervisor launch history for inventory session ${number} is unavailable`);
   const form = isRecord(launch['form']) ? launch['form'] : {};
-  const formRefusal = launchFormRefusal(run, form);
+  const formRefusal = products === undefined ? launchFormRefusal(run, form, recheck.sources.effectiveRunDeclaration)
+    : form['value'] === 'syzygy-launched' && form['label'] === 'Inferred' ? null : 'invalid supervisor launch history';
   if (formRefusal !== null || launch['role'] !== 'inventory' || launch['session'] !== number || launch['promptSha256'] !== promptSha) {
-    return no(`the launch-form record of inventory session ${number} is not ${expectedLaunch(launchedMarkerState(run))} of that session's prompt`);
+    return no(`the launch-form record of inventory session ${number} is not ${products === undefined ? expectedLaunch(launchedMarkerState(run)) : 'supervisor launch history'} of that session's prompt`);
   }
-  const statement = await recheckSessionStatement(run, `inventory session ${number}`, prompt!, recheck.sources, recheck.now);
+  if (products !== undefined) await yieldForProductReads(products, run);
+  const statement = await recheckSessionStatement(run, `inventory session ${number}`, prompt!, recheck.sources, recheck.now, undefined, products);
   if (!statement.ok) return no(statement.why);
   return {
     counts: true, revision, file: frozen, sha256: inventory['sha256'] as string, session: number,
     sessionId: { value: sessionId, declaredBy: 'the inventory session', label: 'Inferred' },
     launchForm: { value: form['value'] as LaunchForm, declaredBy: form['declaredBy'] as string, label: form['label'] as 'Inferred' | 'Observed' },
-    independence: { label: 'Inferred', basis: INVENTORY_INFERRED.independence },
+    independence: { label: 'Inferred', basis: products === undefined ? INVENTORY_INFERRED.independence
+      : 'the recorded supervisor dispatch and the inventory role’s distinct session history' },
     completeness: { label: 'Inferred', basis: INVENTORY_INFERRED.completeness },
     providerStatement: statement.statement,
     label: 'Inferred',

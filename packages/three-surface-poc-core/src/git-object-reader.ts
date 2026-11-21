@@ -247,21 +247,6 @@ export function unsafeUrlMatches(text: string): readonly { readonly index: numbe
   return [...text.matchAll(UNSAFE_URL)].map((match) => ({ index: match.index, value: match[0] }));
 }
 
-function positionOf(text: string, index: number): { readonly line: number; readonly column: number } {
-  let line = 1;
-  let lineStart = 0;
-  for (let i = 0; i < index; i += 1) {
-    const unit = text.charCodeAt(i);
-    // The mask's CRLF/CR/LF rule, on the original UTF-16 text. The LF of
-    // a CRLF pair advances the column start without ending another line.
-    if (unit === 13 || unit === 10) {
-      if (unit === 13 || text.charCodeAt(i - 1) !== 13) line += 1;
-      lineStart = i + 1;
-    }
-  }
-  return { line, column: index - lineStart + 1 };
-}
-
 export type ActiveContentScan =
   | { readonly kind: 'scanned'; readonly findings: readonly ActiveContentFinding[] }
   | { readonly kind: 'over-limit'; readonly breach: ResourceLimitBreach };
@@ -292,13 +277,13 @@ export function scanActiveContentCharged(raw: string, charge: ParsePassCharge): 
   // The mask keeps every newline and length, so positions found in the
   // masked text are positions in the raw text.
   const text = mask.masked;
-  const findings: ActiveContentFinding[] = [];
+  const matches: { readonly form: ActiveContentForm; readonly index: number }[] = [];
   const found = new Set<string>();
   const add = (form: ActiveContentForm, index: number): void => {
     const key = `${form}@${index}`;
     if (found.has(key)) return;
     found.add(key);
-    findings.push({ form, ...positionOf(text, index) });
+    matches.push({ form, index });
   };
   const tagSpent = spent('active-html-svg-script-handler');
   if (tagSpent !== undefined) return tagSpent;
@@ -312,6 +297,23 @@ export function scanActiveContentCharged(raw: string, charge: ParsePassCharge): 
   if (urlSpent !== undefined) return urlSpent;
   for (const match of unsafeUrlMatches(text)) add('unsafe-url-scheme', match.index);
   for (const match of obfuscatedDestinationMatches(text)) add('obfuscated-link-destination', match.index);
+  // The match families traverse the same text separately. Map their offsets
+  // in order so line and column tracking visits each UTF-16 unit only once.
+  let cursor = 0;
+  let line = 1;
+  let lineStart = 0;
+  const findings = matches.sort((a, b) => a.index - b.index).map(({ form, index }): ActiveContentFinding => {
+    while (cursor < index) {
+      const unit = text.charCodeAt(cursor);
+      if (unit === 13 || unit === 10) {
+        // The LF in CRLF advances the column start on the same line.
+        if (unit === 13 || text.charCodeAt(cursor - 1) !== 13) line += 1;
+        lineStart = cursor + 1;
+      }
+      cursor += 1;
+    }
+    return { form, line, column: index - lineStart + 1 };
+  });
   return { kind: 'scanned', findings: findings.sort((a, b) => a.line - b.line || a.column - b.column || a.form.localeCompare(b.form)) };
 }
 

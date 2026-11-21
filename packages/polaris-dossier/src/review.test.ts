@@ -609,8 +609,11 @@ describe('review-check', () => {
     await reviewCheck(run, {}, deps());
     await launchForm(run, { role: 'review', form: 'terminal' }, { sources: sources(), now: () => LATER });
     fs.writeFileSync(path.join(run, 'launched.json'), '');
-    // The inventory of record is read first and stops counting too, so the packet the verdict names cannot be rebuilt.
-    expect(await reviewOfRecord(await opened(run), deps())).toEqual({ counts: false, why: 'the packet cannot be rebuilt now: no inventory counts, so no fidelity packet is built: the launch-form record of inventory session 1 is not a countable launch (the run\'s launched marker is present but unreadable, so none counts) of that session\'s prompt' });
+    // Mode verification now refuses reopening before a packet or review can
+    // count. The direct inventory reader retains its own fail-closed check.
+    expect(await openRun(run, sources(), LATER, 'nothing is reviewed')).toMatchObject({ ok: false, stage: 'reverify' });
+    expect(await reviewCheck(run, {}, deps())).toMatchObject({ ok: false, refusal: { stage: 'reverify' } });
+    expect(await inventoryOfRecord(run, { sources: sources(), now: LATER })).toMatchObject({ counts: false });
   });
 
   it('refuses before any review session is handed over, and after the deadline', async () => {

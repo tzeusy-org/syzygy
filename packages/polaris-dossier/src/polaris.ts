@@ -3,18 +3,61 @@ import * as fs from 'node:fs';
 import * as os from 'node:os';
 import * as path from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { encodeCanonicalJson, parseBoundedJson } from '@syzygy/polaris-generation-core/live';
 import { isRecord, sha256 } from '@syzygy/support';
 import { isArgvFault, readArgv } from './argv.js';
-import { authorRule, awaitRule, startBroker, type Broker, type BrokerResponse } from './broker.js';
-import { cliGateSources, cliVisibilityOf, runDossierCli, STATE_ROOT_ENV, type CliPorts } from './cli.js';
-import { INVENTORY_CHECKS, inventoryOfRecord, launchRecordName } from './inventory.js';
-import { writeLaunchRecord, writeLaunchedMarker } from './launched.js';
-import { reviewLaunchRecordName, REVIEW_CHECKS } from './review.js';
-import { CONSENT_RULE, WAITING_DENIED_TOOLS, WAITING_TOOLS } from './session-handover.js';
-import { bwrapArgs, viewFor, viewProbeRefusal, viewSha256, type ViewRole } from './session-view.js';
-import { fetchRefusal, type VisibilityOf } from './source-visibility-gate.js';
+import { cliGateSources, DOSSIER_USAGE, runDossierCli, STATE_ROOT_ENV, type CliPorts } from './cli.js';
+import { INVENTORY_CHECKS, launchRecordName } from './inventory.js';
+import { writeLaunchedMarker } from './launched.js';
+import { reviewCheck, reviewLaunchRecordName, REVIEW_CHECKS } from './review.js';
+import { AWAIT_FORMAT } from './waiting-sessions.js';
+import { CONSENT_RULE, startSessions, WAITING_DENIED_TOOLS, WAITING_TOOLS } from './session-handover.js';
+import { viewProbeRefusal, type ViewRole } from './session-view.js';
 import { REVISION_FILE, RUN_LAYOUT } from './state-directory.js';
 import { isoOf } from './iso-of.js';
+import { dossierLocator, normaliseIdentityOption } from './launch-identity.js';
+import { preflight, type PreflightResult } from './preflight.js';
+import { planUrlRevision } from './url-revision.js';
+import { acquireUrlSource, selectUrlSource, type AcquireUrlSourceResult, type SelectedUrlSource, type SelectUrlSourceResult, type UrlAcquisitionOperation } from './url-acquisition.js';
+import { resolveCloneHead, type CloneHead } from './clone-head.js';
+import { buildDossierScreen, placementSubjectOf, type DossierScreen } from './screen.js';
+import { readRunRecord, sourceBindingSha256, type RecordedRunConfig, type RunSubject } from './run-record.js';
+import { initRun } from './init.js';
+import { beginRunProductReads, UrlProductReadRefusal, type RunProductReads } from './url-operation-products.js';
+import { inspectUrlDesignProduct, sameReproducedUrlDesignProduct, validateUrlDesignProduct,
+  type UrlDesignProductMetadata, type ValidatedUrlDesignProduct } from './url-design-product.js';
+import { renderRun, reproduceUrlRender, type ProducedSiteInput } from './render.js';
+import { assertUrlFinalDesignProduct } from './url-session-audit.js';
+import { checkStoredUrlRender } from './url-stored-render.js';
+import { createCredentialProbe, credentialListFromEnv } from './credential-probe.js';
+import { bindUrlSourceReader, type UrlSourceStore } from './url-source-reader.js';
+import type { AcquisitionProcessLimits } from './acquisition-process.js';
+import { DEFAULT_SESSION_MODEL } from './session-profile.js';
+import { acquireUrlSourceInMemory, type UrlMemoryContext } from './url-memory-acquisition.js';
+import { createSourceAcquisitionAudit } from './source-acquisition-audit.js';
+import { committedUrlPoliciesCurrent, committedUrlPoliciesCurrentAsync, readCommittedPolicy, readCommittedUrlOriginPolicy, samePolicy } from './policy-snapshot.js';
+import { readUrlParentAdoption, type UrlParentAdoption } from './url-parent-adoption.js';
+import { loadUrlDossierRenderer, readUrlRuntime, type UrlLoadedRenderer, type UrlRuntime } from './url-runtime.js';
+import { verifySupportedUrlCli, URL_CLI_PROGRAM } from './session-launch.js';
+import { URL_HOST_ROOT, registerUrlRunMode, urlRunModeAuthority } from './url-mode-registry.js';
+import { createUrlRunDeclaration, URL_PROFILE_ID, URL_RUN_MODE, urlSourceTransportIdentity } from './url-run-record.js';
+import { GIT_MEMORY_LIMITS } from './git-memory-transport.js';
+import { GIT_MEMORY_PACK_LIMITS } from './git-memory-pack.js';
+import { GIT_MEMORY_WORKER_LIMITS } from './git-memory-worker.js';
+import type { GitSshAuthentication } from './git-memory-ssh.js';
+import { bindCurrentEffectiveUrlRun, effectiveUrlProjection, readEffectiveRunRecord, URL_RUN_SIDECAR } from './effective-run-record.js';
+import { prepareUrlRolePlans, type UrlRolePlan } from './url-role-plan.js';
+import { createUrlRunOrigins } from './url-run-origins.js';
+import { sessionDirectory, sessionsRoot } from './run-dir.js';
+import { reviewSessionDirectory } from './review-model.js';
+import type { BriefReport } from './brief.js';
+import type { StartSessionsReport } from './session-handover.js';
+import { createUrlRunArtifacts } from './url-run-artifacts.js';
+import { startUrlRunSessions, type UrlDesignReproduction, type UrlRunSessions, type UrlRunSessionsSummary } from './url-run-sessions.js';
+import { loadSessionCredential } from './session-credential.js';
+import type { UrlSessionAnswer, UrlSessionQuestionFrame } from './session-control.js';
+import { askUrlSessionQuestion } from './url-question-ui.js';
+import { readUrlSupervisorState, writeUrlSupervisorState } from './url-supervisor-state.js';
 
 /** `syzygy polaris <url>`: the one-command dossier run (candidate REQ-polaris-generation-040 to 044; prototype under owner direction
  * POLARIS-DOSSIER-ONE-COMMAND-RUN-2026-10-14, slices 1 to 5 of the candidate's design).
@@ -35,27 +78,31 @@ Usage:
 
 Options:
   --clone <dir>            use this one-commit clone instead of making one
-  --revision <label|sha>   the consented revision to clone (default: the first preflight names)
+  --revision <ref|sha>     exact branch/tag or full commit (default: remote default HEAD)
+  --visibility <value>    public or private; absent uses conservative private treatment
+  --identity <id>         explicit repository identity when the locator is ambiguous
+  --ssh-known-hosts <file> explicit trusted host-key file for an SSH URL
+  --ssh-identity-file <file> one explicit SSH identity, or use the next two together
+  --ssh-agent-socket <socket> --ssh-public-identity <file>  constrain one agent key
   --state-root <dir>       state root (default $${STATE_ROOT_ENV}, else ~/.local/state/syzygy-dossier)
   --deadline <ISO dur>     run deadline from the brief, e.g. PT24H
   --audience <text>        who the dossier is for (asked if absent)
-  --model <id>             model for every session (default claude-opus-5-5)
+  --model <id>             supported session model (default ${DEFAULT_SESSION_MODEL})
+                           Unsupported models refuse; the run never silently substitutes one.
   --repair-cycles <n>      repair-cycle limit   --questions <n>  clarification-question limit
   --token-budget <n>       agent token budget   --turn-budget <n>  agent turn budget
                            Run limits have no default: any not given is asked in one question before
                            anything else, and a run with no terminal to ask is refused.
   --operator <name>        default the login name
-  --author-skip-permissions  start the authoring session with --dangerously-skip-permissions
-                           (it still runs inside its view)
   --no-attach              start the run without attaching to its view
 
-Each session runs inside a bubblewrap view: the clone read-only, its own directory writable, the gate
-records read-only, every other session absent. The view separates sessions; it contains no observed
-code, and a launched run executes nothing. Network is left to the agent tool.
+Each URL role has a private bubblewrap view with a fresh HOME and work directory. The four fixed
+Syzygy tools provide screened source and artifact access; inference requests use a checked host relay.
+The view contains no source checkout or real credential, and grants no observed-code execution.
+Declared profiles and stored history are Inferred; unrecorded sends and termination remain Unknown.
 `;
 
 const CHECKOUT = fileURLToPath(new URL('../../..', import.meta.url));
-const BROKER_CLIENT = fileURLToPath(new URL('./broker-client.js', import.meta.url));
 const MAIN = path.join(CHECKOUT, 'apps/syzygy/dist/main.js');
 const POLL_MS = 3000;
 /** Every draft revision after the first counts against the repair-cycle limit, a check that finds something included
@@ -77,13 +124,14 @@ export function isoSeconds(duration: string): number | null {
   const m = /^P(?:(\d+)D)?(?:T(?:(\d+)H)?(?:(\d+)M)?(?:(\d+)S)?)?$/.exec(duration);
   if (m === null || duration === 'P' || duration.endsWith('T')) return null;
   const seconds = Number(m[1] ?? 0) * 86400 + Number(m[2] ?? 0) * 3600 + Number(m[3] ?? 0) * 60 + Number(m[4] ?? 0);
-  return seconds > 0 ? seconds : null;
+  return Number.isSafeInteger(seconds) && seconds > 0 ? seconds : null;
 }
 
 /** Why a declared limit value is refused, or null when it is valid. */
 export function limitFault(flag: RunLimitFlag, value: string): string | null {
   if (flag === '--deadline') return isoSeconds(value) === null ? `${flag} takes a positive ISO 8601 duration such as PT24H` : null;
   if (!/^[0-9]+$/.test(value)) return `${flag} takes a whole number`;
+  if (!Number.isSafeInteger(Number(value))) return `${flag} exceeds the supported whole-number range`;
   if ((flag === '--token-budget' || flag === '--turn-budget') && Number(value) === 0) return `${flag} must be positive`;
   return null;
 }
@@ -110,7 +158,10 @@ export function limitsAnswer(missing: readonly RunLimitFlag[], answer: string): 
 
 interface Options {
   readonly url?: string; readonly clone?: string; readonly revision?: string; readonly stateRoot: string; readonly deadline: string;
-  readonly audience?: string; readonly model: string; readonly repairCycles: number; readonly questions: number; readonly tokenBudget: number;
+  readonly visibility?: 'public' | 'private'; readonly identity?: string;
+  readonly ssh?: { readonly knownHostsPath: string; readonly authentication: GitSshAuthentication };
+  readonly audience?: string; readonly model: string; readonly modelSource: 'operator-option' | 'supported-default';
+  readonly repairCycles: number; readonly questions: number; readonly tokenBudget: number;
   readonly turnBudget: number; readonly operator: string; readonly authorSkipPermissions: boolean; readonly attach: boolean;
   readonly mode: 'start' | 'attach' | 'stop' | 'resume' | 'supervise'; readonly run?: string; readonly tmuxSession?: string;
   /** Run limits the operator gave no value for; their fields hold placeholders that no run may use. */
@@ -123,7 +174,8 @@ export interface SessionPlan {
 }
 
 export interface SupervisorState {
-  format: 'polaris-supervisor/1';
+  format: 'polaris-supervisor/1' | 'polaris-supervisor/2';
+  mode?: typeof URL_RUN_MODE; declarationSha256?: string;
   run: string; runId: string; tmuxSession: string; clone: string; url: string; model: string; authorSkipPermissions: boolean;
   briefIssuedAt: number; deadlineSeconds: number;
   sessions: SessionPlan[];
@@ -134,6 +186,8 @@ export interface SupervisorState {
   /** After a blocking fidelity verdict: the revisions each side asked to repair must exceed before the next delivery. */
   pendingRepair?: PendingRepair;
   launches: { role: ViewRole; pid: number | null; at: string; argvSha256: string; viewSha256: string }[];
+  finalSite?: { site: number; draftRevision: number; verdict: number; packetSha256: string;
+    verdictEventSha256: string; populationSha256: string };
   stopped?: string; done?: string;
 }
 
@@ -141,8 +195,14 @@ export async function runPolarisCli(argv: readonly string[], ports: CliPorts = {
   const parsed = parseArgs(argv);
   if (typeof parsed === 'string') { process.stderr.write(`syzygy polaris: ${parsed}\n\n${POLARIS_USAGE}`); return 2; }
   const options = parsed;
+  if (options.url !== undefined) {
+    const locator = dossierLocator(options.url, 'repository');
+    if (!locator.ok) return refuse(locator.reason);
+  }
   if (options.mode === 'attach') return attach(options);
   if (options.mode === 'stop') return stop(options);
+  if (options.model !== DEFAULT_SESSION_MODEL) return refuse('This URL session model has no supported restricted profile. Use --model claude-sonnet-4-6 or omit --model; no model was substituted.');
+  if (options.authorSkipPermissions) return refuse('URL sessions require their fixed restricted tools. Omit --author-skip-permissions.');
   if (options.mode === 'supervise') return supervise(options, ports);
   // start or resume: check the host, then hand over to a supervisor inside tmux.
   const tmux = spawnSync('tmux', ['-V'], { encoding: 'utf8' });
@@ -169,13 +229,17 @@ export async function runPolarisCli(argv: readonly string[], ports: CliPorts = {
     audience = await ask('Who is this dossier for? (one line, e.g. "Operators and integrators deploying or building on Redis"): ');
     if (audience.trim() === '') return refuse('an audience is required');
   }
+  if (options.mode === 'start') {
+    const prepared = await preparePolarisStart({ ...options, ...(audience === undefined ? {} : { audience }) }, ports);
+    if (!prepared.ok) return refuse(prepared.reason);
+  }
   const name = options.mode === 'resume' ? readState(options.stateRoot, options.run!)!.tmuxSession : `polaris-${Date.now().toString(36)}`;
   const forward = [...argv.filter((arg) => arg !== '--no-attach'), ...limits, ...(audience !== undefined && options.audience === undefined ? ['--audience', audience] : []), '--supervise', '--tmux-session', name];
-  // A running tmux server gives a new session its own global environment, not this process's, so what the supervisor needs is passed
-  // with -e: the state root, PATH (to find the agent tool), the runtime directory, and every SYZYGY_ variable (a stand-in agent included).
-  const passed: Record<string, string> = { [STATE_ROOT_ENV]: options.stateRoot };
-  for (const [key, value] of Object.entries(process.env)) if (value !== undefined && (key.startsWith('SYZYGY_') || key === 'PATH' || key === 'XDG_RUNTIME_DIR' || key === 'HOME')) passed[key] = value;
-  passed[STATE_ROOT_ENV] = options.stateRoot;
+  // Only fixed host metadata crosses tmux's explicit environment boundary.
+  // Authentication remains in the host credential adapter; never place a
+  // credential in tmux argv or forward arbitrary SYZYGY_/provider overrides.
+  const passed: Record<string, string> = { [STATE_ROOT_ENV]: options.stateRoot, HOME: os.homedir(),
+    PATH: `${path.dirname(process.execPath)}:/usr/bin:/bin`, LANG: 'C.UTF-8' };
   const envArgs = Object.entries(passed).flatMap(([key, value]) => ['-e', `${key}=${value}`]);
   const started = spawnSync('tmux', ['new-session', '-d', '-s', name, '-n', 'run', '-x', '220', '-y', '50', ...envArgs, '--', process.execPath, MAIN, 'polaris', ...forward], { stdio: 'inherit' });
   if (started.status !== 0) return refuse('tmux could not start the run\'s session');
@@ -192,11 +256,12 @@ function refuse(reason: string): number {
 
 function parseArgs(argv: readonly string[]): Options | string {
   const read = readArgv(argv, {
-    valued: ['--clone', '--revision', '--state-root', '--deadline', '--audience', '--model', '--repair-cycles', '--questions', '--token-budget',
-      '--turn-budget', '--operator', '--attach', '--stop', '--resume', '--tmux-session'],
+    valued: ['--clone', '--revision', '--visibility', '--identity', '--state-root', '--deadline', '--audience', '--model', '--repair-cycles', '--questions', '--token-budget',
+      '--turn-budget', '--operator', '--attach', '--stop', '--resume', '--tmux-session',
+      '--ssh-known-hosts', '--ssh-identity-file', '--ssh-agent-socket', '--ssh-public-identity'],
     booleans: ['--author-skip-permissions', '--no-attach', '--supervise', '--help', '-h'], dashValue: 'take', repeat: 'last', positionals: true,
   });
-  if (isArgvFault(read)) return read.fault === 'missing-value' ? `${read.arg} requires a value` : `unknown option ${read.arg}`;
+  if (isArgvFault(read)) return read.fault === 'missing-value' && /^--[a-z-]+$/.test(read.arg) ? `${read.arg} requires a value` : 'an option is unknown or missing its value';
   const { values, flags, positional } = read;
   if (flags.has('--help') || flags.has('-h')) { process.stdout.write(POLARIS_USAGE); process.exit(0); }
   const missingLimits: RunLimitFlag[] = [];
@@ -212,15 +277,139 @@ function parseArgs(argv: readonly string[]): Options | string {
   const runRef = values.get('--attach') ?? values.get('--stop') ?? values.get('--resume');
   const mode = flags.has('--supervise') ? 'supervise' : values.has('--attach') ? 'attach' : values.has('--stop') ? 'stop' : values.has('--resume') ? 'resume' : 'start';
   if (mode === 'start' && positional.length !== 1) return 'give exactly one repository URL';
+  const visibility = values.get('--visibility');
+  if (visibility !== undefined && visibility !== 'public' && visibility !== 'private') return '--visibility takes public or private';
+  const identity = values.get('--identity');
+  if (identity !== undefined && normaliseIdentityOption(identity) === null) return '--identity must name a repository identity';
+  const revision = planUrlRevision(values.get('--revision'));
+  if (!revision.ok) return revision.reason;
+  const sshFlags = ['--ssh-known-hosts', '--ssh-identity-file', '--ssh-agent-socket', '--ssh-public-identity'];
+  let ssh: Options['ssh'];
+  if (sshFlags.some(flag => values.has(flag))) {
+    const file = values.get('--ssh-identity-file'), agent = values.get('--ssh-agent-socket'), publicKey = values.get('--ssh-public-identity');
+    if (!values.has('--ssh-known-hosts') || (file !== undefined) === (agent !== undefined)
+      || (agent !== undefined) !== (publicKey !== undefined)) return 'SSH requires --ssh-known-hosts and either one --ssh-identity-file or both --ssh-agent-socket and --ssh-public-identity';
+    ssh = { knownHostsPath: path.resolve(values.get('--ssh-known-hosts')!), authentication: file !== undefined
+      ? { kind: 'identity-file', path: path.resolve(file) } : { kind: 'agent-socket', path: path.resolve(agent!), publicIdentityPath: path.resolve(publicKey!) } };
+  }
   const runId = runRef === undefined ? undefined : path.basename(path.resolve(runRef));
   return {
     ...(positional[0] ? { url: positional[0] } : {}), ...(values.has('--clone') ? { clone: path.resolve(values.get('--clone')!) } : {}),
     ...(values.has('--revision') ? { revision: values.get('--revision')! } : {}), stateRoot, deadline: values.get('--deadline') ?? '',
-    ...(values.has('--audience') ? { audience: values.get('--audience')! } : {}), model: values.get('--model') ?? 'claude-opus-5-5',
+    ...(visibility === undefined ? {} : { visibility }), ...(identity === undefined ? {} : { identity }),
+    ...(ssh === undefined ? {} : { ssh }),
+    ...(values.has('--audience') ? { audience: values.get('--audience')! } : {}), model: values.get('--model') ?? DEFAULT_SESSION_MODEL,
+    modelSource: values.has('--model') ? 'operator-option' : 'supported-default',
     ...numbers, missingLimits,
     operator: values.get('--operator') ?? os.userInfo().username, authorSkipPermissions: flags.has('--author-skip-permissions'), attach: !flags.has('--no-attach'),
     mode, ...(runId ? { run: runId } : {}), ...(values.has('--tmux-session') ? { tmuxSession: values.get('--tmux-session')! } : {}),
   };
+}
+
+/** Validate declarations before they reach a child argv or input-derived output.
+ * This is metadata preparation, never remote selection or provider readiness. */
+export async function preparePolarisStart(
+  input: Pick<Options, 'url' | 'revision' | 'identity' | 'model' | 'operator' | 'audience' | 'ssh'>, ports: CliPorts,
+): Promise<PreflightResult> {
+  if (input.url === undefined) return { ok: false, reason: 'give a repository URL' };
+  const result = await preflight(input.url, cliGateSources(ports), (ports.now ?? Date.now)());
+  if (!result.ok) return result;
+  const authentication = input.ssh?.authentication;
+  const fields = [input.revision, input.identity, input.model, input.operator, input.audience, input.ssh?.knownHostsPath,
+    authentication?.path, ...(authentication?.kind === 'agent-socket' ? [authentication.publicIdentityPath] : [])];
+  const declared = fields.filter((value): value is string => value !== undefined);
+  for (const value of [...declared, declared.join(''), declared.join('\n'), declared.join(' ')]) {
+    if (value !== undefined && (Buffer.byteLength(value, 'utf8') > 65_536 || result.screen.screenBody(value) !== undefined)) {
+      return { ok: false, reason: 'a run declaration is excluded by the committed metadata screening policy; its value is not printed or stored' };
+    }
+  }
+  if (input.identity === undefined && result.report.repository.repositoryId === null) {
+    return { ok: false, reason: 'the locator has no unambiguous repository identity; give --identity repository:<id>' };
+  }
+  return result;
+}
+
+interface PreparedUrlRun {
+  readonly record: RecordedRunConfig; readonly screen: DossierScreen; readonly runtime: UrlRuntime;
+  readonly renderer: UrlLoadedRenderer;
+  readonly roles: readonly UrlRolePlan[]; readonly origins: Awaited<ReturnType<typeof createUrlRunOrigins>>;
+  readonly current: () => boolean; readonly sessionCurrent: () => Promise<boolean>; readonly canaries: readonly string[];
+  readonly directories: Readonly<Record<ViewRole, string>>; readonly auditDirectory: string;
+  readonly originPolicySha256: string;
+  readonly openReader: ReturnType<typeof bindUrlSourceReader>;
+  readonly initializedCoreBytes: Uint8Array;
+  readonly effectiveDeclaration: NonNullable<Parameters<typeof createUrlRunArtifacts>[0]['effectiveDeclaration']>;
+  readonly initial: { brief: BriefReport; sessions: StartSessionsReport };
+}
+const preparedUrlRuns = new Map<string, PreparedUrlRun>();
+type UrlArtifacts = ReturnType<typeof createUrlRunArtifacts>;
+interface CheckedSupervisor {
+  readonly prepared: PreparedUrlRun; readonly artifacts: UrlArtifacts; readonly runtime: UrlRunSessions;
+}
+async function prepareSupervisorArtifacts(run: string, prepared: PreparedUrlRun, ports: CliPorts): Promise<UrlArtifacts> {
+  if (!(await prepared.sessionCurrent())) throw new Error('url-supervisor-unavailable');
+  const artifacts: UrlArtifacts = createUrlRunArtifacts({ run, record: prepared.record, origins: prepared.origins,
+    roles: prepared.roles, current: prepared.current, helpText: DOSSIER_USAGE,
+    statusProjection: effectiveUrlProjection(prepared.record, prepared.effectiveDeclaration.declaration),
+    initializedCoreBytes: prepared.initializedCoreBytes,
+    effectiveDeclaration: prepared.effectiveDeclaration,
+    runDossier: role => async (argv, stdin, review, awaitProductRead) => {
+      if (!(await prepared.sessionCurrent()) || argv[0] !== 'dossier') throw new Error('url-supervisor-unavailable');
+      const operation = argv[1] === 'check' ? 'author-check'
+        : argv[1] === 'await' ? (role === 'inventory' ? 'inventory-check' : 'review-check') : undefined;
+      const products = operation === undefined ? undefined
+        : beginRunProductReads(run, artifacts, operation, Date.parse(prepared.initial.brief.deadlineEndsAt), awaitProductRead);
+      try {
+        if (review !== undefined) {
+          if (role !== 'design' || !products || !stdin) throw new Error('url-supervisor-unavailable');
+          const checked = await reviewCheck(run, { kind: 'design' }, { now: ports.now ?? Date.now, sources: cliGateSources(ports),
+            openReader: prepared.openReader, productReads: products }, { bytes: stdin, proof: review });
+          if (!checked.ok || !(await prepared.sessionCurrent())) throw new Error('url-supervisor-unavailable');
+          const passed = checked.report.outcome === 'validated';
+          return { stdout: JSON.stringify({ command: 'await', format: AWAIT_FORMAT, outcome: 'submitted', role: 'review', kind: 'design',
+            session: 1, passed, check: checked.report,
+            next: passed ? 'Wait for the next design round or run termination.' : 'Address the reported findings and resubmit for this round.',
+            disclosures: ['The original design packet and the protected delivery are verified again for this submission. Reviewer authorship remains Inferred.'] }),
+            stderr: '', exit: passed ? 0 : 1 };
+        }
+        const result = await step(argv.slice(1), { ...ports, openReader: prepared.openReader,
+          ...(products === undefined ? {} : { productReads: products }) }, stdin);
+        if (!(await prepared.sessionCurrent())) throw new Error('url-supervisor-unavailable');
+        return { stdout: result.stdout, stderr: result.stderr, exit: result.exit };
+      } finally { products?.close(); }
+    } });
+  await artifacts.registerInitial(prepared.initial);
+  if (!(await prepared.sessionCurrent())) throw new Error('url-supervisor-unavailable');
+  return artifacts;
+}
+const boundedCanonical = (value: unknown): string => encodeCanonicalJson(value, { maxBytes: 2_097_152, maxNodes: 65_536, maxDepth: 32 });
+function metadataAdmitted(value: unknown, screen: DossierScreen): boolean {
+  try {
+    const fields: string[] = [], values: string[] = [], pending: unknown[] = [value];
+    while (pending.length) { const item = pending.pop();
+      if (typeof item === 'string') { fields.push(item); values.push(item); }
+      else if (Array.isArray(item)) for (const child of item) pending.push(child);
+      else if (isRecord(item)) for (const [key, child] of Object.entries(item)) { fields.push(key); pending.push(child); }
+    }
+    return [boundedCanonical(value), ...fields, ...['', '\n', ' '].flatMap(separator => [fields.join(separator), values.join(separator)])]
+      .every(text => screen.screenBody(text) === undefined);
+  } catch { return false; }
+}
+/** Host metadata only; reject a FIFO, link, oversized file or changed identity
+ * before bounded UTF-8/JSON parsing. Does not read an observed project body. */
+function boundedHostText(file: string, maximum: number): string {
+  if (fs.realpathSync(file) !== file) throw new Error('host-metadata-unavailable');
+  const fd = fs.openSync(file, fs.constants.O_RDONLY | fs.constants.O_NOFOLLOW | fs.constants.O_NONBLOCK);
+  try {
+    const before = fs.fstatSync(fd);
+    if (!before.isFile() || before.nlink !== 1 || before.uid !== process.getuid?.() || before.size > maximum) throw new Error('host-metadata-unavailable');
+    const bytes = Buffer.alloc(maximum + 1); let length = 0;
+    while (length < bytes.length) { const n = fs.readSync(fd, bytes, length, bytes.length - length, null); if (!n) break; length += n; }
+    const after = fs.fstatSync(fd), named = fs.lstatSync(file);
+    if (length !== before.size || ['dev', 'ino', 'size', 'mtimeMs', 'ctimeMs'].some(key => before[key as keyof fs.Stats] !== after[key as keyof fs.Stats]
+      || before[key as keyof fs.Stats] !== named[key as keyof fs.Stats])) throw new Error('host-metadata-unavailable');
+    return new TextDecoder('utf-8', { fatal: true, ignoreBOM: true }).decode(bytes.subarray(0, length));
+  } finally { fs.closeSync(fd); }
 }
 
 async function ask(question: string): Promise<string> {
@@ -229,13 +418,8 @@ async function ask(question: string): Promise<string> {
   try { return await rl.question(question); } finally { rl.close(); }
 }
 
-const statePath = (stateRoot: string, runId: string): string => path.join(stateRoot, `${runId}.supervisor.json`);
-function readState(stateRoot: string, runId: string): SupervisorState | null {
-  try { return JSON.parse(fs.readFileSync(statePath(stateRoot, runId), 'utf8')) as SupervisorState; } catch { return null; }
-}
-function saveState(stateRoot: string, state: SupervisorState): void {
-  fs.writeFileSync(statePath(stateRoot, state.runId), `${JSON.stringify(state, null, 2)}\n`, { mode: 0o600 });
-}
+const readState = readUrlSupervisorState;
+const saveState = writeUrlSupervisorState;
 const tmuxHas = (name: string): boolean => spawnSync('tmux', ['has-session', '-t', name], { stdio: 'ignore' }).status === 0;
 
 function attach(options: Options): number {
@@ -257,18 +441,25 @@ function stop(options: Options): number {
   if (tmuxHas(state.tmuxSession)) spawnSync('tmux', ['kill-session', '-t', state.tmuxSession], { stdio: 'ignore' });
   state.stopped ??= new Date().toISOString();
   saveState(options.stateRoot, state);
-  process.stdout.write(`Stopped run ${state.runId}; every session it started has ended.\n  resume: syzygy polaris --resume ${state.runId}\n`);
+  process.stdout.write(`Stop requested for run ${state.runId}. Process termination is Unknown until the supervisor records its cleanup outcome.\n  resume: syzygy polaris --resume ${state.runId}\n`);
   return 0;
 }
 
 /** One `syzygy dossier` step, in process, as JSON. */
 async function step(argv: readonly string[], ports: CliPorts, stdin?: Uint8Array | null): Promise<{ exit: number; doc: Record<string, unknown> | null; stdout: string; stderr: string }> {
-  let stdout = '', stderr = '';
-  const exit = await runDossierCli(argv, { stdout: (t) => { stdout += t; }, stderr: (t) => { stderr += t; } }, {
+  let stdout = '', stderr = '', outputBytes = 0, excessive = false;
+  const retain = (channel: 'stdout' | 'stderr', text: string): void => {
+    outputBytes += Buffer.byteLength(text);
+    if (outputBytes > 2_097_152) { excessive = true; return; }
+    if (channel === 'stdout') stdout += text; else stderr += text;
+  };
+  const exit = await runDossierCli(argv, { stdout: t => retain('stdout', t), stderr: t => retain('stderr', t) }, {
     ...ports, ...(stdin !== undefined ? { readStdin: async (max: number) => (stdin === null || stdin.byteLength > max ? null : stdin) } : {}),
   });
+  if (excessive) return { exit: 1, doc: null, stdout: '', stderr: 'The bounded local step output limit was exceeded.' };
   let doc: Record<string, unknown> | null = null;
-  try { doc = JSON.parse(stdout) as Record<string, unknown>; } catch { doc = null; }
+  try { const parsed = parseBoundedJson(stdout, { maxBytes: 2_097_152, maxNodes: 65_536, maxDepth: 32 });
+    if (isRecord(parsed)) doc = parsed; } catch { doc = null; }
   return { exit, doc, stdout, stderr };
 }
 
@@ -290,15 +481,12 @@ async function supervise(options: Options, ports: CliPorts): Promise<number> {
   const screen = new Screen('syzygy polaris — launched run (prototype)   detach: C-b d   windows: C-b n / C-b p');
   const fail = async (reason: string): Promise<number> => {
     screen.event(`STOPPED: ${reason}`);
-    screen.draw(['The run stopped. Read the reason below.', 'This window stays open; close it with C-b & or `tmux kill-session`.']);
-    await new Promise(() => { /* keep the window */ });
+    screen.draw(['The run stopped. Read the reason below.', 'A retained tmux view is for inspection; it does not establish live agent work.']);
     return 1;
   };
   let state: SupervisorState;
   if (previous !== null) {
-    state = previous;
-    delete state.stopped;
-    screen.event(`resuming ${state.runId}`);
+    return fail('The retained run has no re-established checked recovery boundary. Preserve its original pin and records; no role or uncertain request was replayed.');
   } else {
     if (options.missingLimits.length > 0) return fail(`run limits not declared: ${options.missingLimits.join(' ')}; start the run with syzygy polaris, which asks for them`);
     const set = await setUp(options, ports, screen);
@@ -306,105 +494,274 @@ async function supervise(options: Options, ports: CliPorts): Promise<number> {
     state = set;
   }
   saveState(options.stateRoot, state);
-  const brokers = new Map<ViewRole, Broker>();
-  const onExit = (): void => {
-    state.stopped ??= new Date().toISOString();
-    saveState(options.stateRoot, state);
-    for (const broker of brokers.values()) broker.close();
-    process.exit(0);
-  };
-  process.on('SIGHUP', onExit); process.on('SIGTERM', onExit); process.on('SIGINT', onExit);
-
-  for (const plan of state.sessions) {
-    const launched = launchSession(options, ports, state, plan, brokers, screen);
-    if (typeof launched === 'string') return fail(launched);
+  const prepared = preparedUrlRuns.get(state.run);
+  if (prepared !== undefined) {
+    try { await prepareSupervisorArtifacts(state.run, prepared, ports); }
+    catch { return fail('The actual issued artifact products could not be bound to their checked producers; no inference role was launched.'); }
+    return fail('The checked stage progression and launch-history composition is not ready; no inference role was launched.');
   }
-  saveState(options.stateRoot, state);
-  return loop(options, ports, state, screen);
+  return fail('This supervisor has no genuine checked URL preparation; no inference role was launched.');
 }
 
-/** What the supervisor's clone step runs, injectable for a test: git, and the file system around the clone path. */
-export interface CloneDeps {
-  readonly git: (args: readonly string[]) => { readonly status: number | null; readonly stdout: string; readonly stderr: string };
-  readonly exists: (file: string) => boolean;
-  readonly mkdir: (dir: string) => void;
-  readonly event: (line: string) => void;
+export interface SupervisorSourceInput {
+  readonly url: string; readonly revision?: string; readonly clone?: string;
+  readonly scratchRoot: string; readonly screen: Pick<DossierScreen, 'screenBody'>;
+  readonly limits?: Partial<AcquisitionProcessLimits>;
+  readonly onStage?: (stage: UrlAcquisitionOperation['stage'], limits: AcquisitionProcessLimits) => void | Promise<void>;
 }
-const PROCESS_CLONE_DEPS: Omit<CloneDeps, 'event'> = {
-  git: args => spawnSync('git', [...args], { encoding: 'utf8' }),
-  exists: file => fs.existsSync(file),
-  mkdir: dir => { fs.mkdirSync(dir, { recursive: true }); },
-};
+export interface SupervisorSourcePorts {
+  readonly select: typeof selectUrlSource;
+  readonly acquire: typeof acquireUrlSource;
+  readonly head: (clone: string) => CloneHead;
+}
+export type SupervisorSourceResult = {
+  readonly ok: true; readonly clone: string; readonly source: SelectedUrlSource;
+  readonly operations: readonly UrlAcquisitionOperation[]; readonly workspace: string | null;
+} | Exclude<SelectUrlSourceResult | AcquireUrlSourceResult, { ok: true }>;
 
-/** The supervisor's one-commit clone when no `--clone` is given: reuse the clone already at the commit, or else fetch the commit from the
- * URL, but only after `fetchRefusal` reads the pair public (screening scope version 8, edit 4: for a private repository Syzygy fetches
- * nothing). Returns the clone directory, or the refusal. */
-export async function supervisorClone(input: {
-  readonly url: string; readonly repositoryId: unknown; readonly chosen: { readonly label: string; readonly commit: string };
-  readonly clonesRoot: string; readonly visibilityOf: VisibilityOf | undefined;
-}, deps: CloneDeps): Promise<{ readonly clone: string } | string> {
-  const { url, chosen } = input;
-  const clone = path.join(input.clonesRoot, `${String(input.repositoryId ?? 'repo')}-${chosen.label}`);
-  const head = deps.git(['-C', clone, 'rev-parse', 'HEAD']);
-  if (head.status === 0 && head.stdout.trim() === chosen.commit) { deps.event(`reusing clone ${clone}`); return { clone }; }
-  if (deps.exists(clone)) return `${clone} exists but is not a clone of ${chosen.commit}; remove it or pass --clone`;
-  const refused = await fetchRefusal(input.repositoryId, chosen.commit, input.visibilityOf);
-  if (refused !== null) return refused;
-  deps.event(`cloning ${chosen.label} (${chosen.commit.slice(0, 12)}) into ${clone}`);
-  deps.mkdir(path.dirname(clone));
-  for (const args of [['init', '-q', clone], ['-C', clone, 'fetch', '-q', '--depth=1', url, chosen.commit], ['-C', clone, 'checkout', '-q', '--detach', 'FETCH_HEAD']]) {
-    const r = deps.git(args);
-    if (r.status !== 0) return `git ${args.join(' ')} failed: ${r.stderr.trim()}`;
+/** Select the URL's current default once, even for a supplied clone. A supplied
+ * clone is inspected read-only and must already match; it is never repaired,
+ * fetched into, or silently selected from its own stale HEAD. */
+export async function supervisorSource(input: SupervisorSourceInput, ports: SupervisorSourcePorts = {
+  select: selectUrlSource, acquire: acquireUrlSource, head: resolveCloneHead,
+}): Promise<SupervisorSourceResult> {
+  const selected = await ports.select({ locator: input.url, scratchRoot: input.scratchRoot, screen: input.screen,
+    ...(input.limits === undefined ? {} : { limits: input.limits }), ...(input.onStage === undefined ? {} : { onStage: input.onStage }),
+    ...(input.revision === undefined ? {} : { revision: input.revision }) });
+  if (!selected.ok) return selected;
+  if (input.clone !== undefined) {
+    const head = ports.head(input.clone);
+    if (!head.ok || head.commit !== selected.source.revision.identifier) return {
+      ok: false, code: 'pin-mismatch', stage: 'verification',
+      reason: 'The supplied clone does not hold the selected full commit at HEAD; supply a matching one-commit clone or omit --clone. It was not modified.',
+      operations: selected.operations,
+    };
+    return { ok: true, clone: input.clone, source: selected.source, operations: selected.operations, workspace: null };
   }
-  return { clone };
+  const acquired = await ports.acquire({ source: selected.source, scratchRoot: input.scratchRoot, screen: input.screen,
+    ...(input.limits === undefined ? {} : { limits: input.limits }), ...(input.onStage === undefined ? {} : { onStage: input.onStage }) });
+  if (!acquired.ok) return { ...acquired, operations: [...selected.operations, ...acquired.operations] };
+  return { ...acquired, operations: [...selected.operations, ...acquired.operations] };
 }
 
 /** Preflight, clone, init, marker, brief and the waiting sessions; returns the supervisor state or the refusal. */
 async function setUp(options: Options, ports: CliPorts, screen: Screen): Promise<SupervisorState | string> {
   const url = options.url!;
-  screen.event(`preflight ${url}`); screen.draw(['Setting up…']);
-  const pre = await step(['--json', 'preflight', url], ports);
-  if (pre.doc === null || pre.doc['outcome'] !== 'ready') return `preflight: ${pre.doc ? JSON.stringify(pre.doc['missing'] ?? pre.doc['reason']) : pre.stderr.trim()}`;
-  const revisions = (pre.doc['consentedRevisions'] as { label: string; commit: string }[] | undefined) ?? [];
-  const chosen = options.revision === undefined ? revisions[0] : revisions.find((r) => r.label === options.revision || r.commit === options.revision);
-  if (chosen === undefined) return `no consented revision matches ${options.revision ?? '(none named)'}`;
-  const acquired = options.clone !== undefined ? { clone: options.clone } : await supervisorClone({
-    url, repositoryId: (pre.doc['repository'] as Record<string, unknown> | undefined)?.['repositoryId'], chosen,
-    clonesRoot: path.join(os.homedir(), '.local/state/syzygy-polaris-clones'), visibilityOf: cliVisibilityOf(ports),
-  }, { ...PROCESS_CLONE_DEPS, event: line => { screen.event(line); if (line.startsWith('cloning ')) screen.draw(['Cloning one commit…']); } });
-  if (typeof acquired === 'string') return acquired;
+  const prepared = await preparePolarisStart(options, ports);
+  if (!prepared.ok) return prepared.reason;
+  let executable: string;
+  try { executable = fs.realpathSync(path.join(os.homedir(), '.local/share/claude/versions', URL_CLI_PROGRAM.version)); }
+  catch { return 'The supported restricted CLI is unavailable; no source was acquired.'; }
+  if (!(await verifySupportedUrlCli(executable))) return 'The installed CLI does not match the supported restricted profile; no source was acquired.';
+  const version = URL_CLI_PROGRAM.version;
+  const sources = cliGateSources(ports), policyRoot = sources.recordsRoot;
+  const policy = readCommittedPolicy(policyRoot), origin = readCommittedUrlOriginPolicy(policyRoot);
+  if (!policy.ok || !origin.ok || !samePolicy(policy.binding, prepared.report.screeningPolicy)) return 'Both committed URL screening policies must be installed and unchanged before acquisition.';
+  const initialAdoption = readUrlParentAdoption(policyRoot, origin.binding.sha256);
+  if (initialAdoption === null || !committedUrlPoliciesCurrent(policyRoot, policy.binding, origin.binding, initialAdoption))
+    return 'The exact installed URL dossier adoption cannot be verified against the observed default branch; no source was acquired.';
+  let adoption = initialAdoption;
+  const refreshAdoption = (previous: UrlParentAdoption): UrlParentAdoption | null => {
+    if (adoption !== previous) return adoption;
+    const updated = readUrlParentAdoption(policyRoot, origin.binding.sha256, previous);
+    if (updated !== null) adoption = updated;
+    return updated;
+  };
+  const runtime = await readUrlRuntime(CHECKOUT);
+  if (!runtime.ok) return 'The checked URL runtime is unavailable or stale; run npm run build from the trusted Syzygy checkout.';
+  const renderer = await loadUrlDossierRenderer(runtime.runtime);
+  if (renderer === null) return 'The checked URL renderer could not be bound to the installed runtime.';
+  const identity = urlSourceTransportIdentity(url);
+  if (!identity.ok) return 'The URL has no supported source-transport identity.';
+  if (identity.destination.scheme === 'ssh' && options.ssh === undefined) return 'An SSH URL requires explicit known-hosts and one explicit identity; ambient SSH configuration is not used.';
+  if (identity.destination.scheme !== 'ssh' && options.ssh !== undefined) return 'SSH authentication options require an SSH URL.';
+  const repository = options.identity === undefined ? prepared.report.repository.repositoryId : normaliseIdentityOption(options.identity)?.slice('repository:'.length);
+  if (repository === null || repository === undefined) return 'The repository identity is unavailable.';
+  const currentPolicies = (): boolean => {
+    const previous = adoption;
+    if (committedUrlPoliciesCurrent(policyRoot, policy.binding, origin.binding, previous)) return true;
+    const updated = refreshAdoption(previous);
+    return updated !== null && committedUrlPoliciesCurrent(policyRoot, policy.binding, origin.binding, updated);
+  };
+  const currentPoliciesAsync = async (): Promise<boolean> => {
+    const previous = adoption;
+    if (await committedUrlPoliciesCurrentAsync(policyRoot, policy.binding, origin.binding, previous)) return true;
+    const updated = refreshAdoption(previous);
+    return updated !== null && await committedUrlPoliciesCurrentAsync(policyRoot, policy.binding, origin.binding, updated);
+  };
+  const current = (context: UrlMemoryContext): boolean => currentPolicies()
+    && context.sourceProvider === identity.providerId && context.locatorSha256 === sha256(url)
+    && context.selectorSha256 === (options.revision === undefined ? null : sha256(options.revision))
+    && context.policySha256 === policy.binding.sha256 && context.originPolicySha256 === origin.binding.sha256;
+  screen.event('prepared repository metadata'); screen.draw(['Receiving and screening the selected source in bounded working memory…']);
+  const scratchRoot = path.join(URL_HOST_ROOT, 'acquisitions');
+  fs.mkdirSync(scratchRoot, { recursive: true, mode: 0o700 });
+  const scratchStat = fs.lstatSync(scratchRoot);
+  if (fs.realpathSync(scratchRoot) !== scratchRoot || !scratchStat.isDirectory() || scratchStat.uid !== process.getuid?.()
+    || (scratchStat.mode & 0o077) !== 0) return 'The protected acquisition root must be a canonical owned private directory.';
+  const attemptDirectory = fs.mkdtempSync(path.join(scratchRoot, 'attempt-'));
+  const attemptFile = path.join(attemptDirectory, 'attempt.json');
+  const acknowledgments: { stage: string; acknowledgedAt: string }[] = [];
+  const declaredLimits = { transport: { ...GIT_MEMORY_LIMITS, packBytes: GIT_MEMORY_PACK_LIMITS.maxPackBytes }, worker: GIT_MEMORY_WORKER_LIMITS };
+  const acquisitionPolicy = { bytes: policy.bytes, sha256: policy.binding.sha256, originBytes: origin.bytes, originSha256: origin.binding.sha256,
+    visibility: options.visibility ?? 'private' as const, repository: `repository:${repository}` };
+  const audit = await createSourceAcquisitionAudit({ parent: attemptDirectory, name: 'source.jsonl', locator: url,
+    ...(options.revision === undefined ? {} : { selector: options.revision }), policy: acquisitionPolicy,
+    program: { nodeSha256: runtime.runtime.worker.nodeSha256, bundleSha256: runtime.runtime.worker.bundleSha256 }, current: currentPolicies });
+  if (!audit.ok) return 'The protected acquisition audit could not be prepared; no source was acquired.';
+  const acquisition = await acquireUrlSourceInMemory({ locator: url, scratchParent: attemptDirectory, program: runtime.runtime.worker,
+    policy: acquisitionPolicy, limits: { packBytes: GIT_MEMORY_PACK_LIMITS.maxPackBytes },
+    ...(options.revision === undefined ? {} : { selector: options.revision }),
+    ...(options.clone === undefined ? {} : { suppliedClone: options.clone }), ...(options.ssh === undefined ? {} : { ssh: options.ssh }),
+    host: { current, audit: async event => {
+      await audit.audit(event); acknowledgments.push({ stage: `${event.stage}:${event.direction}:${event.state}`, acknowledgedAt: isoOf(Date.now()) });
+      screen.event(`${event.stage}: ${event.state}`);
+    } } });
+  const auditSummary = await audit.close();
+  fs.writeFileSync(attemptFile, `${JSON.stringify({ format: 'polaris-dossier-url-attempt/2', label: 'Inferred', declaredLimits,
+    screeningPolicy: policy.binding, originPolicy: origin.binding, sourceProvider: identity.providerId, audit: auditSummary,
+    outcome: acquisition.ok ? 'acquired' : acquisition.code, history: acquisition.history,
+    cleanup: acquisition.ok ? 'not-needed' : acquisition.cleanup }, null, 2)}\n`, { mode: 0o600, flag: 'wx' });
+  if (!acquisition.ok) return `Source acquisition refused (${acquisition.code}); protected attempt: ${attemptFile}.`;
+  if (auditSummary.poisoned || auditSummary.tail !== 'complete') return 'The source audit did not close completely; acquisition cannot establish run readiness.';
+  const acquired = { clone: acquisition.clone, workspace: acquisition.workspace, operations: acquisition.history,
+    source: { normalizedLocator: acquisition.normalizedLocator, selector: options.revision ?? null,
+      revision: acquisition.selection, provenance: 'independently checked native Git-v2 metadata; immutable selected commit' } };
   const clone = acquired.clone;
-  const version = spawnSync(claudeExecutable(), ['--version'], { encoding: 'utf8' }).stdout.trim().split(/\s+/)[0] ?? 'unknown';
+  const chosen = acquired.source.revision;
+  screen.event(`selected full commit ${chosen.identifier}; ${chosen.mode}`);
   const config = {
     operator: options.operator, agentTool: 'claude-code', agentToolVersion: version, agentProvider: 'anthropic', model: options.model,
     deadline: options.deadline, agentTokenBudget: options.tokenBudget, agentTurnBudget: options.turnBudget, maxRepairCycles: options.repairCycles,
     maxQuestions: options.questions, audience: options.audience, operatorIsOwner: true,
   };
-  fs.mkdirSync(options.stateRoot, { recursive: true, mode: 0o700 });
-  const configFile = path.join(options.stateRoot, `.polaris-config-${process.pid}.json`);
-  fs.writeFileSync(configFile, JSON.stringify(config), { mode: 0o600 });
+  const store: UrlSourceStore = acquisition.supplied ? 'supplied' : 'owned-loose';
+  let bindingCurrent = currentPolicies;
+  let openReader: ReturnType<typeof bindUrlSourceReader>;
+  try { openReader = bindUrlSourceReader({ clone, revision: chosen.identifier, store, current: () => bindingCurrent() }); }
+  catch { return 'The selected URL clone could not be bound to its pinned object reader.'; }
+  const runPorts: CliPorts = { ...ports, openReader };
   screen.event('init'); screen.draw(['Initialising the run…']);
-  const init = await step(['--json', 'init', clone, '--url', url, '--config', configFile, '--state-root', options.stateRoot], ports);
-  fs.rmSync(configFile, { force: true });
-  if (init.exit !== 0 || init.doc === null) return `init: ${init.doc ? String(init.doc['reason']) : init.stderr.trim()}`;
-  const run = String(init.doc['run']);
-  const runId = path.basename(run);
+  const init = await initRun({ clone, url, revision: chosen.identifier, configText: JSON.stringify(config), stateRoot: options.stateRoot,
+    ...(options.visibility === undefined ? {} : { visibility: options.visibility }), ...(options.identity === undefined ? {} : { identity: options.identity }) },
+  { sources, now: ports.now ?? Date.now, openReader });
+  if (!init.ok) return `init: ${init.refusal.reason}`;
+  const { run, runId } = init.report;
+  if (!path.isAbsolute(run) || path.resolve(run) !== run || path.dirname(run) !== options.stateRoot || path.basename(run) !== runId)
+    return 'The initialized run has an invalid host directory identity.';
+  const baseText = init.initializedRecordText, baseSha256 = sha256(baseText);
+  const initialized = readRunRecord(baseText);
+  const opened = readEffectiveRunRecord(run, sources.effectiveRunDeclaration);
+  if (!initialized.ok || !opened.ok || opened.effective.kind !== 'operator' || opened.core.subject.pinnedRevision.commit !== chosen.identifier
+    || opened.core.subject.clone.path !== clone || sha256(boundedHostText(path.join(run, RUN_LAYOUT.config), 65_536)) !== baseSha256)
+    return 'The new compatible run record could not be independently bound.';
+  const record = initialized.record;
+  const placement = placementSubjectOf(record.subject);
+  const runScreen = buildDossierScreen(policy.bytes, true, placement, placement.visibility);
+  if (!runScreen.ok || runScreen.screen.policySha256 !== placement.policySha256)
+    return 'The pinned URL subject could not be screened under its bound policy.';
+  let checkBoundRun: (() => boolean) | undefined, originalDeadline: number | undefined;
+  const deadlineCurrent = (): boolean => originalDeadline === undefined || (ports.now ?? Date.now)() < originalDeadline;
+  const recordCurrent = (): boolean => checkBoundRun?.()
+    ?? sha256(boundedHostText(path.join(run, RUN_LAYOUT.config), 65_536)) === baseSha256;
+  const currentRun = (): boolean => {
+    try { return deadlineCurrent() && currentPolicies() && recordCurrent() && deadlineCurrent(); }
+    catch { return false; }
+  };
+  const sessionCurrent = async (): Promise<boolean> => {
+    try {
+      return deadlineCurrent() && await currentPoliciesAsync()
+        && deadlineCurrent() && recordCurrent() && deadlineCurrent();
+    } catch { return false; }
+  };
+  bindingCurrent = currentRun;
+  const directories = { author: run, inventory: sessionDirectory(run, 1), fidelity: reviewSessionDirectory(run, 'fidelity', 1),
+    design: reviewSessionDirectory(run, 'design', 1) };
+  const canaryDirectory = path.join(attemptDirectory, 'canaries'); fs.mkdirSync(canaryDirectory, { mode: 0o700 });
+  const canaries = ['source', 'authentication', 'audit'].map(name => path.join(canaryDirectory, name));
+  for (const file of canaries) fs.writeFileSync(file, 'OWN SYNTHETIC NAMESPACE CANARY\n', { mode: 0o600, flag: 'wx' });
+  const viewParent = path.join(os.homedir(), '.local/state/syzygy-url-views'); fs.mkdirSync(viewParent, { recursive: true, mode: 0o700 });
+  screen.event('checking four restricted role boundaries'); screen.draw(['Checking separate role views and the supported fixed CLI profile…']);
+  const rolePlans = await prepareUrlRolePlans({ run, record, screen: runScreen.screen, sessionDirectories: directories,
+    cliExecutable: executable, runtime: runtime.runtime, parent: viewParent,
+    protectedPaths: [URL_HOST_ROOT, CHECKOUT, run, sessionsRoot(run), clone, path.join(os.homedir(), '.claude'),
+      ...(options.ssh === undefined ? [] : [options.ssh.knownHostsPath, options.ssh.authentication.path,
+        ...(options.ssh.authentication.kind === 'agent-socket' ? [options.ssh.authentication.publicIdentityPath] : [])])],
+    canaries, current: currentRun, audit: () => { throw new Error('planning cannot launch a role'); }, now: Date.now() });
+  if (!rolePlans.ok) return `Restricted role preparation refused at ${rolePlans.stage}; cleanup ${rolePlans.cleanup}. No role was launched.`;
+  let origins: Awaited<ReturnType<typeof createUrlRunOrigins>>;
+  try { origins = await createUrlRunOrigins({ runId, record, screen: runScreen.screen, basePolicyBytes: policy.bytes,
+    originPolicy: { binding: origin.binding, bytes: origin.bytes }, current: currentRun, roles: rolePlans.roles, sourceStore: store, renderer }); }
+  catch { return 'Exact initial role/source provenance could not be established; no brief or role was issued.'; }
+  const operationDigest = (field: keyof typeof acquisition.metadata[number]): string => sha256(boundedCanonical({
+    kind: acquisition.metadata.length === 0 ? 'pure-selection-preexisting-clone' : 'captured-native-operation-identities',
+    field, identities: acquisition.metadata.map(item => item[field]), selected: chosen.identifier }));
+  const sourceTransport = { originalLocator: url, destination: identity.destination, providerId: identity.providerId,
+    acquisitionId: acquisition.context.acquisition, metadataClasses: ['code-structure'] as const,
+    selectionOrigin: 'validated-destination-before-acquisition' as const,
+    commandSha256: operationDigest('commandSha256'), protocolSha256: operationDigest('protocolSha256'),
+    configurationSha256: operationDigest('configSha256'), executableSha256: operationDigest('executableSha256'),
+    environmentSha256: operationDigest('environmentSha256') };
+  const declaration = createUrlRunDeclaration(baseText, { runId, originPolicy: origin.binding,
+    inference: { provider: 'anthropic', tool: 'claude-code', toolVersion: URL_CLI_PROGRAM.version, model: DEFAULT_SESSION_MODEL,
+      modelSelection: options.modelSource, profile: { id: URL_PROFILE_ID, sha256: runtime.runtime.profileRegistrySha256 } },
+    sourceTransport, roles: rolePlans.roles.map(plan => plan.declaration), plannedOrigins: origins.plannedOrigins,
+    protectedAudit: `url-audit:${runId}` }, { runId, expectedBasePolicy: policy.binding, expectedOriginPolicy: origin.binding,
+      expectedSourceTransport: sourceTransport, expectedProfileSha256: runtime.runtime.profileRegistrySha256 });
+  if (!declaration.ok || !metadataAdmitted(declaration.declaration, runScreen.screen) || !currentRun())
+    return 'The complete effective URL declaration failed its binding or metadata checks; no brief or role was issued.';
+  const context = { runId, expectedBasePolicy: policy.binding, expectedOriginPolicy: origin.binding, expectedSourceTransport: sourceTransport,
+    expectedProfileSha256: runtime.runtime.profileRegistrySha256, expectedSidecarSha256: declaration.sha256 };
+  if (!registerUrlRunMode({ root: URL_HOST_ROOT, run, context })) return 'The exclusive protected URL mode binding could not be installed; preserve the run and start a new one.';
+  fs.writeFileSync(path.join(run, URL_RUN_SIDECAR), declaration.text, { mode: 0o600, flag: 'wx' });
+  // Use the same unscoped secret predicate as package URL mode. currentRun
+  // separately confirms its exact committed base policy before every sample.
+  const metadataScreen = buildDossierScreen(policy.bytes, true, null, 'private');
+  const checkedRun = metadataScreen.ok ? bindCurrentEffectiveUrlRun(run, urlRunModeAuthority(URL_HOST_ROOT,
+    value => metadataScreen.screen.screenSecrets(value) === undefined), { baseSha256, sidecarSha256: declaration.sha256 }) : null;
+  if (checkedRun === null) return 'The installed URL declaration could not be independently reverified; no brief or role was issued.';
+  checkBoundRun = checkedRun;
+  if (!currentRun()) return 'The installed URL declaration could not be independently reverified; no brief or role was issued.';
+  fs.writeFileSync(path.join(run, 'url-acquisition.json'), `${JSON.stringify({
+    format: 'polaris-dossier-url-acquisition/1', runId, recordedAt: isoOf(Date.now()), label: 'Inferred',
+    sourceBindingSha256: sourceBindingSha256(record.subject), screeningPolicy: prepared.report.screeningPolicy,
+    provider: config.agentProvider, agentTool: config.agentTool, agentToolVersion: config.agentToolVersion,
+    source: { locator: acquired.source.normalizedLocator, selector: acquired.source.selector, revision: acquired.source.revision, provenance: acquired.source.provenance },
+    operations: acquired.operations, declaredLimits, acknowledgments, attemptFile, ownedWorkspace: acquired.workspace,
+    suppliedClone: options.clone !== undefined,
+    disclosures: ['Remote metadata and stored selection history are Inferred. The full commit is immutable for this run.',
+      'Acquisition is not provider transmission, identity proof or public visibility proof.',
+      'Aggregate scratch limits are sampled; between samples is Unknown.'],
+  }, null, 2)}\n`, { mode: 0o600, flag: 'wx' });
   writeLaunchedMarker(run, runId, Date.now());
   for (const dir of [RUN_LAYOUT.drafts, RUN_LAYOUT.inventory, RUN_LAYOUT.reviews, RUN_LAYOUT.checks]) fs.mkdirSync(path.join(run, dir), { recursive: true, mode: 0o700 });
   screen.event(`run ${runId}; brief`); screen.draw(['Issuing the brief…']);
-  const brief = await step(['--json', 'brief', run], ports);
+  const brief = await step(['--json', 'brief', run], runPorts);
   if (brief.exit !== 0) return `brief: ${brief.doc ? String(brief.doc['reason']) : brief.stderr.trim()}`;
-  const briefIssuedAt = Date.now();
-  const all = await step(['--json', 'session-prompt', run, 'all'], ports);
-  if (all.exit !== 0 || all.doc === null) return `session-prompt all: ${all.doc ? String(all.doc['reason']) : all.stderr.trim()}`;
-  const sessions: SessionPlan[] = [{ role: 'author', session: 1, directory: run, prompt: authorPrompt(runId, run), promptSha256: sha256(authorPrompt(runId, run)), allowedTools: null }];
-  for (const s of all.doc['sessions'] as { role: string; kind?: string; session: number; directory: string; prompt: string; promptSha256: string; commands: { allowedTools?: string[] | null } }[]) {
-    sessions.push({ role: s.role === 'inventory' ? 'inventory' : (s.kind as ViewRole), session: s.session, directory: s.directory, prompt: s.prompt, promptSha256: s.promptSha256, allowedTools: s.commands.allowedTools ?? null });
-  }
+  const briefIssuedAt = typeof brief.doc?.['issuedAt'] === 'string' ? Date.parse(brief.doc['issuedAt']) : Number.NaN;
+  const deadlineEndsAt = typeof brief.doc?.['deadlineEndsAt'] === 'string' ? Date.parse(brief.doc['deadlineEndsAt']) : Number.NaN;
+  if (!Number.isSafeInteger(briefIssuedAt) || !Number.isSafeInteger(deadlineEndsAt)
+    || deadlineEndsAt !== briefIssuedAt + record.declared.deadline.seconds * 1000)
+    return 'The brief producer returned an inconsistent original deadline; no role was launched.';
+  originalDeadline = deadlineEndsAt;
+  const all = await startSessions(run, {}, { sources, now: ports.now ?? Date.now, openReader,
+    ...(ports.loadScreen === undefined ? {} : { loadScreen: ports.loadScreen }),
+    ...(ports.waitModeSigned === undefined ? {} : { waitModeSigned: ports.waitModeSigned }) }, rolePlans.roles);
+  if (!all.ok) return `session-prompt all: ${all.refusal.reason}`;
+  if (brief.doc === null) return 'The brief producer returned no supported bounded result.';
+  preparedUrlRuns.set(run, { record, screen: runScreen.screen, runtime: runtime.runtime, renderer, roles: rolePlans.roles, origins,
+    current: currentRun, sessionCurrent, directories, canaries, auditDirectory: attemptDirectory, originPolicySha256: origin.binding.sha256,
+    openReader, initializedCoreBytes: Buffer.from(baseText), effectiveDeclaration: {
+      declaration: declaration.declaration, bytes: Buffer.from(declaration.text), context,
+    }, initial: { brief: brief.doc as unknown as BriefReport, sessions: all.report } });
+  // The compatible supervisor record carries identities only. Role prompts
+  // remain in their issued artifacts, never copied into an Execution Record.
+  const sessions: SessionPlan[] = rolePlans.roles.map(plan => ({ role: plan.role, session: 1, directory: directories[plan.role],
+    prompt: '', promptSha256: plan.declaration.inputPacketSha256, allowedTools: null }));
   const seconds = isoSeconds(options.deadline);
   if (seconds === null) return `--deadline ${options.deadline} is not a positive ISO 8601 duration`;
   return {
-    format: 'polaris-supervisor/1', run, runId, tmuxSession: options.tmuxSession!, clone, url, model: options.model, authorSkipPermissions: options.authorSkipPermissions,
+    format: 'polaris-supervisor/2', mode: URL_RUN_MODE, declarationSha256: declaration.sha256, run, runId, tmuxSession: options.tmuxSession!, clone, url, model: options.model, authorSkipPermissions: false,
     briefIssuedAt, deadlineSeconds: seconds, sessions, fidelityDeliveredFor: [], designDeliveredFor: [], notified: [], siteFor: {}, launches: [],
   };
 }
@@ -429,29 +786,6 @@ function claudeExecutable(): string {
   return which === '' ? 'claude' : fs.realpathSync(which);
 }
 
-/** The session's private home: a copy of the operator's Claude Code credentials, onboarding marked done and the working directory trusted. */
-function prepareAgentHome(stateRoot: string, runId: string, role: ViewRole, cwd: string): string {
-  const home = path.join(stateRoot, `${runId}.agents`, role);
-  const config = path.join(home, '.claude');
-  fs.mkdirSync(config, { recursive: true, mode: 0o700 });
-  const credentials = path.join(os.homedir(), '.claude', '.credentials.json');
-  if (fs.existsSync(credentials) && !fs.existsSync(path.join(config, '.credentials.json'))) fs.copyFileSync(credentials, path.join(config, '.credentials.json'));
-  if (fs.existsSync(path.join(config, '.credentials.json'))) fs.chmodSync(path.join(config, '.credentials.json'), 0o600);
-  const seed = { hasCompletedOnboarding: true, lastOnboardingVersion: '2.1.299', theme: 'dark', projects: { [cwd]: { hasTrustDialogAccepted: true, hasCompletedProjectOnboarding: true } } };
-  const seedFile = path.join(config, '.claude.json');
-  if (!fs.existsSync(seedFile)) fs.writeFileSync(seedFile, JSON.stringify(seed, null, 2), { mode: 0o600 });
-  return home;
-}
-
-function prepareShim(stateRoot: string, runId: string): string {
-  const dir = path.join(stateRoot, `${runId}.agents`, 'bin');
-  fs.mkdirSync(dir, { recursive: true, mode: 0o700 });
-  fs.writeFileSync(path.join(dir, 'syzygy'), `#!/bin/sh\nexec ${process.execPath} ${BROKER_CLIENT} "$@"\n`, { mode: 0o700 });
-  return dir;
-}
-
-let socketBase: string | undefined;
-
 /** Directories bound read-only into every view so the agent tool and node can run: each executable's own directory. A directory that
  * holds the state root or the operator's home would expose every session's directory, so it is refused (fail closed). */
 export function toolPathsFor(executables: readonly string[], stateRoot: string): string[] {
@@ -474,50 +808,6 @@ export function sessionClaudeArgs(plan: Pick<SessionPlan, 'role' | 'prompt' | 'a
   // limits what the session can reach).
   if (plan.role === 'author' || plan.role === 'inventory') claudeArgs.push('--add-dir', state.clone);
   return claudeArgs;
-}
-
-function launchSession(options: Options, ports: CliPorts, state: SupervisorState, plan: SessionPlan, brokers: Map<ViewRole, Broker>, screen: Screen): string | null {
-  const executable = claudeExecutable();
-  const agentHome = prepareAgentHome(options.stateRoot, state.runId, plan.role, plan.directory);
-  const shimDir = prepareShim(options.stateRoot, state.runId);
-  // A Unix socket path is limited to about 108 bytes, so the socket lives in a short per-session runtime directory, bound into that
-  // session's view alone.
-  // Without XDG_RUNTIME_DIR, an unpredictable private directory under the temporary directory, not a guessable shared path.
-  const runtime = process.env['XDG_RUNTIME_DIR'] || (socketBase ??= fs.mkdtempSync(path.join(os.tmpdir(), 'polaris-')));
-  const socketDir = path.join(runtime, `polaris-${state.runId.slice(4, 16)}`, plan.role);
-  fs.mkdirSync(socketDir, { recursive: true, mode: 0o700 });
-  const socket = path.join(socketDir, 'b.sock');
-  const rule = plan.role === 'author' ? authorRule(state.run) : awaitRule(plan.directory);
-  brokers.get(plan.role)?.close();
-  brokers.set(plan.role, startBroker(socket, rule, async (argv, stdin): Promise<BrokerResponse> => {
-    const result = await step(argv.slice(1), ports, stdin);
-    if (plan.role !== 'author' || argv[1] !== 'help') screen.event(`${plan.role}: syzygy ${argv.slice(0, 3).join(' ')}… → exit ${result.exit}`);
-    return { stdout: result.stdout, stderr: result.stderr, exit: result.exit };
-  }, (line) => screen.event(`${plan.role} broker ${line}`)));
-  const spec = viewFor({
-    role: plan.role, clone: state.clone, runDir: state.run, sessionDir: plan.directory, agentHome, checkout: CHECKOUT,
-    toolPaths: toolPathsFor([executable, process.execPath], options.stateRoot), shimDir, brokerSocket: socket, socketDir,
-  });
-  const claudeArgs = sessionClaudeArgs(plan, state);
-  const argv = ['bwrap', ...bwrapArgs(spec), executable, ...claudeArgs];
-  const window = `${state.tmuxSession}:${plan.role}`;
-  spawnSync('tmux', ['kill-window', '-t', window], { stdio: 'ignore' });
-  const started = Date.now();
-  const r = spawnSync('tmux', ['new-window', '-d', '-t', state.tmuxSession, '-n', plan.role, '--', ...argv], { encoding: 'utf8' });
-  if (r.status !== 0) return `tmux could not start the ${plan.role} session: ${r.stderr.trim()}`;
-  const pidText = spawnSync('tmux', ['list-panes', '-t', window, '-F', '#{pane_pid}'], { encoding: 'utf8' }).stdout.trim();
-  const pid = /^\d+$/.test(pidText) ? Number(pidText) : null;
-  const vsha = viewSha256(spec);
-  state.launches.push({ role: plan.role, pid, at: isoOf(started), argvSha256: sha256(JSON.stringify(argv)), viewSha256: vsha });
-  if (plan.role !== 'author') {
-    const file = plan.role === 'inventory' ? path.join(RUN_LAYOUT.inventory, launchRecordName(plan.session)) : path.join(RUN_LAYOUT.reviews, reviewLaunchRecordName(plan.role, plan.session));
-    if (!fs.existsSync(path.join(state.run, file))) {
-      writeLaunchRecord(state.run, file, { role: plan.role === 'inventory' ? 'inventory' : 'review', ...(plan.role === 'inventory' ? {} : { kind: plan.role }), runId: state.runId, session: plan.session, promptSha256: plan.promptSha256 },
-        { executable, argv, directory: plan.directory, viewSha256: vsha, pid, startedAt: started });
-    }
-  }
-  screen.event(`launched ${plan.role} (pid ${pid ?? '?'}) in its view`);
-  return null;
 }
 
 /** The one line the running view gives the operator: this window is the run; the author's window is the only one that may ask. */
@@ -546,7 +836,9 @@ export function repairSides(verdict: Readonly<Record<string, unknown>>): RepairS
 
 /** The verdict file a review check validated, or an empty object when it cannot be read. */
 export function readVerdict(run: string, kind: 'fidelity' | 'design', n: number): Record<string, unknown> {
-  try { const doc: unknown = JSON.parse(fs.readFileSync(path.join(run, RUN_LAYOUT.reviews, `${kind}-verdict-${n}.json`), 'utf8')); return isRecord(doc) ? doc as Record<string, unknown> : {}; } catch { return {}; }
+  if (!Number.isSafeInteger(n) || n < 0 || n > 999_999) return {};
+  try { const doc = parseBoundedJson(boundedHostText(path.join(run, RUN_LAYOUT.reviews, `${kind}-verdict-${n}.json`), 1_048_576),
+    { maxBytes: 1_048_576, maxNodes: 65_536, maxDepth: 32 }); return isRecord(doc) ? doc : {}; } catch { return {}; }
 }
 
 /** At most this many entries are listed in one inventory repair message; the rest are counted. */
@@ -623,18 +915,28 @@ export function latestChecks(run: string): { readonly draft: CheckRecord; readon
 }
 
 function latestRecord(dir: string, pattern: RegExp): { n: number; doc: Record<string, unknown> } | null {
-  let names: string[];
-  try { names = fs.readdirSync(dir); } catch { return null; }
-  let best: { n: number; name: string } | null = null;
-  for (const name of names) { const m = pattern.exec(name); if (m && (best === null || Number(m[m.length - 1]) > best.n)) best = { n: Number(m[m.length - 1]), name }; }
-  if (best === null) return null;
-  try { return { n: best.n, doc: JSON.parse(fs.readFileSync(path.join(dir, best.name), 'utf8')) as Record<string, unknown> }; } catch { return null; }
-}
-
-function latestSite(run: string): number | null {
+  const names: string[] = [];
   try {
-    const sites = fs.readdirSync(path.join(run, RUN_LAYOUT.site)).filter((n) => /^\d+$/.test(n)).map(Number);
-    return sites.length === 0 ? null : Math.max(...sites);
+    if (fs.realpathSync(dir) !== dir) return null;
+    const directory = fs.opendirSync(dir);
+    try {
+      for (let entry = directory.readSync(); entry !== null; entry = directory.readSync()) {
+        if (names.length >= 4096) return null;
+        names.push(entry.name);
+      }
+    } finally { directory.closeSync(); }
+  } catch { return null; }
+  let best: { n: number; name: string } | null = null;
+  for (const name of names) { const m = pattern.exec(name); if (!m) continue;
+    const n = Number(m[m.length - 1]);
+    if (!Number.isSafeInteger(n) || n < 0 || n > 999_999) return null;
+    if (best === null || n > best.n) best = { n, name };
+  }
+  if (best === null) return null;
+  try {
+    const doc = parseBoundedJson(boundedHostText(path.join(dir, best.name), 2_097_152),
+      { maxBytes: 2_097_152, maxNodes: 65_536, maxDepth: 32 });
+    return isRecord(doc) ? { n: best.n, doc } : null;
   } catch { return null; }
 }
 
@@ -643,19 +945,6 @@ function paneState(state: SupervisorState, role: ViewRole): string {
   if (out.status !== 0) return 'gone';
   const [dead, status] = out.stdout.trim().split(' ');
   return dead === '1' ? `exited (${status})` : 'running';
-}
-
-function tell(state: SupervisorState, role: ViewRole, message: string): void {
-  spawnSync('tmux', ['send-keys', '-t', `${state.tmuxSession}:${role}`, '-l', message], { stdio: 'ignore' });
-  spawnSync('tmux', ['send-keys', '-t', `${state.tmuxSession}:${role}`, 'Enter'], { stdio: 'ignore' });
-}
-const tellAuthor = (state: SupervisorState, message: string): void => tell(state, 'author', message);
-
-function readMaxRepairCycles(run: string): number {
-  try {
-    const declared = (JSON.parse(fs.readFileSync(path.join(run, 'run.json'), 'utf8')) as { declared?: { maxRepairCycles?: unknown } }).declared?.maxRepairCycles;
-    return typeof declared === 'number' ? declared : Number.POSITIVE_INFINITY;
-  } catch { return Number.POSITIVE_INFINITY; }
 }
 
 /** Why a validated verdict is not ready, from its own rows: blocking findings, and rows the reviewer could not resolve (for instance
@@ -672,23 +961,117 @@ export function blockingWhy(run: string, kind: 'fidelity' | 'design', n: number)
   return parts.length > 0 ? parts.join('; ') : 'the reviewer declared it not ready';
 }
 
-async function loop(options: Options, ports: CliPorts, state: SupervisorState, screen: Screen): Promise<number> {
+function cleanupConfirmed(summary: UrlRunSessionsSummary): boolean {
+  return summary.roles.length === 4 && summary.roles.every(role => role.outcome !== 'Unknown'
+    && role.outcome.viewTermination === 'view-exited' && role.outcome.groupTermination === 'confirmed'
+    && role.outcome.toolTermination === 'settled' && role.outcome.pendingInvocations === 0)
+    && summary.hosts.length === 4 && summary.hosts.every(host => host.termination === 'settled' && host.pendingInvocations === 0)
+    && summary.control.termination === 'settled' && summary.control.pendingCallbacks === 0
+    && !summary.audit.poisoned && summary.audit.tail === 'durable-prefix' && summary.audit.termination === 'closed';
+}
+
+async function deliverFeedback(context: CheckedSupervisor, run: string, review: 'fidelity' | 'design', number: number,
+  recipients: readonly ('author' | 'inventory')[]): Promise<void> {
+  if (!context.prepared.current() || !(await context.runtime.current())) throw new Error('url-supervisor-unavailable');
+  const file = `${review}-verdict-${number}.json`, text = boundedHostText(path.join(run, RUN_LAYOUT.reviews, file), 1_048_576);
+  const digest = sha256(text);
+  if (!context.artifacts.hasCommittedReport(review, digest)) throw new Error('url-supervisor-unavailable');
+  for (const role of recipients) {
+    const base = context.prepared.directories[role];
+    if (fs.realpathSync(base) !== base) throw new Error('url-supervisor-unavailable');
+    const directory = path.join(base, 'feedback'); fs.mkdirSync(directory, { recursive: true, mode: 0o700 });
+    if (fs.realpathSync(directory) !== directory || !fs.lstatSync(directory).isDirectory()) throw new Error('url-supervisor-unavailable');
+    const destination = path.join(directory, file);
+    try { fs.writeFileSync(destination, text, { flag: 'wx', mode: 0o600 }); }
+    catch (cause) { if ((cause as NodeJS.ErrnoException).code !== 'EEXIST' || sha256(boundedHostText(destination, 1_048_576)) !== digest) throw new Error('url-supervisor-unavailable'); }
+  }
+  await context.artifacts.registerFeedback({ review, number, sha256: digest, recipients });
+  if (!context.prepared.current() || !(await context.runtime.current())) throw new Error('url-supervisor-unavailable');
+}
+
+async function loop(options: Options, ports: CliPorts, state: SupervisorState, screen: Screen, context: CheckedSupervisor): Promise<number> {
   const run = state.run;
+  const runPorts = { ...ports, openReader: context.prepared.openReader,
+    renderer: context.prepared.renderer.renderer, urlRenderer: context.prepared.renderer };
+  const { record, effectiveDeclaration, screen: runScreen, renderer, origins, current } = context.prepared;
+  const scaffold = origins.rendererScaffold;
+  const validate = (reads: RunProductReads, input: ProducedSiteInput) => scaffold === null ? Promise.resolve(null)
+    : validateUrlDesignProduct(input, { run, record, declaration: effectiveDeclaration.declaration,
+      screen: runScreen, renderer, ledger: origins.ledger, scaffold, products: reads, current });
+  const renderDeps = { ...runPorts, sources: cliGateSources(runPorts),
+    now: runPorts.now ?? Date.now, probe: createCredentialProbe(credentialListFromEnv({})) };
+  const binding = { run, runId: state.runId, pinnedRevision: record.subject.pinnedRevision.commit };
+  const deadline = state.briefIssuedAt + state.deadlineSeconds * 1000;
+  type FinalRender = { readonly path: string; readonly record: NonNullable<SupervisorState['finalSite']>; readonly output: UrlDesignProductMetadata['output'] };
+  let final: FinalRender | null = null;
+
+  async function finalRender(draft: number, verdict: number, reviewedSite: number): Promise<FinalRender | null> {
+    const first = await context.runtime.prepareFinalRender(verdict, reviewedSite);
+    if (first === null) return null;
+    const firstReads = beginRunProductReads(run, context.artifacts, 'render', Math.min(deadline, first.deadline));
+    const capture = (reads: RunProductReads, proof: typeof first) => {
+      let metadata: UrlDesignProductMetadata | null = null;
+      return {
+        get metadata() { return metadata; },
+        admit: async (input: ProducedSiteInput) => {
+          const product = await validate(reads, input);
+          const inspected = product === null ? null : await inspectUrlDesignProduct(product, binding);
+          if (inspected === null) return false;
+          assertUrlFinalDesignProduct(proof, inspected);
+          metadata = inspected;
+          return true;
+        },
+      };
+    };
+    const captured = capture(firstReads, first);
+    let rendered: Awaited<ReturnType<typeof renderRun>>;
+    try { rendered = await renderRun(run, { ...renderDeps, productReads: firstReads, admitProducedSite: captured.admit }, first); }
+    finally { firstReads.close(); }
+    if (!rendered.ok) return null;
+    const metadata = captured.metadata;
+    if (metadata === null || metadata.draftRevision !== draft || rendered.report.draftRevision !== draft
+      || !rendered.report.designReview.counts || rendered.report.designReview.packetSha256 !== metadata.original.sha256) return null;
+    const next = await context.runtime.prepareFinalRender(verdict, reviewedSite);
+    if (next === null || next.verdictEventSha256 !== first.verdictEventSha256) return null;
+    const reads = beginRunProductReads(run, context.artifacts, 'render', Math.min(deadline, next.deadline));
+    try {
+      const reproduced = capture(reads, next);
+      const subject = { path: rendered.report.site, output: metadata.output };
+      const verified = await reproduceUrlRender(run, { ...renderDeps, productReads: reads, admitProducedSite: reproduced.admit }, subject, next);
+      if (!verified || reproduced.metadata === null || !sameReproducedUrlDesignProduct(metadata, reproduced.metadata)) return null;
+      const site = checkStoredUrlRender(run, subject.path, subject.output, reads.isLeaseOpen);
+      if (site === null || site <= reviewedSite) return null;
+      assertUrlFinalDesignProduct(next, reproduced.metadata);
+      return { ...subject, record: { site, draftRevision: draft, verdict, packetSha256: metadata.original.sha256,
+        verdictEventSha256: next.verdictEventSha256,
+        populationSha256: sha256(encodeCanonicalJson(subject.output, { maxBytes: 2_097_152, maxNodes: 65_536, maxDepth: 32 })) } };
+    } finally { reads.close(); }
+  }
   let phase = 'drafting';
-  const maxRepairCycles = readMaxRepairCycles(run);
-  // A refused delivery is retried on later polls, a few times, then left for the operator (the event stays in the log).
-  const refusals = new Map<string, number>();
-  const giveUp = (key: string): boolean => { const n = (refusals.get(key) ?? 0) + 1; refusals.set(key, n); return n >= 5; };
+  const maxRepairCycles = context.prepared.record.declared.maxRepairCycles;
+  const announcedDesignSites = new Set<number>();
   for (;;) {
-    const deadline = state.briefIssuedAt + state.deadlineSeconds * 1000;
+    if (!(await context.runtime.current()) || !(await context.runtime.waitForProductSamples())) {
+      phase = 'checked session boundary unavailable';
+      break;
+    }
     if (Date.now() >= deadline) { phase = 'deadline passed'; break; }
-    const { draft, inventory: inventoryCheck } = latestChecks(run);
-    const stop = limitStop(draft, inventoryCheck, maxRepairCycles, () => cycleBreakdown(run));
+    function stage(checked: ReturnType<UrlArtifacts['latestStageCheck']>) {
+      return checked === null ? null : { n: checked.revision, doc: checked.record, verdict: checked.verdict };
+    }
+    let checks: ReturnType<UrlArtifacts['latestStageChecks']>;
+    try { checks = context.artifacts.latestStageChecks(); }
+    catch {
+      screen.draw([`run   ${state.runId}`, 'Waiting for authenticated check products.']);
+      await new Promise((resolve) => setTimeout(resolve, POLL_MS));
+      continue;
+    }
+    const draft = stage(checks.author), inventoryCheck = stage(checks.inventory);
+    const fidelity = stage(checks.fidelity), design = stage(checks.design);
+    const stop = limitStop(draft, inventoryCheck, maxRepairCycles, () => '');
     if (stop !== null) { phase = stop; break; }
     const passedDraft = draft !== null && draft.doc['outcome'] === 'passed' ? draft.n : null;
-    const inventory = await inventoryOfRecord(run, { sources: cliGateSources(ports), now: (ports.now ?? Date.now)() });
-    const fidelity = latestRecord(path.join(run, REVIEW_CHECKS), /^fidelity-verdict-(\d+)\.json$/);
-    const design = latestRecord(path.join(run, REVIEW_CHECKS), /^design-verdict-(\d+)\.json$/);
+    const inventoryRevision = inventoryCheck !== null && inventoryCheck.doc['outcome'] === 'passed' ? inventoryCheck.n : null;
     const site = draft !== null && draft.doc['outcome'] === 'passed' ? (state.siteFor[String(draft.n)] ?? null) : null;
     const verdictFor = (rec: typeof fidelity, key: 'draftRevision' | 'site', value: number | null): 'none' | 'blocking' | 'ready' => {
       if (rec === null || value === null || rec.doc['outcome'] !== 'validated') return 'none';
@@ -698,7 +1081,6 @@ async function loop(options: Options, ports: CliPorts, state: SupervisorState, s
     };
     // A draft revision n is repair cycle n (check.ts); once the declared limit is reached, a not-ready verdict cannot be repaired.
     const repairsSpent = draft !== null && draft.n >= maxRepairCycles;
-    const inventoryRevision = inventory.counts ? inventory.revision : null;
     // A fidelity verdict is current only while both revisions its packet was built from are (syzygy-1z8m.4).
     const fidelityState = fidelity !== null && (fidelity.doc['packet'] as Record<string, unknown> | undefined)?.['inventoryRevision'] !== inventoryRevision
       ? 'none' : verdictFor(fidelity, 'draftRevision', passedDraft);
@@ -706,20 +1088,27 @@ async function loop(options: Options, ports: CliPorts, state: SupervisorState, s
 
     // An inventory submitted before the author froze a draft is refused unchecked (no author session to compare against yet); once a
     // draft passes, tell the inventory session once to resubmit.
-    if (passedDraft !== null && !inventory.counts && !state.notified.includes(`inventory-draft-${passedDraft}`)) {
-      tell(state, 'inventory', `Syzygy: the authoring session has frozen draft revision ${passedDraft}. If your inventory was refused or not yet accepted, submit it now with the same syzygy dossier await --submit command; otherwise carry on.`);
+    if (passedDraft !== null && inventoryRevision === null && !state.notified.includes(`inventory-draft-${passedDraft}`)) {
+      if (!(await context.runtime.publish('inventory', { event: 'draft-ready', revision: passedDraft }))) { phase = 'typed control delivery refused'; break; }
       state.notified.push(`inventory-draft-${passedDraft}`); saveState(options.stateRoot, state);
       screen.event(`told the inventory session: draft revision ${passedDraft} is frozen`);
     }
     if (fidelityDeliveryDue(passedDraft, inventoryRevision, state.pendingRepair, state.fidelityDeliveredPairs ?? [])) {
       const pair = `${passedDraft!}/${inventoryRevision!}`;
-      const r = await step(['--json', 'session-prompt', run, 'review', '--kind', 'fidelity'], ports);
+      let r: Awaited<ReturnType<typeof step>>;
+      try {
+        const products = beginRunProductReads(run, context.artifacts, 'review-packet', deadline, context.runtime.waitForProductSamples);
+        try { r = await step(['--json', 'session-prompt', run, 'review', '--kind', 'fidelity'], { ...runPorts, productReads: products }); }
+        finally { products.close(); }
+      } catch (cause) { if (!(cause instanceof UrlProductReadRefusal)) throw cause; phase = 'fidelity delivery products unavailable'; break; }
       screen.event(r.exit === 0 ? `delivered the fidelity packet for draft revision ${passedDraft!} and inventory revision ${inventoryRevision!}` : `fidelity delivery refused: ${r.doc ? String(r.doc['reason']) : r.stderr.trim()}`);
-      if (r.exit === 0 || giveUp(`fidelity-${pair}`)) {
-        (state.fidelityDeliveredPairs ??= []).push(pair); state.fidelityDeliveredFor.push(passedDraft!); delete state.pendingRepair; saveState(options.stateRoot, state);
-      }
+      if (r.exit !== 0 || r.doc === null || !(await context.runtime.current())) { phase = 'fidelity packet delivery refused'; break; }
+      try { await context.artifacts.registerPacket({ kind: 'fidelity', round: r.doc['round'] as number, packetSha256: r.doc['packetSha256'] as string },
+        context.runtime.waitForProductSamples); }
+      catch { phase = 'fidelity packet producer binding refused'; break; }
+      (state.fidelityDeliveredPairs ??= []).push(pair); state.fidelityDeliveredFor.push(passedDraft!); delete state.pendingRepair; saveState(options.stateRoot, state);
     }
-    const sides = fidelityState === 'blocking' ? repairSides(readVerdict(run, 'fidelity', fidelity!.n)) : null;
+    const sides = fidelityState === 'blocking' ? repairSides(fidelity!.verdict!) : null;
     const spentSide = sides !== null && draft !== null && inventoryRevision !== null ? fidelityRepairSpent(sides, draft.n, inventoryRevision, maxRepairCycles) : null;
     if (spentSide !== null) {
       phase = `blocked: fidelity verdict ${fidelity!.n} is not ready (${blockingWhy(run, 'fidelity', fidelity!.n)}) and all ${maxRepairCycles} repair cycles of the ${spentSide} are spent${spentSide === 'draft' ? cycleBreakdown(run) : ''}`;
@@ -727,12 +1116,15 @@ async function loop(options: Options, ports: CliPorts, state: SupervisorState, s
     }
     if (designState === 'blocking' && repairsSpent) { phase = `blocked: design verdict ${design!.n} is not ready (${blockingWhy(run, 'design', design!.n)}) and all ${maxRepairCycles} repair cycles are spent${cycleBreakdown(run)}`; break; }
     if (sides !== null && !state.notified.includes(`fidelity-${fidelity!.n}`)) {
+      const recipients: ('author' | 'inventory')[] = [...(sides.author ? ['author' as const] : []), ...(sides.inventory.length > 0 ? ['inventory' as const] : [])];
+      try { await deliverFeedback(context, run, 'fidelity', fidelity!.n, recipients); }
+      catch { phase = 'fidelity feedback producer binding refused'; break; }
       if (sides.author) {
-        tellAuthor(state, `Syzygy: the fidelity review of draft revision ${passedDraft} is not ready (${blockingWhy(run, 'fidelity', fidelity!.n)}). Read ${run}/${RUN_LAYOUT.reviews}/fidelity-verdict-${fidelity!.n}.json, repair the draft in ${RUN_LAYOUT.drafts}/next.json, and run syzygy dossier check ${run} again.${sides.inventory.length > 0 ? ' The inventory entries it could not confirm are the inventory session\'s to repair; Syzygy has told it.' : ''}`);
+        if (!(await context.runtime.publish('author', { event: 'review-blocked', review: 'fidelity', revision: fidelity!.n }))) { phase = 'typed control delivery refused'; break; }
         screen.event(`told the author: fidelity verdict ${fidelity!.n} blocks`);
       }
       if (sides.inventory.length > 0) {
-        tell(state, 'inventory', inventoryRepairMessage(inventoryRevision!, sides.inventory));
+        if (!(await context.runtime.publish('inventory', { event: 'inventory-repair', revision: fidelity!.n }))) { phase = 'typed control delivery refused'; break; }
         screen.event(`told the inventory session: ${sides.inventory.length} entr${sides.inventory.length === 1 ? 'y' : 'ies'} not confirmed by fidelity verdict ${fidelity!.n}`);
       }
       state.pendingRepair = { ...(sides.author ? { draftAbove: passedDraft! } : {}), ...(sides.inventory.length > 0 ? { inventoryAbove: inventoryRevision! } : {}) };
@@ -740,48 +1132,123 @@ async function loop(options: Options, ports: CliPorts, state: SupervisorState, s
     }
     if (fidelityState === 'ready' && passedDraft !== null && state.siteFor[String(passedDraft)] === undefined) {
       screen.event(`rendering draft revision ${passedDraft}`);
-      const r = await step(['--json', 'render', run], ports);
-      if (r.exit !== 0) { screen.event(`render refused: ${r.doc ? String(r.doc['reason']) : r.stderr.trim()}`); phase = 'render refused'; break; }
-      state.siteFor[String(passedDraft)] = latestSite(run) ?? -1; saveState(options.stateRoot, state);
+      const products = (() => {
+        try { return beginRunProductReads(run, context.artifacts, 'render', deadline, context.runtime.waitForProductSamples); }
+        catch (cause) { if (cause instanceof UrlProductReadRefusal) return null; throw cause; }
+      })();
+      if (products === null) { phase = 'render products unavailable'; break; }
+      let product: ValidatedUrlDesignProduct | null = null;
+      try {
+        if (scaffold === null) { phase = 'renderer scaffold origin unavailable'; break; }
+        const rendered = await step(['--json', 'render', run], { ...runPorts, productReads: products,
+          admitProducedSite: async input => {
+            product = await validate(products, input);
+            return product !== null;
+          } });
+        if (rendered.exit !== 0) {
+          screen.event(`render refused: ${rendered.doc ? String(rendered.doc['reason']) : rendered.stderr.trim()}`);
+          phase = 'render refused';
+          break;
+        }
+        const metadata = product === null ? null : await inspectUrlDesignProduct(product, binding);
+        const report = rendered.doc;
+        if (metadata === null || metadata.draftRevision !== passedDraft || report?.['run'] !== run
+          || report['draftRevision'] !== passedDraft || report['command'] !== 'render' || report['outcome'] !== 'rendered'
+          || report['pages'] !== metadata.output.pages || typeof report['site'] !== 'string') {
+          phase = 'render producer result unavailable';
+          break;
+        }
+        // The stored subject must survive a fresh authenticated render read.
+        // The first operation's capability cannot authorize the later boundary.
+        products.close();
+        const sitePath = report['site'], subject = { path: sitePath, output: metadata.output };
+        const reproduce = async (): Promise<UrlDesignReproduction | null> => {
+          const reads = beginRunProductReads(run, context.artifacts, 'render', deadline, context.runtime.waitForProductSamples);
+          let reproduced: ValidatedUrlDesignProduct | null = null;
+          let opened = false;
+          try {
+            const verified = await reproduceUrlRender(run, { ...renderDeps, productReads: reads,
+              admitProducedSite: async input => {
+                reproduced = await validate(reads, input);
+                return reproduced !== null;
+              } }, subject);
+            if (!verified || reproduced === null || !reads.isLeaseOpen()) return null;
+            opened = true;
+            return { product: reproduced, close: reads.close };
+          } finally { if (!opened) reads.close(); }
+        };
+        const confirmed = await reproduce();
+        if (confirmed === null) {
+          phase = 'rendered site input reproduction unavailable';
+          break;
+        }
+        const round = announcedDesignSites.size + 1;
+        const checkedView = await context.runtime.prepareDesignDelivery(confirmed.product, metadata, sitePath, round,
+          { reproduce, open: context.artifacts.openDesignArtifact }).finally(confirmed.close);
+        if (checkedView === null) {
+          phase = 'protected rendered site evidence changed or expired';
+          break;
+        }
+        const preparedSite = checkedView.receipt.identity.site;
+        state.siteFor[String(passedDraft)] = preparedSite;
+        announcedDesignSites.add(preparedSite);
+        saveState(options.stateRoot, state);
+        screen.event(`prepared design round ${round} for the reviewer`);
+      }
+      catch (cause) {
+        if (!(cause instanceof UrlProductReadRefusal)) throw cause;
+        phase = 'rendered site inputs changed';
+        break;
+      }
+      finally { products.close(); }
     }
     const siteNow = passedDraft === null ? undefined : state.siteFor[String(passedDraft)];
-    if (fidelityState === 'ready' && siteNow !== undefined && siteNow >= 0 && !state.designDeliveredFor.includes(siteNow)) {
-      const r = await step(['--json', 'session-prompt', run, 'review', '--kind', 'design'], ports);
-      screen.event(r.exit === 0 ? `delivered the design packet for site ${siteNow}` : `design delivery refused: ${r.doc ? String(r.doc['reason']) : r.stderr.trim()}`);
-      if (r.exit === 0 || giveUp(`design-${siteNow}`)) { state.designDeliveredFor.push(siteNow); saveState(options.stateRoot, state); }
+    if (fidelityState === 'ready' && siteNow !== undefined && siteNow >= 0 && !announcedDesignSites.has(siteNow)) {
+      phase = 'protected design round announcement is unavailable';
+      break;
     }
     if (designState === 'blocking' && !state.notified.includes(`design-${design!.n}`)) {
-      tellAuthor(state, `Syzygy: the rendered-design review of site ${site} is not ready (${blockingWhy(run, 'design', design!.n)}). Read ${run}/${RUN_LAYOUT.reviews}/design-verdict-${design!.n}.json, repair the draft in ${RUN_LAYOUT.drafts}/next.json, and run syzygy dossier check ${run} again.`);
+      try { await deliverFeedback(context, run, 'design', design!.n, ['author']); }
+      catch { phase = 'design feedback producer binding refused'; break; }
+      if (!(await context.runtime.publish('author', { event: 'review-blocked', review: 'design', revision: design!.n }))) { phase = 'typed control delivery refused'; break; }
       state.notified.push(`design-${design!.n}`); saveState(options.stateRoot, state);
       screen.event(`told the author: design verdict ${design!.n} blocks`);
     }
-    if (fidelityState === 'ready' && designState === 'ready') {
-      screen.event('closing the run');
-      const r = await step(['--json', 'close', run], ports);
-      if (r.exit !== 0) { screen.event(`close refused: ${r.doc ? String(r.doc['reason']) : r.stderr.trim()}`); phase = 'close refused'; break; }
-      state.done = new Date().toISOString(); saveState(options.stateRoot, state);
-      phase = `closed — dossier at ${run}/${RUN_LAYOUT.site}/${site}/`;
+    if (fidelityState === 'ready' && designState === 'ready' && passedDraft !== null && design !== null && site !== null) {
+      try { final = await finalRender(passedDraft, design.n, site); }
+      catch { final = null; }
+      phase = final === null ? 'checked design render continuation unavailable' : 'final site verified, settling sessions';
       break;
     }
     const repairing = state.pendingRepair === undefined ? null : [state.pendingRepair.draftAbove !== undefined ? 'author' : null, state.pendingRepair.inventoryAbove !== undefined ? 'inventory' : null].filter((x) => x !== null).join(' and ');
-    phase = repairing !== null && repairing !== '' ? `${repairing} repairing after fidelity review` : passedDraft === null ? 'drafting (author)' : !inventory.counts ? 'waiting for the inventory' : fidelityState === 'none' ? 'fidelity review' : fidelityState === 'blocking' ? 'author repairing after fidelity review'
+    phase = repairing !== null && repairing !== '' ? `${repairing} repairing after fidelity review` : passedDraft === null ? 'drafting (author)' : inventoryRevision === null ? 'waiting for the inventory' : fidelityState === 'none' ? 'fidelity review' : fidelityState === 'blocking' ? 'author repairing after fidelity review'
       : designState === 'none' ? 'rendered-design review' : 'author repairing after design review';
     const left = Math.max(0, deadline - Date.now());
     screen.draw([
       `run       ${state.runId}`, `repo      ${state.url}`, `phase     ${phase}`,
       `deadline  ${isoOf(deadline)} (${Math.floor(left / 3_600_000)}h${Math.floor((left % 3_600_000) / 60_000)}m left)`,
       `draft     ${draft === null ? 'no revision checked' : `revision ${draft.n}: ${String(draft.doc['outcome'])}`}`,
-      `inventory ${inventory.counts ? `counts (revision ${inventory.revision})` : inventory.why}`,
+      `inventory ${inventoryRevision === null ? 'no passing checked revision' : `revision ${inventoryRevision} passed check`}`,
       `fidelity  ${fidelityState}${fidelity ? ` (verdict ${fidelity.n})` : ''}    design ${designState}${design ? ` (verdict ${design.n})` : ''}    site ${site ?? '—'}`,
-      `windows   ${(['author', 'inventory', 'fidelity', 'design'] as const).map((role) => `${role}: ${paneState(state, role)}`).join('   ')}`,
+      `roles     ${context.runtime.summary().roles.map(role => `${role.role}: ${role.startedAt === 'Unknown' ? 'start Unknown' : role.finishedAt === 'Unknown' ? 'exit Unknown' : 'captured exit'}`).join('   ')}`,
       `stop      syzygy polaris --stop ${state.runId}`,
-      OWNER_LINE,
+      'questions Typed clarifications appear in this supervisor view; use their explicit answer choices.',
     ]);
     await new Promise((resolve) => setTimeout(resolve, POLL_MS));
   }
-  for (const role of ['author', 'inventory', 'fidelity', 'design'] as const) spawnSync('tmux', ['kill-window', '-t', `${state.tmuxSession}:${role}`], { stdio: 'ignore' });
+  const stopped = await context.runtime.stop();
+  state.stopped ??= isoOf(Date.now());
+  if (final !== null) {
+    if (stopped.failure === null && cleanupConfirmed(stopped) && current()
+      && checkStoredUrlRender(run, final.path, final.output, () => Date.now() < deadline) === final.record.site && current()) {
+      state.finalSite = final.record;
+      state.done = state.stopped;
+      phase = `complete, final site ${final.path}`;
+    } else phase = 'final render produced, run closure unconfirmed';
+  }
+  saveState(options.stateRoot, state);
   screen.event(`run ended: ${phase}`);
-  screen.draw(endScreen(state.runId, run, phase, state.done !== undefined));
-  await new Promise(() => { /* keep the window */ });
-  return 0;
+  screen.draw([`run    ${state.runId}`, `result ${phase}`, `cleanup ${cleanupConfirmed(stopped) ? 'owned process groups and pending callbacks confirmed settled' : 'Unknown: retain the protected audit and cleanup evidence'}`,
+    'Provider receipts and uncaptured send completeness remain Unknown.', 'A retained tmux view is for inspection.']);
+  return state.done === undefined ? 1 : 0;
 }

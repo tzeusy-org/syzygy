@@ -8,6 +8,7 @@ import { describe, expect, it } from 'vitest';
 import { preflight } from './preflight.js';
 import { D9_ACT_FORM, DRAWER_FORMS, PROVIDER_V2_FORM, RFC7_20_RULING_ACT_FORM, STATEMENT_FORMS, createPackageGateSources, providerStatementGate } from './gate-sources.js';
 import { tempDir } from '@syzygy/test-kit';
+import { commitPolicyFixture, policyFixture } from './full-run.testkit.js';
 
 // The recorder forms render once, before the file collects its tests: some tables render at collection (syzygy-bpyt.4.8).
 await loadRecorderForms();
@@ -128,15 +129,16 @@ describe('version 2 of the Anthropic statement', () => {
     expect(statements.map(r => `${r.recordId}@${r.version}`)).toEqual(['AGENT-PROVIDER-redis-redis-anthropic@0.1.0-candidate.1', 'AGENT-PROVIDER-redis-redis-openai@0.1.0-candidate.1']);
     expect(providerStatementGate(statements, 'claude-code', 'anthropic', V2_AT - 1)).toEqual({ state: 'ok', record: 'AGENT-PROVIDER-redis-redis-anthropic@0.1.0-candidate.1' });
   });
-  it('is what preflight lists in force, before and after its instant, agreeing with the gate', async () => {
-    const root = world(KEYS, true, true);
+  it('retains historical provider versions without making metadata preparation depend on them', async () => {
+    const root = commitPolicyFixture(world(KEYS, true, true), policyFixture().bytes);
     for (const [now, version] of [[NOW, '0.2.0-candidate.1'], [V2_AT - 1, '0.1.0-candidate.1']] as const) {
       const s = { ...sources(root, now), repositoryIdsFor: async () => ['redis-redis'], consentedRevisionsFor: async () => [] };
       const result = await preflight('https://github.com/redis/redis', s, now);
       expect(result.ok).toBe(true);
-      const inForce = result.ok ? result.report.providerStatements.inForce : [];
-      expect(inForce.map(r => r.record)).toEqual([`AGENT-PROVIDER-redis-redis-anthropic@${version}`, 'AGENT-PROVIDER-redis-redis-openai@0.1.0-candidate.1']);
-      expect(providerStatementGate(await s.providerStatements.statementsFor('redis-redis'), 'claude-code', 'anthropic', now)).toEqual({ state: 'ok', record: inForce[0]!.record });
+      expect(result).toMatchObject({ ok: true, report: { outcome: 'prepared', label: 'Inferred', revision: { state: 'Unknown' } } });
+      if (result.ok) expect(result.report).not.toHaveProperty('providerStatements');
+      expect(providerStatementGate(await s.providerStatements.statementsFor('redis-redis'), 'claude-code', 'anthropic', now))
+        .toEqual({ state: 'ok', record: `AGENT-PROVIDER-redis-redis-anthropic@${version}` });
     }
   });
   it('closes no other gate: D9, the reading, the drawer and the registry sign-off stay established beside it', async () => {

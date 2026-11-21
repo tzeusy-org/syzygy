@@ -63,15 +63,18 @@ async function bundleDriver(outfile: string, aliases: Record<string, string> = w
 }
 
 let dir: string;
-let bundle: string;
+let entry: string;
 let clone: string;
 let commit: string;
 beforeAll(async () => {
   if (!HAVE_STRACE) return;
   dir = tempDir('dossier-no-egress-');
   ({ clone, commit } = makeClone(path.join(dir, 'repo')));
-  bundle = path.join(dir, 'driver.mjs');
-  await bundleDriver(bundle);
+  await bundleDriver(path.join(dir, 'driver.mjs'));
+  // All modules in the bundle share its import.meta.url. Load it from a separate
+  // process entry so executable guards in bundled support modules stay inactive.
+  entry = path.join(dir, 'entry.mjs');
+  fs.writeFileSync(entry, "import './driver.mjs';\n", { flag: 'wx' });
 });
 
 interface Capture { readonly status: number | null; readonly stdout: string; readonly stderr: string; readonly calls: readonly string[]; readonly tasks: number }
@@ -80,7 +83,7 @@ interface Capture { readonly status: number | null; readonly stdout: string; rea
 async function captured(name: string, canary: boolean): Promise<Capture> {
   const log = path.join(dir, `${name}.strace`);
   const stateRoot = path.join(dir, `${name}-state`);
-  const result = await exited('strace', ['-f', '-qq', '-e', 'trace=%network,execve,clone,clone3,fork,vfork', '-e', 'signal=none', '-o', log, process.execPath, bundle, clone, commit, stateRoot, ...(canary ? ['canary'] : [])], {
+  const result = await exited('strace', ['-f', '-qq', '-e', 'trace=%network,execve,clone,clone3,fork,vfork', '-e', 'signal=none', '-o', log, process.execPath, entry, clone, commit, stateRoot, ...(canary ? ['canary'] : [])], {
     env: { PATH: process.env['PATH'] ?? '/usr/bin:/bin', HOME: dir, [FULL_RUN_ROOT_ENV]: REAL_ROOT }, timeout: 240_000,
   });
   const lines = fs.existsSync(log) ? fs.readFileSync(log, 'utf8').split('\n').filter((line) => line !== '') : [];
@@ -89,18 +92,22 @@ async function captured(name: string, canary: boolean): Promise<Capture> {
   return { status: result.status, stdout: result.stdout, stderr: result.stderr, calls: network, tasks: new Set(lines.map((line) => line.split(/\s+/u)[0])).size };
 }
 
+function expectCompleteFixtureRun(run: Capture): void {
+  expect(run.stderr).toBe('');
+  expect(run.status, run.stdout).toBe(0);
+  const summary = JSON.parse(run.stdout) as { run: string; steps: { command: string; exit: number }[] };
+  expect(summary.steps.map((step) => step.command)).toEqual([
+    'preflight', 'init', 'brief', 'check', 'session-prompt', 'inventory-check', 'launch-form', 'session-prompt', 'review-check', 'launch-form',
+    'render', 'session-prompt', 'review-check', 'launch-form', 'render', 'close', 'status',
+  ]);
+  expect(summary.steps.every((step) => step.exit === 0)).toBe(true);
+  expect(fs.existsSync(path.join(summary.run, 'record.json'))).toBe(true);
+}
+
 describe.skipIf(!HAVE_STRACE)('no provider call and no transmission (S10): an operating-system capture of a full fixture run', () => {
   it('creates no Internet-family socket over the whole run, from preflight to close', async () => {
     const run = await captured('run', false);
-    expect(run.stderr).toBe('');
-    expect(run.status).toBe(0);
-    const summary = JSON.parse(run.stdout) as { run: string; steps: { command: string; exit: number }[] };
-    expect(summary.steps.map((step) => step.command)).toEqual([
-      'preflight', 'init', 'brief', 'check', 'session-prompt', 'inventory-check', 'launch-form', 'session-prompt', 'review-check', 'launch-form',
-      'render', 'session-prompt', 'review-check', 'launch-form', 'render', 'close', 'status',
-    ]);
-    expect(summary.steps.every((step) => step.exit === 0)).toBe(true);
-    expect(fs.existsSync(path.join(summary.run, 'record.json'))).toBe(true);
+    expectCompleteFixtureRun(run);
     expect(run.tasks).toBeGreaterThan(0);
     // The population: every network-class call the capture recorded, which is not empty (the runtime's own local sockets are in it).
     // None names an Internet address family.
@@ -112,7 +119,7 @@ describe.skipIf(!HAVE_STRACE)('no provider call and no transmission (S10): an op
 
   it('sees the canary: one loopback datagram sent before the same run is in the capture', async () => {
     const run = await captured('canary', true);
-    expect(run.status).toBe(0);
+    expectCompleteFixtureRun(run);
     const internet = run.calls.filter((line) => INTERNET_FAMILY.test(line));
     expect(internet.some((line) => line.startsWith('socket(AF_INET'))).toBe(true);
     expect(internet.some((line) => /^(sendto|sendmsg)\(.*inet_addr\("127\.0\.0\.1"\)/u.test(line))).toBe(true);

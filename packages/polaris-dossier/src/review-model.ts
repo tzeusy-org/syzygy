@@ -1,3 +1,4 @@
+import type { RunProductReads } from './url-operation-products.js';
 import * as fs from 'node:fs';
 import * as path from 'node:path';
 import { sha256 } from '@syzygy/support';
@@ -70,6 +71,7 @@ export type PacketBuild =
   | { readonly ok: false; readonly stage: 'draft' | 'inventory' | 'screen' | 'object-read'; readonly reason: string; readonly objectRead?: ReturnType<GitObjectReadRefusal['toJSON']> };
 
 export interface ReviewDeps {
+  readonly productReads?: RunProductReads;
   readonly sources: GateSources;
   readonly now: () => number;
   readonly loadScreen?: ScreenLoader;

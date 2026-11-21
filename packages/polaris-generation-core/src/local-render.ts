@@ -131,7 +131,7 @@ export type LocalDraftLayer =
     /** The in-force record of the owner's reading the run relies on. */
     readonly ruling?: string;
     /** The generated prose's inference provenance: the operator-declared model identity and version. */
-    readonly inferenceProvenance: { readonly provider?: string; readonly modelIdentity: string; readonly modelVersion: string | null; readonly declaredBy: 'operator'; readonly label: 'Inferred' };
+    readonly inferenceProvenance: { readonly provider?: string; readonly modelIdentity: string; readonly modelVersion: string | null; readonly declaredBy: 'operator' | 'supported-default'; readonly label: 'Inferred' };
   }
   | { readonly state: 'unknown'; readonly reason: 'unconsented-source-or-provider' | 'missing-declaration'; readonly why: readonly string[] };
 
@@ -148,6 +148,10 @@ export interface LocalRenderInput {
   readonly glossary: readonly LocalPageItem[];
   /** The run disclosure, on every page and in the machine view. */
   readonly disclosure: readonly LocalDisclosureItem[];
+  /** Already screened host projection of a URL run's declared mode, providers,
+   * policy bindings and scoped capture limits. This view grants no authority;
+   * absent preserves the operator channel. No prompt/transcript/body belongs here. */
+  readonly effectiveRun?: Readonly<Record<string, unknown>>;
   /** The RFC7-10 anchor of each source page, by source id. */
   readonly sourceAnchors: ReadonlyMap<string, EvidenceAnchor>;
   readonly pages: readonly LocalPage[];
