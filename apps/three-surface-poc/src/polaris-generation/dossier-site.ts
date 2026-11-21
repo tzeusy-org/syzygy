@@ -601,7 +601,7 @@ export function renderDossierSite(input: DossierSiteInput & { readonly local?: L
       : { diagram: d.id, kind: 'swimlane', page: from, laidOutPx: width, lanes: figure.lanes.map(l => l.id), steps: figure.steps.map(st => ({ id: st.id, lane: st.lane })) } });
     return `<figure${from.startsWith('poles/') ? '' : hueAttr(index % HUES + 1)}${curated} data-figure-kind="${figure.kind}"><figcaption>${escape(d.title)}</figcaption><p class="diagram-relationship"><span class="eyebrow">${figure.kind}</span> ${escape(d.relationship)}</p>`
       + `<div class="figure-forms" data-figure-width="${width}"><div class="diagram-scroll figure-drawing">${svg}</div><ol class="figure-stepper">${stepper}</ol></div>`
-      + `${figureLegend(all.map(element => element.epistemic), 0, 0, 'as marked', tallyHead)}<details><summary>Read every component and relationship</summary><ul>${ownerList}</ul><ol>${useList}</ol><details class="diagram-source"><summary>Declarative source (Mermaid)</summary><pre>${escape(figureToMermaid(figure))}</pre></details></details></figure>`;
+      + `${figureLegend(all.map(element => element.epistemic), 0, 0, 'as marked', tallyHead, figure.kind === 'swimlane')}<details><summary>Read every component and relationship</summary><ul>${ownerList}</ul><ol>${useList}</ol><details class="diagram-source"><summary>Declarative source (Mermaid)</summary><pre>${escape(figureToMermaid(figure))}</pre></details></details></figure>`;
   };
   const topicAttr = (id: string): string => ` data-topics="${escape((topics[id] ?? []).join(' '))}"`;
   const localPages = local?.pages ?? [];
@@ -939,13 +939,16 @@ const FIXED_DIAGRAM_LEGEND = '<ul class="diagram-legend" aria-label="Line styles
 const LEGEND_ENTRIES: readonly (readonly [EpistemicMarking, string])[] = [
   ['observed', 'Solid: observed'], ['inferred', 'Dashed: inferred'], ['unknown', 'Dotted: unknown (label ends “?”)'],
 ];
+const ORDER_LEGEND_ENTRY = '<li><span class="legend-line order" aria-hidden="true"></span>Thin grey arrow: step order, no claim</li>';
 const counted = (n: number, one: string, many: string): string => `${n} ${n === 1 ? one : many}`;
 
 /** An operator-agent figure's legend: an entry for each line style the figure draws, in a fixed order, and never one it does not (RFC7-34
  * legends a used encoding); then one line counting its boxes and arrows by marking. Every count is Syzygy's, from the draft's own marks. */
-export function figureLegend(markings: readonly EpistemicMarking[], boxes: number, arrows: number, how = 'as marked', head?: string): string {
+export function figureLegend(markings: readonly EpistemicMarking[], boxes: number, arrows: number, how = 'as marked', head?: string, orderArrows = false): string {
   const count = (m: EpistemicMarking): number => markings.filter(x => x === m).length;
-  const entries = LEGEND_ENTRIES.filter(([m]) => count(m) > 0).map(([m, words]) => `<li><span class="legend-line ${m}" aria-hidden="true"></span>${words}</li>`).join('');
+  const entries = LEGEND_ENTRIES.filter(([m]) => count(m) > 0).map(([m, words]) => `<li><span class="legend-line ${m}" aria-hidden="true"></span>${words}</li>`).join('')
+    // A swimlane draws its step order in thin grey arrows that claim nothing (version 2.5): the legend names them too (RFC7-34).
+    + (orderArrows ? ORDER_LEGEND_ENTRY : '');
   // A sequence or swimlane (version 2.5) names its own elements: `{P} participants and {M} messages` or `{L} lanes and {S} steps`.
   return `<ul class="diagram-legend" aria-label="Line styles">${entries}</ul><p class="diagram-tally">${head ?? `${counted(boxes, 'box', 'boxes')} and ${counted(arrows, 'arrow', 'arrows')}`}, ${how}: ${count('observed')} observed, ${count('inferred')} inferred, ${count('unknown')} unknown.</p>`;
 }
@@ -960,7 +963,8 @@ const figureElements = (d: DraftDiagram): readonly DraftFigureElement[] => d.fig
  * box; each item's left border is solid, dashed or dotted by its mark, as the legend's line styles are. */
 export const FIGURE_KINDS_CSS = '.figure-forms{container-type:inline-size}.figure-stepper{display:none;margin:.5rem 0;padding-left:2rem;font:13px/1.5 var(--font-mono);overflow-wrap:anywhere}'
   + '.figure-stepper>li{border-left:3px solid var(--accent);padding:.15rem 0 .15rem .6rem;margin:0 0 .4rem}.figure-stepper>li.inferred{border-left-style:dashed}.figure-stepper>li.unknown{border-left-style:dotted}'
-  + '.stepper-head{display:block;font-weight:600}.figure-drawing rect.lane-band{fill:none;stroke:var(--line);stroke-dasharray:none}.figure-drawing path.step-order{stroke:var(--muted);stroke-dasharray:none}'
+  + '.stepper-head{display:block;font-weight:600}.figure-drawing rect.lane-band{fill:none;stroke:var(--line);stroke-dasharray:none}.figure-drawing path.step-order{stroke:var(--muted);stroke-width:1;stroke-dasharray:none}.figure-drawing marker.order-head path{fill:var(--muted)}'
+  + '.legend-line.order{border-top:1px solid var(--muted)}'
   + [408, 592, 776, 960].map(w => `@container (width < ${w}px){.figure-forms[data-figure-width="${w}"]>.figure-drawing{display:none}.figure-forms[data-figure-width="${w}"]>.figure-stepper{display:block}}`).join('');
 
 /** The legend every narrative page carries once (REQ-polaris-generation-034, v1.5), with the control that opens the evidence view. The

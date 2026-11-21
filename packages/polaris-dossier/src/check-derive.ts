@@ -1,6 +1,6 @@
 import * as path from 'node:path';
 import { UNKNOWN_REASONS } from '@syzygy/cap1-core';
-import { checkShape, handle, leadInQuotations, lineCount, locateQuote, normaliseTracked, retainedWithMarkers, spanTouchesWithheld, verifiedRedactedBody, type VerifiedRedactedBody, type TrackedText } from '@syzygy/polaris-generation-core/live';
+import { checkShape, handle, leadInQuotations, lineCount, locateQuote, normaliseTracked, retainedWithMarkers, spanTouchesWithheld, verifiedRedactedBody, type VerifiedRedactedBody, type TrackedText, type Schema } from '@syzygy/polaris-generation-core/live';
 import { isRecord } from '@syzygy/support';
 import { FIGURE_MEMBERS, LOCAL_DRAFT_SCHEMA_VERSION, LOCAL_DRAFT_SCHEMA_VERSION_V4, LOCAL_DRAFT_SCHEMA_VERSION_V5, LOCAL_DRAFT_SCHEMA_VERSION_V6, UNDERSTANDING_ITEMS, V4_FIELDS, V7_FIGURE_MEMBERS, hasHomeForm, hasThesisBasisForm, hasV4Forms, checkDraftShape, localDraftSchema, membersOfKind, type DraftSchemaWithDefs } from './draft-schema.js';
 import { isEntryPoint } from './derive.js';
@@ -92,7 +92,9 @@ export interface SubjectRules {
   /** The schema a subject of an earlier version is checked against, where it differs (a draft before v5 names its diagram's section in
    * `sectionId`; one before v6 has no `thesisBasis`), and the later-version fields it may not carry, which the structure reports as
    * field-version findings instead; undefined for a subject of the current version. */
-  readonly earlier?: (subject: unknown) => { readonly schema: DraftSchemaWithDefs; readonly reported: { readonly test: (path: string) => boolean } } | undefined;
+  readonly earlier?: (subject: unknown) => { readonly schema: DraftSchemaWithDefs; readonly reported: { readonly test: (path: string) => boolean };
+    /** The schema faults that stand in place of one, at its place in the order: a v7 diagram naming no kind (version 2.5). */
+    readonly replaced?: (error: { readonly path: string; readonly detail: string }) => readonly { readonly path: string; readonly detail: string }[] | undefined } | undefined;
   /** The declared clarification-question limit, where the subject records questions. */
   readonly maxQuestions: number | null;
   /** The subject's references and required records, after identities are checked. */
@@ -121,7 +123,9 @@ export async function deriveFindings(subject: unknown, inputs: DeriveInputs, rul
   const { noun } = rules;
   const earlier = rules.earlier?.(subject);
   for (const error of checkDraftShape(earlier?.schema ?? rules.schema, subject)) {
-    if (earlier === undefined || !earlier.reported.test(error.path)) add({ kind: 'schema', at: error.path, detail: error.detail });
+    for (const fault of earlier?.replaced?.(error) ?? [error]) {
+      if (earlier === undefined || !earlier.reported.test(fault.path)) add({ kind: 'schema', at: fault.path, detail: fault.detail });
+    }
   }
   const doc: Readonly<Record<string, unknown>> = isRecord(subject) ? subject : {};
 
@@ -475,6 +479,8 @@ export function draftRules(pinned: string, maxQuestions: number, poleLimit: numb
   const parameters = { pinnedRevision: pinned, maxQuestions };
   const current = localDraftSchema(parameters);
   const v6 = localDraftSchema(parameters, 'home', 'required', 'absent');
+  const unnamedRoot = localDraftSchema(parameters, 'home', 'required', 'unnamed').root;
+  const unnamed = { root: (unnamedRoot as { properties: Record<string, { items: Schema }> }).properties['diagrams']!.items, defs: current.defs };
   const v5 = localDraftSchema(parameters, 'home', 'absent', 'absent');
   const v4 = localDraftSchema(parameters, 'sectionId', 'absent', 'absent');
   const v5Reported = /^\$\.thesisBasis$/u, v4Reported = /^\$\.(?:diagrams\[\d+\]\.home|thesisBasis)$/u;
@@ -489,7 +495,17 @@ export function draftRules(pinned: string, maxQuestions: number, poleLimit: numb
       const doc = isRecord(subject) ? subject : {};
       if (version === LOCAL_DRAFT_SCHEMA_VERSION) {
         const standing = new Set(figureKindFindings(doc).map((finding) => finding.member));
-        return { schema: current, reported: { test: (path) => standing.has(path) } };
+        // A diagram naming none of the eight kinds matches none of v7's forms, which would report one fault for all of it: its faults are
+        // read against the graph form with every kind permitted instead, each at its own path, as v6 reports them.
+        const diagrams = list(doc['diagrams']);
+        const replaced = (error: { readonly path: string; readonly detail: string }) => {
+          const match = /^\$\.diagrams\[(\d+)\]$/u.exec(error.path);
+          if (match === null || !error.detail.startsWith('matches none of the permitted forms')) return undefined;
+          const diagram = diagrams[Number(match[1])];
+          if (isRecord(diagram) && membersOfKind(diagram['kind']) !== undefined) return undefined;
+          return checkShape(unnamed, diagram).map((fault) => ({ path: `${error.path}${fault.path.slice(1)}`, detail: fault.detail }));
+        };
+        return { schema: current, reported: { test: (path) => standing.has(path) }, replaced };
       }
       const fieldVersion = new Set(figureFieldVersionPaths(doc));
       const [schema, also] = version === LOCAL_DRAFT_SCHEMA_VERSION_V6 ? [v6, null] : version === LOCAL_DRAFT_SCHEMA_VERSION_V5 ? [v5, v5Reported] : [v4, v4Reported];

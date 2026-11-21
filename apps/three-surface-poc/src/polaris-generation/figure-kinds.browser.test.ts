@@ -39,6 +39,14 @@ it.skipIf(executable === undefined)('shows the drawing at 1440 px and the number
         { kind: 'swimlane', drawing: true, stepper: false, box: 966, overflow: false, items: [] }]);
       // The drawing is drawn at its laid-out width, its text at 13 px.
       expect(await page.evaluate('[...document.querySelectorAll(".figure-drawing svg")].map(svg => Math.round(svg.getBoundingClientRect().width))')).toEqual([592, 592]);
+      // The order arrows are thin and grey, as the legend's own line for them is.
+      expect(await page.evaluate(`(() => { const arrow = getComputedStyle(document.querySelector("path.step-order")), key = getComputedStyle(document.querySelector(".legend-line.order"));
+        return [arrow.strokeWidth, arrow.stroke === key.borderTopColor, key.borderTopWidth, arrow.strokeDasharray]; })()`)).toEqual(['1px', true, '1px', 'none']);
+      // The boundary: a forms box exactly W (592) wide shows the drawing, one 1 px narrower the stepper. The test sets the box's width.
+      for (const [boxPx, shown] of [[592, [true, false]], [591, [false, true]]] as const) {
+        expect(await page.evaluate(`(() => { const forms = document.querySelector("figure[data-figure-kind=swimlane] .figure-forms"); forms.style.width = "${boxPx}px";
+          return [forms.clientWidth, ...[".figure-drawing", ".figure-stepper"].map(s => getComputedStyle(forms.querySelector(s)).display !== "none")]; })()`), `${boxPx} px`).toEqual([boxPx, ...shown]);
+      }
 
       await page.setViewport(390, 900);
       await page.navigate(pathToFileURL(join(directory, 'index.html')).href);

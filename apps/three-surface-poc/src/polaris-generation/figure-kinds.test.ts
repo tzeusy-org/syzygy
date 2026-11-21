@@ -87,7 +87,12 @@ describe('figure kinds on the operator-agent site', () => {
     const index = files.get('index.html')!;
     expect(index).toContain('<div class="figure-forms" data-figure-width="592"><div class="diagram-scroll figure-drawing"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 592 536" width="592" height="536"');
     expect(index).toContain('<rect class="lane-band" x="24" y="0" width="176" height="536"/><rect class="lane-band" x="208" y="0" width="176" height="536"/><rect class="lane-band" x="392" y="0" width="176" height="536"/>');
-    expect(index).toContain('<path class="step-order" d="M 112 248 C 112 263, 296 263, 296 278" marker-end="url(#arrow-1)"/>');
+    // The order arrows claim nothing: thin, grey, with their own head, and the legend names them (RFC7-34); a sequence has none.
+    expect(index).toContain('<path class="step-order" d="M 112 248 C 112 263, 296 263, 296 278" marker-end="url(#order-1)"/>');
+    expect(index).toContain('<marker id="order-1" class="order-head" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto"><path d="M 0 0 L 10 5 L 0 10 z"/></marker>');
+    expect(index.match(/<ul class="diagram-legend"[^]*?<\/ul>/gu)!.filter(legend => legend.includes('legend-line order'))).toEqual([
+      '<ul class="diagram-legend" aria-label="Line styles"><li><span class="legend-line inferred" aria-hidden="true"></span>Dashed: inferred</li><li><span class="legend-line unknown" aria-hidden="true"></span>Dotted: unknown (label ends “?”)</li><li><span class="legend-line order" aria-hidden="true"></span>Thin grey arrow: step order, no claim</li></ul>']);
+    expect(index.split('url(#order-').length - 1).toBe(4);
     expect(index).toContain('<g class="node unknown"><title>tags a release (unknown)</title><rect x="392" y="368" width="176" height="56" rx="6"/>');
     // A box label wraps at 19 characters: "opens a pull request" is 20.
     expect(index).toContain('<tspan x="112" dy="0">opens a pull</tspan><tspan x="112" dy="16">request</tspan>');

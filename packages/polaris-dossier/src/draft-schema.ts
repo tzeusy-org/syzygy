@@ -1,6 +1,6 @@
 import { UNKNOWN_REASONS } from '@syzygy/cap1-core';
 import {
-  DIAGRAM_KINDS, QUOTE_LEAD_IN, checkShape, choice, handle, list, object, one, ref, refs, text, type Schema, type SchemaError, type SchemaWithDefs,
+  DIAGRAM_KINDS, FIGURE_KINDS, QUOTE_LEAD_IN, checkShape, choice, handle, list, object, one, ref, refs, text, type Schema, type SchemaError, type SchemaWithDefs,
 } from '@syzygy/polaris-generation-core/live';
 import { EXECUTION_SCOPES } from './execution-flags.js';
 
@@ -194,9 +194,9 @@ export interface DraftSchemaParameters {
  * before). `thesisBasis` says whether the draft carries its required `thesisBasis` (schema v6 and later) or has no such member (schema
  * v5 and earlier, whose findings stay those of the version before). `figureKinds` says whether a diagram may be a `sequence` or `swimlane`
  * with its own members (schema v7, what the brief publishes; REQ-polaris-generation-034 version 2.5) or is a graph of `nodes` and `edges`
- * only (schema v6 and earlier). */
+ * only (schema v6 and earlier); `unnamed` is the form `check` reads a v7 diagram naming no kind against. */
 export function localDraftSchema(parameters: DraftSchemaParameters, diagramForm: 'home' | 'sectionId' = 'home', thesisBasis: 'required' | 'absent' = 'required',
-  figureKinds: 'taken' | 'absent' = 'taken'): DraftSchemaWithDefs {
+  figureKinds: 'taken' | 'absent' | 'unnamed' = 'taken'): DraftSchemaWithDefs {
   requirePinnedRevision(parameters.pinnedRevision);
   if (!Number.isSafeInteger(parameters.maxQuestions) || parameters.maxQuestions < 0) throw new Error('draft-schema: the question limit is not a nonnegative integer');
   const graph = (kind: Schema): Record<string, Schema> => ({
@@ -220,7 +220,10 @@ export function localDraftSchema(parameters: DraftSchemaParameters, diagramForm:
       : { lanes: list(object(element), ...FIGURE_BOUNDS.lanes), steps: list(object({ id: handle, lane: handle, label: text, epistemic, citations: citations(1) }), ...FIGURE_BOUNDS.steps) };
     return object({ ...shared, ...own, disposition: disposition! });
   };
+  // 'unnamed' is never published: `check` reads a v7 diagram that names none of the eight kinds against it, the v6 graph form with
+  // every v7 kind permitted, so that diagram's faults are each reported as v6 reports them (version 2.5).
   const diagram: Schema = figureKinds === 'absent' ? object(graph(choice(DIAGRAM_KINDS)))
+    : figureKinds === 'unnamed' ? object(graph(choice([...DIAGRAM_KINDS, ...FIGURE_KINDS])))
     : { oneOf: [...DIAGRAM_KINDS.map((kind) => object(graph(one(kind)))), figure('sequence'), figure('swimlane')] };
   return { defs: DEFS, root: object({
     schemaVersion: choice(LOCAL_DRAFT_SCHEMA_VERSIONS),

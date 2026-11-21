@@ -701,8 +701,11 @@ function figureBox(element: FigureClaim, at: FigureBox, escape: (value: string) 
   return `<g class="node ${element.epistemic}"><title>${escape(element.label)} (${element.epistemic})</title><rect x="${num(at.x)}" y="${num(at.y)}" width="${FIGURE_COLUMN}" height="${FIGURE_BOX}" rx="6"/>${figureText(lines, at.x + FIGURE_COLUMN / 2, baseline, 16, escape)}</g>`;
 }
 
-const figureSvg = (index: number | string, width: number, height: number, body: string): string =>
-  `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${width} ${height}" width="${width}" height="${height}" role="img" aria-labelledby="diagram-title-${index}" aria-describedby="diagram-text-${index}"><defs><marker id="arrow-${index}" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto"><path d="M 0 0 L 10 5 L 0 10 z"/></marker></defs>${body}</svg>`;
+/** A swimlane's order arrows carry no claim, so they take their own head (`order-<index>`), drawn thin and grey with them, which the
+ * figure's legend names (RFC7-34). */
+const figureSvg = (index: number | string, width: number, height: number, body: string, orderHead = false): string =>
+  `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${width} ${height}" width="${width}" height="${height}" role="img" aria-labelledby="diagram-title-${index}" aria-describedby="diagram-text-${index}"><defs><marker id="arrow-${index}" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto"><path d="M 0 0 L 10 5 L 0 10 z"/></marker>`
+  + `${orderHead ? `<marker id="order-${index}" class="order-head" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto"><path d="M 0 0 L 10 5 L 0 10 z"/></marker>` : ''}</defs>${body}</svg>`;
 
 /** A sequence figure as static SVG: lifelines, then messages with their labels, then participant boxes. Every text passes through
  * `escape`; the caller must still pass the result through `assertInertSvg`. */
@@ -730,8 +733,8 @@ export function renderSwimlaneSvg(figure: { readonly lanes: readonly FigureClaim
   index: number | string, escape: (value: string) => string): string {
   const layout = layoutSwimlane(figure.lanes, figure.steps);
   const bands = layout.lanes.map(at => `<rect class="lane-band" x="${num(at.x)}" y="0" width="${FIGURE_COLUMN}" height="${layout.height}"/>`).join('');
-  const order = layout.order.map(arrow => `<path class="step-order" d="${arrow.d}" marker-end="url(#arrow-${index})"/>`).join('');
+  const order = layout.order.map(arrow => `<path class="step-order" d="${arrow.d}" marker-end="url(#order-${index})"/>`).join('');
   const heads = figure.lanes.map((lane, i) => figureBox(lane, layout.lanes[i]!, escape)).join('');
   const steps = figure.steps.map((step, k) => figureBox(step, layout.steps[k]!, escape)).join('');
-  return figureSvg(index, layout.width, layout.height, `${bands}${order}${heads}${steps}`);
+  return figureSvg(index, layout.width, layout.height, `${bands}${order}${heads}${steps}`, true);
 }
