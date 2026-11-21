@@ -531,7 +531,7 @@ export function renderDiagramSvg(
   // A lane edge's label with no clear leader where it sits slides across its own gap, a step at a time and nearer first, to the first spot
   // that clears every node, label and other leader and gives it one; it never leaves its gap, so no row moves (syzygy-3efd.58). A leader
   // depends on other labels only through the boxes it must not enter, so a slide that enters no other leader keeps every other leader. A label
-  // already against its own line needs none and stays. A second pass retries the labels still without one, since a slide may clear a way.
+  // already against its own line needs none and stays. Labels slide in edge order, so the remainder without a leader depends on the order.
   const slide = (at: LaidOutEdge, i: number): boolean => {
     if (at.lead !== true || !spacing.labelsOnTop || runs[i] !== undefined || againstOwnLine(curves[i]!, boxOf(i))) return false;
     const home = placed[i]!, { width, height } = wanted[i]!;
@@ -550,7 +550,7 @@ export function renderDiagramSvg(
     placed[i] = home;
     return false;
   };
-  for (let pass = 0; pass < 2; pass++) if (!layout.edges.map((at, i) => slide(at, i)).some(Boolean)) break;
+  layout.edges.forEach(slide);
   const edges = diagram.edges.map((edge, i) => {
     const at = layout.edges[i]!, lines = edgeLines[i]!, { x, y, width, height } = { ...wanted[i]!, ...placed[i]! };
     const top = y - height / 2;

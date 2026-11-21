@@ -255,15 +255,21 @@ describe('layered left-to-right diagram layout', () => {
       expect(svg).not.toContain('>twenty-two characters!</tspan>');
       // Back edges from the last node to ten others add right lanes until the nodes are narrower than the note's one line (173 px): a node no
       // edge reaches then has its note wrapped onto two lines inside the column, and the gap under it grows to hold them.
-      const looped = [...edges, ...twelve.slice(0, 10).map(to => edge(`back-${to}`, 'n11', to))];
+      // Without the edge n10 to n11 the isolated node sits just above n11, so the gap under its note holds the labels of n11's ten incoming
+      // edges: the note's second line must push them down.
+      const looped = [...edges.filter(e => e.id !== 'n10-n11'), ...twelve.slice(0, 10).map(to => edge(`back-${to}`, 'n11', to))];
       const alone = layoutDiagram([...twelve, 'alone'].map(id => ({ id })), looped, READABLE_SPACING);
-      const aloneSvg = renderDiagramSvg({ nodes: [...twelve, 'alone'].map(id => ({ id, label: id, epistemic: 'inferred' as const })), edges: looped.map(e => ({ ...e, label: 'next', epistemic: 'inferred' as const })) }, 1, text => text, READABLE_SPACING);
+      const aloneSvg = renderDiagramSvg({ nodes: [...twelve, 'alone'].map(id => ({ id, label: id, epistemic: 'inferred' as const })), edges: looped.map(e => ({ ...e, label: LONG_LABEL, epistemic: 'inferred' as const })) }, 1, text => text, READABLE_SPACING);
       expect([alone.width, alone.nodeWidth]).toEqual([261, 173]);
       expect(aloneSvg).toContain('<tspan x="130.5" dy="0">No relationship</tspan><tspan x="130.5" dy="16">supplied</tspan></text>');
       expect(aloneSvg).not.toContain('>No relationship supplied<');
       const aloneY = alone.nodes.find(m => m.id === 'alone')!.y;
       const below = alone.nodes.filter(n => n.y > aloneY).map(n => n.y);
       expect((below.length > 0 ? Math.min(...below) : alone.height) - aloneY - 56).toBeGreaterThanOrEqual(40);
+      // No label sits on either line of the wrapped note.
+      const aloneX = alone.nodes.find(m => m.id === 'alone')!.x;
+      const labelBoxes = [...aloneSvg.matchAll(/<rect class="edge-label" x="([\d.]+)" y="([\d.]+)" width="([\d.]+)" height="([\d.]+)"/gu)].map(m => ({ left: Number(m[1]), top: Number(m[2]), right: Number(m[1]) + Number(m[3]), bottom: Number(m[2]) + Number(m[4]) }));
+      expect(labelBoxes.filter(l => l.left < aloneX + 173 && aloneX < l.right && l.top < aloneY + 56 + 40 && aloneY < l.bottom)).toEqual([]);
     });
 
     it('keeps the default spacing and a plain chain as they were', () => {
