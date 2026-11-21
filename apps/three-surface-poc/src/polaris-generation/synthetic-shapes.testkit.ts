@@ -1,4 +1,4 @@
-// Test support (syzygy-3efd.23): three scripted synthetic repositories of different shapes, each with a canned operator-agent draft, so
+// Test support (syzygy-3efd.23, syzygy-3efd.56): nine scripted synthetic repositories of different shapes, each with a canned operator-agent draft, so
 // the structure record and the site renderer run on something other than redis/redis with no network and no model. Only the synthetic
 // shapes test (packages/polaris-dossier/src/synthetic-shapes.test.ts) imports this, by file URL, as the render tests import the renderer.
 import { generationAnchorId, gitBlobObjectId, type EvidenceAnchor, type GenerationSource, type LocalRenderInput } from '@syzygy/polaris-generation-core';
@@ -14,8 +14,9 @@ export interface SyntheticShape {
   readonly files: ReadonlyMap<string, ShapeFile>;
   /** The file the canned draft cites. */
   readonly cited: string;
-  /** The canned draft's diagram: node labels in order, and one edge between each neighbour. */
-  readonly diagram: { readonly title: string; readonly relationship: string; readonly nodes: readonly string[]; readonly edges: readonly string[] };
+  /** The canned draft's diagram: node labels in order, one edge between each neighbour, and one edge from the first node to the third. A
+   * four-node chain with that one skip is stacked by the readable layout, so it fits the 390 px column (syzygy-3efd.56). */
+  readonly diagram: { readonly title: string; readonly relationship: string; readonly nodes: readonly string[]; readonly edges: readonly string[]; readonly skip: string };
 }
 
 const files = (entries: Record<string, string | ShapeFile>): ReadonlyMap<string, ShapeFile> =>
@@ -36,7 +37,7 @@ export const RUST_CLI: SyntheticShape = {
     'ci/release.sh': { body: '#!/bin/sh\ncargo build --release\n', mode: '100755' },
     '.github/workflows/ci.yml': 'on: push\n',
   }),
-  diagram: { title: 'A search', relationship: 'how a pattern becomes matching lines', nodes: ['Arguments', 'Directory walk', 'Matcher'], edges: ['hands the pattern to', 'feeds each file to'] },
+  diagram: { title: 'A search', relationship: 'how a pattern becomes matching lines', nodes: ['Arguments', 'Directory walk', 'Matcher', 'Printer'], edges: ['hands the pattern to', 'feeds each file to', 'sends matches to'], skip: 'skips ignored paths for' },
 };
 
 /** A Python library with a Sphinx documentation site and a test suite. */
@@ -56,7 +57,7 @@ export const PYTHON_LIBRARY: SyntheticShape = {
     'docs/conf.py': 'project = "routekit"\n',
     'requirements/dev.txt': 'pytest\n',
   }),
-  diagram: { title: 'A request', relationship: 'how a path reaches its handler', nodes: ['Request', 'Router', 'Handler'], edges: ['is matched by', 'calls'] },
+  diagram: { title: 'A request', relationship: 'how a path reaches its handler', nodes: ['Request', 'Router', 'Handler', 'Response'], edges: ['is matched by', 'calls', 'returns'], skip: 'is answered 404 by' },
 };
 
 /** A Terraform module: root configuration, examples, a nested module and Go tests, with no package manifest at all. */
@@ -75,10 +76,112 @@ export const TERRAFORM_MODULE: SyntheticShape = {
     'test/vpc_test.go': 'package test\n',
     '.pre-commit-config.yaml': 'repos: []\n',
   }),
-  diagram: { title: 'A network', relationship: 'what the module creates', nodes: ['Inputs', 'Network', 'Outputs'], edges: ['size the', 'is reported by'] },
+  diagram: { title: 'A network', relationship: 'what the module creates', nodes: ['Inputs', 'Network', 'Subnets', 'Outputs'], edges: ['size the', 'is divided into', 'are reported by'], skip: 'name the' },
 };
 
-export const SHAPES: readonly SyntheticShape[] = [RUST_CLI, PYTHON_LIBRARY, TERRAFORM_MODULE];
+const numbered = (n: number): string => String(n).padStart(3, '0');
+
+/** A TypeScript monorepo of 300 workspace packages: past every listing cap, so the record's coverage counts are its denominators. */
+export const TS_WORKSPACE: SyntheticShape = {
+  name: 'ts-workspace', repositoryId: 'synthetic:ts-workspace', cited: 'README.md',
+  files: files({
+    'package.json': '{"private": true, "workspaces": ["packages/*"]}\n',
+    'package-lock.json': '{}\n',
+    'tsconfig.json': '{}\n',
+    'README.md': 'A workspace of 300 small packages that share one build.\n',
+    '.github/workflows/ci.yml': 'on: push\n',
+    ...Object.fromEntries(Array.from({ length: 300 }, (_, i) => [
+      [`packages/pkg-${numbered(i)}/package.json`, `{"name": "pkg-${numbered(i)}"}\n`],
+      [`packages/pkg-${numbered(i)}/src/index.ts`, `export const id = ${i};\n`],
+    ]).flat()),
+  }),
+  diagram: { title: 'A build', relationship: 'how one change reaches every package', nodes: ['Change', 'Workspace graph', 'Package builds', 'Bundle'], edges: ['updates the', 'orders the', 'produce the'], skip: 'invalidates' },
+};
+
+/** A notebook pipeline: numbered notebooks, the steps they call, a pipeline file and a test, with no package manifest. */
+export const NOTEBOOK_PIPELINE: SyntheticShape = {
+  name: 'notebook-pipeline', repositoryId: 'synthetic:notebook-pipeline', cited: 'README.md',
+  files: files({
+    'README.md': 'Notebooks that clean a survey and fit a model to it.\n',
+    'requirements.txt': 'pandas\n',
+    'dvc.yaml': 'stages: {}\n',
+    'notebooks/01-ingest.ipynb': '{"cells": []}\n',
+    'notebooks/02-clean.ipynb': '{"cells": []}\n',
+    'notebooks/03-train.ipynb': '{"cells": []}\n',
+    'pipeline/steps.py': 'def clean(frame): ...\n',
+    'pipeline/__init__.py': '\n',
+    'tests/test_steps.py': 'def test_clean(): ...\n',
+  }),
+  diagram: { title: 'A model', relationship: 'how a survey becomes a fitted model', nodes: ['Raw survey', 'Clean table', 'Features', 'Model'], edges: ['is cleaned into', 'yields', 'train the'], skip: 'is profiled into' },
+};
+
+/** C firmware for a microcontroller: sources, headers, a driver, a linker script, a Makefile and a CMake file. */
+export const C_FIRMWARE: SyntheticShape = {
+  name: 'c-firmware', repositoryId: 'synthetic:c-firmware', cited: 'src/main.c',
+  files: files({
+    'README.md': 'Firmware for a sensor board.\n',
+    Makefile: 'all:\n\tcc -o fw src/main.c\n',
+    'CMakeLists.txt': 'project(fw C)\n',
+    'src/main.c': 'int main(void) { for (;;) {} }\n',
+    'src/uart.c': 'void uart_init(void) {}\n',
+    'include/uart.h': 'void uart_init(void);\n',
+    'drivers/gpio.c': 'void gpio_init(void) {}\n',
+    'linker/board.ld': 'MEMORY {}\n',
+    'tests/test_uart.c': 'int main(void) { return 0; }\n',
+  }),
+  diagram: { title: 'A reading', relationship: 'how a sensor value reaches the serial port', nodes: ['Sensor', 'GPIO driver', 'Main loop', 'UART'], edges: ['raises a pin in', 'is polled by', 'writes to'], skip: 'wakes' },
+};
+
+/** A documentation-only repository: a site generator's configuration and pages, and no code at all. */
+export const DOCS_ONLY: SyntheticShape = {
+  name: 'docs-only', repositoryId: 'synthetic:docs-only', cited: 'docs/index.md',
+  files: files({
+    'README.md': 'The handbook for the on-call rotation.\n',
+    'mkdocs.yml': 'site_name: Handbook\n',
+    LICENSE: 'CC-BY-4.0\n',
+    'docs/index.md': '# Handbook\n\nHow the on-call rotation works.\n',
+    'docs/rotation.md': '# Rotation\n',
+    'docs/escalation.md': '# Escalation\n',
+    'docs/runbooks/database.md': '# Database\n',
+    'docs/runbooks/network.md': '# Network\n',
+  }),
+  diagram: { title: 'A page', relationship: 'how an alert reaches the person who fixes it', nodes: ['Alert', 'On-call', 'Runbook', 'Escalation'], edges: ['pages the', 'follows the', 'ends in'], skip: 'links the' },
+};
+
+/** A plugin host: the host, its plugin interface, two plugins with their own manifests, and a page about writing plugins. */
+export const PLUGIN_HOST: SyntheticShape = {
+  name: 'plugin-host', repositoryId: 'synthetic:plugin-host', cited: 'docs/plugins.md',
+  files: files({
+    'package.json': '{"name": "host"}\n',
+    'README.md': 'A server that loads plugins at start.\n',
+    'src/host.ts': 'export function start() {}\n',
+    'src/plugin-api.ts': 'export interface Plugin {}\n',
+    'plugins/auth/package.json': '{"name": "auth"}\n',
+    'plugins/auth/index.ts': 'export default {};\n',
+    'plugins/cache/package.json': '{"name": "cache"}\n',
+    'plugins/cache/index.ts': 'export default {};\n',
+    'docs/plugins.md': '# Plugins\n\nA plugin exports one object the host calls at start.\n',
+    'test/host.test.ts': 'test("starts", () => {});\n',
+  }),
+  diagram: { title: 'A start', relationship: 'how the host loads its plugins', nodes: ['Host', 'Plugin API', 'Plugins', 'Routes'], edges: ['defines the', 'is implemented by', 'register'], skip: 'loads the' },
+};
+
+/** A Go service with no README at all: the shape the thesis-basis rule is for (the code is the only statement of purpose). */
+export const NO_README: SyntheticShape = {
+  name: 'no-readme', repositoryId: 'synthetic:no-readme', cited: 'cmd/server/main.go',
+  files: files({
+    'go.mod': 'module example.com/ledger\n',
+    'go.sum': '\n',
+    'cmd/server/main.go': 'package main\n\nfunc main() {}\n',
+    'internal/handler/handler.go': 'package handler\n',
+    'internal/handler/handler_test.go': 'package handler\n',
+    'internal/store/store.go': 'package store\n',
+  }),
+  diagram: { title: 'A request', relationship: 'how an entry is written', nodes: ['Server', 'Handler', 'Store', 'Disk'], edges: ['routes to', 'calls', 'writes to'], skip: 'opens the' },
+};
+
+/** The nine shapes (syzygy-3efd.23 and syzygy-3efd.56). */
+export const SHAPES: readonly SyntheticShape[] = [RUST_CLI, PYTHON_LIBRARY, TERRAFORM_MODULE, TS_WORKSPACE, NOTEBOOK_PIPELINE, C_FIRMWARE, DOCS_ONLY, PLUGIN_HOST, NO_README];
 
 /** The shape without one file: the canary that a shape with no README still derives and renders. */
 export function without(shape: SyntheticShape, path: string, cited: string): SyntheticShape {
@@ -102,7 +205,7 @@ export function shapeInput(shape: SyntheticShape): { readonly local: LocalRender
   const anchor: EvidenceAnchor = { targetClass: 'evidence-artifact-identifier-with-integrity-digest', identifier: source.objectId!, algorithm: 'sha1',
     fragment: null, targetState: REVISION, pathLabel: source.path };
   const claim = (text: string) => ({ marking: 'inferred' as const, unknownReason: null, basis: 'fixture', executions: [], segments: [{ kind: 'prose' as const, text }] });
-  const { nodes, edges } = shape.diagram;
+  const { nodes, edges, skip } = shape.diagram;
   const nodeId = (i: number) => `node-${i}`;
   return {
     sources: [source],
@@ -115,7 +218,8 @@ export function shapeInput(shape: SyntheticShape): { readonly local: LocalRender
         diagrams: [{
           id: 'main', sectionId: 'what', kind: 'flow', title: shape.diagram.title, relationship: shape.diagram.relationship, disposition: { kind: 'produced', assetIds: [] },
           nodes: nodes.map((label, i) => ({ id: nodeId(i), label, epistemic: 'inferred', sourceIds: [source.sourceId] })),
-          edges: edges.map((label, i) => ({ id: `edge-${i}`, from: nodeId(i), to: nodeId(i + 1), label, epistemic: 'inferred', sourceIds: [source.sourceId] })),
+          edges: [...edges.map((label, i) => ({ id: `edge-${i}`, from: nodeId(i), to: nodeId(i + 1), label, epistemic: 'inferred', sourceIds: [source.sourceId] })),
+            { id: 'edge-skip', from: nodeId(0), to: nodeId(2), label: skip, epistemic: 'inferred', sourceIds: [source.sourceId] }],
         }],
         deepDives: [],
         unresolved: [],
