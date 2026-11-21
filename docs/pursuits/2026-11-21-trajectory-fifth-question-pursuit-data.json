@@ -1,0 +1,978 @@
+{
+ "run": {
+  "date": "2026-11-21",
+  "scope": "Trajectory run 2: the fifth question and the half of RFC 0008 run 1 did not plan (warrant, pre-work plane, materialization join and orphaned work, reconciliation verdict, review lanes, retention as a constraint).",
+  "run_of_scope": 2,
+  "predecessor": "docs/pursuits/2026-11-21-trajectory-vision-pursuit.md",
+  "mode": "one audit-and-ideation lane (nine checkpoints), lead synthesis, one independent review"
+ },
+ "measuredOn": "worktree 9ebf12476 (POC sources as at c62d4cf79); Syzygy tracker 1,370 items via bd --readonly sql (2026-11-21); git origin/main c813f041c; merged PRs #593..#843; GitHub check runs on c813f041c",
+ "ranking_rule": "VIS-1 order (truth, comprehension, momentum), then enabling order, then inverse build cost. Value/cost on 1-5. Ids U1..U11, distinct from T1..T13.",
+ "ranked_moves": [
+  {
+   "id": "U1",
+   "title": "Correct the fifth row before it lands: three populations, never 'verified N of N'",
+   "what": "Amend the released wave-1 slice syzygy-t3jk.16: the fifth answer renders Unknown-provenance n of N (reason, route), the reconciliation chain as an observed 0 with its chain-state-local 'reconciliation evidence absent' count (never an RFC2-24 reason), and orphaned work as Unknown(missing-declaration) until U2. No 'verified' wording, no sum.",
+   "why": "RFC2-18 'Every materialized work item that reaches merge enters a first-class chain'; RFC8-23 Unknown-provenance is its own counted state; RFC2-19(a) keeps the chain absence out of Unknown-reason aggregates. The slice as written ('verified = Unknown for N of N') merges them.",
+   "finding_ids": [
+    "B2-F7",
+    "B4-F9",
+    "L4-F2",
+    "L4-M1"
+   ],
+   "slices": [
+    "edit t3jk.16 expected content",
+    "trajectory.ts fifth row + machine twin",
+    "POC spec amendment and parity case"
+   ],
+   "owner_value": 5,
+   "build_cost": 1,
+   "prereq": "none",
+   "owner_class": "no — specification change, agent adoption"
+  },
+  {
+   "id": "U2",
+   "title": "State the orphan predicate: which unrecorded items are Contradictions and which are Unknown-provenance",
+   "what": "Amend RFC1-29/RFC8-8/RFC8-23 (and POC-REQ-014's deferred limb) with a decidable predicate, e.g. an item is orphan-eligible only if it carries a Syzygy-written pointer (external_ref in the `syzygy:` namespace or a spec_id Syzygy wrote) or was created inside a declared Syzygy-governed scope after a declared onset instant, and no ledger record matches; every other unrecorded item is Unknown-provenance. Then detect it, mint the Contradiction, render it unfilterable.",
+   "why": "Read literally, RFC1-29 and RFC8-8 make all 10,971 proving-project items orphaned-work Contradictions ('Scheduler work items matching no materialization record are an orphaned-work contradiction'); RFC8-23 says pre-Syzygy backlog is Unknown-provenance. The first real record (T7) makes the contradiction live.",
+   "finding_ids": [
+    "B2-F3",
+    "B2-F14"
+   ],
+   "slices": [
+    "contract amendment with semantic delta",
+    "POC spec limb RFC8-23 / CONTRACT-COVERAGE row 192",
+    "detector over observed items + ledger",
+    "unfilterable rendering + adjudication route"
+   ],
+   "owner_value": 5,
+   "build_cost": 2,
+   "prereq": "none for the amendment; detection needs U4's ledger reader",
+   "owner_class": "no — contracts are agent-decided under VIS-4; see the one judgment question below about who adjudicates"
+  },
+  {
+   "id": "U3",
+   "title": "One intent per loop: delete the seed-literal intent and bind verification to the item's record",
+   "what": "Remove `workerChangeIntentId` (REQ-connector-base-spec-001) and the parallel packet constant as sources of truth; the verification badge and any future verdict read the intent from the item's materialization record (or adopted motivates row). Move the bounded POC mapping out of code into a governance mapping artifact and fix its provenance pointer (`model.ts#ARTIFACT_PATHS` names a symbol that no longer exists).",
+   "why": "Two different intents govern the one demonstrated loop; the recorded false-'Verified' incident came from exactly this adjacency (AGENTS.md; M8 funnel). SDR-4: 'governance mapping artifacts are the primary declaration site'; RFC1-26: rendered edges must resolve.",
+   "finding_ids": [
+    "B1-F3",
+    "B4-F1",
+    "B4-F2"
+   ],
+   "slices": [
+    "record-sourced intent in model-slices.ts / model.ts",
+    "mapping artifact + provenance fix",
+    "counterexample test: record intent ≠ badge intent fails"
+   ],
+   "owner_value": 4,
+   "build_cost": 2,
+   "prereq": "U4 for the record source (the packet constant can serve until then)",
+   "owner_class": "no"
+  },
+  {
+   "id": "U4",
+   "title": "A git-durable materialization ledger under `.syzygy/work/**`, joined into governedBy",
+   "what": "Replace the single 0600 state-dir record with append-only ledger records in the observed project's `.syzygy/work/materializations/`: proposal identity, work-item id set, pinned intent revision (requirement id, spec path, commit, blob digest), materializing evaluation, attribution; reuse records the bead's own created_at. The work-item observation reads external_ref under a closed `syzygy:` grammar only to join a record, and sets governedBy Observed (recorded-identity) for joined items.",
+   "why": "RFC8-10 requires 'proposal identity, work-item identity set, and the pinned warranted intent revision … all three required'; SDR-7 and RFC8-26 place and preserve the record. Today it holds none of the first or third, lives in a state dir, and governedBy is hard-wired Unknown even for an item Syzygy created — so run-1 T7 would not give that item an intent.",
+   "finding_ids": [
+    "B1-F1",
+    "B1-F2",
+    "B1-F4",
+    "B1-F5",
+    "B2-F2",
+    "B2-F13",
+    "B4-F6",
+    "L1-M1"
+   ],
+   "slices": [
+    "ledger schema (RFC 0003 namespace) + reader",
+    "work-items.ts external_ref join (grammar-gated)",
+    "materialize action writes the ledger",
+    "POC-REQ-014 amendment; coverage rows RFC8-10, RFC8-26"
+   ],
+   "owner_value": 5,
+   "build_cost": 3,
+   "prereq": "reader: none; first record: T7 (syzygy-t3jk.7) and syzygy-mxas",
+   "owner_class": "no — Butlers is on OWNED-REPOSITORIES since 2026-11-21, so a `.syzygy/**` write there is not class 3; reading external_ref under a closed grammar is screening policy within SEC-5"
+  },
+  {
+   "id": "U5",
+   "title": "Declare retention for the chain: bounds, inter-pass interval, and capture before horizon",
+   "what": "Declare the scheduler retention bound and the maximum inter-pass interval (RFC4-16) as quality-policy material, adopted by row; make every chain record Syzygy depends on (ledger, warrant rows, gate captures, verdicts) git-durable at write time.",
+   "why": "RFC4-16(2): materialization joins 'must be captured into Syzygy-owned artifacts … before the horizon'; until the interval is declared, claims depending on pre-horizon history render Unknown (RFC8-24). The policy declarations that RFC4-16 honored 'only under RFC3-16(a)' are agent adoptions since D10. No compaction has run on Syzygy's tracker yet, so it is cheap now.",
+   "finding_ids": [
+    "B2-F13",
+    "B3-F6"
+   ],
+   "slices": [
+    "policy file + adoption row",
+    "renderer cites the declared bound"
+   ],
+   "owner_value": 3,
+   "build_cost": 1,
+   "prereq": "none",
+   "owner_class": "no"
+  },
+  {
+   "id": "U6",
+   "title": "The pre-work plane at V0: requirements × warranted work, as absence",
+   "what": "Enumerate identified requirements across every observed OpenSpec change (not one seeded change) with adoption state and warrant coverage, the 64 unidentified requirement headings counted as an absence, and `.syzygy/work/proposals/**` approved / queued-for-materialization with queue order (never 'scheduled'); one bipartite view with both margins (uncovered requirements, Unknown-provenance items). Exclusivity built into every total before the first proposal exists.",
+   "why": "RFC8-8(a)/(b), RFC8-7, SDR-18 (Trajectory owns the drafting queue); v1.md 'V0 surfaces absence; V1 computes gaps'. None of the three planes renders today.",
+   "finding_ids": [
+    "B1-F9",
+    "B2-F11",
+    "B3-F7",
+    "L3-F1",
+    "L3-F3",
+    "L3-F4",
+    "L3-M1",
+    "L3-M2"
+   ],
+   "slices": [
+    "requirement enumerator over openspec changes",
+    "plane (b) reader over .syzygy/work",
+    "Trajectory pre-work section + machine answer",
+    "spec amendment for RFC8-7/8/9",
+    "separately: ids for the 64 unidentified requirements (spec authoring)"
+   ],
+   "owner_value": 4,
+   "build_cost": 2,
+   "prereq": "plane (a): none on Syzygy's own tree; plane (b) after U4/U8",
+   "owner_class": "no"
+  },
+  {
+   "id": "U7",
+   "title": "The first true reconciled@E: one CAP1 requirement, Syzygy on Syzygy, gate-backed by hosting-confirmed CI",
+   "what": "A requirement → conformance-check mapping (42 rows, pinning requirement blob and checker blob), a per-test report uploaded on merge_group, a capture of check-run identity/conclusion/report digest for the merge commit (RFC4-13 route 2, RFC4-13(a)), and one reconciliation evaluation producing cap1-core ReconciliationFacts/ChainState for one requirement; checker drift or requirement drift render their honest alternatives; rule-6 mutants per predicate.",
+   "why": "RFC2-18 reconciled@E requires gate-backed Observed evidence; Syzygy uniquely has 1:1 requirement → conformance files, hosting check runs on exact merge SHAs, and the verdict types already built with no producer. The gate sits in the worker's write set, so the checker must be pinned. V1 work (RFC8-29); starting it is an agent decision.",
+   "finding_ids": [
+    "B1-F8",
+    "B2-F8",
+    "B3-F12",
+    "B3-F13",
+    "B4-F3",
+    "L2-F1",
+    "L2-F2",
+    "L2-F3",
+    "L2-M1"
+   ],
+   "slices": [
+    "mapping artifact + adoption",
+    "CI report artifact",
+    "capture module (hosting sub-adapter facts)",
+    "evaluation producer + observation record",
+    "machine answer, then Trajectory row after T12",
+    "mutation evidence record"
+   ],
+   "owner_value": 5,
+   "build_cost": 4,
+   "prereq": "U4 and one warrant for the item (U8 for a new item or one U10 row); T12 (syzygy-t3jk.12) to show it on Trajectory; coordinate with the V1 readiness drive (syzygy-rrrd)",
+   "owner_class": "no — avoids RFC4-13 route 3 (trusted-oracle policy) entirely"
+  },
+  {
+   "id": "U8",
+   "title": "Fleet work enters through materialization: record and bead written together",
+   "what": "An operator command (never the daemon) that takes an approved requirement or Decision id and writes the ledger record plus `bd create --external-ref syzygy:… --spec-id <anchor>` (both flags exist in the installed bd) in one attributed act, re-reading after write. Adopted first as the way intent-bearing work is filed on Syzygy's own tracker; bugs follow v1.md's rule (warranted by an existing spec or they are a spec gap first).",
+   "why": "The only honest warrant source that scales forward, and it is the owner's own P-100 Q1 direction ('Syzygy's own creation records only'). Today 26 of 1,370 Syzygy items carry spec_id, ad hoc, none a requirement id.",
+   "finding_ids": [
+    "B3-F2",
+    "L1-F1",
+    "L1-F2",
+    "L1-M2"
+   ],
+   "slices": [
+    "command + tests",
+    "adoption row changing fleet practice",
+    "U2 predicate applied to raw `bd create` items"
+   ],
+   "owner_value": 5,
+   "build_cost": 3,
+   "prereq": "U4, U2",
+   "owner_class": "no — own tracker, own repository; unattended agent work is agent-decided"
+  },
+  {
+   "id": "U9",
+   "title": "Review lanes and merge facts by recorded identity: external_ref `gh-pr:N` → PR facts",
+   "what": "Read external_ref under the closed grammar `^gh-pr:[0-9]+$` (192 of 1,370 Syzygy items) and fetch PR facts from the hosting sub-adapter: head SHA, state, review decision, check conclusions, merge commit. Render RFC8-13 `review` (lane bound to head SHA, expiring when it moves, reviewer activity never claimed) and the merge fact with basis recorded-identity, ranked above run-1 T10's naming-convention join.",
+   "why": "RFC4-22 'recorded-identity (an explicit identifier written by an actor)'; RFC4-11 'A merge fact comes only from this adapter — never inferred from scheduler closure'; RFC8-13 review row derives from 'Open PR facts … + external_ref'.",
+   "finding_ids": [
+    "B2-F12",
+    "B3-F3",
+    "B3-F11"
+   ],
+   "slices": [
+    "grammar-gated external_ref read",
+    "hosting PR-facts capture",
+    "review lane state + chain merge field",
+    "coverage rows RFC8-13 review, RFC4-22"
+   ],
+   "owner_value": 4,
+   "build_cost": 3,
+   "prereq": "T12 for Syzygy's tracker (Butlers' external_ref population is [Unknown]); dedupe with syzygy-a4ry / syzygy-nosn on which merge-fact reading binds",
+   "owner_class": "no, but it extends the owner's P-100 Q1 choice (option 2 was 'also reading external_ref'); report it as such so the owner can veto"
+  },
+  {
+   "id": "U10",
+   "title": "Declared warrant backfill with separation of duty",
+   "what": "A governance mapping artifact of motivates rows (warrant ref@pinned revision → work item ids), proposed in batches from evidence (spec_id paths, PR-body requirement ids, parent-epic warrants), each citing its evidence; a batch binds only by an adoption row whose adopter is no claimant of its items; edges render `declared-before-work` or `declared-after-work`. Never from titles or similarity.",
+   "why": "RFC1-25 lets a Decision motivate a work item directly; RFC8-23 resolves Unknown-provenance 'by supplying a warrant'; RFC8-25 forbids execution-side prose as a warrant; VIS-4's lower-rules clause lets an agent row stand in for the owner, which is why the separation rule is needed.",
+   "finding_ids": [
+    "B2-F5",
+    "B2-F14",
+    "B4-F5",
+    "L1-F3",
+    "L1-M3"
+   ],
+   "slices": [
+    "schema + check_governance predicate (adopter ≠ claimant, order rendering)",
+    "candidate generator (no binding)",
+    "join into governedBy"
+   ],
+   "owner_value": 4,
+   "build_cost": 3,
+   "prereq": "U2, U4",
+   "owner_class": "no; the judgment question below applies"
+  },
+  {
+   "id": "U11",
+   "title": "The post-merge account: a since-instant ledger with RFC8-30 composition, routed per answer",
+   "what": "For a reader-chosen window, merged items split into the four chain answers plus Unknown-provenance and orphaned work, each a field-qualified count with denominator, expandable to identities, each with its action route (evaluate / take the gap or indict the spec / adjudicate / backfill warrant). At V0 only pending and the out-of-chain populations populate.",
+   "why": "RFC8-28 four answers 'must never share a rendering'; RFC8-30 composition on every aggregate; v1.md V1 'Fleet account … what the fleet changed and why'.",
+   "finding_ids": [
+    "B2-F10",
+    "L4-F1",
+    "L4-F3",
+    "L4-F5",
+    "L4-M2"
+   ],
+   "slices": [
+    "chain-state field beside normalized state",
+    "window query",
+    "Trajectory section + machine answer"
+   ],
+   "owner_value": 4,
+   "build_cost": 2,
+   "prereq": "U9 or run-1 T10 for merge facts; run-1 T6 for windows",
+   "owner_class": "no"
+  }
+ ],
+ "waves": {
+  "1": [
+   "U1",
+   "U2",
+   "U5"
+  ],
+  "2": [
+   "U4",
+   "U3",
+   "U6"
+  ],
+  "3": [
+   "U8",
+   "U9",
+   "U10"
+  ],
+  "4": [
+   "U7",
+   "U11"
+  ]
+ },
+ "tier_table": [
+  {
+   "surface": "Governing-intent observation (work-items.ts governedBy)",
+   "tier": "weak",
+   "gap": "Honest and counted, but hard-wired Unknown; no join even to Syzygy's own record (B1-F1)."
+  },
+  {
+   "surface": "Materialization record (materialization.ts)",
+   "tier": "weak",
+   "gap": "Idempotent and fail-closed, but lacks proposal identity and pinned revision, single-slot, state-dir only (B1-F2, B2-F2)."
+  },
+  {
+   "surface": "Intent binding of the demonstrated loop (poc-seeds, packet)",
+   "tier": "broken",
+   "gap": "Two different intents for one item; provenance pointer to a missing symbol (B1-F3, B4-F2)."
+  },
+  {
+   "surface": "Test-artifact verification (test-artifact-verification.ts)",
+   "tier": "solid",
+   "gap": "Rigorous report-fact cap and fail-closed checks; no gate-backed route exists, no intent binding (B1-F6, B4-F7)."
+  },
+  {
+   "surface": "Reconciliation verdict machinery (cap1-core facets/drawer)",
+   "tier": "weak",
+   "gap": "Vocabulary built and conformance-tested; no producer in 310 non-test files (B1-F8)."
+  },
+  {
+   "surface": "Pre-work plane (RFC8-7/8/9, .syzygy/work, drafting queue)",
+   "tier": "absent",
+   "gap": "One seeded change; no .syzygy/work; no queue (L3-F1)."
+  },
+  {
+   "surface": "Orphaned-work detection (RFC8-8)",
+   "tier": "absent",
+   "gap": "Not detected, and the contract lacks the predicate that would make detection meaningful (B2-F3)."
+  },
+  {
+   "surface": "Review lanes, PR and merge facts (RFC8-13 review, RFC4-11)",
+   "tier": "absent",
+   "gap": "Only an ancestry proxy for one bead's seam (B4-F8)."
+  },
+  {
+   "surface": "Retention of chain records (RFC4-16, RFC8-26/27)",
+   "tier": "absent",
+   "gap": "No declared bound or interval; records not git-durable (B2-F13)."
+  },
+  {
+   "surface": "Contract for this half (RFC 0008 modules 1 and 3, RFC2-17..20)",
+   "tier": "solid",
+   "gap": "Precise and mutually consistent except the orphan/Unknown-provenance predicate (B2-F3)."
+  },
+  {
+   "surface": "Syzygy tracker as warrant substrate",
+   "tier": "weak",
+   "gap": "spec_id 26/1,370, no requirement ids; metadata ad hoc on 37 (B3-F2, B3-F4)."
+  },
+  {
+   "surface": "Syzygy tracker/VCS as item→PR→merge substrate",
+   "tier": "solid",
+   "gap": "192 recorded-identity PR links, 365/500 bead-tagged subjects, merge commits with hosting checks (B3-F3, F10, F11, F12)."
+  }
+ ],
+ "themes": [
+  {
+   "theme": "The warrant is a constant, not a record. Every intent the POC names is a compile-time literal; the persisted record names none, and the observation never reads one.",
+   "exemplars": [
+    "B1-F1",
+    "B1-F2",
+    "B1-F3",
+    "B4-F2"
+   ]
+  },
+  {
+   "theme": "Built vocabulary, no producer. The verdict types, chain states and 'reconciliation evidence absent' exist and are tested; nothing ever feeds them a computed or captured input.",
+   "exemplars": [
+    "B1-F8",
+    "B1-F6"
+   ]
+  },
+  {
+   "theme": "The contract has one hole, and 10,971 items sit in it: orphaned-work Contradiction vs Unknown-provenance has no stated predicate.",
+   "exemplars": [
+    "B2-F3",
+    "B4-F9"
+   ]
+  },
+  {
+   "theme": "The tracker links work to work, never work to intent. Item↔PR↔merge is recoverable at scale on Syzygy; requirement↔anything is ~0, and the contract forbids reading it from execution-side text anyway.",
+   "exemplars": [
+    "B3-F2",
+    "B3-F10",
+    "B3-F11",
+    "B2-F4",
+    "B2-F6"
+   ]
+  },
+  {
+   "theme": "Independence is the scarce resource. Since D10 an agent row can warrant, adjudicate and declare; the gate lives in the worker's write set. The fifth answer is only worth having if who warrants, who verifies and what checks are kept apart mechanically.",
+   "exemplars": [
+    "B2-F14",
+    "B4-F5",
+    "L2-F2"
+   ]
+  },
+  {
+   "theme": "Durability before coverage. Records the chain depends on live in a 0600 state-dir file; RFC4-16 and RFC8-26 require them Syzygy-owned and preserved from day one.",
+   "exemplars": [
+    "B2-F2",
+    "B2-F13"
+   ]
+  }
+ ],
+ "objections": [
+  "U7 is V1 while V0 Trajectory is weak: true; it is ranked after the truth fixes and the join, and it is the only move that makes the fifth answer non-empty for anything.",
+  "An RFC amendment (U2) for a POC: without it the first real record (T7) puts one item in a recorded state and, read literally, 10,970 into an unfilterable Contradiction state.",
+  "U8 adds friction to every intent-bearing `bd create`: yes; it is the price of the owner's P-100 Q1 choice, and bugs warranted by an existing spec need only the requirement id.",
+  "Syzygy-on-Syzygy is self-grading: the gate is hosting-confirmed, the checker is pinned, verdicts carry mutants; the remaining risk is the separation question above.",
+  "U9 and U10 widen what P-100 Q1 chose: U10's rows are Syzygy records, arguably within it; U9 reads external_ref, which was Q1's option 2. Both are adoptions open to veto, and say so."
+ ],
+ "could_not_verify": [
+  "Anything about Butlers: its tracker fields, commit/PR conventions, CI, requirement density, `.syzygy/work` (B3-F15).",
+  "The V1 readiness drive's plans (syzygy-rrrd/qd2t/oq3x); its files are not in the repo — U7 may overlap it.",
+  "That GitHub merge_group SHAs equal main's commits in general; observed on one commit (c813f041c).",
+  "RFC4-13(a)/(b) and RFC3-16(a) were read in part (named-adapters.md:157-215 and the clause heads), not in full.",
+  "The P-100 packet itself (read only its DECISION-HISTORY rows); what the unread external_ref values hold on Butlers.",
+  "Whether syzygy-a4ry / syzygy-nosn already settle which merge-fact reading U9 should bind to."
+ ],
+ "owner_gates": [],
+ "flagged_for_veto": [
+  "U2",
+  "U7",
+  "U8",
+  "U9",
+  "U10"
+ ],
+ "judgment_question": {
+  "is_owner_class": "no by VIS-4's text; asked under its 'when unsure, … ask' clause",
+  "question": "Since D10, agent adoption rows satisfy the contract's owner-adjudication exits (orphaned-work Contradictions, RFC8-8) and can declare warrants for existing work (U10). Should agents adjudicate and warrant with a mechanical separation rule (adopter ≠ claimant, declared-after-work rendered), or does the owner want to see orphaned-work Contradictions first?",
+  "deciding_clauses": [
+   "VIS-4: \"Where a contract, policy, specification, decision or direction requires an owner act, sign-off, consent or ruling for something this rule leaves to agents, this rule governs and an agent adoption satisfies it\"",
+   "VIS-4: \"Classification is the agent's call, contested by veto. … when unsure, it treats the change as owner-class and asks.\"",
+   "RFC8-8: orphaned work routes \"to owner adjudication as its only lawful exit\""
+  ],
+  "recommendation": "Agents adjudicate and warrant under the separation rule; every orphaned-work adjudication and every warrant batch is reported in the session summary; owner vetoes."
+ },
+ "units": {
+  "l1-warrant-sources": {
+   "findings": [
+    {
+     "id": "L1-F1",
+     "label": "Inferred",
+     "text": "Ranking by fidelity under the accepted contracts (B2-F1, B2-F4, B2-F5, B2-F6): (1) a Syzygy materialization record naming proposal, item set and pinned revision — `recorded-identity`, the only form RFC2-18 binds a verdict to; (2) a declared `motivates` edge in a governance mapping artifact, adopted by a recorded act (RFC1-25 allows Requirement ref · Decision → Work item; SDR-4 makes governance mapping artifacts the primary declaration site) — honest, declared, but not a materialization, so RFC2-18's chain needs it treated as the pinned revision explicitly; (3) a tracker pointer Syzygy itself wrote (RFC4-17 `spec_id`) — re-derivable copy of (1), never authoritative; (4) a tracker field a worker wrote (spec_id 26/1370, metadata 37/1370 on Syzygy) — substrate annotation, asserted-by-worker, never a warrant (RFC8-23, RFC8-25); (5) requirement ids in commit subjects / PR bodies (1 of 500 subjects, 7 of 200 PR bodies on Syzygy) — execution-side prose, forbidden as a warrant source (RFC8-25), usable only as a hint for proposing a (2) row; (6) openspec tasks.md ↔ bead links (5 of 13 tasks.md name any bead, 7 mentions) — declared intent-side text, too sparse to matter; (7) similarity/title matching — forbidden (RFC8-22, RFC4-22 'never fuzzy-matched').",
+     "where": "u2 B2-F1..F6; u3 B3-F2, F4, F7, F9, F10, F11"
+    },
+    {
+     "id": "L1-F2",
+     "label": "Inferred",
+     "text": "Coverage at scale vs honesty: only (1) and (2) are both honest and scalable. (1) scales forward only — it covers work created through Syzygy from now on, which is exactly P-100 Q1's chosen direction ('Syzygy's own creation records only'), provided the fleet creates work through a Syzygy path rather than raw `bd create`. (2) is the only honest backfill: batches of proposed rows, each adopted by a recorded act. (3)–(6) give coverage cheaply but cannot be warrants; their honest use is as candidate-generators for (2), with the candidate's evidence cited and nothing rendered as a warrant until adopted. The proving project's figures for (4)–(6) are [Unknown].",
+     "where": "DECISION-HISTORY.md:212, 219 (P-100 row); RFC-0008/accounting-reconciliation-and-release.md:135-142, 206-218"
+    },
+    {
+     "id": "L1-F3",
+     "label": "Inferred",
+     "text": "A declared warrant made after the work exists is a different fact from one recorded before it. Render the basis with its order: `recorded-at-materialization` (1), `declared-before-work` and `declared-after-work` (2, by comparing the adoption commit instant with the item's first commit or claim instant). A post-hoc warrant is honest only if labelled so; otherwise a backfill silently converts history into apparent plan. This is a rendering qualifier on the edge, not a new RFC1-25 relation (RFC1-26 needs an owner-decided amendment for a new relation).",
+     "where": "RFC-0001-project-graph-identity-state-planes.md:736-740; u4 B4-F5"
+    }
+   ],
+   "proposals": [
+    {
+     "id": "L1-M1",
+     "title": "A git-durable materialization ledger under `.syzygy/work/**`, joined into each item's governedBy",
+     "what": "Replace the 0600 state-dir record with append-only record files under the observed project's `.syzygy/work/materializations/` (one per act): proposal identity, work-item id set, pinned intent revision (requirement id + spec file path + commit + blob digest), materializing evaluation, attribution. The work-item observation reads `external_ref` only to join a record (closed grammar `^syzygy:` namespace), and sets governedBy = Observed (recorded-identity) for joined items; all others stay the Unknown they are today.",
+     "changes": [
+      "packages/three-surface-poc-core/src/materialization.ts (record shape, reader over .syzygy/work)",
+      "work-items.ts (SELECT adds external_ref, grammar-gated; governedBy from record)",
+      "model-slices.ts:148-175",
+      "POC spec POC-REQ-014 amendment + CONTRACT-COVERAGE rows RFC8-10, RFC8-26"
+     ],
+     "owner_value": 5,
+     "build_cost": 3,
+     "prereq": "none to build the reader; the first real record needs T7 (syzygy-t3jk.7) and syzygy-mxas for the write"
+    },
+    {
+     "id": "L1-M2",
+     "title": "Fleet work enters through materialization: a create path that writes the record and the bead together",
+     "what": "A `syzygy work materialize` operator command (agent- or human-run, never the daemon) that takes an approved requirement id (or Decision id) and writes the ledger record plus `bd create --external-ref syzygy:… --spec-id <anchor>` (RFC4-17 pointer) in one attributed act, re-reading after write (RFC8-3). Adopt it as the fleet's way to file intent-bearing work on Syzygy's own tracker first, then Butlers. Coverage then grows from Syzygy's own creation records, which is the owner's P-100 Q1 direction.",
+     "changes": [
+      "new apps/three-surface-poc (or packages/*) operator command",
+      "beads-orchestration practice note",
+      "AGENT-ADOPTIONS row"
+     ],
+     "owner_value": 5,
+     "build_cost": 3,
+     "prereq": "L1-M1; the orphan predicate, synthesis U2 (so new raw `bd create` items are classified correctly)"
+    },
+    {
+     "id": "L1-M3",
+     "title": "Declared warrant backfill: motivates rows proposed from evidence, adopted in batches, with separation of duty",
+     "what": "A governance mapping artifact `.syzygy/work/warrants/<batch>.json` of rows (warrant ref@pinned revision → work item ids), each row citing the evidence that proposed it (spec_id path, PR body requirement id, parent epic's warrant). A batch binds only by an adoption row whose adopter is not a claimant of any item in it; rendering carries `declared-before-work` / `declared-after-work`. No row is generated from titles or similarity.",
+     "changes": [
+      "new schema under .syzygy (RFC 0003 namespace)",
+      "work-items.ts join",
+      "POC spec amendment",
+      "check_governance predicate for adopter ≠ claimant"
+     ],
+     "owner_value": 4,
+     "build_cost": 3,
+     "prereq": "L1-M1; the orphan predicate (synthesis U2)"
+    }
+   ]
+  },
+  "l2-reconciliation-minimum": {
+   "findings": [
+    {
+     "id": "L2-F1",
+     "label": "Inferred",
+     "text": "Syzygy-on-Syzygy CAP1 is the natural first proving case, and Butlers is not. Syzygy has: 42 CAP1 requirement ids with exactly one conformance file each, each stating Case/Oracle/Falsifier (B3-F13); merge commits that carry hosting-confirmed check runs on the exact SHA (B3-F12, RFC4-13 route 2); recorded-identity item→PR links on 192 items (B3-F3); an owned repository (OWNED-REPOSITORIES.md row 1), so ledger writes are agent-decided; and cap1-core already ships the verdict vocabulary — ReconciliationFacts, computeReconciled, ChainState with `reconciled@${string}` (B1-F8). Butlers lacks a declared requirement→test mapping, its CI is [Unknown], and the POC's only test route is operator-reported (report-fact cap).",
+     "where": "u3 B3-F3, F12, F13; u1 B1-F8; .syzygy/governance/decisions/OWNED-REPOSITORIES.md:18-21"
+    },
+    {
+     "id": "L2-F2",
+     "label": "Inferred",
+     "text": "The gate is inside the worker's write set. A conformance file lives in the same repository the worker edits, so a merge whose CI is green can have weakened the check that 'verifies' it. Route 2 confirms the run happened on SHA M; it does not confirm the check is the one adopted for the requirement. A lawful verdict therefore needs the requirement → check mapping to pin the checker's blob digest (or a check version adopted by its own row before the merge), and must render Unknown(contradicted-pending-adjudication or missing-declaration) when the checker at M differs from the pinned one without an adoption. This is the same shape as RFC4-13(b)'s 'checker's definition is lawfully governed for that clause'.",
+     "where": "RFC-0004/named-adapters.md:157-215, 298-350; packages/cap1-conformance/src/req-037.conformance.test.ts:1-22"
+    },
+    {
+     "id": "L2-F3",
+     "label": "Inferred",
+     "text": "Job-level green is not per-requirement evidence. node-ci.yml produces job conclusions and uploads no per-test report (B3-F12). The minimum addition is a machine-readable per-test report (vitest JSON or JUnit) uploaded as a workflow artifact on merge_group, whose artifact id, digest and run id the observation captures (RFC4-13(a): the confirmation 'is a captured artifact inside snapshot identity … never a query re-run against the provider at some later read'). Captured into the repo or a Syzygy-owned store, it survives GitHub's artifact expiry (RFC8-27).",
+     "where": ".github/workflows/node-ci.yml:32-47, 98-118; RFC-0004/named-adapters.md:264-297; RFC-0008/accounting-reconciliation-and-release.md:254-275"
+    },
+    {
+     "id": "L2-F4",
+     "label": "Observed",
+     "text": "This is V1 work by the contract's own staging: RFC8-29 'V1 computes the reconciliation evaluation'; RFC2-19 'V1 computes'; v1.md V1 'Gap computation … Provenance surfaces — structured summaries linking each unit of work to the spec and vision that motivated it'. Starting it is 'when implementation starts', an agent decision under VIS-4; the V1 readiness drive (syzygy-rrrd/qd2t/oq3x) is the in-flight owner of V1 sequencing and its files are not in the repo [Unknown whether it already plans this].",
+     "where": "RFC-0008/accounting-reconciliation-and-release.md:329-336; RFC-0002/reconciliation-chain.md:245-252; .syzygy/governance/doctrine/v1.md:82-95; vision.md:185-191"
+    }
+   ],
+   "proposals": [
+    {
+     "id": "L2-M1",
+     "title": "The first true reconciled@E: one CAP1 requirement on Syzygy, gate-backed through hosting-confirmed CI",
+     "what": "(a) a governance mapping artifact: 42 rows requirement id → conformance file path + pinned checker blob digest + pinned requirement blob digest, adopted by row; (b) CI uploads a per-test report on merge_group; (c) an observation step captures check-run identity, conclusion and report digest for a merge commit into a retained artifact; (d) a reconciliation evaluation for one requirement that produces ReconciliationFacts{computed:true,...} and ChainState reconciled@E | unsatisfied | Unknown(reason); (e) rule-6 mutants per predicate (warrant, pin, SHA, route, checker drift, outcome).",
+     "changes": [
+      ".github/workflows/node-ci.yml (report artifact)",
+      "new capture module (hosting sub-adapter facts, RFC4-11/RFC4-13(a))",
+      "packages/cap1-core facets/drawer producer side",
+      "a new openspec delta (Trajectory chain-state rendering for Syzygy-on-Syzygy) adopted by row",
+      ".syzygy mapping artifact"
+     ],
+     "owner_value": 5,
+     "build_cost": 4,
+     "prereq": "L1-M1 (ledger) and either L1-M2 (new materialized item) or one L1-M3 row; T12 (syzygy-t3jk.12) if it should render on Trajectory rather than only the cap1 machine answer"
+    }
+   ]
+  },
+  "l3-pre-work-plane": {
+   "findings": [
+    {
+     "id": "L3-F1",
+     "label": "Observed",
+     "text": "None of RFC8-8's three planes is rendered. Plane (a) needs the set of approved normative claims; the POC follows one seeded OpenSpec change (B1-F9). Plane (b) needs `.syzygy/work/**`, which exists in neither Syzygy's tree (B2-F11) nor, as far as the POC reads, Butlers'. Plane (c) is the board, without the record check (run-1 scope). The drafting queue SDR-18 gives Trajectory does not exist in code.",
+     "where": "RFC-0008/identity-authority-materialization.md:210-223, 263-275; packages/three-surface-poc-core/src/proposed-work.ts:10-21; SURFACE-DECISION-RECORD.md:122"
+    },
+    {
+     "id": "L3-F2",
+     "label": "Observed",
+     "text": "On Syzygy the plane-(a) population is measurable today from files alone: 13 active changes; 151 requirement headings, 85 distinct identified requirements (CAP1 42, POC 26, PWB 17) and 64 headings with no identifier in 9 Polaris/dossier changes (B3-F7). Whether each is 'approved' is decidable from adoption rows and tags for some (30+ version tags, B3-F8) and [Unknown] for the rest without reading each change's adoption record.",
+     "where": "u3 B3-F7, B3-F8"
+    },
+    {
+     "id": "L3-F3",
+     "label": "Inferred",
+     "text": "V0 plane (a) is absence surfacing, not a gap: 'approved requirement R, with no approved execution-intent Proposal and no declared motivates edge' is a listed absence, never a computed 'unbuilt' claim (v1.md: 'V0 surfaces absence; V1 computes gaps'). Rendering R as 'not implemented' would be a gap claim; rendering 'no work traceably warranted by R' is the honest V0 row. Until a warrant source exists (L1-M1/M3), every identified requirement is in this absence set, which is correct output, like the mostly-Unknown map v1.md calls 'the correct output, not a defect'.",
+     "where": ".syzygy/governance/doctrine/v1.md:25-31, 51-52"
+    },
+    {
+     "id": "L3-F4",
+     "label": "Inferred",
+     "text": "A requirement with no identifier cannot be a pinned warrant except by (change path, heading text, blob digest), which renames silently when the heading is edited. 64 of 151 requirement headings on Syzygy are in this state. The pre-work view should count them as 'requirements without identity' — an absence that blocks warranting — rather than drop them or mint ids for them.",
+     "where": "u3 B3-F7"
+    },
+    {
+     "id": "L3-F5",
+     "label": "Inferred",
+     "text": "The inverse population (work items with no requirement) is the RFC8-23 Unknown-provenance count already rendered as 'governing intent Unknown 10,971 of 10,971'; the two views should be one bipartite rendering (requirements × items), with both margins counted, so the owner sees the uncovered requirements and the unwarranted work in one place. Exclusivity (RFC8-8) means a plane-(b) total must never sum two proposals in one exclusivity group; with zero proposals today, that obligation is vacuous but must be built into the count before the first proposal lands.",
+     "where": "apps/three-surface-poc/src/trajectory.ts:142-160; RFC-0008/identity-authority-materialization.md:248-261"
+    }
+   ],
+   "proposals": [
+    {
+     "id": "L3-M1",
+     "title": "The pre-work plane at V0: every identified requirement and every queued proposal, each with its warrant coverage as absence",
+     "what": "Enumerate requirement identities across all observed OpenSpec changes (not one seeded change), each with: adoption state (adopted / unadopted draft / Unknown), and coverage = items warranted through ledger records or adopted motivates rows (count, or the absence 'no traceably warranted work'). Count requirement headings with no identifier separately. Plane (b): enumerate `.syzygy/work/proposals/**` approved and queued-for-materialization (never 'scheduled'), queue order visible; renders an observed empty set with its denominator when the directory exists and is empty, Unknown(missing-declaration) when it is absent. No 'unbuilt', no percentage.",
+     "changes": [
+      "packages/three-surface-poc-core/src/proposed-work.ts → an enumerating successor",
+      "apps/three-surface-poc/src/trajectory.ts (a pre-work section)",
+      "POC spec amendment covering RFC8-7, RFC8-8(a)/(b)",
+      "CONTRACT-COVERAGE rows RFC8-7/8/9"
+     ],
+     "owner_value": 4,
+     "build_cost": 2,
+     "prereq": "none for plane (a) on Syzygy's own tree; plane (b) is meaningful after L1-M1/L1-M2 create `.syzygy/work/`; on Butlers it needs the PWB reader's admission of openspec change paths, which already exists for one change"
+    },
+    {
+     "id": "L3-M2",
+     "title": "Give the 64 unidentified requirements identities (spec authoring, not Trajectory code)",
+     "what": "Amend the nine Polaris/dossier changes so every Requirement heading carries a stable id, by agent adoption with version tags (CC-SPEC-10). Without ids those requirements can never be a pinned warrant or a reconciliation subject.",
+     "changes": [
+      "openspec/changes/{polaris-manifesto-generation, polaris-manifesto-understanding-amendment, dossier-*, polaris-dossier-*, polaris-non-governed-narrative-profile}/specs/**",
+      "AGENT-ADOPTIONS rows + tags"
+     ],
+     "owner_value": 3,
+     "build_cost": 2,
+     "prereq": "none"
+    }
+   ]
+  },
+  "l4-owner-loop": {
+   "findings": [
+    {
+     "id": "L4-F1",
+     "label": "Inferred",
+     "text": "The owner's daily need is a delta, not a census: 'of what merged since I last looked, which is warranted, which is evaluated, which failed'. v1.md's V1 acceptance test names it: 'At the end of an orchestration day the owner can give, from Syzygy alone, an accurate account of what the fleet changed and why, without reading raw diffs.' 'Why' is the warrant; 'accurate' is the chain state.",
+     "where": ".syzygy/governance/doctrine/v1.md:144"
+    },
+    {
+     "id": "L4-F2",
+     "label": "Observed",
+     "text": "The released wave-1 slice for the five answers (syzygy-t3jk.16, open) specifies the fifth row as 'verified = Unknown for N of N with the governing-intent count'. Under RFC2-18 only materialized work that reached merge is in the chain (B2-F7), so that row puts every unwarranted item into a verification denominator it is not in, and merges two populations RFC8-23 and RFC2-19(a) keep apart (Unknown-provenance is a counted claim state with a reason; 'reconciliation evidence absent' is chain-state-local and never counted among Unknown reasons). It is a correction to a bead in flight, cheap now and expensive after it lands with its spec amendment and parity tests.",
+     "where": "`bd list --all --json` record syzygy-t3jk.16 description ('Expected content at wave 1'); RFC-0002/reconciliation-chain.md:141-160, 254-266; RFC-0008/accounting-reconciliation-and-release.md:135-156"
+    },
+    {
+     "id": "L4-F3",
+     "label": "Observed",
+     "text": "Four post-merge answers, never one rendering (RFC8-28): reconciled at E with evidence; merged, not yet evaluated; evaluated and unsatisfied (a gap → routes to work or upward as a spec indictment); evaluated, contradiction raised (→ owner adjudication only). Never sharing 'a mark, a mark's colour, a count, or a legend entry'; distinguishable without colour. Every aggregate over merged work carries the composition (n reconciled, m pending, k unsatisfied, c contradiction-raised, j Unknown) (RFC8-30). Two further populations sit outside the chain and must not be folded into it: Unknown-provenance merged work (RFC8-23) and orphaned-work Contradictions (RFC8-8) — the latter exempt from filtering.",
+     "where": "RFC-0008/accounting-reconciliation-and-release.md:285-327, 338-346; identity-authority-materialization.md:225-246"
+    },
+    {
+     "id": "L4-F4",
+     "label": "Inferred",
+     "text": "At V0, on today's data, the honest daily line is mostly zeros with denominators and one large Unknown: 'Merged since <instant>: Unknown (merge facts not read — T10/U-merge) · In the reconciliation chain: 0 · Unknown-provenance: n · Orphaned work: not detected (no predicate declared)'. That is less impressive than a board and more useful: each row is a route (read merge facts; declare warrants; declare the orphan predicate), and the row changes the day each move lands, which is how the owner sees the fifth question being built.",
+     "where": "u2 B2-F3, B2-F7; u4 B4-F9"
+    },
+    {
+     "id": "L4-F5",
+     "label": "Inferred",
+     "text": "What the owner does with each answer is different, which is why they cannot share a rendering: 'merged, not evaluated' → trigger an evaluation pass (human-triggered, RFC2-19); 'unsatisfied' → accept the gap as work or indict the spec; 'contradiction-raised' and orphaned work → adjudicate (since D10 an agent row can, per VIS-4's lower-rules clause — L4 recommends the owner see them first regardless); 'Unknown-provenance' → nothing per item, a warrant backfill batch per epic. A rendering that does not route each to its action fails VIS-1's comprehension value even if truthful.",
+     "where": "RFC-0002/reconciliation-chain.md:189-230; .syzygy/governance/doctrine/vision.md:206-212"
+    }
+   ],
+   "proposals": [
+    {
+     "id": "L4-M1",
+     "title": "Correct the fifth row before it lands: three populations, never 'N of N'",
+     "what": "Amend syzygy-t3jk.16's expected content: the fifth row renders (i) Unknown-provenance n of N served items (reason, route: supply a warrant), (ii) in the reconciliation chain: an observed 0 with its denominator and the chain-state-local 'reconciliation evidence absent' count, never stamped with an RFC2-24 reason, (iii) orphaned-work Contradictions: Unknown(missing-declaration) — no orphan predicate declared. No 'verified' wording; no sum across the three.",
+     "changes": [
+      "bead syzygy-t3jk.16 description (by the lead session)",
+      "apps/three-surface-poc/src/trajectory.ts",
+      "POC spec amendment for the five answers"
+     ],
+     "owner_value": 5,
+     "build_cost": 1,
+     "prereq": "none (it is the slice already released)"
+    },
+    {
+     "id": "L4-M2",
+     "title": "The post-merge account: a since-instant ledger with RFC8-30 composition, routed per answer",
+     "what": "A Trajectory section and machine answer: for a window the reader picks (since last evaluation / day / week), merged items split into the four chain answers plus Unknown-provenance and orphaned work, each a count with denominator, each expandable to identities, each with its action route; field-qualified (`chain:merged` vs `normalized:merged`, RFC8-12). At V0, chain verdicts other than pending are absent by construction; at V1 (after L2-M1) they populate.",
+     "changes": [
+      "packages/three-surface-poc-core (chain-state field beside normalized state)",
+      "apps/three-surface-poc/src/trajectory.ts",
+      "openspec delta for RFC8-28/29/30 coverage"
+     ],
+     "owner_value": 4,
+     "build_cost": 2,
+     "prereq": "merge facts (run-1 T10 or recorded-identity PR links, U9); the window comparison benefits from run-1 T6"
+    }
+   ]
+  },
+  "u1-code-substrate": {
+   "findings": [
+    {
+     "id": "B1-F1",
+     "label": "Observed",
+     "text": "Every work item's governing intent is hard-wired Unknown at observation time, independent of any record Syzygy holds. observeWorkItems sets `governedBy: governingIntentUnknown()` on every row; the materialization record is never consulted for it. So even after run-1 move T7 runs the loop, the materialized item's card would still read 'Governing intent: Unknown' unless the observation is changed to join the record. Run 1's T7 text ('After it, one item of 10,971 has a governing intent from Syzygy's own record') is therefore not delivered by T7's slices as written [Inferred from code; T7's slices name no change to work-items.ts].",
+     "where": "packages/three-surface-poc-core/src/work-items.ts:32-35, 54-62, 265; apps/three-surface-poc/src/trajectory.ts:137-140, 188-197"
+    },
+    {
+     "id": "B1-F2",
+     "label": "Observed",
+     "text": "The materialization record does not carry the warrant. The packet has `governingIntent {requirementId, proposalPath, designPath}`, but the persisted MaterializationRecord holds only beadId, externalRef, targetRepoRoot, createdAt, doltRevisionAtCreation, attribution, origin. The intent is recoverable only because externalRef and the packet are both compile-time constants for one item. No requirement revision, spec digest, adoption row or approval identity is recorded at dispatch time, so RFC8-8's materialization record join (approved intent version -> work item) cannot be reconstructed from the record if the constants change.",
+     "where": "packages/three-surface-poc-core/src/materialization.ts:9-10, 14-30, 86-108, 110-121"
+    },
+    {
+     "id": "B1-F3",
+     "label": "Observed",
+     "text": "Two different intents govern the one demonstrated loop. The dispatch packet names REQ-switchboard-identity-001; the worker-change verification badge cites `seeds.workerChangeIntentId` = REQ-connector-base-spec-001, with a different seam (whatsapp_user_client.py vs the mapped identity.py). A run of the loop would therefore bind test evidence to an intent other than the one the item was materialized under. The split is documented as four literals in a candidate design note, not resolved.",
+     "where": "packages/three-surface-poc-core/src/poc-seeds.ts:99-115; materialization.ts:15, 102-106; model-slices.ts:263-275; model.ts:339-349; docs/design/POLARIS-M5-AGENT-BRIEFING-FUNNEL.md:230-250"
+    },
+    {
+     "id": "B1-F4",
+     "label": "Observed",
+     "text": "The materialization record is local, 0600, under the daemon state dir, and becomes Observed only when the named bead is confirmed present in the same evaluation's work items. That is the right posture (record = memory, confirmation = observation) and is the only place in the code where a Syzygy-authored record is joined to a tracker fact. It is single-slot: one file, one item; the type cannot hold a second materialization.",
+     "where": "packages/three-surface-poc-core/src/materialization.ts:123-177; model-slices.ts:141-175"
+    },
+    {
+     "id": "B1-F5",
+     "label": "Observed",
+     "text": "Beads' external_ref is the only tracker-side identity Syzygy writes (as an idempotency key, `syzygy-poc:work:<slug>`), and it is queried only by the materialize action. The work-item observation's SELECT names seven columns and not external_ref, so the one structured backlink the tracker holds is not read for the board.",
+     "where": "packages/three-surface-poc-core/src/materialization.ts:272-302; work-items.ts:177-179"
+    },
+    {
+     "id": "B1-F6",
+     "label": "Observed",
+     "text": "The verification pipeline has no Verified arm by construction: resolveTestArtifactVerification returns only `unknown` or `reported` (tier report-fact, RFC5-19). It binds a record to scope, exact changed-or-merged commit sha, exit 0, ingest-after-authored and ingest-before-evaluation. It does not bind to an intent identity, a requirement, or an acceptance criterion; the intent is supplied separately by the seed constant and only gates which Unknown text renders.",
+     "where": "packages/three-surface-poc-core/src/test-artifact-verification.ts:415-424, 444-508; model.ts:337-349; apps/three-surface-poc/src/trajectory.ts:73-98"
+    },
+    {
+     "id": "B1-F7",
+     "label": "Observed",
+     "text": "The worker-change seam's 'changed-or-merged' state is ancestry of a `[beadId]`-tagged commit to origin's default branch; the label conflates two facts RFC8-13 keeps apart (a VCS merge fact vs a change). It is scoped to one bead and two paths; it carries the commit subject (free text) in the served model.",
+     "where": "packages/three-surface-poc-core/src/worker-change-observation.ts:3, 99-128, 211-229; apps/three-surface-poc/src/trajectory.ts:70"
+    },
+    {
+     "id": "B1-F8",
+     "label": "Observed",
+     "text": "A reconciliation verdict type already exists, in cap1-core and nowhere in the POC: `ReconciliationFacts` (computed false -> each merged work item renders 'reconciliation evidence absent'; computed true -> satisfied|unsatisfied for a declaredScope) and `computeReconciled` mapping to Unknown / Gap / satisfied; drawer.ts defines `ChainState` = merged | reconciliation-pending | reconciled@E | unsatisfied | contradiction-raised | Unknown(r) per RFC2-18. No non-test producer supplies ReconciliationFacts: a sweep of packages/*/src and apps/*/src (non-test .ts) for `reconciliation:`, `computed: true` and `mergedWork` outside facets.ts returned 0 lines; a second method (Python re over 310 non-test .ts files under packages/*/src and apps/*/src, excluding facets.ts, for ReconciliationFacts|computeReconciled|mergedWork) also returned 0 files. So the vocabulary is built and the input is never produced.",
+     "where": "packages/cap1-core/src/facets.ts:60-63, 214-231, 642-711; packages/cap1-core/src/drawer.ts:45-77"
+    },
+    {
+     "id": "B1-F9",
+     "label": "Observed",
+     "text": "Proposed work (the pre-work plane substrate) is one followed OpenSpec change, with lifecycle read from tree paths (active / archived / contradicted / unresolvable) and the current authority looked up in the observed shape. It is a single seeded change, not an enumeration of a project's changes, and it carries no link to any work item.",
+     "where": "packages/three-surface-poc-core/src/proposed-work.ts:10-21, 101-119, 153-169; model-slices.ts:263-276"
+    },
+    {
+     "id": "B1-F10",
+     "label": "Observed",
+     "text": "Seed graph relationships `materializes-as`, `changes`, `verified-by`, `satisfies-at-runtime` exist as declared seed edges with per-edge epistemics; `materializes-as` is Observed only from the confirmed materialization record. These are hand-declared for one capability, so the RFC1 relation vocabulary exists in the POC only as a demo graph.",
+     "where": "packages/three-surface-poc-core/src/poc-seeds.ts:182-255; seed-graph.ts:110-147"
+    },
+    {
+     "id": "B1-F11",
+     "label": "Observed",
+     "text": "The write that would create the first warranted item is foreclosed in code by P-71-Q5 before any registry entry is read (`FORECLOSED_EFFECTS`), and `dispatchAuthorization()` passes a null entry. Already known as run-1 T7 and syzygy-mxas; recorded here only as a prerequisite edge for every Syzygy-created warrant.",
+     "where": "packages/three-surface-poc-core/src/effect-authority.ts:49-120"
+    }
+   ],
+   "proposals": []
+  },
+  "u2-contract": {
+   "findings": [
+    {
+     "id": "B2-F1",
+     "label": "Observed",
+     "text": "The chain the fifth question walks is fixed verbatim by RFC8-21: \"warrant (normative reference or Decision) → approved plan item (execution-intent Proposal) → materialization record → work item → execution run(s) → commits/PR → merge fact → reconciliation verdict\", each link \"rendered with its declared basis (`recorded-identity` vs `naming-convention`, the latter `reduced-fidelity`)\", and \"That thinness must render as thinness\". RFC8-22: \"Where a link cannot be established at the answering evaluation, the chain renders the break at that link — Unknown with its RFC2-24 reason\" and \"Reconstructing a join by similarity, interpolation, or inference is forbidden\".",
+     "where": ".syzygy/governance/contracts/rfcs/RFC-0008/accounting-reconciliation-and-release.md:94-106, 124-131"
+    },
+    {
+     "id": "B2-F2",
+     "label": "Observed",
+     "text": "The materialization record must hold three things: RFC8-10 \"proposal identity, work-item identity set, and the pinned warranted intent revision (RFC1-29; RFC1-5), all three required, none conditional\"; RFC1-29 \"pinning the exact intent revision — requirement, scenario, or governance clause version — cited by the proposal's warrant\". The POC's MaterializationRecord holds none of the first or third (see B1-F2), and it lives in the daemon state dir, whereas SDR-7 places approved intent and the record under `.syzygy/work/**` and RFC8-26 lists \"materialization mappings\" in the binding preservation set. A record in a 0600 file under a state dir is neither the RFC8-10 record nor preserved under RFC8-26.",
+     "where": "RFC-0008/identity-authority-materialization.md:279-299; RFC-0001-project-graph-identity-state-planes.md:772-781; SURFACE-DECISION-RECORD.md:86-88; accounting-reconciliation-and-release.md:246-252; packages/three-surface-poc-core/src/materialization.ts:110-121, 131-177"
+    },
+    {
+     "id": "B2-F3",
+     "label": "Inferred",
+     "text": "The contract does not state the predicate that separates an orphaned-work Contradiction from an Unknown-provenance item. RFC1-29: \"Scheduler work items matching no materialization record are an orphaned-work contradiction\"; RFC8-8 repeats it unconditionally. RFC8-23: \"An Unknown-provenance item may be legitimate untraceable work — a pre-Syzygy backlog item, an import\" and \"Unknown-provenance is not orphaned work\". Read literally, every one of the proving project's 10,971 items (none has a record) is an orphaned-work Contradiction routed to adjudication, \"exempt from filtering\"; read by RFC8-23, they are Unknown-provenance. Nothing in RFC1-29, RFC8-8, RFC8-10 or RFC8-23 names what makes an item 'pre-Syzygy'. The POC spec defers it explicitly: POC-REQ-014 \"makes no claim about orphaned work: the POC detects none … left to the amendment that specifies orphaned-work detection\". This is the first decision any warrant work must make, and it decides whether Trajectory's default state for imported work is a counted badge or 10,971 Contradictions.",
+     "where": "RFC-0001-project-graph-identity-state-planes.md:783-792; RFC-0008/identity-authority-materialization.md:225-246; accounting-reconciliation-and-release.md:135-156, 569-576; openspec/changes/three-surface-poc-experience/specs/three-surface-poc-experience/spec.md:510-517; CONTRACT-COVERAGE.md:192"
+    },
+    {
+     "id": "B2-F4",
+     "label": "Observed",
+     "text": "The tracker is never the warrant. RFC4-15: Beads' authority is \"work lifecycle state, after materialization only (SDR-7) — never intent, never observed behavior, never why the work exists\". RFC4-17: at materialization the adapter writes the warrant reference into `spec_id`/metadata \"as a derived, re-derivable pointer\"; \"the `.syzygy/work/**` materialization record stays authoritative\"; a substrate-side edit renders as an annotation. RFC8-23 repeats: \"A substrate-side warrant-field edit is an annotation, not a competing warrant\". So any tracker field (spec_id, external_ref, labels, title text) can at most be a pointer Syzygy wrote or an annotation; read alone it cannot lawfully establish a warrant.",
+     "where": "RFC-0004/named-adapters.md:365-396, 442-455; RFC-0008/accounting-reconciliation-and-release.md:135-142"
+    },
+    {
+     "id": "B2-F5",
+     "label": "Observed",
+     "text": "`motivates` may run straight to a work item, not only through a Proposal: RFC1-25's row reads \"Requirement ref · Decision · Policy → Work item · Proposal; Gap → only through a confirmation act\", class \"Desired → execution (the work-warrant edge)\", carrying the four warrant classes \"{approved requirement/intent, confirmed finding, declared policy, explicit owner decision}\". A Decision that declares `motivates` edges onto existing items is therefore a lawful warrant source for pre-existing work, distinct from materialization. RFC1-26: \"A relation may be added to this table only by amendment carrying an owner decision\" — so no new relation is needed or allowed for warrant backfill; `motivates` already exists.",
+     "where": "RFC-0001-project-graph-identity-state-planes.md:563-600 (table row `motivates`), 736-740"
+    },
+    {
+     "id": "B2-F6",
+     "label": "Observed",
+     "text": "Adapter-owned join bases in RFC4-22 cover \"work item ↔ branch/worktree, branch → commits, commit → PR, PR → merge fact, gate outcome → artifact\" — not warrant → work item. A requirement id parsed from a commit subject or PR body is therefore not a declared RFC4-22 join for the warrant link; at most it is naming-convention evidence for commit ↔ work item, and for the warrant link it is execution-side prose, which RFC8-25 forbids as a warrant source: \"A warrant is never extended by execution-side prose\".",
+     "where": "RFC-0004/fidelity-joins-and-mappings.md:77-90; RFC-0008/accounting-reconciliation-and-release.md:206-218"
+    },
+    {
+     "id": "B2-F7",
+     "label": "Observed",
+     "text": "The reconciliation chain applies only to materialized work: RFC2-18 \"Every materialized work item that reaches merge enters a first-class chain on its durable identity\". Merged work with no warrant is RFC8-23 Unknown-provenance, not `reconciliation-pending`. Consequence: on the proving project today the chain has an empty population; a fifth-question row of the form 'verified 0 of N' (run-1 T3 says \"verified (0 of N)\") would put 10,971 Unknown-provenance items in a denominator they are not in. The honest V0 rows are: Unknown-provenance n; in chain 0; of those, reconciliation evidence absent 0.",
+     "where": "RFC-0002/reconciliation-chain.md:141-160; RFC-0008/accounting-reconciliation-and-release.md:135-138; docs/pursuits/2026-11-21-trajectory-vision-pursuit.md:174-178"
+    },
+    {
+     "id": "B2-F8",
+     "label": "Observed",
+     "text": "`reconciled@E` needs gate-backed Observed evidence (RFC2-18 \"a positive status claim requiring gate-backed Observed evidence (RFC2-25)\"; RFC2-25 gate-backed is \"The only tier that may support a positive status claim\"). RFC4-13 admits gate-backed through exactly one of four routes: (1) a Syzygy-launched profiled run; (2) external CI/hosting whose run identity and authenticity the sub-adapter confirmed at observation time and captured per RFC4-13(a); (3) an owner-declared trusted-external-oracle policy scoped to a (project, gate class) pair with expiry; (4) a governed checker for doc-only and governance-only work. The POC's operator-reported JUnit is none of these and correctly caps at report-fact.",
+     "where": "RFC-0002/reconciliation-chain.md:189-198; RFC-0002/rendering-vocabularies.md:168-180; RFC-0004/named-adapters.md:157-215; packages/three-surface-poc-core/src/test-artifact-verification.ts:375-424"
+    },
+    {
+     "id": "B2-F9",
+     "label": "Observed",
+     "text": "V0 vs V1 for the verdict: RFC8-29 \"V0 renders the absence honestly … every merged-but-unreconciled item renders 'reconciliation evidence absent / Unknown' … Nothing in V0 simulates a verdict. V1 computes the reconciliation evaluation\". RFC2-19(a) (ratified as SDR-34 per DECISION-HISTORY P-31) makes that rendering chain-state-local: \"never stamped with, counted among, or absorbed by an aggregate of RFC2-24 Unknown reasons\". cap1-core already encodes this split (`MERGED_WORK_UNRECONCILED_STATE`), but cap1's computeReconciled returns the Unknown render with reason MISSING_EVIDENCE for the uncomputed case, and keeps each merged item's 'reconciliation evidence absent' as a separate served fact; its comment (facets.ts:664-668) says this is deliberate (the facet answer is a claim, the per-item value is the chain-state-local fact). [Inferred] consistent with RFC2-19(a), which says #2 missing-evidence \"misdescribes a verdict never sought\" only for the per-item rendering; a Trajectory reuse must keep the same split.",
+     "where": "RFC-0008/accounting-reconciliation-and-release.md:329-336; RFC-0002/reconciliation-chain.md:245-280; .syzygy/governance/decisions/DECISION-HISTORY.md:456; packages/cap1-core/src/facets.ts:60-63, 664-686"
+    },
+    {
+     "id": "B2-F10",
+     "label": "Observed",
+     "text": "The four post-merge answers must never share a rendering: RFC8-28 \"*reconciled at E with evidence* vs *merged, not yet evaluated* vs *evaluated and unsatisfied* vs *evaluated, contradiction raised* are four different answers and must never share a rendering\", \"never share a mark, a mark's colour, a count, or a legend entry\", and the chain state is \"a field of its own\" that travels beside the normalized state on every rendering, filter, count and endpoint. RFC8-30: progress aggregates over merged work \"disclose their reconciliation composition (n reconciled, m pending, k unsatisfied, c contradiction-raised, j Unknown)\".",
+     "where": "RFC-0008/accounting-reconciliation-and-release.md:285-327, 338-346"
+    },
+    {
+     "id": "B2-F11",
+     "label": "Observed",
+     "text": "Pre-work plane obligations: RFC8-8(a) approved normative claims covered by no approved execution-intent Proposal — \"at V0 this is absence surfacing, not gap computation\"; (b) approved execution intent not yet materialized — \"from `.syzygy/work/**`, queue order visible\"; (c) open materialized items each checked against the record. RFC8-7: lifecycle drafted → under review → approved → queued-for-materialization → materialized; queued is \"a recorded queue act in `.syzygy/work/**`\", \"never named 'scheduled'\". Drafts render `unadopted draft` and never count. Exclusivity: no total may sum two proposals in one exclusivity group. `.syzygy/work/` does not exist in Syzygy's own tree (ls at 9ebf12476: governance, intent, map only).",
+     "where": "RFC-0008/identity-authority-materialization.md:140-152, 210-261; `ls .syzygy` at worktree"
+    },
+    {
+     "id": "B2-F12",
+     "label": "Observed",
+     "text": "Review lane: RFC8-13 `review` = \"An open review lane bound to an exact head SHA\", derived from \"Open PR facts (hosting sub-adapter) + review work item/labels + `external_ref`\"; \"reviewer activity is never claimed\"; \"a merge-readiness verdict binds to its head SHA and expires when the head moves\". RFC4-11's hosting sub-adapter reads PR identity, head SHA, base, state, created/merged instants, review decision, review threads, check conclusions, and merge facts: \"A merge fact comes only from this adapter — never inferred from scheduler closure\". Squash-plus-delete merges make per-commit facts unreachable → PR-granularity reduced-fidelity, cause `post-merge-history-unreachable`.",
+     "where": "RFC-0008/state-vocabulary-and-cost.md:223-232; RFC-0004/named-adapters.md:103-128"
+    },
+    {
+     "id": "B2-F13",
+     "label": "Observed",
+     "text": "Retention constrains the join: RFC4-16(2) \"Every scheduler-resident fact a durable Syzygy record depends on — the run envelope's inputs, materialization joins, transition history feeding an account — must be captured into Syzygy-owned artifacts … before the horizon\"; RFC8-26 preserves \"work warrants, decisions, materialization mappings … evidence identities and hashes, and reconciliation outcomes\"; RFC8-27 \"a preserved hash with no capture artifact and no other satisfied route caps at `report-fact`\". So the warrant join and any gate capture must be Syzygy-owned and git-durable from day one; a daemon state-dir file satisfies none of these.",
+     "where": "RFC-0004/named-adapters.md:398-440; RFC-0008/accounting-reconciliation-and-release.md:246-281"
+    },
+    {
+     "id": "B2-F14",
+     "label": "Inferred",
+     "text": "VIS-4's 'Lower rules follow this one' reaches the contract's owner-adjudication exits. RFC8-8 routes orphaned work to \"owner adjudication as its only lawful exit\"; RFC4-13 route 3 and RFC4-23/RFC8-16 bounds are \"honored only under RFC3-16(a)\". None is in VIS-4's four classes, so an agent adoption row now satisfies them. That makes warrant backfill and orphan adjudication mechanically cheap — and removes the separation between the agent that did the work and the authority that says what it was for. The doctrine permits it; the fifth question's credibility depends on not letting the same session warrant and verify its own work.",
+     "where": ".syzygy/governance/doctrine/vision.md:170-212; RFC-0008/identity-authority-materialization.md:231-242; RFC-0004/named-adapters.md:198-209"
+    }
+   ],
+   "proposals": []
+  },
+  "u3-substrate-reality": {
+   "findings": [
+    {
+     "id": "B3-F1",
+     "label": "Observed",
+     "text": "The Beads issues table has 56 columns, among them two structured warrant-capable fields: `spec_id` (the field RFC4-17 names for the warrant pointer) and `external_ref`, plus `metadata` (JSON). Others relevant: assignee, created_by, owner, closed_by_session, close_reason, started_at, last_activity, compaction_level, source_system, source_repo, work_type.",
+     "where": "`bd --readonly --json sql \"DESCRIBE issues\"` (main checkout)"
+    },
+    {
+     "id": "B3-F2",
+     "label": "Observed",
+     "text": "spec_id is non-empty on 26 of 1,370 items (1.9%). Of the 26: 19 begin `openspec/`, 18 contain `.md`, 0 match a requirement-id grammar `^[A-Z0-9]+-REQ-[0-9]+`, 21 match a plain identifier/path grammar `^[A-Za-z0-9._:/#-]+$` (5 do not; max length 128). So the field RFC4-17 reserves for the warrant pointer is used ad hoc, as a change/spec path, never as a requirement anchor, and never written by Syzygy.",
+     "where": "SQL: SUM(spec_id REGEXP ...), SUM(spec_id LIKE 'openspec/%') over issues WHERE spec_id<>''"
+    },
+    {
+     "id": "B3-F3",
+     "label": "Observed",
+     "text": "external_ref is non-empty on 216 of 1,370 items (15.8%): 192 `gh-pr:N`, 22 `gh-NNN` (one per item, prefixes gh-302..gh-332), 2 `https…`. So the tracker already holds a recorded-identity work item → PR link for 192 items (an actor wrote the PR number), which is the RFC4-22 `recorded-identity` basis for the work item ↔ PR link, and the RFC8-13 `review` row's `external_ref` input. It carries nothing about intent.",
+     "where": "SQL: SUBSTRING_INDEX(external_ref, ':', 1) GROUP BY"
+    },
+    {
+     "id": "B3-F4",
+     "label": "Observed",
+     "text": "metadata is a non-empty JSON object on 37 of 1,370 items, with ~40 distinct ad-hoc keys (review_receipt 19, implementation_authorized 8, readiness_audit 7, completed_review_receipt 7, workstream_role 5; singletons include signed_spec_tag, authorization_record, approval_date, acceptance_result). Agents already record warrant- and verification-shaped facts per item, with no schema, no declared grammar and no Syzygy reader. [Inferred] they are worker-asserted (RFC8-25 asserted-by-worker) and could not serve as a warrant or gate outcome as they stand.",
+     "where": "SQL: JSON_KEYS(metadata) WHERE JSON_LENGTH(metadata)>0, key frequencies computed in Python"
+    },
+    {
+     "id": "B3-F5",
+     "label": "Observed",
+     "text": "Edges: 1,633 dependency rows (860 blocks, 665 parent-child, 79 discovered-from, 14 relates-to, 10 related, 5 tracks); 3,538 label rows over 1,117 items. None of the six edge types is a warrant edge. (Run 1 measured 1,580 edges at its time; the tracker grew.)",
+     "where": "SQL: dependencies GROUP BY type; labels COUNT"
+    },
+    {
+     "id": "B3-F6",
+     "label": "Observed",
+     "text": "Closure facts: 945 items closed, 933 carry a close_reason (text not read). acceptance_criteria non-empty on 779 items (text not read). compaction_level > 0 on 0 items: no Beads compaction has run on this tracker yet, so RFC4-16 horizon loss is not yet a measured problem here.",
+     "where": "SQL aggregate over issues"
+    },
+    {
+     "id": "B3-F7",
+     "label": "Observed",
+     "text": "OpenSpec: 13 active changes, 1 archived, 0 baseline `openspec/specs/*/spec.md`. 151 `Requirement:` headings in change specs; 87 carry an id (CAP1-REQ 44 headings / 42 distinct in the CAP1 change plus 2 in cap1-trusted-bootstrap-consent, PWB-REQ 17, POC-REQ 26; 85 distinct ids), and 64 headings in 9 Polaris/dossier changes carry no id at all (e.g. 'Requirement: Admitted project input'). A requirement without an identifier cannot be a pinned warrant revision except by heading text plus file digest.",
+     "where": "Python over openspec/changes/*/**/spec.md headings `^#{2,4}\\s+Requirement:`"
+    },
+    {
+     "id": "B3-F8",
+     "label": "Observed",
+     "text": "Spec version tags exist for 30+ amendments and Polaris specs, but none for the base CAP1 change (project-registration-and-honest-shape-visibility) or the base three-surface-poc change (`git tag -l`, 65 tags). A pinned intent revision for a CAP1 or base POC requirement would have to be a commit plus file blob digest, not a tag.",
+     "where": "`git tag -l` in main checkout"
+    },
+    {
+     "id": "B3-F9",
+     "label": "Observed",
+     "text": "tasks.md ↔ bead links are sparse: 13 tasks.md files, 199 checkbox tasks in all, bead ids named in 5 of them (7 distinct-id mentions in total). OpenSpec tasks are not the plan items the tracker executes.",
+     "where": "Python: `^\\s*- \\[[ x]\\]` and `syzygy-[a-z0-9]{2,5}(\\.\\d+)*` over openspec/changes/*/tasks.md"
+    },
+    {
+     "id": "B3-F10",
+     "label": "Observed",
+     "text": "Commit subjects, last 500 on origin/main to c813f041c: 365 carry a bracketed `[syzygy-…]` token (448 any bead id; 64 are merge commits), 1 carries a CAP1/POC/PWB requirement id, 0 carry both. Second method (`git log --format=%s | grep -cE`) gives the same 1 and 365. Commit bodies: 1 of 500 names a requirement id. So item ↔ commit has a strong naming convention; requirement ↔ commit has effectively none.",
+     "where": "git log c813f041c -500; Python re and grep -cE"
+    },
+    {
+     "id": "B3-F11",
+     "label": "Observed",
+     "text": "Merged PRs #593..#843 (200): 138 bodies name a bead id, 179 head branches name one, 7 bodies name a requirement id; every one has a merge commit. With B3-F3, the item ↔ PR ↔ merge-fact links are recoverable at scale (recorded identity for 192 items, naming convention for most of the rest); the requirement end is not.",
+     "where": "`gh pr list --state merged --limit 200 --json number,body,headRefName,mergeCommit`"
+    },
+    {
+     "id": "B3-F12",
+     "label": "Observed",
+     "text": "Gate evidence on GitHub: main's head merge commit c813f041c (PR #840) carries 9 GitHub Actions check runs, all `success` (node unit/integration/e2e, governance and selftest checks), on that exact SHA. node-ci.yml runs on pull_request and merge_group only ('No push trigger … main moves only through the merge queue, whose merge_group run already tested the exact tree that lands'). It uploads no per-test report artifact (no upload-artifact, no JUnit reporter in the file). So RFC4-13 route 2 (hosting-confirmed run identity) is available per merge commit at job granularity; per-requirement granularity needs a retained per-test report.",
+     "where": "`gh api repos/tzeusy-org/syzygy/commits/c813f041c/check-runs`; .github/workflows/node-ci.yml:32-47, 98, 118"
+    },
+    {
+     "id": "B3-F13",
+     "label": "Observed",
+     "text": "CAP1 has exactly one conformance file per requirement: 42 CAP1-REQ ids in the CAP1 change, 42 `req-NNN.conformance.test.ts` files, no id without a file and no file without an id. Each file states Case / Observable / Oracle / Falsifier in its head comment (e.g. req-037). This is a declared, 1:1 requirement → test mapping already in the tree.",
+     "where": "packages/cap1-conformance/src/req-*.conformance.test.ts; packages/cap1-conformance/src/req-037.conformance.test.ts:1-22"
+    },
+    {
+     "id": "B3-F14",
+     "label": "Observed",
+     "text": "docs/evidence holds 6,182 files (3,406 .json); 2,372 contain a 40-hex SHA; 379 name a CAP1/POC/PWB requirement id; 11 contain a JUnit `<testsuite`. Evidence is plentiful, revision-bound by convention, and not indexed by requirement or work item; it is report-fact at best (written by sessions, not captured by a hosting-confirmed route).",
+     "where": "Python census over docs/evidence/**"
+    },
+    {
+     "id": "B3-F15",
+     "label": "Unknown",
+     "text": "Butlers (proving project): its tracker's spec_id / external_ref / metadata population, its commit-subject convention, its PR↔bead linkage, its CI and its requirement-id density are not readable from this session. Run 1 recorded 10,971 items and the requirement id REQ-switchboard-identity-001 exists in its openspec (seed constant), but nothing here measures them.",
+     "where": "not measured"
+    }
+   ],
+   "proposals": []
+  },
+  "u4-sweep": {
+   "findings": [
+    {
+     "id": "B4-F1",
+     "label": "Inferred",
+     "text": "The most likely false 'verified' is adjacency of constants, and the trap is still armed. The one recorded incident (AGENTS.md note; M8 funnel: \"That produced a false 'Verified' once and was reverted\") came from wiring test-artifact evidence into the wrong entities because the constant groups sit together. Today the verification badge's intent is a third seed literal (`workerChangeIntentId` = REQ-connector-base-spec-001) that no record joins to the materialized item, whose packet names REQ-switchboard-identity-001 (B1-F3). The guard is only that no Verified arm exists. The first change that adds one (any V1 reconciliation move, U-moves included) inherits a verdict bound to an intent the record never pinned. The fix is structural: the verdict must read the intent from the materialization record (or declared motivates edge) of that item, and the seed literal must be deleted, not re-pointed.",
+     "where": "AGENTS.md:383-384; docs/design/POLARIS-M8-PORTABILITY-FUNNEL.md:1070-1074; packages/three-surface-poc-core/src/poc-seeds.ts:115; model-slices.ts:263-275; model.ts:339-349"
+    },
+    {
+     "id": "B4-F2",
+     "label": "Observed",
+     "text": "An Observed `governed-by` edge cites a provenance location that no longer exists. `capability-to-intent` renders `observed('The relationship is declared by the bounded POC mapping.')` with mappingProvenance source `packages/three-surface-poc-core/src/model.ts#ARTIFACT_PATHS`; ARTIFACT_PATHS occurs in exactly two lines across packages/three-surface-poc-core/src and apps/three-surface-poc/src (non-test), both in model-slices.ts (the digest key and this string); model.ts defines no such symbol; the seeds live in poc-seeds.ts. The digest is computed from the live seeds, so the bytes are bound, but the route a reader follows does not resolve (RFC1-26: \"Every rendered internal edge must resolve to its identified target\"). It also shows the warrant edge is declared in implementation code, not in a governance mapping artifact (SDR-4: \"governance mapping artifacts are the primary declaration site\").",
+     "where": "packages/three-surface-poc-core/src/seed-graph.ts:124-128; model-slices.ts:86, 100-105; poc-seeds.ts:92-115; .syzygy/governance/decisions/SURFACE-DECISION-RECORD.md:76-78"
+    },
+    {
+     "id": "B4-F3",
+     "label": "Inferred",
+     "text": "Green CI is the easiest route to a false `reconciled@E` at V1. On Syzygy every merge commit carries all-success check runs (u3 B3-F12) that are job-level. 'The unit tier passed on merge commit M' is a true gate-backed fact (RFC4-13 route 2) about the suite, not about requirement R; SDR-3: \"A passing test does not by itself prove semantic ownership\". A verdict needs (a) a declared requirement → check mapping (a governance artifact, not a filename convention), (b) the per-test outcome of that check at M, retained, and (c) evidence that the check can fail for R (rule 6 mutation evidence). Without (a)–(c), job-green must cap at report-fact for R or render Unknown(mapping-coverage-absent).",
+     "where": ".github/workflows/node-ci.yml:32-47, 98; SURFACE-DECISION-RECORD.md:71-75; RFC-0004/named-adapters.md:157-215; AGENTS.md verification rule 6"
+    },
+    {
+     "id": "B4-F4",
+     "label": "Inferred",
+     "text": "Worker-written metadata is a ready-made false-green source. 37 Syzygy items carry ad-hoc metadata keys such as acceptance_result, review_receipt, implementation_authorized, signed_spec_tag (B3-F4). If a future reader admits metadata, each value is a worker assertion: RFC2-25 `asserted-by-worker` (\"never a status input\") or, with a retained artifact the worker wrote, report-fact (RFC4-13 violation case 6: a well-formed report a worker left on disk \"emitted `gate-backed` because it is retained, resolvable, and hash-carrying — origin unverified\"). None of these keys can serve as a warrant either: RFC8-25 \"A warrant is never extended by execution-side prose\".",
+     "where": "RFC-0002/rendering-vocabularies.md:172-178; RFC-0004/named-adapters.md:456-462; RFC-0008/accounting-reconciliation-and-release.md:217-218"
+    },
+    {
+     "id": "B4-F5",
+     "label": "Inferred",
+     "text": "Self-warranting. Under VIS-4's 'Lower rules follow this one', an agent row satisfies orphan adjudication and warrant declaration (B2-F14). A session that writes a warrant row for its own item, merges it, and reads its own CI green has produced warrant, merge and gate with no independent party. Doctrine allows it; the fifth question's value is that 'a merged change is not a satisfied intent', which collapses if the warrant is authored after the fact by the worker. The check that keeps it honest is mechanical: a warrant's adoption commit must precede the item's first commit (or the warrant renders `declared-after-work`, a distinct state), and the adopter identity must differ from the item's claimant, else the edge renders asserted-by-worker.",
+     "where": ".syzygy/governance/doctrine/vision.md:206-212; README north star (quoted in run-1 dossier:26-28)"
+    },
+    {
+     "id": "B4-F6",
+     "label": "Observed",
+     "text": "The materialization record mis-dates reuse. When the local record is missing and the bead is found by external_ref, the new record is written with `createdAt: input.now()` and `doltRevisionAtCreation` captured now, with `origin: 'reused'`. The dispatch disclosure then serves that instant as the dispatched `createdAt`. The bead's own created_at (a tracker fact) is not used. Small, but it is exactly the RFC8-10 'materializing evaluation' that must be correct for the one-way door.",
+     "where": "packages/three-surface-poc-core/src/materialization.ts:365-374; materialization.ts:59-73; model-slices.ts:162-167"
+    },
+    {
+     "id": "B4-F7",
+     "label": "Observed",
+     "text": "Two weaker time checks in the verification resolver: it compares the ingest instant to the commit's author date (`%aI`), which the author sets freely, rather than the committer date; and an unparseable evaluationAsOf silently skips the future-dated check (`!Number.isNaN(evaluationAsOfMs) && …`). Neither produces a false Verified today (no Verified arm), but both are fail-open predicates a V1 gate would inherit.",
+     "where": "packages/three-surface-poc-core/src/worker-change-observation.ts:105; test-artifact-verification.ts:484-501"
+    },
+    {
+     "id": "B4-F8",
+     "label": "Observed",
+     "text": "'Changed / merged' is one label for two facts, and the merge half is ancestry of a bead-tagged commit to origin's default branch found with `git log --all` (which also searches local branches and any other ref). RFC8-13 reserves `merged` for \"A VCS merge fact only (RFC4-11)\", which comes from the hosting sub-adapter's merge facts. Ancestry is a reasonable merge proxy, but it is a naming-convention join (the `[beadId]` grep) and should render reduced-fidelity, cause derived-from-convention (RFC4-22), which the seam does not.",
+     "where": "packages/three-surface-poc-core/src/worker-change-observation.ts:3, 99-128, 211-229; RFC-0004/fidelity-joins-and-mappings.md:77-90; RFC-0008/state-vocabulary-and-cost.md:233"
+    },
+    {
+     "id": "B4-F9",
+     "label": "Inferred",
+     "text": "A fifth-question count with the wrong denominator is the most likely false claim at V0 (not a false green, a false number). 'Verified 0 of 10,971' implies 10,971 items awaiting verification; under RFC2-18 only materialized-and-merged items are in the chain (B2-F7). The honest V0 count is three disjoint populations: Unknown-provenance (no warrant), in-chain with 'reconciliation evidence absent' (chain-state-local, RFC2-19(a)), and orphaned-work Contradictions (once the predicate exists), never summed.",
+     "where": "RFC-0002/reconciliation-chain.md:141-160, 245-280; RFC-0008/accounting-reconciliation-and-release.md:135-156"
+    }
+   ],
+   "proposals": []
+  }
+ },
+ "epic": null,
+ "review": null
+}
