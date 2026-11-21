@@ -46,7 +46,7 @@ const requirements = [
     }],
   ['pinned Claude executable at ~/.local/share/claude/versions/<version>',
     () => {
-      const pin = dossierNativePin('session-launch.ts', 'URL_CLI_PROGRAM');
+      const pin = dossierNativePin('session-profile.ts', 'URL_CLI_PROGRAM');
       return typeof pin.version === 'string' && /^\d+\.\d+\.\d+$/u.test(pin.version) && Number.isSafeInteger(pin.bytes)
         && pinnedExecutable(path.join(homedir(), '.local/share/claude/versions', pin.version), pin.sha256, 512 * MiB, pin.bytes);
     }],

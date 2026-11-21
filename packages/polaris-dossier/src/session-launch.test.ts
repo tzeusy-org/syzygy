@@ -268,7 +268,7 @@ async function runNativeOrderedFixture(scenario: OrderedScenario) {
   const poll = { argv: ['dossier', 'poll', run] };
   const submit = { argv: ['dossier', 'await', '/work', '--submit', 'round-1/verdict.json', '--stdin'], stdin: submission };
   const step = (ordinal: number, tool: 'dossier_step' | 'artifact_read', input: typeof poll | typeof submit | { path: string }, reply: string) => ({
-    tool, input, reply, call: { type: 'tool_use', id: `toolu_ordered_${ordinal}`, name: `mcp__syzygy__${tool}` as const, input },
+    tool, input, reply, call: { type: 'tool_use' as const, id: `toolu_ordered_${ordinal}`, name: `mcp__syzygy__${tool}` as const, input },
   });
   const steps = [step(1, 'dossier_step', poll,
     orderedCanonical({ kind: 'session-control', ok: true, state: 'events', events: [{ event: 'design-round-prepared', ...plan.prepared }] })),

@@ -11,7 +11,7 @@ import { dossierNativePin } from './dossier_native_pins.mjs';
 
 async function provision(destination) {
   if (process.platform !== 'linux' || process.arch !== 'x64') throw new Error('Expected Linux x64.');
-  const pin = dossierNativePin('session-launch.ts', 'URL_CLI_PROGRAM');
+  const pin = dossierNativePin('session-profile.ts', 'URL_CLI_PROGRAM');
   if (typeof pin.version !== 'string' || !/^\d+\.\d+\.\d+$/u.test(pin.version)
     || !Number.isSafeInteger(pin.bytes) || pin.bytes < 1 || pin.bytes > 512 * 1024 * 1024
     || typeof pin.sha256 !== 'string' || !/^[a-f0-9]{64}$/u.test(pin.sha256)) {
