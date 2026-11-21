@@ -1314,6 +1314,11 @@ describe('check: figure kinds (schema v7)', () => {
     expect(listed(result)).toEqual([{ kind: 'schema', at: '$.diagrams[0].participants', detail: 'must hold 2 to 5 items; holds 1' }]);
   });
 
+  it('reports a message whose receiver is not a well-formed identity as a schema finding', async () => {
+    const result = await findingsOf(drafted(V7, sequence({ messages: [{ ...el('msg1', 'asks'), from: 'pt1', to: 'Not an id' }, { ...el('msg2', 'answers'), from: 'pt2', to: 'pt1' }] })));
+    expect(listed(result).filter((f) => f.kind === 'schema')).toEqual([{ kind: 'schema', at: '$.diagrams[0].messages[0].to', detail: 'must match ^[A-Za-z0-9][A-Za-z0-9_.:-]*$' }]);
+  });
+
   it.each(['polaris-dossier-local-draft-v6', 'polaris-dossier-local-draft-v5'])('reports a %s draft carrying a sequence as field-version, keeping the missing nodes and edges', async (version) => {
     const result = await findingsOf(drafted(version, sequence()));
     expect(listed(result)).toEqual([

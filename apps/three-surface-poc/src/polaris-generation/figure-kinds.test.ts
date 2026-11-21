@@ -109,6 +109,9 @@ describe('figure kinds on the operator-agent site', () => {
     expect(index).toContain('<p class="diagram-tally">3 lanes and 5 steps, as marked: 0 observed, 7 inferred, 1 unknown.</p>');
     expect(index).toContain('<li data-claim-id="m2" data-epistemic="inferred">Server → Store &lt;disk&gt;: reads the stored record for the key it was asked about <span');
     expect(index).toContain('<li data-claim-id="s4" data-epistemic="unknown">Operator: tags a release <span');
+    // The run's count of Unknown claims takes the Unknown message and the Unknown step; the graph-only dossier has none.
+    expect(files.get('appendix.html')).toContain('Unknown claims in the argument: 2.');
+    expect(graphFiles.get('appendix.html')).toContain('Unknown claims in the argument: 0.');
     for (const id of ['client', 'server', 'store', 'm1', 'm2', 'm3', 'm4', 'dev', 'ci', 'ops', 's1', 's2', 's3', 's4', 's5']) {
       expect(index.split(`data-claim-id="${id}"`).length - 1, id).toBe(1);
     }

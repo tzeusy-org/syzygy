@@ -191,8 +191,10 @@ export interface DraftSchemaParameters {
 
 /** The draft schema. `diagramForm` says how a diagram names its page: `home` (schema v5 and later, what the brief publishes) or
  * `sectionId` (schema v4 and earlier, which `check` applies to such a draft so that its findings stay byte for byte those of the version
- * before). `thesisBasis` says whether the draft carries its required `thesisBasis` (schema v6, what the brief publishes) or has no such
- * member (schema v5 and earlier, whose findings stay those of the version before). */
+ * before). `thesisBasis` says whether the draft carries its required `thesisBasis` (schema v6 and later) or has no such member (schema
+ * v5 and earlier, whose findings stay those of the version before). `figureKinds` says whether a diagram may be a `sequence` or `swimlane`
+ * with its own members (schema v7, what the brief publishes; REQ-polaris-generation-034 version 2.5) or is a graph of `nodes` and `edges`
+ * only (schema v6 and earlier). */
 export function localDraftSchema(parameters: DraftSchemaParameters, diagramForm: 'home' | 'sectionId' = 'home', thesisBasis: 'required' | 'absent' = 'required',
   figureKinds: 'taken' | 'absent' = 'taken'): DraftSchemaWithDefs {
   requirePinnedRevision(parameters.pinnedRevision);
