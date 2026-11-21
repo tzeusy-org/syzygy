@@ -6,6 +6,7 @@
 Expected values are literals written here, never read from the result files or computed by the module under test.
 """
 import copy
+import hashlib
 import importlib.util
 import json
 import pathlib
@@ -34,11 +35,25 @@ FIRST = {"D": 0.34, "P": 0.481, "T": 0.944}
 SECOND = {"D": 0.327, "E": 0.574, "P": 0.457, "T": 0.951}
 THIRD = {"D": 0.333, "E": 0.605, "F": 0.481, "G": 0.414, "H": 0.389, "P": 0.469}
 KINDS = ("purpose", "structure", "mechanism", "rationale", "change", "limits")
-# Per kind, in KINDS order: the newest dossier (arm D) and the plain synthesis (arm P), first grading; the richest stored
-# dossier (arm E), third grading.
-FIRST_D_KINDS = (0.58, 0.29, 0.40, 0.31, 0.04, 0.42)
-FIRST_P_KINDS = (0.50, 0.79, 0.60, 0.23, 0.58, 0.15)
-THIRD_E_KINDS = (0.69, 0.57, 0.73, 0.58, 0.50, 0.54)
+# Per kind, in KINDS order, for every arm row of every grading.
+PER_KIND = {
+    "first": {"D": (0.58, 0.29, 0.40, 0.31, 0.04, 0.42), "P": (0.50, 0.79, 0.60, 0.23, 0.58, 0.15),
+              "T": (0.96, 0.89, 0.93, 0.96, 0.92, 1.00)},
+    "second": {"D": (0.58, 0.29, 0.37, 0.31, 0.04, 0.38), "E": (0.65, 0.57, 0.67, 0.62, 0.42, 0.50),
+               "P": (0.46, 0.75, 0.57, 0.19, 0.58, 0.15), "T": (1.00, 0.93, 0.93, 0.92, 0.92, 1.00)},
+    "third": {"D": (0.58, 0.29, 0.37, 0.31, 0.04, 0.42), "E": (0.69, 0.57, 0.73, 0.58, 0.50, 0.54),
+              "F": (0.65, 0.32, 0.50, 0.65, 0.12, 0.65), "G": (0.50, 0.36, 0.37, 0.62, 0.27, 0.38),
+              "H": (0.65, 0.29, 0.37, 0.58, 0.00, 0.46), "P": (0.46, 0.79, 0.57, 0.27, 0.58, 0.12)},
+}
+# The first result file records digests of the first grading's inputs only. These pin the rest: the second and third gradings'
+# grades and the three label maps (sha256 of the stored bytes, written here by script on 2026-11-22).
+PINNED = {
+    "grading2/grades.json": "5a7f1095de48d31e2b5179a6e7a6e145f5b8039c5aaa5839d226607c57df69f8",
+    "grading3/grades.json": "3ca4a22549239a164c0d2f3c3a997a28cb3077c117d00039600aff7f9c6acd39",
+    "labels-first-grading.json": "d27cfe41b07043a3db56464dd39189592b21424798014f0c5dbe3b819f8d1af3",
+    "labels-second-grading.json": "755a15b71d972e5ae11925c5c870bd7df90be681f25403b512d2bdfb5e391a62",
+    "labels-third-grading.json": "2910b0a41ccbf6f0fab1e1f2fa9be69727fa3c97901fef33e8c8a846ae23cf62",
+}
 
 
 class TotalsTests(unittest.TestCase):
@@ -56,8 +71,27 @@ class TotalsTests(unittest.TestCase):
         self.assertEqual(self.shares("third"), THIRD)
 
     def test_shares_per_question_kind(self):
-        for grading, arm, want in (("first", "D", FIRST_D_KINDS), ("first", "P", FIRST_P_KINDS), ("third", "E", THIRD_E_KINDS)):
-            self.assertEqual(self.totals[grading][arm]["perKind"], dict(zip(KINDS, want)), (grading, arm))
+        rows = 0
+        for grading, arms in PER_KIND.items():
+            self.assertEqual(set(arms), set(self.totals[grading]), grading)
+            for arm, want in arms.items():
+                self.assertEqual(self.totals[grading][arm]["perKind"], dict(zip(KINDS, want)), (grading, arm))
+                rows += 1
+        self.assertEqual(rows, 13)
+
+    def test_pinned_digests(self):
+        for name, digest in PINNED.items():
+            self.assertEqual(hashlib.sha256((PILOT / name).read_bytes()).hexdigest(), digest, name)
+
+    def test_a_missing_recorded_member_fails_the_check(self):
+        for grading, arm, member in (("third", "E", "share"), ("second", "D", "firstGradingShare"), ("first", "T", "difficultyFelt"),
+                                     ("third", "P", "perKind"), ("second", "T", "factsRequired")):
+            mutant = copy.deepcopy(self.record)
+            del mutant["gradings"][grading]["result"]["arms"][arm][member]
+            found = totals.differences(mutant)
+            self.assertEqual(len(found), 1, found)
+            self.assertIn(f"{grading} grading, arm {arm}, {member}", found[0])
+            self.assertIn("absent from the result file", found[0])
 
     def test_population(self):
         for grading, arms in (("first", 3), ("second", 4), ("third", 6)):
@@ -80,7 +114,7 @@ class TotalsTests(unittest.TestCase):
         self.assertTrue(any("first grading, arm P, share" in line for line in found), found)
 
     def test_every_mutation_fails_the_check(self):
-        self.assertEqual(len(totals.MUTATIONS), 10)
+        self.assertEqual(len(totals.MUTATIONS), 17)
         for name, mutate in totals.MUTATIONS:
             mutant = copy.deepcopy(self.record)
             mutate(mutant)
@@ -171,6 +205,13 @@ class SiteToTextTests(unittest.TestCase):
             self.assertEqual(json.loads(report.read_text())["perPageWords"], {"index.html": 6, "poles/1.html": 2, "sources/index.html": 1})
             again = subprocess.run([sys.executable, str(SCRIPTS / "dossier_site_to_text.py"), str(site), str(out)], capture_output=True, text=True)
             self.assertEqual(again.returncode, 2)
+            kept = report.read_bytes()
+            over = subprocess.run([sys.executable, str(SCRIPTS / "dossier_site_to_text.py"), str(site), f"{scratch}/text2", "--report", str(report)],
+                                  capture_output=True, text=True)
+            self.assertEqual(over.returncode, 2)
+            self.assertIn("already exists", over.stderr)
+            self.assertEqual(report.read_bytes(), kept)
+            self.assertFalse(pathlib.Path(f"{scratch}/text2").exists())
 
     def test_agent_and_session_directories_are_refused(self):
         with tempfile.TemporaryDirectory() as scratch:
@@ -181,6 +222,14 @@ class SiteToTextTests(unittest.TestCase):
                 done = subprocess.run([sys.executable, str(SCRIPTS / "dossier_site_to_text.py"), str(site), f"{scratch}/out{suffix}"], capture_output=True, text=True)
                 self.assertEqual(done.returncode, 2)
                 self.assertFalse(pathlib.Path(f"{scratch}/out{suffix}").exists())
+                plain = pathlib.Path(scratch) / f"plain{suffix[1:]}" / "site"
+                plain.mkdir(parents=True)
+                (plain / "index.html").write_text("<main>x</main>")
+                for flags in ([f"{scratch}/run-y{suffix}/text"], [f"{scratch}/text{suffix[1:]}", "--report", f"{scratch}/run-y{suffix}/report.json"]):
+                    done = subprocess.run([sys.executable, str(SCRIPTS / "dossier_site_to_text.py"), str(plain), *flags], capture_output=True, text=True)
+                    self.assertEqual(done.returncode, 2, flags)
+                    self.assertIn(".agents or .sessions", done.stderr)
+                    self.assertFalse(pathlib.Path(flags[0]).exists())
 
 
 class ScreenedTreeTests(unittest.TestCase):
@@ -188,6 +237,7 @@ class ScreenedTreeTests(unittest.TestCase):
         done = subprocess.run(["node", str(SCRIPTS / "dossier_pilot_screened_tree.mjs"), "--selftest"], capture_output=True, text=True)
         self.assertEqual(done.returncode, 0, done.stdout + done.stderr)
         self.assertIn("19 count mutations", done.stdout)
+        self.assertIn("0 failure(s)", done.stdout)
         self.assertNotIn("SURVIVED", done.stdout)
 
     def test_refuses_without_a_clone_that_holds_the_commit(self):
@@ -195,8 +245,20 @@ class ScreenedTreeTests(unittest.TestCase):
             subprocess.run(["git", "init", "-q", "--bare", f"{scratch}/empty.git"], check=True)
             done = subprocess.run(["node", str(SCRIPTS / "dossier_pilot_screened_tree.mjs"), "--clone", f"{scratch}/empty.git", "--out", f"{scratch}/tree"],
                                   capture_output=True, text=True)
+            # The clone is checked before the policy bytes and the built screen are loaded, so this refusal is the clone's own
+            # whether or not the checkout is built.
             self.assertEqual(done.returncode, 2, done.stdout + done.stderr)
+            self.assertIn("does not hold commit", done.stderr)
             self.assertFalse(pathlib.Path(f"{scratch}/tree").exists())
+
+    def test_an_error_that_is_not_a_refusal_exits_2(self):
+        with tempfile.TemporaryDirectory() as scratch:
+            subprocess.run(["git", "init", "-q", "--bare", f"{scratch}/empty.git"], check=True)
+            for flags in (["--manifest", f"{scratch}/absent.json"], ["--out", f"{scratch}/no/such/parent/tree"]):
+                done = subprocess.run(["node", str(SCRIPTS / "dossier_pilot_screened_tree.mjs"), "--clone", f"{scratch}/empty.git", *flags],
+                                      capture_output=True, text=True)
+                self.assertEqual(done.returncode, 2, (flags, done.stderr))
+                self.assertIn("ERROR: ", done.stderr)
 
 
 if __name__ == "__main__":

@@ -40,8 +40,9 @@ It recomputes, from the stored grades and label maps, every arm's share of
 required facts and its share per question kind for all three gradings, the
 "not stated" counts and the claim-check totals, and compares them and nine
 file digests with the three result files. It exits 1 and names each
-difference if one differs. `--selftest` changes one stored value in memory at
-a time (a grade, a label map, a kind, a recorded share and six more) and
+difference if one differs; a figure a result file should record and lacks is
+a difference too. `--selftest` changes one stored value in memory at a time
+(a grade, a label map, a kind, a recorded share and thirteen more) and
 confirms the check fails each time.
 
 Recorded shares of required facts (81 facts over 24 questions):
@@ -85,9 +86,14 @@ from the prompt named.
 
    It applies the dossier screen itself (the built `buildDossierScreen`) with
    the policy bytes whose digest the manifest records, and exits 1 if any
-   count differs from the manifest. Without `--out` it compares and writes
-   nothing. The counts depend on the screen's code as well as the policy, so
-   a later screen change can move them; that difference is a finding.
+   count differs from the manifest (2 on a refusal or any other error).
+   Without `--out` it compares and writes nothing. The counts depend on the
+   screen's code as well as the policy, so a later screen change can move
+   them; that difference is a finding. The screen is whatever the last build
+   left in the package's dist directory: the output names the checkout's
+   head and whether its worktree is dirty, and the only freshness check is
+   that the built screen module is not older than its source file, so build
+   immediately before a run you mean to record.
 
 3. A reader session per arm: `prompts/reader-artifact.txt` for a dossier's
    text or the synthesis, `prompts/reader-source.txt` for the tree.
@@ -117,6 +123,13 @@ are for a new key, a new synthesis and a new claim check.
   from them is a new measurement, not a replay.
 - The claim checker's prompt asks for a fixed-step sample of 30; the protocol
   says every tenth sentence and the stored check records a step of 4.
+- [Observed] The stored claim check uses a fourth verdict, "partly" (2 of the
+  dossier's 30 sampled claims), which the protocol does not define: it names
+  supported, contradicted and not found only. The reconstructed prompt
+  carries "partly" because the stored output does.
+- The result files' digests bind the first grading's inputs only. The second
+  and third gradings' grades and the three label maps are pinned as literals
+  in `scripts/test_dossier_pilot.py`.
 - The totals script totals a new grading only when its grades, label map and
   result sit under the names it lists; reporting a new arm beside the kept
   ones on each change is slice 2 of the move.

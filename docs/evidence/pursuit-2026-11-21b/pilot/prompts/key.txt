@@ -1,3 +1,5 @@
+Reconstructed 2026-11-22 from PROTOCOL.md and the stored outputs; the pilot's own prompt was not stored.
+
 Key session. Fresh session; it sees no dossier, no synthesis and no other session's output.
 
 Replace {TREE_DIR} and {OUT_FILE} before use.

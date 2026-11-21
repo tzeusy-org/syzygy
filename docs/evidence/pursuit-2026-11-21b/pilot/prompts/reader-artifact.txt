@@ -1,3 +1,5 @@
+Reconstructed 2026-11-22 from PROTOCOL.md and the stored outputs; the pilot's own prompt was not stored.
+
 Artifact reader session (arms D, E, F, G, H: one dossier's text; arm P: the plain synthesis). Fresh session per arm; it sees no
 key, no other arm's answers, no label map and not the repository.
 

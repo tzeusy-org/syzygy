@@ -1,3 +1,5 @@
+Reconstructed 2026-11-22 from PROTOCOL.md and the stored outputs; the pilot's own prompt was not stored.
+
 Claim checker session. Fresh session; it sees the two artifacts under shuffled labels X and Y, and the screened tree. It is not
 told which artifact is the dossier and which the plain synthesis, and it sees no key, answers or grades.
 

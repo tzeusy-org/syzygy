@@ -1,3 +1,5 @@
+Reconstructed 2026-11-22 from PROTOCOL.md and the stored outputs; the pilot's own prompt was not stored. Its two-sentence instruction ("Explain this repository ... you can.") is the protocol's wording.
+
 Plain-author session. Fresh session, one turn, no follow-up; it sees no key, no questions and no dossier.
 
 Replace {TREE_DIR} and {OUT_FILE} before use.

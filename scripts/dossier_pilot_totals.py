@@ -30,12 +30,19 @@ GRADES = (0, 0.5, 1)
 # maps answer labels to arms (the first grading's file also maps the claim-check labels).
 GRADINGS = (
     {"name": "first", "grades": "grading/grades.json", "labels": "labels-first-grading.json", "labelsKey": "answers",
-     "result": "result.json", "resultLabelsKey": "answers"},
+     "result": "result.json", "resultLabelsKey": "answers",
+     "members": ("share", "factsGiven", "factsRequired", "wrongStatements", "perKind", "answersWithNotStated", "difficultyFelt")},
     {"name": "second", "grades": "grading2/grades.json", "labels": "labels-second-grading.json", "labelsKey": None,
-     "result": "result2.json", "resultLabelsKey": None},
+     "result": "result2.json", "resultLabelsKey": None,
+     "members": ("share", "factsGiven", "factsRequired", "wrongStatements", "perKind", "firstGradingShare")},
     {"name": "third", "grades": "grading3/grades.json", "labels": "labels-third-grading.json", "labelsKey": None,
-     "result": "result3.json", "resultLabelsKey": None},
+     "result": "result3.json", "resultLabelsKey": None,
+     "members": ("share", "factsGiven", "wrongStatements", "perKind")},
 )
+# `members` lists what each result file records per arm that the stored inputs determine; every one must be present and equal.
+# Two recorded members are outside it because nothing stored determines them: the first file's `name` and the third's `run`.
+MEMBERS = {spec["name"]: spec["members"] for spec in GRADINGS}
+ABSENT = object()
 # The first result file names the plain synthesis by the name it had in the pilot's working directory. It is stored here under
 # another name (a Markdown file's backticked paths must resolve in this repository; a synthesis of another repository's cannot).
 RECORDED_NAME = {"plain.md": "plain-synthesis.txt"}
@@ -151,14 +158,14 @@ def differences(record):
             found.append(f"{name} grading: arms {sorted(totals[name])} recomputed, {sorted(recorded)} recorded")
             continue
         for arm, row in sorted(recorded.items()):
-            mine = totals[name][arm]
-            # Every member the grades determine is compared; a recorded member with no recomputed counterpart is named below.
-            for key in ("share", "factsGiven", "factsRequired", "wrongStatements", "perKind", "answersWithNotStated", "difficultyFelt"):
-                if key in row and row[key] != mine.get(key):
-                    found.append(f"{name} grading, arm {arm}, {key}: recomputed {mine.get(key)!r}, recorded {row[key]!r}")
-            if "firstGradingShare" in row and row["firstGradingShare"] != totals["first"].get(arm, {}).get("share"):
-                found.append(f"{name} grading, arm {arm}, firstGradingShare: recomputed "
-                             f"{totals['first'].get(arm, {}).get('share')!r}, recorded {row['firstGradingShare']!r}")
+            mine = dict(totals[name][arm], firstGradingShare=totals["first"].get(arm, {}).get("share"))
+            # Every listed member is compared, and one the result file lacks is a difference, never a pass.
+            for key in MEMBERS[name]:
+                recorded_value = row.get(key, ABSENT)
+                if recorded_value is ABSENT:
+                    found.append(f"{name} grading, arm {arm}, {key}: recomputed {mine.get(key)!r}, absent from the result file")
+                elif recorded_value != mine.get(key):
+                    found.append(f"{name} grading, arm {arm}, {key}: recomputed {mine.get(key)!r}, recorded {recorded_value!r}")
     first = record["gradings"]["first"]["result"]
     claims = claim_totals(record["claims"], record["claimLabels"])
     if claims != first.get("claims"):
@@ -238,11 +245,46 @@ def _change_recorded_first_share(record):
     record["gradings"]["second"]["result"]["arms"]["T"]["firstGradingShare"] = 0.95
 
 
+def _change_recorded_labels(record):
+    labels = record["gradings"]["second"]["resultLabels"]
+    labels["A"], labels["B"] = labels["B"], labels["A"]
+
+
+def _swap_claim_labels(record):
+    labels = record["claimLabels"]
+    labels["X"], labels["Y"] = labels["Y"], labels["X"]
+
+
+def _change_recorded_claim_labels(record):
+    labels = record["gradings"]["first"]["result"]["labels"]["claims"]
+    labels["X"], labels["Y"] = labels["Y"], labels["X"]
+
+
+def _drop_recorded_arm(record):
+    del record["gradings"]["third"]["result"]["arms"]["G"]
+
+
+def _change_difficulty(record):
+    record["answers"]["T"]["minutes_felt"] += 1
+
+
+def _drop_recorded_member(record):
+    del record["gradings"]["third"]["result"]["arms"]["E"]["share"]
+
+
+def _drop_recorded_first_share(record):
+    del record["gradings"]["second"]["result"]["arms"]["E"]["firstGradingShare"]
+
+
 MUTATIONS = (
     ("a grade", _flip_grade), ("a wrong-statement count", _add_wrong), ("the label map", _swap_labels),
     ("a question's kind", _move_kind), ("a 'not stated' answer", _drop_not_stated), ("a claim verdict", _change_verdict),
     ("a claim pointer", _change_pointer), ("a digested file's bytes", _change_bytes),
     ("a recorded share", _change_recorded_share), ("a recorded first-grading share", _change_recorded_first_share),
+    ("the label map a result file records", _change_recorded_labels), ("the claim label map", _swap_claim_labels),
+    ("the claim label map a result file records", _change_recorded_claim_labels), ("a recorded arm removed", _drop_recorded_arm),
+    ("a reader's felt difficulty", _change_difficulty), ("a recorded share removed", _drop_recorded_member),
+    ("a recorded first-grading share removed", _drop_recorded_first_share),
 )
 
 

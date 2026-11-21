@@ -1,3 +1,5 @@
+Reconstructed 2026-11-22 from PROTOCOL.md and the stored outputs; the pilot's own prompt was not stored.
+
 Source reader session (arm T: a plain session asked the questions directly, with the screened tree open and no artifact). Fresh
 session; it sees no key, no dossier, no synthesis and no other arm's answers.
 

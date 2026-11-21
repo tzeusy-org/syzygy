@@ -1,3 +1,5 @@
+Reconstructed 2026-11-22 from PROTOCOL.md and the stored outputs; the pilot's own prompt was not stored.
+
 Blind grader session. Fresh session; it is given one file and nothing else: no label map, no answer file, no artifact, no
 result of an earlier grading.
 

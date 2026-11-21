@@ -11,16 +11,20 @@
 //       pure predicates over synthetic input, with one mutation per compared count that must be reported (rule 6)
 //
 // Run `npm run build` first: the screen is the real `buildDossierScreen` of packages/polaris-dossier (src/screen.ts), loaded from
-// this checkout's own dist, with the policy bytes the manifest's run bound. There is no filter in this file. Fail closed:
+// this checkout's own dist, with the policy bytes the manifest's run bound. There is no filter in this file. The output names the
+// checkout's HEAD (`checkoutHead`) and whether its worktree is dirty (`worktreeDirty`); neither proves which source the dist was
+// built from. The only freshness check is that dist/screen.js is not older than src/screen.ts (modification times), which misses a
+// stale module that screen.js imports: build before a run you mean to record. Fail closed:
+// - the clone must already hold the manifest's commit (checked first). This script never fetches: it runs `git rev-parse`,
+//   `git ls-tree -z` and `git cat-file blob` on the clone and nothing else, with lazy fetching, replace objects and prompts off;
 // - the policy bytes (by default this checkout's Git object `policyBlob` of the manifest, or --policy-file) must hash to the
 //   manifest's `policy.sha256`, and the screen built from them must report that digest, or nothing is read;
-// - the clone must already hold the manifest's commit. This script never fetches: it runs `git rev-parse`, `git ls-tree -z` and
-//   `git cat-file blob` on the clone and nothing else, with lazy fetching, replace objects and prompts turned off;
 // - nothing from the clone is executed, no hook or filter is run, a symbolic link or submodule entry is never written, and every
 //   written file is mode 0644 inside --out, which must not exist and must lie outside this checkout (the tree is never committed);
-// - a body that is not strict UTF-8 is left out.
+// - a body that is not strict UTF-8 is left out; a path that is not strict UTF-8 refuses the run;
+// - with --out, every target path is computed before the first write, so a refused path leaves no partial tree.
 // Prints counts and exclusion reasons only: never a file body, a retained span or text a detector matched. Exit 0 when every count
-// equals the manifest's, 1 when one differs (each named), 2 on a refusal. The counts depend on the screen code as well as the
+// equals the manifest's, 1 when one differs (each named), 2 on a refusal or any other error. The counts depend on the screen code as well as the
 // policy: a later change to the screen can move them, and that difference is the finding, not a fault of the record.
 import { execFileSync } from 'node:child_process';
 import { createHash } from 'node:crypto';
@@ -42,8 +46,15 @@ const refuse = (why) => { throw new Refusal(why); };
 /** P1. The entries of `git ls-tree -r -z --full-tree` output: mode, type, object id and the path exactly as stored. */
 export function parseLsTree(raw) {
   const entries = [];
-  for (const record of raw.toString('utf8').split('\0')) {
-    if (record === '') continue;
+  const decoder = new TextDecoder('utf-8', { fatal: true });
+  for (let start = 0; start < raw.length;) {
+    let end = raw.indexOf(0, start);
+    if (end < 0) end = raw.length;
+    const bytes = raw.subarray(start, end);
+    start = end + 1;
+    if (bytes.length === 0) continue;
+    let record;
+    try { record = decoder.decode(bytes); } catch { refuse('a tree path is not strict UTF-8'); }
     const tab = record.indexOf('\t');
     const head = tab < 0 ? [] : record.slice(0, tab).split(' ');
     if (head.length !== 3 || !/^[0-7]{6}$/u.test(head[0]) || !/^[0-9a-f]{40,64}$/u.test(head[2])) refuse('an ls-tree record is not of the expected form');
@@ -134,6 +145,11 @@ export function inside(root, candidate) {
   return relative === '' || (!relative.startsWith('..' + path.sep) && relative !== '..' && !path.isAbsolute(relative));
 }
 
+/** P7. Whether a built module is at least as new as its source (modification times in milliseconds). */
+export function builtIsFresh(sourceMtimeMs, builtMtimeMs) {
+  return Number.isFinite(sourceMtimeMs) && Number.isFinite(builtMtimeMs) && builtMtimeMs >= sourceMtimeMs;
+}
+
 // ---- the rebuild ----
 
 function gitOf(clone) {
@@ -158,10 +174,16 @@ async function rebuild({ clone, manifestPath, policyFile, out }) {
     if (fs.existsSync(outDir)) refuse(`${outDir} already exists; refusing to write into it`);
     if (inside(fs.realpathSync(ROOT), path.join(fs.realpathSync(path.dirname(outDir)), path.basename(outDir)))) refuse('the output directory is inside this checkout; the tree is never committed');
   }
+  const git = gitOf(path.resolve(clone));
+  let resolved;
+  try { resolved = git(['rev-parse', '--verify', '--quiet', `${commit}^{commit}`]).toString('utf8').trim(); } catch { resolved = ''; }
+  if (resolved !== commit) refuse(`the clone does not hold commit ${commit}; fetch it yourself, this script never fetches`);
   const policy = policyBytes(manifest, policyFile);
   if (sha256(policy) !== manifest.policy.sha256) refuse('the policy bytes do not hash to the digest the run bound');
   const screenModule = path.join(ROOT, 'packages', 'polaris-dossier', 'dist', 'screen.js');
+  const screenSource = path.join(ROOT, 'packages', 'polaris-dossier', 'src', 'screen.ts');
   if (!fs.existsSync(screenModule)) refuse('packages/polaris-dossier/dist/screen.js is absent; run `npm run build` first');
+  if (!builtIsFresh(fs.statSync(screenSource).mtimeMs, fs.statSync(screenModule).mtimeMs)) refuse('packages/polaris-dossier/dist/screen.js is older than src/screen.ts; run `npm run build` first');
   const { buildDossierScreen } = await import(pathToFileURL(screenModule).href);
   const screenFor = (projectDocumentation, visibility) => {
     const load = buildDossierScreen(policy, projectDocumentation, configuration.subject, visibility);
@@ -172,10 +194,6 @@ async function rebuild({ clone, manifestPath, policyFile, out }) {
   if (!chosen.ok) refuse(`the screen was refused: ${chosen.why}`);
   if (chosen.screen.policyVersion !== manifest.policy.policyVersion) refuse('the screen reports another policy version than the run bound');
 
-  const git = gitOf(path.resolve(clone));
-  let resolved;
-  try { resolved = git(['rev-parse', '--verify', '--quiet', `${commit}^{commit}`]).toString('utf8').trim(); } catch { resolved = ''; }
-  if (resolved !== commit) refuse(`the clone does not hold commit ${commit}; fetch it yourself, this script never fetches`);
   const entries = parseLsTree(git(['ls-tree', '-r', '-z', '--full-tree', commit]));
   const decoder = new TextDecoder('utf-8', { fatal: true });
   const bodies = new Map();
@@ -204,10 +222,13 @@ async function rebuild({ clone, manifestPath, policyFile, out }) {
   }
   if (outDir !== undefined) {
     let files = 0, bytes = 0;
+    // Every target is computed (and any refused) before the first byte is written.
+    const writes = [];
     for (const row of placed) {
       const data = row.reason === 'admitted' ? bodyOf(row.entry).bytes : row.redacted !== undefined ? Buffer.from(row.redacted.retained, 'utf8') : undefined;
-      if (data === undefined) continue;
-      const target = targetOf(outDir, row.path);
+      if (data !== undefined) writes.push({ target: targetOf(outDir, row.path), data });
+    }
+    for (const { target, data } of writes) {
       fs.mkdirSync(path.dirname(target), { recursive: true });
       fs.writeFileSync(target, data, { flag: 'wx', mode: 0o644 });
     }
@@ -222,7 +243,8 @@ async function rebuild({ clone, manifestPath, policyFile, out }) {
     measured.onDisk = { files, bytes };
   }
   const head = execFileSync('git', ['-C', ROOT, 'rev-parse', 'HEAD'], { encoding: 'utf8' }).trim();
-  console.log(JSON.stringify({ commit, policySha256: manifest.policy.sha256, screenCodeAt: head, configuration: { projectDocumentation: configuration.projectDocumentation, visibility: configuration.visibility },
+  const dirty = execFileSync('git', ['-C', ROOT, 'status', '--porcelain'], { encoding: 'utf8' }).trim() !== '';
+  console.log(JSON.stringify({ commit, policySha256: manifest.policy.sha256, checkoutHead: head, worktreeDirty: dirty, screenLoadedFrom: 'packages/polaris-dossier/dist/screen.js', configuration: { projectDocumentation: configuration.projectDocumentation, visibility: configuration.visibility },
     counts: { ...measured.counts, redactedSpan: { ...measured.counts.redactedSpan, paths: measured.counts.redactedSpan.paths.length } },
     configurations: measured.configurations.map((c) => ({ projectDocumentation: c.projectDocumentation, visibility: c.visibility, ok: c.ok, admitted: c.admitted })),
     written: measured.onDisk ?? null }, null, 1));
@@ -245,6 +267,10 @@ function selftest() {
   expect('ls-tree: four entries', entries.length === 4);
   expect('ls-tree: a path keeps its tab and newline', entries[1].path === 'dir/with\ttab and\nnewline.md' && entries[1].mode === '100755');
   expect('ls-tree: a malformed record is refused', refused(() => parseLsTree(Buffer.from('100644 blob nothex\tp\0'))));
+  expect('ls-tree: a path that is not UTF-8 is refused', refused(() => parseLsTree(Buffer.concat([Buffer.from(`100644 blob ${oid('a')}\tsrc/`), Buffer.from([0xff, 0xfe]), Buffer.from('.c\0')]))));
+  expect('ls-tree: a UTF-8 path is kept', parseLsTree(Buffer.from(`100644 blob ${oid('a')}\tsrc/\u00e9.c\0`))[0].path === 'src/\u00e9.c');
+  expect('fresh: a newer or equal build', builtIsFresh(10, 10) && builtIsFresh(10, 11));
+  expect('fresh: an older build or a missing time is stale', !builtIsFresh(11, 10) && !builtIsFresh(Number.NaN, 10) && !builtIsFresh(10, undefined));
   expect('ls-tree: a record without a tab is refused', refused(() => parseLsTree(Buffer.from(`100644 blob ${oid('a')} p\0`))));
 
   // A stand-in for the screen's interface only (the rebuild never uses it): names decide every outcome.
@@ -332,8 +358,8 @@ if (process.argv[1] !== undefined && path.resolve(process.argv[1]) === SCRIPT) {
     const options = parseArgs(process.argv.slice(2));
     process.exitCode = options.selftest ? selftest() : await rebuild(options);
   } catch (error) {
-    if (!(error instanceof Refusal)) throw error;
-    process.stderr.write(`dossier_pilot_screened_tree: STOP: ${error.message}\n`);
+    // For a rebuild, exit 1 means one thing only, a count that differs; a refusal or any other error is 2.
+    process.stderr.write(`dossier_pilot_screened_tree: ${error instanceof Refusal ? 'STOP' : 'ERROR'}: ${error instanceof Error ? error.message : String(error)}\n`);
     process.exitCode = 2;
   }
 }

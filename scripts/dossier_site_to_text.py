@@ -13,7 +13,8 @@ visible mark and its pop-up as `[mark: file and lines]`. The raw source pages (e
 
 Prints counts only, never page text: pages, words (whitespace-separated tokens of the converted text) and the source pages left
 out. `--report` writes the same counts with the words per page as JSON. Reads SITE_DIR only and refuses a path inside a
-`.agents` or `.sessions` directory. Starts no session.
+`.agents` or `.sessions` directory, as it refuses to write OUT_DIR or the report inside one, or over an existing report.
+Starts no session.
 """
 import argparse
 import html.parser
@@ -133,6 +134,11 @@ def is_source_page(relative):
     return len(parts) > 1 and parts[0] == 'sources' and relative != 'sources/index.html'
 
 
+def is_session_path(candidate):
+    """Whether a path lies in (or is) an agent or session directory of a run, which this script neither reads nor writes."""
+    return any(part.endswith(('.agents', '.sessions')) for part in pathlib.Path(candidate).parts)
+
+
 def site_pages(site):
     """Every .html page under `site`, as sorted site-relative POSIX paths; symbolic links are not followed."""
     pages = []
@@ -214,9 +220,14 @@ def selftest():
     for relative, want in paths:
         if is_source_page(relative) is not want:
             failures.append(f'{relative}: source page read as {not want}')
+    sessions = (('/s/run-1.agents/site/1', True), ('/s/run-1.sessions', True), ('/s/run-1/site/1', False), ('/s/agents/x', False))
+    for candidate, want in sessions:
+        if is_session_path(candidate) is not want:
+            failures.append(f'{candidate}: session path read as {not want}')
     for failure in failures:
         print(f'FAIL {failure}')
-    print(f'selftest: 1 fixture page, {len(mutations)} mutations, 5 marks, {len(paths)} paths; {len(failures)} failure(s)')
+    print(f'selftest: 1 fixture page, {len(mutations)} mutations, 5 marks, {len(paths)} paths, {len(sessions)} session paths; '
+          f'{len(failures)} failure(s)')
     return 1 if failures else 0
 
 
@@ -232,21 +243,26 @@ def main(argv=None):
     if not args.site or not args.out:
         parser.error('SITE_DIR and OUT_DIR are required')
     site, out = pathlib.Path(args.site).resolve(), pathlib.Path(args.out).resolve()
+    report = pathlib.Path(args.report).resolve() if args.report else None
     refuse = None
-    if any(part.endswith(('.agents', '.sessions')) for part in site.parts):
-        refuse = 'the site path is inside a .agents or .sessions directory'
+    if any(is_session_path(candidate) for candidate in (site, out, report) if candidate is not None):
+        refuse = 'a path is inside a .agents or .sessions directory'
     elif not site.is_dir():
         refuse = f'{site} is not a directory'
     elif out.exists() and (not out.is_dir() or any(out.iterdir())):
         refuse = f'{out} exists and is not an empty directory'
     elif out == site or site in out.parents:
         refuse = 'the output directory is inside the site'
+    elif report is not None and (report.exists() or report.is_symlink()):
+        refuse = f'{report} already exists; refusing to overwrite it'
+    elif report is not None and (report == site or site in report.parents):
+        refuse = 'the report is inside the site'
     if refuse:
         print(f'dossier_site_to_text: {refuse}', file=sys.stderr)
         return 2
     summary = convert_site(site, out)
-    if args.report:
-        pathlib.Path(args.report).write_text(json.dumps({**summary, 'site': str(site)}, indent=1), encoding='utf-8')
+    if report is not None:
+        report.write_text(json.dumps({**summary, 'site': str(site)}, indent=1), encoding='utf-8')
     print('pages', summary['pages'], 'words', summary['words'], 'sources pages excluded', summary['sourcesPagesExcluded'])
     return 0
 
