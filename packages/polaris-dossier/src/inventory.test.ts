@@ -384,6 +384,9 @@ describe('inventory-check', () => {
     // Nor a reading ledger or its difference (version 2.4): those are the draft's alone.
     for (const member of ['readingLedger', 'readingDifference']) expect(report).not.toHaveProperty(member);
     expect(JSON.parse(fs.readFileSync(path.join(run, 'inventory', 'checks', 'rev-0.json'), 'utf8'))).not.toHaveProperty('readingLedger');
+    // Nor manifest facts (version 2.7): a draft's check record alone carries them.
+    expect(report).not.toHaveProperty('manifestFacts');
+    expect(JSON.parse(fs.readFileSync(path.join(run, 'inventory', 'checks', 'rev-0.json'), 'utf8'))).not.toHaveProperty('manifestFacts');
     expect(report).not.toHaveProperty('reviewReach');
   });
 

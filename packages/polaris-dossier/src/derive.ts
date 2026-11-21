@@ -96,8 +96,19 @@ const NOTE = 'Derived by Syzygy from the paths and modes of the pinned tree alon
 
 /** Every name a record emits is a leading part of a path, so each directory prefix is tested as well as the whole path: a detector that
  * matched a prefix but not the path (one anchored at the end, say) cannot leak a directory name. */
-const secretOrUnder = (segments: readonly string[], isSecretPath: (path: string) => boolean): boolean =>
+export const secretOrUnder = (segments: readonly string[], isSecretPath: (path: string) => boolean): boolean =>
   isSecretPath(segments.join('/')) || segments.slice(0, -1).some((_, i) => isSecretPath(segments.slice(0, i + 1).join('/')));
+
+/** Whether rule `vendored-path` v1 or `generated-path` v1 names a path (a directory segment, or a generated basename or suffix), or rule
+ * `tests-path` v1 matches it: the paths the structure record sets apart before it counts manifests, which the package manifest
+ * recognizers (version 2.7) set apart too. */
+export function setApartPath(path: string): boolean {
+  const segments = path.split('/');
+  const basename = segments[segments.length - 1]!;
+  return outermostUnder(segments, VENDORED_PATH.segments) !== undefined || outermostUnder(segments, GENERATED_PATH.segments) !== undefined
+    || (GENERATED_PATH.basenames as readonly string[]).includes(basename) || GENERATED_PATH.suffixes.some((suffix) => basename.endsWith(suffix))
+    || isTest(segments, basename);
+}
 
 export function deriveStructure(entries: readonly Pick<TreeEntry, 'path' | 'mode'>[], isSecretPath: (path: string) => boolean): StructureRecord {
   let files = 0, secretPathsLeftOut = 0, submodules = 0, rootFiles = 0, unrecognized = 0, tests = 0;
