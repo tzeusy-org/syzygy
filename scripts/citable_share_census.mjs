@@ -111,7 +111,7 @@ export function stageTwoLists(policyBytes, predecessorBytes) {
     configurationExtensions: rule('code-content-extended').configurationExtensions, languageExtensions: rule('code-content-extended').languageExtensions,
     sourceFileNames: rule('code-content-extended').sourceFileNames, sourceFileNamePrefixes: rule('code-content-extended').sourceFileNamePrefixes,
     governanceTextExtensions: rule('governance-text-by-name').governanceTextExtensions, governanceTextTokens: rule('governance-text-by-name').governanceTextTokens,
-    proseExtensions: rule('project-documentation-extended').proseExtensions, docTreeRootsAnyDepth: rule('project-documentation-extended').docTreeRootsAnyDepth,
+    proseExtensions: rule('project-documentation-extended').proseExtensions, docTreeRootsAnyDepth: rule('project-documentation-extended').docTreeRootsAnyDepth ?? [],
     separators: stageOne.docTokenSeparators,
     deniedPathBasenames: added('deniedPathBasenames'), deniedPathSuffixes: added('deniedPathSuffixes'), deniedDirectoryNames: added('deniedDirectoryNames'),
   };

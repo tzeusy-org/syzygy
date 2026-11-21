@@ -3,10 +3,10 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { describe, expect, it } from 'vitest';
 
-import { compileEveryOffsetMatcher, LINEAR_EQUIVALENTS, linearDetector, readConfigurationDetectors, type RedactionDetector } from './secret-redaction.js';
+import { compileEveryOffsetMatcher, readConfigurationDetectors, type RedactionDetector } from './secret-redaction.js';
 
 // syzygy-3efd.24: the dossier declared-source policy 2.0.0's `configurationDetectors`, read from the committed successor and run as the
-// screens run them (each in its `linearDetector` form). Every planted value is fake and assembled from pieces, as the other detector
+// screens run them. Every planted value is fake and assembled from pieces, as the other detector
 // tests write theirs, so no committed line reads as a credential assignment; expected detector ids are literals.
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../../..');
@@ -20,7 +20,7 @@ const DETECTORS = ((): readonly RedactionDetector[] => {
   if (!result.ok) throw new Error(result.why);
   return result.detectors;
 })();
-const RUN = compileEveryOffsetMatcher(DETECTORS.map(linearDetector));
+const RUN = compileEveryOffsetMatcher(DETECTORS);
 const firstId = (text: string): string | undefined => RUN.first(text)?.detectorId;
 
 // Fake fragments: each keyword and value is joined at run time.
@@ -98,19 +98,22 @@ describe('a planted value in each configuration format', () => {
   });
 });
 
-describe('the linear form of hcl-secret-variable-default', () => {
+// hcl-secret-variable-default as the policy first wrote it, before its post-review repair: two unbounded runs around the keyword, which try
+// every split of a long unterminated name. Kept here as the canary and as the reference the committed look-ahead form must agree with.
+const QUADRATIC = String.raw`variable[ \t]+"[^"\r\n]*(?:password|passwd|secret|token|key|credential)[^"\r\n]*"[ \t]*\{[^}]*?default[ \t]*=[ \t]*"[^"$\r\n]{8,}"`;
+describe('hcl-secret-variable-default in its committed look-ahead form', () => {
   const policyForm = DETECTORS.find(detector => detector.id === 'hcl-secret-variable-default') as Extract<RedactionDetector, { kind: 'regular-expression' }>;
-  const linearForm = linearDetector(policyForm) as Extract<RedactionDetector, { kind: 'regular-expression' }>;
-  it('is the one entry of LINEAR_EQUIVALENTS, keyed by the policy pattern and flags', () => {
-    expect([...LINEAR_EQUIVALENTS.keys()]).toEqual([`${policyForm.pattern}/${policyForm.flags}`]);
-    expect(linearForm.pattern).not.toBe(policyForm.pattern);
-    expect(DETECTORS.filter(detector => detector !== policyForm).every(detector => linearDetector(detector) === detector)).toBe(true);
+  const linearForm = policyForm;
+  const quadraticForm = { ...policyForm, pattern: QUADRATIC };
+  it('is the look-ahead form, not the earlier two-run form', () => {
+    expect(policyForm.pattern).toBe(String.raw`variable[ \t]+"(?=[^"\r\n]*?(?:password|passwd|secret|token|key|credential))[^"\r\n]*"[ \t]*\{[^}]*?default[ \t]*=[ \t]*"[^"$\r\n]{8,}"`);
+    expect(policyForm.flags).toBe('gi');
   });
-  it('matches the same text at every offset as the policy form, over a seeded population', () => {
+  it('matches the same text at every offset as the earlier two-run form, over a seeded population', () => {
     const pieces = ['variable', ' ', '\t', '"', 'key', 'Pass' + 'word', 'SECRET', '{', '}', 'default', '=', 'abcdefgh', '$', '\n', '\r', 'x'];
     let seed = 0x9e3779b9;
     const next = (n: number): number => { seed = (Math.imul(seed, 1664525) + 1013904223) >>> 0; return seed % n; };
-    const a = new RegExp(policyForm.pattern, 'iy'), b = new RegExp(linearForm.pattern, 'iy');
+    const a = new RegExp(quadraticForm.pattern, 'iy'), b = new RegExp(linearForm.pattern, 'iy');
     // Each text follows the shape of a match, with each part kept, replaced by a random piece or followed by one at random.
     const shape = ['variable', ' ', '"', 'db_', 'key', '_x', '"', ' ', '{', '\n', 'type = 1', '\n', 'default', ' ', '=', ' ', '"', 'abcdefgh', '"', '}'];
     let compared = 0, differing = 0, matched = 0;
@@ -157,7 +160,7 @@ const ADVERSARIAL: readonly [string, string][] = [
 ];
 describe('each configuration detector is bounded on adversarial bodies', () => {
   it.each(DETECTORS.map(detector => [detector.id, detector] as const))('%s', (_id, detector) => {
-    const one = compileEveryOffsetMatcher([linearDetector(detector)]);
+    const one = compileEveryOffsetMatcher([detector]);
     for (const [, body] of ADVERSARIAL) {
       const started = performance.now();
       one.first(body);
@@ -165,10 +168,10 @@ describe('each configuration detector is bounded on adversarial bodies', () => {
     }
   }, 120_000);
 
-  it('canary: the policy form of hcl-secret-variable-default is not bounded on the unterminated name', () => {
+  it('canary: the earlier two-run form of hcl-secret-variable-default is not bounded on the unterminated name', () => {
     const policyForm = DETECTORS.find(detector => detector.id === 'hcl-secret-variable-default')!;
     const body = `variable "${run('key').slice(0, 80_000)}`;
-    const raw = compileEveryOffsetMatcher([policyForm]);
+    const raw = compileEveryOffsetMatcher([{ ...policyForm, pattern: QUADRATIC } as RedactionDetector]);
     const started = performance.now();
     raw.first(body);
     // About a second on the host this was written on (3.5 s at 160,000 characters); the linear form takes a few milliseconds.

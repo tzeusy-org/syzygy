@@ -40,9 +40,9 @@ describe('the successor screen', () => {
   });
 
   it('design and decision documents are governance-text, and the run record names that class', () => {
-    expect(['docs/adr/0001-use-postgres.md', 'ARCHITECTURE.md', 'rfcs/0001-thing.md'].map(p => outcomeOf(screen, p)))
-      .toEqual(['governance-text/2', 'governance-text/2', 'governance-text/2']);
-    expect(screen.screenTargetBody('# Use Postgres\n\nWe chose it.\n', 'docs/adr/0001-use-postgres.md')).toEqual({ kind: 'admitted' });
+    expect(['design/storage.rst', 'pkg/design-overview.rst', 'docs/adr/0001-use-postgres.md', 'ARCHITECTURE.md'].map(p => outcomeOf(screen, p)))
+      .toEqual(['governance-text/2', 'governance-text/2', 'unknown-extraction-class', 'unknown-extraction-class']);
+    expect(screen.screenTargetBody('Use Postgres\n============\n\nWe chose it.\n', 'design/storage.rst')).toEqual({ kind: 'admitted' });
     const parsed = parseRunConfig(JSON.stringify({ operator: 'o', agentTool: 'claude-code', agentToolVersion: '2.1.0', agentProvider: 'anthropic', model: 'm',
       deadline: 'PT1H', agentTurnBudget: 10, maxRepairCycles: 1, maxQuestions: 0, audience: 'a reader', operatorIsOwner: false }));
     if (!parsed.ok) throw new Error('fixture configuration refused');
@@ -64,6 +64,12 @@ describe('the successor screen', () => {
     }
   });
 
+  it('the configuration and code paths the review found admitted stay indeterminate, beside an admitted control', () => {
+    expect(['reports/benchmark-results.json', 'test-output.json', 'audit-log.yaml', 'security-policy.yaml', 'governance/decisions.json', 'SECURITY.yml', 'config/app.json']
+      .map(p => outcomeOf(screen, p))).toEqual(['unknown-extraction-class', 'unknown-extraction-class', 'unknown-extraction-class', 'unknown-extraction-class',
+      'unknown-extraction-class', 'unknown-extraction-class', 'code-content/2']);
+  });
+
   it('withheld words, notebooks and vendored paths stay withheld', () => {
     for (const p of ['docs/security/policy.md', 'GOVERNANCE.md', 'CODE_OF_CONDUCT.md', 'SecurityPolicy.md', 'pkg/CodeOfConduct.md', 'docs/decisions/0001-x.md',
       'reports/q3-audit.md', 'notebooks/intro.ipynb', 'node_modules/x/README.md', 'vendor/k8s/deploy.yaml']) {
@@ -73,9 +79,9 @@ describe('the successor screen', () => {
 
   it('nested documentation is admitted and scanned, and the root README keeps its exemption', () => {
     const BADGE = '# API\n\n<img src="badge.svg" alt="build">\n';
-    expect([outcomeOf(screen, 'packages/api/README.md'), outcomeOf(screen, 'packages/api/docs/guide.adoc'), outcomeOf(screen, 'README.md')])
-      .toEqual(['project-documentation/2', 'project-documentation/2', 'project-documentation/1']);
-    expect(screen.screenTargetBody('= Guide\n\nRun it.\n', 'packages/api/docs/guide.adoc')).toEqual({ kind: 'admitted' });
+    expect([outcomeOf(screen, 'packages/api/README.md'), outcomeOf(screen, 'packages/api/docs/guide.md'), outcomeOf(screen, 'packages/api/docs/guide.adoc'), outcomeOf(screen, 'README.md')])
+      .toEqual(['project-documentation/2', 'project-documentation/2', 'unknown-extraction-class', 'project-documentation/1']);
+    expect(screen.screenTargetBody('# Guide\n\nRun it.\n', 'packages/api/docs/guide.md')).toEqual({ kind: 'admitted' });
     expect(screen.screenTargetBody(BADGE, 'packages/api/README.md')).toEqual({ kind: 'excluded', outcome: 'active-content' });
     expect(screen.screenBody(BADGE, 'packages/api/README.md')).toBe('active-content');
     expect(screen.screenTargetBody(BADGE, 'README.md')).toEqual({ kind: 'admitted' });
@@ -179,7 +185,8 @@ describe('credential paths are denied before any read', () => {
 const POPULATION = ['README.md', 'docs/setup.md', 'docs/adr/x.md', 'docs/DesignDoc.md', 'docs/build-log.txt', 'licenses/MIT.txt', 'SECURITY.md', 'MANIFESTO.md', 'src/server.c',
   'setup.py', 'vendor/x.c', 'src/README.md', 'ARCHITECTURE.md', 'Cargo.toml', 'config/app.json', 'Dockerfile', 'main.tf', 'notebooks/a.ipynb', 'node_modules/x/README.md',
   'GOVERNANCE.md', 'pkg/DesignDoc.md', '.ssh/deploy.sh', '.aws/x.py', 'deploy/.docker/x.json', '.kube/config', 'terraform.tfstate', '.npmrc', '.env', 'keys/a.pem',
-  'x/docs/n.txt', 'src/a.scala', 'bin/changes', 'design/x.md', 'docs/security.md', 'images/logo.png', 'Makefile', 'docs/rfc0001.md', 'licenses/x-spec.txt'];
+  'x/docs/n.txt', 'src/a.scala', 'bin/changes', 'design/x.md', 'docs/security.md', 'images/logo.png', 'Makefile', 'docs/rfc0001.md', 'licenses/x-spec.txt',
+  'design/x.rst', 'reports/benchmark-results.json'];
 const NEWLY_DENIED = ['.ssh/deploy.sh', '.aws/x.py', 'deploy/.docker/x.json', '.kube/config', 'terraform.tfstate', '.npmrc'];
 describe('predecessor outcomes are preserved', () => {
   let before: DossierScreen, after: DossierScreen;
@@ -193,12 +200,13 @@ describe('predecessor outcomes are preserved', () => {
   it('a path the predecessor leaves indeterminate keeps that outcome, becomes denied, or is placed by the second stage', () => {
     const indeterminate = POPULATION.filter(p => before.screenPath(p) === 'unknown-extraction-class');
     expect(indeterminate.map(p => [p, outcomeOf(after, p)])).toEqual([
-      ['docs/adr/x.md', 'governance-text/2'], ['src/README.md', 'project-documentation/2'], ['ARCHITECTURE.md', 'governance-text/2'], ['Cargo.toml', 'code-content/2'],
+      ['docs/adr/x.md', 'unknown-extraction-class'], ['src/README.md', 'project-documentation/2'], ['ARCHITECTURE.md', 'unknown-extraction-class'], ['Cargo.toml', 'code-content/2'],
       ['config/app.json', 'code-content/2'], ['Dockerfile', 'code-content/2'], ['main.tf', 'code-content/2'], ['notebooks/a.ipynb', 'unknown-extraction-class'],
       ['node_modules/x/README.md', 'unknown-extraction-class'], ['GOVERNANCE.md', 'unknown-extraction-class'], ['pkg/DesignDoc.md', 'unknown-extraction-class'],
       ['deploy/.docker/x.json', 'denied-path'], ['.kube/config', 'denied-path'], ['terraform.tfstate', 'denied-path'], ['.npmrc', 'denied-path'],
-      ['x/docs/n.txt', 'project-documentation/2'], ['src/a.scala', 'code-content/2'], ['bin/changes', 'unknown-extraction-class'], ['design/x.md', 'governance-text/2'],
+      ['x/docs/n.txt', 'unknown-extraction-class'], ['src/a.scala', 'unknown-extraction-class'], ['bin/changes', 'unknown-extraction-class'], ['design/x.md', 'unknown-extraction-class'],
       ['docs/security.md', 'unknown-extraction-class'], ['images/logo.png', 'unknown-extraction-class'], ['Makefile', 'code-content/2'], ['licenses/x-spec.txt', 'unknown-extraction-class'],
+      ['design/x.rst', 'governance-text/2'], ['reports/benchmark-results.json', 'unknown-extraction-class'],
     ]);
     expect(NEWLY_DENIED.every(p => after.screenPath(p) === 'denied-path')).toBe(true);
   });

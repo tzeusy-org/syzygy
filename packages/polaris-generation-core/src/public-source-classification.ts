@@ -407,21 +407,20 @@ export function documentationExempt(contentClass: PublicSourceContentClass | und
  *   backslash, as their texts say; code-content-extended is by final segment name, as Stage 1's code-content rule is. */
 const SECOND_STAGE_TEXTS = {
   classDecision: '1188fd8a5292f552c58e0185adf9668901740fe63e58696b47c3d6c0681cf02a',
-  'governance-text-by-name': '804abb62005190abee13f98f0b8990c782125a35b484f5aed7fd6b0009314400',
-  'project-documentation-extended': 'a426ca5a7d430d7221f396ad2b8fb888685d9aeef9652097c7c08c883e02a848',
-  'code-content-extended': '376e4917f1297e28276d4ef3f5bda7c20fda54f741273a6fd5580d08bb82f48f',
+  'governance-text-by-name': '8cf855489a6843473c220006ecb775a0643edfb690bd28f62655f1dc6cf6fa57',
+  'project-documentation-extended': '838e0e310012e0f581e6ca4f7a1a6ba9af1cbb280c3ca52b0416dc2e127809b0',
+  'code-content-extended': 'a19296242e2aeb81602ec6616f40050571037865ec303474918f77517024030d',
   'prose-document': '1160da7cd2be57d99f67413e0c580481ab48125472f23cf4760107c2bdb7d08a',
   'nested-root-document': 'c0e3e464a82a869a2313ca0ccba149596acda1de1a4ccdd99eff9d8afc186606',
-  'docs-tree-text': '651e966a116bc5ddfc0994a1b4d2ac52f49f814c676d04c98a17fd8fa438a06d',
 } as const;
 
 export type SecondStageRuleId = 'governance-text-by-name' | 'project-documentation-extended' | 'code-content-extended';
 const SECOND_STAGE_RULES: readonly { readonly id: SecondStageRuleId; readonly class: PublicSourceContentClass; readonly keys: readonly string[] }[] = [
   { id: 'governance-text-by-name', class: 'governance-text', keys: ['id', 'class', 'rule', 'governanceTextExtensions', 'governanceTextTokens'] },
-  { id: 'project-documentation-extended', class: 'project-documentation', keys: ['id', 'class', 'rule', 'pathRules', 'proseExtensions', 'docTreeRootsAnyDepth'] },
+  { id: 'project-documentation-extended', class: 'project-documentation', keys: ['id', 'class', 'rule', 'pathRules', 'proseExtensions'] },
   { id: 'code-content-extended', class: 'code-content', keys: ['id', 'class', 'rule', 'configurationExtensions', 'languageExtensions', 'sourceFileNames', 'sourceFileNamePrefixes'] },
 ];
-const EXTENDED_PATH_RULE_IDS = ['prose-document', 'nested-root-document', 'docs-tree-text'] as const;
+const EXTENDED_PATH_RULE_IDS = ['prose-document', 'nested-root-document'] as const;
 /** The `contentClassification` lists only the two-stage decision reads; a policy that carries any of them without `classDecision` refuses. */
 const SECOND_STAGE_LISTS = ['withheldTokens', 'vendoredDirectoryNames', 'withheldStems', 'evidenceWords', 'governanceStems'] as const;
 
@@ -429,7 +428,6 @@ export interface SecondStageRules {
   readonly governanceTextExtensions: readonly string[];
   readonly governanceTextTokens: readonly string[];
   readonly proseExtensions: readonly string[];
-  readonly docTreeRootsAnyDepth: readonly string[];
   readonly configurationExtensions: readonly string[];
   readonly languageExtensions: readonly string[];
   readonly sourceFileNames: readonly string[];
@@ -484,14 +482,14 @@ export function readSecondStage(classification: unknown, documentation: ProjectD
   if (!Array.isArray(pathRules) || pathRules.length !== EXTENDED_PATH_RULE_IDS.length
     || !pathRules.every((pathRule: unknown, i) => isRecord(pathRule) && sameKeys(pathRule, ['id', 'rule']) && pathRule['id'] === EXTENDED_PATH_RULE_IDS[i]
       && typeof pathRule['rule'] === 'string' && sha256(pathRule['rule']) === SECOND_STAGE_TEXTS[EXTENDED_PATH_RULE_IDS[i]!])) {
-    return refuse('project-documentation-extended path rules are not the three this screen implements (prose-document, nested-root-document, docs-tree-text, in that order and text)');
+    return refuse('project-documentation-extended path rules are not the two this screen implements (prose-document, nested-root-document, in that order and text)');
   }
   const separators = documentation.docTokenSeparators;
   const word = (entry: string): boolean => entry.length > 0 && ![...separators].some(sep => entry.includes(sep));
   const stem = (entry: string): boolean => entry.length > 0;
   const fields: [Readonly<Record<string, unknown>>, keyof SecondStageRules, (entry: string) => boolean, boolean][] = [
     [byName, 'governanceTextExtensions', extension, true], [byName, 'governanceTextTokens', word, true],
-    [extended, 'proseExtensions', extension, true], [extended, 'docTreeRootsAnyDepth', segment, true],
+    [extended, 'proseExtensions', extension, true],
     [code, 'configurationExtensions', caseSensitiveExtension, false], [code, 'languageExtensions', caseSensitiveExtension, false],
     [code, 'sourceFileNames', caseSensitiveName, false], [code, 'sourceFileNamePrefixes', caseSensitiveName, false],
     [classification, 'withheldTokens', word, true], [classification, 'vendoredDirectoryNames', segment, true],
@@ -526,8 +524,11 @@ const wordsOf = (part: string, separators: string): string[] => {
 };
 
 /** Whether the stem and evidence lists refuse the parts (each directory segment and the final segment with its suffix removed). */
+/** The three refusals every Stage 2 rule applies (dossier policy 2.0.0 after its post-review repair): a part containing a withheldStems
+ * entry, or with a word in evidenceWords or withheldTokens. */
 const refusedByStemOrEvidence = (parts: readonly string[], stage: SecondStageRules, separators: string): boolean =>
-  parts.some(part => stage.withheldStems.some(entry => part.includes(entry)) || wordsOf(part, separators).some(word => stage.evidenceWords.includes(word)));
+  parts.some(part => stage.withheldStems.some(entry => part.includes(entry))
+    || wordsOf(part, separators).some(word => stage.evidenceWords.includes(word) || stage.withheldTokens.includes(word)));
 
 function governanceTextByName(segments: readonly string[], stage: SecondStageRules, documentation: ProjectDocumentationRule): boolean {
   const stems = stemsWithout(segments.at(-1)!, stage.governanceTextExtensions);
@@ -536,8 +537,7 @@ function governanceTextByName(segments: readonly string[], stage: SecondStageRul
   return stems.every(stem => {
     const parts = [...segments.slice(0, -1), stem];
     const words = parts.flatMap(part => wordsOf(part, separators));
-    return words.some(word => stage.governanceTextTokens.includes(word)) && !words.some(word => stage.withheldTokens.includes(word))
-      && !refusedByStemOrEvidence(parts, stage, separators);
+    return words.some(word => stage.governanceTextTokens.includes(word)) && !refusedByStemOrEvidence(parts, stage, separators);
   });
 }
 
@@ -556,11 +556,6 @@ function extendedDocumentationStems(segments: readonly string[], stage: SecondSt
         if (suffix !== '' && bare.endsWith(suffix) && documentation.rootStems.includes(bare.slice(0, bare.length - suffix.length))) stems.push(name.slice(0, name.length - suffix.length));
       }
     }
-    // docs-tree-text.
-    if (segments.slice(0, -1).some(directory => stage.docTreeRootsAnyDepth.includes(directory)) && name.length > TXT.length && name.endsWith(TXT)
-      && !documentation.docTxtExcludedNames.includes(name) && !documentation.docTxtExcludedPrefixes.some(prefix => name.startsWith(prefix))) {
-      stems.push(name.slice(0, name.length - TXT.length));
-    }
   }
   return stems;
 }
@@ -577,9 +572,17 @@ function projectDocumentationExtended(segments: readonly string[], stage: Second
   });
 }
 
-function codeContentExtended(name: string, stage: SecondStageRules): boolean {
-  return [...stage.configurationExtensions, ...stage.languageExtensions].some(entry => name.endsWith(entry))
-    || stage.sourceFileNames.includes(name) || stage.sourceFileNamePrefixes.some(prefix => name.startsWith(prefix));
+/** code-content-extended: the final segment matched case-sensitively, then the three refusals over each folded directory segment and the
+ * folded final segment with the matched extension removed (the whole final segment for a name or prefix match); every match must pass. */
+function codeContentExtended(repositoryPath: string, stage: SecondStageRules, separators: string): boolean {
+  const name = repositoryPath.split('/').at(-1) ?? '';
+  const finals = [
+    ...[...stage.configurationExtensions, ...stage.languageExtensions].filter(entry => name.endsWith(entry)).map(entry => name.slice(0, name.length - entry.length)),
+    ...(stage.sourceFileNames.includes(name) || stage.sourceFileNamePrefixes.some(prefix => name.startsWith(prefix)) ? [name] : []),
+  ];
+  if (finals.length === 0) return false;
+  const directories = fold(repositoryPath).split('/').slice(0, -1);
+  return finals.every(final => !refusedByStemOrEvidence([...directories, fold(final)], stage, separators));
 }
 
 /** The Stage 2 rules that match a path Stage 1 leaves unplaced, before the two-match refusal; none below a vendored directory. */
@@ -591,7 +594,7 @@ export function secondStageRules(repositoryPath: string, stage: SecondStageRules
   const matched: SecondStageRuleId[] = [];
   if (wellFormed && governanceTextByName(segments, stage, documentation)) matched.push('governance-text-by-name');
   if (wellFormed && projectDocumentationExtended(segments, stage, documentation)) matched.push('project-documentation-extended');
-  if (codeContentExtended(repositoryPath.split('/').at(-1) ?? '', stage)) matched.push('code-content-extended');
+  if (codeContentExtended(repositoryPath, stage, documentation.docTokenSeparators)) matched.push('code-content-extended');
   return matched;
 }
 

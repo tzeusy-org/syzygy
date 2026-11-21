@@ -143,28 +143,10 @@ export function readScopeDetectors(scope: unknown, policyDetectorIds: readonly s
  * applies that scope. `priorDetectorIds` are the policy's and the scope detectors' ids, none of which a configuration detector may repeat. */
 const CONFIGURATION_DETECTOR_TEXTS = {
   rule: '73ef736e3ce5b86d44a8f2c474219e43c29c352029935059f667e489d739c173',
-  consequence: 'ea51299727c1c553c3c13e3701634eef06a2ab4b4f3af4885fbdd365f9f0b6f0',
+  consequence: '2b07c92f0dcfaa9add6c13ca41df4d7cfc094f5bf7d66f67625e108054dae241',
 } as const;
 export function readConfigurationDetectors(scope: unknown, priorDetectorIds: readonly string[]): ScopeDetectorsRead {
   return readDetectorBlock(scope, 'configurationDetectors', CONFIGURATION_DETECTOR_TEXTS, priorDetectorIds, 'its configuration detectors');
-}
-
-/** A pattern the screens run in an equivalent form that matches the same text at the same offsets, because the policy's own form
- * backtracks quadratically on an adversarial body. Keyed by the exact pattern and flags, never by a detector id, as the credential-URL
- * recogniser is. `hcl-secret-variable-default` (dossier policy 2.0.0): `[^"\r\n]*(?:keyword)[^"\r\n]*"` reads one quoted variable name,
- * which can hold no quote, so it ends at the name's first quote and matches exactly when that name holds a keyword; the policy's form tries
- * every split of a long unterminated name (about 3.5 s over 160,000 characters), and a lookahead that finds the keyword lazily and then
- * reads the name once is linear and consumes the same characters. `configuration-detectors.test.ts` compares the two forms at every
- * offset over a seeded population and times both on adversarial bodies. */
-export const LINEAR_EQUIVALENTS: ReadonlyMap<string, string> = new Map([
-  [`${String.raw`variable[ \t]+"[^"\r\n]*(?:password|passwd|secret|token|key|credential)[^"\r\n]*"[ \t]*\{[^}]*?default[ \t]*=[ \t]*"[^"$\r\n]{8,}"`}/gi`,
-    String.raw`variable[ \t]+"(?=[^"\r\n]*?(?:password|passwd|secret|token|key|credential))[^"\r\n]*"[ \t]*\{[^}]*?default[ \t]*=[ \t]*"[^"$\r\n]{8,}"`],
-]);
-/** The detector as the screens run it: its linear equivalent when `LINEAR_EQUIVALENTS` names its pattern and flags, itself otherwise. */
-export function linearDetector(detector: RedactionDetector): RedactionDetector {
-  if (detector.kind !== 'regular-expression') return detector;
-  const equivalent = LINEAR_EQUIVALENTS.get(`${detector.pattern}/${detector.flags}`);
-  return equivalent === undefined ? detector : Object.freeze({ ...detector, pattern: equivalent });
 }
 
 function readDetectorBlock(scope: unknown, key: 'scopeDetectors' | 'configurationDetectors', texts: { readonly rule: string; readonly consequence: string },

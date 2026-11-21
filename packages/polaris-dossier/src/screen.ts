@@ -1,5 +1,5 @@
 import { DOSSIER_POLICY_PATH, DOSSIER_PREDECESSOR_POLICY_PATH, readCommittedPolicy, restartExplanation, type PolicyBinding } from './policy-snapshot.js';
-import { classDecision, codeContentExempt, compileEveryOffsetMatcher, deniedDirectory, documentationExempt, linearDetector, readCodeContentExemption, readConfigurationDetectors, readGovernanceTextRule, readProjectDocumentationExemption, readProjectDocumentationRule, readScopeDetectors, readSecondStage, readSecretRedaction, readSourceVisibility, redactBody, redactionFor, type ClassDecision, type PlacementSubject, type SourceVisibility, type PublicSourceContentClass, type RedactionDetector } from '@syzygy/polaris-generation-core/live';
+import { classDecision, codeContentExempt, compileEveryOffsetMatcher, deniedDirectory, documentationExempt, readCodeContentExemption, readConfigurationDetectors, readGovernanceTextRule, readProjectDocumentationExemption, readProjectDocumentationRule, readScopeDetectors, readSecondStage, readSecretRedaction, readSourceVisibility, redactBody, redactionFor, type ClassDecision, type PlacementSubject, type SourceVisibility, type PublicSourceContentClass, type RedactionDetector } from '@syzygy/polaris-generation-core/live';
 import { compileDetectors, deniedPathReason, detectSecrets, scanActiveContent, type DeniedPathRules, type SecretDetector } from '@syzygy/three-surface-poc-core';
 import { isRecord, sha256 } from '@syzygy/support';
 
@@ -228,8 +228,8 @@ export function buildDossierScreen(policy: Uint8Array, projectDocumentationEnabl
   let detectors: ReturnType<typeof compileDetectors>;
   try { detectors = compileDetectors({ detectors: allDetectors as readonly SecretDetector[] }); } catch (error) { return refuse(`its detectors do not compile (${error instanceof Error ? error.message : 'invalid'})`); }
   const everyOffset = compileEveryOffsetMatcher(allDetectors as readonly RedactionDetector[]);
-  // Stage-2 bodies and agent text: every detector above and the configuration detectors, each run in its linear form (`linearDetector`).
-  const extendedDetectors = [...(allDetectors as readonly RedactionDetector[]), ...configurationRead.detectors.map(linearDetector)];
+  // Stage-2 bodies and agent text: every detector above and the configuration detectors, as the policy writes them.
+  const extendedDetectors = [...(allDetectors as readonly RedactionDetector[]), ...configurationRead.detectors];
   let stageTwoDetectors: ReturnType<typeof compileDetectors>;
   try { stageTwoDetectors = compileDetectors({ detectors: extendedDetectors as readonly SecretDetector[] }); } catch (error) { return refuse(`its configuration detectors do not compile (${error instanceof Error ? error.message : 'invalid'})`); }
   const stageTwoOffsets = compileEveryOffsetMatcher(extendedDetectors);
