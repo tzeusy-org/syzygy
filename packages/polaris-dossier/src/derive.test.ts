@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { deriveStructure, structureUnknown } from './derive.js';
+import { deriveStructure, isEntryPoint, structureUnknown } from './derive.js';
 
 // syzygy-3efd.16: the structure record from paths and modes alone. Expected values are literals (CC-TEST-3).
 const blob = (path: string, mode = '100644') => ({ path, mode });
@@ -182,5 +182,21 @@ describe('deriveStructure: the server-entry trait', () => {
   it('never names or counts a path a secret detector matches, or one under a matched directory, and such a path alone does not make it hold', () => {
     const secret = (p: string): boolean => p.startsWith('ghp_');
     expect(trait(['ghp_token/server.go', 'ghp_server.py'], secret)).toEqual({ rule: 'server-entry@1', holds: false, listed: [], notListed: 0 });
+  });
+});
+
+// REQ-polaris-generation-034 version 2.4 (syzygy-3efd.56): an entry point, as check tests one for a `code-reading` thesis.
+describe('isEntryPoint', () => {
+  it.each(['cmd/server/main.go', 'src/kestrel.c', 'lib/index.ts', 'app.py', 'src/server.rs'])('holds for a code file, %s', (path) => {
+    expect(isEntryPoint(path)).toBe(true);
+  });
+
+  it.each([
+    ['a Markdown file', 'README.md'], ['a header', 'src/kestrel.h'], ['JSON', 'package.json'], ['YAML', 'config/app.yaml'], ['SQL', 'db/schema.sql'],
+    ['an unrecognized extension', 'Makefile'], ['a vendored file', 'vendor/lib/x.go'], ['a generated file', 'dist/app.js'], ['a generated basename', 'src/types.pb.go'],
+    ['a test file', 'internal/handler/handler_test.go'], ['a file under a test directory', 'tests/cli.rs'], ['code under a docs tree', 'docs/conf.py'],
+    ['an example', 'examples/basic/main.go'], ['a sample', 'pkg/sample/run.py'], ['a demo', 'demo/app.ts'],
+  ])('does not hold for %s', (_name, path) => {
+    expect(isEntryPoint(path)).toBe(false);
   });
 });
