@@ -43,6 +43,9 @@ The explicit URL declared-source version2.1 amendment follows version2.0
 when its own adoption binding verifies. Each parser counts its four replacements
 and one addition against that predecessor.
 
+The figure-homes-and-fit version2.2 amendment follows them when its own
+adoption binding verifies; each parser counts its one replacement (034).
+
 ## Overlay semantics
 
 Applied in the order the real OpenSpec tool uses at archive time (confirmed
@@ -433,12 +436,22 @@ def url_source_amendment(root: Path) -> str | None:
     return text
 
 
+def figure_amendment(root: Path) -> str | None:
+    """Verified text, a pending or retired amendment, or a counting refusal."""
+    import check_spec_reconciliation as adoption
+    text, records, subjects = adoption.figure_binding(root)
+    if records or subjects:
+        raise ScenarioCountError("figure homes and fit adoption findings:\n" + "\n".join(records + subjects))
+    return text
+
+
 def build_composition(root: Path) -> CompositionResult:
     import check_spec_reconciliation as adoption
     sources = [(path.relative_to(root).as_posix(), path.read_text(encoding="utf-8"))
                for path in discover_composition_files(root)]
     for label, text in ((adoption.DECLARED_SOURCE_SPEC, declared_source_amendment(root)),
-                        (adoption.URL_SOURCE_SPEC, url_source_amendment(root))):
+                        (adoption.URL_SOURCE_SPEC, url_source_amendment(root)),
+                        (adoption.FIGURE_SPEC, figure_amendment(root))):
         if text is not None:
             sources.append((label, text))
 
@@ -473,9 +486,10 @@ def composition_inputs(root: Path) -> list[Path]:
     import check_spec_reconciliation as adoption
     declared_source_amendment(root)
     url_source_amendment(root)
+    figure_amendment(root)
     paths = adoption.declared_source_inputs(root) | {
         adoption.URL_SOURCE_REPLACEMENTS, *adoption.URL_SOURCE_SUBJECTS,
-        *adoption.URL_SOURCE_RFC_PATHS,
+        *adoption.URL_SOURCE_RFC_PATHS, *adoption.FIGURE_SUBJECTS,
     }
     files = discover_composition_files(root)
     files += [root / rel for rel in sorted(paths) if (root / rel).is_file()]
