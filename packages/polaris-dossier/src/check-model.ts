@@ -38,7 +38,9 @@ export type CheckFindingKind =
   // v1.5 (schema v4): a v4 field in an earlier draft, a judgement mark off an Inferred block, a list's repeated diagram not in its section.
   | 'field-version' | 'judgement-mark' | 'repeats-diagram' | 'pole' | 'diagram-home'
   // Version 2.4 (schema v6): a `thesisBasis` its introduction does not fit.
-  | 'thesis-basis';
+  | 'thesis-basis'
+  // Version 2.5 (schema v7): members that do not fit a diagram's kind, and a participant or lane nothing names.
+  | 'figure-kind' | 'figure-unused';
 
 /** A repair finding: the kind of failure, where to repair it (a JSON path into the draft), and the block and citation it concerns. It
  * never carries quoted text or any byte of a blob. */

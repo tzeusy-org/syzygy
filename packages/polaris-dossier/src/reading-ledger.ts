@@ -48,7 +48,7 @@ const minutes = (words: number): number => Math.ceil(words / WORDS_PER_MINUTE);
 /** A deep dive's page: its identity with every code unit outside `A-Z`, `a-z`, `0-9`, `_`, `.` and `-` replaced by `_`. */
 export const deepDivePage = (id: string): string => `deep-dives/${id.replace(/[^A-Za-z0-9_.-]/g, '_')}.html`;
 /** The draft schemas whose diagrams name a `home` (v5 and later). */
-const HOME_SCHEMAS = new Set(['polaris-dossier-local-draft-v5', 'polaris-dossier-local-draft-v6']);
+const HOME_SCHEMAS = new Set(['polaris-dossier-local-draft-v5', 'polaris-dossier-local-draft-v6', 'polaris-dossier-local-draft-v7']);
 
 /** The words of one container's own prose (a section's or deep dive's paragraphs), counted as RS-19 counts them. */
 const containerWords = (container: Readonly<Record<string, unknown>>): number => list(container['paragraphs']).reduce<number>((sum, entry) => sum + proseWords(entry), 0);
