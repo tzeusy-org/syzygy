@@ -170,6 +170,14 @@ describe('compareRecords', () => {
     expect(comparison.moved).toEqual([{ draft: `${RUN_A}/rev-0`, change: 'changed', delta: { proseWords: 0, readingMinutes: 0, figures: 0, advisories: adv(), figureFit: { notFittingAt1440: 0, notFittingAt390: 0, unknown: 0 }, unplacedUnits: 0, figuresExamined: 0 }, pages: [{ page: 'poles/1.html', change: 'added' }, { page: 'index.html', change: 'removed' }] }]);
   });
 
+  it('notices a move in the figures examined alone', () => {
+    const more = measured(RUN_A, 0, 'sa0', 100, 1, 0) as { result: { measured: { figuresExamined: number } } };
+    more.result.measured.figuresExamined = 3;
+    const comparison = compareRecords(record('1'.repeat(40), 'p', [measured(RUN_A, 0, 'sa0', 100, 1, 0)]), record('2'.repeat(40), 'p', [more]));
+    expect(comparison.moved).toEqual([{ draft: `${RUN_A}/rev-0`, change: 'changed', delta: { proseWords: 0, readingMinutes: 0, figures: 0, advisories: adv(), figureFit: { notFittingAt1440: 0, notFittingAt390: 0, unknown: 0 }, unplacedUnits: 0, figuresExamined: 2 }, pages: [] }]);
+    expect(comparison.totalsDelta.figuresExamined).toBe(2);
+  });
+
   it('refuses a record not of its form, naming which', () => {
     expect(() => compareRecords({ format: 'other' }, CURRENT)).toThrow('the baseline record is not of format polaris-dossier-rerender-measure/1');
     expect(() => compareRecords(BASELINE, record('2'.repeat(40), 'p', [measured(RUN_A, 0, 'x', 1, 1, 0), measured(RUN_A, 0, 'x', 1, 1, 0)]))).toThrow(`the current record names ${RUN_A}/rev-0 twice`);
