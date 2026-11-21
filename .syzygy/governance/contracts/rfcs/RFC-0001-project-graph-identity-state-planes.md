@@ -73,8 +73,9 @@ deliberate non-reification.
   carrying an owner decision (RFC1-26). Two relations were added exactly that
   way at acceptance (`declared-dependency` A6, `placed_in` A7).
 - **Conflicts surface, never resolve themselves.** Two governance roots, two
-  placements, orphaned work: contradictions for owner adjudication, never
-  silently repaired.
+  placements, orphaned work: contradictions for adjudication (an agent's
+  recorded adoption, or the owner in an owner class), never silently
+  repaired.
 
 **Also fixed here:**
 
@@ -214,7 +215,7 @@ profile (RFC1-7) or an amendment to this RFC.
 | | Evidence artifact | The artifact's own source authority; identifier + integrity digest | Incl. the **Execution record** kind (SDR-8) — no new doctrine evidence class |
 | | Claim | Kernel (derived, two-level — §3.5) | The only carrier of status |
 | | Gap | Kernel (derived, two-level — §3.5) | V0 surfaces absence; V1 computes gaps |
-| | Contradiction | Kernel (derived, two-level — §3.5): declared scope + canonically ordered durable identities of the cited claims | Owner-adjudicated only; RFC1-18(b) |
+| | Contradiction | Kernel (derived, two-level — §3.5): declared scope + canonically ordered durable identities of the cited claims | Adjudicated only (an agent's adoption row, or the owner in an owner class — VIS-4); RFC1-18(b) |
 | | Challenge | The declared inference process, **or an attributed human via the governance plane** (RFC2-12); identity bound to one exact claim | V0 carries the admissibility floor only |
 | Proposal / work | Proposal | Author (owner, agent, worker); the authority-scoped, collision-free scheme is a named **RFC 0003 obligation** (RFC1-9) | Kinds incl. **execution intent** (the plan item, §3.8) |
 | | Materialization record | Kernel, at materialization: (proposal identity, work-item identity set, pinned warranted intent revision) | Immutable, one-way (SDR-7); the pinned revision is what RFC2-18's reconciliation evaluation and RFC4-19's warrant reference resolve (the RFC4-19 reference is informative, §5) |
@@ -469,9 +470,10 @@ renders the gap again — expiry acts only through a new identified evaluation
 (VIS-6, exception (a)).
 
 **RFC1-21.** A **Contradiction** (co-unsatisfiable authoritative claims in one
-declared scope) renders the affected conclusion Unknown, routes to owner
-adjudication, is never resolved by precedence, and is **never auto-scheduled
-into work**. A **derived gap is not a work warrant**: it motivates work only
+declared scope) renders the affected conclusion Unknown, routes to
+adjudication — by an agent's recorded adoption, reported and open to the
+owner's veto, or by the owner when it falls in an owner class (VIS-4) — is
+never resolved by precedence, and is **never auto-scheduled into work**. A **derived gap is not a work warrant**: it motivates work only
 through a confirmation act — a Decision or a declared deterministic Policy —
 because doctrine's warrant list admits a *confirmed* finding and
 kernel-derived objects are not authorities [Observed: trust-and-evidence.md,
@@ -789,12 +791,34 @@ issues work-item identities before the record can name them, the transition
 instant is fixed at the record, not at the issuance: **until the record
 exists, materialization has not occurred**, and the approved Proposal remains
 the sole authority for the state of the planned work, whatever the scheduler
-already holds. Scheduler work items matching no
-materialization record are an **orphaned-work contradiction** (§3.5) — two
-stores answering one question, no pinned intent revision for RFC2-18 to bind
-to, no warrant traceable through `materializes` — routed to owner adjudication
-and **rendered**, never silently adopted into a record, never silently
-deleted, and never read as evidence that materialization happened.
+already holds.
+
+**Which unrecorded work is orphaned.** A scheduler work item matching no
+materialization record is an **orphaned-work contradiction** (§3.5) **when,
+and only when, it is Syzygy-created**: the scheduler's own history
+attributes the item's creation to the identity under which Syzygy's adapter
+writes (RFC4-17). Such an item is two stores answering one question, with no
+pinned intent revision for RFC2-18 to bind to and no warrant traceable
+through `materializes`. It is routed to adjudication (RFC1-21) and
+**rendered**, never silently adopted into a record, never silently deleted,
+and never read as evidence that materialization happened. A work item the
+scheduler's history attributes to any other writer — pre-Syzygy backlog, an
+import, work filed directly in the scheduler — is **Unknown-provenance**
+(RFC8-23), not orphaned work, however old or numerous it is, and whatever
+its fields hold: a warrant reference on such an item is a substrate
+annotation (RFC4-17), never a claim of materialization. Where the history
+names no creator for an item, whether it is orphaned is itself Unknown: it
+renders Unknown-provenance with that undecided check disclosed and counted
+apart, never green.
+
+**How an orphan leaves.** Adjudication ends the contradiction in one of two
+ways: a new materialization record that cites and supersedes the orphan
+finding, or a recorded adjudication that disposes of the item otherwise.
+In the second case the item renders as that adjudication says and cites it,
+and is not minted as a new contradiction at the next evaluation. An agent
+assigned to an affected item, or one that worked it, never adjudicates it
+[Inferred: it keeps the agent that did the work from ruling on what the
+work was for].
 Re-materialization after a partial failure must **cite and supersede the
 orphan finding** in the new materialization record, so a retry is traceable
 rather than a second silent attempt (violation case 10 unchanged) [Inferred].
@@ -807,7 +831,8 @@ flowchart LR
     P["Approved execution-intent Proposal<br/>(sole authority until the record exists)"]
     P -->|"Materialization record written:<br/>proposal identity, work-item identities,<br/>pinned intent revision"| M["Proposal: materialized (terminal)"]
     M --> S["Scheduler, through its typed adapter<br/>(authority for work lifecycle state)"]
-    O["Scheduler work items matching<br/>no materialization record"] --> C["Orphaned-work contradiction:<br/>rendered, routed to owner adjudication"]
+    O["Syzygy-created scheduler work item<br/>(creation attributed to the adapter),<br/>matching no materialization record"] --> C["Orphaned-work contradiction:<br/>rendered, routed to adjudication"]
+    U["Scheduler work item created by any other writer,<br/>matching no materialization record"] --> K["Unknown-provenance (RFC8-23):<br/>counted, never green"]
 ```
 
 **RFC1-30.** An approved execution-intent Proposal may be decomposed into

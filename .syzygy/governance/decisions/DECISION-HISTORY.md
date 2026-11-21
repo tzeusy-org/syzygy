@@ -547,3 +547,12 @@ round-08d packets file for those rows; the round-08d
 `OWNER-DECISION-PACKETS.md` remained current for packets 1, 3, 4, 5, 9 and
 12, with packet 6 stale and banner-marked (P-22's row and the packets file's
 own banner said so).
+
+## Disposed on 2026-11-22
+
+Removed from `PENDING-OWNER-DECISIONS.md` by `syzygy-yjoq`. P-120 is done (the owner wrote the Butlers row on 2026-11-21); P-121 is withdrawn (the owner retargeted the walkthrough to a Butlers Polaris dossier on 2026-11-21, `syzygy-pdja.6`). The rows as they stood:
+
+| # | Decision | Class | Owning record |
+|---|---|---|---|
+| P-120 | Add Butlers to [`OWNED-REPOSITORIES.md`](OWNED-REPOSITORIES.md): the owner chose this on 2026-11-21 (`owned-repos-butlers`, A); the row takes effect when the owner writes it, naming the remote. No agent edits that list | writes into repositories | [`OWNER-DIRECTION-QUESTIONNAIRE-ANSWERS-2026-11-21.md`](OWNER-DIRECTION-QUESTIONNAIRE-ANSWERS-2026-11-21.md) |
+| P-121 | The owner's RFC7-30 cold-open walkthrough of the PWB Polaris page (`syzygy-1z3.22`), chosen 2026-11-21 (`cold-read-walkthrough`, A), once `syzygy-1z3.33` lands. Only the owner's judgment counts (PWB-REQ-022) | owner judgment, not a gate | [`OWNER-DIRECTION-QUESTIONNAIRE-ANSWERS-2026-11-21.md`](OWNER-DIRECTION-QUESTIONNAIRE-ANSWERS-2026-11-21.md) |

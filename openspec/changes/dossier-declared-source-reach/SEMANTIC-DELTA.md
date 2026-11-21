@@ -15,9 +15,9 @@ Normative, two homes changed together: the specification (one MODIFIED requireme
 | Subject | Path | SHA-256 |
 |---|---|---|
 | Predecessor policy (unchanged) | `.syzygy/governance/policies/POLARIS-DOSSIER-DECLARED-SOURCE-POLICY-v1.json` | `516cb1f2dba9ceb3e55166077c0800be6022012406b9b9b5f0df25bcb73aa499` |
-| Successor policy (new file) | `.syzygy/governance/policies/POLARIS-DOSSIER-DECLARED-SOURCE-POLICY-v2.json` | `fe85a8b530565a8c843546fe2ab2e29ce5730e1641bf05c1bc8214d34ca7e7e4` |
+| Successor policy (new file) | `.syzygy/governance/policies/POLARIS-DOSSIER-DECLARED-SOURCE-POLICY-v2.json` | `19b274a6ef3a83b6690bd33ada30ce0048887fa1c61cefe7501ac902020c4fef` |
 | Predecessor REQ-046 text (unchanged) | `openspec/changes/dossier-declared-source-model/proposed/polaris-generation/spec.md` | `d17dad153f030bd935059a8b0df24286d72370b275a5fb4052de901b2af4e040` |
-| Successor REQ-046 text | `openspec/changes/dossier-declared-source-reach/proposed/polaris-generation/spec.md` | `6d2558c051ea00f371bfa5de4991de2c4540fec47c862f7a42198df7d90f277a` |
+| Successor REQ-046 text | `openspec/changes/dossier-declared-source-reach/proposed/polaris-generation/spec.md` | `0d1eacddabc398def8c7ebc9f2fb19d46a21f98cc12c05faf1ea22c5ee6f8d6a` |
 
 ## Composition
 
@@ -38,7 +38,7 @@ The six paragraphs, exactly:
 [
   "From version 2.6, initialization SHALL bind, for every run it creates, the committed screening policy `.syzygy/governance/policies/POLARIS-DOSSIER-DECLARED-SOURCE-POLICY-v2.json` (policy identity `polaris-butlers-project-shape-secrets`, version `dossier-declared-source/2.0.0`) under REQ-polaris-generation-033's policy-capture rule: its path, identity, version and the SHA-256 of its exact committed bytes, with any missing, malformed, uncommitted or changed policy refused before content is used. The predecessor `.syzygy/governance/policies/POLARIS-DOSSIER-DECLARED-SOURCE-POLICY-v1.json` (version `dossier-declared-source/1.0.0`) SHALL stay committed and unedited. It remains the binding of every run whose record names it: no step SHALL re-screen such a run under version 2.0.0 or silently move it to that version. A step of a run bound to the predecessor that can no longer read the predecessor as its binding SHALL refuse with a restart explanation that names both policy versions, and SHALL change none of the run's files.",
   "In the URL-supervised form of REQ-polaris-generation-048, the bound URL origin/species policy (`POLARIS-DOSSIER-URL-ORIGIN-SPECIES-POLICY-v1`) SHALL be read over the screening policy this requirement binds as its base. That overlay's `basePolicy.reviewedSha256` names the predecessor bytes it was reviewed with, and its binding text forbids using different detector bytes silently; this paragraph is the explicit statement that the base is version 2.0.0, whose detectors and denied paths are the predecessor's with entries only added and whose admission widens by its second classification stage. URL mode therefore admits a body the second stage places, screened as this requirement states; the overlay's own sentences that no new path, file type or object is admitted are read as describing what the overlay itself adds to its base, which is nothing. Every other overlay rule applies over version 2.0.0 unchanged, and the run record SHALL name both bindings, the base by its own path, version and digest.",
-  "Version 2.0.0 classifies a path in two stages (the policy's `classDecision`). The first stage is the predecessor's classification, unchanged. Every path the predecessor places in a class SHALL keep that class, and every body the predecessor admits, retains as `redacted-span` or excludes SHALL keep that outcome, with one exception: a path a new denied basename, suffix or directory names is denied and never read, and its exclusion reason becomes the denied path. A path the predecessor admits changes outcome only through a directory named in the policy's `deniedDirectoryNames` (`.ssh`, `.gnupg`, `.aws`, `.kube`, `.docker`, `.terraform`); the added basenames and suffixes name only paths the predecessor already left indeterminate. The second stage reads only a path the first leaves without a class and without two classes, and places nothing in a path one of whose directories is named in `vendoredDirectoryNames`. Three rules with ids place the rest: `governance-text-by-name` places in `governance-text` a Markdown, MDX, reStructuredText or AsciiDoc document whose path carries a word of `governanceTextTokens` (adr, rfc, spec, specification, design, architecture and manifesto, each with its plural) and no word of `withheldTokens` (decision, governance, policy, security, conduct, doctrine, principle, with the plurals); `project-documentation-extended` places in `project-documentation` such a document at any depth, a root document's name with a non-empty document suffix (README.md, CHANGELOG.rst and the policy's other root stems) below the root, and a `.txt` file below a directory named docs, doc or documentation at any depth, when no word of its path is in either list and no segment contains a stem of `governanceStems` (design, architecture, specification, manifesto) run on into other characters; both documentation rules refuse a path any segment of which contains a stem of `withheldStems` (governance, polic, security, conduct, doctrine, principle, decision, report, benchmark) or has a word of `evidenceWords` (result, log, audit, output, with the plurals), so a run-on or camel-case name such as SecurityPolicy.md, a report or a log stays indeterminate; and `code-content-extended` places in `code-content` the YAML, TOML, JSON, HCL, protocol-buffer, CMake and Makefile extensions the policy lists, the files named Dockerfile, Containerfile, Makefile, makefile, GNUmakefile and CMakeLists.txt or beginning `Dockerfile.` or `Containerfile.`, and the policy's `languageExtensions`. A path two of those rules match, a notebook (`.ipynb`) and a document either documentation rule refuses SHALL stay indeterminate, excluded under the unclassifiable exclusion as before.",
+  "Version 2.0.0 classifies a path in two stages (the policy's `classDecision`). The first stage is the predecessor's classification, unchanged. Every path the predecessor places in a class SHALL keep that class, and every body the predecessor admits, retains as `redacted-span` or excludes SHALL keep that outcome, with one exception: a path a new denied basename, suffix or directory names is denied and never read, and its exclusion reason becomes the denied path. A path the predecessor admits changes outcome only through a directory named in the policy's `deniedDirectoryNames` (`.ssh`, `.gnupg`, `.aws`, `.kube`, `.docker`, `.terraform`); the added basenames and suffixes name only paths the predecessor already left indeterminate. The second stage reads only a path the first leaves without a class and without two classes, and places nothing in a path one of whose directories is named in `vendoredDirectoryNames`. Three rules with ids place the rest: `governance-text-by-name` places in `governance-text` a reStructuredText document whose path carries the word design (`governanceTextExtensions` and `governanceTextTokens` as narrowed to what the measured sample reaches) and no word of `withheldTokens` (decision, governance, policy, security, conduct, doctrine, principle, with the plurals); `project-documentation-extended` places in `project-documentation` a Markdown, MDX or reStructuredText document at any depth and a root document's name with a non-empty document suffix (README.md, CHANGELOG.rst and the policy's other root stems) below the root, when no word of its path is in either list and no segment contains a stem of `governanceStems` (design, architecture, specification, manifesto) run on into other characters; every second-stage rule, the configuration and code rule included, refuses a path any segment of which contains a stem of `withheldStems` (governance, polic, security, conduct, doctrine, principle, decision, report, benchmark) or has a word of `evidenceWords` (result, log, audit, output, with the plurals) or of `withheldTokens`, so a run-on or camel-case name such as SecurityPolicy.md, a report, a log or an audit stays indeterminate in any format; and `code-content-extended` places in `code-content` the YAML, TOML, JSON and Terraform (`.tf`) extensions, the files named Dockerfile and Makefile or beginning `Dockerfile.`, and the policy's `languageExtensions` (`.mts`, `.bash`, `.zsh`, `.fish`). Every admitting entry of the option that reached no path in the measured five-repository sample is left out (the policy's `notAdoptedFromTheOption`), and re-admitting one needs a later successor backed by a measurement in which it reaches a path. A path two of those rules match, a notebook (`.ipynb`) and a path a second-stage rule refuses SHALL stay indeterminate, excluded under the unclassifiable exclusion as before.",
   "A body the second stage places SHALL be screened at least as strictly as any body the predecessor admits: every predecessor detector and scope detector runs over it; the policy's `configurationDetectors` run over it as well; any detector match excludes it whole under either visibility, so it is never retained as `redacted-span`; and the active-content scan runs over it with no exemption. The `configurationDetectors` SHALL also run over every cited span of such a body and over every text an agent session writes wherever the policy's detectors screen that text, and a match there refuses the text as a match of the policy's detectors does. No predecessor detector, scope detector, denied path, active-content rule, unclassifiable exclusion, strict-UTF-8, NUL or resource-limit rule, or private-object identifier and size rule is removed or narrowed by version 2.0.0; the private rule applies to every blob excluded or withheld on any ground, the new grounds included.",
   "The run record SHALL keep naming the eligible classes `code-content`, `project-documentation` and `governance-text`. A document `governance-text-by-name` places SHALL reach the declared provider only as `governance-text`, never as `project-documentation`, and its text is data, never policy for project:syzygy (RFC3-30). Wherever Syzygy states the class of an admitted path, it SHALL state the class version 2.0.0 decides for the policy the run binds.",
   "Letting content that the predecessor cannot classify reach a provider is the owner's decision under RFC5-14. The owner made it: decision `pursuit-2026-11-21-source-reach`, option A, recorded 2026-11-21T03:53:55+00:00 on bead syzygy-3efd.24 with its authorization boundary, which this requirement keeps (no secret detector, active-content rule or fail-closed rule is weakened; no dossier run is started and no repository is read by the decision; nothing is exposed beyond the tailnet). For the words in `governanceTextTokens` only, that decision reverses the owner's screening-scope-v2 choice of variant `none` (act `PWB-SECRET-CLASSIFICATION-POLICY-PUBLIC-SOURCE-SCOPE-V2-APPROVAL-2026-10-07`), which stays history. Every other part of version 2.0.0 is an agent adoption. This requirement admits no word of `withheldTokens` and no path the stem or evidence lists refuse, no notebook, no vendored path and no other format, and narrows no detector, active-content rule or fail-closed rule; any such change needs its own decision in the class RFC5-14 assigns it."
@@ -52,7 +52,7 @@ The six paragraphs, exactly:
   {
     "where": "line kept as a prefix, text appended",
     "old": "- **Case:** Controlled clones and valid declarations, with non-terminal stdin, missing legacy records, malformed locators and overlapping state roots. Independently vary host/earlier segments, port, case and hyphen collisions with derived and explicit identities; inspect every page and machine form for attributed provenance, write reach and surviving collision disclosures. Include a subject with governance-root material and assert one unchanged repository identity with the declared observed-source role in its run, brief and pages.",
-    "new": "- **Case:** Controlled clones and valid declarations, with non-terminal stdin, missing legacy records, malformed locators and overlapping state roots. Independently vary host/earlier segments, port, case and hyphen collisions with derived and explicit identities; inspect every page and machine form for attributed provenance, write reach and surviving collision disclosures. Include a subject with governance-root material and assert one unchanged repository identity with the declared observed-source role in its run, brief and pages. Under version 2.0.0, vary for each stage-two rule a matching path, a path one word short of it, a path with a word of each token list, a vendored directory at each depth, a path two rules match, each new denied basename, suffix and directory and its letter case, a notebook, a run-on or camel-case name carrying a stem of each stem list, an extensionless root stem below the root, and a path the predecessor already places; plant each configuration detector's form in each configuration format, in a cited span and in agent text, with and without a reference or template value, and time each detector over a long run of its keyword; vary visibility; and continue a run bound to the predecessor."
+    "new": "- **Case:** Controlled clones and valid declarations, with non-terminal stdin, missing legacy records, malformed locators and overlapping state roots. Independently vary host/earlier segments, port, case and hyphen collisions with derived and explicit identities; inspect every page and machine form for attributed provenance, write reach and surviving collision disclosures. Include a subject with governance-root material and assert one unchanged repository identity with the declared observed-source role in its run, brief and pages. Under version 2.0.0, vary for each stage-two rule a matching path, a path one word short of it, a path with a word of each token list, a vendored directory at each depth, a path two rules match, each new denied basename, suffix and directory and its letter case, a notebook, a run-on or camel-case name carrying a stem of each stem list, a configuration or code path carrying a refused stem or word, an extensionless root stem below the root, and a path the predecessor already places; plant each configuration detector's form in each configuration format, in a cited span and in agent text, with and without a reference or template value, and time each detector over a long run of its keyword; vary visibility; and continue a run bound to the predecessor."
   },
   {
     "where": "line kept as a prefix, text appended",
@@ -123,7 +123,7 @@ Text fields whose value changed, old and new:
   {
     "field": "publicSourceScope.contentClassification.indeterminate",
     "old": "every other admitted blob, including documentation outside the project-documentation rule's paths (for example src/README.md), documents whose path carries a word of the rule's docExcludedTokens (decision, specification, design, governance, policy, security and conduct records) other than a root file the governance-text rule classifies, committed reports, and configuration or data in an extension outside sourceExtensions, is indeterminate and is treated as unclassifiable under unclassifiableExclusion: excluded from reading and from egress (fail closed), recorded hash-not-body, and never stored or rendered. Its path, object id and size remain code-structure, except that, for a repository whose visibility is private (sourceVisibility), its object id and size do not, under the code-structure rule",
-    "new": "every other admitted blob, including vendored documentation (a path with a directory in vendoredDirectoryNames that Stage 1 does not place), documents whose path carries a word of withheldTokens (decision, governance, policy, security, conduct, doctrine and principle records), documents and nested documentation the second stage refuses by withheldStems, evidenceWords or governanceStems, other than a root file the governance-text rule classifies, .txt files outside the docs-tree and docs-tree-text rules (and the excluded build and tooling names), notebooks (.ipynb), committed reports, symbolic-link entries the reader lists, and configuration or data in an extension or name none of sourceExtensions, configurationExtensions, languageExtensions, sourceFileNames or sourceFileNamePrefixes lists, is indeterminate and is treated as unclassifiable under unclassifiableExclusion: excluded from reading and from egress (fail closed), recorded hash-not-body, and never stored or rendered. Its path, object id and size remain code-structure, except that, for a repository whose visibility is private (sourceVisibility), its object id and size do not, under the code-structure rule"
+    "new": "every other admitted blob, including vendored documentation (a path with a directory in vendoredDirectoryNames that Stage 1 does not place), documents whose path carries a word of withheldTokens (decision, governance, policy, security, conduct, doctrine and principle records), any path a second-stage rule refuses by withheldTokens, withheldStems or evidenceWords (configuration and code included: a report, log, audit or security-policy file in a configuration format stays indeterminate) and nested documentation it refuses by governanceStems, other than a root file the governance-text rule classifies, .txt files outside the docs-tree rule (and the excluded build and tooling names), notebooks (.ipynb), committed reports, symbolic-link entries the reader lists, and configuration or data in an extension or name none of sourceExtensions, configurationExtensions, languageExtensions, sourceFileNames or sourceFileNamePrefixes lists, is indeterminate and is treated as unclassifiable under unclassifiableExclusion: excluded from reading and from egress (fail closed), recorded hash-not-body, and never stored or rendered. Its path, object id and size remain code-structure, except that, for a repository whose visibility is private (sourceVisibility), its object id and size do not, under the code-structure rule"
   },
   {
     "field": "publicSourceScope.detectors",
@@ -211,29 +211,12 @@ Text fields whose value changed, old and new:
     "new": {
       "id": "governance-text-by-name",
       "class": "governance-text",
-      "rule": "the body of an admitted blob, after every screening step, whose final path segment ends with one of governanceTextExtensions and is longer than it, such that a word of some directory segment, or of the final segment with that extension removed, is in governanceTextTokens, and no word of any directory segment or of the final segment with that extension removed is in withheldTokens. A path with an empty, '.' or '..' segment, a backslash or a leading or trailing '/' matches nothing. Matching compares a copy of the path with its ASCII letters A-Z folded to a-z and nothing else folded, normalized or decoded, and words are split as the docs-tree rule splits them (at each character in docTokenSeparators); the path is carried as admitted. No extractor runs: the class is by path and the body is admitted as whole-blob spans. The rule is read only in classDecision's second stage. Besides word matching, the rule refuses a path any directory segment of which, or whose final segment with the matched extension or suffix removed, contains one of withheldStems as a substring of its folded copy, or has a word in evidenceWords: a run-on or camel-case name (SecurityPolicy.md, CodeOfConduct.md, audit-report.md) stays indeterminate. Such a body is a target's design, architecture, architecture-decision-record, request-for-comments, specification or manifesto text, which RFC5-14 places in governance-text and never in project-documentation; it is data and never governing policy for project:syzygy (RFC5-16, RFC3-30, selfReferenceRule). It is not redacted (secretRedaction.appliesTo), so any detector match, configurationDetectors included, excludes it whole, and no active-content exemption names it, so it is scanned as before",
+      "rule": "the body of an admitted blob, after every screening step, whose final path segment ends with one of governanceTextExtensions and is longer than it, such that a word of some directory segment, or of the final segment with that extension removed, is in governanceTextTokens, and no word of any directory segment or of the final segment with that extension removed is in withheldTokens. A path with an empty, '.' or '..' segment, a backslash or a leading or trailing '/' matches nothing. Matching compares a copy of the path with its ASCII letters A-Z folded to a-z and nothing else folded, normalized or decoded, and words are split as the docs-tree rule splits them (at each character in docTokenSeparators); the path is carried as admitted. No extractor runs: the class is by path and the body is admitted as whole-blob spans. The rule is read only in classDecision's second stage. Besides word matching, the rule refuses a path any directory segment of which, or whose final segment with the matched extension or suffix removed, contains one of withheldStems as a substring of its folded copy, or has a word in evidenceWords: a run-on or camel-case name (SecurityPolicy.md, CodeOfConduct.md, audit-report.md) stays indeterminate. Such a body is a target's design text, which RFC5-14 places in governance-text and never in project-documentation; it is data and never governing policy for project:syzygy (RFC5-16, RFC3-30, selfReferenceRule). It is not redacted (secretRedaction.appliesTo), so any detector match, configurationDetectors included, excludes it whole, and no active-content exemption names it, so it is scanned as before",
       "governanceTextExtensions": [
-        ".md",
-        ".mdx",
-        ".rst",
-        ".adoc",
-        ".asciidoc"
+        ".rst"
       ],
       "governanceTextTokens": [
-        "adr",
-        "adrs",
-        "rfc",
-        "rfcs",
-        "spec",
-        "specs",
-        "specification",
-        "specifications",
-        "design",
-        "designs",
-        "architecture",
-        "architectures",
-        "manifesto",
-        "manifestos"
+        "design"
       ]
     }
   },
@@ -242,7 +225,7 @@ Text fields whose value changed, old and new:
     "new": {
       "id": "project-documentation-extended",
       "class": "project-documentation",
-      "rule": "the body of an admitted blob, after every screening step, whose path is matched by at least one of the three path rules below and in which no word of any directory segment, and no word of the final segment with its matched extension or suffix removed, is in the four-rule project-documentation rule's docExcludedTokens, and no such segment contains one of governanceStems as a substring of its folded copy (DesignDoc.md and ArchitectureOverview.md stay indeterminate rather than misclassified). A path with an empty, '.' or '..' segment, a backslash or a leading or trailing '/' matches nothing. Matching compares a copy of the path with its ASCII letters A-Z folded to a-z and nothing else folded, normalized or decoded, and words are split as the docs-tree rule splits them (at each character in docTokenSeparators); the path is carried as admitted. No extractor runs: the class is by path and the body is admitted as whole-blob spans. The rule is read only in classDecision's second stage. Besides word matching, the rule refuses a path any directory segment of which, or whose final segment with the matched extension or suffix removed, contains one of withheldStems as a substring of its folded copy, or has a word in evidenceWords: a run-on or camel-case name (SecurityPolicy.md, CodeOfConduct.md, audit-report.md) stays indeterminate. The class is decided by these paths alone: a file's own claim about itself places nothing (RFC5-14). It is not redacted (secretRedaction.appliesTo), so any detector match, configurationDetectors included, excludes it whole, and activeContent.projectDocumentationExemption does not name it, so it is scanned as before",
+      "rule": "the body of an admitted blob, after every screening step, whose path is matched by at least one of the two path rules below and in which no word of any directory segment, and no word of the final segment with its matched extension or suffix removed, is in the four-rule project-documentation rule's docExcludedTokens, and no such segment contains one of governanceStems as a substring of its folded copy (DesignDoc.md and ArchitectureOverview.md stay indeterminate rather than misclassified). A path with an empty, '.' or '..' segment, a backslash or a leading or trailing '/' matches nothing. Matching compares a copy of the path with its ASCII letters A-Z folded to a-z and nothing else folded, normalized or decoded, and words are split as the docs-tree rule splits them (at each character in docTokenSeparators); the path is carried as admitted. No extractor runs: the class is by path and the body is admitted as whole-blob spans. The rule is read only in classDecision's second stage. Besides word matching, the rule refuses a path any directory segment of which, or whose final segment with the matched extension or suffix removed, contains one of withheldStems as a substring of its folded copy, or has a word in evidenceWords: a run-on or camel-case name (SecurityPolicy.md, CodeOfConduct.md, audit-report.md) stays indeterminate. The class is decided by these paths alone: a file's own claim about itself places nothing (RFC5-14). It is not redacted (secretRedaction.appliesTo), so any detector match, configurationDetectors included, excludes it whole, and activeContent.projectDocumentationExemption does not name it, so it is scanned as before",
       "pathRules": [
         {
           "id": "prose-document",
@@ -251,23 +234,12 @@ Text fields whose value changed, old and new:
         {
           "id": "nested-root-document",
           "rule": "a path of two or more segments whose final segment, read as the root-document rule reads a one-segment path (its rootStemNumericPrefix, documentSuffixes and rootStems), is a root document by a documentSuffixes entry other than the empty one: an extensionless name below the root (bin/changes, src/app/history) matches nothing"
-        },
-        {
-          "id": "docs-tree-text",
-          "rule": "a path of two or more segments, some directory segment of which is one of docTreeRootsAnyDepth, whose final segment ends with .txt and is longer than it, is not one of the four-rule project-documentation rule's docTxtExcludedNames and does not begin with one of its docTxtExcludedPrefixes"
         }
       ],
       "proseExtensions": [
         ".md",
         ".mdx",
-        ".rst",
-        ".adoc",
-        ".asciidoc"
-      ],
-      "docTreeRootsAnyDepth": [
-        "docs",
-        "doc",
-        "documentation"
+        ".rst"
       ]
     }
   },
@@ -276,73 +248,26 @@ Text fields whose value changed, old and new:
     "new": {
       "id": "code-content-extended",
       "class": "code-content",
-      "rule": "the body of an admitted blob, after every screening step, whose final path segment ends with one of configurationExtensions or languageExtensions, equals one of sourceFileNames, or begins with one of sourceFileNamePrefixes, each compared case-sensitively as ASCII as sourceExtensions are. Configuration (YAML, TOML, JSON, HCL, protocol buffers, Dockerfiles, Makefiles and CMake files) is code-content, as configuration in a predecessor extension already is; it is source the project builds or runs from, never prose. No extractor runs: the class is by name and the body is admitted as whole-blob spans. The rule is read only in classDecision's second stage. It is not redacted (secretRedaction.appliesTo names no code-content body), so any detector match, configurationDetectors included, excludes it whole; activeContent.codeContentExemption names none of these extensions or names, so the body is scanned for active content as before",
+      "rule": "the body of an admitted blob, after every screening step, whose final path segment ends with one of configurationExtensions or languageExtensions, equals one of sourceFileNames, or begins with one of sourceFileNamePrefixes, each compared case-sensitively as ASCII as sourceExtensions are. Configuration (YAML, TOML, JSON, Terraform, Dockerfiles and Makefiles) is code-content, as configuration in a predecessor extension already is; it is source the project builds or runs from, never prose. No extractor runs: the class is by name and the body is admitted as whole-blob spans. The rule is read only in classDecision's second stage. It is not redacted (secretRedaction.appliesTo names no code-content body), so any detector match, configurationDetectors included, excludes it whole; activeContent.codeContentExemption names none of these extensions or names, so the body is scanned for active content as before. The rule refuses a path any directory segment of which, or whose final segment with the matched extension removed (or, for a sourceFileNames or sourceFileNamePrefixes match, the whole final segment), has a word in withheldTokens or evidenceWords or contains one of withheldStems as a substring of its folded copy, words being split and the copy folded as the documentation rules do: reports/benchmark-results.json, test-output.json, audit-log.yaml, security-policy.yaml, governance/decisions.json and SECURITY.yml stay indeterminate. Every Stage 2 rule applies these three refusals",
       "configurationExtensions": [
         ".yml",
         ".yaml",
         ".toml",
         ".json",
-        ".tf",
-        ".hcl",
-        ".proto",
-        ".cmake",
-        ".mk",
-        ".mak",
-        ".dockerfile",
-        ".Dockerfile"
+        ".tf"
       ],
       "languageExtensions": [
-        ".cxx",
-        ".hxx",
-        ".hh",
         ".mts",
-        ".cts",
-        ".scala",
-        ".sc",
-        ".kts",
-        ".groovy",
-        ".gradle",
-        ".clj",
-        ".cljs",
-        ".cljc",
-        ".ex",
-        ".exs",
-        ".erl",
-        ".hrl",
-        ".hs",
-        ".ml",
-        ".mli",
-        ".fs",
-        ".fsx",
-        ".dart",
-        ".r",
-        ".R",
-        ".jl",
-        ".m",
-        ".mm",
-        ".pl",
-        ".pm",
-        ".ps1",
-        ".psm1",
         ".bash",
         ".zsh",
-        ".fish",
-        ".zig",
-        ".nim",
-        ".vb",
-        ".elm"
+        ".fish"
       ],
       "sourceFileNames": [
         "Dockerfile",
-        "Containerfile",
-        "Makefile",
-        "makefile",
-        "GNUmakefile",
-        "CMakeLists.txt"
+        "Makefile"
       ],
       "sourceFileNamePrefixes": [
-        "Dockerfile.",
-        "Containerfile."
+        "Dockerfile."
       ]
     }
   },
@@ -438,7 +363,7 @@ Text fields whose value changed, old and new:
         {
           "id": "hcl-secret-variable-default",
           "kind": "regular-expression",
-          "pattern": "variable[ \\t]+\"[^\"\\r\\n]*(?:password|passwd|secret|token|key|credential)[^\"\\r\\n]*\"[ \\t]*\\{[^}]*?default[ \\t]*=[ \\t]*\"[^\"$\\r\\n]{8,}\"",
+          "pattern": "variable[ \\t]+\"(?=[^\"\\r\\n]*?(?:password|passwd|secret|token|key|credential))[^\"\\r\\n]*\"[ \\t]*\\{[^}]*?default[ \\t]*=[ \\t]*\"[^\"$\\r\\n]{8,}\"",
           "flags": "gi"
         },
         {
@@ -460,7 +385,7 @@ Text fields whose value changed, old and new:
           "flags": "gi"
         }
       ],
-      "consequence": "[Inferred] a configuration body holding a password, secret, token or key under a quoted or unquoted key (JSON, YAML, TOML, HCL, Makefile and Dockerfile assignment forms; the keyword may sit anywhere in the key, so secret_key, SECRET_KEY_BASE, db_password_prod and a Docker auths entry's auth are matched; the predecessor's credential-assignment form reads neither a quoted JSON key nor such compound keys), a Kubernetes Secret manifest (whose base64 values no other detector reads), a Terraform variable whose name names a secret and which carries a default, a Dockerfile ENV or ARG naming a secret with a value, a netrc machine line, or an Authorization header value, is excluded whole. Residuals: a secret under a key that contains none of the keywords (for example a bare value in a list, or a key named only pass or pw), a value of fewer than eight characters or one containing whitespace or a quote, a value that opens with $, < or { (read as a reference or template), an encoded, encrypted (an Ansible Vault body) or split value, and a secret whose key and value sit on different lines are not matched. Keywords match inside longer words, so an author, tokenizer or passwordless key with a long value is matched and withholds its body (fail closed). Each pattern bounds its quantifiers before its value run, so matching from every offset stays linear in the body length"
+      "consequence": "[Inferred] a configuration body holding a password, secret, token or key under a quoted or unquoted key (JSON, YAML, TOML, HCL, Makefile and Dockerfile assignment forms; the keyword may sit anywhere in the key, so secret_key, SECRET_KEY_BASE, db_password_prod and a Docker auths entry's auth are matched; the predecessor's credential-assignment form reads neither a quoted JSON key nor such compound keys), a Kubernetes Secret manifest (whose base64 values no other detector reads), a Terraform variable whose name names a secret and which carries a default, a Dockerfile ENV or ARG naming a secret with a value, a netrc machine line, or an Authorization header value, is excluded whole. Residuals: a secret under a key that contains none of the keywords (for example a bare value in a list, or a key named only pass or pw), a value of fewer than eight characters or one containing whitespace or a quote, a value that opens with $, < or { (read as a reference or template), an encoded, encrypted (an Ansible Vault body) or split value, and a secret whose key and value sit on different lines are not matched. Keywords match inside longer words, so an author, tokenizer or passwordless key with a long value is matched and withholds its body (fail closed). No pattern nests an ambiguous quantifier: each bounds its quantifiers before its value run, and hcl-secret-variable-default finds its keyword by a lazy look-ahead and then reads the quoted name once (a name holds no quote, so the look-ahead form matches exactly the text the two-unbounded-runs form would, without trying every split of the name); matching from one offset is linear in the body length"
     }
   },
   {
@@ -498,6 +423,10 @@ Text fields whose value changed, old and new:
       },
       "notAdoptedFromTheOption": [
         {
+          "what": "every admitting entry with no path in the measured sample: the census of the five public repositories (docs/evidence/syzygy-3efd-24/citable-share-v2-2026-11-22.json, its zeroPathEntries) found no path for them, so they are left out rather than widened for no gain; among them Markdown, MDX and AsciiDoc design, architecture, ADR, RFC, specification and manifesto documents, AsciiDoc prose, .txt files in nested docs trees, HCL, protocol buffers, CMake and most added languages",
+          "why": "the bead's rule: a format that contributes almost nothing is left out. Re-admitting any of them needs a later successor backed by a measurement in which it reaches a path"
+        },
+        {
           "what": "notebook text cells (.ipynb)",
           "why": "a text cell is a JSON string inside the notebook blob, so admitting it needs an extractor and a quotation rule that locates a cited span in the decoded cell rather than in the blob's bytes (REQ-polaris-generation-034 verifies every quotation against the pinned blob); the whole notebook body, outputs included, is not what the option admits. A .ipynb path stays indeterminate until a later successor states that extractor"
         },
@@ -507,7 +436,7 @@ Text fields whose value changed, old and new:
         },
         {
           "what": "run-on and camel-case names carrying a withheld, report or governance word",
-          "why": "a file such as SecurityPolicy.md, CodeOfConduct.md or DesignDoc.md folds to one word that is in no token list, so word matching alone would place it in project-documentation; the second stage therefore also refuses a documentation path any of whose segments contains a stem of withheldStems as a substring or has a word of evidenceWords, and project-documentation-extended refuses a segment containing a stem of governanceStems, so such paths stay indeterminate"
+          "why": "a file such as SecurityPolicy.md, CodeOfConduct.md or DesignDoc.md folds to one word that is in no token list, so word matching alone would place it in project-documentation; the second stage therefore also refuses a path (documentation, configuration or code alike) any of whose segments contains a stem of withheldStems as a substring or has a word of evidenceWords or withheldTokens, and project-documentation-extended refuses a segment containing a stem of governanceStems, so such paths stay indeterminate"
         }
       ]
     }
@@ -523,7 +452,7 @@ Text fields whose value changed, old and new:
 2. Every predecessor detector and scope detector still runs everywhere it ran; `configurationDetectors` only add matches, and they run over no Stage-1 body (so they cannot change a Stage-1 outcome) but do run over agent text, where they can only add refusals.
 3. The two exemptions and the redaction that lift a predecessor rule for some bodies are narrowed in their new texts so that they name no Stage-2 body: such a body is scanned for active content and excluded whole on any detector match, under either visibility. The predecessor bodies they named are named exactly as before (the four path rules of the predecessor project-documentation rule; code-content bodies in `exemptExtensions`, which this version does not extend).
 4. Denied-path lists only gain entries, and one rule kind is added; an unclassifiable blob (no rule places it, or two do) stays excluded from reading and egress; the private object-id and size rule is unchanged and applies to every new exclusion ground.
-5. What is newly admitted is what the owner's option names, minus notebooks and the `withheldTokens` words; it reaches the declared provider only under SEC-2, as its true RFC5-14 class.
+5. What is newly admitted is what the owner's option names, minus notebooks, the `withheldTokens` words and every admitting entry that reached no path in the measured five-repository sample (`docs/evidence/syzygy-3efd-24/citable-share-v2-2026-11-22.json`, `zeroPathEntries`); it reaches the declared provider only under SEC-2, as its true RFC5-14 class.
 
 ## Displaced texts
 

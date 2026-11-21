@@ -493,8 +493,8 @@ REACH_TAG = "polaris-dossier-declared-source-reach-v2.6"
 REACH_STATUS_PREFIX = f"[Declared-source reach amendment 2.6]({REACH_HOME})"
 REACH_REPLACES = (POLARIS_ID + "046",)
 REACH_SUBJECTS = {
-    REACH_SPEC: "6d2558c051ea00f371bfa5de4991de2c4540fec47c862f7a42198df7d90f277a",
-    REACH_POLICY: "fe85a8b530565a8c843546fe2ab2e29ce5730e1641bf05c1bc8214d34ca7e7e4",
+    REACH_SPEC: "0d1eacddabc398def8c7ebc9f2fb19d46a21f98cc12c05faf1ea22c5ee6f8d6a",
+    REACH_POLICY: "19b274a6ef3a83b6690bd33ada30ce0048887fa1c61cefe7501ac902020c4fef",
 }
 REACH_BOUND_PARTS = len(REACH_SUBJECTS)
 ADOPTION_LEDGER_TITLE = "# Agent adoptions"

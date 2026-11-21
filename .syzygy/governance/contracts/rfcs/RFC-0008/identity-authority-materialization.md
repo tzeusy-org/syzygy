@@ -38,8 +38,8 @@ Trajectory charter.
 This module decides what work exists, under whose authority, and which store
 is allowed to say so. Two rules carry most of the weight: **Trajectory never
 holds a second editable store of a scheduler-owned field** (RFC8-2(a),
-RFC8-7, RFC8-11), and **a scheduler work item with no materialization record
-is a Contradiction, not a badge** (RFC8-8, RFC8-10).
+RFC8-7, RFC8-11), and **a Syzygy-created scheduler work item with no
+materialization record is a Contradiction, not a badge** (RFC8-8, RFC8-10).
 
 - **What it owns:** what Trajectory is, what it may never become, what it is
   made of, and who is authoritative at each stage of a work item's life.
@@ -59,8 +59,10 @@ is a Contradiction, not a badge** (RFC8-8, RFC8-10).
   - **No second editable store.** Post-materialization lifecycle state is
     read at the answering evaluation and re-derived, never merged; capturing
     that a transition *occurred* is a different, permitted act.
-  - **Orphaned work is a Contradiction.** It is routed to owner adjudication
-    as its only lawful exit, never filtered, never absorbed as ordinary work.
+  - **Orphaned work is a Contradiction.** Syzygy-created work that no
+    materialization record matches is routed to adjudication as its only
+    lawful exit, never filtered, never absorbed as ordinary work; unrecorded
+    work created by any other writer is Unknown-provenance (RFC8-23).
 - **Neighbours in the package:**
   - The normalized work-state vocabulary this module's enumerations feed is
     defined in module 2 (RFC8-12/8-13).
@@ -222,18 +224,26 @@ Drafted (unapproved) proposals render as *unadopted draft* (RFC2-25 sibling
 state) — enumerable, never counted among approved intent, never anchoring any
 remaining-work total.
 
-**Orphaned work is a Contradiction, not a badge.** A scheduler work item
-matching **no materialization record** is an **orphaned-work Contradiction**
-(RFC1-29, final paragraph): two stores answering one question, no pinned
-intent revision for RFC2-18 to bind to, no warrant traceable through
-`materializes`.
+**Orphaned work is a Contradiction, not a badge.** A **Syzygy-created**
+scheduler work item (its creation attributed, in the scheduler's own history,
+to the identity Syzygy's adapter writes under — RFC4-17) matching **no
+materialization record** is an **orphaned-work Contradiction** (RFC1-29,
+"Which unrecorded work is orphaned"): two stores answering one question, no
+pinned intent revision for RFC2-18 to bind to, no warrant traceable through
+`materializes`. An unrecorded item created by any other writer is
+Unknown-provenance (RFC8-23), never this Contradiction; one whose creator the
+history does not name renders Unknown-provenance with the orphan check
+disclosed as undecided.
 
 - Trajectory is the only surface enumerating scheduler work items, so the
   obligation lands here: the enumeration **must**
   - perform the check;
   - mint the Contradiction (RFC1-5/RFC1-18(b));
-  - route it to **owner adjudication as its only lawful exit** (RFC1-21;
-    RFC2-15);
+  - route it to **adjudication as its only lawful exit** (RFC1-21;
+    RFC2-15): an agent's recorded adoption, reported and open to the
+    owner's veto, or the owner's decision when it falls in an owner class
+    (VIS-4), by an agent neither assigned to nor working any affected item
+    (RFC1-29, "How an orphan leaves");
   - render the affected conclusion Unknown (reason #8
     `contradicted-pending-adjudication`, `suspended` tier);
   - and render the finding itself — **never silently adopted into a record,
@@ -291,10 +301,11 @@ directions.
 - After materialization the scheduler is authoritative for lifecycle state;
   `.syzygy/work/**` plan state is never rendered as current for a
   materialized item.
-- **A missing record is a finding, not a silent skip:** a scheduler work item
-  matching no materialization record is the orphaned-work Contradiction,
-  handled per RFC8-8 — never absorbed as ordinary work, never treated as
-  evidence that materialization occurred.
+- **A missing record is a finding, not a silent skip:** a Syzygy-created
+  scheduler work item no materialization record matches is the orphaned-work
+  Contradiction, handled per RFC8-8; one created by any other writer is
+  Unknown-provenance (RFC8-23). Neither is ever absorbed as ordinary work or
+  treated as evidence that materialization occurred.
 - Until the record exists, materialization has not occurred, whatever the
   scheduler holds (RFC1-29).
 
@@ -309,7 +320,8 @@ flowchart LR
   W["Scheduler work item(s)<br/>scheduler authoritative for lifecycle"]
   P <--> R
   R <--> W
-  X["Scheduler work item matching<br/>no materialization record"] --> C["Orphaned-work Contradiction<br/>owner adjudication only (RFC8-8)"]
+  X["Syzygy-created scheduler work item,<br/>matching no materialization record"] --> C["Orphaned-work Contradiction<br/>adjudication only (RFC8-8)"]
+  Y["Scheduler work item created by another writer,<br/>matching no materialization record"] --> K["Unknown-provenance<br/>(RFC8-23)"]
 ```
 
 **RFC8-11.** **Divergence renders; Trajectory never adjudicates it.**
@@ -340,10 +352,12 @@ and are never renumbered. Cases 4 and 12 span modules and are held in
    transitions that RFC8-11 then forbids correcting.
 3. *(RFC8-8)* "What remains" counts drafted proposals among approved intent,
    or omits items whose plane could not be determined.
-11. *(RFC8-8/10)* A work item with no materialization record rendered as
-    ordinary open work, or as an Unknown-provenance badge filtered off the
-    board with only a count disclosed — no Contradiction minted, no
-    adjudication route, the affected conclusion never rendered Unknown.
+11. *(RFC8-8/10)* A Syzygy-created work item with no materialization
+    record rendered as ordinary open work, or as an Unknown-provenance badge
+    filtered off the board with only a count disclosed — no Contradiction
+    minted, no adjudication route, the affected conclusion never rendered
+    Unknown. *(Amended by U2: an unrecorded item created by another writer is
+    Unknown-provenance, and rendering it so is not this violation.)*
 
 ---
 

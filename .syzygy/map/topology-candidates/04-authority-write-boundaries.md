@@ -62,8 +62,9 @@ source of truth.
 | What work is scheduled, in what state? | The scheduler (Beads) — via its typed adapter |
 | What does Syzygy display? | A rebuildable projection of all the above (VIS-6) |
 
-- A contradiction between typed authorities routes to owner adjudication,
-  never precedence.
+- A contradiction between typed authorities routes to adjudication — an
+  agent's recorded adoption, or the owner in an owner class (VIS-4) — never
+  precedence.
 
 ## Governance categories and write-authority classes *(added at the rev7 rework)*
 

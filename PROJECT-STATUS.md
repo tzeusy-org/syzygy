@@ -120,7 +120,7 @@ authority and no model yet called on the current path.
     and brief v12); its implementation (syzygy-3efd.30) is not yet landed.
     *(2026-11-22: the predecessor figure "365 scenarios" is superseded by that
     amendment; all 39 identities remain.)*
-    [Declared-source reach amendment 2.6](openspec/changes/dossier-declared-source-reach) is agent-adopted in A-22.
+    [Declared-source reach amendment 2.6](openspec/changes/dossier-declared-source-reach) is agent-adopted in A-25.
     It replaces REQ-polaris-generation-046 (3 to 11 scenarios) and binds the screening-policy successor
     `POLARIS-DOSSIER-DECLARED-SOURCE-POLICY-v2.json`; its classifier and screen change (syzygy-3efd.24) is not
     yet landed, and until it lands the screen refuses the successor and runs stay on v1.
@@ -581,7 +581,6 @@ python3 scripts/check_quotations.py     # a quotation beside a path:line locator
 python3 scripts/check_quotations.py --selftest
 python3 scripts/check_docs_review_campaign_partition.py --check   # every docs/reviews/ file in exactly one docs/review-campaigns/ fragment
 python3 scripts/check_docs_review_campaign_partition.py --selftest
-python3 scripts/check_surface_freeze.py --selftest   # the surface merge freeze's fixtures; hosted CI also runs it against each change's base
 python3 scripts/build_evidence_index.py --selftest   # the on-demand docs/evidence/ index's fixtures (syzygy-bpyt.9.1)
 DR=.syzygy/governance/contracts/candidates/round-2026-08f/fixtures/DRY-RUN-ADMINISTRATION.json
 python3 scripts/validate_launch_administration.py $DR
@@ -599,7 +598,7 @@ python3 scripts/record_narrative_profile_adoption.py --check --date 2026-10-07 -
 python3 scripts/record_rfc5_project_documentation_act.py --selftest   # rfc5 --selftest
 ```
 
-The one hundred and twenty-nine checks above are the same one hundred and twenty-nine the hosted workflow runs
+The one hundred and twenty-eight checks above are the same one hundred and twenty-eight the hosted workflow runs
 (`.github/workflows/governance-docs.yml`), so "hosted CI is green" and "the
 battery is clean" are one claim rather than two a reader conflates. The
 `git tag` line is orientation, not a check — it prints and cannot fail.
