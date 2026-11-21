@@ -39,6 +39,10 @@ Its five MODIFIED requirements are counted independently by this tool's two
 parsers, with046's declared name change applied before replacement. Invalid
 binding inputs refuse counting; a wholly absent historical amendment is inactive.
 
+The explicit URL declared-source version2.1 amendment follows version2.0
+when its own adoption binding verifies. Each parser counts its four replacements
+and one addition against that predecessor.
+
 ## Overlay semantics
 
 Applied in the order the real OpenSpec tool uses at archive time (confirmed
@@ -420,31 +424,35 @@ def declared_source_amendment(root: Path) -> str | None:
     return text
 
 
+def url_source_amendment(root: Path) -> str | None:
+    """Verified text, a pending or retired amendment, or a counting refusal."""
+    import check_spec_reconciliation as adoption
+    text, records, subjects = adoption.url_source_binding(root)
+    if records or subjects:
+        raise ScenarioCountError("URL declared-source adoption findings:\n" + "\n".join(records + subjects))
+    return text
+
+
 def build_composition(root: Path) -> CompositionResult:
-    files = discover_composition_files(root)
+    import check_spec_reconciliation as adoption
+    sources = [(path.relative_to(root).as_posix(), path.read_text(encoding="utf-8"))
+               for path in discover_composition_files(root)]
+    for label, text in ((adoption.DECLARED_SOURCE_SPEC, declared_source_amendment(root)),
+                        (adoption.URL_SOURCE_SPEC, url_source_amendment(root))):
+        if text is not None:
+            sources.append((label, text))
+
     per_file: list[tuple[str, FileDelta, FileDelta]] = []
     deltas_1: list[tuple[str, FileDelta]] = []
     deltas_2: list[tuple[str, FileDelta]] = []
-    for f in files:
-        text = f.read_text(encoding="utf-8")
-        label = f.relative_to(root).as_posix()
+    for label, text in sources:
         d1 = parse_regex(text, label)
         d2 = parse_manual(text, label)
-        per_file.append((label, d1, d2))
-        deltas_1.append((label, d1))
-        deltas_2.append((label, d2))
-    # The one adopted MODIFIED amendment follows the historical additions.
-    # Share its record/byte binding, but count it with this tool's own parsers.
-    import check_spec_reconciliation as adoption
-    amendment = declared_source_amendment(root)
-    if amendment is not None:
-        label = adoption.DECLARED_SOURCE_SPEC
-        d1 = parse_regex(amendment, label)
-        d2 = parse_manual(amendment, label)
-        # REQ-046 keeps its identity but changes its name in version2.0.
-        rename = ("Launch-time consent", "Declared local-source admission")
-        deltas_1.append((label + " (REQ-046 rename)", FileDelta(renamed=[rename])))
-        deltas_2.append((label + " (REQ-046 rename)", FileDelta(renamed=[rename])))
+        if label == adoption.DECLARED_SOURCE_SPEC:
+            # REQ-046 keeps its identity but changes its name in version2.0.
+            rename = ("Launch-time consent", "Declared local-source admission")
+            deltas_1.append((label + " (REQ-046 rename)", FileDelta(renamed=[rename])))
+            deltas_2.append((label + " (REQ-046 rename)", FileDelta(renamed=[rename])))
         per_file.append((label, d1, d2))
         deltas_1.append((label, d1))
         deltas_2.append((label, d2))
@@ -464,9 +472,13 @@ def composition_inputs(root: Path) -> list[Path]:
     """Composition files plus the adoption inputs a projected install must keep."""
     import check_spec_reconciliation as adoption
     declared_source_amendment(root)
+    url_source_amendment(root)
+    paths = adoption.declared_source_inputs(root) | {
+        adoption.URL_SOURCE_REPLACEMENTS, *adoption.URL_SOURCE_SUBJECTS,
+        *adoption.URL_SOURCE_RFC_PATHS,
+    }
     files = discover_composition_files(root)
-    files += [root / rel for rel in sorted(adoption.declared_source_inputs(root))
-              if (root / rel).is_file()]
+    files += [root / rel for rel in sorted(paths) if (root / rel).is_file()]
     return list(dict.fromkeys(files))
 
 
@@ -713,16 +725,26 @@ def _expect_fail(label: str, fn) -> None:
     raise ScenarioCountError(f"selftest fixture '{label}' did not fail: the check passed on a mutated input")
 
 
+def _copy_composition_inputs(root: Path, dest: Path) -> None:
+    for source in [*composition_inputs(root), root / STATUS_PAGE_REL]:
+        target = dest / source.relative_to(root)
+        target.parent.mkdir(parents=True, exist_ok=True)
+        target.write_bytes(source.read_bytes())
+
+
 def _declared_source_selftest(base: Path) -> None:
-    """Exercise the real reviewed layer and its record inputs in owned copies."""
+    """Exercise the reviewed v2.0 predecessor before the v2.1 adoption row."""
     if declared_source_amendment(ROOT) is None:
         return  # Historical tools/trees have no such amendment to project.
     import check_spec_reconciliation as adoption
     fixture = base / "declared-source"
-    for source in [*composition_inputs(ROOT), ROOT / STATUS_PAGE_REL]:
-        target = fixture / source.relative_to(ROOT)
-        target.parent.mkdir(parents=True, exist_ok=True)
-        target.write_bytes(source.read_bytes())
+    _copy_composition_inputs(ROOT, fixture)
+    ledger = fixture / adoption.AGENT_ADOPTIONS
+    ledger.write_text("".join(line for line in ledger.read_text(encoding="utf-8").splitlines(keepends=True)
+                              if not adoption.is_url_source_row(line.rstrip("\n"))), encoding="utf-8")
+    status = fixture / STATUS_PAGE_REL
+    status.write_bytes(STATUS_FIGURE_RE.sub(
+        b"38 requirements and 277 scenarios in the effective composition", status.read_bytes(), count=1))
     result, _reqs, _scenarios = _run_check(fixture)
     expected = {"Operator-agent authoring mode": 5,
                 "Agent brief and mechanically checked draft": 28,
@@ -735,10 +757,7 @@ def _declared_source_selftest(base: Path) -> None:
         raise ScenarioCountError("declared-source control differs from literal five-requirement counts")
     print("  [ok] declared-source: verified five replacements and046 rename total38/277")
     projected = base / "declared-source-projected"
-    for source in [*composition_inputs(fixture), fixture / STATUS_PAGE_REL]:
-        target = projected / source.relative_to(fixture)
-        target.parent.mkdir(parents=True, exist_ok=True)
-        target.write_bytes(source.read_bytes())
+    _copy_composition_inputs(fixture, projected)
     if _run_check(projected)[0].per_requirement != result.per_requirement:
         raise ScenarioCountError("projected declared-source inputs lose the effective composition")
     print("  [ok] declared-source: projected install keeps binding inputs and effective composition")
@@ -758,12 +777,41 @@ def _declared_source_selftest(base: Path) -> None:
                  lambda: build_composition(projected))
 
 
+def _url_source_selftest(base: Path) -> None:
+    if url_source_amendment(ROOT) is None:
+        return  # The transaction or an archived tree may precede adoption.
+    import check_spec_reconciliation as adoption
+
+    result, _reqs, _scenarios = _run_check(ROOT)
+    expected = {"Provenance-bound source policy": 14,
+                "Operator-agent authoring mode": 6,
+                "Fresh-context review in the operator-agent mode": 37,
+                "Trunk-tip revision pinned at launch": 24,
+                "Declared URL dossier supervisor": 27}
+    if (len(result.per_requirement), result.total) != (39, 333) or any(
+            result.per_requirement.get(normalize_name(name)) != (name, count)
+            for name, count in expected.items()):
+        raise ScenarioCountError("URL declared-source control differs from literal v2.1 counts")
+    print("  [ok] URL declared-source: four replacements and one addition total 39/333")
+
+    projected = base / "url-source-projected"
+    _copy_composition_inputs(ROOT, projected)
+    if _run_check(projected)[0].per_requirement != result.per_requirement:
+        raise ScenarioCountError("projected URL declared-source inputs lose the effective composition")
+    print("  [ok] URL declared-source: projected install keeps binding inputs and effective composition")
+
+    (projected / adoption.URL_SOURCE_RFC_PATHS[-1]).unlink()
+    _expect_fail("projected URL declared-source missing contract binding refuses counting",
+                 lambda: build_composition(projected))
+
+
 def selftest() -> None:
     print("Running rule-6 mutation fixtures (each must make the check fail closed)...")
 
     with tempfile.TemporaryDirectory(prefix="polaris-scenario-count-selftest-") as tmp:
         base = Path(tmp)
         _declared_source_selftest(base)
+        _url_source_selftest(base)
 
         # Sanity: the good fixture itself must pass, with the exact literal
         # totals hard-coded above (never imported from the module).
