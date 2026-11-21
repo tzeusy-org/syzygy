@@ -1281,12 +1281,19 @@
 > the act-ordering note and the launch-scope index above them are history
 > too. Agent adoption A-13 records the triage.
 
+> **Updated 2026-11-21, later (D11 adopted).** The owner said "Adopt D11";
+> P-119 is resolved and its row is in `DECISION-HISTORY.md` §"Resolved on
+> 2026-11-21 (P-119 — doctrine amendment D11 adopted)". Two rows remain
+> open: P-120 and P-121.
+>
+> **Updated 2026-11-21, later still (P-120 done).** The owner added Butlers
+> to `OWNED-REPOSITORIES.md` in commit `c62d4cf79` ("I own butlers"). P-120
+> moves to `DECISION-HISTORY.md`; one row remains open: P-121.
+
 ## Open, and only the owner can dispose
 
 | # | Decision | Class | Owning record |
 |---|---|---|---|
-| P-119 | Doctrine amendment **D11**: an agent session's own raw reads may reach the run's declared provider unscreened, disclosed on every run page; everything Syzygy itself sends, keeps or renders stays screened. It writes the owner's 2026-11-21 answer A on `secrets-raw-clone-to-provider` into SEC-2 and SEC-5. Adopt, amend or decline; until adopted, SEC-2 and SEC-5 stand as written | doctrine; secrets | `../contracts/candidates/doctrine-amendment-session-raw-reads-d11/PROPOSAL.md`; [`OWNER-DIRECTION-QUESTIONNAIRE-ANSWERS-2026-11-21.md`](OWNER-DIRECTION-QUESTIONNAIRE-ANSWERS-2026-11-21.md) |
-| P-120 | Add Butlers to [`OWNED-REPOSITORIES.md`](OWNED-REPOSITORIES.md): the owner chose this on 2026-11-21 (`owned-repos-butlers`, A); the row takes effect when the owner writes it, naming the remote. No agent edits that list | writes into repositories | [`OWNER-DIRECTION-QUESTIONNAIRE-ANSWERS-2026-11-21.md`](OWNER-DIRECTION-QUESTIONNAIRE-ANSWERS-2026-11-21.md) |
 | P-121 | The owner's RFC7-30 cold-open walkthrough of the PWB Polaris page (`syzygy-1z3.22`), chosen 2026-11-21 (`cold-read-walkthrough`, A), once `syzygy-1z3.33` lands. Only the owner's judgment counts (PWB-REQ-022) | owner judgment, not a gate | [`OWNER-DIRECTION-QUESTIONNAIRE-ANSWERS-2026-11-21.md`](OWNER-DIRECTION-QUESTIONNAIRE-ANSWERS-2026-11-21.md) |
 
 **Nothing in this register is self-executing.** An owner decision is

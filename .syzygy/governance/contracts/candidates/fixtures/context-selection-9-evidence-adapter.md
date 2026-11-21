@@ -106,8 +106,8 @@ scripts/context_load.py rfcs/RFC-0004/README.md \
   craft:testing-and-verification.md
 ```
 
-Measured: **30,297 words ≈ 40,901 estimated tokens** (words × 1.35), or
-**54,382 estimated tokens** at chars ÷ 4 over 217,530 characters. Both
+Measured: **30,599 words ≈ 41,309 estimated tokens** (words × 1.35), or
+**54,849 estimated tokens** at chars ÷ 4 over 219,396 characters. Both
 estimates breach the proposed trigger; the verdict does not depend on which
 heuristic is chosen, and the second figure is stated so that it cannot.
 
@@ -294,7 +294,7 @@ them.
 ## Packet digest
 
 sha256 over the mandatory files concatenated in listed order:
-`450afc1645b91138…` (recompute: `cat <mandatory files> | sha256sum`, with
+`cc0d834f19669231…` (recompute: `cat <mandatory files> | sha256sum`, with
 `doctrine:` resolved to `.syzygy/governance/doctrine/` and `craft:` to
 `.syzygy/governance/policies/craft-and-care/`). Measured, not compiled, by
 `scripts/context_load.py`.

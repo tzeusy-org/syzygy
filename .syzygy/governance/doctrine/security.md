@@ -1,8 +1,10 @@
 # Security and blast radius
 
 Syzygy treats observed code as untrusted everywhere, stays within the owner's
-tailnet, sends content only to a run's declared provider, keeps secrets out,
-and writes into other people's repositories only with the owner's consent.
+tailnet, sends content only to a run's declared provider, keeps secrets out
+of everything it sends, keeps and renders (with one disclosed exception, a
+dossier session's own reads), and writes into other people's repositories
+only with the owner's consent.
 
 - **Why this needs doctrine:** Syzygy indexes a whole portfolio, listens on a
   network, may execute observed-project code, and writes into the
@@ -47,7 +49,8 @@ flowchart LR
 ```
 
 **SEC-2 — Portfolio data leaves owner-controlled infrastructure only for a
-declared provider.** Secrets never leave. Repository content, or
+declared provider.** Secrets never leave through Syzygy; a dossier
+session's own raw reads are the one disclosed exception. Repository content, or
 anything derived from it, is sent to a store or service the owner does not
 control only when that service is a provider declared for the run. No
 per-project or per-repository consent is needed.
@@ -59,8 +62,27 @@ per-project or per-repository consent is needed.
   example, the model provider behind the operator's agent tool) in its own
   record, and Syzygy renders them on the project's surface.
 - **A provider not declared for the run receives nothing.**
-- **Secrets never leave (SEC-5):** content that matches the secret-detection
-  policy, or cannot be classified, is never sent, whatever is declared.
+- **Secrets never leave through Syzygy (SEC-5):** content that matches the
+  secret-detection policy, or cannot be classified, is never sent by Syzygy,
+  whatever is declared. This covers every prompt, brief, request and payload
+  Syzygy builds, and every transmission through its egress check.
+- **One accepted exception: a dossier session's own reads (D11).** The
+  authoring session of a Polaris dossier run reads the raw clone through its
+  own agent tool, and what it reads goes to that session's model provider.
+  Syzygy cannot screen or observe that traffic, even when Syzygy launched the
+  session. The owner accepts that a secret in the clone (tracked, untracked
+  or ignored files, and git metadata alike) may reach the provider this way,
+  and that the session may read any content class in the clone, not only the
+  classes the run declares. Two conditions hold:
+  - the provider is declared for the run, as for any other send;
+  - the run discloses, on every run, that the session read the raw clone
+    unscreened and that a secret in it may have reached the provider. The
+    disclosure goes wherever the dossier spec puts its authoring disclosure:
+    the run record, the dossier's appendix and every rendered page's machine
+    form; a run that renders no page still records it in the run record.
+  The exception covers no other session or feature. What the session writes
+  back into a Syzygy surface or store is still bound by SEC-5: a secret
+  reproduced there breaks the trust floor.
 - **With no declared provider**, the inferred layer renders Unknown instead
   of being computed.
 - **Remote backing dependencies** are allowed under the same rule: a backing
@@ -69,7 +91,8 @@ per-project or per-repository consent is needed.
   declared provider without a per-repository question.
 - *Violation:* an index synced to a third-party service as a side effect of a
   feature; project content sent to a provider the run did not declare; a
-  secret in a prompt.
+  secret in a prompt Syzygy builds; a dossier run without the raw-read
+  disclosure; any other session sent raw repository content unscreened.
 
 **SEC-3 — Observed code is untrusted, everywhere.** Syzygy itself never runs
 observed-project code. Agents may build and run it in a sandbox without
@@ -153,6 +176,9 @@ exclusion is rendered.
   policy detect less, admits unclassifiable content, or lets a secret be
   indexed, rendered or sent waits for the owner. Any other change to the
   screening or classification policy is an agent adoption.
+- **One weakening the owner chose (D11):** a dossier session's own raw reads
+  are not screened, and the run discloses so (SEC-2's accepted exception).
+  Every other weakening still waits for the owner.
 - **Matching content** is excluded, and the exclusion is rendered.
 - **Unclassifiable content** is excluded too: classification fails closed.
 - **A secret reproduced** in any Syzygy surface, store, or endpoint breaks the

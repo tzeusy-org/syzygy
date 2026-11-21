@@ -653,6 +653,12 @@ def selftest():
 
     case("a clause claimed by two behaviour rows is refused", duplicate_clause)
 
+    def _anchor_open_row():
+        """The lowest-numbered row the real queue counts open, or None."""
+        ids = sorted(open_decisions(base_queue),
+                     key=lambda i: int(re.match(r"P-(\d+)", i).group(1)))
+        return ids[0] if ids else None
+
     def executed_in_prose():
         """A row that *discusses* the executed marker is still open.
 
@@ -666,15 +672,21 @@ def selftest():
         row moved to `DECISION-HISTORY.md` in the register refactor; P-43
         remains genuinely open, and is the very row whose prose discusses
         the marker. Re-anchored 2026-11-21 from P-43 to P-119: D10 F-10
-        decided P-43 and moved every row but the owner-class three out.)"""
+        decided P-43 and moved every row but the owner-class three out.
+        Since 2026-11-21, later, the fixture takes the lowest-numbered open
+        row of the real queue, so an owner ruling no longer breaks it: P-119
+        left the open table the day it was anchored.)"""
+        pid = _anchor_open_row()
+        if pid is None:
+            return False, "no open row to mutate"
         mutated = base_queue.replace(
-            "| P-119 |", "| P-119 | should an `**Executed.**` marker count? |", 1)
+            f"| {pid} |", f"| {pid} | should an `**Executed.**` marker count? |", 1)
         if mutated == base_queue:
             return False, "mutation did not apply"
         ids = open_decisions(mutated)
-        return ("P-119" in ids,
-                "P-119 dropped from the open population by a prose mention"
-                if "P-119" not in ids else "still open, correctly")
+        return (pid in ids,
+                f"{pid} dropped from the open population by a prose mention"
+                if pid not in ids else "still open, correctly")
 
     case("a row mentioning `**Executed.**` in prose stays open",
          executed_in_prose)
@@ -694,22 +706,26 @@ def selftest():
         (Re-anchored 2026-08-16 from P-33 to P-34, and 2026-08-17 from P-34
         to P-43 — each predecessor was ruled and left the open table; P-43
         remains genuinely open. Re-anchored 2026-11-21 from P-43 to P-119
-        after D10 F-10.)"""
+        after D10 F-10, and 2026-11-21, later, to the lowest-numbered open
+        row of the real queue.)"""
+        pid = _anchor_open_row()
+        if pid is None:
+            return False, "no open row to mutate"
         lines = base_queue.split("\n")
         for j, line in enumerate(lines):
-            if line.startswith("| P-119 |"):
+            if line.startswith(f"| {pid} |"):
                 lines[j] = line.rstrip().rstrip("|").rstrip() \
                     + " | **Executed.** synthetic disposition |"
                 break
         else:
-            return False, "no P-119 row to mutate"
+            return False, f"no {pid} row to mutate"
         mutated = "\n".join(lines)
         if mutated == base_queue:
             return False, "mutation did not apply"
         ids = open_decisions(mutated)
-        return ("P-119" not in ids,
+        return (pid not in ids,
                 "an executed disposition in the OPEN section was still "
-                "counted open" if "P-119" in ids else "disqualified, correctly")
+                "counted open" if pid in ids else "disqualified, correctly")
 
     case("an `**Executed.**` disposition inside the open section disqualifies",
          executed_disposition)
