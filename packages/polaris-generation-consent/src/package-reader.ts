@@ -777,6 +777,8 @@ export async function supersededByD10(fs: PackageReaderFs, root: string, file: s
   return sha256(current) === installed[0];
 }
 
+const DOCTRINE_DIR = '.syzygy/governance/doctrine/';
+
 /** Why the artifact's bound-files table does not hold for `bound`, or null when every listed file still hashes to its row. */
 async function boundMismatch(fs: PackageReaderFs, root: string, artifact: string, bound: readonly string[]): Promise<string | null> {
   const HEAD = '| File | SHA-256 |';
@@ -792,6 +794,9 @@ async function boundMismatch(fs: PackageReaderFs, root: string, artifact: string
   for (const [file, digest] of rows) {
     let text: string;
     try { text = await fs.readFile(path.join(root, file)); } catch { return `the bound file ${file} cannot be read`; }
+    // Doctrine is in force as the tree holds it: the owner adopts each amendment by its commit (VIS-4 as amended by D10 and D13; RFC3-16:
+    // an act's digests are history, not locks). So a later amendment never unbinds an act over a doctrine file.
+    if (file.startsWith(DOCTRINE_DIR)) continue;
     if (sha256(text) !== digest && !(await supersededByD10(fs, root, file, digest))) return `the bytes of ${file} differ from the digest the act's artifact binds`;
   }
   return null;

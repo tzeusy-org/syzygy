@@ -153,8 +153,10 @@ architecture.md), without current evidence.
 artifact — spec, doctrine, contract — must stay digestible by a human who does
 not know the project.
 
-- **The test is a fresh-reader review**, run at adoption and on every material
-  amendment.
+- **The test is a fresh-reader review**, run once when a normative artifact
+  is first adopted and before any release; on a later amendment, when the
+  adopting agent judges it material. One review, never gating; a later edit
+  does not retire it.
   - A reader (human or agent) with no access to the authoring context must
     restate the artifact's intent and constraints correctly.
   - A failure is recorded on the artifact's surface.
@@ -210,6 +212,10 @@ record it and report it, and the owner may veto any of it afterwards.
   asks for consent, a statement or a record before a repository is read, or
   before its content goes to a declared provider, needs nothing at all: not
   an adoption row, not a per-repository record.
+- **Retired gates are defects.** Code, checks, freezes, deadlines, review
+  rounds or records that still enforce a gate this rule leaves to agents are
+  defects; any agent may remove them, with one adoption row. No such
+  mechanism is ever an owner gate.
 - *Violation:* an agent changing doctrine, weakening secret detection,
   pushing into a repository the owner does not own, adding a repository to
   the owner's list, running observed code outside a sandbox, or exposing
