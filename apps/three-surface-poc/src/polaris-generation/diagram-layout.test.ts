@@ -624,3 +624,18 @@ describe('layered left-to-right diagram layout', () => {
     expect(wrapLabel('  line\nbreak ', 22, 2)).toEqual(['line break']);
   });
 });
+
+// syzygy-3efd.20: the width `syzygy dossier check` measures figure fit with is the width the operator-agent site draws the figure at.
+describe('figureLaidOutWidth (the layout check is handed)', () => {
+  const chain = (n: number) => ({
+    nodes: Array.from({ length: n }, (_, i) => ({ id: `n${i}`, label: `Node ${i}`, epistemic: 'inferred' as const })),
+    edges: Array.from({ length: n - 1 }, (_, i) => ({ id: `e${i}`, from: `n${i}`, to: `n${i + 1}`, label: 'then', epistemic: 'inferred' as const })),
+  });
+  it.each([[2, 648], [3, 1048], [6, 1048]])('equals the readable SVG\'s width attribute for a chain of %i nodes (%i px)', async (n, width) => {
+    const { figureLaidOutWidth } = await import('./dossier-site.js');
+    const figure = chain(n);
+    const svg = renderDiagramSvg(figure, 0, (value) => value, READABLE_SPACING);
+    expect(Number(/<svg [^>]*\bwidth="(\d+(?:\.\d+)?)"/u.exec(svg)![1])).toBe(width);
+    expect(figureLaidOutWidth(figure)).toBe(width);
+  });
+});

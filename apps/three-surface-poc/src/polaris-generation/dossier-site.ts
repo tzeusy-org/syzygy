@@ -7,7 +7,7 @@ import {
   type LocalBlock, type LocalRenderInput, type LocalSegment, type OwnerTopic, type QuoteFinding, type WithheldNote,
 } from '@syzygy/polaris-generation-core/live';
 import { sha256 } from '@syzygy/support';
-import { READABLE_SPACING, renderDiagramSvg } from './diagram-layout.js';
+import { READABLE_SPACING, layoutDiagram, renderDiagramSvg } from './diagram-layout.js';
 import { LOCAL_CSS, LOCAL_MACHINE_VIEW, anchorAttributes, anchorDetails, disclosureList, regionMarkup } from './dossier-render-local.js';
 import { DRAFT_PREVIEW_CSP_META, DRAFT_PREVIEW_CSS, MARKING_LABEL, escapeHtml as escape } from './draft-preview.js';
 import { assertInertSvg } from './svg-inert.js';
@@ -812,6 +812,13 @@ export function renderDossierSite(input: DossierSiteInput & { readonly local?: L
     }, null, 2)}\n`);
   }
   return { files, manifest };
+}
+
+/** The laid-out width of an operator-agent figure, as `renderLocalDossier` draws it: what the `syzygy` CLI injects into the dossier
+ * check step, which measures figure fit with it (syzygy-3efd.20). The layout reads identities and edges only, never labels, so a
+ * withheld element's replaced label at render changes no width, and check's width depends on the draft's bytes alone. */
+export function figureLaidOutWidth(figure: { readonly nodes: readonly { readonly id: string }[]; readonly edges: readonly { readonly id: string; readonly from: string; readonly to: string }[] }): number {
+  return layoutDiagram(figure.nodes, figure.edges, READABLE_SPACING).width;
 }
 
 /** An operator-agent run's site: what the `syzygy` CLI injects into the dossier render step. */

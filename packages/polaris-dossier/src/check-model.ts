@@ -13,6 +13,7 @@ import { type ScreenCensusReport } from './census.js';
 import type { ReaderAdvice } from './reader-advice.js';
 import type { ReviewReachAdvice } from './review-reach.js';
 import { CLASS_NOT_CONSENTED, unconsentedClass } from './class-gate.js';
+import type { FigureFit, FigureLayout } from './figure-fit.js';
 
 /** The check's record formats, finding and result types, and the small shared readers; split out of `check.ts` unchanged. */
 
@@ -183,6 +184,9 @@ export interface CheckReport extends CheckRecord {
   readonly structureRecord?: StructureRecord;
   /** The counted reader standards' advice (`reader-advice.ts`); on the report, never the record, and never a finding. */
   readonly readerAdvice?: ReaderAdvice;
+  /** Whether each produced figure fits the content column (`figure-fit.ts`, syzygy-3efd.20): advice, never a finding, and unlike the
+   * advice around it also kept in the draft's check record, so a later check can be compared with this one. */
+  readonly figureFit?: FigureFit;
   /** The claim blocks the fidelity review can never confirm, and the elements that render with none of their text (`review-reach.ts`); on
    * the report, never the record, and never a finding. */
   readonly reviewReach?: ReviewReachAdvice;
@@ -204,6 +208,8 @@ export interface CheckDeps {
   /** The screen; by default the policy the act chain puts in force, from the records root. */
   readonly loadScreen?: ScreenLoader;
   readonly openReader?: (options: PinnedObjectReaderOptions) => PinnedObjectReader;
+  /** The renderer's figure layout, which figure fit measures (syzygy-3efd.20); without it each produced figure's fit is Unknown. */
+  readonly layoutFigure?: FigureLayout;
 }
 
 export const DISCLOSURES = [

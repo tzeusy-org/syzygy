@@ -289,6 +289,47 @@ describe('check: schema v5 diagram homes (syzygy-3efd.18)', () => {
   });
 });
 
+// Figure fit (syzygy-3efd.20): stored in the draft's check record, the same bytes for the same draft, and Unknown without a layout.
+describe('check: figure fit', () => {
+  const wide = (id: string) => ({ ...DIAGRAM, id, disposition: { kind: 'produced', assetIds: [id] } });
+  const layoutFigure = () => 1048;
+  const NUMBERS = { diagram: 'flow-1', viewportPx: 390, laidOutPx: 1048, drawnPx: 860, columnPx: 261, textPx: 10.67, minTextPx: 11, failed: ['width', 'text-size'] };
+
+  it('writes figureFit into checks/rev-<n>.json and onto the report, byte-identical across two checks of the same draft', async () => {
+    const run = await briefedRun();
+    const doc = mutate((d) => { d.schemaVersion = 'polaris-dossier-local-draft-v4'; d.diagrams.push(wide('flow-1')); });
+    writeDraft(run, doc);
+    const first = report(await checkDraft(run, {}, deps({ layoutFigure })));
+    writeDraft(run, doc);
+    const second = report(await checkDraft(run, {}, deps({ layoutFigure })));
+    expect([first.revision, second.revision]).toEqual([0, 1]);
+    const stored = [0, 1].map((n) => JSON.parse(fs.readFileSync(path.join(run, 'checks', `rev-${n}.json`), 'utf8')) as Record<string, unknown>);
+    expect(stored[0]!['figureFit']).toEqual({ textPx: 13, minTextPx: 11, viewports: [{ viewportPx: 1440, columnPx: 966 }, { viewportPx: 390, columnPx: 261 }], examined: 1, entries: [NUMBERS] });
+    expect(JSON.stringify(stored[1]!['figureFit'])).toBe(JSON.stringify(stored[0]!['figureFit']));
+    expect(stored[0]!['format']).toBe('polaris-dossier-check/1');
+    expect(first.figureFit).toEqual(stored[0]!['figureFit']);
+    // Advice only: it changes no outcome and is no finding.
+    expect(first.outcome).toBe('passed');
+    expect(first.findings).toEqual([]);
+  });
+
+  it('records each produced figure Unknown when the check is given no layout', async () => {
+    const run = await briefedRun();
+    writeDraft(run, mutate((d) => { d.schemaVersion = 'polaris-dossier-local-draft-v4'; d.diagrams.push(wide('flow-1')); }));
+    const result = report(await checkDraft(run, {}, deps()));
+    expect(result.figureFit?.entries).toEqual([{ diagram: 'flow-1', unknown: 'no figure layout was supplied to this check, so its width is not known' }]);
+  });
+
+  it('writes no figureFit for a draft that does not parse: its absence states nothing about fit', async () => {
+    const run = await briefedRun();
+    writeDraft(run, '{ not json');
+    const result = await checkDraft(run, {}, deps({ layoutFigure }));
+    if (!result.ok) throw new Error(result.refusal.reason);
+    expect(result.report).not.toHaveProperty('figureFit');
+    expect(JSON.parse(fs.readFileSync(path.join(run, 'checks', 'rev-0.json'), 'utf8'))).not.toHaveProperty('figureFit');
+  });
+});
+
 describe('check: schema v4 (dossier spec v1.5)', () => {
   it('passes an uncited judgement and a list repeating a diagram of its own section', async () => {
     const run = await briefedRun();
