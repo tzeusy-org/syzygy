@@ -1,8 +1,8 @@
 import * as path from 'node:path';
 import { UNKNOWN_REASONS } from '@syzygy/cap1-core';
-import { leadInQuotations, lineCount, locateQuote, normaliseTracked, retainedWithMarkers, spanTouchesWithheld, verifiedRedactedBody, type VerifiedRedactedBody, type TrackedText } from '@syzygy/polaris-generation-core/live';
+import { checkShape, handle, leadInQuotations, lineCount, locateQuote, normaliseTracked, retainedWithMarkers, spanTouchesWithheld, verifiedRedactedBody, type VerifiedRedactedBody, type TrackedText } from '@syzygy/polaris-generation-core/live';
 import { isRecord } from '@syzygy/support';
-import { LOCAL_DRAFT_SCHEMA_VERSION, LOCAL_DRAFT_SCHEMA_VERSION_V4, LOCAL_DRAFT_SCHEMA_VERSION_V5, UNDERSTANDING_ITEMS, V4_FIELDS, hasHomeForm, hasV4Forms, checkDraftShape, localDraftSchema, type DraftSchemaWithDefs } from './draft-schema.js';
+import { FIGURE_MEMBERS, LOCAL_DRAFT_SCHEMA_VERSION, LOCAL_DRAFT_SCHEMA_VERSION_V4, LOCAL_DRAFT_SCHEMA_VERSION_V5, LOCAL_DRAFT_SCHEMA_VERSION_V6, UNDERSTANDING_ITEMS, V4_FIELDS, V7_FIGURE_MEMBERS, hasHomeForm, hasThesisBasisForm, hasV4Forms, checkDraftShape, localDraftSchema, membersOfKind, type DraftSchemaWithDefs } from './draft-schema.js';
 import { isEntryPoint } from './derive.js';
 import { BLOB_MODES, type PinnedObjectReader, type TreeEntry } from './git-object-reader.js';
 import { type DossierScreen, type ScreenExclusion } from './screen.js';
@@ -92,7 +92,7 @@ export interface SubjectRules {
   /** The schema a subject of an earlier version is checked against, where it differs (a draft before v5 names its diagram's section in
    * `sectionId`; one before v6 has no `thesisBasis`), and the later-version fields it may not carry, which the structure reports as
    * field-version findings instead; undefined for a subject of the current version. */
-  readonly earlier?: (subject: unknown) => { readonly schema: DraftSchemaWithDefs; readonly reported: RegExp } | undefined;
+  readonly earlier?: (subject: unknown) => { readonly schema: DraftSchemaWithDefs; readonly reported: { readonly test: (path: string) => boolean } } | undefined;
   /** The declared clarification-question limit, where the subject records questions. */
   readonly maxQuestions: number | null;
   /** The subject's references and required records, after identities are checked. */
@@ -350,8 +350,8 @@ export async function deriveFindings(subject: unknown, inputs: DeriveInputs, rul
  * block. A `thesisBasis` in an earlier draft is a field-version finding. Whether a cited file is where a user or a program enters the
  * project, or whether the repository truly states no purpose, is not tested here: the fidelity review judges the introduction. */
 function thesisStructure(doc: Readonly<Record<string, unknown>>, add: (finding: CheckFinding) => void): void {
-  if (doc['schemaVersion'] !== LOCAL_DRAFT_SCHEMA_VERSION) {
-    if (Object.hasOwn(doc, 'thesisBasis')) add({ kind: 'field-version', at: '$.thesisBasis', detail: `\`thesisBasis\` needs draft schema ${LOCAL_DRAFT_SCHEMA_VERSION}` });
+  if (!hasThesisBasisForm(doc['schemaVersion'])) {
+    if (Object.hasOwn(doc, 'thesisBasis')) add({ kind: 'field-version', at: '$.thesisBasis', detail: `\`thesisBasis\` needs draft schema ${LOCAL_DRAFT_SCHEMA_VERSION_V6}` });
     return;
   }
   const basis = doc['thesisBasis'];
@@ -375,24 +375,128 @@ function thesisStructure(doc: Readonly<Record<string, unknown>>, add: (finding: 
   }
 }
 
+/** A diagram as a finding names it (version 2.5): by its identity, or by its path where it has no well-formed one. */
+function diagramName(diagram: Readonly<Record<string, unknown>>, i: number): string {
+  const id = diagram['id'];
+  return typeof id === 'string' && checkShape({ root: handle, defs: {} }, id).length === 0 ? `the diagram ${JSON.stringify(id)}` : `the diagram $.diagrams[${i}]`;
+}
+
+const membersWords = (members: readonly string[]): string => `\`${members[0]}\` and \`${members[1]}\``;
+
+/** The `figure-kind` findings of a v7 draft (REQ-polaris-generation-034 version 2.5): one at `$.diagrams[<i>].<member>` for each member a
+ * diagram carries that its kind does not take, and one at `$.diagrams[<i>]` naming each member its kind takes that it lacks. `member` is the
+ * member's own path, where the schema check reports no finding. A diagram whose kind is none of the eight takes nothing known: its kind is
+ * the schema's finding alone. */
+export function figureKindFindings(doc: Readonly<Record<string, unknown>>): readonly (CheckFinding & { readonly member: string })[] {
+  const out: (CheckFinding & { readonly member: string })[] = [];
+  list(doc['diagrams']).forEach((diagram, i) => {
+    if (!isRecord(diagram)) return;
+    const takes = membersOfKind(diagram['kind']);
+    if (takes === undefined) return;
+    const kind = diagram['kind'] as string;
+    const name = diagramName(diagram, i);
+    const what = (DIAGRAM_GRAPH_KINDS.has(kind) ? `a ${kind} diagram` : `a ${kind}`);
+    for (const member of FIGURE_MEMBERS) {
+      const at = `$.diagrams[${i}]`;
+      if (Object.hasOwn(diagram, member) && !takes.includes(member)) {
+        out.push({ kind: 'figure-kind', at: `${at}.${member}`, member: `${at}.${member}`, detail: `${name}: ${what} takes ${membersWords(takes)}, not \`${member}\`` });
+      } else if (!Object.hasOwn(diagram, member) && takes.includes(member)) {
+        out.push({ kind: 'figure-kind', at, member: `${at}.${member}`, detail: `${name}: ${what} takes ${membersWords(takes)}; it lacks \`${member}\`` });
+      }
+    }
+  });
+  return out;
+}
+
+/** The paths at which a draft of schema v6 or earlier carries a v7 kind or member, each a field-version finding (version 2.5). */
+function figureFieldVersionPaths(doc: Readonly<Record<string, unknown>>): string[] {
+  const out: string[] = [];
+  list(doc['diagrams']).forEach((diagram, i) => {
+    if (!isRecord(diagram)) return;
+    if (diagram['kind'] === 'sequence' || diagram['kind'] === 'swimlane') out.push(`$.diagrams[${i}].kind`);
+    for (const member of V7_FIGURE_MEMBERS) if (Object.hasOwn(diagram, member)) out.push(`$.diagrams[${i}].${member}`);
+  });
+  return out;
+}
+
+const DIAGRAM_GRAPH_KINDS: ReadonlySet<string> = new Set(['flow', 'lifecycle', 'state-machine', 'boundary', 'dependency', 'placement']);
+
+/** The figure kinds (REQ-polaris-generation-034 version 2.5). In a v7 draft: `figure-kind` for members that do not fit the kind;
+ * `unresolved-reference` for a sequence's message whose `from` or `to`, or a swimlane's step whose `lane`, names nothing in its own
+ * diagram; and `figure-unused` for a participant no message names or a lane no step names, which would draw an empty column. In an
+ * earlier draft: `field-version` for a v7 kind and for each v7 member, in place of the schema finding at that path. */
+function figureStructure(doc: Readonly<Record<string, unknown>>, add: (finding: CheckFinding) => void): void {
+  if (doc['schemaVersion'] !== LOCAL_DRAFT_SCHEMA_VERSION) {
+    list(doc['diagrams']).forEach((diagram, i) => {
+      if (!isRecord(diagram)) return;
+      const name = diagramName(diagram, i);
+      if (diagram['kind'] === 'sequence' || diagram['kind'] === 'swimlane') add({ kind: 'field-version', at: `$.diagrams[${i}].kind`, detail: `${name}: the kind \`${diagram['kind']}\` needs draft schema ${LOCAL_DRAFT_SCHEMA_VERSION}` });
+      for (const member of V7_FIGURE_MEMBERS) {
+        if (Object.hasOwn(diagram, member)) add({ kind: 'field-version', at: `$.diagrams[${i}].${member}`, detail: `${name}: \`${member}\` needs draft schema ${LOCAL_DRAFT_SCHEMA_VERSION}` });
+      }
+    });
+    return;
+  }
+  for (const { member: _member, ...finding } of figureKindFindings(doc)) add(finding);
+  const idsOf = (values: unknown): Set<string> => new Set(list(values).flatMap((entry) => (isRecord(entry) && text(entry['id']) !== undefined ? [text(entry['id'])!] : [])));
+  list(doc['diagrams']).forEach((diagram, i) => {
+    if (!isRecord(diagram)) return;
+    const name = diagramName(diagram, i);
+    const [owners, uses, ends, owner, use] = diagram['kind'] === 'sequence' ? ['participants', 'messages', ['from', 'to'], 'participant', 'message'] as const
+      : diagram['kind'] === 'swimlane' ? ['lanes', 'steps', ['lane'], 'lane', 'step'] as const : [];
+    if (owners === undefined) return;
+    const known = idsOf(diagram[owners]);
+    const named = new Set<string>();
+    list(diagram[uses]).forEach((entry, j) => {
+      if (!isRecord(entry)) return;
+      for (const end of ends) {
+        const target = text(entry[end]);
+        if (target === undefined) continue;
+        named.add(target);
+        if (!known.has(target)) add({ kind: 'unresolved-reference', at: `$.diagrams[${i}].${uses}[${j}].${end}`, detail: `${name}: no ${owner} of this diagram has the identity ${JSON.stringify(target)}` });
+      }
+    });
+    // An unnamed column needs the other list to name it from: a missing list is the figure-kind finding's.
+    if (!Array.isArray(diagram[uses])) return;
+    list(diagram[owners]).forEach((entry, k) => {
+      const id = isRecord(entry) ? text(entry['id']) : undefined;
+      if (id === undefined || named.has(id)) return;
+      add({ kind: 'figure-unused', at: `$.diagrams[${i}].${owners}[${k}]`, detail: owner === 'participant'
+        ? `${name}: no message names the participant ${JSON.stringify(id)} as its sender or receiver; every participant sends or receives a message`
+        : `${name}: no step names the lane ${JSON.stringify(id)}; every lane holds a step` });
+    });
+  });
+}
+
 const CLAIM_UNQUOTABLE = 'only an inferred claim block carries quotations; give this one its own inferred block with a citation';
 
 /** The authoring draft's rules: its schema and question limit, references, understanding record, blocks and discovery account. */
 export function draftRules(pinned: string, maxQuestions: number, poleLimit: number = DEFAULT_POLE_LIMIT): SubjectRules {
   const parameters = { pinnedRevision: pinned, maxQuestions };
-  const v5 = { schema: localDraftSchema(parameters, 'home', 'absent'), reported: /^\$\.thesisBasis$/u };
-  const v4 = { schema: localDraftSchema(parameters, 'sectionId', 'absent'), reported: /^\$\.(?:diagrams\[\d+\]\.home|thesisBasis)$/u };
+  const current = localDraftSchema(parameters);
+  const v6 = localDraftSchema(parameters, 'home', 'required', 'absent');
+  const v5 = localDraftSchema(parameters, 'home', 'absent', 'absent');
+  const v4 = localDraftSchema(parameters, 'sectionId', 'absent', 'absent');
+  const v5Reported = /^\$\.thesisBasis$/u, v4Reported = /^\$\.(?:diagrams\[\d+\]\.home|thesisBasis)$/u;
   return {
     noun: 'draft',
-    schema: localDraftSchema(parameters),
-    // A v5 draft: checked against v5's schema, its `thesisBasis` (the one v6 field) reported as field-version. A v4 or earlier draft:
-    // checked against the schema of its own form, its `home` (the one v5 field) and `thesisBasis` reported as field-version.
+    schema: current,
+    // A v7 draft: checked against v7's schema, with no schema finding where a figure-kind finding stands (version 2.5). A v6 draft: checked
+    // against v6's schema, a v7 kind or member reported as field-version in place of its schema finding. A v5 draft: also its `thesisBasis`
+    // (the one v6 field). A v4 or earlier draft: checked against the schema of its own form, also its `home` (the one v5 field).
     earlier: (subject) => {
       const version = isRecord(subject) ? subject['schemaVersion'] : undefined;
-      return version === LOCAL_DRAFT_SCHEMA_VERSION ? undefined : version === LOCAL_DRAFT_SCHEMA_VERSION_V5 ? v5 : v4;
+      const doc = isRecord(subject) ? subject : {};
+      if (version === LOCAL_DRAFT_SCHEMA_VERSION) {
+        const standing = new Set(figureKindFindings(doc).map((finding) => finding.member));
+        return { schema: current, reported: { test: (path) => standing.has(path) } };
+      }
+      const fieldVersion = new Set(figureFieldVersionPaths(doc));
+      const [schema, also] = version === LOCAL_DRAFT_SCHEMA_VERSION_V6 ? [v6, null] : version === LOCAL_DRAFT_SCHEMA_VERSION_V5 ? [v5, v5Reported] : [v4, v4Reported];
+      return { schema, reported: { test: (path) => fieldVersion.has(path) || (also !== null && also.test(path)) } };
     },
     maxQuestions,
-    structural: (doc, add) => { draftStructure(doc, add, poleLimit); thesisStructure(doc, add); },
+    structural: (doc, add) => { draftStructure(doc, add, poleLimit); thesisStructure(doc, add); figureStructure(doc, add); },
     blocks: collectBlocks,
     account: { key: 'discovery', parts: ['selected', 'excluded', 'unresolved', 'deferred'] },
   };

@@ -74,12 +74,25 @@ export interface DossierDraft {
   unresolved: { question: string; reason: string; references: string[] }[];
 }
 export interface DraftDiagram {
-  id: string; title: string; sectionId: string; kind: DiagramKind; relationship: string;
+  id: string; title: string; sectionId: string; kind: DiagramKind | FigureKind; relationship: string;
   nodes: DraftDiagramNode[]; edges: DraftDiagramEdge[]; disposition: AssetDisposition;
   /** An operator-agent v5 diagram on a page other than a section (syzygy-3efd.18): a deep dive, or the overview. Absent, the diagram's page
    * is the section `sectionId` names; present, `sectionId` names the section the deep dive belongs to, or is empty for the overview. */
   home?: DraftDiagramHome;
+  /** An operator-agent v7 figure kind's own record (REQ-polaris-generation-034 version 2.5, syzygy-3efd.30): present exactly when `kind`
+   * is `sequence` or `swimlane`, whose `nodes` and `edges` are then empty. The provider pipeline never sets it. */
+  figure?: DraftFigure;
 }
+/** The figure kinds with records of their own (version 2.5), beside the six graph kinds; operator-agent drafts only. */
+export const FIGURE_KINDS = ['sequence', 'swimlane'] as const;
+export type FigureKind = typeof FIGURE_KINDS[number];
+/** A participant, lane or step: a claim with its own identity, label, citations and marking, as a node is. */
+export interface DraftFigureElement { id: string; label: string; sourceIds: string[]; epistemic: EpistemicMarking }
+export interface DraftSequenceMessage extends DraftFigureElement { from: string; to: string }
+export interface DraftSwimlaneStep extends DraftFigureElement { lane: string }
+export type DraftFigure =
+  | { kind: 'sequence'; participants: DraftFigureElement[]; messages: DraftSequenceMessage[] }
+  | { kind: 'swimlane'; lanes: DraftFigureElement[]; steps: DraftSwimlaneStep[] };
 export type DraftDiagramHome = { readonly kind: 'deep-dive'; readonly id: string } | { readonly kind: 'overview' };
 export interface FidelityInventoryCoverage { entryId: string; disposition: 'represented' | 'justified-omission' | 'unsupported' | 'unresolved'; blockIds: string[]; reason: string }
 export interface FidelityBlockSupport { blockId: string; verdict: 'supported' | 'anchor-does-not-support' | 'unresolved'; sourceIds: string[]; reason: string }
@@ -168,6 +181,43 @@ export function diagramToMermaid(diagram: Pick<DraftDiagram, 'nodes' | 'edges'>)
   }
   for (const marking of ['inferred', 'unknown'] as const) {
     const members = diagram.nodes.flatMap((node, i) => node.epistemic === marking ? [`n${i}`] : []);
+    if (members.length > 0) lines.push(`  class ${members.join(',')} ${marking}`);
+  }
+  lines.push('  classDef inferred stroke-dasharray:6 4', '  classDef unknown stroke-dasharray:2 4');
+  return `${lines.join('\n')}\n`;
+}
+
+const figureLabel = (element: DraftFigureElement): string => mermaidText(element.epistemic === 'unknown' ? `${element.label} (unknown)` : element.label);
+
+/**
+ * The declarative source of a v7 figure kind (REQ-polaris-generation-034 version 2.5), from its record alone, by position and never by the
+ * draft's identities, one statement to a line, two spaces of indentation a level, ending in a newline. A sequence is a `sequenceDiagram`
+ * (`participant p<i> as <label>`, then `p<i>-->>p<j>: <label>` per message) with no class line; a swimlane is a `flowchart TB` with one
+ * `subgraph l<i>` per lane holding its steps `s<k>` in draft order, then `s<k> --> s<k+1>`, a class line per mark that has steps
+ * (inferred, then unknown) and the graph source's two `classDef` lines. Throws where a reference names nothing.
+ */
+export function figureToMermaid(figure: DraftFigure): string {
+  if (figure.kind === 'sequence') {
+    const index = new Map(figure.participants.map((participant, i) => [participant.id, `p${i}`]));
+    const lines = ['sequenceDiagram', ...figure.participants.map((participant, i) => `  participant p${i} as ${figureLabel(participant)}`)];
+    for (const message of figure.messages) {
+      const from = index.get(message.from), to = index.get(message.to);
+      if (from === undefined || to === undefined) throw new Error('unknown-participant');
+      lines.push(`  ${from}-->>${to}: ${figureLabel(message)}`);
+    }
+    return `${lines.join('\n')}\n`;
+  }
+  const lanes = new Map(figure.lanes.map((lane, i) => [lane.id, i]));
+  if (figure.steps.some(step => !lanes.has(step.lane))) throw new Error('unknown-lane');
+  const lines = ['flowchart TB'];
+  figure.lanes.forEach((lane, i) => {
+    lines.push(`  subgraph l${i}["${figureLabel(lane)}"]`);
+    figure.steps.forEach((step, k) => { if (step.lane === lane.id) lines.push(`    s${k}["${figureLabel(step)}"]`); });
+    lines.push('  end');
+  });
+  for (let k = 0; k + 1 < figure.steps.length; k++) lines.push(`  s${k} --> s${k + 1}`);
+  for (const marking of ['inferred', 'unknown'] as const) {
+    const members = figure.steps.flatMap((step, k) => step.epistemic === marking ? [`s${k}`] : []);
     if (members.length > 0) lines.push(`  class ${members.join(',')} ${marking}`);
   }
   lines.push('  classDef inferred stroke-dasharray:6 4', '  classDef unknown stroke-dasharray:2 4');

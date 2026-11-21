@@ -33,12 +33,30 @@ export const LOCAL_DRAFT_SCHEMA_VERSION_V4 = 'polaris-dossier-local-draft-v4';
 export const LOCAL_DRAFT_SCHEMA_VERSION_V5 = 'polaris-dossier-local-draft-v5';
 /** v6 (REQ-polaris-generation-034 version 2.4, syzygy-3efd.56): a required `thesisBasis` says what the introduction, the dossier's thesis,
  * rests on. Everything else is v5; a v5 or earlier draft still checks and renders as before, and a `thesisBasis` in one is field-version. */
-export const LOCAL_DRAFT_SCHEMA_VERSION = 'polaris-dossier-local-draft-v6';
-export const LOCAL_DRAFT_SCHEMA_VERSIONS = Object.freeze([LOCAL_DRAFT_SCHEMA_VERSION_V2, LOCAL_DRAFT_SCHEMA_VERSION_V3, LOCAL_DRAFT_SCHEMA_VERSION_V4, LOCAL_DRAFT_SCHEMA_VERSION_V5, LOCAL_DRAFT_SCHEMA_VERSION] as const);
+export const LOCAL_DRAFT_SCHEMA_VERSION_V6 = 'polaris-dossier-local-draft-v6';
+/** v7 (REQ-polaris-generation-034 version 2.5, syzygy-3efd.30): a diagram's `kind` may also be `sequence` (`participants` and `messages`)
+ * or `swimlane` (`lanes` and `steps`), each in place of `nodes` and `edges`. Everything else is v6; a v6 or earlier draft still checks and
+ * renders as before, and the new kinds and members in one are field-version. */
+export const LOCAL_DRAFT_SCHEMA_VERSION = 'polaris-dossier-local-draft-v7';
+export const LOCAL_DRAFT_SCHEMA_VERSIONS = Object.freeze([LOCAL_DRAFT_SCHEMA_VERSION_V2, LOCAL_DRAFT_SCHEMA_VERSION_V3, LOCAL_DRAFT_SCHEMA_VERSION_V4, LOCAL_DRAFT_SCHEMA_VERSION_V5, LOCAL_DRAFT_SCHEMA_VERSION_V6, LOCAL_DRAFT_SCHEMA_VERSION] as const);
 /** Whether a draft's version has the v4 forms: v4 and every later version. */
 export const hasV4Forms = (version: unknown): boolean => version === LOCAL_DRAFT_SCHEMA_VERSION_V4 || hasHomeForm(version);
 /** Whether a draft's version names a diagram's page in `home`: v5 and every later version. */
-export const hasHomeForm = (version: unknown): boolean => version === LOCAL_DRAFT_SCHEMA_VERSION_V5 || version === LOCAL_DRAFT_SCHEMA_VERSION;
+export const hasHomeForm = (version: unknown): boolean => version === LOCAL_DRAFT_SCHEMA_VERSION_V5 || hasThesisBasisForm(version);
+/** Whether a draft's version carries the required `thesisBasis`: v6 and every later version. */
+export const hasThesisBasisForm = (version: unknown): boolean => version === LOCAL_DRAFT_SCHEMA_VERSION_V6 || version === LOCAL_DRAFT_SCHEMA_VERSION;
+/** The members each diagram kind takes (v7): a graph kind `nodes` and `edges`, a sequence `participants` and `messages`, a swimlane
+ * `lanes` and `steps`; every other diagram member is shared. */
+export const FIGURE_MEMBERS = Object.freeze(['nodes', 'edges', 'participants', 'messages', 'lanes', 'steps'] as const);
+export type FigureMember = typeof FIGURE_MEMBERS[number];
+/** The members only a v7 draft's diagram may carry, each a field-version finding in an earlier draft. */
+export const V7_FIGURE_MEMBERS = Object.freeze(['participants', 'messages', 'lanes', 'steps'] as const);
+export const membersOfKind = (kind: unknown): readonly FigureMember[] | undefined => (kind === 'sequence' ? ['participants', 'messages']
+  : kind === 'swimlane' ? ['lanes', 'steps'] : (DIAGRAM_KINDS as readonly unknown[]).includes(kind) ? ['nodes', 'edges'] : undefined);
+/** The bounds of the v7 figure kinds' lists. */
+export const FIGURE_BOUNDS: Readonly<Record<Exclude<FigureMember, 'nodes' | 'edges'>, readonly [number, number]>> = Object.freeze({
+  participants: [2, 5], messages: [1, 30], lanes: [2, 5], steps: [2, 20],
+});
 /** What a v6 draft's introduction rests on. */
 export const THESIS_BASES = Object.freeze(['stated', 'code-reading', 'none'] as const);
 export type ThesisBasis = typeof THESIS_BASES[number];
@@ -175,9 +193,33 @@ export interface DraftSchemaParameters {
  * `sectionId` (schema v4 and earlier, which `check` applies to such a draft so that its findings stay byte for byte those of the version
  * before). `thesisBasis` says whether the draft carries its required `thesisBasis` (schema v6, what the brief publishes) or has no such
  * member (schema v5 and earlier, whose findings stay those of the version before). */
-export function localDraftSchema(parameters: DraftSchemaParameters, diagramForm: 'home' | 'sectionId' = 'home', thesisBasis: 'required' | 'absent' = 'required'): DraftSchemaWithDefs {
+export function localDraftSchema(parameters: DraftSchemaParameters, diagramForm: 'home' | 'sectionId' = 'home', thesisBasis: 'required' | 'absent' = 'required',
+  figureKinds: 'taken' | 'absent' = 'taken'): DraftSchemaWithDefs {
   requirePinnedRevision(parameters.pinnedRevision);
   if (!Number.isSafeInteger(parameters.maxQuestions) || parameters.maxQuestions < 0) throw new Error('draft-schema: the question limit is not a nonnegative integer');
+  const graph = (kind: Schema): Record<string, Schema> => ({
+    // One of the two, by version: `sectionId` up to v4, `home` from v5 (the draft's structure also reports a home in the wrong form, and
+    // names the version). A home names a section or a deep dive in `target`, or is the overview and names none. Not `id`: every `id` in
+    // a draft is an identity of its own.
+    id: handle, title: text,
+    ...(diagramForm === 'home' ? { home: object({ kind: choice(DIAGRAM_HOME_KINDS), target: handle }, ['target']) } : { sectionId: handle }),
+    kind, relationship: text,
+    nodes: list(object({ id: handle, label: text, epistemic, citations: citations(1) }), 1, 40),
+    edges: list(object({ id: handle, from: handle, to: handle, label: text, epistemic, citations: citations(1) }), 1, 80),
+    disposition: ref('disposition'),
+  });
+  // v7 (version 2.5): one form per kind, each naming its kind, so a graph diagram's faults are reported against the graph form exactly as
+  // in v6 and a figure kind's against its own. A figure kind shares every member but `nodes` and `edges`, which its own members replace.
+  const figure = (kind: 'sequence' | 'swimlane'): Schema => {
+    const { nodes: _nodes, edges: _edges, disposition, ...shared } = graph(one(kind));
+    const element = { id: handle, label: text, epistemic, citations: citations(1) };
+    const own: Record<string, Schema> = kind === 'sequence'
+      ? { participants: list(object(element), ...FIGURE_BOUNDS.participants), messages: list(object({ id: handle, from: handle, to: handle, label: text, epistemic, citations: citations(1) }), ...FIGURE_BOUNDS.messages) }
+      : { lanes: list(object(element), ...FIGURE_BOUNDS.lanes), steps: list(object({ id: handle, lane: handle, label: text, epistemic, citations: citations(1) }), ...FIGURE_BOUNDS.steps) };
+    return object({ ...shared, ...own, disposition: disposition! });
+  };
+  const diagram: Schema = figureKinds === 'absent' ? object(graph(choice(DIAGRAM_KINDS)))
+    : { oneOf: [...DIAGRAM_KINDS.map((kind) => object(graph(one(kind)))), figure('sequence'), figure('swimlane')] };
   return { defs: DEFS, root: object({
     schemaVersion: choice(LOCAL_DRAFT_SCHEMA_VERSIONS),
     pinnedRevision: one(parameters.pinnedRevision),
@@ -186,17 +228,7 @@ export function localDraftSchema(parameters: DraftSchemaParameters, diagramForm:
     introduction: ref('paragraph'),
     understanding: object(Object.fromEntries(UNDERSTANDING_ITEMS.map((item) => [item, list(ref('understandingItem'), 1, 100)]))),
     sections: list(object({ id: handle, title: text, paragraphs: list(ref('content'), 1, 30), disposition: ref('disposition') }), 1, 30),
-    diagrams: list(object({
-      // One of the two, by version: `sectionId` up to v4, `home` from v5 (the draft's structure also reports a home in the wrong form, and
-      // names the version). A home names a section or a deep dive in `target`, or is the overview and names none. Not `id`: every `id` in
-      // a draft is an identity of its own.
-      id: handle, title: text,
-      ...(diagramForm === 'home' ? { home: object({ kind: choice(DIAGRAM_HOME_KINDS), target: handle }, ['target']) } : { sectionId: handle }),
-      kind: choice(DIAGRAM_KINDS), relationship: text,
-      nodes: list(object({ id: handle, label: text, epistemic, citations: citations(1) }), 1, 40),
-      edges: list(object({ id: handle, from: handle, to: handle, label: text, epistemic, citations: citations(1) }), 1, 80),
-      disposition: ref('disposition'),
-    }), 0, 20),
+    diagrams: list(diagram, 0, 20),
     deepDives: list(object({ id: handle, title: text, sectionId: handle, paragraphs: list(ref('content'), 1, 30), disposition: ref('disposition') }), 0, 30),
     unresolved: list(object({ id: handle, question: text, reason: text, citations: citations(0) }), 0, 100),
     discovery: object({
