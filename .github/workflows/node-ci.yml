@@ -160,6 +160,10 @@ jobs:
             git=1:2.53.0-1ubuntu1.1 git-man=1:2.53.0-1ubuntu1.1 \
             openssh-client=1:10.2p1-2ubuntu3.8 openssh-server=1:10.2p1-2ubuntu3.8 openssh-sftp-server=1:10.2p1-2ubuntu3.8 \
             bubblewrap util-linux strace zsh gcc python3
+          # The runner's preinstalled client can report the pinned package
+          # version while its executable differs from the signed archive.
+          sudo -n env DEBIAN_FRONTEND=noninteractive apt-get "${apt_source[@]}" install -y \
+            --reinstall --no-install-recommends --no-remove openssh-client=1:10.2p1-2ubuntu3.8
           if systemctl is-active --quiet ssh.service ssh.socket; then
             echo "System SSH must stay stopped for native integration." >&2
             exit 1
