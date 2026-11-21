@@ -133,6 +133,11 @@ Four rules govern the declaration:
    dependency declaration is *generated* as the union of its requirements'
    declarations (CC-IMPACT-1). A hand-authored second list at
    specification level is a defect, not a convenience.
+5. **A new version declares only what it changes.** *(Amended 2026-11-22,
+   agent adoption, `syzygy-yjoq`, under VIS-4 as amended by D13.)* A
+   requirement carried unchanged into a new version of an adopted
+   specification keeps its declaration; only new and changed requirements
+   are declared, or re-declared, in that version.
 
 **`lawfully admitted user need` is deliberately not a class.** It appeared
 in this clause until 2026-08-13 and is removed: no admission act, register,
@@ -311,6 +316,14 @@ This clause adds only the specification-side **production obligation**:
 - the specification ships with its coverage matrix;
 - every N/A row in that matrix cites the judgment's record in
   `decisions/`, so the RFC3-16 gate can find its adoption record.
+- *(Amended 2026-11-22, agent adoption, `syzygy-yjoq`, under VIS-4 as
+  amended by D13.)* The specification's own row in
+  `decisions/AGENT-ADOPTIONS.md` is that record for every N/A row its
+  matrix states with a one-line reason: the row adopts them together, and
+  no separate judgment file is needed. "Reviewed" means the
+  specification's one fresh-reader review (VIS-3) read the matrix.
+- A new version of an adopted specification re-states matrix rows only for
+  the clauses its changed requirements touch; the rest carry forward.
 
 A matrix whose N/A rows rest on anything less — a judgment with no adoption
 record, or one recorded only inside the spec — does not discharge this
@@ -405,7 +418,10 @@ Unknown / unresolved    rendered with what would settle it, never
   reviewer who believes an obligation is missing from the population raises
   that against CC-SPEC-1's scope statement, not against this table.
 - The table is **confirmed by a party other than the specification's
-  author** (the CC-TEST-4 pattern, as CC-SPEC-8).
+  author** (the CC-TEST-4 pattern, as CC-SPEC-8). *(Amended 2026-11-22,
+  agent adoption, `syzygy-yjoq`, under VIS-4 as amended by D13: that party
+  is the specification's one fresh-reader review (VIS-3); no separate
+  confirmation round.)*
 - A fresh engineer applies this clause by reading the scope statement,
   listing its obligations, and checking each against the table — no other
   context is required.
