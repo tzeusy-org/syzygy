@@ -84,6 +84,7 @@ export interface OrderedDesignPlan {
   readonly preparedText: string;
   readonly replies: readonly PlannedReply[];
 }
+const issuedPlans = new WeakSet<OrderedDesignPlan>();
 interface PlanInput {
   /** Source already authenticated by the host's dedicated original/view receipt. */
   readonly envelope: Uint8Array;
@@ -170,6 +171,28 @@ export function planOrderedDesignBytes(input: PlanInput): OrderedDesignPlan {
       const reply = replyText(manifest, manifestSha256, part, texts[index]!, limits.replyBytes);
       return { ordinal: part.ordinal, manifestSha256, bytes: Buffer.byteLength(reply), sha256: sha256(reply) };
     });
-    return deepFreeze({ manifest, manifestText, manifestSha256, prepared, preparedText, replies });
+    const plan = deepFreeze({ manifest, manifestText, manifestSha256, prepared, preparedText, replies });
+    issuedPlans.add(plan);
+    return plan;
+  } catch { return fail(); }
+}
+
+/** Reconstruct a sealed reply from the complete reverified envelope. The
+ * caller still owns transfer currentness, the next ordinal and release. */
+export function materializeOrderedDesignPart(plan: OrderedDesignPlan, envelope: Uint8Array, path: string): string {
+  try {
+    if (!issuedPlans.has(plan) || !isOrderedDesignPartPath(path) || !(envelope instanceof Uint8Array)
+      || envelope.byteLength !== plan.manifest.envelopeBytes) return fail();
+    const part = plan.manifest.parts.find(candidate => candidate.path === path);
+    if (part === undefined) return fail();
+    const bytes = Uint8Array.from(envelope);
+    if (sha256(bytes) !== plan.manifest.envelopeSha256) return fail();
+    const slice = bytes.subarray(part.offset, part.offset + part.bytes);
+    if (sha256(slice) !== part.sha256) return fail();
+    const text = new TextDecoder('utf-8', { fatal: true, ignoreBOM: true }).decode(slice);
+    const expected = plan.replies[part.ordinal - 1]!;
+    const reply = replyText(plan.manifest, plan.manifestSha256, part, text, expected.bytes);
+    if (Buffer.byteLength(reply) !== expected.bytes || sha256(reply) !== expected.sha256) return fail();
+    return reply;
   } catch { return fail(); }
 }

@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { sha256 } from '@syzygy/support';
-import { isOrderedDesignPartPath, planOrderedDesignBytes } from './url-design-delivery.js';
+import { isOrderedDesignPartPath, materializeOrderedDesignPart, planOrderedDesignBytes } from './url-design-delivery.js';
 
 /** Owned canonical transport vector 253. The expected encoded counts and
  * hashes below are retained values from the independently verified vector. */
@@ -60,6 +60,29 @@ describe('ordered URL design byte plan', () => {
     const plan = planOrderedDesignBytes({ ...input, limits: { ...input.limits, partBytes: 250 } });
     expect(plan.manifest.parts.map(({ bytes, offset }) => ({ bytes, offset }))).toEqual([{ bytes: 248, offset: 0 }, { bytes: 132, offset: 248 }]);
     expect(input.envelope.subarray(248, 252)).toEqual(Buffer.from('\u{1fabf}'));
+  });
+
+  it('reproduces the independent canonical reply digests and the exact original envelope', () => {
+    const input = vector();
+    const plan = planOrderedDesignBytes(input);
+    const first = materializeOrderedDesignPart(plan, input.envelope, 'round-1/design-view-part-1.json');
+    const second = materializeOrderedDesignPart(plan, input.envelope, 'round-1/design-view-part-2.json');
+    expect([sha256(first), sha256(second)]).toEqual([
+      'c3cf4b4e33ea75f3e03573eef8d1c58de60aa5fa795230370958235e0d1ec4fc',
+      '477db6e1832fd4e788f6a342079507c2caea1976133969b65d54c9a3905ca360',
+    ]);
+    expect(Buffer.from(JSON.parse(first).text + JSON.parse(second).text)).toEqual(input.envelope);
+  });
+
+  it('refuses a cloned plan, foreign selector or changed byte outside the requested part', () => {
+    const input = vector();
+    const plan = planOrderedDesignBytes(input);
+    const first = 'round-1/design-view-part-1.json';
+    expect(() => materializeOrderedDesignPart({ ...plan }, input.envelope, first)).toThrow(REFUSAL);
+    expect(() => materializeOrderedDesignPart(plan, input.envelope, 'round-2/design-view-part-1.json')).toThrow(REFUSAL);
+    const changed = Buffer.from(input.envelope);
+    changed[changed.length - 1] = 0x20;
+    expect(() => materializeOrderedDesignPart(plan, changed, first)).toThrow(REFUSAL);
   });
 
   it('withholds the entire plan when partition, escaped reply or prepared bytes exceed the profile', () => {
