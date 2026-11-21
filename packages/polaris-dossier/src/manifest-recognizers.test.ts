@@ -124,6 +124,13 @@ beforeAll(() => {
     cargoRepeatedUnread: '[package]\nname = "x"\n[package.metadata]\nk = 1\nk = 2\n',
     cargoDate: '[package]\nname = "x"\n\n[package.metadata]\nreleased = 2026-11-22\n',
     cargoDependenciesNotTable: 'dependencies = ["serde"]\n',
+    cargoInvalidDate: '[package]\nname = "x"\n\n[package.metadata]\nreleased = 9999-99-99\n',
+    cargoNotLeapDay: '[package.metadata]\nreleased = 2023-02-29\n',
+    cargoLeapDay: '[package.metadata]\nreleased = 2024-02-29\n',
+    cargoInvalidTime: '[package.metadata]\nat = 24:00:00\n',
+    cargoInvalidOffset: '[package.metadata]\nat = 2024-01-01T00:00:00+24:00\n',
+    cargoRepeatUnreadThenRead: '[package.metadata]\nk = 1\nk = 2\n\n[dependencies]\nserde = "1"\nserde = "2"\n',
+    cargoRepeatHeaderUnreadThenRead: '[package.metadata]\n[package.metadata]\n[workspace.dependencies]\na = "1"\na = "2"\n',
     cargoRepeatedWorkspaceDependency: '[workspace.dependencies]\nserde = "1"\nserde = "2"\n',
 
     pyWorkspace: '[project]\nname = "kestrel-workspace"\n\n[tool.uv.workspace]\nmembers = ["packages/*", "apps/api"]\n',
@@ -188,6 +195,7 @@ beforeAll(() => {
     goTwoModules: 'module a\nmodule b\n',
     goUnknownDirective: 'module a\n\nfrobnicate x\n',
     goBadRequire: 'module a\nrequire x\n',
+    goModuleBlock: 'module (\n\texample.com/x\n)\n',
 
     workflowJobs: [
       'name: CI',
@@ -234,6 +242,53 @@ beforeAll(() => {
     workflowAnchor: 'on: push\njobs:\n  a: &base\n    runs-on: x\n  b: *base\n',
     workflowSecondDocument: 'on: push\n---\non: pull_request\n',
     workflowOnBoolean: '"on": true\n',
+    // A dtolnay-style CI workflow (written for this test): a schedule as a single-pair mapping inside a flow sequence.
+    workflowDtolnay: [
+      'name: CI',
+      '',
+      'on:',
+      '  push:',
+      '  pull_request:',
+      '  workflow_dispatch:',
+      '  schedule: [cron: "40 1 * * *"]',
+      '',
+      'permissions:',
+      '  contents: read',
+      '',
+      'env:',
+      '  RUSTFLAGS: -Dwarnings',
+      '',
+      'jobs:',
+      '  pre_ci:',
+      '    uses: dtolnay/.github/.github/workflows/pre_ci.yml@master',
+      '',
+      '  test:',
+      '    name: Rust ${{matrix.rust}}',
+      '    needs: pre_ci',
+      '    if: needs.pre_ci.outputs.continue',
+      '    runs-on: ubuntu-latest',
+      '    strategy:',
+      '      fail-fast: false',
+      '      matrix:',
+      '        rust: [nightly, beta, stable, 1.70.0]',
+      '    timeout-minutes: 45',
+      '    steps:',
+      '      - uses: actions/checkout@v4',
+      '      - uses: dtolnay/rust-toolchain@master',
+      '        with:',
+      '          toolchain: ${{matrix.rust}}',
+      '      - run: cargo test',
+      '',
+    ].join('\n'),
+    workflowFlowPairNeeds: 'on: push\njobs:\n  a:\n    needs: [b: c]\n',
+    workflowFlowMapNoColon: 'on: {push, pull_request: {}}\n',
+    workflowFlowPairCollectionKey: 'on: [[push]: x]\n',
+    workflowFlowPairKeyAcrossLines: 'on: [push\n  : x]\n',
+    workflowFoldEscapedTab: 'name: "a\\t\n  b"\non: push\n',
+    workflowFoldEscapedSpace: 'name: "a\\ \n  b"\non: push\n',
+    workflowFoldPlainSpace: 'name: "a  \n  b"\non: push\n',
+    workflowBlockTabLine: 'on: push\njobs:\n  a:\n    steps:\n      - run: |\n          echo\n\t\n          echo\n',
+    workflowBlockTabContent: 'on: push\njobs:\n  a:\n    steps:\n      - run: |\n          echo\n          \t\n',
     workflowQuotedKeys: '"name": "Quoted \\"CI\\""\n\'on\':\n  "push": {}\njobs:\n  "build-x": {}\n',
   });
 });
@@ -315,6 +370,15 @@ describe('cargo-manifest version 1', () => {
     expect(facts(recognizeCargoManifest(F['cargoRepeatedUnread']!))).toBe('syntax');
     expect(facts(recognizeCargoManifest(F['cargoDate']!))).toBe('beyond-reader');
   });
+  it('refuses a date or time whose fields are out of range as syntax, and reads a real one as beyond-reader', () => {
+    expect(['cargoInvalidDate', 'cargoNotLeapDay', 'cargoInvalidTime', 'cargoInvalidOffset', 'cargoLeapDay'].map((k) => facts(recognizeCargoManifest(F[k]!))))
+      .toEqual(['syntax', 'syntax', 'syntax', 'syntax', 'beyond-reader']);
+  });
+  it('reads on past a repeat in a table it does not read, so a later repeat in one it reads is duplicate-key', () => {
+    expect(facts(recognizeCargoManifest(F['cargoRepeatUnreadThenRead']!))).toBe('duplicate-key');
+    expect(facts(recognizeCargoManifest(F['cargoRepeatHeaderUnreadThenRead']!))).toBe('duplicate-key');
+    expect(facts(recognizeCargoManifest(F['cargoRepeatedUnread']!))).toBe('syntax');
+  });
 });
 
 describe('python-project-manifest version 1', () => {
@@ -375,6 +439,7 @@ describe('go-module-manifest version 1', () => {
   it('refuses two module directives as field-type and a directive it does not read as beyond-reader', () => {
     expect(facts(recognizeGoModule(F['goTwoModules']!))).toBe('field-type');
     expect(facts(recognizeGoModule(F['goUnknownDirective']!))).toBe('beyond-reader');
+    expect(facts(recognizeGoModule(F['goModuleBlock']!))).toBe('beyond-reader');
   });
 });
 
@@ -402,6 +467,29 @@ describe('github-actions-workflow version 1', () => {
     expect(facts(recognizeWorkflow(F['workflowQuotedKeys']!))).toEqual([
       ['workflow', 1, 5, 'Quoted "CI"'], ['workflow-trigger', 3, 3, 'push'], ['job', 5, 5, 'build-x'],
     ]);
+  });
+  it('reads a dtolnay-style workflow whose schedule is a single-pair mapping in a flow sequence', () => {
+    expect(facts(recognizeWorkflow(F['workflowDtolnay']!))).toEqual([
+      ['workflow', 1, 34, 'CI'],
+      ['workflow-trigger', 4, 4, 'push'], ['workflow-trigger', 5, 5, 'pull_request'], ['workflow-trigger', 6, 6, 'workflow_dispatch'],
+      ['workflow-trigger', 7, 7, 'schedule'],
+      ['job', 16, 17, 'pre_ci'], ['job', 19, 34, 'test'], ['job-needs', 21, 21, 'test', 'pre_ci'],
+    ]);
+  });
+  it('reads a single-pair flow mapping as a mapping and a flow-mapping entry with no colon as a key with a null value', () => {
+    expect(facts(recognizeWorkflow(F['workflowFlowPairNeeds']!))).toBe('field-type');
+    expect(facts(recognizeWorkflow(F['workflowFlowMapNoColon']!))).toEqual([['workflow', 1, 1, null], ['workflow-trigger', 1, 1, 'push'], ['workflow-trigger', 1, 1, 'pull_request']]);
+    expect(facts(recognizeWorkflow(F['workflowFlowPairCollectionKey']!))).toBe('beyond-reader');
+    expect(facts(recognizeWorkflow(F['workflowFlowPairKeyAcrossLines']!))).toBe('syntax');
+  });
+  it('keeps white space an escape wrote when a double-quoted scalar folds, and trims only the line\'s own trailing white space', () => {
+    expect(facts(recognizeWorkflow(F['workflowFoldEscapedTab']!))).toEqual([['workflow', 1, 3, 'a\t b'], ['workflow-trigger', 3, 3, 'push']]);
+    expect(facts(recognizeWorkflow(F['workflowFoldEscapedSpace']!))).toEqual([['workflow', 1, 3, 'a  b'], ['workflow-trigger', 3, 3, 'push']]);
+    expect(facts(recognizeWorkflow(F['workflowFoldPlainSpace']!))).toEqual([['workflow', 1, 3, 'a b'], ['workflow-trigger', 3, 3, 'push']]);
+  });
+  it('refuses a blank line holding a tab short of a block scalar\'s indentation as syntax, and keeps a tab past it as content', () => {
+    expect(facts(recognizeWorkflow(F['workflowBlockTabLine']!))).toBe('syntax');
+    expect(facts(recognizeWorkflow(F['workflowBlockTabContent']!))).toEqual([['workflow', 1, 7, null], ['workflow-trigger', 1, 1, 'push'], ['job', 3, 7, 'a']]);
   });
   it('refuses a malformed, an empty and a whitespace-only file as syntax', () => {
     expect(facts(recognizeWorkflow(F['workflowMalformed']!))).toBe('syntax');

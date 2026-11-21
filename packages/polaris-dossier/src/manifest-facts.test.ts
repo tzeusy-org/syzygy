@@ -1,3 +1,4 @@
+import { createHash } from 'node:crypto';
 import { readFileSync } from 'node:fs';
 import * as path from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -30,11 +31,13 @@ beforeAll(() => {
   V2 = build(POLICY.v2);
 });
 
+/** A listed entry's object id: a stand-in derived from its path, so a refusal can name the listed blob or another object. */
+const idOf = (p: string): string => createHash('sha1').update(p).digest('hex');
 type Tree = Record<string, string | Uint8Array | { readonly mode: string } | GitObjectReadRefusal>;
 /** The listing of `tree` (mode 100644 unless given) and a reader double that reads only `mayRead`, recording every path asked for. */
 function fixture(tree: Tree, mayRead: readonly string[]) {
   const asked: string[] = [];
-  const entries = Object.entries(tree).map(([p, v]) => ({ path: p, mode: typeof v === 'object' && 'mode' in v ? v.mode : '100644' }));
+  const entries = Object.entries(tree).map(([p, v]) => ({ path: p, mode: typeof v === 'object' && 'mode' in v ? v.mode : '100644', id: idOf(p) }));
   const read = async (p: string): Promise<VerifiedBlob> => {
     asked.push(p);
     if (!mayRead.includes(p)) throw new Error(`the reader double was asked for ${JSON.stringify(p)}, which the dispositions do not read`);
@@ -229,7 +232,9 @@ describe('manifestFacts: excluded or withheld blob never read', () => {
     expect(new TextEncoder().encode(exact).byteLength).toBe(LIMIT);
     const tree: Tree = {
       'a/package.json': new GitObjectReadRefusal('object-missing', 'fixture: missing', '1'.repeat(40), 'a/package.json'),
-      'b/package.json': new GitObjectReadRefusal('corrupt-object', 'fixture: over the bound', '2'.repeat(40), 'b/package.json', true),
+      'b/package.json': new GitObjectReadRefusal('corrupt-object', 'fixture: over the bound', idOf('b/package.json'), 'b/package.json', true),
+      // A delta base or tree on the way over the bound: the listed blob was not shown over it, so the read is refused, not too-large.
+      'f/package.json': new GitObjectReadRefusal('corrupt-object', 'fixture: a base over the bound', '2'.repeat(40), 'f/package.json', true),
       'c/package.json': new Uint8Array(LIMIT + 1).fill(0x20),
       'd/package.json': exact,
       'e/package.json': new Uint8Array([0x7b, 0xff, 0x7d]),
@@ -237,7 +242,7 @@ describe('manifestFacts: excluded or withheld blob never read', () => {
     const m = derived(await derive(V2, fixture(tree, Object.keys(tree))));
     expect(m.recognizers[0]!.files).toEqual([
       unknownFile('a/package.json', 'object-read-refused'), unknownFile('b/package.json', 'too-large'), unknownFile('c/package.json', 'too-large'),
-      inferredFile('d/package.json', 1), unknownFile('e/package.json', 'not-utf8-text'),
+      inferredFile('d/package.json', 1), unknownFile('e/package.json', 'not-utf8-text'), unknownFile('f/package.json', 'object-read-refused'),
     ]);
   });
 });
@@ -306,6 +311,44 @@ describe('manifestFacts: values, caps and order', () => {
     expect(f.asked).toEqual(readable);
     expect(npm.files.map((x) => x.path)).toEqual(readable);
     expect([npm.inferred, npm.unknown, npm.inferred + npm.unknown, npm.filesNotListed]).toEqual([250, 10, 260, 10]);
+  });
+
+  it('reads a path of 512 code units and names one of 513 path-not-citable, unread', async () => {
+    const at512 = `${'p'.repeat(499)}/package.json`, at513 = `${'p'.repeat(500)}/package.json`;
+    expect([at512.length, at513.length]).toEqual([512, 513]);
+    const f = fixture({ [at512]: '{ "name": "a" }', [at513]: '{ "name": "b" }' }, [at512]);
+    const npm = derived(await derive(V2, f)).recognizers[0]!;
+    expect(f.asked).toEqual([at512]);
+    expect(npm.files).toEqual([inferredFile(at512, 1), unknownFile(`"${'p'.repeat(500)}/package.jso" (1 more code units)`, 'path-not-citable')]);
+  });
+
+  // Review finding 7 (syzygy-3efd.25): the member has no byte bound of its own, and the spec fixes its caps (1,000 facts and 250 files per
+  // recognizer listed, values to 256 code units, paths to 512). A value may hold lone surrogates, which the value check admits and
+  // JSON.stringify writes as six-byte escapes; a path may hold three-byte characters. Encoded as the check record encodes it, the worst
+  // case is 7,164,441 bytes, and 5,628,441 with three-byte characters alone: both over the 4 MiB (4,194,304-byte) SUBJECT_JSON_LIMITS
+  // that latestPassedDraft reads a check record with. Reported, not tightened: the spec states the caps exactly.
+  it('measures the worst-case member against the 4 MiB subject limit, and admits a 256-unit value of lone surrogates', async () => {
+    const lone = derived(await derive(V2, fixture({ 'package.json': `{ "name": "${'\\ud800'.repeat(256)}" }` }, ['package.json'])));
+    expect([lone.facts.length, (lone.facts[0]!['name'] as string).length, lone.recognizers[0]!.valuesLeftOut]).toEqual([1, 256, 0]);
+    const worst = (value: string): number => {
+      const P = '\u4e00'.repeat(512);
+      const file = { path: P, epistemic: 'inferred', unknownReason: null, parseFault: null, facts: 1_048_576, valuesLeftOut: 1_048_576 };
+      const member = {
+        format: 'polaris-dossier-manifest-facts/1', state: 'derived',
+        screeningPolicy: { policyId: 'x'.repeat(64), policyVersion: 'x'.repeat(64), sha256: '0'.repeat(64) },
+        recognizers: ['npm-package-manifest', 'cargo-manifest', 'python-project-manifest', 'go-module-manifest', 'github-actions-workflow'].map((rule) => ({
+          rule, ruleVersion: 1, label: 'inferred', candidates: 1e9, secretPathsLeftOut: 1e9, setApart: 1e9, inferred: 1e9, unknown: 1e9, valuesLeftOut: 1e9, facts: 1e9,
+          files: Array.from({ length: 250 }, () => file), filesNotListed: 1e9,
+        })),
+        facts: Array.from({ length: 1000 }, (_, i) => ({
+          id: `_manifest-${i + 1}`, fact: 'dependency', rule: 'python-project-manifest', ruleVersion: 1, path: P, lines: [1_048_577, 1_048_577],
+          name: value, section: 'project.optional-dependencies', group: value, epistemic: 'inferred',
+        })),
+        factsNotListed: 1e9,
+      };
+      return Buffer.byteLength(JSON.stringify({ manifestFacts: member }, null, 2));
+    };
+    expect([worst('\ud800'.repeat(256)), worst('\u4e00'.repeat(256)), 4 * 1024 * 1024]).toEqual([7_164_441, 5_628_441, 4_194_304]);
   });
 
   it('is deterministic: the same bytes whatever the listing order, and every fact and entry labelled inferred', async () => {

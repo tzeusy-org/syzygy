@@ -75,7 +75,8 @@ export function recognizeGoModule(text: string): Recognized {
     if (verb === ')') return { ok: false, parseFault: 'syntax' };
     const opensBlock = tokens.length === 2 && tokens[1] === '(';
     if (verb === 'module') {
-      if (opensBlock) { beyond = true; block = 'module'; continue; }
+      // A module block is one module directive in a form this reader does not read: counted, so it is beyond-reader, not field-type.
+      if (opensBlock) { modules++; beyond = true; block = 'module'; continue; }
       if (tokens.length !== 2) return { ok: false, parseFault: 'syntax' };
       modules++;
       const name = unquote(tokens[1]!);

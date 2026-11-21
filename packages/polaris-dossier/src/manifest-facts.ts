@@ -91,7 +91,7 @@ export const MANIFEST_RECOGNIZERS: readonly Recognizer[] = [
 ];
 
 export interface ManifestInputs {
-  readonly entries: readonly Pick<TreeEntry, 'path' | 'mode'>[];
+  readonly entries: readonly Pick<TreeEntry, 'path' | 'mode' | 'id'>[];
   readonly screen: Pick<DossierScreen, 'policyId' | 'policyVersion' | 'policySha256' | 'screenPath' | 'contentClass' | 'screenBody' | 'screenTargetBody'>;
   /** The classes the per-project statement the run relies on lists, or null when it relies on none (`class-gate.ts`). */
   readonly consented: readonly string[] | null;
@@ -126,7 +126,7 @@ export async function deriveManifestFacts(inputs: ManifestInputs): Promise<Manif
     let secretPathsLeftOut = 0, setApart = 0, readable = 0;
     const outcomes: Outcome[] = [];
     const candidates = blobs.filter((entry) => recognizer.matches(entry.path));
-    const toRead: string[] = [];
+    const toRead: (typeof candidates)[number][] = [];
     for (const candidate of candidates) {
       const { path } = candidate;
       if (secretOrUnder(path.split('/'), isSecretPath)) { secretPathsLeftOut++; continue; }
@@ -140,10 +140,10 @@ export async function deriveManifestFacts(inputs: ManifestInputs): Promise<Manif
       if (unconsentedClass(screen.contentClass(path), inputs.consented) !== undefined) { outcomes.push(unknownFile(path, 'class-not-consented', false)); continue; }
       if (readable >= MANIFEST_READ_LIMIT) { outcomes.push(unknownFile(path, 'over-read-limit', false)); continue; }
       readable++;
-      toRead.push(path);
+      toRead.push(candidate);
     }
     // One read per file, in path order, one after another: a refused read makes that file Unknown and no other.
-    for (const path of toRead) outcomes.push(await readOne(path, recognizer, inputs, screen, refusedValue));
+    for (const entry of toRead) outcomes.push(await readOne(entry, recognizer, inputs, screen, refusedValue));
 
     const files = [...outcomes.filter((o) => o.read), ...outcomes.filter((o) => !o.read)].map((o) => o.entry);
     let inferred = 0, unknown = 0, valuesLeftOut = 0, facts = 0;
@@ -169,13 +169,14 @@ export async function deriveManifestFacts(inputs: ManifestInputs): Promise<Manif
   };
 }
 
-async function readOne(path: string, recognizer: Recognizer, inputs: ManifestInputs, screen: ManifestInputs['screen'], refusedValue: (value: string) => boolean): Promise<Outcome> {
+async function readOne({ path, id }: Pick<TreeEntry, 'path' | 'id'>, recognizer: Recognizer, inputs: ManifestInputs, screen: ManifestInputs['screen'], refusedValue: (value: string) => boolean): Promise<Outcome> {
   let blob: VerifiedBlob;
   try {
     blob = await inputs.read(path);
   } catch (cause) {
     if (!(cause instanceof GitObjectReadRefusal)) throw cause;
-    return unknownFile(path, cause.overBound ? 'too-large' : 'object-read-refused', true);
+    // `too-large` is the listed blob's own size alone: a tree or delta base over the bound on the way is a refused read like any other.
+    return unknownFile(path, cause.overBound && cause.objectId === id ? 'too-large' : 'object-read-refused', true);
   }
   if (blob.bytes.byteLength > MANIFEST_BLOB_LIMIT) return unknownFile(path, 'too-large', true);
   let text: string;

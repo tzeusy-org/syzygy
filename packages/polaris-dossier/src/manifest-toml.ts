@@ -3,7 +3,8 @@ import { lineIndex, type Lines, type MEntry, type MNode, type Parsed } from './m
 /** A position-aware reader of one TOML v1.0.0 document, for `cargo-manifest` and `python-project-manifest` version 1
  * (REQ-polaris-generation-034 version 2.7). It reads comments, blank lines, bare, quoted and dotted keys, standard tables, arrays of
  * tables, basic, literal and multi-line strings, integers (decimal, hexadecimal, octal and binary), floats, booleans, arrays across lines
- * and inline tables. The one form it does not read (`beyond`) is a date-time or time value, wherever it occurs. Pure.
+ * and inline tables. The one form it does not read (`beyond`) is a valid date-time, date or time value, wherever it occurs; one whose
+ * fields are out of range (`9999-99-99`) is invalid TOML, `syntax`. Pure.
  *
  * A key defined twice is recorded with the path of the table that holds it, and the reader stops there: a table header redefining a
  * table, a header over a key that holds a value, and a dotted key or header over a defined key all count. Other misuse of the table
@@ -22,6 +23,21 @@ type TItem = TTable | TValue | TArrayOfTables;
 
 const MAX_DEPTH = 256;
 const BARE_KEY = /[A-Za-z0-9_-]+/y;
+/** Whether a date-time, date or time `DATE_TIME` matched names a real instant: month 1-12, a day the month has (29 February in a leap
+ * year alone), hour 0-23, minute and second 0-59, an offset's hour 0-23 and minute 0-59. One that does not is invalid TOML (`syntax`). */
+export function validDateTime(s: string): boolean {
+  const date = /^([0-9]{4})-([0-9]{2})-([0-9]{2})/u.exec(s);
+  if (date !== null) {
+    const year = Number(date[1]), month = Number(date[2]), day = Number(date[3]);
+    const leap = (year % 4 === 0 && year % 100 !== 0) || year % 400 === 0;
+    const days = [31, leap ? 29 : 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31][month - 1];
+    if (days === undefined || day < 1 || day > days) return false;
+  }
+  const time = /([0-9]{2}):([0-9]{2})(?::([0-9]{2}))?/u.exec(date === null ? s : s.slice(10));
+  if (time !== null && (Number(time[1]) > 23 || Number(time[2]) > 59 || Number(time[3] ?? 0) > 59)) return false;
+  const offset = /[+-]([0-9]{2}):([0-9]{2})$/u.exec(date === null ? '' : s.slice(10));
+  return offset === null || (Number(offset[1]) <= 23 && Number(offset[2]) <= 59);
+}
 const DATE_TIME = /(?:[0-9]{4}-[0-9]{2}-[0-9]{2}(?:[Tt ][0-9]{2}:[0-9]{2}(?::[0-9]{2}(?:\.[0-9]+)?)?(?:[Zz]|[+-][0-9]{2}:[0-9]{2})?)?|[0-9]{2}:[0-9]{2}(?::[0-9]{2}(?:\.[0-9]+)?)?)/y;
 const DEC = '(?:0|[1-9](?:_?[0-9])*)';
 const DIGITS = '[0-9](?:_?[0-9])*';
@@ -50,7 +66,11 @@ export function readToml(text: string): Parsed {
   const wsCommentNewline = (): void => {
     for (;;) { ws(); comment(); if (atNewline()) newline(); else return; }
   };
-  const duplicate = (table: TTable): never => { duplicates.push([...table.path]); return syntax(); };
+  /** Record a repeated name under `table` and read on, so a later repeat in a table a recognizer reads is still found (a repeat in a
+   * table it does not read must not hide one it does). The repeated definition is dropped, and a repeated table header opens a table
+   * outside the tree, so what follows it repeats nothing by accident. The text is invalid either way: resolveFaults decides which fault. */
+  const duplicate = (table: TTable): void => { duplicates.push([...table.path]); };
+  const detached = (path: readonly string[], origin: TTable['origin']): TTable => ({ kind: 'table', path: [...path], origin, entries: new Map(), pieces: [] });
 
   const basicString = (multi: boolean): string => {
     let out = '';
@@ -191,9 +211,10 @@ export function readToml(text: string): Parsed {
       if (text.startsWith(literal, i)) { i += literal.length; if (!delimited()) syntax(); return { kind: 'other', lines: span() }; }
     }
     DATE_TIME.lastIndex = i;
-    if (DATE_TIME.exec(text) !== null) {
+    const dateTime = DATE_TIME.exec(text);
+    if (dateTime !== null) {
       i = DATE_TIME.lastIndex;
-      if (!delimited()) syntax();
+      if (!delimited() || !validDateTime(dateTime[0])) syntax();
       beyond = true;
       return { kind: 'beyond', lines: span() };
     }
@@ -218,12 +239,12 @@ export function readToml(text: string): Parsed {
         t.entries.set(part, created);
         t = created;
       } else if (found.kind === 'table' && found.origin === (inline ? 'inline' : 'dotted') && found.pieces.length > 0) t = found;
-      else if (found.kind === 'value' && found.node.kind !== 'map') return duplicate(t);
+      else if (found.kind === 'value' && found.node.kind !== 'map') { duplicate(t); return; }
       else return syntax();
       t.pieces.push(lines);
     }
     const last = parts[parts.length - 1]!;
-    if (t.entries.has(last)) return duplicate(t);
+    if (t.entries.has(last)) { duplicate(t); return; }
     t.entries.set(last, { kind: 'value', node, lines });
   };
 
@@ -239,7 +260,7 @@ export function readToml(text: string): Parsed {
       } else if (found.kind === 'table' && found.origin !== 'inline') t = found;
       else if (found.kind === 'aot') t = found.items[found.items.length - 1]!;
       else if (found.kind === 'value' && found.node.kind === 'map') return syntax();
-      else return duplicate(t);
+      else { duplicate(t); t = detached([...t.path, part], 'implicit'); }
     }
     return t;
   };
@@ -259,14 +280,14 @@ export function readToml(text: string): Parsed {
       table = { kind: 'table', path: [...parent.path, last, '#'], origin: 'element', entries: new Map(), pieces: [] };
       if (found === undefined) parent.entries.set(last, { kind: 'aot', items: [table] });
       else if (found.kind === 'aot') found.items.push(table);
-      else return duplicate(parent);
+      else duplicate(parent);
     } else if (found === undefined) {
       table = { kind: 'table', path: [...parent.path, last], origin: 'header', entries: new Map(), pieces: [] };
       parent.entries.set(last, table);
     } else if (found.kind === 'table' && found.origin === 'implicit') {
       table = found;
       table.origin = 'header';
-    } else return duplicate(parent);
+    } else { duplicate(parent); table = detached([...parent.path, last], 'header'); }
     const piece = { first: line, last: line };
     table.pieces.push(piece);
     section = { table, piece };

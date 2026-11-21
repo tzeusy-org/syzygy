@@ -6,8 +6,9 @@ import type { MEntry, MKey, MNode, Parsed } from './manifest-model.js';
  * folded block scalars with their chomping and indentation indicators. Pure.
  *
  * The forms it does not read (`beyond`), as the requirement lets it refuse: an alias, an anchor, an explicit tag, a merge key (`<<`), a
- * directive and a second document; and also a complex (`?`) key, a flow collection as a key, a single-pair mapping inside a flow sequence,
- * a flow-mapping entry with no `:`, content on a `---` line, and nesting deeper than 256 collections. Everything else it does not accept
+ * directive and a second document; and also a complex (`?`) key, a flow collection as a key, content on a `---` line, and nesting deeper
+ * than 256 collections. A single-pair mapping inside a flow sequence (`[cron: "x"]`) is read as a one-entry mapping, and a flow-mapping
+ * entry with no `:` (`{a, b: 1}`) as a key whose value is null, as YAML 1.2 reads both; either key on one line. Everything else it does not accept
  * is `syntax`, including a tab in indentation, a character YAML does not print, any U+FEFF, an empty or whitespace-only text, and a
  * repeated key (recorded with the path of its mapping). A plain scalar resolves by the core schema: `null`, `~` and empty are null; `true`
  * and `false` in three cases are booleans; integers and floats in the core forms are numbers; everything else (`on` included) is a string. */
@@ -78,12 +79,14 @@ export function readYaml(text: string): Parsed {
   const quoted = (parentIndent: number, singleLine: boolean): string | undefined => {
     const double = ch() === '"';
     col++;
-    let out = '', lineStart = 0;
+    // `kept` is where the last escape's output ends: white space an escape wrote is content, never trimmed when the line folds.
+    let out = '', lineStart = 0, kept = 0;
     for (;;) {
       const c = ch();
       if (c === undefined) {
         if (singleLine) return undefined;
-        out = out.slice(0, lineStart) + out.slice(lineStart).replace(/[ \t]+$/u, '');
+        const from = Math.max(lineStart, kept);
+        out = out.slice(0, from) + out.slice(from).replace(/[ \t]+$/u, '');
         let empties = 0;
         ln++;
         while (ln < N && blankAt(ln)) { empties++; ln++; }
@@ -101,7 +104,7 @@ export function readYaml(text: string): Parsed {
           col = 0; ws(); lineStart = out.length;
           continue;
         }
-        if (DOUBLE_ESCAPES[e] !== undefined) { out += DOUBLE_ESCAPES[e]; col += 2; continue; }
+        if (DOUBLE_ESCAPES[e] !== undefined) { out += DOUBLE_ESCAPES[e]; col += 2; kept = out.length; continue; }
         const width = e === 'x' ? 2 : e === 'u' ? 4 : e === 'U' ? 8 : 0;
         const hex = line().slice(col + 2, col + 2 + width);
         if (width === 0 || !new RegExp(`^[0-9A-Fa-f]{${width}}$`, 'u').test(hex)) syntax();
@@ -109,6 +112,7 @@ export function readYaml(text: string): Parsed {
         if (code > 0x10ffff) syntax();
         out += String.fromCodePoint(code);
         col += 2 + width;
+        kept = out.length;
         continue;
       }
       if (c === (double ? '"' : "'")) {
@@ -207,6 +211,8 @@ export function readYaml(text: string): Parsed {
     while (ln < N) {
       const s = lines[ln]!;
       if (/^ *$/u.test(s)) { content.push(''); ln++; continue; }
+      // A blank line holding a tab short of the scalar's indentation: a tab where indentation is expected.
+      if (/^[ \t]*$/u.test(s) && spacesAt(ln) < indent) syntax();
       if (spacesAt(ln) < indent) break;
       content.push(s.slice(indent));
       lastContent = ln; ln++;
@@ -295,9 +301,22 @@ export function readYaml(text: string): Parsed {
         flowSkip(parentIndent);
         if (ch() === ']') { col++; return { kind: 'array', items, lines: { first: first + 1, last: ln + 1 } }; }
         if (ch() === '?' && flowStop(1)) throw new Stop(true);
-        items.push(flowItem(parentIndent, [...path, '#'], depth));
+        const keyLine = ln;
+        const item = flowItem(parentIndent, [...path, '#'], depth);
         flowSkip(parentIndent);
-        if (ch() === ':') throw new Stop(true);
+        if (ch() === ':') {
+          // A single-pair mapping: the item is its key, which YAML holds to one line; a collection as a key is beyond this reader.
+          if (item.kind === 'array' || item.kind === 'map') throw new Stop(true);
+          if (item.lines.first !== item.lines.last || ln + 1 !== item.lines.last) syntax();
+          const key: MKey = item.kind === 'string' ? { kind: 'string', value: item.value } : item.kind === 'beyond' ? { kind: 'beyond' } : { kind: 'other' };
+          if (key.kind === 'string' && key.value === '<<') beyond = true;
+          col++;
+          flowSkip(parentIndent);
+          const value: MNode = ch() === ',' || ch() === ']' ? nullAt(ln) : flowItem(parentIndent, [...path, '#', item.kind === 'string' ? item.value : ''], depth + 1);
+          const lines_ = { first: keyLine + 1, last: value.lines.last };
+          items.push({ kind: 'map', entries: [{ key, value, lines: lines_ }], lines: lines_ });
+          flowSkip(parentIndent);
+        } else items.push(item);
         if (ch() === ',') { col++; continue; }
         if (ch() === ']') { col++; return { kind: 'array', items, lines: { first: first + 1, last: ln + 1 } }; }
         return syntax();
@@ -314,10 +333,15 @@ export function readYaml(text: string): Parsed {
       const key: MKey = keyNode.kind === 'string' ? { kind: 'string', value: keyNode.value } : keyNode.kind === 'beyond' ? { kind: 'beyond' } : { kind: 'other' };
       if (key.kind === 'string' && key.value === '<<') beyond = true;
       flowSkip(parentIndent);
-      if (ch() !== ':') throw new Stop(true);
-      col++;
-      flowSkip(parentIndent);
-      const value: MNode = ch() === ',' || ch() === '}' ? nullAt(ln) : flowItem(parentIndent, [...path, raw], depth);
+      let value: MNode;
+      if (ch() === ':') {
+        col++;
+        flowSkip(parentIndent);
+        value = ch() === ',' || ch() === '}' ? nullAt(ln) : flowItem(parentIndent, [...path, raw], depth);
+      } else if (ch() === ',' || ch() === '}') {
+        // An entry with no `:` is a key whose value is null (YAML 1.2, 7.4.1); its span is the key's.
+        value = { kind: 'other', lines: { first: keyNode.lines.last, last: keyNode.lines.last } };
+      } else return syntax();
       const id = keyId(key, `${keyNode.kind}:${keyNode.lines.first}`);
       if (id !== undefined && key.kind === 'string') { if (seen.has(id)) duplicates.push([...path]); seen.add(id); }
       entries.push({ key, value, lines: { first: keyLine + 1, last: value.lines.last } });
