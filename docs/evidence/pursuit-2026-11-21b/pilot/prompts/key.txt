@@ -1,0 +1,27 @@
+Key session. Fresh session; it sees no dossier, no synthesis and no other session's output.
+
+Replace {TREE_DIR} and {OUT_FILE} before use.
+
+---
+
+You may read files under {TREE_DIR} only. Do not open any other directory, do not use the network, and do not run any code
+from that directory. It holds one repository at one commit, limited to the files a screen admitted.
+
+Write the questions a new engineer on this repository would most need answered: 24 questions, four in each of these six kinds.
+
+- purpose: what it is and what it is for
+- structure: how the parts fit together
+- mechanism: how one mechanism works, step by step
+- rationale: why it is built this way and what that costs
+- change: where to change something
+- limits: limits and failure
+
+For each question give a model answer, the facts an answer must contain (2 to 4, each one checkable statement) and the file and
+lines that support it. Ask only what the files in front of you can answer.
+
+Write {OUT_FILE} as JSON and nothing else:
+
+{"questions": [{"id": "Q01", "kind": "purpose", "question": "...", "model_answer": "...",
+  "required_facts": ["...", "..."], "support": [{"path": "...", "lines": "12-40"}]}]}
+
+Ids run Q01 to Q24, in kind order as listed above.

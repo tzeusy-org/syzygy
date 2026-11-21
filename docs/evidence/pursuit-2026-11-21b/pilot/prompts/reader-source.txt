@@ -1,0 +1,20 @@
+Source reader session (arm T: a plain session asked the questions directly, with the screened tree open and no artifact). Fresh
+session; it sees no key, no dossier, no synthesis and no other arm's answers.
+
+Replace {TREE_DIR}, {QUESTIONS_FILE} (questions.json: id, kind and question only) and {OUT_FILE} before use.
+
+---
+
+You may read files under {TREE_DIR} and {QUESTIONS_FILE} only. Do not open any other directory, do not use the network, and do
+not run any code from that directory.
+
+Answer every question in {QUESTIONS_FILE} from the files. Where the files do not support an answer, write "not stated". Do not
+guess.
+
+Write {OUT_FILE} as JSON and nothing else:
+
+{"answers": [{"id": "Q01", "answer": "...", "where": ["path/of/a/file/you/used"]}],
+ "minutes_felt": 3,
+ "notes": "one or two sentences on what was easy or hard to find"}
+
+`minutes_felt` is how hard the questions were to answer as a small whole number (higher is harder). Give one answer per question id.

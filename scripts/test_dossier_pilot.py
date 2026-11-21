@@ -1,0 +1,203 @@
+#!/usr/bin/env python3
+"""Tests for the Polaris dossier pilot harness (syzygy-5dhm.133): totals, grading input, reader text.
+
+    python3 scripts/test_dossier_pilot.py
+
+Expected values are literals written here, never read from the result files or computed by the module under test.
+"""
+import copy
+import importlib.util
+import json
+import pathlib
+import subprocess
+import sys
+import tempfile
+import unittest
+
+SCRIPTS = pathlib.Path(__file__).resolve().parent
+PILOT = SCRIPTS.parent / "docs" / "evidence" / "pursuit-2026-11-21b" / "pilot"
+
+
+def load(name):
+    spec = importlib.util.spec_from_file_location(f"pilot_test_{name}", SCRIPTS / f"{name}.py")
+    module = importlib.util.module_from_spec(spec)
+    sys.modules[spec.name] = module
+    spec.loader.exec_module(module)
+    return module
+
+
+totals = load("dossier_pilot_totals")
+grading_input = load("dossier_pilot_grading_input")
+site_to_text = load("dossier_site_to_text")
+
+FIRST = {"D": 0.34, "P": 0.481, "T": 0.944}
+SECOND = {"D": 0.327, "E": 0.574, "P": 0.457, "T": 0.951}
+THIRD = {"D": 0.333, "E": 0.605, "F": 0.481, "G": 0.414, "H": 0.389, "P": 0.469}
+KINDS = ("purpose", "structure", "mechanism", "rationale", "change", "limits")
+# Per kind, in KINDS order: the newest dossier (arm D) and the plain synthesis (arm P), first grading; the richest stored
+# dossier (arm E), third grading.
+FIRST_D_KINDS = (0.58, 0.29, 0.40, 0.31, 0.04, 0.42)
+FIRST_P_KINDS = (0.50, 0.79, 0.60, 0.23, 0.58, 0.15)
+THIRD_E_KINDS = (0.69, 0.57, 0.73, 0.58, 0.50, 0.54)
+
+
+class TotalsTests(unittest.TestCase):
+    @classmethod
+    def setUpClass(cls):
+        cls.record = totals.load(PILOT)
+        cls.totals = totals.recompute(cls.record)
+
+    def shares(self, grading):
+        return {arm: row["share"] for arm, row in self.totals[grading].items()}
+
+    def test_recorded_shares_per_arm(self):
+        self.assertEqual(self.shares("first"), FIRST)
+        self.assertEqual(self.shares("second"), SECOND)
+        self.assertEqual(self.shares("third"), THIRD)
+
+    def test_shares_per_question_kind(self):
+        for grading, arm, want in (("first", "D", FIRST_D_KINDS), ("first", "P", FIRST_P_KINDS), ("third", "E", THIRD_E_KINDS)):
+            self.assertEqual(self.totals[grading][arm]["perKind"], dict(zip(KINDS, want)), (grading, arm))
+
+    def test_population(self):
+        for grading, arms in (("first", 3), ("second", 4), ("third", 6)):
+            self.assertEqual(len(self.totals[grading]), arms)
+            for row in self.totals[grading].values():
+                self.assertEqual(row["factsRequired"], 81)
+                self.assertEqual(set(row["perKind"]), set(KINDS))
+            self.assertEqual(len(self.record["gradings"][grading]["grades"]), 24)
+        self.assertEqual(self.totals["first"]["D"]["factsGiven"], 27.5)
+        self.assertEqual(self.totals["first"]["D"]["answersWithNotStated"], 20)
+
+    def test_record_reproduces(self):
+        self.assertEqual(totals.differences(self.record), [])
+
+    def test_one_changed_grade_fails_the_check(self):
+        mutant = copy.deepcopy(self.record)
+        cell = mutant["gradings"]["first"]["grades"][0]["A"]["facts"]
+        cell[0] = 0 if cell[0] == 1 else 1
+        found = totals.differences(mutant)
+        self.assertTrue(any("first grading, arm P, share" in line for line in found), found)
+
+    def test_every_mutation_fails_the_check(self):
+        self.assertEqual(len(totals.MUTATIONS), 10)
+        for name, mutate in totals.MUTATIONS:
+            mutant = copy.deepcopy(self.record)
+            mutate(mutant)
+            self.assertTrue(totals.differences(mutant), name)
+
+    def test_commands(self):
+        for flags, code in ((["--check"], 0), (["--selftest"], 0), (["--check", "--pilot", str(SCRIPTS)], 2)):
+            done = subprocess.run([sys.executable, str(SCRIPTS / "dossier_pilot_totals.py"), *flags], capture_output=True, text=True)
+            self.assertEqual(done.returncode, code, (flags, done.stderr))
+
+    def test_check_fails_on_a_changed_copy(self):
+        with tempfile.TemporaryDirectory() as scratch:
+            copy_dir = pathlib.Path(scratch) / "pilot"
+            subprocess.run(["cp", "-r", str(PILOT), str(copy_dir)], check=True)
+            grades = json.loads((copy_dir / "grading3" / "grades.json").read_text())
+            grades["grades"][5]["C"]["facts"][0] = 0.5 if grades["grades"][5]["C"]["facts"][0] != 0.5 else 0
+            (copy_dir / "grading3" / "grades.json").write_text(json.dumps(grades))
+            done = subprocess.run([sys.executable, str(SCRIPTS / "dossier_pilot_totals.py"), "--check", "--pilot", str(copy_dir)], capture_output=True, text=True)
+            self.assertEqual(done.returncode, 1, done.stderr)
+            self.assertIn("DIFFERS third grading, arm P", done.stderr)
+
+
+class GradingInputTests(unittest.TestCase):
+    def test_recorded_gradings_rebuild(self):
+        for name, labels in (("first", 3), ("second", 4), ("third", 6)):
+            found, rows, drawn = grading_input.check_recorded(PILOT, name)
+            self.assertEqual((found, rows, drawn), ([], 24, labels), name)
+
+    def test_recorded_label_maps(self):
+        spec = grading_input.RECORDED
+        self.assertEqual(grading_input.build_from(PILOT, spec["first"]["arms"], spec["first"]["coin"], "rotate")[0], {"A": "P", "B": "T", "C": "D"})
+        self.assertEqual(grading_input.build_from(PILOT, spec["second"]["arms"], spec["second"]["coin"], "pick")[0], {"A": "P", "B": "E", "C": "D", "D": "T"})
+        self.assertEqual(grading_input.build_from(PILOT, spec["third"]["arms"], spec["third"]["coin"], "pick")[0],
+                         {"A": "H", "B": "D", "C": "P", "D": "E", "E": "F", "F": "G"})
+
+    def test_input_carries_only_id_and_answer(self):
+        _, built = grading_input.build_from(PILOT, ["D", "P", "T"], ["key.json"], "rotate")
+        for row in built:
+            self.assertEqual(sorted(row), ["answers", "id", "kind", "model_answer", "question", "required_facts"])
+            self.assertEqual(sorted(row["answers"]), ["A", "B", "C"])
+            for answer in row["answers"].values():
+                self.assertIsInstance(answer, str)
+        notes = json.loads((PILOT / "answers-D.json").read_text())["notes"]
+        self.assertGreater(len(notes), 20)
+        self.assertNotIn(notes, json.dumps(built, ensure_ascii=False))
+
+    def test_selftest_and_refusal(self):
+        self.assertEqual(grading_input.selftest(), 0)
+        key = [{"id": "Q1", "kind": "purpose", "question": "q", "model_answer": "m", "required_facts": ["f"]}]
+        with self.assertRaises(grading_input.InputError):
+            grading_input.build_input(key, {"D": {"answers": []}, "P": {"answers": [{"id": "Q1", "answer": "a"}]}}, {"A": "D", "B": "P"})
+
+    def test_label_map_is_not_written_beside_the_input(self):
+        with tempfile.TemporaryDirectory() as scratch:
+            done = subprocess.run([sys.executable, str(SCRIPTS / "dossier_pilot_grading_input.py"), "--grading", "second",
+                                   "--out", f"{scratch}/input.json", "--labels-out", f"{scratch}/labels.json"], capture_output=True, text=True)
+            self.assertEqual(done.returncode, 2, done.stderr)
+            self.assertEqual(list(pathlib.Path(scratch).iterdir()), [])
+
+
+class SiteToTextTests(unittest.TestCase):
+    def test_fixture_page(self):
+        self.assertEqual(site_to_text.selftest(), 0)
+        page = ("<html><body><header>BANNER</header><main><h2>Persistence</h2><p>Two files"
+                "<a class=\"cite\" href=\"sources/x.html\">3<span class=\"cite-pop\">src/rdb.c 10-20</span></a>.</p>"
+                "<ol><li>fork</li><li>write</li></ol></main></body></html>")
+        self.assertEqual(site_to_text.page_text(page), "## Persistence\n\nTwo files [3: src/rdb.c 10-20].\n\n- fork\n\n- write\n")
+
+    def test_site_counts_and_source_pages(self):
+        with tempfile.TemporaryDirectory() as scratch:
+            site, out = pathlib.Path(scratch) / "site", pathlib.Path(scratch) / "text"
+            pages = {"index.html": "<main><h1>One two</h1><p>three four five</p></main>",
+                     "poles/1.html": "<nav>skip me</nav><main><p>six seven</p></main>",
+                     "sources/index.html": "<main><p>eight</p></main>",
+                     "sources/a.html": "<main><p>RAW SOURCE BODY</p></main>",
+                     "sources/src/b.c.html": "<main><p>RAW SOURCE BODY</p></main>"}
+            for relative, body in pages.items():
+                (site / relative).parent.mkdir(parents=True, exist_ok=True)
+                (site / relative).write_text(body)
+            (site / "style.css").write_text("main{}")
+            report = pathlib.Path(scratch) / "report.json"
+            done = subprocess.run([sys.executable, str(SCRIPTS / "dossier_site_to_text.py"), str(site), str(out), "--report", str(report)],
+                                  capture_output=True, text=True)
+            self.assertEqual(done.returncode, 0, done.stderr)
+            self.assertEqual(done.stdout, "pages 3 words 9 sources pages excluded 2\n")
+            self.assertEqual(sorted(p.relative_to(out).as_posix() for p in out.rglob("*") if p.is_file()), ["index.md", "poles/1.md", "sources/index.md"])
+            self.assertEqual((out / "index.md").read_text(), "# One two\n\nthree four five\n")
+            self.assertEqual(json.loads(report.read_text())["perPageWords"], {"index.html": 6, "poles/1.html": 2, "sources/index.html": 1})
+            again = subprocess.run([sys.executable, str(SCRIPTS / "dossier_site_to_text.py"), str(site), str(out)], capture_output=True, text=True)
+            self.assertEqual(again.returncode, 2)
+
+    def test_agent_and_session_directories_are_refused(self):
+        with tempfile.TemporaryDirectory() as scratch:
+            for suffix in (".agents", ".sessions"):
+                site = pathlib.Path(scratch) / f"run-x{suffix}" / "site"
+                site.mkdir(parents=True)
+                (site / "index.html").write_text("<main>x</main>")
+                done = subprocess.run([sys.executable, str(SCRIPTS / "dossier_site_to_text.py"), str(site), f"{scratch}/out{suffix}"], capture_output=True, text=True)
+                self.assertEqual(done.returncode, 2)
+                self.assertFalse(pathlib.Path(f"{scratch}/out{suffix}").exists())
+
+
+class ScreenedTreeTests(unittest.TestCase):
+    def test_selftest(self):
+        done = subprocess.run(["node", str(SCRIPTS / "dossier_pilot_screened_tree.mjs"), "--selftest"], capture_output=True, text=True)
+        self.assertEqual(done.returncode, 0, done.stdout + done.stderr)
+        self.assertIn("19 count mutations", done.stdout)
+        self.assertNotIn("SURVIVED", done.stdout)
+
+    def test_refuses_without_a_clone_that_holds_the_commit(self):
+        with tempfile.TemporaryDirectory() as scratch:
+            subprocess.run(["git", "init", "-q", "--bare", f"{scratch}/empty.git"], check=True)
+            done = subprocess.run(["node", str(SCRIPTS / "dossier_pilot_screened_tree.mjs"), "--clone", f"{scratch}/empty.git", "--out", f"{scratch}/tree"],
+                                  capture_output=True, text=True)
+            self.assertEqual(done.returncode, 2, done.stdout + done.stderr)
+            self.assertFalse(pathlib.Path(f"{scratch}/tree").exists())
+
+
+if __name__ == "__main__":
+    unittest.main()
