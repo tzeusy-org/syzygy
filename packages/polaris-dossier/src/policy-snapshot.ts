@@ -3,7 +3,7 @@ import { closeSync, constants, fstatSync, lstatSync, openSync, readSync, type St
 import { parseBoundedJson } from '@syzygy/polaris-generation-core/live';
 import * as path from 'node:path';
 import { isRecord, sha256 } from '@syzygy/support';
-import { URL_PARENT_DEFAULT_REF, URL_PARENT_TAG, type UrlParentAdoption } from './url-parent-adoption.js';
+import { parseUrlParentRefs, URL_PARENT_REF_ARGS, type UrlParentAdoption } from './url-parent-adoption.js';
 
 /** The dossier successor is versioned separately from the PWB/provider policy.
  * Its screening predicates are preserved; its admission provenance follows D10. */
@@ -45,6 +45,7 @@ function committedPolicy(root: string, policyPath: typeof DOSSIER_POLICY_PATH | 
     env['GIT_CONFIG_NOSYSTEM'] = '1';
     env['GIT_CONFIG_GLOBAL'] = '/dev/null';
     env['GIT_OPTIONAL_LOCKS'] = '0';
+    env['GIT_NO_LAZY_FETCH'] = '1';
     const git = (...args: string[]): Buffer => execFileSync('git', [
       '--no-replace-objects', '-C', root, ...args,
     ], { env, maxBuffer: MAX_POLICY_BYTES, timeout: 10_000, stdio: ['ignore', 'pipe', 'pipe'] });
@@ -85,10 +86,13 @@ function committedPolicy(root: string, policyPath: typeof DOSSIER_POLICY_PATH | 
 export function committedUrlPoliciesCurrent(root: string, base: PolicyBinding, origin: PolicyBinding, parent?: UrlParentAdoption): boolean {
   try {
     const probe = currentPolicyProbe(root, base, origin, parent);
+    const refsCurrent = (): boolean => parent === undefined || probe.refsCurrent(execFileSync('git', probe.refArgs,
+      { ...probe.options, stdio: ['ignore', 'pipe', 'pipe'] }));
+    if (!refsCurrent()) return false;
     const read = (commit: string): boolean | string => probe.check(commit, execFileSync('git', probe.args,
       { ...probe.options, input: probe.input(commit), stdio: ['pipe', 'pipe', 'pipe'] }));
     const initial = read(base.commit);
-    return (typeof initial === 'string' ? read(initial) === true : initial) && probe.workingFilesCurrent();
+    return (typeof initial === 'string' ? read(initial) === true : initial) && refsCurrent() && probe.workingFilesCurrent();
   } catch { return false; }
 }
 
@@ -96,21 +100,27 @@ export function committedUrlPoliciesCurrent(root: string, base: PolicyBinding, o
 export async function committedUrlPoliciesCurrentAsync(root: string, base: PolicyBinding, origin: PolicyBinding, parent?: UrlParentAdoption): Promise<boolean> {
   try {
     const probe = currentPolicyProbe(root, base, origin, parent);
-    const read = async (commit: string): Promise<boolean | string> => {
-      const input = probe.input(commit);
-      const response = await new Promise<Buffer>((resolve, reject) => {
-        const child = execFile('git', probe.args, { ...probe.options, encoding: 'buffer' }, (error, stdout) => {
+    const runGit = (args: readonly string[], input?: string): Promise<Buffer> =>
+      new Promise((resolve, reject) => {
+        const child = execFile('git', args, { ...probe.options, encoding: 'buffer' }, (error, stdout) => {
           if (error) reject(error);
           else resolve(stdout);
         });
+        if (input === undefined) {
+          child.stdin?.destroy();
+          return;
+        }
         if (!child.stdin) throw new Error('current policy input');
         child.stdin.on('error', reject);
         child.stdin.end(input);
       });
-      return probe.check(commit, response);
-    };
+    const refsCurrent = async (): Promise<boolean> =>
+      parent === undefined || probe.refsCurrent(await runGit(probe.refArgs));
+    if (!(await refsCurrent())) return false;
+    const read = async (commit: string): Promise<boolean | string> =>
+      probe.check(commit, await runGit(probe.args, probe.input(commit)));
     const initial = await read(base.commit);
-    return (typeof initial === 'string' ? await read(initial) === true : initial) && probe.workingFilesCurrent();
+    return (typeof initial === 'string' ? await read(initial) === true : initial) && await refsCurrent() && probe.workingFilesCurrent();
   } catch { return false; }
 }
 
@@ -130,11 +140,16 @@ function currentPolicyProbe(root: string, base: PolicyBinding, origin: PolicyBin
   });
   const env = Object.fromEntries(Object.entries(process.env).filter(([key]) => !key.startsWith('GIT_')));
   Object.assign(env, { GIT_CONFIG_NOSYSTEM: '1', GIT_CONFIG_GLOBAL: '/dev/null', GIT_OPTIONAL_LOCKS: '0', GIT_NO_LAZY_FETCH: '1' });
-  const args = ['--no-replace-objects', '-C', root, 'cat-file', '--batch-command'];
+  const prefix = ['--no-replace-objects', '-C', root];
+  const args = [...prefix, 'cat-file', '--batch-command'];
+  const refArgs = [...prefix, ...URL_PARENT_REF_ARGS];
   const options = { env, maxBuffer: working.reduce((bytes, file) => bytes + file.bytes.length + 128, 4096), timeout: 10_000 };
-  const refs = ['info HEAD^{commit}'];
-  if (parent !== undefined) refs.push(`info ${URL_PARENT_DEFAULT_REF}^{commit}`, `info refs/tags/${URL_PARENT_TAG}^{commit}`);
-  const input = (commit: string): string => [...refs, ...[...subjects.keys()].map(file => `contents ${commit}:${file}`), ...refs, ''].join('\n');
+  const head = 'info HEAD^{commit}';
+  const input = (commit: string): string => [head, ...[...subjects.keys()].map(file => `contents ${commit}:${file}`), head, ''].join('\n');
+  const refsCurrent = (output: Buffer): boolean => {
+    const refs = parseUrlParentRefs(output);
+    return refs !== null && refs.defaultCommit === parent?.defaultCommit && refs.tagObject === parent.tagObject;
+  };
   const check = (commit: string, response: Buffer): boolean | string => {
     let offset = 0;
     const header = (type: 'commit' | 'blob') => {
@@ -147,11 +162,8 @@ function currentPolicyProbe(root: string, base: PolicyBinding, origin: PolicyBin
       offset = end + 1;
       return { id: fields[1]!, size };
     };
-    const parentCurrent = (): boolean => parent === undefined
-      || (header('commit').id === parent.defaultCommit && header('commit').id === parent.landedCommit);
     const first = header('commit').id;
     if (first !== commit) return first;
-    if (!parentCurrent()) return false;
     for (const file of working) {
       const blob = header('blob'), end = offset + blob.size;
       if (blob.size > MAX_POLICY_BYTES || response[end] !== 10) return false;
@@ -159,10 +171,10 @@ function currentPolicyProbe(root: string, base: PolicyBinding, origin: PolicyBin
       if (!bytes.equals(file.bytes)) return false;
       offset = end + 1;
     }
-    return header('commit').id === commit && parentCurrent() && offset === response.length;
+    return header('commit').id === commit && offset === response.length;
   };
   const workingFilesCurrent = (): boolean => working.every(file => sameWorkingFile(file.stats, lstatSync(file.path)));
-  return { args, options, input, check, workingFilesCurrent };
+  return { args, refArgs, options, input, check, refsCurrent, workingFilesCurrent };
 }
 
 function sameWorkingFile(initial: Stats, sample: Stats): boolean {
