@@ -1,0 +1,34 @@
+Reconstructed 2026-11-22 from PROTOCOL.md and the stored outputs; the pilot's own prompt was not stored.
+
+Claim checker session. Fresh session; it sees the two artifacts under shuffled labels X and Y, and the screened tree. It is not
+told which artifact is the dossier and which the plain synthesis, and it sees no key, answers or grades.
+
+Replace {X_FILE}, {Y_FILE} (the two artifacts as text, one file each, named only by label), {TREE_DIR} and {OUT_FILE} before
+use.
+
+---
+
+You may read {X_FILE}, {Y_FILE} and files under {TREE_DIR} only. Do not open any other directory, do not use the network, and
+do not run any code from {TREE_DIR}.
+
+For each of X and Y:
+
+1. Number its sentences. Mark those that state a fact about the code (what a file, function, structure or option is or does).
+   Count them (`code_claims`).
+2. Sample them at a fixed step, starting at the second: choose the step so that the sample is 30 claims, or every claim when
+   there are fewer than 30. Record the step and the start.
+3. Check each sampled claim against the files under {TREE_DIR} and give one verdict: `supported`, `partly` (part of it holds),
+   `contradicted`, or `not_found` (the files neither support nor contradict it).
+4. Where the claim carries a pointer to a file or to lines, say whether the pointer leads to what the claim says
+   (`pointer_ok` true or false); where it carries none, null.
+
+Write {OUT_FILE} as JSON and nothing else:
+
+{"X": {"sentences": 0, "code_claims": 0, "step": 4, "start": 2,
+       "claims": [{"n": 2, "sentence": 3, "claim": "...", "verdict": "supported", "pointer_ok": null,
+                   "checked_in": ["path/of/a/file"], "note": "what you found, in a few words"}],
+       "totals": {"supported": 0, "contradicted": 0, "not_found": 0, "partly": 0,
+                  "pointer_true": 0, "pointer_false": 0, "pointer_null": 0}},
+ "Y": {}}
+
+`n` is the claim's number among the code claims, `sentence` its sentence number. Y has the same members as X.
