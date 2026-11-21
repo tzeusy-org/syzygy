@@ -287,6 +287,7 @@ beforeAll(() => {
     workflowFoldEscapedTab: 'name: "a\\t\n  b"\non: push\n',
     workflowFoldEscapedSpace: 'name: "a\\ \n  b"\non: push\n',
     workflowFoldPlainSpace: 'name: "a  \n  b"\non: push\n',
+    workflowFoldHexTab: 'name: "a\\x09\n  b"\non: push\n',
     workflowBlockTabLine: 'on: push\njobs:\n  a:\n    steps:\n      - run: |\n          echo\n\t\n          echo\n',
     workflowBlockTabContent: 'on: push\njobs:\n  a:\n    steps:\n      - run: |\n          echo\n          \t\n',
     workflowQuotedKeys: '"name": "Quoted \\"CI\\""\n\'on\':\n  "push": {}\njobs:\n  "build-x": {}\n',
@@ -486,6 +487,7 @@ describe('github-actions-workflow version 1', () => {
     expect(facts(recognizeWorkflow(F['workflowFoldEscapedTab']!))).toEqual([['workflow', 1, 3, 'a\t b'], ['workflow-trigger', 3, 3, 'push']]);
     expect(facts(recognizeWorkflow(F['workflowFoldEscapedSpace']!))).toEqual([['workflow', 1, 3, 'a  b'], ['workflow-trigger', 3, 3, 'push']]);
     expect(facts(recognizeWorkflow(F['workflowFoldPlainSpace']!))).toEqual([['workflow', 1, 3, 'a b'], ['workflow-trigger', 3, 3, 'push']]);
+    expect(facts(recognizeWorkflow(F['workflowFoldHexTab']!))).toEqual([['workflow', 1, 3, 'a\t b'], ['workflow-trigger', 3, 3, 'push']]);
   });
   it('refuses a blank line holding a tab short of a block scalar\'s indentation as syntax, and keeps a tab past it as content', () => {
     expect(facts(recognizeWorkflow(F['workflowBlockTabLine']!))).toBe('syntax');
