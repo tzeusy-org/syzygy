@@ -1,6 +1,6 @@
 // Trusted build inputs only. This prepares executable support, not observed
 // project code; the runtime rechecks these exact inputs and outputs before use.
-import { build, transform } from 'esbuild';
+import { build } from 'esbuild';
 import ts from 'typescript';
 import { createHash } from 'node:crypto';
 import { mkdir, mkdtemp, readFile, realpath, rm, writeFile } from 'node:fs/promises';
@@ -8,6 +8,7 @@ import { execFileSync } from 'node:child_process';
 import os from 'node:os';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { compileDossierSessionSupport } from './compile_dossier_session_support.mjs';
 
 const root = await realpath(fileURLToPath(new URL('..', import.meta.url)));
 const relative = name => name.length > 0 && !path.isAbsolute(name) && !name.includes('\\')
@@ -87,7 +88,7 @@ const design = await build({ absWorkingDir: root, entryPoints: [renderer], bundl
 if (design.outputFiles.length !== 1 || design.outputFiles[0].contents.length > 8_388_608) throw new Error('unexpected renderer build output');
 outputs.set('renderer.mjs', design.outputFiles[0].contents);
 const inputs = new Set([...Object.keys(result.metafile.inputs), ...Object.keys(host.metafile.inputs), ...Object.keys(design.metafile.inputs), ...profileSources,
-  worker, peerSource, 'scripts/build_dossier_runtime.mjs', 'package-lock.json']);
+  worker, peerSource, 'scripts/build_dossier_runtime.mjs', 'scripts/compile_dossier_session_support.mjs', 'package-lock.json']);
 for (const name of [...Object.keys(host.metafile.inputs), ...Object.keys(design.metafile.inputs)])
   if (!captured.has(name)) throw new Error('uncaptured host/renderer compiler input');
 // Resolution metadata belongs to the captured graph even though esbuild does
@@ -102,14 +103,11 @@ for (const name of [...inputs]) {
   }
 }
 for (const name of Object.keys(result.metafile.inputs)) if (!captured.has(name)) throw new Error('uncaptured compiler input');
-for (const name of ['session-bridge', 'session-mcp']) {
-  const file = `packages/polaris-dossier/src/${name}.ts`;
+for (const [name, bytes] of await compileDossierSessionSupport(async file => {
   inputs.add(file);
   const bytes = await readFile(path.join(root, file)); capture(file, bytes);
-  const compiled = await transform(bytes.toString('utf8'), { loader: 'ts', format: 'esm', target: 'node24', sourcemap: false });
-  if (Buffer.byteLength(compiled.code) > 262_144) throw new Error('support output limit');
-  outputs.set(`support/${name}.js`, Buffer.from(compiled.code));
-}
+  return bytes;
+})) outputs.set(name, bytes);
 const records = [];
 for (const name of [...inputs].sort()) {
   if (!relative(name) || !/^(?:packages|apps|node_modules|scripts)\//u.test(name) && !['package-lock.json', 'package.json'].includes(name)) throw new Error('build input outside known trees');
@@ -123,10 +121,12 @@ for (const name of [...inputs].sort()) {
 if (hash(sourceBytes) !== records.find(record => record.path === worker)?.sha256) throw new Error('worker source changed during build');
 const destination = path.join(root, 'packages/polaris-dossier/dist/runtime');
 await mkdir(path.dirname(destination), { recursive: true });
-await mkdir(destination); await mkdir(path.join(destination, 'support')); await mkdir(path.join(destination, 'host'));
+await mkdir(destination);
+for (const directory of ['support', 'design-support', 'host']) await mkdir(path.join(destination, directory));
 const files = [];
 // Keep the manifest order closed and independent of compilation order.
-for (const name of ['worker.mjs', 'renderer.mjs', 'support/session-bridge.js', 'support/session-mcp.js', 'host/session-peer']) {
+for (const name of ['worker.mjs', 'renderer.mjs', 'support/session-bridge.js', 'support/session-mcp.js', 'host/session-peer',
+  'design-support/session-mcp.js']) {
   const bytes = outputs.get(name);
   if (bytes === undefined) throw new Error('missing runtime output');
   await writeFile(path.join(destination, name), bytes, { flag: 'wx', mode: name === 'host/session-peer' ? 0o755 : 0o644 });

@@ -21,7 +21,7 @@ import { decodeSessionResponse } from './session-response.js';
 import { buildDesignPacket, validateDesignVerdict } from './design-review.js';
 import { createUrlDesignView } from './url-design-view.js';
 import { materializeOrderedDesignPart, planOrderedDesignBytes } from './url-design-delivery.js';
-import ts from 'typescript';
+import { urlSessionMcpSupportPath } from './url-runtime.js';
 import { URL_CLI_PROGRAM, URL_LAUNCH_LIMITS, launchRestrictedUrlSession, prepareRestrictedUrlSession, restrictedSessionCliArgs, verifySupportedUrlCli, type UrlSessionLaunchOptions } from './session-launch.js';
 import { URL_SESSION_BWRAP, urlSessionBwrapArgs, urlSessionCommand, urlSessionViewFor } from './session-url-view.js';
 
@@ -144,22 +144,24 @@ async function launchFixture(limits: UrlSessionLaunchOptions['limits'] = {}) {
   return {...f,launch};
 }
 
+async function compiledSessionSupport(): Promise<ReadonlyMap<string, Buffer>> {
+  const root = new URL('../../../', import.meta.url);
+  const { compileDossierSessionSupport } = await import(new URL('scripts/compile_dossier_session_support.mjs', root).href) as {
+    compileDossierSessionSupport: (readInput: (name: string) => Promise<Buffer>) => Promise<ReadonlyMap<string, Buffer>>;
+  };
+  return compileDossierSessionSupport(name => readFile(new URL(name, root)));
+}
+
 async function privateLaunchOptions(root: string, profile: SessionProfile, role: 'author' | 'design',
-  audit: UrlSessionLaunchOptions['audit'], limits: UrlSessionLaunchOptions['limits'] = {}, fixtureOrderedMcp = false,
+  audit: UrlSessionLaunchOptions['audit'], limits: UrlSessionLaunchOptions['limits'] = {}, support: 'ordinary' | 'ordered-design' = 'ordinary',
 ): Promise<UrlSessionLaunchOptions> {
-  const supportSha256={} as Record<'session-bridge.js'|'session-mcp.js',string>;
-  for(const name of ['session-bridge','session-mcp'] as const){
-    let source=await readFile(new URL(`./${name}.ts`,import.meta.url),'utf8');
-    if (fixtureOrderedMcp && name === 'session-mcp') {
-      // Independently captured revision 251 test catalogue. It is never
-      // installed by the runtime manifest or supplied to a production role.
-      const anchor = "{ name: 'artifact_read',";
-      expect(source.split(anchor)).toHaveLength(2);
-      source = source.replace(anchor, `${anchor} _meta: { 'anthropic/maxResultSizeChars': 500000 },`);
-    }
-    const compiled=ts.transpileModule(source,{compilerOptions:{target:ts.ScriptTarget.ES2022,module:ts.ModuleKind.ES2022,sourceMap:false}}).outputText;
-    await writeFile(path.join(root,'support',`${name}.js`),compiled);supportSha256[`${name}.js`]=sha256(compiled);
-  }
+  const compiled = await compiledSessionSupport();
+  const mcpPath = urlSessionMcpSupportPath(role, support);
+  const bridgeBytes = compiled.get('support/session-bridge.js'), mcpBytes = mcpPath === null ? undefined : compiled.get(mcpPath);
+  if (bridgeBytes === undefined || mcpBytes === undefined) throw new Error('owned support selection refused');
+  await writeFile(path.join(root, 'support/session-bridge.js'), bridgeBytes);
+  await writeFile(path.join(root, 'support/session-mcp.js'), mcpBytes);
+  const supportSha256 = { 'session-bridge.js': sha256(bridgeBytes), 'session-mcp.js': sha256(mcpBytes) };
   const nodeExecutable=await realpath(process.execPath);
   const canaries=['source','auth','audit'].map(name=>path.join(root,'hidden',name));
   for(const canary of canaries)await writeFile(canary,'OWN SYNTHETIC CANARY');
@@ -279,7 +281,13 @@ async function runNativeOrderedFixture(scenario: OrderedScenario) {
       + event('message_delta', { delta: { stop_reason: call ? 'tool_use' : 'end_turn', stop_sequence: null }, usage: { output_tokens: 4 } })
       + event('message_stop', {}));
   }
-  const launch = await privateLaunchOptions(root, profile, role, () => {}, { milliseconds: 30_000 }, true);
+  const launch = await privateLaunchOptions(root, profile, role, () => {}, { milliseconds: 30_000 }, 'ordered-design');
+  if (scenario === 'ready') {
+    const ordinary = (await compiledSessionSupport()).get('support/session-mcp.js')!;
+    await expect(prepareRestrictedUrlSession({ ...launch, expected: { ...launch.expected,
+      supportSha256: { ...launch.expected.supportSha256, 'session-mcp.js': sha256(ordinary) } } }))
+      .rejects.toThrow('url-session-launch-refused');
+  }
   const preparation = await prepareRestrictedUrlSession(launch);
   const audit: SessionAuditEvent[] = [], forwarded: string[] = [], delivered: string[] = [], faults: string[] = [], cachePositions: number[][] = [];
   const receivedParts: string[] = [];
@@ -387,6 +395,52 @@ async function runNativeOrderedFixture(scenario: OrderedScenario) {
 type NativeFixtureRequest = Record<string, unknown> & { readonly messages: readonly { readonly content: readonly Record<string, unknown>[] }[] };
 
 describe('prepared private CLI launch',()=>{
+  it('builds and selects only the design variant with the artifact result hint', async () => {
+    const root = await mkdtemp(path.join(os.tmpdir(), 'session-support-'));
+    cleanup.push(() => rm(root, { force: true, recursive: true }));
+    const compiled = await compiledSessionSupport();
+    const ordinary = compiled.get('support/session-mcp.js')!;
+    const design = compiled.get('design-support/session-mcp.js')!;
+    // Measured independently from the exact predecessor's ordinary build.
+    expect(sha256(compiled.get('support/session-bridge.js')!)).toBe('33a3f07df8001244cebefec75fe2110073196b9cb11fb2994553659a6865bac3');
+    expect(sha256(ordinary)).toBe('7ab492fb6a69e8476049068b5bcf820a95cfcb1a1ea656f34f3c7bdaa6a2fd33');
+    expect(sha256(design)).not.toBe(sha256(ordinary));
+    for (const role of ['author', 'inventory', 'fidelity'] as const) {
+      expect(urlSessionMcpSupportPath(role, 'ordinary')).toBe('support/session-mcp.js');
+      expect(urlSessionMcpSupportPath(role, 'ordered-design')).toBeNull();
+    }
+    expect(urlSessionMcpSupportPath('design', 'ordinary')).toBe('support/session-mcp.js');
+    expect(urlSessionMcpSupportPath('design', 'ordered-design')).toBe('design-support/session-mcp.js');
+    async function catalogue(name: string, bytes: Buffer) {
+      const file = path.join(root, `${name}.mjs`);
+      await writeFile(file, bytes);
+      const response = await new Promise<string>((resolve, reject) => {
+        const child = spawn(process.execPath, [file], { stdio: ['pipe', 'pipe', 'ignore'],
+          env: { SYZYGY_SESSION_MCP_SOCKET: '/sockets/broker/b.sock' } });
+        const timer = setTimeout(() => child.kill('SIGKILL'), 5000);
+        let output = '';
+        child.stdout.setEncoding('utf8').on('data', (chunk: string) => {
+          if (Buffer.byteLength(output) + Buffer.byteLength(chunk) > 65536) child.kill('SIGKILL');
+          else output += chunk;
+        });
+        child.once('error', reject);
+        child.stdin.on('error', reject);
+        child.once('close', code => {
+          clearTimeout(timer);
+          if (code === 0) resolve(output);
+          else reject(new Error('owned MCP catalogue process failed'));
+        });
+        child.stdin.end('{"jsonrpc":"2.0","id":1,"method":"tools/list"}\n');
+      });
+      return JSON.parse(response) as { jsonrpc: string; id: number; result: { tools: { name: string; _meta?: unknown }[] } };
+    }
+    const baseline = await catalogue('ordinary', ordinary);
+    expect(baseline.result.tools.map(tool => tool.name)).toEqual(['source_read', 'artifact_read', 'artifact_write', 'dossier_step']);
+    expect(baseline.result.tools.every(tool => !Object.hasOwn(tool, '_meta'))).toBe(true);
+    expect(await catalogue('ordered-design', design)).toEqual({ ...baseline, result: { tools: baseline.result.tools.map(tool =>
+      tool.name === 'artifact_read' ? { ...tool, _meta: { 'anthropic/maxResultSizeChars': 500000 } } : tool) } });
+  });
+
   it.each(['ready', 'stale-verdict', 'out-of-order', 'truncated-terminal'] as const)('observes the actual ordered design CLI exchange (%s)', async scenario => {
     const observed = await runNativeOrderedFixture(scenario);
     const evidence = JSON.stringify({ faults: observed.faults, checked: observed.checked, delivered: observed.delivered.length,

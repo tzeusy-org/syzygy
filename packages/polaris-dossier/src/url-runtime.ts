@@ -7,11 +7,14 @@ import { deepFreeze, isRecord, sha256 } from '@syzygy/support';
 import type { DossierRenderer } from './render.js';
 import type { GitMemoryWorkerProgram } from './git-memory-worker.js';
 import type { KernelPeerProgram } from './session-peer.js';
+import type { UrlSessionViewInputs } from './session-url-view.js';
 
 const BOUNDS = { maxBytes: 2_097_152, maxNodes: 32_768, maxDepth: 8 };
 const INPUT_READS = 8;
 const NODE_HASH_CHUNK = 1_048_576;
-const OUTPUTS = ['worker.mjs', 'renderer.mjs', 'support/session-bridge.js', 'support/session-mcp.js', 'host/session-peer'];
+const ORDINARY_MCP = 'support/session-mcp.js';
+const DESIGN_MCP = 'design-support/session-mcp.js';
+const OUTPUTS = ['worker.mjs', 'renderer.mjs', 'support/session-bridge.js', ORDINARY_MCP, 'host/session-peer', DESIGN_MCP];
 const RENDERER_ENTRY = 'apps/three-surface-poc/src/polaris-generation/dossier-site.ts';
 const PROFILE_SOURCES = ['session-profile', 'session-launch', 'session-controller', 'session-egress-policy', 'session-response',
   'session-tools', 'session-host', 'session-relay', 'session-broker', 'session-url-view', 'session-credential',
@@ -102,8 +105,16 @@ export interface UrlRuntime {
 
 const installed = new WeakMap<UrlRuntime, { readonly root: string; readonly rendererBytes: Uint8Array; readonly rendererSha256: string }>();
 
-/** A clean build emits the worker, installed renderer, two builtin-only role
- * scripts and a host-only native peer primitive. Rehash the captured inputs and exact output
+/** Identify the payload for an explicitly requested support variant. This
+ * lookup supplies no launch authorization. */
+export function urlSessionMcpSupportPath(role: UrlSessionViewInputs['role'], variant: 'ordinary' | 'ordered-design'):
+  typeof ORDINARY_MCP | typeof DESIGN_MCP | null {
+  if (variant === 'ordinary') return ORDINARY_MCP;
+  return role === 'design' && variant === 'ordered-design' ? DESIGN_MCP : null;
+}
+
+/** A clean build emits the worker, installed renderer, standalone role
+ * support and a host-only native peer primitive. Rehash the captured inputs and exact output
  * set; stale or altered dist cannot become a different program silently. This
  * is local build integrity, not same-UID tamperproof execution or adoption. */
 export async function readUrlRuntime(root: string): Promise<{ readonly ok: true; readonly runtime: UrlRuntime }
@@ -126,8 +137,10 @@ export async function readUrlRuntime(root: string): Promise<{ readonly ok: true;
     if (sha256(JSON.stringify(inputs)) !== manifest.inputTreeSha256 || new Set(inputs.map(item => item.path)).size !== inputs.length
       || JSON.stringify(inputs.map(item => item.path)) !== JSON.stringify(inputs.map(item => item.path).sort())
       || JSON.stringify(files.map(item => item.path)) !== JSON.stringify(OUTPUTS)
+      || files[3]!.sha256 === files[5]!.sha256
       || !['packages/polaris-dossier/src/git-memory-worker.ts', 'packages/polaris-dossier/src/session-bridge.ts',
-        'packages/polaris-dossier/src/session-mcp.ts', 'packages/polaris-dossier/src/session-peer.c', RENDERER_ENTRY, 'scripts/build_dossier_runtime.mjs', 'package-lock.json', 'package.json', 'packages/polaris-dossier/package.json', ...PROFILE_SOURCES]
+        'packages/polaris-dossier/src/session-mcp.ts', 'packages/polaris-dossier/src/session-peer.c', RENDERER_ENTRY, 'scripts/build_dossier_runtime.mjs',
+        'scripts/compile_dossier_session_support.mjs', 'package-lock.json', 'package.json', 'packages/polaris-dossier/package.json', ...PROFILE_SOURCES]
         .every(file => inputs.some(input => input.path === file))) throw new Error();
     let totalBytes = 0;
     for (const input of inputs) {
