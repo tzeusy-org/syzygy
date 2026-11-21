@@ -13,6 +13,7 @@ import { reviewLaunchRecordName, REVIEW_CHECKS } from './review.js';
 import { CONSENT_RULE, WAITING_DENIED_TOOLS, WAITING_TOOLS } from './session-handover.js';
 import { bwrapArgs, viewFor, viewProbeRefusal, viewSha256, type ViewRole } from './session-view.js';
 import { fetchRefusal, type VisibilityOf } from './source-visibility-gate.js';
+import { isCheckRecordOf, readCheckRecord } from './check-record-read.js';
 import { REVISION_FILE, RUN_LAYOUT } from './state-directory.js';
 import { isoOf } from './iso-of.js';
 
@@ -645,7 +646,9 @@ export function limitStop(draft: CheckRecord, inventory: CheckRecord, maxRepairC
   return null;
 }
 
-/** How the spent repair revisions split between drafts check refused and drafts that passed, read from the check records. */
+/** How the spent repair revisions split between drafts check refused and drafts that passed, read from the check records under the one
+ * check-record bound (version 2.8): a record that cannot be read (past a bound, not one JSON object, not of the check format or naming
+ * another revision, as `latestPassedDraft` reads it) is counted in neither figure. */
 export function cycleBreakdown(run: string): string {
   let refused = 0; let passed = 0;
   let names: string[];
@@ -653,9 +656,11 @@ export function cycleBreakdown(run: string): string {
   for (const name of names) {
     const m = /^rev-(\d+)\.json$/.exec(name);
     if (m === null || Number(m[1]) === 0) continue;
-    let outcome: unknown;
-    try { outcome = (JSON.parse(fs.readFileSync(path.join(run, RUN_LAYOUT.checks, name), 'utf8')) as Record<string, unknown>)['outcome']; } catch { outcome = undefined; }
-    if (outcome === 'passed') passed += 1; else refused += 1;
+    let record: unknown;
+    try { record = readCheckRecord(path.join(run, RUN_LAYOUT.checks, name)); } catch { continue; }
+    // The test `latestPassedDraft` applies: a record not of the check format, or naming another revision, cannot be read.
+    if (!isCheckRecordOf(record, Number(m[1]))) continue;
+    if (record['outcome'] === 'passed') passed += 1; else refused += 1;
   }
   return refused + passed === 0 ? '' : ` (${refused} on drafts check refused, ${passed} on drafts that passed check)`;
 }
@@ -670,16 +675,21 @@ export function endScreen(runId: string, run: string, phase: string, closed: boo
 
 /** The latest check record of the draft and of the inventory in a run directory (either null when none was written). */
 export function latestChecks(run: string): { readonly draft: CheckRecord; readonly inventory: CheckRecord } {
-  return { draft: latestRecord(path.join(run, RUN_LAYOUT.checks), REVISION_FILE), inventory: latestRecord(path.join(run, INVENTORY_CHECKS), REVISION_FILE) };
+  // The draft's record is read under the one check-record bound (version 2.8); one past it reads as no record, never passed or refused.
+  return { draft: latestRecord(path.join(run, RUN_LAYOUT.checks), REVISION_FILE, readCheckRecord), inventory: latestRecord(path.join(run, INVENTORY_CHECKS), REVISION_FILE) };
 }
 
-function latestRecord(dir: string, pattern: RegExp): { n: number; doc: Record<string, unknown> } | null {
+const readUnbounded = (file: string): unknown => JSON.parse(fs.readFileSync(file, 'utf8'));
+
+function latestRecord(dir: string, pattern: RegExp, read: (file: string) => unknown = readUnbounded): { n: number; doc: Record<string, unknown> } | null {
   let names: string[];
   try { names = fs.readdirSync(dir); } catch { return null; }
   let best: { n: number; name: string } | null = null;
   for (const name of names) { const m = pattern.exec(name); if (m && (best === null || Number(m[m.length - 1]) > best.n)) best = { n: Number(m[m.length - 1]), name }; }
   if (best === null) return null;
-  try { return { n: best.n, doc: JSON.parse(fs.readFileSync(path.join(dir, best.name), 'utf8')) as Record<string, unknown> }; } catch { return null; }
+  let doc: unknown;
+  try { doc = read(path.join(dir, best.name)); } catch { return null; }
+  return isRecord(doc) ? { n: best.n, doc: { ...doc } } : null;
 }
 
 function latestSite(run: string): number | null {

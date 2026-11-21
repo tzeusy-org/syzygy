@@ -1872,6 +1872,34 @@ describe('render: derived structure (version 2.3)', () => {
     }
   });
 
+  // Version 2.8 (syzygy-3efd.67), the scenario "Derived record naming a directory not in the tree": each planted record below passes every
+  // reading rule of the record itself (exact rebuild, own repository, forms, no secret-matching path); the render refuses it because a
+  // path or rule it names is not one the render's own re-derivation holds.
+  it('publishes and draws nothing of a record naming a directory the tree does not hold, or a rule other than top-level-unit version 1 (version 2.8)', async () => {
+    const sentence = `<section id="derived-structure" data-reading-level="1" data-topics=""><h2>Derived by Syzygy: top-level directories</h2><p class="derived-unknown" data-epistemic="unknown" data-unknown-reason="missing-evidence"><span class="not-established">Not established.</span> The top-level directories of the tree at revision ${commit} are Unknown at this render: no derived record was kept when this draft revision was checked.</p></section>`;
+    const planted: [string, string, (doc: Doc) => void][] = [
+      ['a non-secret directory absent from the tree', 'zqplanteddir', (doc) => { doc.facts[1].path = 'zqplanteddir'; doc.facts[3].path = 'zqplanteddir'; }],
+      ['a rule other than top-level-unit', 'zq-planted-rule', (doc) => { doc.facts[2].rule = 'zq-planted-rule'; }],
+      // A version is a number: a distinctive one, so the sweep below finds it nowhere but in the record itself.
+      ['a version other than 1', '738460193', (doc) => { doc.facts[4].ruleVersion = 738460193; }],
+    ];
+    for (const [what, name, edit] of planted) {
+      const run = await prepared(draft(), false);
+      const doc = JSON.parse(fs.readFileSync(recordPath(run), 'utf8'));
+      edit(doc);
+      const planted = `${JSON.stringify(doc, null, 2)}\n`;
+      fs.writeFileSync(recordPath(run), planted);
+      // The planted text is in the kept record, so its absence from every output below is the render's refusal, not the fixture's.
+      expect(planted, what).toContain(name);
+      const { files, index, machine } = await rendered(run);
+      expect(regionOfIndex(index), what).toBe(sentence);
+      expect(files.has('derived-structure.json'), what).toBe(false);
+      expect(machine.derivedStructure, what).toEqual({ file: null, sha256: null, revision: commit, state: 'missing', currencyPolicy: null, facts: [] });
+      expect([...files.keys()].filter((file) => !file.endsWith('.html')).sort(), what).toEqual(['dossier.json', 'machine.json', 'size-report.json']);
+      for (const [file, text] of files) expect(text, `${what} ${file}`).not.toContain(name);
+    }
+  });
+
   it('refuses a check before freezing when the revision\'s derived record already exists, so the revision is not spent', async () => {
     const run = await prepared(draft(), false);
     fs.writeFileSync(recordPath(run, 1), '{}\n');
@@ -1948,6 +1976,55 @@ describe('render: derived structure (version 2.3)', () => {
     const a = JSON.parse(fs.readFileSync(recordPath(run, 0), 'utf8')), b = JSON.parse(fs.readFileSync(recordPath(run, later.report.revision), 'utf8'));
     expect(b.capturedAt).toBe('2026-10-07T12:01:05.000Z');
     expect({ ...b, capturedAt: a.capturedAt }).toEqual(a);
+  });
+});
+
+// REQ-polaris-generation-034 version 2.8 (syzygy-3efd.72), the scenario "Largest manifest facts read back with the check": a passed check
+// record carrying the `manifestFacts` member at every listing cap in its widest form (built by hand from the stated caps, as in
+// manifest-facts.test.ts) takes more than 4,194,304 bytes; review, render and close each take that revision as the latest passed draft.
+describe('review and render: a passed check record carrying the widest manifest facts (version 2.8)', () => {
+  const MAX = Number.MAX_SAFE_INTEGER;
+  const CJK = '\u4e00'.repeat(512), LONE = '\ud800'.repeat(256);
+  const census = { path: `${JSON.stringify('\u0001'.repeat(512))} (9007199254740991 more code units)`, epistemic: 'unknown', unknownReason: 'path-not-citable', parseFault: null, facts: null, valuesLeftOut: null };
+  const widest = {
+    format: 'polaris-dossier-manifest-facts/1', state: 'derived',
+    screeningPolicy: { policyId: 'x'.repeat(64), policyVersion: 'x'.repeat(64), sha256: '0'.repeat(64) },
+    recognizers: ['npm-package-manifest', 'cargo-manifest', 'python-project-manifest', 'go-module-manifest', 'github-actions-workflow'].map((rule) => ({
+      rule, ruleVersion: 1, label: 'inferred', candidates: MAX, secretPathsLeftOut: MAX, setApart: MAX, inferred: MAX, unknown: MAX, valuesLeftOut: MAX, facts: MAX,
+      files: Array.from({ length: 250 }, () => census), filesNotListed: MAX,
+    })),
+    facts: Array.from({ length: 1000 }, (_, i) => ({
+      id: `_manifest-${i + 1}`, fact: 'dependency', rule: 'python-project-manifest', ruleVersion: 1, path: CJK, lines: [1_048_577, 1_048_577],
+      name: LONE, section: 'project.optional-dependencies', group: LONE, epistemic: 'inferred',
+    })),
+    factsNotListed: MAX,
+  };
+
+  it('builds the fidelity packet and renders the whole site on that revision, where version 2.7 refused both', async () => {
+    const run = await prepared();
+    const file = path.join(run, 'checks', 'rev-0.json');
+    const stored = JSON.parse(fs.readFileSync(file, 'utf8'));
+    expect(stored.outcome).toBe('passed');
+    const before = await renderRun(run, renderDeps());
+    if (!before.ok) throw new Error(before.refusal.reason);
+    stored.manifestFacts = widest;
+    const text = `${JSON.stringify(stored, null, 2)}\n`;
+    fs.writeFileSync(file, text);
+    const size = Buffer.byteLength(text);
+    expect([size > 4_194_304, size <= 16_777_216]).toEqual([true, true]);
+    const deps = { sources: sources(), now: () => LATER, loadScreen: async () => buildDossierScreen(fixturePolicy, true, null, fixtureVisibility) };
+    const packet = await reviewPacket(run, { kind: 'fidelity' }, deps);
+    expect(packet.ok ? packet.report : packet.refusal).toMatchObject({ outcome: 'built', kind: 'fidelity', draftRevision: 0 });
+    const after = await renderRun(run, renderDeps());
+    if (!after.ok) throw new Error(after.refusal.reason);
+    // The manifest facts reach no page: the site is the one rendered before the record grew, outside the review-status region.
+    const first = readSite(before.report.site), second = readSite(after.report.site);
+    expect([...second.keys()].sort()).toEqual([...first.keys()].sort());
+    for (const [name, bytes] of second) if (name.endsWith('.html')) expect(withoutReviewStatusRegion(bytes), name).toBe(withoutReviewStatusRegion(first.get(name)!));
+    // Review, render and close all take the draft revision through one function, latestPassedDraft (review-packet.ts), which reads the
+    // check record under the one check-record bound. The over-4 MiB record is run end to end here through review's packet and render's
+    // site, and through close in close.test.ts ("takes the passed draft revision from a check record carrying the widest manifest facts"),
+    // whose full fixture run carries the policy binding close re-verifies.
   });
 });
 
