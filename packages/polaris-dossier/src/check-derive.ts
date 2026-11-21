@@ -2,7 +2,8 @@ import * as path from 'node:path';
 import { UNKNOWN_REASONS } from '@syzygy/cap1-core';
 import { leadInQuotations, lineCount, locateQuote, normaliseTracked, retainedWithMarkers, spanTouchesWithheld, verifiedRedactedBody, type VerifiedRedactedBody, type TrackedText } from '@syzygy/polaris-generation-core/live';
 import { isRecord } from '@syzygy/support';
-import { LOCAL_DRAFT_SCHEMA_VERSION, LOCAL_DRAFT_SCHEMA_VERSION_V4, UNDERSTANDING_ITEMS, V4_FIELDS, hasV4Forms, checkDraftShape, localDraftSchema, type DraftSchemaWithDefs } from './draft-schema.js';
+import { LOCAL_DRAFT_SCHEMA_VERSION, LOCAL_DRAFT_SCHEMA_VERSION_V4, LOCAL_DRAFT_SCHEMA_VERSION_V5, UNDERSTANDING_ITEMS, V4_FIELDS, hasHomeForm, hasV4Forms, checkDraftShape, localDraftSchema, type DraftSchemaWithDefs } from './draft-schema.js';
+import { isEntryPoint } from './derive.js';
 import { BLOB_MODES, type PinnedObjectReader, type TreeEntry } from './git-object-reader.js';
 import { type DossierScreen, type ScreenExclusion } from './screen.js';
 import { DEFAULT_POLE_LIMIT } from './run-config.js';
@@ -89,8 +90,9 @@ export interface SubjectRules {
   readonly noun: 'draft' | 'inventory';
   readonly schema: DraftSchemaWithDefs;
   /** The schema a subject of an earlier version is checked against, where it differs (a draft before v5 names its diagram's section in
-   * `sectionId`), and the one current-version field it may not carry, which the structure reports as a field-version finding instead. */
-  readonly earlier?: { readonly schema: DraftSchemaWithDefs; readonly current: string; readonly reported: RegExp };
+   * `sectionId`; one before v6 has no `thesisBasis`), and the later-version fields it may not carry, which the structure reports as
+   * field-version findings instead; undefined for a subject of the current version. */
+  readonly earlier?: (subject: unknown) => { readonly schema: DraftSchemaWithDefs; readonly reported: RegExp } | undefined;
   /** The declared clarification-question limit, where the subject records questions. */
   readonly maxQuestions: number | null;
   /** The subject's references and required records, after identities are checked. */
@@ -117,7 +119,7 @@ export async function deriveFindings(subject: unknown, inputs: DeriveInputs, rul
   const findings: CheckFinding[] = [];
   const add = (finding: CheckFinding): void => { findings.push(finding); };
   const { noun } = rules;
-  const earlier = rules.earlier !== undefined && (!isRecord(subject) || subject['schemaVersion'] !== rules.earlier.current) ? rules.earlier : undefined;
+  const earlier = rules.earlier?.(subject);
   for (const error of checkDraftShape(earlier?.schema ?? rules.schema, subject)) {
     if (earlier === undefined || !earlier.reported.test(error.path)) add({ kind: 'schema', at: error.path, detail: error.detail });
   }
@@ -342,17 +344,55 @@ export async function deriveFindings(subject: unknown, inputs: DeriveInputs, rul
   return { findings, quotations, excludedContent, citedBlobs, admitted };
 }
 
+/** The thesis basis (REQ-polaris-generation-034 version 2.4, syzygy-3efd.56). A v6 draft's `thesisBasis` must fit its introduction:
+ * `stated`, an Inferred block citing at least one source; `code-reading`, an Inferred block resting on sources that quotes nothing (no
+ * `quotations` and no lead-in in its text) and cites two different entry points (`isEntryPoint`); `none`, an Unknown or non-normative
+ * block. A `thesisBasis` in an earlier draft is a field-version finding. Whether a cited file is where a user or a program enters the
+ * project, or whether the repository truly states no purpose, is not tested here: the fidelity review judges the introduction. */
+function thesisStructure(doc: Readonly<Record<string, unknown>>, add: (finding: CheckFinding) => void): void {
+  if (doc['schemaVersion'] !== LOCAL_DRAFT_SCHEMA_VERSION) {
+    if (Object.hasOwn(doc, 'thesisBasis')) add({ kind: 'field-version', at: '$.thesisBasis', detail: `\`thesisBasis\` needs draft schema ${LOCAL_DRAFT_SCHEMA_VERSION}` });
+    return;
+  }
+  const basis = doc['thesisBasis'];
+  if (basis !== 'stated' && basis !== 'code-reading' && basis !== 'none') return;
+  const intro = isRecord(doc['introduction']) ? doc['introduction'] : {};
+  const label = intro['label'];
+  const cited = list(intro['citations']).filter(isRecord).flatMap((citation) => (text(citation['path']) === undefined ? [] : [text(citation['path'])!]));
+  const finding = (detail: string): void => add({ kind: 'thesis-basis', at: '$.thesisBasis', detail });
+  if (basis === 'stated') {
+    if (label !== 'inferred' || cited.length === 0) finding('a `stated` thesis rests on a statement of the project\'s purpose by its maintainers: make the introduction an inferred block that cites that statement');
+    return;
+  }
+  if (basis === 'none') {
+    if (label !== 'unknown' && label !== 'non-normative') finding('a `none` thesis establishes nothing: make the introduction an unknown block, or a non-normative one that makes no claim');
+    return;
+  }
+  const quotes = list(intro['quotations']).length > 0 || leadInQuotations(text(intro['text']) ?? '').length > 0;
+  const entryPoints = new Set(cited.filter(isEntryPoint));
+  if (label !== 'inferred' || intro['basis'] !== 'source' || quotes || entryPoints.size < 2) {
+    finding(`a \`code-reading\` thesis says what the code does: make the introduction an inferred block resting on sources (\`basis: source\`) that quotes nothing and cites at least two entry points, two different code files outside documentation, test, vendored, generated and example paths; it cites ${entryPoints.size === 1 ? '1 such file' : `${entryPoints.size} such files`}${quotes ? ' and quotes' : ''}`);
+  }
+}
+
 const CLAIM_UNQUOTABLE = 'only an inferred claim block carries quotations; give this one its own inferred block with a citation';
 
 /** The authoring draft's rules: its schema and question limit, references, understanding record, blocks and discovery account. */
 export function draftRules(pinned: string, maxQuestions: number, poleLimit: number = DEFAULT_POLE_LIMIT): SubjectRules {
+  const parameters = { pinnedRevision: pinned, maxQuestions };
+  const v5 = { schema: localDraftSchema(parameters, 'home', 'absent'), reported: /^\$\.thesisBasis$/u };
+  const v4 = { schema: localDraftSchema(parameters, 'sectionId', 'absent'), reported: /^\$\.(?:diagrams\[\d+\]\.home|thesisBasis)$/u };
   return {
     noun: 'draft',
-    schema: localDraftSchema({ pinnedRevision: pinned, maxQuestions }),
-    // A v4 or earlier draft: checked against the schema of its own form, its `home` (the one v5 field) reported as field-version.
-    earlier: { schema: localDraftSchema({ pinnedRevision: pinned, maxQuestions }, 'sectionId'), current: LOCAL_DRAFT_SCHEMA_VERSION, reported: /^\$\.diagrams\[\d+\]\.home$/u },
+    schema: localDraftSchema(parameters),
+    // A v5 draft: checked against v5's schema, its `thesisBasis` (the one v6 field) reported as field-version. A v4 or earlier draft:
+    // checked against the schema of its own form, its `home` (the one v5 field) and `thesisBasis` reported as field-version.
+    earlier: (subject) => {
+      const version = isRecord(subject) ? subject['schemaVersion'] : undefined;
+      return version === LOCAL_DRAFT_SCHEMA_VERSION ? undefined : version === LOCAL_DRAFT_SCHEMA_VERSION_V5 ? v5 : v4;
+    },
     maxQuestions,
-    structural: (doc, add) => draftStructure(doc, add, poleLimit),
+    structural: (doc, add) => { draftStructure(doc, add, poleLimit); thesisStructure(doc, add); },
     blocks: collectBlocks,
     account: { key: 'discovery', parts: ['selected', 'excluded', 'unresolved', 'deferred'] },
   };
@@ -364,7 +404,7 @@ function draftStructure(doc: Readonly<Record<string, unknown>>, add: (finding: C
   const diveIds = new Set(list(doc['deepDives']).flatMap((dive) => (isRecord(dive) && text(dive['id']) !== undefined ? [text(dive['id'])!] : [])));
   // A diagram's page (syzygy-3efd.18): up to v4 the section it names in `sectionId`, checked exactly as before (diagrams, then deep
   // dives); from v5 its `home`, a section or a deep dive by `target`, or the overview. A home finding names the diagram's identity.
-  const v5 = doc['schemaVersion'] === LOCAL_DRAFT_SCHEMA_VERSION;
+  const v5 = hasHomeForm(doc['schemaVersion']);
   const diagramFinding = (diagram: Readonly<Record<string, unknown>>, at: string, detail: string, kind: 'diagram-home' | 'unresolved-reference' | 'field-version' = 'diagram-home'): void => {
     const id = text(diagram['id']);
     add({ kind, at, detail: id === undefined ? detail : `the diagram ${JSON.stringify(id)}: ${detail}` });
@@ -386,10 +426,10 @@ function draftStructure(doc: Readonly<Record<string, unknown>>, add: (finding: C
     const at = `$.diagrams[${i}]`;
     const hasSection = Object.hasOwn(diagram, 'sectionId'), hasHome = Object.hasOwn(diagram, 'home');
     if (!v5) {
-      if (hasHome) diagramFinding(diagram, `${at}.home`, `\`home\` needs draft schema ${LOCAL_DRAFT_SCHEMA_VERSION}; an earlier draft names its diagram's section in \`sectionId\``, 'field-version');
+      if (hasHome) diagramFinding(diagram, `${at}.home`, `\`home\` needs draft schema ${LOCAL_DRAFT_SCHEMA_VERSION_V5}; an earlier draft names its diagram's section in \`sectionId\``, 'field-version');
       return;
     }
-    if (hasSection) diagramFinding(diagram, `${at}.sectionId`, `a ${LOCAL_DRAFT_SCHEMA_VERSION} diagram names its page in \`home\`, not \`sectionId\`; it has exactly one home`);
+    if (hasSection) diagramFinding(diagram, `${at}.sectionId`, `a ${String(doc['schemaVersion'])} diagram names its page in \`home\`, not \`sectionId\`; it has exactly one home`);
     if (!hasHome) { diagramFinding(diagram, at, 'the diagram names no page; give it a `home`: a section or a deep dive by `target`, or the overview'); return; }
     const home = diagram['home'];
     if (!isRecord(home)) { diagramFinding(diagram, `${at}.home`, 'a home is an object: `{"kind": "section" or "deep-dive", "target": <identity>}` or `{"kind": "overview"}`'); return; }

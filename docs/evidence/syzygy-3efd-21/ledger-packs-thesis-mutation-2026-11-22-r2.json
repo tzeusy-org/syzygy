@@ -1,0 +1,1261 @@
+{
+  "format": "mutation-run/1",
+  "ranAt": "5949558561a0e64c782cd9b90bf92ff1474e6a71",
+  "subject": {
+    "apps/three-surface-poc/src/polaris-generation/dossier-site.ts": "9a810ed710dbeec26a4e3bfefcc7c931fcc62d69376816a704a1b8fbdc3a3d3e",
+    "packages/polaris-dossier/src/brief.ts": "733369f832b4b99d97ac8b68406a1ec37c868441796b76aae4fac75556e3a43e",
+    "packages/polaris-dossier/src/check-derive.ts": "dd2139a355110ddcfe66c2cb36e7b89f3d7dde4366496054f59d80481dbd9901",
+    "packages/polaris-dossier/src/check.ts": "9bad5ac8a6b9a7d45c06b4839921f01c4c078c6acf125ada07bc4fb8ed2132f0",
+    "packages/polaris-dossier/src/derive.ts": "e60b688f9e13c7995dc2c7dfe857d1e2892d99943dc888d230cc70c98c7e7d2d",
+    "packages/polaris-dossier/src/design-review.ts": "0745a5dd06e1c4af7bdee9ac327406f8b34f3e81fc3624106d4a9021679ddfae",
+    "packages/polaris-dossier/src/reader-standards.ts": "a829f176ba404b0d906584ab250408148eeda3e66b1be85b8b400c8ff12ac8c7",
+    "packages/polaris-dossier/src/reading-ledger.ts": "54da23d3606d4b7c014f2f200022917ef99396c2fdb914d62782af9abff8c685",
+    "packages/polaris-dossier/src/render.ts": "a84ff28c37450d7f1e953e2918cf1b179ee640729c565402d96601892fce54f8",
+    "packages/polaris-dossier/src/review-packet.ts": "431253e49ad60691939d388f4dc03b1c213078b1a83a69c3b1279c9beb12d282",
+    "packages/polaris-dossier/src/shape-packs.ts": "6711255fcdfd3318c54424011b7e529fbc124bf51a7ac6fd4d1c225c399ee0ce"
+  },
+  "command": "npx vitest run <the mutant's test files> --reporter=json --outputFile=<tmp>",
+  "method": "Each mutant replaces one fragment (`old`, occurring exactly once in `file`) with `new`, runs the listed test files with vitest, counts the mutant killed when the run exits non-zero, records the failed tests, and restores the file byte for byte (checked against `subject`). Rule 6, AGENTS.md.",
+  "testsByGroup": {
+    "ledger": [
+      "packages/polaris-dossier/src/reading-ledger.test.ts",
+      "packages/polaris-dossier/src/check.test.ts",
+      "packages/polaris-dossier/src/inventory.test.ts"
+    ],
+    "packs": [
+      "packages/polaris-dossier/src/derive.test.ts",
+      "packages/polaris-dossier/src/shape-packs.test.ts",
+      "packages/polaris-dossier/src/brief.test.ts",
+      "packages/polaris-dossier/src/render.test.ts"
+    ],
+    "thesis": [
+      "packages/polaris-dossier/src/check.test.ts",
+      "packages/polaris-dossier/src/synthetic-shapes.test.ts",
+      "packages/polaris-dossier/src/draft-schema.test.ts",
+      "packages/polaris-dossier/src/render.test.ts",
+      "packages/polaris-dossier/src/derive.test.ts",
+      "packages/polaris-dossier/src/brief.test.ts"
+    ],
+    "repair": [
+      "packages/polaris-dossier/src/shape-packs.test.ts",
+      "packages/polaris-dossier/src/render.test.ts"
+    ]
+  },
+  "supersedes": {
+    "path": "docs/evidence/syzygy-3efd-21/ledger-packs-thesis-mutation-2026-11-22.json",
+    "ranAt": "7611417efae6adaa7d6596da20087ccd20ace430",
+    "killed": 60,
+    "total": 61,
+    "why": "Review notes 2, 4, 5 and 6 (READY WITH NOTES) changed design-review.ts, review-packet.ts, render.ts and reading-ledger.ts. This run keeps the first run's 61 mutants, two of them re-targeted at the changed text (L16: the unreadable-record count now also guards the revision; S15: the standards read replaced by a read record naming no packs), and adds R1 to R13 for the new guards. The first record is kept unchanged."
+  },
+  "mutants": [
+    {
+      "id": "L1",
+      "file": "packages/polaris-dossier/src/reading-ledger.ts",
+      "old": "Math.ceil(words / WORDS_PER_MINUTE)",
+      "new": "Math.floor(words / WORDS_PER_MINUTE)",
+      "killed": true,
+      "killedBy": [
+        "packages/polaris-dossier/src/check.test.ts",
+        "packages/polaris-dossier/src/reading-ledger.test.ts"
+      ],
+      "failedTests": [
+        "packages/polaris-dossier/src/reading-ledger.test.ts > reading ledger counts every page by the stated rules, and the draft once",
+        "packages/polaris-dossier/src/check.test.ts > check: reading ledger writes readingLedger into the check record beside figureFit, byte-identical across two checks of the same draft, and on the report",
+        "packages/polaris-dossier/src/check.test.ts > check: reading ledger reports the difference from an earlier run of the same repository in the state root, and writes it nowhere"
+      ]
+    },
+    {
+      "id": "L2",
+      "file": "packages/polaris-dossier/src/reading-ledger.ts",
+      "old": "id.replace(/[^A-Za-z0-9_.-]/g, '_')",
+      "new": "id.replace(/[^A-Za-z0-9_.]/g, '_')",
+      "killed": true,
+      "killedBy": [
+        "packages/polaris-dossier/src/reading-ledger.test.ts"
+      ],
+      "failedTests": [
+        "packages/polaris-dossier/src/reading-ledger.test.ts > reading ledger counts every page by the stated rules, and the draft once",
+        "packages/polaris-dossier/src/reading-ledger.test.ts > reading ledger without Poles keeps every produced section on the landing page; an earlier schema places a figure by sectionId"
+      ]
+    },
+    {
+      "id": "L3",
+      "file": "packages/polaris-dossier/src/reading-ledger.ts",
+      "old": "ids.some((id) => id !== why) ?",
+      "new": "ids.length > 0 ?",
+      "killed": true,
+      "killedBy": [
+        "packages/polaris-dossier/src/reading-ledger.test.ts"
+      ],
+      "failedTests": [
+        "packages/polaris-dossier/src/reading-ledger.test.ts > reading ledger gives a Pole holding only the why section no page, places a section two Poles list by the first, and shares one entry between colliding deep-dive names"
+      ]
+    },
+    {
+      "id": "L4",
+      "file": "packages/polaris-dossier/src/reading-ledger.ts",
+      "old": "    if (id !== undefined && id === why) return 'index.html';\n",
+      "new": "",
+      "killed": true,
+      "killedBy": [
+        "packages/polaris-dossier/src/reading-ledger.test.ts"
+      ],
+      "failedTests": [
+        "packages/polaris-dossier/src/reading-ledger.test.ts > reading ledger counts every page by the stated rules, and the draft once",
+        "packages/polaris-dossier/src/reading-ledger.test.ts > reading ledger gives a Pole holding only the why section no page, places a section two Poles list by the first, and shares one entry between colliding deep-dive names"
+      ]
+    },
+    {
+      "id": "L5",
+      "file": "packages/polaris-dossier/src/reading-ledger.ts",
+      "old": "poleSections.findIndex((ids) => ids.includes(id))",
+      "new": "poleSections.findLastIndex((ids) => ids.includes(id))",
+      "killed": true,
+      "killedBy": [
+        "packages/polaris-dossier/src/reading-ledger.test.ts"
+      ],
+      "failedTests": [
+        "packages/polaris-dossier/src/reading-ledger.test.ts > reading ledger gives a Pole holding only the why section no page, places a section two Poles list by the first, and shares one entry between colliding deep-dive names"
+      ]
+    },
+    {
+      "id": "L6",
+      "file": "packages/polaris-dossier/src/reading-ledger.ts",
+      "old": "if (at === null) { unplacedUnits += 1; return; }",
+      "new": "if (at === null) { return; }",
+      "killed": true,
+      "killedBy": [
+        "packages/polaris-dossier/src/reading-ledger.test.ts"
+      ],
+      "failedTests": [
+        "packages/polaris-dossier/src/reading-ledger.test.ts > reading ledger counts every page by the stated rules, and the draft once"
+      ]
+    },
+    {
+      "id": "L7",
+      "file": "packages/polaris-dossier/src/reading-ledger.ts",
+      "old": "new Set(['polaris-dossier-local-draft-v5', 'polaris-dossier-local-draft-v6'])",
+      "new": "new Set(['polaris-dossier-local-draft-v6'])",
+      "killed": true,
+      "killedBy": [
+        "packages/polaris-dossier/src/reading-ledger.test.ts"
+      ],
+      "failedTests": [
+        "packages/polaris-dossier/src/reading-ledger.test.ts > reading ledger counts every page by the stated rules, and the draft once"
+      ]
+    },
+    {
+      "id": "L8",
+      "file": "packages/polaris-dossier/src/reading-ledger.ts",
+      "old": "return divePages[d] ?? pageOfSectionId(text((dives[d] as Readonly<Record<string, unknown>>)['sectionId']));",
+      "new": "return divePages[d] ?? null;",
+      "killed": true,
+      "killedBy": [
+        "packages/polaris-dossier/src/reading-ledger.test.ts"
+      ],
+      "failedTests": [
+        "packages/polaris-dossier/src/reading-ledger.test.ts > reading ledger counts every page by the stated rules, and the draft once"
+      ]
+    },
+    {
+      "id": "L9",
+      "file": "packages/polaris-dossier/src/reading-ledger.ts",
+      "old": "match[1] === 'sections' ? sectionPages[i]",
+      "new": "match[1] === 'sections' ? divePages[i]",
+      "killed": true,
+      "killedBy": [
+        "packages/polaris-dossier/src/check.test.ts",
+        "packages/polaris-dossier/src/reading-ledger.test.ts"
+      ],
+      "failedTests": [
+        "packages/polaris-dossier/src/reading-ledger.test.ts > reading ledger counts every page by the stated rules, and the draft once",
+        "packages/polaris-dossier/src/check.test.ts > check: reading ledger writes readingLedger into the check record beside figureFit, byte-identical across two checks of the same draft, and on the report",
+        "packages/polaris-dossier/src/check.test.ts > check: reading ledger reports the difference from an earlier run of the same repository in the state root, and writes it nowhere"
+      ]
+    },
+    {
+      "id": "L10",
+      "file": "packages/polaris-dossier/src/reading-ledger.ts",
+      "old": "entry.viewportPx === 390 ? 'notFittingAt390'",
+      "new": "entry.viewportPx === 390 ? 'notFittingAt1440'",
+      "killed": true,
+      "killedBy": [
+        "packages/polaris-dossier/src/reading-ledger.test.ts"
+      ],
+      "failedTests": [
+        "packages/polaris-dossier/src/reading-ledger.test.ts > reading ledger counts every page by the stated rules, and the draft once"
+      ]
+    },
+    {
+      "id": "L11",
+      "file": "packages/polaris-dossier/src/reading-ledger.ts",
+      "old": "!(at < checkedAt)",
+      "new": "!(at <= checkedAt)",
+      "killed": true,
+      "killedBy": [
+        "packages/polaris-dossier/src/reading-ledger.test.ts"
+      ],
+      "failedTests": [
+        "packages/polaris-dossier/src/reading-ledger.test.ts > reading difference never takes a ledger checked at the same instant as this check"
+      ]
+    },
+    {
+      "id": "L12",
+      "file": "packages/polaris-dossier/src/reading-ledger.ts",
+      "old": "byCodeUnit(entry.name, best.runId) > 0",
+      "new": "byCodeUnit(entry.name, best.runId) < 0",
+      "killed": true,
+      "killedBy": [
+        "packages/polaris-dossier/src/reading-ledger.test.ts"
+      ],
+      "failedTests": [
+        "packages/polaris-dossier/src/reading-ledger.test.ts > reading difference takes the latest earlier check, a tie going to the greatest run identity, and skips a ledger checked after this check"
+      ]
+    },
+    {
+      "id": "L13",
+      "file": "packages/polaris-dossier/src/reading-ledger.ts",
+      "old": "    if (stored.record.subject.repository.repositoryId !== repositoryId) continue;\n",
+      "new": "",
+      "killed": true,
+      "killedBy": [
+        "packages/polaris-dossier/src/reading-ledger.test.ts"
+      ],
+      "failedTests": [
+        "packages/polaris-dossier/src/reading-ledger.test.ts > reading difference compares with the previous run of the same repository: unchanged, changed, added and removed pages, and the draft",
+        "packages/polaris-dossier/src/reading-ledger.test.ts > reading difference is Unknown, never zero, where no earlier run of the repository holds a ledger, and counts what it could not read"
+      ]
+    },
+    {
+      "id": "L14",
+      "file": "packages/polaris-dossier/src/reading-ledger.ts",
+      "old": " || entry.name === self) continue;",
+      "new": ") continue;",
+      "killed": true,
+      "killedBy": [
+        "packages/polaris-dossier/src/check.test.ts"
+      ],
+      "failedTests": [
+        "packages/polaris-dossier/src/check.test.ts > check: reading ledger writes readingLedger into the check record beside figureFit, byte-identical across two checks of the same draft, and on the report"
+      ]
+    },
+    {
+      "id": "L15",
+      "file": "packages/polaris-dossier/src/reading-ledger.ts",
+      "old": "catch { unreadableRuns += 1; continue; }",
+      "new": "catch { continue; }",
+      "killed": true,
+      "killedBy": [
+        "packages/polaris-dossier/src/reading-ledger.test.ts"
+      ],
+      "failedTests": [
+        "packages/polaris-dossier/src/reading-ledger.test.ts > reading difference counts a run with no run record as unreadable; a run with no checks directory holds no record, and a checks path it cannot list is counted"
+      ]
+    },
+    {
+      "id": "L16",
+      "file": "packages/polaris-dossier/src/reading-ledger.ts",
+      "old": "record['revision'] !== revision) { unreadableCheckRecords += 1; continue; }",
+      "new": "record['revision'] !== revision) { continue; }",
+      "killed": true,
+      "killedBy": [
+        "packages/polaris-dossier/src/reading-ledger.test.ts"
+      ],
+      "failedTests": [
+        "packages/polaris-dossier/src/reading-ledger.test.ts > reading difference counts a ledger of this format that is malformed as an unreadable check record",
+        "packages/polaris-dossier/src/reading-ledger.test.ts > reading difference reports the record's own revision, and counts a record whose revision is not the one its file name says as unreadable"
+      ]
+    },
+    {
+      "id": "L17",
+      "file": "packages/polaris-dossier/src/reading-ledger.ts",
+      "old": "code !== 'ENOENT') unreadableCheckRecords += 1;",
+      "new": "code !== 'ENOENT-X') unreadableCheckRecords += 1;",
+      "killed": true,
+      "killedBy": [
+        "packages/polaris-dossier/src/reading-ledger.test.ts"
+      ],
+      "failedTests": [
+        "packages/polaris-dossier/src/reading-ledger.test.ts > reading difference counts a run with no run record as unreadable; a run with no checks directory holds no record, and a checks path it cannot list is counted"
+      ]
+    },
+    {
+      "id": "L18",
+      "file": "packages/polaris-dossier/src/reading-ledger.ts",
+      "old": "change: unchanged(delta) ? 'unchanged' : 'changed'",
+      "new": "change: 'changed'",
+      "killed": true,
+      "killedBy": [
+        "packages/polaris-dossier/src/reading-ledger.test.ts"
+      ],
+      "failedTests": [
+        "packages/polaris-dossier/src/reading-ledger.test.ts > reading difference compares with the previous run of the same repository: unchanged, changed, added and removed pages, and the draft"
+      ]
+    },
+    {
+      "id": "L19",
+      "file": "packages/polaris-dossier/src/reading-ledger.ts",
+      "old": "    landing.units.push('introduction');\n",
+      "new": "",
+      "killed": true,
+      "killedBy": [
+        "packages/polaris-dossier/src/check.test.ts",
+        "packages/polaris-dossier/src/reading-ledger.test.ts"
+      ],
+      "failedTests": [
+        "packages/polaris-dossier/src/reading-ledger.test.ts > reading ledger counts every page by the stated rules, and the draft once",
+        "packages/polaris-dossier/src/reading-ledger.test.ts > reading ledger without Poles keeps every produced section on the landing page; an earlier schema places a figure by sectionId",
+        "packages/polaris-dossier/src/reading-ledger.test.ts > reading ledger gives a Pole holding only the why section no page, places a section two Poles list by the first, and shares one entry between colliding deep-dive names",
+        "packages/polaris-dossier/src/check.test.ts > check: reading ledger writes readingLedger into the check record beside figureFit, byte-identical across two checks of the same draft, and on the report"
+      ]
+    },
+    {
+      "id": "L20",
+      "file": "packages/polaris-dossier/src/check.ts",
+      "old": "plan.command === 'check' ? readingDifference(",
+      "new": "true ? readingDifference(",
+      "killed": true,
+      "killedBy": [
+        "packages/polaris-dossier/src/inventory.test.ts"
+      ],
+      "failedTests": [
+        "packages/polaris-dossier/src/inventory.test.ts > inventory-check checks the inventory as a draft is checked, freezes it outside the session directory and records its session"
+      ]
+    },
+    {
+      "id": "L21",
+      "file": "packages/polaris-dossier/src/check.ts",
+      "old": "...(ledger === undefined ? {} : { readingLedger: ledger })",
+      "new": "",
+      "killed": true,
+      "killedBy": [
+        "packages/polaris-dossier/src/check.test.ts"
+      ],
+      "failedTests": [
+        "packages/polaris-dossier/src/check.test.ts > check: reading ledger writes readingLedger into the check record beside figureFit, byte-identical across two checks of the same draft, and on the report",
+        "packages/polaris-dossier/src/check.test.ts > check: reading ledger reports the difference from an earlier run of the same repository in the state root, and writes it nowhere",
+        "packages/polaris-dossier/src/check.test.ts > check: the command reports the counted reader standards as advice on the report alone, never a finding and never in the check record"
+      ]
+    },
+    {
+      "id": "S1",
+      "file": "packages/polaris-dossier/src/derive.ts",
+      "old": "!segments.slice(0, -1).some((segment) => (SERVER_ENTRY.exampleSegments",
+      "new": "!segments.slice(0, 0).some((segment) => (SERVER_ENTRY.exampleSegments",
+      "killed": true,
+      "killedBy": [
+        "packages/polaris-dossier/src/brief.test.ts",
+        "packages/polaris-dossier/src/derive.test.ts"
+      ],
+      "failedTests": [
+        "packages/polaris-dossier/src/derive.test.ts > deriveStructure: the server-entry trait lists the matched paths in code-unit order and leaves out every exclusion ground",
+        "packages/polaris-dossier/src/derive.test.ts > deriveStructure: the server-entry trait does not hold when every match is excluded, or for an empty tree",
+        "packages/polaris-dossier/src/brief.test.ts > brief: shape packs (version 2.4) with no server entry, or one only under vendored, generated, test or example paths, selects default@1 alone and names no server-only dimension"
+      ]
+    },
+    {
+      "id": "S2",
+      "file": "packages/polaris-dossier/src/derive.ts",
+      "old": "if (!test && isServerEntry(segments, basename))",
+      "new": "if (isServerEntry(segments, basename))",
+      "killed": true,
+      "killedBy": [
+        "packages/polaris-dossier/src/brief.test.ts",
+        "packages/polaris-dossier/src/derive.test.ts"
+      ],
+      "failedTests": [
+        "packages/polaris-dossier/src/derive.test.ts > deriveStructure: the server-entry trait lists the matched paths in code-unit order and leaves out every exclusion ground",
+        "packages/polaris-dossier/src/derive.test.ts > deriveStructure: the server-entry trait does not hold when every match is excluded, or for an empty tree",
+        "packages/polaris-dossier/src/brief.test.ts > brief: shape packs (version 2.4) with no server entry, or one only under vendored, generated, test or example paths, selects default@1 alone and names no server-only dimension"
+      ]
+    },
+    {
+      "id": "S3",
+      "file": "packages/polaris-dossier/src/derive.ts",
+      "old": "holds: serverEntries.length > 0",
+      "new": "holds: serverEntries.length > 1",
+      "killed": true,
+      "killedBy": [
+        "packages/polaris-dossier/src/brief.test.ts",
+        "packages/polaris-dossier/src/derive.test.ts"
+      ],
+      "failedTests": [
+        "packages/polaris-dossier/src/derive.test.ts > deriveStructure: the server-entry trait holds for server.c, compared exactly",
+        "packages/polaris-dossier/src/derive.test.ts > deriveStructure: the server-entry trait holds for server.cc, compared exactly",
+        "packages/polaris-dossier/src/derive.test.ts > deriveStructure: the server-entry trait holds for server.cpp, compared exactly",
+        "packages/polaris-dossier/src/derive.test.ts > deriveStructure: the server-entry trait holds for server.go, compared exactly",
+        "packages/polaris-dossier/src/derive.test.ts > deriveStructure: the server-entry trait holds for server.rs, compared exactly",
+        "packages/polaris-dossier/src/derive.test.ts > deriveStructure: the server-entry trait holds for server.py, compared exactly",
+        "packages/polaris-dossier/src/derive.test.ts > deriveStructure: the server-entry trait holds for server.rb, compared exactly",
+        "packages/polaris-dossier/src/derive.test.ts > deriveStructure: the server-entry trait holds for server.js, compared exactly",
+        "packages/polaris-dossier/src/derive.test.ts > deriveStructure: the server-entry trait holds for server.mjs, compared exactly",
+        "packages/polaris-dossier/src/derive.test.ts > deriveStructure: the server-entry trait holds for server.ts, compared exactly",
+        "packages/polaris-dossier/src/derive.test.ts > deriveStructure: the server-entry trait holds for server.java, compared exactly",
+        "packages/polaris-dossier/src/derive.test.ts > deriveStructure: the server-entry trait holds for server.ex, compared exactly",
+        "packages/polaris-dossier/src/derive.test.ts > deriveStructure: the server-entry trait holds for server.php, compared exactly",
+        "packages/polaris-dossier/src/derive.test.ts > deriveStructure: the server-entry trait holds for Procfile, compared exactly",
+        "packages/polaris-dossier/src/derive.test.ts > deriveStructure: the server-entry trait holds for openapi.json, compared exactly",
+        "packages/polaris-dossier/src/derive.test.ts > deriveStructure: the server-entry trait holds for openapi.yaml, compared exactly",
+        "packages/polaris-dossier/src/derive.test.ts > deriveStructure: the server-entry trait holds for openapi.yml, compared exactly",
+        "packages/polaris-dossier/src/derive.test.ts > deriveStructure: the server-entry trait holds for swagger.json, compared exactly",
+        "packages/polaris-dossier/src/derive.test.ts > deriveStructure: the server-entry trait holds for swagger.yaml, compared exactly",
+        "packages/polaris-dossier/src/derive.test.ts > deriveStructure: the server-entry trait holds for swagger.yml, compared exactly",
+        "packages/polaris-dossier/src/brief.test.ts > brief: issued writes the brief, the schema and the brief record, binding the run, the pinned revision and the schema version",
+        "packages/polaris-dossier/src/brief.test.ts > brief: shape packs (version 2.4) a server entry selects default@1 then server@1, and the brief is the v10 golden but for its version line, draft-schema line and thesis paragraph"
+      ]
+    },
+    {
+      "id": "S4",
+      "file": "packages/polaris-dossier/src/shape-packs.ts",
+      "old": "traits !== null && trait === 'server-entry' && traits.serverEntry",
+      "new": "trait === 'server-entry' && (traits === null || traits.serverEntry)",
+      "killed": true,
+      "killedBy": [
+        "packages/polaris-dossier/src/brief.test.ts",
+        "packages/polaris-dossier/src/shape-packs.test.ts"
+      ],
+      "failedTests": [
+        "packages/polaris-dossier/src/shape-packs.test.ts > shape packs: selection and composition selects the default pack, then server where its trait holds, and the default alone for an unknown profile",
+        "packages/polaris-dossier/src/brief.test.ts > brief: shape packs (version 2.4) an unloadable screen leaves the trait profile Unknown, with its reason, and selects default@1 alone"
+      ]
+    },
+    {
+      "id": "S5",
+      "file": "packages/polaris-dossier/src/shape-packs.ts",
+      "old": "a.order - b.order ||",
+      "new": "b.order - a.order ||",
+      "killed": true,
+      "killedBy": [
+        "packages/polaris-dossier/src/brief.test.ts",
+        "packages/polaris-dossier/src/shape-packs.test.ts"
+      ],
+      "failedTests": [
+        "packages/polaris-dossier/src/shape-packs.test.ts > shape packs: selection and composition composes by order then id, a later pack replacing a dimension of the same id",
+        "packages/polaris-dossier/src/shape-packs.test.ts > shape packs: selection and composition default@1 with server@1 composes version 1 itself; default@1 alone composes a text with its own version line and digest",
+        "packages/polaris-dossier/src/shape-packs.test.ts > the design packet carries the standards the brief carried carries version 1 when the brief record names no packs, and the composed text, named by packs and digest, when it does",
+        "packages/polaris-dossier/src/brief.test.ts > brief: issued writes the brief, the schema and the brief record, binding the run, the pinned revision and the schema version",
+        "packages/polaris-dossier/src/brief.test.ts > brief: shape packs (version 2.4) a server entry selects default@1 then server@1, and the brief is the v10 golden but for its version line, draft-schema line and thesis paragraph",
+        "packages/polaris-dossier/src/brief.test.ts > brief: shape packs (version 2.4) with no server entry, or one only under vendored, generated, test or example paths, selects default@1 alone and names no server-only dimension",
+        "packages/polaris-dossier/src/brief.test.ts > brief: shape packs (version 2.4) an unloadable screen leaves the trait profile Unknown, with its reason, and selects default@1 alone"
+      ]
+    },
+    {
+      "id": "S6",
+      "file": "packages/polaris-dossier/src/shape-packs.ts",
+      "old": "for (const dimension of pack.dimensions) byId.set(dimension.id, dimension);",
+      "new": "for (const dimension of pack.dimensions) if (!byId.has(dimension.id)) byId.set(dimension.id, dimension);",
+      "killed": true,
+      "killedBy": [
+        "packages/polaris-dossier/src/brief.test.ts",
+        "packages/polaris-dossier/src/shape-packs.test.ts"
+      ],
+      "failedTests": [
+        "packages/polaris-dossier/src/shape-packs.test.ts > shape packs: selection and composition composes by order then id, a later pack replacing a dimension of the same id",
+        "packages/polaris-dossier/src/shape-packs.test.ts > shape packs: selection and composition default@1 with server@1 composes version 1 itself; default@1 alone composes a text with its own version line and digest",
+        "packages/polaris-dossier/src/brief.test.ts > brief: issued writes the brief, the schema and the brief record, binding the run, the pinned revision and the schema version",
+        "packages/polaris-dossier/src/brief.test.ts > brief: shape packs (version 2.4) a server entry selects default@1 then server@1, and the brief is the v10 golden but for its version line, draft-schema line and thesis paragraph"
+      ]
+    },
+    {
+      "id": "S7",
+      "file": "packages/polaris-dossier/src/reader-standards.ts",
+      "old": "(line === version ? `${version}${packSuffix(identities)}` : line)",
+      "new": "line",
+      "killed": true,
+      "killedBy": [
+        "packages/polaris-dossier/src/brief.test.ts",
+        "packages/polaris-dossier/src/shape-packs.test.ts"
+      ],
+      "failedTests": [
+        "packages/polaris-dossier/src/shape-packs.test.ts > shape packs: selection and composition default@1 with server@1 composes version 1 itself; default@1 alone composes a text with its own version line and digest",
+        "packages/polaris-dossier/src/shape-packs.test.ts > the design packet carries the standards the brief carried carries version 1 when the brief record names no packs, and the composed text, named by packs and digest, when it does",
+        "packages/polaris-dossier/src/brief.test.ts > brief: shape packs (version 2.4) with no server entry, or one only under vendored, generated, test or example paths, selects default@1 alone and names no server-only dimension",
+        "packages/polaris-dossier/src/brief.test.ts > brief: shape packs (version 2.4) an unloadable screen leaves the trait profile Unknown, with its reason, and selects default@1 alone"
+      ]
+    },
+    {
+      "id": "S8",
+      "file": "packages/polaris-dossier/src/brief.ts",
+      "old": "...(standards.packs === null ? {} : { packs: standards.packs })",
+      "new": "",
+      "killed": true,
+      "killedBy": [
+        "packages/polaris-dossier/src/brief.test.ts",
+        "packages/polaris-dossier/src/render.test.ts"
+      ],
+      "failedTests": [
+        "packages/polaris-dossier/src/brief.test.ts > brief: shape packs (version 2.4) with no server entry, or one only under vendored, generated, test or example paths, selects default@1 alone and names no server-only dimension",
+        "packages/polaris-dossier/src/brief.test.ts > brief: shape packs (version 2.4) an unloadable screen leaves the trait profile Unknown, with its reason, and selects default@1 alone",
+        "packages/polaris-dossier/src/render.test.ts > rendered-design review (S9b) builds the design packet from the latest site, outside the review-status region, byte for byte, and names its digest at render",
+        "packages/polaris-dossier/src/render.test.ts > rendered-design review (S9b) hands a design review session the packet under the sessions root with its own prompt"
+      ]
+    },
+    {
+      "id": "S9",
+      "file": "packages/polaris-dossier/src/brief.ts",
+      "old": "(standards.packs === null ? STANDARDS_DIGEST_SENTENCE : COMPOSED_DIGEST_SENTENCE)",
+      "new": "STANDARDS_DIGEST_SENTENCE",
+      "killed": true,
+      "killedBy": [
+        "packages/polaris-dossier/src/brief.test.ts"
+      ],
+      "failedTests": [
+        "packages/polaris-dossier/src/brief.test.ts > brief: shape packs (version 2.4) with no server entry, or one only under vendored, generated, test or example paths, selects default@1 alone and names no server-only dimension"
+      ]
+    },
+    {
+      "id": "S10",
+      "file": "packages/polaris-dossier/src/brief.ts",
+      "old": "listed.slice(0, SHAPE_PACK_PATHS_LISTED)",
+      "new": "listed.slice(0, SHAPE_PACK_PATHS_LISTED + 1)",
+      "killed": true,
+      "killedBy": [
+        "packages/polaris-dossier/src/brief.test.ts"
+      ],
+      "failedTests": [
+        "packages/polaris-dossier/src/brief.test.ts > brief: shape packs (version 2.4) names at most 20 matched paths in code-unit order and counts the rest"
+      ]
+    },
+    {
+      "id": "S11",
+      "file": "packages/polaris-dossier/src/brief.ts",
+      "old": "Math.max(0, listed.length - SHAPE_PACK_PATHS_LISTED) + notListed",
+      "new": "notListed",
+      "killed": true,
+      "killedBy": [
+        "packages/polaris-dossier/src/brief.test.ts"
+      ],
+      "failedTests": [
+        "packages/polaris-dossier/src/brief.test.ts > brief: shape packs (version 2.4) names at most 20 matched paths in code-unit order and counts the rest"
+      ]
+    },
+    {
+      "id": "S12",
+      "file": "packages/polaris-dossier/src/brief.ts",
+      "old": "deriveStructure(await reader.listTree(), secretPathOf(screenLoad.screen))",
+      "new": "deriveStructure(await reader.listTree(), () => false)",
+      "killed": true,
+      "killedBy": [
+        "packages/polaris-dossier/src/brief.test.ts"
+      ],
+      "failedTests": [
+        "packages/polaris-dossier/src/brief.test.ts > brief: shape packs (version 2.4) records the same selection for one tree in two runs, and never names or counts a secret-matching server path"
+      ]
+    },
+    {
+      "id": "S13",
+      "file": "packages/polaris-dossier/src/design-review.ts",
+      "old": "if (composed.sha256 !== standards.sha256) return",
+      "new": "if (false) return",
+      "killed": true,
+      "killedBy": [
+        "packages/polaris-dossier/src/shape-packs.test.ts"
+      ],
+      "failedTests": [
+        "packages/polaris-dossier/src/shape-packs.test.ts > the design packet carries the standards the brief carried refuses, never falling back to version 1, a pack this Syzygy does not ship or a digest the recomposed text does not have"
+      ]
+    },
+    {
+      "id": "S14",
+      "file": "packages/polaris-dossier/src/design-review.ts",
+      "old": "if (pack === undefined) return { ok: false, reason: `${STANDARDS_NOT_RECOMPOSED} (${id} is not shipped)` };",
+      "new": "if (pack === undefined) continue;",
+      "killed": true,
+      "killedBy": [
+        "packages/polaris-dossier/src/render.test.ts",
+        "packages/polaris-dossier/src/shape-packs.test.ts"
+      ],
+      "failedTests": [
+        "packages/polaris-dossier/src/shape-packs.test.ts > the design packet carries the standards the brief carried refuses, never falling back to version 1, a pack this Syzygy does not ship or a digest the recomposed text does not have",
+        "packages/polaris-dossier/src/render.test.ts > rendered-design review (S9b) refuses the render where the brief record names a pack this Syzygy does not ship, or its standards cannot be read, and writes no site"
+      ]
+    },
+    {
+      "id": "S15",
+      "file": "packages/polaris-dossier/src/render.ts",
+      "old": "const standards = briefStandardsOf(run);",
+      "new": "const standards = { ok: true } as const;",
+      "killed": true,
+      "killedBy": [
+        "packages/polaris-dossier/src/render.test.ts"
+      ],
+      "failedTests": [
+        "packages/polaris-dossier/src/render.test.ts > rendered-design review (S9b) builds the design packet from the latest site, outside the review-status region, byte for byte, and names its digest at render",
+        "packages/polaris-dossier/src/render.test.ts > rendered-design review (S9b) keeps a counted design review through a render that changes only the review-status region",
+        "packages/polaris-dossier/src/render.test.ts > rendered-design review (S9b) retires a counted design review when a render changes anything outside the region",
+        "packages/polaris-dossier/src/render.test.ts > rendered-design review (S9b) refuses the render where the brief record names a pack this Syzygy does not ship, or its standards cannot be read, and writes no site",
+        "packages/polaris-dossier/src/render.test.ts > rendered-design review (S9b) counts a validated design verdict only once its launch form is recorded",
+        "packages/polaris-dossier/src/render.test.ts > rendered-design review (S9b) states a counted review that declares the pages not ready beside its blocking finding",
+        "packages/polaris-dossier/src/render.test.ts > rendered-design review (S9b) drives the design review through the CLI",
+        "packages/polaris-dossier/src/render.test.ts > render: derived structure (version 2.3) is stable across renders of one draft revision, and two checks of the same bytes differ only in capturedAt"
+      ]
+    },
+    {
+      "id": "S16",
+      "file": "packages/polaris-dossier/src/reader-standards.ts",
+      "old": "  const heading = standards.packs === null\n",
+      "new": "  const heading = true\n",
+      "killed": true,
+      "killedBy": [
+        "packages/polaris-dossier/src/brief.test.ts"
+      ],
+      "failedTests": [
+        "packages/polaris-dossier/src/brief.test.ts > brief: shape packs (version 2.4) with no server entry, or one only under vendored, generated, test or example paths, selects default@1 alone and names no server-only dimension"
+      ]
+    },
+    {
+      "id": "S17",
+      "file": "packages/polaris-dossier/src/shape-packs.ts",
+      "old": "const NEXT_LINE = /^ {4}\\S[^\\n]*$/u;",
+      "new": "const NEXT_LINE = /^ {2,4}\\S[^\\n]*$/u;",
+      "killed": true,
+      "killedBy": [
+        "packages/polaris-dossier/src/shape-packs.test.ts"
+      ],
+      "failedTests": [
+        "packages/polaris-dossier/src/shape-packs.test.ts > shape packs: the shipped data refuses a document that is not a pack of this format"
+      ]
+    },
+    {
+      "id": "S18",
+      "file": "packages/polaris-dossier/src/brief.ts",
+      "old": "because: pack.selectedBy === null ? 'always selected'",
+      "new": "because: pack.selectedBy !== null ? 'always selected'",
+      "killed": true,
+      "killedBy": [
+        "packages/polaris-dossier/src/brief.test.ts",
+        "packages/polaris-dossier/src/render.test.ts"
+      ],
+      "failedTests": [
+        "packages/polaris-dossier/src/brief.test.ts > brief: issued refuses a changed repository declaration after the brief binds its source",
+        "packages/polaris-dossier/src/brief.test.ts > brief: issued refuses a changed clone declaration after the brief binds its source",
+        "packages/polaris-dossier/src/brief.test.ts > brief: issued refuses a changed visibility declaration after the brief binds its source",
+        "packages/polaris-dossier/src/brief.test.ts > brief: issued writes the brief, the schema and the brief record, binding the run, the pinned revision and the schema version",
+        "packages/polaris-dossier/src/brief.test.ts > brief: issued asks for Poles under the run's Pole limit, five unless declared, and keeps run.json free of an undeclared limit (dossier spec v1.5)",
+        "packages/polaris-dossier/src/brief.test.ts > brief: issued states the four reader topics in the owner's order, the voice rules, the understanding record and every rule 034 and 036 name",
+        "packages/polaris-dossier/src/brief.test.ts > brief: issued keeps a multiline audience on one quoted line without introducing Markdown headings",
+        "packages/polaris-dossier/src/brief.test.ts > brief: issued quotes SEC-3's head byte-equal to the adopted security.md, read live",
+        "packages/polaris-dossier/src/brief.test.ts > brief: issued carries no project content beyond the repository identity and the pinned revision",
+        "packages/polaris-dossier/src/brief.test.ts > brief: shape packs (version 2.4) a server entry selects default@1 then server@1, and the brief is the v10 golden but for its version line, draft-schema line and thesis paragraph",
+        "packages/polaris-dossier/src/brief.test.ts > brief: shape packs (version 2.4) with no server entry, or one only under vendored, generated, test or example paths, selects default@1 alone and names no server-only dimension",
+        "packages/polaris-dossier/src/brief.test.ts > brief: shape packs (version 2.4) records the same selection for one tree in two runs, and never names or counts a secret-matching server path",
+        "packages/polaris-dossier/src/brief.test.ts > brief: shape packs (version 2.4) names at most 20 matched paths in code-unit order and counts the rest",
+        "packages/polaris-dossier/src/brief.test.ts > brief: shape packs (version 2.4) an unloadable screen leaves the trait profile Unknown, with its reason, and selects default@1 alone",
+        "packages/polaris-dossier/src/brief.test.ts > brief: the permitting arm, switched on with fixture ports records the choice and D9's cost bullet verbatim from the adopted security.md (R3-F3)",
+        "packages/polaris-dossier/src/brief.test.ts > brief: the permitting arm, switched on with fixture ports a choice made for an earlier run gives SEC-3's rule",
+        "packages/polaris-dossier/src/brief.test.ts > brief: the permitting arm, switched on with fixture ports a run with launched gives SEC-3's rule, whatever choice it holds",
+        "packages/polaris-dossier/src/brief.test.ts > brief: the permitting arm, switched on with fixture ports a run with an empty marker gives SEC-3's rule, whatever choice it holds",
+        "packages/polaris-dossier/src/brief.test.ts > brief: the permitting arm, switched on with fixture ports a run with a marker of another format gives SEC-3's rule, whatever choice it holds",
+        "packages/polaris-dossier/src/brief.test.ts > brief: the permitting arm, switched on with fixture ports a run with a marker that is a directory gives SEC-3's rule, whatever choice it holds",
+        "packages/polaris-dossier/src/brief.test.ts > brief: the permitting arm, switched on with fixture ports opens the launched marker only to decide the arm: never with the arm off, once with it on (R-GP-IMPL-LAUNCHED-MARKER-2 R2-N4)",
+        "packages/polaris-dossier/src/brief.test.ts > brief: the permitting arm off, whatever the launched marker with no marker, carries only the arm-off reason",
+        "packages/polaris-dossier/src/brief.test.ts > brief: the permitting arm off, whatever the launched marker with the launched marker, carries only the arm-off reason",
+        "packages/polaris-dossier/src/brief.test.ts > brief: the permitting arm off, whatever the launched marker with an unreadable marker, carries only the arm-off reason",
+        "packages/polaris-dossier/src/brief.test.ts > brief: the permitting arm off, whatever the launched marker with a FIFO at the marker, carries only the arm-off reason",
+        "packages/polaris-dossier/src/brief.test.ts > brief: the permitting arm off, whatever the launched marker with a link to a character device at the marker, carries only the arm-off reason",
+        "packages/polaris-dossier/src/brief.test.ts > brief: refused refuses a second brief: the deadline clock has started",
+        "packages/polaris-dossier/src/brief.test.ts > brief: refused ignores legacy launch artifacts while issuing a declared-source brief, leaving their bytes unchanged",
+        "packages/polaris-dossier/src/brief.test.ts > syzygy dossier brief exits 0 and reports the brief in JSON",
+        "packages/polaris-dossier/src/render.test.ts > render refuses with no renderer wired, before it opens the run, and writes nothing",
+        "packages/polaris-dossier/src/render.test.ts > render renders every quotation as the bytes Syzygy located in the blob it read now, with an RFC7-10 anchor",
+        "packages/polaris-dossier/src/render.test.ts > render labels blocks by the agent's label, the counted review and screening, and keeps the pages and machine view in parity per tuple",
+        "packages/polaris-dossier/src/render.test.ts > render the reading view and the evidence view (dossier spec v1.5) shows no label token in the block text of a narrative page, and keeps every one for the evidence view",
+        "packages/polaris-dossier/src/render.test.ts > render the reading view and the evidence view (dossier spec v1.5) carries the legend and the evidence-view target once per narrative page, and the redaction legend elsewhere",
+        "packages/polaris-dossier/src/render.test.ts > render the reading view and the evidence view (dossier spec v1.5) gives each block an evidence note whose values equal its machine attributes",
+        "packages/polaris-dossier/src/render.test.ts > render the reading view and the evidence view (dossier spec v1.5) says in each citation pop which lines of which file the mark cites",
+        "packages/polaris-dossier/src/render.test.ts > render the reading view and the evidence view (dossier spec v1.5) puts the evidence view in the rendered-design packet: each narrative page holds both views",
+        "packages/polaris-dossier/src/render.test.ts > render the reading view and the evidence view (dossier spec v1.5) renders a checked v4 draft's Poles: the why section on the landing page, the other Pole on its own page, in the design packet too",
+        "packages/polaris-dossier/src/render.test.ts > render the reading view and the evidence view (dossier spec v1.5) refuses to render a v4 draft over the run's Pole limit, as check reports it",
+        "packages/polaris-dossier/src/render.test.ts > render the reading view and the evidence view (dossier spec v1.5) counts in the appendix what the machine view counts",
+        "packages/polaris-dossier/src/render.test.ts > render discloses declaration and screening evidence without treating historical launch records as authority",
+        "packages/polaris-dossier/src/render.test.ts > render keeps actual agent transmissions unobserved in the disclosure",
+        "packages/polaris-dossier/src/render.test.ts > render carries the one sentence and the machine disclosure on every page, the human disclosure in the appendix, and one review-status region per page holding no claim",
+        "packages/polaris-dossier/src/render.test.ts > render says on the sources list why the agent reports choosing each source, Inferred, never a secret-named path (syzygy-pdja.15)",
+        "packages/polaris-dossier/src/render.test.ts > render says on the sources list which pages cite each source and how often (syzygy-pdja.15)",
+        "packages/polaris-dossier/src/render.test.ts > render folds how the dossier was made under one Review report entry, apart from the product, open on the pages it holds (syzygy-pdja.13)",
+        "packages/polaris-dossier/src/render.test.ts > render renders an attributed editorial draft without an RFC7-20 reading act",
+        "packages/polaris-dossier/src/render.test.ts > render withholds a quotation from a file screening excludes and renders its block Unknown, with no source page for that file",
+        "packages/polaris-dossier/src/render.test.ts > render refuses a different applied policy instead of upgrading a running render",
+        "packages/polaris-dossier/src/render.test.ts > render renders screened documentation without a legacy class grant null",
+        "packages/polaris-dossier/src/render.test.ts > render renders screened documentation without a legacy class grant \"code-content\"",
+        "packages/polaris-dossier/src/render.test.ts > render suppresses a private unknown-class blob identifier on every page and in the source population",
+        "packages/polaris-dossier/src/render.test.ts > render keeps policy classification independent of a stale provider statement",
+        "packages/polaris-dossier/src/render.test.ts > render refuses when an object at the pinned revision can no longer be read, and writes nothing",
+        "packages/polaris-dossier/src/render.test.ts > render renders an exempt body only through a renderer that declares the page-sink contract and pages that carry the CSP",
+        "packages/polaris-dossier/src/render.test.ts > render draws retained spans with original coordinates and markers while withholding only the removed line",
+        "packages/polaris-dossier/src/render.test.ts > render rescans a redacted exempt body over its complete body where the page sink is unconfirmed, and states no withheld text",
+        "packages/polaris-dossier/src/render.test.ts > render loads the screen for the run's repository and pinned commit",
+        "packages/polaris-dossier/src/render.test.ts > render refuses when the stored passed draft revision is altered, after the deadline, and when the output lacks the disclosure",
+        "packages/polaris-dossier/src/render.test.ts > render writes each render into a new numbered site directory and never over an earlier one",
+        "packages/polaris-dossier/src/render.test.ts > render labels selection history Inferred and the current pin and policy check Observed",
+        "packages/polaris-dossier/src/render.test.ts > render refuses before it renders when the policy cannot be read, with the step guard's codes, and writes no site (syzygy-qkea.23)",
+        "packages/polaris-dossier/src/render.test.ts > render refuses before it renders when the policy binding changes, with the step guard's codes, and writes no site (syzygy-qkea.23)",
+        "packages/polaris-dossier/src/render.test.ts > render lists the pinned tree with the object reader the CLI is given",
+        "packages/polaris-dossier/src/render.test.ts > render is the `render` command of the CLI, which refuses when the composition root injects no renderer",
+        "packages/polaris-dossier/src/render.test.ts > render: figure homes (schema v5) draws each figure once, on its home page: the overview after its introduction, a deep dive and a section ahead of their prose",
+        "packages/polaris-dossier/src/render.test.ts > render: figure homes (schema v5) draws a figure homed on a deep dive with no page of its own in that deep dive's section",
+        "packages/polaris-dossier/src/render.test.ts > render: figure homes (schema v5) draws a v5 figure homed on a section exactly as a v4 draft's `sectionId` draws it",
+        "packages/polaris-dossier/src/render.test.ts > render: withheld items and judgements (dossier spec v1.5) renders each withheld item Unknown in Syzygy's words with its count, and none of the agent's text for it",
+        "packages/polaris-dossier/src/render.test.ts > render: withheld items and judgements (dossier spec v1.5) keeps a block citing a withheld span beside an admitted one, counting the withheld span",
+        "packages/polaris-dossier/src/render.test.ts > render: withheld items and judgements (dossier spec v1.5) withholds an item whose span touches a redacted line, and keeps one over surviving lines of the same file",
+        "packages/polaris-dossier/src/render.test.ts > render: withheld items and judgements (dossier spec v1.5) renders a list repeating a diagram collapsed, with Syzygy's summary and its Unknown count",
+        "packages/polaris-dossier/src/render.test.ts > render: withheld items and judgements (dossier spec v1.5) renders an uncited judgement Inferred with its mark where the counted review finds it advisory",
+        "packages/polaris-dossier/src/render.test.ts > render: withheld items and judgements (dossier spec v1.5) keeps an uncited judgement Unknown while no counted review finds it advisory",
+        "packages/polaris-dossier/src/render.test.ts > rendered-design review (S9b) builds the design packet from the latest site, outside the review-status region, byte for byte, and names its digest at render",
+        "packages/polaris-dossier/src/render.test.ts > rendered-design review (S9b) hands a design review session the packet under the sessions root with its own prompt",
+        "packages/polaris-dossier/src/render.test.ts > rendered-design review (S9b) keeps a counted design review through a render that changes only the review-status region",
+        "packages/polaris-dossier/src/render.test.ts > rendered-design review (S9b) retires a counted design review when a render changes anything outside the region",
+        "packages/polaris-dossier/src/render.test.ts > rendered-design review (S9b) refuses the render where the brief record names a pack this Syzygy does not ship, or its standards cannot be read, and writes no site",
+        "packages/polaris-dossier/src/render.test.ts > rendered-design review (S9b) refuses a render whose statement of the design review leaks outside the region, and writes no site",
+        "packages/polaris-dossier/src/render.test.ts > rendered-design review (S9b) counts a validated design verdict only once its launch form is recorded",
+        "packages/polaris-dossier/src/render.test.ts > rendered-design review (S9b) states a counted review that declares the pages not ready beside its blocking finding",
+        "packages/polaris-dossier/src/render.test.ts > rendered-design review (S9b) records and refuses a design verdict with a page without a row, which never counts",
+        "packages/polaris-dossier/src/render.test.ts > rendered-design review (S9b) records and refuses a design verdict with a row for a page the packet does not hold, which never counts",
+        "packages/polaris-dossier/src/render.test.ts > rendered-design review (S9b) records and refuses a design verdict with two rows for one page, which never counts",
+        "packages/polaris-dossier/src/render.test.ts > rendered-design review (S9b) records and refuses a design verdict with a finding on a file the packet does not hold, which never counts",
+        "packages/polaris-dossier/src/render.test.ts > rendered-design review (S9b) records and refuses a design verdict with a stale packet digest, which never counts",
+        "packages/polaris-dossier/src/render.test.ts > rendered-design review (S9b) records and refuses a design verdict with the authoring session's identifier, which never counts",
+        "packages/polaris-dossier/src/render.test.ts > rendered-design review (S9b) records and refuses a design verdict with a quotation in a reason, which never counts",
+        "packages/polaris-dossier/src/render.test.ts > rendered-design review (S9b) records and refuses a design verdict with readiness beside a blocking finding, which never counts",
+        "packages/polaris-dossier/src/render.test.ts > rendered-design review (S9b) records and refuses a design verdict with readiness beside a deficient page, which never counts",
+        "packages/polaris-dossier/src/render.test.ts > rendered-design review (S9b) records and refuses a design verdict with a fidelity verdict's shape, which never counts",
+        "packages/polaris-dossier/src/render.test.ts > rendered-design review (S9b) records a validated design verdict, with what it observed and what stays Inferred, and a stored site altered since is a stale packet",
+        "packages/polaris-dossier/src/render.test.ts > rendered-design review (S9b) refuses a design packet from a site holding anything but the renderer's files, and an unknown kind",
+        "packages/polaris-dossier/src/render.test.ts > rendered-design review (S9b) names an excluded cited file alike in two renders of the same subject",
+        "packages/polaris-dossier/src/render.test.ts > rendered-design review (S9b) version 8, public: an excluded cited blob's object id is on the pages and in the source population: true",
+        "packages/polaris-dossier/src/render.test.ts > rendered-design review (S9b) version 8, private: an excluded cited blob's object id is on the pages and in the source population: false",
+        "packages/polaris-dossier/src/render.test.ts > rendered-design review (S9b) keys an excluded cited file by the run, the pinned revision and its path alone, never its body or object",
+        "packages/polaris-dossier/src/render.test.ts > rendered-design review (S9b) drives the design review through the CLI",
+        "packages/polaris-dossier/src/render.test.ts > readable operator-agent pages (syzygy-mea.10.1, syzygy-mea.10.2) numbers each page's sources [1], [2] in first-cited order, keeping the identifier in data-source-id only",
+        "packages/polaris-dossier/src/render.test.ts > readable operator-agent pages (syzygy-mea.10.1, syzygy-mea.10.2) draws complete backtick pairs in agent prose as inline code and leaves an unpaired backtick literal",
+        "packages/polaris-dossier/src/render.test.ts > readable operator-agent pages (syzygy-mea.10.1, syzygy-mea.10.2) carries the soft dark theme with a light variant and tinted callouts",
+        "packages/polaris-dossier/src/render.test.ts > readability guidance and diagram-led sections (syzygy-mea.10.4) draws a section's diagrams before its blocks on an operator-agent page",
+        "packages/polaris-dossier/src/render.test.ts > render: derived structure (version 2.3) keeps the record at check and draws the figure Observed with rule and version, publishing the record unchanged",
+        "packages/polaris-dossier/src/render.test.ts > render: derived structure (version 2.3) renders every derived element Unknown (no-currency-bound-declared) where no adopted policy applies",
+        "packages/polaris-dossier/src/render.test.ts > render: derived structure (version 2.3) renders every derived element Unknown (stale-beyond-currency-bound) for a record of another revision or with facts not re-derived",
+        "packages/polaris-dossier/src/render.test.ts > render: derived structure (version 2.3) states Not established with no figure, list or published record where no record was kept, the record is Unknown, or the render cannot list the tree",
+        "packages/polaris-dossier/src/render.test.ts > render: derived structure (version 2.3) derives no size or object id for a private repository, and names no secret-matching path",
+        "packages/polaris-dossier/src/render.test.ts > render: derived structure (version 2.3) keeps an authored figure matching a derived fact dashed and curated, and a draft cannot set Observed",
+        "packages/polaris-dossier/src/render.test.ts > render: derived structure (version 2.3) publishes and draws nothing of a kept record edited after check: an added member, a secret-matching path or a foreign repository",
+        "packages/polaris-dossier/src/render.test.ts > render: derived structure (version 2.3) refuses a check before freezing when the revision's derived record already exists, so the revision is not spent",
+        "packages/polaris-dossier/src/render.test.ts > render: derived structure (version 2.3) takes capturedAt once the check has listed the tree",
+        "packages/polaris-dossier/src/render.test.ts > render: derived structure (version 2.3) draws twelve, lists 250 and counts the rest end to end for a tree of more than 250 top-level directories",
+        "packages/polaris-dossier/src/render.test.ts > render: derived structure (version 2.3) is stable across renders of one draft revision, and two checks of the same bytes differ only in capturedAt",
+        "packages/polaris-dossier/src/render.test.ts > render: the thesis basis (schema v6) renders a code-read thesis under Syzygy's line, immediately before the introduction's block and outside it, and says so in machine.json",
+        "packages/polaris-dossier/src/render.test.ts > render: the thesis basis (schema v6) renders no line for a stated thesis, and machine.json says so",
+        "packages/polaris-dossier/src/render.test.ts > render: the thesis basis (schema v6) renders no line for a none thesis, and machine.json says so",
+        "packages/polaris-dossier/src/render.test.ts > render: the thesis basis (schema v6) renders no line beside a withheld introduction, and machine.json says the line did not render",
+        "packages/polaris-dossier/src/render.test.ts > render: the thesis basis (schema v6) a v5 or earlier draft has no thesisBasis member in machine.json and no line"
+      ]
+    },
+    {
+      "id": "T1",
+      "file": "packages/polaris-dossier/src/check-derive.ts",
+      "old": "entryPoints.size < 2",
+      "new": "entryPoints.size < 1",
+      "killed": true,
+      "killedBy": [
+        "packages/polaris-dossier/src/check.test.ts",
+        "packages/polaris-dossier/src/synthetic-shapes.test.ts"
+      ],
+      "failedTests": [
+        "packages/polaris-dossier/src/synthetic-shapes.test.ts > the no-README shape: a code-read thesis refuses the no-README draft code-read from one file and its test",
+        "packages/polaris-dossier/src/synthetic-shapes.test.ts > the no-README shape: a code-read thesis refuses the no-README draft code-read from main and the module file and checksums",
+        "packages/polaris-dossier/src/check.test.ts > check: the thesis basis (schema v6) reports thesis-basis at $.thesisBasis for one code file",
+        "packages/polaris-dossier/src/check.test.ts > check: the thesis basis (schema v6) reports thesis-basis at $.thesisBasis for one code file twice",
+        "packages/polaris-dossier/src/check.test.ts > check: the thesis basis (schema v6) reports thesis-basis at $.thesisBasis for a code file and a Markdown file",
+        "packages/polaris-dossier/src/check.test.ts > check: the thesis basis (schema v6) reports thesis-basis at $.thesisBasis for a code file and a plain-text note"
+      ]
+    },
+    {
+      "id": "T2",
+      "file": "packages/polaris-dossier/src/check-derive.ts",
+      "old": "const entryPoints = new Set(cited.filter(isEntryPoint));",
+      "new": "const entryPoints = new Set(cited.filter(isEntryPoint).map((p, i) => `${p}#${i}`));",
+      "killed": true,
+      "killedBy": [
+        "packages/polaris-dossier/src/check.test.ts"
+      ],
+      "failedTests": [
+        "packages/polaris-dossier/src/check.test.ts > check: the thesis basis (schema v6) reports thesis-basis at $.thesisBasis for one code file twice"
+      ]
+    },
+    {
+      "id": "T3",
+      "file": "packages/polaris-dossier/src/check-derive.ts",
+      "old": "const quotes = list(intro['quotations']).length > 0 || ",
+      "new": "const quotes = ",
+      "killed": true,
+      "killedBy": [
+        "packages/polaris-dossier/src/synthetic-shapes.test.ts"
+      ],
+      "failedTests": [
+        "packages/polaris-dossier/src/synthetic-shapes.test.ts > the no-README shape: a code-read thesis refuses the no-README draft code-read with a quotations list and no lead-in"
+      ]
+    },
+    {
+      "id": "T4",
+      "file": "packages/polaris-dossier/src/check-derive.ts",
+      "old": " || leadInQuotations(text(intro['text']) ?? '').length > 0;",
+      "new": ";",
+      "killed": true,
+      "killedBy": [
+        "packages/polaris-dossier/src/check.test.ts"
+      ],
+      "failedTests": [
+        "packages/polaris-dossier/src/check.test.ts > check: the thesis basis (schema v6) reports thesis-basis at $.thesisBasis for a lead-in with no quotations list"
+      ]
+    },
+    {
+      "id": "T5",
+      "file": "packages/polaris-dossier/src/check-derive.ts",
+      "old": "intro['basis'] !== 'source' || quotes",
+      "new": "quotes",
+      "killed": true,
+      "killedBy": [
+        "packages/polaris-dossier/src/check.test.ts"
+      ],
+      "failedTests": [
+        "packages/polaris-dossier/src/check.test.ts > check: the thesis basis (schema v6) reports thesis-basis at $.thesisBasis for a block resting on execution"
+      ]
+    },
+    {
+      "id": "T6",
+      "file": "packages/polaris-dossier/src/check-derive.ts",
+      "old": "if (label !== 'inferred' || intro['basis'] !== 'source'",
+      "new": "if (intro['basis'] !== 'source'",
+      "killed": true,
+      "killedBy": [
+        "packages/polaris-dossier/src/synthetic-shapes.test.ts"
+      ],
+      "failedTests": [
+        "packages/polaris-dossier/src/synthetic-shapes.test.ts > the no-README shape: a code-read thesis refuses the no-README draft code-read from an Unknown block that still names a source basis"
+      ]
+    },
+    {
+      "id": "T7",
+      "file": "packages/polaris-dossier/src/check-derive.ts",
+      "old": "if (label !== 'inferred' || cited.length === 0) finding(",
+      "new": "if (label !== 'inferred') finding(",
+      "killed": true,
+      "killedBy": [
+        "packages/polaris-dossier/src/check.test.ts",
+        "packages/polaris-dossier/src/synthetic-shapes.test.ts"
+      ],
+      "failedTests": [
+        "packages/polaris-dossier/src/synthetic-shapes.test.ts > the no-README shape: a code-read thesis refuses the no-README draft marked stated while citing nothing",
+        "packages/polaris-dossier/src/check.test.ts > check: the thesis basis (schema v6) reports thesis-basis at $.thesisBasis for a stated thesis citing nothing"
+      ]
+    },
+    {
+      "id": "T8",
+      "file": "packages/polaris-dossier/src/check-derive.ts",
+      "old": "if (label !== 'unknown' && label !== 'non-normative') finding(",
+      "new": "if (label !== 'unknown' && label !== 'non-normative' && label !== 'inferred') finding(",
+      "killed": true,
+      "killedBy": [
+        "packages/polaris-dossier/src/check.test.ts"
+      ],
+      "failedTests": [
+        "packages/polaris-dossier/src/check.test.ts > check: the thesis basis (schema v6) reports thesis-basis at $.thesisBasis for a none thesis that is Inferred"
+      ]
+    },
+    {
+      "id": "T9",
+      "file": "packages/polaris-dossier/src/check-derive.ts",
+      "old": "if (Object.hasOwn(doc, 'thesisBasis')) add(",
+      "new": "if (false) add(",
+      "killed": true,
+      "killedBy": [
+        "packages/polaris-dossier/src/check.test.ts"
+      ],
+      "failedTests": [
+        "packages/polaris-dossier/src/check.test.ts > check: the thesis basis (schema v6) a polaris-dossier-local-draft-v2 draft carrying thesisBasis has a field-version finding and nothing else",
+        "packages/polaris-dossier/src/check.test.ts > check: the thesis basis (schema v6) a polaris-dossier-local-draft-v4 draft carrying thesisBasis has a field-version finding and nothing else",
+        "packages/polaris-dossier/src/check.test.ts > check: the thesis basis (schema v6) a polaris-dossier-local-draft-v5 draft carrying thesisBasis has a field-version finding and nothing else"
+      ]
+    },
+    {
+      "id": "T10",
+      "file": "packages/polaris-dossier/src/derive.ts",
+      "old": "return language !== undefined && !(ENTRY_POINT.notCode as readonly string[]).includes(language);",
+      "new": "return language !== undefined;",
+      "killed": true,
+      "killedBy": [
+        "packages/polaris-dossier/src/check.test.ts",
+        "packages/polaris-dossier/src/derive.test.ts"
+      ],
+      "failedTests": [
+        "packages/polaris-dossier/src/derive.test.ts > isEntryPoint does not hold for a Markdown file",
+        "packages/polaris-dossier/src/derive.test.ts > isEntryPoint does not hold for a header",
+        "packages/polaris-dossier/src/derive.test.ts > isEntryPoint does not hold for JSON",
+        "packages/polaris-dossier/src/derive.test.ts > isEntryPoint does not hold for YAML",
+        "packages/polaris-dossier/src/derive.test.ts > isEntryPoint does not hold for SQL",
+        "packages/polaris-dossier/src/check.test.ts > check: the thesis basis (schema v6) reports thesis-basis at $.thesisBasis for a code file and a Markdown file"
+      ]
+    },
+    {
+      "id": "T11",
+      "file": "packages/polaris-dossier/src/derive.ts",
+      "old": "  if (isTest(segments, basename)) return false;\n",
+      "new": "",
+      "killed": true,
+      "killedBy": [
+        "packages/polaris-dossier/src/derive.test.ts",
+        "packages/polaris-dossier/src/synthetic-shapes.test.ts"
+      ],
+      "failedTests": [
+        "packages/polaris-dossier/src/derive.test.ts > isEntryPoint does not hold for a test file",
+        "packages/polaris-dossier/src/derive.test.ts > isEntryPoint does not hold for a file under a test directory",
+        "packages/polaris-dossier/src/synthetic-shapes.test.ts > the no-README shape: a code-read thesis refuses the no-README draft code-read from one file and its test"
+      ]
+    },
+    {
+      "id": "T12",
+      "file": "packages/polaris-dossier/src/derive.ts",
+      "old": "  if (segments.length > 1 && (DOCS_TREE.topLevel as readonly string[]).includes(segments[0]!)) return false;\n",
+      "new": "",
+      "killed": true,
+      "killedBy": [
+        "packages/polaris-dossier/src/derive.test.ts"
+      ],
+      "failedTests": [
+        "packages/polaris-dossier/src/derive.test.ts > isEntryPoint does not hold for code under a docs tree"
+      ]
+    },
+    {
+      "id": "T13",
+      "file": "packages/polaris-dossier/src/derive.ts",
+      "old": "  if (segments.slice(0, -1).some((segment) => (ENTRY_POINT.exampleSegments as readonly string[]).includes(segment))) return false;\n",
+      "new": "",
+      "killed": true,
+      "killedBy": [
+        "packages/polaris-dossier/src/derive.test.ts"
+      ],
+      "failedTests": [
+        "packages/polaris-dossier/src/derive.test.ts > isEntryPoint does not hold for an example",
+        "packages/polaris-dossier/src/derive.test.ts > isEntryPoint does not hold for a sample",
+        "packages/polaris-dossier/src/derive.test.ts > isEntryPoint does not hold for a demo"
+      ]
+    },
+    {
+      "id": "T14",
+      "file": "packages/polaris-dossier/src/derive.ts",
+      "old": "  if (outermostUnder(segments, VENDORED_PATH.segments) !== undefined || outermostUnder(segments, GENERATED_PATH.segments) !== undefined) return false;\n",
+      "new": "",
+      "killed": true,
+      "killedBy": [
+        "packages/polaris-dossier/src/derive.test.ts"
+      ],
+      "failedTests": [
+        "packages/polaris-dossier/src/derive.test.ts > isEntryPoint does not hold for a vendored file",
+        "packages/polaris-dossier/src/derive.test.ts > isEntryPoint does not hold for a generated file"
+      ]
+    },
+    {
+      "id": "T15",
+      "file": "packages/polaris-dossier/src/check-derive.ts",
+      "old": "version === LOCAL_DRAFT_SCHEMA_VERSION_V5 ? v5 : v4",
+      "new": "version === LOCAL_DRAFT_SCHEMA_VERSION_V5 ? v4 : v4",
+      "killed": true,
+      "killedBy": [
+        "packages/polaris-dossier/src/check.test.ts",
+        "packages/polaris-dossier/src/render.test.ts"
+      ],
+      "failedTests": [
+        "packages/polaris-dossier/src/check.test.ts > check: schema v5 diagram homes (syzygy-3efd.18) passes a diagram whose home is a section",
+        "packages/polaris-dossier/src/check.test.ts > check: schema v5 diagram homes (syzygy-3efd.18) passes a diagram whose home is a deep dive",
+        "packages/polaris-dossier/src/check.test.ts > check: schema v5 diagram homes (syzygy-3efd.18) passes a diagram whose home is the overview",
+        "packages/polaris-dossier/src/render.test.ts > render: figure homes (schema v5) draws each figure once, on its home page: the overview after its introduction, a deep dive and a section ahead of their prose",
+        "packages/polaris-dossier/src/render.test.ts > render: figure homes (schema v5) draws a figure homed on a deep dive with no page of its own in that deep dive's section",
+        "packages/polaris-dossier/src/render.test.ts > render: figure homes (schema v5) draws a v5 figure homed on a section exactly as a v4 draft's `sectionId` draws it"
+      ]
+    },
+    {
+      "id": "T16",
+      "file": "packages/polaris-dossier/src/check-derive.ts",
+      "old": "reported: /^\\$\\.thesisBasis$/u };",
+      "new": "reported: /^$/u };",
+      "killed": true,
+      "killedBy": [
+        "packages/polaris-dossier/src/check.test.ts"
+      ],
+      "failedTests": [
+        "packages/polaris-dossier/src/check.test.ts > check: the thesis basis (schema v6) a polaris-dossier-local-draft-v5 draft carrying thesisBasis has a field-version finding and nothing else"
+      ]
+    },
+    {
+      "id": "T17",
+      "file": "packages/polaris-dossier/src/render.ts",
+      "old": "blocks.get(draft.introduction.id)?.withheld === undefined",
+      "new": "true",
+      "killed": true,
+      "killedBy": [
+        "packages/polaris-dossier/src/render.test.ts"
+      ],
+      "failedTests": [
+        "packages/polaris-dossier/src/render.test.ts > render: the thesis basis (schema v6) renders no line beside a withheld introduction, and machine.json says the line did not render"
+      ]
+    },
+    {
+      "id": "T18",
+      "file": "packages/polaris-dossier/src/render.ts",
+      "old": "lineRendered: doc['thesisBasis'] === 'code-reading' && editorial",
+      "new": "lineRendered: editorial",
+      "killed": true,
+      "killedBy": [
+        "packages/polaris-dossier/src/render.test.ts"
+      ],
+      "failedTests": [
+        "packages/polaris-dossier/src/render.test.ts > render: the thesis basis (schema v6) renders no line for a stated thesis, and machine.json says so",
+        "packages/polaris-dossier/src/render.test.ts > render: the thesis basis (schema v6) renders no line for a none thesis, and machine.json says so"
+      ]
+    },
+    {
+      "id": "T19",
+      "file": "apps/three-surface-poc/src/polaris-generation/dossier-site.ts",
+      "old": "local?.thesisBasis?.lineRendered === true ? THESIS_BASIS_LINE",
+      "new": "local?.thesisBasis !== undefined ? THESIS_BASIS_LINE",
+      "killed": true,
+      "killedBy": [
+        "packages/polaris-dossier/src/render.test.ts",
+        "packages/polaris-dossier/src/synthetic-shapes.test.ts"
+      ],
+      "failedTests": [
+        "packages/polaris-dossier/src/synthetic-shapes.test.ts > the no-README shape: a code-read thesis renders the code-read line immediately before the introduction, and none for a stated thesis",
+        "packages/polaris-dossier/src/render.test.ts > render: the thesis basis (schema v6) renders no line for a stated thesis, and machine.json says so",
+        "packages/polaris-dossier/src/render.test.ts > render: the thesis basis (schema v6) renders no line for a none thesis, and machine.json says so",
+        "packages/polaris-dossier/src/render.test.ts > render: the thesis basis (schema v6) renders no line beside a withheld introduction, and machine.json says the line did not render"
+      ]
+    },
+    {
+      "id": "T20",
+      "file": "packages/polaris-dossier/src/brief.ts",
+      "old": "    THESIS_BASIS_PARAGRAPH,\n",
+      "new": "",
+      "killed": true,
+      "killedBy": [
+        "packages/polaris-dossier/src/brief.test.ts"
+      ],
+      "failedTests": [
+        "packages/polaris-dossier/src/brief.test.ts > brief: shape packs (version 2.4) a server entry selects default@1 then server@1, and the brief is the v10 golden but for its version line, draft-schema line and thesis paragraph"
+      ]
+    },
+    {
+      "id": "T21",
+      "file": "apps/three-surface-poc/src/polaris-generation/dossier-site.ts",
+      "old": "...(local.thesisBasis === undefined ? {} : { thesisBasis: { value: local.thesisBasis.value, declaredBy: 'the authoring session', label: 'Inferred', lineRendered: local.thesisBasis.lineRendered } }),",
+      "new": "",
+      "killed": true,
+      "killedBy": [
+        "packages/polaris-dossier/src/render.test.ts",
+        "packages/polaris-dossier/src/synthetic-shapes.test.ts"
+      ],
+      "failedTests": [
+        "packages/polaris-dossier/src/synthetic-shapes.test.ts > the no-README shape: a code-read thesis renders the code-read line immediately before the introduction, and none for a stated thesis",
+        "packages/polaris-dossier/src/render.test.ts > render: the thesis basis (schema v6) renders a code-read thesis under Syzygy's line, immediately before the introduction's block and outside it, and says so in machine.json",
+        "packages/polaris-dossier/src/render.test.ts > render: the thesis basis (schema v6) renders no line for a stated thesis, and machine.json says so",
+        "packages/polaris-dossier/src/render.test.ts > render: the thesis basis (schema v6) renders no line for a none thesis, and machine.json says so",
+        "packages/polaris-dossier/src/render.test.ts > render: the thesis basis (schema v6) renders no line beside a withheld introduction, and machine.json says the line did not render"
+      ]
+    },
+    {
+      "id": "T22",
+      "file": "packages/polaris-dossier/src/render.ts",
+      "old": "lineRendered: doc['thesisBasis'] === 'code-reading' && editorial && ",
+      "new": "lineRendered: doc['thesisBasis'] === 'code-reading' && ",
+      "killed": false,
+      "killedBy": [],
+      "failedTests": [],
+      "equivalent": "Equivalent in every reachable state: render.ts sets the draft layer Unknown only when the run record lacks its agent tool or provider, and the run record refuses such a run, so through renderRun the draft layer is always editorial and dropping the conjunct changes no output. The site renderer still renders no line on a withheld draft layer whatever lineRendered says (synthetic-shapes.test.ts, \"renders the code-read line\")."
+    },
+    {
+      "id": "R1",
+      "file": "packages/polaris-dossier/src/design-review.ts",
+      "old": "catch (cause) { return { ok: false, reason: `${name} cannot be read (${errno(cause)})` }; }",
+      "new": "catch { return { ok: true }; }",
+      "killed": true,
+      "killedBy": [
+        "packages/polaris-dossier/src/shape-packs.test.ts"
+      ],
+      "failedTests": [
+        "packages/polaris-dossier/src/shape-packs.test.ts > the brief record's standards: named, absent, or unreadable is unreadable, never version 1, where the record is missing, not bounded JSON, not an object, or its member is not an object"
+      ]
+    },
+    {
+      "id": "R2",
+      "file": "packages/polaris-dossier/src/design-review.ts",
+      "old": "catch { return { ok: false, reason: `${name} is not JSON within its bounds` }; }",
+      "new": "catch { return { ok: true }; }",
+      "killed": true,
+      "killedBy": [
+        "packages/polaris-dossier/src/shape-packs.test.ts"
+      ],
+      "failedTests": [
+        "packages/polaris-dossier/src/shape-packs.test.ts > the brief record's standards: named, absent, or unreadable is unreadable, never version 1, where the record is missing, not bounded JSON, not an object, or its member is not an object"
+      ]
+    },
+    {
+      "id": "R3",
+      "file": "packages/polaris-dossier/src/design-review.ts",
+      "old": "if (!isRecord(record)) return { ok: false, reason: `${name} is not a JSON object` };",
+      "new": "if (!isRecord(record)) return { ok: true };",
+      "killed": true,
+      "killedBy": [
+        "packages/polaris-dossier/src/shape-packs.test.ts"
+      ],
+      "failedTests": [
+        "packages/polaris-dossier/src/shape-packs.test.ts > the brief record's standards: named, absent, or unreadable is unreadable, never version 1, where the record is missing, not bounded JSON, not an object, or its member is not an object"
+      ]
+    },
+    {
+      "id": "R4",
+      "file": "packages/polaris-dossier/src/design-review.ts",
+      "old": "{ ok: true, standards } : { ok: false, reason: `${name} has a readerStandards member that is not an object` };",
+      "new": "{ ok: true, standards } : { ok: true };",
+      "killed": true,
+      "killedBy": [
+        "packages/polaris-dossier/src/render.test.ts",
+        "packages/polaris-dossier/src/shape-packs.test.ts"
+      ],
+      "failedTests": [
+        "packages/polaris-dossier/src/shape-packs.test.ts > the brief record's standards: named, absent, or unreadable is unreadable, never version 1, where the record is missing, not bounded JSON, not an object, or its member is not an object",
+        "packages/polaris-dossier/src/render.test.ts > rendered-design review (S9b) refuses the render where the brief record names a pack this Syzygy does not ship, or its standards cannot be read, and writes no site"
+      ]
+    },
+    {
+      "id": "R5",
+      "file": "packages/polaris-dossier/src/design-review.ts",
+      "old": "if (!Object.hasOwn(record, 'readerStandards')) return { ok: true };",
+      "new": "if (!Object.hasOwn(record, 'readerStandards')) return { ok: false, reason: 'absent' };",
+      "killed": true,
+      "killedBy": [
+        "packages/polaris-dossier/src/shape-packs.test.ts"
+      ],
+      "failedTests": [
+        "packages/polaris-dossier/src/shape-packs.test.ts > the brief record's standards: named, absent, or unreadable reads the readerStandards member, and gives version 1 only where the record has no such member"
+      ]
+    },
+    {
+      "id": "R6",
+      "file": "packages/polaris-dossier/src/design-review.ts",
+      "old": "if (!read.ok) return { standardsUnreadable: read.reason };",
+      "new": "if (!read.ok) return {};",
+      "killed": true,
+      "killedBy": [
+        "packages/polaris-dossier/src/render.test.ts",
+        "packages/polaris-dossier/src/shape-packs.test.ts"
+      ],
+      "failedTests": [
+        "packages/polaris-dossier/src/shape-packs.test.ts > the brief record's standards: named, absent, or unreadable refuses the design packet at the standards stage when the record is unreadable, rather than carrying version 1",
+        "packages/polaris-dossier/src/render.test.ts > rendered-design review (S9b) refuses the render where the brief record names a pack this Syzygy does not ship, or its standards cannot be read, and writes no site"
+      ]
+    },
+    {
+      "id": "R7",
+      "file": "packages/polaris-dossier/src/design-review.ts",
+      "old": "  if (input.standardsUnreadable !== undefined) return { ok: false, stage: 'standards', reason: `${STANDARDS_NOT_RECOMPOSED} (${input.standardsUnreadable})` };\n",
+      "new": "",
+      "killed": true,
+      "killedBy": [
+        "packages/polaris-dossier/src/render.test.ts",
+        "packages/polaris-dossier/src/shape-packs.test.ts"
+      ],
+      "failedTests": [
+        "packages/polaris-dossier/src/shape-packs.test.ts > the brief record's standards: named, absent, or unreadable refuses the design packet at the standards stage when the record is unreadable, rather than carrying version 1",
+        "packages/polaris-dossier/src/render.test.ts > rendered-design review (S9b) refuses the render where the brief record names a pack this Syzygy does not ship, or its standards cannot be read, and writes no site"
+      ]
+    },
+    {
+      "id": "R8",
+      "file": "packages/polaris-dossier/src/review-packet.ts",
+      "old": "files: site.files, ...standardsInput(standards) });",
+      "new": "files: site.files, ...(standards.ok && standards.standards !== undefined ? { standards: standards.standards } : {}) });",
+      "killed": true,
+      "killedBy": [
+        "packages/polaris-dossier/src/render.test.ts"
+      ],
+      "failedTests": [
+        "packages/polaris-dossier/src/render.test.ts > rendered-design review (S9b) refuses the render where the brief record names a pack this Syzygy does not ship, or its standards cannot be read, and writes no site"
+      ]
+    },
+    {
+      "id": "R9",
+      "file": "packages/polaris-dossier/src/render.ts",
+      "old": "files: pending, ...standardsInput(standards) });",
+      "new": "files: pending, ...(standards.ok && standards.standards !== undefined ? { standards: standards.standards } : {}) });",
+      "killed": true,
+      "killedBy": [
+        "packages/polaris-dossier/src/render.test.ts"
+      ],
+      "failedTests": [
+        "packages/polaris-dossier/src/render.test.ts > rendered-design review (S9b) refuses the render where the brief record names a pack this Syzygy does not ship, or its standards cannot be read, and writes no site"
+      ]
+    },
+    {
+      "id": "R10",
+      "file": "packages/polaris-dossier/src/reading-ledger.ts",
+      "old": "if (typeof at !== 'string' || !CHECKED_AT.test(at)) { unreadableCheckRecords += 1; continue; }",
+      "new": "if (typeof at !== 'string' || !CHECKED_AT.test(at)) continue;",
+      "killed": true,
+      "killedBy": [
+        "packages/polaris-dossier/src/reading-ledger.test.ts"
+      ],
+      "failedTests": [
+        "packages/polaris-dossier/src/reading-ledger.test.ts > reading difference counts a check record whose checkedAt is missing or malformed as unreadable, and takes the next earlier record of that run"
+      ]
+    },
+    {
+      "id": "R11",
+      "file": "packages/polaris-dossier/src/reading-ledger.ts",
+      "old": "if (typeof at !== 'string' || !CHECKED_AT.test(at)) { unreadableCheckRecords += 1; continue; }\n      if (!(at < checkedAt)) continue;",
+      "new": "if (typeof at !== 'string' || !CHECKED_AT.test(at) || !(at < checkedAt)) { unreadableCheckRecords += 1; continue; }\n      if (!(at < checkedAt)) continue;",
+      "killed": true,
+      "killedBy": [
+        "packages/polaris-dossier/src/reading-ledger.test.ts"
+      ],
+      "failedTests": [
+        "packages/polaris-dossier/src/reading-ledger.test.ts > reading difference never takes a ledger checked at the same instant as this check"
+      ]
+    },
+    {
+      "id": "R12",
+      "file": "packages/polaris-dossier/src/reading-ledger.ts",
+      "old": " || record['revision'] !== revision)",
+      "new": ")",
+      "killed": true,
+      "killedBy": [
+        "packages/polaris-dossier/src/reading-ledger.test.ts"
+      ],
+      "failedTests": [
+        "packages/polaris-dossier/src/reading-ledger.test.ts > reading difference reports the record's own revision, and counts a record whose revision is not the one its file name says as unreadable"
+      ]
+    },
+    {
+      "id": "R13",
+      "file": "packages/polaris-dossier/src/reading-ledger.ts",
+      "old": " || record['revision'] !== revision)",
+      "new": " || Number(record['revision']) !== revision)",
+      "killed": true,
+      "killedBy": [
+        "packages/polaris-dossier/src/reading-ledger.test.ts"
+      ],
+      "failedTests": [
+        "packages/polaris-dossier/src/reading-ledger.test.ts > reading difference reports the record's own revision, and counts a record whose revision is not the one its file name says as unreadable"
+      ]
+    }
+  ],
+  "killed": 73,
+  "total": 74,
+  "previousRun": {
+    "ranAt": "e10a171d0e391a88bd3a75d97394198d4d0c55d9",
+    "killed": 72,
+    "total": 74,
+    "survivors": [
+      "T22",
+      "R8"
+    ],
+    "repair": "R8 survived: the stored-packet test named only a readable unshipped pack. A test of an unreadable readerStandards member through reviewPacket was added at the commit named in ranAt; the same 74 mutants were then run again here."
+  }
+}

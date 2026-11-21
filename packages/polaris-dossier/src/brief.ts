@@ -14,7 +14,13 @@ import type { Outcome } from './outcome.js';
 import { reverifyPinnedRevision, type ReverifyOptions, type ReverifyRefusal, type ReverifyResult } from './reverify.js';
 import { poleLimitOf, type RunConfig } from './run-config.js';
 import { sourceBindingSha256, type RunSubject } from './run-record.js';
-import { READER_STANDARDS_SHA256, READER_STANDARDS_VERSION, readerStandardsSection } from './reader-standards.js';
+import { READER_STANDARDS_VERSION, composeReaderStandards, readerStandardsSection, V1_SELECTION, type ComposedStandards } from './reader-standards.js';
+import { SERVER_ENTRY } from './derive-rules.js';
+import { deriveStructure } from './derive.js';
+import { secretPathOf } from './derived-record.js';
+import { GitObjectReadRefusal, openPinnedObjectReader } from './git-object-reader.js';
+import { placementSubjectOf, screenLoaderOf, type ScreenLoader } from './screen.js';
+import { selectShapePacks, shapePackSha256, type ShapePack } from './shape-packs.js';
 import { RUN_ID, RUN_LAYOUT } from './state-directory.js';
 import { briefCopyLines, type BriefCopy } from './launch-disclosure.js';
 import { issuedBriefStatement } from './launch-statements.js';
@@ -35,7 +41,11 @@ import { issuedBriefStatement } from './launch-statements.js';
  * step guard compares at every later step (R-POLARIS-DOSSIER-S3-GATES-2 finding 6), and the reader standards' version and digest. It lies within the agent sessions' write reach, so read back it is
  * Inferred. */
 
-export const BRIEF_VERSION = 'polaris-dossier-brief-v10';
+/** v11 (REQ-polaris-generation-034 version 2.4): draft schema v6 and the one thesis-basis paragraph (`THESIS_BASIS_PARAGRAPH`). */
+export const BRIEF_VERSION = 'polaris-dossier-brief-v11';
+
+/** The paragraph brief v11 adds after the one naming each section's `id`, in the requirement's words. */
+export const THESIS_BASIS_PARAGRAPH = 'Set `thesisBasis` to say what your introduction, the dossier\'s thesis, rests on. Write `stated` when it rests on a statement of the project\'s purpose by its maintainers, such as a README, documentation or a package description, and cite that statement. Write `code-reading` when no source you found states the project\'s purpose: the introduction then says what the code does, never why it was made, quotes nothing, and cites at least two entry points, two different code files through which a user or a program enters the project, such as a main program, a command\'s handler or the module a package exports; Syzygy renders it under a line saying that no maintainer statement of purpose was found and that it is Polaris\'s reading of the code. Write `none` when neither is possible, and make the introduction an `unknown` block, or a `non-normative` one that makes no claim.';
 
 /** Which blocks the fidelity review can never confirm (syzygy-pdja.20), and which elements render with none of their text (syzygy-pdja.24):
  * the brief's rule, which carries no project content; `check` names them under `reviewReach` (`review-reach.ts`). Advice: no check refuses a draft for it. */
@@ -103,12 +113,20 @@ export interface BriefInput {
   readonly revisionLabel: string | null;
   /** A copy-class run's copy and the operator's clone (`briefCopyOf`); null otherwise. */
   readonly copy: BriefCopy | null;
+  /** The reader standards composed from the selected shape packs (version 2.4); version 1's text where omitted. */
+  readonly readerStandards?: ComposedStandards;
 }
+
+/** The sentence before the reader standards that names what the heading's digest is of: the skill's reference file for version 1's
+ * text, the composed text where shape packs composed it (REQ-polaris-generation-034 version 2.4). */
+const STANDARDS_DIGEST_SENTENCE = 'The heading below names the digest of the skill\'s `references/reader-standards.md`; the text under it is that file without its version line and with every heading one level down, so it does not itself hash to that digest.';
+const COMPOSED_DIGEST_SENTENCE = 'The heading below names the shape packs that supplied the technology dimensions and the digest of the composed standards text; the text under it is that composed text without its version line and with every heading one level down, so it does not itself hash to that digest.';
 
 /** The brief's text. Pure: everything in it is Syzygy-authored or comes from the run record, the revision label the step guard returned
  * and the doctrine file. */
 export function renderBrief(input: BriefInput): string {
   const { subject, declared } = input;
+  const standards = input.readerStandards ?? composeReaderStandards(V1_SELECTION);
   const commit = subject.pinnedRevision.commit;
   const deadlineEnds = input.issuedAt + declared.deadline.seconds * 1000;
   const topicLines = BRIEF_TOPICS.map((topic) => `- \`${topic.id}\`: ${topic.text}`);
@@ -142,6 +160,8 @@ export function renderBrief(input: BriefInput): string {
     ...topicLines,
     '',
     `Write one section per topic, in this order, each section's \`id\` the topic's id (${BRIEF_TOPICS.map((topic) => `\`${topic.id}\``).join(', ')}). The advantages are the ones the maintainers themselves state, inside the first topic and cited; never a comparison of your own. Optional assets: ${optional.join(', ')}. A topic the clone does not answer keeps its section with an \`unresolved\` disposition naming the missing evidence.`,
+    '',
+    THESIS_BASIS_PARAGRAPH,
     '',
     '## Poles',
     '',
@@ -216,9 +236,9 @@ export function renderBrief(input: BriefInput): string {
     '',
     READABILITY_GUIDANCE,
     '',
-    'The reader standards below describe what a good dossier is, as one checklist. Read them before you outline: write every page as an abstraction tree, and give the technology choices their table. Before each check, test the draft against every standard and fix what fails; `syzygy dossier check` reports the standards it can count as advice, which sets no outcome, and the rendered-design review judges the pages against all of them. Where a standard and a rule above differ, the rule above governs. The heading below names the digest of the skill\'s `references/reader-standards.md`; the text under it is that file without its version line and with every heading one level down, so it does not itself hash to that digest.',
+    'The reader standards below describe what a good dossier is, as one checklist. Read them before you outline: write every page as an abstraction tree, and give the technology choices their table. Before each check, test the draft against every standard and fix what fails; `syzygy dossier check` reports the standards it can count as advice, which sets no outcome, and the rendered-design review judges the pages against all of them. Where a standard and a rule above differ, the rule above governs. ' + (standards.packs === null ? STANDARDS_DIGEST_SENTENCE : COMPOSED_DIGEST_SENTENCE),
     '',
-    readerStandardsSection(),
+    readerStandardsSection(standards),
     '',
   ].join('\n');
 }
@@ -262,6 +282,48 @@ export interface BriefDeps {
   readonly permitting?: PermittingArm;
   /** The object reader the step guard lists the pinned tree with; the default is the re-hashing in-process reader. */
   readonly openReader?: ReverifyOptions['openReader'];
+  /** The screen whose secret detectors leave paths out of the trait profile; by default the policy bound to the run, as `check` loads it. */
+  readonly loadScreen?: ScreenLoader;
+}
+
+/** The brief record's `shapePacks`: the trait profile the packs were selected by, and each selected pack with its digest and reason. */
+export interface ShapePackSelection {
+  readonly traits:
+    | { readonly state: 'derived'; readonly serverEntry: { readonly rule: typeof SERVER_ENTRY.id; readonly ruleVersion: typeof SERVER_ENTRY.version; readonly holds: boolean; readonly paths: readonly string[]; readonly pathsNotListed: number } }
+    | { readonly state: 'unknown'; readonly why: string };
+  readonly selected: readonly { readonly id: string; readonly version: number; readonly sha256: string; readonly because: string }[];
+}
+
+/** At most this many matched paths are named in the brief record. */
+export const SHAPE_PACK_PATHS_LISTED = 20;
+
+/** The trait profile of the pinned tree, from its paths and modes alone (`derive.ts`), a path the bound policy's secret detectors match,
+ * or under one they match, left out; Unknown where the screen cannot be loaded or the tree cannot be listed. */
+async function shapePackTraits(subject: RunSubject, deps: BriefDeps, now: number): Promise<ShapePackSelection['traits']> {
+  const screenLoad = await screenLoaderOf(deps.loadScreen, deps.sources.recordsRoot, now)(placementSubjectOf(subject));
+  if (!screenLoad.ok) return { state: 'unknown', why: `the screening policy bound to this run could not be loaded (${screenLoad.why})` };
+  let structure;
+  try {
+    const reader = (deps.openReader ?? openPinnedObjectReader)({ gitDir: path.join(subject.clone.path, '.git'), revision: subject.pinnedRevision.commit });
+    structure = deriveStructure(await reader.listTree(), secretPathOf(screenLoad.screen));
+  } catch (cause) {
+    if (!(cause instanceof GitObjectReadRefusal)) throw cause;
+    return { state: 'unknown', why: `the pinned tree could not be listed (${cause.reason})` };
+  }
+  if (structure.state !== 'derived') return { state: 'unknown', why: structure.why };
+  const { holds, listed, notListed } = structure.traits.serverEntry;
+  return { state: 'derived', serverEntry: {
+    rule: SERVER_ENTRY.id, ruleVersion: SERVER_ENTRY.version, holds,
+    paths: listed.slice(0, SHAPE_PACK_PATHS_LISTED), pathsNotListed: Math.max(0, listed.length - SHAPE_PACK_PATHS_LISTED) + notListed,
+  } };
+}
+
+/** The packs a trait profile selects, as the brief record names them. */
+export function shapePackSelection(traits: ShapePackSelection['traits']): { readonly packs: readonly ShapePack[]; readonly record: ShapePackSelection } {
+  const packs = selectShapePacks(traits.state === 'derived' ? { serverEntry: traits.serverEntry.holds } : null);
+  return { packs, record: { traits, selected: packs.map((pack) => ({
+    id: pack.id, version: pack.version, sha256: shapePackSha256(pack), because: pack.selectedBy === null ? 'always selected' : `trait ${pack.selectedBy.trait} holds`,
+  })) } };
 }
 
 const DISCLOSURES = [
@@ -301,9 +363,12 @@ export async function issueBrief(runDir: string, deps: BriefDeps): Promise<Brief
     role: 'authoring', runDir: run, runId, pinnedRevision: subject.pinnedRevision.commit, operatorIsOwner: declared.operatorIsOwner,
     sec3: doctrine.sec3, now: issuedAt, d9: deps.sources.d9, launched: () => launchedMarkerState(run), permitting: deps.permitting ?? { enabled: PERMITTING_ARM_ENABLED },
   });
+  // Shape packs (version 2.4): selected from the pinned tree's trait profile, they supply RS-11's technology dimensions.
+  const selection = shapePackSelection(await shapePackTraits(subject, deps, issuedAt));
+  const standards = composeReaderStandards(selection.packs);
   const schemaText = `${JSON.stringify(draftSchemaDocument({ pinnedRevision: subject.pinnedRevision.commit, maxQuestions: declared.maxQuestions }), null, 2)}\n`;
   const schemaSha256 = sha256(schemaText);
-  const briefText = renderBrief({ runId, subject, declared, issuedAt, schemaSha256, executionRule, revisionLabel: checked.revision.label, copy: copy.copy });
+  const briefText = renderBrief({ runId, subject, declared, issuedAt, schemaSha256, executionRule, revisionLabel: checked.revision.label, copy: copy.copy, readerStandards: standards });
   const deadlineEnds = issuedAt + declared.deadline.seconds * 1000;
   const record = {
     format: BRIEF_RECORD_FORMAT,
@@ -314,7 +379,8 @@ export async function issueBrief(runDir: string, deps: BriefDeps): Promise<Brief
     sourceBindingSha256: sourceBindingSha256(subject),
     schemaVersion: LOCAL_DRAFT_SCHEMA_VERSION,
     guidanceVersion: DOSSIER_GUIDANCE_VERSION,
-    readerStandards: { version: READER_STANDARDS_VERSION, sha256: READER_STANDARDS_SHA256 },
+    readerStandards: { version: READER_STANDARDS_VERSION, sha256: standards.sha256, ...(standards.packs === null ? {} : { packs: standards.packs }) },
+    shapePacks: selection.record,
     issuedAt: isoOf(issuedAt),
     deadline: { declared: declared.deadline.declared, seconds: declared.deadline.seconds, endsAt: isoOf(deadlineEnds), clock: 'Syzygy\'s own clock, from the issue of the brief' },
     files: { brief: { name: RUN_LAYOUT.brief, sha256: sha256(briefText) }, draftSchema: { name: RUN_LAYOUT.draftSchema, sha256: schemaSha256 } },

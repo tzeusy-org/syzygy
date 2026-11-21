@@ -120,9 +120,8 @@ const sources = (): GateSources => ({
 afterEach(() => { fixturePolicy = POLICY; consentNames = () => commit; });
 
 /** A briefed run directory, whose run record names a fresh clone. */
-async function briefedRun(over: Record<string, unknown> = {}, clone: string = cloneOf()): Promise<string> {
-  const root = tempDir('dossier-check-state-');
-  const run = path.join(root, RUN_ID);
+async function briefedRun(over: Record<string, unknown> = {}, clone: string = cloneOf(), root: string = tempDir('dossier-check-state-'), runId: string = RUN_ID): Promise<string> {
+  const run = path.join(root, runId);
   fs.mkdirSync(run);
   const parsed = parseRunConfig(JSON.stringify({
     operator: 'Tzeusy', agentTool: 'claude-code', agentToolVersion: '2.1.0', agentProvider: 'anthropic', model: 'claude-opus-5-5',
@@ -354,6 +353,136 @@ describe('check: figure fit', () => {
     if (!result.ok) throw new Error(result.refusal.reason);
     expect(result.report).not.toHaveProperty('figureFit');
     expect(JSON.parse(fs.readFileSync(path.join(run, 'checks', 'rev-0.json'), 'utf8'))).not.toHaveProperty('figureFit');
+  });
+});
+
+// The reading ledger (REQ-polaris-generation-034 version 2.4, syzygy-3efd.21). The numbers are computed by hand from the fixture draft.
+// REQ-polaris-generation-034 version 2.4 (syzygy-3efd.56): schema v6's `thesisBasis` must fit the introduction.
+describe('check: the thesis basis (schema v6)', () => {
+  const CODE_READ = 'a `code-reading` thesis says what the code does: make the introduction an inferred block resting on sources (`basis: source`) that quotes nothing and cites at least two entry points, two different code files outside documentation, test, vendored, generated and example paths;';
+  const STATED = 'a `stated` thesis rests on a statement of the project\'s purpose by its maintainers: make the introduction an inferred block that cites that statement';
+  const NONE = 'a `none` thesis establishes nothing: make the introduction an unknown block, or a non-normative one that makes no claim';
+  const codeIntro = (citations: readonly ReturnType<typeof cite>[], over: Record<string, unknown> = {}) => ({ id: 'intro', label: 'inferred', basis: 'source', text: 'Kestrel is a C server that keeps its keys in memory.', citations, quotations: [], ...over });
+  const TWO = [cite('c-a', 'src/kestrel.c', 1, 1), cite('c-b', 'src/types.ts', 1, 1)];
+  const v6 = (basis: unknown, introduction?: unknown) => mutate((d) => {
+    d.schemaVersion = 'polaris-dossier-local-draft-v6';
+    if (basis !== undefined) d.thesisBasis = basis;
+    if (introduction !== undefined) d.introduction = introduction;
+  });
+  const findingsOf = async (draft: Draft) => {
+    const run = await briefedRun();
+    writeDraft(run, draft);
+    return report(await checkDraft(run, {}, deps()));
+  };
+  const thesis = (result: { findings: readonly { kind: string; at: string; detail: string }[] }) => result.findings.filter((f) => f.kind === 'thesis-basis').map(({ at, detail }) => ({ at, detail }));
+
+  it.each<[string, () => Draft]>([
+    ['a code-reading introduction citing two code files and quoting nothing', () => v6('code-reading', codeIntro(TWO))],
+    ['a code-reading introduction citing a code file whose body screening excludes', () => v6('code-reading', codeIntro([cite('c-a', 'src/kestrel.c', 1, 1), cite('c-b', 'src/config.c', 2, 2)]))],
+    ['a stated introduction citing a statement', () => v6('stated')],
+    ['a none introduction that is Unknown', () => v6('none', { id: 'intro', label: 'unknown', reason: 'missing-evidence', text: 'No source states what Kestrel is for.', citations: [] })],
+    ['a none introduction that is non-normative', () => v6('none', { id: 'intro', label: 'non-normative', text: 'Read on.' })],
+  ])('passes %s', async (_name, build) => {
+    const draft = build();
+    const result = await findingsOf(draft);
+    expect(thesis(result)).toEqual([]);
+    if (!draft.introduction.citations?.some((c: { path: string }) => c.path === 'src/config.c')) expect(result.findings).toEqual([]);
+  });
+
+  it.each<[string, () => Draft, string]>([
+    ['one code file', () => v6('code-reading', codeIntro([cite('c-a', 'src/kestrel.c', 1, 1)])), `${CODE_READ} it cites 1 such file`],
+    ['one code file twice', () => v6('code-reading', codeIntro([cite('c-a', 'src/kestrel.c', 1, 1), cite('c-b', 'src/kestrel.c', 2, 2)])), `${CODE_READ} it cites 1 such file`],
+    ['a code file and a Markdown file', () => v6('code-reading', codeIntro([cite('c-a', 'src/kestrel.c', 1, 1), cite('c-b', 'README.md', 2, 2)])), `${CODE_READ} it cites 1 such file`],
+    ['a code file and a plain-text note', () => v6('code-reading', codeIntro([cite('c-a', 'src/kestrel.c', 1, 1), cite('c-b', 'docs/notes.txt', 2, 2)])), `${CODE_READ} it cites 1 such file`],
+    ['a quotation', () => v6('code-reading', codeIntro(TWO, { text: 'The project states: "Kestrel keeps every key in memory."', quotations: ['c-a'] })), `${CODE_READ} it cites 2 such files and quotes`],
+    ['a lead-in with no quotations list', () => v6('code-reading', codeIntro(TWO, { text: 'The project states: "Kestrel keeps every key in memory."' })), `${CODE_READ} it cites 2 such files and quotes`],
+    ['a block resting on execution', () => v6('code-reading', codeIntro(TWO, { basis: 'execution', executionIds: ['e1'] })), `${CODE_READ} it cites 2 such files`],
+    ['an Unknown block', () => v6('code-reading', { id: 'intro', label: 'unknown', reason: 'missing-evidence', text: 'Unknown.', citations: TWO }), `${CODE_READ} it cites 2 such files`],
+    ['a stated thesis citing nothing', () => v6('stated', { id: 'intro', label: 'inferred', basis: 'source', text: 'Kestrel is a server.', citations: [], quotations: [], judgement: true }), STATED],
+    ['a stated thesis that is Unknown', () => v6('stated', { id: 'intro', label: 'unknown', reason: 'missing-evidence', text: 'Unknown.', citations: [] }), STATED],
+    ['a none thesis that is Inferred', () => v6('none'), NONE],
+  ])('reports thesis-basis at $.thesisBasis for %s', async (_name, build, detail) => {
+    const result = await findingsOf(build());
+    expect(result.outcome).toBe('findings');
+    expect(thesis(result)).toEqual([{ at: '$.thesisBasis', detail }]);
+  });
+
+  it('a v6 draft without thesisBasis fails its schema, and one with another value too', async () => {
+    expect((await findingsOf(v6(undefined))).findings.map(({ kind, at, detail }) => ({ kind, at, detail }))).toEqual([{ kind: 'schema', at: '$.thesisBasis', detail: 'is required' }]);
+    expect((await findingsOf(v6('readme'))).findings.map(({ kind, at, detail }) => ({ kind, at, detail }))).toEqual([{ kind: 'schema', at: '$.thesisBasis', detail: 'must be one of stated, code-reading, none' }]);
+  });
+
+  it.each(['polaris-dossier-local-draft-v2', 'polaris-dossier-local-draft-v4', 'polaris-dossier-local-draft-v5'])('a %s draft carrying thesisBasis has a field-version finding and nothing else', async (version) => {
+    const result = await findingsOf(mutate((d) => { d.schemaVersion = version; d.thesisBasis = 'code-reading'; }));
+    expect(result.findings.map(({ kind, at, detail }) => ({ kind, at, detail }))).toEqual([
+      { kind: 'field-version', at: '$.thesisBasis', detail: '`thesisBasis` needs draft schema polaris-dossier-local-draft-v6' }]);
+  });
+
+  it('a v5 draft without thesisBasis checks as before', async () => {
+    const result = await findingsOf(mutate((d) => { d.schemaVersion = 'polaris-dossier-local-draft-v5'; }));
+    expect([result.outcome, result.findings]).toEqual(['passed', []]);
+  });
+});
+
+describe('check: reading ledger', () => {
+  // `valid()` carries schema v2, no Poles and no diagram: one page. Words, split at white space: the introduction 13; core-ideas p1 13,
+  // its children 6 + 2 + 3, p2 7: 31; 44 in all. The one section has no diagram, so RS-16 counts one advisory, at $.sections[0].
+  const zeros = { 'RS-13': 0, 'RS-14': 0, 'RS-16': 0, 'RS-17': 0, 'RS-19': 0 };
+  const noFit = { notFittingAt1440: 0, notFittingAt390: 0, unknown: 0 };
+  const LEDGER = {
+    format: 'polaris-dossier-reading-ledger/1', wordsPerMinute: 200,
+    pages: [{ page: 'index.html', units: ['introduction', 'section:core-ideas'], proseWords: 44, readingMinutes: 1, figures: 0, advisories: { ...zeros, 'RS-16': 1 }, figureFit: noFit }],
+    draft: { proseWords: 44, readingMinutes: 1, figures: 0, advisories: { ...zeros, 'RS-16': 1 }, figureFit: noFit, unplacedUnits: 0 },
+  };
+
+  it('writes readingLedger into the check record beside figureFit, byte-identical across two checks of the same draft, and on the report', async () => {
+    const run = await briefedRun();
+    const text = JSON.stringify(valid(), null, 2);
+    writeDraft(run, text);
+    const first = report(await checkDraft(run, {}, deps()));
+    writeDraft(run, text);
+    const second = report(await checkDraft(run, {}, deps({ now: () => LATER + 1000 })));
+    const stored = [0, 1].map((n) => JSON.parse(read(run, `checks/rev-${n}.json`)) as Record<string, unknown>);
+    expect(stored[0]!['readingLedger']).toEqual(LEDGER);
+    expect(JSON.stringify(stored[1]!['readingLedger'])).toBe(JSON.stringify(stored[0]!['readingLedger']));
+    expect(Object.keys(stored[0]!).slice(-2)).toEqual(['figureFit', 'readingLedger']);
+    expect(stored[0]!).not.toHaveProperty('readingDifference');
+    expect(first.readingLedger).toEqual(LEDGER);
+    // Advice: no outcome or finding changes; the first run of the repository has no earlier ledger, so its difference is Unknown.
+    expect([first.outcome, second.outcome]).toEqual(['passed', 'passed']);
+    expect(first.readingDifference).toEqual({ state: 'unknown', why: 'no earlier run of this repository in the state root holds a reading ledger that could be read', unreadableRuns: 0, unreadableCheckRecords: 0 });
+    // Its own run's earlier check is never its predecessor: only another run directory is.
+    expect(second.readingDifference).toMatchObject({ state: 'unknown' });
+  });
+
+  it('reports the difference from an earlier run of the same repository in the state root, and writes it nowhere', async () => {
+    const root = tempDir('dossier-check-state-');
+    const earlier = await briefedRun({}, cloneOf(), root, `run-${'a'.repeat(32)}`);
+    writeDraft(earlier, valid());
+    report(await checkDraft(earlier, {}, deps()));
+    const run = await briefedRun({}, cloneOf(), root);
+    writeDraft(run, mutate((d) => { d.sections[0].paragraphs[1].text += ' Four more words here.'; }));
+    const result = report(await checkDraft(run, {}, deps({ now: () => LATER + 1000 })));
+    const before = { proseWords: 44, readingMinutes: 1, figures: 0, advisories: { ...zeros, 'RS-16': 1 }, figureFit: noFit };
+    const after = { ...before, proseWords: 48 };
+    const delta = { proseWords: 4, readingMinutes: 0, figures: 0, advisories: zeros, figureFit: noFit };
+    expect(result.readingDifference).toEqual({
+      state: 'compared', against: { runId: `run-${'a'.repeat(32)}`, revision: 0, pinnedRevision: commit, checkedAt: '2026-10-07T12:01:00.000Z' },
+      pages: [{ page: 'index.html', change: 'changed', before, after, delta }],
+      draft: { before: { ...before, unplacedUnits: 0 }, after: { ...after, unplacedUnits: 0 }, delta: { ...delta, unplacedUnits: 0 } },
+      unreadableRuns: 0, unreadableCheckRecords: 0,
+    });
+    expect(read(run, 'checks/rev-0.json')).not.toContain('readingDifference');
+    expect(fs.readdirSync(run).filter((name) => name.includes('difference'))).toEqual([]);
+  });
+
+  it('writes no ledger for a draft that does not parse, and says so in the difference', async () => {
+    const run = await briefedRun();
+    writeDraft(run, '{ not json');
+    const result = report(await checkDraft(run, {}, deps()));
+    expect(result).not.toHaveProperty('readingLedger');
+    expect(JSON.parse(read(run, 'checks/rev-0.json'))).not.toHaveProperty('readingLedger');
+    expect(result.readingDifference).toEqual({ state: 'unknown', why: 'this draft does not parse, so it has no reading ledger', unreadableRuns: 0, unreadableCheckRecords: 0 });
   });
 });
 
@@ -936,7 +1065,7 @@ describe('check: the command', () => {
     const printed = JSON.parse(a.out.join(''));
     expect(printed.structureRecord).toEqual({
       state: 'derived',
-      rules: ['vendored-path@1', 'generated-path@1', 'language-by-extension@1', 'docs-tree@1', 'tests-path@1', 'manifest-names@1', 'top-level-unit@1'],
+      rules: ['vendored-path@1', 'generated-path@1', 'language-by-extension@1', 'docs-tree@1', 'tests-path@1', 'manifest-names@1', 'top-level-unit@1', 'server-entry@1'],
       files: 9, secretPathsLeftOut: 1, submodules: 0,
       units: [{ unit: '"docs"', files: 2 }, { unit: '"src"', files: 4 }], unitsNotListed: 0, rootFiles: 2,
       vendored: { rule: 'vendored-path@1', files: 0, listed: [], notListed: 0 },
@@ -946,6 +1075,7 @@ describe('check: the command', () => {
         docsTree: { rule: 'docs-tree@1', matched: true, listed: ['"docs"'], notListed: 0 },
         tests: { rule: 'tests-path@1', files: 0 },
         packages: { rule: 'manifest-names@1', shape: 'no-package-manifest', listed: [], notListed: 0 },
+        serverEntry: { rule: 'server-entry@1', holds: false, listed: [], notListed: 0 },
       },
       note: expect.stringContaining('Derived by Syzygy from the paths and modes of the pinned tree alone'),
     });
@@ -963,7 +1093,10 @@ describe('check: the command', () => {
     expect(printed.readerAdvice.standards).toBe('polaris-reader-standards-v1');
     expect(printed.readerAdvice.advisories).toContainEqual({ standard: 'RS-13', at: '$.sections[0].title', detail: expect.stringContaining('camelCase') });
     expect(read(run, 'checks/rev-0.json')).not.toContain('readerAdvice');
-    expect(read(run, 'checks/rev-0.json')).not.toContain('RS-13');
+    // Since version 2.4 the record keeps the advisories' counts in its reading ledger, never an advisory itself: no path or detail of one.
+    expect(read(run, 'checks/rev-0.json')).not.toContain('$.sections[0].title');
+    expect(read(run, 'checks/rev-0.json')).not.toContain('camelCase');
+    expect(JSON.parse(read(run, 'checks/rev-0.json')).readingLedger.draft.advisories['RS-13']).toBe(1);
   });
 
   // syzygy-pdja.20: the claim blocks no fidelity verdict can confirm are advice on the report, never a finding and never in the record.

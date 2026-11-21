@@ -10,13 +10,13 @@ import {
 import { isRecord, sha256 } from '@syzygy/support';
 import { collectBlocks, deriveFindings, draftRules, type BlobRedaction, type Derived } from './check.js';
 import { CREDENTIAL_CHECK_DISCLOSURE, credentialStepCheck, storedBriefArm, type CredentialStepResult } from './credential-probe.js';
-import { UNDERSTANDING_ITEMS } from './draft-schema.js';
+import { LOCAL_DRAFT_SCHEMA_VERSION, UNDERSTANDING_ITEMS } from './draft-schema.js';
 import { EXECUTION_FLAGS_BASIS, executionFlags, type ExecutionFlags } from './execution-flags.js';
 import type { CredentialProbe } from './execution-rule.js';
 import { RECORDS_WITHIN_REACH } from './gate-sources.js';
 import { GitObjectReadRefusal, openPinnedObjectReader } from './git-object-reader.js';
 import { errno, latestInventorySession, logStep, openRun, promptRecordName, readRecord, type OpenedRun } from './inventory.js';
-import { buildDesignPacket } from './design-review.js';
+import { briefStandardsOf, buildDesignPacket, standardsInput } from './design-review.js';
 import { derivedStructureAt, readCurrencyPolicy, secretPathOf, type CurrencyPolicy } from './derived-record.js';
 import type { Outcome } from './outcome.js';
 import { designReviewOfRecord, latestPassedDraft, reviewOfRecord, type DesignReviewOfRecord, type ReviewDeps, type ReviewOfRecord } from './review.js';
@@ -203,13 +203,14 @@ export async function renderRun(runDir: string, deps: RenderDeps): Promise<Rende
   // unless the second drawing equals the first outside the region.
   const pending = draw(built.local);
   if (typeof pending === 'string') return refuse('render', pending);
-  const reviewed = buildDesignPacket({ run, runId, pinnedRevision: pinned, audience: declared.audience, files: pending });
-  if (!reviewed.ok) return refuse('render', `the rendered pages cannot be compared outside the review-status region: ${reviewed.reason}`);
+  const standards = briefStandardsOf(run);
+  const reviewed = buildDesignPacket({ run, runId, pinnedRevision: pinned, audience: declared.audience, files: pending, ...standardsInput(standards) });
+  if (!reviewed.ok) return refuse('render', reviewed.stage === 'standards' ? `the design packet is not built: ${reviewed.reason}` : `the rendered pages cannot be compared outside the review-status region: ${reviewed.reason}`);
   const design = await designReviewOfRecord(opened, reviewed, { sources: deps.sources, now: () => now });
   const local: LocalRenderInput = { ...built.local, reviewStatus: built.local.reviewStatus.map((item) => (item.id === 'review-status/design' ? designStatusItem(design, run) : item)) };
   const files = draw(local);
   if (typeof files === 'string') return refuse('render', files);
-  const published = buildDesignPacket({ run, runId, pinnedRevision: pinned, audience: declared.audience, files });
+  const published = buildDesignPacket({ run, runId, pinnedRevision: pinned, audience: declared.audience, files, ...standardsInput(standards) });
   if (!published.ok || published.sha256 !== reviewed.sha256) {
     return refuse('render', 'stating the rendered-design review in the review-status region changed the pages outside that region, so the review of record cannot be decided from them');
   }
@@ -789,6 +790,11 @@ export function buildLocalInput(inputs: BuildInputs): Built {
       sourceAnchors, pages, reviewStatus, withheldElements, citationLines,
       authoring: { tool: declared.agentTool, model: declared.model },
       selectionReasons,
+      // A v6 draft's thesis basis (version 2.4): the code-reading line renders only while the draft layer and the introduction both show.
+      ...(doc['schemaVersion'] === LOCAL_DRAFT_SCHEMA_VERSION && (doc['thesisBasis'] === 'stated' || doc['thesisBasis'] === 'code-reading' || doc['thesisBasis'] === 'none') ? { thesisBasis: {
+        value: doc['thesisBasis'],
+        lineRendered: doc['thesisBasis'] === 'code-reading' && editorial && blocks.get(draft.introduction.id)?.withheld === undefined,
+      } } : {}),
       // A checked draft's Poles are whole: every section in one Pole and a named why section (check-derive's Pole findings).
       ...(Array.isArray(doc['poles']) && typeof doc['whySection'] === 'string' ? { poles: {
         whySection: doc['whySection'],

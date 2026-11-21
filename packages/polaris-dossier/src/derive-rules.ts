@@ -59,5 +59,24 @@ export const MANIFEST_NAMES = {
  * `top-level-unit` and `contains`, the containment the path itself states. */
 export const TOP_LEVEL_UNIT = { id: 'top-level-unit', version: 1 } as const;
 
-export const DERIVE_RULES: readonly DeriveRuleId[] = [VENDORED_PATH, GENERATED_PATH, LANGUAGE_BY_EXTENSION, DOCS_TREE, TESTS_PATH, MANIFEST_NAMES, TOP_LEVEL_UNIT]
+/** A server entry (REQ-polaris-generation-034 version 2.4, syzygy-3efd.43): a blob whose basename is one of these, compared exactly,
+ * outside vendored, generated and test paths and with no example, sample or demo directory segment. A heuristic over names, like every
+ * rule here: it states what matched, never that the project is a server. It selects the server shape pack. */
+export const SERVER_ENTRY = {
+  id: 'server-entry', version: 1,
+  basenames: ['server.c', 'server.cc', 'server.cpp', 'server.go', 'server.rs', 'server.py', 'server.rb', 'server.js', 'server.mjs', 'server.ts', 'server.java',
+    'server.ex', 'server.php', 'Procfile', 'openapi.json', 'openapi.yaml', 'openapi.yml', 'swagger.json', 'swagger.yaml', 'swagger.yml'],
+  exampleSegments: ['example', 'examples', 'sample', 'samples', 'demo', 'demos'],
+} as const;
+
+/** An entry point, as check can test one for a `code-reading` thesis (REQ-polaris-generation-034 version 2.4, syzygy-3efd.56): a cited path
+ * whose language by extension is none of these, outside vendored, generated, test and docs-tree paths, with no example, sample or demo
+ * directory segment. A heuristic over the path alone: it never says the file is where a user or a program enters the project. */
+export const ENTRY_POINT = {
+  notCode: ['Markdown', 'reStructuredText', 'AsciiDoc', 'Plain text', 'JSON', 'YAML', 'TOML', 'XML', 'INI', 'HTML', 'CSS', 'SCSS', 'C or C++ header', 'SQL',
+    'Protocol Buffers', 'GraphQL'],
+  exampleSegments: ['example', 'examples', 'sample', 'samples', 'demo', 'demos'],
+} as const;
+
+export const DERIVE_RULES: readonly DeriveRuleId[] = [VENDORED_PATH, GENERATED_PATH, LANGUAGE_BY_EXTENSION, DOCS_TREE, TESTS_PATH, MANIFEST_NAMES, TOP_LEVEL_UNIT, SERVER_ENTRY]
   .map(({ id, version }) => ({ id, version }));

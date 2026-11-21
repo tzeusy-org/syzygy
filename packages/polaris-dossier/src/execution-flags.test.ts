@@ -92,7 +92,8 @@ describe('executionFlags', () => {
 describe('the draft schema admits a command whether or not it carries its working directory and scope', () => {
   const schema = (commit: string) => localDraftSchema({ pinnedRevision: commit, maxQuestions: 1 });
   const commit = 'a'.repeat(40);
-  const withExecutions = (executions: unknown[]) => ({ ...draft(commit), executions });
+  // The current schema (v6) requires `thesisBasis`; the shape check is all this block exercises.
+  const withExecutions = (executions: unknown[]) => ({ ...draft(commit), thesisBasis: 'stated', executions });
 
   it('admits a command with neither, and one with both', () => {
     expect(checkDraftShape(schema(commit), withExecutions([{ id: 'x-1', command: 'make', purpose: 'Build.' }]))).toEqual([]);

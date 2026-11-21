@@ -11,6 +11,8 @@ import { issueBrief, READABILITY_GUIDANCE, READABILITY_GUIDANCE_VERSION } from '
 import { checkDraft, type CheckDeps } from './check.js';
 import { runDossierCli } from './cli.js';
 import { buildDesignPacket, designCriteria } from './design-review.js';
+import { composeReaderStandards } from './reader-standards.js';
+import { DEFAULT_PACK } from './shape-packs.js';
 import { designVerdictSchemaDocument } from './draft-schema.js';
 import { GitObjectReadRefusal, openPinnedObjectReader, type PinnedObjectReader, type PinnedObjectReaderOptions } from './git-object-reader.js';
 import { NO_PROVIDER_STATEMENTS, type GateSources, type GateState } from './gate-sources.js';
@@ -197,7 +199,7 @@ async function prepared(doc: Doc = draft(), reviewed = true, extraSupport: reado
   }));
   if (!parsed.ok) throw new Error('fixture configuration refused');
   fs.writeFileSync(path.join(run, 'run.json'), encodeRunRecord(parsed.config, subject(clone)));
-  const brief = await issueBrief(run, { sources: sources(), now: () => NOW });
+  const brief = await issueBrief(run, { sources: sources(), now: () => NOW, loadScreen: async () => buildDossierScreen(fixturePolicy, true, null, fixtureVisibility) });
   if (!brief.ok) throw new Error(`fixture brief refused: ${brief.refusal.reason}`);
   fs.mkdirSync(path.join(run, 'drafts'), { recursive: true });
   fs.writeFileSync(path.join(run, 'drafts', 'next.json'), JSON.stringify(doc, null, 2));
@@ -901,7 +903,8 @@ const expectedDesignPacket = (run: string, site: string): string => `${JSON.stri
     excluded: 'the element of every HTML page marked data-review-status-region="review-status", and the reviewStatus member of machine.json: the only part a later render may change without retiring this review',
   },
   files: [...outside(readSite(site))].map(([file, content]) => ({ path: file, sha256: sha(content), content })),
-  criteria: designCriteria(run, 'an operator'),
+  // The fixture tree holds no server entry, so the brief carried the standards composed from the default pack alone (version 2.4).
+  criteria: designCriteria(run, 'an operator', composeReaderStandards([DEFAULT_PACK])),
   verdictSchema: designVerdictSchemaDocument({ pinnedRevision: commit }),
 }, null, 2)}\n`;
 const htmlPages = (site: string): string[] => [...outside(readSite(site)).keys()].filter((file) => file.endsWith('.html'));
@@ -1170,6 +1173,11 @@ describe('rendered-design review (S9b)', () => {
     expect(contents).not.toContain('Rendered-design review: none counts');
     expect(contents).toContain('data-disclosure-id="no-provider-call"');
     expect(JSON.parse(expected).files.map((file: { path: string }) => file.path)).toEqual([...readSite(rendered.report.site).keys()].sort());
+    // The packet judges against the standards the brief carried: the default pack's dimensions, never the server ones (version 2.4).
+    const criteria = (JSON.parse(expected).criteria as string[]).join('\n');
+    expect(criteria).toContain('(polaris-reader-standards-v1, technology dimensions from shape packs default@1, sha256 ');
+    expect(criteria).toContain('  - Architecture: how the product is divided into parts (modules,\n    packages, commands or processes), and which part holds what.');
+    for (const absent of ['Networking:', 'State and persistence:', 'Concurrency:', 'deployed and divided']) expect(criteria).not.toContain(absent);
   });
 
   it('hands a design review session the packet under the sessions root with its own prompt', async () => {
@@ -1229,6 +1237,25 @@ describe('rendered-design review (S9b)', () => {
     // The unaltered renderer again: the pages are the reviewed ones, and it counts again.
     const four = await renderRun(run, renderDeps());
     expect(four.ok && four.report.designReview).toEqual({ counts: true, packetSha256: digest, label: 'Observed' });
+  });
+
+  it('refuses the render where the brief record names a pack this Syzygy does not ship, or its standards cannot be read, and writes no site', async () => {
+    const run = await prepared();
+    const briefPath = path.join(run, 'brief.json');
+    const brief = JSON.parse(fs.readFileSync(briefPath, 'utf8'));
+    fs.writeFileSync(briefPath, `${JSON.stringify({ ...brief, readerStandards: { ...brief.readerStandards, packs: ['default@1', 'server@9'] } }, null, 2)}\n`);
+    expect(await renderRun(run, renderDeps())).toMatchObject({ ok: false, refusal: { stage: 'render', reason: 'the design packet is not built: the reader standards the brief carried cannot be recomposed (server@9 is not shipped)' } });
+    fs.writeFileSync(briefPath, `${JSON.stringify({ ...brief, readerStandards: 'polaris-reader-standards-v1' }, null, 2)}\n`);
+    expect(await renderRun(run, renderDeps())).toMatchObject({ ok: false, refusal: { stage: 'render', reason: 'the design packet is not built: the reader standards the brief carried cannot be recomposed (brief.json has a readerStandards member that is not an object)' } });
+    expect(fs.existsSync(path.join(run, 'site'))).toBe(false);
+    // The stored site's packet is refused the same way once the brief record no longer reads (never version 1's text).
+    fs.writeFileSync(briefPath, `${JSON.stringify(brief, null, 2)}\n`);
+    const rendered = await renderRun(run, renderDeps());
+    if (!rendered.ok) throw new Error(rendered.refusal.reason);
+    fs.writeFileSync(briefPath, `${JSON.stringify({ ...brief, readerStandards: { ...brief.readerStandards, packs: ['server@9'] } }, null, 2)}\n`);
+    expect(await reviewPacket(run, { kind: 'design' }, hand())).toMatchObject({ ok: false, refusal: { stage: 'standards', reason: 'the reader standards the brief carried cannot be recomposed (server@9 is not shipped)' } });
+    fs.writeFileSync(briefPath, `${JSON.stringify({ ...brief, readerStandards: null }, null, 2)}\n`);
+    expect(await reviewPacket(run, { kind: 'design' }, hand())).toMatchObject({ ok: false, refusal: { stage: 'standards', reason: 'the reader standards the brief carried cannot be recomposed (brief.json has a readerStandards member that is not an object)' } });
   });
 
   it('refuses a render whose statement of the design review leaks outside the region, and writes no site', async () => {
@@ -1921,5 +1948,59 @@ describe('render: derived structure (version 2.3)', () => {
     const a = JSON.parse(fs.readFileSync(recordPath(run, 0), 'utf8')), b = JSON.parse(fs.readFileSync(recordPath(run, later.report.revision), 'utf8'));
     expect(b.capturedAt).toBe('2026-10-07T12:01:05.000Z');
     expect({ ...b, capturedAt: a.capturedAt }).toEqual(a);
+  });
+});
+
+// REQ-polaris-generation-034 version 2.4 (syzygy-3efd.56): the thesis-basis line and machine.json's `thesisBasis`. Literals throughout.
+describe('render: the thesis basis (schema v6)', () => {
+  const LINE = '<p class="thesis-basis" data-thesis-basis="code-reading">The authoring session found no maintainer statement of purpose, so this summary is Polaris\'s reading of the code, not the maintainers\' words.</p>';
+  const CODE_INTRO = { id: 'intro', label: 'inferred', basis: 'source', text: 'Kestrel is a C server whose commands run one at a time.', citations: [cite('c-a', 'src/kestrel.c', 1, 1), cite('c-b', 'src/markup.c', 1, 1)], quotations: [] };
+  const v6 = (basis: string, introduction?: Doc): Doc => ({ ...draft(), schemaVersion: 'polaris-dossier-local-draft-v6', thesisBasis: basis, ...(introduction === undefined ? {} : { introduction }) });
+  const rendered = async (doc: Doc): Promise<ReadonlyMap<string, string>> => {
+    const run = await prepared(doc, false);
+    const result = await renderRun(run, renderDeps());
+    if (!result.ok) throw new Error(result.refusal.reason);
+    return readSite(result.report.site);
+  };
+  const introTag = (index: string): number => index.search(/<p[^>]*data-claim-id="intro"/u);
+
+  it('renders a code-read thesis under Syzygy\'s line, immediately before the introduction\'s block and outside it, and says so in machine.json', async () => {
+    const files = await rendered(v6('code-reading', CODE_INTRO));
+    const index = files.get('index.html')!;
+    expect(index.split(LINE).length - 1).toBe(1);
+    expect(index.indexOf(LINE) + LINE.length).toBe(introTag(index));
+    expect(index).toContain('Kestrel is a C server whose commands run one at a time.');
+    // Only the landing page carries it, and it carries no label token, citation or anchor.
+    expect([...files].filter(([file, page]) => file !== 'index.html' && page.includes('data-thesis-basis')).map(([file]) => file)).toEqual([]);
+    expect(LINE).not.toMatch(/Inferred|Observed|Unknown|data-claim-id|data-anchor|href=/u);
+    // The evidence view is the same page at its target, so the one line serves both views.
+    expect(index).toContain('id="evidence-view"');
+    const machine = JSON.parse(files.get('machine.json')!);
+    expect(machine.thesisBasis).toEqual({ value: 'code-reading', declaredBy: 'the authoring session', label: 'Inferred', lineRendered: true });
+    expect(Object.keys(machine).indexOf('thesisBasis')).toBe(Object.keys(machine).indexOf('reviewStatus') + 1);
+  });
+
+  it.each(['stated', 'none'])('renders no line for a %s thesis, and machine.json says so', async (basis) => {
+    const files = await rendered(v6(basis, basis === 'none' ? { id: 'intro', label: 'unknown', reason: 'missing-evidence', text: 'No source states what Kestrel is for.', citations: [] } : undefined));
+    expect([...files.values()].some((page) => page.includes('thesis-basis'))).toBe(false);
+    expect(JSON.parse(files.get('machine.json')!).thesisBasis).toEqual({ value: basis, declaredBy: 'the authoring session', label: 'Inferred', lineRendered: false });
+  });
+
+  it('renders no line beside a withheld introduction, and machine.json says the line did not render', async () => {
+    fixturePolicy = policy(['.txt']); // .c files are outside the class gate: every span the introduction cites is withheld
+    const files = await rendered(v6('code-reading', CODE_INTRO));
+    const index = files.get('index.html')!;
+    expect(index).not.toContain('Kestrel is a C server whose commands run one at a time.');
+    expect(marked(index, 'intro')).toEqual({ epistemic: 'unknown', reason: 'excluded-content' });
+    expect([...files.values()].some((page) => page.includes('thesis-basis'))).toBe(false);
+    expect(JSON.parse(files.get('machine.json')!).thesisBasis).toEqual({ value: 'code-reading', declaredBy: 'the authoring session', label: 'Inferred', lineRendered: false });
+  });
+
+  it('a v5 or earlier draft has no thesisBasis member in machine.json and no line', async () => {
+    for (const doc of [draft(), { ...draft(), schemaVersion: 'polaris-dossier-local-draft-v5' }]) {
+      const files = await rendered(doc);
+      expect(Object.hasOwn(JSON.parse(files.get('machine.json')!), 'thesisBasis')).toBe(false);
+      expect([...files.values()].some((page) => page.includes('thesis-basis'))).toBe(false);
+    }
   });
 });

@@ -30,10 +30,18 @@ export const LOCAL_DRAFT_SCHEMA_VERSION_V4 = 'polaris-dossier-local-draft-v4';
 /** v5 (syzygy-3efd.18): a diagram names its page in `home` (a section, a deep dive or the overview) in place of `sectionId`, so a figure
  * can sit on a deep dive or on the first page a reader sees. Everything else is v4; a v4 or earlier draft still checks and renders as
  * before, with `sectionId`. */
-export const LOCAL_DRAFT_SCHEMA_VERSION = 'polaris-dossier-local-draft-v5';
-export const LOCAL_DRAFT_SCHEMA_VERSIONS = Object.freeze([LOCAL_DRAFT_SCHEMA_VERSION_V2, LOCAL_DRAFT_SCHEMA_VERSION_V3, LOCAL_DRAFT_SCHEMA_VERSION_V4, LOCAL_DRAFT_SCHEMA_VERSION] as const);
+export const LOCAL_DRAFT_SCHEMA_VERSION_V5 = 'polaris-dossier-local-draft-v5';
+/** v6 (REQ-polaris-generation-034 version 2.4, syzygy-3efd.56): a required `thesisBasis` says what the introduction, the dossier's thesis,
+ * rests on. Everything else is v5; a v5 or earlier draft still checks and renders as before, and a `thesisBasis` in one is field-version. */
+export const LOCAL_DRAFT_SCHEMA_VERSION = 'polaris-dossier-local-draft-v6';
+export const LOCAL_DRAFT_SCHEMA_VERSIONS = Object.freeze([LOCAL_DRAFT_SCHEMA_VERSION_V2, LOCAL_DRAFT_SCHEMA_VERSION_V3, LOCAL_DRAFT_SCHEMA_VERSION_V4, LOCAL_DRAFT_SCHEMA_VERSION_V5, LOCAL_DRAFT_SCHEMA_VERSION] as const);
 /** Whether a draft's version has the v4 forms: v4 and every later version. */
-export const hasV4Forms = (version: unknown): boolean => version === LOCAL_DRAFT_SCHEMA_VERSION_V4 || version === LOCAL_DRAFT_SCHEMA_VERSION;
+export const hasV4Forms = (version: unknown): boolean => version === LOCAL_DRAFT_SCHEMA_VERSION_V4 || hasHomeForm(version);
+/** Whether a draft's version names a diagram's page in `home`: v5 and every later version. */
+export const hasHomeForm = (version: unknown): boolean => version === LOCAL_DRAFT_SCHEMA_VERSION_V5 || version === LOCAL_DRAFT_SCHEMA_VERSION;
+/** What a v6 draft's introduction rests on. */
+export const THESIS_BASES = Object.freeze(['stated', 'code-reading', 'none'] as const);
+export type ThesisBasis = typeof THESIS_BASES[number];
 /** The fields only a v4 or later draft may carry, each a finding in an earlier version. */
 export const V4_FIELDS = Object.freeze(['judgement', 'repeatsDiagram', 'poles', 'whySection'] as const);
 /** The pages a v5 diagram may name as its home. */
@@ -95,6 +103,11 @@ export const SESSION_ID_RULE = (subject: 'draft' | 'inventory'): string => `Put 
 const quotationRefs = (description: string): DraftSchema => ({ ...refs(0, 20), description });
 const repeatsDiagram: DraftSchema = { ...handle, description: 'The id of a diagram in this list\'s own section that the list repeats in words; the list then renders collapsed under it. Omit it when the list adds what the diagram does not show.' };
 const packetSha256: DraftSchema = { type: 'string', minLength: 64, maxLength: 64, pattern: '^[0-9a-f]{64}$' };
+
+/** The thesis basis (v6): the description the schema gives `thesisBasis`. */
+export const THESIS_BASIS_DESCRIPTION = 'What the introduction, the dossier\'s thesis, rests on: stated (a statement of the project\'s purpose by its maintainers, which the introduction cites), code-reading (no source you found states the purpose; the introduction says what the code does, quotes nothing and cites at least two entry points) or none (the introduction is an unknown or non-normative block).';
+
+const THESIS_BASIS: DraftSchema = { type: 'string', minLength: 1, maxLength: 12, enum: THESIS_BASES, description: THESIS_BASIS_DESCRIPTION };
 
 /** The judgement mark (v4): the block is the authoring session's own assessment of the project and asserts no fact about it. */
 export const JUDGEMENT_DESCRIPTION = 'Set true only on an Inferred block that is your own assessment of the project, such as that a design is sound or a trade-off is worth making, and asserts no fact about its rules, behaviour, structure, status, history or decisions. Only a block so marked may cite nothing; a fact with no citation is Unknown, never a judgement. A cited block may carry the mark too.';
@@ -158,9 +171,11 @@ export interface DraftSchemaParameters {
   readonly maxQuestions: number;
 }
 
-/** The draft schema. `diagramForm` says how a diagram names its page: `home` (schema v5, what the brief publishes) or `sectionId`
- * (schema v4 and earlier, which `check` applies to such a draft so that its findings stay byte for byte those of the version before). */
-export function localDraftSchema(parameters: DraftSchemaParameters, diagramForm: 'home' | 'sectionId' = 'home'): DraftSchemaWithDefs {
+/** The draft schema. `diagramForm` says how a diagram names its page: `home` (schema v5 and later, what the brief publishes) or
+ * `sectionId` (schema v4 and earlier, which `check` applies to such a draft so that its findings stay byte for byte those of the version
+ * before). `thesisBasis` says whether the draft carries its required `thesisBasis` (schema v6, what the brief publishes) or has no such
+ * member (schema v5 and earlier, whose findings stay those of the version before). */
+export function localDraftSchema(parameters: DraftSchemaParameters, diagramForm: 'home' | 'sectionId' = 'home', thesisBasis: 'required' | 'absent' = 'required'): DraftSchemaWithDefs {
   requirePinnedRevision(parameters.pinnedRevision);
   if (!Number.isSafeInteger(parameters.maxQuestions) || parameters.maxQuestions < 0) throw new Error('draft-schema: the question limit is not a nonnegative integer');
   return { defs: DEFS, root: object({
@@ -204,6 +219,7 @@ export function localDraftSchema(parameters: DraftSchemaParameters, diagramForm:
     // empty Pole and a section in no Pole or two are repair findings with their own wording, so the schema bounds only the shape.
     poles: list(object({ label: presentationLabel, sections: refs(0, 30) }), 1, 30),
     whySection: handle,
+    ...(thesisBasis === 'required' ? { thesisBasis: THESIS_BASIS } : {}),
   }, ['poles', 'whySection']) };
 }
 

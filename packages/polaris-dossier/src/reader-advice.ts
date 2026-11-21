@@ -3,7 +3,7 @@ import { READER_STANDARDS_VERSION } from './reader-standards.js';
 
 /** The counted reader standards (`reader-standards.ts`, syzygy-pdja.17): what `syzygy dossier check` can measure of RS-13, RS-14, RS-16,
  * RS-17 (an edge's locality, syzygy-3efd.17) and RS-19 in a draft, reported to the author as advice. Advice is never a finding: it sets no outcome, is on the check's report only
- * (never the stored check record, like the screen census), and the rendered-design review still judges every page. Pure. */
+ * (never the stored check record, like the screen census, which since version 2.4 keeps only its counts per page in `readingLedger`), and the rendered-design review still judges every page. Pure. */
 
 export type ReaderStandardId = 'RS-13' | 'RS-14' | 'RS-16' | 'RS-17' | 'RS-19';
 
@@ -25,7 +25,7 @@ export const DEEP_DIVE_LIMIT = 3;
 /** RS-19: about this many words of a section's own prose, outside its diagrams and elements. */
 export const SECTION_WORD_LIMIT = 300;
 
-const NOTE = `Advice from the counted reader standards (${READER_STANDARDS_VERSION}): it sets no outcome and is not stored in the check record; the design review still judges every page.`;
+const NOTE = `Advice from the counted reader standards (${READER_STANDARDS_VERSION}): it sets no outcome, and the check record keeps only how many advisories of each standard fall on each page (its readingLedger), never an advisory itself; the design review still judges every page.`;
 
 const list = (value: unknown): readonly unknown[] => (Array.isArray(value) ? value : []);
 const text = (value: unknown): string | undefined => (typeof value === 'string' ? value : undefined);
@@ -106,7 +106,7 @@ export function codeSymbolInTitle(title: string): string | undefined {
 
 /** The words of an entry's own prose: a plain block's text and its children's; a presentation element (an entry with a `kind`) counts
  * none, since RS-19 counts prose outside the elements. */
-function proseWords(entry: unknown): number {
+export function proseWords(entry: unknown): number {
   if (!isRecord(entry) || entry['kind'] !== undefined) return 0;
   const words = (value: unknown): number => (text(value)?.split(/\s+/u).filter((word) => word !== '').length ?? 0);
   return words(entry['text']) + list(entry['children']).reduce<number>((sum, child) => sum + (isRecord(child) ? words(child['text']) : 0), 0);

@@ -381,6 +381,9 @@ describe('inventory-check', () => {
     // Figure fit is kept in a draft's check record only (syzygy-3efd.20): an inventory check record carries none.
     expect(report).not.toHaveProperty('figureFit');
     expect(JSON.parse(fs.readFileSync(path.join(run, 'inventory', 'checks', 'rev-0.json'), 'utf8'))).not.toHaveProperty('figureFit');
+    // Nor a reading ledger or its difference (version 2.4): those are the draft's alone.
+    for (const member of ['readingLedger', 'readingDifference']) expect(report).not.toHaveProperty(member);
+    expect(JSON.parse(fs.readFileSync(path.join(run, 'inventory', 'checks', 'rev-0.json'), 'utf8'))).not.toHaveProperty('readingLedger');
     expect(report).not.toHaveProperty('reviewReach');
   });
 
