@@ -803,6 +803,32 @@ describe('check: the command', () => {
   });
 
   // syzygy-pdja.17: the counted reader standards are advice on the report: they set no outcome and stay out of the stored record.
+  // syzygy-3efd.16: the structure record, from the same tree listing as the census: paths and modes alone, advice on the report alone.
+  it('reports the structure record of the pinned tree on check, outside the check record, naming no secret path', async () => {
+    const run = await briefedRun();
+    writeDraft(run, valid());
+    const a = io();
+    expect(await runDossierCli(['check', run, '--json'], a.io, { sources: sources(), now: () => LATER, loadScreen: async () => SCREEN })).toBe(0);
+    const printed = JSON.parse(a.out.join(''));
+    expect(printed.structureRecord).toEqual({
+      state: 'derived',
+      rules: ['vendored-path@1', 'generated-path@1', 'language-by-extension@1', 'docs-tree@1', 'tests-path@1', 'manifest-names@1'],
+      files: 9, secretPathsLeftOut: 1, submodules: 0,
+      units: [{ unit: '"docs"', files: 2 }, { unit: '"src"', files: 4 }], unitsNotListed: 0, rootFiles: 2,
+      vendored: { rule: 'vendored-path@1', files: 0, listed: [], notListed: 0 },
+      generated: { rule: 'generated-path@1', files: 0, listed: [], notListed: 0 },
+      languages: { rule: 'language-by-extension@1', counts: [{ language: 'C', files: 3 }, { language: 'Plain text', files: 2 }, { language: 'Markdown', files: 1 }, { language: 'TypeScript', files: 1 }], unrecognized: 1 },
+      traits: {
+        docsTree: { rule: 'docs-tree@1', matched: true, listed: ['"docs"'], notListed: 0 },
+        tests: { rule: 'tests-path@1', files: 0 },
+        packages: { rule: 'manifest-names@1', shape: 'no-package-manifest', listed: [], notListed: 0 },
+      },
+      note: expect.stringContaining('Derived by Syzygy from the paths and modes of the pinned tree alone'),
+    });
+    expect(JSON.stringify(printed.structureRecord)).not.toContain('k'.repeat(24));
+    expect(read(run, 'checks/rev-0.json')).not.toContain('structureRecord');
+  });
+
   it('reports the counted reader standards as advice on the report alone, never a finding and never in the check record', async () => {
     const run = await briefedRun();
     writeDraft(run, mutate((d) => { d.sections[0].title = 'Inside handleRequest'; }));
@@ -910,6 +936,7 @@ describe('check: the command', () => {
     writeDraft(run, valid());
     const unknown = report(await checkDraft(run, {}, deps({ openReader: flaky })));
     expect(unknown.screenCensus).toMatchObject({ state: 'unknown', why: 'the pinned tree could not be listed (object-missing)' });
+    expect(unknown.structureRecord).toEqual({ state: 'unknown', why: 'the pinned tree could not be listed (object-missing)', note: expect.stringContaining('is Unknown at this check') });
   });
 
   it('exits 0 on a passing draft and 1 on findings, printing the same document with --json', async () => {

@@ -652,6 +652,7 @@ describe('what the review will not see (syzygy-mea.3)', () => {
     expect(report.outcome).toBe('passed');
     // The census goes to the author on check; the inventory session has it in its brief.
     expect(report).not.toHaveProperty('screenCensus');
+    expect(report).not.toHaveProperty('structureRecord');
     expect(report.reviewVisibility).toEqual({
       withheld: [{ path: 'docs/notes.txt', outcome: 'unknown-extraction-class' }],
       note: '1 cited file(s) are withheld from the review session, by screening or by the class gate, so it cannot confirm the blocks and inventory entries that rest on them; unconfirmed rows block readiness. Where the same fact is stated in an admitted file, cite that file as well or instead.',

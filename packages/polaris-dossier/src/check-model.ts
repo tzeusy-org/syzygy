@@ -1,6 +1,7 @@
 import * as path from 'node:path';
 import { sha256 } from '@syzygy/support';
 import { type CredentialStepResult } from './credential-probe.js';
+import type { StructureRecord } from './derive.js';
 import { EXECUTION_FLAGS_BASIS, executionFlags, type ExecutionFlags } from './execution-flags.js';
 import type { CredentialProbe } from './execution-rule.js';
 import { RECORDS_WITHIN_REACH, type GateSources } from './gate-sources.js';
@@ -178,6 +179,8 @@ export interface CheckReport extends CheckRecord {
   readonly disclosures: readonly string[];
   /** The path-only census of every file screening withholds at the pinned revision (`census.ts`); on the report, never the record. */
   readonly screenCensus?: ScreenCensusReport;
+  /** What the pinned tree's paths and modes alone show (`derive.ts`); on the report, never the record, and never a finding. */
+  readonly structureRecord?: StructureRecord;
   /** The counted reader standards' advice (`reader-advice.ts`); on the report, never the record, and never a finding. */
   readonly readerAdvice?: ReaderAdvice;
   /** The claim blocks the fidelity review can never confirm, and the elements that render with none of their text (`review-reach.ts`); on
