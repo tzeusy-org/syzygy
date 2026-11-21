@@ -1242,6 +1242,8 @@ describe('rendered-design review (S9b)', () => {
     if (!rendered.ok) throw new Error(rendered.refusal.reason);
     fs.writeFileSync(briefPath, `${JSON.stringify({ ...brief, readerStandards: { ...brief.readerStandards, packs: ['server@9'] } }, null, 2)}\n`);
     expect(await reviewPacket(run, { kind: 'design' }, hand())).toMatchObject({ ok: false, refusal: { stage: 'standards', reason: 'the reader standards the brief carried cannot be recomposed (server@9 is not shipped)' } });
+    fs.writeFileSync(briefPath, `${JSON.stringify({ ...brief, readerStandards: null }, null, 2)}\n`);
+    expect(await reviewPacket(run, { kind: 'design' }, hand())).toMatchObject({ ok: false, refusal: { stage: 'standards', reason: 'the reader standards the brief carried cannot be recomposed (brief.json has a readerStandards member that is not an object)' } });
   });
 
   it('refuses a render whose statement of the design review leaks outside the region, and writes no site', async () => {
