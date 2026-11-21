@@ -1880,13 +1880,17 @@ describe('render: derived structure (version 2.3)', () => {
     const planted: [string, string, (doc: Doc) => void][] = [
       ['a non-secret directory absent from the tree', 'zqplanteddir', (doc) => { doc.facts[1].path = 'zqplanteddir'; doc.facts[3].path = 'zqplanteddir'; }],
       ['a rule other than top-level-unit', 'zq-planted-rule', (doc) => { doc.facts[2].rule = 'zq-planted-rule'; }],
-      ['a version other than 1', 'zq-unused', (doc) => { doc.facts[4].ruleVersion = 2; }],
+      // A version is a number: a distinctive one, so the sweep below finds it nowhere but in the record itself.
+      ['a version other than 1', '738460193', (doc) => { doc.facts[4].ruleVersion = 738460193; }],
     ];
     for (const [what, name, edit] of planted) {
       const run = await prepared(draft(), false);
       const doc = JSON.parse(fs.readFileSync(recordPath(run), 'utf8'));
       edit(doc);
-      fs.writeFileSync(recordPath(run), `${JSON.stringify(doc, null, 2)}\n`);
+      const planted = `${JSON.stringify(doc, null, 2)}\n`;
+      fs.writeFileSync(recordPath(run), planted);
+      // The planted text is in the kept record, so its absence from every output below is the render's refusal, not the fixture's.
+      expect(planted, what).toContain(name);
       const { files, index, machine } = await rendered(run);
       expect(regionOfIndex(index), what).toBe(sentence);
       expect(files.has('derived-structure.json'), what).toBe(false);
@@ -2017,7 +2021,10 @@ describe('review and render: a passed check record carrying the widest manifest 
     const first = readSite(before.report.site), second = readSite(after.report.site);
     expect([...second.keys()].sort()).toEqual([...first.keys()].sort());
     for (const [name, bytes] of second) if (name.endsWith('.html')) expect(withoutReviewStatusRegion(bytes), name).toBe(withoutReviewStatusRegion(first.get(name)!));
-    // Close is exercised on the same member in close.test.ts, through the full fixture run its policy binding needs.
+    // Review, render and close all take the draft revision through one function, latestPassedDraft (review-packet.ts), which reads the
+    // check record under the one check-record bound. The over-4 MiB record is run end to end here through review's packet and render's
+    // site, and through close in close.test.ts ("takes the passed draft revision from a check record carrying the widest manifest facts"),
+    // whose full fixture run carries the policy binding close re-verifies.
   });
 });
 

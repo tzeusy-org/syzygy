@@ -3,6 +3,7 @@ import * as fs from 'node:fs';
 import * as path from 'node:path';
 import { describe, expect, it } from 'vitest';
 import { tempDir } from '@syzygy/test-kit';
+import { patchFs } from './fs-patch.testkit.js';
 import { cycleBreakdown, latestChecks } from './polaris.js';
 import { latestPassedDraft } from './review.js';
 
@@ -58,6 +59,24 @@ describe('the check-record read bound (version 2.8)', () => {
     expect([Buffer.byteLength(at), Buffer.byteLength(past)]).toEqual([16_777_216, 16_777_217]);
     expect(readers(at)).toEqual(READ);
     expect(readers(past)).toEqual(UNREADABLE);
+  });
+
+  it('refuses a record over 16,777,216 bytes from its size alone, never reading a byte of it, and reads one at the bound', () => {
+    const readsOf = (record: string): string[] => {
+      const run = runWith(record);
+      const subject = path.join(run, 'checks', 'rev-2.json');
+      const reads: string[] = [];
+      const restore = patchFs('readFileSync', (original) => ((file: fs.PathOrFileDescriptor, ...rest: unknown[]) => {
+        if (file === subject) reads.push('rev-2.json');
+        return (original as (...args: unknown[]) => unknown)(file, ...rest);
+      }) as typeof original);
+      try {
+        latestPassedDraft(run); cycleBreakdown(run); latestChecks(run);
+      } finally { restore(); }
+      return reads;
+    };
+    expect(readsOf(ofBytes(16_777_217))).toEqual([]);
+    expect(readsOf(ofBytes(16_777_216))).toEqual(['rev-2.json', 'rev-2.json', 'rev-2.json']);
   });
 
   it('reads a record of 2,000,000 values and refuses one of 2,000,001, in every reader', () => {

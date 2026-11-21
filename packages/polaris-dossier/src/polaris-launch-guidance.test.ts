@@ -107,7 +107,7 @@ describe('the run view', () => {
   const runWith = (records: Record<string, string>): string => {
     const run = tempDir('polaris-launch-guidance-');
     fs.mkdirSync(path.join(run, 'checks'), { recursive: true });
-    for (const [name, outcome] of Object.entries(records)) fs.writeFileSync(path.join(run, 'checks', name), JSON.stringify({ outcome }));
+    for (const [name, outcome] of Object.entries(records)) fs.writeFileSync(path.join(run, 'checks', name), JSON.stringify({ format: 'polaris-dossier-check/1', revision: Number(/\d+/u.exec(name)![0]), outcome }));
     return run;
   };
 
@@ -121,6 +121,11 @@ describe('the run view', () => {
   it('counts an unreadable check record in neither figure, and says nothing when no repair revision exists', () => {
     const run = runWith({ 'rev-0.json': 'passed', 'rev-1.json': 'passed' });
     fs.writeFileSync(path.join(run, 'checks', 'rev-2.json'), '{');
+    expect(cycleBreakdown(run)).toBe(' (0 on drafts check refused, 1 on drafts that passed check)');
+    // As latestPassedDraft reads it: a passed record of another format, or naming another revision than its file's, cannot be read either.
+    fs.writeFileSync(path.join(run, 'checks', 'rev-3.json'), JSON.stringify({ format: 'polaris-dossier-check/2', revision: 3, outcome: 'passed' }));
+    fs.writeFileSync(path.join(run, 'checks', 'rev-4.json'), JSON.stringify({ format: 'polaris-dossier-check/1', revision: 5, outcome: 'passed' }));
+    fs.writeFileSync(path.join(run, 'checks', 'rev-5.json'), JSON.stringify({ outcome: 'findings' }));
     expect(cycleBreakdown(run)).toBe(' (0 on drafts check refused, 1 on drafts that passed check)');
     expect(cycleBreakdown(runWith({ 'rev-0.json': 'findings' }))).toBe('');
     expect(cycleBreakdown(path.join(tempDir('polaris-launch-guidance-'), 'absent'))).toBe('');

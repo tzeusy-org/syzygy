@@ -167,7 +167,8 @@ describe('close (S10)', () => {
   });
 
   // REQ-polaris-generation-034 version 2.8 (syzygy-3efd.72): close takes the latest passed draft from a check record of more than 4,194,304
-  // bytes, here one carrying the `manifestFacts` member at every listing cap in its widest form, built by hand from the stated caps.
+  // bytes, here one carrying the `manifestFacts` member at every listing cap in its widest form, built by hand from the stated caps. Close
+  // shares latestPassedDraft with review and render; render.test.ts runs the same record end to end through review's packet and the site.
   it('takes the passed draft revision from a check record carrying the widest manifest facts, over 4 MiB (version 2.8)', async () => {
     const MAX = Number.MAX_SAFE_INTEGER;
     const CJK = '\u4e00'.repeat(512), LONE = '\ud800'.repeat(256);

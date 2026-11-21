@@ -13,7 +13,7 @@ import { reviewLaunchRecordName, REVIEW_CHECKS } from './review.js';
 import { CONSENT_RULE, WAITING_DENIED_TOOLS, WAITING_TOOLS } from './session-handover.js';
 import { bwrapArgs, viewFor, viewProbeRefusal, viewSha256, type ViewRole } from './session-view.js';
 import { fetchRefusal, type VisibilityOf } from './source-visibility-gate.js';
-import { readCheckRecord } from './check-record-read.js';
+import { isCheckRecordOf, readCheckRecord } from './check-record-read.js';
 import { REVISION_FILE, RUN_LAYOUT } from './state-directory.js';
 import { isoOf } from './iso-of.js';
 
@@ -647,7 +647,8 @@ export function limitStop(draft: CheckRecord, inventory: CheckRecord, maxRepairC
 }
 
 /** How the spent repair revisions split between drafts check refused and drafts that passed, read from the check records under the one
- * check-record bound (version 2.8): a record that cannot be read (past a bound, or not one JSON object) is counted in neither figure. */
+ * check-record bound (version 2.8): a record that cannot be read (past a bound, not one JSON object, not of the check format or naming
+ * another revision, as `latestPassedDraft` reads it) is counted in neither figure. */
 export function cycleBreakdown(run: string): string {
   let refused = 0; let passed = 0;
   let names: string[];
@@ -657,7 +658,8 @@ export function cycleBreakdown(run: string): string {
     if (m === null || Number(m[1]) === 0) continue;
     let record: unknown;
     try { record = readCheckRecord(path.join(run, RUN_LAYOUT.checks, name)); } catch { continue; }
-    if (!isRecord(record)) continue;
+    // The test `latestPassedDraft` applies: a record not of the check format, or naming another revision, cannot be read.
+    if (!isCheckRecordOf(record, Number(m[1]))) continue;
     if (record['outcome'] === 'passed') passed += 1; else refused += 1;
   }
   return refused + passed === 0 ? '' : ` (${refused} on drafts check refused, ${passed} on drafts that passed check)`;
