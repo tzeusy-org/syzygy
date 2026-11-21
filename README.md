@@ -105,8 +105,8 @@ workspace-level operator domain that is still candidate.
   independent truth stores.
 - **Mission Control** sits at the level of a **portfolio workspace** — the
   set of projects one operator runs, above any single project. It is defined
-  by candidate contract RFC-0010 and a pending doctrine amendment (D3),
-  neither yet accepted.
+  by candidate contract RFC-0010, not accepted; the doctrine amendment that
+  would have admitted it (D3) was withdrawn on 2026-11-21.
 - All four names are working codenames only.
 
 ## The core loop

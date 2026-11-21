@@ -12,6 +12,73 @@
 > cells — are preserved verbatim in git history at commit `9c43fc5`
 > (`git show 9c43fc5:.syzygy/governance/decisions/PENDING-OWNER-DECISIONS.md`).
 
+## Triaged on 2026-11-21 (D10 FOLLOW-ON F-10: all 34 rows leave the owner register)
+
+Under doctrine VIS-4 as amended by D10 the owner decides four classes only.
+F-10 (`syzygy-k54o.10`) triaged every row of `PENDING-OWNER-DECISIONS.md`;
+agent adoption A-13 in `AGENT-ADOPTIONS.md` records it, open to the owner's
+veto. "Kept deferred" and "agent-class" are agent decisions, reversible by a
+later adoption; "not adopted by this triage" means the package still waits
+for an agent to adopt it after one review, or to withdraw it. The rows as
+they stood are at commit `9e919a293`
+(`git show 9e919a293:.syzygy/governance/decisions/PENDING-OWNER-DECISIONS.md`).
+P-5 and P-101 left earlier the same day (section below).
+
+| # | Disposition |
+|---|---|
+| P-1 | The two launch-path wave acts were performed 2026-08-17; Waves C1/C2/D1/D2 stay **deferred by agent decision** (no mission work is planned; taking one up is a new adoption) |
+| P-2 | CC-TEST-2: the owner's 2026-11-03 hold stands as decided; taking it up is an agent adoption, reported |
+| P-3 | Topology bundle: as P-2 |
+| P-4 | Project overview: as P-2 |
+| P-12 | Knowledge-hygiene policy: as P-2 |
+| P-10 | Routing-matrix confirming review: the owner's 2026-09-27 knowing deferral stands; RFC-0010 is deferred-wave material |
+| P-15 | **Decided: no compact FD register here.** The founder decision log stays founder-local; the two extracted warrants are enough. Reversible by adoption |
+| P-17 | Eight undefined public terms: kept deferred with the waves that define them |
+| P-19 | Mission-envelope residuals: kept deferred with the D waves |
+| P-20 | Fixture-set acceptance posture: kept deferred with P-29 |
+| P-21 | `constrains:` arm (a): kept deferred with Wave C2, its consumer |
+| P-23 | Mission-safety stage placement: kept deferred with the D waves |
+| P-27 | RFC10-18 correction-plane defects: kept deferred with the D waves |
+| P-29 | Wave C2 acceptance criterion: kept deferred with Wave C2 |
+| P-30 | Stop/containment repair form: kept deferred with the D waves |
+| P-32 | RFC11-15 ownership metadata: kept deferred with Wave C2 |
+| P-43 | **Decided:** under D10 a made owner decision is a dated record in this directory that quotes the owner's words (an `OWNER-DIRECTION-*`, sign-off or act record), and a made agent decision is a row in `AGENT-ADOPTIONS.md`; no further marker. Spec-policy follow-up stays in `syzygy-4x77` |
+| P-52 | POC test-coverage gaps: ordinary engineering backlog, tracked in `syzygy-k0np`, `syzygy-u05.13` and `syzygy-dov.16` |
+| P-84 | Identity amendment: agent-class (adopt after one review, or withdraw); its open questions ride `syzygy-vk3f`. Not adopted by this triage |
+| P-85 | Release-label amendment: agent-class; tracked in `syzygy-7yad`. Not adopted by this triage |
+| P-95 | Behaviour-contract re-pin: agent-class; its gate effect is folded into FOLLOW-ON F-2 (`syzygy-k54o.2`), the re-derivation in `syzygy-fxro`. Not adopted by this triage |
+| P-112 | Loaded-profile registry entry: agent-class; tracked in `syzygy-dov.24`. Not adopted by this triage |
+| P-111 | Local CLI runner: Q1 (sign-off) is agent-class, tracked in `syzygy-bc0g`. Q2 (unscreened content to the provider) is owner-class and was answered 2026-11-21 (`secrets-raw-clone-to-provider`, A); its doctrine text is P-119 below |
+| P-117 | CC-SEC-3 amendment: folded into CC-SEC-3 by agent adoption A-12 (2026-11-21). Credential-probe work that only tightens isolation is agent-class; anything letting observed code outside a sandbox reach a credential returns to the owner |
+| P-118 | Launch-time consent: retired by D10 (reading needs no consent record); the candidate binds nothing and is not offered |
+| P-53 | Already resolved 2026-09-15; row removed |
+| P-104 | Already resolved 2026-10-07; row removed |
+| P-105 | Already resolved 2026-10-08; row removed |
+| P-106 | Already resolved 2026-10-08; row removed |
+| P-107 | Already resolved 2026-10-14; row removed |
+| P-110 | Already performed 2026-10-20; row removed |
+| P-114 | Already performed 2026-10-20; row removed |
+| P-115 | Already performed 2026-10-27; row removed |
+| P-116 | Already performed 2026-11-03; row removed |
+
+## Resolved on 2026-11-21 (P-5 and P-101 — doctrine amendments D3 and D7 withdrawn)
+
+The owner answered the D10 F-10 questionnaire on 2026-11-21 through its
+token-gated local web form, with an explicit instruction to apply the answers
+now. Two of its seven items withdrew held doctrine amendments, each "as
+superseded by D10": D10 rewrote the `vision.md` and `architecture.md` text
+both anchor to, and removed the VIS-4 bounds they argued against. No doctrine
+byte changes. Record: [`OWNER-DIRECTION-QUESTIONNAIRE-ANSWERS-2026-11-21.md`](OWNER-DIRECTION-QUESTIONNAIRE-ANSWERS-2026-11-21.md).
+The rows as they stood in the register:
+
+| # | Decision | Owning record |
+|---|---|---|
+| P-5 | **Optional act 5** — adopt, amend, or decline the D3 bounded-mission doctrine amendment. **P-24 (D4) was ruled 2026-08-18: inside VIS-4's bounds, with the reviewer's §1.2 wording designated for act 5** (`D4-RULING-DECISION.md`) — a D3 rev2 carrying that wording, plus the VIS-3 fresh-reader review D3 §5 requires, precede the act *(Marked 2026-11-03: knowingly held. In the owner questionnaire you answered "A. Knowingly hold all five" for acts 2–5 and P-12; this records hold status only, and nothing is performed or declined (`OWNER-DIRECTION-QUESTIONNAIRE-ANSWERS-2026-11-03.md`).)* | `../contracts/candidates/DOCTRINE-AMENDMENT-BOUNDED-MISSION-D3.md` (rev1); `D4-RULING-DECISION.md` |
+
+| # | Decision | Type | Blocks / earliest gate | Owning record |
+|---|---|---|---|---|
+| P-101 | Held derived computation, doctrine amendment D7 (`syzygy-u05.14`, vision pursuit move N14, "packet A, the molding half"): a closed class — observe, compute the difference from the last identified evaluation, stage a draft, hold — may run on a human act that did not request it, or on a hand-installed hook that fires only on human acts; never on a clock or watcher Syzygy owns; never notify, dispatch or reprioritize work, adopt, or set its own next trigger; never hold model output; relaxes no contract. Q1: inside or beyond VIS-4's stated bounds (the drafter recommends inside; "beyond" needs an adjudication RFC first and removes arm B). Q2: A adopt the two insertions (`vision.md` "Not autonomous" bullet, `architecture.md` loop paragraph), B an interpretation act with no doctrine byte (which would rule the change Clarifying, against the packet's Normative class), or C no change. Q3: strict hook test or installation-authorizes. Q4: entry criteria for the live fleet mandate on a roadmap or in `v1.md`. Q5 (added 2026-10-14, answered second): which reading of RFC2's merge-fact confinement arm A is adopted against — N narrow (recommended; RFC2-18's scope, the merge of a materialized work item, so arm A makes unprompted re-observation of a repository with no materialized merged work lawful at the doctrine level), W wide (any merge in a repository's history, so it does not), or narrow D7's own text (redraft). [Inferred] Accepted RFC2 confines every evaluation that captures a merge fact to a deliberately triggered pass, so D7 alone does not make unprompted re-observation of a repository with merges lawful *(marked 2026-10-14: true only on the wide reading; see Q5 and packet §4.1)*; the Butlers-side hook and the regeneration rehearsal are owner options and packet obligations only, nothing installed or run. Round 1 (2026-10-03) was `REVISE`; every finding was repaired once (`ROUND-1-DISPOSITIONS.md` beside the packet). Round 2 over the repaired bytes (2026-10-14, on your direction in `decisions/OWNER-DIRECTION-CONFIRMATION-CYCLE-2026-10-14.md`; `docs/reviews/R-DOCTRINE-AMENDMENT-D7-2-RAW.md`) was `REVISE`: one revise finding (the packet reads RFC2's "merge fact" as any merge in history, where RFC2-18 scopes it to a materialized work item reaching merge, so what arm A leaves unlawful may be overstated) and seven notes, all open (`ROUND-2-DISPOSITIONS.md`). Under the stopping rule the package is **not repaired again**, and the bytes are **unconfirmed** *(marked 2026-10-14, later the same day: "all open" and "not repaired again" are no longer true — on your further direction that day, relayed by the lead session, every round-2 finding, notes included, was repaired once; mapping in `ROUND-2-DISPOSITIONS.md` §"Repairs, 2026-10-14 (cycle 2)")*. **Round-2 findings repaired once on 2026-10-14, unconfirmed pending round 3** (brief: `REVIEW-BRIEF.md` §"Round 3"; a notes-only round clears, a `REVISE` comes back to you). The repair added Q5. *(Marked 2026-10-14, round 3: "unconfirmed pending round 3" is no longer true. Round 3 over the repaired bytes (`docs/reviews/R-DOCTRINE-AMENDMENT-D7-3-RAW.md`, at `7071a744`) was `REVISE`: one revise-level finding (Q5 states its arms' consequences inconsistently — arm W carries an [Unknown] on whether a plain owner ruling can fix the reading of accepted RFC2 text, arm N says "No further step", and §4, §6 item 1 and the ledger say three different things) and five notes, all open in `ROUND-3-DISPOSITIONS.md`. Under the stopping rule in `decisions/OWNER-DIRECTION-CONFIRMATION-CYCLE-2-2026-10-14.md` the package is **not repaired again**, no round 4 is dispatched, and the bytes are **unconfirmed**. Q1–Q5 stand; no ruling is recorded.)* *(Marked 2026-10-14, cycle 3: "not repaired again" and "no round 4" are no longer true. On your cycle-3 direction that day, relayed by the lead session — "One more cycle": make Q5 consistent, choosing a reading of accepted text being a contract-act matter (Unknown otherwise), align §4/§6 and the ledger, then one fresh review — every round-3 finding, notes included, was **repaired once on 2026-10-14, unconfirmed pending round 4** (`ROUND-3-DISPOSITIONS.md` §"Repairs, 2026-10-14 (cycle 3)"; brief `REVIEW-BRIEF.md` §"Round 4"). Q5's description above is superseded: Q5 now asks how the reading is to be fixed — U leave it to a contract act and fix none here (recommended; for a repository with merges but no materialized merged work, lawfulness stays [Unknown]), K commission a contract act carrying a named reading (form [Unknown], not drafted), or narrow D7's own text — because N and W were both a choice of reading a plain answer cannot make. §4.1 also weighs a broadest reading built from RFC4's citations of RFC2-19. **Q6 added:** how to resolve the Polaris understanding adoption recorder's gate, which D7's `vision.md` insertion trips (probe at `7460aec8`; shared with P-102's Q-A1); D7's ledger had called that recorder "unaffected". Section 1's doctrine bytes are unchanged. No ruling is recorded.)* *(Marked 2026-10-15, round 4: "unconfirmed pending round 4" is no longer true, and the cycle-3 direction "relayed by the lead session" is now recorded in `decisions/OWNER-DIRECTION-CONFIRMATION-CYCLE-3-2026-10-14.md`. Round 4 over the repaired bytes (`docs/reviews/R-DOCTRINE-AMENDMENT-D7-4-RAW.md`, at `79f51fdf`) was `REVISE`: one revise-level finding (the one-position rule — which reading binds is fixed only by a contract act, [Unknown] until then — is applied to the narrow and wide readings but not to the broadest one built from RFC4's citations of RFC2-19, so the no-merge row is stated three ways) and four notes, all open in `ROUND-4-DISPOSITIONS.md`. After round 4 you answered "Park until RFC2 decided": **the packet is parked** (a dated banner heads it), an RFC2-18/19 contract clarification draft fixing which reading binds is commissioned (`syzygy-a4ry`), and D7 is redrafted against it (`syzygy-xhh2`, blocked by `syzygy-a4ry`). Q1–Q6 are not offered while parked; nothing is ruled.)* | doctrine amendment: owner adoption (VIS-4), no phrase | the molding half of the north star; any unprompted cadence slice; N2's hook option (also needs a write act, and an RFC2 amendment on the wide reading) *(marked 2026-10-15: "an RFC2 amendment on the wide reading" is superseded — which reading binds is a contract-act matter, [Unknown] until the commissioned RFC2-18/19 clarification, `syzygy-a4ry`, is acted on)* | `contracts/candidates/doctrine-amendment-held-derived-computation-d7/OWNER-DECISION-PACKET.md`; `ROUND-1-DISPOSITIONS.md` to `ROUND-4-DISPOSITIONS.md` beside it |
+
 ## Resolved on 2026-10-21 (P-79 follow-ups, and P-108's implementation)
 
 The owner answered an adversarially-reviewed questionnaire on 2026-10-21
