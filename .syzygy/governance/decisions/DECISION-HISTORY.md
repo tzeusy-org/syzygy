@@ -61,6 +61,18 @@ P-5 and P-101 left earlier the same day (section below).
 | P-115 | Already performed 2026-10-27; row removed |
 | P-116 | Already performed 2026-11-03; row removed |
 
+## Resolved on 2026-11-21 (P-120 — the owner lists Butlers as owned)
+
+The owner wrote the row in [`OWNED-REPOSITORIES.md`](OWNED-REPOSITORIES.md)
+in commit `c62d4cf79` ("I own butlers"; the row quotes "I own the butlers
+repo"), naming `https://github.com/tzeusy-org/butlers`. Under SEC-4 Syzygy
+now writes and pushes there without a per-repository consent.
+The row as it stood in the register:
+
+| # | Decision | Class | Owning record |
+|---|---|---|---|
+| P-120 | Add Butlers to [`OWNED-REPOSITORIES.md`](OWNED-REPOSITORIES.md): the owner chose this on 2026-11-21 (`owned-repos-butlers`, A); the row takes effect when the owner writes it, naming the remote. No agent edits that list | writes into repositories | [`OWNER-DIRECTION-QUESTIONNAIRE-ANSWERS-2026-11-21.md`](OWNER-DIRECTION-QUESTIONNAIRE-ANSWERS-2026-11-21.md) |
+
 ## Resolved on 2026-11-21 (P-119 — doctrine amendment D11 adopted)
 
 The owner adopted D11 in the Claude Code CLI on 2026-11-21, in the owner's
