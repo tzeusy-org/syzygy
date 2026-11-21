@@ -28,7 +28,7 @@ deliberately has **no `about/` tree** — never scaffold or mirror one.
 | `.syzygy/governance/doctrine/v1.md` | Scoping anything V0/V1; deferral questions | V0 increments, V0/V1 gap boundary, deferrals, platform, success tests |
 | `.syzygy/governance/doctrine/architecture.md` | Namespace/write/authority questions; graph, snapshot, or freshness semantics | Governance-root invariant, two-namespace plane, `.syzygy/` layout + reserved categories, typed authority, closed snapshot + temporal model, kernel + three surfaces, frozen vocabulary |
 | `.syzygy/governance/doctrine/trust-and-evidence.md` | Any status, evidence, label, or link question | Evidence definition, Observed/Inferred/Unknown, gap exits, inference-as-challenge, staleness, trust floor incl. the internal-link rule |
-| `.syzygy/governance/doctrine/security.md` | Auth, exposure, consent, egress, secrets, execution | SEC-1..SEC-5 (browser vs machine clients; egress-through-consent; observed code untrusted; consented writes; secrets fail closed) |
+| `.syzygy/governance/doctrine/security.md` | Auth, exposure, egress, writes, secrets, execution | SEC-1..SEC-5 (browser vs machine clients; egress only to a declared provider; observed code untrusted; writes into others' repositories need the owner's consent; secrets fail closed) |
 
 ## Adjacent authoritative layers
 
@@ -44,8 +44,8 @@ deliberately has **no `about/` tree** — never scaffold or mirror one.
 1. VIS-1 comprehensible truth, never comprehensible fiction.
 2. VIS-2 no evidence → Unknown (never green, never zero).
 3. VIS-3 human interpretability; fresh-reader review.
-4. VIS-4 humans steer the vision; owner signs every shape delta.
+4. VIS-4 (as amended by D10) the owner decides doctrine and four owner classes (secrets, writes into others' repositories, exposure beyond the tailnet or release); agents adopt everything else with a row in `decisions/AGENT-ADOPTIONS.md`, open to veto.
 5. VIS-5 direct writes only in `openspec/**` + `.syzygy/**`; adapters elsewhere.
 6. VIS-6 derived with two closed exceptions; dismissals carry reason + expiry.
 7. VIS-7 trustworthy observatory — deterministic identity, faithful legends, resolvable links.
-8. SEC-1..SEC-5 authenticated by default; egress through consent; observed code untrusted; consented/attributed/revertable writes; secrets fail closed.
+8. SEC-1..SEC-5 authenticated by default; content leaves only for a declared provider; observed code untrusted (sandboxed); writes attributed and revertable, consented by the owner only for repositories the owner does not own; secrets fail closed.

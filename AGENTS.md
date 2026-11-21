@@ -14,27 +14,49 @@ and the gap is always rendered honestly. Two planes:
 
 - **Governed** — `.syzygy/**` (doctrine, decisions, policies, contracts) and
   `openspec/**` (specifications). Changes travel as reviewed semantic deltas
-  and bind only by owner act.
+  and bind by an adoption record.
 - **Implementation** — `apps/**`, `packages/**`, `scripts/`, root manifests.
   Code goes here and only here.
 
-Everything is stage-gated. Each authorization is a dated owner act or
-direction under `.syzygy/governance/decisions/` (`ACCEPTANCE-ACT-RECORD.md`
-owns acceptance and amendment transactions). `PROJECT-STATUS.md` says which
-are in force. As of 2026-09-05: Capability 1 is implemented; a bounded,
-non-release Three-Surface POC (Polaris, Trajectory, Orrery) runs against one
-Butlers repository, whose PWB project-shape slice may read one consented
-content class behind the P1 authority gate. Anything no act covers is
-forbidden — before implementing, find the act.
+Since doctrine amendment D10 (2026-11-18), VIS-4 splits every decision in
+two:
+
+- **The owner decides four classes**, and only the owner:
+  1. doctrine (`governance/doctrine/`);
+  2. secrets: weakening secret detection or SEC-5's fail-closed rule, and
+     running observed code outside a sandbox;
+  3. writes or pushes into a repository the owner does not own, and changes
+     to the owner's list of owned repositories;
+  4. network exposure beyond the tailnet, and any release, deployment or
+     multi-user use.
+- **Agents decide everything else** — specifications and their versions,
+  contracts, the craft and specification bars, screening policy within
+  SEC-5, review practice, when implementation starts, behavior-changing
+  fixes, unattended work, which repositories to read — and record each
+  adoption as one row in `decisions/AGENT-ADOPTIONS.md` (commit, what, why,
+  revert command; a spec version also gets a tag). The PR or session summary
+  linking the row is the report. The owner vetoes by saying so; a veto is a
+  revert and a new row.
+- When unsure whether a change is owner-class, treat it as owner-class and
+  ask.
+
+Owner acts and rulings recorded before D10 stay in force as decided; a later
+change to what they decided is an adoption. A lower rule that still asks for
+an owner act, sign-off or consent outside the four classes is satisfied by
+an adoption row, and reading a repository needs no record at all (VIS-4,
+"Lower rules follow this one"). The code may still enforce an old gate until
+its follow-on lands; `PROJECT-STATUS.md` says what runs today. Before
+implementing, find the adoption row or the act — or adopt, and record it.
 
 ## Where authority lives
 
 | Question | Authority | Path | Status |
 |---|---|---|---|
 | Why — purpose, non-negotiables | Doctrine (VIS-1…7, SEC-1…5) | `.syzygy/governance/doctrine/` | Adopted, in force |
-| Prior owner rulings | Decisions (SDR-1…37, acts, pending queue) | `.syzygy/governance/decisions/` | In force |
+| Prior owner rulings | Decisions (SDR-1…37, acts, pending queue) | `.syzygy/governance/decisions/` | In force as decided; later changes are adoptions |
+| What agents adopted since D10 | The adoption log | `decisions/AGENT-ADOPTIONS.md` | Append-only, one row per adoption |
 | Engineering and evidence bar | Craft-and-care (CC-*) | `.syzygy/governance/policies/craft-and-care/` | Owner-approved |
-| The specification bar (CC-SPEC-1…11, CC-IMPACT-1…7) | Craft acts 6 and 7; CC-SPEC amended 2026-09-01 | `contracts/candidates/policy-candidates/` — **not** the craft-and-care directory | **In force.** Path, filenames and head banners all still say candidate; the acts bound those bytes and none may be corrected |
+| The specification bar (CC-SPEC-1…11, CC-IMPACT-1…7) | Craft acts 6 and 7; CC-SPEC amended 2026-09-01 | `contracts/candidates/policy-candidates/` — **not** the craft-and-care directory | **In force**, CC-SPEC-10 and CC-IMPACT as amended by D10. Path, filenames and head banners all still say candidate; correcting them is an ordinary adoption, not yet done |
 | Load-bearing how | Design contracts RFC 0001–0011 | `.syzygy/governance/contracts/` | 0001–0009 accepted; 0010–0011 candidate in `contracts/candidates/` |
 | Intended placement | Topology bundle | `.syzygy/map/topology-candidates/` | Candidate |
 | Public narrative | Overview | `.syzygy/intent/OVERVIEW.md` | Presentation, never authority |
@@ -56,13 +78,13 @@ Load the minimum for one correct decision; never "read everything."
 | A doctrine question | the one doctrine file, via the `heart-and-soul` skill |
 | An engineering-bar question | the one craft policy that owns it |
 | A contract question | `contracts/candidates/TASK-ROUTER.md` (generated) |
-| "May I implement X?" | the authorizing act in `decisions/`; plans: `docs/CAPABILITY-1-IMPLEMENTATION-PLAN.md`, `docs/PWB-IMPLEMENTATION-PLAN.md` |
-| The Capability 1 specification | `openspec/changes/project-registration-and-honest-shape-visibility/` — adopted; amend only via CC-REV-2 |
-| The Three-Surface POC specification | `openspec/changes/three-surface-poc-experience/` — signed off; amend only via CC-REV-2 |
-| Authoring a new spec | `contracts/candidates/HOW-TO-AUTHOR-A-SYZYGY-SPEC.md`; only owner sign-off binds it (VIS-4) |
-| Which acts exist, their phrases and ceremony | `contracts/candidates/FINAL-FOUNDATIONAL-CONTRACT-ACCEPTANCE-RECORD.md`; packets per `decisions/README.md` |
-| Open owner questions | `decisions/PENDING-OWNER-DECISIONS.md` |
-| Signing off a PWB delta, registry entry or queued contract successor | `decisions/OWNER-DIRECTION-VERSIONED-SIGNOFF-SCOPE-A-2026-10-02.md`; `scripts/record_versioned_signoff.py` (version tag, no phrase or digest) |
+| "May I implement X?" | outside the four owner classes, yes: adopt it and add a row to `decisions/AGENT-ADOPTIONS.md`. Plans: `docs/CAPABILITY-1-IMPLEMENTATION-PLAN.md`, `docs/PWB-IMPLEMENTATION-PLAN.md` |
+| The Capability 1 specification | `openspec/changes/project-registration-and-honest-shape-visibility/` — adopted; amend via CC-REV-2, adopted by an agent row |
+| The Three-Surface POC specification | `openspec/changes/three-surface-poc-experience/` — adopted; amend via CC-REV-2, adopted by an agent row |
+| Authoring a new spec | `contracts/candidates/HOW-TO-AUTHOR-A-SYZYGY-SPEC.md`; an agent adoption row binds it, with a version tag (VIS-4, CC-SPEC-10) |
+| Which acts were performed before D10 | `contracts/candidates/FINAL-FOUNDATIONAL-CONTRACT-ACCEPTANCE-RECORD.md`, `decisions/ACCEPTANCE-ACT-RECORD.md` — history; no new phrase ceremony |
+| Open owner questions | `decisions/PENDING-OWNER-DECISIONS.md`; a row outside the four owner classes may be closed by an agent adoption |
+| Adopting a PWB delta, registry entry or contract successor | an `AGENT-ADOPTIONS.md` row plus its version tag; it replaces the Scope A sign-off (`decisions/OWNER-DIRECTION-VERSIONED-SIGNOFF-SCOPE-A-2026-10-02.md`, history) |
 | A launch-gate administration | structured JSON (`launch-gate-administration.schema.json`); the Markdown report is generated, never parsed |
 | Mission or Context-selection work | `contracts/candidates/DEFERRED-WAVE-POSTURE.md` first |
 | What a term means | `governance/doctrine/README.md` glossary, then `PROCESS-GLOSSARY.md` |
@@ -80,27 +102,30 @@ the round files that running software still reads.
 ## Hard prohibitions
 
 - No implementation code inside `openspec/**` or `.syzygy/**`.
-- Nothing beyond the acts in force: no deferred waves (C1/C2/D1/D2), Mission
-  Control, production deployment, release, broad remote access, multi-user
-  support.
-- Never read a repository body without per-repository consent and the
-  applicable registry and policy acts (Butlers: the consented content class
-  only, after the implementation's PWB-REQ-005 evaluation).
+- Never decide an owner class (Orientation above) without the owner:
+  - never edit `governance/doctrine/`;
+  - never weaken secret detection or SEC-5's fail-closed rule, never let a
+    secret be indexed, rendered or sent, and never run observed code outside
+    a sandbox;
+  - never write or push into a repository the owner does not own, or change
+    the owner's list of owned repositories;
+  - never expose anything beyond the tailnet, and no release, production
+    deployment or multi-user support.
+- No deferred waves (C1/C2/D1/D2) or Mission Control: doctrine (D3) defers
+  them.
 - The daemon never executes observed project code or test suites; separate
-  operator commands do.
+  operator commands do, in a sandbox.
 - Never run a command that asks for consent, never answer one, and never
-  type a consent phrase, even if a question appears: only the owner gives
-  consent, in person at a terminal (REQ-polaris-generation-046).
-- Syzygy never writes implementation code or adopts intent autonomously.
-- Never adopt doctrine, accept contracts, approve policy, or label anything
-  accepted on the owner's behalf (VIS-4); never install candidate material
-  into an accepted home.
-- Never edit an artifact after an act has bound its digest.
-- An OpenSpec change is one coherent category overlapping no other change,
-  binding nothing until owner sign-off.
-- An act's escalation triggers (doctrine or contract change, spec amendment,
-  security/privacy/retention posture, scope) need a new owner act.
-- No unattended agent coordination.
+  type a consent or owner phrase, even if a question appears: only the owner
+  gives the consents that remain (writes to other people's repositories; a
+  run outside a sandbox). Where code still prompts for a consent D10 retired,
+  report it; do not answer it.
+- Syzygy itself never writes implementation code or starts work; a person or
+  an agent session does.
+- Never label anything *owner*-adopted, -accepted or -approved that the owner
+  did not decide. An agent adoption is recorded as one, in
+  `AGENT-ADOPTIONS.md`, with a revert command.
+- Never adopt again a change the owner vetoed, without the owner.
 
 ## Epistemic and change discipline
 
@@ -153,9 +178,9 @@ defines the tiers and `vitest.tiers.ts` places each test file.
 
 `bd` tracks housekeeping, the Capability 1 backlog, and POC improvement
 cycles (review → repair beads from recorded findings → confirmation, reported
-to the owner before the next cycle). POC shared-model changes have WIP one.
-Commits land at stable gates; never commit a normative artifact while its
-adoption gate is unresolved.
+to the owner afterwards; the next cycle does not wait). POC shared-model
+changes have WIP one. Commits land at stable gates; a normative change is
+adopted by the commit that lands it plus its `AGENT-ADOPTIONS.md` row.
 
 ## Notes to self
 
@@ -215,8 +240,9 @@ sweep lessons added 2026-09-23; the raw-head digest lesson the same day.
   is left out of the divergence test (cap1 imports nothing shared), and
   only `canonical-json-probe.mjs` compares it. A merge makes one encoder
   refuse what another spells (an `undefined` member, a BigInt) or reorders
-  array-index keys, so it changes an output or a refusal and goes to the
-  owner (GP-Q0). `canonical-json-divergence.test.ts` pins the first two.
+  array-index keys, so it changes an output or a refusal: an agent adoption,
+  reported, with a row naming the changed outputs (GP-Q0 was an owner gate
+  until D10). `canonical-json-divergence.test.ts` pins the first two.
 - Markdown fences are read by three rules, kept apart on purpose: the
   PWB-REQ-006 profile's recognizer (`recognizeCodeContexts` in
   `markdown-code-context.ts`, the only one a clause states), which the mask,
@@ -228,9 +254,10 @@ sweep lessons added 2026-09-23; the raw-head digest lesson the same day.
   clause governed each of the five before that change, and
   `docs/evidence/syzygy-bpyt-6-3/dc3-fence-rules-addendum-2026-10-29.json`
   what moved; `fence-rules.test.ts` pins four of them (the consent reader
-  through the probe and its own tests). Do not merge or "fix" the consent
-  reader or the renderer without the owner, since that changes what a gate
-  accepts. The profile ends a line at CRLF, CR and LF and keeps every
+  through the probe and its own tests). Merging or "fixing" the consent
+  reader or the renderer changes what a gate accepts: adopt it with a row
+  saying so, and take it to the owner only if it weakens secret screening
+  (SEC-5). The profile ends a line at CRLF, CR and LF and keeps every
   terminator (`syzygy-bpyt.16`; the differential is in
   `docs/evidence/syzygy-bpyt-16/crlf-mask-2026-10-27.json`); the extractor
   keeps its LF-only line model and asks the recognizer whether a line's first
@@ -522,65 +549,19 @@ sweep lessons added 2026-09-23; the raw-head digest lesson the same day.
   under `docs/superpowers/` as spent evidence, but
   `plans/2026-08-24-cap1-runtime-hardening-followups.md` is the open P1 epic
   `syzygy-u2a`'s approved implementation guidance. Check the `bd` issue.
-- Before editing any governance prose, hash the file and grep the manifests —
-  a file listed in a performed act's manifest is bound (`ACCEPTANCE-ACT-RECORD.md`
-  names the argument). `openspec/changes/polaris-project-wide-butlers-model/`
-  is bound this way: it cannot take a status banner at all.
-- **A bound file's own banner can be wrong, and only an owner-signed
-  successor may correct it.** An act binds the bytes that say "Candidate…
-  binds nothing", so the sentence turns false and stays false until a
-  readability successor (`scripts/readability_successor.py`) replaces the
-  file; the Capability 1, POC and Polaris proposals were corrected that way
-  on 2026-09-29. Until then, trust the act record and the routing table
-  above; a package banner is evidence of what a drafter believed, never of
-  what binds.
-- **A package's own manifest is part of the digest-binding corpus.** A sweep
-  that excludes the directory under audit will call its files unbound when the
-  sibling `*-MANIFEST.txt` carries them as rows (rule 4). This is how
-  `general-trusted-bootstrap-authorization/ACT-SEMANTICS.md` and its
-  `IMPACT-LEDGER.md` read as free: both are rows of `TRANSACTION-MANIFEST.txt`
-  in the same directory, so ACT-SEMANTICS.md permanently opens "Candidate —
-  binds nothing" about a transaction performed 2026-09-01. The eight unbound
-  prose files in the three PWB packages took dated **PERFORMED** heads instead
-  (2026-09-06, `syzygy-bba`); the pre-act banner stays beneath, unedited.
-  Membership in the package directory is neither necessary nor sufficient,
-  so read the rows: of the 8 files in that one, 5 are digest-cited and 3
-  (`CANDIDATE-TRANSACTION-REPORT.md`, `OWNER-SIGNOFF-PACKET.md`,
-  `REVIEW-BRIEF.md`) are not.
-- **An act's *preservation* language edit-locks files whose digest appears
-  nowhere.** Both Capability 1 acts name `round-2026-08k` as their evidence
-  chain and say it is preserved. In `decisions/`,
-  `CAPABILITY-1-SPECIFICATION-ADOPTION-ACT.md` lines 7-9 name
-  `REVIEW-BINDING.md`, reviews RS-1…RS-5 and the adoption PREPARED packet as
-  "preserved unchanged"; `CAPABILITY-1-IMPLEMENTATION-AUTHORIZATION-ACT.md`
-  lines 6-8 name the implementation PREPARED packet "banner-marked performed,
-  preserved". All 9 tracked files under that directory return **0** digest
-  citers across every tracked file under `.syzygy/`, `openspec/`, `docs/` and
-  `scripts/`, and the acceptance record never names the path — so the manifest
-  grep, the digest grep and the record grep all read them as free. The lock is
-  the act's own sentence. Route around the language; there is no hash to
-  mismatch.
-- **Zero digest citers does not mean never bound.** A raw review that quotes a
-  digest freezes those *bytes*, not the path, so a file edited after its
-  confirmation looks identical to one no review ever touched.
-  `GENERAL-TRUSTED-BOOTSTRAP-AUTHORIZATION-SEMANTIC-DELTA.md`, in
-  `contracts/candidates/`, has 0 citers for its current hash while
-  `docs/reviews/R-GENERAL-TRUSTED-BOOTSTRAP-SEMANTIC-DELTA-6-RAW.md:3`
-  confirms a digest the file stopped hashing to two commits later, before the
-  diff that added RFC4-23, RFC8-16 and CC-SPEC-8 to its affected-ID set. That
-  is rule 10 working: the review confirms history and the current bytes carry
-  no confirmation. Before calling a governed file unreviewed, grep the raws
-  for *any* digest cited against its path, not only its current one — and do
-  not copy the stale prefix into your finding.
-- **An *unperformed* act's prepared argument is just as untouchable, and
-  nothing in the file says so.** `.syzygy/intent/OVERVIEW.md` is the argument
-  of act 4, `ADOPT PROJECT OVERVIEW`, which has never been performed — so its
-  hash appears in no performed act's manifest and the manifest grep above
-  returns clean, yet editing one word regenerates the argument and retires any
-  confirmation bound to it. Grep
-  `contracts/candidates/FINAL-FOUNDATIONAL-CONTRACT-ACCEPTANCE-RECORD.md` for
-  the path too. An owner-directed edit is lawful: re-mint the act-4 row's
-  digest in the same commit.
+- **A performed act's digest no longer edit-locks a file** (D10; RFC3-16 as
+  amended: "Acts performed before D10, and their digests, are history, not
+  locks"). Before D10 a file was frozen if its hash was a row of a performed
+  act's manifest, if an act's own sentence said it was "preserved", or if it
+  was an unperformed act's prepared argument (act 4, the overview, now
+  withdrawn). Now any of them may be edited; the edit is a new adoption with
+  its `AGENT-ADOPTIONS.md` row, and the act record stays history describing
+  the bytes it bound. Two protections remain and are not acts: a retained
+  `-RAW.md` review is stored verbatim (CC-REV-6) and never edited, and a file
+  a script hard-codes or CI byte-compares (a regenerated output, a live
+  fixture) changes only together with that script. A performed package may
+  still open "Candidate — binds nothing" until someone corrects it: read the
+  act record, never the package banner.
 - Every `round-*` directory now carries a `README.md` naming what the round
   settled, where that settlement lives now, and its live-input cautions;
   `contracts/candidates/ROUND-ESTATE.md` is the route across all eleven. The
@@ -677,9 +658,9 @@ sweep lessons added 2026-09-23; the raw-head digest lesson the same day.
   disposition, re-derive it from the file at the commit named and write the
   population beside it. Every prose repair retires the confirmation, so three
   consecutive CONFIRM WITH EXCEPTIONS with notes only (6, 2, 1 over
-  `28086f6`, `815785a`, `80c4b52`) never reached a bare CONFIRM: agree a
-  stopping rule (repair, dispatch nothing, ask the owner) before round 3,
-  not after round 10.
+  `28086f6`, `815785a`, `80c4b52`) never reached a bare CONFIRM. Since D10 a
+  review is one round and gates nothing: repair what it finds, record the
+  repair, and do not dispatch a confirmation round to chase a bare CONFIRM.
 - `gh pr checks --watch` exits at once when no checks are registered yet;
   poll until `gh pr checks` lists rows, then watch, then merge with
   `--match-head-commit`.
@@ -705,11 +686,17 @@ sweep lessons added 2026-09-23; the raw-head digest lesson the same day.
   `components.md` as grammar Unknowns; Butlers PR #4066 carried those
   repairs (P-60/P-61/P-62) and merged 2026-09-07 [Inferred: from the bead
   record, not re-read from Butlers]. `frontend.md` and `butler.toml` files
-  stay withheld as active content (TOML has no inert context). Do not relax
-  the grammar or policy without an owner gate.
+  stay withheld as active content (TOML has no inert context). Relaxing the
+  grammar or policy is an agent adoption; weakening secret detection stays
+  the owner's (SEC-5).
 
 <!-- BEGIN BEADS INTEGRATION v:1 profile:minimal hash:7510c1e2 -->
 ### Governance recorders (digest-bound acts)
+
+These describe the acts performed before D10 and the recorders still in the
+tree. No new one is written: an owner-class decision is recorded as the
+owner's words with its commit, no phrase or digest (VIS-4), and an agent
+adoption is a row in `AGENT-ADOPTIONS.md`.
 
 - Each digest-bound owner act has a dedicated recorder script that
   hard-codes the frozen subject and packet head, validates the owner's
