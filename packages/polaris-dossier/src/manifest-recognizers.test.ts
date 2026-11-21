@@ -124,6 +124,7 @@ beforeAll(() => {
     cargoRepeatedUnread: '[package]\nname = "x"\n[package.metadata]\nk = 1\nk = 2\n',
     cargoDate: '[package]\nname = "x"\n\n[package.metadata]\nreleased = 2026-11-22\n',
     cargoDependenciesNotTable: 'dependencies = ["serde"]\n',
+    cargoRepeatedWorkspaceDependency: '[workspace.dependencies]\nserde = "1"\nserde = "2"\n',
 
     pyWorkspace: '[project]\nname = "kestrel-workspace"\n\n[tool.uv.workspace]\nmembers = ["packages/*", "apps/api"]\n',
     pySingle: [
@@ -153,6 +154,8 @@ beforeAll(() => {
     pyMalformed: '[project]\nname = "kestrel\n',
     pyEmpty: '',
     pyRequirementWithoutName: '[project]\ndependencies = [">=1"]\n',
+    pyRequirementLeadingHyphen: '[project]\ndependencies = ["-x"]\n',
+    pyRequirementNames: '[project]\ndependencies = ["zope.interface>=5", "a_b-c.d~=1", "x."]\n',
     pyGroupElementInteger: '[dependency-groups]\ndev = [1]\n',
     pyRepeated: '[project]\nname = "a"\nname = "b"\n',
     pyDate: '[project]\nname = "x"\n[tool.other]\nwhen = 07:30:00\n',
@@ -223,6 +226,8 @@ beforeAll(() => {
     workflowRootSequence: '- on: push\n',
     workflowIntegerJob: 'on: push\njobs:\n  1:\n    runs-on: x\n',
     workflowNeedsMapping: 'on: push\njobs:\n  a:\n    needs: { b: 1 }\n',
+    workflowJobScalar: 'on: push\njobs:\n  a: 1\n',
+    workflowRepeatedInJob: 'on: push\njobs:\n  a:\n    runs-on: x\n    runs-on: y\n',
     workflowNameInteger: 'name: 12\non: push\n',
     workflowRepeatedJob: 'on: push\njobs:\n  a: {}\n  a: {}\n',
     workflowRepeatedUnread: 'on: push\nenv:\n  A: 1\n  A: 2\njobs: {}\n',
@@ -306,6 +311,7 @@ describe('cargo-manifest version 1', () => {
     expect(facts(recognizeCargoManifest(F['cargoNameInteger']!))).toBe('field-type');
     expect(facts(recognizeCargoManifest(F['cargoDependenciesNotTable']!))).toBe('field-type');
     expect(facts(recognizeCargoManifest(F['cargoRepeatedHeader']!))).toBe('duplicate-key');
+    expect(facts(recognizeCargoManifest(F['cargoRepeatedWorkspaceDependency']!))).toBe('duplicate-key');
     expect(facts(recognizeCargoManifest(F['cargoRepeatedUnread']!))).toBe('syntax');
     expect(facts(recognizeCargoManifest(F['cargoDate']!))).toBe('beyond-reader');
   });
@@ -313,7 +319,7 @@ describe('cargo-manifest version 1', () => {
 
 describe('python-project-manifest version 1', () => {
   it('names every blob whose basename is pyproject.toml, compared exactly', () => {
-    expect(['pyproject.toml', 'sub/pyproject.toml', 'PyProject.toml', 'pyproject.toml.bak'].map(isPythonProjectPath)).toEqual([true, true, false, false]);
+    expect(['pyproject.toml', 'sub/pyproject.toml', 'PyProject.toml', 'pyproject.toml.bak', 'a/xpyproject.toml'].map(isPythonProjectPath)).toEqual([true, true, false, false, false]);
   });
   it('reads a uv workspace: the project name and each member pattern', () => {
     expect(facts(recognizePythonProject(F['pyWorkspace']!))).toEqual([
@@ -328,12 +334,19 @@ describe('python-project-manifest version 1', () => {
       ['dependency', 13, 13, 'pytest', 'dependency-groups', 'dev'],
     ]);
   });
+  it('takes a requirement\'s name as the longest run starting and ending with a letter or digit', () => {
+    expect(facts(recognizePythonProject(F['pyRequirementNames']!))).toEqual([
+      ['dependency', 2, 2, 'zope.interface', 'project.dependencies', null], ['dependency', 2, 2, 'a_b-c.d', 'project.dependencies', null],
+      ['dependency', 2, 2, 'x', 'project.dependencies', null],
+    ]);
+  });
   it('refuses a malformed file as syntax and reads an empty one as declaring nothing', () => {
     expect(facts(recognizePythonProject(F['pyMalformed']!))).toBe('syntax');
     expect(facts(recognizePythonProject(F['pyEmpty']!))).toEqual([]);
   });
   it('refuses a requirement with no name, a group element neither string nor table, a repeated key and a time as their faults', () => {
     expect(facts(recognizePythonProject(F['pyRequirementWithoutName']!))).toBe('field-type');
+    expect(facts(recognizePythonProject(F['pyRequirementLeadingHyphen']!))).toBe('field-type');
     expect(facts(recognizePythonProject(F['pyGroupElementInteger']!))).toBe('field-type');
     expect(facts(recognizePythonProject(F['pyRepeated']!))).toBe('duplicate-key');
     expect(facts(recognizePythonProject(F['pyDate']!))).toBe('beyond-reader');
@@ -342,7 +355,7 @@ describe('python-project-manifest version 1', () => {
 
 describe('go-module-manifest version 1', () => {
   it('names every blob whose basename is go.mod, compared exactly', () => {
-    expect(['go.mod', 'cmd/x/go.mod', 'Go.mod', 'go.sum', 'go.work'].map(isGoModulePath)).toEqual([true, true, false, false, false]);
+    expect(['go.mod', 'cmd/x/go.mod', 'Go.mod', 'go.sum', 'go.work', 'cmd/xgo.mod'].map(isGoModulePath)).toEqual([true, true, false, false, false, false]);
   });
   it('reads the module and single-line and block require directives, each on its own line, an exact `// indirect` as require-indirect', () => {
     expect(facts(recognizeGoModule(F['goModule']!))).toEqual([
@@ -399,11 +412,13 @@ describe('github-actions-workflow version 1', () => {
     expect(facts(recognizeWorkflow(F['workflowRootSequence']!))).toBe('field-type');
     expect(facts(recognizeWorkflow(F['workflowIntegerJob']!))).toBe('field-type');
     expect(facts(recognizeWorkflow(F['workflowNeedsMapping']!))).toBe('field-type');
+    expect(facts(recognizeWorkflow(F['workflowJobScalar']!))).toBe('field-type');
     expect(facts(recognizeWorkflow(F['workflowNameInteger']!))).toBe('field-type');
     expect(facts(recognizeWorkflow(F['workflowOnBoolean']!))).toBe('field-type');
   });
   it('refuses a repeated job as duplicate-key and a repeated key it does not read as syntax', () => {
     expect(facts(recognizeWorkflow(F['workflowRepeatedJob']!))).toBe('duplicate-key');
+    expect(facts(recognizeWorkflow(F['workflowRepeatedInJob']!))).toBe('duplicate-key');
     expect(facts(recognizeWorkflow(F['workflowRepeatedUnread']!))).toBe('syntax');
   });
   it('refuses an anchor and alias and a second document as beyond-reader', () => {
