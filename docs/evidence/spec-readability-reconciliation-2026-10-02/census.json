@@ -599,8 +599,8 @@
       }
     },
     "POLARIS": {
-      "requirements": 38,
-      "scenarios": 277,
+      "requirements": 39,
+      "scenarios": 333,
       "members": {
         "REQ-polaris-generation-001": {
           "name": "Admitted project input",
@@ -869,11 +869,19 @@
           "name": "Provenance-bound source policy",
           "scenarios": [
             "Composite classification cannot be derived",
-            "Consent is valid but policy act is not",
+            "Declaration is present but committed policy is invalid",
             "Observed source supplies a permissive policy",
             "Partial redaction retains usable support",
             "Excluded content reaches a diagnostic boundary",
-            "Provider revoked with an existing challenge"
+            "Provider revoked with an existing challenge",
+            "Complete request screening catches composed secrets",
+            "Ordered design checks preserve full and actual request projections",
+            "Canonical tool receipt cannot be forged or replayed",
+            "First request is not the scaffold baseline",
+            "Ingest excludes before any later request",
+            "Audit persistence failure prevents transmission",
+            "Runtime classes do not silently widen the core declaration",
+            "Fixed protocol controls have distinct received and sent identities"
           ]
         },
         "REQ-polaris-generation-026": {
@@ -963,7 +971,8 @@
             "Pinned objects and policy cannot drift",
             "Conservative visibility preserves exclusions",
             "Legacy continuation is explicit",
-            "Disclosures name actual evidence"
+            "Disclosures name actual evidence",
+            "URL projection does not inherit a false local dispatch reason"
           ]
         },
         "REQ-polaris-generation-034": {
@@ -1005,6 +1014,8 @@
             "Review packet without the authoring exchange",
             "Verdict bound to a stale packet",
             "Reviewer or inventory declared as the author",
+            "Supervised launch record missing or mismatched",
+            "Matched supervised helper is not rejected as operator-started",
             "Verdict incomplete or inconsistent",
             "Independence and completeness disclosed as Inferred",
             "Design review survives its status region",
@@ -1018,7 +1029,25 @@
             "Later round carries a changed-block list",
             "Changed-block list confirms nothing",
             "Changed-block list rebuilt with its packet",
-            "Changed-block list disclosed"
+            "Changed-block list disclosed",
+            "Review launch provenance matches actual mode in both forms",
+            "Codec rejects a stream BOM and preserves embedded data",
+            "URL design view preserves the exact original subject",
+            "Renderer origins cover every actual input byte",
+            "Raw secrets cannot be laundered through entity encoding",
+            "Raw active finding stays failed at the generic boundary",
+            "Full renderer sink verification is mandatory",
+            "Inert view still fails residual generic scanner findings",
+            "View expansion and parent limits are independent",
+            "Complete ordered delivery precedes the dependent verdict",
+            "Ordered design transport exhausts its budget",
+            "Closed canonical ordered transport survives UTF-8 and escaping boundaries",
+            "Final part actual send and admitted response determine verdict eligibility",
+            "Ordered verdict eligibility follows the complete protected acknowledgment",
+            "History projection, lifetime budget and retirement are fail closed",
+            "Design verdict binds original and current representation separately",
+            "Design view is not a decoded raw artifact channel",
+            "Supervised packet delivery uses only admitted MCP tools"
           ]
         },
         "REQ-polaris-generation-036": {
@@ -1043,30 +1072,62 @@
         "REQ-polaris-generation-047": {
           "name": "Trunk-tip revision pinned at launch",
           "scenarios": [
-            "Existing consent at HEAD keeps today's behaviour",
-            "Fork remote at a consented commit",
-            "Default to the trunk tip",
-            "Trunk named master",
-            "No trunk",
-            "Explicit revision",
-            "HEAD elsewhere",
-            "HEAD elsewhere in a no-copy run",
-            "Existing full clone at the trunk tip",
-            "Repeat run at a launch-consented HEAD",
-            "Revision with launch records while HEAD is at another act's revision",
-            "Repeat run under a launch consent recorded by version 1.1",
-            "SHA-256 clone",
-            "Several remote defaults",
-            "Local branch ahead of the remote default",
-            "Partial clone missing an object",
-            "Clone with an alternate",
-            "Configuration and hooks of the operator's clone",
-            "Revision naming an annotated tag",
-            "Revision naming a blob",
-            "Commit whose checkout fails",
-            "Ambiguous abbreviation",
-            "References in the reftable backend",
-            "A consent that states the clone's form"
+            "Non-main remote default without records",
+            "Explicit remote selector and tag",
+            "Unsupported selector or malformed advertisement",
+            "Remote moves after selection",
+            "Supplied clone does not match",
+            "Unsafe locator is not emitted",
+            "Source metadata detector canary",
+            "Acquisition timeout and cleanup failure",
+            "Acquisition disk and process limits are distinct",
+            "Strict SHA-256 shape only",
+            "Local entry remains strict",
+            "Source provider declaration precedes helper and selection",
+            "Complete source metadata is screened before send",
+            "Source connect audit failure prevents native advertisement",
+            "Source fetch audit failure prevents protocol transmission",
+            "Native source profile cannot acquire extra egress authority",
+            "Source transport capture scope is honest",
+            "Entire admitted closure precedes source storage",
+            "One required excluded blob refuses the whole owned acquisition",
+            "Commit tree and alias metadata are screened too",
+            "Pack delta and closure mismatch cannot become a stored pack",
+            "Unsupported memory transport never falls back to fetch",
+            "Interruption cannot retain unadmitted acquisition input",
+            "Supplied clone retains its separate exclusion boundary"
+          ]
+        },
+        "REQ-polaris-generation-048": {
+          "name": "Declared URL dossier supervisor",
+          "scenarios": [
+            "Ordered design support is pinned independently by role",
+            "No-record end-to-end close",
+            "Parent adoption precedes any mechanical instance authority",
+            "Adopted rule permits only its bounded runtime instance",
+            "Mechanical exception cannot spread to another authorization artifact",
+            "Fixed writer cannot widen immutable instance bindings",
+            "Rollback cannot restore retired runtime authority",
+            "Parent withdrawal stops the next live or resumed act",
+            "Kernel attestation is required before protected access",
+            "Authentication and operation scope are separate",
+            "Issuance has one lawful authoritative data home",
+            "Rotation retires the previous instance immediately",
+            "Revocation applies to the next act and resume",
+            "Authority and projection disagreement fails closed",
+            "Bridge authentication cannot launder anonymous input",
+            "Separate contexts and unchanged packets",
+            "Tool configuration refuses before launch",
+            "No execution instruction in every role",
+            "Refusal timeout and stop",
+            "Resume retains the pin and checks",
+            "Stored provenance is not verification",
+            "Operator-started compatibility and CLI access",
+            "Network route cannot bypass the relay",
+            "Strict tools and disabled customization are checked",
+            "Unsupported thinking cannot be hidden by a signature",
+            "Boundary and audit must survive resume",
+            "Verified default is explicit and unsupported model never falls back"
           ]
         }
       }
