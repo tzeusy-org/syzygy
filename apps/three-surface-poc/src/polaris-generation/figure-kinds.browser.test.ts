@@ -52,6 +52,9 @@ it.skipIf(executable === undefined)('shows the drawing at 1440 px and the number
       expect(await page.evaluate(`(() => { const ol = document.querySelector("figure[data-figure-kind=swimlane] .figure-stepper"); const li = [...ol.children];
         return [ol.tagName, getComputedStyle(li[0]).listStyleType, getComputedStyle(ol).fontSize, li.map(item => getComputedStyle(item).borderLeftStyle)]; })()`))
         .toEqual(['OL', 'decimal', '13px', ['dashed', 'dashed', 'dashed', 'dotted', 'dashed']]);
+      // A label with no break opportunity still wraps within the box (overflow-wrap: anywhere): the test writes one into an item.
+      expect(await page.evaluate(`(() => { const ol = document.querySelector("figure[data-figure-kind=swimlane] .figure-stepper");
+        ol.lastElementChild.append(" " + "x".repeat(120)); return ol.scrollWidth <= ol.clientWidth; })()`)).toBe(true);
       expect(await page.evaluate('document.scripts.length')).toBe(0);
     } finally {
       await page.close();

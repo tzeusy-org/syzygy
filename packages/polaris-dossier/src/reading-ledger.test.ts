@@ -298,7 +298,8 @@ describe('reading ledger: the figure kinds of schema v7', () => {
     diagrams: [
       { id: 'seq', title: 'S', home: { kind: 'section', target: 'core' }, kind: 'sequence', relationship: 'R', disposition: { kind: 'produced', assetIds: ['seq'] },
         participants: [part('pa', 'src/a.c'), part('pb', 'src/b.c')],
-        messages: [{ ...part('ma', 'src/a.c'), from: 'pa', to: 'pb' }, { ...part('mb', 'src/c.c'), from: 'pb', to: 'pa' }] },
+        // The third message shares a file with its receiver alone, which is enough.
+        messages: [{ ...part('ma', 'src/a.c'), from: 'pa', to: 'pb' }, { ...part('mb', 'src/c.c'), from: 'pb', to: 'pa' }, { ...part('mc', 'src/b.c'), from: 'pa', to: 'pb' }] },
       { id: 'lane', title: 'L', home: { kind: 'section', target: 'core' }, kind: 'swimlane', relationship: 'R', disposition: { kind: 'produced', assetIds: ['lane'] },
         lanes: [part('la', 'src/a.c'), part('lb', 'src/b.c')], steps: [{ ...part('sa', 'src/a.c'), lane: 'la' }, { ...part('sb', 'src/c.c'), lane: 'lb' }] },
     ],

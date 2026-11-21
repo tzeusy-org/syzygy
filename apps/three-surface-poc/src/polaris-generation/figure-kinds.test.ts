@@ -89,6 +89,8 @@ describe('figure kinds on the operator-agent site', () => {
     expect(index).toContain('<rect class="lane-band" x="24" y="0" width="176" height="536"/><rect class="lane-band" x="208" y="0" width="176" height="536"/><rect class="lane-band" x="392" y="0" width="176" height="536"/>');
     expect(index).toContain('<path class="step-order" d="M 112 248 C 112 263, 296 263, 296 278" marker-end="url(#arrow-1)"/>');
     expect(index).toContain('<g class="node unknown"><title>tags a release (unknown)</title><rect x="392" y="368" width="176" height="56" rx="6"/>');
+    // A box label wraps at 19 characters: "opens a pull request" is 20.
+    expect(index).toContain('<tspan x="112" dy="0">opens a pull</tspan><tspan x="112" dy="16">request</tspan>');
   });
 
   it('writes the phone forms whole and escaped, with no identity, citation or label token', () => {
