@@ -1,0 +1,35 @@
+{
+  "frozenSourceFiles": 171,
+  "frozenCompiledFiles": 23,
+  "hostedMain": "2d36b66c0cc0d18874577ac5a449186b809d76d5",
+  "hostedMainDiffFiles": 38,
+  "hostedMainDiffOverlap": [],
+  "overlapVerification": [
+    "exact set intersection",
+    "separate literal git pathspec filter"
+  ],
+  "replacements": [
+    "REQ-polaris-generation-025",
+    "REQ-polaris-generation-035",
+    "REQ-polaris-generation-048"
+  ],
+  "policyLeafFields": [
+    "supportedProfileRegistry.binding",
+    "urlDesignInertView.audit",
+    "urlDesignInertView.bounds.other",
+    "urlDesignInertView.egress"
+  ],
+  "addedScenarios": [
+    "Closed canonical ordered transport survives UTF-8 and escaping boundaries",
+    "Complete ordered delivery precedes the dependent verdict",
+    "Final part actual send and admitted response determine verdict eligibility",
+    "History projection, lifetime budget and retirement are fail closed",
+    "Ordered design checks preserve full and actual request projections",
+    "Ordered design support is pinned independently by role",
+    "Ordered design transport exhausts its budget"
+  ],
+  "patchRoundTrip": [
+    "forward",
+    "reverse"
+  ]
+}

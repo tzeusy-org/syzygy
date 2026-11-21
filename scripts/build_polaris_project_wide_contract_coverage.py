@@ -10,6 +10,7 @@ warrants and deterministic drift, then generates the matrix manifest.
 import hashlib
 import os
 import re
+import subprocess
 import sys
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
@@ -18,9 +19,9 @@ import build_polaris_project_wide_spec_dependencies as dependencies
 
 ROOT = os.path.normpath(os.path.join(os.path.dirname(os.path.abspath(__file__)), ".."))
 CHANGE = os.path.join(ROOT, "openspec", "changes", "polaris-project-wide-butlers-model")
-INDEX = os.path.join(
-    ROOT, ".syzygy", "governance", "contracts", "candidates", "05-CONTRACT-INDEX.yaml"
-)
+# This matrix verifies the 324 clauses reviewed in the third confirmation.
+# Later contract additions belong to their own review and coverage artifacts.
+REVIEW_INDEX = "f441517e5c036608ff9af1f2b76b8fd9828c2c84:.syzygy/governance/contracts/candidates/05-CONTRACT-INDEX.yaml"
 PARTS = (
     os.path.join(CHANGE, "contract-coverage-matrix", "RFC-0001-0003.md"),
     os.path.join(CHANGE, "contract-coverage-matrix", "RFC-0004-0006.md"),
@@ -105,7 +106,10 @@ def parse_inputs(part_texts=None, repair_text=None):
     if repair_text is None:
         repair_text = base.read(REPAIR)
 
-    accepted = INDEX_RE.findall(base.read(INDEX))
+    index = subprocess.check_output(
+        ["git", "show", REVIEW_INDEX], cwd=ROOT, encoding="utf-8"
+    )
+    accepted = INDEX_RE.findall(index)
     if len(accepted) != 324 or len(set(accepted)) != 324:
         raise ValueError(
             f"accepted denominator must be 324 unique clauses, got {len(accepted)}/{len(set(accepted))}"

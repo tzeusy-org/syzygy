@@ -51,20 +51,16 @@ that other RFCs cite most. Its weight sits in **RFC3-16(a)**, the owner-act
 provenance predicate that every gate in the corpus honoring a consent, an
 approval, an adoption stamp, a policy, or a registry cites rather than
 restating the obligation; in **RFC3-16(b)**, what every act must bind; and in
-**RFC3-16(c)**, the two provenance states.
+RFC3-16(c), the two provenance states.
 
 - **§1.1 Categories.** The five constitutional `governance/` categories,
   closed except by recorded owner widening (RFC3-15, RFC3-15(a)).
 - **§1.2 Lifecycles and provenance.** Category-appropriate lifecycles; the
   self-declared stamp versus effective status.
-  - **RFC3-16(a)** the effective-owner-act predicate — an authorization needs
-    a real human act, exact-digest and scope bound, in state (1) or state
-    (2), with its state rendered.
-  - Independent correlation is what permits state (2), not what makes the
-    human act effective.
-  - **RFC3-16(b)** what every act must bind.
-  - **RFC3-16(c)** the two provenance states, which keeps a bootstrap act
-    visibly uncorrelated and never independently verified.
+  - RFC3-16(a) defines how a row or owner decision establishes adopted authority.
+  - RFC3-16(b) states what the record binds.
+  - RFC3-16(c) preserves the provenance distinction for historical owner acts.
+  - RFC3-16(d) states the currentness checks for bounded URL-dossier machine credentials.
 - **§1.3 Declarations and challenge records.** The reserved `declarations/`
   category and the home of challenge submissions and their admission records
   (RFC3-17, RFC3-17(a)).
@@ -72,7 +68,7 @@ restating the obligation; in **RFC3-16(b)**, what every act must bind; and in
   the open owner question carried here (q4).
 
 Clause identities are package-wide: this module holds RFC3-15, RFC3-15(a),
-RFC3-16, RFC3-16(a), RFC3-16(b), RFC3-16(c), RFC3-17 and RFC3-17(a). No
+RFC3-16, RFC3-16(a), RFC3-16(b), RFC3-16(c), RFC3-16(d), RFC3-17 and RFC3-17(a). No
 numbers are retired or merged anywhere in the package.
 
 ---

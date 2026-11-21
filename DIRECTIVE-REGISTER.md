@@ -196,7 +196,7 @@ Owner-approved craft. 55 identifiers, defined across 8 files.
 
 ## Design contract clauses — `RFC-accepted`
 
-**Accepted** — Waves A and B, 2026-08-17. 325 identifiers, defined across 25 files.
+**Accepted** — Waves A and B, 2026-08-17. 325 identifiers, defined across 24 files.
 
 | Identifier | Title, as the corpus marks it | Defined at |
 |---|---|---|
@@ -280,15 +280,15 @@ Owner-approved craft. 55 identifiers, defined across 8 files.
 | `RFC3-12` | Never authoritative for project-internal truth (SDR-30) | `.syzygy/governance/contracts/rfcs/RFC-0003/manifests-and-namespace.md`:354 |
 | `RFC3-13` | — | `.syzygy/governance/contracts/rfcs/RFC-0003/manifests-and-namespace.md`:362 |
 | `RFC3-14` | Asymmetric relation semantics | `.syzygy/governance/contracts/rfcs/RFC-0003/manifests-and-namespace.md`:367 |
-| `RFC3-15` | — | `.syzygy/governance/contracts/rfcs/RFC-0003/governance-homes-and-owner-acts.md`:87 |
-| `RFC3-15(a)` | Why records/ exists | `.syzygy/governance/contracts/rfcs/RFC-0003/governance-homes-and-owner-acts.md`:109 |
-| `RFC3-16` | Lifecycle status: a self-declaration inside content, an effective status outside it | `.syzygy/governance/contracts/rfcs/RFC-0003/governance-homes-and-owner-acts.md`:121 |
-| `RFC3-16(a)` | — | `.syzygy/governance/contracts/rfcs/RFC-0003/governance-homes-and-owner-acts.md`:60 |
-| `RFC3-16(b)` | — | `.syzygy/governance/contracts/rfcs/RFC-0003/governance-homes-and-owner-acts.md`:65 |
-| `RFC3-16(c)` | — | `.syzygy/governance/contracts/rfcs/RFC-0003/governance-homes-and-owner-acts.md`:54 |
-| `RFC3-16(d)` | Bounded mechanically instantiated URL-dossier local machine-credential data | `.syzygy/governance/contracts/rfcs/RFC-0003/governance-homes-and-owner-acts.md`:394 |
-| `RFC3-17` | — | `.syzygy/governance/contracts/rfcs/RFC-0003/governance-homes-and-owner-acts.md`:410 |
-| `RFC3-17(a)` | Where challenges and their admission records live | `.syzygy/governance/contracts/rfcs/RFC-0003/governance-homes-and-owner-acts.md`:419 |
+| `RFC3-15` | — | `.syzygy/governance/contracts/rfcs/RFC-0003/governance-homes-and-owner-acts.md`:83 |
+| `RFC3-15(a)` | Why records/ exists | `.syzygy/governance/contracts/rfcs/RFC-0003/governance-homes-and-owner-acts.md`:105 |
+| `RFC3-16` | Lifecycle status: a self-declaration inside content, an effective status outside it | `.syzygy/governance/contracts/rfcs/RFC-0003/governance-homes-and-owner-acts.md`:117 |
+| `RFC3-16(a)` | The owner-act provenance predicate | `.syzygy/governance/contracts/rfcs/RFC-0003/governance-homes-and-owner-acts.md`:189 |
+| `RFC3-16(b)` | What an adoption record binds | `.syzygy/governance/contracts/rfcs/RFC-0003/governance-homes-and-owner-acts.md`:258 |
+| `RFC3-16(c)` | Owner-adopted bootstrap act versus Syzygy-verified act | `.syzygy/governance/contracts/rfcs/RFC-0003/governance-homes-and-owner-acts.md`:315 |
+| `RFC3-16(d)` | Bounded mechanically instantiated URL-dossier local machine-credential data | `.syzygy/governance/contracts/rfcs/RFC-0003/governance-homes-and-owner-acts.md`:390 |
+| `RFC3-17` | — | `.syzygy/governance/contracts/rfcs/RFC-0003/governance-homes-and-owner-acts.md`:406 |
+| `RFC3-17(a)` | Where challenges and their admission records live | `.syzygy/governance/contracts/rfcs/RFC-0003/governance-homes-and-owner-acts.md`:415 |
 | `RFC3-18` | — | `.syzygy/governance/contracts/rfcs/RFC-0003/manifests-and-namespace.md`:419 |
 | `RFC3-19` | .syzygy/work/ | `.syzygy/governance/contracts/rfcs/RFC-0003/manifests-and-namespace.md`:426 |
 | `RFC3-20` | .syzygy/cache/ is rebuildable projection, nothing else | `.syzygy/governance/contracts/rfcs/RFC-0003/manifests-and-namespace.md`:439 |
@@ -318,7 +318,7 @@ Owner-approved craft. 55 identifiers, defined across 8 files.
 | `RFC4-11` | Git/VCS adapter (with hosting sub-adapter) | `.syzygy/governance/contracts/rfcs/RFC-0004/named-adapters.md`:103 |
 | `RFC4-12` | Code-structure observer | `.syzygy/governance/contracts/rfcs/RFC-0004/named-adapters.md`:130 |
 | `RFC4-13` | Test, CI, and gate observers | `.syzygy/governance/contracts/rfcs/RFC-0004/named-adapters.md`:157 |
-| `RFC4-13(a)` | — | `.syzygy/governance/contracts/rfcs/RFC-0004/named-adapters.md`:194 |
+| `RFC4-13(a)` | The external-confirmation capture artifact | `.syzygy/governance/contracts/rfcs/RFC-0004/named-adapters.md`:264 |
 | `RFC4-13(b)` | The governed checker | `.syzygy/governance/contracts/rfcs/RFC-0004/named-adapters.md`:298 |
 | `RFC4-14` | Runtime observer | `.syzygy/governance/contracts/rfcs/RFC-0004/named-adapters.md`:352 |
 | `RFC4-15` | Beads adapter: the read contract | `.syzygy/governance/contracts/rfcs/RFC-0004/named-adapters.md`:365 |
@@ -488,7 +488,7 @@ Owner-approved craft. 55 identifiers, defined across 8 files.
 | `RFC9-15(b)` | Fixed locations, manually refreshed | `.syzygy/governance/contracts/rfcs/RFC-0009/semantic-geography.md`:629 |
 | `RFC9-16` | The closed relocation-trigger set | `.syzygy/governance/contracts/rfcs/RFC-0009/semantic-geography.md`:586 |
 | `RFC9-17` | Forbidden churn | `.syzygy/governance/contracts/rfcs/RFC-0009/semantic-geography.md`:701 |
-| `RFC9-18` | (layout version registry, module 1) | `.syzygy/governance/contracts/rfcs/RFC-0009/README.md`:160 |
+| `RFC9-18` | — | `.syzygy/governance/contracts/rfcs/RFC-0009/semantic-geography.md`:715 |
 | `RFC9-19` | — | `.syzygy/governance/contracts/rfcs/RFC-0009/semantic-geography.md`:736 |
 | `RFC9-20` | — | `.syzygy/governance/contracts/rfcs/RFC-0009/semantic-geography.md`:755 |
 | `RFC9-21` | Identity-based counting, never double-counting | `.syzygy/governance/contracts/rfcs/RFC-0009/semantic-geography.md`:804 |
@@ -496,7 +496,7 @@ Owner-approved craft. 55 identifiers, defined across 8 files.
 | `RFC9-23` | — | `.syzygy/governance/contracts/rfcs/RFC-0009/semantic-geography.md`:831 |
 | `RFC9-24` | The reserved state palette | `.syzygy/governance/contracts/rfcs/RFC-0009/visual-grammar-and-lenses.md`:67 |
 | `RFC9-25` | Reserved channels | `.syzygy/governance/contracts/rfcs/RFC-0009/visual-grammar-and-lenses.md`:107 |
-| `RFC9-26` | (channel registry, module 2) | `.syzygy/governance/contracts/rfcs/RFC-0009/README.md`:162 |
+| `RFC9-26` | The channel declaration contract | `.syzygy/governance/contracts/rfcs/RFC-0009/visual-grammar-and-lenses.md`:118 |
 | `RFC9-27` | Unknown is never invisible | `.syzygy/governance/contracts/rfcs/RFC-0009/visual-grammar-and-lenses.md`:160 |
 | `RFC9-28` | Height (SDR-24) | `.syzygy/governance/contracts/rfcs/RFC-0009/visual-grammar-and-lenses.md`:191 |
 | `RFC9-29` | Text is a channel | `.syzygy/governance/contracts/rfcs/RFC-0009/visual-grammar-and-lenses.md`:200 |
@@ -531,7 +531,7 @@ in this family's own files but at no definition site in them: `RFC4-8(c)`, `RFC5
 
 ## Design contract clauses (candidate) — `RFC-candidate`
 
-Candidate — **binds nothing.** RFC-0010 and RFC-0011, plus the candidate copies of the accepted modules. 367 identifiers, defined across 32 files.
+Candidate — **binds nothing.** RFC-0010 and RFC-0011, plus the candidate copies of the accepted modules. 367 identifiers, defined across 31 files.
 
 **Read this before citing them.** A clause number appearing in both this family and the accepted one is the same clause in two homes. The accepted copy governs.
 
@@ -617,15 +617,15 @@ Candidate — **binds nothing.** RFC-0010 and RFC-0011, plus the candidate copie
 | `RFC3-12` | Never authoritative for project-internal truth (SDR-30) | `.syzygy/governance/contracts/candidates/rfcs/RFC-0003/manifests-and-namespace.md`:354 |
 | `RFC3-13` | — | `.syzygy/governance/contracts/candidates/rfcs/RFC-0003/manifests-and-namespace.md`:362 |
 | `RFC3-14` | Asymmetric relation semantics | `.syzygy/governance/contracts/candidates/rfcs/RFC-0003/manifests-and-namespace.md`:367 |
-| `RFC3-15` | — | `.syzygy/governance/contracts/candidates/rfcs/RFC-0003/governance-homes-and-owner-acts.md`:87 |
-| `RFC3-15(a)` | Why records/ exists | `.syzygy/governance/contracts/candidates/rfcs/RFC-0003/governance-homes-and-owner-acts.md`:109 |
-| `RFC3-16` | Lifecycle status: a self-declaration inside content, an effective status outside it | `.syzygy/governance/contracts/candidates/rfcs/RFC-0003/governance-homes-and-owner-acts.md`:121 |
-| `RFC3-16(a)` | — | `.syzygy/governance/contracts/candidates/rfcs/RFC-0003/governance-homes-and-owner-acts.md`:60 |
-| `RFC3-16(b)` | — | `.syzygy/governance/contracts/candidates/rfcs/RFC-0003/governance-homes-and-owner-acts.md`:65 |
-| `RFC3-16(c)` | — | `.syzygy/governance/contracts/candidates/rfcs/RFC-0003/governance-homes-and-owner-acts.md`:54 |
-| `RFC3-16(d)` | Bounded mechanically instantiated URL-dossier local machine-credential data | `.syzygy/governance/contracts/candidates/rfcs/RFC-0003/governance-homes-and-owner-acts.md`:394 |
-| `RFC3-17` | — | `.syzygy/governance/contracts/candidates/rfcs/RFC-0003/governance-homes-and-owner-acts.md`:410 |
-| `RFC3-17(a)` | Where challenges and their admission records live | `.syzygy/governance/contracts/candidates/rfcs/RFC-0003/governance-homes-and-owner-acts.md`:419 |
+| `RFC3-15` | — | `.syzygy/governance/contracts/candidates/rfcs/RFC-0003/governance-homes-and-owner-acts.md`:83 |
+| `RFC3-15(a)` | Why records/ exists | `.syzygy/governance/contracts/candidates/rfcs/RFC-0003/governance-homes-and-owner-acts.md`:105 |
+| `RFC3-16` | Lifecycle status: a self-declaration inside content, an effective status outside it | `.syzygy/governance/contracts/candidates/rfcs/RFC-0003/governance-homes-and-owner-acts.md`:117 |
+| `RFC3-16(a)` | The owner-act provenance predicate | `.syzygy/governance/contracts/candidates/rfcs/RFC-0003/governance-homes-and-owner-acts.md`:189 |
+| `RFC3-16(b)` | What an adoption record binds | `.syzygy/governance/contracts/candidates/rfcs/RFC-0003/governance-homes-and-owner-acts.md`:258 |
+| `RFC3-16(c)` | Owner-adopted bootstrap act versus Syzygy-verified act | `.syzygy/governance/contracts/candidates/rfcs/RFC-0003/governance-homes-and-owner-acts.md`:315 |
+| `RFC3-16(d)` | Bounded mechanically instantiated URL-dossier local machine-credential data | `.syzygy/governance/contracts/candidates/rfcs/RFC-0003/governance-homes-and-owner-acts.md`:390 |
+| `RFC3-17` | — | `.syzygy/governance/contracts/candidates/rfcs/RFC-0003/governance-homes-and-owner-acts.md`:406 |
+| `RFC3-17(a)` | Where challenges and their admission records live | `.syzygy/governance/contracts/candidates/rfcs/RFC-0003/governance-homes-and-owner-acts.md`:415 |
 | `RFC3-18` | — | `.syzygy/governance/contracts/candidates/rfcs/RFC-0003/manifests-and-namespace.md`:419 |
 | `RFC3-19` | .syzygy/work/ | `.syzygy/governance/contracts/candidates/rfcs/RFC-0003/manifests-and-namespace.md`:426 |
 | `RFC3-20` | .syzygy/cache/ is rebuildable projection, nothing else | `.syzygy/governance/contracts/candidates/rfcs/RFC-0003/manifests-and-namespace.md`:439 |
@@ -655,7 +655,7 @@ Candidate — **binds nothing.** RFC-0010 and RFC-0011, plus the candidate copie
 | `RFC4-11` | Git/VCS adapter (with hosting sub-adapter) | `.syzygy/governance/contracts/candidates/rfcs/RFC-0004/named-adapters.md`:103 |
 | `RFC4-12` | Code-structure observer | `.syzygy/governance/contracts/candidates/rfcs/RFC-0004/named-adapters.md`:130 |
 | `RFC4-13` | Test, CI, and gate observers | `.syzygy/governance/contracts/candidates/rfcs/RFC-0004/named-adapters.md`:157 |
-| `RFC4-13(a)` | — | `.syzygy/governance/contracts/candidates/rfcs/RFC-0004/named-adapters.md`:194 |
+| `RFC4-13(a)` | The external-confirmation capture artifact | `.syzygy/governance/contracts/candidates/rfcs/RFC-0004/named-adapters.md`:264 |
 | `RFC4-13(b)` | The governed checker | `.syzygy/governance/contracts/candidates/rfcs/RFC-0004/named-adapters.md`:298 |
 | `RFC4-14` | Runtime observer | `.syzygy/governance/contracts/candidates/rfcs/RFC-0004/named-adapters.md`:352 |
 | `RFC4-15` | Beads adapter: the read contract | `.syzygy/governance/contracts/candidates/rfcs/RFC-0004/named-adapters.md`:365 |
@@ -825,7 +825,7 @@ Candidate — **binds nothing.** RFC-0010 and RFC-0011, plus the candidate copie
 | `RFC9-15(b)` | Fixed locations, manually refreshed | `.syzygy/governance/contracts/candidates/rfcs/RFC-0009/semantic-geography.md`:629 |
 | `RFC9-16` | The closed relocation-trigger set | `.syzygy/governance/contracts/candidates/rfcs/RFC-0009/semantic-geography.md`:586 |
 | `RFC9-17` | Forbidden churn | `.syzygy/governance/contracts/candidates/rfcs/RFC-0009/semantic-geography.md`:701 |
-| `RFC9-18` | (layout version registry, module 1) | `.syzygy/governance/contracts/candidates/rfcs/RFC-0009/README.md`:160 |
+| `RFC9-18` | — | `.syzygy/governance/contracts/candidates/rfcs/RFC-0009/semantic-geography.md`:715 |
 | `RFC9-19` | — | `.syzygy/governance/contracts/candidates/rfcs/RFC-0009/semantic-geography.md`:736 |
 | `RFC9-20` | — | `.syzygy/governance/contracts/candidates/rfcs/RFC-0009/semantic-geography.md`:755 |
 | `RFC9-21` | Identity-based counting, never double-counting | `.syzygy/governance/contracts/candidates/rfcs/RFC-0009/semantic-geography.md`:804 |
@@ -833,7 +833,7 @@ Candidate — **binds nothing.** RFC-0010 and RFC-0011, plus the candidate copie
 | `RFC9-23` | — | `.syzygy/governance/contracts/candidates/rfcs/RFC-0009/semantic-geography.md`:831 |
 | `RFC9-24` | The reserved state palette | `.syzygy/governance/contracts/candidates/rfcs/RFC-0009/visual-grammar-and-lenses.md`:67 |
 | `RFC9-25` | Reserved channels | `.syzygy/governance/contracts/candidates/rfcs/RFC-0009/visual-grammar-and-lenses.md`:107 |
-| `RFC9-26` | (channel registry, module 2) | `.syzygy/governance/contracts/candidates/rfcs/RFC-0009/README.md`:162 |
+| `RFC9-26` | The channel declaration contract | `.syzygy/governance/contracts/candidates/rfcs/RFC-0009/visual-grammar-and-lenses.md`:118 |
 | `RFC9-27` | Unknown is never invisible | `.syzygy/governance/contracts/candidates/rfcs/RFC-0009/visual-grammar-and-lenses.md`:160 |
 | `RFC9-28` | Height (SDR-24) | `.syzygy/governance/contracts/candidates/rfcs/RFC-0009/visual-grammar-and-lenses.md`:191 |
 | `RFC9-29` | Text is a channel | `.syzygy/governance/contracts/candidates/rfcs/RFC-0009/visual-grammar-and-lenses.md`:200 |

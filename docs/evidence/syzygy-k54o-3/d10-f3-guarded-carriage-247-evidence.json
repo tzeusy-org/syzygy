@@ -1,0 +1,614 @@
+{
+  "recordedAt": "2026-11-21T00:37:31.826111+00:00",
+  "base": "3c0658ff8d6de9b73305f4c27979404551ecfe36",
+  "scope": "Owned offline synthetic artifact transport through existing host, relay and broker. The annotation was scratch-only. The separate stored-envelope test used the existing pure codec.",
+  "frozenPathCount": 171,
+  "compiledFileCount": 23,
+  "trials": {
+    "baseline": {
+      "scenario": "baseline",
+      "bodyBytes": [
+        308320,
+        308332
+      ],
+      "counts": {
+        "artifactReads": 1,
+        "forwards": 1,
+        "responses": 1,
+        "reservations": 1
+      },
+      "outcome": "wall-limit",
+      "exitCode": null,
+      "groupTermination": "confirmed",
+      "events": [
+        "launch-audit",
+        "reserve",
+        "audit:attempt-allowed",
+        "forward",
+        "usage",
+        "audit:response-admitted",
+        "tool-attempt",
+        "tool-receipt",
+        "audit:attempt-refused"
+      ],
+      "continuation": [
+        {
+          "bytes": 3154,
+          "sha256": "5f359338843a1ba61b4cc72e702a15ebaca3189cd2f8e781a636ca32a8b0098a",
+          "messages": 1,
+          "projections": [],
+          "projectedMetadataMatches": true
+        }
+      ],
+      "localCopies": [
+        {
+          "bytes": 308454,
+          "sha256": "bfca3b4d90dc1b4c6dd9c452905445f4b24c4ae7ec27831ba150ebae9070ca36"
+        }
+      ],
+      "commandSha256": "3dabe5c81f4ef6d2816dc05af0f68d06585395009252b4f45f9a555a435ba22c",
+      "viewSha256": "6859c81cd36cd8a80e7aa6e33b2e362f880f12807d5278df7f393c8901fb1b47"
+    },
+    "bounded": {
+      "scenario": "bounded",
+      "bodyBytes": [
+        308320,
+        308332
+      ],
+      "counts": {
+        "artifactReads": 2,
+        "forwards": 3,
+        "responses": 3,
+        "reservations": 3
+      },
+      "outcome": "exited",
+      "exitCode": 0,
+      "groupTermination": "confirmed",
+      "events": [
+        "launch-audit",
+        "reserve",
+        "audit:attempt-allowed",
+        "forward",
+        "usage",
+        "audit:response-admitted",
+        "tool-attempt",
+        "tool-receipt",
+        "reserve",
+        "audit:attempt-allowed",
+        "forward",
+        "usage",
+        "audit:response-admitted",
+        "tool-attempt",
+        "tool-receipt",
+        "reserve",
+        "audit:attempt-allowed",
+        "forward",
+        "usage",
+        "audit:response-admitted"
+      ],
+      "auditOutcomes": [
+        {
+          "event": "attempt-allowed",
+          "status": null,
+          "receivedBytes": 3195,
+          "admittedBytes": 3154
+        },
+        {
+          "event": "response-admitted",
+          "status": 200,
+          "receivedBytes": 3195,
+          "admittedBytes": 3154
+        },
+        {
+          "event": "attempt-allowed",
+          "status": null,
+          "receivedBytes": 312055,
+          "admittedBytes": 312014
+        },
+        {
+          "event": "response-admitted",
+          "status": 200,
+          "receivedBytes": 312055,
+          "admittedBytes": 312014
+        },
+        {
+          "event": "attempt-allowed",
+          "status": null,
+          "receivedBytes": 620943,
+          "admittedBytes": 620902
+        },
+        {
+          "event": "response-admitted",
+          "status": 200,
+          "receivedBytes": 620943,
+          "admittedBytes": 620902
+        }
+      ],
+      "continuation": [
+        {
+          "bytes": 3154,
+          "sha256": "5f359338843a1ba61b4cc72e702a15ebaca3189cd2f8e781a636ca32a8b0098a",
+          "messages": 1,
+          "projections": [],
+          "projectedMetadataMatches": true
+        },
+        {
+          "bytes": 312014,
+          "sha256": "5c2657e06dcba7e5687e41f6694f6a6527a3de9508633ded5fe90c15da9e2790",
+          "messages": 3,
+          "projections": [
+            {
+              "receiptBytes": 308455,
+              "receiptSha256": "ab31ce88fb1c5731aee342d58bf5ba759351f9d9c58497e6abb7a74d434304d1",
+              "reminderBytes": 86,
+              "reminderSha256": "f9c3190cad17113eb6d411cfc1c03795a5c36cf31736ee1630fcdc3509b1c8b2"
+            }
+          ],
+          "projectedMetadataMatches": true
+        },
+        {
+          "bytes": 620902,
+          "sha256": "77f600c0fe275926017392038491ca3bb8fe5ed7967e3136dacd0bf6fbaa7360",
+          "messages": 5,
+          "projections": [
+            {
+              "receiptBytes": 308455,
+              "receiptSha256": "ab31ce88fb1c5731aee342d58bf5ba759351f9d9c58497e6abb7a74d434304d1",
+              "reminderBytes": 86,
+              "reminderSha256": "f9c3190cad17113eb6d411cfc1c03795a5c36cf31736ee1630fcdc3509b1c8b2"
+            },
+            {
+              "receiptBytes": 308473,
+              "receiptSha256": "b38f89ade2664790bcf6f739f510b5c67e42fbc39d3c59851cba4f10eb8f342f",
+              "reminderBytes": 86,
+              "reminderSha256": "f9c3190cad17113eb6d411cfc1c03795a5c36cf31736ee1630fcdc3509b1c8b2"
+            }
+          ],
+          "projectedMetadataMatches": true
+        }
+      ],
+      "localCopies": [],
+      "commandSha256": "866ee82e3e9ff2e1be3df8ccfc7b7fa1603d71a2e4e7ebfee129a7a62dcf50b0",
+      "viewSha256": "eb92d5d987d4cded47ccc656c2fe2916948ef2a8e5b14f2b108f42972381a858"
+    },
+    "tight": {
+      "scenario": "tight",
+      "bodyBytes": [
+        308320,
+        308332
+      ],
+      "counts": {
+        "artifactReads": 2,
+        "forwards": 2,
+        "responses": 2,
+        "reservations": 2
+      },
+      "outcome": "wall-limit",
+      "exitCode": null,
+      "groupTermination": "confirmed",
+      "events": [
+        "launch-audit",
+        "reserve",
+        "audit:attempt-allowed",
+        "forward",
+        "usage",
+        "audit:response-admitted",
+        "tool-attempt",
+        "tool-receipt",
+        "reserve",
+        "audit:attempt-allowed",
+        "forward",
+        "usage",
+        "audit:response-admitted",
+        "tool-attempt",
+        "tool-receipt",
+        "audit:attempt-refused"
+      ],
+      "auditOutcomes": [
+        {
+          "event": "attempt-allowed",
+          "status": null,
+          "receivedBytes": 3195,
+          "admittedBytes": 3154
+        },
+        {
+          "event": "response-admitted",
+          "status": 200,
+          "receivedBytes": 3195,
+          "admittedBytes": 3154
+        },
+        {
+          "event": "attempt-allowed",
+          "status": null,
+          "receivedBytes": 312055,
+          "admittedBytes": 312014
+        },
+        {
+          "event": "response-admitted",
+          "status": 200,
+          "receivedBytes": 312055,
+          "admittedBytes": 312014
+        },
+        {
+          "event": "attempt-refused",
+          "status": null,
+          "receivedBytes": null,
+          "admittedBytes": null
+        }
+      ],
+      "wireOutcomes": [
+        {
+          "status": 200,
+          "declaredBytes": 3195
+        },
+        {
+          "status": 200,
+          "declaredBytes": 312055
+        },
+        {
+          "status": 413,
+          "declaredBytes": 620943
+        },
+        {
+          "status": 503,
+          "declaredBytes": 318526
+        },
+        {
+          "status": 503,
+          "declaredBytes": 318526
+        },
+        {
+          "status": 503,
+          "declaredBytes": 318526
+        },
+        {
+          "status": 503,
+          "declaredBytes": 318526
+        },
+        {
+          "status": 503,
+          "declaredBytes": 318526
+        },
+        {
+          "status": 503,
+          "declaredBytes": 318526
+        }
+      ],
+      "continuation": [
+        {
+          "bytes": 3154,
+          "sha256": "5f359338843a1ba61b4cc72e702a15ebaca3189cd2f8e781a636ca32a8b0098a",
+          "messages": 1,
+          "projections": [],
+          "projectedMetadataMatches": true
+        },
+        {
+          "bytes": 312014,
+          "sha256": "5c2657e06dcba7e5687e41f6694f6a6527a3de9508633ded5fe90c15da9e2790",
+          "messages": 3,
+          "projections": [
+            {
+              "receiptBytes": 308455,
+              "receiptSha256": "ab31ce88fb1c5731aee342d58bf5ba759351f9d9c58497e6abb7a74d434304d1",
+              "reminderBytes": 86,
+              "reminderSha256": "f9c3190cad17113eb6d411cfc1c03795a5c36cf31736ee1630fcdc3509b1c8b2"
+            }
+          ],
+          "projectedMetadataMatches": true
+        }
+      ],
+      "localCopies": [],
+      "commandSha256": "8be25a4cfee92e390948bfafcadca44e6adbbea621de54c205d79808ebcf3f58",
+      "viewSha256": "151b6d57001b385b07a9443e7d5059c2dbe0e1a0c3d5abedd6efa7cb01d53915"
+    },
+    "turn": {
+      "scenario": "turn",
+      "bodyBytes": [
+        308320,
+        308332
+      ],
+      "counts": {
+        "artifactReads": 2,
+        "forwards": 2,
+        "responses": 2,
+        "reservations": 2,
+        "attempts": 3,
+        "budget": {
+          "state": "stopped",
+          "reason": "turn-budget",
+          "requestReservations": 2,
+          "completeUsageReports": 2,
+          "pendingRoles": [],
+          "reportedTokens": 14,
+          "usageLabel": "Inferred",
+          "usagePopulation": "normalized complete responses accepted by checked host relays",
+          "uncapturedUsage": "Unknown",
+          "tokenEnforcement": "reported-response-boundary; in-flight usage Unknown"
+        }
+      },
+      "outcome": "exited",
+      "exitCode": 1,
+      "groupTermination": "confirmed",
+      "events": [
+        "launch-audit",
+        "reserve",
+        "audit:attempt-allowed",
+        "forward",
+        "usage",
+        "audit:response-admitted",
+        "tool-attempt",
+        "tool-receipt",
+        "reserve",
+        "audit:attempt-allowed",
+        "forward",
+        "usage",
+        "audit:response-admitted",
+        "tool-attempt",
+        "tool-receipt",
+        "reserve-refused",
+        "audit:attempt-refused"
+      ],
+      "continuation": [
+        {
+          "bytes": 3154,
+          "sha256": "5f359338843a1ba61b4cc72e702a15ebaca3189cd2f8e781a636ca32a8b0098a",
+          "messages": 1,
+          "projections": [],
+          "projectedMetadataMatches": true
+        },
+        {
+          "bytes": 312014,
+          "sha256": "5c2657e06dcba7e5687e41f6694f6a6527a3de9508633ded5fe90c15da9e2790",
+          "messages": 3,
+          "projections": [
+            {
+              "receiptBytes": 308455,
+              "receiptSha256": "ab31ce88fb1c5731aee342d58bf5ba759351f9d9c58497e6abb7a74d434304d1",
+              "reminderBytes": 86,
+              "reminderSha256": "f9c3190cad17113eb6d411cfc1c03795a5c36cf31736ee1630fcdc3509b1c8b2"
+            }
+          ],
+          "projectedMetadataMatches": true
+        }
+      ],
+      "localCopies": [],
+      "commandSha256": "95266af533f4382624e0e81c809c8ceeeed87d17db2257f6f31c7d51bf47ccd7",
+      "viewSha256": "7161286e17e5f678a750a212ff0bc229b0dfa080d640f942cd0b7f6e828ca964"
+    },
+    "receipt": {
+      "scenario": "receipt",
+      "bodyBytes": [
+        308320,
+        308332
+      ],
+      "counts": {
+        "artifactReads": 2,
+        "forwards": 2,
+        "responses": 2,
+        "reservations": 2,
+        "attempts": 2,
+        "budget": {
+          "state": "open",
+          "reason": null,
+          "requestReservations": 2,
+          "completeUsageReports": 2,
+          "pendingRoles": [],
+          "reportedTokens": 14,
+          "usageLabel": "Inferred",
+          "usagePopulation": "normalized complete responses accepted by checked host relays",
+          "uncapturedUsage": "Unknown",
+          "tokenEnforcement": "reported-response-boundary; in-flight usage Unknown"
+        }
+      },
+      "outcome": "wall-limit",
+      "exitCode": null,
+      "groupTermination": "confirmed",
+      "events": [
+        "launch-audit",
+        "reserve",
+        "audit:attempt-allowed",
+        "forward",
+        "usage",
+        "audit:response-admitted",
+        "tool-attempt",
+        "tool-receipt",
+        "reserve",
+        "audit:attempt-allowed",
+        "forward",
+        "usage",
+        "audit:response-admitted",
+        "tool-attempt",
+        "tool-receipt-refused",
+        "audit:attempt-refused"
+      ],
+      "continuation": [
+        {
+          "bytes": 3154,
+          "sha256": "5f359338843a1ba61b4cc72e702a15ebaca3189cd2f8e781a636ca32a8b0098a",
+          "messages": 1,
+          "projections": [],
+          "projectedMetadataMatches": true
+        },
+        {
+          "bytes": 312014,
+          "sha256": "5c2657e06dcba7e5687e41f6694f6a6527a3de9508633ded5fe90c15da9e2790",
+          "messages": 3,
+          "projections": [
+            {
+              "receiptBytes": 308455,
+              "receiptSha256": "ab31ce88fb1c5731aee342d58bf5ba759351f9d9c58497e6abb7a74d434304d1",
+              "reminderBytes": 86,
+              "reminderSha256": "f9c3190cad17113eb6d411cfc1c03795a5c36cf31736ee1630fcdc3509b1c8b2"
+            }
+          ],
+          "projectedMetadataMatches": true
+        }
+      ],
+      "localCopies": [],
+      "commandSha256": "53b8c297cea96a5950bafb52b53567e6527f2995dbe95f30f05abf54280ce9cb",
+      "viewSha256": "eea6a595059e67438b6e78c865bab56a90ff39486105562394f6a2f48c5f1ad1"
+    }
+  },
+  "wholeInspector": {
+    "retainedResultSha256": "937e239e3355d9a37e39cbf565ee64d3a7e633a6690b12be3140cdf7ec7905a4",
+    "envelopeSha256": "889a4d60e6d2e484ab128efa68d7b39d39d19877315f291cd060739953eff8d7",
+    "envelopeBytes": 599538,
+    "whole": {
+      "originalSha256": "dfcf023b76d6abfde7229a2181af6d8475b9715c4e3e71d5f59dd23c1e6980ae",
+      "bytes": 518506,
+      "files": 15,
+      "pages": 12
+    },
+    "partOutcomes": [
+      {
+        "bytes": 299781,
+        "outcome": "refused-by-whole-envelope-inspector"
+      },
+      {
+        "bytes": 299757,
+        "outcome": "refused-by-whole-envelope-inspector"
+      }
+    ],
+    "stitched": {
+      "originalSha256": "dfcf023b76d6abfde7229a2181af6d8475b9715c4e3e71d5f59dd23c1e6980ae",
+      "bytes": 518506,
+      "files": 15,
+      "pages": 12
+    },
+    "existingAliasShape": [
+      false,
+      false
+    ]
+  },
+  "reviewedDraft": {
+    "path": "d10-f3-design-delivery-delta-247.md",
+    "bytes": 5766,
+    "sha256": "f70a4cf7133775e373b27b540ef7b6ded1da445dd7e2167d5aae261ed9708cf3"
+  },
+  "independentReview": {
+    "path": "R-D10-F3-TRANSPORT-247-RAW.md",
+    "bytes": 2679,
+    "sha256": "0fd060462db5a90767b558741b6fb86c60c7c060750a22fae7973d8e41ea9b8f"
+  },
+  "lease": {
+    "lease": {
+      "action": "written",
+      "id": "coordinator:codex-20261114-54ebc9f1",
+      "expires_at": "2026-11-21T01:01:20Z"
+    },
+    "issues": [
+      {
+        "id": "syzygy-k54o.3",
+        "matches": 1,
+        "stamp": "2026-11-21T00:36:24Z"
+      },
+      {
+        "id": "syzygy-pdja.36",
+        "matches": 1,
+        "stamp": "2026-11-21T00:36:28Z"
+      },
+      {
+        "id": "syzygy-k54o.2",
+        "matches": 1,
+        "stamp": "2026-11-21T00:36:31Z"
+      }
+    ]
+  },
+  "checks": [
+    {
+      "path": "d10-f3-native-carriage-246-evidence.json",
+      "bytes": 19435,
+      "sha256": "18015a4fbe0dc6d69576a0499c18b1b71178628b13be86f1384927b21ab49da2"
+    },
+    {
+      "path": "d10-f3-design-delivery-decision-246.md",
+      "bytes": 2766,
+      "sha256": "88849f80a4d5750daf5cc7fb455151982a9927ddff1d9f399278af23b58094c4"
+    },
+    {
+      "path": "d10-f3-candidate-inventory-187.json",
+      "bytes": 87142,
+      "sha256": "2268192592b39a33aaad436362babad18a7f7bc618c6ef120892b3819a175bbf"
+    },
+    {
+      "path": "d10-f3-native-guarded-two-read-247.mjs",
+      "bytes": 16258,
+      "sha256": "69902fc599cf54ff1a858d77e3ed98a0b8ef24c4ce2f4c51413f26288b6d0778"
+    },
+    {
+      "path": "d10-f3-native-guarded-two-read-247b.mjs",
+      "bytes": 16514,
+      "sha256": "90cf2de693e09db07cee8d077f68899ca943f8a679d6b59c85165424f3903501"
+    },
+    {
+      "path": "d10-f3-native-guarded-two-read-247c.mjs",
+      "bytes": 16952,
+      "sha256": "f40b4ca5760c4497293586af6836747380b8f65914bd81faf55162668cd5efe0"
+    },
+    {
+      "path": "d10-f3-native-guarded-reservations-247.mjs",
+      "bytes": 17073,
+      "sha256": "c7a78259befb0cf71df6dc39723a0f7eed3bbadd8794195872cd9446154848d5"
+    },
+    {
+      "path": "d10-f3-design-envelope-projection-247.mjs",
+      "bytes": 2536,
+      "sha256": "82f2f613c7ef83e8a1f6b27ec352fcdbd713edc730ab1eb3bb163a08d59c58bf"
+    },
+    {
+      "path": "d10-f3-design-envelope-projection-247.json",
+      "bytes": 646,
+      "sha256": "411cf6a7928308699a0c5da5500f54cc8eeb432607a5dc1fb9543d0fa1dc76dd"
+    },
+    {
+      "path": "d10-f3-design-delivery-delta-247.md",
+      "bytes": 5766,
+      "sha256": "f70a4cf7133775e373b27b540ef7b6ded1da445dd7e2167d5aae261ed9708cf3"
+    },
+    {
+      "path": "looper-review-state-247.json",
+      "bytes": 4639,
+      "sha256": "568c00c4650e549b928b59848479953d85f68c13c9fea4b576ae4790101df648"
+    },
+    {
+      "path": "looper-ranked-state-247.json",
+      "bytes": 6306,
+      "sha256": "850a3d618cda59513a605c168f4e3733803cef2cfd54f2639ac60730668072f9"
+    },
+    {
+      "path": "d10-f3-guarded-heartbeat-247.json",
+      "bytes": 455,
+      "sha256": "00de219b06e6d9e6d0a7e15b00645dc8a667fdaf99b19e1a9c59dca75f21a014"
+    },
+    {
+      "path": "d10-f3-native-guarded-two-read-247-baseline.log",
+      "bytes": 795,
+      "sha256": "f18d173b49dbef5c61ac0943309e8c92692399fa3513023eadf3a65768cdf2b1"
+    },
+    {
+      "path": "d10-f3-native-guarded-two-read-247b-bounded.log",
+      "bytes": 2336,
+      "sha256": "260fb6b80f2d9d2956205db6f07ed9fa61a35f130b28b16144bbf4f8b861a806"
+    },
+    {
+      "path": "d10-f3-native-guarded-two-read-247c-tight.log",
+      "bytes": 1977,
+      "sha256": "a04e1587e40d72a92748856cf3ffdde2623c48ff65d93b6487d52f3c07642c16"
+    },
+    {
+      "path": "d10-f3-native-guarded-reservations-247-turn.log",
+      "bytes": 1541,
+      "sha256": "1c173ddc012c90eeb2762d7827e7bdb8f26004319c4f921623466353a90d3eba"
+    },
+    {
+      "path": "d10-f3-native-guarded-reservations-247-receipt.log",
+      "bytes": 1529,
+      "sha256": "128e9b7343310fca67d71cdc79abaf6e3172852c7f3654d9b8cf7f047f0fee53"
+    },
+    {
+      "path": "R-D10-F3-TRANSPORT-247-RAW.md",
+      "bytes": 2679,
+      "sha256": "0fd060462db5a90767b558741b6fb86c60c7c060750a22fae7973d8e41ea9b8f"
+    }
+  ]
+}

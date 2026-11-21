@@ -151,6 +151,10 @@ def collect(fam: Family):
                 seen.add(ident)
                 if ident in defs:
                     continue
+                # RFC definitions start at the left margin. A wrapped citation
+                # or reader-map bullet can start with the same bold identifier.
+                if fam.key.startswith("RFC-") and not line.startswith(("#", "**")):
+                    continue
                 title = definition(ident, logical)
                 if title is None:
                     continue
@@ -405,6 +409,20 @@ def run_selftest():
 
     # --- the corpus facts the register exists to make findable ---------------
     body = render()
+    expected_rfc_definitions = {
+        "RFC3-16(a)": "RFC3-16(a). The owner-act provenance predicate.",
+        "RFC3-16(b)": "RFC3-16(b). What an adoption record binds",
+        "RFC3-16(c)": "RFC3-16(c). Owner-adopted bootstrap act versus Syzygy-verified act.",
+        "RFC4-13(a)": "RFC4-13(a) — The external-confirmation capture artifact.",
+    }
+    for family in (item for item in families() if item.key.startswith("RFC-")):
+        definitions, _ = collect(family)
+        for ident, opening in expected_rfc_definitions.items():
+            file, line, _ = definitions[ident]
+            with io.open(os.path.join(REPO, file), encoding="utf-8") as source:
+                definition_line = source.read().splitlines()[line - 1]
+            expect(f"{family.key} routes {ident} to its definition",
+                   definition_line.startswith("**" + opening))
     expect("every doctrine rule VIS-1..7 is located",
            all(re.search(r"\| `VIS-%d` \| .+ \| `\.syzygy/governance/doctrine/"
                          r"vision\.md`:\d+ \|" % i, body) for i in range(1, 8)))
