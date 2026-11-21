@@ -49,7 +49,8 @@ export interface ProviderStatementSource {
 
 export interface GateSources {
   /** D10 local dossier policy source; missing refuses, never falls back to act admission. */
-  readonly declaredPolicy?: () => Promise<PolicySnapshot>;
+  /** The committed policy at `bound` (a run record's bound path), or at the path new runs bind. */
+  readonly declaredPolicy?: (bound?: string) => Promise<PolicySnapshot>;
   /** Where the records are read from, for the disclosure. */
   readonly recordsRoot: string;
   /** Repository ids of the observation consents in force whose `Upstream:` URL, normalised by REQ-polaris-generation-046's rule, equals
@@ -523,7 +524,7 @@ export function createPackageGateSources(options: PackageGateSourceOptions): Gat
   };
   return {
     recordsRoot: options.root,
-    declaredPolicy: async () => readCommittedPolicy(options.root),
+    declaredPolicy: async (bound) => readCommittedPolicy(options.root, bound),
     // By the whole normalised `Upstream:` URL, for every host (046, line 17), from the port's own listing of its records.
     repositoryIdsFor: async url => {
       const read = port.observationRecords === undefined ? null : await port.observationRecords();

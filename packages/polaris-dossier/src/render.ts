@@ -225,7 +225,9 @@ export async function renderRun(runDir: string, deps: RenderDeps): Promise<Rende
   // each such body is scanned as before for these pages, and one with a finding is excluded whole here: a quoted or cited body cannot
   // leave the pages it is drawn on, so nothing is rendered. A redacted body is scanned over its complete body, which check kept as the
   // answer alone (`activeContentAsBefore`), so its withheld lines count and no withheld text reaches this step.
-  const scannedAsBefore = [...derived.admitted].filter(([, blob]) => (blob.withheld === undefined ? screen.screenBody(blob.raw) !== undefined : blob.activeContentAsBefore === true))
+  // A whole body is scanned with its path, so its stage's detectors run (dossier policy 2.0.0's configuration detectors never over a body
+  // Stage 1 places), and the active-content scan runs with no exemption.
+  const scannedAsBefore = [...derived.admitted].filter(([cited, blob]) => (blob.withheld === undefined ? screen.scannedAsBefore(blob.raw, cited) : blob.activeContentAsBefore === true))
     .map(([cited]) => cited);
   const unconfirmed = scannedAsBefore.length === 0 ? null : pageSinkUnconfirmed(renderer, files);
   if (unconfirmed !== null) {
@@ -360,7 +362,7 @@ export function buildLocalInput(inputs: BuildInputs): Built {
     if (typeof startLine !== 'number' || typeof endLine !== 'number') return 'other';
     if (blob.withheld === undefined) return 'admitted';
     if (spanTouchesWithheld(blob.withheld, startLine, endLine)) return 'withheld';
-    return screen.screenBody(blob.retainedLines!.slice(startLine - 1, endLine).join('')) === 'secret-detector-match' ? 'withheld' : 'admitted';
+    return screen.screenBody(blob.retainedLines!.slice(startLine - 1, endLine).join(''), cited) === 'secret-detector-match' ? 'withheld' : 'admitted';
   };
   const standingIn = (value: Readonly<Record<string, unknown>>): ((citationId: string) => SpanStanding) => {
     const by = new Map(list(value['citations']).filter(isRecord).flatMap((citation) => (text(citation['id']) === undefined ? [] : [[text(citation['id'])!, spanStanding(citation)] as const])));

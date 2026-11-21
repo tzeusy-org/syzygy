@@ -28,6 +28,8 @@ const DECLARED_VISIBILITY_TEXTS = {
   consequence: '9b77a15373d15cfa6bbd14c01e4dca1cd6a2d098ba9b315f354527cf05b0f088',
   consentRecordMetadata: '4e7baf6e615604d2a6958f59af07e7c454ab9474deb5f2e90f36bdc0d9b1aa84',
 } as const;
+/** sha256 of the dossier declared-source policy 2.0.0's `unchanged`: the declared-source text with configurationDetectors named. */
+const UNCHANGED_TWO_STAGE = 'c33ff41059f398812be0f2e226231111ca2cb38ce49dc0890a841c1da2bcafd8';
 const VISIBILITY_KEYS = ['values', 'admitted', 'rule', 'privateSourceRules', 'unchanged', 'agentSessions', 'consequence', 'consentRecordMetadata'] as const;
 
 /** The two owner-act records whose form states public (`sourceVisibility.rule`), by path. */
@@ -47,7 +49,7 @@ const exactly = (value: unknown, expected: readonly string[]): boolean =>
 
 /** Reads sourceVisibility. Absent means public only. Present must match one complete pinned vocabulary: historical v8 or the
  * declared-source dossier successor. Mixing texts from the two versions refuses. */
-export function readSourceVisibility(scope: unknown): SourceVisibilityRead {
+export function readSourceVisibility(scope: unknown, twoStage = false): SourceVisibilityRead {
   const refuse = (why: string): SourceVisibilityRead => ({ ok: false, why: `its source visibility ${why}` });
   if (!isRecord(scope) || !Object.hasOwn(scope, 'sourceVisibility')) return { ok: true, declared: false, admitsPrivate: false };
   const sv = scope['sourceVisibility'];
@@ -56,8 +58,11 @@ export function readSourceVisibility(scope: unknown): SourceVisibilityRead {
   if (!exactly(keys, VISIBILITY_KEYS)) return refuse(`carries the fields ${keys.join(', ')}, not exactly ${VISIBILITY_KEYS.join(', ')}`);
   if (!exactly(sv['values'], ['public', 'private'])) return refuse('values is not exactly public, private');
   if (!exactly(sv['admitted'], ['public', 'private'])) return refuse('admitted is not exactly public, private');
-  const texts = typeof sv['rule'] === 'string' && sha256(sv['rule']) === DECLARED_VISIBILITY_TEXTS.rule
-    ? DECLARED_VISIBILITY_TEXTS : VISIBILITY_TEXTS;
+  // The dossier policy 2.0.0 (`twoStage`, read only by a screen that implements its classDecision) keeps the declared-source texts and
+  // names configurationDetectors in `unchanged`; that text is read only there, and the predecessor's `unchanged` never is.
+  const declared = typeof sv['rule'] === 'string' && sha256(sv['rule']) === DECLARED_VISIBILITY_TEXTS.rule;
+  if (twoStage && !declared) return refuse('rule is not the declared-source text the two-stage class decision is read with');
+  const texts = twoStage ? { ...DECLARED_VISIBILITY_TEXTS, unchanged: UNCHANGED_TWO_STAGE } : declared ? DECLARED_VISIBILITY_TEXTS : VISIBILITY_TEXTS;
   for (const key of Object.keys(VISIBILITY_TEXTS) as (keyof typeof VISIBILITY_TEXTS)[]) {
     const value = sv[key];
     if (typeof value !== 'string' || sha256(value) !== texts[key]) return refuse(`${key} is not the text this screen implements`);

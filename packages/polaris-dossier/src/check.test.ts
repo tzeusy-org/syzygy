@@ -224,7 +224,7 @@ describe('check: the screen subject', () => {
     writeDraft(run, JSON.stringify(valid(), null, 2));
     const seen: unknown[] = [];
     report(await checkDraft(run, {}, deps({ loadScreen: async (placement) => { seen.push(placement); return SCREEN; } })));
-    expect(seen).toEqual([{ repository: 'repository:redis-redis', commit, visibility: 'public', policySha256: policyFixture(fixturePolicy).binding.sha256 }]);
+    expect(seen).toEqual([{ repository: 'repository:redis-redis', commit, visibility: 'public', policySha256: policyFixture(fixturePolicy).binding.sha256, policyPath: '.syzygy/governance/policies/POLARIS-DOSSIER-DECLARED-SOURCE-POLICY-v2.json' }]);
   });
 });
 
