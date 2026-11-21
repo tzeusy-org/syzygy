@@ -24,6 +24,7 @@ import { buildDesignPacket, validateDesignVerdict } from './design-review.js';
 import { createUrlDesignView } from './url-design-view.js';
 import { materializeOrderedDesignPart, planOrderedDesignBytes } from './url-design-delivery.js';
 import { createOrderedDesignSession } from './url-ordered-design-session.js';
+import { createUrlSessionBudget } from './url-session-budget.js';
 import { createUrlSessionAudit } from './url-session-audit.js';
 import { urlSessionMcpSupportPath } from './url-runtime.js';
 import { URL_CLI_PROGRAM, URL_LAUNCH_LIMITS, launchRestrictedUrlSession, prepareRestrictedUrlSession, restrictedSessionCliArgs, verifySupportedUrlCli, type UrlSessionLaunchOptions } from './session-launch.js';
@@ -183,7 +184,7 @@ async function privateLaunchOptions(root: string, profile: NativeSessionProfile,
 
 const orderedCanonical = (value: unknown): string => encodeCanonicalJson(value, SESSION_POLICY_LIMITS);
 const sameWireValue = (actual: unknown, expected: unknown): boolean => orderedCanonical(actual) === orderedCanonical(expected);
-type OrderedScenario = 'ready' | 'stale-verdict' | 'out-of-order' | 'truncated-terminal';
+type OrderedScenario = 'ready' | 'stale-verdict' | 'out-of-order' | 'truncated-terminal' | 'insufficient-turns' | 'oversized-verdict';
 
 /** Run only the prepared byte-identical namespace command, with its native
  * resource limits and an independent fixture timeout. The production sampled
@@ -315,8 +316,10 @@ async function runNativeOrderedFixture(scenario: OrderedScenario) {
   if (!protectedAudit.ok) throw new Error('own protected audit refused');
   cleanup.push(protectedAudit.close);
   const writer = protectedAudit.beginOrderedDesignAudit(plan, () => true);
+  const budget = createUrlSessionBudget({ deadline: Date.parse(plan.manifest.binding.deadline), now: Date.now,
+    turnBudget: scenario === 'insufficient-turns' ? 4 : 5, tokenBudget: null });
   let relay: SessionRelay;
-  const orderedSession = createOrderedDesignSession({ profile, plan, principal, writer, relay: () => relay, envelope: () => view.bytes,
+  const orderedSession = createOrderedDesignSession({ profile, plan, principal, writer, budget, relay: () => relay, envelope: () => view.bytes,
     current: () => true, assertCurrent: () => {}, stageVerdict: async ({ stdin, assertCurrent }) => {
       await expect(writer.readTerminal()).rejects.toThrow('url-ordered-design-audit-writer-refused');
       assertCurrent();
@@ -333,7 +336,9 @@ async function runNativeOrderedFixture(scenario: OrderedScenario) {
     if (input.route !== '/v1/messages?beta=true' || index >= 5) throw new Error('own route refused');
     expect(protectedAudit.summary().captured['design-ordered']).toBe([0, 2, 7, 12, 19][index]);
     forwarded.push(sha256(input.body));
-    const next = scenario === 'out-of-order' && index === 1 ? steps[2]?.call : steps[index]?.call;
+    const next = scenario === 'out-of-order' && index === 1 ? steps[2]?.call
+      : scenario === 'oversized-verdict' && index === 3 ? { ...steps[3]!.call, input: { ...submit, stdin: 'overrun '.repeat(5_000) } }
+      : steps[index]?.call;
     const message = response(index, next);
     const body = scenario === 'truncated-terminal' && index === steps.length ? message.subarray(0, -10) : message;
     return { status: 200, contentType: 'text/event-stream', requestFlushed: true, body };
@@ -416,12 +421,9 @@ async function runNativeOrderedFixture(scenario: OrderedScenario) {
     response: (bytes, contentType) => {
       const scanSecrets = (text: string) => screen.screenSecrets(text) !== undefined;
       if (scenario !== 'out-of-order' || checked !== 2) {
-        if (scenario === 'ready' && checked === 4) {
-          const oversized = response(3, { ...steps[3]!.call, input: { ...submit, stdin: 'overrun '.repeat(5_000) } });
-          expect(decodeSessionResponse(oversized, contentType, DEFAULT_SESSION_MODEL, scanSecrets).ok).toBe(true);
-          expect(orderedSession.checkResponse(oversized, contentType, scanSecrets, () => true).ok).toBe(false);
-        }
-        const accepted = orderedSession.checkResponse(bytes, contentType, scanSecrets, () => true);
+        if (scenario === 'oversized-verdict' && checked === 4)
+          expect(decodeSessionResponse(bytes, contentType, DEFAULT_SESSION_MODEL, scanSecrets).ok).toBe(true);
+        const accepted = orderedSession.checkResponse(bytes, contentType, scanSecrets);
         if (!accepted.ok || accepted.usage === undefined) {
           faults.push('fixture response codec refused');
           return { ok: false };
@@ -466,7 +468,7 @@ async function runNativeOrderedFixture(scenario: OrderedScenario) {
   const stored = await readFile(path.join(auditParent, 'audit-design.jsonl'), 'utf8');
   const orderedRecords = stored.trimEnd().split('\n').map(line => JSON.parse(line)).filter(row => row.event.kind === 'design-ordered')
     .map(row => row.event.payload as { kind: string; payload: unknown });
-  return { result, checked, screened, terminalResponseDecoded, verdictValidated, audit, forwarded, delivered, faults, cachePositions,
+  return { result, checked, screened, terminalResponseDecoded, verdictValidated, audit, forwarded, delivered, faults, cachePositions, budget: budget.snapshot(),
     reconstructed: receivedParts.join('') === new TextDecoder().decode(view.bytes), plan, terminal, orderedRecords };
 }
 
@@ -593,7 +595,7 @@ describe('prepared private CLI launch',()=>{
       tool.name === 'artifact_read' ? { ...tool, _meta: { 'anthropic/maxResultSizeChars': 500000 } } : tool) } });
   });
 
-  it.each(['ready', 'stale-verdict', 'out-of-order', 'truncated-terminal'] as const)('observes the actual ordered design CLI exchange (%s)', async scenario => {
+  it.each(['ready', 'stale-verdict', 'out-of-order', 'truncated-terminal', 'insufficient-turns', 'oversized-verdict'] as const)('observes the actual ordered design CLI exchange (%s)', async scenario => {
     const observed = await runNativeOrderedFixture(scenario);
     const evidence = JSON.stringify({ faults: observed.faults, checked: observed.checked, delivered: observed.delivered.length,
       audit: observed.audit.map(event => event.event),
@@ -602,6 +604,14 @@ describe('prepared private CLI launch',()=>{
       expect(observed.terminal, evidence).toBeNull();
       expect(observed.orderedRecords.map(record => record.kind)).not.toContain('eligible');
       expect(observed.orderedRecords.at(-1)?.kind).toBe('retired');
+    }
+    if (scenario === 'insufficient-turns') {
+      expect(observed.checked, evidence).toBe(1);
+      expect(observed.delivered).toEqual([]);
+      expect(observed.forwarded).toHaveLength(1);
+      expect(observed.budget).toMatchObject({ reason: 'turn-budget', requestReservations: 1, heldDesignTurns: 0, reportedTokens: 7 });
+      expect(observed.orderedRecords.map(record => record.kind)).toEqual(['retired']);
+      return;
     }
     if (scenario === 'out-of-order') {
       expect(observed.faults, evidence).toEqual(['ordered audit refused owned callback']);
@@ -623,6 +633,14 @@ describe('prepared private CLI launch',()=>{
       expect(observed.reconstructed).toBe(true);
       expect(observed.verdictValidated).toBe(false);
       expect(observed.terminalResponseDecoded).toBe(false);
+      expect(observed.orderedRecords.map(record => record.kind)).not.toContain('verdict-staged');
+      return;
+    }
+    if (scenario === 'oversized-verdict') {
+      expect(observed.checked, evidence).toBe(4);
+      expect(observed.delivered).toHaveLength(3);
+      expect(observed.budget).toMatchObject({ requestReservations: 4, heldDesignTurns: 0, completeUsageReports: 4, reportedTokens: 28 });
+      expect(observed.audit.at(-1)?.event).toBe('response-refused');
       expect(observed.orderedRecords.map(record => record.kind)).not.toContain('verdict-staged');
       return;
     }
@@ -653,6 +671,7 @@ describe('prepared private CLI launch',()=>{
         'acknowledgment-receipt', 'request-admitted', 'send-attempt', 'send-outcome', 'response-admitted', 'eligible',
       ]);
       expect(observed.terminal, evidence).toMatchObject({ packetSha256: observed.plan.manifest.originalSha256 });
+      expect(observed.budget).toMatchObject({ state: 'open', heldDesignTurns: 0, requestReservations: 5, completeUsageReports: 5, reportedTokens: 35 });
     }
   }, 60_000);
 
@@ -837,7 +856,10 @@ describe('prepared private CLI launch',()=>{
   ])('distinguishes $missing vanishing at directory open', async ({ missing, directories, outcome, removed, rootReads }) => {
     const f = await launchFixture();
     const work = f.launch.view.workDirectory, names = new Set(Array.from({ length: directories }, (_, index) => `own-vanishing-dir-${index}`));
-    const preparation = await prepareRestrictedUrlSession(f.launch), host = await f.start();
+    const preparation = await prepareRestrictedUrlSession(f.launch);
+    let releaseTool!: () => void;
+    const heldTool = new Promise<void>(resolve => { releaseTool = resolve; });
+    const host = await f.start({ beforeTool: () => heldTool });
     const retained = 'own-retained-dir-entry';
     const enumerated = new Set<string>();
     let rootOpens = 0, childRemovals = 0, inspectedRetainedAfterRetry = false;
@@ -845,7 +867,10 @@ describe('prepared private CLI launch',()=>{
       if (typeof file !== 'string' || !file.startsWith('/proc/self/fd/')) return;
       const name = path.basename(file);
       if (names.has(name)) enumerated.add(name);
-      if (name === retained && rootOpens > 1) inspectedRetainedAfterRetry = true;
+      if (name === retained && rootOpens > 1) {
+        inspectedRetainedAfterRetry = true;
+        if (outcome === 'exited') releaseTool();
+      }
     };
     filesystem.beforeOpen = async file => {
       if (file === work) {
@@ -861,7 +886,11 @@ describe('prepared private CLI launch',()=>{
         if (missing === 'replaced child') await writeFile(file, 'not a directory', { flag: 'wx' });
       }
     };
-    const child = await launchRestrictedUrlSession({ preparation, host });
+    // Keep the CLI in its first native tool call until the intended census
+    // branch runs. Release pending fixture work when the host closes.
+    const child = await launchRestrictedUrlSession({ preparation, host: {
+      ...host, close: () => { releaseTool(); return host.close(); },
+    } });
     cleanup.push(child.stop);
     const result = await child.finished;
     expect(childRemovals).toBe(removed);
@@ -870,6 +899,6 @@ describe('prepared private CLI launch',()=>{
     if (outcome === 'exited') {
       expect(rootOpens).toBeGreaterThanOrEqual(rootReads);
       expect(inspectedRetainedAfterRetry).toBe(true);
-    } else expect(rootOpens).toBe(rootReads);
-  }, 15000);
+    } else expect(rootOpens, JSON.stringify(result)).toBe(rootReads);
+  }, 60_000);
 });

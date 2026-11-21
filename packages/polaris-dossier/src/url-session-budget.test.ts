@@ -45,4 +45,56 @@ describe('shared URL host budget capture', () => {
     expect(clock.reserve('author', admission)).toBe(false);
     expect(() => createUrlSessionBudget({ deadline: 100, turnBudget: null, tokenBudget: null, now: () => 1 })).toThrow();
   });
+  it('holds the complete ordered path before consuming each turn and protects that capacity from other roles', () => {
+    const b = createUrlSessionBudget({ deadline: 100, turnBudget: 6, tokenBudget: null, now: () => 1 });
+    expect(b.reserve('design', admission)).toBe(true);
+    expect(b.holdOrderedDesignTurns(4, 100)).toBeNull();
+    expect(b.observeUsage('design', usage)).toBe(true);
+    const held = b.holdOrderedDesignTurns(4, 100)!;
+    expect(held.complete()).toBe(false);
+    expect(b.reserve('author', admission)).toBe(true);
+    expect(b.reserve('inventory', admission)).toBe(false);
+    expect(b.reserve('design', admission)).toBe(false);
+    expect(b.snapshot()).toMatchObject({ state: 'open', heldDesignTurns: 4, requestReservations: 2 });
+    expect(b.observeUsage('author', usage)).toBe(true);
+    for (let index = 0; index < 4; index++) {
+      expect(held.canSend()).toBe(true);
+      expect(held.reserve(admission)).toBe(true);
+      expect(held.reserve(admission)).toBe(false);
+      expect(b.reserve('inventory', admission)).toBe(false);
+      expect(b.observeUsage('design', usage)).toBe(false);
+      expect(held.observeUsage(usage)).toBe(true);
+    }
+    expect(held.canSend()).toBe(false);
+    expect(held.complete()).toBe(true);
+    expect(held.complete()).toBe(false);
+    expect(b.holdOrderedDesignTurns(1, 100)).toBeNull();
+    expect(b.snapshot()).toMatchObject({ state: 'open', heldDesignTurns: 0, requestReservations: 6, reportedTokens: 156 });
+  });
+  it('refuses a short budget before consuming a turn and cannot extend an expired or retired reservation', () => {
+    let now = 5;
+    const short = createUrlSessionBudget({ deadline: 100, turnBudget: 3, tokenBudget: null, now: () => now });
+    expect(short.holdOrderedDesignTurns(4, 100)).toBeNull();
+    expect(short.snapshot()).toMatchObject({ reason: 'turn-budget', heldDesignTurns: 0, requestReservations: 0 });
+    const b = createUrlSessionBudget({ deadline: 100, turnBudget: 5, tokenBudget: null, now: () => now });
+    expect(b.holdOrderedDesignTurns(4, 101)).toBeNull();
+    const held = b.holdOrderedDesignTurns(4, 12)!;
+    expect(held.reserve(admission)).toBe(true);
+    now = 12;
+    expect(held.observeUsage(usage)).toBe(false);
+    now = 11;
+    expect(held.canSend()).toBe(false);
+    held.retire();
+    expect(b.holdOrderedDesignTurns(4, 100)).toBeNull();
+    expect(b.snapshot()).toMatchObject({ reason: 'deadline', heldDesignTurns: 0, requestReservations: 1, reportedTokens: 26 });
+  });
+  it('charges measured usage and refuses the next effect at the token cutoff', () => {
+    const b = createUrlSessionBudget({ deadline: 100, turnBudget: null, tokenBudget: 26, now: () => 1 });
+    const held = b.holdOrderedDesignTurns(4, 100)!;
+    expect(held.reserve(admission)).toBe(true);
+    expect(held.observeUsage(usage)).toBe(true);
+    expect(held.canSend()).toBe(false);
+    held.retire();
+    expect(b.snapshot()).toMatchObject({ reason: 'token-budget', heldDesignTurns: 0, requestReservations: 1, reportedTokens: 26 });
+  });
 });

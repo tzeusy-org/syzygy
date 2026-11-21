@@ -10,6 +10,7 @@ import { decodeSessionResponse, type SessionResponseUsage } from './session-resp
 import { isOrderedDesignPlanFor, materializeOrderedDesignPart, type OrderedDesignPlan } from './url-design-delivery.js';
 import type { OrderedDesignAuditPayloads, OrderedDesignAuditReference } from './url-ordered-design-audit.js';
 import type { OrderedDesignAuditWriter } from './url-ordered-design-writer.js';
+import type { createUrlSessionBudget, UrlOrderedDesignTurnReservation } from './url-session-budget.js';
 
 type Call = OrderedDesignAuditPayloads['prepared']['call'];
 type Admission = OrderedDesignAuditPayloads['request-admitted'];
@@ -33,6 +34,7 @@ interface Options {
   readonly principal: string;
   readonly relay: () => SessionRelay | undefined;
   readonly writer: OrderedDesignAuditWriter;
+  readonly budget: Pick<ReturnType<typeof createUrlSessionBudget>, 'current' | 'reserve' | 'observeUsage' | 'uncertainAttempt' | 'holdOrderedDesignTurns'>;
   /** Private exact sealed bytes. This port must revalidate the current input. */
   readonly envelope: () => Uint8Array;
   readonly current: () => boolean | Promise<boolean>;
@@ -61,7 +63,7 @@ function nativeResponse(native: NonNullable<SessionAuditEvent['response']>): Ord
 /** Host-only cursor for one exact sealed transfer. A role supplies an invocation,
  * and only the selected relay contributes admitted request/response evidence. */
 export function createOrderedDesignSession(options: Options) {
-  const { profile, plan, principal, relay, writer, envelope, current, assertCurrent, stageVerdict } = options;
+  const { profile, plan, principal, relay, writer, budget, envelope, current, assertCurrent, stageVerdict } = options;
   if (!isOrderedDesignSessionProfile(profile) || !isOrderedDesignPlanFor(plan, profile.transcript.partition)) throw refused();
   const { transcript } = profile;
   const { binding, parts, originalBytes, originalSha256 } = plan.manifest;
@@ -74,6 +76,7 @@ export function createOrderedDesignSession(options: Options) {
   const receipts: Receipt[] = [], exchanges: Exchange[] = [];
   let selectedRelay: SessionRelay | undefined;
   let initial = true, stopped = false, busy = false, eligible = false;
+  let initialBudgetPending = false, budgetReservation: UrlOrderedDesignTurnReservation | null = null;
   let request: OrderedDesignRequestChecks | null = null, pending: InFlight | null = null, response: Response | null = null;
   let checkedResponse: { readonly native: NonNullable<SessionAuditEvent['response']>; readonly usage: SessionResponseUsage } | null = null;
   let completion: OrderedDesignAuditReference | null = null, stage: OrderedDesignAuditReference | null = null;
@@ -85,7 +88,8 @@ export function createOrderedDesignSession(options: Options) {
     return selectedRelay ??= actual;
   };
   const requireLive = (): void => {
-    if (stopped || !selected().healthy() || !(Date.now() < deadline)) throw refused();
+    if (stopped || !selected().healthy() || !(Date.now() < deadline)
+      || !(budgetReservation === null ? budget.current() : budgetReservation.current())) throw refused();
     assertCurrent();
   };
   const requireCurrent = async (): Promise<void> => {
@@ -93,10 +97,16 @@ export function createOrderedDesignSession(options: Options) {
     if (await current() !== true) throw refused();
     requireLive();
   };
+  const requireNextSend = (): void => {
+    requireLive();
+    if (budgetReservation?.canSend() !== true) throw refused();
+  };
   const stop = (reason: RetireReason): void => {
     if (stopped || eligible) return;
     stopped = true;
     retirement = reason;
+    if (initialBudgetPending) budget.uncertainAttempt('design');
+    budgetReservation?.retire();
     response = null;
     request = null;
     checkedResponse = null;
@@ -132,15 +142,19 @@ export function createOrderedDesignSession(options: Options) {
     return checks;
   };
 
-  const checkResponse = (bytes: Uint8Array, contentType: string, scanSecrets: (text: string) => boolean,
-    chargeUsage: (usage: SessionResponseUsage) => boolean): ReturnType<SessionRelayPorts['response']> => {
+  const checkResponse = (bytes: Uint8Array, contentType: string, scanSecrets: (text: string) => boolean): ReturnType<SessionRelayPorts['response']> => {
     try {
       requireLive();
       if (busy || eligible || checkedResponse !== null || pending?.step !== 'response-admitted'
         || !/^text\/event-stream(?:\s*;\s*charset=utf-8)?$/iu.test(contentType))
         throw refused();
       const decoded = decodeSessionResponse(bytes, contentType, profile.input.binding.model, scanSecrets);
-      if (!decoded.ok || !sessionProfileRemainingTokens(decoded.usage).ok || chargeUsage(decoded.usage) !== true) throw refused();
+      if (!decoded.ok) throw refused();
+      const charged = initial
+        ? budget.observeUsage('design', decoded.usage)
+        : budgetReservation?.observeUsage(decoded.usage);
+      initialBudgetPending = false;
+      if (charged !== true || !sessionProfileRemainingTokens(decoded.usage).ok) throw refused();
       const accept = (observation: SessionResponseObservation) => {
         const result = deepFreeze({ ok: true, usage: decoded.usage, observation } as const);
         checkedResponse = deepFreeze({ native: { ...result.observation, content: 'messages-event-stream',
@@ -185,7 +199,8 @@ export function createOrderedDesignSession(options: Options) {
       if (event.event === 'attempt-allowed') {
         if (pending !== null || response !== null) throw refused();
         if (initial) {
-          if (event.consumedToolResults.length !== 0) throw refused();
+          if (event.consumedToolResults.length !== 0 || !budget.reserve('design', event.admission)) throw refused();
+          initialBudgetPending = true;
           pending = { scope, admission: null, wrapper: null, step: 'send-attempt' };
           return;
         }
@@ -194,7 +209,8 @@ export function createOrderedDesignSession(options: Options) {
         const exactResult = event.consumedToolResults[0], latest = receipts.at(-1);
         if (checked === null || !equal(checked.received, scope.received) || !equal(checked.forwarded, scope.forwarded)
           || checked.resultWrappers.length !== receipts.length || event.consumedToolResults.length !== 1
-          || !exactResult || !latest || exactResult.toolUseId !== latest.call.id || !equal(byteIdentity(exactResult), latest.reply))
+          || !exactResult || !latest || exactResult.toolUseId !== latest.call.id || !equal(byteIdentity(exactResult), latest.reply)
+          || budgetReservation?.reserve(event.admission) !== true)
           throw refused();
         const results = checked.resultWrappers.map(({ toolUseId, wrapper }, index) => {
           const receipt = receipts[index]!;
@@ -236,7 +252,7 @@ export function createOrderedDesignSession(options: Options) {
           exchanges.push(exchange);
           if (native.tool) response = { call: native.tool, usage };
           else {
-            if (!completion || !stage || submission === null) throw refused();
+            if (!completion || !stage || submission === null || budgetReservation?.complete() !== true) throw refused();
             await requireCurrent();
             await writer.append('eligible', { ...exchange, completion, stage, acknowledgment: receipts.at(-1)!.receipt, wrapper });
             requireLive();
@@ -260,13 +276,17 @@ export function createOrderedDesignSession(options: Options) {
     const ordinal = receipts.length;
     let reply: string, receipt: OrderedDesignAuditReference;
     if (ordinal === 0) {
+      budgetReservation = budget.holdOrderedDesignTurns(transcript.resultTurns.length, deadline);
+      requireNextSend();
       reply = canonical({ kind: 'session-control', ok: true, state: 'events', events: [{ event: transcript.prepared.event, ...plan.prepared }] });
       receipt = await writer.append('prepared', { call: issued.call, prepared: identify(plan.preparedText), reply: identify(reply) });
     } else if (ordinal <= parts.length) {
+      requireNextSend();
       const prior = exchanges[ordinal - 1]!;
       reply = materializeOrderedDesignPart(plan, envelope(), parts[ordinal - 1]!.path);
       receipt = await writer.append('part-receipt', { ordinal, issuedBy: prior.response, call: issued.call, reply: identify(reply) });
     } else {
+      requireNextSend();
       const prior = exchanges.at(-1)!;
       if (ordinal !== parts.length + 1 || exchanges.length !== ordinal || completion !== null || !Array.isArray(invocation.input.argv)
         || typeof invocation.input.stdin !== 'string'
@@ -277,7 +297,8 @@ export function createOrderedDesignSession(options: Options) {
         parts: receipts.slice(1).map(({ receipt }, index) => ({ receipt, ...exchanges[index + 1]! })),
         finalAdmission: prior.admission, verdictResponse: prior.response, verdictCall: issued.call });
       await requireCurrent();
-      const checkedVerdictSha256 = await stageVerdict({ stdin, call: issued.call, completion, assertCurrent: requireLive });
+      requireNextSend();
+      const checkedVerdictSha256 = await stageVerdict({ stdin, call: issued.call, completion, assertCurrent: requireNextSend });
       if (checkedVerdictSha256 === null) throw refused();
       await requireCurrent();
       stage = await writer.append('verdict-staged', { completion, issuedBy: prior.response, verdictCall: issued.call,
@@ -288,7 +309,7 @@ export function createOrderedDesignSession(options: Options) {
       submission = Object.freeze({ argv: Object.freeze([...verdictArgv]), stdin });
     }
     await requireCurrent();
-    release(parseBoundedJson(reply, transcript.requestLimits), requireLive);
+    release(parseBoundedJson(reply, transcript.requestLimits), requireNextSend);
     receipts.push({ ...issued, receipt, reply: identify(reply) });
   });
   const readTerminal = async () => {
