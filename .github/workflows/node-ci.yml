@@ -127,17 +127,24 @@ jobs:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
+          persist-credentials: false
 
       - uses: actions/setup-node@v4
         with:
-          node-version: 24
+          # The native dossier worker admits this exact Node release.
+          node-version: 24.6.0
           cache: npm
 
       - name: install (npm ci)
         run: npm ci
 
+      - name: dossier native integration prerequisites
+        run: node scripts/check_dossier_native_integration.mjs
+
       - name: integration tests (npm run test:integration)
-        run: npm run test:integration
+        run: |
+          umask 022
+          npm run test:integration
 
   # e2e tier: a browser, a build and `npm ci` in clones, strace, and the
   # compiled daemon of the system-test suite. The job runs as the default
