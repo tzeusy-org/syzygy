@@ -949,7 +949,9 @@ describe('render: figure homes (schema v5)', () => {
       figure('fig-s', 'zq-section figure', { home: { kind: 'section', target: 'core-ideas' } })];
     return doc;
   };
-  const caption = (title: string): string => `<figcaption>${title}</figcaption>`;
+  // A figure's caption carries the id its drawing's aria-labelledby names (syzygy-3efd.70): its diagram's index in the draft.
+  const ORDER: Record<string, number> = { 'zq-overview figure': 0, 'zq-dive figure': 1, 'zq-section figure': 2 };
+  const caption = (title: string, index = ORDER[title]!): string => `<figcaption id="diagram-title-${index}">${title}</figcaption>`;
   const count = (page: string, needle: string): number => page.split(needle).length - 1;
 
   it('draws each figure once, on its home page: the overview after its introduction, a deep dive and a section ahead of their prose', async () => {
@@ -1014,7 +1016,7 @@ describe('render: figure homes (schema v5)', () => {
     v5.schemaVersion = 'polaris-dossier-local-draft-v5';
     v5.diagrams = [figure('fig-s', 'zq-section figure', { home: { kind: 'section', target: 'core-ideas' } })];
     const [four, five] = [await figureOf(v4), await figureOf(v5)];
-    expect(four).toContain(caption('zq-section figure'));
+    expect(four).toContain(caption('zq-section figure', 0));
     expect(five).toBe(four);
   });
 });
@@ -1058,7 +1060,7 @@ describe('render: withheld items and judgements (dossier spec v1.5)', () => {
     expect(index).toMatch(/data-withheld-sources="2" data-claim-id="p3"/u);
     expect(index).toContain('Withheld from this dossier: it rests on 2 source file(s) that screening withholds (.env; 1 not named, because a secret detector matches the path), so its text is not shown.');
     expect(index).toContain('<h2>Withheld item</h2>');
-    expect(index).toContain('<figcaption>Withheld item</figcaption>');
+    expect(index).toContain('<figcaption id="diagram-title-1">Withheld item</figcaption>');
     expect(files.get('glossary.html')).not.toContain('zq-term');
     expect(index).toContain('<p class="card-label">Withheld item</p>');
     expect(marked(index, 'n1')).toEqual({ epistemic: 'unknown', reason: 'excluded-content' });
@@ -1826,7 +1828,7 @@ describe('render: derived structure (version 2.3)', () => {
       edges: [{ id: 'e-contains', from: 'n-root', to: 'n-src', label: 'contains', epistemic: 'inferred', citations: [cite('c-e-contains', 'src/kestrel.c', 1, 1)] }] }];
     const run = await prepared(doc, false);
     const { files, index } = await rendered(run);
-    const authored = index.slice(index.lastIndexOf('<figure', index.indexOf('<figcaption>zq-authored tree</figcaption>')), index.indexOf('</figure>', index.indexOf('zq-authored tree')));
+    const authored = index.slice(index.lastIndexOf('<figure', index.indexOf('<figcaption id="diagram-title-0">zq-authored tree</figcaption>')), index.indexOf('</figure>', index.indexOf('zq-authored tree')));
     expect(authored.startsWith('<figure data-hue="1" data-visual-provenance="curated">')).toBe(true);
     expect([...authored.matchAll(/<g class="(?:node|edge) (\w+)/gu)].map((m) => m[1])).toEqual(['inferred', 'inferred', 'inferred']);
     expect(authored).not.toContain('Solid: observed');
