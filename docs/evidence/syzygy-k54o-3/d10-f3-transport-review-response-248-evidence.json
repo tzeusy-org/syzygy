@@ -1,0 +1,43 @@
+{
+  "recordedAt": "2026-11-21T00:38:49.393208+00:00",
+  "retainedDraft": {
+    "path": "d10-f3-design-delivery-delta-247.md",
+    "bytes": 5766,
+    "sha256": "f70a4cf7133775e373b27b540ef7b6ded1da445dd7e2167d5aae261ed9708cf3"
+  },
+  "revisedDraft": {
+    "path": "d10-f3-design-delivery-delta-247b.md",
+    "bytes": 7823,
+    "sha256": "5a27277999b54d8c5c0b74d1f3000871bbb899b26e6e1bd644c218fd53d31a08"
+  },
+  "rawReview": {
+    "path": "R-D10-F3-TRANSPORT-247-RAW.md",
+    "bytes": 2679,
+    "sha256": "0fd060462db5a90767b558741b6fb86c60c7c060750a22fae7973d8e41ea9b8f"
+  },
+  "reviewVerdict": "REVISE",
+  "scope": "Scratch design revisions only. The revised text has no independent verdict.",
+  "remainingTrace": "Real checked host through design verdict on the retained owned full packet and all original ceilings.",
+  "checks": [
+    {
+      "path": "d10-f3-design-delivery-delta-247.md",
+      "bytes": 5766,
+      "sha256": "f70a4cf7133775e373b27b540ef7b6ded1da445dd7e2167d5aae261ed9708cf3"
+    },
+    {
+      "path": "d10-f3-design-delivery-delta-247b.md",
+      "bytes": 7823,
+      "sha256": "5a27277999b54d8c5c0b74d1f3000871bbb899b26e6e1bd644c218fd53d31a08"
+    },
+    {
+      "path": "R-D10-F3-TRANSPORT-247-RAW.md",
+      "bytes": 2679,
+      "sha256": "0fd060462db5a90767b558741b6fb86c60c7c060750a22fae7973d8e41ea9b8f"
+    },
+    {
+      "path": "d10-f3-guarded-carriage-247-evidence.json",
+      "bytes": 18169,
+      "sha256": "4deb60a073869a564853c9e0aae68885dd1901ec939c6f180fdc5dfc6ee0f6eb"
+    }
+  ]
+}

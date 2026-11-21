@@ -1,0 +1,68 @@
+[
+  {
+    "path": "R-D10-F3-TRANSPORT-OFFERING-252-RAW.md",
+    "sha256": "4a4feb0859c61170bd879c013b3ec1de9371f009a28d9f8423cb2a553343bb08",
+    "bytes": 11582,
+    "scope": "Focused raw independent REVISE on the immutable original package"
+  },
+  {
+    "path": "d10-f3-native-carriage-246-evidence.json",
+    "sha256": "18015a4fbe0dc6d69576a0499c18b1b71178628b13be86f1384927b21ab49da2",
+    "bytes": 19435,
+    "scope": "Owned real declared native client and annotated ASCII fit and pointer boundary"
+  },
+  {
+    "path": "d10-f3-verdict-evidence-249.json",
+    "sha256": "b9bfa6c2160ffff36fdb522b69501d1a3608c1092549568c1dd51ebd46bf5b35",
+    "bytes": 16046,
+    "scope": "Owned exact two-part delivered fixture with actual native client and synthetic receiver"
+  },
+  {
+    "path": "d10-f3-order-and-profile-251-evidence.json",
+    "sha256": "9f52e50a8162bd27cf91e76ccd381547ca9d05ef28cfd3b9c3e94a510294fd43",
+    "bytes": 18241,
+    "scope": "Owned scoped ordered receipt proof and staged role namespace controls"
+  },
+  {
+    "path": "d10-f3-transport-offering-253-checked.json",
+    "sha256": "6b03d744ef8c2c9fb29dc2833c3bd3bc9b0bfe12fd54ac234ed4fd9013611fb5",
+    "bytes": 1154,
+    "scope": "Independent exact reviewed-scope patch and worktree verification"
+  },
+  {
+    "path": "d10-f3-ordered-transport-vector-253.mjs",
+    "sha256": "7622c063e8433e34bedee6cc86e3e09ec4fbef4808b958f375bd5ec417895361",
+    "bytes": 5518,
+    "scope": "Reproducible scratch encoding vector using the frozen repository encoder"
+  },
+  {
+    "path": "d10-f3-verify-ordered-vector-253.py",
+    "sha256": "93d42af95bdb7ffc5e0a36ed3309b7f4e765cfa4f2cf3a442f8ba4f25d7076c8",
+    "bytes": 2103,
+    "scope": "Independent exact canonical-byte, digest and UTF-8 check for the scratch vector"
+  },
+  {
+    "path": "d10-f3-source-decision-254.md",
+    "sha256": "95de72ac13201e07e90200052c0356ad54e000959150179d1c59cd2671339338",
+    "bytes": 2429,
+    "scope": "Recorded F3 behavior decision for the unresolved terminal eligibility case"
+  },
+  {
+    "path": "d10-f3-transport-acknowledgment-correction-254.md",
+    "sha256": "b30156a585232f608ee6b7fdb93ddcb329cce3e1eb2450e5f954492cd99440b5",
+    "bytes": 3665,
+    "scope": "Decision-stage scratch development and failure-control criteria"
+  },
+  {
+    "path": "R-D10-F3-TRANSPORT-CORRECTIONS-253-RAW.md",
+    "sha256": "ca7498e4876baed7cbfc37bd4f821719d0abc929f9cf2f363ca8e802d85d7679",
+    "bytes": 11467,
+    "scope": "Fresh focused raw REVISE narrowed to terminal acknowledgment eligibility"
+  },
+  {
+    "path": "d10-f3-transport-offering-254-checked.json",
+    "sha256": "4a4c6c7002779a24df635547b08b0a519a1506859bbe444d72705e5698af1aec",
+    "bytes": 1303,
+    "scope": "Exact baseline and incremental patch, scope and frozen worktree proof"
+  }
+]

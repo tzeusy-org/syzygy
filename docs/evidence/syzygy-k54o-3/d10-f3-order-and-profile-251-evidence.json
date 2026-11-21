@@ -1,0 +1,524 @@
+{
+  "recordedAt": "2026-11-21T00:56:26.803741+00:00",
+  "subject": "3c0658ff8d6de9b73305f4c27979404551ecfe36",
+  "sourceEntries": 171,
+  "compiledEntries": 23,
+  "successfulTrace": {
+    "auditSha256": "91e6d2773b0c5d2e93702bc40557387ac3c1c380b59458ea4d097d4abd57a94e",
+    "brokerFaults": 0,
+    "brokerLimit": 2097152,
+    "budget": {
+      "completeUsageReports": 5,
+      "pendingRoles": [],
+      "reason": null,
+      "reportedTokens": 35,
+      "requestReservations": 5,
+      "state": "open",
+      "tokenEnforcement": "reported-response-boundary; in-flight usage Unknown",
+      "uncapturedUsage": "Unknown",
+      "usageLabel": "Inferred",
+      "usagePopulation": "normalized complete responses accepted by checked host relays"
+    },
+    "committed": {
+      "elapsedMs": 3805,
+      "packetSha256": "dfcf023b76d6abfde7229a2181af6d8475b9715c4e3e71d5f59dd23c1e6980ae",
+      "verdictSha256": "44d5d2a47ffee5a60d130557b52a78182682311206a1fc7d7ae64c7b6f92e69d"
+    },
+    "elapsedMs": 4130,
+    "envelopeSha256": "889a4d60e6d2e484ab128efa68d7b39d39d19877315f291cd060739953eff8d7",
+    "exitCode": 0,
+    "fullReplyBytes": 616763,
+    "groupTermination": "confirmed",
+    "manifestSha256": "a9619fbf3c3f5c05943c82dedc021890485686d6ce998c6720d503d3a224f11c",
+    "negativeControls": [
+      "later-part-first",
+      "repeated-part-1",
+      "prefix-only",
+      "repeated-part-2",
+      "reordered-same-members",
+      "cloned-admission",
+      "cloned-completion",
+      "different-durable-event-bytes",
+      "prior-admission"
+    ],
+    "outcome": "exited",
+    "peakBytes": 658883,
+    "receipts": [
+      {
+        "bytes": 548,
+        "digest": "70441094636d5699f9a99731bf4bff4e4de6595517481a8500c1e333f988c53c",
+        "elapsedMs": 2923,
+        "inputSha256": "c2a7114393b7d5d9cd3a4d420794263ba64dadb4479d4de139fa1c7156c781e9",
+        "ordinal": 1,
+        "tool": "mcp__syzygy__dossier_step"
+      },
+      {
+        "bytes": 305630,
+        "digest": "910515a5b302f50b3d34e258c6a69865f0399e1f4517786ed2d9994509c3d940",
+        "elapsedMs": 2960,
+        "inputSha256": "d29cfb0c860da3f9527a2714da46d3e967ce27dc6893c6996d50603d73aee489",
+        "ordinal": 2,
+        "tool": "mcp__syzygy__artifact_read"
+      },
+      {
+        "bytes": 311749,
+        "digest": "c126489117c1bc84c533098f60c8e5af2199ca085139ee919d9fe8a883f4b90e",
+        "elapsedMs": 3232,
+        "inputSha256": "ea0fc0e66b84b8950bce35b386f067f2119339d2415ed5fa1320211981370738",
+        "ordinal": 3,
+        "tool": "mcp__syzygy__artifact_read"
+      },
+      {
+        "bytes": 277,
+        "digest": "4fd7a541cac1f9d6011485d8acb71619cf7e1af9544e3ef8b0c114589377a6c2",
+        "elapsedMs": 3701,
+        "inputSha256": "61c039be6ff6c629505250feb61122402fe3ea613159a854c1e01d8e9a0d96b5",
+        "ordinal": 4,
+        "tool": "mcp__syzygy__dossier_step"
+      }
+    ],
+    "reconstructed": {
+      "bytes": 518506,
+      "digest": "dfcf023b76d6abfde7229a2181af6d8475b9715c4e3e71d5f59dd23c1e6980ae",
+      "files": 15,
+      "pages": 12
+    },
+    "refused": [],
+    "requestHeadroom": 1438269,
+    "requests": [
+      {
+        "elapsedMs": 2899,
+        "messages": 1,
+        "projectedBytes": 3222,
+        "projectedSha256": "34312130c85f134a5bafde35086710965f9681ad3537b144cde4ffd11063110e",
+        "projections": [],
+        "rawBytes": 3234,
+        "replyBytes": 952
+      },
+      {
+        "elapsedMs": 2950,
+        "messages": 3,
+        "projectedBytes": 4235,
+        "projectedSha256": "139f48773db5d916c0a3c95e45b653b039a85cda9006ddebf16222ab526ea930",
+        "projections": [
+          {
+            "bytes": 549,
+            "reminderBytes": 86,
+            "sha256": "f2d86e8274bb002bbafb46817bee35de7c5e93bd8ec90a44a764b31601535332"
+          }
+        ],
+        "rawBytes": 4247,
+        "replyBytes": 925
+      },
+      {
+        "elapsedMs": 3221,
+        "messages": 5,
+        "projectedBytes": 321229,
+        "projectedSha256": "f3cd4c01d06e73cd965565ea6b4db056fd6bb6949d90c2e71b97ff4dabee66e7",
+        "projections": [
+          {
+            "bytes": 549,
+            "reminderBytes": 86,
+            "sha256": "f2d86e8274bb002bbafb46817bee35de7c5e93bd8ec90a44a764b31601535332"
+          },
+          {
+            "bytes": 305631,
+            "reminderBytes": 86,
+            "sha256": "40bfc25d3288004ca72dd2fa0d2d71a4f6610886e7caef73eca0deaf4540b84e"
+          }
+        ],
+        "rawBytes": 321241,
+        "replyBytes": 925
+      },
+      {
+        "elapsedMs": 3677,
+        "messages": 7,
+        "projectedBytes": 656618,
+        "projectedSha256": "81d93f7e0b80e996ee6b4636cc25d377ed262f6da6b0c53017ce08c00fab4b19",
+        "projections": [
+          {
+            "bytes": 549,
+            "reminderBytes": 86,
+            "sha256": "f2d86e8274bb002bbafb46817bee35de7c5e93bd8ec90a44a764b31601535332"
+          },
+          {
+            "bytes": 305631,
+            "reminderBytes": 86,
+            "sha256": "40bfc25d3288004ca72dd2fa0d2d71a4f6610886e7caef73eca0deaf4540b84e"
+          },
+          {
+            "bytes": 311750,
+            "reminderBytes": 86,
+            "sha256": "4c43482fa43f81696d88c5d2bf5ac0e5d1d2183f3f444a26a5df8526cfc9dbca"
+          }
+        ],
+        "rawBytes": 656630,
+        "replyBytes": 2819
+      },
+      {
+        "elapsedMs": 4015,
+        "messages": 9,
+        "projectedBytes": 658871,
+        "projectedSha256": "d2157cda4a16dff52d8a1095cbf98f69e83d39adc72f6529df36d74fd7166d75",
+        "projections": [
+          {
+            "bytes": 549,
+            "reminderBytes": 86,
+            "sha256": "f2d86e8274bb002bbafb46817bee35de7c5e93bd8ec90a44a764b31601535332"
+          },
+          {
+            "bytes": 305631,
+            "reminderBytes": 86,
+            "sha256": "40bfc25d3288004ca72dd2fa0d2d71a4f6610886e7caef73eca0deaf4540b84e"
+          },
+          {
+            "bytes": 311750,
+            "reminderBytes": 86,
+            "sha256": "4c43482fa43f81696d88c5d2bf5ac0e5d1d2183f3f444a26a5df8526cfc9dbca"
+          },
+          {
+            "bytes": 278,
+            "reminderBytes": 86,
+            "sha256": "f8a0a5f81e125b3cda594b1b026ea1c167d1711bdf2a69196ad555d8144f1f61"
+          }
+        ],
+        "rawBytes": 658883,
+        "replyBytes": 828
+      }
+    ],
+    "retainedSha256": "937e239e3355d9a37e39cbf565ee64d3a7e633a6690b12be3140cdf7ec7905a4",
+    "scenario": "ready",
+    "supportSha256": {
+      "session-bridge.js": "309d31d193bdd19f7c5cb64c25e1f4b500ed6bdb55bf83da4ea6800a5f237f4b",
+      "session-mcp.js": "8513977c4b39f12eeb2b34145459fbcc2fd0af9b2f65822e9b427de6d7a2e44f"
+    },
+    "verifiedDelivery": {
+      "eventSha256s": [
+        "920d854c73c4d8f2fddc9891ab79320496d8e2642e6cb42071552c2590302450",
+        "55760d89d27933aeb21edf464d5a879458abf9ce3c4f6293aa54471e734a692c"
+      ],
+      "manifestSha256": "a9619fbf3c3f5c05943c82dedc021890485686d6ce998c6720d503d3a224f11c",
+      "receiptIds": [
+        "tool-ffc0f4cf1fbc4d107b65d7996daaf4a543216a025679904ee004cfe45f5d9ab0",
+        "tool-691e249bd9ff0859fffdac611096c49494ab65890f60db6b96189e6bcfd09769"
+      ],
+      "requestSha256": "81d93f7e0b80e996ee6b4636cc25d377ed262f6da6b0c53017ce08c00fab4b19"
+    },
+    "version": "2.1.327",
+    "wholeCheckMs": 202
+  },
+  "staleControl": {
+    "auditSha256": "e24531f9bb1f11bf893cc1e6a16a51184acc46d8f0e9918acf953feb7d318f54",
+    "brokerFaults": 1,
+    "brokerLimit": 2097152,
+    "budget": {
+      "completeUsageReports": 4,
+      "pendingRoles": [],
+      "reason": null,
+      "reportedTokens": 28,
+      "requestReservations": 4,
+      "state": "open",
+      "tokenEnforcement": "reported-response-boundary; in-flight usage Unknown",
+      "uncapturedUsage": "Unknown",
+      "usageLabel": "Inferred",
+      "usagePopulation": "normalized complete responses accepted by checked host relays"
+    },
+    "committed": null,
+    "elapsedMs": 3955,
+    "envelopeSha256": "889a4d60e6d2e484ab128efa68d7b39d39d19877315f291cd060739953eff8d7",
+    "exitCode": 1,
+    "fullReplyBytes": 616763,
+    "groupTermination": "confirmed",
+    "manifestSha256": "a9619fbf3c3f5c05943c82dedc021890485686d6ce998c6720d503d3a224f11c",
+    "negativeControls": [
+      "later-part-first",
+      "repeated-part-1",
+      "prefix-only",
+      "repeated-part-2",
+      "reordered-same-members",
+      "cloned-admission",
+      "cloned-completion",
+      "different-durable-event-bytes"
+    ],
+    "outcome": "exited",
+    "peakBytes": 656630,
+    "receipts": [
+      {
+        "bytes": 548,
+        "digest": "70441094636d5699f9a99731bf4bff4e4de6595517481a8500c1e333f988c53c",
+        "elapsedMs": 3021,
+        "inputSha256": "c2a7114393b7d5d9cd3a4d420794263ba64dadb4479d4de139fa1c7156c781e9",
+        "ordinal": 1,
+        "tool": "mcp__syzygy__dossier_step"
+      },
+      {
+        "bytes": 305630,
+        "digest": "910515a5b302f50b3d34e258c6a69865f0399e1f4517786ed2d9994509c3d940",
+        "elapsedMs": 3063,
+        "inputSha256": "d29cfb0c860da3f9527a2714da46d3e967ce27dc6893c6996d50603d73aee489",
+        "ordinal": 2,
+        "tool": "mcp__syzygy__artifact_read"
+      },
+      {
+        "bytes": 311749,
+        "digest": "c126489117c1bc84c533098f60c8e5af2199ca085139ee919d9fe8a883f4b90e",
+        "elapsedMs": 3369,
+        "inputSha256": "ea0fc0e66b84b8950bce35b386f067f2119339d2415ed5fa1320211981370738",
+        "ordinal": 3,
+        "tool": "mcp__syzygy__artifact_read"
+      }
+    ],
+    "reconstructed": {
+      "bytes": 518506,
+      "digest": "dfcf023b76d6abfde7229a2181af6d8475b9715c4e3e71d5f59dd23c1e6980ae",
+      "files": 15,
+      "pages": 12
+    },
+    "refused": [
+      {
+        "kinds": [
+          "stale-packet"
+        ],
+        "state": "verdict-validation"
+      },
+      {
+        "rawBytes": 658589,
+        "state": "request"
+      }
+    ],
+    "requestHeadroom": 1440522,
+    "requests": [
+      {
+        "elapsedMs": 2997,
+        "messages": 1,
+        "projectedBytes": 3222,
+        "projectedSha256": "34312130c85f134a5bafde35086710965f9681ad3537b144cde4ffd11063110e",
+        "projections": [],
+        "rawBytes": 3234,
+        "replyBytes": 952
+      },
+      {
+        "elapsedMs": 3055,
+        "messages": 3,
+        "projectedBytes": 4235,
+        "projectedSha256": "139f48773db5d916c0a3c95e45b653b039a85cda9006ddebf16222ab526ea930",
+        "projections": [
+          {
+            "bytes": 549,
+            "reminderBytes": 86,
+            "sha256": "f2d86e8274bb002bbafb46817bee35de7c5e93bd8ec90a44a764b31601535332"
+          }
+        ],
+        "rawBytes": 4247,
+        "replyBytes": 925
+      },
+      {
+        "elapsedMs": 3348,
+        "messages": 5,
+        "projectedBytes": 321229,
+        "projectedSha256": "f3cd4c01d06e73cd965565ea6b4db056fd6bb6949d90c2e71b97ff4dabee66e7",
+        "projections": [
+          {
+            "bytes": 549,
+            "reminderBytes": 86,
+            "sha256": "f2d86e8274bb002bbafb46817bee35de7c5e93bd8ec90a44a764b31601535332"
+          },
+          {
+            "bytes": 305631,
+            "reminderBytes": 86,
+            "sha256": "40bfc25d3288004ca72dd2fa0d2d71a4f6610886e7caef73eca0deaf4540b84e"
+          }
+        ],
+        "rawBytes": 321241,
+        "replyBytes": 925
+      },
+      {
+        "elapsedMs": 3818,
+        "messages": 7,
+        "projectedBytes": 656618,
+        "projectedSha256": "81d93f7e0b80e996ee6b4636cc25d377ed262f6da6b0c53017ce08c00fab4b19",
+        "projections": [
+          {
+            "bytes": 549,
+            "reminderBytes": 86,
+            "sha256": "f2d86e8274bb002bbafb46817bee35de7c5e93bd8ec90a44a764b31601535332"
+          },
+          {
+            "bytes": 305631,
+            "reminderBytes": 86,
+            "sha256": "40bfc25d3288004ca72dd2fa0d2d71a4f6610886e7caef73eca0deaf4540b84e"
+          },
+          {
+            "bytes": 311750,
+            "reminderBytes": 86,
+            "sha256": "4c43482fa43f81696d88c5d2bf5ac0e5d1d2183f3f444a26a5df8526cfc9dbca"
+          }
+        ],
+        "rawBytes": 656630,
+        "replyBytes": 2819
+      }
+    ],
+    "retainedSha256": "937e239e3355d9a37e39cbf565ee64d3a7e633a6690b12be3140cdf7ec7905a4",
+    "scenario": "stale",
+    "supportSha256": {
+      "session-bridge.js": "309d31d193bdd19f7c5cb64c25e1f4b500ed6bdb55bf83da4ea6800a5f237f4b",
+      "session-mcp.js": "8513977c4b39f12eeb2b34145459fbcc2fd0af9b2f65822e9b427de6d7a2e44f"
+    },
+    "verifiedDelivery": {
+      "eventSha256s": [
+        "920d854c73c4d8f2fddc9891ab79320496d8e2642e6cb42071552c2590302450",
+        "55760d89d27933aeb21edf464d5a879458abf9ce3c4f6293aa54471e734a692c"
+      ],
+      "manifestSha256": "a9619fbf3c3f5c05943c82dedc021890485686d6ce998c6720d503d3a224f11c",
+      "receiptIds": [
+        "tool-ffc0f4cf1fbc4d107b65d7996daaf4a543216a025679904ee004cfe45f5d9ab0",
+        "tool-691e249bd9ff0859fffdac611096c49494ab65890f60db6b96189e6bcfd09769"
+      ],
+      "requestSha256": "81d93f7e0b80e996ee6b4636cc25d377ed262f6da6b0c53017ce08c00fab4b19"
+    },
+    "version": "2.1.327",
+    "wholeCheckMs": 198
+  },
+  "roleNamespaceSelection": {
+    "observations": [
+      {
+        "role": "author",
+        "mcpSupportSha256": "f4f32640793e1f6a60c2cc5d03793d9a7207f49bc264453936276eda1e31a566",
+        "viewSha256": "b8324b89f9bfd0f864762747e9048246b16621d1a4422deebb82f014c4aa7479",
+        "baselineToolSha256": "91876b623f527e1c293b55296f89c38a07a5a2774351be6a6094f948a8b7fe4a",
+        "alternateSupportProbePassed": true,
+        "probe": "owned-synthetic-namespace-probe-passed"
+      },
+      {
+        "role": "inventory",
+        "mcpSupportSha256": "f4f32640793e1f6a60c2cc5d03793d9a7207f49bc264453936276eda1e31a566",
+        "viewSha256": "782c392769c8184eddc168ce3c69b55c227274160b56fad66baf93856439b003",
+        "baselineToolSha256": "91876b623f527e1c293b55296f89c38a07a5a2774351be6a6094f948a8b7fe4a",
+        "alternateSupportProbePassed": true,
+        "probe": "owned-synthetic-namespace-probe-passed"
+      },
+      {
+        "role": "fidelity",
+        "mcpSupportSha256": "f4f32640793e1f6a60c2cc5d03793d9a7207f49bc264453936276eda1e31a566",
+        "viewSha256": "cfc6ccd7f8e7b4bc6c0ae08bb3e2e677395506856c852de3ef86bc8ba147698b",
+        "baselineToolSha256": "91876b623f527e1c293b55296f89c38a07a5a2774351be6a6094f948a8b7fe4a",
+        "alternateSupportProbePassed": true,
+        "probe": "owned-synthetic-namespace-probe-passed"
+      },
+      {
+        "role": "design",
+        "mcpSupportSha256": "8513977c4b39f12eeb2b34145459fbcc2fd0af9b2f65822e9b427de6d7a2e44f",
+        "viewSha256": "9c38d11c8fc3f0cbe311c428dfbb3a07765bccb404054c316f0d64fcf4cce80e",
+        "baselineToolSha256": "91876b623f527e1c293b55296f89c38a07a5a2774351be6a6094f948a8b7fe4a",
+        "alternateSupportProbePassed": true,
+        "probe": "owned-synthetic-namespace-probe-passed"
+      }
+    ],
+    "refused": {
+      "ok": false,
+      "code": "url-role-plan-unavailable",
+      "stage": "view-storage",
+      "cleanup": "removed",
+      "retainedPaths": []
+    },
+    "originalCompiledPlannerSha256": "29477451bc93fa7c8da78728417d1e3f603a0496ccb4602be83252cefb17ff31",
+    "stagedScope": "local namespace preparation only"
+  },
+  "independentReview": {
+    "path": "R-D10-F3-ORDERED-RECEIPTS-251-RAW.md",
+    "bytes": 7462,
+    "sha256": "37cfc914b780a9e9f2264b5d4817a38abc5cb71b966fa305cffdb18b669a3524"
+  },
+  "lease": {
+    "lease": {
+      "action": "written",
+      "id": "coordinator:codex-20261114-54ebc9f1",
+      "expires_at": "2026-11-21T01:20:00Z"
+    },
+    "issues": [
+      {
+        "id": "syzygy-k54o.3",
+        "matches": 1,
+        "stamp": "2026-11-21T00:55:04Z"
+      },
+      {
+        "id": "syzygy-pdja.36",
+        "matches": 1,
+        "stamp": "2026-11-21T00:55:07Z"
+      },
+      {
+        "id": "syzygy-k54o.2",
+        "matches": 1,
+        "stamp": "2026-11-21T00:55:12Z"
+      }
+    ]
+  },
+  "scope": "Owned offline scratch role planning, annotated MCP, ordered admission projection and temporary completion ledger. Existing production send audit, history and live workflow remain separate.",
+  "checks": [
+    {
+      "path": "d10-f3-role-profile-controls-250-evidence.json",
+      "bytes": 21032,
+      "sha256": "abaadcadfc2e4cbc6a75883c56a9c547b6bd2067b1cb3e062fff98a8a3cf8f64"
+    },
+    {
+      "path": "d10-f3-order-and-profile-251.md",
+      "bytes": 3455,
+      "sha256": "cf15573247fb6aacd4c773b620a895a7afa437a292247d955605cbc5e29e9563"
+    },
+    {
+      "path": "d10-f3-ordered-receipt-probe-251.mjs",
+      "bytes": 5866,
+      "sha256": "88729b3408721810b06d1d423e354334d15dc67d06cef5fdedfd004590b926d2"
+    },
+    {
+      "path": "d10-f3-owned-ordered-delivery-251.mjs",
+      "bytes": 20825,
+      "sha256": "3505a1ed31a4eb1862423cf68d65b805a5b3a64dfa086cd342c76b36df34a6b5"
+    },
+    {
+      "path": "d10-f3-owned-ordered-delivery-251-ready.log",
+      "bytes": 5179,
+      "sha256": "630cf0054642ac6e6ec6f7390f34adeb8ac6add2ce1e14afa865e10931c21bec"
+    },
+    {
+      "path": "d10-f3-owned-ordered-delivery-251-stale.log",
+      "bytes": 4206,
+      "sha256": "c23ab6b3cfabc7ba43d8536c5807be9aef90395815189708da60180cfc7929b6"
+    },
+    {
+      "path": "d10-f3-owned-role-pins-251.mjs",
+      "bytes": 8701,
+      "sha256": "5a48928e820e10baef42ca66b3a16678b8323c03910815705adee3fe180e482a"
+    },
+    {
+      "path": "d10-f3-owned-role-pins-251-checked.json",
+      "bytes": 1716,
+      "sha256": "0f1602a9f178af217ffb7128b5b68c9c7535f32aa29fa86e6c3fded20ad4c324"
+    },
+    {
+      "path": "R-D10-F3-ORDERED-RECEIPTS-251-RAW.md",
+      "bytes": 7462,
+      "sha256": "37cfc914b780a9e9f2264b5d4817a38abc5cb71b966fa305cffdb18b669a3524"
+    },
+    {
+      "path": "d10-f3-candidate-inventory-187.json",
+      "bytes": 87142,
+      "sha256": "2268192592b39a33aaad436362babad18a7f7bc618c6ef120892b3819a175bbf"
+    },
+    {
+      "path": "looper-review-state-251.json",
+      "bytes": 4639,
+      "sha256": "2ba8b20d2ae4089509c7fade706beafddc5edf8ec0f9a17b928b0b6329dd7e9b"
+    },
+    {
+      "path": "looper-ranked-state-251.json",
+      "bytes": 6306,
+      "sha256": "84f92269f326aae3bd4ad3da3c6f6ab1fa202997d8ecc4a6ca8d953bf806b95f"
+    },
+    {
+      "path": "d10-f3-guarded-heartbeat-251.json",
+      "bytes": 455,
+      "sha256": "42411508155e662b57e5cd2abc6693fbaa62b41cd7b56b73653483ae17a51029"
+    }
+  ]
+}

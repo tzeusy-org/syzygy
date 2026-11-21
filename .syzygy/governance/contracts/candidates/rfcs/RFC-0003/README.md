@@ -4,7 +4,7 @@ title: Project, Workspace and .syzygy/** Manifests — contract package index
 package: RFC-0003
 modules: [manifests-and-namespace, governance-homes-and-owner-acts]
 status_source: owner-act-record
-clauses: "RFC3-1..RFC3-33 (no retired or merged numbers; sub-clauses RFC3-15(a), RFC3-16(a), RFC3-16(b), RFC3-16(c), RFC3-17(a))"
+clauses: "RFC3-1..RFC3-33 (no retired or merged numbers; sub-clauses RFC3-15(a), RFC3-16(a), RFC3-16(b), RFC3-16(c), RFC3-16(d), RFC3-17(a))"
 implementation_boundary:
   kind: requires-openspec
   clause: RFC3-33
@@ -41,7 +41,7 @@ the clause wins.
 | Module | Clauses | What it binds |
 |---|---|---|
 | `manifests-and-namespace.md` | **RFC3-1 … RFC3-14** and **RFC3-18 … RFC3-33** | The one-writer rule and write containment; the project declaration `.syzygy/project.yaml` and its closed field set; consent records, revocation and withdrawal; the platform-level workspace manifest and asymmetric cross-project relations; surface namespaces and `work/**` authority; `cache/` and `local/`; schema versioning and identity-preserving migration; the `openspec/**` boundary; nesting as composition by declaration. |
-| `governance-homes-and-owner-acts.md` | **RFC3-15, RFC3-15(a), RFC3-16, RFC3-16(a), RFC3-16(b), RFC3-16(c), RFC3-17, RFC3-17(a)** | The five constitutional `governance/` categories; category-appropriate lifecycles; the self-declared stamp versus effective status; the owner-act provenance predicate and what any conforming mechanism must bind; the two provenance states of an owner-act record; the reserved `declarations/` category; the home of challenge submissions and admission records. |
+| `governance-homes-and-owner-acts.md` | **RFC3-15, RFC3-15(a), RFC3-16, RFC3-16(a), RFC3-16(b), RFC3-16(c), RFC3-16(d), RFC3-17, RFC3-17(a)** | The five constitutional `governance/` categories; category-appropriate lifecycles; the self-declared stamp versus effective status; the owner-act provenance predicate and what any conforming mechanism must bind; the two provenance states of an owner-act record; bounded URL-dossier machine-credential instances; the reserved `declarations/` category; the home of challenge submissions and admission records. |
 
 ## Deterministic lookup rule
 
@@ -50,7 +50,7 @@ run RFC3-15…RFC3-17 plus every lettered sub-clause. To resolve any citation
 without reading either file:
 
 > **`RFC3-15`, `RFC3-16`, `RFC3-17` and every lettered sub-clause
-> (`RFC3-15(a)`, `RFC3-16(a)`, `RFC3-16(b)`, `RFC3-16(c)`, `RFC3-17(a)`) are
+> (`RFC3-15(a)`, `RFC3-16(a)`, `RFC3-16(b)`, `RFC3-16(c)`, `RFC3-16(d)`, `RFC3-17(a)`) are
 > in `governance-homes-and-owner-acts.md`. Every other `RFC3-n` number —
 > whatever the package's range grows to — is in
 > `manifests-and-namespace.md`.**

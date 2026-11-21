@@ -50,7 +50,8 @@ from collections import OrderedDict
 REPO = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 OUT = os.path.join(REPO, "DIRECTIVE-REGISTER.md")
 
-NAME_MAX = 96
+# RFC9-13(a) has a 108-character marked-up title.
+NAME_MAX = 112
 LOOKAHEAD = 3  # a definition's markup may wrap onto this many following lines
 
 DOCTRINE = ".syzygy/governance/doctrine"
@@ -150,6 +151,10 @@ def collect(fam: Family):
                 seen.add(ident)
                 if ident in defs:
                     continue
+                # RFC definitions start at the left margin. A wrapped citation
+                # or reader-map bullet can start with the same bold identifier.
+                if fam.key.startswith("RFC-") and not line.startswith(("#", "**")):
+                    continue
                 title = definition(ident, logical)
                 if title is None:
                     continue
@@ -177,7 +182,7 @@ def families():
     impact_pol = POLICY_CAND + "/SHAPE-TO-SPEC-IMPACT-POLICY-CANDIDATE.md"
     rfc_acc = rel(RFCS_ACCEPTED + "/*.md") + rel(RFCS_ACCEPTED + "/*/*.md")
     rfc_cand = rel(RFCS_CANDIDATE + "/*.md") + rel(RFCS_CANDIDATE + "/*/*.md")
-    rfc_pat = r"\bRFC\d+-\d+(?:\([a-z]\))?\b"
+    rfc_pat = r"\bRFC\d+-\d+(?:\([a-z]\))?(?!\w|\([a-z]\))"
     return [
         Family("VIS", "Vision doctrine", r"\bVIS-\d+\b", doctrine,
                "**Adopted, in force** since 2026-07-30"),
@@ -338,8 +343,11 @@ def main(argv):
 def run_selftest():
     """Mutate the input and confirm the check fails (verification rule 6)."""
     failures = []
+    checks = 0
 
     def expect(name, cond):
+        nonlocal checks
+        checks += 1
         print(("ok   " if cond else "FAIL ") + name)
         if not cond:
             failures.append(name)
@@ -397,8 +405,27 @@ def run_selftest():
     expect("a family with no files renders empty, never stale",
            len(d) == 0 and len(c) == 0)
 
+    rfc_family = next(family for family in families() if family.key == "RFC-accepted")
+    expect("RFC identifiers keep a lettered subclause and match a plain identifier",
+           rfc_family.pattern.findall("RFC3-16(d), RFC3-16, RFC5-6.")
+           == ["RFC3-16(d)", "RFC3-16", "RFC5-6"])
+
     # --- the corpus facts the register exists to make findable ---------------
     body = render()
+    expected_rfc_definitions = {
+        "RFC3-16(a)": "RFC3-16(a). The owner-act provenance predicate.",
+        "RFC3-16(b)": "RFC3-16(b). What an adoption record binds",
+        "RFC3-16(c)": "RFC3-16(c). Owner-adopted bootstrap act versus Syzygy-verified act.",
+        "RFC4-13(a)": "RFC4-13(a) — The external-confirmation capture artifact.",
+    }
+    for family in (item for item in families() if item.key.startswith("RFC-")):
+        definitions, _ = collect(family)
+        for ident, opening in expected_rfc_definitions.items():
+            file, line, _ = definitions[ident]
+            with io.open(os.path.join(REPO, file), encoding="utf-8") as source:
+                definition_line = source.read().splitlines()[line - 1]
+            expect(f"{family.key} routes {ident} to its definition",
+                   definition_line.startswith("**" + opening))
     expect("every doctrine rule VIS-1..7 is located",
            all(re.search(r"\| `VIS-%d` \| .+ \| `\.syzygy/governance/doctrine/"
                          r"vision\.md`:\d+ \|" % i, body) for i in range(1, 8)))
@@ -415,8 +442,7 @@ def run_selftest():
     expect("no clause body reached the page (no line over 400 chars)",
            max(len(l) for l in body.splitlines()) < 400)
 
-    n = 9 + 4 + 2 + 6
-    print(f"\n{n} checks, {len(failures)} failing"
+    print(f"\n{checks} checks, {len(failures)} failing"
           " — a check that cannot fail is not a check")
     return 1 if failures else 0
 

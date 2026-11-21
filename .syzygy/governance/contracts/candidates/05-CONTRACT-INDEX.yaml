@@ -124,7 +124,7 @@ contracts:
       declared_in: RFC-0003/README.md
     modules: [RFC-0003/README.md, RFC-0003/governance-homes-and-owner-acts.md, RFC-0003/manifests-and-namespace.md]
     module_ranges:
-      - {file: RFC-0003/governance-homes-and-owner-acts.md, clauses: "RFC3-15, RFC3-15(a), RFC3-16, RFC3-16(a), RFC3-16(b), RFC3-16(c), RFC3-17, RFC3-17(a) (every other RFC3-n lives in manifests-and-namespace.md)"}
+      - {file: RFC-0003/governance-homes-and-owner-acts.md, clauses: "RFC3-15, RFC3-15(a), RFC3-16, RFC3-16(a), RFC3-16(b), RFC3-16(c), RFC3-16(d), RFC3-17, RFC3-17(a) (every other RFC3-n lives in manifests-and-namespace.md)"}
       - {file: RFC-0003/manifests-and-namespace.md, clauses: RFC3-1..RFC3-14 and RFC3-18..RFC3-33 (no retired or merged numbers; RFC3-15..RFC3-17 and all lettered sub-clauses live in governance-homes-and-owner-acts.md)}
     clauses:
       - {id: RFC3-15, module: RFC-0003/governance-homes-and-owner-acts.md, kind: normative}
@@ -133,6 +133,7 @@ contracts:
       - {id: RFC3-16(a), module: RFC-0003/governance-homes-and-owner-acts.md, kind: normative}
       - {id: RFC3-16(b), module: RFC-0003/governance-homes-and-owner-acts.md, kind: normative}
       - {id: RFC3-16(c), module: RFC-0003/governance-homes-and-owner-acts.md, kind: normative}
+      - {id: RFC3-16(d), module: RFC-0003/governance-homes-and-owner-acts.md, kind: normative}
       - {id: RFC3-17, module: RFC-0003/governance-homes-and-owner-acts.md, kind: normative}
       - {id: RFC3-17(a), module: RFC-0003/governance-homes-and-owner-acts.md, kind: normative}
       - {id: RFC3-1, module: RFC-0003/manifests-and-namespace.md, kind: normative}

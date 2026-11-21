@@ -1,0 +1,24 @@
+{
+  "lease": {
+    "action": "written",
+    "id": "coordinator:codex-20261114-54ebc9f1",
+    "expires_at": "2026-11-21T01:01:20Z"
+  },
+  "issues": [
+    {
+      "id": "syzygy-k54o.3",
+      "matches": 1,
+      "stamp": "2026-11-21T00:36:24Z"
+    },
+    {
+      "id": "syzygy-pdja.36",
+      "matches": 1,
+      "stamp": "2026-11-21T00:36:28Z"
+    },
+    {
+      "id": "syzygy-k54o.2",
+      "matches": 1,
+      "stamp": "2026-11-21T00:36:31Z"
+    }
+  ]
+}

@@ -1,0 +1,18 @@
+
+ RUN  v3.2.7 /home/orca/orca/projects/syzygy/.worktrees/parallel-agents/syzygy-k54o.3
+
+ ✓ |unit| packages/polaris-dossier/src/session-controller.test.ts (9 tests) 239ms
+ ✓ |unit| packages/polaris-dossier/src/session-egress-policy.test.ts (31 tests) 300ms
+ ✓ |integration| packages/polaris-dossier/src/session-relay.test.ts (18 tests) 363ms
+ ✓ |unit| packages/polaris-dossier/src/session-profile.test.ts (6 tests) 38ms
+ ✓ |integration| packages/polaris-dossier/src/session-tools.test.ts (23 tests) 1514ms
+ ✓ |unit| packages/polaris-dossier/src/url-design-view.test.ts (13 tests) 1295ms
+   ✓ whole-packet URL design representation data > keeps the exact captured packet across render polling points  807ms
+ ✓ |integration| packages/polaris-dossier/src/url-session-audit.test.ts (65 tests) 2088ms
+   ✓ protected URL session audit > bounds queue-inclusive waits and close, reporting an uncancelled filesystem operation as Unknown  513ms
+
+ Test Files  7 passed (7)
+      Tests  165 passed (165)
+   Start at  08:46:51
+   Duration  4.54s (transform 3.25s, setup 383ms, collect 7.20s, tests 5.84s, environment 1ms, prepare 554ms)
+

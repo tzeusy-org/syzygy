@@ -1,0 +1,600 @@
+{
+  "recordedAt": "2026-11-21T00:29:37.587804+00:00",
+  "base": "3c0658ff8d6de9b73305f4c27979404551ecfe36",
+  "scope": "Owned offline local broker and receiver. Tool annotation applied to scratch support only. The limit comparison used ASCII fixtures. No live provider, review verdict, or production admission.",
+  "frozenPathCount": 171,
+  "compiledFileCount": 23,
+  "governingCandidate": {
+    "path": "/home/orca/orca/projects/syzygy/.worktrees/parallel-agents/syzygy-k54o.3/openspec/changes/dossier-url-declared-source-run/proposed/polaris-generation/spec.md",
+    "bytes": 188981,
+    "sha256": "5471910a6ce8574c77d94e6fa1d09c8c5f10a4506d73f510ca6f8a0b14452a32"
+  },
+  "wireBoundary": [
+    {
+      "version": "2.1.327",
+      "scenario": "bounded",
+      "canonicalResultBytes": 390133,
+      "selectedCount": 120000,
+      "metaSize": 500000,
+      "supportSha256": {
+        "session-bridge.js": "309d31d193bdd19f7c5cb64c25e1f4b500ed6bdb55bf83da4ea6800a5f237f4b",
+        "session-mcp.js": "8513977c4b39f12eeb2b34145459fbcc2fd0af9b2f65822e9b427de6d7a2e44f"
+      },
+      "requests": [
+        {
+          "route": "messages",
+          "bytes": 3196,
+          "sha256": "60e7f61b4e4f6dde76e61dd1fa6bd687926c2ab1f54160c659516a329d1817e2",
+          "pinnedModel": true,
+          "clientVersionMatches": true,
+          "metadataMatches": true,
+          "messages": 1,
+          "expectsCall": false,
+          "exactResult": false,
+          "resultBytes": 0,
+          "localPointer": false,
+          "countMatches": false
+        },
+        {
+          "route": "messages",
+          "bytes": 393730,
+          "sha256": "1721545a4987217325024c9ee19fb3028ace298923cec46ab4be75707f7439d3",
+          "pinnedModel": true,
+          "clientVersionMatches": true,
+          "metadataMatches": true,
+          "messages": 3,
+          "expectsCall": true,
+          "exactResult": true,
+          "resultBytes": 390134,
+          "localPointer": false,
+          "countMatches": false
+        }
+      ],
+      "messages": 2,
+      "artifactReads": 1,
+      "countReplies": 0,
+      "brokerFaults": 0,
+      "groupTermination": "confirmed",
+      "outcome": "exited",
+      "exitCode": 0,
+      "commandSha256": "e08253cebe69b5edebf4e5e88b69bd7a83cafc1eec5123e52b993aadd0c2ff03"
+    },
+    {
+      "version": "2.1.327",
+      "scenario": "large",
+      "canonicalResultBytes": 616751,
+      "selectedCount": 120000,
+      "metaSize": 500000,
+      "supportSha256": {
+        "session-bridge.js": "309d31d193bdd19f7c5cb64c25e1f4b500ed6bdb55bf83da4ea6800a5f237f4b",
+        "session-mcp.js": "8513977c4b39f12eeb2b34145459fbcc2fd0af9b2f65822e9b427de6d7a2e44f"
+      },
+      "requests": [
+        {
+          "route": "messages",
+          "bytes": 3196,
+          "sha256": "235e8f723e6c2c503792de96be7b22fe3d32ad3b3e520adc95086c1db9e6c7e2",
+          "pinnedModel": true,
+          "clientVersionMatches": true,
+          "metadataMatches": true,
+          "messages": 1,
+          "expectsCall": false,
+          "exactResult": false,
+          "resultBytes": 0,
+          "localPointer": false,
+          "countMatches": false
+        },
+        {
+          "route": "messages",
+          "bytes": 5808,
+          "sha256": "d8721ca0a0b2afc1d37f3fa1feface300ba0e6eb1fdafca981c01fbf9c908710",
+          "pinnedModel": true,
+          "clientVersionMatches": true,
+          "metadataMatches": true,
+          "messages": 3,
+          "expectsCall": true,
+          "exactResult": false,
+          "resultBytes": 2316,
+          "localPointer": true,
+          "countMatches": false
+        }
+      ],
+      "messages": 2,
+      "artifactReads": 1,
+      "countReplies": 0,
+      "brokerFaults": 0,
+      "groupTermination": "confirmed",
+      "outcome": "exited",
+      "exitCode": 0,
+      "commandSha256": "a3209d0c31f4f675c3d7ba206cdaf170f2b9fcd0b73fca1ee4ab5cee3cafabe3"
+    },
+    {
+      "version": "2.1.327",
+      "scenario": "large",
+      "canonicalResultBytes": 616751,
+      "selectedCount": 120000,
+      "metaSize": 750000,
+      "supportSha256": {
+        "session-bridge.js": "309d31d193bdd19f7c5cb64c25e1f4b500ed6bdb55bf83da4ea6800a5f237f4b",
+        "session-mcp.js": "73aca01630d34a13c5cce254ba3613d7a04fdf4b3bb0eca23de03e69a6a52a2b"
+      },
+      "requests": [
+        {
+          "route": "messages",
+          "bytes": 3196,
+          "sha256": "a3311cf878a27c894ec485e1f954ca494e8f1275a6493cc1ec7020a047aa1089",
+          "pinnedModel": true,
+          "clientVersionMatches": true,
+          "metadataMatches": true,
+          "messages": 1,
+          "expectsCall": false,
+          "exactResult": false,
+          "resultBytes": 0,
+          "localPointer": false,
+          "countMatches": false
+        },
+        {
+          "route": "messages",
+          "bytes": 5808,
+          "sha256": "e8a2725da3c2ad8fc8045d4e4d2964bdf5402d92124317b72c15fd984dc477d4",
+          "pinnedModel": true,
+          "clientVersionMatches": true,
+          "metadataMatches": true,
+          "messages": 3,
+          "expectsCall": true,
+          "exactResult": false,
+          "resultBytes": 2316,
+          "localPointer": true,
+          "countMatches": false
+        }
+      ],
+      "messages": 2,
+      "artifactReads": 1,
+      "countReplies": 0,
+      "brokerFaults": 0,
+      "groupTermination": "confirmed",
+      "outcome": "exited",
+      "exitCode": 0,
+      "commandSha256": "ebf77cb885c6209f2e040bc954dfd822cef4dd04609ed553f830f1ea04ced4fd"
+    },
+    {
+      "version": "2.1.327",
+      "scenario": "bounded",
+      "canonicalResultBytes": 499999,
+      "selectedCount": 120000,
+      "metaSize": 1000000,
+      "supportSha256": {
+        "session-bridge.js": "309d31d193bdd19f7c5cb64c25e1f4b500ed6bdb55bf83da4ea6800a5f237f4b",
+        "session-mcp.js": "e265f19cb88e5e528f6184028b9bb4f147d8f14d6f48d4929b868deb7fc90da6"
+      },
+      "requests": [
+        {
+          "route": "messages",
+          "bytes": 3196,
+          "sha256": "d182f09ea95910788f414e556b76c1399658c4664683f6e1fbfc4281d55c4864",
+          "pinnedModel": true,
+          "clientVersionMatches": true,
+          "metadataMatches": true,
+          "messages": 1,
+          "expectsCall": false,
+          "exactResult": false,
+          "resultBytes": 0,
+          "localPointer": false,
+          "countMatches": false
+        },
+        {
+          "route": "messages",
+          "bytes": 503596,
+          "sha256": "7d08c6029170c9e877491c68d6f360d7615e4d1f7e7e36a6d0544762684dd40a",
+          "pinnedModel": true,
+          "clientVersionMatches": true,
+          "metadataMatches": true,
+          "messages": 3,
+          "expectsCall": true,
+          "exactResult": true,
+          "resultBytes": 500000,
+          "localPointer": false,
+          "countMatches": false
+        }
+      ],
+      "messages": 2,
+      "artifactReads": 1,
+      "countReplies": 0,
+      "brokerFaults": 0,
+      "groupTermination": "confirmed",
+      "outcome": "exited",
+      "exitCode": 0,
+      "commandSha256": "233614647ba366285efe01db6c2f4bebb1bf46e6c1fab796a1029e87a30b6294"
+    },
+    {
+      "version": "2.1.327",
+      "scenario": "bounded",
+      "canonicalResultBytes": 500000,
+      "selectedCount": 120000,
+      "metaSize": 1000000,
+      "supportSha256": {
+        "session-bridge.js": "309d31d193bdd19f7c5cb64c25e1f4b500ed6bdb55bf83da4ea6800a5f237f4b",
+        "session-mcp.js": "e265f19cb88e5e528f6184028b9bb4f147d8f14d6f48d4929b868deb7fc90da6"
+      },
+      "requests": [
+        {
+          "route": "messages",
+          "bytes": 3196,
+          "sha256": "788922c5f50d2df7185b527d2d2c3b73ac49a9db79b9fd91711470e515c0cd04",
+          "pinnedModel": true,
+          "clientVersionMatches": true,
+          "metadataMatches": true,
+          "messages": 1,
+          "expectsCall": false,
+          "exactResult": false,
+          "resultBytes": 0,
+          "localPointer": false,
+          "countMatches": false
+        },
+        {
+          "route": "messages",
+          "bytes": 503597,
+          "sha256": "b37be40d22beebe5e65f4ee750591cb7e930801ace431dbefc3d5fdc1c0574f9",
+          "pinnedModel": true,
+          "clientVersionMatches": true,
+          "metadataMatches": true,
+          "messages": 3,
+          "expectsCall": true,
+          "exactResult": true,
+          "resultBytes": 500001,
+          "localPointer": false,
+          "countMatches": false
+        }
+      ],
+      "messages": 2,
+      "artifactReads": 1,
+      "countReplies": 0,
+      "brokerFaults": 0,
+      "groupTermination": "confirmed",
+      "outcome": "exited",
+      "exitCode": 0,
+      "commandSha256": "fc298c9a70973465c26201385a88c797fb8e4b9913603e957d31b056cbef6605"
+    },
+    {
+      "version": "2.1.327",
+      "scenario": "bounded",
+      "canonicalResultBytes": 500001,
+      "selectedCount": 120000,
+      "metaSize": 1000000,
+      "supportSha256": {
+        "session-bridge.js": "309d31d193bdd19f7c5cb64c25e1f4b500ed6bdb55bf83da4ea6800a5f237f4b",
+        "session-mcp.js": "e265f19cb88e5e528f6184028b9bb4f147d8f14d6f48d4929b868deb7fc90da6"
+      },
+      "requests": [
+        {
+          "route": "messages",
+          "bytes": 3196,
+          "sha256": "ac4f82ee83c1d6657be49a1abec8c7942e5aca3b9adfe1d1030d5845f6fc4a80",
+          "pinnedModel": true,
+          "clientVersionMatches": true,
+          "metadataMatches": true,
+          "messages": 1,
+          "expectsCall": false,
+          "exactResult": false,
+          "resultBytes": 0,
+          "localPointer": false,
+          "countMatches": false
+        },
+        {
+          "route": "messages",
+          "bytes": 5808,
+          "sha256": "a0eb4058d2b56a95d4a3c0d952a6e09640836115efb1005b7107159a682c2022",
+          "pinnedModel": true,
+          "clientVersionMatches": true,
+          "metadataMatches": true,
+          "messages": 3,
+          "expectsCall": true,
+          "exactResult": false,
+          "resultBytes": 2316,
+          "localPointer": true,
+          "countMatches": false
+        }
+      ],
+      "messages": 2,
+      "artifactReads": 1,
+      "countReplies": 0,
+      "brokerFaults": 0,
+      "groupTermination": "confirmed",
+      "outcome": "exited",
+      "exitCode": 0,
+      "commandSha256": "200def4e811d487a5e7ebfbaa0aa0d53de50757533c5f1e853ec066e9445b5f8"
+    }
+  ],
+  "partitionedDelivery": [
+    {
+      "version": "2.1.327",
+      "scenario": "large",
+      "sourceBodyBytes": 616616,
+      "canonicalResultBytes": [
+        308445,
+        308445
+      ],
+      "selectedCount": 120000,
+      "metaSize": 500000,
+      "supportSha256": {
+        "session-bridge.js": "309d31d193bdd19f7c5cb64c25e1f4b500ed6bdb55bf83da4ea6800a5f237f4b",
+        "session-mcp.js": "8513977c4b39f12eeb2b34145459fbcc2fd0af9b2f65822e9b427de6d7a2e44f"
+      },
+      "requests": [
+        {
+          "route": "messages",
+          "bytes": 3196,
+          "sha256": "e30ffe60e45bce43363f75114643c4570680e0e2497df2ffad77e596dcbaa647",
+          "metadataMatches": true,
+          "messages": 1,
+          "roles": [
+            "user"
+          ],
+          "resultProjections": []
+        },
+        {
+          "route": "messages",
+          "bytes": 312042,
+          "sha256": "5c94c9a0b52514df398d05f230dd84322565fa4f050a1a3d384242027eda3d47",
+          "metadataMatches": true,
+          "messages": 3,
+          "roles": [
+            "user",
+            "assistant",
+            "user"
+          ],
+          "resultProjections": [
+            {
+              "known": true,
+              "bytes": 308446,
+              "sha256": "76a2eae4bc07dd3a116f42f2c4dde151b18186c91aef346896f540e4d33c8ca8",
+              "exact": true,
+              "pointer": false
+            }
+          ]
+        },
+        {
+          "route": "messages",
+          "bytes": 620888,
+          "sha256": "cbefd2fb04061bd4191e73ac0584ee767d0dd78e2ca817c8d9451eceafac71a2",
+          "metadataMatches": true,
+          "messages": 5,
+          "roles": [
+            "user",
+            "assistant",
+            "user",
+            "assistant",
+            "user"
+          ],
+          "resultProjections": [
+            {
+              "known": true,
+              "bytes": 308446,
+              "sha256": "76a2eae4bc07dd3a116f42f2c4dde151b18186c91aef346896f540e4d33c8ca8",
+              "exact": true,
+              "pointer": false
+            },
+            {
+              "known": true,
+              "bytes": 308446,
+              "sha256": "ee7053076480fda643b1096327a17aeb0e38111466aba9f974a055f377f01214",
+              "exact": true,
+              "pointer": false
+            }
+          ]
+        }
+      ],
+      "messages": 3,
+      "artifactReads": 2,
+      "countReplies": 0,
+      "brokerFaults": 0,
+      "groupTermination": "confirmed",
+      "outcome": "exited",
+      "exitCode": 0,
+      "commandSha256": "9081c8962d6954e85434c0524a7ce0795b185603c88163e3d3210dd5d404dc86"
+    },
+    {
+      "version": "2.1.327",
+      "scenario": "large",
+      "sourceBodyBytes": 599538,
+      "canonicalResultBytes": [
+        305386,
+        311500
+      ],
+      "selectedCount": 120000,
+      "metaSize": 500000,
+      "supportSha256": {
+        "session-bridge.js": "309d31d193bdd19f7c5cb64c25e1f4b500ed6bdb55bf83da4ea6800a5f237f4b",
+        "session-mcp.js": "8513977c4b39f12eeb2b34145459fbcc2fd0af9b2f65822e9b427de6d7a2e44f"
+      },
+      "requests": [
+        {
+          "route": "messages",
+          "bytes": 3196,
+          "sha256": "00064d92b8cba6b6d27ab57216be2e5982a28fab618d729572a25ef523af80de",
+          "metadataMatches": true,
+          "messages": 1,
+          "roles": [
+            "user"
+          ],
+          "resultProjections": []
+        },
+        {
+          "route": "messages",
+          "bytes": 319920,
+          "sha256": "f54e6c1094e0f1a4d8ae90b2f69ba1f8e5b2aa8d82e21ff51c109d9983da253a",
+          "metadataMatches": true,
+          "messages": 3,
+          "roles": [
+            "user",
+            "assistant",
+            "user"
+          ],
+          "resultProjections": [
+            {
+              "known": true,
+              "bytes": 305387,
+              "sha256": "5ef5f3819e6234334823758c3d8d1f902ee37a05eccd223bb6fec9267dde3e05",
+              "exact": true,
+              "pointer": false
+            }
+          ]
+        },
+        {
+          "route": "messages",
+          "bytes": 655034,
+          "sha256": "49d3b5e1b4c7d622e9d2de2ec4abfbb26b4b61ddc4140cbea287fd290e579d69",
+          "metadataMatches": true,
+          "messages": 5,
+          "roles": [
+            "user",
+            "assistant",
+            "user",
+            "assistant",
+            "user"
+          ],
+          "resultProjections": [
+            {
+              "known": true,
+              "bytes": 305387,
+              "sha256": "5ef5f3819e6234334823758c3d8d1f902ee37a05eccd223bb6fec9267dde3e05",
+              "exact": true,
+              "pointer": false
+            },
+            {
+              "known": true,
+              "bytes": 311501,
+              "sha256": "5b8aaec4e5a046225f66b144a3e3d4397eb1502cdc71b3d8fd7b94fa6b940ab5",
+              "exact": true,
+              "pointer": false
+            }
+          ]
+        }
+      ],
+      "reconstructed": {
+        "retainedResultSha256": "937e239e3355d9a37e39cbf565ee64d3a7e633a6690b12be3140cdf7ec7905a4",
+        "envelopeSha256": "889a4d60e6d2e484ab128efa68d7b39d39d19877315f291cd060739953eff8d7",
+        "envelopeBytes": 599538,
+        "packetSha256": "dfcf023b76d6abfde7229a2181af6d8475b9715c4e3e71d5f59dd23c1e6980ae",
+        "packetBytes": 518506,
+        "files": 15,
+        "pages": 12
+      },
+      "messages": 3,
+      "artifactReads": 2,
+      "countReplies": 0,
+      "brokerFaults": 0,
+      "groupTermination": "confirmed",
+      "outcome": "exited",
+      "exitCode": 0,
+      "commandSha256": "b65d9dbb0c1467ce4fa872078ace43dabdeb84f5b359d1ee1d3977a1206225e9"
+    }
+  ],
+  "hypotheticalStylesheetSizing": {
+    "baseline": {
+      "packetBytes": 518506,
+      "wrappedBytes": 616763,
+      "styleBytes": 23404
+    },
+    "hypothetical": {
+      "packetBytes": 476518,
+      "wrappedBytes": 566807,
+      "styleBytes": 20082
+    },
+    "pages": 12,
+    "files": 15,
+    "fitsRecordedAsciiBoundary": false
+  },
+  "checks": [
+    {
+      "path": "d10-f3-native-version-245-evidence.json",
+      "bytes": 16033,
+      "sha256": "c44dd554e0820cd29908c22e253e80f47b06f2c8507ca38e938f47639a221d90"
+    },
+    {
+      "path": "d10-f3-native-boundary-244-evidence.json",
+      "bytes": 18518,
+      "sha256": "dc1466f0da5281187747d41e12176fc1614a9e90336bc9f14d001af67d0e1143"
+    },
+    {
+      "path": "d10-f3-native-output-242-evidence.json",
+      "bytes": 10559,
+      "sha256": "145eab33c0c48d58c38a52ba40dffc3791608b08975349a7276eb5ecdebc289d"
+    },
+    {
+      "path": "d10-f3-candidate-inventory-187.json",
+      "bytes": 87142,
+      "sha256": "2268192592b39a33aaad436362babad18a7f7bc618c6ef120892b3819a175bbf"
+    },
+    {
+      "path": "d10-f3-owned-native-result-meta-246.mjs",
+      "bytes": 9863,
+      "sha256": "47167f62e45fcf54530c4a0f05e78b327148eeab5475268ce12a5a09e8766354"
+    },
+    {
+      "path": "d10-f3-owned-native-result-meta-edge-246.mjs",
+      "bytes": 10101,
+      "sha256": "caaafa83536f38b58313a7bd4b3a2934ca7b074077ff025d1372baf67cbd46d3"
+    },
+    {
+      "path": "d10-f3-owned-native-segments-246b.mjs",
+      "bytes": 9825,
+      "sha256": "580fe24884d79ad54eb1155579ab154ed9d7df08662e94fced0ec663ba6ace5b"
+    },
+    {
+      "path": "d10-f3-owned-native-segments-246c.mjs",
+      "bytes": 11550,
+      "sha256": "ec8fddc5454a054a9fdc64004eaa7ddd221807a6f450e3d4463ee38906ee07f9"
+    },
+    {
+      "path": "d10-f3-owned-css-size-246.mjs",
+      "bytes": 3177,
+      "sha256": "271b4df379e0366c91c231c689c8bc965a1bfb7c0af2b22e68a4a50633407c1f"
+    },
+    {
+      "path": "d10-f3-owned-css-size-246.json",
+      "bytes": 212,
+      "sha256": "0e9adea3ca4719f387975340b48138baf391609be632547cce57a0c37c6a314b"
+    },
+    {
+      "path": "d10-f3-owned-native-result-meta-246-390k.log",
+      "bytes": 1114,
+      "sha256": "39b19e52ed1560f46b289feeb6167084ea9753a038d06e86bb12e113d107fb7b"
+    },
+    {
+      "path": "d10-f3-owned-native-result-meta-246-500000.log",
+      "bytes": 1108,
+      "sha256": "f0a3ee9388b0f317b898c55aaa2212010e41d6a69fde459b50195f5250e454e7"
+    },
+    {
+      "path": "d10-f3-owned-native-result-meta-246-750000.log",
+      "bytes": 1108,
+      "sha256": "549dff79ad51a0aa0a114bc449df05e5fc30f9a3e7c802b4f6c977facf4d22ef"
+    },
+    {
+      "path": "d10-f3-owned-native-result-meta-246-edge-499866.log",
+      "bytes": 1115,
+      "sha256": "4632c07f8960495866cf5b758bee2b08a58797efb43b388ca96d22728dc71a8d"
+    },
+    {
+      "path": "d10-f3-owned-native-result-meta-246-edge-499867.log",
+      "bytes": 1115,
+      "sha256": "a4028c630abf22b155dbcf8b09ed31578b817d413c98dd062da4ffdfbb1f5887"
+    },
+    {
+      "path": "d10-f3-owned-native-result-meta-246-edge-499868.log",
+      "bytes": 1111,
+      "sha256": "487b557f764061b9b48756c87da4d29c25026fd54138fc3c08770bb68023cf3e"
+    },
+    {
+      "path": "d10-f3-owned-native-segments-246b-two.log",
+      "bytes": 1581,
+      "sha256": "371c4f9a6b8cbcf42fd84d9fdab36e799f6e2f0fcd7610620216aa5729b5e3b0"
+    },
+    {
+      "path": "d10-f3-owned-native-segments-246c-retained.log",
+      "bytes": 1921,
+      "sha256": "fcc9763469dcdcbd86252fc9951f229889fb9c46c34bae0561e10c520617e819"
+    }
+  ]
+}

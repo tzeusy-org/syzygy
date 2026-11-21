@@ -3,7 +3,7 @@ id: RFC-0003
 title: Project, Workspace and .syzygy/** Manifests — governance homes and owner acts
 module: governance-homes-and-owner-acts
 status_source: owner-act-record
-clauses: "RFC3-15, RFC3-15(a), RFC3-16, RFC3-16(a), RFC3-16(b), RFC3-16(c), RFC3-17, RFC3-17(a) (every other RFC3-n lives in manifests-and-namespace.md)"
+clauses: "RFC3-15, RFC3-15(a), RFC3-16, RFC3-16(a), RFC3-16(b), RFC3-16(c), RFC3-16(d), RFC3-17, RFC3-17(a) (every other RFC3-n lives in manifests-and-namespace.md)"
 governs: [governance-homes, lifecycles, owner-acts, provenance, challenge-records]
 applies_to: [kernel, workspace, all-surfaces]
 depends_on: [RFC-0001, RFC-0002, RFC-0005]
@@ -51,20 +51,16 @@ that other RFCs cite most. Its weight sits in **RFC3-16(a)**, the owner-act
 provenance predicate that every gate in the corpus honoring a consent, an
 approval, an adoption stamp, a policy, or a registry cites rather than
 restating the obligation; in **RFC3-16(b)**, what every act must bind; and in
-**RFC3-16(c)**, the two provenance states.
+RFC3-16(c), the two provenance states.
 
 - **§1.1 Categories.** The five constitutional `governance/` categories,
   closed except by recorded owner widening (RFC3-15, RFC3-15(a)).
 - **§1.2 Lifecycles and provenance.** Category-appropriate lifecycles; the
   self-declared stamp versus effective status.
-  - **RFC3-16(a)** the effective-owner-act predicate — an authorization needs
-    a real human act, exact-digest and scope bound, in state (1) or state
-    (2), with its state rendered.
-  - Independent correlation is what permits state (2), not what makes the
-    human act effective.
-  - **RFC3-16(b)** what every act must bind.
-  - **RFC3-16(c)** the two provenance states, which keeps a bootstrap act
-    visibly uncorrelated and never independently verified.
+  - RFC3-16(a) defines how a row or owner decision establishes adopted authority.
+  - RFC3-16(b) states what the record binds.
+  - RFC3-16(c) preserves the provenance distinction for historical owner acts.
+  - RFC3-16(d) states the currentness checks for bounded URL-dossier machine credentials.
 - **§1.3 Declarations and challenge records.** The reserved `declarations/`
   category and the home of challenge submissions and their admission records
   (RFC3-17, RFC3-17(a)).
@@ -72,7 +68,7 @@ restating the obligation; in **RFC3-16(b)**, what every act must bind; and in
   the open owner question carried here (q4).
 
 Clause identities are package-wide: this module holds RFC3-15, RFC3-15(a),
-RFC3-16, RFC3-16(a), RFC3-16(b), RFC3-16(c), RFC3-17 and RFC3-17(a). No
+RFC3-16, RFC3-16(a), RFC3-16(b), RFC3-16(c), RFC3-16(d), RFC3-17 and RFC3-17(a). No
 numbers are retired or merged anywhere in the package.
 
 ---
@@ -102,7 +98,7 @@ directory is conforming:
 |---|---|---|
 | `doctrine/` | Adopted doctrine artifacts; Syzygy-drafted doctrine for undeclared projects, stamped unadopted | Owner adoption (`ADOPT DOCTRINE` in this repo's bootstrap; explicit owner adoption generally). Amendment: owner-only (VIS-4) |
 | `contracts/` | Accepted load-bearing contracts (RFCs), including normative data contracts and external service contracts | Agent adoption under VIS-4 (amended by GOVERNANCE-SIMPLIFICATION-D10): a row in `decisions/AGENT-ADOPTIONS.md` naming the commit, reported to the owner, undone by veto. The foundational set's digest-bound acts in the active acceptance record remain history |
-| `policies/` | Quality, evidence, and security policies — including currency-bound declarations (RFC2-9), the secret-detection policy (SEC-5), deterministic challenge-resolution policies and challenge sweep policies (RFC2-13) | Agent adoption, as for `contracts/`, except that weakening the secret-detection policy is the owner's decision (SEC-5); policy versions are snapshot inputs (RFC2-1 item 7) |
+| `policies/` | Quality, evidence, and security policies — including currency-bound declarations (RFC2-9), the secret-detection policy (SEC-5), deterministic challenge-resolution policies and challenge sweep policies (RFC2-13) | Agent adoption, as for `contracts/`, except that weakening the secret-detection policy is the owner's decision (SEC-5); policy versions are snapshot inputs (RFC2-1 item 7). The sole mechanical-instance exception is RFC3-16(d): its parent amendment and fixed security policy require ordinary adoption; only its exact bounded runtime credential data instances derive operational authority under that adopted rule without individual adoption. No other policy/path gains this exception |
 | `decisions/` | Recorded owner decisions: adoptions, dismissals (reason + expiry), adjudications, consent records (RFC3-7), overrules | Recording by the owner (or attributed on the owner's behalf), or an agent adoption row; a decision is a warrant, never evidence |
 | `records/` | **Kernel-authored durable facts minted on a non-owner actor's submission, or by the pre-declared deterministic challenge-sweep policy resolving an expiry-eligible challenge as `expired` (RFC2-13; owner decision B1 — the sweep's policy lives in `policies/`, its resolution record here, and that record is the new snapshot's authoritative input; the record's authority is the kernel's verification that the policy carries an effective owner act under RFC3-16(a), declared before the challenge was admitted — never the record's own say-so, shape-parallel with RFC3-17(a) — and an unbacked resolution record is inadmissible, the suspension holding)** (the only minting triggers — see RFC3-2's transition rule; expiry *eligibility* derives at evaluation and mints nothing): **challenge submissions** (RFC1-5, RFC2-12 — the submission is itself a distinct recorded artifact, per RFC3-17(a)), their admission and rejection records and submitted withdrawals (RFC2-13), and **walkthrough execution records** (the fact a comprehension walkthrough ran and what it walked — RFC7-30, RFC9-45; **this artifact class exists only where those contracts are accepted and active**, so until then the category admits no member of it and a conforming validator rejects one). *Never* owner decisions, never policy, never claims — a walkthrough **judgment** (pass/fail and rationale) is an adjudication and lives in `decisions/` | **No install gate — these are recorded facts, not authorizations.** Minted by the kernel under its own rules; the *submission* they record is attributed, and the record itself is neither adopted nor adoptable. The one non-submission member — the sweep's expiry-resolution record — answers to a gate all the same: the resolving policy's owner-approval gate in `policies/` and its effective RFC3-16(a) act state, carried into the record by the kernel's verification, so no authorization enters this category by riding a record |
 
@@ -131,6 +127,7 @@ that:
 | `decisions/` and consent records | active → superseded / revoked / expired | A decision is **made**, never "adopted"; supersession and revocation are themselves recorded acts |
 | `records/` (kernel records) | immutable recorded fact; plus withdrawal, supersession, or the sweep's recorded expiry resolution where its governing contract defines them (RFC2-13 — expiry *eligibility* derives; the resolution is a recorded act whose authority is the resolving policy's RFC3-16(a) provenance, never the record's own say-so) | **No adoption lifecycle exists for this class** — nothing here is adopted or adoptable (RFC3-15) |
 | Governed presentation artifacts (e.g. the Polaris narrative, RFC 0007) | draft → adopted/published → superseded | Non-authoritative content with an adoption gate on publication |
+| RFC3-16(d) closed URL-dossier local machine-credential instances in `policies/` | instantiated → rotated / expired / revoked | Authorization-bearing operational data under the adopted rule/policy and current protected lifecycle, **not independently adopted policy**; only RFC3-16(d) defines the exception |
 | `cache/`, `local/` | none | No governance lifecycle; rebuildable / personal (RFC3-20/21) |
 
 **The self-declared stamp.** An artifact of an adoptable or gated class
@@ -141,7 +138,7 @@ captured in the snapshot "with adoption status as a fact, not formatting"
 of acceptance.
 
 **Effective status is read from the adoption record, not from the stamp.**
-*(Amended by GOVERNANCE-SIMPLIFICATION-D10.)* The **effective** lifecycle status of a normative
+*(Amended by GOVERNANCE-SIMPLIFICATION-D10.)* Except for the sole RFC3-16(d) bounded mechanical-instance class, the **effective** lifecycle status of a normative
 or authorization-bearing artifact is determined by its **adoption record** on
 the default branch:
 
@@ -164,7 +161,7 @@ transcribed. Consequences that bind:
   distinguishes the self-declared stamp (untrusted content) from the
   effective status; where they disagree, the effective status governs and the
   disagreement renders as a disclosed fact, never silently reconciled.
-- An artifact with **no** adoption record at all has effective status
+- Outside the sole RFC3-16(d) instance class, an artifact with **no** adoption record at all has effective status
   **unadopted** whatever its stamp claims: it binds nothing, anchors nothing,
   and renders unadopted everywhere (v1.md drafting rule; RFC2-25
   `unadopted-draft`).
@@ -184,7 +181,7 @@ transcribed. Consequences that bind:
 
 **Scope.** This clause and the RFC3-16(a) predicate govern
 **authorization-bearing and normative artifacts** — the adoptable class,
-decisions/consents, and gated presentation artifacts. Kernel records carry no
+decisions/consents, and gated presentation artifacts. RFC3-16(d) instances remain authorization-bearing and inside this predicate, but obtain operational authority only through that explicit adopted-rule exception, never a self-declared stamp or implicit policy-path exemption. They render `authorized-under-adopted-policy`, `refused` or `Unknown` with their actual parent and current instance bindings, never `agent-adopted`/`owner-decided` per instance. Kernel records carry no
 adoption lifecycle and are outside both (their authority is RFC3-2's
 `kernel-recorded` class); `cache/` and `local/` are outside governance
 entirely.
@@ -236,14 +233,14 @@ as the boundary:
   render means, so no downstream status check can catch it (VIS-7's trust
   floor).
 
-**The predicate** *(amended by GOVERNANCE-SIMPLIFICATION-D10)*. Such an artifact is honored
+**The predicate** *(amended by GOVERNANCE-SIMPLIFICATION-D10)*. Outside the sole explicit RFC3-16(d) mechanical-instance exception, such an artifact is honored
 only at bytes that carry an **adoption record** under RFC3-16: an owner
 decision record where the artifact falls in one of VIS-4's four owner classes
 (for example, a write consent for a repository the owner does not own, a
 weakening of the secret-detection policy, or a configuration exposing Syzygy
 beyond the tailnet), and an agent adoption row otherwise. Being present and
 well-formed *in the tree* is not sufficient; being committed to the default
-branch with its record is.
+branch with its record is. RFC3-16(d) does not remove an artifact from this authorization-bearing predicate: it defines a separate, closed derivation of operational authority from an actually adopted governing amendment and fixed issuance/scoping policy, plus every current instance, kernel, scope, protected audit and antirollback check. An applicability judgment, controller assertion, well-formed record or policy filename cannot create this exception. Any member or write outside its exact class uses the ordinary per-artifact adoption predicate.
 
 **The trust premise, stated honestly.** The plane is in-tree and agents
 commit into it, so every record, owner decision records included, lies within
@@ -265,7 +262,7 @@ adoption record, owner or agent, binds at minimum:
 1. the **project identity**;
 2. the **stable identity of the artifact** adopted;
 3. the **commit** that carries the adopted bytes — approving a path never
-   approves future content at that path; a later edit needs its own record;
+   approves future content at that path; a later edit needs its own record. The sole RFC3-16(d) exception permits only that explicitly adopted fixed-policy mechanical operational-instance transition, not arbitrary future bytes or parent-policy edits;
 4. the **kind** of adoption (adopt, amend, retire, consent, revoke, veto);
 5. **who decided** — the owner, or the agent session that adopted;
 6. the **date**;
@@ -277,9 +274,9 @@ adoption record, owner or agent, binds at minimum:
 For an agent adoption, items 1 to 8 are the `AGENT-ADOPTIONS.md` row and its
 revert command; no phrase is typed and no digest is transcribed.
 
-**Effect when the adoption record is missing.** A missing, mismatched or
-reverted record blocks the dependent effect and renders the authorization
-Unknown; for an owner-class artifact it also routes to the owner. Blocking is
+**Effect when the adoption record is missing.** For ordinary artifacts and for the parent amendment/fixed policy of RFC3-16(d), a missing, mismatched or
+reverted adoption record blocks the dependent effect and renders the authorization
+Unknown. An RFC3-16(d) instance instead must satisfy every adopted-rule derivation/currentness predicate of that clause at the next act; missing instance adoption alone is not a failure only within that exact exception. Any failed parent or instance predicate blocks the effect and renders its operational authorization refused/Unknown as warranted; for an owner-class artifact it also routes to the owner. Blocking is
 not deletion: the artifact and its record state both remain rendered.
 
 **One predicate, one home.** Every consuming gate **cites this clause rather
@@ -306,10 +303,13 @@ authorization-bearing artifact under RFC3-16(a) and RFC3-16(b).
 
 ```mermaid
 flowchart TD
-    A["Authorization-bearing artifact<br/>(the RFC3-16(a) predicate)"] --> Q{"Adoption record on the default branch?<br/>owner decision for an owner class,<br/>agent adoption row otherwise"}
-    Q -->|"yes"| H["Honored; who adopted is rendered"]
-    Q -->|"missing, mismatched or reverted"| B["Dependent effect blocked;<br/>authorization rendered Unknown;<br/>owner class: routed to the owner"]
-    B --> R["Artifact and record state<br/>remain rendered, never deleted"]
+    A["Authorization-bearing artifact"] --> C{"Exact RFC3-16(d) instance?"}
+    C -->|"yes"| D{"Adopted parents + every current instance/kernel/scope/audit/antirollback check?"}
+    C -->|"no"| Q{"Current default-branch adoption record for exact artifact bytes?"}
+    D -->|"yes"| H["Operational authority under adopted policy; never instance adoption"]
+    Q -->|"yes"| J["Ordinary adopted artifact; actual adopter disclosed"]
+    D -->|"no"| B["Dependent effect blocked; actual refusal/Unknown disclosed"]
+    Q -->|"missing/mismatched/reverted"| B
 ```
 
 **RFC3-16(c). Owner-adopted bootstrap act versus Syzygy-verified act.** An
@@ -386,6 +386,20 @@ flowchart LR
     ACT -->|"through the A1 ceremony<br/>and RFC5-25 audit trail"| S2
     S1 -->|"recorded correlation act,<br/>same digest, no artifact edit"| S2
 ```
+
+**RFC3-16(d). Bounded mechanically instantiated URL-dossier local machine-credential data.** This is the sole explicit exception to RFC3-16/(a)/(b)'s individual-adoption-of-authorization-bearing-bytes rule. It defines operational application of an adopted rule, not adoption of new intent or policy at runtime. It applies only when **all** of the following hold; a path, format label, controller claim or parent policy alone supplies no authority.
+
+1. **Adopted parents before use.** This exact governing amendment and the fixed URL-dossier issuance/scoping/origin policy SHALL each have current effective ordinary default-branch adoption under RFC3-16/(a)/(b) and VIS-4 in the observing project:syzygy governance root. The package's behavioral specification version receives its required tag. The rule/policy adoptive commit, artifact identity and exact content identities, project/root, policy schema/scopes, supported kernel/controller/adapter profile and installed controller identity SHALL be independently resolved and bound before any instance grant. Their self stamps or candidate presence never suffice. Parent amendment/policy edits are ordinary new adoptions, never mechanical-instance writes. Missing/unknown/mismatched/reverted/vetoed/retired parent or changed unsupported controller/policy profile refuses every next act; no grandfathering or automatic migration/re-adoption escapes a veto.
+
+2. **Closed class and canonical data home.** Members are exclusively secret-free polaris-dossier-local-machine-client/1 data instances for one bounded URL-dossier run's pinned role-cli/mcp-shim/inference-bridge machine clients under RFC5-7(d), in .syzygy/governance/policies/dossier-machine-clients/<opaque-client-id>.json of the **observing Syzygy project**. No observed foreign repository or supplied clone is written. The fixed adopted policy SHALL close the exact record/instance/verifier schema, immutable project/source pin/run/role/kind/scopes/policy/client/issuance bindings, finite timestamps and bounds, nonsecret attested process/channel verifier metadata and one-way lifecycle transitions specified by complete REQ-polaris-generation-048. The policy is normative and adopted; an instance is authorization-bearing operational governance data, never an independently adopted policy, kernel-recorded fact, owner credential, anonymous client class or general exemption for policies/. Outside this exact class, ordinary RFC3-16/(a)/(b) remains mandatory.
+
+3. **Single mechanical writer and immutable boundaries.** Every instance field has RFC3-2's Syzygy-maintained authority, exercised only by the one fixed-policy-pinned typed trusted host controller; a role/MCP/bridge client cannot administer or mint credentials. The only permitted writes instantiate a never-reused identity under an already validated permitted run binding, append a permitted unique increasing instance generation, advance revision, shorten finite expiry, and set one-way retirement/revocation. Immutable identities/policy/project/source/run/role/kind/scopes and historical verifier bindings cannot be changed or deleted under an existing identity. No new scope, operation species, provider, client kind, policy discretion, arbitrary authorization artifact or secret may be added by runtime. A genuinely different binding requires a new policy-permitted never-reused identity and cannot bypass an existing identity/run revocation. No reusable bearer or adapter secret enters role/observed namespaces; implementation code stays outside .syzygy. The explicitly authorized typed local-machine-verifier adapter writes only bounded protected verifier projection/currentness anchor and lifecycle audit at its fixed host state root, never governing policy or foreign repository content.
+
+4. **Effective operational authority, not individual artifact adoption.** A current member derives permission only from the conjunction of current adopted parent identities, validated fixed-policy membership/transition, complete atomic expected-revision canonical publication, matching protected verifier/currentness projection, actual independently supported kernel peer/process-lifetime/dedicated-channel binding and separately authorized deny-default project/source/run/role/operation scope. The canonical governance record is the current identity/scope/lifecycle datum required by RFC5-6; the policy/rule is its authorization warrant, and the protected projection is only a verifier/currentness safeguard, never independent governance authority. Neither absent individual default-branch commit/adoption row/tag nor absence of a per-instance owner ceremony blocks a member that satisfies this explicit rule; no such per-instance act is required or fabricated. Conversely these operational bytes do **not** acquire agent-adopted/owner-decided status, and earlier parent or path adoption never approves arbitrary future content. Readers disclose the actual adopted parent commit/policy identities, current instance/revision and operational-authority state with captured scope, never independent proof of adoption or a false per-instance adoption claim.
+
+5. **Every-next-act currentness and antirollback.** Before any protected data delivery, reply registration, tool/adapter effect or dependent forwarding, including queued work/open connections/attach/resume, re-read current parent effective adoption, actual canonical instance, protected projection/currentness anchor, kernel identity/lifetime, policy membership, expiry/revocation and separate scopes. Enforce monotonic revision/generation/never-reused issuance identity and an independently protected per-client high-water revision/digest/lifecycle binding, coupled to the durable lifecycle trail. A replay of old canonical bytes or both file and ordinary projection cannot reset revocation/currentness. The anchor is not governing authority and cannot grant on its own; its protection/rollback-detection scope SHALL be independently proved for the supported profile. Missing, inconsistent, unreadable, reset, partial, tampered, rolled-back or unsynchronized parent/record/anchor/audit state refuses; do not reconstruct a grant from mutable run history or an unverified projection. Atomic compare-and-publish and mediation serialization prevent a stale concurrent writer from winning; failed publication/synchronization/audit has no grant. Exactly zero-overlap identity-preserving rotation retires the old instance; identity/instance/run stop, expiry or revocation blocks the next act even on existing connections. Resume cannot restore retired authority or widen original deadline/pin/policy/provider/role. Already attempted sends are truthfully captured, never represented as undone.
+
+6. **Protected evidence, finite limits and unchanged safeguards.** Safe durable integrity-verifiable lifecycle audit binds actual trusted controller/client/instance/project/run, parent commit/policy identities, previous/next revision/digest, issuance/rotation/revocation/publication/currentness decision, time/outcome and scope **before** any corresponding grant/effect. No bodies/secrets/unsafe metadata enter it; failure blocks. Maintain finite record/instance/client/parse/I/O/lock/output/wall bounds under the original run deadline, rejecting exhaustion instead of dropping revocation/history or silently reissuing identities. Captures remain attributed Inferred history, missing evidence Unknown; supported live kernel/currentness observations name their actual scope/instant, never prove all past behavior. Independent positive and missing-parent, wrong-peer/scope, unsupported writer/field, rollback, atomic race, audit failure, next-act revocation and resume counterexamples are mandatory. Every source admission, complete request screening, provider declaration, no-observed-code-execution, secret fail-closed rule and owner class remains unchanged; this exception cannot authorize an owner-class change. Actual adoption of this amendment and fixed policy is prerequisite to activation; this candidate creates none.
 
 ### 1.3 The `declarations/` category, and where challenge records live
 

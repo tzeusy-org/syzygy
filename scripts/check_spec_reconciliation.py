@@ -118,6 +118,11 @@ warrant union, and R5 routes it to the one adoption ledger. This is published
 specification applicability only, never source/provider admission. The tag's
 actual target is checked at publication, not asserted from a row's text.
 
+The v2.1 URL declared-source transaction is pending until its own row.
+After the row and reviewed subjects verify, both R3 methods apply its four
+MODIFIED requirements and one ADDED requirement after v2.0, and R4/R5
+include its dependency union and publication routes.
+
 `--selftest` copies every input into a scratch tree, confirms it passes,
 then applies each rule-6 mutant and requires its expected predicate to fail
 (or, for R6 and R7, to change what it reports); `--witnesses FILE` stores
@@ -392,6 +397,36 @@ DECLARED_SOURCE_SUBJECTS = {
     '.syzygy/governance/decisions/DOSSIER-DECLARED-SOURCE-CONTRACT-APPLICABILITY.md':
         'a698de216484ee2f221988142e70de3b661c9fb095b0e3eb3cf10390517588d1',
 }
+URL_SOURCE_CHANGE = "dossier-url-declared-source-run"
+URL_SOURCE_HOME = f"{CHANGES}/{URL_SOURCE_CHANGE}"
+URL_SOURCE_SPEC = f"{URL_SOURCE_HOME}/proposed/polaris-generation/spec.md"
+URL_SOURCE_UNION = f"{URL_SOURCE_HOME}/GOVERNING-DEPENDENCIES.json"
+URL_SOURCE_TAG = "polaris-dossier-url-declared-source-run-v2.1"
+URL_SOURCE_REPLACEMENTS = f"{URL_SOURCE_HOME}/EXACT-REPLACEMENTS.json"
+URL_SOURCE_REPLACEMENTS_SHA = "e26793ab3ed9a614f892ff25b13209c15efaec62c3f8dcbf3f945a22f48dad8c"
+URL_SOURCE_RFC_MODULES = ("RFC-0003/manifests-and-namespace.md",
+                          "RFC-0003/governance-homes-and-owner-acts.md",
+                          "RFC-0005/admission-and-boundary.md")
+URL_SOURCE_RFC_PATHS = tuple(
+    f".syzygy/governance/contracts/{tree}/{module}"
+    for tree in ("rfcs", "candidates/rfcs") for module in URL_SOURCE_RFC_MODULES)
+RFC_CLAUSE_START = re.compile(r"^\*\*(RFC\d+-\d+(?:\([a-z]\))?)(?:\.|\s+[—-])", re.M)
+RFC_SECTION_START = re.compile(r"^#{2,} ", re.M)
+URL_SOURCE_SUBJECTS = {
+    URL_SOURCE_SPEC:
+        "e30836f902361c74943cc0cf69ae907a3e9d678a542b27676677e47c8a5fa865",
+    ".syzygy/governance/policies/POLARIS-DOSSIER-URL-ORIGIN-SPECIES-POLICY-v1.json":
+        "930efcc2cbdae55be92ce7929820e771f554502a9110e8ac5f8925132961e421",
+    f"{DECISIONS}/DOSSIER-URL-RUN-CONTRACT-APPLICABILITY.md":
+        "38e3b6f924c81187cfe7bb31e5383a994d98339689bb0256dd0c1763c8267386",
+    f"{URL_SOURCE_HOME}/proposed/contracts/DOSSIER-URL-LOCAL-MACHINE-CREDENTIAL-AMENDMENT.md":
+        "fdbb30efae2b01946a8f8265b9b7bbbd81c89e007aacc94455f7527fcb19aa6d",
+}
+URL_SOURCE_BOUND_PARTS = len(URL_SOURCE_SUBJECTS) + 1 + 2 * 7
+
+
+def is_url_source_row(line):
+    return line.startswith("|") and (URL_SOURCE_TAG in line or f"/{URL_SOURCE_SPEC})" in line)
 
 
 def polaris_additions(root):
@@ -725,6 +760,83 @@ def declared_source_binding(root):
     return (None if records or subjects else read_text(root, DECLARED_SOURCE_SPEC), records, subjects)
 
 
+def url_source_binding(root):
+    """Read v2.1's published composition. The transaction can land before its row.
+
+    The publication step checks the tag target and default-branch ancestry.
+    Like v2.0, this checker validates the row and exact current subject bytes
+    without fetching refs, including in projected selftest trees.
+    """
+    rows = []
+    for line in (read_text(root, AGENT_ADOPTIONS) or "").splitlines():
+        if is_url_source_row(line):
+            rows.append([cell.strip() for cell in line.split("|")[1:-1]])
+    if not rows:
+        return None, [], []
+
+    records, subjects = [], []
+    sys.path.insert(0, str(Path(__file__).resolve().parent))
+    import d10_supersession
+    if d10_supersession.state(root) != "recorded":
+        records.append("URL declared-source: D10 record does not verify")
+    if len(rows) != 1 or len(rows[0]) != 7:
+        records.append("URL declared-source: expected one seven-column agent adoption row")
+    else:
+        identity, date, commit, changed, reason, revert, tag = rows[0]
+        landed = re.fullmatch(r"`([0-9a-f]{40})`", commit)
+        if (not re.fullmatch(r"A-[1-9][0-9]*", identity)
+                or not re.fullmatch(r"\d{4}-\d{2}-\d{2}", date)
+                or not landed or tag != f"`{URL_SOURCE_TAG}`" or not reason):
+            records.append("URL declared-source: malformed adoption identity, date, commit, reason or tag")
+        if landed:
+            oid = landed.group(1)
+            if revert.split("`")[1:2] != [f"git revert -m 1 {oid}"]:
+                records.append("URL declared-source: revert does not name the landed merge commit")
+            for rel in URL_SOURCE_SUBJECTS:
+                snapshot = f"https://github.com/tzeusy-org/syzygy/blob/{oid}/{rel}"
+                if f"]({snapshot})" not in changed:
+                    records.append(f"URL declared-source: adoption row does not name `{rel}`")
+    for rel, digest in URL_SOURCE_SUBJECTS.items():
+        body = read_bytes(root, rel)
+        if body is None or sha(body) != digest:
+            subjects.append(f"URL declared-source: `{rel}` differs from the reviewed v2.1 subject")
+    subjects += url_source_contract_findings(root)
+    return (None if records or subjects else read_text(root, URL_SOURCE_SPEC), records, subjects)
+
+
+def url_source_contract_findings(root):
+    """Verify the reviewed amendment in its actual contract homes."""
+    body = read_bytes(root, URL_SOURCE_REPLACEMENTS)
+    if body is None or sha(body) != URL_SOURCE_REPLACEMENTS_SHA:
+        return [f"URL declared-source: `{URL_SOURCE_REPLACEMENTS}` differs from the reviewed ledger"]
+    groups = {rel: {} for rel in URL_SOURCE_RFC_PATHS}
+    for row in json.loads(body)["contract_sections"]:
+        paths = ((row["source"], row["mirror_source"]) if row["operation"] == "MODIFIED"
+                 else tuple(rel for rel in URL_SOURCE_RFC_PATHS if rel.endswith(URL_SOURCE_RFC_MODULES[1])))
+        for rel in paths:
+            groups[rel][row["clause"]] = row["new_clause_sha256"]
+    findings = []
+    for rel, expected in groups.items():
+        text = read_text(root, rel) or ""
+        found = {clause: [] for clause in expected}
+        starts = list(RFC_CLAUSE_START.finditer(text))
+        stops = [m.start() for m in starts[1:]] + [len(text)]
+        for start, stop in zip(starts, stops):
+            ident = start.group(1)
+            if ident in found:
+                # The new clause precedes the next subsection heading, which
+                # belongs to the preserved RFC3-17 section.
+                if ident == "RFC3-16(d)":
+                    section = RFC_SECTION_START.search(text, start.end(), stop)
+                    if section:
+                        stop = section.start()
+                found[ident].append(sha(text[start.start():stop].encode("utf-8")))
+        for ident, digest in expected.items():
+            if found[ident] != [digest]:
+                findings.append(f"URL declared-source: installed `{rel}` does not contain the exact reviewed {ident}")
+    return findings
+
+
 def check_digest_act(act, tag, aggregate, record, manifest_bytes, r1, r2):
     """R1 and R2 checks of one digest act; its signed table, or None."""
     rows = {path: digest for digest, path in
@@ -1042,13 +1154,20 @@ def check_outcomes(root, report):
         subjects_seen += len(DECLARED_SOURCE_SUBJECTS)
     r1 += agent_records
     r2 += agent_subjects
+    url_amendment, url_records, url_subjects = url_source_binding(root)
+    if url_amendment is not None or url_records or url_subjects:
+        records += 1
+        subjects_seen += URL_SOURCE_BOUND_PARTS
+    r1 += url_records
+    r2 += url_subjects
     report.add("R1", "terminal outcome for every child", records, r1,
                f"{len(CHILDREN)} children and {len(additions)} installed Polaris "
                "additions; digest acts: phrase = manifest sha256 and in the "
                "aggregate; versioned: package/version/tag and one aggregate "
                "block; adopted additions: the declared record names the spec; "
                "declared-source: one VIS-4 ledger row and verified D10 record "
-               "when present; wholly absent pre-D10 amendment is inactive")
+               "when present; URL declared-source: one v2.1 row and verified "
+               "D10 record; an unrecorded v2.1 transaction stays pending")
     report.add("R2", "reviewed and signed subjects hash to their rows", subjects_seen, r2)
 
 
@@ -1380,6 +1499,71 @@ def compose_declared_source_by_name(current, text):
     return (dict(current) if problems else composed), problems
 
 
+URL_SOURCE_REPLACES = tuple(POLARIS_ID + suffix for suffix in ("025", "033", "035", "047"))
+URL_SOURCE_ADDS = POLARIS_ID + "048"
+URL_SOURCE_HEADINGS = (DECLARED_SOURCE_MODIFIED, ADDED_HEADING)
+URL_SOURCE_OPERATIONS = tuple(("MODIFIED", ident) for ident in URL_SOURCE_REPLACES) + (
+    ("ADDED", URL_SOURCE_ADDS),)
+
+
+def compose_url_source_by_id(current, text):
+    """Replace exactly four existing IDs and add the new URL-only requirement."""
+    problems = _header_problems_regex(text)
+    foreign = _foreign_headings_regex(text)
+    headings = re.findall(r"^[ \t]*##(?!#)[^\n]*$", text, re.M)
+    if headings != list(URL_SOURCE_HEADINGS) or any(h != DECLARED_SOURCE_MODIFIED for h in foreign):
+        problems.append("expected one canonical MODIFIED section followed by one ADDED section")
+    if re.search("[\ufeff\r]", text):
+        problems.append("noncanonical line bytes")
+    blocks = _polaris_blocks_regex(text)
+    operations = tuple((kind, ids[0]) for kind, ids, _name, _scenarios in blocks
+                       if len(ids) == 1)
+    if len(operations) != len(blocks) or operations != URL_SOURCE_OPERATIONS:
+        return dict(current), problems + ["unexpected URL declared-source requirement operations"]
+    names = {" ".join(row["name"].split()).casefold() for row in current.values()}
+    composed = dict(current)
+    for kind, (ident,), name, scenarios in blocks:
+        if kind == "MODIFIED" and (ident not in current or current[ident]["name"] != name):
+            problems.append(f"MODIFIED {ident} must preserve its predecessor's ID and name")
+        if kind == "ADDED" and (ident in current or " ".join(name.split()).casefold() in names):
+            problems.append(f"ADDED {ident} collides with a predecessor")
+        composed[ident] = {"name": name, "scenarios": scenarios}
+    return (dict(current) if problems else composed), problems
+
+
+def compose_url_source_by_name(current, text):
+    """Independently match predecessor names, then confirm the attached IDs."""
+    problems = _header_problems_manual(text)
+    lines = text.split("\n")
+    headings = [line for line in lines if line.lstrip(" \t").startswith("##")
+                and not line.lstrip(" \t").startswith("###")]
+    foreign = _foreign_headings_manual(text)
+    if headings != list(URL_SOURCE_HEADINGS) or any(h != DECLARED_SOURCE_MODIFIED for h in foreign):
+        problems.append("expected one canonical MODIFIED section followed by one ADDED section")
+    if "\ufeff" in text or "\r" in text:
+        problems.append("noncanonical line bytes")
+    blocks = _polaris_blocks_manual(text)
+    operations = tuple((b["section"], b["ids"][0]) for b in blocks if len(b["ids"]) == 1)
+    if len(operations) != len(blocks) or operations != URL_SOURCE_OPERATIONS:
+        return dict(current), problems + ["unexpected URL declared-source requirement operations"]
+
+    def norm(name):
+        return " ".join(name.split()).casefold()
+
+    names = {norm(row["name"]): (ident, row) for ident, row in current.items()}
+    for block in blocks:
+        key = norm(block["name"])
+        ident, = block["ids"]
+        if block["section"] == "MODIFIED":
+            prior = names.get(key)
+            if prior is None or prior[0] != ident or prior[1]["name"] != block["name"]:
+                problems.append(f"MODIFIED `{block['name']}` must preserve its predecessor's ID and name")
+        elif key in names or ident in current:
+            problems.append(f"ADDED `{block['name']}` collides with a predecessor")
+        names[key] = (ident, {"name": block["name"], "scenarios": block["scenarios"]})
+    return (dict(current) if problems else {ident: row for ident, row in names.values()}), problems
+
+
 def _cap1_overlay_guard_regex(text):
     """Method A: refusals for the CAP1 overlay, independent of its blocks.
 
@@ -1576,6 +1760,16 @@ def census(root):
             b, extra_b = compose_declared_source_by_name(b, amendment)
             pa += extra_a
             pb += extra_b
+        url_amendment, url_records, url_subjects = url_source_binding(root)
+        findings += url_records + url_subjects
+        if url_amendment is not None:
+            if amendment is None:
+                findings.append("POLARIS: URL declared-source requires effective declared-source v2.0")
+            else:
+                a, extra_a = compose_url_source_by_id(a, url_amendment)
+                b, extra_b = compose_url_source_by_name(b, url_amendment)
+                pa += extra_a
+                pb += extra_b
         findings += [f"POLARIS method A: {p}" for p in pa]
         findings += [f"POLARIS method B: {p}" for p in pb]
         if a != b:
@@ -1645,6 +1839,17 @@ def polaris_expected(root, findings):
         if pa or pb or delta_a != delta_b or set(after_a) != set(before_a):
             findings.append("POLARIS declared-source: replacement delta methods disagree or change identities")
         n_scen += delta_a
+        url_amendment, _records, _subjects = url_source_binding(root)
+        if url_amendment is not None:
+            url_a, pa = compose_url_source_by_id(after_a, url_amendment)
+            url_b, pb = compose_url_source_by_name(after_b, url_amendment)
+            expected_ids = ids | {URL_SOURCE_ADDS}
+            if pa or pb or url_a != url_b or set(url_a) != expected_ids:
+                findings.append("POLARIS URL declared-source: methods disagree or change unexpected identities")
+            ids = expected_ids
+            n_req += 1
+            n_scen += sum(len(row["scenarios"]) for row in url_a.values()) - sum(
+                len(row["scenarios"]) for row in after_a.values())
     return n_req, n_scen, ids
 
 
@@ -1675,8 +1880,7 @@ def check_census(root, report):
                                 f"from the literal at {diff[:6]}")
         elif family == "POLARIS":
             if set(reqs) != p_ids:
-                findings.append("POLARIS: identities are not exactly 001–031 "
-                                "and the signed additions' IDs "
+                findings.append("POLARIS: identities differ from the effective composition "
                                 f"(off by {sorted(set(reqs) ^ p_ids)[:6]})")
     committed = read_text(root, CENSUS)
     if committed is None:
@@ -1766,6 +1970,10 @@ def check_generated(root, pop, report):
     amendment, _records, _subjects = declared_source_binding(root)
     if amendment is not None:
         files += tracked(root, f"{CHANGES}/{DECLARED_SOURCE_CHANGE}")
+    url_amendment, _records, _subjects = url_source_binding(root)
+    if url_amendment is not None:
+        files += tracked(root, URL_SOURCE_HOME)
+    candidate_ref_dirs = addition_dirs + (URL_SOURCE_HOME + "/",)
     files += list(ROUTE_PAGES)
     # An addition may cite a candidate Polaris requirement still under
     # another change's `proposed/` (no act binds it); such a mention resolves
@@ -1786,7 +1994,7 @@ def check_generated(root, pop, report):
             family = m.group(1) or "POLARIS"
             for num in [m.group(2)] + re.findall(r"\d{3}", m.group(3)):
                 mentions += 1
-                if (family == "POLARIS" and rel.startswith(addition_dirs)
+                if (family == "POLARIS" and rel.startswith(candidate_ref_dirs)
                         and num not in numbers.get(family, set())
                         and num in candidates):
                     candidate_refs += 1
@@ -1808,22 +2016,24 @@ def check_generated(root, pop, report):
         if computed != declared:
             findings.append(f"`{rel}`: differs from its spec's warrants; run "
                             "`--regenerate`")
-    if amendment is not None:
+    for delta, rel in ((amendment, DECLARED_SOURCE_UNION), (url_amendment, URL_SOURCE_UNION)):
+        if delta is None:
+            continue
         examined += 1
         try:
-            declared = json.loads(read_text(root, DECLARED_SOURCE_UNION) or "null")["warrants"]
+            declared = json.loads(read_text(root, rel) or "null")["warrants"]
             declared = {key: set(values) for key, values in declared.items()}
         except (ValueError, TypeError, KeyError, AttributeError):
             declared = None
-        computed = warrant_union(amendment)
+        computed = warrant_union(delta)
         computed.pop("primary", None)
         if computed != declared:
-            findings.append(f"`{DECLARED_SOURCE_UNION}` differs from its amendment's warrants")
+            findings.append(f"`{rel}` differs from its amendment's warrants")
     report.add("R4", "generated dependency and coverage rows resolve",
                examined + mentions, findings,
                f"{examined} generated anchors, {mentions} identifier mentions "
                f"(full and continuation forms) over {len(files)} files, "
-               f"{candidate_refs} of them an addition's reference to a "
+               f"{candidate_refs} of them references to a "
                "candidate Polaris requirement under `proposed/`")
 
 
@@ -1885,6 +2095,15 @@ def check_routes(root, pop, report):
             findings.append(f"`{OPENSPEC_README}` does not route the declared-source amendment to `{AGENT_ADOPTIONS}`")
         if AGENT_ADOPTIONS not in status:
             findings.append(f"`{STATUS}` cites no declared-source agent-adoption ledger")
+    url_amendment, _records, _subjects = url_source_binding(root)
+    if url_amendment is not None:
+        examined += 2
+        if not any(Path(AGENT_ADOPTIONS).name in line and URL_SOURCE_TAG in line
+                   for line in rows.get(URL_SOURCE_CHANGE, [])):
+            findings.append(f"`{OPENSPEC_README}` does not route URL declared-source v2.1 "
+                            f"to `{AGENT_ADOPTIONS}` and its version tag")
+        if AGENT_ADOPTIONS not in status or URL_SOURCE_HOME not in status:
+            findings.append(f"`{STATUS}` does not route URL declared-source v2.1 and its adoption")
     figures = STATUS_FIGURE.findall(status)
     examined += 1
     reqs = pop.get("POLARIS", {})
@@ -2074,6 +2293,7 @@ def inputs(root):
         if change in ADOPTED_ADDITIONS:
             paths.add(adopted_binding(ADOPTED_ADDITIONS[change][1])[1])
     paths |= declared_source_inputs(root)
+    paths |= {URL_SOURCE_UNION, URL_SOURCE_REPLACEMENTS, *URL_SOURCE_SUBJECTS, *URL_SOURCE_RFC_PATHS}
     paths |= poc_reference().validation_inputs(root)
     return sorted(paths)
 
@@ -2408,7 +2628,9 @@ def declared_source_historical_cases(tmp, base, clean, witnesses, failures):
     original = ledger.read_text()
     row = next(line for line in original.splitlines()
                if line.startswith(f"| {DECLARED_SOURCE_ROW} |"))
-    absent_ledger = original.replace(row + "\n", "")
+    had_url_source = any(is_url_source_row(line) for line in original.splitlines())
+    absent_ledger = "".join(line for line in original.splitlines(keepends=True)
+                            if line.rstrip("\n") != row and not is_url_source_row(line))
     ledger.write_text(absent_ledger)
     report = Report()
     check_outcomes(tree, report)
@@ -2420,8 +2642,9 @@ def declared_source_historical_cases(tmp, base, clean, witnesses, failures):
     held = (declared_source_absent(tree)
             and declared_source_binding(tree) == (None, [], [])
             and not report.failed
-            and examined(report, "R1") == examined(clean, "R1") - 1
-            and examined(report, "R2") == examined(clean, "R2") - 3)
+            and examined(report, "R1") == examined(clean, "R1") - 1 - had_url_source
+            and examined(report, "R2") == examined(clean, "R2") - 3
+            - (URL_SOURCE_BOUND_PARTS if had_url_source else 0))
     witnesses.append({"mutant": "declared-historical-control", "path": change,
                       "old": "<no amendment, row, subjects or D10 act>",
                       "new": "<unchanged>", "expected": "inactive; no phantom R1/R2 subjects",
@@ -2529,6 +2752,111 @@ def declared_source_composition_cases(witnesses, failures):
                           "outcome": "killed" if caught else "SURVIVED"})
         if not caught:
             failures.append("declared-compose-" + name)
+
+
+def url_source_cases(tmp, base, witnesses, failures):
+    """Check the pending-to-adopted transition and the independent overlay guards."""
+    original = read_text(base, URL_SOURCE_SPEC)
+    if original is None:
+        return
+
+    def record(name, rel, old, new, expect, found, caught, stood):
+        witnesses.append({"mutant": name, "path": rel, "old": old, "new": new,
+                          "expected": expect, "failed": found,
+                          "outcome": ("held" if stood else "killed") if caught else "SURVIVED"})
+        if not caught:
+            failures.append(name)
+
+    tree = Path(tmp) / "url-source"
+    shutil.copytree(base, tree)
+    ledger = tree / AGENT_ADOPTIONS
+    pending = "".join(line for line in ledger.read_text().splitlines(keepends=True)
+                      if not is_url_source_row(line))
+    ledger.write_text(pending)
+    pending_pop, pending_findings = census(tree)
+    predecessor = pending_pop["POLARIS"]
+    held = (url_source_binding(tree) == (None, [], []) and not pending_findings
+            and URL_SOURCE_ADDS not in predecessor)
+    record("url-source-pending", AGENT_ADOPTIONS, "<no v2.1 row>", "<unchanged>",
+           "landed artifacts alone keep v2.1 pending", pending_findings, held, True)
+
+    oid = "1234567890abcdef" * 2 + "12345678"
+    links = ", ".join(f"[subject](https://github.com/tzeusy-org/syzygy/blob/{oid}/{rel})"
+                      for rel in URL_SOURCE_SUBJECTS)
+    row = (f"| A-999 | 2026-11-21 | `{oid}` | {links} | Selftest | "
+           f"`git revert -m 1 {oid}` | `{URL_SOURCE_TAG}` |\n")
+    ledger.write_text(pending + row)
+    current_pop, current_findings = census(tree)
+    current = current_pop["POLARIS"]
+    expected_counts = {"025": 14, "033": 6, "035": 37, "047": 24, "048": 27}
+    held = (url_source_binding(tree) == (original, [], []) and not current_findings
+            and set(current) == set(predecessor) | {URL_SOURCE_ADDS}
+            and all(len(current[POLARIS_ID + suffix]["scenarios"]) == count
+                    for suffix, count in expected_counts.items())
+            and all(current[ident] == requirement for ident, requirement in predecessor.items()
+                    if ident not in URL_SOURCE_REPLACES))
+    record("url-source-adopted", AGENT_ADOPTIONS, "<no v2.1 row>", row,
+           "v2.1 applies exactly the reviewed replacement and addition", current_findings, held, True)
+
+    ledger_cases = [
+        ("duplicate-row", row, row + row),
+        ("wrong-tag", URL_SOURCE_TAG, URL_SOURCE_TAG + "-wrong"),
+        ("wrong-revert", "git revert -m 1", "git revert -m 2"),
+    ]
+    ledger_cases += [(f"missing-link-{i}", f"/blob/{oid}/{rel})", f"/blob/other/{rel})")
+                     for i, rel in enumerate(URL_SOURCE_SUBJECTS, 1)]
+    for name, old, new in ledger_cases:
+        assert old in row
+        ledger.write_text(pending + row.replace(old, new, 1))
+        effective, r1, r2 = url_source_binding(tree)
+        record(f"url-source-{name}", AGENT_ADOPTIONS, old, new,
+               "R1 refusal with no effective amendment", r1 + r2,
+               effective is None and bool(r1) and not r2, False)
+    ledger.write_text(pending + row)
+    for i, rel in enumerate(URL_SOURCE_SUBJECTS, 1):
+        subject = tree / rel
+        previous = subject.read_bytes()
+        subject.write_bytes(previous + b"\n")
+        effective, r1, r2 = url_source_binding(tree)
+        subject.write_bytes(previous)
+        record(f"url-source-subject-{i}", rel, "<end of file>", "\n",
+               "R2 refusal with no effective amendment", r1 + r2,
+               effective is None and not r1 and bool(r2), False)
+    for rel in URL_SOURCE_RFC_PATHS:
+        subject = tree / rel
+        previous = subject.read_bytes()
+        marker = next(marker for marker in (b"**RFC3-2.", b"**RFC3-16(d).", b"**RFC5-6.")
+                      if marker in previous)
+        replacement = marker + b" changed"
+        subject.write_bytes(previous.replace(marker, replacement, 1))
+        effective, r1, r2 = url_source_binding(tree)
+        subject.write_bytes(previous)
+        record("url-source-contract-" + rel.split("/contracts/")[1], rel,
+               marker.decode(), replacement.decode(), "R2 refusal with no effective amendment",
+               r1 + r2, effective is None and not r1 and bool(r2), False)
+
+    cases = [
+        ("wrong-operation", ADDED_HEADING, DECLARED_SOURCE_MODIFIED),
+        ("wrong-modified-id", "ID: " + POLARIS_ID + "025", "ID: " + POLARIS_ID + "026"),
+        ("missing-added-id", "ID: " + URL_SOURCE_ADDS, ""),
+        ("wrong-predecessor-name", "Requirement: Provenance-bound source policy",
+         "Requirement: Renamed source policy"),
+        ("new-name-collision", "Requirement: Declared URL dossier supervisor",
+         "Requirement: Operator-agent authoring mode"),
+        ("foreign-heading", ADDED_HEADING, ADDED_HEADING + "\n\n### REMOVED Requirements"),
+        ("noncanonical-header", "### Requirement: Declared URL dossier supervisor",
+         "### requirement: Declared URL dossier supervisor"),
+        ("leading-bom", DECLARED_SOURCE_MODIFIED, "\ufeff" + DECLARED_SOURCE_MODIFIED),
+        ("carriage-return", ADDED_HEADING, ADDED_HEADING + "\r"),
+    ]
+    for name, old, new in cases:
+        assert old in original
+        mutant = original.replace(old, new, 1)
+        a, ida = compose_url_source_by_id(predecessor, mutant)
+        b, names = compose_url_source_by_name(predecessor, mutant)
+        record(f"url-compose-{name}", URL_SOURCE_SPEC, old, new,
+               "both parsers refuse without partial application", ida + names,
+               bool(ida and names and a == b == predecessor), False)
 
 
 def cap1_overlay_mutants():
@@ -2946,6 +3274,7 @@ def _selftest_cases(tmp, commit, witnesses, failures, witness_path, base, clean,
     _entry_kind_cases(tmp, base, witnesses, failures)
     declared_source_historical_cases(tmp, base, clean, witnesses, failures)
     declared_source_composition_cases(witnesses, failures)
+    url_source_cases(tmp, base, witnesses, failures)
     # Two cases a one-file mutation cannot express. A second record of the
     # same version fails R1 by its own finding; --regenerate refuses an
     # unsigned addition and writes nothing.

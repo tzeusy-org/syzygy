@@ -1,0 +1,315 @@
+{
+  "recordedAt": "2026-11-21T00:07:55.024107+00:00",
+  "scope": "Owned offline fixtures only",
+  "savedDesignResult": {
+    "path": "d10-f3-render-reproduction-native/PROOF-241-8000-TRACE2-NATIVE/views/run-0HtAhT/design/home/.claude/projects/-work/ac7f88b3-22f0-4714-a181-41e8f63c184e/tool-results/mcp-syzygy-artifact_read-1795219274107-j5pv3j.txt",
+    "bytes": 616763,
+    "sha256": "937e239e3355d9a37e39cbf565ee64d3a7e633a6690b12be3140cdf7ec7905a4"
+  },
+  "nativeCli": {
+    "path": "/home/orca/.local/share/claude/versions/2.1.327",
+    "bytes": 372904464,
+    "sha256": "343c744baa14bfd38286a7cb90871051f04379956da6c5b803a9e66019a76ac9"
+  },
+  "small": {
+    "scenario": "small",
+    "bodyBytes": 21,
+    "counts": {
+      "artifactReads": 1,
+      "forwards": 2,
+      "responses": 2,
+      "reservations": 2
+    },
+    "outcome": "exited",
+    "groupTermination": "confirmed",
+    "events": [
+      "launch-audit",
+      "reserve",
+      "audit:attempt-allowed",
+      "forward",
+      "usage",
+      "audit:response-admitted",
+      "tool-attempt",
+      "tool-receipt",
+      "reserve",
+      "audit:attempt-allowed",
+      "forward",
+      "usage",
+      "audit:response-admitted"
+    ],
+    "continuation": [
+      {
+        "requestBytes": 3752,
+        "requestSha256": "a2ffce68462c5a4a0e82a175c9e9bf3723d675993cdcf78dcbc3c465dc24b494",
+        "expectedBytes": 156,
+        "expectedSha256": "9bb77fd5be58c4384ee5b002d644cf2d697defedfff6aeb0201c74bcd954c251",
+        "actualBytes": 156,
+        "actualSha256": "9bb77fd5be58c4384ee5b002d644cf2d697defedfff6aeb0201c74bcd954c251",
+        "exact": true,
+        "persisted": false,
+        "toolResultsPath": false,
+        "partCount": 2
+      }
+    ],
+    "localCopies": [],
+    "commandSha256": "73c5168f34e7e712e99ffa9b4768cda21373a30c2ed8b08dac41d384067b49ee",
+    "viewSha256": "f0e2393fa68c6d7b72a9d3f27c5b076a1192c2b2363ab09170762cb89e21022d"
+  },
+  "large": {
+    "scenario": "large",
+    "bodyBytes": 806024,
+    "counts": {
+      "artifactReads": 1,
+      "forwards": 1,
+      "responses": 1,
+      "reservations": 1
+    },
+    "outcome": "exited",
+    "groupTermination": "confirmed",
+    "events": [
+      "launch-audit",
+      "reserve",
+      "audit:attempt-allowed",
+      "forward",
+      "usage",
+      "audit:response-admitted",
+      "tool-attempt",
+      "tool-receipt",
+      "audit:attempt-refused"
+    ],
+    "continuation": [
+      {
+        "requestBytes": 4940,
+        "requestSha256": "8e58523b73e84e7beffcdeb1e0da5412c6803834de3e93dda6299edc71e198a9",
+        "expectedBytes": 806160,
+        "expectedSha256": "fe24d1b3230c97f1e59c833cb4991097a261488904623eeac8e952dec6445af8",
+        "actualBytes": 1491,
+        "actualSha256": "2657108fe2d10100467878759cfc4a1743fc4cb15d7dc59adf6169bbaf23e0b5",
+        "exact": false,
+        "persisted": false,
+        "toolResultsPath": true,
+        "messageCount": 3,
+        "lastRole": "user",
+        "contentType": "string",
+        "isError": false,
+        "partCount": null
+      }
+    ],
+    "localCopies": [],
+    "commandSha256": "2653247131ea35f13d06e5002a331e0c458aa40e5580d3ded73c157a3cdb5b82",
+    "viewSha256": "f5e4dcc80fc30399262fe18014017e447ae5449464f51529cea0d9d68e648adf"
+  },
+  "scratchBound": {
+    "scenario": "large",
+    "bodyBytes": 806024,
+    "counts": {
+      "artifactReads": 1,
+      "forwards": 1,
+      "responses": 1,
+      "reservations": 1
+    },
+    "outcome": "wall-limit",
+    "groupTermination": "confirmed",
+    "events": [
+      "launch-audit",
+      "reserve",
+      "audit:attempt-allowed",
+      "forward",
+      "usage",
+      "audit:response-admitted",
+      "tool-attempt",
+      "tool-receipt",
+      "audit:attempt-refused"
+    ],
+    "continuation": [
+      {
+        "requestBytes": 806286,
+        "requestSha256": "a2494f0f8df8a8fb7499b1027555fd7ecf2648b88cadaeb0b41310cd3742c55a",
+        "expectedBytes": 806160,
+        "expectedSha256": "fe24d1b3230c97f1e59c833cb4991097a261488904623eeac8e952dec6445af8",
+        "actualBytes": 0,
+        "actualSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "exact": false,
+        "persisted": false,
+        "toolResultsPath": false,
+        "messageCount": 1,
+        "lastRole": "user",
+        "contentType": "undefined",
+        "isError": false,
+        "partCount": null
+      },
+      {
+        "requestBytes": 5807,
+        "requestSha256": "a9c17dd80365f2a322dc7df9ac94bd811e2c52bc33ea8cb39e703e0e359768fe",
+        "expectedBytes": 806160,
+        "expectedSha256": "fe24d1b3230c97f1e59c833cb4991097a261488904623eeac8e952dec6445af8",
+        "actualBytes": 2316,
+        "actualSha256": "86594bf046c308ff27f65f960ee0dad71a236e478edef5a30539a1cb48eefbfa",
+        "exact": false,
+        "persisted": true,
+        "toolResultsPath": true,
+        "messageCount": 3,
+        "lastRole": "user",
+        "contentType": "string",
+        "isError": false,
+        "partCount": null
+      },
+      {
+        "requestBytes": 5807,
+        "requestSha256": "a9c17dd80365f2a322dc7df9ac94bd811e2c52bc33ea8cb39e703e0e359768fe",
+        "expectedBytes": 806160,
+        "expectedSha256": "fe24d1b3230c97f1e59c833cb4991097a261488904623eeac8e952dec6445af8",
+        "actualBytes": 2316,
+        "actualSha256": "86594bf046c308ff27f65f960ee0dad71a236e478edef5a30539a1cb48eefbfa",
+        "exact": false,
+        "persisted": true,
+        "toolResultsPath": true,
+        "messageCount": 3,
+        "lastRole": "user",
+        "contentType": "string",
+        "isError": false,
+        "partCount": null
+      },
+      {
+        "requestBytes": 5807,
+        "requestSha256": "a9c17dd80365f2a322dc7df9ac94bd811e2c52bc33ea8cb39e703e0e359768fe",
+        "expectedBytes": 806160,
+        "expectedSha256": "fe24d1b3230c97f1e59c833cb4991097a261488904623eeac8e952dec6445af8",
+        "actualBytes": 2316,
+        "actualSha256": "86594bf046c308ff27f65f960ee0dad71a236e478edef5a30539a1cb48eefbfa",
+        "exact": false,
+        "persisted": true,
+        "toolResultsPath": true,
+        "messageCount": 3,
+        "lastRole": "user",
+        "contentType": "string",
+        "isError": false,
+        "partCount": null
+      },
+      {
+        "requestBytes": 5807,
+        "requestSha256": "a9c17dd80365f2a322dc7df9ac94bd811e2c52bc33ea8cb39e703e0e359768fe",
+        "expectedBytes": 806160,
+        "expectedSha256": "fe24d1b3230c97f1e59c833cb4991097a261488904623eeac8e952dec6445af8",
+        "actualBytes": 2316,
+        "actualSha256": "86594bf046c308ff27f65f960ee0dad71a236e478edef5a30539a1cb48eefbfa",
+        "exact": false,
+        "persisted": true,
+        "toolResultsPath": true,
+        "messageCount": 3,
+        "lastRole": "user",
+        "contentType": "string",
+        "isError": false,
+        "partCount": null
+      },
+      {
+        "requestBytes": 5807,
+        "requestSha256": "a9c17dd80365f2a322dc7df9ac94bd811e2c52bc33ea8cb39e703e0e359768fe",
+        "expectedBytes": 806160,
+        "expectedSha256": "fe24d1b3230c97f1e59c833cb4991097a261488904623eeac8e952dec6445af8",
+        "actualBytes": 2316,
+        "actualSha256": "86594bf046c308ff27f65f960ee0dad71a236e478edef5a30539a1cb48eefbfa",
+        "exact": false,
+        "persisted": true,
+        "toolResultsPath": true,
+        "messageCount": 3,
+        "lastRole": "user",
+        "contentType": "string",
+        "isError": false,
+        "partCount": null
+      }
+    ],
+    "localCopies": [
+      {
+        "bytes": 806225,
+        "sha256": "9d842fa77a032269fcdbb79cbb2a9b1a804289024f67dd1d027a27d89ad285c4"
+      }
+    ],
+    "commandSha256": "4005b25f34af874d899a5606ee42a7f13b7d11939f429adc58cf86c143f8a693",
+    "viewSha256": "a3add71da94642180f91d0878f6999f1aa5eac4543b3833b5748672bcdac54b6"
+  },
+  "earlierRehearsalStops": [
+    {
+      "fixture": "8000-SHAPE",
+      "designToolResultReached": false,
+      "continuations": 5
+    },
+    {
+      "fixture": "8000-SHAPE2",
+      "designToolResultReached": false,
+      "continuations": 0
+    }
+  ],
+  "checks": [
+    {
+      "path": "d10-f3-design-continuation-241-evidence.json",
+      "bytes": 12572,
+      "sha256": "8801dd27f4415b8ba20d1f33f73bfcf0400a19afc787d27e7cdb59ffc043b2b1"
+    },
+    {
+      "path": "d10-f3-isolated-native-output-242-build.mjs",
+      "bytes": 6028,
+      "sha256": "fe74765a600513b3cac4889af1cf8b08d0b07307d839c206e4ec499495ed557f"
+    },
+    {
+      "path": "d10-f3-isolated-native-output-242.mjs",
+      "bytes": 14689,
+      "sha256": "30cd6872c6d75f37d6722f588c9deaba49ec51aff8731a94d705b360a0f45314"
+    },
+    {
+      "path": "d10-f3-isolated-native-output-242b.mjs",
+      "bytes": 15041,
+      "sha256": "a42dcb570bbf297ebbd2c583c2bdda1858d72627e14df91c6371d63305227bb0"
+    },
+    {
+      "path": "d10-f3-native-output-setting-242.mjs",
+      "bytes": 721,
+      "sha256": "e6656dd69ec99287efe876dde6a05fa56e35e0b0a3982906a21e1e8bc12f4238"
+    },
+    {
+      "path": "d10-f3-native-continuation-trace-242.mjs",
+      "bytes": 3169,
+      "sha256": "d86071aa5b612f483ec3cb1adf77ae83e065a4255c59e1690efab7baac931e9d"
+    },
+    {
+      "path": "d10-f3-native-continuation-run-242.py",
+      "bytes": 2308,
+      "sha256": "5ea74ee2f7660d82b9e573924d7fa137811c894f66ae9bcce8317ab72e775487"
+    },
+    {
+      "path": "d10-f3-isolated-native-output-242-small.log",
+      "bytes": 946,
+      "sha256": "2cd7ef6a61664f7b22b8f73e0e9c215891aeffeb3eabdd252fbd6f7d486a8268"
+    },
+    {
+      "path": "d10-f3-isolated-native-output-242b-large.log",
+      "bytes": 977,
+      "sha256": "c4de7af996f594a35c8c5dc0b1fdf15a704d5a5c93ab4981ea42dd7a5beb1298"
+    },
+    {
+      "path": "d10-f3-isolated-native-output-242b-large-bounded.log",
+      "bytes": 3366,
+      "sha256": "cdccbeeb9a8c2d732f5c80b2d705f8202e0ac7dfe3e00cf824ad8a2c4c3d9b53"
+    },
+    {
+      "path": "d10-f3-render-lease-result-242-8000-SHAPE.json",
+      "bytes": 1199,
+      "sha256": "583e852971ebe26af1267c632d8fcf249228976466b7902fcf3b8cbc8c1537fe"
+    },
+    {
+      "path": "d10-f3-render-reproduction-native/PROBE-242-8000-SHAPE-NATIVE.log",
+      "bytes": 18507,
+      "sha256": "0226940115f6c8f3abf4cb0c7f3f4439816a275e632c6f897b18a12af3b04aef"
+    },
+    {
+      "path": "d10-f3-render-lease-result-242-8000-SHAPE2.json",
+      "bytes": 1202,
+      "sha256": "6d2753bcb003b9a4bdcf58eb66e59bcce64cafde8402a95a74f4efced68f312d"
+    },
+    {
+      "path": "d10-f3-render-reproduction-native/PROBE-242-8000-SHAPE2-NATIVE.log",
+      "bytes": 14670,
+      "sha256": "4aa8149f79fca5403e1a0c7449af8a952e10c1d292a8514b8791cef34c9169ed"
+    }
+  ]
+}

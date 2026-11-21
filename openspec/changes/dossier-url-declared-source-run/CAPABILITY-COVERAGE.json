@@ -1,0 +1,458 @@
+{
+  "label": "Inferred",
+  "meaning": "Candidate obligation/risk coverage under complete025/033/035/047 +048 and proposed origin/species policy; no implementation or adoption evidence; F4 strict all-admitted memory acquisition and fixed protocol-control projection are mandatory candidate behavior, not runtime proof; F5 Git source metadata has independent declared destination/class/check/protected pre-send audit and exact prepared-operation capture, no inference/no-body exemption; F6 explicitly changes URL-design transport representation and specialized local-product boundary only, retaining raw generic active failure, complete original review subject and unchanged secret/private/unknown gates; F7 authenticates every named local machine with RFC5-7(d) before separate scopes, explicit authoritative policy-instance home/single writer and next-act lifecycle; filesystem-only socket is no proof; F8 explicitly amends governing contracts for the sole operational-instance class after real parent adoption, not an applicability-only exception or runtime policy choice; ordered design candidate specifies exact protected parts, separate complete logical and actual checks, verdict acknowledgment and terminal eligibility. Production and authority remain unverified by this ledger.",
+  "risk_dimensions": [
+    {
+      "dimension": "failure/recovery",
+      "scenarios": [
+        "Acquisition timeout and cleanup failure",
+        "Refusal timeout and stop",
+        "Resume retains the pin and checks",
+        "Audit persistence failure prevents transmission",
+        "Boundary and audit must survive resume",
+        "Unsupported thinking cannot be hidden by a signature",
+        "One required excluded blob refuses the whole owned acquisition",
+        "Unsupported memory transport never falls back to fetch",
+        "Interruption cannot retain unadmitted acquisition input",
+        "Source connect audit failure prevents native advertisement",
+        "Source fetch audit failure prevents protocol transmission",
+        "Source transport capture scope is honest",
+        "Inert view still fails residual generic scanner findings",
+        "Design verdict binds original and current representation separately",
+        "Issuance has one lawful authoritative data home",
+        "Rotation retires the previous instance immediately",
+        "Revocation applies to the next act and resume",
+        "Authority and projection disagreement fails closed",
+        "Bridge authentication cannot launder anonymous input",
+        "Parent adoption precedes any mechanical instance authority",
+        "Adopted rule permits only its bounded runtime instance",
+        "Mechanical exception cannot spread to another authorization artifact",
+        "Fixed writer cannot widen immutable instance bindings",
+        "Rollback cannot restore retired runtime authority",
+        "Parent withdrawal stops the next live or resumed act",
+        "Ordered design transport exhausts its budget",
+        "History projection, lifetime budget and retirement are fail closed",
+        "Final part actual send and admitted response determine verdict eligibility",
+        "Ordered verdict eligibility follows the complete protected acknowledgment"
+      ]
+    },
+    {
+      "dimension": "authorization/privacy",
+      "scenarios": [
+        "Unsafe locator is not emitted",
+        "Tool configuration refuses before launch",
+        "No execution instruction in every role",
+        "Network route cannot bypass the relay",
+        "Canonical tool receipt cannot be forged or replayed",
+        "Ingest excludes before any later request",
+        "Verified default is explicit and unsupported model never falls back",
+        "Entire admitted closure precedes source storage",
+        "Commit tree and alias metadata are screened too",
+        "Supplied clone retains its separate exclusion boundary",
+        "Source provider declaration precedes helper and selection",
+        "Complete source metadata is screened before send",
+        "Native source profile cannot acquire extra egress authority",
+        "Raw secrets cannot be laundered through entity encoding",
+        "Design view is not a decoded raw artifact channel",
+        "Kernel attestation is required before protected access",
+        "Authentication and operation scope are separate",
+        "Issuance has one lawful authoritative data home",
+        "Rotation retires the previous instance immediately",
+        "Revocation applies to the next act and resume",
+        "Authority and projection disagreement fails closed",
+        "Bridge authentication cannot launder anonymous input",
+        "Parent adoption precedes any mechanical instance authority",
+        "Adopted rule permits only its bounded runtime instance",
+        "Mechanical exception cannot spread to another authorization artifact",
+        "Fixed writer cannot widen immutable instance bindings",
+        "Rollback cannot restore retired runtime authority",
+        "Parent withdrawal stops the next live or resumed act",
+        "Ordered design checks preserve full and actual request projections",
+        "Ordered design support is pinned independently by role",
+        "Ordered verdict eligibility follows the complete protected acknowledgment"
+      ]
+    },
+    {
+      "dimension": "concurrency/ordering/idempotency",
+      "scenarios": [
+        "Remote moves after selection",
+        "Separate contexts and unchanged packets",
+        "Resume retains the pin and checks",
+        "Canonical tool receipt cannot be forged or replayed",
+        "Boundary and audit must survive resume",
+        "Entire admitted closure precedes source storage",
+        "Fixed protocol controls have distinct received and sent identities",
+        "Source connect audit failure prevents native advertisement",
+        "Source fetch audit failure prevents protocol transmission",
+        "Source transport capture scope is honest",
+        "Design verdict binds original and current representation separately",
+        "Renderer origins cover every actual input byte",
+        "Kernel attestation is required before protected access",
+        "Rotation retires the previous instance immediately",
+        "Revocation applies to the next act and resume",
+        "Authority and projection disagreement fails closed",
+        "Bridge authentication cannot launder anonymous input",
+        "Parent adoption precedes any mechanical instance authority",
+        "Adopted rule permits only its bounded runtime instance",
+        "Mechanical exception cannot spread to another authorization artifact",
+        "Fixed writer cannot widen immutable instance bindings",
+        "Rollback cannot restore retired runtime authority",
+        "Parent withdrawal stops the next live or resumed act",
+        "Complete ordered delivery precedes the dependent verdict",
+        "Closed canonical ordered transport survives UTF-8 and escaping boundaries",
+        "Final part actual send and admitted response determine verdict eligibility",
+        "Ordered verdict eligibility follows the complete protected acknowledgment"
+      ]
+    },
+    {
+      "dimension": "lifecycle/retention",
+      "scenarios": [
+        "Acquisition timeout and cleanup failure",
+        "Refusal timeout and stop",
+        "Ingest excludes before any later request",
+        "Audit persistence failure prevents transmission",
+        "Interruption cannot retain unadmitted acquisition input",
+        "Entire admitted closure precedes source storage",
+        "Source transport capture scope is honest",
+        "Source connect audit failure prevents native advertisement",
+        "Raw active finding stays failed at the generic boundary",
+        "Design verdict binds original and current representation separately",
+        "Issuance has one lawful authoritative data home",
+        "Rotation retires the previous instance immediately",
+        "Revocation applies to the next act and resume",
+        "Authority and projection disagreement fails closed",
+        "Parent adoption precedes any mechanical instance authority",
+        "Adopted rule permits only its bounded runtime instance",
+        "Mechanical exception cannot spread to another authorization artifact",
+        "Fixed writer cannot widen immutable instance bindings",
+        "Rollback cannot restore retired runtime authority",
+        "Parent withdrawal stops the next live or resumed act",
+        "History projection, lifetime budget and retirement are fail closed",
+        "Ordered verdict eligibility follows the complete protected acknowledgment"
+      ]
+    },
+    {
+      "dimension": "limits/performance",
+      "scenarios": [
+        "Acquisition timeout and cleanup failure",
+        "Refusal timeout and stop",
+        "Complete request screening catches composed secrets",
+        "Unsupported thinking cannot be hidden by a signature",
+        "Pack delta and closure mismatch cannot become a stored pack",
+        "Unsupported memory transport never falls back to fetch",
+        "Complete source metadata is screened before send",
+        "View expansion and parent limits are independent",
+        "Authority and projection disagreement fails closed",
+        "Parent adoption precedes any mechanical instance authority",
+        "Adopted rule permits only its bounded runtime instance",
+        "Mechanical exception cannot spread to another authorization artifact",
+        "Fixed writer cannot widen immutable instance bindings",
+        "Rollback cannot restore retired runtime authority",
+        "Parent withdrawal stops the next live or resumed act",
+        "Ordered design checks preserve full and actual request projections",
+        "Ordered design transport exhausts its budget",
+        "History projection, lifetime budget and retirement are fail closed",
+        "Ordered verdict eligibility follows the complete protected acknowledgment"
+      ]
+    },
+    {
+      "dimension": "compatibility/migration",
+      "scenarios": [
+        "Local entry remains strict",
+        "Operator-started compatibility and CLI access",
+        "URL projection does not inherit a false local dispatch reason",
+        "Runtime classes do not silently widen the core declaration",
+        "Supplied clone retains its separate exclusion boundary",
+        "One required excluded blob refuses the whole owned acquisition",
+        "Source provider declaration precedes helper and selection",
+        "Source transport capture scope is honest",
+        "URL design view preserves the exact original subject",
+        "Design view is not a decoded raw artifact channel",
+        "Review launch provenance matches actual mode in both forms",
+        "Codec rejects a stream BOM and preserves embedded data",
+        "Parent adoption precedes any mechanical instance authority",
+        "Adopted rule permits only its bounded runtime instance",
+        "Mechanical exception cannot spread to another authorization artifact",
+        "Fixed writer cannot widen immutable instance bindings",
+        "Rollback cannot restore retired runtime authority",
+        "Parent withdrawal stops the next live or resumed act",
+        "Closed canonical ordered transport survives UTF-8 and escaping boundaries",
+        "History projection, lifetime budget and retirement are fail closed"
+      ]
+    },
+    {
+      "dimension": "human interface/accessibility/discoverability/loading/error",
+      "scenarios": [
+        "Operator-started compatibility and CLI access",
+        "Refusal timeout and stop",
+        "Unsupported selector or malformed advertisement",
+        "Unsupported thinking cannot be hidden by a signature",
+        "URL projection does not inherit a false local dispatch reason",
+        "One required excluded blob refuses the whole owned acquisition",
+        "Unsupported memory transport never falls back to fetch",
+        "Source provider declaration precedes helper and selection",
+        "Source transport capture scope is honest",
+        "URL design view preserves the exact original subject",
+        "Full renderer sink verification is mandatory",
+        "Review launch provenance matches actual mode in both forms",
+        "Issuance has one lawful authoritative data home",
+        "Parent adoption precedes any mechanical instance authority",
+        "Adopted rule permits only its bounded runtime instance",
+        "Mechanical exception cannot spread to another authorization artifact",
+        "Fixed writer cannot widen immutable instance bindings",
+        "Rollback cannot restore retired runtime authority",
+        "Parent withdrawal stops the next live or resumed act",
+        "Ordered design transport exhausts its budget",
+        "History projection, lifetime budget and retirement are fail closed",
+        "Ordered verdict eligibility follows the complete protected acknowledgment"
+      ]
+    },
+    {
+      "dimension": "integrity/provenance",
+      "scenarios": [
+        "Canonical tool receipt cannot be forged or replayed",
+        "First request is not the scaffold baseline",
+        "Pack delta and closure mismatch cannot become a stored pack",
+        "Fixed protocol controls have distinct received and sent identities",
+        "Source connect audit failure prevents native advertisement",
+        "Source fetch audit failure prevents protocol transmission",
+        "Renderer origins cover every actual input byte",
+        "URL design view preserves the exact original subject",
+        "Kernel attestation is required before protected access",
+        "Authority and projection disagreement fails closed",
+        "Bridge authentication cannot launder anonymous input",
+        "Review launch provenance matches actual mode in both forms",
+        "Codec rejects a stream BOM and preserves embedded data",
+        "Parent adoption precedes any mechanical instance authority",
+        "Adopted rule permits only its bounded runtime instance",
+        "Mechanical exception cannot spread to another authorization artifact",
+        "Fixed writer cannot widen immutable instance bindings",
+        "Rollback cannot restore retired runtime authority",
+        "Parent withdrawal stops the next live or resumed act",
+        "Ordered design support is pinned independently by role",
+        "Closed canonical ordered transport survives UTF-8 and escaping boundaries",
+        "Complete ordered delivery precedes the dependent verdict",
+        "Final part actual send and admitted response determine verdict eligibility",
+        "Ordered verdict eligibility follows the complete protected acknowledgment"
+      ]
+    },
+    {
+      "dimension": "classification/secrets/ingest",
+      "scenarios": [
+        "Complete request screening catches composed secrets",
+        "Ingest excludes before any later request",
+        "Runtime classes do not silently widen the core declaration",
+        "Entire admitted closure precedes source storage",
+        "Commit tree and alias metadata are screened too",
+        "Complete source metadata is screened before send",
+        "Native source profile cannot acquire extra egress authority",
+        "Raw secrets cannot be laundered through entity encoding",
+        "Raw active finding stays failed at the generic boundary",
+        "Full renderer sink verification is mandatory",
+        "Kernel attestation is required before protected access",
+        "Authentication and operation scope are separate",
+        "Bridge authentication cannot launder anonymous input",
+        "Codec rejects a stream BOM and preserves embedded data",
+        "Parent adoption precedes any mechanical instance authority",
+        "Adopted rule permits only its bounded runtime instance",
+        "Mechanical exception cannot spread to another authorization artifact",
+        "Fixed writer cannot widen immutable instance bindings",
+        "Rollback cannot restore retired runtime authority",
+        "Parent withdrawal stops the next live or resumed act",
+        "Ordered design checks preserve full and actual request projections",
+        "Ordered verdict eligibility follows the complete protected acknowledgment"
+      ]
+    },
+    {
+      "dimension": "audit/observability/epistemics",
+      "scenarios": [
+        "Audit persistence failure prevents transmission",
+        "URL projection does not inherit a false local dispatch reason",
+        "Stored provenance is not verification",
+        "Interruption cannot retain unadmitted acquisition input",
+        "Fixed protocol controls have distinct received and sent identities",
+        "Source provider declaration precedes helper and selection",
+        "Source transport capture scope is honest",
+        "Source connect audit failure prevents native advertisement",
+        "Raw active finding stays failed at the generic boundary",
+        "Design verdict binds original and current representation separately",
+        "Issuance has one lawful authoritative data home",
+        "Rotation retires the previous instance immediately",
+        "Revocation applies to the next act and resume",
+        "Authority and projection disagreement fails closed",
+        "Review launch provenance matches actual mode in both forms",
+        "Parent adoption precedes any mechanical instance authority",
+        "Adopted rule permits only its bounded runtime instance",
+        "Mechanical exception cannot spread to another authorization artifact",
+        "Fixed writer cannot widen immutable instance bindings",
+        "Rollback cannot restore retired runtime authority",
+        "Parent withdrawal stops the next live or resumed act",
+        "Complete ordered delivery precedes the dependent verdict",
+        "Final part actual send and admitted response determine verdict eligibility",
+        "Ordered verdict eligibility follows the complete protected acknowledgment"
+      ]
+    }
+  ],
+  "capability_obligations": [
+    {
+      "obligation": "safe locator and conservative declaration",
+      "requirement": "REQ-polaris-generation-047"
+    },
+    {
+      "obligation": "remote default latest at capture",
+      "requirement": "REQ-polaris-generation-047"
+    },
+    {
+      "obligation": "explicit selector and immutable verified pin",
+      "requirement": "REQ-polaris-generation-047"
+    },
+    {
+      "obligation": "strict acquired shape or unchanged supplied clone",
+      "requirement": "REQ-polaris-generation-047"
+    },
+    {
+      "obligation": "bounded acquisition and truthful cleanup",
+      "requirement": "REQ-polaris-generation-047"
+    },
+    {
+      "obligation": "no-record full URL activation",
+      "requirement": "REQ-polaris-generation-048"
+    },
+    {
+      "obligation": "declared local CLI/provider with actual launch validation",
+      "requirement": "REQ-polaris-generation-048"
+    },
+    {
+      "obligation": "four independent roles, full original review subjects and denominators, and a separately verified ordered representation exclusively for URL design",
+      "requirement": "REQ-polaris-generation-035"
+    },
+    {
+      "obligation": "finite no-execution supervisor stop/resume/close",
+      "requirement": "REQ-polaris-generation-048"
+    },
+    {
+      "obligation": "truthful source/dispatch/record epistemics",
+      "requirement": "REQ-polaris-generation-033"
+    },
+    {
+      "obligation": "unchanged direct local and run/2 compatibility",
+      "requirement": "REQ-polaris-generation-048"
+    },
+    {
+      "obligation": "unavoidable fixed-provider transport and every-complete-request gate",
+      "requirement": "REQ-polaris-generation-025"
+    },
+    {
+      "obligation": "canonical independent receipt plus exact pinned CLI wrapper/scaffold",
+      "requirement": "REQ-polaris-generation-025"
+    },
+    {
+      "obligation": "classify/screen before every ingest store delivery or effect",
+      "requirement": "REQ-polaris-generation-025"
+    },
+    {
+      "obligation": "protected durable attributable pre-send audit and uncertain outcome",
+      "requirement": "REQ-polaris-generation-025"
+    },
+    {
+      "obligation": "effective minimal runtime species/classes with preserved legacy core",
+      "requirement": "REQ-polaris-generation-033"
+    },
+    {
+      "obligation": "no builtin/rogue MCP/raw clone or unsupported thinking",
+      "requirement": "REQ-polaris-generation-048"
+    },
+    {
+      "obligation": "verified disclosed default profile and unsupported explicit-model refusal without fallback",
+      "requirement": "REQ-polaris-generation-048"
+    },
+    {
+      "obligation": "bounded memory-only pack/closure verification before all source persistence",
+      "requirement": "REQ-polaris-generation-047"
+    },
+    {
+      "obligation": "every required commit/tree/path/whole blob/alias admitted or entire acquisition refuses",
+      "requirement": "REQ-polaris-generation-047"
+    },
+    {
+      "obligation": "only exact admitted loose objects and necessary admitted worktree retained; external supplied-clone per-read behavior unchanged",
+      "requirement": "REQ-polaris-generation-047"
+    },
+    {
+      "obligation": "independent continuous filesystem-effect and realistic supported transport/decoder profile proof",
+      "requirement": "REQ-polaris-generation-047"
+    },
+    {
+      "obligation": "explicit fixed control projection and distinct received/prepared send identities with no semantic rewrite",
+      "requirement": "REQ-polaris-generation-025"
+    },
+    {
+      "obligation": "distinct Inferred canonical Git source-provider/destination and code-structure declaration before selection/helper/network",
+      "requirement": "REQ-polaris-generation-047"
+    },
+    {
+      "obligation": "exact prepared closed metadata command/protocol/profile screening and protected durable audit before every dependent source send",
+      "requirement": "REQ-polaris-generation-025"
+    },
+    {
+      "obligation": "zero helper/GET on connect denial and zero write/POST on fetch denial; honest native capture and both-route effective-reader projection",
+      "requirement": "REQ-polaris-generation-033"
+    },
+    {
+      "obligation": "authenticated local renderer product with complete actual input-span/fullbody lineage and independent unconditional sink proof",
+      "requirement": "REQ-polaris-generation-025"
+    },
+    {
+      "obligation": "exact seven-key canonical whole035 inert view, independent strict inverse/re-encoding and original versus representation identities",
+      "requirement": "REQ-polaris-generation-035"
+    },
+    {
+      "obligation": "unchanged raw semantic secret and composition checks before product persistence; exact actual numbered parts, wrappers and requests and the private complete logical projection are separately screened; raw active classification stays FAILED",
+      "requirement": "REQ-polaris-generation-025"
+    },
+    {
+      "obligation": "original verdict digest/full denominator with separate protected representation/currentness/audit and finite expansion/parent bounds",
+      "requirement": "REQ-polaris-generation-035"
+    },
+    {
+      "obligation": "actual kernel-peer/process-lifetime/dedicated-channel machine-client authentication before separate deny-default scopes",
+      "requirement": "REQ-polaris-generation-048"
+    },
+    {
+      "obligation": "one lawful canonical governance security-policy instance home with fixed typed mechanical controller writer and nonauthoritative verifier projection",
+      "requirement": "REQ-polaris-generation-048"
+    },
+    {
+      "obligation": "trusted current-policy issuance, zero-overlap identity-preserving rotation and identity/instance next-act revocation including open connections and resume",
+      "requirement": "REQ-polaris-generation-048"
+    },
+    {
+      "obligation": "paired ordinary versus supervised review provenance and leading-stream BOM versus unchanged embedded U+FEFF data",
+      "requirement": "REQ-polaris-generation-035"
+    },
+    {
+      "obligation": "explicit adopted RFC3 mechanical-instance authority class with parent exact-byte adoption, canonical home/single writer/closed lifecycle and no individual instance commit/adoption",
+      "requirement": "REQ-polaris-generation-048"
+    },
+    {
+      "obligation": "protected high-water/audit antirollback and atomic currentness plus next-act parent veto/retirement on live/queued/resumed calls, no broader policy exemption",
+      "requirement": "REQ-polaris-generation-048"
+    },
+    {
+      "obligation": "Full sealed logical and independent actual detector projections through ordered verdict acknowledgment",
+      "requirement": "REQ-polaris-generation-025"
+    },
+    {
+      "obligation": "Complete immutable canonical part plan and independently verified durable send/response chain, preflight and failure retirement",
+      "requirement": "REQ-polaris-generation-035"
+    },
+    {
+      "obligation": "Current atomic terminal verdict eligibility after protected stage and complete checked actual acknowledgment exchange",
+      "requirement": "REQ-polaris-generation-035"
+    },
+    {
+      "obligation": "Per-role installed binding and no review readiness from interrupted or ineligible ordered verdict stage",
+      "requirement": "REQ-polaris-generation-048"
+    }
+  ]
+}

@@ -1,0 +1,2477 @@
+{
+  "base": "3c0658ff8d6de9b73305f4c27979404551ecfe36",
+  "pathCount": 171,
+  "porcelainSha256": "97c1c0c736edc2176f7993233d86a3a79e4c94389f469789785d3d264a5ae95b",
+  "paths": [
+    {
+      "path": "CONTRIBUTING.md",
+      "state": " M",
+      "bytes": 12630,
+      "sha256": "1a4a10e36c052201f4f188bbec1173ead73aa76ce3bc14cfb9cd06ab54e9f91b"
+    },
+    {
+      "path": "apps/three-surface-poc/src/polaris-authority-sweep.test.ts",
+      "state": " M",
+      "bytes": 15605,
+      "sha256": "18a76c90ba0f14716e1db2901fd054b15b4f20e2f5ac072f9065a465bd664e5f"
+    },
+    {
+      "path": "apps/three-surface-poc/src/polaris-generation/dossier-site.ts",
+      "state": " M",
+      "bytes": 88360,
+      "sha256": "0d06dd7c405c7e5ec43028a1ccb6497b9e1ad48bf1394cb101b02ea4fe06836f"
+    },
+    {
+      "path": "apps/three-surface-poc/src/sync-child-process-guard.test.ts",
+      "state": " M",
+      "bytes": 34835,
+      "sha256": "073831d830a31f1b161509820849914cab0f0562e5f23231d03f1e3210b0e1a1"
+    },
+    {
+      "path": "packages/polaris-dossier/README.md",
+      "state": " M",
+      "bytes": 4943,
+      "sha256": "fc543845e0df25fd861e7b77201dc75caa9dc6dc001ae69f6eb9b1d567249b8b"
+    },
+    {
+      "path": "packages/polaris-dossier/src/argv.test.ts",
+      "state": " M",
+      "bytes": 18851,
+      "sha256": "92e6fa2b35b2a04454f31095b55ddc1b101b9a95ea77894f63daa9130710ed89"
+    },
+    {
+      "path": "packages/polaris-dossier/src/brief.test.ts",
+      "state": " M",
+      "bytes": 36481,
+      "sha256": "86c2ab078ec7ff721dc1f6a0c75e56fbd51aa1ae373941a119256de5eeb7ed51"
+    },
+    {
+      "path": "packages/polaris-dossier/src/brief.ts",
+      "state": " M",
+      "bytes": 36811,
+      "sha256": "3ac98779d29d349f3699e15cf7a339fbdf12c83cbdedbee3b32841a2761db398"
+    },
+    {
+      "path": "packages/polaris-dossier/src/check-model.ts",
+      "state": " M",
+      "bytes": 13587,
+      "sha256": "24f65ebd9bd939b6e686c077d1374677f966e5c0bb1086822f05b5a8586844c4"
+    },
+    {
+      "path": "packages/polaris-dossier/src/check.ts",
+      "state": " M",
+      "bytes": 21708,
+      "sha256": "3b3abc837a98a32730a5db32437cccccf3d653c28dc35f7203383af133a27404"
+    },
+    {
+      "path": "packages/polaris-dossier/src/cli.test.ts",
+      "state": " M",
+      "bytes": 8999,
+      "sha256": "8c6446e5e1c7988d38c7525b2fb57845a396160d0f4da0fdf12b6dfe5e916ddb"
+    },
+    {
+      "path": "packages/polaris-dossier/src/cli.ts",
+      "state": " M",
+      "bytes": 34015,
+      "sha256": "9290943877add476ebe344037b79b8ee4d993de042e12246021d0d2b5b23c56b"
+    },
+    {
+      "path": "packages/polaris-dossier/src/close.ts",
+      "state": " M",
+      "bytes": 16604,
+      "sha256": "f6ec556867bf79522795bfc62ef183ccc38db890ddebe49ca4e99da31f5cb08b"
+    },
+    {
+      "path": "packages/polaris-dossier/src/design-review.ts",
+      "state": " M",
+      "bytes": 16197,
+      "sha256": "3e7f31830c6fd30c05284fb3cec2aac6badf20ee61517fb6f947fe7ab3584ce4"
+    },
+    {
+      "path": "packages/polaris-dossier/src/full-run.testkit.ts",
+      "state": " M",
+      "bytes": 19174,
+      "sha256": "eb6098e562f7d2d2d89623f7052f5dc95d99b9fbb19c98613f03e8e0a1bc946f"
+    },
+    {
+      "path": "packages/polaris-dossier/src/gate-acts.test.ts",
+      "state": " M",
+      "bytes": 67147,
+      "sha256": "6e5ae5d0b4b54bf72a30132b6407c76a2723104d54a1f225955e142fd953dafe"
+    },
+    {
+      "path": "packages/polaris-dossier/src/gate-sources.ts",
+      "state": " M",
+      "bytes": 41851,
+      "sha256": "bc728f1b9d4e202f3d144bcd23d4aa6fb75f081ae5a7efe2298ddfbd9536224e"
+    },
+    {
+      "path": "packages/polaris-dossier/src/git-object-reader.test.ts",
+      "state": " M",
+      "bytes": 84861,
+      "sha256": "d2a24f6057f845bcdb8aafb04893e623448e42253ed0845ce44d000e3ed28346"
+    },
+    {
+      "path": "packages/polaris-dossier/src/git-object-reader.ts",
+      "state": " M",
+      "bytes": 49971,
+      "sha256": "97692073596c5f4fde10cb366e05077a20f69deabfd42344158485612e0c70f2"
+    },
+    {
+      "path": "packages/polaris-dossier/src/init.ts",
+      "state": " M",
+      "bytes": 11010,
+      "sha256": "9b1958432a2964da19ee20e4a49d49cf90cf571ee64a84c944759ed28062db19"
+    },
+    {
+      "path": "packages/polaris-dossier/src/inventory.ts",
+      "state": " M",
+      "bytes": 31710,
+      "sha256": "e3ae81ba734384702d9dbdb9dc2eb107b51788ee3be6fd262abadafa8f2044f2"
+    },
+    {
+      "path": "packages/polaris-dossier/src/launched.ts",
+      "state": " M",
+      "bytes": 8542,
+      "sha256": "dd30d0ecae19a24867070eb27c941b9ede91a9f4365a8bf2683b044713eb7048"
+    },
+    {
+      "path": "packages/polaris-dossier/src/no-egress.test.ts",
+      "state": " M",
+      "bytes": 13613,
+      "sha256": "b369b1873e17455de29deca4717a6486898b4a013d3cf57315f0fe5b1a1b2929"
+    },
+    {
+      "path": "packages/polaris-dossier/src/polaris-clone.test.ts",
+      "state": " M",
+      "bytes": 5529,
+      "sha256": "831062d62dda554d1d49fb5839a7fa615c67aae6e3fb52970171f771e96546d4"
+    },
+    {
+      "path": "packages/polaris-dossier/src/polaris-launch-guidance.test.ts",
+      "state": " M",
+      "bytes": 27090,
+      "sha256": "11e15a5c91291a84ae8cc421c5ff9a7043169eb395bcba1ce7a77abc254796c9"
+    },
+    {
+      "path": "packages/polaris-dossier/src/polaris.ts",
+      "state": " M",
+      "bytes": 96223,
+      "sha256": "487efb8f4fd14ef5abfb77ec49dbef1cfb6b658ff14f96e38a2e0bb8a587685b"
+    },
+    {
+      "path": "packages/polaris-dossier/src/policy-snapshot.ts",
+      "state": " M",
+      "bytes": 10099,
+      "sha256": "e227b6f3450d238ad42a26141b5bd5b6d70d6fadfa26648ffafe006b072ae97c"
+    },
+    {
+      "path": "packages/polaris-dossier/src/preflight.ts",
+      "state": " M",
+      "bytes": 3627,
+      "sha256": "f81d7df48159d0bbec7dad7b555d63cc90fcb1f3238cb3d7c4d02c0115fb9d7c"
+    },
+    {
+      "path": "packages/polaris-dossier/src/render.test.ts",
+      "state": " M",
+      "bytes": 133476,
+      "sha256": "d56f0c8bbca2de8677a9a78f0e66f756b943d712b3456670091afdbfd4923cd1"
+    },
+    {
+      "path": "packages/polaris-dossier/src/render.ts",
+      "state": " M",
+      "bytes": 89467,
+      "sha256": "bf1b920366ecda9810e3b8683386f3552c4b46d08b51da1d5554035c478c022a"
+    },
+    {
+      "path": "packages/polaris-dossier/src/reverify.ts",
+      "state": " M",
+      "bytes": 10819,
+      "sha256": "645f042d1d9ea4c6080173e776dedb1b15f5b5d29d99f8437d014112a82dafd5"
+    },
+    {
+      "path": "packages/polaris-dossier/src/review-model.ts",
+      "state": " M",
+      "bytes": 9094,
+      "sha256": "716e9e8b0ffef7db407fa54db5e00dd1e27c395f6a125cd877f2d5bc8eba063d"
+    },
+    {
+      "path": "packages/polaris-dossier/src/review-packet.ts",
+      "state": " M",
+      "bytes": 19704,
+      "sha256": "5d226d23c369cf47fafa7043b9011d4d6d1f483b529688c1ab76d436ff823b29"
+    },
+    {
+      "path": "packages/polaris-dossier/src/review.test.ts",
+      "state": " M",
+      "bytes": 60031,
+      "sha256": "aab190a16230e3af29525adc79c1e3badba4aa960979ecded975c3288018030b"
+    },
+    {
+      "path": "packages/polaris-dossier/src/review.ts",
+      "state": " M",
+      "bytes": 37742,
+      "sha256": "d0da45fdce00f6af46d6ee2675b985d74c79447b024282016776a078650e0317"
+    },
+    {
+      "path": "packages/polaris-dossier/src/run-dir.ts",
+      "state": " M",
+      "bytes": 5942,
+      "sha256": "3110d5906a04de57d8aea5694167fbd708a729ea3fc83f2280eac4ecc477cc4a"
+    },
+    {
+      "path": "packages/polaris-dossier/src/screen.test.ts",
+      "state": " M",
+      "bytes": 39145,
+      "sha256": "71a8d58bf527fb0f021884315009e605c4f3766cad9edb000c97b078690e2f1c"
+    },
+    {
+      "path": "packages/polaris-dossier/src/screen.ts",
+      "state": " M",
+      "bytes": 20808,
+      "sha256": "f6e3b9d6248af8706525535503f6a7ad95682037a9d25e4e633722d84678a378"
+    },
+    {
+      "path": "packages/polaris-dossier/src/session-handover.ts",
+      "state": " M",
+      "bytes": 49196,
+      "sha256": "8f44cc4b9dc942f1075b8a36ad1a6dde1639cffdf1482d21abe07ffa033d6ffd"
+    },
+    {
+      "path": "packages/polaris-dossier/src/session-statement.ts",
+      "state": " M",
+      "bytes": 2827,
+      "sha256": "37d1ee6b484ef68c9fe06dfefc640fdc6fadff3901dc61066c42b5bc5a75f389"
+    },
+    {
+      "path": "packages/polaris-dossier/src/start-gates.test.ts",
+      "state": " M",
+      "bytes": 66676,
+      "sha256": "eef97c31bd0960be41fec4d49b987d078b55d11c17d44cb5a3a8d8c4531e70d2"
+    },
+    {
+      "path": "packages/polaris-dossier/src/status.test.ts",
+      "state": " M",
+      "bytes": 19017,
+      "sha256": "8039fcc2c51895ca36ee6aa040d2b4fd22fac4222dd3c9d4693c14f7563d20c4"
+    },
+    {
+      "path": "packages/polaris-dossier/src/status.ts",
+      "state": " M",
+      "bytes": 10939,
+      "sha256": "32dfcb371193045c565a74b9dbe8768ed669fde1b266913bfbbdd75fbc7ace19"
+    },
+    {
+      "path": "packages/polaris-dossier/src/waiting-sessions.ts",
+      "state": " M",
+      "bytes": 56013,
+      "sha256": "ec19d20d06d217c1717a898f9c2a9fb1b00e73ac579dc90363a2ec4d3448cc7f"
+    },
+    {
+      "path": "packages/polaris-dossier/test-support/no-egress-driver.ts",
+      "state": " M",
+      "bytes": 1387,
+      "sha256": "9204ac87c60441c6b1c282cd8772c3d14769342b6cf868670397652be3daef22"
+    },
+    {
+      "path": "packages/polaris-generation-core/src/island-boundary.test.ts",
+      "state": " M",
+      "bytes": 24013,
+      "sha256": "4e916ae02ffa8fb7741283f3a30578bb12a58394057823ee6ee8df2c0e232613"
+    },
+    {
+      "path": "packages/polaris-generation-core/src/local-render.ts",
+      "state": " M",
+      "bytes": 9817,
+      "sha256": "bd4c24943167c23ffc827061d7695e0ad181b09018ffc4966c18e99f74250050"
+    },
+    {
+      "path": "packages/three-surface-poc-core/src/content-classification.ts",
+      "state": " M",
+      "bytes": 27853,
+      "sha256": "fb6cc3c757627806fcfdebda76ccb42069f0b9d704b4bbae03a2286c582ce5dd"
+    },
+    {
+      "path": "packages/three-surface-poc-core/src/git-object-reader.ts",
+      "state": " M",
+      "bytes": 30673,
+      "sha256": "6921104e402559ed3272a086a91ca79f3e6a2345e40de18a801d3824593f25e3"
+    },
+    {
+      "path": "scripts/check_polaris_response_ceiling_reading.py",
+      "state": " M",
+      "bytes": 36996,
+      "sha256": "f4fa0dbbf299868464a60a274b6a6eaa42cf99142a6c0c7224f479e40a8d74dc"
+    },
+    {
+      "path": "scripts/clean_build.mjs",
+      "state": " M",
+      "bytes": 4894,
+      "sha256": "b4c4d5b2b9dc32c54f04ba7563eb3ebe28ef88f9fde7a6bd090fc94c9f5fc9db"
+    },
+    {
+      "path": "vitest.tiers.ts",
+      "state": " M",
+      "bytes": 14434,
+      "sha256": "46d8b7eb1e86094c69a5f01d44fa656b5972e1d46b8238083cc0de4e907a67f2"
+    },
+    {
+      "path": "openspec/changes/dossier-url-declared-source-run/.openspec.yaml",
+      "state": "??",
+      "bytes": 40,
+      "sha256": "4c809c0a23df2b5d2324425b77ae5ff9b6d93d0a0f8c42e9dc20695839cf2478"
+    },
+    {
+      "path": "openspec/changes/dossier-url-declared-source-run/CAPABILITY-COVERAGE.json",
+      "state": "??",
+      "bytes": 21606,
+      "sha256": "44f66e25cc594f66cb76d70d3d48d96ded47bdc82610d7ce13655cb30f6ffa1f"
+    },
+    {
+      "path": "openspec/changes/dossier-url-declared-source-run/CONTRACT-COVERAGE.json",
+      "state": "??",
+      "bytes": 110728,
+      "sha256": "ca9533f22ea3592b8b0920228459a75b19695690a075e4b00a0470ad455ac2b8"
+    },
+    {
+      "path": "openspec/changes/dossier-url-declared-source-run/EXACT-REPLACEMENTS.json",
+      "state": "??",
+      "bytes": 254740,
+      "sha256": "43a3f1458787fad6b7b22672d47196289b91055e4b9a4dae9abc436d8e571bcc"
+    },
+    {
+      "path": "openspec/changes/dossier-url-declared-source-run/GOVERNING-DEPENDENCIES.json",
+      "state": "??",
+      "bytes": 3331,
+      "sha256": "c2fa146ca00fb6665c6918e4dbd3f00f8f1f5728bc210dc48d2d646f9fa44acd"
+    },
+    {
+      "path": "openspec/changes/dossier-url-declared-source-run/IMPACT-LEDGER.json",
+      "state": "??",
+      "bytes": 718607,
+      "sha256": "ea8414521aeed2dd00abb3851fdb3b71e485a1a517fa4ff81a5df7db47d7a96e"
+    },
+    {
+      "path": "openspec/changes/dossier-url-declared-source-run/README.md",
+      "state": "??",
+      "bytes": 1650,
+      "sha256": "8299e357375104981184e9be8a01dc62afd2b439f55fdddde6106619aaf3a811"
+    },
+    {
+      "path": "openspec/changes/dossier-url-declared-source-run/SCENARIO-COVERAGE.json",
+      "state": "??",
+      "bytes": 54817,
+      "sha256": "3d07bf37f6aaae9c7248d9259e80b37d704c0becb52be53309d56e0c956e293b"
+    },
+    {
+      "path": "openspec/changes/dossier-url-declared-source-run/SEMANTIC-DELTA.md",
+      "state": "??",
+      "bytes": 18089,
+      "sha256": "dc3e20ab7bb7cb24427970faecf8500c428b64d63df810d3999fd6d94319b98f"
+    },
+    {
+      "path": "openspec/changes/dossier-url-declared-source-run/design.md",
+      "state": "??",
+      "bytes": 20945,
+      "sha256": "9cef8abc7bdbb158118ac5528799d675720034a831cff116731635f13d0c0900"
+    },
+    {
+      "path": "openspec/changes/dossier-url-declared-source-run/proposal.md",
+      "state": "??",
+      "bytes": 14489,
+      "sha256": "a94d604efc4136fec46529c50ccfbc10fa6eb5b7719a1767eca34df1b183cecb"
+    },
+    {
+      "path": "openspec/changes/dossier-url-declared-source-run/proposed/contracts/DOSSIER-URL-LOCAL-MACHINE-CREDENTIAL-AMENDMENT.md",
+      "state": "??",
+      "bytes": 36029,
+      "sha256": "fdbb30efae2b01946a8f8265b9b7bbbd81c89e007aacc94455f7527fcb19aa6d"
+    },
+    {
+      "path": "openspec/changes/dossier-url-declared-source-run/proposed/decisions/DOSSIER-URL-RUN-CONTRACT-APPLICABILITY.md",
+      "state": "??",
+      "bytes": 9871,
+      "sha256": "51d3b1c97f127754345d88dcac921ab0ea0558f5adc86372238c5aa10527db30"
+    },
+    {
+      "path": "openspec/changes/dossier-url-declared-source-run/proposed/polaris-generation/spec.md",
+      "state": "??",
+      "bytes": 188981,
+      "sha256": "5471910a6ce8574c77d94e6fa1d09c8c5f10a4506d73f510ca6f8a0b14452a32"
+    },
+    {
+      "path": "openspec/changes/dossier-url-declared-source-run/proposed/policies/POLARIS-DOSSIER-URL-ORIGIN-SPECIES-POLICY-v1.json",
+      "state": "??",
+      "bytes": 35990,
+      "sha256": "fa29c4c3a8cb7c8cb43e54bdb813c11c0f8609960b4d8a46f5fdfacb733a9b92"
+    },
+    {
+      "path": "openspec/changes/dossier-url-declared-source-run/tasks.md",
+      "state": "??",
+      "bytes": 13794,
+      "sha256": "06acffda35d4f3a3c3ba598341649751c55431e16868fd580db06e6e47d9fcca"
+    },
+    {
+      "path": "packages/polaris-dossier/src/acquisition-process.test.ts",
+      "state": "??",
+      "bytes": 16386,
+      "sha256": "3cbced2aced94c235740db72e212ade1a7f064c2f7a0bbf53b0de71c55c6220c"
+    },
+    {
+      "path": "packages/polaris-dossier/src/acquisition-process.ts",
+      "state": "??",
+      "bytes": 19137,
+      "sha256": "45563fee4ede8f2bee0a8b06cc20d1a9bb45ba8d358b32ac241e22f80fdeb772"
+    },
+    {
+      "path": "packages/polaris-dossier/src/effective-run-record.test.ts",
+      "state": "??",
+      "bytes": 23126,
+      "sha256": "3fba761e7517df41f9c97cd1276fea49ccaae4faf8dd5dfb5ba7ccbd5ba4dccc"
+    },
+    {
+      "path": "packages/polaris-dossier/src/effective-run-record.ts",
+      "state": "??",
+      "bytes": 17578,
+      "sha256": "53193552d044b19b321b2670faf4eab3c8bafe947433042560c0bdb5acf87715"
+    },
+    {
+      "path": "packages/polaris-dossier/src/git-memory-admission.test.ts",
+      "state": "??",
+      "bytes": 9934,
+      "sha256": "f0e21451b252ce227db369d7c08203922f654545c270757b4261d4082dc05547"
+    },
+    {
+      "path": "packages/polaris-dossier/src/git-memory-admission.ts",
+      "state": "??",
+      "bytes": 10331,
+      "sha256": "822e0efbf23464c04ec9a00150ab43e11ff6448613207444ff1a10aeaf2c7b89"
+    },
+    {
+      "path": "packages/polaris-dossier/src/git-memory-pack.test.ts",
+      "state": "??",
+      "bytes": 20704,
+      "sha256": "d019d3ce8c20d0a5ad03f419ea5986eebb3ae41fbe6f5b04a8c05680fde50a56"
+    },
+    {
+      "path": "packages/polaris-dossier/src/git-memory-pack.ts",
+      "state": "??",
+      "bytes": 23199,
+      "sha256": "c27f6bc29e74a9159cc5d2f8f0fd3f88216aac5cce5d732e91150291a5e9fddd"
+    },
+    {
+      "path": "packages/polaris-dossier/src/git-memory-selection.test.ts",
+      "state": "??",
+      "bytes": 7185,
+      "sha256": "65fa617766cb8b8cd6374a0ed46ed06b37ef50df77b2e71ee32f8e3f2a8a4467"
+    },
+    {
+      "path": "packages/polaris-dossier/src/git-memory-selection.ts",
+      "state": "??",
+      "bytes": 16879,
+      "sha256": "97e5602358c79ecbae41df0bbffc2bb6c9b410f8d7e87f0b67b72ca00f70f6f8"
+    },
+    {
+      "path": "packages/polaris-dossier/src/git-memory-ssh.test.ts",
+      "state": "??",
+      "bytes": 33967,
+      "sha256": "82b6003bc439feb09aa0316723c0f94946aecf6d836d4952c71f644ce88f5b36"
+    },
+    {
+      "path": "packages/polaris-dossier/src/git-memory-ssh.ts",
+      "state": "??",
+      "bytes": 33404,
+      "sha256": "eef5da4ffb43f7d8d1cf326c0edfc0340dbdf9b0d6a0e4f3a3399ef8c89d13d5"
+    },
+    {
+      "path": "packages/polaris-dossier/src/git-memory-store.test.ts",
+      "state": "??",
+      "bytes": 6609,
+      "sha256": "53cd8f1a4b0ec29e5fcd201fa27ce5e174436131092953d0da8351708667d9c2"
+    },
+    {
+      "path": "packages/polaris-dossier/src/git-memory-store.ts",
+      "state": "??",
+      "bytes": 6663,
+      "sha256": "c3b615c8acd232b28690b02e48542ff7e8c0c78ed70abc0b549228f993257287"
+    },
+    {
+      "path": "packages/polaris-dossier/src/git-memory-transport.test.ts",
+      "state": "??",
+      "bytes": 37868,
+      "sha256": "c472d84f752fd649958c4e46380ea2aae6b7dbc7123805e27ab584ed15c08f22"
+    },
+    {
+      "path": "packages/polaris-dossier/src/git-memory-transport.ts",
+      "state": "??",
+      "bytes": 36044,
+      "sha256": "3d2d505f3f699bb2f40b67390ce77bd284ae61b1cc5e3684da791d4318d08d0c"
+    },
+    {
+      "path": "packages/polaris-dossier/src/git-memory-worker.test.ts",
+      "state": "??",
+      "bytes": 20629,
+      "sha256": "87efffc6eb61e1d7ea7549c6be4a9a21f6dadded244613a182a7c6d922966fd3"
+    },
+    {
+      "path": "packages/polaris-dossier/src/git-memory-worker.ts",
+      "state": "??",
+      "bytes": 29045,
+      "sha256": "eab4f74db8520b8eb2762d6674ea9eb467c04d6a95fedd46e1e18c48ddc2cbf5"
+    },
+    {
+      "path": "packages/polaris-dossier/src/session-bridge.test.ts",
+      "state": "??",
+      "bytes": 6745,
+      "sha256": "2dd3c3776c4b2664532d06552661b8a4c679586348980a07b6344de932b999e6"
+    },
+    {
+      "path": "packages/polaris-dossier/src/session-bridge.ts",
+      "state": "??",
+      "bytes": 9071,
+      "sha256": "a133ced61c7b666c5e579665076a04925ad1e524155505155272a0ff1923f8a5"
+    },
+    {
+      "path": "packages/polaris-dossier/src/session-broker.test.ts",
+      "state": "??",
+      "bytes": 8148,
+      "sha256": "c7e46ae714d376705a0e47ecd393313f5dd735a198d61dc41801df40d11d34d7"
+    },
+    {
+      "path": "packages/polaris-dossier/src/session-broker.ts",
+      "state": "??",
+      "bytes": 6592,
+      "sha256": "54cbaa6f4f93cfdbc6f9e58af75f16270c5be8c22b52553d540a70a344ac941a"
+    },
+    {
+      "path": "packages/polaris-dossier/src/session-control.test.ts",
+      "state": "??",
+      "bytes": 20920,
+      "sha256": "903e75fab88a87f16f9dc277a99cf47a1ab8807dfb065e7c9558eecb83104187"
+    },
+    {
+      "path": "packages/polaris-dossier/src/session-control.ts",
+      "state": "??",
+      "bytes": 21107,
+      "sha256": "b7375dfcd4e39bf8b83ac6f15fc4f305b610e747b981f98147fd1499bed90ff7"
+    },
+    {
+      "path": "packages/polaris-dossier/src/session-controller.test.ts",
+      "state": "??",
+      "bytes": 12048,
+      "sha256": "42490a4182cdc7595f6f2c52fb61eb7106746ccae103d728821ec9d90d2940ff"
+    },
+    {
+      "path": "packages/polaris-dossier/src/session-controller.ts",
+      "state": "??",
+      "bytes": 7894,
+      "sha256": "227d6fd0fdb94a74ddf1bd82e32ad72d65175229d39f4b331c7ae6964c764a22"
+    },
+    {
+      "path": "packages/polaris-dossier/src/session-credential.test.ts",
+      "state": "??",
+      "bytes": 5198,
+      "sha256": "270934d2b947142a46f252cf5f153baf868213f57a3d78be6138b0a79a884c52"
+    },
+    {
+      "path": "packages/polaris-dossier/src/session-credential.ts",
+      "state": "??",
+      "bytes": 4832,
+      "sha256": "f110aa3b6af093cc1a97fbe5c2ff6746a27b3d8c12bbbf72510425cdf924f0a4"
+    },
+    {
+      "path": "packages/polaris-dossier/src/session-egress-policy.test.ts",
+      "state": "??",
+      "bytes": 38771,
+      "sha256": "c397c05eee022784a854511172e6d9a03ea5aee9551d7a2fcd21b1e00aa2c7c0"
+    },
+    {
+      "path": "packages/polaris-dossier/src/session-egress-policy.ts",
+      "state": "??",
+      "bytes": 37691,
+      "sha256": "59620c4f04f6955fd9cb0eba0aef8e7ce4cab784a34261492a80a4a1bfc730f1"
+    },
+    {
+      "path": "packages/polaris-dossier/src/session-host.test.ts",
+      "state": "??",
+      "bytes": 17490,
+      "sha256": "2435d1b6811149fe48d714e24bd445b89fa66918ff5fd566670e5c4eeff0731a"
+    },
+    {
+      "path": "packages/polaris-dossier/src/session-host.ts",
+      "state": "??",
+      "bytes": 9274,
+      "sha256": "c75aa96fec3140801481e36278a0bcde24fabc3365eea3849ea968e9969c6bd6"
+    },
+    {
+      "path": "packages/polaris-dossier/src/session-launch.test.ts",
+      "state": "??",
+      "bytes": 25751,
+      "sha256": "fedef313307e78f8c35426fb0de276574fd5627e28f8fee9dade5167a6c89911"
+    },
+    {
+      "path": "packages/polaris-dossier/src/session-launch.ts",
+      "state": "??",
+      "bytes": 26980,
+      "sha256": "286a2b6b59bbe41184c91f1c21525ddb0fff728095c6eb8ff63dcb5fb8ca134e"
+    },
+    {
+      "path": "packages/polaris-dossier/src/session-mcp.test.ts",
+      "state": "??",
+      "bytes": 19623,
+      "sha256": "34e842b79c3685c0f16430e817ca946ff0f21df375cb3e7e4ae124380278a04d"
+    },
+    {
+      "path": "packages/polaris-dossier/src/session-mcp.ts",
+      "state": "??",
+      "bytes": 15919,
+      "sha256": "544332f543912d3b54a6dc4f71befc5db4fa1421212556f1b1d095be66f1f7dd"
+    },
+    {
+      "path": "packages/polaris-dossier/src/session-peer.c",
+      "state": "??",
+      "bytes": 1048,
+      "sha256": "d5e73e40975caaf484c7db2065a5dbd14adb319c59d4d9bdfed29aba49949745"
+    },
+    {
+      "path": "packages/polaris-dossier/src/session-peer.test.ts",
+      "state": "??",
+      "bytes": 5820,
+      "sha256": "cda92cc3f1906fd4fd053198bfc7f6f9d170945af5806a167f017140346e9da2"
+    },
+    {
+      "path": "packages/polaris-dossier/src/session-peer.ts",
+      "state": "??",
+      "bytes": 4120,
+      "sha256": "443edfe565505b9b3df145879e7bff1a692deeb15f814d05682a32ee27b9033c"
+    },
+    {
+      "path": "packages/polaris-dossier/src/session-profile.test.ts",
+      "state": "??",
+      "bytes": 9236,
+      "sha256": "f54be84b4c7e7a1e497618266f715041a84b2d9c07f349870d4394ef4acf8cef"
+    },
+    {
+      "path": "packages/polaris-dossier/src/session-profile.ts",
+      "state": "??",
+      "bytes": 13537,
+      "sha256": "ad283f31c74fc2da4d1a79bf7807454493b253418ce273a1c80ec8afd5018ab8"
+    },
+    {
+      "path": "packages/polaris-dossier/src/session-relay.test.ts",
+      "state": "??",
+      "bytes": 16724,
+      "sha256": "095d41203f79b9a06b4331eb451001bba3cc6cca06e92187bab4c01d9ca16c75"
+    },
+    {
+      "path": "packages/polaris-dossier/src/session-relay.ts",
+      "state": "??",
+      "bytes": 20825,
+      "sha256": "3b097a282cf98380f251b7c167148bff3a46ea7c7018b62adfbd04c40e4ada47"
+    },
+    {
+      "path": "packages/polaris-dossier/src/session-response.test.ts",
+      "state": "??",
+      "bytes": 8249,
+      "sha256": "80eadad315da41a0c068e62f42c13cfc951bbc55829c7c2cc19e3989be7cee52"
+    },
+    {
+      "path": "packages/polaris-dossier/src/session-response.ts",
+      "state": "??",
+      "bytes": 10521,
+      "sha256": "763e0ec395ae5e3f266a75d62fef86101a51b250f678783ffd67649a719123b2"
+    },
+    {
+      "path": "packages/polaris-dossier/src/session-tools.test.ts",
+      "state": "??",
+      "bytes": 49629,
+      "sha256": "5a8a25decbf63ae893e9f91315370496e737cc2dfed36038ad2be7fc28456252"
+    },
+    {
+      "path": "packages/polaris-dossier/src/session-tools.ts",
+      "state": "??",
+      "bytes": 34237,
+      "sha256": "6fb41bfc35ca906b5f96f9a728783396e81281c165351b634e0a4799db79d0f0"
+    },
+    {
+      "path": "packages/polaris-dossier/src/session-url-view.test.ts",
+      "state": "??",
+      "bytes": 14687,
+      "sha256": "022a20e4ff71dd88ff7ad82bd19ecfffda8c7a7c14ad41b2857960600cf130c5"
+    },
+    {
+      "path": "packages/polaris-dossier/src/session-url-view.ts",
+      "state": "??",
+      "bytes": 17481,
+      "sha256": "0881cb49426ca066d91459054025f842cce84c54584aa83b429ce166e90d9f02"
+    },
+    {
+      "path": "packages/polaris-dossier/src/source-acquisition-audit.test.ts",
+      "state": "??",
+      "bytes": 22981,
+      "sha256": "f690f895b5c084dab1085e6a258c7aba07a1a4b326a88c3c4e1fbf5d98776bdb"
+    },
+    {
+      "path": "packages/polaris-dossier/src/source-acquisition-audit.ts",
+      "state": "??",
+      "bytes": 21039,
+      "sha256": "64f127dd999fb0ba09b14e10034a92db5dc0b6b8c9c8b4f0516334d3ba8e2b2c"
+    },
+    {
+      "path": "packages/polaris-dossier/src/url-acquisition.test.ts",
+      "state": "??",
+      "bytes": 20417,
+      "sha256": "076124e4b16aa7b41fc1b0ca1b5baebd749256176c8b55f78762cd176aaac8ec"
+    },
+    {
+      "path": "packages/polaris-dossier/src/url-acquisition.ts",
+      "state": "??",
+      "bytes": 21629,
+      "sha256": "86952b792b8838db5f47b20e3179e7a2fe5347cff421c93ebed37396bb884509"
+    },
+    {
+      "path": "packages/polaris-dossier/src/url-design-product.test.ts",
+      "state": "??",
+      "bytes": 34680,
+      "sha256": "25749a9396a6b0b875da03fb2cdc97d71cce1f5acec3b7e5e9f7ee5b1f23b735"
+    },
+    {
+      "path": "packages/polaris-dossier/src/url-design-product.ts",
+      "state": "??",
+      "bytes": 16435,
+      "sha256": "a9ea9f2bfaf9c5a345b66fa04f38c1004c770b8d73a400394eaffbf5c0ac8126"
+    },
+    {
+      "path": "packages/polaris-dossier/src/url-design-view.test.ts",
+      "state": "??",
+      "bytes": 18208,
+      "sha256": "8e2d4b41e2bc2a8175db3dd44db9d09249e33ac5fc30b57fa0050b16f21bd86c"
+    },
+    {
+      "path": "packages/polaris-dossier/src/url-design-view.ts",
+      "state": "??",
+      "bytes": 18411,
+      "sha256": "9809e429498ef94e702065b42d7277c7544812a6efa68e6885a102ee05406545"
+    },
+    {
+      "path": "packages/polaris-dossier/src/url-dossier-result.ts",
+      "state": "??",
+      "bytes": 936,
+      "sha256": "a8197209fbab7c026ff64118aa66dbd279cfa625ce94f00d09826e06ab3ed5cd"
+    },
+    {
+      "path": "packages/polaris-dossier/src/url-launch-history.test.ts",
+      "state": "??",
+      "bytes": 59206,
+      "sha256": "dc29d6d3d6d224741ae695a3ccf81bde0058f23c86b3f7d829cb87fb3ba88592"
+    },
+    {
+      "path": "packages/polaris-dossier/src/url-launch-history.ts",
+      "state": "??",
+      "bytes": 14262,
+      "sha256": "a75154a4136f8908ad4d65cbe3b0478e9d5be1cf3506849b492bbf059b592334"
+    },
+    {
+      "path": "packages/polaris-dossier/src/url-machine-instance.test.ts",
+      "state": "??",
+      "bytes": 14052,
+      "sha256": "9f82de515fbf191bec322f19fa0b6dffe35617daf772243b6b816e5429850293"
+    },
+    {
+      "path": "packages/polaris-dossier/src/url-machine-instance.ts",
+      "state": "??",
+      "bytes": 13520,
+      "sha256": "d681f9d3220f8d3c466456ba6d9b35526866b5a78c7127ce05873603e8f0b271"
+    },
+    {
+      "path": "packages/polaris-dossier/src/url-machine-lifecycle.test.ts",
+      "state": "??",
+      "bytes": 34777,
+      "sha256": "db2314190d66d5d5d2475efc2b64d2b0e54467956c735b4ee01f7b061274b406"
+    },
+    {
+      "path": "packages/polaris-dossier/src/url-machine-lifecycle.ts",
+      "state": "??",
+      "bytes": 12955,
+      "sha256": "7c086af97989e14500a0e2c493e34308891dadd0925728ae32139eff1e7b9320"
+    },
+    {
+      "path": "packages/polaris-dossier/src/url-memory-acquisition.test.ts",
+      "state": "??",
+      "bytes": 34112,
+      "sha256": "36de2b61f63796dccd2209f0b3211b729e53f6c0b81e9396d07c252a6e3b7fa2"
+    },
+    {
+      "path": "packages/polaris-dossier/src/url-memory-acquisition.ts",
+      "state": "??",
+      "bytes": 38275,
+      "sha256": "23915da942af288a6547cf26ff1ab6a14d72376a9307db2963458921ef3a0817"
+    },
+    {
+      "path": "packages/polaris-dossier/src/url-mode-registry.test.ts",
+      "state": "??",
+      "bytes": 7418,
+      "sha256": "91237cf681619fd955dd3b845144d4be43d8e4414009b0b7b88218ed396e3e89"
+    },
+    {
+      "path": "packages/polaris-dossier/src/url-mode-registry.ts",
+      "state": "??",
+      "bytes": 9212,
+      "sha256": "73d8ebc6c42adb42df47f1b04cdf744ae6ea2ebce646b40ada2ac954d1f553c2"
+    },
+    {
+      "path": "packages/polaris-dossier/src/url-operation-products.ts",
+      "state": "??",
+      "bytes": 6882,
+      "sha256": "5e72b423fe1171c6a4b069ad54d43417f074fdc5db00045c351dc5d86d6b279f"
+    },
+    {
+      "path": "packages/polaris-dossier/src/url-ordered-render-value.ts",
+      "state": "??",
+      "bytes": 2770,
+      "sha256": "3c6f263e310284f480b76ea6955ebc89c93ac401b735d0c801842313b0727845"
+    },
+    {
+      "path": "packages/polaris-dossier/src/url-origin-ledger.test.ts",
+      "state": "??",
+      "bytes": 34462,
+      "sha256": "3cc3927c164560032a0eb2d241e355f91fa67ce70e6827d9b34b1970c14d9c30"
+    },
+    {
+      "path": "packages/polaris-dossier/src/url-origin-ledger.ts",
+      "state": "??",
+      "bytes": 37521,
+      "sha256": "ab9240f4fbd4ad6fd36af615ba13a46d385ff5606cd4c67fc14aac1c079624cf"
+    },
+    {
+      "path": "packages/polaris-dossier/src/url-product-reads.test.ts",
+      "state": "??",
+      "bytes": 3064,
+      "sha256": "5943a799bc07fb33009e58ecc386fd3bf8e85c4b616c9f5ef22f2ebe49331fcf"
+    },
+    {
+      "path": "packages/polaris-dossier/src/url-product-reads.ts",
+      "state": "??",
+      "bytes": 5491,
+      "sha256": "8520384f97028e15df4b2fe9c8cd19c053f0ac563655f2b5c220ea466d78e124"
+    },
+    {
+      "path": "packages/polaris-dossier/src/url-question-ui.test.ts",
+      "state": "??",
+      "bytes": 9326,
+      "sha256": "e11e320824bff9df649f2ab8eeafff25af8efe2289d8155a4ed59a9cdebb7621"
+    },
+    {
+      "path": "packages/polaris-dossier/src/url-question-ui.ts",
+      "state": "??",
+      "bytes": 7017,
+      "sha256": "fa4dae4ff1e5f327ed687a3e32a836103ba867af6ae4259b3dd907e1af3c9eea"
+    },
+    {
+      "path": "packages/polaris-dossier/src/url-rendered-site-screen.test.ts",
+      "state": "??",
+      "bytes": 7258,
+      "sha256": "3992d43e8c87087f1cea36ea2c2eb1adc6e1cd403a435543050b8650dd4edc35"
+    },
+    {
+      "path": "packages/polaris-dossier/src/url-rendered-site-screen.ts",
+      "state": "??",
+      "bytes": 5566,
+      "sha256": "5491d77d5b65539b09746b55b74d7fdd309861c98d88aa267077f7455d75ab1f"
+    },
+    {
+      "path": "packages/polaris-dossier/src/url-rendered-source-proof.ts",
+      "state": "??",
+      "bytes": 3919,
+      "sha256": "3e993b5cb6daca9b260eb1f61f960c94dd5983d855c5bfb9a16d8f1e78be4160"
+    },
+    {
+      "path": "packages/polaris-dossier/src/url-revision.test.ts",
+      "state": "??",
+      "bytes": 4751,
+      "sha256": "39e8cff9d49ae3e2e9b7a9283e60b32f50a2e7d5a534fd0cf0d7bdd3321773a6"
+    },
+    {
+      "path": "packages/polaris-dossier/src/url-revision.ts",
+      "state": "??",
+      "bytes": 6428,
+      "sha256": "8e24c7e9cd2676b60a12a22182fd8b74301a86cdf2e9fc8c07de1aca6929b672"
+    },
+    {
+      "path": "packages/polaris-dossier/src/url-role-plan.test.ts",
+      "state": "??",
+      "bytes": 8650,
+      "sha256": "9957484c6afd1b212c78656e6b7a351326f765af46cf4e22808a9bd8bee4acef"
+    },
+    {
+      "path": "packages/polaris-dossier/src/url-role-plan.ts",
+      "state": "??",
+      "bytes": 15644,
+      "sha256": "4180bfd1a510d72fb07b0db670cf1346811670a1526fb159f7f9490642627502"
+    },
+    {
+      "path": "packages/polaris-dossier/src/url-run-artifacts.test.ts",
+      "state": "??",
+      "bytes": 82368,
+      "sha256": "6316219d4f33317b47a9cda9d16242b932aef815cf14e1177913fcff00b5a299"
+    },
+    {
+      "path": "packages/polaris-dossier/src/url-run-artifacts.ts",
+      "state": "??",
+      "bytes": 96313,
+      "sha256": "b7730bc49f0f34829eb38d91a4f278bbe396c02b370e0d5ff45bd03ebc09783e"
+    },
+    {
+      "path": "packages/polaris-dossier/src/url-run-origins.test.ts",
+      "state": "??",
+      "bytes": 15566,
+      "sha256": "6655ca2c5da172db961fd0eb261ee9df1132e26a023cc2f2b90e7ba19ed50364"
+    },
+    {
+      "path": "packages/polaris-dossier/src/url-run-origins.ts",
+      "state": "??",
+      "bytes": 14467,
+      "sha256": "d52877bd644fe2c242a0bd38c21e5e0881e507e7cc955c3db7005a0b752bdc42"
+    },
+    {
+      "path": "packages/polaris-dossier/src/url-run-record.test.ts",
+      "state": "??",
+      "bytes": 22606,
+      "sha256": "d3f0c979211026e4c24bd42f81af638193d3b839c393dafec3d8cbe73eb9898b"
+    },
+    {
+      "path": "packages/polaris-dossier/src/url-run-record.ts",
+      "state": "??",
+      "bytes": 25132,
+      "sha256": "97abb7604789e8a5af2aba06d16511973ded89486015dc1826fb30178090e766"
+    },
+    {
+      "path": "packages/polaris-dossier/src/url-run-sessions.test.ts",
+      "state": "??",
+      "bytes": 20794,
+      "sha256": "c1d94fc3ee83fe0770b5bd775fbb96a685f344f5bdf87df4536e39ccacd0d29a"
+    },
+    {
+      "path": "packages/polaris-dossier/src/url-run-sessions.ts",
+      "state": "??",
+      "bytes": 28417,
+      "sha256": "29ec6bade47e6388ff3b820bb4ba30a2c43ce370556e81d63c661259f55e26b9"
+    },
+    {
+      "path": "packages/polaris-dossier/src/url-runtime.ts",
+      "state": "??",
+      "bytes": 14372,
+      "sha256": "42072125c19f965fab6d2710a2914b3a9ddd7abb9f9ec7b115d8cced369dd869"
+    },
+    {
+      "path": "packages/polaris-dossier/src/url-session-audit.test.ts",
+      "state": "??",
+      "bytes": 31230,
+      "sha256": "e84b328e69d82a68badcdaa0a9b0f0c9497e585f8f56e0076afa3be80d96a5fd"
+    },
+    {
+      "path": "packages/polaris-dossier/src/url-session-audit.ts",
+      "state": "??",
+      "bytes": 65274,
+      "sha256": "66ef708754f19d0ca4533361bf809aa4470156c8ae9ed76f8afde6c42fc1a2b6"
+    },
+    {
+      "path": "packages/polaris-dossier/src/url-session-budget.test.ts",
+      "state": "??",
+      "bytes": 4172,
+      "sha256": "b6895049e2c46cda38c006aecaeef75756c158fcd2a38c83dfb92814a04701cc"
+    },
+    {
+      "path": "packages/polaris-dossier/src/url-session-budget.ts",
+      "state": "??",
+      "bytes": 5068,
+      "sha256": "903af88ef5813ca0d5cb665ca89962a2f1632ee63497109d08c25ec810a6b477"
+    },
+    {
+      "path": "packages/polaris-dossier/src/url-source-reader.test.ts",
+      "state": "??",
+      "bytes": 3112,
+      "sha256": "6aa6b10471c8099c76a188519c825790fa36a0a0495f25932f549ea542218aba"
+    },
+    {
+      "path": "packages/polaris-dossier/src/url-source-reader.ts",
+      "state": "??",
+      "bytes": 3549,
+      "sha256": "10c575122f1df9c54b5a4779b575d6148214d985332fde5e4292fa037db3002c"
+    },
+    {
+      "path": "packages/polaris-dossier/src/url-stored-render.test.ts",
+      "state": "??",
+      "bytes": 3101,
+      "sha256": "9d95a1274f29651fd660e1d7746e4057aa9579fc2500d300629bdcad10acc17a"
+    },
+    {
+      "path": "packages/polaris-dossier/src/url-stored-render.ts",
+      "state": "??",
+      "bytes": 3524,
+      "sha256": "3d15af6a930f825e3afa72822d4fe6f916ff5d267362bd2a0caf40880fc58055"
+    },
+    {
+      "path": "packages/polaris-dossier/src/url-supervisor-state.test.ts",
+      "state": "??",
+      "bytes": 13172,
+      "sha256": "ad280a7c0d8f2c214b514c4aa60d40b4a02faf09360328fa3410d1e042fd06f8"
+    },
+    {
+      "path": "packages/polaris-dossier/src/url-supervisor-state.ts",
+      "state": "??",
+      "bytes": 13814,
+      "sha256": "97d8a4358da1afd9cb53bddd8cebaf195f7b8ab3fc4781c599cdf350494795fe"
+    },
+    {
+      "path": "scripts/build_dossier_runtime.mjs",
+      "state": "??",
+      "bytes": 10729,
+      "sha256": "0f725832398d412b143603bf75eb6bec22cee41df8ccfc0c8494a6c9d04be8a9"
+    }
+  ],
+  "changesSince159": [
+    {
+      "path": "packages/polaris-dossier/src/url-design-product.ts",
+      "before": {
+        "path": "packages/polaris-dossier/src/url-design-product.ts",
+        "state": "??",
+        "bytes": 15440,
+        "sha256": "13964941365e8fb3b831c757939b8b7139100b9a4e60c906f2dbd6fcf8ea225e"
+      },
+      "after": {
+        "path": "packages/polaris-dossier/src/url-design-product.ts",
+        "state": "??",
+        "bytes": 15735,
+        "sha256": "9d2785a5597448cac0011a40c6a06275fb12cc6e5ced2d6774a00d604ecba8fe"
+      }
+    },
+    {
+      "path": "packages/polaris-dossier/src/url-design-view.test.ts",
+      "before": {
+        "path": "packages/polaris-dossier/src/url-design-view.test.ts",
+        "state": "??",
+        "bytes": 17231,
+        "sha256": "b1f84124bd7bda9e5ceffcbf478c4dc11adfbabc7a01bf101e9806666aa96576"
+      },
+      "after": {
+        "path": "packages/polaris-dossier/src/url-design-view.test.ts",
+        "state": "??",
+        "bytes": 18208,
+        "sha256": "8e2d4b41e2bc2a8175db3dd44db9d09249e33ac5fc30b57fa0050b16f21bd86c"
+      }
+    },
+    {
+      "path": "packages/polaris-dossier/src/url-design-view.ts",
+      "before": {
+        "path": "packages/polaris-dossier/src/url-design-view.ts",
+        "state": "??",
+        "bytes": 17045,
+        "sha256": "cdbbef3a85681a98307ac470cd323d23d45c5ea25cb1caf36f9a2b8cc90d4e5c"
+      },
+      "after": {
+        "path": "packages/polaris-dossier/src/url-design-view.ts",
+        "state": "??",
+        "bytes": 18359,
+        "sha256": "e279e4466b1685ad9a9ebf6e339dee139be24e05bcbe07279f97c018b0b6d43d"
+      }
+    }
+  ],
+  "build": {
+    "polaris.js": "721021fbda2a175319c78e577a13ae10e0e3689fd2e8f09543340e8e5fbb4237",
+    "runtime/manifest.json": "bda0f8651013f4c7dd358d4055beeb0515c6b5d89d742baecc6f0445e610c995",
+    "session-host.js": "fb3e2629b86792431d44135ac33856e33a3fb8e745b07700b7dd5e185f85b341",
+    "session-launch.js": "d6030c42f387cfdb108370cff4e151ebc3a623f41e489de47e714242984509ee",
+    "session-relay.js": "49ffd0588de8f84105d169938d4e5cf81571cc8521249dabb2ae6875c3203873",
+    "url-design-product.js": "e203a3f7f3460b545ee53424f95f81b4dcae7b30ac252076bf06bf92585a928c",
+    "url-origin-ledger.js": "5b2a57d88b963aa59a12589cd0cc15da22ce114084f643585440554f212232b3",
+    "url-run-artifacts.js": "f57ca1fe2abaeadf4c02eff373ea1000092b41ecaac4db8312df590aa2e65429",
+    "url-session-audit.js": "4b63b6e0400b16b81f788410adfd693e8072f3c1b89b30e86bd94cdc225e7182",
+    "review-packet.js": "e5008a9d34ce60265483948e6e7773407df242c6989fd1e76daa6752e3a04144",
+    "inventory.js": "cb585eccea21ac644a482facf304c17928abe0008d188a33d1a72c538604315a",
+    "session-handover.js": "0aec2221b3880a6a40151c33663d83d5661575473787687044e657f075637a12",
+    "session-controller.js": "be06d7c2b93732bb76562f4cc9321276a8921171e974ef3169560c85e2ec2b16",
+    "session-egress-policy.js": "163804caa6031c9694b74195f75db1fa794b62c16cf5a0efec4956c2bdbbcfb3",
+    "url-design-view.js": "590f913c136cc8b9b23aa095e2f0cb389f42afb3b6e6fb67d747401468251ece",
+    "url-run-sessions.js": "d8bbfe84ad7f71a4a20b53a7c7331174fe2a42b83c52abb829c7ffb1a9e7e5b8",
+    "check.js": "ba5de7bb2b1a8c4f9987ba49e081f2ad750203cfda607056a5b6833e1de3ad76",
+    "reverify.js": "ba2e13f70b6d6d200bdddc3bb85f9911eebe305a61a9f696fccc3c8b3e4325d0",
+    "url-operation-products.js": "c16501f90007c60c38ede52f37f3b5bdc044e3cdc46c3f2c9824ebc57f50a4ba",
+    "review.js": "d2278c6f8e1eaaaec3ed591f213335baddedafedaf1dca7c4c90d5176923d6fb",
+    "render.js": "340d3bec0a85009d4f66aa7e95e5822e537d269565894d02b2889ab2780d28a3",
+    "policy-snapshot.js": "9f3767db8eee9bfeab1b064c700af856e394f0bc7a968da1b9754d3113f01971",
+    "session-tools.js": "37897d4b4a6436e8ae5e7fab61f9440475a20d9203ba375f90da46e4c5da1268"
+  },
+  "changesSince160": [
+    {
+      "path": "packages/polaris-dossier/src/url-run-artifacts.test.ts",
+      "before": {
+        "path": "packages/polaris-dossier/src/url-run-artifacts.test.ts",
+        "state": "??",
+        "bytes": 73144,
+        "sha256": "4b49c331042f8d0bb759099bb8df98007c0d0fcb14daa27bbd3aec6ec0324706"
+      },
+      "after": {
+        "path": "packages/polaris-dossier/src/url-run-artifacts.test.ts",
+        "state": "??",
+        "bytes": 74671,
+        "sha256": "490cb9a6ceb3cb4156665fe4325e62f51df6dfee653c7c8620f36fdf421aace1"
+      }
+    },
+    {
+      "path": "packages/polaris-dossier/src/url-run-artifacts.ts",
+      "before": {
+        "path": "packages/polaris-dossier/src/url-run-artifacts.ts",
+        "state": "??",
+        "bytes": 93724,
+        "sha256": "366b65c98a6e8e21868ecc63ae670ec79621d13e56f86133abe8e5a62e30e535"
+      },
+      "after": {
+        "path": "packages/polaris-dossier/src/url-run-artifacts.ts",
+        "state": "??",
+        "bytes": 93943,
+        "sha256": "8595017d7cc85d6ff7252a6b49f6619af5f42ce117f18d17214c6ec8048b65b3"
+      }
+    }
+  ],
+  "changesSince161": [
+    {
+      "path": "packages/polaris-dossier/src/url-launch-history.test.ts",
+      "before": {
+        "path": "packages/polaris-dossier/src/url-launch-history.test.ts",
+        "state": "??",
+        "bytes": 53038,
+        "sha256": "a645c9f36c920177ef1e3c57089d15e50775086d3a012bc99ac8661db63d166d"
+      },
+      "after": {
+        "path": "packages/polaris-dossier/src/url-launch-history.test.ts",
+        "state": "??",
+        "bytes": 55275,
+        "sha256": "ff0eabd892917df01cbf097033fa26ae789f210b53b81a00c8703c99bc27b8f6"
+      }
+    },
+    {
+      "path": "packages/polaris-dossier/src/url-run-artifacts.ts",
+      "before": {
+        "path": "packages/polaris-dossier/src/url-run-artifacts.ts",
+        "state": "??",
+        "bytes": 93943,
+        "sha256": "8595017d7cc85d6ff7252a6b49f6619af5f42ce117f18d17214c6ec8048b65b3"
+      },
+      "after": {
+        "path": "packages/polaris-dossier/src/url-run-artifacts.ts",
+        "state": "??",
+        "bytes": 94212,
+        "sha256": "10cdc6f444a07783720da4e7508d320dfb799fe9a3f2c10899b30ba75eb3ed03"
+      }
+    },
+    {
+      "path": "packages/polaris-dossier/src/url-run-sessions.test.ts",
+      "before": {
+        "path": "packages/polaris-dossier/src/url-run-sessions.test.ts",
+        "state": "??",
+        "bytes": 15781,
+        "sha256": "92d8c5434bc07ab52b54052e27b734bdc1969f55205f5a472177ab3a464ea20f"
+      },
+      "after": {
+        "path": "packages/polaris-dossier/src/url-run-sessions.test.ts",
+        "state": "??",
+        "bytes": 15854,
+        "sha256": "0dfbe4482135057ccfe2218d7eee22c95735dba0766e38b56d40636f40102c59"
+      }
+    },
+    {
+      "path": "packages/polaris-dossier/src/url-run-sessions.ts",
+      "before": {
+        "path": "packages/polaris-dossier/src/url-run-sessions.ts",
+        "state": "??",
+        "bytes": 26121,
+        "sha256": "21e4e937df07f35ce7fec9eccf80642eed48528ac6a9846ddeab3e65408153c9"
+      },
+      "after": {
+        "path": "packages/polaris-dossier/src/url-run-sessions.ts",
+        "state": "??",
+        "bytes": 26196,
+        "sha256": "6564ec28cbb7b7feea1eb311e88a4f63d32918ea9c821e0cb2355ea91f306d70"
+      }
+    }
+  ],
+  "changesSince162": [
+    {
+      "path": "packages/polaris-dossier/src/url-origin-ledger.test.ts",
+      "before": {
+        "path": "packages/polaris-dossier/src/url-origin-ledger.test.ts",
+        "state": "??",
+        "bytes": 32062,
+        "sha256": "65ee80f4bed85343c3b09c1ed74092d9d187697cde17a5da430595c23f625186"
+      },
+      "after": {
+        "path": "packages/polaris-dossier/src/url-origin-ledger.test.ts",
+        "state": "??",
+        "bytes": 33056,
+        "sha256": "925437a6f0ff64d64ed5e275ed362718bdcf218625b4ff2479f22276adaf5543"
+      }
+    },
+    {
+      "path": "packages/polaris-dossier/src/url-origin-ledger.ts",
+      "before": {
+        "path": "packages/polaris-dossier/src/url-origin-ledger.ts",
+        "state": "??",
+        "bytes": 36554,
+        "sha256": "6e04ef76369d5cfce35a76aea3e92caf9c1be68574add3ad26308025d56a2e60"
+      },
+      "after": {
+        "path": "packages/polaris-dossier/src/url-origin-ledger.ts",
+        "state": "??",
+        "bytes": 36994,
+        "sha256": "177146ec43e9368f4b8a7b9467b636331baae1fe297e406b59230f261bcd0a83"
+      }
+    },
+    {
+      "path": "packages/polaris-dossier/src/url-run-artifacts.test.ts",
+      "before": {
+        "path": "packages/polaris-dossier/src/url-run-artifacts.test.ts",
+        "state": "??",
+        "bytes": 74671,
+        "sha256": "490cb9a6ceb3cb4156665fe4325e62f51df6dfee653c7c8620f36fdf421aace1"
+      },
+      "after": {
+        "path": "packages/polaris-dossier/src/url-run-artifacts.test.ts",
+        "state": "??",
+        "bytes": 74846,
+        "sha256": "8d984acd2520b5dff8191fe7beda049aa37bacd758c24197efbdeacf432e60b1"
+      }
+    },
+    {
+      "path": "packages/polaris-dossier/src/url-run-artifacts.ts",
+      "before": {
+        "path": "packages/polaris-dossier/src/url-run-artifacts.ts",
+        "state": "??",
+        "bytes": 94212,
+        "sha256": "10cdc6f444a07783720da4e7508d320dfb799fe9a3f2c10899b30ba75eb3ed03"
+      },
+      "after": {
+        "path": "packages/polaris-dossier/src/url-run-artifacts.ts",
+        "state": "??",
+        "bytes": 94460,
+        "sha256": "1167fe7b9100355eb373907367287e0ad19ae90aebfb33aa1bbc90a8edb4faef"
+      }
+    }
+  ],
+  "changesSince163": [
+    {
+      "path": "packages/polaris-dossier/src/url-origin-ledger.test.ts",
+      "before": {
+        "path": "packages/polaris-dossier/src/url-origin-ledger.test.ts",
+        "state": "??",
+        "bytes": 33056,
+        "sha256": "925437a6f0ff64d64ed5e275ed362718bdcf218625b4ff2479f22276adaf5543"
+      },
+      "after": {
+        "path": "packages/polaris-dossier/src/url-origin-ledger.test.ts",
+        "state": "??",
+        "bytes": 34321,
+        "sha256": "01d76a55214ce49648a8a2d16d90298f0cb8ba2c23ebde1ee6baafea6f5c8791"
+      }
+    },
+    {
+      "path": "packages/polaris-dossier/src/url-origin-ledger.ts",
+      "before": {
+        "path": "packages/polaris-dossier/src/url-origin-ledger.ts",
+        "state": "??",
+        "bytes": 36994,
+        "sha256": "177146ec43e9368f4b8a7b9467b636331baae1fe297e406b59230f261bcd0a83"
+      },
+      "after": {
+        "path": "packages/polaris-dossier/src/url-origin-ledger.ts",
+        "state": "??",
+        "bytes": 37382,
+        "sha256": "19e367be5801ca27e1bd27b5eb9bf3ecaa908c86362e5c1fb82922d6bda1f12a"
+      }
+    }
+  ],
+  "changesSince164": [
+    {
+      "path": "packages/polaris-dossier/src/session-launch.test.ts",
+      "before": {
+        "path": "packages/polaris-dossier/src/session-launch.test.ts",
+        "state": "??",
+        "bytes": 20117,
+        "sha256": "91aede936d279609d349042c3b53bb5c5314ae76d54329b33893dd85d9dd1330"
+      },
+      "after": {
+        "path": "packages/polaris-dossier/src/session-launch.test.ts",
+        "state": "??",
+        "bytes": 20776,
+        "sha256": "657820aa9127dc6d5e18596d3e02a00fcd41505e7cb3c3cccdabbbe5ec66ac0a"
+      }
+    },
+    {
+      "path": "packages/polaris-dossier/src/session-launch.ts",
+      "before": {
+        "path": "packages/polaris-dossier/src/session-launch.ts",
+        "state": "??",
+        "bytes": 23794,
+        "sha256": "c9d65e578d5939807012037c0934821597ff884b53e1c9d0e7e3450ad005a1c7"
+      },
+      "after": {
+        "path": "packages/polaris-dossier/src/session-launch.ts",
+        "state": "??",
+        "bytes": 24199,
+        "sha256": "7432c191b88295b1f3c20825a7b057b12fb3eef65b5ab859adeda0a58c0c80da"
+      }
+    }
+  ],
+  "changesSince165": [
+    {
+      "path": "packages/polaris-dossier/src/url-launch-history.test.ts",
+      "before": {
+        "path": "packages/polaris-dossier/src/url-launch-history.test.ts",
+        "state": "??",
+        "bytes": 55275,
+        "sha256": "ff0eabd892917df01cbf097033fa26ae789f210b53b81a00c8703c99bc27b8f6"
+      },
+      "after": {
+        "path": "packages/polaris-dossier/src/url-launch-history.test.ts",
+        "state": "??",
+        "bytes": 55690,
+        "sha256": "fafa53c5bd4465212f67af4d618a6d67ce1d043559f10fee311c3229a07594d3"
+      }
+    },
+    {
+      "path": "packages/polaris-dossier/src/url-run-artifacts.ts",
+      "before": {
+        "path": "packages/polaris-dossier/src/url-run-artifacts.ts",
+        "state": "??",
+        "bytes": 94460,
+        "sha256": "1167fe7b9100355eb373907367287e0ad19ae90aebfb33aa1bbc90a8edb4faef"
+      },
+      "after": {
+        "path": "packages/polaris-dossier/src/url-run-artifacts.ts",
+        "state": "??",
+        "bytes": 94689,
+        "sha256": "78c235ba1f218d423f0595a7a68363281da0ed27e8ede856c0beb0aba6461218"
+      }
+    }
+  ],
+  "changesSince166": [
+    {
+      "path": "packages/polaris-dossier/src/url-launch-history.test.ts",
+      "before": {
+        "path": "packages/polaris-dossier/src/url-launch-history.test.ts",
+        "state": "??",
+        "bytes": 55690,
+        "sha256": "fafa53c5bd4465212f67af4d618a6d67ce1d043559f10fee311c3229a07594d3"
+      },
+      "after": {
+        "path": "packages/polaris-dossier/src/url-launch-history.test.ts",
+        "state": "??",
+        "bytes": 57081,
+        "sha256": "9fd7b8b526ecc32e848f80f270345481de6af8b8aa7ec0868ea971262b0f9cfe"
+      }
+    },
+    {
+      "path": "packages/polaris-dossier/src/url-run-artifacts.ts",
+      "before": {
+        "path": "packages/polaris-dossier/src/url-run-artifacts.ts",
+        "state": "??",
+        "bytes": 94689,
+        "sha256": "78c235ba1f218d423f0595a7a68363281da0ed27e8ede856c0beb0aba6461218"
+      },
+      "after": {
+        "path": "packages/polaris-dossier/src/url-run-artifacts.ts",
+        "state": "??",
+        "bytes": 95006,
+        "sha256": "2eace96ab003c1bf2f29bc83f5f270af29490053cb2819acd8f46feb7b86f790"
+      }
+    }
+  ],
+  "changesSince167": [
+    {
+      "path": "packages/polaris-dossier/src/session-launch.test.ts",
+      "before": {
+        "path": "packages/polaris-dossier/src/session-launch.test.ts",
+        "state": "??",
+        "bytes": 20776,
+        "sha256": "657820aa9127dc6d5e18596d3e02a00fcd41505e7cb3c3cccdabbbe5ec66ac0a"
+      },
+      "after": {
+        "path": "packages/polaris-dossier/src/session-launch.test.ts",
+        "state": "??",
+        "bytes": 21715,
+        "sha256": "16dc1e8f487d2f8eebe8e5df1da3ec6e66c3890adb21c21b60a123decc684158"
+      }
+    },
+    {
+      "path": "packages/polaris-dossier/src/session-launch.ts",
+      "before": {
+        "path": "packages/polaris-dossier/src/session-launch.ts",
+        "state": "??",
+        "bytes": 24199,
+        "sha256": "7432c191b88295b1f3c20825a7b057b12fb3eef65b5ab859adeda0a58c0c80da"
+      },
+      "after": {
+        "path": "packages/polaris-dossier/src/session-launch.ts",
+        "state": "??",
+        "bytes": 24836,
+        "sha256": "dfb1b8aad51b9c4ee8a94305d088fe0df0c671b00eb605af8c9889575b4dff6f"
+      }
+    }
+  ],
+  "changesSince168": [
+    {
+      "path": "packages/polaris-dossier/src/session-launch.test.ts",
+      "before": {
+        "path": "packages/polaris-dossier/src/session-launch.test.ts",
+        "state": "??",
+        "bytes": 21715,
+        "sha256": "16dc1e8f487d2f8eebe8e5df1da3ec6e66c3890adb21c21b60a123decc684158"
+      },
+      "after": {
+        "path": "packages/polaris-dossier/src/session-launch.test.ts",
+        "state": "??",
+        "bytes": 21777,
+        "sha256": "b73685d131c988ef0a2d9eda406522ce65d65b8febbe783c4420d89f0ed84595"
+      }
+    },
+    {
+      "path": "packages/polaris-dossier/src/session-launch.ts",
+      "before": {
+        "path": "packages/polaris-dossier/src/session-launch.ts",
+        "state": "??",
+        "bytes": 24836,
+        "sha256": "dfb1b8aad51b9c4ee8a94305d088fe0df0c671b00eb605af8c9889575b4dff6f"
+      },
+      "after": {
+        "path": "packages/polaris-dossier/src/session-launch.ts",
+        "state": "??",
+        "bytes": 26099,
+        "sha256": "e145208fb719f5dbdc82acb949e30078c9d7ee0a50a6e85b45479b54a0a94169"
+      }
+    }
+  ],
+  "changesSince169": [
+    {
+      "path": "packages/polaris-dossier/src/session-launch.test.ts",
+      "before": {
+        "path": "packages/polaris-dossier/src/session-launch.test.ts",
+        "state": "??",
+        "bytes": 21777,
+        "sha256": "b73685d131c988ef0a2d9eda406522ce65d65b8febbe783c4420d89f0ed84595"
+      },
+      "after": {
+        "path": "packages/polaris-dossier/src/session-launch.test.ts",
+        "state": "??",
+        "bytes": 22753,
+        "sha256": "1cab6629419c517888590b2e37e35f17e75dac65aac9df188e52689dce9bcf57"
+      }
+    },
+    {
+      "path": "packages/polaris-dossier/src/session-launch.ts",
+      "before": {
+        "path": "packages/polaris-dossier/src/session-launch.ts",
+        "state": "??",
+        "bytes": 26099,
+        "sha256": "e145208fb719f5dbdc82acb949e30078c9d7ee0a50a6e85b45479b54a0a94169"
+      },
+      "after": {
+        "path": "packages/polaris-dossier/src/session-launch.ts",
+        "state": "??",
+        "bytes": 26408,
+        "sha256": "c69e8c7b5b165834c18dc69b0d025a6acc2271d429ed8d56baf032b63fd421d8"
+      }
+    }
+  ],
+  "changesSince170": [
+    {
+      "path": "packages/polaris-dossier/src/session-launch.test.ts",
+      "before": {
+        "path": "packages/polaris-dossier/src/session-launch.test.ts",
+        "state": "??",
+        "bytes": 22753,
+        "sha256": "1cab6629419c517888590b2e37e35f17e75dac65aac9df188e52689dce9bcf57"
+      },
+      "after": {
+        "path": "packages/polaris-dossier/src/session-launch.test.ts",
+        "state": "??",
+        "bytes": 23219,
+        "sha256": "c507e9922a13bff6a031c36baba7501468da8a4650da8ad0a65496c02fed543c"
+      }
+    },
+    {
+      "path": "packages/polaris-dossier/src/session-launch.ts",
+      "before": {
+        "path": "packages/polaris-dossier/src/session-launch.ts",
+        "state": "??",
+        "bytes": 26408,
+        "sha256": "c69e8c7b5b165834c18dc69b0d025a6acc2271d429ed8d56baf032b63fd421d8"
+      },
+      "after": {
+        "path": "packages/polaris-dossier/src/session-launch.ts",
+        "state": "??",
+        "bytes": 26690,
+        "sha256": "095e776d51323677375511125946ae1d5276b193e5ef907d50dda999c048dab1"
+      }
+    },
+    {
+      "path": "packages/polaris-dossier/src/url-launch-history.test.ts",
+      "before": {
+        "path": "packages/polaris-dossier/src/url-launch-history.test.ts",
+        "state": "??",
+        "bytes": 57081,
+        "sha256": "9fd7b8b526ecc32e848f80f270345481de6af8b8aa7ec0868ea971262b0f9cfe"
+      },
+      "after": {
+        "path": "packages/polaris-dossier/src/url-launch-history.test.ts",
+        "state": "??",
+        "bytes": 58089,
+        "sha256": "2a3dcf4f9d930733f8ba9cc29c27b67e73247bdaa38a6124796b74eb9c532aba"
+      }
+    },
+    {
+      "path": "packages/polaris-dossier/src/url-run-artifacts.ts",
+      "before": {
+        "path": "packages/polaris-dossier/src/url-run-artifacts.ts",
+        "state": "??",
+        "bytes": 95006,
+        "sha256": "2eace96ab003c1bf2f29bc83f5f270af29490053cb2819acd8f46feb7b86f790"
+      },
+      "after": {
+        "path": "packages/polaris-dossier/src/url-run-artifacts.ts",
+        "state": "??",
+        "bytes": 95135,
+        "sha256": "6a11746af40db4d480266ccfbacf7b3878bfb7a3603b3c8878d06767d751565f"
+      }
+    },
+    {
+      "path": "packages/polaris-dossier/src/url-run-sessions.test.ts",
+      "before": {
+        "path": "packages/polaris-dossier/src/url-run-sessions.test.ts",
+        "state": "??",
+        "bytes": 15854,
+        "sha256": "0dfbe4482135057ccfe2218d7eee22c95735dba0766e38b56d40636f40102c59"
+      },
+      "after": {
+        "path": "packages/polaris-dossier/src/url-run-sessions.test.ts",
+        "state": "??",
+        "bytes": 16754,
+        "sha256": "f5aac6108a4a889e4ecfbed8225cecf502ddc39b62bc87b607746f25cafc2c6d"
+      }
+    },
+    {
+      "path": "packages/polaris-dossier/src/url-run-sessions.ts",
+      "before": {
+        "path": "packages/polaris-dossier/src/url-run-sessions.ts",
+        "state": "??",
+        "bytes": 26196,
+        "sha256": "6564ec28cbb7b7feea1eb311e88a4f63d32918ea9c821e0cb2355ea91f306d70"
+      },
+      "after": {
+        "path": "packages/polaris-dossier/src/url-run-sessions.ts",
+        "state": "??",
+        "bytes": 26511,
+        "sha256": "115d95bad41586ec57fd6ce877fd151fdcda418c01a45d1b69a7aac37deeda5b"
+      }
+    }
+  ],
+  "changesSince171": [
+    {
+      "path": "packages/polaris-dossier/src/url-origin-ledger.test.ts",
+      "before": {
+        "path": "packages/polaris-dossier/src/url-origin-ledger.test.ts",
+        "state": "??",
+        "bytes": 34321,
+        "sha256": "01d76a55214ce49648a8a2d16d90298f0cb8ba2c23ebde1ee6baafea6f5c8791"
+      },
+      "after": {
+        "path": "packages/polaris-dossier/src/url-origin-ledger.test.ts",
+        "state": "??",
+        "bytes": 34462,
+        "sha256": "3cc3927c164560032a0eb2d241e355f91fa67ce70e6827d9b34b1970c14d9c30"
+      }
+    },
+    {
+      "path": "packages/polaris-dossier/src/url-origin-ledger.ts",
+      "before": {
+        "path": "packages/polaris-dossier/src/url-origin-ledger.ts",
+        "state": "??",
+        "bytes": 37382,
+        "sha256": "19e367be5801ca27e1bd27b5eb9bf3ecaa908c86362e5c1fb82922d6bda1f12a"
+      },
+      "after": {
+        "path": "packages/polaris-dossier/src/url-origin-ledger.ts",
+        "state": "??",
+        "bytes": 37521,
+        "sha256": "ab9240f4fbd4ad6fd36af615ba13a46d385ff5606cd4c67fc14aac1c079624cf"
+      }
+    },
+    {
+      "path": "packages/polaris-dossier/src/url-run-artifacts.ts",
+      "before": {
+        "path": "packages/polaris-dossier/src/url-run-artifacts.ts",
+        "state": "??",
+        "bytes": 95135,
+        "sha256": "6a11746af40db4d480266ccfbacf7b3878bfb7a3603b3c8878d06767d751565f"
+      },
+      "after": {
+        "path": "packages/polaris-dossier/src/url-run-artifacts.ts",
+        "state": "??",
+        "bytes": 95299,
+        "sha256": "b031a5bb8f5fdcc99523aa9b57f544abc928559e5c1b3e06c5fd693e0b129397"
+      }
+    },
+    {
+      "path": "packages/polaris-dossier/src/url-run-sessions.test.ts",
+      "before": {
+        "path": "packages/polaris-dossier/src/url-run-sessions.test.ts",
+        "state": "??",
+        "bytes": 16754,
+        "sha256": "f5aac6108a4a889e4ecfbed8225cecf502ddc39b62bc87b607746f25cafc2c6d"
+      },
+      "after": {
+        "path": "packages/polaris-dossier/src/url-run-sessions.test.ts",
+        "state": "??",
+        "bytes": 18927,
+        "sha256": "7c3e7762daf539b0917f0b218380a42dc485db36979930bf7beee39c5f56cf38"
+      }
+    },
+    {
+      "path": "packages/polaris-dossier/src/url-run-sessions.ts",
+      "before": {
+        "path": "packages/polaris-dossier/src/url-run-sessions.ts",
+        "state": "??",
+        "bytes": 26511,
+        "sha256": "115d95bad41586ec57fd6ce877fd151fdcda418c01a45d1b69a7aac37deeda5b"
+      },
+      "after": {
+        "path": "packages/polaris-dossier/src/url-run-sessions.ts",
+        "state": "??",
+        "bytes": 27023,
+        "sha256": "53ee8f54062344fe5e7d4b94f6c69408acd618312c6503cdf9a85a61bb7b5362"
+      }
+    }
+  ],
+  "changesSince172": [
+    {
+      "path": "packages/polaris-dossier/src/check.ts",
+      "before": {
+        "path": "packages/polaris-dossier/src/check.ts",
+        "state": " M",
+        "bytes": 21553,
+        "sha256": "fcc5ea0c5be9f4b45a03b024623ea58e5ab52405e35fda460b02ad225c0b5067"
+      },
+      "after": {
+        "path": "packages/polaris-dossier/src/check.ts",
+        "state": " M",
+        "bytes": 21630,
+        "sha256": "4527520387ff096e7653a7c0d4e994b3bca5f4b65174d928c7fe248e9cc40036"
+      }
+    },
+    {
+      "path": "packages/polaris-dossier/src/polaris.ts",
+      "before": {
+        "path": "packages/polaris-dossier/src/polaris.ts",
+        "state": " M",
+        "bytes": 95505,
+        "sha256": "b95d30a257ca73b8fb41b211655f24d233296b2b7206df2a0dcd11f043e4b095"
+      },
+      "after": {
+        "path": "packages/polaris-dossier/src/polaris.ts",
+        "state": " M",
+        "bytes": 95541,
+        "sha256": "09d0baec92e344277bfca6cd008bb5fa3114d3a6ac5b03098ed783ede8f29208"
+      }
+    },
+    {
+      "path": "packages/polaris-dossier/src/reverify.ts",
+      "before": {
+        "path": "packages/polaris-dossier/src/reverify.ts",
+        "state": " M",
+        "bytes": 10538,
+        "sha256": "14ff1085b4e3aaff684e29370b45d9d7fe44966da4b4e13743b867e545d9a725"
+      },
+      "after": {
+        "path": "packages/polaris-dossier/src/reverify.ts",
+        "state": " M",
+        "bytes": 10819,
+        "sha256": "645f042d1d9ea4c6080173e776dedb1b15f5b5d29d99f8437d014112a82dafd5"
+      }
+    },
+    {
+      "path": "packages/polaris-dossier/src/url-operation-products.ts",
+      "before": {
+        "path": "packages/polaris-dossier/src/url-operation-products.ts",
+        "state": "??",
+        "bytes": 6005,
+        "sha256": "1384cd156975cd8aa8f86b6984359b86de7c20a5d0ca71d463936760274f8164"
+      },
+      "after": {
+        "path": "packages/polaris-dossier/src/url-operation-products.ts",
+        "state": "??",
+        "bytes": 6564,
+        "sha256": "2424ce474c042d6b7efa3b54cc42069c1a6b87e15e77d510bcfb5262751fb298"
+      }
+    },
+    {
+      "path": "packages/polaris-dossier/src/url-run-artifacts.test.ts",
+      "before": {
+        "path": "packages/polaris-dossier/src/url-run-artifacts.test.ts",
+        "state": "??",
+        "bytes": 74846,
+        "sha256": "8d984acd2520b5dff8191fe7beda049aa37bacd758c24197efbdeacf432e60b1"
+      },
+      "after": {
+        "path": "packages/polaris-dossier/src/url-run-artifacts.test.ts",
+        "state": "??",
+        "bytes": 75715,
+        "sha256": "56f2cc3d58e56c4fc3cf663817fe43bb8d2f05bb480b5f05f7e195a52750fa20"
+      }
+    },
+    {
+      "path": "packages/polaris-dossier/src/url-run-artifacts.ts",
+      "before": {
+        "path": "packages/polaris-dossier/src/url-run-artifacts.ts",
+        "state": "??",
+        "bytes": 95299,
+        "sha256": "b031a5bb8f5fdcc99523aa9b57f544abc928559e5c1b3e06c5fd693e0b129397"
+      },
+      "after": {
+        "path": "packages/polaris-dossier/src/url-run-artifacts.ts",
+        "state": "??",
+        "bytes": 95335,
+        "sha256": "1dafcd56d6342e35a1b4578971f25f508a06fafdefd9ea9775dacd0142520481"
+      }
+    },
+    {
+      "path": "packages/polaris-dossier/src/url-run-sessions.test.ts",
+      "before": {
+        "path": "packages/polaris-dossier/src/url-run-sessions.test.ts",
+        "state": "??",
+        "bytes": 18927,
+        "sha256": "7c3e7762daf539b0917f0b218380a42dc485db36979930bf7beee39c5f56cf38"
+      },
+      "after": {
+        "path": "packages/polaris-dossier/src/url-run-sessions.test.ts",
+        "state": "??",
+        "bytes": 20669,
+        "sha256": "7c5f96670e27c69f33ce1d73b2a820386b3045d4131d24d7fceebd25fc36c301"
+      }
+    },
+    {
+      "path": "packages/polaris-dossier/src/url-run-sessions.ts",
+      "before": {
+        "path": "packages/polaris-dossier/src/url-run-sessions.ts",
+        "state": "??",
+        "bytes": 27023,
+        "sha256": "53ee8f54062344fe5e7d4b94f6c69408acd618312c6503cdf9a85a61bb7b5362"
+      },
+      "after": {
+        "path": "packages/polaris-dossier/src/url-run-sessions.ts",
+        "state": "??",
+        "bytes": 27509,
+        "sha256": "9e5cffb5e7017b96b0705db996a4a80d9c37039aa988b1e4c85c679518a866d5"
+      }
+    }
+  ],
+  "changesSince173": [
+    {
+      "path": "packages/polaris-dossier/src/check.ts",
+      "before": {
+        "path": "packages/polaris-dossier/src/check.ts",
+        "state": " M",
+        "bytes": 21630,
+        "sha256": "4527520387ff096e7653a7c0d4e994b3bca5f4b65174d928c7fe248e9cc40036"
+      },
+      "after": {
+        "path": "packages/polaris-dossier/src/check.ts",
+        "state": " M",
+        "bytes": 21708,
+        "sha256": "3b3abc837a98a32730a5db32437cccccf3d653c28dc35f7203383af133a27404"
+      }
+    },
+    {
+      "path": "packages/polaris-dossier/src/review.ts",
+      "before": {
+        "path": "packages/polaris-dossier/src/review.ts",
+        "state": " M",
+        "bytes": 37454,
+        "sha256": "911ee33cafe08b8873b80b041390465434e65ad36e1adfbd3e348c216b6d33b5"
+      },
+      "after": {
+        "path": "packages/polaris-dossier/src/review.ts",
+        "state": " M",
+        "bytes": 37532,
+        "sha256": "4dda76441921af696ca788ea609def93d9ebc6bcfb99f9dec53f10abd860c55b"
+      }
+    },
+    {
+      "path": "packages/polaris-dossier/src/url-run-artifacts.test.ts",
+      "before": {
+        "path": "packages/polaris-dossier/src/url-run-artifacts.test.ts",
+        "state": "??",
+        "bytes": 75715,
+        "sha256": "56f2cc3d58e56c4fc3cf663817fe43bb8d2f05bb480b5f05f7e195a52750fa20"
+      },
+      "after": {
+        "path": "packages/polaris-dossier/src/url-run-artifacts.test.ts",
+        "state": "??",
+        "bytes": 76706,
+        "sha256": "53820f5d1cef84207df289735424aa36747bc16b0505fd61a55db6d3efa1caa8"
+      }
+    }
+  ],
+  "changesSince174": [
+    {
+      "path": "packages/polaris-dossier/src/session-launch.test.ts",
+      "before": {
+        "path": "packages/polaris-dossier/src/session-launch.test.ts",
+        "state": "??",
+        "bytes": 23219,
+        "sha256": "c507e9922a13bff6a031c36baba7501468da8a4650da8ad0a65496c02fed543c"
+      },
+      "after": {
+        "path": "packages/polaris-dossier/src/session-launch.test.ts",
+        "state": "??",
+        "bytes": 25751,
+        "sha256": "fedef313307e78f8c35426fb0de276574fd5627e28f8fee9dade5167a6c89911"
+      }
+    },
+    {
+      "path": "packages/polaris-dossier/src/session-launch.ts",
+      "before": {
+        "path": "packages/polaris-dossier/src/session-launch.ts",
+        "state": "??",
+        "bytes": 26690,
+        "sha256": "095e776d51323677375511125946ae1d5276b193e5ef907d50dda999c048dab1"
+      },
+      "after": {
+        "path": "packages/polaris-dossier/src/session-launch.ts",
+        "state": "??",
+        "bytes": 26980,
+        "sha256": "286a2b6b59bbe41184c91f1c21525ddb0fff728095c6eb8ff63dcb5fb8ca134e"
+      }
+    }
+  ],
+  "changesSince175": [
+    {
+      "path": "packages/polaris-dossier/src/url-run-artifacts.test.ts",
+      "before": {
+        "path": "packages/polaris-dossier/src/url-run-artifacts.test.ts",
+        "state": "??",
+        "bytes": 76706,
+        "sha256": "53820f5d1cef84207df289735424aa36747bc16b0505fd61a55db6d3efa1caa8"
+      },
+      "after": {
+        "path": "packages/polaris-dossier/src/url-run-artifacts.test.ts",
+        "state": "??",
+        "bytes": 77452,
+        "sha256": "c08c832e3119920938939c8bdafe620a6cbf50d04c76dbd252609c435093f840"
+      }
+    },
+    {
+      "path": "packages/polaris-dossier/src/url-run-artifacts.ts",
+      "before": {
+        "path": "packages/polaris-dossier/src/url-run-artifacts.ts",
+        "state": "??",
+        "bytes": 95335,
+        "sha256": "1dafcd56d6342e35a1b4578971f25f508a06fafdefd9ea9775dacd0142520481"
+      },
+      "after": {
+        "path": "packages/polaris-dossier/src/url-run-artifacts.ts",
+        "state": "??",
+        "bytes": 95750,
+        "sha256": "7b77e727b2a038aac244044f48ed8b1a91733f2ff974dded54b8dbb20ab4f431"
+      }
+    }
+  ],
+  "changesSince176": [
+    {
+      "path": "packages/polaris-dossier/src/inventory.ts",
+      "before": {
+        "path": "packages/polaris-dossier/src/inventory.ts",
+        "state": " M",
+        "bytes": 31690,
+        "sha256": "215d83eeceb262a87f6b39de2ae0ec5061ad034a2d63df1f6eb0dfa5e3fe0578"
+      },
+      "after": {
+        "path": "packages/polaris-dossier/src/inventory.ts",
+        "state": " M",
+        "bytes": 31710,
+        "sha256": "e3ae81ba734384702d9dbdb9dc2eb107b51788ee3be6fd262abadafa8f2044f2"
+      }
+    },
+    {
+      "path": "packages/polaris-dossier/src/polaris.ts",
+      "before": {
+        "path": "packages/polaris-dossier/src/polaris.ts",
+        "state": " M",
+        "bytes": 95541,
+        "sha256": "09d0baec92e344277bfca6cd008bb5fa3114d3a6ac5b03098ed783ede8f29208"
+      },
+      "after": {
+        "path": "packages/polaris-dossier/src/polaris.ts",
+        "state": " M",
+        "bytes": 95580,
+        "sha256": "6628b1aadd83e0bc550d965ee22909399e4c2ec33082528b852d11560b3c0db9"
+      }
+    },
+    {
+      "path": "packages/polaris-dossier/src/review-packet.ts",
+      "before": {
+        "path": "packages/polaris-dossier/src/review-packet.ts",
+        "state": " M",
+        "bytes": 19657,
+        "sha256": "24b758c0e41b736f34064e6af33dab462aef80ee3716354045b3db7532f5d18a"
+      },
+      "after": {
+        "path": "packages/polaris-dossier/src/review-packet.ts",
+        "state": " M",
+        "bytes": 19704,
+        "sha256": "5d226d23c369cf47fafa7043b9011d4d6d1f483b529688c1ab76d436ff823b29"
+      }
+    },
+    {
+      "path": "packages/polaris-dossier/src/session-handover.ts",
+      "before": {
+        "path": "packages/polaris-dossier/src/session-handover.ts",
+        "state": " M",
+        "bytes": 49176,
+        "sha256": "423904efdfc691e7e23d4d4d4bfda4212dae9e6948ba78b73991dfe7158638b9"
+      },
+      "after": {
+        "path": "packages/polaris-dossier/src/session-handover.ts",
+        "state": " M",
+        "bytes": 49196,
+        "sha256": "8f44cc4b9dc942f1075b8a36ad1a6dde1639cffdf1482d21abe07ffa033d6ffd"
+      }
+    },
+    {
+      "path": "packages/polaris-dossier/src/url-operation-products.ts",
+      "before": {
+        "path": "packages/polaris-dossier/src/url-operation-products.ts",
+        "state": "??",
+        "bytes": 6564,
+        "sha256": "2424ce474c042d6b7efa3b54cc42069c1a6b87e15e77d510bcfb5262751fb298"
+      },
+      "after": {
+        "path": "packages/polaris-dossier/src/url-operation-products.ts",
+        "state": "??",
+        "bytes": 6882,
+        "sha256": "5e72b423fe1171c6a4b069ad54d43417f074fdc5db00045c351dc5d86d6b279f"
+      }
+    },
+    {
+      "path": "packages/polaris-dossier/src/url-run-artifacts.test.ts",
+      "before": {
+        "path": "packages/polaris-dossier/src/url-run-artifacts.test.ts",
+        "state": "??",
+        "bytes": 77452,
+        "sha256": "c08c832e3119920938939c8bdafe620a6cbf50d04c76dbd252609c435093f840"
+      },
+      "after": {
+        "path": "packages/polaris-dossier/src/url-run-artifacts.test.ts",
+        "state": "??",
+        "bytes": 79687,
+        "sha256": "f13ba59ae95eee42661220f818e607daae7777a489a9245763ac8fe29d7a553b"
+      }
+    },
+    {
+      "path": "packages/polaris-dossier/src/url-run-sessions.test.ts",
+      "before": {
+        "path": "packages/polaris-dossier/src/url-run-sessions.test.ts",
+        "state": "??",
+        "bytes": 20669,
+        "sha256": "7c5f96670e27c69f33ce1d73b2a820386b3045d4131d24d7fceebd25fc36c301"
+      },
+      "after": {
+        "path": "packages/polaris-dossier/src/url-run-sessions.test.ts",
+        "state": "??",
+        "bytes": 20794,
+        "sha256": "c1d94fc3ee83fe0770b5bd775fbb96a685f344f5bdf87df4536e39ccacd0d29a"
+      }
+    },
+    {
+      "path": "packages/polaris-dossier/src/url-run-sessions.ts",
+      "before": {
+        "path": "packages/polaris-dossier/src/url-run-sessions.ts",
+        "state": "??",
+        "bytes": 27509,
+        "sha256": "9e5cffb5e7017b96b0705db996a4a80d9c37039aa988b1e4c85c679518a866d5"
+      },
+      "after": {
+        "path": "packages/polaris-dossier/src/url-run-sessions.ts",
+        "state": "??",
+        "bytes": 27666,
+        "sha256": "4f748968b1f2bfa916fb7fc72e545fefa10b8753ec861f9c2713e68744d7be90"
+      }
+    }
+  ],
+  "changesSince177": [
+    {
+      "path": "packages/polaris-dossier/src/polaris.ts",
+      "before": {
+        "path": "packages/polaris-dossier/src/polaris.ts",
+        "state": " M",
+        "bytes": 95580,
+        "sha256": "6628b1aadd83e0bc550d965ee22909399e4c2ec33082528b852d11560b3c0db9"
+      },
+      "after": {
+        "path": "packages/polaris-dossier/src/polaris.ts",
+        "state": " M",
+        "bytes": 95627,
+        "sha256": "3c9dffe8f03d2e95c42944f1abe829625c57dc25d2029ac54c9a8a80abf27cea"
+      }
+    },
+    {
+      "path": "packages/polaris-dossier/src/url-run-artifacts.test.ts",
+      "before": {
+        "path": "packages/polaris-dossier/src/url-run-artifacts.test.ts",
+        "state": "??",
+        "bytes": 79687,
+        "sha256": "f13ba59ae95eee42661220f818e607daae7777a489a9245763ac8fe29d7a553b"
+      },
+      "after": {
+        "path": "packages/polaris-dossier/src/url-run-artifacts.test.ts",
+        "state": "??",
+        "bytes": 81266,
+        "sha256": "7935c28a3e059389b4b87ebda7086810446c99d8f75d2105ead39517f76637c3"
+      }
+    },
+    {
+      "path": "packages/polaris-dossier/src/url-run-artifacts.ts",
+      "before": {
+        "path": "packages/polaris-dossier/src/url-run-artifacts.ts",
+        "state": "??",
+        "bytes": 95750,
+        "sha256": "7b77e727b2a038aac244044f48ed8b1a91733f2ff974dded54b8dbb20ab4f431"
+      },
+      "after": {
+        "path": "packages/polaris-dossier/src/url-run-artifacts.ts",
+        "state": "??",
+        "bytes": 96127,
+        "sha256": "e1d8fa555eed0ce7ed73883bab53c6d2878911b70fe9acf09d3a8de14e982a26"
+      }
+    }
+  ],
+  "changesSince178": [
+    {
+      "path": "packages/polaris-dossier/src/polaris.ts",
+      "before": {
+        "path": "packages/polaris-dossier/src/polaris.ts",
+        "state": " M",
+        "bytes": 95627,
+        "sha256": "3c9dffe8f03d2e95c42944f1abe829625c57dc25d2029ac54c9a8a80abf27cea"
+      },
+      "after": {
+        "path": "packages/polaris-dossier/src/polaris.ts",
+        "state": " M",
+        "bytes": 95705,
+        "sha256": "aff4fc895d8a033559e810d5544be633b3a4d3692946c1363c977b801ef02310"
+      }
+    },
+    {
+      "path": "packages/polaris-dossier/src/render.ts",
+      "before": {
+        "path": "packages/polaris-dossier/src/render.ts",
+        "state": " M",
+        "bytes": 89265,
+        "sha256": "2cdb272b677394ce536814d50129f542e3dd25051af7bc1c04e0bad909668b35"
+      },
+      "after": {
+        "path": "packages/polaris-dossier/src/render.ts",
+        "state": " M",
+        "bytes": 89467,
+        "sha256": "bf1b920366ecda9810e3b8683386f3552c4b46d08b51da1d5554035c478c022a"
+      }
+    },
+    {
+      "path": "packages/polaris-dossier/src/review.ts",
+      "before": {
+        "path": "packages/polaris-dossier/src/review.ts",
+        "state": " M",
+        "bytes": 37532,
+        "sha256": "4dda76441921af696ca788ea609def93d9ebc6bcfb99f9dec53f10abd860c55b"
+      },
+      "after": {
+        "path": "packages/polaris-dossier/src/review.ts",
+        "state": " M",
+        "bytes": 37742,
+        "sha256": "d0da45fdce00f6af46d6ee2675b985d74c79447b024282016776a078650e0317"
+      }
+    },
+    {
+      "path": "packages/polaris-dossier/src/url-run-artifacts.test.ts",
+      "before": {
+        "path": "packages/polaris-dossier/src/url-run-artifacts.test.ts",
+        "state": "??",
+        "bytes": 81266,
+        "sha256": "7935c28a3e059389b4b87ebda7086810446c99d8f75d2105ead39517f76637c3"
+      },
+      "after": {
+        "path": "packages/polaris-dossier/src/url-run-artifacts.test.ts",
+        "state": "??",
+        "bytes": 82368,
+        "sha256": "6316219d4f33317b47a9cda9d16242b932aef815cf14e1177913fcff00b5a299"
+      }
+    }
+  ],
+  "changesSince179": [
+    {
+      "path": "packages/polaris-dossier/src/polaris.ts",
+      "before": {
+        "path": "packages/polaris-dossier/src/polaris.ts",
+        "state": " M",
+        "bytes": 95705,
+        "sha256": "aff4fc895d8a033559e810d5544be633b3a4d3692946c1363c977b801ef02310"
+      },
+      "after": {
+        "path": "packages/polaris-dossier/src/polaris.ts",
+        "state": " M",
+        "bytes": 95773,
+        "sha256": "420e64d2fd5f5b1959d4510822e556b192d6f101ca7fb16434ea45b8f9292dd2"
+      }
+    }
+  ],
+  "changesSince180": [
+    {
+      "path": "packages/polaris-dossier/src/url-design-product.test.ts",
+      "before": {
+        "path": "packages/polaris-dossier/src/url-design-product.test.ts",
+        "state": "??",
+        "bytes": 32795,
+        "sha256": "e24651c20b5e5f178145d1a925e889a6d511563ca1dd8f58bb76d67775c3943c"
+      },
+      "after": {
+        "path": "packages/polaris-dossier/src/url-design-product.test.ts",
+        "state": "??",
+        "bytes": 33761,
+        "sha256": "e76ff6317f10ac1eb054e24f4709316b4cfd903df9f09ba15ed23f8f61572a19"
+      }
+    },
+    {
+      "path": "packages/polaris-dossier/src/url-design-product.ts",
+      "before": {
+        "path": "packages/polaris-dossier/src/url-design-product.ts",
+        "state": "??",
+        "bytes": 15735,
+        "sha256": "9d2785a5597448cac0011a40c6a06275fb12cc6e5ced2d6774a00d604ecba8fe"
+      },
+      "after": {
+        "path": "packages/polaris-dossier/src/url-design-product.ts",
+        "state": "??",
+        "bytes": 16016,
+        "sha256": "047bf03460397a9f2a9a2f6413a500d18b77b5f8b909bf2eae34923b34a4f57b"
+      }
+    },
+    {
+      "path": "packages/polaris-dossier/src/url-design-view.ts",
+      "before": {
+        "path": "packages/polaris-dossier/src/url-design-view.ts",
+        "state": "??",
+        "bytes": 18359,
+        "sha256": "e279e4466b1685ad9a9ebf6e339dee139be24e05bcbe07279f97c018b0b6d43d"
+      },
+      "after": {
+        "path": "packages/polaris-dossier/src/url-design-view.ts",
+        "state": "??",
+        "bytes": 18411,
+        "sha256": "9809e429498ef94e702065b42d7277c7544812a6efa68e6885a102ee05406545"
+      }
+    }
+  ],
+  "changesSince181": [
+    {
+      "path": "packages/polaris-dossier/src/url-launch-history.test.ts",
+      "before": {
+        "path": "packages/polaris-dossier/src/url-launch-history.test.ts",
+        "state": "??",
+        "bytes": 58089,
+        "sha256": "2a3dcf4f9d930733f8ba9cc29c27b67e73247bdaa38a6124796b74eb9c532aba"
+      },
+      "after": {
+        "path": "packages/polaris-dossier/src/url-launch-history.test.ts",
+        "state": "??",
+        "bytes": 59027,
+        "sha256": "eeda2bbcf388e20c54fefa8bcc4dcbd1c45e7d5b1bb018f35daa870ac11faea8"
+      }
+    },
+    {
+      "path": "packages/polaris-dossier/src/url-run-sessions.ts",
+      "before": {
+        "path": "packages/polaris-dossier/src/url-run-sessions.ts",
+        "state": "??",
+        "bytes": 27666,
+        "sha256": "4f748968b1f2bfa916fb7fc72e545fefa10b8753ec861f9c2713e68744d7be90"
+      },
+      "after": {
+        "path": "packages/polaris-dossier/src/url-run-sessions.ts",
+        "state": "??",
+        "bytes": 27775,
+        "sha256": "46565d725fa627810f60c689eb81d5b1bbe3adb19b8009157381871d284eac63"
+      }
+    },
+    {
+      "path": "packages/polaris-dossier/src/url-session-audit.ts",
+      "before": {
+        "path": "packages/polaris-dossier/src/url-session-audit.ts",
+        "state": "??",
+        "bytes": 64594,
+        "sha256": "b8c6e76b98b8436a06093f9924651fc84a106164a10ffe37022cc7d3997d60b4"
+      },
+      "after": {
+        "path": "packages/polaris-dossier/src/url-session-audit.ts",
+        "state": "??",
+        "bytes": 65044,
+        "sha256": "6d634c07d7e6dfb116ae656afa48ff8f70a9157f460c2b62225bf9c1ced42949"
+      }
+    }
+  ],
+  "changesSince182": [
+    {
+      "path": "packages/polaris-dossier/src/polaris.ts",
+      "before": {
+        "path": "packages/polaris-dossier/src/polaris.ts",
+        "state": " M",
+        "bytes": 95773,
+        "sha256": "420e64d2fd5f5b1959d4510822e556b192d6f101ca7fb16434ea45b8f9292dd2"
+      },
+      "after": {
+        "path": "packages/polaris-dossier/src/polaris.ts",
+        "state": " M",
+        "bytes": 96223,
+        "sha256": "487efb8f4fd14ef5abfb77ec49dbef1cfb6b658ff14f96e38a2e0bb8a587685b"
+      }
+    },
+    {
+      "path": "packages/polaris-dossier/src/policy-snapshot.ts",
+      "before": {
+        "path": "packages/polaris-dossier/src/policy-snapshot.ts",
+        "state": " M",
+        "bytes": 8592,
+        "sha256": "01400619cea15e9362cb4ea9009abcb034225e0ddcef16e31f9835ac752f2e33"
+      },
+      "after": {
+        "path": "packages/polaris-dossier/src/policy-snapshot.ts",
+        "state": " M",
+        "bytes": 10099,
+        "sha256": "e227b6f3450d238ad42a26141b5bd5b6d70d6fadfa26648ffafe006b072ae97c"
+      }
+    },
+    {
+      "path": "packages/polaris-dossier/src/start-gates.test.ts",
+      "before": {
+        "path": "packages/polaris-dossier/src/start-gates.test.ts",
+        "state": " M",
+        "bytes": 66178,
+        "sha256": "2d59f16590115e9d7f2c53f8496e455a8a95fc9c8a12e0448119d5a0be7db958"
+      },
+      "after": {
+        "path": "packages/polaris-dossier/src/start-gates.test.ts",
+        "state": " M",
+        "bytes": 66676,
+        "sha256": "eef97c31bd0960be41fec4d49b987d078b55d11c17d44cb5a3a8d8c4531e70d2"
+      }
+    }
+  ],
+  "changesSince183": [
+    {
+      "path": "packages/polaris-dossier/src/url-design-product.test.ts",
+      "before": {
+        "path": "packages/polaris-dossier/src/url-design-product.test.ts",
+        "state": "??",
+        "bytes": 33761,
+        "sha256": "e76ff6317f10ac1eb054e24f4709316b4cfd903df9f09ba15ed23f8f61572a19"
+      },
+      "after": {
+        "path": "packages/polaris-dossier/src/url-design-product.test.ts",
+        "state": "??",
+        "bytes": 34680,
+        "sha256": "25749a9396a6b0b875da03fb2cdc97d71cce1f5acec3b7e5e9f7ee5b1f23b735"
+      }
+    },
+    {
+      "path": "packages/polaris-dossier/src/url-design-product.ts",
+      "before": {
+        "path": "packages/polaris-dossier/src/url-design-product.ts",
+        "state": "??",
+        "bytes": 16016,
+        "sha256": "047bf03460397a9f2a9a2f6413a500d18b77b5f8b909bf2eae34923b34a4f57b"
+      },
+      "after": {
+        "path": "packages/polaris-dossier/src/url-design-product.ts",
+        "state": "??",
+        "bytes": 16435,
+        "sha256": "a9ea9f2bfaf9c5a345b66fa04f38c1004c770b8d73a400394eaffbf5c0ac8126"
+      }
+    },
+    {
+      "path": "packages/polaris-dossier/src/url-run-sessions.ts",
+      "before": {
+        "path": "packages/polaris-dossier/src/url-run-sessions.ts",
+        "state": "??",
+        "bytes": 27775,
+        "sha256": "46565d725fa627810f60c689eb81d5b1bbe3adb19b8009157381871d284eac63"
+      },
+      "after": {
+        "path": "packages/polaris-dossier/src/url-run-sessions.ts",
+        "state": "??",
+        "bytes": 28040,
+        "sha256": "bececf26a3f794e16c676096940e88507dda9d85ab5d625ceba04e01fe295718"
+      }
+    }
+  ],
+  "changesSince184": [
+    {
+      "path": "packages/polaris-dossier/src/session-controller.test.ts",
+      "before": {
+        "path": "packages/polaris-dossier/src/session-controller.test.ts",
+        "state": "??",
+        "bytes": 11416,
+        "sha256": "9dd717ed3285b24bd5555647b498baf58347b0232c2b2c00c7a11340d7d9d1a2"
+      },
+      "after": {
+        "path": "packages/polaris-dossier/src/session-controller.test.ts",
+        "state": "??",
+        "bytes": 12048,
+        "sha256": "42490a4182cdc7595f6f2c52fb61eb7106746ccae103d728821ec9d90d2940ff"
+      }
+    },
+    {
+      "path": "packages/polaris-dossier/src/session-controller.ts",
+      "before": {
+        "path": "packages/polaris-dossier/src/session-controller.ts",
+        "state": "??",
+        "bytes": 7827,
+        "sha256": "056b14197fb2f64a64b514edd2dca7d24f07f034a4287e615464183fcde19d9d"
+      },
+      "after": {
+        "path": "packages/polaris-dossier/src/session-controller.ts",
+        "state": "??",
+        "bytes": 7894,
+        "sha256": "227d6fd0fdb94a74ddf1bd82e32ad72d65175229d39f4b331c7ae6964c764a22"
+      }
+    },
+    {
+      "path": "packages/polaris-dossier/src/session-egress-policy.ts",
+      "before": {
+        "path": "packages/polaris-dossier/src/session-egress-policy.ts",
+        "state": "??",
+        "bytes": 37521,
+        "sha256": "ef4b565736609db7c8bb6f70549723d5eeab9876a6cc58ff42fc95d26455047c"
+      },
+      "after": {
+        "path": "packages/polaris-dossier/src/session-egress-policy.ts",
+        "state": "??",
+        "bytes": 37691,
+        "sha256": "59620c4f04f6955fd9cb0eba0aef8e7ce4cab784a34261492a80a4a1bfc730f1"
+      }
+    },
+    {
+      "path": "packages/polaris-dossier/src/session-host.ts",
+      "before": {
+        "path": "packages/polaris-dossier/src/session-host.ts",
+        "state": "??",
+        "bytes": 9242,
+        "sha256": "5a2c12fa184d624469633d3d931387a6115b3e1cb532f3181426c7f1ed2db23e"
+      },
+      "after": {
+        "path": "packages/polaris-dossier/src/session-host.ts",
+        "state": "??",
+        "bytes": 9274,
+        "sha256": "c75aa96fec3140801481e36278a0bcde24fabc3365eea3849ea968e9969c6bd6"
+      }
+    },
+    {
+      "path": "packages/polaris-dossier/src/session-tools.test.ts",
+      "before": {
+        "path": "packages/polaris-dossier/src/session-tools.test.ts",
+        "state": "??",
+        "bytes": 48179,
+        "sha256": "2c628cb0cf095a36d6df4a9fa85c8b3e4da2a3718a5f51a08c9c4301f7267bb1"
+      },
+      "after": {
+        "path": "packages/polaris-dossier/src/session-tools.test.ts",
+        "state": "??",
+        "bytes": 49629,
+        "sha256": "5a8a25decbf63ae893e9f91315370496e737cc2dfed36038ad2be7fc28456252"
+      }
+    },
+    {
+      "path": "packages/polaris-dossier/src/session-tools.ts",
+      "before": {
+        "path": "packages/polaris-dossier/src/session-tools.ts",
+        "state": "??",
+        "bytes": 33877,
+        "sha256": "80127b8af87410edc17426c07d28129220dce4796aec5f5781c0fcbbe247a2b1"
+      },
+      "after": {
+        "path": "packages/polaris-dossier/src/session-tools.ts",
+        "state": "??",
+        "bytes": 34237,
+        "sha256": "6fb41bfc35ca906b5f96f9a728783396e81281c165351b634e0a4799db79d0f0"
+      }
+    },
+    {
+      "path": "packages/polaris-dossier/src/url-run-sessions.ts",
+      "before": {
+        "path": "packages/polaris-dossier/src/url-run-sessions.ts",
+        "state": "??",
+        "bytes": 28040,
+        "sha256": "bececf26a3f794e16c676096940e88507dda9d85ab5d625ceba04e01fe295718"
+      },
+      "after": {
+        "path": "packages/polaris-dossier/src/url-run-sessions.ts",
+        "state": "??",
+        "bytes": 28417,
+        "sha256": "29ec6bade47e6388ff3b820bb4ba30a2c43ce370556e81d63c661259f55e26b9"
+      }
+    }
+  ],
+  "changesSince185": [
+    {
+      "path": "packages/polaris-dossier/src/url-launch-history.test.ts",
+      "before": {
+        "path": "packages/polaris-dossier/src/url-launch-history.test.ts",
+        "state": "??",
+        "bytes": 59027,
+        "sha256": "eeda2bbcf388e20c54fefa8bcc4dcbd1c45e7d5b1bb018f35daa870ac11faea8"
+      },
+      "after": {
+        "path": "packages/polaris-dossier/src/url-launch-history.test.ts",
+        "state": "??",
+        "bytes": 59206,
+        "sha256": "dc29d6d3d6d224741ae695a3ccf81bde0058f23c86b3f7d829cb87fb3ba88592"
+      }
+    },
+    {
+      "path": "packages/polaris-dossier/src/url-run-artifacts.ts",
+      "before": {
+        "path": "packages/polaris-dossier/src/url-run-artifacts.ts",
+        "state": "??",
+        "bytes": 96127,
+        "sha256": "e1d8fa555eed0ce7ed73883bab53c6d2878911b70fe9acf09d3a8de14e982a26"
+      },
+      "after": {
+        "path": "packages/polaris-dossier/src/url-run-artifacts.ts",
+        "state": "??",
+        "bytes": 96313,
+        "sha256": "b7730bc49f0f34829eb38d91a4f278bbe396c02b370e0d5ff45bd03ebc09783e"
+      }
+    },
+    {
+      "path": "packages/polaris-dossier/src/url-session-audit.ts",
+      "before": {
+        "path": "packages/polaris-dossier/src/url-session-audit.ts",
+        "state": "??",
+        "bytes": 65044,
+        "sha256": "6d634c07d7e6dfb116ae656afa48ff8f70a9157f460c2b62225bf9c1ced42949"
+      },
+      "after": {
+        "path": "packages/polaris-dossier/src/url-session-audit.ts",
+        "state": "??",
+        "bytes": 65274,
+        "sha256": "66ef708754f19d0ca4533361bf809aa4470156c8ae9ed76f8afde6c42fc1a2b6"
+      }
+    }
+  ]
+}
