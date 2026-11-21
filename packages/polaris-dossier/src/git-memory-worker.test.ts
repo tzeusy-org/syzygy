@@ -118,6 +118,30 @@ describe('bounded same-realm acquisition worker', () => {
 /** This oracle observes positive regular-file write syscalls continuously. A
  * final directory census cannot see the deliberately written-and-deleted body. */
 describe('independent worker effects and resource falsifiers', () => {
+  it('keeps fixture writes in entry order when unrelated trace records are incomplete', () => {
+    const destination = '/fixture/destination', marker = '/fixture/admitted';
+    const bodyWrite = '102 write(8</fixture/destination/body>, ""..., 3';
+    const auditWrite = '104 write(9</fixture/admitted>, ""..., 4) = 4';
+    expect(completeTrace([
+      '101 openat(AT_FDCWD, ""..., O_RDONLY <unfinished ...>',
+      bodyWrite + ' <unfinished ...>',
+      '103 write(1<pipe:[3]>, ""..., 8 <unfinished ...>',
+      auditWrite,
+      '102 <... write resumed>) = 3',
+    ], destination, marker)).toEqual([bodyWrite + ') = 3', auditWrite]);
+  });
+
+  it('rejects uncertain fixture write results and destinations', () => {
+    const destination = '/fixture/destination', marker = '/fixture/admitted';
+    for (const trace of [
+      ['102 write(8</fixture/destination/body>, ""..., 3 <unfinished ...>'],
+      ['102 write(9</fixture/admitted>, ""..., 4) = ?'],
+      ['102 write(8, ""..., 3) = 3'],
+      ['102 <... write resumed>) = 3'],
+      ['102 write(8</fixture/destination/body>, ""..., 3 <unfinished ...>', '102 <... pwritev resumed>) = 3'],
+    ]) expect(() => completeTrace(trace, destination, marker)).toThrow(/write syscall trace/u);
+  });
+
   it('detects a transient pre-admission source write that a final census misses', () => {
     const root = tempDir('memory-worker-effects-'), source = fs.readFileSync(SOURCE, 'utf8');
     const injection = `if (!decoded.ok) throw new Error();
@@ -150,9 +174,10 @@ const prefix=Buffer.concat([header,...entries]),pack=Buffer.concat([prefix,creat
 const policyBytes=Buffer.from(${JSON.stringify(Buffer.from(policyFixture().bytes).toString('base64'))},'base64');
 const result=await runGitMemoryWorker({program:${JSON.stringify(trusted)},parent:${JSON.stringify(parent)},pack,objectFormat:'sha1',selectedCommit:commit.oid,shallow:[commit.oid],policyBytes,visibility:'private',binding:{run:'own-effects',acquisition:'own-capture',sourceBinding:'a'.repeat(64),policySha256:createHash('sha256').update(policyBytes).digest('hex'),originPolicySha256:'e'.repeat(64)},current:()=>true,audit:event=>{if(event.stage==='whole-closure-admitted')fs.writeFileSync(${JSON.stringify(marker)},'ACK\\n',{mode:0o600});}});
 process.stdout.write(JSON.stringify(result));`);
-      const result = JSON.parse(execFileSync('/usr/bin/strace', ['-f', '-qq', '-yy', '-s', '0', '-e', 'trace=write,writev,pwrite64,pwritev,openat,unlink,unlinkat', '-o', trace, process.execPath, driver],
+      const result = JSON.parse(execFileSync('/usr/bin/strace', ['-f', '-qq', '-y', '-s', '0', '-e', 'trace=write,writev,pwrite64,pwritev,openat,unlink,unlinkat', '-o', trace, process.execPath, driver],
         { env: { PATH: '/usr/bin:/bin', LANG: 'C', LC_ALL: 'C' }, encoding: 'utf8', timeout: 10_000, maxBuffer: 65_536 }));
-      const lines = completeTrace(fs.readFileSync(trace, 'utf8').split('\n')), markerAt = lines.findIndex(line => line.includes(`<${marker}>`) && /\bwrite\(/u.test(line) && /\)\s*=\s*[1-9][0-9]*$/u.test(line));
+      const lines = completeTrace(fs.readFileSync(trace, 'utf8').split('\n'), parent, marker);
+      const markerAt = lines.findIndex(line => line.includes(`<${marker}>`) && /\bwrite\(/u.test(line) && /\)\s*=\s*[1-9][0-9]*$/u.test(line));
       const writes = lines.map((line, index) => ({ line, index })).filter(({ line }) => line.includes(`<${parent}/`) && /\b(?:write|writev|pwrite64|pwritev)\(/u.test(line) && /\)\s*=\s*[1-9][0-9]*$/u.test(line));
       const early = writes.filter(({ index }) => markerAt < 0 || index < markerAt);
       captures.push({ name: name!, earlyWrites: early.length, bodyWrites: writes.length, transientPresent: fs.existsSync(path.join(parent, 'pre-admission-transient')), ok: result.ok,
@@ -210,15 +235,42 @@ process.stdout.write(JSON.stringify(result));`);
   }, 10_000);
 });
 
-function completeTrace(lines: readonly string[]): string[] {
-  const pending = new Map<string, { text: string; index: number }>(); const complete: string[] = [];
+function completeTrace(lines: readonly string[], parent: string, marker: string): string[] {
+  type Write = { syscall: string; text: string; index: number; scope: 'fixture' | 'outside' | 'unidentified' };
+  const pending = new Map<string, Write>();
+  const complete: string[] = [];
+  const incomplete = (): never => { throw new Error('Incomplete write syscall trace for the fixture.'); };
+  const finish = (write: Write, suffix = ''): void => {
+    if (write.scope === 'outside') return;
+    const line = write.text + suffix;
+    const result = /\)\s*=\s*(-?\d+)(?:\s|$)/u.exec(line)?.[1];
+    if (result === undefined || (write.scope === 'unidentified' && Number(result) > 0)) incomplete();
+    complete[write.index] = line;
+  };
   for (const [index, line] of lines.entries()) {
-    const pid = /^([0-9]+)\s+/u.exec(line)?.[1];
-    if (pid && line.includes('<unfinished ...>')) { pending.set(pid, { text: line.replace(' <unfinished ...>', ''), index }); continue; }
-    if (pid && /<\.\.\. [a-z0-9_]+ resumed>/u.test(line)) {
-      const first = pending.get(pid); if (!first) throw new Error('Incomplete syscall trace.');
-      complete[first.index] = first.text + line.replace(/^[0-9]+\s+<\.\.\. [a-z0-9_]+ resumed>/u, ''); pending.delete(pid);
-    } else complete[index] = line;
+    const resumed = /^(\d+)\s+<\.\.\. (write|writev|pwrite64|pwritev) resumed>/u.exec(line);
+    if (resumed) {
+      const first = pending.get(resumed[1]!);
+      if (!first || first.syscall !== resumed[2]) return incomplete();
+      pending.delete(resumed[1]!);
+      finish(first, line.slice(resumed[0].length));
+      continue;
+    }
+    const start = /^(\d+)\s+(write|writev|pwrite64|pwritev)\(/u.exec(line);
+    if (!start) continue;
+    const tid = start[1]!, syscall = start[2]!;
+    const descriptor = /^-?\d+<([^>]+)>,/u.exec(line.slice(start[0].length))?.[1];
+    const scope = descriptor === marker || descriptor?.startsWith(parent + '/') ? 'fixture'
+      : descriptor && /^(?:\/|[a-z0-9_:-]+:\[)/iu.test(descriptor) ? 'outside' : 'unidentified';
+    const previous = pending.get(tid);
+    if (previous && previous.scope !== 'outside') return incomplete();
+    pending.delete(tid);
+    const unfinished = ' <unfinished ...>';
+    if (line.endsWith(unfinished)) pending.set(tid, { syscall, text: line.slice(0, -unfinished.length), index, scope });
+    else finish({ syscall, text: line, index, scope });
   }
-  if (pending.size) throw new Error('Incomplete syscall trace.'); return complete.filter(line => line !== undefined);
+  // Missing completion for a decoded pipe or another file does not establish
+  // anything about destination writes. Unknown and fixture writes still fail.
+  if ([...pending.values()].some(write => write.scope !== 'outside')) incomplete();
+  return complete.filter(line => line !== undefined);
 }
