@@ -202,6 +202,7 @@ Usage:
 import argparse
 import multiprocessing
 import contextlib
+from datetime import date as iso_date
 import errno
 import hashlib
 import io
@@ -431,8 +432,18 @@ ADOPTION_HTML = re.compile(r"<!--|^ {0,3}<[!/?A-Za-z]")
 DISPOSITION_PREFIX = re.compile(
     r"^(?:(?:the )?owner )?(?:veto(?:ed|es)?|revert(?:ed|s)?|retir(?:e[ds]?|ement))"
     r"(?: of)?\s+(?:(?:the )?(?:agent )?adoption\s+)?", re.I)
-DISPOSITION_LINK = re.compile(r"^\[([^\]]+)\]\(([^)]+)\)")
-DISPOSITION_PATH = re.compile(r"^https://github\.com/tzeusy-org/syzygy/blob/[0-9a-f]{7,40}/(.+)$")
+DISPOSITION_LINK = re.compile(r"^\[[^\]]+\]\(([^)]+)\)")
+DISPOSITION_PATH = re.compile(r"^https://github\.com/tzeusy-org/syzygy/blob/([0-9a-f]{40})/(.+)$")
+
+
+def valid_adoption_date(value):
+    if not re.fullmatch(r"\d{4}-\d{2}-\d{2}", value):
+        return False
+    try:
+        iso_date.fromisoformat(value)
+        return True
+    except ValueError:
+        return False
 
 
 def adoption_table_rows(root):
@@ -508,15 +519,20 @@ def recorded_disposition(root, identity, commit, tag, paths):
             continue
         action = DISPOSITION_PREFIX.match(changed)
         if (not adopted or not action or not re.fullmatch(r"A-[1-9][0-9]*", row_id)
-                or not re.fullmatch(r"\d{4}-\d{2}-\d{2}", date)
+                or not valid_adoption_date(date)
                 or not re.fullmatch(r"`[0-9a-f]{7,40}`", oid)
-                or oid == f"`{commit}`" or not why or not revert):
+                or oid == f"`{commit}`" or not why):
+            continue
+        row_commit = oid[1:-1]
+        if revert not in (f"`git revert {row_commit}`", f"`git revert -m 1 {row_commit}`"):
             continue
         target = changed[action.end():].lstrip("(")
         link = DISPOSITION_LINK.match(target)
         if link:
-            path = DISPOSITION_PATH.fullmatch(link.group(2))
-            token = path.group(1) if path else link.group(1)
+            snapshot = DISPOSITION_PATH.fullmatch(link.group(1))
+            if snapshot and snapshot.group(1) == commit and snapshot.group(2) in paths:
+                return row_id
+            continue
         else:
             token = target.split(maxsplit=1)[0].rstrip(".,;:!?)]").strip("`") if target else ""
         if token in subjects:
@@ -898,7 +914,7 @@ def url_source_binding(root):
         identity, date, commit, changed, reason, revert, tag = rows[0]
         landed = re.fullmatch(r"`([0-9a-f]{40})`", commit)
         if (not re.fullmatch(r"A-[1-9][0-9]*", identity)
-                or not re.fullmatch(r"\d{4}-\d{2}-\d{2}", date)
+                or not valid_adoption_date(date)
                 or not landed or tag != f"`{URL_SOURCE_TAG}`" or not reason):
             records.append("URL declared-source: malformed adoption identity, date, commit, reason or tag")
         if landed:
@@ -2219,7 +2235,7 @@ def check_routes(root, pop, report):
             findings.append(f"`{OPENSPEC_README}` does not route the declared-source amendment to `{AGENT_ADOPTIONS}`")
         if AGENT_ADOPTIONS not in status:
             findings.append(f"`{STATUS}` cites no declared-source agent-adoption ledger")
-    url_amendment, _records, _subjects = url_source_binding(root)
+    url_amendment, url_records, url_subjects = url_source_binding(root)
     if url_amendment is not None:
         examined += 2
         if not any(Path(AGENT_ADOPTIONS).name in line and URL_SOURCE_TAG in line
@@ -2228,6 +2244,24 @@ def check_routes(root, pop, report):
                             f"to `{AGENT_ADOPTIONS}` and its version tag")
         if AGENT_ADOPTIONS not in status or URL_SOURCE_HOME not in status:
             findings.append(f"`{STATUS}` does not route URL declared-source v2.1 and its adoption")
+    else:
+        url_rows = url_source_rows(root)
+        disposition = url_source_disposition(root, url_rows) or (
+            declared_source_disposition(root) if url_rows else None)
+        if disposition is not None or url_records or url_subjects:
+            examined += 2
+            predecessor = DECLARED_SOURCE_TAG if amendment is not None else "Unknown"
+            for file, passages in ((OPENSPEC_README, rows.get(URL_SOURCE_CHANGE, [])),
+                                   (STATUS, [p for p in status.split("\n\n") if URL_SOURCE_HOME in p])):
+                matches = (passage for passage in passages
+                           if Path(AGENT_ADOPTIONS).name in passage and predecessor in passage)
+                if not any((disposition is not None
+                            and re.search(rf"(?<![\w-]){disposition}(?![\w-])", passage)
+                            and re.search(r"\b(?:veto|revert|retir)\w*", passage, re.I))
+                           or (disposition is None and "Unknown" in passage)
+                           for passage in matches):
+                    findings.append(f"`{file}` does not disclose inactive URL declared-source v2.1, "
+                                    f"its effective predecessor ({predecessor}) and recorded disposition or Unknown")
     figures = STATUS_FIGURE.findall(status)
     examined += 1
     reqs = pop.get("POLARIS", {})
@@ -2943,6 +2977,9 @@ def url_source_cases(tmp, base, witnesses, failures):
         ("retire-exact-spec", f"Retire `{URL_SOURCE_SPEC}`", "Test only", False, True),
         ("retire-exact-link", f"Retirement of [policy](https://github.com/tzeusy-org/syzygy/blob/{oid}/{policy})",
          "Test only", False, True),
+        ("external-link-label", "Revert [A-999](https://example.org/unrelated)", "Test only", False, False),
+        ("wrong-snapshot-oid", f"Retire [policy](https://github.com/tzeusy-org/syzygy/blob/{'c' * 40}/{policy})",
+         "Test only", False, False),
         ("unrelated-target", "Revert A-123 after consulting A-999", "Test only", False, False),
         ("row-prefix", "Veto A-9999", "Test only", False, False),
         ("why-only", "Update an index", "Veto A-999 was discussed", False, False),
@@ -2964,6 +3001,17 @@ def url_source_cases(tmp, base, witnesses, failures):
         record(f"url-source-{name}", AGENT_ADOPTIONS, row, reversal,
                "restore the predecessor" if withdrawn else "preserve current adoption",
                found, held, True)
+    valid_reversal = ("| A-1000 | 2026-11-22 | `8a468bc` | Veto A-999 | Test only | "
+                      "`git revert 8a468bc` | — |\n")
+    for name, old, bad in (("malformed-veto-date", "2026-11-22", "2026-99-99"),
+                            ("malformed-veto-revert", "git revert 8a468bc", "git revert 8a468bd")):
+        invalid = valid_reversal.replace(old, bad, 1)
+        ledger.write_text(pending + row + invalid)
+        pop, found = census(tree)
+        held = (not found and pop["POLARIS"] == current
+                and url_source_disposition(tree, url_source_rows(tree)) is None)
+        record(f"url-source-{name}", AGENT_ADOPTIONS, old, bad, "preserve current adoption",
+               found, held, True)
     base_veto = ("| A-1000 | 2026-11-22 | `8a468bc` | Veto A-4 | Test only | "
                  "`git revert 8a468bc` | — |\n")
     ledger.write_text(pending + row + base_veto)
@@ -2982,6 +3030,38 @@ def url_source_cases(tmp, base, witnesses, failures):
         return f"\n```md\n{ADOPTION_TABLE_HEADER}\n{ADOPTION_TABLE_DIVIDER}\n{rows}```\n"
 
     url_veto = base_veto.replace("Veto A-4", "Veto A-999")
+    ledger.write_text(pending + row + url_veto)
+    route_pop, _ = census(tree)
+    prior_status = read_text(tree, STATUS)
+    prior_readme = read_text(tree, OPENSPEC_README)
+    assert prior_status is not None and prior_readme is not None
+    figure = (f"{len(predecessor)} requirements and "
+              f"{sum(len(requirement['scenarios']) for requirement in predecessor.values())} scenarios in the effective composition")
+    (tree / STATUS).write_text(STATUS_FIGURE.sub(figure, prior_status))
+    stale = Report()
+    check_routes(tree, route_pop, stale)
+    stale_routes = [line for line in stale.lines if "does not disclose inactive URL declared-source v2.1" in line]
+    old_figure = STATUS_FIGURE.search(prior_status)
+    assert old_figure is not None
+    record("url-source-inactive-stale-routes", STATUS, old_figure.group(0), figure,
+           "R5 requires both routes to disclose the effective predecessor and veto",
+           stale_routes, len(stale_routes) == 2, False)
+    disclosure = (f"URL declared-source v2.1 reverted by [A-1000]({AGENT_ADOPTIONS}). "
+                  f"Effective predecessor `{DECLARED_SOURCE_TAG}`.")
+    (tree / STATUS).write_text(STATUS_FIGURE.sub(figure, prior_status)
+                               + f"\n\n[{URL_SOURCE_CHANGE}]({URL_SOURCE_HOME}). {disclosure}\n")
+    (tree / OPENSPEC_README).write_text("\n".join(
+        f"| [`{URL_SOURCE_CHANGE}`](changes/{URL_SOURCE_CHANGE}) | {disclosure} |"
+        if line.startswith(f"| [`{URL_SOURCE_CHANGE}`]") else line
+        for line in prior_readme.split("\n")))
+    disclosed = Report()
+    check_routes(tree, route_pop, disclosed)
+    disclosed_routes = [line for line in disclosed.lines if "does not disclose inactive URL declared-source v2.1" in line]
+    record("url-source-inactive-recorded-routes", STATUS, figure, disclosure,
+           "R5 accepts both updated routes", disclosed_routes, not disclosed_routes, True)
+    (tree / STATUS).write_text(prior_status)
+    (tree / OPENSPEC_README).write_text(prior_readme)
+
     base_row = next(line for line in pending.splitlines(keepends=True)
                     if line.startswith(f"| {DECLARED_SOURCE_ROW} |"))
     base_retirement = base_veto.replace("A-1000", "A-1001")
