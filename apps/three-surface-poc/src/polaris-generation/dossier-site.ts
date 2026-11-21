@@ -4,10 +4,10 @@ import {
   DOSSIER_FORMAT, OWNER_TOPICS, PAGE_SINK_CONTRACT, checkDraftQuotes, diagramToMermaid, isDossierPagePath, parseDossierManifest, readerCost, reviewVerdict, scanDossierPage, sourceTextById, withoutReviewStatusRegion,
   generationSpanRange, validateGenerationSources,
   type DossierDraft, type DossierManifest, type DraftBlock, type DraftDiagram, type DraftElement, type DraftParagraph, type EpistemicMarking, type GenerationSource, type LocalPageItem,
-  type LocalBlock, type LocalRenderInput, type LocalSegment, type OwnerTopic, type QuoteFinding, type WithheldNote,
+  type LocalBlock, type LocalDerivedFact, type LocalDerivedStructure, type LocalRenderInput, type LocalSegment, type OwnerTopic, type QuoteFinding, type WithheldNote,
 } from '@syzygy/polaris-generation-core/live';
 import { sha256 } from '@syzygy/support';
-import { READABLE_SPACING, renderDiagramSvg } from './diagram-layout.js';
+import { READABLE_SPACING, layoutDiagram, renderDiagramSvg } from './diagram-layout.js';
 import { LOCAL_CSS, LOCAL_MACHINE_VIEW, anchorAttributes, anchorDetails, disclosureList, regionMarkup } from './dossier-render-local.js';
 import { DRAFT_PREVIEW_CSP_META, DRAFT_PREVIEW_CSS, MARKING_LABEL, escapeHtml as escape } from './draft-preview.js';
 import { assertInertSvg } from './svg-inert.js';
@@ -193,7 +193,7 @@ export const DOSSIER_THEME_CSS = ':root{--void:#262624;--panel:#30302e;--panel-r
   + '.contents li[data-hue]>a::before{content:"";display:inline-block;width:.6em;height:.6em;border-radius:50%;background:var(--accent);margin-right:.45em;vertical-align:.05em}'
   + '.pole-map,.review-report>summary{font-family:var(--font-serif)}.legend-line{border-top-color:var(--muted)}'
   + 'li.card{background:var(--accent-tint);border-top:3px solid var(--accent)}th{background:color-mix(in srgb,var(--accent) 12%,var(--panel))}ol.steps>li::before{border-color:var(--accent);background:var(--accent-tint)}'
-  + '.run-sentence{margin:.5rem 0;font-size:.9rem;color:var(--muted)}.reading-legend{border:1px solid var(--line);border-radius:10px;padding:.5rem 1rem;margin:0 0 1.5rem;font-size:.85rem;color:var(--muted)}.reading-legend ul{margin:.25rem 0;padding-left:1.2rem}.view-switch{margin:0}.legend-sample{font:600 .9em var(--font-mono)}';
+  + '.run-sentence{margin:.5rem 0;font-size:.9rem;color:var(--muted)}.reading-legend{border:1px solid var(--line);border-radius:10px;padding:.5rem 1rem;margin:0 0 1.5rem;font-size:.85rem;color:var(--muted)}.reading-legend ul{margin:.25rem 0;padding-left:1.2rem}.view-switch{margin:0}.legend-sample{font:600 .9em var(--font-mono)}.diagram-tally{margin:.25rem 0 0;font:.8rem var(--font-mono);color:var(--muted)}';
 
 /** What an operator-agent run adds to every page: its notice, the run disclosure, attributes on `main` and the review-status region. */
 interface PageChrome { readonly notice: string; readonly disclosure: (path: string) => string; readonly mainAttributes: string; readonly region: string }
@@ -260,7 +260,13 @@ export function renderDossierSite(input: DossierSiteInput & { readonly local?: L
     ?? Object.fromEntries([...draft.sections, ...draft.deepDives].map(item => [item.id, item.disposition.kind === 'produced' ? owned(item.disposition.assetIds) : []]));
   for (const list of Object.values(topics)) if (list.some(topic => !(OWNER_TOPICS as readonly string[]).includes(topic))) throw new DossierRenderError('unknown-topic');
   const sectionIds = new Set(draft.sections.map(section => section.id));
-  for (const item of [...draft.diagrams, ...draft.deepDives]) if (!sectionIds.has(item.sectionId)) throw new DossierRenderError('unknown-section');
+  // A diagram's page (syzygy-3efd.18): the section `sectionId` names, or, with an operator-agent `home`, a deep dive or the overview.
+  const diveIds = new Set(draft.deepDives.map(dive => dive.id));
+  for (const item of draft.deepDives) if (!sectionIds.has(item.sectionId)) throw new DossierRenderError('unknown-section');
+  for (const d of draft.diagrams) {
+    if (d.home !== undefined && local === undefined) throw new DossierRenderError('unknown-section');
+    if (d.home?.kind === 'deep-dive' ? !diveIds.has(d.home.id) : d.home === undefined && !sectionIds.has(d.sectionId)) throw new DossierRenderError('unknown-section');
+  }
 
   const deepDives = withheld ? [] : draft.deepDives.filter(dive => dive.disposition.kind === 'produced');
   const deepPaths = new Map(deepDives.map(dive => [dive.id, deepDivePath(dive.id)]));
@@ -274,6 +280,8 @@ export function renderDossierSite(input: DossierSiteInput & { readonly local?: L
   // Colour (syzygy-pdja.14, owner review of the Redis run): an operator-agent page gives each Pole, and each diagram outside a Pole page,
   // one of six hues in turn. A hue only tells parts apart; it carries no claim, so nothing a reader needs rests on it.
   const hueAttr = (hue: number): string => local === undefined ? '' : ` data-hue="${hue}"`;
+  // Every operator-agent figure drawn from the draft says it is curated (RFC7-28, version 2.3); the provider mode's bytes are pinned.
+  const curated = local === undefined ? '' : ' data-visual-provenance="curated"';
   if (poleSpec !== undefined) {
     const homes = draft.sections.map(section => poles.filter(pole => pole.sections.includes(section.id)).length);
     if (poles.length === 0 || homes.some(count => count !== 1) || poles.some(pole => pole.sections.length === 0 || pole.sections.some(id => !draft.sections.some(section => section.id === id)))
@@ -497,7 +505,7 @@ export function renderDossierSite(input: DossierSiteInput & { readonly local?: L
           // A withheld excerpt's range is the agent's, never checked against the blob, and says so (REQ-polaris-generation-034).
           const unverified = `<figcaption><span class="code-language">${escape(e.language)}</span> <span class="code-path">${escape(e.path)}, lines ${e.startLine}–${e.endLine} as the agent gave them, unverified</span></figcaption>`;
           return claim('figure', id, 'unknown', `${unverified}<p><span class="quote-withheld" data-unknown-reason="excluded-content">[code excerpt withheld: the file it cites is excluded by screening]</span> ${mark(from, 'unknown')}</p>`,
-            ` class="code-excerpt"${attrs} data-unknown-reason="excluded-content"`, 'excluded-content');
+            ` class="code-excerpt"${attrs}${curated} data-unknown-reason="excluded-content"`, 'excluded-content');
         }
         for (const part of located) {
           const redaction = sources.get(part.sourceId)?.redaction;
@@ -506,7 +514,7 @@ export function renderDossierSite(input: DossierSiteInput & { readonly local?: L
         }
         // Entity-encoded text, so a cited `<`, `&` or `</pre>` is shown, never parsed (v1.3 note 1).
         const lines = located.map(part => `<code class="verified-quote" data-quote-source="${escape(part.sourceId)}" data-quote-start="${part.start}" data-quote-end="${part.end}">${escape(part.text).replace(/\r/gu, '&#13;')}</code>`).join('');
-        return claim('figure', id, 'observed', `${caption}<pre>${lines}</pre><p class="code-anchor">${mark(from, 'observed')} ${located.map(part => anchorLink(from, part)).join(' ')}</p>`, ` class="code-excerpt"${attrs}`);
+        return claim('figure', id, 'observed', `${caption}<pre>${lines}</pre><p class="code-anchor">${mark(from, 'observed')} ${located.map(part => anchorLink(from, part)).join(' ')}</p>`, ` class="code-excerpt"${attrs}${curated}`);
       }
     }
   };
@@ -542,12 +550,14 @@ export function renderDossierSite(input: DossierSiteInput & { readonly local?: L
     } catch {
       return notice(from, d.id, { kind: 'unresolved', reason: 'diagram could not be rendered inertly', references: [...new Set([...d.nodes, ...d.edges].flatMap(element => element.sourceIds))] });
     }
-    const legend = '<ul class="diagram-legend" aria-label="Line styles"><li><span class="legend-line observed" aria-hidden="true"></span>Solid: observed</li><li><span class="legend-line inferred" aria-hidden="true"></span>Dashed: inferred</li><li><span class="legend-line unknown" aria-hidden="true"></span>Dotted: unknown (label ends “?”)</li></ul>';
-    return `<figure${from.startsWith('poles/') ? '' : hueAttr(index % HUES + 1)}><figcaption>${escape(d.title)}</figcaption><p class="diagram-relationship"><span class="eyebrow">${escape(d.kind)}</span> ${escape(d.relationship)}</p><div class="diagram-scroll">${svg}</div>${legend}<details><summary>Read every component and relationship</summary><ul>${nodeList}</ul><ol>${edgeList}</ol><details class="diagram-source"><summary>Declarative source (Mermaid)</summary><pre>${escape(diagramToMermaid(d))}</pre></details></details></figure>`;
+    // The provider mode keeps its fixed legend (its bytes are pinned); an operator-agent figure legends only the styles it draws, with a
+    // tally of its boxes and arrows by marking (syzygy-3efd.17): no figure element is observed there, so "Solid: observed" was false.
+    const legend = local === undefined ? FIXED_DIAGRAM_LEGEND : figureLegend([...d.nodes, ...d.edges].map(element => element.epistemic), d.nodes.length, d.edges.length);
+    return `<figure${from.startsWith('poles/') ? '' : hueAttr(index % HUES + 1)}${curated}><figcaption>${escape(d.title)}</figcaption><p class="diagram-relationship"><span class="eyebrow">${escape(d.kind)}</span> ${escape(d.relationship)}</p><div class="diagram-scroll">${svg}</div>${legend}<details><summary>Read every component and relationship</summary><ul>${nodeList}</ul><ol>${edgeList}</ol><details class="diagram-source"><summary>Declarative source (Mermaid)</summary><pre>${escape(diagramToMermaid(d))}</pre></details></details></figure>`;
   };
   const topicAttr = (id: string): string => ` data-topics="${escape((topics[id] ?? []).join(' '))}"`;
   const localPages = local?.pages ?? [];
-  const reserved = new Set(['index.html', 'contents.html', 'glossary.html', 'dossier.json', 'size-report.json', 'size-report.html', APPENDIX, LOCAL_MACHINE_VIEW, ...deepPaths.values(), ...sourcePaths.values(),
+  const reserved = new Set(['index.html', 'contents.html', 'glossary.html', 'dossier.json', 'size-report.json', 'size-report.html', APPENDIX, LOCAL_MACHINE_VIEW, DERIVED_SITE_FILE, ...deepPaths.values(), ...sourcePaths.values(),
     ...poles.flatMap(pole => pole.path === null ? [] : [pole.path])]);
   for (const localPage of localPages) {
     if (!isDossierPagePath(localPage.path) || localPage.path.includes('/') || !localPage.path.endsWith('.html') || reserved.has(localPage.path)) throw new DossierRenderError('page-path-collision');
@@ -603,6 +613,8 @@ export function renderDossierSite(input: DossierSiteInput & { readonly local?: L
 
   // --- entry page
   const from = 'index.html';
+  // The structure Syzygy derived from the pinned tree (version 2.3), in its own region at the end of the landing page's main content.
+  const derivedRegion = local?.derivedStructure === undefined ? '' : renderDerivedRegion(local.derivedStructure);
   // The open questions: on the overview for a provider run; for an operator-agent run, on the appendix (v1.5), drawn there.
   const openQuestionClaims = (at: string): string => withheld ? '' : draft.unresolved.map((item, index) => claim('aside', `unresolved/${index + 1}`, 'unknown',
     `<strong>${escape(item.question)}</strong>: ${escape(item.reason)} ${marking('unknown')} <span class="asset-references">(${assetReferences(at, item.references)})</span>`)).join('');
@@ -615,7 +627,8 @@ export function renderDossierSite(input: DossierSiteInput & { readonly local?: L
     const head = `<span class="eyebrow">${String(index + 1).padStart(2, '0')}</span><h2>${escape(section.title)}</h2>`;
     if (view.deferredSections.has(section.id)) return `<section id="section-${escape(section.id)}" data-reading-level="1" data-topics="">${head}${notGenerated(section.id, 'section')}</section>`;
     if (section.disposition.kind !== 'produced') return `<section id="section-${escape(section.id)}" data-reading-level="1"${topicAttr(section.id)}>${head}${notice(from, section.id, section.disposition)}</section>`;
-    const figures = draft.diagrams.map((d, i) => d.sectionId === section.id ? diagram(from, d, i) : '').join('');
+    // A figure homed on a deep dive that has no page of its own (not produced, or the draft layer withheld) shows in the dive's section.
+    const figures = draft.diagrams.map((d, i) => (d.home === undefined || (d.home.kind === 'deep-dive' && !deepPaths.has(d.home.id))) && d.sectionId === section.id ? diagram(from, d, i) : '').join('');
     const dives = draft.deepDives.filter(dive => dive.sectionId === section.id).map(dive => dive.disposition.kind === 'produced'
       ? `<li><a href="${escape(href(from, deepPaths.get(dive.id)!))}">Explore: ${escape(dive.title)}</a></li>` : `<li>${notice(from, dive.id, dive.disposition)}</li>`).join('');
     // An operator-agent section leads with its diagrams (syzygy-mea.10.4); the provider mode's bytes are pinned, so its figures follow.
@@ -639,12 +652,16 @@ export function renderDossierSite(input: DossierSiteInput & { readonly local?: L
     const policy = claim('aside', 'draft-layer/policy-state', 'unknown',
       `<strong>The draft layer is Unknown (unconsented-source-or-provider).</strong> No part of the agent's draft is shown: under the owner's reading of RFC7-20 an operator-computed draft renders only while every condition holds, and ${why.length === 1 ? 'one does' : `${why.length} do`} not. ${marking('unknown')}<ul class="item-details">${why.map(reason => `<li>${escape(reason)}</li>`).join('')}</ul> The source pages Syzygy read and screened, and how this run was made, remain readable.`,
       ' class="policy-state" data-unknown-reason="unconsented-source-or-provider"', 'unconsented-source-or-provider');
-    add(from, 0, 'Overview', `<header data-reading-level="0"><span class="eyebrow">Polaris · Draft layer Unknown</span><h1>${escape(title)}</h1>${policy}</header>`);
+    add(from, 0, 'Overview', `<header data-reading-level="0"><span class="eyebrow">Polaris · Draft layer Unknown</span><h1>${escape(title)}</h1>${policy}</header>${derivedRegion}`);
   } else {
     termsShown.clear();
     const introduction = view.drafted ? paragraph(from, draft.introduction, 'p') : '';
     const missingList = view.notGenerated.length === 0 ? '' : `<section id="not-generated" data-reading-level="1" data-topics=""><h2>Not generated</h2>${view.notGenerated.map(item => notGenerated(item.id, item.kind)).join('')}</section>`;
-    add(from, 0, 'Overview', `<header data-reading-level="0"><span class="eyebrow">Polaris · Editorial draft</span><h1>${escape(draft.title)}</h1>${banner}${introduction}${unresolved}</header>${sections}${poleMap}${missingList}`);
+    // Figures whose home is the overview lead the first page, after its introduction and before its sections, in a region of their own
+    // at reading level 1 with no topics; none where the page shows no part of the draft (syzygy-3efd.18).
+    const overviewDrawn = view.drafted ? draft.diagrams.map((d, i) => d.home?.kind === 'overview' ? diagram(from, d, i) : '').join('') : '';
+    const overviewFigures = overviewDrawn === '' ? '' : `<section id="overview-figures" data-reading-level="1" data-topics="">${overviewDrawn}</section>`;
+    add(from, 0, 'Overview', `<header data-reading-level="0"><span class="eyebrow">Polaris · Editorial draft</span><h1>${escape(draft.title)}</h1>${banner}${introduction}${unresolved}</header>${overviewFigures}${sections}${poleMap}${missingList}${derivedRegion}`);
   }
 
   // --- Pole pages, in the map's order, after the landing page: each draws its sections; the why section stays on the landing page,
@@ -666,7 +683,9 @@ export function renderDossierSite(input: DossierSiteInput & { readonly local?: L
     const path = deepPaths.get(dive.id)!;
     termsShown.clear();
     const parent = draft.sections.find(section => section.id === dive.sectionId)!;
-    add(path, 1, dive.title, `<section id="deep-dive-${escape(dive.id)}" data-reading-level="2"${topicAttr(dive.id)}><span class="eyebrow">Deep dive · <a href="${escape(sectionHref(path, parent.id))}">${escape(parent.title)}</a></span><h1>${escape(dive.title)}</h1>${bannerFor(`run-stopped/dive/${dive.id}`)}${dive.paragraphs.map(b => block(path, b)).join('')}</section>`);
+    // A deep dive leads with the figures whose home it is, as a section does (syzygy-3efd.18).
+    const diveFigures = draft.diagrams.map((d, i) => d.home?.kind === 'deep-dive' && d.home.id === dive.id ? diagram(path, d, i) : '').join('');
+    add(path, 1, dive.title, `<section id="deep-dive-${escape(dive.id)}" data-reading-level="2"${topicAttr(dive.id)}><span class="eyebrow">Deep dive · <a href="${escape(sectionHref(path, parent.id))}">${escape(parent.title)}</a></span><h1>${escape(dive.title)}</h1>${bannerFor(`run-stopped/dive/${dive.id}`)}${diveFigures}${dive.paragraphs.map(b => block(path, b)).join('')}</section>`);
   }
 
   // --- contents
@@ -784,6 +803,8 @@ export function renderDossierSite(input: DossierSiteInput & { readonly local?: L
     + `<table><thead><tr><th>Link depth</th><th>Pages</th><th>Bytes</th><th>Words</th></tr></thead><tbody>${cost.perPageDepth.map(row => `<tr><td>${row.depth}</td><td>${row.pages}</td><td>${row.bytes}</td><td>${row.words}</td></tr>`).join('')}</tbody></table>`
     + `<table><thead><tr><th>Page</th><th>Depth</th><th>Bytes</th><th>Words</th></tr></thead><tbody>${cost.pages.map(row => `<tr><td><a href="${escape(row.path)}">${escape(pageNames.get(row.path) ?? row.path)}</a></td><td>${row.depth}</td><td>${row.bytes}</td><td>${Object.values(row.wordsByReadingLevel).reduce((n, w) => n + w, 0) + row.unlabelledWords}</td></tr>`).join('')}</tbody></table>`
     + `<p>Measured from the rendered bytes by the evaluation harness's scanner. This page and size-report.json are not counted${local === undefined ? '' : ', and each page is measured without its review-status region and its glossary entries'}.</p></section>`, chrome));
+  // The kept record, published byte for byte; none where no derived record is in force for this render.
+  if (local?.derivedStructure?.state === 'derived') files.set(DERIVED_SITE_FILE, local.derivedStructure.recordText);
   if (local !== undefined) {
     // The machine channel of the same render: every claim it rendered with its label and page, the non-normative blocks, every
     // quotation with its anchor, the source anchors, the disclosure, the draft layer and the review-status region.
@@ -794,6 +815,7 @@ export function renderDossierSite(input: DossierSiteInput & { readonly local?: L
       disclosure: local.disclosure,
       ...(local.effectiveRun === undefined ? {} : { effectiveRun: local.effectiveRun }),
       reviewStatus: local.reviewStatus,
+      ...(local.derivedStructure === undefined ? {} : { derivedStructure: derivedMachine(local.derivedStructure) }),
       pages: [...pages.map(p => p.path), 'size-report.html'],
       claims: claimsByPage,
       nonNormative,
@@ -806,6 +828,16 @@ export function renderDossierSite(input: DossierSiteInput & { readonly local?: L
     }, null, 2)}\n`);
   }
   return { files, manifest };
+}
+
+/** The laid-out width of an operator-agent figure, as `renderLocalDossier` draws it: what the `syzygy` CLI injects into the dossier
+ * check step, which measures figure fit with it (syzygy-3efd.20). The layout reads identities and edges only, never labels, so a
+ * withheld element's replaced label at render changes no width, and check's width depends on the draft's bytes alone. It throws for a
+ * figure the site would not draw (one that is not inert), whose fit is then Unknown. */
+export function figureLaidOutWidth(figure: Parameters<typeof renderDiagramSvg>[0]): number {
+  // A figure the site cannot draw inertly renders a notice, not a drawing, so it has no width to fit: throwing makes its fit Unknown.
+  assertInertSvg(renderDiagramSvg(figure, 0, escape, READABLE_SPACING));
+  return layoutDiagram(figure.nodes, figure.edges, READABLE_SPACING).width;
 }
 
 /** An operator-agent run's site: what the `syzygy` CLI injects into the dossier render step. */
@@ -845,6 +877,21 @@ const HUES = 6;
 /** The appendix page (dossier spec v1.5). */
 const APPENDIX = 'appendix.html';
 
+/** The provider mode's figure legend, whatever the figure draws. */
+const FIXED_DIAGRAM_LEGEND = '<ul class="diagram-legend" aria-label="Line styles"><li><span class="legend-line observed" aria-hidden="true"></span>Solid: observed</li><li><span class="legend-line inferred" aria-hidden="true"></span>Dashed: inferred</li><li><span class="legend-line unknown" aria-hidden="true"></span>Dotted: unknown (label ends “?”)</li></ul>';
+const LEGEND_ENTRIES: readonly (readonly [EpistemicMarking, string])[] = [
+  ['observed', 'Solid: observed'], ['inferred', 'Dashed: inferred'], ['unknown', 'Dotted: unknown (label ends “?”)'],
+];
+const counted = (n: number, one: string, many: string): string => `${n} ${n === 1 ? one : many}`;
+
+/** An operator-agent figure's legend: an entry for each line style the figure draws, in a fixed order, and never one it does not (RFC7-34
+ * legends a used encoding); then one line counting its boxes and arrows by marking. Every count is Syzygy's, from the draft's own marks. */
+export function figureLegend(markings: readonly EpistemicMarking[], boxes: number, arrows: number, how = 'as marked'): string {
+  const count = (m: EpistemicMarking): number => markings.filter(x => x === m).length;
+  const entries = LEGEND_ENTRIES.filter(([m]) => count(m) > 0).map(([m, words]) => `<li><span class="legend-line ${m}" aria-hidden="true"></span>${words}</li>`).join('');
+  return `<ul class="diagram-legend" aria-label="Line styles">${entries}</ul><p class="diagram-tally">${counted(boxes, 'box', 'boxes')} and ${counted(arrows, 'arrow', 'arrows')}, ${how}: ${count('observed')} observed, ${count('inferred')} inferred, ${count('unknown')} unknown.</p>`;
+}
+
 /** The legend every narrative page carries once (REQ-polaris-generation-034, v1.5), with the control that opens the evidence view. The
  * control is a fragment link and a CSS rule, so it works with scripts off. */
 const READING_LEGEND = '<aside class="reading-legend" aria-label="How to read this page"><p class="view-switch"><a href="#evidence-view">Show the evidence view</a> · <a href="#content">Back to the reading view</a></p><span id="evidence-view"></span><ul>'
@@ -865,4 +912,59 @@ function evidenceNote(block: LocalBlock, kind: 'anchored' | 'labeled'): string {
   if (block.withheldSpans !== undefined) parts.push(`${block.withheldSpans} withheld span(s)`);
   parts.push('editorial draft');
   return `Evidence: ${parts.join('; ')}.`;
+}
+
+/** Where a rendered site publishes the derived-structure record (version 2.3). */
+const DERIVED_SITE_FILE = 'derived-structure.json';
+/** How many top-level directories the derived figure draws; the list holds every listed one. */
+const DERIVED_DRAWN = 12;
+
+const unknownWords: Readonly<Record<'missing-evidence' | 'source-uncaptured-or-unreachable', string>> = {
+  'missing-evidence': 'no derived record was kept when this draft revision was checked',
+  'source-uncaptured-or-unreachable': 'the pinned tree could not be listed',
+};
+
+/** The derived-structure region (REQ-polaris-generation-034 version 2.3): the figure Syzygy computes from the kept record, never from the
+ * draft, with its caption, note, drawing, legend and tally, and every fact in a collapsed list; or, with no record in force, the heading
+ * and the Unknown sentence alone. Every value here is Syzygy's; every path is escaped text. */
+export function renderDerivedRegion(derived: LocalDerivedStructure): string {
+  const head = '<section id="derived-structure" data-reading-level="1" data-topics=""><h2>Derived by Syzygy: top-level directories</h2>';
+  if (derived.state !== 'derived') {
+    return `${head}<p class="derived-unknown" data-epistemic="unknown" data-unknown-reason="${derived.unknownReason}"><span class="not-established">Not established.</span> The top-level directories of the tree at revision ${escape(derived.revision)} are Unknown at this render: ${unknownWords[derived.unknownReason]}.</p></section>`;
+  }
+  const record = `sha256:${derived.sha256}`;
+  const files = (n: number): string => counted(n, 'file', 'files');
+  const units = derived.facts.filter(fact => fact.fact === 'top-level-unit');
+  const drawnUnits = [...units].sort((a, b) => (b.count ?? 0) - (a.count ?? 0) || (a.path < b.path ? -1 : a.path > b.path ? 1 : 0)).slice(0, DERIVED_DRAWN);
+  const drawnIds = new Set(drawnUnits.map(fact => fact.id));
+  const root = derived.facts.find(fact => fact.fact === 'tree-root')!;
+  const arrows = derived.facts.filter(fact => fact.fact === 'contains' && fact.to !== null && drawnIds.has(fact.to));
+  const nodes = [root, ...drawnUnits].map(fact => ({ id: fact.id, label: fact.fact === 'tree-root' ? 'Repository root' : `${fact.path}/ (${files(fact.count ?? 0)})`, epistemic: fact.epistemic }));
+  const edges = arrows.map(fact => ({ id: fact.id, from: root.id, to: fact.to!, label: 'contains', epistemic: fact.epistemic }));
+  const svg = renderDiagramSvg({ nodes, edges }, 'derived', escape, READABLE_SPACING, id => ` data-derived-id="${escape(id)}"`);
+  assertInertSvg(svg);
+  const notDrawn = units.length - drawnUnits.length;
+  const notes = `${notDrawn === 0 ? '' : `<p class="derived-more">${notDrawn === 1 ? '1 more top-level directory is' : `${notDrawn} more top-level directories are`} listed below and not drawn.</p>`}`
+    + `${derived.unitsNotListed === 0 ? '' : `<p class="derived-more">${derived.unitsNotListed === 1 ? '1 more top-level directory is' : `${derived.unitsNotListed} more top-level directories are`} counted and not listed.</p>`}`;
+  const legend = figureLegend([...nodes, ...edges].map(element => element.epistemic), nodes.length, edges.length, 'derived by Syzygy');
+  const said = (fact: LocalDerivedFact): string => fact.fact === 'tree-root' ? `Repository root: ${files(fact.count ?? 0)} at the root.`
+    : fact.fact === 'top-level-unit' ? `${fact.path}/: ${files(fact.count ?? 0)}.` : `Repository root contains ${fact.path}/.`;
+  const evidence = (fact: LocalDerivedFact): string => fact.epistemic === 'observed'
+    ? `Evidence: label Observed; derived by Syzygy by rule ${fact.rule} version ${fact.ruleVersion}; source path ${fact.path}; record ${record}; current for revision ${derived.recordRevision}.`
+    : `Evidence: label Unknown; reason ${fact.unknownReason}; derived by Syzygy by rule ${fact.rule} version ${fact.ruleVersion}; source path ${fact.path}; record ${record}.`;
+  const entries = derived.facts.map(fact => `<li data-derived-id="${escape(fact.id)}" data-derived-fact="${fact.fact}" data-epistemic="${fact.epistemic}"${fact.unknownReason === null ? '' : ` data-unknown-reason="${fact.unknownReason}"`}`
+    + ` data-derived-rule="${escape(fact.rule)}" data-derived-rule-version="${fact.ruleVersion}" data-derived-path="${escape(fact.path)}" data-derived-record="${record}" data-derived-revision="${escape(derived.recordRevision)}">`
+    + `${escape(said(fact))} <span class="derived-mark">Derived by Syzygy</span><span class="visually-hidden ev"> ${escape(evidence(fact))}</span></li>`).join('');
+  return `${head}<figure class="derived-figure" data-visual-provenance="computed" data-derived-record="${record}"><figcaption>Derived by Syzygy from the pinned tree</figcaption>`
+    + `<p class="derived-note">Derived by Syzygy from the paths and modes of the tree at revision ${escape(derived.recordRevision)}, listed at ${escape(derived.capturedAt)}, by rule top-level-unit version 1. No file body, size or object id was read. Current for that revision only.</p>`
+    + `<div class="diagram-scroll">${svg}</div>${notes}${legend}<details><summary>Read every derived fact</summary><ul class="derived-facts">${entries}</ul></details></figure></section>`;
+}
+
+/** The machine view's `derivedStructure` member: beside and outside `reviewStatus`. */
+function derivedMachine(derived: LocalDerivedStructure): unknown {
+  if (derived.state !== 'derived') return { file: null, sha256: null, revision: derived.revision, state: derived.state, currencyPolicy: null, facts: [] };
+  return {
+    file: DERIVED_SITE_FILE, sha256: derived.sha256, revision: derived.revision, state: derived.state, currencyPolicy: derived.currencyPolicy,
+    facts: derived.facts.map(fact => ({ id: fact.id, fact: fact.fact, epistemic: fact.epistemic, unknownReason: fact.unknownReason, rule: fact.rule, ruleVersion: fact.ruleVersion, path: fact.path })),
+  };
 }

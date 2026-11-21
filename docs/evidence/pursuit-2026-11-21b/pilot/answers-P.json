@@ -1,0 +1,126 @@
+{
+ "answers": [
+  {
+   "id": "Q01",
+   "answer": "Redis is an in-memory data structure server written in C, shipped as one server binary. It keeps typed values in RAM under string keys, executes commands against them on a single main thread, and can optionally persist and replicate the result. Which application problems it is meant to solve: not stated.",
+   "where": "Introduction"
+  },
+  {
+   "id": "Q02",
+   "answer": "RDB is a point-in-time snapshot of the dataset written by a forked child process. AOF is a log of write commands, kept as a set of files described by a manifest: one BASE snapshot, one or more INCR files, and HISTORY files awaiting deletion. How the two differ in durability: not stated. Which one is used to restore data at startup when both are enabled: not stated; the only related fact is that a preload-file option loads a backup, plain RDB or AOF at startup in place of the normal data files.",
+   "where": "Persistence"
+  },
+  {
+   "id": "Q03",
+   "answer": "The background I/O service is a set of worker threads in src/bio.c that take slow work off the main thread, which must never block. The work it takes is closing files, AOF fsync and lazy freeing of memory. What ordering guarantee it gives: not stated.",
+   "where": "Threads; Conventions and traps"
+  },
+  {
+   "id": "Q04",
+   "answer": "Modules extend the server through a public API declared in src/redismodule.h, which modules compile against; JSON, Search, Time Series and the probabilistic types are delivered this way from separate repositories, and vector sets is an in-tree module. Modules are loaded during startup, after cluster initialisation and before listeners open, via loadmodule lines in the configuration (the full configuration file with those lines is generated, not hand-edited). Whether a module can be loaded into an already running server by command: not stated. A module value's encoding is owned by the module, and modules can use key metadata slots 1 to 7; how a module's data type is saved and restored: not stated.",
+   "where": "Startup; Types and encodings; Objects and the keyspace; Scripting and modules; Building and running"
+  },
+  {
+   "id": "Q05",
+   "answer": "The main thread runs one event loop from src/ae.c, with one OS backend compiled in (epoll, kqueue, evport or select). Before each poll, beforeSleep() handles pending TLS and decompressed data, cluster and slot-migration housekeeping, blocked clients, a fast expire cycle, the AOF flush, pending client writes, hand-off to I/O threads and asynchronous client frees, then releases the modules GIL. After the poll, afterSleep() reacquires the GIL first; when a connection is readable, readQueryFromClient() in src/networking.c reads into the client's query buffer, the input is parsed into commands, executed, and replies go to the client's output buffer to be written from beforeSleep() or by an I/O thread. A timer, serverCron(), runs at a rate set by hz for client timeouts, database maintenance (expiry, rehashing, defrag), replication cron and persistence triggers. Connection types are initialised at startup, but how the connection layer itself is structured: not stated.",
+   "where": "Startup; The event loop; Life of a command"
+  },
+  {
+   "id": "Q06",
+   "answer": "Each database holds two kvstore instances, keys and expires; a kvstore is an array of dicts. In cluster mode there is one dict per hash slot (16,384); otherwise there is one dict. A Fenwick tree over the dict sizes makes finding the Nth key and the next non-empty slot cheap. A third structure, subexpires, tracks hashes that have fields with a TTL, keyed by their earliest field expiry. The key name is embedded directly after the stored object's struct (a small string value may be embedded too), and the key's expiry time sits in metadata slot 0 placed before the struct.",
+   "where": "Objects and the keyspace"
+  },
+  {
+   "id": "Q07",
+   "answer": "A value object carries a type, an encoding, a reference count and a pointer. The type is the kind of value (string, list, set, sorted set, hash, stream, array, module); the encoding is the in-memory representation used for it, for example listpack or hash table for a set. Both exist because a type usually has a compact encoding for small values and a general one for larger ones. The switch is governed by thresholds set in redis.conf; for module types the encoding is owned by the module. Beyond those thresholds, who decides the encoding of a given value: not stated.",
+   "where": "Objects and the keyspace; Types and encodings"
+  },
+  {
+   "id": "Q08",
+   "answer": "src/cluster.c holds the parts common to any clustering implementation: slot calculation, redirection decisions and generic CLUSTER subcommands. src/cluster_legacy.c is the standard gossip-based cluster bus: node table, failure detection, failover and config epochs; atomic slot migration and per-slot statistics are separate files. A key's slot is the CRC16 of the key, or of the text inside {...} if present, masked to 14 bits. The redirection check runs in the command gate after command lookup, arity, authentication and ACL checks, and is driven partly by the command's key specs. The rule by which a node decides to serve or redirect: not stated.",
+   "where": "Cluster; Life of a command; Where to make common changes"
+  },
+  {
+   "id": "Q09",
+   "answer": "When the connection becomes readable, readQueryFromClient() reads the bytes into the client's query buffer, and processInputBuffer() parses RESP or inline input into pending command objects, parsing ahead so key lookups for pipelined commands can be prefetched. processCommand() then applies checks in a fixed order, any of which can stop the command: command lookup and arity, authentication, ACL, cluster redirection, client-memory eviction, maxmemory eviction, disk-error and min-replicas write refusal, read-only replica, pub/sub context, stale replica, loading, busy script and client pause; inside MULTI the command is queued instead of executed. call() runs the handler, records stats and slowlog, and propagates the write to the AOF and to replicas. The AOF is flushed before the event loop's next poll, with fsync done by a background thread, and the reply is written from the same pre-poll step or by an I/O thread.",
+   "where": "Life of a command; The event loop; Threads"
+  },
+  {
+   "id": "Q10",
+   "answer": "The append-only log is a set of files described by a manifest: one BASE file (a snapshot), one or more INCR files, and HISTORY files awaiting deletion. A rewrite is done by a forked child and produces a new BASE. The manifest is what records which files make up the log. The individual steps of the rewrite and how files are switched while writes continue: not stated.",
+   "where": "Persistence; Threads"
+  },
+  {
+   "id": "Q11",
+   "answer": "A replica first attempts a partial resynchronization (PSYNC) served from the primary's replication backlog; if that fails, a full sync is done by transferring an RDB. The exact criteria the master uses to accept or refuse the partial resync: not stated. In a full sync using the RDB channel, the replica opens a second connection so the forked child streams the RDB directly while the main connection carries live writes, which the replica buffers until loading finishes; this moves buffering pressure from primary to replica. What happens step by step in the partial case beyond using the backlog: not stated.",
+   "where": "Replication"
+  },
+  {
+   "id": "Q12",
+   "answer": "Key lookups perform lazy expiry, so an expired key is removed when it is accessed. A fast expire cycle runs before each event-loop poll, and a slower cycle runs from the periodic timer's database maintenance. Hashes with expiring fields are registered in a per-database structure keyed by earliest field expiry so the active cycle can find them. How the background cycle limits its own cost: not stated beyond long work being done incrementally. How removal is kept consistent on replicas and in the append-only file: not stated specifically; the general rule is that any write must be propagated exactly as it should replay.",
+   "where": "The event loop; Objects and the keyspace; Things that are newer and less obvious; Conventions and traps"
+  },
+  {
+   "id": "Q13",
+   "answer": "Not stated. The only supported fact is that a maxmemory eviction step runs in the command gate before a command executes; why victims are chosen by approximation, how the approximation works and what it costs are not stated.",
+   "where": "not stated"
+  },
+  {
+   "id": "Q14",
+   "answer": "The main thread must never block, so long work is done incrementally; rehashing is carried out in the periodic database maintenance step. Why resizing is discouraged while a background save or rewrite child runs: not stated. What each choice costs: not stated.",
+   "where": "The event loop; Conventions and traps"
+  },
+  {
+   "id": "Q15",
+   "answer": "Command execution is single threaded; the reason for that design is not stated. Extra threads are used only for work that does not touch the dataset concurrently: optional I/O threads that read, parse and write for the clients they own and hand complete commands to the main thread; background workers for closing files, AOF fsync and lazy freeing; fork children for RDB snapshots and AOF rewrites; and module threads coordinated by a global lock. I/O threads are off by default, pub/sub, monitor, blocked, tracking and close-pending clients must stay on the main thread, client fields are duplicated to avoid sharing, a client must never be freed from an I/O thread, and the main thread can pause I/O threads to touch their state. Replication stream compression is only effective with more than one I/O thread.",
+   "where": "Threads; Replication; Conventions and traps"
+  },
+  {
+   "id": "Q16",
+   "answer": "The append-only file is flushed in the step that runs before each event-loop poll, and fsync is done by a background thread. What trade-off the sync policies offer: not stated. Why the log is written before the loop sleeps rather than inside each command: not stated. What durability is given up during a background save with the mitigation turned on: not stated.",
+   "where": "The event loop; Threads"
+  },
+  {
+   "id": "Q17",
+   "answer": "Each command is described by a JSON file under src/commands/, from which utils/generate-command-code.py generates src/commands.def; src/commands.c includes that generated file, which is how the table gets compiled into the server. The handler is a function of the form void nameCommand(client *c) in the relevant source file. Besides the handler, the description must give the command's name, arity, flags (such as write, denyoom, fast) and key specs. Those flags drive the command gate, ACLs and cluster routing, so they are part of correctness.",
+   "where": "Where to make common changes; What this copy does not contain"
+  },
+  {
+   "id": "Q18",
+   "answer": "A new parameter is one line in the static_configs[] table in src/config.c, written with a create*Config macro, plus a field in struct redisServer and a documented entry in redis.conf. Flags such as IMMUTABLE_CONFIG and MODIFIABLE_CONFIG decide whether CONFIG SET can change it at runtime. What determines its default: not stated. Whether and how changing it triggers an action: not stated.",
+   "where": "Where to make common changes"
+  },
+  {
+   "id": "Q19",
+   "answer": "Each type has a compact encoding for small values and a general one, and the thresholds between them are settings in redis.conf, so tuning means changing those settings. The type's own file (t_hash.c, t_set.c, t_zset.c, t_list.c) implements its encodings. For hashes, automatic conversion to the template encoding is controlled by hash-min-template-entries, which is 0 (off) by default and one-way. The exact function where the conversion decision is made, and the names of the other thresholds: not stated.",
+   "where": "Types and encodings; Things that are newer and less obvious"
+  },
+  {
+   "id": "Q20",
+   "answer": "(a) The event library in src/ae.c compiles in one backend from ae_epoll.c, ae_kqueue.c, ae_evport.c or ae_select.c, so a new readiness API would be another backend file of that kind. (b) Connection types are initialised during startup, before the configuration is parsed; where a new transport is defined or registered: not stated.",
+   "where": "The event loop; Startup"
+  },
+  {
+   "id": "Q21",
+   "answer": "A maxmemory eviction step runs in the command gate before a command executes, preceded by a separate client-memory eviction step, and a command's denyoom flag is among the flags that drive that gate. Exactly what happens when the limit is reached, in which situations writes fail, and which memory or instances are not subject to the limit: not stated.",
+   "where": "Life of a command; Where to make common changes"
+  },
+  {
+   "id": "Q22",
+   "answer": "The command gate includes a disk-error write refusal, so writes can be refused when there is a disk error. What specifically happens when a background snapshot fails, when the append-only file is damaged at startup, or when the data file cannot be loaded: not stated.",
+   "where": "Life of a command"
+  },
+  {
+   "id": "Q23",
+   "answer": "Which consistency and durability guarantees replication does not give: not stated. A min-replicas write refusal exists in the command gate, so an operator can have writes refused under a min-replicas condition; its exact semantics are not stated. The command gate also has read-only replica and stale replica checks, so a replica can refuse commands on those grounds; the precise behaviour toward clients when the master link is down: not stated.",
+   "where": "Life of a command; Replication"
+  },
+  {
+   "id": "Q24",
+   "answer": "In cluster mode the keyspace uses one dict per hash slot (16,384), commands pass a cluster redirection check, and scripts calling into the server have cluster checks applied. What restrictions cluster mode places on commands and databases compared with standalone: not stated. What happens to availability when some hash slots have no serving node: not stated.",
+   "where": "Objects and the keyspace; Life of a command; Scripting and modules"
+  }
+ ],
+ "minutes_felt": 2,
+ "notes": "Locating things was easy because the text is short and organised by subsystem. Answering was hard for rationale and limits questions: the text names where mechanisms live but rarely says why, what they cost, or how failure cases behave."
+}

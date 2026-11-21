@@ -192,8 +192,9 @@ describe('URL metadata admission and whole-worker composition', () => {
     fs.chmodSync(key, 0o644);
     await expect(urlMemoryAcquisitionFixtureProfile('git@own.example.invalid:fixture/repository.git', home, { knownHostsPath, authentication: { kind: 'identity-file', path: key } }, 1500)).rejects.toThrow();
   });
-  it('selects once, admits complete metadata, and stores only after the durable closure audit', async () => {
-    const f = fixture();
+  it('pins the advertised default branch once and stores only after the durable closure audit', async () => {
+    const reference = 'refs/heads/release-next';
+    const f = fixture({ reference });
     const originalAudit = f.request.host.audit;
     const request = { ...f.request, host: { ...f.request.host, audit: async (event: UrlMemoryAudit) => {
       if (event.worker?.stage === 'whole-closure-admitted') {
@@ -205,6 +206,7 @@ describe('URL metadata admission and whole-worker composition', () => {
     const result = await urlMemoryAcquisitionTestPort(f.ports)(request);
     expect(result, JSON.stringify(result)).toHaveProperty('ok', true); if (!result.ok) return;
     expect(f.calls.filter(call => call === 'selection')).toHaveLength(1); expect(f.calls.filter(call => call === 'receive')).toHaveLength(1);
+    expect(result.selection).toMatchObject({ mode: 'remote-default', reference, identifier: f.objects.pin });
     expect(f.calls.indexOf('worker')).toBeGreaterThan(f.calls.indexOf('ingest:fetch-end'));
     expect(fs.readdirSync(result.clone)).toEqual(['.git']); expect(fs.readFileSync(path.join(result.clone, '.git', 'HEAD'), 'utf8').trim()).toBe(f.objects.pin);
     expect(result.context.provisionalRun).toMatch(/^provisional-acq-[a-f0-9]{32}$/u); expect(result.metadata).toHaveLength(2);

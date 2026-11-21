@@ -6,7 +6,7 @@ import {
   excludedSourceId, spanTouchesWithheld, generationSourcesForBody, generationSourcesForRedactedBody, generationSpanRange, generationSourceTextAt, isDossierPagePath, leadInQuotationSpans, PAGE_SINK_CONTRACT, PAGE_SINK_SCRIPT_CONTRACT, pageSinkCspFinding, pageSinkScriptFinding,
   type EpistemicMarking, type EvidenceAnchor, type GenerationExclusionReason, type GenerationSource, type LocalBlock,
   type LocalDisclosureItem, type LocalDraftLayer, type LocalPage, type LocalPageItem, type LocalRenderInput, type LocalSegment, type WithheldNote,
-  type DossierDraft, type DraftBlock, type DraftParagraph,
+  type DossierDraft, type DraftBlock, type DraftDiagramHome, type DraftParagraph,
 } from '@syzygy/polaris-generation-core/live';
 import { isRecord, sha256 } from '@syzygy/support';
 import { collectBlocks, deriveFindings, draftRules, type BlobRedaction, type Derived } from './check.js';
@@ -18,6 +18,7 @@ import { RECORDS_WITHIN_REACH } from './gate-sources.js';
 import { GitObjectReadRefusal, openPinnedObjectReader } from './git-object-reader.js';
 import { errno, logStep, openRun, readRecord, type OpenedRun } from './inventory.js';
 import { buildDesignPacket } from './design-review.js';
+import { derivedStructureAt, readCurrencyPolicy, secretPathOf, type CurrencyPolicy } from './derived-record.js';
 import type { Outcome } from './outcome.js';
 import { designReviewOfRecord, latestPassedDraft, reviewOfRecord, type DesignReviewOfRecord, type ReviewDeps, type ReviewOfRecord } from './review.js';
 import type { ReverifyRefusal } from './reverify.js';
@@ -89,6 +90,8 @@ export interface RenderDeps extends ReviewDeps {
    * port; the URL supervisor binds actual renderer inputs and output receipts
    * before any site bytes are persisted. No CLI option supplies this callback. */
   readonly admitProducedSite?: (input: ProducedSiteInput) => boolean | Promise<boolean>;
+  /** The derived-fact currency policy (version 2.3); by default the committed bytes at the records root's HEAD (`readCurrencyPolicy`). */
+  readonly currencyPolicy?: () => CurrencyPolicy | null;
 }
 export interface ProducedSiteInput {
   readonly run: string; readonly runId: string; readonly pinnedRevision: string; readonly draftRevision: number;
@@ -248,9 +251,16 @@ async function render(runDir: string, deps: RenderDeps, storedSite?: StoredUrlRe
   // hidden reread of brief or reviewer continuation history.
   const fidelityContinuation = review.counts
     ? continuationOf(run, 'fidelity', review.session, review.number, review.packetSha256, review.sessionId.value, products) : null;
-  const built = buildLocalInput({ opened, doc, derived, review, screen, credential, algorithm: reader.algorithm,
+  const input = buildLocalInput({ opened, doc, derived, review, screen, credential, algorithm: reader.algorithm,
     briefRecord, fidelityContinuation });
-  if (!built.ok) return refuse(built.stage, built.reason);
+  if (!input.ok) return refuse(input.stage, input.reason);
+  // URL renders read through the protected product bridge. Until the derived
+  // record has a producer receipt there, the ordinary filesystem record
+  // cannot supply facts to the review packet.
+  const built = urlMode ? input : { ...input, local: { ...input.local, derivedStructure: await derivedStructureAt({
+    run, revision: draftRev.revision, pinned, repositoryId: subject.repository.repositoryId, reader, isSecretPath: secretPathOf(screen),
+    policy: (deps.currencyPolicy ?? (() => readCurrencyPolicy(deps.sources.recordsRoot)))(),
+  }) } };
 
   const renderer = deps.renderer;
   const draw = (local: LocalRenderInput, sources = built.sources): ReadonlyMap<string, string> | string => {
@@ -804,14 +814,24 @@ export function buildLocalInput(inputs: BuildInputs): Built {
     return held ? WITHHELD_LABEL : title(container['title']);
   };
   const diagramRecords = list(doc['diagrams']).filter(isRecord);
+  // A v5 diagram names its page in `home` (syzygy-3efd.18). On a section it becomes the same diagram a v4 draft's `sectionId` gives, so
+  // its page is byte-identical; on a deep dive it belongs to that deep dive's section; on the overview, to none.
+  const diveSection = new Map(list(doc['deepDives']).filter(isRecord).map((dive) => [text(dive['id'])!, text(dive['sectionId'])!]));
+  const placement = (diagram: Readonly<Record<string, unknown>>): { readonly sectionId: string; readonly home?: DraftDiagramHome } => {
+    const home = diagram['home'];
+    if (!isRecord(home)) return { sectionId: text(diagram['sectionId'])! };
+    if (home['kind'] === 'deep-dive') return { sectionId: diveSection.get(text(home['target'])!)!, home: { kind: 'deep-dive', id: text(home['target'])! } };
+    if (home['kind'] === 'overview') return { sectionId: '', home: { kind: 'overview' } };
+    return { sectionId: text(home['target'])! };
+  };
   const draft: DossierDraft = {
     title: title(doc['title']),
     introduction: paragraph(doc['introduction']),
-    sections: list(doc['sections']).filter(isRecord).map((section) => ({ id: text(section['id'])!, title: containerTitle(section, diagramRecords.filter((diagram) => diagram['sectionId'] === section['id'])), paragraphs: tree(section['paragraphs']), disposition: disposition(section['disposition']) })),
+    sections: list(doc['sections']).filter(isRecord).map((section) => ({ id: text(section['id'])!, title: containerTitle(section, diagramRecords.filter((diagram) => placement(diagram).home === undefined && placement(diagram).sectionId === section['id'])), paragraphs: tree(section['paragraphs']), disposition: disposition(section['disposition']) })),
     diagrams: diagramRecords.map((diagram) => {
       const held = diagramHeld(diagram);
       return {
-        id: text(diagram['id'])!, title: held ? WITHHELD_LABEL : title(diagram['title']), sectionId: text(diagram['sectionId'])!, kind: diagram['kind'] as DossierDraft['diagrams'][number]['kind'], relationship: held ? WITHHELD_LABEL : title(diagram['relationship']),
+        id: text(diagram['id'])!, title: held ? WITHHELD_LABEL : title(diagram['title']), ...placement(diagram), kind: diagram['kind'] as DossierDraft['diagrams'][number]['kind'], relationship: held ? WITHHELD_LABEL : title(diagram['relationship']),
         nodes: list(diagram['nodes']).filter(isRecord).map((node) => {
           const { held: gone } = element('', node);
           return { id: text(node['id'])!, label: gone === undefined ? title(node['label']) : WITHHELD_LABEL, sourceIds: cites(text(node['id'])!, node), epistemic: gone === undefined && node['epistemic'] === 'inferred' ? 'inferred' as const : 'unknown' as const };
@@ -823,7 +843,7 @@ export function buildLocalInput(inputs: BuildInputs): Built {
         disposition: disposition(diagram['disposition']),
       };
     }),
-    deepDives: list(doc['deepDives']).filter(isRecord).map((dive) => ({ id: text(dive['id'])!, title: containerTitle(dive, []), sectionId: text(dive['sectionId'])!, paragraphs: tree(dive['paragraphs']), disposition: disposition(dive['disposition']) })),
+    deepDives: list(doc['deepDives']).filter(isRecord).map((dive) => ({ id: text(dive['id'])!, title: containerTitle(dive, diagramRecords.filter((diagram) => { const home = placement(diagram).home; return home?.kind === 'deep-dive' && home.id === dive['id']; })), sectionId: text(dive['sectionId'])!, paragraphs: tree(dive['paragraphs']), disposition: disposition(dive['disposition']) })),
     unresolved: list(doc['unresolved']).filter(isRecord).map((item) => ({ question: title(item['question']), reason: title(item['reason']), references: citedSources(item) })),
   };
 

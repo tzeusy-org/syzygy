@@ -1,0 +1,14 @@
+Reconstructed 2026-11-22 from PROTOCOL.md and the stored outputs; the pilot's own prompt was not stored. Its two-sentence instruction ("Explain this repository ... you can.") is the protocol's wording.
+
+Plain-author session. Fresh session, one turn, no follow-up; it sees no key, no questions and no dossier.
+
+Replace {TREE_DIR} and {OUT_FILE} before use.
+
+---
+
+You may read files under {TREE_DIR} only. Do not open any other directory, do not use the network, and do not run any code
+from that directory.
+
+Explain this repository to an engineer who is new to it. Write the most useful synthesis you can.
+
+Write it to {OUT_FILE}.

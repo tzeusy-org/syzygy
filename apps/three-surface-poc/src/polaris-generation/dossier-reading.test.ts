@@ -1,7 +1,7 @@
 import { beforeAll, describe, expect, it } from 'vitest';
 import { generationAnchorId, gitBlobObjectId, pageSinkCspFinding, type GenerationSource } from '@syzygy/polaris-generation-core';
 import { READING_QUOTE, READING_SOURCE, readingInput } from './dossier-reading.testkit.js';
-import { DOSSIER_THEME_CSS, renderLocalDossier } from './dossier-site.js';
+import { DOSSIER_THEME_CSS, figureLegend, renderLocalDossier } from './dossier-site.js';
 
 // syzygy-pdja.1: the owner's review of the Redis dossier. Expected values are literals, never read from the renderer.
 const render = () => renderLocalDossier(readingInput()).files;
@@ -40,8 +40,8 @@ describe('Poles: a landing page with the why section and a map, then one page pe
     const files = withPoles(SPEC);
     const pole = files.get('poles/2.html')!;
     expect(pole).toContain('<section id="pole" data-reading-level="1" data-pole="poles/2.html" data-hue="2">');
-    expect(pole).toContain('<figure><figcaption>Loop</figcaption>');
-    expect(files.get('index.html')!).toContain('<figure data-hue="1"><figcaption>Flow</figcaption>');
+    expect(pole).toContain('<figure data-visual-provenance="curated"><figcaption>Loop</figcaption>');
+    expect(files.get('index.html')!).toContain('<figure data-hue="1" data-visual-provenance="curated"><figcaption>Flow</figcaption>');
   });
 
   it('loses and repeats no claim against the page division with no Poles', () => {
@@ -166,7 +166,7 @@ describe('the sources list says why each file is there (syzygy-pdja.15)', () => 
     const local = { ...input.local, sourceAnchors: new Map([...input.local.sourceAnchors, [unused.sourceId, anchor]]) };
     const list = main(renderLocalDossier({ local, sources: [...input.sources, unused] }).files.get('sources/index.html')!);
     expect(list).toContain('<p>2 sources counted, 2 with admitted text. 1 cited by the dossier\'s pages; each says where.</p>');
-    expect(list).toContain('>docs/reading.md</a> <span class="cited-on">Cited on <a href="../index.html">Overview</a> (32 times).</span></li>');
+    expect(list).toContain('>docs/reading.md</a> <span class="cited-on">Cited on <a href="../index.html">Overview</a> (36 times).</span></li>');
     expect(list).toContain('>docs/unused.md</a> <span class="cited-on">Not cited on the dossier\'s pages.</span></li>');
   });
 
@@ -179,7 +179,7 @@ describe('the sources list says why each file is there (syzygy-pdja.15)', () => 
     // Never beside an excluded or withheld file: the agent's words there may derive from what screening kept out.
     expect(list).toContain('<li>docs/held.md — counted; exact text unavailable: body-not-retained-for-generation.</li>');
     expect(list).not.toContain('zq-held-reason');
-    expect(list).toContain('(32 times).</span> <span class="selected-why">Why the agent chose it, as it reports: zq-reason: it explains the reading order. <span class="marking inferred">[Inferred]</span></span></li>');
+    expect(list).toContain('(36 times).</span> <span class="selected-why">Why the agent chose it, as it reports: zq-reason: it explains the reading order. <span class="marking inferred">[Inferred]</span></span></li>');
     expect(main(renderLocalDossier(input).files.get('sources/index.html')!)).not.toContain('selected-why');
   });
 });
@@ -215,7 +215,7 @@ describe('colour: six hues for Poles, diagrams and cards, none carrying a claim 
 
   it('gives each diagram outside a Pole page a hue in turn, and a diagram on a Pole page its Pole\'s', () => {
     const files = render();
-    const figures = [...files].flatMap(([path, html]) => path.endsWith('.html') ? [...html.matchAll(/<figure( data-hue="(\d)")?><figcaption>[^<]*<\/figcaption><p class="diagram-relationship">/gu)].map(match => ({ path, hue: match[2] })) : []);
+    const figures = [...files].flatMap(([path, html]) => path.endsWith('.html') ? [...html.matchAll(/<figure( data-hue="(\d)")? data-visual-provenance="curated"><figcaption>[^<]*<\/figcaption><p class="diagram-relationship">/gu)].map(match => ({ path, hue: match[2] })) : []);
     expect(figures.length).toBeGreaterThan(0);
     expect(figures[0]).toEqual({ path: 'index.html', hue: '1' });
     for (const figure of figures) expect(figure.hue === undefined, figure.path).toBe(figure.path.startsWith('poles/'));
@@ -310,5 +310,49 @@ describe('glossary terms in agent prose', () => {
     expect(DOSSIER_THEME_CSS).toContain('main [data-claim-id]{position:relative}');
     expect(DOSSIER_THEME_CSS).toContain('.term-pop::before{content:"";position:absolute;left:0;right:0;top:-.5rem;height:.5rem}');
     expect(DOSSIER_THEME_CSS).toContain('pre.redaction-note{margin:.25rem 0;padding:.1rem .75rem;border-left:4px solid var(--line);color:var(--muted);');
+  });
+});
+
+// syzygy-3efd.17: a figure legends only the line styles it draws, and counts its boxes and arrows by marking.
+describe('figure legend and tally (syzygy-3efd.17)', () => {
+  const entry = (m: string, words: string) => `<li><span class="legend-line ${m}" aria-hidden="true"></span>${words}</li>`;
+
+  it('a figure of inferred elements alone has no solid or dotted entry, and its tally counts every element', () => {
+    expect(figureLegend(['inferred', 'inferred', 'inferred'], 2, 1)).toBe(
+      `<ul class="diagram-legend" aria-label="Line styles">${entry('inferred', 'Dashed: inferred')}</ul><p class="diagram-tally">2 boxes and 1 arrow, as marked: 0 observed, 3 inferred, 0 unknown.</p>`);
+  });
+
+  it('a mixed figure lists each style it uses, in a fixed order, and the right counts', () => {
+    expect(figureLegend(['unknown', 'inferred', 'unknown', 'observed', 'inferred'], 1, 4)).toBe(
+      `<ul class="diagram-legend" aria-label="Line styles">${entry('observed', 'Solid: observed')}${entry('inferred', 'Dashed: inferred')}${entry('unknown', 'Dotted: unknown (label ends “?”)')}</ul><p class="diagram-tally">1 box and 4 arrows, as marked: 1 observed, 2 inferred, 2 unknown.</p>`);
+  });
+
+  it('every rendered figure says nothing of a style it does not draw, and its tally equals its drawn boxes and arrows', () => {
+    const figures = [...render()].flatMap(([path, html]) => path.endsWith('.html') ? [...html.matchAll(/<figure[^>]*>[\s\S]*?<\/figure>/gu)].map(m => ({ path, html: m[0] })) : []);
+    expect(figures.length).toBeGreaterThan(2);
+    for (const { path, html } of figures) {
+      const svg = html.slice(html.indexOf('<svg'), html.indexOf('</svg>'));
+      const drawn = (kind: string, m: string): number => (svg.match(new RegExp(`<g class="${kind} ${m}[ "]`, 'gu')) ?? []).length;
+      const boxes = ['observed', 'inferred', 'unknown'].reduce((n, m) => n + drawn('node', m), 0);
+      const arrows = ['observed', 'inferred', 'unknown'].reduce((n, m) => n + drawn('edge', m), 0);
+      const by = (m: string): number => drawn('node', m) + drawn('edge', m);
+      const tally = /<p class="diagram-tally">(\d+) box(?:es)? and (\d+) arrows?, as marked: (\d+) observed, (\d+) inferred, (\d+) unknown\.<\/p>/u.exec(html);
+      expect(tally?.slice(1).map(Number), path).toEqual([boxes, arrows, by('observed'), by('inferred'), by('unknown')]);
+      for (const [m, words] of [['observed', 'Solid'], ['inferred', 'Dashed'], ['unknown', 'Dotted']] as const) expect(html.includes(`${words}: `), `${path} ${m}`).toBe(by(m) > 0);
+    }
+    // The pair figure: two inferred boxes and two inferred arrows.
+    expect(figures.find(f => f.html.includes('<figcaption>Pair</figcaption>'))!.html).toContain('<p class="diagram-tally">2 boxes and 2 arrows, as marked: 0 observed, 4 inferred, 0 unknown.</p>');
+  });
+
+  it('a figure with an unknown box and arrow draws them dotted, legends the dotted style and counts them', () => {
+    const input = readingInput();
+    const local = structuredClone(input.local) as unknown as { draft: { diagrams: { id: string; nodes: { epistemic: string }[]; edges: { epistemic: string }[] }[] } };
+    const pair = local.draft.diagrams.find(d => d.id === 'pair')!;
+    pair.nodes[1]!.epistemic = 'unknown';
+    pair.edges[1]!.epistemic = 'unknown';
+    const html = [...renderLocalDossier({ ...input, local: local as unknown as typeof input.local }).files.values()].find(h => h.includes('<figcaption>Pair</figcaption>'))!;
+    const figure = html.slice(html.indexOf('<figcaption>Pair</figcaption>'), html.indexOf('</figure>', html.indexOf('<figcaption>Pair</figcaption>')));
+    expect(figure).toContain(`<ul class="diagram-legend" aria-label="Line styles">${entry('inferred', 'Dashed: inferred')}${entry('unknown', 'Dotted: unknown (label ends “?”)')}</ul><p class="diagram-tally">2 boxes and 2 arrows, as marked: 0 observed, 2 inferred, 2 unknown.</p>`);
+    expect((figure.match(/<g class="(?:node|edge) unknown[ "]/gu) ?? []).length).toBe(2);
   });
 });

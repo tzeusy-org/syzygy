@@ -25,6 +25,7 @@ import { pairVisibilityAt, type VisibilityOf } from './source-visibility-gate.js
 import { runStatus } from './status.js';
 import { packageUrlRunModeAuthority } from './url-mode-registry.js';
 import { awaitSession } from './waiting-sessions.js';
+import type { FigureLayout } from './figure-fit.js';
 
 /** The `syzygy dossier` command family (design "Command surface").
  *
@@ -176,6 +177,9 @@ export interface CliPorts {
   readonly admitProducedSite?: RenderDeps['admitProducedSite'];
   readonly productReads?: RunProductReads;
   readonly urlRenderer?: UrlLoadedRenderer;
+  /** The figure layout `check` measures figure fit with (syzygy-3efd.20); the `syzygy` composition root injects it. Without it each
+   * produced figure's fit is Unknown. */
+  readonly layoutFigure?: FigureLayout;
   /** Whether version 1.2 of the local-agent mode, which specifies waiting sessions, is signed off; by default read from the records root. */
   readonly waitModeSigned?: () => boolean;
   /** The pause between an `await` slice's looks at its session directory; a timer by default. */
@@ -232,6 +236,7 @@ interface StepPorts {
   readonly admitProducedSite?: RenderDeps['admitProducedSite'];
   readonly productReads?: RunProductReads;
   readonly urlRenderer?: UrlLoadedRenderer;
+  readonly layoutFigure?: FigureLayout;
 }
 
 type StepDeps<K extends keyof StepPorts> = { readonly sources: GateSources; readonly now: () => number } & Pick<StepPorts, K>;
@@ -259,6 +264,7 @@ function commandContext(json: boolean, io: CliIo, ports: CliPorts) {
         ...(wants('productReads') && ports.productReads ? { productReads: ports.productReads } : {}),
         ...(wants('urlRenderer') && ports.urlRenderer ? { urlRenderer: ports.urlRenderer } : {}),
         ...(wants('admitProducedSite') && ports.admitProducedSite ? { admitProducedSite: ports.admitProducedSite } : {}),
+        ...(wants('layoutFigure') && ports.layoutFigure ? { layoutFigure: ports.layoutFigure } : {}),
       } as StepDeps<K>;
     },
     usageError: (detail: string): number => {
@@ -344,9 +350,9 @@ export const DOSSIER_COMMANDS: Readonly<Record<string, DossierCommand>> = Object
     args: { kind: 'options', options: ['--draft'], noun: RUN },
     run: async ({ positional: [run], values }, ctx) => {
       const draftFile = values.get('--draft');
-      const result = await checkDraft(run!, draftFile === undefined ? {} : { draftFile }, ctx.deps('probe', 'openReader', 'loadScreen', 'productReads'));
+      const result = await checkDraft(run!, draftFile === undefined ? {} : { draftFile }, ctx.deps('probe', 'openReader', 'loadScreen', 'layoutFigure', 'productReads'));
       if (!result.ok) return ctx.refused(result.refusal);
-      // `reviewVisibility`, `screenCensus`, `readerAdvice` and `reviewReach` are on the report already (`checkSubject`), never in the stored
+      // `reviewVisibility`, `screenCensus`, `structureRecord`, `readerAdvice` and `reviewReach` are on the report already (`checkSubject`), never in the stored
       // record, and the exit code reads the outcome alone.
       return ctx.report(result.report, result.report.outcome === 'passed' ? EXIT.clean : EXIT.refused);
     },

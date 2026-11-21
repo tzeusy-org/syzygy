@@ -1,0 +1,147 @@
+{
+ "rule": "Convert the last site of the four remaining runs with site_to_text.py, then write pilot/runs.json for all six runs.\n\nPage classes (by site-relative path):\n  reader     index.html, poles/*, deep-dives/*, glossary.html\n  navigation contents.html, sources/index.html\n  run        review.html, discovery.html, size-report.html, clarifications.html, executions.html, appendix.html, understanding.html\n  other      anything else (listed by path)",
+ "wordCount": "whitespace-separated tokens of the converted <main> text (site_to_text.py)",
+ "runs": {
+  "2ecdcab0": {
+   "runDir": "run-2ecdcab0c77e228f6ad9d3e0acfa1414",
+   "briefVersion": "polaris-dossier-brief-v2",
+   "guidanceVersion": "polaris-author-dossier-v2",
+   "draftSchemaVersion": "polaris-dossier-local-draft-v4",
+   "lastDraftRevision": 2,
+   "site": "site/0",
+   "textDir": "dossier-2ecdcab0",
+   "pages": 15,
+   "words": 15281,
+   "sourcesPagesExcluded": 29,
+   "wordsByClass": {
+    "reader": 10863,
+    "navigation": 221,
+    "run": 4197,
+    "other": 0
+   },
+   "pagesByClass": {
+    "reader": 6,
+    "navigation": 2,
+    "run": 7,
+    "other": 0
+   },
+   "readerShareOfWords": 0.711,
+   "otherPages": []
+  },
+  "36df95fa": {
+   "runDir": "run-36df95faf04a4c98eabbb32a18a4e833",
+   "briefVersion": "polaris-dossier-brief-v1",
+   "guidanceVersion": "polaris-author-dossier-v2",
+   "draftSchemaVersion": "polaris-dossier-local-draft-v2",
+   "lastDraftRevision": 3,
+   "site": null,
+   "pages": 0,
+   "words": 0,
+   "note": "no rendered site: the run has no site/ directory (it was never rendered)"
+  },
+  "4465d22f": {
+   "runDir": "run-4465d22f5ce1829ca49059a5b8451bb0",
+   "briefVersion": "polaris-dossier-brief-v1",
+   "guidanceVersion": "polaris-author-dossier-v2",
+   "draftSchemaVersion": "polaris-dossier-local-draft-v2",
+   "lastDraftRevision": 3,
+   "site": "site/0",
+   "textDir": "dossier-4465d22f",
+   "pages": 11,
+   "words": 7883,
+   "sourcesPagesExcluded": 32,
+   "wordsByClass": {
+    "reader": 4306,
+    "navigation": 251,
+    "run": 3326,
+    "other": 0
+   },
+   "pagesByClass": {
+    "reader": 3,
+    "navigation": 2,
+    "run": 6,
+    "other": 0
+   },
+   "readerShareOfWords": 0.546,
+   "otherPages": []
+  },
+  "658f2f90": {
+   "runDir": "run-658f2f90470f73eea1dc1d90209c5ef7",
+   "briefVersion": "polaris-dossier-brief-v7",
+   "guidanceVersion": "polaris-author-dossier-v2",
+   "draftSchemaVersion": "polaris-dossier-local-draft-v4",
+   "lastDraftRevision": 4,
+   "site": "site/1",
+   "textDir": "dossier",
+   "pages": 15,
+   "words": 12574,
+   "sourcesPagesExcluded": 27,
+   "wordsByClass": {
+    "reader": 7195,
+    "navigation": 921,
+    "run": 4458,
+    "other": 0
+   },
+   "pagesByClass": {
+    "reader": 6,
+    "navigation": 2,
+    "run": 7,
+    "other": 0
+   },
+   "readerShareOfWords": 0.572,
+   "otherPages": []
+  },
+  "d9411d26": {
+   "runDir": "run-d9411d26ca55ebe0250e2e9b94dc0e32",
+   "briefVersion": "polaris-dossier-brief-v1",
+   "guidanceVersion": "polaris-author-dossier-v2",
+   "draftSchemaVersion": "polaris-dossier-local-draft-v3",
+   "lastDraftRevision": 4,
+   "site": "site/1",
+   "textDir": "dossier-d94",
+   "pages": 11,
+   "words": 15897,
+   "sourcesPagesExcluded": 51,
+   "wordsByClass": {
+    "reader": 10872,
+    "navigation": 414,
+    "run": 4611,
+    "other": 0
+   },
+   "pagesByClass": {
+    "reader": 3,
+    "navigation": 2,
+    "run": 6,
+    "other": 0
+   },
+   "readerShareOfWords": 0.684,
+   "otherPages": []
+  },
+  "ffe579c7": {
+   "runDir": "run-ffe579c77dc21d9f6dd87ca6e2bc9301",
+   "briefVersion": "polaris-dossier-brief-v4",
+   "guidanceVersion": "polaris-author-dossier-v2",
+   "draftSchemaVersion": "polaris-dossier-local-draft-v4",
+   "lastDraftRevision": 6,
+   "site": "site/0",
+   "textDir": "dossier-ffe579c7",
+   "pages": 15,
+   "words": 14227,
+   "sourcesPagesExcluded": 30,
+   "wordsByClass": {
+    "reader": 9002,
+    "navigation": 1016,
+    "run": 4209,
+    "other": 0
+   },
+   "pagesByClass": {
+    "reader": 6,
+    "navigation": 2,
+    "run": 7,
+    "other": 0
+   },
+   "readerShareOfWords": 0.633,
+   "otherPages": []
+  }
+ }
+}

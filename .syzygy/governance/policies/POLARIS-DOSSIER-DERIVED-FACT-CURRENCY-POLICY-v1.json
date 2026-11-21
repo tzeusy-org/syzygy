@@ -1,0 +1,21 @@
+{
+  "schemaVersion": 1,
+  "policyId": "POLARIS-DOSSIER-DERIVED-FACT-CURRENCY-POLICY-v1",
+  "policyVersion": "1.0.0",
+  "status": "binds only with its agent adoption row in decisions/AGENT-ADOPTIONS.md (VIS-4 as amended by GOVERNANCE-SIMPLIFICATION-D10); read that ledger, never this field",
+  "observingProject": "project:syzygy",
+  "claimClass": "polaris-dossier-derived-tree-metadata",
+  "scope": "Currency-bound declarations (RFC2-9; trust-and-evidence.md, 'Every claim class declares a currency bound') for the derived structural facts that the operator-agent dossier renders as Observed under REQ-polaris-generation-034 version 2.3. A declaration covers one derivation rule at one version; a rule or version not declared here has no bound, and its facts render Unknown (no-currency-bound-declared).",
+  "boundValues": {
+    "pinned-revision": "A fact is current at a render exactly when its derived record's revision equals that render's pinned revision and the facts that render re-derives from the tree it lists at that revision equal the record's. It carries no wall-clock bound: the tree of a pinned commit cannot change, so age does not make the fact stale; a different revision, or facts the render cannot reproduce, do (stale-beyond-currency-bound)."
+  },
+  "declarations": [
+    {
+      "rule": "top-level-unit",
+      "version": 1,
+      "currencyBound": "pinned-revision"
+    }
+  ],
+  "notDeclared": "Every other rule of the structure record (vendored-path, generated-path, language-by-extension, docs-tree, tests-path, manifest-names, each at version 1) and every later version of top-level-unit. A declaration added here is an agent adoption with its own row.",
+  "approves": "Nothing about which rule is sound: a declaration states only how long a rule's facts count as current. It widens no read, admits no content, and lets no agent or model label a claim Observed."
+}

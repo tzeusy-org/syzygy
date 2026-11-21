@@ -91,13 +91,30 @@ authority and no model yet called on the current path.
     [v1.4 sign-off](.syzygy/governance/decisions/POLARIS-DOSSIER-LOCAL-AGENT-MODE-SIGNOFF-v1.4.md);
     [v1.5 sign-off](.syzygy/governance/decisions/POLARIS-DOSSIER-LOCAL-AGENT-MODE-SIGNOFF-v1.5.md);
     [v1.6 sign-off](.syzygy/governance/decisions/POLARIS-DOSSIER-LOCAL-AGENT-MODE-SIGNOFF-v1.6.md)), and
-    38 requirements and 277 scenarios in the effective composition with it and with the signed-off
+    39 requirements and 365 scenarios in the effective composition with it and with the signed-off
     [launch-consent addition](openspec/changes/polaris-dossier-launch-consent/specs/polaris-generation/spec.md)
     ([v1.0 sign-off](.syzygy/governance/decisions/POLARIS-DOSSIER-LAUNCH-CONSENT-SIGNOFF-v1.0.md);
     [v1.1 sign-off](.syzygy/governance/decisions/POLARIS-DOSSIER-LAUNCH-CONSENT-SIGNOFF-v1.1.md);
     [v1.2 sign-off](.syzygy/governance/decisions/POLARIS-DOSSIER-LAUNCH-CONSENT-SIGNOFF-v1.2.md)),
     then the five-requirement declared-source2.0 replacement in
     [AGENT-ADOPTIONS.md](.syzygy/governance/decisions/AGENT-ADOPTIONS.md), A-4.
+    [URL dossier 2.1 amendment](openspec/changes/dossier-url-declared-source-run) is agent-adopted in A-14.
+    [Unknown] Live acceptance of the four-role URL workflow (D10 F3).
+    [Figure homes and fit amendment 2.2](openspec/changes/dossier-figure-homes-and-fit) is agent-adopted in A-18.
+    It replaces REQ-polaris-generation-034 (28 to 38 scenarios: draft schema v5 diagram homes and stored
+    figure-fit advice); its implementation (syzygy-3efd.18, syzygy-3efd.20) is not yet landed.
+    *(2026-11-21: the predecessor figure "333 scenarios" is superseded by that
+    amendment; all 39 identities remain.)*
+    [Derived observed facts amendment 2.3](openspec/changes/dossier-derived-observed-facts) is agent-adopted in A-19.
+    It replaces REQ-polaris-generation-034 again (38 to 49 scenarios: Syzygy-computed tree facts rendered
+    Observed under the currency policy it installs); its implementation (syzygy-3efd.27) is not yet landed.
+    *(2026-11-21: the predecessor figure "343 scenarios" is superseded by that
+    amendment; all 39 identities remain.)*
+    [Ledger, packs and thesis amendment 2.4](openspec/changes/dossier-ledger-packs-thesis) is agent-adopted in A-20.
+    It replaces REQ-polaris-generation-034 again (49 to 60 scenarios: a stored reading ledger, shape packs and
+    the thesis basis); its implementation (syzygy-3efd.21, syzygy-3efd.43, syzygy-3efd.56) is not yet landed.
+    *(2026-11-21: the predecessor figure "354 scenarios" is superseded by that
+    amendment; all 39 identities remain.)*
     *(2026-11-18: the predecessor figure "329 scenarios" is superseded by that
     overlay; all38 identities remain, and046 is now Declared local-source admission.)*
   - Its `spec.md` keeps its reviewed candidate-era banner; its proposal and

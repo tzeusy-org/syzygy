@@ -15,8 +15,11 @@ import { poleLimitOf, type RunConfig } from './run-config.js';
 import { placementSubjectOf, screenLoaderOf } from './screen.js';
 import { REVISION_FILE, RUN_ID, RUN_LAYOUT } from './state-directory.js';
 import { readerAdvice, type ReaderAdvice } from './reader-advice.js';
+import { figureFit, type FigureFit } from './figure-fit.js';
 import { reviewReachAdvice, type ReviewReachAdvice } from './review-reach.js';
 import { screenCensusReport, withheldCensus, type ScreenCensusReport } from './census.js';
+import { deriveStructure, deriveTreeFacts, structureUnknown, type StructureRecord } from './derive.js';
+import { derivedRecordFile, encodeDerivedRecord, secretPathOf } from './derived-record.js';
 import { BRIEF_JSON_LIMITS, CHECK_RECORD_FORMAT, type CheckCommand, type CheckDeps, type CheckFinding, type CheckRecord, type CheckRefusal, type CheckRequest, type CheckResult, type CheckStage, type CitedBlob, DEFAULT_DRAFT, DISCLOSURES, DRAFT_JSON_LIMITS, DRAFT_MAX_BYTES, type ExcludedQuotation, type ReviewVisibility, STEP_LOG_FORMAT, type VerifiedQuotation, errno, reviewVisibility, text } from './check-model.js';
 import { type Derived, type SubjectRules, deriveFindings, draftRules } from './check-derive.js';
 export { CHECK_RECORD_FORMAT, STEP_LOG_FORMAT, DEFAULT_DRAFT, DRAFT_MAX_BYTES, reviewVisibility, lineRanges, blobRedaction } from './check-model.js';
@@ -89,9 +92,9 @@ export interface SubjectPlan<R extends object, G> {
   readonly disclosures: readonly string[];
 }
 
-/** `screenCensus` (`census.ts`), `readerAdvice` (`reader-advice.ts`) and `reviewReach` (`review-reach.ts`) are on `check`'s report only: advice to the author, never written
+/** `screenCensus` (`census.ts`), `structureRecord` (`derive.ts`), `readerAdvice` (`reader-advice.ts`) and `reviewReach` (`review-reach.ts`) are on `check`'s report only: advice to the author, never written
  * to the check record and never a finding. */
-export type SubjectReport<R extends object> = R & { readonly command: CheckCommand; readonly run: string; readonly checkFile: string; readonly disclosures: readonly string[]; readonly screenCensus?: ScreenCensusReport; readonly readerAdvice?: ReaderAdvice; readonly reviewReach?: ReviewReachAdvice; readonly reviewVisibility?: ReviewVisibility };
+export type SubjectReport<R extends object> = R & { readonly command: CheckCommand; readonly run: string; readonly checkFile: string; readonly disclosures: readonly string[]; readonly screenCensus?: ScreenCensusReport; readonly structureRecord?: StructureRecord; readonly readerAdvice?: ReaderAdvice; readonly figureFit?: FigureFit; readonly reviewReach?: ReviewReachAdvice; readonly reviewVisibility?: ReviewVisibility };
 export type SubjectResult<R extends object> = Outcome<SubjectReport<R>, CheckRefusal>;
 
 const DRAFT_PLAN: SubjectPlan<CheckRecord, null> = {
@@ -231,13 +234,25 @@ async function checkOpenSubject<R extends object, G>(runDir: string, file: strin
   }
   // The author's path-only census of what the review will not see (syzygy-mea.3, lead ruling): every blob of the pinned tree, through the
   // same screen and the class gate, on every check from the first. The reader re-lists the tree it listed for the derivation.
-  let screenCensus: ScreenCensusReport | undefined;
+  // The structure record (syzygy-3efd.16) is derived from the same listing: paths and modes alone, a secret path counted and never named.
+  // The derived-structure record (REQ-polaris-generation-034 version 2.3) is derived from that listing too, by rule top-level-unit, and
+  // kept once beside the check record: what a render publishes unchanged and compares with its own re-derivation.
+  let screenCensus: ScreenCensusReport | undefined, structureRecord: StructureRecord | undefined, derivedRecord: string | undefined;
   if (plan.command === 'check') {
+    // `capturedAt` is the instant this check listed the tree: taken once the listing returns, or once it is refused.
+    const source = (): { repositoryId: string; revision: string; capturedAt: string } => ({ repositoryId: subject.repository.repositoryId, revision: pinned, capturedAt: isoOf(deps.now()) });
+    const isSecretPath = secretPathOf(screen);
     try {
-      screenCensus = screenCensusReport({ ok: true, census: withheldCensus(await reader.listTree(), screen, checked.contentClasses) });
+      const entries = await reader.listTree();
+      const listed = source();
+      screenCensus = screenCensusReport({ ok: true, census: withheldCensus(entries, screen, checked.contentClasses) });
+      structureRecord = deriveStructure(entries, isSecretPath);
+      if (products === undefined) derivedRecord = encodeDerivedRecord(listed, deriveTreeFacts(entries, isSecretPath));
     } catch (cause) {
       if (!(cause instanceof GitObjectReadRefusal)) throw cause;
       screenCensus = screenCensusReport({ ok: false, why: `the pinned tree could not be listed (${cause.reason})`, consented: checked.contentClasses });
+      structureRecord = structureUnknown(`the pinned tree could not be listed (${cause.reason})`);
+      if (products === undefined) derivedRecord = encodeDerivedRecord(source(), { why: `the pinned tree could not be listed (${cause.reason})` });
     }
   }
   if (credential.required && !credential.passed) {
@@ -245,6 +260,11 @@ async function checkOpenSubject<R extends object, G>(runDir: string, file: strin
   }
 
   const frozen = path.join(frozenDir, `rev-${revision}.json`), checkFile = path.join(checksDir, `rev-${revision}.json`);
+  // A derived record already in place for this revision (planted, or left by a crash) is never overwritten or adopted: refused here,
+  // before the draft is frozen, so the revision is not spent.
+  if (derivedRecord !== undefined && fs.existsSync(derivedRecordFile(run, revision))) {
+    return refuse('freeze', `${path.relative(run, derivedRecordFile(run, revision))} already exists, but draft revision ${revision} has not been checked; Syzygy writes that record once, so the draft is not frozen. Remove the file and check again`);
+  }
   if (products !== undefined) {
     if (products.waitForSample !== undefined) await products.waitForSample();
     if (deps.now() >= deadlineEnds) return refuse('deadline', 'the URL deadline elapsed before the checked revision was frozen');
@@ -277,9 +297,17 @@ async function checkOpenSubject<R extends object, G>(runDir: string, file: strin
     clonePath: subject.clone.path,
     executionArm: products === undefined ? storedBriefArm(run) : 'sec-3',
   }, gate.found, declared);
+  // Figure fit (syzygy-3efd.20): advice like readerAdvice, but kept in the draft's check record so a later check can be compared with
+  // this one; an inventory check record carries none, and a draft that does not parse states nothing about fit.
+  const fit = plan.command === 'check' && parseFault === null ? figureFit(doc, deps.layoutFigure) : undefined;
+  const stored = fit === undefined ? record : { ...record, figureFit: fit };
   try {
+    if (derivedRecord !== undefined) {
+      fs.mkdirSync(path.join(run, RUN_LAYOUT.derived), { recursive: true, mode: 0o700 });
+      fs.writeFileSync(derivedRecordFile(run, revision), derivedRecord, { mode: 0o600, flag: 'wx' });
+    }
     fs.mkdirSync(checksDir, { recursive: true, mode: 0o700 });
-    fs.writeFileSync(checkFile, `${JSON.stringify(record, null, 2)}\n`, { mode: 0o600, flag: 'wx' });
+    fs.writeFileSync(checkFile, `${JSON.stringify(stored, null, 2)}\n`, { mode: 0o600, flag: 'wx' });
   } catch (cause) {
     return refuse('write', `${noun === 'draft' ? '' : `${noun} `}revision ${revision} was frozen, but its result could not be written to ${path.relative(run, checkFile)} (${errno(cause)})`);
   }
@@ -291,7 +319,8 @@ async function checkOpenSubject<R extends object, G>(runDir: string, file: strin
   const reach = plan.command === 'check' && parseFault === null
     ? reviewReachAdvice(doc, { citedBlobs, admitted, screen, consented: checked.contentClasses }) : undefined;
   return { ok: true, report: {
-    command: plan.command, run, checkFile, ...record, disclosures, ...(screenCensus === undefined ? {} : { screenCensus }),
+    command: plan.command, run, checkFile, ...stored, disclosures, ...(screenCensus === undefined ? {} : { screenCensus }),
+    ...(structureRecord === undefined ? {} : { structureRecord }),
     ...(advice === undefined ? {} : { readerAdvice: advice }), ...(reach === undefined ? {} : { reviewReach: reach }),
     ...(visibility === null ? {} : { reviewVisibility: visibility }),
   } };

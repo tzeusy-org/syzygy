@@ -2,5 +2,5 @@
   "direction": "OWNER-DIRECTION-QUESTIONNAIRE-ANSWERS-2026-11-06",
   "state": "inactive",
   "candidateHead": null,
-  "reason": "No candidate head's readiness run has begun. Set state to frozen, with the head, when one begins; set inactive again if that head is NOT READY or once the judgment and cycle report are recorded."
+  "reason": "Released 2026-11-21 without a walkthrough: the owner retargeted the cold-open walkthrough (syzygy-pdja.6) from the daemon's live /polaris page to a Butlers Polaris dossier, so the frozen candidate 52f50f1c will not be judged. Set state to frozen, with the head, when a candidate head's readiness run begins; set inactive again if that head is NOT READY or once the judgment and cycle report are recorded."
 }

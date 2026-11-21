@@ -1,0 +1,531 @@
+{
+  "format": "derive-rules-mutation/1",
+  "bead": "syzygy-3efd.16",
+  "measuredOn": "2026-11-21",
+  "subject": "packages/polaris-dossier/src/derive-rules.ts and derive.ts, each mutant applied alone at the commit named, then restored",
+  "how": "for each mutant: replace old with new (exactly one occurrence) in file, run `npx vitest run packages/polaris-dossier/src/derive.test.ts packages/polaris-dossier/src/check.test.ts`, killed when the run reports a failed test; the tree is restored and checked clean after the sweep",
+  "firstRun": {
+    "commit": "b767fe6240acf7098f9a78d532d73e4b227b295a",
+    "killed": 19,
+    "survived": [
+      "a basename counts as a segment",
+      "extension case kept",
+      "leading dot read as an extension",
+      "docs matched at any depth",
+      "test_ prefix dropped",
+      "listed sets uncapped"
+    ],
+    "repair": "the next commit adds a case for each survivor to derive.test.ts"
+  },
+  "coverage": "selected entries of each rule table and each branch of derive.ts, not every table entry",
+  "secondRun": {
+    "commit": "4dedf1d7928b8bd1d158165613fb207800e502d7",
+    "killed": 25,
+    "survived": 0,
+    "mutants": [
+      {
+        "rule": "vendored-path",
+        "mutant": "vendor segment dropped",
+        "file": "packages/polaris-dossier/src/derive-rules.ts",
+        "old": "segments: ['vendor', 'vendored',",
+        "new": "segments: ['vendored',",
+        "outcome": "killed",
+        "tests": "Tests  2 failed | 143 passed (145)"
+      },
+      {
+        "rule": "vendored-path",
+        "mutant": "third_party segment dropped",
+        "file": "packages/polaris-dossier/src/derive-rules.ts",
+        "old": "'third_party', 'third-party'",
+        "new": "'third-party'",
+        "outcome": "killed",
+        "tests": "Tests  1 failed | 144 passed (145)"
+      },
+      {
+        "rule": "vendored-path",
+        "mutant": "vendored set no longer set apart first",
+        "file": "packages/polaris-dossier/src/derive.ts",
+        "old": "vendoredRoots.push(vendoredRoot); continue; }",
+        "new": "vendoredRoots.push(vendoredRoot); }",
+        "outcome": "killed",
+        "tests": "Tests  1 failed | 144 passed (145)"
+      },
+      {
+        "rule": "vendored-path",
+        "mutant": "a basename counts as a segment",
+        "file": "packages/polaris-dossier/src/derive.ts",
+        "old": "for (let i = 0; i < segments.length - 1; i++)",
+        "new": "for (let i = 0; i < segments.length; i++)",
+        "outcome": "killed",
+        "tests": "Tests  1 failed | 144 passed (145)"
+      },
+      {
+        "rule": "generated-path",
+        "mutant": "dist segment dropped",
+        "file": "packages/polaris-dossier/src/derive-rules.ts",
+        "old": "segments: ['dist', 'build',",
+        "new": "segments: ['build',",
+        "outcome": "killed",
+        "tests": "Tests  1 failed | 144 passed (145)"
+      },
+      {
+        "rule": "generated-path",
+        "mutant": "go.sum basename dropped",
+        "file": "packages/polaris-dossier/src/derive-rules.ts",
+        "old": "'uv.lock', 'Pipfile.lock', 'go.sum',",
+        "new": "'uv.lock', 'Pipfile.lock',",
+        "outcome": "killed",
+        "tests": "Tests  1 failed | 144 passed (145)"
+      },
+      {
+        "rule": "generated-path",
+        "mutant": ".min.js suffix dropped",
+        "file": "packages/polaris-dossier/src/derive-rules.ts",
+        "old": "suffixes: ['.min.js', '.min.css',",
+        "new": "suffixes: ['.min.css',",
+        "outcome": "killed",
+        "tests": "Tests  1 failed | 144 passed (145)"
+      },
+      {
+        "rule": "generated-path",
+        "mutant": "generated set not left out of languages",
+        "file": "packages/polaris-dossier/src/derive.ts",
+        "old": "generatedMatches.push(generatedRoot ?? entry.path); continue; }",
+        "new": "generatedMatches.push(generatedRoot ?? entry.path); }",
+        "outcome": "killed",
+        "tests": "Tests  1 failed | 144 passed (145)"
+      },
+      {
+        "rule": "language-by-extension",
+        "mutant": "Rust renamed",
+        "file": "packages/polaris-dossier/src/derive-rules.ts",
+        "old": "'.rs': 'Rust'",
+        "new": "'.rs': 'Rust (mutant)'",
+        "outcome": "killed",
+        "tests": "Tests  1 failed | 144 passed (145)"
+      },
+      {
+        "rule": "language-by-extension",
+        "mutant": "extension case kept",
+        "file": "packages/polaris-dossier/src/derive.ts",
+        "old": "basename.slice(dot).toLowerCase()",
+        "new": "basename.slice(dot)",
+        "outcome": "killed",
+        "tests": "Tests  1 failed | 144 passed (145)"
+      },
+      {
+        "rule": "language-by-extension",
+        "mutant": "leading dot read as an extension",
+        "file": "packages/polaris-dossier/src/derive.ts",
+        "old": "return dot <= 0 ? undefined",
+        "new": "return dot < 0 ? undefined",
+        "outcome": "killed",
+        "tests": "Tests  1 failed | 144 passed (145)"
+      },
+      {
+        "rule": "language-by-extension",
+        "mutant": "counts sorted by name only",
+        "file": "packages/polaris-dossier/src/derive.ts",
+        "old": "b.files - a.files || byCodeUnit(a.language, b.language)",
+        "new": "byCodeUnit(a.language, b.language)",
+        "outcome": "killed",
+        "tests": "Tests  4 failed | 141 passed (145)"
+      },
+      {
+        "rule": "docs-tree",
+        "mutant": "docs dropped",
+        "file": "packages/polaris-dossier/src/derive-rules.ts",
+        "old": "topLevel: ['docs', 'doc',",
+        "new": "topLevel: ['doc',",
+        "outcome": "killed",
+        "tests": "Tests  3 failed | 142 passed (145)"
+      },
+      {
+        "rule": "docs-tree",
+        "mutant": "docs matched at any depth",
+        "file": "packages/polaris-dossier/src/derive.ts",
+        "old": "segments.length > 1 && (DOCS_TREE.topLevel as readonly string[]).includes(segments[0]!)",
+        "new": "segments.slice(0, -1).some((s) => (DOCS_TREE.topLevel as readonly string[]).includes(s))",
+        "outcome": "killed",
+        "tests": "Tests  1 failed | 144 passed (145)"
+      },
+      {
+        "rule": "tests-path",
+        "mutant": "tests segment dropped",
+        "file": "packages/polaris-dossier/src/derive-rules.ts",
+        "old": "segments: ['test', 'tests',",
+        "new": "segments: ['test',",
+        "outcome": "killed",
+        "tests": "Tests  1 failed | 144 passed (145)"
+      },
+      {
+        "rule": "tests-path",
+        "mutant": "test_ prefix dropped",
+        "file": "packages/polaris-dossier/src/derive-rules.ts",
+        "old": "prefixes: ['test_'],",
+        "new": "prefixes: [],",
+        "outcome": "killed",
+        "tests": "Tests  1 failed | 144 passed (145)"
+      },
+      {
+        "rule": "tests-path",
+        "mutant": ".test.ts suffix dropped",
+        "file": "packages/polaris-dossier/src/derive-rules.ts",
+        "old": "'_spec.rb', '.test.ts',",
+        "new": "'_spec.rb',",
+        "outcome": "killed",
+        "tests": "Tests  1 failed | 144 passed (145)"
+      },
+      {
+        "rule": "manifest-names",
+        "mutant": "package.json dropped",
+        "file": "packages/polaris-dossier/src/derive-rules.ts",
+        "old": "basenames: ['package.json', 'Cargo.toml',",
+        "new": "basenames: ['Cargo.toml',",
+        "outcome": "killed",
+        "tests": "Tests  1 failed | 144 passed (145)"
+      },
+      {
+        "rule": "manifest-names",
+        "mutant": "test manifests counted",
+        "file": "packages/polaris-dossier/src/derive.ts",
+        "old": "    else if ((MANIFEST_NAMES",
+        "new": "    if ((MANIFEST_NAMES",
+        "outcome": "killed",
+        "tests": "Tests  1 failed | 144 passed (145)"
+      },
+      {
+        "rule": "manifest-names",
+        "mutant": "one manifest reads as a workspace",
+        "file": "packages/polaris-dossier/src/derive.ts",
+        "old": "manifestCount === 1 ? 'single-package'",
+        "new": "manifestCount === 2 ? 'single-package'",
+        "outcome": "killed",
+        "tests": "Tests  2 failed | 143 passed (145)"
+      },
+      {
+        "rule": "(record)",
+        "mutant": "secret path not left out",
+        "file": "packages/polaris-dossier/src/derive.ts",
+        "old": "if (isSecretPath(entry.path)) { secretPathsLeftOut++; continue; }",
+        "new": "if (isSecretPath(entry.path)) { secretPathsLeftOut++; }",
+        "outcome": "killed",
+        "tests": "Tests  2 failed | 143 passed (145)"
+      },
+      {
+        "rule": "(record)",
+        "mutant": "listed sets unsorted",
+        "file": "packages/polaris-dossier/src/derive.ts",
+        "old": "const all = [...new Set(paths)].sort(byCodeUnit);",
+        "new": "const all = [...new Set(paths)];",
+        "outcome": "killed",
+        "tests": "Tests  2 failed | 143 passed (145)"
+      },
+      {
+        "rule": "(record)",
+        "mutant": "listed sets uncapped",
+        "file": "packages/polaris-dossier/src/derive.ts",
+        "old": "listed: all.slice(0, CENSUS_LISTED_LIMIT).map(shownPath)",
+        "new": "listed: all.map(shownPath)",
+        "outcome": "killed",
+        "tests": "Tests  1 failed | 144 passed (145)"
+      },
+      {
+        "rule": "(record)",
+        "mutant": "names not escaped",
+        "file": "packages/polaris-dossier/src/derive.ts",
+        "old": "({ unit: shownPath(unit), files: count })",
+        "new": "({ unit, files: count })",
+        "outcome": "killed",
+        "tests": "Tests  6 failed | 139 passed (145)"
+      },
+      {
+        "rule": "(record)",
+        "mutant": "submodule counted as nothing",
+        "file": "packages/polaris-dossier/src/derive.ts",
+        "old": "if (entry.mode === SUBMODULE_MODE) { submodules++; continue; }",
+        "new": "if (entry.mode === SUBMODULE_MODE) { continue; }",
+        "outcome": "killed",
+        "tests": "Tests  1 failed | 144 passed (145)"
+      }
+    ]
+  },
+  "finalRun": {
+    "commit": "db7cfc6feb172e4c298de267d6350a3f41224dab",
+    "after": "the independent review of 197ee9a0, which re-ran ten recorded mutants (all killed) and found three of its own that survived (deps segment, .map suffix, a nested test directory) and an untested denied-and-secret predicate clause; each is a mutant below",
+    "killed": 30,
+    "survived": 0,
+    "mutants": [
+      {
+        "rule": "vendored-path",
+        "mutant": "vendor segment dropped",
+        "file": "packages/polaris-dossier/src/derive-rules.ts",
+        "old": "segments: ['vendor', 'vendored',",
+        "new": "segments: ['vendored',",
+        "outcome": "killed",
+        "tests": "Tests  2 failed | 145 passed (147)"
+      },
+      {
+        "rule": "vendored-path",
+        "mutant": "third_party segment dropped",
+        "file": "packages/polaris-dossier/src/derive-rules.ts",
+        "old": "'third_party', 'third-party'",
+        "new": "'third-party'",
+        "outcome": "killed",
+        "tests": "Tests  1 failed | 146 passed (147)"
+      },
+      {
+        "rule": "vendored-path",
+        "mutant": "vendored set no longer set apart first",
+        "file": "packages/polaris-dossier/src/derive.ts",
+        "old": "vendoredRoots.push(vendoredRoot); continue; }",
+        "new": "vendoredRoots.push(vendoredRoot); }",
+        "outcome": "killed",
+        "tests": "Tests  1 failed | 146 passed (147)"
+      },
+      {
+        "rule": "vendored-path",
+        "mutant": "a basename counts as a segment",
+        "file": "packages/polaris-dossier/src/derive.ts",
+        "old": "for (let i = 0; i < segments.length - 1; i++)",
+        "new": "for (let i = 0; i < segments.length; i++)",
+        "outcome": "killed",
+        "tests": "Tests  1 failed | 146 passed (147)"
+      },
+      {
+        "rule": "generated-path",
+        "mutant": "dist segment dropped",
+        "file": "packages/polaris-dossier/src/derive-rules.ts",
+        "old": "segments: ['dist', 'build',",
+        "new": "segments: ['build',",
+        "outcome": "killed",
+        "tests": "Tests  1 failed | 146 passed (147)"
+      },
+      {
+        "rule": "generated-path",
+        "mutant": "go.sum basename dropped",
+        "file": "packages/polaris-dossier/src/derive-rules.ts",
+        "old": "'uv.lock', 'Pipfile.lock', 'go.sum',",
+        "new": "'uv.lock', 'Pipfile.lock',",
+        "outcome": "killed",
+        "tests": "Tests  1 failed | 146 passed (147)"
+      },
+      {
+        "rule": "generated-path",
+        "mutant": ".min.js suffix dropped",
+        "file": "packages/polaris-dossier/src/derive-rules.ts",
+        "old": "suffixes: ['.min.js', '.min.css',",
+        "new": "suffixes: ['.min.css',",
+        "outcome": "killed",
+        "tests": "Tests  1 failed | 146 passed (147)"
+      },
+      {
+        "rule": "generated-path",
+        "mutant": "generated set not left out of languages",
+        "file": "packages/polaris-dossier/src/derive.ts",
+        "old": "generatedMatches.push(generatedRoot ?? entry.path); continue; }",
+        "new": "generatedMatches.push(generatedRoot ?? entry.path); }",
+        "outcome": "killed",
+        "tests": "Tests  1 failed | 146 passed (147)"
+      },
+      {
+        "rule": "language-by-extension",
+        "mutant": "Rust renamed",
+        "file": "packages/polaris-dossier/src/derive-rules.ts",
+        "old": "'.rs': 'Rust'",
+        "new": "'.rs': 'Rust (mutant)'",
+        "outcome": "killed",
+        "tests": "Tests  1 failed | 146 passed (147)"
+      },
+      {
+        "rule": "language-by-extension",
+        "mutant": "extension case kept",
+        "file": "packages/polaris-dossier/src/derive.ts",
+        "old": "basename.slice(dot).toLowerCase()",
+        "new": "basename.slice(dot)",
+        "outcome": "killed",
+        "tests": "Tests  1 failed | 146 passed (147)"
+      },
+      {
+        "rule": "language-by-extension",
+        "mutant": "leading dot read as an extension",
+        "file": "packages/polaris-dossier/src/derive.ts",
+        "old": "return dot <= 0 ? undefined",
+        "new": "return dot < 0 ? undefined",
+        "outcome": "killed",
+        "tests": "Tests  1 failed | 146 passed (147)"
+      },
+      {
+        "rule": "language-by-extension",
+        "mutant": "counts sorted by name only",
+        "file": "packages/polaris-dossier/src/derive.ts",
+        "old": "b.files - a.files || byCodeUnit(a.language, b.language)",
+        "new": "byCodeUnit(a.language, b.language)",
+        "outcome": "killed",
+        "tests": "Tests  4 failed | 143 passed (147)"
+      },
+      {
+        "rule": "docs-tree",
+        "mutant": "docs dropped",
+        "file": "packages/polaris-dossier/src/derive-rules.ts",
+        "old": "topLevel: ['docs', 'doc',",
+        "new": "topLevel: ['doc',",
+        "outcome": "killed",
+        "tests": "Tests  3 failed | 144 passed (147)"
+      },
+      {
+        "rule": "docs-tree",
+        "mutant": "docs matched at any depth",
+        "file": "packages/polaris-dossier/src/derive.ts",
+        "old": "segments.length > 1 && (DOCS_TREE.topLevel as readonly string[]).includes(segments[0]!)",
+        "new": "segments.slice(0, -1).some((s) => (DOCS_TREE.topLevel as readonly string[]).includes(s))",
+        "outcome": "killed",
+        "tests": "Tests  1 failed | 146 passed (147)"
+      },
+      {
+        "rule": "tests-path",
+        "mutant": "tests segment dropped",
+        "file": "packages/polaris-dossier/src/derive-rules.ts",
+        "old": "segments: ['test', 'tests',",
+        "new": "segments: ['test',",
+        "outcome": "killed",
+        "tests": "Tests  2 failed | 145 passed (147)"
+      },
+      {
+        "rule": "tests-path",
+        "mutant": "test_ prefix dropped",
+        "file": "packages/polaris-dossier/src/derive-rules.ts",
+        "old": "prefixes: ['test_'],",
+        "new": "prefixes: [],",
+        "outcome": "killed",
+        "tests": "Tests  1 failed | 146 passed (147)"
+      },
+      {
+        "rule": "tests-path",
+        "mutant": ".test.ts suffix dropped",
+        "file": "packages/polaris-dossier/src/derive-rules.ts",
+        "old": "'_spec.rb', '.test.ts',",
+        "new": "'_spec.rb',",
+        "outcome": "killed",
+        "tests": "Tests  1 failed | 146 passed (147)"
+      },
+      {
+        "rule": "manifest-names",
+        "mutant": "package.json dropped",
+        "file": "packages/polaris-dossier/src/derive-rules.ts",
+        "old": "basenames: ['package.json', 'Cargo.toml',",
+        "new": "basenames: ['Cargo.toml',",
+        "outcome": "killed",
+        "tests": "Tests  2 failed | 145 passed (147)"
+      },
+      {
+        "rule": "manifest-names",
+        "mutant": "test manifests counted",
+        "file": "packages/polaris-dossier/src/derive.ts",
+        "old": "    else if ((MANIFEST_NAMES",
+        "new": "    if ((MANIFEST_NAMES",
+        "outcome": "killed",
+        "tests": "Tests  1 failed | 146 passed (147)"
+      },
+      {
+        "rule": "manifest-names",
+        "mutant": "one manifest reads as a workspace",
+        "file": "packages/polaris-dossier/src/derive.ts",
+        "old": "manifestCount === 1 ? 'single-package'",
+        "new": "manifestCount === 2 ? 'single-package'",
+        "outcome": "killed",
+        "tests": "Tests  3 failed | 144 passed (147)"
+      },
+      {
+        "rule": "(record)",
+        "mutant": "secret path not left out",
+        "file": "packages/polaris-dossier/src/derive.ts",
+        "old": "{ secretPathsLeftOut++; continue; }",
+        "new": "{ secretPathsLeftOut++; }",
+        "outcome": "killed",
+        "tests": "Tests  4 failed | 143 passed (147)"
+      },
+      {
+        "rule": "(record)",
+        "mutant": "listed sets unsorted",
+        "file": "packages/polaris-dossier/src/derive.ts",
+        "old": "const all = [...new Set(paths)].sort(byCodeUnit);",
+        "new": "const all = [...new Set(paths)];",
+        "outcome": "killed",
+        "tests": "Tests  2 failed | 145 passed (147)"
+      },
+      {
+        "rule": "(record)",
+        "mutant": "listed sets uncapped",
+        "file": "packages/polaris-dossier/src/derive.ts",
+        "old": "listed: all.slice(0, CENSUS_LISTED_LIMIT).map(shownPath)",
+        "new": "listed: all.map(shownPath)",
+        "outcome": "killed",
+        "tests": "Tests  1 failed | 146 passed (147)"
+      },
+      {
+        "rule": "(record)",
+        "mutant": "names not escaped",
+        "file": "packages/polaris-dossier/src/derive.ts",
+        "old": "({ unit: shownPath(unit), files: count })",
+        "new": "({ unit, files: count })",
+        "outcome": "killed",
+        "tests": "Tests  7 failed | 140 passed (147)"
+      },
+      {
+        "rule": "(record)",
+        "mutant": "submodule counted as nothing",
+        "file": "packages/polaris-dossier/src/derive.ts",
+        "old": "if (entry.mode === SUBMODULE_MODE) { submodules++; continue; }",
+        "new": "if (entry.mode === SUBMODULE_MODE) { continue; }",
+        "outcome": "killed",
+        "tests": "Tests  1 failed | 146 passed (147)"
+      },
+      {
+        "rule": "(record)",
+        "mutant": "denied-and-secret path not left out",
+        "file": "packages/polaris-dossier/src/check.ts",
+        "old": " || screen.screenBody(p, p) === 'secret-detector-match');",
+        "new": ");",
+        "outcome": "killed",
+        "tests": "Tests  1 failed | 146 passed (147)"
+      },
+      {
+        "rule": "(record)",
+        "mutant": "directory prefixes not tested",
+        "file": "packages/polaris-dossier/src/derive.ts",
+        "old": "if (isSecretPath(entry.path) || segments.slice(0, -1).some((_, i) => isSecretPath(segments.slice(0, i + 1).join('/'))))",
+        "new": "if (isSecretPath(entry.path))",
+        "outcome": "killed",
+        "tests": "Tests  1 failed | 146 passed (147)"
+      },
+      {
+        "rule": "vendored-path",
+        "mutant": "deps segment dropped",
+        "file": "packages/polaris-dossier/src/derive-rules.ts",
+        "old": "'node_modules', 'deps', 'external',",
+        "new": "'node_modules', 'external',",
+        "outcome": "killed",
+        "tests": "Tests  1 failed | 146 passed (147)"
+      },
+      {
+        "rule": "generated-path",
+        "mutant": ".map suffix dropped",
+        "file": "packages/polaris-dossier/src/derive-rules.ts",
+        "old": "'.min.css', '.map', '.pb.go',",
+        "new": "'.min.css', '.pb.go',",
+        "outcome": "killed",
+        "tests": "Tests  1 failed | 146 passed (147)"
+      },
+      {
+        "rule": "tests-path",
+        "mutant": "test directory read at the top level only",
+        "file": "packages/polaris-dossier/src/derive.ts",
+        "old": "segments.slice(0, -1).some((segment) => (TESTS_PATH.segments",
+        "new": "segments.slice(0, 1).some((segment) => (TESTS_PATH.segments",
+        "outcome": "killed",
+        "tests": "Tests  1 failed | 146 passed (147)"
+      }
+    ]
+  }
+}

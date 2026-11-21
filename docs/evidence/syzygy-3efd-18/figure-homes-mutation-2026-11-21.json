@@ -1,0 +1,247 @@
+{
+  "format": "mutation-run/1",
+  "bead": "syzygy-3efd.18",
+  "date": "2026-11-21",
+  "ranAt": "fa378a5d031d7f6f7390e602a914b1d3feee2366",
+  "subject": {
+    "packages/polaris-dossier/src/check-derive.ts": "f630f4ac25ed222f52b3af66bf6be9e4ca23ddea39f553310fe5a66f93c6cd3b",
+    "packages/polaris-dossier/src/render.ts": "1a5d3ff2f6abfd55fdb9292bf368769224a63ffbbe8366ee3a5d14234a59c630",
+    "apps/three-surface-poc/src/polaris-generation/dossier-site.ts": "0f6ac77bf0559ad1475fd348e84a0b20503bd7344983ad253742370678e14cec",
+    "packages/polaris-dossier/src/reader-advice.ts": "baf2c506d0f1f649c5df71447a3b83b2ad8c6827d4e88fb270c09d386bea5080",
+    "packages/polaris-dossier/src/draft-schema.ts": "5f7673c4eba65c62793c1175b38d55d5fa4a49abe32590cb2cdb68f5c39a1b8c",
+    "packages/polaris-dossier/src/check.test.ts": "1190dc294c9c0194c01302e0cba5ec0fca576e2dad8c7a9d0235ec18e63229b6",
+    "packages/polaris-dossier/src/render.test.ts": "c412ecd648cac37f92fdad4b8048c62543014b872e265b55a6c15bcb3c03363b",
+    "packages/polaris-dossier/src/reader-standards.test.ts": "d77d72c6e1ae2a12f04fb59a1bdb9ae81acd6edcc5eda12029e1a2bec1aeaf7d"
+  },
+  "command": "npx vitest run packages/polaris-dossier/src/check.test.ts packages/polaris-dossier/src/render.test.ts packages/polaris-dossier/src/reader-standards.test.ts packages/polaris-dossier/src/draft-schema.test.ts packages/polaris-dossier/src/brief.test.ts --reporter=json",
+  "method": "each mutant replaces old with new exactly once in file, runs the command, restores the file; failedTests records each failing test and the first line of its message; killedBy tells an assertion from a thrown error",
+  "mutants": [
+    {
+      "id": "check-v5-sectionId-allowed",
+      "file": "packages/polaris-dossier/src/check-derive.ts",
+      "old": "    if (hasSection) add({ kind: 'diagram-home', at: `${at}.sectionId`",
+      "new": "    if (false) add({ kind: 'diagram-home', at: `${at}.sectionId`",
+      "killed": true,
+      "failedTests": [
+        {
+          "test": "reports a v5 diagram that names `sectionId`",
+          "message": "AssertionError: expected [ { kind: 'diagram-home', \u2026(2) } ] to deeply equal [ Array(2) ]"
+        },
+        {
+          "test": "reports a v5 diagram with two homes",
+          "message": "AssertionError: expected 'passed' to be 'findings' // Object.is equality"
+        }
+      ],
+      "killedBy": "assertion"
+    },
+    {
+      "id": "check-target-unchecked",
+      "file": "packages/polaris-dossier/src/check-derive.ts",
+      "old": "else if (!(kind === 'section' ? sectionIds : diveIds).has(target))",
+      "new": "else if (false)",
+      "killed": true,
+      "failedTests": [
+        {
+          "test": "reports a home naming an unknown section",
+          "message": "AssertionError: expected 'passed' to be 'findings' // Object.is equality"
+        },
+        {
+          "test": "reports a home naming an unknown deep dive",
+          "message": "AssertionError: expected 'passed' to be 'findings' // Object.is equality"
+        }
+      ],
+      "killedBy": "assertion"
+    },
+    {
+      "id": "check-dive-target-as-section",
+      "file": "packages/polaris-dossier/src/check-derive.ts",
+      "old": "(kind === 'section' ? sectionIds : diveIds).has(target)",
+      "new": "sectionIds.has(target)",
+      "killed": true,
+      "failedTests": [
+        {
+          "test": "passes a diagram whose home is a deep dive",
+          "message": "AssertionError: expected [ { \u2026(2) } ] to deeply equal []"
+        },
+        {
+          "test": "reports a home naming an unknown deep dive",
+          "message": "AssertionError: expected 'passed' to be 'findings' // Object.is equality"
+        },
+        {
+          "test": "draws each figure once, on its home page: the overview after its introduction, a deep dive and a section ahead of their prose",
+          "message": "Error: fixture draft: [{\"kind\":\"unresolved-reference\",\"at\":\"$.diagrams[1].home.target\",\"detail\":\"no deep dive has the identity \\\"dive-1\\\"\"}]"
+        },
+        {
+          "test": "draws a figure homed on a deep dive with no page of its own in that deep dive's section",
+          "message": "Error: fixture draft: [{\"kind\":\"unresolved-reference\",\"at\":\"$.diagrams[1].home.target\",\"detail\":\"no deep dive has the identity \\\"dive-1\\\"\"}]"
+        }
+      ],
+      "killedBy": "thrown error"
+    },
+    {
+      "id": "check-overview-target-allowed",
+      "file": "packages/polaris-dossier/src/check-derive.ts",
+      "old": "if (Object.hasOwn(home, 'target')) add({ kind: 'diagram-home'",
+      "new": "if (false) add({ kind: 'diagram-home'",
+      "killed": true,
+      "failedTests": [
+        {
+          "test": "reports an overview home with an id",
+          "message": "AssertionError: expected 'passed' to be 'findings' // Object.is equality"
+        }
+      ],
+      "killedBy": "assertion"
+    },
+    {
+      "id": "check-v4-home-allowed",
+      "file": "packages/polaris-dossier/src/check-derive.ts",
+      "old": "      if (hasHome) add({ kind: 'field-version'",
+      "new": "      if (false) add({ kind: 'field-version'",
+      "killed": true,
+      "failedTests": [
+        {
+          "test": "refuses `home` in a v4 draft, which names its section in `sectionId`",
+          "message": "AssertionError: expected [] to deeply equal [ { kind: 'field-version', \u2026(2) } ]"
+        }
+      ],
+      "killedBy": "assertion"
+    },
+    {
+      "id": "check-no-home-allowed",
+      "file": "packages/polaris-dossier/src/check-derive.ts",
+      "old": "    if (!hasHome) { add({ kind: 'diagram-home', at, detail: 'the diagram names no page; give it a `home`: a section or a deep dive by `target`, or the overview' }); return; }",
+      "new": "    if (!hasHome) return;",
+      "killed": true,
+      "failedTests": [
+        {
+          "test": "reports a v5 diagram that names `sectionId`",
+          "message": "AssertionError: expected [ { kind: 'diagram-home', \u2026(2) } ] to deeply equal [ Array(2) ]"
+        }
+      ],
+      "killedBy": "assertion"
+    },
+    {
+      "id": "check-repeat-dive-section",
+      "file": "packages/polaris-dossier/src/check-derive.ts",
+      "old": "home['kind'] === 'deep-dive' ? diveSections.get(text(home['target']) ?? '') : undefined",
+      "new": "undefined",
+      "killed": true,
+      "failedTests": [
+        {
+          "test": "passes a diagram whose home is a deep dive",
+          "message": "AssertionError: expected [ { kind: 'repeats-diagram', \u2026(1) } ] to deeply equal []"
+        }
+      ],
+      "killedBy": "assertion"
+    },
+    {
+      "id": "adapter-ignores-home",
+      "file": "packages/polaris-dossier/src/render.ts",
+      "old": "    const home = diagram['home'];\n    if (!isRecord(home)) return { sectionId: text(diagram['sectionId'])! };",
+      "new": "    const home = diagram['home'];\n    if (true) return { sectionId: text(diagram['sectionId'])! };",
+      "killed": true,
+      "failedTests": [
+        {
+          "test": "draws each figure once, on its home page: the overview after its introduction, a deep dive and a section ahead of their prose",
+          "message": "Error: the renderer refused the run: Dossier render refused: unknown-section"
+        },
+        {
+          "test": "draws a figure homed on a deep dive with no page of its own in that deep dive's section",
+          "message": "Error: the renderer refused the run: Dossier render refused: unknown-section"
+        },
+        {
+          "test": "draws a v5 figure homed on a section exactly as a v4 draft's `sectionId` draws it",
+          "message": "Error: the renderer refused the run: Dossier render refused: unknown-section"
+        }
+      ],
+      "killedBy": "thrown error"
+    },
+    {
+      "id": "site-no-overview-figures",
+      "file": "apps/three-surface-poc/src/polaris-generation/dossier-site.ts",
+      "old": "const overviewFigures = draft.diagrams.map((d, i) => d.home?.kind === 'overview' ? diagram(from, d, i) : '').join('');",
+      "new": "const overviewFigures = '';",
+      "killed": true,
+      "failedTests": [
+        {
+          "test": "draws each figure once, on its home page: the overview after its introduction, a deep dive and a section ahead of their prose",
+          "message": "AssertionError: zq-overview figure: expected [] to deeply equal [ 'index.html' ]"
+        }
+      ],
+      "killedBy": "assertion"
+    },
+    {
+      "id": "site-overview-after-sections",
+      "file": "apps/three-surface-poc/src/polaris-generation/dossier-site.ts",
+      "old": "</header>${overviewFigures}${sections}${poleMap}",
+      "new": "</header>${sections}${overviewFigures}${poleMap}",
+      "killed": true,
+      "failedTests": [
+        {
+          "test": "draws each figure once, on its home page: the overview after its introduction, a deep dive and a section ahead of their prose",
+          "message": "AssertionError: expected 37032 to be less than 29068"
+        }
+      ],
+      "killedBy": "assertion"
+    },
+    {
+      "id": "site-no-dive-figures",
+      "file": "apps/three-surface-poc/src/polaris-generation/dossier-site.ts",
+      "old": "${bannerFor(`run-stopped/dive/${dive.id}`)}${diveFigures}${dive.paragraphs",
+      "new": "${bannerFor(`run-stopped/dive/${dive.id}`)}${dive.paragraphs",
+      "killed": true,
+      "failedTests": [
+        {
+          "test": "draws each figure once, on its home page: the overview after its introduction, a deep dive and a section ahead of their prose",
+          "message": "AssertionError: zq-dive figure: expected [] to deeply equal [ 'deep-dives/dive-1.html' ]"
+        }
+      ],
+      "killedBy": "assertion"
+    },
+    {
+      "id": "site-dive-figures-after-prose",
+      "file": "apps/three-surface-poc/src/polaris-generation/dossier-site.ts",
+      "old": "${diveFigures}${dive.paragraphs.map(b => block(path, b)).join('')}</section>`",
+      "new": "${dive.paragraphs.map(b => block(path, b)).join('')}${diveFigures}</section>`",
+      "killed": true,
+      "failedTests": [
+        {
+          "test": "draws each figure once, on its home page: the overview after its introduction, a deep dive and a section ahead of their prose",
+          "message": "AssertionError: expected 27859 to be less than 27604"
+        }
+      ],
+      "killedBy": "assertion"
+    },
+    {
+      "id": "site-no-pageless-dive-fallback",
+      "file": "apps/three-surface-poc/src/polaris-generation/dossier-site.ts",
+      "old": "(d.home === undefined || (d.home.kind === 'deep-dive' && !deepPaths.has(d.home.id))) && d.sectionId === section.id",
+      "new": "d.home === undefined && d.sectionId === section.id",
+      "killed": true,
+      "failedTests": [
+        {
+          "test": "draws a figure homed on a deep dive with no page of its own in that deep dive's section",
+          "message": "AssertionError: expected +0 to be 1 // Object.is equality"
+        }
+      ],
+      "killedBy": "assertion"
+    },
+    {
+      "id": "advice-ignores-home",
+      "file": "packages/polaris-dossier/src/reader-advice.ts",
+      "old": "const sectionOf = (diagram: Readonly<Record<string, unknown>>): string | undefined => (isRecord(diagram['home'])",
+      "new": "const sectionOf = (diagram: Readonly<Record<string, unknown>>): string | undefined => (false",
+      "killed": true,
+      "failedTests": [
+        {
+          "test": "RS-16 with v5 homes: a section-home draws its section, an overview or deep-dive home draws none",
+          "message": "AssertionError: expected [ { standard: 'RS-16', \u2026(1) }, \u2026(2) ] to deeply equal [ { standard: 'RS-16', \u2026(1) }, \u2026(1) ]"
+        }
+      ],
+      "killedBy": "assertion"
+    }
+  ],
+  "killed": 14,
+  "killedByAssertion": 12,
+  "total": 14
+}

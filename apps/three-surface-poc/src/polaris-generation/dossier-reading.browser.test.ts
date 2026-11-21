@@ -36,6 +36,8 @@ it.skipIf(executable === undefined)('folds the navigation, keeps diagram labels 
         const chainWidth = await page.evaluate<number>('Math.round(document.querySelector(".diagram-scroll svg").getBoundingClientRect().width)');
         if (width === 390) expect(chainWidth).toBe(860);
         else expect(chainWidth).toBeGreaterThanOrEqual(860);
+        // The loop, stacked top to bottom, fits its box at both widths with no sideways scroll (syzygy-3efd.19).
+        expect(await page.evaluate('(() => { const s = document.querySelectorAll(".diagram-scroll")[1]; return [s.scrollWidth <= s.clientWidth, s.clientWidth]; })()')).toEqual([true, width === 390 ? 261 : 966]);
       }
       await page.setViewport(1440, 900);
       await page.navigate(pathToFileURL(join(directory, 'index.html')).href);
@@ -43,8 +45,8 @@ it.skipIf(executable === undefined)('folds the navigation, keeps diagram labels 
       for (const selector of ['body', '.contents a', '.contents .eyebrow', '.pipeline-notice', '.marking', 'a.cite']) {
         expect(await page.evaluate(`getComputedStyle(document.querySelector(${JSON.stringify(selector)})).fontFamily.startsWith("ui-sans-serif")`), selector).toBe(true);
       }
-      // A diagram wider than the column keeps its size and scrolls; its text is never shrunk.
-      expect(await page.evaluate('[...document.querySelectorAll(".diagram-scroll svg")].map(svg => Math.round(svg.getBoundingClientRect().width))')).toEqual([expect.any(Number), 1848]);
+      // A loop wider than three columns is stacked top to bottom at its own size, its text never shrunk (syzygy-3efd.19).
+      expect(await page.evaluate('[...document.querySelectorAll(".diagram-scroll svg")].map(svg => Math.round(svg.getBoundingClientRect().width))')).toEqual([expect.any(Number), 248, expect.any(Number)]);
       // The focus ring is inside the panel that clips it, reached by real Tabs.
       for (let i = 0; i < 6 && !await page.evaluate<boolean>('document.activeElement.matches(".nav-panel > summary")'); i++) await page.press('Tab');
       expect(await page.evaluate('document.activeElement.matches(".nav-panel > summary:focus-visible") && getComputedStyle(document.activeElement).outlineOffset')).toBe('-3px');

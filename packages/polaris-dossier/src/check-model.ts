@@ -1,6 +1,7 @@
 import * as path from 'node:path';
 import { sha256 } from '@syzygy/support';
 import { type CredentialStepResult } from './credential-probe.js';
+import type { StructureRecord } from './derive.js';
 import { EXECUTION_FLAGS_BASIS, executionFlags, type ExecutionFlags } from './execution-flags.js';
 import type { CredentialProbe } from './execution-rule.js';
 import { RECORDS_WITHIN_REACH, type GateSources } from './gate-sources.js';
@@ -12,6 +13,7 @@ import { type ScreenCensusReport } from './census.js';
 import type { ReaderAdvice } from './reader-advice.js';
 import type { ReviewReachAdvice } from './review-reach.js';
 import { CLASS_NOT_CONSENTED, unconsentedClass } from './class-gate.js';
+import type { FigureFit, FigureLayout } from './figure-fit.js';
 import type { RunProductReads } from './url-operation-products.js';
 
 /** The check's record formats, finding and result types, and the small shared readers; split out of `check.ts` unchanged. */
@@ -33,7 +35,7 @@ export type CheckFindingKind =
   // v1.3 presentation elements (syzygy-mea.10.5).
   | 'code-excerpt-too-long' | 'label-markup' | 'label-quotation' | 'element-version'
   // v1.5 (schema v4): a v4 field in an earlier draft, a judgement mark off an Inferred block, a list's repeated diagram not in its section.
-  | 'field-version' | 'judgement-mark' | 'repeats-diagram' | 'pole';
+  | 'field-version' | 'judgement-mark' | 'repeats-diagram' | 'pole' | 'diagram-home';
 
 /** A repair finding: the kind of failure, where to repair it (a JSON path into the draft), and the block and citation it concerns. It
  * never carries quoted text or any byte of a blob. */
@@ -179,8 +181,13 @@ export interface CheckReport extends CheckRecord {
   readonly disclosures: readonly string[];
   /** The path-only census of every file screening withholds at the pinned revision (`census.ts`); on the report, never the record. */
   readonly screenCensus?: ScreenCensusReport;
+  /** What the pinned tree's paths and modes alone show (`derive.ts`); on the report, never the record, and never a finding. */
+  readonly structureRecord?: StructureRecord;
   /** The counted reader standards' advice (`reader-advice.ts`); on the report, never the record, and never a finding. */
   readonly readerAdvice?: ReaderAdvice;
+  /** Whether each produced figure fits the content column (`figure-fit.ts`, syzygy-3efd.20): advice, never a finding, and unlike the
+   * advice around it also kept in the draft's check record, so a later check can be compared with this one. */
+  readonly figureFit?: FigureFit;
   /** The claim blocks the fidelity review can never confirm, and the elements that render with none of their text (`review-reach.ts`); on
    * the report, never the record, and never a finding. */
   readonly reviewReach?: ReviewReachAdvice;
@@ -203,6 +210,8 @@ export interface CheckDeps {
   /** The screen; by default the policy the act chain puts in force, from the records root. */
   readonly loadScreen?: ScreenLoader;
   readonly openReader?: (options: PinnedObjectReaderOptions) => PinnedObjectReader;
+  /** The renderer's figure layout, which figure fit measures (syzygy-3efd.20); without it each produced figure's fit is Unknown. */
+  readonly layoutFigure?: FigureLayout;
 }
 
 export const DISCLOSURES = [

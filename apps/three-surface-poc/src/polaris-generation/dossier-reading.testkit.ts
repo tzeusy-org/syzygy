@@ -69,13 +69,18 @@ export function readingInput(): { readonly local: LocalRenderInput; readonly sou
           nodes: chain.map(id => ({ id, label: `Node ${id}`, epistemic: 'inferred', sourceIds: [source.sourceId] })),
           edges: chain.slice(1).map((id, i) => ({ id: `edge-${id}`, from: chain[i]!, to: id, label: 'hands the parsed command onward to the next stage for processing', epistemic: 'inferred', sourceIds: [source.sourceId] })),
         }, {
-          // A loop keeps one band, so this one is wider than a column at every width.
+          // A loop wider than three columns is stacked top to bottom, one node to a row, so it fits a column at every width (syzygy-3efd.19).
           id: 'loop', sectionId: 'two', kind: 'flow', title: 'Loop', relationship: 'how it repeats', disposition: { kind: 'produced', assetIds: [] },
           nodes: chain.map(id => ({ id: `loop-${id}`, label: `Step ${id}`, epistemic: 'inferred', sourceIds: [source.sourceId] })),
           edges: [...chain.slice(1).map((id, i) => ({ id: `loop-edge-${id}`, from: `loop-${chain[i]!}`, to: `loop-${id}`, label: 'next step', epistemic: 'inferred', sourceIds: [source.sourceId] })),
-            // A parallel edge, whose label cannot stay where its edge puts it.
             { id: 'loop-edge-parallel', from: `loop-${chain[0]!}`, to: `loop-${chain[1]!}`, label: 'also next', epistemic: 'inferred', sourceIds: [source.sourceId] },
             { id: 'loop-back', from: 'loop-e', to: 'loop-a', label: 'starts again', epistemic: 'inferred', sourceIds: [source.sourceId] }],
+        }, {
+          // Two layers, left to right: the parallel edge's label cannot stay where its edge puts it, so it keeps a leader.
+          id: 'pair', sectionId: 'two', kind: 'flow', title: 'Pair', relationship: 'how it hands over', disposition: { kind: 'produced', assetIds: [] },
+          nodes: ['x', 'y'].map(id => ({ id: `pair-${id}`, label: `Stage ${id}`, epistemic: 'inferred', sourceIds: [source.sourceId] })),
+          edges: [{ id: 'pair-edge', from: 'pair-x', to: 'pair-y', label: 'hands over', epistemic: 'inferred', sourceIds: [source.sourceId] },
+            { id: 'pair-edge-parallel', from: 'pair-x', to: 'pair-y', label: 'also hands over', epistemic: 'inferred', sourceIds: [source.sourceId] }],
         }],
         deepDives: [],
         unresolved: [{ question: 'What is unanswered?', reason: 'Nothing says.', references: [source.sourceId] }],

@@ -1,0 +1,23 @@
+Reconstructed 2026-11-22 from PROTOCOL.md and the stored outputs; the pilot's own prompt was not stored.
+
+Artifact reader session (arms D, E, F, G, H: one dossier's text; arm P: the plain synthesis). Fresh session per arm; it sees no
+key, no other arm's answers, no label map and not the repository.
+
+Replace {ARTIFACT} (a directory of dossier text written by scripts/dossier_site_to_text.py, or the synthesis file),
+{QUESTIONS_FILE} (questions.json: id, kind and question only) and {OUT_FILE} before use.
+
+---
+
+You may read {ARTIFACT} and {QUESTIONS_FILE} only. Do not open the repository the artifact describes or any other directory, and
+do not use the network or what you already know about the project: answer from the artifact alone.
+
+Answer every question in {QUESTIONS_FILE}. Where the artifact does not support an answer, or supports only part of one, write
+"not stated" for the part it does not support. Do not guess.
+
+Write {OUT_FILE} as JSON and nothing else:
+
+{"answers": [{"id": "Q01", "answer": "...", "where": "the page or section you answered from"}],
+ "minutes_felt": 3,
+ "notes": "one or two sentences on what was easy or hard to find"}
+
+`minutes_felt` is how hard the artifact was to answer from as a small whole number (higher is harder). Give one answer per question id.

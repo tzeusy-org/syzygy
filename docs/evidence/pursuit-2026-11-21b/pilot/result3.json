@@ -1,0 +1,96 @@
+{
+ "labels": {
+  "A": "H",
+  "B": "D",
+  "C": "P",
+  "D": "E",
+  "E": "F",
+  "F": "G"
+ },
+ "arms": {
+  "D": {
+   "run": "658f2f90",
+   "share": 0.333,
+   "factsGiven": 27.0,
+   "wrongStatements": 0,
+   "perKind": {
+    "purpose": 0.58,
+    "structure": 0.29,
+    "mechanism": 0.37,
+    "rationale": 0.31,
+    "change": 0.04,
+    "limits": 0.42
+   }
+  },
+  "E": {
+   "run": "d9411d26",
+   "share": 0.605,
+   "factsGiven": 49.0,
+   "wrongStatements": 0,
+   "perKind": {
+    "purpose": 0.69,
+    "structure": 0.57,
+    "mechanism": 0.73,
+    "rationale": 0.58,
+    "change": 0.5,
+    "limits": 0.54
+   }
+  },
+  "F": {
+   "run": "2ecdcab0",
+   "share": 0.481,
+   "factsGiven": 39.0,
+   "wrongStatements": 0,
+   "perKind": {
+    "purpose": 0.65,
+    "structure": 0.32,
+    "mechanism": 0.5,
+    "rationale": 0.65,
+    "change": 0.12,
+    "limits": 0.65
+   }
+  },
+  "G": {
+   "run": "4465d22f",
+   "share": 0.414,
+   "factsGiven": 33.5,
+   "wrongStatements": 0,
+   "perKind": {
+    "purpose": 0.5,
+    "structure": 0.36,
+    "mechanism": 0.37,
+    "rationale": 0.62,
+    "change": 0.27,
+    "limits": 0.38
+   }
+  },
+  "H": {
+   "run": "ffe579c7",
+   "share": 0.389,
+   "factsGiven": 31.5,
+   "wrongStatements": 0,
+   "perKind": {
+    "purpose": 0.65,
+    "structure": 0.29,
+    "mechanism": 0.37,
+    "rationale": 0.58,
+    "change": 0.0,
+    "limits": 0.46
+   }
+  },
+  "P": {
+   "run": "plain synthesis",
+   "share": 0.469,
+   "factsGiven": 38.0,
+   "wrongStatements": 0,
+   "perKind": {
+    "purpose": 0.46,
+    "structure": 0.79,
+    "mechanism": 0.57,
+    "rationale": 0.27,
+    "change": 0.58,
+    "limits": 0.12
+   }
+  }
+ }
+}

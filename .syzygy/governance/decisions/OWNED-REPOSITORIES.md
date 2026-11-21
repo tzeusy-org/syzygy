@@ -17,3 +17,5 @@ and sent to a run's declared provider (SEC-2).
 | Repository | Added | Owner's words |
 |---|---|---|
 | `https://github.com/tzeusy-org/syzygy` | adopted with D10 | Syzygy's own repository, listed by the D10 act |
+| `https://github.com/tzeusy-org/butlers` | 2026-11-21 | "I own the butlers repo" |
+

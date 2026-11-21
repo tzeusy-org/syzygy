@@ -95,14 +95,14 @@ describe('brief: issued', () => {
     const run = runDirectory();
     const result = await issueBrief(run, { sources: sources(), openReader: tree(), now: () => NOW });
     expect(result).toMatchObject({ ok: true, report: {
-      command: 'brief', outcome: 'issued', run, briefVersion: 'polaris-dossier-brief-v9', schemaVersion: 'polaris-dossier-local-draft-v4',
+      command: 'brief', outcome: 'issued', run, briefVersion: 'polaris-dossier-brief-v10', schemaVersion: 'polaris-dossier-local-draft-v5',
       pinnedRevision: REV, issuedAt: '2026-10-07T12:00:00.000Z', deadlineEndsAt: '2026-10-07T13:00:00.000Z', executionRule: { arm: 'sec-3' },
     } });
     const brief = read(run, 'brief.md'), schema = read(run, 'draft.schema.json');
     expect(brief).toContain('Repository role: observed-source (Inferred); governance-root material keeps this same repository identity.');
     expect(brief).toContain(`- Run: \`${RUN_ID}\``);
     expect(brief).toContain(`- Pinned revision: \`${REV}\` (label-in-run-json)`);
-    expect(brief).toContain(`- Draft schema: \`polaris-dossier-local-draft-v4\`, in \`draft.schema.json\` beside this brief (sha256 \`${sha(schema)}\`)`);
+    expect(brief).toContain(`- Draft schema: \`polaris-dossier-local-draft-v5\`, in \`draft.schema.json\` beside this brief (sha256 \`${sha(schema)}\`)`);
     expect(brief).toContain('Your draft names that revision in `pinnedRevision`');
     expect(brief).toContain('Write it to `drafts/next.json` in the run directory and run `syzygy dossier check <run>`;');
     // The one quotation form, with an example, and what quoted text without it is: the brief and the schema say the same.
@@ -125,8 +125,8 @@ describe('brief: issued', () => {
     expect(brief).toContain('The heading below names the digest of the skill\'s `references/reader-standards.md`; the text under it is that file without its version line and with every heading one level down, so it does not itself hash to that digest.');
     const record = JSON.parse(read(run, 'brief.json'));
     expect(record).toMatchObject({
-      format: 'polaris-dossier-brief/1', briefVersion: 'polaris-dossier-brief-v9', role: 'authoring', runId: RUN_ID, pinnedRevision: REV,
-      schemaVersion: 'polaris-dossier-local-draft-v4', guidanceVersion: 'polaris-author-dossier-v2', issuedAt: '2026-10-07T12:00:00.000Z',
+      format: 'polaris-dossier-brief/1', briefVersion: 'polaris-dossier-brief-v10', role: 'authoring', runId: RUN_ID, pinnedRevision: REV,
+      schemaVersion: 'polaris-dossier-local-draft-v5', guidanceVersion: 'polaris-author-dossier-v2', issuedAt: '2026-10-07T12:00:00.000Z',
       readerStandards: { version: 'polaris-reader-standards-v1', sha256: sha(STANDARDS) },
       deadline: { declared: 'PT1H', seconds: 3600, endsAt: '2026-10-07T13:00:00.000Z' },
       files: { brief: { name: 'brief.md', sha256: sha(brief) }, draftSchema: { name: 'draft.schema.json', sha256: sha(schema) } },
@@ -259,7 +259,7 @@ describe('brief: issued', () => {
     if (!sec3.ok) throw new Error(sec3.reason);
     const rule = await decideExecutionRule({ role: 'authoring', runDir: '/r', runId: RUN_ID, pinnedRevision: REV, operatorIsOwner: true, sec3: sec3.sec3, now: NOW, d9: async () => OK, launched: () => 'absent', permitting: { enabled: false } });
     const text = renderBrief({ runId: RUN_ID, subject: SUBJECT, declared: configOf(), issuedAt: NOW, schemaSha256: '0'.repeat(64), executionRule: rule, revisionLabel: '8.10.2', copy: null });
-    const heading = '## Readability (`polaris-dossier-readability-v4`)';
+    const heading = '## Readability (`polaris-dossier-readability-v5`)';
     expect(text).toContain(`${heading}\n\nThese rules shape how the dossier reads; every claim, citation and quotation rule above still holds.\n\n${READABILITY_GUIDANCE}\n`);
     expect(text.indexOf(heading)).toBeGreaterThan(text.indexOf(DOSSIER_GUIDANCE));
   });
