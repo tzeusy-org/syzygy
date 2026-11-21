@@ -2194,6 +2194,21 @@ def check_generated(root, pop, report):
 # R5: default routes.
 # --------------------------------------------------------------------------
 
+def visible_route_lines(text):
+    """Yield route prose outside HTML comments and fenced examples."""
+    fence = None
+    for line in re.sub(r"<!--.*?(?:-->|\Z)", "", text, flags=re.S).splitlines():
+        marker = ADOPTION_FENCE.fullmatch(line)
+        if fence:
+            if marker and marker[1].startswith(fence) and not marker[2].strip():
+                fence = None
+            continue
+        if marker and (marker[1][0] == "~" or "`" not in marker[2]):
+            fence = marker[1]
+            continue
+        yield line
+
+
 def check_routes(root, pop, report):
     findings, examined = [], 0
     readme = read_text(root, OPENSPEC_README) or ""
@@ -2202,7 +2217,7 @@ def check_routes(root, pop, report):
                       if p.count("/") >= 3})
     changes = [c for c in changes if c != "archive"]
     rows = {}
-    for line in readme.splitlines():
+    for line in visible_route_lines(readme):
         m = re.match(r"^\| \[`([^`]+)`\]\(changes/", line)
         if m:
             rows.setdefault(m.group(1), []).append(line)
@@ -2249,28 +2264,35 @@ def check_routes(root, pop, report):
         if AGENT_ADOPTIONS not in status:
             findings.append(f"`{STATUS}` cites no declared-source agent-adoption ledger")
     url_amendment, url_records, url_subjects = url_source_binding(root)
+    url_index = rows.get(URL_SOURCE_CHANGE, [])
+    cells = [cell.strip() for cell in url_index[0].split("|")] if len(url_index) == 1 else []
+    status_fields = [line.strip() for line in visible_route_lines(status) if line.strip().startswith(URL_STATUS_PREFIX)]
     if url_amendment is not None:
         examined += 2
         if not any(Path(AGENT_ADOPTIONS).name in line and URL_SOURCE_TAG in line
                    for line in rows.get(URL_SOURCE_CHANGE, [])):
             findings.append(f"`{OPENSPEC_README}` does not route URL declared-source v2.1 "
                             f"to `{AGENT_ADOPTIONS}` and its version tag")
-        if AGENT_ADOPTIONS not in status or URL_SOURCE_HOME not in status:
-            findings.append(f"`{STATUS}` does not route URL declared-source v2.1 and its adoption")
+        identity = url_source_rows(root)[0][0]
+        if AGENT_ADOPTIONS not in status or status_fields != [f"{URL_STATUS_PREFIX} is agent-adopted in {identity}."]:
+            findings.append(f"`{STATUS}` does not route URL declared-source v2.1 and its adoption {identity}")
     else:
         url_rows = url_source_rows(root)
         disposition = url_source_disposition(root, url_rows) or (
             declared_source_disposition(root) if url_rows else None)
-        if disposition is not None or url_records or url_subjects:
+        if URL_SOURCE_CHANGE in changes:
             examined += 2
             predecessor = DECLARED_SOURCE_TAG if amendment is not None else "Unknown"
             expected = url_inactive_text(disposition, predecessor)
-            url_index = rows.get(URL_SOURCE_CHANGE, [])
-            cells = [cell.strip() for cell in url_index[0].split("|")] if len(url_index) == 1 else []
             index_current = len(cells) == 6 and cells[3] == expected and Path(AGENT_ADOPTIONS).name in cells[4]
-            status_fields = [line.strip() for line in status.splitlines() if line.strip().startswith(URL_STATUS_PREFIX)]
             status_current = status_fields == [
                 f"{URL_STATUS_PREFIX}. {expected} [Agent adoptions]({AGENT_ADOPTIONS})"]
+            if not (disposition or url_records or url_subjects):
+                # The source-only transaction published a pending index before the record.
+                if len(cells) == 6 and cells[3] == "Reviewed source prepared for agent adoption":
+                    index_current = Path(AGENT_ADOPTIONS).name in cells[4]
+                if not status_fields:
+                    status_current = True
             for file, current in ((OPENSPEC_README, index_current), (STATUS, status_current)):
                 if not current:
                     findings.append(f"`{file}` does not disclose inactive URL declared-source v2.1: {expected}")
@@ -3067,11 +3089,22 @@ def url_source_cases(tmp, base, witnesses, failures):
     record("url-source-inactive-stale-routes", STATUS, old_figure.group(0), figure,
            "R5 requires both routes to disclose the effective predecessor and veto",
            stale_routes, len(stale_routes) == 2, False)
-    def write_routes(disclosure):
-        current = f"    {URL_STATUS_PREFIX}. {disclosure} [Agent adoptions]({AGENT_ADOPTIONS})"
-        status_text = "\n".join(line for line in prior_status.split("\n")
-                                if not line.strip().startswith(URL_STATUS_PREFIX))
-        (tree / STATUS).write_text(STATUS_FIGURE.sub(figure, status_text) + f"\n\n{current}\n")
+
+    ledger.write_text(pending)
+    unrecorded = Report()
+    check_routes(tree, pending_pop, unrecorded)
+    unrecorded_routes = [line for line in unrecorded.lines if "does not disclose inactive URL declared-source v2.1" in line]
+    record("url-source-pending-stale-routes", AGENT_ADOPTIONS, row, "",
+           "R5 refuses active routes while the adoption row is missing",
+           unrecorded_routes, len(unrecorded_routes) == 2, False)
+    ledger.write_text(pending + row + url_veto)
+
+    def write_routes(disclosure, hide_status=False):
+        shown = f"    {URL_STATUS_PREFIX}. {disclosure} [Agent adoptions]({AGENT_ADOPTIONS})"
+        replacement = f"    <!--\n{shown}\n    -->" if hide_status else shown
+        status_text = "\n".join(replacement if line.strip().startswith(URL_STATUS_PREFIX) else line
+                                for line in prior_status.split("\n"))
+        (tree / STATUS).write_text(STATUS_FIGURE.sub(figure, status_text))
         (tree / OPENSPEC_README).write_text("\n".join(
             f"| [`{URL_SOURCE_CHANGE}`](changes/{URL_SOURCE_CHANGE}) | URL scope | {disclosure} | [{Path(AGENT_ADOPTIONS).name}]({AGENT_ADOPTIONS}) |"
             if line.startswith(f"| [`{URL_SOURCE_CHANGE}`]") else line
@@ -3084,6 +3117,13 @@ def url_source_cases(tmp, base, witnesses, failures):
     disclosed_routes = [line for line in disclosed.lines if "does not disclose inactive URL declared-source v2.1" in line]
     record("url-source-inactive-recorded-routes", STATUS, figure, disclosure,
            "R5 accepts both updated routes", disclosed_routes, not disclosed_routes, True)
+    write_routes(disclosure, hide_status=True)
+    hidden = Report()
+    check_routes(tree, route_pop, hidden)
+    hidden_routes = [line for line in hidden.lines if "does not disclose inactive URL declared-source v2.1" in line]
+    record("url-source-inactive-hidden-status", STATUS, disclosure, f"<!-- {disclosure} -->",
+           "R5 refuses inactive status hidden in a comment",
+           hidden_routes, len(hidden_routes) == 1 and STATUS in hidden_routes[0], False)
     contradiction = f"URL dossier 2.1 remains adopted. {disclosure}"
     write_routes(contradiction)
     contradictory = Report()
