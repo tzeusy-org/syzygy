@@ -23,66 +23,81 @@
 
 ## The lifecycle of a document
 
-Four words name **increasing force** — candidate, confirmed, accepted,
-recorded — and they are not synonyms: a document at one level must never be
-described using a word from a higher one.
+Since doctrine amendment D10 (2026-11-18), five words name **increasing
+force** — candidate, confirmed, adopted, accepted, recorded — and they are not
+synonyms: a document at one level must never be described using a word from
+a higher one, and an agent adoption is never described as the owner's.
 
 | Word | Means | Who makes it so |
 |---|---|---|
 | **candidate** | Drafted and reviewable. **Binds nothing.** May be discussed, may not be cited as authority. Most of this repository is here | anyone |
-| **confirmed** | An independent fresh-context reviewer examined the exact bytes and returned `CONFIRM`. Says the bytes are *ready to be offered* — **still binds nothing** | a reviewer |
-| **accepted** | An owner **act** was performed on it. It is now binding authority | the owner, and only the owner |
-| **recorded** | An owner **decision** was written down. Binding, but not digest-bound — no ceremony phrase, no argument | the owner |
+| **confirmed** | An independent fresh-context reviewer examined the exact bytes and returned `CONFIRM`. Says the bytes are ready — **still binds nothing**, and since D10 a review gates nothing either | a reviewer |
+| **adopted** | An agent landed it on the default branch with a row in `decisions/AGENT-ADOPTIONS.md` (commit, what, why, revert command; a spec version also gets a tag). Binding until the owner vetoes it. Covers everything outside the four owner classes | an agent (VIS-4) |
+| **accepted** | An owner **act** was performed on it before D10, with a typed phrase over a digest. Binding as decided; a later edit is a new adoption, not a broken act (RFC3-16 as amended) | the owner, before D10 |
+| **recorded** | An owner **decision** was written down: the owner's words, dated, with the commit that applies it. No ceremony phrase, no argument. Since D10 this is how the owner decides the four owner classes (doctrine; secrets; writes into repositories the owner does not own; exposure beyond the tailnet, release, deployment, multi-user) | the owner, and only the owner |
 
-**Confirmed is not accepted.** A `CONFIRM` verdict says the bytes are ready
-to be offered; an act is a separate thing that only the owner does. This is
-the distinction a newcomer most often collapses.
+**Confirmed is not adopted.** A `CONFIRM` verdict says the bytes are ready;
+adoption is the commit plus its row. This is the distinction a newcomer most
+often collapses.
 
 - *Example:* confirmation of Waves A and B did not make them binding — the
   two acts performed on 2026-08-17 did, and each was a separate transaction
   after the review.
-- *Status lives elsewhere:* which artifacts are accepted today is owned by
-  `.syzygy/governance/decisions/ACCEPTANCE-ACT-RECORD.md` and summarised in
+- *Status lives elsewhere:* what was accepted is owned by
+  `.syzygy/governance/decisions/ACCEPTANCE-ACT-RECORD.md`, what agents
+  adopted by `decisions/AGENT-ADOPTIONS.md`, and both are summarised in
   `PROJECT-STATUS.md`; read those, not this page, for status.
 - *Superseded, dated:* until 2026-09-05 this paragraph ended "Waves A and B
   are both *confirmed* today and **neither is accepted**; no owner act has
   been performed in this repository at all." That was true when written and
-  stopped being true on 2026-08-17.
+  stopped being true on 2026-08-17. Until 2026-11-21 the table had four rows
+  and said only the owner made anything binding; D10 made that false on
+  2026-11-18.
 
 ## Acts, arguments, offers
 
-An act is the owner's formal transaction; its argument is the exact bytes it
-binds; an offer presents a prepared act for a yes/no.
+An act was the owner's formal transaction; its argument was the exact bytes
+it bound; an offer presented a prepared act for a yes/no. D10 retired the
+ceremony: no new act, argument or offer is prepared. The words remain
+because the records use them.
 
-- **act** — a formal owner transaction that changes what is binding.
-  - An act has an exact **ceremony phrase** the owner types, and an
-    **argument**. Only the owner performs acts (doctrine VIS-4).
-  - Acts have been performed here, and
-    `.syzygy/governance/decisions/ACCEPTANCE-ACT-RECORD.md` — created by the
-    first of them — is the append-only record of every one. This page
+- **act** — a formal owner transaction that changed what was binding.
+  - An act had an exact **ceremony phrase** the owner typed, and an
+    **argument**. Only the owner performed acts.
+  - `.syzygy/governance/decisions/ACCEPTANCE-ACT-RECORD.md`, created by the
+    first of them, is the append-only record of every one. This page
     defines the word; it never says which acts exist.
+  - Since D10 the owner decides the four owner classes by a recorded
+    decision, with no phrase or digest, and agents adopt everything else.
   - *(Until 2026-09-05 this entry read "No act has been performed yet;
     `decisions/ACCEPTANCE-ACT-RECORD.md` therefore does not exist, and that
     absence is correct rather than a gap" — correct when written, false from
     2026-08-17 onward.)*
 
-- **argument** — the exact bytes an act binds, identified by a `sha256`
+- **argument** — the exact bytes an act bound, identified by a `sha256`
   digest.
   - For a wave act the argument is the digest of that wave's **whole
     manifest file** — four generated header lines plus one digest row per
     module.
-  - A change to a file that is not in the manifest moves no accepted byte.
-  - **But the header names the acceptance phrase**, so renaming the phrase
-    regenerates the argument and retires the confirmation without touching
-    any module. *(Corrected 2026-08-13, RD-54: the shorter form of this rule
-    — "the ceremony is in no manifest, so a ceremony change costs nothing" —
-    was false in exactly that case.)*
+  - Since D10 an argument is history, not a lock: editing a bound file is a
+    new adoption (RFC3-16 as amended).
+  - *(Corrected 2026-08-13, RD-54: the header names the acceptance phrase, so
+    renaming the phrase regenerated the argument. Moot since D10.)*
 
 - **offer** — presenting a prepared act to the owner for a yes/no.
-  - Preparing an offer is not performing it.
-  - An act can be *confirmed and unoffered* — Wave A spent a week in exactly
-    that state while the P-33 install-shape decision withheld its offer
-    (`PROJECT-STATUS.md` owns the current state).
+  - Preparing an offer was not performing it.
+  - D10 withdrew the unperformed offers its package lists (`RETIREMENTS.md`
+    §C in `contracts/candidates/governance-simplification-d10/`); none is
+    presented again.
+
+- **adoption** — an agent's decision under VIS-4 as amended by D10: the
+  change lands on the default branch and one row in
+  `decisions/AGENT-ADOPTIONS.md` names the commit, what changed, why and the
+  revert command.
+  - The pull request or session summary that links the row is the report.
+  - **veto** — the owner's revert of an adoption, at any time, by saying so;
+    recorded as a new row. A vetoed change is not adopted again without the
+    owner.
 
 - **wave** — one batch of contract modules accepted by one act.
   - There are six (A, B, C1, C2, D1, D2).
@@ -91,9 +106,8 @@ binds; an offer presents a prepared act for a yes/no.
     from default task routing.
 
 - **retire / survive** — what happens to a *confirmation* when bytes move.
-  If an act's argument regenerates, the review that confirmed the old
-  argument no longer covers anything and is **retired**; otherwise it
-  **survives**.
+  If the bytes a review confirmed change, that review no longer covers them
+  and is **retired**; otherwise it **survives**.
 
 ## Identifiers
 
@@ -108,11 +122,12 @@ Identifiers are amended in place or retired — **never renumbered**.
 
 | Form | Is | Example |
 |---|---|---|
-| `P-nn` | An open **owner decision**, queued in `PENDING-OWNER-DECISIONS.md`. A question only the owner may answer | `P-41` — the specification-acceptance craft act |
+| `P-nn` | An open **owner decision**, queued in `PENDING-OWNER-DECISIONS.md`. Since D10 a row outside the four owner classes may be closed by an agent adoption | `P-41` — the specification-acceptance craft act |
 | `RD-nn` | A **review**. Raw reviewer output, stored verbatim and never edited | `RD-49` — the P-33 review |
 | `VIS-n`, `SEC-n` | An adopted **doctrine** rule. Binding since 2026-07-30 | `VIS-2` — no evidence means Unknown |
+| `A-n` | An **agent adoption**, one row of `decisions/AGENT-ADOPTIONS.md` | `A-4` — the dossier declared-source model |
 | `SDR-n` | A prior recorded owner **decision** | `SDR-9` |
-| `CC-*` | An owner-approved **craft policy** clause | `CC-REV-3` |
+| `CC-*` | A **craft policy** clause; owner-approved before D10, changed since by agent adoption | `CC-REV-3` |
 | `RFCn-m` | Clause *m* of candidate contract RFC-000*n* | `RFC3-15` — the governance category rules |
 | `D1`, `D2`, `D3` | A **doctrine amendment**. D1 and D2 are in force; D3 is a candidate | |
 | `CG-nn` | A check inside `check_governance.py` | `CG-15` |
