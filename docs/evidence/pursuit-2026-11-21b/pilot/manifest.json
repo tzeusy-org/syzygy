@@ -1,0 +1,227 @@
+{
+ "commit": "498ecd0d6d007db11ddb3aea9428552598a78622",
+ "repository": "github.com/redis/redis",
+ "policy": {
+  "policyId": "polaris-butlers-project-shape-secrets",
+  "policyVersion": "1.9.0-public-source-candidate.1.none.code-all.redact-span.v5-bcd.v6-p.v7-s.v8-pv",
+  "sha256": "44153bbe210c7a724f224f2bc1c9255db43cf0887b6ad22dd24884514f21bbe8"
+ },
+ "policyBlob": "588f9ffd514beccbbd320830bb71ac8b6f6936fa",
+ "policyBlobFoundAt": "73716fc70b455f264411857be77467e9cfeb9e6c:.syzygy/governance/policies/POLARIS-BUTLERS-SECRET-CLASSIFICATION-POLICY-CANDIDATE.json",
+ "screenCode": "packages/polaris-dossier/src/screen.ts buildDossierScreen at main checkout c62d4cf79a514d574882c337f605d40bfc04f838",
+ "screenConfiguration": {
+  "projectDocumentation": true,
+  "visibility": "public",
+  "subject": {
+   "repository": "repository:redis-redis",
+   "commit": "498ecd0d6d007db11ddb3aea9428552598a78622"
+  }
+ },
+ "screenRule": "kept only if screenPath(path) is undefined AND screenBody(body, path) is undefined AND screenTargetBody(body, path).kind == 'admitted'; body decoded strict UTF-8",
+ "filesInCommit": 1861,
+ "filesAdmitted": 1176,
+ "filesLeftOutByReason": {
+  "path:unknown-extraction-class": 662,
+  "body:secret-detector-match": 21,
+  "body:not-utf8-text": 2
+ },
+ "redactedSpan": {
+  "files": 2,
+  "withheldLines": 23,
+  "retainedBytes": 160014,
+  "paths": [
+   "README.md",
+   "redis.conf"
+  ],
+  "rule": "screenPath undefined, strict UTF-8, screenTargetBody kind 'redacted'; the file in tree/ is the screen's own retained text"
+ },
+ "excludedWholeForSecretDetector": 19,
+ "treeBytes": 15567017,
+ "treeFilesOnDisk": 1178,
+ "wholeFileBytes": 15407003,
+ "visibilityIndependentByCount": true,
+ "otherConfigurations": [
+  {
+   "projectDocumentation": true,
+   "visibility": "public",
+   "ok": true,
+   "admitted": 1176
+  },
+  {
+   "projectDocumentation": true,
+   "visibility": "private",
+   "ok": true,
+   "admitted": 1176
+  },
+  {
+   "projectDocumentation": false,
+   "visibility": "public",
+   "ok": true,
+   "admitted": 1171
+  },
+  {
+   "projectDocumentation": false,
+   "visibility": "private",
+   "ok": true,
+   "admitted": 1171
+  }
+ ],
+ "agreementWithRunCitedBlobs": [
+  {
+   "path": "README.md",
+   "runOutcome": "admitted",
+   "runRedaction": true,
+   "screen": "body:secret-detector-match"
+  },
+  {
+   "path": "MANIFESTO",
+   "runOutcome": "admitted",
+   "runRedaction": false,
+   "screen": "admitted"
+  },
+  {
+   "path": "src/ae.c",
+   "runOutcome": "admitted",
+   "runRedaction": false,
+   "screen": "admitted"
+  },
+  {
+   "path": "src/server.c",
+   "runOutcome": "admitted",
+   "runRedaction": false,
+   "screen": "admitted"
+  },
+  {
+   "path": "src/aof.c",
+   "runOutcome": "admitted",
+   "runRedaction": false,
+   "screen": "admitted"
+  },
+  {
+   "path": "redis.conf",
+   "runOutcome": "admitted",
+   "runRedaction": true,
+   "screen": "body:secret-detector-match"
+  },
+  {
+   "path": "sentinel.conf",
+   "runOutcome": "unknown-extraction-class",
+   "runRedaction": false,
+   "screen": "path:unknown-extraction-class"
+  },
+  {
+   "path": "src/sentinel.c",
+   "runOutcome": "secret-detector-match",
+   "runRedaction": false,
+   "screen": "body:secret-detector-match"
+  },
+  {
+   "path": "modules/README.md",
+   "runOutcome": "unknown-extraction-class",
+   "runRedaction": false,
+   "screen": "path:unknown-extraction-class"
+  },
+  {
+   "path": "src/rdb.c",
+   "runOutcome": "admitted",
+   "runRedaction": false,
+   "screen": "admitted"
+  },
+  {
+   "path": "src/replication.c",
+   "runOutcome": "admitted",
+   "runRedaction": false,
+   "screen": "admitted"
+  },
+  {
+   "path": "src/cluster.h",
+   "runOutcome": "admitted",
+   "runRedaction": false,
+   "screen": "admitted"
+  },
+  {
+   "path": "SECURITY.md",
+   "runOutcome": "admitted",
+   "runRedaction": false,
+   "screen": "admitted"
+  },
+  {
+   "path": "00-RELEASENOTES",
+   "runOutcome": "admitted",
+   "runRedaction": false,
+   "screen": "admitted"
+  },
+  {
+   "path": "CONTRIBUTING.md",
+   "runOutcome": "admitted",
+   "runRedaction": false,
+   "screen": "admitted"
+  },
+  {
+   "path": "src/networking.c",
+   "runOutcome": "admitted",
+   "runRedaction": false,
+   "screen": "admitted"
+  },
+  {
+   "path": "src/socket.c",
+   "runOutcome": "admitted",
+   "runRedaction": false,
+   "screen": "admitted"
+  },
+  {
+   "path": "modules/MODULES.md",
+   "runOutcome": "admitted",
+   "runRedaction": false,
+   "screen": "admitted"
+  },
+  {
+   "path": "TLS.md",
+   "runOutcome": "admitted",
+   "runRedaction": false,
+   "screen": "admitted"
+  },
+  {
+   "path": "src/module.c",
+   "runOutcome": "secret-detector-match",
+   "runRedaction": false,
+   "screen": "body:secret-detector-match"
+  }
+ ],
+ "equalReachCaveat": {
+  "citedByDossierAsRedactedSpan": [
+   "README.md",
+   "redis.conf"
+  ],
+  "nowInTreeAsRedactedSpan": [
+   "README.md",
+   "redis.conf"
+  ],
+  "stillMissing": []
+ },
+ "dossier": {
+  "pages": 15,
+  "words": 12574,
+  "sourcesPagesExcluded": 27,
+  "rule": "every .html under site/1 except sources/*.html other than sources/index.html; text from <main> only",
+  "perPageWords": {
+   "appendix.html": 1024,
+   "clarifications.html": 107,
+   "contents.html": 144,
+   "discovery.html": 945,
+   "executions.html": 198,
+   "glossary.html": 451,
+   "index.html": 1563,
+   "review.html": 460,
+   "size-report.html": 511,
+   "understanding.html": 1213,
+   "poles/1.html": 1172,
+   "poles/2.html": 1298,
+   "poles/3.html": 2015,
+   "sources/index.html": 777,
+   "deep-dives/mechanism-deep-dive.html": 696
+  },
+  "siteDir": "run-658f2f90470f73eea1dc1d90209c5ef7/site/1 (draft revision 4)"
+ },
+ "runtimeNote": "screen.ts ran from the main checkout sources with node --experimental-transform-types and a resolve hook (audit/scripts/ts-hooks.mjs); parse5 8.1.0 and yaml, imported by modules the screen loads but not by the screen functions, resolved read-only from an existing worktree node_modules"
+}

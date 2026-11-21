@@ -1,0 +1,122 @@
+[
+ {
+  "id": "Q01",
+  "kind": "purpose",
+  "question": "What is Redis, where does it keep its data, and what kinds of application problems is it meant to solve?"
+ },
+ {
+  "id": "Q02",
+  "kind": "purpose",
+  "question": "Redis has two ways of persisting data to disk. What is each one for, how do they differ in durability, and which one is used to restore data at startup when both are enabled?"
+ },
+ {
+  "id": "Q03",
+  "kind": "purpose",
+  "question": "What is the background I/O service for, what kinds of work does it take off the main thread, and what ordering guarantee does it give?"
+ },
+ {
+  "id": "Q04",
+  "kind": "purpose",
+  "question": "What is the modules system for, how is a module brought into a running server, and how does a module's own data type get saved and restored given that the core does not understand it?"
+ },
+ {
+  "id": "Q05",
+  "kind": "structure",
+  "question": "How do the event loop, the connection layer and the client-handling code fit together to make the server run? Describe what one turn of the main loop does."
+ },
+ {
+  "id": "Q06",
+  "kind": "structure",
+  "question": "How is a database's keyspace organised in memory: what containers hold keys and their expirations, how does that layout change in cluster mode, and where is a key's name stored relative to its value?"
+ },
+ {
+  "id": "Q07",
+  "kind": "structure",
+  "question": "A stored value has both a 'type' and an 'encoding'. What is the difference, why do both exist, and who decides which encoding a value uses?"
+ },
+ {
+  "id": "Q08",
+  "kind": "structure",
+  "question": "How is the clustering code divided, and how does a cluster node decide which hash slot a key belongs to and whether it should serve the command or redirect the client?"
+ },
+ {
+  "id": "Q09",
+  "kind": "mechanism",
+  "question": "Walk through what happens to a write command from the moment its bytes arrive on a client socket until it has been executed and made durable or replicated. What checks can stop it before execution?"
+ },
+ {
+  "id": "Q10",
+  "kind": "mechanism",
+  "question": "How does a background rewrite of the append-only file work, step by step, and how does the server keep track of which files make up the log while writes continue?"
+ },
+ {
+  "id": "Q11",
+  "kind": "mechanism",
+  "question": "When a replica connects (or reconnects) to a master, how does the master decide between sending only the missing data and doing a full resynchronization, and what happens in each case?"
+ },
+ {
+  "id": "Q12",
+  "kind": "mechanism",
+  "question": "How do keys with a time-to-live actually get removed? Describe the mechanisms involved, how the background one limits its own cost, and how removal is kept consistent on replicas and in the append-only file."
+ },
+ {
+  "id": "Q13",
+  "kind": "rationale",
+  "question": "Why does eviction pick victims using an approximation instead of tracking exact least-recently-used order, how does the approximation work, and what does that choice cost?"
+ },
+ {
+  "id": "Q14",
+  "kind": "rationale",
+  "question": "Why are the main hash tables resized incrementally rather than all at once, and why is resizing discouraged while a background save or rewrite child is running? What does each choice cost?"
+ },
+ {
+  "id": "Q15",
+  "kind": "rationale",
+  "question": "Why does Redis execute commands on essentially one thread, where does it nevertheless use extra threads, and what are the stated costs or conditions of doing so?"
+ },
+ {
+  "id": "Q16",
+  "kind": "rationale",
+  "question": "What trade-off do the append-only file's sync policies offer, why is the log written just before the event loop sleeps rather than inside each command, and what durability is given up while a background save is running if the related mitigation is turned on?"
+ },
+ {
+  "id": "Q17",
+  "kind": "change",
+  "question": "If you wanted to add a new built-in command, where is the command table defined, how does it get into the running server, and what besides the handler function must you describe about the command?"
+ },
+ {
+  "id": "Q18",
+  "kind": "change",
+  "question": "Where would you add a new configuration parameter, and what determines whether it can be changed at runtime, what its default is, and whether changing it triggers any action?"
+ },
+ {
+  "id": "Q19",
+  "kind": "change",
+  "question": "Where is it decided when a small hash, set, sorted set or list stops using its compact representation, and how would you tune or change that behaviour?"
+ },
+ {
+  "id": "Q20",
+  "kind": "change",
+  "question": "Where would you plug in (a) support for a different operating-system readiness-notification API and (b) a new kind of client transport alongside TCP, Unix sockets and TLS?"
+ },
+ {
+  "id": "Q21",
+  "kind": "limits",
+  "question": "What happens when the configured memory limit is reached, in which situations will writes start failing, and what memory or which instances are not subject to the limit in the way you might expect?"
+ },
+ {
+  "id": "Q22",
+  "kind": "limits",
+  "question": "How does the server behave when persistence goes wrong: when a background snapshot fails, when the append-only file is damaged at startup, and when the data file cannot be loaded at all?"
+ },
+ {
+  "id": "Q23",
+  "kind": "limits",
+  "question": "What consistency and durability guarantees does master-replica replication NOT give, what can an operator configure to narrow the exposure, and how does a replica behave towards clients when its link to the master is down?"
+ },
+ {
+  "id": "Q24",
+  "kind": "limits",
+  "question": "What restrictions does running in cluster mode impose on commands and databases compared with a standalone server, and what happens to the cluster's availability when some hash slots have no serving node?"
+ }
+]

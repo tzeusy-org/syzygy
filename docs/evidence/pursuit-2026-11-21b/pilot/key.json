@@ -1,0 +1,439 @@
+{
+  "questions": [
+    {
+      "id": "Q01",
+      "kind": "purpose",
+      "question": "What is Redis, where does it keep its data, and what kinds of application problems is it meant to solve?",
+      "model_answer": "Redis is a server (a TCP daemon) that exposes abstract data types such as strings, lists, sets, hashes and sorted sets under binary-safe keys, and is positioned as a cache, data structure server and document/vector query engine. The data set lives primarily in the computer's memory, which is what gives it low and predictable latency; disk is used only optionally for persistence. Typical uses named by the project are caching, session storage, queues and message brokering (lists, streams, pub/sub), leaderboards and counters, and real-time analytics.",
+      "required_facts": [
+        "Redis is a network server that manipulates abstract data types (strings, lists, sets, hashes, sorted sets, ...) stored under keys",
+        "The data set is held primarily in memory, which is the source of its speed and predictable performance",
+        "Main use cases include caching, session storage, messaging/queues and real-time analytics"
+      ],
+      "support": [
+        {"path": "README.md", "lines": "37-52"},
+        {"path": "README.md", "lines": "54-66"},
+        {"path": "MANIFESTO", "lines": "7-26"}
+      ]
+    },
+    {
+      "id": "Q02",
+      "kind": "purpose",
+      "question": "Redis has two ways of persisting data to disk. What is each one for, how do they differ in durability, and which one is used to restore data at startup when both are enabled?",
+      "model_answer": "Snapshotting (RDB) periodically dumps the whole dataset to disk when configured save points are met (a number of seconds elapsed together with a number of writes), so a crash can lose the minutes of writes since the last snapshot. The append-only file (AOF) logs the write operations applied to the dataset and gives much better durability: with the default once-per-second fsync at most about one second of writes is lost on power failure. Both can be enabled together, and if AOF is enabled at startup Redis loads the AOF because it has the better durability guarantees.",
+      "required_facts": [
+        "RDB snapshotting saves the whole dataset when a save point (elapsed seconds plus number of changes) is reached, and can lose minutes of writes",
+        "AOF is an append-only log of writes with better durability (about one second of loss with the default fsync policy)",
+        "Both can be enabled at once; at startup the AOF is loaded in preference to the RDB file"
+      ],
+      "support": [
+        {"path": "redis.conf", "lines": "485-506"},
+        {"path": "redis.conf", "lines": "1469-1483"},
+        {"path": "src/server.c", "lines": "7757-7783"}
+      ]
+    },
+    {
+      "id": "Q03",
+      "kind": "purpose",
+      "question": "What is the background I/O service for, what kinds of work does it take off the main thread, and what ordering guarantee does it give?",
+      "model_answer": "The background I/O service exists so that operations that could block the server are performed on side threads instead of the main thread. It handles three kinds of work: closing files (where the close may actually unlink a file and be slow), fsync of the append-only file, and lazy freeing of memory. Each job type is assigned to one specific worker thread with its own queue, and a worker processes its jobs sequentially in the order they were inserted.",
+      "required_facts": [
+        "It moves slow, potentially blocking operations off the main thread onto background worker threads",
+        "The job kinds are background file close, AOF fsync, and lazy freeing of memory",
+        "Each job type is bound to one worker, and jobs on a worker are processed in FIFO order"
+      ],
+      "support": [
+        {"path": "src/bio.c", "lines": "1-35"},
+        {"path": "src/bio.c", "lines": "51-67"}
+      ]
+    },
+    {
+      "id": "Q04",
+      "kind": "purpose",
+      "question": "What is the modules system for, how is a module brought into a running server, and how does a module's own data type get saved and restored given that the core does not understand it?",
+      "model_answer": "Modules let Redis be extended beyond its built-in data structures: a module is a shared library that implements new commands (and possibly new data types). It is loaded at startup with a loadmodule directive naming the library and optional arguments, and the server aborts if a module cannot be loaded; the module's load entry point initialises the API and registers each command with flags and key positions. A module-owned value is stored as a special object type whose value is managed only by the module, with a table of function pointers for serialising, deserialising, AOF-rewriting and freeing it, and in the RDB file it is tagged with a 64-bit module type ID so loading is dispatched to the right module.",
+      "required_facts": [
+        "Modules extend Redis with new commands and data types beyond the built-in ones",
+        "They are loaded via loadmodule directives at startup (the server aborts if loading fails), and the module's load function registers its commands",
+        "Module values are a special object type handled through module-supplied callbacks (serialise, deserialise, AOF rewrite, free)",
+        "In RDB a module value carries a 64-bit module type ID used to dispatch loading to the owning module"
+      ],
+      "support": [
+        {"path": "README.md", "lines": "60-60"},
+        {"path": "redis.conf", "lines": "47-54"},
+        {"path": "src/server.h", "lines": "882-896"},
+        {"path": "src/modules/helloworld.c", "lines": "525-541"},
+        {"path": "src/redismodule.h", "lines": "1537-1542"}
+      ]
+    },
+    {
+      "id": "Q05",
+      "kind": "structure",
+      "question": "How do the event loop, the connection layer and the client-handling code fit together to make the server run? Describe what one turn of the main loop does.",
+      "model_answer": "The server is driven by a single event loop that multiplexes file (socket) events and time events over the best polling facility the OS offers (evport, epoll, kqueue, or select as fallback). At initialisation the server registers a periodic timer callback (the server cron), a before-sleep hook, and accept handlers on its listeners; each accepted client gets a read handler installed on its connection, and connections are an abstraction with pluggable types (TCP, Unix socket, TLS). Each turn of the loop runs the before-sleep hook, blocks in the poll call until a descriptor is ready or the next timer is due, runs the after-sleep hook, dispatches the fired read/write handlers, and finally runs due time events.",
+      "required_facts": [
+        "A single event loop handles both file (socket) events and time events, choosing one OS polling backend (evport/epoll/kqueue/select) at build time",
+        "Server init registers the periodic cron timer, a before-sleep hook and accept handlers; each client connection gets a read handler",
+        "One iteration: before-sleep hook, poll (sleeping until an fd fires or the next timer), after-sleep hook, fired file handlers, then time events",
+        "Connections are abstracted behind a connection-type interface (TCP, Unix, TLS)"
+      ],
+      "support": [
+        {"path": "src/ae.c", "lines": "30-44"},
+        {"path": "src/ae.c", "lines": "350-473"},
+        {"path": "src/ae.c", "lines": "497-504"},
+        {"path": "src/server.c", "lines": "3201-3216"},
+        {"path": "src/server.c", "lines": "3309-3309"},
+        {"path": "src/networking.c", "lines": "122-135"},
+        {"path": "src/connection.c", "lines": "61-72"}
+      ]
+    },
+    {
+      "id": "Q06",
+      "kind": "structure",
+      "question": "How is a database's keyspace organised in memory: what containers hold keys and their expirations, how does that layout change in cluster mode, and where is a key's name stored relative to its value?",
+      "model_answer": "Each database holds a main keyspace store, a second store indexing the keys that have a timeout, and a third structure for sub-key expirations (currently hash fields), plus bookkeeping tables for blocked and watched keys. The stores are 'kvstores': an array of hash tables rather than a single one. In standalone mode there is one hash table; in cluster mode there is one per hash slot (2^14 of them, allocated on demand), so all keys of a slot can be reached easily. The key name is not a separate object: the key (and optional metadata such as the expiry, and small string values) is embedded in the same allocation as the value object.",
+      "required_facts": [
+        "A database has a main keys store plus a separate store for keys with an expiration (and one for sub-key/hash-field expirations)",
+        "Each store is an array of hash tables: one table in standalone mode, one per hash slot in cluster mode",
+        "The key string (and optional expiry metadata) is embedded in the same allocation as the value object"
+      ],
+      "support": [
+        {"path": "src/server.h", "lines": "1226-1241"},
+        {"path": "src/kvstore.h", "lines": "12-21"},
+        {"path": "src/server.c", "lines": "3094-3102"},
+        {"path": "src/object.h", "lines": "24-56"}
+      ]
+    },
+    {
+      "id": "Q07",
+      "kind": "structure",
+      "question": "A stored value has both a 'type' and an 'encoding'. What is the difference, why do both exist, and who decides which encoding a value uses?",
+      "model_answer": "The type is the logical data type the user sees (string, list, set, sorted set, hash, stream, module value, ...), while the encoding says which in-memory representation currently implements it. Several types have multiple encodings optimised for memory footprint or speed: for example compact listpack or integer-set forms for small collections versus hash tables and skiplists for large ones, and integer or embedded forms for short strings. The generic object code only chooses encodings for strings; for the other types, the code implementing each type's commands picks and converts the encoding as the value grows. A sorted set in its full form, for instance, keeps the same elements in both a hash table (element to score) and a skiplist (ordered by score).",
+      "required_facts": [
+        "Type is the logical data type; encoding is the current in-memory representation of that value",
+        "One type can have several encodings, trading memory footprint against speed (compact forms for small values, hash table/skiplist forms for large)",
+        "String encodings are chosen in the generic object code; other types' encodings are managed by the code implementing that type's commands"
+      ],
+      "support": [
+        {"path": "src/object.h", "lines": "14-22"},
+        {"path": "src/object.h", "lines": "74-90"},
+        {"path": "src/server.h", "lines": "875-898"},
+        {"path": "src/object.c", "lines": "938-980"},
+        {"path": "src/t_zset.c", "lines": "20-33"}
+      ]
+    },
+    {
+      "id": "Q08",
+      "kind": "structure",
+      "question": "How is the clustering code divided, and how does a cluster node decide which hash slot a key belongs to and whether it should serve the command or redirect the client?",
+      "model_answer": "The clustering code is split into a common part shared by any clustering implementation (key-space handling, slot computation, deciding which node serves a query) and a separate part implementing the standard cluster-bus based mechanism. A key maps to one of 16384 slots by taking the low 14 bits of the CRC16 of the key; if the key contains a non-empty {...} section only that part is hashed, so related keys can be forced into the same slot. For each command with keys the node works out the owning node: if it is itself the command runs, otherwise the client gets a MOVED or ASK redirection, and commands whose keys fall in different slots are refused.",
+      "required_facts": [
+        "Cluster code is split into a generic/common part and a part specific to the cluster-bus (gossip) implementation",
+        "There are 16384 slots; slot = CRC16(key) reduced to 14 bits",
+        "If the key contains a non-empty {...} hash tag only the tagged part is hashed",
+        "Commands for slots owned elsewhere are redirected (MOVED/ASK); keys spanning different slots are rejected"
+      ],
+      "support": [
+        {"path": "src/cluster.c", "lines": "15-19"},
+        {"path": "src/cluster_legacy.c", "lines": "15-18"},
+        {"path": "src/cluster.h", "lines": "22-23"},
+        {"path": "src/cluster.h", "lines": "54-79"},
+        {"path": "src/cluster.c", "lines": "1202-1235"},
+        {"path": "src/server.c", "lines": "4599-4621"}
+      ]
+    },
+    {
+      "id": "Q09",
+      "kind": "mechanism",
+      "question": "Walk through what happens to a write command from the moment its bytes arrive on a client socket until it has been executed and made durable or replicated. What checks can stop it before execution?",
+      "model_answer": "The connection's read handler reads bytes into the client's query buffer and the input-buffer processor parses complete commands into an argument vector. The command processor then looks the command up in the command table and rejects unknown names or wrong arity, checks authentication and ACL permissions, performs cluster redirection if the keys belong to another node, tries to evict data if memory is over the limit (rejecting with an out-of-memory error if it cannot), and refuses writes when persistence is failing, when too few replicas are connected, or when the node is a read-only replica. If the client is inside a transaction the command is queued instead; otherwise the core call routine executes it and, if it changed the dataset, propagates it to the AOF buffer and to the replication stream. The AOF buffer is written to disk in the before-sleep hook, before replies are delivered to clients.",
+      "required_facts": [
+        "Bytes are read into a per-client query buffer and parsed into arguments before the command is looked up in the command table (unknown command / wrong arity rejected)",
+        "Pre-execution checks include authentication/ACL, cluster redirection, maxmemory eviction (OOM rejection), and write refusals (disk error, not enough replicas, read-only replica)",
+        "Inside MULTI the command is queued instead of executed",
+        "After execution a data-modifying command is propagated to the AOF buffer and to replicas; the AOF buffer is flushed before returning to the event loop / replying"
+      ],
+      "support": [
+        {"path": "src/networking.c", "lines": "3685-3690"},
+        {"path": "src/networking.c", "lines": "3893-3896"},
+        {"path": "src/server.c", "lines": "4459-4466"},
+        {"path": "src/server.c", "lines": "4496-4499"},
+        {"path": "src/server.c", "lines": "4587-4602"},
+        {"path": "src/server.c", "lines": "4649-4670"},
+        {"path": "src/server.c", "lines": "4685-4727"},
+        {"path": "src/server.c", "lines": "4831-4847"},
+        {"path": "src/server.c", "lines": "3957-3966"},
+        {"path": "src/server.c", "lines": "3744-3758"},
+        {"path": "src/aof.c", "lines": "1690-1697"},
+        {"path": "src/server.c", "lines": "2053-2057"}
+      ]
+    },
+    {
+      "id": "Q10",
+      "kind": "mechanism",
+      "question": "How does a background rewrite of the append-only file work, step by step, and how does the server keep track of which files make up the log while writes continue?",
+      "model_answer": "The append-only log is a set of files tracked by a manifest: at most one base file (a snapshot as of the last rewrite), one or more incremental files holding the writes since then, and history files left over from earlier generations. On a rewrite the parent first flushes its buffer and opens a new incremental file to keep logging, then forks; the child writes a fresh snapshot of the dataset to a temporary file and exits. When the parent sees the child succeeded, it renames the temporary file to a new base file name, marks the previous base and the already-covered incremental files as history, persists the updated manifest, and deletes the history files in a background thread.",
+      "required_facts": [
+        "AOF consists of a base (snapshot) file plus incremental files, with a manifest tracking them and their order",
+        "The parent opens a new incremental file and forks; the child writes a new snapshot to a temporary file",
+        "On success the parent renames the temp file to the new base, marks the old base and old incremental files as history, and persists the manifest",
+        "History files are deleted afterwards in the background"
+      ],
+      "support": [
+        {"path": "src/aof.c", "lines": "43-72"},
+        {"path": "src/aof.c", "lines": "3183-3196"},
+        {"path": "src/aof.c", "lines": "3197-3254"},
+        {"path": "redis.conf", "lines": "1495-1516"}
+      ]
+    },
+    {
+      "id": "Q11",
+      "kind": "mechanism",
+      "question": "When a replica connects (or reconnects) to a master, how does the master decide between sending only the missing data and doing a full resynchronization, and what happens in each case?",
+      "model_answer": "The replica asks to continue from a given replication ID and offset. The master accepts a partial resynchronization only if that ID matches its current replication ID (or its secondary ID, up to the offset where that history ended) and the requested offset is still inside its replication backlog, an in-memory buffer of recent replication stream; it then replies that it can continue and sends the backlog from that offset onward. Otherwise it falls back to a full resynchronization: it tells the replica the new replication ID and offset, produces an RDB snapshot in a forked child (written to disk and then transferred, or streamed directly to replica sockets in diskless mode), and the replica loads it. A bigger backlog lets replicas survive longer disconnections without a full resync.",
+      "required_facts": [
+        "The replica presents a replication ID and offset; the master compares the ID with its own (current or secondary) replication IDs",
+        "Partial resync also requires the requested offset to still be covered by the replication backlog buffer; then only the missing backlog portion is sent",
+        "Otherwise a full resync happens: the master announces a new ID/offset and transfers an RDB snapshot produced by a child process (via disk or directly over the socket)"
+      ],
+      "support": [
+        {"path": "src/replication.c", "lines": "1002-1082"},
+        {"path": "src/replication.c", "lines": "1274-1282"},
+        {"path": "src/replication.c", "lines": "1336-1415"},
+        {"path": "redis.conf", "lines": "652-671"},
+        {"path": "redis.conf", "lines": "768-779"}
+      ]
+    },
+    {
+      "id": "Q12",
+      "kind": "mechanism",
+      "question": "How do keys with a time-to-live actually get removed? Describe the mechanisms involved, how the background one limits its own cost, and how removal is kept consistent on replicas and in the append-only file.",
+      "model_answer": "Expired keys are reclaimed in two ways: lazily, when a key is accessed and found to be past its expiry, and actively, by a background cycle that samples keys with timeouts so that keys never accessed again are still freed. The active cycle is adaptive and runs in two forms: a slow cycle from the periodic server timer (hz times per second) bounded to a percentage of CPU time, and a short fast cycle run before each sleep of the event loop, bounded to about a millisecond; it stops working on a database once the estimated fraction of expired keys is low. Only the master deletes: when it removes an expired key it sends an explicit delete to replicas and the AOF, while replicas do not delete expired keys themselves but report them as expired to readers until the master's delete arrives.",
+      "required_facts": [
+        "Two mechanisms: lazy expiration on access and an active background expire cycle",
+        "The active cycle has a slow form run from the periodic timer and a fast form run before sleeping, each with a time limit, and is adaptive to how many keys are expired",
+        "The master propagates a delete (DEL/UNLINK) for each expired key to replicas and the AOF",
+        "Replicas do not delete expired keys on their own; they wait for the master's delete while still treating the key as logically expired for reads"
+      ],
+      "support": [
+        {"path": "src/expire.c", "lines": "56-100"},
+        {"path": "src/db.c", "lines": "2899-2907"},
+        {"path": "src/db.c", "lines": "2963-2984"},
+        {"path": "src/server.c", "lines": "2006-2009"},
+        {"path": "src/server.c", "lines": "1543-1548"},
+        {"path": "redis.conf", "lines": "1308-1321"}
+      ]
+    },
+    {
+      "id": "Q13",
+      "kind": "rationale",
+      "question": "Why does eviction pick victims using an approximation instead of tracking exact least-recently-used order, how does the approximation work, and what does that choice cost?",
+      "model_answer": "Exact LRU ordering would need extra memory per key, so Redis uses an approximation that runs in constant memory: each object carries only a small access clock (or frequency counter), and when a key must be evicted the server samples a handful of keys (five by default) and feeds the best candidates into a small fixed-size pool kept across eviction calls, then evicts the best entry in the pool. The cost is accuracy: the evicted key is not guaranteed to be the globally oldest one. The sample size is tunable to trade CPU for accuracy (ten samples comes very close to true LRU but costs more CPU, three is faster but less accurate).",
+      "required_facts": [
+        "The approximation is used to save memory (it runs in constant memory rather than maintaining an exact ordering)",
+        "It samples a small number of keys (default 5) and keeps the best candidates in a small fixed-size pool across calls, evicting the best one",
+        "The trade-off is accuracy versus CPU, tunable via the sample size (more samples = closer to true LRU but more CPU)"
+      ],
+      "support": [
+        {"path": "src/evict.c", "lines": "25-36"},
+        {"path": "src/evict.c", "lines": "91-109"},
+        {"path": "redis.conf", "lines": "1248-1249"},
+        {"path": "redis.conf", "lines": "1268-1278"}
+      ]
+    },
+    {
+      "id": "Q14",
+      "kind": "rationale",
+      "question": "Why are the main hash tables resized incrementally rather than all at once, and why is resizing discouraged while a background save or rewrite child is running? What does each choice cost?",
+      "model_answer": "Rehashing is spread over many small steps (one bucket at a time, piggybacked on ordinary lookups and updates, plus about one millisecond of active rehashing ten times a second) so that growing a huge table never blocks the single main thread for a long time; the cost is that two tables coexist and use extra memory until rehashing finishes, and active rehashing can add occasional small delays. While a forked child is saving, resizing is avoided because the child shares memory pages with the parent copy-on-write, and moving lots of entries would cause many pages to be copied. The cost of that is that tables may run denser than ideal during a save; resizing is only forced when the load factor exceeds a hard ratio, and inside the child itself it is forbidden entirely.",
+      "required_facts": [
+        "Rehashing is incremental (small steps during normal operations plus a time-bounded active rehash) to avoid long blocking pauses",
+        "The cost of incremental rehashing is extra memory while two tables coexist (and small latency from active rehashing)",
+        "With a child process active, resizing is avoided to limit copy-on-write page copying",
+        "Resizing is still allowed when the fill ratio passes a forced threshold (elements/buckets of 4 or more)"
+      ],
+      "support": [
+        {"path": "src/dict.c", "lines": "34-46"},
+        {"path": "src/dict.c", "lines": "397-405"},
+        {"path": "src/dict.c", "lines": "463-473"},
+        {"path": "src/server.c", "lines": "820-833"},
+        {"path": "redis.conf", "lines": "2414-2432"}
+      ]
+    },
+    {
+      "id": "Q15",
+      "kind": "rationale",
+      "question": "Why does Redis execute commands on essentially one thread, where does it nevertheless use extra threads, and what are the stated costs or conditions of doing so?",
+      "model_answer": "The project's stated philosophy is that threading is not a silver bullet: an efficient, mostly single-threaded core is simpler, and scaling is achieved by running several such shared-nothing instances combined by higher-level features like Redis Cluster, which also keeps each instance's dataset small enough for persist-by-fork to work well. Parallelism was only considered worthwhile for I/O, the low-hanging fruit. Accordingly, optional I/O threads handle client socket reads, protocol parsing and writes while command execution stays on the main thread (I/O threads hand clients back to the main thread and never free clients themselves), and other side threads handle things like lazy freeing and slow file operations. I/O threading is off by default and recommended only on machines with at least four cores, leaving a spare core, and only when CPU is actually the bottleneck.",
+      "required_facts": [
+        "The core is deliberately (mostly) single-threaded for simplicity; scaling comes from multiple shared-nothing instances (e.g. Redis Cluster)",
+        "Extra threads are used only for I/O (socket reads, parsing, writes) and background chores such as lazy freeing; command execution stays on the main thread",
+        "I/O threads are disabled by default and advised only with 4+ cores and a real CPU bottleneck"
+      ],
+      "support": [
+        {"path": "MANIFESTO", "lines": "72-83"},
+        {"path": "redis.conf", "lines": "1390-1416"},
+        {"path": "src/iothread.c", "lines": "594-596"}
+      ]
+    },
+    {
+      "id": "Q16",
+      "kind": "rationale",
+      "question": "What trade-off do the append-only file's sync policies offer, why is the log written just before the event loop sleeps rather than inside each command, and what durability is given up while a background save is running if the related mitigation is turned on?",
+      "model_answer": "There are three fsync policies: never (let the OS flush when it wants: fastest, least safe), every write (slow, safest) and once per second (the default compromise). Because a client must not get a reply before its write is in the log, and replies can only go out when the event loop is re-entered, all AOF writes of an iteration are accumulated in a memory buffer and written just before sleeping; with the always policy a write barrier ensures a socket is not read and replied to in the same iteration before that flush. Since fsync can block for a long time while a child is doing heavy disk I/O, an option lets the server skip fsync during a background save or rewrite, which reduces latency but means durability is temporarily the same as the never policy (up to about 30 seconds of log could be lost with default Linux settings).",
+      "required_facts": [
+        "Three policies: no fsync (fastest), always (safest, slow), every second (default compromise)",
+        "AOF writes are buffered and flushed just before re-entering the event loop so the log is written before the client is answered",
+        "Skipping fsync during a background save/rewrite trades durability (equivalent to no fsync, up to ~30 s of loss) for lower latency"
+      ],
+      "support": [
+        {"path": "redis.conf", "lines": "1526-1550"},
+        {"path": "redis.conf", "lines": "1553-1572"},
+        {"path": "src/aof.c", "lines": "1380-1397"},
+        {"path": "src/networking.c", "lines": "270-279"}
+      ]
+    },
+    {
+      "id": "Q17",
+      "kind": "change",
+      "question": "If you wanted to add a new built-in command, where is the command table defined, how does it get into the running server, and what besides the handler function must you describe about the command?",
+      "model_answer": "Commands are declared as one JSON description per command in a commands folder under the source directory; a generator script in the utilities folder reads all of them, links subcommands to their container commands, validates key specifications, and writes a generated definitions file that must not be edited by hand. That generated file is included by the command-table source to form a static table, and at startup the server walks the table and inserts each command (and its subcommands) into its command dictionary, plus a second dictionary unaffected by renames. Besides the handler function, the description carries arity, command flags (write, read-only, fast, allowed while loading, etc., which also drive ACL categories), group, and key specifications.",
+      "required_facts": [
+        "Each command is described in a JSON file in the commands folder of the source tree",
+        "A generator script turns those JSON files into a generated definitions file (not hand-edited) that is compiled into the static command table",
+        "At startup the static table is loaded into the server's command lookup dictionary",
+        "The description includes metadata such as arity, flags, group and key specs, not just the handler"
+      ],
+      "support": [
+        {"path": "utils/generate-command-code.py", "lines": "544-581"},
+        {"path": "src/commands.c", "lines": "1-12"},
+        {"path": "src/server.c", "lines": "3517-3541"},
+        {"path": "src/server.h", "lines": "2988-3057"}
+      ]
+    },
+    {
+      "id": "Q18",
+      "kind": "change",
+      "question": "Where would you add a new configuration parameter, and what determines whether it can be changed at runtime, what its default is, and whether changing it triggers any action?",
+      "model_answer": "Configuration parameters are rows in one static table in the configuration source file. Each row is created with a type-specific constructor (boolean, integer, enum, string, ...) that binds a user-visible name and optional alias to the server field that stores the value, with a default, bounds or validity function, and an optional apply callback run after a runtime change. A flag on the row says whether the parameter is modifiable at runtime or immutable (runtime set attempts on immutable ones are refused, and protected ones need extra permission). The same row serves startup loading, runtime get/set and rewriting of the config file; the user-facing explanation belongs in the commented sample configuration file.",
+      "required_facts": [
+        "All standard parameters live in a single static table of typed entries in the configuration source file",
+        "Each entry binds a name to a server variable with a default (and bounds/validator) and an optional apply function called on runtime change",
+        "A per-entry flag marks it modifiable or immutable; immutable ones cannot be set at runtime"
+      ],
+      "support": [
+        {"path": "src/config.c", "lines": "260-288"},
+        {"path": "src/config.c", "lines": "3398-3406"},
+        {"path": "src/config.c", "lines": "952-956"},
+        {"path": "src/config.c", "lines": "3537-3537"}
+      ]
+    },
+    {
+      "id": "Q19",
+      "kind": "change",
+      "question": "Where is it decided when a small hash, set, sorted set or list stops using its compact representation, and how would you tune or change that behaviour?",
+      "model_answer": "The switch points are configuration thresholds documented in the advanced section of the sample configuration: for hashes, sets and sorted sets a maximum number of entries and a maximum size of the biggest entry for the compact listpack form (sets of integers have their own integer-set entry limit), and for lists a maximum size or element count per internal node plus a compression depth. The conversion itself is performed by each type's implementation: for example the hash code checks, when fields are written, whether the number of fields or the length of a value exceeds the thresholds and converts the listpack to a real hash table. So tuning is a configuration change, while changing the conversion rules means editing the type's own source file.",
+      "required_facts": [
+        "Thresholds are configuration directives: max entries and max entry size for the compact form of hashes, sets and sorted sets (plus an integer-set limit for sets and a per-node size for lists)",
+        "The conversion is carried out in each data type's own implementation when a write exceeds the threshold (e.g. hash converts listpack to hash table)",
+        "Default limits: hashes 512 entries / 64-byte values; sets and sorted sets 128 entries / 64 bytes"
+      ],
+      "support": [
+        {"path": "redis.conf", "lines": "2212-2216"},
+        {"path": "redis.conf", "lines": "2283-2296"},
+        {"path": "redis.conf", "lines": "2314-2332"},
+        {"path": "src/t_hash.c", "lines": "1558-1581"}
+      ]
+    },
+    {
+      "id": "Q20",
+      "kind": "change",
+      "question": "Where would you plug in (a) support for a different operating-system readiness-notification API and (b) a new kind of client transport alongside TCP, Unix sockets and TLS?",
+      "model_answer": "The polling backend is selected at compile time inside the event-loop library: it includes exactly one backend implementation file, tried in order of expected performance (evport, epoll, kqueue, then select), so a new OS API means a new backend file plus a new branch in that selection. A transport is added by implementing the connection-type interface (a table of callbacks for init, configure, accept, read/write handlers, address lookup and so on) and registering it with the connection-type registry, which holds a small fixed number of types keyed by name. TCP and Unix types are mandatory at startup, while TLS registration may fail when the server is built without TLS support.",
+      "required_facts": [
+        "The OS polling backend is a compile-time choice inside the event-loop library, one implementation file per API, ordered by performance",
+        "A transport is an implementation of the connection-type callback interface registered by name in a registry",
+        "TCP and Unix socket types are required; TLS is optional and depends on a build flag"
+      ],
+      "support": [
+        {"path": "src/ae.c", "lines": "30-44"},
+        {"path": "src/connection.h", "lines": "40-60"},
+        {"path": "src/connection.c", "lines": "30-72"},
+        {"path": "README.md", "lines": "294-295"}
+      ]
+    },
+    {
+      "id": "Q21",
+      "kind": "limits",
+      "question": "What happens when the configured memory limit is reached, in which situations will writes start failing, and what memory or which instances are not subject to the limit in the way you might expect?",
+      "model_answer": "When memory use exceeds the limit, Redis tries before executing commands to evict keys according to the selected policy, for a bounded time per call so the server stays responsive (continuing in a timer if needed). If the policy is no-eviction (the default) or no suitable key exists (for example a volatile policy with no keys that have a TTL), commands that would use more memory are rejected with an error while reads keep working. Replica output buffers and AOF buffers are deliberately not counted as used memory, to avoid a feedback loop where eviction deletes fill the buffers and trigger more eviction; so real memory can exceed the limit and headroom should be left. Replicas by default ignore the limit entirely and just follow the master's deletes, so they can use more memory than configured.",
+      "required_facts": [
+        "On reaching the limit, keys are evicted per the configured policy; eviction work is time-bounded per call",
+        "With the no-eviction policy (the default) or when nothing is evictable, memory-increasing write commands get an error while reads continue",
+        "Replica output buffers and AOF buffers are excluded from the counted memory to avoid an eviction feedback loop",
+        "Replicas ignore maxmemory by default and may exceed it"
+      ],
+      "support": [
+        {"path": "redis.conf", "lines": "1205-1226"},
+        {"path": "redis.conf", "lines": "1257-1266"},
+        {"path": "redis.conf", "lines": "1288-1304"},
+        {"path": "src/evict.c", "lines": "310-317"},
+        {"path": "src/evict.c", "lines": "464-475"},
+        {"path": "src/evict.c", "lines": "508-531"}
+      ]
+    },
+    {
+      "id": "Q22",
+      "kind": "limits",
+      "question": "How does the server behave when persistence goes wrong: when a background snapshot fails, when the append-only file is damaged at startup, and when the data file cannot be loaded at all?",
+      "model_answer": "If snapshots are enabled and the latest background save failed, the server by default stops accepting write commands (so the operator notices), and accepts them again once a background save succeeds; AOF write or fsync errors likewise cause writes to be denied. At startup, an AOF that is merely truncated at the end is by default loaded as far as possible with a log message, but if that option is off the server refuses to start, and an AOF corrupted in the middle always makes the server exit with an error (unless a small corrupt tail is explicitly allowed to be cut off). A fatal error loading the RDB file, or a failed AOF load, makes the server exit rather than start with partial data.",
+      "required_facts": [
+        "After a failed background save (with save points configured) writes are refused by default until a save succeeds; AOF write/fsync errors also block writes",
+        "A truncated AOF tail is loaded as much as possible by default; with that option disabled the server refuses to start",
+        "Corruption in the middle of the AOF, or a fatal RDB load error, makes the server exit at startup"
+      ],
+      "support": [
+        {"path": "redis.conf", "lines": "508-521"},
+        {"path": "redis.conf", "lines": "1594-1635"},
+        {"path": "src/server.c", "lines": "5249-5280"},
+        {"path": "src/server.c", "lines": "7757-7783"}
+      ]
+    },
+    {
+      "id": "Q23",
+      "kind": "limits",
+      "question": "What consistency and durability guarantees does master-replica replication NOT give, what can an operator configure to narrow the exposure, and how does a replica behave towards clients when its link to the master is down?",
+      "model_answer": "Replication is asynchronous, so a write acknowledged by the master may not have reached any replica and can be lost on failover. A master can be configured to stop accepting writes unless at least N replicas are connected with a lag of at most M seconds, but this explicitly does not guarantee that N replicas received a given write; it only bounds the window of exposure. A replica that has lost its master, or is still synchronising, by default keeps answering queries with possibly stale or even empty data; it can instead be configured to return an error for data commands. Replicas are read-only by default, and loading a sync payload directly from the socket without first storing it on disk carries its own data-loss risks if the transfer fails.",
+      "required_facts": [
+        "Replication is asynchronous, so acknowledged writes can be lost",
+        "A minimum-replicas / maximum-lag setting can make the master refuse writes, but it does not guarantee the write reached that many replicas, it only limits the exposure window",
+        "A disconnected or syncing replica serves stale (possibly empty) data by default, or can be set to reply with an error instead"
+      ],
+      "support": [
+        {"path": "redis.conf", "lines": "589-598"},
+        {"path": "redis.conf", "lines": "620-632"},
+        {"path": "redis.conf", "lines": "864-884"},
+        {"path": "redis.conf", "lines": "699-732"},
+        {"path": "src/server.c", "lines": "4713-4727"}
+      ]
+    },
+    {
+      "id": "Q24",
+      "kind": "limits",
+      "question": "What restrictions does running in cluster mode impose on commands and databases compared with a standalone server, and what happens to the cluster's availability when some hash slots have no serving node?",
+      "model_answer": "In cluster mode a command may only address a single key or several keys that all hash to the same slot, and multi-key commands are additionally refused while that slot is being migrated; commands whose keys span slots fail with a cross-slot error, which follows from the project's position that multi-key operations cannot be distributed transparently. Only one database is available: the number of databases is forced to 1 and selecting another database is not allowed. By default, if any hash slot is uncovered the whole cluster stops accepting queries until all slots are covered again; this can be relaxed so the covered part keeps serving, and another option allows reads while the cluster is down.",
+      "required_facts": [
+        "Multi-key commands must have all keys in the same hash slot, otherwise they are rejected (and are refused while the slot is unstable/migrating)",
+        "Cluster mode has a single database: the database count is forced to 1 and SELECT is not allowed",
+        "By default the cluster stops accepting queries if any slot is uncovered; an option lets the covered subset keep serving"
+      ],
+      "support": [
+        {"path": "src/cluster.c", "lines": "1202-1235"},
+        {"path": "src/db.c", "lines": "1578-1578"},
+        {"path": "src/config.c", "lines": "678-678"},
+        {"path": "redis.conf", "lines": "1872-1909"},
+        {"path": "MANIFESTO", "lines": "85-93"}
+      ]
+    }
+  ]
+}

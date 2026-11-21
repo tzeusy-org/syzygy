@@ -1,0 +1,126 @@
+{
+ "answers": [
+  {
+   "id": "Q01",
+   "answer": "Redis is an in-memory key-value store and data structure server: a network server that maps binary-safe string keys to typed values such as strings, lists, sets, hashes and sorted sets. It keeps the dataset primarily in RAM; writing it to disk through RDB snapshots or the append only file is optional. It targets real-time applications where a disk database is too slow for the request path, answering reads and writes often in under a millisecond. Named uses are caching (with eviction and key expiration), session storage, queues and messaging (job queues on lists, priority queues on sorted sets, pub/sub, streams), and secondary indexing, full-text search and vector similarity search.",
+   "where": "index.md; poles/1.md"
+  },
+  {
+   "id": "Q02",
+   "answer": "An RDB snapshot is a point-in-time dump of the whole dataset, written by a forked child when configured save points (enough changes and seconds) are reached; a process problem or power outage can lose a few minutes of writes, depending on the save points. The append only file is a log of every write command, replayed at startup to rebuild the dataset, and gives better durability; how often it is synced is set by appendfsync, and with everysec roughly one second of writes can be lost. When both are enabled, the append only file is loaded at startup because it has the better durability guarantees.",
+   "where": "deep-dives/mechanism-deep-dive.md; poles/3.md; understanding.md"
+  },
+  {
+   "id": "Q03",
+   "answer": "Not stated. A background I/O service, the work it takes off the main thread, and any ordering guarantee are not described. The only related facts given are that optional I/O threads read, parse and write sockets, and that background saves run in a forked child.",
+   "where": "not stated"
+  },
+  {
+   "id": "Q04",
+   "answer": "The modules API lets developers add new commands and data types beyond the built-in ones. A module is a shared library loaded into redis-server, for example with a loadmodule line in the configuration, so it is loaded at startup; loading into an already running server by command is not stated. How a module's own data type is saved and restored is not stated.",
+   "where": "poles/1.md; index.md"
+  },
+  {
+   "id": "Q05",
+   "answer": "The event loop, built on the library in ae.c, sleeps until file descriptors are ready and then processes their events; aeMain repeats this until the loop is stopped. The listening socket's handler connSocketAcceptHandler accepts a TCP connection and passes it to acceptCommonHandler, which creates a client; createClient installs readQueryFromClient as the read handler, so the loop calls it when bytes arrive. That handler fills the query buffer and processInputBuffer parses and dispatches commands, whose replies go into the client output buffer. Before the loop waits again, beforeSleep flushes the append only file buffer to disk and then calls handleClientsWithPendingWrites to send buffered replies. serverCron periodically checks save points. A fuller per-turn ordering (timers, other before/after-sleep work) is not stated.",
+   "where": "poles/2.md; deep-dives/mechanism-deep-dive.md; glossary.md"
+  },
+  {
+   "id": "Q06",
+   "answer": "Not stated beyond the basics: a server holds a keyspace in memory in which each key is a binary-safe string naming one value, and in cluster mode keys are divided over 16384 hash slots by the CRC16 of the key. The containers that hold keys and expirations, how that layout changes in cluster mode, and where the key name is stored relative to its value are not stated.",
+   "where": "poles/1.md (partial); otherwise not stated"
+  },
+  {
+   "id": "Q07",
+   "answer": "Not stated. A data type is described only as the kind of value a key holds (string, list, set, hash, sorted set); encodings, why both exist, and who chooses the encoding are not described.",
+   "where": "not stated"
+  },
+  {
+   "id": "Q08",
+   "answer": "A key belongs to one of 16384 hash slots, given by the CRC16 of the key name; the mapping is defined in src/cluster.h. During command checking, processCommand redirects the client when the key is owned by another cluster node, and otherwise the command proceeds; multi-key operations work only when all keys share a slot. Cluster nodes talk to each other on a separate bus port. How the clustering code is divided into files or layers is not stated.",
+   "where": "poles/1.md; poles/2.md; poles/3.md; sources/index.md"
+  },
+  {
+   "id": "Q09",
+   "answer": "The event loop calls readQueryFromClient, which fills the client's query buffer and calls processInputBuffer; that chooses between the multibulk protocol (input starting with *) and inline commands, parses arguments, and calls processCommandAndResetClient once a full command is ready. processCommand looks up the command, checks ACL permissions, redirects keys owned by another cluster node, runs eviction when maxmemory is set, and refuses writes after a persistence error; with no evictable key under the memory limit, writes needing memory get errors. Inside MULTI the command is queued and answered QUEUED; otherwise call runs the command's proc function, which writes its reply with addReply into the output buffer. After a write, call hands the command to alsoPropagate, and propagateNow feeds it to feedAppendOnlyFile (a memory buffer) and replicationFeedSlaves (the replication stream). In beforeSleep, flushAppendOnlyFile writes the buffer to disk before handleClientsWithPendingWrites sends the replies; fsync frequency follows appendfsync.",
+   "where": "poles/2.md; deep-dives/mechanism-deep-dive.md"
+  },
+  {
+   "id": "Q10",
+   "answer": "The steps of a background rewrite are not stated. What is stated is that since Redis 7 the append only file is a set of files: a base snapshot, incremental command files, and a manifest that orders them. Writes are appended to a memory buffer and flushed to disk before the event loop sleeps.",
+   "where": "deep-dives/mechanism-deep-dive.md (partial); otherwise not stated"
+  },
+  {
+   "id": "Q11",
+   "answer": "A replica connects with SYNC or PSYNC, handled by syncCommand. The master keeps a replication backlog, a buffer of recent writes; after a short disconnect the replica can resume from that backlog with a partial resync and receive only what it missed, instead of copying everything again. Otherwise a full resynchronization is done. The exact conditions the master tests (such as IDs or offsets) and the steps of a full resynchronization are not stated.",
+   "where": "deep-dives/mechanism-deep-dive.md; glossary.md"
+  },
+  {
+   "id": "Q12",
+   "answer": "Not stated. Key expiration is mentioned only as a feature available for caching; the removal mechanisms, how a background cycle limits its cost, and how removal is kept consistent on replicas and in the append only file are not described.",
+   "where": "not stated"
+  },
+  {
+   "id": "Q13",
+   "answer": "When memory use reaches maxmemory, keys are evicted according to maxmemory-policy, and LRU, LFU, LRM and volatile-ttl are implemented using approximated randomized algorithms. Why an approximation was chosen over exact ordering, how the approximation works in detail, and what it costs are not stated.",
+   "where": "poles/3.md (partial); otherwise not stated"
+  },
+  {
+   "id": "Q14",
+   "answer": "Not stated. Hash table resizing, incremental rehashing, and its interaction with a background save or rewrite child are not described.",
+   "where": "not stated"
+  },
+  {
+   "id": "Q15",
+   "answer": "The maintainers hold that threading is not a silver bullet and that an efficient, mostly single-threaded core keeps the design simple; scaling is meant to come from many simple shared-nothing instances combined by higher-level features such as Redis Cluster, which also suits NUMA systems. Extra threads are used as optional I/O threads that read, parse and write sockets, and background saves use a forked child process. I/O threads are disabled by default, are suggested only on machines with at least four cores and only when there is a real performance problem, and are not supported for TLS connections; replication compression works only when io-threads is above 1. The cost of the single thread is that one slow command delays every other client of that instance until it finishes.",
+   "where": "poles/3.md; poles/1.md; understanding.md"
+  },
+  {
+   "id": "Q16",
+   "answer": "appendfsync sets how often the log is fsynced, trading durability against disk I/O; everysec fsyncs once per second as a compromise and can lose about one second of writes. The other policy values are not stated. Writes are appended to a memory buffer and flushAppendOnlyFile writes it to disk in beforeSleep, before replies are sent, because the log must be written before replying to the client. What durability is given up during a background save when the related mitigation is turned on is not stated.",
+   "where": "poles/3.md; deep-dives/mechanism-deep-dive.md; understanding.md"
+  },
+  {
+   "id": "Q17",
+   "answer": "Not stated. It is only stated that processCommand looks up the command and that call runs the command's proc function; where the command table is defined, how it is loaded into the server, and what metadata a command must declare are not described. The only extension route described is the modules API, which adds commands through a loaded shared library.",
+   "where": "not stated"
+  },
+  {
+   "id": "Q18",
+   "answer": "Not stated. Configuration is described only through settings in redis.conf (for example appendfsync, maxmemory-policy, loadmodule); where a parameter is defined in code, and what governs runtime mutability, defaults or change actions, are not described.",
+   "where": "not stated"
+  },
+  {
+   "id": "Q19",
+   "answer": "Not stated. Compact representations of small hashes, sets, sorted sets or lists, and the thresholds for leaving them, are not described.",
+   "where": "not stated"
+  },
+  {
+   "id": "Q20",
+   "answer": "Not stated. The event loop is built on the library in ae.c and connections are accepted by connSocketAcceptHandler and handed to acceptCommonHandler, with TLS optional via BUILD_TLS=yes, but where a new readiness-notification backend or a new transport type would be plugged in is not described.",
+   "where": "not stated (ae.c and the accept handlers are named in glossary.md and poles/2.md)"
+  },
+  {
+   "id": "Q21",
+   "answer": "When memory use reaches maxmemory, keys are evicted according to maxmemory-policy; processCommand runs eviction before executing a command. Under the default policy, noeviction, writes return errors, and in general when no key can be evicted, write commands that need memory get errors. Which memory or which instances are exempt from the limit is not stated.",
+   "where": "poles/3.md; poles/2.md; understanding.md"
+  },
+  {
+   "id": "Q22",
+   "answer": "If a background save fails, the server by default stops accepting writes so that the failure is noticed; processCommand refuses writes after a persistence error. Behaviour when the append only file is damaged at startup and when the data file cannot be loaded at all is not stated.",
+   "where": "deep-dives/mechanism-deep-dive.md; poles/2.md"
+  },
+  {
+   "id": "Q23",
+   "answer": "Replication is asynchronous, so acknowledged writes can be lost on failover. A master can be configured to stop accepting writes if it appears not to be connected to at least a given number of replicas; this does not guarantee that N replicas will accept a write, it only limits the window of exposure for lost writes to the specified number of seconds. How a replica behaves towards clients while its link to the master is down is not stated.",
+   "where": "poles/3.md; deep-dives/mechanism-deep-dive.md; understanding.md"
+  },
+  {
+   "id": "Q24",
+   "answer": "In cluster mode multi-key operations work only when all keys are in the same hash slot, and clients whose keys live on another node are redirected. The cluster bus has no authentication of its own unless TLS is enabled for it. Restrictions on databases and what happens to availability when some slots have no serving node are not stated.",
+   "where": "poles/3.md (partial); otherwise not stated"
+  }
+ ],
+ "minutes_felt": 2,
+ "notes": "The explanatory content is small and concentrated in four pages, so checking whether something was covered was quick once citation marks were filtered out; most pages are process/provenance records with no project facts. Roughly half the questions concern internals (keyspace layout, encodings, expiry, rehashing, config and command tables, AOF rewrite) that are simply absent."
+}

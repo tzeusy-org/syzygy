@@ -1,0 +1,730 @@
+{
+ "X": {
+  "sentences": 229,
+  "code_claims": 137,
+  "step": 4,
+  "start": 2,
+  "claims": [
+   {
+    "n": 2,
+    "sentence": 3,
+    "claim": "It is one server binary that keeps typed values in RAM under string keys, executes commands against them on a single main thread, and optionally",
+    "verdict": "supported",
+    "pointer_ok": null,
+    "checked_in": [
+     "src/server.c",
+     "src/server.h",
+     "redis.conf"
+    ],
+    "note": "general description borne out by server.c call path, redisDb, persistence/replication sources"
+   },
+   {
+    "n": 6,
+    "sentence": 14,
+    "claim": "| `src/redis-cli.c`, `src/redis-benchmark.c` | Only their shared helpers (`cli_common.c`, `cli_commands.c`) are here. |",
+    "verdict": "supported",
+    "pointer_ok": true,
+    "checked_in": [
+     "src/"
+    ],
+    "note": "redis-cli.c and redis-benchmark.c absent; cli_common.c/.h and cli_commands.c/.h present"
+   },
+   {
+    "n": 10,
+    "sentence": 19,
+    "claim": "`README.md` starts with two blank lines where a title would be; I could not tell which lines of `redis.conf` are missing.",
+    "verdict": "supported",
+    "pointer_ok": true,
+    "checked_in": [
+     "README.md"
+    ],
+    "note": "first two lines of README.md are empty; second half is about the author, not checked"
+   },
+   {
+    "n": 14,
+    "sentence": 27,
+    "claim": "scripts/ shell scripts behind the top-level make targets",
+    "verdict": "supported",
+    "pointer_ok": true,
+    "checked_in": [
+     "scripts/",
+     "modules/MODULES.md"
+    ],
+    "note": "MODULES.md:26 one script per top-level target; script headers name their make entry point"
+   },
+   {
+    "n": 18,
+    "sentence": 31,
+    "claim": "redis.conf the annotated default configuration (2,600+ lines); the best",
+    "verdict": "supported",
+    "pointer_ok": true,
+    "checked_in": [
+     "redis.conf"
+    ],
+    "note": "2738 lines, annotated"
+   },
+   {
+    "n": 22,
+    "sentence": 39,
+    "claim": "`src/ae.c` is a small event library with one backend compiled in (`ae_epoll.c`, `ae_kqueue.c`, `ae_evport.c`, `ae_select.c`).",
+    "verdict": "supported",
+    "pointer_ok": true,
+    "checked_in": [
+     "src/ae.c"
+    ],
+    "note": "ae.c:33-41 includes exactly one of the four backends by #ifdef"
+   },
+   {
+    "n": 26,
+    "sentence": 45,
+    "claim": "- `afterSleep()` reacquires the GIL first.",
+    "verdict": "supported",
+    "pointer_ok": true,
+    "checked_in": [
+     "src/server.c"
+    ],
+    "note": "afterSleep 2162-2181: moduleAcquireGIL before anything else (when modules loaded)"
+   },
+   {
+    "n": 30,
+    "sentence": 53,
+    "claim": "It parses ahead up to the `lookahead` setting so that key lookups for several pipelined commands can be prefetched together (`src/memory_prefetch.c`).",
+    "verdict": "supported",
+    "pointer_ok": true,
+    "checked_in": [
+     "src/networking.c",
+     "src/config.c",
+     "src/memory_prefetch.c",
+     "redis.conf"
+    ],
+    "note": "networking.c:3704-3736 parses up to server.lookahead; memory_prefetch.c batches pending commands"
+   },
+   {
+    "n": 34,
+    "sentence": 59,
+    "claim": "`call()` runs the command's handler (`void fooCommand(client *c)`), records stats and slowlog, and propagates writes to the AOF and to replicas.",
+    "verdict": "supported",
+    "pointer_ok": true,
+    "checked_in": [
+     "src/server.c"
+    ],
+    "note": "call(): c->cmd->proc(c), calls++/latency, slowlogPushCurrentCommand, alsoPropagate"
+   },
+   {
+    "n": 38,
+    "sentence": 66,
+    "claim": "- **I/O threads** (`src/iothread.c`, `io-threads` config, off by default).",
+    "verdict": "supported",
+    "pointer_ok": true,
+    "checked_in": [
+     "src/iothread.c",
+     "src/config.c",
+     "redis.conf"
+    ],
+    "note": "config.c:3507 io-threads default 1 (single threaded by default)"
+   },
+   {
+    "n": 42,
+    "sentence": 70,
+    "claim": "Some clients must stay on the main thread: pub/sub, monitor, blocked, tracking, close-pending (`isClientMustHandledByMainThread`).",
+    "verdict": "supported",
+    "pointer_ok": true,
+    "checked_in": [
+     "src/iothread.c"
+    ],
+    "note": "iothread.c:292-300 flags CLOSE_ASAP, PUBSUB, MONITOR, BLOCKED, TRACKING (plus others the text does not list)"
+   },
+   {
+    "n": 46,
+    "sentence": 75,
+    "claim": "If you add state that an I/O thread reads, note how `iothread.c` duplicates fields (the `io_*` members of `client`) to avoid sharing with the main",
+    "verdict": "supported",
+    "pointer_ok": true,
+    "checked_in": [
+     "src/server.h",
+     "src/iothread.c"
+    ],
+    "note": "client has io_lastinteraction, io_read_reploff, io_repl_ack_time copies; iothread.c:61-71 syncs them"
+   },
+   {
+    "n": 50,
+    "sentence": 83,
+    "claim": "- `keys` and `expires`: `kvstore` instances (`src/kvstore.c`), an array of dicts.",
+    "verdict": "supported",
+    "pointer_ok": true,
+    "checked_in": [
+     "src/server.h",
+     "src/kvstore.c"
+    ],
+    "note": "redisDb keys/expires are kvstore*; _kvstore has dict **dicts"
+   },
+   {
+    "n": 54,
+    "sentence": 87,
+    "claim": "- dictionaries for blocked clients, ready keys and `WATCH`.",
+    "verdict": "supported",
+    "pointer_ok": null,
+    "checked_in": [
+     "src/server.h"
+    ],
+    "note": "blocking_keys, ready_keys, watched_keys dicts"
+   },
+   {
+    "n": 58,
+    "sentence": 92,
+    "claim": "A type usually has a compact encoding for small values and a general one, with thresholds in `redis.conf`.",
+    "verdict": "supported",
+    "pointer_ok": true,
+    "checked_in": [
+     "redis.conf",
+     "src/object.h"
+    ],
+    "note": "hash/list/set/zset -max-listpack-* thresholds at redis.conf 2215-2332"
+   },
+   {
+    "n": 62,
+    "sentence": 98,
+    "claim": "| Sorted set | `t_zset.c`, `geo.c` | listpack, skiplist |",
+    "verdict": "supported",
+    "pointer_ok": true,
+    "checked_in": [
+     "src/object.h",
+     "src/t_zset.c",
+     "src/geo.c"
+    ],
+    "note": "t_zset.c uses LISTPACK and SKIPLIST encodings; geo.c operates on zsets"
+   },
+   {
+    "n": 66,
+    "sentence": 102,
+    "claim": "| Module | (module.c, absent) | owned by the module |",
+    "verdict": "supported",
+    "pointer_ok": true,
+    "checked_in": [
+     "src/",
+     "src/object.h"
+    ],
+    "note": "src/module.c absent; OBJ_MODULE type referenced in object.h"
+   },
+   {
+    "n": 70,
+    "sentence": 107,
+    "claim": "Each hash keeps its own `ebuckets` structure (`src/ebuckets.h`) of expiring fields, and is itself registered in `db->subexpires` for the active expire cycle.",
+    "verdict": "supported",
+    "pointer_ok": true,
+    "checked_in": [
+     "src/t_hash.c",
+     "src/ebuckets.h"
+    ],
+    "note": "t_hash.c:117-124 private ebuckets per hash, registered in db->subexpires (2343-2348)"
+   },
+   {
+    "n": 74,
+    "sentence": 111,
+    "claim": "Points to remember: changing a hash's field set moves it to a different template, so the feature suits stable schemas; automatic conversion is off by",
+    "verdict": "supported",
+    "pointer_ok": true,
+    "checked_in": [
+     "redis.conf",
+     "src/t_hash.c",
+     "src/config.c"
+    ],
+    "note": "redis.conf 2218-2235; t_hash.c:311-315 registry main-thread only, BIO lazyfree publishes drops"
+   },
+   {
+    "n": 78,
+    "sentence": 115,
+    "claim": "`ARGREP` is why the `tre` regex library is vendored.",
+    "verdict": "supported",
+    "pointer_ok": true,
+    "checked_in": [
+     "src/t_array.c",
+     "deps/tre"
+    ],
+    "note": "t_array.c is the only src file including tre; used for ARGREP regex predicates"
+   },
+   {
+    "n": 82,
+    "sentence": 121,
+    "claim": "`RDB_VERSION` is 15.",
+    "verdict": "supported",
+    "pointer_ok": null,
+    "checked_in": [
+     "src/rdb.h"
+    ],
+    "note": "rdb.h:21 #define RDB_VERSION 15"
+   },
+   {
+    "n": 86,
+    "sentence": 125,
+    "claim": "A rewrite produces a new BASE.",
+    "verdict": "supported",
+    "pointer_ok": null,
+    "checked_in": [
+     "src/aof.c"
+    ],
+    "note": "aof.c:432-433 rewrite done handler gets a new BASE, old becomes HISTORY"
+   },
+   {
+    "n": 90,
+    "sentence": 129,
+    "claim": "- `src/rio.c` is the I/O abstraction both formats write through (file, buffer, socket).",
+    "verdict": "supported",
+    "pointer_ok": true,
+    "checked_in": [
+     "src/rio.c",
+     "src/rdb.c",
+     "src/aof.c"
+    ],
+    "note": "rioBufferIO, rioFileIO, rioConnIO/rioFdIO/rioConnsetIO; used by rdb.c and aof.c"
+   },
+   {
+    "n": 94,
+    "sentence": 135,
+    "claim": "- **RDB channel** full sync: the replica opens a second connection so the forked child streams the RDB directly while the main connection carries live",
+    "verdict": "supported",
+    "pointer_ok": null,
+    "checked_in": [
+     "src/replication.c"
+    ],
+    "note": "replication.c:3775-3815 design comment states each part"
+   },
+   {
+    "n": 98,
+    "sentence": 141,
+    "claim": "`src/cluster_legacy.c` is the standard gossip-based cluster bus: node table, failure detection, failover, config epochs.",
+    "verdict": "supported",
+    "pointer_ok": true,
+    "checked_in": [
+     "src/cluster_legacy.c"
+    ],
+    "note": "file head comment plus failover/epoch/gossip code"
+   },
+   {
+    "n": 102,
+    "sentence": 146,
+    "claim": "- The cluster bus is unauthenticated unless `tls-cluster` is on; 8.10.2 added a startup warning and `cluster-bus-port-protected-mode`.",
+    "verdict": "supported",
+    "pointer_ok": null,
+    "checked_in": [
+     "00-RELEASENOTES",
+     "redis.conf"
+    ],
+    "note": "release notes line 32 under 8.10.2 (line 24)"
+   },
+   {
+    "n": 106,
+    "sentence": 151,
+    "claim": "- `modules/vector-sets/` is the one in-tree module (vector similarity over an HNSW graph with int8 quantisation and true deletion).",
+    "verdict": "supported",
+    "pointer_ok": true,
+    "checked_in": [
+     "modules/",
+     "modules/vector-sets/hnsw.c"
+    ],
+    "note": "only vector-sets under modules/; hnsw.c:20-23 int8 quantization, true deletion"
+   },
+   {
+    "n": 110,
+    "sentence": 165,
+    "claim": "- `redis.conf` is hand-edited and holds core settings only.",
+    "verdict": "supported",
+    "pointer_ok": true,
+    "checked_in": [
+     "modules/MODULES.md",
+     "README.md"
+    ],
+    "note": "MODULES.md:28 tracked, hand-edited Redis-core config"
+   },
+   {
+    "n": 114,
+    "sentence": 170,
+    "claim": "- On macOS use `gmake`.",
+    "verdict": "supported",
+    "pointer_ok": null,
+    "checked_in": [
+     "modules/MODULES.md"
+    ],
+    "note": "MODULES.md:9-12"
+   },
+   {
+    "n": 118,
+    "sentence": 179,
+    "claim": "Tests start real servers.",
+    "verdict": "supported",
+    "pointer_ok": null,
+    "checked_in": [
+     "tests/support/server.tcl"
+    ],
+    "note": "server.tcl:425 launches src/redis-server with a config file"
+   }
+  ],
+  "totals": {
+   "supported": 30,
+   "contradicted": 0,
+   "not_found": 0,
+   "partly": 0,
+   "pointer_true": 22,
+   "pointer_false": 0,
+   "pointer_null": 8
+  }
+ },
+ "Y": {
+  "sentences": 1109,
+  "code_claims": 125,
+  "step": 4,
+  "start": 2,
+  "claims": [
+   {
+    "n": 2,
+    "sentence": 68,
+    "claim": "How do the maintainers compare Redis with named alternative products?: The README points to an external page for differences between editions and names no alternative",
+    "verdict": "supported",
+    "pointer_ok": true,
+    "checked_in": [
+     "README.md"
+    ],
+    "note": "README.md:84 links an external page for differences; no alternative product named in README"
+   },
+   {
+    "n": 6,
+    "sentence": 134,
+    "claim": "Command log. feedAppendOnlyFile appends each propagated write to a memory buffer; flushAppendOnlyFile writes it to disk in beforeSleep, before replies are sent, because the AOFThe",
+    "verdict": "supported",
+    "pointer_ok": true,
+    "checked_in": [
+     "src/aof.c",
+     "src/server.c"
+    ],
+    "note": "aof.c:1661 feedAppendOnlyFile appends to server.aof_buf; aof.c:1380-1386 and server.c:2053-2057 flush in beforeSleep before pending writes"
+   },
+   {
+    "n": 10,
+    "sentence": 148,
+    "claim": "- The project states: This option does not GUARANTEE that N replicas will accept the write, but # will limit the window of exposure for",
+    "verdict": "supported",
+    "pointer_ok": true,
+    "checked_in": [
+     "redis.conf"
+    ],
+    "note": "quotation at lines 872-874 exact; cited byte span is offset in this copy (lines withheld in the copy shift bytes)"
+   },
+   {
+    "n": 14,
+    "sentence": 363,
+    "claim": "The system call that makes the operating system write buffered data to disk; appendfsync sets how often the AOF calls it.",
+    "verdict": "supported",
+    "pointer_ok": true,
+    "checked_in": [
+     "redis.conf"
+    ],
+    "note": "lines 1526-1534"
+   },
+   {
+    "n": 18,
+    "sentence": 383,
+    "claim": "The command a replica uses to synchronise with its master, resuming partially when it can instead of copying everything again.",
+    "verdict": "supported",
+    "pointer_ok": true,
+    "checked_in": [
+     "src/replication.c",
+     "redis.conf"
+    ],
+    "note": "replication.c:1208 SYNC and PSYNC command; redis.conf 592-595 partial resynchronization"
+   },
+   {
+    "n": 22,
+    "sentence": 419,
+    "claim": "Redis is an in-memory key-value store: a network server that keeps keys mapped to typed values, such as strings, lists and sorted sets, in RAM.",
+    "verdict": "supported",
+    "pointer_ok": true,
+    "checked_in": [
+     "README.md",
+     "MANIFESTO",
+     "src/server.c"
+    ],
+    "note": "README 39/163-172, MANIFESTO 7-12"
+   },
+   {
+    "n": 26,
+    "sentence": 427,
+    "claim": "Developers building real-time applications use it when a database on disk is too slow for the request path: it keeps data in RAM and answers",
+    "verdict": "partly",
+    "pointer_ok": true,
+    "checked_in": [
+     "README.md"
+    ],
+    "note": "RAM, sub-millisecond latency, real-time developers supported at lines 39 and 58; \"when a database on disk is too slow for the request path\" is not stated anywhere found"
+   },
+   {
+    "n": 30,
+    "sentence": 447,
+    "claim": "Secondary indexing, full-text search and vector similarity search over in-memory data; the vector set type is still in beta.",
+    "verdict": "supported",
+    "pointer_ok": true,
+    "checked_in": [
+     "README.md"
+    ],
+    "note": "lines 49, 66, 68 and 173 (vector set beta); line 66 carries secondary indexing, cited 49/68 carry the rest"
+   },
+   {
+    "n": 34,
+    "sentence": 460,
+    "claim": "- A modules API lets developers add new commands and data types beyond the built-in ones.",
+    "verdict": "supported",
+    "pointer_ok": true,
+    "checked_in": [
+     "README.md"
+    ],
+    "note": "line 60"
+   },
+   {
+    "n": 38,
+    "sentence": 469,
+    "claim": "A further stated goal is to keep building more memory-efficient data structures, so that problems once too big for RAM fit in it.",
+    "verdict": "supported",
+    "pointer_ok": true,
+    "checked_in": [
+     "MANIFESTO"
+    ],
+    "note": "lines 45-49"
+   },
+   {
+    "n": 42,
+    "sentence": 480,
+    "claim": "The maintainers recommend always running the latest version, yet the security policy at this revision still lists 8.6 as the newest supported line.",
+    "verdict": "supported",
+    "pointer_ok": true,
+    "checked_in": [
+     "SECURITY.md"
+    ],
+    "note": "lines 5-7 and table 12-22, top row 8.6.x"
+   },
+   {
+    "n": 46,
+    "sentence": 495,
+    "claim": "- Server-to-server authentication based on TLS peer certificates.",
+    "verdict": "supported",
+    "pointer_ok": true,
+    "checked_in": [
+     "00-RELEASENOTES"
+    ],
+    "note": "line 67"
+   },
+   {
+    "n": 50,
+    "sentence": 509,
+    "claim": "- Contributions are accepted only under the Redis Software Grant and Contributor License Agreement.",
+    "verdict": "supported",
+    "pointer_ok": true,
+    "checked_in": [
+     "CONTRIBUTING.md",
+     "README.md"
+    ],
+    "note": "CONTRIBUTING 1-5, README 461"
+   },
+   {
+    "n": 54,
+    "sentence": 522,
+    "claim": "Vulnerabilities are reported through the Redis Vulnerability Disclosure Program, or through GitHub's Report a Vulnerability feature.",
+    "verdict": "supported",
+    "pointer_ok": true,
+    "checked_in": [
+     "SECURITY.md"
+    ],
+    "note": "lines 24-36"
+   },
+   {
+    "n": 58,
+    "sentence": 580,
+    "claim": "A Redis server holds a keyspace in memory: each key is a binary-safe string that names one value of an abstract data type, and every",
+    "verdict": "supported",
+    "pointer_ok": true,
+    "checked_in": [
+     "MANIFESTO"
+    ],
+    "note": "lines 7-15"
+   },
+   {
+    "n": 62,
+    "sentence": 596,
+    "claim": "The project states: Instead of making Redis threaded we believe on the idea of an efficient (mostly) single threaded Redis core.",
+    "verdict": "supported",
+    "pointer_ok": true,
+    "checked_in": [
+     "MANIFESTO"
+    ],
+    "note": "bytes 4596-4708 are exactly the quotation; lines 72-73"
+   },
+   {
+    "n": 66,
+    "sentence": 622,
+    "claim": "The append only file, a log of write commands that gives better durability than snapshots.",
+    "verdict": "supported",
+    "pointer_ok": true,
+    "checked_in": [
+     "redis.conf"
+    ],
+    "note": "lines 1474-1475"
+   },
+   {
+    "n": 70,
+    "sentence": 638,
+    "claim": "The manifesto's name for getting the most for users with the least added complexity, solving most of a problem with little code when that is",
+    "verdict": "supported",
+    "pointer_ok": true,
+    "checked_in": [
+     "MANIFESTO"
+    ],
+    "note": "lines 100-103"
+   },
+   {
+    "n": 74,
+    "sentence": 693,
+    "claim": "- Or build from source with make and run ./src/redis-server redis.conf in a release tarball, or ./src/redis-server redis-full.conf in a git checkout, where the bundled",
+    "verdict": "supported",
+    "pointer_ok": true,
+    "checked_in": [
+     "README.md"
+    ],
+    "note": "lines 206-215 and 292-302"
+   },
+   {
+    "n": 78,
+    "sentence": 709,
+    "claim": "- createClient installs readQueryFromClient as the read handler, so the event loop calls it when bytes arrive; it fills the client's query buffer and calls",
+    "verdict": "supported",
+    "pointer_ok": true,
+    "checked_in": [
+     "src/networking.c"
+    ],
+    "note": "133 connSetReadHandler(conn, readQueryFromClient); 3893; 4043-4046 processInputBuffer"
+   },
+   {
+    "n": 82,
+    "sentence": 721,
+    "claim": "- The command writes its answer with addReply into the client output buffer; beforeSleep calls handleClientsWithPendingWrites to send buffered replies before the loop waits again.",
+    "verdict": "supported",
+    "pointer_ok": true,
+    "checked_in": [
+     "src/networking.c",
+     "src/server.c"
+    ],
+    "note": "networking.c 600-610 addReply, 2954-2958; server.c 2103-2104"
+   },
+   {
+    "n": 86,
+    "sentence": 734,
+    "claim": "On macOS the module builds need GNU make 4 or later, run as gmake.",
+    "verdict": "supported",
+    "pointer_ok": true,
+    "checked_in": [
+     "modules/MODULES.md"
+    ],
+    "note": "lines 9-11"
+   },
+   {
+    "n": 90,
+    "sentence": 787,
+    "claim": "| Architecture | A single server process per instance, optionally with replicas, Redis Sentinel to promote a replica when the master fails, or a cluster",
+    "verdict": "supported",
+    "pointer_ok": true,
+    "checked_in": [
+     "MANIFESTO",
+     "redis.conf"
+    ],
+    "note": "redis.conf 589-600, 812-814, 1749-1753; MANIFESTO 72-79 shared nothing, NUMA"
+   },
+   {
+    "n": 94,
+    "sentence": 791,
+    "claim": "| Interfaces | Commands over the protocol, used through redis-cli or client libraries; a modules API for extensions. | Not established. Which interfaces are guaranteed",
+    "verdict": "supported",
+    "pointer_ok": true,
+    "checked_in": [
+     "README.md"
+    ],
+    "note": "lines 114-131 client libraries and redis-cli, line 60 modules API"
+   },
+   {
+    "n": 98,
+    "sentence": 797,
+    "claim": "| Replicas receive the write stream from the master and resynchronise partially from a backlog after short disconnects. | The project states: Redis replication is",
+    "verdict": "supported",
+    "pointer_ok": true,
+    "checked_in": [
+     "redis.conf"
+    ],
+    "note": "lines 589-595, 768-772; quotation exact at 589-591, cited byte span offset in this copy"
+   },
+   {
+    "n": 102,
+    "sentence": 801,
+    "claim": "Because one thread runs every command, a single slow command delays every other client of that instance until it finishes.",
+    "verdict": "supported",
+    "pointer_ok": false,
+    "checked_in": [
+     "MANIFESTO",
+     "src/server.c",
+     "redis.conf"
+    ],
+    "note": "cited places show single-threaded core and synchronous call() but do not state the delay; redis.conf 1328 says a blocking command stops the server processing new commands"
+   },
+   {
+    "n": 106,
+    "sentence": 994,
+    "claim": "- u-purpose-1: Redis is an in-memory database used as a cache, a data structure server, and a document and vector query engine for real-time applications.",
+    "verdict": "supported",
+    "pointer_ok": true,
+    "checked_in": [
+     "README.md",
+     "MANIFESTO"
+    ],
+    "note": "README line 39"
+   },
+   {
+    "n": 110,
+    "sentence": 1030,
+    "claim": "- u-trade-1: Durability is traded for speed: snapshots can lose minutes of writes, the AOF with everysec can lose about one second, and asynchronous replication",
+    "verdict": "partly",
+    "pointer_ok": true,
+    "checked_in": [
+     "redis.conf"
+    ],
+    "note": "minutes of writes (1469-1472) and one second (1474-1477) supported, replication asynchronous (589); loss of acknowledged writes on failover is not stated at the cited lines or elsewhere found"
+   },
+   {
+    "n": 114,
+    "sentence": 1050,
+    "claim": "- fsync: The system call that makes the operating system write buffered data to disk; appendfsync sets how often the AOF calls it.",
+    "verdict": "supported",
+    "pointer_ok": true,
+    "checked_in": [
+     "redis.conf"
+    ],
+    "note": "lines 1526-1534"
+   },
+   {
+    "n": 118,
+    "sentence": 1066,
+    "claim": "- PSYNC: The command a replica uses to synchronise with its master, resuming partially when it can instead of copying everything again.",
+    "verdict": "supported",
+    "pointer_ok": true,
+    "checked_in": [
+     "src/replication.c",
+     "redis.conf"
+    ],
+    "note": "as claim 18"
+   }
+  ],
+  "totals": {
+   "supported": 28,
+   "contradicted": 0,
+   "not_found": 0,
+   "partly": 2,
+   "pointer_true": 29,
+   "pointer_false": 1,
+   "pointer_null": 0
+  }
+ }
+}
