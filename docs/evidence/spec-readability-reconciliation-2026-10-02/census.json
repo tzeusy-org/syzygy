@@ -600,7 +600,7 @@
     },
     "POLARIS": {
       "requirements": 39,
-      "scenarios": 383,
+      "scenarios": 395,
       "members": {
         "REQ-polaris-generation-001": {
           "name": "Admitted project input",
@@ -1047,7 +1047,19 @@
             "Figure kinds in an earlier schema",
             "Graph figures unchanged by figure kinds",
             "Brief v12 states the figure kinds",
-            "Provider mode unchanged by figure kinds"
+            "Provider mode unchanged by figure kinds",
+            "Workspace manifests read into the check record",
+            "Python project and its dependency sections",
+            "Workflow jobs and their needs",
+            "Malformed manifest is Unknown, never empty",
+            "Empty manifests",
+            "Excluded or withheld blob never read",
+            "Go modules Unknown under the bound policy",
+            "Manifest facts deterministic and independent of the draft",
+            "Manifest facts stay Inferred",
+            "More manifests than the member lists",
+            "Unread files sorting first do not hide read ones",
+            "Pages and provider unchanged by manifest facts"
           ]
         },
         "REQ-polaris-generation-035": {
