@@ -2004,3 +2004,52 @@ describe('render: the thesis basis (schema v6)', () => {
     }
   });
 });
+
+// REQ-polaris-generation-034 version 2.5 (syzygy-3efd.30): schema v7's sequence and swimlane figures through the render command, and a
+// v6 draft rendering as version 2.4 renders it. Literals throughout.
+describe('render: figure kinds (schema v7)', () => {
+  const V6 = 'polaris-dossier-local-draft-v6', V7 = 'polaris-dossier-local-draft-v7';
+  const home = { kind: 'section', target: 'core-ideas' };
+  const el = (id: string, label: string, file = 'docs/notes.txt') => ({ id, label, epistemic: 'inferred', citations: [cite(`c-${id}`, file, 2, 2)] });
+  const FLOW = { id: 'flow-1', title: 'Flow', home, kind: 'flow', relationship: 'Order.', disposition: { kind: 'produced', assetIds: ['flow-1'] },
+    nodes: [el('n1', 'Client'), el('n2', 'Server')], edges: [{ ...el('x1', 'sends'), from: 'n1', to: 'n2' }] };
+  const SEQUENCE = { id: 'seq-1', title: 'Handshake', home, kind: 'sequence', relationship: 'Who asks whom.', disposition: { kind: 'produced', assetIds: ['seq-1'] },
+    participants: [el('pt1', 'Client'), el('pt2', 'Server')], messages: [{ ...el('msg1', 'asks'), from: 'pt1', to: 'pt2' }, { ...el('msg2', 'answers'), from: 'pt2', to: 'pt1' }] };
+  const SWIMLANE = { id: 'lane-1', title: 'Release', home, kind: 'swimlane', relationship: 'Who does each step.', disposition: { kind: 'produced', assetIds: ['lane-1'] },
+    lanes: [el('ln1', 'Developer'), el('ln2', 'CI')], steps: [{ ...el('stp1', 'pushes'), lane: 'ln1' }, { ...el('stp2', 'tests', 'src/kestrel.c'), lane: 'ln2' }] };
+  const versioned = (version: string, diagrams: readonly Doc[]): Doc => ({ ...draft(), schemaVersion: version, thesisBasis: 'stated', diagrams });
+  const rendered = async (doc: Doc): Promise<ReadonlyMap<string, string>> => {
+    const run = await prepared(doc, false);
+    const result = await renderRun(run, renderDeps());
+    if (!result.ok) throw new Error(result.refusal.reason);
+    return readSite(result.report.site);
+  };
+
+  it('renders a graph diagram of a v7 draft byte for byte as the same diagram of a v6 draft, on every page, with no figure-kind style', async () => {
+    const v6 = await rendered(versioned(V6, [FLOW]));
+    const v7 = await rendered(versioned(V7, [FLOW]));
+    expect([...v7.keys()]).toEqual([...v6.keys()]);
+    const differing = [...v6].filter(([file, bytes]) => v7.get(file) !== bytes).map(([file]) => file);
+    // Only the records that name the draft's schema version differ, and in that alone.
+    for (const file of differing) expect(v7.get(file)!.replaceAll(V7, V6), file).toBe(v6.get(file));
+    expect([...v7.values()].some((page) => page.includes('figure-stepper') || page.includes('figureStructures'))).toBe(false);
+  });
+
+  it('renders a sequence and a swimlane in their two forms, with figureStructures in machine.json and the style on their page alone', async () => {
+    fixturePolicy = policy(['.txt']); // the second step cites a .c file, outside the class gate, so it is withheld: Unknown, its label Syzygy's words
+    const files = await rendered(versioned(V7, [SEQUENCE, SWIMLANE]));
+    const index = files.get('index.html')!;
+    expect(index).toContain('<p class="diagram-relationship"><span class="eyebrow">sequence</span> Who asks whom.</p><div class="figure-forms" data-figure-width="408"><div class="diagram-scroll figure-drawing"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 408 248" width="408" height="248"');
+    expect(index).toContain('<ol class="figure-stepper"><li class="inferred"><span class="stepper-head">Client → Server</span> asks</li><li class="inferred"><span class="stepper-head">Server → Client</span> answers</li></ol>');
+    expect(index).toContain('<ol class="figure-stepper"><li class="inferred"><span class="stepper-head">Developer</span> pushes</li><li class="unknown"><span class="stepper-head">CI</span> Withheld item ?</li></ol>');
+    expect(index).toContain('<p class="diagram-tally">2 participants and 2 messages, as marked: 0 observed, 4 inferred, 0 unknown.</p>');
+    expect(index).toContain('<p class="diagram-tally">2 lanes and 2 steps, as marked: 0 observed, 3 inferred, 1 unknown.</p>');
+    expect(index).toContain('<pre>sequenceDiagram\n  participant p0 as Client\n  participant p1 as Server\n  p0--&gt;&gt;p1: asks\n  p1--&gt;&gt;p0: answers\n</pre>');
+    expect((index.match(/data-visual-provenance="curated" data-figure-kind="(?:sequence|swimlane)"/gu) ?? []).length).toBe(2);
+    expect(index).not.toMatch(/<script/u);
+    expect([...files].filter(([, page]) => page.includes('.figure-stepper{')).map(([file]) => file)).toEqual(['index.html']);
+    expect(JSON.parse(files.get('machine.json')!).figureStructures).toEqual([
+      { diagram: 'seq-1', kind: 'sequence', page: 'index.html', laidOutPx: 408, participants: ['pt1', 'pt2'], messages: [{ id: 'msg1', from: 'pt1', to: 'pt2' }, { id: 'msg2', from: 'pt2', to: 'pt1' }] },
+      { diagram: 'lane-1', kind: 'swimlane', page: 'index.html', laidOutPx: 408, lanes: ['ln1', 'ln2'], steps: [{ id: 'stp1', lane: 'ln1' }, { id: 'stp2', lane: 'ln2' }] }]);
+  });
+});

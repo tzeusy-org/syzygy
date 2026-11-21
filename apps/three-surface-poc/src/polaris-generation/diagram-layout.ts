@@ -567,3 +567,171 @@ export function renderDiagramSvg(
   const lines = edges.map(edge => edge.line).join(''), labels = edges.map(edge => edge.label).join('');
   return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${layout.width} ${height}" width="${layout.width}" height="${height}" role="img" aria-labelledby="diagram-title-${index}" aria-describedby="diagram-text-${index}"><defs><marker id="${markerId}" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto"><path d="M 0 0 L 10 5 L 0 10 z"/></marker></defs>${lines}${nodes}${labels}</svg>`;
 }
+
+/**
+ * The figure kinds' fixed-pitch layouts (REQ-polaris-generation-034 version 2.5, syzygy-3efd.30). Each reads identities, references and
+ * counts, never a label's width, so the same record always gives the same coordinates. With n participants or lanes in draft order,
+ * column i is `FIGURE_COLUMN` wide at x = 24 + 184 i, and the drawing is W = 40 + 184 n wide (408, 592, 776 or 960 px).
+ * - A sequence of m messages: each participant a box 56 px high at y = 24, its lifeline down the column's centre from the box's foot to the
+ *   drawing's foot; message k an arrow at y = 128 + 72 k from the sender's lifeline to the receiver's, or for a message to itself a loop
+ *   that reaches 32 px right and returns 24 px lower; its label centred above its arrow. H = 104 + 72 m.
+ * - A swimlane of s steps: each lane a band its column wide and the drawing's height, headed by a box 56 px high at y = 24; step k a box
+ *   176 x 56 in its lane's column at y = 104 + 88 k; an arrow from each step's foot to the next step's head, straight within one lane and
+ *   curved between two. H = 96 + 88 s.
+ * A layout throws where a count is outside its bounds, an identity repeats, a reference names nothing in its own figure, or a participant
+ * or lane is named by nothing: the figure is then not drawn, and its fit is Unknown.
+ */
+export const FIGURE_COLUMN = 176;
+const FIGURE_PITCH = 184;
+const FIGURE_BOX = 56;
+const MESSAGE_TOP = 128;
+const MESSAGE_PITCH = 72;
+const LOOP_REACH = 32;
+const LOOP_DROP = 24;
+const STEP_TOP = 104;
+const STEP_PITCH = 88;
+/** A message's label wraps at 22 characters, a participant's, lane's or step's at 19, each to at most two lines. */
+const MESSAGE_CHARS = 22;
+const BOX_CHARS = 19;
+const FIGURE_LABEL_CHAR = 7.9;
+
+const columnX = (i: number): number => MARGIN + FIGURE_PITCH * i;
+const figureWidth = (n: number): number => 40 + FIGURE_PITCH * n;
+
+function figureColumns(owners: readonly { readonly id: string }[], least: number, most: number): Map<string, number> {
+  if (owners.length < least || owners.length > most) throw new Error('figure-count');
+  const index = new Map<string, number>();
+  owners.forEach((owner, i) => {
+    if (index.has(owner.id)) throw new Error('duplicate-node');
+    index.set(owner.id, i);
+  });
+  return index;
+}
+
+interface FigureBox { readonly id: string; readonly x: number; readonly y: number }
+export interface SequenceLayout {
+  readonly width: number; readonly height: number;
+  readonly participants: readonly FigureBox[];
+  readonly lifelines: readonly { readonly id: string; readonly x: number; readonly y1: number; readonly y2: number }[];
+  /** Each message's arrow at `y`; its label centred at `labelX`, its box's foot at `labelBottom`. */
+  readonly messages: readonly { readonly id: string; readonly y: number; readonly self: boolean; readonly d: string; readonly labelX: number; readonly labelBottom: number }[];
+}
+
+// Test seam: exported for the tests; production code reaches it only inside this file and `dossier-site.ts`.
+export function layoutSequence(participants: readonly { readonly id: string }[], messages: readonly { readonly id: string; readonly from: string; readonly to: string }[]): SequenceLayout {
+  const index = figureColumns(participants, 2, 5);
+  if (messages.length < 1 || messages.length > 30) throw new Error('figure-count');
+  const named = new Set<string>();
+  const ends = messages.map(message => {
+    const from = index.get(message.from), to = index.get(message.to);
+    if (from === undefined || to === undefined) throw new Error('unknown-node');
+    named.add(message.from).add(message.to);
+    return { from, to };
+  });
+  if (participants.some(participant => !named.has(participant.id))) throw new Error('figure-unused');
+  const width = figureWidth(participants.length), height = 104 + MESSAGE_PITCH * messages.length;
+  const centre = (i: number): number => columnX(i) + FIGURE_COLUMN / 2;
+  return {
+    width, height,
+    participants: participants.map((participant, i) => ({ id: participant.id, x: columnX(i), y: MARGIN })),
+    lifelines: participants.map((participant, i) => ({ id: participant.id, x: centre(i), y1: MARGIN + FIGURE_BOX, y2: height })),
+    messages: messages.map((message, k) => {
+      const y = MESSAGE_TOP + MESSAGE_PITCH * k;
+      const { from, to } = ends[k]!;
+      const x1 = centre(from), x2 = centre(to);
+      if (from === to) {
+        return { id: message.id, y, self: true, d: `M ${num(x1)} ${num(y)} L ${num(x1 + LOOP_REACH)} ${num(y)} L ${num(x1 + LOOP_REACH)} ${num(y + LOOP_DROP)} L ${num(x1 + 2)} ${num(y + LOOP_DROP)}`, labelX: x1, labelBottom: y - 3 };
+      }
+      // The arrowhead's tip stops short of the receiver's lifeline, as a graph edge's stops short of its node.
+      const tip = x2 > x1 ? x2 - 2 : x2 + 2;
+      return { id: message.id, y, self: false, d: `M ${num(x1)} ${num(y)} L ${num(tip)} ${num(y)}`, labelX: (x1 + x2) / 2, labelBottom: y - 3 };
+    }),
+  };
+}
+
+export interface SwimlaneLayout {
+  readonly width: number; readonly height: number;
+  readonly lanes: readonly FigureBox[];
+  readonly steps: readonly FigureBox[];
+  /** The arrow from each step to the next, in step order: straight within one lane, curved between two. It carries no claim. */
+  readonly order: readonly { readonly from: string; readonly to: string; readonly straight: boolean; readonly d: string }[];
+}
+
+// Test seam: exported for the tests; production code reaches it only inside this file and `dossier-site.ts`.
+export function layoutSwimlane(lanes: readonly { readonly id: string }[], steps: readonly { readonly id: string; readonly lane: string }[]): SwimlaneLayout {
+  const index = figureColumns(lanes, 2, 5);
+  if (steps.length < 2 || steps.length > 20) throw new Error('figure-count');
+  const columns = steps.map(step => {
+    const lane = index.get(step.lane);
+    if (lane === undefined) throw new Error('unknown-node');
+    return lane;
+  });
+  if (lanes.some((_, i) => !columns.includes(i))) throw new Error('figure-unused');
+  const laidSteps = steps.map((step, k) => ({ id: step.id, x: columnX(columns[k]!), y: STEP_TOP + STEP_PITCH * k }));
+  return {
+    width: figureWidth(lanes.length), height: 96 + STEP_PITCH * steps.length,
+    lanes: lanes.map((lane, i) => ({ id: lane.id, x: columnX(i), y: MARGIN })),
+    steps: laidSteps,
+    order: laidSteps.slice(0, -1).map((from, k) => {
+      const to = laidSteps[k + 1]!;
+      const x1 = from.x + FIGURE_COLUMN / 2, y1 = from.y + FIGURE_BOX, x2 = to.x + FIGURE_COLUMN / 2, y2 = to.y - 2;
+      if (x1 === x2) return { from: from.id, to: to.id, straight: true, d: `M ${num(x1)} ${num(y1)} L ${num(x2)} ${num(y2)}` };
+      const dy = (y2 - y1) / 2;
+      return { from: from.id, to: to.id, straight: false, d: `M ${num(x1)} ${num(y1)} C ${num(x1)} ${num(y1 + dy)}, ${num(x2)} ${num(y2 - dy)}, ${num(x2)} ${num(y2)}` };
+    }),
+  };
+}
+
+interface FigureClaim { readonly id: string; readonly label: string; readonly epistemic: EpistemicMarking }
+
+/** A box's or message's label lines: wrapped, with ` ?` after an Unknown element's last line, as a graph figure's. */
+function figureLines(element: FigureClaim, maxChars: number): string[] {
+  const lines = wrapLabel(element.label, maxChars, 2);
+  if (element.epistemic === 'unknown') lines[lines.length - 1] = `${lines[lines.length - 1]} ?`;
+  return lines;
+}
+
+function figureText(lines: readonly string[], x: number, firstBaseline: number, lineHeight: number, escape: (value: string) => string): string {
+  return `<text x="${num(x)}" y="${num(firstBaseline)}" text-anchor="middle">${lines.map((line, i) => `<tspan x="${num(x)}" dy="${i === 0 ? 0 : lineHeight}">${escape(line)}</tspan>`).join('')}</text>`;
+}
+
+function figureBox(element: FigureClaim, at: FigureBox, escape: (value: string) => string): string {
+  const lines = figureLines(element, BOX_CHARS);
+  const baseline = at.y + FIGURE_BOX / 2 + 5 - (lines.length - 1) * 8;
+  return `<g class="node ${element.epistemic}"><title>${escape(element.label)} (${element.epistemic})</title><rect x="${num(at.x)}" y="${num(at.y)}" width="${FIGURE_COLUMN}" height="${FIGURE_BOX}" rx="6"/>${figureText(lines, at.x + FIGURE_COLUMN / 2, baseline, 16, escape)}</g>`;
+}
+
+const figureSvg = (index: number | string, width: number, height: number, body: string): string =>
+  `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${width} ${height}" width="${width}" height="${height}" role="img" aria-labelledby="diagram-title-${index}" aria-describedby="diagram-text-${index}"><defs><marker id="arrow-${index}" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto"><path d="M 0 0 L 10 5 L 0 10 z"/></marker></defs>${body}</svg>`;
+
+/** A sequence figure as static SVG: lifelines, then messages with their labels, then participant boxes. Every text passes through
+ * `escape`; the caller must still pass the result through `assertInertSvg`. */
+export function renderSequenceSvg(figure: { readonly participants: readonly FigureClaim[]; readonly messages: readonly (FigureClaim & { readonly from: string; readonly to: string })[] },
+  index: number | string, escape: (value: string) => string): string {
+  const layout = layoutSequence(figure.participants, figure.messages);
+  const lifelines = figure.participants.map((participant, i) => {
+    const at = layout.lifelines[i]!;
+    return `<g class="lifeline ${participant.epistemic}"><path d="M ${num(at.x)} ${num(at.y1)} L ${num(at.x)} ${num(at.y2)}"/></g>`;
+  }).join('');
+  const messages = figure.messages.map((message, k) => {
+    const at = layout.messages[k]!;
+    const lines = figureLines(message, MESSAGE_CHARS);
+    const width = Math.max(...lines.map(line => [...line].length)) * FIGURE_LABEL_CHAR + 8, height = lines.length * 15 + 6;
+    const top = at.labelBottom - height;
+    return `<g class="edge ${message.epistemic}"><title>${escape(message.label)} (${message.epistemic})</title><path d="${at.d}" marker-end="url(#arrow-${index})"/>`
+      + `<rect class="edge-label" x="${num(at.labelX - width / 2)}" y="${num(top)}" width="${num(width)}" height="${num(height)}" rx="3"/>${figureText(lines, at.labelX, top + 15, 15, escape)}</g>`;
+  }).join('');
+  const boxes = figure.participants.map((participant, i) => figureBox(participant, layout.participants[i]!, escape)).join('');
+  return figureSvg(index, layout.width, layout.height, `${lifelines}${messages}${boxes}`);
+}
+
+/** A swimlane figure as static SVG: lane bands, then the order arrows (no claim, no title), then lane heads and step boxes. */
+export function renderSwimlaneSvg(figure: { readonly lanes: readonly FigureClaim[]; readonly steps: readonly (FigureClaim & { readonly lane: string })[] },
+  index: number | string, escape: (value: string) => string): string {
+  const layout = layoutSwimlane(figure.lanes, figure.steps);
+  const bands = layout.lanes.map(at => `<rect class="lane-band" x="${num(at.x)}" y="0" width="${FIGURE_COLUMN}" height="${layout.height}"/>`).join('');
+  const order = layout.order.map(arrow => `<path class="step-order" d="${arrow.d}" marker-end="url(#arrow-${index})"/>`).join('');
+  const heads = figure.lanes.map((lane, i) => figureBox(lane, layout.lanes[i]!, escape)).join('');
+  const steps = figure.steps.map((step, k) => figureBox(step, layout.steps[k]!, escape)).join('');
+  return figureSvg(index, layout.width, layout.height, `${bands}${order}${heads}${steps}`);
+}

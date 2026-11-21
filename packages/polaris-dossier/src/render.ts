@@ -5,12 +5,12 @@ import {
   excludedSourceId, spanTouchesWithheld, generationSourcesForBody, generationSourcesForRedactedBody, generationSpanRange, generationSourceTextAt, isDossierPagePath, leadInQuotationSpans, PAGE_SINK_CONTRACT, PAGE_SINK_SCRIPT_CONTRACT, pageSinkCspFinding, pageSinkScriptFinding,
   type EpistemicMarking, type EvidenceAnchor, type GenerationExclusionReason, type GenerationSource, type LocalBlock,
   type LocalDisclosureItem, type LocalDraftLayer, type LocalPage, type LocalPageItem, type LocalRenderInput, type LocalSegment, type WithheldNote,
-  type DossierDraft, type DraftBlock, type DraftDiagramHome, type DraftParagraph,
+  type DossierDraft, type DraftBlock, type DraftDiagramHome, type DraftFigure, type DraftFigureElement, type DraftParagraph,
 } from '@syzygy/polaris-generation-core/live';
 import { isRecord, sha256 } from '@syzygy/support';
 import { collectBlocks, deriveFindings, draftRules, type BlobRedaction, type Derived } from './check.js';
 import { CREDENTIAL_CHECK_DISCLOSURE, credentialStepCheck, storedBriefArm, type CredentialStepResult } from './credential-probe.js';
-import { LOCAL_DRAFT_SCHEMA_VERSION, UNDERSTANDING_ITEMS } from './draft-schema.js';
+import { LOCAL_DRAFT_SCHEMA_VERSION, UNDERSTANDING_ITEMS, hasThesisBasisForm } from './draft-schema.js';
 import { EXECUTION_FLAGS_BASIS, executionFlags, type ExecutionFlags } from './execution-flags.js';
 import type { CredentialProbe } from './execution-rule.js';
 import { RECORDS_WITHIN_REACH } from './gate-sources.js';
@@ -614,8 +614,16 @@ export function buildLocalInput(inputs: BuildInputs): Built {
     if (held !== undefined) withheldElements.set(`${prefix}${text(value['id'])!}`, held);
     return { held };
   };
+  // A v7 sequence or swimlane (version 2.5): its participants, lanes and steps are rendered as nodes are, its messages as edges are.
+  const figureKind = (diagram: Readonly<Record<string, unknown>>): 'sequence' | 'swimlane' | undefined =>
+    (doc['schemaVersion'] === LOCAL_DRAFT_SCHEMA_VERSION && (diagram['kind'] === 'sequence' || diagram['kind'] === 'swimlane') ? diagram['kind'] : undefined);
+  const elementsOf = (diagram: Readonly<Record<string, unknown>>): unknown[] => {
+    const kind = figureKind(diagram);
+    return kind === 'sequence' ? [...list(diagram['participants']), ...list(diagram['messages'])]
+      : kind === 'swimlane' ? [...list(diagram['lanes']), ...list(diagram['steps'])] : [...list(diagram['nodes']), ...list(diagram['edges'])];
+  };
   const diagramHeld = (diagram: Readonly<Record<string, unknown>>): boolean => {
-    const parts = [...list(diagram['nodes']), ...list(diagram['edges'])].filter(isRecord);
+    const parts = elementsOf(diagram).filter(isRecord);
     return parts.length > 0 && parts.every((part) => withheldNote(part) !== undefined);
   };
   // A section's or deep dive's title over paragraphs and diagrams that are all withheld.
@@ -641,6 +649,21 @@ export function buildLocalInput(inputs: BuildInputs): Built {
     sections: list(doc['sections']).filter(isRecord).map((section) => ({ id: text(section['id'])!, title: containerTitle(section, diagramRecords.filter((diagram) => placement(diagram).home === undefined && placement(diagram).sectionId === section['id'])), paragraphs: tree(section['paragraphs']), disposition: disposition(section['disposition']) })),
     diagrams: diagramRecords.map((diagram) => {
       const held = diagramHeld(diagram);
+      const kind = figureKind(diagram);
+      if (kind !== undefined) {
+        const claimOf = (value: Readonly<Record<string, unknown>>): DraftFigureElement => {
+          const { held: gone } = element('', value);
+          return { id: text(value['id'])!, label: gone === undefined ? title(value['label']) : WITHHELD_LABEL, sourceIds: cites(text(value['id'])!, value), epistemic: gone === undefined && value['epistemic'] === 'inferred' ? 'inferred' as const : 'unknown' as const };
+        };
+        const records = (key: string): Readonly<Record<string, unknown>>[] => list(diagram[key]).filter(isRecord);
+        const figure: DraftFigure = kind === 'sequence'
+          ? { kind, participants: records('participants').map(claimOf), messages: records('messages').map((message) => ({ ...claimOf(message), from: text(message['from'])!, to: text(message['to'])! })) }
+          : { kind, lanes: records('lanes').map(claimOf), steps: records('steps').map((step) => ({ ...claimOf(step), lane: text(step['lane'])! })) };
+        return {
+          id: text(diagram['id'])!, title: held ? WITHHELD_LABEL : title(diagram['title']), ...placement(diagram), kind, relationship: held ? WITHHELD_LABEL : title(diagram['relationship']),
+          nodes: [], edges: [], figure, disposition: disposition(diagram['disposition']),
+        };
+      }
       return {
         id: text(diagram['id'])!, title: held ? WITHHELD_LABEL : title(diagram['title']), ...placement(diagram), kind: diagram['kind'] as DossierDraft['diagrams'][number]['kind'], relationship: held ? WITHHELD_LABEL : title(diagram['relationship']),
         nodes: list(diagram['nodes']).filter(isRecord).map((node) => {
@@ -791,7 +814,7 @@ export function buildLocalInput(inputs: BuildInputs): Built {
       authoring: { tool: declared.agentTool, model: declared.model },
       selectionReasons,
       // A v6 draft's thesis basis (version 2.4): the code-reading line renders only while the draft layer and the introduction both show.
-      ...(doc['schemaVersion'] === LOCAL_DRAFT_SCHEMA_VERSION && (doc['thesisBasis'] === 'stated' || doc['thesisBasis'] === 'code-reading' || doc['thesisBasis'] === 'none') ? { thesisBasis: {
+      ...(hasThesisBasisForm(doc['schemaVersion']) && (doc['thesisBasis'] === 'stated' || doc['thesisBasis'] === 'code-reading' || doc['thesisBasis'] === 'none') ? { thesisBasis: {
         value: doc['thesisBasis'],
         lineRendered: doc['thesisBasis'] === 'code-reading' && editorial && blocks.get(draft.introduction.id)?.withheld === undefined,
       } } : {}),

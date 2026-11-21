@@ -97,3 +97,25 @@ export function readingInput(): { readonly local: LocalRenderInput; readonly sou
     },
   };
 }
+
+/** Figure kinds (REQ-polaris-generation-034 version 2.5, syzygy-3efd.30): the reading dossier with its graph figures replaced by a
+ * sequence of three participants and four messages on section one (592 x 392) and a swimlane of three lanes and five steps on section
+ * two (592 x 536). One message is to its own sender, one message and one step are Unknown, and one label is long enough to wrap. */
+export function figureKindsInput(): { readonly local: LocalRenderInput; readonly sources: readonly GenerationSource[] } {
+  const { local, sources } = readingInput();
+  const sourceIds = [READING_SOURCE.sourceId];
+  const el = (id: string, label: string, epistemic = 'inferred') => ({ id, label, sourceIds, epistemic });
+  const produced = { kind: 'produced', assetIds: [] };
+  const draft = local.draft as unknown as Record<string, unknown>;
+  return { sources, local: { ...local, draft: { ...draft, diagrams: [{
+    id: 'handshake', sectionId: 'one', kind: 'sequence', title: 'Handshake', relationship: 'who asks whom', disposition: produced, nodes: [], edges: [],
+    figure: { kind: 'sequence', participants: [el('client', 'Client'), el('server', 'Server'), el('store', 'Store <disk>')],
+      messages: [{ ...el('m1', 'opens a connection'), from: 'client', to: 'server' }, { ...el('m2', 'reads the stored record for the key it was asked about'), from: 'server', to: 'store' },
+        { ...el('m3', 'checks its cache', 'unknown'), from: 'server', to: 'server' }, { ...el('m4', 'replies'), from: 'server', to: 'client' }] },
+  }, {
+    id: 'release', sectionId: 'two', kind: 'swimlane', title: 'Release', relationship: 'who does each step', disposition: produced, nodes: [], edges: [],
+    figure: { kind: 'swimlane', lanes: [el('dev', 'Developer'), el('ci', 'CI'), el('ops', 'Operator')],
+      steps: [{ ...el('s1', 'writes the change'), lane: 'dev' }, { ...el('s2', 'opens a pull request'), lane: 'dev' }, { ...el('s3', 'runs the tests'), lane: 'ci' },
+        { ...el('s4', 'tags a release', 'unknown'), lane: 'ops' }, { ...el('s5', 'watches the rollout'), lane: 'ops' }] },
+  }] } as unknown as LocalRenderInput['draft'] } };
+}
