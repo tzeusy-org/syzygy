@@ -1,4 +1,4 @@
-import { declaredSubjectFixture, policyFixture } from './full-run.testkit.js';
+import { declaredSubjectFixture, policyFixture, predecessorPolicyBytes } from './full-run.testkit.js';
 import { execFileSync } from 'node:child_process';
 import { createHash } from 'node:crypto';
 import * as fs from 'node:fs';
@@ -660,7 +660,7 @@ describe('render', () => {
   // Screening scope version 8: a private repository's class-gate-withheld blob keeps its object id off every page and out of the source
   // population; the public counterpart (the test above) keeps it.
   it('suppresses a private unknown-class blob identifier on every page and in the source population', async () => {
-    const raw = JSON.parse(new TextDecoder().decode(policy(['.c']))); raw.publicSourceScope.sourceVisibility = JSON.parse(new TextDecoder().decode(policyFixture().bytes)).publicSourceScope.sourceVisibility;
+    const raw = JSON.parse(new TextDecoder().decode(policy(['.c']))); raw.publicSourceScope.sourceVisibility = JSON.parse(new TextDecoder().decode(predecessorPolicyBytes())).publicSourceScope.sourceVisibility;
     fixturePolicy = new TextEncoder().encode(JSON.stringify(raw)); fixtureVisibility = 'private';
     const run = await prepared(draft(), false); const { renderer, inputs } = capturing();
     const result = await renderRun(run, renderDeps({ renderer })); if (!result.ok) throw new Error(result.refusal.reason);
@@ -792,7 +792,7 @@ describe('render', () => {
     const result = await renderRun(run, renderDeps({ loadScreen: async (placement) => { seen.push(placement); return SCREEN; } }));
     expect(result).toMatchObject({ ok: true });
     const commit = JSON.parse(fs.readFileSync(path.join(run, 'run.json'), 'utf8')).subject.pinnedRevision.commit as string;
-    expect(seen).toEqual([{ repository: 'repository:redis-redis', commit, visibility: 'public', policySha256: policyFixture(fixturePolicy).binding.sha256 }]);
+    expect(seen).toEqual([{ repository: 'repository:redis-redis', commit, visibility: 'public', policySha256: policyFixture(fixturePolicy).binding.sha256, policyPath: '.syzygy/governance/policies/POLARIS-DOSSIER-DECLARED-SOURCE-POLICY-v2.json' }]);
     expect(commit).toMatch(/^[0-9a-f]{40}$/u);
   });
 
@@ -1341,7 +1341,7 @@ describe('rendered-design review (S9b)', () => {
   });
 
   it.each([['public', true], ['private', false]] as const)('version 8, %s: an excluded cited blob\'s object id is on the pages and in the source population: %s', async (visibility, shown) => {
-    const raw = JSON.parse(new TextDecoder().decode(policy(['.c', '.txt']))); raw.publicSourceScope.sourceVisibility = JSON.parse(new TextDecoder().decode(policyFixture().bytes)).publicSourceScope.sourceVisibility; fixturePolicy = new TextEncoder().encode(JSON.stringify(raw)); fixtureVisibility = visibility;
+    const raw = JSON.parse(new TextDecoder().decode(policy(['.c', '.txt']))); raw.publicSourceScope.sourceVisibility = JSON.parse(new TextDecoder().decode(predecessorPolicyBytes())).publicSourceScope.sourceVisibility; fixturePolicy = new TextEncoder().encode(JSON.stringify(raw)); fixtureVisibility = visibility;
     const doc = draft();
     doc.sections[0].paragraphs[1] = { id: 'p2', label: 'inferred', basis: 'source', text: 'The project states: "Deploy notes."', citations: [cite('c-p2', 'docs/deploy.md', 1, 1)], quotations: ['c-p2'], children: [] };
     const run = await prepared(doc, false);
@@ -1767,7 +1767,7 @@ describe('render: derived structure (version 2.3)', () => {
   });
 
   it('derives no size or object id for a private repository, and names no secret-matching path', async () => {
-    const raw = JSON.parse(new TextDecoder().decode(policy(['.c']))); raw.publicSourceScope.sourceVisibility = JSON.parse(new TextDecoder().decode(policyFixture().bytes)).publicSourceScope.sourceVisibility;
+    const raw = JSON.parse(new TextDecoder().decode(policy(['.c']))); raw.publicSourceScope.sourceVisibility = JSON.parse(new TextDecoder().decode(predecessorPolicyBytes())).publicSourceScope.sourceVisibility;
     fixturePolicy = new TextEncoder().encode(JSON.stringify(raw)); fixtureVisibility = 'private';
     const run = await prepared(draft(), false);
     const { files, index, machine } = await rendered(run);
