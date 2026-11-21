@@ -600,7 +600,7 @@
     },
     "POLARIS": {
       "requirements": 39,
-      "scenarios": 343,
+      "scenarios": 354,
       "members": {
         "REQ-polaris-generation-001": {
           "name": "Admitted project input",
@@ -1015,7 +1015,18 @@
             "Figure too wide at 390 px",
             "Fitting figure reports nothing",
             "Scaled text below the minimum",
-            "Figure fit stored and deterministic"
+            "Figure fit stored and deterministic",
+            "Derived tree figure renders Observed",
+            "Rule without a declared currency bound renders Unknown",
+            "Derived record not current renders Unknown",
+            "No derived record, or a tree that cannot be listed",
+            "No size or object id derived for a private repository",
+            "Authored element stays dashed",
+            "Draft cannot set Observed",
+            "Derived legend and tally agree with the drawing",
+            "More top-level directories than the figure draws",
+            "Derived structure stable across renders",
+            "Provider mode unchanged by derived structure"
           ]
         },
         "REQ-polaris-generation-035": {
