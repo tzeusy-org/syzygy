@@ -83,7 +83,6 @@ const NATIVE_SITES = new Map<string, ReadonlyMap<string, string>>([
     ['3e1a3c26893129a7c71f4a2626ea132bcec18efd7fc4774f524aa99c07e3e5f3', 'trace a bounded synthetic write-ordering driver, 10s'],
   ])],
   [DOSSIER + 'session-peer.test.ts', new Map([
-    ['39142dc78ac61f0fcc8ce7a9d2dad441ff54edd02e2296c019228e18d199dcd5', 'compile one first-party C fixture, 10s'],
     ['d5dea8e4382174a6f337c42849dc31649a3d82814b30e06ba72e8368a32329e2', 'make one FIFO in the malformed helper fixture'],
   ])],
   [PEER_MODULE, new Map([

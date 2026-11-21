@@ -2,7 +2,8 @@ import * as fs from 'node:fs';
 import * as net from 'node:net';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { execFileSync, spawn, type ChildProcess } from 'node:child_process';
+import { execFile, execFileSync, spawn, type ChildProcess } from 'node:child_process';
+import { promisify } from 'node:util';
 import { afterEach, beforeAll, describe, expect, it } from 'vitest';
 import { tempDir } from '@syzygy/test-kit';
 import { sha256 } from '@syzygy/support';
@@ -10,11 +11,13 @@ import { captureKernelUnixPeer, type KernelPeerProgram } from './session-peer.js
 
 const cleanup: (() => Promise<void>)[] = [];
 const fixtureEnv = { PATH: '/usr/bin:/bin', LANG: 'C' };
-function compilePeerFixture(source: string): string {
+const execFileAsync = promisify(execFile);
+
+async function compilePeerFixture(source: string): Promise<string> {
   const executable = path.join(tempDir('sp-build-'), 'peer');
-  execFileSync('/usr/bin/cc', ['-std=c11', '-Wall', '-Wextra', '-Werror', '-O2',
+  await execFileAsync('/usr/bin/cc', ['-std=c11', '-Wall', '-Wextra', '-Werror', '-O2',
     fileURLToPath(new URL(source, import.meta.url)), '-o', executable],
-  { env: fixtureEnv, stdio: 'pipe', timeout: 10_000 });
+  { env: fixtureEnv, timeout: 10_000, killSignal: 'SIGKILL', maxBuffer: 65_536 });
   return executable;
 }
 afterEach(async () => { for (const close of cleanup.splice(0).reverse()) await close(); });
@@ -44,8 +47,8 @@ async function ownConnection(tcp = false): Promise<{ client: net.Socket; socket:
 
 describe('host kernel Unix peer identity primitive', () => {
   let program: KernelPeerProgram;
-  beforeAll(() => {
-    const executable = compilePeerFixture('./session-peer.c');
+  beforeAll(async () => {
+    const executable = await compilePeerFixture('./session-peer.c');
     program = { executable, sha256: sha256(fs.readFileSync(executable)) };
   });
   it('captures the actual distinct same-user client processes rather than their claimed identity', async () => {
@@ -93,19 +96,19 @@ describe('host kernel Unix peer identity primitive', () => {
 
 describe('own-fixture kernel sender lifetime control', () => {
   let executable: string;
-  beforeAll(() => { executable = compilePeerFixture('./session-peer-lifetime.test.c'); });
+  beforeAll(async () => { executable = await compilePeerFixture('./session-peer-lifetime.test.c'); });
 
   it.each([
     ['live', 'effect\n'],
     ['inherited', 'refused: sender\n'],
     ['forged', 'refused: connector\n'],
     ['exited', 'refused: exited\n'],
-  ])('observes the expected effect or refusal for the %s sender', (scenario, outcome) => {
+  ])('observes the expected effect or refusal for the %s sender', async (scenario, outcome) => {
     const socket = path.join(tempDir('sp-life-'), 's');
-    const observed = execFileSync(executable, [scenario, socket], {
-      env: fixtureEnv, stdio: ['ignore', 'pipe', 'pipe'], encoding: 'utf8',
+    const observed = await execFileAsync(executable, [scenario, socket], {
+      env: fixtureEnv, encoding: 'utf8',
       timeout: 4_000, killSignal: 'SIGKILL', maxBuffer: 1024,
     });
-    expect(observed).toBe(outcome);
+    expect(observed.stdout).toBe(outcome);
   });
 });
