@@ -1034,9 +1034,9 @@ label. Both require an amendment; neither is an implementation choice.
 different thing from the evidence that describes a state.
 
 **Formal definition.** **Status describes; warrant authorizes.** Two acts are
-authorized by warrants that are *not* evidence: a **recorded human decision**
+authorized by warrants that are *not* evidence: a **recorded decision**
 (attributed, timestamped, individually revertable — it may suppress a gap,
-rendered *dismissed by human decision*, never as resolved or green, and takes
+rendered *dismissed by decision*, never as resolved or green, and takes
 effect only once committed out to the governed plane with a reason and an
 expiry); and a **work warrant** — creating or prioritizing work requires
 traceable authority from a closed set of four classes: an approved
@@ -1151,7 +1151,7 @@ yet.
 state — the intent-vs-observed, work-generating delta. **A gap leaves a surface
 in exactly two non-interchangeable ways:** *factual resolution or absence* — a
 status claim requiring current evidence; or *policy dismissal* — a recorded,
-attributed human decision with reason and expiry, committed out to the governed
+attributed decision with reason and expiry, committed out to the governed
 plane, always rendered **dismissed by decision**, never green, resolved, or
 aligned. A dismissal whose reason or expiry is not current at the as-of instant
 renders the gap again — through a new evaluation, never a wall-clock flip.

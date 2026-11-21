@@ -141,8 +141,13 @@ material amendment (VIS-3).
 - **Failures** are recorded on the artifact's surface.
 - **Scope, per SDR-14:** material changes and release milestones, not every
   prose correction.
-- **Two failed review rounds** signal upstream ambiguity — return to the
-  source decision, don't polish prose.
+- **One independent review, not gating** (amended 2026-11-21 under D10,
+  D10 FOLLOW-ON F-7). The adopting agent applies the fixes, records the
+  dispositions (CC-REV-6) and decides; no confirmation round is required, no
+  owner arbitrates, and there is no stopping rule to agree. A failure that
+  a fix cannot reach signals upstream ambiguity — return to the source
+  decision rather than polishing prose; that decision is the owner's only
+  in an owner class (VIS-4).
 - *Violation:* a contract amended in five successive LLM sessions, each edit
   locally reasonable, none fresh-reader-reviewed, until only its authors can
   parse it.
@@ -171,8 +176,9 @@ recorded rationale by the accountable authority.
 
 - **Raw reviewer output** is stored unchanged before synthesis.
 - **Every revise-severity finding** is either fixed or explicitly overruled
-  with recorded rationale by the accountable authority (the owner, for
-  owner-gated artifacts).
+  with recorded rationale by the accountable authority: the agent adopting
+  the change, and the owner only for a change in an owner class (VIS-4 as
+  amended by D10; amended 2026-11-21, D10 FOLLOW-ON F-7).
 - **A useful review** names concrete risks even when accepting;
   rubber-stamp reviews are themselves findings.
 - *Violation:* a synthesis that quietly omits the one reviewer finding the

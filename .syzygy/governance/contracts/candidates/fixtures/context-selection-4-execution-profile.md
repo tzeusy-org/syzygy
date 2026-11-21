@@ -47,7 +47,7 @@ scripts/context_load.py rfcs/RFC-0005/README.md \
   craft:security-and-secrets.md
 ```
 
-Measured: **13,269 words ≈ 17,913 estimated tokens.** Band position is
+Measured: **13,531 words ≈ 18,267 estimated tokens.** Band position is
 owned by `CONTEXT-BUDGET-REPORT.md` §1, computed from this anchored figure;
 this fixture's prose makes no band claim of its own.
 
@@ -88,7 +88,7 @@ context is in scope); RFC-0002 `rendering-vocabularies`
 ## Packet digest
 
 sha256 over the mandatory files concatenated in listed order:
-`7c7d67d9a6ccf2cb…`.
+`4a148ff3c1bdb280…`.
 
 **Selection: hand-authored golden selection. Measurement: mechanical.
 Compiler implementation: absent.** `scripts/context_load.py` resolves a
