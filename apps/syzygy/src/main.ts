@@ -177,11 +177,11 @@ async function main(): Promise<number> {
     // provider island (island-boundary.test.ts in polaris-generation-core).
     // TODO(syzygy-qkea.19): import it from a renderer package once
     // the renderer stack moves out of apps/three-surface-poc.
-    const { renderLocalDossier } = await import('@syzygy/three-surface-poc-app/dossier-site');
+    const { figureLaidOutWidth, renderLocalDossier } = await import('@syzygy/three-surface-poc-app/dossier-site');
     return runDossierCli(argv.slice(1), {
       stdout: (text) => process.stdout.write(text),
       stderr: (text) => process.stderr.write(text),
-    }, { renderer: renderLocalDossier });
+    }, { renderer: renderLocalDossier, layoutFigure: figureLaidOutWidth });
   }
 
   // `syzygy polaris <url>` is the one-command launched run (prototype under
@@ -189,8 +189,8 @@ async function main(): Promise<number> {
   // `dossier` steps in process and starts the agent sessions in views.
   if (argv[0] === 'polaris') {
     const { runPolarisCli } = await import('@syzygy/polaris-dossier');
-    const { renderLocalDossier } = await import('@syzygy/three-surface-poc-app/dossier-site');
-    return runPolarisCli(argv.slice(1), { renderer: renderLocalDossier });
+    const { figureLaidOutWidth, renderLocalDossier } = await import('@syzygy/three-surface-poc-app/dossier-site');
+    return runPolarisCli(argv.slice(1), { renderer: renderLocalDossier, layoutFigure: figureLaidOutWidth });
   }
 
   let parsed = parseCli(process.argv.slice(2), process.env);

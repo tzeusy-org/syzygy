@@ -377,10 +377,10 @@ describe('daemon entry: the one changed input, `dossier` as the first argument',
   // branch termination. Among its false refusals, which the rows above pass: a comment naming the app in the dossier
   // branch, the renderer bound under another name, the two branches swapped, the dossier import in a nested function,
   // the polaris import in a nested try, G1's Allman brace/wrapped import and G2's block comments around else/in the condition.
-  // The `polaris` branch (prototype, POLARIS-DOSSIER-ONE-COMMAND-RUN-2026-10-14) injects the same renderer the same way.
+  // The `polaris` branch (prototype, POLARIS-DOSSIER-ONE-COMMAND-RUN-2026-10-14) injects the same renderer the same way, and both inject the figure layout check measures fit with (syzygy-3efd.20).
   it('the daemon path never loads the POC app: each import is dynamic and inside the `dossier` or `polaris` branch', () => {
     const main = readFileSync(path.join(REPO_ROOT, 'apps/syzygy/src/main.ts'), 'utf8');
-    const line = "    const { renderLocalDossier } = await import('@syzygy/three-surface-poc-app/dossier-site');";
+    const line = "    const { figureLaidOutWidth, renderLocalDossier } = await import('@syzygy/three-surface-poc-app/dossier-site');";
     const mentions = main.split('\n').filter((text) => text.includes('three-surface-poc-app'));
     expect(mentions).toEqual([line, line]);
     const daemon = main.indexOf('let parsed = parseCli(');

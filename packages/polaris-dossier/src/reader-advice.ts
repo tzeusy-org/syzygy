@@ -132,7 +132,10 @@ export function readerAdvice(doc: unknown): ReaderAdvice {
       });
     }
     if (deepDives.length > DEEP_DIVE_LIMIT) add('RS-14', '$.deepDives', `${deepDives.length} deep dives, past ${DEEP_DIVE_LIMIT}: keep those that answer a question their section cannot, and merge two that serve one question`);
-    const drawn = new Set(list(doc['diagrams']).flatMap((diagram) => (isRecord(diagram) && text(diagram['sectionId']) !== undefined ? [text(diagram['sectionId'])!] : [])));
+    // A section is drawn by a diagram whose page it is: `sectionId` up to v4, a section `home` from v5 (syzygy-3efd.18).
+    const sectionOf = (diagram: Readonly<Record<string, unknown>>): string | undefined => (isRecord(diagram['home'])
+      ? (diagram['home']['kind'] === 'section' ? text(diagram['home']['target']) : undefined) : text(diagram['sectionId']));
+    const drawn = new Set(list(doc['diagrams']).flatMap((diagram) => (isRecord(diagram) && sectionOf(diagram) !== undefined ? [sectionOf(diagram)!] : [])));
     list(doc['sections']).forEach((section, i) => {
       const id = isRecord(section) ? text(section['id']) : undefined;
       if (id !== undefined && !drawn.has(id)) add('RS-16', `$.sections[${i}]`, `no diagram is drawn for the section ${JSON.stringify(id)}: draw any workflow, mechanism or set of components that talk to each other it explains`);

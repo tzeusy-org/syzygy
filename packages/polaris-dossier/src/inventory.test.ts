@@ -378,6 +378,9 @@ describe('inventory-check', () => {
     expect(listAll(dir)).toEqual(['inventory-brief.md', 'inventory.json']);
     // The reader standards and the review's reach are a draft's advice, never an inventory's (R-PDJA-17-STANDARDS-1 note 6).
     expect(report).not.toHaveProperty('readerAdvice');
+    // Figure fit is kept in a draft's check record only (syzygy-3efd.20): an inventory check record carries none.
+    expect(report).not.toHaveProperty('figureFit');
+    expect(JSON.parse(fs.readFileSync(path.join(run, 'inventory', 'checks', 'rev-0.json'), 'utf8'))).not.toHaveProperty('figureFit');
     expect(report).not.toHaveProperty('reviewReach');
   });
 

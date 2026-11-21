@@ -76,7 +76,11 @@ export interface DossierDraft {
 export interface DraftDiagram {
   id: string; title: string; sectionId: string; kind: DiagramKind; relationship: string;
   nodes: DraftDiagramNode[]; edges: DraftDiagramEdge[]; disposition: AssetDisposition;
+  /** An operator-agent v5 diagram on a page other than a section (syzygy-3efd.18): a deep dive, or the overview. Absent, the diagram's page
+   * is the section `sectionId` names; present, `sectionId` names the section the deep dive belongs to, or is empty for the overview. */
+  home?: DraftDiagramHome;
 }
+export type DraftDiagramHome = { readonly kind: 'deep-dive'; readonly id: string } | { readonly kind: 'overview' };
 export interface FidelityInventoryCoverage { entryId: string; disposition: 'represented' | 'justified-omission' | 'unsupported' | 'unresolved'; blockIds: string[]; reason: string }
 export interface FidelityBlockSupport { blockId: string; verdict: 'supported' | 'anchor-does-not-support' | 'unresolved'; sourceIds: string[]; reason: string }
 export interface FidelityReview { inventoryCoverage: FidelityInventoryCoverage[]; blockSupport: FidelityBlockSupport[]; findings: { severity: 'blocking' | 'advisory'; message: string; target: string }[] }

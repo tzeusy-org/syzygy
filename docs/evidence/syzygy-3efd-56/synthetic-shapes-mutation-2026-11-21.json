@@ -1,0 +1,139 @@
+{
+  "format": "mutation-run/1",
+  "bead": "syzygy-3efd.56",
+  "date": "2026-11-21",
+  "ranAt": "ec0d9fef3c4399810c2d3cd26151f208ea4f28e9",
+  "subject": {
+    "packages/polaris-dossier/src/derive.ts": "b2f3ab40881db6a43122d75adbf42df62dd6d492fe9376b8d34cce9b698ac42b",
+    "packages/polaris-dossier/src/derive-rules.ts": "21103f429f8ffc1376e8f5e71634b802df3f05c57c8e84dd56e359f60dedc90c",
+    "apps/three-surface-poc/src/polaris-generation/synthetic-shapes.testkit.ts": "6413117a7a81a198dbc9edaf41e888c8d70882fa6debd768fec81b86ffb33d98",
+    "packages/polaris-dossier/src/synthetic-shapes.test.ts": "19003f2a61dc5f277ab8f2268616ea746aa3f4b28dae55caa0a9fefb2f5a2495"
+  },
+  "command": "npx vitest run packages/polaris-dossier/src/synthetic-shapes.test.ts --reporter=json",
+  "method": "each mutant replaces old with new exactly once in file, runs the command, restores the file; failedTests records each failing test and the first line of its message",
+  "mutants": [
+    {
+      "id": "listing-uncapped",
+      "file": "packages/polaris-dossier/src/derive.ts",
+      "old": "listed: all.slice(0, CENSUS_LISTED_LIMIT).map(shownPath), notListed: Math.max(0, all.length - CENSUS_LISTED_LIMIT)",
+      "new": "listed: all.map(shownPath), notListed: 0",
+      "killed": true,
+      "failedTests": [
+        {
+          "test": "a TypeScript workspace of 300 packages: the package listing stops at 250 and counts the other 51",
+          "message": "AssertionError: expected { state: 'derived', \u2026(11) } to deeply equal { state: 'derived', \u2026(11) }"
+        }
+      ],
+      "killedBy": "assertion"
+    },
+    {
+      "id": "workspace-as-single",
+      "file": "packages/polaris-dossier/src/derive.ts",
+      "old": "manifestCount === 1 ? 'single-package' : 'workspace'",
+      "new": "manifestCount >= 1 ? 'single-package' : 'workspace'",
+      "killed": true,
+      "failedTests": [
+        {
+          "test": "a TypeScript workspace of 300 packages: the package listing stops at 250 and counts the other 51",
+          "message": "AssertionError: expected { state: 'derived', \u2026(11) } to deeply equal { state: 'derived', \u2026(11) }"
+        },
+        {
+          "test": "a plugin host: the host and two plugins, each with its own manifest, read as a workspace",
+          "message": "AssertionError: expected { state: 'derived', \u2026(11) } to deeply equal { state: 'derived', \u2026(11) }"
+        }
+      ],
+      "killedBy": "assertion"
+    },
+    {
+      "id": "notebook-unknown",
+      "file": "packages/polaris-dossier/src/derive-rules.ts",
+      "old": "'.ipynb': 'Jupyter notebook', ",
+      "new": "",
+      "killed": true,
+      "failedTests": [
+        {
+          "test": "a notebook pipeline: notebooks are their own language, no package manifest",
+          "message": "AssertionError: expected { state: 'derived', \u2026(11) } to deeply equal { state: 'derived', \u2026(11) }"
+        }
+      ],
+      "killedBy": "assertion"
+    },
+    {
+      "id": "header-as-c",
+      "file": "packages/polaris-dossier/src/derive-rules.ts",
+      "old": "'.h': 'C or C++ header'",
+      "new": "'.h': 'C'",
+      "killed": true,
+      "failedTests": [
+        {
+          "test": "C firmware: C sources and a header, the Makefile and CMake file unrecognized by extension, no package manifest",
+          "message": "AssertionError: expected { state: 'derived', \u2026(11) } to deeply equal { state: 'derived', \u2026(11) }"
+        }
+      ],
+      "killedBy": "assertion"
+    },
+    {
+      "id": "go-test-not-test",
+      "file": "packages/polaris-dossier/src/derive-rules.ts",
+      "old": "'_test.go', ",
+      "new": "",
+      "killed": true,
+      "failedTests": [
+        {
+          "test": "a Go service with no README: one package, its go.sum set apart as generated, a test beside its code",
+          "message": "AssertionError: expected { state: 'derived', \u2026(11) } to deeply equal { state: 'derived', \u2026(11) }"
+        }
+      ],
+      "killedBy": "assertion"
+    },
+    {
+      "id": "kit-no-skip",
+      "file": "apps/three-surface-poc/src/polaris-generation/synthetic-shapes.testkit.ts",
+      "old": "            { id: 'edge-skip', from: nodeId(0), to: nodeId(2), label: skip, epistemic: 'inferred', sourceIds: [source.sourceId] }],",
+      "new": "            ],",
+      "killed": true,
+      "failedTests": [
+        {
+          "test": "fits every shape's figure at 1440 and 390 px: figure fit lists nothing for any of the nine",
+          "message": "AssertionError: rust-cli: expected { textPx: 13, minTextPx: 11, \u2026(3) } to deeply equal { textPx: 13, minTextPx: 11, \u2026(3) }"
+        },
+        {
+          "test": "renders each shape's canned draft: its title, its figure with a tally, its cited source page, and no script",
+          "message": "AssertionError: rust-cli: expected '<!doctype html><html lang=\"en\"><head>\u2026' to contain '<p class=\"diagram-tally\">4 boxes and \u2026'"
+        }
+      ],
+      "killedBy": "assertion"
+    },
+    {
+      "id": "kit-299-packages",
+      "file": "apps/three-surface-poc/src/polaris-generation/synthetic-shapes.testkit.ts",
+      "old": "Array.from({ length: 300 }, (_, i) => [",
+      "new": "Array.from({ length: 299 }, (_, i) => [",
+      "killed": true,
+      "failedTests": [
+        {
+          "test": "a TypeScript workspace of 300 packages: the package listing stops at 250 and counts the other 51",
+          "message": "AssertionError: expected { state: 'derived', \u2026(11) } to deeply equal { state: 'derived', \u2026(11) }"
+        }
+      ],
+      "killedBy": "assertion"
+    },
+    {
+      "id": "kit-no-readme-has-readme",
+      "file": "apps/three-surface-poc/src/polaris-generation/synthetic-shapes.testkit.ts",
+      "old": "    'go.mod': 'module example.com/ledger\\n',",
+      "new": "    'README.md': 'x\\n',\n    'go.mod': 'module example.com/ledger\\n',",
+      "killed": true,
+      "failedTests": [
+        {
+          "test": "a Go service with no README: one package, its go.sum set apart as generated, a test beside its code",
+          "message": "AssertionError: expected { state: 'derived', \u2026(11) } to deeply equal { state: 'derived', \u2026(11) }"
+        }
+      ],
+      "killedBy": "assertion"
+    }
+  ],
+  "killed": 8,
+  "killedByAssertion": 8,
+  "total": 8
+}

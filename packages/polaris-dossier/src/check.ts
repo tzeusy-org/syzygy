@@ -14,6 +14,7 @@ import { poleLimitOf, type RunConfig } from './run-config.js';
 import { placementSubjectOf, screenLoaderOf } from './screen.js';
 import { REVISION_FILE, RUN_ID, RUN_LAYOUT } from './state-directory.js';
 import { readerAdvice, type ReaderAdvice } from './reader-advice.js';
+import { figureFit, type FigureFit } from './figure-fit.js';
 import { reviewReachAdvice, type ReviewReachAdvice } from './review-reach.js';
 import { screenCensusReport, withheldCensus, type ScreenCensusReport } from './census.js';
 import { deriveStructure, structureUnknown, type StructureRecord } from './derive.js';
@@ -90,7 +91,7 @@ export interface SubjectPlan<R extends object, G> {
 
 /** `screenCensus` (`census.ts`), `structureRecord` (`derive.ts`), `readerAdvice` (`reader-advice.ts`) and `reviewReach` (`review-reach.ts`) are on `check`'s report only: advice to the author, never written
  * to the check record and never a finding. */
-export type SubjectReport<R extends object> = R & { readonly command: CheckCommand; readonly run: string; readonly checkFile: string; readonly disclosures: readonly string[]; readonly screenCensus?: ScreenCensusReport; readonly structureRecord?: StructureRecord; readonly readerAdvice?: ReaderAdvice; readonly reviewReach?: ReviewReachAdvice; readonly reviewVisibility?: ReviewVisibility };
+export type SubjectReport<R extends object> = R & { readonly command: CheckCommand; readonly run: string; readonly checkFile: string; readonly disclosures: readonly string[]; readonly screenCensus?: ScreenCensusReport; readonly structureRecord?: StructureRecord; readonly readerAdvice?: ReaderAdvice; readonly figureFit?: FigureFit; readonly reviewReach?: ReviewReachAdvice; readonly reviewVisibility?: ReviewVisibility };
 export type SubjectResult<R extends object> = Outcome<SubjectReport<R>, CheckRefusal>;
 
 const DRAFT_PLAN: SubjectPlan<CheckRecord, null> = {
@@ -260,9 +261,13 @@ export async function checkSubject<R extends object, G>(runDir: string, file: st
     run,
     clonePath: subject.clone.path,
   }, gate.found, declared);
+  // Figure fit (syzygy-3efd.20): advice like readerAdvice, but kept in the draft's check record so a later check can be compared with
+  // this one; an inventory check record carries none, and a draft that does not parse states nothing about fit.
+  const fit = plan.command === 'check' && parseFault === null ? figureFit(doc, deps.layoutFigure) : undefined;
+  const stored = fit === undefined ? record : { ...record, figureFit: fit };
   try {
     fs.mkdirSync(checksDir, { recursive: true, mode: 0o700 });
-    fs.writeFileSync(checkFile, `${JSON.stringify(record, null, 2)}\n`, { mode: 0o600, flag: 'wx' });
+    fs.writeFileSync(checkFile, `${JSON.stringify(stored, null, 2)}\n`, { mode: 0o600, flag: 'wx' });
   } catch (cause) {
     return refuse('write', `${noun === 'draft' ? '' : `${noun} `}revision ${revision} was frozen, but its result could not be written to ${path.relative(run, checkFile)} (${errno(cause)})`);
   }
@@ -274,7 +279,7 @@ export async function checkSubject<R extends object, G>(runDir: string, file: st
   const reach = plan.command === 'check' && parseFault === null
     ? reviewReachAdvice(doc, { citedBlobs, admitted, screen, consented: checked.contentClasses }) : undefined;
   return { ok: true, report: {
-    command: plan.command, run, checkFile, ...record, disclosures, ...(screenCensus === undefined ? {} : { screenCensus }),
+    command: plan.command, run, checkFile, ...stored, disclosures, ...(screenCensus === undefined ? {} : { screenCensus }),
     ...(structureRecord === undefined ? {} : { structureRecord }),
     ...(advice === undefined ? {} : { readerAdvice: advice }), ...(reach === undefined ? {} : { reviewReach: reach }),
     ...(visibility === null ? {} : { reviewVisibility: visibility }),
