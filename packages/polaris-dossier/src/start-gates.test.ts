@@ -916,7 +916,7 @@ describe('the declared-source policy successor 2.0.0 and runs bound to its prede
     const load = await loadDossierScreen(out.root, NOW, placementSubjectOf(subject));
     if (!load.ok) throw new Error(load.why);
     expect(['design/storage.rst', 'pkg/design-overview.rst', 'ARCHITECTURE.md'].map(p => [load.screen.contentClass(p), load.screen.stageOf(p)]))
-      .toEqual([['governance-text', 2], ['governance-text', 2], [undefined, undefined]]);
+      .toEqual([['governance-text', 2], ['governance-text', 2], ['governance-text', 2]]);
   });
 
   it('a run bound to the predecessor is screened under it, never under the successor', async () => {

@@ -49,13 +49,15 @@ const outcome = (repositoryPath: string): string => {
 describe('the successor second stage reads', () => {
   it('with exactly the lists the policy gives', () => {
     expect(second()).toEqual({
-      governanceTextExtensions: ['.rst'],
-      governanceTextTokens: ['design'],
+      governanceTextExtensions: ['.md', '.rst'],
+      governanceTextTokens: ['adr', 'adrs', 'rfc', 'rfcs', 'spec', 'specs', 'specification', 'specifications', 'design', 'designs', 'architecture', 'architectures', 'manifesto', 'manifestos'],
       proseExtensions: ['.md', '.mdx', '.rst'],
       configurationExtensions: ['.yml', '.yaml', '.toml', '.json', '.tf'],
       languageExtensions: LANGUAGE_EXTENSIONS,
       sourceFileNames: ['Dockerfile', 'Makefile'],
       sourceFileNamePrefixes: ['Dockerfile.'],
+      prefixExcludedExtensions: ['.md', '.mdx', '.rst', '.adoc', '.asciidoc', '.txt'],
+      codeEvidenceWords: ['result', 'results', 'log', 'logs', 'audit', 'audits', 'output'],
       withheldTokens: ['decision', 'decisions', 'governance', 'policy', 'policies', 'security', 'conduct', 'doctrine', 'doctrines', 'principle', 'principles'],
       vendoredDirectoryNames: ['node_modules', 'bower_components', 'jspm_packages', 'vendor', 'vendored', 'third_party', 'third-party', 'thirdparty', 'external', 'externals', 'extern'],
       withheldStems: ['governance', 'polic', 'security', 'conduct', 'doctrine', 'principle', 'decision', 'report', 'benchmark'],
@@ -117,16 +119,16 @@ describe('classDecision, path by path', () => {
     ['design/api.rst', 'governance-text/2'],
     ['Design/Notes.RST', 'governance-text/2'],
     ['pkg/design-overview.rst', 'governance-text/2'],
-    // ... the extensions and tokens the D7 narrowing removed: a governance word now excludes them from documentation too.
-    ['docs/adr/0001-use-postgres.md', 'indeterminate'],
-    ['ARCHITECTURE.md', 'indeterminate'],
-    ['rfcs/0001-thing.md', 'indeterminate'],
+    ['docs/adr/0001-use-postgres.md', 'governance-text/2'],
+    ['ARCHITECTURE.md', 'governance-text/2'],
+    ['rfcs/0001-thing.md', 'governance-text/2'],
+    // ... the extensions the D7 narrowing removed: a governance word excludes them from documentation too.
     ['design/overview.mdx', 'indeterminate'],
-    ['spec/api.rst', 'indeterminate'],
+    ['spec/api.rst', 'governance-text/2'],
     ['handbook/specifications/x.adoc', 'indeterminate'],
     ['MANIFESTO.asciidoc', 'indeterminate'],
-    ['Docs/ADRS/One.MD', 'indeterminate'],
-    ['design/notes.md', 'indeterminate'],
+    ['Docs/ADRS/One.MD', 'governance-text/2'],
+    ['design/notes.md', 'governance-text/2'],
     // ... one word short of it: no governance word, so the documentation rule decides.
     ['notes/adrx/0001.md', 'project-documentation/2'],
     ['design.txt', 'indeterminate'],
@@ -180,15 +182,15 @@ describe('classDecision, path by path', () => {
     ['security-policy.yaml', 'indeterminate'], ['governance/decisions.json', 'indeterminate'], ['SECURITY.yml', 'indeterminate'],
     ['logs/app.json', 'indeterminate'], ['ci/results/x.toml', 'indeterminate'], ['security/Dockerfile', 'indeterminate'], ['Dockerfile.audit', 'indeterminate'],
     ['policies/main.tf', 'indeterminate'], ['principles.mts', 'indeterminate'],
-    // ... near misses (log and blog only contain an evidence word) beside two more hits (outputs is a word; polic is a stem).
-    ['catalog/app.json', 'code-content/2'], ['outputs-x/Makefile', 'indeterminate'], ['blog/x.yml', 'code-content/2'], ['policy-free.json', 'indeterminate'],
+    // ... near misses (log and blog only contain an evidence word; outputs is in evidenceWords, not codeEvidenceWords) beside a stem hit.
+    ['outputs.tf', 'code-content/2'], ['modules/x/outputs.tf', 'code-content/2'], ['output.json', 'indeterminate'], ['modules/x/output.tf', 'indeterminate'],
+    ['catalog/app.json', 'code-content/2'], ['outputs-x/Makefile', 'code-content/2'], ['blog/x.yml', 'code-content/2'], ['policy-free.json', 'indeterminate'],
     ['x.YML', 'indeterminate'], ['DOCKERFILE', 'indeterminate'], ['Makefile.am', 'indeterminate'], ['x.Toml', 'indeterminate'],
     // A notebook, and a path two Stage-2 rules match (code-content-extended by prefix, and a documentation rule).
     ['notebooks/intro.ipynb', 'indeterminate'],
-    // design/Dockerfile.md: no governance-text-by-name match (.md is no longer its extension), project-documentation-extended refuses the
-    // design stem, and code-content-extended places it by the Dockerfile. prefix, which no refusal names.
-    ['design/Dockerfile.md', 'code-content/2'],
-    ['pkg/Dockerfile.md', 'indeterminate'],
+    // A Dockerfile. prefix match is void on a documentation extension (prefixExcludedExtensions): the documentation rules decide.
+    ['design/Dockerfile.md', 'governance-text/2'], ['images/Dockerfile.txt', 'indeterminate'], ['Dockerfile.MD', 'project-documentation/2'],
+    ['pkg/Dockerfile.md', 'project-documentation/2'],
     // Vendored directories at each depth; the final segment is not a directory; Stage 1 is never re-read.
     ['vendor/k8s/deploy.yaml', 'indeterminate'],
     ['node_modules/x/README.md', 'indeterminate'],
@@ -239,9 +241,9 @@ describe('classDecision, path by path', () => {
   });
 
   it('names the rules each Stage-2 path matches before the two-match refusal', () => {
-    expect(secondStageRules('pkg/Dockerfile.md', second(), documentationRule())).toEqual(['project-documentation-extended', 'code-content-extended']);
-    expect(secondStageRules('design/Dockerfile.md', second(), documentationRule())).toEqual(['code-content-extended']);
-    expect(secondStageRules('design/Dockerfile.rst', second(), documentationRule())).toEqual(['governance-text-by-name', 'code-content-extended']);
+    expect(secondStageRules('pkg/Dockerfile.md', second(), documentationRule())).toEqual(['project-documentation-extended']);
+    expect(secondStageRules('design/Dockerfile.md', second(), documentationRule())).toEqual(['governance-text-by-name']);
+    expect(secondStageRules('design/Dockerfile.yml', second(), documentationRule())).toEqual(['code-content-extended']);
     expect(secondStageRules('vendor/design/x.md', second(), documentationRule())).toEqual([]);
   });
 });

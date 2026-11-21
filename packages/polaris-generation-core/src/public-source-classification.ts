@@ -407,9 +407,9 @@ export function documentationExempt(contentClass: PublicSourceContentClass | und
  *   backslash, as their texts say; code-content-extended is by final segment name, as Stage 1's code-content rule is. */
 const SECOND_STAGE_TEXTS = {
   classDecision: '1188fd8a5292f552c58e0185adf9668901740fe63e58696b47c3d6c0681cf02a',
-  'governance-text-by-name': '8cf855489a6843473c220006ecb775a0643edfb690bd28f62655f1dc6cf6fa57',
+  'governance-text-by-name': '804abb62005190abee13f98f0b8990c782125a35b484f5aed7fd6b0009314400',
   'project-documentation-extended': '838e0e310012e0f581e6ca4f7a1a6ba9af1cbb280c3ca52b0416dc2e127809b0',
-  'code-content-extended': 'a19296242e2aeb81602ec6616f40050571037865ec303474918f77517024030d',
+  'code-content-extended': 'a64edfa533deeb740ba68033100767a28385b933493be784165150b99b6039a5',
   'prose-document': '1160da7cd2be57d99f67413e0c580481ab48125472f23cf4760107c2bdb7d08a',
   'nested-root-document': 'c0e3e464a82a869a2313ca0ccba149596acda1de1a4ccdd99eff9d8afc186606',
 } as const;
@@ -418,7 +418,7 @@ export type SecondStageRuleId = 'governance-text-by-name' | 'project-documentati
 const SECOND_STAGE_RULES: readonly { readonly id: SecondStageRuleId; readonly class: PublicSourceContentClass; readonly keys: readonly string[] }[] = [
   { id: 'governance-text-by-name', class: 'governance-text', keys: ['id', 'class', 'rule', 'governanceTextExtensions', 'governanceTextTokens'] },
   { id: 'project-documentation-extended', class: 'project-documentation', keys: ['id', 'class', 'rule', 'pathRules', 'proseExtensions'] },
-  { id: 'code-content-extended', class: 'code-content', keys: ['id', 'class', 'rule', 'configurationExtensions', 'languageExtensions', 'sourceFileNames', 'sourceFileNamePrefixes'] },
+  { id: 'code-content-extended', class: 'code-content', keys: ['id', 'class', 'rule', 'configurationExtensions', 'languageExtensions', 'sourceFileNames', 'sourceFileNamePrefixes', 'prefixExcludedExtensions', 'codeEvidenceWords'] },
 ];
 const EXTENDED_PATH_RULE_IDS = ['prose-document', 'nested-root-document'] as const;
 /** The `contentClassification` lists only the two-stage decision reads; a policy that carries any of them without `classDecision` refuses. */
@@ -432,6 +432,8 @@ export interface SecondStageRules {
   readonly languageExtensions: readonly string[];
   readonly sourceFileNames: readonly string[];
   readonly sourceFileNamePrefixes: readonly string[];
+  readonly prefixExcludedExtensions: readonly string[];
+  readonly codeEvidenceWords: readonly string[];
   readonly withheldTokens: readonly string[];
   readonly vendoredDirectoryNames: readonly string[];
   readonly withheldStems: readonly string[];
@@ -492,6 +494,7 @@ export function readSecondStage(classification: unknown, documentation: ProjectD
     [extended, 'proseExtensions', extension, true],
     [code, 'configurationExtensions', caseSensitiveExtension, false], [code, 'languageExtensions', caseSensitiveExtension, false],
     [code, 'sourceFileNames', caseSensitiveName, false], [code, 'sourceFileNamePrefixes', caseSensitiveName, false],
+    [code, 'prefixExcludedExtensions', extension, true], [code, 'codeEvidenceWords', word, true],
     [classification, 'withheldTokens', word, true], [classification, 'vendoredDirectoryNames', segment, true],
     [classification, 'withheldStems', stem, true], [classification, 'evidenceWords', word, true], [classification, 'governanceStems', stem, true],
   ];
@@ -525,10 +528,10 @@ const wordsOf = (part: string, separators: string): string[] => {
 
 /** Whether the stem and evidence lists refuse the parts (each directory segment and the final segment with its suffix removed). */
 /** The three refusals every Stage 2 rule applies (dossier policy 2.0.0 after its post-review repair): a part containing a withheldStems
- * entry, or with a word in evidenceWords or withheldTokens. */
-const refusedByStemOrEvidence = (parts: readonly string[], stage: SecondStageRules, separators: string): boolean =>
+ * entry, or with a word in the rule's evidence list (evidenceWords; codeEvidenceWords for code-content-extended) or in withheldTokens. */
+const refusedByStemOrEvidence = (parts: readonly string[], stage: SecondStageRules, separators: string, evidence: readonly string[] = stage.evidenceWords): boolean =>
   parts.some(part => stage.withheldStems.some(entry => part.includes(entry))
-    || wordsOf(part, separators).some(word => stage.evidenceWords.includes(word) || stage.withheldTokens.includes(word)));
+    || wordsOf(part, separators).some(word => evidence.includes(word) || stage.withheldTokens.includes(word)));
 
 function governanceTextByName(segments: readonly string[], stage: SecondStageRules, documentation: ProjectDocumentationRule): boolean {
   const stems = stemsWithout(segments.at(-1)!, stage.governanceTextExtensions);
@@ -572,17 +575,21 @@ function projectDocumentationExtended(segments: readonly string[], stage: Second
   });
 }
 
+/** A sourceFileNamePrefixes match, void when the folded final segment ends with a prefixExcludedExtensions entry (design/Dockerfile.md). */
+const prefixMatch = (name: string, stage: SecondStageRules): boolean =>
+  stage.sourceFileNamePrefixes.some(prefix => name.startsWith(prefix)) && !stage.prefixExcludedExtensions.some(entry => fold(name).endsWith(entry));
+
 /** code-content-extended: the final segment matched case-sensitively, then the three refusals over each folded directory segment and the
  * folded final segment with the matched extension removed (the whole final segment for a name or prefix match); every match must pass. */
 function codeContentExtended(repositoryPath: string, stage: SecondStageRules, separators: string): boolean {
   const name = repositoryPath.split('/').at(-1) ?? '';
   const finals = [
     ...[...stage.configurationExtensions, ...stage.languageExtensions].filter(entry => name.endsWith(entry)).map(entry => name.slice(0, name.length - entry.length)),
-    ...(stage.sourceFileNames.includes(name) || stage.sourceFileNamePrefixes.some(prefix => name.startsWith(prefix)) ? [name] : []),
+    ...(stage.sourceFileNames.includes(name) || prefixMatch(name, stage) ? [name] : []),
   ];
   if (finals.length === 0) return false;
   const directories = fold(repositoryPath).split('/').slice(0, -1);
-  return finals.every(final => !refusedByStemOrEvidence([...directories, fold(final)], stage, separators));
+  return finals.every(final => !refusedByStemOrEvidence([...directories, fold(final)], stage, separators, stage.codeEvidenceWords));
 }
 
 /** The Stage 2 rules that match a path Stage 1 leaves unplaced, before the two-match refusal; none below a vendored directory. */

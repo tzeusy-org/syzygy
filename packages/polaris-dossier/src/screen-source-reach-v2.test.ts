@@ -41,7 +41,9 @@ describe('the successor screen', () => {
 
   it('design and decision documents are governance-text, and the run record names that class', () => {
     expect(['design/storage.rst', 'pkg/design-overview.rst', 'docs/adr/0001-use-postgres.md', 'ARCHITECTURE.md'].map(p => outcomeOf(screen, p)))
-      .toEqual(['governance-text/2', 'governance-text/2', 'unknown-extraction-class', 'unknown-extraction-class']);
+      .toEqual(['governance-text/2', 'governance-text/2', 'governance-text/2', 'governance-text/2']);
+    expect(['design/Dockerfile.md', 'outputs.tf', 'modules/x/outputs.tf', 'output.json'].map(p => outcomeOf(screen, p)))
+      .toEqual(['governance-text/2', 'code-content/2', 'code-content/2', 'unknown-extraction-class']);
     expect(screen.screenTargetBody('Use Postgres\n============\n\nWe chose it.\n', 'design/storage.rst')).toEqual({ kind: 'admitted' });
     const parsed = parseRunConfig(JSON.stringify({ operator: 'o', agentTool: 'claude-code', agentToolVersion: '2.1.0', agentProvider: 'anthropic', model: 'm',
       deadline: 'PT1H', agentTurnBudget: 10, maxRepairCycles: 1, maxQuestions: 0, audience: 'a reader', operatorIsOwner: false }));
@@ -200,11 +202,11 @@ describe('predecessor outcomes are preserved', () => {
   it('a path the predecessor leaves indeterminate keeps that outcome, becomes denied, or is placed by the second stage', () => {
     const indeterminate = POPULATION.filter(p => before.screenPath(p) === 'unknown-extraction-class');
     expect(indeterminate.map(p => [p, outcomeOf(after, p)])).toEqual([
-      ['docs/adr/x.md', 'unknown-extraction-class'], ['src/README.md', 'project-documentation/2'], ['ARCHITECTURE.md', 'unknown-extraction-class'], ['Cargo.toml', 'code-content/2'],
+      ['docs/adr/x.md', 'governance-text/2'], ['src/README.md', 'project-documentation/2'], ['ARCHITECTURE.md', 'governance-text/2'], ['Cargo.toml', 'code-content/2'],
       ['config/app.json', 'code-content/2'], ['Dockerfile', 'code-content/2'], ['main.tf', 'code-content/2'], ['notebooks/a.ipynb', 'unknown-extraction-class'],
       ['node_modules/x/README.md', 'unknown-extraction-class'], ['GOVERNANCE.md', 'unknown-extraction-class'], ['pkg/DesignDoc.md', 'unknown-extraction-class'],
       ['deploy/.docker/x.json', 'denied-path'], ['.kube/config', 'denied-path'], ['terraform.tfstate', 'denied-path'], ['.npmrc', 'denied-path'],
-      ['x/docs/n.txt', 'unknown-extraction-class'], ['src/a.scala', 'unknown-extraction-class'], ['bin/changes', 'unknown-extraction-class'], ['design/x.md', 'unknown-extraction-class'],
+      ['x/docs/n.txt', 'unknown-extraction-class'], ['src/a.scala', 'unknown-extraction-class'], ['bin/changes', 'unknown-extraction-class'], ['design/x.md', 'governance-text/2'],
       ['docs/security.md', 'unknown-extraction-class'], ['images/logo.png', 'unknown-extraction-class'], ['Makefile', 'code-content/2'], ['licenses/x-spec.txt', 'unknown-extraction-class'],
       ['design/x.rst', 'governance-text/2'], ['reports/benchmark-results.json', 'unknown-extraction-class'],
     ]);
