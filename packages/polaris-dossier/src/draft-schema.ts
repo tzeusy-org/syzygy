@@ -36,6 +36,13 @@ export const LOCAL_DRAFT_SCHEMA_VERSIONS = Object.freeze([LOCAL_DRAFT_SCHEMA_VER
 export const hasV4Forms = (version: unknown): boolean => version === LOCAL_DRAFT_SCHEMA_VERSION_V4 || version === LOCAL_DRAFT_SCHEMA_VERSION;
 /** The fields only a v4 or later draft may carry, each a finding in an earlier version. */
 export const V4_FIELDS = Object.freeze(['judgement', 'repeatsDiagram', 'poles', 'whySection'] as const);
+/** The draft schema versions before v5. `inventoryOmissions` (syzygy-5dhm.28, dossier spec 2.5) is a field of v5 and every later
+ * version; in one of these it is a field-version finding. */
+export const PRE_V5_SCHEMA_VERSIONS: readonly string[] = Object.freeze([LOCAL_DRAFT_SCHEMA_VERSION_V2, LOCAL_DRAFT_SCHEMA_VERSION_V3, LOCAL_DRAFT_SCHEMA_VERSION_V4]);
+/** The first draft schema version that has `inventoryOmissions`. */
+export const INVENTORY_OMISSIONS_SINCE = 'polaris-dossier-local-draft-v5';
+/** The author's justified-omission record: what the schema says of it, and so what `draft.schema.json` tells the authoring session. */
+export const INVENTORY_OMISSIONS_DESCRIPTION = 'Optional. Each entry records that this draft leaves out, on purpose, one entry of the independent inventory that `syzygy dossier check` listed as uncovered: `entryId` is the identifier check gave, and `reason` says in your own words why a reader of this dossier does not need it. An entry named here is not listed as uncovered again. The record is never rendered and claims nothing about the project; the fidelity reviewer reads it and still decides whether the omission is justified.';
 /** The pages a v5 diagram may name as its home. */
 export const DIAGRAM_HOME_KINDS = Object.freeze(['section', 'deep-dive', 'overview'] as const);
 /** The tones a callout takes; each renders with its visible name. */
@@ -204,7 +211,10 @@ export function localDraftSchema(parameters: DraftSchemaParameters, diagramForm:
     // empty Pole and a section in no Pole or two are repair findings with their own wording, so the schema bounds only the shape.
     poles: list(object({ label: presentationLabel, sections: refs(0, 30) }), 1, 30),
     whySection: handle,
-  }, ['poles', 'whySection']) };
+    // The justified-omission record (dossier spec 2.5): identifiers of inventory entries and the author's reasons, never a claim. Not
+    // `id`: an `entryId` names an identity of the inventory, not one of this draft.
+    inventoryOmissions: { ...list(object({ entryId: handle, reason: text }), 0, 2000), description: INVENTORY_OMISSIONS_DESCRIPTION },
+  }, ['poles', 'whySection', 'inventoryOmissions']) };
 }
 
 /** The schema as the JSON Schema document written to `draft.schema.json`. The internal form already uses JSON Schema's keywords. */

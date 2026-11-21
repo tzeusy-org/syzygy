@@ -14,6 +14,7 @@ import type { ReaderAdvice } from './reader-advice.js';
 import type { ReviewReachAdvice } from './review-reach.js';
 import { CLASS_NOT_CONSENTED, unconsentedClass } from './class-gate.js';
 import type { FigureFit, FigureLayout } from './figure-fit.js';
+import type { InventoryCoverageAdvice, InventoryOfRecordReader } from './inventory-coverage.js';
 
 /** The check's record formats, finding and result types, and the small shared readers; split out of `check.ts` unchanged. */
 
@@ -192,6 +193,9 @@ export interface CheckReport extends CheckRecord {
   readonly reviewReach?: ReviewReachAdvice;
   /** The cited files withheld from the review session, by screening or the class gate (`reviewVisibility`); on the report, never the record. */
   readonly reviewVisibility?: ReviewVisibility;
+  /** The entries of the inventory of record that no block of the draft covers (`inventory-coverage.ts`, syzygy-5dhm.28); on the report,
+   * never the record, and never a finding. */
+  readonly inventoryCoverage?: InventoryCoverageAdvice;
 }
 
 export type CheckResult = Outcome<CheckReport, CheckRefusal>;
@@ -210,6 +214,9 @@ export interface CheckDeps {
   readonly openReader?: (options: PinnedObjectReaderOptions) => PinnedObjectReader;
   /** The renderer's figure layout, which figure fit measures (syzygy-3efd.20); without it each produced figure's fit is Unknown. */
   readonly layoutFigure?: FigureLayout;
+  /** The reader of the inventory of record, which the coverage advice compares the draft with (syzygy-5dhm.28); without it that advice
+   * is Unknown. A port, not an import: `inventory.ts` imports the check. */
+  readonly inventoryOfRecord?: InventoryOfRecordReader;
 }
 
 export const DISCLOSURES = [

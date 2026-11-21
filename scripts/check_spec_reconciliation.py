@@ -466,6 +466,19 @@ LEDGER_SUBJECTS = {
     LEDGER_SPEC: "500a7771f3df85046ff2c0c41a36c2067cf0bf44b1ba65e5bb5f52d4dbd9fded",
 }
 LEDGER_BOUND_PARTS = len(LEDGER_SUBJECTS)
+# The v2.5 coverage-precheck amendment (syzygy-5dhm.28): one MODIFIED
+# REQ-polaris-generation-034 after v2.4, pending until its own VIS-4 ledger
+# row, found by its tag as v2.4's is.
+COVERAGE_CHANGE = "dossier-coverage-precheck"
+COVERAGE_HOME = f"{CHANGES}/{COVERAGE_CHANGE}"
+COVERAGE_SPEC = f"{COVERAGE_HOME}/proposed/polaris-generation/spec.md"
+COVERAGE_UNION = f"{COVERAGE_HOME}/GOVERNING-DEPENDENCIES.json"
+COVERAGE_TAG = "polaris-dossier-coverage-precheck-v2.5"
+COVERAGE_STATUS_PREFIX = f"[Coverage pre-check amendment 2.5]({COVERAGE_HOME})"
+COVERAGE_SUBJECTS = {
+    COVERAGE_SPEC: "ecde872ff0732e7388332ea33cc3bb0a06d86e8f88f88db996ca234629156d90",
+}
+COVERAGE_BOUND_PARTS = len(COVERAGE_SUBJECTS)
 ADOPTION_LEDGER_TITLE = "# Agent adoptions"
 ADOPTION_TABLE_HEADER = "| Id | Date | Commit | What changed | Why | Revert | Tag |"
 ADOPTION_TABLE_DIVIDER = "|---|---|---|---|---|---|---|"
@@ -698,6 +711,35 @@ def ledger_disposition(root, rows):
         identity, _date, commit, _changed, _why, _revert, _tag = rows[0]
         return recorded_disposition(root, identity, commit.strip("`"), LEDGER_TAG,
                                     LEDGER_SUBJECTS, plain_revert=True)
+    return None
+
+
+def is_coverage_row(line):
+    """A ledger row claiming the v2.5 coverage-precheck amendment, well formed or not."""
+    if not line.startswith("|"):
+        return False
+    cells = [cell.strip() for cell in line.split("|")[1:-1]]
+    tag = f"`{COVERAGE_TAG}`"
+    if len(cells) == 7 and cells[6] == tag:
+        return True
+    if len(cells) != 7 and tag in cells:
+        return True
+    if len(cells) < 4 or not re.fullmatch(r"`[0-9a-f]{40}`", cells[2]):
+        return False
+    snapshot = f"https://github.com/tzeusy-org/syzygy/blob/{cells[2][1:-1]}/"
+    return all(f"]({snapshot}{path})" in cells[3] for path in COVERAGE_SUBJECTS)
+
+
+def coverage_rows(root):
+    return [[cell.strip() for cell in line.split("|")[1:-1]]
+            for line in adoption_table_rows(root) if is_coverage_row(line)]
+
+
+def coverage_disposition(root, rows):
+    if len(rows) == 1 and len(rows[0]) == 7:
+        identity, _date, commit, _changed, _why, _revert, _tag = rows[0]
+        return recorded_disposition(root, identity, commit.strip("`"), COVERAGE_TAG,
+                                    COVERAGE_SUBJECTS, plain_revert=True)
     return None
 
 
@@ -1189,6 +1231,44 @@ def ledger_binding(root):
     return (None if records or subjects else read_text(root, LEDGER_SPEC), records, subjects)
 
 
+def coverage_binding(root):
+    """Read v2.5's published composition: pending until its row, like v2.4.
+
+    The row names the installing commit (a plain commit, so its revert may
+    omit `-m 1`), the reviewed spec at that commit and the version tag. Its
+    predecessor is v2.4's text of REQ-polaris-generation-034, so v2.4 must
+    itself be in force.
+    """
+    rows = coverage_rows(root)
+    if not rows or coverage_disposition(root, rows):
+        return None, [], []
+    records, subjects = [], []
+    if ledger_binding(root)[0] is None:
+        records.append("coverage precheck: prior v2.4 ledger packs thesis adoption is unavailable")
+    if len(rows) != 1 or len(rows[0]) != 7:
+        records.append("coverage precheck: expected one seven-column agent adoption row")
+    else:
+        identity, date, commit, changed, reason, revert, tag = rows[0]
+        landed = re.fullmatch(r"`([0-9a-f]{40})`", commit)
+        if (not re.fullmatch(r"A-[1-9][0-9]*", identity)
+                or not valid_adoption_date(date)
+                or not landed or tag != f"`{COVERAGE_TAG}`" or not reason):
+            records.append("coverage precheck: malformed adoption identity, date, commit, reason or tag")
+        if landed:
+            oid = landed.group(1)
+            if revert.split("`")[1:2] not in ([f"git revert {oid}"], [f"git revert -m 1 {oid}"]):
+                records.append("coverage precheck: revert does not name the landed commit")
+            for rel in COVERAGE_SUBJECTS:
+                snapshot = f"https://github.com/tzeusy-org/syzygy/blob/{oid}/{rel}"
+                if f"]({snapshot})" not in changed:
+                    records.append(f"coverage precheck: adoption row does not name `{rel}`")
+    for rel, digest in COVERAGE_SUBJECTS.items():
+        body = read_bytes(root, rel)
+        if body is None or sha(body) != digest:
+            subjects.append(f"coverage precheck: `{rel}` differs from the reviewed v2.5 subject")
+    return (None if records or subjects else read_text(root, COVERAGE_SPEC), records, subjects)
+
+
 def url_source_contract_findings(root):
     """Verify the reviewed amendment in its actual contract homes."""
     body = read_bytes(root, URL_SOURCE_REPLACEMENTS)
@@ -1578,6 +1658,15 @@ def check_outcomes(root, report):
         subjects_seen += LEDGER_BOUND_PARTS
     r1 += ledger_records
     r2 += ledger_subjects
+    coverage_retired_by = coverage_disposition(root, coverage_rows(root))
+    coverage_amendment, coverage_records, coverage_subjects = coverage_binding(root)
+    if coverage_retired_by:
+        records += 2
+    elif coverage_amendment is not None or coverage_records or coverage_subjects:
+        records += 1
+        subjects_seen += COVERAGE_BOUND_PARTS
+    r1 += coverage_records
+    r2 += coverage_subjects
     retirement = ""
     if declared_retired_by:
         retirement += f"; v2.0 inactive by {declared_retired_by}"
@@ -1589,6 +1678,8 @@ def check_outcomes(root, report):
         retirement += f"; v2.3 inactive by {derived_retired_by}"
     if ledger_retired_by:
         retirement += f"; v2.4 inactive by {ledger_retired_by}"
+    if coverage_retired_by:
+        retirement += f"; v2.5 inactive by {coverage_retired_by}"
     report.add("R1", "terminal outcome for every child", records, r1,
                f"{len(CHILDREN)} children and {len(additions)} installed Polaris "
                "additions; digest acts: phrase = manifest sha256 and in the "
@@ -1601,7 +1692,8 @@ def check_outcomes(root, report):
                "recorded; derived observed facts: one v2.3 row over effective "
                "v2.2 naming spec and policy, pending until recorded; ledger, "
                "packs and thesis: one v2.4 row over effective v2.3, pending "
-               "until recorded" + retirement)
+               "until recorded; coverage pre-check: one v2.5 row over effective "
+               "v2.4, pending until recorded" + retirement)
     report.add("R2", "reviewed and signed subjects hash to their rows", subjects_seen, r2)
 
 
@@ -2288,6 +2380,17 @@ def census(root):
                 b, extra_b = compose_figure_by_name(b, ledger_amendment)
                 pa += extra_a
                 pb += extra_b
+        coverage_amendment, coverage_records, coverage_subjects = coverage_binding(root)
+        findings += coverage_records + coverage_subjects
+        if coverage_amendment is not None:
+            if (ledger_amendment is None or derived_amendment is None
+                    or figure_amendment is None or amendment is None):
+                findings.append("POLARIS: coverage precheck requires effective ledger packs thesis v2.4")
+            else:
+                a, extra_a = compose_figure_by_id(a, coverage_amendment)
+                b, extra_b = compose_figure_by_name(b, coverage_amendment)
+                pa += extra_a
+                pb += extra_b
         findings += [f"POLARIS method A: {p}" for p in pa]
         findings += [f"POLARIS method B: {p}" for p in pb]
         if a != b:
@@ -2393,6 +2496,14 @@ def polaris_expected(root, findings):
                         findings.append("POLARIS ledger packs thesis: methods disagree or change identities")
                     n_scen += sum(len(row["scenarios"]) for row in led_a.values()) - sum(
                         len(row["scenarios"]) for row in der_a.values())
+                    coverage_amendment, _records, _subjects = coverage_binding(root)
+                    if coverage_amendment is not None:
+                        cov_a, pa = compose_figure_by_id(led_a, coverage_amendment)
+                        cov_b, pb = compose_figure_by_name(led_b, coverage_amendment)
+                        if pa or pb or cov_a != cov_b or set(cov_a) != set(led_a):
+                            findings.append("POLARIS coverage precheck: methods disagree or change identities")
+                        n_scen += sum(len(row["scenarios"]) for row in cov_a.values()) - sum(
+                            len(row["scenarios"]) for row in led_a.values())
     return n_req, n_scen, ids
 
 
@@ -2525,6 +2636,9 @@ def check_generated(root, pop, report):
     ledger_amendment, _records, _subjects = ledger_binding(root)
     if ledger_amendment is not None:
         files += tracked(root, LEDGER_HOME)
+    coverage_amendment, _records, _subjects = coverage_binding(root)
+    if coverage_amendment is not None:
+        files += tracked(root, COVERAGE_HOME)
     candidate_ref_dirs = addition_dirs + (URL_SOURCE_HOME + "/",)
     files += list(ROUTE_PAGES)
     # An addition may cite a candidate Polaris requirement still under
@@ -2570,7 +2684,7 @@ def check_generated(root, pop, report):
                             "`--regenerate`")
     for delta, rel in ((amendment, DECLARED_SOURCE_UNION), (url_amendment, URL_SOURCE_UNION),
                        (figure_amendment, FIGURE_UNION), (derived_amendment, DERIVED_UNION),
-                       (ledger_amendment, LEDGER_UNION)):
+                       (ledger_amendment, LEDGER_UNION), (coverage_amendment, COVERAGE_UNION)):
         if delta is None:
             continue
         examined += 1
@@ -2751,6 +2865,24 @@ def check_routes(root, pop, report):
             findings.append(f"`{STATUS}` calls ledger packs thesis v2.4 adopted while it is not in force")
         if any(LEDGER_TAG in line and "Agent adoption" in line for line in rows.get(LEDGER_CHANGE, [])):
             findings.append(f"`{OPENSPEC_README}` calls ledger packs thesis v2.4 adopted while it is not in force")
+    coverage_amendment, _records, _subjects = coverage_binding(root)
+    coverage_fields = [line.strip() for line in visible_route_lines(status)
+                       if line.strip().startswith(COVERAGE_STATUS_PREFIX)]
+    if coverage_amendment is not None:
+        examined += 2
+        if not any(Path(AGENT_ADOPTIONS).name in line and COVERAGE_TAG in line
+                   for line in rows.get(COVERAGE_CHANGE, [])):
+            findings.append(f"`{OPENSPEC_README}` does not route coverage precheck v2.5 "
+                            f"to `{AGENT_ADOPTIONS}` and its version tag")
+        identity = coverage_rows(root)[0][0]
+        if AGENT_ADOPTIONS not in status or coverage_fields != [f"{COVERAGE_STATUS_PREFIX} is agent-adopted in {identity}."]:
+            findings.append(f"`{STATUS}` does not route coverage precheck v2.5 and its adoption {identity}")
+    elif COVERAGE_CHANGE in changes:
+        examined += 2
+        if any("is agent-adopted" in field for field in coverage_fields):
+            findings.append(f"`{STATUS}` calls coverage precheck v2.5 adopted while it is not in force")
+        if any(COVERAGE_TAG in line and "Agent adoption" in line for line in rows.get(COVERAGE_CHANGE, [])):
+            findings.append(f"`{OPENSPEC_README}` calls coverage precheck v2.5 adopted while it is not in force")
     figures = STATUS_FIGURE.findall(status)
     examined += 1
     reqs = pop.get("POLARIS", {})
@@ -2944,6 +3076,7 @@ def inputs(root):
     paths |= {FIGURE_UNION, *FIGURE_SUBJECTS}
     paths |= {DERIVED_UNION, *DERIVED_SUBJECTS}
     paths |= {LEDGER_UNION, *LEDGER_SUBJECTS}
+    paths |= {COVERAGE_UNION, *COVERAGE_SUBJECTS}
     paths |= poc_reference().validation_inputs(root)
     return sorted(paths)
 
@@ -3282,10 +3415,11 @@ def declared_source_historical_cases(tmp, base, clean, witnesses, failures):
     had_figure = any(is_figure_row(line) for line in original.splitlines())
     had_derived = any(is_derived_row(line) for line in original.splitlines())
     had_ledger = any(is_ledger_row(line) for line in original.splitlines())
+    had_coverage = any(is_coverage_row(line) for line in original.splitlines())
     absent_ledger = "".join(line for line in original.splitlines(keepends=True)
                             if line.rstrip("\n") != row and not is_url_source_row(line)
                             and not is_figure_row(line) and not is_derived_row(line)
-                            and not is_ledger_row(line))
+                            and not is_ledger_row(line) and not is_coverage_row(line))
     ledger.write_text(absent_ledger)
     report = Report()
     check_outcomes(tree, report)
@@ -3297,12 +3431,13 @@ def declared_source_historical_cases(tmp, base, clean, witnesses, failures):
     held = (declared_source_absent(tree)
             and declared_source_binding(tree) == (None, [], [])
             and not report.failed
-            and examined(report, "R1") == examined(clean, "R1") - 1 - had_url_source - had_figure - had_derived - had_ledger
+            and examined(report, "R1") == examined(clean, "R1") - 1 - had_url_source - had_figure - had_derived - had_ledger - had_coverage
             and examined(report, "R2") == examined(clean, "R2") - 3
             - (URL_SOURCE_BOUND_PARTS if had_url_source else 0)
             - (FIGURE_BOUND_PARTS if had_figure else 0)
             - (DERIVED_BOUND_PARTS if had_derived else 0)
-            - (LEDGER_BOUND_PARTS if had_ledger else 0))
+            - (LEDGER_BOUND_PARTS if had_ledger else 0)
+            - (COVERAGE_BOUND_PARTS if had_coverage else 0))
     witnesses.append({"mutant": "declared-historical-control", "path": change,
                       "old": "<no amendment, row, subjects or D10 act>",
                       "new": "<unchanged>", "expected": "inactive; no phantom R1/R2 subjects",
@@ -3696,7 +3831,7 @@ def figure_cases(tmp, base, witnesses, failures):
     ledger = tree / AGENT_ADOPTIONS
     pending = "".join(line for line in ledger.read_text().splitlines(keepends=True)
                       if not is_figure_row(line) and not is_derived_row(line)
-                      and not is_ledger_row(line))
+                      and not is_ledger_row(line) and not is_coverage_row(line))
     ledger.write_text(pending)
     pending_pop, pending_findings = census(tree)
     predecessor = pending_pop["POLARIS"]
@@ -3828,7 +3963,8 @@ def derived_cases(tmp, base, witnesses, failures):
     shutil.copytree(base, tree)
     ledger = tree / AGENT_ADOPTIONS
     pending = "".join(line for line in ledger.read_text().splitlines(keepends=True)
-                      if not is_derived_row(line) and not is_ledger_row(line))
+                      if not is_derived_row(line) and not is_ledger_row(line)
+                      and not is_coverage_row(line))
     ledger.write_text(pending)
     pending_pop, pending_findings = census(tree)
     predecessor = pending_pop["POLARIS"]
@@ -3956,7 +4092,7 @@ def ledger_cases(tmp, base, witnesses, failures):
     shutil.copytree(base, tree)
     ledger = tree / AGENT_ADOPTIONS
     pending = "".join(line for line in ledger.read_text().splitlines(keepends=True)
-                      if not is_ledger_row(line))
+                      if not is_ledger_row(line) and not is_coverage_row(line))
     ledger.write_text(pending)
     pending_pop, pending_findings = census(tree)
     predecessor = pending_pop["POLARIS"]
@@ -4064,6 +4200,133 @@ def ledger_cases(tmp, base, witnesses, failures):
         record(f"ledger-compose-{name}", LEDGER_SPEC, old, new,
                "both parsers refuse without partial application", ida + names,
                bool(ida and names and a == b == der_pop), False)
+
+
+def coverage_cases(tmp, base, witnesses, failures):
+    """The v2.5 pending-to-adopted transition over v2.4, its ledger and byte guards, and the predecessor guard."""
+    original = read_text(base, COVERAGE_SPEC)
+    if original is None or ledger_binding(base)[0] is None:
+        return
+
+    def record(name, rel, old, new, expect, found, caught, stood):
+        witnesses.append({"mutant": name, "path": rel, "old": old, "new": new,
+                          "expected": expect, "failed": found,
+                          "outcome": ("held" if stood else "killed") if caught else "SURVIVED"})
+        if not caught:
+            failures.append(name)
+
+    tree = Path(tmp) / "coverage-precheck"
+    shutil.copytree(base, tree)
+    ledger = tree / AGENT_ADOPTIONS
+    pending = "".join(line for line in ledger.read_text().splitlines(keepends=True)
+                      if not is_coverage_row(line))
+    ledger.write_text(pending)
+    pending_pop, pending_findings = census(tree)
+    predecessor = pending_pop["POLARIS"]
+    ident = FIGURE_REPLACES[0]
+    held = (coverage_binding(tree) == (None, [], []) and not pending_findings
+            and len(predecessor[ident]["scenarios"]) == 60)
+    record("coverage-pending", AGENT_ADOPTIONS, "<no v2.5 row>", "<unchanged>",
+           "landed package alone keeps v2.5 pending", pending_findings, held, True)
+
+    oid = "0123456789abcdef" * 2 + "01234567"
+    row = (f"| A-999 | 2026-11-22 | `{oid}` | [spec](https://github.com/tzeusy-org/syzygy/blob/{oid}/{COVERAGE_SPEC}) "
+           f"| Selftest | `git revert {oid}` | `{COVERAGE_TAG}` |\n")
+    ledger.write_text(pending + row)
+    current_pop, current_findings = census(tree)
+    current = current_pop["POLARIS"]
+    held = (coverage_binding(tree) == (original, [], []) and not current_findings
+            and set(current) == set(predecessor)
+            and len(current[ident]["scenarios"]) == 67
+            and current[ident]["name"] == predecessor[ident]["name"]
+            and all(current[i] == r for i, r in predecessor.items() if i != ident))
+    record("coverage-adopted", AGENT_ADOPTIONS, "<no v2.5 row>", row,
+           "v2.5 replaces exactly 034 (60 to 67 scenarios)", current_findings, held, True)
+
+    for name, old, new in (("duplicate-row", row, row + row),
+                           ("wrong-tag", COVERAGE_TAG, COVERAGE_TAG + "-wrong"),
+                           ("wrong-revert", f"git revert {oid}", "git revert " + "0" * 40),
+                           ("missing-spec-link", f"/blob/{oid}/{COVERAGE_SPEC})", f"/blob/other/{COVERAGE_SPEC})"),
+                           ("bad-date", "2026-11-22", "2026-99-22"),
+                           ("no-reason", "| Selftest |", "|  |")):
+        assert old in row
+        ledger.write_text(pending + row.replace(old, new, 1))
+        effective, r1, r2 = coverage_binding(tree)
+        record(f"coverage-{name}", AGENT_ADOPTIONS, old, new,
+               "R1 refusal with no effective amendment", r1 + r2,
+               effective is None and bool(r1) and not r2, False)
+
+    veto = (f"| A-1000 | 2026-11-23 | `8a468bc` | Veto A-999 | Test only | `git revert 8a468bc` | — |\n")
+    ledger.write_text(pending + row + veto)
+    pop, found = census(tree)
+    held = (coverage_disposition(tree, coverage_rows(tree)) == "A-1000" and not found
+            and pop["POLARIS"] == predecessor)
+    record("coverage-vetoed", AGENT_ADOPTIONS, row, veto, "restore the v2.4 034", found, held, True)
+    ledger_row = next((line for line in pending.splitlines(keepends=True) if is_ledger_row(line)), None)
+    if ledger_row is not None:
+        no_ledger = "".join(line for line in pending.splitlines(keepends=True) if not is_ledger_row(line))
+        ledger.write_text(no_ledger + row)
+        effective, r1, r2 = coverage_binding(tree)
+        record("coverage-predecessor-missing", AGENT_ADOPTIONS, ledger_row, "",
+               "R1 refusal while v2.4 is not in force", r1 + r2,
+               effective is None and any("prior v2.4" in f for f in r1), False)
+
+    ledger.write_text(pending + row)
+    for rel in COVERAGE_SUBJECTS:
+        subject = tree / rel
+        previous = subject.read_bytes()
+        subject.write_bytes(previous + b"\n")
+        effective, r1, r2 = coverage_binding(tree)
+        subject.write_bytes(previous)
+        record(f"coverage-subject-changed-{Path(rel).name}", rel, "<end of file>", "\n",
+               "R2 refusal with no effective amendment", r1 + r2,
+               effective is None and not r1 and bool(r2), False)
+    union = tree / COVERAGE_UNION
+    previous = union.read_text()
+    assert '"REQ-polaris-generation-035"' in previous
+    union.write_text(previous.replace('"REQ-polaris-generation-035"', '"REQ-polaris-generation-099"', 1))
+    report = Report()
+    check_generated(tree, current_pop, report)
+    union.write_text(previous)
+    record("coverage-union-changed", COVERAGE_UNION, '"REQ-polaris-generation-035"', '"REQ-polaris-generation-099"', "R4 refusal",
+           report.findings.get("R4", []), any(COVERAGE_UNION in f for f in report.findings.get("R4", [])), False)
+    status = tree / STATUS
+    previous = status.read_text()
+    status.write_text("\n".join(line for line in previous.split("\n")
+                                if not line.strip().startswith(COVERAGE_STATUS_PREFIX)))
+    report = Report()
+    check_routes(tree, current_pop, report)
+    status.write_text(previous)
+    record("coverage-status-route-missing", STATUS, COVERAGE_STATUS_PREFIX, "", "R5 refusal",
+           report.findings.get("R5", []),
+           any("coverage precheck v2.5" in f for f in report.findings.get("R5", [])), False)
+    ledger.write_text(pending)
+    report = Report()
+    check_routes(tree, pending_pop, report)
+    claims = [f for f in report.findings.get("R5", []) if "while it is not in force" in f]
+    adopted_status = any(line.strip().startswith(COVERAGE_STATUS_PREFIX) and "is agent-adopted" in line
+                         for line in previous.split("\n"))
+    record("coverage-pending-claims-adoption", AGENT_ADOPTIONS, row, "",
+           "R5 refuses an adopted route while the row is missing", claims,
+           bool(claims) if adopted_status else not claims, not adopted_status)
+    ledger.write_text(pending + row)
+
+    cases = [
+        ("added-section", DECLARED_SOURCE_MODIFIED, ADDED_HEADING),
+        ("wrong-id", "ID: " + ident, "ID: " + POLARIS_ID + "035"),
+        ("renamed", "### Requirement: Agent brief and mechanically checked draft",
+         "### Requirement: Agent brief and coverage pre-check"),
+        ("second-block", "ID: " + ident, "ID: " + ident + "\n\n### Requirement: Extra\n\nID: " + POLARIS_ID + "099"),
+    ]
+    led_pop = predecessor
+    for name, old, new in cases:
+        assert old in original, name
+        mutant = original.replace(old, new, 1)
+        a, ida = compose_figure_by_id(led_pop, mutant)
+        b, names = compose_figure_by_name(led_pop, mutant)
+        record(f"coverage-compose-{name}", COVERAGE_SPEC, old, new,
+               "both parsers refuse without partial application", ida + names,
+               bool(ida and names and a == b == led_pop), False)
 
 
 def cap1_overlay_mutants():
@@ -4485,6 +4748,7 @@ def _selftest_cases(tmp, commit, witnesses, failures, witness_path, base, clean,
     figure_cases(tmp, base, witnesses, failures)
     derived_cases(tmp, base, witnesses, failures)
     ledger_cases(tmp, base, witnesses, failures)
+    coverage_cases(tmp, base, witnesses, failures)
     # Two cases a one-file mutation cannot express. A second record of the
     # same version fails R1 by its own finding; --regenerate refuses an
     # unsigned addition and writes nothing.

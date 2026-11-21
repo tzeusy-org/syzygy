@@ -11,7 +11,7 @@ import { createPackageGateSources, type GateSources } from './gate-sources.js';
 import { initRun, type InitPorts } from './init.js';
 import { processLaunchPorts } from './launch-cli.js';
 import { withLaunchRecords } from './launch-sources.js';
-import { checkInventory, inventoryBrief } from './inventory.js';
+import { checkInventory, inventoryBrief, inventoryOfRecord } from './inventory.js';
 import { preflight } from './preflight.js';
 import type { ReverifyOptions } from './reverify.js';
 import { RUN_CONFIG_JSON_LIMITS } from './run-config.js';
@@ -338,9 +338,9 @@ export const DOSSIER_COMMANDS: Readonly<Record<string, DossierCommand>> = Object
     args: { kind: 'options', options: ['--draft'], noun: RUN },
     run: async ({ positional: [run], values }, ctx) => {
       const draftFile = values.get('--draft');
-      const result = await checkDraft(run!, draftFile === undefined ? {} : { draftFile }, ctx.deps('probe', 'openReader', 'loadScreen', 'layoutFigure'));
+      const result = await checkDraft(run!, draftFile === undefined ? {} : { draftFile }, { ...ctx.deps('probe', 'openReader', 'loadScreen', 'layoutFigure'), inventoryOfRecord });
       if (!result.ok) return ctx.refused(result.refusal);
-      // `reviewVisibility`, `screenCensus`, `structureRecord`, `readerAdvice` and `reviewReach` are on the report already (`checkSubject`), never in the stored
+      // `reviewVisibility`, `screenCensus`, `structureRecord`, `readerAdvice`, `reviewReach` and `inventoryCoverage` are on the report already (`checkSubject`), never in the stored
       // record, and the exit code reads the outcome alone.
       return ctx.report(result.report, result.report.outcome === 'passed' ? EXIT.clean : EXIT.refused);
     },

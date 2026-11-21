@@ -2,7 +2,7 @@ import * as path from 'node:path';
 import { UNKNOWN_REASONS } from '@syzygy/cap1-core';
 import { leadInQuotations, lineCount, locateQuote, normaliseTracked, retainedWithMarkers, spanTouchesWithheld, verifiedRedactedBody, type VerifiedRedactedBody, type TrackedText } from '@syzygy/polaris-generation-core/live';
 import { isRecord } from '@syzygy/support';
-import { LOCAL_DRAFT_SCHEMA_VERSION, LOCAL_DRAFT_SCHEMA_VERSION_V4, UNDERSTANDING_ITEMS, V4_FIELDS, hasV4Forms, checkDraftShape, localDraftSchema, type DraftSchemaWithDefs } from './draft-schema.js';
+import { LOCAL_DRAFT_SCHEMA_VERSION, LOCAL_DRAFT_SCHEMA_VERSION_V4, INVENTORY_OMISSIONS_SINCE, PRE_V5_SCHEMA_VERSIONS, UNDERSTANDING_ITEMS, V4_FIELDS, hasV4Forms, checkDraftShape, localDraftSchema, type DraftSchemaWithDefs } from './draft-schema.js';
 import { BLOB_MODES, type PinnedObjectReader, type TreeEntry } from './git-object-reader.js';
 import { type DossierScreen, type ScreenExclusion } from './screen.js';
 import { DEFAULT_POLE_LIMIT } from './run-config.js';
@@ -156,6 +156,11 @@ export async function deriveFindings(subject: unknown, inputs: DeriveInputs, rul
     walk(doc, '$', (value, at) => {
       for (const field of V4_FIELDS) if (Object.hasOwn(value, field)) add({ kind: 'field-version', at: `${at}.${field}`, detail: `\`${field}\` needs draft schema ${LOCAL_DRAFT_SCHEMA_VERSION_V4}` });
     });
+  }
+
+  // The justified-omission record is a field of v5 and later (dossier spec 2.5): in an earlier draft it is a finding at its path.
+  if (rules.noun === 'draft' && Object.hasOwn(doc, 'inventoryOmissions') && PRE_V5_SCHEMA_VERSIONS.includes(doc['schemaVersion'] as string)) {
+    add({ kind: 'field-version', at: '$.inventoryOmissions', detail: `\`inventoryOmissions\` needs draft schema ${INVENTORY_OMISSIONS_SINCE}` });
   }
 
   // Labels, citations by block kind and the execution marking.

@@ -18,6 +18,7 @@ import { figureFit, type FigureFit } from './figure-fit.js';
 import { reviewReachAdvice, type ReviewReachAdvice } from './review-reach.js';
 import { screenCensusReport, withheldCensus, type ScreenCensusReport } from './census.js';
 import { deriveStructure, deriveTreeFacts, structureUnknown, type StructureRecord } from './derive.js';
+import { inventoryCoverageAdvice, type InventoryCoverageAdvice } from './inventory-coverage.js';
 import { derivedRecordFile, encodeDerivedRecord, secretPathOf } from './derived-record.js';
 import { BRIEF_JSON_LIMITS, CHECK_RECORD_FORMAT, type CheckCommand, type CheckDeps, type CheckFinding, type CheckRecord, type CheckRefusal, type CheckRequest, type CheckResult, type CheckStage, type CitedBlob, DEFAULT_DRAFT, DISCLOSURES, DRAFT_JSON_LIMITS, DRAFT_MAX_BYTES, type ExcludedQuotation, type ReviewVisibility, STEP_LOG_FORMAT, type VerifiedQuotation, errno, reviewVisibility, text } from './check-model.js';
 import { type Derived, type SubjectRules, deriveFindings, draftRules } from './check-derive.js';
@@ -90,9 +91,9 @@ export interface SubjectPlan<R extends object, G> {
   readonly disclosures: readonly string[];
 }
 
-/** `screenCensus` (`census.ts`), `structureRecord` (`derive.ts`), `readerAdvice` (`reader-advice.ts`) and `reviewReach` (`review-reach.ts`) are on `check`'s report only: advice to the author, never written
+/** `screenCensus` (`census.ts`), `structureRecord` (`derive.ts`), `readerAdvice` (`reader-advice.ts`), `reviewReach` (`review-reach.ts`) and `inventoryCoverage` (`inventory-coverage.ts`) are on `check`'s report only: advice to the author, never written
  * to the check record and never a finding. */
-export type SubjectReport<R extends object> = R & { readonly command: CheckCommand; readonly run: string; readonly checkFile: string; readonly disclosures: readonly string[]; readonly screenCensus?: ScreenCensusReport; readonly structureRecord?: StructureRecord; readonly readerAdvice?: ReaderAdvice; readonly figureFit?: FigureFit; readonly reviewReach?: ReviewReachAdvice; readonly reviewVisibility?: ReviewVisibility };
+export type SubjectReport<R extends object> = R & { readonly command: CheckCommand; readonly run: string; readonly checkFile: string; readonly disclosures: readonly string[]; readonly screenCensus?: ScreenCensusReport; readonly structureRecord?: StructureRecord; readonly readerAdvice?: ReaderAdvice; readonly figureFit?: FigureFit; readonly reviewReach?: ReviewReachAdvice; readonly reviewVisibility?: ReviewVisibility; readonly inventoryCoverage?: InventoryCoverageAdvice };
 export type SubjectResult<R extends object> = Outcome<SubjectReport<R>, CheckRefusal>;
 
 const DRAFT_PLAN: SubjectPlan<CheckRecord, null> = {
@@ -296,11 +297,17 @@ export async function checkSubject<R extends object, G>(runDir: string, file: st
   // The claim blocks no fidelity verdict can confirm (syzygy-pdja.20), read from this derivation's own blobs.
   const reach = plan.command === 'check' && parseFault === null
     ? reviewReachAdvice(doc, { citedBlobs, admitted, screen, consented: checked.contentClasses }) : undefined;
+  // The inventory entries no block of this draft covers (syzygy-5dhm.28), from the inventory of record as it reads now.
+  const coverage = plan.command === 'check' && parseFault === null
+    ? await inventoryCoverageAdvice(run, doc, { ...(deps.inventoryOfRecord ? { inventoryOfRecord: deps.inventoryOfRecord } : {}), sources: deps.sources, now: started,
+      isSecretPath: (cited) => screen.screenPath(cited) === 'secret-detector-match' })
+    : undefined;
   return { ok: true, report: {
     command: plan.command, run, checkFile, ...stored, disclosures, ...(screenCensus === undefined ? {} : { screenCensus }),
     ...(structureRecord === undefined ? {} : { structureRecord }),
     ...(advice === undefined ? {} : { readerAdvice: advice }), ...(reach === undefined ? {} : { reviewReach: reach }),
     ...(visibility === null ? {} : { reviewVisibility: visibility }),
+    ...(coverage === undefined ? {} : { inventoryCoverage: coverage }),
   } };
 }
 

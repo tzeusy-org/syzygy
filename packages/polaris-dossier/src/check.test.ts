@@ -1,5 +1,6 @@
 import { declaredSubjectFixture, policyFixture } from './full-run.testkit.js';
 import { execFileSync } from 'node:child_process';
+import { createHash } from 'node:crypto';
 import * as fs from 'node:fs';
 import * as path from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -1108,6 +1109,107 @@ describe('check: the command', () => {
     const a = io();
     expect(await runDossierCli(argv, a.io, { sources: sources(), now: () => LATER })).toBe(2);
     expect(a.err.join('')).toContain(`syzygy dossier: ${message}`);
+  });
+});
+
+// syzygy-5dhm.28: the inventory entries no draft block covers are advice on the report, and the draft may record a justified omission.
+describe('check: inventory coverage advice and the justified-omission record', () => {
+  const v5 = (change: (draft: Draft) => void = () => {}): Draft => mutate((d) => { d.schemaVersion = 'polaris-dossier-local-draft-v5'; change(d); });
+  const INVENTORY = {
+    schemaVersion: 'polaris-dossier-local-inventory-v1', pinnedRevision: 'unused', sessionId: 'inventory-1',
+    entries: [
+      { id: 'e-memory', kind: 'purpose', label: 'inferred', statement: 'INVENTORY-STATEMENT-ONE', citations: [cite('ce-1', 'src/kestrel.c', 1, 1)], quotations: [] },
+      { id: 'e-types', kind: 'term', label: 'inferred', statement: 'INVENTORY-STATEMENT-TWO', citations: [cite('ce-2', 'src/types.ts', 1, 2)], quotations: [] },
+      { id: 'e-readme', kind: 'capability', label: 'inferred', statement: 'INVENTORY-STATEMENT-THREE', citations: [cite('ce-3', 'README.md', 1, 2), cite('ce-4', SECRET_PATH, 1, 1)], quotations: [] },
+    ],
+    coverage: { inspected: [], excluded: [], deferred: [], stoppingReason: 'Done.' },
+  };
+  /** A frozen inventory in the run directory and a reader that counts it, standing in for `inventoryOfRecord`. */
+  const counted = (run: string): NonNullable<CheckDeps['inventoryOfRecord']> => {
+    const body = JSON.stringify(INVENTORY);
+    fs.mkdirSync(path.join(run, 'inventory'), { recursive: true });
+    fs.writeFileSync(path.join(run, 'inventory', 'rev-0.json'), body);
+    return async () => ({ counts: true, revision: 0, file: 'inventory/rev-0.json', sha256: createHash('sha256').update(body).digest('hex') }) as never;
+  };
+
+  it('lists each uncovered entry by identifier and path, sets no outcome and stays out of the check record', async () => {
+    const run = await briefedRun();
+    writeDraft(run, v5());
+    const result = report(await checkDraft(run, {}, deps({ inventoryOfRecord: counted(run) })));
+    expect(result.outcome).toBe('passed');
+    expect(result.findings).toEqual([]);
+    expect(result.inventoryCoverage).toMatchObject({
+      state: 'compared', rule: { id: 'overlap-or-path-named', version: 1 },
+      counts: { entries: 3, covered: 1, omitted: 0, uncovered: 2 },
+      uncovered: [{ entryId: 'e-types', paths: ['src/types.ts'], unnamedPaths: 0 }, { entryId: 'e-readme', paths: ['README.md'], unnamedPaths: 1 }],
+      omissions: { recorded: 0, unmatched: [], alsoCovered: [] },
+    });
+    const printed = JSON.stringify(result.inventoryCoverage);
+    expect(printed).not.toContain('INVENTORY-STATEMENT');
+    expect(printed).not.toContain('k'.repeat(24));
+    expect(read(run, 'checks/rev-0.json')).not.toContain('inventoryCoverage');
+    expect(read(run, 'steps.jsonl')).not.toContain('inventoryCoverage');
+  });
+
+  it('does not list an entry the v5 draft records as a justified omission, and the record is no finding', async () => {
+    const run = await briefedRun();
+    writeDraft(run, v5((d) => { d.inventoryOmissions = [{ entryId: 'e-types', reason: 'The type alias is an implementation detail no reader needs.' }]; }));
+    const result = report(await checkDraft(run, {}, deps({ inventoryOfRecord: counted(run) })));
+    expect(result.findings).toEqual([]);
+    expect(result.outcome).toBe('passed');
+    expect(result.inventoryCoverage).toMatchObject({
+      counts: { entries: 3, covered: 1, omitted: 1, uncovered: 1 },
+      uncovered: [{ entryId: 'e-readme', paths: ['README.md'], unnamedPaths: 1 }],
+      omissions: { recorded: 1, unmatched: [], alsoCovered: [] },
+    });
+  });
+
+  it('is Unknown where the check has no reader of the inventory, and where none counts', async () => {
+    const run = await briefedRun();
+    writeDraft(run, v5());
+    const bare = report(await checkDraft(run, {}, deps()));
+    expect(bare.outcome).toBe('passed');
+    expect(bare.inventoryCoverage).toEqual({ state: 'unknown', why: 'this check was given no reader of the inventory of record', note: expect.stringContaining('not zero uncovered entries') });
+    writeDraft(run, v5());
+    const none = report(await checkDraft(run, {}, deps({ inventoryOfRecord: async () => ({ counts: false, why: 'no inventory revision has been checked' }) })));
+    expect(none.outcome).toBe('passed');
+    expect(none.inventoryCoverage).toMatchObject({ state: 'unknown', why: 'no inventory counts: no inventory revision has been checked' });
+  });
+
+  it('refuses no check when the reader fails: the draft still passes and the advice is Unknown', async () => {
+    const run = await briefedRun();
+    writeDraft(run, v5());
+    const result = report(await checkDraft(run, {}, deps({ inventoryOfRecord: async () => { throw new Error('reader failed'); } })));
+    expect(result.outcome).toBe('passed');
+    expect(result.inventoryCoverage).toMatchObject({ state: 'unknown', why: 'the inventory of record could not be read or compared (Error)' });
+    expect(JSON.parse(read(run, 'checks/rev-0.json')).outcome).toBe('passed');
+  });
+
+  it('reports the omission record in a draft before v5 as a field-version finding, and a malformed one as a schema finding', async () => {
+    const run = await briefedRun({ maxRepairCycles: 8 });
+    writeDraft(run, mutate((d) => { d.inventoryOmissions = [{ entryId: 'e-types', reason: 'Not needed.' }]; }));
+    expect(report(await checkDraft(run, {}, deps())).findings).toEqual([
+      { kind: 'field-version', at: '$.inventoryOmissions', detail: '`inventoryOmissions` needs draft schema polaris-dossier-local-draft-v5' },
+    ]);
+    writeDraft(run, v5((d) => { d.inventoryOmissions = [{ entryId: 'e-types' }]; }));
+    expect(report(await checkDraft(run, {}, deps())).findings.map(({ kind, at }) => ({ kind, at }))).toEqual([{ kind: 'schema', at: '$.inventoryOmissions[0].reason' }]);
+    const kindsFor = async (omissions: unknown): Promise<string[]> => {
+      writeDraft(run, v5((d) => { d.inventoryOmissions = omissions; }));
+      return report(await checkDraft(run, {}, deps())).findings.map(({ kind }) => kind);
+    };
+    expect(await kindsFor([{ entryId: 'e-types', reason: 'Not needed.', note: 'extra' }])).toEqual(['schema']);
+    expect(await kindsFor([{ entryId: 'e'.repeat(101), reason: 'Not needed.' }])).toEqual(['schema']);
+    expect(await kindsFor([{ entryId: 'e-types', reason: 'r'.repeat(8001) }])).toEqual(['schema']);
+    expect(await kindsFor(Array.from({ length: 2001 }, (_, i) => ({ entryId: `e-${i}`, reason: 'Not needed.' })))).toEqual(['schema']);
+    expect(await kindsFor([{ entryId: 'e'.repeat(100), reason: 'r'.repeat(8000) }, { entryId: 'e-types', reason: 'Once.' }, { entryId: 'e-types', reason: 'Twice.' }])).toEqual([]);
+  });
+
+  it('gives no coverage advice for a draft that does not parse', async () => {
+    const run = await briefedRun();
+    writeDraft(run, '{');
+    const result = report(await checkDraft(run, {}, deps({ inventoryOfRecord: counted(run) })));
+    expect(result.findings.map((f) => f.kind)).toEqual(['not-json']);
+    expect(result).not.toHaveProperty('inventoryCoverage');
   });
 });
 
