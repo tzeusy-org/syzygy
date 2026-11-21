@@ -343,8 +343,11 @@ def main(argv):
 def run_selftest():
     """Mutate the input and confirm the check fails (verification rule 6)."""
     failures = []
+    checks = 0
 
     def expect(name, cond):
+        nonlocal checks
+        checks += 1
         print(("ok   " if cond else "FAIL ") + name)
         if not cond:
             failures.append(name)
@@ -439,8 +442,7 @@ def run_selftest():
     expect("no clause body reached the page (no line over 400 chars)",
            max(len(l) for l in body.splitlines()) < 400)
 
-    n = 9 + 4 + 2 + 6
-    print(f"\n{n} checks, {len(failures)} failing"
+    print(f"\n{checks} checks, {len(failures)} failing"
           " — a check that cannot fail is not a check")
     return 1 if failures else 0
 
