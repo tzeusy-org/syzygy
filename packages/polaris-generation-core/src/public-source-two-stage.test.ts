@@ -297,6 +297,13 @@ describe('checks the committed lists do not reach on their own', () => {
     expect([secondStageRules('docs/design/decisions.rst', stage, documentationRule()), secondStageRules('docs/design/notes.rst', stage, documentationRule())])
       .toEqual([[], ['governance-text-by-name']]);
   });
+  // prefixExcludedExtensions leaves the committed lists no path two Stage-2 rules match; without it, pkg/Dockerfile.md is one.
+  it('a path two Stage-2 rules match is indeterminate', () => {
+    const stage = { ...second(), prefixExcludedExtensions: Object.freeze([]) } as SecondStageRules;
+    const at = (repositoryPath: string, rules: SecondStageRules) => classDecision(repositoryPath, EXTENSIONS, documentationRule(), { governanceTextPaths: governanceTextPaths(), subject: null }, rules);
+    expect(secondStageRules('pkg/Dockerfile.md', stage, documentationRule())).toEqual(['project-documentation-extended', 'code-content-extended']);
+    expect([at('pkg/Dockerfile.md', stage), at('pkg/Dockerfile.md', second())]).toEqual([undefined, { contentClass: 'project-documentation', stage: 2 }]);
+  });
   it('a path two Stage-1 documentation path rules place is never read by Stage 2', () => {
     const subject = { repository: 'repository:o-r', commit: 'a'.repeat(40) };
     const documentation: ProjectDocumentationRule = { ...documentationRule(), ownerPlacements: [{ repository: subject.repository, commits: [subject.commit], paths: ['docs/notes.md'] }] };

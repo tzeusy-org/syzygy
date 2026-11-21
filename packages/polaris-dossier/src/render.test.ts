@@ -717,6 +717,17 @@ describe('render', () => {
     expect(await renderRun(run, renderDeps({ renderer: undeclared }))).toMatchObject({ ok: true });
   });
 
+  // syzygy-3efd.24: the rescan reads the body with its path, so a detector that screens only agent text and Stage-2 bodies (dossier policy
+  // 2.0.0's configuration detectors, here one injected on the path-free screen) never asks a Stage-1 body for the render condition.
+  it('rescans a cited body with its path, so a detector of agent text alone asks nothing of a Stage-1 body', async () => {
+    const run = await prepared(draft(), false);
+    if (!SCREEN.ok) throw new Error(SCREEN.why);
+    const base = SCREEN.screen;
+    const agentOnly = { ok: true as const, screen: { ...base, screenBody: (body: string, repositoryPath?: string) => (repositoryPath === undefined && body === KESTREL ? 'secret-detector-match' as const : base.screenBody(body, repositoryPath)) } };
+    const undeclared: DossierRenderer = (input) => renderLocalDossier(input);
+    expect(await renderRun(run, renderDeps({ loadScreen: async () => agentOnly, renderer: undeclared }))).toMatchObject({ ok: true });
+  });
+
   it('draws retained spans with original coordinates and markers while withholding only the removed line', async () => {
     const run = await prepared(draft(), false);
     if (!SCREEN.ok) throw new Error(SCREEN.why);
