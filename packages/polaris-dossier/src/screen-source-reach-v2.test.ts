@@ -1,7 +1,7 @@
 import { readFileSync } from 'node:fs';
 import * as path from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { describe, expect, it } from 'vitest';
+import { beforeAll, describe, expect, it } from 'vitest';
 
 import { parseRunConfig } from './run-config.js';
 import { DOSSIER_CONTENT_CLASSES, encodeRunRecord, NO_WORK_ITEM_REASON, readRunRecord, type RunSubject } from './run-record.js';
@@ -31,7 +31,8 @@ const VALUE = ['hunter2', 'hunter2'].join('');
 const CREDENTIAL_LINE = `${PW} = "${VALUE}"`;
 
 describe('the successor screen', () => {
-  const screen = screenOf(V2);
+  let screen: DossierScreen;
+  beforeAll(() => { screen = screenOf(V2); });
   it('binds version 2.0.0 with its two stages and six configuration detectors', () => {
     expect([screen.policyVersion, screen.twoStage, screen.configurationDetectors, screen.scopeDetectors]).toEqual(['dossier-declared-source/2.0.0', true, 6, 4]);
     const predecessor = screenOf(V1);
@@ -89,7 +90,8 @@ describe('the successor screen', () => {
 });
 
 describe.each(['public', 'private'] as const)('configuration under %s visibility', visibility => {
-  const screen = screenOf(V2, visibility);
+  let screen: DossierScreen;
+  beforeAll(() => { screen = screenOf(V2, visibility); });
   it('the three planted secrets are excluded whole and Cargo.toml is admitted as code-content', () => {
     const json = `{"${PW}": "${VALUE}"}\n`;
     const yml = `${['SECRET', 'KEY', 'BASE'].join('_')}: ${['abcdef', '0123456789'].join('')}\n`;
@@ -116,7 +118,8 @@ describe.each(['public', 'private'] as const)('configuration under %s visibility
 });
 
 describe('the configuration detectors over agent text and cited spans', () => {
-  const screen = screenOf(V2), predecessor = screenOf(V1);
+  let screen: DossierScreen, predecessor: DossierScreen;
+  beforeAll(() => { screen = screenOf(V2); predecessor = screenOf(V1); });
   const QUOTED = `${['aws', 'secret', 'access', 'key'].join('_')} = AbCdEfGhIjKlMn`;
   const JSON_LINE = `  "${PW}": "${VALUE}",\n`;
   it('refuse agent text quoting a configuration secret, which the predecessor admits', () => {
@@ -139,7 +142,8 @@ const NEW_SUFFIXES = ['.tfstate', '.tfstate.backup', '.tfvars', '.tfvars.json', 
 const NEW_DIRECTORIES = ['.ssh', '.gnupg', '.aws', '.kube', '.docker', '.terraform'];
 const PREDECESSOR_DENIED = ['.env', '.env.local', '.env.production', 'credentials.json', 'secrets.json', 'id_rsa', 'id_ed25519', '.env.staging', 'keys/server.pem', 'a.key', 'cert.p12', 'cert.pfx'];
 describe('credential paths are denied before any read', () => {
-  const screen = screenOf(V2), predecessor = screenOf(V1);
+  let screen: DossierScreen, predecessor: DossierScreen;
+  beforeAll(() => { screen = screenOf(V2); predecessor = screenOf(V1); });
   it('the scenario paths', () => {
     for (const p of ['terraform.tfstate', 'env/prod.tfvars', '.npmrc', '.netrc', 'kubeconfig', 'config/secrets.yml', '.kube/config', 'deploy/.docker/config.json', '.ssh/deploy.sh']) {
       expect([p, screen.screenPath(p), screen.contentClass(p), screen.stageOf(p)]).toEqual([p, 'denied-path', undefined, undefined]);
@@ -161,6 +165,7 @@ describe('credential paths are denied before any read', () => {
   });
 });
 
+// Screens are built in beforeAll, so a policy the screen refuses fails each test rather than the file's collection.
 // The controlled tree of the requirement's "Predecessor outcomes preserved" scenario, screened under both versions: paths and bodies.
 const POPULATION = ['README.md', 'docs/setup.md', 'docs/adr/x.md', 'docs/DesignDoc.md', 'docs/build-log.txt', 'licenses/MIT.txt', 'SECURITY.md', 'MANIFESTO.md', 'src/server.c',
   'setup.py', 'vendor/x.c', 'src/README.md', 'ARCHITECTURE.md', 'Cargo.toml', 'config/app.json', 'Dockerfile', 'main.tf', 'notebooks/a.ipynb', 'node_modules/x/README.md',
@@ -168,7 +173,8 @@ const POPULATION = ['README.md', 'docs/setup.md', 'docs/adr/x.md', 'docs/DesignD
   'x/docs/n.txt', 'src/a.scala', 'bin/changes', 'design/x.md', 'docs/security.md', 'images/logo.png', 'Makefile', 'docs/rfc0001.md', 'licenses/x-spec.txt'];
 const NEWLY_DENIED = ['.ssh/deploy.sh', '.aws/x.py', 'deploy/.docker/x.json', '.kube/config', 'terraform.tfstate', '.npmrc'];
 describe('predecessor outcomes are preserved', () => {
-  const before = screenOf(V1), after = screenOf(V2);
+  let before: DossierScreen, after: DossierScreen;
+  beforeAll(() => { before = screenOf(V1); after = screenOf(V2); });
   it('every path the predecessor places keeps its class, except below a new denied directory', () => {
     const placed = POPULATION.filter(p => before.screenPath(p) === undefined);
     expect(placed.filter(p => !(outcomeOf(after, p) === `${before.contentClass(p)}/1` || (NEW_DIRECTORIES.some(d => p.split('/').slice(0, -1).includes(d)) && after.screenPath(p) === 'denied-path'))))

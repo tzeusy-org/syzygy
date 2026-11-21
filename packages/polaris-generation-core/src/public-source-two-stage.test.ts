@@ -267,3 +267,20 @@ describe('a reader that does not implement the two-stage decision refuses the su
     expect(readSecretRedaction(v1, ids, true)).toMatchObject({ ok: false });
   });
 });
+
+// Two checks the committed lists make redundant, each held on its own (the mutation run found both unreached by the policy's lists alone).
+describe('checks the committed lists do not reach on their own', () => {
+  it('a withheld token refuses governance-text-by-name even with no withheld stem beside it', () => {
+    const stage = { ...second(), withheldStems: Object.freeze([]) } as SecondStageRules;
+    expect([secondStageRules('docs/design/decisions.md', stage, documentationRule()), secondStageRules('docs/design/notes.md', stage, documentationRule())])
+      .toEqual([[], ['governance-text-by-name']]);
+  });
+  it('a path two Stage-1 documentation path rules place is never read by Stage 2', () => {
+    const subject = { repository: 'repository:o-r', commit: 'a'.repeat(40) };
+    const documentation: ProjectDocumentationRule = { ...documentationRule(), ownerPlacements: [{ repository: subject.repository, commits: [subject.commit], paths: ['docs/notes.txt'] }] };
+    const at = (repositoryPath: string, rule: ProjectDocumentationRule) => classDecision(repositoryPath, EXTENSIONS, rule, { governanceTextPaths: governanceTextPaths(), subject }, second());
+    // docs-tree and owner-placement both place docs/notes.txt: Stage 1 finds two placements, and docs-tree-text never reads it.
+    expect([at('docs/notes.txt', documentation), at('docs/notes.txt', documentationRule()), at('x/docs/notes.txt', documentation)])
+      .toEqual([undefined, { contentClass: 'project-documentation', stage: 1 }, { contentClass: 'project-documentation', stage: 2 }]);
+  });
+});
