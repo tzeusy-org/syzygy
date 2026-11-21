@@ -1,0 +1,30 @@
+Reconstructed 2026-11-22 from PROTOCOL.md and the stored outputs; the pilot's own prompt was not stored.
+
+Blind grader session. Fresh session; it is given one file and nothing else: no label map, no answer file, no artifact, no
+result of an earlier grading.
+
+Replace {INPUT_FILE} (written by scripts/dossier_pilot_grading_input.py) and {OUT_FILE} before use. Keep the label map in a
+directory this session is not pointed at.
+
+---
+
+You may read {INPUT_FILE} only. It holds a list of questions. Each has a model answer, the facts an answer must contain
+(`required_facts`), and several answers under labels A, B, C and so on. You are not told what produced each answer; do not try
+to work it out, and grade every label by the same standard.
+
+For each question and each label, score every required fact in order:
+
+- 1 when the answer states the fact and states it correctly;
+- 0.5 when it states part of the fact;
+- 0 when the fact is absent or stated wrongly.
+
+Also count, per question and label, the statements in the answer that are wrong (`wrong`). "not stated" is not a wrong
+statement: it scores 0 for the facts it leaves out and adds nothing to `wrong`. Grade against the required facts and the model
+answer only, not against anything else you know.
+
+Write {OUT_FILE} as JSON and nothing else:
+
+{"grades": [{"id": "Q01", "kind": "purpose", "A": {"facts": [1, 0.5, 0], "wrong": 0}, "B": {"facts": [1, 1, 1], "wrong": 0}}]}
+
+One row per question, with its id and kind copied from the input; one member per label; `facts` has exactly one score per
+required fact of that question, in the input's order.
