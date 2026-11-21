@@ -109,6 +109,17 @@ describe('reading ledger', () => {
     expect(ledger.draft.unplacedUnits).toBe(0);
   });
 
+  it('names a deep dive\'s page per code point, as the renderer does: one _ for an astral character and one for a lone surrogate (version 2.8)', () => {
+    // The scenario "Deep-dive page named per code point" (syzygy-3efd.68). The identities are written as escapes: U+1F600 is the
+    // surrogate pair \ud83d\ude00, and \ud800 stands alone. Draft identities are ASCII in a valid draft; this one fails the schema.
+    const doc = { ...DRAFT, diagrams: [], deepDives: [dive('a\u{1F600}\ud800', 'One', 'core', [block('y1', 'One.')]), dive('Az09_.-', 'Two', 'core', [block('y2', 'Two words.')])] };
+    const ledger = readingLedger(doc, { ...FIT, entries: [] }, { standards: 'polaris-reader-standards-v1', note: '', advisories: [] });
+    expect(ledger.pages.filter((p) => p.page.startsWith('deep-dives/')).map((p) => [p.page, p.units])).toEqual([
+      ['deep-dives/a__.html', ['deep-dive:a\u{1F600}\ud800']],
+      ['deep-dives/Az09_.-.html', ['deep-dive:Az09_.-']],
+    ]);
+  });
+
   it('counts nothing in a part that is not of the expected form, and holds only the landing page for a draft that is not an object', () => {
     expect(readingLedger([1, 2], { ...FIT, entries: [] }, { standards: 'polaris-reader-standards-v1', note: '', advisories: [] })).toEqual({
       format: 'polaris-dossier-reading-ledger/1', wordsPerMinute: 200,

@@ -45,8 +45,9 @@ const list = (value: unknown): readonly unknown[] => (Array.isArray(value) ? val
 const text = (value: unknown): string | undefined => (typeof value === 'string' ? value : undefined);
 const produced = (value: unknown): value is Readonly<Record<string, unknown>> => isRecord(value) && isRecord(value['disposition']) && value['disposition']['kind'] === 'produced';
 const minutes = (words: number): number => Math.ceil(words / WORDS_PER_MINUTE);
-/** A deep dive's page: its identity with every code unit outside `A-Z`, `a-z`, `0-9`, `_`, `.` and `-` replaced by `_`. */
-export const deepDivePage = (id: string): string => `deep-dives/${id.replace(/[^A-Za-z0-9_.-]/g, '_')}.html`;
+/** A deep dive's page: its identity with every code point outside `A-Z`, `a-z`, `0-9`, `_`, `.` and `-` replaced by one `_`, the rule
+ * by which the renderer names that page (`deepDivePath`); a surrogate pair is one code point, and so is a lone surrogate (version 2.8). */
+export const deepDivePage = (id: string): string => `deep-dives/${id.replace(/[^A-Za-z0-9_.-]/gu, '_')}.html`;
 /** The draft schemas whose diagrams name a `home` (v5 and later). */
 const HOME_SCHEMAS = new Set(['polaris-dossier-local-draft-v5', 'polaris-dossier-local-draft-v6', 'polaris-dossier-local-draft-v7']);
 
