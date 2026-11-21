@@ -195,7 +195,8 @@ owner's to decide. SEC-5 reserves "a change that makes the policy detect less, a
 unclassifiable content, or lets a secret be indexed, rendered or sent"; titles are excluded
 today because they are unclassifiable, the owner answered exactly this question on 2026-10-20
 (titles excluded), and pattern detectors over free text can miss a secret that would then be
-rendered. Nothing is built until the owner answers (see "Owner gates this run").
+rendered. The owner answered on 2026-11-21: admit titles for every observed tracker (see "Owner gates
+this run").
 
 **T6 — What changed, from the substrate's own history (5/3).** Dolt keeps every revision. For
 a window the reader chooses (since the last evaluation, a day, a week), list items added,
@@ -260,9 +261,9 @@ post-hoc and read-only: steering and live control remain deferred (SDR-5).
 
 - **Wave 1, no new reads:** T1, T2, T3, T9, T8. After it the page answers the first question
   in counts, states the other four honestly in five rows, and is a fifth of its height.
-- **Wave 2, new reads, each with an adoption row:** T4, T6, then T7.
+- **Wave 2, new reads:** T4, T6, T5 (owner-decided), then T7.
 - **Wave 3, the account:** T13, T12, T10, then T11.
-- **Waiting on the owner:** T5.
+- **Waiting on the owner:** nothing.
 
 ## Strongest objections
 
@@ -272,8 +273,8 @@ post-hoc and read-only: steering and live control remain deferred (SDR-5).
 - **Hoisting the Unknowns weakens the per-claim honesty the POC was built to prove.** The
   marker stays on every card for the machine and the sweep; only the repeated sentence moves
   to its scope. The parity requirement (POC-REQ-020) is per tuple, and must be re-proved.
-- **Reading titles risks a secret on a page.** Yes; that is why T5 is the owner's decision
-  and builds nothing before it.
+- **Reading titles risks a secret on a page.** Yes; the owner weighed it and chose to admit
+  them, screened.
 - **A fleet is mid-flight on other epics.** T2 and T8 touch the POC shared model's renderer,
   which has WIP one; the plan-hold exists so a lead session sequences them.
 
@@ -287,6 +288,12 @@ file under `.owner_packet`.
   and rendered under a declared policy. Asked under VIS-4's rule, when unsure treat the change
   as owner-class and ask; SEC-5's two sentences can be read either way. The recommendation is
   to admit titles for Syzygy's own tracker only, which has no effect until T12 is built.
+
+**Answered 2026-11-21T12:21:41Z, choice C:** admit titles for every observed tracker under
+the declared, screened policy. The owner's words: "Not extremely concerned about leakage;
+Don't be over-paranoid here, prefer development velocity." The boundary stands: no title goes
+to a model provider, no other free-text field is admitted, no detector is loosened. This
+supersedes the 2026-10-20 answer for titles only. The record is on `syzygy-t3jk.5`.
 
 A second question, on commit subjects, was drafted and withdrawn after that review (T10).
 Release is not asked: when implementation starts is an agent decision under VIS-4, reported

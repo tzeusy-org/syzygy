@@ -340,12 +340,12 @@
    "title": "Titles, under a declared policy",
    "owner_value": 5,
    "build_cost": 3,
-   "class": "owner gate",
+   "class": "owner-decided",
    "serves": [
     "VIS-3",
     "SEC-5"
    ],
-   "prereq": "owner answer pursuit-2026-11-21-trajectory-titles",
+   "prereq": "owner answered C on 2026-11-21: every observed tracker; recorded on syzygy-t3jk.5",
    "slices": [
     "Declare the work-item-title content class and policy",
     "Run the unchanged detectors and active-content scan per title; withhold on match or failure, exclusion rendered",
@@ -470,7 +470,7 @@
     "vision.md amnesiac orchestration day",
     "VIS-3"
    ],
-   "prereq": "adoption row changing the POC single-project bound; hard-coded project name in board, authorization and materialize route; T5 answer for titles",
+   "prereq": "adoption row changing the POC single-project bound; hard-coded project name in board, authorization and materialize route",
    "slices": [
     "Second registry entry and locator",
     "Board, edges and change window over this repository's tracker"
@@ -508,6 +508,7 @@
   "2": [
    "T4",
    "T6",
+   "T5",
    "T7"
   ],
   "3": [
@@ -516,9 +517,7 @@
    "T10",
    "T11"
   ],
-  "waiting_on_owner": [
-   "T5"
-  ]
+  "waiting_on_owner": []
  },
  "owner_gates": [
   "pursuit-2026-11-21-trajectory-titles"
@@ -572,6 +571,17 @@
   "path": "/home/orca/.tmp/user-questionnaire/syzygy-2026-11-21-trajectory-pursuit/packet.md",
   "items": 1,
   "withdrawn": "commit-subjects item: an accepted contract (RFC4-22) names the message-convention join and worker-change-observation.ts already reads commit subjects, so T10 is an agent adoption",
-  "review": "scope Pass, recommendation Pass (round 2; round 1 Revise on both)"
+  "review": "scope Pass, recommendation Pass (round 2; round 1 Revise on both)",
+  "answer": {
+   "decision": "pursuit-2026-11-21-trajectory-titles",
+   "choice": "C",
+   "recorded_at": "2026-11-21T12:21:41+00:00",
+   "apply_now": true,
+   "routed_to": [
+    "syzygy-t3jk.5",
+    "syzygy-4wuz",
+    "syzygy-jytt"
+   ]
+  }
  }
 }
