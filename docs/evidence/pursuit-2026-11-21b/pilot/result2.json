@@ -1,0 +1,70 @@
+{
+ "labels": {
+  "A": "P",
+  "B": "E",
+  "C": "D",
+  "D": "T"
+ },
+ "arms": {
+  "P": {
+   "share": 0.457,
+   "factsGiven": 37.0,
+   "factsRequired": 81,
+   "wrongStatements": 0,
+   "perKind": {
+    "purpose": 0.46,
+    "structure": 0.75,
+    "mechanism": 0.57,
+    "rationale": 0.19,
+    "change": 0.58,
+    "limits": 0.15
+   },
+   "firstGradingShare": 0.481
+  },
+  "E": {
+   "share": 0.574,
+   "factsGiven": 46.5,
+   "factsRequired": 81,
+   "wrongStatements": 0,
+   "perKind": {
+    "purpose": 0.65,
+    "structure": 0.57,
+    "mechanism": 0.67,
+    "rationale": 0.62,
+    "change": 0.42,
+    "limits": 0.5
+   },
+   "firstGradingShare": null
+  },
+  "D": {
+   "share": 0.327,
+   "factsGiven": 26.5,
+   "factsRequired": 81,
+   "wrongStatements": 0,
+   "perKind": {
+    "purpose": 0.58,
+    "structure": 0.29,
+    "mechanism": 0.37,
+    "rationale": 0.31,
+    "change": 0.04,
+    "limits": 0.38
+   },
+   "firstGradingShare": 0.34
+  },
+  "T": {
+   "share": 0.951,
+   "factsGiven": 77.0,
+   "factsRequired": 81,
+   "wrongStatements": 0,
+   "perKind": {
+    "purpose": 1.0,
+    "structure": 0.93,
+    "mechanism": 0.93,
+    "rationale": 0.92,
+    "change": 0.92,
+    "limits": 1.0
+   },
+   "firstGradingShare": 0.944
+  }
+ }
+}

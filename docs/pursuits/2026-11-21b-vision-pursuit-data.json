@@ -25,7 +25,7 @@
    ],
    "prereq": "Owner decision, 2026-11-21, in the owner's words: asked what the plain-session arm may read and send, the owner chose 'Everything except detector matches' (the whole clone minus only files the secret detectors match; denied-path and active-content screens are dropped for this arm), over the recommended variant that kept those screens. It applies to this benchmark arm and to public repositories in R16's corpus only; it changes nothing about what a dossier run reads or sends, and no detector is weakened. The equal-reach arm needs no decision. Real runs come from R16's corpus runner after syzygy-k54o.3",
    "touches_doctrine": false,
-   "what": "For each proving repository, five arms at the same pinned commit: the Polaris dossier; a plain session at equal reach (same model, the screened copy of the clone the author reads, a fixed published prompt and three fixed follow-ups, the same wall-time limit); a plain session at full reach, which is what a user would really get (the whole clone of a public corpus repository minus only the files the unchanged secret detectors match, as the owner decided on 2026-11-21); and the maintainers' own documentation as a ceiling. Before anything is generated, freeze one question file per repository shape: the reader questions, a depth list of ten to twenty non-obvious facts and trade-offs drawn from maintainer documents by a session that sees neither arm, and five reader tasks ('where would I change X'). Fresh readers answer from one arm only; a grader that is not told which arm it holds scores answers against the frozen key; forty sampled claims per arm are checked against the pinned tree. All arms are shown to graders in the same neutral page shell. Record tokens, wall time and operator minutes for every arm. The win rule is written down first: Polaris wins only if its claim error rate is at most half the plain session's, its comprehension and depth scores are not more than ten percent lower, and its cost is within a stated multiple. Anything else is published as a loss, naming the dimension. The three question sets in the repository today (seven in TARGETS, five in the profile, four topics in the brief) become one versioned file that the brief, the reader test and the scorecard all read. Every published result names the arm it was won or lost against: a win at equal reach shows the mechanism helps; only a win at full reach shows an advantage over a real plain session, and the difference between the two arms is what screening costs. Sampled claims are first checked by R2's deterministic checker (resolves, quotation verified, path missing); a model judges only whether a claim matches its cited span, so the claim-error rate rests on Observed checks. Reader tasks are graded against a key of paths taken from the structure record and R19's units, not judged. A figure-ablation measure tags the frozen questions each figure is meant to answer and has fresh readers answer them from the dossier with figures and with figures replaced by their text alternatives; the difference is stored per figure kind, and a kind with no measured gain is listed for R22. A fourth plain arm is budget-matched: the full-reach session given the tokens and wall time the dossier used, with free follow-ups up to that budget, which separates the mechanism from the compute it spends. The aggregation is fixed before the first pass: the number of repositories, a win on at least a stated share of shapes, and no claim from a single repository. Every arm's text is shown to graders as text only, under the source policy's render rule and the no-script rule, because the full-reach arm drops the active-content screen. The owner's decision on that arm is recorded in the owner's words in docs/polaris-generation/BENCHMARK.md by the commit that builds slice 6. The number of sampled claims per arm is set from the error rates the calibration finds, so that the win rule's 'half the error rate' can be resolved; forty is a floor, and a result the sample cannot resolve is published as unresolved. Hold-out: the question file has two parts. The topic questions are public and the author's brief reads them. The graded reader questions, the depth list and the reader tasks are held out: no authoring, inventory, editor or scout session ever receives them, and check asserts their text is absent from every such packet, so the dossier cannot be taught to the test while the plain arm is not. A benchmark pass has its own cost line and budget (sessions per arm, readers, graders), recorded like a run's. A benchmark result never rests on one dossier run: the six stored runs of one commit share 10 of 545 supported-claim clusters, so a single run is one draw. Each corpus repository gets at least two dossier runs and the win rule is applied to the weaker.",
+   "what": "For each proving repository, five arms at the same pinned commit: the Polaris dossier; a plain session at equal reach (same model, the screened copy of the clone the author reads, a fixed published prompt and three fixed follow-ups, the same wall-time limit); a plain session at full reach, which is what a user would really get (the whole clone of a public corpus repository minus only the files the unchanged secret detectors match, as the owner decided on 2026-11-21); and the maintainers' own documentation as a ceiling. Before anything is generated, freeze one question file per repository shape: the reader questions, a depth list of ten to twenty non-obvious facts and trade-offs drawn from maintainer documents by a session that sees neither arm, and five reader tasks ('where would I change X'). Fresh readers answer from one arm only; a grader that is not told which arm it holds scores answers against the frozen key; forty sampled claims per arm are checked against the pinned tree. All arms are shown to graders in the same neutral page shell. Record tokens, wall time and operator minutes for every arm. The win rule is written down first: Polaris wins only if its claim error rate is at most half the plain session's, its comprehension and depth scores are not more than ten percent lower, and its cost is within a stated multiple. Anything else is published as a loss, naming the dimension. The three question sets in the repository today (seven in TARGETS, five in the profile, four topics in the brief) become one versioned file that the brief, the reader test and the scorecard all read. Every published result names the arm it was won or lost against: a win at equal reach shows the mechanism helps; only a win at full reach shows an advantage over a real plain session, and the difference between the two arms is what screening costs. Sampled claims are first checked by R2's deterministic checker (resolves, quotation verified, path missing); a model judges only whether a claim matches its cited span, so the claim-error rate rests on Observed checks. Reader tasks are graded against a key of paths taken from the structure record and R19's units, not judged. A figure-ablation measure tags the frozen questions each figure is meant to answer and has fresh readers answer them from the dossier with figures and with figures replaced by their text alternatives; the difference is stored per figure kind, and a kind with no measured gain is listed for R22. A fourth plain arm is budget-matched: the full-reach session given the tokens and wall time the dossier used, with free follow-ups up to that budget, which separates the mechanism from the compute it spends. The aggregation is fixed before the first pass: the number of repositories, a win on at least a stated share of shapes, and no claim from a single repository. Every arm's text is shown to graders as text only, under the source policy's render rule and the no-script rule, because the full-reach arm drops the active-content screen. The owner's decision on that arm is recorded in the owner's words in docs/polaris-generation/BENCHMARK.md by the commit that builds slice 6. The number of sampled claims per arm is set from the error rates the calibration finds, so that the win rule's 'half the error rate' can be resolved; forty is a floor, and a result the sample cannot resolve is published as unresolved. Hold-out: the question file has two parts. The topic questions are public and the author's brief reads them. The graded reader questions, the depth list and the reader tasks are held out: no authoring, inventory, editor or scout session ever receives them, and check asserts their text is absent from every such packet, so the dossier cannot be taught to the test while the plain arm is not. A benchmark pass has its own cost line and budget (sessions per arm, readers, graders), recorded like a run's. A benchmark result never rests on one dossier run: the six stored runs of one commit share 10 of 545 supported-claim clusters, so a single run is one draw. Each corpus repository gets at least two dossier runs and the win rule is applied to the weaker. Pilot, 2026-11-21 (one repository, model readers, two blind graders within 0.03 of each other; record docs/evidence/pursuit-2026-11-21b/pilot/): of 81 required facts over 24 questions, a reader of the newest stored dossier gave 33 to 34 percent, a reader of a plain session's synthesis 46 to 48 percent, a reader of the richest stored dossier 57 percent, and a session answering from the source itself 94 to 95 percent. No arm made a wrong statement. Of 30 sampled claims the plain synthesis had 30 supported and the dossier 28 supported and 2 partly. Three consequences. The win rule no longer assumes a plain session errs more: the truth term is 'no more errors than the plain arm', and the advantage has to come from comprehension, depth and what a reader can verify. The source-reading arm is the bar an artifact must justify itself against, so each pass also measures what reading gives that asking does not: time to answer, and what a reader can state unprompted after reading (a reader cannot ask about what they do not know exists). And the pilot's questions, key and answers are kept as the regression set of R29. The product's thesis is written into the win rule: a dossier is for orientation, checked pointers and then asking. So the rule's main term is time and tokens per correct answer for a reader who starts from the dossier and may then ask, against a reader who only asks a session with the source; fact share from the artifact alone is reported, not judged.",
    "why": "The owner's question is comparative, and nothing planned answers it: every existing or planned probe measures a dossier against itself, against pixels or against synthetic shapes. Under the rubric a dimension with no measurement cannot pass 60, and this one instrument also puts numbers on comprehension, claim precision and cost.",
    "basis": "[Observed] packages/polaris-generation-core/src/dossier-reader-test.ts:23-41 and :76-77: the only answer port is scripted and every result records accuracy 'not-evaluated'. [Observed] No run directory holds a reader result. [Observed] Three question sets disagree: docs/polaris-generation/TARGETS.md:76-81 (seven), packages/polaris-generation-core/src/dossier-profile.ts:19-25 (five), packages/polaris-dossier/src/brief.ts:47-52 (four topics). [Observed] The first drafts of the newest run failed fidelity twice before passing, which suggests the harness earns something, uncounted. [Inferred] that a plain session wins on speed and reach; its time has not been measured.",
    "slices": [
@@ -316,7 +316,7 @@
    ],
    "prereq": "none from the owner: under VIS-4 as amended by D10 this is an agent adoption, recorded as a row in AGENT-ADOPTIONS.md with its revert command; the owner may veto it. The present rule (a comparison only as quotation) was the owner's trade-off; the adoption row says so and names what changes. Q8's depth slice comes before the length change",
    "touches_doctrine": false,
-   "what": "Three changes to what the author is asked for. Each Pole carries one to three blocks marked worth knowing: a cited fact an engineer new to the project would not guess from its category, shown as a distinct callout near the top; the inventory session gets the same request, so missing ones surface as coverage gaps. A labelled judgement may compare the project's choice with a named, widely known alternative when it cites the project's own mechanism as its premise and marks the alternative's property as general knowledge and Inferred; it renders as a 'Compared with' aside and never as the maintainers' claim. The flat limits of 300 words per section and three deep dives give way to budgets the evidence earns: a deep dive for each mechanism whose blocks cite at least eight distinct spans in two files, capped by the repository's size tier, and section length that scales with supported claims; check advises a Pole with fewer than three choices or trade-offs on record. The benchmark's depth list is drawn not only from maintainer prose but also from the derived tables (what the tests pin down, deprecations, changelog reasons) and, where admitted, history (hidden coupling, the oldest unchanged core). A Pole with no fact that meets the worth-knowing test says 'none found'; the one-to-three request is a ceiling with a reason required for zero, not a quota.",
+   "what": "Three changes to what the author is asked for. Each Pole carries one to three blocks marked worth knowing: a cited fact an engineer new to the project would not guess from its category, shown as a distinct callout near the top; the inventory session gets the same request, so missing ones surface as coverage gaps. A labelled judgement may compare the project's choice with a named, widely known alternative when it cites the project's own mechanism as its premise and marks the alternative's property as general knowledge and Inferred; it renders as a 'Compared with' aside and never as the maintainers' claim. The flat limits of 300 words per section and three deep dives give way to budgets the evidence earns: a deep dive for each mechanism whose blocks cite at least eight distinct spans in two files, capped by the repository's size tier, and section length that scales with supported claims; check advises a Pole with fewer than three choices or trade-offs on record. The benchmark's depth list is drawn not only from maintainer prose but also from the derived tables (what the tests pin down, deprecations, changelog reasons) and, where admitted, history (hidden coupling, the oldest unchanged core). A Pole with no fact that meets the worth-knowing test says 'none found'; the one-to-three request is a ceiling with a reason required for zero, not a quota. The pilot's richest stored run, written under an earlier brief with no 300-word section limit, gave readers 57 percent of the required facts; the newest, under the limit, 33 percent. That the limit is the cause is Inferred: the two runs differ in brief, schema and renderer at once. R29 tests it first, with one run under each rule and nothing else changed, and the limit is replaced only if that test says so.",
    "why": "Depth comes from naming the non-obvious, and nothing in the brief asks for it. 'Why this and not the obvious alternative' is the insight a newcomer most wants and a plain session gives freely; forbidding it outright costs depth without buying truth, because the label already carries the state. The limits were a cure for an overlong overview that reading depths now solve.",
    "basis": "[Observed] packages/polaris-dossier/src/brief.ts:72-73: a comparison only as quotation, never an alternative of the author's own, and an unstated advantage never written even as Inferred. [Observed] :88-89: 300 words per section, three deep dives. [Observed] the newest draft holds 0 Inferred blocks and 0 judgements; its understanding record holds 1 choice, 1 trade-off and 1 limit for all of Redis; it wrote one deep dive. [Observed] run 3 counted 0 judgements across seven drafts.",
    "slices": [
@@ -609,7 +609,7 @@
    ],
    "prereq": "R2 for the ask command. The ask session runs under the run's own screening; which provider answers is agent-decided since D10",
    "touches_doctrine": false,
-   "what": "Two generated pages with no script. An index of every glossary term, unit, notable path, identifier and figure title, linking to every block that names it, built at render with no model call, so the browser's own find works over one page that names everything. A 'find by task' page: eight to fifteen reader tasks ('add a command', 'change how data is persisted'), each answered by a short cited route through the dossier and the code, written by the author and checked like any block. And an operator command, `ask`, that starts one session with the stored draft, the derived layers and the pinned clone under the run's own screening; its answer is checked by R2 before it is shown, labelled, filed in the run directory as a small page, and may be promoted into the next refresh as a task route.",
+   "what": "Two generated pages with no script. An index of every glossary term, unit, notable path, identifier and figure title, linking to every block that names it, built at render with no model call, so the browser's own find works over one page that names everything. A 'find by task' page: eight to fifteen reader tasks ('add a command', 'change how data is persisted'), each answered by a short cited route through the dossier and the code, written by the author and checked like any block. And an operator command, `ask`, that starts one session with the stored draft, the derived layers and the pinned clone under the run's own screening; its answer is checked by R2 before it is shown, labelled, filed in the run directory as a small page, and may be promoted into the next refresh as a task route. The pilot puts this move on the critical path: the newest dossier gave 4 percent of the 'where do I change this' facts, and a session that can be asked gave 95 percent overall. A dossier that cannot be asked loses to one that can.",
    "why": "Follow-up questions and 'where do I change X' are where a plain session wins outright. Answering them with the dossier's own evidence and checker makes each answer as trustworthy as the dossier, and filed answers make the document grow where readers get stuck.",
    "basis": "[Observed] apps/three-surface-poc/src/polaris-generation/draft-preview.ts: every page forbids script and form submission, so finding must be script-free. [Observed] the site offers a contents list and one glossary page and no other way to find a term or file. [Observed] source pages already list where each file is cited, so the data for task routes exists.",
    "slices": [
@@ -983,7 +983,7 @@
    "merges": [
     "ideation last-five F3"
    ],
-   "prereq": "R11 tokens; Q5 numbered steps for (1); R23 for the 'bite you' slot in (3), which otherwise shows the worth-knowing marks from R8",
+   "prereq": "R11 tokens; Q5 numbered steps for (1); R23 for the 'bite you' slot in (3), which otherwise shows the worth-knowing marks from R8. Held until R29 shows density has stopped falling: these forms add words",
    "touches_doctrine": false,
    "what": "Three static, script-free forms.\n(1) Sticky-figure sections: on a wide screen, a mechanism section is a two-column grid. The figure sits in one column with `position: sticky`, and the numbered steps scroll in the other. Each step names the numbered callout it explains, and the matching figure region carries the same number in the Pole hue. The view stays fixed while the explanation moves, which is the core move of the best interactive explainers, done in CSS. Below the measure width it falls back to figure-then-steps.\n(2) Sidenotes: citations, definitions on first use and short asides move into a margin column on wide screens (CSS grid, the Tufte layout), and inline toggles open them on narrow screens. The prose column carries only prose. This replaces inline apparatus in place, with no extra page.\n(3) The one-page edition: a single designed page, landscape A3 in print and a long single screen on the web, assembled only from elements already checked. It holds the thesis, the hero figure, each Pole's one-line answer with a thumbnail of its figure, key numbers from the derived tally, the three 'bite you' judgements (R23) and 'where to start' links. It makes no new model claims. It is rendered by R11's tokens, and its PDF gets a digest beside R13's. Every new page form goes through R12's accessibility pass: reading order with sidenotes, keyboard reach of the sticky layout, and the one-page edition's headings.",
    "why": "Beauty and visual richness are capped at 72-80 because the plan makes good components but no page form a reader remembers. These three are the recognisable signatures of explainers people praise: the sticky figure of interactive essays, the margin notes of illustrated books, and the cheat sheet pinned above a desk. All are CSS and render-time assembly under the existing no-script rule.",
@@ -1019,7 +1019,7 @@
    "merges": [
     "ideation last-five F4"
    ],
-   "prereq": "R19 or the Q2 unit graph for the order; none for the checkpoints",
+   "prereq": "R19 or the Q2 unit graph for the order; none for the checkpoints. Held until R29 shows density has stopped falling: a path adds words",
    "touches_doctrine": false,
    "what": "A generated 'Start here' path: an ordered route of 5-8 stops through the dossier (the overview, then Poles in dependency order from the derived structure, then one walk, then the operating envelope), each with an estimated reading time from word counts. Each stop ends with two or three 'check yourself' questions, with cited answers inside `details` (script-free reveal) and the answer linking back to the block that teaches it. A third session writes the questions from the dossier's own blocks, and `check` verifies every answer's citations. A lexical overlap check against the frozen benchmark questions (TARGETS.md and reader-questions.ts) refuses any near-duplicate, so the dossier cannot teach to the test. The checkpoint questions also make a second, held-out reader probe: a fresh reader who follows the path should answer them, and R1 can report path-reader against cold-reader comprehension. The checkpoint questions are written by a third session that is neither the author nor the holder of the benchmark's held-out key, so the author never writes its own exam and no held-out question can leak onto a page.",
    "why": "Onboarding documents people praise are paths, not piles. A reader learns faster with an order and a way to know they understood. A plain session gives neither an order across a whole system nor checkpoints with cited answers.",
@@ -1107,6 +1107,45 @@
    "slice_beads": [
     "syzygy-5dhm.130",
     "syzygy-5dhm.131"
+   ]
+  },
+  {
+   "id": "R29",
+   "round": 11,
+   "title": "No mechanism change ships blind: a comprehension regression on stored runs, and a floor per question kind",
+   "rubric": [
+    2,
+    7,
+    5,
+    8
+   ],
+   "owner_value": 5,
+   "build_cost": 2,
+   "relation": "New. It is the pilot of R1 slice 3 kept as a gate. R16 runs new dossiers; this re-reads stored ones, so it needs no dossier run and does not wait on syzygy-k54o.3. R18 turns each loss it finds into a repair.",
+   "merges": [
+    "pilot 2026-11-21"
+   ],
+   "prereq": "none for slice 1 (the pilot's files exist); R1 slice 1 for the question file's home",
+   "touches_doctrine": false,
+   "what": "Two parts. (1) A regression: the pilot's 24 questions, key, plain synthesis and screened tree are kept; a script renders any stored or new Redis dossier to text, a fresh reader answers from it, and a blind grader scores it beside the kept arms. A change to the brief, the schema or the renderer is reported with the reader's share of required facts before and after, per question kind, and a drop of more than five points must be explained in the change. The brief went from version 1 to 7 with no such number, and the newest stored run gives readers 33 percent where an earlier one gave 57. (2) A floor per question kind: check reports, for six kinds of newcomer question (purpose, structure, mechanism, rationale, where to change, limits), whether the dossier has a block that answers it for each major unit, and names the kinds a unit lacks as coverage gaps. The pilot's newest dossier scored 4 percent on 'where to change' and 29 percent on structure. The questions in the regression set are never shown to an authoring session. The key rotates: each use draws a fresh set of questions from a key session, with a fixed core of eight kept for trend, and a second repository is added as soon as one has a stored run; a regression result is never reported as a win. It also reports density, required facts recovered per thousand words and per thousand tokens of run cost, beside the plain synthesis. The pilot's figures were 2.2 facts per thousand words for the newest dossier and 14.1 for the plain synthesis, and about 4,900 of the dossier's 12,574 words were pages about the run itself. A reader's edition without the process pages is measured as its own arm.",
+   "why": "The only comparison ever run shows the current mechanism producing a dossier that teaches less than a plain synthesis a fifth its length, while an earlier version of the same mechanism beat that synthesis. Six brief versions shipped without anyone being able to see that. A cheap, stored-run regression makes the next such loss visible the day it happens.",
+   "basis": "[Observed] pilot/result.json and result2.json: shares 0.34/0.33 (newest dossier), 0.48/0.46 (plain synthesis), 0.57 (richest dossier, second grading only), 0.94/0.95 (source). [Inferred] that the section limit is the cause: the two runs differ in brief version, schema and renderer at once.",
+   "slices": [
+    "S1: the pilot kept as a script and a record: render a stored dossier to text, reader, blind grader, totals per question kind, with the 2026-11-21 results as its first rows",
+    "S2: the regression reported on every brief, schema or renderer change, with the five-point explanation rule",
+    "S3: the per-kind floor in check, as advisory coverage gaps per major unit"
+   ],
+   "integration_points": [
+    "scripts/",
+    "docs/evidence/",
+    "packages/polaris-dossier/src/check.ts",
+    "packages/polaris-dossier/src/brief.ts"
+   ],
+   "bead": "syzygy-5dhm.132",
+   "slice_beads": [
+    "syzygy-5dhm.133",
+    "syzygy-5dhm.134",
+    "syzygy-5dhm.135"
    ]
   }
  ],
@@ -2826,6 +2865,221 @@
     }
    ],
    "summary_of_change": "85.8, at or above 85.0. Up from 84.7 after U1-U7, the three earlier faults, and the second reviewer's fixes. The largest single gain is R1's hold-out, a fairness hole I had missed. measure-now.json (figures a and b only) is Observed and meets R28's pre-set gate, with every run's share at or below 51 percent, but the runs span brief v1 to v7. Its main worth is as evidence that today's single run is unstable. Left: X1 and X2 (about +0.15) and two wording faults. The rest of the gap to 87.55 is measured outcomes only."
+  },
+  {
+   "reviewer": "Independent subagent, read-only. Seventh scoring. I read pilot/PROTOCOL.md, result.json, result2.json, both dossier reports and the file times in the pilot directory, and R8, R15 and R29 in ranked_moves.json. Answers, key and grades were not opened. All pilot figures below are quoted from result.json and result2.json.",
+   "scored_subject": "plan: the end product if every planned move (P1-P15, Q1-Q14, R1-R29) is built as written; product_today: the stored Redis dossiers as the pilot measured them",
+   "verdict_on_85_8": "It does not survive. 85.8 was a score of the plan's mechanisms with no comparison against a plain session. It treated the remaining points as unmeasured, not as at risk. The first comparison is an Observed loss, and a large one: the newest dossier gave 0.34 of the required facts against the plain synthesis's 0.48. It used about 4.5 times the words, and it fell below the protocol's own 'holds its own' bar of 0.9 times the plain share (0.43). It also knocks out a premise the plan leaned on, that a plain session errs more and the dossier wins on truth. Neither arm made a single wrong statement. The plan's response repairs much of what this exposes, and I score that response below, but the plan now stands at 80.2, not 85.8.",
+   "dimensions": [
+    {
+     "n": 1,
+     "name": "Truth",
+     "weight": 15,
+     "score_before": 80,
+     "score_after": 83,
+     "score_after_round6": 84,
+     "score_after_round7": 85,
+     "score_after_round8": 85,
+     "score_after_round9": 88,
+     "score_after_round10": 90,
+     "score_after_round11": 88,
+     "reason": "Down 2 points. Truth is still the dossier's best dimension: 29 of its 30 sampled claims carry a pointer that checks out, against 22 of the plain synthesis's 30 that carry pointers at all. But truth is not a differentiator. The plain synthesis had 30 of 30 claims supported against the dossier's 28 plus 2 partly, and neither arm made a wrong statement. R1 has rightly dropped the assumption that a plain session errs more. The truth machinery is worth what it costs only if checkability itself becomes the value the dossier claims, and the plan does not yet measure it that way (see Y4)."
+    },
+    {
+     "n": 2,
+     "name": "Comprehension",
+     "weight": 15,
+     "score_before": 68,
+     "score_after": 77,
+     "score_after_round6": 79,
+     "score_after_round7": 82,
+     "score_after_round8": 83,
+     "score_after_round9": 86,
+     "score_after_round10": 87,
+     "score_after_round11": 76,
+     "reason": "Down 11 points. The dimension's own outcome has now been measured, and it is behind the plain arm: 0.34 against 0.48 (second grader 0.33 against 0.46). On facts per thousand words the gap is far larger: plain synthesis 14.1, newest dossier 2.2, richest dossier 2.9. The plan's responses (R8's depth budgets, R15 find-by-task and ask, R29's regression and per-kind floor) are aimed at the right failures but untested. The plan's other comprehension moves (sidenotes, one-page edition, first-day path) all add apparatus to an artifact whose problem is too little signal per word."
+    },
+    {
+     "n": 3,
+     "name": "Visual richness",
+     "weight": 15,
+     "score_before": 75,
+     "score_after": 78,
+     "score_after_round6": 79,
+     "score_after_round7": 80,
+     "score_after_round8": 80,
+     "score_after_round9": 85,
+     "score_after_round10": 85,
+     "score_after_round11": 84,
+     "reason": "Down 1 point. The pilot read the dossier as text from main only, so it says little about figures. The one signal is weak: structure, the kind of question figures exist for, scored 0.29 for the dossier against 0.79 for the plain synthesis. The plan's figure-ablation measure (V1) is now the most urgent part of R1, because it would say whether figures recover that gap."
+    },
+    {
+     "n": 4,
+     "name": "Generality",
+     "weight": 15,
+     "score_before": 68,
+     "score_after": 71,
+     "score_after_round6": 80,
+     "score_after_round7": 83,
+     "score_after_round8": 83,
+     "score_after_round9": 85,
+     "score_after_round10": 86,
+     "score_after_round11": 84,
+     "reason": "Down 2 points. The pilot says nothing about other repositories. But the mechanism lost on Redis, the repository it has been tuned on across seven brief versions, so a corpus pass is less likely to be passed under its own pass rule. Its rule requires that no shape score below the full-reach plain arm on more than one dimension."
+    },
+    {
+     "n": 5,
+     "name": "Depth of insight",
+     "weight": 10,
+     "score_before": 45,
+     "score_after": 70,
+     "score_after_round6": 76,
+     "score_after_round7": 77,
+     "score_after_round8": 79,
+     "score_after_round9": 85,
+     "score_after_round10": 86,
+     "score_after_round11": 81,
+     "reason": "Down 5 points. The evidence is mixed. The dossier beat the plain synthesis on rationale (0.31 against 0.23), on limits (0.42 against 0.15) and on purpose (0.58 against 0.50), so its depth intent is visible. It lost badly on structure, mechanism and where to change. The earlier-brief run's 0.57 suggests that removing the length limit helps, but that arm was added after the protocol (see does_not_show)."
+    },
+    {
+     "n": 6,
+     "name": "Beauty",
+     "weight": 10,
+     "score_before": 38,
+     "score_after": 58,
+     "score_after_round6": 65,
+     "score_after_round7": 72,
+     "score_after_round8": 73,
+     "score_after_round9": 78,
+     "score_after_round10": 79,
+     "score_after_round11": 79,
+     "reason": "Unchanged. The pilot measures nothing about beauty."
+    },
+    {
+     "n": 7,
+     "name": "Measured advantage over a vanilla session",
+     "weight": 10,
+     "score_before": 10,
+     "score_after": 68,
+     "score_after_round6": 76,
+     "score_after_round7": 80,
+     "score_after_round8": 81,
+     "score_after_round9": 84,
+     "score_after_round10": 85,
+     "score_after_round11": 66,
+     "plan_ceiling_now": 76,
+     "reason": "Down 19 points, the largest fall. The plan's win rule assumed the advantage would lie in truth, and that is gone. The bar it now names, the source-reading arm at 0.94 to 0.95, is one no reading artifact can plausibly meet on fact share. A plan whose stated win condition looks unreachable cannot score in the 80s on this dimension. The advantages the dossier could still credibly win on are not yet the win rule: answers with checked pointers, time to answer, cost per correct answer over many readers, and a lasting artifact that can be shared. R1 now measures time to answer and unprompted recall, which is the right start, so this does not fall further (see Y4)."
+    },
+    {
+     "n": 8,
+     "name": "Economy and lifecycle",
+     "weight": 10,
+     "score_before": 30,
+     "score_after": 76,
+     "score_after_round6": 78,
+     "score_after_round7": 80,
+     "score_after_round8": 81,
+     "score_after_round9": 84,
+     "score_after_round10": 86,
+     "score_after_round11": 78,
+     "reason": "Down 8 points. A multi-session run (author, inventory, fidelity rounds, review) delivered fewer facts than one plain session's 2,768 words. R16's cost target (0.7 of the first baseline) measures cost against cost and never against value delivered. The plan needs a value-per-cost line (Y3). Lifecycle mechanisms are unaffected."
+    }
+   ],
+   "weighted_total_after_round10": 85.8,
+   "weighted_total_after_round11": 80.2,
+   "total_arithmetic": "0.15*(88+76+84+84) + 0.10*(81+79+66+78) = 49.8 + 30.4 = 80.2",
+   "without_the_response": "About 78. Without R29, the R1 truth fix, R8's limit change and R15 on the critical path, comprehension, vanilla advantage and economy would each sit 2 to 4 points lower.",
+   "pilot_shows": [
+    "[Observed] On one repository, against a 24-question key written from the code, the newest stored dossier gave readers fewer required facts than a single plain synthesis: 0.34 against 0.48. Two blind graders agree to within 0.025 on every arm.",
+    "[Observed] Information density is the gap, not truth. The dossier has 12,574 words against the plain synthesis's 2,768, so 2.2 facts per thousand words against 14.1. About 4,900 of the dossier's words are process pages (appendix, review, size report, executions, clarifications, discovery, understanding), not reader content.",
+    "[Observed] The dossier's failure is concentrated. It scored 0.04 on where to change and 0.29 on structure, against 0.58 and 0.79 for the plain synthesis. It was stronger on rationale and limits.",
+    "[Observed] Truth is at parity. Neither arm made a wrong statement; plain had 30 of 30 claims supported and the dossier 28 plus 2 partly. The dossier's pointers are near-complete (30 of 30 claims carry one, 29 check out); 22 of plain's 30 carry one, all of which check out.",
+    "[Observed] A session that can read the source answers 0.94 to 0.95 of the facts, so asking beats any artifact on fact share.",
+    "[Observed] The protocol was written before the arms ran (PROTOCOL.md 22:16, the first answers 22:29), and the dossier lost by its own pre-set rule."
+   ],
+   "pilot_does_not_show": [
+    "Anything about other repositories (n = 1), or about human readers. Every reader and grader was a model of the same family, so by the plan's own rule the result is uncalibrated.",
+    "Anything about figures. The dossier was read as text from main, and 27 source pages were excluded. A dossier whose structure lives in diagrams and source routes was read without either. [Inferred] This handicaps the dossier on structure and on where to change, by an unknown amount.",
+    "That the 300-word section limit caused the drop. The richest run (d9411d26, 0.57) differs from the newest in brief version, schema and page layout (its index page alone is 9,338 words). R8's causal sentence is Inferred, from two runs.",
+    "The richest-run arm is not pre-registered. answers-E.json (22:36) and dossier-d94-report.json (22:34:37) come after result.json (22:34:03), and that arm was graded only by the second grader. Its 0.57 is a post-hoc observation, not a protocol result.",
+    "Time, cost or effort per answer. The source reader's 0.94 costs a full session per question set with the clone open. The artifact arms cost one reading. The comparison that could favour the dossier was not run.",
+    "The key is not neutral. It was written by a session that read the code, so it favours code-level facts (structure, where to change). The protocol states this limit itself."
+   ],
+   "response_assessment": {
+    "verdict": "The response is right in direction, and its three main moves are the right ones. It is incomplete in four places, and one of them (Y1) could make R29's numbers misleading.",
+    "right": [
+     "R29 keeps the pilot as a regression and reports the fact share before and after every brief, schema or renderer change. This is exactly the measurement whose absence let seven brief versions drift from 0.57 to 0.34 unnoticed.",
+     "R1 drops the assumption that the dossier wins on truth, names the source-reading arm as the bar, and measures time to answer and unprompted recall. This is honest, and it moves the win condition to where a dossier could actually win.",
+     "R15 on the critical path answers the 0.04 on where to change directly, and ask makes the source-reading arm's strength part of the product.",
+     "R8 replaces the section limit first. The attribution is Inferred (see does_not_show), but the cost is low and R29 will measure it."
+    ],
+    "gaps": [
+     "Y1. The regression will be taught to. R29 re-uses the same 24 questions on every change, and the person or agent editing the brief sees the per-kind results. That is indirect fitting to the test, which R1's hold-out exists to prevent. Rotate in a fresh key from a new blind session every few changes, add a second repository before trusting any rise, and state that R29 is a regression alarm and never carries a win.",
+     "Y2. Density is not measured or targeted. Add facts per thousand words and the share of words in reader-facing content to R29's rows. Give readers an edition without the process pages (appendix, review, size report, executions, discovery, understanding, clarifications); those pages belong to the operator. Until density moves, R25 (sidenotes, one-page edition) and R26 (path) should be held, because they add words.",
+     "Y3. Value per cost. Add to R3 and R16 a figure for facts delivered per thousand tokens spent, set beside the plain synthesis's. The 0.7-of-baseline target measures cost against cost only.",
+     "Y4. State the product thesis the benchmark tests. The pilot shows the dossier cannot beat asking on fact share. Write down what it is for (orientation before asking, verifiable pointers, one artifact shared by many readers), and make R1's win rule measure that: time and tokens per correct answer for a reader with the dossier plus ask, against the source-reading session alone."
+    ],
+    "smaller": [
+     "Re-run the pilot's D arm with the source pages and figure text alternatives included. If the structure gap closes, the problem is in navigation, not content.",
+     "A cheap floor: give the author the plain synthesis prompt as a first stage, and require the dossier to at least match it on R29 before any other stage adds anything."
+    ]
+   },
+   "product_today": {
+    "basis": "[Observed] where the pilot measured; [Unknown], capped at 60 by the rubric's rule, where nothing measured it.",
+    "dimensions": {
+     "truth": {
+      "score": 85,
+      "why": "[Observed] No wrong statements; 28 of 30 claims supported and 2 partly; 29 of 30 pointers check out."
+     },
+     "comprehension": {
+      "score": 45,
+      "why": "[Observed] 0.34 of required facts, against plain 0.48 and source 0.94."
+     },
+     "visual": {
+      "score": 55,
+      "why": "[Unknown] Not measured by the pilot; capped."
+     },
+     "generality": {
+      "score": 40,
+      "why": "[Observed] One repository only. Elsewhere [Unknown]."
+     },
+     "depth": {
+      "score": 45,
+      "why": "[Observed] Rationale 0.31 and limits 0.42, better than plain but low in absolute terms."
+     },
+     "beauty": {
+      "score": 55,
+      "why": "[Unknown] Not measured; capped."
+     },
+     "vanilla_advantage": {
+      "score": 25,
+      "why": "[Observed] A loss under the pre-set rule. The one advantage is verifiable pointers."
+     },
+     "economy": {
+      "score": 30,
+      "why": "[Observed] Several sessions to produce fewer facts than one plain session."
+     }
+    },
+    "weighted": "0.15*(85+45+55+40) + 0.10*(45+55+25+30) = 33.75 + 15.5 = 49.25, about 49",
+    "plain_reading": "Today's product is accurate and checkable, but it tells a newcomer less than a single plain session does, while using more words and more sessions. Its truth discipline is real and worth keeping. Its information design is the problem."
+   },
+   "faults": [
+    {
+     "moves": [
+      "R8"
+     ],
+     "fault": "States as fact that the section limit explains 57 against 33 percent. That rests on two runs that also differ in brief version, schema and layout, and on an arm added after the protocol.",
+     "fix": "Label it Inferred, and let R29's first rows test it with an A/B at one brief version."
+    },
+    {
+     "moves": [
+      "R29"
+     ],
+     "fault": "It uses a fixed question set while the brief is iterated against its results (Y1).",
+     "fix": "Rotate the key, add a second repository, and state that R29 never carries a win."
+    }
+   ],
+   "summary_of_change": "85.8 does not survive: the plan is now 80.2, and the product today about 49. The pilot is a pre-registered, doubly graded Observed loss, 0.34 against 0.48, at 4.5 times the words. It shows density is the gap, not truth, but it covers one repository, model readers only and no figures, and the 0.57 arm was added after the protocol. The response (R29, the R1 bar, R15, R8) is right in direction. It is missing Y1 to Y4: the regression set must rotate, density must be measured, value per cost added, and the product thesis written into the win rule."
   }
  ],
  "second_opinion": [
@@ -3573,6 +3827,274 @@
     "R23: precision measured; named Unknowns",
     "R16: numeric cost ceilings (baseline still undefined)"
    ]
+  },
+  {
+   "reviewer": "second independent reviewer, fourth pass",
+   "date": "2026-11-21",
+   "subject": "Two scores: (A) the end product if every planned move (P, Q, R1-R29) is built as written, re-read in the light of the pilot; (B) the product as it stands today, from the evidence on disk",
+   "read": [
+    "pilot/PROTOCOL.md, manifest.json, result.json, result2.json, claims/result.json (verdict rows other than 'supported'), questions.json, reader notes and the dossier reader's four 'change' answers, the three report files, word counts",
+    "ranked_moves.json: R29 in full; the pilot additions to R1, R8, R15; R22"
+   ],
+   "not_read": "key.json model answers, the grade rows and input files, plain.md beyond its word count. I audited the design and the totals, not each grade.",
+   "anchoring_disclosure": "No review-score*.json file opened in any pass. 74 and 78 seen in the run-5 report body in pass one.",
+   "labels": "Pilot figures are [Observed] by the pilot's own record, which carries digests; I did not re-derive them. Every score and every causal reading is [Inferred]. That the pilot's dossier (run 658f2f90) is the newest stored run is the lead's statement, [Unknown] to me.",
+   "pilot_method": {
+    "what_it_shows": [
+     "A model reader of today's reviewed dossier can give about a third of the facts a code-reading session thinks a new engineer needs, and a model reader of one plain synthesis a quarter the length (2,768 words against 12,574) can give nearly half. Two blind graders agree within 0.03. Within its frame this is solid, and by the rule written first it is a loss.",
+     "The premise the whole plan leaned on, that a plain session makes more wrong statements, has no support here: 0 wrong answers in any arm, 30 of 30 sampled plain claims supported, 22 of 22 plain pointers resolving. The dossier's reviewed text had 2 of 30 claims only partly supported, both an author's gloss that fidelity review let through.",
+     "Brief changes moved the result by more than the gap to the plain arm (0.57 for an earlier brief, 0.33 for the newest) and nobody had a number. That is a regression in the mechanism, found by the first measurement ever taken.",
+     "The loss has a shape. The dossier leads the plain synthesis on rationale (0.31 against 0.19 to 0.23) and limits (0.38 to 0.42 against 0.15), and trails badly on structure (0.29 against 0.75 to 0.79) and where to change something (0.04 against 0.58). The dossier reader's own note: most pages are process and provenance records with no project facts.",
+     "An artifact of either kind is far below a session that is simply asked with the source open (0.94 to 0.95)."
+    ],
+    "what_it_does_not_show": [
+     "Anything about a repository the model has not already learned. Redis is among the best-documented codebases in any model's training. The plain author, the key writer, all readers and the source reader can lean on memory, and 'not stated' depends on readers obeying an instruction. Zero errors from a plain session on Redis says little about a private or obscure repository, which is where a checked account is supposed to earn its keep. This is the largest limit and the protocol does not name it.",
+     "Human comprehension. Readers are model sessions extracting facts from text. Nothing measures orientation, trust, speed for a person, or what a person remembers.",
+     "The product as rendered. The dossier was flattened to text: figures gone, navigation gone, evidence pop-overs gone, 27 source pages excluded. The product's promise of evidence one step away was removed from its own arm. Today's figures are weak, so this probably cost little, but it is a bias against the dossier and should be said.",
+     "That the plain arm's lead is all real. The key writer and the plain author are the same model exploring the same tree with no brief; what one finds salient the other does too. The dossier author worked to four fixed owner topics. Part of 0.48 against 0.34 is the same explorer agreeing with itself, and the source reader's 0.95 is close to that by construction. The key also tilts to internals (keyspace layout, encodings, configuration tables), where the owner's stated target is why a project exists and how it works.",
+     "Variance. One plain run, one run per dossier brief. The stored runs are known to differ widely; the plain arm's spread is unmeasured.",
+     "That the 300-word limit caused the drop. Seven brief versions separate the two dossiers and the richer one is the run the owner faulted sixteen ways for length. The attribution in R1 and R8 is Inferred and is written there as fact.",
+     "Cost. No tokens or wall time per arm are in the result. They would make the loss worse: one session against 30 to 81 minutes of several."
+    ],
+    "protocol_deviations": [
+     "Claim sampling was every fourth claim sentence, where the protocol says every tenth.",
+     "A 'partly' verdict was used; the protocol lists supported, contradicted, not found.",
+     "Arm E (the richest stored dossier) and the second grader were added after the first result. Useful, and exploratory: E was chosen knowing the outcome.",
+     "The truth rule ('at most half the plain rate') cannot be met when the plain rate is zero. The protocol did not foresee the case."
+    ],
+    "statistical_note": "30 of 30 supported bounds the plain arm's error rate only below about 10 percent. It cannot tell 0 from 5."
+   },
+   "plan_response_assessment": [
+    {
+     "response": "R29: a comprehension regression on stored runs, and a floor per question kind",
+     "verdict": "Right, and overdue. Two defects.",
+     "detail": "A five-point explanation rule sits inside run-to-run variance (single runs hold 14 to 51 percent of pooled claims), so one run per measurement will flag noise and miss real drops; it needs two or three runs or a wider band. And one repository, one key, 24 questions becomes the target the brief is tuned to, even with the questions held out of authoring sessions, because the people changing the brief see the number. It needs a second repository and a second key before it steers anything. The per-kind floor depends on check knowing which kind a block answers, which is the author's own tag."
+    },
+    {
+     "response": "Ask and find-by-task pulled onto the critical path (R15)",
+     "verdict": "Find-by-task: right. Ask: right to build, wrong to count.",
+     "detail": "Find-by-task answers the 0.04. Ask concedes the point rather than winning it: an ask command over the clone is the source-reading arm with a claim check on top, and in any benchmark it will score what that arm scores. Build it, since a product that cannot be asked loses to one that can, but it is not an advantage of the dossier, and it remains an operator command the page's reader does not have."
+    },
+    {
+     "response": "The section word limit replaced first (R8)",
+     "verdict": "Premature as written.",
+     "detail": "The cause is not established and the remedy points back at the output the owner rejected. The plain synthesis shows the real variable: facts per word. It gave more facts in 2,768 words than the dossier gave in 12,574. Measure the other four stored runs first (no new run needed), and prefer cutting the process pages out of the reading path and using Q8's reading depths over simply lifting the limit."
+    },
+    {
+     "response": "The truth term no longer assumes a plain session errs more",
+     "verdict": "Right, and it leaves a question the plan has not answered.",
+     "detail": "If a plain session is as accurate, what is Polaris's truth advantage? What remains is a mechanical guarantee instead of a sampled one, labelled Unknowns, a coverage denominator, staleness, and the docs-against-code page. None is measured. And the claim should be retested where it might still hold: a repository the model does not know."
+    },
+    {
+     "response": "A measure of what reading gives that asking does not (time to answer; unprompted recall)",
+     "verdict": "Right. This is now the question the product stands or falls on.",
+     "detail": "Add two measures. First, the dossier as context for a session: the source-reading arm with the dossier loaded against without, on accuracy, tokens and time. If a dossier makes asking cheaper or better, that is a real, measurable use. Second, a downstream task: a reader (model, then the owner) makes a small real change after reading one arm."
+    }
+   ],
+   "dimensions": [
+    {
+     "n": 1,
+     "name": "Truth: every claim's evidence state is honest and checkable",
+     "weight": 15,
+     "score": 90,
+     "capped": false,
+     "product_today": 78,
+     "change_from_third": "-2 (92 to 90)",
+     "reason": "Plan: the design is unchanged, but reviewed output carried 2 of 30 partly unsupported claims, so review recall is not what I assumed; R16 slice 5 measures it. Today: citations and quotations are verified and that is real; set against it are those two claims, legends offering an encoding no figure can draw, and a dossier that is one draw and does not say so. This dimension is absolute, so it stays high; as an advantage over a plain session it is, on this evidence, zero."
+    },
+    {
+     "n": 2,
+     "name": "Comprehension: a newcomer understands the system fast",
+     "weight": 15,
+     "score": 81,
+     "capped": false,
+     "product_today": 40,
+     "change_from_third": "-4 (85 to 81)",
+     "reason": "Plan: R29 adds the missing regression (+), but the pilot shows the plan's direction of travel, shorter and more apparatus, cost readers facts, and the tension between brevity and coverage is unresolved until reading depths exist. Today: a third of the key facts, below a plain synthesis a quarter its length; most pages carry no project facts; 141 words of apparatus before the thesis; sideways scroll on a phone."
+    },
+    {
+     "n": 3,
+     "name": "Visual richness: figures that carry real explanation",
+     "weight": 15,
+     "score": 82,
+     "capped": false,
+     "product_today": 30,
+     "change_from_third": "0",
+     "reason": "Plan: untouched by the pilot, which stripped figures. Today: three all-dashed graphs of one layout, one overflowing its column 2.3 times, none on the overview or the deep dive."
+    },
+    {
+     "n": 4,
+     "name": "Generality: works on any kind of repository, and is shown to",
+     "weight": 15,
+     "score": 80,
+     "capped": false,
+     "product_today": 25,
+     "change_from_third": "0",
+     "reason": "Plan: unchanged. Today: every run is of one repository; on that repository the screen leaves out 662 of 1,861 files for having no extraction class."
+    },
+    {
+     "n": 5,
+     "name": "Depth of insight: the why, the trade-offs, the non-obvious",
+     "weight": 10,
+     "score": 79,
+     "capped": false,
+     "product_today": 38,
+     "change_from_third": "0",
+     "reason": "Plan: unchanged; the pilot is mildly encouraging, since rationale and limits are where the dossier already leads. Today: 0.31 on rationale and about 0.40 on limits, ahead of the plain synthesis and low in absolute terms; one choice and one trade-off on record."
+    },
+    {
+     "n": 6,
+     "name": "Beauty: a surface a reader enjoys and trusts on sight",
+     "weight": 10,
+     "score": 76,
+     "capped": false,
+     "product_today": 50,
+     "change_from_third": "0",
+     "reason": "Plan: unchanged. Today: clean contrast in two themes, no script, careful; 23 font sizes, the thesis about 750 pixels down, no print style."
+    },
+    {
+     "n": 7,
+     "name": "Measured advantage over a vanilla LLM session",
+     "weight": 10,
+     "score": 62,
+     "capped": false,
+     "product_today": 22,
+     "change_from_third": "-8 (70 to 62)",
+     "reason": "Plan: there is now a measurement and it is a loss, so 70 as a neutral prior no longer holds. The instrument works, which counts for the plan; the moves do aim at the kinds lost (structure: Q2, Q7; change: R15); an earlier brief already beat the plain synthesis. Against that, no artifact will approach a session that is asked, and the one advantage the plan assumed, accuracy, was not there. Today: measured, and behind on the pilot's rule. Credit only for the lead on rationale and limits."
+    },
+    {
+     "n": 8,
+     "name": "Economy and lifecycle: cost, time, freshness, follow-up",
+     "weight": 10,
+     "score": 78,
+     "capped": false,
+     "product_today": 25,
+     "change_from_third": "0",
+     "reason": "Plan: ask and find-by-task move forward; cost per pilot arm was not recorded. Today: 30 to 81 minutes and 12 to 15 operator actions for a result one session beat; tokens unrecorded; no refresh, no question, no export."
+    }
+   ],
+   "weighted_total": 79.45,
+   "weighted_total_arithmetic": "plan: 0.15*(90+81+82+80) + 0.10*(79+76+62+78) = 49.95 + 29.50 = 79.45",
+   "product_today_total": 39.45,
+   "product_today_arithmetic": "0.15*(78+40+30+25) + 0.10*(38+50+22+25) = 25.95 + 13.50 = 39.45; reported as about 39",
+   "progression": "plan: 76.3, 80.3, 81.15, 79.45. The fall is the first real measurement, not a change in the plan.",
+   "substantial_improvement": {
+    "answer": "Today: no. On the one comparison that exists, the reviewed dossier gave a reader fewer facts than a plain synthesis, was no more accurate, was four and a half times longer and took many times the effort.",
+    "what_survives": "It is ahead on why and on limits; every claim has a link; it lasts. Those are real and, so far, small.",
+    "for_the_built_plan": "Possible against a plain synthesis, and an earlier brief already did it on this key. Not possible against a session that can be asked, if the measure is answerable questions. The built product is a substantial improvement only if it wins on what asking cannot give: knowing what to ask, a verified map, figures, an account that outlives the session, and a better starting point for the asking session itself. None of that is measured yet.",
+    "caution": "One repository the model already knows, model readers, one run per arm. Enough to stop assuming; not enough to conclude."
+   },
+   "can_a_plan_reach_85": {
+    "answer": "No, and after the pilot the question has changed. The plan was three points from its ceiling on paper while the product is at about 39. Further plan scores tell the owner nothing the next two measurements will not tell better.",
+    "what_would_take_the_product_score_up_fastest": "Comprehension, visual richness and measured advantage carry 40 of the 100 points and sit at 40, 30 and 22. A landing page with the thesis and one derived structure figure, the process pages out of the reading path, a find-by-task page and earned section length would move all three, and the kept pilot can now say whether they did."
+   },
+   "do_next": [
+    {
+     "step": 1,
+     "what": "Grade the four stored runs not yet graded with the kept pilot, and report share against reading-path words and brief version for all six.",
+     "why": "No new run. Turns 'the limit caused it' from a guess into six points, and gives facts per thousand words."
+    },
+    {
+     "step": 2,
+     "what": "Run the plain arm three more times and write a second key by a different route: the owner's own eight questions, or one drawn from the maintainers' documents.",
+     "why": "Gives the plain arm's spread and tests how much of its lead is the key's bias."
+    },
+    {
+     "step": 3,
+     "what": "Repeat the pilot on a repository the model has not seen: one the owner owns. The key, the plain synthesis and the source-reading arm can run now; the dossier arm when a dossier run can be started.",
+     "why": "The most informative experiment available. It is where a plain session might err, and where the plan's truth claim either returns or is retired."
+    },
+    {
+     "step": 4,
+     "what": "The source-reading arm with and without the dossier loaded: accuracy, tokens, time. And unprompted recall after reading each artifact.",
+     "why": "Tests the two things reading might give that asking does not."
+    },
+    {
+     "step": 5,
+     "what": "One sitting: the owner reads the plain synthesis and the dossier, blind where possible, and says which they would rather have been given and why.",
+     "why": "Thirty minutes. The only human datum, and the owner's question was whether they would be proud of it."
+    },
+    {
+     "step": 6,
+     "what": "Then build only what the losses name (thesis-first landing, one derived structure figure, process pages off the reading path, find-by-task, depth budgets), re-measure with two runs, and hold everything else off the ready queue.",
+     "why": "The pilot is the cut line the plan was waiting for. R22 can run now, on this result."
+    }
+   ],
+   "missing_moves": [
+    {
+     "title": "An unseen-repository arm in every pass",
+     "what": "At least one corpus repository published after the model's training, or owner-owned, with the result reported apart from well-known repositories.",
+     "raises": [
+      7,
+      1,
+      4
+     ],
+     "estimated_gain": "validity, not points"
+    },
+    {
+     "title": "The dossier as context for a session",
+     "what": "Step 4 above as a standing measure in R1.",
+     "raises": [
+      7,
+      8
+     ],
+     "estimated_gain": "+0.3 if it shows a gain"
+    },
+    {
+     "title": "Facts per word as a reported measure",
+     "what": "Share of key facts per thousand reading-path words, beside the raw share, so length cannot buy the score.",
+     "raises": [
+      2
+     ],
+     "estimated_gain": "+0.2"
+    },
+    {
+     "title": "Render the dossier arm as the product",
+     "what": "Readers of the dossier arm get the rendered pages including source pages and figures; the text-only form is reported as a second row.",
+     "raises": [
+      3,
+      7
+     ],
+     "estimated_gain": "validity"
+    }
+   ],
+   "faults": [
+    {
+     "move": "R1, R8",
+     "kind": "causal claim stated as fact",
+     "fault": "'The newest, under the limit, 33 percent' attributes a difference across seven brief versions to one rule. Label it Inferred until step 1 is done."
+    },
+    {
+     "move": "R29",
+     "kind": "threshold inside noise; single target",
+     "fault": "Five points with one run per measurement; one repository and one key steering every brief change."
+    },
+    {
+     "move": "R15",
+     "kind": "counted as an advantage",
+     "fault": "'A dossier that cannot be asked loses to one that can' is true and makes ask a parity feature. It should not appear in any win."
+    },
+    {
+     "move": "R1",
+     "kind": "record location",
+     "fault": "The pilot record is to live under docs/evidence/. Its tree/ directory is about 15 MB of another project's source under that project's licence. Commit the manifest, digests and the script that rebuilds the tree, not the tree."
+    },
+    {
+     "move": "pilot",
+     "kind": "undeclared limit",
+     "fault": "Training-data familiarity with the subject repository is not among the protocol's stated limits. It should lead them."
+    },
+    {
+     "move": "pilot",
+     "kind": "deviations",
+     "fault": "Sampling step, the 'partly' verdict, the added arm and grader: record each in the result as a deviation from the protocol."
+    },
+    {
+     "move": "whole plan",
+     "kind": "feasibility (unchanged, now urgent)",
+     "fault": "58 moves, a product at about 39, and a first measurement that names five things to build. The earlier cut list stands; P12's script, R10's class question and R16's dependencies are unchanged."
+    }
+   ]
   }
  ],
  "priorities": {
@@ -3600,8 +4122,6 @@
   "R13S1": 4,
   "R13S2": 4,
   "R13S3": 4,
-  "R15S3": 4,
-  "R15S4": 4,
   "R20S3": 4,
   "R25S3": 4,
   "R17S3": 4,
@@ -3610,7 +4130,16 @@
   "R9S5": 4,
   "R28S2": 4,
   "R5S4": 4,
-  "R26S2": 4
+  "R26S2": 4,
+  "R29S1": 1,
+  "R29S2": 1,
+  "R15S1": 1,
+  "R15S2": 1,
+  "R15S3": 1,
+  "R25S1": 4,
+  "R25S2": 4,
+  "R26S1": 4,
+  "R8S4": 1
  },
  "units": [
   {

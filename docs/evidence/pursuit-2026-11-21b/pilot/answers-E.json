@@ -1,0 +1,126 @@
+{
+ "answers": [
+  {
+   "id": "Q01",
+   "answer": "Redis is a server program (a TCP daemon) that keeps a key space of abstract data types and lets applications read and change it by sending commands over a network connection. The data set is held primarily in the computer's memory; writes can optionally also be copied to files on disk and to other Redis servers called replicas. It is aimed at developers building real-time data-driven applications, with stated uses of caching, session management, querying/sorting/analytics, messaging and interservice communication, and vector operations. Its data types serve uses such as counters, stacks and queues, leaderboards, rate limiters and event logs.",
+   "where": "index.md"
+  },
+  {
+   "id": "Q02",
+   "answer": "The RDB snapshot dumps the whole data set to a file, written by a forked background child when a save point (seconds elapsed and number of changes) is met or BGSAVE is issued. The Append Only File is an alternative mode that logs each write command. With snapshots alone a process failure or power outage may lose a few minutes of writes, depending on the save points; with the AOF at its default fsync policy (every second) about one second of writes can be lost on a power outage, or a single write if only the Redis process fails. Both can be on at once and each can be off. At startup the AOF is loaded when it is enabled, otherwise the snapshot is loaded; a preload-file setting overrides both.",
+   "where": "index.md"
+  },
+  {
+   "id": "Q03",
+   "answer": "The background job service in src/bio.c uses worker threads to take work off the main thread. The work it does is background close(2) calls, AOF fsync, and lazy freeing of memory. What ordering guarantee it gives is not stated.",
+   "where": "index.md"
+  },
+  {
+   "id": "Q04",
+   "answer": "Modules extend Redis beyond its built-in data structures and let new commands be implemented quickly; a module is a shared library loaded into redis-server at runtime. It is named with a loadmodule line in the configuration, which is queued by queueLoadModule at startup and then loaded when main calls moduleLoadFromQueue (outside Sentinel mode). External modules are pinned in modules/modules.yaml, fetched with make modules-update and built by make, while vector sets are an in-tree module. How a module registers its commands, and how a module's own data type is saved and restored, is not stated.",
+   "where": "index.md"
+  },
+  {
+   "id": "Q05",
+   "answer": "The event loop in src/ae.c is aeMain, which repeatedly calls aeProcessEvents; each turn runs beforeSleep, waits in aeApiPoll for ready sockets, runs afterSleep, then runs the file (socket) events and time events. On the connection side, connSocketAcceptHandler accepts a socket and hands it to acceptCommonHandler, which rejects it at maxclients or calls createClient, which installs readQueryFromClient as the read handler. When a socket is readable the loop calls that handler, which reads into the query buffer, parses it in processInputBuffer and dispatches to processCommand. The time event runs serverCron (server.hz times per second) for active expiry, rehashing, starting saves and replication reconnection. beforeSleep flushes the AOF and then sends buffered replies through handleClientsWithPendingWrites and writeToClient; a ready socket normally fires its read handler before its write handler, and AE_BARRIER inverts that. How the connection layer abstracts different transports is not stated.",
+   "where": "index.md; deep-dives/mechanism-deep-dive.md"
+  },
+  {
+   "id": "Q06",
+   "answer": "Not stated. The only supported facts are that keys are binary-safe strings naming values, and that a value is an object holding its type, encoding, LRU or LFU data, a refcount and a pointer to the payload; the containers for keys and expirations, the cluster-mode layout and where the key name sits relative to the value are not stated.",
+   "where": "not stated"
+  },
+  {
+   "id": "Q07",
+   "answer": "The type is what a value is: an abstract data type such as a string, list, set or hash, defined by its operations and their complexity. The encoding is how that value is represented in memory at the moment, recorded in the object's encoding field; strings may be RAW, EMBSTR or INT, sets may be INTSET or HT, lists use a quicklist (a linked list of listpacks) and streams a radix tree of listpacks. Both exist so that small values can use memory-saving compact representations under the same type. A value stays in its compact form until it passes configured limits such as hash-max-listpack-entries, hash-max-listpack-value, set-max-intset-entries, set-max-listpack-entries and zset-max-listpack-entries. Which piece of code makes the choice is not stated.",
+   "where": "deep-dives/mechanism-deep-dive.md; glossary.md"
+  },
+  {
+   "id": "Q08",
+   "answer": "Cluster code lives in src/cluster.c and src/cluster_legacy.c (with slot migration in src/cluster_asm.c); cluster.c covers routing and redirection, and the code as a whole maps keys to slots, routes requests and handles node failure, but exactly which responsibilities sit in which file is not stated. keyHashSlot takes the crc16 of the key and keeps its low 14 bits, giving one of 16384 slots; if the key has a {...} part only that part is hashed, so related keys can share a slot. processCommand calls getNodeByQuery, which returns the node serving that slot: if it is this node the command runs here, otherwise clusterRedirectClient replies with a MOVED error, or ASK during a migration, giving the slot and the node's address. Keys in different slots get -CROSSSLOT and a multi-key request during a slot migration can get -TRYAGAIN.",
+   "where": "index.md"
+  },
+  {
+   "id": "Q09",
+   "answer": "The event loop calls readQueryFromClient when the socket is readable; it reads bytes into the query buffer and processInputBuffer parses them (input starting with * as multibulk, otherwise inline) into a pending command; an I/O thread may read and parse but must queue the client for the main thread. processCommand looks the command up and can refuse it for: authentication required, ACL denial (-NOPERM), cluster routing to another node (redirect), failed eviction for a deny-on-memory-limit command (OOM error), a disk persistence error, a write on a read-only replica, or the server still loading data. Otherwise call runs the command's handler (setCommand for SET, which stores the key, raises server.dirty and queues the OK reply). Because dirty changed, the command is queued with alsoPropagate and sent to both feedAppendOnlyFile (into the AOF buffer) and replicationFeedSlaves when the outermost unit finishes, with several commands from one unit wrapped in MULTI/EXEC. Just before the loop sleeps, beforeSleep flushes the AOF buffer to the file first, then sends the buffered reply to the client.",
+   "where": "index.md; deep-dives/mechanism-deep-dive.md"
+  },
+  {
+   "id": "Q10",
+   "answer": "When the AOF grows past auto-aof-rewrite-percentage and auto-aof-rewrite-min-size, serverCron calls rewriteAppendOnlyFileBackground, which forks a child process. A manifest file names which files currently make up the log: at most one BASE file, a snapshot from the last rewrite, and one or more INCR files, in order, holding the write commands since the last successful rewrite. After a rewrite the old BASE and INCR files become HISTORY files, which are removed automatically unless garbage collection is disabled. The base file uses the RDB format by default. The detailed steps of the rewrite between the fork and the manifest update are not stated.",
+   "where": "index.md; deep-dives/mechanism-deep-dive.md"
+  },
+  {
+   "id": "Q11",
+   "answer": "The replica connects (replicationCron sees the connect state and calls connectWithMaster, with syncWithMaster as handler) and sends PSYNC with a replication ID and offset. On the master, syncCommand calls masterTryPartialResynchronization, which accepts when the replication ID matches and the requested offset is still inside the replication backlog; it then answers +CONTINUE and the replica gets only the part it missed. Otherwise the master answers +FULLRESYNC, runs startBgsaveForReplication to produce an RDB, and the replica receives that RDB in readSyncBulkPayload. In both cases the master afterwards streams write commands through replicationFeedSlaves, and a replica passes its master's stream unchanged to its own replicas.",
+   "where": "index.md"
+  },
+  {
+   "id": "Q12",
+   "answer": "There are two mechanisms: on access, expireIfNeeded deletes a key found to be expired, and in the background activeExpireCycle scans for expired keys as one of serverCron's periodic jobs. On a replica, an expired key is not deleted locally; the replica waits for the master, which sends synthesized DEL operations. How the background cycle limits its own cost is not stated, and how expiry is recorded in the append-only file is not stated beyond the fact that replication and the AOF share one propagation feed.",
+   "where": "index.md; deep-dives/mechanism-deep-dive.md"
+  },
+  {
+   "id": "Q13",
+   "answer": "The LRU, LFU and minimal-TTL eviction algorithms are approximated rather than precise in order to save memory. The approximation is tunable for speed or accuracy through a sample count: the default of 5 gives good enough results, and 10 comes very close to true LRU but costs more CPU. Each value object carries LRU or LFU data used for the choice. The cost is that victim selection is not exact, with accuracy traded against CPU; the internal working of the sampling is not stated.",
+   "where": "index.md"
+  },
+  {
+   "id": "Q14",
+   "answer": "Not stated. The only supported fact is that rehashing is one of the periodic jobs serverCron performs; the reasons for incremental resizing, the interaction with a background save or rewrite child, and the costs are not stated.",
+   "where": "not stated"
+  },
+  {
+   "id": "Q15",
+   "answer": "The project chose a mostly single-threaded core and scales by presenting several such cores, on one machine or many, as one system through features such as Redis Cluster; it says this shared-nothing approach is much simpler and also optimal on NUMA systems. Extra threads only help: I/O threads read, write and parse client sockets but cannot run a command (they flag the client and queue it for the main thread), and background worker threads do close(2), AOF fsync and lazy freeing; saves and AOF rewrites run in a forked child process. Costs and conditions: one slow operation (a huge aggregated value, a long script) blocks everything else; I/O threads do not make commands run in parallel and are recommended only when the instance really has CPU-bound performance problems; pub/sub, monitor, blocked and tracking clients stay on the main thread; and multi-threaded I/O is documented as unsupported for TLS, although a code comment suggests otherwise, so that should be checked. Helper threads are started after modules load because of a race between thread-local storage setup and dlopen.",
+   "where": "index.md; deep-dives/mechanism-deep-dive.md"
+  },
+  {
+   "id": "Q16",
+   "answer": "The appendfsync policy trades speed for safety: no never fsyncs and lets the OS flush (fastest), always fsyncs after every write (slow, safest), and everysec, the default, fsyncs once per second as a compromise that can lose about one second of writes. Commands append to an in-memory AOF buffer, and the buffer is written by flushAppendOnlyFile from beforeSleep, ahead of sending replies, so that with always the write reaches the file before the reply goes out. With always, a failed write makes the process exit because the reply may already be buffered and the change cannot be rolled back. With no-appendfsync-on-rewrite set to yes, up to 30 seconds of log can be lost in the worst case with default Linux settings.",
+   "where": "index.md"
+  },
+  {
+   "id": "Q17",
+   "answer": "Commands are defined as JSON files under src/commands (for example set.json and get.json). utils/generate-command-code.py reads those JSON files and generates commands.def, which src/commands.c includes with COMMAND_STRUCT set to redisCommand; at run time processCommand finds a command with lookupCommand and call invokes its handler through the command's proc pointer. Commands carry properties such as being marked deny-on-memory-limit and whether they need authentication, but the full list of what must be described besides the handler is not stated.",
+   "where": "index.md"
+  },
+  {
+   "id": "Q18",
+   "answer": "Configuration handling, including compiled defaults (for example maxmemory 0 and io-threads 1) and the loadmodule queueing, lives in src/config.c, and the shipped redis.conf documents each setting. Some sensitive directives are immutable and governed by enable-protected-configs, and settings can be changed on a live server through the CONFIG command. Where exactly a new parameter is declared, and what determines its runtime mutability, its default and any action triggered on change, is not stated.",
+   "where": "index.md"
+  },
+  {
+   "id": "Q19",
+   "answer": "The switch away from the compact form is governed by configuration limits: hash-max-listpack-entries and hash-max-listpack-value for hashes, set-max-intset-entries and set-max-listpack-entries for sets, and zset-max-listpack-entries for sorted sets; a value stays compact until it passes them. Tuning is done by changing those settings in the configuration. Where in the code the conversion decision is made is not stated, and no threshold for lists is stated (lists are a linked list of listpacks).",
+   "where": "deep-dives/mechanism-deep-dive.md"
+  },
+  {
+   "id": "Q20",
+   "answer": "(a) The event loop in src/ae.c selects its multiplexing layer from separate backend files, trying ae_evport.c, then ae_epoll.c, then ae_kqueue.c, and falling back to ae_select.c, so a new readiness API would be another such backend chosen in src/ae.c. (b) The TCP accept path is connSocketAcceptHandler in src/socket.c, which hands sockets to acceptCommonHandler, and TLS can be built in or built as a module; where a new transport type is registered is not stated.",
+   "where": "deep-dives/mechanism-deep-dive.md; index.md"
+  },
+  {
+   "id": "Q21",
+   "answer": "When maxmemory is set, processCommand calls performEvictions before running a command, which frees keys according to maxmemory-policy. If memory cannot be freed (the default policy is noeviction, or no key qualifies), commands marked deny-on-memory-limit get an OOM error while read-only commands such as GET keep working. Replica output buffers are outside what the limit protects: with replicas attached it is suggested to set a lower maxmemory to leave free RAM for them (not needed under noeviction), and a forked child adds copy-on-write memory pressure. The compiled default is 0 (commented out in the shipped file), and a 32-bit instance with no limit is given a 3 GB maxmemory with noeviction at startup. Whether any kind of instance ignores the limit is not stated.",
+   "where": "index.md; deep-dives/mechanism-deep-dive.md"
+  },
+  {
+   "id": "Q22",
+   "answer": "After a failed background save, stop-writes-on-bgsave-error makes the server refuse writes, so the user learns the hard way that data is not persisting; the command gate checks this through writeCommandsDeniedByDiskError and returns a disk error message. With appendfsync always, a failed AOF write makes the process exit. When a preload-file backup manifest is configured, startup aborts if the target is missing or cannot be loaded. What happens when the append-only file is damaged at startup, or when the normal data file cannot be loaded, is not stated.",
+   "where": "index.md"
+  },
+  {
+   "id": "Q23",
+   "answer": "Replication is asynchronous, so replicas lag and acknowledged writes can be lost. A master can be configured to stop accepting writes when it does not appear connected to at least a given number of replicas (min-replicas-to-write); this does not guarantee that N replicas accept a write, it only limits the window of exposure for lost writes to the specified number of seconds. Diskless loading on a replica may cause data loss during failovers because the RDB is not immediately stored on disk, and parsing the RDB from the socket safely needs more memory. A read-only replica rejects writes from normal clients. How a replica treats clients while its link to the master is down is not stated.",
+   "where": "index.md"
+  },
+  {
+   "id": "Q24",
+   "answer": "A node must be started with cluster-enabled yes, since a normal instance cannot join a cluster. A request whose keys fall in different hash slots is rejected with -CROSSSLOT, and a multi-key request during a slot migration can get -TRYAGAIN; commands for slots served elsewhere are redirected with MOVED or ASK. If some hash slots are no longer covered, the whole cluster eventually becomes unavailable, a behaviour the cluster-require-full-coverage option changes. Any restriction on databases in cluster mode is not stated.",
+   "where": "index.md"
+  }
+ ],
+ "minutes_felt": 4,
+ "notes": "Request path, persistence, replication and cluster routing were easy to trace from the workflow lists and tables. Internals such as keyspace layout, rehashing, expiry-cycle limits, config registration and failure handling at load were absent, and facts were buried among repeated citation markers and figure text."
+}

@@ -1,0 +1,11 @@
+{
+ "claims": {
+  "X": "plain",
+  "Y": "dossier"
+ },
+ "answers": {
+  "A": "P",
+  "B": "T",
+  "C": "D"
+ }
+}

@@ -29,7 +29,12 @@ jq '.score' docs/pursuits/2026-11-21b-vision-pursuit-data.json
 and 81.2. Neither figure is a measurement of a dossier. The first measurements, over the six
 stored runs, confirm one planned saving, empty another, and show that a single run today
 holds 14 to 51 percent of what six runs found together. See "Rounds 8 to 10" under "Where the
-plan stands". Twenty-eight moves follow, not the twenty this section counted when written.
+plan stands". Twenty-nine moves follow, not the twenty this section counted when written.
+
+*And the first comparison with a plain session, run the same day as a pilot:* readers got 33
+percent of the required facts from the newest dossier, 46 percent from a plain session's
+synthesis, up to 61 percent from an earlier dossier of the same commit, and 95 percent by asking a
+session that had the source. See "Round 11".
 
 No: before this run the plan would not have produced something that is demonstrably better than
 asking a capable model to explain a repository. It would have produced something more
@@ -176,6 +181,123 @@ ready, so lanes would build what R22 would later cut. Twenty-one slices on the c
 are therefore priority 1, and fourteen slices it named are parked at priority 4 until R22.
 Nothing was closed: closing run-3 and run-4 beads as superseded is left to R22, which will
 have numbers.
+
+### Round 11: the first comparison with a plain session
+
+Both reviewers said the missing points could only be earned by measuring, and that one
+measurement needed no new run. It was run the same day as a pilot. The protocol was written
+before any arm ran; the full record is under `docs/evidence/pursuit-2026-11-21b/pilot/`.
+
+**Method.** Redis at the commit the stored runs pinned, cut down by the dossier's own screen
+code to the 1,178 files its author could read (two of them with the same 23 lines withheld).
+One session read that tree and wrote 24 questions a new engineer needs answered, four in each
+of six kinds, with 81 required facts. A second session, given the same tree and one sentence
+("Explain this repository to an engineer who is new to it"), wrote a synthesis of 2,768 words.
+Fresh readers then answered the questions from one thing each, and two graders scored the
+answers blind. A separate checker tested 30 sampled claims from each text against the tree.
+
+Three graders scored, each blind and each over a different set of arms. Only the first
+grading was in the protocol; the other dossiers and graders were added after its result was
+read, so those rows are exploration, not a pre-registered test.
+
+| Reader answered from `[Observed]` | Brief | Words (reader pages) | Share of 81 required facts, graders 1, 2, 3 |
+|---|---|---|---|
+| The source tree itself, asked directly | n/a | n/a | 0.94, 0.95, not graded |
+| Stored dossier `d9411d26` | 1 | 15,897 (10,872) | not graded, 0.57, 0.61 |
+| Stored dossier `2ecdcab0` | 2 | 15,281 (10,863) | not graded, not graded, 0.48 |
+| The plain session's synthesis | n/a | 2,768 | 0.48, 0.46, 0.47 |
+| Stored dossier `4465d22f` | 1 | 7,883 (4,306) | not graded, not graded, 0.41 |
+| Stored dossier `ffe579c7` | 4 | 14,227 (9,002) | not graded, not graded, 0.39 |
+| Newest stored dossier `658f2f90` | 7 | 12,574 (7,195) | 0.34, 0.33, 0.33 |
+
+No arm made a statement a grader counted as wrong. The sixth stored run was never rendered.
+
+By kind of question (third grader), the five dossiers and the plain synthesis fail in
+opposite places:
+
+| Kind | Dossiers, lowest to highest | Plain synthesis |
+|---|---|---|
+| How the parts fit | 0.29 to 0.57 | 0.79 |
+| Where to change something | 0.00 to 0.50 | 0.58 |
+| Why it is built this way | 0.31 to 0.65 | 0.27 |
+| Limits and failure | 0.38 to 0.65 | 0.12 |
+
+| Claim check, 30 sampled claims each `[Observed]` | Supported | Partly | Contradicted or not found |
+|---|---|---|---|
+| Plain synthesis | 30 | 0 | 0 |
+| Newest dossier | 28 | 2 | 0 |
+
+**What it shows.**
+
+1. **The newest dossier lost to a plain synthesis a fifth its length**, by the rule fixed
+   beforehand. Its weakest kinds were "where do I change this" (0.04 against 0.58) and how the
+   parts fit (0.29 against 0.79).
+2. **Two of the five stored dossiers matched or beat that synthesis, and the share falls as
+   the brief version rises** (0.61 and 0.41 at version 1, 0.48 at 2, 0.39 at 4, 0.33 at 7).
+   The mechanism became worse at teaching and nothing showed it. The runs differ in brief,
+   schema and renderer at once, so the cause is `[Inferred]`; the 300-word section limit is a
+   suspect and R29 tests it before anything is changed.
+3. **Dossiers and a plain synthesis are good at different things.** Every dossier beat the
+   synthesis on why the system is built as it is and on its limits; every dossier lost on how
+   the parts fit and on where to change something. The plan's structure figures
+   (run 4) and find-by-task (R15) aim at exactly the two losing kinds.
+4. **Density is the gap.** The plain synthesis carries about 14 required facts per thousand
+   words, the newest dossier about 2. Between 3,326 and 4,611 words of each eight-to-sixteen-thousand
+   word dossier are pages about the run itself.
+5. **No truth advantage appeared.** The plain synthesis made no unsupported claim in the
+   sample. The plan had assumed a plain session errs more; here it did not.
+6. **Asking beats reading either artifact.** A session with the source answered 95 percent.
+   A dossier that cannot be asked has to justify itself some other way.
+
+**What it does not show.** The second reviewer's list, which is right:
+
+- Redis is in the model's training data. The plain author, the key writer and every reader may
+  lean on memory, and the protocol did not name this limit. A repository the model has not
+  seen is the test that matters.
+- The key writer and the plain author are the same model exploring the same tree unbriefed, so
+  part of the synthesis's lead, and most of the source reader's 0.95, may be one explorer
+  agreeing with itself.
+- Readers and graders are models. The dossiers were read as flattened text: no figures, no
+  navigation, no source pages. One run per arm, one repository, no cost recorded.
+- Thirty supported claims of thirty only bounds the error rate below roughly ten percent.
+
+**Deviations from the protocol.** The claim checker sampled every fourth claim, not every
+tenth, because neither text has 300; it used a "partly" verdict the protocol did not define;
+the truth rule ("at most half the plain arm's rate") cannot be met when that rate is zero; and
+four dossier arms and two graders were added after the first result.
+
+**What changed in the plan.** The pilot is kept as a regression over stored runs, reported on
+every brief, schema or renderer change, with a floor per question kind (R29, new). "Find by
+task" and "ask" (R15) moved to
+priority 1. The benchmark's truth term is now "no more errors than the plain arm", and each
+pass measures what reading gives that asking does not.
+
+R29's key rotates and gains a second repository so it cannot become the thing the brief is
+tuned to; it reports facts per thousand words and per thousand tokens; R25 and R26, which add
+words, are held until density stops falling.
+
+**Both reviewers rescored after reading the pilot** (first grading and the richest dossier;
+the three later arms came after). All `[Inferred]`.
+
+| | First reviewer | Second reviewer |
+|---|---|---|
+| The plan, before the pilot | 85.8 | 81.2 |
+| The plan, after the pilot | 80.2 | 79.5 |
+| The product as it is today | about 49 | about 39 |
+
+The first reviewer's words: "the 85.8 does not survive the pilot." Both say no further
+planning round is worth running. The second reviewer's order of next steps: a second key and
+three more plain runs; the same test on a repository the model has not seen, one the owner
+owns; an asking session with and without the dossier loaded; one sitting of the owner, plain
+against dossier; then build only what the losses name, and take everything else off the ready
+queue.
+
+**Where this leaves the owner's question.** Not at 85, and not by a margin another round of
+planning can close. The plan is about 80 by two reviewers who now agree. The product, on the
+only comparison ever run, is not yet a substantial improvement over asking a capable model:
+its newest output teaches a reader less than a plain synthesis a fifth its length, and far
+less than a session that can be asked. It is better at the why and the limits, and its
+pointers check out. That is a real base and not yet a product to be proud of.
 
 ## Tier board
 
@@ -410,6 +532,15 @@ merged by cited-span overlap, with conflicts shown. The offline merge of stored 
 proceed; the run mode is built only if a second fresh run at the same brief adds at least 25
 percent more supported-claim clusters to the first.
 
+### Round 11: one move from the pilot's loss
+
+**R29 — No mechanism change ships blind (value 5, cost 2; rubric 2, 7, 5, 8).** The pilot's
+questions, key, plain synthesis and gradings are kept. A change to the brief, the schema or the
+renderer reports the reader's share of required facts before and after, per question kind, and
+explains any drop of more than five points. Check also advises, per major unit, which of six
+kinds of newcomer question no block answers. It re-reads stored runs, so it needs no dossier
+run. The regression questions are never shown to an authoring session.
+
 ### What to build first
 
 1. **R3 slice 1, R4 slice 1, R5 slice 1, R2 slice 1** need nothing and each is small: record
@@ -476,8 +607,8 @@ Exposure beyond the tailnet is not proposed.
 
 ## Planned epic
 
-Epic `syzygy-5dhm`, label `dossier`: twenty-eight move beads (`.1`–`.20`, `.98`, `.99`,
-`.106`–`.111`), each a container for its slices, and 103 slice beads. Twenty-one slices on the
+Epic `syzygy-5dhm`, label `dossier`: twenty-nine move beads (`.1`–`.20`, `.98`, `.99`,
+`.106`–`.111`, `.132`), each a container for its slices, and 106 slice beads. The slices on the
 critical path are priority 1 and fourteen are parked at priority 4 (the data file's
 `priorities` lists both). Every slice is a full packet (outcome,
 approach, spec route, tests, numbered acceptance) and is ready when its predecessors close.

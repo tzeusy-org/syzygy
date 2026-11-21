@@ -1,0 +1,373 @@
+# Redis 8.10 source tree: orientation for a new engineer
+
+This is the source of Redis Open Source at version 8.10.2 (`src/version.h`), an
+in-memory data structure server written in C. It is one server binary that
+keeps typed values in RAM under string keys, executes commands against them on
+a single main thread, and optionally persists and replicates the result.
+
+Everything below comes from reading this copy of the tree. The copy is
+incomplete, and that matters for how you use it, so start there.
+
+## What this copy does not contain
+
+Several files that the rest of the tree refers to are not here. I confirmed
+each by looking for it:
+
+| Missing | Why you will notice |
+|---|---|
+| Every `Makefile` (root, `src/`, `deps/`, `modules/`, `tests/modules/`), `modules/common.mk`, `modules/manifest.mk`, `modules/modules.yaml`, `docker/` | The build is documented (`README.md`, `modules/MODULES.md`) and scripted (`scripts/*.sh`) but cannot be followed end to end from this copy. |
+| `src/commands/*.json` and the generated `src/commands.def` | The command table (names, arity, flags, key specs) is not readable here. `src/commands.c` only includes it. |
+| `src/module.c`, `src/acl.c`, `src/debug.c`, `src/sentinel.c`, `src/cluster_asm.c` | The modules API implementation, ACLs, `DEBUG`, Sentinel and atomic slot migration are called from many places, but only their headers or call sites are present. |
+| `src/redis-cli.c`, `src/redis-benchmark.c` | Only their shared helpers (`cli_common.c`, `cli_commands.c`) are here. |
+| `runtest`, `runtest-cluster`, `runtest-moduleapi`, `runtest-sentinel` | The Tcl harness is present; the wrapper scripts that launch it are not. |
+| `modules/vector-sets/vset.c`, `expr.c` | The vector set module's command layer is absent; its HNSW index (`hnsw.c`) and tests are present. |
+| `src/release.h` | Generated at build time by `src/mkreleasehdr.sh`. |
+
+Two files have lines withheld. `README.md` starts with two blank lines where a
+title would be; I could not tell which lines of `redis.conf` are missing.
+
+Where this document describes one of the missing pieces, it says what the
+description rests on.
+
+## Layout
+
+```
+src/        the server: about 205 files, 162k lines of C
+deps/       vendored libraries: jemalloc, lua, hiredis, linenoise,
+            hdr_histogram, fpconv, xxhash, tre (regex)
+modules/    MODULES.md (how external modules are built) and the in-tree
+            vector-sets module
+scripts/    shell scripts behind the top-level make targets
+tests/      Tcl test suite, C test modules, legacy cluster and sentinel suites
+utils/      code generators, release tooling, small diagnostics
+tools/      array-bench.py, a redis-benchmark driver for the Array type
+redis.conf  the annotated default configuration (2,600+ lines); the best
+            single reference for what each option does
+```
+
+`00-RELEASENOTES` is worth reading once: it lists what changed in 8.10 and
+tells you which subsystems are new and therefore least settled.
+
+## How the server runs
+
+### Startup
+
+`main()` in `src/server.c` does, in order: seed randomness and the hash
+function, `initServerConfig()`, initialise ACLs, the module system, connection
+types and key metadata, parse the config file plus command-line options (each
+`--name value` is appended to the config text), `initServer()`, cluster init if
+enabled, load modules, open listeners, `InitServerLast()` (which starts
+background and I/O threads), load data from disk, then `aeMain()`.
+
+The same binary also acts as Sentinel, `redis-check-rdb` and `redis-check-aof`,
+chosen by executable name or `--sentinel`.
+
+### The event loop
+
+`src/ae.c` is a small event library with one backend compiled in
+(`ae_epoll.c`, `ae_kqueue.c`, `ae_evport.c`, `ae_select.c`). The main thread
+runs one loop. Three hooks in `server.c` structure all periodic work:
+
+- `beforeSleep()` runs before each poll. In order it handles pending TLS and
+  decompressed data, cluster and slot-migration housekeeping, blocked clients,
+  a fast expire cycle, the AOF flush, pending client writes, hand-off to I/O
+  threads, and asynchronous client frees. It ends by releasing the modules
+  GIL; nothing may be added after that line.
+- `afterSleep()` reacquires the GIL first.
+- `serverCron()` is a timer (rate set by `hz`) for slower work: client
+  timeouts, `databasesCron()` (expiry, rehashing, defrag), replication cron,
+  persistence triggers.
+
+### Life of a command
+
+1. A connection becomes readable. `readQueryFromClient()` in
+   `src/networking.c` reads into the client's query buffer.
+2. `processInputBuffer()` parses RESP (`processMultibulkBuffer`) or inline
+   commands into `pendingCommand` objects. It parses ahead up to the
+   `lookahead` setting so that key lookups for several pipelined commands can
+   be prefetched together (`src/memory_prefetch.c`).
+3. `processCommand()` in `server.c` is the gate. Its checks run in a fixed
+   order: command lookup and arity, authentication, ACL, cluster redirection,
+   client-memory eviction, `maxmemory` eviction, disk-error and
+   `min-replicas` write refusal, read-only replica, pub/sub context, stale
+   replica, loading, busy script, client pause. Inside `MULTI` it queues
+   instead of executing.
+4. `call()` runs the command's handler (`void fooCommand(client *c)`),
+   records stats and slowlog, and propagates writes to the AOF and to
+   replicas. Handlers can force or suppress propagation with
+   `forceCommandPropagation()` and the `preventCommand*()` functions.
+5. Replies go into the client's output buffer through the `addReply*` family
+   and are written from `beforeSleep()` or by an I/O thread.
+
+### Threads
+
+Command execution is single threaded. Other threads exist for work that does
+not touch the dataset concurrently:
+
+- **I/O threads** (`src/iothread.c`, `io-threads` config, off by default).
+  Each runs its own event loop and owns a set of clients. It reads, parses and
+  writes; when a client has a complete command it is handed to the main thread,
+  executed, and handed back. Hand-offs use per-thread lists plus an
+  `eventNotifier` (eventfd or pipe). Some clients must stay on the main
+  thread: pub/sub, monitor, blocked, tracking, close-pending
+  (`isClientMustHandledByMainThread`). The main thread can pause I/O threads
+  when it needs to touch their state.
+- **Background I/O** (`src/bio.c`): worker threads for closing files, AOF
+  fsync and lazy freeing of memory.
+- **Fork children** for RDB snapshots and AOF rewrites (`redisFork()`).
+- **Module threads**, coordinated by the GIL mentioned above.
+
+If you add state that an I/O thread reads, note how `iothread.c` duplicates
+fields (the `io_*` members of `client`) to avoid sharing with the main thread.
+
+## The data model
+
+### Objects and the keyspace
+
+`src/object.h` explains the central structure. A value is a `robj` with a
+type, an encoding, a reference count and a pointer. A `kvobj` is an `robj`
+stored in the keyspace: it embeds the key name after the struct, may embed a
+small string value too, and may carry up to eight 8-byte metadata slots placed
+before the struct. Slot 0 is the key's expiry time; slots 1 to 7 are available
+to modules through the key metadata framework (`src/keymeta.h`).
+
+`redisDb` (`src/server.h`) holds:
+
+- `keys` and `expires`: `kvstore` instances (`src/kvstore.c`), an array of
+  dicts. In cluster mode there is one dict per hash slot (16,384); otherwise
+  one. A Fenwick tree (`src/fwtree.c`) over dict sizes makes "find the Nth
+  key" and "next non-empty slot" cheap.
+- `subexpires`: an `estore` (`src/estore.c`) tracking hashes that have fields
+  with a TTL, keyed by their earliest field expiry.
+- dictionaries for blocked clients, ready keys and `WATCH`.
+
+All key access goes through `src/db.c` (`lookupKeyRead`, `lookupKeyWrite`,
+`dbAdd`, `setKey`, `dbDelete`). Lookups also perform lazy expiry.
+
+### Types and encodings
+
+Each type has a `t_*.c` file. A type usually has a compact encoding for small
+values and a general one, with thresholds in `redis.conf`.
+
+| Type | File | Encodings (from `object.h`) |
+|---|---|---|
+| String | `t_string.c`, `bitops.c`, `hyperloglog.c` | raw, embstr, int |
+| List | `t_list.c` | listpack, quicklist |
+| Set | `t_set.c` | intset, listpack, hash table |
+| Sorted set | `t_zset.c`, `geo.c` | listpack, skiplist |
+| Hash | `t_hash.c` | listpack, listpack with TTL metadata, hash table, and two template encodings |
+| Stream | `t_stream.c` | radix tree of listpacks |
+| Array | `t_array.c`, `sparsearray.c` | sliced array |
+| Module | (module.c, absent) | owned by the module |
+
+Building blocks you will meet everywhere: `sds` (strings), `dict`,
+`listpack`, `quicklist`, `rax` (radix tree), `intset`, `adlist`, `vector`.
+`ziplist` and `zipmap` remain only to load old RDB files.
+
+### Things that are newer and less obvious
+
+- **Hash field expiration.** Fields live in `Entry` objects (`src/entry.h`)
+  that pack field, value and an optional expiry. Each hash keeps its own
+  `ebuckets` structure (`src/ebuckets.h`) of expiring fields, and is itself
+  registered in `db->subexpires` for the active expire cycle.
+- **Compact hashes (templates).** New in 8.10. When many hashes share exactly
+  the same field names, the names are stored once in an immutable shared
+  template and each key stores only its values plus a small template id. The
+  long comment "Hash template registry internals" in `t_hash.c` is the
+  design note. Points to remember: changing a hash's field set moves it to a
+  different template, so the feature suits stable schemas; automatic
+  conversion is off by default (`hash-min-template-entries 0`) and one-way;
+  hashes with field TTLs are never converted; the registry is main-thread
+  only, so the lazy-free thread reports dropped references back to it instead
+  of touching it. `HIMPORT` is the bulk-load command built on this.
+- **Array type.** A sparse array with a 64-bit index space, commands prefixed
+  `AR` (`ARGET`, `ARMSET`, `ARSCAN`, `ARGREP`, and others). Values are tagged
+  pointer-sized words that hold small integers, doubles and short strings
+  inline. `ARGREP` is why the `tre` regex library is vendored.
+- **GCRA rate limiter** (`src/gcra.c`). Compiled out unless built with
+  `-DENABLE_GCRA`; the object type and RDB type are behind the same flag.
+- **Hot key tracking** (`src/hotkeys.c`), a `HOTKEYS` command that samples CPU
+  and network cost per key using a Cuckoo Heavy Keeper top-K sketch
+  (`src/chk.c`).
+
+## Persistence
+
+- **RDB** (`src/rdb.c`, `rdb.h`): a point-in-time snapshot written by a forked
+  child. `RDB_VERSION` is 15. `rdb.h` lists every value type and opcode; any
+  new type or encoding needs an entry there, a save path and a load path, and
+  must tolerate hostile input, because RDB payloads also arrive through
+  `RESTORE` and replication. The release notes show a steady stream of fixes
+  for exactly that.
+- **AOF** (`src/aof.c`): a log of write commands, kept as a set of files
+  described by a manifest: one BASE (a snapshot), one or more INCR files, and
+  HISTORY files awaiting deletion. A rewrite produces a new BASE.
+- **BACKUP** (new in 8.10, also in `aof.c`): reuses the multi-part AOF
+  machinery to produce a sealed BASE plus INCR plus manifest in
+  `backupdirname`. Subcommands are START, SEAL, ABORT, CLEANUP, STATUS and
+  LIST. The `preload-file` option loads such a backup (or a plain RDB or AOF)
+  at startup in place of the normal data files.
+- `src/rio.c` is the I/O abstraction both formats write through (file, buffer,
+  socket).
+
+## Replication
+
+`src/replication.c` implements primary to replica streaming. The code still
+uses the words master and slave in identifiers. Essentials:
+
+- A replica first attempts a partial resync (PSYNC) from the primary's
+  replication backlog; failing that, a full sync by RDB transfer.
+- **RDB channel** full sync: the replica opens a second connection so the
+  forked child streams the RDB directly while the main connection carries live
+  writes, which the replica buffers until loading finishes. This moves
+  buffering pressure from primary to replica. The state machine is drawn in a
+  comment (search "Rdb channel for full sync").
+- **Stream compression** (`src/client_comp.c`, new in 8.10): zstd, only when
+  built with `BUILD_COMPRESSION=yes`, and per `redis.conf` only effective with
+  `io-threads` above 1.
+
+## Cluster
+
+- `src/cluster.c` holds the parts common to any clustering implementation
+  (slot calculation, redirection decisions, generic `CLUSTER` subcommands).
+  `src/cluster_legacy.c` is the standard gossip-based cluster bus: node
+  table, failure detection, failover, config epochs.
+- A key's slot is CRC16 of the key, or of the text inside `{...}` if present,
+  masked to 14 bits (`keyHashSlot` in `cluster.h`).
+- **Atomic slot migration (ASM)** moves slots by snapshot plus stream, like a
+  miniature replication, then pauses writes briefly on the source for
+  hand-off and trims the moved keys afterwards. The implementation file is
+  absent; this summary comes from `cluster_asm.h`, the two
+  `cluster-slot-migration-*` options in `redis.conf`, call sites, and
+  `tests/unit/cluster/atomic-slot-migration.tcl`.
+- `src/cluster_slot_stats.c` keeps per-slot CPU, network and memory figures.
+- The cluster bus is unauthenticated unless `tls-cluster` is on; 8.10.2 added
+  a startup warning and `cluster-bus-port-protected-mode`.
+
+## Scripting and modules
+
+- Lua: `src/eval.c` (EVAL), `src/functions.c` and `function_lua.c` (FUNCTION
+  libraries), `script_lua.c` (the Lua binding), and `script.c`, the shared
+  layer through which any script calls back into the server with ACL, cluster
+  and read-only checks applied.
+- Modules: `src/redismodule.h` is the public API header that modules compile
+  against. `src/modules/hello*.c` are small examples; `tests/modules/*.c` are
+  44 test modules that exercise the API and are the most complete usage
+  reference in this copy.
+- `modules/vector-sets/` is the one in-tree module (vector similarity over an
+  HNSW graph with int8 quantisation and true deletion).
+- JSON, Search, Time Series and the probabilistic types are **not** in this
+  repository. They are separate repositories pinned in `modules/modules.yaml`
+  and cloned into `modules/<name>/src/` by `make modules-update`.
+
+## Building and running
+
+From `README.md` and `modules/MODULES.md`; not verifiable here because the
+Makefiles are absent.
+
+```sh
+make build redis          # core only; no external modules needed
+make modules-update       # clone the pinned external modules (git checkout)
+make bootstrap            # install their toolchains; changes system packages
+make                      # core plus whatever is cloned
+./src/redis-server redis-full.conf   # git checkout
+./src/redis-server redis.conf        # release tarball
+```
+
+Useful facts:
+
+- A core-only build needs little beyond a C compiler. The full build needs
+  LLVM, Rust and CMake between 3.25 and 3.31.6; CMake 4 is rejected.
+- `redis.conf` is hand-edited and holds core settings only.
+  `redis-full.conf` is generated from it plus each module's config; never
+  hand-add `loadmodule` lines.
+- Build options are cached, and `deps/` is not rebuilt automatically. After
+  changing flags or pulling, run `make distclean`.
+- Flags: `BUILD_TLS=yes`, `BUILD_COMPRESSION=yes`, `USE_SYSTEMD=yes`,
+  `MALLOC=libc|jemalloc` (jemalloc is the Linux default), `make 32bit`.
+- On macOS use `gmake`.
+
+## Testing
+
+Three layers exist:
+
+1. **C unit tests** inside the server binary, compiled with `REDIS_TEST`.
+   `redis-server test all` or `redis-server test <name>` runs them; the list
+   (`redisTests[]` in `server.c`) covers the data structures: sds, dict,
+   listpack, rax, kvstore, ebuckets and so on.
+2. **Tcl integration suite**, the main one. `tests/test_helper.tcl` collects
+   every `.tcl` file under `tests/unit`, `unit/type`, `unit/moduleapi`,
+   `unit/cluster` and `integration` (about 85k lines). Tests start real
+   servers. The shape, taken from `tests/unit/type/incr.tcl`:
+
+   ```tcl
+   start_server {tags {"incr"}} {
+       test {INCR against key created by incr itself} {
+           r incr novar
+       } {2}
+   }
+   ```
+
+   `r` sends a command to the server just started; the trailing braces hold
+   the expected result.
+
+   Options worth knowing: `--single <unit>`, `--only <test>`, `--tags`,
+   `--tls`, `--valgrind`, `--cluster-mode`, `--dump-logs`, `--stop`.
+   `tests/support/` holds the framework, `tests/helpers/` load generators.
+3. **Older multi-instance suites** under `tests/cluster` and `tests/sentinel`,
+   driven by `tests/instances.tcl`.
+
+The vector set module is tested by Python scripts in
+`modules/vector-sets/tests/`, launched from `tests/vectorset/vectorset.tcl`
+when `redis-py` is installed. External modules run their own suites through
+`make test <module>`.
+
+## Where to make common changes
+
+- **A new command.** Add a JSON description under `src/commands/`, regenerate
+  `commands.def` with `utils/generate-command-code.py`, and write
+  `void nameCommand(client *c)` in the relevant file. The flags in the JSON
+  (write, denyoom, fast, key specs) drive `processCommand()`, ACLs and cluster
+  routing, so they are part of correctness. (The JSON directory is absent
+  here; this is from the generator script and `commands.c`.)
+- **A new config option.** Add one line to the `static_configs[]` table in
+  `src/config.c` using a `create*Config` macro, a field in `struct
+  redisServer`, and a documented entry in `redis.conf`. Flags such as
+  `IMMUTABLE_CONFIG` and `MODIFIABLE_CONFIG` decide whether `CONFIG SET` works.
+- **A new encoding or type.** Touch `object.h`, the `t_*.c` file, `rdb.h` and
+  `rdb.c`, AOF rewrite, `defrag.c`, memory accounting in `object.c`, and
+  `redis-check-rdb.c`. Follow how `OBJ_ARRAY` or the hash template encodings
+  were threaded through.
+- **A new INFO field or metric.** `genRedisInfoString()` in `server.c`.
+
+## Conventions and traps
+
+- Memory is allocated through `zmalloc` so usage is accounted; do not call
+  libc `malloc` in core code.
+- Never block the main thread. Long work is done incrementally from cron,
+  handed to `bio`, or done in a fork child.
+- Any write must be propagated exactly as it should replay. Commands whose
+  effect is non-deterministic rewrite themselves before propagation (see
+  `rewriteClientCommandVector`).
+- A client can be freed while you hold a pointer to it; use `freeClientAsync`
+  when in doubt, and never free a client from an I/O thread.
+- Many files end their header with a design essay (`ebuckets.h`, `mstr.h`,
+  `entry.h`, `object.h`, `replication.c`, `t_hash.c`). Read these before the
+  code; they are the real architecture documentation.
+- `SECURITY.md` lists supported versions only up to 8.6.x, so that table lags
+  the 8.10.2 in `version.h`.
+- Licensing is a three-way choice (RSALv2, SSPLv1 or AGPLv3) from 8.0 on, and
+  contributions require the agreement in `CONTRIBUTING.md`.
+
+## A reading order
+
+1. `MANIFESTO`, then the non-build parts of `README.md`.
+2. `src/server.h`: `redisObject` (via `object.h`), `redisDb`, `client`,
+   `redisCommand`, `redisServer`.
+3. `src/server.c`: `main`, `processCommand`, `call`, `beforeSleep`,
+   `serverCron`.
+4. `src/networking.c`: `readQueryFromClient` through `processInputBuffer`,
+   then `addReply` and `writeToClient`.
+5. `src/db.c`, then one simple type end to end (`t_string.c`).
+6. `src/t_hash.c` for the richest example of encodings, expiry and templates.
+7. `src/rdb.c` and `src/aof.c`, then `src/replication.c`.
+8. `src/cluster.c` and `cluster_legacy.c` only when you need them.

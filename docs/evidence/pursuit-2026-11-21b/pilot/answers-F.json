@@ -1,0 +1,126 @@
+{
+ "answers": [
+  {
+   "id": "Q01",
+   "answer": "Redis is an in-memory key-value store and data structure server: a single redis-server process runs as a TCP daemon, holds the dataset primarily in RAM, and answers commands such as SET and GET. Disk is an optional extra, used for persistence (RDB snapshots or an append-only file) so the dataset can be reloaded at restart. It targets real-time, data-driven applications that need hot data faster than a disk-backed database: caching (with eviction and key/hash-field expiration), distributed session storage, counters, queues, leaderboards and rate limiters, event store and message broker (lists, sorted sets, sets, streams, pub/sub), and search, query and vector storage for documents and GenAI workloads.",
+   "where": "index.md; poles/1.md"
+  },
+  {
+   "id": "Q02",
+   "answer": "RDB is a binary snapshot of the whole dataset written to disk at configured save points by a forked child, so the parent keeps serving; a crash between snapshots can lose a few minutes of writes. The AOF is a log of every write command that is replayed on restart; with the default everysec fsync policy about one second of writes can be lost, 'always' fsyncs after every write (slowest, safest), and 'no' leaves flushing to the OS. The two are independent and can run together. When both are enabled, the AOF is loaded at startup because it has the better durability guarantees.",
+   "where": "poles/3.md; poles/1.md"
+  },
+  {
+   "id": "Q03",
+   "answer": "Not stated. The only related fact given is that UNLINK and the ASYNC option of FLUSHALL and FLUSHDB free memory on another thread so that a large deletion does not block the main thread. The service itself, the full set of work it takes over and any ordering guarantee are not stated.",
+   "where": "not stated (poles/3.md for the lazy-free fact)"
+  },
+  {
+   "id": "Q04",
+   "answer": "The modules API lets developers extend the core with new commands beyond the built-in data structures; search, JSON, time series and probabilistic types are bundled as external modules pinned in modules/modules.yaml, while vector sets are kept in-tree. Modules are loaded at runtime through loadmodule lines in the configuration file (a git checkout uses a generated redis-full.conf that carries them); the MODULE command is blocked by default unless enable-module-command allows the caller. How a module's own data type is saved and restored is not stated.",
+   "where": "index.md; poles/1.md; poles/2.md; poles/3.md"
+  },
+  {
+   "id": "Q05",
+   "answer": "main initialises the server and listeners, loads saved data, then enters aeMain, which repeatedly calls aeProcessEvents in src/ae.c. Each turn sleeps until a file (socket) event fires or a timer is due, then runs the registered handlers. For a new TCP connection the accept handler in src/socket.c accepts the socket and hands it on to createClient in src/networking.c, which registers readQueryFromClient as that connection's read handler; later bytes are read into the client's query buffer, parsed, and passed to processCommand and call in src/server.c. Replies are appended to the client's output buffer and the client is put on a pending-write queue rather than installing a write handler. Just before the loop sleeps again, beforeSleep flushes the AOF buffer and then sends the pending replies.",
+   "where": "poles/2.md; poles/3.md"
+  },
+  {
+   "id": "Q06",
+   "answer": "Not stated. It is only stated that every command acts on one keyspace whose keys are binary-safe strings and whose values are one of several data types, and that cluster mode divides the keyspace into 16384 hash slots. The containers holding keys and expirations, how that layout changes in cluster mode, and where a key's name is stored relative to its value are not stated.",
+   "where": "not stated (poles/1.md for the keyspace facts)"
+  },
+  {
+   "id": "Q07",
+   "answer": "Not stated. The only related fact is that 8.10 added compact hashes, described as a hash encoding that stores field names once for keys sharing a schema to reduce memory use. The general distinction between type and encoding, why both exist and who chooses the encoding are not stated.",
+   "where": "not stated (poles/2.md for compact hashes)"
+  },
+  {
+   "id": "Q08",
+   "answer": "How the clustering code is divided into files is not stated. A key's hash slot is the low 14 bits of the CRC16 of the key, giving 16384 slots; if the key contains a part inside { and }, only that part is hashed, so related keys can be forced into the same slot. In processCommand, when cluster mode is enabled, getNodeByQuery finds which node owns the command's keys; if it is another node, clusterRedirectClient redirects the client there. A command whose keys fall in different slots gets a cross-slot error before it runs.",
+   "where": "poles/3.md; deep-dives/mechanism-deep-dive.md; glossary.md"
+  },
+  {
+   "id": "Q09",
+   "answer": "The event loop fires the client's read handler, readQueryFromClient, which reads the bytes into the client's query buffer; processInputBuffer chooses inline or multibulk parsing, and on an I/O thread it only flags and queues the client for the main thread. processCommand then looks the command up and can stop it for: unknown command or wrong argument count, ACL denial, a cluster redirect to another node (or cross-slot error), an out-of-memory rejection when eviction fails for a command flagged as denied on OOM, a disk-error block on writes after a failed save or AOF write, and DEBUG/MODULE being disabled; a client pause postpones the client rather than rejecting it, and inside MULTI the command is queued and answered QUEUED. Otherwise call runs the command's handler, which answers via addReply into the output buffer and pending-write queue. For a write, call schedules propagation with alsoPropagate, and afterwards propagatePendingCommands calls propagateNow, which appends to the AOF buffer if AOF is on and feeds the replicas (several commands from one execution unit are normally wrapped in MULTI/EXEC). Before the loop sleeps, beforeSleep writes the AOF buffer to the file and only then sends replies, so the write reaches the log before the client hears OK; replication is asynchronous and the master does not wait for replicas.",
+   "where": "poles/2.md; poles/3.md; deep-dives/mechanism-deep-dive.md"
+  },
+  {
+   "id": "Q10",
+   "answer": "Since Redis 7 the AOF is a set of files kept in the directory named by appenddirname: a base snapshot file, incremental command files, and a manifest that records their order. The log is rewritten in the background with BGREWRITEAOF, triggered automatically when it grows by auto-aof-rewrite-percentage. The step-by-step procedure of the rewrite and how the manifest is updated while writes continue are not stated.",
+   "where": "poles/3.md"
+  },
+  {
+   "id": "Q11",
+   "answer": "A replica is configured with replicaof <masterip> <masterport> and reconnects by itself after a network partition; it resynchronizes partially when the link was lost only briefly, otherwise fully. A full sync sends an RDB file, either written to disk first or, by default (repl-diskless-sync yes), streamed by a child straight to the replica sockets; because a replica arriving after the transfer starts must wait for the next one, the master waits repl-diskless-sync-delay seconds (5 by default) to gather replicas. How the master decides between partial and full resynchronization, and the handshake and what is sent in the partial case, are not stated.",
+   "where": "poles/2.md; poles/3.md; appendix.md"
+  },
+  {
+   "id": "Q12",
+   "answer": "Expired keys are removed in two ways: when they are accessed, and by a background cycle that scans the keyspace; the effort of that cycle is described as a trade-off between memory, CPU and latency. How the background cycle limits its own cost is not stated. How expiry is kept consistent on replicas and in the append-only file is not stated (it is only stated that replicas receive DEL commands for keys the master evicts).",
+   "where": "poles/3.md"
+  },
+  {
+   "id": "Q13",
+   "answer": "Eviction samples keys instead of tracking exact order in order to save memory. When memory must be freed it examines a sample of keys and chooses a victim by the policy (approximated LRU, LFU or LRM, random, or nearest expiry, among all keys or only keys with an expiry). The cost is accuracy versus CPU: the default sample size of 5 gives good-enough results, while 10 approximates true LRU very closely but costs more CPU. Further detail of how the approximation works is not stated.",
+   "where": "poles/3.md; understanding.md"
+  },
+  {
+   "id": "Q14",
+   "answer": "Not stated. The only related fact is that a forked save child reports its copy-on-write size to the parent when it finishes, indicating that pages the parent modifies during a save are duplicated in memory. Incremental hash table resizing and why resizing is discouraged while a child runs are not stated.",
+   "where": "not stated (poles/3.md for copy-on-write)"
+  },
+  {
+   "id": "Q15",
+   "answer": "The core is deliberately mostly single-threaded: a shared-nothing design is held to be much simpler and optimal on NUMA systems, and scaling is done by running many instances joined with Redis Cluster; because one thread runs each command to completion, commands never interleave. The cost is that a slow command blocks everyone, e.g. DEL on a value with millions of elements can stall the server for seconds. Extra threads are used for freeing memory (UNLINK, and ASYNC on FLUSHALL/FLUSHDB) and, with io-threads, for socket reads, writes and protocol parsing, while commands still execute on the main thread. I/O threading is off by default and suggested only on machines with at least 4 cores, leaving at least one spare core; it is not supported for TLS connections because TLS manipulates event-loop events in a non-thread-safe way.",
+   "where": "poles/3.md; poles/1.md"
+  },
+  {
+   "id": "Q16",
+   "answer": "The sync policies trade speed for durability: 'no' never fsyncs and lets the OS flush when it wants (fastest), 'always' fsyncs after every write to the log (slow, safest), and 'everysec' fsyncs once per second (the default compromise, can lose about one second of writes in a power outage). Commands only append to an in-memory AOF buffer; the buffer is written just before the event loop sleeps and before replies are sent, so a client is told OK only after its write is in the file. With no-appendfsync-on-rewrite yes, long fsync stalls while a child is saving are avoided, but during that time durability drops to that of appendfsync no, which can mean up to 30 seconds of lost log with default Linux settings.",
+   "where": "poles/3.md; poles/2.md"
+  },
+  {
+   "id": "Q17",
+   "answer": "Not stated for the most part. It is stated only that processCommand resolves commands with lookupCommand and rejects wrong argument counts, that call invokes the command's handler through c->cmd->proc (e.g. setCommand and getCommand in src/t_string.c), that commands carry flags such as the one denying them when out of memory, and that src/commands/README.md describes generated command metadata. Where the command table is defined, how it gets into the running server, and the full description a command needs are not stated.",
+   "where": "not stated (poles/2.md; deep-dives/mechanism-deep-dive.md; discovery.md for the fragments)"
+  },
+  {
+   "id": "Q18",
+   "answer": "Not stated. The only related facts are that directives controlling the files Redis writes, such as dir and dbfilename, are immutable at runtime, and that enable-protected-configs defaults to no. Where a new parameter is added and what determines its runtime mutability, default and any triggered action are not stated.",
+   "where": "not stated (poles/3.md for the immutable directives)"
+  },
+  {
+   "id": "Q19",
+   "answer": "Not stated.",
+   "where": "not stated"
+  },
+  {
+   "id": "Q20",
+   "answer": "Not stated for both parts. (a) The event loop lives in src/ae.c, but how an operating-system readiness-notification API is plugged in is not stated. (b) The TCP accept handler lives in src/socket.c and TLS can be built into the server or as a loadable module, but the extension point for a new transport is not stated.",
+   "where": "not stated (poles/2.md; poles/3.md for file locations)"
+  },
+  {
+   "id": "Q21",
+   "answer": "When maxmemory is set, processCommand runs performEvictions before a command; eviction removes keys under the configured policy, working for a bounded time and continuing later from a timer so a large overshoot does not freeze the server. The default policy is noeviction; whenever nothing can be evicted, commands that would use more memory are refused with an out-of-memory error while reads still work. The output buffers feeding attached replicas are not counted toward the limit (to avoid a loop of evictions filling them with DEL commands and triggering more evictions), so a lower maxmemory is suggested to leave room. Replicas ignore maxmemory by default and instead receive DEL commands for keys the master evicts, so they can use more memory than the limit.",
+   "where": "poles/3.md; deep-dives/mechanism-deep-dive.md"
+  },
+  {
+   "id": "Q22",
+   "answer": "If a background snapshot fails, stop-writes-on-bgsave-error yes makes the server refuse writes until saving works again, so a broken disk is noticed rather than silently losing data; write commands are likewise blocked after a failed AOF write. RDB files end with a CRC64 checksum that makes the format more resistant to corruption at roughly a 10% cost when saving and loading, and it can be disabled. What the server does when the append-only file is damaged at startup, and when the data file cannot be loaded at all, is not stated.",
+   "where": "poles/3.md; deep-dives/mechanism-deep-dive.md"
+  },
+  {
+   "id": "Q23",
+   "answer": "Replication is asynchronous: the master streams each propagated write to replicas and does not wait for them, so it gives no guarantee that a write has reached a replica when it is acknowledged; a replica with a broken link may hold stale data. An operator can set min-replicas-to-write (off by default) so the master stops accepting writes when fewer than a given number of replicas appear connected. While its link to the master is down, a replica by default still answers reads with possibly stale data (replica-serve-stale-data yes) and by default rejects writes (replica-read-only yes).",
+   "where": "poles/3.md"
+  },
+  {
+   "id": "Q24",
+   "answer": "In cluster mode all keys of one command must map to the same hash slot; a command whose keys fall in different slots gets a cross-slot error before it runs, and a command for keys owned by another node is redirected. Multi-key operations are deliberately not made distributed transparently; a hash tag in braces can force related keys into one slot. Restrictions on databases in cluster mode are not stated. What happens to availability when some hash slots have no serving node is not stated.",
+   "where": "poles/3.md; poles/1.md; deep-dives/mechanism-deep-dive.md"
+  }
+ ],
+ "minutes_felt": 3,
+ "notes": "Command path, persistence policies, eviction, threading and replication defaults were well covered; internals such as keyspace layout, encodings, hash table resizing, command table, configuration registration, background I/O and module persistence were absent. Heavy per-sentence evidence markers made the pages slow to read."
+}
