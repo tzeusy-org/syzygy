@@ -91,7 +91,7 @@ authority and no model yet called on the current path.
     [v1.4 sign-off](.syzygy/governance/decisions/POLARIS-DOSSIER-LOCAL-AGENT-MODE-SIGNOFF-v1.4.md);
     [v1.5 sign-off](.syzygy/governance/decisions/POLARIS-DOSSIER-LOCAL-AGENT-MODE-SIGNOFF-v1.5.md);
     [v1.6 sign-off](.syzygy/governance/decisions/POLARIS-DOSSIER-LOCAL-AGENT-MODE-SIGNOFF-v1.6.md)), and
-    39 requirements and 365 scenarios in the effective composition with it and with the signed-off
+    39 requirements and 372 scenarios in the effective composition with it and with the signed-off
     [launch-consent addition](openspec/changes/polaris-dossier-launch-consent/specs/polaris-generation/spec.md)
     ([v1.0 sign-off](.syzygy/governance/decisions/POLARIS-DOSSIER-LAUNCH-CONSENT-SIGNOFF-v1.0.md);
     [v1.1 sign-off](.syzygy/governance/decisions/POLARIS-DOSSIER-LAUNCH-CONSENT-SIGNOFF-v1.1.md);
@@ -114,6 +114,11 @@ authority and no model yet called on the current path.
     It replaces REQ-polaris-generation-034 again (49 to 60 scenarios: a stored reading ledger, shape packs and
     the thesis basis); its implementation (syzygy-3efd.21, syzygy-3efd.43, syzygy-3efd.56) is not yet landed.
     *(2026-11-21: the predecessor figure "354 scenarios" is superseded by that
+    amendment; all 39 identities remain.)*
+    [Coverage pre-check amendment 2.5](openspec/changes/dossier-coverage-precheck) is agent-adopted in A-21.
+    It replaces REQ-polaris-generation-034 again (60 to 67 scenarios: inventory-coverage advice on check's
+    report and the author's justified-omission record); its implementation (syzygy-5dhm.28) lands with it.
+    *(2026-11-22: the predecessor figure "365 scenarios" is superseded by that
     amendment; all 39 identities remain.)*
     *(2026-11-18: the predecessor figure "329 scenarios" is superseded by that
     overlay; all38 identities remain, and046 is now Declared local-source admission.)*

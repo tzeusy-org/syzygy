@@ -1,0 +1,276 @@
+{
+  "format": "syzygy-dossier-coverage-precheck-replay/1",
+  "bead": "syzygy-5dhm.28",
+  "label": "Observed",
+  "subject": "the stored operator-agent dossier runs under the state root, read only",
+  "stateRoot": "/home/orca/.local/state/syzygy-dossier",
+  "rule": {
+    "id": "overlap-or-path-named",
+    "version": 1
+  },
+  "ruleModule": {
+    "path": "packages/polaris-dossier/src/inventory-coverage.ts",
+    "sha256": "fb9a2f0872ff89fa426c65e2fcbdb49869d4b75257d277df2c6bdfb28e1918ef",
+    "commit": "9f3d006682a18aa216648a59184e19313a5a38ec",
+    "worktreeClean": true
+  },
+  "predicates": {
+    "run": "a directory of the state root whose name matches ^run-[0-9a-f]{32}$",
+    "firstValidatedVerdict": "the lowest `number` among the run's steps.jsonl rows with step review-check, kind fidelity and outcome validated; the file reviews/fidelity-verdict-<number>.json",
+    "comparedDocuments": "packet.draft.document and packet.inventory.document of reviews/fidelity-packet-<verdict.packetSha256>/packet.json",
+    "listed": "an entry in compareInventoryCoverage(draft, inventory).uncovered: no citation under the draft's introduction, sections, diagrams, deepDives or unresolved shares a path and an intersecting closed line range with a citation of the entry, no claim block's text contains a path the entry cites, and the draft's inventoryOmissions does not name it",
+    "reviewer": "the disposition of the entry in that verdict's inventoryCoverage",
+    "recall": "listedBy.unsupported / reviewer.unsupported",
+    "listedThatReviewerAccepted": "listedBy.represented"
+  },
+  "denominator": "every entry of the inventory each first validated fidelity packet carries (pooled.entries)",
+  "pooled": {
+    "entries": 385,
+    "listed": 184,
+    "reviewer": {
+      "unsupported": 181,
+      "represented": 160,
+      "justified-omission": 44,
+      "unresolved": 0,
+      "withheld": 0
+    },
+    "listedBy": {
+      "unsupported": 151,
+      "represented": 12,
+      "justified-omission": 21,
+      "unresolved": 0,
+      "withheld": 0
+    },
+    "listedWithNoDisposition": 0,
+    "listedCitingNothing": 0,
+    "recall": 0.834,
+    "shareOfListedUnsupported": 0.821
+  },
+  "runs": [
+    {
+      "runId": "run-2ecdcab0c77e228f6ad9d3e0acfa1414",
+      "pinnedRevision": "498ecd0d6d007db11ddb3aea9428552598a78622",
+      "firstValidatedVerdict": "fidelity-verdict-1.json",
+      "packetSha256": "def3906d35c240e8ee4f5de54dceab52b939a710f1885c93c71c161dc57873a6",
+      "draft": {
+        "revision": 1,
+        "sha256": "320821f48799c3a1e725de61e5a2b1e6f84edfb09a028b4006f4db7008744351",
+        "schemaVersion": "polaris-dossier-local-draft-v4"
+      },
+      "inventory": {
+        "revision": 1,
+        "sha256": "a3519ce3c7192e83c20c6030c60309f4b930528c271f1523c95f5c1410b59802"
+      },
+      "omissionsRecorded": 0,
+      "entries": 66,
+      "listed": 33,
+      "reviewer": {
+        "unsupported": 39,
+        "represented": 27,
+        "justified-omission": 0,
+        "unresolved": 0,
+        "withheld": 0
+      },
+      "listedBy": {
+        "unsupported": 32,
+        "represented": 1,
+        "justified-omission": 0,
+        "unresolved": 0,
+        "withheld": 0
+      },
+      "listedWithNoDisposition": 0,
+      "listedCitingNothing": 0
+    },
+    {
+      "runId": "run-36df95faf04a4c98eabbb32a18a4e833",
+      "pinnedRevision": "498ecd0d6d007db11ddb3aea9428552598a78622",
+      "firstValidatedVerdict": "fidelity-verdict-2.json",
+      "packetSha256": "5801903893c0b7baed5f789b45c054f05eac866f39da8d893f065d7dbaea2b73",
+      "draft": {
+        "revision": 1,
+        "sha256": "8e0e52f9fa3556580b71258d461c14f6496f2a57b898a4ef4265ea8e02356d30",
+        "schemaVersion": "polaris-dossier-local-draft-v2"
+      },
+      "inventory": {
+        "revision": 1,
+        "sha256": "a4cdec3a3756d87820e0af3b5a4b32891c4d6ffa91ed9f3a36b196d7afc29b6b"
+      },
+      "omissionsRecorded": 0,
+      "entries": 63,
+      "listed": 42,
+      "reviewer": {
+        "unsupported": 43,
+        "represented": 19,
+        "justified-omission": 1,
+        "unresolved": 0,
+        "withheld": 0
+      },
+      "listedBy": {
+        "unsupported": 40,
+        "represented": 2,
+        "justified-omission": 0,
+        "unresolved": 0,
+        "withheld": 0
+      },
+      "listedWithNoDisposition": 0,
+      "listedCitingNothing": 0
+    },
+    {
+      "runId": "run-4465d22f5ce1829ca49059a5b8451bb0",
+      "pinnedRevision": "498ecd0d6d007db11ddb3aea9428552598a78622",
+      "firstValidatedVerdict": "fidelity-verdict-0.json",
+      "packetSha256": "08a1591c7f63f0b68fea3bead00bdc0ed6c9e06da5f17672df7407c8aa933f41",
+      "draft": {
+        "revision": 1,
+        "sha256": "c3a61f55e7c41a21b27cf0da042858f20a51c316698aa1878335a4842f0691b2",
+        "schemaVersion": "polaris-dossier-local-draft-v2"
+      },
+      "inventory": {
+        "revision": 1,
+        "sha256": "8c84c55645455a18e33ccd1d280449ae88be9b66b70f010999cb08f528ed80d8"
+      },
+      "omissionsRecorded": 0,
+      "entries": 46,
+      "listed": 26,
+      "reviewer": {
+        "unsupported": 20,
+        "represented": 19,
+        "justified-omission": 7,
+        "unresolved": 0,
+        "withheld": 0
+      },
+      "listedBy": {
+        "unsupported": 18,
+        "represented": 2,
+        "justified-omission": 6,
+        "unresolved": 0,
+        "withheld": 0
+      },
+      "listedWithNoDisposition": 0,
+      "listedCitingNothing": 0
+    },
+    {
+      "runId": "run-658f2f90470f73eea1dc1d90209c5ef7",
+      "pinnedRevision": "498ecd0d6d007db11ddb3aea9428552598a78622",
+      "firstValidatedVerdict": "fidelity-verdict-0.json",
+      "packetSha256": "82940817f95c790903a90103264d941217e563b407a60e391823e40b8716733e",
+      "draft": {
+        "revision": 1,
+        "sha256": "d34bf8a95cd7162239ca461b15a0456df5ac3a4c845e56daa41e15b02c1c4bdb",
+        "schemaVersion": "polaris-dossier-local-draft-v4"
+      },
+      "inventory": {
+        "revision": 0,
+        "sha256": "aaa6baaff3535820d7f90caf2aa06072c9d64d55f8fb41a29322d41533e3e45e"
+      },
+      "omissionsRecorded": 0,
+      "entries": 55,
+      "listed": 30,
+      "reviewer": {
+        "unsupported": 30,
+        "represented": 25,
+        "justified-omission": 0,
+        "unresolved": 0,
+        "withheld": 0
+      },
+      "listedBy": {
+        "unsupported": 27,
+        "represented": 3,
+        "justified-omission": 0,
+        "unresolved": 0,
+        "withheld": 0
+      },
+      "listedWithNoDisposition": 0,
+      "listedCitingNothing": 0
+    },
+    {
+      "runId": "run-d9411d26ca55ebe0250e2e9b94dc0e32",
+      "pinnedRevision": "498ecd0d6d007db11ddb3aea9428552598a78622",
+      "firstValidatedVerdict": "fidelity-verdict-1.json",
+      "packetSha256": "108c92d6f49622642d7df91835b8ce0745f56ea392801e0b6925bd366009052c",
+      "draft": {
+        "revision": 1,
+        "sha256": "4bea5393ea771f623deaf8efd5229f83c6a8f164b8104cfefb961be4360ba15e",
+        "schemaVersion": "polaris-dossier-local-draft-v3"
+      },
+      "inventory": {
+        "revision": 1,
+        "sha256": "c065eb24f58b4a00a8bfe9ef85f4ced5220f3db401b23878b3e0354978998e7a"
+      },
+      "omissionsRecorded": 0,
+      "entries": 92,
+      "listed": 20,
+      "reviewer": {
+        "unsupported": 12,
+        "represented": 44,
+        "justified-omission": 36,
+        "unresolved": 0,
+        "withheld": 0
+      },
+      "listedBy": {
+        "unsupported": 4,
+        "represented": 1,
+        "justified-omission": 15,
+        "unresolved": 0,
+        "withheld": 0
+      },
+      "listedWithNoDisposition": 0,
+      "listedCitingNothing": 0
+    },
+    {
+      "runId": "run-ffe579c77dc21d9f6dd87ca6e2bc9301",
+      "pinnedRevision": "498ecd0d6d007db11ddb3aea9428552598a78622",
+      "firstValidatedVerdict": "fidelity-verdict-1.json",
+      "packetSha256": "ef8798f8d29f37ede6a96e3ed7429c4d6b633c516b3c546139e3c050cd17fae0",
+      "draft": {
+        "revision": 1,
+        "sha256": "07f7205c9a58c26b419c7dfdc847b1aa23292c4ebdfafc455c962ca56c87743d",
+        "schemaVersion": "polaris-dossier-local-draft-v4"
+      },
+      "inventory": {
+        "revision": 1,
+        "sha256": "8d44dbc89d085fad0af0239df42796351ae24081987c7cb3057ffcb0fc697789"
+      },
+      "omissionsRecorded": 0,
+      "entries": 63,
+      "listed": 33,
+      "reviewer": {
+        "unsupported": 37,
+        "represented": 26,
+        "justified-omission": 0,
+        "unresolved": 0,
+        "withheld": 0
+      },
+      "listedBy": {
+        "unsupported": 30,
+        "represented": 3,
+        "justified-omission": 0,
+        "unresolved": 0,
+        "withheld": 0
+      },
+      "listedWithNoDisposition": 0,
+      "listedCitingNothing": 0
+    }
+  ],
+  "skipped": [],
+  "filesRead": {
+    "run-2ecdcab0c77e228f6ad9d3e0acfa1414/reviews/fidelity-packet-def3906d35c240e8ee4f5de54dceab52b939a710f1885c93c71c161dc57873a6/packet.json": "def3906d35c240e8ee4f5de54dceab52b939a710f1885c93c71c161dc57873a6",
+    "run-2ecdcab0c77e228f6ad9d3e0acfa1414/reviews/fidelity-verdict-1.json": "93ea5896adf106c3d8b192df1953b614cd3ad519ceb5bee590f353a0f677fa17",
+    "run-2ecdcab0c77e228f6ad9d3e0acfa1414/steps.jsonl": "0c16183d562af7b4ee7075f285d7440b0aeed9ed1beccaf1b92ddb9357e9832d",
+    "run-36df95faf04a4c98eabbb32a18a4e833/reviews/fidelity-packet-5801903893c0b7baed5f789b45c054f05eac866f39da8d893f065d7dbaea2b73/packet.json": "5801903893c0b7baed5f789b45c054f05eac866f39da8d893f065d7dbaea2b73",
+    "run-36df95faf04a4c98eabbb32a18a4e833/reviews/fidelity-verdict-2.json": "cec296760e44809fdf5cae7c2a508f5ae6e94c42b27eafe3fbae32a356936860",
+    "run-36df95faf04a4c98eabbb32a18a4e833/steps.jsonl": "7d42d6603eec72dee90e722d7b7a7bf3905f8b61c8dc64a6b45a71ff905f4e1a",
+    "run-4465d22f5ce1829ca49059a5b8451bb0/reviews/fidelity-packet-08a1591c7f63f0b68fea3bead00bdc0ed6c9e06da5f17672df7407c8aa933f41/packet.json": "08a1591c7f63f0b68fea3bead00bdc0ed6c9e06da5f17672df7407c8aa933f41",
+    "run-4465d22f5ce1829ca49059a5b8451bb0/reviews/fidelity-verdict-0.json": "b20d4a962bf2fc951d584a2131a2cc1187aad23200a4ffc133a031645cf349bf",
+    "run-4465d22f5ce1829ca49059a5b8451bb0/steps.jsonl": "aea8584097bfcf6197962702a27b18e0634096a11d0a5416421699f1678c25c5",
+    "run-658f2f90470f73eea1dc1d90209c5ef7/reviews/fidelity-packet-82940817f95c790903a90103264d941217e563b407a60e391823e40b8716733e/packet.json": "82940817f95c790903a90103264d941217e563b407a60e391823e40b8716733e",
+    "run-658f2f90470f73eea1dc1d90209c5ef7/reviews/fidelity-verdict-0.json": "8f3371c50052af970dcb3d98198286bdc494a85ab825cfe16542df5a970e7346",
+    "run-658f2f90470f73eea1dc1d90209c5ef7/steps.jsonl": "8a33647ad32651b2681746af20ece424dbff5d8a3930d966112a887c42dd0b64",
+    "run-d9411d26ca55ebe0250e2e9b94dc0e32/reviews/fidelity-packet-108c92d6f49622642d7df91835b8ce0745f56ea392801e0b6925bd366009052c/packet.json": "108c92d6f49622642d7df91835b8ce0745f56ea392801e0b6925bd366009052c",
+    "run-d9411d26ca55ebe0250e2e9b94dc0e32/reviews/fidelity-verdict-1.json": "30c3326e3cdb4ab4374afef2e09e2d5d4de53dc1ab3e96e76ad5545b966206a7",
+    "run-d9411d26ca55ebe0250e2e9b94dc0e32/steps.jsonl": "1464b3e5c61b8fccc6cfb95da65599c652d3098e453a4385000309afaee76c33",
+    "run-ffe579c77dc21d9f6dd87ca6e2bc9301/reviews/fidelity-packet-ef8798f8d29f37ede6a96e3ed7429c4d6b633c516b3c546139e3c050cd17fae0/packet.json": "ef8798f8d29f37ede6a96e3ed7429c4d6b633c516b3c546139e3c050cd17fae0",
+    "run-ffe579c77dc21d9f6dd87ca6e2bc9301/reviews/fidelity-verdict-1.json": "601e19f34517a1df9ffcf455ac845be293f820b8d4c6144424c54a24e1b843d7",
+    "run-ffe579c77dc21d9f6dd87ca6e2bc9301/steps.jsonl": "4eb6676194fc72a40a47d00e4663a451ccb5bce10fada2602a4fdd40c0245eb6"
+  }
+}
