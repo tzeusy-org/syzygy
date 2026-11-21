@@ -1,11 +1,11 @@
 import { isRecord } from '@syzygy/support';
 import { READER_STANDARDS_VERSION } from './reader-standards.js';
 
-/** The counted reader standards (`reader-standards.ts`, syzygy-pdja.17): what `syzygy dossier check` can measure of RS-13, RS-14, RS-16
- * and RS-19 in a draft, reported to the author as advice. Advice is never a finding: it sets no outcome, is on the check's report only
+/** The counted reader standards (`reader-standards.ts`, syzygy-pdja.17): what `syzygy dossier check` can measure of RS-13, RS-14, RS-16,
+ * RS-17 (an edge's locality, syzygy-3efd.17) and RS-19 in a draft, reported to the author as advice. Advice is never a finding: it sets no outcome, is on the check's report only
  * (never the stored check record, like the screen census), and the rendered-design review still judges every page. Pure. */
 
-export type ReaderStandardId = 'RS-13' | 'RS-14' | 'RS-16' | 'RS-19';
+export type ReaderStandardId = 'RS-13' | 'RS-14' | 'RS-16' | 'RS-17' | 'RS-19';
 
 export interface ReaderAdvisory {
   readonly standard: ReaderStandardId;
@@ -136,6 +136,22 @@ export function readerAdvice(doc: unknown): ReaderAdvice {
     list(doc['sections']).forEach((section, i) => {
       const id = isRecord(section) ? text(section['id']) : undefined;
       if (id !== undefined && !drawn.has(id)) add('RS-16', `$.sections[${i}]`, `no diagram is drawn for the section ${JSON.stringify(id)}: draw any workflow, mechanism or set of components that talk to each other it explains`);
+    });
+    // RS-17, locality (syzygy-3efd.17): an edge none of whose cited files is cited by either of its endpoint nodes. Files are compared by
+    // path alone, never by line range, so an advisory means the edge's support shares no file with what it connects.
+    list(doc['diagrams']).forEach((diagram, i) => {
+      if (!isRecord(diagram)) return;
+      const citedPaths = (element: unknown): Set<string> =>
+        new Set(isRecord(element) ? list(element['citations']).flatMap((c) => (isRecord(c) && text(c['path']) !== undefined ? [text(c['path'])!] : [])) : []);
+      const nodes = new Map(list(diagram['nodes']).flatMap((node) => (isRecord(node) && text(node['id']) !== undefined ? [[text(node['id'])!, citedPaths(node)] as const] : [])));
+      list(diagram['edges']).forEach((edge, j) => {
+        if (!isRecord(edge)) return;
+        const from = nodes.get(text(edge['from']) ?? ''), to = nodes.get(text(edge['to']) ?? '');
+        const own = citedPaths(edge);
+        if (from === undefined || to === undefined || own.size === 0) return;
+        if ([...own].some((p) => from.has(p) || to.has(p))) return;
+        add('RS-17', `$.diagrams[${i}].edges[${j}]`, `the edge ${JSON.stringify(text(edge['id']) ?? '')} cites no file that its node ${JSON.stringify(text(edge['from']))} or its node ${JSON.stringify(text(edge['to']))} cites: cite where the source shows these two connect, or check that the edge joins the right nodes (polaris-reader-standards-v1 does not yet mark RS-17 counted; this is its locality alone)`);
+      });
     });
   }
   return { standards: READER_STANDARDS_VERSION, note: NOTE, advisories };

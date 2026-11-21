@@ -50,7 +50,7 @@ const section = (id: string, words: number, title = 'How a write reaches the rep
 const diagram = (sectionId: string) => ({ id: `d-${sectionId}`, sectionId });
 
 describe('reader advice: the counted standards', () => {
-  it('gives no advice on a draft that meets all four, and none on a draft that is not an object', () => {
+  it('gives no advice on a draft that meets every counted standard, and none on a draft that is not an object', () => {
     const doc = { sections: [section('a', 300)], deepDives: [{ ...section('dd', 10), sectionId: 'a' }], diagrams: [diagram('a')] };
     expect(readerAdvice(doc)).toEqual({ standards: 'polaris-reader-standards-v1', note: expect.stringContaining('sets no outcome'), advisories: [] });
     expect(readerAdvice('x').advisories).toEqual([]);
@@ -83,6 +83,28 @@ describe('reader advice: the counted standards', () => {
   it('RS-16: a section no diagram is drawn for, and never a deep dive', () => {
     const doc = { sections: [section('a', 5), section('b', 5)], deepDives: [{ ...section('dd', 5), sectionId: 'b' }], diagrams: [diagram('a'), { id: 'x', sectionId: 'dd' }] };
     expect(readerAdvice(doc).advisories).toEqual([{ standard: 'RS-16', at: '$.sections[1]', detail: expect.stringContaining('"b"') }]);
+  });
+
+  // syzygy-3efd.17: an edge whose cited files touch neither endpoint's.
+  it('RS-17 locality: an edge citing no file either endpoint cites, and never one that shares a file with an end', () => {
+    const cite = (path: string, line = 1) => ({ id: `c-${path}-${line}`, path, startLine: line, endLine: line });
+    const node = (id: string, ...paths: string[]) => ({ id, label: id, epistemic: 'inferred', citations: paths.map((p) => cite(p)) });
+    const edge = (id: string, from: string, to: string, ...paths: string[]) => ({ id, from, to, label: id, epistemic: 'inferred', citations: paths.map((p) => cite(p, 9)) });
+    const doc = { sections: [section('a', 5)], diagrams: [{ id: 'd', sectionId: 'a',
+      nodes: [node('client', 'src/client.c'), node('server', 'src/server.c'), node('aof', 'src/aof.c', 'src/server.c')],
+      edges: [
+        edge('far', 'client', 'server', 'src/networking.c'),
+        edge('to-end', 'client', 'server', 'src/server.c'),
+        edge('from-end', 'client', 'aof', 'src/client.c', 'src/networking.c'),
+        edge('shared-file-other-lines', 'server', 'aof', 'src/aof.c'),
+        // Touches an end only through that end's second cited file.
+        edge('second-file', 'client', 'aof', 'src/server.c'),
+        edge('dangling', 'client', 'nowhere', 'src/elsewhere.c'),
+      ] }] };
+    expect(readerAdvice(doc).advisories).toEqual([{
+      standard: 'RS-17', at: '$.diagrams[0].edges[0]',
+      detail: 'the edge "far" cites no file that its node "client" or its node "server" cites: cite where the source shows these two connect, or check that the edge joins the right nodes (polaris-reader-standards-v1 does not yet mark RS-17 counted; this is its locality alone)',
+    }]);
   });
 
   it('RS-13: a title naming a code symbol, in a section or a deep dive', () => {
