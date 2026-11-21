@@ -453,6 +453,19 @@ DERIVED_SUBJECTS = {
     DERIVED_POLICY: "95a3aa132041aa5dd8f860e8ce4c92b3e3c3380ebef4b1ada19bee6b8f50865e",
 }
 DERIVED_BOUND_PARTS = len(DERIVED_SUBJECTS)
+# The v2.4 ledger-packs-thesis amendment (syzygy-3efd.21, .43, .56): one
+# MODIFIED REQ-polaris-generation-034 after v2.3, pending until its own VIS-4
+# ledger row, found by its tag as v2.3's is.
+LEDGER_CHANGE = "dossier-ledger-packs-thesis"
+LEDGER_HOME = f"{CHANGES}/{LEDGER_CHANGE}"
+LEDGER_SPEC = f"{LEDGER_HOME}/proposed/polaris-generation/spec.md"
+LEDGER_UNION = f"{LEDGER_HOME}/GOVERNING-DEPENDENCIES.json"
+LEDGER_TAG = "polaris-dossier-ledger-packs-thesis-v2.4"
+LEDGER_STATUS_PREFIX = f"[Ledger, packs and thesis amendment 2.4]({LEDGER_HOME})"
+LEDGER_SUBJECTS = {
+    LEDGER_SPEC: "500a7771f3df85046ff2c0c41a36c2067cf0bf44b1ba65e5bb5f52d4dbd9fded",
+}
+LEDGER_BOUND_PARTS = len(LEDGER_SUBJECTS)
 ADOPTION_LEDGER_TITLE = "# Agent adoptions"
 ADOPTION_TABLE_HEADER = "| Id | Date | Commit | What changed | Why | Revert | Tag |"
 ADOPTION_TABLE_DIVIDER = "|---|---|---|---|---|---|---|"
@@ -656,6 +669,35 @@ def derived_disposition(root, rows):
         identity, _date, commit, _changed, _why, _revert, _tag = rows[0]
         return recorded_disposition(root, identity, commit.strip("`"), DERIVED_TAG,
                                     DERIVED_SUBJECTS, plain_revert=True)
+    return None
+
+
+def is_ledger_row(line):
+    """A ledger row claiming the v2.4 ledger-packs-thesis amendment, well formed or not."""
+    if not line.startswith("|"):
+        return False
+    cells = [cell.strip() for cell in line.split("|")[1:-1]]
+    tag = f"`{LEDGER_TAG}`"
+    if len(cells) == 7 and cells[6] == tag:
+        return True
+    if len(cells) != 7 and tag in cells:
+        return True
+    if len(cells) < 4 or not re.fullmatch(r"`[0-9a-f]{40}`", cells[2]):
+        return False
+    snapshot = f"https://github.com/tzeusy-org/syzygy/blob/{cells[2][1:-1]}/"
+    return all(f"]({snapshot}{path})" in cells[3] for path in LEDGER_SUBJECTS)
+
+
+def ledger_rows(root):
+    return [[cell.strip() for cell in line.split("|")[1:-1]]
+            for line in adoption_table_rows(root) if is_ledger_row(line)]
+
+
+def ledger_disposition(root, rows):
+    if len(rows) == 1 and len(rows[0]) == 7:
+        identity, _date, commit, _changed, _why, _revert, _tag = rows[0]
+        return recorded_disposition(root, identity, commit.strip("`"), LEDGER_TAG,
+                                    LEDGER_SUBJECTS, plain_revert=True)
     return None
 
 
@@ -1109,6 +1151,44 @@ def derived_binding(root):
     return (None if records or subjects else read_text(root, DERIVED_SPEC), records, subjects)
 
 
+def ledger_binding(root):
+    """Read v2.4's published composition: pending until its row, like v2.3.
+
+    The row names the installing commit (a plain commit, so its revert may
+    omit `-m 1`), the reviewed spec at that commit and the version tag. Its
+    predecessor is v2.3's text of REQ-polaris-generation-034, so v2.3 must
+    itself be in force.
+    """
+    rows = ledger_rows(root)
+    if not rows or ledger_disposition(root, rows):
+        return None, [], []
+    records, subjects = [], []
+    if derived_binding(root)[0] is None:
+        records.append("ledger packs thesis: prior v2.3 derived observed facts adoption is unavailable")
+    if len(rows) != 1 or len(rows[0]) != 7:
+        records.append("ledger packs thesis: expected one seven-column agent adoption row")
+    else:
+        identity, date, commit, changed, reason, revert, tag = rows[0]
+        landed = re.fullmatch(r"`([0-9a-f]{40})`", commit)
+        if (not re.fullmatch(r"A-[1-9][0-9]*", identity)
+                or not valid_adoption_date(date)
+                or not landed or tag != f"`{LEDGER_TAG}`" or not reason):
+            records.append("ledger packs thesis: malformed adoption identity, date, commit, reason or tag")
+        if landed:
+            oid = landed.group(1)
+            if revert.split("`")[1:2] not in ([f"git revert {oid}"], [f"git revert -m 1 {oid}"]):
+                records.append("ledger packs thesis: revert does not name the landed commit")
+            for rel in LEDGER_SUBJECTS:
+                snapshot = f"https://github.com/tzeusy-org/syzygy/blob/{oid}/{rel}"
+                if f"]({snapshot})" not in changed:
+                    records.append(f"ledger packs thesis: adoption row does not name `{rel}`")
+    for rel, digest in LEDGER_SUBJECTS.items():
+        body = read_bytes(root, rel)
+        if body is None or sha(body) != digest:
+            subjects.append(f"ledger packs thesis: `{rel}` differs from the reviewed v2.4 subject")
+    return (None if records or subjects else read_text(root, LEDGER_SPEC), records, subjects)
+
+
 def url_source_contract_findings(root):
     """Verify the reviewed amendment in its actual contract homes."""
     body = read_bytes(root, URL_SOURCE_REPLACEMENTS)
@@ -1489,6 +1569,15 @@ def check_outcomes(root, report):
         subjects_seen += DERIVED_BOUND_PARTS
     r1 += derived_records
     r2 += derived_subjects
+    ledger_retired_by = ledger_disposition(root, ledger_rows(root))
+    ledger_amendment, ledger_records, ledger_subjects = ledger_binding(root)
+    if ledger_retired_by:
+        records += 2
+    elif ledger_amendment is not None or ledger_records or ledger_subjects:
+        records += 1
+        subjects_seen += LEDGER_BOUND_PARTS
+    r1 += ledger_records
+    r2 += ledger_subjects
     retirement = ""
     if declared_retired_by:
         retirement += f"; v2.0 inactive by {declared_retired_by}"
@@ -1498,6 +1587,8 @@ def check_outcomes(root, report):
         retirement += f"; v2.2 inactive by {figure_retired_by}"
     if derived_retired_by:
         retirement += f"; v2.3 inactive by {derived_retired_by}"
+    if ledger_retired_by:
+        retirement += f"; v2.4 inactive by {ledger_retired_by}"
     report.add("R1", "terminal outcome for every child", records, r1,
                f"{len(CHILDREN)} children and {len(additions)} installed Polaris "
                "additions; digest acts: phrase = manifest sha256 and in the "
@@ -1508,7 +1599,9 @@ def check_outcomes(root, report):
                "D10 record; an unrecorded v2.1 transaction stays pending; figure "
                "homes and fit: one v2.2 row over effective v2.0, pending until "
                "recorded; derived observed facts: one v2.3 row over effective "
-               "v2.2 naming spec and policy, pending until recorded" + retirement)
+               "v2.2 naming spec and policy, pending until recorded; ledger, "
+               "packs and thesis: one v2.4 row over effective v2.3, pending "
+               "until recorded" + retirement)
     report.add("R2", "reviewed and signed subjects hash to their rows", subjects_seen, r2)
 
 
@@ -2185,6 +2278,16 @@ def census(root):
                 b, extra_b = compose_figure_by_name(b, derived_amendment)
                 pa += extra_a
                 pb += extra_b
+        ledger_amendment, ledger_records, ledger_subjects = ledger_binding(root)
+        findings += ledger_records + ledger_subjects
+        if ledger_amendment is not None:
+            if derived_amendment is None or figure_amendment is None or amendment is None:
+                findings.append("POLARIS: ledger packs thesis requires effective derived observed facts v2.3")
+            else:
+                a, extra_a = compose_figure_by_id(a, ledger_amendment)
+                b, extra_b = compose_figure_by_name(b, ledger_amendment)
+                pa += extra_a
+                pb += extra_b
         findings += [f"POLARIS method A: {p}" for p in pa]
         findings += [f"POLARIS method B: {p}" for p in pb]
         if a != b:
@@ -2282,6 +2385,14 @@ def polaris_expected(root, findings):
                     findings.append("POLARIS derived observed facts: methods disagree or change identities")
                 n_scen += sum(len(row["scenarios"]) for row in der_a.values()) - sum(
                     len(row["scenarios"]) for row in fig_a.values())
+                ledger_amendment, _records, _subjects = ledger_binding(root)
+                if ledger_amendment is not None:
+                    led_a, pa = compose_figure_by_id(der_a, ledger_amendment)
+                    led_b, pb = compose_figure_by_name(der_b, ledger_amendment)
+                    if pa or pb or led_a != led_b or set(led_a) != set(der_a):
+                        findings.append("POLARIS ledger packs thesis: methods disagree or change identities")
+                    n_scen += sum(len(row["scenarios"]) for row in led_a.values()) - sum(
+                        len(row["scenarios"]) for row in der_a.values())
     return n_req, n_scen, ids
 
 
@@ -2411,6 +2522,9 @@ def check_generated(root, pop, report):
     derived_amendment, _records, _subjects = derived_binding(root)
     if derived_amendment is not None:
         files += tracked(root, DERIVED_HOME)
+    ledger_amendment, _records, _subjects = ledger_binding(root)
+    if ledger_amendment is not None:
+        files += tracked(root, LEDGER_HOME)
     candidate_ref_dirs = addition_dirs + (URL_SOURCE_HOME + "/",)
     files += list(ROUTE_PAGES)
     # An addition may cite a candidate Polaris requirement still under
@@ -2455,7 +2569,8 @@ def check_generated(root, pop, report):
             findings.append(f"`{rel}`: differs from its spec's warrants; run "
                             "`--regenerate`")
     for delta, rel in ((amendment, DECLARED_SOURCE_UNION), (url_amendment, URL_SOURCE_UNION),
-                       (figure_amendment, FIGURE_UNION), (derived_amendment, DERIVED_UNION)):
+                       (figure_amendment, FIGURE_UNION), (derived_amendment, DERIVED_UNION),
+                       (ledger_amendment, LEDGER_UNION)):
         if delta is None:
             continue
         examined += 1
@@ -2618,6 +2733,24 @@ def check_routes(root, pop, report):
             findings.append(f"`{STATUS}` calls derived observed facts v2.3 adopted while it is not in force")
         if any(DERIVED_TAG in line and "Agent adoption" in line for line in rows.get(DERIVED_CHANGE, [])):
             findings.append(f"`{OPENSPEC_README}` calls derived observed facts v2.3 adopted while it is not in force")
+    ledger_amendment, _records, _subjects = ledger_binding(root)
+    ledger_fields = [line.strip() for line in visible_route_lines(status)
+                     if line.strip().startswith(LEDGER_STATUS_PREFIX)]
+    if ledger_amendment is not None:
+        examined += 2
+        if not any(Path(AGENT_ADOPTIONS).name in line and LEDGER_TAG in line
+                   for line in rows.get(LEDGER_CHANGE, [])):
+            findings.append(f"`{OPENSPEC_README}` does not route ledger packs thesis v2.4 "
+                            f"to `{AGENT_ADOPTIONS}` and its version tag")
+        identity = ledger_rows(root)[0][0]
+        if AGENT_ADOPTIONS not in status or ledger_fields != [f"{LEDGER_STATUS_PREFIX} is agent-adopted in {identity}."]:
+            findings.append(f"`{STATUS}` does not route ledger packs thesis v2.4 and its adoption {identity}")
+    elif LEDGER_CHANGE in changes:
+        examined += 2
+        if any("is agent-adopted" in field for field in ledger_fields):
+            findings.append(f"`{STATUS}` calls ledger packs thesis v2.4 adopted while it is not in force")
+        if any(LEDGER_TAG in line and "Agent adoption" in line for line in rows.get(LEDGER_CHANGE, [])):
+            findings.append(f"`{OPENSPEC_README}` calls ledger packs thesis v2.4 adopted while it is not in force")
     figures = STATUS_FIGURE.findall(status)
     examined += 1
     reqs = pop.get("POLARIS", {})
@@ -2810,6 +2943,7 @@ def inputs(root):
     paths |= {URL_SOURCE_UNION, URL_SOURCE_REPLACEMENTS, *URL_SOURCE_SUBJECTS, *URL_SOURCE_RFC_PATHS}
     paths |= {FIGURE_UNION, *FIGURE_SUBJECTS}
     paths |= {DERIVED_UNION, *DERIVED_SUBJECTS}
+    paths |= {LEDGER_UNION, *LEDGER_SUBJECTS}
     paths |= poc_reference().validation_inputs(root)
     return sorted(paths)
 
@@ -3147,9 +3281,11 @@ def declared_source_historical_cases(tmp, base, clean, witnesses, failures):
     had_url_source = any(is_url_source_row(line) for line in original.splitlines())
     had_figure = any(is_figure_row(line) for line in original.splitlines())
     had_derived = any(is_derived_row(line) for line in original.splitlines())
+    had_ledger = any(is_ledger_row(line) for line in original.splitlines())
     absent_ledger = "".join(line for line in original.splitlines(keepends=True)
                             if line.rstrip("\n") != row and not is_url_source_row(line)
-                            and not is_figure_row(line) and not is_derived_row(line))
+                            and not is_figure_row(line) and not is_derived_row(line)
+                            and not is_ledger_row(line))
     ledger.write_text(absent_ledger)
     report = Report()
     check_outcomes(tree, report)
@@ -3161,11 +3297,12 @@ def declared_source_historical_cases(tmp, base, clean, witnesses, failures):
     held = (declared_source_absent(tree)
             and declared_source_binding(tree) == (None, [], [])
             and not report.failed
-            and examined(report, "R1") == examined(clean, "R1") - 1 - had_url_source - had_figure - had_derived
+            and examined(report, "R1") == examined(clean, "R1") - 1 - had_url_source - had_figure - had_derived - had_ledger
             and examined(report, "R2") == examined(clean, "R2") - 3
             - (URL_SOURCE_BOUND_PARTS if had_url_source else 0)
             - (FIGURE_BOUND_PARTS if had_figure else 0)
-            - (DERIVED_BOUND_PARTS if had_derived else 0))
+            - (DERIVED_BOUND_PARTS if had_derived else 0)
+            - (LEDGER_BOUND_PARTS if had_ledger else 0))
     witnesses.append({"mutant": "declared-historical-control", "path": change,
                       "old": "<no amendment, row, subjects or D10 act>",
                       "new": "<unchanged>", "expected": "inactive; no phantom R1/R2 subjects",
@@ -3558,7 +3695,8 @@ def figure_cases(tmp, base, witnesses, failures):
     shutil.copytree(base, tree)
     ledger = tree / AGENT_ADOPTIONS
     pending = "".join(line for line in ledger.read_text().splitlines(keepends=True)
-                      if not is_figure_row(line) and not is_derived_row(line))
+                      if not is_figure_row(line) and not is_derived_row(line)
+                      and not is_ledger_row(line))
     ledger.write_text(pending)
     pending_pop, pending_findings = census(tree)
     predecessor = pending_pop["POLARIS"]
@@ -3690,7 +3828,7 @@ def derived_cases(tmp, base, witnesses, failures):
     shutil.copytree(base, tree)
     ledger = tree / AGENT_ADOPTIONS
     pending = "".join(line for line in ledger.read_text().splitlines(keepends=True)
-                      if not is_derived_row(line))
+                      if not is_derived_row(line) and not is_ledger_row(line))
     ledger.write_text(pending)
     pending_pop, pending_findings = census(tree)
     predecessor = pending_pop["POLARIS"]
@@ -3799,6 +3937,133 @@ def derived_cases(tmp, base, witnesses, failures):
         record(f"derived-compose-{name}", DERIVED_SPEC, old, new,
                "both parsers refuse without partial application", ida + names,
                bool(ida and names and a == b == fig_pop), False)
+
+
+def ledger_cases(tmp, base, witnesses, failures):
+    """The v2.4 pending-to-adopted transition over v2.3, its ledger and byte guards, and the predecessor guard."""
+    original = read_text(base, LEDGER_SPEC)
+    if original is None or derived_binding(base)[0] is None:
+        return
+
+    def record(name, rel, old, new, expect, found, caught, stood):
+        witnesses.append({"mutant": name, "path": rel, "old": old, "new": new,
+                          "expected": expect, "failed": found,
+                          "outcome": ("held" if stood else "killed") if caught else "SURVIVED"})
+        if not caught:
+            failures.append(name)
+
+    tree = Path(tmp) / "ledger-packs-thesis"
+    shutil.copytree(base, tree)
+    ledger = tree / AGENT_ADOPTIONS
+    pending = "".join(line for line in ledger.read_text().splitlines(keepends=True)
+                      if not is_ledger_row(line))
+    ledger.write_text(pending)
+    pending_pop, pending_findings = census(tree)
+    predecessor = pending_pop["POLARIS"]
+    ident = FIGURE_REPLACES[0]
+    held = (ledger_binding(tree) == (None, [], []) and not pending_findings
+            and len(predecessor[ident]["scenarios"]) == 49)
+    record("ledger-pending", AGENT_ADOPTIONS, "<no v2.4 row>", "<unchanged>",
+           "landed package alone keeps v2.4 pending", pending_findings, held, True)
+
+    oid = "0123456789abcdef" * 2 + "01234567"
+    row = (f"| A-999 | 2026-11-21 | `{oid}` | [spec](https://github.com/tzeusy-org/syzygy/blob/{oid}/{LEDGER_SPEC}) "
+           f"| Selftest | `git revert {oid}` | `{LEDGER_TAG}` |\n")
+    ledger.write_text(pending + row)
+    current_pop, current_findings = census(tree)
+    current = current_pop["POLARIS"]
+    held = (ledger_binding(tree) == (original, [], []) and not current_findings
+            and set(current) == set(predecessor)
+            and len(current[ident]["scenarios"]) == 60
+            and current[ident]["name"] == predecessor[ident]["name"]
+            and all(current[i] == r for i, r in predecessor.items() if i != ident))
+    record("ledger-adopted", AGENT_ADOPTIONS, "<no v2.4 row>", row,
+           "v2.4 replaces exactly 034 (49 to 60 scenarios)", current_findings, held, True)
+
+    for name, old, new in (("duplicate-row", row, row + row),
+                           ("wrong-tag", LEDGER_TAG, LEDGER_TAG + "-wrong"),
+                           ("wrong-revert", f"git revert {oid}", "git revert " + "0" * 40),
+                           ("missing-spec-link", f"/blob/{oid}/{LEDGER_SPEC})", f"/blob/other/{LEDGER_SPEC})"),
+                           ("bad-date", "2026-11-21", "2026-99-21"),
+                           ("no-reason", "| Selftest |", "|  |")):
+        assert old in row
+        ledger.write_text(pending + row.replace(old, new, 1))
+        effective, r1, r2 = ledger_binding(tree)
+        record(f"ledger-{name}", AGENT_ADOPTIONS, old, new,
+               "R1 refusal with no effective amendment", r1 + r2,
+               effective is None and bool(r1) and not r2, False)
+
+    veto = (f"| A-1000 | 2026-11-22 | `8a468bc` | Veto A-999 | Test only | `git revert 8a468bc` | — |\n")
+    ledger.write_text(pending + row + veto)
+    pop, found = census(tree)
+    held = (ledger_disposition(tree, ledger_rows(tree)) == "A-1000" and not found
+            and pop["POLARIS"] == predecessor)
+    record("ledger-vetoed", AGENT_ADOPTIONS, row, veto, "restore the v2.3 034", found, held, True)
+    derived_row = next((line for line in pending.splitlines(keepends=True) if is_derived_row(line)), None)
+    if derived_row is not None:
+        no_derived = "".join(line for line in pending.splitlines(keepends=True) if not is_derived_row(line))
+        ledger.write_text(no_derived + row)
+        effective, r1, r2 = ledger_binding(tree)
+        record("ledger-predecessor-missing", AGENT_ADOPTIONS, derived_row, "",
+               "R1 refusal while v2.3 is not in force", r1 + r2,
+               effective is None and any("prior v2.3" in f for f in r1), False)
+
+    ledger.write_text(pending + row)
+    for rel in LEDGER_SUBJECTS:
+        subject = tree / rel
+        previous = subject.read_bytes()
+        subject.write_bytes(previous + b"\n")
+        effective, r1, r2 = ledger_binding(tree)
+        subject.write_bytes(previous)
+        record(f"ledger-subject-changed-{Path(rel).name}", rel, "<end of file>", "\n",
+               "R2 refusal with no effective amendment", r1 + r2,
+               effective is None and not r1 and bool(r2), False)
+    union = tree / LEDGER_UNION
+    previous = union.read_text()
+    assert '"REQ-polaris-generation-014"' in previous
+    union.write_text(previous.replace('"REQ-polaris-generation-014"', '"REQ-polaris-generation-099"', 1))
+    report = Report()
+    check_generated(tree, current_pop, report)
+    union.write_text(previous)
+    record("ledger-union-changed", LEDGER_UNION, '"REQ-polaris-generation-014"', '"REQ-polaris-generation-099"', "R4 refusal",
+           report.findings.get("R4", []), any(LEDGER_UNION in f for f in report.findings.get("R4", [])), False)
+    status = tree / STATUS
+    previous = status.read_text()
+    status.write_text("\n".join(line for line in previous.split("\n")
+                                if not line.strip().startswith(LEDGER_STATUS_PREFIX)))
+    report = Report()
+    check_routes(tree, current_pop, report)
+    status.write_text(previous)
+    record("ledger-status-route-missing", STATUS, LEDGER_STATUS_PREFIX, "", "R5 refusal",
+           report.findings.get("R5", []),
+           any("ledger packs thesis v2.4" in f for f in report.findings.get("R5", [])), False)
+    ledger.write_text(pending)
+    report = Report()
+    check_routes(tree, pending_pop, report)
+    claims = [f for f in report.findings.get("R5", []) if "while it is not in force" in f]
+    adopted_status = any(line.strip().startswith(LEDGER_STATUS_PREFIX) and "is agent-adopted" in line
+                         for line in previous.split("\n"))
+    record("ledger-pending-claims-adoption", AGENT_ADOPTIONS, row, "",
+           "R5 refuses an adopted route while the row is missing", claims,
+           bool(claims) if adopted_status else not claims, not adopted_status)
+    ledger.write_text(pending + row)
+
+    cases = [
+        ("added-section", DECLARED_SOURCE_MODIFIED, ADDED_HEADING),
+        ("wrong-id", "ID: " + ident, "ID: " + POLARIS_ID + "035"),
+        ("renamed", "### Requirement: Agent brief and mechanically checked draft",
+         "### Requirement: Agent brief and reading ledger"),
+        ("second-block", "ID: " + ident, "ID: " + ident + "\n\n### Requirement: Extra\n\nID: " + POLARIS_ID + "099"),
+    ]
+    der_pop = predecessor
+    for name, old, new in cases:
+        assert old in original, name
+        mutant = original.replace(old, new, 1)
+        a, ida = compose_figure_by_id(der_pop, mutant)
+        b, names = compose_figure_by_name(der_pop, mutant)
+        record(f"ledger-compose-{name}", LEDGER_SPEC, old, new,
+               "both parsers refuse without partial application", ida + names,
+               bool(ida and names and a == b == der_pop), False)
 
 
 def cap1_overlay_mutants():
@@ -4219,6 +4484,7 @@ def _selftest_cases(tmp, commit, witnesses, failures, witness_path, base, clean,
     url_source_cases(tmp, base, witnesses, failures)
     figure_cases(tmp, base, witnesses, failures)
     derived_cases(tmp, base, witnesses, failures)
+    ledger_cases(tmp, base, witnesses, failures)
     # Two cases a one-file mutation cannot express. A second record of the
     # same version fails R1 by its own finding; --regenerate refuses an
     # unsigned addition and writes nothing.

@@ -49,6 +49,9 @@ adoption binding verifies; each parser counts its one replacement (034).
 The derived-observed-facts version2.3 amendment follows version2.2 when its
 own adoption binding verifies; each parser counts its one replacement (034).
 
+The ledger-packs-thesis version2.4 amendment follows version2.3 when its own
+adoption binding verifies; each parser counts its one replacement (034).
+
 ## Overlay semantics
 
 Applied in the order the real OpenSpec tool uses at archive time (confirmed
@@ -457,6 +460,15 @@ def derived_amendment(root: Path) -> str | None:
     return text
 
 
+def ledger_amendment(root: Path) -> str | None:
+    """Verified text, a pending or retired amendment, or a counting refusal."""
+    import check_spec_reconciliation as adoption
+    text, records, subjects = adoption.ledger_binding(root)
+    if records or subjects:
+        raise ScenarioCountError("ledger packs thesis adoption findings:\n" + "\n".join(records + subjects))
+    return text
+
+
 def build_composition(root: Path) -> CompositionResult:
     import check_spec_reconciliation as adoption
     sources = [(path.relative_to(root).as_posix(), path.read_text(encoding="utf-8"))
@@ -464,7 +476,8 @@ def build_composition(root: Path) -> CompositionResult:
     for label, text in ((adoption.DECLARED_SOURCE_SPEC, declared_source_amendment(root)),
                         (adoption.URL_SOURCE_SPEC, url_source_amendment(root)),
                         (adoption.FIGURE_SPEC, figure_amendment(root)),
-                        (adoption.DERIVED_SPEC, derived_amendment(root))):
+                        (adoption.DERIVED_SPEC, derived_amendment(root)),
+                        (adoption.LEDGER_SPEC, ledger_amendment(root))):
         if text is not None:
             sources.append((label, text))
 
@@ -501,9 +514,11 @@ def composition_inputs(root: Path) -> list[Path]:
     url_source_amendment(root)
     figure_amendment(root)
     derived_amendment(root)
+    ledger_amendment(root)
     paths = adoption.declared_source_inputs(root) | {
         adoption.URL_SOURCE_REPLACEMENTS, *adoption.URL_SOURCE_SUBJECTS,
         *adoption.URL_SOURCE_RFC_PATHS, *adoption.FIGURE_SUBJECTS, *adoption.DERIVED_SUBJECTS,
+        *adoption.LEDGER_SUBJECTS,
     }
     files = discover_composition_files(root)
     files += [root / rel for rel in sorted(paths) if (root / rel).is_file()]
