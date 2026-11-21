@@ -27,6 +27,7 @@ const TREE = [
   { path: 'mixed/token=abcdefghijk', mode: '100644' }, { path: 'mixed/fine.txt', mode: '100644' },
 ];
 const isSecret = (p: string): boolean => p.includes('token=') || p === 'keys';
+const EXPECT = { repositoryId: 'kestrel', isSecretPath: isSecret };
 const R = { rule: 'top-level-unit', ruleVersion: 1 };
 const FACTS = [
   { id: '_tree-root', fact: 'tree-root', ...R, path: '.', rootFiles: 3 },
@@ -133,11 +134,11 @@ describe('the record', () => {
 
   it('is read back with its exact text and the digest of its bytes, and refused where any member is malformed', () => {
     const text = kept();
-    const read = readDerivedRecord(runWith(text), 0);
+    const read = readDerivedRecord(runWith(text), 0, EXPECT);
     expect(read).toMatchObject({ text, sha256: hex(text), revision: REV, state: 'derived', unitsNotListed: 0 });
     expect(read!.facts).toEqual(FACTS);
-    expect(readDerivedRecord(runWith(null), 0)).toBeUndefined();
-    expect(readDerivedRecord(runWith(text), 1)).toBeUndefined();
+    expect(readDerivedRecord(runWith(null), 0, EXPECT)).toBeUndefined();
+    expect(readDerivedRecord(runWith(text), 1, EXPECT)).toBeUndefined();
     const malformed: [string, (doc: Record<string, any>) => void][] = [ // eslint-disable-line @typescript-eslint/no-explicit-any
       ['format', (doc) => { doc['format'] = 'polaris-dossier-derived-structure/2'; }],
       ['revision', (doc) => { doc['revision'] = 7; }],
@@ -157,18 +158,47 @@ describe('the record', () => {
       ['a rule version', (doc) => { doc['facts'][1].ruleVersion = '1'; }],
       ['a path', (doc) => { doc['facts'][1].path = null; }],
     ];
-    for (const [what, edit] of malformed) expect(readDerivedRecord(runWith(kept(edit)), 0), what).toBeUndefined();
-    expect(readDerivedRecord(runWith(new Uint8Array([0x7b, 0xff, 0x7d])), 0)).toBeUndefined();
-    expect(readDerivedRecord(runWith('not json'), 0)).toBeUndefined();
+    for (const [what, edit] of malformed) expect(readDerivedRecord(runWith(kept(edit)), 0, EXPECT), what).toBeUndefined();
+    // Only exactly what check writes is a record: no member added, moved or respaced, and Syzygy's own forms for every value shown.
+    const altered: [string, (doc: Record<string, any>) => void][] = [ // eslint-disable-line @typescript-eslint/no-explicit-any
+      ['an added member', (doc) => { doc['sizes'] = { 'lib/a.ts': 120 }; }],
+      ['an added fact member', (doc) => { doc['facts'][1].objectId = 'f'.repeat(40); }],
+      ['a foreign repository', (doc) => { doc['repositoryId'] = 'someone-else'; }],
+      ['another scope', (doc) => { doc['scope'] = 'the whole repository, bodies included'; }],
+      ['another producer', (doc) => { doc['producer'] = 'the authoring session'; }],
+      ['other rules', (doc) => { doc['rules'] = [{ id: 'top-level-unit', version: 2 }]; }],
+      ['a revision that is no object id', (doc) => { doc['revision'] = 'see the README'; }],
+      ['a capture time that is no instant', (doc) => { doc['capturedAt'] = 'yesterday <b>'; }],
+      ['an identity of another form', (doc) => { doc['facts'][1].id = '_tree-unit-<b>&'; }],
+      ['a containment target of another form', (doc) => { doc['facts'][4].to = '_tree-root'; }],
+      ['a path of two segments', (doc) => { doc['facts'][1].path = 'lib/b'; }],
+      ['an empty path', (doc) => { doc['facts'][1].path = ''; }],
+      ['a rule of another form', (doc) => { doc['facts'][1].rule = 'Top level <b>'; }],
+      ['a secret-matching path in a stale fact', (doc) => { doc['facts'][1].path = 'token=abcdefghijk'; doc['facts'][4].path = 'token=abcdefghijk'; }],
+      ['a path under a secret-matching name', (doc) => { doc['facts'][2].path = 'keys'; }],
+    ];
+    for (const [what, edit] of altered) expect(readDerivedRecord(runWith(kept(edit)), 0, EXPECT), what).toBeUndefined();
+    const doc = JSON.parse(text);
+    expect(readDerivedRecord(runWith(`${JSON.stringify(doc, null, 2)}`), 0, EXPECT), 'no trailing newline').toBeUndefined();
+    expect(readDerivedRecord(runWith(`${JSON.stringify(doc, null, 4)}\n`), 0, EXPECT), 'respaced').toBeUndefined();
+    const { format, ...rest } = doc;
+    expect(readDerivedRecord(runWith(`${JSON.stringify({ ...rest, format }, null, 2)}\n`), 0, EXPECT), 'members moved').toBeUndefined();
+    expect(readDerivedRecord(runWith(text), 0, { ...EXPECT, repositoryId: 'someone-else' }), 'another run').toBeUndefined();
+    expect(readDerivedRecord(runWith(text), 0, { ...EXPECT, isSecretPath: (p) => isSecret(p) || p === 'mixed' }), 'a path the screen holds secret').toBeUndefined();
+    const unknown = encodeDerivedRecord({ repositoryId: 'kestrel', revision: REV, capturedAt: '2026-11-21T00:00:00.000Z' }, { why: 'the pinned tree could not be listed (object-missing)' });
+    expect(readDerivedRecord(runWith(unknown), 0, EXPECT)).toMatchObject({ state: 'unknown', facts: [] });
+    expect(readDerivedRecord(runWith(unknown.replace('"why"', '"files": 3,\n  "why"')), 0, EXPECT), 'an Unknown record with a member added').toBeUndefined();
+    expect(readDerivedRecord(runWith(new Uint8Array([0x7b, 0xff, 0x7d])), 0, EXPECT)).toBeUndefined();
+    expect(readDerivedRecord(runWith('not json'), 0, EXPECT)).toBeUndefined();
     // A byte-order mark is never stripped, so bytes that are not the record's exact JSON do not read as a record.
-    expect(readDerivedRecord(runWith(`\u{feff}${text}`), 0)).toBeUndefined();
+    expect(readDerivedRecord(runWith(`\u{feff}${text}`), 0, EXPECT)).toBeUndefined();
   });
 
   describe('at a render', () => {
     const reader = (entries = TREE) => ({ listTree: async () => entries });
     const policy = currencyPolicyOf(ADOPTED);
     const at = (text: string | null, overrides: Partial<Parameters<typeof derivedStructureAt>[0]> = {}) =>
-      derivedStructureAt({ run: runWith(text), revision: 0, pinned: REV, reader: reader(), isSecretPath: isSecret, policy, ...overrides });
+      derivedStructureAt({ run: runWith(text), revision: 0, pinned: REV, repositoryId: 'kestrel', reader: reader(), isSecretPath: isSecret, policy, ...overrides });
     const outcomes = (structure: Awaited<ReturnType<typeof derivedStructureAt>>): string[] =>
       structure.state === 'derived' ? structure.facts.map((fact) => `${fact.id} ${fact.epistemic} ${fact.unknownReason}`) : [];
 
@@ -199,8 +229,6 @@ describe('the record', () => {
       expect(outcomes(await at(kept((doc) => { doc['facts'][2].files = 9; })))).toEqual(FACTS.map((fact) => `${fact.id} unknown stale-beyond-currency-bound`));
       expect(outcomes(await at(kept(), { reader: reader([...TREE, { path: 'new/file', mode: '100644' }]) }))).toEqual(FACTS.map((fact) => `${fact.id} unknown stale-beyond-currency-bound`));
       expect(outcomes(await at(kept((doc) => { doc['unitsNotListed'] = 1; })))).toEqual(FACTS.map((fact) => `${fact.id} unknown stale-beyond-currency-bound`));
-      // The render's own secret predicate: a path it holds secret is left out of its re-derivation, so a record naming it is not current.
-      expect(outcomes(await at(kept(), { isSecretPath: (p) => isSecret(p) || p === 'mixed' }))).toEqual(FACTS.map((fact) => `${fact.id} unknown stale-beyond-currency-bound`));
     });
 
     it('states missing, or unknown, where there is no record, the record is Unknown, or the tree cannot be listed', async () => {

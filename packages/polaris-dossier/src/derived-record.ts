@@ -67,34 +67,58 @@ export interface KeptRecord {
 const count = (value: unknown): value is number => typeof value === 'number' && Number.isSafeInteger(value) && value >= 0;
 const str = (value: unknown): value is string => typeof value === 'string';
 
+const FACT_ID = /^_tree-(?:root|unit-[1-9][0-9]*|contains-[1-9][0-9]*)$/u;
+const RULE_ID = /^[a-z][a-z0-9-]{0,63}$/u;
+const REVISION = /^(?:[0-9a-f]{40}|[0-9a-f]{64})$/u;
+const INSTANT = /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{3}Z$/u;
+/** A directory's raw first segment: non-empty, one segment. */
+const segment = (value: string): boolean => value !== '' && !value.includes('/');
+
+/** One fact, rebuilt with its members in the order `deriveTreeFacts` writes them, or undefined where any member is malformed. */
 function factOf(value: unknown): TreeFact | undefined {
-  if (!isRecord(value) || !str(value['id']) || !str(value['rule']) || !count(value['ruleVersion']) || !str(value['path'])) return undefined;
+  if (!isRecord(value) || !str(value['id']) || !FACT_ID.test(value['id']) || !str(value['rule']) || !RULE_ID.test(value['rule']) || !count(value['ruleVersion']) || !str(value['path'])) return undefined;
   const { id, rule, ruleVersion, path: at } = value;
   switch (value['fact']) {
     case 'tree-root': return id === '_tree-root' && at === '.' && count(value['rootFiles']) ? { id, fact: 'tree-root', rule, ruleVersion, path: at, rootFiles: value['rootFiles'] } : undefined;
-    case 'top-level-unit': return count(value['files']) ? { id, fact: 'top-level-unit', rule, ruleVersion, path: at, files: value['files'] } : undefined;
-    case 'contains': return value['from'] === '_tree-root' && str(value['to']) ? { id, fact: 'contains', rule, ruleVersion, path: at, from: '_tree-root', to: value['to'] } : undefined;
+    case 'top-level-unit': return id.startsWith('_tree-unit-') && segment(at) && count(value['files']) ? { id, fact: 'top-level-unit', rule, ruleVersion, path: at, files: value['files'] } : undefined;
+    case 'contains': return id.startsWith('_tree-contains-') && segment(at) && value['from'] === '_tree-root' && str(value['to']) && value['to'].startsWith('_tree-unit-') && FACT_ID.test(value['to'])
+      ? { id, fact: 'contains', rule, ruleVersion, path: at, from: '_tree-root', to: value['to'] } : undefined;
     default: return undefined;
   }
 }
 
-/** The run directory's record for draft revision `revision`, or undefined where there is none that reads as one: absent, unreadable, not
- * UTF-8 JSON, of another format, or with a malformed member. Every derived record starts with its root fact, and its identities are
- * unique. */
-export function readDerivedRecord(run: string, revision: number): KeptRecord | undefined {
+/** What a kept record must agree with: the run's repository, and the bound screen's secret-path test. */
+export interface RecordExpectations {
+  readonly repositoryId: string;
+  readonly isSecretPath: (repositoryPath: string) => boolean;
+}
+
+/** The run directory's record for draft revision `revision`, or undefined where there is none that reads as one. The agent sessions can
+ * write in the run directory, so a record is read only when it is exactly what `encodeDerivedRecord` writes: its members rebuilt from
+ * their parsed values encode to its bytes, with no member added, moved or respaced; it names the run's repository, the fixed scope,
+ * producer and rules (the rebuild writes those constants); its revision is a full object id and its capture time an instant; each fact
+ * is well formed, starting with the root, with unique identities of Syzygy's own forms; and no fact's path is one the screen's secret
+ * test matches. Anything else is no record: nothing of it is drawn, listed or published. */
+export function readDerivedRecord(run: string, revision: number, expected: RecordExpectations): KeptRecord | undefined {
   let bytes: Buffer;
   try { bytes = fs.readFileSync(derivedRecordFile(run, revision)); } catch { return undefined; }
   try {
     // A byte-order mark is kept, never stripped, so it fails the parse: the text published is always the kept bytes exactly.
     const text = new TextDecoder('utf-8', { fatal: true, ignoreBOM: true }).decode(bytes);
     const doc: unknown = parseBoundedJson(text, RECORD_LIMITS);
-    if (!isRecord(doc) || doc['format'] !== DERIVED_RECORD_FORMAT || !str(doc['revision']) || !str(doc['capturedAt'])) return undefined;
+    if (!isRecord(doc) || doc['format'] !== DERIVED_RECORD_FORMAT || !str(doc['revision']) || !REVISION.test(doc['revision']) || !str(doc['capturedAt']) || !INSTANT.test(doc['capturedAt'])) return undefined;
+    const source = { repositoryId: expected.repositoryId, revision: doc['revision'], capturedAt: doc['capturedAt'] };
     const base = { text, sha256: sha256(bytes), revision: doc['revision'], capturedAt: doc['capturedAt'] };
-    if (doc['state'] === 'unknown') return { ...base, state: 'unknown', facts: [], unitsNotListed: 0 };
-    if (doc['state'] !== 'derived' || !Array.isArray(doc['facts']) || !count(doc['unitsNotListed'])) return undefined;
+    if (doc['state'] === 'unknown') {
+      return str(doc['why']) && encodeDerivedRecord(source, { why: doc['why'] }) === text ? { ...base, state: 'unknown', facts: [], unitsNotListed: 0 } : undefined;
+    }
+    if (doc['state'] !== 'derived' || !Array.isArray(doc['facts']) || !count(doc['unitsNotListed']) || !count(doc['files']) || !count(doc['secretPathsLeftOut']) || !count(doc['submodules'])) return undefined;
     const facts = doc['facts'].map(factOf);
     if (facts.some((fact) => fact === undefined) || facts[0]?.fact !== 'tree-root' || new Set(facts.map((fact) => fact!.id)).size !== facts.length) return undefined;
-    return { ...base, state: 'derived', facts: facts as TreeFact[], unitsNotListed: doc['unitsNotListed'] };
+    const kept = facts as TreeFact[];
+    if (kept.some((fact) => fact.fact !== 'tree-root' && expected.isSecretPath(fact.path))) return undefined;
+    const rebuilt = encodeDerivedRecord(source, { files: doc['files'], secretPathsLeftOut: doc['secretPathsLeftOut'], submodules: doc['submodules'], facts: kept, unitsNotListed: doc['unitsNotListed'] });
+    return rebuilt === text ? { ...base, state: 'derived', facts: kept, unitsNotListed: doc['unitsNotListed'] } : undefined;
   } catch {
     return undefined;
   }
@@ -140,13 +164,15 @@ export async function derivedStructureAt(inputs: {
   readonly run: string;
   readonly revision: number;
   readonly pinned: string;
+  /** The run's repository identity, which the kept record must name. */
+  readonly repositoryId: string;
   /** Only paths and modes are read from the listing: never an object id or a size. */
   readonly reader: { readonly listTree: () => Promise<readonly Pick<TreeEntry, 'path' | 'mode'>[]> };
   readonly isSecretPath: (repositoryPath: string) => boolean;
   readonly policy: CurrencyPolicy | null;
 }): Promise<LocalDerivedStructure> {
-  const { run, revision, pinned, reader, isSecretPath, policy } = inputs;
-  const record = readDerivedRecord(run, revision);
+  const { run, revision, pinned, repositoryId, reader, isSecretPath, policy } = inputs;
+  const record = readDerivedRecord(run, revision, { repositoryId, isSecretPath });
   if (record === undefined) return { state: 'missing', revision: pinned, unknownReason: 'missing-evidence' };
   if (record.state === 'unknown') return { state: 'unknown', revision: pinned, unknownReason: 'source-uncaptured-or-unreachable' };
   let entries: readonly Pick<TreeEntry, 'path' | 'mode'>[];

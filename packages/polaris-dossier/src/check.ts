@@ -223,18 +223,20 @@ export async function checkSubject<R extends object, G>(runDir: string, file: st
   // kept once beside the check record: what a render publishes unchanged and compares with its own re-derivation.
   let screenCensus: ScreenCensusReport | undefined, structureRecord: StructureRecord | undefined, derivedRecord: string | undefined;
   if (plan.command === 'check') {
-    const source = { repositoryId: subject.repository.repositoryId, revision: pinned, capturedAt: isoOf(deps.now()) };
+    // `capturedAt` is the instant this check listed the tree: taken once the listing returns, or once it is refused.
+    const source = (): { repositoryId: string; revision: string; capturedAt: string } => ({ repositoryId: subject.repository.repositoryId, revision: pinned, capturedAt: isoOf(deps.now()) });
     const isSecretPath = secretPathOf(screen);
     try {
       const entries = await reader.listTree();
+      const listed = source();
       screenCensus = screenCensusReport({ ok: true, census: withheldCensus(entries, screen, checked.contentClasses) });
       structureRecord = deriveStructure(entries, isSecretPath);
-      derivedRecord = encodeDerivedRecord(source, deriveTreeFacts(entries, isSecretPath));
+      derivedRecord = encodeDerivedRecord(listed, deriveTreeFacts(entries, isSecretPath));
     } catch (cause) {
       if (!(cause instanceof GitObjectReadRefusal)) throw cause;
       screenCensus = screenCensusReport({ ok: false, why: `the pinned tree could not be listed (${cause.reason})`, consented: checked.contentClasses });
       structureRecord = structureUnknown(`the pinned tree could not be listed (${cause.reason})`);
-      derivedRecord = encodeDerivedRecord(source, { why: `the pinned tree could not be listed (${cause.reason})` });
+      derivedRecord = encodeDerivedRecord(source(), { why: `the pinned tree could not be listed (${cause.reason})` });
     }
   }
   if (credential.required && !credential.passed) {
@@ -242,6 +244,11 @@ export async function checkSubject<R extends object, G>(runDir: string, file: st
   }
 
   const frozen = path.join(frozenDir, `rev-${revision}.json`), checkFile = path.join(checksDir, `rev-${revision}.json`);
+  // A derived record already in place for this revision (planted, or left by a crash) is never overwritten or adopted: refused here,
+  // before the draft is frozen, so the revision is not spent.
+  if (derivedRecord !== undefined && fs.existsSync(derivedRecordFile(run, revision))) {
+    return refuse('freeze', `${path.relative(run, derivedRecordFile(run, revision))} already exists, but draft revision ${revision} has not been checked; Syzygy writes that record once, so the draft is not frozen. Remove the file and check again`);
+  }
   try {
     fs.mkdirSync(frozenDir, { recursive: true, mode: 0o700 });
     fs.writeFileSync(frozen, bytes, { mode: 0o600, flag: 'wx' });

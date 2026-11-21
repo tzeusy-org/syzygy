@@ -1810,6 +1810,90 @@ describe('render: derived structure (version 2.3)', () => {
     }
   });
 
+  it('publishes and draws nothing of a kept record edited after check: an added member, a secret-matching path or a foreign repository', async () => {
+    const edits: [string, (doc: Doc) => void][] = [
+      ['an added member', (doc) => { doc.facts[1].objectId = objectIds['docs/notes.txt']; }],
+      ['a secret-matching path in a stale fact', (doc) => { doc.facts[1].path = 'token=abcdefghijk'; doc.facts[3].path = 'token=abcdefghijk'; }],
+      ['a foreign repository', (doc) => { doc.repositoryId = 'someone-else'; }],
+    ];
+    for (const [what, edit] of edits) {
+      const run = await prepared(draft(), false);
+      const doc = JSON.parse(fs.readFileSync(recordPath(run), 'utf8'));
+      edit(doc);
+      fs.writeFileSync(recordPath(run), `${JSON.stringify(doc, null, 2)}\n`);
+      const { files, index, machine } = await rendered(run);
+      expect(files.has('derived-structure.json'), what).toBe(false);
+      expect(regionOfIndex(index), what).toContain('data-unknown-reason="missing-evidence"');
+      expect(regionOfIndex(index), what).not.toContain('<figure');
+      expect(machine.derivedStructure, what).toEqual({ file: null, sha256: null, revision: commit, state: 'missing', currencyPolicy: null, facts: [] });
+      for (const [file, text] of files) {
+        expect(text, `${what} ${file}`).not.toContain('token=');
+        expect(text, `${what} ${file}`).not.toContain('someone-else');
+      }
+    }
+  });
+
+  it('refuses a check before freezing when the revision\'s derived record already exists, so the revision is not spent', async () => {
+    const run = await prepared(draft(), false);
+    fs.writeFileSync(recordPath(run, 1), '{}\n');
+    fs.writeFileSync(path.join(run, 'drafts', 'next.json'), JSON.stringify(draft(), null, 2));
+    const refused = await checkDraft(run, {}, checkDeps());
+    expect(refused).toMatchObject({ ok: false, refusal: { stage: 'freeze', reason: 'derived/rev-1.json already exists, but draft revision 1 has not been checked; Syzygy writes that record once, so the draft is not frozen. Remove the file and check again' } });
+    expect(fs.existsSync(path.join(run, 'drafts', 'rev-1.json'))).toBe(false);
+    expect(fs.existsSync(path.join(run, 'checks', 'rev-1.json'))).toBe(false);
+    expect(fs.readFileSync(recordPath(run, 1), 'utf8')).toBe('{}\n');
+    fs.rmSync(recordPath(run, 1));
+    const checked = await checkDraft(run, {}, checkDeps());
+    expect(checked.ok && checked.report.revision).toBe(1);
+  });
+
+  it('takes capturedAt once the check has listed the tree', async () => {
+    const run = await prepared(draft(), false);
+    let listings = 0;
+    const marking = (options: PinnedObjectReaderOptions): PinnedObjectReader => {
+      const real = openPinnedObjectReader(options);
+      return { ...real, algorithm: real.algorithm, readBlobs: (paths) => real.readBlobs(paths), listTree: async () => { const entries = await real.listTree(); listings++; return entries; } } as PinnedObjectReader;
+    };
+    fs.writeFileSync(path.join(run, 'drafts', 'next.json'), JSON.stringify(draft(), null, 2));
+    // The step guard and the derivation list the tree first; the clock reads LATER + 7 s only once the third listing, the census's, has returned.
+    const checked = await checkDraft(run, {}, { ...checkDeps(), openReader: marking, now: () => (listings >= 3 ? LATER + 7_000 : LATER) });
+    expect(listings).toBe(3);
+    if (!checked.ok) throw new Error(checked.refusal.reason);
+    expect(checked.report.checkedAt).toBe('2026-10-07T12:01:00.000Z');
+    expect(JSON.parse(fs.readFileSync(recordPath(run, 1), 'utf8')).capturedAt).toBe('2026-10-07T12:01:07.000Z');
+  });
+
+  it('draws twelve, lists 250 and counts the rest end to end for a tree of more than 250 top-level directories', async () => {
+    const saved = { origin, commit };
+    const wide = tempDir('dossier-render-wide-');
+    const git = (...args: string[]): string => execFileSync('git', ['-C', wide, ...args], { encoding: 'utf8', env: GIT_ENV }).trim();
+    git('init', '-q', '-b', 'main');
+    for (const [file, body] of Object.entries(FILES)) { fs.mkdirSync(path.dirname(path.join(wide, file)), { recursive: true }); fs.writeFileSync(path.join(wide, file), body); }
+    // 252 more directories of one file each: with docs/ and src/, 254 directories, so 250 listed and 4 counted; 12 drawn, 238 listed only.
+    for (let i = 0; i < 252; i++) { fs.mkdirSync(path.join(wide, `w${String(i).padStart(3, '0')}`)); fs.writeFileSync(path.join(wide, `w${String(i).padStart(3, '0')}`, 'f.txt'), 'x\n'); }
+    git('add', '-A');
+    git('-c', 'user.name=t', '-c', 'user.email=t@example.invalid', 'commit', '-q', '-m', 'wide');
+    origin = wide; commit = git('rev-parse', 'HEAD');
+    try {
+      const run = await prepared(draft(), false);
+      const record = JSON.parse(fs.readFileSync(recordPath(run), 'utf8'));
+      expect(record.unitsNotListed).toBe(4);
+      expect(record.facts.filter((fact: { fact: string }) => fact.fact === 'top-level-unit').length).toBe(250);
+      // docs, src, then w000 ... w247 by code unit; w248 to w251 are counted, not listed.
+      expect(record.facts[250]).toMatchObject({ id: '_tree-unit-250', path: 'w247' });
+      const { index, files } = await rendered(run);
+      const region = regionOfIndex(index);
+      expect(region).toContain('<p class="derived-more">238 more top-level directories are listed below and not drawn.</p><p class="derived-more">4 more top-level directories are counted and not listed.</p>');
+      expect(region).toContain('<p class="diagram-tally">13 boxes and 12 arrows, derived by Syzygy: 25 observed, 0 inferred, 0 unknown.</p>');
+      // Most files first, ties by path: src (3), docs (2), then w000 to w009.
+      expect([...region.matchAll(/<g class="node \w+" data-derived-id="([^"]+)">/gu)].map((m) => m[1])).toEqual(['_tree-root', '_tree-unit-2', '_tree-unit-1', ...Array.from({ length: 10 }, (_, i) => `_tree-unit-${i + 3}`)]);
+      expect(region.match(/<li data-derived-id=/gu)).toHaveLength(501);
+      expect(files.get('derived-structure.json')).toBe(fs.readFileSync(recordPath(run), 'utf8'));
+    } finally {
+      ({ origin, commit } = saved);
+    }
+  });
+
   it('is stable across renders of one draft revision, and two checks of the same bytes differ only in capturedAt', async () => {
     const run = await prepared();
     const { site, digest } = await designReviewed(run);

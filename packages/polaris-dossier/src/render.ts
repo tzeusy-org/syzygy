@@ -189,7 +189,7 @@ export async function renderRun(runDir: string, deps: RenderDeps): Promise<Rende
   // The derived structure (REQ-polaris-generation-034 version 2.3): the record check kept for this draft revision, compared with the facts
   // re-derived now from the tree this reader lists, under the currency policy committed at the Syzygy checkout. No draft member reaches it.
   const derivedStructure = await derivedStructureAt({
-    run, revision: draftRev.revision, pinned, reader, isSecretPath: secretPathOf(screen),
+    run, revision: draftRev.revision, pinned, repositoryId: subject.repository.repositoryId, reader, isSecretPath: secretPathOf(screen),
     policy: (deps.currencyPolicy ?? (() => readCurrencyPolicy(deps.sources.recordsRoot)))(),
   });
   const built = { ...input, local: { ...input.local, derivedStructure } };
