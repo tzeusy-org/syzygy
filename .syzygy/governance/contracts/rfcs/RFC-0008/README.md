@@ -106,8 +106,8 @@ package.
     - a view in which closure renders as done;
     - a board that cannot answer "what did the fleet change, at what cost,
       under whose authority" for a past window.
-  - **A scheduler work item with no materialization record is a
-    Contradiction, not a badge**, whose only lawful exit is owner
+  - **A Syzygy-created scheduler work item with no materialization record
+    is a Contradiction, not a badge**, whose only lawful exit is
     adjudication (module 1, RFC8-8/8-10).
   - **Work renders through a closed thirteen-value normalized state
     vocabulary** in three partitions (module 2, RFC8-12/8-13).

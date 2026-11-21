@@ -120,7 +120,7 @@ authority and no model yet called on the current path.
     and brief v12); its implementation (syzygy-3efd.30) is not yet landed.
     *(2026-11-22: the predecessor figure "365 scenarios" is superseded by that
     amendment; all 39 identities remain.)*
-    [Declared-source reach amendment 2.6](openspec/changes/dossier-declared-source-reach) is agent-adopted in A-22.
+    [Declared-source reach amendment 2.6](openspec/changes/dossier-declared-source-reach) is agent-adopted in A-23.
     It replaces REQ-polaris-generation-046 (3 to 11 scenarios) and binds the screening-policy successor
     `POLARIS-DOSSIER-DECLARED-SOURCE-POLICY-v2.json`; its classifier and screen change (syzygy-3efd.24) is not
     yet landed, and until it lands the screen refuses the successor and runs stay on v1.

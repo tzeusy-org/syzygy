@@ -80,8 +80,9 @@ rather than renumber.
 authoritative claims in one declared scope that cannot simultaneously be
 satisfied (across or within typed authorities): it renders the affected
 conclusion Unknown (reason `contradicted-pending-adjudication`, `suspended`
-tier), routes to owner adjudication, is never resolved by precedence, never
-auto-scheduled into work. A **gap** is compatible desired state not yet
+tier), routes to adjudication — by an agent's recorded adoption, reported and
+open to the owner's veto, or by the owner when it falls in an owner class
+(VIS-4) — is never resolved by precedence, never auto-scheduled into work. A **gap** is compatible desired state not yet
 realized in observed state. [Observed — architecture.md.] A gap leaves a
 surface in exactly two non-interchangeable ways: **factual resolution or
 absence** — a status claim requiring current evidence; or **decision

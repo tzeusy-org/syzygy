@@ -106,8 +106,8 @@ scripts/context_load.py rfcs/RFC-0004/README.md \
   craft:testing-and-verification.md
 ```
 
-Measured: **30,297 words ≈ 40,901 estimated tokens** (words × 1.35), or
-**54,382 estimated tokens** at chars ÷ 4 over 217,530 characters. Both
+Measured: **30,308 words ≈ 40,916 estimated tokens** (words × 1.35), or
+**54,398 estimated tokens** at chars ÷ 4 over 217,594 characters. Both
 estimates breach the proposed trigger; the verdict does not depend on which
 heuristic is chosen, and the second figure is stated so that it cannot.
 
@@ -294,7 +294,7 @@ them.
 ## Packet digest
 
 sha256 over the mandatory files concatenated in listed order:
-`450afc1645b91138…` (recompute: `cat <mandatory files> | sha256sum`, with
+`92a13f4e688ded6d…` (recompute: `cat <mandatory files> | sha256sum`, with
 `doctrine:` resolved to `.syzygy/governance/doctrine/` and `craft:` to
 `.syzygy/governance/policies/craft-and-care/`). Measured, not compiled, by
 `scripts/context_load.py`.
@@ -361,3 +361,5 @@ the packet digest are the only measurements this fixture states.*
 ---
 
 *Re-measured 2026-08-10 by the same CG-18 method (declared mandatory set, listed order): the round-2026-08e RD-26 repair batch edited Wave A modules this packet loads. Previous: 25,466 words, digest `781b1ec3733698b9…`. Selection unchanged; the movement is contract repairs landing under the fixture, which is the class this check exists to catch.*
+
+*Re-measured 2026-11-22 by the same CG-18 method: the U2 contract amendment (orphan predicate; Contradiction adjudication route per D12) edited contract modules this packet loads. Previous: 30,297 words, digest `450afc1645b91138…`. Selection unchanged.*
