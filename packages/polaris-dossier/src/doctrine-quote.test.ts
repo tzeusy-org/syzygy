@@ -55,7 +55,7 @@ describe('readSec3 over the adopted security.md, read live', () => {
     if (!read.ok) return;
     expect(read.sec3.head).toEqual({ text: lines(74, 76), startLine: 74, endLine: 76 });
     expect(read.sec3.head.text.startsWith('**SEC-3 — Observed code is untrusted, everywhere.** Syzygy itself never runs\n')).toBe(true);
-    expect(read.sec3.cost).toEqual({ text: lines(103, 109), startLine: 103, endLine: 109 });
+    expect(read.sec3.cost).toEqual({ text: lines(106, 112), startLine: 106, endLine: 112 });
     expect(read.sec3.cost?.text.startsWith('- **What the permitted case costs:** the session runs with the owner\'s own\n')).toBe(true);
     expect(read.sec3.cost?.text.endsWith('  a sandbox, and forbidding it.')).toBe(true);
     expect(read.sec3.sha256).toBe(createHash('sha256').update(fs.readFileSync(path.join(REAL_ROOT, '.syzygy/governance/doctrine/security.md'))).digest('hex'));

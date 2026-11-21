@@ -95,8 +95,11 @@ asking; running it outside a sandbox is the owner's decision.
   the session is on the owner's own host; the owner started it and attends
   it, being present to see and stop what it does; and the owner has recorded
   a choice for that one run, naming what the instruction covers, before
-  Syzygy issues the instruction. A standing or per-project record does not
-  qualify. Syzygy never gives this instruction to a session it started or to
+  Syzygy issues the instruction. For a repository on the owner's list
+  (SEC-4), the owner may instead record one standing choice naming the
+  repository; it covers every session the owner starts and attends on the
+  owner's own host until the owner withdraws it. For any other repository
+  the choice is per run. Syzygy never gives this instruction to a session it started or to
   one left running unattended, and never asks for a process that outlives
   the session. Work the session hands to its own subagents is part of the
   session.
@@ -118,8 +121,8 @@ asking; running it outside a sandbox is the owner's decision.
 - *Violation:* the daemon executing observed code; a sandbox that inherits
   the host user's ambient credentials "for convenience"; Syzygy instructing a
   session to run observed code outside a sandbox before the owner's choice
-  for that run is recorded, on a standing record, or in an unattended
-  session; a claim that rests on observed-code execution rendered Observed.
+  is recorded, on a standing record for a repository not on the owner's
+  list, or in an unattended session; a claim that rests on observed-code execution rendered Observed.
 
 **SEC-4 — Writes are consented, attributed, and revertable.** Syzygy writes
 or pushes into a repository the owner does not own only with the owner's
