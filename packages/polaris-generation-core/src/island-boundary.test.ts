@@ -349,7 +349,7 @@ describe('the live Node entries and the parked provider island', () => {
       if (design.outputFiles.length !== 1 || design.outputFiles[0].contents.length > 8_388_608) throw new Error('unexpected renderer build output');
       outputs.set('renderer.mjs', design.outputFiles[0].contents);
       const inputs = new Set([...Object.keys(result.metafile.inputs), ...Object.keys(host.metafile.inputs), ...Object.keys(design.metafile.inputs), ...profileSources,
-        worker, peerSource, 'scripts/build_dossier_runtime.mjs', 'package-lock.json']);
+        worker, peerSource, 'scripts/build_dossier_runtime.mjs', 'scripts/compile_dossier_session_support.mjs', 'package-lock.json']);
       for (const name of [...Object.keys(host.metafile.inputs), ...Object.keys(design.metafile.inputs)])
         if (!captured.has(name)) throw new Error('uncaptured host/renderer compiler input');
     `)) expect(builder).toContain(statement);
