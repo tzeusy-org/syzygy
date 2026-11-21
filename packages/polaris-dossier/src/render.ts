@@ -1,3 +1,4 @@
+import { isRunProductReads, protectedProductRecord, yieldForProductReads, UrlProductReadRefusal, type ProductReadEvidence } from './url-operation-products.js';
 import { createHash, randomBytes } from 'node:crypto';
 import * as fs from 'node:fs';
 import * as path from 'node:path';
@@ -9,27 +10,31 @@ import {
 } from '@syzygy/polaris-generation-core/live';
 import { isRecord, sha256 } from '@syzygy/support';
 import { collectBlocks, deriveFindings, draftRules, type BlobRedaction, type Derived } from './check.js';
-import { CREDENTIAL_CHECK_DISCLOSURE, credentialStepCheck, storedBriefArm, type CredentialStepResult } from './credential-probe.js';
+import { CREDENTIAL_CHECK_DISCLOSURE, credentialStepCheck, type CredentialStepResult } from './credential-probe.js';
 import { UNDERSTANDING_ITEMS } from './draft-schema.js';
 import { EXECUTION_FLAGS_BASIS, executionFlags, type ExecutionFlags } from './execution-flags.js';
 import type { CredentialProbe } from './execution-rule.js';
 import { RECORDS_WITHIN_REACH } from './gate-sources.js';
 import { GitObjectReadRefusal, openPinnedObjectReader } from './git-object-reader.js';
-import { errno, latestInventorySession, logStep, openRun, promptRecordName, readRecord, type OpenedRun } from './inventory.js';
+import { errno, logStep, openRun, readRecord, type OpenedRun } from './inventory.js';
 import { buildDesignPacket } from './design-review.js';
 import { derivedStructureAt, readCurrencyPolicy, secretPathOf, type CurrencyPolicy } from './derived-record.js';
 import type { Outcome } from './outcome.js';
 import { designReviewOfRecord, latestPassedDraft, reviewOfRecord, type DesignReviewOfRecord, type ReviewDeps, type ReviewOfRecord } from './review.js';
 import type { ReverifyRefusal } from './reverify.js';
-import { readRunRecord } from './run-record.js';
 import { NO_WORK_ITEM_REASON } from './run-record.js';
 import { CLASS_NOT_CONSENTED, unconsentedClass, unconsentedText } from './class-gate.js';
 import { placementSubjectOf, screenLoaderOf, type DossierScreen, type ScreenExclusion } from './screen.js';
 import { RUN_LAYOUT } from './state-directory.js';
-import { continuationOf } from './waiting-sessions.js';
+import { continuationOf, type Continuation } from './waiting-sessions.js';
 import { packetSpanStanding } from './review-verdict.js';
 import { citationIdsOf, isWithheldItem, type SpanStanding } from './withheld-items.js';
 import { poleLimitOf } from './run-config.js';
+import { effectiveUrlDisclosures, effectiveUrlProjection, readEffectiveRunRecord } from './effective-run-record.js';
+import { copyOrderedRenderValue, equalOrderedRenderValue } from './url-ordered-render-value.js';
+import { isLoadedUrlRenderer, urlRendererCurrent, type UrlLoadedRenderer } from './url-runtime.js';
+import { checkStoredUrlRender } from './url-stored-render.js';
+import { assertUrlDesignRenderContinuationCurrent, type UrlDesignRenderContinuation } from './url-session-audit.js';
 
 /** `syzygy dossier render <run>` (REQ-polaris-generation-033, 034, 036; design "Command surface", `render`; syzygy-qkea.10).
  *
@@ -80,9 +85,22 @@ export function pageSinkUnconfirmed(renderer: DossierRenderer, files: ReadonlyMa
 export interface RenderDeps extends ReviewDeps {
   readonly probe: CredentialProbe;
   readonly renderer?: DossierRenderer;
+  readonly urlRenderer?: UrlLoadedRenderer;
+  /** Trusted host-only producer boundary. No source body is retained by this
+   * port; the URL supervisor binds actual renderer inputs and output receipts
+   * before any site bytes are persisted. No CLI option supplies this callback. */
+  readonly admitProducedSite?: (input: ProducedSiteInput) => boolean | Promise<boolean>;
   /** The derived-fact currency policy (version 2.3); by default the committed bytes at the records root's HEAD (`readCurrencyPolicy`). */
   readonly currencyPolicy?: () => CurrencyPolicy | null;
 }
+export interface ProducedSiteInput {
+  readonly run: string; readonly runId: string; readonly pinnedRevision: string; readonly draftRevision: number;
+  readonly products?: ProductReadEvidence;
+  readonly input: DossierRendererInput; readonly files: ReadonlyMap<string, string>; readonly signal: AbortSignal;
+  readonly packet: { readonly bytes: string; readonly sha256: string };
+  readonly sourceBodies: readonly { readonly path: string; readonly objectId: string; readonly raw: string | null; readonly redacted: boolean }[];
+}
+export const RENDER_PRODUCER_MILLISECONDS = 5000;
 
 export type RenderStage = 'renderer' | 'run' | 'reverify' | 'not-briefed' | 'deadline' | 'draft' | 'screen' | 'object-read' | 'rederive' | 'sources' | 'render' | 'write';
 
@@ -133,7 +151,29 @@ const EXCLUSION_REASON: Readonly<Record<ScreenExclusion, GenerationExclusionReas
   'not-utf8-text': 'not-utf-8', 'active-content': 'active-content',
 };
 
-export async function renderRun(runDir: string, deps: RenderDeps): Promise<RenderResult> {
+export async function renderRun(runDir: string, deps: RenderDeps, designContinuation?: UrlDesignRenderContinuation): Promise<RenderResult> {
+  try { return await render(runDir, deps, undefined, designContinuation); }
+  catch (cause) {
+    if (!(cause instanceof UrlProductReadRefusal)) throw cause;
+    return { ok: false, refusal: { command: 'render', outcome: 'refused', stage: 'reverify', reason: cause.message, disclosures: DISCLOSURES } };
+  }
+}
+
+type StoredUrlRender = { readonly path: string; readonly output: Parameters<typeof checkStoredUrlRender>[2] };
+
+/** Host-only fresh reconstruction. Compare with the exact stored site without
+ * allocating a site number or writing a render step, including on refusal. */
+export async function reproduceUrlRender(runDir: string, deps: RenderDeps, site: StoredUrlRender,
+  designContinuation?: UrlDesignRenderContinuation): Promise<boolean> {
+  try { return (await render(runDir, deps, structuredClone(site), designContinuation)).ok; }
+  catch (cause) {
+    if (cause instanceof UrlProductReadRefusal) return false;
+    throw cause;
+  }
+}
+
+async function render(runDir: string, deps: RenderDeps, storedSite?: StoredUrlRender,
+  checkedDesign?: UrlDesignRenderContinuation): Promise<RenderResult> {
   const now = deps.now();
   let logRun: string | undefined;
   const refuse = (stage: RenderStage, reason: string, extra: Partial<RenderRefusal> = {}): RenderResult => {
@@ -142,20 +182,41 @@ export async function renderRun(runDir: string, deps: RenderDeps): Promise<Rende
   };
   // A retained legacy run is read-only and gets its restart explanation even
   // when no renderer is installed; do not append a step or inspect its sources.
-  try {
-    const stored = readRunRecord(fs.readFileSync(path.join(runDir, RUN_LAYOUT.config), 'utf8'));
-    if (!stored.ok && stored.legacy) return refuse('run', stored.detail);
-  } catch { /* existing missing-run / missing-renderer handling below */ }
+  if (deps.productReads === undefined) {
+    try {
+      const stored = readEffectiveRunRecord(runDir, deps.sources.effectiveRunDeclaration);
+      if (!stored.ok && stored.legacy) return refuse('run', stored.reason);
+    } catch { /* existing missing-run / missing-renderer handling below */ }
+  }
   if (deps.renderer === undefined) return refuse('renderer', NO_RENDERER);
-  const opened = await openRun(runDir, deps.sources, now, 'nothing is rendered', deps.openReader ? { openReader: deps.openReader } : {});
+  const opened = await openRun(runDir, deps.sources, now, 'nothing is rendered', deps);
   if (!opened.ok) return refuse(opened.stage, opened.reason, { ...(opened.reasons ? { reasons: opened.reasons } : {}), ...(opened.refusals ? { refusals: opened.refusals } : {}) });
   const { run, runId, subject, declared } = opened;
-  logRun = run;
+  const urlMode = opened.effective?.kind === 'url';
+  if (checkedDesign !== undefined && !urlMode) return refuse('reverify', 'The protected design continuation requires a URL run.');
+  if (storedSite !== undefined && !urlMode) return refuse('reverify', 'Stored site reproduction requires a protected URL run.');
+  const products = deps.productReads;
+  if (urlMode && !isRunProductReads(products)) return refuse('reverify', 'A URL render requires authenticated product reads.');
+  const installed = deps.urlRenderer;
+  if (urlMode && (installed === undefined || !isLoadedUrlRenderer(installed) || installed.renderer !== deps.renderer
+    || installed.identity.profileRegistrySha256 !== opened.effective.declaration.inference.profile.sha256
+    || !(await urlRendererCurrent(installed)))) return refuse('renderer', 'The bound URL renderer is unavailable or changed.');
+  if (urlMode && deps.admitProducedSite === undefined) return refuse('renderer', 'A URL render requires its checked producer admission boundary before site storage.');
+  if (storedSite === undefined) logRun = run;
   const pinned = subject.pinnedRevision.commit;
 
-  const credential = await credentialStepCheck(run, 'render', deps.probe, now);
+  const briefRecord = products === undefined ? readRecord(path.join(run, RUN_LAYOUT.briefRecord))
+    : protectedProductRecord(products, run, RUN_LAYOUT.briefRecord);
+  const arm = briefRecord?.['executionRule'];
+  if (urlMode && (!isRecord(arm) || arm['arm'] !== 'sec-3')) {
+    return refuse('reverify', 'The authenticated URL brief does not establish the required no-execution rule.');
+  }
+  const credential: CredentialStepResult = urlMode ? {
+    required: false, why: "the brief carried SEC-3's rule and permits no execution",
+  } : await credentialStepCheck(run, 'render', deps.probe, now);
 
-  const draftRev = latestPassedDraft(run);
+  if (products?.waitForSample !== undefined) await yieldForProductReads(products, run);
+  const draftRev = latestPassedDraft(run, products);
   if (!draftRev.ok) return refuse('draft', `nothing is rendered: ${draftRev.reason}`);
   let doc: Readonly<Record<string, unknown>>;
   try {
@@ -184,33 +245,48 @@ export async function renderRun(runDir: string, deps: RenderDeps): Promise<Rende
 
   const review = await reviewOfRecord(opened, deps);
 
-  const input = buildLocalInput({ opened, doc, derived, review, screen, credential, algorithm: reader.algorithm });
+  // Record-derived presentation inputs are read at the operation boundary, then
+  // passed explicitly into the renderer adapter. The producer read context can
+  // authenticate these exact snapshots; building the local input performs no
+  // hidden reread of brief or reviewer continuation history.
+  const fidelityContinuation = review.counts
+    ? continuationOf(run, 'fidelity', review.session, review.number, review.packetSha256, review.sessionId.value, products) : null;
+  const input = buildLocalInput({ opened, doc, derived, review, screen, credential, algorithm: reader.algorithm,
+    briefRecord, fidelityContinuation });
   if (!input.ok) return refuse(input.stage, input.reason);
-  // The derived structure (REQ-polaris-generation-034 version 2.3): the record check kept for this draft revision, compared with the facts
-  // re-derived now from the tree this reader lists, under the currency policy committed at the Syzygy checkout. No draft member reaches it.
-  const derivedStructure = await derivedStructureAt({
+  // URL renders read through the protected product bridge. Until the derived
+  // record has a producer receipt there, the ordinary filesystem record
+  // cannot supply facts to the review packet.
+  const built = urlMode ? input : { ...input, local: { ...input.local, derivedStructure: await derivedStructureAt({
     run, revision: draftRev.revision, pinned, repositoryId: subject.repository.repositoryId, reader, isSecretPath: secretPathOf(screen),
     policy: (deps.currencyPolicy ?? (() => readCurrencyPolicy(deps.sources.recordsRoot)))(),
-  });
-  const built = { ...input, local: { ...input.local, derivedStructure } };
+  }) } };
 
   const renderer = deps.renderer;
-  const draw = (local: LocalRenderInput): ReadonlyMap<string, string> | string => {
-    try { return renderer({ local, sources: built.sources }).files; } catch (cause) { return `the renderer refused the run: ${cause instanceof Error ? cause.message : 'unknown'}`; }
+  const draw = (local: LocalRenderInput, sources = built.sources): ReadonlyMap<string, string> | string => {
+    try { return renderer({ local, sources }).files; } catch (cause) { return `the renderer refused the run: ${cause instanceof Error ? cause.message : 'unknown'}`; }
   };
   // The rendered-design review of record is decided from the pages this render draws, outside the review-status region, which is where
   // the decision is stated: draw once with the decision pending, decide it from those pages, then draw again with it stated, and refuse
   // unless the second drawing equals the first outside the region.
+  const pendingInput = urlMode ? copyOrderedRenderValue({ local: built.local, sources: built.sources }) : null;
   const pending = draw(built.local);
   if (typeof pending === 'string') return refuse('render', pending);
   const reviewed = buildDesignPacket({ run, runId, pinnedRevision: pinned, audience: declared.audience, files: pending });
   if (!reviewed.ok) return refuse('render', `the rendered pages cannot be compared outside the review-status region: ${reviewed.reason}`);
-  const design = await designReviewOfRecord(opened, reviewed, { sources: deps.sources, now: () => now });
-  const local: LocalRenderInput = { ...built.local, reviewStatus: built.local.reviewStatus.map((item) => (item.id === 'review-status/design' ? designStatusItem(design, run) : item)) };
-  const files = draw(local);
-  if (typeof files === 'string') return refuse('render', files);
+  const design = await designReviewOfRecord(opened, reviewed, { sources: deps.sources, now: () => now, productReads: products }, checkedDesign);
+  if (checkedDesign !== undefined && (!review.counts || review.verdict.blocking || review.verdict.readiness !== 'ready' || !design.counts))
+    return refuse('reverify', 'The current fidelity and design reviews are required for the protected final render.');
+  const designContinuation = design.counts
+    ? continuationOf(run, 'design', design.session, design.number, design.packetSha256, design.sessionId.value, products,
+      checkedDesign === undefined ? undefined : { round: checkedDesign.delivery.identity.round, earlierRounds: checkedDesign.earlierRounds }) : null;
+  const local: LocalRenderInput = { ...built.local, reviewStatus: built.local.reviewStatus.map((item) => (item.id === 'review-status/design' ? designStatusItem(design, designContinuation) : item)) };
+  const finalInput = urlMode ? copyOrderedRenderValue({ local, sources: built.sources }) : null;
+  const drawn = draw(local);
+  if (typeof drawn === 'string') return refuse('render', drawn);
+  const files = new Map(drawn);
   const published = buildDesignPacket({ run, runId, pinnedRevision: pinned, audience: declared.audience, files });
-  if (!published.ok || published.sha256 !== reviewed.sha256) {
+  if (!published.ok || published.bytes !== reviewed.bytes) {
     return refuse('render', 'stating the rendered-design review in the review-status region changed the pages outside that region, so the review of record cannot be decided from them');
   }
   // The first RFC7-20 condition, checked on the output itself (dossier spec v1.5): every page carries the one sentence and its machine
@@ -232,8 +308,116 @@ export async function renderRun(runDir: string, deps: RenderDeps): Promise<Rende
     return refuse('render', `${scannedAsBefore.length} cited blob(s) were admitted only under the screening policy's code-content or project-documentation exemption, and these pages cannot be confirmed to meet its render condition (${unconfirmed}); scanned as before for these pages they hold active content, so nothing is rendered`);
   }
 
+  // URL products use this sink check unconditionally: the source exemption's
+  // conditional fallback cannot attest a new raw renderer-product species.
+  if (urlMode && (renderer.pageSinkContract !== PAGE_SINK_CONTRACT || pageSinkUnconfirmed(renderer, files) !== null))
+    return refuse('render', 'The complete URL renderer output does not satisfy the fixed page sink contract.');
+  if (deps.admitProducedSite !== undefined) {
+    const reproduce = async (signal: AbortSignal) => {
+      if (!urlMode) return { input: { local, sources: built.sources }, derived };
+      if (storedSite !== undefined || checkedDesign !== undefined) {
+        // These operations independently rebuild the reviewed packet. Check
+        // the exact inputs consumed by both draws again. The producer verifies
+        // the sources and packet. The supervisor independently reproduces the
+        // full final site before counting completion.
+        if (signal.aborted
+          || !equalOrderedRenderValue(pendingInput, { local: built.local, sources: built.sources })
+          || !equalOrderedRenderValue(finalInput, { local, sources: built.sources })) return null;
+        return { input: { local, sources: built.sources }, derived };
+      }
+      if (products?.waitForSample !== undefined) await yieldForProductReads(products, run);
+      const again = latestPassedDraft(run, products);
+      if (!again.ok || again.revision !== draftRev.revision || !Buffer.from(again.bytes).equals(draftRev.bytes)) return null;
+      const draft: unknown = JSON.parse(new TextDecoder('utf-8', { fatal: true }).decode(again.bytes));
+      if (!isRecord(draft)) return null;
+      const reader = deps.openReader!({ gitDir: path.join(subject.clone.path, '.git'), revision: pinned });
+      const rederived = await deriveFindings(draft, { pinned, screen, reader }, draftRules(pinned, declared.maxQuestions, poleLimitOf(declared)));
+      if (signal.aborted || rederived.findings.length > 0) return null;
+      const fidelity = await reviewOfRecord(opened, deps);
+      const fidelityContinuation = fidelity.counts
+        ? continuationOf(run, 'fidelity', fidelity.session, fidelity.number, fidelity.packetSha256, fidelity.sessionId.value, products) : null;
+      const rebuilt = buildLocalInput({ opened, doc: draft, derived: rederived, review: fidelity, screen, credential, algorithm: reader.algorithm,
+        briefRecord: protectedProductRecord(products!, run, RUN_LAYOUT.briefRecord), fidelityContinuation });
+      if (!rebuilt.ok || signal.aborted
+        || !equalOrderedRenderValue(pendingInput, { local: rebuilt.local, sources: rebuilt.sources })) return null;
+      const pending = draw(rebuilt.local, rebuilt.sources);
+      if (typeof pending === 'string') return null;
+      const candidate = buildDesignPacket({ run, runId, pinnedRevision: pinned, audience: declared.audience, files: pending });
+      if (!candidate.ok || candidate.bytes !== reviewed.bytes) return null;
+      const design = await designReviewOfRecord(opened, candidate, { sources: deps.sources, now: () => now, productReads: products });
+      const designContinuation = design.counts
+        ? continuationOf(run, 'design', design.session, design.number, design.packetSha256, design.sessionId.value, products) : null;
+      const next = { ...rebuilt.local, reviewStatus: rebuilt.local.reviewStatus.map(item =>
+        item.id === 'review-status/design' ? designStatusItem(design, designContinuation) : item) };
+      if (!equalOrderedRenderValue(finalInput, { local: next, sources: rebuilt.sources })) return null;
+      const drawn = draw(next, rebuilt.sources);
+      if (typeof drawn === 'string' || drawn.size !== files.size || signal.aborted) return null;
+      const expected = files.entries();
+      for (const [file, bytes] of drawn) {
+        const pair = expected.next().value;
+        if (pair === undefined || pair[0] !== file || pair[1] !== bytes) return null;
+      }
+      return { input: { local: next, sources: rebuilt.sources }, derived: rederived };
+    };
+    const abort = new AbortController();
+    const expires = performance.now() + RENDER_PRODUCER_MILLISECONDS;
+    const expired = (): boolean => abort.signal.aborted || performance.now() >= expires;
+    let timer: ReturnType<typeof setTimeout> | undefined, completed = false;
+    try {
+      const admitted = await Promise.race([
+        Promise.resolve().then(async () => {
+          const rebuilt = await reproduce(abort.signal);
+          if (rebuilt === null || expired()) return false;
+          const usedPaths = new Set(rebuilt.input.sources.filter(source => !source.exclusion.excluded).map(source => source.path));
+          return deps.admitProducedSite!({ run, runId, pinnedRevision: pinned, draftRevision: draftRev.revision,
+            ...(products === undefined ? {} : { products: products.revalidate() }),
+            input: rebuilt.input, files: new Map(files), signal: abort.signal, packet: { bytes: published.bytes, sha256: published.sha256 },
+            sourceBodies: [...rebuilt.derived.admitted].filter(([repositoryPath]) => !urlMode || usedPaths.has(repositoryPath))
+              .map(([repositoryPath, blob]) => ({ path: repositoryPath, objectId: blob.objectId,
+                raw: blob.withheld === undefined ? blob.raw : null, redacted: blob.withheld !== undefined })) });
+        }),
+        new Promise<false>(resolve => { timer = setTimeout(() => { abort.abort(); resolve(false); }, RENDER_PRODUCER_MILLISECONDS); }),
+      ]);
+      if (admitted !== true || expired()) return refuse('render', 'The rendered products were not admitted by the checked producer before storage.');
+      completed = true;
+    } catch { return refuse('render', 'The rendered products were not admitted by the checked producer before storage.'); }
+    finally { clearTimeout(timer); if (!completed) abort.abort(); }
+  }
+
+  if (urlMode && !(await urlRendererCurrent(installed!))) return refuse('renderer', 'The bound URL renderer changed before site storage.');
+  const productLeaseCurrent = (): boolean => products?.isLeaseOpen() === true
+    && (checkedDesign === undefined || Date.now() < checkedDesign.deadline);
+  const ensureStorageCurrent = (): void => {
+    if (urlMode && !productLeaseCurrent()) throw new UrlProductReadRefusal();
+  };
+  const ensureDesignCurrent = (): void => {
+    if (checkedDesign !== undefined) {
+      try { assertUrlDesignRenderContinuationCurrent(checkedDesign); }
+      catch { throw new UrlProductReadRefusal(); }
+    }
+  };
   let site: string;
-  try { site = writeSite(run, files); } catch (cause) { return refuse('write', `the site could not be written (${cause instanceof Error && cause.message.startsWith('invalid') ? cause.message : errno(cause)})`); }
+  if (storedSite === undefined) {
+    products?.revalidate();
+    try { site = writeSite(run, files, ensureStorageCurrent, ensureDesignCurrent); } catch (cause) {
+      if (cause instanceof UrlProductReadRefusal) throw cause;
+      return refuse('write', `the site could not be written (${cause instanceof Error && cause.message.startsWith('invalid') ? cause.message : errno(cause)})`);
+    }
+  } else {
+    ensureStorageCurrent();
+    if (files.size !== storedSite.output.files || storedSite.output.population.some(file => {
+      ensureStorageCurrent();
+      const body = files.get(file.path);
+      return body === undefined || file.bytes !== Buffer.byteLength(body) || file.sha256 !== sha256(body);
+    }) || checkStoredUrlRender(run, storedSite.path, storedSite.output, productLeaseCurrent) === null)
+      return refuse('reverify', 'The reproduced output differs from the checked stored site.');
+    // The comparison is read-only. Verify the authenticated input and
+    // continuation again before releasing the reproduced result.
+    products!.revalidate();
+    ensureDesignCurrent();
+    ensureStorageCurrent();
+    site = storedSite.path;
+  }
   const quoted = built.local.blocks;
   const rendered = [...quoted.values()].reduce((n, block) => n + block.segments.filter((part) => part.kind === 'quotation').length, 0);
   // A withheld item (v1.5) carries none of its segments, so its withheld quotations are counted from the check's own record.
@@ -256,13 +440,15 @@ export async function renderRun(runDir: string, deps: RenderDeps): Promise<Rende
     credential,
     disclosures: credential.required ? [...DISCLOSURES, CREDENTIAL_CHECK_DISCLOSURE] : DISCLOSURES,
   };
-  logStep(run, 'render', now, { outcome: 'rendered', site: path.relative(run, site), draftRevision: draftRev.revision, draftLayer: report.draftLayer.state });
+  if (storedSite === undefined) logStep(run, 'render', now, { outcome: 'rendered', site: path.relative(run, site), draftRevision: draftRev.revision, draftLayer: report.draftLayer.state });
+  else ensureStorageCurrent();
   return { ok: true, report };
 }
 
 /** Write the site into a new numbered directory under `site/`, through a staging directory renamed into place only when every file is
  * written. Returns the directory. */
-function writeSite(run: string, files: ReadonlyMap<string, string>): string {
+function writeSite(run: string, files: ReadonlyMap<string, string>, ensureCurrent: () => void, ensureDesignCurrent: () => void): string {
+  ensureCurrent();
   for (const file of files.keys()) if (!isDossierPagePath(file)) throw new Error('invalid-output-path');
   const root = path.join(run, RUN_LAYOUT.site);
   fs.mkdirSync(root, { recursive: true, mode: 0o700 });
@@ -272,11 +458,14 @@ function writeSite(run: string, files: ReadonlyMap<string, string>): string {
   fs.mkdirSync(staging, { mode: 0o700 });
   try {
     for (const [file, content] of files) {
+      ensureCurrent();
       const out = path.join(staging, file);
       fs.mkdirSync(path.dirname(out), { recursive: true, mode: 0o700 });
       fs.writeFileSync(out, content, { mode: 0o600, flag: 'wx' });
     }
     if (fs.existsSync(target)) throw new Error('site-directory-exists');
+    ensureDesignCurrent();
+    ensureCurrent();
     fs.renameSync(staging, target);
     return target;
   } catch (cause) {
@@ -295,6 +484,9 @@ interface BuildInputs {
   readonly screen: DossierScreen;
   readonly credential: CredentialStepResult;
   readonly algorithm: 'sha1' | 'sha256';
+  readonly briefRecord: Readonly<Record<string, unknown>> | undefined;
+  readonly fidelityContinuation: Continuation | null;
+  readonly designContinuation?: Continuation | null;
 }
 
 type Built = { readonly ok: true; readonly local: LocalRenderInput; readonly sources: readonly GenerationSource[] } | { readonly ok: false; readonly stage: RenderStage; readonly reason: string };
@@ -325,7 +517,7 @@ export function languageOf(repositoryPath: string): string {
 }
 
 export function buildLocalInput(inputs: BuildInputs): Built {
-  const { opened, doc, derived, review, design, screen, credential, algorithm } = inputs;
+  const { opened, doc, derived, review, design, screen, credential, algorithm, briefRecord, fidelityContinuation, designContinuation } = inputs;
   const { run, runId, subject, declared } = opened;
   const pinned = subject.pinnedRevision.commit;
   const clean = (value: string): string => (screen.screenBody(value) === 'secret-detector-match' ? WITHHELD_TEXT : value);
@@ -726,7 +918,9 @@ export function buildLocalInput(inputs: BuildInputs): Built {
     })) }],
   };
   const executionList = list(doc['executions']).filter(isRecord);
-  const flags = executionFlags(executionList, subject.clone.path, storedBriefArm(run));
+  const rawArm = isRecord(briefRecord?.['executionRule']) ? briefRecord['executionRule']['arm'] : undefined;
+  const briefArm = rawArm === 'sec-3' || rawArm === 'permitting' ? rawArm : null;
+  const flags = executionFlags(executionList, subject.clone.path, briefArm);
   const executionsPage: LocalPage = {
     path: 'executions.html', title: 'Executions',
     intro: 'Every command the agent reports having run. Syzygy cannot observe what the agent ran and ran nothing itself: the list is the agent\'s own report, Inferred, and not complete or Observed.',
@@ -739,7 +933,7 @@ export function buildLocalInput(inputs: BuildInputs): Built {
       ], sourceIds: [],
     })) }],
   };
-  const fidelityContinuation = review.counts ? continuationOf(run, 'fidelity', review.session, review.number, review.packetSha256, review.sessionId.value) : null;
+  if (review.counts && fidelityContinuation === null) return { ok: false, stage: 'render', reason: 'The counted fidelity review has no captured continuation input.' };
   const reviewItems: LocalPageItem[] = review.counts ? [
     { id: 'review/fidelity/binding', marking: 'observed', unknownReason: null, title: 'Fidelity review binding', text: `Syzygy rebuilt the fidelity packet from the frozen draft and inventory at this render; its digest is ${review.packetSha256}, and the counted verdict names that digest.`, details: [], sourceIds: [] },
     { id: 'review/fidelity/verdict', marking: 'inferred', unknownReason: null, title: 'Fidelity verdict', text: `The review session declares the draft ${review.verdict.readiness}${review.verdict.blocking ? ', beside a blocking finding' : ''}.`,
@@ -765,16 +959,18 @@ export function buildLocalInput(inputs: BuildInputs): Built {
   const why: string[] = [];
   if (declared.agentTool.trim() === '' || declared.agentProvider.trim() === '') why.push('the agent tool or provider is not declared and recorded');
   const draftLayer: LocalDraftLayer = why.length === 0
-    ? { state: 'editorial-draft', inferenceProvenance: { provider: declared.agentProvider, modelIdentity: declared.model, modelVersion: declared.modelVersion, declaredBy: 'operator', label: 'Inferred' } }
+    ? { state: 'editorial-draft', inferenceProvenance: { provider: declared.agentProvider, modelIdentity: declared.model,
+      modelVersion: opened.effective?.kind === 'url' ? null : declared.modelVersion,
+      declaredBy: opened.effective?.kind === 'url' && opened.effective.declaration.inference.modelSelection === 'supported-default' ? 'supported-default' : 'operator', label: 'Inferred' } }
     : { state: 'unknown', reason: 'missing-declaration', why };
 
   const quotationCount = [...blocks.values()].reduce((n, block) => n + block.segments.filter((part) => part.kind === 'quotation').length, 0);
-  const disclosure = disclosureItems({ opened, draftLayer, executionList, flags, quotationCount, credential, clean, run });
+  const disclosure = disclosureItems({ opened, draftLayer, executionList, flags, quotationCount, credential, clean, briefRecord });
   const reviewStatus: LocalDisclosureItem[] = [
     review.counts
       ? { id: 'review-status/fidelity', text: `Fidelity review: one counts, bound to packet ${review.packetSha256} rebuilt at this render; its verdict, ${review.verdict.readiness}, is the review session's.${fidelityContinuation!.continuing ? ' Its reviewer continued across revisions (see the review page).' : ''}`, label: 'Inferred' }
       : { id: 'review-status/fidelity', text: `Fidelity review: none counts (${review.why}).`, label: 'Unknown' },
-    designStatusItem(design, run),
+    designStatusItem(design, designContinuation ?? null),
   ];
 
   const editorial = draftLayer.state === 'editorial-draft';
@@ -786,6 +982,7 @@ export function buildLocalInput(inputs: BuildInputs): Built {
       draft, withheldTitle: `Dossier of ${subject.repository.url} at ${pinned.slice(0, 12)}`, draftLayer, blocks, glossary, disclosure,
       sourceAnchors, pages, reviewStatus, withheldElements, citationLines,
       authoring: { tool: declared.agentTool, model: declared.model },
+      ...(opened.effective?.kind === 'url' ? { effectiveRun: effectiveUrlProjection({ subject }, opened.effective.declaration) } : {}),
       selectionReasons,
       // A checked draft's Poles are whole: every section in one Pole and a named why section (check-derive's Pole findings).
       ...(Array.isArray(doc['poles']) && typeof doc['whySection'] === 'string' ? { poles: {
@@ -822,12 +1019,12 @@ export function withheldSentence(note: WithheldNote): string {
 const DESIGN_REVIEW_WHERE = 'Whether a rendered-design review counts for these pages is stated in the review-status region at the foot of every page, the only part of a page a later render may change without retiring that review; this page is part of what that review reviews, so it does not repeat it.';
 
 /** The review-status region's line for the rendered-design review. */
-export function designStatusItem(design: DesignReviewOfRecord | undefined, run: string): LocalDisclosureItem {
+export function designStatusItem(design: DesignReviewOfRecord | undefined, continuation: Continuation | null): LocalDisclosureItem {
   if (design === undefined) return { id: 'review-status/design', text: 'Rendered-design review: not yet decided at this render.', label: 'Unknown' };
   if (!design.counts) return { id: 'review-status/design', text: `Rendered-design review: none counts (${design.why}).`, label: 'Unknown' };
   // The design review's status lives only in this region, so its reviewer's continuity, continuing or not, is disclosed here, never on a
   // reviewed page.
-  const continuation = continuationOf(run, 'design', design.session, design.number, design.packetSha256, design.sessionId.value);
+  if (continuation === null) throw new Error('counted-design-continuation-unavailable');
   return { id: 'review-status/design', text: `Rendered-design review: one counts, bound to packet ${design.packetSha256}, which Syzygy built at this render from these pages outside this region; its verdict, ${design.verdict.readiness}${design.verdict.blocking ? ' beside a blocking finding' : ''}, is the review session's. ${continuation.text} (Inferred, from ${continuation.basis}.)`, label: 'Inferred' };
 }
 
@@ -839,11 +1036,10 @@ const UNDERSTANDING_HEADINGS: Readonly<Record<(typeof UNDERSTANDING_ITEMS)[numbe
 /** The run disclosure REQ-polaris-generation-036 requires on every page and in the machine view. */
 function disclosureItems(inputs: {
   readonly opened: Extract<OpenedRun, { ok: true }>; readonly draftLayer: LocalDraftLayer; readonly executionList: readonly Readonly<Record<string, unknown>>[];
-  readonly flags: ExecutionFlags; readonly quotationCount: number; readonly credential: CredentialStepResult; readonly clean: (value: string) => string; readonly run: string;
+  readonly flags: ExecutionFlags; readonly quotationCount: number; readonly credential: CredentialStepResult; readonly clean: (value: string) => string; readonly briefRecord: Readonly<Record<string, unknown>> | undefined;
 }): LocalDisclosureItem[] {
-  const { opened, draftLayer, executionList, flags, quotationCount, credential, clean, run } = inputs;
+  const { opened, draftLayer, executionList, flags, quotationCount, credential, clean, briefRecord: brief } = inputs;
   const { subject, declared } = opened;
-  const brief = readRecord(path.join(run, RUN_LAYOUT.briefRecord));
   const rule = isRecord(brief) && isRecord(brief['executionRule']) ? brief['executionRule'] : {};
   const commands = executionList.map((entry) => clean(text(entry['command']) ?? ''));
   const items: LocalDisclosureItem[] = [
@@ -874,6 +1070,12 @@ function disclosureItems(inputs: {
     items.push(credential.passed
       ? { id: 'adapter-credential', text: `At this render no adapter credential of the ${credential.checked} listed was readable as the operator's user.`, label: 'Observed' }
       : { id: 'adapter-credential', text: `At this render an adapter credential was readable as the operator's user: ${credential.finding.why}. ${credential.finding.instruction}`, label: 'Observed' });
+  }
+  if (opened.effective?.kind === 'url') {
+    const replacements = effectiveUrlDisclosures({ subject }, opened.effective.declaration);
+    const ids = new Set(replacements.map(item => item.id));
+    const retained = items.filter(item => item.id !== 'no-provider-call' && !ids.has(item.id));
+    return [...replacements, ...retained];
   }
   return items;
 }

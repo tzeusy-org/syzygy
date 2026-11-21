@@ -111,11 +111,20 @@ root.
 |---|---|---|
 | `npm test` | one complete **unit** run in a fresh private TMPDIR, with a post-run leak check | node, python3 with pidfd support, Linux `/proc` |
 | `npm run check` | `npm run typecheck`, then `npm test` | node, python3 with pidfd support, Linux `/proc` |
-| `npm run test:integration` | bounded TMPDIR-driver selftests, then the **integration** tier | git, python3 with pidfd support, Linux `/proc` |
+| `npm run test:integration` | bounded TMPDIR-driver selftests, then the **integration** tier | Linux x64 and the native dossier integration prerequisites below |
 | `npm run test:e2e` | the **e2e** tier, then the system tests (`npm run test:system`, which builds first) | Chrome or Chromium, strace, git, npm |
 | `npm run check:all` | `check`, `test:tiers`, `test:integration`, `test:e2e`, then the governance battery (`npm run check:battery`) | all of the above |
 | `npm run test:live` | the **live** tier: operator-run, skips unless `SYZYGY_POC_BUTLERS_REPO` names a real repository | a Butlers checkout |
 | `npm run test:tiers` | every test file is in exactly one tier (two methods, with a count) | node only |
+
+- **Native dossier integration.** After `npm ci`, run
+  `node scripts/check_dossier_native_integration.mjs` to verify the test host.
+  Use Node 24.6.0, the pinned Claude and Git transport executables, and an
+  unprivileged test account for the synthetic loopback SSH fixture.
+  Hosted CI uses Ubuntu 26.04 x64, a signed Ubuntu archive snapshot for the
+  native packages, and a byte-verified public release of the Claude executable.
+  The preflight checks the pinned executable bytes and probes the local
+  namespace, resource-limit, tracing and pidfd facilities.
 
 - **Unit** is hermetic. The unit setup (`vitest.unit-guard.setup.ts`) refuses
   a child process (git, node, python, a browser), a socket and a server at the

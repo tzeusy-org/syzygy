@@ -73,6 +73,7 @@ describe('the screen', () => {
     ['a script element', '<script>run()</script>\n', 'active-content'],
   ])('screens a body with %s', (_name, body, outcome) => {
     expect(screen?.screenBody(body)).toBe(outcome);
+    expect(screen?.screenSecrets(body)).toBe(outcome === 'secret-detector-match' ? 'secret-detector-match' : undefined);
   });
 
   it.each<[string, string]>([

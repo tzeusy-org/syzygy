@@ -1,5 +1,6 @@
 import { createHash } from 'node:crypto';
-import { constants, lstat, open, readdir, type FileHandle } from 'node:fs/promises';
+import type { BigIntStats } from 'node:fs';
+import { constants, lstat, open, opendir, readdir, type FileHandle } from 'node:fs/promises';
 import path from 'node:path';
 import { constants as zlib, inflateSync } from 'node:zlib';
 
@@ -42,7 +43,10 @@ import { constants as zlib, inflateSync } from 'node:zlib';
  *   answer is acted on, and only after `tree` re-hashes it;
  * - refuses a store that cannot be read (`store-unreadable`, a filesystem error code) and its own defects (`reader-fault`, any other
  *   error), and never throws anything else.
- * Not bounded: the bytes of `.idx` files, each read and parsed in full once per call. Classification and screening of what it returns
+ * The default profile reads whole pack indexes and directory listings without metadata budgets. A host may set aggregate
+ * per-call limits on both populations, or select looseOnly to refuse a nonempty pack directory and never load indexes,
+ * including ones appearing after its one-entry census.
+ * Classification and screening of what it returns
  * (REQ-polaris-generation-025) are the caller's. */
 
 export type HashAlgorithm = 'sha1' | 'sha256';
@@ -141,6 +145,10 @@ export interface PinnedObjectReaderOptions {
   readonly gitDir: string;
   /** The consented revision: the full commit identifier the in-force observation consent names. */
   readonly revision: string;
+  /** Host-selected loose-store profile. Each actual store operation refuses a nonempty pack directory
+   * using a bounded one-entry census and never enumerates or reads indexes, even if entries appear later.
+   * Default false retains packed object support and its independently disclosed unbounded index reads. */
+  readonly looseOnly?: boolean;
   /** Largest object, inflated, the reader will hold. Default 1 GiB. */
   readonly maxObjectBytes?: number;
   /** Longest delta chain resolved. Default 1,000 (git's default `pack.depth` is 50 and its maximum 4,095). */
@@ -149,21 +157,40 @@ export interface PinnedObjectReaderOptions {
   readonly maxInflatedBytesPerCall?: number;
   /** Objects read (each delta base counted) plus tree entries listed, over one call. Default 1,000,000. */
   readonly maxObjectsPerCall?: number;
+  /** Aggregate stored pack index bytes read per call. Omitted retains the default packed reader behavior. */
+  readonly maxPackIndexBytesPerCall?: number;
+  /** Aggregate directory entries inspected per call, including names the reader ignores. Omitted has no ceiling. */
+  readonly maxStoreEntriesPerCall?: number;
 }
 
-interface Limits { readonly objectBytes: number; readonly chainDepth: number; readonly callBytes: number; readonly callObjects: number }
+interface Limits {
+  readonly objectBytes: number;
+  readonly chainDepth: number;
+  readonly callBytes: number;
+  readonly callObjects: number;
+  readonly indexBytes?: number;
+  readonly storeEntries?: number;
+}
 
 export function openPinnedObjectReader(options: PinnedObjectReaderOptions): PinnedObjectReader {
   const algorithm = hashAlgorithmOf(options.revision);
   const revision = options.revision;
+  if (options.looseOnly !== undefined && typeof options.looseOnly !== 'boolean') refuse('reader-fault', 'looseOnly must be a boolean');
+  const looseOnly = options.looseOnly ?? false;
+  const { maxPackIndexBytesPerCall, maxStoreEntriesPerCall, gitDir } = options;
+  for (const [name, value] of Object.entries({ maxPackIndexBytesPerCall, maxStoreEntriesPerCall })) {
+    if (value !== undefined && (!Number.isSafeInteger(value) || value <= 0)) refuse('reader-fault', `${name} must be a positive safe integer`);
+  }
   const limits: Limits = {
     objectBytes: options.maxObjectBytes ?? 2 ** 30, chainDepth: options.maxDeltaChainDepth ?? 1_000,
     callBytes: options.maxInflatedBytesPerCall ?? 2 ** 32, callObjects: options.maxObjectsPerCall ?? 1_000_000,
+    ...(maxPackIndexBytesPerCall === undefined ? {} : { indexBytes: maxPackIndexBytesPerCall }),
+    ...(maxStoreEntriesPerCall === undefined ? {} : { storeEntries: maxStoreEntriesPerCall }),
   };
   const step = async <T>(body: (walk: Walk) => Promise<T>): Promise<T> => {
     let store: ObjectStore | null = null;
     try {
-      store = await ObjectStore.open(options.gitDir, algorithm, limits);
+      store = await ObjectStore.open(gitDir, algorithm, limits, looseOnly);
       return await body(new Walk(store, revision));
     } catch (e) {
       if (e instanceof GitObjectReadRefusal) throw e;
@@ -380,6 +407,27 @@ const HEADER_BYTES = 32, HEADER_STORED_BYTES = 1024;
 /** The most bytes one more stored byte can inflate to, a few back-references of 258 bytes each, with room to spare. */
 const HEADER_STEP_OUTPUT = 64 * 1024;
 
+/** Counts the actual directory population, including ignored names, across one store operation. */
+class StoreCensus {
+  private visited = 0;
+  constructor(private readonly limit: number | undefined) {}
+
+  async names(directory: string): Promise<string[]> {
+    const limit = this.limit;
+    if (limit === undefined) return readdir(directory);
+    const names: string[] = [];
+    const handle = await opendir(directory, { bufferSize: 1 });
+    try {
+      for (let entry = await handle.read(); entry !== null; entry = await handle.read()) {
+        this.visited += 1;
+        if (this.visited > limit) refuse('budget-exceeded', `this call inspects more than ${limit} object store directory entries`);
+        names.push(entry.name);
+      }
+      return names;
+    } finally { await handle.close(); }
+  }
+}
+
 /** The clone's own object store, read once per call: loose objects first, then packs in name order. Nothing else under `.git`. */
 class ObjectStore {
   private readonly handles = new Map<string, Pack>();
@@ -392,24 +440,49 @@ class ObjectStore {
     private readonly packs: readonly PackIndex[],
     private readonly limits: Limits,
     private readonly alternatesPresent: boolean,
+    private readonly census: StoreCensus,
+    private readonly boundedLooseReads: boolean,
   ) {}
 
-  static async open(gitDir: string, algorithm: HashAlgorithm, limits: Limits): Promise<ObjectStore> {
+  static async open(gitDir: string, algorithm: HashAlgorithm, limits: Limits, looseOnly = false): Promise<ObjectStore> {
     let isDir = false;
     try { isDir = (await lstat(gitDir)).isDirectory(); } catch { isDir = false; }
     if (!isDir) refuse('not-a-git-directory', `${gitDir} is not a directory; a gitdir pointer file is never followed`);
     const objects = path.join(gitDir, 'objects'), packDir = path.join(objects, 'pack');
-    if (!(await realDirectory(gitDir, objects))) return new ObjectStore(gitDir, null, algorithm, [], limits, false);
-    const names = (await realDirectory(gitDir, packDir)) ? (await readdir(packDir)).filter(n => n.endsWith('.idx')).sort() : [];
+    const census = new StoreCensus(limits.storeEntries);
+    const boundedLooseReads = looseOnly || limits.indexBytes !== undefined || limits.storeEntries !== undefined;
+    if (!(await realDirectory(gitDir, objects))) return new ObjectStore(gitDir, null, algorithm, [], limits, false, census, boundedLooseReads);
+    const packDirectory = await realDirectory(gitDir, packDir);
+    if (looseOnly && packDirectory) {
+      const directory = await opendir(packDir, { bufferSize: 1 });
+      try { if (await directory.read() !== null) refuse('unsafe-store-entry', 'the loose-only profile refuses a nonempty pack directory'); }
+      finally { await directory.close(); }
+    }
+    // This branch is fixed for the entire actual operation. A later index can never
+    // turn a loose-only store into a packed store after the bounded census.
+    const names = !looseOnly && packDirectory ? (await census.names(packDir)).filter(n => n.endsWith('.idx')).sort() : [];
     const packs: PackIndex[] = [];
+    const indexBudget = limits.indexBytes;
+    let indexBytes = 0;
     for (const name of names) {
       const fh = await openRegular(gitDir, path.join(packDir, name));
-      if (fh === null) refuse('invalid-pack-index', `${name} vanished while being read`);
-      try { packs.push(parseIndex(await fh!.readFile(), name.slice(0, -4), algorithm)); } finally { await fh!.close(); }
+      if (fh === null) return refuse('invalid-pack-index', `${name} vanished while being read`);
+      try {
+        let bytes: Buffer;
+        if (indexBudget === undefined) {
+          bytes = await fh.readFile();
+        } else {
+          const initial = await fh.stat({ bigint: true });
+          if (initial.size > BigInt(indexBudget - indexBytes)) refuse('budget-exceeded', `this call reads more than ${indexBudget} stored pack index bytes`);
+          indexBytes += Number(initial.size);
+          bytes = await readStableFile(fh, initial, () => refuse('invalid-pack-index', `${name} changed while being read`));
+        }
+        packs.push(parseIndex(bytes, name.slice(0, -4), algorithm));
+      } finally { await fh.close(); }
     }
     let alternatesPresent = false;
     try { alternatesPresent = (await lstat(path.join(objects, 'info', 'alternates'))).isFile(); } catch { alternatesPresent = false; }
-    return new ObjectStore(gitDir, objects, algorithm, packs, limits, alternatesPresent);
+    return new ObjectStore(gitDir, objects, algorithm, packs, limits, alternatesPresent, census, boundedLooseReads);
   }
 
   async close(): Promise<void> {
@@ -423,9 +496,9 @@ class ObjectStore {
     const out = new Set<string>();
     if (this.objects === null) return out;
     const rest = new RegExp(`^[0-9a-f]{${HEX[this.algorithm] - 2}}$`);
-    for (const fan of (await readdir(this.objects)).filter(n => /^[0-9a-f]{2}$/.test(n)).sort()) {
+    for (const fan of (await this.census.names(this.objects)).filter(n => /^[0-9a-f]{2}$/.test(n)).sort()) {
       if (!(await realDirectory(this.gitDir, path.join(this.objects, fan)))) continue;
-      for (const name of (await readdir(path.join(this.objects, fan))).filter(n => rest.test(n))) {
+      for (const name of (await this.census.names(path.join(this.objects, fan))).filter(n => rest.test(n))) {
         this.count(`${fan}${name}`, null);
         out.add(`${fan}${name}`);
       }
@@ -563,6 +636,11 @@ class ObjectStore {
     const fh = await openRegular(this.gitDir, path.join(dir, id.slice(2)));
     if (fh === null) return null;
     try {
+      if (this.boundedLooseReads) {
+        const initial = await fh.stat({ bigint: true });
+        if (initial.size > BigInt(storedBound(this.limits.objectBytes))) refuse('corrupt-object', `loose object ${id} is larger stored than any object the reader holds`, id, at);
+        return await readStableFile(fh, initial, () => refuse('corrupt-object', `loose object ${id} changed while being read`, id, at));
+      }
       if ((await fh.stat()).size > storedBound(this.limits.objectBytes)) refuse('corrupt-object', `loose object ${id} is larger stored than any object the reader holds`, id, at);
       return await fh.readFile();
     } finally { await fh.close(); }
@@ -682,6 +760,20 @@ async function readAt(fh: FileHandle, offset: number, length: number): Promise<B
   const buf = Buffer.alloc(Math.max(0, length));
   const { bytesRead } = await fh.read(buf, 0, buf.length, offset);
   return buf.subarray(0, bytesRead);
+}
+
+/** Read exactly the checked descriptor extent. A growing file cannot cause another allocation or read beyond that extent. */
+async function readStableFile(fh: FileHandle, initial: BigIntStats, changed: () => never): Promise<Buffer> {
+  const bytes = Buffer.alloc(Number(initial.size));
+  let offset = 0;
+  while (offset < bytes.length) {
+    const { bytesRead } = await fh.read(bytes, offset, bytes.length - offset, offset);
+    if (bytesRead === 0) changed();
+    offset += bytesRead;
+  }
+  const final = await fh.stat({ bigint: true });
+  if (final.size !== initial.size || final.mtimeNs !== initial.mtimeNs || final.ctimeNs !== initial.ctimeNs) changed();
+  return bytes;
 }
 
 /** A version-2 pack index whose identifiers are as wide as the consented algorithm's; any other shape refuses (an index in

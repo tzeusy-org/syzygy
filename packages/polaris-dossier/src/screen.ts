@@ -72,6 +72,11 @@ export interface DossierScreen {
    * or (version 5) the project-documentation exemption names skips the active-content scan; without one (agent text, or a page that
    * cannot meet the render condition) every body is scanned. */
   readonly screenBody: (body: string, repositoryPath?: string) => ScreenExclusion | undefined;
+  /** The exact compiled policy detector population, without path exemptions,
+   * redaction or rendering-only active-content rules. A relay applies this to
+   * complete protocol text/compositions after independently deriving origins;
+   * it does not replace path classification or source/artifact screening. */
+  readonly screenSecrets: (body: string) => 'secret-detector-match' | undefined;
   /** Whether the policy declares the version-4 secret redaction. */
   readonly secretRedaction: boolean;
   /** A target body read at `repositoryPath`, screened under the policy's secret redaction (version 4) where it applies: every detector over
@@ -189,6 +194,7 @@ export function buildDossierScreen(policy: Uint8Array, projectDocumentationEnabl
     return codeContentExempt(repositoryPath, found, exemption) || documentationExempt(found, documentationExemption);
   };
   const active = (body: string, repositoryPath: string): boolean => !exempt(repositoryPath) && scanActiveContent(body).length > 0;
+  const screenSecrets = (body: string): 'secret-detector-match' | undefined => detectSecrets(detectors, body) !== undefined ? 'secret-detector-match' : undefined;
   // The detectors first (from every offset, over the complete body), then the active-content scan over the complete body, as before.
   const screenTargetBody = (body: string, repositoryPath: string): TargetBodyScreen => {
     const redacted = redactBody(body, contentClass(repositoryPath), everyOffset, redactionFor(redaction, visibility));
@@ -207,8 +213,9 @@ export function buildDossierScreen(policy: Uint8Array, projectDocumentationEnabl
       scopeDetectors: scopeRead.detectors.length,
       screenPath,
       contentClass,
-      screenBody: (body, repositoryPath) => detectSecrets(detectors, body) !== undefined ? 'secret-detector-match'
-        : !exempt(repositoryPath) && scanActiveContent(body).length > 0 ? 'active-content' : undefined,
+      screenBody: (body, repositoryPath) => screenSecrets(body) ?? (
+        !exempt(repositoryPath) && scanActiveContent(body).length > 0 ? 'active-content' : undefined),
+      screenSecrets,
       secretRedaction: redaction !== null,
       screenTargetBody,
       activeContentAsBefore: (body) => scanActiveContent(body).length > 0,

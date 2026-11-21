@@ -1,14 +1,18 @@
 import * as fs from 'node:fs';
 import * as path from 'node:path';
-import { isRecord } from '@syzygy/support';
+import { isRecord, sha256 } from '@syzygy/support';
 import { parseBoundedJson } from '@syzygy/polaris-generation-core/live';
 import type { GateSources } from './gate-sources.js';
 import { samePolicy } from './policy-snapshot.js';
 import { buildDossierScreen } from './screen.js';
 import { GitObjectReadRefusal, openPinnedObjectReader, type PinnedObjectReader, type PinnedObjectReaderOptions } from './git-object-reader.js';
 import { governedSubject, type GovernedDecision } from './governed.js';
-import { readRunRecord, sourceBindingSha256, type RecordedRunConfig } from './run-record.js';
+import { sourceBindingSha256, type RecordedRunConfig } from './run-record.js';
 import { RUN_LAYOUT } from './state-directory.js';
+import { readEffectiveRunRecord, URL_RUN_SIDECAR } from './effective-run-record.js';
+import type { EffectiveRunDeclaration } from './url-run-record.js';
+import { isRunProductReads, protectedProduct, protectedProductPair, type RunProductReads } from './url-operation-products.js';
+import { isBoundUrlSourceReader } from './url-source-reader.js';
 
 /** Recheck declarations, the committed policy and pinned objects. Stored subject
  * history is Inferred; no retired consent or statement source is consulted. */
@@ -28,6 +32,8 @@ export type ReverifyResult =
   | {
     readonly ok: true;
     readonly record: RecordedRunConfig;
+    readonly effective?: EffectiveRunDeclaration;
+    readonly sidecarSha256?: string | null;
     readonly revision: ReverifiedRevision;
     readonly governed: GovernedDecision;
     /** Recognized body classes eligible for artifacts; the screen must still classify each path and screen every body. */
@@ -44,6 +50,7 @@ export type ReverifyResult =
 
 export interface ReverifyOptions {
   /** The object reader; the default is the re-hashing in-process reader. */
+  readonly productReads?: RunProductReads;
   readonly openReader?: (options: PinnedObjectReaderOptions) => PinnedObjectReader;
 }
 
@@ -56,9 +63,14 @@ const DISCLOSURES = [
 const BRIEF_RECORD_LIMITS = Object.freeze({ maxBytes: 262_144, maxNodes: 4096, maxDepth: 8 });
 
 /** The agent tool and provider the brief record states, once the run is briefed (R-POLARIS-DOSSIER-S3-GATES-2 finding 6). */
-function briefDeclaredAgent(run: string): { readonly state: 'unbriefed' } | { readonly state: 'ok'; readonly tool: string; readonly provider: string; readonly commit: string; readonly sourceBinding: string } | { readonly state: 'invalid'; readonly why: string } {
+function briefDeclaredAgent(run: string, products?: RunProductReads): { readonly state: 'unbriefed' } | { readonly state: 'ok'; readonly tool: string; readonly provider: string; readonly commit: string; readonly sourceBinding: string } | { readonly state: 'invalid'; readonly why: string } {
   let text: string;
-  try {
+  if (products !== undefined) {
+    const bytes = protectedProduct(products, run, RUN_LAYOUT.briefRecord);
+    if (bytes === null) return { state: 'unbriefed' };
+    try { text = new TextDecoder('utf-8', { fatal: true }).decode(bytes); }
+    catch { return { state: 'invalid', why: 'it is not valid UTF-8' }; }
+  } else try {
     text = fs.readFileSync(path.join(run, RUN_LAYOUT.briefRecord), 'utf8');
   } catch (cause) {
     const code = (cause as NodeJS.ErrnoException).code ?? 'unknown-error';
@@ -79,21 +91,32 @@ function briefDeclaredAgent(run: string): { readonly state: 'unbriefed' } | { re
 
 export async function reverifyPinnedRevision(runDir: string, sources: GateSources, now: number, options: ReverifyOptions = {}): Promise<ReverifyResult> {
   const refusals: ReverifyRefusal[] = [];
+  let disclosures: readonly string[] = DISCLOSURES;
   const refuse = (extra: { objectRead?: ReturnType<GitObjectReadRefusal['toJSON']> } = {}): ReverifyResult =>
-    ({ ok: false, reasons: refusals.map(r => r.reason), refusals, ...extra, disclosures: DISCLOSURES });
-  let text: string;
-  try {
-    text = fs.readFileSync(path.join(path.resolve(runDir), RUN_LAYOUT.config), 'utf8');
-  } catch (cause) {
-    refusals.push({ code: 'record-invalid', reason: `${runDir} holds no readable ${RUN_LAYOUT.config} (${(cause as NodeJS.ErrnoException).code ?? 'unknown-error'})` });
-    return refuse();
-  }
-  const read = readRunRecord(text);
+    ({ ok: false, reasons: refusals.map(r => r.reason), refusals, ...extra, disclosures });
+  const run = path.resolve(runDir), products = options.productReads;
+  if (isRunProductReads(products) && products.run === run && products.waitForSample !== undefined) await products.waitForSample();
+  const [coreBytes, sidecarBytes] = products === undefined ? [null, null] : protectedProductPair(products, run, RUN_LAYOUT.config, URL_RUN_SIDECAR);
+  const read = readEffectiveRunRecord(run, sources.effectiveRunDeclaration);
   if (!read.ok) {
-    refusals.push({ code: 'record-invalid', reason: read.detail });
+    refusals.push({ code: 'record-invalid', reason: read.reason });
     return refuse();
   }
-  const { subject, declared } = read.record;
+  if (products !== undefined && (read.effective.kind !== 'url' || coreBytes === null || sidecarBytes === null
+    || sha256(coreBytes) !== read.effective.declaration.baseRunSha256 || sha256(sidecarBytes) !== read.sidecarSha256)) {
+    refusals.push({ code: 'record-invalid', reason: 'the URL run declaration does not match the authenticated products' });
+    return refuse();
+  }
+  const { subject, declared } = read.core;
+  if (read.effective.kind === 'url') disclosures = [
+    'The protected host mode binding and strict URL declaration were checked for this read. URL providers, planned classes, source selection and launch history remain Inferred; actual sends, receipts, usage and completeness are Unknown here.',
+    DISCLOSURES[1]!,
+    'Writable compatible history is distinct from protected host receipts and audit; no stored declaration is a live receipt or execution permission.',
+  ];
+  if (read.effective.kind === 'url' && !isBoundUrlSourceReader(options.openReader)) {
+    refusals.push({ code: 'record-invalid', reason: 'the URL run requires its checked supervisor source reader' });
+    return refuse();
+  }
   const { repositoryId } = subject.repository;
   const commit = subject.pinnedRevision.commit;
 
@@ -111,7 +134,8 @@ export async function reverifyPinnedRevision(runDir: string, sources: GateSource
     refusals.push({ code: 'policy', reason: screened.ok ? 'the policy bytes do not match the committed binding' : screened.why });
     return refuse();
   }
-  const briefed = briefDeclaredAgent(path.resolve(runDir));
+  if (isRunProductReads(products) && products.run === run && products.waitForSample !== undefined) await products.waitForSample();
+  const briefed = briefDeclaredAgent(run, products);
   if (briefed.state === 'invalid') {
     refusals.push({ code: 'declared-changed', reason: `the brief record exists but ${briefed.why}; the declared provider binding cannot be checked` });
   } else if (briefed.state === 'ok' && briefed.commit !== commit) {
@@ -136,12 +160,12 @@ export async function reverifyPinnedRevision(runDir: string, sources: GateSource
   }
   const governed = governedSubject({ stated: false, why: 'D10 source admission does not require a drawer declaration' }, paths);
   return {
-    ok: true, record: read.record,
+    ok: true, record: read.core, effective: read.effective, sidecarSha256: read.sidecarSha256,
     revision: { commit, label: subject.pinnedRevision.label },
     governed,
     // Eligibility still requires the screen to classify each path. This list
     // grants nothing to an undefined class and is not a provider statement.
     contentClasses: subject.contentClasses,
-    disclosures: DISCLOSURES,
+    disclosures,
   };
 }

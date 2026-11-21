@@ -1,8 +1,9 @@
 import { readdirSync } from 'node:fs';
+import { isBuiltin } from 'node:module';
 import { join } from 'node:path';
 import ts from 'typescript';
 import { describe, expect, it } from 'vitest';
-import { ROOT, isFile, reach as reachBy, readModule, resolve } from './workspace-reach.testkit.js';
+import { ROOT, isFile, reach as reachBy, readModule, resolve, type ReachEdge } from './workspace-reach.testkit.js';
 
 // syzygy-bpyt.8.1/.8.23: the CLI and the broker-client process it launches
 // never load the parked provider island (owner packet Q8). Read TypeScript
@@ -10,6 +11,10 @@ import { ROOT, isFile, reach as reachBy, readModule, resolve } from './workspace
 // The shared resolver follows workspace exports, including their conditions.
 // Entry reach sets and the production-source population are discovered, not listed.
 const ENTRIES = ['apps/syzygy/src/main.ts', 'packages/polaris-dossier/src/broker-client.ts'];
+const URL_RUNTIME = 'packages/polaris-dossier/src/url-runtime.ts';
+const RUNTIME_BUILDER = 'scripts/build_dossier_runtime.mjs';
+const RENDERER_ENTRY = 'apps/three-surface-poc/src/polaris-generation/dossier-site.ts';
+const RENDERER_EDGE = `../../../${RENDERER_ENTRY}`;
 const ISLAND = [
   'packages/polaris-generation-core/src/admitted-input.ts',
   'packages/polaris-generation-core/src/discovery-provider.ts',
@@ -69,10 +74,44 @@ function productionModules(): string[] {
   }
   return files.sort();
 }
-/** Static, type-only, re-export, import-type and literal dynamic edges. A
- * computed import or CommonJS loader cannot be followed by this guard. */
+const parse = (file: string, text: string): ts.SourceFile => ts.createSourceFile(file, text, ts.ScriptTarget.Latest, true);
+const printer = ts.createPrinter({ removeComments: true });
+const syntax = (node: ts.Node): string => printer.printNode(ts.EmitHint.Unspecified, node, node.getSourceFile());
+const statementsOf = (text: string): string[] => parse('expected.ts', text).statements.map(syntax);
+const findFunction = (source: ts.SourceFile, name: string): ts.FunctionDeclaration | undefined => source.statements.find(
+  (statement): statement is ts.FunctionDeclaration => ts.isFunctionDeclaration(statement) && statement.name?.text === name);
+
+const rendererLoad = "const module: unknown = await import(`data:text/javascript;base64,${Buffer.from(captured.rendererBytes).toString('base64')}`);";
+const checkedRendererLoad = statementsOf(`
+  const captured = installed.get(runtime);
+  if (captured === undefined) return null;
+  const fresh = await readUrlRuntime(captured.root);
+  if (!fresh.ok || JSON.stringify(fresh.runtime) !== JSON.stringify(runtime)) return null;
+  ${rendererLoad}
+`);
+
+/** The data URL adds the installed bundle's first-party source edge. Admit
+ * only the exact import node reached after the runtime capability checks. */
+function installedRendererImport(source: ts.SourceFile): ts.CallExpression | undefined {
+  if (source.fileName !== URL_RUNTIME) return undefined;
+  const loader = findFunction(source, 'loadUrlDossierRenderer');
+  if (loader?.parameters.length !== 1 || syntax(loader.parameters[0]!) !== 'runtime: UrlRuntime') return undefined;
+  const attempt = loader.body?.statements[0];
+  if (loader.body?.statements.length !== 1 || attempt === undefined || !ts.isTryStatement(attempt)) return undefined;
+  const prefix = attempt.tryBlock.statements.slice(0, checkedRendererLoad.length);
+  if (prefix.length !== checkedRendererLoad.length || !prefix.every((statement, index) => syntax(statement) === checkedRendererLoad[index])) return undefined;
+  const statement = prefix.at(-1)!;
+  if (!ts.isVariableStatement(statement)) return undefined;
+  const initializer = statement.declarationList.declarations[0]?.initializer;
+  return initializer !== undefined && ts.isAwaitExpression(initializer) && ts.isCallExpression(initializer.expression)
+    ? initializer.expression : undefined;
+}
+
+/** Static, type-only, re-export, import-type and literal dynamic edges.
+ * The verified installed renderer is the only computed edge with a known target. */
 function importsOf(file: string, text: string): { specifiers: string[]; unsupported: string[] } {
-  const source = ts.createSourceFile(file, text, ts.ScriptTarget.Latest, true, ts.ScriptKind.TS);
+  const source = parse(file, text);
+  const rendererImport = installedRendererImport(source);
   const specifiers: string[] = [];
   const unsupported: string[] = [];
   const createRequireNames = new Set(['createRequire']);
@@ -121,6 +160,7 @@ function importsOf(file: string, text: string): { specifiers: string[]; unsuppor
       if (node.expression.kind === ts.SyntaxKind.ImportKeyword) {
         const argument = node.arguments[0];
         if (argument !== undefined && (ts.isStringLiteral(argument) || ts.isNoSubstitutionTemplateLiteral(argument))) specifiers.push(argument.text);
+        else if (node === rendererImport) specifiers.push(RENDERER_EDGE);
         else refuse(node, 'computed import()');
       } else {
         let callee: ts.Expression = node.expression;
@@ -136,9 +176,20 @@ function importsOf(file: string, text: string): { specifiers: string[]; unsuppor
   return { specifiers, unsupported };
 }
 
+const importsInCheckout = new Map<string, ReturnType<typeof importsOf>>();
+
+function readCheckoutImports(file: string): ReturnType<typeof importsOf> {
+  let imports = importsInCheckout.get(file);
+  if (imports === undefined) {
+    imports = importsOf(file, readModule(file));
+    importsInCheckout.set(file, imports);
+  }
+  return imports;
+}
+
 /** Every module and unresolved/unsupported edge, with an originating path for
  * island entries. Walking the consent root deliberately reaches the island. */
-function reach(entry: string, readImports = (file: string) => importsOf(file, readModule(file)), resolveModule: typeof resolve = resolve): { reachable: string[]; intoIsland: string[]; unresolved: string[]; unsupported: string[] } {
+function reach(entry: string, readImports = readCheckoutImports, resolveModule: typeof resolve = resolve): { reachable: string[]; intoIsland: string[]; unresolved: string[]; unsupported: string[] } {
   const island = new Set(ISLAND);
   const unsupported: string[] = [];
   const { reachable, edges, unresolved } = reachBy(entry, (file) => {
@@ -159,6 +210,28 @@ function reach(entry: string, readImports = (file: string) => importsOf(file, re
   };
 }
 
+/** Record one forward route per origin by walking the import graph backwards. */
+function routesIntoIsland(edges: readonly ReachEdge[], island: readonly string[]): Map<string, ReachEdge> {
+  const incoming = new Map<string, ReachEdge[]>();
+  for (const edge of edges) {
+    const previous = incoming.get(edge.to) ?? [];
+    previous.push(edge);
+    incoming.set(edge.to, previous);
+  }
+  const reachable = new Set(island);
+  const pending = [...island];
+  const routes = new Map<string, ReachEdge>();
+  for (const module of pending) {
+    for (const edge of incoming.get(module) ?? []) {
+      if (reachable.has(edge.from)) continue;
+      reachable.add(edge.from);
+      routes.set(edge.from, edge);
+      pending.push(edge.from);
+    }
+  }
+  return routes;
+}
+
 describe('the live Node entries and the parked provider island', () => {
   it('lists twenty-four island modules, each a file in the tree', () => {
     expect(new Set(ISLAND).size).toBe(24);
@@ -166,43 +239,60 @@ describe('the live Node entries and the parked provider island', () => {
     expect(ISLAND.filter(path => !isFile(path))).toEqual([]);
   });
 
+  // A cold source census took 10.5 s under host load with the URL modules
+  // present. Round three times the observed duration up to the next 5 s.
   it('admits transitive island ingress only from the island and exact parked remainder', () => {
     const population = productionModules();
     const allowed = new Set([...ISLAND, ...PARKED_REMAINDER]);
-    const cache = new Map<string, ReturnType<typeof importsOf>>();
-    const readImports = (file: string): ReturnType<typeof importsOf> => {
-      let imports = cache.get(file);
-      if (imports === undefined) { imports = importsOf(file, readModule(file)); cache.set(file, imports); }
-      return imports;
-    };
-    // The source snapshot is fixed for this census. Share edge resolution across
-    // origins, including null/undefined results, while retaining each full walk.
-    let resolutionCalls = 0;
-    const resolveCounted: typeof resolve = (from, specifier) => { resolutionCalls += 1; return resolve(from, specifier); };
-    const resolutions = new Map<string, Map<string, ReturnType<typeof resolve>>>();
-    const resolveOnce: typeof resolve = (from, specifier) => {
-      let targets = resolutions.get(from);
-      if (targets === undefined) { targets = new Map(); resolutions.set(from, targets); }
-      if (!targets.has(specifier)) targets.set(specifier, resolveCounted(from, specifier));
-      return targets.get(specifier);
-    };
-    const violations: string[] = [];
-    const unresolved: string[] = [];
+    const census = '<production census>';
     const unsupported: string[] = [];
+    const parsed = new Set<string>();
+    let importCount = 0;
+    let resolutionCount = 0;
+    const resolved = new Map<string, Set<string>>();
+    const { edges, unresolved } = reachBy(census, (file) => {
+      if (file === census) return population;
+      parsed.add(file);
+      const imports = readCheckoutImports(file);
+      for (const form of imports.unsupported) unsupported.push(form);
+      const specifiers = [...new Set(imports.specifiers)];
+      importCount += specifiers.length;
+      return specifiers;
+    }, (from, specifier) => {
+      if (from === census) return specifier;
+      const specifiers = resolved.get(from) ?? new Set();
+      if (specifiers.has(specifier)) throw new Error(`repeated edge resolution: ${from} imports ${specifier}`);
+      specifiers.add(specifier);
+      resolved.set(from, specifiers);
+      resolutionCount += 1;
+      return resolve(from, specifier);
+    });
+    const routes = routesIntoIsland(edges.filter((edge) => edge.from !== census), ISLAND);
+    const violations: string[] = [];
     for (const module of population) {
-      const result = reach(module, readImports, resolveOnce);
-      for (const edge of result.unresolved) unresolved.push(edge);
-      for (const form of result.unsupported) unsupported.push(form);
-      if (!allowed.has(module) && result.intoIsland.length > 0) violations.push(result.intoIsland[0]!);
+      if (allowed.has(module) || !routes.has(module)) continue;
+      const path = [module];
+      for (let edge = routes.get(module); edge !== undefined; edge = routes.get(edge.to)) {
+        path.push(`${edge.specifier} (${edge.to})`);
+      }
+      violations.push(path.join(' -> '));
     }
     expect(population.length, 'production-source enumeration must not be empty').toBeGreaterThan(0);
-    // The independent AST input population defines the cost bound: one
-    // underlying resolution per distinct edge, regardless of origin count.
-    const uniqueEdges = [...cache.values()].reduce((sum, imports) => sum + new Set(imports.specifiers).size, 0);
-    expect(resolutionCalls, 'whole-census resolutions must not repeat shared edges').toBe(uniqueEdges);
-    expect([...new Set(unsupported)], `${population.length} production sources: unsupported loaders`).toEqual([]);
-    expect([...new Set(unresolved)], `${population.length} production sources: unresolved workspace edges`).toEqual([]);
+    expect(population.filter((file) => !parsed.has(file)), 'unexamined production sources').toEqual([]);
+    expect(resolutionCount).toBe(importCount);
+    expect(unsupported, `${population.length} production sources: unsupported loaders`).toEqual([]);
+    expect(unresolved, `${population.length} production sources: unresolved workspace edges`).toEqual([]);
     expect(violations, `${population.length} production sources: unlisted transitive ingress\n${violations.join('\n')}`).toEqual([]);
+  }, 35_000);
+
+  it('finds a path to the island through a parked origin even with a cycle', () => {
+    const hidden = { from: 'disconnected', specifier: './parked', to: 'parked' };
+    const parked = { from: 'parked', specifier: './island', to: 'island' };
+    const cycle = { from: 'parked', specifier: './disconnected', to: 'disconnected' };
+    expect(routesIntoIsland([cycle, hidden, parked], ['island'])).toEqual(new Map([
+      ['parked', parked],
+      ['disconnected', hidden],
+    ]));
   });
 
   it('resolves every workspace import both entries reach, dynamic ones included', () => {
@@ -211,7 +301,7 @@ describe('the live Node entries and the parked provider island', () => {
       expect(unsupported, `${entry}: unsupported loader forms\n${unsupported.join('\n')}`).toEqual([]);
       expect(unresolved, `${entry}: unresolved workspace imports\n${unresolved.join('\n')}`).toEqual([]);
       if (entry === ENTRIES[0]) {
-        expect(reachable).toContain('apps/three-surface-poc/src/polaris-generation/dossier-site.ts');
+        expect(reachable).toContain(RENDERER_ENTRY);
         expect(reachable).toContain('packages/polaris-generation-consent/src/in-force.ts');
       }
     }
@@ -232,6 +322,78 @@ describe('the live Node entries and the parked provider island', () => {
   // must replace this control rather than treating that change as a defect.
   it('reaches the island from the consent package root, which neither live entry imports', () => {
     expect(reach('packages/polaris-generation-consent/src/index.ts').intoIsland.length).toBeGreaterThan(0);
+  });
+
+  it('walks the installed renderer from its exact captured bundle entry through the workspace', () => {
+    const runtime = parse(URL_RUNTIME, readModule(URL_RUNTIME));
+    expect(runtime.statements.map(syntax)).toContain(statementsOf(`const RENDERER_ENTRY = '${RENDERER_ENTRY}';`)[0]);
+    const read = findFunction(runtime, 'readUrlRuntime')?.body?.statements[0];
+    if (read === undefined || !ts.isTryStatement(read)) throw new Error('expected runtime capture in the readUrlRuntime try block');
+    const capture = read.tryBlock.statements.map(syntax);
+    for (const statement of statementsOf(`
+      for (const file of files) {
+        if (file.bytes > (file.path === 'worker.mjs' || file.path === 'renderer.mjs' ? 8_388_608 : 262_144)) throw new Error();
+        const value = await read(path.join(directory, file.path), file.bytes, root, true);
+        if (value.length !== file.bytes || sha256(value) !== file.sha256) throw new Error();
+        if (file.path === 'renderer.mjs') rendererBytes = Uint8Array.from(value);
+      }
+      if (rendererBytes === undefined) throw new Error();
+      installed.set(runtime, { root, rendererBytes, rendererSha256: files[1]!.sha256 });
+    `)) expect(capture).toContain(statement);
+    const builder = statementsOf(readModule(RUNTIME_BUILDER));
+    for (const statement of statementsOf(`
+      const renderer = '${RENDERER_ENTRY}';
+      const design = await build({ absWorkingDir: root, entryPoints: [renderer], bundle: true,
+        platform: 'node', format: 'esm', conditions: ['source'], target: 'node24', outfile: 'renderer.mjs',
+        write: false, metafile: true, logLevel: 'silent', plugins: [capturePlugin] });
+      if (design.outputFiles.length !== 1 || design.outputFiles[0].contents.length > 8_388_608) throw new Error('unexpected renderer build output');
+      outputs.set('renderer.mjs', design.outputFiles[0].contents);
+      const inputs = new Set([...Object.keys(result.metafile.inputs), ...Object.keys(host.metafile.inputs), ...Object.keys(design.metafile.inputs), ...profileSources,
+        worker, peerSource, 'scripts/build_dossier_runtime.mjs', 'scripts/compile_dossier_session_support.mjs', 'package-lock.json']);
+      for (const name of [...Object.keys(host.metafile.inputs), ...Object.keys(design.metafile.inputs)])
+        if (!captured.has(name)) throw new Error('uncaptured host/renderer compiler input');
+    `)) expect(builder).toContain(statement);
+
+    const runtimeImports = importsOf(URL_RUNTIME, runtime.text);
+    expect(runtimeImports.specifiers.filter(specifier => resolve(URL_RUNTIME, specifier) === RENDERER_ENTRY)).toEqual([RENDERER_EDGE]);
+    // The workspace walk includes type-only branches esbuild can erase.
+    // Stop at these exact registry import edges.
+    const registryImports = new Map([
+      ['packages/polaris-generation-core/src/page-sink.ts', 'parse5'],
+      ['packages/cap1-core/src/yaml-dialect.ts', 'yaml'],
+    ]);
+    const resolveRenderer: typeof resolve = (from, specifier) => {
+      const target = resolve(from, specifier);
+      if (target !== null || registryImports.get(from) === specifier || (specifier.startsWith('node:') && isBuiltin(specifier))) return target;
+      return undefined;
+    };
+    const closure = reach(RENDERER_ENTRY, undefined, resolveRenderer);
+    expect(closure.unresolved).toEqual([]);
+    expect(closure.unsupported).toEqual([]);
+    expect(closure.intoIsland).toEqual([]);
+  });
+
+  it('refuses nearby computed loaders with different inputs, provenance, or scope', () => {
+    const runtime = readModule(URL_RUNTIME);
+    expect(runtime).toContain(rendererLoad);
+    expect(importsOf('lookalike/url-runtime.ts', runtime).unsupported).toHaveLength(1);
+    for (const [before, after, admitted] of [
+      ['captured.rendererBytes).toString', 'captured.workerBytes).toString', 0],
+      ['data:text/javascript;base64,', 'data:text/javascript,', 0],
+      [".toString('base64')}`)", ".toString('base64')}`, {})", 0],
+      ['const captured = installed.get(runtime);', 'const captured = fallback.get(runtime);', 0],
+      ['const fresh = await readUrlRuntime(captured.root);', 'const fresh = await uncheckedRuntime(captured.root);', 0],
+      ['function loadUrlDossierRenderer(runtime:', 'function otherLoader(runtime:', 0],
+      ['function loadUrlDossierRenderer(runtime: UrlRuntime)', 'function loadUrlDossierRenderer(runtime: UrlRuntime, Buffer: unknown)', 0],
+      [rendererLoad, `if (choose) { ${rendererLoad} }`, 0],
+      [rendererLoad, `${rendererLoad}\n${rendererLoad.replace('const module:', 'const anotherModule:')}`, 1],
+    ] as const) {
+      expect(runtime, before).toContain(before);
+      const imports = importsOf(URL_RUNTIME, runtime.replace(before, after));
+      expect(imports.unsupported, after).toHaveLength(1);
+      expect(imports.unsupported[0], after).toContain('computed import()');
+      expect(imports.specifiers.filter(specifier => specifier === RENDERER_EDGE), after).toHaveLength(admitted);
+    }
   });
 
   it('refuses computed import arguments, including template expressions', () => {

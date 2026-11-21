@@ -11,7 +11,7 @@ covers. This script checks, read-only:
      "the final encoded HTTP body", in the registry as it stands and as the
      candidate .18 patch would leave it;
   C3 no non-test TypeScript or JavaScript source under apps/*/src or
-     packages/*/src carries compression code outside what an issued,
+     packages/*/src carries response compression outside what an issued,
      unwithdrawn direction permits (a sweep over zero files fails). The
      direction permits a coding only through fixed markers: paragraph 1
      ("THE READING.") carries a Q1 (a) or (b) answer, and paragraph 2
@@ -53,10 +53,14 @@ the issued direction's own text:
     PERMIT_MARKERS names its clause (fail-closed);
   - the sweep reads apps/*/src and packages/*/src only, minus node_modules,
     dist and test-fixtures, and skips *.test.* files.
+  - the two terms originating in the local Git object writer are classified
+    from the exact reviewed source bytes. Any source drift returns those
+    terms to the ordinary sweep.
 """
 from __future__ import annotations
 
 import argparse
+import hashlib
 import os
 import re
 import shutil
@@ -116,6 +120,18 @@ COMPRESSION_TERMS: tuple[tuple[str, str, str | None], ...] = (
 )
 SOURCE_FILE = re.compile(r"\.(?:[mc]?ts|[mc]?js)$")
 TEST_FILE = re.compile(r"\.test\.(?:[mc]?ts|[mc]?js)$")
+
+# P-77 Q2 and the issued direction govern the final encoded HTTP body. This
+# writer rechecks the audited admission receipt, encodes a Git header and body,
+# caps stored bytes, and writes the result only to the held .git/objects fanout.
+# Pin the entire source so an additional use, alias or changed sink restores
+# the ordinary sweep. Even at that digest only these two term sites qualify.
+GIT_OBJECT_STORE = "packages/polaris-dossier/src/git-memory-store.ts"
+GIT_OBJECT_STORE_SHA256 = "c3b615c8acd232b28690b02e48542ff7e8c0c78ed70abc0b549228f993257287"
+GIT_OBJECT_TERMS = {
+    "import { deflateSync } from 'node:zlib';": frozenset({"zlib", "deflate"}),
+    "      const encoded = deflateSync(Buffer.concat([header, body]));": frozenset({"deflate"}),
+}
 
 # An issued direction opens C3 only through fixed markers: paragraph 1 ("THE
 # READING.", up to "WHAT MAY SHIP.") answers Q1 (a) or (b), and paragraph 2
@@ -275,13 +291,17 @@ def check_no_compression(root: str) -> tuple[list[str], int, frozenset[str]]:
                         continue
                     scanned += 1
                     path = os.path.join(dirpath, name)
-                    with open(path, encoding="utf-8") as fh:
-                        for n, line in enumerate(fh, 1):
-                            hits = [label for label, rx in terms if rx.search(line)]
-                            if hits:
-                                findings.append(
-                                    f"C3 compression code ({', '.join(hits)}) outside what a direction permits: "
-                                    f"{os.path.relpath(path, root)}:{n}")
+                    rel = os.path.relpath(path, root)
+                    with open(path, encoding="utf-8", newline="") as fh:
+                        lines = fh.readlines()
+                    local_git_encoding = (rel == GIT_OBJECT_STORE
+                                          and hashlib.sha256("".join(lines).encode("utf-8")).hexdigest() == GIT_OBJECT_STORE_SHA256)
+                    for n, line in enumerate(lines, 1):
+                        local_terms = GIT_OBJECT_TERMS.get(line.rstrip("\r\n"), ()) if local_git_encoding else ()
+                        hits = [label for label, rx in terms if label not in local_terms and rx.search(line)]
+                        if hits:
+                            findings.append(
+                                f"C3 compression code ({', '.join(hits)}) outside what a direction permits: {rel}:{n}")
     if scanned == 0:
         findings.append("C3 compression sweep scanned zero source files")
     return findings, scanned, permitted
@@ -483,6 +503,17 @@ def _land_compression(root: str, line: str = "const gz = require('node:zlib');")
     _edit(root, ROUTES, "const observed = Buffer", f"{line}\n  const observed = Buffer")
 
 
+def _copy_git_store(root: str, rel: str = GIT_OBJECT_STORE) -> None:
+    dest = os.path.join(root, rel)
+    os.makedirs(os.path.dirname(dest), exist_ok=True)
+    shutil.copyfile(os.path.join(ROOT, GIT_OBJECT_STORE), dest)
+
+
+def _edit_git_store(root: str, old: str, new: str) -> None:
+    _copy_git_store(root)
+    _edit(root, GIT_OBJECT_STORE, old, new)
+
+
 def _write_patch(root: str, name: str, before: list[str], after: list[str]) -> None:
     import difflib
     diff = "".join(difflib.unified_diff(before, after, f"a/{SPEC}", f"b/{SPEC}"))
@@ -554,6 +585,13 @@ def selftest() -> int:
         ("C3 M7 the compression package is caught", "C3", lambda r: _land_compression(r, "import compression from 'compression';"), False),
         ("C3 M9 a .js source under src is swept", "C3", lambda r: _write(r, "apps/three-surface-poc/src/extra.js", "const z = require('zlib');\n"), False),
         ("C3 M9 a .mjs source under src is swept", "C3", lambda r: _write(r, "apps/three-surface-poc/src/extra.mjs", "import z from 'zlib';\n"), False),
+        ("C3 exact on-disk Git encoding needs no HTTP direction", None, _copy_git_store, True),
+        ("C3 exact Git store does not hide a response deflate under the gzip direction", "C3", lambda r: (_copy_git_store(r), _issue_direction(r), _land_compression(r, "const served = deflateSync(response);")), False),
+        ("C3 the same Git source at a different path is swept", "C3", lambda r: _copy_git_store(r, "apps/three-surface-poc/src/extra.ts"), False),
+        ("C3 an extra call in the Git writer is swept", "C3", lambda r: _edit_git_store(r, "storedBytes += encoded.byteLength;", "deflateSync(body);\n      storedBytes += encoded.byteLength;"), False),
+        ("C3 an extra use of the Git encoded bytes is swept", "C3", lambda r: _edit_git_store(r, "storedBytes += encoded.byteLength;", "return encodeForResponse(encoded);\n      storedBytes += encoded.byteLength;"), False),
+        ("C3 a changed Git output sink is swept", "C3", lambda r: _edit_git_store(r, "await write(bucket, object.oid.slice(2), encoded);", "await response.write(encoded);"), False),
+        ("C3 a changed file writer sink is swept", "C3", lambda r: _edit_git_store(r, "await handle.writeFile(bytes);", "await response.write(bytes);"), False),
         ("C3 sweep over zero files", ("C3", "C1"), lambda r: shutil.rmtree(os.path.join(r, "apps")), False),
         ("C4 banner removed", "C4", lambda r: _edit(r, PACKET, "**Candidate — binds nothing.**", "**Draft.**"), False),
         ("C4 a question loses its default", "C4", lambda r: _edit(r, PACKET, "**Default if unanswered:** (a). No new dependency", "No new dependency"), False),

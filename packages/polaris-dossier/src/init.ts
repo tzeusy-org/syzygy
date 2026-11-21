@@ -1,3 +1,4 @@
+import { isBoundUrlSourceReader, URL_STORE_ENTRY_LIMIT } from './url-source-reader.js';
 import * as fs from 'node:fs';
 import * as path from 'node:path';
 import { resolveCloneHead } from './clone-head.js';
@@ -6,7 +7,6 @@ import type { GateSources, GateState } from './gate-sources.js';
 import { GitObjectReadRefusal, openPinnedObjectReader, type PinnedObjectReader, type PinnedObjectReaderOptions } from './git-object-reader.js';
 import { deriveIdentity, normaliseIdentityOption, readLocator } from './launch-identity.js';
 import { governedSubject, type GovernedDecision } from './governed.js';
-import type { Outcome } from './outcome.js';
 import { parseRunConfig, type RunConfigRefusal } from './run-config.js';
 import { DOSSIER_CONTENT_CLASSES, NO_WORK_ITEM_REASON, encodeRunRecord, type RunSubject } from './run-record.js';
 import { createRunDirectory, stateRootViolation, type RunPorts } from './state-directory.js';
@@ -51,7 +51,9 @@ export interface InitReport {
   readonly disclosures: readonly string[];
 }
 
-export type InitResult = Outcome<InitReport, InitRefusal>;
+export type InitResult =
+  | { readonly ok: true; readonly report: InitReport; readonly initializedRecordText: string }
+  | { readonly ok: false; readonly refusal: InitRefusal };
 
 export interface InitRequest {
   readonly clone: string;
@@ -70,7 +72,7 @@ export interface InitRequest {
 export interface InitPorts extends RunPorts {
   readonly sources: GateSources;
   readonly now: () => number;
-  /** The object reader; the default is the re-hashing in-process reader. Injected only to observe that no read precedes the gates. */
+  /** Defaults to the local in-process reader. The URL supervisor binds its own reader to the selected source. */
   readonly openReader?: (options: PinnedObjectReaderOptions) => PinnedObjectReader;
   /** Legacy acquisition adapter retained for F-3 callers; the declared local entry never invokes it. */
   readonly launch?: Omit<LaunchPorts, 'sources' | 'now' | 'openReader' | 'copyRoot'>;
@@ -122,7 +124,8 @@ export async function initRun(request: InitRequest, ports: InitPorts): Promise<I
   const screened = buildDossierScreen(snapshot.bytes, true, { repository: identity, commit: head.commit }, visibility);
   if (!screened.ok) return refuse('policy', screened.why);
   if (screened.screen.policySha256 !== snapshot.binding.sha256) return refuse('policy', 'the policy bytes do not match their committed binding');
-  const form = cloneGitDirShape(head.gitDir, head.commit);
+  const form = cloneGitDirShape(head.gitDir, head.commit, { objectFormatSetting: head.commit.length === 64,
+    ...(isBoundUrlSourceReader(ports.openReader) ? { maxEntries: URL_STORE_ENTRY_LIMIT } : {}) });
   if (!form.ok) return refuse('clone-shape', form.reason);
   let paths: readonly string[];
   try {
@@ -146,9 +149,10 @@ export async function initRun(request: InitRequest, ports: InitPorts): Promise<I
     governed: { kind: governed.kind, because: governed.because },
     workItem: { identity: null, reason: NO_WORK_ITEM_REASON },
   };
-  const created = createRunDirectory(request.stateRoot, clonePath, encodeRunRecord(config.config, subject), ports);
+  const initializedRecordText = encodeRunRecord(config.config, subject);
+  const created = createRunDirectory(request.stateRoot, clonePath, initializedRecordText, ports);
   if (!created.created) return refuse('write', created.detail);
-  return { ok: true, report: {
+  return { ok: true, initializedRecordText, report: {
     command: 'init', outcome: 'initialized', run: created.runDir, runId: created.runId,
     label: 'Inferred', subject, governed, disclosures: DISCLOSURES,
   } };

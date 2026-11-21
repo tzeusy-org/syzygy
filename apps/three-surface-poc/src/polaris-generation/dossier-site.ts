@@ -578,16 +578,22 @@ export function renderDossierSite(input: DossierSiteInput & { readonly local?: L
     + draft.diagrams.filter(d => d.disposition.kind === 'produced').flatMap(d => [...d.nodes, ...d.edges]).filter(element => element.epistemic === 'unknown').length;
   const tally = [openQuestions === 0 ? '' : `${openQuestions} open question(s)`, unknownClaims === 0 ? '' : `${unknownClaims} Unknown claim(s)`].filter(part => part !== '');
   const runSentence = local === undefined ? '' : withheld
-    ? 'The draft layer of this dossier is Unknown, so none of the agent\'s draft is shown; no human review is recorded.'
-    : `This is a draft written by ${local.authoring?.tool ?? 'the operator\'s agent tool'} with ${local.authoring?.model ?? 'an operator-declared model'}; no human review is recorded.${tally.length === 0 ? '' : ` It has ${tally.join(' and ')}.`}`;
+    ? local.effectiveRun === undefined
+      ? 'The draft layer of this dossier is Unknown, so none of the agent\'s draft is shown; no human review is recorded.'
+      : 'The draft layer of this URL-supervised dossier is Unknown, so none of the agent\'s draft is shown; no human review is recorded.'
+    : local.effectiveRun === undefined
+      ? `This is a draft written by ${local.authoring?.tool ?? 'the operator\'s agent tool'} with ${local.authoring?.model ?? 'an operator-declared model'}; no human review is recorded.${tally.length === 0 ? '' : ` It has ${tally.join(' and ')}.`}`
+      : `This URL-supervised editorial draft is configured for ${local.authoring?.tool ?? 'the declared CLI'} with ${local.authoring?.model ?? 'the declared model'}. Provider delivery, served model and capture completeness remain Unknown where no protected observation is available. No human review is recorded.${tally.length === 0 ? '' : ` It has ${tally.join(' and ')}.`}`;
   const chrome: PageChrome | undefined = local === undefined ? undefined : {
-    notice: withheld ? 'Operator-agent dossier — draft layer Unknown (unconsented-source-or-provider)' : 'Operator-agent editorial draft — not adopted; how it was made is stated below',
+    notice: local.effectiveRun === undefined
+      ? withheld ? 'Operator-agent dossier — draft layer Unknown (unconsented-source-or-provider)' : 'Operator-agent editorial draft — not adopted; how it was made is stated below'
+      : withheld ? 'URL-supervised dossier — draft layer Unknown' : 'URL-supervised editorial draft — not adopted; declared mode and capture limits are stated below',
     // Dossier spec v1.5: one sentence of human text and a link to the appendix, which holds the disclosure in human form; the machine form
     // stays whole on every page, as these attributes read with the machine view.
     disclosure: (path: string) => `<p class="run-sentence">${escape(runSentence)} <a href="${escape(href(path, APPENDIX))}">How this dossier was made, its counts and its open questions</a></p>`,
     mainAttributes: `${local.draftLayer.state === 'editorial-draft'
       ? ` data-draft-state="editorial-draft" data-inference-model="${escape(local.draftLayer.inferenceProvenance.modelIdentity)}" data-inference-model-version="${escape(local.draftLayer.inferenceProvenance.modelVersion ?? 'not shown by the agent tool')}"`
-      : ' data-draft-state="unknown" data-unknown-reason="unconsented-source-or-provider"'} data-disclosure-ids="${escape(local.disclosure.map(item => item.id).join(' '))}"`,
+      : ' data-draft-state="unknown" data-unknown-reason="unconsented-source-or-provider"'} data-disclosure-ids="${escape(local.disclosure.map(item => item.id).join(' '))}"${local.effectiveRun === undefined ? '' : ` data-effective-run="${escape(JSON.stringify(local.effectiveRun))}"`}`,
     region: regionMarkup(local.reviewStatus, escape),
   };
 
@@ -807,6 +813,7 @@ export function renderDossierSite(input: DossierSiteInput & { readonly local?: L
       title,
       draftLayer: local.draftLayer,
       disclosure: local.disclosure,
+      ...(local.effectiveRun === undefined ? {} : { effectiveRun: local.effectiveRun }),
       reviewStatus: local.reviewStatus,
       ...(local.derivedStructure === undefined ? {} : { derivedStructure: derivedMachine(local.derivedStructure) }),
       pages: [...pages.map(p => p.path), 'size-report.html'],

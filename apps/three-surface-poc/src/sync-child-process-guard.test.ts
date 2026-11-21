@@ -1,7 +1,9 @@
 import { execFileSync } from 'node:child_process';
+import { createHash } from 'node:crypto';
 import { readFileSync } from 'node:fs';
 import { fileURLToPath, pathToFileURL } from 'node:url';
 import { join } from 'node:path';
+import ts from 'typescript';
 import { describe, expect, it } from 'vitest';
 import { WORKSPACE, resolveIn, type Workspace } from '../../../packages/polaris-generation-core/src/workspace-reach.testkit.js';
 import { SYSTEM_TEST_SUFFIX, TIERS, workspaceDirectories } from '../../../vitest.tiers.js';
@@ -34,9 +36,74 @@ const LAUNCHER = 'the `syzygy polaris` launcher at run time; suite tests import 
 const EXEMPT: Readonly<Record<string, string>> = {
   "packages/polaris-dossier/src/polaris.ts 'tmux'": LAUNCHER,
   "packages/polaris-dossier/src/polaris.ts 'sh'": LAUNCHER,
-  "packages/polaris-dossier/src/polaris.ts claudeExecutable(": LAUNCHER,
   "packages/polaris-dossier/src/session-view.ts 'bwrap'": 'viewProbeRefusal, called only by the launcher at run time; suite tests import only the pure view builders',
 };
+const DOSSIER = 'packages/polaris-dossier/src/';
+const PEER_MODULE = DOSSIER + 'session-peer.ts';
+// Each exact location must be consumed once. Pin the parsed call, including argv and options.
+// Short fixture-only Git and FIFO calls have the same local-work rationale as their bare forms.
+const NATIVE_SITES = new Map<string, ReadonlyMap<string, string>>([
+  [DOSSIER + 'acquisition-process.test.ts', new Map([
+    ['321c5c8541458741cd416b0e42f9f4925d4e205ff448af1697c9a8e4fb6dcfef', 'local Git setup for the temporary upload fixture'],
+    ['dc195423d11f4dc4ace38129aca4bcf5c05ff427878579362c73686dab7250b2', 'make one FIFO in the local census fixture'],
+  ])],
+  [DOSSIER + 'effective-run-record.test.ts', new Map([
+    ['c63c670931555dfb7a241aeb33a0e4c35aa008718c6f72d852517ed545ae58a8', 'make one FIFO in the malformed record fixture'],
+  ])],
+  [DOSSIER + 'git-memory-pack.test.ts', new Map([
+    ['f3b5e9f0103bf7bfa4e56bdd2bde8a4439ae7a68b18d56ea2b2e694a8e67c2b8', 'local synthetic Git object and pack construction, 5s'],
+  ])],
+  [DOSSIER + 'git-memory-ssh.test.ts', new Map([
+    ['8e255a9c2026c018d523497f1471627978732670b0df0f2169e81fd30a2fc2df', 'generate a fixture-only Ed25519 key, 5s'],
+    ['b66e96a8cf2f45b79fa24b55f5466d9b6eb4a7d0ecf634ead740dcc8528aeaf5', 'local synthetic Git repository setup, 5s'],
+    ['57115c12a0840cf43ae98795df4c5a6034b7f93b692ffa47128e816c3a4171dd', 'sshd config check with -t on generated fixture config, 5s'],
+    ['ec94ac44dcb372e7b2ef8048cc3c08be9a61836c5023b498a850b636331f2554', 'list files beneath the temporary SSH fixture home, 1s'],
+    ['f408dc0e00bc1778c5e2256075b7e8366bae034d7851fefceaac3f2210057334', 'load fixture keys into the fixture-owned SSH agent, 1s'],
+    ['78c3bf0d77bc43157b7b4841e7eed3c67ee883130dfbff397d5fc37640850050', 'write the restricted synthetic control file, 1s'],
+    ['3c2749a296180a23143cb264e9dc72a5b686399451f0b7fc1f3955c5d21abf52', 'stat the synthetic control path, 1s'],
+    ['f362efb721ee907a4cc1e990e43cc84d9cd13895d1ae10d707a7804cd21e7555', 'set local fixture HEAD, 1s'],
+  ])],
+  [DOSSIER + 'git-memory-store.test.ts', new Map([
+    ['faeab4caf438bf74bd0cdd6b6dc57f40a9ca6b104dd0fda6e07194919610f6bc', 'local Git synthesis in a temporary bare repository'],
+    ['b4f95608fcf2114198efe529ceea525d819bea74d9453743b057ccc7e2a00f8f', 'read back local synthetic HEAD and objects'],
+  ])],
+  [DOSSIER + 'git-memory-transport.test.ts', new Map([
+    ['00a4b1b10cc41538a74c7fe792c806f9eb0bdc0511f0e3daf3dd6f7845dbd084', 'local synthetic Git transport fixture setup, 5s'],
+    ['b52226c1c49d1bb19a83f9899ba02884f353dce0bf29d34f00ca981a5c61c15a', 'list files beneath the temporary transport fixture home, 5s'],
+    ['325f79f09c7828fec8a7bb6ba58e52bb21a5b745586ebf0c994bed718ac99eca', 'hash one synthetic census file, 5s'],
+    ['7827e48f295d73cba50488b606eeaee2170aca7aaebc4854ae029b2d630486fb', 'stat one synthetic census file, 5s'],
+    ['487fe659406e0da6f84d2942f78e334c00186a76ba6905c0f140688822d84780', 'local upload-pack fixture advertisement, 5s'],
+    ['9e112f8ef42532df715c861d0ae53a8b004958ef1043abb540aa62e05ceac069', 'local upload-pack fixture response, 5s'],
+    ['21b1e36f48fe5b707a61ec45f6b6e40faee9d03fb93ffdbf4e32af2b65506a85', 'write the restricted synthetic control file, 1s'],
+    ['31829c80eeb7a5b9186394d2adc7b098080ea4c6c4d982abe7f71823bf8f5a19', 'set local fixture HEAD, 1s'],
+    ['dc9dc7ff1a4a5198318a6f145d8051c90fcd12913f84ebbbfc3a6d8019621feb', 'exercise local fixture ref drift, 1s'],
+  ])],
+  [DOSSIER + 'git-memory-worker.test.ts', new Map([
+    ['1702fdda3cdc5377e9c82672bb2df8decda45b39d4cb2015844a8f8d0d6356ba', 'read one synthetic blob in the temporary worker repository'],
+    ['3e1a3c26893129a7c71f4a2626ea132bcec18efd7fc4774f524aa99c07e3e5f3', 'trace a bounded synthetic write-ordering driver, 10s'],
+  ])],
+  [DOSSIER + 'session-peer.test.ts', new Map([
+    ['d5dea8e4382174a6f337c42849dc31649a3d82814b30e06ba72e8368a32329e2', 'make one FIFO in the malformed helper fixture'],
+  ])],
+  [PEER_MODULE, new Map([
+    ['9d5395660d3f137ce72e2cdf199f9cf29f9c4857a215a40f8e96b8258af86a0c', 'execute the verified helper on fd 4 with no args, 1s SIGKILL and 128 output bytes'],
+  ])],
+  [DOSSIER + 'session-tools.test.ts', new Map([
+    ['1e3dffa0ed4e69c22beded3774568d9b6aaae2104390b9624fecd38636978120', 'local Git setup in the owned synthetic source fixture'],
+  ])],
+  [DOSSIER + 'url-acquisition.test.ts', new Map([
+    ['e6e409891649683791cacaeee8f6e65c83c04a6f9ecd023281a8799304e0854d', 'local Git setup in the owned synthetic acquisition fixture'],
+  ])],
+  [DOSSIER + 'url-mode-registry.test.ts', new Map([
+    ['7e96c681d64c2161548aa940552f97bd8a04a2d305cc17528f28dc7eee68e24d', 'make one FIFO in the malformed mode record fixture'],
+  ])],
+]);
+// This exact template supplies a fixture process launched asynchronously by the test.
+const EMBEDDED_FIXTURE = DOSSIER + 'acquisition-process.test.ts';
+const EMBEDDED_CALL = '496476a19a8b66906bd56990727e80e227041208e23bd8af1b01026751afd69b';
+// Bind the child-file writer and the production fd verification to the admitted calls.
+const FIXTURE_WRITER = 'e49f3dc7ce221b2a257bcbc95f0ad98201ddcf5f433fd6e8f44ba7e71e852cb7';
+const PEER_CAPTURE = '0c99049517dab56bc93566dc9614d17b08f1231cd2dbc1f1bdeb93f220382045';
 const SELF = 'apps/three-surface-poc/src/sync-child-process-guard.test.ts';
 const SYNC_FUNCTIONS = ['execFileSync', 'execSync', 'spawnSync'];
 const MODULE_SPECIFIER = /(?:\bfrom|\bimport)\s*\(?\s*['"]([^'"]+)['"]/g;
@@ -53,7 +120,7 @@ const CHILD_PROCESS_NON_BINDINGS = [
   /\bvi\s*\.\s*mock\s*\(\s*['"](?:node:)?child_process['"]/g,
 ];
 
-interface SyncCall { readonly line: number; readonly command: string }
+interface SyncCall { readonly line: number; readonly command: string; readonly offset?: number }
 
 /** Refuses a root vitest config that loads a workspace package other than by its source condition: a plugin, an alias, or no
  * `source` first in the server conditions. The test files themselves come from the tier lists (vitest.tiers.ts). */
@@ -139,7 +206,7 @@ function syncCalls(source: string): SyncCall[] {
   const callees = [...[...direct].map(escape), ...[...namespaces].map((name) => `${escape(name)}\\s*\\.\\s*(?:${SYNC_FUNCTIONS.join('|')})`)];
   if (callees.length === 0) return calls;
   for (const match of source.matchAll(new RegExp(`(?<![\\w.$])(?:${callees.join('|')})\\s*\\(\\s*([^,)\\n]*)`, 'g'))) {
-    calls.push({ line: lineOf(source, match.index ?? 0), command: match[1]!.trim() });
+    calls.push({ line: lineOf(source, match.index ?? 0), command: match[1]!.trim(), offset: match.index ?? 0 });
   }
   return calls.sort((a, b) => a.line - b.line);
 }
@@ -150,6 +217,58 @@ function longSyncCalls(source: string): SyncCall[] {
     const literal = /^(['"`])(.*)\1$/.exec(command);
     return literal === null || !SHORT_COMMANDS.has(literal[2]!);
   });
+}
+
+const printer = ts.createPrinter({ removeComments: true });
+const fingerprintOf = (source: ts.SourceFile, node: ts.Node, hint = ts.EmitHint.Unspecified): string =>
+  createHash('sha256').update(printer.printNode(hint, node, source)).digest('hex');
+
+function exactFunction(source: ts.SourceFile, name: string, fingerprint: string): ts.FunctionDeclaration | undefined {
+  return source.statements.find((statement): statement is ts.FunctionDeclaration => ts.isFunctionDeclaration(statement)
+    && statement.name?.text === name && fingerprintOf(source, statement) === fingerprint);
+}
+
+function guardedSyncCalls(path: string, text: string): { calls: SyncCall[]; missing: string[] } {
+  const known = NATIVE_SITES.get(path);
+  if (known === undefined && path !== EMBEDDED_FIXTURE) return { calls: longSyncCalls(text), missing: [] };
+  const source = ts.createSourceFile(path, text, ts.ScriptTarget.Latest, true);
+  const peerCapture = path === PEER_MODULE ? exactFunction(source, 'captureKernelUnixPeer', PEER_CAPTURE) : undefined;
+  const writesFixture = path === EMBEDDED_FIXTURE && exactFunction(source, 'fake', FIXTURE_WRITER) !== undefined;
+  const sites = new Map<number, string>();
+  let fixture: ts.TemplateExpression | undefined;
+  const visit = (node: ts.Node): void => {
+    if (ts.isCallExpression(node) && ts.isIdentifier(node.expression)) {
+      if (known !== undefined && SYNC_FUNCTIONS.includes(node.expression.text)) {
+        const start = node.getStart(source);
+        const inPeerCapture = peerCapture !== undefined && start >= peerCapture.getStart(source) && node.end <= peerCapture.end;
+        const fingerprint = fingerprintOf(source, node, ts.EmitHint.Expression);
+        if (known.has(fingerprint) && (path !== PEER_MODULE || inPeerCapture)) sites.set(start, fingerprint);
+      }
+      const argument = node.arguments[1];
+      if (writesFixture && node.expression.text === 'fake' && fixture === undefined && argument !== undefined
+        && ts.isTemplateExpression(argument) && fingerprintOf(source, node, ts.EmitHint.Expression) === EMBEDDED_CALL) fixture = argument;
+    }
+    ts.forEachChild(node, visit);
+  };
+  visit(source);
+  let masked = text;
+  if (fixture !== undefined) {
+    // Mask only the text of the exact child program. Interpolations remain scanned.
+    for (const part of [fixture.head, ...fixture.templateSpans.map(span => span.literal)]) {
+      const start = part.getStart(source), end = part.getEnd();
+      masked = masked.slice(0, start) + masked.slice(start, end).replace(/[^\n\r]/g, ' ') + masked.slice(end);
+    }
+  }
+  const used = new Set<string>();
+  const calls = longSyncCalls(masked).filter(({ offset }) => {
+    const fingerprint = offset === undefined ? undefined : sites.get(offset);
+    if (fingerprint === undefined || used.has(fingerprint)) return true;
+    used.add(fingerprint);
+    return false;
+  });
+  const missing = [...(known ?? [])].filter(([fingerprint]) => !used.has(fingerprint)).map(([, description]) => description);
+  if (path === EMBEDDED_FIXTURE && fixture === undefined) missing.push('asynchronous synthetic grandchild fixture');
+  return { calls, missing };
 }
 
 /** Every module a vitest worker loads for `tests`: the tests and their relative and workspace imports, transitively. A workspace
@@ -199,10 +318,17 @@ describe('suite child processes and the vitest worker RPC', () => {
     expect(modules.length).toBeGreaterThan(tests.length + 100);
     expect(modules).toContain('apps/three-surface-poc/src/test-model-fixture.ts');
     expect(modules).toContain('packages/three-surface-poc-core/src/work-items.ts');
+    expect([...NATIVE_SITES.keys()].filter(path => !modules.includes(path))).toEqual([]);
+    const missing: string[] = [];
     const found = modules
       .filter((path) => path !== SELF)
-      .flatMap((path) => longSyncCalls(sources.get(path)!).map(({ line, command }) => ({ at: `${path}:${line} ${command}`, key: `${path} ${command}` })));
+      .flatMap((path) => {
+        const checked = guardedSyncCalls(path, sources.get(path)!);
+        missing.push(...checked.missing.map(description => `${path}: ${description}`));
+        return checked.calls.map(({ line, command }) => ({ at: `${path}:${line} ${command}`, key: `${path} ${command}` }));
+      });
     expect(found.filter(({ key }) => !Object.hasOwn(EXEMPT, key)).map(({ at }) => at)).toEqual([]);
+    expect(missing).toEqual([]);
     expect(Object.keys(EXEMPT).filter((key) => !found.some((call) => call.key === key))).toEqual([]);
   });
 
@@ -219,6 +345,40 @@ describe('suite child processes and the vitest worker RPC', () => {
     expect(commands("execFileSync('git', ['rev-parse', 'HEAD'])")).toEqual([]);
     expect(commands('spawnSync("mkfifo", [path])')).toEqual([]);
     expect(commands("execSync('git status')")).toEqual(["'git status'"]);
+  });
+
+  it('refuses changed, copied or duplicated native calls and changes to the generated child fixture', () => {
+    const fixture = (path: string): string => readFileSync(join(REPO_ROOT, path), 'utf8');
+    const change = (source: string, from: string, to: string): string => {
+      expect(source).toContain(from);
+      return source.replace(from, to);
+    };
+    const commands = (path: string, source: string): string[] => guardedSyncCalls(path, source).calls.map(call => call.command);
+
+    const fifoFile = DOSSIER + 'effective-run-record.test.ts';
+    const fifo = "execFileSync('/usr/bin/mkfifo', [file])";
+    expect(commands('packages/other/src/fixture.test.ts', fixture(fifoFile))).toEqual(["'/usr/bin/mkfifo'"]);
+    const duplicate = change(fixture(fifoFile), fifo, `(${fifo}, ${fifo})`);
+    expect(commands(fifoFile, duplicate)).toEqual(["'/usr/bin/mkfifo'"]);
+    const changedFifo = change(fixture(fifoFile), fifo, "execFileSync('/usr/bin/mkfifo', [outside])");
+    expect(guardedSyncCalls(fifoFile, changedFifo).missing).toEqual(['make one FIFO in the malformed record fixture']);
+    expect(commands(fifoFile, changedFifo)).toEqual(["'/usr/bin/mkfifo'"]);
+
+    const sshFile = DOSSIER + 'git-memory-ssh.test.ts';
+    expect(commands(sshFile, change(fixture(sshFile), "['-t', '-f', config]", "['-D', '-f', config]"))).toEqual(["'/usr/sbin/sshd'"]);
+    const peer = fixture(PEER_MODULE);
+    expect(commands(PEER_MODULE, change(peer, 'timeout: 1000', 'timeout: 60_000'))).toEqual(["'/proc/self/fd/4'"]);
+    expect(commands(PEER_MODULE, change(peer, '!== program.sha256', '!== otherDigest'))).toEqual(["'/proc/self/fd/4'"]);
+
+    const acquisition = fixture(EMBEDDED_FIXTURE);
+    for (const changed of [
+      change(acquisition, '.spawnSync(process.execPath', '.spawnSync(otherExecutable'),
+      change(acquisition, "'trusted-fixture-git'", "'unverified-fixture-git'"),
+    ]) {
+      const checked = guardedSyncCalls(EMBEDDED_FIXTURE, changed);
+      expect(checked.calls.map(call => call.command)).toContain('<c re-bound>');
+      expect(checked.missing).toEqual(['asynchronous synthetic grandchild fixture']);
+    }
   });
 
   it('follows every way of binding the synchronous calls, and fails closed on a binding it does not recognize', () => {

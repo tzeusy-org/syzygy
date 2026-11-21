@@ -150,7 +150,8 @@ export function designBlocking(verdict: Readonly<Record<string, unknown>>): bool
 
 /** Every validation of REQ-polaris-generation-035 over a parsed design verdict, against the packet built now. */
 export function validateDesignVerdict(
-  verdict: Readonly<Record<string, unknown>>, built: Extract<DesignPacketBuild, { ok: true }>, pinnedRevision: string, authoringIds: ReadonlySet<string>,
+  verdict: Readonly<Record<string, unknown>>, built: Pick<Extract<DesignPacketBuild, { ok: true }>, 'sha256' | 'pages' | 'files'>,
+  pinnedRevision: string, authoringIds: ReadonlySet<string>,
 ): ReviewProblem[] {
   const problems: ReviewProblem[] = [];
   const add = (kind: ReviewProblemKind, at: string, detail: string): void => { problems.push({ kind, at, detail }); };

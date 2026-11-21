@@ -17,6 +17,8 @@ import {
 import { AGENT_TOOLS, type AgentTool } from './run-config.js';
 import { recheckSessionStatement } from './session-statement.js';
 import { RUN_ID, RUN_LAYOUT } from './state-directory.js';
+import { isPreparedUrlRolePlan, type UrlRolePlan } from './url-role-plan.js';
+import { isRunProductReads, yieldForProductReads, UrlProductReadRefusal, type RunProductReads } from './url-operation-products.js';
 import {
   DELIVERY_DISCLOSURES, PLAIN_PATH, WAITING_MODE, WAIT_MODE_DIRECTION, WAIT_TIMEOUT_ADVICE, deliverToWaiting, stdinHandOver, waitModeRefusal, waitingReviewSession,
   type DeliveryReport,
@@ -134,6 +136,7 @@ export interface HandoverDeps {
   /** The object reader the step guard lists the pinned tree with, and a review packet reads with; by default the re-hashing in-process
    * reader. */
   readonly openReader?: ReverifyOptions['openReader'];
+  readonly productReads?: RunProductReads;
   /** Whether version 1.2, which specifies waiting sessions, is signed off; by default `waitModeSignedIn` over the records root. */
   readonly waitModeSigned?: () => boolean;
 }
@@ -339,7 +342,7 @@ export interface StartedSession {
   readonly directory: string;
   readonly prompt: string;
   readonly promptSha256: string;
-  readonly commands: SessionCommands;
+  readonly commands: SessionCommands | null;
 }
 
 export interface StartSessionsReport {
@@ -363,19 +366,35 @@ const START_DISCLOSURES = [
   'A waiting session never carries the execution permission. A permission the authoring session\'s brief carries lapses when the owner stops attending it, so an unattended stretch of the run is a reading-only stretch.',
   `One waiting review session may review each later revision of its subject; a review page discloses a reviewer that continued (${WAIT_MODE_DIRECTION}).`,
 ];
+const URL_START_DISCLOSURES = [
+  'Inferred: Syzygy issued a compatible prompt record for each prepared URL helper role. Any captured launch history is recorded separately.',
+  'URL helpers use the restricted Syzygy tools in their assigned role. The host retains the pinned clone and handles each permitted read.',
+  'Provider activity and role starts remain Unknown until their respective boundaries capture them.',
+];
 
 /** `syzygy dossier session-prompt <run> all`: at the start of a run, make the inventory, fidelity-review and design-review sessions'
  * directories, write the inventory brief into the inventory one, and print a command per session, each pre-approving only that role's
  * tools; record each prompt, marked waiting. The review sessions wait for their packets with `syzygy dossier await`. */
-export async function startSessions(runDir: string, request: Omit<SessionPromptRequest, 'role' | 'kind'>, deps: HandoverDeps): Promise<Outcome<StartSessionsReport, HandoverRefusal>> {
+export async function startSessions(runDir: string, request: Omit<SessionPromptRequest, 'role' | 'kind'>, deps: HandoverDeps,
+  urlPlans?: readonly UrlRolePlan[]): Promise<Outcome<StartSessionsReport, HandoverRefusal>> {
   const now = deps.now();
+  const disclosures = urlPlans === undefined ? START_DISCLOSURES : URL_START_DISCLOSURES;
   const refuse = (stage: string, reason: string, reasons?: readonly string[], refusals?: readonly ReverifyRefusal[]) =>
-    ({ ok: false as const, refusal: { command: 'session-prompt' as const, outcome: 'refused' as const, stage, reason, ...(reasons ? { reasons } : {}), ...(refusals ? { refusals } : {}), disclosures: START_DISCLOSURES } });
+    ({ ok: false as const, refusal: { command: 'session-prompt' as const, outcome: 'refused' as const, stage, reason, ...(reasons ? { reasons } : {}), ...(refusals ? { refusals } : {}), disclosures } });
   const gateRefusal = waitModeRefusal(deps.sources.recordsRoot, deps.waitModeSigned, now ?? NaN);
   if (gateRefusal !== null) return refuse('unsigned', gateRefusal);
   const opened = await openRun(runDir, deps.sources, now, 'no session is started', deps.openReader ? { openReader: deps.openReader } : {});
   if (!opened.ok) return refuse(opened.stage, opened.reason, opened.reasons, opened.refusals);
   const { run, runId } = opened;
+  const url = opened.effective?.kind === 'url' ? opened.effective.declaration : undefined;
+  if (url !== undefined || urlPlans !== undefined) {
+    if (url === undefined || urlPlans === undefined || urlPlans.length !== url.roles.length || urlPlans.some((plan, index) =>
+      !isPreparedUrlRolePlan(plan) || plan.role !== url.roles[index]?.role || plan.profile.input.binding.run !== runId
+      || plan.declaration.compiledProfileSha256 !== url.roles[index]?.compiledProfileSha256
+      || plan.declaration.inputPacketSha256 !== url.roles[index]?.inputPacketSha256)
+      || request.tool !== undefined || request.toolVersion !== undefined || request.model !== undefined)
+      return refuse('context', 'The URL helper prompts require the supervisor’s bound role preparation.');
+  }
   const context = await sessionContextOf(opened, request, deps.sources, now);
   if ('stage' in context) return refuse(context.stage, context.reason);
   const outside = sessionsRootViolation(run, opened.subject.clone.path);
@@ -384,12 +403,16 @@ export async function startSessions(runDir: string, request: Omit<SessionPromptR
   if (!PLAIN_PATH.test(root)) return refuse('sessions-root', `the sessions root ${root} holds a character a printed permission rule cannot carry unquoted (only letters, digits, '.', '_', '-' and '/'); choose a state root whose path has none`);
 
   const inventorySession = latestInventorySession(run) + 1;
+  if (url !== undefined && (inventorySession !== 1 || latestReviewSession(run, 'fidelity') !== 0 || latestReviewSession(run, 'design') !== 0))
+    return refuse('session', 'The URL supervisor issues each original helper prompt once.');
   const built = await buildInventoryBrief(opened, inventorySession, deps.sources, now, deps);
   if (!built.ok) return refuse(built.stage, built.reason);
   if (built.executionRule.arm !== 'sec-3') return refuse('execution-rule', 'an inventory brief may carry only SEC-3\'s rule');
   const plan: { readonly started: StartedSession; readonly recordFile: string; readonly extra: Readonly<Record<string, unknown>> }[] = [];
   const add = (role: 'inventory' | 'review', kind: ReviewKind | undefined, session: number, directory: string, prompt: string, reads: readonly string[], recordFile: string, extra: Readonly<Record<string, unknown>>): void => {
-    const commands = sessionCommands(context.agentTool, directory, prompt, waitingAllowedTools(directory, reads));
+    const urlPlan = urlPlans?.find(item => item.role === (kind ?? role));
+    if (urlPlan !== undefined) prompt = urlPlan.profile.input.initialPrompt;
+    const commands = urlPlan === undefined ? sessionCommands(context.agentTool, directory, prompt, waitingAllowedTools(directory, reads)) : null;
     plan.push({ started: { role, ...(kind ? { kind } : {}), session, directory, prompt, promptSha256: sha256(prompt), commands }, recordFile, extra });
   };
   const inventoryDir = sessionDirectory(run, inventorySession);
@@ -421,8 +444,10 @@ export async function startSessions(runDir: string, request: Omit<SessionPromptR
   return { ok: true, report: {
     command: 'session-prompt', outcome: 'issued', role: 'all', mode: WAITING_MODE, run, sessions: plan.map(({ started }) => started), context,
     executionRule: { arm: 'sec-3', notPermittedBecause: built.executionRule.notPermittedBecause },
-    next: `Show the operator the three commands. The operator starts each session; never start one yourself, headless or otherwise, and never use a subagent for one. When the operator says how each was started, record it with \`syzygy dossier launch-form ${run} inventory|review terminal [--kind fidelity|design]\`. When a draft revision passes and the inventory counts, run \`syzygy dossier session-prompt ${run} review --kind fidelity\`: Syzygy delivers the packet to the waiting fidelity session. After a render, do the same with --kind design. After a repair, the same command delivers the next round to the same session; add --fresh to hand it to a new session instead.`,
-    disclosures: START_DISCLOSURES,
+    next: url === undefined
+      ? `Show the operator the three commands. The operator starts each session; never start one yourself, headless or otherwise, and never use a subagent for one. When the operator says how each was started, record it with \`syzygy dossier launch-form ${run} inventory|review terminal [--kind fidelity|design]\`. When a draft revision passes and the inventory counts, run \`syzygy dossier session-prompt ${run} review --kind fidelity\`: Syzygy delivers the packet to the waiting fidelity session. After a render, do the same with --kind design. After a repair, the same command delivers the next round to the same session; add --fresh to hand it to a new session instead.`
+      : 'The URL supervisor retains the original helper prompts and verifies each role boundary before a permitted launch.',
+    disclosures,
   } };
 }
 
@@ -438,7 +463,8 @@ export async function handOver(
   }
   if (role === 'inventory' && fresh === true) return { ok: false, refusal: { command: 'session-prompt', outcome: 'refused', stage: 'role', reason: '--fresh applies to a review session only', disclosures: PROMPT_DISCLOSURES } };
   const target = path.resolve(runDir);
-  if (role === 'review' && fresh !== true && isReviewKind(rest.kind) && RUN_ID.test(path.basename(target)) && waitingReviewSession(target, rest.kind) !== null) {
+  if (role === 'review' && fresh !== true && isReviewKind(rest.kind) && RUN_ID.test(path.basename(target))
+    && (deps.productReads !== undefined || waitingReviewSession(target, rest.kind) !== null)) {
     return deliverReview(target, rest.kind, rest, deps);
   }
   return sessionPrompt(runDir, { role, ...rest }, deps);
@@ -457,30 +483,42 @@ async function deliverReview(
   if (request.tool !== undefined || request.toolVersion !== undefined || request.model !== undefined) {
     return refuse('context', `a ${kind} session is waiting, and its tool, version and model were declared when it was started; deliver without --tool, --tool-version or --model, or add --fresh to hand the packet to a new session`);
   }
-  const opened = await openRun(run, deps.sources, now, 'no packet is delivered', deps.openReader ? { openReader: deps.openReader } : {});
-  if (!opened.ok) return refuse(opened.stage, opened.reason, opened.reasons, opened.refusals);
-  const waiting = waitingReviewSession(run, kind);
-  if (waiting === null) return refuse('session', `no ${kind} session is waiting`);
-  const recorded = waiting.record['context'];
-  const tool = isRecord(recorded) ? (recorded as Record<string, unknown>)['agentTool'] : undefined;
-  if (typeof tool !== 'string' || !(AGENT_TOOLS as readonly string[]).includes(tool)) return refuse('context', `the prompt record of waiting ${kind} session ${waiting.session} names no agent tool`);
-  // A waiting session remains bound to its recorded tool and declared provider.
-  const cited = await recheckSessionStatement(run, `waiting ${kind} session ${waiting.session}`, waiting.record, deps.sources, now, 'no packet is delivered');
-  if (!cited.ok) return refuse('statement', cited.why);
-  let built: { readonly bytes: string; readonly sha256: string }, packet: Readonly<Record<string, unknown>>;
-  if (kind === 'design') {
-    const design = buildStoredDesignPacket(opened);
-    if (!design.ok) return refuse(design.stage, design.reason);
-    built = design;
-    packet = { sha256: design.sha256, site: design.site };
-  } else {
-    const fidelity = await buildFidelityPacket(opened, { ...deps, now: () => now });
-    if (!fidelity.ok) return refuse(fidelity.stage, fidelity.reason);
-    built = fidelity;
-    packet = { sha256: fidelity.sha256, draftRevision: fidelity.draft.revision, inventoryRevision: fidelity.inventory.revision };
+  try {
+    const opened = await openRun(run, deps.sources, now, 'no packet is delivered', deps);
+    if (!opened.ok) return refuse(opened.stage, opened.reason, opened.reasons, opened.refusals);
+    const products = deps.productReads;
+    if (opened.effective?.kind === 'url' && !isRunProductReads(products)) return refuse('reverify', 'The URL review delivery requires authenticated products.');
+    if (opened.effective?.kind === 'url' && kind === 'design') return refuse('packet', 'The URL design delivery requires the specialized checked renderer product.');
+    if (products !== undefined) await yieldForProductReads(products, run);
+    const waiting = waitingReviewSession(run, kind, products);
+    if (waiting === null) return refuse('session', `no ${kind} session is waiting`);
+    const recorded = waiting.record['context'];
+    const tool = isRecord(recorded) ? (recorded as Record<string, unknown>)['agentTool'] : undefined;
+    if (typeof tool !== 'string' || !(AGENT_TOOLS as readonly string[]).includes(tool)) return refuse('context', `the prompt record of waiting ${kind} session ${waiting.session} names no agent tool`);
+    // A waiting session remains bound to its recorded tool and declared provider.
+    if (products !== undefined) await yieldForProductReads(products, run);
+    const cited = await recheckSessionStatement(run, `waiting ${kind} session ${waiting.session}`, waiting.record, deps.sources, now, 'no packet is delivered', products);
+    if (!cited.ok) return refuse('statement', cited.why);
+    let built: { readonly bytes: string; readonly sha256: string }, packet: Readonly<Record<string, unknown>>;
+    if (kind === 'design') {
+      const design = buildStoredDesignPacket(opened);
+      if (!design.ok) return refuse(design.stage, design.reason);
+      built = design;
+      packet = { sha256: design.sha256, site: design.site };
+    } else {
+      const fidelity = await buildFidelityPacket(opened, { ...deps, now: () => now });
+      if (!fidelity.ok) return refuse(fidelity.stage, fidelity.reason);
+      built = fidelity;
+      packet = { sha256: fidelity.sha256, draftRevision: fidelity.draft.revision, inventoryRevision: fidelity.inventory.revision };
+    }
+    // Delivery revalidates the lease and all selected products before writing.
+    if (products !== undefined) await yieldForProductReads(products, run);
+    const delivered = deliverToWaiting(run, opened.runId, kind, waiting, built, packet, now, undefined, products);
+    return delivered.ok ? delivered : refuse('write', delivered.reason);
+  } catch (cause) {
+    if (cause instanceof UrlProductReadRefusal) return refuse('reverify', cause.message);
+    throw cause;
   }
-  const delivered = deliverToWaiting(run, opened.runId, kind, waiting, built, packet, now);
-  return delivered.ok ? delivered : refuse('write', delivered.reason);
 }
 
 export interface LaunchFormRequest {

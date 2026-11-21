@@ -3,7 +3,9 @@ import * as path from 'node:path';
 import { parseBoundedJson } from '@syzygy/polaris-generation-core/live';
 import { briefIssuedAt } from './check.js';
 import { USAGE_NOT_RECORDED } from './close.js';
-import { readRunRecord, type RecordedRunConfig } from './run-record.js';
+import { type RecordedRunConfig } from './run-record.js';
+import { effectiveUrlProjection, readEffectiveRunRecord, URL_MODE_MARKERS, URL_RUN_SIDECAR, type EffectiveRunAuthority } from './effective-run-record.js';
+import type { UrlRunDeclaration } from './url-run-record.js';
 import { REVIEW_PACKET_DIR, REVIEW_VERDICT_FILE, REVISION_FILE, RUN_LAYOUT } from './state-directory.js';
 import { isoOf } from './iso-of.js';
 
@@ -22,16 +24,17 @@ export interface StatusReport {
   readonly outcome: 'reported';
   readonly run: string;
   readonly label: 'Inferred';
-  readonly basis: 'the run directory, which the agent sessions can write';
-  readonly mode: 'operator-agent';
-  readonly route: typeof NO_ROUTE;
+  readonly basis: string;
+  readonly mode: 'operator-agent' | UrlRunDeclaration['mode'];
+  readonly route: string;
   readonly principal: RecordedRunConfig['principal'];
   /** What init recorded: the repository, the pinned revision, the start gates' records, the governed decision, the statement relied
    * on and the absent work item. Which revision the run was pinned to is shown, not verified, here; later steps verify it. */
-  readonly subject: RecordedRunConfig['subject'];
+  readonly subject: RecordedRunConfig['subject'] | (Omit<RecordedRunConfig['subject'], 'workItem'> & { readonly workItem: UrlRunDeclaration['workItem'] });
+  readonly effectiveRun?: ReturnType<typeof effectiveUrlProjection>;
   readonly state: RunState;
   readonly configuration: {
-    readonly declaredBy: 'operator';
+    readonly declaredBy: 'operator' | 'URL run configuration';
     readonly label: 'Inferred';
     readonly values: Readonly<Record<string, string | number | boolean>>;
     readonly modelVersionProvider: string;
@@ -89,7 +92,7 @@ function closedUsage(file: string): string {
 
 export const NO_RECORD_DEADLINE_PASSED = 'not written, and it will not be: the deadline passed before the run was closed, and close, like every step, refuses after it; the agent usage is therefore not recorded';
 
-export function runStatus(runDir: string, now: () => number = Date.now): StatusResult {
+export function runStatus(runDir: string, now: () => number = Date.now, authority?: EffectiveRunAuthority): StatusResult {
   const run = path.resolve(runDir);
   let stats: fs.Stats;
   try {
@@ -98,14 +101,10 @@ export function runStatus(runDir: string, now: () => number = Date.now): StatusR
     return { ok: false, reason: `run directory ${run} cannot be read (${(cause as NodeJS.ErrnoException).code ?? 'unknown-error'})` };
   }
   if (!stats.isDirectory()) return { ok: false, reason: `${run} is not a run directory` };
-  let configText: string;
-  try {
-    configText = fs.readFileSync(path.join(run, RUN_LAYOUT.config), 'utf8');
-  } catch (cause) {
-    return { ok: false, reason: `${run} holds no readable ${RUN_LAYOUT.config} (${(cause as NodeJS.ErrnoException).code ?? 'unknown-error'})` };
-  }
-  const record = readRunRecord(configText);
-  if (!record.ok) return { ok: false, reason: record.detail, ...(record.refusals ? { refusals: record.refusals } : {}) };
+  const read = readEffectiveRunRecord(run, authority);
+  if (!read.ok) return { ok: false, reason: read.reason, ...(read.refusals ? { refusals: read.refusals } : {}) };
+  const record = { record: read.core };
+  const url = read.effective.kind === 'url' ? read.effective.declaration : undefined;
 
   const entries = fs.readdirSync(run).sort();
   const has = (name: string): boolean => entries.includes(name);
@@ -159,25 +158,29 @@ export function runStatus(runDir: string, now: () => number = Date.now): StatusR
       run,
       label: 'Inferred',
       basis: 'the run directory, which the agent sessions can write',
-      mode: 'operator-agent',
-      route: NO_ROUTE,
+      mode: url?.mode ?? 'operator-agent',
+      route: url === undefined ? NO_ROUTE : 'local CLI through checked transport relay; Git source transport is a distinct declared route; actual sends Unknown',
       principal: record.record.principal,
-      subject: record.record.subject,
+      subject: url === undefined ? record.record.subject : { ...record.record.subject, workItem: url.workItem },
+      ...(url === undefined ? {} : { effectiveRun: effectiveUrlProjection(read.core, url) }),
       state,
-      configuration: { declaredBy: 'operator', label: 'Inferred', values, modelVersionProvider: record.record.modelVersionProvider },
+      configuration: { declaredBy: url === undefined ? 'operator' : 'URL run configuration', label: 'Inferred', values,
+        modelVersionProvider: url === undefined ? record.record.modelVersionProvider : 'Unknown; no supported provider-reported model/version capture is bound to this declaration' },
       steps,
       limitsSpent: {
         repairCycles: `${checkedRevisions} checked revisions recorded of ${declared.maxRepairCycles} repair cycles declared`,
         questions: `${NOT_RECORDED} of ${declared.maxQuestions} declared`,
         deadline,
-        agentUsage: steps.closed ? closedUsage(path.join(run, RUN_LAYOUT.record))
+        agentUsage: url !== undefined ? 'Unknown; no supported provider usage capture is bound to this declaration; compatible history and any operator figures remain Inferred'
+          : steps.closed ? closedUsage(path.join(run, RUN_LAYOUT.record))
           : passed ? `${NOT_RECORDED}; the deadline passed before the run was closed, so no Execution Record will carry it, and Syzygy cannot observe the agent sessions' usage`
             : 'not recorded; Syzygy cannot observe the agent sessions\' usage, and the run is not closed',
       },
       executionRecord: steps.closed ? `written at close: ${RUN_LAYOUT.record}` : passed ? NO_RECORD_DEADLINE_PASSED : 'not written: the run is not closed',
       openFindings: NOT_RECORDED,
       reviewsStillRequired: ['inventory', 'fidelity review', 'rendered-design review'],
-      unrecognizedEntries: entries.filter((name) => !KNOWN_ENTRIES.has(name)),
+      unrecognizedEntries: entries.filter((name) => !KNOWN_ENTRIES.has(name)
+        && !(url !== undefined && (name === URL_RUN_SIDECAR || (URL_MODE_MARKERS as readonly string[]).includes(name)))),
     },
   };
 }

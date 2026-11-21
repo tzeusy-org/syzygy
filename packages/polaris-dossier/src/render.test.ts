@@ -4,7 +4,7 @@ import { createHash } from 'node:crypto';
 import * as fs from 'node:fs';
 import * as path from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
-import { afterEach, beforeAll, describe, expect, it } from 'vitest';
+import { afterEach, beforeAll, describe, expect, it, vi } from 'vitest';
 import { evaluateDossier, excludedSourceId, parseDossierManifest, scanDossierPage } from '@syzygy/polaris-generation-core';
 import { withoutReviewStatusRegion } from '@syzygy/polaris-generation-core/live';
 import { issueBrief, READABILITY_GUIDANCE, READABILITY_GUIDANCE_VERSION } from './brief.js';
@@ -15,7 +15,7 @@ import { designVerdictSchemaDocument } from './draft-schema.js';
 import { GitObjectReadRefusal, openPinnedObjectReader, type PinnedObjectReader, type PinnedObjectReaderOptions } from './git-object-reader.js';
 import { NO_PROVIDER_STATEMENTS, type GateSources, type GateState } from './gate-sources.js';
 import { checkInventory, openRun } from './inventory.js';
-import { NO_RENDERER, redactedExtent, redactionDetails, renderRun, type DossierRenderer, type DossierRendererInput, type RenderDeps } from './render.js';
+import { NO_RENDERER, RENDER_PRODUCER_MILLISECONDS, redactedExtent, redactionDetails, renderRun, type DossierRenderer, type DossierRendererInput, type RenderDeps } from './render.js';
 import { buildStoredDesignPacket, designReviewOfRecord, reviewCheck, reviewPacket } from './review.js';
 import { parseRunConfig } from './run-config.js';
 import { NO_WORK_ITEM_REASON, encodeRunRecord, type RunSubject } from './run-record.js';
@@ -256,6 +256,49 @@ const marked = (page: string, id: string): { epistemic: string; reason: string |
 const html = (files:ReadonlyMap<string, string>): [string, string][] => [...files].filter(([file]) => file.endsWith('.html'));
 
 describe('render', () => {
+  it('awaits actual producer admission before storing a site, and withholds it on a failed producer', async () => {
+    const run = await prepared(); let calls = 0;
+    const result = await renderRun(run, renderDeps({ admitProducedSite: async input => {
+      calls++;
+      expect(input.run).toBe(run); expect(input.pinnedRevision).toBe(commit);
+      expect(input.sourceBodies).toEqual(expect.arrayContaining([expect.objectContaining({ path: 'src/kestrel.c', raw: KESTREL, redacted: false })]));
+      expect(input.files.has('machine.json')).toBe(true); expect(input.signal.aborted).toBe(false);
+      expect(fs.existsSync(path.join(run, 'site'))).toBe(false);
+      await Promise.resolve();
+      expect(fs.existsSync(path.join(run, 'site'))).toBe(false);
+      return false;
+    } }));
+    expect(calls).toBe(1);
+    expect(result).toMatchObject({ ok: false, refusal: { stage: 'render', reason: 'The rendered products were not admitted by the checked producer before storage.' } });
+    expect(fs.existsSync(path.join(run, 'site'))).toBe(false);
+  });
+
+  it('refuses an admission that consumes the monotonic budget before its timer can run', async () => {
+    const run = await prepared(); let elapsed = 0;
+    const clock = vi.spyOn(performance, 'now').mockImplementation(() => elapsed);
+    try {
+      const result = await renderRun(run, renderDeps({ admitProducedSite: input => {
+        expect(input.signal.aborted).toBe(false);
+        elapsed = RENDER_PRODUCER_MILLISECONDS;
+        return true;
+      } }));
+      expect(result).toMatchObject({ ok: false, refusal: { stage: 'render' } });
+      expect(fs.existsSync(path.join(run, 'site'))).toBe(false);
+    } finally { clock.mockRestore(); }
+  });
+
+  it('writes the admitted exact output population despite mutation of the callback map copy', async () => {
+    const run = await prepared(); let names: string[] = [];
+    const result = await renderRun(run, renderDeps({ admitProducedSite: input => {
+      names = [...input.files.keys()].sort();
+      (input.files as Map<string, string>).clear();
+      return true;
+    } }));
+    if (!result.ok) throw new Error(result.refusal.reason);
+    expect([...readSite(result.report.site).keys()].sort()).toEqual(names);
+    expect(names).toContain('machine.json');
+  });
+
   it('refuses with no renderer wired, before it opens the run, and writes nothing', async () => {
     const run = await prepared(draft(), false);
     const before = fs.readdirSync(run).sort();
@@ -1244,11 +1287,15 @@ describe('rendered-design review (S9b)', () => {
     // The review verdict's wording once the marker is present but unreadable (R-GP-IMPL-LAUNCHED-MARKER-1 N5). A render never reaches it:
     // the inventory and the fidelity review stop counting too, which changes the pages, so the design verdict is retired as a stale packet
     // first. The design review of record is asked directly, against the packet of the pages the last render stored.
-    fs.writeFileSync(path.join(run, 'launched.json'), '');
     const opened = await openRun(run, sources(), LATER, 'test');
     const stored = opened.ok ? buildStoredDesignPacket(opened) : undefined;
     if (!opened.ok || !stored?.ok) throw new Error('fixture: no stored design packet');
     expect(stored.sha256).toBe(digest);
+    fs.writeFileSync(path.join(run, 'launched.json'), '');
+    expect(await openRun(run, sources(), LATER, 'test')).toMatchObject({ ok: false, stage: 'reverify',
+      refusals: [{ code: 'record-invalid', reason: expect.stringContaining('protected URL binding') }] });
+    // The lower-level launch-form predicate remains fail-closed too, even when handed the
+    // earlier verified packet. Entry readers refuse this legacy URL state before this point.
     expect(await designReviewOfRecord(opened, stored, { sources: sources(), now: () => LATER })).toEqual({ counts: false, why: 'the launch-form record of design session 1 is not a countable launch (the run\'s launched marker is present but unreadable, so none counts) of that session\'s prompt' });
   });
 

@@ -1,3 +1,5 @@
+import type { RunProductReads } from './url-operation-products.js';
+import type { UrlLoadedRenderer } from './url-runtime.js';
 import * as fs from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import { isArgvFault, readArgv } from './argv.js';
@@ -15,12 +17,13 @@ import { checkInventory, inventoryBrief } from './inventory.js';
 import { preflight } from './preflight.js';
 import type { ReverifyOptions } from './reverify.js';
 import { RUN_CONFIG_JSON_LIMITS } from './run-config.js';
-import { renderRun, type DossierRenderer } from './render.js';
+import { renderRun, type DossierRenderer, type RenderDeps } from './render.js';
 import { reviewCheck, reviewPacket } from './review.js';
 import type { ScreenLoader } from './screen.js';
 import { handOver, launchForm } from './session-handover.js';
 import { pairVisibilityAt, type VisibilityOf } from './source-visibility-gate.js';
 import { runStatus } from './status.js';
+import { packageUrlRunModeAuthority } from './url-mode-registry.js';
 import { awaitSession } from './waiting-sessions.js';
 import type { FigureLayout } from './figure-fit.js';
 
@@ -40,11 +43,10 @@ export const DOSSIER_USAGE = `syzygy dossier — operator-agent dossier runs
 Usage: syzygy dossier <command> [--json] [arguments]
 
 Commands:
-  preflight <url>     report whether the observation consent, the source-acquisition
-                      registry entry and the classification and screening policy are
-                      in force for the repository, the revisions the consent names,
-                      any per-project statement, and whether D9 and the RFC7-20
-                      reading are in force; the URL is parsed, never fetched
+  preflight <url>     prepare locator metadata and the committed screening policy;
+                      no consent, registry or statement records are required.
+                      Prepared is not run readiness: no revision is selected,
+                      no source is fetched and no repository object is read.
   init <clone> [--url <url>] --config <run.json> [--state-root <dir>] [--revision <rev>] [--identity <id>] [--upstream <url>] [--visibility public|private]
                       record a declared local source and full pinned HEAD under the
                       committed dossier screening policy. --visibility public|private
@@ -172,6 +174,9 @@ export interface CliPorts {
   readonly loadScreen?: ScreenLoader;
   /** The multi-page dossier renderer `render` draws through; the `syzygy` composition root injects it. Without it `render` refuses. */
   readonly renderer?: DossierRenderer;
+  readonly admitProducedSite?: RenderDeps['admitProducedSite'];
+  readonly productReads?: RunProductReads;
+  readonly urlRenderer?: UrlLoadedRenderer;
   /** The figure layout `check` measures figure fit with (syzygy-3efd.20); the `syzygy` composition root injects it. Without it each
    * produced figure's fit is Unknown. */
   readonly layoutFigure?: FigureLayout;
@@ -196,7 +201,8 @@ const RECORDS_ROOT = fileURLToPath(new URL('../../..', import.meta.url));
 
 /** The gate sources the commands read: the injected ones, or the records in this Syzygy checkout. */
 export const cliGateSources = (ports: CliPorts): GateSources => ports.sources
-  ?? withLaunchRecords(createPackageGateSources({ root: RECORDS_ROOT, now: ports.now ?? Date.now }), { home: RECORDS_ROOT, now: ports.now ?? Date.now });
+  ?? { ...withLaunchRecords(createPackageGateSources({ root: RECORDS_ROOT, now: ports.now ?? Date.now }), { home: RECORDS_ROOT, now: ports.now ?? Date.now }),
+    effectiveRunDeclaration: packageUrlRunModeAuthority(RECORDS_ROOT) };
 /** The visibility decision the supervisor fetches by: the injected one, or this checkout's where the sources are this checkout's too. */
 export const cliVisibilityOf = (ports: CliPorts): VisibilityOf | undefined =>
   ports.visibilityOf ?? (ports.sources === undefined ? (subject => pairVisibilityAt(subject, { root: RECORDS_ROOT, now: (ports.now ?? Date.now)() })) : undefined);
@@ -227,6 +233,9 @@ interface StepPorts {
   readonly sleep?: NonNullable<CliPorts['sleep']>;
   readonly readStdin?: NonNullable<CliPorts['readStdin']>;
   readonly renderer?: DossierRenderer;
+  readonly admitProducedSite?: RenderDeps['admitProducedSite'];
+  readonly productReads?: RunProductReads;
+  readonly urlRenderer?: UrlLoadedRenderer;
   readonly layoutFigure?: FigureLayout;
 }
 
@@ -252,6 +261,9 @@ function commandContext(json: boolean, io: CliIo, ports: CliPorts) {
         ...(wants('sleep') && ports.sleep ? { sleep: ports.sleep } : {}),
         ...(wants('readStdin') && ports.readStdin ? { readStdin: ports.readStdin } : {}),
         ...(wants('renderer') && ports.renderer ? { renderer: ports.renderer } : {}),
+        ...(wants('productReads') && ports.productReads ? { productReads: ports.productReads } : {}),
+        ...(wants('urlRenderer') && ports.urlRenderer ? { urlRenderer: ports.urlRenderer } : {}),
+        ...(wants('admitProducedSite') && ports.admitProducedSite ? { admitProducedSite: ports.admitProducedSite } : {}),
         ...(wants('layoutFigure') && ports.layoutFigure ? { layoutFigure: ports.layoutFigure } : {}),
       } as StepDeps<K>;
     },
@@ -289,7 +301,7 @@ export const DOSSIER_COMMANDS: Readonly<Record<string, DossierCommand>> = Object
     run: async ({ positional: [url] }, ctx) => {
       const result = await preflight(url!, ctx.sources(), ctx.now());
       if (!result.ok) return ctx.refused({ command: 'preflight', outcome: 'refused', reason: result.reason });
-      return ctx.report(result.report, result.report.outcome === 'ready' ? EXIT.clean : EXIT.refused);
+      return ctx.report(result.report, EXIT.clean);
     },
   },
   init: {
@@ -338,7 +350,7 @@ export const DOSSIER_COMMANDS: Readonly<Record<string, DossierCommand>> = Object
     args: { kind: 'options', options: ['--draft'], noun: RUN },
     run: async ({ positional: [run], values }, ctx) => {
       const draftFile = values.get('--draft');
-      const result = await checkDraft(run!, draftFile === undefined ? {} : { draftFile }, ctx.deps('probe', 'openReader', 'loadScreen', 'layoutFigure'));
+      const result = await checkDraft(run!, draftFile === undefined ? {} : { draftFile }, ctx.deps('probe', 'openReader', 'loadScreen', 'layoutFigure', 'productReads'));
       if (!result.ok) return ctx.refused(result.refusal);
       // `reviewVisibility`, `screenCensus`, `structureRecord`, `readerAdvice` and `reviewReach` are on the report already (`checkSubject`), never in the stored
       // record, and the exit code reads the outcome alone.
@@ -354,7 +366,7 @@ export const DOSSIER_COMMANDS: Readonly<Record<string, DossierCommand>> = Object
       const result = await handOver(run, {
         role, ...(fresh ? { fresh: true } : {}), ...(v.has('--kind') ? { kind: v.get('--kind')! } : {}), ...(v.has('--tool') ? { tool: v.get('--tool')! } : {}),
         ...(v.has('--tool-version') ? { toolVersion: v.get('--tool-version')! } : {}), ...(v.has('--model') ? { model: v.get('--model')! } : {}),
-      }, ctx.deps('openReader', 'loadScreen', 'waitModeSigned'));
+      }, ctx.deps('openReader', 'loadScreen', 'waitModeSigned', 'productReads'));
       return result.ok ? ctx.report(result.report, EXIT.clean) : ctx.refused(result.refusal);
     },
   },
@@ -365,7 +377,7 @@ export const DOSSIER_COMMANDS: Readonly<Record<string, DossierCommand>> = Object
       const result = await awaitSession(session!, {
         ...(v.has('--round') ? { round: v.get('--round')! } : {}), ...(v.has('--submit') ? { submit: v.get('--submit')! } : {}),
         ...(v.has('--wait-minutes') ? { waitMinutes: v.get('--wait-minutes')! } : {}), ...(stdin ? { stdin: true } : {}),
-      }, ctx.deps('probe', 'openReader', 'loadScreen', 'waitModeSigned', 'sleep', 'readStdin'));
+      }, ctx.deps('probe', 'openReader', 'loadScreen', 'waitModeSigned', 'sleep', 'readStdin', 'productReads'));
       if (!result.ok) return ctx.refused(result.refusal);
       const outcome = result.report;
       return ctx.report(outcome, outcome.outcome === 'waiting' ? EXIT.waiting : outcome.outcome === 'submitted' && !outcome.passed ? EXIT.refused : EXIT.clean);
@@ -399,7 +411,7 @@ export const DOSSIER_COMMANDS: Readonly<Record<string, DossierCommand>> = Object
     args: { kind: 'options', options: ['--inventory'], noun: RUN },
     run: async ({ positional: [run], values }, ctx) => {
       const inventoryFile = values.get('--inventory');
-      const result = await checkInventory(run!, inventoryFile === undefined ? {} : { inventoryFile }, ctx.deps('probe', 'openReader', 'loadScreen'));
+      const result = await checkInventory(run!, inventoryFile === undefined ? {} : { inventoryFile }, ctx.deps('probe', 'openReader', 'loadScreen', 'productReads'));
       if (!result.ok) return ctx.refused(result.refusal);
       // The same advice `check` gives the author, on the report from `checkSubject`, as `await --submit` returns it too (syzygy-mea.3).
       return ctx.report(result.report, result.report.outcome === 'passed' ? EXIT.clean : EXIT.refused);
@@ -421,7 +433,7 @@ export const DOSSIER_COMMANDS: Readonly<Record<string, DossierCommand>> = Object
     run: async ({ positional: [run], values }, ctx) => {
       const verdictFile = values.get('--verdict');
       const kind = values.get('--kind');
-      const result = await reviewCheck(run!, { ...(verdictFile === undefined ? {} : { verdictFile }), ...(kind === undefined ? {} : { kind }) }, ctx.deps('openReader', 'loadScreen'));
+      const result = await reviewCheck(run!, { ...(verdictFile === undefined ? {} : { verdictFile }), ...(kind === undefined ? {} : { kind }) }, ctx.deps('openReader', 'loadScreen', 'productReads'));
       if (!result.ok) return ctx.refused(result.refusal);
       return ctx.report(result.report, result.report.outcome === 'validated' ? EXIT.clean : EXIT.refused);
     },
@@ -430,7 +442,7 @@ export const DOSSIER_COMMANDS: Readonly<Record<string, DossierCommand>> = Object
     synopsis: 'render <run>',
     args: { kind: 'one', noun: RUN },
     run: async ({ positional: [run] }, ctx) => {
-      const result = await renderRun(run!, ctx.deps('probe', 'openReader', 'loadScreen', 'renderer'));
+      const result = await renderRun(run!, ctx.deps('probe', 'openReader', 'loadScreen', 'renderer', 'admitProducedSite', 'productReads', 'urlRenderer'));
       return result.ok ? ctx.report(result.report, EXIT.clean) : ctx.refused(result.refusal);
     },
   },
@@ -449,7 +461,7 @@ export const DOSSIER_COMMANDS: Readonly<Record<string, DossierCommand>> = Object
     synopsis: 'status <run>',
     args: { kind: 'one', noun: RUN },
     run: ({ positional: [run] }, ctx) => {
-      const result = runStatus(run!, ctx.now);
+      const result = runStatus(run!, ctx.now, ctx.sources().effectiveRunDeclaration);
       if (!result.ok) return ctx.refused({ command: 'status', outcome: 'refused', reason: result.reason, ...(result.refusals ? { refusals: result.refusals } : {}) });
       return ctx.report(result.report, EXIT.clean);
     },

@@ -18,8 +18,9 @@ const DOSSIER_ONE: ArgvSpec = { valued: [], dashValue: 'refuse', repeat: 'refuse
 /** `allow-execution`'s options; every options command is read the same way. */
 const DOSSIER_OPTIONS: ArgvSpec = { valued: ['--revision', '--declare'], dashValue: 'refuse', repeat: 'refuse', positionals: true };
 const POLARIS: ArgvSpec = {
-  valued: ['--clone', '--revision', '--state-root', '--deadline', '--audience', '--model', '--repair-cycles', '--questions', '--token-budget',
-    '--turn-budget', '--operator', '--attach', '--stop', '--resume', '--tmux-session'],
+  valued: ['--clone', '--revision', '--visibility', '--identity', '--state-root', '--deadline', '--audience', '--model', '--repair-cycles', '--questions', '--token-budget',
+    '--turn-budget', '--operator', '--attach', '--stop', '--resume', '--tmux-session',
+    '--ssh-known-hosts', '--ssh-identity-file', '--ssh-agent-socket', '--ssh-public-identity'],
   booleans: ['--author-skip-permissions', '--no-attach', '--supervise', '--help', '-h'], dashValue: 'take', repeat: 'last', positionals: true,
 };
 

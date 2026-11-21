@@ -179,7 +179,7 @@ describe('status (REQ-polaris-generation-033)', () => {
     fs.rmSync(path.join(runDir, 'run.json'));
     const result = runStatus(runDir);
     expect(result.ok).toBe(false);
-    expect(!result.ok && result.reason).toBe(`${runDir} holds no readable run.json (ENOENT)`);
+    expect(!result.ok && result.reason).toBe('Run metadata is missing, changed, excessive or not a regular non-symlink UTF-8 file; preserve it and check the recorded files.');
   });
 
   it.each([

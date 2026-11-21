@@ -65,3 +65,6 @@ for (const project of referenced) if (!composite.get(project)) throw new Error(`
 for (const project of built) rmSync(join(project, 'dist'), { recursive: true, force: true });
 const tsc = require.resolve('typescript/bin/tsc');
 process.exitCode = spawnSync(process.execPath, [tsc, '-b', ...projects], { stdio: 'inherit' }).status ?? 1;
+if (process.exitCode === 0 && built.has('packages/polaris-dossier')) {
+  process.exitCode = spawnSync(process.execPath, ['scripts/build_dossier_runtime.mjs'], { stdio: 'inherit' }).status ?? 1;
+}

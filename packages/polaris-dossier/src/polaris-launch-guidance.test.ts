@@ -4,13 +4,90 @@ import { tempDir } from '@syzygy/test-kit';
 import { describe, expect, it, vi } from 'vitest';
 import {
   AUTHOR_SELF_CHECK, DEFAULT_REPAIR_CYCLES, LAUNCHED_GUIDANCE, RUN_LIMITS, isoSeconds, limitFault, limitsAnswer, limitsQuestion, OWNER_LINE, POLARIS_USAGE, authorPrompt, cycleBreakdown, endScreen,
-  runPolarisCli, fidelityDeliveryDue, fidelityRepairSpent, inventoryRepairMessage, readVerdict, latestChecks, limitStop, refusedAtLimit, repairSides, sessionClaudeArgs,
+  runPolarisCli, preparePolarisStart, fidelityDeliveryDue, fidelityRepairSpent, inventoryRepairMessage, readVerdict, latestChecks, limitStop, refusedAtLimit, repairSides, sessionClaudeArgs,
 } from './polaris.js';
 import { inventoryPrompt, reviewPrompt, waitingInventoryPrompt, waitingReviewPrompt } from './session-handover.js';
+import { policyFixture } from './full-run.testkit.js';
+import type { GateSources } from './gate-sources.js';
 
 // syzygy-1z8m.1 and syzygy-1z8m.2: what the 2026-11-04 Redis run taught the launched run. Expected values are literals.
 
 describe('the run limits of a launched run (syzygy-1z8m.7)', () => {
+  it('refuses an unsafe locator before source ports, process launches or input-derived output', async () => {
+    const stateRoot = tempDir('polaris-unsafe-locator-');
+    const stderr = vi.spyOn(process.stderr, 'write').mockImplementation(() => true);
+    const sources = new Proxy({} as GateSources, { get() { throw new Error('source port accessed'); } });
+    try {
+      expect(await runPolarisCli(['https://user:NONSECRET@invalid.test/o/r', '--state-root', stateRoot], { sources })).toBe(1);
+      expect(stderr.mock.calls.flat().join('')).not.toContain('NONSECRET');
+      expect(stderr.mock.calls.flat().join('')).toContain('URL is not admitted');
+      expect(fs.readdirSync(stateRoot)).toEqual([]);
+    } finally { stderr.mockRestore(); }
+  });
+
+  it('discloses the supported default and refuses unsupported models or unrestricted tools before a child or source access', async () => {
+    expect(POLARIS_USAGE).toContain('default claude-sonnet-4-6');
+    expect(POLARIS_USAGE).toContain('never silently substitutes');
+    const stateRoot = tempDir('polaris-profile-refusal-');
+    const stderr = vi.spyOn(process.stderr, 'write').mockImplementation(() => true);
+    const sources = new Proxy({} as GateSources, { get() { throw new Error('source port accessed'); } });
+    try {
+      expect(await runPolarisCli(['https://example.invalid/o/r', '--model', 'NONSECRET-unsupported', '--state-root', stateRoot], { sources })).toBe(1);
+      expect(stderr.mock.calls.flat().join('')).not.toContain('NONSECRET-unsupported');
+      expect(await runPolarisCli(['https://example.invalid/o/r', '--author-skip-permissions', '--state-root', stateRoot], { sources })).toBe(1);
+      expect(fs.readdirSync(stateRoot)).toEqual([]);
+    } finally { stderr.mockRestore(); }
+  });
+
+  it('screens declarations without consulting retired record ports or claiming run readiness', async () => {
+    const sources = new Proxy({ declaredPolicy: async () => policyFixture() } as GateSources, {
+      get(target, key) { if (key !== 'declaredPolicy') throw new Error('retired record port accessed'); return target.declaredPolicy; },
+    });
+    const input = { url: 'https://example.invalid/o/r', model: 'declared-model', operator: 'operator', audience: 'Project readers' };
+    expect(await preparePolarisStart(input, { sources })).toMatchObject({ ok: true, report: { outcome: 'prepared', visibility: { default: 'private' } } });
+    const canary = 'AKIA' + 'A'.repeat(16);
+    for (const key of ['model', 'operator', 'audience', 'revision', 'identity']) {
+      const result = await preparePolarisStart({ ...input, [key]: canary }, { sources });
+      expect(result).toMatchObject({ ok: false, reason: expect.stringContaining('declaration is excluded') });
+      expect(JSON.stringify(result)).not.toContain(canary);
+    }
+    const ssh = { knownHostsPath: '/own/known-hosts', authentication: { kind: 'agent-socket' as const, path: '/own/agent', publicIdentityPath: '/own/public-key' } };
+    expect(await preparePolarisStart({ ...input, ssh }, { sources })).toMatchObject({ ok: true });
+    for (const value of [canary, '<script>']) {
+      const cases = [
+        { ...ssh, knownHostsPath: `/own/${value}` },
+        { ...ssh, authentication: { kind: 'identity-file' as const, path: `/own/${value}` } },
+        { ...ssh, authentication: { ...ssh.authentication, path: `/own/${value}` } },
+        { ...ssh, authentication: { ...ssh.authentication, publicIdentityPath: `/own/${value}` } },
+      ];
+      for (const candidate of cases) {
+        const result = await preparePolarisStart({ ...input, ssh: candidate }, { sources });
+        expect(result).toMatchObject({ ok: false, reason: expect.stringContaining('declaration is excluded') });
+        expect(JSON.stringify(result)).not.toContain(value);
+      }
+    }
+    expect(await preparePolarisStart({ ...input, model: 'AKIA', operator: 'A'.repeat(8), audience: 'A'.repeat(8) }, { sources }))
+      .toMatchObject({ ok: false, reason: expect.stringContaining('declaration is excluded') });
+    expect(await preparePolarisStart({ ...input, url: 'https://example.invalid/only-one-segment' }, { sources }))
+      .toMatchObject({ ok: false, reason: expect.stringContaining('--identity repository:<id>') });
+  });
+  it('refuses incomplete or conflicting explicit SSH authentication before source or child access', async () => {
+    const stateRoot = tempDir('polaris-ssh-options-');
+    const stderr = vi.spyOn(process.stderr, 'write').mockImplementation(() => true);
+    const sources = new Proxy({} as GateSources, { get() { throw new Error('source port accessed'); } });
+    const rows = [
+      ['--ssh-identity-file', '/own/key'], ['--ssh-known-hosts', '/own/hosts'],
+      ['--ssh-known-hosts', '/own/hosts', '--ssh-agent-socket', '/own/agent'],
+      ['--ssh-known-hosts', '/own/hosts', '--ssh-public-identity', '/own/public'],
+      ['--ssh-known-hosts', '/own/hosts', '--ssh-identity-file', '/own/key', '--ssh-public-identity', '/own/public'],
+      ['--ssh-known-hosts', '/own/hosts', '--ssh-identity-file', '/own/key', '--ssh-agent-socket', '/own/agent', '--ssh-public-identity', '/own/public'],
+    ];
+    try {
+      for (const flags of rows) expect(await runPolarisCli(['git@example.invalid:o/r', '--state-root', stateRoot, ...flags], { sources })).toBe(2);
+      expect(stderr.mock.calls.flat().join('')).toContain('SSH requires --ssh-known-hosts');
+      expect(fs.readdirSync(stateRoot)).toEqual([]);
+    } finally { stderr.mockRestore(); }
+  });
   it('refuses a new supervisor without a declared audience before setup writes or launches anything', async () => {
     const stateRoot = tempDir('polaris-audience-');
     const stderr = vi.spyOn(process.stderr, 'write').mockImplementation(() => true);
@@ -46,12 +123,14 @@ describe('the run limits of a launched run (syzygy-1z8m.7)', () => {
     expect(limitFault('--deadline', 'P1DT')).toBe('--deadline takes a positive ISO 8601 duration such as PT24H');
     expect(limitFault('--questions', '0')).toBeNull();
     expect(limitFault('--repair-cycles', '0')).toBeNull();
+    expect(limitFault('--turn-budget', '9'.repeat(400))).toBe('--turn-budget exceeds the supported whole-number range');
   });
   it('measure a deadline in seconds, never falling back to a day', () => {
     expect(isoSeconds('PT24H')).toBe(86400);
     expect(isoSeconds('P1DT2H3M4S')).toBe(93784);
     expect(isoSeconds('PT90M')).toBe(5400);
     expect(isoSeconds('bogus')).toBeNull();
+    expect(isoSeconds(`P${'9'.repeat(400)}D`)).toBeNull();
   });
 });
 
@@ -241,6 +320,19 @@ describe('the loop\'s limit stop (syzygy-1z8m.5, R-PR718-LAUNCH-NOTES-3937-1 N1)
 });
 
 describe('the loop reads each side from its own check directory (syzygy-1z8m.6, R-PR718-LAUNCH-NOTES-A44D-2 P2)', () => {
+  it.each(['symlink', 'hardlink', 'oversized', 'non-object'] as const)('withholds a latest %s check instead of treating its bytes as a stage result', (kind) => {
+    const run = tempDir('polaris-check-boundary-');
+    const directory = path.join(run, 'checks'); fs.mkdirSync(directory);
+    fs.writeFileSync(path.join(directory, 'rev-1.json'), '{"outcome":"passed"}');
+    const latest = path.join(directory, 'rev-2.json');
+    if (kind === 'symlink' || kind === 'hardlink') {
+      const outside = path.join(run, 'unbound-check.json'); fs.writeFileSync(outside, '{"outcome":"passed"}');
+      if (kind === 'symlink') fs.symlinkSync(outside, latest); else fs.linkSync(outside, latest);
+    } else fs.writeFileSync(latest, kind === 'oversized' ? JSON.stringify({ outcome: 'passed', detail: 'x'.repeat(2_097_152) }) : '[]');
+    // The preceding passing revision cannot stand in for an unreadable newer one.
+    expect(latestChecks(run).draft).toBeNull();
+  });
+
   it('takes the draft from checks/ and the inventory from inventory/checks/, newest revision each', () => {
     const run = tempDir('polaris-launch-guidance-');
     fs.mkdirSync(path.join(run, 'checks'));

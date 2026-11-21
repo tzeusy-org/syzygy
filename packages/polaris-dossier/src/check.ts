@@ -1,3 +1,4 @@
+import { checkedProductPopulation, isRunProductReads, parseProductRecord, protectedProduct, protectedProductRecord, UrlProductReadRefusal, type RunProductReads } from './url-operation-products.js';
 import * as fs from 'node:fs';
 import * as path from 'node:path';
 import { parseBoundedJson } from '@syzygy/polaris-generation-core/live';
@@ -8,7 +9,7 @@ import { executionFlags } from './execution-flags.js';
 import { GitObjectReadRefusal, openPinnedObjectReader } from './git-object-reader.js';
 import { isoOf } from './iso-of.js';
 import type { Outcome } from './outcome.js';
-import { readRunRecord } from './run-record.js';
+import { mayAppendCompatibleStepLog } from './effective-run-record.js';
 import { reverifyPinnedRevision } from './reverify.js';
 import { poleLimitOf, type RunConfig } from './run-config.js';
 import { placementSubjectOf, screenLoaderOf } from './screen.js';
@@ -70,6 +71,7 @@ export interface CheckedRevision {
   readonly run: string;
   /** The clone's path as the run record names it. */
   readonly clonePath: string;
+  readonly executionArm: ReturnType<typeof storedBriefArm>;
 }
 
 /** A subject's own gate, run once the subject is parsed and before any object is read: a refusal, or what it found for the record. */
@@ -85,7 +87,7 @@ export interface SubjectPlan<R extends object, G> {
   /** The file checked when none is named, or why none is. */
   readonly defaultFile: (run: string) => string;
   readonly rules: (pinned: string, declared: RunConfig) => SubjectRules;
-  readonly gate: (run: string, doc: unknown) => SubjectGate<G>;
+  readonly gate: (run: string, doc: unknown, products?: RunProductReads) => SubjectGate<G>;
   readonly record: (checked: CheckedRevision, found: G, declared: RunConfig) => R;
   readonly disclosures: readonly string[];
 }
@@ -114,7 +116,7 @@ const DRAFT_PLAN: SubjectPlan<CheckRecord, null> = {
     draft: checked.file,
     session: { sessionId: declaredSessionId(checked.doc), declaredBy: 'the authoring session', label: 'Inferred' },
     findings: checked.findings,
-    executionFlags: executionFlags(isRecord(checked.doc) ? checked.doc['executions'] : undefined, checked.clonePath, storedBriefArm(checked.run)),
+    executionFlags: executionFlags(isRecord(checked.doc) ? checked.doc['executions'] : undefined, checked.clonePath, checked.executionArm),
     quotations: checked.quotations,
     excludedContent: checked.excludedContent,
     citedBlobs: checked.citedBlobs,
@@ -143,13 +145,20 @@ export async function checkDraft(runDir: string, request: CheckRequest, deps: Ch
 
 /** One check of one subject at the pinned revision, in the order the file comment states. A refusal freezes and writes nothing. */
 export async function checkSubject<R extends object, G>(runDir: string, file: string | undefined, deps: CheckDeps, plan: SubjectPlan<R, G>): Promise<SubjectResult<R>> {
+  try { return await checkOpenSubject(runDir, file, deps, plan); }
+  catch (cause) {
+    if (!(cause instanceof UrlProductReadRefusal)) throw cause;
+    return { ok: false, refusal: { command: plan.command, outcome: 'refused', stage: 'reverify', reason: cause.message, at: isoOf(deps.now()), disclosures: plan.disclosures } };
+  }
+}
+
+async function checkOpenSubject<R extends object, G>(runDir: string, file: string | undefined, deps: CheckDeps, plan: SubjectPlan<R, G>): Promise<SubjectResult<R>> {
   const run = path.resolve(runDir);
   const started = deps.now();
   const { noun } = plan;
   const log = (entry: Record<string, unknown>): void => {
     try {
-      const stored = readRunRecord(fs.readFileSync(path.join(run, RUN_LAYOUT.config), 'utf8'));
-      if (!stored.ok && stored.legacy) return;
+      if (!mayAppendCompatibleStepLog(run)) return;
       fs.appendFileSync(path.join(run, RUN_LAYOUT.steps), `${JSON.stringify({ format: STEP_LOG_FORMAT, step: plan.command, at: isoOf(started), ...entry })}\n`, { mode: 0o600 });
     } catch { /* the step log is a convenience within the agent's reach; a failure to append changes no result */ }
   };
@@ -160,27 +169,34 @@ export async function checkSubject<R extends object, G>(runDir: string, file: st
   const runId = path.basename(run);
   if (!RUN_ID.test(runId) || !fs.existsSync(path.join(run, RUN_LAYOUT.config))) return refuse('run', `${run} is not a run directory`);
 
-  const checked = await reverifyPinnedRevision(run, deps.sources, started, deps.openReader ? { openReader: deps.openReader } : {});
+  const products = deps.productReads;
+  const checked = await reverifyPinnedRevision(run, deps.sources, started, deps);
   if (!checked.ok) {
     return refuse('reverify', `the pinned revision could not be verified again, so the ${noun} is not checked`, {
       reasons: checked.reasons, refusals: checked.refusals, ...(checked.objectRead ? { objectRead: checked.objectRead } : {}),
     });
   }
+  if (checked.effective?.kind === 'url' && !isRunProductReads(products))
+    return refuse('reverify', 'the URL check requires authenticated products');
   const { subject, declared } = checked.record;
   const pinned = subject.pinnedRevision.commit;
 
-  const issued = briefIssuedAt(run, pinned, noun);
+  if (products?.waitForSample !== undefined) await products.waitForSample();
+  const issued = briefIssuedAt(run, pinned, noun, products);
   if (typeof issued === 'string') return refuse('not-briefed', issued);
   const deadlineEnds = issued + declared.deadline.seconds * 1000;
   if (started >= deadlineEnds) return refuse('deadline', `the deadline ${declared.deadline.declared} from the brief ended at ${isoOf(deadlineEnds)} on Syzygy's clock; no step runs after it`);
 
   const frozenDir = path.join(run, plan.frozenDir), checksDir = path.join(run, plan.checksDir);
-  const revision = nextRevision(frozenDir);
+  const revision = products === undefined ? nextRevision(frozenDir) : nextCheckedRevision(run, plan.command, products);
   if (revision > declared.maxRepairCycles) {
     return refuse('repair-limit', `${noun === 'draft' ? '' : `${noun} `}revision ${revision} would be repair cycle ${revision} of the ${declared.maxRepairCycles} declared; the repair-cycle limit is spent`);
   }
 
-  const credential = await credentialStepCheck(run, plan.command, deps.probe, started);
+  const executionRule = products === undefined ? null : protectedProductRecord(products, run, RUN_LAYOUT.briefRecord)?.['executionRule'];
+  if (products !== undefined && (!isRecord(executionRule) || executionRule['arm'] !== 'sec-3')) return refuse('not-briefed', 'the authenticated brief must carry SEC-3');
+  const credential: CredentialStepResult = products === undefined ? await credentialStepCheck(run, plan.command, deps.probe, started)
+    : { required: false, why: 'the authenticated URL brief carried SEC-3 and permits no execution' };
 
   const subjectFile = file === undefined ? plan.defaultFile(run) : path.resolve(file);
   const bytes = readSubject(subjectFile, noun);
@@ -193,7 +209,7 @@ export async function checkSubject<R extends object, G>(runDir: string, file: st
     parseFault = `the ${noun} is not one bounded UTF-8 JSON document`;
   }
 
-  const gate = plan.gate(run, parseFault === null ? doc : undefined);
+  const gate = plan.gate(run, parseFault === null ? doc : undefined, products);
   if (!gate.ok) return refuse(gate.stage, gate.reason);
 
   const screenLoad = await screenLoaderOf(deps.loadScreen, deps.sources.recordsRoot, started)(placementSubjectOf(subject));
@@ -230,13 +246,18 @@ export async function checkSubject<R extends object, G>(runDir: string, file: st
       const entries = await reader.listTree();
       const listed = source();
       screenCensus = screenCensusReport({ ok: true, census: withheldCensus(entries, screen, checked.contentClasses) });
-      structureRecord = deriveStructure(entries, isSecretPath);
-      derivedRecord = encodeDerivedRecord(listed, deriveTreeFacts(entries, isSecretPath));
+      // A URL check needs a producer receipt before it can emit derived paths.
+      if (products === undefined) {
+        structureRecord = deriveStructure(entries, isSecretPath);
+        derivedRecord = encodeDerivedRecord(listed, deriveTreeFacts(entries, isSecretPath));
+      }
     } catch (cause) {
       if (!(cause instanceof GitObjectReadRefusal)) throw cause;
       screenCensus = screenCensusReport({ ok: false, why: `the pinned tree could not be listed (${cause.reason})`, consented: checked.contentClasses });
-      structureRecord = structureUnknown(`the pinned tree could not be listed (${cause.reason})`);
-      derivedRecord = encodeDerivedRecord(source(), { why: `the pinned tree could not be listed (${cause.reason})` });
+      if (products === undefined) {
+        structureRecord = structureUnknown(`the pinned tree could not be listed (${cause.reason})`);
+        derivedRecord = encodeDerivedRecord(source(), { why: `the pinned tree could not be listed (${cause.reason})` });
+      }
     }
   }
   if (credential.required && !credential.passed) {
@@ -248,6 +269,11 @@ export async function checkSubject<R extends object, G>(runDir: string, file: st
   // before the draft is frozen, so the revision is not spent.
   if (derivedRecord !== undefined && fs.existsSync(derivedRecordFile(run, revision))) {
     return refuse('freeze', `${path.relative(run, derivedRecordFile(run, revision))} already exists, but draft revision ${revision} has not been checked; Syzygy writes that record once, so the draft is not frozen. Remove the file and check again`);
+  }
+  if (products !== undefined) {
+    if (products.waitForSample !== undefined) await products.waitForSample();
+    if (deps.now() >= deadlineEnds) return refuse('deadline', 'the URL deadline elapsed before the checked revision was frozen');
+    products.revalidate();
   }
   try {
     fs.mkdirSync(frozenDir, { recursive: true, mode: 0o700 });
@@ -274,6 +300,7 @@ export async function checkSubject<R extends object, G>(runDir: string, file: st
     doc: parseFault === null ? doc : undefined,
     run,
     clonePath: subject.clone.path,
+    executionArm: products === undefined ? storedBriefArm(run) : 'sec-3',
   }, gate.found, declared);
   // Figure fit (syzygy-3efd.20): advice like readerAdvice, but kept in the draft's check record so a later check can be compared with
   // this one; an inventory check record carries none, and a draft that does not parse states nothing about fit.
@@ -305,9 +332,12 @@ export async function checkSubject<R extends object, G>(runDir: string, file: st
 }
 
 /** The instant the brief record states it was issued, or why the run counts as not briefed. */
-export function briefIssuedAt(run: string, pinned: string, noun = 'draft'): number | string {
+export function briefIssuedAt(run: string, pinned: string, noun = 'draft', products?: RunProductReads): number | string {
   let record: unknown;
-  try {
+  if (products !== undefined) {
+    const bytes = protectedProduct(products, run, RUN_LAYOUT.briefRecord);
+    record = bytes === null ? undefined : parseProductRecord(bytes, BRIEF_JSON_LIMITS);
+  } else try {
     record = parseBoundedJson(fs.readFileSync(path.join(run, RUN_LAYOUT.briefRecord), 'utf8'), BRIEF_JSON_LIMITS);
   } catch {
     return `the run holds no readable ${RUN_LAYOUT.briefRecord}: no brief was issued, so the deadline clock has not started and no ${noun} is checked`;
@@ -324,6 +354,13 @@ export function nextRevision(dir: string): number {
   try { names = fs.readdirSync(dir); } catch { return 0; }
   const numbers = names.flatMap((name) => { const match = REVISION_FILE.exec(name); return match === null ? [] : [Number(match[1])]; });
   return numbers.length === 0 ? 0 : Math.max(...numbers) + 1;
+}
+
+function nextCheckedRevision(run: string, command: CheckCommand, products: RunProductReads): number {
+  const check = command === 'check'
+    ? checkedProductPopulation(products, run, 'author-checks', 'author-drafts').at(-1)
+    : checkedProductPopulation(products, run, 'inventory-checks', 'inventory-revisions').at(-1);
+  return check === undefined ? 0 : Number(REVISION_FILE.exec(path.basename(check))![1]) + 1;
 }
 
 function readSubject(file: string, noun: string): Uint8Array | string {

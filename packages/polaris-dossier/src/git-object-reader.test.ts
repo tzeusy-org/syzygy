@@ -1,5 +1,6 @@
 import { execFileSync } from 'node:child_process';
 import { createHash } from 'node:crypto';
+import { createRequire, syncBuiltinESMExports } from 'node:module';
 import { chmodSync, closeSync, constants as fsConstants, cpSync, existsSync, mkdirSync, openSync, readdirSync, readFileSync, rmSync, symlinkSync, writeFileSync } from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -97,6 +98,43 @@ const ALL_PATHS = [
   { path: 'src/run.sh', mode: '100755', id: '4163036efa65bd4a469e752267498f01ea36a55c' },
 ];
 
+async function indexTrace<T>(action: () => Promise<T>, inject?: { readonly directory: string; readonly file: string }): Promise<{
+  readonly value: T; readonly opened: number; readonly bytes: number; readonly injected: boolean; readonly buffers: number[];
+}> {
+  const promises = createRequire(import.meta.url)('node:fs/promises') as typeof import('node:fs/promises');
+  const originalOpen = promises.open, originalDir = promises.opendir;
+  let opened = 0, bytes = 0, injected = false; const buffers: number[] = [];
+  Object.assign(promises, {
+    opendir: async (...args: Parameters<typeof promises.opendir>) => {
+      const directory = await Reflect.apply(originalDir, promises, args) as import('node:fs').Dir;
+      if (inject && String(args[0]) === inject.directory) {
+        buffers.push((args[1] as { bufferSize?: number } | undefined)?.bufferSize ?? 32);
+        const close = directory.close.bind(directory);
+        Object.assign(directory, { close: async () => { await close(); if (!injected) { writeFileSync(inject.file, Buffer.alloc(1025)); injected = true; } } });
+      }
+      return directory;
+    },
+    open: async (...args: Parameters<typeof promises.open>) => {
+      const handle = await originalOpen(...args);
+      if (String(args[0]).endsWith('.idx')) {
+        opened++;
+        const readFile = handle.readFile.bind(handle), read = handle.read.bind(handle);
+        Object.assign(handle, {
+          readFile: async (...given: unknown[]) => { const data = await Reflect.apply(readFile, handle, given) as Buffer; bytes += data.length; return data; },
+          read: async (...given: unknown[]) => {
+            const result = await Reflect.apply(read, handle, given) as { bytesRead: number };
+            bytes += result.bytesRead;
+            return result;
+          },
+        });
+      }
+      return handle;
+    },
+  }); syncBuiltinESMExports();
+  try { return { value: await action(), get opened() { return opened; }, get bytes() { return bytes; }, get injected() { return injected; }, buffers }; }
+  finally { Object.assign(promises, { open: originalOpen, opendir: originalDir }); syncBuiltinESMExports(); }
+}
+
 describe('hashAlgorithmOf: the algorithm is the one the consented identifier is written in', () => {
   it('40 hex digits are SHA-1 and 64 are SHA-256; anything else refuses', () => {
     expect(hashAlgorithmOf(C2)).toBe('sha1');
@@ -122,6 +160,116 @@ describe('reads at the pinned revision, from loose objects and packs, every obje
     expect(await r.listTree()).toEqual(ALL_PATHS);
     const blobs = await r.readBlobs(['README.md', 'src/run.sh', 'link', 'big.txt']);
     expect(blobs.map(b => [b.mode, text(b.bytes)])).toEqual([['100644', 'hello\n'], ['100755', '#!/bin/sh\necho hi\n'], ['120000', 'src/quoted.txt'], ['100644', BIG(2)]]);
+  });
+  it('selects a loose-only actual store for tree, list and source while default and explicit packed modes still work', async () => {
+    const loose = reader(L, C2, { looseOnly: true });
+    expect(await loose.tree()).toBe(TREE2); expect(await loose.listTree()).toEqual(ALL_PATHS);
+    expect(text((await loose.readBlobs(['src/quoted.txt']))[0]!.bytes)).toBe(QUOTED);
+    const strict = await indexTrace(async () => {
+      const packed = reader(OFS, C2, { looseOnly: true });
+      for (const operation of [() => packed.tree(), () => packed.listTree(), () => packed.readBlobs(['README.md'])]) {
+        expect(await refusal(operation())).toMatchObject({ reason: 'unsafe-store-entry', message: 'the loose-only profile refuses a nonempty pack directory' });
+      }
+    });
+    expect(strict.opened).toBe(0); expect(strict.bytes).toBe(0);
+    const baseline = await indexTrace(async () => {
+      for (const options of [{}, { looseOnly: false }]) expect(text((await reader(OFS, C2, options).readBlobs(['src/quoted.txt']))[0]!.bytes)).toBe(QUOTED);
+    });
+    expect(baseline.opened).toBeGreaterThan(0); expect(baseline.bytes).toBeGreaterThan(0);
+  });
+  it('keeps indexes appearing after the bounded census unreachable during each loose-only tree/list/source operation', async () => {
+    for (const kind of ['tree', 'list', 'source'] as const) {
+      const repo = copy(L, `loose-only-race-${kind}`), directory = path.join(repo, '.git/objects/pack'), file = path.join(directory, 'late.idx');
+      expect(readdirSync(directory)).toEqual([]);
+      const r = reader(repo, C2, { looseOnly: true });
+      const trace = await indexTrace(async () => kind === 'tree' ? r.tree() : kind === 'list' ? r.listTree() : r.readBlobs(['src/quoted.txt']), { directory, file });
+      expect(trace.injected).toBe(true); expect(trace.buffers).toEqual([1]); expect(trace.opened).toBe(0); expect(trace.bytes).toBe(0);
+      if (kind === 'tree') expect(trace.value).toBe(TREE2);
+      else if (kind === 'list') expect(trace.value).toEqual(ALL_PATHS);
+      else expect(text((trace.value as Awaited<ReturnType<PinnedObjectReader['readBlobs']>>)[0]!.bytes)).toBe(QUOTED);
+    }
+  });
+  it('reads a supplied pack at the index-byte ceiling and refuses a later index before reading past the aggregate ceiling', async () => {
+    const repo = copy(OFS, 'bounded-pack-index'), pack = packFile(repo), index = pack.replace(/\.pack$/u, '.idx');
+    const size = readFileSync(index).length;
+    const options = { maxPackIndexBytesPerCall: 2 * size, maxStoreEntriesPerCall: 12 };
+    cpSync(index, path.join(path.dirname(index), 'pack-z-copy.idx'));
+    cpSync(pack, path.join(path.dirname(pack), 'pack-z-copy.pack'));
+    const admitted = await indexTrace(() => reader(repo, C2, options).readBlobs(['src/quoted.txt']));
+    expect(admitted.opened).toBe(2);
+    expect(admitted.bytes).toBe(2 * size);
+    expect(text(admitted.value[0]!.bytes)).toBe(QUOTED);
+    cpSync(index, path.join(path.dirname(index), 'pack-z-extra.idx'));
+    cpSync(pack, path.join(path.dirname(pack), 'pack-z-extra.pack'));
+    const over = await indexTrace(() => refusal(reader(repo, C2, options).tree()));
+    expect(over.opened).toBe(3);
+    expect(over.bytes).toBe(2 * size);
+    expect(over.value).toMatchObject({ reason: 'budget-exceeded', message: `this call reads more than ${2 * size} stored pack index bytes` });
+  });
+  it('counts ignored names in pack, store-root and fanout directory censuses against the same operation limit', async () => {
+    const { blob, tree, commit } = oneFile('store census');
+    const repo = handBuilt('bounded-store-census', [blob, tree, commit]);
+    const objects = path.join(gitDir(repo), 'objects');
+    expect(readdirSync(objects)).toHaveLength(4); // Three distinct fanouts plus pack.
+    writeFileSync(path.join(objects, 'pack', 'ignored-note'), '');
+    writeFileSync(path.join(objects, 'ignored-note'), '');
+    writeFileSync(path.join(objects, blob.id.slice(0, 2), 'ignored-note'), '');
+    const bounded = reader(repo, commit.id, { maxStoreEntriesPerCall: 10 });
+    const inventory = { stored: 3, reachable: 3, beyondCount: 0 };
+    expect(await bounded.inventory()).toMatchObject(inventory);
+    expect(await bounded.inventory()).toMatchObject(inventory); // A new budget per call.
+    expect(await refusal(reader(repo, commit.id, { maxStoreEntriesPerCall: 9 }).inventory()))
+      .toMatchObject({ reason: 'budget-exceeded', message: 'this call inspects more than 9 object store directory entries' });
+    writeFileSync(path.join(objects, 'pack', 'another-ignored-note'), '');
+    expect(await refusal(reader(repo, commit.id, { maxStoreEntriesPerCall: 1 }).tree()))
+      .toMatchObject({ reason: 'budget-exceeded', message: 'this call inspects more than 1 object store directory entries' });
+  });
+  it('reads only the checked extent and refuses growth after the initial stat for a pack index and a loose object', async () => {
+    const packedRepo = copy(OFS, 'bounded-grow-index'), looseRepo = copy(L, 'bounded-grow-loose');
+    const targets = [
+      { file: packFile(packedRepo).replace(/\.pack$/u, '.idx'), run: () => reader(packedRepo, C2, { maxPackIndexBytesPerCall: 4_096 }).tree(), reason: 'invalid-pack-index' },
+      { file: looseFile(looseRepo, C2), run: () => reader(looseRepo, C2, { looseOnly: true }).tree(), reason: 'corrupt-object' },
+    ].map(target => ({ ...target, size: readFileSync(target.file).length, grew: false, actualBytes: 0 }));
+    const promises = createRequire(import.meta.url)('node:fs/promises') as typeof import('node:fs/promises');
+    const open = promises.open;
+    Object.assign(promises, {
+      open: async (...args: Parameters<typeof open>) => {
+        const handle = await open(...args), target = targets.find(row => row.file === args[0]);
+        if (target === undefined) return handle;
+        const stat = handle.stat.bind(handle), read = handle.read.bind(handle), readFile = handle.readFile.bind(handle);
+        Object.assign(handle, {
+          stat: async (...args: unknown[]) => {
+            const stats = await Reflect.apply(stat, handle, args) as { size: number | bigint };
+            if (!target.grew && typeof stats.size === 'bigint') {
+              chmodSync(target.file, 0o644);
+              writeFileSync(target.file, Buffer.alloc(8192), { flag: 'a' });
+              target.grew = true;
+            }
+            return stats;
+          },
+          read: async (...args: unknown[]) => {
+            const result = await Reflect.apply(read, handle, args) as { bytesRead: number };
+            target.actualBytes += result.bytesRead;
+            return result;
+          },
+          readFile: async (...args: unknown[]) => {
+            const result = await Reflect.apply(readFile, handle, args) as Buffer;
+            target.actualBytes += result.length;
+            return result;
+          },
+        });
+        return handle;
+      },
+    });
+    syncBuiltinESMExports();
+    try {
+      for (const target of targets) {
+        const result = await refusal(target.run());
+        expect(target.grew).toBe(true);
+        expect(target.actualBytes).toBe(target.size);
+        expect(result).toMatchObject({ reason: target.reason, message: expect.stringContaining('changed while being read') });
+      }
+    } finally { Object.assign(promises, { open }); syncBuiltinESMExports(); }
   });
   it('reads at the pinned commit, not at HEAD: commit one has the first version', async () => {
     const [big] = await reader(L, C1).readBlobs(['big.txt']);
@@ -294,7 +442,8 @@ describe('paths, types, and no state between calls', () => {
     const source = readFileSync(fileURLToPath(new URL('./git-object-reader.ts', import.meta.url)), 'utf8');
     expect(source.match(/^import .*$/gm)).toEqual([
       "import { createHash } from 'node:crypto';",
-      "import { constants, lstat, open, readdir, type FileHandle } from 'node:fs/promises';",
+      "import type { BigIntStats } from 'node:fs';",
+      "import { constants, lstat, open, opendir, readdir, type FileHandle } from 'node:fs/promises';",
       "import path from 'node:path';",
       "import { constants as zlib, inflateSync } from 'node:zlib';",
     ]);

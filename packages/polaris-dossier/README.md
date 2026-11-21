@@ -2,6 +2,15 @@
 
 The Polaris dossier command drivers and the run machinery behind them.
 
+The URL runtime build (`scripts/build_dossier_runtime.mjs`, also invoked by the
+product build) requires Linux and a C11 compiler at `/usr/bin/cc`. It compiles
+the first-party `session-peer.c` into a host-only `host/session-peer` executable,
+outside the role-visible `support/` mount. The manifest binds its source and
+output bytes; the host rechecks the helper before querying a connected Unix
+socket's kernel peer numbers. Those numbers alone establish neither a client's
+authorization nor its process lifetime or revocation state. Building these
+artifacts does not activate a URL run.
+
 ## Entry points
 
 The package barrel (`.`, `src/index.ts`) exports exactly two values, the command-line drivers the daemon dispatches to:

@@ -1,0 +1,48 @@
+import { describe, expect, it } from 'vitest';
+import { createUrlSessionBudget } from './url-session-budget.js';
+
+const admission = { digest: 'a'.repeat(64), bytes: 100, classes: ['governance-text'] as const, originIds: ['own:fixture'] };
+const usage = { inputTokens: 3, outputTokens: 5, cacheCreationInputTokens: 7, cacheReadInputTokens: 11 };
+describe('shared URL host budget capture', () => {
+  it('consumes reservations across roles before replies, keeps missing usage Unknown and enforces the shared turn boundary', () => {
+    const budget = createUrlSessionBudget({ deadline: 100, turnBudget: 2, tokenBudget: null, now: () => 1 });
+    expect(budget.snapshot()).toMatchObject({ requestReservations: 0, reportedTokens: 'Unknown', uncapturedUsage: 'Unknown' });
+    expect(budget.reserve('author', admission)).toBe(true); expect(budget.reserve('inventory', admission)).toBe(true);
+    expect(budget.snapshot().pendingRoles).toEqual(['author', 'inventory']);
+    expect(budget.observeUsage('author', usage)).toBe(true);
+    expect(budget.snapshot()).toMatchObject({ reportedTokens: 26, requestReservations: 2, completeUsageReports: 1, pendingRoles: ['inventory'] });
+    expect(budget.reserve('fidelity', admission)).toBe(false);
+    expect(budget.snapshot()).toMatchObject({ state: 'stopped', reason: 'turn-budget', requestReservations: 2 });
+    expect(budget.observeUsage('inventory', usage)).toBe(false);
+    expect(budget.snapshot()).toMatchObject({ completeUsageReports: 2, reportedTokens: 52, pendingRoles: [] });
+  });
+  it('counts all four provider counters and stops on overspend, malformed, duplicate or unreserved reports', () => {
+    const budget = createUrlSessionBudget({ deadline: 100, turnBudget: null, tokenBudget: 25, now: () => 1 });
+    expect(budget.reserve('author', admission)).toBe(true); expect(budget.observeUsage('author', usage)).toBe(false);
+    expect(budget.snapshot()).toMatchObject({ reason: 'token-budget', reportedTokens: 26, completeUsageReports: 1 });
+    for (const invalid of [null, { ...usage, extra: 1 }, { ...usage, inputTokens: -1 }, { ...usage, outputTokens: 1.5 },
+      { ...usage, cacheReadInputTokens: Number.MAX_SAFE_INTEGER }]) {
+      const b = createUrlSessionBudget({ deadline: 100, turnBudget: 10, tokenBudget: 100, now: () => 1 });
+      expect(b.reserve('author', admission)).toBe(true);
+      expect(b.observeUsage('author', invalid as typeof usage)).toBe(false); expect(b.snapshot().reason).toBe('invalid-usage');
+    }
+    const duplicate = createUrlSessionBudget({ deadline: 100, turnBudget: 10, tokenBudget: null, now: () => 1 });
+    expect(duplicate.observeUsage('author', usage)).toBe(false);
+    const b = createUrlSessionBudget({ deadline: 100, turnBudget: 10, tokenBudget: null, now: () => 1 });
+    b.reserve('author', admission); expect(b.observeUsage('author', usage)).toBe(true);
+    expect(b.observeUsage('author', usage)).toBe(false); expect(b.snapshot().reason).toBe('invalid-usage');
+  });
+  it('stops uncertain attempts permanently, checks clock failures and never refunds a consumed slot', () => {
+    let now = 1;
+    const b = createUrlSessionBudget({ deadline: 100, turnBudget: 10, tokenBudget: null, now: () => now });
+    b.reserve('author', admission); now = 100;
+    expect(b.observeUsage('author', usage)).toBe(false);
+    expect(b.snapshot()).toMatchObject({ reason: 'deadline', reportedTokens: 26, requestReservations: 1 });
+    const unknown = createUrlSessionBudget({ deadline: 100, turnBudget: 10, tokenBudget: null, now: () => 1 });
+    expect(unknown.reserve('author', admission)).toBe(true); expect(unknown.uncertainAttempt('author')).toBe(false);
+    expect(unknown.reserve('inventory', admission)).toBe(false); expect(unknown.snapshot()).toMatchObject({ reason: 'usage-unavailable', requestReservations: 1, reportedTokens: 'Unknown' });
+    const clock = createUrlSessionBudget({ deadline: 100, turnBudget: 10, tokenBudget: null, now: () => { throw new Error('own-clock'); } });
+    expect(clock.reserve('author', admission)).toBe(false);
+    expect(() => createUrlSessionBudget({ deadline: 100, turnBudget: null, tokenBudget: null, now: () => 1 })).toThrow();
+  });
+});

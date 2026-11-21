@@ -1,5 +1,5 @@
 import { commitPolicyFixture, policyFixture } from './full-run.testkit.js';
-import { DOSSIER_POLICY_PATH, readCommittedPolicy } from './policy-snapshot.js';
+import { committedUrlPoliciesCurrent, committedUrlPoliciesCurrentAsync, DOSSIER_POLICY_PATH, DOSSIER_URL_ORIGIN_POLICY_PATH, readCommittedPolicy, readCommittedUrlOriginPolicy } from './policy-snapshot.js';
 import { createHash } from 'node:crypto';
 import { buildSync } from 'esbuild';
 import { execFile, execFileSync } from 'node:child_process';
@@ -220,6 +220,33 @@ describe('init: a declared pinned source', () => {
     expect(fs.readFileSync(path.join(clone, '.git', 'shallow'), 'utf8')).toBe(`${commits.B}\n`);
     const { result } = await init({ clone, providerStatements: statements(STATEMENT) });
     expect(result.ok && result.report.subject.pinnedRevision.commit).toBe(commits.B);
+  });
+
+  it('accepts the exact SHA-256 init/fetch form and still rejects extra extensions before object reads (REQ-polaris-generation-047)', async () => {
+    const base = tempDir('dossier-sha256-admission-');
+    const upstream = path.join(base, 'upstream');
+    gitInitFromEmptyTemplate(upstream, ['--object-format=sha256', '-b', 'release-next']);
+    fs.writeFileSync(path.join(upstream, 'README.md'), '# Synthetic source\n');
+    gitIn(upstream, 'add', 'README.md');
+    gitIn(upstream, '-c', 'user.name=Synthetic fixture', '-c', 'user.email=fixture@invalid', 'commit', '-qm', 'synthetic SHA-256 snapshot');
+    const selected = gitIn(upstream, 'rev-parse', 'HEAD');
+    expect(selected).toMatch(/^[0-9a-f]{64}$/u);
+    const clone = path.join(base, 'clone');
+    gitInitFromEmptyTemplate(clone, ['--object-format=sha256']);
+    gitIn(clone, 'fetch', '-q', '--depth=1', '--no-tags', '--no-recurse-submodules', `file://${upstream}`, selected);
+    gitIn(clone, 'checkout', '-q', '--detach', selected);
+    const before = fs.readFileSync(path.join(clone, '.git', 'config'), 'utf8');
+    const admitted = await init({ clone });
+    expect(admitted.result.ok, admitted.result.ok ? undefined : admitted.result.refusal.reason).toBe(true);
+    if (admitted.result.ok) expect(admitted.result.report.subject.pinnedRevision.commit).toBe(selected);
+    expect(fs.readFileSync(path.join(clone, '.git', 'config'), 'utf8')).toBe(before);
+    for (const extra of ['\n[extensions]\n\tpartialclone = origin\n', '\n[include]\n\tpath = never-read-fixture-config\n']) {
+      fs.writeFileSync(path.join(clone, '.git', 'config'), before + extra);
+      const refused = await init({ clone });
+      expect(refused.result.ok).toBe(false);
+      expect(refused.readerOpened).toBe(false);
+      if (!refused.result.ok) expect(refused.result.refusal.stage).toBe('clone-shape');
+    }
   });
 
   it('starts from a clone of a root commit shallow at it, or with no shallow file: a root commit has no parent to cut', async () => {
@@ -678,6 +705,53 @@ describe('declared-source admission and continuation boundaries', () => {
     gitIn(root, 'add', DOSSIER_POLICY_PATH); gitIn(root, '-c', 'user.name=t', '-c', 'user.email=t@example.invalid', 'commit', '-qm', 'different policy');
     expect(await guard(run, root)).toMatchObject({ ok: false, refusals: [{ code: 'policy-changed' }] });
   });
+  it('loads the URL origin policy independently and refuses absent, dirty or wrong-species bindings', () => {
+    const root = records(), base = readCommittedPolicy(root);
+    expect(base.ok).toBe(true); expect(readCommittedUrlOriginPolicy(root).ok).toBe(false);
+    const file = path.join(root, DOSSIER_URL_ORIGIN_POLICY_PATH);
+    const bytes = JSON.stringify({ policyId: 'POLARIS-DOSSIER-URL-ORIGIN-SPECIES-POLICY-v1', policyVersion: '1.0.0', fixture: 'OWN-NONSECRET-ORIGIN' });
+    fs.writeFileSync(file, bytes);
+    expect(readCommittedUrlOriginPolicy(root).ok).toBe(false);
+    gitIn(root, 'add', DOSSIER_URL_ORIGIN_POLICY_PATH); gitIn(root, '-c', 'user.name=t', '-c', 'user.email=t@example.invalid', 'commit', '-qm', 'own fixture origin policy');
+    const origin = readCommittedUrlOriginPolicy(root);
+    expect(origin).toMatchObject({ ok: true, binding: { path: DOSSIER_URL_ORIGIN_POLICY_PATH,
+      policyId: 'POLARIS-DOSSIER-URL-ORIGIN-SPECIES-POLICY-v1', sha256: sha(bytes) } });
+    expect(readCommittedPolicy(root)).toMatchObject({ ok: true, binding: { sha256: base.ok ? base.binding.sha256 : '' } });
+    fs.appendFileSync(file, ' '); expect(readCommittedUrlOriginPolicy(root).ok).toBe(false);
+    fs.writeFileSync(file, JSON.stringify({ policyId: 'OWN-WRONG-SPECIES', policyVersion: '1.0.0' }));
+    gitIn(root, 'add', DOSSIER_URL_ORIGIN_POLICY_PATH); gitIn(root, '-c', 'user.name=t', '-c', 'user.email=t@example.invalid', 'commit', '-qm', 'own wrong species fixture');
+    expect(readCommittedUrlOriginPolicy(root)).toEqual({ ok: false, why: 'the committed URL origin policy has an unsupported identity or version' });
+  });
+  it.each([DOSSIER_POLICY_PATH, DOSSIER_URL_ORIGIN_POLICY_PATH])('rechecks the coherent committed pair when %s changes', async changed => {
+    const root = records(), overlay = path.join(root, DOSSIER_URL_ORIGIN_POLICY_PATH);
+    const commit = (message: string) => gitIn(root, '-c', 'user.name=Own fixture', '-c', 'user.email=own@example.invalid', 'commit', '-qm', message, '--allow-empty');
+    fs.writeFileSync(overlay, JSON.stringify({ policyId: 'POLARIS-DOSSIER-URL-ORIGIN-SPECIES-POLICY-v1', policyVersion: '1.0.0' }));
+    gitIn(root, 'add', DOSSIER_URL_ORIGIN_POLICY_PATH);
+    commit('Own origin policy');
+    const base = readCommittedPolicy(root), origin = readCommittedUrlOriginPolicy(root);
+    if (!base.ok || !origin.ok) throw new Error('Own committed policy pair is unreadable');
+    const current = () => committedUrlPoliciesCurrent(root, base.binding, origin.binding);
+    const currentAsync = () => committedUrlPoliciesCurrentAsync(root, base.binding, origin.binding);
+    expect(current()).toBe(true);
+    await expect(currentAsync()).resolves.toBe(true);
+    commit('Own unrelated commit');
+    gitIn(root, 'pack-refs', '--all');
+    expect(current()).toBe(true);
+    await expect(currentAsync()).resolves.toBe(true);
+    const file = path.join(root, changed), bytes = fs.readFileSync(file);
+    const pending = currentAsync();
+    fs.appendFileSync(file, ' ');
+    await expect(pending).resolves.toBe(false);
+    expect(current()).toBe(false);
+    await expect(currentAsync()).resolves.toBe(false);
+    gitIn(root, 'add', changed);
+    commit('Own changed policy');
+    expect(current()).toBe(false);
+    await expect(currentAsync()).resolves.toBe(false);
+    fs.writeFileSync(file, bytes);
+    expect(current()).toBe(false);
+    await expect(currentAsync()).resolves.toBe(false);
+  });
   it.each(['symlink', 'oversize', 'invalid-utf8', 'malformed-json'] as const)('refuses %s policy files without using their contents', kind => {
     const root = records(); const file = path.join(root, DOSSIER_POLICY_PATH);
     if (kind === 'symlink') {
@@ -725,97 +799,63 @@ describe('declared-source admission and continuation boundaries', () => {
   });
 });
 
-describe('preflight', () => {
-  const run = (root: string, input = URL_, now = NOW) => preflight(input, createPackageGateSources({ root, now: () => now }), now);
-  it('reports a ready repository, its consented revisions and the clone commands, reading no object', async () => {
-    const result = await run(records());
-    expect(result.ok).toBe(true);
+describe('preflight: declared metadata preparation', () => {
+  const run = (root: string, input = URL_) => preflight(input, createPackageGateSources({ root, now: () => NOW }), NOW);
+
+  it('prepares a locator and committed policy with every retired record port inaccessible', async () => {
+    const root = commitPolicyFixture(tempDir('preflight-no-records-'), policyFixture().bytes);
+    const actual = createPackageGateSources({ root, now: () => NOW });
+    const sources = new Proxy(actual, { get(target, key) {
+      if (key !== 'declaredPolicy') throw new Error(`retired source port read: ${String(key)}`);
+      return target.declaredPolicy;
+    } });
+    const result = await preflight(URL_, sources, NOW);
+    expect(result).toMatchObject({ ok: true, report: {
+      outcome: 'prepared', url: 'github.com/redis/redis', label: 'Inferred',
+      repository: { repositoryId: 'redis-redis', identitySource: 'derived' },
+      revision: { state: 'Unknown' }, visibility: { default: 'private', label: 'Inferred' },
+      screeningPolicy: { policyVersion: 'dossier-declared-source/1.0.0' },
+    } });
     if (!result.ok) return;
-    expect(result.report).toMatchObject({
-      outcome: 'ready',
-      url: 'github.com/redis/redis',
-      repository: { repositoryId: 'redis-redis' },
-      consentedRevisions: [{ label: 'fixture-a', commit: commits.A }, { label: 'fixture-b', commit: commits.B }, { label: 'fixture-c', commit: commits.C }],
-      startGates: { registryEntry: { state: 'ok', record: 'public-git-source-acquisition-local-agent-v1.1' }, screeningPolicy: { state: 'ok' } },
-      missing: [],
-      cloneCommands: [
-        'git init <dir>   # fixture-a: a new, empty directory for this revision alone', `git -C <dir> fetch --depth=1 'https://github.com/redis/redis' ${commits.A}`, 'git -C <dir> checkout --detach FETCH_HEAD',
-        'git init <dir>   # fixture-b: a new, empty directory for this revision alone', `git -C <dir> fetch --depth=1 'https://github.com/redis/redis' ${commits.B}`, 'git -C <dir> checkout --detach FETCH_HEAD',
-        'git init <dir>   # fixture-c: a new, empty directory for this revision alone', `git -C <dir> fetch --depth=1 'https://github.com/redis/redis' ${commits.C}`, 'git -C <dir> checkout --detach FETCH_HEAD',
-      ],
-    });
-    expect(result.report.cloneCommands.some((command) => /\bgit clone\b/u.test(command))).toBe(false);
+    expect(result.report).not.toHaveProperty('consentedRevisions');
+    expect(result.report).not.toHaveProperty('cloneCommands');
+    expect(result.report.disclosures).toContain('Prepared is not run readiness: the selected commit, supplied clone, declared provider/configuration and current policy still require validation at launch.');
   });
-  it('prints clone commands that leave the consented commit alone in the clone', async () => {
-    const result = await run(records());
-    if (!result.ok) throw new Error(result.reason);
-    // A local stand-in for the upstream, holding the consented commits and others; the printed commands run against it with the URL
-    // replaced, and the clone they make must hold exactly the one commit fetched.
-    const upstream = path.join(tempDir('preflight-upstream-'), 'redis.git');
-    const dir = path.join(tempDir('preflight-clone-'), 'redis');
-    execFileSync('git', ['clone', '-q', '--bare', '--no-local', origin, upstream], { env: GIT_ENV });
-    execFileSync('git', ['-C', upstream, 'config', 'uploadpack.allowAnySHA1InWant', 'true'], { env: GIT_ENV });
-    for (const line of result.report.cloneCommands.slice(3, 6)) {
-      // Split as the shell reads it: the URL is one single-quoted word (R-PDJA-33-SLICE-C-1 finding 7).
-      const command = line.replace(/\s+#.*$/u, '').replaceAll('<dir>', dir).replace(`'${URL_}'`, `'file://${upstream}'`);
-      const argv = [...command.matchAll(/'([^']*)'|(\S+)/g)].map(m => m[1] ?? m[2]!);
-      expect(argv[0]).toBe('git');
-      execFileSync('git', argv.slice(1), { env: GIT_ENV, stdio: 'pipe' });
-    }
-    expect(execFileSync('git', ['-C', dir, 'rev-parse', 'HEAD'], { encoding: 'utf8', env: GIT_ENV }).trim()).toBe(commits.B);
-    expect(execFileSync('git', ['-C', dir, 'rev-list', '--all'], { encoding: 'utf8', env: GIT_ENV }).trim().split('\n')).toEqual([commits.B]);
-    // And init starts a run on the clone those commands made (R-POLARIS-DOSSIER-CLONE-SHAPE-1 note N9).
-    const started = await init({ clone: dir, providerStatements: statements(STATEMENT) });
-    expect(started.result.ok && started.result.report.subject.pinnedRevision.commit).toBe(commits.B);
+
+  it('neither missing nor present historical acts change preparation', async () => {
+    expect(await run(records())).toMatchObject({ ok: true, report: { outcome: 'prepared' } });
+    expect(await run(records({ [CONSENT_ACT]: null, [POLICY_ACT]: null, [REGISTRY_ACT]: null })))
+      .toMatchObject({ ok: true, report: { outcome: 'prepared' } });
   });
-  it('names each missing record and is not ready', async () => {
-    const result = await run(records({ [CONSENT_ACT]: null, [POLICY_ACT]: null }));
-    expect(result.ok && result.report.outcome).toBe('not-ready');
-    expect(result.ok && result.report.missing).toEqual([
-      'observation consent: no observation consent in force has an Upstream that normalises to github.com/redis/redis: no observation record\'s Upstream normalises to github.com/redis/redis',
-      'classification and screening policy: no screening-scope policy act is recorded',
-    ]);
+
+  it('refuses missing or changed committed policy rather than using a policy act', async () => {
+    const root = records();
+    fs.appendFileSync(path.join(root, DOSSIER_POLICY_PATH), '\n');
+    expect(await run(root)).toMatchObject({ ok: false, reason: 'the dossier policy differs from its committed bytes; start only from a committed policy' });
+    fs.unlinkSync(path.join(root, DOSSIER_POLICY_PATH));
+    expect((await run(root)).ok).toBe(false);
   });
-  it('reports D9 and the RFC7-20 reading as not established: no owner-act record binds their digests', async () => {
-    const result = await run(records());
-    const why = (what: string) => `no owner-act record binds a digest of ${what}, so the act cross-check of RFC3-16(a) cannot establish it in force; a status word, a log row or a file's presence is not read as one`;
-    expect(result.ok && result.report.d9).toEqual({ state: 'absent', why: why('the D9 text (SEC-3 amendment)') });
-    expect(result.ok && result.report.rfc720Ruling).toEqual({ state: 'absent', why: why('the RFC7-20 reading (POLARIS-DOSSIER-LOCAL-AGENT-RULINGS-2026-10-05, item 1)') });
+
+  it('refuses a credential-bearing locator before consulting any source port and never echoes it', async () => {
+    const sources = new Proxy({} as ReturnType<typeof createPackageGateSources>, { get() { throw new Error('source read before URI validation'); } });
+    const result = await preflight('https://user:token@github.com/redis/redis', sources, NOW);
+    expect(result).toEqual({ ok: false, reason: 'the repository URL is not admitted: an https://, http:// or git:// locator carries no user information; it is not printed, stored or recorded' });
   });
-  it('reports D9 established on this checkout only once an act record binds it, though the doctrine amendment log records its adoption', async () => {
-    expect(fs.readFileSync(path.join(REAL_ROOT, DECISIONS_DIR, 'DOCTRINE-AMENDMENT-LOG.md'), 'utf8')).toMatch(/^\| D9 \|/m);
-    const result = await preflight(URL_, createPackageGateSources({ root: REAL_ROOT, now: () => Date.now() }), Date.now());
-    const recorded = (stem: string): 'ok' | 'absent' => (fs.existsSync(path.join(REAL_ROOT, DECISIONS_DIR, `DOSSIER-LOCAL-AGENT-${stem}-ACT.md`)) ? 'ok' : 'absent');
-    expect(result.ok && result.report.d9.state).toBe(recorded('D9-IN-FORCE'));
-    expect(result.ok && result.report.rfc720Ruling.state).toBe(recorded('RFC7-20-READING-IN-FORCE'));
-  }, TREE_TIMEOUT);
-  it('reports D9 and the RFC7-20 reading established once the sitting\'s acts bind their records, and only while the bound bytes hold', async () => {
-    const sitting = '.syzygy/governance/contracts/candidates/dossier-local-agent-acts/instances/in-force';
-    const copied = [`${sitting}/D9-IN-FORCE-RECORD.md`, `${sitting}/RFC7-20-READING-IN-FORCE-RECORD.md`, '.syzygy/governance/doctrine/security.md', '.syzygy/governance/doctrine/v1.md', `${DECISIONS_DIR}/POLARIS-DOSSIER-LOCAL-AGENT-RULINGS-DIRECTION.md`,
-      // D10 replaced the doctrine files D9 binds; the D9 reading holds over the replaced bytes only beside its record and manifest.
-      `${DECISIONS_DIR}/GOVERNANCE-SIMPLIFICATION-D10-ACT.md`, '.syzygy/governance/contracts/candidates/governance-simplification-d10/MANIFEST.txt'];
-    const real = (rel: string): string => fs.readFileSync(path.join(REAL_ROOT, rel), 'utf8');
-    const root = records({
-      ...Object.fromEntries(copied.map(rel => [rel, real(rel)])),
-      [`${DECISIONS_DIR}/DOSSIER-LOCAL-AGENT-D9-IN-FORCE-ACT.md`]: renderDossierLocalAgentAct('d9-in-force', sha(real(copied[0]!)), '2026-10-06', '2026-10-06T09:30:00Z'),
-      [`${DECISIONS_DIR}/DOSSIER-LOCAL-AGENT-RFC7-20-READING-IN-FORCE-ACT.md`]: renderDossierLocalAgentAct('rfc7-20-reading-in-force', sha(real(copied[1]!)), '2026-10-06', '2026-10-06T09:30:00Z'),
-    });
-    const ready = await run(root);
-    expect(ready.ok && [ready.report.d9, ready.report.rfc720Ruling]).toEqual([
-      { state: 'ok', record: 'D9-IN-FORCE-OPERATOR-AGENT-2026-10-06' }, { state: 'ok', record: 'RFC7-20-READING-IN-FORCE-OPERATOR-AGENT-2026-10-06' },
-    ]);
-    fs.appendFileSync(path.join(root, '.syzygy/governance/doctrine/security.md'), '\nedit\n');
-    const edited = await run(root);
-    expect(edited.ok && edited.report.d9).toEqual({ state: 'refused', why: 'the bytes of .syzygy/governance/doctrine/security.md differ from the digest the act\'s artifact binds' });
-    expect(edited.ok && edited.report.rfc720Ruling.state).toBe('ok');
+
+  it('screens secret-shaped metadata before returning a normalized locator', async () => {
+    const nonsecretCanary = 'AKIA' + 'A'.repeat(16);
+    const result = await run(records(), `https://git.example.org/team/${nonsecretCanary}`);
+    expect(result).toEqual({ ok: false, reason: 'the repository locator is excluded by the committed metadata screening policy; it is not printed or stored' });
+    expect(JSON.stringify(result)).not.toContain(nonsecretCanary);
   });
-  it('refuses a URL that is not an admitted locator, by its rule and never quoting it, and never fetches', async () => {
-    expect(await run(records(), 'https://user:token@github.com/redis/redis')).toEqual({ ok: false,
-      reason: 'the repository URL is not admitted: an https://, http:// or git:// locator carries no user information; it is not printed, stored or recorded' });
-  });
-  it('a locator on another host, or under another path, is read and simply matches no consent (no GitHub-only refusal)', async () => {
-    const other = await run(records(), 'https://github.com/redis/redis/tree/unstable');
-    expect(other.ok && other.report).toMatchObject({ outcome: 'not-ready', url: 'github.com/redis/redis/tree/unstable', repository: { repositoryId: null } });
+
+  it('normalizes another host and derives identity without matching any consent', async () => {
+    expect(await run(records(), 'https://git.example.org/team/tool.git')).toMatchObject({ ok: true, report: {
+      outcome: 'prepared', url: 'git.example.org/team/tool', repository: { repositoryId: 'team-tool', identitySource: 'derived' },
+    } });
+    expect(await run(records(), 'https://git.example.org/tool')).toMatchObject({ ok: true, report: {
+      repository: { repositoryId: null, identitySource: 'requires-explicit-identity' },
+    } });
   });
 });
 
@@ -857,14 +897,16 @@ describe('the CLI: preflight and init', () => {
     expect(result.code).toBe(2);
     expect(result.stderr.startsWith(`syzygy dossier: ${detail}\n`)).toBe(true);
   });
-  it('preflight exits 0 when ready and 1 when a record is missing, printing the report on stdout both times', async () => {
-    const ready = await cli(['preflight', URL_, '--json'], records());
-    expect(ready.code).toBe(0);
-    expect(JSON.parse(ready.stdout).outcome).toBe('ready');
-    const missing = await cli(['preflight', URL_], records({ [REGISTRY_ACT]: null }));
+  it('preflight exits 0 for preparation without registry records and 1 for a missing committed policy', async () => {
+    const prepared = await cli(['preflight', URL_, '--json'], records({ [REGISTRY_ACT]: null }));
+    expect(prepared.code).toBe(0);
+    expect(JSON.parse(prepared.stdout).outcome).toBe('prepared');
+    const root = records();
+    fs.unlinkSync(path.join(root, DOSSIER_POLICY_PATH));
+    const missing = await cli(['preflight', URL_, '--json'], root);
     expect(missing.code).toBe(1);
-    expect(missing.stdout).toContain('outcome: not-ready\n');
-    expect(missing.stdout).toMatch(/^missing\.0: source-acquisition registry entry: no owner-act record /m);
+    expect(JSON.parse(missing.stdout)).toMatchObject({ command: 'preflight', outcome: 'refused' });
+    expect(missing.stdout).not.toContain('observation consent:');
   });
 });
 

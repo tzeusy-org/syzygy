@@ -1,3 +1,4 @@
+import { isRunProductReads, productSelection, protectedHelperPrompt, protectedProductRecord, UrlProductReadRefusal, type RunProductReads } from './url-operation-products.js';
 import * as fs from 'node:fs';
 import * as path from 'node:path';
 import { parseBoundedJson } from '@syzygy/polaris-generation-core/live';
@@ -12,7 +13,7 @@ import { isoOf } from './iso-of.js';
 import type { Outcome } from './outcome.js';
 import type { ReverifyOptions, ReverifyRefusal } from './reverify.js';
 import {
-  PACKET_DIGEST_FILE, PACKET_FILE, REVIEW_CHECKS, isReviewKind, latestReviewSession, reviewCheck, reviewPromptRecordName, verdictFileName,
+  PACKET_DIGEST_FILE, PACKET_FILE, REVIEW_CHECKS, isReviewKind, latestReviewSession, reviewCheck, reviewLaunchRecordName, reviewPromptRecordName, verdictFileName,
   writePacket, type ReviewCheckResult, type ReviewDeps, type ReviewKind,
 } from './review.js';
 import type { ScreenLoader } from './screen.js';
@@ -236,10 +237,11 @@ export function waitModeRefusal(recordsRoot: string, signed?: () => boolean, now
 export interface WaitingSession { readonly session: number; readonly record: Readonly<Record<string, unknown>> }
 
 /** The latest session of a review kind, when its prompt record says it was started to wait. */
-export function waitingReviewSession(run: string, kind: ReviewKind): WaitingSession | null {
-  const session = latestReviewSession(run, kind);
+export function waitingReviewSession(run: string, kind: ReviewKind, products?: RunProductReads): WaitingSession | null {
+  const session = products === undefined ? latestReviewSession(run, kind) : 1;
   if (session === 0) return null;
-  const record = readRecord(path.join(run, RUN_LAYOUT.reviews, reviewPromptRecordName(kind, session)));
+  const file = path.join(RUN_LAYOUT.reviews, reviewPromptRecordName(kind, session));
+  const record = products === undefined ? readRecord(path.join(run, file)) : protectedHelperPrompt(products, run, kind);
   return record !== undefined && record['mode'] === WAITING_MODE ? { session, record } : null;
 }
 
@@ -247,14 +249,20 @@ export function waitingReviewSession(run: string, kind: ReviewKind): WaitingSess
 export interface Delivery { readonly round: number; readonly packetSha256: string; readonly packetBytes: number | null }
 
 /** The rounds delivered to a waiting review session, with their packet digests, in order. */
-export function deliveries(run: string, kind: ReviewKind, session: number): readonly Delivery[] {
-  let names: string[];
-  try { names = fs.readdirSync(path.join(run, RUN_LAYOUT.reviews)); } catch { return []; }
+export function deliveries(run: string, kind: ReviewKind, session: number, products?: RunProductReads): readonly Delivery[] {
+  let names: readonly string[];
+  if (products !== undefined) {
+    if (session !== 1) throw new Error('url-product-session-unavailable');
+    names = productSelection(products, run, kind === 'fidelity' ? 'fidelity-deliveries' : 'design-deliveries').map(file => path.basename(file));
+  } else {
+    try { names = fs.readdirSync(path.join(run, RUN_LAYOUT.reviews)); } catch { return []; }
+  }
   const pattern = DELIVERY_RECORD(kind, session);
   return names.flatMap((name) => {
     const match = pattern.exec(name);
     if (match === null) return [];
-    const record = readRecord(path.join(run, RUN_LAYOUT.reviews, name));
+    const file = path.join(RUN_LAYOUT.reviews, name);
+    const record = products === undefined ? readRecord(path.join(run, file)) : protectedProductRecord(products, run, file);
     const round = Number(match[1]);
     if (record === undefined || record['round'] !== round || typeof record['packetSha256'] !== 'string') return [];
     const bytes = record['packetBytes'];
@@ -314,7 +322,7 @@ export const DELIVERY_DISCLOSURES = [
  * `round-N/` files, `delivery.json` last and by rename, so a waiting slice never sees a partial round. */
 export function deliverToWaiting(
   run: string, runId: string, kind: ReviewKind, waiting: WaitingSession, built: { readonly bytes: string; readonly sha256: string },
-  packet: Readonly<Record<string, unknown>>, now: number, afterCheck: () => void = () => undefined,
+  packet: Readonly<Record<string, unknown>>, now: number, afterCheck: () => void = () => undefined, products?: RunProductReads,
 ): { readonly ok: true; readonly report: DeliveryReport } | { readonly ok: false; readonly reason: string } {
   const { session } = waiting;
   const relative = waiting.record['directory'];
@@ -325,7 +333,8 @@ export function deliverToWaiting(
   if (!resolved.ok) return { ok: false, reason: resolved.reason };
   // `afterCheck` is a test seam, run in the window between the check and the writes; every write for the session goes through `resolved.real`.
   afterCheck();
-  const earlier = deliveries(run, kind, session);
+  const earlier = deliveries(run, kind, session, products);
+  products?.revalidate();
   const round = earlier.length === 0 ? 1 : earlier[earlier.length - 1]!.round + 1;
   const packetBytes = Buffer.byteLength(built.bytes, 'utf8');
   const record = {
@@ -372,25 +381,34 @@ const CONTINUATION_BASIS = 'Syzygy\'s delivery records and the session identifie
 
 /** Whether the session of a counted verdict continued across revisions: it was delivered an earlier round, or an earlier checked verdict
  * of the same kind declares the same session identifier. */
-export function continuationOf(run: string, kind: ReviewKind, session: number, number: number, packetSha256: string, sessionId: string): Continuation {
-  const delivered = deliveries(run, kind, session);
-  const matching = delivered.filter((entry) => entry.packetSha256 === packetSha256);
-  const round = matching.length === 0 ? null : matching[matching.length - 1]!.round;
-  const earlierRounds = delivered.filter((entry) => (round === null ? true : entry.round < round)).map((entry) => entry.round);
+export function continuationOf(run: string, kind: ReviewKind, session: number, number: number, packetSha256: string, sessionId: string,
+  products?: RunProductReads, protectedDelivery?: { readonly round: number; readonly earlierRounds: readonly number[] }): Continuation {
+  const delivered = protectedDelivery === undefined ? deliveries(run, kind, session, products) : [];
+  const round = protectedDelivery?.round ?? delivered.filter((entry) => entry.packetSha256 === packetSha256).at(-1)?.round ?? null;
+  const earlierRounds = protectedDelivery?.earlierRounds
+    ?? delivered.filter((entry) => round === null || entry.round < round).map((entry) => entry.round);
   const earlierVerdicts: number[] = [];
-  for (let n = 0; n < number; n++) {
-    const check = readRecord(path.join(run, REVIEW_CHECKS, verdictFileName(kind, n)));
+  function* previousFiles() { for (let n = 0; n < number; n++) yield path.join(REVIEW_CHECKS, verdictFileName(kind, n)); }
+  const preceding = products === undefined ? previousFiles() : productSelection(products, run, `${kind}-checks`);
+  for (const file of preceding) {
+    const n = Number(path.basename(file).match(/-(0|[1-9][0-9]*)\.json$/u)?.[1]);
+    if (!Number.isSafeInteger(n) || n >= number) continue;
+    const check = products === undefined ? readRecord(path.join(run, file)) : protectedProductRecord(products, run, file);
     const recorded = check !== undefined && isRecord(check['session']) ? check['session']['sessionId'] : undefined;
     if (recorded === sessionId) earlierVerdicts.push(n);
   }
   const continuing = earlierRounds.length > 0 || earlierVerdicts.length > 0;
   const parts: string[] = [];
-  if (earlierRounds.length > 0) parts.push(`Syzygy delivered ${earlierRounds.length} earlier packet(s) to this ${kind} session (round${earlierRounds.length > 1 ? 's' : ''} ${earlierRounds.join(', ')}) before the one this verdict names${round === null ? '' : `, round ${round}`}`);
+  if (earlierRounds.length > 0) parts.push(protectedDelivery === undefined
+    ? `Syzygy delivered ${earlierRounds.length} earlier packet(s) to this ${kind} session (round${earlierRounds.length > 1 ? 's' : ''} ${earlierRounds.join(', ')}) before the one this verdict names${round === null ? '' : `, round ${round}`}`
+    : `the host audited earlier packet reads for rounds ${earlierRounds.join(', ')} before round ${round}, which this verdict names`);
   if (earlierVerdicts.length > 0) parts.push(`earlier ${kind} verdict(s) ${earlierVerdicts.join(', ')} declare the same session identifier`);
   const text = continuing
     ? `Continuing reviewer: ${parts.join('; ')}. It reviewed an earlier revision and has seen its own earlier verdict, which may anchor this one; the owner permits one reviewer to continue across revisions, disclosed here (${WAIT_MODE_DIRECTION}).`
     : 'No earlier packet was delivered to this review session, and no earlier verdict declares its session identifier.';
-  return { continuing, round, earlierRounds, earlierVerdicts, text, basis: CONTINUATION_BASIS, label: 'Inferred' };
+  const basis = protectedDelivery !== undefined ? 'Protected host audit and session identifiers declared in earlier checked verdicts'
+    : products === undefined ? CONTINUATION_BASIS : 'Authenticated supervisor delivery products and session identifiers declared in earlier checked verdicts';
+  return { continuing, round, earlierRounds, earlierVerdicts, text, basis, label: 'Inferred' };
 }
 
 export interface AwaitRequest {
@@ -417,6 +435,7 @@ export interface AwaitDeps {
   readonly probe: CheckDeps['probe'];
   readonly loadScreen?: ScreenLoader;
   readonly openReader?: ReverifyOptions['openReader'];
+  readonly productReads?: RunProductReads;
 }
 
 type Role = { readonly role: 'inventory'; readonly session: number } | { readonly role: 'review'; readonly kind: ReviewKind; readonly session: number };
@@ -481,6 +500,7 @@ const SUBMIT_JSON_LIMITS = Object.freeze({ maxBytes: DRAFT_MAX_BYTES, maxNodes: 
  * its findings (the spec's order: Syzygy writes the content, then checks it). */
 async function writeFromStdin(
   realDir: string, role: Role, name: string, readStdin: (maxBytes: number) => Promise<Uint8Array | null>,
+  beforeWrite?: () => void,
 ): Promise<string | null> {
   let target: string;
   if (role.role === 'inventory') {
@@ -501,6 +521,7 @@ async function writeFromStdin(
   try { text = new TextDecoder('utf-8', { fatal: true }).decode(bytes); } catch { return 'standard input is not UTF-8 text; nothing is written'; }
   if (text.trim() === '') return 'standard input is empty: pass the file\'s JSON as the command\'s standard input';
   try { parseBoundedJson(text, SUBMIT_JSON_LIMITS); } catch { return `standard input is not one bounded JSON document; nothing is written, and ${name} stays as it was`; }
+  beforeWrite?.();
   const pending = path.join(path.dirname(target), `.${path.basename(target)}.stdin`);
   try {
     // Never follow a link left at the pending name: remove it, then create the file exclusively.
@@ -515,6 +536,14 @@ async function writeFromStdin(
 
 /** `syzygy dossier await <session directory>/ [--round N] [--submit <file>] [--wait-minutes M]`. */
 export async function awaitSession(directoryArg: string, request: AwaitRequest, deps: AwaitDeps): Promise<AwaitResult> {
+  try { return await awaitPreparedSession(directoryArg, request, deps); }
+  catch (cause) {
+    if (!(cause instanceof UrlProductReadRefusal)) throw cause;
+    return { ok: false, refusal: { command: 'await', outcome: 'refused', stage: 'reverify', reason: cause.message, disclosures: AWAIT_DISCLOSURES } };
+  }
+}
+
+async function awaitPreparedSession(directoryArg: string, request: AwaitRequest, deps: AwaitDeps): Promise<AwaitResult> {
   const startedAt = deps.now();
   const refuse = (stage: string, reason: string, reasons?: readonly string[], refusals?: readonly ReverifyRefusal[]): AwaitResult =>
     ({ ok: false, refusal: { command: 'await', outcome: 'refused', stage, reason, ...(reasons ? { reasons } : {}), ...(refusals ? { refusals } : {}), disclosures: AWAIT_DISCLOSURES } });
@@ -536,17 +565,23 @@ export async function awaitSession(directoryArg: string, request: AwaitRequest, 
     : reviewMatch !== null && isReviewKind(reviewMatch[1]) ? { role: 'review', kind: reviewMatch[1], session: Number(reviewMatch[2]) } : null;
   if (role === null) return refuse('directory', `${directory} is not an inventory or review session directory`);
   const kindField = role.role === 'review' ? { kind: role.kind } : {};
+  const products = deps.productReads;
+  const what = 'the session waits for nothing more';
+  const opened = await openRun(run, deps.sources, startedAt, what, deps);
+  if (!opened.ok) return refuse(opened.stage, opened.reason, opened.reasons, opened.refusals);
+  if (opened.effective?.kind === 'url' && !isRunProductReads(products)) return refuse('reverify', 'the URL helper requires authenticated products');
+  if (products !== undefined && role.session !== 1) return refuse('session', 'the URL helper session number does not match its protected record');
+  if (products !== undefined && role.role === 'review' && role.kind === 'design') {
+    return refuse('packet', 'the URL design helper requires the specialized checked renderer product');
+  }
   const recordFile = role.role === 'inventory' ? path.join(run, RUN_LAYOUT.inventory, promptRecordName(role.session)) : path.join(run, RUN_LAYOUT.reviews, reviewPromptRecordName(role.kind, role.session));
-  const prompt = readRecord(recordFile);
+  const prompt = products === undefined ? readRecord(recordFile) : protectedHelperPrompt(products, run, role.role === 'inventory' ? 'inventory' : role.kind);
   if (prompt === undefined || typeof prompt['prompt'] !== 'string' || prompt['promptSha256'] !== sha256(prompt['prompt'])) {
     return refuse('session', `the prompt record of ${name} cannot be read or does not match its own digest`);
   }
   if (prompt['mode'] !== WAITING_MODE) return refuse('session', `${name} was not started to wait: only a session started from \`syzygy dossier session-prompt ${run} all\` waits`);
   if (prompt['directory'] !== path.relative(path.dirname(run), directory)) return refuse('session', `the prompt record of ${name} names another directory`);
 
-  const what = 'the session waits for nothing more';
-  const opened = await openRun(run, deps.sources, startedAt, what, deps.openReader ? { openReader: deps.openReader } : {});
-  if (!opened.ok) return refuse(opened.stage, opened.reason, opened.reasons, opened.refusals);
   const self = `syzygy dossier await ${directoryArg}`;
   const resolved = resolveSessionDirectory(parent, directory);
   if (!resolved.ok) return refuse('directory', resolved.reason);
@@ -555,17 +590,25 @@ export async function awaitSession(directoryArg: string, request: AwaitRequest, 
   if (request.stdin === true && request.submit === undefined) return refuse('usage', '--stdin applies only with --submit');
   if (request.submit !== undefined) {
     if (request.round !== undefined || request.waitMinutes !== undefined) return refuse('usage', '--submit takes no --round or --wait-minutes');
-    const latest = role.role === 'inventory' ? latestInventorySession(run) : latestReviewSession(run, role.kind);
+    const latest = products !== undefined ? 1 : role.role === 'inventory' ? latestInventorySession(run) : latestReviewSession(run, role.kind);
     if (latest !== role.session) return refuse('submit', `${name} is no longer the latest ${role.role === 'inventory' ? 'inventory' : role.kind} session, so its file is not checked`);
+    const submittedRounds = products !== undefined && role.role === 'review' ? deliveries(run, role.kind, role.session, products) : undefined;
+    if (products !== undefined && request.stdin !== true) return refuse('submit', 'the URL supervisor must receive the actual submission bytes');
+    if (submittedRounds !== undefined) {
+      const round = submittedRounds.at(-1)?.round;
+      if (round === undefined || request.submit !== `${roundDirName(round)}/verdict.json`)
+        return refuse('submit', 'the verdict must identify the latest protected delivery to this review session');
+    }
     if (request.stdin === true) {
       // The session holds no write permission: Syzygy writes the role's own file from standard input, then checks it.
-      const stdinRefusal = await writeFromStdin(realDir, role, request.submit, deps.readStdin ?? ((maxBytes) => readStdinBytes(maxBytes)));
+      const stdinRefusal = await writeFromStdin(realDir, role, request.submit, deps.readStdin ?? ((maxBytes) => readStdinBytes(maxBytes)), products?.revalidate);
       if (stdinRefusal !== null) return refuse('submit', stdinRefusal);
     }
     const file = realOrNull(path.resolve(realDir, request.submit));
     if (file === null || !file.startsWith(`${realDir}${path.sep}`)) return refuse('submit', `the file to submit must exist inside ${directory}`);
     const deps2: CheckDeps & ReviewDeps = {
       sources: deps.sources, now: deps.now, probe: deps.probe, ...(deps.loadScreen ? { loadScreen: deps.loadScreen } : {}), ...(deps.openReader ? { openReader: deps.openReader } : {}),
+      ...(products === undefined ? {} : { productReads: products }),
     };
     if (role.role === 'inventory') {
       const result: InventoryCheckResult = await checkInventory(run, { inventoryFile: file }, deps2);
@@ -580,7 +623,7 @@ export async function awaitSession(directoryArg: string, request: AwaitRequest, 
     const result: ReviewCheckResult = await reviewCheck(run, { verdictFile: file, kind: role.kind }, deps2);
     if (!result.ok) return refuse('check', result.refusal.reason, result.refusal.reasons);
     const passed = result.report.outcome === 'validated';
-    const delivered = deliveries(run, role.kind, role.session);
+    const delivered = submittedRounds ?? deliveries(run, role.kind, role.session);
     const nextRound = (delivered.length === 0 ? 0 : delivered[delivered.length - 1]!.round) + 1;
     return { ok: true, report: {
       command: 'await', format: AWAIT_FORMAT, outcome: 'submitted', role: 'review', kind: role.kind, session: role.session, passed, check: result.report as unknown as Readonly<Record<string, unknown>>,
@@ -615,7 +658,16 @@ export async function awaitSession(directoryArg: string, request: AwaitRequest, 
   const roundDir = path.join(directory, roundDirName(round));
   const sleep = deps.sleep ?? ((ms: number) => new Promise<void>((resolve) => { setTimeout(resolve, ms); }));
   const sliceEnds = Math.min(startedAt + minutes * 60_000, opened.deadlineEnds);
-  for (;;) {
+  const selected = products === undefined ? null : deliveries(run, role.kind, role.session, products).find(item => item.round === round);
+  if (selected === undefined) {
+    products!.revalidate();
+    return { ok: true, report: {
+      command: 'await', format: AWAIT_FORMAT, outcome: 'waiting', role: 'review', ...kindField, session: role.session, round,
+      waitedUntil: isoOf(deps.now()), deadline: isoOf(opened.deadlineEnds), next: 'The requested round has no committed delivery yet.',
+      disclosures: AWAIT_DISCLOSURES,
+    } };
+  }
+  while (products === undefined) {
     if (fs.existsSync(path.join(roundDir, DELIVERY_FILE))) break;
     if (fs.existsSync(path.join(run, RUN_LAYOUT.record))) {
       logStep(run, 'await', deps.now(), { outcome: 'ended', role: 'review', kind: role.kind, session: role.session, round });
@@ -640,7 +692,7 @@ export async function awaitSession(directoryArg: string, request: AwaitRequest, 
 
   // Delivered: the gates again, then the digest three ways.
   const at = deps.now();
-  const reopened = await openRun(run, deps.sources, at, what, deps.openReader ? { openReader: deps.openReader } : {});
+  const reopened = products === undefined ? await openRun(run, deps.sources, at, what, deps) : opened;
   if (!reopened.ok) return refuse(reopened.stage, reopened.reason, reopened.reasons, reopened.refusals);
   let delivery: unknown, packetBytes: Uint8Array, digestLine: string;
   try {
@@ -648,13 +700,15 @@ export async function awaitSession(directoryArg: string, request: AwaitRequest, 
     packetBytes = new Uint8Array(fs.readFileSync(path.join(roundDir, PACKET_FILE)));
     digestLine = fs.readFileSync(path.join(roundDir, PACKET_DIGEST_FILE), 'utf8');
   } catch (cause) { return refuse('rehash', `round ${round} cannot be read (${errno(cause)}); stop, and tell the operator`); }
-  const record = readRecord(path.join(run, RUN_LAYOUT.reviews, deliveryRecordName(role.kind, role.session, round)));
+  const record = products === undefined ? readRecord(path.join(run, RUN_LAYOUT.reviews, deliveryRecordName(role.kind, role.session, round)))
+    : protectedProductRecord(products, run, path.join(RUN_LAYOUT.reviews, deliveryRecordName(role.kind, role.session, round)));
   const actual = sha256(packetBytes);
   const named = isRecord(delivery) && delivery['round'] === round && delivery['kind'] === role.kind && delivery['session'] === role.session ? delivery['packetSha256'] : undefined;
   if (named !== actual || digestLine !== `${actual}  ${PACKET_FILE}\n` || record === undefined || record['packetSha256'] !== actual) {
     logStep(run, 'await', at, { outcome: 'refused', stage: 'rehash', role: 'review', kind: role.kind, session: role.session, round });
     return refuse('rehash', `round ${round}'s ${PACKET_FILE} does not hash to the digest in ${DELIVERY_FILE}, ${PACKET_DIGEST_FILE} and the delivery record Syzygy wrote; do not read it: stop, and tell the operator`);
   }
+  products?.revalidate();
   logStep(run, 'await', at, { outcome: 'delivered', role: 'review', kind: role.kind, session: role.session, round, packetSha256: actual });
   const verdictFile = path.join(roundDirName(round), 'verdict.json');
   return { ok: true, report: {

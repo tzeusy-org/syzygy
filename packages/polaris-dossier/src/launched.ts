@@ -3,6 +3,7 @@ import * as path from 'node:path';
 import { sha256 } from '@syzygy/support';
 import { RUN_LAYOUT } from './state-directory.js';
 import { isoOf } from './iso-of.js';
+import { readEffectiveRunRecord, type EffectiveRunAuthority } from './effective-run-record.js';
 
 /** Launched runs (candidate REQ-polaris-generation-040 to 044; prototype under owner direction
  * POLARIS-DOSSIER-ONE-COMMAND-RUN-2026-10-14).
@@ -11,7 +12,9 @@ import { isoOf } from './iso-of.js';
  * `launched.json`, written by the supervisor right after `init`, which no session can write (each session's view holds the run directory
  * read-only or not at all). A launch record names the launch form `syzygy-launched` and what Syzygy itself did to start the session,
  * labelled Observed: the executable, the digest of the full command line, the directory, the view's digest, the process and the instant.
- * In a launched run the operator-declared forms `terminal` and `bang` are refused, and in any other run `syzygy-launched` is. */
+ * These are the legacy prototype labels. A protected effective URL declaration instead requires stored launch history to remain
+ * Inferred; its mode is independently read through the caller's authority, never inferred from a sidecar. In a launched run the
+ * operator-declared forms `terminal` and `bang` are refused, and in any other run `syzygy-launched` is. */
 
 export const LAUNCHED_FORMAT = 'polaris-dossier-launched/1';
 export const LAUNCH_RECORD_FORMAT = 'polaris-dossier-launch-record/1';
@@ -123,8 +126,18 @@ export function writeLaunchRecord(
 }
 
 /** Whether a recorded launch form is acceptable for this run: `terminal` or `bang`, operator-declared and Inferred, in a run Syzygy did not
- * launch; `syzygy-launched`, recorded by Syzygy and Observed, in a run it did. Null when acceptable; the reason otherwise. */
-export function launchFormRefusal(runDir: string, form: Readonly<Record<string, unknown>>): string | null {
+ * launch; legacy `syzygy-launched`, recorded by Syzygy and Observed, in a run it did. Explicit protected URL authority selects only
+ * Inferred stored launch history. Missing authority retains the legacy API, without deriving authority from writable metadata.
+ * Null when acceptable; the reason otherwise. */
+export function launchFormRefusal(runDir: string, form: Readonly<Record<string, unknown>>, authority?: EffectiveRunAuthority): string | null {
+  if (authority !== undefined) {
+    const read = readEffectiveRunRecord(runDir, authority);
+    if (!read.ok) return 'the effective run binding cannot be verified, so no launch form counts';
+    if (read.effective.kind === 'url') {
+      return form['value'] === SYZYGY_LAUNCHED && form['declaredBy'] === 'syzygy' && form['label'] === 'Inferred' ? null
+        : 'a URL run counts only stored syzygy-launched history labelled Inferred';
+    }
+  }
   const state = launchedMarkerState(runDir);
   if (state === 'unreadable') return 'the run\'s launched marker is present but cannot be read as the one Syzygy writes, so no launch form counts, declared or syzygy-launched';
   if (state === 'launched') {
