@@ -15,4 +15,4 @@
 
 ## Rollback after a veto
 
-Keep the adoption row as history, run the row's recorded revert (the D7 narrowing, the post-review repair, then the install; together they remove the successor policy, this package and the checker wiring), revert the row's own commit's census, status and index changes, and append a new row recording the veto; a vetoed change is not adopted again without the owner. With the veto row in place, the checker reads the version 2.0 text as effective again. If the classifier change has landed by then, revert it first: it is what makes runs bind the successor.
+Keep the adoption row as history, run the row's recorded revert (the owner-named restoration, the D7 narrowing, the post-review repair, then the install; together they remove the successor policy, this package and the checker wiring), revert the row's own commit's census, status and index changes, and append a new row recording the veto; a vetoed change is not adopted again without the owner. With the veto row in place, the checker reads the version 2.0 text as effective again. If the classifier change has landed by then, revert it first: it is what makes runs bind the successor.
