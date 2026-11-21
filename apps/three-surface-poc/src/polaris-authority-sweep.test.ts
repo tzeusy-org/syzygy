@@ -40,6 +40,8 @@ const MACHINE_CEILING_DECISION = /^OWNER-DIRECTION-MACHINE-CEILING-2026-10-15$/;
 // The D10 owner act declares an artifact identity rather than a Decision ID line.
 const D10_DECISION = /^GOVERNANCE-SIMPLIFICATION-D10$/;
 
+const URL_ORIGIN_POLICY = /^POLARIS-DOSSIER-URL-ORIGIN-SPECIES-POLICY-v1$/;
+
 /** Hand-typed warrant id families (a new family must be added here). */
 const WARRANT_FAMILIES = [
   GENERATOR_REQUIREMENT,
@@ -47,6 +49,7 @@ const WARRANT_FAMILIES = [
   DOSSIER_RUNNER_DECISION,
   MACHINE_CEILING_DECISION,
   D10_DECISION,
+  URL_ORIGIN_POLICY,
   /^(VIS|SEC|SDR|RFC\d+|CC-[A-Z]+|POC-REQ|PWB-REQ|CAP1-REQ)-\d+[a-z]?(\([a-z]\))?$/,
   /^(POC|POLARIS|PWB-STATE1-AMENDMENT)-DIR-\d{4}-\d{2}-\d{2}$/,
   // Redis local-agent owner directions: `Decision ID:` in decisions/REDIS-LOCAL-AGENT-SITTING-DIRECTION.md.
@@ -168,6 +171,10 @@ describe('Zero downstream citations of Polaris as authority (PWB-REQ-014)', () =
       } else if (DOSSIER_DECISION.test(entry.value)) {
         expect(entry.key).toBe('decisions');
         expect(declaredDecisions.has(entry.value), `${entry.value} must have an owning Decision ID declaration`).toBe(true);
+      } else if (URL_ORIGIN_POLICY.test(entry.value)) {
+        expect(entry.key).toBe('policies');
+        const path = join(REPO_ROOT, '.syzygy/governance/policies', `${entry.value}.json`);
+        expect(JSON.parse(readFileSync(path, 'utf8'))).toMatchObject({ policyId: entry.value, policyVersion: '1.0.0' });
       } else {
         expect(entry.key).toBe('decisions');
         expect(entry.value).toMatch(/^POLARIS-DIR-\d{4}-\d{2}-\d{2}$/);
