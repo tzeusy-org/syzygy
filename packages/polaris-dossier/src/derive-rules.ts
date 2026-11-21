@@ -53,5 +53,11 @@ export const MANIFEST_NAMES = {
   basenames: ['package.json', 'Cargo.toml', 'pyproject.toml', 'setup.py', 'go.mod', 'pom.xml', 'build.gradle', 'build.gradle.kts', 'Gemfile', 'composer.json', 'mix.exs', 'Package.swift'],
 } as const;
 
-export const DERIVE_RULES: readonly DeriveRuleId[] = [VENDORED_PATH, GENERATED_PATH, LANGUAGE_BY_EXTENSION, DOCS_TREE, TESTS_PATH, MANIFEST_NAMES]
+/** A top-level unit (REQ-polaris-generation-034 version 2.3, syzygy-3efd.27): over the blob entries (modes 100644, 100755, 120000) whose
+ * path and every directory prefix no secret detector matches, a path of one segment is a file at the root and a path of two or more
+ * belongs to the top-level directory its first segment names. Its facts are the only derived facts a dossier renders: `tree-root`,
+ * `top-level-unit` and `contains`, the containment the path itself states. */
+export const TOP_LEVEL_UNIT = { id: 'top-level-unit', version: 1 } as const;
+
+export const DERIVE_RULES: readonly DeriveRuleId[] = [VENDORED_PATH, GENERATED_PATH, LANGUAGE_BY_EXTENSION, DOCS_TREE, TESTS_PATH, MANIFEST_NAMES, TOP_LEVEL_UNIT]
   .map(({ id, version }) => ({ id, version }));

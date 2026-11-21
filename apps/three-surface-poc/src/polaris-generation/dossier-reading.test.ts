@@ -40,8 +40,8 @@ describe('Poles: a landing page with the why section and a map, then one page pe
     const files = withPoles(SPEC);
     const pole = files.get('poles/2.html')!;
     expect(pole).toContain('<section id="pole" data-reading-level="1" data-pole="poles/2.html" data-hue="2">');
-    expect(pole).toContain('<figure><figcaption>Loop</figcaption>');
-    expect(files.get('index.html')!).toContain('<figure data-hue="1"><figcaption>Flow</figcaption>');
+    expect(pole).toContain('<figure data-visual-provenance="curated"><figcaption>Loop</figcaption>');
+    expect(files.get('index.html')!).toContain('<figure data-hue="1" data-visual-provenance="curated"><figcaption>Flow</figcaption>');
   });
 
   it('loses and repeats no claim against the page division with no Poles', () => {
@@ -215,7 +215,7 @@ describe('colour: six hues for Poles, diagrams and cards, none carrying a claim 
 
   it('gives each diagram outside a Pole page a hue in turn, and a diagram on a Pole page its Pole\'s', () => {
     const files = render();
-    const figures = [...files].flatMap(([path, html]) => path.endsWith('.html') ? [...html.matchAll(/<figure( data-hue="(\d)")?><figcaption>[^<]*<\/figcaption><p class="diagram-relationship">/gu)].map(match => ({ path, hue: match[2] })) : []);
+    const figures = [...files].flatMap(([path, html]) => path.endsWith('.html') ? [...html.matchAll(/<figure( data-hue="(\d)")? data-visual-provenance="curated"><figcaption>[^<]*<\/figcaption><p class="diagram-relationship">/gu)].map(match => ({ path, hue: match[2] })) : []);
     expect(figures.length).toBeGreaterThan(0);
     expect(figures[0]).toEqual({ path: 'index.html', hue: '1' });
     for (const figure of figures) expect(figure.hue === undefined, figure.path).toBe(figure.path.startsWith('poles/'));
