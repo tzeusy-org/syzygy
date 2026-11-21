@@ -2520,6 +2520,7 @@ exclusion of the acts in force stands.
         # a closed list, so any other new package still fails the census.
         later = {"polaris-dossier-local-agent-mode@1.3", "polaris-dossier-local-agent-mode@1.4",
                  "polaris-dossier-local-agent-mode@1.5", "polaris-dossier-local-agent-mode@1.6",
+                 "polaris-dossier-local-agent-mode@1.7",
                  "polaris-dossier-launch-consent", "polaris-dossier-launch-consent@1.1",
                  "polaris-dossier-launch-consent@1.2",
                  "public-git-source-acquisition-local-agent@1.1"}

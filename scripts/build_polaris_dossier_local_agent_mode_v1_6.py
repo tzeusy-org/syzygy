@@ -5,7 +5,7 @@ The three candidate patches extend signed v1.5. --check and --selftest
 write no repository target; apply() is called only by the existing
 versioned-signoff recorder after the owner's actual version selection.
 The predecessor builder peels this layer and delegates latest-signed
-checks here. Review binding remains the recorder's existing spec binding;
+checks here; this builder does the same for the v1.7 layer. Review binding remains the recorder's existing spec binding;
 its candidate-package drift guards remain unchanged. No product behavior,
 P115 act, consent, or observed-project execution permission is added.
 """
@@ -69,10 +69,27 @@ sha = v11.sha
 
 # --- patches in a scratch copy -------------------------------------------------
 
+def peeled(root: pathlib.Path) -> dict[pathlib.Path, bytes] | None:
+    """The v1.6 layer, with applied v1.7 patches reversed if present."""
+    import build_polaris_dossier_local_agent_mode_v1_7 as v17
+    if not (root / v17.CANDIDATE).is_dir():
+        return None
+    return v17.backward(root)
+
+
+def _spec(root: pathlib.Path) -> bytes:
+    later = peeled(root)
+    return later[SPEC] if later is not None else (root / SPEC).read_bytes()
+
+
 def _copy_targets(root: pathlib.Path, scratch: pathlib.Path) -> None:
-    """The tree's own bytes: this layer is the top one, so nothing is peeled."""
+    """The v1.6 layer, with any applied v1.7 patches peeled off."""
+    later = peeled(root)
     for rel in TARGETS:
-        if (root / rel).is_file():
+        if later is not None:
+            (scratch / rel).parent.mkdir(parents=True, exist_ok=True)
+            (scratch / rel).write_bytes(later[rel])
+        elif (root / rel).is_file():
             (scratch / rel).parent.mkdir(parents=True, exist_ok=True)
             shutil.copyfile(root / rel, scratch / rel)
 
@@ -183,7 +200,7 @@ def check(root: pathlib.Path = ROOT) -> list[str]:
                 (root / SUBJECTS).read_text(encoding="utf-8") != proposed_subjects(root)):
             findings.append(f"{SUBJECTS.as_posix()} is stale; regenerate it with --write-subjects")
     else:
-        findings += v11._shape((root / SPEC).read_bytes(), SPEC.as_posix())
+        findings += v11._shape(_spec(root), SPEC.as_posix())
     return findings
 
 
@@ -197,9 +214,17 @@ def signed_findings(root: pathlib.Path) -> list[str]:
     if not versions or versions[-1] < (1, 6):
         return v15.signed_findings(root)
     latest = versions[-1]
-    if latest != (1, 6):
-        return [f"recorded version {latest[0]}.{latest[1]} has no builder; its bytes cannot be "
-                "told from unsigned ones"]
+    if latest == (1, 6):
+        findings = signed_v16_findings(root)
+        if peeled(root) is not None:
+            findings.append("the tree carries the v1.7 patches, which no sign-off record covers")
+        return findings
+    import build_polaris_dossier_local_agent_mode_v1_7 as v17
+    return v17.signed_findings(root)
+
+
+def signed_v16_findings(root: pathlib.Path) -> list[str]:
+    """Whether the v1.6 layer, any later patches peeled, is the signed v1.6."""
     if not (root / CANDIDATE).is_dir():
         return [f"{V16_RECORD.as_posix()} exists but the v{VERSION} package is absent"]
     findings = [f"v1.5 signed bytes: {f}" for f in v15.signed_v15_findings(root)]
@@ -208,7 +233,7 @@ def signed_findings(root: pathlib.Path) -> list[str]:
         return findings + [f"the tree is not v1.5 plus the v{VERSION} patches as recorded "
                            f"(found {current})"]
     reviewed = v11.review_digest(root, V16_RECORD)
-    if reviewed is None or sha((root / SPEC).read_bytes()) != reviewed:
+    if reviewed is None or sha(_spec(root)) != reviewed:
         findings.append(f"the v{VERSION} spec is not the bytes its review read")
     return findings
 
@@ -366,11 +391,11 @@ def selftest() -> int:
                         and any("v1.5 signed bytes" in f for f in check(root))))
         v15._record_v15(root, digest=base_digest)
         results.append(("restored: signed", signed_findings(root) == [] and battery(root) == []))
-        (root / DECISIONS / f"{RECORD_STEM}-SIGNOFF-v1.7.md").write_text("Review: x\n")
+        (root / DECISIONS / f"{RECORD_STEM}-SIGNOFF-v1.8.md").write_text("Review: x\n")
         results.append(("a later version no builder knows fails",
                         any("has no builder" in f for f in signed_findings(root))
                         and any("has no builder" in f for f in v10.check(root))))
-        (root / DECISIONS / f"{RECORD_STEM}-SIGNOFF-v1.7.md").unlink()
+        (root / DECISIONS / f"{RECORD_STEM}-SIGNOFF-v1.8.md").unlink()
         spec = (root / SPEC).read_text()
         (root / SPEC).write_text(spec.replace(V16_MARKER, "#### Scenario: edited after v1.6\n"))
         results.append(("applied and signed, then the spec edited: the tree is neither state",
