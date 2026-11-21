@@ -277,7 +277,10 @@ describe('brief: issued', () => {
 
 // The brief version 2.3 issued (polaris-dossier-brief-v10), captured at commit 379be88d, before version 2.4, for this fixture run with
 // a pinned tree holding `src/server.c`: issueBrief(runDirectory(), { sources: sources(), openReader: tree(['src/server.c']), now: () => NOW }),
-// the file holding `{"brief": <brief.md>}`. Nothing rewrites it.
+// the file holding `{"brief": <brief.md>}`. Nothing rewrites it. Recaptured 2026-11-22 the same way at 379be88d with only
+// `.syzygy/governance/doctrine/security.md` replaced by its bytes at 4086c1b0 (doctrine amendment D13): the only line that
+// changed is SEC-3's file digest, its quoted lines 74–76 unchanged; a capture with 379be88d's own file reproduced the earlier golden.
+// A later change to security.md is recaptured the same way, never hand-edited.
 const BRIEF_V10_GOLDEN = new URL('./brief-v10-golden.json', import.meta.url);
 // Shape packs (REQ-polaris-generation-034 version 2.4, syzygy-3efd.43). Digests are literals computed outside the module under test.
 const V1_SHA = 'ede073f11ee7eaf5832cba4b8c7addd0bb9ae1cb3b058b7f0ef502aefb7e9555';
