@@ -33,7 +33,7 @@
   {
    "id": "U2",
    "title": "State the orphan predicate: which unrecorded items are Contradictions and which are Unknown-provenance",
-   "what": "Amend RFC1-29, RFC8-8 and RFC8-23 so an item is an orphaned-work Contradiction only when a Syzygy record or a pointer Syzygy wrote claims it and no matching record agrees; every other unrecorded item is Unknown-provenance. Detect it, render it unfilterable, route it to the owner. Adjudicates nothing until the owner answers.",
+   "what": "Amend RFC1-29, RFC8-8 and RFC8-23 so an item is an orphaned-work Contradiction only when a Syzygy record or a pointer Syzygy wrote claims it and no matching record agrees; every other unrecorded item is Unknown-provenance. Detect it, render it unfilterable, and let an agent adjudicate by adoption row (the adjudicating session claimed none of the items), reported and open to veto.",
    "why": "Read literally, RFC1-29 and RFC8-8 make all 10,971 proving-project items orphaned-work Contradictions ('Scheduler work items matching no materialization record are an orphaned-work contradiction'); RFC8-23 says pre-Syzygy backlog is Unknown-provenance. The first real record (T7) makes the contradiction live.",
    "finding_ids": [
     "B2-F3",
@@ -43,12 +43,13 @@
     "contract amendment with semantic delta",
     "POC spec limb RFC8-23 / CONTRACT-COVERAGE row 192",
     "detector over observed items + ledger",
-    "unfilterable rendering + adjudication route"
+    "unfilterable rendering + adjudication route",
+    "reword \"owner adjudication\" in RFC1-21, RFC1-29, RFC2-15, RFC8-8, RFC8-23"
    ],
    "owner_value": 5,
    "build_cost": 2,
    "prereq": "none for the amendment; detection needs U4's ledger reader",
-   "owner_class": "amendment: no. Adjudication of a detected orphan: yes, doctrine architecture.md routes it to the owner"
+   "owner_class": "no — doctrine architecture.md:134-137: an agent resolves a contradiction by a recorded adoption"
   },
   {
    "id": "U12",
@@ -251,7 +252,7 @@
    "owner_value": 4,
    "build_cost": 3,
    "prereq": "U2, U4",
-   "owner_class": "declaring warrants: no. It never adjudicates a Contradiction"
+   "owner_class": "no"
   },
   {
    "id": "U11",
@@ -425,14 +426,7 @@
   "The P-100 packet itself (read only its DECISION-HISTORY rows); what the unread external_ref values hold on Butlers.",
   "Whether syzygy-a4ry / syzygy-nosn already settle which merge-fact reading U9 should bind to."
  ],
- "owner_gates": [
-  {
-   "decision": "pursuit-2026-11-21-trajectory-orphan-adjudication",
-   "question": "May an agent adoption adjudicate an orphaned-work Contradiction, or does adjudication stay with the owner?",
-   "deciding_text": ".syzygy/governance/doctrine/architecture.md: a contradiction \"routes to adjudication by the owner\"; VIS-4 lower-rules clause lists contract, policy, specification, decision or direction, not doctrine",
-   "blocks": "adjudication only; U2 detection and rendering proceed"
-  }
- ],
+ "owner_gates": [],
  "flagged_for_veto": [
   "U2",
   "U7",
@@ -995,6 +989,10 @@
   "reviewed_commit": "8360c84c1",
   "verdict": "REVISE",
   "rounds": 1,
-  "disposition": "nine findings, each repaired once; see the dossier section \"Corrections after independent review\""
- }
+  "disposition": "nine findings, each repaired once; see the dossier section \"Corrections after independent review\"",
+  "owner_question": "drafted, independently reviewed (Scope Revise, Recommendation Revise: do not ask), withdrawn"
+ },
+ "reported_to_owner": [
+  "doctrine residue: architecture.md:166-167 (\"routes to adjudication by the owner\") contradicts architecture.md:134-137 as amended by D10; only the owner may edit doctrine"
+ ]
 }

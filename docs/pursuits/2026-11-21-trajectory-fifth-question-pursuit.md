@@ -139,8 +139,9 @@ Never summed. Applied to `syzygy-t3jk.16`.
 **U2. State the orphan rule (5/2).** Amend RFC1-29, RFC8-8 and RFC8-23 so that an item is
 an orphaned-work Contradiction only when a Syzygy record or a pointer Syzygy wrote claims
 it and no matching record agrees; every other unrecorded item is Unknown-provenance. Then
-detect it, render it where it cannot be filtered away, and route it to the owner. Who may
-adjudicate one is the question this run asks (below).
+detect it and render it where it cannot be filtered away. An agent adjudicates one by an
+adoption row, reported and open to veto; the amendment rewords the "owner adjudication"
+phrases in RFC1-21, RFC1-29, RFC2-15, RFC8-8 and RFC8-23 to match doctrine.
 
 **U12. The smallest approved plan item (4/2).** RFC1-29 materializes "an approved
 execution-intent Proposal", and RFC8-10 requires its identity in the record. No Proposal
@@ -197,7 +198,7 @@ question's second option. Flagged for veto.
 artifact of intent-to-item rows, proposed in batches from recorded evidence, never from
 titles or similarity. A batch binds only by an adoption row whose adopter claimed none of
 its items, and each link is shown as declared before or after the work. Declaring a warrant
-is an agent decision; adjudicating a Contradiction is not (below).
+and adjudicating a Contradiction are both agent decisions, kept as separate acts.
 
 **U11. The post-merge account (4/2).** For a window the reader chooses, merged items split
 into the four answers the contract says "must never share a rendering" (RFC8-28), plus
@@ -218,24 +219,26 @@ forward when run 1's wave 2 is released.
 
 ## What this run asks of the owner
 
-One question. The first draft of this report said nothing was gated; the independent review
-showed that was wrong.
+Nothing is gated, and one thing is reported.
 
-**Who adjudicates an orphaned-work Contradiction?** Doctrine says a contradiction "renders
-the affected conclusion Unknown and routes to adjudication by the owner"
-(`.syzygy/governance/doctrine/architecture.md`). VIS-4 lets an agent adoption stand in for
-an owner act that "a contract, policy, specification, decision or direction requires"; that
-list does not include doctrine, and D10 left the architecture sentence as it was. So an
-agent may not adjudicate one, and only the owner can change that, by amending doctrine.
-Until the answer, U2 detects, renders and routes to the owner, and adjudicates nothing. The
-question is `pursuit-2026-11-21-trajectory-orphan-adjudication` in the owner packet; the
-plan-hold bead carries its path.
+An owner question was drafted and withdrawn. The first review read doctrine as reserving
+the adjudication of an orphaned-work Contradiction to the owner. The review of that
+question found the sentence that governs, 30 lines earlier in the same section: a
+contradiction "renders Unknown and is never settled silently: an agent resolves it by a
+recorded adoption, reported and open to the owner's veto, and the owner resolves it when it
+falls in an owner class" (`.syzygy/governance/doctrine/architecture.md:134-137`, written by
+D10). So agents adjudicate, by adoption row. This plan adds a practice of its own: the
+adjudicating session claimed none of the affected items.
 
-No other move falls in an owner class: none changes doctrine, weakens secret screening,
-writes into a repository the owner does not own, or exposes anything beyond the tailnet.
-Five moves change earlier practice or an earlier ruling and say so in their beads, open to
-veto: U2 (contract amendment), U7 (begins V1 work), U8 (how the fleet files work), U9
-(widens P-100 question 1), U10 (agents declare warrants).
+**Reported, for the owner to fix or leave:** the same file still says, at lines 166-167,
+that a contradiction "routes to adjudication by the owner". That is D10 residue and it
+contradicts lines 134-137; it misled one reviewer today. Only the owner may edit doctrine.
+
+No move falls in an owner class: none changes doctrine, weakens secret screening, writes
+into a repository the owner does not own, or exposes anything beyond the tailnet. Five
+moves change earlier practice or an earlier ruling and say so in their beads, open to veto:
+U2 (contract amendment; agents adjudicate), U7 (begins V1 work), U8 (how the fleet files
+work), U9 (widens P-100 question 1), U10 (agents declare warrants).
 
 ## Objections
 
@@ -265,8 +268,9 @@ veto: U2 (contract amendment), U7 (begins V1 work), U8 (how the fleet files work
 One fresh-context review at `8360c84c1` returned REVISE. Every finding was repaired once; no
 confirmation round was run.
 
-- "Nothing is gated" was wrong: doctrine routes contradictions to the owner. One question
-  is now asked.
+- The review held that doctrine reserves orphan adjudication to the owner. A question was
+  drafted; its own independent review showed doctrine already gives it to agents
+  (`architecture.md:134-137`), so it was withdrawn and the residue sentence is reported.
 - Finding 3 overclaimed "no clause says how to tell the two apart"; it now quotes RFC8-23's
   tie-break and states what is actually missing. U2 lost a limb that would have made every
   new raw tracker item a Contradiction.
