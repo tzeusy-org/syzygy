@@ -3,99 +3,217 @@
   "bead": "syzygy-3efd.17",
   "measuredOn": "2026-11-21",
   "how": "each mutant applied alone (old replaced by new, one occurrence), then `npx vitest run` over dossier-reading.test.ts, reader-standards.test.ts and dossier-render-provider-golden.test.ts; killed when a test fails; the file is restored after each",
-  "commit": "9c19b29bb40df4e3f6726ea0f0187f47d8d76187",
-  "killed": 10,
-  "survived": 0,
-  "mutants": [
-    {
-      "area": "legend",
-      "mutant": "operator figure keeps the fixed legend",
-      "file": "apps/three-surface-poc/src/polaris-generation/dossier-site.ts",
-      "old": "local === undefined ? FIXED_DIAGRAM_LEGEND : figureLegend",
-      "new": "true ? FIXED_DIAGRAM_LEGEND : figureLegend",
-      "outcome": "killed",
-      "tests": "Tests  1 failed | 117 passed (118)"
-    },
-    {
-      "area": "legend",
-      "mutant": "provider figure gets the generated legend",
-      "file": "apps/three-surface-poc/src/polaris-generation/dossier-site.ts",
-      "old": "local === undefined ? FIXED_DIAGRAM_LEGEND : figureLegend",
-      "new": "false ? FIXED_DIAGRAM_LEGEND : figureLegend",
-      "outcome": "killed",
-      "tests": "Tests  1 failed | 117 passed (118)"
-    },
-    {
-      "area": "legend",
-      "mutant": "unused styles kept",
-      "file": "apps/three-surface-poc/src/polaris-generation/dossier-site.ts",
-      "old": "LEGEND_ENTRIES.filter(([m]) => count(m) > 0)",
-      "new": "LEGEND_ENTRIES.filter(([m]) => count(m) >= 0)",
-      "outcome": "killed",
-      "tests": "Tests  2 failed | 116 passed (118)"
-    },
-    {
-      "area": "tally",
-      "mutant": "boxes and arrows swapped",
-      "file": "apps/three-surface-poc/src/polaris-generation/dossier-site.ts",
-      "old": "${counted(boxes, 'box', 'boxes')} and ${counted(arrows, 'arrow', 'arrows')}",
-      "new": "${counted(arrows, 'box', 'boxes')} and ${counted(boxes, 'arrow', 'arrows')}",
-      "outcome": "killed",
-      "tests": "Tests  3 failed | 115 passed (118)"
-    },
-    {
-      "area": "tally",
-      "mutant": "singular never used",
-      "file": "apps/three-surface-poc/src/polaris-generation/dossier-site.ts",
-      "old": "`${n} ${n === 1 ? one : many}`",
-      "new": "`${n} ${many}`",
-      "outcome": "killed",
-      "tests": "Tests  2 failed | 116 passed (118)"
-    },
-    {
-      "area": "tally",
-      "mutant": "unknown counted as inferred",
-      "file": "apps/three-surface-poc/src/polaris-generation/dossier-site.ts",
-      "old": "${count('inferred')} inferred, ${count('unknown')} unknown",
-      "new": "${count('inferred') + count('unknown')} inferred, 0 unknown",
-      "outcome": "killed",
-      "tests": "Tests  1 failed | 117 passed (118)"
-    },
-    {
-      "area": "locality",
-      "mutant": "to-endpoint ignored",
-      "file": "packages/polaris-dossier/src/reader-advice.ts",
-      "old": "[...own].some((p) => from.has(p) || to.has(p))",
-      "new": "[...own].some((p) => from.has(p))",
-      "outcome": "killed",
-      "tests": "Tests  1 failed | 117 passed (118)"
-    },
-    {
-      "area": "locality",
-      "mutant": "from-endpoint ignored",
-      "file": "packages/polaris-dossier/src/reader-advice.ts",
-      "old": "[...own].some((p) => from.has(p) || to.has(p))",
-      "new": "[...own].some((p) => to.has(p))",
-      "outcome": "killed",
-      "tests": "Tests  1 failed | 117 passed (118)"
-    },
-    {
-      "area": "locality",
-      "mutant": "every cited file must touch",
-      "file": "packages/polaris-dossier/src/reader-advice.ts",
-      "old": "[...own].some((p) => from.has(p) || to.has(p))",
-      "new": "[...own].every((p) => from.has(p) || to.has(p))",
-      "outcome": "killed",
-      "tests": "Tests  1 failed | 117 passed (118)"
-    },
-    {
-      "area": "locality",
-      "mutant": "dangling edge advised",
-      "file": "packages/polaris-dossier/src/reader-advice.ts",
-      "old": "if (from === undefined || to === undefined || own.size === 0) return;",
-      "new": "if (own.size === 0) return;",
-      "outcome": "killed",
-      "tests": "Tests  1 failed | 117 passed (118)"
-    }
-  ]
+  "firstRun": {
+    "commit": "9c19b29bb40df4e3f6726ea0f0187f47d8d76187",
+    "killed": 10,
+    "survived": 0,
+    "mutants": [
+      {
+        "area": "legend",
+        "mutant": "operator figure keeps the fixed legend",
+        "file": "apps/three-surface-poc/src/polaris-generation/dossier-site.ts",
+        "old": "local === undefined ? FIXED_DIAGRAM_LEGEND : figureLegend",
+        "new": "true ? FIXED_DIAGRAM_LEGEND : figureLegend",
+        "outcome": "killed",
+        "tests": "Tests  1 failed | 117 passed (118)"
+      },
+      {
+        "area": "legend",
+        "mutant": "provider figure gets the generated legend",
+        "file": "apps/three-surface-poc/src/polaris-generation/dossier-site.ts",
+        "old": "local === undefined ? FIXED_DIAGRAM_LEGEND : figureLegend",
+        "new": "false ? FIXED_DIAGRAM_LEGEND : figureLegend",
+        "outcome": "killed",
+        "tests": "Tests  1 failed | 117 passed (118)"
+      },
+      {
+        "area": "legend",
+        "mutant": "unused styles kept",
+        "file": "apps/three-surface-poc/src/polaris-generation/dossier-site.ts",
+        "old": "LEGEND_ENTRIES.filter(([m]) => count(m) > 0)",
+        "new": "LEGEND_ENTRIES.filter(([m]) => count(m) >= 0)",
+        "outcome": "killed",
+        "tests": "Tests  2 failed | 116 passed (118)"
+      },
+      {
+        "area": "tally",
+        "mutant": "boxes and arrows swapped",
+        "file": "apps/three-surface-poc/src/polaris-generation/dossier-site.ts",
+        "old": "${counted(boxes, 'box', 'boxes')} and ${counted(arrows, 'arrow', 'arrows')}",
+        "new": "${counted(arrows, 'box', 'boxes')} and ${counted(boxes, 'arrow', 'arrows')}",
+        "outcome": "killed",
+        "tests": "Tests  3 failed | 115 passed (118)"
+      },
+      {
+        "area": "tally",
+        "mutant": "singular never used",
+        "file": "apps/three-surface-poc/src/polaris-generation/dossier-site.ts",
+        "old": "`${n} ${n === 1 ? one : many}`",
+        "new": "`${n} ${many}`",
+        "outcome": "killed",
+        "tests": "Tests  2 failed | 116 passed (118)"
+      },
+      {
+        "area": "tally",
+        "mutant": "unknown counted as inferred",
+        "file": "apps/three-surface-poc/src/polaris-generation/dossier-site.ts",
+        "old": "${count('inferred')} inferred, ${count('unknown')} unknown",
+        "new": "${count('inferred') + count('unknown')} inferred, 0 unknown",
+        "outcome": "killed",
+        "tests": "Tests  1 failed | 117 passed (118)"
+      },
+      {
+        "area": "locality",
+        "mutant": "to-endpoint ignored",
+        "file": "packages/polaris-dossier/src/reader-advice.ts",
+        "old": "[...own].some((p) => from.has(p) || to.has(p))",
+        "new": "[...own].some((p) => from.has(p))",
+        "outcome": "killed",
+        "tests": "Tests  1 failed | 117 passed (118)"
+      },
+      {
+        "area": "locality",
+        "mutant": "from-endpoint ignored",
+        "file": "packages/polaris-dossier/src/reader-advice.ts",
+        "old": "[...own].some((p) => from.has(p) || to.has(p))",
+        "new": "[...own].some((p) => to.has(p))",
+        "outcome": "killed",
+        "tests": "Tests  1 failed | 117 passed (118)"
+      },
+      {
+        "area": "locality",
+        "mutant": "every cited file must touch",
+        "file": "packages/polaris-dossier/src/reader-advice.ts",
+        "old": "[...own].some((p) => from.has(p) || to.has(p))",
+        "new": "[...own].every((p) => from.has(p) || to.has(p))",
+        "outcome": "killed",
+        "tests": "Tests  1 failed | 117 passed (118)"
+      },
+      {
+        "area": "locality",
+        "mutant": "dangling edge advised",
+        "file": "packages/polaris-dossier/src/reader-advice.ts",
+        "old": "if (from === undefined || to === undefined || own.size === 0) return;",
+        "new": "if (own.size === 0) return;",
+        "outcome": "killed",
+        "tests": "Tests  1 failed | 117 passed (118)"
+      }
+    ]
+  },
+  "finalRun": {
+    "commit": "b44d714c38899ddc142771886bb5149d4831a99e",
+    "after": "the independent review of 592193de, whose two surviving mutants (unknown folded into inferred at the call site; only each node's first cited file) are the last two below",
+    "killed": 12,
+    "survived": 0,
+    "mutants": [
+      {
+        "area": "legend",
+        "mutant": "operator figure keeps the fixed legend",
+        "file": "apps/three-surface-poc/src/polaris-generation/dossier-site.ts",
+        "old": "local === undefined ? FIXED_DIAGRAM_LEGEND : figureLegend",
+        "new": "true ? FIXED_DIAGRAM_LEGEND : figureLegend",
+        "outcome": "killed",
+        "tests": "Tests  2 failed | 117 passed (119)"
+      },
+      {
+        "area": "legend",
+        "mutant": "provider figure gets the generated legend",
+        "file": "apps/three-surface-poc/src/polaris-generation/dossier-site.ts",
+        "old": "local === undefined ? FIXED_DIAGRAM_LEGEND : figureLegend",
+        "new": "false ? FIXED_DIAGRAM_LEGEND : figureLegend",
+        "outcome": "killed",
+        "tests": "Tests  1 failed | 118 passed (119)"
+      },
+      {
+        "area": "legend",
+        "mutant": "unused styles kept",
+        "file": "apps/three-surface-poc/src/polaris-generation/dossier-site.ts",
+        "old": "LEGEND_ENTRIES.filter(([m]) => count(m) > 0)",
+        "new": "LEGEND_ENTRIES.filter(([m]) => count(m) >= 0)",
+        "outcome": "killed",
+        "tests": "Tests  3 failed | 116 passed (119)"
+      },
+      {
+        "area": "tally",
+        "mutant": "boxes and arrows swapped",
+        "file": "apps/three-surface-poc/src/polaris-generation/dossier-site.ts",
+        "old": "${counted(boxes, 'box', 'boxes')} and ${counted(arrows, 'arrow', 'arrows')}",
+        "new": "${counted(arrows, 'box', 'boxes')} and ${counted(boxes, 'arrow', 'arrows')}",
+        "outcome": "killed",
+        "tests": "Tests  3 failed | 116 passed (119)"
+      },
+      {
+        "area": "tally",
+        "mutant": "singular never used",
+        "file": "apps/three-surface-poc/src/polaris-generation/dossier-site.ts",
+        "old": "`${n} ${n === 1 ? one : many}`",
+        "new": "`${n} ${many}`",
+        "outcome": "killed",
+        "tests": "Tests  2 failed | 117 passed (119)"
+      },
+      {
+        "area": "tally",
+        "mutant": "unknown counted as inferred",
+        "file": "apps/three-surface-poc/src/polaris-generation/dossier-site.ts",
+        "old": "${count('inferred')} inferred, ${count('unknown')} unknown",
+        "new": "${count('inferred') + count('unknown')} inferred, 0 unknown",
+        "outcome": "killed",
+        "tests": "Tests  2 failed | 117 passed (119)"
+      },
+      {
+        "area": "locality",
+        "mutant": "to-endpoint ignored",
+        "file": "packages/polaris-dossier/src/reader-advice.ts",
+        "old": "[...own].some((p) => from.has(p) || to.has(p))",
+        "new": "[...own].some((p) => from.has(p))",
+        "outcome": "killed",
+        "tests": "Tests  1 failed | 118 passed (119)"
+      },
+      {
+        "area": "locality",
+        "mutant": "from-endpoint ignored",
+        "file": "packages/polaris-dossier/src/reader-advice.ts",
+        "old": "[...own].some((p) => from.has(p) || to.has(p))",
+        "new": "[...own].some((p) => to.has(p))",
+        "outcome": "killed",
+        "tests": "Tests  1 failed | 118 passed (119)"
+      },
+      {
+        "area": "locality",
+        "mutant": "every cited file must touch",
+        "file": "packages/polaris-dossier/src/reader-advice.ts",
+        "old": "[...own].some((p) => from.has(p) || to.has(p))",
+        "new": "[...own].every((p) => from.has(p) || to.has(p))",
+        "outcome": "killed",
+        "tests": "Tests  1 failed | 118 passed (119)"
+      },
+      {
+        "area": "locality",
+        "mutant": "dangling edge advised",
+        "file": "packages/polaris-dossier/src/reader-advice.ts",
+        "old": "if (from === undefined || to === undefined || own.size === 0) return;",
+        "new": "if (own.size === 0) return;",
+        "outcome": "killed",
+        "tests": "Tests  1 failed | 118 passed (119)"
+      },
+      {
+        "area": "tally",
+        "mutant": "unknown folded into inferred at the call site",
+        "file": "apps/three-surface-poc/src/polaris-generation/dossier-site.ts",
+        "old": "[...d.nodes, ...d.edges].map(element => element.epistemic)",
+        "new": "[...d.nodes, ...d.edges].map(element => element.epistemic === 'unknown' ? 'inferred' : element.epistemic)",
+        "outcome": "killed",
+        "tests": "Tests  1 failed | 118 passed (119)"
+      },
+      {
+        "area": "locality",
+        "mutant": "only each node's first cited file",
+        "file": "packages/polaris-dossier/src/reader-advice.ts",
+        "old": "list(element['citations']).flatMap(",
+        "new": "list(element['citations']).slice(0, 1).flatMap(",
+        "outcome": "killed",
+        "tests": "Tests  1 failed | 118 passed (119)"
+      }
+    ]
+  }
 }
