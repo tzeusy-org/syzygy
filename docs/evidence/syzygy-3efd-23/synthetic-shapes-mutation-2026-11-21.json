@@ -2,43 +2,145 @@
   "format": "mutation-run/1",
   "bead": "syzygy-3efd.23",
   "date": "2026-11-21",
-  "ranAt": "441ea97199e51a7b87e0ceffc642210b6b30b1ed",
+  "ranAt": "1c50f3e6a669f2ce09fcc815cd2cfb68a16d2712",
   "subject": {
-    "packages/polaris-dossier/src/synthetic-shapes.test.ts": "eb9d91849e210526f760599929a096689496ee0a36a0e471f6de4ecc6457b2d1",
-    "apps/three-surface-poc/src/polaris-generation/synthetic-shapes.testkit.ts": "52187a994e53a7df97781726bf79ec7b9e909f9ad69f4e36ccd9410e5e1a72c7"
+    "packages/polaris-dossier/src/synthetic-shapes.test.ts": "4c1ae09d50eb7cec77c950ee1985c11924856bb4b6de3f0f065c5a379af0f826",
+    "apps/three-surface-poc/src/polaris-generation/synthetic-shapes.testkit.ts": "52187a994e53a7df97781726bf79ec7b9e909f9ad69f4e36ccd9410e5e1a72c7",
+    "packages/polaris-dossier/src/derive-rules.ts": "21103f429f8ffc1376e8f5e71634b802df3f05c57c8e84dd56e359f60dedc90c",
+    "packages/polaris-dossier/src/derive.ts": "b2f3ab40881db6a43122d75adbf42df62dd6d492fe9376b8d34cce9b698ac42b",
+    "apps/three-surface-poc/src/polaris-generation/dossier-site.ts": "2ff9f96afbcc21a7241e291836405affb4bbd4b58ca8bed7b31b1eafb1f99b14"
   },
-  "command": "npx vitest run packages/polaris-dossier/src/synthetic-shapes.test.ts",
-  "method": "each mutant replaces old with new exactly once in file, runs the command, restores the file; killed means a non-zero exit",
+  "command": "npx vitest run packages/polaris-dossier/src/synthetic-shapes.test.ts --reporter=json",
+  "method": "each mutant replaces old with new exactly once in file, runs the command, restores the file; killed means a non-zero exit, and failedTests records each failing test and the first line of its message, so a kill by an assertion is told apart from a kill by a throw",
   "mutants": [
+    {
+      "id": "rule-lockfile-not-generated",
+      "file": "packages/polaris-dossier/src/derive-rules.ts",
+      "old": "'Cargo.lock', ",
+      "new": "",
+      "killed": true,
+      "failedTests": [
+        {
+          "test": "a Rust command-line tool: one crate, its lock file set apart as generated, tests, no docs tree",
+          "message": "AssertionError: expected { state: 'derived', \u2026(11) } to deeply equal { state: 'derived', \u2026(11) }"
+        },
+        {
+          "test": "a shape with no README still derives, and its draft still renders (canary)",
+          "message": "AssertionError: expected { state: 'derived', \u2026(11) } to match object { files: 9, rootFiles: 3, \u2026(1) }"
+        }
+      ],
+      "killedBy": "assertion"
+    },
+    {
+      "id": "rule-docs-tree-name",
+      "file": "packages/polaris-dossier/src/derive-rules.ts",
+      "old": "topLevel: ['docs', 'doc', 'documentation']",
+      "new": "topLevel: ['doc', 'documentation']",
+      "killed": true,
+      "failedTests": [
+        {
+          "test": "a Python library with a documentation site: a docs tree, two test files, one package",
+          "message": "AssertionError: expected { state: 'derived', \u2026(11) } to deeply equal { state: 'derived', \u2026(11) }"
+        }
+      ],
+      "killedBy": "assertion"
+    },
+    {
+      "id": "rule-test-path-manifests-counted",
+      "file": "packages/polaris-dossier/src/derive.ts",
+      "old": "    else if ((MANIFEST_NAMES.basenames",
+      "new": "    if ((MANIFEST_NAMES.basenames",
+      "killed": true,
+      "failedTests": [
+        {
+          "test": "a Terraform module: no package manifest (the Go test module is a test path), examples and a nested module",
+          "message": "AssertionError: expected { state: 'derived', \u2026(11) } to deeply equal { state: 'derived', \u2026(11) }"
+        }
+      ],
+      "killedBy": "assertion"
+    },
+    {
+      "id": "rule-test-path-segment",
+      "file": "packages/polaris-dossier/src/derive-rules.ts",
+      "old": "segments: ['test', 'tests',",
+      "new": "segments: ['tests',",
+      "killed": true,
+      "failedTests": [
+        {
+          "test": "a Terraform module: no package manifest (the Go test module is a test path), examples and a nested module",
+          "message": "AssertionError: expected { state: 'derived', \u2026(11) } to deeply equal { state: 'derived', \u2026(11) }"
+        }
+      ],
+      "killedBy": "assertion"
+    },
+    {
+      "id": "render-tally-wording",
+      "file": "apps/three-surface-poc/src/polaris-generation/dossier-site.ts",
+      "old": "${count('inferred')} inferred, ",
+      "new": "${count('inferred')} inferred; ",
+      "killed": true,
+      "failedTests": [
+        {
+          "test": "renders each shape's canned draft: its title, its figure with a tally, its cited source page, and no script",
+          "message": "AssertionError: rust-cli: expected '<!doctype html><html lang=\"en\"><head>\u2026' to contain '<p class=\"diagram-tally\">3 boxes and \u2026'"
+        }
+      ],
+      "killedBy": "assertion"
+    },
     {
       "id": "kit-drop-lockfile",
       "file": "apps/three-surface-poc/src/polaris-generation/synthetic-shapes.testkit.ts",
       "old": "    'Cargo.lock': '# generated by cargo\\n',\n",
       "new": "",
-      "killed": true
-    },
-    {
-      "id": "kit-docs-renamed",
-      "file": "apps/three-surface-poc/src/polaris-generation/synthetic-shapes.testkit.ts",
-      "old": "    'docs/index.rst': 'routekit",
-      "new": "    'doc/index.rst': 'routekit",
-      "killed": true
+      "killed": true,
+      "failedTests": [
+        {
+          "test": "a Rust command-line tool: one crate, its lock file set apart as generated, tests, no docs tree",
+          "message": "AssertionError: expected { state: 'derived', \u2026(11) } to deeply equal { state: 'derived', \u2026(11) }"
+        },
+        {
+          "test": "a shape with no README still derives, and its draft still renders (canary)",
+          "message": "AssertionError: expected { state: 'derived', \u2026(11) } to match object { files: 9, rootFiles: 3, \u2026(1) }"
+        }
+      ],
+      "killedBy": "assertion"
     },
     {
       "id": "kit-terraform-gains-manifest",
       "file": "apps/three-surface-poc/src/polaris-generation/synthetic-shapes.testkit.ts",
       "old": "'test/go.mod'",
       "new": "'go.mod'",
-      "killed": true
+      "killed": true,
+      "failedTests": [
+        {
+          "test": "a Terraform module: no package manifest (the Go test module is a test path), examples and a nested module",
+          "message": "AssertionError: expected { state: 'derived', \u2026(11) } to deeply equal { state: 'derived', \u2026(11) }"
+        }
+      ],
+      "killedBy": "assertion"
     },
     {
-      "id": "kit-canary-cites-missing",
+      "id": "kit-source-path-label",
       "file": "apps/three-surface-poc/src/polaris-generation/synthetic-shapes.testkit.ts",
-      "old": "const body = shape.files.get(shape.cited)!.body;",
-      "new": "const body = shape.files.get('README.md')!.body;",
-      "killed": true
+      "old": "path: shape.cited, objectId",
+      "new": "path: `./${shape.cited}`, objectId",
+      "killed": true,
+      "failedTests": [
+        {
+          "test": "renders each shape's canned draft: its title, its figure with a tally, its cited source page, and no script",
+          "message": "GenerationSourceError: Generation source rejected: invalid-source"
+        },
+        {
+          "test": "a shape with no README still derives, and its draft still renders (canary)",
+          "message": "GenerationSourceError: Generation source rejected: invalid-source"
+        }
+      ],
+      "killedBy": "thrown error",
+      "note": "killed by the source validator throwing, not by an assertion of this test; kept for the record, not counted as an assertion kill"
     }
   ],
-  "killed": 4,
-  "total": 4
+  "killed": 8,
+  "killedByAssertion": 7,
+  "total": 8,
+  "supersedes": "the first run of this record (4/4 at 441ea971), which mutated the fixture kit only and counted a crash as a kill (independent review note 1-2)"
 }
