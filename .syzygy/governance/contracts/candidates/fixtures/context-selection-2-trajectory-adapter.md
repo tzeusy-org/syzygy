@@ -115,7 +115,7 @@ scope.
 ## Packet digest
 
 sha256 over the mandatory files concatenated in listed order:
-`238cbe0671d8f172…`.
+`ecfca48dee2ce598…`.
 
 **Selection: hand-authored golden selection. Measurement: mechanical.
 Compiler implementation: absent.** `scripts/context_load.py` resolves a
@@ -143,3 +143,5 @@ only, closing RD-5's double-count finding.*
 *Re-measured 2026-08-10 by the same CG-18 method (declared mandatory set, listed order): the round-2026-08e RD-26 repair batch edited Wave A modules this packet loads. Previous: 19,490 words, digest `93c4674ef075e667…`. Selection unchanged; the movement is contract repairs landing under the fixture, which is the class this check exists to catch.*
 
 *Re-measured 2026-08-10b by the same CG-18 method: the round-2026-08e RD-27 repair batch edited Wave B modules this packet loads. Previous: 19,596 words, digest `fb7c6d9e0e380eed…`. Selection unchanged.*
+
+*Re-measured 2026-11-22 by the same CG-18 method: the U2 contract amendment (orphan predicate; Contradiction adjudication route per D12) edited contract modules this packet loads. Previous: 23,150 words, digest `238cbe0671d8f172…`. Selection unchanged.*

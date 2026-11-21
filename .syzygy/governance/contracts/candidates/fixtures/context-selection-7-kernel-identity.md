@@ -60,7 +60,7 @@ scripts/context_load.py rfcs/RFC-0001-project-graph-identity-state-planes.md \
   doctrine:architecture.md craft:engineering-bar.md
 ```
 
-Measured: **18,533 words ≈ 25,020 estimated tokens.**
+Measured: **18,815 words ≈ 25,400 estimated tokens.**
 
 ## ⚠️ Above the justification trigger — disclosed, not trimmed
 
@@ -162,7 +162,7 @@ are in `CONTEXT-BUDGET-REPORT.md` §3.
 ## Packet digest
 
 sha256 over the mandatory files concatenated in listed order:
-`87873156f7231620…` (recompute: `cat <mandatory files> | sha256sum`).
+`c46cb462e52814fb…` (recompute: `cat <mandatory files> | sha256sum`).
 
 **Selection: hand-authored golden selection. Measurement: mechanical.
 Compiler implementation: absent.** `scripts/context_load.py` resolves a
@@ -226,3 +226,5 @@ packet digest are the only measurements this fixture states.*
 *Re-measured 2026-08-10 by the same CG-18 method (declared mandatory set, listed order): the round-2026-08e RD-26 repair batch edited Wave A modules this packet loads. Previous: 16,958 words, digest `f43e9174d24fe3d5…`. Selection unchanged; the movement is contract repairs landing under the fixture, which is the class this check exists to catch.*
 
 *Re-measured 2026-11-21 by the same CG-18 method: doctrine amendment D12 reworded one bullet of `architecture.md`, which this packet loads. Previous: 18,512 words, digest `6282fe0dcc357339…`. Selection unchanged.*
+
+*Re-measured 2026-11-22 by the same CG-18 method: the U2 contract amendment (orphan predicate; Contradiction adjudication route per D12) edited contract modules this packet loads. Previous: 18,533 words, digest `87873156f7231620…`. Selection unchanged.*
