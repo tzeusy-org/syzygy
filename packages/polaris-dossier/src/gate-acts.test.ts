@@ -50,6 +50,7 @@ const V2_AT = Date.UTC(2026, 9, 7, 10, 30, 0);
 /** The real tree's D10 record and manifest: D10 replaced the doctrine files the D9 act binds, and the D9 reading holds over the
  * replaced bytes only beside them (`supersededByD10`), so a world that copies the real doctrine copies them too. */
 const D10_FILES = [`${DECISIONS_DIR}/GOVERNANCE-SIMPLIFICATION-D10-ACT.md`, '.syzygy/governance/contracts/candidates/governance-simplification-d10/MANIFEST.txt'];
+const LOG = `${DECISIONS_DIR}/DOCTRINE-AMENDMENT-LOG.md`;
 const real = (rel: string): string => fs.readFileSync(path.join(REAL_ROOT, rel), 'utf8');
 
 const write = (root: string, rel: string, text: string): void => {
@@ -62,7 +63,7 @@ const write = (root: string, rel: string, text: string): void => {
  * the real v1.0 record, byte for byte, which still names v1.0's bytes. An unrelated decisions file keeps the directory present. */
 function world(acts: readonly DossierLocalAgentActKey[], signoff = false, v2 = false): string {
   const root = tempDir('dossier-gate-acts-');
-  for (const rel of [...KEYS.map(k => ACTS[k].record), SECURITY, V1, DIRECTION, V2_RECORD, ...D10_FILES]) write(root, rel, real(rel));
+  for (const rel of [...KEYS.map(k => ACTS[k].record), SECURITY, V1, DIRECTION, V2_RECORD, ...D10_FILES, LOG]) write(root, rel, real(rel));
   write(root, `${DECISIONS_DIR}/UNRELATED.md`, '# Unrelated\n');
   for (const key of acts) write(root, ACTS[key].file, renderDossierLocalAgentAct(key, sha(real(ACTS[key].record)), DATE, INSTANT));
   if (signoff) {
@@ -322,6 +323,30 @@ describe('the sitting\'s acts fail closed', () => {
     const noRecord = world(['d9-in-force']);
     fs.rmSync(path.join(noRecord, RECORD));
     expect(await sources(noRecord).d9()).toEqual(refused);
+  });
+  it('keep D9 across a later logged doctrine amendment, only along the log\'s recorded transitions (supersededByLaterAdoption, A-14)', async () => {
+    const refused = { state: 'refused', why: `the bytes of ${SECURITY} differ from the digest the act's artifact binds` };
+    const STEP = /`security\.md` sha256 before `([0-9a-f]{64})`, after `([0-9a-f]{64})`/;
+    expect(STEP.test(real(LOG))).toBe(true);
+    expect(await sources(world(['d9-in-force'])).d9()).toEqual({ state: 'ok', record: 'D9-IN-FORCE-OPERATOR-AGENT-2026-10-07' });
+    // The transition removed: D11's bytes are no longer reached from what D10 installed.
+    const noStep = world(['d9-in-force']);
+    fs.writeFileSync(path.join(noStep, LOG), real(LOG).replace(STEP, 'no digests'));
+    expect(await sources(noStep).d9()).toEqual(refused);
+    // A fork: a second row stating the same before-digest reaches nothing.
+    const fork = world(['d9-in-force']);
+    const [, before] = STEP.exec(real(LOG))!;
+    fs.writeFileSync(path.join(fork, LOG), `${real(LOG)}| D99 | 2026-11-22 | \`security.md\` sha256 before \`${before}\`, after \`${'d'.repeat(64)}\` | test |\n`);
+    expect(await sources(fork).d9()).toEqual(refused);
+    // A transition outside a D-row is not read.
+    const prose = world(['d9-in-force']);
+    const row = real(LOG).split('\n').find(line => STEP.test(line))!;
+    fs.writeFileSync(path.join(prose, LOG), real(LOG).replace(row, row.replace(/^\| D(\d+) \|/, '| X$1 |')));
+    expect(await sources(prose).d9()).toEqual(refused);
+    // An edit after the logged amendment is not that amendment.
+    const later = world(['d9-in-force']);
+    fs.appendFileSync(path.join(later, SECURITY), '\nedit\n');
+    expect(await sources(later).d9()).toEqual(refused);
   });
   it('refuse the reading once the direction file changes, and when it is missing', async () => {
     const root = world(['rfc7-20-reading-in-force']);

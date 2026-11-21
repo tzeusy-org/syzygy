@@ -754,13 +754,23 @@ const D10_PROPOSED = '.syzygy/governance/contracts/candidates/governance-simplif
 /** The recorder's MIRRORS: an installed contract module is also installed under the candidates mirror. */
 const D10_MIRRORS: readonly (readonly [string, string])[] = [['.syzygy/governance/contracts/rfcs/', '.syzygy/governance/contracts/candidates/rfcs/']];
 export async function supersededByD10(fs: PackageReaderFs, root: string, file: string, boundDigest: string): Promise<boolean> {
+  const installed = await d10Installed(fs, root, file, boundDigest);
+  if (installed === null) return false;
+  let current: string;
+  try { current = await fs.readFile(path.join(root, file)); } catch { return false; }
+  return sha256(current) === installed;
+}
+
+/** The digest D10 installed at `file` when D10 is recorded and replaced exactly `boundDigest` there, else null (the checks of
+ * `supersededByD10` short of reading the file's current bytes). */
+async function d10Installed(fs: PackageReaderFs, root: string, file: string, boundDigest: string): Promise<string | null> {
   let record: string, manifest: string;
   try {
     record = await fs.readFile(path.join(root, DECISIONS_DIR, D10_RECORD));
     manifest = await fs.readFile(path.join(root, D10_MANIFEST));
-  } catch { return false; }
+  } catch { return null; }
   const binding = record.split('\n').filter(line => line.includes(D10_LABEL));
-  if (binding.length !== 1 || binding[0] !== `${D10_LABEL}: ${sha256(manifest)}`) return false;
+  if (binding.length !== 1 || binding[0] !== `${D10_LABEL}: ${sha256(manifest)}`) return null;
   const homes = [file, ...D10_MIRRORS.flatMap(([source, mirror]) => (file.startsWith(mirror) ? [source + file.slice(mirror.length)] : []))];
   const proposed = new Set(homes.map(home => `${D10_PROPOSED}${home}.proposed`));
   const rows: string[] = [], installed: string[] = [];
@@ -771,10 +781,38 @@ export async function supersededByD10(fs: PackageReaderFs, root: string, file: s
     if (section === '[base]' && row !== null && row[2] === file) rows.push(row[1]!);
     if (section === '[package]' && row !== null && proposed.has(row[2]!)) installed.push(row[1]!);
   }
-  if (rows.length !== 1 || rows[0] !== boundDigest || installed.length !== 1) return false;
-  let current: string;
-  try { current = await fs.readFile(path.join(root, file)); } catch { return false; }
-  return sha256(current) === installed[0];
+  return rows.length === 1 && rows[0] === boundDigest && installed.length === 1 ? installed[0]! : null;
+}
+
+/** Doctrine amendments after D10 are adopted by the owner's words and logged in `DOCTRINE-AMENDMENT-LOG.md` (D11, 2026-11-21, was the
+ * first). Under RFC3-16 as D10 amends it, such an edit is a new adoption and does not break an act that bound the earlier bytes, as
+ * `supersededByD10` already reads for D10 itself. A doctrine file still counts as bound when its current bytes are reached from
+ * `boundDigest` (or from the bytes D10 installed in its place) by the log's recorded transitions: rows of the log whose id is `D<n>`
+ * and that state, for that file's basename, `` `<name>` sha256 before `<64 hex>`, after `<64 hex>` ``, followed in log order, each
+ * applying only where its before-digest is the current step. A before-digest stated by two rows for one file is a fork and reaches
+ * nothing. Only files under the doctrine directory are read this way; everything else refuses as before. Agent adoption A-14. */
+export const DOCTRINE_DIR = '.syzygy/governance/doctrine/';
+export const DOCTRINE_AMENDMENT_LOG = 'DOCTRINE-AMENDMENT-LOG.md';
+export async function supersededByLaterAdoption(fs: PackageReaderFs, root: string, file: string, boundDigest: string): Promise<boolean> {
+  if (await supersededByD10(fs, root, file, boundDigest)) return true;
+  if (!file.startsWith(DOCTRINE_DIR) || file.slice(DOCTRINE_DIR.length).includes('/')) return false;
+  let log: string, current: string;
+  try {
+    log = await fs.readFile(path.join(root, DECISIONS_DIR, DOCTRINE_AMENDMENT_LOG));
+    current = await fs.readFile(path.join(root, file));
+  } catch { return false; }
+  const name = file.slice(DOCTRINE_DIR.length).replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+  const step = new RegExp(`\`${name}\` sha256 before \`([0-9a-f]{64})\`, after \`([0-9a-f]{64})\``, 'g');
+  const transitions: (readonly [string, string])[] = [];
+  for (const line of log.split('\n')) {
+    if (!/^\| D\d+ \| /.test(line)) continue;
+    for (const m of line.matchAll(step)) transitions.push([m[1]!, m[2]!]);
+  }
+  const befores = transitions.map(([before]) => before);
+  if (new Set(befores).size !== befores.length) return false;
+  let at = (await d10Installed(fs, root, file, boundDigest)) ?? boundDigest;
+  for (const [before, after] of transitions) if (before === at) at = after;
+  return at !== boundDigest && sha256(current) === at;
 }
 
 /** Why the artifact's bound-files table does not hold for `bound`, or null when every listed file still hashes to its row. */
@@ -792,7 +830,7 @@ async function boundMismatch(fs: PackageReaderFs, root: string, artifact: string
   for (const [file, digest] of rows) {
     let text: string;
     try { text = await fs.readFile(path.join(root, file)); } catch { return `the bound file ${file} cannot be read`; }
-    if (sha256(text) !== digest && !(await supersededByD10(fs, root, file, digest))) return `the bytes of ${file} differ from the digest the act's artifact binds`;
+    if (sha256(text) !== digest && !(await supersededByLaterAdoption(fs, root, file, digest))) return `the bytes of ${file} differ from the digest the act's artifact binds`;
   }
   return null;
 }
