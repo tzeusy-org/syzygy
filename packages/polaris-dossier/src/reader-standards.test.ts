@@ -50,7 +50,7 @@ const section = (id: string, words: number, title = 'How a write reaches the rep
 const diagram = (sectionId: string) => ({ id: `d-${sectionId}`, sectionId });
 
 describe('reader advice: the counted standards', () => {
-  it('gives no advice on a draft that meets all four, and none on a draft that is not an object', () => {
+  it('gives no advice on a draft that meets every counted standard, and none on a draft that is not an object', () => {
     const doc = { sections: [section('a', 300)], deepDives: [{ ...section('dd', 10), sectionId: 'a' }], diagrams: [diagram('a')] };
     expect(readerAdvice(doc)).toEqual({ standards: 'polaris-reader-standards-v1', note: expect.stringContaining('sets no outcome'), advisories: [] });
     expect(readerAdvice('x').advisories).toEqual([]);
@@ -97,11 +97,13 @@ describe('reader advice: the counted standards', () => {
         edge('to-end', 'client', 'server', 'src/server.c'),
         edge('from-end', 'client', 'aof', 'src/client.c', 'src/networking.c'),
         edge('shared-file-other-lines', 'server', 'aof', 'src/aof.c'),
+        // Touches an end only through that end's second cited file.
+        edge('second-file', 'client', 'aof', 'src/server.c'),
         edge('dangling', 'client', 'nowhere', 'src/elsewhere.c'),
       ] }] };
     expect(readerAdvice(doc).advisories).toEqual([{
       standard: 'RS-17', at: '$.diagrams[0].edges[0]',
-      detail: 'the edge "far" cites no file that its node "client" or its node "server" cites: cite where the source shows these two connect, or check that the edge joins the right nodes',
+      detail: 'the edge "far" cites no file that its node "client" or its node "server" cites: cite where the source shows these two connect, or check that the edge joins the right nodes (polaris-reader-standards-v1 does not yet mark RS-17 counted; this is its locality alone)',
     }]);
   });
 

@@ -150,7 +150,7 @@ export function readerAdvice(doc: unknown): ReaderAdvice {
         const own = citedPaths(edge);
         if (from === undefined || to === undefined || own.size === 0) return;
         if ([...own].some((p) => from.has(p) || to.has(p))) return;
-        add('RS-17', `$.diagrams[${i}].edges[${j}]`, `the edge ${JSON.stringify(text(edge['id']) ?? '')} cites no file that its node ${JSON.stringify(text(edge['from']))} or its node ${JSON.stringify(text(edge['to']))} cites: cite where the source shows these two connect, or check that the edge joins the right nodes`);
+        add('RS-17', `$.diagrams[${i}].edges[${j}]`, `the edge ${JSON.stringify(text(edge['id']) ?? '')} cites no file that its node ${JSON.stringify(text(edge['from']))} or its node ${JSON.stringify(text(edge['to']))} cites: cite where the source shows these two connect, or check that the edge joins the right nodes (polaris-reader-standards-v1 does not yet mark RS-17 counted; this is its locality alone)`);
       });
     });
   }

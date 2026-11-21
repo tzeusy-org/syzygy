@@ -852,7 +852,7 @@ const counted = (n: number, one: string, many: string): string => `${n} ${n === 
 export function figureLegend(markings: readonly EpistemicMarking[], boxes: number, arrows: number): string {
   const count = (m: EpistemicMarking): number => markings.filter(x => x === m).length;
   const entries = LEGEND_ENTRIES.filter(([m]) => count(m) > 0).map(([m, words]) => `<li><span class="legend-line ${m}" aria-hidden="true"></span>${words}</li>`).join('');
-  return `<ul class="diagram-legend" aria-label="Line styles">${entries}</ul><p class="diagram-tally">${counted(boxes, 'box', 'boxes')} and ${counted(arrows, 'arrow', 'arrows')}: ${count('observed')} observed, ${count('inferred')} inferred, ${count('unknown')} unknown.</p>`;
+  return `<ul class="diagram-legend" aria-label="Line styles">${entries}</ul><p class="diagram-tally">${counted(boxes, 'box', 'boxes')} and ${counted(arrows, 'arrow', 'arrows')}, as marked: ${count('observed')} observed, ${count('inferred')} inferred, ${count('unknown')} unknown.</p>`;
 }
 
 /** The legend every narrative page carries once (REQ-polaris-generation-034, v1.5), with the control that opens the evidence view. The
