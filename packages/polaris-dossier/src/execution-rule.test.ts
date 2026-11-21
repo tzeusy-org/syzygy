@@ -83,10 +83,10 @@ describe('the permitting arm, enabled with fixture ports', () => {
     const rule = await decideExecutionRule(inputs());
     expect(rule).toMatchObject({ arm: 'permitting', d9: 'D9-ACT', choice: CHOICE, choiceLabel: 'Inferred', probe: { checked: 2 } });
     if (rule.arm !== 'permitting') return;
-    expect(rule.cost.text).toBe(lines(103, 109));
+    expect(rule.cost.text).toBe(lines(106, 112));
     const text = executionRuleSection(rule);
     for (const sentence of [PERMISSION, LAPSE, SUBAGENTS, NO_LONG_LIVED, STOP_EVERY, '`choice-1`']) expect(text).toContain(sentence);
-    expect(text).toContain(`\`\`\`text\n${lines(103, 109)}\n\`\`\``);
+    expect(text).toContain(`\`\`\`text\n${lines(106, 112)}\n\`\`\``);
     expect(text).not.toContain(SEC3_RULE);
   });
 

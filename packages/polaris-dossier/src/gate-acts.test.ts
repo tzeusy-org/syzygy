@@ -295,35 +295,17 @@ describe('the sitting\'s acts as gate sources, once recorded', () => {
 });
 
 describe('the sitting\'s acts fail closed', () => {
-  it('refuse D9 once either doctrine file it binds changes, though the record and its act are untouched', async () => {
+  it('keep D9 when either doctrine file it binds changes: doctrine is in force as the tree holds it (VIS-4 after D13; RFC3-16)', async () => {
     for (const file of [SECURITY, V1]) {
       const root = world(['d9-in-force']);
       fs.appendFileSync(path.join(root, file), '\nedit\n');
-      expect(await sources(root).d9()).toEqual({ state: 'refused', why: `the bytes of ${file} differ from the digest the act's artifact binds` });
+      expect(await sources(root).d9()).toEqual({ state: 'ok', record: 'D9-IN-FORCE-OPERATOR-AGENT-2026-10-07' });
     }
   });
-  it('keep D9 once D10 replaces the doctrine files it binds, at exactly the bound and installed bytes (supersededByD10)', async () => {
-    const MANIFEST = D10_FILES[1]!, RECORD = D10_FILES[0]!;
-    const PROPOSED_SECURITY = `.syzygy/governance/contracts/candidates/governance-simplification-d10/proposed/${SECURITY}.proposed`;
-    /** Rewrite one manifest row's digest and re-record D10 over the new manifest, as a recorder would. */
-    const rerecord = (root: string, rowPath: string): void => {
-      const manifest = real(MANIFEST).replace(new RegExp(`^[0-9a-f]{64}(  ${rowPath.replace(/[.*+?^${}()|[\]\\/]/g, '\\$&')})$`, 'm'), `${'c'.repeat(64)}$1`);
-      expect(manifest).not.toBe(real(MANIFEST));
-      fs.writeFileSync(path.join(root, MANIFEST), manifest);
-      const sha = createHash('sha256').update(manifest).digest('hex');
-      fs.writeFileSync(path.join(root, RECORD), real(RECORD).replace(/^(ADOPT GOVERNANCE SIMPLIFICATION D10: )[0-9a-f]{64}$/m, `$1${sha}`));
-    };
-    expect(await sources(world(['d9-in-force'])).d9()).toEqual({ state: 'ok', record: 'D9-IN-FORCE-OPERATOR-AGENT-2026-10-07' });
-    const refused = { state: 'refused', why: `the bytes of ${SECURITY} differ from the digest the act's artifact binds` };
-    const wrongBase = world(['d9-in-force']);
-    rerecord(wrongBase, SECURITY);
-    expect(await sources(wrongBase).d9()).toEqual(refused);
-    const wrongInstall = world(['d9-in-force']);
-    rerecord(wrongInstall, PROPOSED_SECURITY);
-    expect(await sources(wrongInstall).d9()).toEqual(refused);
-    const noRecord = world(['d9-in-force']);
-    fs.rmSync(path.join(noRecord, RECORD));
-    expect(await sources(noRecord).d9()).toEqual(refused);
+  it('keep D9 with no D10 record at all: a doctrine file needs no supersession record', async () => {
+    const root = world(['d9-in-force']);
+    fs.rmSync(path.join(root, D10_FILES[0]!));
+    expect(await sources(root).d9()).toEqual({ state: 'ok', record: 'D9-IN-FORCE-OPERATOR-AGENT-2026-10-07' });
   });
   it('refuse the reading once the direction file changes, and when it is missing', async () => {
     const root = world(['rfc7-20-reading-in-force']);
