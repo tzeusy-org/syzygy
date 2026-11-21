@@ -164,9 +164,10 @@ and each role names its current realization — all substitutable (see
 - A **contradiction** is a set of authoritative claims in the same declared
   scope that cannot all be satisfied, whether they come from different typed
   authorities or from one. It renders the affected conclusion Unknown and
-  routes to adjudication by the owner. It is never resolved silently by
-  precedence and never auto-scheduled into work; no surface may silently pick
-  a winner.
+  routes to adjudication: by an agent's recorded adoption, reported and open
+  to the owner's veto, or by the owner when it falls in an owner class
+  (VIS-4). It is never resolved silently by precedence and never
+  auto-scheduled into work; no surface may silently pick a winner.
 - A **gap** is compatible desired state not yet realized in observed state:
   the intent-vs-observed, work-generating difference (v1.md, V1 scope).
 
