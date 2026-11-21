@@ -94,7 +94,7 @@ describe('layered left-to-right diagram layout', () => {
       'fan-out': {
         nodes: ['hub', 'a', 'b', 'c', 'a2', 'a3'], edges: [edge('ha', 'hub', 'a'), edge('hb', 'hub', 'b'), edge('hc', 'hub', 'c'), edge('aa2', 'a', 'a2'), edge('a2a3', 'a2', 'a3')],
         size: [248, 714], rows: [['hub', 24, 24], ['a', 24, 146], ['b', 24, 512], ['c', 24, 634], ['a2', 24, 268], ['a3', 24, 390]],
-        d: ['M 124 80 C 124 112, 124 112, 124 144', 'M 24 44 C 13.3 44, 13.3 548, 22 548', 'M 24 44 C 2.7 44, 2.7 670, 22 670', 'M 124 202 C 124 234, 124 234, 124 266', 'M 124 324 C 124 356, 124 356, 124 388'],
+        d: ['M 124 80 C 124 112, 124 112, 124 144', 'M 24 44 C 13.3 44, 13.3 548, 22 548', 'M 24 44 C 13.3 44, 13.3 670, 22 670', 'M 124 202 C 124 234, 124 234, 124 266', 'M 124 324 C 124 356, 124 356, 124 388'],
       },
       // A chain of five with an edge skipping two steps: 1848 px left to right.
       'skip edge': {
@@ -110,10 +110,10 @@ describe('layered left-to-right diagram layout', () => {
       },
     } as const;
     const inside = (x: number, y: number, box: { x: number; y: number }) => x > box.x + 0.5 && x < box.x + 199.5 && y > box.y + 0.5 && y < box.y + 55.5;
-    const along = (d: string) => {
+    const along = (d: string, pieces = 2000) => {
       const [x0, y0, x1, y1, x2, y2, x3, y3] = [...d.matchAll(/-?[\d.]+/gu)].map(m => Number(m[0])) as [number, number, number, number, number, number, number, number];
-      return Array.from({ length: 2001 }, (_, i) => {
-        const t = i / 2000, u = 1 - t;
+      return Array.from({ length: pieces + 1 }, (_, i) => {
+        const t = i / pieces, u = 1 - t;
         return { x: u ** 3 * x0 + 3 * u * u * t * x1 + 3 * u * t * t * x2 + t ** 3 * x3, y: u ** 3 * y0 + 3 * u * u * t * y1 + 3 * u * t * t * y2 + t ** 3 * y3 };
       });
     };
@@ -141,6 +141,54 @@ describe('layered left-to-right diagram layout', () => {
         expect(labels.filter(l => l.left < 0 || l.right > layout.width)).toEqual([]);
       });
     }
+
+    it('holds over random graphs: every stacked one fits the narrow column, nothing touches a node, a note or another label', () => {
+      let seed = 20261121;
+      const next = (bound: number): number => { seed = (seed * 1103515245 + 12345) % 2147483648; return Math.floor(seed / 65536) % bound; };
+      let stacked = 0, isolated = 0, leaders = 0;
+      for (let graph = 0; graph < 800; graph++) {
+        const ids = Array.from({ length: 2 + next(11) }, (_, i) => `n${i}`);
+        const edges = Array.from({ length: 1 + next(ids.length * 2) }, (_, i) => edge(`e${i}`, ids[next(ids.length)]!, ids[next(ids.length)]!));
+        const layout = layoutDiagram(ids.map(id => ({ id })), edges, READABLE_SPACING);
+        // Stacked: wider than three columns left to right and not a plain chain, so the readable form differs from both unbanded forms.
+        const leftToRight = layoutDiagram(ids.map(id => ({ id })), edges, { ...READABLE_SPACING, maxColumns: Number.POSITIVE_INFINITY });
+        const layers = Math.max(...leftToRight.nodes.map(n => n.layer)) + 1;
+        if (layers <= 3 || layout.nodes.some(n => n.x !== layout.nodes[0]!.x)) continue;
+        stacked++;
+        expect(layout.width, `graph ${graph} width`).toBeLessThanOrEqual(STACK_COLUMN);
+        const linked = new Set(edges.flatMap(e => [e.from, e.to]));
+        if (ids.some(id => !linked.has(id))) isolated++;
+        for (const e of layout.edges) {
+          const touched = [...along(e.d, 200), ...arrowheadOf(e.d)].filter(at => layout.nodes.some(n => inside(at.x, at.y, n)));
+          expect(touched, `graph ${graph} ${e.id} line or arrowhead`).toEqual([]);
+        }
+        const svg = renderDiagramSvg({ nodes: ids.map(id => ({ id, label: id, epistemic: 'inferred' as const })), edges: edges.map(e => ({ ...e, label: LONG_LABEL, epistemic: 'inferred' as const })) }, graph, text => text, READABLE_SPACING);
+        assertInertSvg(svg);
+        leaders += (svg.match(/class="edge-leader"/gu) ?? []).length;
+        // A node's box includes the note under it when it has no edges.
+        const boxes = layout.nodes.map(n => ({ left: n.x, right: n.x + 200, top: n.y, bottom: n.y + 56 + (linked.has(n.id) ? 0 : 24) }));
+        const labels = [...svg.matchAll(/<rect class="edge-label" x="([\d.]+)" y="([\d.]+)" width="([\d.]+)" height="([\d.]+)"/gu)].map(m => ({ left: Number(m[1]), top: Number(m[2]), right: Number(m[1]) + Number(m[3]), bottom: Number(m[2]) + Number(m[4]) }));
+        expect(labels.filter(l => boxes.some(n => l.left < n.right && n.left < l.right && l.top < n.bottom && n.top < l.bottom)), `graph ${graph} on a node or note`).toEqual([]);
+        expect(labels.filter((l, i) => labels.some((o, j) => j > i && l.left < o.right && o.left < l.right && l.top < o.bottom && o.top < l.bottom)), `graph ${graph} overprinted`).toEqual([]);
+        // Every label stays where the layout put it: the gaps hold their slots and notes.
+        // (The drawing rounds a label's box to a tenth.)
+        expect(labels.filter((l, i) => Math.abs((l.left + l.right) / 2 - layout.edges[i]!.labelX) > 0.15 || Math.abs((l.top + l.bottom) / 2 - layout.edges[i]!.labelY) > 0.15), `graph ${graph} moved`).toEqual([]);
+      }
+      // The population reaches what it claims to: many stacked graphs, some with an isolated node, and lane labels with leaders.
+      expect(stacked).toBeGreaterThan(300);
+      expect(isolated).toBeGreaterThan(50);
+      expect(leaders).toBeGreaterThan(100);
+    }, 30_000);
+
+    it('a fan-out costs one lane, and lanes draw closer before a diagram outgrows the narrow column', () => {
+      const widthOf = (ids: string[], edges: ReturnType<typeof edge>[]) => layoutDiagram(ids.map(id => ({ id })), edges, READABLE_SPACING).width;
+      // A hub with six children and a three-deep branch (review finding 1: 268 px before the lanes were shared).
+      const kids = ['k1', 'k2', 'k3', 'k4', 'k5', 'k6'];
+      expect(widthOf(['hub', ...kids, 'd2', 'd3'], [...kids.map(k => edge(`h${k}`, 'hub', k)), edge('k1d2', 'k1', 'd2'), edge('d2d3', 'd2', 'd3')])).toBe(248);
+      // Every edge of a complete DAG on eight nodes: six sources with an edge that skips a row, so six lanes, drawn 5 px apart (364 px before).
+      const eight = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h'];
+      expect(widthOf(eight, eight.flatMap((from, i) => eight.slice(i + 1).map(to => edge(`${from}${to}`, from, to))))).toBe(258);
+    });
 
     it('keeps the default spacing and a plain chain as they were', () => {
       const ids = ['n0', 'n1', 'n2', 'n3', 'n4'];

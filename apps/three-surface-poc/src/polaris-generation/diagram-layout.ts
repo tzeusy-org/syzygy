@@ -59,6 +59,8 @@ interface LaidOutNode { readonly id: string; readonly layer: number; readonly ro
 interface LaidOutEdge {
   readonly id: string; readonly from: string; readonly to: string; readonly back: boolean;
   readonly d: string; readonly labelX: number; readonly labelY: number;
+  /** The label sits away from its line (a stacked diagram's lane edge): draw it a leader as if it had been moved. */
+  readonly lead?: true;
 }
 interface DiagramLayout { readonly width: number; readonly height: number; readonly nodes: readonly LaidOutNode[]; readonly edges: readonly LaidOutEdge[] }
 
@@ -187,23 +189,30 @@ export function layoutDiagram(nodes: readonly LayoutNodeInput[], edges: readonly
   };
 }
 
-/** How far apart two side lanes run, and how far the first runs from the nodes' edge. */
+/** How far apart two side lanes run, and how far the first runs from the nodes' edge, at most and at least: lanes draw closer, down to the
+ * least, until the stacked form fits `STACK_COLUMN`. */
 const LANE_STEP = 8;
+const LANE_STEP_LEAST = 4;
+/** The narrowest box a dossier gives a diagram: 261 px on a 390 px screen, measured in Chrome on the reading fixture (syzygy-3efd.19). */
+const STACK_COLUMN = 261;
 /** Where a lane edge leaves its source's side and enters its target's, measured down from the node's top. */
 const LANE_EXIT = 20;
 const LANE_ENTRY = 36;
 
 /**
  * A diagram wider than the readable column that is not a plain chain, stacked top to bottom one node to a row, so it is no wider than one
- * node and its side lanes: 248 px with up to two lanes a side, 260 px with four on one side and two on the other, inside the 261 px a
- * dossier gives a diagram on a 390 px screen (syzygy-3efd.19). Past that it scrolls in its own box, as any too-wide diagram does. Rows are in a topological order of the
- * forward edges, so every forward edge points down and every back edge up.
+ * node and its side lanes: 248 px with up to two lanes a side, and inside `STACK_COLUMN` with up to twelve lanes in all, the lanes drawn
+ * closer as they grow (syzygy-3efd.19). Past that it scrolls in its own box, as any too-wide diagram does. Rows are in a topological
+ * order of the forward edges, so every forward edge points down and every back edge up.
  * - A forward edge to the next row is a straight drop from the source's foot to the target's head.
  * - Any other forward edge leaves the source's left side, bulges into a lane left of every node and enters the target's left side; a back
  *   edge or a self-loop does the same on the right. A cubic whose two inner control points share an x outside the nodes never reaches
- *   the nodes' side, so no line crosses a node. Lanes are reused by edges whose rows do not overlap, the shorter span inside.
+ *   the nodes' side, so no line crosses a node. Left-lane edges from one source share its lane, as right-lane edges into one target
+ *   share theirs (they leave or enter at one point, so a fan-out costs one lane); a lane is reused by groups whose rows do not overlap,
+ *   the shorter span inside.
  * - Each edge label wants a slot in the gap next to its target (above it for a forward edge, below for a back edge), centred on the node
- *   column; a gap grows to hold its slots, so no label starts on a node or on another label.
+ *   column, under the note of a node with no edges; a gap grows to hold its slots, so no label starts on a node, a note or another label.
+ *   A lane edge's label is drawn a leader to its line, which runs beside the column, not through the label's gap.
  */
 function stackDiagram(
   nodes: readonly LayoutNodeInput[], edges: readonly LayoutEdgeInput[], ends: readonly { readonly from: number; readonly to: number }[],
@@ -230,33 +239,48 @@ function stackDiagram(
   const straight = ends.map((end, e) => !back[e] && position[end.to]! === position[end.from]! + 1);
   const side = ends.map((_, e) => straight[e] ? 'none' : back[e] ? 'right' : 'left');
 
-  // Lanes: shorter spans first, each into the innermost lane none of whose spans shares a row with it.
+  // Lanes: a left-lane edge is grouped by its source, a right-lane edge by its target; groups take lanes shorter span first, each into
+  // the innermost lane none of whose groups shares a row with it.
   const lane = ends.map(() => 0);
   const laneCount = { left: 0, right: 0 };
   for (const which of ['left', 'right'] as const) {
-    const spans = ends.flatMap((end, e) => side[e] === which
-      ? [{ e, low: Math.min(position[end.from]!, position[end.to]!), high: Math.max(position[end.from]!, position[end.to]!) }] : []);
-    spans.sort((a, b) => (a.high - a.low) - (b.high - b.low) || a.e - b.e);
+    const groups = new Map<number, { members: number[]; low: number; high: number; first: number }>();
+    ends.forEach((end, e) => {
+      if (side[e] !== which) return;
+      const key = which === 'left' ? end.from : end.to;
+      const low = Math.min(position[end.from]!, position[end.to]!), high = Math.max(position[end.from]!, position[end.to]!);
+      const group = groups.get(key);
+      if (group === undefined) groups.set(key, { members: [e], low, high, first: e });
+      else { group.members.push(e); group.low = Math.min(group.low, low); group.high = Math.max(group.high, high); }
+    });
+    const spans = [...groups.values()].sort((a, b) => (a.high - a.low) - (b.high - b.low) || a.first - b.first);
     const taken: { low: number; high: number }[][] = [];
     for (const span of spans) {
       let k = 0;
       while (taken[k]?.some(other => span.low <= other.high && other.low <= span.high)) k++;
       (taken[k] ??= []).push(span);
-      lane[span.e] = k;
+      for (const e of span.members) lane[e] = k;
     }
     laneCount[which] = taken.length;
   }
-  const gutter = (count: number): number => Math.max(MARGIN, count * LANE_STEP + 4);
+  const gutterAt = (count: number, step: number): number => Math.max(MARGIN, count * step + 4);
+  let step = LANE_STEP;
+  while (step > LANE_STEP_LEAST && gutterAt(laneCount.left, step) + NODE_WIDTH + gutterAt(laneCount.right, step) > STACK_COLUMN) step--;
+  const gutter = (count: number): number => gutterAt(count, step);
   const nodeX = gutter(laneCount.left);
 
   // Label slots: gap g sits above row g (g = order.length is the space under the last row).
   const slotHeight = spacing.edgeLines * 15 + 6 + LABEL_CLEARANCE + 1;
+  const connected = new Set(ends.flatMap(end => [end.from, end.to]));
+  // The note under a node with no edges takes the top of the gap below it.
+  const noteAbove = Array.from({ length: order.length + 1 }, (_, g) => g > 0 && !connected.has(order[g - 1]!) ? NODE_NOTE_HEIGHT : 0);
   const slots = Array.from({ length: order.length + 1 }, () => 0);
   const slotOf = ends.map((end, e) => {
     const gap = back[e] ? position[end.to]! + 1 : position[end.to]!;
     return { gap, k: slots[gap]!++ };
   });
-  const gapHeight = slots.map((count, g) => g === 0 ? 0 : Math.max(g === order.length ? 0 : spacing.gapY, count === 0 ? 0 : count * slotHeight + 2 * LABEL_CLEARANCE + 2));
+  const gapHeight = slots.map((count, g) => g === 0 ? 0
+    : Math.max(g === order.length ? 0 : spacing.gapY, noteAbove[g]! + (count === 0 ? 0 : count * slotHeight + 2 * LABEL_CLEARANCE + 2)));
   const top: number[] = [];
   let next = MARGIN;
   for (let p = 0; p < order.length; p++) { next += gapHeight[p]!; top.push(next); next += NODE_HEIGHT; }
@@ -268,7 +292,7 @@ function stackDiagram(
     const from = laidNodes[ends[e]!.from]!, to = laidNodes[ends[e]!.to]!;
     const { gap, k } = slotOf[e]!;
     const gapTop = gap === 0 ? MARGIN : top[gap - 1]! + NODE_HEIGHT;
-    const label = { labelX: centre, labelY: gapTop + LABEL_CLEARANCE + 1 + (k + 0.5) * slotHeight };
+    const label = { labelX: centre, labelY: gapTop + noteAbove[gap]! + LABEL_CLEARANCE + 1 + (k + 0.5) * slotHeight };
     if (straight[e]) {
       const y1 = from.y + NODE_HEIGHT, y2 = to.y - 2, dy = (y2 - y1) / 2;
       return { id: edge.id, from: edge.from, to: edge.to, back: false, d: `M ${num(centre)} ${num(y1)} C ${num(centre)} ${num(y1 + dy)}, ${num(centre)} ${num(y2 - dy)}, ${num(centre)} ${num(y2)}`, ...label };
@@ -277,9 +301,9 @@ function stackDiagram(
     const x0 = left ? nodeX : nodeX + NODE_WIDTH, x3 = left ? nodeX - 2 : nodeX + NODE_WIDTH + 2;
     const y0 = from.y + (left ? LANE_EXIT : LANE_ENTRY), y3 = to.y + (left ? LANE_ENTRY : LANE_EXIT);
     // The curve's farthest point, at t = 1/2, lies three quarters of the way to the control x: put it on the lane.
-    const reach = (lane[e]! + 1) * LANE_STEP / 0.75;
+    const reach = (lane[e]! + 1) * step / 0.75;
     const c = left ? x0 - reach : x0 + reach;
-    return { id: edge.id, from: edge.from, to: edge.to, back: back[e]!, d: `M ${num(x0)} ${num(y0)} C ${num(c)} ${num(y0)}, ${num(c)} ${num(y3)}, ${num(x3)} ${num(y3)}`, ...label };
+    return { id: edge.id, from: edge.from, to: edge.to, back: back[e]!, d: `M ${num(x0)} ${num(y0)} C ${num(c)} ${num(y0)}, ${num(c)} ${num(y3)}, ${num(x3)} ${num(y3)}`, ...label, lead: true };
   });
   return { width: nodeX + NODE_WIDTH + gutter(laneCount.right), height: Math.ceil(bottom + MARGIN), nodes: laidNodes, edges: laidEdges };
 }
@@ -464,8 +488,8 @@ export function renderDiagramSvg(
     const at = layout.edges[i]!, lines = edgeLines[i]!, { x, y, width, height } = { ...wanted[i]!, ...placed[i]! };
     const top = y - height / 2;
     // A label the search moved keeps a thin leader to its own line where one can be seen, in the line's layer: without one, it can read as
-    // another line's label.
-    const moved = x !== at.labelX || y !== at.labelY;
+    // another line's label. So does a stacked lane edge's label, which sits in the column, away from its line (`lead`).
+    const moved = x !== at.labelX || y !== at.labelY || at.lead === true;
     const run = moved
       ? leaderRun(curves[i]!, boxOf(i), [...standing, ...wanted.flatMap((_, j) => j === i ? [] : [boxOf(j)])], curves.filter((_, j) => layout.edges[j]!.d !== at.d),
         heads.filter((_, j) => layout.edges[j]!.d !== at.d))
