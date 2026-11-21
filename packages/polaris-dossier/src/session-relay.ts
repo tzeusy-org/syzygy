@@ -3,9 +3,9 @@ import * as http from 'node:http';
 import * as https from 'node:https';
 import path from 'node:path';
 import { randomUUID } from 'node:crypto';
-import { sha256 } from '@syzygy/support';
+import { deepFreeze, sha256 } from '@syzygy/support';
 import { SESSION_CONTENT_CLASSES, type SessionAdmission, type SessionBinding, type SessionConsumedToolResult, type SessionTool } from './session-egress-policy.js';
-import type { SessionResponseStopReason } from './session-response.js';
+import type { SessionResponseStopReason, SessionResponseUsage } from './session-response.js';
 
 export interface SessionRelayLimits {
   readonly requestBytes: number; readonly responseBytes: number;
@@ -55,7 +55,8 @@ export interface SessionRelayPorts {
   readonly providerHeaders: (incoming: Readonly<Record<string, string>>) => Readonly<Record<string, string>> | null;
   /** Complete buffered response ingest, including SSE reconstruction and screening,
    * must succeed before any response body is released to the CLI. */
-  readonly response: (bytes: Uint8Array, contentType: string) => { readonly ok: true; readonly observation: SessionResponseObservation } | { readonly ok: false };
+  readonly response: (bytes: Uint8Array, contentType: string) => { readonly ok: true; readonly observation: SessionResponseObservation;
+    readonly usage?: SessionResponseUsage } | { readonly ok: false };
   readonly audit: (event: SessionAuditEvent) => void | Promise<void>;
 }
 export interface SessionRelay {
@@ -68,6 +69,16 @@ export interface SessionRelay {
    * does not establish that the CLI received it. */
   responseFlushed(): boolean;
   close(): Promise<void>;
+}
+interface SessionRelayAuditEvidence {
+  readonly usage: SessionResponseUsage | null;
+}
+const relayEvidence = new WeakMap<SessionRelay, WeakMap<SessionAuditEvent, SessionRelayAuditEvidence>>();
+
+/** Read the observation only for the exact callback from the selected relay.
+ * Keep response usage outside the serialized legacy callback envelope. */
+export function readSessionRelayAuditEvidence(relay: SessionRelay, event: SessionAuditEvent): SessionRelayAuditEvidence | null {
+  return relayEvidence.get(relay)?.get(event) ?? null;
 }
 interface ProviderResponse {
   readonly status: number; readonly contentType: string; readonly body: Uint8Array;
@@ -129,6 +140,7 @@ async function start(socket: string, subject: SessionRelaySubject, ports: Sessio
   subject = Object.freeze({ binding: Object.freeze({ ...subject.binding }), project: subject.project, pin: subject.pin, principal: subject.principal });
   ports = Object.freeze({ current: ports.current, request: ports.request, providerHeaders: ports.providerHeaders, response: ports.response, audit: ports.audit });
   const controllers = new Set<AbortController>();
+  const evidence = new WeakMap<SessionAuditEvent, SessionRelayAuditEvidence>();
   let pending = false, poisoned = false, closing = false, responseFlushed = false;
   const server = http.createServer({ maxHeaderSize: 16_384, requestTimeout: limits.milliseconds, headersTimeout: Math.min(limits.milliseconds, 10_000) }, (incoming, outgoing) => {
     if (pending || poisoned || closing) { outgoing.writeHead(503, { 'content-type': 'application/json', connection: 'close' }); outgoing.end(SAFE_FAILURE); incoming.resume(); return; }
@@ -140,15 +152,20 @@ async function start(socket: string, subject: SessionRelaySubject, ports: Sessio
     let received: SessionAuditEvent['received'] = null;
     let consumedToolResults: SessionAuditEvent['consumedToolResults'] = [];
     let observedResponse: SessionAuditEvent['response'] = null;
+    let observedUsage: SessionResponseUsage | null = null;
     let size = 0;
     const chunks: Buffer[] = [];
     const finish = (): void => { terminal = true; clearTimeout(timer); pending = false; controllers.delete(controller); };
-    const event = (kind: SessionAuditEvent['event'], outcome: SessionAuditEvent['outcome'], status: number | null): SessionAuditEvent => ({
-      event: kind, subject, requestId, at: new Date().toISOString(), credentialIdentity: 'Unknown', exposureMode: 'private-local-cli',
-      authority: 'GOVERNANCE-SIMPLIFICATION-D10', admission, received,
-      route: ROUTES.has(incoming.url ?? '') ? incoming.url!.includes('/count_tokens') ? 'count-tokens' : 'messages' : null,
-      consumedToolResults, response: kind === 'response-admitted' ? observedResponse : null, outcome, status,
-    });
+    const event = (kind: SessionAuditEvent['event'], outcome: SessionAuditEvent['outcome'], status: number | null): SessionAuditEvent => {
+      const row = deepFreeze({
+        event: kind, subject, requestId, at: new Date().toISOString(), credentialIdentity: 'Unknown', exposureMode: 'private-local-cli',
+        authority: 'GOVERNANCE-SIMPLIFICATION-D10', admission, received,
+        route: ROUTES.has(incoming.url ?? '') ? incoming.url!.includes('/count_tokens') ? 'count-tokens' : 'messages' : null,
+        consumedToolResults, response: kind === 'response-admitted' ? observedResponse : null, outcome, status,
+      } satisfies SessionAuditEvent);
+      evidence.set(row, Object.freeze({ usage: kind === 'response-admitted' ? observedUsage : null }));
+      return row;
+    };
     const refuse = (status: number): void => {
       if (terminal) return;
       poisoned = true; refusing = true; controller.abort(); incoming.resume();
@@ -255,6 +272,11 @@ async function start(socket: string, subject: SessionRelaySubject, ports: Sessio
           await ports.audit(event('response-refused', 'refused', responseStatus)); refuse(502); return;
         }
         const { stopReason, textBlocks, tool } = accepted.observation;
+        const usage = accepted.usage;
+        if (usage !== undefined) {
+          const { inputTokens, outputTokens, cacheCreationInputTokens, cacheReadInputTokens } = usage;
+          observedUsage = Object.freeze({ inputTokens, outputTokens, cacheCreationInputTokens, cacheReadInputTokens });
+        }
         observedResponse = Object.freeze({ digest: responseDigest, bytes: responseBody.byteLength, content, stopReason, textBlocks,
           tool: tool === null ? null : Object.freeze({ id: tool.id, name: tool.name, inputSha256: tool.inputSha256 }) });
         await ports.audit(event('response-admitted', 'response-admitted', responseStatus));
@@ -282,13 +304,15 @@ async function start(socket: string, subject: SessionRelaySubject, ports: Sessio
     fs.chmodSync(socket, 0o600);
   }
   catch { server.close(); throw new Error('session-relay-start-failed'); }
-  return { socket, healthy: () => !poisoned && !closing, responseFlushed: () => responseFlushed && !poisoned && !closing, close: async () => {
+  const relay = Object.freeze({ socket, healthy: () => !poisoned && !closing, responseFlushed: () => responseFlushed && !poisoned && !closing, close: async () => {
     closing = true; poisoned = true;
     for (const controller of controllers) controller.abort();
     server.closeAllConnections();
     await new Promise<void>(resolve => server.close(() => resolve()));
     try { fs.unlinkSync(socket); } catch { /* Retain only safe lifecycle metadata outside this transport. */ }
-  } };
+  } });
+  relayEvidence.set(relay, evidence);
+  return relay;
 }
 
 /** New segment only. The supervisor chooses a directory absent from every role

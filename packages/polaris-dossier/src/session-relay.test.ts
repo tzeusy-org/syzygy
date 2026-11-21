@@ -5,7 +5,8 @@ import path from 'node:path';
 import { createHash } from 'node:crypto';
 import { afterEach, describe, expect, it } from 'vitest';
 import { tempDir } from '@syzygy/test-kit';
-import { createSessionAuditSegment, sessionRelayTestPort, SESSION_RELAY_LIMITS, type SessionAuditEvent, type SessionRelay, type SessionRelayPorts, type SessionRelaySubject } from './session-relay.js';
+import { createSessionAuditSegment, readSessionRelayAuditEvidence, sessionRelayTestPort, SESSION_RELAY_LIMITS, type SessionAuditEvent,
+  type SessionRelay, type SessionRelayPorts, type SessionRelaySubject } from './session-relay.js';
 
 const BODY = '{"messages":[{"role":"user","content":"NONSECRET-admitted"}]}';
 const RESPONSE = 'event: message_stop\ndata: {"type":"message_stop"}\n\n';
@@ -54,6 +55,31 @@ async function fixture(overrides: Partial<SessionRelayPorts> = {}, options: { re
 }
 
 describe('session relay choke point ordering', () => {
+  it('authenticates immutable issued callbacks to their specific relay and snapshots response usage', async () => {
+    const mutableUsage = { inputTokens: 11, outputTokens: 12, cacheCreationInputTokens: 0, cacheReadInputTokens: 4 };
+    const other = await fixture();
+    const callbacks: SessionAuditEvent[] = [];
+    const own = await fixture({
+      response: () => ({ ...ACCEPTED, usage: mutableUsage }),
+      audit: event => { callbacks.push(event); },
+    });
+    expect((await request(own.relay)).status).toBe(200);
+    expect((await request(other.relay)).status).toBe(200);
+    expect(callbacks.map(event => event.event)).toEqual(['attempt-allowed', 'send-attempt', 'send-outcome', 'response-admitted']);
+    expect(readSessionRelayAuditEvidence(own.relay, callbacks[0]!)).toEqual({ usage: null });
+    const response = callbacks.at(-1)!;
+    mutableUsage.inputTokens = 999;
+    expect(readSessionRelayAuditEvidence(own.relay, response)).toEqual({
+      usage: { inputTokens: 11, outputTokens: 12, cacheCreationInputTokens: 0, cacheReadInputTokens: 4 },
+    });
+    expect(Object.isFrozen(response)).toBe(true);
+    expect(Object.isFrozen(response.admission?.classes)).toBe(true);
+    expect(readSessionRelayAuditEvidence(own.relay, structuredClone(response))).toBeNull();
+    expect(readSessionRelayAuditEvidence({ ...own.relay }, response)).toBeNull();
+    expect(readSessionRelayAuditEvidence(other.relay, response)).toBeNull();
+    expect(readSessionRelayAuditEvidence(own.relay, other.audit[0]!)).toBeNull();
+  });
+
   it('rejects missing, expanded or nonfinite limits before opening the endpoint', async () => {
     const start = sessionRelayTestPort(async () => { throw new Error('unexpected provider call'); });
     const ports: SessionRelayPorts = { current: () => true, request: () => ({ ok: true, body: Buffer.from(BODY), admission: ADMISSION, consumedToolResults: [] }),

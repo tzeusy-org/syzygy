@@ -7,7 +7,7 @@ import { createSessionController } from './session-controller.js';
 import type { SessionCredential } from './session-credential.js';
 import { SESSION_POLICY_LIMITS, SESSION_TOOLS, type SessionAdmission, type SessionContentClass, type SessionOrigin } from './session-egress-policy.js';
 import { isSessionProfile, sessionProfileProviderHeaders, type SessionProfile } from './session-profile.js';
-import { startSessionRelay, type SessionAuditEvent, type SessionRelay, type SessionRelayLimits, type SessionRelayPorts,
+import { readSessionRelayAuditEvidence, startSessionRelay, type SessionAuditEvent, type SessionRelay, type SessionRelayLimits, type SessionRelayPorts,
   type SessionRelaySubject } from './session-relay.js';
 import { decodeSessionResponse, type SessionResponseUsage } from './session-response.js';
 import { createSessionTools, type SessionToolsOptions, type SessionToolsReceipt } from './session-tools.js';
@@ -117,12 +117,16 @@ async function start(input: SessionHostOptions, relayStart: RelayStart): Promise
             if (tool !== null || name === undefined || typeof block.id !== 'string') throw new Error('session-host-unavailable');
             tool = { id: block.id, name, inputSha256: sha256(encodeCanonicalJson(block.input, SESSION_POLICY_LIMITS)) };
           }
-          return { ok: true, observation: { stopReason: decoded.stopReason, textBlocks, tool } };
+          return { ok: true, observation: { stopReason: decoded.stopReason, textBlocks, tool }, usage: decoded.usage };
         }
       } catch { /* Fixed failure below. */ }
       poison(); return { ok: false };
     },
     audit: async event => {
+      if (relay === undefined || readSessionRelayAuditEvidence(relay, event) === null) {
+        poison();
+        throw new Error('session-host-unavailable');
+      }
       if (event.event === 'attempt-refused' || event.event === 'transport-failed' || event.event === 'response-refused') poison();
       try { await ports.audit(event); }
       catch { poison(); throw new Error('session-host-unavailable'); }

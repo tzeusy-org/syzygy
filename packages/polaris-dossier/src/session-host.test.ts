@@ -87,8 +87,11 @@ async function fixture() {
     server.on('request', (_request, response) => { response.once('close', relayClosed); });
     failRelayServer = () => { server.emit('error', new Error('NONSECRET-own-relay-server-failure')); };
   });
-  const start = async (changes: Partial<SessionHostOptions> = {}) => {
-    const host = await sessionHostTestPort(relay)({ ...options, ...changes }); cleanup.push(() => host.close()); return host;
+  const start = async (changes: Partial<SessionHostOptions> = {}, copyRelayEvent = false) => {
+    const startRelay: typeof relay = copyRelayEvent
+      ? (socket, subject, ports, limits) => relay(socket, subject, { ...ports, audit: event => ports.audit(structuredClone(event)) }, limits)
+      : relay;
+    const host = await sessionHostTestPort(startRelay)({ ...options, ...changes }); cleanup.push(() => host.close()); return host;
   };
   const { tool_choice: _projection, ...baseline } = profile.baseline;
   const request = (messages: readonly unknown[] = [profile.initialMessage]) => JSON.stringify({ ...baseline,
@@ -115,6 +118,14 @@ async function invoke(host: SessionHost, value: unknown): Promise<any> {
 }
 
 describe('actual composed host controller, broker and checked relay', () => {
+  it('refuses a copied local relay callback before forwarding', async () => {
+    const f = await fixture(), host = await f.start({}, true);
+    expect((await send(host, f.request())).status).toBe(502);
+    expect(f.counts().forwards).toBe(0);
+    expect(f.exchanges).toEqual([]);
+    expect((await send(host, f.request())).status).toBe(503);
+  });
+
   it('delivers an issued tool once, audits before effect/release and admits only its exact canonical continuation', async () => {
     const f = await fixture(), host = await f.start();
     expect((await send(host, f.request())).status).toBe(200);
