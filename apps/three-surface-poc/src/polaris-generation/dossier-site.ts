@@ -286,6 +286,11 @@ export function renderDossierSite(input: DossierSiteInput & { readonly local?: L
   const hueAttr = (hue: number): string => local === undefined ? '' : ` data-hue="${hue}"`;
   // Every operator-agent figure drawn from the draft says it is curated (RFC7-28, version 2.3); the provider mode's bytes are pinned.
   const curated = local === undefined ? '' : ' data-visual-provenance="curated"';
+  // The drawing is `role="img"`, named by its caption and described by its list (`aria-labelledby="diagram-title-N"`,
+  // `aria-describedby="diagram-text-N"`): an operator-agent figure carries both ids (syzygy-3efd.70). The provider mode's bytes are
+  // pinned, so its figures keep the references without the ids, as they always have.
+  const figureIds = (index: number): { readonly title: string; readonly text: string } => local === undefined ? { title: '', text: '' }
+    : { title: ` id="diagram-title-${index}"`, text: ` id="diagram-text-${index}"` };
   if (poleSpec !== undefined) {
     const homes = draft.sections.map(section => poles.filter(pole => pole.sections.includes(section.id)).length);
     if (poles.length === 0 || homes.some(count => count !== 1) || poles.some(pole => pole.sections.length === 0 || pole.sections.some(id => !draft.sections.some(section => section.id === id)))
@@ -558,7 +563,8 @@ export function renderDossierSite(input: DossierSiteInput & { readonly local?: L
     // The provider mode keeps its fixed legend (its bytes are pinned); an operator-agent figure legends only the styles it draws, with a
     // tally of its boxes and arrows by marking (syzygy-3efd.17): no figure element is observed there, so "Solid: observed" was false.
     const legend = local === undefined ? FIXED_DIAGRAM_LEGEND : figureLegend([...d.nodes, ...d.edges].map(element => element.epistemic), d.nodes.length, d.edges.length);
-    return `<figure${from.startsWith('poles/') ? '' : hueAttr(index % HUES + 1)}${curated}><figcaption>${escape(d.title)}</figcaption><p class="diagram-relationship"><span class="eyebrow">${escape(d.kind)}</span> ${escape(d.relationship)}</p><div class="diagram-scroll">${svg}</div>${legend}<details><summary>Read every component and relationship</summary><ul>${nodeList}</ul><ol>${edgeList}</ol><details class="diagram-source"><summary>Declarative source (Mermaid)</summary><pre>${escape(diagramToMermaid(d))}</pre></details></details></figure>`;
+    const ids = figureIds(index);
+    return `<figure${from.startsWith('poles/') ? '' : hueAttr(index % HUES + 1)}${curated}><figcaption${ids.title}>${escape(d.title)}</figcaption><p class="diagram-relationship"><span class="eyebrow">${escape(d.kind)}</span> ${escape(d.relationship)}</p><div class="diagram-scroll">${svg}</div>${legend}<details${ids.text}><summary>Read every component and relationship</summary><ul>${nodeList}</ul><ol>${edgeList}</ol><details class="diagram-source"><summary>Declarative source (Mermaid)</summary><pre>${escape(diagramToMermaid(d))}</pre></details></details></figure>`;
   };
   // A v7 sequence or swimlane (REQ-polaris-generation-034 version 2.5): the figure a graph figure with its home takes, holding its drawing and
   // its phone form, of which the stylesheet displays one by the width of the `figure-forms` box. Each participant, lane and step is a claim
@@ -599,9 +605,10 @@ export function renderDossierSite(input: DossierSiteInput & { readonly local?: L
     figureStructures.push({ index, entry: figure.kind === 'sequence'
       ? { diagram: d.id, kind: 'sequence', page: from, laidOutPx: width, participants: figure.participants.map(p => p.id), messages: figure.messages.map(m => ({ id: m.id, from: m.from, to: m.to })) }
       : { diagram: d.id, kind: 'swimlane', page: from, laidOutPx: width, lanes: figure.lanes.map(l => l.id), steps: figure.steps.map(st => ({ id: st.id, lane: st.lane })) } });
-    return `<figure${from.startsWith('poles/') ? '' : hueAttr(index % HUES + 1)}${curated} data-figure-kind="${figure.kind}"><figcaption>${escape(d.title)}</figcaption><p class="diagram-relationship"><span class="eyebrow">${figure.kind}</span> ${escape(d.relationship)}</p>`
+    const ids = figureIds(index);
+    return `<figure${from.startsWith('poles/') ? '' : hueAttr(index % HUES + 1)}${curated} data-figure-kind="${figure.kind}"><figcaption${ids.title}>${escape(d.title)}</figcaption><p class="diagram-relationship"><span class="eyebrow">${figure.kind}</span> ${escape(d.relationship)}</p>`
       + `<div class="figure-forms" data-figure-width="${width}"><div class="diagram-scroll figure-drawing">${svg}</div><ol class="figure-stepper">${stepper}</ol></div>`
-      + `${figureLegend(all.map(element => element.epistemic), 0, 0, 'as marked', tallyHead, figure.kind === 'swimlane')}<details><summary>Read every component and relationship</summary><ul>${ownerList}</ul><ol>${useList}</ol><details class="diagram-source"><summary>Declarative source (Mermaid)</summary><pre>${escape(figureToMermaid(figure))}</pre></details></details></figure>`;
+      + `${figureLegend(all.map(element => element.epistemic), 0, 0, 'as marked', tallyHead, figure.kind === 'swimlane')}<details${ids.text}><summary>Read every component and relationship</summary><ul>${ownerList}</ul><ol>${useList}</ol><details class="diagram-source"><summary>Declarative source (Mermaid)</summary><pre>${escape(figureToMermaid(figure))}</pre></details></details></figure>`;
   };
   const topicAttr = (id: string): string => ` data-topics="${escape((topics[id] ?? []).join(' '))}"`;
   const localPages = local?.pages ?? [];
@@ -1030,9 +1037,9 @@ export function renderDerivedRegion(derived: LocalDerivedStructure): string {
   const entries = derived.facts.map(fact => `<li data-derived-id="${escape(fact.id)}" data-derived-fact="${fact.fact}" data-epistemic="${fact.epistemic}"${fact.unknownReason === null ? '' : ` data-unknown-reason="${fact.unknownReason}"`}`
     + ` data-derived-rule="${escape(fact.rule)}" data-derived-rule-version="${fact.ruleVersion}" data-derived-path="${escape(fact.path)}" data-derived-record="${record}" data-derived-revision="${escape(derived.recordRevision)}">`
     + `${escape(said(fact))} <span class="derived-mark">Derived by Syzygy</span><span class="visually-hidden ev"> ${escape(evidence(fact))}</span></li>`).join('');
-  return `${head}<figure class="derived-figure" data-visual-provenance="computed" data-derived-record="${record}"><figcaption>Derived by Syzygy from the pinned tree</figcaption>`
+  return `${head}<figure class="derived-figure" data-visual-provenance="computed" data-derived-record="${record}"><figcaption id="diagram-title-derived">Derived by Syzygy from the pinned tree</figcaption>`
     + `<p class="derived-note">Derived by Syzygy from the paths and modes of the tree at revision ${escape(derived.recordRevision)}, listed at ${escape(derived.capturedAt)}, by rule top-level-unit version 1. No file body, size or object id was read. Current for that revision only.</p>`
-    + `<div class="diagram-scroll">${svg}</div>${notes}${legend}<details><summary>Read every derived fact</summary><ul class="derived-facts">${entries}</ul></details></figure></section>`;
+    + `<div class="diagram-scroll">${svg}</div>${notes}${legend}<details id="diagram-text-derived"><summary>Read every derived fact</summary><ul class="derived-facts">${entries}</ul></details></figure></section>`;
 }
 
 /** The machine view's `derivedStructure` member: beside and outside `reviewStatus`. */

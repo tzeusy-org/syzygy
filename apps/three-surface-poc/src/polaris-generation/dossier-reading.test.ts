@@ -40,8 +40,8 @@ describe('Poles: a landing page with the why section and a map, then one page pe
     const files = withPoles(SPEC);
     const pole = files.get('poles/2.html')!;
     expect(pole).toContain('<section id="pole" data-reading-level="1" data-pole="poles/2.html" data-hue="2">');
-    expect(pole).toContain('<figure data-visual-provenance="curated"><figcaption>Loop</figcaption>');
-    expect(files.get('index.html')!).toContain('<figure data-hue="1" data-visual-provenance="curated"><figcaption>Flow</figcaption>');
+    expect(pole).toContain('<figure data-visual-provenance="curated"><figcaption id="diagram-title-1">Loop</figcaption>');
+    expect(files.get('index.html')!).toContain('<figure data-hue="1" data-visual-provenance="curated"><figcaption id="diagram-title-0">Flow</figcaption>');
   });
 
   it('loses and repeats no claim against the page division with no Poles', () => {
@@ -215,7 +215,7 @@ describe('colour: six hues for Poles, diagrams and cards, none carrying a claim 
 
   it('gives each diagram outside a Pole page a hue in turn, and a diagram on a Pole page its Pole\'s', () => {
     const files = render();
-    const figures = [...files].flatMap(([path, html]) => path.endsWith('.html') ? [...html.matchAll(/<figure( data-hue="(\d)")? data-visual-provenance="curated"><figcaption>[^<]*<\/figcaption><p class="diagram-relationship">/gu)].map(match => ({ path, hue: match[2] })) : []);
+    const figures = [...files].flatMap(([path, html]) => path.endsWith('.html') ? [...html.matchAll(/<figure( data-hue="(\d)")? data-visual-provenance="curated"><figcaption id="diagram-title-\d+">[^<]*<\/figcaption><p class="diagram-relationship">/gu)].map(match => ({ path, hue: match[2] })) : []);
     expect(figures.length).toBeGreaterThan(0);
     expect(figures[0]).toEqual({ path: 'index.html', hue: '1' });
     for (const figure of figures) expect(figure.hue === undefined, figure.path).toBe(figure.path.startsWith('poles/'));
@@ -341,7 +341,7 @@ describe('figure legend and tally (syzygy-3efd.17)', () => {
       for (const [m, words] of [['observed', 'Solid'], ['inferred', 'Dashed'], ['unknown', 'Dotted']] as const) expect(html.includes(`${words}: `), `${path} ${m}`).toBe(by(m) > 0);
     }
     // The pair figure: two inferred boxes and two inferred arrows.
-    expect(figures.find(f => f.html.includes('<figcaption>Pair</figcaption>'))!.html).toContain('<p class="diagram-tally">2 boxes and 2 arrows, as marked: 0 observed, 4 inferred, 0 unknown.</p>');
+    expect(figures.find(f => f.html.includes('<figcaption id="diagram-title-2">Pair</figcaption>'))!.html).toContain('<p class="diagram-tally">2 boxes and 2 arrows, as marked: 0 observed, 4 inferred, 0 unknown.</p>');
   });
 
   it('a figure with an unknown box and arrow draws them dotted, legends the dotted style and counts them', () => {
@@ -350,8 +350,8 @@ describe('figure legend and tally (syzygy-3efd.17)', () => {
     const pair = local.draft.diagrams.find(d => d.id === 'pair')!;
     pair.nodes[1]!.epistemic = 'unknown';
     pair.edges[1]!.epistemic = 'unknown';
-    const html = [...renderLocalDossier({ ...input, local: local as unknown as typeof input.local }).files.values()].find(h => h.includes('<figcaption>Pair</figcaption>'))!;
-    const figure = html.slice(html.indexOf('<figcaption>Pair</figcaption>'), html.indexOf('</figure>', html.indexOf('<figcaption>Pair</figcaption>')));
+    const html = [...renderLocalDossier({ ...input, local: local as unknown as typeof input.local }).files.values()].find(h => h.includes('<figcaption id="diagram-title-2">Pair</figcaption>'))!;
+    const figure = html.slice(html.indexOf('<figcaption id="diagram-title-2">Pair</figcaption>'), html.indexOf('</figure>', html.indexOf('<figcaption id="diagram-title-2">Pair</figcaption>')));
     expect(figure).toContain(`<ul class="diagram-legend" aria-label="Line styles">${entry('inferred', 'Dashed: inferred')}${entry('unknown', 'Dotted: unknown (label ends “?”)')}</ul><p class="diagram-tally">2 boxes and 2 arrows, as marked: 0 observed, 2 inferred, 2 unknown.</p>`);
     expect((figure.match(/<g class="(?:node|edge) unknown[ "]/gu) ?? []).length).toBe(2);
   });

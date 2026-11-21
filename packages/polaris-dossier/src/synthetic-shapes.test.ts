@@ -189,7 +189,7 @@ describe('nine synthetic shapes through derive and render (syzygy-3efd.23, syzyg
       const files = render(kit.shapeInput(shape)).files;
       const index = files.get('index.html');
       expect(index, shape.name).toContain(`The ${shape.name} dossier`);
-      expect(index, shape.name).toContain(`<figcaption>${shape.diagram.title}</figcaption>`);
+      expect(index, shape.name).toContain(`<figcaption id="diagram-title-0">${shape.diagram.title}</figcaption>`);
       expect(index, shape.name).toContain('<p class="diagram-tally">4 boxes and 4 arrows, as marked: 0 observed, 8 inferred, 0 unknown.</p>');
       expect([...files.keys()].filter((p) => p.startsWith('sources/')).sort(), shape.name).toEqual([SOURCE_PAGE[shape.name], 'sources/index.html']);
       expect(files.get(SOURCE_PAGE[shape.name]!), shape.name).toContain(`>${shape.cited}<`);
