@@ -140,7 +140,8 @@ jobs:
         run: |
           test "$RUNNER_ENVIRONMENT" = github-hosted
           native_sources="$(mktemp --suffix=.sources)"
-          trap 'rm -f -- "$native_sources"' EXIT
+          native_client="$(mktemp --suffix=.deb)"
+          trap 'rm -f -- "$native_sources" "$native_client"' EXIT
           chmod 0644 "$native_sources"
           cat > "$native_sources" <<'EOF'
           Types: deb
@@ -160,10 +161,15 @@ jobs:
             git=1:2.53.0-1ubuntu1.1 git-man=1:2.53.0-1ubuntu1.1 \
             openssh-client=1:10.2p1-2ubuntu3.8 openssh-server=1:10.2p1-2ubuntu3.8 openssh-sftp-server=1:10.2p1-2ubuntu3.8 \
             bubblewrap util-linux strace zsh gcc python3
-          # The runner's preinstalled client can report the pinned package
-          # version while its executable differs from the signed archive.
-          sudo -n env DEBIAN_FRONTEND=noninteractive apt-get "${apt_source[@]}" install -y \
-            --reinstall --no-install-recommends --no-remove openssh-client=1:10.2p1-2ubuntu3.8
+          # APT can skip the preinstalled same-version client and decline to
+          # fetch it on reinstall. Verify the exact package from the signed
+          # snapshot index before restoring the executable.
+          curl -q --fail --silent --show-error --max-time 120 --max-filesize 935840 --proto '=https' \
+            --output "$native_client" \
+            https://snapshot.ubuntu.com/ubuntu/20261121T000000Z/pool/main/o/openssh/openssh-client_10.2p1-2ubuntu3.8_amd64.deb
+          printf '%s  %s\n' 81770282e1e007b399aca7de4e4e9f72e39a10ad65abaf83ef727c28cadfb22f "$native_client" \
+            | sha256sum --check --status
+          sudo -n env DEBIAN_FRONTEND=noninteractive dpkg --install "$native_client"
           if systemctl is-active --quiet ssh.service ssh.socket; then
             echo "System SSH must stay stopped for native integration." >&2
             exit 1
