@@ -41,10 +41,10 @@ the *measurement*, never the *selection*.
 | `context-selection-10-trajectory-lifecycle.md` | 12 | 43,576 | 58,828 | **above the proposed trigger** by 194.1% | `d4da94ad987146e0…` |
 | `context-selection-2-trajectory-adapter.md` | 8 | 23,150 | 31,253 | **above the proposed trigger** by 56.3% | `ecfca48dee2ce598…` |
 | `context-selection-3-orrery-lens.md` | 5 | 17,024 | 22,982 | **above the proposed trigger** by 14.9% | `962f42f56516c492…` |
-| `context-selection-4-execution-profile.md` | 6 | 14,712 | 19,861 | above the proposed default band, under the proposed trigger | `80bcb3ca5598c433…` |
+| `context-selection-4-execution-profile.md` | 6 | 14,720 | 19,872 | above the proposed default band, under the proposed trigger | `2a7b138cde027da5…` |
 | `context-selection-5-cross-project-mission.md` | 11 | 26,251 | 35,439 | **above the proposed trigger** by 77.2% | `477a7bdfe527b7d3…` |
 | `context-selection-6-doctrine-amendment.md` | 6 | 15,170 | 20,480 | **above the proposed trigger** by 2.4% | `4abe45ea83c3d673…` |
-| `context-selection-7-kernel-identity.md` | 5 | 18,815 | 25,400 | **above the proposed trigger** by 27.0% | `c46cb462e52814fb…` |
+| `context-selection-7-kernel-identity.md` | 5 | 18,867 | 25,470 | **above the proposed trigger** by 27.4% | `b2b03d02242465b2…` |
 | `context-selection-8-openspec-authoring.md` | 6 | 27,206 | 36,728 | **above the proposed trigger** by 83.6% | `92b14508b5d71c8d…` |
 | `context-selection-9-evidence-adapter.md` | 12 | 30,308 | 40,916 | **above the proposed trigger** by 104.6% | `92a13f4e688ded6d…` |
 
@@ -130,7 +130,7 @@ printed at the foot of §5.
 
 ### `context-selection-7-kernel-identity.md`
 
-- **Measured:** 18,815 words ≈ 25,400 estimated tokens — 27.0% above the proposed trigger.
+- **Measured:** 18,867 words ≈ 25,470 estimated tokens — 27.4% above the proposed trigger.
 - **Reason:** RFC-0001 is indivisible (its justified oversize is recorded in `03-ACTIVE-CONTRACT-COMPACTION-REPORT.md` and in the verifier's justification table, *not* in RFC-0001 itself, which records no waiver), and an identity change genuinely needs the minting/continuity scheme (RFC1-11), the evaluation identity a claim resolves against, the constitutional temporal model, and the floor text it may not weaken
 - **Scope:** Kernel identity and continuity changes — minting, successor edges, split/merge, and the continuity links recorded across them — **where CC-BAR-5 floor 7 is the declared classifier**. Does **not** cover: the adoption ceremony for such a change (RFC-0003 stays deferred to that packet, as this fixture already rules); `.syzygy/**` schema migrations that do not alter minting; changes to challenge, reconciliation or rendering semantics, which pull further RFC-0002 modules and must be re-measured (scope tightened by RC-12)
 - **Reviewer:** **RC-12, independent reviewer, 2026-08-06.** Ruled `WAIVER SOUND` in `round-2026-08b/reviews/RC-12-budget-waiver-RAW.md`, over the *selection* — not over the contracts it selects. That review's own verdict was `EXCEPTIONS`; read §5 there on what this signature can and cannot mean while no budget rule is installed
