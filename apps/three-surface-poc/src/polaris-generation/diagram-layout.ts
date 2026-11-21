@@ -470,9 +470,11 @@ interface RenderableEdge extends LayoutEdgeInput { readonly label: string; reado
  */
 export function renderDiagramSvg(
   diagram: { readonly nodes: readonly RenderableNode[]; readonly edges: readonly RenderableEdge[] },
-  index: number,
+  index: number | string,
   escape: (value: string) => string,
   spacing: DiagramSpacing = DEFAULT_SPACING,
+  /** Attributes Syzygy adds to each drawn element's group, by element id (built by the caller from Syzygy's own values, escaped). */
+  elementAttributes: (id: string) => string = () => '',
 ): string {
   const layout = layoutDiagram(diagram.nodes, diagram.edges, spacing);
   const markerId = `arrow-${index}`;
@@ -494,7 +496,7 @@ export function renderDiagramSvg(
     const note = connected.has(node.id) ? '' : nodeWidth < NOTE_ONE_LINE
       ? `<text class="note" x="${noteX}" y="${num(at.y + NODE_HEIGHT + 18)}" text-anchor="middle"><tspan x="${noteX}" dy="0">No relationship</tspan><tspan x="${noteX}" dy="16">supplied</tspan></text>`
       : `<text class="note" x="${noteX}" y="${num(at.y + NODE_HEIGHT + 18)}" text-anchor="middle">No relationship supplied</text>`;
-    return `<g class="node ${node.epistemic}"><title>${escape(node.label)} (${node.epistemic})</title><rect x="${num(at.x)}" y="${num(at.y)}" width="${nodeWidth}" height="${NODE_HEIGHT}" rx="6"/>${textLines(lines, at.x + nodeWidth / 2, baseline, 16)}${note}</g>`;
+    return `<g class="node ${node.epistemic}"${elementAttributes(node.id)}><title>${escape(node.label)} (${node.epistemic})</title><rect x="${num(at.x)}" y="${num(at.y)}" width="${nodeWidth}" height="${NODE_HEIGHT}" rx="6"/>${textLines(lines, at.x + nodeWidth / 2, baseline, 16)}${note}</g>`;
   }).join('');
   const edgeLines = diagram.edges.map(edge => shown(edge.label, edge.epistemic, spacing.edgeChars, spacing.edgeLines));
   const wanted = edgeLines.map((lines, i) => ({
@@ -556,10 +558,10 @@ export function renderDiagramSvg(
     const top = y - height / 2;
     const run = runs[i];
     const leader = run === undefined ? '' : `<path class="edge-leader" d="M ${num(run.from.x)} ${num(run.from.y)} L ${num(run.to.x)} ${num(run.to.y)}"/>`;
-    const head = `<g class="edge ${edge.epistemic}${at.back ? ' back' : ''}"><title>${escape(edge.label)} (${edge.epistemic})</title><path d="${at.d}" marker-end="url(#${markerId})"/>${leader}`;
+    const head = `<g class="edge ${edge.epistemic}${at.back ? ' back' : ''}"${elementAttributes(edge.id)}><title>${escape(edge.label)} (${edge.epistemic})</title><path d="${at.d}" marker-end="url(#${markerId})"/>${leader}`;
     const label = `<rect class="edge-label" x="${num(x - width / 2)}" y="${num(top)}" width="${num(width)}" height="${num(height)}" rx="3"/>${textLines(lines, x, top + 15, 15)}`;
     // A label's own copy of its line, hidden until the label is under the pointer: the line itself sits in a lower layer the label cannot reach without a script.
-    return spacing.labelsOnTop ? { line: `${head}</g>`, label: `<g class="edge-text ${edge.epistemic}"><title>${escape(edge.label)} (${edge.epistemic})</title><path class="edge-echo" d="${at.d}"/>${label}</g>` } : { line: `${head}${label}</g>`, label: '' };
+    return spacing.labelsOnTop ? { line: `${head}</g>`, label: `<g class="edge-text ${edge.epistemic}"${elementAttributes(edge.id)}><title>${escape(edge.label)} (${edge.epistemic})</title><path class="edge-echo" d="${at.d}"/>${label}</g>` } : { line: `${head}${label}</g>`, label: '' };
   });
   const height = Math.max(layout.height, ...(spacing.labelsOnTop ? placed.map((box, i) => Math.ceil(box.y + wanted[i]!.height / 2 + LABEL_STEP)) : []));
   const lines = edges.map(edge => edge.line).join(''), labels = edges.map(edge => edge.label).join('');

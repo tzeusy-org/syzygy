@@ -32,7 +32,7 @@ beforeAll(async () => {
   layoutFigure = site.figureLaidOutWidth;
 });
 
-const RULES = ['vendored-path@1', 'generated-path@1', 'language-by-extension@1', 'docs-tree@1', 'tests-path@1', 'manifest-names@1'];
+const RULES = ['vendored-path@1', 'generated-path@1', 'language-by-extension@1', 'docs-tree@1', 'tests-path@1', 'manifest-names@1', 'top-level-unit@1'];
 const none = { files: 0, listed: [], notListed: 0 };
 /** Each shape's one source page, by the cited file's source id: the path is the renderer's, written here as a literal. */
 const SOURCE_PAGE: Readonly<Record<string, string>> = {

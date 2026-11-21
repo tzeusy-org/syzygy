@@ -16,6 +16,8 @@ const ATTRIBUTES = new Set([
   'xmlns', 'viewBox', 'role', 'aria-labelledby', 'aria-describedby', 'id', 'class',
   'x', 'y', 'dy', 'width', 'height', 'rx', 'd',
   'refX', 'refY', 'markerWidth', 'markerHeight', 'orient', 'marker-end', 'text-anchor',
+  // The derived figure's element identities (version 2.3): inert data, an identity Syzygy wrote (`_tree-root`, `_tree-unit-<k>`, ...).
+  'data-derived-id',
 ]);
 const SVG_NAMESPACE = 'http://www.w3.org/2000/svg';
 /** Attribute values the renderer emits: numbers, path commands, ids, class names. */

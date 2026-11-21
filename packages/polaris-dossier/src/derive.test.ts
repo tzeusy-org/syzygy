@@ -4,7 +4,7 @@ import { deriveStructure, structureUnknown } from './derive.js';
 // syzygy-3efd.16: the structure record from paths and modes alone. Expected values are literals (CC-TEST-3).
 const blob = (path: string, mode = '100644') => ({ path, mode });
 const NO_SECRET = (): boolean => false;
-const RULES = ['vendored-path@1', 'generated-path@1', 'language-by-extension@1', 'docs-tree@1', 'tests-path@1', 'manifest-names@1'];
+const RULES = ['vendored-path@1', 'generated-path@1', 'language-by-extension@1', 'docs-tree@1', 'tests-path@1', 'manifest-names@1', 'top-level-unit@1'];
 const NOTE_START = 'Derived by Syzygy from the paths and modes of the pinned tree alone';
 
 /** A tree entry that refuses every read but its path and mode: a blob body, size or object id read through it fails the test. */
