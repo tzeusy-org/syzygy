@@ -226,7 +226,36 @@ describe('reading difference', () => {
     const root = tempDir('reading-difference-');
     const self = runIn(root, id('c'), RUN_RECORD('kestrel'));
     runIn(root, id('a'), RUN_RECORD('kestrel'), { 0: checkRecord(NOW, EARLIER) });
-    expect(readingDifference(self, 'kestrel', NOW, LATER)).toMatchObject({ state: 'unknown', why: 'no earlier run of this repository in the state root holds a reading ledger that could be read' });
+    // A valid checkedAt not earlier than this check is passed over, not counted.
+    expect(readingDifference(self, 'kestrel', NOW, LATER)).toEqual({
+      state: 'unknown', why: 'no earlier run of this repository in the state root holds a reading ledger that could be read', unreadableRuns: 0, unreadableCheckRecords: 0,
+    });
+  });
+
+  it('counts a check record whose checkedAt is missing or malformed as unreadable, and takes the next earlier record of that run', () => {
+    const root = tempDir('reading-difference-');
+    const self = runIn(root, id('c'), RUN_RECORD('kestrel'));
+    runIn(root, id('a'), RUN_RECORD('kestrel'), {
+      0: checkRecord('2026-11-22T08:00:00.000Z', EARLIER),
+      1: checkRecord('2026-11-22 09:00', EARLIER, 1),
+      2: { ...checkRecord('2026-11-22T10:00:00.000Z', EARLIER, 2), checkedAt: undefined },
+    });
+    expect(readingDifference(self, 'kestrel', NOW, LATER)).toMatchObject({
+      state: 'compared', against: { runId: id('a'), revision: 0, checkedAt: '2026-11-22T08:00:00.000Z' }, unreadableRuns: 0, unreadableCheckRecords: 2,
+    });
+  });
+
+  it('reports the record\'s own revision, and counts a record whose revision is not the one its file name says as unreadable', () => {
+    const root = tempDir('reading-difference-');
+    const self = runIn(root, id('c'), RUN_RECORD('kestrel'));
+    runIn(root, id('a'), RUN_RECORD('kestrel'), {
+      2: checkRecord('2026-11-22T08:00:00.000Z', EARLIER, 2),
+      3: checkRecord('2026-11-22T09:00:00.000Z', EARLIER, 7),
+      4: { ...checkRecord('2026-11-22T10:00:00.000Z', EARLIER), revision: '4' },
+    });
+    expect(readingDifference(self, 'kestrel', NOW, LATER)).toEqual(expect.objectContaining({
+      state: 'compared', against: { runId: id('a'), revision: 2, pinnedRevision: PIN, checkedAt: '2026-11-22T08:00:00.000Z' }, unreadableRuns: 0, unreadableCheckRecords: 2,
+    }));
   });
 
   it('counts a run with no run record as unreadable; a run with no checks directory holds no record, and a checks path it cannot list is counted', () => {

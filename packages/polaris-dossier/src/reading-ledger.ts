@@ -288,7 +288,8 @@ export function compareLedgers(before: ReadingLedger, after: ReadingLedger): { r
 /** The previous run's ledger: among the other run directories of the state root whose run record names this repository identity, each
  * run's candidate is the ledger of its highest-numbered check record that parses, carries a ledger of this format and was checked before
  * `checkedAt`; the previous run is the one whose candidate was checked latest, a tie going to the greatest run identity. What cannot be
- * read is counted, never passed over. Nothing is matched by directory name beyond the run-identity form, or by URL. */
+ * read is counted, never passed over: a check record whose `checkedAt` is malformed, or whose own `revision` is not the one its file name
+ * says, is unreadable; one validly checked at or after `checkedAt` is passed over uncounted. Nothing is matched by directory name beyond the run-identity form, or by URL. */
 export function readingDifference(run: string, repositoryId: string, checkedAt: string, ledger: ReadingLedger | undefined): ReadingDifference {
   if (ledger === undefined) return { state: 'unknown', why: DRAFT_DOES_NOT_PARSE, unreadableRuns: 0, unreadableCheckRecords: 0 };
   const root = path.dirname(run), self = path.basename(run);
@@ -315,10 +316,12 @@ export function readingDifference(run: string, repositoryId: string, checkedAt: 
       try { record = parseBoundedJson(fs.readFileSync(path.join(dir, RUN_LAYOUT.checks, `rev-${revision}.json`), 'utf8'), CHECK_RECORD_LIMITS); } catch { unreadableCheckRecords += 1; continue; }
       if (!isRecord(record) || !isRecord(record['readingLedger']) || record['readingLedger']['format'] !== READING_LEDGER_FORMAT) continue;
       const at = record['checkedAt'];
-      if (typeof at !== 'string' || !CHECKED_AT.test(at) || !(at < checkedAt)) continue;
+      if (typeof at !== 'string' || !CHECKED_AT.test(at)) { unreadableCheckRecords += 1; continue; }
+      if (!(at < checkedAt)) continue;
       const earlier = storedLedger(record['readingLedger']);
       const pinned = record['pinnedRevision'];
-      if (earlier === undefined || typeof pinned !== 'string' || !COMMIT.test(pinned)) { unreadableCheckRecords += 1; continue; }
+      // The revision reported is the record's own, and it must be the one its file name says: a record that disagrees is unreadable.
+      if (earlier === undefined || typeof pinned !== 'string' || !COMMIT.test(pinned) || record['revision'] !== revision) { unreadableCheckRecords += 1; continue; }
       if (best === undefined || at > best.checkedAt || (at === best.checkedAt && byCodeUnit(entry.name, best.runId) > 0)) {
         best = { runId: entry.name, revision, pinnedRevision: pinned, checkedAt: at, ledger: earlier };
       }

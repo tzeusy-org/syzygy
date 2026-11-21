@@ -79,14 +79,31 @@ export function readLatestSite(run: string): SiteRead {
 export interface BriefStandards { readonly sha256?: unknown; readonly packs?: unknown }
 
 const BRIEF_RECORD_LIMITS = Object.freeze({ maxBytes: 262_144, maxNodes: 4096, maxDepth: 8 });
-/** The brief record's `readerStandards`, or undefined where the record or the member cannot be read (version 1's text is carried then). */
-export function briefStandardsOf(run: string): BriefStandards | undefined {
-  try {
-    const record = parseBoundedJson(fs.readFileSync(path.join(run, RUN_LAYOUT.briefRecord), 'utf8'), BRIEF_RECORD_LIMITS);
-    return isRecord(record) && isRecord(record['readerStandards']) ? record['readerStandards'] : undefined;
-  } catch {
-    return undefined;
-  }
+
+/** What the brief record says of the reader standards: read (`standards` absent where the record has no `readerStandards` member, which
+ * names no packs) or unreadable, with why. An unreadable record refuses the design packet; it never stands for version 1. */
+export type BriefStandardsRead =
+  | { readonly ok: true; readonly standards?: BriefStandards }
+  | { readonly ok: false; readonly reason: string };
+
+/** The brief record's `readerStandards`, as the record names them. A record that is missing, cannot be read, is not bounded JSON or is not
+ * an object, or a `readerStandards` member that is not an object, is unreadable; only an absent member names no packs. */
+export function briefStandardsOf(run: string): BriefStandardsRead {
+  const name = RUN_LAYOUT.briefRecord;
+  let text: string;
+  try { text = fs.readFileSync(path.join(run, name), 'utf8'); } catch (cause) { return { ok: false, reason: `${name} cannot be read (${errno(cause)})` }; }
+  let record: unknown;
+  try { record = parseBoundedJson(text, BRIEF_RECORD_LIMITS); } catch { return { ok: false, reason: `${name} is not JSON within its bounds` }; }
+  if (!isRecord(record)) return { ok: false, reason: `${name} is not a JSON object` };
+  if (!Object.hasOwn(record, 'readerStandards')) return { ok: true };
+  const standards = record['readerStandards'];
+  return isRecord(standards) ? { ok: true, standards } : { ok: false, reason: `${name} has a readerStandards member that is not an object` };
+}
+
+/** The design packet's standards input from what the brief record says. */
+export function standardsInput(read: BriefStandardsRead): { readonly standards?: BriefStandards; readonly standardsUnreadable?: string } {
+  if (!read.ok) return { standardsUnreadable: read.reason };
+  return read.standards === undefined ? {} : { standards: read.standards };
 }
 
 export const STANDARDS_NOT_RECOMPOSED = 'the reader standards the brief carried cannot be recomposed';
@@ -159,10 +176,11 @@ export function outsideRegion(files: ReadonlyMap<string, string>): { readonly ok
 }
 
 /** Build the design packet from one render's files and declared audience. Pure: the same inputs give the same bytes. */
-export function buildDesignPacket(input: { readonly run: string; readonly runId: string; readonly pinnedRevision: string; readonly audience: string; readonly files: ReadonlyMap<string, string>; readonly standards?: BriefStandards }): DesignPacketBuild {
+export function buildDesignPacket(input: { readonly run: string; readonly runId: string; readonly pinnedRevision: string; readonly audience: string; readonly files: ReadonlyMap<string, string>; readonly standards?: BriefStandards; readonly standardsUnreadable?: string }): DesignPacketBuild {
   const outside = outsideRegion(input.files);
   if (!outside.ok) return { ok: false, stage: 'region', reason: outside.reason };
   // The reader standards the brief carried (version 2.4): recomposed from the packs its record names, or the packet is not built.
+  if (input.standardsUnreadable !== undefined) return { ok: false, stage: 'standards', reason: `${STANDARDS_NOT_RECOMPOSED} (${input.standardsUnreadable})` };
   const standards = recomposedStandards(input.standards);
   if (!standards.ok) return { ok: false, stage: 'standards', reason: standards.reason };
   const pages = [...outside.files.keys()].filter((file) => file.endsWith('.html'));

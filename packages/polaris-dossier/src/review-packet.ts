@@ -7,7 +7,7 @@ import { DEFICIENT_SUBJECTS, VERDICT_QUOTATION_FORM, verdictSchemaDocument } fro
 import { RECORDS_WITHIN_REACH } from './gate-sources.js';
 import { BLOB_MODES, GitObjectReadRefusal, openPinnedObjectReader, type TreeEntry } from './git-object-reader.js';
 import { INVENTORY_INFERRED, errno, inventoryOfRecord, type OpenedRun } from './inventory.js';
-import { briefStandardsOf, buildDesignPacket, readLatestSite, type DesignPacketBuild } from './design-review.js';
+import { briefStandardsOf, buildDesignPacket, standardsInput, readLatestSite, type DesignPacketBuild } from './design-review.js';
 import { CLASS_NOT_CONSENTED, unconsentedClass } from './class-gate.js';
 import { placementSubjectOf, screenLoaderOf, type ScreenExclusion } from './screen.js';
 import { RUN_LAYOUT } from './state-directory.js';
@@ -206,6 +206,6 @@ export function buildStoredDesignPacket(opened: Extract<OpenedRun, { ok: true }>
   const site = readLatestSite(opened.run);
   if (!site.ok) return { ok: false, stage: 'site', reason: site.reason };
   const standards = briefStandardsOf(opened.run);
-  const built = buildDesignPacket({ run: opened.run, runId: opened.runId, pinnedRevision: opened.subject.pinnedRevision.commit, audience: opened.declared.audience, files: site.files, ...(standards === undefined ? {} : { standards }) });
+  const built = buildDesignPacket({ run: opened.run, runId: opened.runId, pinnedRevision: opened.subject.pinnedRevision.commit, audience: opened.declared.audience, files: site.files, ...standardsInput(standards) });
   return built.ok ? { ...built, site: site.number } : built;
 }

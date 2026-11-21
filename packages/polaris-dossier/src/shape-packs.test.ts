@@ -1,7 +1,9 @@
 import { createHash } from 'node:crypto';
 import * as fs from 'node:fs';
+import * as path from 'node:path';
 import { describe, expect, it } from 'vitest';
-import { buildDesignPacket } from './design-review.js';
+import { tempDir } from '@syzygy/test-kit';
+import { briefStandardsOf, buildDesignPacket, standardsInput } from './design-review.js';
 import { composeReaderStandards } from './reader-standards.js';
 import { composeDimensions, DEFAULT_PACK, encodeShapePack, selectShapePacks, SERVER_PACK, shapePackRefusal, SHIPPED_PACKS } from './shape-packs.js';
 
@@ -102,5 +104,37 @@ describe('the design packet carries the standards the brief carried', () => {
     expect(refusal({ sha256: DEFAULT_COMPOSED_SHA, packs: ['default@1', 'gpu@1'] })).toEqual({ ok: false, stage: 'standards', reason: 'the reader standards the brief carried cannot be recomposed (gpu@1 is not shipped)' });
     expect(refusal({ sha256: V1_SHA, packs: ['default@1'] })).toEqual({ ok: false, stage: 'standards', reason: 'the reader standards the brief carried cannot be recomposed (the recomposed digest differs from the brief record\'s)' });
     expect(refusal({ sha256: DEFAULT_COMPOSED_SHA, packs: [] })).toEqual({ ok: false, stage: 'standards', reason: 'the reader standards the brief carried cannot be recomposed (the recomposed digest differs from the brief record\'s)' });
+  });
+});
+
+describe('the brief record\'s standards: named, absent, or unreadable', () => {
+  /** A run directory holding brief.json with these bytes, or none. */
+  const runWith = (bytes?: string): string => {
+    const run = tempDir('brief-standards-');
+    if (bytes !== undefined) fs.writeFileSync(path.join(run, 'brief.json'), bytes);
+    return run;
+  };
+
+  it('reads the readerStandards member, and gives version 1 only where the record has no such member', () => {
+    expect(briefStandardsOf(runWith(JSON.stringify({ readerStandards: { sha256: V1_SHA, packs: ['default@1'] } })))).toEqual({ ok: true, standards: { sha256: V1_SHA, packs: ['default@1'] } });
+    expect(briefStandardsOf(runWith(JSON.stringify({ briefVersion: 'v9' })))).toEqual({ ok: true });
+    expect(standardsInput({ ok: true })).toEqual({});
+  });
+
+  it('is unreadable, never version 1, where the record is missing, not bounded JSON, not an object, or its member is not an object', () => {
+    expect(briefStandardsOf(runWith())).toEqual({ ok: false, reason: 'brief.json cannot be read (ENOENT)' });
+    expect(briefStandardsOf(runWith('{ not json'))).toEqual({ ok: false, reason: 'brief.json is not JSON within its bounds' });
+    expect(briefStandardsOf(runWith(`{"x":"${'a'.repeat(262_200)}"}`))).toEqual({ ok: false, reason: 'brief.json is not JSON within its bounds' });
+    expect(briefStandardsOf(runWith('[1]'))).toEqual({ ok: false, reason: 'brief.json is not a JSON object' });
+    for (const member of ['"default@1"', 'null', '[]']) {
+      expect(briefStandardsOf(runWith(`{"readerStandards":${member}}`)), member).toEqual({ ok: false, reason: 'brief.json has a readerStandards member that is not an object' });
+    }
+  });
+
+  it('refuses the design packet at the standards stage when the record is unreadable, rather than carrying version 1', () => {
+    const input = { run: '/runs/run-x', runId: 'run-x', pinnedRevision: 'a'.repeat(40), audience: 'an operator', files: new Map([['machine.json', `${JSON.stringify({ reviewStatus: [] }, null, 2)}\n`]]) };
+    expect(buildDesignPacket({ ...input, ...standardsInput({ ok: false, reason: 'brief.json is not a JSON object' }) })).toEqual({
+      ok: false, stage: 'standards', reason: 'the reader standards the brief carried cannot be recomposed (brief.json is not a JSON object)',
+    });
   });
 });

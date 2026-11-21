@@ -1227,6 +1227,23 @@ describe('rendered-design review (S9b)', () => {
     expect(four.ok && four.report.designReview).toEqual({ counts: true, packetSha256: digest, label: 'Observed' });
   });
 
+  it('refuses the render where the brief record names a pack this Syzygy does not ship, or its standards cannot be read, and writes no site', async () => {
+    const run = await prepared();
+    const briefPath = path.join(run, 'brief.json');
+    const brief = JSON.parse(fs.readFileSync(briefPath, 'utf8'));
+    fs.writeFileSync(briefPath, `${JSON.stringify({ ...brief, readerStandards: { ...brief.readerStandards, packs: ['default@1', 'server@9'] } }, null, 2)}\n`);
+    expect(await renderRun(run, renderDeps())).toMatchObject({ ok: false, refusal: { stage: 'render', reason: 'the design packet is not built: the reader standards the brief carried cannot be recomposed (server@9 is not shipped)' } });
+    fs.writeFileSync(briefPath, `${JSON.stringify({ ...brief, readerStandards: 'polaris-reader-standards-v1' }, null, 2)}\n`);
+    expect(await renderRun(run, renderDeps())).toMatchObject({ ok: false, refusal: { stage: 'render', reason: 'the design packet is not built: the reader standards the brief carried cannot be recomposed (brief.json has a readerStandards member that is not an object)' } });
+    expect(fs.existsSync(path.join(run, 'site'))).toBe(false);
+    // The stored site's packet is refused the same way once the brief record no longer reads (never version 1's text).
+    fs.writeFileSync(briefPath, `${JSON.stringify(brief, null, 2)}\n`);
+    const rendered = await renderRun(run, renderDeps());
+    if (!rendered.ok) throw new Error(rendered.refusal.reason);
+    fs.writeFileSync(briefPath, `${JSON.stringify({ ...brief, readerStandards: { ...brief.readerStandards, packs: ['server@9'] } }, null, 2)}\n`);
+    expect(await reviewPacket(run, { kind: 'design' }, hand())).toMatchObject({ ok: false, refusal: { stage: 'standards', reason: 'the reader standards the brief carried cannot be recomposed (server@9 is not shipped)' } });
+  });
+
   it('refuses a render whose statement of the design review leaks outside the region, and writes no site', async () => {
     const run = await prepared();
     const leaky: DossierRenderer = (input) => ({ files: new Map([...renderLocalDossier(input).files].map(([file, page]) => [file, file === 'index.html' ? page.replace('</main>', `<p>${input.local.reviewStatus.map((item) => item.text).join(' ')}</p></main>`) : page])) });
