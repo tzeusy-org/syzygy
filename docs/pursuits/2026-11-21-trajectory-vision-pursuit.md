@@ -190,12 +190,9 @@ class", as superseded by VIS-4 for a column that carries no free text.
 **T5 — Titles, under a declared policy (comprehension; 5/3; owner gate).** A board of
 identifiers cannot be an account. The move: declare a secret-classification policy for the
 work-item title class, run the existing detectors and the active-content scan on each title,
-and keep a matching or unclassifiable title withheld with its exclusion rendered. This is the
-owner's to decide. SEC-5 reserves "a change that makes the policy detect less, admits
-unclassifiable content, or lets a secret be indexed, rendered or sent"; titles are excluded
-today because they are unclassifiable, the owner answered exactly this question on 2026-10-20
-(titles excluded), and pattern detectors over free text can miss a secret that would then be
-rendered. The owner answered on 2026-11-21: admit titles for every observed tracker (see "Owner gates
+and keep a matching or unclassifiable title withheld with its exclusion rendered. It was put
+to the owner because SEC-5 reserves a change that "admits unclassifiable content, or lets a
+secret be indexed, rendered or sent", and it reverses the 2026-10-20 answer. The owner answered on 2026-11-21: admit titles for every observed tracker (see "Owner gates
 this run").
 
 **T6 — What changed, from the substrate's own history (5/3).** Dolt keeps every revision. For
@@ -335,8 +332,5 @@ here, each re-checked against the file it names:
   `syzygy-a4ry` and `syzygy-nosn` (merge-fact reading), `syzygy-dov.4`, `syzygy-dov.9`,
   `syzygy-bpyt.5.3` (HTML component layer), and the V1 readiness drive `syzygy-rrrd`,
   `syzygy-qd2t`, `syzygy-oq3x`, whose working files are not in this repository `[Unknown]`.
-- **Retention deviation.** The deliverables rule keeps only the two newest data files. The
-  older data files have live citers (recorded by the fourth Polaris run), so none was pruned.
-- **File name.** The fourth Polaris run holds today's default name, so this run's files carry
-  the surface in their names.
+- **Retention deviation.** Older data files have live citers, so none was pruned.
 - **No harvest file.** The run was inline; the data file holds every unit's output.
