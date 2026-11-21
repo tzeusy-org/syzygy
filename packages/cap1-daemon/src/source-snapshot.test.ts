@@ -147,6 +147,10 @@ describe('the evaluation snapshot is the digest of the captured inputs', () => {
       ['entry', 'entry', 'captured'],
       ['owner-act', 'c-gov', 'captured'],
       ['owner-act', 'c-src', 'captured'],
+      // syzygy-u2a.7: the admitted governance root's README (absent in this
+      // fixture), and the observed source's README, never read.
+      ['readme', 'repo-gov', 'missing'],
+      ['readme', 'repo-src', 'not-read'],
       ['repository-root', 'repo-gov', 'captured'],
       ['repository-root', 'repo-src', 'captured'],
     ]);
@@ -196,6 +200,11 @@ describe('the evaluation snapshot is the digest of the captured inputs', () => {
     }],
     ['repository observation', (f) => { rmSync(f.src, { recursive: true, force: true }); }],
     ['entry bytes', (f) => writeFileSync(join(f.root, '.syzygy', 'intent', 'OVERVIEW.md'), '# overview v2\n', 'utf8')],
+    ['governance-root README bytes', (f) => writeFileSync(join(f.root, 'README.md'), '# readme\n', 'utf8')],
+    ['repository link context', () => ({
+      linkContexts: { 'repo-gov': { canonicalWebBase: 'https://forge.example/owner/repo', defaultBranch: 'main' } },
+    })],
+    ['markdown parser version', () => ({ versions: { ...DAEMON_CAPTURE_VERSIONS, markdownParser: 'marked@0.0.0+parse5@0.0.0;gfm=true' } })],
     ['observer version', () => ({ versions: { ...DAEMON_CAPTURE_VERSIONS, observer: 'cap1-observer/v2' } })],
     ['currency-bound configuration', () => ({ consentCurrencyBound: { maxAgeSeconds: 31536000, declaredBy: 'fixture-bound (synthetic)' } })],
     ['correlation result', () => ({
@@ -228,8 +237,105 @@ describe('capture order: consent is decided before any dependent read', () => {
     ]);
     expect(reader.calls.filter((c) => c === `list:${f.root}`)).toHaveLength(0);
     expect(reader.calls.filter((c) => c === 'read:.syzygy/intent/OVERVIEW.md')).toHaveLength(0);
+    // No README is read: the refused governance root's for its consent, the
+    // admitted observed source's for its role (syzygy-u2a.7).
+    expect(reader.calls.filter((c) => c === 'read:README.md')).toHaveLength(0);
+    expect(captured.repositories.map((r) => r.readme)).toEqual([
+      { state: 'not-read', reason: 'consent-not-admitted' },
+      { state: 'not-read', reason: 'observed-source' },
+    ]);
     expect(reader.calls.filter((c) => c === `list:${f.src}`)).toHaveLength(2);
     expect(captured.entry).toEqual({ state: 'not-read', reason: 'unconsented-governance-root' });
+  });
+
+  // Round-1 F5, round-2 N4/N5 (owner answer pr585-round3): when no governance
+  // root is admitted the entry is read nowhere, its not-read reason names the
+  // declaration's own state, and its sentence and RFC2-24 reason say only
+  // what the capture observed, never that a consent was refused.
+  const unreadableDeclaration: CaptureReader = {
+    readBytes: (root, path) =>
+      path === '.syzygy/project.yaml'
+        ? Promise.resolve({ state: 'unreadable', code: 'EACCES' })
+        : fsCaptureReader.readBytes(root, path),
+    listRoot: (root) => fsCaptureReader.listRoot(root),
+  };
+  const notAdmitted: readonly (readonly [string, (f: Fixture) => Partial<CaptureDependencies>, string, string, string])[] = [
+    [
+      'a missing declaration',
+      (f) => {
+        rmSync(join(f.root, '.syzygy', 'project.yaml'));
+        return {};
+      },
+      'declaration-missing',
+      'missing-declaration',
+      'the project declaration is missing, so no governance root is declared',
+    ],
+    [
+      'an invalid declaration that names a governance root',
+      (f) => {
+        writeFileSync(join(f.root, '.syzygy', 'project.yaml'), `${DECLARATION}unknown_field: 1\n`, 'utf8');
+        return {};
+      },
+      'declaration-invalid',
+      'missing-declaration',
+      'the project declaration failed validation, so no governance root is admitted',
+    ],
+    [
+      'an unreadable declaration',
+      () => ({ reader: unreadableDeclaration }),
+      'declaration-unreadable',
+      'source-uncaptured-or-unreachable',
+      'the project declaration could not be read, so no governance root is admitted',
+    ],
+    [
+      'a valid declaration that names no governance root',
+      (f) => {
+        writeFileSync(
+          join(f.root, '.syzygy', 'project.yaml'),
+          DECLARATION.replace('    role: governance-root\n', '    role: observed-source\n'),
+          'utf8',
+        );
+        return {};
+      },
+      'undeclared-governance-root',
+      'missing-declaration',
+      'the project declaration names no governance root',
+    ],
+  ];
+  for (const [form, arrange, reason, unknownReason, cause] of notAdmitted) {
+    it(`${form}: the entry is not read, and its reason and sentence name that state`, async () => {
+      const f = fixture();
+      const extra = arrange(f);
+      const reader = countingReader(extra.reader);
+      const captured = await capture(f, { ...extra, reader });
+      expect(reader.calls.filter((c) => c === 'read:.syzygy/intent/OVERVIEW.md')).toHaveLength(0);
+      expect(captured.entry).toEqual({ state: 'not-read', reason });
+      expect(captured.manifest.inputs.filter((d) => d.kind === 'entry').map((d) => [d.state, d.failureCode])).toEqual([
+        ['not-read', reason],
+      ]);
+      const evaluation = evaluateCapturedProject(captured);
+      const entry = humanRoutes({ getEvaluation: () => evaluation }).find((r) => r.path === HUMAN_ENTRY_ROUTE_PATH);
+      const html = (await entry?.handle({} as never))?.body ?? '';
+      expect(html).toContain(
+        `<p data-epistemic-label="Unknown" data-unknown-reason="${unknownReason}" data-not-read-reason="${reason}">` +
+          `The entry document was not read: ${cause} (${reason}). Unknown — reason: ${unknownReason}. Nothing is shown in its place.</p>`,
+      );
+      expect(html).not.toContain('consent is not admitted');
+      expect(html).not.toContain('resolution route');
+    });
+  }
+
+  it('a refused governance root serves the consent sentence on /entry, with its resolution route (CAP1-REQ-012)', async () => {
+    const f = fixture();
+    rmSync(join(f.decisions, 'c-gov.act.yaml'));
+    const evaluation = evaluateCapturedProject(await capture(f));
+    const entry = humanRoutes({ getEvaluation: () => evaluation }).find((r) => r.path === HUMAN_ENTRY_ROUTE_PATH);
+    const html = (await entry?.handle({} as never))?.body ?? '';
+    expect(html).toContain(
+      '<p data-epistemic-label="Unknown" data-unknown-reason="unconsented-source-or-provider" data-not-read-reason="unconsented-governance-root" data-policy-resolution-route="record consent">' +
+        "The entry document was not read: the governance root&#39;s observation consent is not admitted (unconsented-governance-root). " +
+        'Unknown — reason: unconsented-source-or-provider (a standing policy state; resolution route: record consent). Nothing is shown in its place.</p>',
+    );
   });
 
   it('a reference naming an act file is refused before any filesystem access', async () => {
@@ -318,6 +424,7 @@ describe('mid-capture and post-capture source changes', () => {
     const captured = await capture(f);
     const before = evaluateCapturedProject(captured);
     writeFileSync(join(f.root, '.syzygy', 'intent', 'OVERVIEW.md'), '# overview TAMPERED\n', 'utf8');
+    writeFileSync(join(f.root, 'README.md'), '[entry](.syzygy/intent/OVERVIEW.md)\n', 'utf8');
     rmSync(join(f.decisions, 'c-src.act.yaml'));
     writeFileSync(join(f.root, '.syzygy', 'project.yaml'), 'schema_version: "1"\n', 'utf8');
     const after = evaluateCapturedProject(captured);

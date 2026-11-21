@@ -1,4 +1,5 @@
-import { mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
+import { createHash } from 'node:crypto';
+import { chmodSync, mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { afterEach, describe, expect, it } from 'vitest';
@@ -7,7 +8,7 @@ import { writeConsent } from '../test-support/consent-acts.js';
 import { evaluateProject } from './pipeline.js';
 import { humanRoutes } from './routes-human.js';
 import { machineProjectBody } from './routes-machine.js';
-import { DAEMON_CAPTURE_VERSIONS } from './source-snapshot.js';
+import { DAEMON_CAPTURE_VERSIONS, fsCaptureReader } from './source-snapshot.js';
 
 // RT3 — pipeline tests over a REAL on-disk fixture repository (no
 // mocks). The fixture mirrors the integration conformance test's
@@ -320,5 +321,181 @@ describe('coverage preserves the closed consent decision (syzygy-u2a.6)', () => 
     const decisionImports = modules.coverage.match(/^import[^;]*from '\.\/consent-decision\.js';/gm) ?? [];
     expect(decisionImports.map((statement) => statement.startsWith('import type'))).toEqual([true]);
     expect(modules.coverage).not.toMatch(/from '\.\/consent\.js'/);
+  });
+});
+
+// syzygy-u2a.7 — discoverability is a required plane of the one evaluation,
+// computed from the captured root README by the semantic link reader. Every
+// expected value is a literal, or a digest recomputed here with node:crypto.
+describe('discoverability plane over a real capture (CAP1-REQ-050…053)', () => {
+  const runningAsRoot = typeof process.getuid === 'function' && process.getuid() === 0;
+  const sha = (text: string) => `sha256:${createHash('sha256').update(text).digest('hex')}`;
+
+  async function evaluated(readme: string | undefined, extra: Record<string, unknown> = {}) {
+    const { root, observedSourceDir } = fixtureRepo();
+    if (readme !== undefined) writeFileSync(join(root, 'README.md'), readme, 'utf8');
+    const result = await evaluateProject(root, { ...fixtureDeps(observedSourceDir, root), ...extra });
+    if (result.kind !== 'project-evaluated') throw new Error(result.kind);
+    return { result, root };
+  }
+
+  function rows(result: Extract<Awaited<ReturnType<typeof evaluateProject>>, { kind: 'project-evaluated' }>) {
+    const plane = result.planes.discoverability;
+    if (plane.state !== 'available') throw new Error(`plane ${plane.state}`);
+    return plane.rows;
+  }
+
+  const OBSERVED_ROWS = [
+    {
+      repositoryId: 'repo-observed-source',
+      value: 'not-applicable',
+      label: 'Observed',
+      primaryReason: null,
+      basis: { kind: 'no-governance-root' },
+      evidence: null,
+      proposal: 'not-produced',
+    },
+    {
+      repositoryId: 'repo-unconsented',
+      value: 'not-applicable',
+      label: 'Observed',
+      primaryReason: null,
+      basis: { kind: 'no-governance-root' },
+      evidence: null,
+      proposal: 'not-produced',
+    },
+  ];
+
+  it('a README linking the entry is yes, bound to the README digest; one row per declared repository', async () => {
+    const readme = '# Fixture\n\nSee the [project entry](.syzygy/intent/OVERVIEW.md).\n';
+    const { result } = await evaluated(readme);
+    const served = rows(result);
+    expect(served.map((entry) => entry.row)).toStrictEqual([
+      {
+        repositoryId: 'repo-governance-root',
+        value: 'yes',
+        label: 'Observed',
+        primaryReason: null,
+        basis: { kind: 'readme-captured', relativePath: 'README.md', digest: sha(readme), linksToEntry: true },
+        evidence: { relativePath: 'README.md', digest: sha(readme) },
+        proposal: 'not-produced',
+      },
+      ...OBSERVED_ROWS,
+    ]);
+    // The denominator is the declared repository count.
+    expect(served).toHaveLength(3);
+    const explanation = served[0]?.explanation;
+    expect(explanation?.selection).toBe('project:prj-rt3-pipeline/discoverability:repo-governance-root');
+    expect(explanation?.sourceRevision).toBe(sha(readme));
+    expect(explanation?.evaluation).toStrictEqual(result.model.evaluation);
+    expect(explanation?.scenarioContext).toBe('daemon-runtime');
+    expect(explanation?.coverageAndConsentBoundary?.records).toHaveLength(3);
+    expect(explanation?.unknownReasons).toBeUndefined();
+  });
+
+  it('a README that mentions the entry only in text and code is a truthful no, with its evidence', async () => {
+    const readme = 'The entry is .syzygy/intent/OVERVIEW.md — `[e](.syzygy/intent/OVERVIEW.md)`\n';
+    const { result } = await evaluated(readme);
+    expect(rows(result)[0]?.row).toStrictEqual({
+      repositoryId: 'repo-governance-root',
+      value: 'no',
+      label: 'Observed',
+      primaryReason: null,
+      basis: { kind: 'readme-captured', relativePath: 'README.md', digest: sha(readme), linksToEntry: false },
+      evidence: { relativePath: 'README.md', digest: sha(readme) },
+      proposal: 'not-produced',
+    });
+  });
+
+  it('a missing README is Unknown source-uncaptured-or-unreachable, never no', async () => {
+    const { result } = await evaluated(undefined);
+    expect(rows(result)[0]?.row).toStrictEqual({
+      repositoryId: 'repo-governance-root',
+      value: 'Unknown',
+      label: 'Unknown',
+      primaryReason: 'source-uncaptured-or-unreachable',
+      basis: { kind: 'readme-uncaptured', relativePath: 'README.md', failure: 'missing' },
+      evidence: null,
+      proposal: 'not-produced',
+    });
+    expect(rows(result)[0]?.explanation.unknownReasons).toStrictEqual({
+      primary: 'source-uncaptured-or-unreachable',
+      secondary: [],
+    });
+  });
+
+  it.skipIf(runningAsRoot)('an unreadable README is Unknown with its errno code as the basis', async () => {
+    const { root, observedSourceDir } = fixtureRepo();
+    writeFileSync(join(root, 'README.md'), '# locked\n', 'utf8');
+    chmodSync(join(root, 'README.md'), 0o000);
+    try {
+      const result = await evaluateProject(root, fixtureDeps(observedSourceDir, root));
+      if (result.kind !== 'project-evaluated') throw new Error(result.kind);
+      expect(rows(result)[0]?.row.basis).toStrictEqual({
+        kind: 'readme-uncaptured',
+        relativePath: 'README.md',
+        failure: 'EACCES',
+      });
+      expect(rows(result)[0]?.row.value).toBe('Unknown');
+    } finally {
+      chmodSync(join(root, 'README.md'), 0o644);
+    }
+  });
+
+  it('an unconsented governance root is Unknown unconsented-source-or-provider and its README is never read', async () => {
+    const { root, observedSourceDir } = fixtureRepo();
+    writeFileSync(join(root, 'README.md'), '[e](.syzygy/intent/OVERVIEW.md)\n', 'utf8');
+    rmSync(join(root, '.syzygy', 'governance', 'decisions', 'consent-gov-root.act.yaml'));
+    const reads: string[] = [];
+    const result = await evaluateProject(root, {
+      ...fixtureDeps(observedSourceDir, root),
+      reader: {
+        readBytes: (r, path) => {
+          reads.push(path);
+          return fsCaptureReader.readBytes(r, path);
+        },
+        listRoot: (r) => fsCaptureReader.listRoot(r),
+      },
+    });
+    if (result.kind !== 'project-evaluated') throw new Error(result.kind);
+    expect(reads.filter((path) => path === 'README.md')).toHaveLength(0);
+    expect(rows(result)[0]?.row).toStrictEqual({
+      repositoryId: 'repo-governance-root',
+      value: 'Unknown',
+      label: 'Unknown',
+      primaryReason: 'unconsented-source-or-provider',
+      basis: { kind: 'consent-not-admitted' },
+      evidence: null,
+      proposal: 'not-produced',
+    });
+  });
+
+  it('a target-looking absolute link with no captured locator makes the whole plane unavailable, never no', async () => {
+    const href = 'https://forge.example/owner/repo/blob/main/.syzygy/intent/OVERVIEW.md';
+    const readme = `[entry](${href})\n`;
+    const { result } = await evaluated(readme);
+    expect(result.planes.discoverability).toStrictEqual({
+      state: 'unavailable',
+      reason: 'target-unclassifiable',
+      repositoryId: 'repo-governance-root',
+      readme: { relativePath: 'README.md', digest: sha(readme) },
+      href,
+      classifier: 'repository-locator-unavailable',
+    });
+    // The same README with the captured locator classifies as yes.
+    const located = await evaluated(readme, {
+      linkContexts: { 'repo-governance-root': { canonicalWebBase: 'https://forge.example/owner/repo', defaultBranch: 'main' } },
+    });
+    expect(rows(located.result)[0]?.row.value).toBe('yes');
+  });
+
+  it('the authority, proposal and entry planes are always present, as their named states', async () => {
+    const { result } = await evaluated(undefined);
+    expect(result.planes.authorityExposures).toStrictEqual({
+      state: 'unavailable',
+      reason: 'authority-input-not-designed',
+    });
+    expect(result.planes.proposals).toStrictEqual({ state: 'not-produced', reason: 'proposal-input-not-designed' });
+    expect(result.planes.entry).toStrictEqual({ state: 'missing', failureCode: 'missing' });
   });
 });

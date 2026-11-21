@@ -3,7 +3,9 @@ import {
   evaluationId,
   type ConsentDecisionTuple,
   type CoverageBoundary,
+  extractAuthorityDistinctions,
   extractConsentDistinction,
+  extractDiscoverabilityDistinctions,
   extractDistinctions,
   extractProposalDistinctions,
   coverageBoundary,
@@ -16,14 +18,22 @@ import {
   type EvaluationId,
   type IdentityField,
   type MachineAnswer,
+  type DiscoverabilityRow,
+  type ExplanationFactSet,
   type MachineReadableDistinction,
-  type Proposal,
   type RepositoryCoverage,
   type StateRendering,
 } from '@syzygy/cap1-core';
 import type { Route } from '@syzygy/http-host';
 
-import type { ProjectEvaluation } from './pipeline.js';
+import {
+  servedEntry,
+  type AuthorityPlane,
+  type DiscoverabilityPlane,
+  type ProjectEvaluation,
+  type ProposalPlane,
+  type ServedEntry,
+} from './pipeline.js';
 
 // RT4 — the authenticated JSON machine endpoint (CAP1-REQ-040..046,
 // 060, 062..064 at the transport). This module is TRANSPORT ONLY: every
@@ -126,6 +136,19 @@ export interface MachineConsentDecision extends ConsentDecisionTuple {
   readonly evaluationId: EvaluationId;
 }
 
+// syzygy-u2a.7: one discoverability row per declared repository — the
+// complete tuple core computed, the evaluation it belongs to, and its full
+// "Why this answer?" fact set (CAP1-REQ-040/050…053). An unavailable plane
+// is served as its named state, never as an empty list.
+export interface MachineDiscoverabilityRow extends DiscoverabilityRow {
+  readonly evaluationId: EvaluationId;
+  readonly explanation: ExplanationFactSet;
+}
+
+export type MachineDiscoverabilityPlane =
+  | { readonly state: 'available'; readonly rows: readonly MachineDiscoverabilityRow[] }
+  | Extract<DiscoverabilityPlane, { state: 'unavailable' }>;
+
 export interface MachineProjectEvaluatedBody {
   readonly kind: 'project-evaluated';
   readonly state: StateRendering<MachineAnswer>;
@@ -137,6 +160,11 @@ export interface MachineProjectEvaluatedBody {
   // human page renders the same rows; only the independent wire oracle
   // in the tests judges that they agree (CAP1-REQ-041).
   readonly coverageBoundary: CoverageBoundary;
+  // The required evaluated planes, verbatim from the one evaluation.
+  readonly discoverability: MachineDiscoverabilityPlane;
+  readonly authorityExposures: AuthorityPlane;
+  readonly proposals: ProposalPlane;
+  readonly entry: ServedEntry;
   readonly identities: {
     readonly registration: readonly IdentityField[];
     readonly coverage: readonly IdentityField[];
@@ -145,6 +173,7 @@ export interface MachineProjectEvaluatedBody {
     readonly perFact: readonly FactDistinctions[];
     readonly perRepositoryConsent: readonly RepositoryConsentDistinction[];
     readonly perProposal: readonly (readonly MachineReadableDistinction[])[];
+    readonly perRepositoryDiscoverability: readonly RepositoryConsentDistinction[];
     readonly sweep: DistinctionSweep;
   };
 }
@@ -178,13 +207,16 @@ export type MachineProjectBody =
       readonly failure: Extract<ProjectEvaluation, { kind: 'capture-failed' }>['failure'];
     };
 
-// The evaluation carries no proposal plane today: the pipeline's
-// project-evaluated arm has no proposals field, so the open-proposal
-// list is empty — rendered through core `renderState` all the same, so
-// the proposed plane's polarity (nothing merges into current) is core's
-// code path, not this module's. When the evaluation grows proposals,
-// they are passed here and nowhere else.
-const OPEN_PROPOSALS: readonly Proposal[] = [];
+function machineDiscoverability(
+  plane: DiscoverabilityPlane,
+  id: EvaluationId,
+): MachineDiscoverabilityPlane {
+  if (plane.state === 'unavailable') return plane;
+  return {
+    state: 'available',
+    rows: plane.rows.map((entry) => ({ ...entry.row, evaluationId: id, explanation: entry.explanation })),
+  };
+}
 
 /**
  * Build the machine body for one evaluation — pure, deterministic, and
@@ -196,7 +228,10 @@ export function machineProjectBody(evaluation: ProjectEvaluation): MachineProjec
   switch (evaluation.kind) {
     case 'project-evaluated': {
       const answer = serveMachine(evaluation.model);
-      const state = renderState(answer, OPEN_PROPOSALS);
+      const { planes } = evaluation;
+      // The proposed plane renders through core `renderState`, so nothing
+      // merges into current (CAP1-REQ-063); proposals are not produced.
+      const state = renderState(answer, planes.proposals.state === 'available' ? planes.proposals.values : []);
       const id = evaluationId(answer.evaluation);
       return {
         kind: 'project-evaluated',
@@ -207,6 +242,10 @@ export function machineProjectBody(evaluation: ProjectEvaluation): MachineProjec
           evaluationId: id,
         })),
         coverageBoundary: coverageBoundary(evaluation.coverage),
+        discoverability: machineDiscoverability(planes.discoverability, id),
+        authorityExposures: planes.authorityExposures,
+        proposals: planes.proposals,
+        entry: servedEntry(planes.entry),
         identities: {
           registration: registrationIdentityFields(evaluation.registration),
           coverage: coverageIdentityFields(evaluation.coverage),
@@ -226,6 +265,13 @@ export function machineProjectBody(evaluation: ProjectEvaluation): MachineProjec
           perProposal: state.proposed.map((rendering) =>
             extractProposalDistinctions(rendering),
           ),
+          perRepositoryDiscoverability:
+            planes.discoverability.state === 'available'
+              ? planes.discoverability.rows.map((entry) => ({
+                  repositoryId: entry.finding.repositoryId,
+                  distinctions: extractDiscoverabilityDistinctions(entry.finding),
+                }))
+              : [],
           sweep: sweepOver(evaluation, state),
         },
       };
@@ -242,11 +288,9 @@ export function machineProjectBody(evaluation: ProjectEvaluation): MachineProjec
   }
 }
 
-// Core's distinction sweep over everything this response carries. The
-// authority and discoverability planes contribute nothing here because
-// the pipeline evaluation carries no authority exposure and no
-// discoverability finding — so the sweep lists their distinction kinds
-// as MISSING, honestly, rather than this module inventing coverage.
+// Core's distinction sweep over everything this response carries. An
+// unavailable authority or discoverability plane contributes nothing, so
+// the sweep lists its distinction kinds as MISSING, honestly.
 function sweepOver(
   evaluation: Extract<ProjectEvaluation, { kind: 'project-evaluated' }>,
   state: StateRendering<MachineAnswer>,
@@ -254,8 +298,12 @@ function sweepOver(
   return sweepDistinctions(
     state.current.facts.flatMap((fact) => extractDistinctions(fact)),
     state.proposed.flatMap((rendering) => extractProposalDistinctions(rendering)),
-    [],
-    [],
+    evaluation.planes.authorityExposures.state === 'available'
+      ? evaluation.planes.authorityExposures.values.flatMap((exposure) => extractAuthorityDistinctions(exposure))
+      : [],
+    evaluation.planes.discoverability.state === 'available'
+      ? evaluation.planes.discoverability.rows.flatMap((entry) => extractDiscoverabilityDistinctions(entry.finding))
+      : [],
     evaluation.coverage.repositories.flatMap((entry) =>
       extractConsentDistinction(entry.state, consentCitationForDistinction(entry)),
     ),

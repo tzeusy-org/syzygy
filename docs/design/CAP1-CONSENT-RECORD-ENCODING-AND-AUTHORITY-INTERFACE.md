@@ -329,6 +329,12 @@ export interface CapturedProjectInputs {
     | { readonly state: 'captured'; readonly text: string; readonly digest: Sha256Digest }
     | { readonly state: 'missing' | 'unreadable'; readonly failureCode: string }
     | { readonly state: 'not-read'; readonly reason: 'unconsented-governance-root' };
+    // Stale 2026-11-17 (syzygy-u2a.7, PR #585 round 2, N6): the line above
+    // froze one not-read reason. The capture now carries
+    // `reason: EntryNotReadReason`, one of 'declaration-missing',
+    // 'declaration-invalid', 'declaration-unreadable',
+    // 'undeclared-governance-root' or 'unconsented-governance-root'
+    // (source-snapshot.ts). The line above is kept as it was reviewed.
 }
 
 export type CaptureFailure =
@@ -365,6 +371,20 @@ declaration
   (`.syzygy/intent/OVERVIEW.md`) is read only when the governance-root
   repository is admitted; otherwise `{ state: 'not-read', reason:
   'unconsented-governance-root' }`.
+  - *Stale 2026-11-17 (`syzygy-u2a.7`, PR #585 round 2, N6).* The sentence
+    above, "otherwise `{ state: 'not-read', reason:
+    'unconsented-governance-root' }`", names one reason for every entry not
+    read. The capture now names why, by the declaration's own state:
+    `declaration-missing`, `declaration-invalid`, `declaration-unreadable`,
+    `undeclared-governance-root` (a valid declaration naming no governance
+    root) or `unconsented-governance-root` (the declared root's consent is
+    not admitted). The served entry carries RFC2-24 reason #1
+    `missing-declaration` for the first two and the fourth, #10
+    `source-uncaptured-or-unreachable` for an unreadable declaration, and #6
+    `unconsented-source-or-provider` with its resolution route, record
+    consent (CAP1-REQ-012), for the last. Each value also changes the
+    manifest entry descriptor's `failureCode`, so the snapshot digest of
+    such a project changes with it.
 - No README read is added: nothing in this task consumes it (`syzygy-u2a.7`
   adds it with discoverability).
 - Manifest `cap1-source-snapshot/v1`: `schema`, `versions` (manifest schema,

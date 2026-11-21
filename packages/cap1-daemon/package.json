@@ -13,6 +13,8 @@
   },
   "dependencies": {
     "@syzygy/cap1-core": "0.0.0",
-    "@syzygy/http-host": "0.0.0"
+    "@syzygy/http-host": "0.0.0",
+    "marked": "18.0.10",
+    "parse5": "8.0.1"
   }
 }
