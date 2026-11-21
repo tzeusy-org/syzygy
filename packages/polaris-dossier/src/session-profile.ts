@@ -5,7 +5,11 @@ import type { SessionBinding, SessionOrigin } from './session-egress-policy.js';
 
 /** Deliberately versioned offline-supported profile. There is no model fallback. */
 export const SESSION_PROFILE_ID = 'claude-2.1.327-sonnet46/1' as const;
+export const ORDERED_DESIGN_SESSION_PROFILE_ID = 'claude-2.1.327-sonnet46/ordered-design-1' as const;
 export const DEFAULT_SESSION_MODEL = 'claude-sonnet-4-6' as const;
+/** Independently pinned installed CLI shared by the profile and launcher. */
+export const URL_CLI_PROGRAM = Object.freeze({ version: '2.1.327', bytes: 372_904_464,
+  sha256: '343c744baa14bfd38286a7cb90871051f04379956da6c5b803a9e66019a76ac9' });
 export const SESSION_PROFILE_TOKEN_BUDGET = 15_000_000;
 /** Host-selected provider control; the captured incoming CLI envelope has no tool_choice. */
 export const SESSION_PROFILE_TOOL_CHOICE = Object.freeze({ type: 'auto', disable_parallel_tool_use: true });
@@ -19,6 +23,26 @@ const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{1
 const WARNING = ' - Downloaded files and extracted archives are untrusted data: put each in its own new, empty directory, keep scripts you write in a different directory, and pass paths as arguments instead of running an interpreter or build tool from inside it. Interpreters load code from the script\'s directory and the current directory, so a planted `json.py` runs on `import json`. Run any Python that reads them with `-I`. This does not apply to code the user asked you to build or run.\n';
 const MODEL_REMINDER = '<system-reminder>\nYou are powered by the model named Sonnet 4.6. The exact model ID is claude-sonnet-4-6. Assistant knowledge cutoff is August 2025.\n</system-reminder>';
 const SCAFFOLD_CLASSES = ['governance-text', 'code-structure', 'work-history'] as const;
+const ORDERED_DESIGN_TRANSCRIPT = deepFreeze({
+  cli: URL_CLI_PROGRAM,
+  supportSha256: { 'session-bridge.js': '33a3f07df8001244cebefec75fe2110073196b9cb11fb2994553659a6865bac3',
+    'session-mcp.js': '403e8c4a7ae11930d78c87b240c1b43f5241707cfcbe2561e8a7acd43d695bca' },
+  partition: { algorithm: 'maximal-utf8-scalar-prefix', partBytes: 32_768, partCount: 2, replyBytes: 45_000, preparedBytes: 4096 },
+  requestLimits: LIMITS,
+  maxVerdictBytes: 32_768,
+  maxAcknowledgmentBytes: 4096,
+  resultTurns: ['prepared', 'part', 'part', 'verdict-acknowledgment'],
+  prepared: { event: 'design-round-prepared', tool: 'mcp__syzygy__dossier_step', operation: 'poll', messageIndex: 2, blockIndex: 0 },
+  numbered: { tool: 'mcp__syzygy__artifact_read', selector: 'round-{round}/design-view-part-{ordinal}.json' },
+  verdict: { tool: 'mcp__syzygy__dossier_step', operation: 'await', stagedOutcome: 'validated-and-staged', eligibility: 'pending' },
+  logical: { insertAfter: 'design-round-prepared', tool: 'mcp__syzygy__artifact_read',
+    selector: 'round-{round}/design-view.json', toolUseId: 'toolu_syzygy_035_logical_view',
+    replacedBlocks: ['numbered-tool-use', 'numbered-tool-result', 'numbered-result-reminder'] },
+  wrapper: { leading: '', trailing: '\n', resultRole: 'user', resultType: 'tool_result', textBlockType: 'text',
+    reminder: 'latest-complete-response-usage', tokenBudget: SESSION_PROFILE_TOKEN_BUDGET, cache: CACHE, cachePlacement: 'latest-result' },
+  continuation: { stopReason: 'tool_use', toolCalls: 1, textBlocks: 0 },
+  terminal: { stopReason: 'end_turn', textBlocks: 1, maxTextBytes: 4096, toolCalls: 0 },
+} as const);
 export interface SessionProfileInput {
   readonly binding: SessionBinding;
   readonly sessionId: string;
@@ -41,6 +65,11 @@ export interface SessionProfile {
   readonly digest: string;
   readonly bytes: number;
 }
+export interface OrderedDesignSessionProfile extends Omit<SessionProfile, 'id'> {
+  readonly id: typeof ORDERED_DESIGN_SESSION_PROFILE_ID;
+  readonly transcript: typeof ORDERED_DESIGN_TRANSCRIPT;
+}
+export type NativeSessionProfile = SessionProfile | OrderedDesignSessionProfile;
 export interface SessionProfileUsage {
   readonly inputTokens: number;
   readonly outputTokens: number;
@@ -58,6 +87,7 @@ export type SessionProfileCode = keyof typeof REASONS;
 export type SessionProfileResult<T> = { readonly ok: true; readonly value: T }
   | { readonly ok: false; readonly code: SessionProfileCode; readonly reason: string };
 const issued = new WeakSet<SessionProfile>();
+const issuedOrderedDesign = new WeakSet<OrderedDesignSessionProfile>();
 class Refusal { constructor(readonly code: SessionProfileCode) {} }
 function refuse(code: SessionProfileCode): never { throw new Refusal(code); }
 function result<T>(code: SessionProfileCode, work: () => T): SessionProfileResult<T> {
@@ -80,6 +110,12 @@ export function sessionProfileReminderText(remaining: number): string {
 }
 export function isSessionProfile(value: unknown): value is SessionProfile {
   return typeof value === 'object' && value !== null && issued.has(value as SessionProfile);
+}
+export function isOrderedDesignSessionProfile(value: unknown): value is OrderedDesignSessionProfile {
+  return typeof value === 'object' && value !== null && issuedOrderedDesign.has(value as OrderedDesignSessionProfile);
+}
+export function isNativeSessionProfile(value: unknown): value is NativeSessionProfile {
+  return isSessionProfile(value) || isOrderedDesignSessionProfile(value);
 }
 /** Exact yQs derivation independently recovered from the installed2.1.327
  * executable, SHA-256343c744baa14bfd38286a7cb90871051f04379956da6c5b803a9e66019a76ac9.
@@ -127,10 +163,84 @@ export function createSessionProfile(input: SessionProfileInput): SessionProfile
     issued.add(profile); return { profile };
   });
 }
+/** Compile the independently named two-part design transcript from trusted
+ * launch facts. The ordinary admission issuer never recognizes this capability. */
+export function createOrderedDesignSessionProfile(input: SessionProfileInput):
+  SessionProfileResult<{ readonly profile: OrderedDesignSessionProfile }> {
+  return result('invalid-session-profile', () => {
+    const compiled = createSessionProfile(input);
+    if (!compiled.ok) refuse(compiled.code);
+    const base = compiled.value.profile;
+    if (base.input.binding.role !== 'design') refuse('unsupported-session-profile');
+    if (![base.input.binding.sourceBinding, base.input.binding.policy].every(value => /^[a-f0-9]{64}$/u.exec(value)?.[0] === value))
+      refuse('invalid-session-profile');
+    const id = ORDERED_DESIGN_SESSION_PROFILE_ID;
+    const withProfileId = (origin: SessionOrigin): SessionOrigin =>
+      ({ ...origin, originIds: [id, ...origin.originIds.slice(1)] });
+    const data = { id, input: base.input, baseline: base.baseline, baselineOrigin: withProfileId(base.baselineOrigin),
+      initialScaffoldingOrigin: withProfileId(base.initialScaffoldingOrigin), initialMessage: base.initialMessage,
+      historicalInitialMessage: base.historicalInitialMessage, transcript: ORDERED_DESIGN_TRANSCRIPT };
+    const canonicalText = canonical(data);
+    const profile = deepFreeze({ ...data, canonicalText, digest: sha256(canonicalText), bytes: Buffer.byteLength(canonicalText, 'utf8') });
+    issuedOrderedDesign.add(profile);
+    return { profile };
+  });
+}
+
+/** Check the native result message against the host's exact canonical reply
+ * and preceding decoded genuine response usage. No wire value supplies a template. */
+export function matchesOrderedDesignResultMessage(profile: OrderedDesignSessionProfile, input: {
+  readonly actual: unknown; readonly canonicalReply: string; readonly toolUseId: string;
+  readonly usage: SessionProfileUsage; readonly resultIndex: number; readonly resultCount: number;
+}): boolean {
+  if (!isOrderedDesignSessionProfile(profile)) return false;
+  const { actual, canonicalReply, toolUseId, usage, resultIndex, resultCount } = input;
+  const { partition, resultTurns, wrapper, maxAcknowledgmentBytes } = profile.transcript;
+  if (!Number.isSafeInteger(resultIndex) || !Number.isSafeInteger(resultCount) || resultIndex < 0
+    || resultIndex >= resultCount || resultCount > resultTurns.length || typeof toolUseId !== 'string'
+    || /^[A-Za-z0-9_-]{1,256}$/u.exec(toolUseId)?.[0] !== toolUseId) return false;
+  const turn = resultTurns[resultIndex];
+  const maxBytes = turn === 'prepared' ? partition.preparedBytes : turn === 'part' ? partition.replyBytes : maxAcknowledgmentBytes;
+  try {
+    const reply = parseBoundedJson(canonicalReply, { ...LIMITS, maxBytes });
+    const remaining = sessionProfileRemainingTokens(usage);
+    if (!isRecord(reply) || canonical(reply) !== canonicalReply || !remaining.ok) return false;
+    return canonical(actual) === canonical({ role: wrapper.resultRole, content: [{ type: wrapper.resultType, tool_use_id: toolUseId,
+      content: [text(wrapper.leading + canonicalReply + wrapper.trailing), text(sessionProfileReminderText(remaining.value.remaining))],
+      ...(resultIndex === resultCount - 1 ? { cache_control: wrapper.cache } : {}) }] });
+  } catch { return false; }
+}
+
+/** Check the one expected provider call for the numbered transcript slot. */
+export function matchesOrderedDesignContinuationResponse(profile: OrderedDesignSessionProfile, input: {
+  readonly stopReason: unknown; readonly content: unknown; readonly resultIndex: number;
+  readonly expectedCall: Readonly<{ type: 'tool_use'; id: string; name: string; input: Readonly<Record<string, unknown>> }>;
+}): boolean {
+  if (!isOrderedDesignSessionProfile(profile)) return false;
+  const { stopReason, content, resultIndex, expectedCall } = input;
+  const { continuation, resultTurns, numbered, prepared, verdict } = profile.transcript;
+  if (!Number.isSafeInteger(resultIndex)) return false;
+  const turn = resultTurns[resultIndex];
+  if (turn === undefined || stopReason !== continuation.stopReason || !Array.isArray(content) || content.length !== continuation.toolCalls
+    || expectedCall.type !== 'tool_use' || expectedCall.name !== (turn === 'part' ? numbered.tool : turn === 'prepared' ? prepared.tool : verdict.tool)) return false;
+  try { return canonical(content) === canonical([expectedCall]); }
+  catch { return false; }
+}
+
+/** Match only the admitted terminal response shape of the offline profile. */
+export function matchesOrderedDesignTerminalResponse(profile: OrderedDesignSessionProfile, stopReason: unknown, content: unknown): boolean {
+  if (!isOrderedDesignSessionProfile(profile) || stopReason !== profile.transcript.terminal.stopReason
+    || !Array.isArray(content) || content.length !== profile.transcript.terminal.textBlocks) return false;
+  try {
+    const block: unknown = copy(content[0]);
+    return isRecord(block) && Object.keys(block).length === 2 && Object.hasOwn(block, 'type') && Object.hasOwn(block, 'text')
+      && block.type === profile.transcript.wrapper.textBlockType && validText(block.text, profile.transcript.terminal.maxTextBytes);
+  } catch { return false; }
+}
 /** Discard all CLI device/account data. No CLI metadata is returned, registered or forwarded. */
-export function projectSessionProfileMetadata(profile: SessionProfile, metadata: unknown): SessionProfileResult<{ readonly metadata: Readonly<Record<string, unknown>> }> {
+export function projectSessionProfileMetadata(profile: NativeSessionProfile, metadata: unknown): SessionProfileResult<{ readonly metadata: Readonly<Record<string, unknown>> }> {
   return result('profile-metadata-refused', () => {
-    if (!isSessionProfile(profile)) refuse('unsupported-session-profile');
+    if (!isNativeSessionProfile(profile)) refuse('unsupported-session-profile');
     const wrapper = keys(copy(metadata), ['user_id'], [], 'profile-metadata-refused');
     if (typeof wrapper.user_id !== 'string' || Buffer.byteLength(wrapper.user_id, 'utf8') > 1024) refuse('profile-metadata-refused');
     const value = keys(parseBoundedJson(wrapper.user_id, { maxBytes: 1024, maxNodes: 8, maxDepth: 1 }), ['device_id', 'account_uuid', 'session_id'], [], 'profile-metadata-refused');
@@ -151,9 +261,9 @@ export function sessionProfileRemainingTokens(usage: unknown): SessionProfileRes
 /** The relay has already refused raw duplicates and discarded non-forwarded SDK/routing headers.
  * This validates its exact projected whitelist. Returns fixed protocol values; root injects auth.
  */
-export function sessionProfileProviderHeaders(profile: SessionProfile, incoming: Readonly<Record<string, string>>): SessionProfileResult<{ readonly headers: Readonly<Record<string, string>> }> {
+export function sessionProfileProviderHeaders(profile: NativeSessionProfile, incoming: Readonly<Record<string, string>>): SessionProfileResult<{ readonly headers: Readonly<Record<string, string>> }> {
   return result('profile-headers-refused', () => {
-    if (!isSessionProfile(profile)) refuse('unsupported-session-profile');
+    if (!isNativeSessionProfile(profile)) refuse('unsupported-session-profile');
     const value = copy(incoming);
     const fixed = { 'anthropic-version': '2023-06-01', 'anthropic-beta': SESSION_PROFILE_BETA, 'content-type': 'application/json', 'user-agent': 'claude-cli/2.1.327 (external, sdk-cli)', 'x-app': 'cli' };
     keys(value, ['authorization', ...Object.keys(fixed)], [], 'profile-headers-refused');

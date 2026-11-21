@@ -15,9 +15,11 @@ import { loadSessionCredential } from './session-credential.js';
 import { SESSION_CONTENT_CLASSES, SESSION_POLICY_LIMITS } from './session-egress-policy.js';
 import { startSessionBroker } from './session-broker.js';
 import { sessionHostTestPort, type SessionHost, type SessionHostOptions } from './session-host.js';
-import { createSessionProfile, DEFAULT_SESSION_MODEL, projectSessionProfileMetadata, SESSION_PROFILE_BETA, SESSION_PROFILE_SYNTHETIC_AUTHORIZATION, sessionProfileProviderHeaders, type SessionProfile } from './session-profile.js';
+import { createOrderedDesignSessionProfile, createSessionProfile, DEFAULT_SESSION_MODEL, isOrderedDesignSessionProfile, isSessionProfile,
+  matchesOrderedDesignContinuationResponse, matchesOrderedDesignResultMessage, matchesOrderedDesignTerminalResponse, projectSessionProfileMetadata, SESSION_PROFILE_BETA,
+  SESSION_PROFILE_SYNTHETIC_AUTHORIZATION, sessionProfileProviderHeaders, type NativeSessionProfile } from './session-profile.js';
 import { sessionRelayTestPort, type SessionAuditEvent } from './session-relay.js';
-import { decodeSessionResponse } from './session-response.js';
+import { decodeSessionResponse, type SessionResponseUsage } from './session-response.js';
 import { buildDesignPacket, validateDesignVerdict } from './design-review.js';
 import { createUrlDesignView } from './url-design-view.js';
 import { materializeOrderedDesignPart, planOrderedDesignBytes } from './url-design-delivery.js';
@@ -152,7 +154,7 @@ async function compiledSessionSupport(): Promise<ReadonlyMap<string, Buffer>> {
   return compileDossierSessionSupport(name => readFile(new URL(name, root)));
 }
 
-async function privateLaunchOptions(root: string, profile: SessionProfile, role: 'author' | 'design',
+async function privateLaunchOptions(root: string, profile: NativeSessionProfile, role: 'author' | 'design',
   audit: UrlSessionLaunchOptions['audit'], limits: UrlSessionLaunchOptions['limits'] = {}, support: 'ordinary' | 'ordered-design' = 'ordinary',
 ): Promise<UrlSessionLaunchOptions> {
   const compiled = await compiledSessionSupport();
@@ -229,7 +231,7 @@ async function runNativeOrderedFixture(scenario: OrderedScenario) {
   const sessionId = '12345678-1234-4234-8234-123456789012';
   const binding = { run, role, sourceBinding: sha256('own source binding'), policy: screen.policySha256,
     provider: 'anthropic', model: DEFAULT_SESSION_MODEL };
-  const compiled = createSessionProfile({ binding, sessionId, systemPrompt: 'Use the owned design fixture.',
+  const compiled = createOrderedDesignSessionProfile({ binding, sessionId, systemPrompt: 'Use the owned design fixture.',
     initialPrompt: 'Inspect the exact ordered packet before submitting the owned verdict.',
     utcDate: new Date().toISOString().slice(0, 10), kernelRelease: os.release() });
   if (!compiled.ok) throw new Error('own ordered profile unavailable');
@@ -250,15 +252,18 @@ async function runNativeOrderedFixture(scenario: OrderedScenario) {
       project: 'project:syzygy', provider: binding.provider, role, round: 1, run, session: sessionId, transferEpoch: 1, pin,
       deadline: '2099-01-01T00:00:00.000Z' }, parents: [sha256('own parent')],
     instructionProfileSha256: sha256(profile.input.systemPrompt),
-    limits: { partBytes: 32_768, partCount: 2, replyBytes: 45_000, preparedBytes: 4096 } });
+    limits: { partBytes: profile.transcript.partition.partBytes, partCount: profile.transcript.partition.partCount,
+      replyBytes: profile.transcript.partition.replyBytes, preparedBytes: profile.transcript.partition.preparedBytes } });
   expect(plan.manifest.parts).toHaveLength(2);
   expect(plan.replies.every(reply => reply.bytes > 10_000)).toBe(true);
   const verdict = { schemaVersion: 'polaris-dossier-local-design-verdict-v1', pinnedRevision: pin,
     packetSha256: scenario === 'stale-verdict' ? sha256('own stale packet') : packet.sha256, sessionId, readiness: 'ready',
     pageReview: packet.pages.map(page => ({ page, verdict: 'acceptable', reason: 'Owned fixture review.' })), findings: [] };
   const submission = orderedCanonical(verdict);
+  expect(Buffer.byteLength(submission, 'utf8')).toBeLessThanOrEqual(profile.transcript.maxVerdictBytes);
   const ack = orderedCanonical(scenario !== 'stale-verdict'
-    ? { kind: 'dossier-result', ok: true, stdout: orderedCanonical({ outcome: 'submitted', packetSha256: packet.sha256 }), stderr: '', exit: 0 }
+    ? { kind: 'dossier-result', ok: true, stdout: orderedCanonical({ outcome: 'validated-and-staged', eligibility: 'pending',
+      packetSha256: packet.sha256 }), stderr: '', exit: 0 }
     : { kind: 'dossier-result', ok: true, stdout: '', stderr: 'Stale fixture packet.', exit: 1 });
   const poll = { argv: ['dossier', 'poll', run] };
   const submit = { argv: ['dossier', 'await', '/work', '--submit', 'round-1/verdict.json', '--stdin'], stdin: submission };
@@ -287,10 +292,14 @@ async function runNativeOrderedFixture(scenario: OrderedScenario) {
     await expect(prepareRestrictedUrlSession({ ...launch, expected: { ...launch.expected,
       supportSha256: { ...launch.expected.supportSha256, 'session-mcp.js': sha256(ordinary) } } }))
       .rejects.toThrow('url-session-launch-refused');
+    const preparation = await prepareRestrictedUrlSession(launch);
+    const unreachable = new Proxy({} as SessionHost, { get() { throw new Error('ordered profile reached a production host'); } });
+    await expect(launchRestrictedUrlSession({ preparation, host: unreachable })).rejects.toThrow('url-session-launch-refused');
   }
   const preparation = await prepareRestrictedUrlSession(launch);
   const audit: SessionAuditEvent[] = [], forwarded: string[] = [], delivered: string[] = [], faults: string[] = [], cachePositions: number[][] = [];
   const receivedParts: string[] = [];
+  const responseUsage: SessionResponseUsage[] = [];
   let checked = 0, terminalResponseDecoded = false, verdictValidated = false;
   const relay = await sessionRelayTestPort(async input => {
     const index = forwarded.length;
@@ -328,6 +337,8 @@ async function runNativeOrderedFixture(scenario: OrderedScenario) {
           const expected = steps[index]!;
           if (!sameWireValue(messages[1 + index * 2], { role: 'assistant', content: [expected.call] })) throw new Error('unrecognized historical call');
           const message = messages[2 + index * 2]!;
+          if (!matchesOrderedDesignResultMessage(profile, { actual: message, canonicalReply: expected.reply, toolUseId: expected.call.id,
+            usage: responseUsage[index]!, resultIndex: index, resultCount: checked })) throw new Error('ordered profile result mismatch');
           const [block] = message.content;
           if (block === undefined) throw new Error('missing native result');
           const { cache_control: cache, ...frame } = block;
@@ -358,11 +369,14 @@ async function runNativeOrderedFixture(scenario: OrderedScenario) {
       if (!decoded.ok) { faults.push('fixture response codec refused'); return { ok: false }; }
       const call = steps[checked - 1]?.call;
       if (call !== undefined) {
-        if (!sameWireValue(decoded.content, [call]) || decoded.stopReason !== 'tool_use') { faults.push('fixture response order refused'); return { ok: false }; }
+        if (!matchesOrderedDesignContinuationResponse(profile, { expectedCall: call, resultIndex: checked - 1,
+          content: decoded.content, stopReason: decoded.stopReason })) { faults.push('fixture response order refused'); return { ok: false }; }
+        responseUsage.push(decoded.usage);
         return { ok: true, observation: { stopReason: decoded.stopReason, textBlocks: 0,
           tool: { id: call.id, name: call.name, inputSha256: sha256(orderedCanonical(call.input)) } } };
       }
-      if (decoded.stopReason !== 'end_turn' || !sameWireValue(decoded.content, [{ type: 'text', text: 'Owned ordered fixture complete.' }]))
+      if (!matchesOrderedDesignTerminalResponse(profile, decoded.stopReason, decoded.content)
+        || !sameWireValue(decoded.content, [{ type: 'text', text: 'Owned ordered fixture complete.' }]))
         return { ok: false };
       terminalResponseDecoded = true;
       return { ok: true, observation: { stopReason: decoded.stopReason, textBlocks: 1, tool: null } };
@@ -394,7 +408,79 @@ async function runNativeOrderedFixture(scenario: OrderedScenario) {
  * independently compared, including the rest of the verified message. */
 type NativeFixtureRequest = Record<string, unknown> & { readonly messages: readonly { readonly content: readonly Record<string, unknown>[] }[] };
 
+const fixedProfileInput = {
+  binding: { run: 'own-run', role: 'design', sourceBinding: 'a'.repeat(64), policy: 'b'.repeat(64), provider: 'anthropic', model: 'claude-sonnet-4-6' },
+  sessionId: '12345678-1234-4234-8234-123456789012', systemPrompt: 'Use exact trusted input.',
+  initialPrompt: 'Inspect the whole bounded packet.', utcDate: '2026-11-22', kernelRelease: '6.12.0-test',
+};
+
 describe('prepared private CLI launch',()=>{
+  it('compiles the independently named design profile while preserving exact ordinary profile bytes', () => {
+    const ordinary = createSessionProfile(fixedProfileInput), ordered = createOrderedDesignSessionProfile(fixedProfileInput);
+    if (!ordinary.ok || !ordered.ok) throw new Error('own fixed profile refused');
+    const base = ordinary.value.profile, profile = ordered.value.profile;
+    expect(base).toMatchObject({ id: 'claude-2.1.327-sonnet46/1', bytes: 9299,
+      digest: '449669bbb011a9cad8a1b694534fed91fe75aeece278118620f154762ac0cf08' });
+    expect(profile.id).toBe('claude-2.1.327-sonnet46/ordered-design-1');
+    expect(profile.baseline).toEqual(base.baseline);
+    expect(profile.baselineOrigin.originIds[0]).toBe(profile.id);
+    expect(profile.initialScaffoldingOrigin.originIds[0]).toBe(profile.id);
+    expect(profile).toMatchObject({ transcript: {
+      resultTurns: ['prepared', 'part', 'part', 'verdict-acknowledgment'],
+      prepared: { event: 'design-round-prepared', messageIndex: 2, blockIndex: 0 },
+      numbered: { selector: 'round-{round}/design-view-part-{ordinal}.json' },
+      logical: { selector: 'round-{round}/design-view.json', toolUseId: 'toolu_syzygy_035_logical_view', insertAfter: 'design-round-prepared' },
+    } });
+    expect(createOrderedDesignSessionProfile(structuredClone(fixedProfileInput))).toEqual(ordered);
+    expect(isOrderedDesignSessionProfile(profile)).toBe(true);
+    expect(isSessionProfile(profile)).toBe(false);
+    expect(isOrderedDesignSessionProfile(structuredClone(profile))).toBe(false);
+    for (const binding of [{ ...fixedProfileInput.binding, role: 'author' },
+      { ...fixedProfileInput.binding, model: 'unsupported' }, { ...fixedProfileInput.binding, provider: 'unsupported' }]) {
+      expect(createOrderedDesignSessionProfile({ ...fixedProfileInput, binding })).toMatchObject({ ok: false, code: 'unsupported-session-profile' });
+    }
+    expect(createOrderedDesignSessionProfile({ ...fixedProfileInput, binding: { ...fixedProfileInput.binding, policy: 'not-a-digest' } }))
+      .toMatchObject({ ok: false, code: 'invalid-session-profile' });
+  });
+
+  it('checks exact canonical ordered result, usage, latest-cache position and terminal shape', () => {
+    const compiled = createOrderedDesignSessionProfile(fixedProfileInput);
+    if (!compiled.ok) throw new Error('own fixed profile refused');
+    const profile = compiled.value.profile;
+    const canonicalReply = '{"ok":true}', toolUseId = 'toolu_own_fixture';
+    const usage = { inputTokens: 3, outputTokens: 4 };
+    const block = { type: 'tool_result', tool_use_id: toolUseId, content: [{ type: 'text', text: '{"ok":true}\n' },
+      { type: 'text', text: '<system-reminder>\n<total_tokens>14999993 tokens left</total_tokens>\n</system-reminder>' }] };
+    const latest = { ...block, cache_control: { type: 'ephemeral', ttl: '1h' } };
+    const input = { actual: { role: 'user', content: [latest] }, canonicalReply, toolUseId, usage, resultIndex: 0, resultCount: 1 };
+    expect(matchesOrderedDesignResultMessage(profile, input)).toBe(true);
+    expect(matchesOrderedDesignResultMessage(profile, { ...input, actual: { role: 'user', content: [block] }, resultCount: 2 })).toBe(true);
+    for (const change of [
+      { resultCount: 2 }, { resultCount: 5 }, { resultIndex: -1 }, { toolUseId: `${toolUseId}\n` },
+      { canonicalReply: '{"ok": true}' }, { usage: { inputTokens: 3, outputTokens: 3 } },
+      { actual: { role: 'user', content: [block] } },
+      { actual: { role: 'user', content: [{ ...latest, cache_control: { type: 'ephemeral' } }] } },
+      { actual: { role: 'user', content: [{ ...latest, content: [{ type: 'text', text: '{"ok":true}\r\n' }, block.content[1]] }] } },
+      { actual: { role: 'user', content: [{ ...latest, content: [block.content[0], block.content[1], block.content[1]] }] } },
+    ]) expect(matchesOrderedDesignResultMessage(profile, { ...input, ...change })).toBe(false);
+    expect(matchesOrderedDesignResultMessage(structuredClone(profile), input)).toBe(false);
+    const part = { type: 'tool_use', id: 'toolu_own_part', name: 'mcp__syzygy__artifact_read',
+      input: { path: 'round-1/design-view-part-1.json' } } as const;
+    const response = { stopReason: 'tool_use', content: [part], resultIndex: 1, expectedCall: part };
+    expect(matchesOrderedDesignContinuationResponse(profile, response)).toBe(true);
+    expect(matchesOrderedDesignContinuationResponse(profile, { ...response, resultIndex: 0 })).toBe(false);
+    expect(matchesOrderedDesignContinuationResponse(profile, { ...response, content: [part, { type: 'text', text: 'extra' }] })).toBe(false);
+    expect(matchesOrderedDesignContinuationResponse(profile, { ...response, content: [{ ...part, input: { path: 'round-1/design-view-part-2.json' } }] })).toBe(false);
+    expect(matchesOrderedDesignContinuationResponse(profile, { ...response, stopReason: 'end_turn' })).toBe(false);
+    const terminal = [{ type: 'text', text: 'Owned done.' }];
+    expect(matchesOrderedDesignTerminalResponse(profile, 'end_turn', terminal)).toBe(true);
+    expect(matchesOrderedDesignTerminalResponse(profile, 'max_tokens', terminal)).toBe(false);
+    for (const content of [[], [...terminal, ...terminal], [{ ...terminal[0], extra: true }], [{ type: 'tool_use', text: 'owned' }],
+      [{ type: 'text', text: '' }], [{ type: 'text', text: 'x'.repeat(4097) }]]) {
+      expect(matchesOrderedDesignTerminalResponse(profile, 'end_turn', content)).toBe(false);
+    }
+  });
+
   it('builds and selects only the design variant with the artifact result hint', async () => {
     const root = await mkdtemp(path.join(os.tmpdir(), 'session-support-'));
     cleanup.push(() => rm(root, { force: true, recursive: true }));

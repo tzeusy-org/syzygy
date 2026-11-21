@@ -7,13 +7,11 @@ import path from 'node:path';
 import { encodeCanonicalJson } from '@syzygy/polaris-generation-core/live';
 import { deepFreeze, sha256 } from '@syzygy/support';
 import type { SessionHost } from './session-host.js';
-import { isSessionProfile, type SessionProfile } from './session-profile.js';
+import { isNativeSessionProfile, isOrderedDesignSessionProfile, isSessionProfile, URL_CLI_PROGRAM, type NativeSessionProfile } from './session-profile.js';
 import { probeUrlSessionView, URL_SESSION_BWRAP, urlSessionBwrapArgs, urlSessionCommand, urlSessionViewFor,
   verifyUrlSessionViewInputs, type UrlSessionViewInputs } from './session-url-view.js';
 
-/** Independently pinned installed CLI; no caller-selected replacement program. */
-export const URL_CLI_PROGRAM = Object.freeze({ version: '2.1.327', bytes: 372_904_464,
-  sha256: '343c744baa14bfd38286a7cb90871051f04379956da6c5b803a9e66019a76ac9' });
+export { URL_CLI_PROGRAM };
 export const URL_LAUNCH_LIMITS = Object.freeze({ milliseconds: 1_800_000, setupMilliseconds: 20_000, cleanupMilliseconds: 2500,
   cpuSeconds: 600, addressBytes: 68_719_476_736, fileBytes: 2_097_152, storageBytes: 16_777_216,
   entries: 16_384, processes: 64, outputBytes: 8_388_608, descriptors: 256, sampleMilliseconds: 200 });
@@ -40,8 +38,8 @@ async function bounded<T>(operation: () => T | Promise<T>, milliseconds: number)
 }
 
 /** Fixed CLI controls, four bounded MCP schemas and no shell or interactive stdin. */
-export function restrictedSessionCliArgs(profile: SessionProfile): readonly string[] {
-  if (!isSessionProfile(profile)) throw refused();
+export function restrictedSessionCliArgs(profile: NativeSessionProfile): readonly string[] {
+  if (!isNativeSessionProfile(profile)) throw refused();
   const config = { mcpServers: { syzygy: { type: 'stdio', command: '/tool/node', args: ['/tool/support/session-mcp.js'] } } };
   return Object.freeze(['--restricted', '--print', '--permission-mode', 'dontAsk', '--tools', '', '--disable-slash-commands',
     '--strict-mcp-config', '--mcp-config', canonical(config), '--setting-sources', '', '--no-session-persistence',
@@ -51,7 +49,7 @@ export function restrictedSessionCliArgs(profile: SessionProfile): readonly stri
 }
 export interface UrlSessionLaunchOptions {
   readonly view: UrlSessionViewInputs;
-  readonly profile: SessionProfile;
+  readonly profile: NativeSessionProfile;
   readonly expected: { readonly nodeSha256: string; readonly supportSha256: Readonly<Record<'session-bridge.js' | 'session-mcp.js', string>> };
   readonly current: () => boolean | Promise<boolean>;
   readonly audit: (event: { readonly event: 'session-launch-attempt'; readonly profileSha256: string;
@@ -65,7 +63,7 @@ export interface UrlSessionPreparation {
   readonly probe: 'owned-synthetic-namespace-probe-passed';
 }
 interface Prepared {
-  readonly view: ReturnType<typeof urlSessionViewFor>; readonly profile: SessionProfile;
+  readonly view: ReturnType<typeof urlSessionViewFor>; readonly profile: NativeSessionProfile;
   readonly expected: UrlSessionLaunchOptions['expected']; readonly limits: UrlLaunchLimits;
   readonly current: UrlSessionLaunchOptions['current']; readonly audit: UrlSessionLaunchOptions['audit'];
   readonly args: readonly string[]; readonly expires: number; readonly directories: readonly string[];
@@ -139,7 +137,7 @@ async function verify(state: Omit<Prepared, 'directories'> & { readonly director
  * the namespace probe's empty connections never touch a policy cursor. */
 export async function prepareRestrictedUrlSession(input: UrlSessionLaunchOptions): Promise<UrlSessionPreparation> {
   const profile = input.profile, current = input.current, audit = input.audit;
-  if (!isSessionProfile(profile) || typeof current !== 'function' || typeof audit !== 'function') throw refused();
+  if (!isNativeSessionProfile(profile) || typeof current !== 'function' || typeof audit !== 'function') throw refused();
   const view = urlSessionViewFor(input.view), expected = deepFreeze(JSON.parse(canonical(input.expected))) as UrlSessionLaunchOptions['expected'];
   const limits: UrlLaunchLimits = Object.freeze({ ...URL_LAUNCH_LIMITS, ...input.limits });
   const canaries = Object.freeze([...input.canaries]), port = input.hostLoopbackPort;
@@ -148,7 +146,8 @@ export async function prepareRestrictedUrlSession(input: UrlSessionLaunchOptions
       || value > URL_LAUNCH_LIMITS[key as keyof UrlLaunchLimits])
     || Object.keys(expected).sort().join(',') !== 'nodeSha256,supportSha256'
     || Object.keys(expected.supportSha256).sort().join(',') !== 'session-bridge.js,session-mcp.js'
-    || [expected.nodeSha256, ...Object.values(expected.supportSha256)].some(value => typeof value !== 'string' || !/^[a-f0-9]{64}$/u.test(value))) throw refused();
+    || [expected.nodeSha256, ...Object.values(expected.supportSha256)].some(value => typeof value !== 'string' || !/^[a-f0-9]{64}$/u.test(value))
+    || (isOrderedDesignSessionProfile(profile) && canonical(expected.supportSha256) !== canonical(profile.transcript.supportSha256))) throw refused();
   const mountArgs = urlSessionBwrapArgs(view), temporaryMount = mountArgs.indexOf('--tmpfs');
   if (temporaryMount < 0 || mountArgs[temporaryMount + 1] !== '/tmp') throw refused();
   // Bound private temporary byte allocation too. HOME/work remain separately
@@ -325,6 +324,9 @@ function processArgs(args: readonly string[], limits: UrlLaunchLimits): string[]
 export async function launchRestrictedUrlSession(input: { readonly preparation: UrlSessionPreparation; readonly host: SessionHost }): Promise<UrlSessionProcess> {
   const state = preparations.get(input.preparation), host = input.host;
   if (!state) throw refused(); preparations.delete(input.preparation);
+  // Ordered preparation is independently pinned for offline conformance.
+  // The native production host still implements only ordinary admission.
+  if (!isSessionProfile(state.profile)) throw refused();
   const { view, limits } = state;
   if (!host || typeof host.close !== 'function' || host.brokerSocket !== path.join(view.inputs.brokerSocketDirectory, 'b.sock')
     || host.relaySocket !== path.join(view.inputs.relaySocketDirectory, 'r.sock')) throw refused();
