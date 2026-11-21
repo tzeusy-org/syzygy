@@ -4,6 +4,7 @@
 //
 //   node scripts/citable_share_census.mjs --out <record.json> --scratch <empty dir> [--date YYYY-MM-DD]
 //       resolve each default repository's HEAD, measure it, write the record
+//       --commits-from <record>: measure the commits an earlier record names instead of each HEAD
 //   node scripts/citable_share_census.mjs --check <record.json> --scratch <empty dir>
 //       re-measure every repository at the commit the record names and compare the counts (exit 1 on any difference)
 //
@@ -76,7 +77,10 @@ export function citableShare(rows, screen, withheldCensus, blobModes) {
   const sum = Object.values(counts).reduce((a, b) => a + b, 0);
   if (sum !== census.files) throw new Error(`the outcomes sum to ${sum}, not to the ${census.files} blobs`);
   // Which admitted paths a run that relies on no per-project statement still withholds from agent-bound artifacts (the class gate).
-  return { files: census.files, counts, classGateWithoutStatement: census.classNotConsented.length, nonBlobEntries: rows.length - census.files };
+  // The policy's sourceAdmission does not admit a symbolic link, but the dossier reader lists mode 120000 among its blob modes and the
+  // screen decides it by path like any file; it is counted here as the reader counts it, and how many there are is stated beside it.
+  const symlinks = entries.filter(({ mode }) => mode === '120000').length;
+  return { files: census.files, counts, classGateWithoutStatement: census.classNotConsented.length, symlinks, nonBlobEntries: rows.length - census.files };
 }
 
 function measure(repository, commit, scratch, tools) {
@@ -89,6 +93,8 @@ function measure(repository, commit, scratch, tools) {
   const types = git(['-C', dir, 'cat-file', '--batch-all-objects', '--batch-check=%(objecttype)']).toString('ascii').split('\n').filter(Boolean);
   const blobObjects = types.filter((type) => type === 'blob').length;
   if (blobObjects !== 0) throw new Error(`${repository.url}: the scratch clone holds ${blobObjects} blob objects`);
+  // No owner placement can name this subject (placements name `repository:<id>` subjects of registered repositories), and path outcomes
+  // do not depend on visibility, which decides only redaction: `public` is stated so the screen builds.
   const screenLoad = tools.buildDossierScreen(tools.policy, true, { repository: repository.url, commit }, 'public');
   if (!screenLoad.ok) throw new Error(`the screen did not build: ${screenLoad.why}`);
   const share = citableShare(rows, screenLoad.screen, tools.withheldCensus, tools.BLOB_MODES);
@@ -135,9 +141,11 @@ async function main(args) {
     }
     const out = args[args.indexOf('--out') + 1];
     if (!args.includes('--out') || out === undefined) throw new Error('usage: --out <record.json> --scratch <empty dir> [--date YYYY-MM-DD]');
+    // --commits-from <record>: measure the commits an earlier record names instead of each repository's current HEAD.
+    const earlier = args.includes('--commits-from') ? JSON.parse(fs.readFileSync(args[args.indexOf('--commits-from') + 1], 'utf8')) : undefined;
     const date = args.includes('--date') ? args[args.indexOf('--date') + 1] : new Date().toISOString().slice(0, 10);
     const repositories = REPOSITORIES.map((repository) => {
-      const head = git(['ls-remote', repository.url, 'HEAD']).toString('ascii').split('\t')[0];
+      const head = earlier?.repositories.find((r) => r.url === repository.url)?.commit ?? git(['ls-remote', repository.url, 'HEAD']).toString('ascii').split('\t')[0];
       if (!/^[0-9a-f]{40}$/u.test(head)) throw new Error(`${repository.url}: HEAD is unreadable`);
       return measure(repository, head, scratch, kit);
     });
@@ -148,8 +156,8 @@ async function main(args) {
       measuredOn: date,
       syzygyCommit,
       policy: { path: POLICY_PATH, sha256: createHash('sha256').update(kit.policy).digest('hex'), readAt: 'HEAD of the Syzygy commit above' },
-      screen: 'buildDossierScreen(policy, projectDocumentation enabled, the repository and commit as placement subject, visibility public)',
-      method: 'blobless depth-1 fetch of one commit; git ls-tree -r -z --full-tree; screenPath and contentClass per blob path; withheldCensus with no per-project statement; cat-file --batch-all-objects confirms no blob object',
+      screen: 'buildDossierScreen(policy, projectDocumentation enabled, the repository URL and commit as subject, visibility public). No owner placement applies: placements name repository:<id> subjects of registered repositories. Visibility decides redaction only, never a path outcome, so these counts are the same under private',
+      method: 'blobless depth-1 fetch of one commit; git ls-tree -r -z --full-tree; screenPath and contentClass per blob path; withheldCensus with no per-project statement; cat-file --batch-all-objects confirms afterwards that no blob object arrived (it detects a server that ignored the filter; it does not prevent the download)',
       outcomes: {
         admittedCodeContent: 'the screen admits the path as code-content',
         admittedProjectDocumentation: 'the screen admits the path as project-documentation',
@@ -158,7 +166,9 @@ async function main(args) {
         withheldSecretPath: 'a secret detector matches the path (counted, never named)',
         indeterminateUnknownExtractionClass: 'no denied-path rule and no content class: the path is withheld as unknown-extraction-class',
       },
-      denominator: 'files: every tree entry with a blob mode the dossier reader lists (100644, 100755, 120000) at the commit; the six outcome counts sum to it; nonBlobEntries counts the rest (submodules)',
+      denominator: 'files: every tree entry with a blob mode the dossier reader lists (100644, 100755, 120000) at the commit; the six outcome counts sum to it; nonBlobEntries counts every other entry (a submodule, or a mode the reader does not list as a blob mode)',
+      symlinks: 'of files, the symbolic links (mode 120000): the policy does not admit them, but the dossier reader lists them as blobs and the screen decides them by path, so they are counted as the reader counts them',
+      recheck: '--check re-measures with the census and screen code and the policy of the checkout it runs in, not of syzygyCommit: a difference names a changed count, not its cause',
       classGateWithoutStatement: 'of the admitted paths, how many the class gate withholds from agent-bound artifacts when a run relies on no per-project statement (every class but code-content)',
       repositories,
     };
