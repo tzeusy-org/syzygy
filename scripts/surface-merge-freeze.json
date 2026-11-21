@@ -2,5 +2,5 @@
   "direction": "OWNER-DIRECTION-QUESTIONNAIRE-ANSWERS-2026-11-06",
   "state": "inactive",
   "candidateHead": null,
-  "reason": "Retired 2026-11-22 (syzygy-yjoq, agent adoption under VIS-4 as amended by D12: a freeze enforcing a gate VIS-4 leaves to agents is a defect). Neither hosted CI nor the PROJECT-STATUS battery runs scripts/check_surface_freeze.py any more; this file and the script remain only because historical records cite them. Earlier: released 2026-11-21 when the owner retargeted the walkthrough (syzygy-pdja.6) to a Butlers Polaris dossier."
+  "reason": "Retired 2026-11-22 (syzygy-yjoq, agent adoption under VIS-4 as amended by D13: a freeze enforcing a gate VIS-4 leaves to agents is a defect). Neither hosted CI nor the PROJECT-STATUS battery runs scripts/check_surface_freeze.py any more; this file and the script remain only because historical records cite them. Earlier: released 2026-11-21 when the owner retargeted the walkthrough (syzygy-pdja.6) to a Butlers Polaris dossier."
 }

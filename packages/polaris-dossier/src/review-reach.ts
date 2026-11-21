@@ -57,7 +57,7 @@ export function citationReach(citation: Readonly<Record<string, unknown>>, input
   const startLine = citation['startLine'], endLine = citation['endLine'];
   if (typeof startLine !== 'number' || typeof endLine !== 'number') return 'reaches-review';
   if (spanTouchesWithheld(blob.withheld, startLine, endLine)) return 'withheld';
-  return inputs.screen.screenBody(blob.retainedLines.slice(startLine - 1, endLine).join('')) === 'secret-detector-match' ? 'withheld' : 'reaches-review';
+  return inputs.screen.screenBody(blob.retainedLines.slice(startLine - 1, endLine).join(''), cited) === 'secret-detector-match' ? 'withheld' : 'reaches-review';
 }
 
 export type UnseenConsequence = 'withheld-item' | 'unconfirmable';

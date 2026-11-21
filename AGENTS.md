@@ -137,7 +137,8 @@ consensus language. Normative edits travel as semantic deltas
 (`policy-candidates/NORMATIVE-CHANGE-WORKFLOW.md`); "editorial" is a
 reviewable claim. Reviews run in fresh context with only the artifact, its
 governing references, and the acceptance criteria; raw output is stored
-verbatim and verdict words are copied exactly.
+verbatim and verdict words are copied exactly. One review, fix, done: a
+review gates nothing, and no confirmation round chases a bare CONFIRM.
 
 ## Verification rules
 
@@ -159,7 +160,8 @@ is stable; reviews cite rules by number.
 8. Anchor a contract claim to a defined clause and quote it; nearby prose is
    not the clause.
 9. A claim of absence needs a sweep with a denominator.
-10. Freeze the bytes a review is bound to; any later edit retires the review.
+10. Name the bytes a review is bound to (commit or digest); a later edit is
+    noted beside the review, never a reason for another round (D13, VIS-3).
 11. An evidence record names its subject and the subject's digest; a record
     that names neither cannot be re-checked against the bytes it describes.
 

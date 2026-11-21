@@ -5,8 +5,23 @@ import * as path from 'node:path';
 import { isRecord, sha256 } from '@syzygy/support';
 
 /** The dossier successor is versioned separately from the PWB/provider policy.
- * Its screening predicates are preserved; its admission provenance follows D10. */
-export const DOSSIER_POLICY_PATH = '.syzygy/governance/policies/POLARIS-DOSSIER-DECLARED-SOURCE-POLICY-v1.json';
+ * Its screening predicates are preserved; its admission provenance follows D10.
+ *
+ * From specification version 2.6 (REQ-polaris-generation-046, adoption row A-22) every new run binds version 2.0.0, the two-stage class
+ * decision. Version 1.0.0 stays committed and unedited, and stays the binding of every run whose record names it: such a run is screened
+ * under it, never re-screened under 2.0.0, and a step of it that can no longer read it as its binding refuses with `restartExplanation`. */
+export const DOSSIER_POLICY_PATH = '.syzygy/governance/policies/POLARIS-DOSSIER-DECLARED-SOURCE-POLICY-v2.json';
+export const DOSSIER_POLICY_VERSION = 'dossier-declared-source/2.0.0';
+export const DOSSIER_PREDECESSOR_POLICY_PATH = '.syzygy/governance/policies/POLARIS-DOSSIER-DECLARED-SOURCE-POLICY-v1.json';
+export const DOSSIER_PREDECESSOR_POLICY_VERSION = 'dossier-declared-source/1.0.0';
+/** The policy files a run record may bind: the one new runs bind, and the predecessor earlier runs bound. */
+export const DOSSIER_POLICY_PATHS: readonly string[] = Object.freeze([DOSSIER_POLICY_PATH, DOSSIER_PREDECESSOR_POLICY_PATH]);
+
+/** Why a step of a run bound to the predecessor refuses when it can no longer read the predecessor as its binding: both versions named,
+ * the run never moved to the new one. */
+export const restartExplanation = (why: string): string =>
+  `this run is bound to the screening policy ${DOSSIER_PREDECESSOR_POLICY_PATH} (${DOSSIER_PREDECESSOR_POLICY_VERSION}), which can no longer be read as its binding (${why}); `
+  + `a run is never re-screened under another version or moved to it, so start a new run, which binds ${DOSSIER_POLICY_PATH} (${DOSSIER_POLICY_VERSION})`;
 const MAX_POLICY_BYTES = 2_097_152;
 
 export interface PolicyBinding {
@@ -61,8 +76,9 @@ export function readCommittedBytes(root: string, relativePath: string): { readon
 /** Reads this Syzygy checkout, never the observed clone. Capture HEAD once and
  * read by that commit, so a concurrent ref update cannot mix policy subjects.
  * Uncommitted policy bytes are refused rather than silently adopted. */
-export function readCommittedPolicy(root: string): PolicySnapshot {
-  const read = readCommittedBytes(root, DOSSIER_POLICY_PATH);
+export function readCommittedPolicy(root: string, relativePath: string = DOSSIER_POLICY_PATH): PolicySnapshot {
+  if (!DOSSIER_POLICY_PATHS.includes(relativePath)) return { ok: false, why: 'the dossier policy path is not one a run may bind' };
+  const read = readCommittedBytes(root, relativePath);
   if (!read.ok) {
     return { ok: false, why: read.fault === 'commit' ? 'the Syzygy policy commit is unreadable'
       : read.fault === 'file' ? 'the dossier policy must be a bounded regular file'
@@ -77,7 +93,7 @@ export function readCommittedPolicy(root: string): PolicySnapshot {
       return { ok: false, why: 'the committed dossier policy has no readable identity and version' };
     }
     return { ok: true, bytes: new Uint8Array(bytes), binding: {
-      path: DOSSIER_POLICY_PATH, commit, policyId: document['policyId'], policyVersion: document['policyVersion'], sha256: sha256(bytes),
+      path: relativePath, commit, policyId: document['policyId'], policyVersion: document['policyVersion'], sha256: sha256(bytes),
     } };
   } catch {
     // Malformed policy bytes are not content-safe output.

@@ -139,8 +139,9 @@ export async function buildFidelityPacket(opened: Extract<OpenedRun, { ok: true 
       if (withheld === undefined) return { id, path: span.path, startLine: span.startLine, endLine: span.endLine, objectId, outcome: 'admitted', text: spanText, citedBy: span.citedBy };
       const redaction: SpanRedaction = { redactionClass: 'redacted-span', withheldLines: withheld.length };
       // The citedSpanRule: a span that includes a withheld line is withheld whole; an admitted span's own text is screened by every
-      // detector before it is carried, and a match withholds it.
-      if (spanTouchesWithheld(withheld, span.startLine, span.endLine) || screen.screenBody(spanText) === 'secret-detector-match') {
+      // detector before it is carried, and a match withholds it. Only a Stage-1 body is ever redacted, so the span is screened with its path:
+      // the configuration detectors of the dossier policy 2.0.0 screen Stage-2 bodies and agent text, never a Stage-1 span.
+      if (spanTouchesWithheld(withheld, span.startLine, span.endLine) || screen.screenBody(spanText, span.path) === 'secret-detector-match') {
         return { id, path: span.path, startLine: span.startLine, endLine: span.endLine, objectId, outcome: 'redacted-span', redaction, citedBy: span.citedBy };
       }
       return { id, path: span.path, startLine: span.startLine, endLine: span.endLine, objectId, outcome: 'admitted', text: spanText, redaction, citedBy: span.citedBy };

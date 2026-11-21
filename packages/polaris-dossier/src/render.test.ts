@@ -1,4 +1,4 @@
-import { declaredSubjectFixture, policyFixture } from './full-run.testkit.js';
+import { declaredSubjectFixture, policyFixture, predecessorPolicyBytes } from './full-run.testkit.js';
 import { execFileSync } from 'node:child_process';
 import { createHash } from 'node:crypto';
 import * as fs from 'node:fs';
@@ -662,7 +662,7 @@ describe('render', () => {
   // Screening scope version 8: a private repository's class-gate-withheld blob keeps its object id off every page and out of the source
   // population; the public counterpart (the test above) keeps it.
   it('suppresses a private unknown-class blob identifier on every page and in the source population', async () => {
-    const raw = JSON.parse(new TextDecoder().decode(policy(['.c']))); raw.publicSourceScope.sourceVisibility = JSON.parse(new TextDecoder().decode(policyFixture().bytes)).publicSourceScope.sourceVisibility;
+    const raw = JSON.parse(new TextDecoder().decode(policy(['.c']))); raw.publicSourceScope.sourceVisibility = JSON.parse(new TextDecoder().decode(predecessorPolicyBytes())).publicSourceScope.sourceVisibility;
     fixturePolicy = new TextEncoder().encode(JSON.stringify(raw)); fixtureVisibility = 'private';
     const run = await prepared(draft(), false); const { renderer, inputs } = capturing();
     const result = await renderRun(run, renderDeps({ renderer })); if (!result.ok) throw new Error(result.refusal.reason);
@@ -700,7 +700,8 @@ describe('render', () => {
     const run = await prepared(draft(), false);
     if (!SCREEN.ok) throw new Error(SCREEN.why);
     const base = SCREEN.screen;
-    const exempt = { ok: true as const, screen: { ...base, codeContentExemption: true, screenBody: (body: string, repositoryPath?: string) => (repositoryPath === undefined && body === KESTREL ? 'active-content' as const : base.screenBody(body, repositoryPath)) } };
+    const exempt = { ok: true as const, screen: { ...base, codeContentExemption: true, screenBody: (body: string, repositoryPath?: string) => (repositoryPath === undefined && body === KESTREL ? 'active-content' as const : base.screenBody(body, repositoryPath)),
+      scannedAsBefore: (body: string, repositoryPath: string) => body === KESTREL || base.scannedAsBefore(body, repositoryPath) } };
     const deps = (renderer: DossierRenderer) => renderDeps({ loadScreen: async () => exempt, renderer });
     const undeclared: DossierRenderer = (input) => renderLocalDossier(input);
     const why = (unconfirmed: string) => `1 cited blob(s) were admitted only under the screening policy's code-content or project-documentation exemption, and these pages cannot be confirmed to meet its render condition (${unconfirmed}); scanned as before for these pages they hold active content, so nothing is rendered`;
@@ -716,6 +717,17 @@ describe('render', () => {
     expect(result.report.outcome).toBe('rendered');
     // Without an exempt body the contract is not needed: the same undeclared renderer renders.
     expect(await renderRun(run, renderDeps({ renderer: undeclared }))).toMatchObject({ ok: true });
+  });
+
+  // syzygy-3efd.24: the rescan reads the body with its path, so a detector that screens only agent text and Stage-2 bodies (dossier policy
+  // 2.0.0's configuration detectors, here one injected on the path-free screen) never asks a Stage-1 body for the render condition.
+  it('rescans a cited body with its path, so a detector of agent text alone asks nothing of a Stage-1 body', async () => {
+    const run = await prepared(draft(), false);
+    if (!SCREEN.ok) throw new Error(SCREEN.why);
+    const base = SCREEN.screen;
+    const agentOnly = { ok: true as const, screen: { ...base, screenBody: (body: string, repositoryPath?: string) => (repositoryPath === undefined && body === KESTREL ? 'secret-detector-match' as const : base.screenBody(body, repositoryPath)) } };
+    const undeclared: DossierRenderer = (input) => renderLocalDossier(input);
+    expect(await renderRun(run, renderDeps({ loadScreen: async () => agentOnly, renderer: undeclared }))).toMatchObject({ ok: true });
   });
 
   it('draws retained spans with original coordinates and markers while withholding only the removed line', async () => {
@@ -794,7 +806,7 @@ describe('render', () => {
     const result = await renderRun(run, renderDeps({ loadScreen: async (placement) => { seen.push(placement); return SCREEN; } }));
     expect(result).toMatchObject({ ok: true });
     const commit = JSON.parse(fs.readFileSync(path.join(run, 'run.json'), 'utf8')).subject.pinnedRevision.commit as string;
-    expect(seen).toEqual([{ repository: 'repository:redis-redis', commit, visibility: 'public', policySha256: policyFixture(fixturePolicy).binding.sha256 }]);
+    expect(seen).toEqual([{ repository: 'repository:redis-redis', commit, visibility: 'public', policySha256: policyFixture(fixturePolicy).binding.sha256, policyPath: '.syzygy/governance/policies/POLARIS-DOSSIER-DECLARED-SOURCE-POLICY-v2.json' }]);
     expect(commit).toMatch(/^[0-9a-f]{40}$/u);
   });
 
@@ -1368,7 +1380,7 @@ describe('rendered-design review (S9b)', () => {
   });
 
   it.each([['public', true], ['private', false]] as const)('version 8, %s: an excluded cited blob\'s object id is on the pages and in the source population: %s', async (visibility, shown) => {
-    const raw = JSON.parse(new TextDecoder().decode(policy(['.c', '.txt']))); raw.publicSourceScope.sourceVisibility = JSON.parse(new TextDecoder().decode(policyFixture().bytes)).publicSourceScope.sourceVisibility; fixturePolicy = new TextEncoder().encode(JSON.stringify(raw)); fixtureVisibility = visibility;
+    const raw = JSON.parse(new TextDecoder().decode(policy(['.c', '.txt']))); raw.publicSourceScope.sourceVisibility = JSON.parse(new TextDecoder().decode(predecessorPolicyBytes())).publicSourceScope.sourceVisibility; fixturePolicy = new TextEncoder().encode(JSON.stringify(raw)); fixtureVisibility = visibility;
     const doc = draft();
     doc.sections[0].paragraphs[1] = { id: 'p2', label: 'inferred', basis: 'source', text: 'The project states: "Deploy notes."', citations: [cite('c-p2', 'docs/deploy.md', 1, 1)], quotations: ['c-p2'], children: [] };
     const run = await prepared(doc, false);
@@ -1794,7 +1806,7 @@ describe('render: derived structure (version 2.3)', () => {
   });
 
   it('derives no size or object id for a private repository, and names no secret-matching path', async () => {
-    const raw = JSON.parse(new TextDecoder().decode(policy(['.c']))); raw.publicSourceScope.sourceVisibility = JSON.parse(new TextDecoder().decode(policyFixture().bytes)).publicSourceScope.sourceVisibility;
+    const raw = JSON.parse(new TextDecoder().decode(policy(['.c']))); raw.publicSourceScope.sourceVisibility = JSON.parse(new TextDecoder().decode(predecessorPolicyBytes())).publicSourceScope.sourceVisibility;
     fixturePolicy = new TextEncoder().encode(JSON.stringify(raw)); fixtureVisibility = 'private';
     const run = await prepared(draft(), false);
     const { files, index, machine } = await rendered(run);

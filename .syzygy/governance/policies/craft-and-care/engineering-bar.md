@@ -124,8 +124,10 @@ but never lower them.
 - **Implementing agents** — human-directed or fleet — may **strengthen**
   them in a change; they may never weaken, waive, special-case, or
   "temporarily" bypass them.
-- **Only the owner can change them**, through the artifact that owns each
-  floor (doctrine amendment or owner ruling).
+- **Changing them:** the parts that restate an owner class (the truth
+  floor's secret clause, floor 6's secret and execution rules, and SEC-4's
+  writes into repositories the owner does not own) change only by the
+  owner, through doctrine; the rest by an agent adoption (VIS-4).
 
 The floors, named:
 
@@ -142,12 +144,13 @@ The floors, named:
 4. **Write floor** — direct writes confined to `openspec/**` and
    `.syzygy/**`; all other effects through typed, explicitly authorized
    adapters; Syzygy never writes implementation code (VIS-5).
-5. **Sign-off floor** — shape-defining deltas require owner sign-off;
-   security-posture, privacy/retention, and normative-data-contract spec
-   changes are always human-gated (VIS-4).
+5. **Decision floor** — the four VIS-4 owner classes (doctrine; secrets and
+   unsandboxed execution; writes into repositories the owner does not own;
+   exposure beyond the tailnet and release) are decided by the owner;
+   everything else by a recorded agent adoption (VIS-4).
 6. **Security floor** — SEC-1 through SEC-5 defaults: authenticated by
-   default, consented egress, untrusted observed code, consented/attributed/
-   revertable writes, secrets fail closed.
+   default, egress only to declared providers, untrusted observed code,
+   attributed and revertable writes, secrets fail closed.
 7. **Identity floor** — kernel identities and `.syzygy/**` schema migrations
    are identity-preserving; migrations never orphan or silently re-mint
    durable IDs (CC-DEP-2/3).

@@ -1,5 +1,5 @@
 import { createHash } from 'node:crypto';
-import { DOSSIER_POLICY_PATH, type PolicySnapshot } from './policy-snapshot.js';
+import { DOSSIER_POLICY_PATH, DOSSIER_PREDECESSOR_POLICY_PATH, type PolicySnapshot } from './policy-snapshot.js';
 import { execFileSync } from 'node:child_process';
 import * as fs from 'node:fs';
 import * as path from 'node:path';
@@ -263,6 +263,8 @@ export async function fullFixtureRun(options: FullRunOptions): Promise<{ readonl
 
 /** Input fixtures only: source bytes and their transport binding, never expected screening outcomes. */
 const defaultPolicy = (): Uint8Array => new Uint8Array(fs.readFileSync(path.join(REAL_ROOT, DOSSIER_POLICY_PATH)));
+/** The predecessor's bytes (`dossier-declared-source/1.0.0`), for fixtures that exercise the one-stage screen it still binds for earlier runs. */
+export const predecessorPolicyBytes = (): Uint8Array => new Uint8Array(fs.readFileSync(path.join(REAL_ROOT, DOSSIER_PREDECESSOR_POLICY_PATH)));
 export function policyFixture(bytes: Uint8Array = defaultPolicy()): Extract<PolicySnapshot, { ok: true }> {
   const document = JSON.parse(new TextDecoder().decode(bytes)) as { policyId: string; policyVersion: string };
   return { ok: true, bytes, binding: {

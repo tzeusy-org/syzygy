@@ -1,0 +1,3065 @@
+{
+ "format": "mutation-run/1",
+ "bead": "syzygy-3efd.24",
+ "date": "2026-11-22",
+ "ranAt": "be64a7d7d390df97f190d02b3e34bf17efbf96de",
+ "subject": {
+  "packages/polaris-dossier/src/policy-snapshot.ts": "0d05094b4d2a6ae14c23f4873096b6ff2075f17537a0bbbf32568b6228cba390",
+  "packages/polaris-dossier/src/render.ts": "a676bb5a2675fd2ca5806e484a524dbc0956e61a7c35c13feed0a97742e40f19",
+  "packages/polaris-dossier/src/reverify.ts": "b4af67f0a68374bd4ba4c371e8f8bc6cd2abca2096b653a5affb91a63dd2bb42",
+  "packages/polaris-dossier/src/screen.ts": "0a5b5517501e606bc91d490751b231093aeb6809ad1d96989b146fc6d8d2c950",
+  "packages/polaris-generation-core/src/public-source-classification.ts": "098d10c2776e7cf4b4269c9718cfb930f6949841da0e4a24ee8c87824117651f",
+  "packages/polaris-generation-core/src/secret-redaction.ts": "74c01724adcf1256f8a2fd2c943d5ee995f14e204e355de0ae3fffc15aa2cddc",
+  "packages/polaris-dossier/src/render.test.ts": "d6b39079f005a5437707dbb3473edd1cfb944734f1577df436f7feb98f3ad749",
+  "packages/polaris-dossier/src/screen-source-reach-v2.test.ts": "ab0b4363d97d3479e4a68cd44463769196efef8bdcee7032ff9dc3c58a5cb660",
+  "packages/polaris-dossier/src/start-gates.test.ts": "99067fe54cfb1d786ebc4386be7ebeb3533f1cb2f1fb968800d846ab8507238d",
+  "packages/polaris-generation-core/src/configuration-detectors.test.ts": "3a2c21f2cd32e4bda1a87a2dc4651648a8b203b593338986e8c7d995f8d1ca1e",
+  "packages/polaris-generation-core/src/public-source-two-stage.test.ts": "51f2ccf09b9ba073a0d18574541542f2e5b60811b259bcb63307e256d47af970"
+ },
+ "command": "python3 scripts/rule6_mutation_runner.py SPEC.json OUT.json; each mutant runs npx vitest run --project <project> <tests> (named per mutant below)",
+ "method": "each mutant replaces old with new exactly once in file (the runner refuses a fragment that is absent; the spec generator asserts each occurs exactly once), runs its tests, restores the file from git; killed means at least one test ran and failed with a non-zero exit, and failedTests records each failing test and its first error line, so a kill by an assertion is told apart from a kill by a throw. Per-entry mutants drop one added denied basename, suffix, directory or configuration detector where the screen reads it, since the policy file itself is governed and is never edited",
+ "runner": {
+  "path": "scripts/rule6_mutation_runner.py",
+  "sha256": "1b404998373bbb866040714e0cc11ef81429ce2321f1b4d270a7f3ffa873d737"
+ },
+ "mutants": [
+  {
+   "id": "stage2-off",
+   "file": "packages/polaris-generation-core/src/public-source-classification.ts",
+   "old": "if (stage === null || documentation === null) return undefined;",
+   "new": "return undefined;",
+   "tests": [
+    "packages/polaris-generation-core/src/public-source-two-stage.test.ts",
+    "packages/polaris-dossier/src/screen-source-reach-v2.test.ts"
+   ],
+   "project": "unit",
+   "outcome": "killed",
+   "killed": true,
+   "killedBy": "assertion",
+   "failedTests": [
+    {
+     "test": "the successor screen design and decision documents are governance-text, and the run record names that class",
+     "message": "AssertionError: expected [ 'unknown-extraction-class', \u2026(3) ] to deeply equal [ 'governance-text/2', \u2026(3) ]"
+    },
+    {
+     "test": "the successor screen the configuration and code paths the review found admitted stay indeterminate, beside an admitted control",
+     "message": "AssertionError: expected [ 'unknown-extraction-class', \u2026(6) ] to deeply equal [ 'unknown-extraction-class', \u2026(6) ]"
+    },
+    {
+     "test": "the successor screen nested documentation is admitted and scanned, and the root README keeps its exemption",
+     "message": "AssertionError: expected [ 'unknown-extraction-class', \u2026(3) ] to deeply equal [ 'project-documentation/2', \u2026(3) ]"
+    },
+    {
+     "test": "configuration under public visibility the three planted secrets are excluded whole and Cargo.toml is admitted as code-content",
+     "message": "AssertionError: expected [ { kind: 'admitted' }, \u2026(4) ] to deeply equal [ { kind: 'excluded', \u2026(1) }, \u2026(4) ]"
+    },
+    {
+     "test": "configuration under private visibility the three planted secrets are excluded whole and Cargo.toml is admitted as code-content",
+     "message": "AssertionError: expected [ { kind: 'admitted' }, \u2026(4) ] to deeply equal [ { kind: 'excluded', \u2026(1) }, \u2026(4) ]"
+    },
+    {
+     "test": "the configuration detectors over agent text and cited spans rescan a Stage-2 body with them, and a Stage-1 body as the predecessor does",
+     "message": "AssertionError: expected [ false, false, true, false ] to deeply equal [ true, false, true, false ]"
+    },
+    {
+     "test": "the configuration detectors over agent text and cited spans screen a Stage-2 span or body given its path, and never a Stage-1 one",
+     "message": "AssertionError: expected undefined to be 'secret-detector-match' // Object.is equality"
+    },
+    {
+     "test": "predecessor outcomes are preserved a path the predecessor leaves indeterminate keeps that outcome, becomes denied, or is placed by the second stage",
+     "message": "AssertionError: expected [ [ 'docs/adr/x.md', \u2026(1) ], \u2026(24) ] to deeply equal [ [ 'docs/adr/x.md', \u2026(1) ], \u2026(24) ]"
+    },
+    {
+     "test": "classDecision, path by path design/api.rst is governance-text/2",
+     "message": "AssertionError: expected 'indeterminate' to be 'governance-text/2' // Object.is equality"
+    },
+    {
+     "test": "classDecision, path by path Design/Notes.RST is governance-text/2",
+     "message": "AssertionError: expected 'indeterminate' to be 'governance-text/2' // Object.is equality"
+    },
+    {
+     "test": "classDecision, path by path pkg/design-overview.rst is governance-text/2",
+     "message": "AssertionError: expected 'indeterminate' to be 'governance-text/2' // Object.is equality"
+    },
+    {
+     "test": "classDecision, path by path docs/adr/0001-use-postgres.md is governance-text/2",
+     "message": "AssertionError: expected 'indeterminate' to be 'governance-text/2' // Object.is equality"
+    },
+    {
+     "test": "classDecision, path by path ARCHITECTURE.md is governance-text/2",
+     "message": "AssertionError: expected 'indeterminate' to be 'governance-text/2' // Object.is equality"
+    },
+    {
+     "test": "classDecision, path by path rfcs/0001-thing.md is governance-text/2",
+     "message": "AssertionError: expected 'indeterminate' to be 'governance-text/2' // Object.is equality"
+    },
+    {
+     "test": "classDecision, path by path spec/api.rst is governance-text/2",
+     "message": "AssertionError: expected 'indeterminate' to be 'governance-text/2' // Object.is equality"
+    },
+    {
+     "test": "classDecision, path by path Docs/ADRS/One.MD is governance-text/2",
+     "message": "AssertionError: expected 'indeterminate' to be 'governance-text/2' // Object.is equality"
+    },
+    {
+     "test": "classDecision, path by path design/notes.md is governance-text/2",
+     "message": "AssertionError: expected 'indeterminate' to be 'governance-text/2' // Object.is equality"
+    },
+    {
+     "test": "classDecision, path by path notes/adrx/0001.md is project-documentation/2",
+     "message": "AssertionError: expected 'indeterminate' to be 'project-documentation/2' // Object.is equality"
+    },
+    {
+     "test": "classDecision, path by path packages/api/README.md is project-documentation/2",
+     "message": "AssertionError: expected 'indeterminate' to be 'project-documentation/2' // Object.is equality"
+    },
+    {
+     "test": "classDecision, path by path packages/api/docs/guide.md is project-documentation/2",
+     "message": "AssertionError: expected 'indeterminate' to be 'project-documentation/2' // Object.is equality"
+    },
+    {
+     "test": "classDecision, path by path src/app/CHANGELOG.rst is project-documentation/2",
+     "message": "AssertionError: expected 'indeterminate' to be 'project-documentation/2' // Object.is equality"
+    },
+    {
+     "test": "classDecision, path by path packages/api/LICENSE.txt is project-documentation/2",
+     "message": "AssertionError: expected 'indeterminate' to be 'project-documentation/2' // Object.is equality"
+    },
+    {
+     "test": "classDecision, path by path pkg/01-README.md is project-documentation/2",
+     "message": "AssertionError: expected 'indeterminate' to be 'project-documentation/2' // Object.is equality"
+    },
+    {
+     "test": "classDecision, path by path guide.mdx is project-documentation/2",
+     "message": "AssertionError: expected 'indeterminate' to be 'project-documentation/2' // Object.is equality"
+    },
+    {
+     "test": "classDecision, path by path config/app.json is code-content/2",
+     "message": "AssertionError: expected 'indeterminate' to be 'code-content/2' // Object.is equality"
+    },
+    {
+     "test": "classDecision, path by path app.yml is code-content/2",
+     "message": "AssertionError: expected 'indeterminate' to be 'code-content/2' // Object.is equality"
+    },
+    {
+     "test": "classDecision, path by path deploy/x.yaml is code-content/2",
+     "message": "AssertionError: expected 'indeterminate' to be 'code-content/2' // Object.is equality"
+    },
+    {
+     "test": "classDecision, path by path Cargo.toml is code-content/2",
+     "message": "AssertionError: expected 'indeterminate' to be 'code-content/2' // Object.is equality"
+    },
+    {
+     "test": "classDecision, path by path main.tf is code-content/2",
+     "message": "AssertionError: expected 'indeterminate' to be 'code-content/2' // Object.is equality"
+    },
+    {
+     "test": "classDecision, path by path Dockerfile is code-content/2",
+     "message": "AssertionError: expected 'indeterminate' to be 'code-content/2' // Object.is equality"
+    },
+    {
+     "test": "classDecision, path by path Makefile is code-content/2",
+     "message": "AssertionError: expected 'indeterminate' to be 'code-content/2' // Object.is equality"
+    },
+    {
+     "test": "classDecision, path by path Dockerfile.dev is code-content/2",
+     "message": "AssertionError: expected 'indeterminate' to be 'code-content/2' // Object.is equality"
+    },
+    {
+     "test": "classDecision, path by path outputs.tf is code-content/2",
+     "message": "AssertionError: expected 'indeterminate' to be 'code-content/2' // Object.is equality"
+    },
+    {
+     "test": "classDecision, path by path modules/x/outputs.tf is code-content/2",
+     "message": "AssertionError: expected 'indeterminate' to be 'code-content/2' // Object.is equality"
+    },
+    {
+     "test": "classDecision, path by path catalog/app.json is code-content/2",
+     "message": "AssertionError: expected 'indeterminate' to be 'code-content/2' // Object.is equality"
+    },
+    {
+     "test": "classDecision, path by path outputs-x/Makefile is code-content/2",
+     "message": "AssertionError: expected 'indeterminate' to be 'code-content/2' // Object.is equality"
+    },
+    {
+     "test": "classDecision, path by path blog/x.yml is code-content/2",
+     "message": "AssertionError: expected 'indeterminate' to be 'code-content/2' // Object.is equality"
+    },
+    {
+     "test": "classDecision, path by path design/Dockerfile.md is governance-text/2",
+     "message": "AssertionError: expected 'indeterminate' to be 'governance-text/2' // Object.is equality"
+    },
+    {
+     "test": "classDecision, path by path Dockerfile.MD is project-documentation/2",
+     "message": "AssertionError: expected 'indeterminate' to be 'project-documentation/2' // Object.is equality"
+    },
+    {
+     "test": "classDecision, path by path pkg/Dockerfile.md is project-documentation/2",
+     "message": "AssertionError: expected 'indeterminate' to be 'project-documentation/2' // Object.is equality"
+    },
+    {
+     "test": "classDecision, path by path vendor.yml is code-content/2",
+     "message": "AssertionError: expected 'indeterminate' to be 'code-content/2' // Object.is equality"
+    },
+    {
+     "test": "classDecision, path by path a file ending .mts is code-content by Stage 2",
+     "message": "AssertionError: expected 'indeterminate' to be 'code-content/2' // Object.is equality"
+    },
+    {
+     "test": "classDecision, path by path a file ending .bash is code-content by Stage 2",
+     "message": "AssertionError: expected 'indeterminate' to be 'code-content/2' // Object.is equality"
+    },
+    {
+     "test": "classDecision, path by path a file ending .zsh is code-content by Stage 2",
+     "message": "AssertionError: expected 'indeterminate' to be 'code-content/2' // Object.is equality"
+    },
+    {
+     "test": "classDecision, path by path a file ending .fish is code-content by Stage 2",
+     "message": "AssertionError: expected 'indeterminate' to be 'code-content/2' // Object.is equality"
+    },
+    {
+     "test": "checks the committed lists do not reach on their own a path two Stage-2 rules match is indeterminate",
+     "message": "AssertionError: expected [ undefined, undefined ] to deeply equal [ undefined, { \u2026(2) } ]"
+    },
+    {
+     "test": "checks the committed lists do not reach on their own a path two Stage-1 documentation path rules place is never read by Stage 2",
+     "message": "AssertionError: expected [ undefined, { \u2026(2) }, undefined ] to deeply equal [ undefined, { \u2026(2) }, { \u2026(2) } ]"
+    }
+   ]
+  },
+  {
+   "id": "stage2-reads-two-class-stage1",
+   "file": "packages/polaris-generation-core/src/public-source-classification.ts",
+   "old": "if (stageOne > 1 || rulesMatched > 1) return undefined;",
+   "new": "if (rulesMatched > 1) return undefined;",
+   "tests": [
+    "packages/polaris-generation-core/src/public-source-two-stage.test.ts",
+    "packages/polaris-dossier/src/screen-source-reach-v2.test.ts"
+   ],
+   "project": "unit",
+   "outcome": "killed",
+   "killed": true,
+   "killedBy": "assertion",
+   "failedTests": [
+    {
+     "test": "classDecision, path by path never reads a path Stage 1 finds two classes for",
+     "message": "AssertionError: expected { \u2026(2) } to be undefined"
+    }
+   ]
+  },
+  {
+   "id": "stage2-reads-two-doc-path-rules",
+   "file": "packages/polaris-generation-core/src/public-source-classification.ts",
+   "old": "if (stageOne > 1 || rulesMatched > 1) return undefined;",
+   "new": "if (stageOne > 1) return undefined;",
+   "tests": [
+    "packages/polaris-generation-core/src/public-source-two-stage.test.ts",
+    "packages/polaris-dossier/src/screen-source-reach-v2.test.ts"
+   ],
+   "project": "unit",
+   "outcome": "killed",
+   "killed": true,
+   "killedBy": "assertion",
+   "failedTests": [
+    {
+     "test": "checks the committed lists do not reach on their own a path two Stage-1 documentation path rules place is never read by Stage 2",
+     "message": "AssertionError: expected [ { \u2026(2) }, { \u2026(2) }, { \u2026(2) } ] to deeply equal [ undefined, { \u2026(2) }, { \u2026(2) } ]"
+    }
+   ]
+  },
+  {
+   "id": "stage2-two-rule-match-admitted",
+   "file": "packages/polaris-generation-core/src/public-source-classification.ts",
+   "old": "if (matched.length !== 1) return undefined;",
+   "new": "if (matched.length === 0) return undefined;",
+   "tests": [
+    "packages/polaris-generation-core/src/public-source-two-stage.test.ts",
+    "packages/polaris-dossier/src/screen-source-reach-v2.test.ts"
+   ],
+   "project": "unit",
+   "outcome": "killed",
+   "killed": true,
+   "killedBy": "assertion",
+   "failedTests": [
+    {
+     "test": "checks the committed lists do not reach on their own a path two Stage-2 rules match is indeterminate",
+     "message": "AssertionError: expected [ { \u2026(2) }, { \u2026(2) } ] to deeply equal [ undefined, { \u2026(2) } ]"
+    }
+   ]
+  },
+  {
+   "id": "stage2-carried-as-stage1",
+   "file": "packages/polaris-generation-core/src/public-source-classification.ts",
+   "old": "return { contentClass: found.class, stage: 2 };",
+   "new": "return { contentClass: found.class, stage: 1 };",
+   "tests": [
+    "packages/polaris-generation-core/src/public-source-two-stage.test.ts",
+    "packages/polaris-dossier/src/screen-source-reach-v2.test.ts"
+   ],
+   "project": "unit",
+   "outcome": "killed",
+   "killed": true,
+   "killedBy": "assertion",
+   "failedTests": [
+    {
+     "test": "the successor screen design and decision documents are governance-text, and the run record names that class",
+     "message": "AssertionError: expected [ 'governance-text/1', \u2026(3) ] to deeply equal [ 'governance-text/2', \u2026(3) ]"
+    },
+    {
+     "test": "the successor screen the configuration and code paths the review found admitted stay indeterminate, beside an admitted control",
+     "message": "AssertionError: expected [ 'unknown-extraction-class', \u2026(6) ] to deeply equal [ 'unknown-extraction-class', \u2026(6) ]"
+    },
+    {
+     "test": "the successor screen nested documentation is admitted and scanned, and the root README keeps its exemption",
+     "message": "AssertionError: expected [ 'project-documentation/1', \u2026(3) ] to deeply equal [ 'project-documentation/2', \u2026(3) ]"
+    },
+    {
+     "test": "configuration under public visibility the three planted secrets are excluded whole and Cargo.toml is admitted as code-content",
+     "message": "AssertionError: expected [ { kind: 'admitted' }, \u2026(4) ] to deeply equal [ { kind: 'excluded', \u2026(1) }, \u2026(4) ]"
+    },
+    {
+     "test": "configuration under public visibility a Stage-2 project-documentation body with one credential-assignment match is excluded whole, never redacted",
+     "message": "AssertionError: expected { kind: 'redacted', \u2026(7) } to deeply equal { kind: 'excluded', \u2026(1) }"
+    },
+    {
+     "test": "configuration under private visibility the three planted secrets are excluded whole and Cargo.toml is admitted as code-content",
+     "message": "AssertionError: expected [ { kind: 'admitted' }, \u2026(4) ] to deeply equal [ { kind: 'excluded', \u2026(1) }, \u2026(4) ]"
+    },
+    {
+     "test": "the configuration detectors over agent text and cited spans rescan a Stage-2 body with them, and a Stage-1 body as the predecessor does",
+     "message": "AssertionError: expected [ false, false, true, false ] to deeply equal [ true, false, true, false ]"
+    },
+    {
+     "test": "the configuration detectors over agent text and cited spans screen a Stage-2 span or body given its path, and never a Stage-1 one",
+     "message": "AssertionError: expected undefined to be 'secret-detector-match' // Object.is equality"
+    },
+    {
+     "test": "predecessor outcomes are preserved a path the predecessor leaves indeterminate keeps that outcome, becomes denied, or is placed by the second stage",
+     "message": "AssertionError: expected [ [ 'docs/adr/x.md', \u2026(1) ], \u2026(24) ] to deeply equal [ [ 'docs/adr/x.md', \u2026(1) ], \u2026(24) ]"
+    },
+    {
+     "test": "classDecision, path by path design/api.rst is governance-text/2",
+     "message": "AssertionError: expected 'governance-text/1' to be 'governance-text/2' // Object.is equality"
+    },
+    {
+     "test": "classDecision, path by path Design/Notes.RST is governance-text/2",
+     "message": "AssertionError: expected 'governance-text/1' to be 'governance-text/2' // Object.is equality"
+    },
+    {
+     "test": "classDecision, path by path pkg/design-overview.rst is governance-text/2",
+     "message": "AssertionError: expected 'governance-text/1' to be 'governance-text/2' // Object.is equality"
+    },
+    {
+     "test": "classDecision, path by path docs/adr/0001-use-postgres.md is governance-text/2",
+     "message": "AssertionError: expected 'governance-text/1' to be 'governance-text/2' // Object.is equality"
+    },
+    {
+     "test": "classDecision, path by path ARCHITECTURE.md is governance-text/2",
+     "message": "AssertionError: expected 'governance-text/1' to be 'governance-text/2' // Object.is equality"
+    },
+    {
+     "test": "classDecision, path by path rfcs/0001-thing.md is governance-text/2",
+     "message": "AssertionError: expected 'governance-text/1' to be 'governance-text/2' // Object.is equality"
+    },
+    {
+     "test": "classDecision, path by path spec/api.rst is governance-text/2",
+     "message": "AssertionError: expected 'governance-text/1' to be 'governance-text/2' // Object.is equality"
+    },
+    {
+     "test": "classDecision, path by path Docs/ADRS/One.MD is governance-text/2",
+     "message": "AssertionError: expected 'governance-text/1' to be 'governance-text/2' // Object.is equality"
+    },
+    {
+     "test": "classDecision, path by path design/notes.md is governance-text/2",
+     "message": "AssertionError: expected 'governance-text/1' to be 'governance-text/2' // Object.is equality"
+    },
+    {
+     "test": "classDecision, path by path notes/adrx/0001.md is project-documentation/2",
+     "message": "AssertionError: expected 'project-documentation/1' to be 'project-documentation/2' // Object.is equality"
+    },
+    {
+     "test": "classDecision, path by path packages/api/README.md is project-documentation/2",
+     "message": "AssertionError: expected 'project-documentation/1' to be 'project-documentation/2' // Object.is equality"
+    },
+    {
+     "test": "classDecision, path by path packages/api/docs/guide.md is project-documentation/2",
+     "message": "AssertionError: expected 'project-documentation/1' to be 'project-documentation/2' // Object.is equality"
+    },
+    {
+     "test": "classDecision, path by path src/app/CHANGELOG.rst is project-documentation/2",
+     "message": "AssertionError: expected 'project-documentation/1' to be 'project-documentation/2' // Object.is equality"
+    },
+    {
+     "test": "classDecision, path by path packages/api/LICENSE.txt is project-documentation/2",
+     "message": "AssertionError: expected 'project-documentation/1' to be 'project-documentation/2' // Object.is equality"
+    },
+    {
+     "test": "classDecision, path by path pkg/01-README.md is project-documentation/2",
+     "message": "AssertionError: expected 'project-documentation/1' to be 'project-documentation/2' // Object.is equality"
+    },
+    {
+     "test": "classDecision, path by path guide.mdx is project-documentation/2",
+     "message": "AssertionError: expected 'project-documentation/1' to be 'project-documentation/2' // Object.is equality"
+    },
+    {
+     "test": "classDecision, path by path config/app.json is code-content/2",
+     "message": "AssertionError: expected 'code-content/1' to be 'code-content/2' // Object.is equality"
+    },
+    {
+     "test": "classDecision, path by path app.yml is code-content/2",
+     "message": "AssertionError: expected 'code-content/1' to be 'code-content/2' // Object.is equality"
+    },
+    {
+     "test": "classDecision, path by path deploy/x.yaml is code-content/2",
+     "message": "AssertionError: expected 'code-content/1' to be 'code-content/2' // Object.is equality"
+    },
+    {
+     "test": "classDecision, path by path Cargo.toml is code-content/2",
+     "message": "AssertionError: expected 'code-content/1' to be 'code-content/2' // Object.is equality"
+    },
+    {
+     "test": "classDecision, path by path main.tf is code-content/2",
+     "message": "AssertionError: expected 'code-content/1' to be 'code-content/2' // Object.is equality"
+    },
+    {
+     "test": "classDecision, path by path Dockerfile is code-content/2",
+     "message": "AssertionError: expected 'code-content/1' to be 'code-content/2' // Object.is equality"
+    },
+    {
+     "test": "classDecision, path by path Makefile is code-content/2",
+     "message": "AssertionError: expected 'code-content/1' to be 'code-content/2' // Object.is equality"
+    },
+    {
+     "test": "classDecision, path by path Dockerfile.dev is code-content/2",
+     "message": "AssertionError: expected 'code-content/1' to be 'code-content/2' // Object.is equality"
+    },
+    {
+     "test": "classDecision, path by path outputs.tf is code-content/2",
+     "message": "AssertionError: expected 'code-content/1' to be 'code-content/2' // Object.is equality"
+    },
+    {
+     "test": "classDecision, path by path modules/x/outputs.tf is code-content/2",
+     "message": "AssertionError: expected 'code-content/1' to be 'code-content/2' // Object.is equality"
+    },
+    {
+     "test": "classDecision, path by path catalog/app.json is code-content/2",
+     "message": "AssertionError: expected 'code-content/1' to be 'code-content/2' // Object.is equality"
+    },
+    {
+     "test": "classDecision, path by path outputs-x/Makefile is code-content/2",
+     "message": "AssertionError: expected 'code-content/1' to be 'code-content/2' // Object.is equality"
+    },
+    {
+     "test": "classDecision, path by path blog/x.yml is code-content/2",
+     "message": "AssertionError: expected 'code-content/1' to be 'code-content/2' // Object.is equality"
+    },
+    {
+     "test": "classDecision, path by path design/Dockerfile.md is governance-text/2",
+     "message": "AssertionError: expected 'governance-text/1' to be 'governance-text/2' // Object.is equality"
+    },
+    {
+     "test": "classDecision, path by path Dockerfile.MD is project-documentation/2",
+     "message": "AssertionError: expected 'project-documentation/1' to be 'project-documentation/2' // Object.is equality"
+    },
+    {
+     "test": "classDecision, path by path pkg/Dockerfile.md is project-documentation/2",
+     "message": "AssertionError: expected 'project-documentation/1' to be 'project-documentation/2' // Object.is equality"
+    },
+    {
+     "test": "classDecision, path by path vendor.yml is code-content/2",
+     "message": "AssertionError: expected 'code-content/1' to be 'code-content/2' // Object.is equality"
+    },
+    {
+     "test": "classDecision, path by path a file ending .mts is code-content by Stage 2",
+     "message": "AssertionError: expected 'code-content/1' to be 'code-content/2' // Object.is equality"
+    },
+    {
+     "test": "classDecision, path by path a file ending .bash is code-content by Stage 2",
+     "message": "AssertionError: expected 'code-content/1' to be 'code-content/2' // Object.is equality"
+    },
+    {
+     "test": "classDecision, path by path a file ending .zsh is code-content by Stage 2",
+     "message": "AssertionError: expected 'code-content/1' to be 'code-content/2' // Object.is equality"
+    },
+    {
+     "test": "classDecision, path by path a file ending .fish is code-content by Stage 2",
+     "message": "AssertionError: expected 'code-content/1' to be 'code-content/2' // Object.is equality"
+    },
+    {
+     "test": "checks the committed lists do not reach on their own a path two Stage-2 rules match is indeterminate",
+     "message": "AssertionError: expected [ undefined, { \u2026(2) } ] to deeply equal [ undefined, { \u2026(2) } ]"
+    },
+    {
+     "test": "checks the committed lists do not reach on their own a path two Stage-1 documentation path rules place is never read by Stage 2",
+     "message": "AssertionError: expected [ undefined, { \u2026(2) }, { \u2026(2) } ] to deeply equal [ undefined, { \u2026(2) }, { \u2026(2) } ]"
+    }
+   ]
+  },
+  {
+   "id": "vendored-not-skipped",
+   "file": "packages/polaris-generation-core/src/public-source-classification.ts",
+   "old": "if (segments.slice(0, -1).some(directory => stage.vendoredDirectoryNames.includes(directory))) return [];",
+   "new": "",
+   "tests": [
+    "packages/polaris-generation-core/src/public-source-two-stage.test.ts",
+    "packages/polaris-dossier/src/screen-source-reach-v2.test.ts"
+   ],
+   "project": "unit",
+   "outcome": "killed",
+   "killed": true,
+   "killedBy": "assertion",
+   "failedTests": [
+    {
+     "test": "the successor screen withheld words, notebooks and vendored paths stay withheld",
+     "message": "AssertionError: expected [ 'node_modules/x/README.md', \u2026(1) ] to deeply equal [ 'node_modules/x/README.md', \u2026(1) ]"
+    },
+    {
+     "test": "predecessor outcomes are preserved a path the predecessor leaves indeterminate keeps that outcome, becomes denied, or is placed by the second stage",
+     "message": "AssertionError: expected [ [ 'docs/adr/x.md', \u2026(1) ], \u2026(24) ] to deeply equal [ [ 'docs/adr/x.md', \u2026(1) ], \u2026(24) ]"
+    },
+    {
+     "test": "classDecision, path by path vendor/k8s/deploy.yaml is indeterminate",
+     "message": "AssertionError: expected 'code-content/2' to be 'indeterminate' // Object.is equality"
+    },
+    {
+     "test": "classDecision, path by path node_modules/x/README.md is indeterminate",
+     "message": "AssertionError: expected 'project-documentation/2' to be 'indeterminate' // Object.is equality"
+    },
+    {
+     "test": "classDecision, path by path a/b/node_modules/x/README.md is indeterminate",
+     "message": "AssertionError: expected 'project-documentation/2' to be 'indeterminate' // Object.is equality"
+    },
+    {
+     "test": "classDecision, path by path Vendor/x.yml is indeterminate",
+     "message": "AssertionError: expected 'code-content/2' to be 'indeterminate' // Object.is equality"
+    },
+    {
+     "test": "classDecision, path by path third-party/design/x.md is indeterminate",
+     "message": "AssertionError: expected 'governance-text/2' to be 'indeterminate' // Object.is equality"
+    },
+    {
+     "test": "classDecision, path by path names the rules each Stage-2 path matches before the two-match refusal",
+     "message": "AssertionError: expected [ 'governance-text-by-name' ] to deeply equal []"
+    }
+   ]
+  },
+  {
+   "id": "ill-formed-path-placed",
+   "file": "packages/polaris-generation-core/src/public-source-classification.ts",
+   "old": "const wellFormed = !folded.includes('\\\\') && segments.every(part => part !== '' && part !== '.' && part !== '..');",
+   "new": "const wellFormed = true;",
+   "tests": [
+    "packages/polaris-generation-core/src/public-source-two-stage.test.ts",
+    "packages/polaris-dossier/src/screen-source-reach-v2.test.ts"
+   ],
+   "project": "unit",
+   "outcome": "killed",
+   "killed": true,
+   "killedBy": "assertion",
+   "failedTests": [
+    {
+     "test": "classDecision, path by path design//x.md is indeterminate",
+     "message": "AssertionError: expected 'governance-text/2' to be 'indeterminate' // Object.is equality"
+    },
+    {
+     "test": "classDecision, path by path design/./x.md is indeterminate",
+     "message": "AssertionError: expected 'governance-text/2' to be 'indeterminate' // Object.is equality"
+    }
+   ]
+  },
+  {
+   "id": "gtbn-needs-no-token",
+   "file": "packages/polaris-generation-core/src/public-source-classification.ts",
+   "old": "return words.some(word => stage.governanceTextTokens.includes(word)) &&",
+   "new": "return true &&",
+   "tests": [
+    "packages/polaris-generation-core/src/public-source-two-stage.test.ts",
+    "packages/polaris-dossier/src/screen-source-reach-v2.test.ts"
+   ],
+   "project": "unit",
+   "outcome": "killed",
+   "killed": true,
+   "killedBy": "assertion",
+   "failedTests": [
+    {
+     "test": "the successor screen nested documentation is admitted and scanned, and the root README keeps its exemption",
+     "message": "AssertionError: expected [ 'unknown-extraction-class', \u2026(3) ] to deeply equal [ 'project-documentation/2', \u2026(3) ]"
+    },
+    {
+     "test": "predecessor outcomes are preserved a path the predecessor leaves indeterminate keeps that outcome, becomes denied, or is placed by the second stage",
+     "message": "AssertionError: expected [ [ 'docs/adr/x.md', \u2026(1) ], \u2026(24) ] to deeply equal [ [ 'docs/adr/x.md', \u2026(1) ], \u2026(24) ]"
+    },
+    {
+     "test": "classDecision, path by path notes/adrx/0001.md is project-documentation/2",
+     "message": "AssertionError: expected 'indeterminate' to be 'project-documentation/2' // Object.is equality"
+    },
+    {
+     "test": "classDecision, path by path packages/api/README.md is project-documentation/2",
+     "message": "AssertionError: expected 'indeterminate' to be 'project-documentation/2' // Object.is equality"
+    },
+    {
+     "test": "classDecision, path by path packages/api/docs/guide.md is project-documentation/2",
+     "message": "AssertionError: expected 'indeterminate' to be 'project-documentation/2' // Object.is equality"
+    },
+    {
+     "test": "classDecision, path by path src/app/CHANGELOG.rst is project-documentation/2",
+     "message": "AssertionError: expected 'indeterminate' to be 'project-documentation/2' // Object.is equality"
+    },
+    {
+     "test": "classDecision, path by path pkg/01-README.md is project-documentation/2",
+     "message": "AssertionError: expected 'indeterminate' to be 'project-documentation/2' // Object.is equality"
+    },
+    {
+     "test": "classDecision, path by path pkg/DesignDoc.md is indeterminate",
+     "message": "AssertionError: expected 'governance-text/2' to be 'indeterminate' // Object.is equality"
+    },
+    {
+     "test": "classDecision, path by path pkg/ArchitectureOverview.md is indeterminate",
+     "message": "AssertionError: expected 'governance-text/2' to be 'indeterminate' // Object.is equality"
+    },
+    {
+     "test": "classDecision, path by path Dockerfile.MD is project-documentation/2",
+     "message": "AssertionError: expected 'indeterminate' to be 'project-documentation/2' // Object.is equality"
+    },
+    {
+     "test": "classDecision, path by path pkg/Dockerfile.md is project-documentation/2",
+     "message": "AssertionError: expected 'indeterminate' to be 'project-documentation/2' // Object.is equality"
+    },
+    {
+     "test": "classDecision, path by path never reads a path Stage 1 finds two classes for",
+     "message": "AssertionError: expected [ 'governance-text-by-name', \u2026(1) ] to deeply equal [ 'project-documentation-extended' ]"
+    },
+    {
+     "test": "classDecision, path by path names the rules each Stage-2 path matches before the two-match refusal",
+     "message": "AssertionError: expected [ 'governance-text-by-name', \u2026(1) ] to deeply equal [ 'project-documentation-extended' ]"
+    },
+    {
+     "test": "checks the committed lists do not reach on their own a path two Stage-2 rules match is indeterminate",
+     "message": "AssertionError: expected [ 'governance-text-by-name', \u2026(2) ] to deeply equal [ \u2026(2) ]"
+    },
+    {
+     "test": "checks the committed lists do not reach on their own a path two Stage-1 documentation path rules place is never read by Stage 2",
+     "message": "AssertionError: expected [ undefined, { \u2026(2) }, undefined ] to deeply equal [ undefined, { \u2026(2) }, { \u2026(2) } ]"
+    }
+   ]
+  },
+  {
+   "id": "pde-governance-stems-dropped",
+   "file": "packages/polaris-generation-core/src/public-source-classification.ts",
+   "old": "      && !parts.some(part => stage.governanceStems.some(entry => part.includes(entry)))\n",
+   "new": "",
+   "tests": [
+    "packages/polaris-generation-core/src/public-source-two-stage.test.ts",
+    "packages/polaris-dossier/src/screen-source-reach-v2.test.ts"
+   ],
+   "project": "unit",
+   "outcome": "killed",
+   "killed": true,
+   "killedBy": "assertion",
+   "failedTests": [
+    {
+     "test": "predecessor outcomes are preserved a path the predecessor leaves indeterminate keeps that outcome, becomes denied, or is placed by the second stage",
+     "message": "AssertionError: expected [ [ 'docs/adr/x.md', \u2026(1) ], \u2026(24) ] to deeply equal [ [ 'docs/adr/x.md', \u2026(1) ], \u2026(24) ]"
+    },
+    {
+     "test": "classDecision, path by path pkg/DesignDoc.md is indeterminate",
+     "message": "AssertionError: expected 'project-documentation/2' to be 'indeterminate' // Object.is equality"
+    },
+    {
+     "test": "classDecision, path by path pkg/ArchitectureOverview.md is indeterminate",
+     "message": "AssertionError: expected 'project-documentation/2' to be 'indeterminate' // Object.is equality"
+    }
+   ]
+  },
+  {
+   "id": "pde-excluded-tokens-dropped",
+   "file": "packages/polaris-generation-core/src/public-source-classification.ts",
+   "old": "return !parts.some(part => wordsOf(part, separators).some(word => documentation.docExcludedTokens.includes(word)))",
+   "new": "return true",
+   "tests": [
+    "packages/polaris-generation-core/src/public-source-two-stage.test.ts",
+    "packages/polaris-dossier/src/screen-source-reach-v2.test.ts"
+   ],
+   "project": "unit",
+   "outcome": "killed",
+   "killed": true,
+   "killedBy": "assertion",
+   "failedTests": [
+    {
+     "test": "the successor screen design and decision documents are governance-text, and the run record names that class",
+     "message": "AssertionError: expected [ 'governance-text/2', \u2026(3) ] to deeply equal [ 'governance-text/2', \u2026(3) ]"
+    },
+    {
+     "test": "predecessor outcomes are preserved a path the predecessor leaves indeterminate keeps that outcome, becomes denied, or is placed by the second stage",
+     "message": "AssertionError: expected [ [ 'docs/adr/x.md', \u2026(1) ], \u2026(24) ] to deeply equal [ [ 'docs/adr/x.md', \u2026(1) ], \u2026(24) ]"
+    },
+    {
+     "test": "classDecision, path by path docs/adr/0001-use-postgres.md is governance-text/2",
+     "message": "AssertionError: expected 'indeterminate' to be 'governance-text/2' // Object.is equality"
+    },
+    {
+     "test": "classDecision, path by path rfcs/0001-thing.md is governance-text/2",
+     "message": "AssertionError: expected 'indeterminate' to be 'governance-text/2' // Object.is equality"
+    },
+    {
+     "test": "classDecision, path by path spec/api.rst is governance-text/2",
+     "message": "AssertionError: expected 'indeterminate' to be 'governance-text/2' // Object.is equality"
+    },
+    {
+     "test": "classDecision, path by path Docs/ADRS/One.MD is governance-text/2",
+     "message": "AssertionError: expected 'indeterminate' to be 'governance-text/2' // Object.is equality"
+    }
+   ]
+  },
+  {
+   "id": "nested-root-document-dropped",
+   "file": "packages/polaris-generation-core/src/public-source-classification.ts",
+   "old": "if (suffix !== '' && bare.endsWith(suffix)",
+   "new": "if (false && bare.endsWith(suffix)",
+   "tests": [
+    "packages/polaris-generation-core/src/public-source-two-stage.test.ts",
+    "packages/polaris-dossier/src/screen-source-reach-v2.test.ts"
+   ],
+   "project": "unit",
+   "outcome": "killed",
+   "killed": true,
+   "killedBy": "assertion",
+   "failedTests": [
+    {
+     "test": "classDecision, path by path packages/api/LICENSE.txt is project-documentation/2",
+     "message": "AssertionError: expected 'indeterminate' to be 'project-documentation/2' // Object.is equality"
+    }
+   ]
+  },
+  {
+   "id": "cce-language-extensions-dropped",
+   "file": "packages/polaris-generation-core/src/public-source-classification.ts",
+   "old": "...[...stage.configurationExtensions, ...stage.languageExtensions].filter",
+   "new": "...[...stage.configurationExtensions].filter",
+   "tests": [
+    "packages/polaris-generation-core/src/public-source-two-stage.test.ts",
+    "packages/polaris-dossier/src/screen-source-reach-v2.test.ts"
+   ],
+   "project": "unit",
+   "outcome": "killed",
+   "killed": true,
+   "killedBy": "assertion",
+   "failedTests": [
+    {
+     "test": "classDecision, path by path a file ending .mts is code-content by Stage 2",
+     "message": "AssertionError: expected 'indeterminate' to be 'code-content/2' // Object.is equality"
+    },
+    {
+     "test": "classDecision, path by path a file ending .bash is code-content by Stage 2",
+     "message": "AssertionError: expected 'indeterminate' to be 'code-content/2' // Object.is equality"
+    },
+    {
+     "test": "classDecision, path by path a file ending .zsh is code-content by Stage 2",
+     "message": "AssertionError: expected 'indeterminate' to be 'code-content/2' // Object.is equality"
+    },
+    {
+     "test": "classDecision, path by path a file ending .fish is code-content by Stage 2",
+     "message": "AssertionError: expected 'indeterminate' to be 'code-content/2' // Object.is equality"
+    }
+   ]
+  },
+  {
+   "id": "cce-configuration-extensions-dropped",
+   "file": "packages/polaris-generation-core/src/public-source-classification.ts",
+   "old": "...[...stage.configurationExtensions, ...stage.languageExtensions].filter",
+   "new": "...[...stage.languageExtensions].filter",
+   "tests": [
+    "packages/polaris-generation-core/src/public-source-two-stage.test.ts",
+    "packages/polaris-dossier/src/screen-source-reach-v2.test.ts"
+   ],
+   "project": "unit",
+   "outcome": "killed",
+   "killed": true,
+   "killedBy": "assertion",
+   "failedTests": [
+    {
+     "test": "the successor screen design and decision documents are governance-text, and the run record names that class",
+     "message": "AssertionError: expected [ 'governance-text/2', \u2026(3) ] to deeply equal [ 'governance-text/2', \u2026(3) ]"
+    },
+    {
+     "test": "the successor screen the configuration and code paths the review found admitted stay indeterminate, beside an admitted control",
+     "message": "AssertionError: expected [ 'unknown-extraction-class', \u2026(6) ] to deeply equal [ 'unknown-extraction-class', \u2026(6) ]"
+    },
+    {
+     "test": "configuration under public visibility the three planted secrets are excluded whole and Cargo.toml is admitted as code-content",
+     "message": "AssertionError: expected [ { kind: 'admitted' }, \u2026(4) ] to deeply equal [ { kind: 'excluded', \u2026(1) }, \u2026(4) ]"
+    },
+    {
+     "test": "configuration under private visibility the three planted secrets are excluded whole and Cargo.toml is admitted as code-content",
+     "message": "AssertionError: expected [ { kind: 'admitted' }, \u2026(4) ] to deeply equal [ { kind: 'excluded', \u2026(1) }, \u2026(4) ]"
+    },
+    {
+     "test": "the configuration detectors over agent text and cited spans rescan a Stage-2 body with them, and a Stage-1 body as the predecessor does",
+     "message": "AssertionError: expected [ false, false, true, false ] to deeply equal [ true, false, true, false ]"
+    },
+    {
+     "test": "the configuration detectors over agent text and cited spans screen a Stage-2 span or body given its path, and never a Stage-1 one",
+     "message": "AssertionError: expected undefined to be 'secret-detector-match' // Object.is equality"
+    },
+    {
+     "test": "predecessor outcomes are preserved a path the predecessor leaves indeterminate keeps that outcome, becomes denied, or is placed by the second stage",
+     "message": "AssertionError: expected [ [ 'docs/adr/x.md', \u2026(1) ], \u2026(24) ] to deeply equal [ [ 'docs/adr/x.md', \u2026(1) ], \u2026(24) ]"
+    },
+    {
+     "test": "classDecision, path by path config/app.json is code-content/2",
+     "message": "AssertionError: expected 'indeterminate' to be 'code-content/2' // Object.is equality"
+    },
+    {
+     "test": "classDecision, path by path app.yml is code-content/2",
+     "message": "AssertionError: expected 'indeterminate' to be 'code-content/2' // Object.is equality"
+    },
+    {
+     "test": "classDecision, path by path deploy/x.yaml is code-content/2",
+     "message": "AssertionError: expected 'indeterminate' to be 'code-content/2' // Object.is equality"
+    },
+    {
+     "test": "classDecision, path by path Cargo.toml is code-content/2",
+     "message": "AssertionError: expected 'indeterminate' to be 'code-content/2' // Object.is equality"
+    },
+    {
+     "test": "classDecision, path by path main.tf is code-content/2",
+     "message": "AssertionError: expected 'indeterminate' to be 'code-content/2' // Object.is equality"
+    },
+    {
+     "test": "classDecision, path by path outputs.tf is code-content/2",
+     "message": "AssertionError: expected 'indeterminate' to be 'code-content/2' // Object.is equality"
+    },
+    {
+     "test": "classDecision, path by path modules/x/outputs.tf is code-content/2",
+     "message": "AssertionError: expected 'indeterminate' to be 'code-content/2' // Object.is equality"
+    },
+    {
+     "test": "classDecision, path by path catalog/app.json is code-content/2",
+     "message": "AssertionError: expected 'indeterminate' to be 'code-content/2' // Object.is equality"
+    },
+    {
+     "test": "classDecision, path by path blog/x.yml is code-content/2",
+     "message": "AssertionError: expected 'indeterminate' to be 'code-content/2' // Object.is equality"
+    },
+    {
+     "test": "classDecision, path by path vendor.yml is code-content/2",
+     "message": "AssertionError: expected 'indeterminate' to be 'code-content/2' // Object.is equality"
+    }
+   ]
+  },
+  {
+   "id": "withheld-stems-dropped",
+   "file": "packages/polaris-generation-core/src/public-source-classification.ts",
+   "old": "  parts.some(part => stage.withheldStems.some(entry => part.includes(entry))\n    || wordsOf",
+   "new": "  parts.some(part => wordsOf",
+   "tests": [
+    "packages/polaris-generation-core/src/public-source-two-stage.test.ts",
+    "packages/polaris-dossier/src/screen-source-reach-v2.test.ts"
+   ],
+   "project": "unit",
+   "outcome": "killed",
+   "killed": true,
+   "killedBy": "assertion",
+   "failedTests": [
+    {
+     "test": "the successor screen withheld words, notebooks and vendored paths stay withheld",
+     "message": "AssertionError: expected [ 'SecurityPolicy.md', \u2026(1) ] to deeply equal [ 'SecurityPolicy.md', \u2026(1) ]"
+    },
+    {
+     "test": "classDecision, path by path design/SecurityPolicy.md is indeterminate",
+     "message": "AssertionError: expected 'governance-text/2' to be 'indeterminate' // Object.is equality"
+    },
+    {
+     "test": "classDecision, path by path design/reporting.md is indeterminate",
+     "message": "AssertionError: expected 'governance-text/2' to be 'indeterminate' // Object.is equality"
+    },
+    {
+     "test": "classDecision, path by path SecurityPolicy.md is indeterminate",
+     "message": "AssertionError: expected 'project-documentation/2' to be 'indeterminate' // Object.is equality"
+    },
+    {
+     "test": "classDecision, path by path pkg/CodeOfConduct.md is indeterminate",
+     "message": "AssertionError: expected 'project-documentation/2' to be 'indeterminate' // Object.is equality"
+    },
+    {
+     "test": "classDecision, path by path pkg/PrinciplesOfX.md is indeterminate",
+     "message": "AssertionError: expected 'project-documentation/2' to be 'indeterminate' // Object.is equality"
+    }
+   ]
+  },
+  {
+   "id": "evidence-words-dropped",
+   "file": "packages/polaris-generation-core/src/public-source-classification.ts",
+   "old": "evidence.includes(word) || stage.withheldTokens.includes(word)",
+   "new": "stage.withheldTokens.includes(word)",
+   "tests": [
+    "packages/polaris-generation-core/src/public-source-two-stage.test.ts",
+    "packages/polaris-dossier/src/screen-source-reach-v2.test.ts"
+   ],
+   "project": "unit",
+   "outcome": "killed",
+   "killed": true,
+   "killedBy": "assertion",
+   "failedTests": [
+    {
+     "test": "the successor screen design and decision documents are governance-text, and the run record names that class",
+     "message": "AssertionError: expected [ 'governance-text/2', \u2026(3) ] to deeply equal [ 'governance-text/2', \u2026(3) ]"
+    },
+    {
+     "test": "the successor screen the configuration and code paths the review found admitted stay indeterminate, beside an admitted control",
+     "message": "AssertionError: expected [ 'unknown-extraction-class', \u2026(6) ] to deeply equal [ 'unknown-extraction-class', \u2026(6) ]"
+    },
+    {
+     "test": "classDecision, path by path design/test-output.md is indeterminate",
+     "message": "AssertionError: expected 'governance-text/2' to be 'indeterminate' // Object.is equality"
+    },
+    {
+     "test": "classDecision, path by path spec/build-log.md is indeterminate",
+     "message": "AssertionError: expected 'governance-text/2' to be 'indeterminate' // Object.is equality"
+    },
+    {
+     "test": "classDecision, path by path guides/build-log.md is indeterminate",
+     "message": "AssertionError: expected 'project-documentation/2' to be 'indeterminate' // Object.is equality"
+    },
+    {
+     "test": "classDecision, path by path notes/results.md is indeterminate",
+     "message": "AssertionError: expected 'project-documentation/2' to be 'indeterminate' // Object.is equality"
+    },
+    {
+     "test": "classDecision, path by path test-output.json is indeterminate",
+     "message": "AssertionError: expected 'code-content/2' to be 'indeterminate' // Object.is equality"
+    },
+    {
+     "test": "classDecision, path by path audit-log.yaml is indeterminate",
+     "message": "AssertionError: expected 'code-content/2' to be 'indeterminate' // Object.is equality"
+    },
+    {
+     "test": "classDecision, path by path logs/app.json is indeterminate",
+     "message": "AssertionError: expected 'code-content/2' to be 'indeterminate' // Object.is equality"
+    },
+    {
+     "test": "classDecision, path by path ci/results/x.toml is indeterminate",
+     "message": "AssertionError: expected 'code-content/2' to be 'indeterminate' // Object.is equality"
+    },
+    {
+     "test": "classDecision, path by path Dockerfile.audit is indeterminate",
+     "message": "AssertionError: expected 'code-content/2' to be 'indeterminate' // Object.is equality"
+    },
+    {
+     "test": "classDecision, path by path output.json is indeterminate",
+     "message": "AssertionError: expected 'code-content/2' to be 'indeterminate' // Object.is equality"
+    },
+    {
+     "test": "classDecision, path by path modules/x/output.tf is indeterminate",
+     "message": "AssertionError: expected 'code-content/2' to be 'indeterminate' // Object.is equality"
+    }
+   ]
+  },
+  {
+   "id": "withheld-tokens-dropped",
+   "file": "packages/polaris-generation-core/src/public-source-classification.ts",
+   "old": "evidence.includes(word) || stage.withheldTokens.includes(word)",
+   "new": "evidence.includes(word)",
+   "tests": [
+    "packages/polaris-generation-core/src/public-source-two-stage.test.ts",
+    "packages/polaris-dossier/src/screen-source-reach-v2.test.ts"
+   ],
+   "project": "unit",
+   "outcome": "killed",
+   "killed": true,
+   "killedBy": "assertion",
+   "failedTests": [
+    {
+     "test": "checks the committed lists do not reach on their own a withheld token refuses governance-text-by-name even with no withheld stem beside it",
+     "message": "AssertionError: expected [ [ 'governance-text-by-name' ], \u2026(1) ] to deeply equal [ [], [ 'governance-text-by-name' ] ]"
+    }
+   ]
+  },
+  {
+   "id": "cce-refusals-dropped",
+   "file": "packages/polaris-generation-core/src/public-source-classification.ts",
+   "old": "return finals.every(final => !refusedByStemOrEvidence([...directories, fold(final)], stage, separators, stage.codeEvidenceWords));",
+   "new": "return true;",
+   "tests": [
+    "packages/polaris-generation-core/src/public-source-two-stage.test.ts",
+    "packages/polaris-dossier/src/screen-source-reach-v2.test.ts"
+   ],
+   "project": "unit",
+   "outcome": "killed",
+   "killed": true,
+   "killedBy": "assertion",
+   "failedTests": [
+    {
+     "test": "the successor screen design and decision documents are governance-text, and the run record names that class",
+     "message": "AssertionError: expected [ 'governance-text/2', \u2026(3) ] to deeply equal [ 'governance-text/2', \u2026(3) ]"
+    },
+    {
+     "test": "the successor screen the configuration and code paths the review found admitted stay indeterminate, beside an admitted control",
+     "message": "AssertionError: expected [ 'code-content/2', \u2026(6) ] to deeply equal [ 'unknown-extraction-class', \u2026(6) ]"
+    },
+    {
+     "test": "predecessor outcomes are preserved a path the predecessor leaves indeterminate keeps that outcome, becomes denied, or is placed by the second stage",
+     "message": "AssertionError: expected [ [ 'docs/adr/x.md', \u2026(1) ], \u2026(24) ] to deeply equal [ [ 'docs/adr/x.md', \u2026(1) ], \u2026(24) ]"
+    },
+    {
+     "test": "classDecision, path by path reports/benchmark-results.json is indeterminate",
+     "message": "AssertionError: expected 'code-content/2' to be 'indeterminate' // Object.is equality"
+    },
+    {
+     "test": "classDecision, path by path test-output.json is indeterminate",
+     "message": "AssertionError: expected 'code-content/2' to be 'indeterminate' // Object.is equality"
+    },
+    {
+     "test": "classDecision, path by path audit-log.yaml is indeterminate",
+     "message": "AssertionError: expected 'code-content/2' to be 'indeterminate' // Object.is equality"
+    },
+    {
+     "test": "classDecision, path by path security-policy.yaml is indeterminate",
+     "message": "AssertionError: expected 'code-content/2' to be 'indeterminate' // Object.is equality"
+    },
+    {
+     "test": "classDecision, path by path governance/decisions.json is indeterminate",
+     "message": "AssertionError: expected 'code-content/2' to be 'indeterminate' // Object.is equality"
+    },
+    {
+     "test": "classDecision, path by path SECURITY.yml is indeterminate",
+     "message": "AssertionError: expected 'code-content/2' to be 'indeterminate' // Object.is equality"
+    },
+    {
+     "test": "classDecision, path by path logs/app.json is indeterminate",
+     "message": "AssertionError: expected 'code-content/2' to be 'indeterminate' // Object.is equality"
+    },
+    {
+     "test": "classDecision, path by path ci/results/x.toml is indeterminate",
+     "message": "AssertionError: expected 'code-content/2' to be 'indeterminate' // Object.is equality"
+    },
+    {
+     "test": "classDecision, path by path security/Dockerfile is indeterminate",
+     "message": "AssertionError: expected 'code-content/2' to be 'indeterminate' // Object.is equality"
+    },
+    {
+     "test": "classDecision, path by path Dockerfile.audit is indeterminate",
+     "message": "AssertionError: expected 'code-content/2' to be 'indeterminate' // Object.is equality"
+    },
+    {
+     "test": "classDecision, path by path policies/main.tf is indeterminate",
+     "message": "AssertionError: expected 'code-content/2' to be 'indeterminate' // Object.is equality"
+    },
+    {
+     "test": "classDecision, path by path principles.mts is indeterminate",
+     "message": "AssertionError: expected 'code-content/2' to be 'indeterminate' // Object.is equality"
+    },
+    {
+     "test": "classDecision, path by path output.json is indeterminate",
+     "message": "AssertionError: expected 'code-content/2' to be 'indeterminate' // Object.is equality"
+    },
+    {
+     "test": "classDecision, path by path modules/x/output.tf is indeterminate",
+     "message": "AssertionError: expected 'code-content/2' to be 'indeterminate' // Object.is equality"
+    },
+    {
+     "test": "classDecision, path by path policy-free.json is indeterminate",
+     "message": "AssertionError: expected 'code-content/2' to be 'indeterminate' // Object.is equality"
+    }
+   ]
+  },
+  {
+   "id": "cce-directories-not-refused",
+   "file": "packages/polaris-generation-core/src/public-source-classification.ts",
+   "old": "!refusedByStemOrEvidence([...directories, fold(final)], stage, separators, stage.codeEvidenceWords)",
+   "new": "!refusedByStemOrEvidence([fold(final)], stage, separators, stage.codeEvidenceWords)",
+   "tests": [
+    "packages/polaris-generation-core/src/public-source-two-stage.test.ts",
+    "packages/polaris-dossier/src/screen-source-reach-v2.test.ts"
+   ],
+   "project": "unit",
+   "outcome": "killed",
+   "killed": true,
+   "killedBy": "assertion",
+   "failedTests": [
+    {
+     "test": "classDecision, path by path logs/app.json is indeterminate",
+     "message": "AssertionError: expected 'code-content/2' to be 'indeterminate' // Object.is equality"
+    },
+    {
+     "test": "classDecision, path by path ci/results/x.toml is indeterminate",
+     "message": "AssertionError: expected 'code-content/2' to be 'indeterminate' // Object.is equality"
+    },
+    {
+     "test": "classDecision, path by path security/Dockerfile is indeterminate",
+     "message": "AssertionError: expected 'code-content/2' to be 'indeterminate' // Object.is equality"
+    },
+    {
+     "test": "classDecision, path by path policies/main.tf is indeterminate",
+     "message": "AssertionError: expected 'code-content/2' to be 'indeterminate' // Object.is equality"
+    }
+   ]
+  },
+  {
+   "id": "cce-final-not-refused",
+   "file": "packages/polaris-generation-core/src/public-source-classification.ts",
+   "old": "!refusedByStemOrEvidence([...directories, fold(final)], stage, separators, stage.codeEvidenceWords)",
+   "new": "!refusedByStemOrEvidence([...directories], stage, separators, stage.codeEvidenceWords)",
+   "tests": [
+    "packages/polaris-generation-core/src/public-source-two-stage.test.ts",
+    "packages/polaris-dossier/src/screen-source-reach-v2.test.ts"
+   ],
+   "project": "unit",
+   "outcome": "killed",
+   "killed": true,
+   "killedBy": "assertion",
+   "failedTests": [
+    {
+     "test": "the successor screen design and decision documents are governance-text, and the run record names that class",
+     "message": "AssertionError: expected [ 'governance-text/2', \u2026(3) ] to deeply equal [ 'governance-text/2', \u2026(3) ]"
+    },
+    {
+     "test": "the successor screen the configuration and code paths the review found admitted stay indeterminate, beside an admitted control",
+     "message": "AssertionError: expected [ 'unknown-extraction-class', \u2026(6) ] to deeply equal [ 'unknown-extraction-class', \u2026(6) ]"
+    },
+    {
+     "test": "classDecision, path by path test-output.json is indeterminate",
+     "message": "AssertionError: expected 'code-content/2' to be 'indeterminate' // Object.is equality"
+    },
+    {
+     "test": "classDecision, path by path audit-log.yaml is indeterminate",
+     "message": "AssertionError: expected 'code-content/2' to be 'indeterminate' // Object.is equality"
+    },
+    {
+     "test": "classDecision, path by path security-policy.yaml is indeterminate",
+     "message": "AssertionError: expected 'code-content/2' to be 'indeterminate' // Object.is equality"
+    },
+    {
+     "test": "classDecision, path by path SECURITY.yml is indeterminate",
+     "message": "AssertionError: expected 'code-content/2' to be 'indeterminate' // Object.is equality"
+    },
+    {
+     "test": "classDecision, path by path Dockerfile.audit is indeterminate",
+     "message": "AssertionError: expected 'code-content/2' to be 'indeterminate' // Object.is equality"
+    },
+    {
+     "test": "classDecision, path by path principles.mts is indeterminate",
+     "message": "AssertionError: expected 'code-content/2' to be 'indeterminate' // Object.is equality"
+    },
+    {
+     "test": "classDecision, path by path output.json is indeterminate",
+     "message": "AssertionError: expected 'code-content/2' to be 'indeterminate' // Object.is equality"
+    },
+    {
+     "test": "classDecision, path by path modules/x/output.tf is indeterminate",
+     "message": "AssertionError: expected 'code-content/2' to be 'indeterminate' // Object.is equality"
+    },
+    {
+     "test": "classDecision, path by path policy-free.json is indeterminate",
+     "message": "AssertionError: expected 'code-content/2' to be 'indeterminate' // Object.is equality"
+    }
+   ]
+  },
+  {
+   "id": "cce-final-not-folded",
+   "file": "packages/polaris-generation-core/src/public-source-classification.ts",
+   "old": "!refusedByStemOrEvidence([...directories, fold(final)], stage, separators, stage.codeEvidenceWords)",
+   "new": "!refusedByStemOrEvidence([...directories, final], stage, separators, stage.codeEvidenceWords)",
+   "tests": [
+    "packages/polaris-generation-core/src/public-source-two-stage.test.ts",
+    "packages/polaris-dossier/src/screen-source-reach-v2.test.ts"
+   ],
+   "project": "unit",
+   "outcome": "killed",
+   "killed": true,
+   "killedBy": "assertion",
+   "failedTests": [
+    {
+     "test": "the successor screen the configuration and code paths the review found admitted stay indeterminate, beside an admitted control",
+     "message": "AssertionError: expected [ 'unknown-extraction-class', \u2026(6) ] to deeply equal [ 'unknown-extraction-class', \u2026(6) ]"
+    },
+    {
+     "test": "classDecision, path by path SECURITY.yml is indeterminate",
+     "message": "AssertionError: expected 'code-content/2' to be 'indeterminate' // Object.is equality"
+    }
+   ]
+  },
+  {
+   "id": "cce-code-evidence-is-evidence-words",
+   "file": "packages/polaris-generation-core/src/public-source-classification.ts",
+   "old": "!refusedByStemOrEvidence([...directories, fold(final)], stage, separators, stage.codeEvidenceWords)",
+   "new": "!refusedByStemOrEvidence([...directories, fold(final)], stage, separators, stage.evidenceWords)",
+   "tests": [
+    "packages/polaris-generation-core/src/public-source-two-stage.test.ts",
+    "packages/polaris-dossier/src/screen-source-reach-v2.test.ts"
+   ],
+   "project": "unit",
+   "outcome": "killed",
+   "killed": true,
+   "killedBy": "assertion",
+   "failedTests": [
+    {
+     "test": "the successor screen design and decision documents are governance-text, and the run record names that class",
+     "message": "AssertionError: expected [ 'governance-text/2', \u2026(3) ] to deeply equal [ 'governance-text/2', \u2026(3) ]"
+    },
+    {
+     "test": "classDecision, path by path outputs.tf is code-content/2",
+     "message": "AssertionError: expected 'indeterminate' to be 'code-content/2' // Object.is equality"
+    },
+    {
+     "test": "classDecision, path by path modules/x/outputs.tf is code-content/2",
+     "message": "AssertionError: expected 'indeterminate' to be 'code-content/2' // Object.is equality"
+    },
+    {
+     "test": "classDecision, path by path outputs-x/Makefile is code-content/2",
+     "message": "AssertionError: expected 'indeterminate' to be 'code-content/2' // Object.is equality"
+    }
+   ]
+  },
+  {
+   "id": "cce-name-match-not-refused",
+   "file": "packages/polaris-generation-core/src/public-source-classification.ts",
+   "old": "prefixMatch(name, stage) ? [name] : []),",
+   "new": "prefixMatch(name, stage) ? [''] : []),",
+   "tests": [
+    "packages/polaris-generation-core/src/public-source-two-stage.test.ts",
+    "packages/polaris-dossier/src/screen-source-reach-v2.test.ts"
+   ],
+   "project": "unit",
+   "outcome": "killed",
+   "killed": true,
+   "killedBy": "assertion",
+   "failedTests": [
+    {
+     "test": "classDecision, path by path Dockerfile.audit is indeterminate",
+     "message": "AssertionError: expected 'code-content/2' to be 'indeterminate' // Object.is equality"
+    }
+   ]
+  },
+  {
+   "id": "cce-source-file-names-dropped",
+   "file": "packages/polaris-generation-core/src/public-source-classification.ts",
+   "old": "...(stage.sourceFileNames.includes(name) || prefixMatch(name, stage)",
+   "new": "...(prefixMatch(name, stage)",
+   "tests": [
+    "packages/polaris-generation-core/src/public-source-two-stage.test.ts",
+    "packages/polaris-dossier/src/screen-source-reach-v2.test.ts"
+   ],
+   "project": "unit",
+   "outcome": "killed",
+   "killed": true,
+   "killedBy": "assertion",
+   "failedTests": [
+    {
+     "test": "predecessor outcomes are preserved a path the predecessor leaves indeterminate keeps that outcome, becomes denied, or is placed by the second stage",
+     "message": "AssertionError: expected [ [ 'docs/adr/x.md', \u2026(1) ], \u2026(24) ] to deeply equal [ [ 'docs/adr/x.md', \u2026(1) ], \u2026(24) ]"
+    },
+    {
+     "test": "classDecision, path by path Dockerfile is code-content/2",
+     "message": "AssertionError: expected 'indeterminate' to be 'code-content/2' // Object.is equality"
+    },
+    {
+     "test": "classDecision, path by path Makefile is code-content/2",
+     "message": "AssertionError: expected 'indeterminate' to be 'code-content/2' // Object.is equality"
+    },
+    {
+     "test": "classDecision, path by path outputs-x/Makefile is code-content/2",
+     "message": "AssertionError: expected 'indeterminate' to be 'code-content/2' // Object.is equality"
+    }
+   ]
+  },
+  {
+   "id": "cce-source-file-prefixes-dropped",
+   "file": "packages/polaris-generation-core/src/public-source-classification.ts",
+   "old": "...(stage.sourceFileNames.includes(name) || prefixMatch(name, stage)",
+   "new": "...(stage.sourceFileNames.includes(name)",
+   "tests": [
+    "packages/polaris-generation-core/src/public-source-two-stage.test.ts",
+    "packages/polaris-dossier/src/screen-source-reach-v2.test.ts"
+   ],
+   "project": "unit",
+   "outcome": "killed",
+   "killed": true,
+   "killedBy": "assertion",
+   "failedTests": [
+    {
+     "test": "classDecision, path by path Dockerfile.dev is code-content/2",
+     "message": "AssertionError: expected 'indeterminate' to be 'code-content/2' // Object.is equality"
+    },
+    {
+     "test": "checks the committed lists do not reach on their own a path two Stage-2 rules match is indeterminate",
+     "message": "AssertionError: expected [ 'project-documentation-extended' ] to deeply equal [ \u2026(2) ]"
+    }
+   ]
+  },
+  {
+   "id": "prefix-exclusion-dropped",
+   "file": "packages/polaris-generation-core/src/public-source-classification.ts",
+   "old": " && !stage.prefixExcludedExtensions.some(entry => fold(name).endsWith(entry));",
+   "new": ";",
+   "tests": [
+    "packages/polaris-generation-core/src/public-source-two-stage.test.ts",
+    "packages/polaris-dossier/src/screen-source-reach-v2.test.ts"
+   ],
+   "project": "unit",
+   "outcome": "killed",
+   "killed": true,
+   "killedBy": "assertion",
+   "failedTests": [
+    {
+     "test": "the successor screen design and decision documents are governance-text, and the run record names that class",
+     "message": "AssertionError: expected [ 'unknown-extraction-class', \u2026(3) ] to deeply equal [ 'governance-text/2', \u2026(3) ]"
+    },
+    {
+     "test": "classDecision, path by path design/Dockerfile.md is governance-text/2",
+     "message": "AssertionError: expected 'indeterminate' to be 'governance-text/2' // Object.is equality"
+    },
+    {
+     "test": "classDecision, path by path images/Dockerfile.txt is indeterminate",
+     "message": "AssertionError: expected 'code-content/2' to be 'indeterminate' // Object.is equality"
+    },
+    {
+     "test": "classDecision, path by path Dockerfile.MD is project-documentation/2",
+     "message": "AssertionError: expected 'indeterminate' to be 'project-documentation/2' // Object.is equality"
+    },
+    {
+     "test": "classDecision, path by path pkg/Dockerfile.md is project-documentation/2",
+     "message": "AssertionError: expected 'indeterminate' to be 'project-documentation/2' // Object.is equality"
+    },
+    {
+     "test": "classDecision, path by path names the rules each Stage-2 path matches before the two-match refusal",
+     "message": "AssertionError: expected [ \u2026(2) ] to deeply equal [ 'project-documentation-extended' ]"
+    },
+    {
+     "test": "checks the committed lists do not reach on their own a path two Stage-2 rules match is indeterminate",
+     "message": "AssertionError: expected [ undefined, undefined ] to deeply equal [ undefined, { \u2026(2) } ]"
+    }
+   ]
+  },
+  {
+   "id": "prefix-exclusion-unfolded",
+   "file": "packages/polaris-generation-core/src/public-source-classification.ts",
+   "old": "!stage.prefixExcludedExtensions.some(entry => fold(name).endsWith(entry))",
+   "new": "!stage.prefixExcludedExtensions.some(entry => name.endsWith(entry))",
+   "tests": [
+    "packages/polaris-generation-core/src/public-source-two-stage.test.ts",
+    "packages/polaris-dossier/src/screen-source-reach-v2.test.ts"
+   ],
+   "project": "unit",
+   "outcome": "killed",
+   "killed": true,
+   "killedBy": "assertion",
+   "failedTests": [
+    {
+     "test": "classDecision, path by path Dockerfile.MD is project-documentation/2",
+     "message": "AssertionError: expected 'indeterminate' to be 'project-documentation/2' // Object.is equality"
+    }
+   ]
+  },
+  {
+   "id": "render-rescan-stage-one-extended",
+   "file": "packages/polaris-dossier/src/screen.ts",
+   "old": "scannedAsBefore: (body, repositoryPath) => detectSecrets(stageTwo(repositoryPath) ? stageTwoDetectors : detectors, body)",
+   "new": "scannedAsBefore: (body, repositoryPath) => detectSecrets(stageTwoDetectors, body)",
+   "tests": [
+    "packages/polaris-dossier/src/screen-source-reach-v2.test.ts"
+   ],
+   "project": "unit",
+   "outcome": "killed",
+   "killed": true,
+   "killedBy": "assertion",
+   "failedTests": [
+    {
+     "test": "the configuration detectors over agent text and cited spans rescan a Stage-2 body with them, and a Stage-1 body as the predecessor does",
+     "message": "AssertionError: expected [ true, true, true, false ] to deeply equal [ true, false, true, false ]"
+    }
+   ]
+  },
+  {
+   "id": "render-rescan-no-active-content",
+   "file": "packages/polaris-dossier/src/screen.ts",
+   "old": "detectSecrets(stageTwo(repositoryPath) ? stageTwoDetectors : detectors, body) !== undefined || scanActiveContent(body).length > 0,",
+   "new": "detectSecrets(stageTwo(repositoryPath) ? stageTwoDetectors : detectors, body) !== undefined,",
+   "tests": [
+    "packages/polaris-dossier/src/screen-source-reach-v2.test.ts"
+   ],
+   "project": "unit",
+   "outcome": "killed",
+   "killed": true,
+   "killedBy": "assertion",
+   "failedTests": [
+    {
+     "test": "the configuration detectors over agent text and cited spans rescan a Stage-2 body with them, and a Stage-1 body as the predecessor does",
+     "message": "AssertionError: expected [ true, false, false, false ] to deeply equal [ true, false, true, false ]"
+    }
+   ]
+  },
+  {
+   "id": "render-rescan-path-free",
+   "file": "packages/polaris-dossier/src/render.ts",
+   "old": "screen.scannedAsBefore(blob.raw, cited)",
+   "new": "screen.screenBody(blob.raw) !== undefined",
+   "tests": [
+    "packages/polaris-dossier/src/render.test.ts"
+   ],
+   "project": "integration",
+   "outcome": "killed",
+   "killed": true,
+   "killedBy": "assertion",
+   "failedTests": [
+    {
+     "test": "render rescans a cited body with its path, so a detector of agent text alone asks nothing of a Stage-1 body",
+     "message": "AssertionError: expected { ok: false, refusal: { \u2026(5) } } to match object { ok: true }"
+    }
+   ]
+  },
+  {
+   "id": "code-exemption-ignores-stage",
+   "file": "packages/polaris-generation-core/src/public-source-classification.ts",
+   "old": "if (exemption === null || contentClass !== 'code-content' || stage !== 1) return false;",
+   "new": "if (exemption === null || contentClass !== 'code-content') return false;",
+   "tests": [
+    "packages/polaris-generation-core/src/public-source-two-stage.test.ts",
+    "packages/polaris-dossier/src/screen-source-reach-v2.test.ts"
+   ],
+   "project": "unit",
+   "outcome": "killed",
+   "killed": true,
+   "killedBy": "assertion",
+   "failedTests": [
+    {
+     "test": "the exemptions read the stage never exempt a body Stage 2 places",
+     "message": "AssertionError: expected [ true, true ] to deeply equal [ true, false ]"
+    }
+   ]
+  },
+  {
+   "id": "doc-exemption-ignores-stage",
+   "file": "packages/polaris-generation-core/src/public-source-classification.ts",
+   "old": "return declared && contentClass === 'project-documentation' && stage === 1;",
+   "new": "return declared && contentClass === 'project-documentation';",
+   "tests": [
+    "packages/polaris-generation-core/src/public-source-two-stage.test.ts",
+    "packages/polaris-dossier/src/screen-source-reach-v2.test.ts"
+   ],
+   "project": "unit",
+   "outcome": "killed",
+   "killed": true,
+   "killedBy": "assertion",
+   "failedTests": [
+    {
+     "test": "the successor screen nested documentation is admitted and scanned, and the root README keeps its exemption",
+     "message": "AssertionError: expected { kind: 'admitted' } to deeply equal { kind: 'excluded', \u2026(1) }"
+    },
+    {
+     "test": "the exemptions read the stage never exempt a body Stage 2 places",
+     "message": "AssertionError: expected [ true, true ] to deeply equal [ true, false ]"
+    }
+   ]
+  },
+  {
+   "id": "denied-directory-reads-final-segment",
+   "file": "packages/polaris-generation-core/src/public-source-classification.ts",
+   "old": "return repositoryPath.split('/').slice(0, -1).some(directory => lowered",
+   "new": "return repositoryPath.split('/').some(directory => lowered",
+   "tests": [
+    "packages/polaris-generation-core/src/public-source-two-stage.test.ts",
+    "packages/polaris-dossier/src/screen-source-reach-v2.test.ts"
+   ],
+   "project": "unit",
+   "outcome": "killed",
+   "killed": true,
+   "killedBy": "assertion",
+   "failedTests": [
+    {
+     "test": "credential paths are denied before any read directory .ssh at each depth and in upper case, never the final segment",
+     "message": "AssertionError: expected 'denied-path' to be 'unknown-extraction-class' // Object.is equality"
+    },
+    {
+     "test": "credential paths are denied before any read directory .gnupg at each depth and in upper case, never the final segment",
+     "message": "AssertionError: expected 'denied-path' to be 'unknown-extraction-class' // Object.is equality"
+    },
+    {
+     "test": "credential paths are denied before any read directory .aws at each depth and in upper case, never the final segment",
+     "message": "AssertionError: expected 'denied-path' to be 'unknown-extraction-class' // Object.is equality"
+    },
+    {
+     "test": "credential paths are denied before any read directory .kube at each depth and in upper case, never the final segment",
+     "message": "AssertionError: expected 'denied-path' to be 'unknown-extraction-class' // Object.is equality"
+    },
+    {
+     "test": "credential paths are denied before any read directory .docker at each depth and in upper case, never the final segment",
+     "message": "AssertionError: expected 'denied-path' to be 'unknown-extraction-class' // Object.is equality"
+    },
+    {
+     "test": "credential paths are denied before any read directory .terraform at each depth and in upper case, never the final segment",
+     "message": "AssertionError: expected 'denied-path' to be 'unknown-extraction-class' // Object.is equality"
+    },
+    {
+     "test": "deniedDirectoryNames conf/.aws is denied: false",
+     "message": "AssertionError: expected true to be false // Object.is equality"
+    },
+    {
+     "test": "deniedDirectoryNames .ssh is denied: false",
+     "message": "AssertionError: expected true to be false // Object.is equality"
+    }
+   ]
+  },
+  {
+   "id": "denied-directory-case-sensitive",
+   "file": "packages/polaris-generation-core/src/public-source-classification.ts",
+   "old": "lowered.includes(directory.toLowerCase())",
+   "new": "lowered.includes(directory)",
+   "tests": [
+    "packages/polaris-generation-core/src/public-source-two-stage.test.ts",
+    "packages/polaris-dossier/src/screen-source-reach-v2.test.ts"
+   ],
+   "project": "unit",
+   "outcome": "killed",
+   "killed": true,
+   "killedBy": "assertion",
+   "failedTests": [
+    {
+     "test": "credential paths are denied before any read directory .ssh at each depth and in upper case, never the final segment",
+     "message": "AssertionError: expected [ 'a/.SSH/b/c.c', undefined ] to deeply equal [ 'a/.SSH/b/c.c', 'denied-path' ]"
+    },
+    {
+     "test": "credential paths are denied before any read directory .gnupg at each depth and in upper case, never the final segment",
+     "message": "AssertionError: expected [ 'a/.GNUPG/b/c.c', undefined ] to deeply equal [ 'a/.GNUPG/b/c.c', 'denied-path' ]"
+    },
+    {
+     "test": "credential paths are denied before any read directory .aws at each depth and in upper case, never the final segment",
+     "message": "AssertionError: expected [ 'a/.AWS/b/c.c', undefined ] to deeply equal [ 'a/.AWS/b/c.c', 'denied-path' ]"
+    },
+    {
+     "test": "credential paths are denied before any read directory .kube at each depth and in upper case, never the final segment",
+     "message": "AssertionError: expected [ 'a/.KUBE/b/c.c', undefined ] to deeply equal [ 'a/.KUBE/b/c.c', 'denied-path' ]"
+    },
+    {
+     "test": "credential paths are denied before any read directory .docker at each depth and in upper case, never the final segment",
+     "message": "AssertionError: expected [ 'a/.DOCKER/b/c.c', undefined ] to deeply equal [ 'a/.DOCKER/b/c.c', 'denied-path' ]"
+    },
+    {
+     "test": "credential paths are denied before any read directory .terraform at each depth and in upper case, never the final segment",
+     "message": "AssertionError: expected [ 'a/.TERRAFORM/b/c.c', undefined ] to deeply equal [ 'a/.TERRAFORM/b/c.c', 'denied-path' ]"
+    },
+    {
+     "test": "deniedDirectoryNames home/.SSH/id is denied: true",
+     "message": "AssertionError: expected false to be true // Object.is equality"
+    },
+    {
+     "test": "deniedDirectoryNames infra/.Aws/credentials is denied: true",
+     "message": "AssertionError: expected false to be true // Object.is equality"
+    }
+   ]
+  },
+  {
+   "id": "second-stage-overlap-check-dropped",
+   "file": "packages/polaris-generation-core/src/public-source-classification.ts",
+   "old": "if (read.governanceTextTokens.some(entry => read.withheldTokens.includes(entry))) return refuse('governanceTextTokens and withheldTokens share a word');",
+   "new": "",
+   "tests": [
+    "packages/polaris-generation-core/src/public-source-two-stage.test.ts",
+    "packages/polaris-dossier/src/screen-source-reach-v2.test.ts"
+   ],
+   "project": "unit",
+   "outcome": "killed",
+   "killed": true,
+   "killedBy": "assertion",
+   "failedTests": [
+    {
+     "test": "a successor whose second stage differs from the text implemented refuses a word in both token lists",
+     "message": "AssertionError: expected { ok: true, stage: { \u2026(14) } } to deeply equal { ok: false, \u2026(1) }"
+    }
+   ]
+  },
+  {
+   "id": "second-stage-subset-check-dropped",
+   "file": "packages/polaris-generation-core/src/public-source-classification.ts",
+   "old": "if (!read.governanceTextTokens.every(entry => documentation.docExcludedTokens.includes(entry))) return refuse('governanceTextTokens is not within docExcludedTokens, which classDecision says it is');",
+   "new": "",
+   "tests": [
+    "packages/polaris-generation-core/src/public-source-two-stage.test.ts",
+    "packages/polaris-dossier/src/screen-source-reach-v2.test.ts"
+   ],
+   "project": "unit",
+   "outcome": "killed",
+   "killed": true,
+   "killedBy": "assertion",
+   "failedTests": [
+    {
+     "test": "a successor whose second stage differs from the text implemented refuses a governance token outside docExcludedTokens",
+     "message": "AssertionError: expected { ok: true, stage: { \u2026(14) } } to deeply equal { ok: false, \u2026(1) }"
+    }
+   ]
+  },
+  {
+   "id": "stage2-body-redacted",
+   "file": "packages/polaris-dossier/src/screen.ts",
+   "old": "const redacted = found?.stage === 2 ? redactBody(",
+   "new": "const redacted = found?.stage === 3 ? redactBody(",
+   "tests": [
+    "packages/polaris-dossier/src/screen-source-reach-v2.test.ts"
+   ],
+   "project": "unit",
+   "outcome": "killed",
+   "killed": true,
+   "killedBy": "assertion",
+   "failedTests": [
+    {
+     "test": "configuration under public visibility the three planted secrets are excluded whole and Cargo.toml is admitted as code-content",
+     "message": "AssertionError: expected [ { kind: 'admitted' }, \u2026(4) ] to deeply equal [ { kind: 'excluded', \u2026(1) }, \u2026(4) ]"
+    },
+    {
+     "test": "configuration under public visibility a Stage-2 project-documentation body with one credential-assignment match is excluded whole, never redacted",
+     "message": "AssertionError: expected { kind: 'redacted', \u2026(7) } to deeply equal { kind: 'excluded', \u2026(1) }"
+    },
+    {
+     "test": "configuration under private visibility the three planted secrets are excluded whole and Cargo.toml is admitted as code-content",
+     "message": "AssertionError: expected [ { kind: 'admitted' }, \u2026(4) ] to deeply equal [ { kind: 'excluded', \u2026(1) }, \u2026(4) ]"
+    }
+   ]
+  },
+  {
+   "id": "agent-text-base-detectors",
+   "file": "packages/polaris-dossier/src/screen.ts",
+   "old": "repositoryPath === undefined || admittedDecision(repositoryPath)?.stage === 2;",
+   "new": "repositoryPath !== undefined && admittedDecision(repositoryPath)?.stage === 2;",
+   "tests": [
+    "packages/polaris-dossier/src/screen-source-reach-v2.test.ts"
+   ],
+   "project": "unit",
+   "outcome": "killed",
+   "killed": true,
+   "killedBy": "assertion",
+   "failedTests": [
+    {
+     "test": "the configuration detectors over agent text and cited spans refuse agent text quoting a configuration secret, which the predecessor admits",
+     "message": "AssertionError: expected [ undefined, undefined ] to deeply equal [ 'secret-detector-match', undefined ]"
+    }
+   ]
+  },
+  {
+   "id": "stage2-path-base-detectors",
+   "file": "packages/polaris-dossier/src/screen.ts",
+   "old": "repositoryPath === undefined || admittedDecision(repositoryPath)?.stage === 2;",
+   "new": "repositoryPath === undefined;",
+   "tests": [
+    "packages/polaris-dossier/src/screen-source-reach-v2.test.ts"
+   ],
+   "project": "unit",
+   "outcome": "killed",
+   "killed": true,
+   "killedBy": "assertion",
+   "failedTests": [
+    {
+     "test": "the configuration detectors over agent text and cited spans rescan a Stage-2 body with them, and a Stage-1 body as the predecessor does",
+     "message": "AssertionError: expected [ false, false, true, false ] to deeply equal [ true, false, true, false ]"
+    },
+    {
+     "test": "the configuration detectors over agent text and cited spans screen a Stage-2 span or body given its path, and never a Stage-1 one",
+     "message": "AssertionError: expected undefined to be 'secret-detector-match' // Object.is equality"
+    }
+   ]
+  },
+  {
+   "id": "stage1-span-extended-detectors",
+   "file": "packages/polaris-dossier/src/screen.ts",
+   "old": "repositoryPath === undefined || admittedDecision(repositoryPath)?.stage === 2;",
+   "new": "true;",
+   "tests": [
+    "packages/polaris-dossier/src/screen-source-reach-v2.test.ts"
+   ],
+   "project": "unit",
+   "outcome": "killed",
+   "killed": true,
+   "killedBy": "assertion",
+   "failedTests": [
+    {
+     "test": "the configuration detectors over agent text and cited spans rescan a Stage-2 body with them, and a Stage-1 body as the predecessor does",
+     "message": "AssertionError: expected [ true, true, true, false ] to deeply equal [ true, false, true, false ]"
+    },
+    {
+     "test": "the configuration detectors over agent text and cited spans screen a Stage-2 span or body given its path, and never a Stage-1 one",
+     "message": "AssertionError: expected 'secret-detector-match' to be undefined"
+    },
+    {
+     "test": "predecessor outcomes are preserved every Stage-1 body keeps its outcome under either visibility",
+     "message": "AssertionError: expected [ undefined, \u2026(9) ] to deeply equal [ undefined, \u2026(9) ]"
+    }
+   ]
+  },
+  {
+   "id": "screen-denied-directory-dropped",
+   "file": "packages/polaris-dossier/src/screen.ts",
+   "old": " || deniedDirectory(repositoryPath, directories)",
+   "new": "",
+   "tests": [
+    "packages/polaris-dossier/src/screen-source-reach-v2.test.ts"
+   ],
+   "project": "unit",
+   "outcome": "killed",
+   "killed": true,
+   "killedBy": "assertion",
+   "failedTests": [
+    {
+     "test": "credential paths are denied before any read the scenario paths",
+     "message": "AssertionError: expected [ '.kube/config', \u2026(3) ] to deeply equal [ '.kube/config', 'denied-path', \u2026(2) ]"
+    },
+    {
+     "test": "credential paths are denied before any read directory .ssh at each depth and in upper case, never the final segment",
+     "message": "AssertionError: expected [ '.ssh/x.sh', undefined ] to deeply equal [ '.ssh/x.sh', 'denied-path' ]"
+    },
+    {
+     "test": "credential paths are denied before any read directory .gnupg at each depth and in upper case, never the final segment",
+     "message": "AssertionError: expected [ '.gnupg/x.sh', undefined ] to deeply equal [ '.gnupg/x.sh', 'denied-path' ]"
+    },
+    {
+     "test": "credential paths are denied before any read directory .aws at each depth and in upper case, never the final segment",
+     "message": "AssertionError: expected [ '.aws/x.sh', undefined ] to deeply equal [ '.aws/x.sh', 'denied-path' ]"
+    },
+    {
+     "test": "credential paths are denied before any read directory .kube at each depth and in upper case, never the final segment",
+     "message": "AssertionError: expected [ '.kube/x.sh', undefined ] to deeply equal [ '.kube/x.sh', 'denied-path' ]"
+    },
+    {
+     "test": "credential paths are denied before any read directory .docker at each depth and in upper case, never the final segment",
+     "message": "AssertionError: expected [ '.docker/x.sh', undefined ] to deeply equal [ '.docker/x.sh', 'denied-path' ]"
+    },
+    {
+     "test": "credential paths are denied before any read directory .terraform at each depth and in upper case, never the final segment",
+     "message": "AssertionError: expected [ '.terraform/x.sh', undefined ] to deeply equal [ '.terraform/x.sh', 'denied-path' ]"
+    },
+    {
+     "test": "predecessor outcomes are preserved every path the predecessor places keeps its class, except below a new denied directory",
+     "message": "AssertionError: expected [] to deeply equal [ '.ssh/deploy.sh', '.aws/x.py' ]"
+    },
+    {
+     "test": "predecessor outcomes are preserved a path the predecessor leaves indeterminate keeps that outcome, becomes denied, or is placed by the second stage",
+     "message": "AssertionError: expected [ [ 'docs/adr/x.md', \u2026(1) ], \u2026(24) ] to deeply equal [ [ 'docs/adr/x.md', \u2026(1) ], \u2026(24) ]"
+    }
+   ]
+  },
+  {
+   "id": "screen-code-exemption-stage-dropped",
+   "file": "packages/polaris-dossier/src/screen.ts",
+   "old": "found?.contentClass, exemption, found?.stage)",
+   "new": "found?.contentClass, exemption)",
+   "tests": [
+    "packages/polaris-dossier/src/screen-source-reach-v2.test.ts"
+   ],
+   "project": "unit",
+   "outcome": "survived",
+   "killed": false,
+   "killedBy": null,
+   "failedTests": []
+  },
+  {
+   "id": "screen-doc-exemption-stage-dropped",
+   "file": "packages/polaris-dossier/src/screen.ts",
+   "old": "documentationExempt(found?.contentClass, documentationExemption, found?.stage)",
+   "new": "documentationExempt(found?.contentClass, documentationExemption)",
+   "tests": [
+    "packages/polaris-dossier/src/screen-source-reach-v2.test.ts"
+   ],
+   "project": "unit",
+   "outcome": "killed",
+   "killed": true,
+   "killedBy": "assertion",
+   "failedTests": [
+    {
+     "test": "the successor screen nested documentation is admitted and scanned, and the root README keeps its exemption",
+     "message": "AssertionError: expected { kind: 'admitted' } to deeply equal { kind: 'excluded', \u2026(1) }"
+    }
+   ]
+  },
+  {
+   "id": "screen-stage1-reads-id-rules",
+   "file": "packages/polaris-dossier/src/screen.ts",
+   "old": "const rules = twoStage ? allRules.filter(",
+   "new": "const rules = false ? allRules.filter(",
+   "tests": [
+    "packages/polaris-dossier/src/screen-source-reach-v2.test.ts"
+   ],
+   "project": "unit",
+   "outcome": "killed",
+   "killed": true,
+   "killedBy": "assertion",
+   "failedTests": [
+    {
+     "test": "a successor the screen does not implement refuses an edited classDecision",
+     "message": "AssertionError: expected 'the screening policy cannot be applie\u2026' to contain 'the screening policy cannot be applie\u2026'"
+    },
+    {
+     "test": "a successor the screen does not implement refuses no configurationDetectors",
+     "message": "AssertionError: expected 'the screening policy cannot be applie\u2026' to contain 'the screening policy cannot be applie\u2026'"
+    },
+    {
+     "test": "a successor the screen does not implement refuses an edited configuration-detector rule",
+     "message": "AssertionError: expected 'the screening policy cannot be applie\u2026' to contain 'the screening policy cannot be applie\u2026'"
+    },
+    {
+     "test": "a successor the screen does not implement refuses a configuration detector that does not compile",
+     "message": "AssertionError: expected 'the screening policy cannot be applie\u2026' to contain 'the screening policy cannot be applie\u2026'"
+    },
+    {
+     "test": "a successor the screen does not implement refuses no deniedDirectoryNames",
+     "message": "AssertionError: expected 'the screening policy cannot be applie\u2026' to contain 'the screening policy cannot be applie\u2026'"
+    },
+    {
+     "test": "a successor the screen does not implement refuses an empty deniedDirectoryNames",
+     "message": "AssertionError: expected 'the screening policy cannot be applie\u2026' to contain 'the screening policy cannot be applie\u2026'"
+    },
+    {
+     "test": "a successor the screen does not implement refuses a directory name with a slash",
+     "message": "AssertionError: expected 'the screening policy cannot be applie\u2026' to contain 'the screening policy cannot be applie\u2026'"
+    },
+    {
+     "test": "a successor the screen does not implement refuses the predecessor pathRuleScope",
+     "message": "AssertionError: expected 'the screening policy cannot be applie\u2026' to contain 'the screening policy cannot be applie\u2026'"
+    },
+    {
+     "test": "a successor the screen does not implement refuses the predecessor project-documentation exemption",
+     "message": "AssertionError: expected 'the screening policy cannot be applie\u2026' to contain 'the screening policy cannot be applie\u2026'"
+    },
+    {
+     "test": "a successor the screen does not implement refuses the predecessor redaction appliesTo",
+     "message": "AssertionError: expected 'the screening policy cannot be applie\u2026' to contain 'the screening policy cannot be applie\u2026'"
+    }
+   ]
+  },
+  {
+   "id": "screen-v1-accepts-config-detectors",
+   "file": "packages/polaris-dossier/src/screen.ts",
+   "old": "if (twoStage !== (configurationRead.detectors.length > 0))",
+   "new": "if (twoStage && configurationRead.detectors.length === 0)",
+   "tests": [
+    "packages/polaris-dossier/src/screen-source-reach-v2.test.ts"
+   ],
+   "project": "unit",
+   "outcome": "killed",
+   "killed": true,
+   "killedBy": "assertion",
+   "failedTests": [
+    {
+     "test": "a successor the screen does not implement refuses configurationDetectors on the predecessor",
+     "message": "AssertionError: expected 'admitted' to contain 'the screening policy cannot be applie\u2026'"
+    }
+   ]
+  },
+  {
+   "id": "screen-v1-accepts-denied-directories",
+   "file": "packages/polaris-dossier/src/screen.ts",
+   "old": "if (twoStage !== Object.hasOwn(admission, 'deniedDirectoryNames'))",
+   "new": "if (twoStage && !Object.hasOwn(admission, 'deniedDirectoryNames'))",
+   "tests": [
+    "packages/polaris-dossier/src/screen-source-reach-v2.test.ts"
+   ],
+   "project": "unit",
+   "outcome": "killed",
+   "killed": true,
+   "killedBy": "assertion",
+   "failedTests": [
+    {
+     "test": "a successor the screen does not implement refuses deniedDirectoryNames on the predecessor",
+     "message": "AssertionError: expected 'admitted' to contain 'the screening policy cannot be applie\u2026'"
+    }
+   ]
+  },
+  {
+   "id": "screen-path-rule-scope-unpinned",
+   "file": "packages/polaris-dossier/src/screen.ts",
+   "old": "    || typeof admission['pathRuleScope'] !== 'string' || sha256(admission['pathRuleScope']) !== PATH_RULE_SCOPE_TWO_STAGE)) {",
+   "new": "    )) {",
+   "tests": [
+    "packages/polaris-dossier/src/screen-source-reach-v2.test.ts"
+   ],
+   "project": "unit",
+   "outcome": "killed",
+   "killed": true,
+   "killedBy": "assertion",
+   "failedTests": [
+    {
+     "test": "a successor the screen does not implement refuses the predecessor pathRuleScope",
+     "message": "AssertionError: expected 'admitted' to contain 'the screening policy cannot be applie\u2026'"
+    }
+   ]
+  },
+  {
+   "id": "new-runs-bind-predecessor",
+   "file": "packages/polaris-dossier/src/policy-snapshot.ts",
+   "old": "export const DOSSIER_POLICY_PATH = '.syzygy/governance/policies/POLARIS-DOSSIER-DECLARED-SOURCE-POLICY-v2.json';",
+   "new": "export const DOSSIER_POLICY_PATH = '.syzygy/governance/policies/POLARIS-DOSSIER-DECLARED-SOURCE-POLICY-v1.json';",
+   "tests": [
+    "packages/polaris-dossier/src/start-gates.test.ts",
+    "packages/polaris-dossier/src/screen-source-reach-v2.test.ts"
+   ],
+   "project": "integration",
+   "outcome": "killed",
+   "killed": true,
+   "killedBy": "assertion",
+   "failedTests": [
+    {
+     "test": "init: a declared pinned source writes one /2 record without launch records or clone writes",
+     "message": "AssertionError: expected { repository: { \u2026(3) }, \u2026(7) } to match object { repository: { \u2026(2) }, \u2026(3) }"
+    },
+    {
+     "test": "the declared-source policy successor 2.0.0 and runs bound to its predecessor a new run binds the successor, names governance-text among its classes, and its screen sends a design document as governance-text",
+     "message": "AssertionError: expected [ \u2026(3) ] to deeply equal [ \u2026(3) ]"
+    },
+    {
+     "test": "the declared-source policy successor 2.0.0 and runs bound to its predecessor a run bound to the predecessor is screened under it, never under the successor",
+     "message": "Error: Command failed: git -C /tmp/dossier-records-zVklep -c user.name=t -c user.email=t@example.invalid commit -qm predecessor policy"
+    },
+    {
+     "test": "the declared-source policy successor 2.0.0 and runs bound to its predecessor a step of a run bound to the predecessor, removed, refuses with the restart explanation and changes no file of the run",
+     "message": "Error: Command failed: git -C /tmp/dossier-records-AiAEji -c user.name=t -c user.email=t@example.invalid commit -qm predecessor policy"
+    },
+    {
+     "test": "the declared-source policy successor 2.0.0 and runs bound to its predecessor a step of a run bound to the predecessor, changed, refuses with the restart explanation and changes no file of the run",
+     "message": "Error: Command failed: git -C /tmp/dossier-records-RNJPqO -c user.name=t -c user.email=t@example.invalid commit -qm predecessor policy"
+    }
+   ]
+  },
+  {
+   "id": "screen-load-ignores-bound-path",
+   "file": "packages/polaris-dossier/src/screen.ts",
+   "old": "const bound = subject?.policyPath ?? DOSSIER_POLICY_PATH;",
+   "new": "const bound = DOSSIER_POLICY_PATH;",
+   "tests": [
+    "packages/polaris-dossier/src/start-gates.test.ts"
+   ],
+   "project": "integration",
+   "outcome": "killed",
+   "killed": true,
+   "killedBy": "assertion",
+   "failedTests": [
+    {
+     "test": "the declared-source policy successor 2.0.0 and runs bound to its predecessor a run bound to the predecessor is screened under it, never under the successor",
+     "message": "Error: the committed dossier policy changed from this run binding"
+    },
+    {
+     "test": "the declared-source policy successor 2.0.0 and runs bound to its predecessor a step of a run bound to the predecessor, removed, refuses with the restart explanation and changes no file of the run",
+     "message": "AssertionError: expected { ok: false, \u2026(1) } to deeply equal { ok: false, \u2026(1) }"
+    },
+    {
+     "test": "the declared-source policy successor 2.0.0 and runs bound to its predecessor a step of a run bound to the predecessor, changed, refuses with the restart explanation and changes no file of the run",
+     "message": "AssertionError: expected { ok: false, \u2026(1) } to deeply equal { ok: false, \u2026(1) }"
+    }
+   ]
+  },
+  {
+   "id": "reverify-ignores-bound-path",
+   "file": "packages/polaris-dossier/src/reverify.ts",
+   "old": "declaredPolicy?.(subject.screeningPolicy.path)",
+   "new": "declaredPolicy?.()",
+   "tests": [
+    "packages/polaris-dossier/src/start-gates.test.ts"
+   ],
+   "project": "integration",
+   "outcome": "killed",
+   "killed": true,
+   "killedBy": "assertion",
+   "failedTests": [
+    {
+     "test": "the declared-source policy successor 2.0.0 and runs bound to its predecessor a run bound to the predecessor is screened under it, never under the successor",
+     "message": "AssertionError: expected false to be true // Object.is equality"
+    },
+    {
+     "test": "the declared-source policy successor 2.0.0 and runs bound to its predecessor a step of a run bound to the predecessor, removed, refuses with the restart explanation and changes no file of the run",
+     "message": "AssertionError: expected { ok: false, \u2026(3) } to match object { ok: false, refusals: [ { \u2026(2) } ] }"
+    }
+   ]
+  },
+  {
+   "id": "basename-.npmrc",
+   "file": "packages/polaris-dossier/src/screen.ts",
+   "old": "const denied: DeniedPathRules = { basenames: admission['deniedPathBasenames'], prefixes: admission['deniedPathPrefixes'], suffixes: admission['deniedPathSuffixes'] };",
+   "new": "const denied: DeniedPathRules = { basenames: (admission['deniedPathBasenames'] as string[]).filter(n => n !== \".npmrc\"), prefixes: admission['deniedPathPrefixes'], suffixes: admission['deniedPathSuffixes'] };",
+   "tests": [
+    "packages/polaris-dossier/src/screen-source-reach-v2.test.ts"
+   ],
+   "project": "unit",
+   "outcome": "killed",
+   "killed": true,
+   "killedBy": "assertion",
+   "failedTests": [
+    {
+     "test": "credential paths are denied before any read the scenario paths",
+     "message": "AssertionError: expected [ '.npmrc', \u2026(3) ] to deeply equal [ '.npmrc', 'denied-path', \u2026(2) ]"
+    },
+    {
+     "test": "credential paths are denied before any read basename .npmrc, at the root, nested and in upper case",
+     "message": "AssertionError: expected [ Array(2) ] to deeply equal [ '.npmrc', 'denied-path' ]"
+    },
+    {
+     "test": "predecessor outcomes are preserved a path the predecessor leaves indeterminate keeps that outcome, becomes denied, or is placed by the second stage",
+     "message": "AssertionError: expected [ [ 'docs/adr/x.md', \u2026(1) ], \u2026(24) ] to deeply equal [ [ 'docs/adr/x.md', \u2026(1) ], \u2026(24) ]"
+    }
+   ]
+  },
+  {
+   "id": "basename-.netrc",
+   "file": "packages/polaris-dossier/src/screen.ts",
+   "old": "const denied: DeniedPathRules = { basenames: admission['deniedPathBasenames'], prefixes: admission['deniedPathPrefixes'], suffixes: admission['deniedPathSuffixes'] };",
+   "new": "const denied: DeniedPathRules = { basenames: (admission['deniedPathBasenames'] as string[]).filter(n => n !== \".netrc\"), prefixes: admission['deniedPathPrefixes'], suffixes: admission['deniedPathSuffixes'] };",
+   "tests": [
+    "packages/polaris-dossier/src/screen-source-reach-v2.test.ts"
+   ],
+   "project": "unit",
+   "outcome": "killed",
+   "killed": true,
+   "killedBy": "assertion",
+   "failedTests": [
+    {
+     "test": "credential paths are denied before any read the scenario paths",
+     "message": "AssertionError: expected [ '.netrc', \u2026(3) ] to deeply equal [ '.netrc', 'denied-path', \u2026(2) ]"
+    },
+    {
+     "test": "credential paths are denied before any read basename .netrc, at the root, nested and in upper case",
+     "message": "AssertionError: expected [ Array(2) ] to deeply equal [ '.netrc', 'denied-path' ]"
+    }
+   ]
+  },
+  {
+   "id": "basename-_netrc",
+   "file": "packages/polaris-dossier/src/screen.ts",
+   "old": "const denied: DeniedPathRules = { basenames: admission['deniedPathBasenames'], prefixes: admission['deniedPathPrefixes'], suffixes: admission['deniedPathSuffixes'] };",
+   "new": "const denied: DeniedPathRules = { basenames: (admission['deniedPathBasenames'] as string[]).filter(n => n !== \"_netrc\"), prefixes: admission['deniedPathPrefixes'], suffixes: admission['deniedPathSuffixes'] };",
+   "tests": [
+    "packages/polaris-dossier/src/screen-source-reach-v2.test.ts"
+   ],
+   "project": "unit",
+   "outcome": "killed",
+   "killed": true,
+   "killedBy": "assertion",
+   "failedTests": [
+    {
+     "test": "credential paths are denied before any read basename _netrc, at the root, nested and in upper case",
+     "message": "AssertionError: expected [ Array(2) ] to deeply equal [ '_netrc', 'denied-path' ]"
+    }
+   ]
+  },
+  {
+   "id": "basename-.pypirc",
+   "file": "packages/polaris-dossier/src/screen.ts",
+   "old": "const denied: DeniedPathRules = { basenames: admission['deniedPathBasenames'], prefixes: admission['deniedPathPrefixes'], suffixes: admission['deniedPathSuffixes'] };",
+   "new": "const denied: DeniedPathRules = { basenames: (admission['deniedPathBasenames'] as string[]).filter(n => n !== \".pypirc\"), prefixes: admission['deniedPathPrefixes'], suffixes: admission['deniedPathSuffixes'] };",
+   "tests": [
+    "packages/polaris-dossier/src/screen-source-reach-v2.test.ts"
+   ],
+   "project": "unit",
+   "outcome": "killed",
+   "killed": true,
+   "killedBy": "assertion",
+   "failedTests": [
+    {
+     "test": "credential paths are denied before any read basename .pypirc, at the root, nested and in upper case",
+     "message": "AssertionError: expected [ '.pypirc', \u2026(1) ] to deeply equal [ '.pypirc', 'denied-path' ]"
+    }
+   ]
+  },
+  {
+   "id": "basename-.git-credentials",
+   "file": "packages/polaris-dossier/src/screen.ts",
+   "old": "const denied: DeniedPathRules = { basenames: admission['deniedPathBasenames'], prefixes: admission['deniedPathPrefixes'], suffixes: admission['deniedPathSuffixes'] };",
+   "new": "const denied: DeniedPathRules = { basenames: (admission['deniedPathBasenames'] as string[]).filter(n => n !== \".git-credentials\"), prefixes: admission['deniedPathPrefixes'], suffixes: admission['deniedPathSuffixes'] };",
+   "tests": [
+    "packages/polaris-dossier/src/screen-source-reach-v2.test.ts"
+   ],
+   "project": "unit",
+   "outcome": "killed",
+   "killed": true,
+   "killedBy": "assertion",
+   "failedTests": [
+    {
+     "test": "credential paths are denied before any read basename .git-credentials, at the root, nested and in upper case",
+     "message": "AssertionError: expected [ '.git-credentials', \u2026(1) ] to deeply equal [ '.git-credentials', 'denied-path' ]"
+    }
+   ]
+  },
+  {
+   "id": "basename-.dockercfg",
+   "file": "packages/polaris-dossier/src/screen.ts",
+   "old": "const denied: DeniedPathRules = { basenames: admission['deniedPathBasenames'], prefixes: admission['deniedPathPrefixes'], suffixes: admission['deniedPathSuffixes'] };",
+   "new": "const denied: DeniedPathRules = { basenames: (admission['deniedPathBasenames'] as string[]).filter(n => n !== \".dockercfg\"), prefixes: admission['deniedPathPrefixes'], suffixes: admission['deniedPathSuffixes'] };",
+   "tests": [
+    "packages/polaris-dossier/src/screen-source-reach-v2.test.ts"
+   ],
+   "project": "unit",
+   "outcome": "killed",
+   "killed": true,
+   "killedBy": "assertion",
+   "failedTests": [
+    {
+     "test": "credential paths are denied before any read basename .dockercfg, at the root, nested and in upper case",
+     "message": "AssertionError: expected [ '.dockercfg', \u2026(1) ] to deeply equal [ '.dockercfg', 'denied-path' ]"
+    }
+   ]
+  },
+  {
+   "id": "basename-.dockerconfigjson",
+   "file": "packages/polaris-dossier/src/screen.ts",
+   "old": "const denied: DeniedPathRules = { basenames: admission['deniedPathBasenames'], prefixes: admission['deniedPathPrefixes'], suffixes: admission['deniedPathSuffixes'] };",
+   "new": "const denied: DeniedPathRules = { basenames: (admission['deniedPathBasenames'] as string[]).filter(n => n !== \".dockerconfigjson\"), prefixes: admission['deniedPathPrefixes'], suffixes: admission['deniedPathSuffixes'] };",
+   "tests": [
+    "packages/polaris-dossier/src/screen-source-reach-v2.test.ts"
+   ],
+   "project": "unit",
+   "outcome": "killed",
+   "killed": true,
+   "killedBy": "assertion",
+   "failedTests": [
+    {
+     "test": "credential paths are denied before any read basename .dockerconfigjson, at the root, nested and in upper case",
+     "message": "AssertionError: expected [ '.dockerconfigjson', \u2026(1) ] to deeply equal [ '.dockerconfigjson', 'denied-path' ]"
+    }
+   ]
+  },
+  {
+   "id": "basename-.pgpass",
+   "file": "packages/polaris-dossier/src/screen.ts",
+   "old": "const denied: DeniedPathRules = { basenames: admission['deniedPathBasenames'], prefixes: admission['deniedPathPrefixes'], suffixes: admission['deniedPathSuffixes'] };",
+   "new": "const denied: DeniedPathRules = { basenames: (admission['deniedPathBasenames'] as string[]).filter(n => n !== \".pgpass\"), prefixes: admission['deniedPathPrefixes'], suffixes: admission['deniedPathSuffixes'] };",
+   "tests": [
+    "packages/polaris-dossier/src/screen-source-reach-v2.test.ts"
+   ],
+   "project": "unit",
+   "outcome": "killed",
+   "killed": true,
+   "killedBy": "assertion",
+   "failedTests": [
+    {
+     "test": "credential paths are denied before any read basename .pgpass, at the root, nested and in upper case",
+     "message": "AssertionError: expected [ '.pgpass', \u2026(1) ] to deeply equal [ '.pgpass', 'denied-path' ]"
+    }
+   ]
+  },
+  {
+   "id": "basename-.htpasswd",
+   "file": "packages/polaris-dossier/src/screen.ts",
+   "old": "const denied: DeniedPathRules = { basenames: admission['deniedPathBasenames'], prefixes: admission['deniedPathPrefixes'], suffixes: admission['deniedPathSuffixes'] };",
+   "new": "const denied: DeniedPathRules = { basenames: (admission['deniedPathBasenames'] as string[]).filter(n => n !== \".htpasswd\"), prefixes: admission['deniedPathPrefixes'], suffixes: admission['deniedPathSuffixes'] };",
+   "tests": [
+    "packages/polaris-dossier/src/screen-source-reach-v2.test.ts"
+   ],
+   "project": "unit",
+   "outcome": "killed",
+   "killed": true,
+   "killedBy": "assertion",
+   "failedTests": [
+    {
+     "test": "credential paths are denied before any read basename .htpasswd, at the root, nested and in upper case",
+     "message": "AssertionError: expected [ '.htpasswd', \u2026(1) ] to deeply equal [ '.htpasswd', 'denied-path' ]"
+    }
+   ]
+  },
+  {
+   "id": "basename-.s3cfg",
+   "file": "packages/polaris-dossier/src/screen.ts",
+   "old": "const denied: DeniedPathRules = { basenames: admission['deniedPathBasenames'], prefixes: admission['deniedPathPrefixes'], suffixes: admission['deniedPathSuffixes'] };",
+   "new": "const denied: DeniedPathRules = { basenames: (admission['deniedPathBasenames'] as string[]).filter(n => n !== \".s3cfg\"), prefixes: admission['deniedPathPrefixes'], suffixes: admission['deniedPathSuffixes'] };",
+   "tests": [
+    "packages/polaris-dossier/src/screen-source-reach-v2.test.ts"
+   ],
+   "project": "unit",
+   "outcome": "killed",
+   "killed": true,
+   "killedBy": "assertion",
+   "failedTests": [
+    {
+     "test": "credential paths are denied before any read basename .s3cfg, at the root, nested and in upper case",
+     "message": "AssertionError: expected [ Array(2) ] to deeply equal [ '.s3cfg', 'denied-path' ]"
+    }
+   ]
+  },
+  {
+   "id": "basename-.boto",
+   "file": "packages/polaris-dossier/src/screen.ts",
+   "old": "const denied: DeniedPathRules = { basenames: admission['deniedPathBasenames'], prefixes: admission['deniedPathPrefixes'], suffixes: admission['deniedPathSuffixes'] };",
+   "new": "const denied: DeniedPathRules = { basenames: (admission['deniedPathBasenames'] as string[]).filter(n => n !== \".boto\"), prefixes: admission['deniedPathPrefixes'], suffixes: admission['deniedPathSuffixes'] };",
+   "tests": [
+    "packages/polaris-dossier/src/screen-source-reach-v2.test.ts"
+   ],
+   "project": "unit",
+   "outcome": "killed",
+   "killed": true,
+   "killedBy": "assertion",
+   "failedTests": [
+    {
+     "test": "credential paths are denied before any read basename .boto, at the root, nested and in upper case",
+     "message": "AssertionError: expected [ '.boto', 'unknown-extraction-class' ] to deeply equal [ '.boto', 'denied-path' ]"
+    }
+   ]
+  },
+  {
+   "id": "basename-kubeconfig",
+   "file": "packages/polaris-dossier/src/screen.ts",
+   "old": "const denied: DeniedPathRules = { basenames: admission['deniedPathBasenames'], prefixes: admission['deniedPathPrefixes'], suffixes: admission['deniedPathSuffixes'] };",
+   "new": "const denied: DeniedPathRules = { basenames: (admission['deniedPathBasenames'] as string[]).filter(n => n !== \"kubeconfig\"), prefixes: admission['deniedPathPrefixes'], suffixes: admission['deniedPathSuffixes'] };",
+   "tests": [
+    "packages/polaris-dossier/src/screen-source-reach-v2.test.ts"
+   ],
+   "project": "unit",
+   "outcome": "killed",
+   "killed": true,
+   "killedBy": "assertion",
+   "failedTests": [
+    {
+     "test": "credential paths are denied before any read the scenario paths",
+     "message": "AssertionError: expected [ 'kubeconfig', \u2026(3) ] to deeply equal [ 'kubeconfig', 'denied-path', \u2026(2) ]"
+    },
+    {
+     "test": "credential paths are denied before any read basename kubeconfig, at the root, nested and in upper case",
+     "message": "AssertionError: expected [ 'kubeconfig', \u2026(1) ] to deeply equal [ 'kubeconfig', 'denied-path' ]"
+    }
+   ]
+  },
+  {
+   "id": "basename-kubeconfig.yaml",
+   "file": "packages/polaris-dossier/src/screen.ts",
+   "old": "const denied: DeniedPathRules = { basenames: admission['deniedPathBasenames'], prefixes: admission['deniedPathPrefixes'], suffixes: admission['deniedPathSuffixes'] };",
+   "new": "const denied: DeniedPathRules = { basenames: (admission['deniedPathBasenames'] as string[]).filter(n => n !== \"kubeconfig.yaml\"), prefixes: admission['deniedPathPrefixes'], suffixes: admission['deniedPathSuffixes'] };",
+   "tests": [
+    "packages/polaris-dossier/src/screen-source-reach-v2.test.ts"
+   ],
+   "project": "unit",
+   "outcome": "killed",
+   "killed": true,
+   "killedBy": "assertion",
+   "failedTests": [
+    {
+     "test": "credential paths are denied before any read basename kubeconfig.yaml, at the root, nested and in upper case",
+     "message": "AssertionError: expected [ 'kubeconfig.yaml', undefined ] to deeply equal [ 'kubeconfig.yaml', 'denied-path' ]"
+    }
+   ]
+  },
+  {
+   "id": "basename-kubeconfig.yml",
+   "file": "packages/polaris-dossier/src/screen.ts",
+   "old": "const denied: DeniedPathRules = { basenames: admission['deniedPathBasenames'], prefixes: admission['deniedPathPrefixes'], suffixes: admission['deniedPathSuffixes'] };",
+   "new": "const denied: DeniedPathRules = { basenames: (admission['deniedPathBasenames'] as string[]).filter(n => n !== \"kubeconfig.yml\"), prefixes: admission['deniedPathPrefixes'], suffixes: admission['deniedPathSuffixes'] };",
+   "tests": [
+    "packages/polaris-dossier/src/screen-source-reach-v2.test.ts"
+   ],
+   "project": "unit",
+   "outcome": "killed",
+   "killed": true,
+   "killedBy": "assertion",
+   "failedTests": [
+    {
+     "test": "credential paths are denied before any read basename kubeconfig.yml, at the root, nested and in upper case",
+     "message": "AssertionError: expected [ 'kubeconfig.yml', undefined ] to deeply equal [ 'kubeconfig.yml', 'denied-path' ]"
+    }
+   ]
+  },
+  {
+   "id": "basename-kubeconfig.json",
+   "file": "packages/polaris-dossier/src/screen.ts",
+   "old": "const denied: DeniedPathRules = { basenames: admission['deniedPathBasenames'], prefixes: admission['deniedPathPrefixes'], suffixes: admission['deniedPathSuffixes'] };",
+   "new": "const denied: DeniedPathRules = { basenames: (admission['deniedPathBasenames'] as string[]).filter(n => n !== \"kubeconfig.json\"), prefixes: admission['deniedPathPrefixes'], suffixes: admission['deniedPathSuffixes'] };",
+   "tests": [
+    "packages/polaris-dossier/src/screen-source-reach-v2.test.ts"
+   ],
+   "project": "unit",
+   "outcome": "killed",
+   "killed": true,
+   "killedBy": "assertion",
+   "failedTests": [
+    {
+     "test": "credential paths are denied before any read basename kubeconfig.json, at the root, nested and in upper case",
+     "message": "AssertionError: expected [ 'kubeconfig.json', undefined ] to deeply equal [ 'kubeconfig.json', 'denied-path' ]"
+    }
+   ]
+  },
+  {
+   "id": "basename-id_dsa",
+   "file": "packages/polaris-dossier/src/screen.ts",
+   "old": "const denied: DeniedPathRules = { basenames: admission['deniedPathBasenames'], prefixes: admission['deniedPathPrefixes'], suffixes: admission['deniedPathSuffixes'] };",
+   "new": "const denied: DeniedPathRules = { basenames: (admission['deniedPathBasenames'] as string[]).filter(n => n !== \"id_dsa\"), prefixes: admission['deniedPathPrefixes'], suffixes: admission['deniedPathSuffixes'] };",
+   "tests": [
+    "packages/polaris-dossier/src/screen-source-reach-v2.test.ts"
+   ],
+   "project": "unit",
+   "outcome": "killed",
+   "killed": true,
+   "killedBy": "assertion",
+   "failedTests": [
+    {
+     "test": "credential paths are denied before any read basename id_dsa, at the root, nested and in upper case",
+     "message": "AssertionError: expected [ Array(2) ] to deeply equal [ 'id_dsa', 'denied-path' ]"
+    }
+   ]
+  },
+  {
+   "id": "basename-id_ecdsa",
+   "file": "packages/polaris-dossier/src/screen.ts",
+   "old": "const denied: DeniedPathRules = { basenames: admission['deniedPathBasenames'], prefixes: admission['deniedPathPrefixes'], suffixes: admission['deniedPathSuffixes'] };",
+   "new": "const denied: DeniedPathRules = { basenames: (admission['deniedPathBasenames'] as string[]).filter(n => n !== \"id_ecdsa\"), prefixes: admission['deniedPathPrefixes'], suffixes: admission['deniedPathSuffixes'] };",
+   "tests": [
+    "packages/polaris-dossier/src/screen-source-reach-v2.test.ts"
+   ],
+   "project": "unit",
+   "outcome": "killed",
+   "killed": true,
+   "killedBy": "assertion",
+   "failedTests": [
+    {
+     "test": "credential paths are denied before any read basename id_ecdsa, at the root, nested and in upper case",
+     "message": "AssertionError: expected [ 'id_ecdsa', \u2026(1) ] to deeply equal [ 'id_ecdsa', 'denied-path' ]"
+    }
+   ]
+  },
+  {
+   "id": "basename-id_ecdsa_sk",
+   "file": "packages/polaris-dossier/src/screen.ts",
+   "old": "const denied: DeniedPathRules = { basenames: admission['deniedPathBasenames'], prefixes: admission['deniedPathPrefixes'], suffixes: admission['deniedPathSuffixes'] };",
+   "new": "const denied: DeniedPathRules = { basenames: (admission['deniedPathBasenames'] as string[]).filter(n => n !== \"id_ecdsa_sk\"), prefixes: admission['deniedPathPrefixes'], suffixes: admission['deniedPathSuffixes'] };",
+   "tests": [
+    "packages/polaris-dossier/src/screen-source-reach-v2.test.ts"
+   ],
+   "project": "unit",
+   "outcome": "killed",
+   "killed": true,
+   "killedBy": "assertion",
+   "failedTests": [
+    {
+     "test": "credential paths are denied before any read basename id_ecdsa_sk, at the root, nested and in upper case",
+     "message": "AssertionError: expected [ 'id_ecdsa_sk', \u2026(1) ] to deeply equal [ 'id_ecdsa_sk', 'denied-path' ]"
+    }
+   ]
+  },
+  {
+   "id": "basename-id_ed25519_sk",
+   "file": "packages/polaris-dossier/src/screen.ts",
+   "old": "const denied: DeniedPathRules = { basenames: admission['deniedPathBasenames'], prefixes: admission['deniedPathPrefixes'], suffixes: admission['deniedPathSuffixes'] };",
+   "new": "const denied: DeniedPathRules = { basenames: (admission['deniedPathBasenames'] as string[]).filter(n => n !== \"id_ed25519_sk\"), prefixes: admission['deniedPathPrefixes'], suffixes: admission['deniedPathSuffixes'] };",
+   "tests": [
+    "packages/polaris-dossier/src/screen-source-reach-v2.test.ts"
+   ],
+   "project": "unit",
+   "outcome": "killed",
+   "killed": true,
+   "killedBy": "assertion",
+   "failedTests": [
+    {
+     "test": "credential paths are denied before any read basename id_ed25519_sk, at the root, nested and in upper case",
+     "message": "AssertionError: expected [ 'id_ed25519_sk', \u2026(1) ] to deeply equal [ 'id_ed25519_sk', 'denied-path' ]"
+    }
+   ]
+  },
+  {
+   "id": "basename-secrets.yml",
+   "file": "packages/polaris-dossier/src/screen.ts",
+   "old": "const denied: DeniedPathRules = { basenames: admission['deniedPathBasenames'], prefixes: admission['deniedPathPrefixes'], suffixes: admission['deniedPathSuffixes'] };",
+   "new": "const denied: DeniedPathRules = { basenames: (admission['deniedPathBasenames'] as string[]).filter(n => n !== \"secrets.yml\"), prefixes: admission['deniedPathPrefixes'], suffixes: admission['deniedPathSuffixes'] };",
+   "tests": [
+    "packages/polaris-dossier/src/screen-source-reach-v2.test.ts"
+   ],
+   "project": "unit",
+   "outcome": "killed",
+   "killed": true,
+   "killedBy": "assertion",
+   "failedTests": [
+    {
+     "test": "credential paths are denied before any read the scenario paths",
+     "message": "AssertionError: expected [ 'config/secrets.yml', \u2026(3) ] to deeply equal [ 'config/secrets.yml', \u2026(3) ]"
+    },
+    {
+     "test": "credential paths are denied before any read basename secrets.yml, at the root, nested and in upper case",
+     "message": "AssertionError: expected [ 'secrets.yml', undefined ] to deeply equal [ 'secrets.yml', 'denied-path' ]"
+    }
+   ]
+  },
+  {
+   "id": "basename-secrets.yaml",
+   "file": "packages/polaris-dossier/src/screen.ts",
+   "old": "const denied: DeniedPathRules = { basenames: admission['deniedPathBasenames'], prefixes: admission['deniedPathPrefixes'], suffixes: admission['deniedPathSuffixes'] };",
+   "new": "const denied: DeniedPathRules = { basenames: (admission['deniedPathBasenames'] as string[]).filter(n => n !== \"secrets.yaml\"), prefixes: admission['deniedPathPrefixes'], suffixes: admission['deniedPathSuffixes'] };",
+   "tests": [
+    "packages/polaris-dossier/src/screen-source-reach-v2.test.ts"
+   ],
+   "project": "unit",
+   "outcome": "killed",
+   "killed": true,
+   "killedBy": "assertion",
+   "failedTests": [
+    {
+     "test": "credential paths are denied before any read basename secrets.yaml, at the root, nested and in upper case",
+     "message": "AssertionError: expected [ 'secrets.yaml', undefined ] to deeply equal [ 'secrets.yaml', 'denied-path' ]"
+    }
+   ]
+  },
+  {
+   "id": "basename-secrets.toml",
+   "file": "packages/polaris-dossier/src/screen.ts",
+   "old": "const denied: DeniedPathRules = { basenames: admission['deniedPathBasenames'], prefixes: admission['deniedPathPrefixes'], suffixes: admission['deniedPathSuffixes'] };",
+   "new": "const denied: DeniedPathRules = { basenames: (admission['deniedPathBasenames'] as string[]).filter(n => n !== \"secrets.toml\"), prefixes: admission['deniedPathPrefixes'], suffixes: admission['deniedPathSuffixes'] };",
+   "tests": [
+    "packages/polaris-dossier/src/screen-source-reach-v2.test.ts"
+   ],
+   "project": "unit",
+   "outcome": "killed",
+   "killed": true,
+   "killedBy": "assertion",
+   "failedTests": [
+    {
+     "test": "credential paths are denied before any read basename secrets.toml, at the root, nested and in upper case",
+     "message": "AssertionError: expected [ 'secrets.toml', undefined ] to deeply equal [ 'secrets.toml', 'denied-path' ]"
+    }
+   ]
+  },
+  {
+   "id": "basename-credentials.yml",
+   "file": "packages/polaris-dossier/src/screen.ts",
+   "old": "const denied: DeniedPathRules = { basenames: admission['deniedPathBasenames'], prefixes: admission['deniedPathPrefixes'], suffixes: admission['deniedPathSuffixes'] };",
+   "new": "const denied: DeniedPathRules = { basenames: (admission['deniedPathBasenames'] as string[]).filter(n => n !== \"credentials.yml\"), prefixes: admission['deniedPathPrefixes'], suffixes: admission['deniedPathSuffixes'] };",
+   "tests": [
+    "packages/polaris-dossier/src/screen-source-reach-v2.test.ts"
+   ],
+   "project": "unit",
+   "outcome": "killed",
+   "killed": true,
+   "killedBy": "assertion",
+   "failedTests": [
+    {
+     "test": "credential paths are denied before any read basename credentials.yml, at the root, nested and in upper case",
+     "message": "AssertionError: expected [ 'credentials.yml', undefined ] to deeply equal [ 'credentials.yml', 'denied-path' ]"
+    }
+   ]
+  },
+  {
+   "id": "basename-credentials.yaml",
+   "file": "packages/polaris-dossier/src/screen.ts",
+   "old": "const denied: DeniedPathRules = { basenames: admission['deniedPathBasenames'], prefixes: admission['deniedPathPrefixes'], suffixes: admission['deniedPathSuffixes'] };",
+   "new": "const denied: DeniedPathRules = { basenames: (admission['deniedPathBasenames'] as string[]).filter(n => n !== \"credentials.yaml\"), prefixes: admission['deniedPathPrefixes'], suffixes: admission['deniedPathSuffixes'] };",
+   "tests": [
+    "packages/polaris-dossier/src/screen-source-reach-v2.test.ts"
+   ],
+   "project": "unit",
+   "outcome": "killed",
+   "killed": true,
+   "killedBy": "assertion",
+   "failedTests": [
+    {
+     "test": "credential paths are denied before any read basename credentials.yaml, at the root, nested and in upper case",
+     "message": "AssertionError: expected [ 'credentials.yaml', undefined ] to deeply equal [ 'credentials.yaml', 'denied-path' ]"
+    }
+   ]
+  },
+  {
+   "id": "basename-credentials.toml",
+   "file": "packages/polaris-dossier/src/screen.ts",
+   "old": "const denied: DeniedPathRules = { basenames: admission['deniedPathBasenames'], prefixes: admission['deniedPathPrefixes'], suffixes: admission['deniedPathSuffixes'] };",
+   "new": "const denied: DeniedPathRules = { basenames: (admission['deniedPathBasenames'] as string[]).filter(n => n !== \"credentials.toml\"), prefixes: admission['deniedPathPrefixes'], suffixes: admission['deniedPathSuffixes'] };",
+   "tests": [
+    "packages/polaris-dossier/src/screen-source-reach-v2.test.ts"
+   ],
+   "project": "unit",
+   "outcome": "killed",
+   "killed": true,
+   "killedBy": "assertion",
+   "failedTests": [
+    {
+     "test": "credential paths are denied before any read basename credentials.toml, at the root, nested and in upper case",
+     "message": "AssertionError: expected [ 'credentials.toml', undefined ] to deeply equal [ 'credentials.toml', 'denied-path' ]"
+    }
+   ]
+  },
+  {
+   "id": "suffix-.tfstate",
+   "file": "packages/polaris-dossier/src/screen.ts",
+   "old": "const denied: DeniedPathRules = { basenames: admission['deniedPathBasenames'], prefixes: admission['deniedPathPrefixes'], suffixes: admission['deniedPathSuffixes'] };",
+   "new": "const denied: DeniedPathRules = { basenames: admission['deniedPathBasenames'], prefixes: admission['deniedPathPrefixes'], suffixes: (admission['deniedPathSuffixes'] as string[]).filter(n => n !== \".tfstate\") };",
+   "tests": [
+    "packages/polaris-dossier/src/screen-source-reach-v2.test.ts"
+   ],
+   "project": "unit",
+   "outcome": "killed",
+   "killed": true,
+   "killedBy": "assertion",
+   "failedTests": [
+    {
+     "test": "credential paths are denied before any read the scenario paths",
+     "message": "AssertionError: expected [ 'terraform.tfstate', \u2026(3) ] to deeply equal [ 'terraform.tfstate', \u2026(3) ]"
+    },
+    {
+     "test": "credential paths are denied before any read suffix .tfstate, and in upper case",
+     "message": "AssertionError: expected [ 'infra/prod.tfstate', \u2026(1) ] to deeply equal [ 'infra/prod.tfstate', 'denied-path' ]"
+    },
+    {
+     "test": "predecessor outcomes are preserved a path the predecessor leaves indeterminate keeps that outcome, becomes denied, or is placed by the second stage",
+     "message": "AssertionError: expected [ [ 'docs/adr/x.md', \u2026(1) ], \u2026(24) ] to deeply equal [ [ 'docs/adr/x.md', \u2026(1) ], \u2026(24) ]"
+    }
+   ]
+  },
+  {
+   "id": "suffix-.tfstate.backup",
+   "file": "packages/polaris-dossier/src/screen.ts",
+   "old": "const denied: DeniedPathRules = { basenames: admission['deniedPathBasenames'], prefixes: admission['deniedPathPrefixes'], suffixes: admission['deniedPathSuffixes'] };",
+   "new": "const denied: DeniedPathRules = { basenames: admission['deniedPathBasenames'], prefixes: admission['deniedPathPrefixes'], suffixes: (admission['deniedPathSuffixes'] as string[]).filter(n => n !== \".tfstate.backup\") };",
+   "tests": [
+    "packages/polaris-dossier/src/screen-source-reach-v2.test.ts"
+   ],
+   "project": "unit",
+   "outcome": "killed",
+   "killed": true,
+   "killedBy": "assertion",
+   "failedTests": [
+    {
+     "test": "credential paths are denied before any read suffix .tfstate.backup, and in upper case",
+     "message": "AssertionError: expected [ 'infra/prod.tfstate.backup', \u2026(1) ] to deeply equal [ 'infra/prod.tfstate.backup', \u2026(1) ]"
+    }
+   ]
+  },
+  {
+   "id": "suffix-.tfvars",
+   "file": "packages/polaris-dossier/src/screen.ts",
+   "old": "const denied: DeniedPathRules = { basenames: admission['deniedPathBasenames'], prefixes: admission['deniedPathPrefixes'], suffixes: admission['deniedPathSuffixes'] };",
+   "new": "const denied: DeniedPathRules = { basenames: admission['deniedPathBasenames'], prefixes: admission['deniedPathPrefixes'], suffixes: (admission['deniedPathSuffixes'] as string[]).filter(n => n !== \".tfvars\") };",
+   "tests": [
+    "packages/polaris-dossier/src/screen-source-reach-v2.test.ts"
+   ],
+   "project": "unit",
+   "outcome": "killed",
+   "killed": true,
+   "killedBy": "assertion",
+   "failedTests": [
+    {
+     "test": "credential paths are denied before any read the scenario paths",
+     "message": "AssertionError: expected [ 'env/prod.tfvars', \u2026(3) ] to deeply equal [ 'env/prod.tfvars', \u2026(3) ]"
+    },
+    {
+     "test": "credential paths are denied before any read suffix .tfvars, and in upper case",
+     "message": "AssertionError: expected [ 'infra/prod.tfvars', \u2026(1) ] to deeply equal [ 'infra/prod.tfvars', 'denied-path' ]"
+    }
+   ]
+  },
+  {
+   "id": "suffix-.tfvars.json",
+   "file": "packages/polaris-dossier/src/screen.ts",
+   "old": "const denied: DeniedPathRules = { basenames: admission['deniedPathBasenames'], prefixes: admission['deniedPathPrefixes'], suffixes: admission['deniedPathSuffixes'] };",
+   "new": "const denied: DeniedPathRules = { basenames: admission['deniedPathBasenames'], prefixes: admission['deniedPathPrefixes'], suffixes: (admission['deniedPathSuffixes'] as string[]).filter(n => n !== \".tfvars.json\") };",
+   "tests": [
+    "packages/polaris-dossier/src/screen-source-reach-v2.test.ts"
+   ],
+   "project": "unit",
+   "outcome": "killed",
+   "killed": true,
+   "killedBy": "assertion",
+   "failedTests": [
+    {
+     "test": "credential paths are denied before any read suffix .tfvars.json, and in upper case",
+     "message": "AssertionError: expected [ 'infra/prod.tfvars.json', undefined ] to deeply equal [ 'infra/prod.tfvars.json', \u2026(1) ]"
+    }
+   ]
+  },
+  {
+   "id": "suffix-.kubeconfig",
+   "file": "packages/polaris-dossier/src/screen.ts",
+   "old": "const denied: DeniedPathRules = { basenames: admission['deniedPathBasenames'], prefixes: admission['deniedPathPrefixes'], suffixes: admission['deniedPathSuffixes'] };",
+   "new": "const denied: DeniedPathRules = { basenames: admission['deniedPathBasenames'], prefixes: admission['deniedPathPrefixes'], suffixes: (admission['deniedPathSuffixes'] as string[]).filter(n => n !== \".kubeconfig\") };",
+   "tests": [
+    "packages/polaris-dossier/src/screen-source-reach-v2.test.ts"
+   ],
+   "project": "unit",
+   "outcome": "killed",
+   "killed": true,
+   "killedBy": "assertion",
+   "failedTests": [
+    {
+     "test": "credential paths are denied before any read suffix .kubeconfig, and in upper case",
+     "message": "AssertionError: expected [ 'infra/prod.kubeconfig', \u2026(1) ] to deeply equal [ 'infra/prod.kubeconfig', \u2026(1) ]"
+    }
+   ]
+  },
+  {
+   "id": "suffix-.ppk",
+   "file": "packages/polaris-dossier/src/screen.ts",
+   "old": "const denied: DeniedPathRules = { basenames: admission['deniedPathBasenames'], prefixes: admission['deniedPathPrefixes'], suffixes: admission['deniedPathSuffixes'] };",
+   "new": "const denied: DeniedPathRules = { basenames: admission['deniedPathBasenames'], prefixes: admission['deniedPathPrefixes'], suffixes: (admission['deniedPathSuffixes'] as string[]).filter(n => n !== \".ppk\") };",
+   "tests": [
+    "packages/polaris-dossier/src/screen-source-reach-v2.test.ts"
+   ],
+   "project": "unit",
+   "outcome": "killed",
+   "killed": true,
+   "killedBy": "assertion",
+   "failedTests": [
+    {
+     "test": "credential paths are denied before any read suffix .ppk, and in upper case",
+     "message": "AssertionError: expected [ 'infra/prod.ppk', \u2026(1) ] to deeply equal [ 'infra/prod.ppk', 'denied-path' ]"
+    }
+   ]
+  },
+  {
+   "id": "suffix-.jks",
+   "file": "packages/polaris-dossier/src/screen.ts",
+   "old": "const denied: DeniedPathRules = { basenames: admission['deniedPathBasenames'], prefixes: admission['deniedPathPrefixes'], suffixes: admission['deniedPathSuffixes'] };",
+   "new": "const denied: DeniedPathRules = { basenames: admission['deniedPathBasenames'], prefixes: admission['deniedPathPrefixes'], suffixes: (admission['deniedPathSuffixes'] as string[]).filter(n => n !== \".jks\") };",
+   "tests": [
+    "packages/polaris-dossier/src/screen-source-reach-v2.test.ts"
+   ],
+   "project": "unit",
+   "outcome": "killed",
+   "killed": true,
+   "killedBy": "assertion",
+   "failedTests": [
+    {
+     "test": "credential paths are denied before any read suffix .jks, and in upper case",
+     "message": "AssertionError: expected [ 'infra/prod.jks', \u2026(1) ] to deeply equal [ 'infra/prod.jks', 'denied-path' ]"
+    }
+   ]
+  },
+  {
+   "id": "suffix-.keystore",
+   "file": "packages/polaris-dossier/src/screen.ts",
+   "old": "const denied: DeniedPathRules = { basenames: admission['deniedPathBasenames'], prefixes: admission['deniedPathPrefixes'], suffixes: admission['deniedPathSuffixes'] };",
+   "new": "const denied: DeniedPathRules = { basenames: admission['deniedPathBasenames'], prefixes: admission['deniedPathPrefixes'], suffixes: (admission['deniedPathSuffixes'] as string[]).filter(n => n !== \".keystore\") };",
+   "tests": [
+    "packages/polaris-dossier/src/screen-source-reach-v2.test.ts"
+   ],
+   "project": "unit",
+   "outcome": "killed",
+   "killed": true,
+   "killedBy": "assertion",
+   "failedTests": [
+    {
+     "test": "credential paths are denied before any read suffix .keystore, and in upper case",
+     "message": "AssertionError: expected [ 'infra/prod.keystore', \u2026(1) ] to deeply equal [ Array(2) ]"
+    }
+   ]
+  },
+  {
+   "id": "directory-.ssh",
+   "file": "packages/polaris-dossier/src/screen.ts",
+   "old": "const directories: readonly string[] = twoStage ? directoryNames as readonly string[] : [];",
+   "new": "const directories: readonly string[] = twoStage ? (directoryNames as string[]).filter(n => n !== \".ssh\") : [];",
+   "tests": [
+    "packages/polaris-dossier/src/screen-source-reach-v2.test.ts"
+   ],
+   "project": "unit",
+   "outcome": "killed",
+   "killed": true,
+   "killedBy": "assertion",
+   "failedTests": [
+    {
+     "test": "credential paths are denied before any read the scenario paths",
+     "message": "AssertionError: expected [ '.ssh/deploy.sh', undefined, \u2026(2) ] to deeply equal [ '.ssh/deploy.sh', \u2026(3) ]"
+    },
+    {
+     "test": "credential paths are denied before any read directory .ssh at each depth and in upper case, never the final segment",
+     "message": "AssertionError: expected [ '.ssh/x.sh', undefined ] to deeply equal [ '.ssh/x.sh', 'denied-path' ]"
+    },
+    {
+     "test": "predecessor outcomes are preserved every path the predecessor places keeps its class, except below a new denied directory",
+     "message": "AssertionError: expected [ '.aws/x.py' ] to deeply equal [ '.ssh/deploy.sh', '.aws/x.py' ]"
+    },
+    {
+     "test": "predecessor outcomes are preserved a path the predecessor leaves indeterminate keeps that outcome, becomes denied, or is placed by the second stage",
+     "message": "AssertionError: expected false to be true // Object.is equality"
+    }
+   ]
+  },
+  {
+   "id": "directory-.gnupg",
+   "file": "packages/polaris-dossier/src/screen.ts",
+   "old": "const directories: readonly string[] = twoStage ? directoryNames as readonly string[] : [];",
+   "new": "const directories: readonly string[] = twoStage ? (directoryNames as string[]).filter(n => n !== \".gnupg\") : [];",
+   "tests": [
+    "packages/polaris-dossier/src/screen-source-reach-v2.test.ts"
+   ],
+   "project": "unit",
+   "outcome": "killed",
+   "killed": true,
+   "killedBy": "assertion",
+   "failedTests": [
+    {
+     "test": "credential paths are denied before any read directory .gnupg at each depth and in upper case, never the final segment",
+     "message": "AssertionError: expected [ '.gnupg/x.sh', undefined ] to deeply equal [ '.gnupg/x.sh', 'denied-path' ]"
+    }
+   ]
+  },
+  {
+   "id": "directory-.aws",
+   "file": "packages/polaris-dossier/src/screen.ts",
+   "old": "const directories: readonly string[] = twoStage ? directoryNames as readonly string[] : [];",
+   "new": "const directories: readonly string[] = twoStage ? (directoryNames as string[]).filter(n => n !== \".aws\") : [];",
+   "tests": [
+    "packages/polaris-dossier/src/screen-source-reach-v2.test.ts"
+   ],
+   "project": "unit",
+   "outcome": "killed",
+   "killed": true,
+   "killedBy": "assertion",
+   "failedTests": [
+    {
+     "test": "credential paths are denied before any read directory .aws at each depth and in upper case, never the final segment",
+     "message": "AssertionError: expected [ '.aws/x.sh', undefined ] to deeply equal [ '.aws/x.sh', 'denied-path' ]"
+    },
+    {
+     "test": "predecessor outcomes are preserved every path the predecessor places keeps its class, except below a new denied directory",
+     "message": "AssertionError: expected [ '.ssh/deploy.sh' ] to deeply equal [ '.ssh/deploy.sh', '.aws/x.py' ]"
+    },
+    {
+     "test": "predecessor outcomes are preserved a path the predecessor leaves indeterminate keeps that outcome, becomes denied, or is placed by the second stage",
+     "message": "AssertionError: expected false to be true // Object.is equality"
+    }
+   ]
+  },
+  {
+   "id": "directory-.kube",
+   "file": "packages/polaris-dossier/src/screen.ts",
+   "old": "const directories: readonly string[] = twoStage ? directoryNames as readonly string[] : [];",
+   "new": "const directories: readonly string[] = twoStage ? (directoryNames as string[]).filter(n => n !== \".kube\") : [];",
+   "tests": [
+    "packages/polaris-dossier/src/screen-source-reach-v2.test.ts"
+   ],
+   "project": "unit",
+   "outcome": "killed",
+   "killed": true,
+   "killedBy": "assertion",
+   "failedTests": [
+    {
+     "test": "credential paths are denied before any read the scenario paths",
+     "message": "AssertionError: expected [ '.kube/config', \u2026(3) ] to deeply equal [ '.kube/config', 'denied-path', \u2026(2) ]"
+    },
+    {
+     "test": "credential paths are denied before any read directory .kube at each depth and in upper case, never the final segment",
+     "message": "AssertionError: expected [ '.kube/x.sh', undefined ] to deeply equal [ '.kube/x.sh', 'denied-path' ]"
+    },
+    {
+     "test": "predecessor outcomes are preserved a path the predecessor leaves indeterminate keeps that outcome, becomes denied, or is placed by the second stage",
+     "message": "AssertionError: expected [ [ 'docs/adr/x.md', \u2026(1) ], \u2026(24) ] to deeply equal [ [ 'docs/adr/x.md', \u2026(1) ], \u2026(24) ]"
+    }
+   ]
+  },
+  {
+   "id": "directory-.docker",
+   "file": "packages/polaris-dossier/src/screen.ts",
+   "old": "const directories: readonly string[] = twoStage ? directoryNames as readonly string[] : [];",
+   "new": "const directories: readonly string[] = twoStage ? (directoryNames as string[]).filter(n => n !== \".docker\") : [];",
+   "tests": [
+    "packages/polaris-dossier/src/screen-source-reach-v2.test.ts"
+   ],
+   "project": "unit",
+   "outcome": "killed",
+   "killed": true,
+   "killedBy": "assertion",
+   "failedTests": [
+    {
+     "test": "credential paths are denied before any read the scenario paths",
+     "message": "AssertionError: expected [ 'deploy/.docker/config.json', \u2026(3) ] to deeply equal [ 'deploy/.docker/config.json', \u2026(3) ]"
+    },
+    {
+     "test": "credential paths are denied before any read directory .docker at each depth and in upper case, never the final segment",
+     "message": "AssertionError: expected [ '.docker/x.sh', undefined ] to deeply equal [ '.docker/x.sh', 'denied-path' ]"
+    },
+    {
+     "test": "predecessor outcomes are preserved a path the predecessor leaves indeterminate keeps that outcome, becomes denied, or is placed by the second stage",
+     "message": "AssertionError: expected [ [ 'docs/adr/x.md', \u2026(1) ], \u2026(24) ] to deeply equal [ [ 'docs/adr/x.md', \u2026(1) ], \u2026(24) ]"
+    }
+   ]
+  },
+  {
+   "id": "directory-.terraform",
+   "file": "packages/polaris-dossier/src/screen.ts",
+   "old": "const directories: readonly string[] = twoStage ? directoryNames as readonly string[] : [];",
+   "new": "const directories: readonly string[] = twoStage ? (directoryNames as string[]).filter(n => n !== \".terraform\") : [];",
+   "tests": [
+    "packages/polaris-dossier/src/screen-source-reach-v2.test.ts"
+   ],
+   "project": "unit",
+   "outcome": "killed",
+   "killed": true,
+   "killedBy": "assertion",
+   "failedTests": [
+    {
+     "test": "credential paths are denied before any read directory .terraform at each depth and in upper case, never the final segment",
+     "message": "AssertionError: expected [ '.terraform/x.sh', undefined ] to deeply equal [ '.terraform/x.sh', 'denied-path' ]"
+    }
+   ]
+  },
+  {
+   "id": "detector-config-credential-key",
+   "file": "packages/polaris-generation-core/src/secret-redaction.ts",
+   "old": "return readDetectorBlock(scope, 'configurationDetectors', CONFIGURATION_DETECTOR_TEXTS, priorDetectorIds, 'its configuration detectors');",
+   "new": "const read = readDetectorBlock(scope, 'configurationDetectors', CONFIGURATION_DETECTOR_TEXTS, priorDetectorIds, 'its configuration detectors'); return read.ok ? { ok: true, detectors: read.detectors.filter(d => d.id !== \"config-credential-key\") } : read;",
+   "tests": [
+    "packages/polaris-generation-core/src/configuration-detectors.test.ts",
+    "packages/polaris-dossier/src/screen-source-reach-v2.test.ts"
+   ],
+   "project": "unit",
+   "outcome": "killed",
+   "killed": true,
+   "killedBy": "assertion",
+   "failedTests": [
+    {
+     "test": "the successor screen binds version 2.0.0 with its two stages and six configuration detectors",
+     "message": "AssertionError: expected [ \u2026(4) ] to deeply equal [ \u2026(4) ]"
+    },
+    {
+     "test": "configuration under public visibility the three planted secrets are excluded whole and Cargo.toml is admitted as code-content",
+     "message": "AssertionError: expected [ { kind: 'admitted' }, \u2026(4) ] to deeply equal [ { kind: 'excluded', \u2026(1) }, \u2026(4) ]"
+    },
+    {
+     "test": "configuration under private visibility the three planted secrets are excluded whole and Cargo.toml is admitted as code-content",
+     "message": "AssertionError: expected [ { kind: 'admitted' }, \u2026(4) ] to deeply equal [ { kind: 'excluded', \u2026(1) }, \u2026(4) ]"
+    },
+    {
+     "test": "the configuration detectors over agent text and cited spans refuse agent text quoting a configuration secret, which the predecessor admits",
+     "message": "AssertionError: expected [ undefined, undefined ] to deeply equal [ 'secret-detector-match', undefined ]"
+    },
+    {
+     "test": "the configuration detectors over agent text and cited spans rescan a Stage-2 body with them, and a Stage-1 body as the predecessor does",
+     "message": "AssertionError: expected [ false, false, true, false ] to deeply equal [ true, false, true, false ]"
+    },
+    {
+     "test": "the configuration detectors over agent text and cited spans screen a Stage-2 span or body given its path, and never a Stage-1 one",
+     "message": "AssertionError: expected undefined to be 'secret-detector-match' // Object.is equality"
+    },
+    {
+     "test": "a successor the screen does not implement refuses a configuration detector that does not compile",
+     "message": "AssertionError: expected 'admitted' to contain 'the screening policy cannot be applie\u2026'"
+    },
+    {
+     "test": "the configuration detectors read as the six the policy lists, in order",
+     "message": "AssertionError: expected [ 'kubernetes-secret-kind', \u2026(4) ] to deeply equal [ 'config-credential-key', \u2026(5) ]"
+    },
+    {
+     "test": "a planted value in each configuration format JSON is matched",
+     "message": "AssertionError: expected undefined to be 'config-credential-key' // Object.is equality"
+    },
+    {
+     "test": "a planted value in each configuration format YAML compound key is matched",
+     "message": "AssertionError: expected undefined to be 'config-credential-key' // Object.is equality"
+    },
+    {
+     "test": "a planted value in each configuration format YAML nested is matched",
+     "message": "AssertionError: expected undefined to be 'config-credential-key' // Object.is equality"
+    },
+    {
+     "test": "a planted value in each configuration format TOML is matched",
+     "message": "AssertionError: expected undefined to be 'config-credential-key' // Object.is equality"
+    },
+    {
+     "test": "a planted value in each configuration format HCL assignment is matched",
+     "message": "AssertionError: expected undefined to be 'config-credential-key' // Object.is equality"
+    },
+    {
+     "test": "a planted value in each configuration format Makefile := is matched",
+     "message": "AssertionError: expected undefined to be 'config-credential-key' // Object.is equality"
+    },
+    {
+     "test": "a planted value in each configuration format Makefile ?= is matched",
+     "message": "AssertionError: expected undefined to be 'config-credential-key' // Object.is equality"
+    },
+    {
+     "test": "a planted value in each configuration format Docker config auths is matched",
+     "message": "AssertionError: expected undefined to be 'config-credential-key' // Object.is equality"
+    },
+    {
+     "test": "a planted value in each configuration format agent text is matched",
+     "message": "AssertionError: expected undefined to be 'config-credential-key' // Object.is equality"
+    }
+   ]
+  },
+  {
+   "id": "detector-kubernetes-secret-kind",
+   "file": "packages/polaris-generation-core/src/secret-redaction.ts",
+   "old": "return readDetectorBlock(scope, 'configurationDetectors', CONFIGURATION_DETECTOR_TEXTS, priorDetectorIds, 'its configuration detectors');",
+   "new": "const read = readDetectorBlock(scope, 'configurationDetectors', CONFIGURATION_DETECTOR_TEXTS, priorDetectorIds, 'its configuration detectors'); return read.ok ? { ok: true, detectors: read.detectors.filter(d => d.id !== \"kubernetes-secret-kind\") } : read;",
+   "tests": [
+    "packages/polaris-generation-core/src/configuration-detectors.test.ts",
+    "packages/polaris-dossier/src/screen-source-reach-v2.test.ts"
+   ],
+   "project": "unit",
+   "outcome": "killed",
+   "killed": true,
+   "killedBy": "assertion",
+   "failedTests": [
+    {
+     "test": "the successor screen binds version 2.0.0 with its two stages and six configuration detectors",
+     "message": "AssertionError: expected [ \u2026(4) ] to deeply equal [ \u2026(4) ]"
+    },
+    {
+     "test": "configuration under public visibility the three planted secrets are excluded whole and Cargo.toml is admitted as code-content",
+     "message": "AssertionError: expected [ { kind: 'excluded', \u2026(1) }, \u2026(4) ] to deeply equal [ { kind: 'excluded', \u2026(1) }, \u2026(4) ]"
+    },
+    {
+     "test": "configuration under private visibility the three planted secrets are excluded whole and Cargo.toml is admitted as code-content",
+     "message": "AssertionError: expected [ { kind: 'excluded', \u2026(1) }, \u2026(4) ] to deeply equal [ { kind: 'excluded', \u2026(1) }, \u2026(4) ]"
+    },
+    {
+     "test": "the configuration detectors read as the six the policy lists, in order",
+     "message": "AssertionError: expected [ 'config-credential-key', \u2026(4) ] to deeply equal [ 'config-credential-key', \u2026(5) ]"
+    },
+    {
+     "test": "a planted value in each configuration format Kubernetes YAML is matched",
+     "message": "AssertionError: expected undefined to be 'kubernetes-secret-kind' // Object.is equality"
+    },
+    {
+     "test": "a planted value in each configuration format Kubernetes JSON is matched",
+     "message": "AssertionError: expected undefined to be 'kubernetes-secret-kind' // Object.is equality"
+    },
+    {
+     "test": "a planted value in each configuration format Kubernetes with a comment is matched",
+     "message": "AssertionError: expected undefined to be 'kubernetes-secret-kind' // Object.is equality"
+    }
+   ]
+  },
+  {
+   "id": "detector-hcl-secret-variable-default",
+   "file": "packages/polaris-generation-core/src/secret-redaction.ts",
+   "old": "return readDetectorBlock(scope, 'configurationDetectors', CONFIGURATION_DETECTOR_TEXTS, priorDetectorIds, 'its configuration detectors');",
+   "new": "const read = readDetectorBlock(scope, 'configurationDetectors', CONFIGURATION_DETECTOR_TEXTS, priorDetectorIds, 'its configuration detectors'); return read.ok ? { ok: true, detectors: read.detectors.filter(d => d.id !== \"hcl-secret-variable-default\") } : read;",
+   "tests": [
+    "packages/polaris-generation-core/src/configuration-detectors.test.ts",
+    "packages/polaris-dossier/src/screen-source-reach-v2.test.ts"
+   ],
+   "project": "unit",
+   "outcome": "killed",
+   "killed": true,
+   "killedBy": "assertion",
+   "failedTests": [
+    {
+     "test": "the successor screen binds version 2.0.0 with its two stages and six configuration detectors",
+     "message": "AssertionError: expected [ \u2026(4) ] to deeply equal [ \u2026(4) ]"
+    },
+    {
+     "test": "the configuration detectors read as the six the policy lists, in order",
+     "message": "AssertionError: expected [ 'config-credential-key', \u2026(4) ] to deeply equal [ 'config-credential-key', \u2026(5) ]"
+    },
+    {
+     "test": "a planted value in each configuration format Terraform variable is matched",
+     "message": "AssertionError: expected undefined to be 'hcl-secret-variable-default' // Object.is equality"
+    },
+    {
+     "test": "hcl-secret-variable-default in its committed look-ahead form is the look-ahead form, not the earlier two-run form",
+     "message": "TypeError: Cannot read properties of undefined (reading 'pattern')"
+    },
+    {
+     "test": "hcl-secret-variable-default in its committed look-ahead form matches the same text at every offset as the earlier two-run form, over a seeded population",
+     "message": "TypeError: Cannot read properties of undefined (reading 'pattern')"
+    },
+    {
+     "test": "each configuration detector is bounded on adversarial bodies canary: the earlier two-run form of hcl-secret-variable-default is not bounded on the unterminated name",
+     "message": "TypeError: Cannot read properties of undefined (reading 'replace')"
+    }
+   ]
+  },
+  {
+   "id": "detector-dockerfile-secret-env",
+   "file": "packages/polaris-generation-core/src/secret-redaction.ts",
+   "old": "return readDetectorBlock(scope, 'configurationDetectors', CONFIGURATION_DETECTOR_TEXTS, priorDetectorIds, 'its configuration detectors');",
+   "new": "const read = readDetectorBlock(scope, 'configurationDetectors', CONFIGURATION_DETECTOR_TEXTS, priorDetectorIds, 'its configuration detectors'); return read.ok ? { ok: true, detectors: read.detectors.filter(d => d.id !== \"dockerfile-secret-env\") } : read;",
+   "tests": [
+    "packages/polaris-generation-core/src/configuration-detectors.test.ts",
+    "packages/polaris-dossier/src/screen-source-reach-v2.test.ts"
+   ],
+   "project": "unit",
+   "outcome": "killed",
+   "killed": true,
+   "killedBy": "assertion",
+   "failedTests": [
+    {
+     "test": "the successor screen binds version 2.0.0 with its two stages and six configuration detectors",
+     "message": "AssertionError: expected [ \u2026(4) ] to deeply equal [ \u2026(4) ]"
+    },
+    {
+     "test": "the configuration detectors read as the six the policy lists, in order",
+     "message": "AssertionError: expected [ 'config-credential-key', \u2026(4) ] to deeply equal [ 'config-credential-key', \u2026(5) ]"
+    },
+    {
+     "test": "a planted value in each configuration format Dockerfile ENV is matched",
+     "message": "AssertionError: expected undefined to be 'dockerfile-secret-env' // Object.is equality"
+    },
+    {
+     "test": "a planted value in each configuration format Dockerfile ARG is matched",
+     "message": "AssertionError: expected undefined to be 'dockerfile-secret-env' // Object.is equality"
+    }
+   ]
+  },
+  {
+   "id": "detector-netrc-machine-password",
+   "file": "packages/polaris-generation-core/src/secret-redaction.ts",
+   "old": "return readDetectorBlock(scope, 'configurationDetectors', CONFIGURATION_DETECTOR_TEXTS, priorDetectorIds, 'its configuration detectors');",
+   "new": "const read = readDetectorBlock(scope, 'configurationDetectors', CONFIGURATION_DETECTOR_TEXTS, priorDetectorIds, 'its configuration detectors'); return read.ok ? { ok: true, detectors: read.detectors.filter(d => d.id !== \"netrc-machine-password\") } : read;",
+   "tests": [
+    "packages/polaris-generation-core/src/configuration-detectors.test.ts",
+    "packages/polaris-dossier/src/screen-source-reach-v2.test.ts"
+   ],
+   "project": "unit",
+   "outcome": "killed",
+   "killed": true,
+   "killedBy": "assertion",
+   "failedTests": [
+    {
+     "test": "the successor screen binds version 2.0.0 with its two stages and six configuration detectors",
+     "message": "AssertionError: expected [ \u2026(4) ] to deeply equal [ \u2026(4) ]"
+    },
+    {
+     "test": "the configuration detectors read as the six the policy lists, in order",
+     "message": "AssertionError: expected [ 'config-credential-key', \u2026(4) ] to deeply equal [ 'config-credential-key', \u2026(5) ]"
+    },
+    {
+     "test": "a planted value in each configuration format netrc is matched",
+     "message": "AssertionError: expected undefined to be 'netrc-machine-password' // Object.is equality"
+    }
+   ]
+  },
+  {
+   "id": "detector-authorization-header-credential",
+   "file": "packages/polaris-generation-core/src/secret-redaction.ts",
+   "old": "return readDetectorBlock(scope, 'configurationDetectors', CONFIGURATION_DETECTOR_TEXTS, priorDetectorIds, 'its configuration detectors');",
+   "new": "const read = readDetectorBlock(scope, 'configurationDetectors', CONFIGURATION_DETECTOR_TEXTS, priorDetectorIds, 'its configuration detectors'); return read.ok ? { ok: true, detectors: read.detectors.filter(d => d.id !== \"authorization-header-credential\") } : read;",
+   "tests": [
+    "packages/polaris-generation-core/src/configuration-detectors.test.ts",
+    "packages/polaris-dossier/src/screen-source-reach-v2.test.ts"
+   ],
+   "project": "unit",
+   "outcome": "killed",
+   "killed": true,
+   "killedBy": "assertion",
+   "failedTests": [
+    {
+     "test": "the successor screen binds version 2.0.0 with its two stages and six configuration detectors",
+     "message": "AssertionError: expected [ \u2026(4) ] to deeply equal [ \u2026(4) ]"
+    },
+    {
+     "test": "the configuration detectors read as the six the policy lists, in order",
+     "message": "AssertionError: expected [ 'config-credential-key', \u2026(4) ] to deeply equal [ 'config-credential-key', \u2026(5) ]"
+    },
+    {
+     "test": "a planted value in each configuration format an Authorization header is matched",
+     "message": "AssertionError: expected undefined to be 'authorization-header-credential' // Object.is equality"
+    },
+    {
+     "test": "a planted value in each configuration format a quoted header in JSON is matched",
+     "message": "AssertionError: expected undefined to be 'authorization-header-credential' // Object.is equality"
+    }
+   ]
+  }
+ ],
+ "total": 94,
+ "killed": 93,
+ "killedByAssertion": 93,
+ "notKilled": [
+  {
+   "id": "screen-code-exemption-stage-dropped",
+   "outcome": "survived",
+   "note": "equivalent under the committed lists: a Stage-2 code-content path never ends with an exemptExtensions entry (screen.ts refuses an exemption extension a code-content-extended list names, readSecondStage refuses one Stage 1 sourceExtensions names, and a Dockerfile/Makefile name or Dockerfile. prefix ending in an exempt extension is placed by Stage 1 first), so the stage argument at this call site changes no outcome; codeContentExempt's own stage check is killed by code-exemption-ignores-stage"
+  }
+ ],
+ "supersedes": {
+  "ranAt": "5d8ccaeaf531f60688b31decc6cb89f120c4ea2d",
+  "killed": 91,
+  "total": 94,
+  "notKilled": {
+   "stage2-two-rule-match-admitted": "survived",
+   "render-rescan-path-free": "survived",
+   "screen-code-exemption-stage-dropped": "survived"
+  },
+  "repair": "fixtures added for the two-rule refusal (a stage with prefixExcludedExtensions emptied) and for render rescanning a cited body with its path"
+ },
+ "earlierRecord": {
+  "path": "docs/evidence/syzygy-3efd-24/source-reach-mutation-2026-11-22.json",
+  "sha256": "45019028bc5cbb6df3027a5c3967c4a6a8876622dfe4ba5241dd80a91b8e3232",
+  "note": "the run over the successor as first adopted (84 of 85 at 8e0b81c3); its fragments name code the narrowing changed"
+ }
+}

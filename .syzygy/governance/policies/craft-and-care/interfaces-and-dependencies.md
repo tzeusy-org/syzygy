@@ -97,7 +97,7 @@ through **explicit, reviewable, identity-preserving migrations**
 - **Versioning:** every stored artifact carries its schema version; readers
   reject or explicitly adapt unknown versions — never silently guess.
 - **A migration is its own reviewed change** (mandatory independent review,
-  CC-REV-1 class 5).
+  CC-REV-1 class 3, when it affects identity).
   - It states what it preserves.
   - It proves durable identities and evidence records survive round-trip.
 - **Migrations never rewrite immutable records** (observation records,
@@ -144,8 +144,7 @@ faithfully and exposes no more than it promises.
 - **Public interfaces:** endpoints, adapter contracts, exported schemas.
 - **Every public interface:**
   - is versioned, with breaking changes made deliberately, announced in the
-    interface's own contract, and independently reviewed (CC-REV-1 class
-    6);
+    interface's own contract;
   - exposes epistemic state faithfully — Observed/Inferred/Unknown labels
     and freshness travel through the API; no endpoint "simplifies" Unknown
     away for consumer convenience (VIS-1 applies to machine consumers too);

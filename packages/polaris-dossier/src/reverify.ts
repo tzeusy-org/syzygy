@@ -3,7 +3,7 @@ import * as path from 'node:path';
 import { isRecord } from '@syzygy/support';
 import { parseBoundedJson } from '@syzygy/polaris-generation-core/live';
 import type { GateSources } from './gate-sources.js';
-import { samePolicy } from './policy-snapshot.js';
+import { DOSSIER_PREDECESSOR_POLICY_PATH, restartExplanation, samePolicy } from './policy-snapshot.js';
 import { buildDossierScreen } from './screen.js';
 import { GitObjectReadRefusal, openPinnedObjectReader, type PinnedObjectReader, type PinnedObjectReaderOptions } from './git-object-reader.js';
 import { governedSubject, type GovernedDecision } from './governed.js';
@@ -97,13 +97,18 @@ export async function reverifyPinnedRevision(runDir: string, sources: GateSource
   const { repositoryId } = subject.repository;
   const commit = subject.pinnedRevision.commit;
 
-  const snapshot = await sources.declaredPolicy?.();
+  // The run is screened under the policy file its record binds; one bound to the predecessor is never moved to the successor
+  // (REQ-polaris-generation-046 from version 2.6), and refuses with the restart explanation when it can no longer read the predecessor.
+  const predecessor = subject.screeningPolicy.path === DOSSIER_PREDECESSOR_POLICY_PATH;
+  const snapshot = await sources.declaredPolicy?.(subject.screeningPolicy.path);
   if (snapshot === undefined || !snapshot.ok) {
-    refusals.push({ code: 'policy', reason: snapshot === undefined ? 'no committed dossier policy source is available' : snapshot.why });
+    const why = snapshot === undefined ? 'no committed dossier policy source is available' : snapshot.why;
+    refusals.push({ code: 'policy', reason: predecessor ? restartExplanation(why) : why });
     return refuse();
   }
   if (!samePolicy(snapshot.binding, subject.screeningPolicy)) {
-    refusals.push({ code: 'policy-changed', reason: 'the committed dossier policy identity, version or bytes differ from this run binding; start a new run instead of silently upgrading it' });
+    refusals.push({ code: 'policy-changed', reason: predecessor ? restartExplanation('the committed predecessor identity, version or bytes differ from this run binding')
+      : 'the committed dossier policy identity, version or bytes differ from this run binding; start a new run instead of silently upgrading it' });
     return refuse();
   }
   const screened = buildDossierScreen(snapshot.bytes, true, { repository: `repository:${repositoryId}`, commit }, subject.visibility.value);

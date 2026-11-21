@@ -42,6 +42,15 @@ const D10_DECISION = /^GOVERNANCE-SIMPLIFICATION-D10$/;
 
 const URL_ORIGIN_POLICY = /^POLARIS-DOSSIER-URL-ORIGIN-SPECIES-POLICY-v1$/;
 
+/** An owner act cited by its approval identity rather than its file (declared-source reach 2.6 cites the screening-scope-v2 act it
+ * partly reverses this way); each must be declared by an `Act identity:` line under decisions/. */
+const ACT_APPROVAL_IDENTITY = /^[A-Z0-9]+(?:-[A-Z0-9]+)*-APPROVAL-\d{4}-\d{2}-\d{2}$/;
+const ACT_IDENTITY_DECLARATION = /^Act identity: `([A-Z0-9-]+)`$/gm;
+
+/** An owner decision asked by a vision pursuit (`pursuit-<date>-<topic>`, recorded on its bead, not in a decisions/ file; declared-source
+ * reach 2.6 cites `pursuit-2026-11-21-source-reach`); each must be named by that date's pursuit report under docs/pursuits/. */
+const PURSUIT_DECISION = /^pursuit-(\d{4}-\d{2}-\d{2})-[a-z0-9]+(?:-[a-z0-9]+)*$/;
+
 /** Hand-typed warrant id families (a new family must be added here). */
 const WARRANT_FAMILIES = [
   GENERATOR_REQUIREMENT,
@@ -50,6 +59,8 @@ const WARRANT_FAMILIES = [
   MACHINE_CEILING_DECISION,
   D10_DECISION,
   URL_ORIGIN_POLICY,
+  ACT_APPROVAL_IDENTITY,
+  PURSUIT_DECISION,
   /^(VIS|SEC|SDR|RFC\d+|CC-[A-Z]+|POC-REQ|PWB-REQ|CAP1-REQ)-\d+[a-z]?(\([a-z]\))?$/,
   /^(POC|POLARIS|PWB-STATE1-AMENDMENT)-DIR-\d{4}-\d{2}-\d{2}$/,
   // Redis local-agent owner directions: `Decision ID:` in decisions/REDIS-LOCAL-AGENT-SITTING-DIRECTION.md.
@@ -161,6 +172,20 @@ describe('Zero downstream citations of Polaris as authority (PWB-REQ-014)', () =
       expect(entry.key).toBe('decisions');
       const act = readFileSync(join(decisionsDirectory, 'GOVERNANCE-SIMPLIFICATION-D10-ACT.md'), 'utf8');
       expect(act).toMatch(/^Artifact identity: governance-simplification-d10 \(/m);
+    }
+    const declaredActs = new Set<string>();
+    for (const file of walk(decisionsDirectory, isSpec)) {
+      for (const match of readFileSync(file, 'utf8').matchAll(ACT_IDENTITY_DECLARATION)) declaredActs.add(match[1] as string);
+    }
+    for (const entry of entries.filter((candidate) => ACT_APPROVAL_IDENTITY.test(candidate.value))) {
+      expect(entry.key).toBe('decisions');
+      expect(declaredActs.has(entry.value), `${entry.value} must have an owning Act identity declaration`).toBe(true);
+    }
+    for (const entry of entries.filter((candidate) => PURSUIT_DECISION.test(candidate.value))) {
+      expect(entry.key).toBe('decisions');
+      const date = (PURSUIT_DECISION.exec(entry.value) as RegExpExecArray)[1] as string;
+      const report = join(REPO_ROOT, 'docs/pursuits', `${date}-vision-pursuit.md`);
+      expect(existsSync(report) && readFileSync(report, 'utf8').includes(entry.value), `${entry.value} must be named by its pursuit report`).toBe(true);
     }
     const polarisNamed = entries.filter((entry) => /polaris/i.test(entry.value));
     expect(polarisNamed.length).toBeGreaterThan(0);

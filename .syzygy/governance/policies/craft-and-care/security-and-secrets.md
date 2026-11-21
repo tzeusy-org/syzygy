@@ -22,8 +22,9 @@ writes, and secrets kept out.
 - **Standing protections:**
   - All of SEC-1…SEC-5 sit inside the non-downgradable risk floors
     (CC-BAR-5 floor 6).
-  - All security-class changes take mandatory independent review (CC-REV-1
-    class 4) and are always human-gated at the spec level (VIS-4).
+  - Changes to secret detection, screening, egress, authentication or where
+    observed code runs take one independent review (CC-REV-1 class 1). Only
+    the four VIS-4 owner classes are human-gated.
 
 ## CC-SEC-1 — Default-deny is the born state of every surface
 

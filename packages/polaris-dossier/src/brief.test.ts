@@ -398,10 +398,10 @@ describe('brief: the permitting arm, switched on with fixture ports', () => {
     const result = await issueBrief(run, { sources: sources(), openReader: tree(), now: () => NOW, permitting: permitting(CHOICE) });
     expect(result).toMatchObject({ ok: true, report: { executionRule: { arm: 'permitting' } } });
     const record = JSON.parse(read(run, 'brief.json'));
-    expect(record.executionRule).toMatchObject({ arm: 'permitting', cites: 'SEC-3 (D9)', choice: CHOICE, choiceLabel: 'Inferred', cost: { text: lines(103, 109), startLine: 103, endLine: 109 } });
+    expect(record.executionRule).toMatchObject({ arm: 'permitting', cites: 'SEC-3 (D9)', choice: CHOICE, choiceLabel: 'Inferred', cost: { text: lines(106, 112), startLine: 106, endLine: 112 } });
     const brief = read(run, 'brief.md');
     expect(brief).toContain('This permission lapses if the owner stops attending this session');
-    expect(brief).toContain(`\`\`\`text\n${lines(103, 109)}\n\`\`\``);
+    expect(brief).toContain(`\`\`\`text\n${lines(106, 112)}\n\`\`\``);
   });
 
   it('a choice recorded in run.json is never read: the record is refused and no brief is issued', async () => {
