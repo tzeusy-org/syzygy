@@ -1,6 +1,6 @@
 # Project status
 
-> **As-of: 2026-09-15 (launch-gate v2.5/schema 2.1 approved for local installation; older entries retain their cited evidence dates).** To check whether that is still true, run
+> **As-of: 2026-11-21 (governance regime under doctrine amendment D10 stated; the tables below keep their own cited dates, and their owner acts are history since D10).** To check whether that is still true, run
 > `git log -1 --date=short --format='%h %ad' PROJECT-STATUS.md`: it names the
 > commit that last touched this page. **If its date is later than the As-of
 > above, someone edited this page without restating this line**, and the rows
@@ -19,9 +19,42 @@
 
 Syzygy is in **bounded Three-Surface POC mode (non-release)**. Capability 1
 and its local runtime are implemented; the generalized Polaris generator
-specification is adopted and its implementation authorized and in progress;
-the Polaris project-wide Butlers (PWB) work is authorized for one consented
-content class. Each section cites the record that owns its rows.
+specification is adopted and its implementation in progress; the Polaris
+project-wide Butlers (PWB) runtime reads one content class. Since doctrine
+amendment D10 (2026-11-18), agents adopt every change outside four owner
+classes (next section). Each section cites the record that owns its rows.
+
+## Governance regime (D10)
+
+[Observed] Doctrine amendment D10 was adopted by the owner on 2026-11-18
+(`decisions/GOVERNANCE-SIMPLIFICATION-D10-ACT.md`; tag
+`governance-simplification-d10-adopted-2026-11-18`). VIS-4 as amended is
+the rule; this section only routes to it.
+
+- **The owner decides four classes, and only the owner:**
+  1. doctrine (`governance/doctrine/`);
+  2. secrets: weakening secret detection or SEC-5's fail-closed rule, and
+     running observed code outside a sandbox;
+  3. writes or pushes into a repository the owner does not own, and the
+     owner's list of owned repositories (`decisions/OWNED-REPOSITORIES.md`);
+  4. network exposure beyond the tailnet, and any release, deployment or
+     multi-user use.
+- **Agents decide everything else** — specifications and versions,
+  contracts, craft and specification bars, screening policy within SEC-5,
+  review practice, when implementation starts — and record each adoption as
+  one row in [`AGENT-ADOPTIONS.md`](.syzygy/governance/decisions/AGENT-ADOPTIONS.md).
+  That log, not this page, says what agents have adopted.
+- **The owner vetoes by saying so**; a veto is a revert recorded as a row.
+- **Acts performed before D10 are history.** The owner acts, sign-offs and
+  directions in the tables below stay in force as decided; a later change to
+  what they decided is an adoption. Their digests no longer lock the files
+  they bound (RFC3-16 as amended). Unperformed offerings are withdrawn
+  (`contracts/candidates/governance-simplification-d10/RETIREMENTS.md` §C).
+- **What still runs the old way.** [Observed] Some code still enforces gates
+  D10 retired — the dossier launch consent and act readers, the PWB
+  body-read authority gate. Their removal is tracked as the D10 follow-ons
+  (bead `syzygy-k54o`); until each lands, the code's behaviour is what this
+  page's rows describe.
 
 ## Generalized Polaris generation
 
@@ -118,7 +151,11 @@ runtime are implemented trusted groundwork.
   human-triggered, and experimental.
   - It does not authorize production release or deployment, autonomous
     adoption of intent, Syzygy-authored implementation code, broad remote
-    access, or multi-user support.
+    access, or multi-user support. *(Marked 2026-11-21: release,
+    deployment, remote exposure and multi-user use are owner classes under
+    D10, and Syzygy itself still writes no code; "autonomous adoption of
+    intent" now means adoption outside VIS-4's bounds, since agents adopt
+    specifications as recorded agent decisions.)*
 - **Its invariants:**
   - desired, execution, and observed state remain distinct;
   - no evidence means Unknown;
@@ -293,7 +330,10 @@ A, Wave B, and craft acts 6 + 7.
   first act and owns every performed act.
 - The nine still-open foundational offerings remain open: deferred Waves
   C1/C2/D1/D2, CC-TEST-2, topology, overview, D3, and **P-12 knowledge
-  hygiene** as the ninth.
+  hygiene** as the ninth. *(Marked 2026-11-21: since D10 none of them is
+  offered as an act. D3 amends doctrine and stays with the owner; the
+  deferred waves stay deferred by doctrine; CC-TEST-2, topology, the
+  overview and P-12 are agent adoptions when taken up.)*
 
 ## Gates already closed
 
@@ -326,7 +366,11 @@ Every gate below is closed; each row names what closed it.
 
 ## Gates still open, beyond the launch path
 
-These gates remain open; none of them is on the launch path.
+These gates remain open; none of them is on the launch path. *(Marked
+2026-11-21: since D10 only the D3 row is an owner decision, being a doctrine
+amendment. Every other row is an agent decision, recorded in
+`AGENT-ADOPTIONS.md` when taken; their triage is D10 FOLLOW-ON F-10,
+`syzygy-k54o.10`. The State cells keep the wording of the owner-gate era.)*
 
 | Gate | State | Owning record |
 |---|---|---|
@@ -356,9 +400,19 @@ content class. The order:
    warrants, not evidence. Reads stay inside `declared-project-shape-text`
    and the approved secret-classification policy.
 3. Review → repair → confirmation on frozen heads, then an owner report
-   before any next cycle (tasks §5).
+   before any next cycle (tasks §5). *(Marked 2026-11-21: since D10 the
+   report follows the cycle and the next cycle does not wait for it.)*
 4. Add write, egress, execution, deployment, release, recovery, or mission
    authorization only if that effect is actually requested; none is today.
+   *(Marked 2026-11-21: since D10 these are agent adoptions, except writes
+   into a repository the owner does not own, execution outside a sandbox,
+   deployment and release, which stay the owner's; missions stay deferred
+   by doctrine.)*
+
+*(Marked 2026-11-21: steps 1–2 describe the code as it runs. Under D10 a
+read needs no consent or act (VIS-4, SEC-2 as amended); the body-read gate
+that evaluates the three effect acts is removed by D10 FOLLOW-ON F-2, and
+until then it is what decides a Butlers read.)*
 
 How step 2 gates the first Butlers body read:
 
