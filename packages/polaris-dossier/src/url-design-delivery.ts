@@ -84,7 +84,7 @@ export interface OrderedDesignPlan {
   readonly preparedText: string;
   readonly replies: readonly PlannedReply[];
 }
-const issuedPlans = new WeakSet<OrderedDesignPlan>();
+const issuedPlans = new WeakMap<OrderedDesignPlan, PlanInput['limits']>();
 interface PlanInput {
   /** Source already authenticated by the host's dedicated original/view receipt. */
   readonly envelope: Uint8Array;
@@ -113,6 +113,25 @@ const exactKeys = (value: object, names: readonly string[]): boolean =>
 const replyText = (manifest: Manifest, manifestSha256: string, part: DesignPart, text: string, maxBytes: number): string => canonical({
   ...part, count: manifest.partCount, envelopeSha256: manifest.envelopeSha256, kind: 'design-view-part', manifestSha256, ok: true, text,
 }, maxBytes);
+
+function boundEnvelope(plan: OrderedDesignPlan, envelope: Uint8Array): Uint8Array {
+  if (!issuedPlans.has(plan) || !(envelope instanceof Uint8Array)
+    || envelope.byteLength !== plan.manifest.envelopeBytes) return fail();
+  const bytes = Uint8Array.from(envelope);
+  if (sha256(bytes) !== plan.manifest.envelopeSha256) return fail();
+  return bytes;
+}
+
+/** The legacy whole representation, used only as a detector input for the
+ * ordered profile. Its tool identity is separate from this byte plan. */
+export function orderedDesignWholeReply(plan: OrderedDesignPlan, envelope: Uint8Array, limits: PlanInput['limits']): string {
+  const issued = issuedPlans.get(plan);
+  if (issued === undefined || issued.partBytes !== limits.partBytes || issued.partCount !== limits.partCount
+    || issued.replyBytes !== limits.replyBytes || issued.preparedBytes !== limits.preparedBytes) return fail();
+  const text = new TextDecoder('utf-8', { fatal: true, ignoreBOM: true }).decode(boundEnvelope(plan, envelope));
+  return canonical({ ok: true, kind: 'artifact', path: `round-${plan.manifest.binding.round}/design-view.json`,
+    text, sha256: plan.manifest.envelopeSha256 });
+}
 
 /**
  * Compile the exact host-private byte/receipt plan. This is a necessary
@@ -172,7 +191,7 @@ export function planOrderedDesignBytes(input: PlanInput): OrderedDesignPlan {
       return { ordinal: part.ordinal, manifestSha256, bytes: Buffer.byteLength(reply), sha256: sha256(reply) };
     });
     const plan = deepFreeze({ manifest, manifestText, manifestSha256, prepared, preparedText, replies });
-    issuedPlans.add(plan);
+    issuedPlans.set(plan, Object.freeze({ ...limits }));
     return plan;
   } catch { return fail(); }
 }
@@ -181,12 +200,10 @@ export function planOrderedDesignBytes(input: PlanInput): OrderedDesignPlan {
  * caller still owns transfer currentness, the next ordinal and release. */
 export function materializeOrderedDesignPart(plan: OrderedDesignPlan, envelope: Uint8Array, path: string): string {
   try {
-    if (!issuedPlans.has(plan) || !isOrderedDesignPartPath(path) || !(envelope instanceof Uint8Array)
-      || envelope.byteLength !== plan.manifest.envelopeBytes) return fail();
+    if (!isOrderedDesignPartPath(path)) return fail();
+    const bytes = boundEnvelope(plan, envelope);
     const part = plan.manifest.parts.find(candidate => candidate.path === path);
     if (part === undefined) return fail();
-    const bytes = Uint8Array.from(envelope);
-    if (sha256(bytes) !== plan.manifest.envelopeSha256) return fail();
     const slice = bytes.subarray(part.offset, part.offset + part.bytes);
     if (sha256(slice) !== part.sha256) return fail();
     const text = new TextDecoder('utf-8', { fatal: true, ignoreBOM: true }).decode(slice);

@@ -3,10 +3,11 @@ import { encodeCanonicalJson, parseBoundedJson } from '@syzygy/polaris-generatio
 import { deepFreeze, isRecord, sha256 } from '@syzygy/support';
 import {
   isSessionProfile, projectSessionProfileMetadata, sessionProfileRemainingTokens, sessionProfileReminderText,
-  type SessionProfile, type SessionProfileUsage,
+  type NativeSessionProfile, type SessionProfile, type SessionProfileUsage,
 } from './session-profile.js';
 import { inspectUrlDesignSecretContribution, URL_DESIGN_VIEW_ARTIFACT } from './url-design-view.js';
 import { isOrderedDesignPartPath } from './url-design-delivery.js';
+import { projectOrderedDesignRequest, type OrderedDesignRequestBindings } from './url-ordered-design-request.js';
 
 /** Pure admission boundary; the supervisor owns classification, receipts, audit and transport.
  * Never expose these functions or the state to the CLI. The host must serialize transitions,
@@ -163,18 +164,24 @@ function designViewPath(origin: SessionOrigin): string | null {
   return origin.kind === 'tool-result' && origin.toolName === 'mcp__syzygy__artifact_read'
     && typeof path === 'string' && URL_DESIGN_VIEW_ARTIFACT.test(path) ? path : null;
 }
+type ScreeningOptions = Pick<SessionPolicyOptions, 'binding' | 'limits' | 'scanSecrets' | 'scanDesignView'>;
+type WholeViewDetectorInput = Pick<SessionOrigin, 'toolUseId' | 'canonicalText'>;
+
 /** Scan serialized content, individual decoded fields, and both wire-order and canonical-order
  * semantic compositions. Joining decoded text closes escaped/split-field detector bypasses.
  * These are bounded whole-envelope compositions, not claims about a detector's completeness.
  */
-function screen(value: unknown, options: SessionPolicyOptions, receipts: readonly SessionOrigin[] = []): void {
+function screen(value: unknown, options: ScreeningOptions, receipts: readonly SessionOrigin[] = []): void {
   finish(screenSteps(value, options, receipts));
 }
-function* screenSteps(value: unknown, options: SessionPolicyOptions, receipts: readonly SessionOrigin[] = []): ScreeningSteps {
+function* screenSteps(value: unknown, options: ScreeningOptions, receipts: readonly SessionOrigin[] = [],
+  wholeView?: WholeViewDetectorInput): ScreeningSteps {
   yield;
   const encoded = canonical(value, options.limits);
   const strings: string[] = [], sorted: string[] = [], payload: string[] = [];
-  const designByCall = new Map(receipts.flatMap(receipt => designViewPath(receipt) === null ? [] : [[receipt.toolUseId, receipt] as const]));
+  const designByCall = new Map<string | undefined, WholeViewDetectorInput>(
+    receipts.flatMap(receipt => designViewPath(receipt) === null ? [] : [[receipt.toolUseId, receipt] as const]));
+  if (wholeView !== undefined) designByCall.set(wholeView.toolUseId, wholeView);
   const design = new Map<number, { inert: readonly string[]; original: readonly string[]; fields: readonly string[]; keyed: readonly string[] }>();
   const collect = (v: unknown, into: string[], sort: boolean, withKeys = false): void => {
     if (typeof v === 'string') into.push(v);
@@ -263,6 +270,53 @@ function* screenSteps(value: unknown, options: SessionPolicyOptions, receipts: r
     }
   }
 }
+
+function projectProfileControls(profile: NativeSessionProfile, request: JsonRecord): JsonRecord {
+  const projection = projectSessionProfileMetadata(profile, request.metadata);
+  if (!projection.ok) refuse('metadata-refused');
+  if (Object.hasOwn(request, 'tool_choice')) refuse('scaffolding-mismatch');
+  return { ...request, metadata: projection.value.metadata, tool_choice: profile.baseline.tool_choice };
+}
+
+/** Compose the ordinary and whole-view detector branches from a host-checked
+ * ordered prefix. This returns no origin, admission or transmission receipt. */
+export interface OrderedDesignRequestChecks {
+  readonly received: { readonly bytes: number; readonly sha256: string };
+  readonly forwarded: { readonly bytes: number; readonly sha256: string };
+  readonly logical: { readonly bytes: number; readonly sha256: string };
+  readonly transcriptSha256: string;
+}
+
+export function screenOrderedDesignRequest(bytes: Uint8Array, bindings: OrderedDesignRequestBindings,
+  detectors: Pick<ScreeningOptions, 'scanSecrets' | 'scanDesignView'>): SessionPolicyResult<OrderedDesignRequestChecks> {
+  return outcome(() => {
+    const { profile } = bindings;
+    const limits = SESSION_POLICY_LIMITS;
+    if (!(bytes instanceof Uint8Array) || bytes.byteLength > limits.maxBytes) refuse('invalid-input');
+    const raw = new TextDecoder('utf-8', { fatal: true, ignoreBOM: true }).decode(bytes);
+    const received = record(parseBoundedJson(raw, limits));
+    const prepared = projectProfileControls(profile, received);
+    const { messages, ...controls } = prepared;
+    if (!same(controls, profile.baseline, limits) || !Array.isArray(messages) || messages.length > limits.maxHistoryMessages)
+      refuse('scaffolding-mismatch');
+    const options = { ...detectors, limits, binding: profile.input.binding };
+    try { if (options.scanSecrets(raw)) refuse('secret-excluded'); }
+    catch (error) { if (error instanceof Refusal) throw error; refuse('detector-failed'); }
+    screen(received, options);
+    screen(prepared, options);
+    const logical = projectOrderedDesignRequest(received, bindings);
+    const wholeView = { toolUseId: profile.transcript.logical.toolUseId, canonicalText: logical.wholeReply };
+    const logicalPrepared = { ...prepared, messages: logical.request.messages };
+    finish(screenSteps(logical.request, options, [], wholeView));
+    finish(screenSteps(logicalPrepared, options, [], wholeView));
+    const identity = (text: string) => ({ bytes: Buffer.byteLength(text, 'utf8'), sha256: sha256(text) });
+    const checks = { received: identity(raw), forwarded: identity(canonical(prepared, limits)), logical: identity(canonical(logicalPrepared, limits)) };
+    const transcriptSha256 = sha256(canonical({ ...checks, logicalReceived: identity(canonical(logical.request, limits)),
+      manifestSha256: bindings.plan.manifestSha256, profileSha256: profile.digest }, limits));
+    return deepFreeze({ ...checks, transcriptSha256 });
+  });
+}
+
 function summary(value: unknown, origins: readonly SessionOrigin[], options: SessionPolicyOptions): SessionAdmission {
   const encoded = canonical(value, options.limits);
   const result = { digest: sha256(encoded), bytes: Buffer.byteLength(encoded, 'utf8'),
@@ -394,8 +448,7 @@ function* registrationSteps(state: SessionEgressState, input: SessionOrigin): Sc
   if (receipt.kind === 'tool-result') {
     const call = s.pendingCalls.find(c => c.id === receipt.toolUseId);
     if (s.awaitingResponse || !call || call.name !== receipt.toolName || !same(call.input, receipt.toolInput, s.options.limits) || s.receipts.some(r => r.kind === 'tool-result' && r.toolUseId === receipt.toolUseId)) refuse('tool-refused');
-    // The installed registry enables no ordered profile. A numbered virtual
-    // result must never take the generic origin/receipt path.
+    // A numbered virtual result requires the protected ordered receipt path.
     if (receipt.toolName === 'mcp__syzygy__artifact_read' && isOrderedDesignPartPath(receipt.toolInput?.path)) refuse('tool-refused');
     const file = designViewPath(receipt);
     if (file !== null) {
@@ -484,12 +537,9 @@ export function validateSessionRequest(state: SessionEgressState, bytes: Uint8Ar
     if (options.profile !== undefined) {
       // Discarded metadata is screened in ephemeral processing, never stored as an origin.
       screen(request, options);
-      const projection = projectSessionProfileMetadata(options.profile, request.metadata);
-      if (!projection.ok) refuse('metadata-refused');
       // Explicit host-owned control. The observed CLI input omits tool_choice;
       // no CLI value can override or expand the selected single-call boundary.
-      if (Object.hasOwn(request, 'tool_choice')) refuse('scaffolding-mismatch');
-      request = { ...request, metadata: projection.value.metadata, tool_choice: options.profile.baseline.tool_choice };
+      request = projectProfileControls(options.profile, request);
       if (s.history.length === 0 && !same(wireMessages[0], options.profile.initialMessage, options.limits)) refuse('scaffolding-mismatch');
     }
     const { messages, ...control } = request;

@@ -12,7 +12,7 @@ import { DOSSIER_CONTENT_CLASSES, NO_WORK_ITEM_REASON, recordRunConfig, sourceBi
 import { DOSSIER_POLICY_PATH } from './policy-snapshot.js';
 import { buildDossierScreen } from './screen.js';
 import { loadSessionCredential } from './session-credential.js';
-import { SESSION_CONTENT_CLASSES, SESSION_POLICY_LIMITS } from './session-egress-policy.js';
+import { screenOrderedDesignRequest, SESSION_CONTENT_CLASSES, SESSION_POLICY_LIMITS } from './session-egress-policy.js';
 import { startSessionBroker } from './session-broker.js';
 import { sessionHostTestPort, type SessionHost, type SessionHostOptions } from './session-host.js';
 import { createOrderedDesignSessionProfile, createSessionProfile, DEFAULT_SESSION_MODEL, isOrderedDesignSessionProfile, isSessionProfile,
@@ -300,7 +300,7 @@ async function runNativeOrderedFixture(scenario: OrderedScenario) {
   const audit: SessionAuditEvent[] = [], forwarded: string[] = [], delivered: string[] = [], faults: string[] = [], cachePositions: number[][] = [];
   const receivedParts: string[] = [];
   const responseUsage: SessionResponseUsage[] = [];
-  let checked = 0, terminalResponseDecoded = false, verdictValidated = false;
+  let checked = 0, screened = 0, terminalResponseDecoded = false, verdictValidated = false;
   const relay = await sessionRelayTestPort(async input => {
     const index = forwarded.length;
     if (input.route !== '/v1/messages?beta=true' || index >= 5) throw new Error('own route refused');
@@ -355,9 +355,28 @@ async function runNativeOrderedFixture(scenario: OrderedScenario) {
             receivedParts.push((JSON.parse(result) as { text: string }).text);
           }
         }
+        const body = Buffer.from(orderedCanonical({ ...normalized, messages }));
+        if (checked > 0) {
+          const result = (index: number) => ({ toolUseId: steps[index]!.call.id, usage: responseUsage[index]! });
+          const ordered = { profile, plan, envelope: view.bytes, prepared: result(0),
+            parts: steps.slice(1, Math.min(checked, 3)).map((_, index) => result(index + 1)),
+            ...(checked === steps.length ? { acknowledgment: { ...result(3), input: submit } } : {}) };
+          const detectors = { scanSecrets: (text: string) => screen.screenSecrets(text) !== undefined,
+            scanDesignView: (text: string) => screen.screenBody(text) !== undefined };
+          const admission = screenOrderedDesignRequest(bytes, ordered, detectors);
+          if (!admission.ok) throw new Error(`ordered detector branches refused (${admission.code})`);
+          if (!sameWireValue(admission.value.received, { bytes: bytes.length, sha256: sha256(bytes) })
+            || !sameWireValue(admission.value.forwarded, { bytes: body.length, sha256: sha256(body) })
+            || admission.value.logical.sha256 === admission.value.forwarded.sha256) throw new Error('ordered detector identities differ from wire');
+          screened++;
+          if (scenario === 'ready' && checked === 1) {
+            const refuseOriginal = screenOrderedDesignRequest(bytes, ordered,
+              { ...detectors, scanSecrets: text => text === original.toString('utf8') });
+            if (refuseOriginal.ok || refuseOriginal.code !== 'secret-excluded') throw new Error('whole original missing before first part');
+          }
+        }
         cachePositions.push(caches);
         const prior = checked === 0 ? undefined : steps[checked - 1];
-        const body = Buffer.from(orderedCanonical({ ...normalized, messages }));
         checked++;
         return { ok: true, body, admission: { digest: sha256(body), bytes: body.length, classes: ['derived-composites'], originIds: ['own:fixture'] },
           consumedToolResults: prior === undefined ? [] : [{ receiptId: `own:receipt:${checked - 1}`, toolUseId: prior.call.id,
@@ -400,7 +419,7 @@ async function runNativeOrderedFixture(scenario: OrderedScenario) {
   }, () => { faults.push('own broker fault'); });
   cleanup.push(broker.close);
   const result = await runOwnedPreparedCommand(launch, preparation.commandSha256);
-  return { result, checked, terminalResponseDecoded, verdictValidated, audit, forwarded, delivered, faults, cachePositions,
+  return { result, checked, screened, terminalResponseDecoded, verdictValidated, audit, forwarded, delivered, faults, cachePositions,
     reconstructed: receivedParts.join('') === new TextDecoder().decode(view.bytes), plan };
 }
 
@@ -535,16 +554,29 @@ describe('prepared private CLI launch',()=>{
     if (scenario === 'out-of-order') {
       expect(observed.faults, evidence).toEqual(['fixture response order refused']);
       expect(observed.delivered).toHaveLength(1);
+      expect(observed.screened).toBe(1);
       expect(observed.cachePositions).toEqual([[], [0]]);
       expect(observed.audit.at(-1)?.event).toBe('response-refused');
       expect(observed.terminalResponseDecoded).toBe(false);
       expect(observed.verdictValidated).toBe(false);
       return;
     }
+    if (scenario === 'stale-verdict') {
+      expect(observed.faults, evidence).toEqual(['ordered detector branches refused (invalid-input)']);
+      expect(observed.checked).toBe(4);
+      expect(observed.screened).toBe(3);
+      expect(observed.forwarded).toHaveLength(4);
+      expect(observed.delivered).toHaveLength(4);
+      expect(observed.reconstructed).toBe(true);
+      expect(observed.verdictValidated).toBe(false);
+      expect(observed.terminalResponseDecoded).toBe(false);
+      return;
+    }
     expect(observed.checked).toBe(5);
+    expect(observed.screened).toBe(4);
     expect(observed.delivered.slice(1, 3)).toEqual(observed.plan.replies.map(reply => reply.sha256));
     expect(observed.reconstructed).toBe(true);
-    expect(observed.verdictValidated).toBe(scenario !== 'stale-verdict');
+    expect(observed.verdictValidated).toBe(true);
     const sends = observed.audit.filter(event => event.event === 'send-outcome');
     expect(sends.map(event => event.admission?.digest)).toEqual(observed.forwarded);
     expect(sends.every(event => event.received?.digest !== event.admission?.digest)).toBe(true);
@@ -710,7 +742,15 @@ describe('prepared private CLI launch',()=>{
     const disappearing = Array.from({ length: disappearingEntries }, (_, index) => `own-disappearing-entry-${index}`);
     const retained = 'own-retained-entry';
     const preparation = await prepareRestrictedUrlSession(f.launch), host = await f.start();
-    let removed = 0, inspectedRetained = false;
+    const work = f.launch.view.workDirectory;
+    let seeded = false, removed = 0, inspectedRetained = false;
+    filesystem.beforeOpen = async file => {
+      if (file !== work || seeded) return;
+      seeded = true;
+      // The launch requires an empty view. Seed at the first sample's open,
+      // before its directory enumeration can observe a partial fixture.
+      await Promise.all([...disappearing, retained].map(name => writeFile(path.join(work, name), 'owned')));
+    };
     filesystem.beforeLstat = async file => {
       if (typeof file !== 'string' || !file.startsWith('/proc/self/fd/')) return;
       if (disappearing.includes(path.basename(file))) {
@@ -722,8 +762,6 @@ describe('prepared private CLI launch',()=>{
     };
     const child = await launchRestrictedUrlSession({ preparation, host });
     cleanup.push(child.stop);
-    for (const name of disappearing) await writeFile(path.join(f.launch.view.workDirectory, name), 'temporary');
-    await writeFile(path.join(f.launch.view.workDirectory, retained), 'retained');
     const outcome = await child.finished;
     expect(removed).toBe(disappearingEntries);
     expect(outcome).toMatchObject({ outcome: expected, exitCode: expected === 'exited' ? 0 : null,
@@ -740,11 +778,7 @@ describe('prepared private CLI launch',()=>{
     const f = await launchFixture();
     const work = f.launch.view.workDirectory, names = new Set(Array.from({ length: directories }, (_, index) => `own-vanishing-dir-${index}`));
     const preparation = await prepareRestrictedUrlSession(f.launch), host = await f.start();
-    const child = await launchRestrictedUrlSession({ preparation, host });
-    cleanup.push(child.stop);
-    for (const name of names) await mkdir(path.join(work, name));
     const retained = 'own-retained-dir-entry';
-    await writeFile(path.join(work, retained), 'retained');
     const enumerated = new Set<string>();
     let rootOpens = 0, childRemovals = 0, inspectedRetainedAfterRetry = false;
     filesystem.beforeLstat = async file => {
@@ -756,7 +790,10 @@ describe('prepared private CLI launch',()=>{
     filesystem.beforeOpen = async file => {
       if (file === work) {
         rootOpens++;
-        if (missing === 'root' && rootOpens === 1) throw Object.assign(new Error('own missing work root'), { code: 'ENOENT' });
+        if (rootOpens === 1) {
+          if (missing === 'root') throw Object.assign(new Error('own missing work root'), { code: 'ENOENT' });
+          await Promise.all([...Array.from(names, name => mkdir(path.join(work, name))), writeFile(path.join(work, retained), 'retained')]);
+        }
       } else if (typeof file === 'string' && file.startsWith('/proc/self/fd/') && names.has(path.basename(file))) {
         expect(enumerated.has(path.basename(file))).toBe(true);
         await rmdir(file);
@@ -764,6 +801,8 @@ describe('prepared private CLI launch',()=>{
         if (missing === 'replaced child') await writeFile(file, 'not a directory', { flag: 'wx' });
       }
     };
+    const child = await launchRestrictedUrlSession({ preparation, host });
+    cleanup.push(child.stop);
     const result = await child.finished;
     expect(childRemovals).toBe(removed);
     expect(result).toMatchObject({ outcome, exitCode: outcome === 'exited' ? 0 : null,

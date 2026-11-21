@@ -1,6 +1,9 @@
 import { describe, expect, it } from 'vitest';
+import { encodeCanonicalJson } from '@syzygy/polaris-generation-core/live';
 import { sha256 } from '@syzygy/support';
 import { isOrderedDesignPartPath, materializeOrderedDesignPart, planOrderedDesignBytes } from './url-design-delivery.js';
+import { createOrderedDesignSessionProfile, DEFAULT_SESSION_MODEL } from './session-profile.js';
+import { projectOrderedDesignRequest } from './url-ordered-design-request.js';
 
 /** Owned canonical transport vector 253. The expected encoded counts and
  * hashes below are retained values from the independently verified vector. */
@@ -28,6 +31,57 @@ function vector() {
   };
 }
 const REFUSAL = 'url-ordered-design-plan-refused';
+const PROJECT_REFUSAL = 'url-ordered-design-request-refused';
+
+function requestProjectionFixture(partResults: number) {
+  const input = vector();
+  const sessionId = '12345678-1234-4234-8234-123456789012';
+  const binding = { ...input.binding, provider: 'anthropic', session: sessionId };
+  const compiled = createOrderedDesignSessionProfile({
+    binding: { run: binding.run, sourceBinding: sha256('own source binding'), policy: binding.basePolicySha256,
+      role: 'design', provider: binding.provider, model: DEFAULT_SESSION_MODEL },
+    sessionId, systemPrompt: 'Review the owned fixture.', initialPrompt: 'Inspect the original design.', utcDate: '2026-11-21', kernelRelease: '7.0-fixture',
+  });
+  if (!compiled.ok) throw new Error('own ordered design profile');
+  const { profile } = compiled.value;
+  const json = (value: unknown) => encodeCanonicalJson(value, profile.transcript.requestLimits);
+  const payload = 'x'.repeat(36_000);
+  const original = { bytes: payload.length, sha256: sha256(payload) };
+  const envelope = Buffer.from(json({ encoding: binding.encoding, format: 'polaris-dossier-url-design-inert-view/1',
+    originalBytes: original.bytes, originalSha256: original.sha256, payload, payloadBytes: payload.length, payloadSha256: original.sha256 }));
+  const { partBytes, partCount, replyBytes, preparedBytes } = profile.transcript.partition;
+  const planInput = { ...input, envelope, envelopeSha256: sha256(envelope), original,
+    instructionProfileSha256: sha256(profile.input.systemPrompt), limits: { partBytes, partCount, replyBytes, preparedBytes },
+    binding: { ...binding, profileSha256: profile.digest } };
+  const plan = planOrderedDesignBytes(planInput);
+  const usage = { inputTokens: 2, outputTokens: 3 };
+  const prepared = { toolUseId: 'toolu_fixture_poll', usage };
+  const text = (value: string) => ({ type: 'text', text: value });
+  const result = (id: string, reply: unknown, cache: boolean) => ({
+    type: 'tool_result', tool_use_id: id, content: [text(json(reply) + '\n'),
+      text('<system-reminder>\n<total_tokens>14999995 tokens left</total_tokens>\n</system-reminder>')],
+    ...(cache ? { cache_control: { type: 'ephemeral', ttl: '1h' } } : {}),
+  });
+  const call = (id: string, name: string, input: unknown) => ({ type: 'tool_use', id, name, input });
+  const preparedMessage = { role: 'user', content: [result(prepared.toolUseId, { kind: 'session-control', ok: true, state: 'events',
+    events: [{ event: 'design-round-prepared', ...plan.prepared }] }, partResults === 0), text('after prepared')] };
+  const messages: { role: string; content: Record<string, unknown>[] }[] = [
+    { role: 'user', content: [text('before preparation')] },
+    { role: 'assistant', content: [call(prepared.toolUseId, 'mcp__syzygy__dossier_step', { argv: ['dossier', 'poll', binding.run] })] },
+    preparedMessage,
+  ];
+  const parts = plan.manifest.parts.slice(0, partResults).map((part, index) => {
+    const toolUseId = `toolu_fixture_part_${index + 1}`;
+    messages.push({ role: 'assistant', content: [text(`before call ${index}`),
+      call(toolUseId, 'mcp__syzygy__artifact_read', { path: part.path }), text(`after call ${index}`)] });
+    messages.push({ role: 'user', content: [text(`before result ${index}`),
+      result(toolUseId, JSON.parse(materializeOrderedDesignPart(plan, envelope, part.path)), index === partResults - 1),
+      text(`after result ${index}`)] });
+    return { toolUseId, usage };
+  });
+  messages.push({ role: 'assistant', content: [text('after all parts')] });
+  return { actual: { metadata: { user_id: 'owned' }, messages }, bindings: { profile, plan, envelope, prepared, parts }, preparedMessage, planInput };
+}
 
 describe('ordered URL design byte plan', () => {
   it('reproduces the canonical vector with ordered repeated parents and separate reply identities', () => {
@@ -117,6 +171,49 @@ describe('ordered URL design byte plan', () => {
     for (const path of ['round-01/design-view-part-1.json', 'round-1/design-view-part-01.json', 'round-1/design-view-part-0.json',
       'round-1/design-view-part-1023.json', 'round-1/design-view-part-1.json\n', 'round-1/../design-view-part-1.json']) {
       expect(isOrderedDesignPartPath(path)).toBe(false);
+    }
+  });
+
+  it.each([0, 1, 2])('projects the complete sealed view at prefix %i and preserves all surrounding blocks', partResults => {
+    const { actual, bindings, preparedMessage } = requestProjectionFixture(partResults);
+    const original = structuredClone(actual);
+    const { request, wholeReply } = projectOrderedDesignRequest(actual, bindings);
+    const { messages, ...control } = request;
+    expect(control).toEqual({ metadata: { user_id: 'owned' } });
+    expect(actual).toEqual(original);
+    const expected = [
+      ...original.messages.slice(0, 2),
+      { role: 'user', content: [preparedMessage.content[0]] },
+      { role: 'assistant', content: [{ type: 'tool_use', id: 'toolu_syzygy_035_logical_view', name: 'mcp__syzygy__artifact_read',
+        input: { path: 'round-1/design-view.json' } }] },
+      { role: 'user', content: [{ type: 'tool_result', tool_use_id: 'toolu_syzygy_035_logical_view', content: [
+        { type: 'text', text: wholeReply + '\n' },
+        { type: 'text', text: '<system-reminder>\n<total_tokens>15000000 tokens left</total_tokens>\n</system-reminder>' },
+      ] }] },
+      { role: 'user', content: [preparedMessage.content[1]] },
+      ...original.messages.slice(3, -1).map(message => ({ ...message, content: message.content.filter(block => block.type === 'text') })),
+      original.messages.at(-1),
+    ];
+    expect(messages).toEqual(expected);
+    expect(JSON.parse(wholeReply)).toEqual({ kind: 'artifact', ok: true, path: 'round-1/design-view.json',
+      text: bindings.envelope.toString('utf8'), sha256: bindings.plan.manifest.envelopeSha256 });
+  });
+
+  it('refuses an extra transfer, an unverified result, preparation drift or an absent later envelope byte', () => {
+    const { actual, bindings, planInput } = requestProjectionFixture(1);
+    const changed = Buffer.from(bindings.envelope);
+    changed[changed.length - 10] = 0x20;
+    expect(() => projectOrderedDesignRequest(actual, { ...bindings, envelope: changed })).toThrow(REFUSAL);
+    expect(() => projectOrderedDesignRequest(actual, { ...bindings, plan: { ...bindings.plan } })).toThrow(REFUSAL);
+    const repartitioned = planOrderedDesignBytes({ ...planInput, limits: { ...planInput.limits, partBytes: 30_000 } });
+    expect(() => projectOrderedDesignRequest(actual, { ...bindings, plan: repartitioned })).toThrow(REFUSAL);
+    expect(() => projectOrderedDesignRequest(actual, { ...bindings, parts: [] })).toThrow(PROJECT_REFUSAL);
+    for (const messageAt of [2, 3, 4]) {
+      const messages = structuredClone(actual.messages);
+      const blockAt = messageAt === 2 ? 0 : 1;
+      const message = messages[messageAt]!;
+      message.content[blockAt] = { ...message.content[blockAt]!, unauthorized: true };
+      expect(() => projectOrderedDesignRequest({ ...actual, messages }, bindings)).toThrow(PROJECT_REFUSAL);
     }
   });
 });
