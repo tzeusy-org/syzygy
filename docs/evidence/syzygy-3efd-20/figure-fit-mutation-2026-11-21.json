@@ -1,0 +1,291 @@
+{
+  "format": "mutation-run/1",
+  "bead": "syzygy-3efd.20",
+  "date": "2026-11-21",
+  "ranAt": "123c71e3b8429472bfb45f9543fd344e89b9c979",
+  "subject": {
+    "packages/polaris-dossier/src/figure-fit.ts": "9d3fa0b7f34436866c4dac972958f1d47b6631474a974265460cb1949faa0e18",
+    "packages/polaris-dossier/src/check.ts": "90964226256423127884dd4fbb585cdcdc0525831c3e0e863403186e62f7bf9e",
+    "packages/polaris-dossier/src/figure-fit.test.ts": "2d093c99dcf0a7eea8fbebc4b833427171739721ebdcf10a180decb8cb66826e",
+    "packages/polaris-dossier/src/check.test.ts": "f883cf837acd84e658ad2f23bd5249ed93fa7be1f7e593b6aa3d263a6fa8de70",
+    "packages/polaris-dossier/src/inventory.test.ts": "8bc855b7798642c554eee4a52353bd322d076dfdca6e8060adfec18193efe402",
+    "apps/three-surface-poc/src/polaris-generation/diagram-layout.test.ts": "645cbba97a52db4a53c7e14406140d13661406e1169fc2e79ebc5a2c05b16192"
+  },
+  "command": "npx vitest run packages/polaris-dossier/src/figure-fit.test.ts apps/three-surface-poc/src/polaris-generation/diagram-layout.test.ts packages/polaris-dossier/src/check.test.ts packages/polaris-dossier/src/render.test.ts packages/polaris-dossier/src/reader-standards.test.ts packages/polaris-dossier/src/draft-schema.test.ts packages/polaris-dossier/src/brief.test.ts --reporter=json",
+  "method": "each mutant replaces old with new exactly once in file, runs the command, restores the file; failedTests records each failing test and the first line of its message",
+  "unreached": "the composition-root wiring in apps/syzygy/src/main.ts (layoutFigure passed to the dossier and polaris CLIs) is not mutated: no hermetic test drives main.ts; figureLaidOutWidth itself is pinned against the drawn SVG width in diagram-layout.test.ts",
+  "mutants": [
+    {
+      "id": "ff-no-shrink",
+      "file": "packages/polaris-dossier/src/figure-fit.ts",
+      "old": "return laidOut === SHRINKING_WIDTH_PX ? Math.min(laidOut, Math.max(column, SHRINK_FLOOR_PX)) : laidOut;",
+      "new": "return laidOut;",
+      "killed": true,
+      "failedTests": [
+        {
+          "test": "reports the shrinking three-column width at 390 px for both rules, and fits it at 1440 px",
+          "message": "AssertionError: expected [ { diagram: 'w1048', \u2026(7) }, \u2026(1) ] to deeply equal [ { diagram: 'w1048', \u2026(7) } ]"
+        },
+        {
+          "test": "writes figureFit into checks/rev-<n>.json and onto the report, byte-identical across two checks of the same draft",
+          "message": "AssertionError: expected { textPx: 13, minTextPx: 11, \u2026(3) } to deeply equal { textPx: 13, minTextPx: 11, \u2026(3) }"
+        }
+      ],
+      "killedBy": "assertion"
+    },
+    {
+      "id": "ff-shrink-to-column",
+      "file": "packages/polaris-dossier/src/figure-fit.ts",
+      "old": "Math.min(laidOut, Math.max(column, SHRINK_FLOOR_PX))",
+      "new": "Math.min(laidOut, column)",
+      "killed": true,
+      "failedTests": [
+        {
+          "test": "reports the shrinking three-column width at 390 px for both rules, and fits it at 1440 px",
+          "message": "AssertionError: expected [ { diagram: 'w1048', \u2026(7) } ] to deeply equal [ { diagram: 'w1048', \u2026(7) } ]"
+        },
+        {
+          "test": "writes figureFit into checks/rev-<n>.json and onto the report, byte-identical across two checks of the same draft",
+          "message": "AssertionError: expected { textPx: 13, minTextPx: 11, \u2026(3) } to deeply equal { textPx: 13, minTextPx: 11, \u2026(3) }"
+        }
+      ],
+      "killedBy": "assertion"
+    },
+    {
+      "id": "ff-width-ge",
+      "file": "packages/polaris-dossier/src/figure-fit.ts",
+      "old": "if (drawnPx > columnPx) failed.push('width');",
+      "new": "if (drawnPx >= columnPx) failed.push('width');",
+      "killed": true,
+      "failedTests": [
+        {
+          "test": "reports nothing for a figure that fits both columns, and counts it examined",
+          "message": "AssertionError: expected { textPx: 13, minTextPx: 11, \u2026(3) } to deeply equal { textPx: 13, minTextPx: 11, \u2026(3) }"
+        },
+        {
+          "test": "reports the shrinking three-column width at 390 px for both rules, and fits it at 1440 px",
+          "message": "AssertionError: expected [ { diagram: 'w1048', \u2026(7) }, \u2026(1) ] to deeply equal [ { diagram: 'w1048', \u2026(7) } ]"
+        },
+        {
+          "test": "writes figureFit into checks/rev-<n>.json and onto the report, byte-identical across two checks of the same draft",
+          "message": "AssertionError: expected { textPx: 13, minTextPx: 11, \u2026(3) } to deeply equal { textPx: 13, minTextPx: 11, \u2026(3) }"
+        }
+      ],
+      "killedBy": "assertion"
+    },
+    {
+      "id": "ff-text-le",
+      "file": "packages/polaris-dossier/src/figure-fit.ts",
+      "old": "if (text < FIGURE_MIN_TEXT_PX) failed.push('text-size');",
+      "new": "if (text <= FIGURE_MIN_TEXT_PX + 0.7) failed.push('text-size');",
+      "killed": false,
+      "failedTests": [],
+      "equivalent": true,
+      "reason": "under the stated constants the only effective text sizes are 13, 11.98 (1048 px at 1440) and 10.67 (1048 px at 390), so any threshold in (10.67, 11.98] reports the same entries; the mutant moves it to 11.7 and is equivalent at this version",
+      "killedBy": "equivalent"
+    },
+    {
+      "id": "ff-text-unscaled",
+      "file": "packages/polaris-dossier/src/figure-fit.ts",
+      "old": "const text = FIGURE_TEXT_PX * drawnPx / laidOut;",
+      "new": "const text = FIGURE_TEXT_PX;",
+      "killed": true,
+      "failedTests": [
+        {
+          "test": "reports the shrinking three-column width at 390 px for both rules, and fits it at 1440 px",
+          "message": "AssertionError: expected [ { diagram: 'w1048', \u2026(7) } ] to deeply equal [ { diagram: 'w1048', \u2026(7) } ]"
+        },
+        {
+          "test": "writes figureFit into checks/rev-<n>.json and onto the report, byte-identical across two checks of the same draft",
+          "message": "AssertionError: expected { textPx: 13, minTextPx: 11, \u2026(3) } to deeply equal { textPx: 13, minTextPx: 11, \u2026(3) }"
+        }
+      ],
+      "killedBy": "assertion"
+    },
+    {
+      "id": "ff-round-down",
+      "file": "packages/polaris-dossier/src/figure-fit.ts",
+      "old": "Math.round(Math.abs(value) * 100) / 100",
+      "new": "Math.floor(Math.abs(value) * 100) / 100",
+      "killed": true,
+      "failedTests": [
+        {
+          "test": "reports the shrinking three-column width at 390 px for both rules, and fits it at 1440 px",
+          "message": "AssertionError: expected [ { diagram: 'w1048', \u2026(7) } ] to deeply equal [ { diagram: 'w1048', \u2026(7) } ]"
+        },
+        {
+          "test": "writes figureFit into checks/rev-<n>.json and onto the report, byte-identical across two checks of the same draft",
+          "message": "AssertionError: expected { textPx: 13, minTextPx: 11, \u2026(3) } to deeply equal { textPx: 13, minTextPx: 11, \u2026(3) }"
+        }
+      ],
+      "killedBy": "assertion"
+    },
+    {
+      "id": "ff-count-all",
+      "file": "packages/polaris-dossier/src/figure-fit.ts",
+      "old": "if (!isRecord(diagram) || !isRecord(diagram['disposition']) || diagram['disposition']['kind'] !== 'produced') continue;\n    examined += 1;",
+      "new": "examined += 1;\n    if (!isRecord(diagram) || !isRecord(diagram['disposition']) || diagram['disposition']['kind'] !== 'produced') continue;",
+      "killed": true,
+      "failedTests": [
+        {
+          "test": "examines produced figures only, keeps the draft order, and lists an unlaid figure once as Unknown in its place",
+          "message": "AssertionError: expected { textPx: 13, minTextPx: 11, \u2026(3) } to deeply equal { textPx: 13, minTextPx: 11, \u2026(3) }"
+        },
+        {
+          "test": "lists every produced figure Unknown when no layout is supplied: Unknown, never fitting",
+          "message": "AssertionError: expected { textPx: 13, minTextPx: 11, \u2026(3) } to deeply equal { textPx: 13, minTextPx: 11, \u2026(3) }"
+        },
+        {
+          "test": "examines nothing in a draft with no diagrams or a malformed diagrams member",
+          "message": "AssertionError: expected { textPx: 13, minTextPx: 11, \u2026(3) } to deeply equal { textPx: 13, minTextPx: 11, \u2026(3) }"
+        }
+      ],
+      "killedBy": "assertion"
+    },
+    {
+      "id": "ff-no-layout-fits",
+      "file": "packages/polaris-dossier/src/figure-fit.ts",
+      "old": "if (layout === undefined) { entries.push({ diagram: id, unknown: NO_LAYOUT }); continue; }",
+      "new": "if (layout === undefined) continue;",
+      "killed": true,
+      "failedTests": [
+        {
+          "test": "lists every produced figure Unknown when no layout is supplied: Unknown, never fitting",
+          "message": "AssertionError: expected { textPx: 13, minTextPx: 11, \u2026(3) } to deeply equal { textPx: 13, minTextPx: 11, \u2026(3) }"
+        },
+        {
+          "test": "records each produced figure Unknown when the check is given no layout",
+          "message": "AssertionError: expected [] to deeply equal [ { diagram: 'flow-1', \u2026(1) } ]"
+        }
+      ],
+      "killedBy": "assertion"
+    },
+    {
+      "id": "ff-throw-fits",
+      "file": "packages/polaris-dossier/src/figure-fit.ts",
+      "old": "      entries.push({ diagram: id, unknown: LAYOUT_FAILED });\n      continue;",
+      "new": "      continue;",
+      "killed": true,
+      "failedTests": [
+        {
+          "test": "examines produced figures only, keeps the draft order, and lists an unlaid figure once as Unknown in its place",
+          "message": "AssertionError: expected { textPx: 13, minTextPx: 11, \u2026(3) } to deeply equal { textPx: 13, minTextPx: 11, \u2026(3) }"
+        }
+      ],
+      "killedBy": "assertion"
+    },
+    {
+      "id": "ff-nonfinite-ok",
+      "file": "packages/polaris-dossier/src/figure-fit.ts",
+      "old": "if (!Number.isFinite(laidOut) || laidOut <= 0) {",
+      "new": "if (false) {",
+      "killed": true,
+      "failedTests": [
+        {
+          "test": "treats a non-finite or non-positive width as Unknown",
+          "message": "AssertionError: expected [] to deeply equal [ { diagram: 'w1', \u2026(1) } ]"
+        }
+      ],
+      "killedBy": "assertion"
+    },
+    {
+      "id": "ff-viewports-swapped",
+      "file": "packages/polaris-dossier/src/figure-fit.ts",
+      "old": "[{ viewportPx: 1440, columnPx: 966 }, { viewportPx: 390, columnPx: 261 }]",
+      "new": "[{ viewportPx: 390, columnPx: 261 }, { viewportPx: 1440, columnPx: 966 }]",
+      "killed": true,
+      "failedTests": [
+        {
+          "test": "reports nothing for a figure that fits both columns, and counts it examined",
+          "message": "AssertionError: expected { textPx: 13, minTextPx: 11, \u2026(3) } to deeply equal { textPx: 13, minTextPx: 11, \u2026(3) }"
+        },
+        {
+          "test": "reports a figure wider than both columns that does not shrink, at both viewports, in viewport order",
+          "message": "AssertionError: expected [ { diagram: 'w1200', \u2026(7) }, \u2026(1) ] to deeply equal [ { diagram: 'w1200', \u2026(7) }, \u2026(1) ]"
+        },
+        {
+          "test": "examines produced figures only, keeps the draft order, and lists an unlaid figure once as Unknown in its place",
+          "message": "AssertionError: expected { textPx: 13, minTextPx: 11, \u2026(3) } to deeply equal { textPx: 13, minTextPx: 11, \u2026(3) }"
+        },
+        {
+          "test": "lists every produced figure Unknown when no layout is supplied: Unknown, never fitting",
+          "message": "AssertionError: expected { textPx: 13, minTextPx: 11, \u2026(3) } to deeply equal { textPx: 13, minTextPx: 11, \u2026(3) }"
+        },
+        {
+          "test": "examines nothing in a draft with no diagrams or a malformed diagrams member",
+          "message": "AssertionError: expected { textPx: 13, minTextPx: 11, \u2026(3) } to deeply equal { textPx: 13, minTextPx: 11, \u2026(3) }"
+        },
+        {
+          "test": "writes figureFit into checks/rev-<n>.json and onto the report, byte-identical across two checks of the same draft",
+          "message": "AssertionError: expected { textPx: 13, minTextPx: 11, \u2026(3) } to deeply equal { textPx: 13, minTextPx: 11, \u2026(3) }"
+        }
+      ],
+      "killedBy": "assertion"
+    },
+    {
+      "id": "ck-not-stored",
+      "file": "packages/polaris-dossier/src/check.ts",
+      "old": "`${JSON.stringify(stored, null, 2)}\\n`",
+      "new": "`${JSON.stringify(record, null, 2)}\\n`",
+      "killed": true,
+      "failedTests": [
+        {
+          "test": "writes figureFit into checks/rev-<n>.json and onto the report, byte-identical across two checks of the same draft",
+          "message": "AssertionError: expected undefined to deeply equal { textPx: 13, minTextPx: 11, \u2026(3) }"
+        }
+      ],
+      "killedBy": "assertion"
+    },
+    {
+      "id": "ck-inventory-too",
+      "file": "packages/polaris-dossier/src/check.ts",
+      "old": "const fit = plan.command === 'check' && parseFault === null ?",
+      "new": "const fit = parseFault === null ?",
+      "killed": true,
+      "failedTests": [
+        {
+          "test": "checks the inventory as a draft is checked, freezes it outside the session directory and records its session",
+          "message": "AssertionError: expected { command: 'inventory-check', \u2026(23) } to not have property \"figureFit\""
+        }
+      ],
+      "command": "the base command with packages/polaris-dossier/src/inventory.test.ts added",
+      "firstRun": {
+        "command": "the base command",
+        "killed": false,
+        "note": "survived: the base command ran no inventory check; the inventory test asserts the absence, so it was re-run with that file added"
+      },
+      "killedBy": "assertion"
+    },
+    {
+      "id": "ck-unparsed-too",
+      "file": "packages/polaris-dossier/src/check.ts",
+      "old": "const fit = plan.command === 'check' && parseFault === null ? figureFit(doc, deps.layoutFigure)",
+      "new": "const fit = plan.command === 'check' ? figureFit(doc, deps.layoutFigure)",
+      "killed": true,
+      "failedTests": [
+        {
+          "test": "writes no figureFit for a draft that does not parse: its absence states nothing about fit",
+          "message": "AssertionError: expected { command: 'check', \u2026(24) } to not have property \"figureFit\""
+        }
+      ],
+      "killedBy": "assertion"
+    },
+    {
+      "id": "ck-port-dropped",
+      "file": "packages/polaris-dossier/src/check.ts",
+      "old": "figureFit(doc, deps.layoutFigure)",
+      "new": "figureFit(doc, undefined)",
+      "killed": true,
+      "failedTests": [
+        {
+          "test": "writes figureFit into checks/rev-<n>.json and onto the report, byte-identical across two checks of the same draft",
+          "message": "AssertionError: expected { textPx: 13, minTextPx: 11, \u2026(3) } to deeply equal { textPx: 13, minTextPx: 11, \u2026(3) }"
+        }
+      ],
+      "killedBy": "assertion"
+    }
+  ],
+  "killed": 14,
+  "equivalent": 1,
+  "total": 15
+}
