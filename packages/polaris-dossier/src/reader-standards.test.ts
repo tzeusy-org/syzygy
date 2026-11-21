@@ -85,6 +85,26 @@ describe('reader advice: the counted standards', () => {
     expect(readerAdvice(doc).advisories).toEqual([{ standard: 'RS-16', at: '$.sections[1]', detail: expect.stringContaining('"b"') }]);
   });
 
+  // syzygy-3efd.17: an edge whose cited files touch neither endpoint's.
+  it('RS-17 locality: an edge citing no file either endpoint cites, and never one that shares a file with an end', () => {
+    const cite = (path: string, line = 1) => ({ id: `c-${path}-${line}`, path, startLine: line, endLine: line });
+    const node = (id: string, ...paths: string[]) => ({ id, label: id, epistemic: 'inferred', citations: paths.map((p) => cite(p)) });
+    const edge = (id: string, from: string, to: string, ...paths: string[]) => ({ id, from, to, label: id, epistemic: 'inferred', citations: paths.map((p) => cite(p, 9)) });
+    const doc = { sections: [section('a', 5)], diagrams: [{ id: 'd', sectionId: 'a',
+      nodes: [node('client', 'src/client.c'), node('server', 'src/server.c'), node('aof', 'src/aof.c', 'src/server.c')],
+      edges: [
+        edge('far', 'client', 'server', 'src/networking.c'),
+        edge('to-end', 'client', 'server', 'src/server.c'),
+        edge('from-end', 'client', 'aof', 'src/client.c', 'src/networking.c'),
+        edge('shared-file-other-lines', 'server', 'aof', 'src/aof.c'),
+        edge('dangling', 'client', 'nowhere', 'src/elsewhere.c'),
+      ] }] };
+    expect(readerAdvice(doc).advisories).toEqual([{
+      standard: 'RS-17', at: '$.diagrams[0].edges[0]',
+      detail: 'the edge "far" cites no file that its node "client" or its node "server" cites: cite where the source shows these two connect, or check that the edge joins the right nodes',
+    }]);
+  });
+
   it('RS-13: a title naming a code symbol, in a section or a deep dive', () => {
     const doc = { sections: [section('a', 5, 'Inside handleRequest')], deepDives: [{ ...section('dd', 5, 'The aof.c rewrite'), sectionId: 'a' }], diagrams: [diagram('a')] };
     expect(readerAdvice(doc).advisories).toEqual([

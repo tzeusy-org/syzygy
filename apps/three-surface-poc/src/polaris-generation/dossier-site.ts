@@ -193,7 +193,7 @@ export const DOSSIER_THEME_CSS = ':root{--void:#262624;--panel:#30302e;--panel-r
   + '.contents li[data-hue]>a::before{content:"";display:inline-block;width:.6em;height:.6em;border-radius:50%;background:var(--accent);margin-right:.45em;vertical-align:.05em}'
   + '.pole-map,.review-report>summary{font-family:var(--font-serif)}.legend-line{border-top-color:var(--muted)}'
   + 'li.card{background:var(--accent-tint);border-top:3px solid var(--accent)}th{background:color-mix(in srgb,var(--accent) 12%,var(--panel))}ol.steps>li::before{border-color:var(--accent);background:var(--accent-tint)}'
-  + '.run-sentence{margin:.5rem 0;font-size:.9rem;color:var(--muted)}.reading-legend{border:1px solid var(--line);border-radius:10px;padding:.5rem 1rem;margin:0 0 1.5rem;font-size:.85rem;color:var(--muted)}.reading-legend ul{margin:.25rem 0;padding-left:1.2rem}.view-switch{margin:0}.legend-sample{font:600 .9em var(--font-mono)}';
+  + '.run-sentence{margin:.5rem 0;font-size:.9rem;color:var(--muted)}.reading-legend{border:1px solid var(--line);border-radius:10px;padding:.5rem 1rem;margin:0 0 1.5rem;font-size:.85rem;color:var(--muted)}.reading-legend ul{margin:.25rem 0;padding-left:1.2rem}.view-switch{margin:0}.legend-sample{font:600 .9em var(--font-mono)}.diagram-tally{margin:.25rem 0 0;font:.8rem var(--font-mono);color:var(--muted)}';
 
 /** What an operator-agent run adds to every page: its notice, the run disclosure, attributes on `main` and the review-status region. */
 interface PageChrome { readonly notice: string; readonly disclosure: (path: string) => string; readonly mainAttributes: string; readonly region: string }
@@ -542,7 +542,9 @@ export function renderDossierSite(input: DossierSiteInput & { readonly local?: L
     } catch {
       return notice(from, d.id, { kind: 'unresolved', reason: 'diagram could not be rendered inertly', references: [...new Set([...d.nodes, ...d.edges].flatMap(element => element.sourceIds))] });
     }
-    const legend = '<ul class="diagram-legend" aria-label="Line styles"><li><span class="legend-line observed" aria-hidden="true"></span>Solid: observed</li><li><span class="legend-line inferred" aria-hidden="true"></span>Dashed: inferred</li><li><span class="legend-line unknown" aria-hidden="true"></span>Dotted: unknown (label ends “?”)</li></ul>';
+    // The provider mode keeps its fixed legend (its bytes are pinned); an operator-agent figure legends only the styles it draws, with a
+    // tally of its boxes and arrows by marking (syzygy-3efd.17): no figure element is observed there, so "Solid: observed" was false.
+    const legend = local === undefined ? FIXED_DIAGRAM_LEGEND : figureLegend([...d.nodes, ...d.edges].map(element => element.epistemic), d.nodes.length, d.edges.length);
     return `<figure${from.startsWith('poles/') ? '' : hueAttr(index % HUES + 1)}><figcaption>${escape(d.title)}</figcaption><p class="diagram-relationship"><span class="eyebrow">${escape(d.kind)}</span> ${escape(d.relationship)}</p><div class="diagram-scroll">${svg}</div>${legend}<details><summary>Read every component and relationship</summary><ul>${nodeList}</ul><ol>${edgeList}</ol><details class="diagram-source"><summary>Declarative source (Mermaid)</summary><pre>${escape(diagramToMermaid(d))}</pre></details></details></figure>`;
   };
   const topicAttr = (id: string): string => ` data-topics="${escape((topics[id] ?? []).join(' '))}"`;
@@ -837,6 +839,21 @@ const HUES = 6;
 
 /** The appendix page (dossier spec v1.5). */
 const APPENDIX = 'appendix.html';
+
+/** The provider mode's figure legend, whatever the figure draws. */
+const FIXED_DIAGRAM_LEGEND = '<ul class="diagram-legend" aria-label="Line styles"><li><span class="legend-line observed" aria-hidden="true"></span>Solid: observed</li><li><span class="legend-line inferred" aria-hidden="true"></span>Dashed: inferred</li><li><span class="legend-line unknown" aria-hidden="true"></span>Dotted: unknown (label ends “?”)</li></ul>';
+const LEGEND_ENTRIES: readonly (readonly [EpistemicMarking, string])[] = [
+  ['observed', 'Solid: observed'], ['inferred', 'Dashed: inferred'], ['unknown', 'Dotted: unknown (label ends “?”)'],
+];
+const counted = (n: number, one: string, many: string): string => `${n} ${n === 1 ? one : many}`;
+
+/** An operator-agent figure's legend: an entry for each line style the figure draws, in a fixed order, and never one it does not (RFC7-34
+ * legends a used encoding); then one line counting its boxes and arrows by marking. Every count is Syzygy's, from the draft's own marks. */
+export function figureLegend(markings: readonly EpistemicMarking[], boxes: number, arrows: number): string {
+  const count = (m: EpistemicMarking): number => markings.filter(x => x === m).length;
+  const entries = LEGEND_ENTRIES.filter(([m]) => count(m) > 0).map(([m, words]) => `<li><span class="legend-line ${m}" aria-hidden="true"></span>${words}</li>`).join('');
+  return `<ul class="diagram-legend" aria-label="Line styles">${entries}</ul><p class="diagram-tally">${counted(boxes, 'box', 'boxes')} and ${counted(arrows, 'arrow', 'arrows')}: ${count('observed')} observed, ${count('inferred')} inferred, ${count('unknown')} unknown.</p>`;
+}
 
 /** The legend every narrative page carries once (REQ-polaris-generation-034, v1.5), with the control that opens the evidence view. The
  * control is a fragment link and a CSS rule, so it works with scripts off. */
