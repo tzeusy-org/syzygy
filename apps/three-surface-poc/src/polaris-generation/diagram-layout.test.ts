@@ -8,7 +8,7 @@ const edge = (id: string, from: string, to: string) => ({ id, from, to });
  * (`.diagram-scroll` clientWidth, 2026-11-21, syzygy-3efd.19). */
 const STACK_COLUMN = 261;
 const WIDE_COLUMN = 966;
-const MEASURED_58 = { stacked: 118, narrowed: 7, laneLabels: 2132, leaders: 1991, slid: 288 };
+const MEASURED_58 = { stacked: 118, narrowed: 7, narrowedNotes: 0, laneLabels: 2132, leaders: 1991, againstOwn: 0, slid: 288 };
 const MEASURED_DAG12 = [261, 193];
 const place = (layout: ReturnType<typeof layoutDiagram>) => layout.nodes.map(({ id, layer, row, x, y }) => [id, layer, row, x, y]);
 
@@ -195,7 +195,7 @@ describe('layered left-to-right diagram layout', () => {
     it('fits the narrow column at any density: nodes narrow past the lanes the least step holds, and lane labels slide to find a leader (syzygy-3efd.58)', () => {
       let seed = 58;
       const next = (bound: number): number => { seed = (seed * 1103515245 + 12345) % 2147483648; return Math.floor(seed / 65536) % bound; };
-      let stacked = 0, narrowed = 0, laneLabels = 0, leaders = 0, slid = 0;
+      let stacked = 0, narrowed = 0, narrowedNotes = 0, laneLabels = 0, leaders = 0, againstOwn = 0, slid = 0;
       for (let graph = 0; graph < 160; graph++) {
         const ids = Array.from({ length: 3 + next(14) }, (_, i) => `n${i}`);
         const edges = Array.from({ length: 1 + next(ids.length * 4) }, (_, i) => edge(`e${i}`, ids[next(ids.length)]!, ids[next(ids.length)]!));
@@ -212,7 +212,13 @@ describe('layered left-to-right diagram layout', () => {
         const svg = renderDiagramSvg({ nodes: ids.map(id => ({ id, label: id, epistemic: 'inferred' as const })), edges: edges.map(e => ({ ...e, label: 'hands the parsed command onward', epistemic: 'inferred' as const })) }, graph, text => text, READABLE_SPACING);
         assertInertSvg(svg);
         const linked = new Set(edges.flatMap(e => [e.from, e.to]));
-        const boxes = layout.nodes.map(n => ({ left: n.x, right: n.x + layout.nodeWidth, top: n.y, bottom: n.y + 56 + (linked.has(n.id) ? 0 : 24) }));
+        // A narrowed node's note wraps onto two lines (40 px), so it stays inside the node's column.
+        const noteHeight = layout.nodeWidth < 174 ? 40 : 24;
+        if (layout.nodeWidth < 174 && ids.some(id => !linked.has(id))) {
+          narrowedNotes++;
+          expect(svg, `graph ${graph} wrapped note`).toContain('>No relationship</tspan><tspan');
+        }
+        const boxes = layout.nodes.map(n => ({ left: n.x, right: n.x + layout.nodeWidth, top: n.y, bottom: n.y + 56 + (linked.has(n.id) ? 0 : noteHeight) }));
         const groups = [...svg.matchAll(/<g class="edge-text[^"]*">.*?<\/g>/gu)].map(m => m[0]);
         const labels = groups.map(g => /<rect class="edge-label" x="([\d.]+)" y="([\d.]+)" width="([\d.]+)" height="([\d.]+)"/u.exec(g)!).map(m => ({ left: Number(m[1]), top: Number(m[2]), right: Number(m[1]) + Number(m[3]), bottom: Number(m[2]) + Number(m[4]) }));
         expect(labels.filter(l => l.left < 0 || l.right > layout.width), `graph ${graph} off the canvas`).toEqual([]);
@@ -223,15 +229,18 @@ describe('layered left-to-right diagram layout', () => {
           if (e.lead !== true) return;
           laneLabels++;
           if (lines[i]!.includes('class="edge-leader"')) leaders++;
+          // A label already against its own line needs no leader (within 6 px of it).
+          else if (along(e.d, 2000).some(at => Math.hypot(Math.max(labels[i]!.left - at.x, 0, at.x - labels[i]!.right), Math.max(labels[i]!.top - at.y, 0, at.y - labels[i]!.bottom)) < 6)) againstOwn++;
           const centre = (labels[i]!.left + labels[i]!.right) / 2;
           if (Math.abs(centre - e.labelX) > 0.15) { slid++; expect(lines[i], `graph ${graph} ${e.id} slid without a leader`).toContain('class="edge-leader"'); }
         });
       }
-      // The population and the remainder, measured on this seed. Before sliding and narrowing (the syzygy-3efd.19 layout, same seed) 7 of
-      // the 118 graphs were wider than the column and 431 of the 2132 lane labels had no leader; now none is wider and 141 (6.6%) still find
-      // no clear run, all in graphs denser than any named shape (each named shape gets every leader, above). A missing leader is honest; a
+      // The population and the remainder, measured on this seed and in this label order (a slide can depend on the order, so the remainder
+      // is an upper bound). Before sliding and narrowing (the syzygy-3efd.19 layout, same seed) 7 of the 118 graphs were wider than the
+      // column and 431 of the 2132 lane labels had no leader. Now none is wider; the labels with no leader that are not against their own
+      // line are the measured remainder, in these random graphs (each named shape above gets every leader). A missing leader is honest; a
       // wrong one would mislead.
-      expect({ stacked, narrowed, laneLabels, leaders, slid }).toEqual(MEASURED_58);
+      expect({ stacked, narrowed, narrowedNotes, laneLabels, leaders, againstOwn, slid }).toEqual(MEASURED_58);
     }, 120_000);
 
     it('narrows the nodes of a complete DAG on twelve nodes to fit, and wraps their labels shorter', () => {
@@ -244,6 +253,17 @@ describe('layered left-to-right diagram layout', () => {
       // 22 characters fit one line of a full-width node; a 193 px node holds 21, so the label wraps.
       expect(svg).toContain('>twenty-two</tspan>');
       expect(svg).not.toContain('>twenty-two characters!</tspan>');
+      // Back edges from the last node to ten others add right lanes until the nodes are narrower than the note's one line (173 px): a node no
+      // edge reaches then has its note wrapped onto two lines inside the column, and the gap under it grows to hold them.
+      const looped = [...edges, ...twelve.slice(0, 10).map(to => edge(`back-${to}`, 'n11', to))];
+      const alone = layoutDiagram([...twelve, 'alone'].map(id => ({ id })), looped, READABLE_SPACING);
+      const aloneSvg = renderDiagramSvg({ nodes: [...twelve, 'alone'].map(id => ({ id, label: id, epistemic: 'inferred' as const })), edges: looped.map(e => ({ ...e, label: 'next', epistemic: 'inferred' as const })) }, 1, text => text, READABLE_SPACING);
+      expect([alone.width, alone.nodeWidth]).toEqual([261, 173]);
+      expect(aloneSvg).toContain('<tspan x="130.5" dy="0">No relationship</tspan><tspan x="130.5" dy="16">supplied</tspan></text>');
+      expect(aloneSvg).not.toContain('>No relationship supplied<');
+      const aloneY = alone.nodes.find(m => m.id === 'alone')!.y;
+      const below = alone.nodes.filter(n => n.y > aloneY).map(n => n.y);
+      expect((below.length > 0 ? Math.min(...below) : alone.height) - aloneY - 56).toBeGreaterThanOrEqual(40);
     });
 
     it('keeps the default spacing and a plain chain as they were', () => {

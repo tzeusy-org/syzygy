@@ -26,6 +26,9 @@ const BACK_EDGE_DROP = 40;
 const BACK_LABEL_CLEARANCE = 30;
 const SKIP_LABEL_DROP = 52;
 const NODE_NOTE_HEIGHT = 24;
+/** "No relationship supplied" in the note's 12 px monospace is about 173 px; a node narrower than this wraps it onto two lines, under it. */
+const NOTE_ONE_LINE = 174;
+const noteHeight = (nodeWidth: number): number => (nodeWidth < NOTE_ONE_LINE ? NODE_NOTE_HEIGHT + 16 : NODE_NOTE_HEIGHT);
 const LABEL_CLEARANCE = 4;
 const LABEL_STEP = 8;
 const LEADER_SAMPLES = 64;
@@ -206,8 +209,8 @@ const LANE_ENTRY = 36;
 /**
  * A diagram wider than the readable column that is not a plain chain, stacked top to bottom one node to a row, so it is no wider than one
  * node and its side lanes: 248 px with up to two lanes a side, and inside `STACK_COLUMN` with up to twelve lanes in all, the lanes drawn
- * closer as they grow (syzygy-3efd.19). Past that the nodes narrow to fit, down to `NODE_WIDTH_LEAST` (syzygy-3efd.58), which no graph of
- * sixteen nodes reaches (at most sixteen lane groups a side, 68 px at the least step, leaving 125 px); only past that does it scroll in its own box, as any too-wide diagram does. Rows are in a topological
+ * closer as they grow (syzygy-3efd.19). Past that the nodes narrow to fit, down to `NODE_WIDTH_LEAST` (syzygy-3efd.58), which no
+ * graph of sixteen nodes reaches (at most sixteen lane groups a side, 68 px at the least step, leaving 125 px); only past that does it scroll in its own box, as any too-wide diagram does. Rows are in a topological
  * order of the forward edges, so every forward edge points down and every back edge up.
  * - A forward edge to the next row is a straight drop from the source's foot to the target's head.
  * - Any other forward edge leaves the source's left side, bulges into a lane left of every node and enters the target's left side; a back
@@ -280,7 +283,7 @@ function stackDiagram(
   const slotHeight = spacing.edgeLines * 15 + 6 + LABEL_CLEARANCE + 1;
   const connected = new Set(ends.flatMap(end => [end.from, end.to]));
   // The note under a node with no edges takes the top of the gap below it.
-  const noteAbove = Array.from({ length: order.length + 1 }, (_, g) => g > 0 && !connected.has(order[g - 1]!) ? NODE_NOTE_HEIGHT : 0);
+  const noteAbove = Array.from({ length: order.length + 1 }, (_, g) => g > 0 && !connected.has(order[g - 1]!) ? noteHeight(nodeWidth) : 0);
   const slots = Array.from({ length: order.length + 1 }, () => 0);
   const slotOf = ends.map((end, e) => {
     const gap = back[e] ? position[end.to]! + 1 : position[end.to]!;
@@ -398,10 +401,23 @@ function distanceToSegment(at: Point, a: Point, b: Point): number {
  */
 // Test seam: exported for the tests; production code reaches it only inside this file.
 export function leaderRun(own: readonly Point[], label: LabelBox, others: readonly LabelBox[], otherCurves: readonly (readonly Point[])[], otherHeads: readonly Triangle[]): { readonly from: Point; readonly to: Point } | undefined {
+  return againstOwnLine(own, label) ? undefined : runFromEnds(leaderEnds(own, otherCurves, otherHeads), label, others);
+}
+
+/** Whether a label already sits against its own line, so a leader would say nothing more. */
+function againstOwnLine(own: readonly Point[], label: LabelBox): boolean {
   const gap = (at: Point): number => Math.hypot(Math.max(label.left - at.x, 0, at.x - label.right), Math.max(label.top - at.y, 0, at.y - label.bottom));
-  if (own.some(at => gap(at) < LEADER_MIN_RUN)) return undefined;
-  const ends = own.filter(at => otherCurves.every(curve => curve.every((a, i) => i === 0 || distanceToSegment(at, curve[i - 1]!, a) >= LEADER_SHARED))
+  return own.some(at => gap(at) < LEADER_MIN_RUN);
+}
+
+/** The points of a line where a leader may end: where no other line runs and outside every other arrowhead. They do not depend on where the
+ * label sits, so a label that tries several spots computes them once. */
+function leaderEnds(own: readonly Point[], otherCurves: readonly (readonly Point[])[], otherHeads: readonly Triangle[]): readonly Point[] {
+  return own.filter(at => otherCurves.every(curve => curve.every((a, i) => i === 0 || distanceToSegment(at, curve[i - 1]!, a) >= LEADER_SHARED))
     && otherHeads.every(head => distanceToTriangle(at, head) >= LEADER_SHARED));
+}
+
+function runFromEnds(ends: readonly Point[], label: LabelBox, others: readonly LabelBox[]): { readonly from: Point; readonly to: Point } | undefined {
   const starts: Point[] = [];
   for (let k = 0; k <= LEADER_EDGE_STOPS; k++) {
     const across = label.left + (label.right - label.left) * k / LEADER_EDGE_STOPS, down = label.top + (label.bottom - label.top) * k / LEADER_EDGE_STOPS;
@@ -474,7 +490,10 @@ export function renderDiagramSvg(
     const at = layout.nodes[i]!;
     const lines = shown(node.label, node.epistemic, nodeChars, 2);
     const baseline = at.y + NODE_HEIGHT / 2 + 5 - (lines.length - 1) * 8;
-    const note = connected.has(node.id) ? '' : `<text class="note" x="${num(at.x + nodeWidth / 2)}" y="${num(at.y + NODE_HEIGHT + 18)}" text-anchor="middle">No relationship supplied</text>`;
+    const noteX = num(at.x + nodeWidth / 2);
+    const note = connected.has(node.id) ? '' : nodeWidth < NOTE_ONE_LINE
+      ? `<text class="note" x="${noteX}" y="${num(at.y + NODE_HEIGHT + 18)}" text-anchor="middle"><tspan x="${noteX}" dy="0">No relationship</tspan><tspan x="${noteX}" dy="16">supplied</tspan></text>`
+      : `<text class="note" x="${noteX}" y="${num(at.y + NODE_HEIGHT + 18)}" text-anchor="middle">No relationship supplied</text>`;
     return `<g class="node ${node.epistemic}"><title>${escape(node.label)} (${node.epistemic})</title><rect x="${num(at.x)}" y="${num(at.y)}" width="${nodeWidth}" height="${NODE_HEIGHT}" rx="6"/>${textLines(lines, at.x + nodeWidth / 2, baseline, 16)}${note}</g>`;
   }).join('');
   const edgeLines = diagram.edges.map(edge => shown(edge.label, edge.epistemic, spacing.edgeChars, spacing.edgeLines));
@@ -484,7 +503,7 @@ export function renderDiagramSvg(
   }));
   const standing = diagram.nodes.map((node, i) => {
     const at = layout.nodes[i]!;
-    return { left: at.x, top: at.y, right: at.x + nodeWidth, bottom: at.y + NODE_HEIGHT + (connected.has(node.id) ? 0 : NODE_NOTE_HEIGHT) };
+    return { left: at.x, top: at.y, right: at.x + nodeWidth, bottom: at.y + NODE_HEIGHT + (connected.has(node.id) ? 0 : noteHeight(nodeWidth)) };
   });
   const placed: { x: number; y: number }[] = [...(spacing.labelsOnTop ? placeEdgeLabels(wanted, standing, layout.width) : wanted)].map(({ x, y }) => ({ x, y }));
   const curves = spacing.labelsOnTop ? layout.edges.map(edge => curveSamples(edge.d)) : [];
@@ -496,16 +515,25 @@ export function renderDiagramSvg(
   // A label the search moved keeps a thin leader to its own line where one can be seen, in the line's layer: without one, it can read as
   // another line's label. So does a stacked lane edge's label, which sits in the column, away from its line (`lead`).
   const moved = (i: number): boolean => placed[i]!.x !== layout.edges[i]!.labelX || placed[i]!.y !== layout.edges[i]!.labelY || layout.edges[i]!.lead === true;
-  const runOf = (i: number) => (moved(i)
-    ? leaderRun(curves[i]!, boxOf(i), [...standing, ...wanted.flatMap((_, j) => j === i ? [] : [boxOf(j)])], curves.filter((_, j) => layout.edges[j]!.d !== layout.edges[i]!.d),
-      heads.filter((_, j) => layout.edges[j]!.d !== layout.edges[i]!.d))
+  const endsCache = new Map<number, readonly Point[]>();
+  const endsOf = (i: number): readonly Point[] => {
+    let ends = endsCache.get(i);
+    if (ends === undefined) {
+      ends = leaderEnds(curves[i]!, curves.filter((_, j) => layout.edges[j]!.d !== layout.edges[i]!.d), heads.filter((_, j) => layout.edges[j]!.d !== layout.edges[i]!.d));
+      endsCache.set(i, ends);
+    }
+    return ends;
+  };
+  const runOf = (i: number) => (moved(i) && !againstOwnLine(curves[i]!, boxOf(i))
+    ? runFromEnds(endsOf(i), boxOf(i), [...standing, ...wanted.flatMap((_, j) => j === i ? [] : [boxOf(j)])])
     : undefined);
   const runs = layout.edges.map((_, i) => runOf(i));
   // A lane edge's label with no clear leader where it sits slides across its own gap, a step at a time and nearer first, to the first spot
   // that clears every node, label and other leader and gives it one; it never leaves its gap, so no row moves (syzygy-3efd.58). A leader
-  // depends on other labels only through the boxes it must not enter, so a slide that enters no other leader keeps every other leader.
-  layout.edges.forEach((at, i) => {
-    if (at.lead !== true || !spacing.labelsOnTop || runs[i] !== undefined) return;
+  // depends on other labels only through the boxes it must not enter, so a slide that enters no other leader keeps every other leader. A label
+  // already against its own line needs none and stays. A second pass retries the labels still without one, since a slide may clear a way.
+  const slide = (at: LaidOutEdge, i: number): boolean => {
+    if (at.lead !== true || !spacing.labelsOnTop || runs[i] !== undefined || againstOwnLine(curves[i]!, boxOf(i))) return false;
     const home = placed[i]!, { width, height } = wanted[i]!;
     const others = [...standing, ...wanted.flatMap((_, j) => j === i ? [] : [boxOf(j)])];
     for (let k = 1; (k - 1) * LABEL_STEP < layout.width; k++) {
@@ -516,11 +544,13 @@ export function renderDiagramSvg(
           || runs.some((run, j) => j !== i && run !== undefined && segmentEntersBox(run.from.x, run.from.y, run.to.x, run.to.y, box))) continue;
         placed[i] = { x: home.x + dx, y: home.y };
         runs[i] = runOf(i);
-        if (runs[i] !== undefined) return;
+        if (runs[i] !== undefined) return true;
       }
     }
     placed[i] = home;
-  });
+    return false;
+  };
+  for (let pass = 0; pass < 2; pass++) if (!layout.edges.map((at, i) => slide(at, i)).some(Boolean)) break;
   const edges = diagram.edges.map((edge, i) => {
     const at = layout.edges[i]!, lines = edgeLines[i]!, { x, y, width, height } = { ...wanted[i]!, ...placed[i]! };
     const top = y - height / 2;
