@@ -2,14 +2,14 @@
   "format": "citable-share-census/1",
   "bead": "syzygy-3efd.15",
   "measuredOn": "2026-11-21",
-  "syzygyCommit": "615a6985a542a4fcd0942cacf04b1f9d6b377161",
+  "syzygyCommit": "d08078a7b3db0e4e0527e536b15afad2294e1bdc",
   "policy": {
     "path": ".syzygy/governance/policies/POLARIS-DOSSIER-DECLARED-SOURCE-POLICY-v1.json",
     "sha256": "516cb1f2dba9ceb3e55166077c0800be6022012406b9b9b5f0df25bcb73aa499",
     "readAt": "HEAD of the Syzygy commit above"
   },
-  "screen": "buildDossierScreen(policy, projectDocumentation enabled, the repository and commit as placement subject, visibility public)",
-  "method": "blobless depth-1 fetch of one commit; git ls-tree -r -z --full-tree; screenPath and contentClass per blob path; withheldCensus with no per-project statement; cat-file --batch-all-objects confirms no blob object",
+  "screen": "buildDossierScreen(policy, projectDocumentation enabled, the repository URL and commit as subject, visibility public). No owner placement applies: placements name repository:<id> subjects of registered repositories. Visibility decides redaction only, never a path outcome, so these counts are the same under private",
+  "method": "blobless depth-1 fetch of one commit; git ls-tree -r -z --full-tree; screenPath and contentClass per blob path; withheldCensus with no per-project statement; cat-file --batch-all-objects confirms afterwards that no blob object arrived (it detects a server that ignored the filter; it does not prevent the download)",
   "outcomes": {
     "admittedCodeContent": "the screen admits the path as code-content",
     "admittedProjectDocumentation": "the screen admits the path as project-documentation",
@@ -18,7 +18,9 @@
     "withheldSecretPath": "a secret detector matches the path (counted, never named)",
     "indeterminateUnknownExtractionClass": "no denied-path rule and no content class: the path is withheld as unknown-extraction-class"
   },
-  "denominator": "files: every tree entry with a blob mode the dossier reader lists (100644, 100755, 120000) at the commit; the six outcome counts sum to it; nonBlobEntries counts the rest (submodules)",
+  "denominator": "files: every tree entry with a blob mode the dossier reader lists (100644, 100755, 120000) at the commit; the six outcome counts sum to it; nonBlobEntries counts every other entry (a submodule, or a mode the reader does not list as a blob mode)",
+  "symlinks": "of files, the symbolic links (mode 120000): the policy does not admit them, but the dossier reader lists them as blobs and the screen decides them by path, so they are counted as the reader counts them",
+  "recheck": "--check re-measures with the census and screen code and the policy of the checkout it runs in, not of syzygyCommit: a difference names a changed count, not its cause",
   "classGateWithoutStatement": "of the admitted paths, how many the class gate withholds from agent-bound artifacts when a run relies on no per-project statement (every class but code-content)",
   "repositories": [
     {
@@ -35,6 +37,7 @@
         "indeterminateUnknownExtractionClass": 116
       },
       "classGateWithoutStatement": 5,
+      "symlinks": 1,
       "nonBlobEntries": 0,
       "objectTypesInScratchClone": {
         "blob": 0,
@@ -55,6 +58,7 @@
         "indeterminateUnknownExtractionClass": 72
       },
       "classGateWithoutStatement": 77,
+      "symlinks": 0,
       "nonBlobEntries": 0,
       "objectTypesInScratchClone": {
         "blob": 0,
@@ -75,6 +79,7 @@
         "indeterminateUnknownExtractionClass": 606
       },
       "classGateWithoutStatement": 3,
+      "symlinks": 0,
       "nonBlobEntries": 0,
       "objectTypesInScratchClone": {
         "blob": 0,
@@ -95,6 +100,7 @@
         "indeterminateUnknownExtractionClass": 106
       },
       "classGateWithoutStatement": 5,
+      "symlinks": 0,
       "nonBlobEntries": 0,
       "objectTypesInScratchClone": {
         "blob": 0,
@@ -115,6 +121,7 @@
         "indeterminateUnknownExtractionClass": 75
       },
       "classGateWithoutStatement": 3,
+      "symlinks": 0,
       "nonBlobEntries": 0,
       "objectTypesInScratchClone": {
         "blob": 0,
@@ -130,5 +137,17 @@
     "codeExtensionPaths": 86,
     "agrees": "files 236 and admittedCodeContent 86 in this record",
     "blobObjectsAfter": 0
+  },
+  "secondMethodByReviewer": {
+    "repository": "https://github.com/BurntSushi/ripgrep",
+    "commit": "4e588dd8b27693797984a71ee62aea1a9013c23b",
+    "by": "the independent reviewer of PR #844 (a fresh session), not the author",
+    "how": "a separate blobless depth-1 fetch; git ls-tree -r -z; paths classified in Python with rules read from the policy JSON, not through the screen",
+    "blobs": 227,
+    "codeExtensionPaths": 106,
+    "rootDocuments": 5,
+    "deniedByName": 0,
+    "indeterminate": 116,
+    "agrees": "every ripgrep count in this record"
   }
 }
