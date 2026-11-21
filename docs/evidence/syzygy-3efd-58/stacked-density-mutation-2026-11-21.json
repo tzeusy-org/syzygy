@@ -2,10 +2,10 @@
   "format": "mutation-run/1",
   "bead": "syzygy-3efd.58",
   "date": "2026-11-21",
-  "ranAt": "1079fbb477e5b550ebcd0c49448d5becbe5b3329",
+  "ranAt": "52811755f3c725465dc085c17e3e685cedc1c042",
   "subject": {
-    "apps/three-surface-poc/src/polaris-generation/diagram-layout.ts": "f9c8ecec87f6a6b5dece69ca0e7232b2567943192945412a145d59f95e25a872",
-    "apps/three-surface-poc/src/polaris-generation/diagram-layout.test.ts": "8bfd549f2eb1a6ad5679ff3d6e756beda8e92afadb23db8eb4d9bbb122e1b158"
+    "apps/three-surface-poc/src/polaris-generation/diagram-layout.ts": "e045fd58f7309263e60ce947ff889f48316956b2334feaaf5bcda9d09afe8084",
+    "apps/three-surface-poc/src/polaris-generation/diagram-layout.test.ts": "7b8a6701c3921e3ea346ba4dacab0436430d58ab0119c3ee34600c0f9458b089"
   },
   "command": "npx vitest run apps/three-surface-poc/src/polaris-generation/diagram-layout.test.ts --reporter=json",
   "method": "each mutant replaces old with new exactly once in file, runs the command, restores the file; failedTests records each failing test and the first line of its message",
@@ -77,13 +77,13 @@
     {
       "id": "no-slide",
       "file": "apps/three-surface-poc/src/polaris-generation/diagram-layout.ts",
-      "old": "if (at.lead !== true || !spacing.labelsOnTop || runs[i] !== undefined) return;",
-      "new": "return;",
+      "old": "if (at.lead !== true || !spacing.labelsOnTop || runs[i] !== undefined || againstOwnLine(curves[i]!, boxOf(i))) return false;",
+      "new": "return false;",
       "killed": true,
       "failedTests": [
         {
           "test": "fits the narrow column at any density: nodes narrow past the lanes the least step holds, and lane labels slide to find a leader (syzygy-3efd.58)",
-          "message": "AssertionError: expected { stacked: 118, narrowed: 7, \u2026(3) } to deeply equal { stacked: 118, narrowed: 7, \u2026(3) }"
+          "message": "AssertionError: expected { stacked: 118, narrowed: 7, \u2026(5) } to deeply equal { stacked: 118, narrowed: 7, \u2026(5) }"
         }
       ],
       "killedBy": "assertion"
@@ -97,7 +97,7 @@
       "failedTests": [
         {
           "test": "fits the narrow column at any density: nodes narrow past the lanes the least step holds, and lane labels slide to find a leader (syzygy-3efd.58)",
-          "message": "AssertionError: expected { stacked: 118, narrowed: 7, \u2026(3) } to deeply equal { stacked: 118, narrowed: 7, \u2026(3) }"
+          "message": "AssertionError: expected { stacked: 118, narrowed: 7, \u2026(5) } to deeply equal { stacked: 118, narrowed: 7, \u2026(5) }"
         }
       ],
       "killedBy": "assertion"
@@ -105,8 +105,8 @@
     {
       "id": "slide-no-return-home",
       "file": "apps/three-surface-poc/src/polaris-generation/diagram-layout.ts",
-      "old": "    placed[i] = home;\n  });",
-      "new": "  });",
+      "old": "    placed[i] = home;\n    return false;",
+      "new": "    return false;",
       "killed": true,
       "failedTests": [
         {
@@ -117,6 +117,44 @@
       "killedBy": "assertion"
     },
     {
+      "id": "note-never-wraps",
+      "file": "apps/three-surface-poc/src/polaris-generation/diagram-layout.ts",
+      "old": "nodeWidth < NOTE_ONE_LINE ? NODE_NOTE_HEIGHT + 16 : NODE_NOTE_HEIGHT",
+      "new": "NODE_NOTE_HEIGHT",
+      "killed": true,
+      "failedTests": [
+        {
+          "test": "narrows the nodes of a complete DAG on twelve nodes to fit, and wraps their labels shorter",
+          "message": "AssertionError: expected [ { left: 41.6, top: 4531.5, \u2026(2) } ] to deeply equal []"
+        }
+      ],
+      "killedBy": "assertion"
+    },
+    {
+      "id": "note-text-one-line",
+      "file": "apps/three-surface-poc/src/polaris-generation/diagram-layout.ts",
+      "old": "const note = connected.has(node.id) ? '' : nodeWidth < NOTE_ONE_LINE",
+      "new": "const note = connected.has(node.id) ? '' : false",
+      "killed": true,
+      "failedTests": [
+        {
+          "test": "narrows the nodes of a complete DAG on twelve nodes to fit, and wraps their labels shorter",
+          "message": "AssertionError: expected '<svg xmlns=\"http://www.w3.org/2000/sv\u2026' to contain '<tspan x=\"130.5\" dy=\"0\">No relationsh\u2026'"
+        }
+      ],
+      "killedBy": "assertion"
+    },
+    {
+      "id": "slide-against-own",
+      "file": "apps/three-surface-poc/src/polaris-generation/diagram-layout.ts",
+      "old": "|| runs[i] !== undefined || againstOwnLine(curves[i]!, boxOf(i))) return false;",
+      "new": "|| runs[i] !== undefined) return false;",
+      "killed": false,
+      "failedTests": [],
+      "killedBy": "survived",
+      "unreached": "no lane label in the seeded population sits against its own line (the test counts againstOwn: 0), so the guard that keeps such a label home is never reached; it is kept because a label against its own line needs no leader and sliding it away would only lengthen the reader's path"
+    },
+    {
       "id": "slide-ignores-labels",
       "file": "apps/three-surface-poc/src/polaris-generation/diagram-layout.ts",
       "old": "\n          || others.some(o => box.left < o.right + LABEL_CLEARANCE",
@@ -124,12 +162,16 @@
       "killed": false,
       "failedTests": [],
       "killedBy": "survived",
-      "equivalent": "a stacked gap stacks its label slots at least slotHeight apart (edgeLines*15+11) and every label is at most edgeLines*15+6 tall, so a label sliding sideways in its own slot keeps more than LABEL_CLEARANCE from every other label, node and note; the check is kept as a guard should the slots change"
+      "equivalent": "a stacked gap stacks its label slots at least slotHeight apart (edgeLines*15+11) and every label is at most edgeLines*15+6 tall, so a label sliding sideways in its own slot keeps more than LABEL_CLEARANCE from every other label, node and note; the check is kept as a guard should the slots change (confirmed by the independent review)"
     }
   ],
-  "killed": 7,
-  "total": 8,
+  "killed": 9,
+  "total": 11,
   "equivalent": [
     "slide-ignores-labels"
-  ]
+  ],
+  "unreached": [
+    "slide-against-own"
+  ],
+  "supersedes": "the first run of this record (7/8 at 1079fbb4), before the independent review notes were repaired"
 }
