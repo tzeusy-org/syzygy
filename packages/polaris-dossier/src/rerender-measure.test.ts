@@ -2,7 +2,7 @@ import * as fs from 'node:fs';
 import * as os from 'node:os';
 import * as path from 'node:path';
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
-import { buildRecord, compareRecords, listStoredDrafts, measureDraft, populationDigest } from './rerender-measure.js';
+import { buildRecord, compareRecords, listStoredDrafts, measureDraft, moduleGraphDigest, outsideOf, populationDigest } from './rerender-measure.js';
 
 const COMMIT = 'c'.repeat(40);
 const RUN_A = `run-${'a'.repeat(32)}`;
@@ -67,6 +67,9 @@ describe('measureDraft', () => {
 
 describe('a state root listed and recorded', () => {
   let root: string;
+  /** Root reads a mode-000 file, so the unreadable revision is readable there and refused for its bytes instead. */
+  const asRoot = process.getuid?.() === 0;
+  const RUN_C = `run-${'c'.repeat(32)}`, RUN_D = `run-${'d'.repeat(32)}`;
   beforeAll(() => {
     root = fs.mkdtempSync(path.join(os.tmpdir(), 'rerender-measure-'));
     const drafts = path.join(root, RUN_A, 'drafts');
@@ -74,8 +77,16 @@ describe('a state root listed and recorded', () => {
     fs.writeFileSync(path.join(drafts, 'rev-0.json'), bytes(draft()));
     fs.writeFileSync(path.join(drafts, 'rev-1.json'), bytes(untitled));
     fs.writeFileSync(path.join(drafts, 'rev-2.json'), '{"schemaVersion":');
+    fs.mkdirSync(path.join(drafts, 'rev-3.json'));
+    fs.writeFileSync(path.join(drafts, 'rev-4.json'), '{}');
+    fs.chmodSync(path.join(drafts, 'rev-4.json'), 0o000);
     fs.writeFileSync(path.join(drafts, 'next.json'), bytes(draft()));
     fs.mkdirSync(path.join(root, RUN_B));
+    // A run whose drafts/ is a link to another run's: not followed, and listed as unlistable.
+    fs.mkdirSync(path.join(root, RUN_C));
+    fs.symlinkSync(drafts, path.join(root, RUN_C, 'drafts'));
+    // A file named as a run directory.
+    fs.writeFileSync(path.join(root, RUN_D), '');
     // A session directory beside the run: named as no run directory, so neither listed nor opened. Its mode would make a listing throw.
     const agents = path.join(root, `${RUN_A}.agents`, 'drafts');
     fs.mkdirSync(agents, { recursive: true });
@@ -87,21 +98,88 @@ describe('a state root listed and recorded', () => {
     fs.rmSync(root, { recursive: true, force: true });
   });
 
-  it('counts a refused draft, never passing over it, and its counts sum to the drafts found', () => {
+  it('counts a refused or unreadable draft, never passing over it, and its counts sum to the drafts found', () => {
     const listing = listStoredDrafts(root);
-    expect(listing.runsListed).toBe(2);
+    expect(listing.runsListed).toBe(4);
     expect(listing.runsWithoutDrafts).toBe(1);
-    expect(listing.otherDraftFiles).toBe(1);
-    expect(listing.unlistable).toEqual([]);
-    expect(listing.drafts.map((d) => `${d.run}/rev-${d.revision}`)).toEqual([`${RUN_A}/rev-0`, `${RUN_A}/rev-1`, `${RUN_A}/rev-2`]);
-    const record = buildRecord({ measuredAt: '2026-11-22T00:00:00.000Z', syzygy: { commit: COMMIT, trackedChanges: 0 }, population: 'fixture', figureLayout: 'fixture', listing, layout: () => 2000 });
-    expect(record.counts).toEqual({ found: 3, measured: 1, refused: 2, refusedBy: { 'not-utf8': 0, 'not-json': 1, 'unknown-schema-version': 0, 'no-pinned-revision': 0, schema: 1 } });
-    expect(record.drafts.filter((row) => row.result.outcome === 'refused').map((row) => row.revision)).toEqual([1, 2]);
+    expect(listing.otherDraftFiles).toBe(2);
+    expect(listing.unlistable).toEqual([{ run: RUN_C, why: 'drafts/ is not a directory' }, { run: RUN_D, why: 'not a directory' }]);
+    expect(listing.drafts.map((d) => `${d.run}/rev-${d.revision}`)).toEqual([`${RUN_A}/rev-0`, `${RUN_A}/rev-1`, `${RUN_A}/rev-2`, `${RUN_A}/rev-4`]);
+    const record = buildRecord({ measuredAt: '2026-11-22T00:00:00.000Z', syzygy: { commit: COMMIT, trackedChanges: 0 }, population: 'fixture', figureLayout: 'fixture', listing, layout: () => 2000, instrument: { sha256: 'i'.repeat(64), files: ['a.js'], externals: [] } });
+    expect(record.counts).toEqual({ found: 4, measured: 1, refused: 3, refusedBy: { unreadable: asRoot ? 0 : 1, 'not-utf8': 0, 'not-json': 1, 'unknown-schema-version': asRoot ? 1 : 0, 'no-pinned-revision': 0, schema: 1 } });
+    expect(record.drafts.filter((row) => row.result.outcome === 'refused').map((row) => row.revision)).toEqual([1, 2, 4]);
+    if (!asRoot) {
+      expect(record.drafts[3]).toEqual({ run: RUN_A, revision: 4, sha256: null, bytes: null, readError: 'EACCES', result: { outcome: 'refused', schemaVersion: null, why: 'unreadable', schemaFindings: 0 } });
+      expect(record.subject.populationSha256).toBe('0a3d53912bca1863cc3dc65d44d20b0a765894f3e42720d046ce94954d18bbff');
+    }
+    expect(record.instrument.sha256).toBe('i'.repeat(64));
+    expect(record.instrument.files).toBe(1);
     expect(record.totals.figureFit).toEqual({ notFittingAt1440: 1, notFittingAt390: 1, unknown: 0 });
-    expect(record.subject.populationSha256).toBe(populationDigest(record.drafts));
     // The record keeps numbers and identities: no draft text reaches it.
     const written = JSON.stringify(record);
     for (const phrase of ['Kestrel', 'runs to completion', 'Command flow', 'Client', 'Read the server first']) expect(written).not.toContain(phrase);
+  });
+
+  it('names its subject by a digest over one line per draft, an unreadable one by the word', () => {
+    expect(populationDigest([{ run: 'run-x', revision: 0, sha256: 'abc' }, { run: 'run-x', revision: 2, sha256: null }])).toBe('a04ceb064c23843d96ea23698964b441d3e7c3e2d2b98c0857a171a845e541da');
+  });
+});
+
+describe('the instrument digest', () => {
+  let root: string;
+  beforeAll(() => {
+    root = fs.mkdtempSync(path.join(os.tmpdir(), 'rerender-instrument-'));
+    fs.mkdirSync(path.join(root, 'lib'));
+    fs.writeFileSync(path.join(root, 'a.js'), "import * as fs from 'node:fs';\nimport { b } from './lib/b.js';\nexport { y } from '@x/y';\n");
+    fs.writeFileSync(path.join(root, 'lib', 'b.js'), "export const b = () => import('./c.js');\n");
+    fs.writeFileSync(path.join(root, 'lib', 'c.js'), "import './b.js';\n");
+    fs.writeFileSync(path.join(root, 'y.js'), 'export const y = 1;\n');
+    fs.writeFileSync(path.join(root, 'unreached.js'), 'export {};\n');
+  });
+  afterAll(() => { fs.rmSync(root, { recursive: true, force: true }); });
+  const resolve = (specifier: string): string | null => (specifier === '@x/y' ? path.join(root, 'y.js') : null);
+
+  it('digests every module the entry reaches, and lists what lies outside by name', () => {
+    const digest = moduleGraphDigest(root, [path.join(root, 'a.js')], resolve);
+    expect(digest.files).toEqual(['a.js', 'lib/b.js', 'lib/c.js', 'y.js']);
+    expect(digest.externals).toEqual(['node:fs']);
+    expect(digest.sha256).toBe('abd8c076b61396aa09687c9c38360711be6477c6491f3e96e5b3dc9b1c497ecb');
+  });
+
+  it('passes over prose that reads like an import', () => {
+    fs.writeFileSync(path.join(root, 'prose.js'), "// import the page from '\u2026 later'\nexport const note = 1;\n");
+    expect(moduleGraphDigest(root, [path.join(root, 'prose.js')], resolve)).toEqual({ sha256: expect.any(String), files: ['prose.js'], externals: [] });
+  });
+
+  it('moves when a module it reaches changes, and not when one it does not reach does', () => {
+    const before = moduleGraphDigest(root, [path.join(root, 'a.js')], resolve).sha256;
+    fs.writeFileSync(path.join(root, 'unreached.js'), 'export const z = 2;\n');
+    expect(moduleGraphDigest(root, [path.join(root, 'a.js')], resolve).sha256).toBe(before);
+    fs.writeFileSync(path.join(root, 'lib', 'c.js'), "import './b.js';\nexport const c = 3;\n");
+    expect(moduleGraphDigest(root, [path.join(root, 'a.js')], resolve).sha256).not.toBe(before);
+    fs.writeFileSync(path.join(root, 'lib', 'c.js'), "import './b.js';\n");
+  });
+});
+
+describe('outsideOf', () => {
+  let base: string;
+  beforeAll(() => {
+    base = fs.realpathSync(fs.mkdtempSync(path.join(os.tmpdir(), 'rerender-outside-')));
+    fs.mkdirSync(path.join(base, 'root', '..dots'), { recursive: true });
+    fs.mkdirSync(path.join(base, 'elsewhere'));
+    fs.symlinkSync(path.join(base, 'root'), path.join(base, 'elsewhere', 'into-root'));
+  });
+  afterAll(() => { fs.rmSync(base, { recursive: true, force: true }); });
+
+  it('sees through a link and a `..` segment, and does not take a name starting with two dots for the parent', () => {
+    const root = path.join(base, 'root');
+    expect(outsideOf(root, path.join(base, 'elsewhere', 'out.json'))).toBe(true);
+    expect(outsideOf(root, path.join(base, 'root-sibling.json'))).toBe(true);
+    expect(outsideOf(root, path.join(root, 'out.json'))).toBe(false);
+    expect(outsideOf(root, root)).toBe(false);
+    expect(outsideOf(root, path.join(root, '..dots', 'out.json'))).toBe(false);
+    expect(outsideOf(root, path.join(base, 'elsewhere', 'into-root', 'out.json'))).toBe(false);
+    expect(outsideOf(root, path.join(base, 'elsewhere', '..', 'root', 'out.json'))).toBe(false);
   });
 });
 
@@ -113,8 +191,8 @@ const measured = (run: string, revision: number, sha: string, words: number, fig
   run, revision, sha256: sha, bytes: 10,
   result: { outcome: 'measured', schemaVersion: 'polaris-dossier-local-draft-v6', measured: { figuresExamined: figures, draft: { ...nums(words, figures, at390, rs19), unplacedUnits: 0 }, pages: [{ page: 'index.html', ...nums(words, figures, at390, rs19) }] } },
 });
-const refused = (run: string, revision: number, sha: string) => ({ run, revision, sha256: sha, bytes: 10, result: { outcome: 'refused', schemaVersion: null, why: 'not-json', schemaFindings: 0 } });
-const record = (commit: string, digest: string, drafts: readonly unknown[]) => ({ format: 'polaris-dossier-rerender-measure/1', measuredAt: '2026-11-22T00:00:00.000Z', syzygy: { commit, trackedChanges: 0 }, subject: { populationSha256: digest }, drafts });
+const refused = (run: string, revision: number, sha: string | null, why = 'not-json') => ({ run, revision, sha256: sha, bytes: 10, result: { outcome: 'refused', schemaVersion: null, why, schemaFindings: 0 } });
+const record = (commit: string, digest: string, drafts: readonly unknown[], instrument = 'i1') => ({ format: 'polaris-dossier-rerender-measure/1', measuredAt: '2026-11-22T00:00:00.000Z', syzygy: { commit, trackedChanges: 0 }, instrument: { sha256: instrument }, subject: { populationSha256: digest }, drafts });
 
 const BASELINE = record('1'.repeat(40), 'p1', [
   measured(RUN_A, 0, 'sa0', 400, 2, 1),
@@ -136,19 +214,20 @@ const CURRENT = record('2'.repeat(40), 'p2', [
 describe('compareRecords', () => {
   it('reports what moved, draft by draft, with literal counts and deltas', () => {
     const comparison = compareRecords(BASELINE, CURRENT);
-    expect(comparison.baseline).toEqual({ commit: '1'.repeat(40), populationSha256: 'p1' });
-    expect(comparison.current).toEqual({ commit: '2'.repeat(40), populationSha256: 'p2' });
+    expect(comparison.baseline).toEqual({ commit: '1'.repeat(40), instrumentSha256: 'i1', populationSha256: 'p1' });
+    expect(comparison.current).toEqual({ commit: '2'.repeat(40), instrumentSha256: 'i1', populationSha256: 'p2' });
+    expect(comparison.sameInstrument).toBe(true);
     expect(comparison.samePopulation).toBe(false);
-    expect(comparison.counts).toEqual({ unchanged: 1, changed: 1, added: 1, removed: 1, 'bytes-changed': 1, 'now-refused': 1, 'now-measured': 1, 'refused-both': 0 });
+    expect(comparison.counts).toEqual({ unchanged: 1, changed: 1, added: 1, removed: 1, 'bytes-changed': 1, 'now-refused': 1, 'now-measured': 1, 'refused-both': 0, 'refusal-changed': 0 });
     expect(comparison.moved).toEqual([
       {
         draft: `${RUN_A}/rev-1`, change: 'changed',
         delta: { proseWords: 0, readingMinutes: 0, figures: 0, advisories: { 'RS-13': 0, 'RS-14': 0, 'RS-16': 0, 'RS-17': 0, 'RS-19': 2 }, figureFit: { notFittingAt1440: 0, notFittingAt390: 2, unknown: 0 }, unplacedUnits: 0, figuresExamined: 0 },
         pages: [{ page: 'index.html', change: 'changed' }],
       },
-      { draft: `${RUN_A}/rev-2`, change: 'now-measured' },
+      { draft: `${RUN_A}/rev-2`, change: 'now-measured', refusal: { before: 'not-json' } },
       { draft: `${RUN_B}/rev-1`, change: 'bytes-changed' },
-      { draft: `${RUN_B}/rev-2`, change: 'now-refused' },
+      { draft: `${RUN_B}/rev-2`, change: 'now-refused', refusal: { after: 'not-json' } },
       { draft: `${RUN_B}/rev-3`, change: 'added' },
       { draft: `${RUN_B}/rev-0`, change: 'removed' },
     ]);
@@ -158,8 +237,8 @@ describe('compareRecords', () => {
   it('finds nothing moved when a record is compared with itself', () => {
     const comparison = compareRecords(BASELINE, BASELINE);
     expect(comparison.samePopulation).toBe(true);
-    expect(comparison.counts).toEqual({ unchanged: 5, changed: 0, added: 0, removed: 0, 'bytes-changed': 0, 'now-refused': 0, 'now-measured': 0, 'refused-both': 1 });
-    expect(comparison.moved).toEqual([{ draft: `${RUN_A}/rev-2`, change: 'refused-both' }]);
+    expect(comparison.counts).toEqual({ unchanged: 5, changed: 0, added: 0, removed: 0, 'bytes-changed': 0, 'now-refused': 0, 'now-measured': 0, 'refused-both': 1, 'refusal-changed': 0 });
+    expect(comparison.moved).toEqual([{ draft: `${RUN_A}/rev-2`, change: 'refused-both', refusal: { before: 'not-json', after: 'not-json' } }]);
   });
 
   it('notices a page added or removed, and a page-only move, even where the draft totals hold', () => {
@@ -178,8 +257,31 @@ describe('compareRecords', () => {
     expect(comparison.totalsDelta.figuresExamined).toBe(2);
   });
 
+  it('reports a draft refused for another reason as such', () => {
+    const comparison = compareRecords(record('1'.repeat(40), 'p', [refused(RUN_A, 0, 's', 'not-json'), refused(RUN_A, 1, null, 'unreadable')]), record('2'.repeat(40), 'p', [refused(RUN_A, 0, 's', 'schema'), refused(RUN_A, 1, null, 'unreadable')]));
+    expect(comparison.counts['refusal-changed']).toBe(1);
+    expect(comparison.counts['refused-both']).toBe(1);
+    expect(comparison.moved).toEqual([
+      { draft: `${RUN_A}/rev-0`, change: 'refusal-changed', refusal: { before: 'not-json', after: 'schema' } },
+      { draft: `${RUN_A}/rev-1`, change: 'refused-both', refusal: { before: 'unreadable', after: 'unreadable' } },
+    ]);
+  });
+
+  it('names a different instrument at the same commit', () => {
+    const comparison = compareRecords(record('1'.repeat(40), 'p', [measured(RUN_A, 0, 's', 100, 1, 0)], 'build-1'), record('1'.repeat(40), 'p', [measured(RUN_A, 0, 's', 100, 1, 1)], 'build-2'));
+    expect(comparison.baseline.commit).toBe(comparison.current.commit);
+    expect(comparison.sameInstrument).toBe(false);
+    expect([comparison.baseline.instrumentSha256, comparison.current.instrumentSha256]).toEqual(['build-1', 'build-2']);
+    expect(comparison.counts.changed).toBe(1);
+  });
+
   it('refuses a record not of its form, naming which', () => {
     expect(() => compareRecords({ format: 'other' }, CURRENT)).toThrow('the baseline record is not of format polaris-dossier-rerender-measure/1');
+    const { instrument: _instrument, ...bare } = CURRENT;
+    expect(() => compareRecords(BASELINE, bare)).toThrow('the current record lacks its commit, instrument digest, subject digest or drafts');
+    const silent = refused(RUN_A, 0, 's') as { result: Record<string, unknown> };
+    delete silent.result['why'];
+    expect(() => compareRecords(BASELINE, record('2'.repeat(40), 'p', [silent]))).toThrow(`the current record has a refused row for ${RUN_A}/rev-0 that names no reason`);
     expect(() => compareRecords(BASELINE, record('2'.repeat(40), 'p', [measured(RUN_A, 0, 'x', 1, 1, 0), measured(RUN_A, 0, 'x', 1, 1, 0)]))).toThrow(`the current record names ${RUN_A}/rev-0 twice`);
     const broken = measured(RUN_A, 0, 'x', 1, 1, 0) as { result: { measured: { draft: Record<string, unknown> } } };
     broken.result.measured.draft['proseWords'] = -1;
