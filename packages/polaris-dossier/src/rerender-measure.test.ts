@@ -147,7 +147,7 @@ describe('the instrument digest', () => {
   });
 
   it('passes over prose that reads like an import', () => {
-    fs.writeFileSync(path.join(root, 'prose.js'), "// import the page from '\u2026 later'\nexport const note = 1;\n");
+    fs.writeFileSync(path.join(root, 'prose.js'), 'export const note = `\nimport the page from \'\u2026 later\'\n`;\n');
     expect(moduleGraphDigest(root, [path.join(root, 'prose.js')], resolve)).toEqual({ sha256: expect.any(String), files: ['prose.js'], externals: [] });
   });
 
