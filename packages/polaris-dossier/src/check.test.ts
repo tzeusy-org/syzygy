@@ -120,9 +120,8 @@ const sources = (): GateSources => ({
 afterEach(() => { fixturePolicy = POLICY; consentNames = () => commit; });
 
 /** A briefed run directory, whose run record names a fresh clone. */
-async function briefedRun(over: Record<string, unknown> = {}, clone: string = cloneOf()): Promise<string> {
-  const root = tempDir('dossier-check-state-');
-  const run = path.join(root, RUN_ID);
+async function briefedRun(over: Record<string, unknown> = {}, clone: string = cloneOf(), root: string = tempDir('dossier-check-state-'), runId: string = RUN_ID): Promise<string> {
+  const run = path.join(root, runId);
   fs.mkdirSync(run);
   const parsed = parseRunConfig(JSON.stringify({
     operator: 'Tzeusy', agentTool: 'claude-code', agentToolVersion: '2.1.0', agentProvider: 'anthropic', model: 'claude-opus-5-5',
@@ -354,6 +353,69 @@ describe('check: figure fit', () => {
     if (!result.ok) throw new Error(result.refusal.reason);
     expect(result.report).not.toHaveProperty('figureFit');
     expect(JSON.parse(fs.readFileSync(path.join(run, 'checks', 'rev-0.json'), 'utf8'))).not.toHaveProperty('figureFit');
+  });
+});
+
+// The reading ledger (REQ-polaris-generation-034 version 2.4, syzygy-3efd.21). The numbers are computed by hand from the fixture draft.
+describe('check: reading ledger', () => {
+  // `valid()` carries schema v2, no Poles and no diagram: one page. Words, split at white space: the introduction 13; core-ideas p1 13,
+  // its children 6 + 2 + 3, p2 7: 31; 44 in all. The one section has no diagram, so RS-16 counts one advisory, at $.sections[0].
+  const zeros = { 'RS-13': 0, 'RS-14': 0, 'RS-16': 0, 'RS-17': 0, 'RS-19': 0 };
+  const noFit = { notFittingAt1440: 0, notFittingAt390: 0, unknown: 0 };
+  const LEDGER = {
+    format: 'polaris-dossier-reading-ledger/1', wordsPerMinute: 200,
+    pages: [{ page: 'index.html', units: ['introduction', 'section:core-ideas'], proseWords: 44, readingMinutes: 1, figures: 0, advisories: { ...zeros, 'RS-16': 1 }, figureFit: noFit }],
+    draft: { proseWords: 44, readingMinutes: 1, figures: 0, advisories: { ...zeros, 'RS-16': 1 }, figureFit: noFit, unplacedUnits: 0 },
+  };
+
+  it('writes readingLedger into the check record beside figureFit, byte-identical across two checks of the same draft, and on the report', async () => {
+    const run = await briefedRun();
+    const text = JSON.stringify(valid(), null, 2);
+    writeDraft(run, text);
+    const first = report(await checkDraft(run, {}, deps()));
+    writeDraft(run, text);
+    const second = report(await checkDraft(run, {}, deps({ now: () => LATER + 1000 })));
+    const stored = [0, 1].map((n) => JSON.parse(read(run, `checks/rev-${n}.json`)) as Record<string, unknown>);
+    expect(stored[0]!['readingLedger']).toEqual(LEDGER);
+    expect(JSON.stringify(stored[1]!['readingLedger'])).toBe(JSON.stringify(stored[0]!['readingLedger']));
+    expect(Object.keys(stored[0]!).slice(-2)).toEqual(['figureFit', 'readingLedger']);
+    expect(stored[0]!).not.toHaveProperty('readingDifference');
+    expect(first.readingLedger).toEqual(LEDGER);
+    // Advice: no outcome or finding changes; the first run of the repository has no earlier ledger, so its difference is Unknown.
+    expect([first.outcome, second.outcome]).toEqual(['passed', 'passed']);
+    expect(first.readingDifference).toEqual({ state: 'unknown', why: 'no earlier run of this repository in the state root holds a reading ledger that could be read', unreadableRuns: 0, unreadableCheckRecords: 0 });
+    // Its own run's earlier check is never its predecessor: only another run directory is.
+    expect(second.readingDifference).toMatchObject({ state: 'unknown' });
+  });
+
+  it('reports the difference from an earlier run of the same repository in the state root, and writes it nowhere', async () => {
+    const root = tempDir('dossier-check-state-');
+    const earlier = await briefedRun({}, cloneOf(), root, `run-${'a'.repeat(32)}`);
+    writeDraft(earlier, valid());
+    report(await checkDraft(earlier, {}, deps()));
+    const run = await briefedRun({}, cloneOf(), root);
+    writeDraft(run, mutate((d) => { d.sections[0].paragraphs[1].text += ' Four more words here.'; }));
+    const result = report(await checkDraft(run, {}, deps({ now: () => LATER + 1000 })));
+    const before = { proseWords: 44, readingMinutes: 1, figures: 0, advisories: { ...zeros, 'RS-16': 1 }, figureFit: noFit };
+    const after = { ...before, proseWords: 48 };
+    const delta = { proseWords: 4, readingMinutes: 0, figures: 0, advisories: zeros, figureFit: noFit };
+    expect(result.readingDifference).toEqual({
+      state: 'compared', against: { runId: `run-${'a'.repeat(32)}`, revision: 0, pinnedRevision: commit, checkedAt: '2026-10-07T12:01:00.000Z' },
+      pages: [{ page: 'index.html', change: 'changed', before, after, delta }],
+      draft: { before: { ...before, unplacedUnits: 0 }, after: { ...after, unplacedUnits: 0 }, delta: { ...delta, unplacedUnits: 0 } },
+      unreadableRuns: 0, unreadableCheckRecords: 0,
+    });
+    expect(read(run, 'checks/rev-0.json')).not.toContain('readingDifference');
+    expect(fs.readdirSync(run).filter((name) => name.includes('difference'))).toEqual([]);
+  });
+
+  it('writes no ledger for a draft that does not parse, and says so in the difference', async () => {
+    const run = await briefedRun();
+    writeDraft(run, '{ not json');
+    const result = report(await checkDraft(run, {}, deps()));
+    expect(result).not.toHaveProperty('readingLedger');
+    expect(JSON.parse(read(run, 'checks/rev-0.json'))).not.toHaveProperty('readingLedger');
+    expect(result.readingDifference).toEqual({ state: 'unknown', why: 'this draft does not parse, so it has no reading ledger', unreadableRuns: 0, unreadableCheckRecords: 0 });
   });
 });
 
@@ -963,7 +1025,10 @@ describe('check: the command', () => {
     expect(printed.readerAdvice.standards).toBe('polaris-reader-standards-v1');
     expect(printed.readerAdvice.advisories).toContainEqual({ standard: 'RS-13', at: '$.sections[0].title', detail: expect.stringContaining('camelCase') });
     expect(read(run, 'checks/rev-0.json')).not.toContain('readerAdvice');
-    expect(read(run, 'checks/rev-0.json')).not.toContain('RS-13');
+    // Since version 2.4 the record keeps the advisories' counts in its reading ledger, never an advisory itself: no path or detail of one.
+    expect(read(run, 'checks/rev-0.json')).not.toContain('$.sections[0].title');
+    expect(read(run, 'checks/rev-0.json')).not.toContain('camelCase');
+    expect(JSON.parse(read(run, 'checks/rev-0.json')).readingLedger.draft.advisories['RS-13']).toBe(1);
   });
 
   // syzygy-pdja.20: the claim blocks no fidelity verdict can confirm are advice on the report, never a finding and never in the record.
