@@ -50,7 +50,8 @@ from collections import OrderedDict
 REPO = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 OUT = os.path.join(REPO, "DIRECTIVE-REGISTER.md")
 
-NAME_MAX = 96
+# RFC9-13(a) has a 108-character marked-up title.
+NAME_MAX = 112
 LOOKAHEAD = 3  # a definition's markup may wrap onto this many following lines
 
 DOCTRINE = ".syzygy/governance/doctrine"
@@ -177,7 +178,7 @@ def families():
     impact_pol = POLICY_CAND + "/SHAPE-TO-SPEC-IMPACT-POLICY-CANDIDATE.md"
     rfc_acc = rel(RFCS_ACCEPTED + "/*.md") + rel(RFCS_ACCEPTED + "/*/*.md")
     rfc_cand = rel(RFCS_CANDIDATE + "/*.md") + rel(RFCS_CANDIDATE + "/*/*.md")
-    rfc_pat = r"\bRFC\d+-\d+(?:\([a-z]\))?\b"
+    rfc_pat = r"\bRFC\d+-\d+(?:\([a-z]\))?(?!\w|\([a-z]\))"
     return [
         Family("VIS", "Vision doctrine", r"\bVIS-\d+\b", doctrine,
                "**Adopted, in force** since 2026-07-30"),
@@ -396,6 +397,11 @@ def run_selftest():
     d, c = collect(fam)
     expect("a family with no files renders empty, never stale",
            len(d) == 0 and len(c) == 0)
+
+    rfc_family = next(family for family in families() if family.key == "RFC-accepted")
+    expect("RFC identifiers keep a lettered subclause and match a plain identifier",
+           rfc_family.pattern.findall("RFC3-16(d), RFC3-16, RFC5-6.")
+           == ["RFC3-16(d)", "RFC3-16", "RFC5-6"])
 
     # --- the corpus facts the register exists to make findable ---------------
     body = render()

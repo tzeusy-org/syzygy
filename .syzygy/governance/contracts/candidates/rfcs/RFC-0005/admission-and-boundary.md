@@ -236,18 +236,19 @@ is chosen:
   channel (an authenticated session, or the serving host's own console).
   Credentials are never self-issued, never minted by another machine
   credential, and never distributed through an observed project's content.
+  The sole RFC3-16(d) URL-dossier OS-local class instead uses its fixed adopted issuance/scoping policy and one trusted host controller, not per-instance adoption/owner ceremony or authority delegated through another machine credential. Parent rule/policy adoption and all owner classes remain unchanged.
 - **Scoping — deny by default.** A credential carries an explicit scope set:
   which projects it may read, whether it may submit proposals, trigger
   evaluations, or reach adapter-mediated effects. An unscoped credential is
   invalid, not all-powerful. Scope enumeration granularity is RFC 0003/0006
   schema material; the deny-by-default rule is this clause's.
 - **Rotation.** Supported without identity change; the old instance is retired
-  with an overlap window the owner declares (which may be zero).
+  with an overlap window the owner declares (which may be zero). The RFC3-16(d) class uses exactly zero overlap fixed by its adopted policy; identity survives and next-act revocation still binds.
 - **Revocation.** Effective at the next request (§3.5, acts rule); recorded.
 - **Storage.** Syzygy stores only a verifier (hash or public key), never the
   presentable secret; the credential record (identity, scopes, issuance,
   expiry, revocation state) is a governance-plane artifact and contains no
-  secret material (SEC-5).
+  secret material (SEC-5). For RFC3-16(d) only, that canonical governance-plane operational data is secret-free, Syzygy-maintained and authorization-bearing under the adopted rule/policy derivation, without individual adoption. Its declared observing-Syzygy policies home, closed writer/schema and current protected lifecycle are mandatory; a local verifier projection has no authority. Every other credential artifact follows RFC3-16(a/b), with no broader mutable-policy exemption.
 
 **RFC5-7.** The concrete mechanism is an **enumerated choice for acceptance**
 (§8 q1), each satisfying RFC5-6:

@@ -1,0 +1,763 @@
+{
+  "generated": "Requirement/scenario headings from proposed/polaris-generation/spec.md",
+  "requirement_count": 5,
+  "scenario_count": 108,
+  "rows": [
+    {
+      "requirement": "REQ-polaris-generation-025",
+      "scenario": "Composite classification cannot be derived",
+      "verification": "independent synthetic network/store/process/receipt/byte capture with positive controls and meaningful counterexamples",
+      "delivery_owner": "root delivery/package source owner",
+      "state": "candidate criterion only; implementation and independent full-spec review/activation not claimed"
+    },
+    {
+      "requirement": "REQ-polaris-generation-025",
+      "scenario": "Declaration is present but committed policy is invalid",
+      "verification": "independent synthetic network/store/process/receipt/byte capture with positive controls and meaningful counterexamples",
+      "delivery_owner": "root delivery/package source owner",
+      "state": "candidate criterion only; implementation and independent full-spec review/activation not claimed"
+    },
+    {
+      "requirement": "REQ-polaris-generation-025",
+      "scenario": "Observed source supplies a permissive policy",
+      "verification": "independent synthetic network/store/process/receipt/byte capture with positive controls and meaningful counterexamples",
+      "delivery_owner": "root delivery/package source owner",
+      "state": "candidate criterion only; implementation and independent full-spec review/activation not claimed"
+    },
+    {
+      "requirement": "REQ-polaris-generation-025",
+      "scenario": "Partial redaction retains usable support",
+      "verification": "independent synthetic network/store/process/receipt/byte capture with positive controls and meaningful counterexamples",
+      "delivery_owner": "root delivery/package source owner",
+      "state": "candidate criterion only; implementation and independent full-spec review/activation not claimed"
+    },
+    {
+      "requirement": "REQ-polaris-generation-025",
+      "scenario": "Excluded content reaches a diagnostic boundary",
+      "verification": "independent synthetic network/store/process/receipt/byte capture with positive controls and meaningful counterexamples",
+      "delivery_owner": "root delivery/package source owner",
+      "state": "candidate criterion only; implementation and independent full-spec review/activation not claimed"
+    },
+    {
+      "requirement": "REQ-polaris-generation-025",
+      "scenario": "Provider revoked with an existing challenge",
+      "verification": "independent synthetic network/store/process/receipt/byte capture with positive controls and meaningful counterexamples",
+      "delivery_owner": "root delivery/package source owner",
+      "state": "candidate criterion only; implementation and independent full-spec review/activation not claimed"
+    },
+    {
+      "requirement": "REQ-polaris-generation-025",
+      "scenario": "Complete request screening catches composed secrets",
+      "verification": "independent synthetic network/store/process/receipt/byte capture with positive controls and meaningful counterexamples",
+      "delivery_owner": "root delivery/package source owner",
+      "state": "candidate criterion only; implementation and independent full-spec review/activation not claimed"
+    },
+    {
+      "requirement": "REQ-polaris-generation-025",
+      "scenario": "Ordered design checks preserve full and actual request projections",
+      "verification": "Independent exact prepared, prefix and complete histories preserve surrounding fields and exercise actual and logical detector inputs.",
+      "delivery_owner": "root delivery/package source owner",
+      "state": "candidate criterion only; implementation and independent full-spec review/activation not claimed"
+    },
+    {
+      "requirement": "REQ-polaris-generation-025",
+      "scenario": "Canonical tool receipt cannot be forged or replayed",
+      "verification": "independent synthetic network/store/process/receipt/byte capture with positive controls and meaningful counterexamples",
+      "delivery_owner": "root delivery/package source owner",
+      "state": "candidate criterion only; implementation and independent full-spec review/activation not claimed"
+    },
+    {
+      "requirement": "REQ-polaris-generation-025",
+      "scenario": "First request is not the scaffold baseline",
+      "verification": "independent synthetic network/store/process/receipt/byte capture with positive controls and meaningful counterexamples",
+      "delivery_owner": "root delivery/package source owner",
+      "state": "candidate criterion only; implementation and independent full-spec review/activation not claimed"
+    },
+    {
+      "requirement": "REQ-polaris-generation-025",
+      "scenario": "Ingest excludes before any later request",
+      "verification": "independent synthetic network/store/process/receipt/byte capture with positive controls and meaningful counterexamples",
+      "delivery_owner": "root delivery/package source owner",
+      "state": "candidate criterion only; implementation and independent full-spec review/activation not claimed"
+    },
+    {
+      "requirement": "REQ-polaris-generation-025",
+      "scenario": "Audit persistence failure prevents transmission",
+      "verification": "independent synthetic network/store/process/receipt/byte capture with positive controls and meaningful counterexamples",
+      "delivery_owner": "root delivery/package source owner",
+      "state": "candidate criterion only; implementation and independent full-spec review/activation not claimed"
+    },
+    {
+      "requirement": "REQ-polaris-generation-025",
+      "scenario": "Runtime classes do not silently widen the core declaration",
+      "verification": "independent synthetic network/store/process/receipt/byte capture with positive controls and meaningful counterexamples",
+      "delivery_owner": "root delivery/package source owner",
+      "state": "candidate criterion only; implementation and independent full-spec review/activation not claimed"
+    },
+    {
+      "requirement": "REQ-polaris-generation-025",
+      "scenario": "Fixed protocol controls have distinct received and sent identities",
+      "verification": "independent fixed incoming/projection/prepared byte fixtures and audit/send capture; conflicting values or semantic rewrites refuse; <=1 tool-use response checked independently",
+      "delivery_owner": "root delivery/package source owner",
+      "state": "candidate criterion only; implementation and independent full-spec review/activation not claimed"
+    },
+    {
+      "requirement": "REQ-polaris-generation-033",
+      "scenario": "Local run without retired records",
+      "verification": "inherited behavior plus exact scoped URL/record/packet regression with independent fixture oracle",
+      "delivery_owner": "root delivery/package source owner",
+      "state": "candidate criterion only; implementation and independent full-spec review/activation not claimed"
+    },
+    {
+      "requirement": "REQ-polaris-generation-033",
+      "scenario": "Pinned objects and policy cannot drift",
+      "verification": "inherited behavior plus exact scoped URL/record/packet regression with independent fixture oracle",
+      "delivery_owner": "root delivery/package source owner",
+      "state": "candidate criterion only; implementation and independent full-spec review/activation not claimed"
+    },
+    {
+      "requirement": "REQ-polaris-generation-033",
+      "scenario": "Conservative visibility preserves exclusions",
+      "verification": "inherited behavior plus exact scoped URL/record/packet regression with independent fixture oracle",
+      "delivery_owner": "root delivery/package source owner",
+      "state": "candidate criterion only; implementation and independent full-spec review/activation not claimed"
+    },
+    {
+      "requirement": "REQ-polaris-generation-033",
+      "scenario": "Legacy continuation is explicit",
+      "verification": "inherited behavior plus exact scoped URL/record/packet regression with independent fixture oracle",
+      "delivery_owner": "root delivery/package source owner",
+      "state": "candidate criterion only; implementation and independent full-spec review/activation not claimed"
+    },
+    {
+      "requirement": "REQ-polaris-generation-033",
+      "scenario": "Disclosures name actual evidence",
+      "verification": "inherited behavior plus exact scoped URL/record/packet regression with independent fixture oracle",
+      "delivery_owner": "root delivery/package source owner",
+      "state": "candidate criterion only; implementation and independent full-spec review/activation not claimed"
+    },
+    {
+      "requirement": "REQ-polaris-generation-033",
+      "scenario": "URL projection does not inherit a false local dispatch reason",
+      "verification": "inherited behavior plus exact scoped URL/record/packet regression with independent fixture oracle",
+      "delivery_owner": "root delivery/package source owner",
+      "state": "candidate criterion only; implementation and independent full-spec review/activation not claimed"
+    },
+    {
+      "requirement": "REQ-polaris-generation-035",
+      "scenario": "Review packet without the authoring exchange",
+      "verification": "inherited behavior plus exact scoped URL/record/packet regression with independent fixture oracle",
+      "delivery_owner": "root delivery/package source owner",
+      "state": "candidate criterion only; implementation and independent full-spec review/activation not claimed"
+    },
+    {
+      "requirement": "REQ-polaris-generation-035",
+      "scenario": "Verdict bound to a stale packet",
+      "verification": "inherited behavior plus exact scoped URL/record/packet regression with independent fixture oracle",
+      "delivery_owner": "root delivery/package source owner",
+      "state": "candidate criterion only; implementation and independent full-spec review/activation not claimed"
+    },
+    {
+      "requirement": "REQ-polaris-generation-035",
+      "scenario": "Reviewer or inventory declared as the author",
+      "verification": "inherited behavior plus exact scoped URL/record/packet regression with independent fixture oracle",
+      "delivery_owner": "root delivery/package source owner",
+      "state": "candidate criterion only; implementation and independent full-spec review/activation not claimed"
+    },
+    {
+      "requirement": "REQ-polaris-generation-035",
+      "scenario": "Supervised launch record missing or mismatched",
+      "verification": "inherited behavior plus exact scoped URL/record/packet regression with independent fixture oracle",
+      "delivery_owner": "root delivery/package source owner",
+      "state": "candidate criterion only; implementation and independent full-spec review/activation not claimed"
+    },
+    {
+      "requirement": "REQ-polaris-generation-035",
+      "scenario": "Matched supervised helper is not rejected as operator-started",
+      "verification": "inherited behavior plus exact scoped URL/record/packet regression with independent fixture oracle",
+      "delivery_owner": "root delivery/package source owner",
+      "state": "candidate criterion only; implementation and independent full-spec review/activation not claimed"
+    },
+    {
+      "requirement": "REQ-polaris-generation-035",
+      "scenario": "Verdict incomplete or inconsistent",
+      "verification": "inherited behavior plus exact scoped URL/record/packet regression with independent fixture oracle",
+      "delivery_owner": "root delivery/package source owner",
+      "state": "candidate criterion only; implementation and independent full-spec review/activation not claimed"
+    },
+    {
+      "requirement": "REQ-polaris-generation-035",
+      "scenario": "Independence and completeness disclosed as Inferred",
+      "verification": "inherited behavior plus exact scoped URL/record/packet regression with independent fixture oracle",
+      "delivery_owner": "root delivery/package source owner",
+      "state": "candidate criterion only; implementation and independent full-spec review/activation not claimed"
+    },
+    {
+      "requirement": "REQ-polaris-generation-035",
+      "scenario": "Design review survives its status region",
+      "verification": "inherited behavior plus exact scoped URL/record/packet regression with independent fixture oracle",
+      "delivery_owner": "root delivery/package source owner",
+      "state": "candidate criterion only; implementation and independent full-spec review/activation not claimed"
+    },
+    {
+      "requirement": "REQ-polaris-generation-035",
+      "scenario": "Inventory omission blocks readiness",
+      "verification": "inherited behavior plus exact scoped URL/record/packet regression with independent fixture oracle",
+      "delivery_owner": "root delivery/package source owner",
+      "state": "candidate criterion only; implementation and independent full-spec review/activation not claimed"
+    },
+    {
+      "requirement": "REQ-polaris-generation-035",
+      "scenario": "Withheld and advisory verdict entries",
+      "verification": "inherited behavior plus exact scoped URL/record/packet regression with independent fixture oracle",
+      "delivery_owner": "root delivery/package source owner",
+      "state": "candidate criterion only; implementation and independent full-spec review/activation not claimed"
+    },
+    {
+      "requirement": "REQ-polaris-generation-035",
+      "scenario": "Rendered-design packet carries its questions",
+      "verification": "inherited behavior plus exact scoped URL/record/packet regression with independent fixture oracle",
+      "delivery_owner": "root delivery/package source owner",
+      "state": "candidate criterion only; implementation and independent full-spec review/activation not claimed"
+    },
+    {
+      "requirement": "REQ-polaris-generation-035",
+      "scenario": "Waiting session started before its packet",
+      "verification": "inherited behavior plus exact scoped URL/record/packet regression with independent fixture oracle",
+      "delivery_owner": "root delivery/package source owner",
+      "state": "candidate criterion only; implementation and independent full-spec review/activation not claimed"
+    },
+    {
+      "requirement": "REQ-polaris-generation-035",
+      "scenario": "Packet delivered to a waiting session",
+      "verification": "inherited behavior plus exact scoped URL/record/packet regression with independent fixture oracle",
+      "delivery_owner": "root delivery/package source owner",
+      "state": "candidate criterion only; implementation and independent full-spec review/activation not claimed"
+    },
+    {
+      "requirement": "REQ-polaris-generation-035",
+      "scenario": "Printed pre-approval for a waiting session",
+      "verification": "inherited behavior plus exact scoped URL/record/packet regression with independent fixture oracle",
+      "delivery_owner": "root delivery/package source owner",
+      "state": "candidate criterion only; implementation and independent full-spec review/activation not claimed"
+    },
+    {
+      "requirement": "REQ-polaris-generation-035",
+      "scenario": "Continuing reviewer disclosed",
+      "verification": "inherited behavior plus exact scoped URL/record/packet regression with independent fixture oracle",
+      "delivery_owner": "root delivery/package source owner",
+      "state": "candidate criterion only; implementation and independent full-spec review/activation not claimed"
+    },
+    {
+      "requirement": "REQ-polaris-generation-035",
+      "scenario": "Later round carries a changed-block list",
+      "verification": "inherited behavior plus exact scoped URL/record/packet regression with independent fixture oracle",
+      "delivery_owner": "root delivery/package source owner",
+      "state": "candidate criterion only; implementation and independent full-spec review/activation not claimed"
+    },
+    {
+      "requirement": "REQ-polaris-generation-035",
+      "scenario": "Changed-block list confirms nothing",
+      "verification": "inherited behavior plus exact scoped URL/record/packet regression with independent fixture oracle",
+      "delivery_owner": "root delivery/package source owner",
+      "state": "candidate criterion only; implementation and independent full-spec review/activation not claimed"
+    },
+    {
+      "requirement": "REQ-polaris-generation-035",
+      "scenario": "Changed-block list rebuilt with its packet",
+      "verification": "inherited behavior plus exact scoped URL/record/packet regression with independent fixture oracle",
+      "delivery_owner": "root delivery/package source owner",
+      "state": "candidate criterion only; implementation and independent full-spec review/activation not claimed"
+    },
+    {
+      "requirement": "REQ-polaris-generation-035",
+      "scenario": "Changed-block list disclosed",
+      "verification": "inherited behavior plus exact scoped URL/record/packet regression with independent fixture oracle",
+      "delivery_owner": "root delivery/package source owner",
+      "state": "candidate criterion only; implementation and independent full-spec review/activation not claimed"
+    },
+    {
+      "requirement": "REQ-polaris-generation-035",
+      "scenario": "Review launch provenance matches actual mode in both forms",
+      "verification": "Paired independently attributed ordinary operator versus URL supervisor launch-record fixtures and human/machine projections; swap launch mode/run/role/directory and reject; retained helper reading/freshness remains Inferred",
+      "delivery_owner": "root delivery/package source owner",
+      "state": "candidate criterion only; implementation and independent full-spec review/activation not claimed"
+    },
+    {
+      "requirement": "REQ-polaris-generation-035",
+      "scenario": "Codec rejects a stream BOM and preserves embedded data",
+      "verification": "Independent exact UTF-8 stream fixtures: reject original/envelope leading EFBBBF, preserve embedded JSON-string U+FEFF through five-entity roundtrip, reject raw/decoded NUL; seven-key shape and all scanners unchanged",
+      "delivery_owner": "root delivery/package source owner",
+      "state": "candidate criterion only; implementation and independent full-spec review/activation not claimed"
+    },
+    {
+      "requirement": "REQ-polaris-generation-035",
+      "scenario": "URL design view preserves the exact original subject",
+      "verification": "independent actual installed-renderer fixture plus complete input-coverage/sink/round-trip/schema/size/currentness/audit oracles and meaningful forged-parent/raw-secret/residual-active/producer-drift/raw-channel counterexamples; generic raw active failure must remain; byte identity does not establish comprehension or runtime completion",
+      "delivery_owner": "root delivery/package source owner",
+      "state": "candidate criterion only; implementation and independent full-spec review/activation not claimed"
+    },
+    {
+      "requirement": "REQ-polaris-generation-035",
+      "scenario": "Renderer origins cover every actual input byte",
+      "verification": "independent actual installed-renderer fixture plus complete input-coverage/sink/round-trip/schema/size/currentness/audit oracles and meaningful forged-parent/raw-secret/residual-active/producer-drift/raw-channel counterexamples; generic raw active failure must remain; byte identity does not establish comprehension or runtime completion",
+      "delivery_owner": "root delivery/package source owner",
+      "state": "candidate criterion only; implementation and independent full-spec review/activation not claimed"
+    },
+    {
+      "requirement": "REQ-polaris-generation-035",
+      "scenario": "Raw secrets cannot be laundered through entity encoding",
+      "verification": "independent actual installed-renderer fixture plus complete input-coverage/sink/round-trip/schema/size/currentness/audit oracles and meaningful forged-parent/raw-secret/residual-active/producer-drift/raw-channel counterexamples; generic raw active failure must remain; byte identity does not establish comprehension or runtime completion",
+      "delivery_owner": "root delivery/package source owner",
+      "state": "candidate criterion only; implementation and independent full-spec review/activation not claimed"
+    },
+    {
+      "requirement": "REQ-polaris-generation-035",
+      "scenario": "Raw active finding stays failed at the generic boundary",
+      "verification": "independent actual installed-renderer fixture plus complete input-coverage/sink/round-trip/schema/size/currentness/audit oracles and meaningful forged-parent/raw-secret/residual-active/producer-drift/raw-channel counterexamples; generic raw active failure must remain; byte identity does not establish comprehension or runtime completion",
+      "delivery_owner": "root delivery/package source owner",
+      "state": "candidate criterion only; implementation and independent full-spec review/activation not claimed"
+    },
+    {
+      "requirement": "REQ-polaris-generation-035",
+      "scenario": "Full renderer sink verification is mandatory",
+      "verification": "independent actual installed-renderer fixture plus complete input-coverage/sink/round-trip/schema/size/currentness/audit oracles and meaningful forged-parent/raw-secret/residual-active/producer-drift/raw-channel counterexamples; generic raw active failure must remain; byte identity does not establish comprehension or runtime completion",
+      "delivery_owner": "root delivery/package source owner",
+      "state": "candidate criterion only; implementation and independent full-spec review/activation not claimed"
+    },
+    {
+      "requirement": "REQ-polaris-generation-035",
+      "scenario": "Inert view still fails residual generic scanner findings",
+      "verification": "independent actual installed-renderer fixture plus complete input-coverage/sink/round-trip/schema/size/currentness/audit oracles and meaningful forged-parent/raw-secret/residual-active/producer-drift/raw-channel counterexamples; generic raw active failure must remain; byte identity does not establish comprehension or runtime completion",
+      "delivery_owner": "root delivery/package source owner",
+      "state": "candidate criterion only; implementation and independent full-spec review/activation not claimed"
+    },
+    {
+      "requirement": "REQ-polaris-generation-035",
+      "scenario": "View expansion and parent limits are independent",
+      "verification": "independent actual installed-renderer fixture plus complete input-coverage/sink/round-trip/schema/size/currentness/audit oracles and meaningful forged-parent/raw-secret/residual-active/producer-drift/raw-channel counterexamples; generic raw active failure must remain; byte identity does not establish comprehension or runtime completion",
+      "delivery_owner": "root delivery/package source owner",
+      "state": "candidate criterion only; implementation and independent full-spec review/activation not claimed"
+    },
+    {
+      "requirement": "REQ-polaris-generation-035",
+      "scenario": "Complete ordered delivery precedes the dependent verdict",
+      "verification": "Independently inspect the durable exact receipt and request lineage with stale, reordered, duplicate and prefix controls.",
+      "delivery_owner": "root delivery/package source owner",
+      "state": "candidate criterion only; implementation and independent full-spec review/activation not claimed"
+    },
+    {
+      "requirement": "REQ-polaris-generation-035",
+      "scenario": "Ordered design transport exhausts its budget",
+      "verification": "Prove exact bound and adverse boundary through actual replies, history, bounded verdict and acknowledgment under the original deadline.",
+      "delivery_owner": "root delivery/package source owner",
+      "state": "candidate criterion only; implementation and independent full-spec review/activation not claimed"
+    },
+    {
+      "requirement": "REQ-polaris-generation-035",
+      "scenario": "Closed canonical ordered transport survives UTF-8 and escaping boundaries",
+      "verification": "Independent canonical round-trip and mutation controls on exact closed fields, selector grammar and scalar boundary.",
+      "delivery_owner": "root delivery/package source owner",
+      "state": "candidate criterion only; implementation and independent full-spec review/activation not claimed"
+    },
+    {
+      "requirement": "REQ-polaris-generation-035",
+      "scenario": "Final part actual send and admitted response determine verdict eligibility",
+      "verification": "Exercise absent, failed, uncertain, changed and unrelated final-part send/outcome/response audit events before the verdict effect.",
+      "delivery_owner": "root delivery/package source owner",
+      "state": "candidate criterion only; implementation and independent full-spec review/activation not claimed"
+    },
+    {
+      "requirement": "REQ-polaris-generation-035",
+      "scenario": "Ordered verdict eligibility follows the complete protected acknowledgment",
+      "verification": "Require exact staged identity, complete actual terminal exchange and atomic promotion. Refuse failed, uncertain, interrupted, replayed and stale stages across dependent reads.",
+      "delivery_owner": "root delivery/package source owner",
+      "state": "candidate criterion only; implementation and independent full-spec review/activation not claimed"
+    },
+    {
+      "requirement": "REQ-polaris-generation-035",
+      "scenario": "History projection, lifetime budget and retirement are fail closed",
+      "verification": "Exercise zero, prefix and full histories, preflight verdict overflow, retirement, applicable retention and authorized new attempts without replay.",
+      "delivery_owner": "root delivery/package source owner",
+      "state": "candidate criterion only; implementation and independent full-spec review/activation not claimed"
+    },
+    {
+      "requirement": "REQ-polaris-generation-035",
+      "scenario": "Design verdict binds original and current representation separately",
+      "verification": "independent actual installed-renderer fixture plus complete input-coverage/sink/round-trip/schema/size/currentness/audit oracles and meaningful forged-parent/raw-secret/residual-active/producer-drift/raw-channel counterexamples; generic raw active failure must remain; byte identity does not establish comprehension or runtime completion",
+      "delivery_owner": "root delivery/package source owner",
+      "state": "candidate criterion only; implementation and independent full-spec review/activation not claimed"
+    },
+    {
+      "requirement": "REQ-polaris-generation-035",
+      "scenario": "Design view is not a decoded raw artifact channel",
+      "verification": "independent actual installed-renderer fixture plus complete input-coverage/sink/round-trip/schema/size/currentness/audit oracles and meaningful forged-parent/raw-secret/residual-active/producer-drift/raw-channel counterexamples; generic raw active failure must remain; byte identity does not establish comprehension or runtime completion",
+      "delivery_owner": "root delivery/package source owner",
+      "state": "candidate criterion only; implementation and independent full-spec review/activation not claimed"
+    },
+    {
+      "requirement": "REQ-polaris-generation-035",
+      "scenario": "Supervised packet delivery uses only admitted MCP tools",
+      "verification": "inherited behavior plus exact scoped URL/record/packet regression with independent fixture oracle",
+      "delivery_owner": "root delivery/package source owner",
+      "state": "candidate criterion only; implementation and independent full-spec review/activation not claimed"
+    },
+    {
+      "requirement": "REQ-polaris-generation-047",
+      "scenario": "Non-main remote default without records",
+      "verification": "independent controlled pack/closure/path-policy oracle plus continuous filesystem-effect/process/buffer/limit capture through transfer, refusal, interruption and admitted materialization; transient raw-pack-write mutant must fail; final cleanup snapshots alone insufficient",
+      "delivery_owner": "root delivery/package source owner",
+      "state": "candidate criterion only; implementation and independent full-spec review/activation not claimed"
+    },
+    {
+      "requirement": "REQ-polaris-generation-047",
+      "scenario": "Explicit remote selector and tag",
+      "verification": "independent controlled pack/closure/path-policy oracle plus continuous filesystem-effect/process/buffer/limit capture through transfer, refusal, interruption and admitted materialization; transient raw-pack-write mutant must fail; final cleanup snapshots alone insufficient",
+      "delivery_owner": "root delivery/package source owner",
+      "state": "candidate criterion only; implementation and independent full-spec review/activation not claimed"
+    },
+    {
+      "requirement": "REQ-polaris-generation-047",
+      "scenario": "Unsupported selector or malformed advertisement",
+      "verification": "independent controlled pack/closure/path-policy oracle plus continuous filesystem-effect/process/buffer/limit capture through transfer, refusal, interruption and admitted materialization; transient raw-pack-write mutant must fail; final cleanup snapshots alone insufficient",
+      "delivery_owner": "root delivery/package source owner",
+      "state": "candidate criterion only; implementation and independent full-spec review/activation not claimed"
+    },
+    {
+      "requirement": "REQ-polaris-generation-047",
+      "scenario": "Remote moves after selection",
+      "verification": "independent controlled pack/closure/path-policy oracle plus continuous filesystem-effect/process/buffer/limit capture through transfer, refusal, interruption and admitted materialization; transient raw-pack-write mutant must fail; final cleanup snapshots alone insufficient",
+      "delivery_owner": "root delivery/package source owner",
+      "state": "candidate criterion only; implementation and independent full-spec review/activation not claimed"
+    },
+    {
+      "requirement": "REQ-polaris-generation-047",
+      "scenario": "Supplied clone does not match",
+      "verification": "independent controlled pack/closure/path-policy oracle plus continuous filesystem-effect/process/buffer/limit capture through transfer, refusal, interruption and admitted materialization; transient raw-pack-write mutant must fail; final cleanup snapshots alone insufficient",
+      "delivery_owner": "root delivery/package source owner",
+      "state": "candidate criterion only; implementation and independent full-spec review/activation not claimed"
+    },
+    {
+      "requirement": "REQ-polaris-generation-047",
+      "scenario": "Unsafe locator is not emitted",
+      "verification": "independent controlled pack/closure/path-policy oracle plus continuous filesystem-effect/process/buffer/limit capture through transfer, refusal, interruption and admitted materialization; transient raw-pack-write mutant must fail; final cleanup snapshots alone insufficient",
+      "delivery_owner": "root delivery/package source owner",
+      "state": "candidate criterion only; implementation and independent full-spec review/activation not claimed"
+    },
+    {
+      "requirement": "REQ-polaris-generation-047",
+      "scenario": "Source metadata detector canary",
+      "verification": "independent controlled pack/closure/path-policy oracle plus continuous filesystem-effect/process/buffer/limit capture through transfer, refusal, interruption and admitted materialization; transient raw-pack-write mutant must fail; final cleanup snapshots alone insufficient",
+      "delivery_owner": "root delivery/package source owner",
+      "state": "candidate criterion only; implementation and independent full-spec review/activation not claimed"
+    },
+    {
+      "requirement": "REQ-polaris-generation-047",
+      "scenario": "Acquisition timeout and cleanup failure",
+      "verification": "independent controlled pack/closure/path-policy oracle plus continuous filesystem-effect/process/buffer/limit capture through transfer, refusal, interruption and admitted materialization; transient raw-pack-write mutant must fail; final cleanup snapshots alone insufficient",
+      "delivery_owner": "root delivery/package source owner",
+      "state": "candidate criterion only; implementation and independent full-spec review/activation not claimed"
+    },
+    {
+      "requirement": "REQ-polaris-generation-047",
+      "scenario": "Acquisition disk and process limits are distinct",
+      "verification": "independent controlled pack/closure/path-policy oracle plus continuous filesystem-effect/process/buffer/limit capture through transfer, refusal, interruption and admitted materialization; transient raw-pack-write mutant must fail; final cleanup snapshots alone insufficient",
+      "delivery_owner": "root delivery/package source owner",
+      "state": "candidate criterion only; implementation and independent full-spec review/activation not claimed"
+    },
+    {
+      "requirement": "REQ-polaris-generation-047",
+      "scenario": "Strict SHA-256 shape only",
+      "verification": "independent controlled pack/closure/path-policy oracle plus continuous filesystem-effect/process/buffer/limit capture through transfer, refusal, interruption and admitted materialization; transient raw-pack-write mutant must fail; final cleanup snapshots alone insufficient",
+      "delivery_owner": "root delivery/package source owner",
+      "state": "candidate criterion only; implementation and independent full-spec review/activation not claimed"
+    },
+    {
+      "requirement": "REQ-polaris-generation-047",
+      "scenario": "Local entry remains strict",
+      "verification": "independent controlled pack/closure/path-policy oracle plus continuous filesystem-effect/process/buffer/limit capture through transfer, refusal, interruption and admitted materialization; transient raw-pack-write mutant must fail; final cleanup snapshots alone insufficient",
+      "delivery_owner": "root delivery/package source owner",
+      "state": "candidate criterion only; implementation and independent full-spec review/activation not claimed"
+    },
+    {
+      "requirement": "REQ-polaris-generation-047",
+      "scenario": "Source provider declaration precedes helper and selection",
+      "verification": "independently prepared metadata/destination/ref/OID/protocol/profile fixtures plus native helper/GET/protocol-write/POST and protected-audit ordering capture; unknown/secret/audit-failure/check-to-use tamper must prevent dependent sends; no exact libcurl-header/ciphertext claim, source-body/store proof remains independent",
+      "delivery_owner": "root delivery/package source owner",
+      "state": "candidate criterion only; implementation and independent full-spec review/activation not claimed"
+    },
+    {
+      "requirement": "REQ-polaris-generation-047",
+      "scenario": "Complete source metadata is screened before send",
+      "verification": "independently prepared metadata/destination/ref/OID/protocol/profile fixtures plus native helper/GET/protocol-write/POST and protected-audit ordering capture; unknown/secret/audit-failure/check-to-use tamper must prevent dependent sends; no exact libcurl-header/ciphertext claim, source-body/store proof remains independent",
+      "delivery_owner": "root delivery/package source owner",
+      "state": "candidate criterion only; implementation and independent full-spec review/activation not claimed"
+    },
+    {
+      "requirement": "REQ-polaris-generation-047",
+      "scenario": "Source connect audit failure prevents native advertisement",
+      "verification": "independently prepared metadata/destination/ref/OID/protocol/profile fixtures plus native helper/GET/protocol-write/POST and protected-audit ordering capture; unknown/secret/audit-failure/check-to-use tamper must prevent dependent sends; no exact libcurl-header/ciphertext claim, source-body/store proof remains independent",
+      "delivery_owner": "root delivery/package source owner",
+      "state": "candidate criterion only; implementation and independent full-spec review/activation not claimed"
+    },
+    {
+      "requirement": "REQ-polaris-generation-047",
+      "scenario": "Source fetch audit failure prevents protocol transmission",
+      "verification": "independently prepared metadata/destination/ref/OID/protocol/profile fixtures plus native helper/GET/protocol-write/POST and protected-audit ordering capture; unknown/secret/audit-failure/check-to-use tamper must prevent dependent sends; no exact libcurl-header/ciphertext claim, source-body/store proof remains independent",
+      "delivery_owner": "root delivery/package source owner",
+      "state": "candidate criterion only; implementation and independent full-spec review/activation not claimed"
+    },
+    {
+      "requirement": "REQ-polaris-generation-047",
+      "scenario": "Native source profile cannot acquire extra egress authority",
+      "verification": "independently prepared metadata/destination/ref/OID/protocol/profile fixtures plus native helper/GET/protocol-write/POST and protected-audit ordering capture; unknown/secret/audit-failure/check-to-use tamper must prevent dependent sends; no exact libcurl-header/ciphertext claim, source-body/store proof remains independent",
+      "delivery_owner": "root delivery/package source owner",
+      "state": "candidate criterion only; implementation and independent full-spec review/activation not claimed"
+    },
+    {
+      "requirement": "REQ-polaris-generation-047",
+      "scenario": "Source transport capture scope is honest",
+      "verification": "independently prepared metadata/destination/ref/OID/protocol/profile fixtures plus native helper/GET/protocol-write/POST and protected-audit ordering capture; unknown/secret/audit-failure/check-to-use tamper must prevent dependent sends; no exact libcurl-header/ciphertext claim, source-body/store proof remains independent",
+      "delivery_owner": "root delivery/package source owner",
+      "state": "candidate criterion only; implementation and independent full-spec review/activation not claimed"
+    },
+    {
+      "requirement": "REQ-polaris-generation-047",
+      "scenario": "Entire admitted closure precedes source storage",
+      "verification": "independent controlled pack/closure/path-policy oracle plus continuous filesystem-effect/process/buffer/limit capture through transfer, refusal, interruption and admitted materialization; transient raw-pack-write mutant must fail; final cleanup snapshots alone insufficient",
+      "delivery_owner": "root delivery/package source owner",
+      "state": "candidate criterion only; implementation and independent full-spec review/activation not claimed"
+    },
+    {
+      "requirement": "REQ-polaris-generation-047",
+      "scenario": "One required excluded blob refuses the whole owned acquisition",
+      "verification": "independent controlled pack/closure/path-policy oracle plus continuous filesystem-effect/process/buffer/limit capture through transfer, refusal, interruption and admitted materialization; transient raw-pack-write mutant must fail; final cleanup snapshots alone insufficient",
+      "delivery_owner": "root delivery/package source owner",
+      "state": "candidate criterion only; implementation and independent full-spec review/activation not claimed"
+    },
+    {
+      "requirement": "REQ-polaris-generation-047",
+      "scenario": "Commit tree and alias metadata are screened too",
+      "verification": "independent controlled pack/closure/path-policy oracle plus continuous filesystem-effect/process/buffer/limit capture through transfer, refusal, interruption and admitted materialization; transient raw-pack-write mutant must fail; final cleanup snapshots alone insufficient",
+      "delivery_owner": "root delivery/package source owner",
+      "state": "candidate criterion only; implementation and independent full-spec review/activation not claimed"
+    },
+    {
+      "requirement": "REQ-polaris-generation-047",
+      "scenario": "Pack delta and closure mismatch cannot become a stored pack",
+      "verification": "independent controlled pack/closure/path-policy oracle plus continuous filesystem-effect/process/buffer/limit capture through transfer, refusal, interruption and admitted materialization; transient raw-pack-write mutant must fail; final cleanup snapshots alone insufficient",
+      "delivery_owner": "root delivery/package source owner",
+      "state": "candidate criterion only; implementation and independent full-spec review/activation not claimed"
+    },
+    {
+      "requirement": "REQ-polaris-generation-047",
+      "scenario": "Unsupported memory transport never falls back to fetch",
+      "verification": "independent controlled pack/closure/path-policy oracle plus continuous filesystem-effect/process/buffer/limit capture through transfer, refusal, interruption and admitted materialization; transient raw-pack-write mutant must fail; final cleanup snapshots alone insufficient",
+      "delivery_owner": "root delivery/package source owner",
+      "state": "candidate criterion only; implementation and independent full-spec review/activation not claimed"
+    },
+    {
+      "requirement": "REQ-polaris-generation-047",
+      "scenario": "Interruption cannot retain unadmitted acquisition input",
+      "verification": "independent controlled pack/closure/path-policy oracle plus continuous filesystem-effect/process/buffer/limit capture through transfer, refusal, interruption and admitted materialization; transient raw-pack-write mutant must fail; final cleanup snapshots alone insufficient",
+      "delivery_owner": "root delivery/package source owner",
+      "state": "candidate criterion only; implementation and independent full-spec review/activation not claimed"
+    },
+    {
+      "requirement": "REQ-polaris-generation-047",
+      "scenario": "Supplied clone retains its separate exclusion boundary",
+      "verification": "independent controlled pack/closure/path-policy oracle plus continuous filesystem-effect/process/buffer/limit capture through transfer, refusal, interruption and admitted materialization; transient raw-pack-write mutant must fail; final cleanup snapshots alone insufficient",
+      "delivery_owner": "root delivery/package source owner",
+      "state": "candidate criterion only; implementation and independent full-spec review/activation not claimed"
+    },
+    {
+      "requirement": "REQ-polaris-generation-048",
+      "scenario": "Ordered design support is pinned independently by role",
+      "verification": "Inspect all four actual role support selections, reject mismatched bytes and verify the supported bounded continued design path.",
+      "delivery_owner": "root delivery/package source owner",
+      "state": "candidate criterion only; implementation and independent full-spec review/activation not claimed"
+    },
+    {
+      "requirement": "REQ-polaris-generation-048",
+      "scenario": "No-record end-to-end close",
+      "verification": "actual safe production public-URL activation plus independent network/audit capture and synthetic counterexamples",
+      "delivery_owner": "root delivery/package source owner",
+      "state": "candidate criterion only; implementation and independent full-spec review/activation not claimed"
+    },
+    {
+      "requirement": "REQ-polaris-generation-048",
+      "scenario": "Parent adoption precedes any mechanical instance authority",
+      "verification": "Independently controlled effective parent-adoption fixtures and supported real canonical-instance/kernel/scope/anchor/audit captures; no-parent/candidate-only/veto/retirement, out-of-class/immutable-field, double-file rollback, stale race and live/resume next-act controls must prevent effects. A permitted exact instance needs no individual commit/adoption only under the actually adopted governing rule; document fixtures do not prove runtime.",
+      "delivery_owner": "root delivery/package source owner",
+      "state": "candidate criterion only; implementation and independent full-spec review/activation not claimed"
+    },
+    {
+      "requirement": "REQ-polaris-generation-048",
+      "scenario": "Adopted rule permits only its bounded runtime instance",
+      "verification": "Independently controlled effective parent-adoption fixtures and supported real canonical-instance/kernel/scope/anchor/audit captures; no-parent/candidate-only/veto/retirement, out-of-class/immutable-field, double-file rollback, stale race and live/resume next-act controls must prevent effects. A permitted exact instance needs no individual commit/adoption only under the actually adopted governing rule; document fixtures do not prove runtime.",
+      "delivery_owner": "root delivery/package source owner",
+      "state": "candidate criterion only; implementation and independent full-spec review/activation not claimed"
+    },
+    {
+      "requirement": "REQ-polaris-generation-048",
+      "scenario": "Mechanical exception cannot spread to another authorization artifact",
+      "verification": "Independently controlled effective parent-adoption fixtures and supported real canonical-instance/kernel/scope/anchor/audit captures; no-parent/candidate-only/veto/retirement, out-of-class/immutable-field, double-file rollback, stale race and live/resume next-act controls must prevent effects. A permitted exact instance needs no individual commit/adoption only under the actually adopted governing rule; document fixtures do not prove runtime.",
+      "delivery_owner": "root delivery/package source owner",
+      "state": "candidate criterion only; implementation and independent full-spec review/activation not claimed"
+    },
+    {
+      "requirement": "REQ-polaris-generation-048",
+      "scenario": "Fixed writer cannot widen immutable instance bindings",
+      "verification": "Independently controlled effective parent-adoption fixtures and supported real canonical-instance/kernel/scope/anchor/audit captures; no-parent/candidate-only/veto/retirement, out-of-class/immutable-field, double-file rollback, stale race and live/resume next-act controls must prevent effects. A permitted exact instance needs no individual commit/adoption only under the actually adopted governing rule; document fixtures do not prove runtime.",
+      "delivery_owner": "root delivery/package source owner",
+      "state": "candidate criterion only; implementation and independent full-spec review/activation not claimed"
+    },
+    {
+      "requirement": "REQ-polaris-generation-048",
+      "scenario": "Rollback cannot restore retired runtime authority",
+      "verification": "Independently controlled effective parent-adoption fixtures and supported real canonical-instance/kernel/scope/anchor/audit captures; no-parent/candidate-only/veto/retirement, out-of-class/immutable-field, double-file rollback, stale race and live/resume next-act controls must prevent effects. A permitted exact instance needs no individual commit/adoption only under the actually adopted governing rule; document fixtures do not prove runtime.",
+      "delivery_owner": "root delivery/package source owner",
+      "state": "candidate criterion only; implementation and independent full-spec review/activation not claimed"
+    },
+    {
+      "requirement": "REQ-polaris-generation-048",
+      "scenario": "Parent withdrawal stops the next live or resumed act",
+      "verification": "Independently controlled effective parent-adoption fixtures and supported real canonical-instance/kernel/scope/anchor/audit captures; no-parent/candidate-only/veto/retirement, out-of-class/immutable-field, double-file rollback, stale race and live/resume next-act controls must prevent effects. A permitted exact instance needs no individual commit/adoption only under the actually adopted governing rule; document fixtures do not prove runtime.",
+      "delivery_owner": "root delivery/package source owner",
+      "state": "candidate criterion only; implementation and independent full-spec review/activation not claimed"
+    },
+    {
+      "requirement": "REQ-polaris-generation-048",
+      "scenario": "Kernel attestation is required before protected access",
+      "verification": "Independent supported real kernel-peer/process-lifetime/dedicated-channel controls plus wrong/missing/reused identity, same-UID/loopback/anonymous-upstream, scope, atomic-governance-publication/projection, zero-overlap rotation/next-act revocation/open-connection/resume and bounds/audit-failure probes; document checks and filesystem-only sockets never constitute this runtime proof",
+      "delivery_owner": "root delivery/package source owner",
+      "state": "candidate criterion only; implementation and independent full-spec review/activation not claimed"
+    },
+    {
+      "requirement": "REQ-polaris-generation-048",
+      "scenario": "Authentication and operation scope are separate",
+      "verification": "Independent supported real kernel-peer/process-lifetime/dedicated-channel controls plus wrong/missing/reused identity, same-UID/loopback/anonymous-upstream, scope, atomic-governance-publication/projection, zero-overlap rotation/next-act revocation/open-connection/resume and bounds/audit-failure probes; document checks and filesystem-only sockets never constitute this runtime proof",
+      "delivery_owner": "root delivery/package source owner",
+      "state": "candidate criterion only; implementation and independent full-spec review/activation not claimed"
+    },
+    {
+      "requirement": "REQ-polaris-generation-048",
+      "scenario": "Issuance has one lawful authoritative data home",
+      "verification": "Independent supported real kernel-peer/process-lifetime/dedicated-channel controls plus wrong/missing/reused identity, same-UID/loopback/anonymous-upstream, scope, atomic-governance-publication/projection, zero-overlap rotation/next-act revocation/open-connection/resume and bounds/audit-failure probes; document checks and filesystem-only sockets never constitute this runtime proof",
+      "delivery_owner": "root delivery/package source owner",
+      "state": "candidate criterion only; implementation and independent full-spec review/activation not claimed"
+    },
+    {
+      "requirement": "REQ-polaris-generation-048",
+      "scenario": "Rotation retires the previous instance immediately",
+      "verification": "Independent supported real kernel-peer/process-lifetime/dedicated-channel controls plus wrong/missing/reused identity, same-UID/loopback/anonymous-upstream, scope, atomic-governance-publication/projection, zero-overlap rotation/next-act revocation/open-connection/resume and bounds/audit-failure probes; document checks and filesystem-only sockets never constitute this runtime proof",
+      "delivery_owner": "root delivery/package source owner",
+      "state": "candidate criterion only; implementation and independent full-spec review/activation not claimed"
+    },
+    {
+      "requirement": "REQ-polaris-generation-048",
+      "scenario": "Revocation applies to the next act and resume",
+      "verification": "Independent supported real kernel-peer/process-lifetime/dedicated-channel controls plus wrong/missing/reused identity, same-UID/loopback/anonymous-upstream, scope, atomic-governance-publication/projection, zero-overlap rotation/next-act revocation/open-connection/resume and bounds/audit-failure probes; document checks and filesystem-only sockets never constitute this runtime proof",
+      "delivery_owner": "root delivery/package source owner",
+      "state": "candidate criterion only; implementation and independent full-spec review/activation not claimed"
+    },
+    {
+      "requirement": "REQ-polaris-generation-048",
+      "scenario": "Authority and projection disagreement fails closed",
+      "verification": "Independent supported real kernel-peer/process-lifetime/dedicated-channel controls plus wrong/missing/reused identity, same-UID/loopback/anonymous-upstream, scope, atomic-governance-publication/projection, zero-overlap rotation/next-act revocation/open-connection/resume and bounds/audit-failure probes; document checks and filesystem-only sockets never constitute this runtime proof",
+      "delivery_owner": "root delivery/package source owner",
+      "state": "candidate criterion only; implementation and independent full-spec review/activation not claimed"
+    },
+    {
+      "requirement": "REQ-polaris-generation-048",
+      "scenario": "Bridge authentication cannot launder anonymous input",
+      "verification": "Independent supported real kernel-peer/process-lifetime/dedicated-channel controls plus wrong/missing/reused identity, same-UID/loopback/anonymous-upstream, scope, atomic-governance-publication/projection, zero-overlap rotation/next-act revocation/open-connection/resume and bounds/audit-failure probes; document checks and filesystem-only sockets never constitute this runtime proof",
+      "delivery_owner": "root delivery/package source owner",
+      "state": "candidate criterion only; implementation and independent full-spec review/activation not claimed"
+    },
+    {
+      "requirement": "REQ-polaris-generation-048",
+      "scenario": "Separate contexts and unchanged packets",
+      "verification": "independent synthetic network/store/process/receipt/byte capture with positive controls and meaningful counterexamples",
+      "delivery_owner": "root delivery/package source owner",
+      "state": "candidate criterion only; implementation and independent full-spec review/activation not claimed"
+    },
+    {
+      "requirement": "REQ-polaris-generation-048",
+      "scenario": "Tool configuration refuses before launch",
+      "verification": "independent synthetic network/store/process/receipt/byte capture with positive controls and meaningful counterexamples",
+      "delivery_owner": "root delivery/package source owner",
+      "state": "candidate criterion only; implementation and independent full-spec review/activation not claimed"
+    },
+    {
+      "requirement": "REQ-polaris-generation-048",
+      "scenario": "No execution instruction in every role",
+      "verification": "independent synthetic network/store/process/receipt/byte capture with positive controls and meaningful counterexamples",
+      "delivery_owner": "root delivery/package source owner",
+      "state": "candidate criterion only; implementation and independent full-spec review/activation not claimed"
+    },
+    {
+      "requirement": "REQ-polaris-generation-048",
+      "scenario": "Refusal timeout and stop",
+      "verification": "independent synthetic network/store/process/receipt/byte capture with positive controls and meaningful counterexamples",
+      "delivery_owner": "root delivery/package source owner",
+      "state": "candidate criterion only; implementation and independent full-spec review/activation not claimed"
+    },
+    {
+      "requirement": "REQ-polaris-generation-048",
+      "scenario": "Resume retains the pin and checks",
+      "verification": "independent synthetic network/store/process/receipt/byte capture with positive controls and meaningful counterexamples",
+      "delivery_owner": "root delivery/package source owner",
+      "state": "candidate criterion only; implementation and independent full-spec review/activation not claimed"
+    },
+    {
+      "requirement": "REQ-polaris-generation-048",
+      "scenario": "Stored provenance is not verification",
+      "verification": "independent synthetic network/store/process/receipt/byte capture with positive controls and meaningful counterexamples",
+      "delivery_owner": "root delivery/package source owner",
+      "state": "candidate criterion only; implementation and independent full-spec review/activation not claimed"
+    },
+    {
+      "requirement": "REQ-polaris-generation-048",
+      "scenario": "Operator-started compatibility and CLI access",
+      "verification": "independent synthetic network/store/process/receipt/byte capture with positive controls and meaningful counterexamples",
+      "delivery_owner": "root delivery/package source owner",
+      "state": "candidate criterion only; implementation and independent full-spec review/activation not claimed"
+    },
+    {
+      "requirement": "REQ-polaris-generation-048",
+      "scenario": "Network route cannot bypass the relay",
+      "verification": "independent synthetic network/store/process/receipt/byte capture with positive controls and meaningful counterexamples",
+      "delivery_owner": "root delivery/package source owner",
+      "state": "candidate criterion only; implementation and independent full-spec review/activation not claimed"
+    },
+    {
+      "requirement": "REQ-polaris-generation-048",
+      "scenario": "Strict tools and disabled customization are checked",
+      "verification": "independent synthetic network/store/process/receipt/byte capture with positive controls and meaningful counterexamples",
+      "delivery_owner": "root delivery/package source owner",
+      "state": "candidate criterion only; implementation and independent full-spec review/activation not claimed"
+    },
+    {
+      "requirement": "REQ-polaris-generation-048",
+      "scenario": "Unsupported thinking cannot be hidden by a signature",
+      "verification": "independent synthetic network/store/process/receipt/byte capture with positive controls and meaningful counterexamples",
+      "delivery_owner": "root delivery/package source owner",
+      "state": "candidate criterion only; implementation and independent full-spec review/activation not claimed"
+    },
+    {
+      "requirement": "REQ-polaris-generation-048",
+      "scenario": "Boundary and audit must survive resume",
+      "verification": "independent synthetic network/store/process/receipt/byte capture with positive controls and meaningful counterexamples",
+      "delivery_owner": "root delivery/package source owner",
+      "state": "candidate criterion only; implementation and independent full-spec review/activation not claimed"
+    },
+    {
+      "requirement": "REQ-polaris-generation-048",
+      "scenario": "Verified default is explicit and unsupported model never falls back",
+      "verification": "independent synthetic network/store/process/receipt/byte capture with positive controls and meaningful counterexamples",
+      "delivery_owner": "root delivery/package source owner",
+      "state": "candidate criterion only; implementation and independent full-spec review/activation not claimed"
+    }
+  ]
+}

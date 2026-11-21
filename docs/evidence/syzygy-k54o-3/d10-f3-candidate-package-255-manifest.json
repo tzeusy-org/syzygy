@@ -1,0 +1,122 @@
+{
+  "scope": "Local verified combined F3 candidate. Review, adoption and runtime separate.",
+  "base": "3c0658ff8d6de9b73305f4c27979404551ecfe36",
+  "files": [
+    {
+      "path": "openspec/changes/dossier-url-declared-source-run/.openspec.yaml",
+      "sha256": "4c809c0a23df2b5d2324425b77ae5ff9b6d93d0a0f8c42e9dc20695839cf2478",
+      "bytes": 40,
+      "basisSha256": "4c809c0a23df2b5d2324425b77ae5ff9b6d93d0a0f8c42e9dc20695839cf2478",
+      "changed": false
+    },
+    {
+      "path": "openspec/changes/dossier-url-declared-source-run/CAPABILITY-COVERAGE.json",
+      "sha256": "9b596ae744ff60a04647810d4946748101a92e75efe88273621eb56a102f9d3f",
+      "bytes": 25107,
+      "basisSha256": "44f66e25cc594f66cb76d70d3d48d96ded47bdc82610d7ce13655cb30f6ffa1f",
+      "changed": true
+    },
+    {
+      "path": "openspec/changes/dossier-url-declared-source-run/CONTRACT-COVERAGE.json",
+      "sha256": "da64faa26c3c39f95d3ca0db17a0c1f3b71678499a76539b871918b222e95591",
+      "bytes": 113461,
+      "basisSha256": "ca9533f22ea3592b8b0920228459a75b19695690a075e4b00a0470ad455ac2b8",
+      "changed": true
+    },
+    {
+      "path": "openspec/changes/dossier-url-declared-source-run/EXACT-REPLACEMENTS.json",
+      "sha256": "e26793ab3ed9a614f892ff25b13209c15efaec62c3f8dcbf3f945a22f48dad8c",
+      "bytes": 277496,
+      "basisSha256": "43a3f1458787fad6b7b22672d47196289b91055e4b9a4dae9abc436d8e571bcc",
+      "changed": true
+    },
+    {
+      "path": "openspec/changes/dossier-url-declared-source-run/GOVERNING-DEPENDENCIES.json",
+      "sha256": "c2fa146ca00fb6665c6918e4dbd3f00f8f1f5728bc210dc48d2d646f9fa44acd",
+      "bytes": 3331,
+      "basisSha256": "c2fa146ca00fb6665c6918e4dbd3f00f8f1f5728bc210dc48d2d646f9fa44acd",
+      "changed": false
+    },
+    {
+      "path": "openspec/changes/dossier-url-declared-source-run/IMPACT-LEDGER.json",
+      "sha256": "a50e5948f0fdc9e68128f98c2be92fa922d52d96af2cea423f2d7c8c8a33b1af",
+      "bytes": 721780,
+      "basisSha256": "ea8414521aeed2dd00abb3851fdb3b71e485a1a517fa4ff81a5df7db47d7a96e",
+      "changed": true
+    },
+    {
+      "path": "openspec/changes/dossier-url-declared-source-run/README.md",
+      "sha256": "f5e7efd56b005e28eefbaaa21270ac83a9ec6f098c6599d864f7211627c8d83d",
+      "bytes": 2224,
+      "basisSha256": "8299e357375104981184e9be8a01dc62afd2b439f55fdddde6106619aaf3a811",
+      "changed": true
+    },
+    {
+      "path": "openspec/changes/dossier-url-declared-source-run/SCENARIO-COVERAGE.json",
+      "sha256": "a9c946e7c10a86f1a090950a392adace55c7760f3794af5dddd6c7613f626a5d",
+      "bytes": 58712,
+      "basisSha256": "3d07bf37f6aaae9c7248d9259e80b37d704c0becb52be53309d56e0c956e293b",
+      "changed": true
+    },
+    {
+      "path": "openspec/changes/dossier-url-declared-source-run/SEMANTIC-DELTA.md",
+      "sha256": "6dff6d26f559153f9053d92ff2411cfc2ed9135d28266d2cf475bac21ec5afa3",
+      "bytes": 19210,
+      "basisSha256": "dc3e20ab7bb7cb24427970faecf8500c428b64d63df810d3999fd6d94319b98f",
+      "changed": true
+    },
+    {
+      "path": "openspec/changes/dossier-url-declared-source-run/design.md",
+      "sha256": "5d52a8083423cd0e6f9327a2a33a2d260c26b4f927990a3268c576939b532f9e",
+      "bytes": 22087,
+      "basisSha256": "9cef8abc7bdbb158118ac5528799d675720034a831cff116731635f13d0c0900",
+      "changed": true
+    },
+    {
+      "path": "openspec/changes/dossier-url-declared-source-run/proposal.md",
+      "sha256": "97d8f0d6bcda23e26af1f5d7cdb652ff9a027a6dffa416e7295c22703166ab15",
+      "bytes": 15281,
+      "basisSha256": "a94d604efc4136fec46529c50ccfbc10fa6eb5b7719a1767eca34df1b183cecb",
+      "changed": true
+    },
+    {
+      "path": "openspec/changes/dossier-url-declared-source-run/proposed/contracts/DOSSIER-URL-LOCAL-MACHINE-CREDENTIAL-AMENDMENT.md",
+      "sha256": "fdbb30efae2b01946a8f8265b9b7bbbd81c89e007aacc94455f7527fcb19aa6d",
+      "bytes": 36029,
+      "basisSha256": "fdbb30efae2b01946a8f8265b9b7bbbd81c89e007aacc94455f7527fcb19aa6d",
+      "changed": false
+    },
+    {
+      "path": "openspec/changes/dossier-url-declared-source-run/proposed/decisions/DOSSIER-URL-RUN-CONTRACT-APPLICABILITY.md",
+      "sha256": "38e3b6f924c81187cfe7bb31e5383a994d98339689bb0256dd0c1763c8267386",
+      "bytes": 10535,
+      "basisSha256": "51d3b1c97f127754345d88dcac921ab0ea0558f5adc86372238c5aa10527db30",
+      "changed": true
+    },
+    {
+      "path": "openspec/changes/dossier-url-declared-source-run/proposed/polaris-generation/spec.md",
+      "sha256": "e30836f902361c74943cc0cf69ae907a3e9d678a542b27676677e47c8a5fa865",
+      "bytes": 213529,
+      "basisSha256": "5471910a6ce8574c77d94e6fa1d09c8c5f10a4506d73f510ca6f8a0b14452a32",
+      "changed": true
+    },
+    {
+      "path": "openspec/changes/dossier-url-declared-source-run/proposed/policies/POLARIS-DOSSIER-URL-ORIGIN-SPECIES-POLICY-v1.json",
+      "sha256": "930efcc2cbdae55be92ce7929820e771f554502a9110e8ac5f8925132961e421",
+      "bytes": 39113,
+      "basisSha256": "fa29c4c3a8cb7c8cb43e54bdb813c11c0f8609960b4d8a46f5fdfacb733a9b92",
+      "changed": true
+    },
+    {
+      "path": "openspec/changes/dossier-url-declared-source-run/tasks.md",
+      "sha256": "f1b1c5949d47f5a6f9d3803cd2f8be284782af2a6268b726963bfeea02481af6",
+      "bytes": 15231,
+      "basisSha256": "06acffda35d4f3a3c3ba598341649751c55431e16868fd580db06e6e47d9fcca",
+      "changed": true
+    }
+  ],
+  "specificationCensus": {
+    "files": 13,
+    "occurrences": 151
+  }
+}

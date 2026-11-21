@@ -1,0 +1,235 @@
+{
+  "schemaVersion": 1,
+  "policyId": "POLARIS-DOSSIER-URL-ORIGIN-SPECIES-POLICY-v1",
+  "policyVersion": "1.0.0",
+  "status": "candidate-binds-nothing",
+  "observingProject": "project:syzygy",
+  "scope": "Only the URL-supervised form of REQ-polaris-generation-048; operator-started dossier entry and frozen declared-source2.0 policy bytes remain unchanged.",
+  "basePolicy": {
+    "path": ".syzygy/governance/policies/POLARIS-DOSSIER-DECLARED-SOURCE-POLICY-v1.json",
+    "reviewedSha256": "516cb1f2dba9ceb3e55166077c0800be6022012406b9b9b5f0df25bcb73aa499",
+    "binding": "At use bind the committed base policy identity/version/digest plus this origin/species policy identity/version/digest. Missing, mismatched, dirty, unadopted or unreadable policy refuses; no per-repository policy act or ceremony. The reviewedSha256 names the predecessor reviewed here, never permission to use different detector bytes silently."
+  },
+  "unchanged": "Every base detector and scope-detector predicate, denied path, invalid encoding/NUL/resource exclusion, source-file classification, private whole-body exclusion, withheld-private-object id/size suppression, redaction branch and page-sink encoding/CSP condition remains. No source-body, generic-composition or egress active-content exemption is created. Only the URL-design local renderer-product boundary specified in urlDesignInertView uses independently verified page-sink treatment while preserving a FAILED generic raw active finding; an exempt source span retains its original policy/path/provenance only while carried as identified inert source data. Arbitrary composed/runtime text obtains no source-extension exemption.",
+  "classification": {
+    "vocabulary": "RFC5-14 unchanged. A species match requires independently established origin and exact supported structure, not a caller label. Missing, conflicting or unrecognized species/origin/class refuses before store, delivery, tool effect or send.",
+    "species": [
+      {
+        "species": "pinned-repository-body",
+        "origin": "Verified full run pin/path/blob, rehashed on use",
+        "classes": "Exactly the base policy class and retained span treatment; no new source path, file type or object admitted."
+      },
+      {
+        "species": "verified-selected-git-commit-envelope-message",
+        "origin": "Only the exact hash-verified selected commit in the complete owned depth-one acquisition closure, parsed under its independently supported Git grammar",
+        "classes": [
+          "work-history"
+        ],
+        "rule": "Strict supported tree/parent/author/committer/time/envelope/message fields only, with whole textual envelope/message classification and unchanged detectors before persistence. Unknown/opaque/signature/encoding headers or malformed text refuse the entire owned acquisition. This is a Git run/source-history metadata species, not permission to admit arbitrary repository work-history/report files, parent commit objects, provider thinking or encoded unknown content. The original commit bytes/hash must remain exact."
+      },
+      {
+        "species": "structural-source-and-tool-metadata",
+        "origin": "Host-verified exact Git tree/path/mode/OID structural grammar or screened locator/ref data or exact trusted tool schema registry or exact prepared native source-transport command/protocol/control/capability envelope under the independently pinned closed source profile",
+        "classes": [
+          "code-structure"
+        ],
+        "rule": "Only the strict identified metadata fields, never a hidden body, credential, arbitrary string dictionary or private withheld id/size; every emitted value is screened. Raw tree binary encoding is admitted only as the exact known structural grammar whose text paths and metadata pass policy before storage; arbitrary binary blobs or opaque metadata remain excluded. Every path/mode and every alias is assessed; a safe alias cannot launder an excluded one. Native source command/protocol metadata has only the sourceTransportMetadataEgress closed supported fields and independently known host/source origins; all are code-structure and pass complete composition screening and protected audit before the dependent helper/network/write. The route is not a blanket classification for arbitrary native arguments, capabilities, headers or source bodies."
+      },
+      {
+        "species": "fixed-role-policy-and-cli-scaffold",
+        "origin": "Host-issued operational role policy and independently pinned, reviewed CLI-version scaffold/template registry",
+        "classes": [
+          "governance-text"
+        ],
+        "rule": "This rule classifies only the vetted fixed operational policy text that instructs this run, including exact tool-use rules, not arbitrary text produced by the CLI. Classification does not adopt it as project intent or evidence. Every fixed byte and variable slot has a predeclared origin/shape; the first observed payload is never its own baseline."
+      },
+      {
+        "species": "typed-run-control-and-clarification",
+        "origin": "Host-created run control or attributed question-bound clarification receipt",
+        "classes": [
+          "work-history"
+        ],
+        "rule": "Strict named control fields and question/answer species only. Clarifications bind run/role/question/instant/principal and are screened before storage or delivery. They grant no new source authority, policy or proof; an embedded source quote must also bind its admitted source receipt/class. Arbitrary terminal text, unknown origin, encoded opaque payload and unsupported answer structure refuse."
+      },
+      {
+        "species": "role-report-or-verdict",
+        "origin": "Host-ingested bounded schema artifact from the named role, independently bound to its packet and input origins",
+        "classes": [
+          "evidence-content"
+        ],
+        "rule": "Reports, checks and verdicts retain evidence-content plus all embedded source and run-control origins. This classification never establishes report truth, freshness, coverage or an Observed claim."
+      },
+      {
+        "species": "composed-role-input-or-broker-result",
+        "origin": "Host composition of already admitted named receipts",
+        "classes": "derived-composites plus every actual embedded origin class",
+        "rule": "Preserve the exact transitive origin/class population and source-span treatment. Constant control fields use their own species. No invented class order, default all-seven declaration, derived-only laundering or permission union; if the inherited classification cannot be determined, refuse."
+      },
+      {
+        "species": "fixed-provider-text-or-tool-use",
+        "origin": "Exact supported complete response block from the declared fixed provider, bound to the admitted request and role/run/pin/policies",
+        "classes": "derived-composites plus the union of that request’s actual originating classes; tool-use argument fields retain the same derivation",
+        "rule": "Before registration or delivery validate the supported response schema, tool name/arguments, class derivation and detectors. Register exact permitted block bytes and actual origin set. Reuse requires an exact prior registered block; a tool id, model assertion or response label is insufficient. Unsupported thinking, signed/opaque/redacted thinking, images, binary, MIME/compressed and unknown content-bearing forms refuse; signatures are not a screening waiver."
+      },
+      {
+        "species": "authenticated-local-renderer-design-product-and-inert-view",
+        "origin": "Only independently pinned actual installed first-party renderer and fixed packet/view builders, freshly reproduced from complete current genuine receipts for every actually used input byte/span/full blob and exact render parameters",
+        "classes": "code-content for fixed first-party HTML/CSS implementation scaffold, plus derived-composites and every actual source/report/run-control origin class; separately retain typed fixed view metadata/control origins",
+        "rule": "The fixed implementation syntax justifies code-content without a source-extension exemption; no arbitrary dynamic HTML or caller producer name becomes code-structure. Justify needed planned renderer class before use from that exact pinned producer, not unrelated preparation evidence/all-seven. Specialized constructor only; original raw generic active finding stays FAILED and has no ordinary raw artifact/compose/egress receipt. Only complete classified secret-checked local product under independently verified sink contract and exact screened035 inert view are supported; unknown/gapped parents or incomplete full-body coverage refuse."
+      }
+    ],
+    "declarations": "Keep the legacy run/2 three eligible repository-body classes distinct from the effective URL role/input class declaration. Before role launch or later newly admitted input, record the finite planned classes justified by its concrete species/origins; a new needed class requires an explicit recorded declaration update before that input is used, never implicit widening. Recompute and separately record actual classes for every attempted forward and require them to be a subset of the effective declaration. Updates are agent configuration, not owner ceremony; they do not change provider/pin/policy or invalidate an already emitted audit history. No class may be added solely because content is unknown."
+  },
+  "ingest": "Owned047 acquisition also gates every received commit/tree/blob/path before the first persistent source object/body write: bounded wire/decode working memory only, exact selected depth-one closure and full object identity validation, every-path whole-blob classification/screening, entire acquisition refusal on any required excluded/unknown/secret/binary/redaction-dependent member. No raw pack/object/index/temp/spool/checkout before admission or original-pack retention afterwards. Apply the unchanged detector population and class/active-content rules before every source read, clarification, provider block/tool argument, broker result, role artifact, machine tool reply or audit field is stored, registered, delivered or causes an effect. Buffer bounded complete provider messages including all blocks and relevant cross-block/field composition before release; partial SSE cannot expose a subsequently excluded block. Ephemeral bounded transport buffering is processing only, not permission to index or retain offending bodies. Exclusions retain safe constants/permitted digest/location/policy/redaction/count metadata only, subject to private protections. Only urlDesignInertView names the explicit specialized local producer/representation handling; raw generic active failure remains FAILED, unknown/secret exclusions unchanged and all actual role/request representations still pass full generic checks.",
+  "screening": "Before each external forward, apply the same detector bytes to the complete composed request and every textual/structured content field and applicable concatenation across fields/fragments. Verify origin/class receipts and typed field structure separately. Rechecking a source excerpt alone is insufficient. Runtime scaffolding, provider prose and serialized controls have no file-extension exemption. Unknown bodies, detector matches, unsupported encoding/forms and indeterminate composition refuse. Transport credentials are not content or classification escape routes: admit only fixed authentication header species directly into the trusted TLS transport, never body/receipt/log/record; content-bearing unknown headers refuse.",
+  "urlTransportOverlay": "The base local-entry no-network acquisition rule remains. Owned URL acquisition is permitted only through047's independently supported bounded working-memory wire/decode/hash/closure/all-object-path admission gate; conventional fetch/import/index-pack/raw-spool writes are not permitted before screening. Persist only deterministically re-encoded exact admitted loose objects/fixed strict depth-one metadata and, if needed, exact admitted worktree bytes after the complete gate. No source body is sent to the Git host, no observed program/hook/filter runs and no source-history/partial-clone adapter is added. Trusted SSH authentication and declared HTTPS/SSH transport hygiene retain047's rules.025/048 separately permit only the unavoidable checked fixed-provider relay; consumers unable to apply both explicit routes refuse. Source metadata egress is independently governed: select an Inferred source-transport provider from validated canonical HTTPS/SSH destination before selection/helper/connect, distinct from Anthropic inference; every connect/selection/fetch command/protocol envelope is closed known code-structure, complete-origin/class/project/run/policy/profile checked and fully screened, then durably protected-audited before dependent helper/network/write. No-body upload is required but not an egress exemption. Audit exact prepared command/protocol identities/counts plus native executable/nonsecret environment/config profile/destination, never pretend exact native HTTP headers/TLS ciphertext. No redirect/proxy/helper/config/ambient destination or arbitrary/body upload authority. Missing/changed/unknown/secret or audit failure means no dependent send; denied pre-connect means no helper/GET and denied fetch means no write/POST. Actual native support/non-bypass and capture require independent evidence; uncaptured send/outcome counts stay Unknown.",
+  "ingestAndRetentionOverlay": "Owned acquisition wire/compressed/expanded bytes are necessary bounded decoder working memory, never a filesystem/database/log/pack/index/quarantine/cache store or reusable raw input. After the entire exact closure passes policy, only admitted exact objects/metadata and necessary admitted worktree bytes enter the owned clone store; post-brief retention until operator removal applies only to that admitted population. Refusal/interruption discards raw buffers and stores only safe policy-permitted digest/count metadata, never rejected bodies; pre-brief residuals are metadata-only or already admitted according to stage and are cleaned/disclosed. Existing supplied clones remain external read-only inputs under current body-read gates and are not manufactured by this feature. For URL mode extend only the named processing boundaries to strict source/artifact MCP replies, complete provider responses/requests, typed clarification and protected safe audit metadata. Admitted bodies/receipts remain bounded in local run processing/state and role-delivery channels; no raw body logging or Execution Record prompt/transcript storage. The protected audit is outside the governed tree and role/untrusted write reach and contains only safe identified metadata. Machine tool replies are private role transport, not a public machine endpoint or a grant to render private withheld metadata. Other base storage/rendering boundaries stay unchanged. The sole035 URL-design raw local producer boundary follows urlDesignInertView after complete pre-write secret/class/lineage/sink checks, never generic raw025 admission; only its exact verified inert view receives role/egress receipt.",
+  "activation": "Candidate only. Agent adoption of this ordinary classification/transport refinement follows current VIS-4 in the same logical change; any actual SEC-5 weakening remains owner-only and is not selected. No runtime, credential-refresh, provider success or independent enforcement proof is asserted by policy presence.",
+  "baseFieldInterpretation": {
+    "publicSourceScope.contentClassification.classesClassified_and_neverClassified": "These keep governing repository-file/body admission. Only the explicitly identified host/runtime species table extends classification to typed runtime work-history/evidence-content and composites; no repository report/work-history file becomes newly admitted. The narrow verified selected Git commit envelope/message exception supplies only required acquisition metadata work-history after exact grammar/hash verification; repository file-body classifications, including excluded repository work-history/report files, remain unchanged.",
+    "publicSourceScope.instructionTextRule_targetMetadataRule_runProfileRule": "Their fixed-origin and unknown-origin refusal remains. Only exact independently vetted role-policy/CLI scaffold/template/typed metadata and host clarification species in this overlay supply additional known origins; an arbitrary operator, run-directory or provider string is never accepted merely under a familiar field name.",
+    "publicSourceScope.sourceVisibility.agentSessions": "The inability to observe operator-started CLI transmissions remains. URL mode uses the mandatory independent relay population under025/048; declarations and stored capture history still do not establish current completeness or truth.",
+    "publicSourceScope.activeContent_and_classificationSuccess_for_local_renderer_product": "Source-body rules/exemptions remain exact. Exclusively authenticated035 URL-design own first-party renderer product has a new explicit local handling boundary: unchanged complete secret/class/lineage checks plus independently verified every page sink/CSP/encoding, while raw generic active findings remain FAILED and prohibit ordinary raw receipts/egress. It is neither a code-extension exemption nor permission for unknown/matching source content.",
+    "publicSourceScope.rawBodyHandling_for_local_renderer_product": "Only that exact independently reproduced known first-party renderer/design subject may persist in run-directory local product state under urlDesignInertView; no raw role/machine/log/provider channel or arbitrary saved HTML. Its actual inert role view and complete outgoing request still pass unchanged full generic checks. This explicitly scopes the earlier local-product ingestion/retention reading; it does not say raw025 generic admission passed."
+  },
+  "supportedProfileRegistry": {
+    "binding": "Independently pin installed executable/version, full supported nonsecret configuration/tool/MCP profile digest, scaffold/schema/typed-variable-slot shape and exact request/response/SSE/MCP wrapper fixtures before launch. No first-payload learning or cross-profile substitution. For the 035 ordered design profile bind the exact design-only artifact_read catalogue annotation and installed support bytes at role preparation, launch, replacement and resume; verify the selected role profile and actual wrapper in the same decision. Bind the closed prepared event, manifest partition and exact selector, supported received/prepared and whole-logical wrapper/placement rules, and numeric complete-path limits through bounded verdict and acknowledgment. No alternate profile or single-reply fallback. Pin the exact staged-verdict acknowledgment, native wrapper, bounded supported terminal response and 035 terminal disposition rule.",
+    "wrapper": "Verify exact presence/absence and bytes/shape of LF, fixed token reminder and cache-control fields. Canonical text-only results remain exactly text-only; no guessed padding or wrapper normalization. Known initial-versus-continuation scaffold shape conversion requires an independently pinned profile rule and identified origin slots.",
+    "unsupported": "This candidate activates no profile by itself. Only supported text/tool-use response species may be ingested. Thinking/signed/opaque forms remain refused. A supported no-thinking configuration needs independent offline evidence before launch; absence of such evidence is a refusal, not a guessed CLI flag or claim that Opus works.",
+    "selection": "Use the explicit independently verified supported model/profile or disclose and record the independently verified supported default and its actual selection origin before brief/launch. An explicit unsupported model/profile refuses before launch with supported recovery, never silently falls back or uses an unchecked ambient default. Model configuration is Inferred declaration, never evidence of actual model served.",
+    "projection": "Only the independently specified known protocol-control projection may prepare the actual send: discard the exact recognized received device/account metadata slot without admitting/persisting it; insert known host user_id and the exact fixed tool_choice auto/disable_parallel_tool_use:true where the pinned received profile has no tool_choice. Every introduced value has host origin/class/screening; arbitrary/conflicting structure/values refuse. No model, prompt/repository/role/tool/provider semantic content is rewritten. Record profile/projection and distinct received/prepared-send identities/digests; re-screen and durably audit exact prepared bytes before transmission, and independently refuse provider responses exceeding one tool call."
+  },
+  "acquisitionWorkingMemory": {
+    "profile": "Independently tested executable/configuration/protocol/transport/object-format/delta profile before use; internal/experimental helper support is not generalized from one installed capability or one local HTTP specimen. Unsupported profile refuses, never disk fallback. No Git version is mandated by this policy.",
+    "validation": "Before source persistence, verify full packet/compression ends and trailer/count, all full object identities/types/sizes, bounded acyclic internal deltas, one selected commit and exact complete depth-one tree/blob closure; reject duplicates/extras/tags/parent objects/external bases/unknown metadata. Every whole blob and each path/alias must pass unchanged source-file policy with no redaction under original hash.",
+    "bounds": "Positive finite compressed/expanded/object bytes, count, packet/framing, delta depth/dependency, working-buffer/memory and CPU/wall limits apply before allocation/expansion; existing reader and later admitted-write bounds remain independent.",
+    "truth": "Application no-spill/no-source-write processing and lifecycle require independent filesystem-effect evidence. Necessary working memory or synthetic helper success proves no host swap/core-dump/crash guarantee; no such guarantee is invented or supplied here. No raw source tempfile/log/dump is requested or permitted by this acquisition path."
+  },
+  "sourceTransportMetadataEgress": {
+    "selection": "Before any source selection/helper/network operation, select/disclose attributed Inferred Git source-transport provider from validated canonical credential-free HTTPS/SSH destination, bind exact original safe locator and scheme/host/port/repository destination, observing project/run-acquisition identity/policies and only code-structure metadata classes; distinct from inference-provider/model, no consent ceremony or public/ownership proof.",
+    "species": "Only independently typed closed supported command/locator/path/ref/selector/OID/protocol/control/capability metadata with known source/host origin, never arbitrary bodies, unknown fields or unclassifiable host capability strings; source-supplied values must pass policy before reuse. Complete prepared fields and applicable cross-field/fragment compositions use unchanged detectors, no source-extension exemption.",
+    "beforeSend": "Protected durable safe RFC5-25 audit before helper spawn/connect and each actual outbound Git-v2 write; bind principal/session or Unknown, act/subject/exposure/instant/outcome and destination/provider/project/run/policies/profile, exact prepared command/protocol bytes/count/digest and native executable/nonsecret environment/config identity/digest. Check-to-use tamper refuses. Audit failure prevents dependent operation; connect denial zero helper/GET, fetch denial zero write/POST, equivalent SSH controls.",
+    "scope": "Closed supported native profile may serialize known HTTP/SSH/auth framing. Record exact prepared application envelope identities, not exact libcurl header order/ciphertext or unobserved native count. No redirects/proxy/helper/config alternate authority, body upload, unknown auxiliary or arbitrary arguments/fields. Only fixed supported host-process transport/authentication endpoint may receive transport credentials; no credential/context/role/log/audit payload.",
+    "truth": "Keep declarations, protected operation admission, attempt, actual send and acknowledgment/outcome separate. Interruptions/uncaptured counts Unknown, no blind replay or after-transfer acquisition-record substitution. Independent failure/tamper/safe-control/native no-bypass and continuous pre-store evidence required; no runtime/adoption proof from policy presence."
+  },
+  "urlDesignInertView": {
+    "scope": "Exclusively048 URL rendered-design delivery under035; explicit local renderer-product handling amendment, not a claim that F5 raw025 active screening passed. Ordinary raw operator035, URL fidelity, source/admission/acquisition/inference transport/execution rules unchanged.",
+    "schema": {
+      "format": "polaris-dossier-url-design-inert-view/1",
+      "encoding": "html-entities-five/1",
+      "originalSha256": "64 lowercase hex, exact raw035 UTF-8 packet digest",
+      "originalBytes": "bounded nonnegative safe integer raw035 byte count",
+      "payloadSha256": "64 lowercase hex of UTF-8 entity string alone",
+      "payloadBytes": "bounded nonnegative safe integer entity string byte count",
+      "payload": "whole original packet fixed five-entity string"
+    },
+    "serialization": "Exactly seven keys, existing Polaris encodeCanonicalJson, strict UTF-8/no leading original/envelope UTF-8 stream BOM/no raw or decoded NUL/duplicates/unknown keys/discretionary whitespace; complete envelope digest/count separate protected receipt, no self hash. Map original &, <, >, double quote, apostrophe in one pass to &amp;, &lt;, &gt;, &quot;, &#39;, preserve all other code units/newlines/Unicode. Independently strict inverse accepts only emitted tokens once, byte-compares fresh original; independent re-encode compares payload; aliases/tolerant HTML decoding/recursive entity or normalization refuse. Original035 means exact existing packet-builder serialization including whitespace/final newline; never recanonicalize/reserialize original bytes with the outer encoder. U+FEFF inside ordinary JSON string data is preserved unchanged, subject to all other scanners and origin/schema rules; reject only a leading stream BOM, never normalize away embedded data.",
+    "lineage": "Pin actual installed renderer/packet/view builder/config/version before role bytes. Reproduce every original file/hash, sole review-status exclusion, evidence view and exact run/site/audience/revision. Every actual producer input has complete genuine current receipts for exact bytes/full blobs/spans; short receipt never covers full blob, unknown/gapped/inconsistent/extra/excess parent coverage refuses. No saved role HTML/caller callback/producer marker/pageSink assertion or generic compose authenticates output.",
+    "rawBoundary": "Before any raw renderer-product persistence or view creation/registration/delivery, unchanged secret detectors cover complete raw original, every file body, parsed keys/strings and raw field/value/cross-file composition. Unknown/secret/excluded/private withheld data never encoded/retained/delivered. Independently verify every page sink context encoding/file name/type/parser/CSP/empty pinned-script registry regardless of conditional fallback. Raw HTML generic active result stays FAILED and denies ordinary registration/egress; exclusively known exact local producer subject may persist in run directory under this specialized verified page-sink treatment. No raw logs/machine/role/decoded artifact channel or general HTML/code-extension/caller-encoding exemption.",
+    "egress": "Actual inert envelope/decoded JSON fields/compositions/canonical reply/CLI wrapper/tool_result/whole outgoing request pass unchanged full generic scanning. Secret checks also insert only the authenticated inverse raw contribution into relevant complete-request semantic/cross-fragment checks; inverse is identity/secret computation only, never delivery or actual request rewriting. Residual backtick/unsafe Markdown/unknown/class/audit/size/currentness failures refuse with no alternate encoding/normalization/model rewrite fallback. For the 035 ordered design profile, apply unchanged full-view, original and complete logical request projections and the actual prepared event, per-part, wrapper and full numbered request projections. Every admitted part derives solely from the immutable complete view and its exact manifest, with genuine existing origins and no new input source or classification. The supported profile pins the one logical splice of the complete existing whole-view input after the checked prepared origin. Keep all other actual eligible blocks, origins and surrounding fields. Use the complete sealed verification material even at zero/partial delivery and compare the complete actual join when available. Screen every actual operation independently through the verdict acknowledgment.",
+    "review": "Verdict.packetSha256 remains original035 digest; separate view/count/encoding/producer/current policy/complete parents bind protected run/role/round delivery. Review original complete meaning/pages/files/evidence view/size/denominator, not summary/hashes; disclose explicit representation and transport expansion. Independently rebuild original/view at review-check/render/resume; any identity/policy/revocation/parent drift retires. Review comprehension/quality stays Inferred and needs evidence. Ordinary verdict/tool/quotation screening remains; decoded active quotes receive no exemption.",
+    "bounds": {
+      "originalBytes": 2097152,
+      "payloadBytes": 2097152,
+      "envelopeBytes": 2097152,
+      "files": 4096,
+      "inputParentReceipts": 4096,
+      "parseNodes": 65536,
+      "parseDepth": 32,
+      "inputCodeUnitsPerTransformPass": 2097152,
+      "maxTransformVerificationPasses": 4,
+      "other": "Bind caps before processing. Predict and separately charge byte/node/depth, transforms and detector work, actual and logical requests, received/prepared protocol and wrappers, replies, response/turn, history, wall and remaining original limits through the maximum supported bounded verdict and acknowledgment. Known missing coverage or overflow refuses before first release; a later failure stops before its dependent action and retires without replay. Stricter existing role/broker/request/deadline/wall bounds and actual measured usage checks win. The finite parent cap never permits incomplete lineage. The complete path includes the staged acknowledgment receipt and allowed terminal response, protected eligibility compare-and-publish and acknowledgment error/refusal boundaries."
+    },
+    "audit": "Protected receipt/audit binds exact original/view/count/encoding/producer/config/policy/complete genuine parents/currentness outside role/untrusted write reach; no raw leaked body. Audit failure prevents delivery/send/effect. No candidate presence, round-trip, trusted marker or assessment supplies runtime/adoption/review proof. For ordered delivery the protected completion metadata binds the ordered manifest, checked request identity and complete durable tool/send audit event population under 025/035/048. A prefix, sorted origin membership, caller-provided order or lost durable event supplies no proof. Bind prepared event, exact ordered receipt, authenticated admission, durable pre-send audit, actual attempt, actual outcome and complete admitted response events through the final part and dependent verdict call. Incomplete transfer metadata may survive only under the existing protected safe audit and private suppression. Its historical observations confer no retry, current permission or proof. Independently admitted original products keep existing handling. Count an ordered verdict only with its single durable terminal eligibility disposition. It binds the validated staging state and delivery completion, exact acknowledgment receipt/wrapper, checked request and durable preparation, actual attempt and confirmed outcome, fully admitted terminal response, and an atomic current-bound eligibility transition. Failed, interrupted, missing or uncertain acknowledgment leaves a stage ineligible and supplies no replay or promotion."
+  },
+  "localMachineAuthentication": {
+    "mechanism": "Exclusively048 machine clients use RFC5-7(d) actual kernel peer/process/channel attestation and registered instance/lifetime/namespace binding, separate from deny-default project/source/run/role/operation authorization. SameUID/path/socketmode/loopback/claimed fields or valid bridge with anonymous upstream never suffice; unsupported end-to-end binding refuses. No third client class.",
+    "identity": "Each fixed role-CLI/MCP-shim/inference-bridge has own immutable never-reused client and distinct instance identity, principal/kind/role/run; controller separately identified. Fixed adopted policy permits only enumerated per-role operations, no lifecycle administration/client self issuance/owner-session identity or default scope.",
+    "home": "Candidate future authoritative secret-free polaris-dossier-local-machine-client/1 security-policy instance at .syzygy/governance/policies/dossier-machine-clients/<opaque-client-id>.json in the observing project:syzygy governance root only, under the explicit adopted RFC3-2/15/16/(a)/(b)/(d) amendment and fixed adopted issuance/scoping policy. Single typed trusted-controller mechanical writer, immutable issuance IDs/monotonic instance/revision history. No foreign source write, records/ authorization, implementation code under .syzygy or runtime new policy discretion.",
+    "projection": "Explicitly authorized typed local-machine-verifier runtime adapter writes only nonsecret verifier/current-record identity-revision-digest projection and protected audit in fixed bounded host state outside role/observed/clone/artifact views. Projection is not governance authority. Every next act including open connection/resume rechecks actual current canonical record, projection binding, kernel instance/lifetime, expiry/policy/scopes; missing/partial/tampered/rolledback/unsynchronized authority/audit refuses.",
+    "lifecycle": "Actual current ordinary default-branch adoption of the governing RFC3-16(d) amendment and fixed policy is prerequisite; candidate presence/applicability/stamp never suffices. Only exact bounded rule members then require no individual runtime-instance commit/adoption/ceremony. Trusted controller instantiates under current VIS-4, not stale owner-per-instance ceremony, public bootstrap, observed content or another client credential. Finite expiry<=original run deadline, identity-preserving rotation with exactly zero overlap, identity/instance next-act revocation and no retry/resume auto reissue. Canonical atomic expected-revision publication then verified projection before grant; durable safe lifecycle captures separate Inferred history, not authorization. Failures block dependent actions.",
+    "bounds": {
+      "clientsPerRun": 16,
+      "historicalInstancesPerClient": 64,
+      "recordBytes": 65536,
+      "recordNodes": 4096,
+      "recordDepth": 16,
+      "other": "Finite registry/audit I/O/lock/output/wall bounds within original deadline, bound before use. No dropping history/revocation evidence, unbounded identity creation or presentable secret. Actual implementation Unknown."
+    },
+    "recordSchema": {
+      "format": "polaris-dossier-local-machine-client/1",
+      "additionalProperties": false,
+      "required": [
+        "format",
+        "clientId",
+        "issuanceId",
+        "policySha256",
+        "revision",
+        "projectId",
+        "sourcePin",
+        "runId",
+        "role",
+        "kind",
+        "scopes",
+        "issuedAt",
+        "expiresAt",
+        "revokedAt",
+        "instances"
+      ],
+      "instanceRequired": [
+        "instanceId",
+        "generation",
+        "issuedAt",
+        "expiresAt",
+        "retiredAt",
+        "revokedAt",
+        "verifier"
+      ],
+      "verifierRequired": [
+        "mechanism",
+        "profileSha256",
+        "processIdentitySha256",
+        "channelIdentitySha256"
+      ],
+      "closedTypes": "Exact048 field types/identifier grammars/strict UTC validity and immutable bindings; maximum4096 UTF-8 bytes per string within65536-byte/4096-node/depth16 record; duplicate keys/unsafe numbers/missing/extra fields refuse",
+      "roles": [
+        "author",
+        "inventory",
+        "fidelity",
+        "design"
+      ],
+      "kinds": [
+        "role-cli",
+        "mcp-shim",
+        "inference-bridge"
+      ],
+      "operations": [
+        "source_read",
+        "artifact_read",
+        "artifact_write",
+        "dossier_step",
+        "inference-forward"
+      ],
+      "fixedScope": "Nonempty duplicate-free operation subset restricted by fixed role/kind and record observing project/source/run; authenticated scopes do not bypass source/detector/provider/audit gates",
+      "writeAuthority": "One typed trusted controller: instantiate fixed bindings, append permitted generation, advance revision and one-way retirement/expiry/revocation only; existing identity never rewrites source/project/run/role/kind/scopes/policy or historical verifier/identity. Different binding requires new permitted never-reused identity, not revocation escape",
+      "authority": "Operational authority derives only from actual current adopted RFC3-16(d) rule +fixed policy +every canonical instance/kernel/scope/atomic/antirollback/audit predicate. Canonical governance record supplies RFC5-6 identity/scopes/lifecycle data; local projection/anchor never authority. No instance-adopted status or policy discretion; outside exact class ordinary RFC3-16(a/b)."
+    },
+    "governingAmendment": {
+      "candidatePath": "proposed/contracts/DOSSIER-URL-LOCAL-MACHINE-CREDENTIAL-AMENDMENT.md",
+      "modified": [
+        "RFC3-2",
+        "RFC3-15",
+        "RFC3-16",
+        "RFC3-16(a)",
+        "RFC3-16(b)",
+        "RFC5-6"
+      ],
+      "added": [
+        "RFC3-16(d)"
+      ],
+      "requiredBeforeUse": "Actual ordinary VIS-4 default-branch adoption of exact amendment and fixed policy, current at every act; no per-instance default-branch commits or ceremony. Parent veto/change/missing adoption refuses, never auto-migrate/re-adopt",
+      "antirollback": "Protected per-client high-water revision/generation/digest/lifecycle anchor coupled to safe durable audit and atomic expected-revision publication; replay of canonical record plus ordinary projection cannot restore authority. Missing/reset/partial/rollback/unsynchronized state refuses. Anchor scope requires independent proof, never governing authority",
+      "classBoundary": "Only observing Syzygy canonical policies home and exact bounded OS-local URL-role schema/immutable fields/one-way lifecycle. No broader policies/secret/owner/browser/remote/foreign/execution exemption"
+    }
+  }
+}

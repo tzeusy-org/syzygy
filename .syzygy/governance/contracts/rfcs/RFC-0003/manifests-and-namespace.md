@@ -136,6 +136,8 @@ each means, and who may write it.
 - **kernel-recorded** (values the kernel writes as a factual record of a
   **non-owner actor's** submission).
 
+For the narrow RFC3-16(d) URL-dossier local machine-credential instance class, every closed-schema identity, binding, verifier and lifecycle field has the **Syzygy-maintained** authority, exercised only by the one policy-pinned typed trusted controller under that clause. This is an explicit authorization-data maintenance rule of this RFC, not kernel-recorded authority, generic permission for mutable policies or a second writer. The adopted parent rule/policy fields retain their ordinary adoption authority.
+
 No field has two writers; a field whose authority is not declared by its
 governing RFC may not exist.
 
