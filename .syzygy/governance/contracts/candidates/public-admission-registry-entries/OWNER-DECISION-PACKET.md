@@ -1,5 +1,9 @@
 # Owner decision packet — public-admission registry entries
 
+> **Withdrawn by D10, marked 2026-11-21.** This offering was never performed and is not performed now. Never offer it to the owner
+> again. D10 retired the owner act this package offered (`governance-simplification-d10/RETIREMENTS.md` §C); the change it carried, if still wanted, is an agent adoption recorded in `decisions/AGENT-ADOPTIONS.md`.
+> Everything below is history, unchanged.
+
 > **Candidate — binds nothing.** Drafted 2026-10-03. Effect comes only from an
 > owner act over an entry's exact bytes. A commit, a review or a passing check
 > performs none. No target repository body has been read and no provider has
