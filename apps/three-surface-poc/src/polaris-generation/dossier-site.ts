@@ -260,7 +260,13 @@ export function renderDossierSite(input: DossierSiteInput & { readonly local?: L
     ?? Object.fromEntries([...draft.sections, ...draft.deepDives].map(item => [item.id, item.disposition.kind === 'produced' ? owned(item.disposition.assetIds) : []]));
   for (const list of Object.values(topics)) if (list.some(topic => !(OWNER_TOPICS as readonly string[]).includes(topic))) throw new DossierRenderError('unknown-topic');
   const sectionIds = new Set(draft.sections.map(section => section.id));
-  for (const item of [...draft.diagrams, ...draft.deepDives]) if (!sectionIds.has(item.sectionId)) throw new DossierRenderError('unknown-section');
+  // A diagram's page (syzygy-3efd.18): the section `sectionId` names, or, with an operator-agent `home`, a deep dive or the overview.
+  const diveIds = new Set(draft.deepDives.map(dive => dive.id));
+  for (const item of draft.deepDives) if (!sectionIds.has(item.sectionId)) throw new DossierRenderError('unknown-section');
+  for (const d of draft.diagrams) {
+    if (d.home !== undefined && local === undefined) throw new DossierRenderError('unknown-section');
+    if (d.home?.kind === 'deep-dive' ? !diveIds.has(d.home.id) : d.home === undefined && !sectionIds.has(d.sectionId)) throw new DossierRenderError('unknown-section');
+  }
 
   const deepDives = withheld ? [] : draft.deepDives.filter(dive => dive.disposition.kind === 'produced');
   const deepPaths = new Map(deepDives.map(dive => [dive.id, deepDivePath(dive.id)]));
@@ -611,7 +617,8 @@ export function renderDossierSite(input: DossierSiteInput & { readonly local?: L
     const head = `<span class="eyebrow">${String(index + 1).padStart(2, '0')}</span><h2>${escape(section.title)}</h2>`;
     if (view.deferredSections.has(section.id)) return `<section id="section-${escape(section.id)}" data-reading-level="1" data-topics="">${head}${notGenerated(section.id, 'section')}</section>`;
     if (section.disposition.kind !== 'produced') return `<section id="section-${escape(section.id)}" data-reading-level="1"${topicAttr(section.id)}>${head}${notice(from, section.id, section.disposition)}</section>`;
-    const figures = draft.diagrams.map((d, i) => d.sectionId === section.id ? diagram(from, d, i) : '').join('');
+    // A figure homed on a deep dive that has no page of its own (not produced, or the draft layer withheld) shows in the dive's section.
+    const figures = draft.diagrams.map((d, i) => (d.home === undefined || (d.home.kind === 'deep-dive' && !deepPaths.has(d.home.id))) && d.sectionId === section.id ? diagram(from, d, i) : '').join('');
     const dives = draft.deepDives.filter(dive => dive.sectionId === section.id).map(dive => dive.disposition.kind === 'produced'
       ? `<li><a href="${escape(href(from, deepPaths.get(dive.id)!))}">Explore: ${escape(dive.title)}</a></li>` : `<li>${notice(from, dive.id, dive.disposition)}</li>`).join('');
     // An operator-agent section leads with its diagrams (syzygy-mea.10.4); the provider mode's bytes are pinned, so its figures follow.
@@ -640,7 +647,9 @@ export function renderDossierSite(input: DossierSiteInput & { readonly local?: L
     termsShown.clear();
     const introduction = view.drafted ? paragraph(from, draft.introduction, 'p') : '';
     const missingList = view.notGenerated.length === 0 ? '' : `<section id="not-generated" data-reading-level="1" data-topics=""><h2>Not generated</h2>${view.notGenerated.map(item => notGenerated(item.id, item.kind)).join('')}</section>`;
-    add(from, 0, 'Overview', `<header data-reading-level="0"><span class="eyebrow">Polaris · Editorial draft</span><h1>${escape(draft.title)}</h1>${banner}${introduction}${unresolved}</header>${sections}${poleMap}${missingList}`);
+    // Figures whose home is the overview lead the first page, after its introduction and before its sections (syzygy-3efd.18).
+    const overviewFigures = draft.diagrams.map((d, i) => d.home?.kind === 'overview' ? diagram(from, d, i) : '').join('');
+    add(from, 0, 'Overview', `<header data-reading-level="0"><span class="eyebrow">Polaris · Editorial draft</span><h1>${escape(draft.title)}</h1>${banner}${introduction}${unresolved}</header>${overviewFigures}${sections}${poleMap}${missingList}`);
   }
 
   // --- Pole pages, in the map's order, after the landing page: each draws its sections; the why section stays on the landing page,
@@ -662,7 +671,9 @@ export function renderDossierSite(input: DossierSiteInput & { readonly local?: L
     const path = deepPaths.get(dive.id)!;
     termsShown.clear();
     const parent = draft.sections.find(section => section.id === dive.sectionId)!;
-    add(path, 1, dive.title, `<section id="deep-dive-${escape(dive.id)}" data-reading-level="2"${topicAttr(dive.id)}><span class="eyebrow">Deep dive · <a href="${escape(sectionHref(path, parent.id))}">${escape(parent.title)}</a></span><h1>${escape(dive.title)}</h1>${bannerFor(`run-stopped/dive/${dive.id}`)}${dive.paragraphs.map(b => block(path, b)).join('')}</section>`);
+    // A deep dive leads with the figures whose home it is, as a section does (syzygy-3efd.18).
+    const diveFigures = draft.diagrams.map((d, i) => d.home?.kind === 'deep-dive' && d.home.id === dive.id ? diagram(path, d, i) : '').join('');
+    add(path, 1, dive.title, `<section id="deep-dive-${escape(dive.id)}" data-reading-level="2"${topicAttr(dive.id)}><span class="eyebrow">Deep dive · <a href="${escape(sectionHref(path, parent.id))}">${escape(parent.title)}</a></span><h1>${escape(dive.title)}</h1>${bannerFor(`run-stopped/dive/${dive.id}`)}${diveFigures}${dive.paragraphs.map(b => block(path, b)).join('')}</section>`);
   }
 
   // --- contents

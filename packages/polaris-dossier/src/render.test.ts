@@ -920,6 +920,78 @@ async function designReviewed(run: string, edit: (v: Doc) => Doc = (v) => v, lau
   return { site: rendered.report.site, digest, dir: handed.report.directory };
 }
 
+// Schema v5 (syzygy-3efd.18): a figure's home is a section, a deep dive or the overview, and it renders once, on that page.
+describe('render: figure homes (schema v5)', () => {
+  const figure = (id: string, title: string, place: Record<string, unknown>) => ({ id, title, ...place, kind: 'flow', relationship: 'Order.', disposition: { kind: 'produced', assetIds: [id] },
+    nodes: [{ id: `${id}-a`, label: 'Client', epistemic: 'inferred', citations: [cite(`c-${id}-a`, 'src/kestrel.c', 1, 1)] }, { id: `${id}-b`, label: 'Server', epistemic: 'inferred', citations: [cite(`c-${id}-b`, 'src/kestrel.c', 2, 3)] }],
+    edges: [{ id: `${id}-e`, from: `${id}-a`, to: `${id}-b`, label: 'sends', epistemic: 'inferred', citations: [cite(`c-${id}-e`, 'src/kestrel.c', 1, 1)] }] });
+  const dive = { id: 'dive-1', title: 'A closer look', sectionId: 'core-ideas', paragraphs: [{ id: 'dv1', label: 'non-normative', text: 'zq-dive prose.', children: [] }], disposition: { kind: 'produced', assetIds: ['dive-1'] } };
+  const homedDraft = (): Doc => {
+    const doc = draft();
+    doc.schemaVersion = 'polaris-dossier-local-draft-v5';
+    doc.deepDives = [dive];
+    doc.diagrams = [figure('fig-o', 'zq-overview figure', { home: { kind: 'overview' } }), figure('fig-d', 'zq-dive figure', { home: { kind: 'deep-dive', target: 'dive-1' } }),
+      figure('fig-s', 'zq-section figure', { home: { kind: 'section', target: 'core-ideas' } })];
+    return doc;
+  };
+  const caption = (title: string): string => `<figcaption>${title}</figcaption>`;
+  const count = (page: string, needle: string): number => page.split(needle).length - 1;
+
+  it('draws each figure once, on its home page: the overview after its introduction, a deep dive and a section ahead of their prose', async () => {
+    const run = await prepared(homedDraft(), false);
+    const result = await renderRun(run, renderDeps());
+    if (!result.ok) throw new Error(result.refusal.reason);
+    const files = readSite(result.report.site);
+    const pages = [...files].filter(([file]) => file.endsWith('.html'));
+    const homes = { 'zq-overview figure': 'index.html', 'zq-dive figure': 'deep-dives/dive-1.html', 'zq-section figure': 'index.html' } as const;
+    for (const [title, home] of Object.entries(homes)) {
+      expect(pages.filter(([, page]) => page.includes(caption(title))).map(([file]) => file), title).toEqual([home]);
+      expect(count(files.get(home)!, caption(title)), title).toBe(1);
+    }
+    const index = files.get('index.html')!;
+    // The overview figure sits after the header (the introduction) and before the first section; the section's figure inside its section.
+    expect(index.indexOf('</header>')).toBeLessThan(index.indexOf(caption('zq-overview figure')));
+    expect(index.indexOf(caption('zq-overview figure'))).toBeLessThan(index.indexOf('<section id="section-core-ideas"'));
+    expect(index.indexOf('<section id="section-core-ideas"')).toBeLessThan(index.indexOf(caption('zq-section figure')));
+    const divePage = files.get('deep-dives/dive-1.html')!;
+    expect(divePage.indexOf(caption('zq-dive figure'))).toBeLessThan(divePage.indexOf('zq-dive prose.'));
+    // Each carries the operator-agent legend and tally, as a section's figure does.
+    for (const page of [index, divePage]) expect(page).toContain('<p class="diagram-tally">2 boxes and 1 arrow, as marked: 0 observed, 3 inferred, 0 unknown.</p>');
+  });
+
+  it('draws a figure homed on a deep dive with no page of its own in that deep dive\'s section', async () => {
+    const doc = homedDraft();
+    doc.deepDives = [{ ...dive, disposition: { kind: 'unresolved', reason: 'zq-not written.', citations: [] } }];
+    const run = await prepared(doc, false);
+    const result = await renderRun(run, renderDeps());
+    if (!result.ok) throw new Error(result.refusal.reason);
+    const files = readSite(result.report.site);
+    expect(files.has('deep-dives/dive-1.html')).toBe(false);
+    const index = files.get('index.html')!;
+    expect(count(index, caption('zq-dive figure'))).toBe(1);
+    expect(index.indexOf('<section id="section-core-ideas"')).toBeLessThan(index.indexOf(caption('zq-dive figure')));
+  });
+
+  it('draws a v5 figure homed on a section exactly as a v4 draft\'s `sectionId` draws it', async () => {
+    const figureOf = async (doc: Doc): Promise<string> => {
+      const run = await prepared(doc, false);
+      const result = await renderRun(run, renderDeps());
+      if (!result.ok) throw new Error(result.refusal.reason);
+      const index = readSite(result.report.site).get('index.html')!;
+      return index.slice(index.indexOf('<section id="section-core-ideas"'), index.indexOf('</section>', index.indexOf('<section id="section-core-ideas"')));
+    };
+    const v4 = draft();
+    v4.schemaVersion = 'polaris-dossier-local-draft-v4';
+    v4.diagrams = [figure('fig-s', 'zq-section figure', { sectionId: 'core-ideas' })];
+    const v5 = draft();
+    v5.schemaVersion = 'polaris-dossier-local-draft-v5';
+    v5.diagrams = [figure('fig-s', 'zq-section figure', { home: { kind: 'section', target: 'core-ideas' } })];
+    const [four, five] = [await figureOf(v4), await figureOf(v5)];
+    expect(four).toContain(caption('zq-section figure'));
+    expect(five).toBe(four);
+  });
+});
+
 // Dossier spec v1.5 (syzygy-pdja.3): withheld items, a block citing a withheld span beside an admitted one, and the judgement mark.
 // `.env` is path-excluded (denied-path) and never read. Words only an agent wrote carry `zq-`, which nothing Syzygy writes contains.
 describe('render: withheld items and judgements (dossier spec v1.5)', () => {
@@ -1394,10 +1466,10 @@ describe('readability guidance and diagram-led sections (syzygy-mea.10.4)', () =
   });
 
   it('puts the readability rules in the brief, after the profile guidance, and the newcomer test in the design criteria', () => {
-    expect(READABILITY_GUIDANCE_VERSION).toBe('polaris-dossier-readability-v4');
+    expect(READABILITY_GUIDANCE_VERSION).toBe('polaris-dossier-readability-v5');
     expect(READABILITY_GUIDANCE).toContain('Write for a software engineer new to this project and its domain, such as a recent graduate. Before any project term, say in everyday words what the project does and why it exists, as its sources state. Define each term at its first use.');
     // Owner review of the Redis run, 2026-11-08 (syzygy-pdja.11, syzygy-pdja.12): draw first, few words, few and broad pages.
-    expect(READABILITY_GUIDANCE).toContain('2. Diagrams lead, prose follows. Draw before you write: every end-to-end workflow, every mechanism and every set of components that talk to each other gets a diagram with its section\'s `sectionId`, and Syzygy draws it at the top of the section');
+    expect(READABILITY_GUIDANCE).toContain('2. Diagrams lead, prose follows. Draw before you write: every end-to-end workflow, every mechanism and every set of components that talk to each other gets a diagram whose `home` is its section (`{"kind": "section", "target": …}`), and Syzygy draws it at the top of the section. A figure that orients the whole dossier may have the overview as its home (`{"kind": "overview"}`)');
     expect(READABILITY_GUIDANCE).toContain('The section\'s blocks then explain what the diagram cannot show (why a step exists, what it costs), never retell it edge by edge.');
     expect(READABILITY_GUIDANCE).toContain('6. Few words. Keep a section\'s own prose short: about 300 words of blocks at most, outside its diagrams and elements. A paragraph that lists three or more things, compares options or walks through steps becomes a table, cards, steps or a diagram');
     expect(READABILITY_GUIDANCE).toContain('7. Few, broad pages. A deep dive is a page of its own, so write one only for a mechanism a reader of the stated audience needs and the section cannot hold: at most three in a dossier.');

@@ -26,10 +26,18 @@ export const LOCAL_DRAFT_SCHEMA_VERSION_V3 = 'polaris-dossier-local-draft-v3';
  * definitions or cards) may name, in `repeatsDiagram`, a diagram of its section that it repeats; and the draft may divide its sections
  * into `poles`, naming in `whySection` the section that answers why the project exists. A v2 or v3 draft still checks, and in one every
  * Inferred block still cites, since only v4 has the mark. */
-export const LOCAL_DRAFT_SCHEMA_VERSION = 'polaris-dossier-local-draft-v4';
-export const LOCAL_DRAFT_SCHEMA_VERSIONS = Object.freeze([LOCAL_DRAFT_SCHEMA_VERSION_V2, LOCAL_DRAFT_SCHEMA_VERSION_V3, LOCAL_DRAFT_SCHEMA_VERSION] as const);
-/** The fields only a v4 draft may carry, each a finding in an earlier version. */
+export const LOCAL_DRAFT_SCHEMA_VERSION_V4 = 'polaris-dossier-local-draft-v4';
+/** v5 (syzygy-3efd.18): a diagram names its page in `home` (a section, a deep dive or the overview) in place of `sectionId`, so a figure
+ * can sit on a deep dive or on the first page a reader sees. Everything else is v4; a v4 or earlier draft still checks and renders as
+ * before, with `sectionId`. */
+export const LOCAL_DRAFT_SCHEMA_VERSION = 'polaris-dossier-local-draft-v5';
+export const LOCAL_DRAFT_SCHEMA_VERSIONS = Object.freeze([LOCAL_DRAFT_SCHEMA_VERSION_V2, LOCAL_DRAFT_SCHEMA_VERSION_V3, LOCAL_DRAFT_SCHEMA_VERSION_V4, LOCAL_DRAFT_SCHEMA_VERSION] as const);
+/** Whether a draft's version has the v4 forms: v4 and every later version. */
+export const hasV4Forms = (version: unknown): boolean => version === LOCAL_DRAFT_SCHEMA_VERSION_V4 || version === LOCAL_DRAFT_SCHEMA_VERSION;
+/** The fields only a v4 or later draft may carry, each a finding in an earlier version. */
 export const V4_FIELDS = Object.freeze(['judgement', 'repeatsDiagram', 'poles', 'whySection'] as const);
+/** The pages a v5 diagram may name as its home. */
+export const DIAGRAM_HOME_KINDS = Object.freeze(['section', 'deep-dive', 'overview'] as const);
 /** The tones a callout takes; each renders with its visible name. */
 export const CALLOUT_TONES = Object.freeze(['note', 'tip', 'caution', 'important'] as const);
 
@@ -162,11 +170,14 @@ export function localDraftSchema(parameters: DraftSchemaParameters): DraftSchema
     understanding: object(Object.fromEntries(UNDERSTANDING_ITEMS.map((item) => [item, list(ref('understandingItem'), 1, 100)]))),
     sections: list(object({ id: handle, title: text, paragraphs: list(ref('content'), 1, 30), disposition: ref('disposition') }), 1, 30),
     diagrams: list(object({
-      id: handle, title: text, sectionId: handle, kind: choice(DIAGRAM_KINDS), relationship: text,
+      // Exactly one of the two, by version: `sectionId` up to v4, `home` from v5 (checked with the draft's structure, where the finding can
+      // name the version). A home names a section or a deep dive in `target`, or is the overview and names none. Not `id`: every `id` in a
+      // draft is an identity of its own.
+      id: handle, title: text, sectionId: handle, home: object({ kind: choice(DIAGRAM_HOME_KINDS), target: handle }, ['target']), kind: choice(DIAGRAM_KINDS), relationship: text,
       nodes: list(object({ id: handle, label: text, epistemic, citations: citations(1) }), 1, 40),
       edges: list(object({ id: handle, from: handle, to: handle, label: text, epistemic, citations: citations(1) }), 1, 80),
       disposition: ref('disposition'),
-    }), 0, 20),
+    }, ['sectionId', 'home']), 0, 20),
     deepDives: list(object({ id: handle, title: text, sectionId: handle, paragraphs: list(ref('content'), 1, 30), disposition: ref('disposition') }), 0, 30),
     unresolved: list(object({ id: handle, question: text, reason: text, citations: citations(0) }), 0, 100),
     discovery: object({

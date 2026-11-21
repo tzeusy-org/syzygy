@@ -2,7 +2,7 @@ import * as path from 'node:path';
 import { UNKNOWN_REASONS } from '@syzygy/cap1-core';
 import { leadInQuotations, lineCount, locateQuote, normaliseTracked, retainedWithMarkers, spanTouchesWithheld, verifiedRedactedBody, type VerifiedRedactedBody, type TrackedText } from '@syzygy/polaris-generation-core/live';
 import { isRecord } from '@syzygy/support';
-import { LOCAL_DRAFT_SCHEMA_VERSION, UNDERSTANDING_ITEMS, V4_FIELDS, checkDraftShape, localDraftSchema, type DraftSchemaWithDefs } from './draft-schema.js';
+import { LOCAL_DRAFT_SCHEMA_VERSION, LOCAL_DRAFT_SCHEMA_VERSION_V4, UNDERSTANDING_ITEMS, V4_FIELDS, hasV4Forms, checkDraftShape, localDraftSchema, type DraftSchemaWithDefs } from './draft-schema.js';
 import { BLOB_MODES, type PinnedObjectReader, type TreeEntry } from './git-object-reader.js';
 import { type DossierScreen, type ScreenExclusion } from './screen.js';
 import { DEFAULT_POLE_LIMIT } from './run-config.js';
@@ -143,12 +143,12 @@ export async function deriveFindings(subject: unknown, inputs: DeriveInputs, rul
   if (doc['schemaVersion'] === 'polaris-dossier-local-draft-v2') {
     for (const label of elementEntries(doc)) add({ kind: 'element-version', at: label, detail: 'a presentation element needs draft schema polaris-dossier-local-draft-v3' });
   }
-  // Only a v4 draft has the judgement mark and a list's repeated diagram (dossier spec v1.5); in an earlier draft each is a finding at
-  // its path, so an uncited block in one is never excused by a mark its version does not define.
-  const v4 = doc['schemaVersion'] === LOCAL_DRAFT_SCHEMA_VERSION;
+  // Only a v4 or later draft has the judgement mark and a list's repeated diagram (dossier spec v1.5); in an earlier draft each is a
+  // finding at its path, so an uncited block in one is never excused by a mark its version does not define.
+  const v4 = hasV4Forms(doc['schemaVersion']);
   if (rules.noun === 'draft' && !v4) {
     walk(doc, '$', (value, at) => {
-      for (const field of V4_FIELDS) if (Object.hasOwn(value, field)) add({ kind: 'field-version', at: `${at}.${field}`, detail: `\`${field}\` needs draft schema ${LOCAL_DRAFT_SCHEMA_VERSION}` });
+      for (const field of V4_FIELDS) if (Object.hasOwn(value, field)) add({ kind: 'field-version', at: `${at}.${field}`, detail: `\`${field}\` needs draft schema ${LOCAL_DRAFT_SCHEMA_VERSION_V4}` });
     });
   }
 
@@ -353,13 +353,38 @@ export function draftRules(pinned: string, maxQuestions: number, poleLimit: numb
 function draftStructure(doc: Readonly<Record<string, unknown>>, add: (finding: CheckFinding) => void, poleLimit: number): void {
   // References.
   const sectionIds = new Set(list(doc['sections']).flatMap((section) => (isRecord(section) && text(section['id']) !== undefined ? [text(section['id'])!] : [])));
-  for (const part of ['diagrams', 'deepDives'] as const) {
-    list(doc[part]).forEach((asset, i) => {
-      if (!isRecord(asset)) return;
-      const sectionId = text(asset['sectionId']);
-      if (sectionId !== undefined && !sectionIds.has(sectionId)) add({ kind: 'unresolved-reference', at: `$.${part}[${i}].sectionId`, detail: `no section has the identity ${JSON.stringify(sectionId)}` });
-    });
-  }
+  const diveIds = new Set(list(doc['deepDives']).flatMap((dive) => (isRecord(dive) && text(dive['id']) !== undefined ? [text(dive['id'])!] : [])));
+  list(doc['deepDives']).forEach((dive, i) => {
+    if (!isRecord(dive)) return;
+    const sectionId = text(dive['sectionId']);
+    if (sectionId !== undefined && !sectionIds.has(sectionId)) add({ kind: 'unresolved-reference', at: `$.deepDives[${i}].sectionId`, detail: `no section has the identity ${JSON.stringify(sectionId)}` });
+  });
+  // A diagram's page (syzygy-3efd.18): up to v4 the section it names in `sectionId`; from v5 its `home`, a section or a deep dive by
+  // identity, or the overview. Each version names exactly one, in its own form.
+  const v5 = doc['schemaVersion'] === LOCAL_DRAFT_SCHEMA_VERSION;
+  list(doc['diagrams']).forEach((diagram, i) => {
+    if (!isRecord(diagram)) return;
+    const at = `$.diagrams[${i}]`;
+    const hasSection = Object.hasOwn(diagram, 'sectionId'), hasHome = Object.hasOwn(diagram, 'home');
+    if (!v5) {
+      if (hasHome) add({ kind: 'field-version', at: `${at}.home`, detail: `\`home\` needs draft schema ${LOCAL_DRAFT_SCHEMA_VERSION}; an earlier draft names its diagram's section in \`sectionId\`` });
+      if (!hasSection) add({ kind: 'diagram-home', at, detail: 'the diagram names no section; up to draft schema polaris-dossier-local-draft-v4 a diagram names its section in `sectionId`' });
+      const sectionId = text(diagram['sectionId']);
+      if (sectionId !== undefined && !sectionIds.has(sectionId)) add({ kind: 'unresolved-reference', at: `${at}.sectionId`, detail: `no section has the identity ${JSON.stringify(sectionId)}` });
+      return;
+    }
+    if (hasSection) add({ kind: 'diagram-home', at: `${at}.sectionId`, detail: `a ${LOCAL_DRAFT_SCHEMA_VERSION} diagram names its page in \`home\`, not \`sectionId\`; it has exactly one home` });
+    if (!hasHome) { add({ kind: 'diagram-home', at, detail: 'the diagram names no page; give it a `home`: a section or a deep dive by `target`, or the overview' }); return; }
+    const home = diagram['home'];
+    if (!isRecord(home)) return;
+    const kind = text(home['kind']), target = text(home['target']);
+    if (kind === 'overview') {
+      if (Object.hasOwn(home, 'target')) add({ kind: 'diagram-home', at: `${at}.home.target`, detail: 'the overview is one page and takes no `target`' });
+    } else if (kind === 'section' || kind === 'deep-dive') {
+      if (target === undefined) add({ kind: 'diagram-home', at: `${at}.home`, detail: `a ${kind} home names its ${kind === 'section' ? 'section' : 'deep dive'} in \`target\`` });
+      else if (!(kind === 'section' ? sectionIds : diveIds).has(target)) add({ kind: 'unresolved-reference', at: `${at}.home.target`, detail: `no ${kind === 'section' ? 'section' : 'deep dive'} has the identity ${JSON.stringify(target)}` });
+    }
+  });
   list(doc['diagrams']).forEach((diagram, i) => {
     if (!isRecord(diagram)) return;
     const nodes = new Set(list(diagram['nodes']).flatMap((node) => (isRecord(node) && text(node['id']) !== undefined ? [text(node['id'])!] : [])));
@@ -385,8 +410,15 @@ function draftStructure(doc: Readonly<Record<string, unknown>>, add: (finding: C
     });
   }
 
-  // A list repeating a diagram names one in its own section (a deep dive's section is the one it belongs to).
-  const diagramSections = new Map(list(doc['diagrams']).flatMap((diagram) => (isRecord(diagram) && text(diagram['id']) !== undefined ? [[text(diagram['id'])!, text(diagram['sectionId'])] as const] : [])));
+  // A list repeating a diagram names one in its own section (a deep dive's section is the one it belongs to); a v5 diagram homed on a
+  // deep dive belongs to that deep dive's section too, and one on the overview to no section.
+  const diveSections = new Map(list(doc['deepDives']).flatMap((dive) => (isRecord(dive) && text(dive['id']) !== undefined ? [[text(dive['id'])!, text(dive['sectionId'])] as const] : [])));
+  const sectionOfDiagram = (diagram: Readonly<Record<string, unknown>>): string | undefined => {
+    if (!v5 || !isRecord(diagram['home'])) return text(diagram['sectionId']);
+    const home = diagram['home'];
+    return home['kind'] === 'section' ? text(home['target']) : home['kind'] === 'deep-dive' ? diveSections.get(text(home['target']) ?? '') : undefined;
+  };
+  const diagramSections = new Map(list(doc['diagrams']).flatMap((diagram) => (isRecord(diagram) && text(diagram['id']) !== undefined ? [[text(diagram['id'])!, sectionOfDiagram(diagram)] as const] : [])));
   for (const part of ['sections', 'deepDives'] as const) {
     list(doc[part]).forEach((container, i) => {
       if (!isRecord(container)) return;
@@ -404,7 +436,7 @@ function draftStructure(doc: Readonly<Record<string, unknown>>, add: (finding: C
   // Poles (dossier spec v1.5): at most the run's limit, every section in exactly one, none empty, and a named why section. Whether
   // that section answers why the project exists, and whether the Poles fit what the repository holds, are review judgements.
   // Only a v4 draft has Poles; in an earlier one the field is a field-version finding and nothing more.
-  const v4 = doc['schemaVersion'] === LOCAL_DRAFT_SCHEMA_VERSION;
+  const v4 = hasV4Forms(doc['schemaVersion']);
   if (v4 && Object.hasOwn(doc, 'poles')) {
     const poles = list(doc['poles']);
     if (poles.length > poleLimit) add({ kind: 'pole', at: '$.poles', detail: `the draft declares ${poles.length} Poles; this run's Pole limit is ${poleLimit}` });
