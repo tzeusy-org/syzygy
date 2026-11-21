@@ -281,7 +281,7 @@ other. The overlay consumes and renders both:
     *evaluated, contradiction raised* are four answers and **never share a
     mark, a mark's color, a count, or a legend entry** (RFC8-28); an
     `unsatisfied` mark and a `contradiction-raised` mark are never merged into
-    one, since one routes to a gap and the other to owner adjudication alone.
+    one, since one routes to a gap and the other to adjudication alone.
   - A district rendering normalized `merged` while dropping the chain state has
     shown scaffolding removed and concealed that nothing was reconciled — the
     closure fallacy at map scale (RFC8-30).

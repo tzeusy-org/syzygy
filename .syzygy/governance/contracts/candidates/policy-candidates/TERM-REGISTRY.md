@@ -1095,7 +1095,8 @@ none carries the admissibility floor, and a "flag" that suspends nothing is not
 a challenge.
 
 **Related but distinct.** Contradiction (T-19 — between authoritative claims,
-exits only by owner adjudication); Gap (T-20); Inferred state (T-10).
+exits only by adjudication: an agent's recorded adoption, or the owner in an
+owner class); Gap (T-20); Inferred state (T-10).
 
 **Example.** An inference process challenges one Aligned claim, citing a
 specific untested branch. Once admitted, the claim renders Unknown

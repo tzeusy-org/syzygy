@@ -588,7 +588,7 @@ governance_sources:
   - {file: topology/01-system-context.md, role: topology, words: 745, rule_ids: [SEC-1, SEC-2, SEC-3, SEC-4, SEC-5, VIS-1, VIS-4, VIS-5]}
   - {file: topology/02-project-workspace-repos.md, role: topology, words: 711, rule_ids: [SEC-4, VIS-6]}
   - {file: topology/03-kernel-and-surfaces.md, role: topology, words: 705, rule_ids: [VIS-7]}
-  - {file: topology/04-authority-write-boundaries.md, role: topology, words: 1206, rule_ids: [SEC-3, SEC-4, SEC-5, VIS-5, VIS-6]}
+  - {file: topology/04-authority-write-boundaries.md, role: topology, words: 1219, rule_ids: [SEC-3, SEC-4, SEC-5, VIS-4, VIS-5, VIS-6]}
   - {file: topology/05-observation-evidence-flow.md, role: topology, words: 757, rule_ids: [SEC-2, SEC-4, SEC-5, VIS-6, VIS-7]}
   - {file: topology/06-intent-to-reconciliation-flow.md, role: topology, words: 995, rule_ids: [VIS-4]}
   - {file: topology/07-client-trust-boundaries.md, role: topology, words: 731, rule_ids: [SEC-1, SEC-3]}
