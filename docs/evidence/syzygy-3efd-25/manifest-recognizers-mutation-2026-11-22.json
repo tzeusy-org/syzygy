@@ -1,0 +1,664 @@
+{
+  "format": "mutation-run/1",
+  "bead": "syzygy-3efd.25",
+  "requirement": "REQ-polaris-generation-034 version 2.7",
+  "ranAt": "579565923a45181ba4f287faccf45dc40938f285",
+  "ranAtClean": true,
+  "subject": [
+    {
+      "path": "packages/polaris-dossier/src/manifest-cargo.ts",
+      "sha256": "435e22c4e9d2a4ce35729bd6563618cb8d964734d3ab278c92ebe459319c9c7b"
+    },
+    {
+      "path": "packages/polaris-dossier/src/manifest-facts.ts",
+      "sha256": "d677801a79ab37f535210359be83f2460610c173c002403ddc0f36f455e31075"
+    },
+    {
+      "path": "packages/polaris-dossier/src/manifest-go.ts",
+      "sha256": "c8a8270c5cfa6cc7ace74efc166a73f888203b4bfee276ac1242ccb3030d2097"
+    },
+    {
+      "path": "packages/polaris-dossier/src/manifest-json.ts",
+      "sha256": "a3e6eb2811017bd87520e4e8b034850a4ef6b9f4295c3393673543f92759b8ac"
+    },
+    {
+      "path": "packages/polaris-dossier/src/manifest-model.ts",
+      "sha256": "330039778e3d218dd508c6d2f186c6e10cfc523b6321fd4ecfbb85853c17c025"
+    },
+    {
+      "path": "packages/polaris-dossier/src/manifest-npm.ts",
+      "sha256": "8664f241d294b743cf9ff36a44b9e8768822e4fff3d1b77e9f987283f3ecf00b"
+    },
+    {
+      "path": "packages/polaris-dossier/src/manifest-python.ts",
+      "sha256": "9ebf2d8c5ff161e3ed95c3e5532c210bca4e0806c3fe3bb09f4e6aab70e0c1a0"
+    },
+    {
+      "path": "packages/polaris-dossier/src/manifest-toml.ts",
+      "sha256": "216c5bbbb39da4aed8a9d99dcddc36bc5aad63f2849586f0eb94515f7091737e"
+    },
+    {
+      "path": "packages/polaris-dossier/src/manifest-workflow.ts",
+      "sha256": "0b9d4c99d810c47e4d9783fddfa0f3b930c2d60c65336e02b2b98e145d1da896"
+    },
+    {
+      "path": "packages/polaris-dossier/src/manifest-yaml.ts",
+      "sha256": "3183208fcafbfa22026aa24efd7e3611819adecc794f4b702aeb842a09526bb8"
+    }
+  ],
+  "rules": [
+    {
+      "rule": "npm-package-manifest",
+      "version": 1
+    },
+    {
+      "rule": "cargo-manifest",
+      "version": 1
+    },
+    {
+      "rule": "python-project-manifest",
+      "version": 1
+    },
+    {
+      "rule": "go-module-manifest",
+      "version": 1
+    },
+    {
+      "rule": "github-actions-workflow",
+      "version": 1
+    }
+  ],
+  "parser": {
+    "package": "none",
+    "version": null,
+    "note": "hand-written literal readers in manifest-json.ts, manifest-toml.ts and manifest-yaml.ts; no dependency"
+  },
+  "command": "npx vitest run packages/polaris-dossier/src/manifest-recognizers.test.ts packages/polaris-dossier/src/manifest-facts.test.ts --reporter=json --outputFile=<tmp>",
+  "method": "Each mutant replaces one fragment (old, which occurs exactly once in file) with new, in place; the two unit test files run; the mutant is killed when at least one test fails. The original bytes are restored and their sha256 checked against subject before the next mutant. The baseline run passed 46 tests at ranAt.",
+  "baselineTests": 46,
+  "killed": 46,
+  "total": 47,
+  "survivors": [
+    "cargo-5-toml-duplicates-valid"
+  ],
+  "mutants": [
+    {
+      "id": "npm-1-path-suffix",
+      "rule": "npm-package-manifest",
+      "file": "packages/polaris-dossier/src/manifest-npm.ts",
+      "old": "path === 'package.json' || path.endsWith('/package.json')",
+      "new": "path.endsWith('package.json')",
+      "killed": true,
+      "killedBy": "test failure",
+      "failedTests": [
+        "manifest-recognizers.test.ts > npm-package-manifest version 1 names every blob whose basename is package.json, compared exactly"
+      ]
+    },
+    {
+      "id": "npm-2-workspaces-object-without-packages",
+      "rule": "npm-package-manifest",
+      "file": "packages/polaris-dossier/src/manifest-npm.ts",
+      "old": "if (packages === undefined) walk.fieldType = true;",
+      "new": "if (packages === undefined) walk.fieldType = false;",
+      "killed": true,
+      "killedBy": "test failure",
+      "failedTests": [
+        "manifest-recognizers.test.ts > npm-package-manifest version 1 refuses a wrong-typed field it reads as field-type"
+      ]
+    },
+    {
+      "id": "npm-3-read-mappings",
+      "rule": "npm-package-manifest",
+      "file": "packages/polaris-dossier/src/manifest-npm.ts",
+      "old": "(p.length === 1 && READ.has(p[0]!))",
+      "new": "(p.length === 1)",
+      "killed": true,
+      "killedBy": "test failure",
+      "failedTests": [
+        "manifest-recognizers.test.ts > npm-package-manifest version 1 refuses a repeated name in an object it reads as duplicate-key, before syntax, and reads past one in an object it does not read"
+      ]
+    },
+    {
+      "id": "npm-4-dependency-lines-value-only",
+      "rule": "npm-package-manifest",
+      "file": "packages/polaris-dossier/src/manifest-npm.ts",
+      "old": "walk.add('dependency', dependency.lines, key, section, null)",
+      "new": "walk.add('dependency', dependency.value.lines, key, section, null)",
+      "killed": true,
+      "killedBy": "test failure",
+      "failedTests": [
+        "manifest-recognizers.test.ts > npm-package-manifest version 1 reads a single package with dependencies in every section, each spanning its key and value"
+      ]
+    },
+    {
+      "id": "npm-5-json-duplicates-invalid",
+      "rule": "npm-package-manifest",
+      "file": "packages/polaris-dossier/src/manifest-npm.ts",
+      "old": "READ.has(p[0]!)), false,",
+      "new": "READ.has(p[0]!)), true,",
+      "killed": true,
+      "killedBy": "test failure",
+      "failedTests": [
+        "manifest-recognizers.test.ts > npm-package-manifest version 1 refuses a repeated name in an object it reads as duplicate-key, before syntax, and reads past one in an object it does not read"
+      ]
+    },
+    {
+      "id": "npm-6-drop-optional-section",
+      "rule": "npm-package-manifest",
+      "file": "packages/polaris-dossier/src/manifest-npm.ts",
+      "old": "'peerDependencies', 'optionalDependencies'] as const",
+      "new": "'peerDependencies'] as const",
+      "killed": true,
+      "killedBy": "test failure",
+      "failedTests": [
+        "manifest-recognizers.test.ts > npm-package-manifest version 1 reads a single package with dependencies in every section, each spanning its key and value"
+      ]
+    },
+    {
+      "id": "npm-7-name-type-unchecked",
+      "rule": "npm-package-manifest",
+      "file": "packages/polaris-dossier/src/manifest-npm.ts",
+      "old": "if (name !== undefined && walk.is(name.value, 'string')) walk.add('package', name.lines, name.value.value);",
+      "new": "if (name !== undefined && name.value.kind === 'string') walk.add('package', name.lines, name.value.value);",
+      "killed": true,
+      "killedBy": "test failure",
+      "failedTests": [
+        "manifest-recognizers.test.ts > npm-package-manifest version 1 refuses a wrong-typed field it reads as field-type"
+      ]
+    },
+    {
+      "id": "cargo-1-path-case",
+      "rule": "cargo-manifest",
+      "file": "packages/polaris-dossier/src/manifest-cargo.ts",
+      "old": "path === 'Cargo.toml' || path.endsWith('/Cargo.toml')",
+      "new": "path.toLowerCase() === 'cargo.toml' || path.toLowerCase().endsWith('/cargo.toml')",
+      "killed": true,
+      "killedBy": "test failure",
+      "failedTests": [
+        "manifest-recognizers.test.ts > cargo-manifest version 1 names every blob whose basename is Cargo.toml, compared exactly"
+      ]
+    },
+    {
+      "id": "cargo-2-target-section-name",
+      "rule": "cargo-manifest",
+      "file": "packages/polaris-dossier/src/manifest-cargo.ts",
+      "old": "`target.${section}`, group",
+      "new": "section, group",
+      "killed": true,
+      "killedBy": "test failure",
+      "failedTests": [
+        "manifest-recognizers.test.ts > cargo-manifest version 1 reads a single package with dependencies in every section: dotted keys first to last, a header to its table's last line, the key never the renamed package"
+      ]
+    },
+    {
+      "id": "cargo-3-no-workspace-dependencies",
+      "rule": "cargo-manifest",
+      "file": "packages/polaris-dossier/src/manifest-cargo.ts",
+      "old": "      keys(member(workspace.value, 'dependencies')?.value, 'workspace.dependencies', null);\n",
+      "new": "",
+      "killed": true,
+      "killedBy": "test failure",
+      "failedTests": [
+        "manifest-facts.test.ts > manifestFacts: workspace manifests (scenario \"Workspace manifests read into the check record\") derives the member under policy 2.0.0: the five recognizer entries in order, each file Inferred with its count, the facts in order",
+        "manifest-facts.test.ts > manifestFacts: workspace manifests (scenario \"Workspace manifests read into the check record\") writes each member in the stated order, and the same bytes for a run relying on a statement listing code-content",
+        "manifest-recognizers.test.ts > cargo-manifest version 1 reads a workspace: each member element on its own lines and each workspace dependency key"
+      ]
+    },
+    {
+      "id": "cargo-4-member-lines",
+      "rule": "cargo-manifest",
+      "file": "packages/polaris-dossier/src/manifest-cargo.ts",
+      "old": "walk.add('workspace-member', item.lines, item.value)",
+      "new": "walk.add('workspace-member', members.lines, item.value)",
+      "killed": true,
+      "killedBy": "test failure",
+      "failedTests": [
+        "manifest-recognizers.test.ts > cargo-manifest version 1 reads a workspace: each member element on its own lines and each workspace dependency key"
+      ]
+    },
+    {
+      "id": "cargo-5-toml-duplicates-valid",
+      "rule": "cargo-manifest",
+      "file": "packages/polaris-dossier/src/manifest-cargo.ts",
+      "old": "resolveFaults(readToml(text), isRead, true,",
+      "new": "resolveFaults(readToml(text), isRead, false,",
+      "killed": false,
+      "killedBy": null,
+      "failedTests": [],
+      "equivalent": "manifest-toml.ts records a repeated name and stops with syntax (its duplicate() returns syntax()), so parsed.syntax is already true whenever parsed.duplicates is non-empty; resolveFaults then gives syntax whether duplicatesInvalid is true or false. No input distinguishes the mutant."
+    },
+    {
+      "id": "cargo-6-section-type-unchecked",
+      "rule": "cargo-manifest",
+      "file": "packages/polaris-dossier/src/manifest-cargo.ts",
+      "old": "if (table === undefined || !walk.is(table, 'map')) return;",
+      "new": "if (table === undefined || table.kind !== 'map') return;",
+      "killed": true,
+      "killedBy": "test failure",
+      "failedTests": [
+        "manifest-recognizers.test.ts > cargo-manifest version 1 refuses a wrong-typed field, a repeated table header, a repeated key elsewhere and a date-time as their faults"
+      ]
+    },
+    {
+      "id": "cargo-7-read-workspace-dependencies-path",
+      "rule": "cargo-manifest",
+      "file": "packages/polaris-dossier/src/manifest-cargo.ts",
+      "old": "((p[0] === 'workspace' && p[1] === 'dependencies') || p[0] === 'target')",
+      "new": "(p[0] === 'target')",
+      "killed": true,
+      "killedBy": "test failure",
+      "failedTests": [
+        "manifest-recognizers.test.ts > cargo-manifest version 1 refuses a wrong-typed field, a repeated table header, a repeated key elsewhere and a date-time as their faults"
+      ]
+    },
+    {
+      "id": "python-1-include-table-read",
+      "rule": "python-project-manifest",
+      "file": "packages/polaris-dossier/src/manifest-python.ts",
+      "old": "          if (item.kind === 'map') continue;\n",
+      "new": "",
+      "killed": true,
+      "killedBy": "test failure",
+      "failedTests": [
+        "manifest-facts.test.ts > manifestFacts: python, workflows and path rules records a project's package and dependency facts with sections and groups, and nothing from an include or tool.poetry",
+        "manifest-recognizers.test.ts > python-project-manifest version 1 reads a single project with every section: the requirement's leading name as declared; no fact from an include or tool.poetry"
+      ]
+    },
+    {
+      "id": "python-2-extra-group-null",
+      "rule": "python-project-manifest",
+      "file": "packages/polaris-dossier/src/manifest-python.ts",
+      "old": "requirements(extra.value, 'project.optional-dependencies', key)",
+      "new": "requirements(extra.value, 'project.optional-dependencies', null)",
+      "killed": true,
+      "killedBy": "test failure",
+      "failedTests": [
+        "manifest-facts.test.ts > manifestFacts: python, workflows and path rules records a project's package and dependency facts with sections and groups, and nothing from an include or tool.poetry",
+        "manifest-recognizers.test.ts > python-project-manifest version 1 reads a single project with every section: the requirement's leading name as declared; no fact from an include or tool.poetry"
+      ]
+    },
+    {
+      "id": "python-3-nameless-requirement-accepted",
+      "rule": "python-project-manifest",
+      "file": "packages/polaris-dossier/src/manifest-python.ts",
+      "old": "        if (name === undefined) walk.fieldType = true;\n        else walk.add('dependency', item.lines, name, section, group);",
+      "new": "        if (name !== undefined) walk.add('dependency', item.lines, name, section, group);",
+      "killed": true,
+      "killedBy": "test failure",
+      "failedTests": [
+        "manifest-recognizers.test.ts > python-project-manifest version 1 refuses a requirement with no name, a group element neither string nor table, a repeated key and a time as their faults"
+      ]
+    },
+    {
+      "id": "python-4-group-element-type",
+      "rule": "python-project-manifest",
+      "file": "packages/polaris-dossier/src/manifest-python.ts",
+      "old": "          if (!walk.is(item, 'string')) continue;\n          const name = requirementName(item.value);",
+      "new": "          if (item.kind !== 'string') continue;\n          const name = requirementName(item.value);",
+      "killed": true,
+      "killedBy": "test failure",
+      "failedTests": [
+        "manifest-recognizers.test.ts > python-project-manifest version 1 refuses a requirement with no name, a group element neither string nor table, a repeated key and a time as their faults"
+      ]
+    },
+    {
+      "id": "python-5-no-uv-members",
+      "rule": "python-project-manifest",
+      "file": "packages/polaris-dossier/src/manifest-python.ts",
+      "old": "const members = member(workspace.value, 'members');",
+      "new": "const members = member(workspace.value, 'member');",
+      "killed": true,
+      "killedBy": "test failure",
+      "failedTests": [
+        "manifest-recognizers.test.ts > python-project-manifest version 1 reads a uv workspace: the project name and each member pattern"
+      ]
+    },
+    {
+      "id": "python-6-path-suffix",
+      "rule": "python-project-manifest",
+      "file": "packages/polaris-dossier/src/manifest-python.ts",
+      "old": "path === 'pyproject.toml' || path.endsWith('/pyproject.toml')",
+      "new": "path.endsWith('pyproject.toml')",
+      "killed": true,
+      "killedBy": "test failure",
+      "failedTests": [
+        "manifest-recognizers.test.ts > python-project-manifest version 1 names every blob whose basename is pyproject.toml, compared exactly"
+      ]
+    },
+    {
+      "id": "python-7-requirement-name-grammar",
+      "rule": "python-project-manifest",
+      "file": "packages/polaris-dossier/src/manifest-model.ts",
+      "old": "/^[A-Za-z0-9](?:[A-Za-z0-9._-]*[A-Za-z0-9])?/u",
+      "new": "/^[A-Za-z0-9._-]+/u",
+      "killed": true,
+      "killedBy": "test failure",
+      "failedTests": [
+        "manifest-recognizers.test.ts > python-project-manifest version 1 takes a requirement's name as the longest run starting and ending with a letter or digit",
+        "manifest-recognizers.test.ts > python-project-manifest version 1 refuses a requirement with no name, a group element neither string nor table, a repeated key and a time as their faults"
+      ]
+    },
+    {
+      "id": "go-1-indirect-exact",
+      "rule": "go-module-manifest",
+      "file": "packages/polaris-dossier/src/manifest-go.ts",
+      "old": "comment === '// indirect'",
+      "new": "comment?.startsWith('// indirect') === true",
+      "killed": true,
+      "killedBy": "test failure",
+      "failedTests": [
+        "manifest-recognizers.test.ts > go-module-manifest version 1 reads the module and single-line and block require directives, each on its own line, an exact `// indirect` as require-indirect"
+      ]
+    },
+    {
+      "id": "go-2-module-count",
+      "rule": "go-module-manifest",
+      "file": "packages/polaris-dossier/src/manifest-go.ts",
+      "old": "if (modules !== 1)",
+      "new": "if (modules > 1)",
+      "killed": true,
+      "killedBy": "test failure",
+      "failedTests": [
+        "manifest-recognizers.test.ts > go-module-manifest version 1 refuses a block left open as syntax, and an empty file as field-type (no module directive)"
+      ]
+    },
+    {
+      "id": "go-3-unknown-directive",
+      "rule": "go-module-manifest",
+      "file": "packages/polaris-dossier/src/manifest-go.ts",
+      "old": "    } else beyond = true;\n",
+      "new": "    }\n",
+      "killed": true,
+      "killedBy": "test failure",
+      "failedTests": [
+        "manifest-recognizers.test.ts > go-module-manifest version 1 refuses two module directives as field-type and a directive it does not read as beyond-reader"
+      ]
+    },
+    {
+      "id": "go-4-open-block",
+      "rule": "go-module-manifest",
+      "file": "packages/polaris-dossier/src/manifest-go.ts",
+      "old": "  if (block !== null) return { ok: false, parseFault: 'syntax' };\n  if (modules",
+      "new": "  if (modules",
+      "killed": true,
+      "killedBy": "test failure",
+      "failedTests": [
+        "manifest-recognizers.test.ts > go-module-manifest version 1 refuses a block left open as syntax, and an empty file as field-type (no module directive)"
+      ]
+    },
+    {
+      "id": "go-5-raw-string-unquote",
+      "rule": "go-module-manifest",
+      "file": "packages/polaris-dossier/src/manifest-go.ts",
+      "old": "if (token.startsWith('`')) return token.slice(1, -1);",
+      "new": "if (token.startsWith('`')) return token;",
+      "killed": true,
+      "killedBy": "test failure",
+      "failedTests": [
+        "manifest-recognizers.test.ts > go-module-manifest version 1 reads the module and single-line and block require directives, each on its own line, an exact `// indirect` as require-indirect"
+      ]
+    },
+    {
+      "id": "go-6-require-arity",
+      "rule": "go-module-manifest",
+      "file": "packages/polaris-dossier/src/manifest-go.ts",
+      "old": "if (tokens.length !== 2 || ",
+      "new": "if (tokens.length === 0 || ",
+      "killed": true,
+      "killedBy": "test failure",
+      "failedTests": [
+        "manifest-recognizers.test.ts > go-module-manifest version 1 refuses a block left open as syntax, and an empty file as field-type (no module directive)"
+      ]
+    },
+    {
+      "id": "go-7-path-suffix",
+      "rule": "go-module-manifest",
+      "file": "packages/polaris-dossier/src/manifest-go.ts",
+      "old": "path === 'go.mod' || path.endsWith('/go.mod')",
+      "new": "path.endsWith('go.mod')",
+      "killed": true,
+      "killedBy": "test failure",
+      "failedTests": [
+        "manifest-recognizers.test.ts > go-module-manifest version 1 names every blob whose basename is go.mod, compared exactly"
+      ]
+    },
+    {
+      "id": "workflow-1-nested-directory",
+      "rule": "github-actions-workflow",
+      "file": "packages/polaris-dossier/src/manifest-workflow.ts",
+      "old": "/^\\.github\\/workflows\\/[^/]+\\.(?:yml|yaml)$/u",
+      "new": "/^\\.github\\/workflows\\/.+\\.(?:yml|yaml)$/u",
+      "killed": true,
+      "killedBy": "test failure",
+      "failedTests": [
+        "manifest-facts.test.ts > manifestFacts: python, workflows and path rules records a workflow, its triggers, jobs and needs, and takes no workflow one directory deeper or with another case or extension",
+        "manifest-recognizers.test.ts > github-actions-workflow version 1 names exactly .github/workflows/<name>.yml or .yaml, three segments, the name not empty"
+      ]
+    },
+    {
+      "id": "workflow-2-yaml-extension",
+      "rule": "github-actions-workflow",
+      "file": "packages/polaris-dossier/src/manifest-workflow.ts",
+      "old": "/^\\.github\\/workflows\\/[^/]+\\.(?:yml|yaml)$/u",
+      "new": "/^\\.github\\/workflows\\/[^/]+\\.(?:yml)$/u",
+      "killed": true,
+      "killedBy": "test failure",
+      "failedTests": [
+        "manifest-facts.test.ts > manifestFacts: python, workflows and path rules records a workflow, its triggers, jobs and needs, and takes no workflow one directory deeper or with another case or extension",
+        "manifest-recognizers.test.ts > github-actions-workflow version 1 names exactly .github/workflows/<name>.yml or .yaml, three segments, the name not empty"
+      ]
+    },
+    {
+      "id": "workflow-3-workflow-span",
+      "rule": "github-actions-workflow",
+      "file": "packages/polaris-dossier/src/manifest-workflow.ts",
+      "old": "else if (walk.is(name.value, 'string')) walk.add('workflow', { first: 1, last: lineCountOf(text) }, name.value.value);",
+      "new": "else if (walk.is(name.value, 'string')) walk.add('workflow', name.lines, name.value.value);",
+      "killed": true,
+      "killedBy": "test failure",
+      "failedTests": [
+        "manifest-facts.test.ts > manifestFacts: python, workflows and path rules records a workflow, its triggers, jobs and needs, and takes no workflow one directory deeper or with another case or extension",
+        "manifest-recognizers.test.ts > github-actions-workflow version 1 reads several jobs with needs as a string and as a sequence, on as a mapping, and the workflow spanning the whole file",
+        "manifest-recognizers.test.ts > github-actions-workflow version 1 reads on as a string and as a sequence, a quoted scalar decoded, and an absent name as null"
+      ]
+    },
+    {
+      "id": "workflow-4-on-other-type",
+      "rule": "github-actions-workflow",
+      "file": "packages/polaris-dossier/src/manifest-workflow.ts",
+      "old": "      else walk.is(value, 'string');\n",
+      "new": "",
+      "killed": true,
+      "killedBy": "test failure",
+      "failedTests": [
+        "manifest-recognizers.test.ts > github-actions-workflow version 1 refuses a root that is no mapping, an integer job key, a wrong-typed needs or name, and a boolean on as field-type"
+      ]
+    },
+    {
+      "id": "workflow-5-needs-direction",
+      "rule": "github-actions-workflow",
+      "file": "packages/polaris-dossier/src/manifest-workflow.ts",
+      "old": "walk.add('job-needs', item.lines, job, item.value)",
+      "new": "walk.add('job-needs', item.lines, item.value, job)",
+      "killed": true,
+      "killedBy": "test failure",
+      "failedTests": [
+        "manifest-recognizers.test.ts > github-actions-workflow version 1 reads several jobs with needs as a string and as a sequence, on as a mapping, and the workflow spanning the whole file"
+      ]
+    },
+    {
+      "id": "workflow-6-job-value-type",
+      "rule": "github-actions-workflow",
+      "file": "packages/polaris-dossier/src/manifest-workflow.ts",
+      "old": "if (!walk.is(entry.value, 'map')) continue;",
+      "new": "if (entry.value.kind !== 'map') continue;",
+      "killed": true,
+      "killedBy": "test failure",
+      "failedTests": [
+        "manifest-recognizers.test.ts > github-actions-workflow version 1 refuses a root that is no mapping, an integer job key, a wrong-typed needs or name, and a boolean on as field-type"
+      ]
+    },
+    {
+      "id": "workflow-7-read-job-mappings",
+      "rule": "github-actions-workflow",
+      "file": "packages/polaris-dossier/src/manifest-workflow.ts",
+      "old": " || (p.length === 2 && p[0] === 'jobs');",
+      "new": ";",
+      "killed": true,
+      "killedBy": "test failure",
+      "failedTests": [
+        "manifest-recognizers.test.ts > github-actions-workflow version 1 refuses a repeated job as duplicate-key and a repeated key it does not read as syntax"
+      ]
+    },
+    {
+      "id": "workflow-8-absent-name",
+      "rule": "github-actions-workflow",
+      "file": "packages/polaris-dossier/src/manifest-workflow.ts",
+      "old": "if (name === undefined) walk.add('workflow', { first: 1, last: lineCountOf(text) }, null);",
+      "new": "if (name === undefined) walk.fieldType = true;",
+      "killed": true,
+      "killedBy": "test failure",
+      "failedTests": [
+        "manifest-facts.test.ts > manifestFacts: python, workflows and path rules records a workflow, its triggers, jobs and needs, and takes no workflow one directory deeper or with another case or extension",
+        "manifest-recognizers.test.ts > github-actions-workflow version 1 reads on as a string and as a sequence, a quoted scalar decoded, and an absent name as null",
+        "manifest-recognizers.test.ts > github-actions-workflow version 1 refuses an anchor and alias and a second document as beyond-reader"
+      ]
+    },
+    {
+      "id": "driver-1-blob-bound",
+      "rule": "all five (driver)",
+      "file": "packages/polaris-dossier/src/manifest-facts.ts",
+      "old": "if (blob.bytes.byteLength > MANIFEST_BLOB_LIMIT)",
+      "new": "if (blob.bytes.byteLength >= MANIFEST_BLOB_LIMIT)",
+      "killed": true,
+      "killedBy": "test failure",
+      "failedTests": [
+        "manifest-facts.test.ts > manifestFacts: excluded or withheld blob never read makes a refused read Unknown for that file alone: object-read-refused, too-large over the bound, not-utf8-text"
+      ]
+    },
+    {
+      "id": "driver-2-value-limit",
+      "rule": "all five (driver)",
+      "file": "packages/polaris-dossier/src/manifest-facts.ts",
+      "old": "value.length > MANIFEST_VALUE_LIMIT",
+      "new": "value.length >= MANIFEST_VALUE_LIMIT",
+      "killed": true,
+      "killedBy": "test failure",
+      "failedTests": [
+        "manifest-facts.test.ts > manifestFacts: values, caps and order leaves out a fact whose body-taken value is over 256 code units, holds a control character or a detector matches, and counts it"
+      ]
+    },
+    {
+      "id": "driver-3-value-detector",
+      "rule": "all five (driver)",
+      "file": "packages/polaris-dossier/src/manifest-facts.ts",
+      "old": " || screen.screenBody(value) === 'secret-detector-match';",
+      "new": ";",
+      "killed": true,
+      "killedBy": "test failure",
+      "failedTests": [
+        "manifest-facts.test.ts > manifestFacts: values, caps and order leaves out a fact whose body-taken value is over 256 code units, holds a control character or a detector matches, and counts it"
+      ]
+    },
+    {
+      "id": "driver-4-workflow-set-apart",
+      "rule": "all five (driver)",
+      "file": "packages/polaris-dossier/src/manifest-facts.ts",
+      "old": "isWorkflowPath, setsApart: false,",
+      "new": "isWorkflowPath, setsApart: true,",
+      "killed": true,
+      "killedBy": "test failure",
+      "failedTests": [
+        "manifest-facts.test.ts > manifestFacts: python, workflows and path rules records a workflow, its triggers, jobs and needs, and takes no workflow one directory deeper or with another case or extension"
+      ]
+    },
+    {
+      "id": "driver-5-over-bound-reason",
+      "rule": "all five (driver)",
+      "file": "packages/polaris-dossier/src/manifest-facts.ts",
+      "old": "cause.overBound ? 'too-large' : 'object-read-refused'",
+      "new": "'object-read-refused'",
+      "killed": true,
+      "killedBy": "test failure",
+      "failedTests": [
+        "manifest-facts.test.ts > manifestFacts: excluded or withheld blob never read makes a refused read Unknown for that file alone: object-read-refused, too-large over the bound, not-utf8-text"
+      ]
+    },
+    {
+      "id": "driver-6-class-gate",
+      "rule": "all five (driver)",
+      "file": "packages/polaris-dossier/src/manifest-facts.ts",
+      "old": "      if (unconsentedClass(screen.contentClass(path), inputs.consented) !== undefined) { outcomes.push(unknownFile(path, 'class-not-consented', false)); continue; }\n",
+      "new": "",
+      "killed": true,
+      "killedBy": "test failure",
+      "failedTests": [
+        "manifest-facts.test.ts > manifestFacts: excluded or withheld blob never read withholds a class the run's statement does not list (class-not-consented), unread"
+      ]
+    },
+    {
+      "id": "driver-7-read-limit",
+      "rule": "all five (driver)",
+      "file": "packages/polaris-dossier/src/manifest-facts.ts",
+      "old": "if (readable >= MANIFEST_READ_LIMIT)",
+      "new": "if (readable > MANIFEST_READ_LIMIT)",
+      "killed": true,
+      "killedBy": "test failure",
+      "failedTests": [
+        "manifest-facts.test.ts > manifestFacts: values, caps and order reads and lists the first 250 of 260 files, counts the rest Unknown over-read-limit, and lists the first 1,000 facts"
+      ]
+    },
+    {
+      "id": "driver-8-secret-path-by-name",
+      "rule": "all five (driver)",
+      "file": "packages/polaris-dossier/src/manifest-facts.ts",
+      "old": "      if (secretOrUnder(path.split('/'), isSecretPath)) { secretPathsLeftOut++; continue; }\n",
+      "new": "",
+      "killed": true,
+      "killedBy": "test failure",
+      "failedTests": [
+        "manifest-facts.test.ts > manifestFacts: excluded or withheld blob never read reads none of the paths its dispositions exclude: secret, set apart, denied, indeterminate, unconsented, symbolic link, unciteable"
+      ]
+    },
+    {
+      "id": "driver-9-symbolic-link",
+      "rule": "all five (driver)",
+      "file": "packages/polaris-dossier/src/manifest-facts.ts",
+      "old": "      if (candidate.mode === '120000') { outcomes.push(unknownFile(path, 'symbolic-link', false)); continue; }\n",
+      "new": "",
+      "killed": true,
+      "killedBy": "test failure",
+      "failedTests": [
+        "manifest-facts.test.ts > manifestFacts: excluded or withheld blob never read reads none of the paths its dispositions exclude: secret, set apart, denied, indeterminate, unconsented, symbolic link, unciteable",
+        "manifest-facts.test.ts > manifestFacts: values, caps and order lists every file read first, so unread files sorting before them do not hide one"
+      ]
+    },
+    {
+      "id": "driver-10-facts-listed",
+      "rule": "all five (driver)",
+      "file": "packages/polaris-dossier/src/manifest-facts.ts",
+      "old": "pending.slice(0, MANIFEST_FACTS_LISTED)",
+      "new": "pending.slice(0, MANIFEST_FACTS_LISTED - 1)",
+      "killed": true,
+      "killedBy": "test failure",
+      "failedTests": [
+        "manifest-facts.test.ts > manifestFacts: values, caps and order reads and lists the first 250 of 260 files, counts the rest Unknown over-read-limit, and lists the first 1,000 facts",
+        "manifest-facts.test.ts > manifestFacts: values, caps and order lists exactly 1,000 facts with none left, and counts the 1,001st"
+      ]
+    },
+    {
+      "id": "model-1-duplicate-before-syntax",
+      "rule": "all five (model)",
+      "file": "packages/polaris-dossier/src/manifest-model.ts",
+      "old": "  if (parsed.duplicates.some(isRead)) return { ok: false, parseFault: 'duplicate-key' };\n  if (parsed.syntax || (duplicatesInvalid && parsed.duplicates.length > 0)) return { ok: false, parseFault: 'syntax' };",
+      "new": "  if (parsed.syntax) return { ok: false, parseFault: 'syntax' };\n  if (parsed.duplicates.some(isRead)) return { ok: false, parseFault: 'duplicate-key' };\n  if (duplicatesInvalid && parsed.duplicates.length > 0) return { ok: false, parseFault: 'syntax' };",
+      "killed": true,
+      "killedBy": "test failure",
+      "failedTests": [
+        "manifest-recognizers.test.ts > npm-package-manifest version 1 refuses a repeated name in an object it reads as duplicate-key, before syntax, and reads past one in an object it does not read",
+        "manifest-recognizers.test.ts > cargo-manifest version 1 refuses a wrong-typed field, a repeated table header, a repeated key elsewhere and a date-time as their faults",
+        "manifest-recognizers.test.ts > python-project-manifest version 1 refuses a requirement with no name, a group element neither string nor table, a repeated key and a time as their faults"
+      ]
+    }
+  ]
+}

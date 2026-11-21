@@ -619,6 +619,32 @@ describe('each call is bounded: bytes inflated, delta depth, objects visited (fi
     const { repo, commit } = deltaRepo('delta-big');
     expect(await refusal(reader(repo, commit, { maxObjectBytes: 11 }).readBlobs(['f']))).toMatchObject({ reason: 'corrupt-object', message: '1ccd73aeacfd33cab1d9e1091d21860c1922ef53: delta declares 12 bytes' });
   });
+  // syzygy-3efd.25: the manifest recognizers tell an object over the bound (`too-large`) from a malformed one by `overBound`, which leaves the
+  // reason, the message and `toJSON` as they were. A loose object inflates up to 64 bytes past the bound (room for its header) and is
+  // returned; the recognizers refuse such a body by its length.
+  it('marks every refusal for size overBound, and no other: loose stored, loose inflated, packed, delta output', async () => {
+    const raised = async (p: Promise<unknown>): Promise<GitObjectReadRefusal> => {
+      try { await p; } catch (e) { if (e instanceof GitObjectReadRefusal) return e; throw e; }
+      throw new Error('expected a refusal');
+    };
+    let seed = Buffer.from('seed');
+    const noise = Buffer.concat(Array.from({ length: 64 }, () => (seed = createHash('sha256').update(seed).digest())));
+    const big = oneFile(noise), loose = handBuilt('over-loose-stored', [big.blob, big.tree, big.commit]);
+    const runs = oneFile(Buffer.alloc(4096, 0x61)), inflating = handBuilt('over-loose-inflated', [runs.blob, runs.tree, runs.commit]);
+    const packed = handBuilt('over-packed', [runs.tree, runs.commit], [{ id: runs.blob.id, entry: whole(runs.blob.body) }]);
+    const { repo, commit } = deltaRepo('over-delta');
+    const refusals = [
+      await raised(reader(loose, big.commit.id, { maxObjectBytes: 512 }).readBlobs(['f'])),
+      await raised(reader(inflating, runs.commit.id, { maxObjectBytes: 512 }).readBlobs(['f'])),
+      await raised(reader(packed, runs.commit.id, { maxObjectBytes: 4095 }).readBlobs(['f'])),
+      await raised(reader(repo, commit, { maxObjectBytes: 11 }).readBlobs(['f'])),
+    ];
+    expect(refusals.map((r) => [r.reason, r.overBound])).toEqual([['corrupt-object', true], ['corrupt-object', true], ['corrupt-object', true], ['corrupt-object', true]]);
+    expect((await reader(inflating, runs.commit.id, { maxObjectBytes: 4095 }).readBlobs(['f']))[0]!.bytes.byteLength).toBe(4096);
+    expect(Object.keys(refusals[0]!.toJSON())).toEqual(['reason', 'objectId', 'path', 'message']);
+    const malformed = await raised(reader(L, C2).readBlobs(['missing/path.txt']));
+    expect(malformed.overBound).toBe(false);
+  });
 });
 
 describe('pack and delta malformations, each predicate (finding 5)', () => {

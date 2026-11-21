@@ -78,5 +78,15 @@ export const ENTRY_POINT = {
   exampleSegments: ['example', 'examples', 'sample', 'samples', 'demo', 'demos'],
 } as const;
 
+/** The manifest recognizers (REQ-polaris-generation-034 version 2.7, syzygy-3efd.25), each version 1: what one admitted manifest body
+ * declares, read by `manifest-*.ts`. They read bodies, so they are not structure-record rules and are not in `DERIVE_RULES`: the
+ * structure record's `rules` list keeps its bytes. The forms each reader refuses as `beyond-reader` are part of its rule (stated in its
+ * module); a change to that set is a new version. */
+export const NPM_PACKAGE_MANIFEST = { id: 'npm-package-manifest', version: 1 } as const;
+export const CARGO_MANIFEST = { id: 'cargo-manifest', version: 1 } as const;
+export const PYTHON_PROJECT_MANIFEST = { id: 'python-project-manifest', version: 1 } as const;
+export const GO_MODULE_MANIFEST = { id: 'go-module-manifest', version: 1 } as const;
+export const GITHUB_ACTIONS_WORKFLOW = { id: 'github-actions-workflow', version: 1 } as const;
+
 export const DERIVE_RULES: readonly DeriveRuleId[] = [VENDORED_PATH, GENERATED_PATH, LANGUAGE_BY_EXTENSION, DOCS_TREE, TESTS_PATH, MANIFEST_NAMES, TOP_LEVEL_UNIT, SERVER_ENTRY]
   .map(({ id, version }) => ({ id, version }));

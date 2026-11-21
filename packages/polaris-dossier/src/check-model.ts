@@ -15,6 +15,7 @@ import type { ReviewReachAdvice } from './review-reach.js';
 import { CLASS_NOT_CONSENTED, unconsentedClass } from './class-gate.js';
 import type { FigureFit, FigureLayout } from './figure-fit.js';
 import type { ReadingDifference, ReadingLedger } from './reading-ledger.js';
+import type { ManifestFacts } from './manifest-facts.js';
 
 /** The check's record formats, finding and result types, and the small shared readers; split out of `check.ts` unchanged. */
 
@@ -193,6 +194,9 @@ export interface CheckReport extends CheckRecord {
   /** The reading ledger (`reading-ledger.ts`, version 2.4): counts per narrative page of the draft, kept in the draft's check record beside
    * `figureFit`; advice, never a finding. */
   readonly readingLedger?: ReadingLedger;
+  /** Declared manifest facts (`manifest-facts.ts`, version 2.7): the draft check record's last member, from the pinned tree and the blobs
+   * the screen admits, never from the draft; every fact Inferred. Carried once, as part of the check record. */
+  readonly manifestFacts?: ManifestFacts;
   /** The ledger's difference from the previous run of the same repository in the state root, computed at this check and written to no
    * file; Unknown, never zero, where there is none. */
   readonly readingDifference?: ReadingDifference;

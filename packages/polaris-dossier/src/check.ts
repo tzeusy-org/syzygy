@@ -20,6 +20,7 @@ import { reviewReachAdvice, type ReviewReachAdvice } from './review-reach.js';
 import { screenCensusReport, withheldCensus, type ScreenCensusReport } from './census.js';
 import { deriveStructure, deriveTreeFacts, structureUnknown, type StructureRecord } from './derive.js';
 import { derivedRecordFile, encodeDerivedRecord, secretPathOf } from './derived-record.js';
+import { MANIFEST_BLOB_LIMIT, deriveManifestFacts, manifestFactsUnknown, type ManifestFacts } from './manifest-facts.js';
 import { BRIEF_JSON_LIMITS, CHECK_RECORD_FORMAT, type CheckCommand, type CheckDeps, type CheckFinding, type CheckRecord, type CheckRefusal, type CheckRequest, type CheckResult, type CheckStage, type CitedBlob, DEFAULT_DRAFT, DISCLOSURES, DRAFT_JSON_LIMITS, DRAFT_MAX_BYTES, type ExcludedQuotation, type ReviewVisibility, STEP_LOG_FORMAT, type VerifiedQuotation, errno, reviewVisibility, text } from './check-model.js';
 import { type Derived, type SubjectRules, deriveFindings, draftRules } from './check-derive.js';
 export { CHECK_RECORD_FORMAT, STEP_LOG_FORMAT, DEFAULT_DRAFT, DRAFT_MAX_BYTES, reviewVisibility, lineRanges, blobRedaction } from './check-model.js';
@@ -222,13 +223,18 @@ export async function checkSubject<R extends object, G>(runDir: string, file: st
   // The structure record (syzygy-3efd.16) is derived from the same listing: paths and modes alone, a secret path counted and never named.
   // The derived-structure record (REQ-polaris-generation-034 version 2.3) is derived from that listing too, by rule top-level-unit, and
   // kept once beside the check record: what a render publishes unchanged and compares with its own re-derivation.
+  // Declared manifest facts (REQ-polaris-generation-034 version 2.7, syzygy-3efd.25) are read from that listing as well: each admitted
+  // manifest through a second reader on the same clone whose object bound is 1 MiB, one call per file. They are kept in the draft's check
+  // record (`manifestFacts`), never in an inventory check record, and derived whether or not the draft parses.
   let screenCensus: ScreenCensusReport | undefined, structureRecord: StructureRecord | undefined, derivedRecord: string | undefined;
+  let manifestFacts: ManifestFacts | undefined;
   if (plan.command === 'check') {
     // `capturedAt` is the instant this check listed the tree: taken once the listing returns, or once it is refused.
     const source = (): { repositoryId: string; revision: string; capturedAt: string } => ({ repositoryId: subject.repository.repositoryId, revision: pinned, capturedAt: isoOf(deps.now()) });
     const isSecretPath = secretPathOf(screen);
+    let entries: Awaited<ReturnType<typeof reader.listTree>> | undefined;
     try {
-      const entries = await reader.listTree();
+      entries = await reader.listTree();
       const listed = source();
       screenCensus = screenCensusReport({ ok: true, census: withheldCensus(entries, screen, checked.contentClasses) });
       structureRecord = deriveStructure(entries, isSecretPath);
@@ -238,6 +244,14 @@ export async function checkSubject<R extends object, G>(runDir: string, file: st
       screenCensus = screenCensusReport({ ok: false, why: `the pinned tree could not be listed (${cause.reason})`, consented: checked.contentClasses });
       structureRecord = structureUnknown(`the pinned tree could not be listed (${cause.reason})`);
       derivedRecord = encodeDerivedRecord(source(), { why: `the pinned tree could not be listed (${cause.reason})` });
+      manifestFacts = manifestFactsUnknown(cause.reason);
+    }
+    if (entries !== undefined) {
+      const manifestReader = (deps.openReader ?? openPinnedObjectReader)({ gitDir: path.join(subject.clone.path, '.git'), revision: pinned, maxObjectBytes: MANIFEST_BLOB_LIMIT });
+      manifestFacts = await deriveManifestFacts({
+        entries, screen, consented: checked.contentClasses,
+        read: async (manifestPath) => (await manifestReader.readBlobs([manifestPath]))[0]!,
+      });
     }
   }
   if (credential.required && !credential.passed) {
@@ -283,7 +297,10 @@ export async function checkSubject<R extends object, G>(runDir: string, file: st
   // draft bytes, so two checks of one draft write the same member; an inventory check record carries none.
   const advice = plan.command === 'check' && parseFault === null ? readerAdvice(doc) : undefined;
   const ledger = fit === undefined || advice === undefined ? undefined : readingLedger(doc, fit, advice);
-  const stored = fit === undefined ? record : { ...record, figureFit: fit, ...(ledger === undefined ? {} : { readingLedger: ledger }) };
+  const stored = {
+    ...record, ...(fit === undefined ? {} : { figureFit: fit }), ...(ledger === undefined ? {} : { readingLedger: ledger }),
+    ...(manifestFacts === undefined ? {} : { manifestFacts }),
+  };
   try {
     if (derivedRecord !== undefined) {
       fs.mkdirSync(path.join(run, RUN_LAYOUT.derived), { recursive: true, mode: 0o700 });

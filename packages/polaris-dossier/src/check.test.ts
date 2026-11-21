@@ -12,6 +12,8 @@ import { GitObjectReadRefusal, openPinnedObjectReader, type PinnedObjectReader, 
 import { parseRunConfig } from './run-config.js';
 import { NO_WORK_ITEM_REASON, encodeRunRecord, type RunSubject } from './run-record.js';
 import { buildDossierScreen } from './screen.js';
+import { deriveManifestFacts } from './manifest-facts.js';
+import { createHash } from 'node:crypto';
 import { GIT_ENV, tempDir } from '@syzygy/test-kit';
 
 // syzygy-qkea.7 (S6): `syzygy dossier check` (REQ-polaris-generation-033, 034, 036). The clone is a real Git repository built here
@@ -445,7 +447,7 @@ describe('check: reading ledger', () => {
     const stored = [0, 1].map((n) => JSON.parse(read(run, `checks/rev-${n}.json`)) as Record<string, unknown>);
     expect(stored[0]!['readingLedger']).toEqual(LEDGER);
     expect(JSON.stringify(stored[1]!['readingLedger'])).toBe(JSON.stringify(stored[0]!['readingLedger']));
-    expect(Object.keys(stored[0]!).slice(-2)).toEqual(['figureFit', 'readingLedger']);
+    expect(Object.keys(stored[0]!).slice(-3)).toEqual(['figureFit', 'readingLedger', 'manifestFacts']);
     expect(stored[0]!).not.toHaveProperty('readingDifference');
     expect(first.readingLedger).toEqual(LEDGER);
     // Advice: no outcome or finding changes; the first run of the repository has no earlier ledger, so its difference is Unknown.
@@ -483,6 +485,58 @@ describe('check: reading ledger', () => {
     expect(result).not.toHaveProperty('readingLedger');
     expect(JSON.parse(read(run, 'checks/rev-0.json'))).not.toHaveProperty('readingLedger');
     expect(result.readingDifference).toEqual({ state: 'unknown', why: 'this draft does not parse, so it has no reading ledger', unreadableRuns: 0, unreadableCheckRecords: 0 });
+  });
+});
+
+describe('check: manifest facts (REQ-polaris-generation-034 version 2.7, syzygy-3efd.25)', () => {
+  // The fixture tree declares no manifest, so each of the five recognizers lists no candidate; the member is still written, last.
+  const none = (rule: string) => ({ rule, ruleVersion: 1, label: 'inferred', candidates: 0, secretPathsLeftOut: 0, setApart: 0, inferred: 0, unknown: 0, valuesLeftOut: 0, facts: 0, files: [], filesNotListed: 0 });
+  const MEMBER = {
+    format: 'polaris-dossier-manifest-facts/1', state: 'derived',
+    screeningPolicy: { policyId: 'fixture-public-source', policyVersion: '1', sha256: createHash('sha256').update(POLICY).digest('hex') },
+    recognizers: ['npm-package-manifest', 'cargo-manifest', 'python-project-manifest', 'go-module-manifest', 'github-actions-workflow'].map(none),
+    facts: [], factsNotListed: 0,
+  };
+
+  it('writes manifestFacts last in the check record, once on the report, the same bytes for two different drafts and for one that does not parse', async () => {
+    const run = await briefedRun();
+    writeDraft(run, valid());
+    const first = report(await checkDraft(run, {}, deps()));
+    writeDraft(run, mutate((d) => { d.title = 'Another title'; }));
+    report(await checkDraft(run, {}, deps({ now: () => LATER + 1000 })));
+    writeDraft(run, '{ "schemaVersion": ');
+    const broken = report(await checkDraft(run, {}, deps({ now: () => LATER + 2000 })));
+    expect(broken.outcome).not.toBe('passed');
+    const texts = [0, 1, 2].map((n) => read(run, `checks/rev-${n}.json`));
+    const stored = texts.map((t) => JSON.parse(t) as Record<string, unknown>);
+    expect(stored[0]!['manifestFacts']).toEqual(MEMBER);
+    for (const s of stored) expect(Object.keys(s).at(-1)).toBe('manifestFacts');
+    expect(JSON.stringify(stored[1]!['manifestFacts'])).toBe(JSON.stringify(stored[0]!['manifestFacts']));
+    expect(JSON.stringify(stored[2]!['manifestFacts'])).toBe(JSON.stringify(stored[0]!['manifestFacts']));
+    expect(first.manifestFacts).toEqual(MEMBER);
+    expect(texts[0]!.split('"manifestFacts"')).toHaveLength(2);
+  });
+
+  it('reads each manifest through the pinned reader bounded at 1 MiB: 1,048,576 bytes read, one byte or more past it too-large', async () => {
+    const repo = tempDir('dossier-manifest-bound-');
+    const git = (...args: string[]): string => execFileSync('git', ['-C', repo, ...args], { encoding: 'utf8', env: GIT_ENV }).trim();
+    git('init', '-q', '-b', 'main');
+    git('config', 'gc.auto', '0');
+    const exact = `{ "name": "exact"${' '.repeat(1_048_576 - 19)}}\n`;
+    for (const [dir, body] of [['a', exact], ['b', `${exact} `], ['c', `${exact}${' '.repeat(4096)}`]] as const) {
+      fs.mkdirSync(path.join(repo, dir));
+      fs.writeFileSync(path.join(repo, dir, 'package.json'), body);
+    }
+    git('add', '-A');
+    git('-c', 'user.name=t', '-c', 'user.email=t@example.invalid', 'commit', '-q', '-m', 'fixture');
+    const v2 = buildDossierScreen(new Uint8Array(fs.readFileSync(path.join(REAL_ROOT, '.syzygy/governance/policies/POLARIS-DOSSIER-DECLARED-SOURCE-POLICY-v2.json'))), true, { repository: 'repository:o-r', commit: 'a'.repeat(40) }, 'public');
+    if (!v2.ok) throw new Error(v2.why);
+    const reader = openPinnedObjectReader({ gitDir: path.join(repo, '.git'), revision: git('rev-parse', 'HEAD'), maxObjectBytes: 1_048_576 });
+    const member = await deriveManifestFacts({ entries: await reader.listTree(), screen: v2.screen, consented: null, read: async (p) => (await reader.readBlobs([p]))[0]! });
+    if (member.state !== 'derived') throw new Error('expected a derived member');
+    expect(member.recognizers[0]!.files.map((f) => [f.path, f.epistemic, f.unknownReason, f.facts])).toEqual([
+      ['a/package.json', 'inferred', null, 1], ['b/package.json', 'unknown', 'too-large', null], ['c/package.json', 'unknown', 'too-large', null],
+    ]);
   });
 });
 
@@ -1196,6 +1250,9 @@ describe('check: the command', () => {
     const unknown = report(await checkDraft(run, {}, deps({ openReader: flaky })));
     expect(unknown.screenCensus).toMatchObject({ state: 'unknown', why: 'the pinned tree could not be listed (object-missing)' });
     expect(unknown.structureRecord).toEqual({ state: 'unknown', why: 'the pinned tree could not be listed (object-missing)', note: expect.stringContaining('is Unknown at this check') });
+    // Version 2.7: the manifest facts are kept in their unknown form, with the same reason, and no manifest is read.
+    expect(direct.manifestFacts?.state).toBe('derived');
+    expect(unknown.manifestFacts).toEqual({ format: 'polaris-dossier-manifest-facts/1', state: 'unknown', why: 'the pinned tree could not be listed (object-missing)' });
   });
 
   it('exits 0 on a passing draft and 1 on findings, printing the same document with --json', async () => {
