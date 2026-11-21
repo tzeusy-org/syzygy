@@ -665,15 +665,16 @@ def selftest():
         (Re-anchored 2026-08-17 from P-34 to P-43 — P-34 was ruled and its
         row moved to `DECISION-HISTORY.md` in the register refactor; P-43
         remains genuinely open, and is the very row whose prose discusses
-        the marker.)"""
+        the marker. Re-anchored 2026-11-21 from P-43 to P-119: D10 F-10
+        decided P-43 and moved every row but the owner-class three out.)"""
         mutated = base_queue.replace(
-            "| P-43 |", "| P-43 | should an `**Executed.**` marker count? |", 1)
+            "| P-119 |", "| P-119 | should an `**Executed.**` marker count? |", 1)
         if mutated == base_queue:
             return False, "mutation did not apply"
         ids = open_decisions(mutated)
-        return ("P-43" in ids,
-                "P-43 dropped from the open population by a prose mention"
-                if "P-43" not in ids else "still open, correctly")
+        return ("P-119" in ids,
+                "P-119 dropped from the open population by a prose mention"
+                if "P-119" not in ids else "still open, correctly")
 
     case("a row mentioning `**Executed.**` in prose stays open",
          executed_in_prose)
@@ -692,22 +693,23 @@ def selftest():
 
         (Re-anchored 2026-08-16 from P-33 to P-34, and 2026-08-17 from P-34
         to P-43 — each predecessor was ruled and left the open table; P-43
-        remains genuinely open.)"""
+        remains genuinely open. Re-anchored 2026-11-21 from P-43 to P-119
+        after D10 F-10.)"""
         lines = base_queue.split("\n")
         for j, line in enumerate(lines):
-            if line.startswith("| P-43 |"):
+            if line.startswith("| P-119 |"):
                 lines[j] = line.rstrip().rstrip("|").rstrip() \
                     + " | **Executed.** synthetic disposition |"
                 break
         else:
-            return False, "no P-43 row to mutate"
+            return False, "no P-119 row to mutate"
         mutated = "\n".join(lines)
         if mutated == base_queue:
             return False, "mutation did not apply"
         ids = open_decisions(mutated)
-        return ("P-43" not in ids,
+        return ("P-119" not in ids,
                 "an executed disposition in the OPEN section was still "
-                "counted open" if "P-43" in ids else "disqualified, correctly")
+                "counted open" if "P-119" in ids else "disqualified, correctly")
 
     case("an `**Executed.**` disposition inside the open section disqualifies",
          executed_disposition)
