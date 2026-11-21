@@ -285,3 +285,33 @@ describe('reading difference', () => {
     expect(compared.pages.map((p) => [p.page, p.change])).toEqual([['b.html', 'added'], ['a.html', 'removed']]);
   });
 });
+
+// REQ-polaris-generation-034 version 2.5 (syzygy-3efd.30): a sequence or swimlane is a figure for the ledger as any diagram is, and a v7
+// sequence's message takes RS-17 as an edge does.
+describe('reading ledger: the figure kinds of schema v7', () => {
+  const part = (id: string, file: string) => ({ id, label: 'P', epistemic: 'inferred', citations: cite(file) });
+  const V7: Draft = {
+    schemaVersion: 'polaris-dossier-local-draft-v7',
+    introduction: { id: 'intro', label: 'non-normative', text: 'Kestrel is a small server.' },
+    sections: [section('core', 'Core ideas', [block('k1', 'One two three four five')])],
+    deepDives: [],
+    diagrams: [
+      { id: 'seq', title: 'S', home: { kind: 'section', target: 'core' }, kind: 'sequence', relationship: 'R', disposition: { kind: 'produced', assetIds: ['seq'] },
+        participants: [part('pa', 'src/a.c'), part('pb', 'src/b.c')],
+        messages: [{ ...part('ma', 'src/a.c'), from: 'pa', to: 'pb' }, { ...part('mb', 'src/c.c'), from: 'pb', to: 'pa' }] },
+      { id: 'lane', title: 'L', home: { kind: 'section', target: 'core' }, kind: 'swimlane', relationship: 'R', disposition: { kind: 'produced', assetIds: ['lane'] },
+        lanes: [part('la', 'src/a.c'), part('lb', 'src/b.c')], steps: [{ ...part('sa', 'src/a.c'), lane: 'la' }, { ...part('sb', 'src/c.c'), lane: 'lb' }] },
+    ],
+  };
+  const NO_FIT: FigureFit = { textPx: 13, minTextPx: 11, viewports: [{ viewportPx: 1440, columnPx: 966 }, { viewportPx: 390, columnPx: 261 }], examined: 2, entries: [] };
+
+  it('advises RS-17 on a message citing no file its sender or receiver cites, and on nothing in a swimlane', () => {
+    expect(readerAdvice(V7).advisories.filter((a) => a.standard === 'RS-17').map((a) => a.at)).toEqual(['$.diagrams[0].messages[1]']);
+    expect(readerAdvice({ ...V7, schemaVersion: 'polaris-dossier-local-draft-v6' }).advisories.filter((a) => a.standard === 'RS-17')).toEqual([]);
+  });
+
+  it('counts both figures on their section\'s page', () => {
+    const ledger = readingLedger(V7, NO_FIT, readerAdvice(V7));
+    expect(ledger.pages).toEqual([{ page: 'index.html', units: ['introduction', 'section:core'], proseWords: 10, readingMinutes: 1, figures: 2, advisories: { ...zero, 'RS-17': 1 }, figureFit: noFit }]);
+  });
+});
