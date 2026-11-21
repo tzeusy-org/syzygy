@@ -427,17 +427,17 @@
    "title": "Commits by naming convention",
    "owner_value": 5,
    "build_cost": 3,
-   "class": "owner gate",
+   "class": "mandate-grounded",
    "serves": [
     "RFC8-21",
     "RFC8-13",
     "RFC4-22"
    ],
-   "prereq": "owner answer pursuit-2026-11-21-trajectory-commit-subjects; relation to syzygy-a4ry and syzygy-nosn not shown",
+   "prereq": "adoption row; keep a token only when it equals an identifier observed in the tracker (RFC4-22: never fuzzy-matched); relation to syzygy-a4ry and syzygy-nosn not shown",
    "slices": [
-    "Extract identifier tokens from commit subjects by strict grammar",
+    "Read commit subjects; keep only tokens equal to an observed item identifier; store no subject",
     "Join item to commits to merge fact, basis naming-convention, reduced-fidelity",
-    "Render merged apart from closed-unmerged"
+    "Render merged apart from closed-unmerged; a join that cannot be established renders Unknown"
    ],
    "measure": "85 of 175 commit subjects in seven days of Syzygy history carry a bracketed item identifier"
   },
@@ -513,19 +513,19 @@
   "3": [
    "T13",
    "T12",
+   "T10",
    "T11"
   ],
   "waiting_on_owner": [
-   "T5",
-   "T10"
+   "T5"
   ]
  },
  "owner_gates": [
-  "pursuit-2026-11-21-trajectory-titles",
-  "pursuit-2026-11-21-trajectory-commit-subjects"
+  "pursuit-2026-11-21-trajectory-titles"
  ],
  "flagged_for_veto": [
   "T7",
+  "T10",
   "T12"
  ],
  "epic": null,
@@ -549,5 +549,10 @@
    "T10's prerequisite was asserted, not shown."
   ],
   "not_reverified": "page byte, pixel and mark counts (daemon down during review)"
+ },
+ "owner_packet": {
+  "path": "/home/orca/.tmp/user-questionnaire/syzygy-2026-11-21-trajectory-pursuit/packet.md",
+  "items": 1,
+  "withdrawn": "commit-subjects item: an accepted contract (RFC4-22) names the message-convention join and worker-change-observation.ts already reads commit subjects, so T10 is an agent adoption"
  }
 }

@@ -149,8 +149,8 @@ requirements govern the surface (POC-REQ-014 and 040 to 043).
 Ranking rule: owner value in VIS-1 order, then enabling order, then the inverse of build cost.
 Scores are value/cost on 1–5. Ids are T1…T13, distinct from M, N, P and Q. None touches
 doctrine: each serves a V0 or V1 mandate already adopted, so none is vision-extending. Under
-VIS-4 each specification change is an agent adoption with its row, except T5 and T10, which
-wait on the owner; slices and measurements are
+VIS-4 each specification change is an agent adoption with its row, except T5, which waits on
+the owner; slices and measurements are
 under `.ranked_moves[]`.
 
 **T1 — Retire the closure words (truth; 5/1).** Head the closed column with the tracker's own
@@ -224,14 +224,15 @@ time of closed items, age of open ones, arrivals and closures per week, each an 
 measure with its coverage (RFC8-18, RFC8-19), drawn with an axis and given as a table. Replaces
 the unlabelled bar. Tokens and money stay Unknown, stated.
 
-**T10 — Commits by naming convention (what changed, per item; 5/3; owner gate).** Read commit
-subjects only for tokens that match the item-identifier grammar, keep the tokens and discard
-the rest, and join item to commits to the merge fact, basis `naming-convention`, rendered
-`reduced-fidelity` as RFC8-21 requires. It separates merged from closed-unmerged. In Syzygy's
-own history 85 of the last 175 subjects carry such a token `[Observed]`; the proving project's
-convention is `[Unknown]`. A commit subject is free text of the same class as a title, so
-whether reading it to extract a token is admitted is asked with T5. Related and not shown to
-bind this join `[Unknown]`: the parked merge-fact clarification (`syzygy-a4ry`, `syzygy-nosn`).
+**T10 — Commits by naming convention (what changed, per item; 5/3).** Read commit subjects
+and keep a token only when it equals an item identifier already observed in the tracker; no
+subject is stored. Join item to commits to the merge fact, basis `naming-convention`, rendered
+`reduced-fidelity` (RFC8-21; RFC4-22 names the message-convention join and says it is "never
+fuzzy-matched"). It separates merged from closed-unmerged. In Syzygy's own history 85 of 175
+subjects in the 7 days to `c62d4cf79` carry such a token `[Observed]`; the proving project's
+convention is `[Unknown]`. An agent adoption: one seam already reads commit subjects, and
+nothing derived from the text is kept. Not shown to bind this join `[Unknown]`: the parked
+merge-fact clarification (`syzygy-a4ry`, `syzygy-nosn`).
 
 **T11 — The contract's vocabulary (4/4).** Adopt RFC8-12 and RFC8-13 into the spec: the
 thirteen normalized values and the chain state as a second field, each derived or honestly
@@ -260,8 +261,8 @@ post-hoc and read-only: steering and live control remain deferred (SDR-5).
 - **Wave 1, no new reads:** T1, T2, T3, T9, T8. After it the page answers the first question
   in counts, states the other four honestly in five rows, and is a fifth of its height.
 - **Wave 2, new reads, each with an adoption row:** T4, T6, then T7.
-- **Wave 3, the account:** T13, T12, then T11; T10 if the owner admits it.
-- **Waiting on the owner:** T5 and T10.
+- **Wave 3, the account:** T13, T12, T10, then T11.
+- **Waiting on the owner:** T5.
 
 ## Strongest objections
 
@@ -278,24 +279,24 @@ post-hoc and read-only: steering and live control remain deferred (SDR-5).
 
 ## Owner gates this run
 
-One packet, two items, each reviewed by an independent subagent before it was served. The
-packet path and decision ids are recorded on the plan-hold bead and in the data file under
-`.owner_packet`. Both are asked under VIS-4's rule: when unsure, treat the change as
-owner-class and ask.
+One packet, one item, passed by an independent subagent on both its scope and its
+recommendation before it was served. The packet path is on the plan-hold bead and in the data
+file under `.owner_packet`.
 
 - `pursuit-2026-11-21-trajectory-titles` (T5): whether work-item titles may be read, screened
-  and rendered under a declared policy. It would reverse the owner's answer of 2026-10-20.
-- `pursuit-2026-11-21-trajectory-commit-subjects` (T10): whether commit subjects may be read
-  only to extract item identifiers, with the rest discarded.
+  and rendered under a declared policy. Asked under VIS-4's rule, when unsure treat the change
+  as owner-class and ask; SEC-5's two sentences can be read either way. The recommendation is
+  to admit titles for Syzygy's own tracker only, which has no effect until T12 is built.
 
+A second question, on commit subjects, was drafted and withdrawn after that review (T10).
 Release is not asked: when implementation starts is an agent decision under VIS-4, reported
-and open to veto. Two moves change something the owner decided before D10 and say so in their
-beads: T7 (ruling P-71-Q5; its write is triggered by the owner alone) and T12 (the POC's
-single-project bound).
+and open to veto. Three moves change something decided before D10 or read new text, and say
+so in their beads: T7 (ruling P-71-Q5; its write is triggered by the owner alone), T10 and
+T12 (the POC's single-project bound).
 
 ## Planned epic
 
-The epic and plan-hold ids are recorded in the data file under `.epic` once filed. Each move
+The epic and plan-hold ids are in the data file under `.epic`. Each move
 bead depends on the plan-hold, an ordinary sequencing bead, not an owner gate: this run was
 asked to chart a course, so it files a plan and starts nothing. A lead session releases wave 1
 by filing its slices as ready beads and reporting them.
@@ -305,8 +306,9 @@ by filing its slices as ready beads and reporting them.
 One round, verdict REVISE; the full findings are in the data file under `.review`. Repaired
 here, each re-checked against the file it names:
 
-- "No owner gates" did not hold: T5 is owner-class under SEC-5's own sentence, and T10 reads
-  the same class of free text. Both are now asked, and neither is in a wave.
+- "No owner gates" did not hold: T5 is asked under SEC-5. T10 was first gated with it; the
+  packet's own reviewer then showed it is an agent adoption, and it was re-scoped to exact
+  matches against observed identifiers.
 - The first draft said three board-level notices repeat the three per-card Unknowns. There are
   two; verification has none, and the "10,971 of 10,971" figure is governing intent's.
 - Lead time is one of RFC8-18's V1 measures, not "the contract's first cost measure".
