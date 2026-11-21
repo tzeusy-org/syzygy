@@ -600,7 +600,7 @@
     },
     "POLARIS": {
       "requirements": 39,
-      "scenarios": 354,
+      "scenarios": 365,
       "members": {
         "REQ-polaris-generation-001": {
           "name": "Admitted project input",
@@ -1026,7 +1026,18 @@
             "Derived legend and tally agree with the drawing",
             "More top-level directories than the figure draws",
             "Derived structure stable across renders",
-            "Provider mode unchanged by derived structure"
+            "Provider mode unchanged by derived structure",
+            "Reading ledger stored with the check",
+            "Reading ledger deterministic",
+            "Difference from the previous run of the repository",
+            "No previous run gives an Unknown difference",
+            "Server pack keeps the brief",
+            "Default pack drops server-only dimensions",
+            "Pack selection recorded and deterministic",
+            "Code-read thesis marked",
+            "Unsupported thesis basis refused",
+            "Thesis basis in an earlier schema",
+            "Withheld thesis carries no basis line"
           ]
         },
         "REQ-polaris-generation-035": {
