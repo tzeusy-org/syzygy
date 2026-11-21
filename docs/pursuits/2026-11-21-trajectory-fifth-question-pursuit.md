@@ -283,4 +283,5 @@ confirmation round was run.
 
 ## Planned epic
 
-Epic and plan-hold ids are in the data file under `.epic`.
+Epic `syzygy-659o`, plan-hold `syzygy-f74w`; move bead ids are in the data file under `.epic`.
+U1 is already applied to `syzygy-t3jk.16`, a released slice of run 1.

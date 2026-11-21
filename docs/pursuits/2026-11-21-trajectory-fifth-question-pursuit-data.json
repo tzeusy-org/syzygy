@@ -984,7 +984,24 @@
    "proposals": []
   }
  },
- "epic": null,
+ "epic": {
+  "epic": "syzygy-659o",
+  "plan_hold": "syzygy-f74w",
+  "moves": {
+   "U1": "syzygy-659o.1",
+   "U2": "syzygy-659o.2",
+   "U12": "syzygy-659o.3",
+   "U3": "syzygy-659o.4",
+   "U4": "syzygy-659o.5",
+   "U5": "syzygy-659o.6",
+   "U6": "syzygy-659o.7",
+   "U7": "syzygy-659o.8",
+   "U8": "syzygy-659o.9",
+   "U9": "syzygy-659o.10",
+   "U10": "syzygy-659o.11",
+   "U11": "syzygy-659o.12"
+  }
+ },
  "review": {
   "reviewed_commit": "8360c84c1",
   "verdict": "REVISE",
