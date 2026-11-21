@@ -4,7 +4,7 @@ import { execFileSync, spawn, type ChildProcess } from 'node:child_process';
 import { createHash } from 'node:crypto';
 import { chmod, lstat, mkdir, mkdtemp, readFile, readdir, realpath, rm, symlink, writeFile } from 'node:fs/promises';
 import net from 'node:net';
-import { tmpdir } from 'node:os';
+import { tmpdir, userInfo } from 'node:os';
 import path from 'node:path';
 import { sha256 } from '@syzygy/support';
 import { receiveGitPackOverSsh, gitMemorySshTestPort, GIT_MEMORY_SSH_PROFILE, type GitSshRequest, type GitSshMetadata, selectGitRevisionOverSsh } from './git-memory-ssh.js';
@@ -23,11 +23,13 @@ afterEach(async () => {
 const packet = (text: string | Buffer): Buffer => { const bytes = Buffer.isBuffer(text) ? text : Buffer.from(text); return Buffer.concat([Buffer.from((bytes.length + 4).toString(16).padStart(4, '0')), bytes]); };
 const advertisement = (format = 'sha1', agent?: string) => Buffer.concat([packet('version 2\n'), ...(agent === undefined ? [] : [packet(`agent=${agent}\n`)]), packet('ls-refs=unborn\n'), packet('fetch=shallow wait-for-done\n'), packet(`object-format=${format}\n`), Buffer.from('0000')]);
 async function base() {
+  const { uid, username } = userInfo();
+  if (uid < 1 || !/^[a-z_][a-z0-9_-]{0,31}$/u.test(username)) throw new Error('fixture-ssh-account-unavailable');
   const root = await mkdtemp(path.join(await realpath(tmpdir()), 'syzygy-memory-ssh-test-')); roots.push(root);
   const home = path.join(root, 'recipient-home'), serverHome = path.join(root, 'server-home');
   await mkdir(home, { mode: 0o700 }); await mkdir(serverHome, { mode: 0o700 });
   for (const name of ['host', 'client', 'other']) execFileSync('/usr/bin/ssh-keygen', ['-q', '-t', 'ed25519', '-N', '', '-f', path.join(root, name)], { env: cleanEnv(serverHome), timeout: 5000, stdio: ['ignore', 'pipe', 'pipe'] });
-  return { root, home, serverHome, identity: path.join(root, 'client'), knownHosts: path.join(root, 'known_hosts') };
+  return { root, home, serverHome, username, identity: path.join(root, 'client'), knownHosts: path.join(root, 'known_hosts') };
 }
 async function fixture(format: 'sha1' | 'sha256' = 'sha1', mode = 'native', custom?: Buffer | ((pin: string) => Buffer), incomingAgent?: string) {
   const f = await base(), source = path.join(f.root, 'own-synthetic.git');
@@ -52,7 +54,7 @@ else if(${JSON.stringify(mode)}==='stall'){setInterval(()=>{},1000);}
 else {process.stdout.write(Buffer.from(${JSON.stringify(advertisement(format, incomingAgent).toString('base64'))},'base64'));process.stdin.once('data',chunk=>{fs.writeFileSync(${JSON.stringify(requestLog)},chunk);process.stdout.write(Buffer.from(${JSON.stringify((typeof custom === 'function' ? custom(pin) : custom ?? Buffer.from('zzzz')).toString('base64'))},'base64'));process.stdin.on('end',()=>process.exit(0));});}`;
   await writeFile(wrapper, script);
   const config = path.join(f.root, 'sshd_config');
-  await writeFile(config, `Port ${port}\nListenAddress 127.0.0.1\nHostKey ${path.join(f.root, 'host')}\nPidFile ${path.join(f.root, 'pid')}\nAuthorizedKeysFile ${path.join(f.root, 'client.pub')}\nStrictModes no\nUsePAM no\nPasswordAuthentication no\nKbdInteractiveAuthentication no\nPubkeyAuthentication yes\nAuthenticationMethods publickey\nPermitRootLogin no\nAllowUsers orca\nAllowTcpForwarding no\nAllowAgentForwarding no\nX11Forwarding no\nPermitTunnel no\nPermitUserEnvironment no\nPermitUserRC no\nAcceptEnv GIT_PROTOCOL\nSetEnv HOME=${f.serverHome} ZDOTDIR=${f.serverHome}\nForceCommand ${process.execPath} ${wrapper}\nLogLevel ERROR\n`);
+  await writeFile(config, `Port ${port}\nListenAddress 127.0.0.1\nHostKey ${path.join(f.root, 'host')}\nPidFile ${path.join(f.root, 'pid')}\nAuthorizedKeysFile ${path.join(f.root, 'client.pub')}\nStrictModes no\nUsePAM no\nPasswordAuthentication no\nKbdInteractiveAuthentication no\nPubkeyAuthentication yes\nAuthenticationMethods publickey\nPermitRootLogin no\nAllowUsers ${f.username}\nAllowTcpForwarding no\nAllowAgentForwarding no\nX11Forwarding no\nPermitTunnel no\nPermitUserEnvironment no\nPermitUserRC no\nAcceptEnv GIT_PROTOCOL\nSetEnv HOME=${f.serverHome} ZDOTDIR=${f.serverHome}\nForceCommand ${process.execPath} ${wrapper}\nLogLevel ERROR\n`);
   execFileSync('/usr/sbin/sshd', ['-t', '-f', config], { env: cleanEnv(f.serverHome), timeout: 5000, stdio: ['ignore', 'pipe', 'pipe'] });
   const server = spawn('/usr/sbin/sshd', ['-D', '-e', '-f', config], { env: cleanEnv(f.serverHome), stdio: ['ignore', 'pipe', 'pipe'] }); children.push(server);
   // Readiness uses TCP only; no authentication/command or unknown user configuration is invoked.
@@ -60,7 +62,7 @@ else {process.stdout.write(Buffer.from(${JSON.stringify(advertisement(format, in
     const ready = await new Promise<boolean>(resolve => { const socket = net.connect(port, '127.0.0.1'); socket.once('connect', () => { socket.destroy(); resolve(true); }); socket.once('error', () => resolve(false)); });
     if (ready) break; if (count > 100 || server.exitCode !== null) throw new Error('fixture-sshd-unavailable'); await new Promise(resolve => setTimeout(resolve, 10));
   }
-  const url = `ssh://orca@127.0.0.1:${port}/own-synthetic.git`;
+  const url = `ssh://${f.username}@127.0.0.1:${port}/own-synthetic.git`;
   const request: GitSshRequest = { url, pin, objectFormat: format, home: f.home, knownHostsPath: f.knownHosts, authentication: { kind: 'identity-file', path: f.identity }, sourceProvider: 'synthetic-ssh-provider', admitIncomingMetadata: () => true, admitMetadata: () => true, limits: { milliseconds: 5000 } };
   return { ...f, pin, port, source, request, receipt, requestLog };
 }
@@ -87,7 +89,7 @@ describe('native memory-only SSH Git v2', () => {
     expect(await census(f.home)).toEqual(['tmp/', 'xdg/']); expect(independentFiles(f.home)).toEqual([]);
     expect(JSON.parse(await readFile(f.receipt, 'utf8'))).toEqual({ protocol: 'version=2', commandDigest: sha256("git-upload-pack '/own-synthetic.git'") });
     expect(metadata.map(value => value.stage)).toEqual(['connect', 'fetch']);
-    expect(metadata[0]!.destination).toEqual({ scheme: 'ssh', user: 'orca', host: '127.0.0.1', port: f.port, repository: '/own-synthetic.git', service: 'git-upload-pack' });
+    expect(metadata[0]!.destination).toEqual({ scheme: 'ssh', user: f.username, host: '127.0.0.1', port: f.port, repository: '/own-synthetic.git', service: 'git-upload-pack' });
     const config = metadata[0]!.config;
     expect(config.environment).toMatchObject({ HOME: f.home, ZDOTDIR: f.home, GIT_PROTOCOL: 'version=2' });
     expect(JSON.stringify(config.environment)).not.toContain('SSH_AUTH_SOCK');
@@ -103,7 +105,7 @@ describe('native memory-only SSH Git v2', () => {
       await new Promise<void>(resolve => listener.listen(0, '127.0.0.1', resolve));
       try {
         const address = listener.address(); if (address === null || typeof address === 'string') throw new Error('fixture-port');
-        const result = await receiveGitPackOverSsh({ ...f.request, url: `ssh://orca@127.0.0.1:${address.port}/repo`, admitMetadata: admission });
+        const result = await receiveGitPackOverSsh({ ...f.request, url: `ssh://${f.username}@127.0.0.1:${address.port}/repo`, admitMetadata: admission });
         expect(result).toMatchObject({ ok: false, code: 'metadata-admission-refused', evidence: { groupTermination: 'not-started', sentBytes: 0, admittedMetadata: [] } });
         expect(connections).toBe(0); expect(JSON.stringify(result)).not.toContain('NONSECRET_PRIVATE_ADMISSION_ERROR');
         await expect(lstat(f.receipt)).rejects.toMatchObject({ code: 'ENOENT' });
@@ -137,7 +139,7 @@ describe('native memory-only SSH Git v2', () => {
       for (const control of ['BatchMode=yes', 'StrictHostKeyChecking=yes', 'GlobalKnownHostsFile=/dev/null', 'IdentityAgent=none', 'IdentitiesOnly=yes', 'CertificateFile=none', 'ProxyCommand=none', 'ProxyJump=none', 'ControlPath=none', 'ClearAllForwardings=yes', 'ForwardAgent=no', 'PermitLocalCommand=no', 'SendEnv=GIT_PROTOCOL']) expect(args).toContain(control);
       value.wire.fill(0);
       const mutable = request as { url: string; pin: string; authentication: { kind: 'identity-file'; path: string }; sourceProvider: string; admitMetadata: GitSshRequest['admitMetadata'] };
-      mutable.url = 'ssh://orca@127.0.0.1:1/UNADMITTED'; mutable.pin = '0'.repeat(40); mutable.authentication.path = path.join(f.root, 'other'); mutable.sourceProvider = 'unadmitted'; mutable.admitMetadata = () => false;
+      mutable.url = `ssh://${f.username}@127.0.0.1:1/UNADMITTED`; mutable.pin = '0'.repeat(40); mutable.authentication.path = path.join(f.root, 'other'); mutable.sourceProvider = 'unadmitted'; mutable.admitMetadata = () => false;
       await new Promise(resolve => setTimeout(resolve, 1)); return true;
     } };
     const result = await receiveGitPackOverSsh(request); expect(result.ok).toBe(true);
@@ -192,7 +194,7 @@ describe('native memory-only SSH Git v2', () => {
   it('supports narrow scp-style relative paths without command interpolation', async () => {
     const f = await fixture(); let connect = '';
     // The source path is bound but the forced fixture upload-pack always reads its own repository.
-    const result = await receiveGitPackOverSsh({ ...f.request, url: 'orca@127.0.0.1:org/repo.git', admitMetadata: value => { connect = Buffer.from(value.wire).toString(); return false; } });
+    const result = await receiveGitPackOverSsh({ ...f.request, url: `${f.username}@127.0.0.1:org/repo.git`, admitMetadata: value => { connect = Buffer.from(value.wire).toString(); return false; } });
     expect(result).toMatchObject({ ok: false, code: 'metadata-admission-refused' });
     expect(connect).toBe("git-upload-pack 'org/repo.git'");
   });
@@ -296,7 +298,7 @@ describe('native memory-only SSH Git v2', () => {
     const f = await fixture(), wires: Buffer[] = [];
     const request = { ...f.request, selector: 'refs/heads/trunk', admitMetadata: async (value: import('./git-memory-selection.js').GitSelectionMetadata): Promise<boolean> => {
       expect(value.selector).toBe('refs/heads/trunk'); expect(Object.isFrozen(value.plan)).toBe(true); wires.push(Buffer.from(value.wire)); value.wire.fill(0);
-      request.selector = 'refs/heads/UNADMITTED'; request.url = 'ssh://orca@127.0.0.1:1/UNADMITTED'; await new Promise(resolve => setTimeout(resolve, 1)); return true;
+      request.selector = 'refs/heads/UNADMITTED'; request.url = `ssh://${f.username}@127.0.0.1:1/UNADMITTED`; await new Promise(resolve => setTimeout(resolve, 1)); return true;
     } };
     const result = await selectGitRevisionOverSsh(request); expect(result).toMatchObject({ ok: true, selection: { reference: 'refs/heads/trunk', identifier: f.pin } });
     expect(await readFile(f.requestLog)).toEqual(wires[1]);

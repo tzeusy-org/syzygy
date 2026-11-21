@@ -1,41 +1,13 @@
 // Check runner prerequisites before integration tests. Read executable bytes,
 // never run Claude, load credentials, or connect to a provider here.
 import { spawnSync } from 'node:child_process';
-import { accessSync, constants, lstatSync, readFileSync, realpathSync, statSync } from 'node:fs';
+import { accessSync, constants, lstatSync, realpathSync, statSync } from 'node:fs';
 import { homedir, userInfo } from 'node:os';
 import path from 'node:path';
-import ts from 'typescript';
+import { dossierNativePin } from './dossier_native_pins.mjs';
 
-const sourceRoot = new URL('../packages/polaris-dossier/src/', import.meta.url);
 const childEnv = { PATH: '/usr/bin:/bin', LANG: 'C' };
 const MiB = 1024 * 1024;
-
-// Runtime modules import other workspace modules. Read their literal pins
-// without running the modules or needing a compiled runtime in this job.
-function sourcePin(file, name) {
-  const source = ts.createSourceFile(file, readFileSync(new URL(file, sourceRoot), 'utf8'), ts.ScriptTarget.Latest);
-  const declarations = source.statements.filter(ts.isVariableStatement)
-    .flatMap(statement => [...statement.declarationList.declarations])
-    .filter(declaration => ts.isIdentifier(declaration.name) && declaration.name.text === name);
-  const initializer = declarations[0]?.initializer;
-  if (declarations.length !== 1 || !initializer) throw new Error('missing pin declaration');
-  if (ts.isCallExpression(initializer) && initializer.expression.getText(source) === 'Object.freeze'
-    && initializer.arguments.length === 1 && ts.isObjectLiteralExpression(initializer.arguments[0])) {
-    const entries = initializer.arguments[0].properties.map(property => {
-      if (!ts.isPropertyAssignment(property) || !ts.isIdentifier(property.name)) throw new Error('nonliteral pin property');
-      return [property.name.text, literal(property.initializer)];
-    });
-    if (new Set(entries.map(([key]) => key)).size !== entries.length) throw new Error('duplicate pin property');
-    return Object.fromEntries(entries);
-  }
-  return literal(initializer);
-}
-
-function literal(node) {
-  if (ts.isStringLiteral(node)) return node.text;
-  if (ts.isNumericLiteral(node)) return Number(node.text);
-  throw new Error('nonliteral pin value');
-}
 
 function command(executable, args) {
   const result = spawnSync(executable, args, {
@@ -63,28 +35,29 @@ function pinnedExecutable(file, sha256, maxBytes, exactBytes) {
 }
 
 const requirements = [
-  ['Linux x64 and an unprivileged orca fixture account',
-    () => process.platform === 'linux' && process.arch === 'x64' && process.getuid() !== 0 && userInfo().username === 'orca'],
+  ['Linux x64 and an unprivileged fixture account',
+    () => process.platform === 'linux' && process.arch === 'x64' && process.getuid() !== 0
+      && /^[a-z_][a-z0-9_-]{0,31}$/u.test(userInfo().username)],
   ['exact Node release and executable permissions',
     () => {
-      const pin = sourcePin('git-memory-worker.ts', 'NODE_VERSION');
+      const pin = dossierNativePin('git-memory-worker.ts', 'NODE_VERSION');
       const { stat } = executable(process.execPath);
       return process.version === pin && stat.size <= 128 * MiB && (stat.mode & 0o022) === 0;
     }],
   ['pinned Claude executable at ~/.local/share/claude/versions/<version>',
     () => {
-      const pin = sourcePin('session-launch.ts', 'URL_CLI_PROGRAM');
+      const pin = dossierNativePin('session-launch.ts', 'URL_CLI_PROGRAM');
       return typeof pin.version === 'string' && /^\d+\.\d+\.\d+$/u.test(pin.version) && Number.isSafeInteger(pin.bytes)
         && pinnedExecutable(path.join(homedir(), '.local/share/claude/versions', pin.version), pin.sha256, 512 * MiB, pin.bytes);
     }],
   ['pinned Git HTTP helper',
     () => {
-      const pin = sourcePin('git-memory-transport.ts', 'GIT_MEMORY_HELPER_PROFILE');
+      const pin = dossierNativePin('git-memory-transport.ts', 'GIT_MEMORY_HELPER_PROFILE');
       return pinnedExecutable(pin.path, pin.sha256, 16 * MiB);
     }],
   ['pinned OpenSSH client',
     () => {
-      const pin = sourcePin('git-memory-ssh.ts', 'GIT_MEMORY_SSH_PROFILE');
+      const pin = dossierNativePin('git-memory-ssh.ts', 'GIT_MEMORY_SSH_PROFILE');
       return pinnedExecutable(pin.path, pin.sha256, 16 * MiB);
     }],
   ['OpenSSH loopback server tools and /run/sshd',
@@ -100,7 +73,7 @@ const requirements = [
       return true;
     }],
   ['bubblewrap namespace setup',
-    () => command(sourcePin('session-url-view.ts', 'URL_SESSION_BWRAP'),
+    () => command(dossierNativePin('session-url-view.ts', 'URL_SESSION_BWRAP'),
       ['--unshare-all', '--unshare-user', '--die-with-parent', '--new-session', '--cap-drop', 'ALL', '--clearenv',
         '--ro-bind', '/usr', '/usr', '--dev', '/dev', '--proc', '/proc', '--tmpfs', '/tmp',
         '--symlink', 'usr/bin', '/bin', '--symlink', 'usr/lib', '/lib', '--symlink', 'usr/lib64', '/lib64',

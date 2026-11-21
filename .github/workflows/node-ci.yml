@@ -122,7 +122,7 @@ jobs:
   integration:
     name: node (integration)
     needs: unit
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-26.04
     steps:
       - uses: actions/checkout@v4
         with:
@@ -135,8 +135,42 @@ jobs:
           node-version: 24.6.0
           cache: npm
 
+      - name: install pinned native integration packages
+        shell: bash
+        run: |
+          test "$RUNNER_ENVIRONMENT" = github-hosted
+          native_sources="$(mktemp --suffix=.sources)"
+          trap 'rm -f -- "$native_sources"' EXIT
+          chmod 0644 "$native_sources"
+          cat > "$native_sources" <<'EOF'
+          Types: deb
+          URIs: https://snapshot.ubuntu.com/ubuntu/20261121T000000Z
+          Suites: resolute resolute-updates resolute-security
+          Components: main
+          Architectures: amd64
+          Signed-By: /usr/share/keyrings/ubuntu-archive-keyring.gpg
+          EOF
+          apt_source=(-o "Dir::Etc::sourcelist=$native_sources" -o Dir::Etc::sourceparts=-)
+          sudo -n apt-get "${apt_source[@]}" -o APT::Update::Error-Mode=any update
+          # Fixtures start sshd on 127.0.0.1 with generated keys. Package installation
+          # must not start a system SSH listener.
+          sudo -n systemctl mask --runtime --now ssh.service ssh.socket
+          sudo -n env DEBIAN_FRONTEND=noninteractive apt-get "${apt_source[@]}" install -y \
+            --no-install-recommends --no-remove --allow-downgrades \
+            git=1:2.53.0-1ubuntu1.1 git-man=1:2.53.0-1ubuntu1.1 \
+            openssh-client=1:10.2p1-2ubuntu3.8 openssh-server=1:10.2p1-2ubuntu3.8 openssh-sftp-server=1:10.2p1-2ubuntu3.8 \
+            bubblewrap util-linux strace zsh gcc python3
+          if systemctl is-active --quiet ssh.service ssh.socket; then
+            echo "System SSH must stay stopped for native integration." >&2
+            exit 1
+          fi
+          sudo -n install -d -m 0755 /run/sshd
+
       - name: install (npm ci)
         run: npm ci
+
+      - name: install pinned Claude native fixture
+        run: node scripts/provision_dossier_native_cli.mjs "$HOME/.local/share/claude/versions"
 
       - name: dossier native integration prerequisites
         run: node scripts/check_dossier_native_integration.mjs

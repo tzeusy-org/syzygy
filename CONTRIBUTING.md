@@ -120,7 +120,9 @@ root.
 - **Native dossier integration.** After `npm ci`, run
   `node scripts/check_dossier_native_integration.mjs` to verify the test host.
   Use Node 24.6.0, the pinned Claude and Git transport executables, and an
-  unprivileged `orca` test account for the synthetic loopback SSH fixture.
+  unprivileged test account for the synthetic loopback SSH fixture.
+  Hosted CI uses Ubuntu 26.04 x64, a signed Ubuntu archive snapshot for the
+  native packages, and a byte-verified public release of the Claude executable.
   The preflight checks the pinned executable bytes and probes the local
   namespace, resource-limit, tracing and pidfd facilities.
 
