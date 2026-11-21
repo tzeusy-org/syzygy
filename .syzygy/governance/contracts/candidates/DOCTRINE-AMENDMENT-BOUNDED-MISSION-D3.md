@@ -1,5 +1,10 @@
 # Doctrine amendment packet — D3 (proposed, rev1): a human trigger may authorize a bounded mission
 
+**WITHDRAWN 2026-11-21 by the owner, as superseded by D10** (answer
+recorded in `../../decisions/OWNER-DIRECTION-QUESTIONNAIRE-ANSWERS-2026-11-21.md`). Act 5 is
+not offered. The text below is history; a future mission amendment starts
+from the D10 doctrine text.
+
 **Status: DRAFT — not applied, not adopted.** Doctrine amendment is an owner
 act (VIS-4; AGENTS.md adoption authority). This packet is a **minimally
 revised** replacement for `DOCTRINE-AMENDMENT-BOUNDED-MISSION-DRAFT.md`

@@ -333,7 +333,11 @@ A, Wave B, and craft acts 6 + 7.
   hygiene** as the ninth. *(Marked 2026-11-21: since D10 none of them is
   offered as an act. D3 amends doctrine and stays with the owner; the
   deferred waves stay deferred by doctrine; CC-TEST-2, topology, the
-  overview and P-12 are agent adoptions when taken up.)*
+  overview and P-12 are agent adoptions when taken up.)* *(Marked
+  2026-11-21, later: the owner withdrew D3 as superseded by D10
+  (`decisions/OWNER-DIRECTION-QUESTIONNAIRE-ANSWERS-2026-11-21.md`). "By doctrine" was wrong:
+  doctrine does not defer the waves; acts did, and they now stay
+  deferred by agent decision.)*
 
 ## Gates already closed
 
@@ -368,7 +372,7 @@ Every gate below is closed; each row names what closed it.
 
 These gates remain open; none of them is on the launch path. *(Marked
 2026-11-21: since D10 only the D3 row is an owner decision, being a doctrine
-amendment. Every other row is an agent decision, recorded in
+amendment. Later that day the owner withdrew D3; its row reads so. Every other row is an agent decision, recorded in
 `AGENT-ADOPTIONS.md` when taken; their triage is D10 FOLLOW-ON F-10,
 `syzygy-k54o.10`. The State cells keep the wording of the owner-gate era.)*
 
@@ -379,7 +383,7 @@ amendment. Every other row is an agent decision, recorded in
 | Topology bundle | Candidate — no act performed | `.syzygy/map/topology-candidates/BUNDLE-MANIFEST.md` |
 | Project overview | Draft — awaiting adoption | `.syzygy/intent/OVERVIEW.md` |
 | Governing-intent value once per observation (P-115, `syzygy-318o`) | [Observed 2026-10-27] Owner selected A for `three-surface-poc-governedby-reference-amendment-v1.0`. The canonical recorder wrote the dedicated and aggregate sign-off records and verified the exact six-file applied result. Semantic round 4 remains `CONFIRM WITH EXCEPTIONS`; its coordinator-preparation note was closed before the owner offer. The signed specification serves one complete governing-intent Unknown per observation with local item references; it preserves distinct claims and complete served/rendered counts. This is a machine compatibility change. [Observed 2026-10-28] The owner separately selected A to authorize the reviewed implementation and owned-consumer migration packet, including recording and handoff, under `decisions/OWNER-DIRECTION-P115-IMPLEMENTATION-AND-CONSUMER-MIGRATION-2026-10-28.md`. Implementation may start only after that direction is on main and fresh ownership/dependency/overlap checks pass. Runtime conformance and actual payload savings remain Unknown. The sign-off record owns the version binding and scope. | `decisions/THREE-SURFACE-POC-GOVERNEDBY-REFERENCE-AMENDMENT-SIGNOFF-v1.0.md`; `decisions/ACCEPTANCE-ACT-RECORD.md` |
-| Doctrine amendment D3 (bounded missions) | Proposed — adopt, amend, or decline. **D4 was ruled 2026-08-18** (inside VIS-4's bounds; reviewer's §1.2 wording designated) — a D3 rev2 and its VIS-3 fresh-reader review precede act 5 | `contracts/candidates/DOCTRINE-AMENDMENT-BOUNDED-MISSION-D3.md` (rev1); `decisions/D4-RULING-DECISION.md` |
+| Doctrine amendment D3 (bounded missions) | **Withdrawn 2026-11-21** by the owner, as superseded by D10 (`decisions/OWNER-DIRECTION-QUESTIONNAIRE-ANSWERS-2026-11-21.md`; P-5 in `decisions/DECISION-HISTORY.md`). Before: proposed — adopt, amend, or decline. **D4 was ruled 2026-08-18** (inside VIS-4's bounds; reviewer's §1.2 wording designated) — a D3 rev2 and its VIS-3 fresh-reader review precede act 5 | `contracts/candidates/DOCTRINE-AMENDMENT-BOUNDED-MISSION-D3.md` (rev1); `decisions/D4-RULING-DECISION.md` |
 | Knowledge-hygiene craft policy | Candidate — own craft act (P-12) | `policy-candidates/CRAFT-KNOWLEDGE-HYGIENE-POLICY.md` |
 | Decision-record convention (P-43) | Open — not launch-gating; earliest gate is a deferral-bearing administration | `decisions/PENDING-OWNER-DECISIONS.md` row P-43 |
 | PWB behaviour-contract re-pin to the tree-framing sign-off, registry entry and secret policy (`syzygy-2g0d`, P-95) | Candidate, drafted 2026-10-03; binds nothing. Review round 1 was `REVISE`; repaired once, no round 2 dispatched, so unconfirmed. It offers two separate superseding acts (`approve-policy`, `adopt-registry-entry`) re-pinning `governingBehaviorContract` to the `spec.md` signed as `pwb-tree-framing-amendment-v1.0`, superseding the 2026-10-02 re-pin acts, plus one plain continuation direction. [stale 2026-10-14: the PWB anchor-resolution sign-off moved `spec.md` past that row, so this package must be redrafted over it before its acts can be offered (`syzygy-fxro`)] Either act makes the body-read gate refuse every Butlers read until that direction re-points it | `contracts/candidates/pwb-behavior-contract-repin-tree-framing/OWNER-DECISION-PACKET.md` |

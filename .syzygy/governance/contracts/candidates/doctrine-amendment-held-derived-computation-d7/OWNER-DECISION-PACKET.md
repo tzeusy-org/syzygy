@@ -1,5 +1,10 @@
 # Doctrine amendment packet — D7 (proposed): held derived computation delegates no decision
 
+**WITHDRAWN 2026-11-21 by the owner, as superseded by D10** (answer
+recorded in `../../../decisions/OWNER-DIRECTION-QUESTIONNAIRE-ANSWERS-2026-11-21.md`). P-101
+and its questions Q1 to Q6 close unruled. The text below, including the
+parked banner, is history.
+
 **PARKED 2026-10-15 (owner answer "Park until RFC2 decided", recorded in
 `../../../decisions/OWNER-DIRECTION-CONFIRMATION-CYCLE-3-2026-10-14.md`).**
 This packet is not reviewed again and not offered. An RFC2-18/19 contract

@@ -28,7 +28,8 @@ Also deferred from Capability 1, by the same direction:
 - the **P-29** C2 reproduction criterion;
 - **P-30** Mission stop/containment form;
 - **P-32** context ownership metadata;
-- the **D3/D4** Mission doctrine questions;
+- the **D3/D4** Mission doctrine questions *(marked 2026-11-21: D3 is
+  withdrawn by the owner as superseded by D10, `decisions/OWNER-DIRECTION-QUESTIONNAIRE-ANSWERS-2026-11-21.md`)*;
 - Mission effect/recovery semantics;
 - deterministic Context selection as a capability.
 

@@ -111,8 +111,9 @@ the round files that running software still reads.
     the owner's list of owned repositories;
   - never expose anything beyond the tailnet, and no release, production
     deployment or multi-user support.
-- No deferred waves (C1/C2/D1/D2) or Mission Control: doctrine (D3) defers
-  them.
+- No deferred waves (C1/C2/D1/D2) or Mission Control: they stay deferred
+  by agent decision (D10 F-10); taking one up is a new adoption. Doctrine
+  does not defer them, and D3 is withdrawn.
 - The daemon never executes observed project code or test suites; separate
   operator commands do, in a sandbox.
 - Never run a command that asks for consent, never answer one, and never
