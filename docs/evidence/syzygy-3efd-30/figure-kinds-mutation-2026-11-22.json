@@ -1,0 +1,1339 @@
+{
+ "format": "mutation-run/1",
+ "ranAt": "cc5707ae441bb0e10bd8235c70940a557b68860b",
+ "subject": {
+  "apps/three-surface-poc/src/polaris-generation/diagram-layout.ts": "825f8ab1bce1b506c35304f0e7f3b3b61b003c3066835b82c03469492fadfc9f",
+  "apps/three-surface-poc/src/polaris-generation/dossier-site.ts": "0cd223b0dd38f337b87c462de36c754ad2ca9b0247c2070c9c515f5fba94adc6",
+  "packages/polaris-dossier/src/brief.ts": "9c90c457ad6447cdfe1d27b0dd524569a1f755ef66f46a8a6485041ee76a0ac3",
+  "packages/polaris-dossier/src/check-derive.ts": "233e5876654804c6102a08c3d6d968de2948acc77a036f91396bfc543b98b264",
+  "packages/polaris-dossier/src/draft-schema.ts": "9bc5bcf24a544feaf5b276c8ea5d481bc457dae0ad1840516cf6a836860ce634",
+  "packages/polaris-dossier/src/figure-fit.ts": "f5528e12c734ad770b7ac38ca14ecac9e10dca39b49ab088a61dd474a05fdbaf",
+  "packages/polaris-dossier/src/reader-advice.ts": "263f698a08154c1b96468a2a2d39c0d1e3baf197dbd72d7c4dba652bc61ab906",
+  "packages/polaris-dossier/src/reading-ledger.ts": "8dbb56d5510ae8a6d95c4666aaa514f651e520c492ce6cbfb6e41b4c62c8bc8f",
+  "packages/polaris-dossier/src/render.ts": "a381b4ac2e16595a1c799893c19dc8e3c8bc55e6392d91a4c7d399807fc97b1b",
+  "packages/polaris-dossier/src/review-reach.ts": "23e446b28bcc2059dacd799b867c4e527c338253aaba0033f627e262747454a8",
+  "packages/polaris-generation-core/src/draft-model.ts": "8085038be7fbc37e7ffd5c3d2529e1d6e7395e987eb440679db591c970a5d5e8"
+ },
+ "command": "npx vitest run <the mutant's test files> --reporter=json --outputFile=<tmp>, with SYZYGY_POC_BROWSER set to a local chrome-headless-shell",
+ "method": "Each mutant replaces one fragment (`old`, occurring exactly once in `file`) with `new`, runs the listed test files with vitest, counts the mutant killed when the run exits non-zero, records the failed tests, and restores the file byte for byte (checked against `subject`). Rule 6, AGENTS.md.",
+ "testsByGroup": {
+  "layout": [
+   "apps/three-surface-poc/src/polaris-generation/figure-kinds.test.ts",
+   "packages/polaris-dossier/src/figure-fit.test.ts"
+  ],
+  "site": [
+   "apps/three-surface-poc/src/polaris-generation/figure-kinds.test.ts",
+   "packages/polaris-dossier/src/render.test.ts",
+   "apps/three-surface-poc/src/polaris-generation/figure-kinds.browser.test.ts",
+   "packages/polaris-dossier/src/figure-fit.test.ts"
+  ],
+  "fit": [
+   "packages/polaris-dossier/src/figure-fit.test.ts",
+   "apps/three-surface-poc/src/polaris-generation/figure-kinds.test.ts"
+  ],
+  "check": [
+   "packages/polaris-dossier/src/check.test.ts",
+   "packages/polaris-dossier/src/draft-schema.test.ts",
+   "packages/polaris-dossier/src/figure-fit.test.ts"
+  ],
+  "brief": [
+   "packages/polaris-dossier/src/brief.test.ts"
+  ],
+  "source": [
+   "apps/three-surface-poc/src/polaris-generation/figure-kinds.test.ts",
+   "packages/polaris-dossier/src/render.test.ts"
+  ],
+  "render": [
+   "packages/polaris-dossier/src/render.test.ts",
+   "apps/three-surface-poc/src/polaris-generation/figure-kinds.test.ts"
+  ],
+  "reach": [
+   "packages/polaris-dossier/src/review-reach.test.ts",
+   "packages/polaris-dossier/src/reading-ledger.test.ts"
+  ]
+ },
+ "requirement": "REQ-polaris-generation-034 version 2.5 (polaris-dossier-figure-kinds-v2.5, adoption A-21); bead syzygy-3efd.30",
+ "mutants": [
+  {
+   "id": "L1",
+   "file": "apps/three-surface-poc/src/polaris-generation/diagram-layout.ts",
+   "old": "const columnX = (i: number): number => MARGIN + FIGURE_PITCH * i;",
+   "new": "const columnX = (i: number): number => MARGIN + FIGURE_COLUMN * i;",
+   "tests": [
+    "apps/three-surface-poc/src/polaris-generation/figure-kinds.test.ts",
+    "packages/polaris-dossier/src/figure-fit.test.ts"
+   ],
+   "killed": true,
+   "killedBy": [
+    "apps/three-surface-poc/src/polaris-generation/figure-kinds.test.ts"
+   ],
+   "failedTests": [
+    "apps/three-surface-poc/src/polaris-generation/figure-kinds.test.ts > sequence layout lays out three participants and four messages at 592 x 392, a self-message as a loop 32 px right and 24 px lower",
+    "apps/three-surface-poc/src/polaris-generation/figure-kinds.test.ts > swimlane layout lays out three lanes and five steps at 592 x 536, arrows straight within a lane and curved between two",
+    "apps/three-surface-poc/src/polaris-generation/figure-kinds.test.ts > figure kinds on the operator-agent site draws the sequence with its lifelines, a wrapped message label, a loop and an escaped Unknown label",
+    "apps/three-surface-poc/src/polaris-generation/figure-kinds.test.ts > figure kinds on the operator-agent site draws the swimlane with lane bands, order arrows and step boxes in their lanes"
+   ]
+  },
+  {
+   "id": "L2",
+   "file": "apps/three-surface-poc/src/polaris-generation/diagram-layout.ts",
+   "old": "const figureWidth = (n: number): number => 40 + FIGURE_PITCH * n;",
+   "new": "const figureWidth = (n: number): number => 48 + FIGURE_PITCH * n;",
+   "tests": [
+    "apps/three-surface-poc/src/polaris-generation/figure-kinds.test.ts",
+    "packages/polaris-dossier/src/figure-fit.test.ts"
+   ],
+   "killed": true,
+   "killedBy": [
+    "apps/three-surface-poc/src/polaris-generation/figure-kinds.test.ts"
+   ],
+   "failedTests": [
+    "apps/three-surface-poc/src/polaris-generation/figure-kinds.test.ts > sequence layout lays out three participants and four messages at 592 x 392, a self-message as a loop 32 px right and 24 px lower",
+    "apps/three-surface-poc/src/polaris-generation/figure-kinds.test.ts > sequence layout is 408, 776 and 960 px wide for two, four and five participants",
+    "apps/three-surface-poc/src/polaris-generation/figure-kinds.test.ts > swimlane layout lays out three lanes and five steps at 592 x 536, arrows straight within a lane and curved between two",
+    "apps/three-surface-poc/src/polaris-generation/figure-kinds.test.ts > figure kinds on the operator-agent site draws the sequence with its lifelines, a wrapped message label, a loop and an escaped Unknown label",
+    "apps/three-surface-poc/src/polaris-generation/figure-kinds.test.ts > figure kinds on the operator-agent site draws the swimlane with lane bands, order arrows and step boxes in their lanes",
+    "apps/three-surface-poc/src/polaris-generation/figure-kinds.test.ts > figure kinds on the operator-agent site lists figureStructures in machine.json in draft order; the graph-only machine view has no such member",
+    "apps/three-surface-poc/src/polaris-generation/figure-kinds.test.ts > figure kinds on the operator-agent site measures each kind by its own layout for figure fit"
+   ]
+  },
+  {
+   "id": "L3",
+   "file": "apps/three-surface-poc/src/polaris-generation/diagram-layout.ts",
+   "old": "const MESSAGE_TOP = 128;",
+   "new": "const MESSAGE_TOP = 120;",
+   "tests": [
+    "apps/three-surface-poc/src/polaris-generation/figure-kinds.test.ts",
+    "packages/polaris-dossier/src/figure-fit.test.ts"
+   ],
+   "killed": true,
+   "killedBy": [
+    "apps/three-surface-poc/src/polaris-generation/figure-kinds.test.ts"
+   ],
+   "failedTests": [
+    "apps/three-surface-poc/src/polaris-generation/figure-kinds.test.ts > sequence layout lays out three participants and four messages at 592 x 392, a self-message as a loop 32 px right and 24 px lower",
+    "apps/three-surface-poc/src/polaris-generation/figure-kinds.test.ts > figure kinds on the operator-agent site draws the sequence with its lifelines, a wrapped message label, a loop and an escaped Unknown label"
+   ]
+  },
+  {
+   "id": "L4",
+   "file": "apps/three-surface-poc/src/polaris-generation/diagram-layout.ts",
+   "old": "const MESSAGE_PITCH = 72;",
+   "new": "const MESSAGE_PITCH = 64;",
+   "tests": [
+    "apps/three-surface-poc/src/polaris-generation/figure-kinds.test.ts",
+    "packages/polaris-dossier/src/figure-fit.test.ts"
+   ],
+   "killed": true,
+   "killedBy": [
+    "apps/three-surface-poc/src/polaris-generation/figure-kinds.test.ts"
+   ],
+   "failedTests": [
+    "apps/three-surface-poc/src/polaris-generation/figure-kinds.test.ts > sequence layout lays out three participants and four messages at 592 x 392, a self-message as a loop 32 px right and 24 px lower",
+    "apps/three-surface-poc/src/polaris-generation/figure-kinds.test.ts > sequence layout is 408, 776 and 960 px wide for two, four and five participants",
+    "apps/three-surface-poc/src/polaris-generation/figure-kinds.test.ts > figure kinds on the operator-agent site draws the sequence with its lifelines, a wrapped message label, a loop and an escaped Unknown label"
+   ]
+  },
+  {
+   "id": "L5",
+   "file": "apps/three-surface-poc/src/polaris-generation/diagram-layout.ts",
+   "old": "const LOOP_REACH = 32;",
+   "new": "const LOOP_REACH = 24;",
+   "tests": [
+    "apps/three-surface-poc/src/polaris-generation/figure-kinds.test.ts",
+    "packages/polaris-dossier/src/figure-fit.test.ts"
+   ],
+   "killed": true,
+   "killedBy": [
+    "apps/three-surface-poc/src/polaris-generation/figure-kinds.test.ts"
+   ],
+   "failedTests": [
+    "apps/three-surface-poc/src/polaris-generation/figure-kinds.test.ts > sequence layout lays out three participants and four messages at 592 x 392, a self-message as a loop 32 px right and 24 px lower",
+    "apps/three-surface-poc/src/polaris-generation/figure-kinds.test.ts > figure kinds on the operator-agent site draws the sequence with its lifelines, a wrapped message label, a loop and an escaped Unknown label"
+   ]
+  },
+  {
+   "id": "L6",
+   "file": "apps/three-surface-poc/src/polaris-generation/diagram-layout.ts",
+   "old": "const LOOP_DROP = 24;",
+   "new": "const LOOP_DROP = 32;",
+   "tests": [
+    "apps/three-surface-poc/src/polaris-generation/figure-kinds.test.ts",
+    "packages/polaris-dossier/src/figure-fit.test.ts"
+   ],
+   "killed": true,
+   "killedBy": [
+    "apps/three-surface-poc/src/polaris-generation/figure-kinds.test.ts"
+   ],
+   "failedTests": [
+    "apps/three-surface-poc/src/polaris-generation/figure-kinds.test.ts > sequence layout lays out three participants and four messages at 592 x 392, a self-message as a loop 32 px right and 24 px lower",
+    "apps/three-surface-poc/src/polaris-generation/figure-kinds.test.ts > figure kinds on the operator-agent site draws the sequence with its lifelines, a wrapped message label, a loop and an escaped Unknown label"
+   ]
+  },
+  {
+   "id": "L7",
+   "file": "apps/three-surface-poc/src/polaris-generation/diagram-layout.ts",
+   "old": "const STEP_TOP = 104;",
+   "new": "const STEP_TOP = 96;",
+   "tests": [
+    "apps/three-surface-poc/src/polaris-generation/figure-kinds.test.ts",
+    "packages/polaris-dossier/src/figure-fit.test.ts"
+   ],
+   "killed": true,
+   "killedBy": [
+    "apps/three-surface-poc/src/polaris-generation/figure-kinds.test.ts"
+   ],
+   "failedTests": [
+    "apps/three-surface-poc/src/polaris-generation/figure-kinds.test.ts > swimlane layout lays out three lanes and five steps at 592 x 536, arrows straight within a lane and curved between two",
+    "apps/three-surface-poc/src/polaris-generation/figure-kinds.test.ts > figure kinds on the operator-agent site draws the swimlane with lane bands, order arrows and step boxes in their lanes"
+   ]
+  },
+  {
+   "id": "L8",
+   "file": "apps/three-surface-poc/src/polaris-generation/diagram-layout.ts",
+   "old": "const STEP_PITCH = 88;",
+   "new": "const STEP_PITCH = 80;",
+   "tests": [
+    "apps/three-surface-poc/src/polaris-generation/figure-kinds.test.ts",
+    "packages/polaris-dossier/src/figure-fit.test.ts"
+   ],
+   "killed": true,
+   "killedBy": [
+    "apps/three-surface-poc/src/polaris-generation/figure-kinds.test.ts"
+   ],
+   "failedTests": [
+    "apps/three-surface-poc/src/polaris-generation/figure-kinds.test.ts > swimlane layout lays out three lanes and five steps at 592 x 536, arrows straight within a lane and curved between two",
+    "apps/three-surface-poc/src/polaris-generation/figure-kinds.test.ts > figure kinds on the operator-agent site draws the swimlane with lane bands, order arrows and step boxes in their lanes"
+   ]
+  },
+  {
+   "id": "L9",
+   "file": "apps/three-surface-poc/src/polaris-generation/diagram-layout.ts",
+   "old": "height = 104 + MESSAGE_PITCH * messages.length",
+   "new": "height = 96 + MESSAGE_PITCH * messages.length",
+   "tests": [
+    "apps/three-surface-poc/src/polaris-generation/figure-kinds.test.ts",
+    "packages/polaris-dossier/src/figure-fit.test.ts"
+   ],
+   "killed": true,
+   "killedBy": [
+    "apps/three-surface-poc/src/polaris-generation/figure-kinds.test.ts"
+   ],
+   "failedTests": [
+    "apps/three-surface-poc/src/polaris-generation/figure-kinds.test.ts > sequence layout lays out three participants and four messages at 592 x 392, a self-message as a loop 32 px right and 24 px lower",
+    "apps/three-surface-poc/src/polaris-generation/figure-kinds.test.ts > sequence layout is 408, 776 and 960 px wide for two, four and five participants",
+    "apps/three-surface-poc/src/polaris-generation/figure-kinds.test.ts > figure kinds on the operator-agent site draws the sequence with its lifelines, a wrapped message label, a loop and an escaped Unknown label"
+   ]
+  },
+  {
+   "id": "L10",
+   "file": "apps/three-surface-poc/src/polaris-generation/diagram-layout.ts",
+   "old": "height: 96 + STEP_PITCH * steps.length",
+   "new": "height: 104 + STEP_PITCH * steps.length",
+   "tests": [
+    "apps/three-surface-poc/src/polaris-generation/figure-kinds.test.ts",
+    "packages/polaris-dossier/src/figure-fit.test.ts"
+   ],
+   "killed": true,
+   "killedBy": [
+    "apps/three-surface-poc/src/polaris-generation/figure-kinds.test.ts"
+   ],
+   "failedTests": [
+    "apps/three-surface-poc/src/polaris-generation/figure-kinds.test.ts > swimlane layout lays out three lanes and five steps at 592 x 536, arrows straight within a lane and curved between two",
+    "apps/three-surface-poc/src/polaris-generation/figure-kinds.test.ts > figure kinds on the operator-agent site draws the swimlane with lane bands, order arrows and step boxes in their lanes"
+   ]
+  },
+  {
+   "id": "L11",
+   "file": "apps/three-surface-poc/src/polaris-generation/diagram-layout.ts",
+   "old": "if (participants.some(participant => !named.has(participant.id))) throw new Error('figure-unused');",
+   "new": "void named;",
+   "tests": [
+    "apps/three-surface-poc/src/polaris-generation/figure-kinds.test.ts",
+    "packages/polaris-dossier/src/figure-fit.test.ts"
+   ],
+   "killed": true,
+   "killedBy": [
+    "apps/three-surface-poc/src/polaris-generation/figure-kinds.test.ts"
+   ],
+   "failedTests": [
+    "apps/three-surface-poc/src/polaris-generation/figure-kinds.test.ts > sequence layout refuses a participant no message names"
+   ]
+  },
+  {
+   "id": "L12",
+   "file": "apps/three-surface-poc/src/polaris-generation/diagram-layout.ts",
+   "old": "if (lanes.some((_, i) => !columns.includes(i))) throw new Error('figure-unused');",
+   "new": "void columns;",
+   "tests": [
+    "apps/three-surface-poc/src/polaris-generation/figure-kinds.test.ts",
+    "packages/polaris-dossier/src/figure-fit.test.ts"
+   ],
+   "killed": true,
+   "killedBy": [
+    "apps/three-surface-poc/src/polaris-generation/figure-kinds.test.ts"
+   ],
+   "failedTests": [
+    "apps/three-surface-poc/src/polaris-generation/figure-kinds.test.ts > swimlane layout refuses a lane no step names"
+   ]
+  },
+  {
+   "id": "L13",
+   "file": "apps/three-surface-poc/src/polaris-generation/diagram-layout.ts",
+   "old": "if (from === undefined || to === undefined) throw new Error('unknown-node');\n    named",
+   "new": "if (from === undefined && to === undefined) throw new Error('unknown-node');\n    named",
+   "tests": [
+    "apps/three-surface-poc/src/polaris-generation/figure-kinds.test.ts",
+    "packages/polaris-dossier/src/figure-fit.test.ts"
+   ],
+   "killed": true,
+   "killedBy": [
+    "apps/three-surface-poc/src/polaris-generation/figure-kinds.test.ts"
+   ],
+   "failedTests": [
+    "apps/three-surface-poc/src/polaris-generation/figure-kinds.test.ts > sequence layout refuses an unknown participant"
+   ]
+  },
+  {
+   "id": "L14",
+   "file": "apps/three-surface-poc/src/polaris-generation/diagram-layout.ts",
+   "old": "if (x1 === x2) return { from: from.id, to: to.id, straight: true",
+   "new": "if (x1 !== x2) return { from: from.id, to: to.id, straight: true",
+   "tests": [
+    "apps/three-surface-poc/src/polaris-generation/figure-kinds.test.ts",
+    "packages/polaris-dossier/src/figure-fit.test.ts"
+   ],
+   "killed": true,
+   "killedBy": [
+    "apps/three-surface-poc/src/polaris-generation/figure-kinds.test.ts"
+   ],
+   "failedTests": [
+    "apps/three-surface-poc/src/polaris-generation/figure-kinds.test.ts > swimlane layout lays out three lanes and five steps at 592 x 536, arrows straight within a lane and curved between two",
+    "apps/three-surface-poc/src/polaris-generation/figure-kinds.test.ts > figure kinds on the operator-agent site draws the swimlane with lane bands, order arrows and step boxes in their lanes"
+   ]
+  },
+  {
+   "id": "L15",
+   "file": "apps/three-surface-poc/src/polaris-generation/diagram-layout.ts",
+   "old": "if (messages.length < 1 || messages.length > 30)",
+   "new": "if (messages.length > 30)",
+   "tests": [
+    "apps/three-surface-poc/src/polaris-generation/figure-kinds.test.ts",
+    "packages/polaris-dossier/src/figure-fit.test.ts"
+   ],
+   "killed": true,
+   "killedBy": [
+    "apps/three-surface-poc/src/polaris-generation/figure-kinds.test.ts"
+   ],
+   "failedTests": [
+    "apps/three-surface-poc/src/polaris-generation/figure-kinds.test.ts > sequence layout refuses no message"
+   ]
+  },
+  {
+   "id": "L16",
+   "file": "apps/three-surface-poc/src/polaris-generation/diagram-layout.ts",
+   "old": "if (element.epistemic === 'unknown') lines[lines.length - 1] =",
+   "new": "if (element.epistemic === 'inferred') lines[lines.length - 1] =",
+   "tests": [
+    "apps/three-surface-poc/src/polaris-generation/figure-kinds.test.ts",
+    "packages/polaris-dossier/src/figure-fit.test.ts"
+   ],
+   "killed": true,
+   "killedBy": [
+    "apps/three-surface-poc/src/polaris-generation/figure-kinds.test.ts"
+   ],
+   "failedTests": [
+    "apps/three-surface-poc/src/polaris-generation/figure-kinds.test.ts > figure kinds on the operator-agent site draws the sequence with its lifelines, a wrapped message label, a loop and an escaped Unknown label",
+    "apps/three-surface-poc/src/polaris-generation/figure-kinds.test.ts > figure kinds on the operator-agent site draws the swimlane with lane bands, order arrows and step boxes in their lanes"
+   ]
+  },
+  {
+   "id": "L17",
+   "file": "apps/three-surface-poc/src/polaris-generation/diagram-layout.ts",
+   "old": "const MESSAGE_CHARS = 22;",
+   "new": "const MESSAGE_CHARS = 30;",
+   "tests": [
+    "apps/three-surface-poc/src/polaris-generation/figure-kinds.test.ts",
+    "packages/polaris-dossier/src/figure-fit.test.ts"
+   ],
+   "killed": true,
+   "killedBy": [
+    "apps/three-surface-poc/src/polaris-generation/figure-kinds.test.ts"
+   ],
+   "failedTests": [
+    "apps/three-surface-poc/src/polaris-generation/figure-kinds.test.ts > figure kinds on the operator-agent site draws the sequence with its lifelines, a wrapped message label, a loop and an escaped Unknown label"
+   ]
+  },
+  {
+   "id": "L18",
+   "file": "apps/three-surface-poc/src/polaris-generation/diagram-layout.ts",
+   "old": "const BOX_CHARS = 19;",
+   "new": "const BOX_CHARS = 22;",
+   "tests": [
+    "apps/three-surface-poc/src/polaris-generation/figure-kinds.test.ts",
+    "packages/polaris-dossier/src/render.test.ts",
+    "apps/three-surface-poc/src/polaris-generation/figure-kinds.browser.test.ts",
+    "packages/polaris-dossier/src/figure-fit.test.ts"
+   ],
+   "killed": true,
+   "killedBy": [
+    "apps/three-surface-poc/src/polaris-generation/figure-kinds.test.ts"
+   ],
+   "failedTests": [
+    "apps/three-surface-poc/src/polaris-generation/figure-kinds.test.ts > figure kinds on the operator-agent site draws the swimlane with lane bands, order arrows and step boxes in their lanes"
+   ]
+  },
+  {
+   "id": "L19",
+   "file": "apps/three-surface-poc/src/polaris-generation/diagram-layout.ts",
+   "old": "if (index.has(owner.id)) throw new Error('duplicate-node');",
+   "new": "void index;",
+   "tests": [
+    "apps/three-surface-poc/src/polaris-generation/figure-kinds.test.ts",
+    "packages/polaris-dossier/src/figure-fit.test.ts"
+   ],
+   "killed": true,
+   "killedBy": [
+    "apps/three-surface-poc/src/polaris-generation/figure-kinds.test.ts"
+   ],
+   "failedTests": [
+    "apps/three-surface-poc/src/polaris-generation/figure-kinds.test.ts > sequence layout refuses a repeated participant"
+   ]
+  },
+  {
+   "id": "L20",
+   "file": "apps/three-surface-poc/src/polaris-generation/diagram-layout.ts",
+   "old": "const tip = x2 > x1 ? x2 - 2 : x2 + 2;",
+   "new": "const tip = x2;",
+   "tests": [
+    "apps/three-surface-poc/src/polaris-generation/figure-kinds.test.ts",
+    "packages/polaris-dossier/src/figure-fit.test.ts"
+   ],
+   "killed": true,
+   "killedBy": [
+    "apps/three-surface-poc/src/polaris-generation/figure-kinds.test.ts"
+   ],
+   "failedTests": [
+    "apps/three-surface-poc/src/polaris-generation/figure-kinds.test.ts > sequence layout lays out three participants and four messages at 592 x 392, a self-message as a loop 32 px right and 24 px lower"
+   ]
+  },
+  {
+   "id": "S1",
+   "file": "apps/three-surface-poc/src/polaris-generation/dossier-site.ts",
+   "old": "    figurePages.add(from);\n",
+   "new": "    void from;\n",
+   "tests": [
+    "apps/three-surface-poc/src/polaris-generation/figure-kinds.test.ts",
+    "packages/polaris-dossier/src/render.test.ts",
+    "apps/three-surface-poc/src/polaris-generation/figure-kinds.browser.test.ts",
+    "packages/polaris-dossier/src/figure-fit.test.ts"
+   ],
+   "killed": true,
+   "killedBy": [
+    "apps/three-surface-poc/src/polaris-generation/figure-kinds.browser.test.ts",
+    "apps/three-surface-poc/src/polaris-generation/figure-kinds.test.ts",
+    "packages/polaris-dossier/src/render.test.ts"
+   ],
+   "failedTests": [
+    "apps/three-surface-poc/src/polaris-generation/figure-kinds.test.ts > figure kinds on the operator-agent site carries the figure-kind style on the page holding such a figure alone, and none on the graph-only dossier",
+    "packages/polaris-dossier/src/render.test.ts > render: figure kinds (schema v7) renders a sequence and a swimlane in their two forms, with figureStructures in machine.json and the style on their page alone",
+    "apps/three-surface-poc/src/polaris-generation/figure-kinds.browser.test.ts > shows the drawing at 1440 px and the numbered stepper at 390 px, with no sideways scroll"
+   ]
+  },
+  {
+   "id": "S2",
+   "file": "apps/three-surface-poc/src/polaris-generation/dossier-site.ts",
+   "old": "${figureKinds ? FIGURE_KINDS_CSS : ''}",
+   "new": "${FIGURE_KINDS_CSS}",
+   "tests": [
+    "apps/three-surface-poc/src/polaris-generation/figure-kinds.test.ts",
+    "packages/polaris-dossier/src/render.test.ts",
+    "apps/three-surface-poc/src/polaris-generation/figure-kinds.browser.test.ts",
+    "packages/polaris-dossier/src/figure-fit.test.ts"
+   ],
+   "killed": true,
+   "killedBy": [
+    "apps/three-surface-poc/src/polaris-generation/figure-kinds.test.ts",
+    "packages/polaris-dossier/src/render.test.ts"
+   ],
+   "failedTests": [
+    "apps/three-surface-poc/src/polaris-generation/figure-kinds.test.ts > figure kinds on the operator-agent site carries the figure-kind style on the page holding such a figure alone, and none on the graph-only dossier",
+    "packages/polaris-dossier/src/render.test.ts > render: figure kinds (schema v7) renders a graph diagram of a v7 draft byte for byte as the same diagram of a v6 draft, on every page, with no figure-kind style",
+    "packages/polaris-dossier/src/render.test.ts > render: figure kinds (schema v7) renders a sequence and a swimlane in their two forms, with figureStructures in machine.json and the style on their page alone"
+   ]
+  },
+  {
+   "id": "S3",
+   "file": "apps/three-surface-poc/src/polaris-generation/dossier-site.ts",
+   "old": "@container (width < ${w}px)",
+   "new": "@container (width <= ${w}px)",
+   "tests": [
+    "apps/three-surface-poc/src/polaris-generation/figure-kinds.test.ts",
+    "packages/polaris-dossier/src/render.test.ts",
+    "apps/three-surface-poc/src/polaris-generation/figure-kinds.browser.test.ts",
+    "packages/polaris-dossier/src/figure-fit.test.ts"
+   ],
+   "killed": true,
+   "killedBy": [
+    "apps/three-surface-poc/src/polaris-generation/figure-kinds.test.ts"
+   ],
+   "failedTests": [
+    "apps/three-surface-poc/src/polaris-generation/figure-kinds.test.ts > figure kinds on the operator-agent site carries the figure-kind style on the page holding such a figure alone, and none on the graph-only dossier"
+   ]
+  },
+  {
+   "id": "S4",
+   "file": "apps/three-surface-poc/src/polaris-generation/dossier-site.ts",
+   "old": ".figure-stepper>li.unknown{border-left-style:dotted}",
+   "new": ".figure-stepper>li.unknown{border-left-style:dashed}",
+   "tests": [
+    "apps/three-surface-poc/src/polaris-generation/figure-kinds.test.ts",
+    "packages/polaris-dossier/src/render.test.ts",
+    "apps/three-surface-poc/src/polaris-generation/figure-kinds.browser.test.ts",
+    "packages/polaris-dossier/src/figure-fit.test.ts"
+   ],
+   "killed": true,
+   "killedBy": [
+    "apps/three-surface-poc/src/polaris-generation/figure-kinds.browser.test.ts"
+   ],
+   "failedTests": [
+    "apps/three-surface-poc/src/polaris-generation/figure-kinds.browser.test.ts > shows the drawing at 1440 px and the numbered stepper at 390 px, with no sideways scroll"
+   ]
+  },
+  {
+   "id": "S5",
+   "file": "apps/three-surface-poc/src/polaris-generation/dossier-site.ts",
+   "old": "font:13px/1.5 var(--font-mono);overflow-wrap:anywhere}",
+   "new": "font:13px/1.5 var(--font-mono);overflow-wrap:normal}",
+   "tests": [
+    "apps/three-surface-poc/src/polaris-generation/figure-kinds.test.ts",
+    "packages/polaris-dossier/src/render.test.ts",
+    "apps/three-surface-poc/src/polaris-generation/figure-kinds.browser.test.ts",
+    "packages/polaris-dossier/src/figure-fit.test.ts"
+   ],
+   "killed": true,
+   "killedBy": [
+    "apps/three-surface-poc/src/polaris-generation/figure-kinds.browser.test.ts"
+   ],
+   "failedTests": [
+    "apps/three-surface-poc/src/polaris-generation/figure-kinds.browser.test.ts > shows the drawing at 1440 px and the numbered stepper at 390 px, with no sideways scroll"
+   ]
+  },
+  {
+   "id": "S6",
+   "file": "apps/three-surface-poc/src/polaris-generation/dossier-site.ts",
+   "old": "${escape(element.label)}${element.epistemic === 'unknown' ? ' ?' : ''}",
+   "new": "${escape(element.label)}",
+   "tests": [
+    "apps/three-surface-poc/src/polaris-generation/figure-kinds.test.ts",
+    "packages/polaris-dossier/src/render.test.ts",
+    "apps/three-surface-poc/src/polaris-generation/figure-kinds.browser.test.ts",
+    "packages/polaris-dossier/src/figure-fit.test.ts"
+   ],
+   "killed": true,
+   "killedBy": [
+    "apps/three-surface-poc/src/polaris-generation/figure-kinds.browser.test.ts",
+    "apps/three-surface-poc/src/polaris-generation/figure-kinds.test.ts",
+    "packages/polaris-dossier/src/render.test.ts"
+   ],
+   "failedTests": [
+    "apps/three-surface-poc/src/polaris-generation/figure-kinds.test.ts > figure kinds on the operator-agent site writes the phone forms whole and escaped, with no identity, citation or label token",
+    "packages/polaris-dossier/src/render.test.ts > render: figure kinds (schema v7) renders a sequence and a swimlane in their two forms, with figureStructures in machine.json and the style on their page alone",
+    "apps/three-surface-poc/src/polaris-generation/figure-kinds.browser.test.ts > shows the drawing at 1440 px and the numbered stepper at 390 px, with no sideways scroll"
+   ]
+  },
+  {
+   "id": "S7",
+   "file": "apps/three-surface-poc/src/polaris-generation/dossier-site.ts",
+   "old": ".sort((a, b) => a.index - b.index)",
+   "new": ".sort((a, b) => b.index - a.index)",
+   "tests": [
+    "apps/three-surface-poc/src/polaris-generation/figure-kinds.test.ts",
+    "packages/polaris-dossier/src/render.test.ts",
+    "apps/three-surface-poc/src/polaris-generation/figure-kinds.browser.test.ts",
+    "packages/polaris-dossier/src/figure-fit.test.ts"
+   ],
+   "killed": true,
+   "killedBy": [
+    "apps/three-surface-poc/src/polaris-generation/figure-kinds.test.ts",
+    "packages/polaris-dossier/src/render.test.ts"
+   ],
+   "failedTests": [
+    "apps/three-surface-poc/src/polaris-generation/figure-kinds.test.ts > figure kinds on the operator-agent site lists figureStructures in machine.json in draft order; the graph-only machine view has no such member",
+    "packages/polaris-dossier/src/render.test.ts > render: figure kinds (schema v7) renders a sequence and a swimlane in their two forms, with figureStructures in machine.json and the style on their page alone"
+   ]
+  },
+  {
+   "id": "S8",
+   "file": "apps/three-surface-poc/src/polaris-generation/dossier-site.ts",
+   "old": "counted(figure.lanes.length, 'lane', 'lanes')",
+   "new": "counted(figure.lanes.length, 'box', 'boxes')",
+   "tests": [
+    "apps/three-surface-poc/src/polaris-generation/figure-kinds.test.ts",
+    "packages/polaris-dossier/src/render.test.ts",
+    "apps/three-surface-poc/src/polaris-generation/figure-kinds.browser.test.ts",
+    "packages/polaris-dossier/src/figure-fit.test.ts"
+   ],
+   "killed": true,
+   "killedBy": [
+    "apps/three-surface-poc/src/polaris-generation/figure-kinds.test.ts",
+    "packages/polaris-dossier/src/render.test.ts"
+   ],
+   "failedTests": [
+    "apps/three-surface-poc/src/polaris-generation/figure-kinds.test.ts > figure kinds on the operator-agent site tallies each figure in its own nouns and lists every element once, then its declarative source",
+    "packages/polaris-dossier/src/render.test.ts > render: figure kinds (schema v7) renders a sequence and a swimlane in their two forms, with figureStructures in machine.json and the style on their page alone"
+   ]
+  },
+  {
+   "id": "S9",
+   "file": "apps/three-surface-poc/src/polaris-generation/dossier-site.ts",
+   "old": "data-figure-kind=\"${figure.kind}\"",
+   "new": "data-figure-kind=\"graph\"",
+   "tests": [
+    "apps/three-surface-poc/src/polaris-generation/figure-kinds.test.ts",
+    "packages/polaris-dossier/src/render.test.ts",
+    "apps/three-surface-poc/src/polaris-generation/figure-kinds.browser.test.ts",
+    "packages/polaris-dossier/src/figure-fit.test.ts"
+   ],
+   "killed": true,
+   "killedBy": [
+    "apps/three-surface-poc/src/polaris-generation/figure-kinds.browser.test.ts",
+    "apps/three-surface-poc/src/polaris-generation/figure-kinds.test.ts",
+    "packages/polaris-dossier/src/render.test.ts"
+   ],
+   "failedTests": [
+    "apps/three-surface-poc/src/polaris-generation/figure-kinds.test.ts > figure kinds on the operator-agent site draws the sequence with its lifelines, a wrapped message label, a loop and an escaped Unknown label",
+    "packages/polaris-dossier/src/render.test.ts > render: figure kinds (schema v7) renders a sequence and a swimlane in their two forms, with figureStructures in machine.json and the style on their page alone",
+    "apps/three-surface-poc/src/polaris-generation/figure-kinds.browser.test.ts > shows the drawing at 1440 px and the numbered stepper at 390 px, with no sideways scroll"
+   ]
+  },
+  {
+   "id": "S10",
+   "file": "apps/three-surface-poc/src/polaris-generation/dossier-site.ts",
+   "old": "...d.edges, ...figureElements(d)]",
+   "new": "...d.edges]",
+   "tests": [
+    "apps/three-surface-poc/src/polaris-generation/figure-kinds.test.ts",
+    "packages/polaris-dossier/src/render.test.ts",
+    "apps/three-surface-poc/src/polaris-generation/figure-kinds.browser.test.ts",
+    "packages/polaris-dossier/src/figure-fit.test.ts"
+   ],
+   "killed": true,
+   "killedBy": [
+    "apps/three-surface-poc/src/polaris-generation/figure-kinds.test.ts"
+   ],
+   "failedTests": [
+    "apps/three-surface-poc/src/polaris-generation/figure-kinds.test.ts > figure kinds on the operator-agent site tallies each figure in its own nouns and lists every element once, then its declarative source"
+   ]
+  },
+  {
+   "id": "S11",
+   "file": "apps/three-surface-poc/src/polaris-generation/dossier-site.ts",
+   "old": "    return layoutSequence(figure.participants, figure.messages).width;\n",
+   "new": "    return 592;\n",
+   "tests": [
+    "apps/three-surface-poc/src/polaris-generation/figure-kinds.test.ts",
+    "packages/polaris-dossier/src/render.test.ts",
+    "apps/three-surface-poc/src/polaris-generation/figure-kinds.browser.test.ts",
+    "packages/polaris-dossier/src/figure-fit.test.ts"
+   ],
+   "killed": true,
+   "killedBy": [
+    "apps/three-surface-poc/src/polaris-generation/figure-kinds.test.ts"
+   ],
+   "failedTests": [
+    "apps/three-surface-poc/src/polaris-generation/figure-kinds.test.ts > figure kinds on the operator-agent site measures each kind by its own layout for figure fit"
+   ]
+  },
+  {
+   "id": "S12",
+   "file": "apps/three-surface-poc/src/polaris-generation/dossier-site.ts",
+   "old": "${shownOwner(message.from)} → ${shownOwner(message.to)}",
+   "new": "${shownOwner(message.to)} → ${shownOwner(message.from)}",
+   "tests": [
+    "apps/three-surface-poc/src/polaris-generation/figure-kinds.test.ts",
+    "packages/polaris-dossier/src/render.test.ts",
+    "apps/three-surface-poc/src/polaris-generation/figure-kinds.browser.test.ts",
+    "packages/polaris-dossier/src/figure-fit.test.ts"
+   ],
+   "killed": true,
+   "killedBy": [
+    "apps/three-surface-poc/src/polaris-generation/figure-kinds.browser.test.ts",
+    "apps/three-surface-poc/src/polaris-generation/figure-kinds.test.ts",
+    "packages/polaris-dossier/src/render.test.ts"
+   ],
+   "failedTests": [
+    "apps/three-surface-poc/src/polaris-generation/figure-kinds.test.ts > figure kinds on the operator-agent site writes the phone forms whole and escaped, with no identity, citation or label token",
+    "packages/polaris-dossier/src/render.test.ts > render: figure kinds (schema v7) renders a sequence and a swimlane in their two forms, with figureStructures in machine.json and the style on their page alone",
+    "apps/three-surface-poc/src/polaris-generation/figure-kinds.browser.test.ts > shows the drawing at 1440 px and the numbered stepper at 390 px, with no sideways scroll"
+   ]
+  },
+  {
+   "id": "S13",
+   "file": "apps/three-surface-poc/src/polaris-generation/dossier-site.ts",
+   "old": ".figure-stepper{display:none;",
+   "new": ".figure-stepper{display:block;",
+   "tests": [
+    "apps/three-surface-poc/src/polaris-generation/figure-kinds.test.ts",
+    "packages/polaris-dossier/src/render.test.ts",
+    "apps/three-surface-poc/src/polaris-generation/figure-kinds.browser.test.ts",
+    "packages/polaris-dossier/src/figure-fit.test.ts"
+   ],
+   "killed": true,
+   "killedBy": [
+    "apps/three-surface-poc/src/polaris-generation/figure-kinds.browser.test.ts"
+   ],
+   "failedTests": [
+    "apps/three-surface-poc/src/polaris-generation/figure-kinds.browser.test.ts > shows the drawing at 1440 px and the numbered stepper at 390 px, with no sideways scroll"
+   ]
+  },
+  {
+   "id": "S14",
+   "file": "apps/three-surface-poc/src/polaris-generation/dossier-site.ts",
+   "old": "font:13px/1.5 var(--font-mono)",
+   "new": "font:12px/1.5 var(--font-mono)",
+   "tests": [
+    "apps/three-surface-poc/src/polaris-generation/figure-kinds.test.ts",
+    "packages/polaris-dossier/src/render.test.ts",
+    "apps/three-surface-poc/src/polaris-generation/figure-kinds.browser.test.ts",
+    "packages/polaris-dossier/src/figure-fit.test.ts"
+   ],
+   "killed": true,
+   "killedBy": [
+    "apps/three-surface-poc/src/polaris-generation/figure-kinds.browser.test.ts"
+   ],
+   "failedTests": [
+    "apps/three-surface-poc/src/polaris-generation/figure-kinds.browser.test.ts > shows the drawing at 1440 px and the numbered stepper at 390 px, with no sideways scroll"
+   ]
+  },
+  {
+   "id": "S15",
+   "file": "apps/three-surface-poc/src/polaris-generation/dossier-site.ts",
+   "old": "<ol class=\"figure-stepper\">${stepper}</ol>",
+   "new": "<ul class=\"figure-stepper\">${stepper}</ul>",
+   "tests": [
+    "apps/three-surface-poc/src/polaris-generation/figure-kinds.test.ts",
+    "packages/polaris-dossier/src/render.test.ts",
+    "apps/three-surface-poc/src/polaris-generation/figure-kinds.browser.test.ts",
+    "packages/polaris-dossier/src/figure-fit.test.ts"
+   ],
+   "killed": true,
+   "killedBy": [
+    "apps/three-surface-poc/src/polaris-generation/figure-kinds.browser.test.ts",
+    "apps/three-surface-poc/src/polaris-generation/figure-kinds.test.ts",
+    "packages/polaris-dossier/src/render.test.ts"
+   ],
+   "failedTests": [
+    "apps/three-surface-poc/src/polaris-generation/figure-kinds.test.ts > figure kinds on the operator-agent site writes the phone forms whole and escaped, with no identity, citation or label token",
+    "packages/polaris-dossier/src/render.test.ts > render: figure kinds (schema v7) renders a sequence and a swimlane in their two forms, with figureStructures in machine.json and the style on their page alone",
+    "apps/three-surface-poc/src/polaris-generation/figure-kinds.browser.test.ts > shows the drawing at 1440 px and the numbered stepper at 390 px, with no sideways scroll"
+   ]
+  },
+  {
+   "id": "S16",
+   "file": "apps/three-surface-poc/src/polaris-generation/dossier-site.ts",
+   "old": "...(figureStructures.length === 0 ? {} : {",
+   "new": "...(false ? {} : {",
+   "tests": [
+    "apps/three-surface-poc/src/polaris-generation/figure-kinds.test.ts",
+    "packages/polaris-dossier/src/render.test.ts",
+    "apps/three-surface-poc/src/polaris-generation/figure-kinds.browser.test.ts",
+    "packages/polaris-dossier/src/figure-fit.test.ts"
+   ],
+   "killed": true,
+   "killedBy": [
+    "apps/three-surface-poc/src/polaris-generation/figure-kinds.test.ts",
+    "packages/polaris-dossier/src/render.test.ts"
+   ],
+   "failedTests": [
+    "apps/three-surface-poc/src/polaris-generation/figure-kinds.test.ts > figure kinds on the operator-agent site lists figureStructures in machine.json in draft order; the graph-only machine view has no such member",
+    "packages/polaris-dossier/src/render.test.ts > render: figure kinds (schema v7) renders a graph diagram of a v7 draft byte for byte as the same diagram of a v6 draft, on every page, with no figure-kind style"
+   ]
+  },
+  {
+   "id": "S17",
+   "file": "apps/three-surface-poc/src/polaris-generation/dossier-site.ts",
+   "old": "<pre>${escape(figureToMermaid(figure))}</pre>",
+   "new": "<pre>${escape(diagramToMermaid(d))}</pre>",
+   "tests": [
+    "apps/three-surface-poc/src/polaris-generation/figure-kinds.test.ts",
+    "packages/polaris-dossier/src/render.test.ts",
+    "apps/three-surface-poc/src/polaris-generation/figure-kinds.browser.test.ts",
+    "packages/polaris-dossier/src/figure-fit.test.ts"
+   ],
+   "killed": true,
+   "killedBy": [
+    "packages/polaris-dossier/src/render.test.ts"
+   ],
+   "failedTests": [
+    "packages/polaris-dossier/src/render.test.ts > render: figure kinds (schema v7) renders a sequence and a swimlane in their two forms, with figureStructures in machine.json and the style on their page alone"
+   ]
+  },
+  {
+   "id": "F1",
+   "file": "packages/polaris-dossier/src/figure-fit.ts",
+   "old": "const drawnPx = kinded ? Math.min(laidOut, columnPx) : drawnWidth(laidOut, columnPx);",
+   "new": "const drawnPx = drawnWidth(laidOut, columnPx);",
+   "tests": [
+    "packages/polaris-dossier/src/figure-fit.test.ts",
+    "apps/three-surface-poc/src/polaris-generation/figure-kinds.test.ts"
+   ],
+   "killed": true,
+   "killedBy": [
+    "packages/polaris-dossier/src/figure-fit.test.ts"
+   ],
+   "failedTests": [
+    "packages/polaris-dossier/src/figure-fit.test.ts > figure fit: sequence and swimlane (syzygy-3efd.30) reports no entry for figures 408 to 960 px wide, the drawing at 1440 px and the phone form at 390 px",
+    "packages/polaris-dossier/src/figure-fit.test.ts > figure fit: sequence and swimlane (syzygy-3efd.30) with the site's layout: a three-participant sequence and a three-lane swimlane fit both viewports; an unknown participant is Unknown"
+   ]
+  },
+  {
+   "id": "F2",
+   "file": "packages/polaris-dossier/src/figure-fit.ts",
+   "old": "const text = kinded ? FIGURE_TEXT_PX :",
+   "new": "const text = kinded ? FIGURE_TEXT_PX * 0.8 :",
+   "tests": [
+    "packages/polaris-dossier/src/figure-fit.test.ts",
+    "apps/three-surface-poc/src/polaris-generation/figure-kinds.test.ts"
+   ],
+   "killed": true,
+   "killedBy": [
+    "packages/polaris-dossier/src/figure-fit.test.ts"
+   ],
+   "failedTests": [
+    "packages/polaris-dossier/src/figure-fit.test.ts > figure fit: sequence and swimlane (syzygy-3efd.30) reports no entry for figures 408 to 960 px wide, the drawing at 1440 px and the phone form at 390 px",
+    "packages/polaris-dossier/src/figure-fit.test.ts > figure fit: sequence and swimlane (syzygy-3efd.30) with the site's layout: a three-participant sequence and a three-lane swimlane fit both viewports; an unknown participant is Unknown"
+   ]
+  },
+  {
+   "id": "F3",
+   "file": "packages/polaris-dossier/src/figure-fit.ts",
+   "old": "const v7 = isRecord(doc) && doc['schemaVersion'] === LOCAL_DRAFT_SCHEMA_VERSION;",
+   "new": "const v7 = isRecord(doc);",
+   "tests": [
+    "packages/polaris-dossier/src/figure-fit.test.ts",
+    "apps/three-surface-poc/src/polaris-generation/figure-kinds.test.ts"
+   ],
+   "killed": true,
+   "killedBy": [
+    "packages/polaris-dossier/src/figure-fit.test.ts"
+   ],
+   "failedTests": [
+    "packages/polaris-dossier/src/figure-fit.test.ts > figure fit: sequence and swimlane (syzygy-3efd.30) lays out a sequence in a v6 draft as a graph, as version 2.4 does"
+   ]
+  },
+  {
+   "id": "F4",
+   "file": "packages/polaris-dossier/src/figure-fit.ts",
+   "old": "value.length >= least && value.length <= most",
+   "new": "value.length >= least",
+   "tests": [
+    "packages/polaris-dossier/src/figure-fit.test.ts",
+    "apps/three-surface-poc/src/polaris-generation/figure-kinds.test.ts"
+   ],
+   "killed": true,
+   "killedBy": [
+    "packages/polaris-dossier/src/figure-fit.test.ts"
+   ],
+   "failedTests": [
+    "packages/polaris-dossier/src/figure-fit.test.ts > figure fit: sequence and swimlane (syzygy-3efd.30) lists Unknown a figure with a member its kind does not take, a missing member, a count out of bounds, or a layout that throws"
+   ]
+  },
+  {
+   "id": "F5",
+   "file": "packages/polaris-dossier/src/figure-fit.ts",
+   "old": "if (FIGURE_MEMBERS.some((member) => Object.hasOwn(diagram, member) !== takes.includes(member))) return undefined;",
+   "new": "void takes;",
+   "tests": [
+    "packages/polaris-dossier/src/figure-fit.test.ts",
+    "apps/three-surface-poc/src/polaris-generation/figure-kinds.test.ts"
+   ],
+   "killed": true,
+   "killedBy": [
+    "packages/polaris-dossier/src/figure-fit.test.ts"
+   ],
+   "failedTests": [
+    "packages/polaris-dossier/src/figure-fit.test.ts > figure fit: sequence and swimlane (syzygy-3efd.30) lists Unknown a figure with a member its kind does not take, a missing member, a count out of bounds, or a layout that throws"
+   ]
+  },
+  {
+   "id": "C1",
+   "file": "packages/polaris-dossier/src/check-derive.ts",
+   "old": "if (!known.has(target)) add({ kind: 'unresolved-reference'",
+   "new": "if (false && !known.has(target)) add({ kind: 'unresolved-reference'",
+   "tests": [
+    "packages/polaris-dossier/src/check.test.ts",
+    "packages/polaris-dossier/src/draft-schema.test.ts",
+    "packages/polaris-dossier/src/figure-fit.test.ts"
+   ],
+   "killed": true,
+   "killedBy": [
+    "packages/polaris-dossier/src/check.test.ts"
+   ],
+   "failedTests": [
+    "packages/polaris-dossier/src/check.test.ts > check: figure kinds (schema v7) reports a message naming an unknown participant as unresolved-reference, naming the diagram",
+    "packages/polaris-dossier/src/check.test.ts > check: figure kinds (schema v7) reports a step naming an unknown lane as unresolved-reference, and the lane it left empty as figure-unused"
+   ]
+  },
+  {
+   "id": "C2",
+   "file": "packages/polaris-dossier/src/check-derive.ts",
+   "old": "if (id === undefined || named.has(id)) return;",
+   "new": "if (id === undefined || !named.has(id)) return;",
+   "tests": [
+    "packages/polaris-dossier/src/check.test.ts",
+    "packages/polaris-dossier/src/draft-schema.test.ts",
+    "packages/polaris-dossier/src/figure-fit.test.ts"
+   ],
+   "killed": true,
+   "killedBy": [
+    "packages/polaris-dossier/src/check.test.ts"
+   ],
+   "failedTests": [
+    "packages/polaris-dossier/src/check.test.ts > check: figure kinds (schema v7) passes a v7 draft holding a sequence, a swimlane and a graph diagram",
+    "packages/polaris-dossier/src/check.test.ts > check: figure kinds (schema v7) reports a message naming an unknown participant as unresolved-reference, naming the diagram",
+    "packages/polaris-dossier/src/check.test.ts > check: figure kinds (schema v7) reports a step naming an unknown lane as unresolved-reference, and the lane it left empty as figure-unused",
+    "packages/polaris-dossier/src/check.test.ts > check: figure kinds (schema v7) reports a participant no message names as figure-unused",
+    "packages/polaris-dossier/src/check.test.ts > check: figure kinds (schema v7) reports a count outside its bounds as a schema finding"
+   ]
+  },
+  {
+   "id": "C3",
+   "file": "packages/polaris-dossier/src/check-derive.ts",
+   "old": "return { schema: current, reported: { test: (path) => standing.has(path) } };",
+   "new": "return { schema: current, reported: { test: () => false } };",
+   "tests": [
+    "packages/polaris-dossier/src/check.test.ts",
+    "packages/polaris-dossier/src/draft-schema.test.ts",
+    "packages/polaris-dossier/src/figure-fit.test.ts"
+   ],
+   "killed": true,
+   "killedBy": [
+    "packages/polaris-dossier/src/check.test.ts"
+   ],
+   "failedTests": [
+    "packages/polaris-dossier/src/check.test.ts > check: figure kinds (schema v7) reports members that do not fit the kind as figure-kind, with no schema finding at their paths"
+   ]
+  },
+  {
+   "id": "C4",
+   "file": "packages/polaris-dossier/src/check-derive.ts",
+   "old": "test: (path) => fieldVersion.has(path) || (also",
+   "new": "test: (path) => (also",
+   "tests": [
+    "packages/polaris-dossier/src/check.test.ts",
+    "packages/polaris-dossier/src/draft-schema.test.ts",
+    "packages/polaris-dossier/src/figure-fit.test.ts"
+   ],
+   "killed": true,
+   "killedBy": [
+    "packages/polaris-dossier/src/check.test.ts"
+   ],
+   "failedTests": [
+    "packages/polaris-dossier/src/check.test.ts > check: figure kinds (schema v7) reports a polaris-dossier-local-draft-v6 draft carrying a sequence as field-version, keeping the missing nodes and edges",
+    "packages/polaris-dossier/src/check.test.ts > check: figure kinds (schema v7) reports a polaris-dossier-local-draft-v5 draft carrying a sequence as field-version, keeping the missing nodes and edges"
+   ]
+  },
+  {
+   "id": "C5",
+   "file": "packages/polaris-dossier/src/check-derive.ts",
+   "old": "if (doc['schemaVersion'] !== LOCAL_DRAFT_SCHEMA_VERSION) {\n    list(doc['diagrams'])",
+   "new": "if (false) {\n    list(doc['diagrams'])",
+   "tests": [
+    "packages/polaris-dossier/src/check.test.ts",
+    "packages/polaris-dossier/src/draft-schema.test.ts",
+    "packages/polaris-dossier/src/figure-fit.test.ts"
+   ],
+   "killed": true,
+   "killedBy": [
+    "packages/polaris-dossier/src/check.test.ts"
+   ],
+   "failedTests": [
+    "packages/polaris-dossier/src/check.test.ts > check: figure kinds (schema v7) reports a polaris-dossier-local-draft-v6 draft carrying a sequence as field-version, keeping the missing nodes and edges",
+    "packages/polaris-dossier/src/check.test.ts > check: figure kinds (schema v7) reports a polaris-dossier-local-draft-v5 draft carrying a sequence as field-version, keeping the missing nodes and edges"
+   ]
+  },
+  {
+   "id": "C6",
+   "file": "packages/polaris-dossier/src/check-derive.ts",
+   "old": "if (Object.hasOwn(diagram, member) && !takes.includes(member)) {",
+   "new": "if (false) {",
+   "tests": [
+    "packages/polaris-dossier/src/check.test.ts",
+    "packages/polaris-dossier/src/draft-schema.test.ts",
+    "packages/polaris-dossier/src/figure-fit.test.ts"
+   ],
+   "killed": true,
+   "killedBy": [
+    "packages/polaris-dossier/src/check.test.ts"
+   ],
+   "failedTests": [
+    "packages/polaris-dossier/src/check.test.ts > check: figure kinds (schema v7) reports members that do not fit the kind as figure-kind, with no schema finding at their paths"
+   ]
+  },
+  {
+   "id": "C7",
+   "file": "packages/polaris-dossier/src/check-derive.ts",
+   "old": "} else if (!Object.hasOwn(diagram, member) && takes.includes(member)) {",
+   "new": "} else if (false) {",
+   "tests": [
+    "packages/polaris-dossier/src/check.test.ts",
+    "packages/polaris-dossier/src/draft-schema.test.ts",
+    "packages/polaris-dossier/src/figure-fit.test.ts"
+   ],
+   "killed": true,
+   "killedBy": [
+    "packages/polaris-dossier/src/check.test.ts"
+   ],
+   "failedTests": [
+    "packages/polaris-dossier/src/check.test.ts > check: figure kinds (schema v7) reports members that do not fit the kind as figure-kind, with no schema finding at their paths"
+   ]
+  },
+  {
+   "id": "C8",
+   "file": "packages/polaris-dossier/src/check-derive.ts",
+   "old": "if (!Array.isArray(diagram[uses])) return;\n",
+   "new": "",
+   "tests": [
+    "packages/polaris-dossier/src/check.test.ts",
+    "packages/polaris-dossier/src/draft-schema.test.ts",
+    "packages/polaris-dossier/src/figure-fit.test.ts"
+   ],
+   "killed": true,
+   "killedBy": [
+    "packages/polaris-dossier/src/check.test.ts"
+   ],
+   "failedTests": [
+    "packages/polaris-dossier/src/check.test.ts > check: figure kinds (schema v7) reports members that do not fit the kind as figure-kind, with no schema finding at their paths"
+   ]
+  },
+  {
+   "id": "C9",
+   "file": "packages/polaris-dossier/src/check-derive.ts",
+   "old": "const v6 = localDraftSchema(parameters, 'home', 'required', 'absent');",
+   "new": "const v6 = localDraftSchema(parameters, 'home', 'required', 'taken');",
+   "tests": [
+    "packages/polaris-dossier/src/check.test.ts",
+    "packages/polaris-dossier/src/draft-schema.test.ts",
+    "packages/polaris-dossier/src/figure-fit.test.ts"
+   ],
+   "killed": true,
+   "killedBy": [
+    "packages/polaris-dossier/src/check.test.ts"
+   ],
+   "failedTests": [
+    "packages/polaris-dossier/src/check.test.ts > check: figure kinds (schema v7) reports a polaris-dossier-local-draft-v6 draft carrying a sequence as field-version, keeping the missing nodes and edges"
+   ]
+  },
+  {
+   "id": "D1",
+   "file": "packages/polaris-dossier/src/draft-schema.ts",
+   "old": "participants: [2, 5], messages: [1, 30]",
+   "new": "participants: [2, 6], messages: [1, 30]",
+   "tests": [
+    "packages/polaris-dossier/src/check.test.ts",
+    "packages/polaris-dossier/src/draft-schema.test.ts",
+    "packages/polaris-dossier/src/figure-fit.test.ts"
+   ],
+   "killed": true,
+   "killedBy": [
+    "packages/polaris-dossier/src/check.test.ts",
+    "packages/polaris-dossier/src/figure-fit.test.ts"
+   ],
+   "failedTests": [
+    "packages/polaris-dossier/src/figure-fit.test.ts > figure fit: sequence and swimlane (syzygy-3efd.30) lists Unknown a figure with a member its kind does not take, a missing member, a count out of bounds, or a layout that throws",
+    "packages/polaris-dossier/src/check.test.ts > check: figure kinds (schema v7) reports a count outside its bounds as a schema finding"
+   ]
+  },
+  {
+   "id": "D2",
+   "file": "packages/polaris-dossier/src/draft-schema.ts",
+   "old": "figure('sequence'), figure('swimlane')] };",
+   "new": "figure('sequence')] };",
+   "tests": [
+    "packages/polaris-dossier/src/check.test.ts",
+    "packages/polaris-dossier/src/draft-schema.test.ts",
+    "packages/polaris-dossier/src/figure-fit.test.ts"
+   ],
+   "killed": true,
+   "killedBy": [
+    "packages/polaris-dossier/src/check.test.ts"
+   ],
+   "failedTests": [
+    "packages/polaris-dossier/src/check.test.ts > check: figure kinds (schema v7) passes a v7 draft holding a sequence, a swimlane and a graph diagram",
+    "packages/polaris-dossier/src/check.test.ts > check: figure kinds (schema v7) reports a step naming an unknown lane as unresolved-reference, and the lane it left empty as figure-unused"
+   ]
+  },
+  {
+   "id": "D3",
+   "file": "packages/polaris-dossier/src/draft-schema.ts",
+   "old": "messages: list(object({ id: handle, from: handle, to: handle,",
+   "new": "messages: list(object({ id: handle, from: handle, to: text,",
+   "tests": [
+    "packages/polaris-dossier/src/check.test.ts",
+    "packages/polaris-dossier/src/draft-schema.test.ts",
+    "packages/polaris-dossier/src/figure-fit.test.ts"
+   ],
+   "killed": true,
+   "killedBy": [
+    "packages/polaris-dossier/src/check.test.ts"
+   ],
+   "failedTests": [
+    "packages/polaris-dossier/src/check.test.ts > check: figure kinds (schema v7) reports a message whose receiver is not a well-formed identity as a schema finding"
+   ]
+  },
+  {
+   "id": "B1",
+   "file": "packages/polaris-dossier/src/brief.ts",
+   "old": "export const BRIEF_VERSION = 'polaris-dossier-brief-v12';",
+   "new": "export const BRIEF_VERSION = 'polaris-dossier-brief-v11';",
+   "tests": [
+    "packages/polaris-dossier/src/brief.test.ts"
+   ],
+   "killed": true,
+   "killedBy": [
+    "packages/polaris-dossier/src/brief.test.ts"
+   ],
+   "failedTests": [
+    "packages/polaris-dossier/src/brief.test.ts > brief: issued writes the brief, the schema and the brief record, binding the run, the pinned revision and the schema version",
+    "packages/polaris-dossier/src/brief.test.ts > brief: shape packs (version 2.4) a server entry selects default@1 then server@1, and the brief is the v10 golden but for its version line, draft-schema line, thesis paragraph and figure-kinds paragraph"
+   ]
+  },
+  {
+   "id": "B2",
+   "file": "packages/polaris-dossier/src/brief.ts",
+   "old": "    FIGURE_KINDS_PARAGRAPH,\n    '',\n    '## Poles',",
+   "new": "    '## Poles',",
+   "tests": [
+    "packages/polaris-dossier/src/brief.test.ts"
+   ],
+   "killed": true,
+   "killedBy": [
+    "packages/polaris-dossier/src/brief.test.ts"
+   ],
+   "failedTests": [
+    "packages/polaris-dossier/src/brief.test.ts > brief: shape packs (version 2.4) a server entry selects default@1 then server@1, and the brief is the v10 golden but for its version line, draft-schema line, thesis paragraph and figure-kinds paragraph"
+   ]
+  },
+  {
+   "id": "M1",
+   "file": "packages/polaris-generation-core/src/draft-model.ts",
+   "old": "lines.push(`  ${from}-->>${to}: ${figureLabel(message)}`);",
+   "new": "lines.push(`  ${from}->>${to}: ${figureLabel(message)}`);",
+   "tests": [
+    "apps/three-surface-poc/src/polaris-generation/figure-kinds.test.ts",
+    "packages/polaris-dossier/src/render.test.ts"
+   ],
+   "killed": true,
+   "killedBy": [
+    "apps/three-surface-poc/src/polaris-generation/figure-kinds.test.ts",
+    "packages/polaris-dossier/src/render.test.ts"
+   ],
+   "failedTests": [
+    "apps/three-surface-poc/src/polaris-generation/figure-kinds.test.ts > declarative source of the figure kinds writes a sequence by position, with no class line",
+    "packages/polaris-dossier/src/render.test.ts > render: figure kinds (schema v7) renders a sequence and a swimlane in their two forms, with figureStructures in machine.json and the style on their page alone"
+   ]
+  },
+  {
+   "id": "M2",
+   "file": "packages/polaris-generation-core/src/draft-model.ts",
+   "old": "figure.steps.forEach((step, k) => { if (step.lane === lane.id)",
+   "new": "figure.steps.forEach((step, k) => { if (step.lane !== lane.id)",
+   "tests": [
+    "apps/three-surface-poc/src/polaris-generation/figure-kinds.test.ts",
+    "packages/polaris-dossier/src/render.test.ts"
+   ],
+   "killed": true,
+   "killedBy": [
+    "apps/three-surface-poc/src/polaris-generation/figure-kinds.test.ts"
+   ],
+   "failedTests": [
+    "apps/three-surface-poc/src/polaris-generation/figure-kinds.test.ts > declarative source of the figure kinds writes a swimlane as subgraphs with its order edges and class lines"
+   ]
+  },
+  {
+   "id": "M3",
+   "file": "packages/polaris-generation-core/src/draft-model.ts",
+   "old": "const figureLabel = (element: DraftFigureElement): string => mermaidText(element.epistemic === 'unknown' ? `${element.label} (unknown)` : element.label);",
+   "new": "const figureLabel = (element: DraftFigureElement): string => mermaidText(element.label);",
+   "tests": [
+    "apps/three-surface-poc/src/polaris-generation/figure-kinds.test.ts",
+    "packages/polaris-dossier/src/render.test.ts"
+   ],
+   "killed": true,
+   "killedBy": [
+    "apps/three-surface-poc/src/polaris-generation/figure-kinds.test.ts"
+   ],
+   "failedTests": [
+    "apps/three-surface-poc/src/polaris-generation/figure-kinds.test.ts > declarative source of the figure kinds writes a sequence by position, with no class line",
+    "apps/three-surface-poc/src/polaris-generation/figure-kinds.test.ts > declarative source of the figure kinds writes a swimlane as subgraphs with its order edges and class lines"
+   ]
+  },
+  {
+   "id": "M4",
+   "file": "packages/polaris-generation-core/src/draft-model.ts",
+   "old": "const members = figure.steps.flatMap((step, k) => step.epistemic === marking ? [`s${k}`] : []);",
+   "new": "const members: string[] = [];",
+   "tests": [
+    "apps/three-surface-poc/src/polaris-generation/figure-kinds.test.ts",
+    "packages/polaris-dossier/src/render.test.ts"
+   ],
+   "killed": true,
+   "killedBy": [
+    "apps/three-surface-poc/src/polaris-generation/figure-kinds.test.ts"
+   ],
+   "failedTests": [
+    "apps/three-surface-poc/src/polaris-generation/figure-kinds.test.ts > declarative source of the figure kinds writes a swimlane as subgraphs with its order edges and class lines"
+   ]
+  },
+  {
+   "id": "R1",
+   "file": "packages/polaris-dossier/src/render.ts",
+   "old": "(doc['schemaVersion'] === LOCAL_DRAFT_SCHEMA_VERSION && (diagram['kind'] === 'sequence'",
+   "new": "((diagram['kind'] === 'sequence'",
+   "tests": [
+    "packages/polaris-dossier/src/render.test.ts",
+    "apps/three-surface-poc/src/polaris-generation/figure-kinds.test.ts"
+   ],
+   "killed": false,
+   "killedBy": [],
+   "failedTests": []
+  },
+  {
+   "id": "R2",
+   "file": "packages/polaris-dossier/src/render.ts",
+   "old": "label: gone === undefined ? title(value['label']) : WITHHELD_LABEL",
+   "new": "label: title(value['label'])",
+   "tests": [
+    "packages/polaris-dossier/src/render.test.ts",
+    "apps/three-surface-poc/src/polaris-generation/figure-kinds.test.ts"
+   ],
+   "killed": true,
+   "killedBy": [
+    "packages/polaris-dossier/src/render.test.ts"
+   ],
+   "failedTests": [
+    "packages/polaris-dossier/src/render.test.ts > render: figure kinds (schema v7) renders a sequence and a swimlane in their two forms, with figureStructures in machine.json and the style on their page alone"
+   ]
+  },
+  {
+   "id": "R3",
+   "file": "packages/polaris-dossier/src/render.ts",
+   "old": "epistemic: gone === undefined && value['epistemic'] === 'inferred' ? 'inferred' as const",
+   "new": "epistemic: value['epistemic'] === 'inferred' ? 'inferred' as const",
+   "tests": [
+    "packages/polaris-dossier/src/render.test.ts",
+    "apps/three-surface-poc/src/polaris-generation/figure-kinds.test.ts"
+   ],
+   "killed": true,
+   "killedBy": [
+    "packages/polaris-dossier/src/render.test.ts"
+   ],
+   "failedTests": [
+    "packages/polaris-dossier/src/render.test.ts > render: figure kinds (schema v7) renders a sequence and a swimlane in their two forms, with figureStructures in machine.json and the style on their page alone"
+   ]
+  },
+  {
+   "id": "RR1",
+   "file": "packages/polaris-dossier/src/review-reach.ts",
+   "old": "[['participants', 'diagram-node'], ['messages', 'diagram-edge'], ['lanes', 'diagram-node'], ['steps', 'diagram-node']]",
+   "new": "[['participants', 'diagram-node'], ['messages', 'diagram-edge'], ['lanes', 'diagram-node']]",
+   "tests": [
+    "packages/polaris-dossier/src/review-reach.test.ts",
+    "packages/polaris-dossier/src/reading-ledger.test.ts"
+   ],
+   "killed": true,
+   "killedBy": [
+    "packages/polaris-dossier/src/review-reach.test.ts"
+   ],
+   "failedTests": [
+    "packages/polaris-dossier/src/review-reach.test.ts > reviewReachAdvice: the figure kinds of schema v7 lists each withheld participant, lane and step as a diagram node and each withheld message as a diagram edge, at its own path"
+   ]
+  },
+  {
+   "id": "RR2",
+   "file": "packages/polaris-dossier/src/review-reach.ts",
+   "old": "? [['participants', 'diagram-node'], ['messages', 'diagram-edge']",
+   "new": "? [['participants', 'diagram-node'], ['messages', 'diagram-node']",
+   "tests": [
+    "packages/polaris-dossier/src/review-reach.test.ts",
+    "packages/polaris-dossier/src/reading-ledger.test.ts"
+   ],
+   "killed": true,
+   "killedBy": [
+    "packages/polaris-dossier/src/review-reach.test.ts"
+   ],
+   "failedTests": [
+    "packages/polaris-dossier/src/review-reach.test.ts > reviewReachAdvice: the figure kinds of schema v7 lists each withheld participant, lane and step as a diagram node and each withheld message as a diagram edge, at its own path"
+   ]
+  },
+  {
+   "id": "RA1",
+   "file": "packages/polaris-dossier/src/reader-advice.ts",
+   "old": "if ([...own].some((p) => from.has(p) || to.has(p))) return;\n        add('RS-17', `$.diagrams[${i}].messages",
+   "new": "if ([...own].some((p) => from.has(p))) return;\n        add('RS-17', `$.diagrams[${i}].messages",
+   "tests": [
+    "packages/polaris-dossier/src/review-reach.test.ts",
+    "packages/polaris-dossier/src/reading-ledger.test.ts"
+   ],
+   "killed": true,
+   "killedBy": [
+    "packages/polaris-dossier/src/reading-ledger.test.ts"
+   ],
+   "failedTests": [
+    "packages/polaris-dossier/src/reading-ledger.test.ts > reading ledger: the figure kinds of schema v7 advises RS-17 on a message citing no file its sender or receiver cites, and on nothing in a swimlane",
+    "packages/polaris-dossier/src/reading-ledger.test.ts > reading ledger: the figure kinds of schema v7 counts both figures on their section's page"
+   ]
+  },
+  {
+   "id": "RA2",
+   "file": "packages/polaris-dossier/src/reader-advice.ts",
+   "old": "if (diagram['kind'] !== 'sequence' || doc['schemaVersion'] !== 'polaris-dossier-local-draft-v7') return;",
+   "new": "if (diagram['kind'] !== 'sequence') return;",
+   "tests": [
+    "packages/polaris-dossier/src/review-reach.test.ts",
+    "packages/polaris-dossier/src/reading-ledger.test.ts"
+   ],
+   "killed": true,
+   "killedBy": [
+    "packages/polaris-dossier/src/reading-ledger.test.ts"
+   ],
+   "failedTests": [
+    "packages/polaris-dossier/src/reading-ledger.test.ts > reading ledger: the figure kinds of schema v7 advises RS-17 on a message citing no file its sender or receiver cites, and on nothing in a swimlane"
+   ]
+  },
+  {
+   "id": "LG1",
+   "file": "packages/polaris-dossier/src/reading-ledger.ts",
+   "old": ", 'polaris-dossier-local-draft-v7']);",
+   "new": "]);",
+   "tests": [
+    "packages/polaris-dossier/src/review-reach.test.ts",
+    "packages/polaris-dossier/src/reading-ledger.test.ts"
+   ],
+   "killed": true,
+   "killedBy": [
+    "packages/polaris-dossier/src/reading-ledger.test.ts"
+   ],
+   "failedTests": [
+    "packages/polaris-dossier/src/reading-ledger.test.ts > reading ledger: the figure kinds of schema v7 counts both figures on their section's page"
+   ]
+  }
+ ],
+ "killed": 67,
+ "total": 68,
+ "survivors": {
+  "R1": "Equivalent through the render command: render.ts reads the sequence and swimlane members only for a v7 draft, and the mutant drops that version gate. Render takes only a draft whose check passed, and a v6 or earlier draft carrying a sequence or swimlane kind or member always has field-version findings (killed C5, C9 and the check tests), so no draft that reaches the conversion distinguishes the two. The gate is kept as the requirement's statement that a v6 draft renders exactly as version 2.4 renders it."
+ },
+ "previousRun": {
+  "ranAt": "b5733726745937b4735de0453d6bda324f3b91e7",
+  "killed": 65,
+  "total": 68,
+  "survivors": [
+   "S10",
+   "D3",
+   "R1"
+  ],
+  "repair": "S10 survived because no test read the appendix count of Unknown claims over a figure's elements, and D3 because no test gave a message a malformed `to`; tests for both were added at the commit named in ranAt, and the same 68 mutants were then run again here. A first attempt before that stopped at S5, whose fragment occurred three times; the runner now refuses any mutant whose fragment is not unique before running any, and S5 was retargeted."
+ }
+}
