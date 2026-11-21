@@ -296,7 +296,7 @@ T12 (the POC's single-project bound).
 
 ## Planned epic
 
-The epic and plan-hold ids are in the data file under `.epic`. Each move
+Epic `syzygy-t3jk` (moves `.1` to `.13`, in T order), plan-hold `syzygy-4wuz`. Each move
 bead depends on the plan-hold, an ordinary sequencing bead, not an owner gate: this run was
 asked to chart a course, so it files a plan and starts nothing. A lead session releases wave 1
 by filing its slices as ready beads and reporting them.

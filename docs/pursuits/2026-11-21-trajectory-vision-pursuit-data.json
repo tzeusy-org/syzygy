@@ -528,7 +528,25 @@
   "T10",
   "T12"
  ],
- "epic": null,
+ "epic": {
+  "epic": "syzygy-t3jk",
+  "plan_hold": "syzygy-4wuz",
+  "moves": {
+   "T1": "syzygy-t3jk.1",
+   "T2": "syzygy-t3jk.2",
+   "T3": "syzygy-t3jk.3",
+   "T4": "syzygy-t3jk.4",
+   "T5": "syzygy-t3jk.5",
+   "T6": "syzygy-t3jk.6",
+   "T7": "syzygy-t3jk.7",
+   "T8": "syzygy-t3jk.8",
+   "T9": "syzygy-t3jk.9",
+   "T10": "syzygy-t3jk.10",
+   "T11": "syzygy-t3jk.11",
+   "T12": "syzygy-t3jk.12",
+   "T13": "syzygy-t3jk.13"
+  }
+ },
  "review": {
   "round": 1,
   "verdict": "REVISE",
@@ -553,6 +571,7 @@
  "owner_packet": {
   "path": "/home/orca/.tmp/user-questionnaire/syzygy-2026-11-21-trajectory-pursuit/packet.md",
   "items": 1,
-  "withdrawn": "commit-subjects item: an accepted contract (RFC4-22) names the message-convention join and worker-change-observation.ts already reads commit subjects, so T10 is an agent adoption"
+  "withdrawn": "commit-subjects item: an accepted contract (RFC4-22) names the message-convention join and worker-change-observation.ts already reads commit subjects, so T10 is an agent adoption",
+  "review": "scope Pass, recommendation Pass (round 2; round 1 Revise on both)"
  }
 }
