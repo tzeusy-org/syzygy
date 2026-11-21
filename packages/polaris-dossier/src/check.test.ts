@@ -1317,3 +1317,102 @@ describe('redacted-span provenance', () => {
     expect(redaction.detectorIds).not.toBe(ids);
   });
 });
+
+// REQ-polaris-generation-034 version 2.5 (syzygy-3efd.30): schema v7's `sequence` and `swimlane` diagram kinds and their findings.
+describe('check: figure kinds (schema v7)', () => {
+  const V7 = 'polaris-dossier-local-draft-v7';
+  const el = (id: string, label: string) => ({ id, label, epistemic: 'inferred', citations: [cite(`c-${id}`)] });
+  const head = (id: string, kind: string) => ({ id, title: id, home: { kind: 'section', target: 'core-ideas' }, kind, relationship: 'Order.', disposition: { kind: 'produced', assetIds: [id] } });
+  const sequence = (over: Record<string, unknown> = {}) => ({ ...head('seq-1', 'sequence'), participants: [el('pt1', 'Client'), el('pt2', 'Server')],
+    messages: [{ ...el('msg1', 'asks'), from: 'pt1', to: 'pt2' }, { ...el('msg2', 'answers'), from: 'pt2', to: 'pt1' }], ...over });
+  const swimlane = (over: Record<string, unknown> = {}) => ({ ...head('lane-1', 'swimlane'), lanes: [el('ln1', 'Developer'), el('ln2', 'CI')],
+    steps: [{ ...el('stp1', 'pushes'), lane: 'ln1' }, { ...el('stp2', 'tests'), lane: 'ln2' }], ...over });
+  const drafted = (version: string, ...diagrams: unknown[]) => mutate((d) => { d.schemaVersion = version; if (version === V7 || version.endsWith('-v6')) d.thesisBasis = 'stated'; d.diagrams.push(...diagrams); });
+  const findingsOf = async (draft: Draft) => {
+    const run = await briefedRun();
+    writeDraft(run, draft);
+    return report(await checkDraft(run, {}, deps()));
+  };
+  const listed = (result: { findings: readonly { kind: string; at: string; detail: string }[] }) => result.findings.map(({ kind, at, detail }) => ({ kind, at, detail }));
+
+  it('passes a v7 draft holding a sequence, a swimlane and a graph diagram', async () => {
+    const result = await findingsOf(drafted(V7, sequence(), swimlane(), homed({ kind: 'section', target: 'core-ideas' })));
+    expect([result.outcome, listed(result)]).toEqual(['passed', []]);
+  });
+
+  it('reports a message naming an unknown participant as unresolved-reference, naming the diagram', async () => {
+    const result = await findingsOf(drafted(V7, sequence({ messages: [{ ...el('msg1', 'asks'), from: 'pt9', to: 'pt2' }, { ...el('msg2', 'answers'), from: 'pt2', to: 'pt1' }] })));
+    expect(listed(result)).toEqual([{ kind: 'unresolved-reference', at: '$.diagrams[0].messages[0].from', detail: 'the diagram "seq-1": no participant of this diagram has the identity "pt9"' }]);
+  });
+
+  it('reports a step naming an unknown lane as unresolved-reference, and the lane it left empty as figure-unused', async () => {
+    const result = await findingsOf(drafted(V7, swimlane({ steps: [{ ...el('stp1', 'pushes'), lane: 'ln1' }, { ...el('stp2', 'tests'), lane: 'ln9' }] })));
+    expect(listed(result)).toEqual([
+      { kind: 'unresolved-reference', at: '$.diagrams[0].steps[1].lane', detail: 'the diagram "lane-1": no lane of this diagram has the identity "ln9"' },
+      { kind: 'figure-unused', at: '$.diagrams[0].lanes[1]', detail: 'the diagram "lane-1": no step names the lane "ln2"; every lane holds a step' }]);
+  });
+
+  it('reports a participant no message names as figure-unused', async () => {
+    const result = await findingsOf(drafted(V7, sequence({ participants: [el('pt1', 'Client'), el('pt2', 'Server'), el('pt3', 'Store')] })));
+    expect(listed(result)).toEqual([{ kind: 'figure-unused', at: '$.diagrams[0].participants[2]', detail: 'the diagram "seq-1": no message names the participant "pt3" as its sender or receiver; every participant sends or receives a message' }]);
+  });
+
+  it('reports members that do not fit the kind as figure-kind, with no schema finding at their paths', async () => {
+    const { messages: _messages, ...noMessages } = sequence();
+    const result = await findingsOf(drafted(V7, { ...noMessages, nodes: [] }, { ...homed({ kind: 'section', target: 'core-ideas' }), steps: [] }));
+    expect(listed(result)).toEqual([
+      { kind: 'figure-kind', at: '$.diagrams[0].nodes', detail: 'the diagram "seq-1": a sequence takes `participants` and `messages`, not `nodes`' },
+      { kind: 'figure-kind', at: '$.diagrams[0]', detail: 'the diagram "seq-1": a sequence takes `participants` and `messages`; it lacks `messages`' },
+      { kind: 'figure-kind', at: '$.diagrams[1].steps', detail: 'the diagram "flow-1": a flow diagram takes `nodes` and `edges`, not `steps`' }]);
+  });
+
+  it('reports a count outside its bounds as a schema finding', async () => {
+    const result = await findingsOf(drafted(V7, sequence({ participants: [el('pt1', 'Client')], messages: [{ ...el('msg1', 'asks'), from: 'pt1', to: 'pt1' }] })));
+    expect(listed(result)).toEqual([{ kind: 'schema', at: '$.diagrams[0].participants', detail: 'must hold 2 to 5 items; holds 1' }]);
+  });
+
+  it('reports a message whose receiver is not a well-formed identity as a schema finding', async () => {
+    const result = await findingsOf(drafted(V7, sequence({ messages: [{ ...el('msg1', 'asks'), from: 'pt1', to: 'Not an id' }, { ...el('msg2', 'answers'), from: 'pt2', to: 'pt1' }] })));
+    expect(listed(result).filter((f) => f.kind === 'schema')).toEqual([{ kind: 'schema', at: '$.diagrams[0].messages[0].to', detail: 'must match ^[A-Za-z0-9][A-Za-z0-9_.:-]*$' }]);
+  });
+
+  it.each(['polaris-dossier-local-draft-v6', 'polaris-dossier-local-draft-v5'])('reports a %s draft carrying a sequence as field-version, keeping the missing nodes and edges', async (version) => {
+    const result = await findingsOf(drafted(version, sequence()));
+    expect(listed(result)).toEqual([
+      { kind: 'schema', at: '$.diagrams[0].nodes', detail: 'is required' },
+      { kind: 'schema', at: '$.diagrams[0].edges', detail: 'is required' },
+      { kind: 'field-version', at: '$.diagrams[0].kind', detail: 'the diagram "seq-1": the kind `sequence` needs draft schema polaris-dossier-local-draft-v7' },
+      { kind: 'field-version', at: '$.diagrams[0].participants', detail: 'the diagram "seq-1": `participants` needs draft schema polaris-dossier-local-draft-v7' },
+      { kind: 'field-version', at: '$.diagrams[0].messages', detail: 'the diagram "seq-1": `messages` needs draft schema polaris-dossier-local-draft-v7' }]);
+  });
+
+  // Review note 1 (syzygy-3efd.30): a diagram naming none of the eight kinds is read against the graph form with every kind permitted,
+  // so each of its faults is reported at its own path, as v6 reports it, and no single fault stands for all of it.
+  const EIGHT = 'must be one of flow, lifecycle, state-machine, boundary, dependency, placement, sequence, swimlane';
+  const flawed = (kind: unknown) => { const { kind: _kind, ...rest } = homed({ kind: 'section', target: 'core-ideas' }); const nodes = [{ ...rest.nodes[0], label: '' }, rest.nodes[1]];
+    return kind === undefined ? { ...rest, nodes } : { ...rest, kind, nodes }; };
+  it.each<[string, unknown, { kind: string; at: string; detail: string }[]]>([
+    ['an unknown kind', 'gantt', [{ kind: 'schema', at: '$.diagrams[0].kind', detail: EIGHT }]],
+    ['a kind in the wrong case', 'Flow', [{ kind: 'schema', at: '$.diagrams[0].kind', detail: EIGHT }]],
+    ['no kind', undefined, [{ kind: 'schema', at: '$.diagrams[0].kind', detail: 'is required' }]],
+  ])('reports a v7 diagram with %s at its kind and each fault inside it, with no single fault for the whole diagram', async (_name, kind, head) => {
+    const result = await findingsOf(drafted(V7, flawed(kind)));
+    expect(listed(result)).toEqual([...head, { kind: 'schema', at: '$.diagrams[0].nodes[0].label', detail: 'must be 1 to 8000 characters; is 0' }]);
+  });
+
+  it('reports a v4 draft carrying a sequence as field-version, keeping the missing nodes and edges', async () => {
+    const { home: _home, ...rest } = sequence();
+    const result = await findingsOf(mutate((d) => { d.schemaVersion = 'polaris-dossier-local-draft-v4'; d.diagrams.push({ ...rest, sectionId: 'core-ideas' }); }));
+    expect(listed(result)).toEqual([
+      { kind: 'schema', at: '$.diagrams[0].nodes', detail: 'is required' },
+      { kind: 'schema', at: '$.diagrams[0].edges', detail: 'is required' },
+      { kind: 'field-version', at: '$.diagrams[0].kind', detail: 'the diagram "seq-1": the kind `sequence` needs draft schema polaris-dossier-local-draft-v7' },
+      { kind: 'field-version', at: '$.diagrams[0].participants', detail: 'the diagram "seq-1": `participants` needs draft schema polaris-dossier-local-draft-v7' },
+      { kind: 'field-version', at: '$.diagrams[0].messages', detail: 'the diagram "seq-1": `messages` needs draft schema polaris-dossier-local-draft-v7' }]);
+  });
+
+  it('checks a v6 draft with a graph diagram exactly as before: no finding', async () => {
+    const result = await findingsOf(drafted('polaris-dossier-local-draft-v6', homed({ kind: 'section', target: 'core-ideas' })));
+    expect([result.outcome, listed(result)]).toEqual(['passed', []]);
+  });
+});

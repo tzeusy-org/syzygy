@@ -175,3 +175,28 @@ describe('reviewReachAdvice: a withheld element is told by the rule the render r
     expect(reviewReachAdvice(doc, inputs()).elements).toEqual([]);
   });
 });
+
+// REQ-polaris-generation-034 version 2.5 (syzygy-3efd.30): in a v7 draft a participant, lane or step is told as a node is, a message as an
+// edge is; in an earlier draft those members are not rendered, so none is told.
+describe('reviewReachAdvice: the figure kinds of schema v7', () => {
+  const part = (id: string, file: string) => ({ id, label: 'P', epistemic: 'inferred', citations: [cite(`c-${id}`, file)] });
+  const draftOf = (schemaVersion: string) => ({ schemaVersion, sections: [], diagrams: [
+    { id: 'seq', home: { kind: 'overview' }, title: 'S', kind: 'sequence', relationship: 'R',
+      participants: [part('p-held', 'README.md'), part('p-shown', 'src/a.c')], messages: [{ ...part('m-held', 'README.md'), from: 'p-held', to: 'p-shown' }] },
+    { id: 'lane', home: { kind: 'overview' }, title: 'L', kind: 'swimlane', relationship: 'R',
+      lanes: [part('l-held', 'README.md'), part('l-shown', 'src/a.c')], steps: [{ ...part('s-shown', 'src/a.c'), lane: 'l-held' }, { ...part('s-held', 'README.md'), lane: 'l-shown' }] },
+  ] });
+
+  it('lists each withheld participant, lane and step as a diagram node and each withheld message as a diagram edge, at its own path', () => {
+    expect(reviewReachAdvice(draftOf('polaris-dossier-local-draft-v7'), inputs()).elements.map(({ at, kind, id }) => ({ at, kind, id }))).toEqual([
+      { at: '$.diagrams[0].participants[0]', kind: 'diagram-node', id: 'p-held' },
+      { at: '$.diagrams[0].messages[0]', kind: 'diagram-edge', id: 'm-held' },
+      { at: '$.diagrams[1].lanes[0]', kind: 'diagram-node', id: 'l-held' },
+      { at: '$.diagrams[1].steps[1]', kind: 'diagram-node', id: 's-held' },
+    ]);
+  });
+
+  it('lists none of them in a v6 draft', () => {
+    expect(reviewReachAdvice(draftOf('polaris-dossier-local-draft-v6'), inputs()).elements).toEqual([]);
+  });
+});

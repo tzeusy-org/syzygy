@@ -155,6 +155,17 @@ export function readerAdvice(doc: unknown): ReaderAdvice {
         if ([...own].some((p) => from.has(p) || to.has(p))) return;
         add('RS-17', `$.diagrams[${i}].edges[${j}]`, `the edge ${JSON.stringify(text(edge['id']) ?? '')} cites no file that its node ${JSON.stringify(text(edge['from']))} or its node ${JSON.stringify(text(edge['to']))} cites: cite where the source shows these two connect, or check that the edge joins the right nodes (polaris-reader-standards-v1 does not yet mark RS-17 counted; this is its locality alone)`);
       });
+      // A v7 sequence's message takes an edge's rule, its sender and receiver a node's (version 2.5).
+      if (diagram['kind'] !== 'sequence' || doc['schemaVersion'] !== 'polaris-dossier-local-draft-v7') return;
+      const participants = new Map(list(diagram['participants']).flatMap((node) => (isRecord(node) && text(node['id']) !== undefined ? [[text(node['id'])!, citedPaths(node)] as const] : [])));
+      list(diagram['messages']).forEach((message, j) => {
+        if (!isRecord(message)) return;
+        const from = participants.get(text(message['from']) ?? ''), to = participants.get(text(message['to']) ?? '');
+        const own = citedPaths(message);
+        if (from === undefined || to === undefined || own.size === 0) return;
+        if ([...own].some((p) => from.has(p) || to.has(p))) return;
+        add('RS-17', `$.diagrams[${i}].messages[${j}]`, `the message ${JSON.stringify(text(message['id']) ?? '')} cites no file that its sender ${JSON.stringify(text(message['from']))} or its receiver ${JSON.stringify(text(message['to']))} cites: cite where the source shows this exchange, or check that the message names the right participants (polaris-reader-standards-v1 does not yet mark RS-17 counted; this is its locality alone)`);
+      });
     });
   }
   return { standards: READER_STANDARDS_VERSION, note: NOTE, advisories };
