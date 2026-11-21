@@ -1975,6 +1975,52 @@ describe('render: derived structure (version 2.3)', () => {
   });
 });
 
+// REQ-polaris-generation-034 version 2.8 (syzygy-3efd.72), the scenario "Largest manifest facts read back with the check": a passed check
+// record carrying the `manifestFacts` member at every listing cap in its widest form (built by hand from the stated caps, as in
+// manifest-facts.test.ts) takes more than 4,194,304 bytes; review, render and close each take that revision as the latest passed draft.
+describe('review and render: a passed check record carrying the widest manifest facts (version 2.8)', () => {
+  const MAX = Number.MAX_SAFE_INTEGER;
+  const CJK = '\u4e00'.repeat(512), LONE = '\ud800'.repeat(256);
+  const census = { path: `${JSON.stringify('\u0001'.repeat(512))} (9007199254740991 more code units)`, epistemic: 'unknown', unknownReason: 'path-not-citable', parseFault: null, facts: null, valuesLeftOut: null };
+  const widest = {
+    format: 'polaris-dossier-manifest-facts/1', state: 'derived',
+    screeningPolicy: { policyId: 'x'.repeat(64), policyVersion: 'x'.repeat(64), sha256: '0'.repeat(64) },
+    recognizers: ['npm-package-manifest', 'cargo-manifest', 'python-project-manifest', 'go-module-manifest', 'github-actions-workflow'].map((rule) => ({
+      rule, ruleVersion: 1, label: 'inferred', candidates: MAX, secretPathsLeftOut: MAX, setApart: MAX, inferred: MAX, unknown: MAX, valuesLeftOut: MAX, facts: MAX,
+      files: Array.from({ length: 250 }, () => census), filesNotListed: MAX,
+    })),
+    facts: Array.from({ length: 1000 }, (_, i) => ({
+      id: `_manifest-${i + 1}`, fact: 'dependency', rule: 'python-project-manifest', ruleVersion: 1, path: CJK, lines: [1_048_577, 1_048_577],
+      name: LONE, section: 'project.optional-dependencies', group: LONE, epistemic: 'inferred',
+    })),
+    factsNotListed: MAX,
+  };
+
+  it('builds the fidelity packet and renders the whole site on that revision, where version 2.7 refused both', async () => {
+    const run = await prepared();
+    const file = path.join(run, 'checks', 'rev-0.json');
+    const stored = JSON.parse(fs.readFileSync(file, 'utf8'));
+    expect(stored.outcome).toBe('passed');
+    const before = await renderRun(run, renderDeps());
+    if (!before.ok) throw new Error(before.refusal.reason);
+    stored.manifestFacts = widest;
+    const text = `${JSON.stringify(stored, null, 2)}\n`;
+    fs.writeFileSync(file, text);
+    const size = Buffer.byteLength(text);
+    expect([size > 4_194_304, size <= 16_777_216]).toEqual([true, true]);
+    const deps = { sources: sources(), now: () => LATER, loadScreen: async () => buildDossierScreen(fixturePolicy, true, null, fixtureVisibility) };
+    const packet = await reviewPacket(run, { kind: 'fidelity' }, deps);
+    expect(packet.ok ? packet.report : packet.refusal).toMatchObject({ outcome: 'built', kind: 'fidelity', draftRevision: 0 });
+    const after = await renderRun(run, renderDeps());
+    if (!after.ok) throw new Error(after.refusal.reason);
+    // The manifest facts reach no page: the site is the one rendered before the record grew, outside the review-status region.
+    const first = readSite(before.report.site), second = readSite(after.report.site);
+    expect([...second.keys()].sort()).toEqual([...first.keys()].sort());
+    for (const [name, bytes] of second) if (name.endsWith('.html')) expect(withoutReviewStatusRegion(bytes), name).toBe(withoutReviewStatusRegion(first.get(name)!));
+    // Close is exercised on the same member in close.test.ts, through the full fixture run its policy binding needs.
+  });
+});
+
 // REQ-polaris-generation-034 version 2.4 (syzygy-3efd.56): the thesis-basis line and machine.json's `thesisBasis`. Literals throughout.
 describe('render: the thesis basis (schema v6)', () => {
   const LINE = '<p class="thesis-basis" data-thesis-basis="code-reading">The authoring session found no maintainer statement of purpose, so this summary is Polaris\'s reading of the code, not the maintainers\' words.</p>';

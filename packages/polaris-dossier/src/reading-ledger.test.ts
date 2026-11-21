@@ -202,6 +202,25 @@ describe('reading difference', () => {
     expect(fs.readdirSync(path.join(self, 'checks'))).toEqual([]);
   });
 
+  it('reads an earlier check record of 16,777,216 bytes and counts one of 16,777,217 unreadable, under the one check-record bound (version 2.8)', () => {
+    // An ASCII `pad` member sizes each record exactly; its size is checked against the literal before the difference runs.
+    const sized = (bytes: number): string => {
+      const empty = JSON.stringify({ ...checkRecord('2026-11-22T10:00:00.000Z', EARLIER), pad: '' });
+      return JSON.stringify({ ...checkRecord('2026-11-22T10:00:00.000Z', EARLIER), pad: 'x'.repeat(bytes - empty.length) });
+    };
+    const outcome = (bytes: number) => {
+      const record = sized(bytes);
+      expect(Buffer.byteLength(record)).toBe(bytes);
+      const root = tempDir('reading-difference-');
+      const self = runIn(root, id('c'), RUN_RECORD('kestrel'));
+      runIn(root, id('a'), RUN_RECORD('kestrel'), { 0: record });
+      const difference = readingDifference(self, 'kestrel', NOW, LATER);
+      return [difference.state, difference.unreadableCheckRecords];
+    };
+    expect(outcome(16_777_216)).toEqual(['compared', 0]);
+    expect(outcome(16_777_217)).toEqual(['unknown', 1]);
+  });
+
   it('is Unknown, never zero, where no earlier run of the repository holds a ledger, and counts what it could not read', () => {
     const root = tempDir('reading-difference-');
     const self = runIn(root, id('c'), RUN_RECORD('kestrel'));

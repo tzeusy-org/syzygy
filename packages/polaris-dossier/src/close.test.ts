@@ -24,7 +24,7 @@ type Doc = Record<string, any>; // eslint-disable-line @typescript-eslint/no-exp
 const readJson = (file: string): Doc => JSON.parse(fs.readFileSync(file, 'utf8'));
 
 /** A full fixture run in a fresh temporary directory; the state root is a sibling of the clone's directory. */
-async function fullRun(options: { closeArgs?: string[]; plantSecret?: boolean; env?: Record<string, string> } = {}) {
+async function fullRun(options: { closeArgs?: string[]; plantSecret?: boolean; env?: Record<string, string>; beforeClose?: (run: string) => void } = {}) {
   const dir = tempDir('dossier-close-');
   const { clone, commit } = makeClone(path.join(dir, 'repo'));
   const stateRoot = path.join(dir, 'state');
@@ -164,6 +164,36 @@ describe('close (S10)', () => {
     expect(record.noProviderCall).toContain('Syzygy made no provider call');
     expect(record.executionRule.arm).toBe('sec-3');
     expect(record.steps.entries.map((entry: { step: string }) => entry.step)).toEqual(expect.arrayContaining(['check', 'render']));
+  });
+
+  // REQ-polaris-generation-034 version 2.8 (syzygy-3efd.72): close takes the latest passed draft from a check record of more than 4,194,304
+  // bytes, here one carrying the `manifestFacts` member at every listing cap in its widest form, built by hand from the stated caps.
+  it('takes the passed draft revision from a check record carrying the widest manifest facts, over 4 MiB (version 2.8)', async () => {
+    const MAX = Number.MAX_SAFE_INTEGER;
+    const CJK = '\u4e00'.repeat(512), LONE = '\ud800'.repeat(256);
+    const census = { path: `${JSON.stringify('\u0001'.repeat(512))} (9007199254740991 more code units)`, epistemic: 'unknown', unknownReason: 'path-not-citable', parseFault: null, facts: null, valuesLeftOut: null };
+    const widest = {
+      format: 'polaris-dossier-manifest-facts/1', state: 'derived',
+      screeningPolicy: { policyId: 'x'.repeat(64), policyVersion: 'x'.repeat(64), sha256: '0'.repeat(64) },
+      recognizers: ['npm-package-manifest', 'cargo-manifest', 'python-project-manifest', 'go-module-manifest', 'github-actions-workflow'].map((rule) => ({
+        rule, ruleVersion: 1, label: 'inferred', candidates: MAX, secretPathsLeftOut: MAX, setApart: MAX, inferred: MAX, unknown: MAX, valuesLeftOut: MAX, facts: MAX,
+        files: Array.from({ length: 250 }, () => census), filesNotListed: MAX,
+      })),
+      facts: Array.from({ length: 1000 }, (_, i) => ({
+        id: `_manifest-${i + 1}`, fact: 'dependency', rule: 'python-project-manifest', ruleVersion: 1, path: CJK, lines: [1_048_577, 1_048_577],
+        name: LONE, section: 'project.optional-dependencies', group: LONE, epistemic: 'inferred',
+      })),
+      factsNotListed: MAX,
+    };
+    let size = 0;
+    const { run } = await fullRun({ beforeClose: (dir) => {
+      const file = path.join(dir, 'checks', 'rev-0.json');
+      const text = `${JSON.stringify({ ...readJson(file), manifestFacts: widest }, null, 2)}\n`;
+      fs.writeFileSync(file, text);
+      size = Buffer.byteLength(text);
+    } });
+    expect([size > 4_194_304, size <= 16_777_216]).toEqual([true, true]);
+    expect(readJson(path.join(run, 'record.json')).reportedCommands).toMatchObject({ draftRevision: 0, reportedBy: 'the authoring agent', label: 'Inferred' });
   });
 
   it('leaves no credential in the state directory: a sweep of every file under the state root, with its denominator', async () => {

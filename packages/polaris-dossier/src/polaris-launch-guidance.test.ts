@@ -116,10 +116,12 @@ describe('the run view', () => {
     const run = runWith({ 'rev-0.json': 'findings', 'rev-1.json': 'passed', 'rev-2.json': 'findings', 'rev-3.json': 'passed' });
     expect(cycleBreakdown(run)).toBe(' (1 on drafts check refused, 2 on drafts that passed check)');
   });
-  it('counts an unreadable check record as refused, and says nothing when no repair revision exists', () => {
+  // Version 2.8 (syzygy-3efd.72): a check record that cannot be read is counted neither as passed nor as refused; until then it was
+  // counted refused.
+  it('counts an unreadable check record in neither figure, and says nothing when no repair revision exists', () => {
     const run = runWith({ 'rev-0.json': 'passed', 'rev-1.json': 'passed' });
     fs.writeFileSync(path.join(run, 'checks', 'rev-2.json'), '{');
-    expect(cycleBreakdown(run)).toBe(' (1 on drafts check refused, 1 on drafts that passed check)');
+    expect(cycleBreakdown(run)).toBe(' (0 on drafts check refused, 1 on drafts that passed check)');
     expect(cycleBreakdown(runWith({ 'rev-0.json': 'findings' }))).toBe('');
     expect(cycleBreakdown(path.join(tempDir('polaris-launch-guidance-'), 'absent'))).toBe('');
   });
