@@ -69,5 +69,14 @@ export const SERVER_ENTRY = {
   exampleSegments: ['example', 'examples', 'sample', 'samples', 'demo', 'demos'],
 } as const;
 
+/** An entry point, as check can test one for a `code-reading` thesis (REQ-polaris-generation-034 version 2.4, syzygy-3efd.56): a cited path
+ * whose language by extension is none of these, outside vendored, generated, test and docs-tree paths, with no example, sample or demo
+ * directory segment. A heuristic over the path alone: it never says the file is where a user or a program enters the project. */
+export const ENTRY_POINT = {
+  notCode: ['Markdown', 'reStructuredText', 'AsciiDoc', 'Plain text', 'JSON', 'YAML', 'TOML', 'XML', 'INI', 'HTML', 'CSS', 'SCSS', 'C or C++ header', 'SQL',
+    'Protocol Buffers', 'GraphQL'],
+  exampleSegments: ['example', 'examples', 'sample', 'samples', 'demo', 'demos'],
+} as const;
+
 export const DERIVE_RULES: readonly DeriveRuleId[] = [VENDORED_PATH, GENERATED_PATH, LANGUAGE_BY_EXTENSION, DOCS_TREE, TESTS_PATH, MANIFEST_NAMES, TOP_LEVEL_UNIT, SERVER_ENTRY]
   .map(({ id, version }) => ({ id, version }));

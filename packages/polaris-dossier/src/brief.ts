@@ -41,7 +41,11 @@ import { issuedBriefStatement } from './launch-statements.js';
  * step guard compares at every later step (R-POLARIS-DOSSIER-S3-GATES-2 finding 6), and the reader standards' version and digest. It lies within the agent sessions' write reach, so read back it is
  * Inferred. */
 
-export const BRIEF_VERSION = 'polaris-dossier-brief-v10';
+/** v11 (REQ-polaris-generation-034 version 2.4): draft schema v6 and the one thesis-basis paragraph (`THESIS_BASIS_PARAGRAPH`). */
+export const BRIEF_VERSION = 'polaris-dossier-brief-v11';
+
+/** The paragraph brief v11 adds after the one naming each section's `id`, in the requirement's words. */
+export const THESIS_BASIS_PARAGRAPH = 'Set `thesisBasis` to say what your introduction, the dossier\'s thesis, rests on. Write `stated` when it rests on a statement of the project\'s purpose by its maintainers, such as a README, documentation or a package description, and cite that statement. Write `code-reading` when no source you found states the project\'s purpose: the introduction then says what the code does, never why it was made, quotes nothing, and cites at least two entry points, two different code files through which a user or a program enters the project, such as a main program, a command\'s handler or the module a package exports; Syzygy renders it under a line saying that no maintainer statement of purpose was found and that it is Polaris\'s reading of the code. Write `none` when neither is possible, and make the introduction an `unknown` block, or a `non-normative` one that makes no claim.';
 
 /** Which blocks the fidelity review can never confirm (syzygy-pdja.20), and which elements render with none of their text (syzygy-pdja.24):
  * the brief's rule, which carries no project content; `check` names them under `reviewReach` (`review-reach.ts`). Advice: no check refuses a draft for it. */
@@ -156,6 +160,8 @@ export function renderBrief(input: BriefInput): string {
     ...topicLines,
     '',
     `Write one section per topic, in this order, each section's \`id\` the topic's id (${BRIEF_TOPICS.map((topic) => `\`${topic.id}\``).join(', ')}). The advantages are the ones the maintainers themselves state, inside the first topic and cited; never a comparison of your own. Optional assets: ${optional.join(', ')}. A topic the clone does not answer keeps its section with an \`unresolved\` disposition naming the missing evidence.`,
+    '',
+    THESIS_BASIS_PARAGRAPH,
     '',
     '## Poles',
     '',

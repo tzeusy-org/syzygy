@@ -34,6 +34,8 @@ const valid = (): Record<string, unknown> => ({
   discovery: { inspected: ['README.md'], selected: [{ path: 'README.md', reason: 'Overview.' }], excluded: [], unresolved: [], deferred: [], stoppingReason: 'Topics answered.' },
   clarifications: [{ id: 'c1', question: 'Audience?', evidence: [], consequence: 'Tone.', options: ['Operators'], answer: 'Operators', answerKind: 'selected-interpretation', attribution: 'operator' }],
   executions: [{ id: 'e1', command: 'make', workingDirectory: '.', purpose: 'Build.' }],
+  // The current schema (v6) requires it; the shape check reads no version (check applies each version's own schema).
+  thesisBasis: 'stated',
 });
 
 type Draft = Record<string, any>; // eslint-disable-line @typescript-eslint/no-explicit-any
@@ -70,7 +72,7 @@ describe('local-agent draft schema', () => {
     ['a non-normative block carries a citation', (d) => { d.sections[0].paragraphs[0].children[1].citations = [cite('x')]; }, { path: '$.sections[0].paragraphs[0].children[1].citations', detail: 'is not a field of this form' }],
     ['an execution-based claim names no execution', (d) => { d.sections[0].paragraphs[0].children[2].executionIds = []; }, { path: '$.sections[0].paragraphs[0].children[2].executionIds', detail: 'must hold 1 to 20 items; holds 0' }],
     ['the draft names another revision', (d) => { d.pinnedRevision = 'a'.repeat(40); }, { path: '$.pinnedRevision', detail: `must be one of ${REV}` }],
-    ['the draft names another schema version', (d) => { d.schemaVersion = 'polaris-dossier-local-draft-v0'; }, { path: '$.schemaVersion', detail: 'must be one of polaris-dossier-local-draft-v2, polaris-dossier-local-draft-v3, polaris-dossier-local-draft-v4, polaris-dossier-local-draft-v5' }],
+    ['the draft names another schema version', (d) => { d.schemaVersion = 'polaris-dossier-local-draft-v0'; }, { path: '$.schemaVersion', detail: 'must be one of polaris-dossier-local-draft-v2, polaris-dossier-local-draft-v3, polaris-dossier-local-draft-v4, polaris-dossier-local-draft-v5, polaris-dossier-local-draft-v6' }],
     ['the understanding record omits an item', (d) => { delete d.understanding.tradeOffs; }, { path: '$.understanding.tradeOffs', detail: 'is required' }],
     ['an understanding item is left empty rather than Unknown', (d) => { d.understanding.limits = []; }, { path: '$.understanding.limits', detail: 'must hold 1 to 100 items; holds 0' }],
     ['the draft has no understanding record', (d) => { delete d.understanding; }, { path: '$.understanding', detail: 'is required' }],
@@ -121,6 +123,23 @@ describe('local-agent draft schema', () => {
   });
 });
 
+// REQ-polaris-generation-034 version 2.4 (syzygy-3efd.56): schema v6's required `thesisBasis`; v5 and earlier have no such member.
+describe('local-agent draft schema: the thesis basis (v6)', () => {
+  it('requires thesisBasis, one of stated, code-reading and none', () => {
+    for (const basis of ['stated', 'code-reading', 'none']) expect(checkDraftShape(SCHEMA, mutate((d) => { d.thesisBasis = basis; }))).toEqual([]);
+    expect(checkDraftShape(SCHEMA, mutate((d) => { delete d.thesisBasis; }))).toEqual([{ path: '$.thesisBasis', detail: 'is required' }]);
+    expect(checkDraftShape(SCHEMA, mutate((d) => { d.thesisBasis = 'readme'; }))).toEqual([{ path: '$.thesisBasis', detail: 'must be one of stated, code-reading, none' }]);
+  });
+
+  it('has no thesisBasis member in the form check applies to a v5 or earlier draft', () => {
+    for (const form of ['home', 'sectionId'] as const) {
+      const earlier = localDraftSchema({ pinnedRevision: REV, maxQuestions: 1 }, form, 'absent');
+      expect(checkDraftShape(earlier, mutate((d) => { delete d.thesisBasis; }))).toEqual([]);
+      expect(checkDraftShape(earlier, valid())).toEqual([{ path: '$.thesisBasis', detail: 'is not a field of this form' }]);
+    }
+  });
+});
+
 describe('draft.schema.json', () => {
   const document = draftSchemaDocument({ pinnedRevision: REV, maxQuestions: 1 });
   const refs = (value: unknown): string[] => (value !== null && typeof value === 'object'
@@ -128,7 +147,7 @@ describe('draft.schema.json', () => {
 
   it('is a JSON Schema 2020-12 document carrying the version, the revision and closed objects', () => {
     expect(document['$schema']).toBe('https://json-schema.org/draft/2020-12/schema');
-    expect(document['$id']).toBe('urn:syzygy:polaris-dossier:polaris-dossier-local-draft-v5');
+    expect(document['$id']).toBe('urn:syzygy:polaris-dossier:polaris-dossier-local-draft-v6');
     expect(document['additionalProperties']).toBe(false);
     expect((document['properties'] as Record<string, unknown>)['pinnedRevision']).toMatchObject({ enum: [REV] });
     expect(JSON.parse(JSON.stringify(document))).toEqual(document);

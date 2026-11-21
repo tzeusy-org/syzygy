@@ -1919,3 +1919,57 @@ describe('render: derived structure (version 2.3)', () => {
     expect({ ...b, capturedAt: a.capturedAt }).toEqual(a);
   });
 });
+
+// REQ-polaris-generation-034 version 2.4 (syzygy-3efd.56): the thesis-basis line and machine.json's `thesisBasis`. Literals throughout.
+describe('render: the thesis basis (schema v6)', () => {
+  const LINE = '<p class="thesis-basis" data-thesis-basis="code-reading">The authoring session found no maintainer statement of purpose, so this summary is Polaris\'s reading of the code, not the maintainers\' words.</p>';
+  const CODE_INTRO = { id: 'intro', label: 'inferred', basis: 'source', text: 'Kestrel is a C server whose commands run one at a time.', citations: [cite('c-a', 'src/kestrel.c', 1, 1), cite('c-b', 'src/markup.c', 1, 1)], quotations: [] };
+  const v6 = (basis: string, introduction?: Doc): Doc => ({ ...draft(), schemaVersion: 'polaris-dossier-local-draft-v6', thesisBasis: basis, ...(introduction === undefined ? {} : { introduction }) });
+  const rendered = async (doc: Doc): Promise<ReadonlyMap<string, string>> => {
+    const run = await prepared(doc, false);
+    const result = await renderRun(run, renderDeps());
+    if (!result.ok) throw new Error(result.refusal.reason);
+    return readSite(result.report.site);
+  };
+  const introTag = (index: string): number => index.search(/<p[^>]*data-claim-id="intro"/u);
+
+  it('renders a code-read thesis under Syzygy\'s line, immediately before the introduction\'s block and outside it, and says so in machine.json', async () => {
+    const files = await rendered(v6('code-reading', CODE_INTRO));
+    const index = files.get('index.html')!;
+    expect(index.split(LINE).length - 1).toBe(1);
+    expect(index.indexOf(LINE) + LINE.length).toBe(introTag(index));
+    expect(index).toContain('Kestrel is a C server whose commands run one at a time.');
+    // Only the landing page carries it, and it carries no label token, citation or anchor.
+    expect([...files].filter(([file, page]) => file !== 'index.html' && page.includes('data-thesis-basis')).map(([file]) => file)).toEqual([]);
+    expect(LINE).not.toMatch(/Inferred|Observed|Unknown|data-claim-id|data-anchor|href=/u);
+    // The evidence view is the same page at its target, so the one line serves both views.
+    expect(index).toContain('id="evidence-view"');
+    const machine = JSON.parse(files.get('machine.json')!);
+    expect(machine.thesisBasis).toEqual({ value: 'code-reading', declaredBy: 'the authoring session', label: 'Inferred', lineRendered: true });
+    expect(Object.keys(machine).indexOf('thesisBasis')).toBe(Object.keys(machine).indexOf('reviewStatus') + 1);
+  });
+
+  it.each(['stated', 'none'])('renders no line for a %s thesis, and machine.json says so', async (basis) => {
+    const files = await rendered(v6(basis, basis === 'none' ? { id: 'intro', label: 'unknown', reason: 'missing-evidence', text: 'No source states what Kestrel is for.', citations: [] } : undefined));
+    expect([...files.values()].some((page) => page.includes('thesis-basis'))).toBe(false);
+    expect(JSON.parse(files.get('machine.json')!).thesisBasis).toEqual({ value: basis, declaredBy: 'the authoring session', label: 'Inferred', lineRendered: false });
+  });
+
+  it('renders no line beside a withheld introduction, and machine.json says the line did not render', async () => {
+    fixturePolicy = policy(['.txt']); // .c files are outside the class gate: every span the introduction cites is withheld
+    const files = await rendered(v6('code-reading', CODE_INTRO));
+    const index = files.get('index.html')!;
+    expect(index).not.toContain('Kestrel is a C server whose commands run one at a time.');
+    expect(marked(index, 'intro')).toEqual({ epistemic: 'unknown', reason: 'excluded-content' });
+    expect([...files.values()].some((page) => page.includes('thesis-basis'))).toBe(false);
+    expect(JSON.parse(files.get('machine.json')!).thesisBasis).toEqual({ value: 'code-reading', declaredBy: 'the authoring session', label: 'Inferred', lineRendered: false });
+  });
+
+  it('a v5 or earlier draft has no thesisBasis member in machine.json and no line', async () => {
+    for (const doc of [draft(), { ...draft(), schemaVersion: 'polaris-dossier-local-draft-v5' }]) {
+      const files = await rendered(doc);
+      expect(Object.hasOwn(JSON.parse(files.get('machine.json')!), 'thesisBasis')).toBe(false);
+      expect([...files.values()].some((page) => page.includes('thesis-basis'))).toBe(false);
+    }
+  });
+});

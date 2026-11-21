@@ -357,6 +357,73 @@ describe('check: figure fit', () => {
 });
 
 // The reading ledger (REQ-polaris-generation-034 version 2.4, syzygy-3efd.21). The numbers are computed by hand from the fixture draft.
+// REQ-polaris-generation-034 version 2.4 (syzygy-3efd.56): schema v6's `thesisBasis` must fit the introduction.
+describe('check: the thesis basis (schema v6)', () => {
+  const CODE_READ = 'a `code-reading` thesis says what the code does: make the introduction an inferred block resting on sources (`basis: source`) that quotes nothing and cites at least two entry points, two different code files outside documentation, test, vendored, generated and example paths;';
+  const STATED = 'a `stated` thesis rests on a statement of the project\'s purpose by its maintainers: make the introduction an inferred block that cites that statement';
+  const NONE = 'a `none` thesis establishes nothing: make the introduction an unknown block, or a non-normative one that makes no claim';
+  const codeIntro = (citations: readonly ReturnType<typeof cite>[], over: Record<string, unknown> = {}) => ({ id: 'intro', label: 'inferred', basis: 'source', text: 'Kestrel is a C server that keeps its keys in memory.', citations, quotations: [], ...over });
+  const TWO = [cite('c-a', 'src/kestrel.c', 1, 1), cite('c-b', 'src/types.ts', 1, 1)];
+  const v6 = (basis: unknown, introduction?: unknown) => mutate((d) => {
+    d.schemaVersion = 'polaris-dossier-local-draft-v6';
+    if (basis !== undefined) d.thesisBasis = basis;
+    if (introduction !== undefined) d.introduction = introduction;
+  });
+  const findingsOf = async (draft: Draft) => {
+    const run = await briefedRun();
+    writeDraft(run, draft);
+    return report(await checkDraft(run, {}, deps()));
+  };
+  const thesis = (result: { findings: readonly { kind: string; at: string; detail: string }[] }) => result.findings.filter((f) => f.kind === 'thesis-basis').map(({ at, detail }) => ({ at, detail }));
+
+  it.each<[string, () => Draft]>([
+    ['a code-reading introduction citing two code files and quoting nothing', () => v6('code-reading', codeIntro(TWO))],
+    ['a code-reading introduction citing a code file whose body screening excludes', () => v6('code-reading', codeIntro([cite('c-a', 'src/kestrel.c', 1, 1), cite('c-b', 'src/config.c', 2, 2)]))],
+    ['a stated introduction citing a statement', () => v6('stated')],
+    ['a none introduction that is Unknown', () => v6('none', { id: 'intro', label: 'unknown', reason: 'missing-evidence', text: 'No source states what Kestrel is for.', citations: [] })],
+    ['a none introduction that is non-normative', () => v6('none', { id: 'intro', label: 'non-normative', text: 'Read on.' })],
+  ])('passes %s', async (_name, build) => {
+    const draft = build();
+    const result = await findingsOf(draft);
+    expect(thesis(result)).toEqual([]);
+    if (!draft.introduction.citations?.some((c: { path: string }) => c.path === 'src/config.c')) expect(result.findings).toEqual([]);
+  });
+
+  it.each<[string, () => Draft, string]>([
+    ['one code file', () => v6('code-reading', codeIntro([cite('c-a', 'src/kestrel.c', 1, 1)])), `${CODE_READ} it cites 1 such file`],
+    ['one code file twice', () => v6('code-reading', codeIntro([cite('c-a', 'src/kestrel.c', 1, 1), cite('c-b', 'src/kestrel.c', 2, 2)])), `${CODE_READ} it cites 1 such file`],
+    ['a code file and a Markdown file', () => v6('code-reading', codeIntro([cite('c-a', 'src/kestrel.c', 1, 1), cite('c-b', 'README.md', 2, 2)])), `${CODE_READ} it cites 1 such file`],
+    ['a code file and a plain-text note', () => v6('code-reading', codeIntro([cite('c-a', 'src/kestrel.c', 1, 1), cite('c-b', 'docs/notes.txt', 2, 2)])), `${CODE_READ} it cites 1 such file`],
+    ['a quotation', () => v6('code-reading', codeIntro(TWO, { text: 'The project states: "Kestrel keeps every key in memory."', quotations: ['c-a'] })), `${CODE_READ} it cites 2 such files and quotes`],
+    ['a lead-in with no quotations list', () => v6('code-reading', codeIntro(TWO, { text: 'The project states: "Kestrel keeps every key in memory."' })), `${CODE_READ} it cites 2 such files and quotes`],
+    ['a block resting on execution', () => v6('code-reading', codeIntro(TWO, { basis: 'execution', executionIds: ['e1'] })), `${CODE_READ} it cites 2 such files`],
+    ['an Unknown block', () => v6('code-reading', { id: 'intro', label: 'unknown', reason: 'missing-evidence', text: 'Unknown.', citations: TWO }), `${CODE_READ} it cites 2 such files`],
+    ['a stated thesis citing nothing', () => v6('stated', { id: 'intro', label: 'inferred', basis: 'source', text: 'Kestrel is a server.', citations: [], quotations: [], judgement: true }), STATED],
+    ['a stated thesis that is Unknown', () => v6('stated', { id: 'intro', label: 'unknown', reason: 'missing-evidence', text: 'Unknown.', citations: [] }), STATED],
+    ['a none thesis that is Inferred', () => v6('none'), NONE],
+  ])('reports thesis-basis at $.thesisBasis for %s', async (_name, build, detail) => {
+    const result = await findingsOf(build());
+    expect(result.outcome).toBe('findings');
+    expect(thesis(result)).toEqual([{ at: '$.thesisBasis', detail }]);
+  });
+
+  it('a v6 draft without thesisBasis fails its schema, and one with another value too', async () => {
+    expect((await findingsOf(v6(undefined))).findings.map(({ kind, at, detail }) => ({ kind, at, detail }))).toEqual([{ kind: 'schema', at: '$.thesisBasis', detail: 'is required' }]);
+    expect((await findingsOf(v6('readme'))).findings.map(({ kind, at, detail }) => ({ kind, at, detail }))).toEqual([{ kind: 'schema', at: '$.thesisBasis', detail: 'must be one of stated, code-reading, none' }]);
+  });
+
+  it.each(['polaris-dossier-local-draft-v2', 'polaris-dossier-local-draft-v4', 'polaris-dossier-local-draft-v5'])('a %s draft carrying thesisBasis has a field-version finding and nothing else', async (version) => {
+    const result = await findingsOf(mutate((d) => { d.schemaVersion = version; d.thesisBasis = 'code-reading'; }));
+    expect(result.findings.map(({ kind, at, detail }) => ({ kind, at, detail }))).toEqual([
+      { kind: 'field-version', at: '$.thesisBasis', detail: '`thesisBasis` needs draft schema polaris-dossier-local-draft-v6' }]);
+  });
+
+  it('a v5 draft without thesisBasis checks as before', async () => {
+    const result = await findingsOf(mutate((d) => { d.schemaVersion = 'polaris-dossier-local-draft-v5'; }));
+    expect([result.outcome, result.findings]).toEqual(['passed', []]);
+  });
+});
+
 describe('check: reading ledger', () => {
   // `valid()` carries schema v2, no Poles and no diagram: one page. Words, split at white space: the introduction 13; core-ideas p1 13,
   // its children 6 + 2 + 3, p2 7: 31; 44 in all. The one section has no diagram, so RS-16 counts one advisory, at $.sections[0].

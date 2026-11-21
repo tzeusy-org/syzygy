@@ -1,7 +1,10 @@
 import * as path from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
 import { beforeAll, describe, expect, it } from 'vitest';
+import type { CheckFinding } from './check-model.js';
+import { draftRules } from './check-derive.js';
 import { deriveStructure } from './derive.js';
+import { checkDraftShape } from './draft-schema.js';
 import { figureFit, type FigureLayout } from './figure-fit.js';
 import type { DossierRenderer, DossierRendererInput } from './render.js';
 
@@ -200,5 +203,58 @@ describe('nine synthetic shapes through derive and render (syzygy-3efd.23, syzyg
     const bare = kit.without(kit.RUST_CLI, 'README.md', 'src/main.rs');
     expect(profile(bare)).toMatchObject({ files: 9, rootFiles: 3, languages: { counts: [{ language: 'Rust', files: 4 }, { language: 'Shell', files: 1 }, { language: 'TOML', files: 1 }, { language: 'YAML', files: 1 }], unrecognized: 1 } });
     expect(render(kit.shapeInput(bare)).files.get('index.html')).toContain('The rust-cli-without-README.md dossier');
+  });
+});
+
+// REQ-polaris-generation-034 version 2.4 (syzygy-3efd.56, acceptance 3): the no-README shape's thesis. Check cannot see that the
+// repository states no purpose (the requirement leaves that to the review), so what it refuses is a thesis basis its introduction does
+// not fit; the draft below cites the shape's own files. Expected values are literals.
+describe('the no-README shape: a code-read thesis', () => {
+  const REV = 'a'.repeat(40);
+  const LINE = '<p class="thesis-basis" data-thesis-basis="code-reading">The authoring session found no maintainer statement of purpose, so this summary is Polaris\'s reading of the code, not the maintainers\' words.</p>';
+  const cite = (id: string, file: string) => ({ id, path: file, startLine: 1, endLine: 1 });
+  const intro = (files: readonly string[], over: Record<string, unknown> = {}) => ({ id: 'intro', label: 'inferred', basis: 'source', text: 'A ledger server: main starts it and the store keeps entries.', citations: files.map((file, i) => cite(`c-${i}`, file)), quotations: [], ...over });
+  const draft = (basis: string | undefined, introduction: Record<string, unknown>) => ({
+    schemaVersion: 'polaris-dossier-local-draft-v6', pinnedRevision: REV, ...(basis === undefined ? {} : { thesisBasis: basis }), introduction,
+    sections: [{ id: 'what', title: 'What it does', paragraphs: [introduction], disposition: { kind: 'produced', assetIds: ['what'] } }], diagrams: [], deepDives: [],
+  });
+  const findings = (doc: Record<string, unknown>): { kind: string; at: string; detail: string }[] => {
+    const rules = draftRules(REV, 1);
+    const found: CheckFinding[] = [];
+    rules.structural(doc, (finding) => { found.push(finding); });
+    return [
+      ...checkDraftShape(rules.schema, doc).filter((error) => error.path === '$.thesisBasis').map((error) => ({ kind: 'schema', at: error.path, detail: error.detail })),
+      ...found.filter((finding) => finding.kind === 'thesis-basis' || finding.kind === 'field-version').map(({ kind, at, detail }) => ({ kind, at, detail })),
+    ];
+  };
+  const CODE_READ = 'a `code-reading` thesis says what the code does: make the introduction an inferred block resting on sources (`basis: source`) that quotes nothing and cites at least two entry points, two different code files outside documentation, test, vendored, generated and example paths;';
+
+  it('passes a code-reading thesis citing the server\'s main and its store, two entry points of the shape\'s own tree', () => {
+    expect(kit.treeListing(kit.NO_README).map((entry) => entry.path)).toEqual(['cmd/server/main.go', 'go.mod', 'go.sum', 'internal/handler/handler.go', 'internal/handler/handler_test.go', 'internal/store/store.go']);
+    expect(findings(draft('code-reading', intro(['cmd/server/main.go', 'internal/store/store.go'])))).toEqual([]);
+  });
+
+  it.each<[string, string | undefined, readonly string[], Record<string, unknown>, { kind: string; at: string; detail: string }[]]>([
+    ['without the marking', undefined, ['cmd/server/main.go', 'internal/store/store.go'], {}, [{ kind: 'schema', at: '$.thesisBasis', detail: 'is required' }]],
+    ['marked stated while citing nothing', 'stated', [], { judgement: true }, [{ kind: 'thesis-basis', at: '$.thesisBasis', detail: 'a `stated` thesis rests on a statement of the project\'s purpose by its maintainers: make the introduction an inferred block that cites that statement' }]],
+    ['code-read from one file and its test', 'code-reading', ['cmd/server/main.go', 'internal/handler/handler_test.go'], {}, [{ kind: 'thesis-basis', at: '$.thesisBasis', detail: `${CODE_READ} it cites 1 such file` }]],
+    ['code-read from main and the module file and checksums', 'code-reading', ['cmd/server/main.go', 'go.mod', 'go.sum'], {}, [{ kind: 'thesis-basis', at: '$.thesisBasis', detail: `${CODE_READ} it cites 1 such file` }]],
+    ['code-read with a quotation', 'code-reading', ['cmd/server/main.go', 'internal/store/store.go'], { text: 'The project states: "package main"', quotations: ['c-0'] }, [{ kind: 'thesis-basis', at: '$.thesisBasis', detail: `${CODE_READ} it cites 2 such files and quotes` }]],
+  ])('refuses the no-README draft %s', (_name, basis, files, over, expected) => {
+    expect(findings(draft(basis, intro(files, over)))).toEqual(expected);
+  });
+
+  it('renders the code-read line immediately before the introduction, and none for a stated thesis', () => {
+    const input = kit.shapeInput(kit.NO_README);
+    const marked = render({ ...input, local: { ...input.local, thesisBasis: { value: 'code-reading', lineRendered: true } } }).files;
+    const index = marked.get('index.html')!;
+    expect(index.split(LINE).length - 1).toBe(1);
+    expect(index.indexOf(LINE) + LINE.length).toBe(index.search(/<p[^>]*data-claim-id="introduction"/u));
+    expect(JSON.parse(marked.get('machine.json')!).thesisBasis).toEqual({ value: 'code-reading', declaredBy: 'the authoring session', label: 'Inferred', lineRendered: true });
+    const stated = render({ ...input, local: { ...input.local, thesisBasis: { value: 'stated', lineRendered: false } } }).files;
+    expect(stated.get('index.html')).not.toContain('thesis-basis');
+    // A line the render said would render does not, where the draft layer is withheld: the withheld page shows no part of the draft.
+    const withheld = render({ ...input, local: { ...input.local, thesisBasis: { value: 'code-reading', lineRendered: true }, draftLayer: { state: 'unknown', reason: 'missing-declaration', why: ['fixture'] } } }).files;
+    expect(withheld.get('index.html')).not.toContain('thesis-basis');
   });
 });

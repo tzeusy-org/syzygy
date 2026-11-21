@@ -82,6 +82,10 @@ export class DossierRenderError extends Error {
   }
 }
 
+/** The line a code-read thesis renders under (REQ-polaris-generation-034 version 2.4): Syzygy's words, attributing the absence of a
+ * maintainer statement of purpose to the authoring session. */
+export const THESIS_BASIS_LINE = '<p class="thesis-basis" data-thesis-basis="code-reading">The authoring session found no maintainer statement of purpose, so this summary is Polaris\'s reading of the code, not the maintainers\' words.</p>';
+
 // Test seam: exported for the tests; production code reaches it only inside this file.
 /** The page a quotable source's exact text lives on, from its anchor alone. */
 export function sourceRoute(source: Pick<GenerationSource, 'spans' | 'redaction'>): string {
@@ -649,7 +653,10 @@ export function renderDossierSite(input: DossierSiteInput & { readonly local?: L
     add(from, 0, 'Overview', `<header data-reading-level="0"><span class="eyebrow">Polaris · Draft layer Unknown</span><h1>${escape(title)}</h1>${policy}</header>${derivedRegion}`);
   } else {
     termsShown.clear();
-    const introduction = view.drafted ? paragraph(from, draft.introduction, 'p') : '';
+    // A v6 draft whose thesis is a reading of the code (version 2.4): Syzygy's one line, immediately before the introduction's block and
+    // outside it, carrying no label token, citation or anchor; none where the introduction or the draft layer is withheld.
+    const thesisLine = local?.thesisBasis?.lineRendered === true ? THESIS_BASIS_LINE : '';
+    const introduction = view.drafted ? `${thesisLine}${paragraph(from, draft.introduction, 'p')}` : '';
     const missingList = view.notGenerated.length === 0 ? '' : `<section id="not-generated" data-reading-level="1" data-topics=""><h2>Not generated</h2>${view.notGenerated.map(item => notGenerated(item.id, item.kind)).join('')}</section>`;
     // Figures whose home is the overview lead the first page, after its introduction and before its sections, in a region of their own
     // at reading level 1 with no topics; none where the page shows no part of the draft (syzygy-3efd.18).
@@ -808,6 +815,7 @@ export function renderDossierSite(input: DossierSiteInput & { readonly local?: L
       draftLayer: local.draftLayer,
       disclosure: local.disclosure,
       reviewStatus: local.reviewStatus,
+      ...(local.thesisBasis === undefined ? {} : { thesisBasis: { value: local.thesisBasis.value, declaredBy: 'the authoring session', label: 'Inferred', lineRendered: local.thesisBasis.lineRendered } }),
       ...(local.derivedStructure === undefined ? {} : { derivedStructure: derivedMachine(local.derivedStructure) }),
       pages: [...pages.map(p => p.path), 'size-report.html'],
       claims: claimsByPage,
