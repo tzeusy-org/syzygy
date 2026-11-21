@@ -91,7 +91,7 @@ authority and no model yet called on the current path.
     [v1.4 sign-off](.syzygy/governance/decisions/POLARIS-DOSSIER-LOCAL-AGENT-MODE-SIGNOFF-v1.4.md);
     [v1.5 sign-off](.syzygy/governance/decisions/POLARIS-DOSSIER-LOCAL-AGENT-MODE-SIGNOFF-v1.5.md);
     [v1.6 sign-off](.syzygy/governance/decisions/POLARIS-DOSSIER-LOCAL-AGENT-MODE-SIGNOFF-v1.6.md)), and
-    39 requirements and 375 scenarios in the effective composition with it and with the signed-off
+    39 requirements and 383 scenarios in the effective composition with it and with the signed-off
     [launch-consent addition](openspec/changes/polaris-dossier-launch-consent/specs/polaris-generation/spec.md)
     ([v1.0 sign-off](.syzygy/governance/decisions/POLARIS-DOSSIER-LAUNCH-CONSENT-SIGNOFF-v1.0.md);
     [v1.1 sign-off](.syzygy/governance/decisions/POLARIS-DOSSIER-LAUNCH-CONSENT-SIGNOFF-v1.1.md);
@@ -119,6 +119,12 @@ authority and no model yet called on the current path.
     It replaces REQ-polaris-generation-034 again (60 to 70 scenarios: sequence and swimlane figure kinds, schema v7
     and brief v12); its implementation (syzygy-3efd.30) is not yet landed.
     *(2026-11-22: the predecessor figure "365 scenarios" is superseded by that
+    amendment; all 39 identities remain.)*
+    [Declared-source reach amendment 2.6](openspec/changes/dossier-declared-source-reach) is agent-adopted in A-27.
+    It replaces REQ-polaris-generation-046 (3 to 11 scenarios) and binds the screening-policy successor
+    `POLARIS-DOSSIER-DECLARED-SOURCE-POLICY-v2.json`; its classifier and screen change (syzygy-3efd.24) is not
+    yet landed, and until it lands the screen refuses the successor and runs stay on v1.
+    *(2026-11-22: the predecessor figure "375 scenarios" is superseded by that
     amendment; all 39 identities remain.)*
     *(2026-11-18: the predecessor figure "329 scenarios" is superseded by that
     overlay; all38 identities remain, and046 is now Declared local-source admission.)*
