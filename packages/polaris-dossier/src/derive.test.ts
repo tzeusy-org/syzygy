@@ -41,15 +41,17 @@ describe('deriveStructure (syzygy-3efd.16)', () => {
     const record = deriveStructure([
       blob('package.json'), blob('packages/core/package.json'), blob('packages/core/src/index.ts'), blob('packages/core/src/index.test.ts'),
       blob('packages/ui/package.json'), blob('packages/ui/src/App.tsx'), blob('tests/fixtures/package.json'),
+      // A docs directory below the top level is no docs tree; a test_ basename is a test, its directory none.
+      blob('packages/core/docs/api.md'), blob('scripts/test_build.py'),
     ], NO_SECRET);
     if (record.state !== 'derived') throw new Error('expected a derived record');
-    expect(record.units).toEqual([{ unit: '"packages"', files: 5 }, { unit: '"tests"', files: 1 }]);
+    expect(record.units).toEqual([{ unit: '"packages"', files: 6 }, { unit: '"scripts"', files: 1 }, { unit: '"tests"', files: 1 }]);
     expect(record.traits).toEqual({
       docsTree: { rule: 'docs-tree@1', matched: false, listed: [], notListed: 0 },
-      tests: { rule: 'tests-path@1', files: 2 },
+      tests: { rule: 'tests-path@1', files: 3 },
       packages: { rule: 'manifest-names@1', shape: 'workspace', listed: ['"."', '"packages/core"', '"packages/ui"'], notListed: 0 },
     });
-    expect(record.languages.counts).toEqual([{ language: 'JSON', files: 4 }, { language: 'TypeScript', files: 3 }]);
+    expect(record.languages.counts).toEqual([{ language: 'JSON', files: 4 }, { language: 'TypeScript', files: 3 }, { language: 'Markdown', files: 1 }, { language: 'Python', files: 1 }]);
   });
 
   it('sets vendored paths apart first and generated ones next, and leaves both out of languages, traits and manifests', () => {
@@ -57,11 +59,13 @@ describe('deriveStructure (syzygy-3efd.16)', () => {
       blob('go.mod'), blob('go.sum'), blob('main.go'), blob('vendor/github.com/x/y/y.go'), blob('vendor/github.com/x/y/go.mod'),
       blob('third_party/zlib/dist/zlib.c'), blob('web/dist/app.js'), blob('web/app.min.js'), blob('web/src/app.ts'), blob('docs/build/index.html'),
       blob('api/api.pb.go'),
+      // A file named like a generated segment is no directory; an extension compares without case; a leading dot alone is no extension.
+      blob('scripts/build'), blob('web/src/Legacy.TS'), blob('.json'),
     ], NO_SECRET);
     if (record.state !== 'derived') throw new Error('expected a derived record');
     expect(record.vendored).toEqual({ rule: 'vendored-path@1', files: 3, listed: ['"third_party"', '"vendor"'], notListed: 0 });
     expect(record.generated).toEqual({ rule: 'generated-path@1', files: 5, listed: ['"api/api.pb.go"', '"docs/build"', '"go.sum"', '"web/app.min.js"', '"web/dist"'], notListed: 0 });
-    expect(record.languages).toEqual({ rule: 'language-by-extension@1', counts: [{ language: 'Go', files: 1 }, { language: 'TypeScript', files: 1 }], unrecognized: 1 });
+    expect(record.languages).toEqual({ rule: 'language-by-extension@1', counts: [{ language: 'TypeScript', files: 2 }, { language: 'Go', files: 1 }], unrecognized: 3 });
     // docs/build/index.html is generated, so no file of the docs tree is left to match.
     expect(record.traits.docsTree.matched).toBe(false);
     expect(record.traits.packages).toEqual({ rule: 'manifest-names@1', shape: 'single-package', listed: ['"."'], notListed: 0 });
@@ -121,8 +125,9 @@ describe('deriveStructure (syzygy-3efd.16)', () => {
   });
 
   it('caps every listed set at 250 and counts the rest', () => {
-    const record = deriveStructure(Array.from({ length: 260 }, (_, i) => blob(`u${String(i).padStart(3, '0')}/f.c`)), NO_SECRET);
+    const record = deriveStructure(Array.from({ length: 260 }, (_, i) => blob(`u${String(i).padStart(3, '0')}/vendor/f.c`)), NO_SECRET);
     if (record.state !== 'derived') throw new Error('expected a derived record');
     expect([record.units.length, record.unitsNotListed, record.units[249]]).toEqual([250, 10, { unit: '"u249"', files: 1 }]);
+    expect([record.vendored.files, record.vendored.listed.length, record.vendored.notListed, record.vendored.listed[249]]).toEqual([260, 250, 10, '"u249/vendor"']);
   });
 });
