@@ -15,9 +15,15 @@ authority.
 
 ## CC-REV-1 — Mandatory independent review classes
 
-Changes touching any of seven classes require review by an independent,
-fresh-context reviewer, and the agent performing the change never finally
-decides which classes it touches.
+Changes touching any of three classes get one review by an independent,
+fresh-context reviewer. The review runs once, its findings are repaired and
+recorded, and it never gates the merge; a later edit does not retire it.
+
+> *Amended 2026-11-22 (agent adoption, `syzygy-yjoq`, under VIS-4 as
+> amended by D13).* Before: seven classes (adding authority boundaries,
+> public interface and certificate logic, and all of SEC-1…SEC-5), class
+> membership never finally decided by the author, a fresh review of every
+> head a reviewer's fix produced, and standing review prompts.
 
 **The reviewer:**
 
@@ -28,44 +34,29 @@ decides which classes it touches.
 
 **The classes:**
 
-1. **authority boundaries** — write-universe, typed-authority table,
-   adapter authorization (VIS-5, VIS-6);
-2. **graph identity** — entity identity minting, continuity, split/merge
-   (SDR-2, SDR-22 identity-based counting);
-3. **deterministic observation** — snapshot composition, evaluation
+1. **secrets and execution** — secret detection and SEC-5 screening,
+   anything that sends content off the host, authentication surfaces, and
+   where observed code runs (SEC-2, SEC-3, SEC-5);
+2. **deterministic observation** — snapshot composition, evaluation
    identity, the deterministic/inferred seam (VIS-7);
-4. **security** — anything under SEC-1…SEC-5, auth surfaces, egress paths;
-5. **data migration** — `.syzygy/**` schema migrations, any
-   identity-affecting store change;
-6. **public interface** — machine-queryable endpoints, adapter contracts,
-   anything an external consumer can depend on;
-7. **certificate logic** — when certificates exist (post-V1,
-   future-tagged), any code that grants, invalidates, or renders them.
+3. **identity and migration** — entity identity minting, continuity,
+   split/merge, and `.syzygy/**` schema or store migrations that affect
+   identity (SDR-2, SDR-22).
 
-**Class membership is contested by default and is never finally determined
-by the agent performing the change** (mirroring VIS-4's classification
-rule).
+**The author classifies; the owner may veto.**
 
 - **The change record states** which classes the change touches, or "none,"
   so a misclassification is a findable violation after the fact.
-- **A reviewer or the owner** may reclassify at any time.
+- **A reviewer or the owner** may reclassify; a reclassified change gets its
+  one review then.
 - **Self-declared complexity** never exempts these classes (CC-BAR-6).
 
-**Who reviews:**
+**Who reviews:** never the implementing agent. The reviewer's brief may be
+written per review; it carries the artifact and acceptance criteria, never
+the author's reasoning or a desired verdict.
 
-- The implementing agent never reviews its own change here.
-- Per the canonical bar, if the reviewer authors semantic fixes, the exact
-  resulting head gets fresh independent review.
-
-**Review prompts are standing artifacts**, keeping steering out of the
-channel context isolation cannot close.
-
-- Prompts for these mandatory classes are maintained like the bootstrap's
-  `review-prompts/`, not authored per review.
-- The author's side may select the artifact cluster, never compose the
-  reviewer's instructions.
 - *Violation:* an agent modifies snapshot hashing "as a refactor,"
-  self-reviews because the diff is small, and merges — a class-3 change with
+  self-reviews because the diff is small, and merges — a class-2 change with
   no independent eyes.
 
 ## CC-REV-2 — The same-logical-change rule
