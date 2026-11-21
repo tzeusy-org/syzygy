@@ -36,7 +36,7 @@ import { DEFAULT_SESSION_MODEL } from './session-profile.js';
 import { acquireUrlSourceInMemory, type UrlMemoryContext } from './url-memory-acquisition.js';
 import { createSourceAcquisitionAudit } from './source-acquisition-audit.js';
 import { committedUrlPoliciesCurrent, committedUrlPoliciesCurrentAsync, readCommittedPolicy, readCommittedUrlOriginPolicy, samePolicy } from './policy-snapshot.js';
-import { readUrlParentAdoption, type UrlParentAdoption } from './url-parent-adoption.js';
+import { readUrlParentAdoption, URL_PARENT_TAG, type UrlParentAdoption } from './url-parent-adoption.js';
 import { loadUrlDossierRenderer, readUrlRuntime, type UrlLoadedRenderer, type UrlRuntime } from './url-runtime.js';
 import { verifySupportedUrlCli, URL_CLI_PROGRAM } from './session-launch.js';
 import { URL_HOST_ROOT, registerUrlRunMode, urlRunModeAuthority } from './url-mode-registry.js';
@@ -620,6 +620,8 @@ async function setUp(options: Options, ports: CliPorts, screen: Screen): Promise
   const auditSummary = await audit.close();
   fs.writeFileSync(attemptFile, `${JSON.stringify({ format: 'polaris-dossier-url-attempt/2', label: 'Inferred', declaredLimits,
     screeningPolicy: policy.binding, originPolicy: origin.binding, sourceProvider: identity.providerId, audit: auditSummary,
+    governingAdoption: { row: adoption.rowId, tag: URL_PARENT_TAG, landedCommit: adoption.landedCommit,
+      firstObservedDefaultCommit: initialAdoption.defaultCommit, lastObservedDefaultCommit: adoption.defaultCommit },
     outcome: acquisition.ok ? 'acquired' : acquisition.code, history: acquisition.history,
     cleanup: acquisition.ok ? 'not-needed' : acquisition.cleanup }, null, 2)}\n`, { mode: 0o600, flag: 'wx' });
   if (!acquisition.ok) return `Source acquisition refused (${acquisition.code}); protected attempt: ${attemptFile}.`;

@@ -25,7 +25,7 @@ const INSTALLED_CLAUSES = [
 ] as const;
 const CONTRACT_SUBJECT = REVIEWED_SUBJECTS[1][0];
 const MAX_SUBJECT_BYTES = 2_097_152;
-const MAX_CONTRACT_REVISIONS = 64;
+const MAX_PARENT_REVISIONS = 64;
 const CONTRACT_FILES = [...new Set(INSTALLED_CLAUSES.map(([file]) => `${GOVERNANCE}/contracts/rfcs/${file}`))];
 const LEDGER_HEADER = '| Id | Date | Commit | What changed | Why | Revert | Tag |';
 const LEDGER_DIVIDER = '|---|---|---|---|---|---|---|';
@@ -33,6 +33,7 @@ const NEXT_CLAUSE = /^\*\*RFC[0-9]+-[0-9]+(?:\([a-z]\))?(?:\.|\s+[—-])/mu;
 const COMMIT = /^(?:[0-9a-f]{40}|[0-9a-f]{64})$/u;
 
 export interface UrlParentAdoption {
+  readonly rowId: string;
   readonly landedCommit: string;
   readonly defaultCommit: string;
   readonly tagObject: string;
@@ -54,6 +55,7 @@ export function parseUrlParentRefs(output: Buffer): { readonly defaultCommit: st
 }
 
 function ledgerRows(record: string): string[][] | null {
+  if (!record.startsWith('# Agent adoptions\n')) return null;
   const lines = record.split('\n');
   const tables: string[][][] = [];
   let fence: string | undefined;
@@ -68,6 +70,8 @@ function ledgerRows(record: string): string[][] | null {
       fence = marker[1];
       continue;
     }
+    // The ledger preamble is plain Markdown. Raw HTML could hide a sample table.
+    if (tables.length === 0 && /<(?:[!?]|\/?[A-Za-z][A-Za-z0-9-]*(?:\s|\/?>))/u.test(line)) return null;
     if (line !== LEDGER_HEADER || lines[index + 1] !== LEDGER_DIVIDER) continue;
     const rows: string[][] = [];
     const ids = new Set<string>();
@@ -87,7 +91,7 @@ function ledgerRows(record: string): string[][] | null {
 export function findUrlParentAdoption(record: string): { readonly id: string; readonly commit: string } | null {
   const rows = ledgerRows(record);
   if (rows === null) return null;
-  const claimants = rows.filter(fields => fields.includes(`\`${URL_PARENT_TAG}\``));
+  const claimants = rows.filter(fields => fields[6] === `\`${URL_PARENT_TAG}\``);
   if (claimants.length !== 1) return null;
   const fields = claimants[0]!;
   const [id, date, commitCell, changed, reason, revert, tag] = fields;
@@ -176,8 +180,9 @@ export function readUrlParentAdoption(
       return text;
     };
     const record = show(defaultCommit, URL_PARENT_RECORD), authority = findUrlParentAdoption(utf8(record));
-    if (authority?.commit !== landedCommit) return null;
-    const interval = `${previous?.defaultCommit ?? landedCommit}..${defaultCommit}`;
+    if (authority?.commit !== landedCommit || (previous !== undefined && previous.rowId !== authority.id)) return null;
+    const historyStart = previous?.defaultCommit ?? landedCommit;
+    const interval = `${historyStart}..${defaultCommit}`;
     const changed = (limit: number, paths: readonly string[]): string[] => {
       const result = git('rev-list', `--max-count=${limit}`, '--first-parent', interval, '--', ...paths).toString('ascii').trim();
       const commits = result === '' ? [] : result.split('\n');
@@ -185,6 +190,17 @@ export function readUrlParentAdoption(
       return commits;
     };
     if (changed(1, REVIEWED_SUBJECTS.map(([file]) => file)).length !== 0) return null;
+    const ledgerRevisions = changed(MAX_PARENT_REVISIONS + 1, [URL_PARENT_RECORD]);
+    let governingRows = ledgerRows(utf8(show(historyStart, URL_PARENT_RECORD)));
+    if (ledgerRevisions.length > MAX_PARENT_REVISIONS || governingRows === null) return null;
+    for (const commit of ledgerRevisions.reverse()) {
+      const document = utf8(show(commit, URL_PARENT_RECORD));
+      const nextRows = ledgerRows(document);
+      if (nextRows === null || governingRows.some((row, index) =>
+        row.some((cell, column) => cell !== nextRows[index]?.[column]))) return null;
+      if (nextRows.some(row => row[6] === `\`${URL_PARENT_TAG}\``) && findUrlParentAdoption(document)?.commit !== landedCommit) return null;
+      governingRows = nextRows;
+    }
     const subjects: { path: string; sha256: string }[] = [];
     for (const [file, digest] of REVIEWED_SUBJECTS) {
       if (sha256(show(landedCommit, file)) !== digest || sha256(show(defaultCommit, file)) !== digest) return null;
@@ -192,8 +208,8 @@ export function readUrlParentAdoption(
     }
     const reviewed = utf8(show(landedCommit, CONTRACT_SUBJECT));
     if (!installedClausesMatch(reviewed, file => utf8(show(landedCommit, file)))) return null;
-    const revisions = changed(MAX_CONTRACT_REVISIONS + 1, CONTRACT_FILES);
-    if (revisions.length > MAX_CONTRACT_REVISIONS || revisions.some(commit =>
+    const revisions = changed(MAX_PARENT_REVISIONS + 1, CONTRACT_FILES);
+    if (revisions.length > MAX_PARENT_REVISIONS || revisions.some(commit =>
       !installedClausesMatch(reviewed, file => utf8(show(commit, file))))) return null;
     if (!installedClausesMatch(reviewed, file => {
       const raw = show(defaultCommit, file);
@@ -202,6 +218,6 @@ export function readUrlParentAdoption(
     })) return null;
     const finalRefs = parseUrlParentRefs(git(...URL_PARENT_REF_ARGS));
     if (finalRefs?.defaultCommit !== defaultCommit || finalRefs.tagObject !== tagObject) return null;
-    return { landedCommit, defaultCommit, tagObject, subjects };
+    return { rowId: authority.id, landedCommit, defaultCommit, tagObject, subjects };
   } catch { return null; }
 }

@@ -1,5 +1,5 @@
 import { execFileSync } from 'node:child_process';
-import { copyFileSync, mkdirSync, mkdtempSync, rmSync, writeFileSync } from 'node:fs';
+import { appendFileSync, copyFileSync, mkdirSync, mkdtempSync, rmSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { dirname, join } from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
@@ -24,6 +24,8 @@ const FILES = [...SUBJECTS,
   `${GOVERNANCE}/contracts/rfcs/RFC-0003/manifests-and-namespace.md`,
   `${GOVERNANCE}/contracts/rfcs/RFC-0003/governance-homes-and-owner-acts.md`,
   `${GOVERNANCE}/contracts/rfcs/RFC-0005/admission-and-boundary.md`];
+const LEDGER_HEADER = '# Agent adoptions\n\n'
+  + '| Id | Date | Commit | What changed | Why | Revert | Tag |\n|---|---|---|---|---|---|---|\n';
 const temporary: string[] = [];
 
 afterEach(() => {
@@ -52,6 +54,8 @@ function fixture() {
   const run = (...args: string[]): string => git(root, ...args);
   run('init', '-q', '--initial-branch=main', '--template=');
   copy(root, DOSSIER_POLICY_PATH);
+  mkdirSync(dirname(join(root, URL_PARENT_RECORD)), { recursive: true });
+  writeFileSync(join(root, URL_PARENT_RECORD), LEDGER_HEADER);
   run('add', '.');
   run('commit', '-qm', 'Predecessor');
   run('switch', '-qc', 'package');
@@ -63,8 +67,7 @@ function fixture() {
   const landed = run('rev-parse', 'HEAD');
   run('tag', '-am', 'Reviewed version', URL_PARENT_TAG, landed);
   const links = SUBJECTS.map(file => `[subject](https://github.com/tzeusy-org/syzygy/blob/${landed}/${file})`).join(' · ');
-  writeFileSync(join(root, URL_PARENT_RECORD), '# Agent adoptions\n\n'
-    + '| Id | Date | Commit | What changed | Why | Revert | Tag |\n|---|---|---|---|---|---|---|\n'
+  writeFileSync(join(root, URL_PARENT_RECORD), LEDGER_HEADER
     + `| A-14 | 2026-11-21 | \`${landed}\` | ${links} | Apply reviewed version | \`git revert -m 1 ${landed}\` | \`${URL_PARENT_TAG}\` |\n`);
   run('add', URL_PARENT_RECORD);
   run('commit', '-qm', 'Record adoption after landing');
@@ -123,5 +126,24 @@ describe('URL parent adoption on the observing Git checkout', () => {
     expect(() => git(clone, 'cat-file', '-e', object)).toThrow();
     expect(readCommittedUrlOriginPolicy(clone).ok).toBe(false);
     expect(() => git(clone, 'cat-file', '-e', object)).toThrow();
+  });
+
+  it('keeps an appended retirement effective when a later commit removes it', () => {
+    const { root, run, binding, origin } = fixture();
+    const record = join(root, URL_PARENT_RECORD);
+    appendFileSync(record, '| A-15 | 2026-11-22 | `bbbbbbbb` | Record unrelated research | Test | — | — |\n');
+    run('commit', '-qam', 'Append unrelated row');
+    run('update-ref', URL_PARENT_DEFAULT_REF, 'HEAD');
+    const unrelated = readUrlParentAdoption(root, origin.sha256, binding);
+    expect(unrelated?.defaultCommit).toBe(run('rev-parse', 'HEAD'));
+    appendFileSync(record, '| A-16 | 2026-11-22 | `cccccccc` | Retire A-14 | Test | — | — |\n');
+    run('commit', '-qam', 'Append retirement');
+    run('update-ref', URL_PARENT_DEFAULT_REF, 'HEAD');
+    expect(readUrlParentAdoption(root, origin.sha256, binding)).toBeNull();
+    run('restore', '--source=HEAD^', '--staged', '--worktree', '--', URL_PARENT_RECORD);
+    run('commit', '-qm', 'Remove retirement from the current ledger');
+    run('update-ref', URL_PARENT_DEFAULT_REF, 'HEAD');
+    expect(readUrlParentAdoption(root, origin.sha256, unrelated ?? undefined)).toBeNull();
+    expect(readUrlParentAdoption(root, origin.sha256)).toBeNull();
   });
 });

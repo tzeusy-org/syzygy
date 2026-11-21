@@ -28,7 +28,9 @@ describe('URL parent adoption record', () => {
   it('distinguishes actual ledger entries from standalone and fenced examples', () => {
     expect(findUrlParentAdoption(row)).toBeNull();
     expect(findUrlParentAdoption(`# Agent adoptions\n\n\`\`\`markdown\n${ledger(row)}\`\`\`\n`)).toBeNull();
-    expect(findUrlParentAdoption(`~~~markdown\n${ledger(row)}~~~\n\n${ledger(row)}`)).toEqual({ id: 'A-15', commit });
+    expect(findUrlParentAdoption(`# Agent adoptions\n\n~~~markdown\n${ledger(row)}~~~\n\n${ledger(row)}`)).toEqual({ id: 'A-15', commit });
+    expect(findUrlParentAdoption(`# Agent adoptions\n\n<!--\n${ledger(row)}-->\n`)).toBeNull();
+    expect(findUrlParentAdoption(`# Agent adoptions\n\n<pre>\n${ledger(row)}</pre>\n`)).toBeNull();
   });
 
   it('honors a later explicit veto even with the original tagged row and subjects present', () => {
