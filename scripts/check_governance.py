@@ -276,7 +276,16 @@ CANDIDATE_HOME_RULES = {
 
 #: The downgrade lookup both tables feed. One place, so a new advisory table
 #: cannot be forgotten at the twenty-six call sites.
-ADVISORY_RULES = dict(PYTHON_ONLY_RULES, **CANDIDATE_HOME_RULES)
+#: Prose-lint checks that report but never fail a change (agent adoption,
+#: `syzygy-yjoq` item 10, 2026-11-22, under VIS-4 as amended by D12: a check
+#: that blocks a PR over wording is a velocity gate VIS-4 leaves to agents).
+#: Their findings still print, as WARN, with this note.
+REPORT_ONLY_RULES = {
+    fam: "report-only since 2026-11-22 (syzygy-yjoq): prose lint warns, never fails"
+    for fam in ("CG-8", "CG-10", "CG-22", "CG-27")
+}
+
+ADVISORY_RULES = {**REPORT_ONLY_RULES, **PYTHON_ONLY_RULES, **CANDIDATE_HOME_RULES}
 
 
 def check_family(name):

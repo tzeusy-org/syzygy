@@ -1283,11 +1283,16 @@
 
 ## Open, and only the owner can dispose
 
+> **Updated 2026-11-22 (`syzygy-yjoq`).** P-120 is done: the owner wrote the
+> Butlers row into [`OWNED-REPOSITORIES.md`](OWNED-REPOSITORIES.md) on
+> 2026-11-21. P-121 is withdrawn: on 2026-11-21 the owner retargeted the
+> walkthrough from the daemon's `/polaris` page to a Butlers Polaris dossier
+> (`syzygy-pdja.6`). Both rows, as they stood, are in `DECISION-HISTORY.md`
+> §"Disposed on 2026-11-22".
+
 | # | Decision | Class | Owning record |
 |---|---|---|---|
 | P-119 | Doctrine amendment **D11**: an agent session's own raw reads may reach the run's declared provider unscreened, disclosed on every run page; everything Syzygy itself sends, keeps or renders stays screened. It writes the owner's 2026-11-21 answer A on `secrets-raw-clone-to-provider` into SEC-2 and SEC-5. Adopt, amend or decline; until adopted, SEC-2 and SEC-5 stand as written | doctrine; secrets | `../contracts/candidates/doctrine-amendment-session-raw-reads-d11/PROPOSAL.md`; [`OWNER-DIRECTION-QUESTIONNAIRE-ANSWERS-2026-11-21.md`](OWNER-DIRECTION-QUESTIONNAIRE-ANSWERS-2026-11-21.md) |
-| P-120 | Add Butlers to [`OWNED-REPOSITORIES.md`](OWNED-REPOSITORIES.md): the owner chose this on 2026-11-21 (`owned-repos-butlers`, A); the row takes effect when the owner writes it, naming the remote. No agent edits that list | writes into repositories | [`OWNER-DIRECTION-QUESTIONNAIRE-ANSWERS-2026-11-21.md`](OWNER-DIRECTION-QUESTIONNAIRE-ANSWERS-2026-11-21.md) |
-| P-121 | The owner's RFC7-30 cold-open walkthrough of the PWB Polaris page (`syzygy-1z3.22`), chosen 2026-11-21 (`cold-read-walkthrough`, A), once `syzygy-1z3.33` lands. Only the owner's judgment counts (PWB-REQ-022) | owner judgment, not a gate | [`OWNER-DIRECTION-QUESTIONNAIRE-ANSWERS-2026-11-21.md`](OWNER-DIRECTION-QUESTIONNAIRE-ANSWERS-2026-11-21.md) |
 
 **Nothing in this register is self-executing.** An owner decision is
 recorded from the owner's own words in a dated record in this directory.
