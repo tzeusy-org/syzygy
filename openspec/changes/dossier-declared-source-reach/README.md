@@ -11,8 +11,8 @@
 | `GOVERNING-DEPENDENCIES.json` | The union of its warrants (checked by `scripts/check_spec_reconciliation.py` R4) |
 | `tasks.md` | Delivery |
 
-[Observed] `scripts/check_spec_reconciliation.py` composes it after version 2.0 only once one seven-column ledger row carries its tag, names the installing commit, links the spec and the policy at that commit and gives a revert, and both still hash to the reviewed bytes; until then it is pending and the effective REQ-046 is version 2.0's. The predecessor policy file is not edited.
+[Observed] `scripts/check_spec_reconciliation.py` composes it after version 2.0 only once one seven-column ledger row carries its tag, names the commit carrying the adopted bytes, links the spec and the policy at that commit and gives a revert, and both still hash to the reviewed bytes; until then it is pending and the effective REQ-046 is version 2.0's. The predecessor policy file is not edited.
 
 ## Rollback after a veto
 
-Keep the adoption row as history, revert the commit the row names (its recorded command; it removes the successor policy, this package and the checker wiring), revert the row's own commit's census, status and index changes, and append a new row recording the veto; a vetoed change is not adopted again without the owner. With the veto row in place, the checker reads the version 2.0 text as effective again. If the classifier change has landed by then, revert it first: it is what makes runs bind the successor.
+Keep the adoption row as history, run the row's recorded revert (the post-review repair, then the install; together they remove the successor policy, this package and the checker wiring), revert the row's own commit's census, status and index changes, and append a new row recording the veto; a vetoed change is not adopted again without the owner. With the veto row in place, the checker reads the version 2.0 text as effective again. If the classifier change has landed by then, revert it first: it is what makes runs bind the successor.
