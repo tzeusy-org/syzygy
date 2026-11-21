@@ -8,15 +8,15 @@ import { tempDir } from '@syzygy/test-kit';
 import { sha256 } from '@syzygy/support';
 import { captureKernelUnixPeer, type KernelPeerProgram } from './session-peer.js';
 
-let program: KernelPeerProgram;
 const cleanup: (() => Promise<void>)[] = [];
-beforeAll(() => {
-  const directory = tempDir('sp-build-'), executable = path.join(directory, 'peer');
+const fixtureEnv = { PATH: '/usr/bin:/bin', LANG: 'C' };
+function compilePeerFixture(source: string): string {
+  const executable = path.join(tempDir('sp-build-'), 'peer');
   execFileSync('/usr/bin/cc', ['-std=c11', '-Wall', '-Wextra', '-Werror', '-O2',
-    fileURLToPath(new URL('./session-peer.c', import.meta.url)), '-o', executable],
-  { env: { PATH: '/usr/bin:/bin', LANG: 'C' }, stdio: 'pipe', timeout: 10_000 });
-  program = { executable, sha256: sha256(fs.readFileSync(executable)) };
-});
+    fileURLToPath(new URL(source, import.meta.url)), '-o', executable],
+  { env: fixtureEnv, stdio: 'pipe', timeout: 10_000 });
+  return executable;
+}
 afterEach(async () => { for (const close of cleanup.splice(0).reverse()) await close(); });
 async function ownedServer(tcp = false): Promise<{ server: net.Server; endpoint: string | number; accepted: Promise<net.Socket> }> {
   let accept!: (socket: net.Socket) => void;
@@ -43,6 +43,11 @@ async function ownConnection(tcp = false): Promise<{ client: net.Socket; socket:
 }
 
 describe('host kernel Unix peer identity primitive', () => {
+  let program: KernelPeerProgram;
+  beforeAll(() => {
+    const executable = compilePeerFixture('./session-peer.c');
+    program = { executable, sha256: sha256(fs.readFileSync(executable)) };
+  });
   it('captures the actual distinct same-user client processes rather than their claimed identity', async () => {
     const ids: number[] = [];
     for (let i = 0; i < 2; i++) {
@@ -83,5 +88,24 @@ describe('host kernel Unix peer identity primitive', () => {
     const disconnected = new net.Socket(); expect(captureKernelUnixPeer(disconnected, program)).toBeNull(); disconnected.destroy();
     const unix = await ownConnection(); unix.socket.destroy();
     expect(captureKernelUnixPeer(unix.socket, program)).toBeNull();
+  });
+});
+
+describe('own-fixture kernel sender lifetime control', () => {
+  let executable: string;
+  beforeAll(() => { executable = compilePeerFixture('./session-peer-lifetime.test.c'); });
+
+  it.each([
+    ['live', 'effect\n'],
+    ['inherited', 'refused: sender\n'],
+    ['forged', 'refused: connector\n'],
+    ['exited', 'refused: exited\n'],
+  ])('observes the expected effect or refusal for the %s sender', (scenario, outcome) => {
+    const socket = path.join(tempDir('sp-life-'), 's');
+    const observed = execFileSync(executable, [scenario, socket], {
+      env: fixtureEnv, stdio: ['ignore', 'pipe', 'pipe'], encoding: 'utf8',
+      timeout: 4_000, killSignal: 'SIGKILL', maxBuffer: 1024,
+    });
+    expect(observed).toBe(outcome);
   });
 });
