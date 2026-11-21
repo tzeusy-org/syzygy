@@ -35,7 +35,8 @@ Usage:
 
 Options:
   --clone <dir>            use this one-commit clone instead of making one
-  --revision <label|sha>   the consented revision to clone (default: the first preflight names)
+  --revision <label|sha>   a consented revision to clone (default: trunk, the remote HEAD; a public
+                           repository needs no observation record)
   --state-root <dir>       state root (default $${STATE_ROOT_ENV}, else ~/.local/state/syzygy-dossier)
   --deadline <ISO dur>     run deadline from the brief, e.g. PT24H
   --audience <text>        who the dossier is for (asked if absent)
@@ -331,7 +332,8 @@ export interface CloneDeps {
   readonly event: (line: string) => void;
 }
 const PROCESS_CLONE_DEPS: Omit<CloneDeps, 'event'> = {
-  git: args => spawnSync('git', [...args], { encoding: 'utf8' }),
+  // Never prompt for, or send, a credential: the supervisor reads only what anyone can read.
+  git: args => spawnSync('git', [...args], { encoding: 'utf8', env: { ...process.env, GIT_TERMINAL_PROMPT: '0' } }),
   exists: file => fs.existsSync(file),
   mkdir: dir => { fs.mkdirSync(dir, { recursive: true }); },
 };
@@ -342,14 +344,19 @@ const PROCESS_CLONE_DEPS: Omit<CloneDeps, 'event'> = {
 export async function supervisorClone(input: {
   readonly url: string; readonly repositoryId: unknown; readonly chosen: { readonly label: string; readonly commit: string };
   readonly clonesRoot: string; readonly visibilityOf: VisibilityOf | undefined;
+  /** The URL answered an anonymous `git ls-remote` (`trunkOf`), so the repository is public and no record decides it. */
+  readonly publicByProbe?: boolean;
 }, deps: CloneDeps): Promise<{ readonly clone: string } | string> {
   const { url, chosen } = input;
-  const clone = path.join(input.clonesRoot, `${String(input.repositoryId ?? 'repo')}-${chosen.label}`);
+  const name = typeof input.repositoryId === 'string' && input.repositoryId !== '' ? input.repositoryId : urlSlug(url);
+  const clone = path.join(input.clonesRoot, `${name}-${chosen.label}`);
   const head = deps.git(['-C', clone, 'rev-parse', 'HEAD']);
   if (head.status === 0 && head.stdout.trim() === chosen.commit) { deps.event(`reusing clone ${clone}`); return { clone }; }
   if (deps.exists(clone)) return `${clone} exists but is not a clone of ${chosen.commit}; remove it or pass --clone`;
-  const refused = await fetchRefusal(input.repositoryId, chosen.commit, input.visibilityOf);
-  if (refused !== null) return refused;
+  if (input.publicByProbe !== true) {
+    const refused = await fetchRefusal(input.repositoryId, chosen.commit, input.visibilityOf);
+    if (refused !== null) return refused;
+  }
   deps.event(`cloning ${chosen.label} (${chosen.commit.slice(0, 12)}) into ${clone}`);
   deps.mkdir(path.dirname(clone));
   for (const args of [['init', '-q', clone], ['-C', clone, 'fetch', '-q', '--depth=1', url, chosen.commit], ['-C', clone, 'checkout', '-q', '--detach', 'FETCH_HEAD']]) {
@@ -359,17 +366,61 @@ export async function supervisorClone(input: {
   return { clone };
 }
 
+/** `github.com/o/r.git` → `o-r`: a clone directory name when the preflight names no repository. */
+export function urlSlug(url: string): string {
+  const parts = url.replace(/\.git$/, '').split(/[/:]/).filter(Boolean);
+  return parts.slice(-2).join('-').replace(/[^A-Za-z0-9._-]/g, '_') || 'repo';
+}
+
+/** The repository's trunk: the commit its remote HEAD names, read with no credential (D10, VIS-4: reading a repository needs no record;
+ * syzygy-pdja.36: with no --revision a run pins trunk, never an older consented revision). A URL that answers is public, since anyone
+ * can read it; one that does not is refused, naming --clone. */
+export function trunkOf(url: string, deps: Pick<CloneDeps, 'git'>): { readonly commit: string } | string {
+  const r = deps.git(['-c', 'credential.helper=', 'ls-remote', url, 'HEAD']);
+  if (r.status !== 0) return `${url} cannot be read without a credential (${r.stderr.trim() || 'git ls-remote failed'}); for a private repository make a one-commit clone yourself and pass --clone <dir> --revision <commit>`;
+  const commit = /^([0-9a-f]{40})\tHEAD$/m.exec(r.stdout)?.[1];
+  return commit === undefined ? `${url} names no HEAD commit` : { commit };
+}
+
+/** Whether every gate preflight reports missing is an observation-consent record, which D10 retired (VIS-4, "Lower rules follow this
+ * one"): such a run may go ahead on a public trunk. Any other missing gate still refuses. */
+export function onlyConsentMissing(doc: Readonly<Record<string, unknown>>): boolean {
+  const missing = doc['missing'];
+  return Array.isArray(missing) && missing.length > 0 && missing.every((m) => typeof m === 'string' && m.startsWith('observation consent'));
+}
+
 /** Preflight, clone, init, marker, brief and the waiting sessions; returns the supervisor state or the refusal. */
 async function setUp(options: Options, ports: CliPorts, screen: Screen): Promise<SupervisorState | string> {
   const url = options.url!;
   screen.event(`preflight ${url}`); screen.draw(['Setting up…']);
   const pre = await step(['--json', 'preflight', url], ports);
-  if (pre.doc === null || pre.doc['outcome'] !== 'ready') return `preflight: ${pre.doc ? JSON.stringify(pre.doc['missing'] ?? pre.doc['reason']) : pre.stderr.trim()}`;
-  const revisions = (pre.doc['consentedRevisions'] as { label: string; commit: string }[] | undefined) ?? [];
-  const chosen = options.revision === undefined ? revisions[0] : revisions.find((r) => r.label === options.revision || r.commit === options.revision);
-  if (chosen === undefined) return `no consented revision matches ${options.revision ?? '(none named)'}`;
+  const ready = pre.doc !== null && pre.doc['outcome'] === 'ready';
+  const recordless = pre.doc !== null && !ready && options.revision === undefined && onlyConsentMissing(pre.doc);
+  if (pre.doc === null || (!ready && !recordless)) return `preflight: ${pre.doc ? JSON.stringify(pre.doc['missing'] ?? pre.doc['reason']) : pre.stderr.trim()}`;
+  let chosen: { label: string; commit: string } | undefined;
+  let publicByProbe = false;
+  if (options.revision !== undefined) {
+    const revisions = (pre.doc['consentedRevisions'] as { label: string; commit: string }[] | undefined) ?? [];
+    chosen = revisions.find((r) => r.label === options.revision || r.commit === options.revision);
+    if (chosen === undefined) return `no consented revision matches ${options.revision}`;
+  } else {
+    // No --revision: pin trunk (syzygy-pdja.36), or the commit the operator's own --clone holds.
+    const trunk = trunkOf(url, PROCESS_CLONE_DEPS);
+    publicByProbe = typeof trunk !== 'string';
+    if (recordless && !publicByProbe) return `preflight: no observation record, and ${String(trunk)}`;
+    if (options.clone !== undefined) {
+      const head = PROCESS_CLONE_DEPS.git(['-C', options.clone, 'rev-parse', 'HEAD']);
+      if (head.status !== 0) return `${options.clone} is not a git clone: ${head.stderr.trim()}`;
+      const commit = head.stdout.trim();
+      chosen = { label: `clone-${commit.slice(0, 12)}`, commit };
+    } else {
+      if (typeof trunk === 'string') return trunk;
+      chosen = { label: `trunk-${trunk.commit.slice(0, 12)}`, commit: trunk.commit };
+    }
+    screen.event(`pinned ${chosen.label}${recordless ? ' (public repository, no record needed)' : ''}`);
+  }
   const acquired = options.clone !== undefined ? { clone: options.clone } : await supervisorClone({
-    url, repositoryId: (pre.doc['repository'] as Record<string, unknown> | undefined)?.['repositoryId'], chosen,
+    url, repositoryId: (pre.doc['repository'] as Record<string, unknown> | undefined)?.['repositoryId'], chosen, publicByProbe,
     clonesRoot: path.join(os.homedir(), '.local/state/syzygy-polaris-clones'), visibilityOf: cliVisibilityOf(ports),
   }, { ...PROCESS_CLONE_DEPS, event: line => { screen.event(line); if (line.startsWith('cloning ')) screen.draw(['Cloning one commit…']); } });
   if (typeof acquired === 'string') return acquired;
@@ -384,7 +435,7 @@ async function setUp(options: Options, ports: CliPorts, screen: Screen): Promise
   const configFile = path.join(options.stateRoot, `.polaris-config-${process.pid}.json`);
   fs.writeFileSync(configFile, JSON.stringify(config), { mode: 0o600 });
   screen.event('init'); screen.draw(['Initialising the run…']);
-  const init = await step(['--json', 'init', clone, '--url', url, '--config', configFile, '--state-root', options.stateRoot], ports);
+  const init = await step(['--json', 'init', clone, '--url', url, '--config', configFile, '--state-root', options.stateRoot, ...(publicByProbe ? ['--visibility', 'public'] : [])], ports);
   fs.rmSync(configFile, { force: true });
   if (init.exit !== 0 || init.doc === null) return `init: ${init.doc ? String(init.doc['reason']) : init.stderr.trim()}`;
   const run = String(init.doc['run']);
