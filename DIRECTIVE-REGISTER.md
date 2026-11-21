@@ -200,45 +200,45 @@ Owner-approved craft. 55 identifiers, defined across 8 files.
 
 | Identifier | Title, as the corpus marks it | Defined at |
 |---|---|---|
-| `RFC1-1` | — | `.syzygy/governance/contracts/rfcs/RFC-0001-project-graph-identity-state-planes.md`:138 |
-| `RFC1-2` | Repository | `.syzygy/governance/contracts/rfcs/RFC-0001-project-graph-identity-state-planes.md`:169 |
-| `RFC1-3` | — | `.syzygy/governance/contracts/rfcs/RFC-0001-project-graph-identity-state-planes.md`:178 |
-| `RFC1-4` | — | `.syzygy/governance/contracts/rfcs/RFC-0001-project-graph-identity-state-planes.md`:188 |
-| `RFC1-5` | — | `.syzygy/governance/contracts/rfcs/RFC-0001-project-graph-identity-state-planes.md`:195 |
-| `RFC1-6` | — | `.syzygy/governance/contracts/rfcs/RFC-0001-project-graph-identity-state-planes.md`:227 |
-| `RFC1-7` | Extension profiles | `.syzygy/governance/contracts/rfcs/RFC-0001-project-graph-identity-state-planes.md`:244 |
-| `RFC1-8` | Frozen-noun mapping | `.syzygy/governance/contracts/rfcs/RFC-0001-project-graph-identity-state-planes.md`:283 |
-| `RFC1-9` | — | `.syzygy/governance/contracts/rfcs/RFC-0001-project-graph-identity-state-planes.md`:300 |
-| `RFC1-10` | Identifiers are opaque; names are labels | `.syzygy/governance/contracts/rfcs/RFC-0001-project-graph-identity-state-planes.md`:331 |
-| `RFC1-11` | Split and merge mint successors, never mutations | `.syzygy/governance/contracts/rfcs/RFC-0001-project-graph-identity-state-planes.md`:337 |
-| `RFC1-12` | Judgments do not silently survive identity change | `.syzygy/governance/contracts/rfcs/RFC-0001-project-graph-identity-state-planes.md`:346 |
-| `RFC1-13` | — | `.syzygy/governance/contracts/rfcs/RFC-0001-project-graph-identity-state-planes.md`:354 |
-| `RFC1-14` | Capability | `.syzygy/governance/contracts/rfcs/RFC-0001-project-graph-identity-state-planes.md`:361 |
-| `RFC1-15` | Requirement and Scenario are references, not owned content | `.syzygy/governance/contracts/rfcs/RFC-0001-project-graph-identity-state-planes.md`:370 |
-| `RFC1-16` | — | `.syzygy/governance/contracts/rfcs/RFC-0001-project-graph-identity-state-planes.md`:378 |
-| `RFC1-17` | — | `.syzygy/governance/contracts/rfcs/RFC-0001-project-graph-identity-state-planes.md`:392 |
-| `RFC1-18` | Claim and Gap identity has two levels | `.syzygy/governance/contracts/rfcs/RFC-0001-project-graph-identity-state-planes.md`:399 |
-| `RFC1-18(a)` | Declared scope is a typed reference, never a string | `.syzygy/governance/contracts/rfcs/RFC-0001-project-graph-identity-state-planes.md`:415 |
-| `RFC1-18(b)` | Contradiction identity, two levels | `.syzygy/governance/contracts/rfcs/RFC-0001-project-graph-identity-state-planes.md`:434 |
-| `RFC1-19` | — | `.syzygy/governance/contracts/rfcs/RFC-0001-project-graph-identity-state-planes.md`:455 |
-| `RFC1-20` | — | `.syzygy/governance/contracts/rfcs/RFC-0001-project-graph-identity-state-planes.md`:461 |
-| `RFC1-21` | — | `.syzygy/governance/contracts/rfcs/RFC-0001-project-graph-identity-state-planes.md`:471 |
-| `RFC1-22` | — | `.syzygy/governance/contracts/rfcs/RFC-0001-project-graph-identity-state-planes.md`:482 |
-| `RFC1-23` | Act-assignment rule | `.syzygy/governance/contracts/rfcs/RFC-0001-project-graph-identity-state-planes.md`:542 |
-| `RFC1-24` | All positive status flows through Claims | `.syzygy/governance/contracts/rfcs/RFC-0001-project-graph-identity-state-planes.md`:557 |
-| `RFC1-25` | — | `.syzygy/governance/contracts/rfcs/RFC-0001-project-graph-identity-state-planes.md`:563 |
-| `RFC1-25(a)` | Two relations minted by owner decision | `.syzygy/governance/contracts/rfcs/RFC-0001-project-graph-identity-state-planes.md`:623 |
-| `RFC1-25(b)` | The dependency anti-conflation invariant | `.syzygy/governance/contracts/rfcs/RFC-0001-project-graph-identity-state-planes.md`:631 |
-| `RFC1-25(c)` | Cardinality of placed_in | `.syzygy/governance/contracts/rfcs/RFC-0001-project-graph-identity-state-planes.md`:660 |
-| `RFC1-25(d)` | Typed relation identity: the spelling is never the identity | `.syzygy/governance/contracts/rfcs/RFC-0001-project-graph-identity-state-planes.md`:684 |
-| `RFC1-26` | — | `.syzygy/governance/contracts/rfcs/RFC-0001-project-graph-identity-state-planes.md`:736 |
-| `RFC1-27` | — | `.syzygy/governance/contracts/rfcs/RFC-0001-project-graph-identity-state-planes.md`:746 |
-| `RFC1-28` | The approved-but-unmaterialized plan item is a lifecycle state of the Proposal entity | `.syzygy/governance/contracts/rfcs/RFC-0001-project-graph-identity-state-planes.md`:763 |
-| `RFC1-29` | Materialization is a one-way door | `.syzygy/governance/contracts/rfcs/RFC-0001-project-graph-identity-state-planes.md`:772 |
-| `RFC1-30` | — | `.syzygy/governance/contracts/rfcs/RFC-0001-project-graph-identity-state-planes.md`:813 |
-| `RFC1-31` | — | `.syzygy/governance/contracts/rfcs/RFC-0001-project-graph-identity-state-planes.md`:821 |
-| `RFC1-32` | — | `.syzygy/governance/contracts/rfcs/RFC-0001-project-graph-identity-state-planes.md`:860 |
-| `RFC1-33` | — | `.syzygy/governance/contracts/rfcs/RFC-0001-project-graph-identity-state-planes.md`:870 |
+| `RFC1-1` | — | `.syzygy/governance/contracts/rfcs/RFC-0001-project-graph-identity-state-planes.md`:139 |
+| `RFC1-2` | Repository | `.syzygy/governance/contracts/rfcs/RFC-0001-project-graph-identity-state-planes.md`:170 |
+| `RFC1-3` | — | `.syzygy/governance/contracts/rfcs/RFC-0001-project-graph-identity-state-planes.md`:179 |
+| `RFC1-4` | — | `.syzygy/governance/contracts/rfcs/RFC-0001-project-graph-identity-state-planes.md`:189 |
+| `RFC1-5` | — | `.syzygy/governance/contracts/rfcs/RFC-0001-project-graph-identity-state-planes.md`:196 |
+| `RFC1-6` | — | `.syzygy/governance/contracts/rfcs/RFC-0001-project-graph-identity-state-planes.md`:228 |
+| `RFC1-7` | Extension profiles | `.syzygy/governance/contracts/rfcs/RFC-0001-project-graph-identity-state-planes.md`:245 |
+| `RFC1-8` | Frozen-noun mapping | `.syzygy/governance/contracts/rfcs/RFC-0001-project-graph-identity-state-planes.md`:284 |
+| `RFC1-9` | — | `.syzygy/governance/contracts/rfcs/RFC-0001-project-graph-identity-state-planes.md`:301 |
+| `RFC1-10` | Identifiers are opaque; names are labels | `.syzygy/governance/contracts/rfcs/RFC-0001-project-graph-identity-state-planes.md`:332 |
+| `RFC1-11` | Split and merge mint successors, never mutations | `.syzygy/governance/contracts/rfcs/RFC-0001-project-graph-identity-state-planes.md`:338 |
+| `RFC1-12` | Judgments do not silently survive identity change | `.syzygy/governance/contracts/rfcs/RFC-0001-project-graph-identity-state-planes.md`:347 |
+| `RFC1-13` | — | `.syzygy/governance/contracts/rfcs/RFC-0001-project-graph-identity-state-planes.md`:355 |
+| `RFC1-14` | Capability | `.syzygy/governance/contracts/rfcs/RFC-0001-project-graph-identity-state-planes.md`:362 |
+| `RFC1-15` | Requirement and Scenario are references, not owned content | `.syzygy/governance/contracts/rfcs/RFC-0001-project-graph-identity-state-planes.md`:371 |
+| `RFC1-16` | — | `.syzygy/governance/contracts/rfcs/RFC-0001-project-graph-identity-state-planes.md`:379 |
+| `RFC1-17` | — | `.syzygy/governance/contracts/rfcs/RFC-0001-project-graph-identity-state-planes.md`:393 |
+| `RFC1-18` | Claim and Gap identity has two levels | `.syzygy/governance/contracts/rfcs/RFC-0001-project-graph-identity-state-planes.md`:400 |
+| `RFC1-18(a)` | Declared scope is a typed reference, never a string | `.syzygy/governance/contracts/rfcs/RFC-0001-project-graph-identity-state-planes.md`:416 |
+| `RFC1-18(b)` | Contradiction identity, two levels | `.syzygy/governance/contracts/rfcs/RFC-0001-project-graph-identity-state-planes.md`:435 |
+| `RFC1-19` | — | `.syzygy/governance/contracts/rfcs/RFC-0001-project-graph-identity-state-planes.md`:456 |
+| `RFC1-20` | — | `.syzygy/governance/contracts/rfcs/RFC-0001-project-graph-identity-state-planes.md`:462 |
+| `RFC1-21` | — | `.syzygy/governance/contracts/rfcs/RFC-0001-project-graph-identity-state-planes.md`:472 |
+| `RFC1-22` | — | `.syzygy/governance/contracts/rfcs/RFC-0001-project-graph-identity-state-planes.md`:484 |
+| `RFC1-23` | Act-assignment rule | `.syzygy/governance/contracts/rfcs/RFC-0001-project-graph-identity-state-planes.md`:544 |
+| `RFC1-24` | All positive status flows through Claims | `.syzygy/governance/contracts/rfcs/RFC-0001-project-graph-identity-state-planes.md`:559 |
+| `RFC1-25` | — | `.syzygy/governance/contracts/rfcs/RFC-0001-project-graph-identity-state-planes.md`:565 |
+| `RFC1-25(a)` | Two relations minted by owner decision | `.syzygy/governance/contracts/rfcs/RFC-0001-project-graph-identity-state-planes.md`:625 |
+| `RFC1-25(b)` | The dependency anti-conflation invariant | `.syzygy/governance/contracts/rfcs/RFC-0001-project-graph-identity-state-planes.md`:633 |
+| `RFC1-25(c)` | Cardinality of placed_in | `.syzygy/governance/contracts/rfcs/RFC-0001-project-graph-identity-state-planes.md`:662 |
+| `RFC1-25(d)` | Typed relation identity: the spelling is never the identity | `.syzygy/governance/contracts/rfcs/RFC-0001-project-graph-identity-state-planes.md`:686 |
+| `RFC1-26` | — | `.syzygy/governance/contracts/rfcs/RFC-0001-project-graph-identity-state-planes.md`:738 |
+| `RFC1-27` | — | `.syzygy/governance/contracts/rfcs/RFC-0001-project-graph-identity-state-planes.md`:748 |
+| `RFC1-28` | The approved-but-unmaterialized plan item is a lifecycle state of the Proposal entity | `.syzygy/governance/contracts/rfcs/RFC-0001-project-graph-identity-state-planes.md`:765 |
+| `RFC1-29` | Materialization is a one-way door | `.syzygy/governance/contracts/rfcs/RFC-0001-project-graph-identity-state-planes.md`:774 |
+| `RFC1-30` | — | `.syzygy/governance/contracts/rfcs/RFC-0001-project-graph-identity-state-planes.md`:838 |
+| `RFC1-31` | — | `.syzygy/governance/contracts/rfcs/RFC-0001-project-graph-identity-state-planes.md`:846 |
+| `RFC1-32` | — | `.syzygy/governance/contracts/rfcs/RFC-0001-project-graph-identity-state-planes.md`:885 |
+| `RFC1-33` | — | `.syzygy/governance/contracts/rfcs/RFC-0001-project-graph-identity-state-planes.md`:895 |
 | `RFC2-1` | The closed rule, restated as binding | `.syzygy/governance/contracts/rfcs/RFC-0002/snapshot-and-evaluation-core.md`:72 |
 | `RFC2-2` | Uncaptured means uninfluential | `.syzygy/governance/contracts/rfcs/RFC-0002/snapshot-and-evaluation-core.md`:112 |
 | `RFC2-3` | Evaluation identity | `.syzygy/governance/contracts/rfcs/RFC-0002/snapshot-and-evaluation-core.md`:122 |
@@ -254,14 +254,14 @@ Owner-approved craft. 55 identifiers, defined across 8 files.
 | `RFC2-13` | States, admission, resolution, expiry | `.syzygy/governance/contracts/rfcs/RFC-0002/challenge-lifecycle.md`:81 |
 | `RFC2-14` | Suspension is not erasure | `.syzygy/governance/contracts/rfcs/RFC-0002/challenge-lifecycle.md`:278 |
 | `RFC2-15` | Definitions and exits | `.syzygy/governance/contracts/rfcs/RFC-0002/reconciliation-chain.md`:79 |
-| `RFC2-16` | As claim predicates | `.syzygy/governance/contracts/rfcs/RFC-0002/reconciliation-chain.md`:107 |
-| `RFC2-17` | Reservation of the words | `.syzygy/governance/contracts/rfcs/RFC-0002/reconciliation-chain.md`:122 |
-| `RFC2-18` | The chain | `.syzygy/governance/contracts/rfcs/RFC-0002/reconciliation-chain.md`:141 |
-| `RFC2-19` | Trigger and staging | `.syzygy/governance/contracts/rfcs/RFC-0002/reconciliation-chain.md`:245 |
-| `RFC2-19(a)` | What that Unknown carries, and does not | `.syzygy/governance/contracts/rfcs/RFC-0002/reconciliation-chain.md`:254 |
-| `RFC2-20` | The closure fallacy, forbidden | `.syzygy/governance/contracts/rfcs/RFC-0002/reconciliation-chain.md`:289 |
-| `RFC2-21` | What "no gap at evaluation E" means | `.syzygy/governance/contracts/rfcs/RFC-0002/reconciliation-chain.md`:300 |
-| `RFC2-22` | Fixed point (idempotence) | `.syzygy/governance/contracts/rfcs/RFC-0002/reconciliation-chain.md`:311 |
+| `RFC2-16` | As claim predicates | `.syzygy/governance/contracts/rfcs/RFC-0002/reconciliation-chain.md`:108 |
+| `RFC2-17` | Reservation of the words | `.syzygy/governance/contracts/rfcs/RFC-0002/reconciliation-chain.md`:123 |
+| `RFC2-18` | The chain | `.syzygy/governance/contracts/rfcs/RFC-0002/reconciliation-chain.md`:142 |
+| `RFC2-19` | Trigger and staging | `.syzygy/governance/contracts/rfcs/RFC-0002/reconciliation-chain.md`:246 |
+| `RFC2-19(a)` | What that Unknown carries, and does not | `.syzygy/governance/contracts/rfcs/RFC-0002/reconciliation-chain.md`:255 |
+| `RFC2-20` | The closure fallacy, forbidden | `.syzygy/governance/contracts/rfcs/RFC-0002/reconciliation-chain.md`:290 |
+| `RFC2-21` | What "no gap at evaluation E" means | `.syzygy/governance/contracts/rfcs/RFC-0002/reconciliation-chain.md`:301 |
+| `RFC2-22` | Fixed point (idempotence) | `.syzygy/governance/contracts/rfcs/RFC-0002/reconciliation-chain.md`:312 |
 | `RFC2-23` | Six degradation states, closed, each with its rendering obligation | `.syzygy/governance/contracts/rfcs/RFC-0002/rendering-vocabularies.md`:78 |
 | `RFC2-24` | Twelve reasons, closed | `.syzygy/governance/contracts/rfcs/RFC-0002/rendering-vocabularies.md`:103 |
 | `RFC2-25` | Six tiers, closed, each inside exactly one parent label | `.syzygy/governance/contracts/rfcs/RFC-0002/rendering-vocabularies.md`:168 |
@@ -433,17 +433,17 @@ Owner-approved craft. 55 identifiers, defined across 8 files.
 | `RFC7-38` | This contract schedules nothing | `.syzygy/governance/contracts/rfcs/RFC-0007/rendering-and-surface.md`:323 |
 | `RFC7-39` | The fixed human entry point | `.syzygy/governance/contracts/rfcs/RFC-0007/rendering-and-surface.md`:374 |
 | `RFC7-40` | Repository-front-door discoverability is a per-repository finding | `.syzygy/governance/contracts/rfcs/RFC-0007/rendering-and-surface.md`:416 |
-| `RFC8-1` | — | `.syzygy/governance/contracts/rfcs/RFC-0008/identity-authority-materialization.md`:79 |
-| `RFC8-2` | The anti-thesis is binding | `.syzygy/governance/contracts/rfcs/RFC-0008/identity-authority-materialization.md`:86 |
-| `RFC8-3` | — | `.syzygy/governance/contracts/rfcs/RFC-0008/identity-authority-materialization.md`:96 |
-| `RFC8-4` | — | `.syzygy/governance/contracts/rfcs/RFC-0008/identity-authority-materialization.md`:104 |
-| `RFC8-5` | Deliberate non-reifications | `.syzygy/governance/contracts/rfcs/RFC-0008/identity-authority-materialization.md`:119 |
-| `RFC8-6` | — | `.syzygy/governance/contracts/rfcs/RFC-0008/identity-authority-materialization.md`:132 |
-| `RFC8-7` | — | `.syzygy/governance/contracts/rfcs/RFC-0008/identity-authority-materialization.md`:140 |
-| `RFC8-8` | "What remains?" enumerates three planes, each labeled | `.syzygy/governance/contracts/rfcs/RFC-0008/identity-authority-materialization.md`:210 |
-| `RFC8-9` | — | `.syzygy/governance/contracts/rfcs/RFC-0008/identity-authority-materialization.md`:263 |
-| `RFC8-10` | — | `.syzygy/governance/contracts/rfcs/RFC-0008/identity-authority-materialization.md`:279 |
-| `RFC8-11` | Divergence renders; Trajectory never adjudicates it | `.syzygy/governance/contracts/rfcs/RFC-0008/identity-authority-materialization.md`:315 |
+| `RFC8-1` | — | `.syzygy/governance/contracts/rfcs/RFC-0008/identity-authority-materialization.md`:81 |
+| `RFC8-2` | The anti-thesis is binding | `.syzygy/governance/contracts/rfcs/RFC-0008/identity-authority-materialization.md`:88 |
+| `RFC8-3` | — | `.syzygy/governance/contracts/rfcs/RFC-0008/identity-authority-materialization.md`:98 |
+| `RFC8-4` | — | `.syzygy/governance/contracts/rfcs/RFC-0008/identity-authority-materialization.md`:106 |
+| `RFC8-5` | Deliberate non-reifications | `.syzygy/governance/contracts/rfcs/RFC-0008/identity-authority-materialization.md`:121 |
+| `RFC8-6` | — | `.syzygy/governance/contracts/rfcs/RFC-0008/identity-authority-materialization.md`:134 |
+| `RFC8-7` | — | `.syzygy/governance/contracts/rfcs/RFC-0008/identity-authority-materialization.md`:142 |
+| `RFC8-8` | "What remains?" enumerates three planes, each labeled | `.syzygy/governance/contracts/rfcs/RFC-0008/identity-authority-materialization.md`:212 |
+| `RFC8-9` | — | `.syzygy/governance/contracts/rfcs/RFC-0008/identity-authority-materialization.md`:273 |
+| `RFC8-10` | — | `.syzygy/governance/contracts/rfcs/RFC-0008/identity-authority-materialization.md`:289 |
+| `RFC8-11` | Divergence renders; Trajectory never adjudicates it | `.syzygy/governance/contracts/rfcs/RFC-0008/identity-authority-materialization.md`:327 |
 | `RFC8-12` | (this paragraph restates it for orientation) | `.syzygy/governance/contracts/rfcs/RFC-0008/README.md`:216 |
 | `RFC8-13` | — | `.syzygy/governance/contracts/rfcs/RFC-0008/state-vocabulary-and-cost.md`:212 |
 | `RFC8-14` | Raw provider status stays visible and queryable | `.syzygy/governance/contracts/rfcs/RFC-0008/state-vocabulary-and-cost.md`:241 |
@@ -456,15 +456,15 @@ Owner-approved craft. 55 identifiers, defined across 8 files.
 | `RFC8-21` | — | `.syzygy/governance/contracts/rfcs/RFC-0008/accounting-reconciliation-and-release.md`:94 |
 | `RFC8-22` | A broken join renders; it is never silently skipped | `.syzygy/governance/contracts/rfcs/RFC-0008/accounting-reconciliation-and-release.md`:124 |
 | `RFC8-23` | — | `.syzygy/governance/contracts/rfcs/RFC-0008/accounting-reconciliation-and-release.md`:135 |
-| `RFC8-24` | — | `.syzygy/governance/contracts/rfcs/RFC-0008/accounting-reconciliation-and-release.md`:158 |
-| `RFC8-25` | — | `.syzygy/governance/contracts/rfcs/RFC-0008/accounting-reconciliation-and-release.md`:184 |
-| `RFC8-26` | The preservation set is binding | `.syzygy/governance/contracts/rfcs/RFC-0008/accounting-reconciliation-and-release.md`:246 |
-| `RFC8-27` | Expired-detail rendering | `.syzygy/governance/contracts/rfcs/RFC-0008/accounting-reconciliation-and-release.md`:254 |
-| `RFC8-28` | — | `.syzygy/governance/contracts/rfcs/RFC-0008/accounting-reconciliation-and-release.md`:285 |
-| `RFC8-29` | V0 renders the absence honestly | `.syzygy/governance/contracts/rfcs/RFC-0008/accounting-reconciliation-and-release.md`:329 |
-| `RFC8-30` | The closure fallacy is forbidden | `.syzygy/governance/contracts/rfcs/RFC-0008/accounting-reconciliation-and-release.md`:338 |
-| `RFC8-31` | — | `.syzygy/governance/contracts/rfcs/RFC-0008/accounting-reconciliation-and-release.md`:350 |
-| `RFC8-32` | This contract schedules nothing | `.syzygy/governance/contracts/rfcs/RFC-0008/accounting-reconciliation-and-release.md`:398 |
+| `RFC8-24` | — | `.syzygy/governance/contracts/rfcs/RFC-0008/accounting-reconciliation-and-release.md`:164 |
+| `RFC8-25` | — | `.syzygy/governance/contracts/rfcs/RFC-0008/accounting-reconciliation-and-release.md`:190 |
+| `RFC8-26` | The preservation set is binding | `.syzygy/governance/contracts/rfcs/RFC-0008/accounting-reconciliation-and-release.md`:252 |
+| `RFC8-27` | Expired-detail rendering | `.syzygy/governance/contracts/rfcs/RFC-0008/accounting-reconciliation-and-release.md`:260 |
+| `RFC8-28` | — | `.syzygy/governance/contracts/rfcs/RFC-0008/accounting-reconciliation-and-release.md`:291 |
+| `RFC8-29` | V0 renders the absence honestly | `.syzygy/governance/contracts/rfcs/RFC-0008/accounting-reconciliation-and-release.md`:335 |
+| `RFC8-30` | The closure fallacy is forbidden | `.syzygy/governance/contracts/rfcs/RFC-0008/accounting-reconciliation-and-release.md`:344 |
+| `RFC8-31` | — | `.syzygy/governance/contracts/rfcs/RFC-0008/accounting-reconciliation-and-release.md`:356 |
+| `RFC8-32` | This contract schedules nothing | `.syzygy/governance/contracts/rfcs/RFC-0008/accounting-reconciliation-and-release.md`:404 |
 | `RFC9-1` | — | `.syzygy/governance/contracts/rfcs/RFC-0009/semantic-geography.md`:76 |
 | `RFC9-2` | — | `.syzygy/governance/contracts/rfcs/RFC-0009/semantic-geography.md`:87 |
 | `RFC9-3` | — | `.syzygy/governance/contracts/rfcs/RFC-0009/semantic-geography.md`:91 |
@@ -537,45 +537,45 @@ Candidate — **binds nothing.** RFC-0010 and RFC-0011, plus the candidate copie
 
 | Identifier | Title, as the corpus marks it | Defined at |
 |---|---|---|
-| `RFC1-1` | — | `.syzygy/governance/contracts/candidates/rfcs/RFC-0001-project-graph-identity-state-planes.md`:138 |
-| `RFC1-2` | Repository | `.syzygy/governance/contracts/candidates/rfcs/RFC-0001-project-graph-identity-state-planes.md`:169 |
-| `RFC1-3` | — | `.syzygy/governance/contracts/candidates/rfcs/RFC-0001-project-graph-identity-state-planes.md`:178 |
-| `RFC1-4` | — | `.syzygy/governance/contracts/candidates/rfcs/RFC-0001-project-graph-identity-state-planes.md`:188 |
-| `RFC1-5` | — | `.syzygy/governance/contracts/candidates/rfcs/RFC-0001-project-graph-identity-state-planes.md`:195 |
-| `RFC1-6` | — | `.syzygy/governance/contracts/candidates/rfcs/RFC-0001-project-graph-identity-state-planes.md`:227 |
-| `RFC1-7` | Extension profiles | `.syzygy/governance/contracts/candidates/rfcs/RFC-0001-project-graph-identity-state-planes.md`:244 |
-| `RFC1-8` | Frozen-noun mapping | `.syzygy/governance/contracts/candidates/rfcs/RFC-0001-project-graph-identity-state-planes.md`:283 |
-| `RFC1-9` | — | `.syzygy/governance/contracts/candidates/rfcs/RFC-0001-project-graph-identity-state-planes.md`:300 |
-| `RFC1-10` | Identifiers are opaque; names are labels | `.syzygy/governance/contracts/candidates/rfcs/RFC-0001-project-graph-identity-state-planes.md`:331 |
-| `RFC1-11` | Split and merge mint successors, never mutations | `.syzygy/governance/contracts/candidates/rfcs/RFC-0001-project-graph-identity-state-planes.md`:337 |
-| `RFC1-12` | Judgments do not silently survive identity change | `.syzygy/governance/contracts/candidates/rfcs/RFC-0001-project-graph-identity-state-planes.md`:346 |
-| `RFC1-13` | — | `.syzygy/governance/contracts/candidates/rfcs/RFC-0001-project-graph-identity-state-planes.md`:354 |
-| `RFC1-14` | Capability | `.syzygy/governance/contracts/candidates/rfcs/RFC-0001-project-graph-identity-state-planes.md`:361 |
-| `RFC1-15` | Requirement and Scenario are references, not owned content | `.syzygy/governance/contracts/candidates/rfcs/RFC-0001-project-graph-identity-state-planes.md`:370 |
-| `RFC1-16` | — | `.syzygy/governance/contracts/candidates/rfcs/RFC-0001-project-graph-identity-state-planes.md`:378 |
-| `RFC1-17` | — | `.syzygy/governance/contracts/candidates/rfcs/RFC-0001-project-graph-identity-state-planes.md`:392 |
-| `RFC1-18` | Claim and Gap identity has two levels | `.syzygy/governance/contracts/candidates/rfcs/RFC-0001-project-graph-identity-state-planes.md`:399 |
-| `RFC1-18(a)` | Declared scope is a typed reference, never a string | `.syzygy/governance/contracts/candidates/rfcs/RFC-0001-project-graph-identity-state-planes.md`:415 |
-| `RFC1-18(b)` | Contradiction identity, two levels | `.syzygy/governance/contracts/candidates/rfcs/RFC-0001-project-graph-identity-state-planes.md`:434 |
-| `RFC1-19` | — | `.syzygy/governance/contracts/candidates/rfcs/RFC-0001-project-graph-identity-state-planes.md`:455 |
-| `RFC1-20` | — | `.syzygy/governance/contracts/candidates/rfcs/RFC-0001-project-graph-identity-state-planes.md`:461 |
-| `RFC1-21` | — | `.syzygy/governance/contracts/candidates/rfcs/RFC-0001-project-graph-identity-state-planes.md`:471 |
-| `RFC1-22` | — | `.syzygy/governance/contracts/candidates/rfcs/RFC-0001-project-graph-identity-state-planes.md`:482 |
-| `RFC1-23` | Act-assignment rule | `.syzygy/governance/contracts/candidates/rfcs/RFC-0001-project-graph-identity-state-planes.md`:542 |
-| `RFC1-24` | All positive status flows through Claims | `.syzygy/governance/contracts/candidates/rfcs/RFC-0001-project-graph-identity-state-planes.md`:557 |
-| `RFC1-25` | — | `.syzygy/governance/contracts/candidates/rfcs/RFC-0001-project-graph-identity-state-planes.md`:563 |
-| `RFC1-25(a)` | Two relations minted by owner decision | `.syzygy/governance/contracts/candidates/rfcs/RFC-0001-project-graph-identity-state-planes.md`:623 |
-| `RFC1-25(b)` | The dependency anti-conflation invariant | `.syzygy/governance/contracts/candidates/rfcs/RFC-0001-project-graph-identity-state-planes.md`:631 |
-| `RFC1-25(c)` | Cardinality of placed_in | `.syzygy/governance/contracts/candidates/rfcs/RFC-0001-project-graph-identity-state-planes.md`:660 |
-| `RFC1-25(d)` | Typed relation identity: the spelling is never the identity | `.syzygy/governance/contracts/candidates/rfcs/RFC-0001-project-graph-identity-state-planes.md`:684 |
-| `RFC1-26` | — | `.syzygy/governance/contracts/candidates/rfcs/RFC-0001-project-graph-identity-state-planes.md`:736 |
-| `RFC1-27` | — | `.syzygy/governance/contracts/candidates/rfcs/RFC-0001-project-graph-identity-state-planes.md`:746 |
-| `RFC1-28` | The approved-but-unmaterialized plan item is a lifecycle state of the Proposal entity | `.syzygy/governance/contracts/candidates/rfcs/RFC-0001-project-graph-identity-state-planes.md`:763 |
-| `RFC1-29` | Materialization is a one-way door | `.syzygy/governance/contracts/candidates/rfcs/RFC-0001-project-graph-identity-state-planes.md`:772 |
-| `RFC1-30` | — | `.syzygy/governance/contracts/candidates/rfcs/RFC-0001-project-graph-identity-state-planes.md`:813 |
-| `RFC1-31` | — | `.syzygy/governance/contracts/candidates/rfcs/RFC-0001-project-graph-identity-state-planes.md`:821 |
-| `RFC1-32` | — | `.syzygy/governance/contracts/candidates/rfcs/RFC-0001-project-graph-identity-state-planes.md`:860 |
-| `RFC1-33` | — | `.syzygy/governance/contracts/candidates/rfcs/RFC-0001-project-graph-identity-state-planes.md`:870 |
+| `RFC1-1` | — | `.syzygy/governance/contracts/candidates/rfcs/RFC-0001-project-graph-identity-state-planes.md`:139 |
+| `RFC1-2` | Repository | `.syzygy/governance/contracts/candidates/rfcs/RFC-0001-project-graph-identity-state-planes.md`:170 |
+| `RFC1-3` | — | `.syzygy/governance/contracts/candidates/rfcs/RFC-0001-project-graph-identity-state-planes.md`:179 |
+| `RFC1-4` | — | `.syzygy/governance/contracts/candidates/rfcs/RFC-0001-project-graph-identity-state-planes.md`:189 |
+| `RFC1-5` | — | `.syzygy/governance/contracts/candidates/rfcs/RFC-0001-project-graph-identity-state-planes.md`:196 |
+| `RFC1-6` | — | `.syzygy/governance/contracts/candidates/rfcs/RFC-0001-project-graph-identity-state-planes.md`:228 |
+| `RFC1-7` | Extension profiles | `.syzygy/governance/contracts/candidates/rfcs/RFC-0001-project-graph-identity-state-planes.md`:245 |
+| `RFC1-8` | Frozen-noun mapping | `.syzygy/governance/contracts/candidates/rfcs/RFC-0001-project-graph-identity-state-planes.md`:284 |
+| `RFC1-9` | — | `.syzygy/governance/contracts/candidates/rfcs/RFC-0001-project-graph-identity-state-planes.md`:301 |
+| `RFC1-10` | Identifiers are opaque; names are labels | `.syzygy/governance/contracts/candidates/rfcs/RFC-0001-project-graph-identity-state-planes.md`:332 |
+| `RFC1-11` | Split and merge mint successors, never mutations | `.syzygy/governance/contracts/candidates/rfcs/RFC-0001-project-graph-identity-state-planes.md`:338 |
+| `RFC1-12` | Judgments do not silently survive identity change | `.syzygy/governance/contracts/candidates/rfcs/RFC-0001-project-graph-identity-state-planes.md`:347 |
+| `RFC1-13` | — | `.syzygy/governance/contracts/candidates/rfcs/RFC-0001-project-graph-identity-state-planes.md`:355 |
+| `RFC1-14` | Capability | `.syzygy/governance/contracts/candidates/rfcs/RFC-0001-project-graph-identity-state-planes.md`:362 |
+| `RFC1-15` | Requirement and Scenario are references, not owned content | `.syzygy/governance/contracts/candidates/rfcs/RFC-0001-project-graph-identity-state-planes.md`:371 |
+| `RFC1-16` | — | `.syzygy/governance/contracts/candidates/rfcs/RFC-0001-project-graph-identity-state-planes.md`:379 |
+| `RFC1-17` | — | `.syzygy/governance/contracts/candidates/rfcs/RFC-0001-project-graph-identity-state-planes.md`:393 |
+| `RFC1-18` | Claim and Gap identity has two levels | `.syzygy/governance/contracts/candidates/rfcs/RFC-0001-project-graph-identity-state-planes.md`:400 |
+| `RFC1-18(a)` | Declared scope is a typed reference, never a string | `.syzygy/governance/contracts/candidates/rfcs/RFC-0001-project-graph-identity-state-planes.md`:416 |
+| `RFC1-18(b)` | Contradiction identity, two levels | `.syzygy/governance/contracts/candidates/rfcs/RFC-0001-project-graph-identity-state-planes.md`:435 |
+| `RFC1-19` | — | `.syzygy/governance/contracts/candidates/rfcs/RFC-0001-project-graph-identity-state-planes.md`:456 |
+| `RFC1-20` | — | `.syzygy/governance/contracts/candidates/rfcs/RFC-0001-project-graph-identity-state-planes.md`:462 |
+| `RFC1-21` | — | `.syzygy/governance/contracts/candidates/rfcs/RFC-0001-project-graph-identity-state-planes.md`:472 |
+| `RFC1-22` | — | `.syzygy/governance/contracts/candidates/rfcs/RFC-0001-project-graph-identity-state-planes.md`:484 |
+| `RFC1-23` | Act-assignment rule | `.syzygy/governance/contracts/candidates/rfcs/RFC-0001-project-graph-identity-state-planes.md`:544 |
+| `RFC1-24` | All positive status flows through Claims | `.syzygy/governance/contracts/candidates/rfcs/RFC-0001-project-graph-identity-state-planes.md`:559 |
+| `RFC1-25` | — | `.syzygy/governance/contracts/candidates/rfcs/RFC-0001-project-graph-identity-state-planes.md`:565 |
+| `RFC1-25(a)` | Two relations minted by owner decision | `.syzygy/governance/contracts/candidates/rfcs/RFC-0001-project-graph-identity-state-planes.md`:625 |
+| `RFC1-25(b)` | The dependency anti-conflation invariant | `.syzygy/governance/contracts/candidates/rfcs/RFC-0001-project-graph-identity-state-planes.md`:633 |
+| `RFC1-25(c)` | Cardinality of placed_in | `.syzygy/governance/contracts/candidates/rfcs/RFC-0001-project-graph-identity-state-planes.md`:662 |
+| `RFC1-25(d)` | Typed relation identity: the spelling is never the identity | `.syzygy/governance/contracts/candidates/rfcs/RFC-0001-project-graph-identity-state-planes.md`:686 |
+| `RFC1-26` | — | `.syzygy/governance/contracts/candidates/rfcs/RFC-0001-project-graph-identity-state-planes.md`:738 |
+| `RFC1-27` | — | `.syzygy/governance/contracts/candidates/rfcs/RFC-0001-project-graph-identity-state-planes.md`:748 |
+| `RFC1-28` | The approved-but-unmaterialized plan item is a lifecycle state of the Proposal entity | `.syzygy/governance/contracts/candidates/rfcs/RFC-0001-project-graph-identity-state-planes.md`:765 |
+| `RFC1-29` | Materialization is a one-way door | `.syzygy/governance/contracts/candidates/rfcs/RFC-0001-project-graph-identity-state-planes.md`:774 |
+| `RFC1-30` | — | `.syzygy/governance/contracts/candidates/rfcs/RFC-0001-project-graph-identity-state-planes.md`:838 |
+| `RFC1-31` | — | `.syzygy/governance/contracts/candidates/rfcs/RFC-0001-project-graph-identity-state-planes.md`:846 |
+| `RFC1-32` | — | `.syzygy/governance/contracts/candidates/rfcs/RFC-0001-project-graph-identity-state-planes.md`:885 |
+| `RFC1-33` | — | `.syzygy/governance/contracts/candidates/rfcs/RFC-0001-project-graph-identity-state-planes.md`:895 |
 | `RFC2-1` | The closed rule, restated as binding | `.syzygy/governance/contracts/candidates/rfcs/RFC-0002/snapshot-and-evaluation-core.md`:72 |
 | `RFC2-2` | Uncaptured means uninfluential | `.syzygy/governance/contracts/candidates/rfcs/RFC-0002/snapshot-and-evaluation-core.md`:112 |
 | `RFC2-3` | Evaluation identity | `.syzygy/governance/contracts/candidates/rfcs/RFC-0002/snapshot-and-evaluation-core.md`:122 |
@@ -591,14 +591,14 @@ Candidate — **binds nothing.** RFC-0010 and RFC-0011, plus the candidate copie
 | `RFC2-13` | States, admission, resolution, expiry | `.syzygy/governance/contracts/candidates/rfcs/RFC-0002/challenge-lifecycle.md`:81 |
 | `RFC2-14` | Suspension is not erasure | `.syzygy/governance/contracts/candidates/rfcs/RFC-0002/challenge-lifecycle.md`:278 |
 | `RFC2-15` | Definitions and exits | `.syzygy/governance/contracts/candidates/rfcs/RFC-0002/reconciliation-chain.md`:79 |
-| `RFC2-16` | As claim predicates | `.syzygy/governance/contracts/candidates/rfcs/RFC-0002/reconciliation-chain.md`:107 |
-| `RFC2-17` | Reservation of the words | `.syzygy/governance/contracts/candidates/rfcs/RFC-0002/reconciliation-chain.md`:122 |
-| `RFC2-18` | The chain | `.syzygy/governance/contracts/candidates/rfcs/RFC-0002/reconciliation-chain.md`:141 |
-| `RFC2-19` | Trigger and staging | `.syzygy/governance/contracts/candidates/rfcs/RFC-0002/reconciliation-chain.md`:245 |
-| `RFC2-19(a)` | What that Unknown carries, and does not | `.syzygy/governance/contracts/candidates/rfcs/RFC-0002/reconciliation-chain.md`:254 |
-| `RFC2-20` | The closure fallacy, forbidden | `.syzygy/governance/contracts/candidates/rfcs/RFC-0002/reconciliation-chain.md`:289 |
-| `RFC2-21` | What "no gap at evaluation E" means | `.syzygy/governance/contracts/candidates/rfcs/RFC-0002/reconciliation-chain.md`:300 |
-| `RFC2-22` | Fixed point (idempotence) | `.syzygy/governance/contracts/candidates/rfcs/RFC-0002/reconciliation-chain.md`:311 |
+| `RFC2-16` | As claim predicates | `.syzygy/governance/contracts/candidates/rfcs/RFC-0002/reconciliation-chain.md`:108 |
+| `RFC2-17` | Reservation of the words | `.syzygy/governance/contracts/candidates/rfcs/RFC-0002/reconciliation-chain.md`:123 |
+| `RFC2-18` | The chain | `.syzygy/governance/contracts/candidates/rfcs/RFC-0002/reconciliation-chain.md`:142 |
+| `RFC2-19` | Trigger and staging | `.syzygy/governance/contracts/candidates/rfcs/RFC-0002/reconciliation-chain.md`:246 |
+| `RFC2-19(a)` | What that Unknown carries, and does not | `.syzygy/governance/contracts/candidates/rfcs/RFC-0002/reconciliation-chain.md`:255 |
+| `RFC2-20` | The closure fallacy, forbidden | `.syzygy/governance/contracts/candidates/rfcs/RFC-0002/reconciliation-chain.md`:290 |
+| `RFC2-21` | What "no gap at evaluation E" means | `.syzygy/governance/contracts/candidates/rfcs/RFC-0002/reconciliation-chain.md`:301 |
+| `RFC2-22` | Fixed point (idempotence) | `.syzygy/governance/contracts/candidates/rfcs/RFC-0002/reconciliation-chain.md`:312 |
 | `RFC2-23` | Six degradation states, closed, each with its rendering obligation | `.syzygy/governance/contracts/candidates/rfcs/RFC-0002/rendering-vocabularies.md`:78 |
 | `RFC2-24` | Twelve reasons, closed | `.syzygy/governance/contracts/candidates/rfcs/RFC-0002/rendering-vocabularies.md`:103 |
 | `RFC2-25` | Six tiers, closed, each inside exactly one parent label | `.syzygy/governance/contracts/candidates/rfcs/RFC-0002/rendering-vocabularies.md`:168 |
@@ -770,17 +770,17 @@ Candidate — **binds nothing.** RFC-0010 and RFC-0011, plus the candidate copie
 | `RFC7-38` | This contract schedules nothing | `.syzygy/governance/contracts/candidates/rfcs/RFC-0007/rendering-and-surface.md`:323 |
 | `RFC7-39` | The fixed human entry point | `.syzygy/governance/contracts/candidates/rfcs/RFC-0007/rendering-and-surface.md`:374 |
 | `RFC7-40` | Repository-front-door discoverability is a per-repository finding | `.syzygy/governance/contracts/candidates/rfcs/RFC-0007/rendering-and-surface.md`:416 |
-| `RFC8-1` | — | `.syzygy/governance/contracts/candidates/rfcs/RFC-0008/identity-authority-materialization.md`:79 |
-| `RFC8-2` | The anti-thesis is binding | `.syzygy/governance/contracts/candidates/rfcs/RFC-0008/identity-authority-materialization.md`:86 |
-| `RFC8-3` | — | `.syzygy/governance/contracts/candidates/rfcs/RFC-0008/identity-authority-materialization.md`:96 |
-| `RFC8-4` | — | `.syzygy/governance/contracts/candidates/rfcs/RFC-0008/identity-authority-materialization.md`:104 |
-| `RFC8-5` | Deliberate non-reifications | `.syzygy/governance/contracts/candidates/rfcs/RFC-0008/identity-authority-materialization.md`:119 |
-| `RFC8-6` | — | `.syzygy/governance/contracts/candidates/rfcs/RFC-0008/identity-authority-materialization.md`:132 |
-| `RFC8-7` | — | `.syzygy/governance/contracts/candidates/rfcs/RFC-0008/identity-authority-materialization.md`:140 |
-| `RFC8-8` | "What remains?" enumerates three planes, each labeled | `.syzygy/governance/contracts/candidates/rfcs/RFC-0008/identity-authority-materialization.md`:210 |
-| `RFC8-9` | — | `.syzygy/governance/contracts/candidates/rfcs/RFC-0008/identity-authority-materialization.md`:263 |
-| `RFC8-10` | — | `.syzygy/governance/contracts/candidates/rfcs/RFC-0008/identity-authority-materialization.md`:279 |
-| `RFC8-11` | Divergence renders; Trajectory never adjudicates it | `.syzygy/governance/contracts/candidates/rfcs/RFC-0008/identity-authority-materialization.md`:315 |
+| `RFC8-1` | — | `.syzygy/governance/contracts/candidates/rfcs/RFC-0008/identity-authority-materialization.md`:81 |
+| `RFC8-2` | The anti-thesis is binding | `.syzygy/governance/contracts/candidates/rfcs/RFC-0008/identity-authority-materialization.md`:88 |
+| `RFC8-3` | — | `.syzygy/governance/contracts/candidates/rfcs/RFC-0008/identity-authority-materialization.md`:98 |
+| `RFC8-4` | — | `.syzygy/governance/contracts/candidates/rfcs/RFC-0008/identity-authority-materialization.md`:106 |
+| `RFC8-5` | Deliberate non-reifications | `.syzygy/governance/contracts/candidates/rfcs/RFC-0008/identity-authority-materialization.md`:121 |
+| `RFC8-6` | — | `.syzygy/governance/contracts/candidates/rfcs/RFC-0008/identity-authority-materialization.md`:134 |
+| `RFC8-7` | — | `.syzygy/governance/contracts/candidates/rfcs/RFC-0008/identity-authority-materialization.md`:142 |
+| `RFC8-8` | "What remains?" enumerates three planes, each labeled | `.syzygy/governance/contracts/candidates/rfcs/RFC-0008/identity-authority-materialization.md`:212 |
+| `RFC8-9` | — | `.syzygy/governance/contracts/candidates/rfcs/RFC-0008/identity-authority-materialization.md`:273 |
+| `RFC8-10` | — | `.syzygy/governance/contracts/candidates/rfcs/RFC-0008/identity-authority-materialization.md`:289 |
+| `RFC8-11` | Divergence renders; Trajectory never adjudicates it | `.syzygy/governance/contracts/candidates/rfcs/RFC-0008/identity-authority-materialization.md`:327 |
 | `RFC8-12` | (this paragraph restates it for orientation) | `.syzygy/governance/contracts/candidates/rfcs/RFC-0008/README.md`:216 |
 | `RFC8-13` | — | `.syzygy/governance/contracts/candidates/rfcs/RFC-0008/state-vocabulary-and-cost.md`:212 |
 | `RFC8-14` | Raw provider status stays visible and queryable | `.syzygy/governance/contracts/candidates/rfcs/RFC-0008/state-vocabulary-and-cost.md`:241 |
@@ -793,15 +793,15 @@ Candidate — **binds nothing.** RFC-0010 and RFC-0011, plus the candidate copie
 | `RFC8-21` | — | `.syzygy/governance/contracts/candidates/rfcs/RFC-0008/accounting-reconciliation-and-release.md`:94 |
 | `RFC8-22` | A broken join renders; it is never silently skipped | `.syzygy/governance/contracts/candidates/rfcs/RFC-0008/accounting-reconciliation-and-release.md`:124 |
 | `RFC8-23` | — | `.syzygy/governance/contracts/candidates/rfcs/RFC-0008/accounting-reconciliation-and-release.md`:135 |
-| `RFC8-24` | — | `.syzygy/governance/contracts/candidates/rfcs/RFC-0008/accounting-reconciliation-and-release.md`:158 |
-| `RFC8-25` | — | `.syzygy/governance/contracts/candidates/rfcs/RFC-0008/accounting-reconciliation-and-release.md`:184 |
-| `RFC8-26` | The preservation set is binding | `.syzygy/governance/contracts/candidates/rfcs/RFC-0008/accounting-reconciliation-and-release.md`:246 |
-| `RFC8-27` | Expired-detail rendering | `.syzygy/governance/contracts/candidates/rfcs/RFC-0008/accounting-reconciliation-and-release.md`:254 |
-| `RFC8-28` | — | `.syzygy/governance/contracts/candidates/rfcs/RFC-0008/accounting-reconciliation-and-release.md`:285 |
-| `RFC8-29` | V0 renders the absence honestly | `.syzygy/governance/contracts/candidates/rfcs/RFC-0008/accounting-reconciliation-and-release.md`:329 |
-| `RFC8-30` | The closure fallacy is forbidden | `.syzygy/governance/contracts/candidates/rfcs/RFC-0008/accounting-reconciliation-and-release.md`:338 |
-| `RFC8-31` | — | `.syzygy/governance/contracts/candidates/rfcs/RFC-0008/accounting-reconciliation-and-release.md`:350 |
-| `RFC8-32` | This contract schedules nothing | `.syzygy/governance/contracts/candidates/rfcs/RFC-0008/accounting-reconciliation-and-release.md`:398 |
+| `RFC8-24` | — | `.syzygy/governance/contracts/candidates/rfcs/RFC-0008/accounting-reconciliation-and-release.md`:164 |
+| `RFC8-25` | — | `.syzygy/governance/contracts/candidates/rfcs/RFC-0008/accounting-reconciliation-and-release.md`:190 |
+| `RFC8-26` | The preservation set is binding | `.syzygy/governance/contracts/candidates/rfcs/RFC-0008/accounting-reconciliation-and-release.md`:252 |
+| `RFC8-27` | Expired-detail rendering | `.syzygy/governance/contracts/candidates/rfcs/RFC-0008/accounting-reconciliation-and-release.md`:260 |
+| `RFC8-28` | — | `.syzygy/governance/contracts/candidates/rfcs/RFC-0008/accounting-reconciliation-and-release.md`:291 |
+| `RFC8-29` | V0 renders the absence honestly | `.syzygy/governance/contracts/candidates/rfcs/RFC-0008/accounting-reconciliation-and-release.md`:335 |
+| `RFC8-30` | The closure fallacy is forbidden | `.syzygy/governance/contracts/candidates/rfcs/RFC-0008/accounting-reconciliation-and-release.md`:344 |
+| `RFC8-31` | — | `.syzygy/governance/contracts/candidates/rfcs/RFC-0008/accounting-reconciliation-and-release.md`:356 |
+| `RFC8-32` | This contract schedules nothing | `.syzygy/governance/contracts/candidates/rfcs/RFC-0008/accounting-reconciliation-and-release.md`:404 |
 | `RFC9-1` | — | `.syzygy/governance/contracts/candidates/rfcs/RFC-0009/semantic-geography.md`:76 |
 | `RFC9-2` | — | `.syzygy/governance/contracts/candidates/rfcs/RFC-0009/semantic-geography.md`:87 |
 | `RFC9-3` | — | `.syzygy/governance/contracts/candidates/rfcs/RFC-0009/semantic-geography.md`:91 |

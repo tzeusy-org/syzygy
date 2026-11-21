@@ -144,11 +144,17 @@ ingest rejection (RFC4-10).
 **Unknown-provenance is not orphaned work, and this clause never absorbs it.**
 
 - An Unknown-provenance item may be legitimate untraceable work — a
-  pre-Syzygy backlog item, an import — and its route is *surface it*:
-  counted, never green, resolvable by supplying a warrant.
-- An **orphaned work item** is two stores answering one question (RFC8-8;
-  RFC1-29), and its **only** lawful exit is owner adjudication (RFC1-21;
-  RFC2-15).
+  pre-Syzygy backlog item, an import, any unrecorded work item created by a
+  writer other than Syzygy's adapter (RFC1-29) — and its route is *surface it*: counted, never green,
+  resolvable by supplying a warrant.
+- An **orphaned work item** is a Syzygy-created one that no materialization
+  record matches: two stores answering one question (RFC8-8; RFC1-29).
+  Its **only** lawful exit is adjudication (RFC1-21; RFC2-15; RFC8-8).
+- **What separates them is who created the item, never its age, its
+  fields or the backlog's size** (RFC1-29). An unrecorded item the
+  scheduler's history attributes to another writer is Unknown-provenance
+  however many such items there are, even when it carries a warrant
+  reference; supplying a warrant resolves it.
 - Rendering one as Unknown-provenance mis-routes it, skips minting the
   Contradiction, and skips RFC2-15's Unknown rendering of the affected
   conclusion.
@@ -292,7 +298,7 @@ different answers and **must never share a rendering**.
 - Unqualified "reconciliation" means only the doctrinal sense;
   scheduler-state repair never shares a field, count, or UI string with it —
   and the same reservation binds `unsatisfied` (a gap) against
-  `contradiction-raised` (a Contradiction, owner adjudication only), which
+  `contradiction-raised` (a Contradiction, adjudication only), which
   Trajectory must never merge into one count or one badge (RFC2-17; RFC4-6).
 
 **Six values, closed.** The chain-state vocabulary above is closed at those
@@ -312,7 +318,7 @@ mark, a mark's colour, a count, or a legend entry**.
 - The map surface binds the identical sentence (RFC9-32), and a distinction
   only colour carries is not a distinction under RFC6-22/23's parity test.
 - Two differently-coloured badges do not discharge this clause: the reader on
-  the surface that routes a gap to work and a Contradiction to owner
+  the surface that routes a gap to work and a Contradiction to
   adjudication alone must be able to tell them apart **without colour**, by
   label, text, or structure.
 
@@ -371,7 +377,7 @@ still lacks reconciliation") are endpoint-answerable at a named evaluation.
 **Non-visual parity binds this surface too, and is stated here rather than
 left to the sibling surfaces.** Polaris binds it at RFC7-33/34; no doctrine
 clause distinguishes surfaces, and this surface's distinctions are the ones
-routing a reader to work or to owner adjudication. Two limbs, both binding:
+routing a reader to work or to adjudication. Two limbs, both binding:
 
 - **Recoverable without colour, position, or layout.** Every normalized work
   state (RFC8-12), every chain state (RFC8-28), every blocked-cause set

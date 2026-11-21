@@ -78,7 +78,7 @@ scripts/context_load.py rfcs/RFC-0001-project-graph-identity-state-planes.md \
   craft:testing-and-verification.md
 ```
 
-Measured: **26,924 words ≈ 36,347 estimated tokens.**
+Measured: **27,206 words ≈ 36,728 estimated tokens.**
 
 ## ⚠️ Budget breach — waiver
 
@@ -198,7 +198,7 @@ anything.
 ## Packet digest
 
 sha256 over the mandatory files concatenated in listed order:
-`ef5aa5c5a0914bab…` (recompute: `cat <mandatory files> | sha256sum`).
+`92b14508b5d71c8d…` (recompute: `cat <mandatory files> | sha256sum`).
 
 **Selection: hand-authored golden selection. Measurement: mechanical.
 Compiler implementation: absent.** `scripts/context_load.py` resolves a
@@ -255,3 +255,5 @@ RFC11-4/RFC11-13 stated as the rule forcing the defining module, closing
 the fixture-1-vs-8 contradiction; transcribed measurements removed — the
 anchored `Measured:` field and the packet digest are the only measurements
 this fixture states.*
+
+*Re-measured 2026-11-22 by the same CG-18 method: the U2 contract amendment (orphan predicate; Contradiction adjudication route per D12) edited contract modules this packet loads. Previous: 26,924 words, digest `ef5aa5c5a0914bab…`. Selection unchanged.*
