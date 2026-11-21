@@ -173,6 +173,7 @@ describe('protected ordered design terminal evidence verifier', () => {
       { principal: 'operator:someone-else' },
       { asOf: start },
       { profile: structuredClone(evidence.profile) },
+      { plan: structuredClone(evidence.plan) },
     ]) expect(verifyOrderedDesignTerminalEvidence({ ...evidence, ...changes })).toBeNull();
   });
 });

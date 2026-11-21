@@ -370,9 +370,11 @@ async function runNativeOrderedFixture(scenario: OrderedScenario) {
             || admission.value.logical.sha256 === admission.value.forwarded.sha256) throw new Error('ordered detector identities differ from wire');
           screened++;
           if (scenario === 'ready' && checked === 1) {
-            const refuseOriginal = screenOrderedDesignRequest(bytes, ordered,
-              { ...detectors, scanSecrets: text => text === original.toString('utf8') });
-            if (refuseOriginal.ok || refuseOriginal.code !== 'secret-excluded') throw new Error('whole original missing before first part');
+            for (const [label, target] of [['received', raw], ['prepared', body.toString('utf8')],
+              ['complete original', original.toString('utf8')]] as const) {
+              const excluded = screenOrderedDesignRequest(bytes, ordered, { ...detectors, scanSecrets: text => text === target });
+              if (excluded.ok || excluded.code !== 'secret-excluded') throw new Error(`ordered detector missed ${label}`);
+            }
           }
         }
         cachePositions.push(caches);

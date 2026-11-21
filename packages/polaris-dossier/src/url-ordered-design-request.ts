@@ -5,7 +5,7 @@ import {
   type OrderedDesignSessionProfile, type SessionProfileUsage,
 } from './session-profile.js';
 import {
-  isOrderedDesignPartPath, materializeOrderedDesignPart, orderedDesignWholeReply, type OrderedDesignPlan,
+  isOrderedDesignPartPath, isOrderedDesignPlanFor, materializeOrderedDesignPart, orderedDesignWholeReply, type OrderedDesignPlan,
 } from './url-design-delivery.js';
 import { URL_DESIGN_VIEW_ARTIFACT } from './url-design-view.js';
 
@@ -30,7 +30,7 @@ export function projectOrderedDesignRequest(
   actual: Readonly<Record<string, unknown>>, bindings: OrderedDesignRequestBindings,
 ): { readonly request: Readonly<Record<string, unknown>>; readonly wholeReply: string } {
   const { profile, plan, envelope, prepared, parts, acknowledgment } = bindings;
-  if (!isOrderedDesignSessionProfile(profile)) return refuse();
+  if (!isOrderedDesignSessionProfile(profile) || !isOrderedDesignPlanFor(plan, profile.transcript.partition)) return refuse();
   const { transcript } = profile;
   const { binding, partCount } = plan.manifest;
   const { messageIndex, blockIndex } = transcript.prepared;
@@ -44,7 +44,7 @@ export function projectOrderedDesignRequest(
   const messages = actual.messages;
   if (!Array.isArray(messages) || messages.length <= messageIndex) return refuse();
   // Check the entire sealed source even for a request with zero released parts.
-  const wholeReply = orderedDesignWholeReply(plan, envelope, transcript.partition);
+  const wholeReply = orderedDesignWholeReply(plan, envelope);
   const preparedReply = canonical({ kind: 'session-control', ok: true, state: 'events',
     events: [{ event: transcript.prepared.event, ...plan.prepared }] });
   const partReplies = parts.map((_, index) => materializeOrderedDesignPart(plan, envelope, plan.manifest.parts[index]!.path));

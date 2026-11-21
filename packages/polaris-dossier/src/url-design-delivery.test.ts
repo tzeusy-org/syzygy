@@ -204,9 +204,9 @@ describe('ordered URL design byte plan', () => {
     const changed = Buffer.from(bindings.envelope);
     changed[changed.length - 10] = 0x20;
     expect(() => projectOrderedDesignRequest(actual, { ...bindings, envelope: changed })).toThrow(REFUSAL);
-    expect(() => projectOrderedDesignRequest(actual, { ...bindings, plan: { ...bindings.plan } })).toThrow(REFUSAL);
+    expect(() => projectOrderedDesignRequest(actual, { ...bindings, plan: { ...bindings.plan } })).toThrow(PROJECT_REFUSAL);
     const repartitioned = planOrderedDesignBytes({ ...planInput, limits: { ...planInput.limits, partBytes: 30_000 } });
-    expect(() => projectOrderedDesignRequest(actual, { ...bindings, plan: repartitioned })).toThrow(REFUSAL);
+    expect(() => projectOrderedDesignRequest(actual, { ...bindings, plan: repartitioned })).toThrow(PROJECT_REFUSAL);
     expect(() => projectOrderedDesignRequest(actual, { ...bindings, parts: [] })).toThrow(PROJECT_REFUSAL);
     for (const messageAt of [2, 3, 4]) {
       const messages = structuredClone(actual.messages);

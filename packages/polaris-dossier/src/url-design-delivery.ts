@@ -124,13 +124,16 @@ function boundEnvelope(plan: OrderedDesignPlan, envelope: Uint8Array): Uint8Arra
 
 /** The legacy whole representation, used only as a detector input for the
  * ordered profile. Its tool identity is separate from this byte plan. */
-export function orderedDesignWholeReply(plan: OrderedDesignPlan, envelope: Uint8Array, limits: PlanInput['limits']): string {
-  const issued = issuedPlans.get(plan);
-  if (issued === undefined || issued.partBytes !== limits.partBytes || issued.partCount !== limits.partCount
-    || issued.replyBytes !== limits.replyBytes || issued.preparedBytes !== limits.preparedBytes) return fail();
+export function orderedDesignWholeReply(plan: OrderedDesignPlan, envelope: Uint8Array): string {
   const text = new TextDecoder('utf-8', { fatal: true, ignoreBOM: true }).decode(boundEnvelope(plan, envelope));
   return canonical({ ok: true, kind: 'artifact', path: `round-${plan.manifest.binding.round}/design-view.json`,
     text, sha256: plan.manifest.envelopeSha256 });
+}
+
+export function isOrderedDesignPlanFor(plan: OrderedDesignPlan, limits: PlanInput['limits']): boolean {
+  const issued = issuedPlans.get(plan);
+  return issued !== undefined && issued.partBytes === limits.partBytes && issued.partCount === limits.partCount
+    && issued.replyBytes === limits.replyBytes && issued.preparedBytes === limits.preparedBytes;
 }
 
 /**

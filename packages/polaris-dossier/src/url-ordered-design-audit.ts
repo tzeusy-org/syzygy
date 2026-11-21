@@ -2,7 +2,7 @@ import { encodeCanonicalJson, parseBoundedJson } from '@syzygy/polaris-generatio
 import { deepFreeze, isRecord, sha256 } from '@syzygy/support';
 import { isOrderedDesignSessionProfile, sessionProfileRemainingTokens, sessionProfileReminderText, type OrderedDesignSessionProfile } from './session-profile.js';
 import type { SessionResponseObservation } from './session-relay.js';
-import type { OrderedDesignPlan } from './url-design-delivery.js';
+import { isOrderedDesignPlanFor, type OrderedDesignPlan } from './url-design-delivery.js';
 
 const FORMAT = 'url-ordered-design-audit/1';
 const BOUNDS = { maxBytes: 65_536, maxNodes: 4096, maxDepth: 12 };
@@ -84,7 +84,8 @@ function textIdentity(text: string): ByteIdentity {
 export function verifyOrderedDesignTerminalEvidence(input: OrderedDesignAuditInput): OrderedDesignTerminalEvidence | null {
   try {
     const { profile, plan, principal, asOf, records, terminal } = input;
-    if (!isOrderedDesignSessionProfile(profile) || !identifier(principal) || !Number.isSafeInteger(asOf)
+    if (!isOrderedDesignSessionProfile(profile) || !isOrderedDesignPlanFor(plan, profile.transcript.partition)
+      || !identifier(principal) || !Number.isSafeInteger(asOf)
       || !exact(terminal, ['id', 'sha256']) || !identifier(terminal.id) || !digest(terminal.sha256)) return refused();
     const { manifest, manifestText, manifestSha256, prepared, preparedText, replies } = plan;
     const binding = manifest.binding;
