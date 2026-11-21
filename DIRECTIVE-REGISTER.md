@@ -89,16 +89,16 @@ Owner-approved craft. 55 identifiers, defined across 8 files.
 | `CC-REV-2` | The same-logical-change rule | `.syzygy/governance/policies/craft-and-care/review-and-documentation.md`:71 |
 | `CC-REV-3` | No hidden duplicate authority | `.syzygy/governance/policies/craft-and-care/review-and-documentation.md`:115 |
 | `CC-REV-4` | Fresh-reader review for normative artifacts | `.syzygy/governance/policies/craft-and-care/review-and-documentation.md`:134 |
-| `CC-REV-5` | Epistemic labels in documentation | `.syzygy/governance/policies/craft-and-care/review-and-documentation.md`:150 |
-| `CC-REV-6` | Review findings are dispositioned, never dropped | `.syzygy/governance/policies/craft-and-care/review-and-documentation.md`:166 |
-| `CC-REV-7` | Identifiers are stable; retire, never renumber | `.syzygy/governance/policies/craft-and-care/review-and-documentation.md`:181 |
-| `CC-REV-8` | Documents are abstraction trees, with diagrams where structure beats prose | `.syzygy/governance/policies/craft-and-care/review-and-documentation.md`:193 |
+| `CC-REV-5` | Epistemic labels in documentation | `.syzygy/governance/policies/craft-and-care/review-and-documentation.md`:155 |
+| `CC-REV-6` | Review findings are dispositioned, never dropped | `.syzygy/governance/policies/craft-and-care/review-and-documentation.md`:171 |
+| `CC-REV-7` | Identifiers are stable; retire, never renumber | `.syzygy/governance/policies/craft-and-care/review-and-documentation.md`:187 |
+| `CC-REV-8` | Documents are abstraction trees, with diagrams where structure beats prose | `.syzygy/governance/policies/craft-and-care/review-and-documentation.md`:199 |
 | `CC-SEC-1` | Default-deny is the born state of every surface | `.syzygy/governance/policies/craft-and-care/security-and-secrets.md`:28 |
-| `CC-SEC-2` | Egress is consent-checked in code, at every path | `.syzygy/governance/policies/craft-and-care/security-and-secrets.md`:46 |
-| `CC-SEC-3` | Observed code never executes outside an accepted profile | `.syzygy/governance/policies/craft-and-care/security-and-secrets.md`:63 |
-| `CC-SEC-4` | Writes are consented, attributed, atomic, revertable | `.syzygy/governance/policies/craft-and-care/security-and-secrets.md`:84 |
-| `CC-SEC-5` | Secrets fail closed at every boundary | `.syzygy/governance/policies/craft-and-care/security-and-secrets.md`:101 |
-| `CC-SEC-6` | Provenance retains hashes, never secret-bearing bodies | `.syzygy/governance/policies/craft-and-care/security-and-secrets.md`:128 |
+| `CC-SEC-2` | Egress is checked in code, at every path | `.syzygy/governance/policies/craft-and-care/security-and-secrets.md`:46 |
+| `CC-SEC-3` | Observed code runs only in a sandbox, or by the owner's choice | `.syzygy/governance/policies/craft-and-care/security-and-secrets.md`:69 |
+| `CC-SEC-4` | Writes are attributed, atomic, revertable; consented outside the owner's repositories | `.syzygy/governance/policies/craft-and-care/security-and-secrets.md`:102 |
+| `CC-SEC-5` | Secrets fail closed at every boundary | `.syzygy/governance/policies/craft-and-care/security-and-secrets.md`:123 |
+| `CC-SEC-6` | Provenance retains hashes, never secret-bearing bodies | `.syzygy/governance/policies/craft-and-care/security-and-secrets.md`:150 |
 | `CC-TEST-1` | Every defect fix ships a reproducing test; exceptions are rare and recorded | `.syzygy/governance/policies/craft-and-care/testing-and-verification.md`:15 |
 | `CC-TEST-2` | Gate claims require retained, resolvable gate artifacts | `.syzygy/governance/policies/craft-and-care/testing-and-verification.md`:31 |
 | `CC-TEST-3` | Determinism is verified, not assumed | `.syzygy/governance/policies/craft-and-care/testing-and-verification.md`:75 |

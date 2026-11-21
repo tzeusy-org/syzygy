@@ -43,50 +43,72 @@ New endpoints, listeners, and UI routes carry SEC-1's full default posture
   serving portfolio data credential-free — the exact fresh-install failure
   SEC-1 names.
 
-## CC-SEC-2 — Egress is consent-checked in code, at every path
+## CC-SEC-2 — Egress is checked in code, at every path
 
 No code path transmits governed-project content to a store or service the
-owner does not control without checking the recorded, per-project consent
-naming that provider and content class (SEC-2).
+owner does not control unless that service is a provider declared for the
+run, and the content has passed secret screening (SEC-2, SEC-5).
+*(Amended 2026-11-21 under D10, D10 FOLLOW-ON F-7: the check was against a
+recorded per-project consent naming the provider and content class; D10
+retired that consent.)*
 
 - **Governed-project content:** source structure, specs, work history,
-  derivations, **prompts included**.
-- **Absent consent**, the dependent feature renders Unknown rather than
-  being computed; it does not queue, cache, or "anonymize" its way around
-  the check.
-- **Consent state is rendered on the project surface**, so what is being
-  sent where is inspectable.
+  derivations, **prompts included**, from any repository Syzygy reads.
+- **The check is two-part, in code:** the receiving service is declared in
+  the run's own record, and the content is determinable and screened. Content
+  the policy matches or cannot classify is never sent, whatever is declared.
+- **With no declared provider**, the dependent feature renders Unknown rather
+  than being computed; it does not queue, cache, or "anonymize" its way
+  around the check.
+- **The run's declared providers are rendered on the project surface**, so
+  what is being sent where is inspectable.
 - *Violation:* a semantic-search feature that ships project text to an
-  embedding provider not named in the project's consent record, because the
-  provider was "already configured globally."
+  embedding provider the run did not declare, because the provider was
+  "already configured globally."
 
-## CC-SEC-3 — Observed code never executes outside an accepted profile
+## CC-SEC-3 — Observed code runs only in a sandbox, or by the owner's choice
 
-Observed-project code is untrusted regardless of owner (SEC-3), and runs
-only inside an accepted, explicit opt-in execution profile.
+Observed-project code is untrusted regardless of owner (SEC-3). Syzygy itself
+never runs it; an agent may build and run it inside a sandbox, and running it
+outside one is the owner's decision. *(Amended 2026-11-21 under D10, D10
+FOLLOW-ON F-7, folding the conforming amendment queued as P-117: the clause
+said no observed code executes until an execution profile is accepted.)*
 
-- **Until the execution-profile RFC is accepted:** **no observed-project
-  code executes, period** — observation is parsing and reading, never
-  evaluation.
-- **After acceptance**, execution happens only inside an explicit opt-in
-  profile with:
+- **The daemon and every Syzygy process** stay observation-only: parsing and
+  reading, never evaluation.
+- **In a sandbox, the agent decides.** A sandbox is an execution profile
+  with:
   - default-deny;
-  - isolated credentials;
+  - isolated credentials (no Syzygy credential and none of the owner's
+    readable);
   - declared network access;
   - resource limits;
   - destructive-operation gates.
-- "Run the project's own test command to get better evidence" is exactly
-  the tempting violation.
+  The agent's choice of profile is recorded in the run's record before the
+  instruction is given; no owner choice per run or per project is needed.
+- **Outside a sandbox, the owner decides** (VIS-4, secrets class), only in
+  the case SEC-3 states: the owner's own host, a session the owner started and
+  attends, and the owner's recorded choice for that one run. Code never
+  issues that instruction to a session Syzygy started or to an unattended
+  one.
+- **Wherever it runs**, claims resting on the execution are Inferred and
+  every command run is disclosed.
+- "Run the project's own test command to get better evidence" outside a
+  sandbox is exactly the tempting violation.
 - *Violation:* an observer that executes a governed repository's build
   script to discover its structure, inheriting the host user's ambient
   credentials.
 
-## CC-SEC-4 — Writes are consented, attributed, atomic, revertable
+## CC-SEC-4 — Writes are attributed, atomic, revertable; consented outside the owner's repositories
 
-Every Syzygy write into a governed repository follows SEC-4.
+Every Syzygy write into a governed repository follows SEC-4. *(Amended
+2026-11-21 under D10, D10 FOLLOW-ON F-7: consent was required before the
+first write into any repository.)*
 
 - **What SEC-4 requires:**
-  - recorded per-repository consent precedes the first write;
+  - the owner's recorded consent precedes the first write into a repository
+    the owner does not own; Syzygy's own repository and the repositories in
+    `decisions/OWNED-REPOSITORIES.md` need none;
   - each write is attributed to Syzygy, atomic, and individually
     revertable;
   - Syzygy never overwrites a governance artifact it did not author without

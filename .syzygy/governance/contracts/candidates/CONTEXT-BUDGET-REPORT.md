@@ -41,7 +41,7 @@ the *measurement*, never the *selection*.
 | `context-selection-10-trajectory-lifecycle.md` | 12 | 43,067 | 58,140 | **above the proposed trigger** by 190.7% | `8972411055a76b5e…` |
 | `context-selection-2-trajectory-adapter.md` | 8 | 21,969 | 29,658 | **above the proposed trigger** by 48.3% | `4456038f649a634e…` |
 | `context-selection-3-orrery-lens.md` | 5 | 16,993 | 22,941 | **above the proposed trigger** by 14.7% | `2a4a3f2798b957f2…` |
-| `context-selection-4-execution-profile.md` | 6 | 13,269 | 17,913 | above the proposed default band, under the proposed trigger | `7c7d67d9a6ccf2cb…` |
+| `context-selection-4-execution-profile.md` | 6 | 13,531 | 18,267 | above the proposed default band, under the proposed trigger | `4a148ff3c1bdb280…` |
 | `context-selection-5-cross-project-mission.md` | 11 | 25,070 | 33,844 | **above the proposed trigger** by 69.2% | `34935c1fa8bb6493…` |
 | `context-selection-6-doctrine-amendment.md` | 6 | 13,968 | 18,857 | above the proposed default band, under the proposed trigger | `b15ca5fb8d62a163…` |
 | `context-selection-7-kernel-identity.md` | 5 | 18,512 | 24,991 | **above the proposed trigger** by 25.0% | `6282fe0dcc357339…` |

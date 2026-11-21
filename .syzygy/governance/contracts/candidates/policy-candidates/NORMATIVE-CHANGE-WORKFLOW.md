@@ -11,9 +11,8 @@ the form, the change classes, and the rules on classes.
 
 **Scope:** how a change to active-authority text moves from proposal to
 adopted, and who does what at each step. **Non-scope:** what any change
-should say; the owner acceptance ceremony for gate-bound artifacts (the
-active acceptance record owns it, and it is not restated here); work
-scheduling and branch mechanics.
+should say; how a pre-D10 owner act was performed (history, in the
+acceptance records); work scheduling and branch mechanics.
 
 ---
 
@@ -26,11 +25,11 @@ scheduling and branch mechanics.
         ↓
 2. Blast radius    every dependent found, by a stated method
         ↓
-3. Fresh review    a reviewer who neither authored it nor shared the session
+3. Fresh review    one reviewer who neither authored it nor shared the session
         ↓
 4. Disposition     every finding fixed, or explicitly overruled with rationale
         ↓
-5. Adopt           by the owning authority — never by the drafter
+5. Adopt           an agent row in AGENT-ADOPTIONS.md; the owner in an owner class
         ↓
 6. Propagate       every invalidated artifact, same logical change
         ↓
@@ -48,11 +47,16 @@ Three questions, in order:
    policy, decision. If the answer is "more than one," stop — that is a
    duplicate-home defect (CC-REV-3) to surface *before* editing, not a
    precedence call to make while editing.
-3. **Is the artifact digest-bound or gate-pending?** If so the change cannot
-   land alone: it needs manifest regeneration, record update and a fresh
-   digest-binding review, batched together. One extra review cycle is cheap;
-   a half-churned gate is not. **An artifact edited after its act is, for the
-   record, an artifact with no act.**
+3. **Is it in an owner class?** Doctrine, weakening secret detection,
+   writes into repositories the owner does not own, and exposure or release
+   are the owner's (VIS-4 as amended by D10); everything else is adopted by
+   an agent. When unsure, treat it as owner-class and ask. *(Amended
+   2026-11-21, D10 FOLLOW-ON F-7. This question used to ask whether the
+   artifact was digest-bound or gate-pending, and said "An artifact edited
+   after its act is, for the record, an artifact with no act." Since D10 an
+   act's digest is history, not a lock: a later edit is a new adoption
+   (RFC3-16 as amended), and no manifest regeneration or digest-binding
+   review is needed for it.)*
 
 ### 1 — Draft the delta
 
@@ -91,16 +95,22 @@ a desired verdict (CC-REV-1).
 Every finding is fixed, or explicitly overruled by the accountable authority
 with recorded rationale. Findings are never dropped (CC-REV-6).
 
-**Two failed review rounds on the same material mean upstream ambiguity.**
-Stop polishing prose and return to the source decision that underspecified it
-(CC-REV-4).
+**One review, not gating** (CC-REV-4 as amended 2026-11-21). Fix what it
+finds, record the dispositions, and decide; do not dispatch confirmation
+rounds to chase a clean verdict. A finding a fix cannot reach means upstream
+ambiguity: return to the source decision that underspecified it.
 
 ### 5 — Adopt
 
-By the owning authority, never the drafter. **Agents draft; the owner
-adopts** — doctrine is owner-only (VIS-4), and gate-bound artifacts follow
-their own acceptance ceremony. Adoption and editing are strictly ordered,
-never interleaved.
+Outside the four owner classes, the agent adopts: the change lands on the
+default branch with one row in `decisions/AGENT-ADOPTIONS.md` naming the
+commit, what changed, why and the revert command, and a specification
+version also gets a tag (VIS-4 as amended by D10). In an owner class the
+owner decides, recorded as the owner's words with the commit that applies
+it; no phrase or digest ceremony. The adopting agent never labels its
+adoption the owner's. *(Amended 2026-11-21, D10 FOLLOW-ON F-7: this step
+read "Agents draft; the owner adopts" and sent gate-bound artifacts to an
+acceptance ceremony.)*
 
 ### 6 — Propagate in the same logical change
 
@@ -173,8 +183,8 @@ says so rather than borrowing the authority of the evidenced rows.
 - **It has no enforcement.** Every step is a discipline, not a gate. The
   script-checkable parts — blast-radius sweeps, count re-verification,
   citation resolution — do not exist as checks yet.
-- **It does not cover the owner acceptance ceremony** for gate-bound
-  artifacts; that sequence lives in the active acceptance record.
+- **It does not describe the retired owner acceptance ceremony**; the acts
+  performed before D10 are history in the acceptance records.
 - **It has not been executed end to end.** Steps 3, 4 and 6 describe practice
   this repository has followed in substance across prior review rounds; steps
   0, 1 and 2 are new and lightly exercised.
