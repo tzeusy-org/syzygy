@@ -126,6 +126,15 @@ describe('the configuration detectors over agent text and cited spans', () => {
     expect([screen.screenBody(QUOTED), predecessor.screenBody(QUOTED)]).toEqual(['secret-detector-match', undefined]);
     expect([screen.screenBody(JSON_LINE), predecessor.screenBody(JSON_LINE)]).toEqual(['secret-detector-match', undefined]);
   });
+  // The render step's rescan of a whole admitted body (a page that cannot be confirmed to meet the renderCondition): the detectors of the
+  // body's stage, then the active-content scan with no exemption. A Stage-1 body keeps the predecessor's answer, which is screenBody(body).
+  it('rescan a Stage-2 body with them, and a Stage-1 body as the predecessor does', () => {
+    const quoted = `# Setup\n\n${JSON_LINE}`;
+    const badge = '# R\n\n<img src="badge.svg" alt="build">\n';
+    expect([screen.scannedAsBefore(JSON_LINE, 'config/app.json'), screen.scannedAsBefore(quoted, 'docs/setup.md'), screen.scannedAsBefore(badge, 'README.md'),
+      screen.scannedAsBefore('# R\n\nA store.\n', 'README.md')]).toEqual([true, false, true, false]);
+    expect([predecessor.screenBody(quoted) !== undefined, predecessor.screenBody(badge) !== undefined]).toEqual([false, true]);
+  });
   it('screen a Stage-2 span or body given its path, and never a Stage-1 one', () => {
     expect(screen.screenBody(JSON_LINE, 'config/app.json')).toBe('secret-detector-match');
     expect(screen.screenBody(JSON_LINE, 'docs/setup.md')).toBeUndefined();

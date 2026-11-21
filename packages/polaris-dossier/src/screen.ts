@@ -98,6 +98,11 @@ export interface DossierScreen {
    * meet the renderCondition applies to an exempt body. It runs over the complete body, so a redacted body (version 4) that an exemption
    * admitted (version 5's project-documentation exemption) is checked on its withheld lines too; the answer carries no text. */
   readonly activeContentAsBefore: (body: string) => boolean;
+  /** Whether a whole admitted body read at `repositoryPath`, scanned as before for a page that cannot be confirmed to meet the
+   * renderCondition, holds a finding: the detectors of the body's stage (the configuration detectors only for a body Stage 2 places,
+   * dossier policy 2.0.0: "They do not run over a body Stage 1 places"), then the active-content scan with no exemption. Under a
+   * one-stage policy it answers as `screenBody(body)` does. */
+  readonly scannedAsBefore: (body: string, repositoryPath: string) => boolean;
   /** The visibility this screen was built for (version 8): `private` excludes every detector-matched body whole, and the render shows no
    * object id of a blob excluded or withheld on any ground. Always `public` under versions 1 to 7. */
   readonly visibility: SourceVisibility;
@@ -272,6 +277,7 @@ export function buildDossierScreen(policy: Uint8Array, projectDocumentationEnabl
       secretRedaction: redaction !== null,
       screenTargetBody,
       activeContentAsBefore: (body) => scanActiveContent(body).length > 0,
+      scannedAsBefore: (body, repositoryPath) => detectSecrets(stageTwo(repositoryPath) ? stageTwoDetectors : detectors, body) !== undefined || scanActiveContent(body).length > 0,
       visibility,
     },
   };

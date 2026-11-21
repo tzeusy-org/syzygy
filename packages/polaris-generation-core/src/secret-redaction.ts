@@ -154,7 +154,8 @@ export function readConfigurationDetectors(scope: unknown, priorDetectorIds: rea
  * recogniser is. `hcl-secret-variable-default` (dossier policy 2.0.0): `[^"\r\n]*(?:keyword)[^"\r\n]*"` reads one quoted variable name,
  * which can hold no quote, so it ends at the name's first quote and matches exactly when that name holds a keyword; the policy's form tries
  * every split of a long unterminated name (about 3.5 s over 160,000 characters), and a lookahead that finds the keyword lazily and then
- * reads the name once is linear and consumes the same characters. `secret-redaction.test.ts` compares the two forms at every offset. */
+ * reads the name once is linear and consumes the same characters. `configuration-detectors.test.ts` compares the two forms at every
+ * offset over a seeded population and times both on adversarial bodies. */
 export const LINEAR_EQUIVALENTS: ReadonlyMap<string, string> = new Map([
   [`${String.raw`variable[ \t]+"[^"\r\n]*(?:password|passwd|secret|token|key|credential)[^"\r\n]*"[ \t]*\{[^}]*?default[ \t]*=[ \t]*"[^"$\r\n]{8,}"`}/gi`,
     String.raw`variable[ \t]+"(?=[^"\r\n]*?(?:password|passwd|secret|token|key|credential))[^"\r\n]*"[ \t]*\{[^}]*?default[ \t]*=[ \t]*"[^"$\r\n]{8,}"`],

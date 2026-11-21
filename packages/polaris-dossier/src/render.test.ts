@@ -698,7 +698,8 @@ describe('render', () => {
     const run = await prepared(draft(), false);
     if (!SCREEN.ok) throw new Error(SCREEN.why);
     const base = SCREEN.screen;
-    const exempt = { ok: true as const, screen: { ...base, codeContentExemption: true, screenBody: (body: string, repositoryPath?: string) => (repositoryPath === undefined && body === KESTREL ? 'active-content' as const : base.screenBody(body, repositoryPath)) } };
+    const exempt = { ok: true as const, screen: { ...base, codeContentExemption: true, screenBody: (body: string, repositoryPath?: string) => (repositoryPath === undefined && body === KESTREL ? 'active-content' as const : base.screenBody(body, repositoryPath)),
+      scannedAsBefore: (body: string, repositoryPath: string) => body === KESTREL || base.scannedAsBefore(body, repositoryPath) } };
     const deps = (renderer: DossierRenderer) => renderDeps({ loadScreen: async () => exempt, renderer });
     const undeclared: DossierRenderer = (input) => renderLocalDossier(input);
     const why = (unconfirmed: string) => `1 cited blob(s) were admitted only under the screening policy's code-content or project-documentation exemption, and these pages cannot be confirmed to meet its render condition (${unconfirmed}); scanned as before for these pages they hold active content, so nothing is rendered`;
