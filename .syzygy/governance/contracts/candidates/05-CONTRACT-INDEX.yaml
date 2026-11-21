@@ -570,7 +570,7 @@ contracts:
 # selection metadata only — the canonical homes stay authoritative):
 governance_sources:
   - {file: doctrine/README.md, role: doctrine, words: 882, rule_ids: [SEC-1, SEC-2, SEC-4, SEC-5, VIS-1, VIS-4, VIS-5, VIS-7]}
-  - {file: doctrine/architecture.md, role: doctrine, words: 2863, rule_ids: [SEC-2, SEC-4, VIS-1, VIS-4, VIS-5, VIS-6, VIS-7]}
+  - {file: doctrine/architecture.md, role: doctrine, words: 2884, rule_ids: [SEC-2, SEC-4, VIS-1, VIS-4, VIS-5, VIS-6, VIS-7]}
   - {file: doctrine/security.md, role: doctrine, words: 1406, rule_ids: [SEC-1, SEC-2, SEC-3, SEC-4, SEC-5, VIS-4]}
   - {file: doctrine/trust-and-evidence.md, role: doctrine, words: 1473, rule_ids: [SEC-5, VIS-1, VIS-2, VIS-4, VIS-6, VIS-7]}
   - {file: doctrine/v1.md, role: doctrine, words: 1285, rule_ids: [SEC-1, SEC-2, SEC-3, VIS-2, VIS-4, VIS-5]}

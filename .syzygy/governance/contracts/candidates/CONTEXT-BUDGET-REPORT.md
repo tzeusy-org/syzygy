@@ -40,11 +40,11 @@ the *measurement*, never the *selection*.
 | `context-selection-1-polaris-narrative.md` | 5 | 16,505 | 22,282 | **above the proposed trigger** by 11.4% | `715aa7ec3e4359ce…` |
 | `context-selection-10-trajectory-lifecycle.md` | 12 | 43,067 | 58,140 | **above the proposed trigger** by 190.7% | `8972411055a76b5e…` |
 | `context-selection-2-trajectory-adapter.md` | 8 | 23,150 | 31,253 | **above the proposed trigger** by 56.3% | `238cbe0671d8f172…` |
-| `context-selection-3-orrery-lens.md` | 5 | 16,993 | 22,941 | **above the proposed trigger** by 14.7% | `2a4a3f2798b957f2…` |
+| `context-selection-3-orrery-lens.md` | 5 | 17,014 | 22,969 | **above the proposed trigger** by 14.8% | `60b52b3fb8b66686…` |
 | `context-selection-4-execution-profile.md` | 6 | 14,712 | 19,861 | above the proposed default band, under the proposed trigger | `80bcb3ca5598c433…` |
 | `context-selection-5-cross-project-mission.md` | 11 | 26,251 | 35,439 | **above the proposed trigger** by 77.2% | `477a7bdfe527b7d3…` |
-| `context-selection-6-doctrine-amendment.md` | 6 | 15,149 | 20,451 | **above the proposed trigger** by 2.3% | `6485ebf6e71e3924…` |
-| `context-selection-7-kernel-identity.md` | 5 | 18,512 | 24,991 | **above the proposed trigger** by 25.0% | `6282fe0dcc357339…` |
+| `context-selection-6-doctrine-amendment.md` | 6 | 15,170 | 20,480 | **above the proposed trigger** by 2.4% | `4abe45ea83c3d673…` |
+| `context-selection-7-kernel-identity.md` | 5 | 18,533 | 25,020 | **above the proposed trigger** by 25.1% | `87873156f7231620…` |
 | `context-selection-8-openspec-authoring.md` | 6 | 26,924 | 36,347 | **above the proposed trigger** by 81.7% | `ef5aa5c5a0914bab…` |
 | `context-selection-9-evidence-adapter.md` | 12 | 30,297 | 40,901 | **above the proposed trigger** by 104.5% | `450afc1645b91138…` |
 
@@ -103,7 +103,7 @@ printed at the foot of §5.
 
 ### `context-selection-3-orrery-lens.md`
 
-- **Measured:** 16,993 words ≈ 22,941 estimated tokens — 14.7% above the proposed trigger.
+- **Measured:** 17,014 words ≈ 22,969 estimated tokens — 14.8% above the proposed trigger.
 - **Reason:** [Unknown] — not declared in the fixture
 - **Scope:** [Unknown] — not declared in the fixture
 - **Reviewer:** [Unknown] — not declared in the fixture
@@ -121,7 +121,7 @@ printed at the foot of §5.
 
 ### `context-selection-6-doctrine-amendment.md`
 
-- **Measured:** 15,149 words ≈ 20,451 estimated tokens — 2.3% above the proposed trigger.
+- **Measured:** 15,170 words ≈ 20,480 estimated tokens — 2.4% above the proposed trigger.
 - **Reason:** [Unknown] — not declared in the fixture
 - **Scope:** [Unknown] — not declared in the fixture
 - **Reviewer:** [Unknown] — not declared in the fixture
@@ -130,7 +130,7 @@ printed at the foot of §5.
 
 ### `context-selection-7-kernel-identity.md`
 
-- **Measured:** 18,512 words ≈ 24,991 estimated tokens — 25.0% above the proposed trigger.
+- **Measured:** 18,533 words ≈ 25,020 estimated tokens — 25.1% above the proposed trigger.
 - **Reason:** RFC-0001 is indivisible (its justified oversize is recorded in `03-ACTIVE-CONTRACT-COMPACTION-REPORT.md` and in the verifier's justification table, *not* in RFC-0001 itself, which records no waiver), and an identity change genuinely needs the minting/continuity scheme (RFC1-11), the evaluation identity a claim resolves against, the constitutional temporal model, and the floor text it may not weaken
 - **Scope:** Kernel identity and continuity changes — minting, successor edges, split/merge, and the continuity links recorded across them — **where CC-BAR-5 floor 7 is the declared classifier**. Does **not** cover: the adoption ceremony for such a change (RFC-0003 stays deferred to that packet, as this fixture already rules); `.syzygy/**` schema migrations that do not alter minting; changes to challenge, reconciliation or rendering semantics, which pull further RFC-0002 modules and must be re-measured (scope tightened by RC-12)
 - **Reviewer:** **RC-12, independent reviewer, 2026-08-06.** Ruled `WAIVER SOUND` in `round-2026-08b/reviews/RC-12-budget-waiver-RAW.md`, over the *selection* — not over the contracts it selects. That review's own verdict was `EXCEPTIONS`; read §5 there on what this signature can and cannot mean while no budget rule is installed

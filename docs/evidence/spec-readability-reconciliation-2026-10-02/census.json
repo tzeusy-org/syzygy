@@ -600,7 +600,7 @@
     },
     "POLARIS": {
       "requirements": 39,
-      "scenarios": 373,
+      "scenarios": 383,
       "members": {
         "REQ-polaris-generation-001": {
           "name": "Admitted project input",
@@ -1037,7 +1037,17 @@
             "Code-read thesis marked",
             "Unsupported thesis basis refused",
             "Thesis basis in an earlier schema",
-            "Withheld thesis carries no basis line"
+            "Withheld thesis carries no basis line",
+            "Sequence figure drawn",
+            "Swimlane figure drawn",
+            "Figure kinds fit at both widths",
+            "Swimlane reads as a numbered stepper on a phone",
+            "Message naming an unknown participant refused",
+            "Members that do not fit the kind refused",
+            "Figure kinds in an earlier schema",
+            "Graph figures unchanged by figure kinds",
+            "Brief v12 states the figure kinds",
+            "Provider mode unchanged by figure kinds"
           ]
         },
         "REQ-polaris-generation-035": {

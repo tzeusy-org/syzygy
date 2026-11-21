@@ -48,7 +48,7 @@ scripts/context_load.py rfcs/RFC-0009/README.md \
   rfcs/RFC-0002/rendering-vocabularies.md doctrine:architecture.md
 ```
 
-Measured: **16,993 words ≈ 22,941 estimated tokens.** Band position is
+Measured: **17,014 words ≈ 22,969 estimated tokens.** Band position is
 owned by `CONTEXT-BUDGET-REPORT.md` §1, computed from this anchored figure;
 this fixture's prose makes no band claim of its own.
 
@@ -89,7 +89,7 @@ facts).
 ## Packet digest
 
 sha256 over the mandatory files concatenated in listed order:
-`2a4a3f2798b957f2…`.
+`60b52b3fb8b66686…`.
 
 **Selection: hand-authored golden selection. Measurement: mechanical.
 Compiler implementation: absent.** `scripts/context_load.py` resolves a
@@ -117,3 +117,5 @@ fixture states.*
 *Re-measured 2026-08-10 by the same CG-18 method (declared mandatory set, listed order): the round-2026-08e RD-26 repair batch edited Wave A modules this packet loads. Previous: 15,193 words, digest `0a7756d0c5228cdd…`. Selection unchanged; the movement is contract repairs landing under the fixture, which is the class this check exists to catch.*
 
 *Re-measured 2026-08-10b by the same CG-18 method: the round-2026-08e RD-27 repair batch edited Wave B modules this packet loads. Previous: 15,236 words, digest `e747219328d5cb2b…`. Selection unchanged.*
+
+*Re-measured 2026-11-21 by the same CG-18 method: doctrine amendment D12 reworded one bullet of `architecture.md`, which this packet loads. Previous: 16,993 words, digest `2a4a3f2798b957f2…`. Selection unchanged.*

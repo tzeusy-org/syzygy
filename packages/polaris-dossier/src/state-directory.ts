@@ -25,6 +25,8 @@ export const RUN_LAYOUT = Object.freeze({
   draftSchema: 'draft.schema.json',
   drafts: 'drafts',
   checks: 'checks',
+  /** The derived-structure record of each checked draft revision, `rev-<n>.json` (REQ-polaris-generation-034 version 2.3). */
+  derived: 'derived',
   inventory: 'inventory',
   reviews: 'reviews',
   site: 'site',

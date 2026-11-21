@@ -1,0 +1,513 @@
+{
+  "format": "mutation-run/1",
+  "bead": "syzygy-3efd.27",
+  "requirement": "REQ-polaris-generation-034 version 2.3 (derived structural facts rendered Observed)",
+  "ranAt": "085a4df937cad54518f6f0a023ef68da1b5c9caf",
+  "ranOn": "2026-11-21T15:34:42Z",
+  "subject": {
+    "apps/three-surface-poc/src/polaris-generation/diagram-layout.ts": "2f8b4a7eeb297b56ecd5b290813b6317a32d8f56718a83a115112f7b85a7a9a3",
+    "apps/three-surface-poc/src/polaris-generation/dossier-site.ts": "13262dd6c7ac04bf8ec421255d4c5e717ce6bcc31dce07106d8f8dd0ec766d5a",
+    "packages/polaris-dossier/src/check.ts": "b011ee9ffd5093212a7615f7f6c8089a99b418b39036b73bb235ab1ae63bfd8a",
+    "packages/polaris-dossier/src/derive.ts": "bdf531d469859ab6a7cc4cf286aaa776a7d74b9ec04378f05bcde4f9f4dc5d44",
+    "packages/polaris-dossier/src/derived-record.ts": "b3cc0338228a50ee485d5b5a39ad4746df66fd6fc1f16ddccf782ce2dc8377ba",
+    "packages/polaris-dossier/src/render.ts": "7c5aaad3ff0f553d7ecf2828218143973f7ed6b4cad8f2c3954a78e860d1354d"
+  },
+  "command": "npx vitest run packages/polaris-dossier/src/derived-record.test.ts packages/polaris-dossier/src/derive.test.ts packages/polaris-dossier/src/render.test.ts apps/three-surface-poc/src/polaris-generation/dossier-derived-region.test.ts apps/three-surface-poc/src/polaris-generation/dossier-reading.test.ts --reporter=json --outputFile=<scratch>/mutation-<id>.json",
+  "method": "Each mutant replaces one exact fragment, asserted to occur exactly once in its file, runs the command, reads the JSON report, and restores the file; a mutant is killed when at least one test fails. killedBy is assertion when any failure is an AssertionError, thrown error when every failure is another error. The sources are re-hashed after the run and must equal subject.",
+  "baselineTests": 162,
+  "tally": {
+    "mutants": 22,
+    "killed": 22,
+    "survived": 0
+  },
+  "mutants": [
+    {
+      "id": "M01-unit-order",
+      "file": "packages/polaris-dossier/src/derive.ts",
+      "old": "const ordered = [...units].sort(([a], [b]) => byCodeUnit(a, b));",
+      "new": "const ordered = [...units];",
+      "killed": true,
+      "killedBy": "assertion",
+      "failedTests": [
+        {
+          "title": "rule top-level-unit version 1 derives the root, each top-level directory and each containment from paths and modes alone, naming no secret path",
+          "message": "AssertionError: expected { files: 10, …(4) } to deeply equal { files: 10, …(4) }"
+        },
+        {
+          "title": "the record is read back with its exact text and the digest of its bytes, and refused where any member is malformed",
+          "message": "AssertionError: expected [ { id: '_tree-root', …(5) }, …(6) ] to deeply equal [ { id: '_tree-root', …(5) }, …(6) ]"
+        },
+        {
+          "title": "the record at a render labels every fact Observed while the adopted bound is declared and the record is current",
+          "message": "AssertionError: expected [ [ 3, null ], [ 2, null ], …(5) ] to deeply equal [ [ 3, null ], [ 1, null ], …(5) ]"
+        }
+      ]
+    },
+    {
+      "id": "M02-listing-cap",
+      "file": "packages/polaris-dossier/src/derive.ts",
+      "old": "const listed = ordered.slice(0, CENSUS_LISTED_LIMIT);",
+      "new": "const listed = ordered.slice(0, CENSUS_LISTED_LIMIT + 1);",
+      "killed": true,
+      "killedBy": "assertion",
+      "failedTests": [
+        {
+          "title": "rule top-level-unit version 1 lists the first 250 directories by raw segment in code-unit order and counts the rest",
+          "message": "AssertionError: expected 1 to be 2 // Object.is equality"
+        }
+      ]
+    },
+    {
+      "id": "M03-secret-prefix",
+      "file": "packages/polaris-dossier/src/derive.ts",
+      "old": "segments.slice(0, -1).some((_, i) => isSecretPath(",
+      "new": "segments.slice(0, 0).some((_, i) => isSecretPath(",
+      "killed": true,
+      "killedBy": "assertion",
+      "failedTests": [
+        {
+          "title": "deriveStructure (syzygy-3efd.16) leaves out a path whose directory prefix alone the secret predicate matches, so no directory name can leak",
+          "message": "AssertionError: expected { state: 'derived', …(12) } to match object { files: 3, …(3) }"
+        },
+        {
+          "title": "rule top-level-unit version 1 derives the root, each top-level directory and each containment from paths and modes alone, naming no secret path",
+          "message": "AssertionError: expected { files: 10, …(4) } to deeply equal { files: 10, …(4) }"
+        },
+        {
+          "title": "rule top-level-unit version 1 keeps a raw segment as it is, quotes and all, and tests every directory prefix against the detector",
+          "message": "AssertionError: expected [ '.', 'a \"b\"', 'x', 'a \"b\"', 'x' ] to deeply equal [ '.', 'a \"b\"', 'a \"b\"' ]"
+        },
+        {
+          "title": "the record is read back with its exact text and the digest of its bytes, and refused where any member is malformed",
+          "message": "AssertionError: expected [ { id: '_tree-root', …(5) }, …(8) ] to deeply equal [ { id: '_tree-root', …(5) }, …(6) ]"
+        },
+        {
+          "title": "the record at a render labels every fact Observed while the adopted bound is declared and the record is current",
+          "message": "AssertionError: expected [ '_tree-root observed null', …(8) ] to deeply equal [ '_tree-root observed null', …(6) ]"
+        },
+        {
+          "title": "the record at a render labels every fact Unknown (no-currency-bound-declared) with no policy, and names none",
+          "message": "AssertionError: expected [ …(9) ] to deeply equal [ …(7) ]"
+        },
+        {
+          "title": "the record at a render labels a fact of an undeclared rule version Unknown (no-currency-bound-declared), and the rest of a record it no longer matches stale",
+          "message": "AssertionError: expected [ …(9) ] to deeply equal [ …(7) ]"
+        },
+        {
+          "title": "the record at a render labels every fact Unknown (stale-beyond-currency-bound) for a record of another revision or with facts the render does not re-derive",
+          "message": "AssertionError: expected [ …(9) ] to deeply equal [ …(7) ]"
+        }
+      ]
+    },
+    {
+      "id": "M04-units-not-listed",
+      "file": "packages/polaris-dossier/src/derive.ts",
+      "old": "unitsNotListed: ordered.length - listed.length }",
+      "new": "unitsNotListed: 0 }",
+      "killed": true,
+      "killedBy": "assertion",
+      "failedTests": [
+        {
+          "title": "rule top-level-unit version 1 lists the first 250 directories by raw segment in code-unit order and counts the rest",
+          "message": "AssertionError: expected +0 to be 2 // Object.is equality"
+        }
+      ]
+    },
+    {
+      "id": "M05-policy-digest",
+      "file": "packages/polaris-dossier/src/derived-record.ts",
+      "old": "if (digest !== CURRENCY_POLICY_SHA256) return null;",
+      "new": "if (digest === '') return null;",
+      "killed": true,
+      "killedBy": "assertion",
+      "failedTests": [
+        {
+          "title": "the currency policy declares pinned-revision for top-level-unit version 1 only, at the adopted digest only",
+          "message": "AssertionError: expected { …(4) } to be null"
+        },
+        {
+          "title": "the currency policy is read from the committed bytes at the Syzygy checkout HEAD, and declares no bound where those bytes are absent, uncommitted or other",
+          "message": "AssertionError: expected { …(4) } to be null"
+        }
+      ]
+    },
+    {
+      "id": "M06-current-revision",
+      "file": "packages/polaris-dossier/src/derived-record.ts",
+      "old": "const current = record.revision === pinned && ",
+      "new": "const current = ",
+      "killed": true,
+      "killedBy": "assertion",
+      "failedTests": [
+        {
+          "title": "the record at a render labels every fact Unknown (stale-beyond-currency-bound) for a record of another revision or with facts the render does not re-derive",
+          "message": "AssertionError: expected [ '_tree-root observed null', …(6) ] to deeply equal [ …(7) ]"
+        },
+        {
+          "title": "render: derived structure (version 2.3) renders every derived element Unknown (stale-beyond-currency-bound) for a record of another revision or with facts not re-derived",
+          "message": "AssertionError: expected false to be true // Object.is equality"
+        }
+      ]
+    },
+    {
+      "id": "M07-current-facts",
+      "file": "packages/polaris-dossier/src/derived-record.ts",
+      "old": "sameFacts(record.facts, now.facts) && ",
+      "new": "",
+      "killed": true,
+      "killedBy": "assertion",
+      "failedTests": [
+        {
+          "title": "the record at a render labels a fact of an undeclared rule version Unknown (no-currency-bound-declared), and the rest of a record it no longer matches stale",
+          "message": "AssertionError: expected [ '_tree-root observed null', …(6) ] to deeply equal [ …(7) ]"
+        },
+        {
+          "title": "the record at a render labels every fact Unknown (stale-beyond-currency-bound) for a record of another revision or with facts the render does not re-derive",
+          "message": "AssertionError: expected [ '_tree-root observed null', …(6) ] to deeply equal [ …(7) ]"
+        },
+        {
+          "title": "render: derived structure (version 2.3) renders every derived element Unknown (stale-beyond-currency-bound) for a record of another revision or with facts not re-derived",
+          "message": "AssertionError: expected false to be true // Object.is equality"
+        }
+      ]
+    },
+    {
+      "id": "M08-no-bound-observed",
+      "file": "packages/polaris-dossier/src/derived-record.ts",
+      "old": "? 'no-currency-bound-declared' as const :",
+      "new": "? null :",
+      "killed": true,
+      "killedBy": "assertion",
+      "failedTests": [
+        {
+          "title": "the record at a render labels every fact Unknown (no-currency-bound-declared) with no policy, and names none",
+          "message": "AssertionError: expected [ '_tree-root observed null', …(6) ] to deeply equal [ …(7) ]"
+        },
+        {
+          "title": "the record at a render labels a fact of an undeclared rule version Unknown (no-currency-bound-declared), and the rest of a record it no longer matches stale",
+          "message": "AssertionError: expected [ …(7) ] to deeply equal [ …(7) ]"
+        },
+        {
+          "title": "render: derived structure (version 2.3) renders every derived element Unknown (no-currency-bound-declared) where no adopted policy applies",
+          "message": "AssertionError: expected [ 'observed', 'observed', …(3) ] to deeply equal [ 'unknown', 'unknown', …(3) ]"
+        }
+      ]
+    },
+    {
+      "id": "M09-root-first",
+      "file": "packages/polaris-dossier/src/derived-record.ts",
+      "old": "facts[0]?.fact !== 'tree-root' || ",
+      "new": "",
+      "killed": true,
+      "killedBy": "assertion",
+      "failedTests": [
+        {
+          "title": "the record is read back with its exact text and the digest of its bytes, and refused where any member is malformed",
+          "message": "AssertionError: root first: expected { …(7) } to be undefined"
+        }
+      ]
+    },
+    {
+      "id": "M10-unknown-record",
+      "file": "packages/polaris-dossier/src/derived-record.ts",
+      "old": "if (record.state === 'unknown') return { state: 'unknown'",
+      "new": "if (record.state === 'never') return { state: 'unknown'",
+      "killed": true,
+      "killedBy": "assertion",
+      "failedTests": [
+        {
+          "title": "the record at a render states missing, or unknown, where there is no record, the record is Unknown, or the tree cannot be listed",
+          "message": "AssertionError: expected { state: 'derived', …(8) } to deeply equal { state: 'unknown', …(2) }"
+        },
+        {
+          "title": "render: derived structure (version 2.3) states Not established with no figure, list or published record where no record was kept, the record is Unknown, or the render cannot list the tree",
+          "message": "Error: the renderer refused the run: Cannot read properties of undefined (reading 'id')"
+        }
+      ]
+    },
+    {
+      "id": "M11-record-not-written",
+      "file": "packages/polaris-dossier/src/check.ts",
+      "old": "fs.writeFileSync(derivedRecordFile(run, revision), derivedRecord, { mode: 0o600, flag: 'wx' });",
+      "new": "void derivedRecordFile;",
+      "killed": true,
+      "killedBy": "assertion",
+      "failedTests": [
+        {
+          "title": "render: derived structure (version 2.3) keeps the record at check and draws the figure Observed with rule and version, publishing the record unchanged",
+          "message": "Error: ENOENT: no such file or directory, open '/tmp/dossier-render-state-GUPidd/run-ffffffffffffffffffffffffffffffff/derived/rev-0.json'"
+        },
+        {
+          "title": "render: derived structure (version 2.3) renders every derived element Unknown (no-currency-bound-declared) where no adopted policy applies",
+          "message": "AssertionError: expected [] to deeply equal [ 'unknown', 'unknown', …(3) ]"
+        },
+        {
+          "title": "render: derived structure (version 2.3) renders every derived element Unknown (stale-beyond-currency-bound) for a record of another revision or with facts not re-derived",
+          "message": "Error: ENOENT: no such file or directory, open '/tmp/dossier-render-state-7JnlQI/run-ffffffffffffffffffffffffffffffff/derived/rev-0.json'"
+        },
+        {
+          "title": "render: derived structure (version 2.3) states Not established with no figure, list or published record where no record was kept, the record is Unknown, or the render cannot list the tree",
+          "message": "Error: ENOENT: no such file or directory, lstat '/tmp/dossier-render-state-oR1Nus/run-ffffffffffffffffffffffffffffffff/derived/rev-0.json'"
+        },
+        {
+          "title": "render: derived structure (version 2.3) derives no size or object id for a private repository, and names no secret-matching path",
+          "message": "SyntaxError: \"undefined\" is not valid JSON"
+        },
+        {
+          "title": "render: derived structure (version 2.3) keeps an authored figure matching a derived fact dashed and curated, and a draft cannot set Observed",
+          "message": "AssertionError: expected +0 to be 1 // Object.is equality"
+        },
+        {
+          "title": "render: derived structure (version 2.3) is stable across renders of one draft revision, and two checks of the same bytes differ only in capturedAt",
+          "message": "Error: ENOENT: no such file or directory, open '/tmp/dossier-render-state-O9JPwt/run-ffffffffffffffffffffffffffffffff/derived/rev-0.json'"
+        }
+      ]
+    },
+    {
+      "id": "M12-check-no-secret",
+      "file": "packages/polaris-dossier/src/check.ts",
+      "old": "const isSecretPath = secretPathOf(screen);",
+      "new": "const isSecretPath = (_: string): boolean => false;",
+      "killed": true,
+      "killedBy": "assertion",
+      "failedTests": [
+        {
+          "title": "render: derived structure (version 2.3) keeps the record at check and draws the figure Observed with rule and version, publishing the record unchanged",
+          "message": "AssertionError: expected { …(13) } to deeply equal { …(13) }"
+        },
+        {
+          "title": "render: derived structure (version 2.3) renders every derived element Unknown (no-currency-bound-declared) where no adopted policy applies",
+          "message": "AssertionError: expected [ 'unknown', 'unknown', …(5) ] to deeply equal [ 'unknown', 'unknown', …(3) ]"
+        },
+        {
+          "title": "render: derived structure (version 2.3) renders every derived element Unknown (stale-beyond-currency-bound) for a record of another revision or with facts not re-derived",
+          "message": "AssertionError: expected [ …(7) ] to have a length of 5 but got 7"
+        },
+        {
+          "title": "render: derived structure (version 2.3) derives no size or object id for a private repository, and names no secret-matching path",
+          "message": "AssertionError: derived-structure.json conf: expected '{\\n  \"format\": \"polaris-dossier-deriv…' not to contain 'conf'"
+        },
+        {
+          "title": "render: derived structure (version 2.3) keeps an authored figure matching a derived fact dashed and curated, and a draft cannot set Observed",
+          "message": "AssertionError: expected false to be true // Object.is equality"
+        }
+      ]
+    },
+    {
+      "id": "M13-render-no-secret",
+      "file": "packages/polaris-dossier/src/render.ts",
+      "old": "isSecretPath: secretPathOf(screen),",
+      "new": "isSecretPath: () => false,",
+      "killed": true,
+      "killedBy": "assertion",
+      "failedTests": [
+        {
+          "title": "render: derived structure (version 2.3) keeps the record at check and draws the figure Observed with rule and version, publishing the record unchanged",
+          "message": "AssertionError: expected [ …(5) ] to deeply equal [ …(5) ]"
+        },
+        {
+          "title": "render: derived structure (version 2.3) keeps an authored figure matching a derived fact dashed and curated, and a draft cannot set Observed",
+          "message": "AssertionError: expected false to be true // Object.is equality"
+        }
+      ]
+    },
+    {
+      "id": "M14-curated-attribute",
+      "file": "apps/three-surface-poc/src/polaris-generation/dossier-site.ts",
+      "old": "const curated = local === undefined ? '' : ' data-visual-provenance=\"curated\"';",
+      "new": "const curated = '';",
+      "killed": true,
+      "killedBy": "assertion",
+      "failedTests": [
+        {
+          "title": "the derived structure on an operator-agent site marks every draft figure curated and only the derived figure computed, and draws no draft element solid",
+          "message": "AssertionError: expected 'index.html <figure data-hue=\"1\">' to match / data-visual-provenance=\"(?:curated|…/u"
+        },
+        {
+          "title": "Poles: a landing page with the why section and a map, then one page per Pole (dossier spec v1.5) colours a Pole page by its Pole, its diagrams included, and a diagram on the landing page by its own hue (syzygy-pdja.14)",
+          "message": "AssertionError: expected '<!doctype html><html lang=\"en\"><head>…' to contain '<figure data-visual-provenance=\"curat…'"
+        },
+        {
+          "title": "colour: six hues for Poles, diagrams and cards, none carrying a claim (syzygy-pdja.14) gives each diagram outside a Pole page a hue in turn, and a diagram on a Pole page its Pole's",
+          "message": "AssertionError: expected 0 to be greater than 0"
+        },
+        {
+          "title": "readability guidance and diagram-led sections (syzygy-mea.10.4) draws a section's diagrams before its blocks on an operator-agent page",
+          "message": "AssertionError: expected -1 to be greater than -1"
+        },
+        {
+          "title": "render: derived structure (version 2.3) keeps an authored figure matching a derived fact dashed and curated, and a draft cannot set Observed",
+          "message": "AssertionError: expected false to be true // Object.is equality"
+        }
+      ]
+    },
+    {
+      "id": "M15-twelve-drawn",
+      "file": "apps/three-surface-poc/src/polaris-generation/dossier-site.ts",
+      "old": ".slice(0, DERIVED_DRAWN);",
+      "new": ".slice(0, DERIVED_DRAWN + 1);",
+      "killed": true,
+      "killedBy": "assertion",
+      "failedTests": [
+        {
+          "title": "the derived-structure region draws the twelve directories with the most files, ties by path, and says how many more are listed and counted",
+          "message": "AssertionError: expected [ Array(14) ] to deeply equal [ Array(13) ]"
+        }
+      ]
+    },
+    {
+      "id": "M16-most-files-first",
+      "file": "apps/three-surface-poc/src/polaris-generation/dossier-site.ts",
+      "old": "(b.count ?? 0) - (a.count ?? 0)",
+      "new": "(a.count ?? 0) - (b.count ?? 0)",
+      "killed": true,
+      "killedBy": "assertion",
+      "failedTests": [
+        {
+          "title": "the derived-structure region draws the root, each directory and each containment solid, each with its fact identity, in the stated order",
+          "message": "AssertionError: expected [ …(5) ] to deeply equal [ …(5) ]"
+        },
+        {
+          "title": "the derived-structure region draws the twelve directories with the most files, ties by path, and says how many more are listed and counted",
+          "message": "AssertionError: expected [ '_tree-root', '_tree-unit-1', …(11) ] to deeply equal [ Array(13) ]"
+        }
+      ]
+    },
+    {
+      "id": "M17-record-published-altered",
+      "file": "apps/three-surface-poc/src/polaris-generation/dossier-site.ts",
+      "old": "files.set(DERIVED_SITE_FILE, local.derivedStructure.recordText);",
+      "new": "files.set(DERIVED_SITE_FILE, local.derivedStructure.recordText.trim());",
+      "killed": true,
+      "killedBy": "assertion",
+      "failedTests": [
+        {
+          "title": "the derived structure on an operator-agent site ends the landing page's main content with the region, publishes the record unchanged and names it in the machine view",
+          "message": "AssertionError: expected '{\\n  \"format\": \"polaris-dossier-deriv…' to be '{\\n  \"format\": \"polaris-dossier-deriv…' // Object.is equality"
+        },
+        {
+          "title": "render: derived structure (version 2.3) keeps the record at check and draws the figure Observed with rule and version, publishing the record unchanged",
+          "message": "AssertionError: expected '{\\n  \"format\": \"polaris-dossier-deriv…' to be '{\\n  \"format\": \"polaris-dossier-deriv…' // Object.is equality"
+        },
+        {
+          "title": "render: derived structure (version 2.3) renders every derived element Unknown (stale-beyond-currency-bound) for a record of another revision or with facts not re-derived",
+          "message": "AssertionError: expected '{\\n  \"format\": \"polaris-dossier-deriv…' to be '{\\n  \"format\": \"polaris-dossier-deriv…' // Object.is equality"
+        }
+      ]
+    },
+    {
+      "id": "M18-legend-nodes-only",
+      "file": "apps/three-surface-poc/src/polaris-generation/dossier-site.ts",
+      "old": "figureLegend([...nodes, ...edges].map(element => element.epistemic), nodes.length, edges.length, 'derived by Syzygy')",
+      "new": "figureLegend(nodes.map(element => element.epistemic), nodes.length, edges.length, 'derived by Syzygy')",
+      "killed": true,
+      "killedBy": "assertion",
+      "failedTests": [
+        {
+          "title": "the derived-structure region draws the root, each directory and each containment solid, each with its fact identity, in the stated order",
+          "message": "AssertionError: expected '<ul class=\"diagram-legend\" aria-label…' to be '<ul class=\"diagram-legend\" aria-label…' // Object.is equality"
+        },
+        {
+          "title": "the derived-structure region draws an Unknown fact dotted with its label ending \"?\", legends only Dotted and counts 0 observed",
+          "message": "AssertionError: expected '<ul class=\"diagram-legend\" aria-label…' to be '<ul class=\"diagram-legend\" aria-label…' // Object.is equality"
+        },
+        {
+          "title": "the derived-structure region legends and tallies exactly what it draws when markings are mixed",
+          "message": "AssertionError: expected '<ul class=\"diagram-legend\" aria-label…' to be '<ul class=\"diagram-legend\" aria-label…' // Object.is equality"
+        },
+        {
+          "title": "the derived-structure region writes a count of one in the singular",
+          "message": "AssertionError: expected '<section id=\"derived-structure\" data-…' to contain '<p class=\"diagram-tally\">2 boxes and …'"
+        },
+        {
+          "title": "the derived-structure region draws the twelve directories with the most files, ties by path, and says how many more are listed and counted",
+          "message": "AssertionError: expected '<section id=\"derived-structure\" data-…' to contain '<p class=\"diagram-tally\">13 boxes and…'"
+        },
+        {
+          "title": "render: derived structure (version 2.3) keeps the record at check and draws the figure Observed with rule and version, publishing the record unchanged",
+          "message": "AssertionError: expected '<section id=\"derived-structure\" data-…' to contain '<p class=\"diagram-tally\">3 boxes and …'"
+        },
+        {
+          "title": "render: derived structure (version 2.3) renders every derived element Unknown (no-currency-bound-declared) where no adopted policy applies",
+          "message": "AssertionError: expected '<section id=\"derived-structure\" data-…' to contain '<p class=\"diagram-tally\">3 boxes and …'"
+        }
+      ]
+    },
+    {
+      "id": "M19-counted-note",
+      "file": "apps/three-surface-poc/src/polaris-generation/dossier-site.ts",
+      "old": "${derived.unitsNotListed === 0 ? ''",
+      "new": "${derived.unitsNotListed < 2 ? ''",
+      "killed": true,
+      "killedBy": "assertion",
+      "failedTests": [
+        {
+          "title": "the derived-structure region writes a count of one in the singular",
+          "message": "AssertionError: expected '<section id=\"derived-structure\" data-…' to contain '<p class=\"derived-more\">1 more top-le…'"
+        }
+      ]
+    },
+    {
+      "id": "M20-node-derived-id",
+      "file": "apps/three-surface-poc/src/polaris-generation/diagram-layout.ts",
+      "old": "\"${elementAttributes(node.id)}><title>",
+      "new": "\"><title>",
+      "killed": true,
+      "killedBy": "assertion",
+      "failedTests": [
+        {
+          "title": "the derived-structure region draws the root, each directory and each containment solid, each with its fact identity, in the stated order",
+          "message": "AssertionError: expected [ …(2) ] to deeply equal [ …(5) ]"
+        },
+        {
+          "title": "the derived-structure region legends and tallies exactly what it draws when markings are mixed",
+          "message": "AssertionError: expected [ +0, 3, 2, 1 ] to deeply equal [ 4, 3, 5, 2 ]"
+        },
+        {
+          "title": "the derived-structure region draws the twelve directories with the most files, ties by path, and says how many more are listed and counted",
+          "message": "AssertionError: expected [] to deeply equal [ Array(13) ]"
+        },
+        {
+          "title": "render: derived structure (version 2.3) keeps the record at check and draws the figure Observed with rule and version, publishing the record unchanged",
+          "message": "AssertionError: expected [ …(2) ] to deeply equal [ …(5) ]"
+        },
+        {
+          "title": "render: derived structure (version 2.3) renders every derived element Unknown (no-currency-bound-declared) where no adopted policy applies",
+          "message": "AssertionError: expected [ 'unknown', 'unknown' ] to deeply equal [ 'unknown', 'unknown', …(3) ]"
+        }
+      ]
+    },
+    {
+      "id": "M21-withheld-placement",
+      "file": "apps/three-surface-poc/src/polaris-generation/dossier-site.ts",
+      "old": "${policy}</header>${derivedRegion}`",
+      "new": "${policy}</header>`",
+      "killed": true,
+      "killedBy": "assertion",
+      "failedTests": [
+        {
+          "title": "the derived structure on an operator-agent site places the region after the header where the draft layer is withheld, and states missing or unknown in the machine view with no record",
+          "message": "AssertionError: expected '<!doctype html><html lang=\"en\"><head>…' to contain '</header><section id=\"derived-structu…'"
+        }
+      ]
+    },
+    {
+      "id": "M22-machine-policy",
+      "file": "apps/three-surface-poc/src/polaris-generation/dossier-site.ts",
+      "old": "currencyPolicy: derived.currencyPolicy,",
+      "new": "currencyPolicy: null,",
+      "killed": true,
+      "killedBy": "assertion",
+      "failedTests": [
+        {
+          "title": "the derived structure on an operator-agent site ends the landing page's main content with the region, publishes the record unchanged and names it in the machine view",
+          "message": "AssertionError: expected { Object (file, sha256, ...) } to deeply equal { Object (file, sha256, ...) }"
+        },
+        {
+          "title": "render: derived structure (version 2.3) keeps the record at check and draws the figure Observed with rule and version, publishing the record unchanged",
+          "message": "AssertionError: expected { Object (file, sha256, ...) } to deeply equal { Object (file, sha256, ...) }"
+        }
+      ]
+    }
+  ]
+}

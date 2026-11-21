@@ -936,7 +936,7 @@ describe('check: the command', () => {
     const printed = JSON.parse(a.out.join(''));
     expect(printed.structureRecord).toEqual({
       state: 'derived',
-      rules: ['vendored-path@1', 'generated-path@1', 'language-by-extension@1', 'docs-tree@1', 'tests-path@1', 'manifest-names@1'],
+      rules: ['vendored-path@1', 'generated-path@1', 'language-by-extension@1', 'docs-tree@1', 'tests-path@1', 'manifest-names@1', 'top-level-unit@1'],
       files: 9, secretPathsLeftOut: 1, submodules: 0,
       units: [{ unit: '"docs"', files: 2 }, { unit: '"src"', files: 4 }], unitsNotListed: 0, rootFiles: 2,
       vendored: { rule: 'vendored-path@1', files: 0, listed: [], notListed: 0 },
