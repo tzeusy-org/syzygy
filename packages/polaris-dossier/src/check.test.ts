@@ -879,7 +879,8 @@ describe('check: the command', () => {
   it('never names a path both a denied-path rule and a secret detector match in screenCensus (round-2 review finding 1)', async () => {
     const run = await briefedRun();
     writeDraft(run, valid());
-    const forged = ['.env.token=abcdefghij', 'keys/ghp_ABCDEFGHIJKLMNOPQRSTUVWX.pem'];
+    // The third puts the token in a directory name, which the structure record would otherwise name as a unit (syzygy-3efd.16 review 2).
+    const forged = ['.env.token=abcdefghij', 'keys/ghp_ABCDEFGHIJKLMNOPQRSTUVWX.pem', 'ghp_ABCDEFGHIJKLMNOPQRSTUVWY/server.pem'];
     const withForged = (options: PinnedObjectReaderOptions): PinnedObjectReader => {
       const real = openPinnedObjectReader(options);
       return { ...real, algorithm: real.algorithm, readBlobs: (paths) => real.readBlobs(paths),
@@ -891,8 +892,9 @@ describe('check: the command', () => {
     expect(out).not.toContain('abcdefghij');
     expect(out).not.toContain('ghp_');
     const printed = JSON.parse(out);
-    expect(printed.screenCensus.secretDetectorPathMatches).toBe(3);
+    expect(printed.screenCensus.secretDetectorPathMatches).toBe(4);
     expect(printed.screenCensus.groups[0]).toEqual({ outcome: 'denied-path', count: 1, listed: ['".env"'], notListed: 0 });
+    expect(printed.structureRecord).toMatchObject({ files: 12, secretPathsLeftOut: 4, units: [{ unit: '"docs"', files: 2 }, { unit: '"src"', files: 4 }] });
   });
 
   it('admits a recognized documentation class without a provider statement grant', async () => {

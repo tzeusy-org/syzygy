@@ -46,8 +46,8 @@ export const TESTS_PATH = {
   suffixes: ['_test.go', '_test.py', '_test.rs', '_spec.rb', '.test.ts', '.test.tsx', '.test.js', '.test.mjs', '.spec.ts', '.spec.js', 'Test.java', 'Tests.cs'],
 } as const;
 
-/** A package manifest by its exact basename. One outside vendored and generated trees at the root alone is a single package; more than one
- * directory holding one is a workspace; none is no package manifest. */
+/** A package manifest by its exact basename, outside vendored, generated and test paths. Exactly one directory holding one (wherever it
+ * is) is a single package; more than one is a workspace; none is no package manifest. */
 export const MANIFEST_NAMES = {
   id: 'manifest-names', version: 1,
   basenames: ['package.json', 'Cargo.toml', 'pyproject.toml', 'setup.py', 'go.mod', 'pom.xml', 'build.gradle', 'build.gradle.kts', 'Gemfile', 'composer.json', 'mix.exs', 'Package.swift'],

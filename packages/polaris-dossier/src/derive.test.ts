@@ -99,6 +99,23 @@ describe('deriveStructure (syzygy-3efd.16)', () => {
     expect(JSON.stringify(record)).not.toContain('AKIA');
   });
 
+  it('leaves out a path whose directory prefix alone the secret predicate matches, so no directory name can leak', () => {
+    const record = deriveStructure([blob('hidden/a.c'), blob('hidden/deeper/b.c'), blob('open/hidden/c.c')], (p) => p === 'hidden' || p === 'open/hidden');
+    expect(record).toMatchObject({ files: 3, secretPathsLeftOut: 3, units: [], rootFiles: 0 });
+  });
+
+  it('a Redis-shaped tree: deps/ is vendored, a nested tests directory counts, a single manifest anywhere is one package', () => {
+    const record = deriveStructure([
+      blob('deps/jemalloc/src/arena.c'), blob('deps/hiredis/hiredis.c'), blob('src/server.c'), blob('src/modules/tests/run.c'),
+      blob('web/app.js.map'), blob('tools/sub/package.json'),
+    ], NO_SECRET);
+    if (record.state !== 'derived') throw new Error('expected a derived record');
+    expect(record.vendored).toEqual({ rule: 'vendored-path@1', files: 2, listed: ['"deps"'], notListed: 0 });
+    expect(record.generated).toEqual({ rule: 'generated-path@1', files: 1, listed: ['"web/app.js.map"'], notListed: 0 });
+    expect(record.traits.tests).toEqual({ rule: 'tests-path@1', files: 1 });
+    expect(record.traits.packages).toEqual({ rule: 'manifest-names@1', shape: 'single-package', listed: ['"tools/sub"'], notListed: 0 });
+  });
+
   it('writes each name as the census does: a JSON string, control characters escaped', () => {
     const record = deriveStructure([blob('we\nird/a.c')], NO_SECRET);
     if (record.state !== 'derived') throw new Error('expected a derived record');

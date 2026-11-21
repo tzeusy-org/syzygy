@@ -5,7 +5,8 @@
  *
  * Advice on `check`'s report beside `screenCensus`, `readerAdvice` and `reviewReach`: never written into the check record or any gated
  * artifact, never handed to the author in the brief, never rendered. A path a secret detector matches is left out of every count and list
- * but its own, and never named. */
+ * but its own, and never named: a path counts
+ * as one when the predicate matches it or any of its directory prefixes. */
 import { CENSUS_LISTED_LIMIT, shownPath } from './census.js';
 import { DERIVE_RULES, DOCS_TREE, GENERATED_PATH, LANGUAGE_BY_EXTENSION, MANIFEST_NAMES, TESTS_PATH, VENDORED_PATH, type DeriveRuleId } from './derive-rules.js';
 import { BLOB_MODES, type TreeEntry } from './git-object-reader.js';
@@ -80,8 +81,10 @@ export function deriveStructure(entries: readonly Pick<TreeEntry, 'path' | 'mode
     if (entry.mode === SUBMODULE_MODE) { submodules++; continue; }
     if (!BLOB_MODES.has(entry.mode)) continue;
     files++;
-    if (isSecretPath(entry.path)) { secretPathsLeftOut++; continue; }
     const segments = entry.path.split('/');
+    // Every name the record emits is a leading part of a path, so each directory prefix is tested as well as the whole path: a detector
+    // that matched a prefix but not the path (one anchored at the end, say) cannot leak a directory name.
+    if (isSecretPath(entry.path) || segments.slice(0, -1).some((_, i) => isSecretPath(segments.slice(0, i + 1).join('/')))) { secretPathsLeftOut++; continue; }
     const basename = segments[segments.length - 1]!;
     if (segments.length === 1) rootFiles++;
     else units.set(segments[0]!, (units.get(segments[0]!) ?? 0) + 1);
