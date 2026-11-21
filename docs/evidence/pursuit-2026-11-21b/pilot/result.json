@@ -1,0 +1,100 @@
+{
+ "arms": {
+  "P": {
+   "name": "plain-synthesis reader",
+   "factsRequired": 81,
+   "factsGiven": 39.0,
+   "share": 0.481,
+   "wrongStatements": 0,
+   "perKind": {
+    "purpose": 0.5,
+    "structure": 0.79,
+    "mechanism": 0.6,
+    "rationale": 0.23,
+    "change": 0.58,
+    "limits": 0.15
+   },
+   "answersWithNotStated": 21,
+   "difficultyFelt": 2
+  },
+  "T": {
+   "name": "source reader",
+   "factsRequired": 81,
+   "factsGiven": 76.5,
+   "share": 0.944,
+   "wrongStatements": 0,
+   "perKind": {
+    "purpose": 0.96,
+    "structure": 0.89,
+    "mechanism": 0.93,
+    "rationale": 0.96,
+    "change": 0.92,
+    "limits": 1.0
+   },
+   "answersWithNotStated": 1,
+   "difficultyFelt": 4
+  },
+  "D": {
+   "name": "dossier reader",
+   "factsRequired": 81,
+   "factsGiven": 27.5,
+   "share": 0.34,
+   "wrongStatements": 0,
+   "perKind": {
+    "purpose": 0.58,
+    "structure": 0.29,
+    "mechanism": 0.4,
+    "rationale": 0.31,
+    "change": 0.04,
+    "limits": 0.42
+   },
+   "answersWithNotStated": 20,
+   "difficultyFelt": 2
+  }
+ },
+ "claims": {
+  "plain": {
+   "sampled": 30,
+   "verdicts": {
+    "supported": 30
+   },
+   "codeClaims": 137,
+   "step": 4,
+   "withPointer": 22,
+   "pointerOk": 22
+  },
+  "dossier": {
+   "sampled": 30,
+   "verdicts": {
+    "supported": 28,
+    "partly": 2
+   },
+   "codeClaims": 125,
+   "step": 4,
+   "withPointer": 30,
+   "pointerOk": 29
+  }
+ },
+ "labels": {
+  "claims": {
+   "X": "plain",
+   "Y": "dossier"
+  },
+  "answers": {
+   "A": "P",
+   "B": "T",
+   "C": "D"
+  }
+ },
+ "digests": {
+  "PROTOCOL.md": "f1139b8f8da28a44bc14fc0ca007c7067875887633c4779821bab78c141c00fb",
+  "key.json": "0dd376661de598819730357aa844fe026a7113959e30b9f863d8159af72b3690",
+  "plain.md": "f5d325377800c76b49cbf4009bb6bb8c9b9ab5a44e8b76526dd6274e7e4da80c",
+  "manifest.json": "9d4dbc03bf76520555723cc9fc3ff56d2db983222fe7921522135ea279bde454",
+  "answers-D.json": "0dc5e596718456e302be163dfeff44b6f46e420293a1825270a4ac86dfab2261",
+  "answers-P.json": "7d36a1af3dfb7a69b85dc2abca2185c544bd6acf39947af3328ce47091d29412",
+  "answers-T.json": "8e8281040a25ab0168fa3f442dcda47a6088efc0fb5964089a801fdde69aad54",
+  "grading/grades.json": "6d4274c05890d300b462faa59f65c49f89907e00bd79ee64f19ec1b9c8a70133",
+  "claims/result.json": "fa785040a65062c46a7fffd8f60b3d767819702d8312d9cc01e257c88d222296"
+ }
+}

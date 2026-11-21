@@ -1,0 +1,126 @@
+{
+ "answers": [
+  {
+   "id": "Q01",
+   "answer": "Redis is a cache, data structure server, and document and vector query engine for real-time data-driven applications. It keeps its data primarily in memory, which gives very low (often sub-millisecond) latency for reads and writes, and it can optionally persist to disk. It targets caching, distributed session storage, queues and message brokering (lists, streams, pub/sub), leaderboards, counters and rate limiters, NoSQL key-value/document/time-series storage, search and query, vector storage for AI workloads, and real-time analytics.",
+   "where": ["README.md", "redis.conf"]
+  },
+  {
+   "id": "Q02",
+   "answer": "Snapshotting (RDB) dumps the whole dataset to a file (dump.rdb) asynchronously when configured save points are reached (N seconds and M changes); a crash or power loss can lose the last few minutes of writes. The append-only file (AOF) logs every write command and gives much better durability: with the default everysec fsync policy at most about one second of writes is lost on power failure, or a single write if only the Redis process fails. Both can be enabled together. If AOF is enabled at startup, the AOF is the one loaded, because it has the better durability guarantees; the RDB file is loaded only when AOF is off.",
+   "where": ["redis.conf", "src/server.c"]
+  },
+  {
+   "id": "Q03",
+   "answer": "The background I/O service runs operations that would block the server if done on the main thread. It handles three kinds of work: deferred close(2) of files (closing the last reference can mean a slow unlink), AOF fsync, and lazy freeing of memory. Each job type is assigned to one specific worker thread with its own queue (close-file, AOF, lazy-free), and a worker may handle several job types. Jobs handled by the same worker are processed strictly in insertion order, oldest first (FIFO); a creator that wants to know when its jobs finished submits a completion-request job whose response is handed back to the main thread through a pipe.",
+   "where": ["src/bio.c", "src/bio.h"]
+  },
+  {
+   "id": "Q04",
+   "answer": "Modules extend Redis beyond the built-in data structures: a shared library can register new commands and new native data types through the modules API. A module is loaded at startup with one or more loadmodule directives (path plus optional arguments), and the server aborts if it cannot load one; the library's RedisModule_OnLoad entry point then registers its commands and types. A module command for managing modules at runtime exists but is blocked by default by enable-module-command (no/yes/local); its exact syntax is not stated. For a module data type the core stores the value as an opaque OBJ_MODULE object: when saving it writes the module type id as a prefix, calls the type's rdb_save callback, and appends an EOF marker; when loading it reads the id, looks up the registered type, and calls its rdb_load callback, reporting an error if no matching module type is loaded. For AOF rewrite the type's optional aof_rewrite callback emits commands that rebuild the value.",
+   "where": ["README.md", "redis.conf", "src/redismodule.h", "src/rdb.c", "src/aof.c", "src/modules/hellotype.c", "src/config.c"]
+  },
+  {
+   "id": "Q05",
+   "answer": "The event loop (ae) multiplexes file-descriptor events and timers; the connection layer wraps each socket in a connection object whose type (TCP, Unix, TLS) supplies read/write/accept handlers registered with the event loop; the client code reads queries from connections, parses them, runs commands and queues replies. One turn of the loop first calls beforeSleep, which processes pending TLS data, runs cluster housekeeping, handles unblocked clients, runs a fast expire cycle on masters, flushes the AOF buffer to disk, writes pending replies to clients (or hands them to I/O threads), frees clients queued for closing, and releases the module GIL. It then polls the OS for ready descriptors, sleeping at most until the next timer is due, and on wake-up calls afterSleep (reacquire the module GIL, refresh cached time). It then fires the handlers for each ready descriptor, normally readable before writable (inverted when the barrier flag is set), and finally runs due time events such as the periodic server cron.",
+   "where": ["src/ae.c", "src/server.c", "src/connection.h", "src/networking.c"]
+  },
+  {
+   "id": "Q06",
+   "answer": "Each database has a 'keys' kvstore holding all keys and an 'expires' kvstore holding the keys that have a timeout, plus a 'subexpires' store for sub-key (hash field) timeouts. A kvstore is an array of hash tables (dicts): in standalone mode it has a single dict, while in cluster mode it has one dict per hash slot (16384), allocated on demand and freed when empty. The dict entries are kvobj objects, which unify key and value: the key name is embedded inline in the same allocation right after the object header, and a small string value can be embedded after the key. The expiry time, when present, is stored as an 8-byte metadata field placed just before the object header, and the expires kvstore refers to the same kvobj.",
+   "where": ["src/server.h", "src/server.c", "src/kvstore.c", "src/object.h"]
+  },
+  {
+   "id": "Q07",
+   "answer": "The type is the logical data type the user sees (string, list, set, sorted set, hash, stream, module, ...) and determines which commands apply. The encoding is an implementation detail: which in-memory representation currently backs that value (for example raw/embstr/int for strings, intset/listpack/hash table for sets, listpack/skiplist for sorted sets, quicklist for lists). Both exist because several types have multiple representations optimised for memory footprint or speed, so a small value can use a compact form and switch to a general one as it grows. The encoding is chosen and converted by the server's own type implementation code, driven by configured size thresholds, not by the client.",
+   "where": ["src/object.h", "src/t_set.c", "src/t_hash.c", "src/t_zset.c", "redis.conf"]
+  },
+  {
+   "id": "Q08",
+   "answer": "cluster.c holds the parts common to any clustering implementation (key-to-slot handling, routing a query to a node, redirections), while cluster_legacy.c implements the standard cluster-bus (gossip) based mechanism; slot statistics and atomic slot migration have their own units. A key's slot is CRC16 of the key masked to 14 bits (16384 slots); if the key contains a non-empty {...} section, only the text between the first '{' and the next '}' is hashed. For a command, the node checks that all keys map to one slot (otherwise a cross-slot error), finds the node owning that slot, and serves it if that is itself; otherwise it replies with a MOVED redirection. If the slot is migrating and some keys are missing it replies ASK (or TRYAGAIN for multi-key requests with only some keys present); an importing node serves only clients that sent ASKING; an unbound slot or a down cluster gives a cluster-down error; a read-only client on a replica can be served for its master's slots.",
+   "where": ["src/cluster.c", "src/cluster.h", "src/cluster_legacy.c"]
+  },
+  {
+   "id": "Q09",
+   "answer": "The connection's read handler reads bytes into the client's query buffer, the buffer is parsed (multibulk or inline protocol) into an argument vector, and the command is looked up in the command table. Before execution it can be rejected for: unknown command or wrong arity, protected command not enabled, not authenticated, ACL denial, cluster redirection or cross-slot keys, out of memory after eviction failed (for commands that may grow memory), a persistence error (failed background save or AOF write error), too few good replicas (min-replicas-to-write), being a read-only replica, a replica with a broken master link and stale data disallowed, dataset loading, a busy script or module, RESP2 pub/sub context, or client pause. Otherwise the handler runs via call(); the resulting writes are propagated by appending them to the in-memory AOF buffer and feeding the replication stream to replicas. The AOF buffer is written (and fsynced per policy) just before the event loop sleeps again, before reply data is sent to the client, and replicas receive the stream asynchronously.",
+   "where": ["src/networking.c", "src/server.c", "src/aof.c", "src/replication.c"]
+  },
+  {
+   "id": "Q10",
+   "answer": "The parent flushes the current AOF buffer, opens a new incremental (INCR) file so new writes go there, and forks. The child writes a snapshot of the dataset to a temporary file and exits. When the parent sees a successful exit it picks a new BASE file name and marks the previous BASE as HISTORY, renames the temp file to the new BASE, marks the INCR files that the rewrite made obsolete as HISTORY, persists the manifest, and then deletes the history files in the background. The manifest file lists every AOF file with its sequence number and type (base, incremental, history), has at most one BASE which is always first, and may hold several ordered INCR files (during a rewrite or after a failed one); files live in a dedicated append-only directory.",
+   "where": ["src/aof.c", "redis.conf"]
+  },
+  {
+   "id": "Q11",
+   "answer": "The replica sends PSYNC with the replication ID and offset it last had. The master accepts a partial resync only if that ID matches its current replication ID (or its second, previous ID with the offset not beyond the point where that ID stopped being valid) and the requested offset still lies inside the replication backlog. In that case it marks the client as an online replica, replies +CONTINUE, and sends the backlog bytes from that offset onward. Otherwise (ID mismatch, offset outside the backlog, no backlog, or the replica asked with '?') it does a full resync: it replies +FULLRESYNC with its ID and offset, produces an RDB snapshot via a background save (to disk then transferred, or diskless straight to the socket, possibly reusing an in-progress save or waiting for the next one), and then streams the writes buffered since the snapshot. Replicas that support it can receive the RDB on a separate channel while the replication stream is delivered in parallel on the main one.",
+   "where": ["src/replication.c", "redis.conf"]
+  },
+  {
+   "id": "Q12",
+   "answer": "Two mechanisms: lazy expiration on access (a lookup that finds a logically expired key deletes it) and an active expire cycle that scans the keys-with-expiry tables in the background. The active cycle has a slow form run at the server hz rate (usually 10 times a second) limited to a percentage of CPU time (25% by default), and a fast form run before each event-loop sleep limited to about 1000 microseconds and not repeated within the same period; it samples about 20 keys per database loop, visits a bounded number of databases per call, stops on a database once the estimated share of stale keys falls below about 10%, and exits on its time limit; an effort setting from 1 to 10 scales these numbers. Only the master expires keys: when it removes one it propagates a DEL (or UNLINK when lazy freeing is on) to the AOF and to replicas. Replicas do not delete expired keys themselves but wait for the master's DEL, while still reporting such keys as expired to readers; keys created on a writable replica are tracked and expired separately.",
+   "where": ["src/expire.c", "src/db.c", "src/server.c", "redis.conf"]
+  },
+  {
+   "id": "Q13",
+   "answer": "Exact LRU ordering would need extra memory per key, so eviction uses an approximation that runs in constant memory: each object carries only a 24-bit clock/frequency field. When a key must be evicted, the server samples a small number of keys (maxmemory-samples, default 5) and inserts the better candidates into a pool of 16 entries ordered by idle time (or inverse frequency for LFU); the best entry in the pool is evicted, and the pool is repopulated if its entries no longer exist. The cost is accuracy: the victim is not guaranteed to be the true least-recently-used key. A sample size of 10 approximates true LRU very closely but uses more CPU, 3 is faster but not very accurate, and the maximum is 64.",
+   "where": ["src/evict.c", "src/object.h", "redis.conf"]
+  },
+  {
+   "id": "Q14",
+   "answer": "Rehashing a large table in one step would block the server for a long time, so buckets are moved a few at a time: one step on each lookup or update of a table that is rehashing, plus an active rehash that spends about 1 millisecond in every 100 milliseconds of CPU time. The cost is that two tables coexist during rehash, using more memory, that an idle server never finishes rehashing without active rehashing, and that active rehashing can add delays of up to about 2 milliseconds to replies. Resizing is avoided while a fork child is saving because the child shares memory by copy-on-write and a resize moves a lot of memory, causing many pages to be copied. The cost of that is fuller tables: growth is then allowed only once the elements-to-buckets ratio reaches 4, and shrinking only when the table is extremely sparse (1/32); inside the child itself resizing is forbidden.",
+   "where": ["src/dict.c", "src/server.c", "redis.conf"]
+  },
+  {
+   "id": "Q15",
+   "answer": "Redis is described as mostly single threaded: commands run on the main thread against the dataset, with slower work pushed aside. Extra threads are used for background jobs (closing files, AOF fsync, lazy freeing for UNLINK and async flushes), optionally for client socket reads, protocol parsing and writes (io-threads), for the allocator's background thread, and by module threads that take a global lock to touch the dataset while the main thread sleeps. Threaded I/O is disabled by default; it is suggested only on machines with at least 4 cores, leaving at least one core spare (for example 3 threads on 4 cores), and only if the instance really is CPU-bound, otherwise there is no point. Setting io-threads to 1 uses just the main thread.",
+   "where": ["redis.conf", "src/bio.c", "src/iothread.c", "src/server.c"]
+  },
+  {
+   "id": "Q16",
+   "answer": "The policies trade speed for safety: 'always' fsyncs after every write to the log (slow, safest), 'everysec' fsyncs once per second (the default compromise, can lose about a second), and 'no' leaves flushing to the operating system (fastest). The log must be written before the client is answered, and a client socket can only be written from the event loop, so writes are accumulated in a memory buffer and flushed in one go just before re-entering the event loop, ahead of sending replies. With no-appendfsync-on-rewrite set to yes, fsync is not called in the main process while a background save or log rewrite is running, so durability during that time equals 'appendfsync no' and up to about 30 seconds of log can be lost in the worst case with default Linux settings. The option exists because fsync can block too long while a child is doing heavy disk I/O.",
+   "where": ["redis.conf", "src/aof.c", "src/server.c"]
+  },
+  {
+   "id": "Q17",
+   "answer": "The command table is a static array, redisCommandTable, in commands.c, which includes a generated commands.def file; that file is produced by a generator script from one JSON file per command in the commands folder under src. At startup, while the server configuration is initialised, populateCommandTable walks the static array and inserts each command into the server's command dictionary and into a second dictionary unaffected by rename-command. Besides the handler function you describe the command's name, summary, complexity, since-version and group, its arity, its flags (write, read-only, deny-OOM, admin, fast, loading, stale, and so on), its ACL categories, its key specifications (how to find keys in the arguments), its arguments, and optionally history, tips, a get-keys function and subcommands. The handler itself is written in the relevant source file and declared in the server header.",
+   "where": ["src/commands.c", "src/server.c", "src/server.h", "utils/generate-command-code.py"]
+  },
+  {
+   "id": "Q18",
+   "answer": "A new parameter is added as one entry in the static configuration table in config.c, using the creator macro for its type (bool, int, size, string, enum, ...), plus a field in the server struct that the entry points at. The entry's flags decide runtime mutability: MODIFIABLE_CONFIG allows changing it at runtime, IMMUTABLE_CONFIG restricts it to startup, and PROTECTED_CONFIG makes it immutable unless protected configs are enabled; other flags mark it sensitive, hidden, debug or denied during loading. The default value is an argument of the same entry, along with bounds for numeric types and an optional alias. The last two arguments are an optional validation function and an optional apply function; the apply function is what runs an action when the value is changed.",
+   "where": ["src/config.c", "src/server.h"]
+  },
+  {
+   "id": "Q19",
+   "answer": "The decision is made in each type's implementation file (hash, set, sorted set and list code) when elements are added, and again when values are loaded from an RDB file; these compare the element count and element size against server settings. The thresholds are hash-max-listpack-entries (512) and hash-max-listpack-value (64), set-max-intset-entries (512), set-max-listpack-entries (128) and set-max-listpack-value (64), zset-max-listpack-entries (128) and zset-max-listpack-value (64), and list-max-listpack-size (-2, meaning 8 KB per list node; positive values mean an element count). They are defined in the configuration table as runtime-modifiable, so they can be tuned in the configuration file or changed live. Changing the rule itself, rather than the numbers, means editing the conversion checks in the type files and the matching checks in the RDB loading code.",
+   "where": ["redis.conf", "src/config.c", "src/t_hash.c", "src/t_set.c", "src/t_zset.c", "src/t_list.c", "src/rdb.c"]
+  },
+  {
+   "id": "Q20",
+   "answer": "(a) Each readiness API is a separate backend file (evport, epoll, kqueue, select) implementing the same small set of static functions: create, resize, free, add event, delete event, poll and name. The event loop source includes exactly one of them at compile time, chosen by feature macros set in the build configuration header, in the order evport, epoll, kqueue, then select as fallback; a new API means a new backend file plus a branch in that selection and its detection macro. (b) A transport is a ConnectionType: a struct of function pointers for init/configure, listen/accept, connect, read/write/writev, handler registration, sync I/O, event-loop rebinding, pending data and peer identity. A new transport defines such a struct in its own file, provides a registration function that calls connTypeRegister, and is added to connTypeInitialize alongside the socket, Unix and TLS registrations.",
+   "where": ["src/ae.c", "src/ae_select.c", "src/config.h", "src/connection.h", "src/connection.c", "src/socket.c", "src/unix.c", "src/tls.c"]
+  },
+  {
+   "id": "Q21",
+   "answer": "Before running a command the server checks memory against maxmemory and, if over, tries to evict keys according to maxmemory-policy for a bounded time, continuing in a timer if needed. Writes start failing with an out-of-memory error when the policy is noeviction (the default) or when no suitable key can be evicted (for example a volatile policy with no keys that have an expire); this applies to commands that may increase memory use (SET, LPUSH, INCR, EXEC containing such commands), while read-only commands keep working. Replica output buffers (replication buffer beyond the backlog size) and the AOF buffer are subtracted from the used-memory count so that DELs generated by eviction cannot cause an eviction loop, so real memory use can exceed the limit. Replicas ignore maxmemory by default (replica-ignore-maxmemory yes) and rely on the master's DELs, so they may use more memory than the setting.",
+   "where": ["redis.conf", "src/evict.c", "src/server.c"]
+  },
+  {
+   "id": "Q22",
+   "answer": "If snapshots are enabled (at least one save point) and the latest background save failed, the server by default refuses write commands (stop-writes-on-bgsave-error yes) until a background save succeeds again; AOF write or fsync errors likewise cause writes to be refused. At startup, an AOF truncated at the end is loaded as far as possible with a log message when aof-load-truncated is yes (the default), otherwise the server aborts and the file must be repaired with redis-check-aof. An AOF corrupted in the middle makes the server exit with an error; corruption at the tail can be truncated automatically only if aof-load-corrupt-tail-max-size is set above its default of 0 and the damaged part is within that size. If the AOF files cannot be opened or loaded, or the RDB file exists but fails to load, the server logs a fatal error and exits; a missing RDB file simply starts with an empty dataset.",
+   "where": ["redis.conf", "src/server.c", "src/aof.c"]
+  },
+  {
+   "id": "Q23",
+   "answer": "Replication is asynchronous, so a write acknowledged by the master is not guaranteed to have reached any replica and can be lost on failover; replicas may serve out-of-date data. An operator can set min-replicas-to-write with min-replicas-max-lag so the master stops accepting writes when fewer than N online replicas have lag within M seconds; this does not guarantee that N replicas accepted a write, it only limits the window of exposure for lost writes to that many seconds. A larger replication backlog lets replicas resynchronise partially after longer disconnects. When a replica's link to the master is down (or sync is still in progress), with replica-serve-stale-data yes (default) it keeps answering, possibly with stale or empty data; with no it replies with a MASTERDOWN error to data commands, still allowing a small set such as INFO, REPLICAOF, AUTH, SHUTDOWN, CONFIG and pub/sub commands. Replicas are read-only by default.",
+   "where": ["redis.conf", "src/server.c"]
+  },
+  {
+   "id": "Q24",
+   "answer": "In cluster mode there is only database 0: the database count is forced to 1, and SELECT, MOVE, SWAPDB and copying to another database are rejected. A command (or transaction) may only touch keys that all hash to the same slot; otherwise it gets a cross-slot error, and multi-key commands on a slot being migrated can get TRYAGAIN. The replicaof directive is not allowed, and commands for slots owned elsewhere are redirected instead of served. By default, if any hash slot has no serving node the whole cluster eventually stops accepting queries until all slots are covered again; cluster-require-full-coverage no lets the covered part keep serving, and cluster-allow-reads-when-down yes lets nodes serve reads for slots they believe they own while the cluster is down.",
+   "where": ["redis.conf", "src/db.c", "src/config.c", "src/cluster.c"]
+  }
+ ],
+ "minutes_felt": 4,
+ "notes": "The top-level document has no internals section, so most answers came from source comments and the sample configuration. The module loader source and the per-command JSON files were absent, leaving the runtime module-load command unstated."
+}
