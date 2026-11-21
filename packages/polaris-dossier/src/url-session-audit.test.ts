@@ -5,12 +5,14 @@ import { createHash } from 'node:crypto';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { tempDir } from '@syzygy/test-kit';
 import { sha256 } from '@syzygy/support';
+import { encodeCanonicalJson } from '@syzygy/polaris-generation-core/live';
 import { fileURLToPath } from 'node:url';
 import { DOSSIER_POLICY_PATH } from './policy-snapshot.js';
 import { buildDossierScreen } from './screen.js';
 import { SESSION_CONTENT_CLASSES } from './session-egress-policy.js';
-import { createSessionProfile, DEFAULT_SESSION_MODEL } from './session-profile.js';
+import { createOrderedDesignSessionProfile, createSessionProfile, DEFAULT_SESSION_MODEL } from './session-profile.js';
 import { createUrlSessionAudit, type UrlSessionAuditEvent, type UrlSessionAuditOptions, type UrlSessionAuditResult } from './url-session-audit.js';
+import { planOrderedDesignBytes } from './url-design-delivery.js';
 import type { ViewRole } from './session-view.js';
 
 type Writer = Extract<UrlSessionAuditResult, { ok: true }>;
@@ -78,7 +80,73 @@ function relayTrace(f: ReturnType<typeof fixture>, writer: Writer) {
   return [relay, send, flush, response] as const;
 }
 
+async function orderedFixture() {
+  const f = fixture();
+  const compiled = createOrderedDesignSessionProfile(f.profiles[3]!.input);
+  if (!compiled.ok) throw new Error('own ordered profile refused');
+  const profile = compiled.value.profile;
+  const { binding, originPolicySha256, pin, project } = f.options;
+  const canonical = (value: unknown) => encodeCanonicalJson(value, { maxBytes: 65_536, maxNodes: 4096, maxDepth: 12 });
+  const identify = (value: string) => ({ sha256: sha256(value), bytes: Buffer.byteLength(value, 'utf8') });
+  const originalText = 'Own ordered audit fixture. '.repeat(1450);
+  const original = identify(originalText);
+  const envelope = Buffer.from(canonical({ encoding: 'html-entities-five/1', format: 'polaris-dossier-url-design-inert-view/1',
+    originalSha256: original.sha256, originalBytes: original.bytes, payload: originalText,
+    payloadSha256: original.sha256, payloadBytes: original.bytes }));
+  const { partBytes, partCount, replyBytes, preparedBytes } = profile.transcript.partition;
+  const plan = planOrderedDesignBytes({ envelope, envelopeSha256: sha256(envelope), original, fileCount: 1, pageCount: 1,
+    instructionProfileSha256: sha256(profile.input.systemPrompt), limits: { partBytes, partCount, replyBytes, preparedBytes },
+    parents: [sha256('own parent')],
+    binding: { basePolicySha256: binding.policy, deadline: new Date(Date.now() + 60_000).toISOString(), encoding: 'html-entities-five/1',
+      originPolicySha256, originalReceiptSha256: sha256('own original receipt'), pin, producerSha256: sha256('own producer'),
+      profileSha256: profile.digest, project, provider: binding.provider, role: 'design', round: 1, run: binding.run,
+      session: profile.input.sessionId, transferEpoch: 1 } });
+  const prepared = { call: { id: 'toolu_poll_owned', name: profile.transcript.prepared.tool,
+    inputSha256: sha256(canonical({ argv: ['dossier', 'poll', binding.run] })) },
+    prepared: identify(plan.preparedText), reply: identify(canonical({ kind: 'session-control', ok: true, state: 'events',
+      events: [{ event: profile.transcript.prepared.event, ...plan.prepared }] })) };
+  const host = await f.create({ profiles: [...f.profiles.slice(0, 3), profile] });
+  return { f, profile, host, plan, prepared, canonical };
+}
+
 describe('protected URL session audit', () => {
+  it('records first-epoch ordered evidence and one retirement in the protected design segment', async () => {
+    const { f, profile, host, plan, prepared, canonical } = await orderedFixture();
+    expect(() => host.beginOrderedDesignAudit(structuredClone(plan), () => true)).toThrow('url-session-audit-refused');
+    const writer = host.beginOrderedDesignAudit(plan, () => true);
+    expect(() => host.beginOrderedDesignAudit(plan, () => true)).toThrow('url-session-audit-refused');
+    const ref = await writer.append('prepared', prepared);
+    await expect(writer.readTerminal()).rejects.toThrow('url-ordered-design-audit-writer-refused');
+    await writer.retire('refused');
+    await expect(writer.retire('exhausted')).rejects.toThrow('url-ordered-design-audit-writer-refused');
+    await expect(writer.append('prepared', prepared)).rejects.toThrow('url-ordered-design-audit-writer-refused');
+    const [declaration, first, retired] = lines(f, 'design');
+    expect(declaration.event.payload.profile).toBe(profile.id);
+    expect(first.event).toMatchObject({ kind: 'design-ordered', role: 'design', payload: { kind: 'prepared', payload: prepared } });
+    expect(ref).toEqual({ id: first.event.payload.id, sha256: sha256(canonical(first.event.payload)) });
+    expect(retired.event.payload).toMatchObject({ kind: 'retired', previous: ref, payload: { reason: 'refused' } });
+    expect(host.summary()).toMatchObject({ captured: { 'design-ordered': 2 }, durableRecords: 6 });
+  });
+
+  it('rejects the ordered event through the ordinary append port', async () => {
+    const { f, host } = await orderedFixture();
+    const bytes = fs.readFileSync(f.file('design'));
+    await expect(host.append({ kind: 'design-ordered', role: 'design', scope: host.scope('design'),
+      payload: { kind: 'prepared' } } as never)).rejects.toThrow('url-session-audit-refused');
+    expect(fs.readFileSync(f.file('design'))).toEqual(bytes);
+  });
+
+  it.each(['changed segment', 'revoked attempt'] as const)('refuses ordered continuation after %s', async fault => {
+    const { f, host, plan, prepared } = await orderedFixture();
+    let current = true;
+    const writer = host.beginOrderedDesignAudit(plan, () => current);
+    await writer.append('prepared', prepared);
+    if (fault === 'changed segment') fs.appendFileSync(f.file('design'), '\n');
+    else current = false;
+    await expect(writer.retire('interrupted')).rejects.toThrow();
+    expect(host.summary()).toMatchObject({ captured: { 'design-ordered': 1 }, durableRecords: 5 });
+  });
+
   it('links the exact complete request exchange across interleaved accounting records', async () => {
     const f = fixture(), writer = await f.create();
     const [admission, send, flush, response] = relayTrace(f, writer);

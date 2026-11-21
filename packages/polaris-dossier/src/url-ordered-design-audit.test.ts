@@ -1,9 +1,10 @@
-import { describe, expect, it } from 'vitest';
+import { describe, expect, it, vi } from 'vitest';
 import { encodeCanonicalJson } from '@syzygy/polaris-generation-core/live';
 import { sha256 } from '@syzygy/support';
 import { createOrderedDesignSessionProfile } from './session-profile.js';
 import { planOrderedDesignBytes } from './url-design-delivery.js';
-import { verifyOrderedDesignAuditPrefix, verifyOrderedDesignTerminalEvidence, type OrderedDesignAuditReference } from './url-ordered-design-audit.js';
+import { verifyOrderedDesignAuditPrefix, verifyOrderedDesignTerminalEvidence, type OrderedDesignAuditEvent, type OrderedDesignAuditReference } from './url-ordered-design-audit.js';
+import { createOrderedDesignAuditWriter } from './url-ordered-design-writer.js';
 
 const encode = (value: unknown): string => encodeCanonicalJson(value, { maxBytes: 65_536, maxNodes: 4096, maxDepth: 12 });
 const bytes = (value: string) => ({ sha256: sha256(value), bytes: Buffer.byteLength(value, 'utf8') });
@@ -116,6 +117,64 @@ function archive(mutate?: (event: Event, occurrence: number, index: number) => v
 }
 const changed = { id: 'other-event', sha256: sha256('other event') };
 const fields = (value: unknown): Record<string, unknown> => value as Record<string, unknown>;
+
+describe('live ordered design audit writer', () => {
+  it('issues a terminal only after all 23 durable records and revokes the live result on currentness loss', async () => {
+    const { evidence, expected } = archive();
+    vi.spyOn(Date, 'now').mockReturnValue(evidence.asOf);
+    let current = true;
+    const stored: Buffer[] = [];
+    try {
+      const writer = createOrderedDesignAuditWriter(evidence, {
+        current: async () => current,
+        append: async record => {
+          const index = stored.push(Buffer.from(encode(record))) - 1;
+          return () => Buffer.from(stored[index]!);
+        },
+      });
+      const refs = new Map<string, OrderedDesignAuditReference>();
+      const replaceRefs = (value: unknown): unknown => {
+        if (Array.isArray(value)) return value.map(replaceRefs);
+        if (typeof value !== 'object' || value === null) return value;
+        const object = fields(value);
+        if (typeof object.id === 'string' && object.id.startsWith('own-event-')) return refs.get(object.id);
+        return Object.fromEntries(Object.entries(object).map(([key, member]) => [key, replaceRefs(member)]));
+      };
+      for (const bytes of evidence.records) {
+        const event: OrderedDesignAuditEvent = JSON.parse(bytes.toString('utf8'));
+        await expect(writer.readTerminal()).rejects.toThrow('url-ordered-design-audit-writer-refused');
+        refs.set(event.id, await writer.append(event.kind, replaceRefs(event.payload) as OrderedDesignAuditEvent['payload']));
+      }
+      expect(stored).toHaveLength(23);
+      const terminal = refs.get(expected.terminal.id)!;
+      expect(await writer.readTerminal()).toEqual(replaceRefs(expected));
+      expect(verifyOrderedDesignTerminalEvidence({ ...evidence, records: stored, terminal })).toEqual(replaceRefs(expected));
+      await expect(writer.retire('interrupted')).rejects.toThrow('url-ordered-design-audit-writer-refused');
+      current = false;
+      await expect(writer.readTerminal()).rejects.toThrow('url-ordered-design-audit-writer-refused');
+      current = true;
+      await expect(writer.readTerminal()).rejects.toThrow('url-ordered-design-audit-writer-refused');
+      expect(stored).toHaveLength(23);
+    } finally { vi.restoreAllMocks(); }
+  });
+
+  it('admits only one append in flight and never retries a record with unconfirmed readback', async () => {
+    const { evidence } = archive();
+    const { payload } = JSON.parse(evidence.records[0]!.toString('utf8')) as OrderedDesignAuditEvent<'prepared'>;
+    vi.spyOn(Date, 'now').mockReturnValue(evidence.asOf);
+    const append = vi.fn(async () => () => Buffer.from('different persisted bytes'));
+    try {
+      const writer = createOrderedDesignAuditWriter(evidence, { current: async () => true, append });
+      const first = writer.append('prepared', payload);
+      await expect(writer.append('prepared', payload)).rejects.toThrow('url-ordered-design-audit-writer-refused');
+      await expect(first).rejects.toThrow('url-ordered-design-audit-writer-refused');
+      await expect(writer.append('prepared', payload)).rejects.toThrow('url-ordered-design-audit-writer-refused');
+      await expect(writer.retire('transport-uncertain')).rejects.toThrow('url-ordered-design-audit-writer-refused');
+      await expect(writer.readTerminal()).rejects.toThrow('url-ordered-design-audit-writer-refused');
+      expect(append).toHaveBeenCalledTimes(1);
+    } finally { vi.restoreAllMocks(); }
+  });
+});
 
 describe('protected ordered design terminal evidence verifier', () => {
   it('reads the complete sealed two-part chain and returns only linked evidence identities', () => {

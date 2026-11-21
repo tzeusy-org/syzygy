@@ -5,7 +5,7 @@ import { encodeCanonicalJson, parseBoundedJson } from '@syzygy/polaris-generatio
 import { deepFreeze, isRecord, sha256 } from '@syzygy/support';
 import { CLARIFICATION_ANSWER_KINDS } from './draft-schema.js';
 import { SESSION_CONTENT_CLASSES, SESSION_TOOLS, type SessionAdmission, type SessionBinding, type SessionContentClass } from './session-egress-policy.js';
-import { isSessionProfile, SESSION_PROFILE_ID, type SessionProfile } from './session-profile.js';
+import { isNativeSessionProfile, isOrderedDesignSessionProfile, type NativeSessionProfile } from './session-profile.js';
 import type { DossierScreen } from './screen.js';
 import type { UrlSessionControlAudit } from './session-control.js';
 import type { UrlSessionLaunchOptions, UrlSessionLaunchOutcome } from './session-launch.js';
@@ -16,6 +16,8 @@ import { inspectUrlDesignProduct, isUrlDesignProductLeaseOpen, readInertUrlDesig
   type UrlDesignProductBinding, type UrlDesignProductMetadata, type UrlInertDesignProduct, type ValidatedUrlDesignProduct } from './url-design-product.js';
 import { checkStoredUrlRender } from './url-stored-render.js';
 import { inspectUrlLaunchHistory, URL_HELPER_LAUNCH_FILES, type UrlLaunchHistoryCapability, type UrlLaunchHistoryRole } from './url-launch-history.js';
+import { isOrderedDesignPlanFor, type OrderedDesignPlan } from './url-design-delivery.js';
+import { createOrderedDesignAuditWriter, type OrderedDesignAuditWriter, type OrderedDesignStoredRecord } from './url-ordered-design-writer.js';
 
 export const URL_SESSION_AUDIT_FORMAT = 'url-session-audit/2' as const;
 export const URL_SESSION_AUDIT_LIMITS = Object.freeze({ events: 4096, eventBytes: 65_536, bytes: 16_777_216, pending: 8, milliseconds: 5000 });
@@ -83,8 +85,9 @@ type DesignVerdictEvent = Envelope<'design-verdict', {
   readonly checked: UrlCheckedDesignVerdict;
   readonly toolReceipt: UrlSessionToolReceiptMetadata;
 }>;
-type CapturedAuditEvent = UrlSessionAuditEvent | LaunchHistoryEvent | DesignDeliveryEvent | DesignVerdictEvent;
-type PrivateEventKind = LaunchHistoryEvent['kind'] | DesignDeliveryEvent['kind'] | DesignVerdictEvent['kind'];
+type OrderedDesignEvent = Envelope<'design-ordered', OrderedDesignStoredRecord>;
+type CapturedAuditEvent = UrlSessionAuditEvent | LaunchHistoryEvent | DesignDeliveryEvent | DesignVerdictEvent | OrderedDesignEvent;
+type PrivateEventKind = LaunchHistoryEvent['kind'] | DesignDeliveryEvent['kind'] | DesignVerdictEvent['kind'] | OrderedDesignEvent['kind'];
 declare const designAuditBrand: unique symbol;
 export interface UrlDesignDeliveryAuditRecord {
   readonly [designAuditBrand]: true;
@@ -197,12 +200,12 @@ export interface UrlSessionAuditOptions {
   readonly parent: string; readonly name: string; readonly binding: Omit<SessionBinding, 'role'>;
   readonly originPolicySha256: string; readonly project: string; readonly pin: string; readonly principal: string;
   /** Genuine independently compiled profiles, one per role. Never event-learned. */
-  readonly profiles: readonly SessionProfile[]; readonly declaredClasses: readonly SessionContentClass[];
+  readonly profiles: readonly NativeSessionProfile[]; readonly declaredClasses: readonly SessionContentClass[];
   readonly screen: DossierScreen; readonly current: () => boolean | Promise<boolean>;
   readonly limits?: Partial<Limits>;
 }
 const ROLES: readonly ViewRole[] = ['author', 'inventory', 'fidelity', 'design'];
-const KINDS = ['relay', 'control', 'launch-attempt', 'before-tool', 'tool-receipt', 'usage', 'launch-terminal', 'launch-history', 'design-delivery', 'design-verdict'] as const;
+const KINDS = ['relay', 'control', 'launch-attempt', 'before-tool', 'tool-receipt', 'usage', 'launch-terminal', 'launch-history', 'design-delivery', 'design-verdict', 'design-ordered'] as const;
 const RELAY_TRANSITIONS: Readonly<Record<SessionAuditEvent['event'], readonly SessionAuditEvent['event'][]>> = {
   'attempt-allowed': ['send-attempt', 'attempt-refused', 'transport-failed'],
   'send-attempt': ['send-outcome', 'transport-failed'],
@@ -242,6 +245,7 @@ export interface UrlSessionAuditSummary {
 }
 export type UrlSessionAuditResult = { readonly ok: true; readonly scope: (role: ViewRole) => UrlSessionAuditScope;
   readonly append: (event: UrlSessionAuditEvent) => Promise<void>;
+  readonly beginOrderedDesignAudit: (plan: OrderedDesignPlan, current: () => boolean | Promise<boolean>) => OrderedDesignAuditWriter;
   readonly commitLaunchHistory: (history: UrlLaunchHistoryCapability) => Promise<UrlCommittedLaunchHistory>;
   readonly commitDesignDelivery: (input: UrlDesignDeliveryAuditInput, waitForSample?: () => Promise<boolean>) => Promise<UrlDesignDeliveryView>;
   readonly revalidateDesignDelivery: (record: UrlDesignDeliveryAuditRecord, product: ValidatedUrlDesignProduct) => Promise<void>;
@@ -335,12 +339,17 @@ export async function createUrlSessionAudit(given: UrlSessionAuditOptions): Prom
     };
     safe(input);
     const scopes = new Map<ViewRole, UrlSessionAuditScope>();
+    const roleProfiles = new Map<ViewRole, NativeSessionProfile>();
     if (profiles.length !== ROLES.length) poison();
     for (const profile of profiles) {
-      if (!isSessionProfile(profile) || !one(profile.input.binding.role, ROLES) || scopes.has(profile.input.binding.role as ViewRole)
-        || !equal(profile.input.binding, { ...input.binding, role: profile.input.binding.role }) || profile.id !== SESSION_PROFILE_ID || !hex(profile.digest)) poison();
-      scopes.set(profile.input.binding.role as ViewRole, copy({ binding: profile.input.binding, originPolicySha256: input.originPolicySha256, profileSha256: profile.digest }));
+      if (!isNativeSessionProfile(profile) || !one(profile.input.binding.role, ROLES) || scopes.has(profile.input.binding.role as ViewRole)
+        || !equal(profile.input.binding, { ...input.binding, role: profile.input.binding.role }) || !hex(profile.digest)) poison();
+      const role = profile.input.binding.role as ViewRole;
+      roleProfiles.set(role, profile);
+      scopes.set(role, copy({ binding: profile.input.binding, originPolicySha256: input.originPolicySha256, profileSha256: profile.digest }));
     }
+    const designProfile = roleProfiles.get('design');
+    const orderedDesignProfile = isOrderedDesignSessionProfile(designProfile) ? designProfile : null;
     const checkCurrent = async (deadline: number): Promise<void> => {
       guard(deadline); if (await wait(track('callback', current), deadline) !== true) poison(); guard(deadline);
     };
@@ -489,6 +498,10 @@ export async function createUrlSessionAudit(given: UrlSessionAuditOptions): Prom
         case 'design-delivery':
           if (privateKind !== 'design-delivery' || role !== 'design') poison();
           break;
+        case 'design-ordered':
+          // Only the ordered writer can enqueue a prefix-verified record.
+          if (privateKind !== 'design-ordered' || role !== 'design' || orderedDesignProfile === null) poison();
+          break;
         case 'before-tool':
           if (!exact(p, ['tool', 'inputSha256']) || !one(p.tool, TOOLS) || !hex(p.inputSha256)) poison(); break;
         case 'design-verdict':
@@ -596,7 +609,7 @@ export async function createUrlSessionAudit(given: UrlSessionAuditOptions): Prom
       return record;
     }
     for (const role of ROLES) await commit({ kind: 'declaration', role, scope: scopes.get(role), payload: { project: input.project, pin: input.pin,
-      principal: input.principal, declaredClasses: input.declaredClasses, profile: SESSION_PROFILE_ID, limits,
+      principal: input.principal, declaredClasses: input.declaredClasses, profile: roleProfiles.get(role)!.id, limits,
       capture: 'host-callbacks-only', providerReceipts: 'Unknown', nativeSendCensus: 'Unknown' } }, role, began, true);
     const enqueue = (event: CapturedAuditEvent, privateKind: PrivateEventKind | null) => {
       const deadline = performance.now() + limits.milliseconds;
@@ -612,7 +625,7 @@ export async function createUrlSessionAudit(given: UrlSessionAuditOptions): Prom
     // A pending write may expose the unchanged prefix or its exact complete
     // append. A short write has no supported intermediate extent. An event
     // can authenticate a product only inside the already durable prefix.
-    const verifyDurableEvent = (role: ViewRole, event: Awaited<ReturnType<typeof commit>>): void => {
+    const verifyDurableEvent = (role: ViewRole, event: DurableEvent): Buffer => {
       if (poisoned) throw refused();
       const intent = managedAppend, writer = intent && segments.get(intent.role)!;
       let extent: SegmentPrefix | undefined;
@@ -662,8 +675,41 @@ export async function createUrlSessionAudit(given: UrlSessionAuditOptions): Prom
           // A checked full extent fixes its stamp while the write promise is
           // outstanding. A later read or completion cannot accept new drift.
           if (intent && extent?.prefix === intent.prefix) intent.full = extent;
+          return bytes;
         } finally { closeSync(file); }
       } finally { closeSync(fd); }
+    };
+    // A new, exclusive audit segment permits one live first-epoch attempt.
+    // A resumed attempt needs a separate authenticated history reader.
+    let orderedDesignOpened = false;
+    const beginOrderedDesignAudit: Extract<UrlSessionAuditResult, { ok: true }>['beginOrderedDesignAudit'] = (plan, attemptCurrent) => {
+      if (orderedDesignOpened || poisoned || closing || orderedDesignProfile === null || typeof attemptCurrent !== 'function'
+        || !isOrderedDesignPlanFor(plan, orderedDesignProfile.transcript.partition)) throw refused();
+      const { binding } = plan.manifest;
+      if (binding.project !== input.project || binding.pin !== input.pin || binding.originPolicySha256 !== input.originPolicySha256
+        || binding.transferEpoch !== 1 || binding.round !== 1) throw refused();
+      const scope = scopes.get('design')!;
+      const checkAttemptCurrent = async (): Promise<boolean> => {
+        const deadline = performance.now() + limits.milliseconds;
+        await checkCurrent(deadline);
+        const allowed = await wait(track('callback', attemptCurrent), deadline);
+        await checkCurrent(deadline);
+        return allowed === true;
+      };
+      const writer = createOrderedDesignAuditWriter({ profile: orderedDesignProfile, plan, principal: input.principal }, {
+        current: checkAttemptCurrent,
+        append: async record => {
+          const event = await enqueue({ kind: 'design-ordered', role: 'design', scope, payload: record }, 'design-ordered');
+          return () => {
+            const bytes = verifyDurableEvent('design', event);
+            const row = parseBoundedJson(bytes.toString('utf8'), { maxBytes: limits.eventBytes + 1, maxNodes: 4096, maxDepth: 12 });
+            if (!isRecord(row) || !isRecord(row.event) || row.event.kind !== 'design-ordered') throw refused();
+            return Buffer.from(canonical(row.event.payload, limits.eventBytes));
+          };
+        },
+      });
+      orderedDesignOpened = true;
+      return writer;
     };
     const ownLaunches = new WeakSet<UrlCommittedLaunchHistory>();
     const commitLaunchHistory = async (capability: UrlLaunchHistoryCapability): Promise<UrlCommittedLaunchHistory> => {
@@ -858,7 +904,7 @@ export async function createUrlSessionAudit(given: UrlSessionAuditOptions): Prom
     /** Record identities only. A checked append can be cited by a later delivery
      * verifier independently reproducing the subject under its own live read. */
     const commitDesignDelivery: Extract<UrlSessionAuditResult, { ok: true }>['commitDesignDelivery'] = async (request, waitForSample) => {
-      if (poisoned || closing || designPending || designRetired
+      if (poisoned || closing || orderedDesignProfile !== null || designPending || designRetired
         || !exact(request, ['product', 'expectedProduct', 'launch', 'run', 'runId', 'pinnedRevision', 'sitePath', 'round'])
         || !count(request.round, 999_999) || request.round !== nextDesignRound
         || !ownLaunches.has(request.launch) || request.runId !== input.binding.run || request.pinnedRevision !== input.pin) throw refused();
@@ -960,7 +1006,7 @@ export async function createUrlSessionAudit(given: UrlSessionAuditOptions): Prom
     };
     const append = async (event: UrlSessionAuditEvent): Promise<void> => { await enqueue(event, null); };
     return Object.freeze({ ok: true as const, scope: (role: ViewRole) => { const scope = scopes.get(role); if (!scope) poison(); return scope!; },
-      append, commitLaunchHistory, commitDesignDelivery, revalidateDesignDelivery, readDesignDeliveryView,
+      append, beginOrderedDesignAudit, commitLaunchHistory, commitDesignDelivery, revalidateDesignDelivery, readDesignDeliveryView,
       commitDesignArtifactRead, readDesignReviewProof, commitDesignVerdict, readDesignRenderContinuation, close, summary });
   } catch {
     poisoned = true; await close(); return Object.freeze({ ok: false as const, code: 'url-session-audit-unavailable' as const, summary });
