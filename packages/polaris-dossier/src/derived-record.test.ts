@@ -219,9 +219,59 @@ describe('the record', () => {
       expect(structure).toMatchObject({ currencyPolicy: null });
     });
 
-    it('labels a fact of an undeclared rule version Unknown (no-currency-bound-declared), and the rest of a record it no longer matches stale', async () => {
-      const structure = await at(kept((doc) => { doc['facts'][1].ruleVersion = 2; }));
-      expect(outcomes(structure)).toEqual(FACTS.map((fact, i) => `${fact.id} unknown ${i === 1 ? 'no-currency-bound-declared' : 'stale-beyond-currency-bound'}`));
+    // Version 2.8 (syzygy-3efd.67): until then a fact of another rule version rendered Unknown (no-currency-bound-declared) beside the
+    // rest stale; now a record naming a rule or version the render does not use, or a path it does not re-derive, is no readable record.
+    it('states missing for a record naming another rule or version, or a path the render does not re-derive (version 2.8)', async () => {
+      const MISSING = { state: 'missing', revision: REV, unknownReason: 'missing-evidence' };
+      const planted: [string, (doc: Record<string, any>) => void][] = [ // eslint-disable-line @typescript-eslint/no-explicit-any
+        ['a unit fact of rule version 2', (doc) => { doc['facts'][1].ruleVersion = 2; }],
+        ['the root of rule version 0', (doc) => { doc['facts'][0].ruleVersion = 0; }],
+        ['a containment of another rule', (doc) => { doc['facts'][4].rule = 'zq-planted-rule'; }],
+        ['the root of another rule', (doc) => { doc['facts'][0].rule = 'zq-planted-rule'; }],
+        ['a non-secret directory the tree does not hold', (doc) => { doc['facts'][1].path = 'zq-planted-dir'; doc['facts'][4].path = 'zq-planted-dir'; }],
+        ['a containment alone naming it', (doc) => { doc['facts'][4].path = 'zq-planted-dir'; }],
+        ['a unit alone naming it', (doc) => { doc['facts'][3].path = 'zq-planted-dir'; }],
+        ['a directory the tree holds only below the top level', (doc) => { doc['facts'][2].path = 'b'; doc['facts'][5].path = 'b'; }],
+      ];
+      for (const [what, edit] of planted) {
+        const text = kept(edit);
+        // Each planted record passes every reading rule of the record itself; only the render's own re-derivation refuses it.
+        expect(readDerivedRecord(runWith(text), 0, EXPECT), what).toMatchObject({ state: 'derived' });
+        const structure = await at(text);
+        expect(structure, what).toEqual(MISSING);
+        expect(JSON.stringify(structure), what).not.toContain('zq-planted');
+      }
+      // Under no policy, and for a record of another revision, the same: the refusal does not wait on currency.
+      expect(await at(kept((doc) => { doc['facts'][1].path = 'zq-planted-dir'; doc['facts'][4].path = 'zq-planted-dir'; }), { policy: null })).toEqual(MISSING);
+      expect(await at(kept((doc) => { doc['revision'] = OTHER; doc['facts'][4].rule = 'zq-planted-rule'; }))).toEqual(MISSING);
+      // A render that cannot list the tree says so, whatever the record names.
+      const refused = { listTree: async () => { throw new GitObjectReadRefusal('object-missing', 'gone'); } };
+      expect(await at(kept((doc) => { doc['facts'][4].rule = 'zq-planted-rule'; }), { reader: refused })).toEqual({ state: 'unknown', revision: REV, unknownReason: 'source-uncaptured-or-unreachable' });
+    });
+
+    it('states missing for a record naming a directory the tree holds past the render\'s listing of 250, and reads one within it (version 2.8)', async () => {
+      const names = Array.from({ length: 251 }, (_, i) => `d${String(i).padStart(3, '0')}`);
+      const wide = names.map((name) => ({ path: `${name}/f`, mode: '100644' }));
+      const record = (edit: (doc: Record<string, any>) => void): string => { // eslint-disable-line @typescript-eslint/no-explicit-any
+        const doc = JSON.parse(encodeDerivedRecord({ repositoryId: 'kestrel', revision: REV, capturedAt: '2026-11-21T00:00:00.000Z' }, deriveTreeFacts(wide, () => false)));
+        edit(doc);
+        return `${JSON.stringify(doc, null, 2)}\n`;
+      };
+      const wideAt = (text: string) => derivedStructureAt({ run: runWith(text), revision: 0, pinned: REV, repositoryId: 'kestrel', reader: reader(wide), isSecretPath: () => false, policy });
+      // Facts 250 and 500 are the 250th unit (d249) and its containment; d250 is in the tree but counted, not listed.
+      const within = await wideAt(record(() => {}));
+      expect(within.state === 'derived' && within.facts.every((fact) => fact.epistemic === 'observed')).toBe(true);
+      expect(await wideAt(record((doc) => { doc['facts'][250].path = 'd250'; doc['facts'][500].path = 'd250'; }))).toEqual({ state: 'missing', revision: REV, unknownReason: 'missing-evidence' });
+    });
+
+    it('still renders stale, with the names this render derived, a record of other facts whose every path the render derives (version 2.8)', async () => {
+      // A record that lists two of the three units the tree holds, and a record whose units are swapped between two paths.
+      const fewer = kept((doc) => { doc['facts'] = [doc['facts'][0], doc['facts'][1], doc['facts'][2], doc['facts'][4], doc['facts'][5]]; });
+      expect(outcomes(await at(fewer))).toEqual(['_tree-root', '_tree-unit-1', '_tree-unit-2', '_tree-contains-1', '_tree-contains-2'].map((id) => `${id} unknown stale-beyond-currency-bound`));
+      const swapped = kept((doc) => { doc['facts'][1].path = 'lib'; doc['facts'][2].path = 'Zeta'; });
+      const structure = await at(swapped);
+      expect(outcomes(structure)).toEqual(FACTS.map((fact) => `${fact.id} unknown stale-beyond-currency-bound`));
+      expect(structure.state === 'derived' && structure.facts.map((fact) => fact.path)).toEqual(['.', 'lib', 'Zeta', 'mixed', 'Zeta', 'lib', 'mixed']);
     });
 
     it('labels every fact Unknown (stale-beyond-currency-bound) for a record of another revision or with facts the render does not re-derive', async () => {

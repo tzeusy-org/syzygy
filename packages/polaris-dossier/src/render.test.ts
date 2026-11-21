@@ -1872,6 +1872,30 @@ describe('render: derived structure (version 2.3)', () => {
     }
   });
 
+  // Version 2.8 (syzygy-3efd.67), the scenario "Derived record naming a directory not in the tree": each planted record below passes every
+  // reading rule of the record itself (exact rebuild, own repository, forms, no secret-matching path); the render refuses it because a
+  // path or rule it names is not one the render's own re-derivation holds.
+  it('publishes and draws nothing of a record naming a directory the tree does not hold, or a rule other than top-level-unit version 1 (version 2.8)', async () => {
+    const sentence = `<section id="derived-structure" data-reading-level="1" data-topics=""><h2>Derived by Syzygy: top-level directories</h2><p class="derived-unknown" data-epistemic="unknown" data-unknown-reason="missing-evidence"><span class="not-established">Not established.</span> The top-level directories of the tree at revision ${commit} are Unknown at this render: no derived record was kept when this draft revision was checked.</p></section>`;
+    const planted: [string, string, (doc: Doc) => void][] = [
+      ['a non-secret directory absent from the tree', 'zqplanteddir', (doc) => { doc.facts[1].path = 'zqplanteddir'; doc.facts[3].path = 'zqplanteddir'; }],
+      ['a rule other than top-level-unit', 'zq-planted-rule', (doc) => { doc.facts[2].rule = 'zq-planted-rule'; }],
+      ['a version other than 1', 'zq-unused', (doc) => { doc.facts[4].ruleVersion = 2; }],
+    ];
+    for (const [what, name, edit] of planted) {
+      const run = await prepared(draft(), false);
+      const doc = JSON.parse(fs.readFileSync(recordPath(run), 'utf8'));
+      edit(doc);
+      fs.writeFileSync(recordPath(run), `${JSON.stringify(doc, null, 2)}\n`);
+      const { files, index, machine } = await rendered(run);
+      expect(regionOfIndex(index), what).toBe(sentence);
+      expect(files.has('derived-structure.json'), what).toBe(false);
+      expect(machine.derivedStructure, what).toEqual({ file: null, sha256: null, revision: commit, state: 'missing', currencyPolicy: null, facts: [] });
+      expect([...files.keys()].filter((file) => !file.endsWith('.html')).sort(), what).toEqual(['dossier.json', 'machine.json', 'size-report.json']);
+      for (const [file, text] of files) expect(text, `${what} ${file}`).not.toContain(name);
+    }
+  });
+
   it('refuses a check before freezing when the revision\'s derived record already exists, so the revision is not spent', async () => {
     const run = await prepared(draft(), false);
     fs.writeFileSync(recordPath(run, 1), '{}\n');
