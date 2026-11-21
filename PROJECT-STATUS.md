@@ -91,7 +91,7 @@ authority and no model yet called on the current path.
     [v1.4 sign-off](.syzygy/governance/decisions/POLARIS-DOSSIER-LOCAL-AGENT-MODE-SIGNOFF-v1.4.md);
     [v1.5 sign-off](.syzygy/governance/decisions/POLARIS-DOSSIER-LOCAL-AGENT-MODE-SIGNOFF-v1.5.md);
     [v1.6 sign-off](.syzygy/governance/decisions/POLARIS-DOSSIER-LOCAL-AGENT-MODE-SIGNOFF-v1.6.md)), and
-    39 requirements and 400 scenarios in the effective composition with it and with the signed-off
+    39 requirements and 413 scenarios in the effective composition with it and with the signed-off
     [launch-consent addition](openspec/changes/polaris-dossier-launch-consent/specs/polaris-generation/spec.md)
     ([v1.0 sign-off](.syzygy/governance/decisions/POLARIS-DOSSIER-LAUNCH-CONSENT-SIGNOFF-v1.0.md);
     [v1.1 sign-off](.syzygy/governance/decisions/POLARIS-DOSSIER-LAUNCH-CONSENT-SIGNOFF-v1.1.md);
@@ -136,6 +136,12 @@ authority and no model yet called on the current path.
     naming only what the render derives, per-code-point page names, the v7 graph sentence qualified); its
     implementation (syzygy-3efd.72, .67, .68) is not yet landed.
     *(2026-11-22: the predecessor figure "395 scenarios" is superseded by that
+    amendment; all 39 identities remain.)*
+    [Computed maps amendment 2.9](openspec/changes/dossier-computed-maps) is agent-adopted in A-30.
+    It replaces REQ-polaris-generation-034 again (87 to 100 scenarios: directory, unit and CI pipeline map
+    pages computed at render, and figure-fit advice no draft change can clear moved to `run-advice.json`); its
+    implementation (syzygy-3efd.36, .64) is not yet landed.
+    *(2026-11-22: the predecessor figure "400 scenarios" is superseded by that
     amendment; all 39 identities remain.)*
     *(2026-11-18: the predecessor figure "329 scenarios" is superseded by that
     overlay; all38 identities remain, and046 is now Declared local-source admission.)*
