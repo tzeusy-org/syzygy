@@ -289,6 +289,8 @@ beforeAll(() => {
     workflowFoldPlainSpace: 'name: "a  \n  b"\non: push\n',
     workflowFoldHexTab: 'name: "a\\x09\n  b"\non: push\n',
     workflowBlockTabLine: 'on: push\njobs:\n  a:\n    steps:\n      - run: |\n          echo\n\t\n          echo\n',
+    // The tab line ends the scalar's reach and the next key is in place, so only the tab rule refuses it.
+    workflowBlockTabBeforeKey: 'on: push\njobs:\n  a:\n    run: |\n      echo\n  \t\n    x: 1\n',
     workflowBlockTabContent: 'on: push\njobs:\n  a:\n    steps:\n      - run: |\n          echo\n          \t\n',
     workflowQuotedKeys: '"name": "Quoted \\"CI\\""\n\'on\':\n  "push": {}\njobs:\n  "build-x": {}\n',
   });
@@ -491,6 +493,7 @@ describe('github-actions-workflow version 1', () => {
   });
   it('refuses a blank line holding a tab short of a block scalar\'s indentation as syntax, and keeps a tab past it as content', () => {
     expect(facts(recognizeWorkflow(F['workflowBlockTabLine']!))).toBe('syntax');
+    expect(facts(recognizeWorkflow(F['workflowBlockTabBeforeKey']!))).toBe('syntax');
     expect(facts(recognizeWorkflow(F['workflowBlockTabContent']!))).toEqual([['workflow', 1, 7, null], ['workflow-trigger', 1, 1, 'push'], ['job', 3, 7, 'a']]);
   });
   it('refuses a malformed, an empty and a whitespace-only file as syntax', () => {
