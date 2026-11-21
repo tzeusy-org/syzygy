@@ -4,7 +4,7 @@ import { deriveStructure, structureUnknown } from './derive.js';
 // syzygy-3efd.16: the structure record from paths and modes alone. Expected values are literals (CC-TEST-3).
 const blob = (path: string, mode = '100644') => ({ path, mode });
 const NO_SECRET = (): boolean => false;
-const RULES = ['vendored-path@1', 'generated-path@1', 'language-by-extension@1', 'docs-tree@1', 'tests-path@1', 'manifest-names@1', 'top-level-unit@1'];
+const RULES = ['vendored-path@1', 'generated-path@1', 'language-by-extension@1', 'docs-tree@1', 'tests-path@1', 'manifest-names@1', 'top-level-unit@1', 'server-entry@1'];
 const NOTE_START = 'Derived by Syzygy from the paths and modes of the pinned tree alone';
 
 /** A tree entry that refuses every read but its path and mode: a blob body, size or object id read through it fails the test. */
@@ -32,6 +32,7 @@ describe('deriveStructure (syzygy-3efd.16)', () => {
         docsTree: { rule: 'docs-tree@1', matched: true, listed: ['"docs"'], notListed: 0 },
         tests: { rule: 'tests-path@1', files: 1 },
         packages: { rule: 'manifest-names@1', shape: 'single-package', listed: ['"."'], notListed: 0 },
+        serverEntry: { rule: 'server-entry@1', holds: false, listed: [], notListed: 0 },
       },
       note: expect.stringContaining(NOTE_START),
     });
@@ -50,6 +51,7 @@ describe('deriveStructure (syzygy-3efd.16)', () => {
       docsTree: { rule: 'docs-tree@1', matched: false, listed: [], notListed: 0 },
       tests: { rule: 'tests-path@1', files: 3 },
       packages: { rule: 'manifest-names@1', shape: 'workspace', listed: ['"."', '"packages/core"', '"packages/ui"'], notListed: 0 },
+      serverEntry: { rule: 'server-entry@1', holds: false, listed: [], notListed: 0 },
     });
     expect(record.languages.counts).toEqual([{ language: 'JSON', files: 4 }, { language: 'TypeScript', files: 3 }, { language: 'Markdown', files: 1 }, { language: 'Python', files: 1 }]);
   });
@@ -81,6 +83,7 @@ describe('deriveStructure (syzygy-3efd.16)', () => {
         docsTree: { rule: 'docs-tree@1', matched: false, listed: [], notListed: 0 },
         tests: { rule: 'tests-path@1', files: 0 },
         packages: { rule: 'manifest-names@1', shape: 'no-package-manifest', listed: [], notListed: 0 },
+        serverEntry: { rule: 'server-entry@1', holds: false, listed: [], notListed: 0 },
       },
       note: expect.stringContaining(NOTE_START),
     });
@@ -146,5 +149,38 @@ describe('deriveStructure (syzygy-3efd.16)', () => {
     if (record.state !== 'derived') throw new Error('expected a derived record');
     expect([record.units.length, record.unitsNotListed, record.units[249]]).toEqual([250, 10, { unit: '"u249"', files: 1 }]);
     expect([record.vendored.files, record.vendored.listed.length, record.vendored.notListed, record.vendored.listed[249]]).toEqual([260, 250, 10, '"u249/vendor"']);
+  });
+});
+
+// REQ-polaris-generation-034 version 2.4 (syzygy-3efd.43): rule `server-entry` v1, the trait that selects the server shape pack.
+describe('deriveStructure: the server-entry trait', () => {
+  const BASENAMES = ['server.c', 'server.cc', 'server.cpp', 'server.go', 'server.rs', 'server.py', 'server.rb', 'server.js', 'server.mjs', 'server.ts', 'server.java',
+    'server.ex', 'server.php', 'Procfile', 'openapi.json', 'openapi.yaml', 'openapi.yml', 'swagger.json', 'swagger.yaml', 'swagger.yml'];
+  const trait = (paths: readonly string[], secret: (p: string) => boolean = NO_SECRET) => {
+    const record = deriveStructure(paths.map((p) => blob(p)), secret);
+    if (record.state !== 'derived') throw new Error('expected a derived record');
+    return record.traits.serverEntry;
+  };
+
+  it.each(BASENAMES)('holds for %s, compared exactly', (basename) => {
+    expect(trait([`app/${basename}`])).toEqual({ rule: 'server-entry@1', holds: true, listed: [`"app/${basename}"`], notListed: 0 });
+  });
+
+  it('lists the matched paths in code-unit order and leaves out every exclusion ground', () => {
+    expect(trait([
+      'src/server.c', 'cmd/api/server.go', 'Procfile', 'api/openapi.yaml',
+      'vendor/x/server.go', 'build/server.js', 'tests/server.py', 'pkg/server_test.go', 'examples/server.ts', 'docs/sample/server.rb', 'demos/server.rs',
+      'a/samples/Procfile', 'a/demo/swagger.yml', 'a/example/openapi.json', 'src/Server.c', 'src/server.cxx', 'src/myserver.c', 'server.c.orig', 'src/server.test.ts',
+    ])).toEqual({ rule: 'server-entry@1', holds: true, listed: ['"Procfile"', '"api/openapi.yaml"', '"cmd/api/server.go"', '"src/server.c"'], notListed: 0 });
+  });
+
+  it('does not hold when every match is excluded, or for an empty tree', () => {
+    expect(trait(['vendor/x/server.go', 'dist/server.js', 'test/server.c', 'examples/Procfile'])).toEqual({ rule: 'server-entry@1', holds: false, listed: [], notListed: 0 });
+    expect(trait([])).toEqual({ rule: 'server-entry@1', holds: false, listed: [], notListed: 0 });
+  });
+
+  it('never names or counts a path a secret detector matches, or one under a matched directory, and such a path alone does not make it hold', () => {
+    const secret = (p: string): boolean => p.startsWith('ghp_');
+    expect(trait(['ghp_token/server.go', 'ghp_server.py'], secret)).toEqual({ rule: 'server-entry@1', holds: false, listed: [], notListed: 0 });
   });
 });

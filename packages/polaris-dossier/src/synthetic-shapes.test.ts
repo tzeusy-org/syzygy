@@ -32,7 +32,7 @@ beforeAll(async () => {
   layoutFigure = site.figureLaidOutWidth;
 });
 
-const RULES = ['vendored-path@1', 'generated-path@1', 'language-by-extension@1', 'docs-tree@1', 'tests-path@1', 'manifest-names@1', 'top-level-unit@1'];
+const RULES = ['vendored-path@1', 'generated-path@1', 'language-by-extension@1', 'docs-tree@1', 'tests-path@1', 'manifest-names@1', 'top-level-unit@1', 'server-entry@1'];
 const none = { files: 0, listed: [], notListed: 0 };
 /** Each shape's one source page, by the cited file's source id: the path is the renderer's, written here as a literal. */
 const SOURCE_PAGE: Readonly<Record<string, string>> = {
@@ -66,6 +66,7 @@ describe('nine synthetic shapes through derive and render (syzygy-3efd.23, syzyg
         docsTree: { rule: 'docs-tree@1', matched: false, listed: [], notListed: 0 },
         tests: { rule: 'tests-path@1', files: 1 },
         packages: { rule: 'manifest-names@1', shape: 'single-package', listed: ['"."'], notListed: 0 },
+        serverEntry: { rule: 'server-entry@1', holds: false, listed: [], notListed: 0 },
       },
     });
   });
@@ -81,6 +82,7 @@ describe('nine synthetic shapes through derive and render (syzygy-3efd.23, syzyg
         docsTree: { rule: 'docs-tree@1', matched: true, listed: ['"docs"'], notListed: 0 },
         tests: { rule: 'tests-path@1', files: 2 },
         packages: { rule: 'manifest-names@1', shape: 'single-package', listed: ['"."'], notListed: 0 },
+        serverEntry: { rule: 'server-entry@1', holds: false, listed: [], notListed: 0 },
       },
     });
   });
@@ -96,6 +98,7 @@ describe('nine synthetic shapes through derive and render (syzygy-3efd.23, syzyg
         docsTree: { rule: 'docs-tree@1', matched: false, listed: [], notListed: 0 },
         tests: { rule: 'tests-path@1', files: 2 },
         packages: { rule: 'manifest-names@1', shape: 'no-package-manifest', listed: [], notListed: 0 },
+        serverEntry: { rule: 'server-entry@1', holds: false, listed: [], notListed: 0 },
       },
     });
   });
@@ -104,6 +107,7 @@ describe('nine synthetic shapes through derive and render (syzygy-3efd.23, syzyg
     docsTree: { rule: 'docs-tree@1', matched: docs.length > 0, listed: docs, notListed: 0 },
     tests: { rule: 'tests-path@1', files: tests },
     packages: { rule: 'manifest-names@1', shape, listed, notListed },
+    serverEntry: { rule: 'server-entry@1', holds: false, listed: [], notListed: 0 },
   });
   const head = { state: 'derived', rules: RULES, secretPathsLeftOut: 0, submodules: 0, unitsNotListed: 0, vendored: { rule: 'vendored-path@1', ...none } };
 

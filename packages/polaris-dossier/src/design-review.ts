@@ -7,7 +7,9 @@ import { declaredSessionId } from './check.js';
 import { DEFICIENT_SUBJECTS, checkDraftShape, designVerdictSchemaDocument, localDesignVerdictSchema } from './draft-schema.js';
 import { errno } from './inventory.js';
 import type { ReviewProblem, ReviewProblemKind } from './review.js';
-import { READER_STANDARDS, READER_STANDARDS_SHA256, READER_STANDARDS_VERSION } from './reader-standards.js';
+import { parseBoundedJson } from '@syzygy/polaris-generation-core/live';
+import { READER_STANDARDS, READER_STANDARDS_SHA256, READER_STANDARDS_VERSION, composeReaderStandards, type ComposedStandards } from './reader-standards.js';
+import { SHIPPED_PACKS, type ShapePack } from './shape-packs.js';
 import { RUN_LAYOUT } from './state-directory.js';
 
 /** The rendered-design review's packet and verdict (REQ-polaris-generation-035; design decision 5). Pure of the run's records: the
@@ -72,16 +74,52 @@ export function readLatestSite(run: string): SiteRead {
   return { ok: true, number, directory, files };
 }
 
-/** The criteria the design packet carries: Syzygy's own text. */
-export function designCriteria(runDir: string, audience: string): readonly string[] {
+/** The reader standards a brief carried, as its record names them: `packs` absent for version 1's text (every brief before version 2.4,
+ * and one whose selection composes version 1's text), or the identities of the shape packs that composed it with the composed digest. */
+export interface BriefStandards { readonly sha256?: unknown; readonly packs?: unknown }
+
+const BRIEF_RECORD_LIMITS = Object.freeze({ maxBytes: 262_144, maxNodes: 4096, maxDepth: 8 });
+/** The brief record's `readerStandards`, or undefined where the record or the member cannot be read (version 1's text is carried then). */
+export function briefStandardsOf(run: string): BriefStandards | undefined {
+  try {
+    const record = parseBoundedJson(fs.readFileSync(path.join(run, RUN_LAYOUT.briefRecord), 'utf8'), BRIEF_RECORD_LIMITS);
+    return isRecord(record) && isRecord(record['readerStandards']) ? record['readerStandards'] : undefined;
+  } catch {
+    return undefined;
+  }
+}
+
+export const STANDARDS_NOT_RECOMPOSED = 'the reader standards the brief carried cannot be recomposed';
+
+/** The standards text the brief carried, recomposed from the packs its record names and confirmed against the recorded digest; version
+ * 1's text where it names none. Never falls back to version 1 when the recomposition fails: it says why instead. */
+export function recomposedStandards(standards: BriefStandards | undefined): { readonly ok: true; readonly standards: ComposedStandards } | { readonly ok: false; readonly reason: string } {
+  if (standards === undefined || !Object.hasOwn(standards, 'packs')) return { ok: true, standards: { text: READER_STANDARDS, sha256: READER_STANDARDS_SHA256, packs: null } };
+  const named = standards.packs;
+  if (!Array.isArray(named) || named.length === 0 || !named.every((id) => typeof id === 'string')) return { ok: false, reason: `${STANDARDS_NOT_RECOMPOSED} (the recomposed digest differs from the brief record's)` };
+  const packs: ShapePack[] = [];
+  for (const id of named as string[]) {
+    const pack = SHIPPED_PACKS.get(id);
+    if (pack === undefined) return { ok: false, reason: `${STANDARDS_NOT_RECOMPOSED} (${id} is not shipped)` };
+    packs.push(pack);
+  }
+  const composed = composeReaderStandards(packs);
+  if (composed.sha256 !== standards.sha256) return { ok: false, reason: `${STANDARDS_NOT_RECOMPOSED} (the recomposed digest differs from the brief record's)` };
+  return { ok: true, standards: composed };
+}
+
+/** The criteria the design packet carries: Syzygy's own text, with the reader standards the brief carried (version 1's by default). */
+export function designCriteria(runDir: string, audience: string, standards: ComposedStandards = { text: READER_STANDARDS, sha256: READER_STANDARDS_SHA256, packs: null }): readonly string[] {
+  const named = standards.packs === null ? `${READER_STANDARDS_VERSION}, sha256 ${READER_STANDARDS_SHA256}`
+    : `${READER_STANDARDS_VERSION}, technology dimensions from shape packs ${standards.packs.join(', ')}, sha256 ${standards.sha256}`;
   return [
     ...audienceGuidance(audience),
     'You are the rendered-design review session of a Polaris dossier (REQ-polaris-generation-006, read for this mode by REQ-polaris-generation-035). Judge the rendered pages only from this packet: every file of one render, each HTML page with its review-status region removed and the machine view without its reviewStatus member. You are given nothing else and must use nothing else.',
     'Judge the dossier as a reader meets it: whether each page is navigable and legible; whether every label (Observed, Inferred, Unknown, non-normative) shows where it applies and agrees with machine.json, which on a narrative page (index.html, poles/ and deep-dives/) means in its evidence view; whether each quotation shows its anchor, each Unknown its reason and each diagram its relationship and line styles; and whether every page carries the run\'s one sentence and a link to the appendix, which holds the disclosure. The cited spans are on the source pages under sources/, as Syzygy located them at the render. Whether the prose is faithful to its sources is the fidelity review\'s question, not yours.',
     'Judge too whether a software engineer new to the project could follow each page on one reading: a section that describes components, steps or hand-offs with no diagram, an enumeration of three or more items written as one sentence, a paragraph that would read better as a diagram, table, cards or steps, a section whose prose runs well past what a reader takes in at once, a deep dive or section titled by a function, type or file name rather than by what it explains, or a passage that needs prior knowledge of the project or its domain is a finding against that page (advisory, or blocking where the page cannot be followed). An advisory finding alone does not make a page deficient.',
     'A narrative page (index.html and the pages under poles/ and deep-dives/) has two views, and its HTML holds both: the reading view it opens to, whose labels, reason codes and evidence notes are visually hidden, and the evidence view, the same page at its #evidence-view target, where they show. Judge both. Ask of each such page: whether its opening states why the project exists; whether its lead uses the category term a software engineer knows; whether warnings sit in the one sentence and the appendix rather than in the reading text; whether the page is too long to read at one sitting; whether a list repeats a diagram instead of folding beneath it; and whether the page reads as a person explaining the project. Each failure is a finding against that page, advisory unless the page cannot be followed.',
-    `Judge every page against the reader standards that follow too (${READER_STANDARDS_VERSION}, sha256 ${READER_STANDARDS_SHA256}). For each standard a page fails, give a finding against that page whose message begins with the standard's identifier (RS-1 to RS-25), advisory unless the page cannot be followed; judge the technology-choices standards (RS-11, RS-12) on the page that holds, or should hold, that table. Where a standard and a criterion above differ, the criterion governs.`,
-    READER_STANDARDS,
+    `Judge every page against the reader standards that follow too (${named}). For each standard a page fails, give a finding against that page whose message begins with the standard's identifier (RS-1 to RS-25), advisory unless the page cannot be followed; judge the technology-choices standards (RS-11, RS-12) on the page that holds, or should hold, that table. Where a standard and a criterion above differ, the criterion governs.`,
+    standards.text,
     'Pages: for every HTML page of the packet, give one pageReview row saying whether its rendering is acceptable, deficient or unresolved, with your reason.',
     `Findings: give every finding its severity (blocking or advisory), its deficient subject (${DEFICIENT_SUBJECTS.join(', ')}), the packet page it concerns as \`page\`, and a message. Declare \`readiness\` ready only when no finding is blocking and every page is acceptable.`,
     'Quote nothing in a reason or message: name the page and describe what you see. No span of this packet verifies a quotation, so Syzygy refuses a design verdict that carries one in the lead-in form.',
@@ -92,7 +130,7 @@ export function designCriteria(runDir: string, audience: string): readonly strin
 
 export type DesignPacketBuild =
   | { readonly ok: true; readonly bytes: string; readonly sha256: string; readonly pages: readonly string[]; readonly files: readonly string[] }
-  | { readonly ok: false; readonly stage: 'region'; readonly reason: string };
+  | { readonly ok: false; readonly stage: 'region' | 'standards'; readonly reason: string };
 
 /** The site's files outside the review-status region: each HTML page without its region, the machine view without `reviewStatus`, and
  * every other file as written. A page without exactly one region, or a machine view without the member, refuses the packet. */
@@ -121,9 +159,12 @@ export function outsideRegion(files: ReadonlyMap<string, string>): { readonly ok
 }
 
 /** Build the design packet from one render's files and declared audience. Pure: the same inputs give the same bytes. */
-export function buildDesignPacket(input: { readonly run: string; readonly runId: string; readonly pinnedRevision: string; readonly audience: string; readonly files: ReadonlyMap<string, string> }): DesignPacketBuild {
+export function buildDesignPacket(input: { readonly run: string; readonly runId: string; readonly pinnedRevision: string; readonly audience: string; readonly files: ReadonlyMap<string, string>; readonly standards?: BriefStandards }): DesignPacketBuild {
   const outside = outsideRegion(input.files);
   if (!outside.ok) return { ok: false, stage: 'region', reason: outside.reason };
+  // The reader standards the brief carried (version 2.4): recomposed from the packs its record names, or the packet is not built.
+  const standards = recomposedStandards(input.standards);
+  if (!standards.ok) return { ok: false, stage: 'standards', reason: standards.reason };
   const pages = [...outside.files.keys()].filter((file) => file.endsWith('.html'));
   const packet = {
     format: DESIGN_PACKET_FORMAT,
@@ -135,7 +176,7 @@ export function buildDesignPacket(input: { readonly run: string; readonly runId:
       excluded: `the element of every HTML page marked data-review-status-region="${REVIEW_STATUS_REGION}", and the ${MACHINE_VIEW_REGION_MEMBER} member of ${MACHINE_VIEW_FILE}: the only part a later render may change without retiring this review`,
     },
     files: [...outside.files].map(([file, content]) => ({ path: file, sha256: sha256(content), content })),
-    criteria: designCriteria(input.run, input.audience),
+    criteria: designCriteria(input.run, input.audience, standards.standards),
     verdictSchema: designVerdictSchemaDocument({ pinnedRevision: input.pinnedRevision }),
   };
   const bytes = `${JSON.stringify(packet, null, 2)}\n`;

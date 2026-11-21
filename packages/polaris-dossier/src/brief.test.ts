@@ -17,6 +17,7 @@ import { parseRunConfig, type RunConfig } from './run-config.js';
 import { NO_WORK_ITEM_REASON, encodeRunRecord, type RunSubject } from './run-record.js';
 import { tempDir } from '@syzygy/test-kit';
 import { reverifyPinnedRevision } from './reverify.js';
+import { buildDossierScreen } from './screen.js';
 
 // syzygy-qkea.6 (S5): `syzygy dossier brief <run>` (REQ-polaris-generation-033, 034, 036). The gate sources are a fixture whose answers
 // each test sets; the doctrine is the live security.md of this checkout. Expected values are literals or computed here from the files
@@ -76,7 +77,7 @@ const sources = (over: Partial<GateSources> = {}): GateSources => ({
   ...over,
 });
 /** The step guard lists the pinned tree; a fixture reader stands in for a clone, giving these paths. */
-const tree = (paths: readonly string[] = ['src/server.c']) => (): PinnedObjectReader => ({ listTree: async () => paths.map((p) => ({ path: p })) }) as unknown as PinnedObjectReader;
+const tree = (paths: readonly string[] = ['src/server.c']) => (): PinnedObjectReader => ({ listTree: async () => paths.map((p) => ({ path: p, mode: '100644' })) }) as unknown as PinnedObjectReader;
 const read = (run: string, name: string): string => fs.readFileSync(path.join(run, name), 'utf8');
 
 describe('brief: issued', () => {
@@ -223,12 +224,14 @@ describe('brief: issued', () => {
     };
     const first = runDirectory(), second = runDirectory(other);
     await issueBrief(first, { sources: sources(), openReader: tree(), now: () => NOW });
-    await issueBrief(second, { sources: sources({ repositoryIdsFor: async () => ['example-other'], consentedRevisionsFor: async () => [{ label: 'v9', commitId: 'c'.repeat(40) }], observationConsentFor: async () => ({ satisfied: true, record: 'OTHER-CONSENT@1' }), providerStatements: { statementsFor: async () => [{ recordId: 'STATEMENT', version: '1', digest: 'd', agentTool: 'claude-code', provider: 'anthropic', contentClasses: ['source'], withdrawn: false, act: { identity: 'A', inForceAt: 0 } }] } }), openReader: tree(['openspec/specs/secret-name.md']), now: () => NOW });
+    await issueBrief(second, { sources: sources({ repositoryIdsFor: async () => ['example-other'], consentedRevisionsFor: async () => [{ label: 'v9', commitId: 'c'.repeat(40) }], observationConsentFor: async () => ({ satisfied: true, record: 'OTHER-CONSENT@1' }), providerStatements: { statementsFor: async () => [{ recordId: 'STATEMENT', version: '1', digest: 'd', agentTool: 'claude-code', provider: 'anthropic', contentClasses: ['source'], withdrawn: false, act: { identity: 'A', inForceAt: 0 } }] } }), openReader: tree(['openspec/specs/secret-name.md', 'lib/server.go']), now: () => NOW });
     // The label shown is the live consent's for the commit, not the run record's.
     const blank = (text: string, subject: RunSubject, liveLabel: string): string => [subject.repository.url, subject.repository.repositoryId, subject.pinnedRevision.commit, `(${liveLabel})`]
       .reduce((acc, value) => acc.split(value).join('<identity>'), text).replace(/sha256 `[0-9a-f]{64}`\)/, 'sha256 `<schema>`)');
     expect(blank(read(second, 'brief.md'), other, 'v9')).toBe(blank(read(first, 'brief.md'), SUBJECT, 'label-in-run-json'));
-    for (const leaked of ['OTHER-CONSENT', 'OTHER-REGISTRY', 'OTHER-POLICY', 'secret-name', 'STATEMENT@1']) expect(read(second, 'brief.md')).not.toContain(leaked);
+    for (const leaked of ['OTHER-CONSENT', 'OTHER-REGISTRY', 'OTHER-POLICY', 'secret-name', 'STATEMENT@1', 'server.go']) expect(read(second, 'brief.md')).not.toContain(leaked);
+    // Both trees hold a server entry (version 2.4), so both briefs carry the same standards; the matched path is in the record, never the brief.
+    expect(read(first, 'brief.md')).not.toContain('src/server.c');
   });
 
   it('is pure: the same run record, instant and rule render the same bytes', async () => {
@@ -269,6 +272,104 @@ describe('brief: issued', () => {
   it('carries its own writing guidance, byte-identical to the author-prompt cut it replaced', () => {
     expect(DOSSIER_GUIDANCE_VERSION).toBe('polaris-author-dossier-v2');
     expect(sha(DOSSIER_GUIDANCE)).toBe('17ea6ff5bc05f02b27343da8184033104295b1c02b82ca5e784d6316d1ecea69');
+  });
+});
+
+// The brief version 2.3 issued (polaris-dossier-brief-v10), captured at commit 379be88d, before version 2.4, for this fixture run with
+// a pinned tree holding `src/server.c`: issueBrief(runDirectory(), { sources: sources(), openReader: tree(['src/server.c']), now: () => NOW }),
+// the file holding `{"brief": <brief.md>}`. Nothing rewrites it.
+const BRIEF_V10_GOLDEN = new URL('./brief-v10-golden.json', import.meta.url);
+// Shape packs (REQ-polaris-generation-034 version 2.4, syzygy-3efd.43). Digests are literals computed outside the module under test.
+const V1_SHA = 'ede073f11ee7eaf5832cba4b8c7addd0bb9ae1cb3b058b7f0ef502aefb7e9555';
+const DEFAULT_PACK_SHA = 'c39168876618f95c57c5cf3f638e8e3b30ab2d8fe546b7ed156bf375df2eb59a';
+const SERVER_PACK_SHA = 'f45ae36cd165439b78d59b906ac78d3b6c1f6cd15b77d7e18629fb03f71baa76';
+const DEFAULT_COMPOSED_SHA = '623c8b83e2c2573502e15a02b33347c7f3f886da09b2e6356e65558ea480f2b4';
+// The policy bytes the fixture subject binds, so the screen the brief loads is the one bound to the run.
+const SCREEN = buildDossierScreen(policyFixture().bytes, false, null, 'public');
+const loadScreen = async () => SCREEN;
+/** A path a secret detector matches: the token is built at run time so the fixture holds no literal token. */
+const SECRET_DIR = `${['gh', 'p_'].join('')}${'k'.repeat(36)}`;
+const SERVER_ONLY = ['Networking:', 'State and persistence:', 'Concurrency:', 'deployed and divided', '(server and'];
+const briefOf = async (paths: readonly string[], name = RUN_ID): Promise<{ readonly brief: string; readonly record: Record<string, unknown> }> => {
+  const run = runDirectory(SUBJECT, configOf(), name);
+  const result = await issueBrief(run, { sources: sources(), openReader: tree(paths), loadScreen, now: () => NOW });
+  if (!result.ok) throw new Error(result.refusal.reason);
+  return { brief: read(run, 'brief.md'), record: JSON.parse(read(run, 'brief.json')) };
+};
+
+describe('brief: shape packs (version 2.4)', () => {
+  it('a server entry selects default@1 then server@1, and the brief is byte for byte the v10 golden', async () => {
+    const { brief, record } = await briefOf(['src/server.c', 'README.md']);
+    expect(brief).toBe(JSON.parse(fs.readFileSync(BRIEF_V10_GOLDEN, 'utf8')).brief);
+    expect(record['readerStandards']).toEqual({ version: 'polaris-reader-standards-v1', sha256: V1_SHA });
+    expect(record['shapePacks']).toEqual({
+      traits: { state: 'derived', serverEntry: { rule: 'server-entry', ruleVersion: 1, holds: true, paths: ['"src/server.c"'], pathsNotListed: 0 } },
+      selected: [
+        { id: 'default', version: 1, sha256: DEFAULT_PACK_SHA, because: 'always selected' },
+        { id: 'server', version: 1, sha256: SERVER_PACK_SHA, because: 'trait server-entry holds' },
+      ],
+    });
+  });
+
+  it('with no server entry, or one only under vendored, generated, test or example paths, selects default@1 alone and names no server-only dimension', async () => {
+    const plain = await briefOf(['src/main.rs', 'README.md']);
+    const excluded = await briefOf(['vendor/x/server.go', 'dist/server.js', 'tests/server.py', 'examples/Procfile', 'src/main.rs'], 'run-bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb');
+    for (const { brief, record } of [plain, excluded]) {
+      for (const absent of SERVER_ONLY) expect(brief).not.toContain(absent);
+      expect(brief).toContain('## Polaris dossier reader standards (`polaris-reader-standards-v1`, technology dimensions from shape packs `default@1`; sha256 of the composed text: `623c8b83e2c2573502e15a02b33347c7f3f886da09b2e6356e65558ea480f2b4`)');
+      expect(brief).toContain('The heading below names the shape packs that supplied the technology dimensions and the digest of the composed standards text; the text under it is that composed text without its version line and with every heading one level down, so it does not itself hash to that digest.');
+      expect(brief).not.toContain('The heading below names the digest of the skill\'s `references/reader-standards.md`');
+      expect(brief).not.toContain(V1_SHA);
+      expect(brief).toContain([
+        '- **RS-11 Cover every dimension that applies.**',
+        '  - Language and runtime: languages, runtime or VM, and versions where they',
+        '    matter.',
+        '  - Architecture: how the product is divided into parts (modules,',
+        '    packages, commands or processes), and which part holds what.',
+        '  - Interfaces: how people and programs reach it (CLI, API, SDK, protocol)',
+        '    and which of these are stable.',
+        '  - Platforms and dependencies: supported systems and hardware, and the',
+        '    dependencies the design rests on.',
+        '  - Check: every dimension has a row',
+      ].join('\n'));
+      expect(brief).not.toContain('Version: `polaris-reader-standards-v1`');
+      expect(record['readerStandards']).toEqual({ version: 'polaris-reader-standards-v1', sha256: DEFAULT_COMPOSED_SHA, packs: ['default@1'] });
+      expect((record['shapePacks'] as { selected: unknown }).selected).toEqual([{ id: 'default', version: 1, sha256: DEFAULT_PACK_SHA, because: 'always selected' }]);
+    }
+    expect((excluded.record['shapePacks'] as { traits: unknown }).traits).toEqual({ state: 'derived', serverEntry: { rule: 'server-entry', ruleVersion: 1, holds: false, paths: [], pathsNotListed: 0 } });
+  });
+
+  it('records the same selection for one tree in two runs, and never names or counts a secret-matching server path', async () => {
+    const paths = [`${SECRET_DIR}/server.go`, 'src/main.rs'];
+    const first = await briefOf(paths);
+    const second = await briefOf(paths, 'run-bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb');
+    expect(first.record['shapePacks']).toEqual({
+      traits: { state: 'derived', serverEntry: { rule: 'server-entry', ruleVersion: 1, holds: false, paths: [], pathsNotListed: 0 } },
+      selected: [{ id: 'default', version: 1, sha256: DEFAULT_PACK_SHA, because: 'always selected' }],
+    });
+    expect(second.record['shapePacks']).toEqual(first.record['shapePacks']);
+    expect(second.brief.split('run-bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb').join(RUN_ID)).toBe(first.brief);
+    for (const text of [first.brief, JSON.stringify(first.record)]) expect(text).not.toContain(SECRET_DIR);
+  });
+
+  it('names at most 20 matched paths in code-unit order and counts the rest', async () => {
+    const paths = Array.from({ length: 23 }, (_, i) => `svc${String(i).padStart(2, '0')}/server.go`);
+    const { record } = await briefOf([...paths].reverse());
+    expect((record['shapePacks'] as { traits: unknown }).traits).toEqual({ state: 'derived', serverEntry: {
+      rule: 'server-entry', ruleVersion: 1, holds: true, paths: paths.slice(0, 20).map((p) => `"${p}"`), pathsNotListed: 3,
+    } });
+  });
+
+  it('an unloadable screen leaves the trait profile Unknown, with its reason, and selects default@1 alone', async () => {
+    const run = runDirectory();
+    const result = await issueBrief(run, { sources: sources(), openReader: tree(['src/server.c']), loadScreen: async () => ({ ok: false, why: 'fixture: no policy' }), now: () => NOW });
+    if (!result.ok) throw new Error(result.refusal.reason);
+    const record = JSON.parse(read(run, 'brief.json'));
+    expect(record.shapePacks).toEqual({
+      traits: { state: 'unknown', why: 'the screening policy bound to this run could not be loaded (fixture: no policy)' },
+      selected: [{ id: 'default', version: 1, sha256: DEFAULT_PACK_SHA, because: 'always selected' }],
+    });
+    expect(record.readerStandards).toEqual({ version: 'polaris-reader-standards-v1', sha256: DEFAULT_COMPOSED_SHA, packs: ['default@1'] });
   });
 });
 

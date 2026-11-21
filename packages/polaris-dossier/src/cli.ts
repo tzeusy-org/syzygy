@@ -316,7 +316,7 @@ export const DOSSIER_COMMANDS: Readonly<Record<string, DossierCommand>> = Object
     synopsis: 'brief <run>',
     args: { kind: 'one', noun: RUN },
     run: async ({ positional: [run] }, ctx) => {
-      const result = await issueBrief(run!, { ...ctx.deps('openReader'), permitting: {
+      const result = await issueBrief(run!, { ...ctx.deps('openReader', 'loadScreen'), permitting: {
         enabled: PERMITTING_ARM_ENABLED, choices: RUN_DIRECTORY_CHOICES, probe: ctx.probe(),
       } });
       return result.ok ? ctx.report(result.report, EXIT.clean) : ctx.refused(result.refusal);

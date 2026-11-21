@@ -11,6 +11,8 @@ import { issueBrief, READABILITY_GUIDANCE, READABILITY_GUIDANCE_VERSION } from '
 import { checkDraft, type CheckDeps } from './check.js';
 import { runDossierCli } from './cli.js';
 import { buildDesignPacket, designCriteria } from './design-review.js';
+import { composeReaderStandards } from './reader-standards.js';
+import { DEFAULT_PACK } from './shape-packs.js';
 import { designVerdictSchemaDocument } from './draft-schema.js';
 import { GitObjectReadRefusal, openPinnedObjectReader, type PinnedObjectReader, type PinnedObjectReaderOptions } from './git-object-reader.js';
 import { NO_PROVIDER_STATEMENTS, type GateSources, type GateState } from './gate-sources.js';
@@ -197,7 +199,7 @@ async function prepared(doc: Doc = draft(), reviewed = true, extraSupport: reado
   }));
   if (!parsed.ok) throw new Error('fixture configuration refused');
   fs.writeFileSync(path.join(run, 'run.json'), encodeRunRecord(parsed.config, subject(clone)));
-  const brief = await issueBrief(run, { sources: sources(), now: () => NOW });
+  const brief = await issueBrief(run, { sources: sources(), now: () => NOW, loadScreen: async () => buildDossierScreen(fixturePolicy, true, null, fixtureVisibility) });
   if (!brief.ok) throw new Error(`fixture brief refused: ${brief.refusal.reason}`);
   fs.mkdirSync(path.join(run, 'drafts'), { recursive: true });
   fs.writeFileSync(path.join(run, 'drafts', 'next.json'), JSON.stringify(doc, null, 2));
@@ -889,7 +891,8 @@ const expectedDesignPacket = (run: string, site: string): string => `${JSON.stri
     excluded: 'the element of every HTML page marked data-review-status-region="review-status", and the reviewStatus member of machine.json: the only part a later render may change without retiring this review',
   },
   files: [...outside(readSite(site))].map(([file, content]) => ({ path: file, sha256: sha(content), content })),
-  criteria: designCriteria(run, 'an operator'),
+  // The fixture tree holds no server entry, so the brief carried the standards composed from the default pack alone (version 2.4).
+  criteria: designCriteria(run, 'an operator', composeReaderStandards([DEFAULT_PACK])),
   verdictSchema: designVerdictSchemaDocument({ pinnedRevision: commit }),
 }, null, 2)}\n`;
 const htmlPages = (site: string): string[] => [...outside(readSite(site)).keys()].filter((file) => file.endsWith('.html'));
@@ -1158,6 +1161,11 @@ describe('rendered-design review (S9b)', () => {
     expect(contents).not.toContain('Rendered-design review: none counts');
     expect(contents).toContain('data-disclosure-id="no-provider-call"');
     expect(JSON.parse(expected).files.map((file: { path: string }) => file.path)).toEqual([...readSite(rendered.report.site).keys()].sort());
+    // The packet judges against the standards the brief carried: the default pack's dimensions, never the server ones (version 2.4).
+    const criteria = (JSON.parse(expected).criteria as string[]).join('\n');
+    expect(criteria).toContain('(polaris-reader-standards-v1, technology dimensions from shape packs default@1, sha256 ');
+    expect(criteria).toContain('  - Architecture: how the product is divided into parts (modules,\n    packages, commands or processes), and which part holds what.');
+    for (const absent of ['Networking:', 'State and persistence:', 'Concurrency:', 'deployed and divided']) expect(criteria).not.toContain(absent);
   });
 
   it('hands a design review session the packet under the sessions root with its own prompt', async () => {
