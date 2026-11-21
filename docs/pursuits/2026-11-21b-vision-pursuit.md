@@ -25,6 +25,12 @@ jq '.score' docs/pursuits/2026-11-21b-vision-pursuit-data.json
 
 ## The answer in brief
 
+*Where it ended, 2026-11-21:* after ten rounds two independent reviewers score the plan 85.8
+and 81.2. Neither figure is a measurement of a dossier. The first measurements, over the six
+stored runs, confirm one planned saving, empty another, and show that a single run today
+holds 14 to 51 percent of what six runs found together. See "Rounds 8 to 10" under "Where the
+plan stands". Twenty-eight moves follow, not the twenty this section counted when written.
+
 No: before this run the plan would not have produced something that is demonstrably better than
 asking a capable model to explain a repository. It would have produced something more
 *trustworthy*, with better figures, and nobody could have shown that it was better.
@@ -89,6 +95,9 @@ weighted. All of it is `[Inferred]`: a reviewer's judgement of a plan, not a mea
 | 8 Economy and lifecycle (10) | 30 (capped) | 76 | 78 | 80 |
 | **Total** | **56** | **74** | **78** | **80** |
 
+*Superseded later on 2026-11-21 by "Rounds 8 to 10" below: the same reviewer then scored the
+plan 85.8 and a second, independent reviewer 81.2. The paragraph is kept as written.*
+
 **The plan reaches 80, not 85, and the reviewer's judgement is that no further planning can
 reach 85.** Its words: "Every instrument … is now planned, calibrated and bounded; I find no
 missing instrument worth more than about 1 point. Scoring a plan cannot credit a win that has
@@ -103,6 +112,70 @@ the owner.
 Two conditions move the total. If a dossier run without a consent record (`syzygy-k54o.3`)
 does not land, the corpus cannot run and the total is 74. With the run-3 gate shut it was 75;
 the owner closed that gate during this run.
+
+### Rounds 8 to 10: a second reviewer, six more moves, and the first measurements
+
+The owner's condition was 85, so the run continued. Three things happened.
+
+**A second reviewer scored the plan cold.** It had seen none of the first reviewer's scores
+files. Both reviewers then rescored after each revision. All scores are `[Inferred]`.
+
+| Dimension (weight) | First reviewer, round 7 | First reviewer, round 10 | Second reviewer, first | Second reviewer, round 10 |
+|---|---|---|---|---|
+| 1 Truth (15) | 85 | 90 | 88 | 92 |
+| 2 Comprehension (15) | 82 | 87 | 80 | 85 |
+| 3 Visual richness (15) | 80 | 85 | 78 | 82 |
+| 4 Generality (15) | 83 | 86 | 76 | 80 |
+| 5 Depth of insight (10) | 77 | 86 | 72 | 79 |
+| 6 Beauty (10) | 72 | 79 | 70 | 76 |
+| 7 Measured advantage (10) | 80 | 85 | 66 | 70 |
+| 8 Economy and lifecycle (10) | 80 | 86 | 72 | 78 |
+| **Total** | **80** | **85.8** | **76.3** | **81.2** |
+
+**The two reviewers disagree, and the lower score is the safer one to plan from.** The first
+reviewer has followed every revision and puts the plan at 85.8, with a ceiling of 87.6 for any
+plan. The second puts it at 81.2 (81.5 with the measurements below) and holds that no plan can
+pass about 83, because generality and measured advantage are worded as outcomes. They agree on
+what matters: another planning round is worth about one point, and the rest is earned by one
+three-repository benchmark pass. The second reviewer names the five results that would take
+its score to about 85: the dossier wins the frozen rule against the full-reach plain session
+on Redis and two other shapes; the owner, reading blind, prefers the dossier and the model
+grades agree with the owner; both non-Redis runs close within budget, one of a shape no pack
+matches; the fidelity reviewer catches seeded false claims at its stated rate; recorded cost
+stays inside the ceilings.
+
+**Six moves were added** (R23 to R28, described under "Ranked moves"), and both reviewers'
+faults were applied. The most serious: the dossier's author would have read the same question
+file the benchmark grades on, while the plain session met those questions cold. The graded
+questions, depth list and reader tasks are now held out of every authoring session, and check
+asserts their absence.
+
+**The first measurements were taken**, over the six stored Redis runs, with no new run and
+nothing sent anywhere. The record with predicates, denominators and the digest of every file
+read is `docs/evidence/pursuit-2026-11-21b/measure-now.json`. All six runs are of one commit,
+but they span brief versions 1 to 7, so the differences mix session variance with the
+mechanism changing.
+
+| Measured `[Observed]` | Result | What it decides |
+|---|---|---|
+| Would a mechanical coverage pre-check have caught first-round omissions? (R4) | It lists 151 of the 181 inventory entries that first fidelity verdicts marked unsupported (recall 0.83); 12 of the 184 it lists were entries the reviewer accepted | The pre-check becomes a default step. The thresholds (recall at least 0.60, wrongly listed under 30 percent) were written before the result was read |
+| How much of what six runs found does one run hold? | 14 to 51 percent of 545 pooled supported-claim clusters; 10 clusters are in all six. The newest run holds 18 percent | A dossier today is one draw. The benchmark now needs two runs per repository and judges the weaker |
+| Does that depend on how "same claim" is defined? | Yes. Any overlapping cited span: 79 percent of a run's blocks have a counterpart in another run. Strict match: 32 percent | The pooled figure is reported under more than one rule; the two-author mode (R28) waits for two fresh runs at one brief |
+| Are review rounds ever sent the same bytes twice? (R5) | No: 0 of 16 later fidelity deliveries repeat the previous packet | R5's "stop on an unchanged packet" would have saved nothing. It stays as a guard |
+| How much of a later review packet is unchanged? (R5) | 30 percent of canonical bytes, 20 percent of file bytes | At the edge of the 30 percent fixed beforehand. Delta packets are built as an option and judged on review minutes in the first corpus pass |
+| Where does a run's time go? | Review rounds take 171 of 302 wall minutes (57 percent); a fidelity round's median is 5.1 minutes | R4 and R5 aim at the right place |
+| Does the reviewer agree with itself? | Five re-submitted verdicts over identical packets agree on readiness every time; support verdicts per block agree fully | Same session each time, so this is a floor on consistency, not an independent check |
+| Do runs agree on structure? | Three of six runs have no Poles; Pole labels overlap at 0.29 across the three that do | Mostly the mechanism changing between brief versions |
+
+**What the measurements are worth.** Little to the plan's score (the first reviewer says
+about 0.05, the second 0.3) and a good deal to the plan itself: one of its savings is
+confirmed, one is shown to be empty, and the benchmark design changed.
+
+**The second reviewer's advice is to cut now, not after the first pass.** Every slice is filed
+ready, so lanes would build what R22 would later cut. Twenty-one slices on the critical path
+are therefore priority 1, and fourteen slices it named are parked at priority 4 until R22.
+Nothing was closed: closing run-3 and run-4 beads as superseded is left to R22, which will
+have numbers.
 
 ## Tier board
 
@@ -304,6 +377,39 @@ rubric 8, 7).** After the first corpus pass a fresh reviewer rescores this rubri
 Every open bead across the three pursuit epics is then sorted: keep, re-scope, or close as not
 justified, with the measurement named.
 
+### Rounds 8 to 10: six moves on what a finished dossier would still lack
+
+An ideation lens asked what the best human-made explainers have that every planned move
+together would still not produce. Full text is in the data file.
+
+**R23 — The operating envelope (value 5, cost 2; rubric 5, 1, 7).** Three deterministic
+harvests: invariants from assertion calls, the failure surface from error and log strings, and
+limits and defaults from configuration files and named constants. A required topic then
+explains what is always true, what fails and how, and where behaviour changes. Where nothing is
+found the page says so.
+
+**R24 — Where the documents and the code disagree (value 5, cost 2; rubric 7, 1, 5).** Every
+checkable statement in the project's own documents (paths, identifiers, configuration keys
+with defaults, commands and flags) is checked against the tree and classed: resolves, agrees,
+disagrees, document only, code only. No model judges a row. Precision is measured as well as
+recall, and a row class below its bound is labelled Inferred.
+
+**R25 — Pages that hold attention (value 4, cost 2; rubric 6, 3, 2).** A figure that stays in
+view while numbered steps scroll beside it, notes in the margin, and a one-page edition built
+only from checked elements. CSS only.
+
+**R26 — A first-day path with checkpoints (value 4, cost 1; rubric 2, 7).** An ordered route
+through the dossier with reading times and check-yourself questions, written by a third
+session and kept apart from the benchmark's questions by a check.
+
+**R27 — Measure now on the six stored runs (value 5, cost 1; rubric 8, 5, 7, 1).** Done in
+this run; results above. Its slices land the scripts as kept, tested code.
+
+**R28 — Two authors, one dossier (value 3, cost 2; rubric 5, 8).** Two independent drafts
+merged by cited-span overlap, with conflicts shown. The offline merge of stored drafts may
+proceed; the run mode is built only if a second fresh run at the same brief adds at least 25
+percent more supported-claim clusters to the first.
+
 ### What to build first
 
 1. **R3 slice 1, R4 slice 1, R5 slice 1, R2 slice 1** need nothing and each is small: record
@@ -370,19 +476,21 @@ Exposure beyond the tailnet is not proposed.
 
 ## Planned epic
 
-Epic `syzygy-5dhm`, label `dossier`: twenty-two move beads (`.1`–`.20`, `.98`, `.99`), each a
-container for its slices, and eighty-three slice beads. Every slice is a full packet (outcome,
+Epic `syzygy-5dhm`, label `dossier`: twenty-eight move beads (`.1`–`.20`, `.98`, `.99`,
+`.106`–`.111`), each a container for its slices, and 103 slice beads. Twenty-one slices on the
+critical path are priority 1 and fourteen are parked at priority 4 (the data file's
+`priorities` lists both). Every slice is a full packet (outcome,
 approach, spec route, tests, numbered acceptance) and is ready when its predecessors close.
 There is no hold bead and no `no-dispatch` label. Where a slice extends a run-3 or run-4 bead
 it depends on that bead and builds only the new part.
 
 ```sh
-bd list --parent syzygy-5dhm --all --limit 120
+bd list --parent syzygy-5dhm --all --limit 140
 bd ready --label dossier
 ```
 
 Ready with no predecessor: R1 slice 1, R2 slice 1, R3 slice 1, R4 slice 1, R5 slices 1 and 4, R6 slices 1
-and 3, R8 slice 1, R11 slice 1, R14 slice 1, R16 slice 1, R17 slice 1.
+and 3, R8 slice 1, R11 slice 1, R14 slice 1, R16 slice 1, R17 slice 1, R27 slice 1.
 
 ## Known ledger and deviations
 
@@ -394,6 +502,12 @@ and 3, R8 slice 1, R11 slice 1, R14 slice 1, R16 slice 1, R17 slice 1.
 - **Declined on principle:** unverified opinion, per-reader tailoring inside the reviewed pages
   (it belongs in R15's ask), racing a plain session on speed, and client-side search (the pages
   forbid script, and R15's index makes it unnecessary).
+- **The plan grew by addition.** Rounds 8 to 10 add six more moves and twenty slices, for
+  twenty-eight moves and 103 slices in this run and fifty-seven moves across runs 3 to 5. The
+  second reviewer's objection stands: in the twelve days before this run one pursuit bead
+  closed. The priorities above are the answer for now; R22 is where beads are closed.
+- **Thresholds were fixed minutes, not days, before the results.** R27's decision numbers were
+  written into the plan before its figures c to f were read, in the same session.
 - **More than fifteen moves.** The skill caps a run at fifteen. Rounds 6 and 7 add seven,
   kept apart under their own headings because they answer the reviewer's gaps, not the lanes'
   units. Rounds 6 and 7 had no lanes of their own: the reviewer's gap list was the audit.
