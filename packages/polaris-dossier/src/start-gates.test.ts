@@ -806,7 +806,8 @@ describe('preflight', () => {
     ]);
     fs.appendFileSync(path.join(root, '.syzygy/governance/doctrine/security.md'), '\nedit\n');
     const edited = await run(root);
-    expect(edited.ok && edited.report.d9).toEqual({ state: 'refused', why: 'the bytes of .syzygy/governance/doctrine/security.md differ from the digest the act\'s artifact binds' });
+    // Doctrine is in force as the tree holds it (VIS-4 after D13): a later amendment leaves D9 in force.
+    expect(edited.ok && edited.report.d9).toEqual({ state: 'ok', record: 'D9-IN-FORCE-OPERATOR-AGENT-2026-10-06' });
     expect(edited.ok && edited.report.rfc720Ruling.state).toBe('ok');
   });
   it('refuses a URL that is not an admitted locator, by its rule and never quoting it, and never fetches', async () => {
