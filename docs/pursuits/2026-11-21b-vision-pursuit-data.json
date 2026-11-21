@@ -4,7 +4,7 @@
  "scope": "Polaris dossier generation: proof against a plain session, depth, prose, beauty, economy and life after close",
  "audited_commit": "93b710b55",
  "epic": "syzygy-5dhm",
- "note": "units[] holds each lane's output verbatim, before independent review; where a unit and ranked_moves[] disagree, ranked_moves[] is right. score[] holds the reviewer's three raw files in order; the third predates the last small corrections. The key `basis` is used where earlier data files said `evidence`, because the PWB-REQ-014 authority sweep reads keys of that name.",
+ "note": "units[] holds each lane's output verbatim, before independent review; where a unit and ranked_moves[] disagree, ranked_moves[] is right. score[] holds the reviewer's six raw files in order and second_opinion[] the independent reviewer's three; each predates the corrections made after it. The key `basis` is used where earlier data files said `evidence`, because the PWB-REQ-014 authority sweep reads keys of that name.",
  "ranked_moves": [
   {
    "id": "R1",
@@ -25,16 +25,18 @@
    ],
    "prereq": "Owner decision, 2026-11-21, in the owner's words: asked what the plain-session arm may read and send, the owner chose 'Everything except detector matches' (the whole clone minus only files the secret detectors match; denied-path and active-content screens are dropped for this arm), over the recommended variant that kept those screens. It applies to this benchmark arm and to public repositories in R16's corpus only; it changes nothing about what a dossier run reads or sends, and no detector is weakened. The equal-reach arm needs no decision. Real runs come from R16's corpus runner after syzygy-k54o.3",
    "touches_doctrine": false,
-   "what": "For each proving repository, three arms at the same pinned commit: the Polaris dossier; a plain session at equal reach (same model, the screened copy of the clone the author reads, a fixed published prompt and three fixed follow-ups, the same wall-time limit); a plain session at full reach, which is what a user would really get (the whole clone of a public corpus repository minus only the files the unchanged secret detectors match, as the owner decided on 2026-11-21); and the maintainers' own documentation as a ceiling. Before anything is generated, freeze one question file per repository shape: the reader questions, a depth list of ten to twenty non-obvious facts and trade-offs drawn from maintainer documents by a session that sees neither arm, and five reader tasks ('where would I change X'). Fresh readers answer from one arm only; a grader that is not told which arm it holds scores answers against the frozen key; forty sampled claims per arm are checked against the pinned tree. Both arms are shown to graders in the same neutral page shell. Record tokens, wall time and operator minutes for every arm. The win rule is written down first: Polaris wins only if its claim error rate is at most half the plain session's, its comprehension and depth scores are not more than ten percent lower, and its cost is within a stated multiple. Anything else is published as a loss, naming the dimension. The three question sets in the repository today (seven in TARGETS, five in the profile, four topics in the brief) become one versioned file that the brief, the reader test and the scorecard all read. Every published result names the arm it was won or lost against: a win at equal reach shows the mechanism helps; only a win at full reach shows an advantage over a real plain session, and the difference between the two arms is what screening costs.",
+   "what": "For each proving repository, five arms at the same pinned commit: the Polaris dossier; a plain session at equal reach (same model, the screened copy of the clone the author reads, a fixed published prompt and three fixed follow-ups, the same wall-time limit); a plain session at full reach, which is what a user would really get (the whole clone of a public corpus repository minus only the files the unchanged secret detectors match, as the owner decided on 2026-11-21); and the maintainers' own documentation as a ceiling. Before anything is generated, freeze one question file per repository shape: the reader questions, a depth list of ten to twenty non-obvious facts and trade-offs drawn from maintainer documents by a session that sees neither arm, and five reader tasks ('where would I change X'). Fresh readers answer from one arm only; a grader that is not told which arm it holds scores answers against the frozen key; forty sampled claims per arm are checked against the pinned tree. All arms are shown to graders in the same neutral page shell. Record tokens, wall time and operator minutes for every arm. The win rule is written down first: Polaris wins only if its claim error rate is at most half the plain session's, its comprehension and depth scores are not more than ten percent lower, and its cost is within a stated multiple. Anything else is published as a loss, naming the dimension. The three question sets in the repository today (seven in TARGETS, five in the profile, four topics in the brief) become one versioned file that the brief, the reader test and the scorecard all read. Every published result names the arm it was won or lost against: a win at equal reach shows the mechanism helps; only a win at full reach shows an advantage over a real plain session, and the difference between the two arms is what screening costs. Sampled claims are first checked by R2's deterministic checker (resolves, quotation verified, path missing); a model judges only whether a claim matches its cited span, so the claim-error rate rests on Observed checks. Reader tasks are graded against a key of paths taken from the structure record and R19's units, not judged. A figure-ablation measure tags the frozen questions each figure is meant to answer and has fresh readers answer them from the dossier with figures and with figures replaced by their text alternatives; the difference is stored per figure kind, and a kind with no measured gain is listed for R22. A fourth plain arm is budget-matched: the full-reach session given the tokens and wall time the dossier used, with free follow-ups up to that budget, which separates the mechanism from the compute it spends. The aggregation is fixed before the first pass: the number of repositories, a win on at least a stated share of shapes, and no claim from a single repository. Every arm's text is shown to graders as text only, under the source policy's render rule and the no-script rule, because the full-reach arm drops the active-content screen. The owner's decision on that arm is recorded in the owner's words in docs/polaris-generation/BENCHMARK.md by the commit that builds slice 6. The number of sampled claims per arm is set from the error rates the calibration finds, so that the win rule's 'half the error rate' can be resolved; forty is a floor, and a result the sample cannot resolve is published as unresolved. Hold-out: the question file has two parts. The topic questions are public and the author's brief reads them. The graded reader questions, the depth list and the reader tasks are held out: no authoring, inventory, editor or scout session ever receives them, and check asserts their text is absent from every such packet, so the dossier cannot be taught to the test while the plain arm is not. A benchmark pass has its own cost line and budget (sessions per arm, readers, graders), recorded like a run's. A benchmark result never rests on one dossier run: the six stored runs of one commit share 10 of 545 supported-claim clusters, so a single run is one draw. Each corpus repository gets at least two dossier runs and the win rule is applied to the weaker.",
    "why": "The owner's question is comparative, and nothing planned answers it: every existing or planned probe measures a dossier against itself, against pixels or against synthetic shapes. Under the rubric a dimension with no measurement cannot pass 60, and this one instrument also puts numbers on comprehension, claim precision and cost.",
    "basis": "[Observed] packages/polaris-generation-core/src/dossier-reader-test.ts:23-41 and :76-77: the only answer port is scripted and every result records accuracy 'not-evaluated'. [Observed] No run directory holds a reader result. [Observed] Three question sets disagree: docs/polaris-generation/TARGETS.md:76-81 (seven), packages/polaris-generation-core/src/dossier-profile.ts:19-25 (five), packages/polaris-dossier/src/brief.ts:47-52 (four topics). [Observed] The first drafts of the newest run failed fidelity twice before passing, which suggests the harness earns something, uncounted. [Inferred] that a plain session wins on speed and reach; its time has not been measured.",
    "slices": [
-    "S1: one question file with its digest in the run record, read by the brief, the profile and the reader test",
+    "S1: one question file in two parts (public topic questions; held-out graded questions, depth list and tasks), its digest in the run record, and a check that no authoring packet contains held-out text",
     "S2: stored answers and a grader with an answer key that is not told which arm it holds, built and tested on the scripted reader port",
     "S3: the protocol and win rule written and frozen; a calibration on Redis using the stored newest site as the Polaris arm and one plain session over the screened clone",
     "S4: three repositories of different shapes under the frozen rule, run through R16's corpus runner",
     "S5: the scorecard on the review page, re-run per mechanism version and compared run over run",
-    "S6: the full-reach plain arm as the owner decided: a clone copy with only detector-matched files removed, public corpus repositories only, results published per arm"
+    "S6: the full-reach plain arm as the owner decided: a clone copy with only detector-matched files removed, public corpus repositories only, results published per arm",
+    "S7: the figure-ablation measure per figure kind",
+    "S8: the budget-matched plain arm and the aggregation rule fixed before the first pass"
    ],
    "integration_points": [
     "packages/polaris-generation-core/src/dossier-reader-test.ts",
@@ -52,7 +54,9 @@
     "syzygy-5dhm.83",
     "syzygy-5dhm.84",
     "syzygy-5dhm.85",
-    "syzygy-5dhm.100"
+    "syzygy-5dhm.100",
+    "syzygy-5dhm.112",
+    "syzygy-5dhm.113"
    ]
   },
   {
@@ -70,7 +74,7 @@
    ],
    "prereq": "none",
    "touches_doctrine": false,
-   "what": "A command that takes any free-form text about a pinned repository (a plain session's answer, an answer to a follow-up question, a pasted design note), extracts every claim that names a path and lines or carries a quoted span, and checks each against the pinned tree with the existing quotation machinery. It reports per claim: quotation verified, reference resolves but is not verified, path missing or quotation not found, or no reference at all, and writes an annotated copy with a tally.",
+   "what": "A command that takes any free-form text about a pinned repository (a plain session's answer, an answer to a follow-up question, a pasted design note), extracts every claim that names a path and lines or carries a quoted span, and checks each against the pinned tree with the existing quotation machinery. It reports per claim: quotation verified, reference resolves but is not verified, path missing or quotation not found, or no reference at all, and writes an annotated copy with a tally. The checker measures whether a claim can be checked and whether its quotation is real, not whether an unquoted claim is true; its tally says so, and a count of claims that cannot be checked at all is reported per arm.",
    "why": "It makes the dossier's main advantage visible next to a plain answer: how much of that answer anyone checked. It is also the only mechanical way to score a plain session's accuracy.",
    "basis": "[Observed] packages/polaris-dossier/src/brief.ts (QUOTATION_RULE) and apps/three-surface-poc/src/polaris-generation/dossier-quote-fidelity.test.ts: the verification exists but accepts only a schema-valid draft. [Observed] packages/polaris-dossier/src/cli.ts:280-444: no command takes free-form text.",
    "slices": [
@@ -105,7 +109,7 @@
    ],
    "prereq": "what usage fields the agent tool exposes to Syzygy is Unknown: slice 1 finds out",
    "touches_doctrine": false,
-   "what": "Syzygy records, for every session of a run, wall time, turns and token use read from the agent tool's own session summary, never typed by the operator, with stage timings from the step log and repair causes by subject. The run declares a budget per stage, derived from the recorded history; `status` shows spend against it, and crossing a stage budget stops that stage and asks, while the existing hard ceilings stay. The review page prints one cost line, and a cross-run ledger keeps time, tokens and review rounds per dossier. The cost line also counts people: operator actions and minutes, and the panel's minutes from R21.",
+   "what": "Syzygy records, for every session of a run, wall time, turns and token use read from the agent tool's own session summary, never typed by the operator, with stage timings from the step log and repair causes by subject. The run declares a budget per stage, derived from the recorded history; `status` shows spend against it, and crossing a stage budget stops that stage and asks, while the existing hard ceilings stay. The review page prints one cost line, and a cross-run ledger keeps time, tokens and review rounds per dossier. The cost line also counts people: operator actions and minutes, and the panel's minutes from R21. Operator effort per dossier (prompts answered, minutes at the terminal) is its own figure in the ledger, separate from panel minutes.",
    "why": "Token and money cost of a dossier is unknown today, so economy cannot be improved by design and a comparison with a plain session cannot charge either side fairly.",
    "basis": "[Observed] .claude/skills/polaris-dossier/SKILL.md:125-130: usage is whatever the operator types at close; the newest run's record says not recorded. [Observed] record.json carries only declared budgets (30,000,000 tokens; 1,000 turns). [Observed] six stored runs took 30 to 81 minutes with 3 to 7 draft revisions (lane scripts over steps.jsonl).",
    "slices": [
@@ -144,7 +148,7 @@
    ],
    "prereq": "none for slice 1",
    "touches_doctrine": false,
-   "what": "Once the independent inventory exists, `check` lists every inventory entry that no draft block cites near (same path, overlapping lines), by entry identifier and path only, never the entry's text, so the inventory stays independent. The author represents each one or records a justified omission, the same two outcomes the reviewer uses today. Next, Syzygy builds a coverage plan from the inventory: each entry assigned to a page and section, deferred to a deep dive, or omitted with a reason, under the page budget. The author drafts against the plan, check verifies the assignments, and the fidelity review's brief narrows to one question: is each claim true to its citation?",
+   "what": "Once the independent inventory exists, `check` lists every inventory entry that no draft block cites near (same path, overlapping lines), by entry identifier and path only, never the entry's text, so the inventory stays independent. The author represents each one or records a justified omission, the same two outcomes the reviewer uses today. Next, Syzygy builds a coverage plan from the inventory: each entry assigned to a page and section, deferred to a deep dive, or omitted with a reason, under the page budget. The author drafts against the plan, check verifies the assignments, and the fidelity review's brief narrows to one question: is each claim true to its citation? Measured 2026-11-21 over the six stored runs: a citation-overlap pre-check would have listed 151 of the 181 inventory entries the first fidelity verdicts marked unsupported (recall 0.83), and 12 of the 184 it lists were entries the reviewer accepted. Both pass the numbers fixed beforehand, so the pre-check is a default step.",
    "why": "Most review failures are bookkeeping, not falsehood, and each one costs a full review round. Removing them is the largest single saving available, and it frees the author's attention for writing.",
    "basis": "[Observed] fidelity verdicts across six stored runs: 20 not ready of 27. [Observed] of 134 blocking findings, 63 are about inventory coverage and 7 say a cited span does not support its claim (lane scripts over reviews/fidelity-verdict-*.json). [Observed] on first verdicts 20 to 42 of 46 to 66 inventory entries were not represented in five runs. [Observed] newest run: 5 minutes of authoring, about 28 of 34 minutes in review rounds.",
    "slices": [
@@ -184,7 +188,7 @@
    ],
    "prereq": "stable block identifiers across revisions (present in the draft schema)",
    "touches_doctrine": false,
-   "what": "Three rules. A review is not dispatched when its packet digest equals the previous round's; the record says the previous verdict stands. After the first round a fidelity packet carries only blocks whose text, citations or label changed, the inventory entries still open, and the previous round's open findings; unchanged supported blocks carry their verdict forward with the digest it was reached over, and a full re-review runs every third round so carried verdicts cannot drift. A design packet after the first round carries only pages whose rendered bytes changed, plus the landing page. Separately, a fast mode: one author session, the deterministic layers and check, no inventory and no review, with a banner on every page that says so, a tally showing nothing reviewed, and no way to promote it except a full re-run.",
+   "what": "Three rules. A review is not dispatched when its packet digest equals the previous round's; the record says the previous verdict stands. After the first round a fidelity packet carries only blocks whose text, citations or label changed, the inventory entries still open, and the previous round's open findings; unchanged supported blocks carry their verdict forward with the digest it was reached over, and a full re-review runs every third round so carried verdicts cannot drift. A design packet after the first round carries only pages whose rendered bytes changed, plus the landing page. Separately, a fast mode: one author session, the deterministic layers and check, no inventory and no review, with a banner on every page that says so, a tally showing nothing reviewed, and no way to promote it except a full re-run. A fast draft never enters the corpus, the benchmark arms or the human panel. Carried verdicts are counted, and each third-round full review reports how often it disagreed with a carried verdict, as a drift figure. Measured 2026-11-21: none of 16 later fidelity deliveries had the same packet digest as the one before, so the unchanged-packet stop would not have fired once; it stays as a guard, not a saving. Unchanged items are 30 percent of later packets' canonical bytes and 20 percent of their file bytes, at the edge of the 30 percent fixed beforehand: delta packets are built as an option and become default only if the first corpus pass shows fewer review minutes, not fewer bytes.",
    "why": "Whole review rounds have bought nothing, and every round pays for the whole draft. A review binds to bytes, so carrying a verdict by digest is honest. An owner looking at a new repository often wants its shape in minutes, and an honest label makes that safe.",
    "basis": "[Observed] consecutive identical fidelity verdicts five times across four runs. [Observed] fidelity packets stay 348 to 413 KB within the newest run and design packets are 3.1 to 5.2 MB each (lane script review_economy.py). [Observed] packages/polaris-dossier/src/review-packet.ts builds a whole packet every round.",
    "slices": [
@@ -225,7 +229,7 @@
    ],
    "prereq": "none",
    "touches_doctrine": false,
-   "what": "After the first draft passes check, a fresh editor session gets the draft, the rendered pages and the house style. It never gets the repository. It returns changes to wording, order within a section, and merging or splitting of blocks. Check refuses any change to a citation, label, quotation, judgement mark, figure element or Unknown, by comparing each block's claim ledger before and after, and advises when a rewrite introduces an identifier or number not in the block's cited spans. The author accepts or rejects each change. House style becomes a versioned data file of twelve to twenty before-and-after pairs over a fictional project, each tagged with the habit it fixes; the author's and editor's briefs carry the pairs in place of the prose rules now spread over two parts of the brief, which shortens the brief.",
+   "what": "After the first draft passes check, a fresh editor session gets the draft, the rendered pages and the house style. It never gets the repository. It returns changes to wording, order within a section, and merging or splitting of blocks. Check refuses any change to a citation, label, quotation, judgement mark, figure element or Unknown, by comparing each block's claim ledger before and after, and advises when a rewrite introduces an identifier or number not in the block's cited spans. The author accepts or rejects each change. House style becomes a versioned data file of twelve to twenty before-and-after pairs over a fictional project, each tagged with the habit it fixes; the author's and editor's briefs carry the pairs in place of the prose rules now spread over two parts of the brief, which shortens the brief. The ledger check cannot see a rewording that changes meaning, so every block the editor changed goes to the fidelity review as a changed block; no edited block keeps a carried verdict.",
    "why": "One session cannot hold 4,910 words of rules about evidence and also write well. A separate editor can only change how claims read, never what they claim, because check fences it, so voice can improve without risk to truth. Models follow examples more reliably than abstract rules.",
    "basis": "[Observed] the newest brief is 4,910 words; 170 are about voice and 711 about citation, quotation and labelling (lane script over brief.md). [Observed] packages/polaris-dossier/src/brief.ts:54: voice rules are open to no mechanical check. [Observed] session roles are author, inventory and review only (packages/polaris-dossier/src/session-handover.ts); docs/polaris-generation/AUTHORING.md:122-128 defines an Edit stage for the provider pipeline alone.",
    "slices": [
@@ -312,7 +316,7 @@
    ],
    "prereq": "none from the owner: under VIS-4 as amended by D10 this is an agent adoption, recorded as a row in AGENT-ADOPTIONS.md with its revert command; the owner may veto it. The present rule (a comparison only as quotation) was the owner's trade-off; the adoption row says so and names what changes. Q8's depth slice comes before the length change",
    "touches_doctrine": false,
-   "what": "Three changes to what the author is asked for. Each Pole carries one to three blocks marked worth knowing: a cited fact an engineer new to the project would not guess from its category, shown as a distinct callout near the top; the inventory session gets the same request, so missing ones surface as coverage gaps. A labelled judgement may compare the project's choice with a named, widely known alternative when it cites the project's own mechanism as its premise and marks the alternative's property as general knowledge and Inferred; it renders as a 'Compared with' aside and never as the maintainers' claim. The flat limits of 300 words per section and three deep dives give way to budgets the evidence earns: a deep dive for each mechanism whose blocks cite at least eight distinct spans in two files, capped by the repository's size tier, and section length that scales with supported claims; check advises a Pole with fewer than three choices or trade-offs on record.",
+   "what": "Three changes to what the author is asked for. Each Pole carries one to three blocks marked worth knowing: a cited fact an engineer new to the project would not guess from its category, shown as a distinct callout near the top; the inventory session gets the same request, so missing ones surface as coverage gaps. A labelled judgement may compare the project's choice with a named, widely known alternative when it cites the project's own mechanism as its premise and marks the alternative's property as general knowledge and Inferred; it renders as a 'Compared with' aside and never as the maintainers' claim. The flat limits of 300 words per section and three deep dives give way to budgets the evidence earns: a deep dive for each mechanism whose blocks cite at least eight distinct spans in two files, capped by the repository's size tier, and section length that scales with supported claims; check advises a Pole with fewer than three choices or trade-offs on record. The benchmark's depth list is drawn not only from maintainer prose but also from the derived tables (what the tests pin down, deprecations, changelog reasons) and, where admitted, history (hidden coupling, the oldest unchanged core). A Pole with no fact that meets the worth-knowing test says 'none found'; the one-to-three request is a ceiling with a reason required for zero, not a quota.",
    "why": "Depth comes from naming the non-obvious, and nothing in the brief asks for it. 'Why this and not the obvious alternative' is the insight a newcomer most wants and a plain session gives freely; forbidding it outright costs depth without buying truth, because the label already carries the state. The limits were a cure for an overlong overview that reading depths now solve.",
    "basis": "[Observed] packages/polaris-dossier/src/brief.ts:72-73: a comparison only as quotation, never an alternative of the author's own, and an unstated advantage never written even as Inferred. [Observed] :88-89: 300 words per section, three deep dives. [Observed] the newest draft holds 0 Inferred blocks and 0 judgements; its understanding record holds 1 choice, 1 trade-off and 1 limit for all of Redis; it wrote one deep dive. [Observed] run 3 counted 0 judgements across seven drafts.",
    "slices": [
@@ -398,7 +402,7 @@
    ],
    "prereq": "none from the owner: under VIS-4 as amended by D10 this is an agent adoption, recorded as a row in AGENT-ADOPTIONS.md with its revert command; the owner may veto it, because acquisition form and classification are screening policy within SEC-5. Two limits keep it there: commit messages pass the unchanged secret detectors and fail closed, and author identity is dropped at ingestion and never stored. A successor source policy and a change to the acquisition form carry it",
    "touches_doctrine": false,
-   "what": "Two levels. Metadata only: a history fetch bounded by count or date keeps commit identifiers, dates, parent links and changed paths, and drops author identity and message text at ingestion. From it Syzygy derives churn per unit, age of last change, an age for every cited span ('unchanged since 2019'), and pairs of files that change together yet share no declared or import link, drawn as a hidden-coupling figure. Messages: commit message text becomes a content class that passes the same secret screening as files; the author may quote a message that states a reason, verified like any quotation, and must label any reading of it Inferred. Authorship stays out of both levels.",
+   "what": "Two levels. Metadata only: a history fetch bounded by count or date keeps commit identifiers, dates, parent links and changed paths, and drops author identity and message text at ingestion. From it Syzygy derives churn per unit, age of last change, an age for every cited span ('unchanged since 2019'), and pairs of files that change together yet share no declared or import link, drawn as a hidden-coupling figure. Messages: commit message text becomes a content class that passes the same secret screening as files; the author may quote a message that states a reason, verified like any quotation, and must label any reading of it Inferred. Authorship stays out of both levels. Identity is dropped wherever it appears: author and committer fields, and message trailers that name people (signed-off-by, co-authored-by, reviewed-by and the like) are removed before a message is stored. A quoted commit message is also screened for people: a span containing an e-mail address or an @-handle is not quotable. Names in running text cannot be removed reliably, so messages are stored only as the spans an author quotes, never whole.",
    "why": "Where a project is still moving, what is stable, which parts are secretly entangled, and why a design changed: no reading of the current tree can give these, and they are what a senior engineer tells a newcomer first.",
    "basis": "[Observed] packages/polaris-dossier/src/clone-shape.ts:20: the clone holds exactly the pinned commit. [Observed] no production module reads commits, messages or blame. [Observed] .syzygy/governance/policies/POLARIS-DOSSIER-DECLARED-SOURCE-POLICY-v1.json:79-80 lists work-history as never classified. [Inferred] the size of the gain: no dossier has ever cited history.",
    "slices": [
@@ -437,9 +441,9 @@
     "audit beauty B1",
     "ideation craft C1, C2"
    ],
-   "prereq": "none; the sitting is optional and the bar's defaults apply until it happens",
+   "prereq": "none to build slices 1 to 4. R12's composition is built once, against the bar's default token set; the owner's sitting (slice 5) can then change tokens only, never the composition, so neither waits for the other",
    "touches_doctrine": false,
-   "what": "One module owns every dossier style value by role: a modular type scale, line heights, a four-pixel spacing grid, a reading measure, two radii, and colour roles. Nothing is named after a hue or a typeface. The stylesheet is generated from it, and a test fails on any size, colour or spacing that is not a token. One panel style is kept for figures; emphasis elsewhere uses weight and a rule, not a box. Colour does two jobs only: which Pole something belongs to, and its evidence state; colour by list position goes. Every figure kind draws from one shape vocabulary keyed by element type (a store is a cylinder, an external system a dashed frame), and each figure's legend is generated from the shapes it uses. Taste is settled once: the renderer produces a specimen (the stored Redis overview and one Pole) in three token sets that differ only in typeface pairing, scale ratio, default theme and accent family, the owner picks one in a single sitting, and the pick becomes the default.",
+   "what": "One module owns every dossier style value by role: a modular type scale, line heights, a four-pixel spacing grid, a reading measure, two radii, and colour roles. Nothing is named after a hue or a typeface. The stylesheet is generated from it, and a test fails on any size, colour or spacing that is not a token. One panel style is kept for figures; emphasis elsewhere uses weight and a rule, not a box. Colour does two jobs only: which Pole something belongs to, and its evidence state; colour by list position goes. Every figure kind draws from one shape vocabulary keyed by element type (a store is a cylinder, an external system a dashed frame), and each figure's legend is generated from the shapes it uses. Taste is settled once: the renderer produces a specimen (the stored Redis overview and one Pole) in three token sets that differ only in typeface pairing, scale ratio, default theme and accent family, the owner picks one in a single sitting, and the pick becomes the default. The specimen sitting comes before the first screen is composed (R12), so composition is done once against the chosen tokens. At the sitting the owner is also asked to name two or three existing documentation sites as the reference bar.",
    "why": "A document is trusted on sight when it looks made by one hand. Today's sheet is a stack of fixes that cannot stay consistent, and each review round produces new spacing notes. A single sitting spends the owner's taste where only the owner can decide and nowhere else.",
    "basis": "[Observed] 23 distinct font sizes in three units, 7 radii and 31 one-pixel borders in the dossier stylesheet (lane script over the newest site). [Observed] apps/three-surface-poc/src/polaris-generation/dossier-site.ts:111-117 and :153-155: --font-serif is defined three times and ends as a sans stack; --cyan holds an orange. [Observed] :187: card hue follows list position, an encoding with no legend. [Observed] what is right: checked contrast in both themes, reduced motion respected, no web fonts, no script.",
    "slices": [
@@ -481,14 +485,15 @@
    ],
    "prereq": "R11's tokens for sizes; Q4's hero slice for slice 3. Slices 1 to 3 build on P3 (syzygy-fnry.3); slice 4's assertions use the existing browser tier and need no run-3 bead",
    "touches_doctrine": false,
-   "what": "The renderer owns a fixed composition for the top of every page. On the overview: the title at a size that fits two lines and never breaks a compound word, the one-sentence thesis, the hero figure at full reading width, a row of Pole chips in their hues with one-line answers, and the evidence tally. The status banner, the provenance paragraph and the reading legend collapse into one quiet line under the title, with the legend behind it. A Pole page opens with its thesis and its figure. The reader probe asserts, at 1440 by 900 and 390 by 844 in both themes, that the title, the thesis and at least the top of the first figure are on the first screen with no sideways scroll.",
+   "what": "The renderer owns a fixed composition for the top of every page. On the overview: the title at a size that fits two lines and never breaks a compound word, the one-sentence thesis, the hero figure at full reading width, a row of Pole chips in their hues with one-line answers, and the evidence tally. The status banner, the provenance paragraph and the reading legend collapse into one quiet line under the title, with the legend behind it. A Pole page opens with its thesis and its figure. The reader probe asserts, at 1440 by 900 and 390 by 844 in both themes, that the title, the thesis and at least the top of the first figure are on the first screen with no sideways scroll. The reader probe also records an accessibility pass per page: headings in order, every figure's text alternative present and reached, focus visible, contrast in both themes.",
    "why": "Trust and enjoyment are decided on the first screen. Today it is spent on apparatus, and a Pole page's first screen holds no content at all.",
    "basis": "[Observed] the newest overview at 1440 by 900: banner, a 37-word provenance paragraph and a six-item legend above the title; the thesis starts about 750 pixels down; no figure visible; the title breaks 'in-memory' across lines (run 4 screenshots). [Observed] a Pole page's first 900 pixels hold no reading content.",
    "slices": [
     "S1: one status line with the legend folded behind it",
     "S2: title sizing with no compound break; thesis directly under it",
     "S3: Pole pages open with thesis and figure",
-    "S4: first-screen assertions in the reader probe at both sizes and themes"
+    "S4: first-screen assertions in the reader probe at both sizes and themes",
+    "S5: the accessibility pass in the reader probe, recorded per page"
    ],
    "integration_points": [
     "apps/three-surface-poc/src/polaris-generation/dossier-site.ts",
@@ -500,7 +505,8 @@
     "syzygy-5dhm.59",
     "syzygy-5dhm.60",
     "syzygy-5dhm.61",
-    "syzygy-5dhm.62"
+    "syzygy-5dhm.62",
+    "syzygy-5dhm.114"
    ]
   },
   {
@@ -645,14 +651,15 @@
    ],
    "prereq": "`syzygy polaris <url>` runs with no record (syzygy-k54o.3) and R3's stage budgets (slice 3). An agent adoption: which repositories are read, which provider receives them and unattended work are agent-decided; observed code is never executed",
    "touches_doctrine": false,
-   "what": "A fixed, versioned corpus of public repositories, each pinned to a commit and chosen to cover the space, not for convenience: at least one repository per trait the shape packs declare and per size tier of the scale ladder, including a large monorepo, an infrastructure-only repository and a data- or documentation-only one; a synthetic private-visibility fixture covers what public repositories cannot. A runner starts a dossier run for each, unattended, under the declared source policy. A pass is due only when the mechanism version changes, and that version is a digest over the brief, schema, check and renderer modules, so a cosmetic commit triggers nothing. Each pass has a total token and wall-time budget on top of R3's stage budgets; shapes it does not reach are recorded Unknown. A generality pass rule is written before the first pass: every shape reaches a reviewed close within budget, and no shape scores below the full-reach plain arm on more than one dimension. Failures are recorded results. Each run feeds R1's arms, Q13's scorecard and the reading, prose and cost ledgers.",
+   "what": "A fixed, versioned corpus of public repositories, each pinned to a commit and chosen to cover the space, not for convenience: at least one repository per trait the shape packs declare and per size tier of the scale ladder, including a large monorepo, an infrastructure-only repository and a data- or documentation-only one; a synthetic private-visibility fixture covers what public repositories cannot. A runner starts a dossier run for each, unattended, under the declared source policy. A pass is due only when the mechanism version changes, and that version is a digest over the brief, schema, check and renderer modules, so a cosmetic commit triggers nothing. Each pass has a total token and wall-time budget on top of R3's stage budgets; shapes it does not reach are recorded Unknown. A generality pass rule is written before the first pass: every shape reaches a reviewed close within budget, and no shape scores below the full-reach plain arm on more than one dimension. Failures are recorded results. Each run feeds R1's arms, Q13's scorecard and the reading, prose and cost ledgers. The corpus also holds a repository whose documentation is not in English and one with no README or documentation root. Each run records which traits matched no shape pack and which units the scale ladder left derived-only, so a generality failure is a named gap and not a quietly thin dossier. The scorecard has a row for figure coverage against the figure policy (required views present, omitted with a reason, missing) and a depth row per Pole (cited choices, trade-offs and limits, worth-knowing marks, top-ten coverage). The pass rule states minimums for those rows and cost targets: a ceiling on median tokens, wall time and review rounds per dossier, and a refresh target for R14 (at most a third of a full run when under ten percent of cited spans changed). On each pass a fixed number of known-false blocks (a wrong line range, an inverted claim, an unsupported number) are seeded into one copy of a review packet and the fidelity reviewer's recall is recorded; below a stated recall the pass's readiness verdicts read 'uncalibrated'. The seeded copy never enters a dossier. The private stratum is not only synthetic: it includes repositories the owner owns (the owned-repositories list), read under the same policy. The cost targets are numbers, fixed from the first recorded baseline before the second pass: median wall time and tokens per dossier at most 0.7 of the baseline median, median review rounds at most three. Each repository is run at least twice per pass. The cost baseline is the six stored runs' medians, which exist today, not a baseline the plan chooses later. Every dossier states on its review page that it is one draw and, where replicate runs exist, how far they agree.",
    "why": "Every real dossier so far is of one repository, and every planned real-repository measure waited for the owner to start a run by hand. Since D10 that wait is no longer required. Without this, generality and the benchmark stay claims.",
    "basis": "[Observed] all six stored runs are of redis/redis. [Observed] vision.md VIS-4: agents decide 'unattended agent work, which repositories Syzygy reads and which provider receives their content'. [Observed] PROJECT-STATUS.md: the dossier launch consent is still enforced by code until the D10 follow-ons land (syzygy-k54o.3 is blocked today).",
    "slices": [
     "S1: the stratified corpus list with pinned commits, the mechanism-version digest, the pass budget and the generality pass rule, all written first",
     "S2: the runner, with budgets, stored records and failures recorded as results",
     "S3: the first full corpus pass and its scorecard",
-    "S4: a corpus pass per mechanism version, compared with the previous one"
+    "S4: a corpus pass per mechanism version, compared with the previous one",
+    "S5: reviewer recall measured with seeded known-false blocks on a copy of a review packet"
    ],
    "integration_points": [
     "packages/polaris-dossier/src/polaris.ts",
@@ -666,7 +673,8 @@
     "syzygy-5dhm.74",
     "syzygy-5dhm.75",
     "syzygy-5dhm.91",
-    "syzygy-5dhm.92"
+    "syzygy-5dhm.92",
+    "syzygy-5dhm.115"
    ]
   },
   {
@@ -685,7 +693,7 @@
    ],
    "prereq": "slice 1 needs only stored sites and the existing headless browser helper; slice 2 needs R12's composition and R1's plain arms in the plain shell; slice 3 needs R11's specimen sets",
    "touches_doctrine": false,
-   "what": "Fresh reader sessions are shown first-screen and full-page screenshots of three things without labels: the dossier, the plain arm in a plain shell, and a hand-made reference site. Each rates trust and clarity on a fixed five-point scale with one sentence of reason, then answers two recall questions after ten seconds of the first screen (what is this project; what are its parts), scored against the thesis and the Pole list. Scores are stored per token set and per mechanism version. A model reader's taste is Inferred evidence and is labelled so; the owner's specimen sitting stays the taste decision. Model ratings are calibrated twice: against the owner's pick at the specimen sitting (did the raters prefer the set the owner chose?) and against R21's human panel; an uncalibrated rating is shown as such.",
+   "what": "Fresh reader sessions are shown first-screen and full-page screenshots of three things without labels: the dossier, the plain arm in a plain shell, and a hand-made reference site. Each rates trust and clarity on a fixed five-point scale with one sentence of reason, then answers two recall questions after ten seconds of the first screen (what is this project; what are its parts), scored against the thesis and the Pole list. Scores are stored per token set and per mechanism version. A model reader's taste is Inferred evidence and is labelled so; the owner's specimen sitting stays the taste decision. Model ratings are calibrated twice: against the owner's pick at the specimen sitting (did the raters prefer the set the owner chose?) and against R21's human panel; an uncalibrated rating is shown as such. The reference arm is the first screens of the sites the owner names as the bar, and the dossier is scored relative to them, not on an absolute scale.",
    "why": "Nothing planned measures whether a reader trusts or enjoys the surface, so beauty cannot score above 60 however good the craft. Recall after ten seconds is the one objective measure of a first screen.",
    "basis": "[Observed] the independent review: R11's lint measures consistency and R12 asserts placement; R1 strips the surface for its graders. [Inferred] that model readers' ratings track human ones; the owner sitting is the check on that.",
    "slices": [
@@ -830,9 +838,9 @@
    "merges": [
     "second independent review, gap 2"
    ],
-   "prereq": "R1 slices 3 and 6 (the protocol and the full-reach arm); the owner's time, about thirty minutes per corpus pass, and optionally up to two more readers on the tailnet",
+   "prereq": "R1 slices 3 and 6; the owner's time, about thirty minutes per corpus pass. More readers only on the owner's word (multi-user use is an owner class)",
    "touches_doctrine": false,
-   "what": "On each corpus pass one repository is sampled. The owner, and up to two other readers on the tailnet, answer the frozen questions from the dossier and from the full-reach plain arm (which arm is which is hidden), rate trust and clarity of each first screen, and say which they would rather have been given. A local page collects the answers; nothing leaves the tailnet. The scorecard then shows, for every model-graded measure, its agreement with the people on that sample. A measure whose agreement is below a bound written in advance is marked uncalibrated and cannot carry a win. Human answers are Observed evidence of those readers; model answers stay Inferred. Answers are pooled across passes, and no agreement figure is shown until a minimum sample fixed in the protocol is reached; until then the measure reads 'calibrating', which also cannot carry a win. Panel minutes go on R3's cost line.",
+   "what": "On each corpus pass one repository is sampled. The owner, and up to two other readers on the tailnet, answer the frozen questions from the dossier and from the full-reach plain arm (which arm is which is hidden), rate trust and clarity of each first screen, and say which they would rather have been given. A local page collects the answers; nothing leaves the tailnet. The scorecard then shows, for every model-graded measure, its agreement with the people on that sample. A measure whose agreement is below a bound written in advance is marked uncalibrated and cannot carry a win. Human answers are Observed evidence of those readers; model answers stay Inferred. Answers are pooled across passes, and no agreement figure is shown until a minimum sample fixed in the protocol is reached; until then the measure reads 'calibrating', which also cannot carry a win. Panel minutes go on R3's cost line. The panel is the owner alone by default. Inviting other readers on the tailnet may be multi-user use, which is the owner's to decide; the page is built for one reader and the owner says if it may serve more. Each sitting records how familiar the owner already is with the sampled repository, on a three-point scale, because a reader who knows the project is not the newcomer the measure is about; agreement is reported with and without familiar samples.",
    "why": "Every score of reader experience in this plan comes from a model. The product is for people, and VIS-3's test is a human unfamiliar with the project. Thirty minutes of a person per pass is the difference between an Inferred benchmark and a checked one.",
    "basis": "[Observed] the second independent review: no human reader appears anywhere in the plan. [Observed] vision.md VIS-3: digestible by a human unfamiliar with the project.",
    "slices": [
@@ -883,6 +891,222 @@
    "slice_beads": [
     "syzygy-5dhm.104",
     "syzygy-5dhm.105"
+   ]
+  },
+  {
+   "id": "R23",
+   "round": 9,
+   "title": "The operating envelope: invariants, failure modes and cliffs, harvested and then explained",
+   "rubric": [
+    5,
+    1,
+    7
+   ],
+   "owner_value": 5,
+   "build_cost": 2,
+   "relation": "New sources and a new required topic. It extends R9's harvest machinery and run-4 Q9's packs (the call-name lists are pack data). The 'bite you' judgements use R8's labelled comparison and P8's premise rule. It also feeds R19: assertion density is a salience signal.",
+   "merges": [
+    "ideation last-five F1"
+   ],
+   "prereq": "Q2 derive stage and R9 S1 machinery; the Q1 policy admits configuration files as data (they are already screened text). Active-content rules still withhold TOML-like executable configuration, and the topic shows that as Unknown.",
+   "touches_doctrine": false,
+   "what": "Three more deterministic harvests, each producing a derived table of verified lines, run over admitted files by the R9 machinery.\n(1) Invariants: assertion calls per language, matched lexically from a closed versioned list (`assert`, `serverAssert`-style project macros detected by an `*assert*` call-name rule, `debug_assert!`, `invariant(`, `precondition(`, `require(` in Kotlin, `Debug.Assert`). Each row is a verified line, grouped by unit.\n(2) Failure surface: string literals passed to error-returning, panic and log-at-error or warn calls (the call names are pack data), plus error-code enums. Each becomes a row: message, path, line, unit.\n(3) Limits and defaults: entries of a documented configuration file (`*.conf`, `config.example.*`, `values.yaml`, `settings.py` defaults, CLI flag definitions), and named constants matching `*_MAX*|*_LIMIT*|*_THRESHOLD*|*_TIMEOUT*|DEFAULT_*`, each with its literal value.\nThe brief gains a required topic, 'Operating envelope: what is always true, what fails and how, where it gets slow'. Its parts:\n- a failure-mode table per major mechanism (trigger, what the code does, what the user sees), each row citing harvested lines;\n- a 'cliffs' list of thresholds where behaviour or cost changes, each citing the constant or config default;\n- 'three things that will bite you': labelled judgements whose premises are harvested rows.\nThe inventory session gets the same topic, so a missing failure mode becomes a coverage gap. Where a language has no call-name list, or a harvest finds nothing, the topic shows a named Unknown for that language and kind, never an empty table. Each 'will bite you' judgement needs at least two harvested premises of different kinds (for example a limit and a failure message). The harvests' precision is measured on fixtures with known answers, not only their recall. Where nothing is found, the topic says 'none found' with the harvest's coverage; a quota is never filled with weak rows.",
+   "why": "This is what a senior maintainer says in the first hour and no planned source yields. Tests say what is intended, markers say what is unfinished and release notes say what changed; none says what must never happen, what the error looks like, or which default to raise. All three are exact, cheap, language-general harvests. Every row is Observed, so the topic adds depth without loosening truth.",
+   "basis": "[Observed] sweeps over the run 3, 4 and 5 move records found no move that plans this (ideation last-five, context.py). [Observed] across the six stored runs of one Redis commit, 57 distinct paths are cited in all, 14 by every run and 18 by exactly one; mean pairwise overlap of cited paths is 0.53 (cross_run.py).",
+   "slices": [
+    "S1: limits-and-defaults harvest plus a derived 'cliffs' reference page (no brief change).",
+    "S2: assertion and failure-string harvests per unit.",
+    "S3: the required topic, the bite judgements and the inventory topic; measured on the next corpus pass by R1's depth key."
+   ],
+   "integration_points": [
+    "packages/polaris-dossier/src/derive.ts (new in Q2)",
+    "packages/polaris-dossier/src/shape-packs/ (new in Q9)",
+    "packages/polaris-dossier/src/brief.ts",
+    "packages/polaris-dossier/src/inventory.ts"
+   ],
+   "bead": "syzygy-5dhm.106",
+   "slice_beads": [
+    "syzygy-5dhm.116",
+    "syzygy-5dhm.117",
+    "syzygy-5dhm.118"
+   ]
+  },
+  {
+   "id": "R24",
+   "round": 9,
+   "title": "Where the documents and the code disagree: a deterministic reconciliation page",
+   "rubric": [
+    7,
+    1,
+    5
+   ],
+   "owner_value": 5,
+   "build_cost": 2,
+   "relation": "New. R2 checks claims Syzygy did not write against the tree; F2 checks the project's own claims. It reuses R2's quotation machinery and run-4 Q2's derived symbols. R16's synthetic fixture should gain planted drift rows so the benchmark has ground truth.",
+   "merges": [
+    "ideation last-five F2"
+   ],
+   "prereq": "Q2 derived symbol and configuration tables (for code-only rows); none for document-only and path rows",
+   "touches_doctrine": false,
+   "what": "Syzygy extracts every checkable assertion from the project's own prose documents (README, docs/, manuals, man pages, the configuration file's comments): inline-code identifiers, configuration keys with a stated default, command or flag names, file paths, and version numbers. It checks each against the pinned tree: does the identifier exist, does the key exist with that default literal, is the command or flag defined, does the path resolve. Every row falls into one of five classes:\n- resolves (the name exists; no value was compared);\n- agrees (a stated value was compared and matched);\n- disagrees: both sides Observed, with the document line and the code line;\n- document only: named in the docs, absent from the code;\n- code only: a configuration key, command or flag defined in code but in no document.\nThe dossier gets a 'Docs and code' reference page with counts per class. Disagreements are surfaced as callouts on the Pole that covers them. The author may explain a disagreement (renamed, deprecated, platform-specific) but never hide one. The matching is lexical, its rules are printed, and anything it cannot decide is Unknown. Nothing is judged by a model. A row is 'resolves' when the documented name exists in the tree and 'agrees' only when a stated value was also compared and matched; existence is never reported as agreement. Precision is measured as well as recall, on fixtures with planted true and false rows, and a row class whose measured precision is below a stated bound is labelled Inferred, not Observed.",
+   "why": "This is Syzygy's thesis, declared versus observed with the gap shown honestly, turned on the subject repository. A plain session cannot do it reliably: it reads the docs as true and does not enumerate. It is also the single most useful page for a maintainer, who can act on it, and a measurable advantage the benchmark can score (planted-drift fixtures in the synthetic repository give it a known answer).",
+   "basis": "[Observed] sweeps over the run 3, 4 and 5 move records found no move that plans this (ideation last-five, context.py). [Observed] across the six stored runs of one Redis commit, 57 distinct paths are cited in all, 14 by every run and 18 by exactly one; mean pairwise overlap of cited paths is 0.53 (cross_run.py).",
+   "slices": [
+    "S1: paths and inline-code identifiers named in docs, resolved against the tree: the document-only and agrees classes.",
+    "S2: configuration keys and defaults in both directions, giving disagrees and code-only.",
+    "S3: commands and flags, plus planted-drift rows in the synthetic fixture, scored in R1."
+   ],
+   "integration_points": [
+    "packages/polaris-dossier/src/derive.ts (new in Q2)",
+    "packages/polaris-dossier/src/check.ts",
+    "apps/three-surface-poc/src/polaris-generation/dossier-site.ts"
+   ],
+   "bead": "syzygy-5dhm.107",
+   "slice_beads": [
+    "syzygy-5dhm.119",
+    "syzygy-5dhm.120",
+    "syzygy-5dhm.121"
+   ]
+  },
+  {
+   "id": "R25",
+   "round": 9,
+   "title": "Pages that hold attention: a figure that stays while the text walks through it, sidenotes, and a one-page edition",
+   "rubric": [
+    6,
+    3,
+    2
+   ],
+   "owner_value": 4,
+   "build_cost": 2,
+   "relation": "New page forms. They use Q5's numbered walk steps, Q4's hero, R11's tokens and Pole hues, R7's pull quotes (which sit in the margin column) and R13's print/PDF path. The one-page edition is new: R13 prints the whole dossier, not a distilled page. R17's blind first-screen test can compare sticky against stacked layout.",
+   "merges": [
+    "ideation last-five F3"
+   ],
+   "prereq": "R11 tokens; Q5 numbered steps for (1); R23 for the 'bite you' slot in (3), which otherwise shows the worth-knowing marks from R8",
+   "touches_doctrine": false,
+   "what": "Three static, script-free forms.\n(1) Sticky-figure sections: on a wide screen, a mechanism section is a two-column grid. The figure sits in one column with `position: sticky`, and the numbered steps scroll in the other. Each step names the numbered callout it explains, and the matching figure region carries the same number in the Pole hue. The view stays fixed while the explanation moves, which is the core move of the best interactive explainers, done in CSS. Below the measure width it falls back to figure-then-steps.\n(2) Sidenotes: citations, definitions on first use and short asides move into a margin column on wide screens (CSS grid, the Tufte layout), and inline toggles open them on narrow screens. The prose column carries only prose. This replaces inline apparatus in place, with no extra page.\n(3) The one-page edition: a single designed page, landscape A3 in print and a long single screen on the web, assembled only from elements already checked. It holds the thesis, the hero figure, each Pole's one-line answer with a thumbnail of its figure, key numbers from the derived tally, the three 'bite you' judgements (R23) and 'where to start' links. It makes no new model claims. It is rendered by R11's tokens, and its PDF gets a digest beside R13's. Every new page form goes through R12's accessibility pass: reading order with sidenotes, keyboard reach of the sticky layout, and the one-page edition's headings.",
+   "why": "Beauty and visual richness are capped at 72-80 because the plan makes good components but no page form a reader remembers. These three are the recognisable signatures of explainers people praise: the sticky figure of interactive essays, the margin notes of illustrated books, and the cheat sheet pinned above a desk. All are CSS and render-time assembly under the existing no-script rule.",
+   "basis": "[Observed] sweeps over the run 3, 4 and 5 move records found no move that plans this (ideation last-five, context.py). [Observed] across the six stored runs of one Redis commit, 57 distinct paths are cited in all, 14 by every run and 18 by exactly one; mean pairwise overlap of cited paths is 0.53 (cross_run.py).",
+   "slices": [
+    "S1: sidenotes for citations and first-use definitions.",
+    "S2: sticky-figure sections for walks with numbered callouts.",
+    "S3: the one-page edition plus its PDF; A/B against stacked layout in R17."
+   ],
+   "integration_points": [
+    "apps/three-surface-poc/src/polaris-generation/dossier-site.ts",
+    "apps/three-surface-poc/src/polaris-generation/diagram-layout.ts",
+    "packages/polaris-dossier/src/render.ts"
+   ],
+   "bead": "syzygy-5dhm.108",
+   "slice_beads": [
+    "syzygy-5dhm.122",
+    "syzygy-5dhm.123",
+    "syzygy-5dhm.124"
+   ]
+  },
+  {
+   "id": "R26",
+   "round": 9,
+   "title": "A first-day path with checkpoints, kept apart from the benchmark's questions",
+   "rubric": [
+    2,
+    7
+   ],
+   "owner_value": 4,
+   "build_cost": 1,
+   "relation": "New. R15's find-by-task routes answer 'where do I change X' by lookup; F4 is the linear first-read order with comprehension checks. It uses Q8's reading depths and R19's salience for the order. The overlap guard protects R1 and R17 from contamination.",
+   "merges": [
+    "ideation last-five F4"
+   ],
+   "prereq": "R19 or the Q2 unit graph for the order; none for the checkpoints",
+   "touches_doctrine": false,
+   "what": "A generated 'Start here' path: an ordered route of 5-8 stops through the dossier (the overview, then Poles in dependency order from the derived structure, then one walk, then the operating envelope), each with an estimated reading time from word counts. Each stop ends with two or three 'check yourself' questions, with cited answers inside `details` (script-free reveal) and the answer linking back to the block that teaches it. A third session writes the questions from the dossier's own blocks, and `check` verifies every answer's citations. A lexical overlap check against the frozen benchmark questions (TARGETS.md and reader-questions.ts) refuses any near-duplicate, so the dossier cannot teach to the test. The checkpoint questions also make a second, held-out reader probe: a fresh reader who follows the path should answer them, and R1 can report path-reader against cold-reader comprehension. The checkpoint questions are written by a third session that is neither the author nor the holder of the benchmark's held-out key, so the author never writes its own exam and no held-out question can leak onto a page.",
+   "why": "Onboarding documents people praise are paths, not piles. A reader learns faster with an order and a way to know they understood. A plain session gives neither an order across a whole system nor checkpoints with cited answers.",
+   "basis": "[Observed] sweeps over the run 3, 4 and 5 move records found no move that plans this (ideation last-five, context.py). [Observed] across the six stored runs of one Redis commit, 57 distinct paths are cited in all, 14 by every run and 18 by exactly one; mean pairwise overlap of cited paths is 0.53 (cross_run.py).",
+   "slices": [
+    "S1: path order plus reading times plus checkpoints with the overlap guard.",
+    "S2: the held-out probe: path reader against cold reader in R1."
+   ],
+   "integration_points": [
+    "packages/polaris-dossier/src/draft-schema.ts",
+    "packages/polaris-dossier/src/check.ts",
+    "apps/three-surface-poc/src/polaris-generation/dossier-site.ts"
+   ],
+   "bead": "syzygy-5dhm.109",
+   "slice_beads": [
+    "syzygy-5dhm.125",
+    "syzygy-5dhm.126"
+   ]
+  },
+  {
+   "id": "R27",
+   "round": 9,
+   "title": "Measure now on the six stored runs: variance, a pooled ceiling, replays and reviewer consistency",
+   "rubric": [
+    8,
+    5,
+    7,
+    1
+   ],
+   "owner_value": 5,
+   "build_cost": 1,
+   "relation": "New measurements over existing stores. (c) is R4 S1's replay made a stated metric pair. (d) quantifies R5. (b) gives the review-score-3 gap 'the ceiling arm is never acted on' a stand-in today. (a) is new and may justify a pooled-author move (R28).",
+   "merges": [
+    "ideation last-five F5"
+   ],
+   "prereq": "none; read-only over the stored runs",
+   "touches_doctrine": false,
+   "what": "A read-only analysis script over the stored run directories, never `run-*.agents/` or `run-*.sessions/`, writing one evidence record that names each subject's digest (rule 11). It reports six figures.\n(a) Author variance at fixed input: the cited-path overlap measured here, extended to claim level (blocks whose cited spans overlap) and to Pole and thesis agreement across runs.\n(b) A pooled pseudo-ceiling: the union of supported claims and inventory entries across six runs, and each run's share of it. This gives a depth-headroom number before any maintainer-ceiling arm exists.\n(c) R4 replay: for each first fidelity verdict, the share of entries the reviewer marked unsupported that the citation-overlap pre-check would have listed (recall), and how many it lists that the reviewer accepted (noise).\n(d) R5 replay: rounds and packet bytes the unchanged-packet stop and delta packets would have saved, computed from the stored packet digests and block digests.\n(e) Reviewer consistency: for consecutive verdicts over packets with equal digests, whether the readiness and finding sets agree.\n(f) Stage time per review round from steps.jsonl, with the operator minutes R21's fault asks the cost line to count.\nOptionally, local renders of the stored sites in the existing headless browser give R12's first-screen pixel facts (title lines, hero above the fold, horizontal scroll at 390 px). This needs no provider. Decision numbers are fixed before the results are read: R28's two-author mode is built only if a second fresh run at the same brief adds at least 25 percent more supported-claim clusters to the first; R4's pre-check becomes a default step only if its recall on first-verdict omissions is at least 60 percent with noise under 30 percent; R5's delta packets become default only if they would have saved at least 30 percent of packet bytes after round one. The pooled figure is reported at several clustering thresholds, because the choice of when two claims count as the same inflates or shrinks the union. First results, 2026-11-21 (six runs of one commit, brief versions 1 to 7): a run holds 14 to 51 percent of 545 pooled supported-claim clusters and 10 clusters are in all six; under a loose match (any overlapping cited span) 79 percent of a run's blocks have a counterpart in another run, under a strict one 32 percent, so the size of the variance depends on the rule; three runs have no Poles; review rounds take 57 percent of 302 wall minutes; five re-submitted verdicts over identical packets agree on readiness every time.",
+   "why": "The reviewer says the last points need measurement and that k54o.3 gates the corpus. These figures need neither: they turn R4's and R5's planned savings and R1's depth gap into measured baselines now, and author variance is a finding the plan does not yet have. If one run cites half of what six cite together, then 'regenerate and pool' or 'two authors, merged' may earn more depth than any brief change. That decision should be made from this number.",
+   "basis": "[Observed] sweeps over the run 3, 4 and 5 move records found no move that plans this (ideation last-five, context.py). [Observed] across the six stored runs of one Redis commit, 57 distinct paths are cited in all, 14 by every run and 18 by exactly one; mean pairwise overlap of cited paths is 0.53 (cross_run.py).",
+   "slices": [
+    "S1: (a), (b), (e) and (f) from stored JSON only.",
+    "S2: the (c) and (d) replays using the real check and packet code.",
+    "S3: first-screen pixel facts from local renders."
+   ],
+   "integration_points": [
+    "scripts/",
+    "docs/evidence/"
+   ],
+   "bead": "syzygy-5dhm.110",
+   "slice_beads": [
+    "syzygy-5dhm.127",
+    "syzygy-5dhm.128",
+    "syzygy-5dhm.129"
+   ]
+  },
+  {
+   "id": "R28",
+   "round": 9,
+   "title": "Two authors, one dossier: pool independent drafts before review (built only if R27 shows the variance)",
+   "rubric": [
+    5,
+    8
+   ],
+   "owner_value": 3,
+   "build_cost": 2,
+   "relation": "New. It uses R6's editor for reconciliation, R4's coverage logic for the outline choice and R3 for cost. Gated on R27, so it is closed unbuilt if the variance is small.",
+   "merges": [
+    "ideation last-five F6"
+   ],
+   "prereq": "R27, restated as what a second run adds: built only if, for two fresh runs at one brief and schema version, the second run adds at least 25 percent more supported-claim clusters to the first, under both clustering rules. The six stored runs span brief versions 1 to 7, so their pooled share (14 to 51 percent of 545 clusters) motivates the test and does not pass it",
+   "touches_doctrine": false,
+   "what": "If R27's variance and pooled-ceiling figures confirm that runs at one commit cover substantially different material, a full run starts two author sessions with the same brief. Neither sees the other's draft. A deterministic merge step aligns their blocks by cited-span overlap and keeps the union of supported claims under one outline. The outline comes from the draft whose thesis the inventory supports better, measured by coverage count, not a model judgement. The merge lists conflicting claims over the same spans for the editor session (R6) to reconcile. A conflict whose two sides cite different evidence is shown as a disagreement, never silently picked. Fidelity then reviews the merged draft once. Cost is roughly one extra author session, recorded by R3. R1 decides whether the depth gain pays for it. The offline merge may proceed on the stored drafts. The two-author run mode waits for two fresh runs at the current brief and schema, checked under both clustering rules, because the six stored runs span seven brief versions and their variance is partly the mechanism changing.",
+   "why": "Ensembles beat single samples when variance is high. The measured overlap (Jaccard 0.53 on cited paths) suggests a second independent author could add a large share of what one author misses, for the price of one session rather than a new mechanism.",
+   "basis": "[Observed] sweeps over the run 3, 4 and 5 move records found no move that plans this (ideation last-five, context.py). [Observed] across the six stored runs of one Redis commit, 57 distinct paths are cited in all, 14 by every run and 18 by exactly one; mean pairwise overlap of cited paths is 0.53 (cross_run.py).",
+   "slices": [
+    "S1: offline merge of two stored Redis drafts, with coverage and conflicts measured; no new run.",
+    "S2: the two-author run mode, scored by R1 on the next corpus pass."
+   ],
+   "integration_points": [
+    "packages/polaris-dossier/src/polaris.ts",
+    "packages/polaris-dossier/src/check.ts"
+   ],
+   "bead": "syzygy-5dhm.111",
+   "slice_beads": [
+    "syzygy-5dhm.130",
+    "syzygy-5dhm.131"
    ]
   }
  ],
@@ -1668,8 +1892,1726 @@
     }
    ],
    "summary_of_change": "The plan as written scores 80, up from 78. syzygy-fj2q was closed on the owner's instruction on 2026-11-21, so the 75 it would have cost is history. The total is 74 if syzygy-k54o.3 does not land, and 79 if the owner declines the full-reach arm. 85 is not reachable by planning alone: the instruments are now complete and the remaining points belong to measured outcomes. One material fault remains: R1's full-reach arm is filed as an agent adoption but sends unclassifiable content and drops denied-path screening, which RFC5-14 and VIS-4 class 2 reserve to the owner."
+  },
+  {
+   "reviewer": "independent subagent, read-only; fourth scoring of ranked_moves.json (R1-R22) with the same rubric, cap rule and strictness as review-score-1 to -3. syzygy-fj2q confirmed closed by bd show on 2026-11-21.",
+   "scored_subject": "the end product if every planned move (P1-P15, Q1-Q14, R1-R22) is built as written",
+   "dimensions": [
+    {
+     "n": 1,
+     "name": "Truth",
+     "weight": 15,
+     "score_before": 80,
+     "score_after": 83,
+     "score_after_round6": 84,
+     "score_after_round7": 85,
+     "score_after_round8": 85,
+     "cap_after_round8": false,
+     "plan_ceiling": 90,
+     "ceiling_reason": "A plan can fully specify the machinery: deterministic checks, labels, verified quotations, a measured claim-error rate, and a measured recall for the model reviewers. It cannot state the error rate itself. 90 is the most a plan can get; the last 10 belong to measured rates.",
+     "reason": "No change this round. The machinery is complete. What is missing is a measure of how often the model fidelity reviewer misses a false claim, and a deterministic, rather than model, check of R1's forty sampled claims.",
+     "moves": [
+      "R1",
+      "R2",
+      "R4",
+      "R6",
+      "R20",
+      "R21"
+     ]
+    },
+    {
+     "n": 2,
+     "name": "Comprehension",
+     "weight": 15,
+     "score_before": 68,
+     "score_after": 77,
+     "score_after_round6": 79,
+     "score_after_round7": 82,
+     "score_after_round8": 83,
+     "cap_after_round8": false,
+     "plan_ceiling": 86,
+     "ceiling_reason": "The dimension is an outcome ('a newcomer understands fast'). A plan can earn a page shape, a probe, human calibration and a repair loop, and all of those exist. The remaining points are the measured scores.",
+     "reason": "R21's pooled panel with a minimum sample makes the human calibration statistically usable, so +1.",
+     "moves": [
+      "R21",
+      "R17",
+      "R18",
+      "R12",
+      "R15",
+      "R1"
+     ]
+    },
+    {
+     "n": 3,
+     "name": "Visual richness",
+     "weight": 15,
+     "score_before": 75,
+     "score_after": 78,
+     "score_after_round6": 79,
+     "score_after_round7": 80,
+     "score_after_round8": 80,
+     "cap_after_round8": false,
+     "plan_ceiling": 86,
+     "ceiling_reason": "The dimension asks for 'figures that carry real explanation'. Nothing yet measures whether a figure explains, only that it is correct, fits and is liked. A figure-ablation measure would lift the ceiling a plan can reach.",
+     "reason": "No change. The figure substrate is thorough. The missing piece is a measure of explanatory value: do readers answer figure questions better with the figure than without it?",
+     "moves": [
+      "R11",
+      "R12",
+      "R17"
+     ]
+    },
+    {
+     "n": 4,
+     "name": "Generality",
+     "weight": 15,
+     "score_before": 68,
+     "score_after": 71,
+     "score_after_round6": 80,
+     "score_after_round7": 83,
+     "score_after_round8": 83,
+     "cap_after_round8": false,
+     "plan_ceiling": 86,
+     "ceiling_reason": "'Shown to work on any kind' is an outcome. The stratified corpus, the pass rule written first and the synthetic private fixture are as much as a plan offers, apart from making unknown shapes visible and adding the shapes still missing.",
+     "reason": "No change this round.",
+     "moves": [
+      "R16",
+      "R22",
+      "R1"
+     ]
+    },
+    {
+     "n": 5,
+     "name": "Depth of insight",
+     "weight": 10,
+     "score_before": 45,
+     "score_after": 70,
+     "score_after_round6": 76,
+     "score_after_round7": 77,
+     "score_after_round8": 79,
+     "cap_after_round8": false,
+     "plan_ceiling": 85,
+     "ceiling_reason": "The depth key is drawn from maintainer documents only, so it can measure depth up to the maintainers' own account and no further. A plan can widen the key and make depth a scorecard row; it cannot show the insight is there.",
+     "reason": "R18 now chases the maintainer-documentation ceiling arm as well as the plain arm, so +2.",
+     "moves": [
+      "R18",
+      "R19",
+      "R21",
+      "R8",
+      "R9",
+      "R10"
+     ]
+    },
+    {
+     "n": 6,
+     "name": "Beauty",
+     "weight": 10,
+     "score_before": 38,
+     "score_after": 58,
+     "score_after_round6": 65,
+     "score_after_round7": 72,
+     "score_after_round8": 73,
+     "cap_after_round8": false,
+     "plan_ceiling": 80,
+     "ceiling_reason": "Taste is the least plannable dimension. Even calibrated, a small panel's preference measures only those readers, and no plan can show a surface is enjoyed before anyone has seen it. The best a plan can do is a named reference bar and the order in which taste is settled.",
+     "reason": "The panel's minimum sample improves calibration, so +1.",
+     "moves": [
+      "R17",
+      "R21",
+      "R11",
+      "R12"
+     ]
+    },
+    {
+     "n": 7,
+     "name": "Measured advantage over a vanilla session",
+     "weight": 10,
+     "score_before": 10,
+     "score_after": 68,
+     "score_after_round6": 76,
+     "score_after_round7": 80,
+     "score_after_round8": 81,
+     "cap_after_round8": false,
+     "plan_ceiling": 84,
+     "ceiling_reason": "This is the most purely outcome-bound dimension. The plan now has the truest vanilla arm the owner allows, a win rule fixed in advance, human calibration and a loss loop. What it lacks is a rule against a cherry-picked win across repositories, and a control for compute (a plain arm given Polaris's budget).",
+     "reason": "The owner granted the full-reach arm on 2026-11-21 ('Everything except detector matches'), removing the risk that the strongest claim would be vetoed later, so +1.",
+     "moves": [
+      "R1",
+      "R21",
+      "R18",
+      "R16"
+     ]
+    },
+    {
+     "n": 8,
+     "name": "Economy and lifecycle",
+     "weight": 10,
+     "score_before": 30,
+     "score_after": 76,
+     "score_after_round6": 78,
+     "score_after_round7": 80,
+     "score_after_round8": 81,
+     "cap_after_round8": false,
+     "plan_ceiling": 88,
+     "ceiling_reason": "These mechanisms are concrete and checkable before measurement: budgets, reuse, refresh, staleness, print and share. What a plan still lacks is stated targets (cost per dossier, refresh cost relative to a full run) that measured runs would be held to.",
+     "reason": "Panel and operator minutes now count on R3's cost line, so +1.",
+     "moves": [
+      "R3",
+      "R4",
+      "R5",
+      "R14",
+      "R16",
+      "R20",
+      "R22"
+     ]
+    }
+   ],
+   "weighted_total_before": 55.95,
+   "weighted_total_after": 73.55,
+   "weighted_total_after_round6": 77.8,
+   "weighted_total_after_round7": 80.4,
+   "weighted_total_after_round8": 81.05,
+   "total_arithmetic": "after_round8 = 0.15*(85+83+80+83) + 0.10*(79+73+81+81) = 49.65 + 31.4 = 81.05; rounded 81",
+   "weighted_total_after_round8_rounded": 81,
+   "weighted_plan_ceiling": {
+    "value": 85.9,
+    "arithmetic": "0.15*(90+86+86+86) + 0.10*(85+80+84+88) = 52.2 + 33.7 = 85.9, with every dimension at its plan ceiling at once",
+    "judgement": "85 sits just inside the plan ceiling. The changes listed below reach truth's ceiling but leave the other seven dimensions 1 to 4 points under theirs, at about 84.1. I could find no justified planning change that closes that remaining gap. The last point or two can only come from R22's measured rescore after the first corpus pass."
+   },
+   "conditional": {
+    "plan_as_written": 81,
+    "if_syzygy_k54o_3_does_not_land": 74,
+    "k54o_3_basis": "This is unchanged from review-score-3: without the record-free `syzygy polaris <url>`, R16 never runs, and with it go the corpus passes, R1 slices 4-6, R18, R21 and R22.",
+    "fj2q": "Closed on the owner's instruction 2026-11-21 (bd close_reason); no longer a conditional.",
+    "if_no_owner_decision_granted": "Not applicable: the one owner-class question (the full-reach arm) was answered."
+   },
+   "planning_changes_still_worth_points": [
+    {
+     "id": "T1",
+     "dimension": 1,
+     "dim_points": 2,
+     "total_points": 0.3,
+     "change": "Check R1's forty sampled claims per arm with R2's deterministic checker (resolves, quotation verified, path missing) before any model judges them. The claim-error rate then rests on Observed checks, and a model is used only for whether the claim matches its cited span."
+    },
+    {
+     "id": "T2",
+     "dimension": 1,
+     "dim_points": 2,
+     "total_points": 0.3,
+     "change": "Measure the fidelity reviewer's recall. On each corpus pass, seed a fixed number of known-false blocks (wrong line range, inverted claim, unsupported number) into one review packet, and record how many the reviewer catches. It is rule 6 applied to the model review. A reviewer below a stated recall makes the pass's readiness verdicts 'uncalibrated'."
+    },
+    {
+     "id": "T3",
+     "dimension": 1,
+     "dim_points": 1,
+     "total_points": 0.15,
+     "change": "State that a fast draft (R5 slice 4) never enters R16's corpus, R1's arms or R21's panel. State also that carried verdicts are counted, and the third-round full review's disagreements with carried verdicts are reported, as a drift figure."
+    },
+    {
+     "id": "V1",
+     "dimension": 3,
+     "dim_points": 3,
+     "total_points": 0.45,
+     "change": "A figure-ablation measure in R1. Tag the frozen questions a figure is meant to answer. Fresh readers answer them from the dossier with figures and from the same dossier with figures replaced by their text alternatives. The difference, stored per figure kind, is the dimension's own claim made measurable: figures that carry explanation. A figure kind with no measured gain is listed for R22's keep, re-scope or close."
+    },
+    {
+     "id": "V2",
+     "dimension": 3,
+     "dim_points": 1,
+     "total_points": 0.15,
+     "change": "Add per-shape figure expectations from Q12's figure policy to R16's scorecard (required views present, omitted with a reason, or missing). Figure coverage then becomes a generality row as well as a lint."
+    },
+    {
+     "id": "G1",
+     "dimension": 4,
+     "dim_points": 1,
+     "total_points": 0.15,
+     "change": "Count unknown shapes. For each corpus repository, record which traits matched no shape pack (Q9) and which units the scale ladder (Q10) left derived-only. Generality failures then show as named gaps, not as quietly thin dossiers."
+    },
+    {
+     "id": "G2",
+     "dimension": 4,
+     "dim_points": 1,
+     "total_points": 0.15,
+     "change": "Add two corpus strata the list still lacks: a repository whose documentation is not in English, and one with no README or docs root. These are where the thesis and topic templates are most likely to break."
+    },
+    {
+     "id": "D1",
+     "dimension": 5,
+     "dim_points": 2,
+     "total_points": 0.2,
+     "change": "Widen the depth key beyond maintainer prose. The key session also draws non-obvious items from R9's derived tables (what the tests pin down, deprecations, changelog reasons) and R10's history (hidden coupling, oldest unchanged core). Depth is then graded against what the repository shows as well as what its maintainers wrote."
+    },
+    {
+     "id": "D2",
+     "dimension": 5,
+     "dim_points": 1,
+     "total_points": 0.1,
+     "change": "Make depth a scorecard row run over run: per Pole, cited choices, trade-offs and limits, worth-knowing marks, and R19's top-ten coverage. Write a minimum into R16's pass rule."
+    },
+    {
+     "id": "B1",
+     "dimension": 6,
+     "dim_points": 2,
+     "total_points": 0.2,
+     "change": "Name the bar. Ask the owner, at the specimen sitting, to name two or three existing documentation sites as the reference standard. Use their first screens as R17's reference arm, and score the dossier relative to them rather than on an absolute five-point scale."
+    },
+    {
+     "id": "B2",
+     "dimension": 6,
+     "dim_points": 1,
+     "total_points": 0.1,
+     "change": "Order taste before composition: hold R11 slice 5 (the specimen sitting) before R12 slices 1-3, so the first screen is composed against the chosen tokens and not re-done."
+    },
+    {
+     "id": "C1",
+     "dimension": 2,
+     "dim_points": 1,
+     "total_points": 0.15,
+     "change": "Grade R1's reader tasks ('where would I change X') deterministically. The answer key is the set of paths Q2's structure record and R19's units name for that task, so task success is checked, not judged."
+    },
+    {
+     "id": "C2",
+     "dimension": 2,
+     "dim_points": 1,
+     "total_points": 0.15,
+     "change": "Add an accessibility pass to P6's probe: headings in order, every figure's text alternative present and reached, focus visible, and contrast in both themes. Record it per page. Comprehension for screen-reader and keyboard readers is then measured, not assumed."
+    },
+    {
+     "id": "W1",
+     "dimension": 7,
+     "dim_points": 1,
+     "total_points": 0.1,
+     "change": "Pre-register the aggregation. Fix the number of corpus repositories and a rule written before the first pass (for example, a win on at least k of n shapes, and no claim from a single repository), so an advantage cannot be cherry-picked."
+    },
+    {
+     "id": "W2",
+     "dimension": 7,
+     "dim_points": 1,
+     "total_points": 0.1,
+     "change": "Add a budget-matched plain arm: the full-reach plain session given the same token and wall-time budget Polaris used, with free follow-ups up to it. This separates the mechanism's value from the extra compute it spends."
+    },
+    {
+     "id": "E1",
+     "dimension": 8,
+     "dim_points": 2,
+     "total_points": 0.2,
+     "change": "State cost targets in R16's pass rule: a ceiling on median tokens and wall time per dossier and on median review rounds, and a refresh-cost target for R14 (for example, at most a third of a full run when under ten percent of cited spans changed). Measured passes are then held to numbers."
+    },
+    {
+     "id": "E2",
+     "dimension": 8,
+     "dim_points": 1,
+     "total_points": 0.1,
+     "change": "Record operator effort per dossier (prompts answered, minutes at the terminal) in R3's ledger as its own figure, separate from panel minutes. The owner's question was about effort as well as tokens."
+    }
+   ],
+   "planning_changes_total": {
+    "sum_of_estimates": 3.05,
+    "per_dimension_after_all_applied": "truth 90, comprehension 85, visual 84, generality 85, depth 82, beauty 76, vanilla 83, economy 84",
+    "after_all_applied": 84.1,
+    "arithmetic": "0.15*(90+85+84+85) + 0.10*(82+76+83+84) = 51.6 + 32.5 = 84.1",
+    "note": "The list is exhausted. With all of it applied the plan reaches about 84 and falls short of 85. Anything further would be credit for an outcome that has not been measured yet."
+   },
+   "faults": [
+    {
+     "moves": [
+      "R1"
+     ],
+     "fault": "The owner's answer drops the active-content screen for the full-reach arm's input. Neither the arm's output nor the input text may then be rendered into the neutral shell the graders see, except as text. R1 should state that the shell writes every arm's text under the policy's renderRule ('never rendered as HTML ... never mint a link, element, attribute, script or handler') and the no-script page rule.",
+     "basis": "[Observed] R1 prereq (owner decision drops the active-content screen for this arm); POLARIS-DOSSIER-DECLARED-SOURCE-POLICY-v1.json:557 renderRule."
+    },
+    {
+     "moves": [
+      "R1"
+     ],
+     "fault": "This is a wording point. The owner decision is quoted in the move, but VIS-4 records an owner decision 'as the owner's words, dated, with the commit that applies it'. R1 should name where that record lives (a decisions/ file or the commit) so the arm's authority can be checked.",
+     "basis": "[Observed] vision.md:203-205; R1 prereq."
+    }
+   ],
+   "summary_of_change": "81 as written, up from 80. fj2q is closed, and the full-reach arm is granted by the owner. Seventeen planning-side changes worth about +3.05 are listed; the largest are a figure-ablation measure (V1), seeding the reviewer with known-false claims to measure its recall (T2), and checking sampled claims deterministically (T1). Applied, they bring the plan to about 84.1. The plan ceiling is 85.9, but the last points need the first measured pass."
+  },
+  {
+   "reviewer": "Independent subagent, read-only. This is the fifth scoring of ranked_moves.json (R1-R28), using the same rubric, cap rule and strictness as review-score-1 to -4. I read R1, R2, R16, R21 and R23-R28 in full. audit/measure-now.json did not exist when I wrote this (an ls of pursuit-r5/audit shows only the earlier audit files), so nothing in this file depends on R27 results.",
+   "scored_subject": "the end product if every planned move (P1-P15, Q1-Q14, R1-R28) is built as written",
+   "dimensions": [
+    {
+     "n": 1,
+     "name": "Truth",
+     "weight": 15,
+     "score_before": 80,
+     "score_after": 83,
+     "score_after_round6": 84,
+     "score_after_round7": 85,
+     "score_after_round8": 85,
+     "score_after_round9": 88,
+     "cap_after_round9": false,
+     "plan_ceiling_round8": 90,
+     "plan_ceiling_round9": 91,
+     "ceiling_reason": "R24 adds a deterministic class of truth that no model claim can give: what the project's own documents get wrong, with both sides Observed. This raises what a plan can credibly promise by one point. The rest still belongs to measured error and recall rates.",
+     "reason": "Up 3 points. T1 (deterministic claim sampling), T2 (seeded reviewer recall, R16 S5) and T3 are applied. The second reviewer's fixes also count: R2 now says it measures checkability, not truth, and counts uncheckable claims; R1's sample size is set from calibration error rates, with unresolvable results published as such; R6's edits always go to fidelity review. One point is held back for a new fault: R24's 'agrees' class overclaims for identifiers and paths (see faults).",
+     "moves": [
+      "R1",
+      "R2",
+      "R6",
+      "R16",
+      "R24",
+      "R4",
+      "R20"
+     ]
+    },
+    {
+     "n": 2,
+     "name": "Comprehension",
+     "weight": 15,
+     "score_before": 68,
+     "score_after": 77,
+     "score_after_round6": 79,
+     "score_after_round7": 82,
+     "score_after_round8": 83,
+     "score_after_round9": 86,
+     "cap_after_round9": false,
+     "plan_ceiling_round8": 86,
+     "plan_ceiling_round9": 88,
+     "ceiling_reason": "R26 gives a structured route through the dossier with checkpoint questions and a held-out probe of whether a reader who follows the path understands better than one who reads cold. R25's one-page edition gives a single orienting artifact. Both are things the best human explainers have that the plan lacked, and both can be measured. The ceiling rises by 2.",
+     "reason": "Up 3 points. C1 (reader tasks graded against a key of paths) and C2 (accessibility pass) add +2. R26 and R25(3) add +2. A narrower human panel takes 1 back: R21 is now the owner alone by default, which is right for multi-user governance, but comprehension is meant for 'a newcomer', and one reader who knows the project domain is a thin and possibly expert-biased calibration.",
+     "moves": [
+      "R1",
+      "R21",
+      "R26",
+      "R25",
+      "R17",
+      "R18",
+      "R12"
+     ]
+    },
+    {
+     "n": 3,
+     "name": "Visual richness",
+     "weight": 15,
+     "score_before": 75,
+     "score_after": 78,
+     "score_after_round6": 79,
+     "score_after_round7": 80,
+     "score_after_round8": 80,
+     "score_after_round9": 85,
+     "cap_after_round9": false,
+     "plan_ceiling_round8": 86,
+     "plan_ceiling_round9": 88,
+     "ceiling_reason": "The figure-ablation measure (V1) makes 'figures that carry real explanation' measurable at all. R25's sticky figure with scrolling numbered steps is the central move of the best interactive explainers, done without script. Together they raise the ceiling by 2.",
+     "reason": "Up 5 points. V1 (ablation, R1 S7) adds +3, V2 (figure coverage row, R16) adds +1, and R25's sticky-figure sections and the one-page edition's hero layout add +1.",
+     "moves": [
+      "R1",
+      "R11",
+      "R12",
+      "R16",
+      "R25"
+     ]
+    },
+    {
+     "n": 4,
+     "name": "Generality",
+     "weight": 15,
+     "score_before": 68,
+     "score_after": 71,
+     "score_after_round6": 80,
+     "score_after_round7": 83,
+     "score_after_round8": 83,
+     "score_after_round9": 85,
+     "cap_after_round9": false,
+     "plan_ceiling_round8": 86,
+     "plan_ceiling_round9": 86,
+     "ceiling_reason": "Unchanged. R23 and R24 add depth, not breadth. Their closed, per-language call-name lists and constant-naming patterns are new generality risks, and the plan's Unknown rendering absorbs them only partly (see planning changes).",
+     "reason": "Up 2 points. G1 (unknown-shape and derived-only counts) and G2 (a repository with non-English documentation and one with no documentation root) are applied, and the private stratum now includes real owner-owned repositories as well as the synthetic fixture.",
+     "moves": [
+      "R16",
+      "R22",
+      "R1",
+      "R23"
+     ]
+    },
+    {
+     "n": 5,
+     "name": "Depth of insight",
+     "weight": 10,
+     "score_before": 45,
+     "score_after": 70,
+     "score_after_round6": 76,
+     "score_after_round7": 77,
+     "score_after_round8": 79,
+     "score_after_round9": 85,
+     "cap_after_round9": false,
+     "plan_ceiling_round8": 85,
+     "plan_ceiling_round9": 88,
+     "ceiling_reason": "R23's operating envelope is the content that separates expert explainers from tours: invariants, failure modes, cliffs and 'what will bite you', each grounded in harvested lines. R24's disagreements between documentation and code are non-obvious facts by construction. R27(b) gives a depth-headroom number before any measurement of the ceiling arm. The ceiling rises by 3.",
+     "reason": "Up 6 points. D1 (a key drawn from derived tables and history) and D2 (a depth row per Pole, with a minimum) add +3. R23 adds +2 and R24 adds +1. R28 is conditional and earns nothing until R27 decides it.",
+     "moves": [
+      "R23",
+      "R24",
+      "R18",
+      "R19",
+      "R8",
+      "R9",
+      "R10",
+      "R27",
+      "R28"
+     ]
+    },
+    {
+     "n": 6,
+     "name": "Beauty",
+     "weight": 10,
+     "score_before": 38,
+     "score_after": 58,
+     "score_after_round6": 65,
+     "score_after_round7": 72,
+     "score_after_round8": 73,
+     "score_after_round9": 78,
+     "cap_after_round9": false,
+     "plan_ceiling_round8": 80,
+     "plan_ceiling_round9": 83,
+     "ceiling_reason": "Sidenotes, sticky figures and a designed one-page edition are concrete, recognisable craft forms. Each is A/B-tested against the stacked layout in R17 and judged against a named reference bar (B1). What a plan can promise rises by 3. Taste is still measured only by the owner, so the ceiling stays the lowest of the eight.",
+     "reason": "Up 5 points. B1 (an owner-named reference bar) and B2 (taste decided before composition) add +3, and R25 adds +2. Having the owner alone on the panel costs beauty nothing: the owner is the taste authority this dimension answers to.",
+     "moves": [
+      "R11",
+      "R12",
+      "R17",
+      "R21",
+      "R25"
+     ]
+    },
+    {
+     "n": 7,
+     "name": "Measured advantage over a vanilla session",
+     "weight": 10,
+     "score_before": 10,
+     "score_after": 68,
+     "score_after_round6": 76,
+     "score_after_round7": 80,
+     "score_after_round8": 81,
+     "score_after_round9": 84,
+     "cap_after_round9": false,
+     "plan_ceiling_round8": 84,
+     "plan_ceiling_round9": 86,
+     "ceiling_reason": "R24 is a capability a plain session structurally lacks: an exhaustive, deterministic check of the documents against the code. Its planted-drift fixtures are scored in R1, so the advantage has a test designed to show it. The budget-matched arm (W2) removes the compute confound. The ceiling rises by 2.",
+     "reason": "Up 3 points. W1 (aggregation fixed in advance) and W2 (a budget-matched arm) add +2, and R24's planted-drift row adds +1. The sample size set from calibration, with unresolved results published, is a fairness gain but adds no separate point.",
+     "moves": [
+      "R1",
+      "R2",
+      "R24",
+      "R21",
+      "R18",
+      "R16",
+      "R26"
+     ]
+    },
+    {
+     "n": 8,
+     "name": "Economy and lifecycle",
+     "weight": 10,
+     "score_before": 30,
+     "score_after": 76,
+     "score_after_round6": 78,
+     "score_after_round7": 80,
+     "score_after_round8": 81,
+     "score_after_round9": 84,
+     "cap_after_round9": false,
+     "plan_ceiling_round8": 88,
+     "plan_ceiling_round9": 89,
+     "ceiling_reason": "R27(c), (d) and (f) replay the stored runs, so the projected savings of R4 and R5 and the stage times become Observed before any new run. That raises what can be claimed in advance by about one point.",
+     "reason": "Net +3. E1 (cost targets in the pass rule) and E2 (operator effort recorded separately) add +3, and R27 adds +1. One point comes back off: 103 slices is a large plan to keep current, and R28 roughly doubles author cost when it runs. Its gate ('substantially different material') has no number yet.",
+     "moves": [
+      "R3",
+      "R4",
+      "R5",
+      "R14",
+      "R16",
+      "R20",
+      "R22",
+      "R27",
+      "R28"
+     ]
+    }
+   ],
+   "weighted_total_before": 55.95,
+   "weighted_total_after": 73.55,
+   "weighted_total_after_round6": 77.8,
+   "weighted_total_after_round7": 80.4,
+   "weighted_total_after_round8": 81.05,
+   "weighted_total_after_round9": 84.7,
+   "total_arithmetic": "after_round9 = 0.15*(88+86+85+85) + 0.10*(85+78+84+84) = 51.6 + 33.1 = 84.7",
+   "weighted_total_after_round9_rounded": 85,
+   "rounding_note": "84.7 rounds to 85 but is still below 85. The planning changes below, if all applied, would bring the exact figure to about 85.5.",
+   "weighted_plan_ceiling": {
+    "round8": 85.9,
+    "round9": 87.55,
+    "arithmetic": "0.15*(91+88+88+86) + 0.10*(88+83+86+89) = 52.95 + 34.6 = 87.55",
+    "answer_to_question": "Yes. R23-R26 raise what a plan can credibly promise: depth by 3 (R23, R24), beauty by 3 (R25), visual by 2 (R25 together with V1), vanilla advantage by 2 (R24) and comprehension by 2 (R26). Generality does not move. Each new form comes with its own measure (R1 depth key, R17 A/B, planted drift, the path-versus-cold probe), so these are not unmeasured promises. That is why the ceilings move."
+   },
+   "r27_value_if_first_cut_holds": {
+    "first_cut": "Six runs at one Redis commit cite 57 distinct paths in total. Only 14 are common to all six, and the mean pairwise overlap is 0.53.",
+    "what_it_would_show": "[Inferred from the first cut, not yet measured] Each single run covers about half of what the six runs found together. A given dossier's depth and coverage depend heavily on the draw.",
+    "effect_on_this_plan_score": [
+     "Depth +1: R28 stops being conditional, and R27(b) is a measured headroom figure.",
+     "Economy -0.5: R28's extra author session is then certain to run, recorded by R3.",
+     "Truth 0 to -1: if (e) shows the reviewer's verdicts disagree on packets with equal digests, until T2's recall measure shows it does not matter.",
+     "Economy 0 to +1: depends on the replays. +1 if (c) and (d) show real recall and real round savings; -1 if they show R4 or R5 would save little."
+    ],
+    "net": "About +0.1 to +0.4 on the weighted total. Results that match the first cut would mostly confirm the plan rather than raise it.",
+    "larger_value": "R27 is the first Observed evidence in the plan. With real numbers, depth and economy can each go about 2 points above their plan ceilings, because a measurement is not limited by what a plan can promise.",
+    "caveats": [
+     "Six runs of one commit of one repository say nothing about generality.",
+     "R27(b)'s pooled pseudo-ceiling is the union of what Polaris itself found. It shows headroom within the mechanism, not depth of insight against an outside standard, so it must not stand in for R1's maintainer-ceiling arm.",
+     "Cited-path overlap is a proxy. Two runs can cite different paths for the same insight, so the 0.53 may overstate how much the content differs. That is why R27(a)'s claim-level extension matters."
+    ]
+   },
+   "conditional": {
+    "plan_as_written": 84.7,
+    "if_syzygy_k54o_3_does_not_land": 77,
+    "k54o_3_basis": "Without the record-free `syzygy polaris <url>`, R16 never runs, and with it go the corpus passes, R1 S4-S8, R18, R21, R22, T2 and every scorecard row. Compared with round 8, R27 (stored runs only), R24, R23 S1 and R25 still build, so this falls less than before (77, not 74).",
+    "fj2q": "Closed 2026-11-21 on the owner's instruction, kept here as history."
+   },
+   "planning_changes_still_worth_points": [
+    {
+     "id": "U1",
+     "dimension": 1,
+     "dim_points": 1,
+     "total_points": 0.15,
+     "change": "Split R24's 'agrees' class in two. 'Resolves' means only that the named identifier or path exists. 'Agrees' is kept for configuration keys whose stated default matches the literal, and for flags whose documented form matches the definition. Today an identifier that merely exists is shown as agreement, which reads as a semantic check that was never made."
+    },
+    {
+     "id": "U2",
+     "dimension": 2,
+     "dim_points": 1,
+     "total_points": 0.15,
+     "change": "R26's held-out probe uses questions the author wrote, so a path reader beats a cold reader partly because the questions follow the path. Have the blind key session from R1 write the checkpoint questions, or state that path-versus-cold cannot carry a win and is reported only as a path-quality figure."
+    },
+    {
+     "id": "U3",
+     "dimension": 4,
+     "dim_points": 1,
+     "total_points": 0.15,
+     "change": "Make R23's per-language lists a scorecard input. For each corpus repository, record which of its languages have no assertion, error-call or constant-pattern entry. Show the envelope topic for those languages as Unknown, with the reason 'no harvest rule for <language>', so G1 counts it as a named gap."
+    },
+    {
+     "id": "U4",
+     "dimension": 2,
+     "dim_points": 0.5,
+     "total_points": 0.075,
+     "change": "Owner-only panel: record the owner's prior familiarity with each sampled repository (none, used it, read its code). Prefer repositories the owner has not read, and report agreement figures by familiarity, so the one reader stands as close to 'a newcomer' as possible."
+    },
+    {
+     "id": "U5",
+     "dimension": 8,
+     "dim_points": 1,
+     "total_points": 0.1,
+     "change": "Before R27's results arrive, write the numbers they will be judged against. R28 is built if claim-level overlap is below a stated figure and the pooled union exceeds a single run by a stated share. R4 and R5 ship as defaults only above a stated recall or rounds-saved figure. Today R28's gate is 'substantially different', which lets the decision be fitted to the result."
+    },
+    {
+     "id": "U6",
+     "dimension": 6,
+     "dim_points": 0.5,
+     "total_points": 0.05,
+     "change": "Run R25's forms through C2's accessibility probe. A sidenote toggle needs no script (a details element or a checkbox label) and must be keyboard-reachable. The sticky figure must not hide the focused step. Honour reduced-motion. The one-page edition needs a reading order that matches the visual order."
+    },
+    {
+     "id": "U7",
+     "dimension": 1,
+     "dim_points": 0.5,
+     "total_points": 0.075,
+     "change": "Add a basis to R23's 'three things that will bite you'. Each judgement must name at least two harvested rows of different kinds (for example, a constant and a failure string). It should be checked as a labelled inference under the doctrine's rule that an inference never establishes a status. Today 'premises are harvested rows' sets no minimum."
+    }
+   ],
+   "planning_changes_total": {
+    "sum_of_estimates": 0.75,
+    "after_all_applied": 85.45,
+    "note": "That list is exhausted. With all of it applied the plan is about 85.5 exact, about 2 points under the revised ceiling of 87.55. The remaining gap is outcome-bound: measured error, recall, comprehension and cost figures."
+   },
+   "faults": [
+    {
+     "moves": [
+      "R24"
+     ],
+     "fault": "The 'agrees' class counts an identifier or path that merely resolves as agreement (see U1). This is a truth-labelling overclaim on a page whose whole purpose is honest reconciliation.",
+     "basis": "[Observed] R24 what: 'S1: paths and inline-code identifiers named in docs, resolved against the tree: the document-only and agrees classes.'"
+    },
+    {
+     "moves": [
+      "R25",
+      "R28"
+     ],
+     "fault": "Wording: stale cross-reference labels. R25 names 'F1' for the bite-you judgements, which are R23. R28 names 'F5(a) and (b)', which are R27(a) and (b). A slice packet that cites F1 or F5 points at nothing in R1-R28.",
+     "basis": "[Observed] R25 prereq 'F1 for the 'bite you' slot'; R28 prereq 'F5 (a) and (b)'."
+    },
+    {
+     "moves": [
+      "R28"
+     ],
+     "fault": "The gate 'substantially different material' has no number, and the deciding results (R27) are arriving today (see U5).",
+     "basis": "[Observed] R28 what and prereq."
+    }
+   ],
+   "non_fault_notes": [
+    "R21 owner-alone: correct under VIS-4, since inviting others may be multi-user use, which is an owner class. Its cost to comprehension calibration is scored above, not faulted.",
+    "R16's owner-owned private stratum: reading and sending owned repositories is agent-decided under VIS-4. Code-structure private-blob withholding (source policy :89) still applies.",
+    "R23's configuration harvest: TOML-like executable configuration stays withheld and is shown as Unknown. This is consistent with SEC-5 and the active-content rule. Nothing is weakened."
+   ],
+   "summary_of_change": "84.7 exact (85 rounded), up from 81.05. Seventeen changes and the second reviewer's fixes add about +3; R23-R26 add about +1.5 net. Plan ceilings rise to 87.55 because R23-R26 bring their own measures. Seven remaining changes are worth about +0.75 (85.45). Results from R27 that match the first cut are worth +0.1 to +0.4 to the plan, but they are the first Observed numbers. Three faults: R24's 'agrees' overclaims, R25 and R28 cite stale F1/F5 labels, and R28's gate has no number."
+  },
+  {
+   "reviewer": "Independent subagent, read-only. This is the sixth scoring of ranked_moves.json (R1-R28), using the same rubric, cap rule and strictness as review-score-1 to -5. I re-read R1, R23, R24, R27 and R28 in full, and read audit/measure-now.json, which exists now.",
+   "scored_subject": "the end product if every planned move (P1-P15, Q1-Q14, R1-R28) is built as written",
+   "dimensions": [
+    {
+     "n": 1,
+     "name": "Truth",
+     "weight": 15,
+     "score_before": 80,
+     "score_after": 83,
+     "score_after_round6": 84,
+     "score_after_round7": 85,
+     "score_after_round8": 85,
+     "score_after_round9": 88,
+     "score_after_round10": 90,
+     "cap_after_round10": false,
+     "plan_ceiling": 91,
+     "reason": "Up 2 points:\n- U1: R24 now reports 'resolves' separately from 'agrees'.\n- R24 measures precision, and any row class below the stated precision bound is labelled Inferred.\n- U7: each bite-you judgement needs two premises of different kinds.\n- R23 measures its harvest precision.\n- R10 refuses to quote message spans that carry addresses or handles.\nThe truth fault from round 9 is closed. One point remains below the ceiling: the measured reviewer recall and claim-error rates.",
+     "moves": [
+      "R1",
+      "R2",
+      "R10",
+      "R16",
+      "R23",
+      "R24"
+     ]
+    },
+    {
+     "n": 2,
+     "name": "Comprehension",
+     "weight": 15,
+     "score_before": 68,
+     "score_after": 77,
+     "score_after_round6": 79,
+     "score_after_round7": 82,
+     "score_after_round8": 83,
+     "score_after_round9": 86,
+     "score_after_round10": 87,
+     "cap_after_round10": false,
+     "plan_ceiling": 88,
+     "reason": "Up 1 point:\n- U2: the blind key session writes R26's checkpoint questions, so path-versus-cold is a fair probe.\n- U4: R21 records the owner's familiarity and reports agreement with and without the samples the owner knows.\nThe owner as sole reader still costs a little.",
+     "moves": [
+      "R1",
+      "R21",
+      "R26",
+      "R25",
+      "R17"
+     ]
+    },
+    {
+     "n": 3,
+     "name": "Visual richness",
+     "weight": 15,
+     "score_before": 75,
+     "score_after": 78,
+     "score_after_round6": 79,
+     "score_after_round7": 80,
+     "score_after_round8": 80,
+     "score_after_round9": 85,
+     "score_after_round10": 85,
+     "cap_after_round10": false,
+     "plan_ceiling": 88,
+     "reason": "No change. The remaining 3 points are outcomes: the figure-ablation gain per kind, and R17's A/B on the sticky-figure forms.",
+     "moves": [
+      "R1",
+      "R11",
+      "R12",
+      "R16",
+      "R25"
+     ]
+    },
+    {
+     "n": 4,
+     "name": "Generality",
+     "weight": 15,
+     "score_before": 68,
+     "score_after": 71,
+     "score_after_round6": 80,
+     "score_after_round7": 83,
+     "score_after_round8": 83,
+     "score_after_round9": 85,
+     "score_after_round10": 86,
+     "cap_after_round10": false,
+     "plan_ceiling": 86,
+     "reason": "Up 1 point. U3: R23 shows a named Unknown for each language and harvest kind it has no rule for. Generality is now at its plan ceiling, and what remains is a passed corpus run.",
+     "moves": [
+      "R16",
+      "R22",
+      "R23",
+      "R1"
+     ]
+    },
+    {
+     "n": 5,
+     "name": "Depth of insight",
+     "weight": 10,
+     "score_before": 45,
+     "score_after": 70,
+     "score_after_round6": 76,
+     "score_after_round7": 77,
+     "score_after_round8": 79,
+     "score_after_round9": 85,
+     "score_after_round10": 86,
+     "cap_after_round10": false,
+     "plan_ceiling": 88,
+     "reason": "Up 1 point:\n- R23 measures harvest precision.\n- R28's gate is now a number.\n- R1's depth list is held out from every authoring packet, so depth scores cannot be taught to.",
+     "moves": [
+      "R23",
+      "R24",
+      "R18",
+      "R19",
+      "R27",
+      "R28",
+      "R1"
+     ]
+    },
+    {
+     "n": 6,
+     "name": "Beauty",
+     "weight": 10,
+     "score_before": 38,
+     "score_after": 58,
+     "score_after_round6": 65,
+     "score_after_round7": 72,
+     "score_after_round8": 73,
+     "score_after_round9": 78,
+     "score_after_round10": 79,
+     "cap_after_round10": false,
+     "plan_ceiling": 83,
+     "reason": "Up 1 point:\n- U6: R25's forms go through the accessibility pass.\n- R11's specimen sitting is now a hard precondition of R12's composition, not only an ordering note.",
+     "moves": [
+      "R11",
+      "R12",
+      "R17",
+      "R21",
+      "R25"
+     ]
+    },
+    {
+     "n": 7,
+     "name": "Measured advantage over a vanilla session",
+     "weight": 10,
+     "score_before": 10,
+     "score_after": 68,
+     "score_after_round6": 76,
+     "score_after_round7": 80,
+     "score_after_round8": 81,
+     "score_after_round9": 84,
+     "score_after_round10": 85,
+     "cap_after_round10": false,
+     "plan_ceiling": 86,
+     "reason": "Up 1 point. R1's hold-out closes a fairness hole I had missed. Before, the author's brief could read the same graded questions the plain arm meets cold. Now only topic questions are public, and check asserts that the held-out text is in no authoring, inventory, editor or scout packet.",
+     "moves": [
+      "R1",
+      "R2",
+      "R24",
+      "R21",
+      "R16",
+      "R26"
+     ]
+    },
+    {
+     "n": 8,
+     "name": "Economy and lifecycle",
+     "weight": 10,
+     "score_before": 30,
+     "score_after": 76,
+     "score_after_round6": 78,
+     "score_after_round7": 80,
+     "score_after_round8": 81,
+     "score_after_round9": 84,
+     "score_after_round10": 86,
+     "cap_after_round10": false,
+     "plan_ceiling": 89,
+     "reason": "Up 2 points:\n- U5: R27's decision numbers are fixed before the results are read. [Inferred, from file times: ranked_moves.json was written at 21:51:34 and measure-now.json at 21:51:37 the same day.]\n- R16's cost targets are now numbers: median wall time and tokens at most 0.7 of the first recorded baseline, and at most three review rounds.\n- A benchmark pass has its own cost line and budget.",
+     "moves": [
+      "R3",
+      "R4",
+      "R5",
+      "R14",
+      "R16",
+      "R20",
+      "R22",
+      "R27",
+      "R28",
+      "R1"
+     ]
+    }
+   ],
+   "weighted_total_before": 55.95,
+   "weighted_total_after": 73.55,
+   "weighted_total_after_round6": 77.8,
+   "weighted_total_after_round7": 80.4,
+   "weighted_total_after_round8": 81.05,
+   "weighted_total_after_round9": 84.7,
+   "weighted_total_after_round10": 85.8,
+   "total_arithmetic": "after_round10 = 0.15*(90+87+85+86) + 0.10*(86+79+85+86) = 52.2 + 33.6 = 85.8",
+   "at_or_above_85_0": true,
+   "weighted_plan_ceiling": 87.55,
+   "gap_to_ceiling": "1.75 points. Planning changes cannot close it. It needs measured outcomes: reviewer recall, claim-error rates, ablation gains, A/B results, corpus pass results and cost against the 0.7 baseline target.",
+   "conditional": {
+    "plan_as_written": 85.8,
+    "if_syzygy_k54o_3_does_not_land": 78,
+    "k54o_3_basis": "Without k54o.3, R16 never runs, and with it go the corpus passes, R1 S4-S8, R18, R21, R22 and T2. What does not need a run still builds: R24, R23 S1-S2, R25, R26 S1 and R27. That is why this is a little higher than in round 9."
+   },
+   "measure_now_observed": {
+    "status": "This is a partial record. It holds figures (a) author variance and (b) pooled ceiling, each with file digests and stated predicates. Figures (c) R4 replay, (d) R5 replay, (e) reviewer consistency and (f) stage times are not in it yet, so R4's and R5's default decisions are still open.",
+    "numbers": [
+     "[Observed] Six runs at one commit (498ecd0d).",
+     "[Observed] Cited paths: 39 in all, 14 in every run, mean pairwise Jaccard 0.613. This differs from the first cut (57 / 14 / 0.53): the counting predicate changed.",
+     "[Observed] Claim match between runs: 0.787 mean share matched under the loose predicate, 0.317 under the strict one.",
+     "[Observed] Pooled supported claims: 545 clusters. Each run's share is 0.136 to 0.508, and 396 clusters appear in one run only.",
+     "[Observed] Inventory entries: 185 clusters. Each run's share is 0.249 to 0.486.",
+     "[Observed] Poles: three of six runs have none. Agreement on Pole label words is 0.29 and on introduction words 0.26."
+    ],
+    "decision_it_triggers": "[Observed] R27's pre-set rule is met: every run's share of pooled supported claims is under 70 percent, the highest 50.8 percent. So R28 is built by its own rule.",
+    "worth": {
+     "to_the_plan_score": "+0.05 net. Depth +1 (R28 is no longer conditional, and the depth headroom is a measured number). Economy -0.5 (R28's second author session is now certain). Not enough to change the rounded total, so 85.8 stands.",
+     "as_evidence_about_the_product_today": "It counts against the current product, not the plan. A single dossier covers between a seventh and a half of what six runs found together. Thesis and Pole structure barely repeat. Today's one-run dossier is therefore an unstable sample of the repository, which is weak on depth and on 'shown to work'. This is the most valuable result in the plan so far: it is Observed, it is pre-registered, and it says what to fix.",
+     "how_far_it_can_be_trusted": [
+      "Confounded. The six runs used briefs v1 to v7 and draft schemas v2 to v4 (the record's own caveat), so the figures mix author variance with brief and schema change. The Poles that are missing in three runs are probably schema rather than author variance [Inferred]. R28's premise ('the same brief') is not what was measured.",
+      "Depends on the predicate. A strict cluster needs cited-line Jaccard >= 0.5, so the same insight cited through different lines makes two clusters. That inflates the union and lowers every run's share. The 396 single-run clusters are therefore an upper bound on unique material.",
+      "Covers one repository, so it says nothing about generality."
+     ]
+    }
+   },
+   "planning_changes_still_worth_points": [
+    {
+     "id": "X1",
+     "dimension": 5,
+     "total_points": 0.1,
+     "change": "R28 S1 is cheap and can proceed. Gate R28 S2 (the two-author run mode) on a replicate: two fresh runs at the current brief and schema, with the 70 percent rule applied again under both the strict and the loose cluster predicates. The rule then tests author variance, which is its premise, rather than brief drift."
+    },
+    {
+     "id": "X2",
+     "dimension": 1,
+     "total_points": 0.05,
+     "change": "R27(b) should report the union and the per-run shares at two or three cluster thresholds (Jaccard 0.3, 0.5, 0.7, plus the loose span-intersection rule), so the headroom figure's dependence on the predicate is visible."
+    }
+   ],
+   "planning_changes_total": {
+    "after_all_applied": 85.95,
+    "note": "Nothing further on the planning side would earn points. X1 and X2 matter more for the honesty of the R28 decision than for the score."
+   },
+   "faults": [
+    {
+     "moves": [
+      "R24"
+     ],
+     "fault": "Wording: the bulleted class list still names four classes (agrees, disagrees, document only, code only). 'Resolves' appears only in a later sentence. A reader or slice packet that takes the list as the schema will omit it.",
+     "basis": "[Observed] R24 what."
+    },
+    {
+     "moves": [
+      "R1"
+     ],
+     "fault": "Wording: R1 now says 'five arms' but keeps 'Both arms are shown to graders in the same neutral page shell'. That should say every arm.",
+     "basis": "[Observed] R1 what."
+    },
+    {
+     "moves": [
+      "R28",
+      "R27"
+     ],
+     "fault": "R28's gate was met by data that does not isolate its premise (author variance at the same brief); see the measure_now_observed caveats and X1. This is not a planning error, since the rule was fixed before the data. It is a reason not to let the gate alone release the costly slice.",
+     "basis": "[Observed] measure-now.json a_author_variance.caveat; R28 prereq."
+    }
+   ],
+   "summary_of_change": "85.8, at or above 85.0. Up from 84.7 after U1-U7, the three earlier faults, and the second reviewer's fixes. The largest single gain is R1's hold-out, a fairness hole I had missed. measure-now.json (figures a and b only) is Observed and meets R28's pre-set gate, with every run's share at or below 51 percent, but the runs span brief v1 to v7. Its main worth is as evidence that today's single run is unstable. Left: X1 and X2 (about +0.15) and two wording faults. The rest of the gap to 87.55 is measured outcomes only."
   }
  ],
+ "second_opinion": [
+  {
+   "reviewer": "second independent reviewer (unanchored brief)",
+   "date": "2026-11-21",
+   "subject": "The end product if P1-P15, Q1-Q14 and R1-R22 are all built as written",
+   "read": [
+    "pursuit-r5/SHARED-BRIEF-R5.md",
+    "docs/pursuits/2026-11-09-vision-pursuit.md",
+    "docs/pursuits/2026-11-21-vision-pursuit.md",
+    "docs/pursuits/2026-11-21b-vision-pursuit.md at commit 8cefb10df (not in the checked-out tree; read with git show), lines 1-73 and 107-410",
+    "pursuit-r5/ranked_moves.json (prerequisites and slice lists of R1-R22)"
+   ],
+   "anchoring_disclosure": "No review-score*.json file was opened and the 'Where the plan stands' section was skipped. The run-5 report nevertheless states two earlier scores outside that section (74 at lines 55-56 and 254, 78 at line 287), so this score is not fully unanchored. No dossier or polaris command was run, no run-*.agents directory was opened, no other repository's file body was read.",
+   "labels": "Every score is [Inferred]: a judgement of a plan. Nothing here was measured. Statements about the plan's text are [Observed] from the files listed under read.",
+   "dimensions": [
+    {
+     "n": 1,
+     "name": "Truth: every claim's evidence state is honest and checkable",
+     "weight": 15,
+     "score": 88,
+     "capped": false,
+     "reason": "The strongest dimension, and already real: citations and quotations re-derived from Git objects, Observed reserved for what Syzygy verifies. The plan adds derived facts with receipts (Q3), a generated legend and tally, honest close (P1), a free-text claim checker (R2), staleness against a newer commit (R14, R20) and a 40-claim audit per arm (R1). Held under 90 by four things: whether a cited span supports its claim is still judged by a model reviewer and nothing measures that reviewer's false-accept rate; R8 admits comparisons whose second half is 'Inferred general knowledge' with no checkable link; R5 carries verdicts forward and adds an unreviewed fast mode; R6 lets an editor reword claims whose citations stay byte-equal."
+    },
+    {
+     "n": 2,
+     "name": "Comprehension: a newcomer understands the system fast",
+     "weight": 15,
+     "score": 80,
+     "capped": false,
+     "reason": "Thesis and spine (P3), reader routes (P4), page shape and reading depths (Q8), walks (Q5), a running example (Q14), an editor (R6), a composed first screen (R12), and three planned measures (P7 probe, R1 benchmark, R21 people). That is a complete design. It is not higher because the plan's own win rule only asks that comprehension be 'not more than ten percent lower' than a plain session until the third corpus pass, the human sample is at most three readers, and every mechanism depends on author sessions that have produced 0 judgements and one trade-off in six runs."
+    },
+    {
+     "n": 3,
+     "name": "Visual richness: figures that carry real explanation",
+     "weight": 15,
+     "score": 78,
+     "capped": false,
+     "reason": "Typed kinds (Q6), one model with views (Q7), hero figure (Q4), click-to-source and walks without script (Q5), a figure policy (Q12), derived arrows (Q3), one shape vocabulary (R11). Measured by figure lint and the transcription probe (Q11). The gap is in the rubric's own words: nothing measures whether a figure carries explanation. The transcription probe measures whether a figure can be read back, not whether it taught anything; R1 has no arm with the figures removed. Eight hand-built layouts with no script is also the largest single build risk in the plan."
+    },
+    {
+     "n": 4,
+     "name": "Generality: works on any kind of repository, and is shown to",
+     "weight": 15,
+     "score": 76,
+     "capped": false,
+     "reason": "Source reach (Q1), structure record (Q2), shape packs (Q9), scale ladder (Q10), nine synthetic shapes (Q13), and a stratified live corpus of six to nine public repositories with a pass rule (R16). 'Shown to' is therefore planned. It is not higher because six to nine repositories is not 'any', the only private case is synthetic, recognizers are capped at three structured formats and four test frameworks so an unrecognized ecosystem falls back to today's path with no stated degradation rule, Q1 waits on an owner answer, and R16 waits on syzygy-k54o.3. All six real runs today are of one repository."
+    },
+    {
+     "n": 5,
+     "name": "Depth of insight: the why, the trade-offs, the non-obvious",
+     "weight": 10,
+     "score": 72,
+     "capped": false,
+     "reason": "Worth-knowing blocks and labelled comparison (R8), harvests of tests, markers and release notes (R9), history as a class (R10), importance ranking (R19), decision cards (P8). Measured by R1's depth list. Three limits: the depth list is drawn from maintainer documents, so it rewards restating what the docs already say and cannot credit an insight the docs lack; issues and pull-request discussion, which the run brief named as the place the why lives, are read by no move; nothing reads code semantically (call graphs and tree-sitter parsing are retained, not ranked), so 'non-obvious' stays whatever an author session notices."
+    },
+    {
+     "n": 6,
+     "name": "Beauty: a surface a reader enjoys and trusts on sight",
+     "weight": 10,
+     "score": 70,
+     "capped": false,
+     "reason": "A token system with a lint (R11), a composed first screen asserted in pixels (R12), print (R13), reader ratings on unlabelled screenshots (R17) and human first-screen ratings (R21). Tokens and lints buy consistency, which is necessary and is not beauty. No move names a visual reference the surface is held to, the one taste decision (the specimen sitting) is optional, and the main beauty measure is a model reader's taste, which the plan itself labels Inferred."
+    },
+    {
+     "n": 7,
+     "name": "Measured advantage over a vanilla LLM session",
+     "weight": 10,
+     "score": 66,
+     "capped": false,
+     "reason": "The measurement design is good: four arms, a frozen question file, a blind grader, a win rule written first, losses published and turned into repairs (R1, R2, R18, R21, R22). The dimension asks for a measured advantage and the plan holds none; its own lanes expect the plain session to win on speed, reach and follow-up. Further deductions: the accuracy instrument (R2) checks only claims that name a path or quote a span, so it measures citability more than truth and treats the two arms asymmetrically; forty claims per arm on three repositories cannot support 'at most half the error rate'; citations and labels unblind the grader; the plain arm is a fixed prompt plus three fixed follow-ups, which is not how a person uses an agentic session."
+    },
+    {
+     "n": 8,
+     "name": "Economy and lifecycle: cost, time, freshness, follow-up",
+     "weight": 10,
+     "score": 72,
+     "capped": false,
+     "reason": "Recorded cost and stage budgets (R3), coverage settled before review (R4), no repeated review (R5), refresh and a 'since' page (R14), a staleness stamp (R20), index, task routes and ask (R15), print and bundle (R13). Measured by R3. Not higher because no cost or time target is stated anywhere ('within a stated multiple' has no number), the plan adds an editor, scouts, corpus passes and benchmark arms, the claim that R4 and R5 save more than those add is Inferred, whether the agent tool exposes token use is Unknown, and follow-up is an operator command: a reader of the static pages still cannot ask anything."
+    }
+   ],
+   "weighted_total": 76.3,
+   "weighted_total_arithmetic": "0.15*(88+80+78+76) + 0.10*(72+70+66+72) = 48.3 + 28.0 = 76.3",
+   "substantial_improvement": {
+    "answer": "Yes as a durable, checkable artifact; unproven as an explanation; no on speed, cost and follow-up.",
+    "why_yes": [
+     "A plain session's synthesis is unverifiable prose that vanishes with the session. The built product is a persistent multi-page site in which every claim carries a state and a resolvable link, figures say which arrows were derived and which are readings, coverage is stated against a denominator, and a newer commit marks which claims went stale. A plain session offers none of these and cannot be made to by prompting.",
+     "It is the only one of the two that says what it did not read."
+    ],
+    "why_not_yet": [
+     "On whether a newcomer understands faster or learns more of the why, the plan promises a measurement, not a result, and its own win rule accepts up to ten percent worse than a plain session on both for the first two passes.",
+     "A plain agentic session answers in minutes, reads everything, and takes any follow-up. The dossier takes 30 to 81 minutes today, several sessions, and answers follow-ups only through an operator command.",
+     "The honest sentence for the owner: substantially more trustworthy and more lasting, very probably better looking, and not yet shown to be better understood."
+    ]
+   },
+   "can_a_plan_reach_85": {
+    "answer": "No, not legitimately on this rubric. My ceiling for any plan with no measurement in hand is about 82 to 83.",
+    "what_caps_it": [
+     "Two dimensions are worded as outcomes. Dimension 7 is 'measured advantage' and dimension 4 ends 'and is shown to'. A plan can supply the instrument and the pass rule, never the reading. With no data I would not score dimension 7 above about 70 or dimension 4 above about 80 for any plan.",
+     "The other six can reach the high 80s on design alone, but each depends on author sessions writing well, which no plan can promise.",
+     "Ceiling arithmetic: 0.15*(92+88+86+80) + 0.10*(82+80+70+80) = 51.9 + 31.2 = 83.1."
+    ],
+    "how_85_is_actually_earned": "By one measurement, not by more moves. R1 slice 3 already describes it: the stored newest Redis site against one plain session over the same clone, scored with R2 and the frozen questions. It needs no new dossier run. Do it first and score from its numbers. If the dossier wins it, dimension 7 moves to the 80s and the total passes 80 on this plan alone; if it loses, the loss is the next move and no plan score was ever the right target."
+   },
+   "missing_moves": [
+    {
+     "title": "Run the Redis calibration before building anything else, and score from it",
+     "what": "Pull R1 slice 3 ahead of slices 1 and 2 as a rough first pass: stored newest site against a plain session at equal reach, R2 over both, the seven frozen questions, one human (the owner) blind. Publish the result as a loss if it is one.",
+     "raises": [
+      7,
+      2
+     ],
+     "estimated_gain": "+0.5 to +1.5 on the total as a plan; removes the cap on dimension 7 once the numbers exist"
+    },
+    {
+     "title": "Measure the fidelity reviewer itself with seeded false claims",
+     "what": "Rule 6 applied to review: inject known-false and known-unsupported claims with valid-looking citations into stored drafts and record how many the fidelity session catches. Publish the false-accept rate on the review page. Run it again on reworded blocks after R6's editor.",
+     "raises": [
+      1
+     ],
+     "estimated_gain": "+0.6 (dimension 1 from 88 to 92)"
+    },
+    {
+     "title": "A figures-removed arm",
+     "what": "Add to R1 a copy of the dossier with every figure replaced by its text alternative. The difference in reader scores and time is the only direct measure of whether figures carry explanation.",
+     "raises": [
+      3,
+      7
+     ],
+     "estimated_gain": "+0.6 (dimension 3 from 78 to 82)"
+    },
+    {
+     "title": "A plain arm that behaves like a real user",
+     "what": "The full-reach arm is an agentic session with tools, and the reader doing the five reader tasks may ask it anything within a time box equal to the dossier reader's. Fixed follow-ups measure a strawman. Count grading by claim across all claims, with unreferenced claims checked by a tree-reading grader, so R2's citability bias does not decide the accuracy rule. State the sample size the win rule needs.",
+     "raises": [
+      7
+     ],
+     "estimated_gain": "+0.4 (dimension 7 from 66 to 70)"
+    },
+    {
+     "title": "Numbers for economy, written before the first pass",
+     "what": "Targets for median wall time, tokens, review rounds and operator actions per dossier by size class, and the number behind 'within a stated multiple'. A fallback measure if the agent tool exposes no token use.",
+     "raises": [
+      8,
+      7
+     ],
+     "estimated_gain": "+0.4 (dimension 8 from 72 to 76)"
+    },
+    {
+     "title": "A depth key that does not come from the maintainers' documents, and the discussion record as a class",
+     "what": "Half of R1's depth list comes from a session that reads code, tests and history and never the documentation, checked by a second session against the tree. Separately decide issues and pull-request discussion as a consented class or record why not: the run brief named them and no move reads them.",
+     "raises": [
+      5
+     ],
+     "estimated_gain": "+0.5 (dimension 5 from 72 to 77)"
+    },
+    {
+     "title": "Generality where recognizers do not reach",
+     "what": "A stated degradation rule for a repository no recognizer or pack matches, a corpus stratum for exactly that case, and two real private repositories the owner owns (this one and Butlers) beside the synthetic private fixture.",
+     "raises": [
+      4
+     ],
+     "estimated_gain": "+0.6 (dimension 4 from 76 to 80)"
+    },
+    {
+     "title": "A named visual bar and a mandatory sitting",
+     "what": "Three to five named reference documents the surface is compared with in R17, the specimen sitting made a precondition of R11 slice 2 instead of optional, and a human rating as the beauty measure of record with the model rating shown beside it.",
+     "raises": [
+      6
+     ],
+     "estimated_gain": "+0.5 (dimension 6 from 70 to 75)"
+    },
+    {
+     "title": "A cut line",
+     "what": "One milestone naming the ten or so slices that make the first dossier worth benchmarking, built before anything else. R22 prunes only after a corpus pass that itself needs most of the plan.",
+     "raises": [],
+     "estimated_gain": "0 on the rubric; it is what makes 'if every move is built' credible"
+    }
+   ],
+   "missing_moves_total_gain": "About +4.1 to +5.1, taking the plan to roughly 80 to 81. Still under 85, which is the point of the answer above.",
+   "faults": [
+    {
+     "move": "R21",
+     "kind": "possible owner class",
+     "fault": "It serves an answer page to 'up to two other readers on the tailnet'. VIS-4 reserves 'any release, deployment or multi-user use' to the owner. The plan lists R21 among agent-decided work and does not flag it. Treat as owner-class and ask."
+    },
+    {
+     "move": "R10",
+     "kind": "possible owner class; incomplete safeguard",
+     "fault": "Commit messages are a new content class sent to a provider through detectors never tuned for them. Q1 treated newly readable configuration formats as owner-class under RFC5-14 for the same reason; R10 calls the parallel case agent-class. Also 'author identity dropped at ingestion' does not cover names and addresses inside message bodies (Signed-off-by and Co-authored-by trailers, mentions)."
+    },
+    {
+     "move": "P12",
+     "kind": "breaks a repo rule as written",
+     "fault": "It specifies a 'hash-allowed progressive-enhancement script for zoom, pan and step sync' on rendered pages. Q5 retires the step-sync half only; zoom and pan survive as 'retained'. Run 5 states the pages forbid script. Drop the script from P12's bead or record the exception as an adoption."
+    },
+    {
+     "move": "R8 slice 2",
+     "kind": "truth risk; reverses an owner trade-off",
+     "fault": "A comparison whose second half is 'Inferred general knowledge' is a claim about another project with no link a reader can follow, on a product whose promise is that every claim is checkable. The plan does flag it for veto. If kept, the aside should say in words that nothing was checked, and R1's 40-claim audit should count these claims."
+    },
+    {
+     "move": "R1, R2",
+     "kind": "measurement validity",
+     "fault": "R2 verifies only claims that name a path or quote a span. A plain session writes few such claims, so 'no reference at all' is a format difference counted as an accuracy difference. Forty claims and three repositories cannot resolve a halved error rate when the base rate is a few percent. Citation marks and labels reveal the arm to the grader; R2 slice 2's neutral shell hides layout, not that."
+    },
+    {
+     "move": "R6",
+     "kind": "gap in the fence",
+     "fault": "The fence is equality of citations, labels and quotations. An editor that never sees the repository can change what a sentence asserts while its citation stays byte-equal. Reworded blocks need fidelity again, which R5 would trigger and which then costs the rounds R4 and R5 were to save."
+    },
+    {
+     "move": "R16",
+     "kind": "single point of failure",
+     "fault": "Every measured claim under dimensions 4 and 7, and R18, R21 and R22, waits on R16, which waits on syzygy-k54o.3 and on R3's budgets, which wait on a usage field whose existence is Unknown. No fallback is planned."
+    },
+    {
+     "move": "R15, R20 slice 3",
+     "kind": "weaker than described",
+     "fault": "'Ask' is an operator command and the questions page records what the operator asked. A reader of the static pages has no way to ask. As a lifecycle answer to a plain session's follow-up, it does not reach the reader."
+    },
+    {
+     "move": "R5 slice 4",
+     "kind": "tension with P1",
+     "fault": "A fast mode renders a draft no review has seen, under a banner. P1 has close refuse or label a site older than its checked draft; the plan does not say how close treats a fast-mode run."
+    },
+    {
+     "move": "several",
+     "kind": "duplication",
+     "fault": "The first screen is specified three times (P3, Q4, R12). Refresh and staleness four times (P15, R14, R14 slice 1, R20 slice 1). Three plans before prose with no stated order (P11 outline sitting, Q12 figure plan, R4 slice 3 coverage plan). Two importance rankings (Q10 'most central units', R19). Three ledgers (Q11 reading, R7 prose, R3 cost). Legend generation twice (Q3, R11 slice 4). Cost recording twice (P15 slice 4, R3). Each pair needs one owner bead."
+    },
+    {
+     "move": "whole plan",
+     "kind": "feasibility",
+     "fault": "Fifty-one moves and well over a hundred slices. Between runs 3 and 4 one of 22 beads closed in twelve days and the renderer, layout and schema took 1, 0 and 0 commits. The scored product assumes everything is built; at the observed rate it is not close, and the only pruning step (R22) runs after most of it."
+    },
+    {
+     "move": "Q1, Q3",
+     "kind": "open dependency",
+     "fault": "Two owner answers from run 4 gate Q1 slice 2, Q2 slices 2 and 3, Q3 slices 2 and 3, and through them R9, R19 and most of Q7, Q9 and Q10. The run-5 report does not say whether they were given. [Unknown] to this reviewer."
+    },
+    {
+     "move": "R9 against Q2",
+     "kind": "internal inconsistency",
+     "fault": "Run 4 answers its own scope objection with 'recognizers are capped at three structured formats and line-oriented files'. R9 adds recognizers for four test frameworks and a changelog format, and Q9 lets packs declare more. Either the cap or the generality claim gives."
+    }
+   ]
+  },
+  {
+   "reviewer": "second independent reviewer, second pass",
+   "date": "2026-11-21",
+   "subject": "The end product if P1-P15, Q1-Q14 and R1-R28 are all built as written",
+   "read": [
+    "pursuit-r5/ranked_moves.json as revised (R1-R28: full text, prerequisites, slice lists)",
+    "the three plan reports, from the first pass (P and Q moves were not re-read; I assume they are unchanged)"
+   ],
+   "anchoring_disclosure": "No review-score*.json file was opened in either pass. The earlier scores 74 and 78 were seen in the run-5 report body during the first pass. No dossier or polaris command was run, no run-*.agents directory was opened, no other repository's file body was read.",
+   "labels": "Every score is [Inferred]: a judgement of a plan. Nothing here was measured. Statements about the plan's text are [Observed] from ranked_moves.json.",
+   "dimensions": [
+    {
+     "n": 1,
+     "name": "Truth: every claim's evidence state is honest and checkable",
+     "weight": 15,
+     "score": 91,
+     "capped": false,
+     "change_from_first": "+3 (88 to 91). Seeded known-false blocks now measure the fidelity reviewer's recall and mark verdicts uncalibrated below a bound (R16 slice 5); edited blocks always return to fidelity (R6); carried verdicts report a drift figure (R5); R2 now says what it does not measure. R24 adds a deterministic docs-against-code page, which is truth a plain session cannot give.",
+     "reason": "Close to what a plan can claim. Held at 91 by: R8's comparison aside still has an uncheckable half; R24's lexical matching can print a false 'document only' or 'disagrees' row as Observed and only its recall is tested (planted drift), not its precision; seeded recall measures caught falsehoods, not false alarms, and 20 of 27 verdicts are already 'not ready'."
+    },
+    {
+     "n": 2,
+     "name": "Comprehension: a newcomer understands the system fast",
+     "weight": 15,
+     "score": 83,
+     "capped": false,
+     "change_from_first": "+3 (80 to 83). A first-day path with checked checkpoints and a held-out path-reader probe (R26); sidenotes that take apparatus out of the prose column and a figure that stays while steps scroll (R25); the benchmark's sample is now sized from calibration and an unresolved result is published as one.",
+     "reason": "The design is complete and measured three ways. Not higher because the win rule still starts at 'not more than ten percent lower', and because R1 slice 1 has the author's brief read the same frozen question file the benchmark grades on while the plain arm's prompt does not: that inflates the comprehension result unless fixed (see faults)."
+    },
+    {
+     "n": 3,
+     "name": "Visual richness: figures that carry real explanation",
+     "weight": 15,
+     "score": 82,
+     "capped": false,
+     "change_from_first": "+4 (78 to 82). The figures-removed ablation per figure kind (R1 slice 7) is exactly the missing measure, and a kind with no gain is listed for cutting. A figure-coverage row with minimums joins the pass rule (R16). Sticky-figure walks and a one-page edition add forms (R25).",
+     "reason": "Now both rich and measured for explanation. The remaining discount is build risk: eight typed layouts, one model with views, an HTML link layer over inert SVG, sticky walks and a poster edition, all without script and all unbuilt, on a renderer that took one commit in twelve days."
+    },
+    {
+     "n": 4,
+     "name": "Generality: works on any kind of repository, and is shown to",
+     "weight": 15,
+     "score": 80,
+     "capped": false,
+     "change_from_first": "+4 (76 to 80). The corpus now has strata for a repository no pack matches, non-English documentation, no README, and owner-owned private repositories; each run records which traits matched nothing, so a thin dossier becomes a named gap; the pass rule carries minimums.",
+     "reason": "This is my ceiling for the dimension without a result: 'is shown to' has no showing yet, and all six real runs are one repository. The whole dimension still rests on R16, behind syzygy-k54o.3 and R3's budgets."
+    },
+    {
+     "n": 5,
+     "name": "Depth of insight: the why, the trade-offs, the non-obvious",
+     "weight": 10,
+     "score": 78,
+     "capped": false,
+     "change_from_first": "+6 (72 to 78). The largest move. The operating envelope (R23: invariants, failure surface, limits and cliffs) and the docs-against-code reconciliation (R24) are non-obvious content derived from the tree, not from an author's attention. The depth key now draws on derived tables and history as well as maintainer prose (R8), losses to the maintainer-documentation ceiling file repairs (R18), and R27 gives a pooled headroom figure from stored runs.",
+     "reason": "Not higher because discussion records (issues, pull requests) are still outside every move, stated honestly as Unknown; the harvests are lexical and will be noisy on unfamiliar codebases; and the required counts (three 'bite you' judgements, one to three worth-knowing blocks per Pole) invite filler where a repository has less to say."
+    },
+    {
+     "n": 6,
+     "name": "Beauty: a surface a reader enjoys and trusts on sight",
+     "weight": 10,
+     "score": 75,
+     "capped": false,
+     "change_from_first": "+5 (70 to 75). The owner names two or three reference sites at a sitting held before composition (R11); beauty is scored relative to those sites and model ratings are calibrated against the owner's pick and the panel (R17); an accessibility pass is recorded per page (R12); sidenotes and the one-page edition are real craft forms (R25).",
+     "reason": "A plan cannot promise taste. Also R11's own prerequisite still reads 'the sitting is optional and the bar's defaults apply until it happens', which contradicts its text and leaves the bar unset if the sitting does not happen."
+    },
+    {
+     "n": 7,
+     "name": "Measured advantage over a vanilla LLM session",
+     "weight": 10,
+     "score": 70,
+     "capped": false,
+     "change_from_first": "+4 (66 to 70). A budget-matched full-reach arm with free follow-ups, the aggregation rule fixed first, uncheckable claims counted per arm, the sample sized so the win rule resolves, text-only presentation to graders, task keys from the structure record. Every instrument objection from the first pass is answered.",
+     "reason": "This is my ceiling for the dimension with no number in hand. The instrument is now better than most published comparisons; it has measured nothing. R27 measures the six stored runs against each other, not against a plain session."
+    },
+    {
+     "n": 8,
+     "name": "Economy and lifecycle: cost, time, freshness, follow-up",
+     "weight": 10,
+     "score": 76,
+     "capped": false,
+     "change_from_first": "+4 (72 to 76). Cost ceilings and a numeric refresh target (a third of a full run under ten percent change) are in the pass rule; operator minutes are counted; R27 replays R4 and R5 on stored runs today, so their saving stops being a guess.",
+     "reason": "The ceilings other than refresh are named, not numbered. The plan now has more sessions per dossier (editor, scout, possibly a second author) and a benchmark of five arms with an ablation per figure kind whose own cost has no line. A reader of the static pages still cannot ask a question."
+    }
+   ],
+   "weighted_total": 80.3,
+   "weighted_total_arithmetic": "0.15*(91+83+82+80) + 0.10*(78+75+70+76) = 50.4 + 29.9 = 80.3",
+   "change_from_first_total": "+4.0 (76.3 to 80.3)",
+   "substantial_improvement": {
+    "answer": "Yes, and more clearly than on the first pass, as a durable and checkable artifact with content a plain session does not produce. Still unproven on being better understood. Still no on speed, cost and reader follow-up.",
+    "what_changed": "R23 and R24 matter most here. A failure-mode table, a list of cliffs with their constants, and a page of where the documentation and the code disagree are things a plain session rarely volunteers and cannot back with verified lines. With them the answer no longer rests only on trust and persistence.",
+    "what_did_not": "No comparison has been run. The plan's lanes still expect a plain session to win on speed, reach and follow-up."
+   },
+   "can_a_plan_reach_85": {
+    "answer": "No. My ceiling for a plan on this rubric is 83, unchanged. This plan is now at 80.3, within three points of it.",
+    "ceiling_arithmetic": "0.15*(92+88+86+80) + 0.10*(82+80+70+80) = 51.9 + 31.2 = 83.1. Dimension 4 is at its ceiling (80) and dimension 7 at its ceiling (70); both are worded as outcomes.",
+    "what_separates_80_from_83": "The faults below, mainly: the brief reading the benchmark's question file, R24's unmeasured precision, the optional sitting, unnumbered cost ceilings, the duplicated specifications, and the size of the build.",
+    "smallest_measured_set_for_85": {
+     "summary": "One three-repository pass, yielding five numbers. Needs +4.7 from 80.3; these give about +5.1.",
+     "results": [
+      {
+       "result": "The dossier wins the frozen rule against the full-reach plain arm on Redis and on two repositories of other shapes, with the sample resolved: claim error rate at most half, comprehension and depth not lower.",
+       "why_three": "R1's own aggregation rule allows no claim from a single repository.",
+       "moves": "dimension 7 from 70 to 88 (+1.8); dimension 2 from 83 to 88 (+0.75); dimension 5 from 78 to 84 (+0.6)"
+      },
+      {
+       "result": "The owner, blind, prefers the dossier to the full-reach plain arm on the sampled repository, and the model-graded measures agree with the owner above the bound.",
+       "moves": "included in the dimension 7 and 2 figures above; without it those wins are model-on-model and I would give half"
+      },
+      {
+       "result": "Both non-Redis repositories reach a reviewed close within budget, one of them a shape no recognizer or pack matches.",
+       "moves": "dimension 4 from 80 to 87 (+1.05)"
+      },
+      {
+       "result": "Seeded-false recall at or above its stated bound on that pass.",
+       "moves": "dimension 1 from 91 to 93 (+0.3)"
+      },
+      {
+       "result": "Recorded cost per dossier inside the stated ceilings, with R27's replay showing R4 and R5 remove review rounds.",
+       "moves": "dimension 8 from 76 to 82 (+0.6)"
+      }
+     ],
+     "total_after": "about 85.4",
+     "note": "The first result can be attempted today on the stored Redis site (R1 slice 3) with no new run. If the present product already wins on Redis, two more repositories finish the set; if it loses, the loss report is worth more than any further planning round."
+    }
+   },
+   "missing_moves": [
+    {
+     "title": "Hold the benchmark's questions out of the author's brief",
+     "what": "R1 slice 1 has one question file 'read by the brief, the profile and the reader test'. Split it: the reader topics may steer the author; the depth list, the reader tasks and the graded questions must not reach any authoring, inventory or editor session. R26 already guards its checkpoints this way.",
+     "raises": [
+      7,
+      2
+     ],
+     "estimated_gain": "+0.5 (protects the validity of dimensions 2 and 7 rather than adding to them)"
+    },
+    {
+     "title": "Measure R24's precision, and R23's",
+     "what": "A hand-checked sample of 'document only' and 'disagrees' rows per corpus repository, with the false-row rate printed on the page; below a bound the callouts are withheld and the page says so.",
+     "raises": [
+      1,
+      5
+     ],
+     "estimated_gain": "+0.3"
+    },
+    {
+     "title": "Numbers in the cost ceilings and a cost line for the benchmark itself",
+     "what": "State the token, wall-time and review-round ceilings by size tier now, from R27's figures, and budget a corpus pass including all arms and the ablation.",
+     "raises": [
+      8
+     ],
+     "estimated_gain": "+0.3"
+    },
+    {
+     "title": "Make the specimen sitting a precondition, in the prerequisite field too",
+     "what": "R11's prerequisite still calls it optional. Either it blocks R11 slice 2 and R12, or the plan names the default bar.",
+     "raises": [
+      6
+     ],
+     "estimated_gain": "+0.2"
+    },
+    {
+     "title": "One owner bead per duplicated specification, and a first milestone",
+     "what": "Unchanged from the first pass and now larger: 57 moves. R22 cuts only after a corpus pass that needs most of them.",
+     "raises": [],
+     "estimated_gain": "0 on the rubric; it decides whether the scored product is ever built"
+    }
+   ],
+   "missing_moves_total_gain": "About +1.3, to roughly 81.6. The rest of the distance to 85 is measurement.",
+   "faults": [
+    {
+     "move": "R1 slice 1",
+     "kind": "measurement validity (new)",
+     "fault": "The author's brief reads the frozen question file that the benchmark grades on; the plain arm's fixed prompt does not carry it. The dossier is taught to the test. See the first missing move."
+    },
+    {
+     "move": "R24",
+     "kind": "truth risk (new)",
+     "fault": "Lexical extraction will read identifiers in the docs that name other tools, environment variables or examples as 'document only', and render 'disagrees' with both sides Observed. Planted drift tests recall only."
+    },
+    {
+     "move": "R11",
+     "kind": "internal inconsistency (new)",
+     "fault": "Text: the sitting comes before R12 and the owner names the bar. Prerequisite: 'the sitting is optional and the bar's defaults apply until it happens'."
+    },
+    {
+     "move": "R23, R25, R28",
+     "kind": "unresolved references (new)",
+     "fault": "They cite lane-internal ids that are not move ids: 'F1' (R23), 'C1' (R11), 'F5' (R27). A bead filed from this text points at nothing."
+    },
+    {
+     "move": "R1",
+     "kind": "internal inconsistency; unbudgeted cost (new)",
+     "fault": "It opens 'three arms' and then defines five (dossier, equal reach, full reach, maintainer documentation, budget-matched), plus a figures-removed reading per figure kind. No line says what a benchmark pass costs or what bounds it."
+    },
+    {
+     "move": "R23, R8",
+     "kind": "forced counts",
+     "fault": "A required 'three things that will bite you' and one to three worth-knowing blocks per Pole ask for a fixed quantity of insight. Where the repository has less, the honest output is fewer; make them ceilings with a stated 'none found'."
+    },
+    {
+     "move": "R10",
+     "kind": "possible owner class (reduced)",
+     "fault": "Trailers are now stripped. The class question stands: Q1 asked the owner before a new content class reached a provider, R10 adopts the parallel case. Names in message bodies outside trailers remain."
+    },
+    {
+     "move": "P12",
+     "kind": "breaks a repo rule as written (unchanged, not stated as fixed)",
+     "fault": "Its text still specifies a zoom and pan script on rendered pages."
+    },
+    {
+     "move": "R16",
+     "kind": "single point of failure (unchanged)",
+     "fault": "Dimensions 4 and 7 and moves R18, R21, R22 wait on it; it waits on syzygy-k54o.3 and on a usage field whose existence is Unknown. R27 softens this for economy only."
+    },
+    {
+     "move": "R15, R20",
+     "kind": "weaker than described (unchanged)",
+     "fault": "Asking is an operator command. A reader of the pages cannot ask."
+    },
+    {
+     "move": "several",
+     "kind": "duplication (grown)",
+     "fault": "First-pass list stands. Added: R25 sidenotes against P13's popover glossary and Q5's link layer; R26's path against P4's reader routes and Q14's guided tour; R23's limits against R9's markers; R28's pooled authors against P10 and Q10's scouts."
+    },
+    {
+     "move": "whole plan",
+     "kind": "feasibility (worse)",
+     "fault": "57 moves. The plan answered every review point by adding, never by removing. R27 and R1 slice 3 are the only parts that can change the score this week."
+    }
+   ],
+   "faults_closed_since_first": [
+    "R21: owner alone by default; more readers on the owner's word",
+    "R6: edited blocks always get fidelity review",
+    "R1/R2: sample sized from calibration, unresolved published, uncheckable claims counted per arm, budget-matched arm with free follow-ups",
+    "R5: fast drafts kept out of corpus, benchmark and panel; banner carried into PDF and bundle (R13)",
+    "R9 against Q2 recognizer cap: partly, since unmatched traits are now recorded as named gaps (R16)"
+   ]
+  },
+  {
+   "reviewer": "second independent reviewer, third pass",
+   "date": "2026-11-21",
+   "subject": "The end product if P1-P15, Q1-Q14 and R1-R28 are all built as written; scored twice: the plan alone, and the plan plus the Observed numbers in audit/measure-now.json",
+   "read": [
+    "pursuit-r5/ranked_moves.json as revised (full text of R1, R10, R11, R16, R22, R23, R24, R26, R27, R28; the rest from the second pass)",
+    "pursuit-r5/audit/measure-now.json (figures a, b and c; figures d, e and f of R27 are not in the file)"
+   ],
+   "anchoring_disclosure": "No review-score*.json file was opened in any pass. The earlier scores 74 and 78 were seen in the run-5 report body during the first pass. No dossier or polaris command was run, no run-*.agents directory was opened, no other repository's file body was read.",
+   "labels": "Scores are [Inferred]. Figures quoted from measure-now.json are [Observed] by that record, which names its files and digests; I did not re-derive them. That the decision numbers in R27 were fixed before the results were read is the lead's statement, [Unknown] to me.",
+   "dimensions": [
+    {
+     "n": 1,
+     "name": "Truth: every claim's evidence state is honest and checkable",
+     "weight": 15,
+     "score": 92,
+     "score_with_measurements": 92,
+     "capped": false,
+     "change_from_first": "+4 (88, 91, 92). This pass: R24 separates 'resolves' from 'agrees' and labels a row class Inferred below a precision bound; R23 measures harvest precision and shows named Unknowns; R10 stores only quoted spans and refuses spans naming people.",
+     "reason": "At my ceiling for a plan. What remains is R8's uncheckable half of a comparison, and that reviewer consistency (R27 figure e) is not yet measured."
+    },
+    {
+     "n": 2,
+     "name": "Comprehension: a newcomer understands the system fast",
+     "weight": 15,
+     "score": 85,
+     "score_with_measurements": 85,
+     "capped": false,
+     "change_from_first": "+5 (80, 83, 85). This pass: graded questions, depth list and tasks are held out of every authoring session with a check that asserts it; checkpoint questions come from a session that is not the author.",
+     "reason": "A full design with a valid instrument. The measurements add a caution, not a point: Pole labels agree at 0.29 and section titles at 0.28 across six runs of one commit, so the reader's map of the system depends on which run they got (confounded by brief versions v1 to v7)."
+    },
+    {
+     "n": 3,
+     "name": "Visual richness: figures that carry real explanation",
+     "weight": 15,
+     "score": 82,
+     "score_with_measurements": 82,
+     "capped": false,
+     "change_from_first": "+4 (78, 82, 82). Nothing in this pass touched it.",
+     "reason": "Rich and measured by ablation. The discount is build risk on an unbuilt, script-free renderer. Nothing in measure-now.json concerns figures."
+    },
+    {
+     "n": 4,
+     "name": "Generality: works on any kind of repository, and is shown to",
+     "weight": 15,
+     "score": 80,
+     "score_with_measurements": 80,
+     "capped": false,
+     "change_from_first": "+4 (76, 80, 80). At its ceiling since the second pass.",
+     "reason": "Outcome-worded and unshown. All of today's measurements are six runs of one repository at one commit; they say nothing about a second shape."
+    },
+    {
+     "n": 5,
+     "name": "Depth of insight: the why, the trade-offs, the non-obvious",
+     "weight": 10,
+     "score": 79,
+     "score_with_measurements": 80,
+     "capped": false,
+     "change_from_first": "+7 plan, +8 with measurements (72, 78, 79/80). This pass: each 'will bite you' judgement needs two harvested premises of different kinds; empty harvests show named Unknowns.",
+     "reason": "With measurements, +1: the headroom is now a number. One run holds 14 to 51 percent of the 545 pooled supported-claim clusters, the newest run 22 percent, and 396 clusters appear in one run only. That makes R28 a justified move, not a speculative one. It is one point and not more because the same numbers say today's dossier is a thin and unstable sample, and the union is inflated by a strict matching rule and by seven brief versions."
+    },
+    {
+     "n": 6,
+     "name": "Beauty: a surface a reader enjoys and trusts on sight",
+     "weight": 10,
+     "score": 76,
+     "score_with_measurements": 76,
+     "capped": false,
+     "change_from_first": "+6 (70, 75, 76). This pass: the sitting is named a precondition of R12's composition.",
+     "reason": "One point only, because the same prerequisite then says 'until the owner sits, the bar's default token set is used and R12 is built against it'. A precondition that can be skipped is not one. R27's first-screen pixel facts are not in the file."
+    },
+    {
+     "n": 7,
+     "name": "Measured advantage over a vanilla LLM session",
+     "weight": 10,
+     "score": 70,
+     "score_with_measurements": 70,
+     "capped": false,
+     "change_from_first": "+4 (66, 70, 70). At its ceiling since the second pass. This pass fixed the hold-out and gave the benchmark its own cost line.",
+     "reason": "No plain-session output exists, so nothing is measured against one. Today's numbers expose one new instrument flaw: with a single run covering 14 to 51 percent of the pool, one dossier per repository cannot represent the mechanism. The benchmark needs replicate dossier runs per repository or its result is run luck."
+    },
+    {
+     "n": 8,
+     "name": "Economy and lifecycle: cost, time, freshness, follow-up",
+     "weight": 10,
+     "score": 78,
+     "score_with_measurements": 80,
+     "capped": false,
+     "change_from_first": "+6 plan, +8 with measurements (72, 76, 78/80). This pass: cost ceilings are numbers (0.7 of the baseline median for time and tokens, at most three review rounds); the benchmark is budgeted.",
+     "reason": "With measurements, +2: R4's pre-check, replayed over 385 inventory entries, would have listed 150 of the 179 entries the first fidelity verdicts marked unsupported (recall 0.838, precision 0.815), clearing its 60 and 30 percent decision numbers. 46 percent of inventory entries were unrepresented at first review, so this is the main cause of repair rounds and it is mechanical. Not more because the saving is shown in entries, not yet in rounds, minutes or tokens; R27's figures d, e and f are absent; and the 0.7 ceiling is relative to a baseline that is not yet defined."
+    }
+   ],
+   "weighted_total": 81.2,
+   "weighted_total_arithmetic": "0.15*(92+85+82+80) + 0.10*(79+76+70+78) = 50.85 + 30.30 = 81.15",
+   "weighted_total_with_measurements": 81.5,
+   "weighted_total_with_measurements_arithmetic": "0.15*(92+85+82+80) + 0.10*(80+76+70+80) = 50.85 + 30.60 = 81.45",
+   "progression": "76.3, 80.3, 81.15 (plan); 81.45 (plan plus today's Observed numbers)",
+   "what_the_measurements_say": {
+    "good": [
+     "R4 is validated on stored evidence: recall 0.838, precision 0.815 over 385 entries in six runs. Build slice 1 and 2 first.",
+     "R28's premise holds on stored evidence: no run reaches 70 percent of the pool; the highest is 50.8 percent."
+    ],
+    "bad": [
+     "Six runs at one commit share 10 of 545 supported-claim clusters and 14 of 39 cited paths. Whatever a reader learns from a dossier today is one draw. The product does not say so on the page.",
+     "The newest run, the one runs 4 and 5 audited, is among the thinnest by pooled share (22 percent of claims, 23.6 percent of supported cited lines)."
+    ],
+    "limits": [
+     "Brief versions v1 to v7 and schemas v2 to v4 differ across the six runs, so author variance and mechanism change are not separated. Two runs under one brief version would separate them.",
+     "A share-of-union threshold is not stable in the number of runs: the union grows with every run added, so 'under 70 percent of six' is nearly guaranteed. The gate for R28 should be what a second run adds to a first under the same brief.",
+     "Figures d (R5 replay), e (reviewer consistency) and f (stage time and operator minutes) are not in the file."
+    ]
+   },
+   "substantial_improvement": {
+    "answer": "Unchanged: yes as a durable, checkable artifact with content a plain session does not produce; unproven on being better understood; no on speed, cost and reader follow-up.",
+    "added_by_measurements": "One honest qualification. A plain session's answer also varies from run to run, and nobody expects otherwise. A dossier presents itself as the account of a repository; today it is one of many possible accounts sharing about a fifth of their supported claims. Until R28 or a stated coverage figure closes that, 'truthful' holds claim by claim and not for the whole."
+   },
+   "can_a_plan_reach_85": {
+    "answer": "No. Ceiling for a plan 83, unchanged. The plan is at 81.15, and today's measurements take it to 81.45.",
+    "ceiling_arithmetic": "0.15*(92+88+86+80) + 0.10*(82+80+70+80) = 83.1",
+    "smallest_measured_set_for_85": "As in the second pass (one three-repository pass: a resolved win against the full-reach plain arm on three shapes; the owner's blind preference with model grades calibrated to it; two non-Redis reviewed closes within budget, one with no matching pack; seeded-false recall above its bound; cost inside the ceilings), with one addition forced by today's numbers: at least two dossier runs per repository, with the win holding for each, or the spread reported and the win holding at its low end.",
+    "further_planning_rounds": "Worth about one more point at most. I would stop planning here."
+   },
+   "cut_now": {
+    "view": "Yes: stop dispatch now, do not wait for R22. Not by deleting moves, but by taking everything off the ready queue that the first measured pass does not need. R22 as written cuts after a pass; every slice is filed ready with no hold, so by then parallel lanes will have built much of what R22 would cut. The cut line has to precede the work it governs.",
+    "close_now_as_superseded": [
+     "P12 (split four ways into Q5, Q6, Q7, Q12 by run 4's own table; closing it also removes the script from the plan)",
+     "P9 (split into Q2 traits and Q9 packs by the same table)",
+     "P15 as a separate move (R14 carries it; keep one bead)",
+     "R20 slice 1 (same computation as R14 slice 1)",
+     "one of P3's landing composition and R12 slices 1 to 3; one of Q10's centrality ranking and R19"
+    ],
+    "park_until_R22": [
+     "R13 whole (print, PDF, bundle: value 3, and nobody has a dossier worth printing yet)",
+     "R15 slices 3 and 4 (ask, promote) and R20 slice 3 (questions page)",
+     "R25 slice 3 (one-page edition) and R17 slice 3",
+     "R10 slices 3 and 4 (hidden-coupling figure, commit messages); keep metadata slices 1 and 2",
+     "R9 slice 5 (rationale scout) and R28 slice 2; keep R28 slice 1, which is offline",
+     "R5 slice 4 (fast mode) and R26 slice 2",
+     "Q6's four HTML figure kinds and Q7's computed map pages, until the ablation shows which kinds earn their place; keep the wrap fix, sequence and containment",
+     "P11's outline sitting and annotate-and-rerender, P4's persona lenses, P8's maintainers'-voice strip, Q14's analogy element",
+     "P14's full engine rebuild beyond what the renderer work needs"
+    ],
+    "critical_path_about_twenty_slices": [
+     "R27 remaining figures (d, e, f, pixel facts)",
+     "R3 slice 1, R4 slices 1 and 2, R5 slice 1",
+     "R1 slices 1 to 3, then 6; R2 slice 1",
+     "the visible minimum: P1, one landing composition (P3 or R12), P13 line links, Q3 slice 1, Q4 slice 1, Q6 slice 1, R7 slice 1, R8 slice 1",
+     "syzygy-k54o.3, then R16 slices 1 to 3 on three repositories with two runs each, R16 slice 5",
+     "R21 slice 3, then R22"
+    ],
+    "effect_on_score": "None on this rubric, which assumes everything is built. It is the difference between a plan scored at 81 and a product that reaches a first measured pass."
+   },
+   "missing_moves": [
+    {
+     "title": "Replicate dossier runs in the benchmark",
+     "what": "At least two dossier runs per repository in R1 and R16, the spread reported, and the win rule applied to the weaker run.",
+     "raises": [
+      7,
+      4
+     ],
+     "estimated_gain": "+0.2 as a plan; without it a measured win is not credible"
+    },
+    {
+     "title": "Say on the page that a dossier is one draw, until it is not",
+     "what": "A coverage line from the structure record and R19's ranking (top units cited, share of first-party bytes deep-read), and where replicate runs exist, the share of pooled supported claims this dossier holds.",
+     "raises": [
+      1,
+      5
+     ],
+     "estimated_gain": "+0.2"
+    },
+    {
+     "title": "Separate author variance from mechanism change",
+     "what": "Two runs of Redis under the current brief and schema, compared by R27's figures a and b; the R28 gate restated as what a second run adds to the first.",
+     "raises": [
+      5,
+      8
+     ],
+     "estimated_gain": "+0.1"
+    },
+    {
+     "title": "Define the cost baseline now",
+     "what": "The 0.7 ceiling should be against the six stored runs' medians (R27 figure f), not against a first corpus pass whose size the plan itself chooses.",
+     "raises": [
+      8
+     ],
+     "estimated_gain": "+0.1"
+    }
+   ],
+   "missing_moves_total_gain": "About +0.6, to roughly 82.",
+   "faults": [
+    {
+     "move": "R1, R16",
+     "kind": "measurement validity (new, from today's numbers)",
+     "fault": "One dossier run per repository, when single runs hold 14 to 51 percent of pooled supported claims. A benchmark result is then mostly run luck."
+    },
+    {
+     "move": "R27, R28",
+     "kind": "weak gate (new)",
+     "fault": "'A single run's share of pooled supported claims under 70 percent' falls as runs are added, whatever the mechanism does, and the six runs mix seven brief versions. The gate passed; it could hardly have failed."
+    },
+    {
+     "move": "R26",
+     "kind": "internal inconsistency; leak path (new)",
+     "fault": "The text still says 'The author writes the questions' and then that the blind key session writes them. And the session that holds the held-out key now writes questions printed in the dossier: the only thing between the key and the page is a lexical overlap check. Use a third session that has never seen the held-out file."
+    },
+    {
+     "move": "R11",
+     "kind": "internal inconsistency (not fully closed)",
+     "fault": "The sitting is called a precondition of R12 and, in the same sentence, R12 is built against the default until the owner sits."
+    },
+    {
+     "move": "R16",
+     "kind": "undefined baseline (new)",
+     "fault": "'At most 0.7 of the first recorded baseline' with the baseline fixed 'before the second pass'. A costly first pass makes the target easy. See missing move four."
+    },
+    {
+     "move": "R1",
+     "kind": "wording",
+     "fault": "'Five arms' are now stated, but the list names four before a 'fourth plain arm' that is the third plain arm, and 'both arms' survives twice."
+    },
+    {
+     "move": "R23, R8",
+     "kind": "forced counts (unchanged)",
+     "fault": "'Three things that will bite you' and one to three worth-knowing blocks per Pole are still quotas. Two premises per judgement raises the bar for each, which helps; a stated 'none found' is still needed."
+    },
+    {
+     "move": "R10",
+     "kind": "possible owner class (reduced again)",
+     "fault": "The identity handling is now careful. The class question is unchanged: Q1 asked the owner before a new content class reached a provider; R10 adopts. The plan names it for veto, which may be enough; I would still ask."
+    },
+    {
+     "move": "P12",
+     "kind": "breaks a repo rule as written (unchanged)",
+     "fault": "Still specifies a script on rendered pages. Closing it as superseded, as cut_now proposes, settles this."
+    },
+    {
+     "move": "R16",
+     "kind": "single point of failure (unchanged)",
+     "fault": "Behind syzygy-k54o.3 and a usage field whose existence is Unknown."
+    },
+    {
+     "move": "R15, R20",
+     "kind": "weaker than described (unchanged)",
+     "fault": "A reader of the pages cannot ask."
+    },
+    {
+     "move": "audit/measure-now.json",
+     "kind": "incomplete record",
+     "fault": "Three of R27's six figures. Before it is cited as R27's result, add d, e and f, or name it as slices a to c."
+    }
+   ],
+   "faults_closed_since_second": [
+    "R1 slice 1: held-out questions, with a check",
+    "R1: benchmark cost line and budget",
+    "R24: resolves against agrees; precision measured; Inferred below the bound",
+    "R23, R25, R28: lane labels replaced by move ids",
+    "R23: precision measured; named Unknowns",
+    "R16: numeric cost ceilings (baseline still undefined)"
+   ]
+  }
+ ],
+ "priorities": {
+  "R27S1": 1,
+  "R3S1": 1,
+  "R4S1": 1,
+  "R4S2": 1,
+  "R5S1": 1,
+  "R1S1": 1,
+  "R1S2": 1,
+  "R1S3": 1,
+  "R1S6": 1,
+  "R2S1": 1,
+  "R7S1": 1,
+  "R8S1": 1,
+  "R16S1": 1,
+  "R16S2": 1,
+  "R16S3": 1,
+  "R16S5": 1,
+  "R21S1": 1,
+  "R21S2": 1,
+  "R21S3": 1,
+  "R22S1": 1,
+  "R22S2": 1,
+  "R13S1": 4,
+  "R13S2": 4,
+  "R13S3": 4,
+  "R15S3": 4,
+  "R15S4": 4,
+  "R20S3": 4,
+  "R25S3": 4,
+  "R17S3": 4,
+  "R10S3": 4,
+  "R10S4": 4,
+  "R9S5": 4,
+  "R28S2": 4,
+  "R5S4": 4,
+  "R26S2": 4
+ },
  "units": [
   {
    "unit": "beauty",
@@ -2815,6 +4757,203 @@
       "S1: fast mode plus the banner plus the record flag.",
       "S2: the digest-keyed cache for derived layers and quotation verifications.",
       "S3: inventory entry reuse at a new commit."
+     ]
+    }
+   ]
+  },
+  {
+   "lens": "last-five",
+   "framing": "Even with all 51 moves built, the finished dossier would still be missing four things that the best human-made explainers have. First, the maintainer's operating knowledge: what is always true, what breaks first, where performance falls off a cliff. Second, a check of the project's own documents against its code, which is Syzygy's own thesis turned on the subject and something a plain session structurally does not do. Third, a page that holds the reader's attention: a figure that stays still while the text walks through it, notes in the margin, and a one-page edition people print and pin up. Fourth, a guided first-day path with checkpoints. Separately, the six stored Redis runs share one commit, which makes them a free variance experiment: several planned numbers can be measured now, with no new run and no new egress. A first cut of one is below.",
+   "findings": [
+    {
+     "claim": "All six stored runs are of one Redis commit, so differences between them are author and reviewer variance at a fixed input. The last drafts cite 23 to 48 distinct paths each (24, 36, 25, 23, 48, 25). Across all six, 57 distinct paths are cited. Only 14 are cited by every run, 18 are cited by exactly one run, and the mean pairwise Jaccard is 0.53. The inventories cite 14 to 33 paths each, 39 in all, 12 in every run, with Jaccard 0.65.",
+     "label": "Observed",
+     "basis": "scratchpad scripts/cross_run.py over /home/orca/.local/state/syzygy-dossier (values under keys named 'path' in each run's highest rev draft and in inventory/*.json; run-*.agents and run-*.sessions skipped); one-commit fact from ranked_moves.json R14 basis"
+    },
+    {
+     "claim": "So a single run cites well under half of what the six runs cite together, and which half depends on the run. The pooled union is a free pseudo-ceiling for coverage that no planned move uses.",
+     "label": "Inferred",
+     "basis": "The finding above. Path granularity understates claim-level variance in both directions."
+    },
+    {
+     "claim": "The planned figure kinds already include a treemap, a state machine, a data layout, a comparison matrix and annotated code walks, and the shape packs plan small multiples. This lens therefore proposes no new figure kind. It proposes a page form and an edition, which nothing plans.",
+     "label": "Observed",
+     "basis": "docs/pursuits/2026-11-21-vision-pursuit-data.json (Q6 kind list; Q9 pack page-plan modules), searched with scratchpad scripts/context.py"
+    },
+    {
+     "claim": "No P, Q or R move harvests assertions, error and log messages, or configuration defaults and limits. None checks maintainer documents against the code. None plans a sticky-figure layout, sidenotes, a one-page edition, or a checkpointed reading path.",
+     "label": "Observed",
+     "basis": "context.py sweeps over ranked_moves.json and the vision-pursuit data file for: contradict, disagree, sidenote, margin, sticky, cheat, one-page, onboarding, self-check, config, invariant. Hits were unrelated: question-set disagreement, the R14 'now contradicted' claim diff, R18's margin."
+    }
+   ],
+   "proposals": [
+    {
+     "id": "F1",
+     "title": "The operating envelope: invariants, failure modes and cliffs, harvested and then explained",
+     "what": "Three more deterministic harvests, each producing a derived table of verified lines, run over admitted files by the R9 machinery.\n(1) Invariants: assertion calls per language, matched lexically from a closed versioned list (`assert`, `serverAssert`-style project macros detected by an `*assert*` call-name rule, `debug_assert!`, `invariant(`, `precondition(`, `require(` in Kotlin, `Debug.Assert`). Each row is a verified line, grouped by unit.\n(2) Failure surface: string literals passed to error-returning, panic and log-at-error or warn calls (the call names are pack data), plus error-code enums. Each becomes a row: message, path, line, unit.\n(3) Limits and defaults: entries of a documented configuration file (`*.conf`, `config.example.*`, `values.yaml`, `settings.py` defaults, CLI flag definitions), and named constants matching `*_MAX*|*_LIMIT*|*_THRESHOLD*|*_TIMEOUT*|DEFAULT_*`, each with its literal value.\nThe brief gains a required topic, 'Operating envelope: what is always true, what fails and how, where it gets slow'. Its parts:\n- a failure-mode table per major mechanism (trigger, what the code does, what the user sees), each row citing harvested lines;\n- a 'cliffs' list of thresholds where behaviour or cost changes, each citing the constant or config default;\n- 'three things that will bite you': labelled judgements whose premises are harvested rows.\nThe inventory session gets the same topic, so a missing failure mode becomes a coverage gap.",
+     "why": "This is what a senior maintainer says in the first hour and no planned source yields. Tests say what is intended, markers say what is unfinished and release notes say what changed; none says what must never happen, what the error looks like, or which default to raise. All three are exact, cheap, language-general harvests. Every row is Observed, so the topic adds depth without loosening truth.",
+     "class": "mandate-grounded",
+     "basis": "VIS-2 and trust-and-evidence.md:105 (Observed is a deterministic claim with a resolvable link); the brief's mechanisms-and-trade-offs topic (packages/polaris-dossier/src/brief.ts:51)",
+     "owner_value": 5,
+     "build_cost": 2,
+     "rubric_raised": [
+      "depth of insight",
+      "truth",
+      "measured advantage",
+      "generality"
+     ],
+     "relation_to_known": "New sources and a new required topic. It extends R9's harvest machinery and run-4 Q9's packs (the call-name lists are pack data). The 'bite you' judgements use R8's labelled comparison and P8's premise rule. It also feeds R19: assertion density is a salience signal.",
+     "prereq": "Q2 derive stage and R9 S1 machinery; the Q1 policy admits configuration files as data (they are already screened text). Active-content rules still withhold TOML-like executable configuration, and the topic shows that as Unknown.",
+     "touches_doctrine": false,
+     "integration_points": [
+      "the Q2/R9 derive stage: assertion, failure-string and limits rules",
+      "packages/polaris-dossier/src/brief.ts BRIEF_TOPICS (a sixth topic) and inventory.ts (the same topic)",
+      "packages/polaris-dossier/src/draft-schema.ts (failure-mode and cliff table forms citing derived rows)",
+      "apps/three-surface-poc/src/polaris-generation/dossier-site.ts (envelope page, cliff list, bite callouts)"
+     ],
+     "slices": [
+      "S1: limits-and-defaults harvest plus a derived 'cliffs' reference page (no brief change).",
+      "S2: assertion and failure-string harvests per unit.",
+      "S3: the required topic, the bite judgements and the inventory topic; measured on the next corpus pass by R1's depth key."
+     ]
+    },
+    {
+     "id": "F2",
+     "title": "Where the documents and the code disagree: a deterministic reconciliation page",
+     "what": "Syzygy extracts every checkable assertion from the project's own prose documents (README, docs/, manuals, man pages, the configuration file's comments): inline-code identifiers, configuration keys with a stated default, command or flag names, file paths, and version numbers. It checks each against the pinned tree: does the identifier exist, does the key exist with that default literal, is the command or flag defined, does the path resolve. Every row falls into one of four classes:\n- agrees;\n- disagrees: both sides Observed, with the document line and the code line;\n- document only: named in the docs, absent from the code;\n- code only: a configuration key, command or flag defined in code but in no document.\nThe dossier gets a 'Docs and code' reference page with counts per class. Disagreements are surfaced as callouts on the Pole that covers them. The author may explain a disagreement (renamed, deprecated, platform-specific) but never hide one. The matching is lexical, its rules are printed, and anything it cannot decide is Unknown. Nothing is judged by a model.",
+     "why": "This is Syzygy's thesis, declared versus observed with the gap shown honestly, turned on the subject repository. A plain session cannot do it reliably: it reads the docs as true and does not enumerate. It is also the single most useful page for a maintainer, who can act on it, and a measurable advantage the benchmark can score (planted-drift fixtures in the synthetic repository give it a known answer).",
+     "class": "mandate-grounded",
+     "basis": "The doctrine's three-state thesis and VIS-2 (contradiction shown, never smoothed); AGENTS.md orientation: 'the gap is always rendered honestly'",
+     "owner_value": 5,
+     "build_cost": 2,
+     "rubric_raised": [
+      "measured advantage",
+      "truth",
+      "depth of insight",
+      "comprehension"
+     ],
+     "relation_to_known": "New. R2 checks claims Syzygy did not write against the tree; F2 checks the project's own claims. It reuses R2's quotation machinery and run-4 Q2's derived symbols. R16's synthetic fixture should gain planted drift rows so the benchmark has ground truth.",
+     "prereq": "Q2 derived symbol and configuration tables (for code-only rows); none for document-only and path rows",
+     "touches_doctrine": false,
+     "integration_points": [
+      "packages/polaris-generation-core/src/quote-locate.ts (document-side spans)",
+      "the Q2 derive stage (symbols, config keys, CLI definitions)",
+      "packages/polaris-dossier/src/check-derive.ts (author may annotate, never drop, a disagreement)",
+      "dossier-site.ts (reference page plus Pole callouts); R16's synthetic fixture (planted drift)"
+     ],
+     "slices": [
+      "S1: paths and inline-code identifiers named in docs, resolved against the tree: the document-only and agrees classes.",
+      "S2: configuration keys and defaults in both directions, giving disagrees and code-only.",
+      "S3: commands and flags, plus planted-drift rows in the synthetic fixture, scored in R1."
+     ]
+    },
+    {
+     "id": "F3",
+     "title": "Pages that hold attention: a figure that stays while the text walks through it, sidenotes, and a one-page edition",
+     "what": "Three static, script-free forms.\n(1) Sticky-figure sections: on a wide screen, a mechanism section is a two-column grid. The figure sits in one column with `position: sticky`, and the numbered steps scroll in the other. Each step names the numbered callout it explains, and the matching figure region carries the same number in the Pole hue. The view stays fixed while the explanation moves, which is the core move of the best interactive explainers, done in CSS. Below the measure width it falls back to figure-then-steps.\n(2) Sidenotes: citations, definitions on first use and short asides move into a margin column on wide screens (CSS grid, the Tufte layout), and inline toggles open them on narrow screens. The prose column carries only prose. This replaces inline apparatus in place, with no extra page.\n(3) The one-page edition: a single designed page, landscape A3 in print and a long single screen on the web, assembled only from elements already checked. It holds the thesis, the hero figure, each Pole's one-line answer with a thumbnail of its figure, key numbers from the derived tally, the three 'bite you' judgements (F1) and 'where to start' links. It makes no new model claims. It is rendered by the C1 tokens, and its PDF gets a digest beside R13's.",
+     "why": "Beauty and visual richness are capped at 72-80 because the plan makes good components but no page form a reader remembers. These three are the recognisable signatures of explainers people praise: the sticky figure of interactive essays, the margin notes of illustrated books, and the cheat sheet pinned above a desk. All are CSS and render-time assembly under the existing no-script rule.",
+     "class": "mandate-grounded",
+     "basis": "VIS-3 (digestible); VIS-7 (one encoding: the callout number and Pole hue mean the same thing in figure and text); the page policy `default-src 'none'` (apps/three-surface-poc/src/polaris-generation/draft-preview.ts), which all three respect",
+     "owner_value": 4,
+     "build_cost": 2,
+     "rubric_raised": [
+      "beauty",
+      "visual richness",
+      "comprehension"
+     ],
+     "relation_to_known": "New page forms. They use Q5's numbered walk steps, Q4's hero, R11's tokens and Pole hues, R7's pull quotes (which sit in the margin column) and R13's print/PDF path. The one-page edition is new: R13 prints the whole dossier, not a distilled page. R17's blind first-screen test can compare sticky against stacked layout.",
+     "prereq": "R11 tokens; Q5 numbered steps for (1); F1 for the 'bite you' slot in (3), which otherwise shows the worth-knowing marks from R8",
+     "touches_doctrine": false,
+     "integration_points": [
+      "apps/three-surface-poc/src/polaris-generation/dossier-site.ts (grid layouts, a sidenote renderer, a one-page builder)",
+      "apps/three-surface-poc/src/polaris-generation/diagram-layout.ts (numbered callout regions)",
+      "packages/polaris-dossier/src/render.ts (one-page PDF with its digest)",
+      "the P6/R12 probe (no horizontal scroll and readable callouts at 390 px)"
+     ],
+     "slices": [
+      "S1: sidenotes for citations and first-use definitions.",
+      "S2: sticky-figure sections for walks with numbered callouts.",
+      "S3: the one-page edition plus its PDF; A/B against stacked layout in R17."
+     ]
+    },
+    {
+     "id": "F4",
+     "title": "A first-day path with checkpoints, kept apart from the benchmark's questions",
+     "what": "A generated 'Start here' path: an ordered route of 5-8 stops through the dossier (the overview, then Poles in dependency order from the derived structure, then one walk, then the operating envelope), each with an estimated reading time from word counts. Each stop ends with two or three 'check yourself' questions, with cited answers inside `details` (script-free reveal) and the answer linking back to the block that teaches it. The author writes the questions, and `check` verifies every answer's citations. A lexical overlap check against the frozen benchmark questions (TARGETS.md and reader-questions.ts) refuses any near-duplicate, so the dossier cannot teach to the test. The checkpoint questions also make a second, held-out reader probe: a fresh reader who follows the path should answer them, and R1 can report path-reader against cold-reader comprehension.",
+     "why": "Onboarding documents people praise are paths, not piles. A reader learns faster with an order and a way to know they understood. A plain session gives neither an order across a whole system nor checkpoints with cited answers.",
+     "class": "mandate-grounded",
+     "basis": "VIS-3 (digestible to a newcomer); the owner's target experience of navigable pages",
+     "owner_value": 4,
+     "build_cost": 1,
+     "relation_to_known": "New. R15's find-by-task routes answer 'where do I change X' by lookup; F4 is the linear first-read order with comprehension checks. It uses Q8's reading depths and R19's salience for the order. The overlap guard protects R1 and R17 from contamination.",
+     "prereq": "R19 or the Q2 unit graph for the order; none for the checkpoints",
+     "touches_doctrine": false,
+     "integration_points": [
+      "packages/polaris-dossier/src/draft-schema.ts (a path form and a checkpoint form)",
+      "packages/polaris-dossier/src/check-derive.ts (answer citations plus frozen-question overlap guard)",
+      "packages/polaris-generation-core/src/reader-questions.ts and docs/polaris-generation/TARGETS.md (the guarded set)",
+      "dossier-site.ts (start-here page, per-stop checkpoint blocks)"
+     ],
+     "slices": [
+      "S1: path order plus reading times plus checkpoints with the overlap guard.",
+      "S2: the held-out probe: path reader against cold reader in R1."
+     ]
+    },
+    {
+     "id": "F5",
+     "title": "Measure now on the six stored runs: variance, a pooled ceiling, replays and reviewer consistency",
+     "what": "A read-only analysis script over the stored run directories, never `run-*.agents/` or `run-*.sessions/`, writing one evidence record that names each subject's digest (rule 11). It reports six figures.\n(a) Author variance at fixed input: the cited-path overlap measured here, extended to claim level (blocks whose cited spans overlap) and to Pole and thesis agreement across runs.\n(b) A pooled pseudo-ceiling: the union of supported claims and inventory entries across six runs, and each run's share of it. This gives a depth-headroom number before any maintainer-ceiling arm exists.\n(c) R4 replay: for each first fidelity verdict, the share of entries the reviewer marked unsupported that the citation-overlap pre-check would have listed (recall), and how many it lists that the reviewer accepted (noise).\n(d) R5 replay: rounds and packet bytes the unchanged-packet stop and delta packets would have saved, computed from the stored packet digests and block digests.\n(e) Reviewer consistency: for consecutive verdicts over packets with equal digests, whether the readiness and finding sets agree.\n(f) Stage time per review round from steps.jsonl, with the operator minutes R21's fault asks the cost line to count.\nOptionally, local renders of the stored sites in the existing headless browser give R12's first-screen pixel facts (title lines, hero above the fold, horizontal scroll at 390 px). This needs no provider.",
+     "why": "The reviewer says the last points need measurement and that k54o.3 gates the corpus. These figures need neither: they turn R4's and R5's planned savings and R1's depth gap into measured baselines now, and author variance is a finding the plan does not yet have. If one run cites half of what six cite together, then 'regenerate and pool' or 'two authors, merged' may earn more depth than any brief change. That decision should be made from this number.",
+     "class": "mandate-grounded",
+     "basis": "VIS-2 (measure what is known; label the rest); AGENTS.md verification rules 3, 4, 9 and 11",
+     "owner_value": 5,
+     "build_cost": 1,
+     "rubric_raised": [
+      "economy and lifecycle",
+      "depth of insight",
+      "measured advantage",
+      "truth"
+     ],
+     "relation_to_known": "New measurements over existing stores. (c) is R4 S1's replay made a stated metric pair. (d) quantifies R5. (b) gives the review-score-3 gap 'the ceiling arm is never acted on' a stand-in today. (a) is new and may justify a pooled-author move (F6).",
+     "prereq": "none; read-only over the stored runs",
+     "touches_doctrine": false,
+     "integration_points": [
+      "a new scripts/dossier_stored_run_metrics.py (the scratchpad cross_run.py, fidelity_causes.py and review_economy.py are sketches)",
+      "docs/evidence/ (one record naming each run's record.json digest)",
+      "packages/polaris-dossier/src/review-packet.ts (packet and block digest functions reused for replay (d))",
+      "the P6 cdp-browser helper for the optional first-screen facts"
+     ],
+     "slices": [
+      "S1: (a), (b), (e) and (f) from stored JSON only.",
+      "S2: the (c) and (d) replays using the real check and packet code.",
+      "S3: first-screen pixel facts from local renders."
+     ]
+    },
+    {
+     "id": "F6",
+     "title": "Two authors, one dossier: pool independent drafts before review",
+     "what": "If F5(a) and (b) confirm that runs at one commit cover substantially different material, a full run starts two author sessions with the same brief. Neither sees the other's draft. A deterministic merge step aligns their blocks by cited-span overlap and keeps the union of supported claims under one outline. The outline comes from the draft whose thesis the inventory supports better, measured by coverage count, not a model judgement. The merge lists conflicting claims over the same spans for the editor session (R6) to reconcile. A conflict whose two sides cite different evidence is shown as a disagreement, never silently picked. Fidelity then reviews the merged draft once. Cost is roughly one extra author session, recorded by R3. R1 decides whether the depth gain pays for it.",
+     "why": "Ensembles beat single samples when variance is high. The measured overlap (Jaccard 0.53 on cited paths) suggests a second independent author could add a large share of what one author misses, for the price of one session rather than a new mechanism.",
+     "class": "mandate-grounded",
+     "basis": "VIS-2 (disagreement shown, not resolved by assertion); the F5 measurement as the gate",
+     "owner_value": 3,
+     "build_cost": 2,
+     "rubric_raised": [
+      "depth of insight",
+      "comprehension",
+      "measured advantage"
+     ],
+     "relation_to_known": "New. It uses R6's editor for reconciliation, R4's coverage logic for the outline choice and R3 for cost. Gated on F5, so it is closed unbuilt if the variance is small.",
+     "prereq": "F5 (a) and (b); R6 editor session",
+     "touches_doctrine": false,
+     "integration_points": [
+      "packages/polaris-dossier/src/polaris.ts (two author sessions, then a merge stage)",
+      "a new packages/polaris-dossier/src/draft-merge.ts (span-overlap alignment, conflict list)",
+      "packages/polaris-dossier/src/session-handover.ts (author brief unchanged; editor brief gains conflicts)"
+     ],
+     "slices": [
+      "S1: offline merge of two stored Redis drafts, with coverage and conflicts measured; no new run.",
+      "S2: the two-author run mode, scored by R1 on the next corpus pass."
      ]
     }
    ]

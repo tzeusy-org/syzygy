@@ -1,0 +1,1722 @@
+{
+ "record": "R27 measure-now over stored dossier runs",
+ "measuredOn": "2026-11-21",
+ "stateRoot": "/home/orca/.local/state/syzygy-dossier",
+ "scope": "six run directories of redis/redis at 498ecd0d; run-*.agents and run-*.sessions never opened; no provider, no dossier or consent command",
+ "scripts": [
+  "fig_a.py",
+  "fig_b.py",
+  "fig_c.py",
+  "fig_d.py",
+  "fig_e.py",
+  "fig_f.py",
+  "fig_g.py",
+  "finalize.py",
+  "first_screen.js",
+  "mlib.py",
+  "selftest.py"
+ ],
+ "headlines": {
+  "a": "cited-path mean pairwise Jaccard 0.613 (14 of 39 paths in every run); claim level strict 0.317 (loose 0.787); intro word Jaccard 0.26, Pole label words 0.29 over 3 runs with Poles",
+  "b": "545 supported-claim clusters pooled; per-run share 0.136-0.508; 396 in one run only, 10 in all six; inventory 185 clusters, per-run share 0.249-0.486",
+  "c": "overlap-or-named pre-check recall 0.834 (151/181), noise 12 represented + 21 justified; overlap-only recall 0.923 noise 17+36",
+  "d": "0 of 16 later fidelity deliveries repeat the previous packet; unchanged blocks are 0.322 of later block bytes but 0.043 of packet bytes; item-level unchanged (blocks, spans, inventory, schema, criteria) 0.301 of canonical bytes",
+  "e": "5 of 23 consecutive verdict pairs share a packet, all same-session resubmissions after a refused check; readiness agrees 5/5; independent re-review of identical bytes: none stored (Unknown)",
+  "f": "fidelity round median 5.13 min over 22 rounds; design 5.84 min over 7; review rounds 0.565 of wall time; observable operator actions 7-7 per run (a floor)",
+  "g": "1440x900: thesis on first screen 2/5, figure top 3/5, horizontal scroll 0/5; 390x844: thesis on first screen 0/5, figure top 0/5, horizontal scroll 5/5"
+ },
+ "figures": {
+  "a_author_variance": {
+   "label": "Observed",
+   "runs": {
+    "2ecdcab0": {
+     "lastDraftRevision": 2,
+     "blocks": 245
+    },
+    "36df95fa": {
+     "lastDraftRevision": 3,
+     "blocks": 126
+    },
+    "4465d22f": {
+     "lastDraftRevision": 3,
+     "blocks": 98
+    },
+    "658f2f90": {
+     "lastDraftRevision": 4,
+     "blocks": 153
+    },
+    "d9411d26": {
+     "lastDraftRevision": 4,
+     "blocks": 415
+    },
+    "ffe579c7": {
+     "lastDraftRevision": 6,
+     "blocks": 214
+    }
+   },
+   "pathLevel": {
+    "perRun": {
+     "2ecdcab0": 18,
+     "36df95fa": 28,
+     "4465d22f": 20,
+     "658f2f90": 19,
+     "d9411d26": 36,
+     "ffe579c7": 18
+    },
+    "union": 39,
+    "inEveryRun": 14,
+    "inOneRunOnly": 8,
+    "meanPairwiseJaccard": 0.613
+   },
+   "claimLevel": {
+    "loose": {
+     "meanOrderedPairShareMatched": 0.787,
+     "minPair": 0.571,
+     "maxPair": 0.953,
+     "shareOfBlocksMatchedInAllFiveOtherRuns": {
+      "2ecdcab0": 0.465,
+      "36df95fa": 0.675,
+      "4465d22f": 0.714,
+      "658f2f90": 0.595,
+      "d9411d26": 0.381,
+      "ffe579c7": 0.565
+     }
+    },
+    "strict": {
+     "meanOrderedPairShareMatched": 0.317,
+     "minPair": 0.096,
+     "maxPair": 0.575,
+     "shareOfBlocksMatchedInAllFiveOtherRuns": {
+      "2ecdcab0": 0.053,
+      "36df95fa": 0.095,
+      "4465d22f": 0.122,
+      "658f2f90": 0.078,
+      "d9411d26": 0.022,
+      "ffe579c7": 0.089
+     }
+    }
+   },
+   "polesAndThesis": {
+    "polesPerRun": {
+     "2ecdcab0": 3,
+     "36df95fa": 0,
+     "4465d22f": 0,
+     "658f2f90": 3,
+     "d9411d26": 0,
+     "ffe579c7": 3
+    },
+    "runsWithPoles": 3,
+    "meanPairwiseJaccardPoleLabelWords": 0.29,
+    "distinctPoleLabelSets": 3,
+    "sectionsPerRun": {
+     "2ecdcab0": 4,
+     "36df95fa": 5,
+     "4465d22f": 5,
+     "658f2f90": 4,
+     "d9411d26": 5,
+     "ffe579c7": 4
+    },
+    "meanPairwiseJaccardSectionTitleWords": 0.284,
+    "meanPairwiseJaccardIntroductionWords": 0.26,
+    "meanPairwiseJaccardPropositionCitedLines": 0.107,
+    "runsWithAnyPropositionCitation": 6
+   },
+   "predicates": {
+    "block": "any dict under introduction, sections, diagrams, deepDives or unresolved with a non-empty citations list whose items carry a path (understanding record excluded)",
+    "citedPaths": "set of citation path values over those blocks",
+    "loose": "block X in run A is matched in run B if some cited span of X and some cited span of any block in B share a path and their closed line ranges intersect",
+    "strict": "block X in run A is matched in run B if some block in B has a cited (path,line) set with Jaccard >= 0.5 against X",
+    "words": "lowercased regex [a-z][a-z0-9-]{2,} minus stop list {the,and,for,how,what,with,its,are,from,that,this,into,redis}",
+    "pairs": "mean over the 15 unordered run pairs (Jaccard) or 30 ordered pairs (share matched)"
+   },
+   "denominator": "6 runs; blocks per run in runs[*].blocks",
+   "caveat": "Runs used brief versions v1 to v7 and draft schemas v2 to v4, so variance mixes author variance with brief and schema change; the commit is fixed (498ecd0d) for all six.",
+   "filesRead": {
+    "run-2ecdcab0c77e228f6ad9d3e0acfa1414/drafts/rev-2.json": "9f8390d30e72f8c47e4ef3592d8b2fec31e379d4ca9339037bf134d925225abb",
+    "run-36df95faf04a4c98eabbb32a18a4e833/drafts/rev-3.json": "47dd2b54d9eda4098255b3b8e0b47265c9fa71515133c5376ae8a4e5ad2024e3",
+    "run-4465d22f5ce1829ca49059a5b8451bb0/drafts/rev-3.json": "ae9524fd705b12b18b37bf3e2978e013238e0cb2689a495c197fd602b967ebd4",
+    "run-658f2f90470f73eea1dc1d90209c5ef7/drafts/rev-4.json": "927b9e84408d04fe922bd1d83add7553314f4202a91008f4dab347d47aad7d77",
+    "run-d9411d26ca55ebe0250e2e9b94dc0e32/drafts/rev-4.json": "01ebbfd1abef9ea1d18e25dfd49c02c0be4c7b022635c1618e051e4f84d5a84c",
+    "run-ffe579c77dc21d9f6dd87ca6e2bc9301/drafts/rev-6.json": "ae7c654cd41997b48fe4e00546ae591a919341f242f90503660f07d6c30b4890"
+   }
+  },
+  "b_pooled_ceiling": {
+   "label": "Observed (counts); Inferred (that the union approximates a depth ceiling)",
+   "inputsPerRun": {
+    "2ecdcab0": {
+     "fidelityVerdict": "fidelity-verdict-2.json",
+     "draftRevisionInPacket": 2,
+     "inventory": "rev-2.json"
+    },
+    "36df95fa": {
+     "fidelityVerdict": "fidelity-verdict-3.json",
+     "draftRevisionInPacket": 3,
+     "inventory": "rev-1.json"
+    },
+    "4465d22f": {
+     "fidelityVerdict": "fidelity-verdict-2.json",
+     "draftRevisionInPacket": 3,
+     "inventory": "rev-2.json"
+    },
+    "658f2f90": {
+     "fidelityVerdict": "fidelity-verdict-3.json",
+     "draftRevisionInPacket": 4,
+     "inventory": "rev-1.json"
+    },
+    "d9411d26": {
+     "fidelityVerdict": "fidelity-verdict-5.json",
+     "draftRevisionInPacket": 4,
+     "inventory": "rev-3.json"
+    },
+    "ffe579c7": {
+     "fidelityVerdict": "fidelity-verdict-6.json",
+     "draftRevisionInPacket": 6,
+     "inventory": "rev-2.json"
+    }
+   },
+   "supportedClaims": {
+    "unionClusters": 545,
+    "perRunItems": {
+     "2ecdcab0": 204,
+     "36df95fa": 97,
+     "4465d22f": 80,
+     "658f2f90": 112,
+     "d9411d26": 314,
+     "ffe579c7": 139
+    },
+    "perRunShareOfUnion": {
+     "2ecdcab0": 0.33,
+     "36df95fa": 0.163,
+     "4465d22f": 0.136,
+     "658f2f90": 0.18,
+     "d9411d26": 0.508,
+     "ffe579c7": 0.22
+    },
+    "clustersInOneRunOnly": 396,
+    "clustersInAllSixRuns": 10
+   },
+   "inventoryEntries": {
+    "unionClusters": 185,
+    "perRunItems": {
+     "2ecdcab0": 66,
+     "36df95fa": 63,
+     "4465d22f": 46,
+     "658f2f90": 55,
+     "d9411d26": 90,
+     "ffe579c7": 63
+    },
+    "perRunShareOfUnion": {
+     "2ecdcab0": 0.357,
+     "36df95fa": 0.33,
+     "4465d22f": 0.249,
+     "658f2f90": 0.297,
+     "d9411d26": 0.486,
+     "ffe579c7": 0.335
+    },
+    "clustersInOneRunOnly": 108,
+    "clustersInAllSixRuns": 9
+   },
+   "supportedCitedLines": {
+    "union": 3819,
+    "perRunShareOfUnion": {
+     "2ecdcab0": 0.454,
+     "36df95fa": 0.447,
+     "4465d22f": 0.249,
+     "658f2f90": 0.389,
+     "d9411d26": 0.355,
+     "ffe579c7": 0.236
+    }
+   },
+   "predicates": {
+    "supportedClaim": "a block (mlib.blocks) of the draft inside the packet of the run's last fidelity verdict whose blockSupport verdict is 'supported' and which cites at least one line range",
+    "sameClaim": "blocks from different runs join a cluster when their cited (path,line) sets have Jaccard >= 0.5 (union-find, transitive)",
+    "sameEntry": "inventory entries from different runs (last inventory revision) join when kinds are equal and cited (path,line) Jaccard >= 0.5; an entry with no line citation is its own cluster",
+    "share": "clusters containing at least one item from the run / all clusters"
+   },
+   "denominator": "6 runs; union cluster counts stated",
+   "filesRead": {
+    "run-2ecdcab0c77e228f6ad9d3e0acfa1414/inventory/rev-2.json": "d5e9c648af712ea844803d5d81cbe98979a51bdfbb8a361f26b40dd69c050cd7",
+    "run-2ecdcab0c77e228f6ad9d3e0acfa1414/reviews/fidelity-packet-a8e9e304ce6df7b3984bfb3dcbe54c2883fa1eae8f5cabd4610e317a63f4a8d2/packet.json": "a8e9e304ce6df7b3984bfb3dcbe54c2883fa1eae8f5cabd4610e317a63f4a8d2",
+    "run-2ecdcab0c77e228f6ad9d3e0acfa1414/reviews/fidelity-verdict-2.json": "1728cbe5520c26bdcf261ab361aa16295e70e9da951f4bb9b552b3adca0f4c97",
+    "run-36df95faf04a4c98eabbb32a18a4e833/inventory/rev-1.json": "a4cdec3a3756d87820e0af3b5a4b32891c4d6ffa91ed9f3a36b196d7afc29b6b",
+    "run-36df95faf04a4c98eabbb32a18a4e833/reviews/fidelity-packet-461b1b61c2f99c54589f2f2d2748e37e9d33888b7a60f4aee8bda7c40b8ec393/packet.json": "461b1b61c2f99c54589f2f2d2748e37e9d33888b7a60f4aee8bda7c40b8ec393",
+    "run-36df95faf04a4c98eabbb32a18a4e833/reviews/fidelity-verdict-3.json": "ea6d9d3265a6b9ba686a5e256ba3b3c79ad4df03022405b847eefa7ccd079e3c",
+    "run-4465d22f5ce1829ca49059a5b8451bb0/inventory/rev-2.json": "385ce0a6d8018008424b99768e06d659a9c02afd3a702f69dcce50380219318c",
+    "run-4465d22f5ce1829ca49059a5b8451bb0/reviews/fidelity-packet-c293d632536671e6a2f60897cba623791682c9ff8f31904ca4a2b2f167d35e8a/packet.json": "c293d632536671e6a2f60897cba623791682c9ff8f31904ca4a2b2f167d35e8a",
+    "run-4465d22f5ce1829ca49059a5b8451bb0/reviews/fidelity-verdict-2.json": "32b8ac4a3f076f75c54d8c007433cd5d25bd02afccfb32cf469b13703bc353bf",
+    "run-658f2f90470f73eea1dc1d90209c5ef7/inventory/rev-1.json": "a25a7858f64bcb1e5910e47a3602b143b3bf009ec805442a808c7e29f9abdd1f",
+    "run-658f2f90470f73eea1dc1d90209c5ef7/reviews/fidelity-packet-e12a7315470bca0b899b141d374410d3b0c29132befb9580cbe8454a42b821d6/packet.json": "e12a7315470bca0b899b141d374410d3b0c29132befb9580cbe8454a42b821d6",
+    "run-658f2f90470f73eea1dc1d90209c5ef7/reviews/fidelity-verdict-3.json": "5aac9d5cdf150504420dbe47d74c160d34bc56701e8e8b8f1487a7376a7f72c8",
+    "run-d9411d26ca55ebe0250e2e9b94dc0e32/inventory/rev-3.json": "aa9d8afd596693adb71af3c0bcb17cc427022b75d9f956e2792af68626a486fc",
+    "run-d9411d26ca55ebe0250e2e9b94dc0e32/reviews/fidelity-packet-227bd5c56c1d97a155a6e98f37379a8291b10f154667e789baf6d6fc9f9ce4fd/packet.json": "227bd5c56c1d97a155a6e98f37379a8291b10f154667e789baf6d6fc9f9ce4fd",
+    "run-d9411d26ca55ebe0250e2e9b94dc0e32/reviews/fidelity-verdict-5.json": "17d963cee22a7d596d646f2b80951b175e35d28aa80b7fd7eb0fc8a7a09d35fa",
+    "run-ffe579c77dc21d9f6dd87ca6e2bc9301/inventory/rev-2.json": "afcfc394a8ae3b592e4e252a5c51a9db9fb7c17f270e5d35e5b615b844fc7ead",
+    "run-ffe579c77dc21d9f6dd87ca6e2bc9301/reviews/fidelity-packet-5546152f77ebfd98a746f0c71cb7c4bfddb9eb5afc73e547fbebdb6cc27bb1d9/packet.json": "5546152f77ebfd98a746f0c71cb7c4bfddb9eb5afc73e547fbebdb6cc27bb1d9",
+    "run-ffe579c77dc21d9f6dd87ca6e2bc9301/reviews/fidelity-verdict-6.json": "12c2e73d74cba52efa0272d4800c1cb785088b169cd8eef241e5aa479f54d340"
+   }
+  },
+  "c_r4_replay": {
+   "label": "Observed",
+   "pooled": {
+    "overlapOrNamed": {
+     "unsupported": 181,
+     "listedUnsupported": 151,
+     "listedRepresented": 12,
+     "listedJustified": 21,
+     "listed": 184,
+     "recall": 0.834,
+     "precision": 0.821
+    },
+    "overlapOnly": {
+     "unsupported": 181,
+     "listedUnsupported": 167,
+     "listedRepresented": 17,
+     "listedJustified": 36,
+     "listed": 220,
+     "recall": 0.923,
+     "precision": 0.759
+    },
+    "samePathOrNamed": {
+     "unsupported": 181,
+     "listedUnsupported": 78,
+     "listedRepresented": 4,
+     "listedJustified": 10,
+     "listed": 92,
+     "recall": 0.431,
+     "precision": 0.848
+    }
+   },
+   "perRun": {
+    "2ecdcab0": {
+     "firstVerdict": "fidelity-verdict-1.json",
+     "draftRevision": 1,
+     "inventoryRevision": 1,
+     "entries": 66,
+     "overlapOrNamed": {
+      "unsupported": 39,
+      "listedUnsupported": 32,
+      "listedRepresented": 1,
+      "listedJustified": 0,
+      "listed": 33
+     },
+     "overlapOnly": {
+      "unsupported": 39,
+      "listedUnsupported": 37,
+      "listedRepresented": 3,
+      "listedJustified": 0,
+      "listed": 40
+     },
+     "samePathOrNamed": {
+      "unsupported": 39,
+      "listedUnsupported": 18,
+      "listedRepresented": 0,
+      "listedJustified": 0,
+      "listed": 18
+     }
+    },
+    "36df95fa": {
+     "firstVerdict": "fidelity-verdict-2.json",
+     "draftRevision": 1,
+     "inventoryRevision": 1,
+     "entries": 63,
+     "overlapOrNamed": {
+      "unsupported": 43,
+      "listedUnsupported": 40,
+      "listedRepresented": 2,
+      "listedJustified": 0,
+      "listed": 42
+     },
+     "overlapOnly": {
+      "unsupported": 43,
+      "listedUnsupported": 42,
+      "listedRepresented": 2,
+      "listedJustified": 1,
+      "listed": 45
+     },
+     "samePathOrNamed": {
+      "unsupported": 43,
+      "listedUnsupported": 12,
+      "listedRepresented": 0,
+      "listedJustified": 0,
+      "listed": 12
+     }
+    },
+    "4465d22f": {
+     "firstVerdict": "fidelity-verdict-0.json",
+     "draftRevision": 1,
+     "inventoryRevision": 1,
+     "entries": 46,
+     "overlapOrNamed": {
+      "unsupported": 20,
+      "listedUnsupported": 18,
+      "listedRepresented": 2,
+      "listedJustified": 6,
+      "listed": 26
+     },
+     "overlapOnly": {
+      "unsupported": 20,
+      "listedUnsupported": 18,
+      "listedRepresented": 2,
+      "listedJustified": 6,
+      "listed": 26
+     },
+     "samePathOrNamed": {
+      "unsupported": 20,
+      "listedUnsupported": 10,
+      "listedRepresented": 0,
+      "listedJustified": 1,
+      "listed": 11
+     }
+    },
+    "658f2f90": {
+     "firstVerdict": "fidelity-verdict-0.json",
+     "draftRevision": 1,
+     "inventoryRevision": 0,
+     "entries": 55,
+     "overlapOrNamed": {
+      "unsupported": 30,
+      "listedUnsupported": 27,
+      "listedRepresented": 3,
+      "listedJustified": 0,
+      "listed": 30
+     },
+     "overlapOnly": {
+      "unsupported": 30,
+      "listedUnsupported": 29,
+      "listedRepresented": 4,
+      "listedJustified": 0,
+      "listed": 33
+     },
+     "samePathOrNamed": {
+      "unsupported": 30,
+      "listedUnsupported": 17,
+      "listedRepresented": 1,
+      "listedJustified": 0,
+      "listed": 18
+     }
+    },
+    "d9411d26": {
+     "firstVerdict": "fidelity-verdict-1.json",
+     "draftRevision": 1,
+     "inventoryRevision": 1,
+     "entries": 92,
+     "overlapOrNamed": {
+      "unsupported": 12,
+      "listedUnsupported": 4,
+      "listedRepresented": 1,
+      "listedJustified": 15,
+      "listed": 20
+     },
+     "overlapOnly": {
+      "unsupported": 12,
+      "listedUnsupported": 11,
+      "listedRepresented": 3,
+      "listedJustified": 29,
+      "listed": 43
+     },
+     "samePathOrNamed": {
+      "unsupported": 12,
+      "listedUnsupported": 3,
+      "listedRepresented": 1,
+      "listedJustified": 9,
+      "listed": 13
+     }
+    },
+    "ffe579c7": {
+     "firstVerdict": "fidelity-verdict-1.json",
+     "draftRevision": 1,
+     "inventoryRevision": 1,
+     "entries": 63,
+     "overlapOrNamed": {
+      "unsupported": 37,
+      "listedUnsupported": 30,
+      "listedRepresented": 3,
+      "listedJustified": 0,
+      "listed": 33
+     },
+     "overlapOnly": {
+      "unsupported": 37,
+      "listedUnsupported": 30,
+      "listedRepresented": 3,
+      "listedJustified": 0,
+      "listed": 33
+     },
+     "samePathOrNamed": {
+      "unsupported": 37,
+      "listedUnsupported": 18,
+      "listedRepresented": 2,
+      "listedJustified": 0,
+      "listed": 20
+     }
+    }
+   },
+   "entriesTotal": 385,
+   "predicates": {
+    "firstVerdict": "the lowest-numbered fidelity verdict file whose steps.jsonl review-check row (same number) has outcome 'validated'",
+    "reviewerNotRepresented": "inventoryCoverage disposition == 'unsupported' in that verdict",
+    "reviewerAccepted": "disposition 'represented' (noise); 'justified-omission' reported separately",
+    "overlap": "some citation of the entry shares a path with, and has an intersecting closed line range with, some citation of any draft block (mlib.blocks over the packet draft)",
+    "samePath": "some citation path of the entry equals some cited path of any draft block",
+    "named": "some citation path of the entry occurs as a substring of the text/statement of any draft block",
+    "listed": "the pre-check lists an entry when the variant predicate for represented is false; variants overlapOrNamed (the R4 form), overlapOnly, samePathOrNamed"
+   },
+   "denominator": "entries in the inventory carried by each first fidelity packet (entriesTotal); recall over reviewer-unsupported entries",
+   "filesRead": {
+    "run-2ecdcab0c77e228f6ad9d3e0acfa1414/reviews/fidelity-packet-def3906d35c240e8ee4f5de54dceab52b939a710f1885c93c71c161dc57873a6/packet.json": "def3906d35c240e8ee4f5de54dceab52b939a710f1885c93c71c161dc57873a6",
+    "run-2ecdcab0c77e228f6ad9d3e0acfa1414/reviews/fidelity-verdict-1.json": "93ea5896adf106c3d8b192df1953b614cd3ad519ceb5bee590f353a0f677fa17",
+    "run-2ecdcab0c77e228f6ad9d3e0acfa1414/steps.jsonl": "0c16183d562af7b4ee7075f285d7440b0aeed9ed1beccaf1b92ddb9357e9832d",
+    "run-36df95faf04a4c98eabbb32a18a4e833/reviews/fidelity-packet-5801903893c0b7baed5f789b45c054f05eac866f39da8d893f065d7dbaea2b73/packet.json": "5801903893c0b7baed5f789b45c054f05eac866f39da8d893f065d7dbaea2b73",
+    "run-36df95faf04a4c98eabbb32a18a4e833/reviews/fidelity-verdict-2.json": "cec296760e44809fdf5cae7c2a508f5ae6e94c42b27eafe3fbae32a356936860",
+    "run-36df95faf04a4c98eabbb32a18a4e833/steps.jsonl": "7d42d6603eec72dee90e722d7b7a7bf3905f8b61c8dc64a6b45a71ff905f4e1a",
+    "run-4465d22f5ce1829ca49059a5b8451bb0/reviews/fidelity-packet-08a1591c7f63f0b68fea3bead00bdc0ed6c9e06da5f17672df7407c8aa933f41/packet.json": "08a1591c7f63f0b68fea3bead00bdc0ed6c9e06da5f17672df7407c8aa933f41",
+    "run-4465d22f5ce1829ca49059a5b8451bb0/reviews/fidelity-verdict-0.json": "b20d4a962bf2fc951d584a2131a2cc1187aad23200a4ffc133a031645cf349bf",
+    "run-4465d22f5ce1829ca49059a5b8451bb0/steps.jsonl": "aea8584097bfcf6197962702a27b18e0634096a11d0a5416421699f1678c25c5",
+    "run-658f2f90470f73eea1dc1d90209c5ef7/reviews/fidelity-packet-82940817f95c790903a90103264d941217e563b407a60e391823e40b8716733e/packet.json": "82940817f95c790903a90103264d941217e563b407a60e391823e40b8716733e",
+    "run-658f2f90470f73eea1dc1d90209c5ef7/reviews/fidelity-verdict-0.json": "8f3371c50052af970dcb3d98198286bdc494a85ab825cfe16542df5a970e7346",
+    "run-658f2f90470f73eea1dc1d90209c5ef7/steps.jsonl": "8a33647ad32651b2681746af20ece424dbff5d8a3930d966112a887c42dd0b64",
+    "run-d9411d26ca55ebe0250e2e9b94dc0e32/reviews/fidelity-packet-108c92d6f49622642d7df91835b8ce0745f56ea392801e0b6925bd366009052c/packet.json": "108c92d6f49622642d7df91835b8ce0745f56ea392801e0b6925bd366009052c",
+    "run-d9411d26ca55ebe0250e2e9b94dc0e32/reviews/fidelity-verdict-1.json": "30c3326e3cdb4ab4374afef2e09e2d5d4de53dc1ab3e96e76ad5545b966206a7",
+    "run-d9411d26ca55ebe0250e2e9b94dc0e32/steps.jsonl": "1464b3e5c61b8fccc6cfb95da65599c652d3098e453a4385000309afaee76c33",
+    "run-ffe579c77dc21d9f6dd87ca6e2bc9301/reviews/fidelity-packet-ef8798f8d29f37ede6a96e3ed7429c4d6b633c516b3c546139e3c050cd17fae0/packet.json": "ef8798f8d29f37ede6a96e3ed7429c4d6b633c516b3c546139e3c050cd17fae0",
+    "run-ffe579c77dc21d9f6dd87ca6e2bc9301/reviews/fidelity-verdict-1.json": "601e19f34517a1df9ffcf455ac845be293f820b8d4c6144424c54a24e1b843d7",
+    "run-ffe579c77dc21d9f6dd87ca6e2bc9301/steps.jsonl": "4eb6676194fc72a40a47d00e4663a451ccb5bce10fada2602a4fdd40c0245eb6"
+   }
+  },
+  "d_r5_replay": {
+   "perRun": {
+    "2ecdcab0": {
+     "fidelity": [
+      {
+       "round": 1,
+       "session": 1,
+       "packetBytes": 478326,
+       "sameDigestAsPrevious": false
+      },
+      {
+       "round": 2,
+       "session": 1,
+       "packetBytes": 607609,
+       "sameDigestAsPrevious": false,
+       "unchangedTopLevelBytes": 11199,
+       "canonicalBytes": 420192,
+       "unchangedBlockBytes": 0,
+       "blockBytes": 76458,
+       "unchangedSpanBytes": 0,
+       "unchangedInventoryBytes": 0
+      }
+     ],
+     "design": [
+      {
+       "round": 1,
+       "session": 1,
+       "packetBytes": 3307836,
+       "sameDigestAsPrevious": false
+      }
+     ]
+    },
+    "36df95fa": {
+     "fidelity": [
+      {
+       "round": 1,
+       "session": 1,
+       "packetBytes": 359374,
+       "sameDigestAsPrevious": false
+      },
+      {
+       "round": 2,
+       "session": 1,
+       "packetBytes": 454779,
+       "sameDigestAsPrevious": false,
+       "unchangedTopLevelBytes": 42934,
+       "canonicalBytes": 328954,
+       "unchangedBlockBytes": 0,
+       "blockBytes": 60305,
+       "unchangedSpanBytes": 2446,
+       "unchangedInventoryBytes": 32252
+      }
+     ],
+     "design": []
+    },
+    "4465d22f": {
+     "fidelity": [
+      {
+       "round": 1,
+       "session": 1,
+       "packetBytes": 288831,
+       "sameDigestAsPrevious": false
+      },
+      {
+       "round": 2,
+       "session": 1,
+       "packetBytes": 317029,
+       "sameDigestAsPrevious": false,
+       "unchangedTopLevelBytes": 11898,
+       "canonicalBytes": 225555,
+       "unchangedBlockBytes": 0,
+       "blockBytes": 41067,
+       "unchangedSpanBytes": 5253,
+       "unchangedInventoryBytes": 0
+      },
+      {
+       "round": 3,
+       "session": 1,
+       "packetBytes": 317563,
+       "sameDigestAsPrevious": false,
+       "unchangedTopLevelBytes": 42868,
+       "canonicalBytes": 225777,
+       "unchangedBlockBytes": 16239,
+       "blockBytes": 41209,
+       "unchangedSpanBytes": 82455,
+       "unchangedInventoryBytes": 20841
+      }
+     ],
+     "design": [
+      {
+       "round": 1,
+       "session": 1,
+       "packetBytes": 3163286,
+       "sameDigestAsPrevious": false
+      }
+     ]
+    },
+    "658f2f90": {
+     "fidelity": [
+      {
+       "round": 1,
+       "session": 1,
+       "packetBytes": 356586,
+       "sameDigestAsPrevious": false
+      },
+      {
+       "round": 2,
+       "session": 1,
+       "packetBytes": 374964,
+       "sameDigestAsPrevious": false,
+       "unchangedTopLevelBytes": 13263,
+       "canonicalBytes": 261327,
+       "unchangedBlockBytes": 0,
+       "blockBytes": 37072,
+       "unchangedSpanBytes": 1111,
+       "unchangedInventoryBytes": 0
+      },
+      {
+       "round": 3,
+       "session": 1,
+       "packetBytes": 409573,
+       "sameDigestAsPrevious": false,
+       "unchangedTopLevelBytes": 47480,
+       "canonicalBytes": 283945,
+       "unchangedBlockBytes": 5326,
+       "blockBytes": 43959,
+       "unchangedSpanBytes": 4060,
+       "unchangedInventoryBytes": 30250
+      },
+      {
+       "round": 4,
+       "session": 1,
+       "packetBytes": 423130,
+       "sameDigestAsPrevious": false,
+       "unchangedTopLevelBytes": 41404,
+       "canonicalBytes": 291654,
+       "unchangedBlockBytes": 0,
+       "blockBytes": 44693,
+       "unchangedSpanBytes": 35644,
+       "unchangedInventoryBytes": 30250
+      }
+     ],
+     "design": [
+      {
+       "round": 1,
+       "session": 1,
+       "packetBytes": 3181412,
+       "sameDigestAsPrevious": false
+      },
+      {
+       "round": 2,
+       "session": 1,
+       "packetBytes": 3211537,
+       "sameDigestAsPrevious": false,
+       "unchangedTopLevelBytes": 15533,
+       "canonicalBytes": 3208140,
+       "unchangedBlockBytes": 0,
+       "blockBytes": 0,
+       "unchangedSpanBytes": 0,
+       "unchangedInventoryBytes": 0
+      }
+     ]
+    },
+    "d9411d26": {
+     "fidelity": [
+      {
+       "round": 1,
+       "session": 1,
+       "packetBytes": 707550,
+       "sameDigestAsPrevious": false
+      },
+      {
+       "round": 2,
+       "session": 1,
+       "packetBytes": 762285,
+       "sameDigestAsPrevious": false,
+       "unchangedTopLevelBytes": 11826,
+       "canonicalBytes": 471666,
+       "unchangedBlockBytes": 747,
+       "blockBytes": 114457,
+       "unchangedSpanBytes": 557,
+       "unchangedInventoryBytes": 0
+      },
+      {
+       "round": 3,
+       "session": 1,
+       "packetBytes": 761116,
+       "sameDigestAsPrevious": false,
+       "unchangedTopLevelBytes": 141893,
+       "canonicalBytes": 470933,
+       "unchangedBlockBytes": 114457,
+       "blockBytes": 114457,
+       "unchangedSpanBytes": 103673,
+       "unchangedInventoryBytes": 0
+      },
+      {
+       "round": 4,
+       "session": 1,
+       "packetBytes": 761088,
+       "sameDigestAsPrevious": false,
+       "unchangedTopLevelBytes": 382469,
+       "canonicalBytes": 470905,
+       "unchangedBlockBytes": 114175,
+       "blockBytes": 114429,
+       "unchangedSpanBytes": 279862,
+       "unchangedInventoryBytes": 48497
+      },
+      {
+       "round": 5,
+       "session": 1,
+       "packetBytes": 787115,
+       "sameDigestAsPrevious": false,
+       "unchangedTopLevelBytes": 59073,
+       "canonicalBytes": 486689,
+       "unchangedBlockBytes": 747,
+       "blockBytes": 117012,
+       "unchangedSpanBytes": 10328,
+       "unchangedInventoryBytes": 48497
+      }
+     ],
+     "design": [
+      {
+       "round": 1,
+       "session": 1,
+       "packetBytes": 5026798,
+       "sameDigestAsPrevious": false
+      },
+      {
+       "round": 2,
+       "session": 1,
+       "packetBytes": 5322354,
+       "sameDigestAsPrevious": false,
+       "unchangedTopLevelBytes": 5121,
+       "canonicalBytes": 5318292,
+       "unchangedBlockBytes": 0,
+       "blockBytes": 0,
+       "unchangedSpanBytes": 0,
+       "unchangedInventoryBytes": 0
+      }
+     ]
+    },
+    "ffe579c7": {
+     "fidelity": [
+      {
+       "round": 1,
+       "session": 1,
+       "packetBytes": 388460,
+       "sameDigestAsPrevious": false
+      },
+      {
+       "round": 2,
+       "session": 1,
+       "packetBytes": 411792,
+       "sameDigestAsPrevious": false,
+       "unchangedTopLevelBytes": 10006,
+       "canonicalBytes": 275114,
+       "unchangedBlockBytes": 3633,
+       "blockBytes": 50486,
+       "unchangedSpanBytes": 20282,
+       "unchangedInventoryBytes": 0
+      },
+      {
+       "round": 3,
+       "session": 1,
+       "packetBytes": 411018,
+       "sameDigestAsPrevious": false,
+       "unchangedTopLevelBytes": 97334,
+       "canonicalBytes": 274713,
+       "unchangedBlockBytes": 48599,
+       "blockBytes": 50235,
+       "unchangedSpanBytes": 125507,
+       "unchangedInventoryBytes": 31788
+      },
+      {
+       "round": 4,
+       "session": 1,
+       "packetBytes": 448089,
+       "sameDigestAsPrevious": false,
+       "unchangedTopLevelBytes": 41938,
+       "canonicalBytes": 297259,
+       "unchangedBlockBytes": 5069,
+       "blockBytes": 59168,
+       "unchangedSpanBytes": 0,
+       "unchangedInventoryBytes": 31788
+      },
+      {
+       "round": 5,
+       "session": 1,
+       "packetBytes": 450877,
+       "sameDigestAsPrevious": false,
+       "unchangedTopLevelBytes": 41938,
+       "canonicalBytes": 299339,
+       "unchangedBlockBytes": 9796,
+       "blockBytes": 59673,
+       "unchangedSpanBytes": 48655,
+       "unchangedInventoryBytes": 31788
+      },
+      {
+       "round": 6,
+       "session": 1,
+       "packetBytes": 476298,
+       "sameDigestAsPrevious": false,
+       "unchangedTopLevelBytes": 41938,
+       "canonicalBytes": 313759,
+       "unchangedBlockBytes": 31914,
+       "blockBytes": 63163,
+       "unchangedSpanBytes": 73112,
+       "unchangedInventoryBytes": 31788
+      }
+     ],
+     "design": [
+      {
+       "round": 1,
+       "session": 1,
+       "packetBytes": 3507319,
+       "sameDigestAsPrevious": false
+      }
+     ]
+    }
+   },
+   "pooled": {
+    "fidelity": {
+     "deliveries": 22,
+     "laterDeliveries": 16,
+     "sameDigestAsPrevious": 0,
+     "laterPacketBytes": 8174325,
+     "unchangedBlockBytes": 350702,
+     "blockBytes": 1087843,
+     "unchangedSpanBytes": 792945,
+     "unchangedInventoryBytes": 337739,
+     "unchangedTopLevelBytes": 1039461,
+     "canonicalBytes": 5397781,
+     "unchangedPartBytes": {
+      "inventory.document.entries": 310822,
+      "spans": 280399,
+      "draft.document.sections": 125961,
+      "verdictSchema": 90664,
+      "criteria": 53927,
+      "draft.document.diagrams": 50813,
+      "draft.document.understanding": 34077,
+      "inventory.document.coverage": 28803,
+      "draft.document.deepDives": 25377,
+      "draft.document.executions": 13945,
+      "draft.document.unresolved": 5162,
+      "draft.document.introduction": 3953
+     },
+     "shareOfLaterPacketBytesInUnchangedBlocks": 0.043,
+     "shareOfLaterBlockBytesUnchanged": 0.322,
+     "shareOfLaterPacketBytesUnchangedBlocksSpansInventory": 0.181,
+     "shareOfLaterCanonicalBytesInUnchangedTopLevelParts": 0.193,
+     "itemLevelUnchangedBytes": 1625977,
+     "shareOfLaterCanonicalBytesItemLevelUnchanged": 0.301
+    },
+    "design": {
+     "deliveries": 7,
+     "laterDeliveries": 2,
+     "sameDigestAsPrevious": 0,
+     "laterPacketBytes": 8533891,
+     "unchangedBlockBytes": 0,
+     "blockBytes": 0,
+     "unchangedSpanBytes": 0,
+     "unchangedInventoryBytes": 0,
+     "unchangedTopLevelBytes": 20654,
+     "canonicalBytes": 8526432,
+     "unchangedPartBytes": {
+      "criteria": 16132,
+      "verdictSchema": 3812,
+      "region": 468,
+      "pinnedRevision": 84,
+      "runId": 76,
+      "format": 66,
+      "kind": 16
+     },
+     "shareOfLaterPacketBytesInUnchangedBlocks": 0.0,
+     "shareOfLaterBlockBytesUnchanged": 0.0,
+     "shareOfLaterPacketBytesUnchangedBlocksSpansInventory": 0.0,
+     "shareOfLaterCanonicalBytesInUnchangedTopLevelParts": 0.002,
+     "itemLevelUnchangedBytes": 19944,
+     "shareOfLaterCanonicalBytesItemLevelUnchanged": 0.002
+    }
+   },
+   "label": "Observed",
+   "predicates": {
+    "delivery": "steps.jsonl rows with step 'session-prompt', outcome 'delivered' and the kind; packet read from reviews/<kind>-packet-<packetSha256>/packet.json",
+    "sameDigest": "a delivery's packetSha256 equals the previous delivery's of the same kind in the same run",
+    "unchangedBlock": "a block (mlib.blocks over packet.draft.document) whose id is present in the previous packet with an equal canonical-JSON sha256 of the block minus its children",
+    "unchangedSpan": "an item of packet.spans whose id is present in the previous packet with equal canonical-JSON sha256",
+    "unchangedInventory": "packet.inventory.document canonical-JSON sha256 equal to the previous packet",
+    "bytes": "packet.json file bytes; block, span and inventory bytes are compact canonical JSON (an approximation of their share of the file)"
+   },
+   "denominator": "deliveries per kind across the six runs (pooled.*.deliveries); later = all but the first delivery of a run",
+   "filesRead": {
+    "run-2ecdcab0c77e228f6ad9d3e0acfa1414/reviews/design-packet-bc23e27bc113b6bd35f00302638d767c12e6d0446e9214d3ecb8938b6df9b10a/packet.json": "bc23e27bc113b6bd35f00302638d767c12e6d0446e9214d3ecb8938b6df9b10a",
+    "run-2ecdcab0c77e228f6ad9d3e0acfa1414/reviews/fidelity-packet-a8e9e304ce6df7b3984bfb3dcbe54c2883fa1eae8f5cabd4610e317a63f4a8d2/packet.json": "a8e9e304ce6df7b3984bfb3dcbe54c2883fa1eae8f5cabd4610e317a63f4a8d2",
+    "run-2ecdcab0c77e228f6ad9d3e0acfa1414/reviews/fidelity-packet-def3906d35c240e8ee4f5de54dceab52b939a710f1885c93c71c161dc57873a6/packet.json": "def3906d35c240e8ee4f5de54dceab52b939a710f1885c93c71c161dc57873a6",
+    "run-2ecdcab0c77e228f6ad9d3e0acfa1414/steps.jsonl": "0c16183d562af7b4ee7075f285d7440b0aeed9ed1beccaf1b92ddb9357e9832d",
+    "run-36df95faf04a4c98eabbb32a18a4e833/reviews/fidelity-packet-461b1b61c2f99c54589f2f2d2748e37e9d33888b7a60f4aee8bda7c40b8ec393/packet.json": "461b1b61c2f99c54589f2f2d2748e37e9d33888b7a60f4aee8bda7c40b8ec393",
+    "run-36df95faf04a4c98eabbb32a18a4e833/reviews/fidelity-packet-5801903893c0b7baed5f789b45c054f05eac866f39da8d893f065d7dbaea2b73/packet.json": "5801903893c0b7baed5f789b45c054f05eac866f39da8d893f065d7dbaea2b73",
+    "run-36df95faf04a4c98eabbb32a18a4e833/steps.jsonl": "7d42d6603eec72dee90e722d7b7a7bf3905f8b61c8dc64a6b45a71ff905f4e1a",
+    "run-4465d22f5ce1829ca49059a5b8451bb0/reviews/design-packet-79518dc24c9ff25f259b766d0f9be4559cd08b4af8e897cb619b5da940b6349c/packet.json": "79518dc24c9ff25f259b766d0f9be4559cd08b4af8e897cb619b5da940b6349c",
+    "run-4465d22f5ce1829ca49059a5b8451bb0/reviews/fidelity-packet-08a1591c7f63f0b68fea3bead00bdc0ed6c9e06da5f17672df7407c8aa933f41/packet.json": "08a1591c7f63f0b68fea3bead00bdc0ed6c9e06da5f17672df7407c8aa933f41",
+    "run-4465d22f5ce1829ca49059a5b8451bb0/reviews/fidelity-packet-37431f9dda95014bcf938b3f3cc6ae95085c0bb45dca7535313cf5ae9c1b58a2/packet.json": "37431f9dda95014bcf938b3f3cc6ae95085c0bb45dca7535313cf5ae9c1b58a2",
+    "run-4465d22f5ce1829ca49059a5b8451bb0/reviews/fidelity-packet-c293d632536671e6a2f60897cba623791682c9ff8f31904ca4a2b2f167d35e8a/packet.json": "c293d632536671e6a2f60897cba623791682c9ff8f31904ca4a2b2f167d35e8a",
+    "run-4465d22f5ce1829ca49059a5b8451bb0/steps.jsonl": "aea8584097bfcf6197962702a27b18e0634096a11d0a5416421699f1678c25c5",
+    "run-658f2f90470f73eea1dc1d90209c5ef7/reviews/design-packet-1e6b599d203871ce746c6d34f6c10d86017f3f747f9f0644344f237f9cb6758e/packet.json": "1e6b599d203871ce746c6d34f6c10d86017f3f747f9f0644344f237f9cb6758e",
+    "run-658f2f90470f73eea1dc1d90209c5ef7/reviews/design-packet-737e999789861dc2d236cfa961734d5e41b2ae0f8dc774736a2c4e0aef0ee61c/packet.json": "737e999789861dc2d236cfa961734d5e41b2ae0f8dc774736a2c4e0aef0ee61c",
+    "run-658f2f90470f73eea1dc1d90209c5ef7/reviews/fidelity-packet-1292b742fdc3e8a98f55e773fa0828a165fce0c29a3aba9ca872a7e3856af1fd/packet.json": "1292b742fdc3e8a98f55e773fa0828a165fce0c29a3aba9ca872a7e3856af1fd",
+    "run-658f2f90470f73eea1dc1d90209c5ef7/reviews/fidelity-packet-82940817f95c790903a90103264d941217e563b407a60e391823e40b8716733e/packet.json": "82940817f95c790903a90103264d941217e563b407a60e391823e40b8716733e",
+    "run-658f2f90470f73eea1dc1d90209c5ef7/reviews/fidelity-packet-e12a7315470bca0b899b141d374410d3b0c29132befb9580cbe8454a42b821d6/packet.json": "e12a7315470bca0b899b141d374410d3b0c29132befb9580cbe8454a42b821d6",
+    "run-658f2f90470f73eea1dc1d90209c5ef7/reviews/fidelity-packet-f68bb2bfa62bcf6fd5fe8217cdb801d3d53f988a5aee9bd6a126503b25984710/packet.json": "f68bb2bfa62bcf6fd5fe8217cdb801d3d53f988a5aee9bd6a126503b25984710",
+    "run-658f2f90470f73eea1dc1d90209c5ef7/steps.jsonl": "8a33647ad32651b2681746af20ece424dbff5d8a3930d966112a887c42dd0b64",
+    "run-d9411d26ca55ebe0250e2e9b94dc0e32/reviews/design-packet-874fb1ebc744b88a6e76ea5ffcc0f4de64bcb3877b1d419f1e26f0e93eb4e199/packet.json": "874fb1ebc744b88a6e76ea5ffcc0f4de64bcb3877b1d419f1e26f0e93eb4e199",
+    "run-d9411d26ca55ebe0250e2e9b94dc0e32/reviews/design-packet-e8e531b276e34e110ed94ba56360c47fa36dd2cb388284b5f1ae5b364b856ce3/packet.json": "e8e531b276e34e110ed94ba56360c47fa36dd2cb388284b5f1ae5b364b856ce3",
+    "run-d9411d26ca55ebe0250e2e9b94dc0e32/reviews/fidelity-packet-108c92d6f49622642d7df91835b8ce0745f56ea392801e0b6925bd366009052c/packet.json": "108c92d6f49622642d7df91835b8ce0745f56ea392801e0b6925bd366009052c",
+    "run-d9411d26ca55ebe0250e2e9b94dc0e32/reviews/fidelity-packet-227bd5c56c1d97a155a6e98f37379a8291b10f154667e789baf6d6fc9f9ce4fd/packet.json": "227bd5c56c1d97a155a6e98f37379a8291b10f154667e789baf6d6fc9f9ce4fd",
+    "run-d9411d26ca55ebe0250e2e9b94dc0e32/reviews/fidelity-packet-704c700a5c0a1924549b8d2502721e47d23724310df5ee5d59f0a12039427938/packet.json": "704c700a5c0a1924549b8d2502721e47d23724310df5ee5d59f0a12039427938",
+    "run-d9411d26ca55ebe0250e2e9b94dc0e32/reviews/fidelity-packet-d79c1493d978c0779210beb4233cbd329f4f4ee7a9dd0777fc940a4f9061e06d/packet.json": "d79c1493d978c0779210beb4233cbd329f4f4ee7a9dd0777fc940a4f9061e06d",
+    "run-d9411d26ca55ebe0250e2e9b94dc0e32/reviews/fidelity-packet-f48253f1f8a440c7c005c75a75625187e843d2d2dc451d9e20c630d1e34de56f/packet.json": "f48253f1f8a440c7c005c75a75625187e843d2d2dc451d9e20c630d1e34de56f",
+    "run-d9411d26ca55ebe0250e2e9b94dc0e32/steps.jsonl": "1464b3e5c61b8fccc6cfb95da65599c652d3098e453a4385000309afaee76c33",
+    "run-ffe579c77dc21d9f6dd87ca6e2bc9301/reviews/design-packet-79a8de2190084e581189bc7a94dc91e23534c4fa8bdc8089fdb05a1da6682eb7/packet.json": "79a8de2190084e581189bc7a94dc91e23534c4fa8bdc8089fdb05a1da6682eb7",
+    "run-ffe579c77dc21d9f6dd87ca6e2bc9301/reviews/fidelity-packet-5546152f77ebfd98a746f0c71cb7c4bfddb9eb5afc73e547fbebdb6cc27bb1d9/packet.json": "5546152f77ebfd98a746f0c71cb7c4bfddb9eb5afc73e547fbebdb6cc27bb1d9",
+    "run-ffe579c77dc21d9f6dd87ca6e2bc9301/reviews/fidelity-packet-96d9325280b55fc9695a50b89e7d3091a17338e25858bbf7eef037dd4905f2cd/packet.json": "96d9325280b55fc9695a50b89e7d3091a17338e25858bbf7eef037dd4905f2cd",
+    "run-ffe579c77dc21d9f6dd87ca6e2bc9301/reviews/fidelity-packet-9d446f71ffa3c841146f0a9175dc503d0830c4cbca62cd6f19a03b7ecc53b039/packet.json": "9d446f71ffa3c841146f0a9175dc503d0830c4cbca62cd6f19a03b7ecc53b039",
+    "run-ffe579c77dc21d9f6dd87ca6e2bc9301/reviews/fidelity-packet-b3798399ce2a17894a79ee9d02d49b340fefffe626abde1b8c495d9306ac0e5a/packet.json": "b3798399ce2a17894a79ee9d02d49b340fefffe626abde1b8c495d9306ac0e5a",
+    "run-ffe579c77dc21d9f6dd87ca6e2bc9301/reviews/fidelity-packet-b96971d060f4d46ae36d14aa9ed9b9a30fba04c7fba0e61e973b08a5e863f19d/packet.json": "b96971d060f4d46ae36d14aa9ed9b9a30fba04c7fba0e61e973b08a5e863f19d",
+    "run-ffe579c77dc21d9f6dd87ca6e2bc9301/reviews/fidelity-packet-ef8798f8d29f37ede6a96e3ed7429c4d6b633c516b3c546139e3c050cd17fae0/packet.json": "ef8798f8d29f37ede6a96e3ed7429c4d6b633c516b3c546139e3c050cd17fae0",
+    "run-ffe579c77dc21d9f6dd87ca6e2bc9301/steps.jsonl": "4eb6676194fc72a40a47d00e4663a451ccb5bce10fada2602a4fdd40c0245eb6"
+   }
+  },
+  "e_reviewer_consistency": {
+   "label": "Observed",
+   "pairsWithEqualPacket": 5,
+   "consecutiveVerdictPairsExamined": 23,
+   "readinessAgreeing": 5,
+   "pairs": [
+    {
+     "run": "2ecdcab0",
+     "kind": "fidelity",
+     "verdicts": [
+      "fidelity-verdict-0.json",
+      "fidelity-verdict-1.json"
+     ],
+     "reviewCheckOutcomes": [
+      "refused",
+      "validated"
+     ],
+     "sameSession": true,
+     "readiness": [
+      "not-ready",
+      "not-ready"
+     ],
+     "readinessAgrees": true,
+     "findingSetJaccard": 0.979,
+     "findings": [
+      46,
+      47
+     ],
+     "blockingFindings": [
+      19,
+      19
+     ],
+     "blockSupportAgreement": 1.0,
+     "coverageAgreement": 0.985,
+     "coverageUnsupported": [
+      38,
+      39
+     ]
+    },
+    {
+     "run": "36df95fa",
+     "kind": "fidelity",
+     "verdicts": [
+      "fidelity-verdict-0.json",
+      "fidelity-verdict-1.json"
+     ],
+     "reviewCheckOutcomes": [
+      "refused",
+      "refused"
+     ],
+     "sameSession": true,
+     "readiness": [
+      "not-ready",
+      "not-ready"
+     ],
+     "readinessAgrees": true,
+     "findingSetJaccard": 0.974,
+     "findings": [
+      38,
+      37
+     ],
+     "blockingFindings": [
+      6,
+      6
+     ],
+     "blockSupportAgreement": 1.0,
+     "coverageAgreement": 1.0,
+     "coverageUnsupported": [
+      42,
+      42
+     ]
+    },
+    {
+     "run": "36df95fa",
+     "kind": "fidelity",
+     "verdicts": [
+      "fidelity-verdict-1.json",
+      "fidelity-verdict-2.json"
+     ],
+     "reviewCheckOutcomes": [
+      "refused",
+      "validated"
+     ],
+     "sameSession": true,
+     "readiness": [
+      "not-ready",
+      "not-ready"
+     ],
+     "readinessAgrees": true,
+     "findingSetJaccard": 1.0,
+     "findings": [
+      37,
+      37
+     ],
+     "blockingFindings": [
+      6,
+      6
+     ],
+     "blockSupportAgreement": 1.0,
+     "coverageAgreement": 0.984,
+     "coverageUnsupported": [
+      42,
+      43
+     ]
+    },
+    {
+     "run": "d9411d26",
+     "kind": "fidelity",
+     "verdicts": [
+      "fidelity-verdict-0.json",
+      "fidelity-verdict-1.json"
+     ],
+     "reviewCheckOutcomes": [
+      "refused",
+      "validated"
+     ],
+     "sameSession": true,
+     "readiness": [
+      "not-ready",
+      "not-ready"
+     ],
+     "readinessAgrees": true,
+     "findingSetJaccard": 1.0,
+     "findings": [
+      27,
+      27
+     ],
+     "blockingFindings": [
+      23,
+      23
+     ],
+     "blockSupportAgreement": 1.0,
+     "coverageAgreement": 0.967,
+     "coverageUnsupported": [
+      12,
+      12
+     ]
+    },
+    {
+     "run": "ffe579c7",
+     "kind": "fidelity",
+     "verdicts": [
+      "fidelity-verdict-0.json",
+      "fidelity-verdict-1.json"
+     ],
+     "reviewCheckOutcomes": [
+      "refused",
+      "validated"
+     ],
+     "sameSession": true,
+     "readiness": [
+      "not-ready",
+      "not-ready"
+     ],
+     "readinessAgrees": true,
+     "findingSetJaccard": 1.0,
+     "findings": [
+      14,
+      14
+     ],
+     "blockingFindings": [
+      6,
+      6
+     ],
+     "blockSupportAgreement": 1.0,
+     "coverageAgreement": 1.0,
+     "coverageUnsupported": [
+      37,
+      37
+     ]
+    }
+   ],
+   "predicates": {
+    "pair": "consecutive verdict files N and N+1 of one kind in one run (reviews/<kind>-verdict-N.json) with equal packetSha256",
+    "findingSet": "set of (severity, subject, target) triples; Jaccard between the two verdicts",
+    "agreement": "share of block ids (entry ids) present in both verdicts with an equal blockSupport verdict (coverage disposition)",
+    "reviewCheckOutcome": "steps.jsonl review-check row whose number equals the verdict file number"
+   },
+   "denominator": "consecutiveVerdictPairsExamined pairs across six runs and two kinds; zero consecutive deliveries had equal digests (figure d), so equal-packet pairs are re-submissions to the same delivery",
+   "filesRead": {
+    "run-2ecdcab0c77e228f6ad9d3e0acfa1414/reviews/fidelity-verdict-0.json": "65378908ff12b22bbbdfb613b06c7b20bba12ca5f556458a299cb3ca8760259e",
+    "run-2ecdcab0c77e228f6ad9d3e0acfa1414/reviews/fidelity-verdict-1.json": "93ea5896adf106c3d8b192df1953b614cd3ad519ceb5bee590f353a0f677fa17",
+    "run-2ecdcab0c77e228f6ad9d3e0acfa1414/reviews/fidelity-verdict-2.json": "1728cbe5520c26bdcf261ab361aa16295e70e9da951f4bb9b552b3adca0f4c97",
+    "run-2ecdcab0c77e228f6ad9d3e0acfa1414/steps.jsonl": "0c16183d562af7b4ee7075f285d7440b0aeed9ed1beccaf1b92ddb9357e9832d",
+    "run-36df95faf04a4c98eabbb32a18a4e833/reviews/fidelity-verdict-0.json": "762a2735f109e15fee6fb44d6f9ea46b614cb6774daf78619d72e8bb99c5ef5a",
+    "run-36df95faf04a4c98eabbb32a18a4e833/reviews/fidelity-verdict-1.json": "eb251f1e2f4d6fe5c8e5cf63d23d458abea0becf5aebabd327fd5693964e738f",
+    "run-36df95faf04a4c98eabbb32a18a4e833/reviews/fidelity-verdict-2.json": "cec296760e44809fdf5cae7c2a508f5ae6e94c42b27eafe3fbae32a356936860",
+    "run-36df95faf04a4c98eabbb32a18a4e833/reviews/fidelity-verdict-3.json": "ea6d9d3265a6b9ba686a5e256ba3b3c79ad4df03022405b847eefa7ccd079e3c",
+    "run-36df95faf04a4c98eabbb32a18a4e833/steps.jsonl": "7d42d6603eec72dee90e722d7b7a7bf3905f8b61c8dc64a6b45a71ff905f4e1a",
+    "run-4465d22f5ce1829ca49059a5b8451bb0/reviews/fidelity-verdict-0.json": "b20d4a962bf2fc951d584a2131a2cc1187aad23200a4ffc133a031645cf349bf",
+    "run-4465d22f5ce1829ca49059a5b8451bb0/reviews/fidelity-verdict-1.json": "a96dba8646ac39d6aafa76d48f41010518222af8aed8abb3b7d135d2e35e5b76",
+    "run-4465d22f5ce1829ca49059a5b8451bb0/reviews/fidelity-verdict-2.json": "32b8ac4a3f076f75c54d8c007433cd5d25bd02afccfb32cf469b13703bc353bf",
+    "run-4465d22f5ce1829ca49059a5b8451bb0/steps.jsonl": "aea8584097bfcf6197962702a27b18e0634096a11d0a5416421699f1678c25c5",
+    "run-658f2f90470f73eea1dc1d90209c5ef7/reviews/design-verdict-0.json": "04e65ef1a07c92321a62d105b3d79e6d7a2df5b9797704c7ad4bde276eb54226",
+    "run-658f2f90470f73eea1dc1d90209c5ef7/reviews/design-verdict-1.json": "6968af87d13c111987985d456c8e371253bfbbfe368327817b6d9976b52867c6",
+    "run-658f2f90470f73eea1dc1d90209c5ef7/reviews/fidelity-verdict-0.json": "8f3371c50052af970dcb3d98198286bdc494a85ab825cfe16542df5a970e7346",
+    "run-658f2f90470f73eea1dc1d90209c5ef7/reviews/fidelity-verdict-1.json": "3ea63792592f510faff704e297156c33489da32bc56221470f30828fa6bb7dbc",
+    "run-658f2f90470f73eea1dc1d90209c5ef7/reviews/fidelity-verdict-2.json": "9b03283f47764c0b9c384550f22fbd3c249c28a389fa49711697b8c761cfd528",
+    "run-658f2f90470f73eea1dc1d90209c5ef7/reviews/fidelity-verdict-3.json": "5aac9d5cdf150504420dbe47d74c160d34bc56701e8e8b8f1487a7376a7f72c8",
+    "run-658f2f90470f73eea1dc1d90209c5ef7/steps.jsonl": "8a33647ad32651b2681746af20ece424dbff5d8a3930d966112a887c42dd0b64",
+    "run-d9411d26ca55ebe0250e2e9b94dc0e32/reviews/design-verdict-0.json": "5c3fd47f20e6fa91b467fd420c37ddb43d2066834ed25996d858c1cfbef29f98",
+    "run-d9411d26ca55ebe0250e2e9b94dc0e32/reviews/design-verdict-1.json": "aed3518fceace2567d93135869127fa0bedbec600b6d28da554c0aeac01f6a24",
+    "run-d9411d26ca55ebe0250e2e9b94dc0e32/reviews/fidelity-verdict-0.json": "48668f4f7accfb0bce4d3715c3326ef85f2015bdb03737300430caaa6acdf083",
+    "run-d9411d26ca55ebe0250e2e9b94dc0e32/reviews/fidelity-verdict-1.json": "30c3326e3cdb4ab4374afef2e09e2d5d4de53dc1ab3e96e76ad5545b966206a7",
+    "run-d9411d26ca55ebe0250e2e9b94dc0e32/reviews/fidelity-verdict-2.json": "df5086fb1fe9243ae564f331eacec6e31466ab69541a47e9443456d8b9f74ecf",
+    "run-d9411d26ca55ebe0250e2e9b94dc0e32/reviews/fidelity-verdict-3.json": "38a4a52251f419e6b95c175b5ac651d762a917bd04b1170da04cb21e4741fa22",
+    "run-d9411d26ca55ebe0250e2e9b94dc0e32/reviews/fidelity-verdict-4.json": "c00e4b2be54b4ef0d13b53475257da1c0e0a35b4e2a35b90e7837587c91accbd",
+    "run-d9411d26ca55ebe0250e2e9b94dc0e32/reviews/fidelity-verdict-5.json": "17d963cee22a7d596d646f2b80951b175e35d28aa80b7fd7eb0fc8a7a09d35fa",
+    "run-d9411d26ca55ebe0250e2e9b94dc0e32/steps.jsonl": "1464b3e5c61b8fccc6cfb95da65599c652d3098e453a4385000309afaee76c33",
+    "run-ffe579c77dc21d9f6dd87ca6e2bc9301/reviews/fidelity-verdict-0.json": "3b930bc6d95d373187034beebb1e8c9f97bd917e513196cb75cde3a124c44987",
+    "run-ffe579c77dc21d9f6dd87ca6e2bc9301/reviews/fidelity-verdict-1.json": "601e19f34517a1df9ffcf455ac845be293f820b8d4c6144424c54a24e1b843d7",
+    "run-ffe579c77dc21d9f6dd87ca6e2bc9301/reviews/fidelity-verdict-2.json": "47590d0bb60471c4614195bdd26afc7220ad203584c540c3a1bed54757a11794",
+    "run-ffe579c77dc21d9f6dd87ca6e2bc9301/reviews/fidelity-verdict-3.json": "22c9c564fdd4a26e22125d14a2d85f84a7143bedcc0ee101061e2633b73d64dc",
+    "run-ffe579c77dc21d9f6dd87ca6e2bc9301/reviews/fidelity-verdict-4.json": "cedb83c28019183a23ebb9b5f502767d92e7d0f7605ea99c07550af39189d94d",
+    "run-ffe579c77dc21d9f6dd87ca6e2bc9301/reviews/fidelity-verdict-5.json": "5510ac8d1228196ada462f96e2cbff6d2b42f4e0392d536d6b9673486488acf2",
+    "run-ffe579c77dc21d9f6dd87ca6e2bc9301/reviews/fidelity-verdict-6.json": "12c2e73d74cba52efa0272d4800c1cb785088b169cd8eef241e5aa479f54d340",
+    "run-ffe579c77dc21d9f6dd87ca6e2bc9301/steps.jsonl": "4eb6676194fc72a40a47d00e4663a451ccb5bce10fada2602a4fdd40c0245eb6"
+   }
+  },
+  "f_stage_time_and_operator_actions": {
+   "label": "Observed (times, records); Inferred (operator-action total is a floor: preflight, clone agreement, init and any consent steps leave no step record)",
+   "reviewRounds": {
+    "fidelity": {
+     "rounds": 22,
+     "medianMinutes": 5.13,
+     "minMinutes": 2.25,
+     "maxMinutes": 12.25,
+     "sumMinutes": 134.8
+    },
+    "design": {
+     "rounds": 7,
+     "medianMinutes": 5.84,
+     "minMinutes": 1.55,
+     "maxMinutes": 7.46,
+     "sumMinutes": 35.8
+    }
+   },
+   "reviewShareOfWallTime": 0.565,
+   "wallMinutesTotal": 301.9,
+   "reviewMinutesTotal": 170.6,
+   "perRun": {
+    "2ecdcab0": {
+     "wallMinutesFirstToLastStep": 42.7,
+     "authorMinutesToFirstCheck": 8.6,
+     "reviewRoundMinutesSum": 24.0,
+     "closed": true,
+     "rounds": [
+      {
+       "kind": "fidelity",
+       "round": 1,
+       "session": 1,
+       "minutes": 10.95,
+       "refusedSubmissions": 1
+      },
+      {
+       "kind": "fidelity",
+       "round": 2,
+       "session": 1,
+       "minutes": 5.64,
+       "refusedSubmissions": 0
+      },
+      {
+       "kind": "design",
+       "round": 1,
+       "session": 1,
+       "minutes": 7.46,
+       "refusedSubmissions": 0
+      }
+     ],
+     "operatorActionsObservable": {
+      "sessionsStarted": 3,
+      "launchFormRecords": 3,
+      "clarificationsAnswered": 0,
+      "usageFiguresGivenAtClose": 0,
+      "configurationAnswer": 1
+     },
+     "operatorActionsObservableTotal": 7
+    },
+    "36df95fa": {
+     "wallMinutesFirstToLastStep": 46.8,
+     "authorMinutesToFirstCheck": 17.2,
+     "reviewRoundMinutesSum": 16.5,
+     "closed": true,
+     "rounds": [
+      {
+       "kind": "fidelity",
+       "round": 1,
+       "session": 1,
+       "minutes": 12.25,
+       "refusedSubmissions": 2
+      },
+      {
+       "kind": "fidelity",
+       "round": 2,
+       "session": 1,
+       "minutes": 4.27,
+       "refusedSubmissions": 0
+      }
+     ],
+     "operatorActionsObservable": {
+      "sessionsStarted": 2,
+      "launchFormRecords": 3,
+      "clarificationsAnswered": 1,
+      "usageFiguresGivenAtClose": 0,
+      "configurationAnswer": 1
+     },
+     "operatorActionsObservableTotal": 7
+    },
+    "4465d22f": {
+     "wallMinutesFirstToLastStep": 30.0,
+     "authorMinutesToFirstCheck": 6.4,
+     "reviewRoundMinutesSum": 14.3,
+     "closed": true,
+     "rounds": [
+      {
+       "kind": "fidelity",
+       "round": 1,
+       "session": 1,
+       "minutes": 5.79,
+       "refusedSubmissions": 0
+      },
+      {
+       "kind": "fidelity",
+       "round": 2,
+       "session": 1,
+       "minutes": 3.13,
+       "refusedSubmissions": 0
+      },
+      {
+       "kind": "fidelity",
+       "round": 3,
+       "session": 1,
+       "minutes": 2.25,
+       "refusedSubmissions": 0
+      },
+      {
+       "kind": "design",
+       "round": 1,
+       "session": 1,
+       "minutes": 3.15,
+       "refusedSubmissions": 0
+      }
+     ],
+     "operatorActionsObservable": {
+      "sessionsStarted": 3,
+      "launchFormRecords": 3,
+      "clarificationsAnswered": 0,
+      "usageFiguresGivenAtClose": 0,
+      "configurationAnswer": 1
+     },
+     "operatorActionsObservableTotal": 7
+    },
+    "658f2f90": {
+     "wallMinutesFirstToLastStep": 34.3,
+     "authorMinutesToFirstCheck": 5.0,
+     "reviewRoundMinutesSum": 22.6,
+     "closed": true,
+     "rounds": [
+      {
+       "kind": "fidelity",
+       "round": 1,
+       "session": 1,
+       "minutes": 5.99,
+       "refusedSubmissions": 0
+      },
+      {
+       "kind": "fidelity",
+       "round": 2,
+       "session": 1,
+       "minutes": 3.43,
+       "refusedSubmissions": 0
+      },
+      {
+       "kind": "fidelity",
+       "round": 3,
+       "session": 1,
+       "minutes": 2.66,
+       "refusedSubmissions": 0
+      },
+      {
+       "kind": "design",
+       "round": 1,
+       "session": 1,
+       "minutes": 5.84,
+       "refusedSubmissions": 0
+      },
+      {
+       "kind": "fidelity",
+       "round": 4,
+       "session": 1,
+       "minutes": 3.08,
+       "refusedSubmissions": 0
+      },
+      {
+       "kind": "design",
+       "round": 2,
+       "session": 1,
+       "minutes": 1.55,
+       "refusedSubmissions": 0
+      }
+     ],
+     "operatorActionsObservable": {
+      "sessionsStarted": 3,
+      "launchFormRecords": 3,
+      "clarificationsAnswered": 0,
+      "usageFiguresGivenAtClose": 0,
+      "configurationAnswer": 1
+     },
+     "operatorActionsObservableTotal": 7
+    },
+    "d9411d26": {
+     "wallMinutesFirstToLastStep": 66.8,
+     "authorMinutesToFirstCheck": 12.0,
+     "reviewRoundMinutesSum": 44.9,
+     "closed": true,
+     "rounds": [
+      {
+       "kind": "fidelity",
+       "round": 1,
+       "session": 1,
+       "minutes": 11.36,
+       "refusedSubmissions": 1
+      },
+      {
+       "kind": "fidelity",
+       "round": 2,
+       "session": 1,
+       "minutes": 8.83,
+       "refusedSubmissions": 1
+      },
+      {
+       "kind": "fidelity",
+       "round": 3,
+       "session": 1,
+       "minutes": 6.16,
+       "refusedSubmissions": 1
+      },
+      {
+       "kind": "fidelity",
+       "round": 4,
+       "session": 1,
+       "minutes": 3.7,
+       "refusedSubmissions": 0
+      },
+      {
+       "kind": "design",
+       "round": 1,
+       "session": 1,
+       "minutes": 7.08,
+       "refusedSubmissions": 0
+      },
+      {
+       "kind": "fidelity",
+       "round": 5,
+       "session": 1,
+       "minutes": 3.87,
+       "refusedSubmissions": 0
+      },
+      {
+       "kind": "design",
+       "round": 2,
+       "session": 1,
+       "minutes": 3.86,
+       "refusedSubmissions": 0
+      }
+     ],
+     "operatorActionsObservable": {
+      "sessionsStarted": 3,
+      "launchFormRecords": 3,
+      "clarificationsAnswered": 0,
+      "usageFiguresGivenAtClose": 0,
+      "configurationAnswer": 1
+     },
+     "operatorActionsObservableTotal": 7
+    },
+    "ffe579c7": {
+     "wallMinutesFirstToLastStep": 81.3,
+     "authorMinutesToFirstCheck": 7.0,
+     "reviewRoundMinutesSum": 48.3,
+     "closed": true,
+     "rounds": [
+      {
+       "kind": "fidelity",
+       "round": 1,
+       "session": 1,
+       "minutes": 11.54,
+       "refusedSubmissions": 1
+      },
+      {
+       "kind": "fidelity",
+       "round": 2,
+       "session": 1,
+       "minutes": 8.83,
+       "refusedSubmissions": 1
+      },
+      {
+       "kind": "fidelity",
+       "round": 3,
+       "session": 1,
+       "minutes": 8.47,
+       "refusedSubmissions": 1
+      },
+      {
+       "kind": "fidelity",
+       "round": 4,
+       "session": 1,
+       "minutes": 4.62,
+       "refusedSubmissions": 0
+      },
+      {
+       "kind": "fidelity",
+       "round": 5,
+       "session": 1,
+       "minutes": 3.67,
+       "refusedSubmissions": 0
+      },
+      {
+       "kind": "design",
+       "round": 1,
+       "session": 1,
+       "minutes": 6.86,
+       "refusedSubmissions": 0
+      },
+      {
+       "kind": "fidelity",
+       "round": 6,
+       "session": 1,
+       "minutes": 4.32,
+       "refusedSubmissions": 0
+      }
+     ],
+     "operatorActionsObservable": {
+      "sessionsStarted": 3,
+      "launchFormRecords": 3,
+      "clarificationsAnswered": 0,
+      "usageFiguresGivenAtClose": 0,
+      "configurationAnswer": 1
+     },
+     "operatorActionsObservableTotal": 7
+    }
+   },
+   "predicates": {
+    "round": "a steps.jsonl session-prompt row with outcome 'delivered'; it ends at the next review-check row of the same kind with outcome 'validated'; refused review-check rows in between are counted",
+    "minutes": "end.at minus delivery.at",
+    "sessionsStarted": "distinct (role, kind, session) over await rows: each is a terminal the operator started",
+    "launchFormRecords": "files inventory/*.launch.json and reviews/*.launch.json",
+    "clarificationsAnswered": "length of clarifications in the last draft revision",
+    "usageFiguresGivenAtClose": "close row carries a usage value other than null/'not-recorded'/{}",
+    "configurationAnswer": "one run-configuration answer per run (SKILL.md step 3), not recorded in steps"
+   },
+   "denominator": "6 runs; rounds counted per kind in reviewRounds",
+   "filesRead": {
+    "run-2ecdcab0c77e228f6ad9d3e0acfa1414/drafts/rev-2.json": "9f8390d30e72f8c47e4ef3592d8b2fec31e379d4ca9339037bf134d925225abb",
+    "run-2ecdcab0c77e228f6ad9d3e0acfa1414/inventory/session-1.launch.json": "bac76ccb9eb0ce89ac08435d5534b93e9fc86f70c8b715d146871edf47a5cef7",
+    "run-2ecdcab0c77e228f6ad9d3e0acfa1414/reviews/design-session-1.launch.json": "59015629462ca97fecdffca6531d4a73a821a5bc710628d059f1ad13c9ec4e94",
+    "run-2ecdcab0c77e228f6ad9d3e0acfa1414/reviews/fidelity-session-1.launch.json": "71f43f9432300e3d17a05b9a8d67d542c8f41e4769bbff4b3e1528d5a7e689ec",
+    "run-2ecdcab0c77e228f6ad9d3e0acfa1414/steps.jsonl": "0c16183d562af7b4ee7075f285d7440b0aeed9ed1beccaf1b92ddb9357e9832d",
+    "run-36df95faf04a4c98eabbb32a18a4e833/drafts/rev-3.json": "47dd2b54d9eda4098255b3b8e0b47265c9fa71515133c5376ae8a4e5ad2024e3",
+    "run-36df95faf04a4c98eabbb32a18a4e833/inventory/session-1.launch.json": "79ea8e90b6484d542c10580c573b43268661f7b233907770b1d837e41dad419f",
+    "run-36df95faf04a4c98eabbb32a18a4e833/reviews/design-session-1.launch.json": "d8e083792e817b5626ef85203d73ada54cc7835c30c74fe1f9570160c6011f6d",
+    "run-36df95faf04a4c98eabbb32a18a4e833/reviews/fidelity-session-1.launch.json": "1b9066c1a923a0165f5231427e41f0a584667830ffc1c4fc38d46ba682ca268f",
+    "run-36df95faf04a4c98eabbb32a18a4e833/steps.jsonl": "7d42d6603eec72dee90e722d7b7a7bf3905f8b61c8dc64a6b45a71ff905f4e1a",
+    "run-4465d22f5ce1829ca49059a5b8451bb0/drafts/rev-3.json": "ae9524fd705b12b18b37bf3e2978e013238e0cb2689a495c197fd602b967ebd4",
+    "run-4465d22f5ce1829ca49059a5b8451bb0/inventory/session-1.launch.json": "c22ebb58fe01be645d53ef25eb2f516f6f4a1cafb863ec572d2c59548c449e30",
+    "run-4465d22f5ce1829ca49059a5b8451bb0/reviews/design-session-1.launch.json": "bd02850ac6a98ed7b825034847303cd3954f5c63b5989d6b7919417e3b3e0161",
+    "run-4465d22f5ce1829ca49059a5b8451bb0/reviews/fidelity-session-1.launch.json": "063a84d0b3dd93b666e8fa18b271291d5c24e2f810abdbe41741d492db61aa61",
+    "run-4465d22f5ce1829ca49059a5b8451bb0/steps.jsonl": "aea8584097bfcf6197962702a27b18e0634096a11d0a5416421699f1678c25c5",
+    "run-658f2f90470f73eea1dc1d90209c5ef7/drafts/rev-4.json": "927b9e84408d04fe922bd1d83add7553314f4202a91008f4dab347d47aad7d77",
+    "run-658f2f90470f73eea1dc1d90209c5ef7/inventory/session-1.launch.json": "7324d5ed47ff6eb60e09bab7af2eb2a661f645d51e7dd954a75e0766d7f345fc",
+    "run-658f2f90470f73eea1dc1d90209c5ef7/reviews/design-session-1.launch.json": "3761b7658f829e6650710b10abb8eb66c93c6ee5701137cde8e0977023d158d5",
+    "run-658f2f90470f73eea1dc1d90209c5ef7/reviews/fidelity-session-1.launch.json": "fe8130519ef78f03f8f2170c47e9a9b4de69446cf70bc9f0b86ac22a147180c5",
+    "run-658f2f90470f73eea1dc1d90209c5ef7/steps.jsonl": "8a33647ad32651b2681746af20ece424dbff5d8a3930d966112a887c42dd0b64",
+    "run-d9411d26ca55ebe0250e2e9b94dc0e32/drafts/rev-4.json": "01ebbfd1abef9ea1d18e25dfd49c02c0be4c7b022635c1618e051e4f84d5a84c",
+    "run-d9411d26ca55ebe0250e2e9b94dc0e32/inventory/session-1.launch.json": "89a2a399faea74f9dca2ac563ff34f08d264511c444637404b4c3e031ee34f61",
+    "run-d9411d26ca55ebe0250e2e9b94dc0e32/reviews/design-session-1.launch.json": "e376e2bfeb3feb47735a5df9e86b1f146aa26ac0343c98ae07a7c01d5ee1d9b9",
+    "run-d9411d26ca55ebe0250e2e9b94dc0e32/reviews/fidelity-session-1.launch.json": "39d148740582505759e85434c8dca8ed0461704fb2558e1a8f76e9c492a25285",
+    "run-d9411d26ca55ebe0250e2e9b94dc0e32/steps.jsonl": "1464b3e5c61b8fccc6cfb95da65599c652d3098e453a4385000309afaee76c33",
+    "run-ffe579c77dc21d9f6dd87ca6e2bc9301/drafts/rev-6.json": "ae7c654cd41997b48fe4e00546ae591a919341f242f90503660f07d6c30b4890",
+    "run-ffe579c77dc21d9f6dd87ca6e2bc9301/inventory/session-1.launch.json": "4b1c4d52fdf008b03de47fcd082fed9441c0cc386cd3c67a5e090f9515418bbe",
+    "run-ffe579c77dc21d9f6dd87ca6e2bc9301/reviews/design-session-1.launch.json": "7683b27e8203f0f8662ed8290d8c57c609c8fead6eccb7c697e234adf29351d1",
+    "run-ffe579c77dc21d9f6dd87ca6e2bc9301/reviews/fidelity-session-1.launch.json": "c0f5a3e3f41455b3f8808836e350dc59e3f5eed9f63899fecf43080bd526524a",
+    "run-ffe579c77dc21d9f6dd87ca6e2bc9301/steps.jsonl": "4eb6676194fc72a40a47d00e4663a451ccb5bce10fada2602a4fdd40c0245eb6"
+   }
+  },
+  "g_first_screen": {
+   "label": "Observed",
+   "summary": {
+    "1440x900": {
+     "pages": 5,
+     "thesisOnFirstScreen": 2,
+     "figureTopOnFirstScreen": 3,
+     "horizontalScroll": 0
+    },
+    "390x844": {
+     "pages": 5,
+     "thesisOnFirstScreen": 0,
+     "figureTopOnFirstScreen": 0,
+     "horizontalScroll": 5
+    }
+   },
+   "perViewport": {
+    "1440x900": {
+     "index": {
+      "viewport": [
+       1440,
+       900
+      ],
+      "h1Top": 473,
+      "h1Lines": 3,
+      "h1FontPx": 72,
+      "thesisTop": 735,
+      "thesisOnFirstScreen": true,
+      "figureTops": [],
+      "figureTopOnFirstScreen": false,
+      "scrollWidth": 1440,
+      "horizontalScroll": false,
+      "figureFullyAboveFoldPx": []
+     },
+     "pole1": {
+      "viewport": [
+       1440,
+       900
+      ],
+      "h1Top": 505,
+      "h1Lines": 1,
+      "h1FontPx": 72,
+      "thesisTop": 1456,
+      "thesisOnFirstScreen": false,
+      "figureTops": [
+       867
+      ],
+      "figureTopOnFirstScreen": true,
+      "scrollWidth": 1440,
+      "horizontalScroll": false,
+      "figureFullyAboveFoldPx": [
+       33
+      ]
+     },
+     "pole2": {
+      "viewport": [
+       1440,
+       900
+      ],
+      "h1Top": 505,
+      "h1Lines": 1,
+      "h1FontPx": 72,
+      "thesisTop": 1484,
+      "thesisOnFirstScreen": false,
+      "figureTops": [
+       872
+      ],
+      "figureTopOnFirstScreen": true,
+      "scrollWidth": 1440,
+      "horizontalScroll": false,
+      "figureFullyAboveFoldPx": [
+       28
+      ]
+     },
+     "pole3": {
+      "viewport": [
+       1440,
+       900
+      ],
+      "h1Top": 505,
+      "h1Lines": 2,
+      "h1FontPx": 72,
+      "thesisTop": 1486,
+      "thesisOnFirstScreen": false,
+      "figureTops": [
+       898
+      ],
+      "figureTopOnFirstScreen": true,
+      "scrollWidth": 1440,
+      "horizontalScroll": false,
+      "figureFullyAboveFoldPx": [
+       2
+      ]
+     },
+     "deep": {
+      "viewport": [
+       1440,
+       900
+      ],
+      "h1Top": 505,
+      "h1Lines": 3,
+      "h1FontPx": 72,
+      "thesisTop": 767,
+      "thesisOnFirstScreen": true,
+      "figureTops": [],
+      "figureTopOnFirstScreen": false,
+      "scrollWidth": 1440,
+      "horizontalScroll": false,
+      "figureFullyAboveFoldPx": []
+     }
+    },
+    "390x844": {
+     "index": {
+      "viewport": [
+       623,
+       1349
+      ],
+      "h1Top": 759,
+      "h1Lines": 6,
+      "h1FontPx": 44.8,
+      "thesisTop": 1072,
+      "thesisOnFirstScreen": false,
+      "figureTops": [],
+      "figureTopOnFirstScreen": false,
+      "scrollWidth": 623,
+      "horizontalScroll": true,
+      "figureFullyAboveFoldPx": []
+     },
+     "pole1": {
+      "viewport": [
+       623,
+       1349
+      ],
+      "h1Top": 803,
+      "h1Lines": 2,
+      "h1FontPx": 44.8,
+      "thesisTop": 1861,
+      "thesisOnFirstScreen": false,
+      "figureTops": [
+       1174
+      ],
+      "figureTopOnFirstScreen": false,
+      "scrollWidth": 623,
+      "horizontalScroll": true,
+      "figureFullyAboveFoldPx": [
+       -330
+      ]
+     },
+     "pole2": {
+      "viewport": [
+       623,
+       1349
+      ],
+      "h1Top": 803,
+      "h1Lines": 2,
+      "h1FontPx": 44.8,
+      "thesisTop": 1915,
+      "thesisOnFirstScreen": false,
+      "figureTops": [
+       1161
+      ],
+      "figureTopOnFirstScreen": false,
+      "scrollWidth": 623,
+      "horizontalScroll": true,
+      "figureFullyAboveFoldPx": [
+       -317
+      ]
+     },
+     "pole3": {
+      "viewport": [
+       623,
+       1349
+      ],
+      "h1Top": 803,
+      "h1Lines": 2,
+      "h1FontPx": 44.8,
+      "thesisTop": 1813,
+      "thesisOnFirstScreen": false,
+      "figureTops": [
+       1126
+      ],
+      "figureTopOnFirstScreen": false,
+      "scrollWidth": 623,
+      "horizontalScroll": true,
+      "figureFullyAboveFoldPx": [
+       -282
+      ]
+     },
+     "deep": {
+      "viewport": [
+       623,
+       1349
+      ],
+      "h1Top": 803,
+      "h1Lines": 5,
+      "h1FontPx": 44.8,
+      "thesisTop": 1062,
+      "thesisOnFirstScreen": false,
+      "figureTops": [],
+      "figureTopOnFirstScreen": false,
+      "scrollWidth": 623,
+      "horizontalScroll": true,
+      "figureFullyAboveFoldPx": []
+     }
+    }
+   },
+   "predicates": {
+    "h1": "first h1 inside main; top in document px; lines = rendered height / computed line-height",
+    "thesis": "first p after the h1 in document order with at least 12 whitespace-separated words",
+    "figure": "figure elements inside main that contain an svg",
+    "firstScreen": "document y < declared viewport height (900 or 844), scroll at top; figureFullyAboveFoldPx = viewport height minus figure top (how much of the figure shows)",
+    "horizontalScroll": "documentElement.scrollWidth > declared viewport width (1440 or 390)",
+    "render": "local headless Chrome via pursuit/audit/tools/cdp.mjs, light scheme; 390 run with MOBILE=1 emulation; no provider, no network"
+   },
+   "denominator": "5 reading pages (index, three Poles, one deep dive) x 2 viewports",
+   "filesRead": {
+    "run-658f2f90470f73eea1dc1d90209c5ef7/site/1/deep-dives/mechanism-deep-dive.html": "a556e9adeff50293021ec29b0141ebd3862b38197f02e967e776a3fa3922724c",
+    "run-658f2f90470f73eea1dc1d90209c5ef7/site/1/index.html": "6145d8d56e28c0157bb5d5d035b24d7aa77bd0befff057eee5816cb07d397360",
+    "run-658f2f90470f73eea1dc1d90209c5ef7/site/1/poles/1.html": "a676b2740d1a3d2bd7c8c351a9f4531757b80bd566d85256e0662c445b0f3efb",
+    "run-658f2f90470f73eea1dc1d90209c5ef7/site/1/poles/2.html": "430d4b7ef752475c4cd73f21783647c9d63f1c0a013f9b8cbfca8dc1934117a7",
+    "run-658f2f90470f73eea1dc1d90209c5ef7/site/1/poles/3.html": "6d96f18a7b85f3bd43aca7ce3fa1415e728a75df40321c5525398824c009ee77"
+   }
+  }
+ }
+}
