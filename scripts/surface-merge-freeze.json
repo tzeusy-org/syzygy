@@ -1,6 +1,6 @@
 {
   "direction": "OWNER-DIRECTION-QUESTIONNAIRE-ANSWERS-2026-11-06",
-  "state": "frozen",
-  "candidateHead": "52f50f1c968bba025e57a2029d6c9489c491fa52",
-  "reason": "Candidate head for the PWB cold-open walkthrough (syzygy-pdja.6): its fresh-checkout readiness run on 2026-11-21 (record docs/evidence/pwb-p4-5-fresh-checkout-demo-2026-11-21-pdja6-r4.json, surface polaris@930904228fb0) is READY. Set inactive again once the owner's judgment and the cycle report are recorded."
+  "state": "inactive",
+  "candidateHead": null,
+  "reason": "Released 2026-11-21 without a walkthrough: the owner retargeted the cold-open walkthrough (syzygy-pdja.6) from the daemon's live /polaris page to a Butlers Polaris dossier, so the frozen candidate 52f50f1c will not be judged. Set state to frozen, with the head, when a candidate head's readiness run begins; set inactive again if that head is NOT READY or once the judgment and cycle report are recorded."
 }
