@@ -4,7 +4,7 @@
  "scope": "Polaris dossier generation: features for a beautiful, intuitive manifesto of any codebase",
  "audited_commit": "c5e40bfe2",
  "subject_output": "Redis 8.10.2 dossier, run-658f2f90470f73eea1dc1d90209c5ef7 (closed 2026-11-15), site/1",
- "note": "units[] holds each lane's output verbatim, before independent review. Where a unit and ranked_moves[] disagree (the source policy's origin and exclusions, Q2's dependency on Q1, the spec line for the Observed clause, the VIS-7 wording), ranked_moves[] and the report's 'Corrections after independent review' are right.",
+ "note": "units[] holds each lane's output verbatim, before independent review. Where a unit and ranked_moves[] disagree (the source policy's origin and exclusions, Q2's dependency on Q1, the spec line for the Observed clause, the VIS-7 wording), ranked_moves[] and the report's 'Corrections after independent review' are right. One mechanical change to the lanes' output: every key the lanes named 'evidence' is named 'basis' here, because the PWB-REQ-014 sweep reads an 'evidence' key that names a renderer file as a citation of that surface as authority; no value was changed.",
  "ranked_moves": [
   {
    "id": "Q1",
@@ -23,7 +23,7 @@
    "touches_doctrine": false,
    "what": "Widen what a dossier run may read and cite: documentation at any depth and under any docs root the repository uses, in Markdown, MDX, RST, AsciiDoc and text; package READMEs below the root; a wider code and configuration set (YAML, TOML, JSON, HCL, Dockerfile, Makefile, CMake, proto, notebook text cells, more languages); and, as the part the owner must choose, documents the policy withholds by name because they may be governance text (design, architecture, ADR, RFC, spec, manifesto). Each admitted class is named per RFC5-14: a design or decision document is classified by rule as governance-text and the run record names that class; it is never passed off as project documentation. The same successor hardens screening for the newly readable formats: more denied paths (for example Terraform variable and state files, .npmrc, .netrc, kubeconfig, Docker config.json) and detectors for configuration formats. No existing detector or fail-closed rule is weakened.",
    "why": "VIS-3: a claim that may cite nothing renders Unknown or is withheld, so the policy removes the sources a manifesto draws its diagrams and choices from. No prompt, schema or renderer move recovers a fact the dossier may not cite, and the structure record's manifest recognizers (Q2 slice 2) cannot read a manifest at all today.",
-   "evidence": "[Observed] .syzygy/governance/policies/POLARIS-DOSSIER-DECLARED-SOURCE-POLICY-v1.json: 25 code extensions (lines 94-120), none of them YAML, TOML or JSON; documentation admitted as a root document with one of 16 stems, under docs/ or doc/ (lines 174-177), under a licences folder, or by an owner placement; 25 excluded words (lines 183-209): adr, decision, rfc, spec, specification, design, governance, policy, security, conduct, doctrine, principle, architecture, manifesto and their plurals; every other blob is 'excluded from reading and from egress' (line 257). [Observed] Denied paths today cover only .env files, credentials.json, secrets.json, SSH keys and four key-file suffixes (lines 469-486). [Observed] The excluded words are the owner's signed choice in screening scope v2 ('Chosen variant: none', PWB-SECRET-CLASSIFICATION-POLICY-PUBLIC-SOURCE-SCOPE-V2-ACT.md:50), offered because an ARCHITECTURE or MANIFESTO file 'may be design authority' or doctrine (public-source-screening-scope-v2/OWNER-DECISION-PACKET.md:67-99); the bytes were re-adopted for dossier runs by agent adoption on 2026-11-18. The policy identifier still carries the Butlers name. [Inferred] effect on non-Redis repositories (0 such runs).",
+   "basis": "[Observed] .syzygy/governance/policies/POLARIS-DOSSIER-DECLARED-SOURCE-POLICY-v1.json: 25 code extensions (lines 94-120), none of them YAML, TOML or JSON; documentation admitted as a root document with one of 16 stems, under docs/ or doc/ (lines 174-177), under a licences folder, or by an owner placement; 25 excluded words (lines 183-209): adr, decision, rfc, spec, specification, design, governance, policy, security, conduct, doctrine, principle, architecture, manifesto and their plurals; every other blob is 'excluded from reading and from egress' (line 257). [Observed] Denied paths today cover only .env files, credentials.json, secrets.json, SSH keys and four key-file suffixes (lines 469-486). [Observed] The excluded words are the owner's signed choice in screening scope v2 ('Chosen variant: none', PWB-SECRET-CLASSIFICATION-POLICY-PUBLIC-SOURCE-SCOPE-V2-ACT.md:50), offered because an ARCHITECTURE or MANIFESTO file 'may be design authority' or doctrine (public-source-screening-scope-v2/OWNER-DECISION-PACKET.md:67-99); the bytes were re-adopted for dossier runs by agent adoption on 2026-11-18. The policy identifier still carries the Butlers name. [Inferred] effect on non-Redis repositories (0 such runs).",
    "slices": [
     "S1: measure, with tree metadata only, what share of five public repositories' paths the current policy can cite (no body read; needs no owner answer)",
     "S2: after the owner's answer, the policy successor and classifier change, with each admitted class named",
@@ -56,7 +56,7 @@
    "touches_doctrine": false,
    "what": "A deterministic derive stage writes a structure record for the pinned revision in three tiers: path-only facts (sizes, language mix, vendored and generated code set aside, citable versus not citable under the policy); format recognizers (workspace and package manifests, binaries and scripts, CI jobs, compose, Kubernetes and Terraform topology); later, lexical import graphs. Each fact carries its rule, rule version, path and lines, and each rule states its own coverage. A fact states only what its rule matched ('path P matches the vendored-path rule, version 1', 'this manifest declares X'), never an interpretation or runtime behaviour. For a private repository, no size or object-id-derived fact is computed or rendered for a blob the policy excludes or withholds (policy line 89). From the record Syzygy computes a trait profile (has a CLI, a library API, a service, plugins, infrastructure, a data model, a docs site, size class) and, after the run, a coverage map of what the draft cited.",
    "why": "It does four jobs at once: it is the scaffold for figures, the witness for each arrow, the denominator for coverage (the newest run inspected 22 of 1,861 files and nothing said so), and the profile that makes the page plan general. It replaces 'pick one archetype' with computed traits.",
-   "evidence": "[Observed] drafts/rev-4.json discovery lists 22 inspected and 12 selected of 1,861 paths at the pinned commit; no Syzygy-side coverage measure exists. [Inferred] that format recognizers cover most public repositories.",
+   "basis": "[Observed] drafts/rev-4.json discovery lists 22 inspected and 12 selected of 1,861 paths at the pinned commit; no Syzygy-side coverage measure exists. [Inferred] that format recognizers cover most public repositories.",
    "slices": [
     "S1: path-only record, vendored exclusion and profile basics, printed by check (reads no blob)",
     "S2: recognizers for package.json, Cargo, pyproject, go.mod and GitHub Actions with golden fixtures and a mutation run",
@@ -92,7 +92,7 @@
    "touches_doctrine": false,
    "what": "Widen the spec clause that reserves Observed for verified quotations so that it also covers a structural fact Syzygy derived by a declared, versioned, deterministic rule; an agent still never labels anything Observed. Conditions the reading carries: the structure record is an evidence artifact (durable, identified, integrity-verifiable, with source, capture time, scope and provenance); the derived-fact class declares a currency bound, or its claims render Unknown; a figure that mixes derived and authored elements carries machine-readable provenance and never imitates a computed map (RFC7-28); a derived fact states only what its rule matched; and nothing is derived from the size or object id of a blob withheld in a private repository. Staging is the default: tree-metadata facts first, and a recognizer's facts only once it has fixtures and a mutation run (CC-TEST-3, CC-TEST-6). Give every diagram edge a closed relation type. Check upgrades an edge to Observed only when the structure record holds a fact of the identical relation type between the same two units (an authored 'calls' is not witnessed by a manifest's 'declares a dependency'), and raises a finding when coverage was complete and no witness exists. Generate each figure's legend from the encodings it actually uses, and print a computed tally under each figure ('14 relationships: 9 derived by Syzygy, 5 cited readings, 0 unsupported').",
    "why": "Comprehension (VIS-1, second rank): today the legend offers 'Solid: observed' while the schema lets no diagram element be anything but inferred or unknown, so every figure is all-dashed and the legend describes a mark that cannot occur. Truth: hallucinated relationships are the known defect of auto-generated architecture pictures; a witnessed arrow and a printed tally are claims no other generator can make truthfully.",
-   "evidence": "[Observed] trust-and-evidence.md:105 defines Observed as 'a deterministic claim with a resolvable evidence link'; its flowchart asks 'Resolvable evidence link, current and deterministic?' (line 122); lines 17-18 and 26-32 state the evidence-artifact and currency-bound conditions. [Observed] RFC7-28 (rendering-and-surface.md:101-109). [Observed] The adopted dossier spec says 'Observed is reserved for a quotation that Syzygy has verified' (openspec/changes/dossier-declared-source-model/proposed/polaris-generation/spec.md:159; the predecessor copy is line 236 of the local-agent-mode spec). [Observed] The legend string is at apps/three-surface-poc/src/polaris-generation/dossier-site.ts:545; the audit lane found all three figures of the newest run fully dashed. [Inferred] that the doctrine sentence covers derived structure: a reading, confirmed with conditions by an independent reviewer, put to the owner.",
+   "basis": "[Observed] trust-and-evidence.md:105 defines Observed as 'a deterministic claim with a resolvable evidence link'; its flowchart asks 'Resolvable evidence link, current and deterministic?' (line 122); lines 17-18 and 26-32 state the evidence-artifact and currency-bound conditions. [Observed] RFC7-28 (rendering-and-surface.md:101-109). [Observed] The adopted dossier spec says 'Observed is reserved for a quotation that Syzygy has verified' (openspec/changes/dossier-declared-source-model/proposed/polaris-generation/spec.md:159; the predecessor copy is line 236 of the local-agent-mode spec). [Observed] The legend string is at apps/three-surface-poc/src/polaris-generation/dossier-site.ts:545; the audit lane found all three figures of the newest run fully dashed. [Inferred] that the doctrine sentence covers derived structure: a reading, confirmed with conditions by an independent reviewer, put to the owner.",
    "slices": [
     "S1: generated legend, a locality advisory (an edge whose citations touch neither endpoint) and the tally; no schema change and no owner answer needed",
     "S2: after the owner's answer, the spec clause and solid rendering with rule provenance in the evidence view, for tree-metadata facts first",
@@ -125,7 +125,7 @@
    "touches_doctrine": false,
    "what": "Let a figure name a section, a deep dive or the overview, and draw it there. Require one hero figure on the overview after the thesis: the project's main parts and what surrounds them, with each region linking to the Pole that covers it, so the figure is also the map of the dossier. An honest escape ('omitted, with reason') remains.",
    "why": "VIS-3: the newest overview has no figure at all and its first visual arrives after about 1.1 screens of text. Deep dives are structurally barred from holding a figure, so guidance that asks for one cannot be followed and the same advisory recurs every run.",
-   "evidence": "[Observed] every diagram must name a section id and figures are drawn only in the section loop (dossier-site.ts:263 and :612); 0 figures on any deep dive across stored runs; the newest overview has 0 figures (5 diagrams in run 3's subject, 3 in the newest).",
+   "basis": "[Observed] every diagram must name a section id and figures are drawn only in the section loop (dossier-site.ts:263 and :612); 0 figures on any deep dive across stored runs; the newest overview has 0 figures (5 diagrams in run 3's subject, 3 in the newest).",
    "slices": [
     "S1: figures on deep dives and the overview (renderer and schema reference only)",
     "S2: the required hero slot with its escape, on today's graph kind",
@@ -157,7 +157,7 @@
    "touches_doctrine": false,
    "what": "A section may declare a walk: ordered steps, each binding a cited block to elements of a figure. The figure shows numbered badges; choosing a step highlights its element through CSS :target and :has(), and an HTML layer over the inert SVG makes each node and edge label a link to its cited lines. The walk doubles as the figure's text alternative. The same mechanism serves code: the existing excerpt element gains line numbers, highlighted ranges and cited margin notes, plus a transcript variant for CLI sessions, and the brief asks for one where a mechanism is explained.",
    "why": "VIS-3 and the owner's 'evidence one step away': no figure element links to its source today, and the one visual Syzygy already verifies as Observed, the code excerpt, has been used 0 times in every stored draft because nothing asks for it. A figure whose every box is walked cannot be decoration.",
-   "evidence": "[Observed] svg-inert.ts forbids href, so no figure element links anywhere; 0 code elements across stored drafts; the brief's diagram rule is specific while excerpts get no comparable instruction. [Inferred] that :has() cross-highlighting is acceptable on the owner's browsers (touch users get :target).",
+   "basis": "[Observed] svg-inert.ts forbids href, so no figure element links anywhere; 0 code elements across stored drafts; the brief's diagram rule is specific while excerpts get no comparable instruction. [Inferred] that :has() cross-highlighting is acceptable on the owner's browsers (touch users get :target).",
    "slices": [
     "S1: walk, badges, :target highlight and node links to line anchors",
     "S2: excerpt line numbers, highlights and margin notes; the brief rule",
@@ -191,7 +191,7 @@
    "touches_doctrine": false,
    "what": "Replace the single nodes-and-edges diagram with a small union of figure records, each with its own fields and layout: sequence (participants and ordered messages), swimlane (lanes that collapse to a stepper on a phone), containment (nested groups), state (states, transitions, loops), and four that render as HTML rather than SVG: record or byte layout, stack, timeline and comparison matrix. Each figure states the question it answers. Slice 1 is a wrap or top-to-bottom variant for any directed graph, which fixes today's overflow.",
    "why": "The visual layer is boxes and arrows by construction: the diagram kind never reaches layout, so a state machine, a boundary and a flow are drawn identically, and the mechanisms a codebase is known for (a handshake, a lifecycle, a memory layout) have no form to be drawn in.",
-   "evidence": "[Observed] diagram-layout.ts contains no reference to kind; the band-wrap rule applies only to a pure chain (diagram-layout.ts:128-129), so the newest run's 8-node flow renders 2,248 px wide in a 981 px column; none of its three diagrams shows a mechanism a list could not.",
+   "basis": "[Observed] diagram-layout.ts contains no reference to kind; the band-wrap rule applies only to a pure chain (diagram-layout.ts:128-129), so the newest run's 8-node flow renders 2,248 px wide in a 981 px column; none of its three diagrams shows a mechanism a list could not.",
    "slices": [
     "S1: wrap or top-to-bottom for any directed graph (bug-sized)",
     "S2: sequence and swimlane with a stepper",
@@ -227,7 +227,7 @@
    "touches_doctrine": false,
    "what": "The draft carries one model of the system (elements with a type and a parent; relationships, each cited or derived). Structural figures become views over it at context, container or component level, so a box on one page is the same box on another and a node with its own view carries a zoom link. Syzygy also renders exhaustive computed map pages (unit graph, CI pipeline, directory map) straight from the structure record; an author's view may start from one, then group, hide with a reason, rename for display and add cited runtime arrows. Every pruned view prints what it leaves out ('showing 9 of 31 packages, full map').",
    "why": "It gives drill-down architecture pictures that cannot contradict each other, and it turns diagram authoring from drawing from memory into annotating something already true. Pruning is never silent (VIS-2).",
-   "evidence": "[Observed] each stored diagram redeclares its own nodes, with no shared identity between figures. [Inferred] that one coherent model does not raise repair cycles (18 of 23 fidelity verdicts across five runs were not ready); the first slice is meant to measure that.",
+   "basis": "[Observed] each stored diagram redeclares its own nodes, with no shared identity between figures. [Inferred] that one coherent model does not raise repair cycles (18 of 23 fidelity verdicts across five runs were not ready); the first slice is meant to measure that.",
    "slices": [
     "S1: computed map pages only (no schema change)",
     "S2: model plus one-level views; existing diagrams migrate mechanically",
@@ -262,7 +262,7 @@
    "touches_doctrine": false,
    "what": "A Pole becomes an ordered list of subsections, each opening with a one-sentence answer and holding its own figure slot; the renderer emits subheadings, an on-page contents list and a takeaways strip built from the answers. A block's level in that tree is its reading depth (30 seconds, 5 minutes, everything), switched by CSS alone, with an Unknown that qualifies a claim promoted to that claim's depth. check reports words and reading time per depth. Glossary terms record where they are introduced, and check advises when a term is used before that point.",
    "why": "VIS-1: simplify presentation, never content. Sentences already read well; pages do not. A reader can only scan a 750-word page by reading it.",
-   "evidence": "[Observed] 0 third-level headings across all five reading pages of the newest site; about 200 words of apparatus per reading page (47% of the text on one Pole); the section schema has no subsections.",
+   "basis": "[Observed] 0 third-level headings across all five reading pages of the newest site; about 200 words of apparatus per reading page (47% of the text on one Pole); the section schema has no subsections.",
    "slices": [
     "S1: subsections with answer lines, subheadings and an on-page contents list",
     "S2: depth attribute, CSS switch and Unknown promotion",
@@ -297,7 +297,7 @@
    "touches_doctrine": false,
    "what": "Move the constants that assume a server into versioned pack files keyed by trait: reader topics, the technology-table dimensions, requested assets, worked examples, required figures and question packs. Packs compose for every trait a repository has. A pack may also declare simple recognizers (a path pattern plus a JSON, TOML or YAML field) that yield derived reference tables (commands, routes, entities, configuration keys), harvest the repository's own decision records as Observed cards, and read its docs-site navigation to seed Pole names in the project's vocabulary.",
    "why": "The mechanism asks every repository to explain itself as a networked server: four fixed topics, seven dimensions with networking, persistence and concurrency mandatory, and examples about replicas and caches.",
-   "evidence": "[Observed] packages/polaris-dossier/src/brief.ts:47-57; reader-standards.ts:105-137 (seven dimensions); packages/polaris-generation-core/src/dossier-profile.ts:31-39 (one workflow diagram, one mechanism deep dive). [Inferred] effect on libraries and CLIs.",
+   "basis": "[Observed] packages/polaris-dossier/src/brief.ts:47-57; reader-standards.ts:105-137 (seven dimensions); packages/polaris-generation-core/src/dossier-profile.ts:31-39 (one workflow diagram, one mechanism deep dive). [Inferred] effect on libraries and CLIs.",
    "slices": [
     "S1: pack schema and a neutral default pack that drops server-only dimensions",
     "S2: CLI and library packs with page-plan modules",
@@ -329,7 +329,7 @@
    "touches_doctrine": false,
    "what": "From first-party bytes and unit count Syzygy picks a tier: small repositories get one session that reads everything; medium ones are partitioned with scout sessions; large ones add deep reading for the most central units and derived-only cards (name, path, size, dependents) for the rest; very large ones add small-multiple atlas pages per domain. Partition follows manifest units, or splits directories to about 1 MB of first-party code. The coverage map shows deep-read, derived-only and withheld bands.",
    "why": "A fixed cap of three deep dives and a 300-word section fits neither a 2,000-line CLI nor a 300-package workspace; the dossier's breadth today is whatever one session reads in 100 turns.",
-   "evidence": "[Observed] brief.ts:88-89 (300 words per section, at most three deep dives); 22 of 1,861 files inspected. [Inferred] tier boundaries.",
+   "basis": "[Observed] brief.ts:88-89 (300 words per section, at most three deep dives); 22 of 1,861 files inspected. [Inferred] tier boundaries.",
    "slices": [
     "S1: tier, partition and coverage map from derived data and the existing discovery list",
     "S2: derived-only atlas pages",
@@ -366,7 +366,7 @@
    "touches_doctrine": false,
    "what": "Layout is a pure function, so check can report, with no browser, a figure wider than its column at 1440 and 390 px, effective text size, crossings, a graph that is really a list, and a chain duplicated by a steps element. Store per-page reading metrics with each run and show the difference from the previous run of the same repository. After any renderer change, re-render the roughly 25 stored drafts and compare the metrics. Route advisories the author cannot act on (they need a renderer or schema change) to the run record once, instead of into every repair packet. Later: a fresh reader transcribes each figure's screenshot into JSON, graded by set comparison against the figure's own model.",
    "why": "The quality gates cannot see what they judge, and movement between runs is invisible: the two newest sites differ only by author variance and nothing measures that.",
-   "evidence": "[Observed] the design reviewer marked the newest run ready while a figure overflowed and every page scrolled sideways at 390 px; its 27 findings mention overflow, scroll, mobile, 390, width or pixels 0 times; four advisory counters exist and none is stored.",
+   "basis": "[Observed] the design reviewer marked the newest run ready while a figure overflowed and every page scrolled sideways at 390 px; its 27 findings mention overflow, scroll, mobile, 390, width or pixels 0 times; four advisory counters exist and none is stored.",
    "slices": [
     "S1: width and text-size lint from the pure layout, stored",
     "S2: stored reading ledger with run-over-run difference",
@@ -403,7 +403,7 @@
    "touches_doctrine": false,
    "what": "The author first writes a figure plan: for each page, the one question a picture answers better than text and the kind it needs. A versioned table maps page types to required views (overview hero; building-block, runtime and deployment views; a sequence or swimlane per workflow; a matrix for named alternatives), each with an honest 'omitted, with reason'. Anti-decoration rules: a chain of three or fewer is a sentence, every figure states its question, duplicates are flagged, and a view's level constrains what may appear in it.",
    "why": "None of the newest run's three diagrams shows a mechanism a list could not; richer kinds without a policy would produce more of the same.",
-   "evidence": "[Observed] the three diagrams are a hub and spokes, a linear chain and two disconnected paths; the persistence deep dive has no figure.",
+   "basis": "[Observed] the three diagrams are a hub and spokes, a linear chain and two disconnected paths; the persistence deep dive has no figure.",
    "slices": [
     "S1: figure plan in the draft and the information-floor, duplicate and granularity advisories",
     "S2: the page-type table and question field",
@@ -434,7 +434,7 @@
    "touches_doctrine": false,
    "what": "Scripted synthetic repositories (a Rust CLI, a 300-package TypeScript workspace, a Python library with a docs site, Terraform, a notebook pipeline, C firmware, docs-only, a plugin host, no README) run through derive, profile, page plan and render with canned drafts on every change, asserting traits, coverage denominators and no overflow at 390 px. No model is called. A periodic live run on three to five public repositories keeps a scorecard against frozen per-shape questions. Where a repository states no purpose, the thesis is marked as Polaris's reading of the code, cites at least two entry points and says no maintainer statement was found.",
    "why": "All six real runs are of one repository; 'any codebase' is unmeasured and has been since the first pursuit.",
-   "evidence": "[Observed] six run directories under the dossier state root, all redis/redis; the only shaped fixture is a synthetic Redis-like tree; syzygy-fnry.22 is open and unrun.",
+   "basis": "[Observed] six run directories under the dossier state root, all redis/redis; the only shaped fixture is a synthetic Redis-like tree; syzygy-fnry.22 is open and unrun.",
    "slices": [
     "S1: three synthetic shapes through derive, profile and render",
     "S2: per-shape assertions and the overflow check; thesis basis",
@@ -464,7 +464,7 @@
    "touches_doctrine": false,
    "what": "The draft names one example whose premise cites a test, example or documentation file. Each Pole carries a cited step of it, and a slim ribbon ('Following: SET user:42, step 3 of 5') links the steps into a tour across pages. A new analogy element is framed as non-normative and must cite where the analogy stops holding.",
    "why": "VIS-3: a newcomer follows one concrete thing more easily than five abstract ones, and every kind of repository has a natural example (a request, an invocation, a call, a deploy, a training run, a boot).",
-   "evidence": "[Observed] no element threads one example across pages; no analogy element exists. [Inferred] reader benefit.",
+   "basis": "[Observed] no element threads one example across pages; no analogy element exists. [Inferred] reader benefit.",
    "slices": [
     "S1: example, steps and the ribbon; the analogy element",
     "S2: check that the premise cites a test, example or documentation file (after Q2)"
@@ -627,42 +627,42 @@
      "id": "A4-F1",
      "claim": "The dossier's citable set is defined by a Butlers-derived policy that excludes, as project documentation, every docs path whose directory or file name contains architecture, design, adr, decision, rfc, spec, governance or principle, and admits docs only under top-level docs/ or doc/ in .md/.rst/.txt. Architecture and design docs, the best source for a manifesto's diagrams and choices, cannot be cited in any repository.",
      "label": "Observed",
-     "evidence": ".syzygy/governance/policies/POLARIS-DOSSIER-DECLARED-SOURCE-POLICY-v1.json: policyId polaris-butlers-project-shape-secrets; docTreeRoots ['docs','doc']; docTreeExtensions ['.md','.rst','.txt']; docExcludedTokens (25 incl. architecture, design, adr, rfc, spec); packages/polaris-generation-core/src/public-source-classification.ts:238-247 (a path with no class is undefined)",
+     "basis": ".syzygy/governance/policies/POLARIS-DOSSIER-DECLARED-SOURCE-POLICY-v1.json: policyId polaris-butlers-project-shape-secrets; docTreeRoots ['docs','doc']; docTreeExtensions ['.md','.rst','.txt']; docExcludedTokens (25 incl. architecture, design, adr, rfc, spec); packages/polaris-generation-core/src/public-source-classification.ts:238-247 (a path with no class is undefined)",
      "severity": "high"
     },
     {
      "id": "A4-F2",
      "claim": "Code is citable only in 25 extensions; configuration and infrastructure formats (YAML, TOML, JSON, HCL, Dockerfile, Makefile, CMake, proto), notebooks and several language families get no class. For an IaC, data/ML, frontend or JVM-Scala repository most mechanism claims would render Unknown or withheld.",
      "label": "Inferred",
-     "evidence": "same policy, sourceExtensions (25 listed); effect on non-Redis repositories unmeasured (0 non-Redis runs)",
+     "basis": "same policy, sourceExtensions (25 listed); effect on non-Redis repositories unmeasured (0 non-Redis runs)",
      "severity": "high"
     },
     {
      "id": "A4-F3",
      "claim": "Exploration is shallow and unpartitioned: the newest run's author inspected 22 of 1,861 files and cited 16 distinct files on the reading path, with no Syzygy-side coverage measure. The dossier's breadth is whatever one session reads in 100 turns.",
      "label": "Observed",
-     "evidence": "drafts/rev-4.json discovery: inspected 22, selected 12; git ls-tree -r of the pinned commit: 1861 paths; aria-label source counts over index and poles: 16 distinct files",
+     "basis": "drafts/rev-4.json discovery: inspected 22, selected 12; git ls-tree -r of the pinned commit: 1861 paths; aria-label source counts over index and poles: 16 distinct files",
      "severity": "high"
     },
     {
      "id": "A4-F4",
      "claim": "The reader topics and the technology table are server templates: 'end-to-end workflows' and 'mechanisms and trade-offs' are mandatory topics, and RS-11 requires networking, persistence and concurrency rows (or an argued 'does not apply'), so a library or CLI dossier is asked to explain itself as a server.",
      "label": "Observed",
-     "evidence": "packages/polaris-dossier/src/brief.ts:47-52; packages/polaris-dossier/src/reader-standards.ts:105-126",
+     "basis": "packages/polaris-dossier/src/brief.ts:47-52; packages/polaris-dossier/src/reader-standards.ts:105-126",
      "severity": "medium"
     },
     {
      "id": "A4-F5",
      "claim": "The worked examples that steer titles and voice are Redis's own domain (replicas, writes, caches, key-value stores); the newest dossier's titles echo them ('How a write reaches…' pattern in brief, 'How writes reach disk and replicas' in the draft).",
      "label": "Observed",
-     "evidence": "brief.ts:56-57, 89; reader-standards.ts:63-65, 136-137; drafts/rev-4.json diagrams[2].title",
+     "basis": "brief.ts:56-57, 89; reader-standards.ts:63-65, 136-137; drafts/rev-4.json diagrams[2].title",
      "severity": "low"
     },
     {
      "id": "A4-F6",
      "claim": "Generality remains unmeasured: no non-Redis run, no non-Redis fixture, and the generality probe (fnry.22) is open. Run 3's L8 persists unchanged.",
      "label": "Observed",
-     "evidence": "ls ~/.local/state/syzygy-dossier: six run-* directories, all redis-redis; bd show syzygy-fnry.22 OPEN",
+     "basis": "ls ~/.local/state/syzygy-dossier: six run-* directories, all redis-redis; bd show syzygy-fnry.22 OPEN",
      "severity": "high"
     }
    ],
@@ -853,42 +853,42 @@
      "id": "A1-F1",
      "claim": "The renderer has not moved since run 3, so every renderer-determined figure is identical: 141 words of apparatus before the thesis, identical h1/thesis positions at 1440 and 390, sideways scroll on every page at 390px, no current-page mark, no previous/next links, citations to #exact-text with no line anchors.",
      "label": "Observed",
-     "evidence": "git log --since=2026-11-09 -- apps/three-surface-poc/src/polaris-generation/dossier-site.ts -> c90324734 only; diagram-layout.ts and packages/polaris-dossier/src/draft-schema.ts -> none. tools/cdp.mjs on both sites: wordsBeforeThesisExclNav 141/141, h1Top 473/473, thesisTop 735/735 (1440); 759/759 and 1072/1072 (390); scrollWidth 623 at 390 on 10/10 sampled newest pages; 0 elements with aria-current; 0 rel=prev/next; 0 id=\"L\" anchors on 27 source pages.",
+     "basis": "git log --since=2026-11-09 -- apps/three-surface-poc/src/polaris-generation/dossier-site.ts -> c90324734 only; diagram-layout.ts and packages/polaris-dossier/src/draft-schema.ts -> none. tools/cdp.mjs on both sites: wordsBeforeThesisExclNav 141/141, h1Top 473/473, thesisTop 735/735 (1440); 759/759 and 1072/1072 (390); scrollWidth 623 at 390 on 10/10 sampled newest pages; 0 elements with aria-current; 0 rel=prev/next; 0 id=\"L\" anchors on 27 source pages.",
      "severity": "high"
     },
     {
      "id": "A1-F2",
      "claim": "The visible changes between runs are author variance under a nearly unchanged brief, not mechanism: glossary 1 -> 10, reading words 3,963 -> 2,281, diagrams 5 -> 3 (overview lost its only diagram), verified quotes 24 -> 9. The authoring brief changed only in screening/reviewReach text between v4 and v7.",
      "label": "Observed",
-     "evidence": "diff of run-ffe579…/brief.md and run-658f2f…/brief.md: changed lines are the version, run id, reviewReach paragraph, turn budget (1000 -> 100) and reader-standards heading; tools/read.js word counts; drafts/rev-4.json diagrams[] has 3 entries, understanding.terminology has 10.",
+     "basis": "diff of run-ffe579…/brief.md and run-658f2f…/brief.md: changed lines are the version, run id, reviewReach paragraph, turn budget (1000 -> 100) and reader-standards heading; tools/read.js word counts; drafts/rev-4.json diagrams[] has 3 entries, understanding.terminology has 10.",
      "severity": "medium"
     },
     {
      "id": "A1-F3",
      "claim": "Shrinkage is not all improvement: the overview now carries no figure at all, the 'Serving a command' Pole has only 231 reading words and 32 inline code spans, and the newest dossier is the thinnest of the comparison (2,281 reading words for all of Redis).",
      "label": "Observed",
-     "evidence": "tools/read-new.json: index figures 0; poles_2 words 231, codeSpans 32; total reading 2281.",
+     "basis": "tools/read-new.json: index figures 0; poles_2 words 231, codeSpans 32; total reading 2281.",
      "severity": "medium"
     },
     {
      "id": "A1-F4",
      "claim": "The newest run closed honestly (site of record = last passed revision, both review kinds ready), but because the supervisor is unchanged this depends on the run happening to converge; a run whose last design repair fails still seals as run 3 did.",
      "label": "Inferred",
-     "evidence": "run-658f2f…/steps.jsonl render site/1 draftRevision 4 at 08:17:08Z, design review-check number 1 validated; reviews/checks/design-verdict-1.json readiness ready; polaris.ts unchanged in the render/close logic since 2026-11-09 except bfe08caa9 (audience) and 7d6c2b389/4b7e04df1; bd show syzygy-fnry.1 OPEN.",
+     "basis": "run-658f2f…/steps.jsonl render site/1 draftRevision 4 at 08:17:08Z, design review-check number 1 validated; reviews/checks/design-verdict-1.json readiness ready; polaris.ts unchanged in the render/close logic since 2026-11-09 except bfe08caa9 (audience) and 7d6c2b389/4b7e04df1; bd show syzygy-fnry.1 OPEN.",
      "severity": "medium"
     },
     {
      "id": "A1-F5",
      "claim": "Source landings since run 3 are upstream of the page: declared audience in author and design briefs (fnry.17, bfe08caa9 2026-11-14, v8 c6b3d48d7 2026-11-18), declared-source binding (22259c8d9), repository roles (9103d5a6a), launch identity (pdja.33), screening v8 (pdja.21). The newest run's brief is v7 with no audience statement, so the audience change is landed, not yet seen in output. No P2-P15 renderer or schema move has landed.",
      "label": "Observed",
-     "evidence": "run-658f2f…/brief.md line 3 'polaris-dossier-brief-v7'; grep -i audience brief.md -> only the generic line 126; packages/polaris-dossier/src/brief.ts:138 '...audienceGuidance(declared.audience)'; bd show syzygy-fnry.1/.6/.12/.13/.18/.20/.22 OPEN, .19 BLOCKED.",
+     "basis": "run-658f2f…/brief.md line 3 'polaris-dossier-brief-v7'; grep -i audience brief.md -> only the generic line 126; packages/polaris-dossier/src/brief.ts:138 '...audienceGuidance(declared.audience)'; bd show syzygy-fnry.1/.6/.12/.13/.18/.20/.22 OPEN, .19 BLOCKED.",
      "severity": "medium"
     },
     {
      "id": "A1-F6",
      "claim": "Run 3's report that the left nav is not sticky does not reproduce: the desktop Contents panel computes position: sticky on run 3's own site and on the newest. The wayfinding gap is the missing current-page mark and previous/next links, not stickiness.",
      "label": "Observed",
-     "evidence": "tools/cdp.mjs 'sticky' field at 1440: 'sticky,static,…' on old-index, old-pole3 and all newest pages.",
+     "basis": "tools/cdp.mjs 'sticky' field at 1440: 'sticky,static,…' on old-index, old-pole3 and all newest pages.",
      "severity": "low"
     }
    ],
@@ -1044,42 +1044,42 @@
      "id": "A5-F1",
      "claim": "The reading path has no sub-structure: each Pole and the deep dive carry one content heading at most, 0 H3 across all five reading pages, so the only way to scan a 750-word page is to read it.",
      "label": "Observed",
-     "evidence": "python count over site/1: poles/1-3 h2=2 (one is Review status), h3=0; deep dive h2=1, h3=0; tools/read-new.json h fields",
+     "basis": "python count over site/1: poles/1-3 h2=2 (one is Review status), h3=0; deep dive h2=1, h3=0; tools/read-new.json h fields",
      "severity": "high"
     },
     {
      "id": "A5-F2",
      "claim": "Apparatus is about 200 words on every reading page (141 before the title, 61 in the review status), as much as the content on the shortest Pole (47% of text on poles/2).",
      "label": "Observed",
-     "evidence": "tools/m-1440.json wordsBeforeThesisExclNav; aside.review-status word count 61 on all five pages; tools/read-new.json poles_2 words 231",
+     "basis": "tools/m-1440.json wordsBeforeThesisExclNav; aside.review-status word count 61 on all five pages; tools/read-new.json poles_2 words 231",
      "severity": "high"
     },
     {
      "id": "A5-F3",
      "claim": "The design reviewer, the only readability gate, cannot see layout: it returned every reading page acceptable and the run ready while a figure overflowed 2,248px in a 981px column and all pages scrolled sideways at 390px; its 27 findings across both verdicts mention overflow, scroll, mobile, 390, width or pixels 0 times.",
      "label": "Observed",
-     "evidence": "reviews/design-verdict-0.json and -1.json pageReview + findings, regex sweep for overflow|scroll|390|wide|screenshot|pixel|mobile|phone: 0 each; tools/m-1440.json new-pole2 figs overflow true",
+     "basis": "reviews/design-verdict-0.json and -1.json pageReview + findings, regex sweep for overflow|scroll|390|wide|screenshot|pixel|mobile|phone: 0 each; tools/m-1440.json new-pole2 figs overflow true",
      "severity": "high"
     },
     {
      "id": "A5-F4",
      "claim": "Readiness absorbs advisories the author cannot act on: both design verdicts ask for a figure on the deep dive (RS-16) and line numbers on source pages (RS-24), neither of which the schema or renderer allows, so these recur every run and train the loop to ignore advice.",
      "label": "Observed",
-     "evidence": "design-verdict-0/1 advisories on deep-dives/mechanism-deep-dive.html (RS-16) and sources/*.html (RS-24); dossier-site.ts:263,612 (no deep-dive figures); 0 id=\"L\" anchors on source pages",
+     "basis": "design-verdict-0/1 advisories on deep-dives/mechanism-deep-dive.html (RS-16) and sources/*.html (RS-24); dossier-site.ts:263,612 (no deep-dive figures); 0 id=\"L\" anchors on source pages",
      "severity": "medium"
     },
     {
      "id": "A5-F5",
      "claim": "The four counted standards are advice that is never stored, so no run-over-run readability trend exists; nothing measures first-screen content, apparatus share, heading density, link mix, inline-code density (32 code spans in 231 words on poles/2), or reading time.",
      "label": "Observed",
-     "evidence": "packages/polaris-dossier/src/reader-advice.ts:1-28 (RS-13/14/16/19; 'not stored in the check record'); checks/rev-4.json keys contain no advice field",
+     "basis": "packages/polaris-dossier/src/reader-advice.ts:1-28 (RS-13/14/16/19; 'not stored in the check record'); checks/rev-4.json keys contain no advice field",
      "severity": "medium"
     },
     {
      "id": "A5-F6",
      "claim": "Prose at sentence level is good and the rules work: median sentence 15-20 words, no unbroken prose run over 103 words, structured content turned into cards, steps and tables. The readability deficit is at page and site level, not sentence level.",
      "label": "Observed",
-     "evidence": "tools/read-new.json sentMedian/longestProseRun; shots/full-index-1440-fig0.png, full-pole3-1440-fig0.png",
+     "basis": "tools/read-new.json sentMedian/longestProseRun; shots/full-index-1440-fig0.png, full-pole3-1440-fig0.png",
      "severity": "low"
     }
    ],
@@ -1613,56 +1613,56 @@
      "id": "A2-F1",
      "claim": "The overview has no figure and no show artifact: a newcomer's first page is all text below a three-line h1, and its first visual is a row of four use-case cards at ~1.1 screens.",
      "label": "Observed",
-     "evidence": "tools/read-new.json index figures 0; shots/full-index-1440-fig0.png; run 3's overview had 1 diagram (old-index figs[0]).",
+     "basis": "tools/read-new.json index figures 0; shots/full-index-1440-fig0.png; run 3's overview had 1 diagram (old-index figs[0]).",
      "severity": "high"
     },
     {
      "id": "A2-F2",
      "claim": "The 8-node flow is drawn as one 2,248px row in a 981px box: three boxes visible, the rest behind a horizontal scroll, with roughly 60% of the figure frame blank above and below; on a phone one box is visible. The layout has no wrapping or vertical variant.",
      "label": "Observed",
-     "evidence": "tools/m-1440.json new-pole2 figs[0] svgW 2248 containerW 981 overflows true; shots/new-pole2-1440-fig0.png; shots/new-pole2-390-fig0.png.",
+     "basis": "tools/m-1440.json new-pole2 figs[0] svgW 2248 containerW 981 overflows true; shots/new-pole2-1440-fig0.png; shots/new-pole2-390-fig0.png.",
      "severity": "high"
     },
     {
      "id": "A2-F3",
      "claim": "Every diagram node and edge is dashed (all Inferred) while each figure prints a three-state legend; two of the three legend states are never drawn on the site, so the encoding carries no information (VIS-7 holds technically, but the channel is wasted).",
      "label": "Observed",
-     "evidence": "shots/new-pole1-1440-fig0.png, new-pole2-1440-fig0.png, new-pole3-1440-fig0.png: all boxes and connectors dashed; legend 'Solid: observed / Dashed: inferred / Dotted: unknown'.",
+     "basis": "shots/new-pole1-1440-fig0.png, new-pole2-1440-fig0.png, new-pole3-1440-fig0.png: all boxes and connectors dashed; legend 'Solid: observed / Dashed: inferred / Dotted: unknown'.",
      "severity": "medium"
     },
     {
      "id": "A2-F4",
      "claim": "None of the three diagrams shows a mechanism a list could not: one is hub-and-spokes, one a linear chain, one two disconnected paths. The step- and time-shaped mechanisms Redis is known for (replication handshake, fork snapshot vs fsync window, cluster slot routing, type encodings) have no picture, and the persistence deep dive has 0 figures.",
      "label": "Observed",
-     "evidence": "drafts/rev-4.json diagrams[] (3: boundary 6/5, flow 8/7, flow 7/5); tools/read-new.json deep-dives figures 0.",
+     "basis": "drafts/rev-4.json diagrams[] (3: boundary 6/5, flow 8/7, flow 7/5); tools/read-new.json deep-dives figures 0.",
      "severity": "high"
     },
     {
      "id": "A2-F5",
      "claim": "Table row headers render 11.5px upper-cased monospace, so the key column of the two most informative visuals on the site is its least readable text and re-cases literals (APPENDFSYNC, MAXMEMORY-POLICY). Run 3 reported the same rule (D4-F3); it persists.",
      "label": "Observed",
-     "evidence": "shots/full-pole3-1440-fig0.png 'Mechanisms and what they cost' and 'Technology choices' tables.",
+     "basis": "shots/full-pole3-1440-fig0.png 'Mechanisms and what they cost' and 'Technology choices' tables.",
      "severity": "medium"
     },
     {
      "id": "A2-F6",
      "claim": "The first screen spends its top 470px on run apparatus: draft banner, a 35-word provenance sentence outside the page grid at x=0, and a legend for marks (judgement, framing) that appear 0 times on the site. At 390px the thesis is below the fold.",
      "label": "Observed",
-     "evidence": "shots/new-index-1440.png, shots/new-index-390.png; static count data-claim-kind=judgement 0, framing 0 over 42 pages.",
+     "basis": "shots/new-index-1440.png, shots/new-index-390.png; static count data-claim-kind=judgement 0, framing 0 over 42 pages.",
      "severity": "high"
     },
     {
      "id": "A2-F7",
      "claim": "The site's colour and card system is a real asset: four Pole hues used consistently across nav dots, card tops, h1 rules and diagram fills, and a dark theme that follows. It is the base a richer visual layer should build on, not replace.",
      "label": "Observed",
-     "evidence": "shots/full-index-1440-fig0.png (cards), new-pole2-1440-dark.png.",
+     "basis": "shots/full-index-1440-fig0.png (cards), new-pole2-1440-dark.png.",
      "severity": "low"
     },
     {
      "id": "A2-F8",
      "claim": "Usage now appears on the reading path (Pole 2 steps: docker run, redis-server redis.conf, redis-cli, set/get/incr) but as inline code inside cited prose steps, not as a verified, copyable terminal block; there is still no code or terminal element in the draft.",
      "label": "Observed",
-     "evidence": "shots/full-pole2-1440-fig0.png steps 1-4; drafts/rev-4.json element kinds contain no 'code'.",
+     "basis": "shots/full-pole2-1440-fig0.png steps 1-4; drafts/rev-4.json element kinds contain no 'code'.",
      "severity": "medium"
     }
    ],
@@ -1763,56 +1763,56 @@
      "id": "A3-F1",
      "claim": "Diagram kind does not affect layout: diagram-layout.ts contains no reference to `kind`, and renderDiagramSvg receives only nodes and edges. A state machine, a boundary and a flow are drawn by the same left-to-right layering. Run 3's statement still holds.",
      "label": "Observed",
-     "evidence": "grep -c kind apps/three-surface-poc/src/polaris-generation/diagram-layout.ts -> 0; dossier-site.ts:540 renderDiagramSvg(d, index, escape, READABLE_SPACING); DIAGRAM_KINDS packages/polaris-generation-core/src/draft-model.ts:17",
+     "basis": "grep -c kind apps/three-surface-poc/src/polaris-generation/diagram-layout.ts -> 0; dossier-site.ts:540 renderDiagramSvg(d, index, escape, READABLE_SPACING); DIAGRAM_KINDS packages/polaris-generation-core/src/draft-model.ts:17",
      "severity": "high"
     },
     {
      "id": "A3-F2",
      "claim": "The wrap-to-bands fix (pdja.1) only applies to a pure chain; one fan-out anywhere disables it, so a 7-step chain with two side effects at the end renders 2,248px wide. This is exactly the newest run's overflowing figure.",
      "label": "Observed",
-     "evidence": "diagram-layout.ts:128-129 (wraps requires members.every(m => m.length === 1)); newest rev-4 workflow-diagram: w-call has 3 out-edges (reply, aof, repl); measured svgW 2248 in 981.",
+     "basis": "diagram-layout.ts:128-129 (wraps requires members.every(m => m.length === 1)); newest rev-4 workflow-diagram: w-call has 3 out-edges (reply, aof, repl); measured svgW 2248 in 981.",
      "severity": "high"
     },
     {
      "id": "A3-F3",
      "claim": "Deep dives cannot carry a diagram: every diagram must name a section id (render throws unknown-section otherwise) and figures are drawn only inside the section loop. 'Add a small diagram when useful' in AUTHORING.md is unreachable for a deep dive, which explains 0 figures on every deep dive across runs.",
      "label": "Observed",
-     "evidence": "dossier-site.ts:262-263 (sectionIds = draft.sections ids; diagrams validated against it), dossier-site.ts:612 (only call to diagram()); docs/polaris-generation/AUTHORING.md:70.",
+     "basis": "dossier-site.ts:262-263 (sectionIds = draft.sections ids; diagrams validated against it), dossier-site.ts:612 (only call to diagram()); docs/polaris-generation/AUTHORING.md:70.",
      "severity": "high"
     },
     {
      "id": "A3-F4",
      "claim": "The vocabulary has no containment, lanes, time axis, ordered messages, node shapes, emphasis, annotation callouts, numbered steps on a figure, or images; so it cannot express a sequence diagram, a layered architecture, a deployment topology, a timeline, a memory/data layout, a comparison matrix chart, a decision tree, a before/after, or an annotated screenshot.",
      "label": "Observed",
-     "evidence": "draft-schema.ts:164-168 (diagram = id,title,sectionId,kind,relationship,nodes{id,label,epistemic,citations},edges{id,from,to,label,epistemic,citations}); svg-inert.ts ELEMENTS list (no circle, ellipse, line, polygon, image, a, foreignObject).",
+     "basis": "draft-schema.ts:164-168 (diagram = id,title,sectionId,kind,relationship,nodes{id,label,epistemic,citations},edges{id,from,to,label,epistemic,citations}); svg-inert.ts ELEMENTS list (no circle, ellipse, line, polygon, image, a, foreignObject).",
      "severity": "high"
     },
     {
      "id": "A3-F5",
      "claim": "Nothing verifies that a diagram is the right or a true picture as a whole. check verifies citations per element and that edges resolve; fidelity reviews elements one by one. No check compares a diagram's topology to anything mechanical (call graph, module imports, config), flags a diagram that is a list (fan-out of identical edges, a chain duplicated by a steps element), or measures fit in the column.",
      "label": "Observed",
-     "evidence": "check-derive.ts:356-399 (diagram checks are referential only); brief.md reviewReach paragraph (elements reviewed individually).",
+     "basis": "check-derive.ts:356-399 (diagram checks are referential only); brief.md reviewReach paragraph (elements reviewed individually).",
      "severity": "medium"
     },
     {
      "id": "A3-F6",
      "claim": "The code excerpt is the one visual form Syzygy itself verifies and labels Observed, yet it is unused (0 in every stored draft): the brief's diagram rule (item 2) is emphatic and specific while code excerpts get no comparable instruction, and the excerpt renders without line numbers, highlight or margin notes.",
      "label": "Observed",
-     "evidence": "draft-schema.ts:136-138; dossier-site.ts:509 claim('figure', id, 'observed', …<pre>); brief.ts:84 (diagram rule) vs no code-excerpt rule in the numbered list; element-kind census of run-ffe579 rev-5/6 and run-658f2f rev-4: code 0.",
+     "basis": "draft-schema.ts:136-138; dossier-site.ts:509 claim('figure', id, 'observed', …<pre>); brief.ts:84 (diagram rule) vs no code-excerpt rule in the numbered list; element-kind census of run-ffe579 rev-5/6 and run-658f2f rev-4: code 0.",
      "severity": "high"
     },
     {
      "id": "A3-F7",
      "claim": "Labels are monospace for plain English and the kind is shown as a reader-facing eyebrow ('FLOW', 'BOUNDARY'), schema vocabulary leaking into the page.",
      "label": "Observed",
-     "evidence": "dossier-site.ts:154 comment ('Only code, source text and diagram text keep the code face'); dossier-site.ts:546 <span class=\"eyebrow\">${escape(d.kind)}</span>.",
+     "basis": "dossier-site.ts:154 comment ('Only code, source text and diagram text keep the code face'); dossier-site.ts:546 <span class=\"eyebrow\">${escape(d.kind)}</span>.",
      "severity": "low"
     },
     {
      "id": "A3-F8",
      "claim": "What the author is told is one paragraph mapping kinds to topics ('flow for a workflow, boundary or dependency for architecture, lifecycle or state-machine for states') plus 'prefer several small diagrams'; nothing about which question a figure answers, when a table/steps beats a graph, size limits that render well (e.g. at most 3 layers wide), or that deep dives cannot hold one.",
      "label": "Observed",
-     "evidence": "packages/polaris-dossier/src/brief.ts:84; reader-standards RS-16/RS-17 (.claude/skills/polaris-dossier/references/reader-standards.md:132-137).",
+     "basis": "packages/polaris-dossier/src/brief.ts:84; reader-standards RS-16/RS-17 (.claude/skills/polaris-dossier/references/reader-standards.md:132-137).",
      "severity": "medium"
     }
    ],
@@ -1921,19 +1921,19 @@
      "id": "I3-F1",
      "claim": "Shapes that neither run 3 nor TARGETS.md names, and what each would break today. Framework (the 'user' is a developer extending it, so the key figure is the extension-point lifecycle and the brief's 'end-to-end workflow' topic misleads). Infrastructure-as-code (Terraform, Helm or Kustomize: the architecture is in the declarations, and a derived resource graph is nearly the whole answer). Data or ML research code (notebooks, configs, a training pipeline: the thesis lives in a paper or README and the 'workflow' is a pipeline DAG). Mobile app (platform manifests and screen or navigation graph; build variants). Firmware or embedded (linker scripts, a board or hardware abstraction layer, interrupt-driven state machines; C with no package manifest). Docs-only or spec-only (the repository is the product: the IA is the architecture). Plugin ecosystem (core plus N plugins following one contract: small multiples of one plugin shape). Polyglot monorepo with hundreds of packages (the unit graph is the map; no single thesis). Almost-no-docs repo (the thesis must be marked as inferred from code). Docs-elsewhere repo (README links to an external site the run may not fetch). Each of these trips at least one fixed assumption: the four fixed topics, the server-shaped technology table, the single layout, or a thesis that is always stated somewhere.",
      "label": "Inferred",
-     "evidence": "Fixed assumptions observed in brief.ts:47-52 (BRIEF_TOPICS), brief.ts:144 ('Write one section per topic, in this order'), reader-standards.md RS-11 (technology dimensions), diagram-layout.ts:1-17. The failure modes per shape are design judgement; no non-Redis run exists (shared brief)."
+     "basis": "Fixed assumptions observed in brief.ts:47-52 (BRIEF_TOPICS), brief.ts:144 ('Write one section per topic, in this order'), reader-standards.md RS-11 (technology dimensions), diagram-layout.ts:1-17. The failure modes per shape are design judgement; no non-Redis run exists (shared brief)."
     },
     {
      "id": "I3-F2",
      "claim": "The run has no vendored-or-generated notion. In Redis, deps/ (6.2 MB of vendored hiredis, lua, jemalloc and others) is 29% of all blob bytes and 39% of non-test code bytes. A size-driven partition or language-mix figure that does not exclude it would misdescribe the project. Linguist-style rules (vendor/, third_party/, deps/, node_modules/, generated-file markers, and the repository's own .gitattributes `linguist-vendored` and `linguist-generated` attributes) are deterministic and path-or-header only.",
      "label": "Observed",
-     "evidence": "git ls-tree -r -l on the run clone: deps 6,181,076 of 21,574,480 bytes (28.6%); src 9,765,825. That percentage of 'code' is computed over src+deps+modules; it is an illustration, not a rule. Case-insensitive `grep -c -F` for 'vendor' and for 'generated' over census.ts and brief.ts each returned 0 in both files (denominator: 2 files); 'linguist' has 0 files under packages/polaris-dossier/src."
+     "basis": "git ls-tree -r -l on the run clone: deps 6,181,076 of 21,574,480 bytes (28.6%); src 9,765,825. That percentage of 'code' is computed over src+deps+modules; it is an illustration, not a rule. Case-insensitive `grep -c -F` for 'vendor' and for 'generated' over census.ts and brief.ts each returned 0 in both files (denominator: 2 files); 'linguist' has 0 files under packages/polaris-dossier/src."
     },
     {
      "id": "I3-F3",
      "claim": "Redis took 22 self-reported inspected paths for a 1,861-blob tree, and its brief says nothing about how exploration should scale with size. Exploration strategy is entirely the agent's, so a 300-package monorepo and a 2-file CLI get the same instruction ('Explore the clone for the brief's reader topics').",
      "label": "Observed",
-     "evidence": "rev-4.json discovery.inspected length 22; .claude/skills/polaris-dossier/SKILL.md step 5."
+     "basis": "rev-4.json discovery.inspected length 22; .claude/skills/polaris-dossier/SKILL.md step 5."
     }
    ],
    "moves": [
@@ -2085,31 +2085,31 @@
      "id": "I1-F1",
      "claim": "The newest Redis draft (rev-4) cites 20 distinct paths out of 1,861 blobs. 78 citations go to redis.conf, 63 to README.md and 31 to MANIFESTO. No citation lands under tests/ (129 unit-test paths, 4.4 MB), .github/workflows/ (11 workflow files), deps/ (6.2 MB of vendored code), or src/commands/ (459 JSON command definitions). The agent's own stopping reason is: 'Every reader question was answered from README, MANIFESTO, redis.conf and the request path in src'. The agent self-reports 22 inspected paths.",
      "label": "Observed",
-     "evidence": "python over run-658f2f90…/drafts/rev-4.json (citation path counter: 20 keys) and `git ls-tree -r -l -z HEAD` on the run's clone (path and size only, no blob read): 1,861 blobs, 21.6 MB; src 9.8 MB, deps 6.2 MB, tests 4.4 MB; 459 paths matching src/commands/*.json; 11 .github/workflows files."
+     "basis": "python over run-658f2f90…/drafts/rev-4.json (citation path counter: 20 keys) and `git ls-tree -r -l -z HEAD` on the run's clone (path and size only, no blob read): 1,861 blobs, 21.6 MB; src 9.8 MB, deps 6.2 MB, tests 4.4 MB; 459 paths matching src/commands/*.json; 11 .github/workflows files."
     },
     {
      "id": "I1-F2",
      "claim": "Doctrine already lets a deterministic, derived structural fact be Observed. trust-and-evidence.md:105 says 'Observed — a deterministic claim with a resolvable evidence link'. RFC7-28 already says 'curated/computed provenance is a machine-readable attribute on every visual' and 'embedded computed visuals inherit the map surface's obligations'. What reserves Observed for verified quotations is the dossier spec: polaris-dossier-local-agent-mode spec.md:236 says 'Observed is reserved for a quotation that Syzygy has verified'. Run 3's I3-M2 said rendering derived structure as Observed 'needs an RFC7 epistemic-label amendment'. Read against these clauses it needs neither a doctrine nor an RFC amendment, only a spec amendment, which D10 made agent-decidable.",
      "label": "Inferred",
-     "evidence": ".syzygy/governance/doctrine/trust-and-evidence.md:105 and :153-158 ('inferred structure stays visually distinct from observed structure'); .syzygy/governance/contracts/rfcs/RFC-0007/rendering-and-surface.md RFC7-28 (lines ~100-108); openspec/changes/polaris-dossier-local-agent-mode/specs/polaris-generation/spec.md:236; docs/pursuits/2026-11-09-vision-pursuit-data.json I3-M2. Inferred because whether a lexical derivation counts as 'deterministic' for VIS-7's identity test is a reading, not a ruling."
+     "basis": ".syzygy/governance/doctrine/trust-and-evidence.md:105 and :153-158 ('inferred structure stays visually distinct from observed structure'); .syzygy/governance/contracts/rfcs/RFC-0007/rendering-and-surface.md RFC7-28 (lines ~100-108); openspec/changes/polaris-dossier-local-agent-mode/specs/polaris-generation/spec.md:236; docs/pursuits/2026-11-09-vision-pursuit-data.json I3-M2. Inferred because whether a lexical derivation counts as 'deterministic' for VIS-7's identity test is a reading, not a ruling."
     },
     {
      "id": "I1-F3",
      "claim": "History-derived views (churn, file age, ownership, contributor maps) cannot be computed under the current acquisition form. clone-shape.ts refuses a .git that holds anything beyond the one consented commit, fetched at depth 1, with `shallow` set to exactly that commit. The only 'history' reachable is the set of tags (from `git ls-remote`, refs only) and whatever the tree itself says (changelogs, release notes).",
      "label": "Observed",
-     "evidence": "packages/polaris-dossier/src/clone-shape.ts:1-30 (the allowlist docstring: HEAD detached at the commit, `shallow` exactly the commit, the store names no identifier but the commit and its trees and blobs)."
+     "basis": "packages/polaris-dossier/src/clone-shape.ts:1-30 (the allowlist docstring: HEAD detached at the commit, `shallow` exactly the commit, the store names no identifier but the commit and its trees and blobs)."
     },
     {
      "id": "I1-F4",
      "claim": "A path-only, no-blob-read derivation already ships, and it is the precedent to copy. census.ts builds a withheld-path census from the tree listing alone and delivers it to the inventory brief and in `check` output. It keeps it out of the authoring brief because REQ-polaris-generation-034 says 'The brief SHALL carry no project content beyond the repository identity and the pinned revision'. Any derived structure has to reach the author by the same route (a run-directory artifact or `check` output) or with a spec amendment to that clause.",
      "label": "Observed",
-     "evidence": "packages/polaris-dossier/src/census.ts:7-28 (docstring: 'the lead ruled (b) for the author's side'); local-agent-mode spec line 230 as cited in the 2026-11-09 pursuit report's P10 correction."
+     "basis": "packages/polaris-dossier/src/census.ts:7-28 (docstring: 'the lead ruled (b) for the author's side'); local-agent-mode spec line 230 as cited in the 2026-11-09 pursuit report's P10 correction."
     },
     {
      "id": "I1-F5",
      "claim": "Cost tiers for derived structure, from cheapest to most expensive. T0, path-only (tree listing and sizes): directory treemap, language mix by extension and bytes, presence and size of docs, tests, CI, examples and vendored code, and the manifest inventory. This is language-agnostic, reads no blob and is already within what census.ts does. T1, format recognizers over screened manifest blobs, using one grammar per file format, never per programming language: package.json, Cargo.toml, pyproject.toml, go.mod, pom.xml, *.csproj, CMakeLists add_executable/add_library, Makefile target lines, GitHub, GitLab and CircleCI workflow YAML (jobs, needs, triggers), docker-compose (services, depends_on, ports), Dockerfile (FROM, EXPOSE, ENTRYPOINT), Helm Chart.yaml and Kubernetes kinds, Terraform blocks, OpenAPI, .proto, GraphQL SDL, SQL DDL, Prisma, JSON Schema. These give the workspace/package graph, binaries, scripts, the CI pipeline graph, service topology, API and route tables, and data models. T2, lexical import scanners per language (import/require/use/mod/#include lines), about 50-150 lines each for the top 10 languages: a file- and package-level import graph, true at the lexical level. T3, tree-sitter or LSP-class symbol and call indexes: public API surface, call graphs. These need native or WASM grammars, the runtime and supply-chain cost that brings, and per-language maintenance. Most of the visual value sits in T0+T1, about 80% by this lane's judgement.",
      "label": "Inferred",
-     "evidence": "Design judgement. Supporting observation: on Redis, T0 alone separates src/deps/tests/modules (I1-F1). T1 Makefile and workflow parsing would give the build/CI graph, and recognising the 459 command JSONs (a project-specific self-description format) would give the full command table. The generality of T1 across repos is unmeasured (all six runs are of redis/redis)."
+     "basis": "Design judgement. Supporting observation: on Redis, T0 alone separates src/deps/tests/modules (I1-F1). T1 Makefile and workflow parsing would give the build/CI graph, and recognising the 459 command JSONs (a project-specific self-description format) would give the full command table. The generality of T1 across repos is unmeasured (all six runs are of redis/redis)."
     }
    ],
    "moves": [
@@ -2266,19 +2266,19 @@
      "id": "I4-F1",
      "claim": "The renderer already finds glossary terms in agent prose by surface form: the term, its de-hyphenated form, plural, capitalised and upper-case. It links the first use in each section to its entry with a hover or focus pop-up. It does not know where a term is defined in reading order, so a page can use a term three sections before the prose that explains it, and nothing notices.",
      "label": "Observed",
-     "evidence": "apps/three-surface-poc/src/polaris-generation/dossier-site.ts:355-385 (glossaryByForm, termPattern, withTerms: first use per section); draft-schema.ts:37-40 (understanding.terminology is a list of items with no link to a defining block)."
+     "basis": "apps/three-surface-poc/src/polaris-generation/dossier-site.ts:355-385 (glossaryByForm, termPattern, withTerms: first use per section); draft-schema.ts:37-40 (understanding.terminology is a list of items with no link to a defining block)."
     },
     {
      "id": "I4-F2",
      "claim": "Enforceability sort of the readability techniques. Mechanically checkable once the schema carries the binding: definition-before-use in reading order (I4-M1); per-depth word and reading-time budgets (I4-M2); running-example presence on each Pole, with a citation to an example, test or doc file (I4-M3); analogy completeness, meaning every analogy states where it breaks, cited (I4-M4); page-template conformance (answer first, figure, walk, trade-off, next); question-led headings (lexical: interrogative opener or 'How/Why/What' form, advisory); sentence-length and undefined-term density per paragraph. Needs a reader-model probe (P7): whether depth 1 alone answers purpose and thesis; whether the running example clarifies; whether an analogy misleads; whether a figure answers its question (I2-M5). Author guidance only: voice, choice of example, aptness of an analogy, what to put first.",
      "label": "Inferred",
-     "evidence": "Design classification. The existing counted standards are RS-13, 14, 16 and 19 (reader-advice.ts:116-141); reader-standards.ts says standards 'marked counted' are measured and 'A count is advice'."
+     "basis": "Design classification. The existing counted standards are RS-13, 14, 16 and 19 (reader-advice.ts:116-141); reader-standards.ts says standards 'marked counted' are measured and 'A count is advice'."
     },
     {
      "id": "I4-F3",
      "claim": "Changing which reader standards are counted has an owner-decision history. On 2026-11-09 the owner-facing decision on syzygy-fnry.18 was 'Not now: no counted glossary-term check and no reader-standards v2 for it', with a re-ask trigger, because counting RS-2 would need approved standards text. Any move below that adds a counted standard should be advisory first and say which standard text it would change.",
      "label": "Observed",
-     "evidence": "`bd show syzygy-fnry.18` comments, 2026-11-09 09:19, '[decision] Not now: …'."
+     "basis": "`bd show syzygy-fnry.18` comments, 2026-11-09 09:19, '[decision] Not now: …'."
     }
    ],
    "moves": [
@@ -2424,25 +2424,25 @@
      "id": "I5-F1",
      "claim": "Current auto-wiki generators converge on a page per module or subsystem, Mermaid architecture and data-flow diagrams, and an 'ask' or chat feature. One diagram-first tool links diagram components to the real files. One commercial tool refreshes the wiki in CI on every push.",
      "label": "Inferred",
-     "evidence": "Web search summaries (2026-11-21): DeepWiki-Open (sourceforge mirror, algolia docsearch page); CodeWiki arXiv 2510.24428; GitDiagram (algolia docsearch page: 'components in the diagram link directly to their real files'); Factory AutoWiki announcement (factory.ai/news/wiki, dated June 17, 2026 in the summary); arozumenko 'Wikis'. Features not verified against the tools."
+     "basis": "Web search summaries (2026-11-21): DeepWiki-Open (sourceforge mirror, algolia docsearch page); CodeWiki arXiv 2510.24428; GitDiagram (algolia docsearch page: 'components in the diagram link directly to their real files'); Factory AutoWiki announcement (factory.ai/news/wiki, dated June 17, 2026 in the summary); arozumenko 'Wikis'. Features not verified against the tools."
     },
     {
      "id": "I5-F2",
      "claim": "The research on LLM-generated architecture documentation reports three recurring defects: hallucinated elements and incorrect relationships; granularity mismatch, with views drawn at code level rather than architectural abstraction; and incomplete or misleading diagrams. Evaluation is mostly LLM-as-judge plus human review. CodeWikiBench builds hierarchical rubrics from the project's official documentation, because text similarity cannot judge repository-level docs.",
      "label": "Inferred",
-     "evidence": "Web search summaries: arXiv 2603.21178 (340 repositories, 4,137 views; 'granularity mismatches'); arXiv 2604.08293 CIAO ('incomplete or misleading diagrams'); arXiv 2607.26100 systematic review ('hallucinated elements, incorrect relationships … violations of metamodel constraints'); arXiv 2510.24428 CodeWikiBench rubric method. Only the summaries were read."
+     "basis": "Web search summaries: arXiv 2603.21178 (340 repositories, 4,137 views; 'granularity mismatches'); arXiv 2604.08293 CIAO ('incomplete or misleading diagrams'); arXiv 2607.26100 systematic review ('hallucinated elements, incorrect relationships … violations of metamodel constraints'); arXiv 2510.24428 CodeWikiBench rubric method. Only the summaries were read."
     },
     {
      "id": "I5-F3",
      "claim": "Model-based architecture tools (Structurizr for C4) keep views consistent by construction: one model of elements and relationships, and every diagram a view derived from it. Names, descriptions and relationships therefore cannot drift between zoom levels, whereas drawing tools copy elements and drift. C4 also says to draw only the levels that add value; context and container usually suffice.",
      "label": "Inferred",
-     "evidence": "Web search summaries: docs.structurizr.com/as-code, c4model.com/diagrams, and secondary posts (dzone, freecodecamp)."
+     "basis": "Web search summaries: docs.structurizr.com/as-code, c4model.com/diagrams, and secondary posts (dzone, freecodecamp)."
     },
     {
      "id": "I5-F4",
      "claim": "The Polaris draft schema is the drawing-tool pattern: each diagram carries its own node and edge list with its own ids (draft-schema.ts:164-169), so the same component in two figures is two unrelated nodes, and nothing ties a figure's 'redis-server' to another figure's 'Run command' inside it.",
      "label": "Observed",
-     "evidence": "draft-schema.ts:164-169; rev-4.json: three diagrams with disjoint id spaces (n-*, w-*, p-*)."
+     "basis": "draft-schema.ts:164-169; rev-4.json: three diagrams with disjoint id spaces (n-*, w-*, p-*)."
     }
    ],
    "moves": [
@@ -2600,19 +2600,19 @@
      "id": "I7-F1",
      "claim": "Run 3 overstated the prerequisite for derived structure. Doctrine defines Observed as 'a deterministic claim with a resolvable evidence link', and RFC7-28 already provides for computed visuals with machine-readable provenance. The only blocker is local-agent-mode spec.md:236 ('Observed is reserved for a quotation that Syzygy has verified'), a spec clause that D10 made agent-decidable.",
      "label": "Inferred",
-     "evidence": "derived-structure.json I1-F2 (trust-and-evidence.md:105, RFC7-28, spec.md:236)."
+     "basis": "derived-structure.json I1-F2 (trust-and-evidence.md:105, RFC7-28, spec.md:236)."
     },
     {
      "id": "I7-F2",
      "claim": "In the newest Redis run the agent cited 20 of 1,861 paths, drew 3 figures, none of them on the landing page, and could not draw a single solid (Observed) element, because the schema allows only inferred or unknown on diagram elements. One figure is 2,248 px wide because band wrapping excludes a chain that ends in a fan-out. No figure element links to its source.",
      "label": "Observed",
-     "evidence": "derived-structure.json I1-F1; visual-grammar.json I2-F2, I2-F3, I2-F4."
+     "basis": "derived-structure.json I1-F1; visual-grammar.json I2-F2, I2-F3, I2-F4."
     },
     {
      "id": "I7-F3",
      "claim": "The research on auto-generated architecture docs names hallucinated relationships and granularity mismatch as the recurring defects. Two moves here target exactly those: derived witnesses on typed relationships (R1) and level-constrained views (R11). The per-figure evidence tally (in R1) is a claim no auto-wiki can print truthfully.",
      "label": "Inferred",
-     "evidence": "state-of-the-art.json I5-F2 (search summaries only)."
+     "basis": "state-of-the-art.json I5-F2 (search summaries only)."
     }
    ],
    "ranked": [
@@ -3231,31 +3231,31 @@
      "id": "I2-F1",
      "claim": "All six diagram kinds share one flat schema (nodes and edges, each with label, epistemic and citations) and one layout: layered, left to right, longest path. `kind` is a caption word. It changes neither the schema nor the layout.",
      "label": "Observed",
-     "evidence": "packages/polaris-generation-core/src/draft-model.ts:17 (DIAGRAM_KINDS); packages/polaris-dossier/src/draft-schema.ts:164-169; apps/three-surface-poc/src/polaris-generation/diagram-layout.ts:1-17 (layout docstring); dossier-site.ts:549 renders `d.kind` as an eyebrow label."
+     "basis": "packages/polaris-generation-core/src/draft-model.ts:17 (DIAGRAM_KINDS); packages/polaris-dossier/src/draft-schema.ts:164-169; apps/three-surface-poc/src/polaris-generation/diagram-layout.ts:1-17 (layout docstring); dossier-site.ts:549 renders `d.kind` as an eyebrow label."
     },
     {
      "id": "I2-F2",
      "claim": "Band wrapping applies only to a plain chain. The Redis 'How one command is served' flow is a five-step chain ending in a three-way fan-out, so it keeps one band and renders 2,248 px wide in a scroll box, about six phone widths at 390 px. The landing page carries no figure at all: 0 `<svg>` in index.html. The three figures sit one per Pole page.",
      "label": "Observed",
-     "evidence": "diagram-layout.ts:126-130 (`wraps` requires no back edge and a plain chain); run-658f2f90…/site/1/poles/2.html viewBox '0 0 2248 376'; site/1/index.html contains 0 '<svg' (grep count); poles/1, 2, 3 each contain 1."
+     "basis": "diagram-layout.ts:126-130 (`wraps` requires no back edge and a plain chain); run-658f2f90…/site/1/poles/2.html viewBox '0 0 2248 376'; site/1/index.html contains 0 '<svg' (grep count); poles/1, 2, 3 each contain 1."
     },
     {
      "id": "I2-F3",
      "claim": "No diagram element links anywhere. svg-inert.ts refuses any `href` and has no `a` element in its allowlist, so a node can only show a `<title>` tooltip. The click-to-source path goes through a collapsed 'Read every component and relationship' list under the figure.",
      "label": "Observed",
-     "evidence": "apps/three-surface-poc/src/polaris-generation/svg-inert.ts:13-18 (ELEMENTS and ATTRIBUTES sets), :33-34 (href refused); site/1/poles/*.html contain 0 '<a ' inside any <svg>; dossier-site.ts:549 (details 'Read every component and relationship')."
+     "basis": "apps/three-surface-poc/src/polaris-generation/svg-inert.ts:13-18 (ELEMENTS and ATTRIBUTES sets), :33-34 (href refused); site/1/poles/*.html contain 0 '<a ' inside any <svg>; dossier-site.ts:549 (details 'Read every component and relationship')."
     },
     {
      "id": "I2-F4",
      "claim": "The legend promises 'Solid: observed' on every figure, but no agent-drawn element can be observed: diagram `epistemic` is `choice(['inferred','unknown'])`. So the solid style has no population in a dossier figure. That is legal under VIS-7 (the legend is still true), but the most trustworthy visual weight is unused. I1-M2 gives it a population.",
      "label": "Observed",
-     "evidence": "draft-schema.ts:113 (`const epistemic = choice(['inferred', 'unknown'])`); dossier-site.ts:547 (legend string)."
+     "basis": "draft-schema.ts:113 (`const epistemic = choice(['inferred', 'unknown'])`); dossier-site.ts:547 (legend string)."
     },
     {
      "id": "I2-F5",
      "claim": "Most of the missing figure kinds are better built in HTML and CSS than in SVG: record or byte layouts, layer stacks, timelines, comparison matrices, anatomy callouts and swimlanes collapsed for mobile. HTML reflows at 390 px for free, its text is selectable and translatable, and it can hold real `<a>` links without widening the SVG allowlist. Only true graphs (dependency, containment, state, free-form flow) need computed coordinates.",
      "label": "Inferred",
-     "evidence": "Design judgement. It is consistent with the existing renderer, which already builds tables, steps, cards and definitions as HTML (draft-schema.ts:128-138) and reaches 0 contrast failures and AA in the run-3 design audit."
+     "basis": "Design judgement. It is consistent with the existing renderer, which already builds tables, steps, cards and definitions as HTML (draft-schema.ts:128-138) and reaches 0 contrast failures and AA in the run-3 design audit."
     }
    ],
    "moves": [
@@ -3416,19 +3416,19 @@
      "id": "I6-F1",
      "claim": "Mechanically guaranteed today: every diagram node and edge cites at least one span (`citations(1)`), and an edge's endpoints are nodes of its diagram. Not guaranteed: that an edge's citation concerns either endpoint, that a node names something that exists at the pinned revision, that an edge's meaning is typed (AUTHORING.md asks for 'typed edges' and 'edge meaning', but the schema has only a free `label`), or that the legend's entries have any population.",
      "label": "Observed",
-     "evidence": "draft-schema.ts:166-167 (citations(1) on nodes and edges); check-derive.ts:363-371 (endpoint resolution); docs/polaris-generation/AUTHORING.md:52-53 ('typed edges, edge meaning'); dossier-site.ts:547 (fixed legend string, I2-F4)."
+     "basis": "draft-schema.ts:166-167 (citations(1) on nodes and edges); check-derive.ts:363-371 (endpoint resolution); docs/polaris-generation/AUTHORING.md:52-53 ('typed edges, edge meaning'); dossier-site.ts:547 (fixed legend string, I2-F4)."
     },
     {
      "id": "I6-F2",
      "claim": "Layout quality is tuned by constants for observed widths rather than measured. The page CSS carries a rule for exactly one SVG width, `.diagram-scroll svg[width=\"1048\"]{max-width:max(100%,860px)}`. READABLE_SPACING's comment records hand-derived pixel budgets ('the widest edge label (22 characters: 186 px) fits its 198 px gap'). Nothing measures a figure's effective text size at the reader's width. The 2,248 px Redis flow must either scroll (it does) or scale its text by about 358/2248, roughly 0.16× at 390 px.",
      "label": "Observed",
-     "evidence": "dossier-site.ts DOSSIER_CSS (python regex over the file: the one width-specific rule); diagram-layout.ts:49-51; site/1/poles/2.html viewBox width 2248. The 0.16× figure is arithmetic over an assumed 358 px content width at 390 px (16 px gutters), so the factor is Inferred."
+     "basis": "dossier-site.ts DOSSIER_CSS (python regex over the file: the one width-specific rule); diagram-layout.ts:49-51; site/1/poles/2.html viewBox width 2248. The 0.16× figure is arithmetic over an assumed 358 px content width at 390 px (16 px gutters), so the factor is Inferred."
     },
     {
      "id": "I6-F3",
      "claim": "Every dossier page's CSP is `default-src 'none'; style-src 'unsafe-inline'; base-uri 'none'; form-action 'none'`. Per-figure generated CSS (walk highlighting, depth switches, lint-driven variants) therefore costs nothing at the CSP layer, while any script still needs the hashed script-src form the page-sink tests already exercise.",
      "label": "Observed",
-     "evidence": "site/1/index.html <meta http-equiv=\"Content-Security-Policy\" …>; apps/three-surface-poc/src/polaris-generation/page-sink-csp.browser.test.ts:16-21."
+     "basis": "site/1/index.html <meta http-equiv=\"Content-Security-Policy\" …>; apps/three-surface-poc/src/polaris-generation/page-sink-csp.browser.test.ts:16-21."
     }
    ],
    "moves": [
