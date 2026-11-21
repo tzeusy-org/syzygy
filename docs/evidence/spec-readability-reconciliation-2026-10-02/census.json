@@ -600,7 +600,7 @@
     },
     "POLARIS": {
       "requirements": 39,
-      "scenarios": 365,
+      "scenarios": 373,
       "members": {
         "REQ-polaris-generation-001": {
           "name": "Admitted project input",
@@ -1098,7 +1098,15 @@
           "scenarios": [
             "No terminal is required",
             "Credential-bearing locator is refused",
-            "Clone and state remain separated"
+            "Clone and state remain separated",
+            "Design and decision documents sent as governance-text",
+            "Withheld words, notebooks and vendored paths stay withheld",
+            "Nested documentation admitted and scanned",
+            "Configuration admitted and screened by the configuration detectors",
+            "Credential paths denied before any read",
+            "Predecessor outcomes preserved",
+            "Agent text quoting a configuration secret refused",
+            "Run bound to the predecessor not migrated"
           ]
         },
         "REQ-polaris-generation-047": {
