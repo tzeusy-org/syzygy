@@ -16,6 +16,9 @@ let program: GitMemoryWorkerProgram;
 beforeAll(() => {
   const bundle = path.join(tempDir('memory-worker-program-'), 'worker.mjs');
   buildSync({ entryPoints: [SOURCE], bundle: true, platform: 'node', format: 'esm', conditions: ['source'], banner: { js: GIT_MEMORY_WORKER_BUNDLE_BANNER }, outfile: bundle });
+  // A trusted worker bundle must never be group/world-writable. Own fixture
+  // builds cannot inherit the runner's umask for this boundary.
+  fs.chmodSync(bundle, 0o600);
   program = { bundle, bundleSha256: sha256(fs.readFileSync(bundle)), node: fs.realpathSync(process.execPath), nodeSha256: sha256(fs.readFileSync(process.execPath)) };
 });
 function fixture(format: 'sha1' | 'sha256' = 'sha1', body = 'Own safe worker documentation.\n') {
@@ -131,6 +134,7 @@ describe('independent worker effects and resource falsifiers', () => {
     for (const [name, code] of [['clean', source], ['blocked-attempt', attempted], ['transient-mutant', bypassed]]) {
       const own = path.join(root, name!); fs.mkdirSync(own); const bundle = path.join(own, 'worker.mjs'); fs.writeFileSync(path.join(own, 'subject.ts'), code!);
       buildSync({ stdin: { contents: code!, resolveDir: path.dirname(SOURCE), sourcefile: SOURCE, loader: 'ts' }, bundle: true, platform: 'node', format: 'esm', conditions: ['source'], banner: { js: GIT_MEMORY_WORKER_BUNDLE_BANNER }, outfile: bundle });
+      fs.chmodSync(bundle, 0o600);
       const parent = path.join(own, 'destination'); fs.mkdirSync(parent, { mode: 0o700 });
       const marker = path.join(own, 'audit-marker'), trace = path.join(own, 'effects.trace'), driver = path.join(own, 'driver.mjs');
       const trusted = { ...program, bundle, bundleSha256: sha256(fs.readFileSync(bundle)) };
@@ -173,6 +177,7 @@ process.stdout.write(JSON.stringify(result));`);
     for (const [name, contents] of [['wrong-ack', wrong], ['disabled-ack-guard', weakened]]) {
       const f = fixture(), root = tempDir('memory-worker-ack-'), bundle = path.join(root, 'worker.mjs');
       buildSync({ stdin: { contents: contents!, resolveDir: path.dirname(SOURCE), loader: 'ts' }, bundle: true, platform: 'node', format: 'esm', conditions: ['source'], banner: { js: GIT_MEMORY_WORKER_BUNDLE_BANNER }, outfile: bundle });
+      fs.chmodSync(bundle, 0o600);
       const result = await runGitMemoryWorker({ ...f.request, program: { ...program, bundle, bundleSha256: sha256(fs.readFileSync(bundle)) } });
       captures.push({ name: name!, ok: result.ok, entries: fs.readdirSync(f.request.parent).length, sourceSha256: sha256(contents!) });
       const evidence = process.env.SYZYGY_GIT_MEMORY_WORKER_EVIDENCE_DIR;
@@ -191,7 +196,7 @@ process.stdout.write(JSON.stringify(result));`);
       const code = kind === 'cpu' ? 'export async function gitMemoryWorkerMain(){for(;;){}}'
         : kind === 'wall' ? 'export async function gitMemoryWorkerMain(){setInterval(()=>{},1000);await new Promise(()=>{});}'
           : kind === 'heap' ? 'export async function gitMemoryWorkerMain(){const held=[];for(;;)held.push(new Array(65536).fill(123));}' : 'export async function gitMemoryWorkerMain(){process.stdout.write("x".repeat(4096));}';
-      fs.writeFileSync(bundle, code);
+      fs.writeFileSync(bundle, code, { mode: 0o600 });
       const start = performance.now();
       const result = await runGitMemoryWorker({ ...f.request, program: { ...program, bundle, bundleSha256: sha256(code) },
         limits: kind === 'cpu' ? { cpuSeconds: 1, wallMilliseconds: 5000 } : kind === 'wall' ? { wallMilliseconds: 200 } : kind === 'heap' ? { heapMiB: 16 } : { outputBytes: 128 } });

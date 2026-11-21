@@ -2,8 +2,9 @@ import { decodeGitIncomingUnit } from './git-memory-selection.js';
 import { afterEach, describe, expect, it } from 'vitest';
 import { execFileSync, spawn, type ChildProcess } from 'node:child_process';
 import { createHash } from 'node:crypto';
-import { chmod, lstat, mkdir, mkdtemp, readFile, readdir, rm, symlink, writeFile } from 'node:fs/promises';
+import { chmod, lstat, mkdir, mkdtemp, readFile, readdir, realpath, rm, symlink, writeFile } from 'node:fs/promises';
 import net from 'node:net';
+import { tmpdir } from 'node:os';
 import path from 'node:path';
 import { sha256 } from '@syzygy/support';
 import { receiveGitPackOverSsh, gitMemorySshTestPort, GIT_MEMORY_SSH_PROFILE, type GitSshRequest, type GitSshMetadata, selectGitRevisionOverSsh } from './git-memory-ssh.js';
@@ -22,7 +23,7 @@ afterEach(async () => {
 const packet = (text: string | Buffer): Buffer => { const bytes = Buffer.isBuffer(text) ? text : Buffer.from(text); return Buffer.concat([Buffer.from((bytes.length + 4).toString(16).padStart(4, '0')), bytes]); };
 const advertisement = (format = 'sha1', agent?: string) => Buffer.concat([packet('version 2\n'), ...(agent === undefined ? [] : [packet(`agent=${agent}\n`)]), packet('ls-refs=unborn\n'), packet('fetch=shallow wait-for-done\n'), packet(`object-format=${format}\n`), Buffer.from('0000')]);
 async function base() {
-  const root = await mkdtemp('/home/orca/.tmp/syzygy-memory-ssh-test-'); roots.push(root);
+  const root = await mkdtemp(path.join(await realpath(tmpdir()), 'syzygy-memory-ssh-test-')); roots.push(root);
   const home = path.join(root, 'recipient-home'), serverHome = path.join(root, 'server-home');
   await mkdir(home, { mode: 0o700 }); await mkdir(serverHome, { mode: 0o700 });
   for (const name of ['host', 'client', 'other']) execFileSync('/usr/bin/ssh-keygen', ['-q', '-t', 'ed25519', '-N', '', '-f', path.join(root, name)], { env: cleanEnv(serverHome), timeout: 5000, stdio: ['ignore', 'pipe', 'pipe'] });

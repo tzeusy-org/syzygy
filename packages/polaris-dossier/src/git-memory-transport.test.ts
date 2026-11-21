@@ -2,8 +2,9 @@ import { decodeGitIncomingUnit } from './git-memory-selection.js';
 import { afterEach, describe, expect, it } from 'vitest';
 import { execFileSync } from 'node:child_process';
 import { createHash } from 'node:crypto';
-import { chmod, lstat, mkdir, mkdtemp, readFile, readdir, rm, writeFile } from 'node:fs/promises';
+import { chmod, lstat, mkdir, mkdtemp, readFile, readdir, realpath, rm, writeFile } from 'node:fs/promises';
 import http from 'node:http';
+import { tmpdir } from 'node:os';
 import path from 'node:path';
 import { sha256 } from '@syzygy/support';
 import { GIT_MEMORY_HELPER_PROFILE, gitMemoryTransportTestPort, receiveGitPackInMemory, type GitMemoryRequest, gitMemorySelectionTestPort, selectGitRevisionOverHttps } from './git-memory-transport.js';
@@ -23,7 +24,7 @@ const pkt = (text: string | Buffer): Buffer => {
   return Buffer.concat([Buffer.from((body.length + 4).toString(16).padStart(4, '0')), body]);
 };
 async function directories() {
-  const root = await mkdtemp('/home/orca/.tmp/syzygy-memory-transport-test-'); roots.push(root);
+  const root = await mkdtemp(path.join(await realpath(tmpdir()), 'syzygy-memory-transport-test-')); roots.push(root);
   const home = path.join(root, 'recipient-home'); await mkdir(home, { mode: 0o700 });
   return { root, home };
 }
