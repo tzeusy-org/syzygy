@@ -161,7 +161,7 @@ is stable; reviews cite rules by number.
    not the clause.
 9. A claim of absence needs a sweep with a denominator.
 10. Name the bytes a review is bound to (commit or digest); a later edit is
-    noted beside the review, never a reason for another round (D12, VIS-3).
+    noted beside the review, never a reason for another round (D13, VIS-3).
 11. An evidence record names its subject and the subject's digest; a record
     that names neither cannot be re-checked against the bytes it describes.
 

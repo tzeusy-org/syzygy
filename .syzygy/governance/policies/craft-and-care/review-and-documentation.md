@@ -20,7 +20,7 @@ fresh-context reviewer. The review runs once, its findings are repaired and
 recorded, and it never gates the merge; a later edit does not retire it.
 
 > *Amended 2026-11-22 (agent adoption, `syzygy-yjoq`, under VIS-4 as
-> amended by D12).* Before: seven classes (adding authority boundaries,
+> amended by D13).* Before: seven classes (adding authority boundaries,
 > public interface and certificate logic, and all of SEC-1…SEC-5), class
 > membership never finally decided by the author, a fresh review of every
 > head a reviewer's fix produced, and standing review prompts.
