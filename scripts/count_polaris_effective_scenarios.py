@@ -58,6 +58,9 @@ adoption binding verifies; each parser counts its one replacement (034).
 The manifest-recognizers version2.7 amendment follows version2.5 when its own
 adoption binding verifies; each parser counts its one replacement (034).
 
+The spec-repairs version2.8 amendment follows version2.7 when its own
+adoption binding verifies; each parser counts its one replacement (034).
+
 The declared-source reach version2.6 amendment follows version2.0 when its own
 adoption binding verifies; each parser counts its one replacement (046).
 
@@ -496,6 +499,15 @@ def manifests_amendment(root: Path) -> str | None:
     return text
 
 
+def repairs_amendment(root: Path) -> str | None:
+    """Verified text, a pending or retired amendment, or a counting refusal."""
+    import check_spec_reconciliation as adoption
+    text, records, subjects = adoption.repairs_binding(root)
+    if records or subjects:
+        raise ScenarioCountError("spec repairs adoption findings:\n" + "\n".join(records + subjects))
+    return text
+
+
 def reach_amendment(root: Path) -> str | None:
     """Verified text, a pending or retired amendment, or a counting refusal."""
     import check_spec_reconciliation as adoption
@@ -516,7 +528,8 @@ def build_composition(root: Path) -> CompositionResult:
                         (adoption.LEDGER_SPEC, ledger_amendment(root)),
                         (adoption.KINDS_SPEC, kinds_amendment(root)),
                         (adoption.REACH_SPEC, reach_amendment(root)),
-                        (adoption.MANIFESTS_SPEC, manifests_amendment(root))):
+                        (adoption.MANIFESTS_SPEC, manifests_amendment(root)),
+                        (adoption.REPAIRS_SPEC, repairs_amendment(root))):
         if text is not None:
             sources.append((label, text))
 
@@ -557,10 +570,12 @@ def composition_inputs(root: Path) -> list[Path]:
     kinds_amendment(root)
     reach_amendment(root)
     manifests_amendment(root)
+    repairs_amendment(root)
     paths = adoption.declared_source_inputs(root) | {
         adoption.URL_SOURCE_REPLACEMENTS, *adoption.URL_SOURCE_SUBJECTS,
         *adoption.URL_SOURCE_RFC_PATHS, *adoption.FIGURE_SUBJECTS, *adoption.DERIVED_SUBJECTS,
         *adoption.LEDGER_SUBJECTS, *adoption.KINDS_SUBJECTS, *adoption.MANIFESTS_SUBJECTS,
+        *adoption.REPAIRS_SUBJECTS,
         *adoption.REACH_SUBJECTS,
     }
     files = discover_composition_files(root)
