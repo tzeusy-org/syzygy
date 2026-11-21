@@ -3,7 +3,8 @@ import path from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
 import { createHash } from 'node:crypto';
 import { deflateSync } from 'node:zlib';
-import { execFileSync } from 'node:child_process';
+import { execFile, execFileSync } from 'node:child_process';
+import { promisify } from 'node:util';
 import { buildSync } from 'esbuild';
 import { beforeAll, describe, expect, it } from 'vitest';
 import { tempDir } from '@syzygy/test-kit';
@@ -11,6 +12,7 @@ import { sha256 } from '@syzygy/support';
 import { policyFixture } from './full-run.testkit.js';
 import { runGitMemoryWorker, GIT_MEMORY_WORKER_BUNDLE_BANNER, type GitMemoryWorkerProgram, type GitMemoryWorkerRequest, type GitMemoryWorkerAudit } from './git-memory-worker.js';
 
+const execFileAsync = promisify(execFile);
 const SOURCE = fileURLToPath(new URL('./git-memory-worker.ts', import.meta.url));
 let program: GitMemoryWorkerProgram;
 beforeAll(() => {
@@ -142,7 +144,7 @@ describe('independent worker effects and resource falsifiers', () => {
     ]) expect(() => completeTrace(trace, destination, marker)).toThrow(/write syscall trace/u);
   });
 
-  it('detects a transient pre-admission source write that a final census misses', () => {
+  it('detects a transient pre-admission source write that a final census misses', async () => {
     const root = tempDir('memory-worker-effects-'), source = fs.readFileSync(SOURCE, 'utf8');
     const injection = `if (!decoded.ok) throw new Error();
       const transient = path.join(v.parent, 'pre-admission-transient');
@@ -174,8 +176,10 @@ const prefix=Buffer.concat([header,...entries]),pack=Buffer.concat([prefix,creat
 const policyBytes=Buffer.from(${JSON.stringify(Buffer.from(policyFixture().bytes).toString('base64'))},'base64');
 const result=await runGitMemoryWorker({program:${JSON.stringify(trusted)},parent:${JSON.stringify(parent)},pack,objectFormat:'sha1',selectedCommit:commit.oid,shallow:[commit.oid],policyBytes,visibility:'private',binding:{run:'own-effects',acquisition:'own-capture',sourceBinding:'a'.repeat(64),policySha256:createHash('sha256').update(policyBytes).digest('hex'),originPolicySha256:'e'.repeat(64)},current:()=>true,audit:event=>{if(event.stage==='whole-closure-admitted')fs.writeFileSync(${JSON.stringify(marker)},'ACK\\n',{mode:0o600});}});
 process.stdout.write(JSON.stringify(result));`);
-      const result = JSON.parse(execFileSync('/usr/bin/strace', ['-f', '-qq', '-y', '-s', '0', '-e', 'trace=write,writev,pwrite64,pwritev,openat,unlink,unlinkat', '-o', trace, process.execPath, driver],
-        { env: { PATH: '/usr/bin:/bin', LANG: 'C', LC_ALL: 'C' }, encoding: 'utf8', timeout: 10_000, maxBuffer: 65_536 }));
+      const { stdout } = await execFileAsync('/usr/bin/strace',
+        ['-f', '-qq', '-y', '-s', '0', '-e', 'trace=write,writev,pwrite64,pwritev,openat,unlink,unlinkat', '-o', trace, process.execPath, driver],
+        { env: { PATH: '/usr/bin:/bin', LANG: 'C', LC_ALL: 'C' }, encoding: 'utf8', timeout: 10_000, maxBuffer: 65_536 });
+      const result = JSON.parse(stdout);
       const lines = completeTrace(fs.readFileSync(trace, 'utf8').split('\n'), parent, marker);
       const markerAt = lines.findIndex(line => line.includes(`<${marker}>`) && /\bwrite\(/u.test(line) && /\)\s*=\s*[1-9][0-9]*$/u.test(line));
       const writes = lines.map((line, index) => ({ line, index })).filter(({ line }) => line.includes(`<${parent}/`) && /\b(?:write|writev|pwrite64|pwritev)\(/u.test(line) && /\)\s*=\s*[1-9][0-9]*$/u.test(line));
