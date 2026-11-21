@@ -14,6 +14,9 @@ import type { EpistemicMarking } from '@syzygy/polaris-generation-core/live';
  * - Forward edges are cubic curves from the source's right side to the target's
  *   left side. Back edges are curves drawn below the layers, each one lower
  *   than the last.
+ * - On a spacing with a column limit, a plain chain longer than the limit
+ *   continues on bands below; any other diagram longer than the limit is
+ *   stacked top to bottom instead (`stackDiagram`).
  */
 
 const NODE_WIDTH = 200;
@@ -124,9 +127,11 @@ export function layoutDiagram(nodes: readonly LayoutNodeInput[], edges: readonly
     members[l] = keyed.map(({ i }) => i);
   }
   // Bands are for a plain chain: one node to a layer and only one-layer steps, so a hand-off between bands crosses nothing. A loop, a skip
-  // or a tall column would put a line or a label on a node, so such a diagram keeps one band and scrolls.
-  const wraps = Number.isFinite(maxColumns) && layerCount > maxColumns && !back.some(Boolean)
+  // or a tall column would put a line or a label on a node on a band break, so such a diagram is stacked top to bottom instead.
+  const tooWide = Number.isFinite(maxColumns) && layerCount > maxColumns;
+  const wraps = tooWide && !back.some(Boolean)
     && members.every(m => m.length === 1) && ends.every(end => layer[end.to]! === layer[end.from]! + 1);
+  if (tooWide && !wraps) return stackDiagram(nodes, edges, ends, back, layer, row, members, spacing);
   const columns = wraps ? maxColumns : Number.POSITIVE_INFINITY;
   const bandOf = (l: number): number => Math.floor(l / columns);
   const columnHeight = (count: number): number => count * NODE_HEIGHT + (count - 1) * gapY;
@@ -180,6 +185,103 @@ export function layoutDiagram(nodes: readonly LayoutNodeInput[], edges: readonly
     nodes: laidNodes,
     edges: laidEdges,
   };
+}
+
+/** How far apart two side lanes run, and how far the first runs from the nodes' edge. */
+const LANE_STEP = 8;
+/** Where a lane edge leaves its source's side and enters its target's, measured down from the node's top. */
+const LANE_EXIT = 20;
+const LANE_ENTRY = 36;
+
+/**
+ * A diagram wider than the readable column that is not a plain chain, stacked top to bottom one node to a row, so it is no wider than one
+ * node and its side lanes: 248 px with up to two lanes a side, 260 px with four on one side and two on the other, inside the 261 px a
+ * dossier gives a diagram on a 390 px screen (syzygy-3efd.19). Past that it scrolls in its own box, as any too-wide diagram does. Rows are in a topological order of the
+ * forward edges, so every forward edge points down and every back edge up.
+ * - A forward edge to the next row is a straight drop from the source's foot to the target's head.
+ * - Any other forward edge leaves the source's left side, bulges into a lane left of every node and enters the target's left side; a back
+ *   edge or a self-loop does the same on the right. A cubic whose two inner control points share an x outside the nodes never reaches
+ *   the nodes' side, so no line crosses a node. Lanes are reused by edges whose rows do not overlap, the shorter span inside.
+ * - Each edge label wants a slot in the gap next to its target (above it for a forward edge, below for a back edge), centred on the node
+ *   column; a gap grows to hold its slots, so no label starts on a node or on another label.
+ */
+function stackDiagram(
+  nodes: readonly LayoutNodeInput[], edges: readonly LayoutEdgeInput[], ends: readonly { readonly from: number; readonly to: number }[],
+  back: readonly boolean[], layer: readonly number[], row: readonly number[], members: readonly (readonly number[])[], spacing: DiagramSpacing,
+): DiagramLayout {
+  // Rows follow a topological order that continues from the row just placed where it can, so a run of steps stays a run of straight drops;
+  // otherwise the next row is the first remaining node in layered order.
+  const layered = members.flat();
+  const indegree = nodes.map(() => 0);
+  ends.forEach((end, e) => { if (!back[e]) indegree[end.to]!++; });
+  const order: number[] = [];
+  const placed = nodes.map(() => false);
+  while (order.length < nodes.length) {
+    const last = order[order.length - 1];
+    const follow = last === undefined ? undefined
+      : ends.find((end, e) => !back[e] && end.from === last && !placed[end.to] && indegree[end.to] === 0)?.to;
+    const pick = follow ?? layered.find(i => !placed[i] && indegree[i] === 0)!;
+    placed[pick] = true;
+    order.push(pick);
+    ends.forEach((end, e) => { if (!back[e] && end.from === pick) indegree[end.to]!--; });
+  }
+  const position = nodes.map(() => 0);
+  order.forEach((i, p) => { position[i] = p; });
+  const straight = ends.map((end, e) => !back[e] && position[end.to]! === position[end.from]! + 1);
+  const side = ends.map((_, e) => straight[e] ? 'none' : back[e] ? 'right' : 'left');
+
+  // Lanes: shorter spans first, each into the innermost lane none of whose spans shares a row with it.
+  const lane = ends.map(() => 0);
+  const laneCount = { left: 0, right: 0 };
+  for (const which of ['left', 'right'] as const) {
+    const spans = ends.flatMap((end, e) => side[e] === which
+      ? [{ e, low: Math.min(position[end.from]!, position[end.to]!), high: Math.max(position[end.from]!, position[end.to]!) }] : []);
+    spans.sort((a, b) => (a.high - a.low) - (b.high - b.low) || a.e - b.e);
+    const taken: { low: number; high: number }[][] = [];
+    for (const span of spans) {
+      let k = 0;
+      while (taken[k]?.some(other => span.low <= other.high && other.low <= span.high)) k++;
+      (taken[k] ??= []).push(span);
+      lane[span.e] = k;
+    }
+    laneCount[which] = taken.length;
+  }
+  const gutter = (count: number): number => Math.max(MARGIN, count * LANE_STEP + 4);
+  const nodeX = gutter(laneCount.left);
+
+  // Label slots: gap g sits above row g (g = order.length is the space under the last row).
+  const slotHeight = spacing.edgeLines * 15 + 6 + LABEL_CLEARANCE + 1;
+  const slots = Array.from({ length: order.length + 1 }, () => 0);
+  const slotOf = ends.map((end, e) => {
+    const gap = back[e] ? position[end.to]! + 1 : position[end.to]!;
+    return { gap, k: slots[gap]!++ };
+  });
+  const gapHeight = slots.map((count, g) => g === 0 ? 0 : Math.max(g === order.length ? 0 : spacing.gapY, count === 0 ? 0 : count * slotHeight + 2 * LABEL_CLEARANCE + 2));
+  const top: number[] = [];
+  let next = MARGIN;
+  for (let p = 0; p < order.length; p++) { next += gapHeight[p]!; top.push(next); next += NODE_HEIGHT; }
+  const bottom = next + gapHeight[order.length]!;
+
+  const laidNodes: LaidOutNode[] = nodes.map((node, i) => ({ id: node.id, layer: layer[i]!, row: row[i]!, x: nodeX, y: top[position[i]!]! }));
+  const centre = nodeX + NODE_WIDTH / 2;
+  const laidEdges: LaidOutEdge[] = edges.map((edge, e) => {
+    const from = laidNodes[ends[e]!.from]!, to = laidNodes[ends[e]!.to]!;
+    const { gap, k } = slotOf[e]!;
+    const gapTop = gap === 0 ? MARGIN : top[gap - 1]! + NODE_HEIGHT;
+    const label = { labelX: centre, labelY: gapTop + LABEL_CLEARANCE + 1 + (k + 0.5) * slotHeight };
+    if (straight[e]) {
+      const y1 = from.y + NODE_HEIGHT, y2 = to.y - 2, dy = (y2 - y1) / 2;
+      return { id: edge.id, from: edge.from, to: edge.to, back: false, d: `M ${num(centre)} ${num(y1)} C ${num(centre)} ${num(y1 + dy)}, ${num(centre)} ${num(y2 - dy)}, ${num(centre)} ${num(y2)}`, ...label };
+    }
+    const left = side[e] === 'left';
+    const x0 = left ? nodeX : nodeX + NODE_WIDTH, x3 = left ? nodeX - 2 : nodeX + NODE_WIDTH + 2;
+    const y0 = from.y + (left ? LANE_EXIT : LANE_ENTRY), y3 = to.y + (left ? LANE_ENTRY : LANE_EXIT);
+    // The curve's farthest point, at t = 1/2, lies three quarters of the way to the control x: put it on the lane.
+    const reach = (lane[e]! + 1) * LANE_STEP / 0.75;
+    const c = left ? x0 - reach : x0 + reach;
+    return { id: edge.id, from: edge.from, to: edge.to, back: back[e]!, d: `M ${num(x0)} ${num(y0)} C ${num(c)} ${num(y0)}, ${num(c)} ${num(y3)}, ${num(x3)} ${num(y3)}`, ...label };
+  });
+  return { width: nodeX + NODE_WIDTH + gutter(laneCount.right), height: Math.ceil(bottom + MARGIN), nodes: laidNodes, edges: laidEdges };
 }
 
 // Test seam: exported for the tests; production code reaches it only inside this file.

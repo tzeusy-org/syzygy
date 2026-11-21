@@ -4,6 +4,10 @@ import { assertInertSvg } from './svg-inert.js';
 
 const nodes = (...ids: string[]) => ids.map(id => ({ id }));
 const edge = (id: string, from: string, to: string) => ({ id, from, to });
+/** The width a dossier gives a diagram's box on a 390 px screen and on a 1440 px one, measured in Chrome on the reading fixture
+ * (`.diagram-scroll` clientWidth, 2026-11-21, syzygy-3efd.19). */
+const STACK_COLUMN = 261;
+const WIDE_COLUMN = 966;
 const place = (layout: ReturnType<typeof layoutDiagram>) => layout.nodes.map(({ id, layer, row, x, y }) => [id, layer, row, x, y]);
 
 describe('layered left-to-right diagram layout', () => {
@@ -83,19 +87,83 @@ describe('layered left-to-right diagram layout', () => {
     expect(svg.match(/<tspan/gu)!.length).toBe(1 + 1 + 3);
   });
 
+  describe('a readable diagram wider than three columns that is not a plain chain stacks top to bottom (syzygy-3efd.19)', () => {
+    const LONG_LABEL = 'twenty-two characters plus more than fit in three lines of this width, which ends in an ellipsis';
+    const STACKED = {
+      // A hub fanning out, one branch running on: four layers, so 1448 px left to right.
+      'fan-out': {
+        nodes: ['hub', 'a', 'b', 'c', 'a2', 'a3'], edges: [edge('ha', 'hub', 'a'), edge('hb', 'hub', 'b'), edge('hc', 'hub', 'c'), edge('aa2', 'a', 'a2'), edge('a2a3', 'a2', 'a3')],
+        size: [248, 714], rows: [['hub', 24, 24], ['a', 24, 146], ['b', 24, 512], ['c', 24, 634], ['a2', 24, 268], ['a3', 24, 390]],
+        d: ['M 124 80 C 124 112, 124 112, 124 144', 'M 24 44 C 13.3 44, 13.3 548, 22 548', 'M 24 44 C 2.7 44, 2.7 670, 22 670', 'M 124 202 C 124 234, 124 234, 124 266', 'M 124 324 C 124 356, 124 356, 124 388'],
+      },
+      // A chain of five with an edge skipping two steps: 1848 px left to right.
+      'skip edge': {
+        nodes: ['n0', 'n1', 'n2', 'n3', 'n4'], edges: [edge('01', 'n0', 'n1'), edge('12', 'n1', 'n2'), edge('23', 'n2', 'n3'), edge('34', 'n3', 'n4'), edge('03', 'n0', 'n3')],
+        size: [248, 648], rows: [['n0', 24, 24], ['n1', 24, 146], ['n2', 24, 268], ['n3', 24, 446], ['n4', 24, 568]],
+        d: ['M 124 80 C 124 112, 124 112, 124 144', 'M 124 202 C 124 234, 124 234, 124 266', 'M 124 324 C 124 384, 124 384, 124 444', 'M 124 502 C 124 534, 124 534, 124 566', 'M 24 44 C 13.3 44, 13.3 482, 22 482'],
+      },
+      // A chain of five whose last node loops back to the second: 1848 px left to right.
+      'back edge': {
+        nodes: ['n0', 'n1', 'n2', 'n3', 'n4'], edges: [edge('01', 'n0', 'n1'), edge('12', 'n1', 'n2'), edge('23', 'n2', 'n3'), edge('34', 'n3', 'n4'), edge('41', 'n4', 'n1')],
+        size: [248, 648], rows: [['n0', 24, 24], ['n1', 24, 146], ['n2', 24, 324], ['n3', 24, 446], ['n4', 24, 568]],
+        d: ['M 124 80 C 124 112, 124 112, 124 144', 'M 124 202 C 124 262, 124 262, 124 322', 'M 124 380 C 124 412, 124 412, 124 444', 'M 124 502 C 124 534, 124 534, 124 566', 'M 224 604 C 234.7 604, 234.7 166, 226 166'],
+      },
+    } as const;
+    const inside = (x: number, y: number, box: { x: number; y: number }) => x > box.x + 0.5 && x < box.x + 199.5 && y > box.y + 0.5 && y < box.y + 55.5;
+    const along = (d: string) => {
+      const [x0, y0, x1, y1, x2, y2, x3, y3] = [...d.matchAll(/-?[\d.]+/gu)].map(m => Number(m[0])) as [number, number, number, number, number, number, number, number];
+      return Array.from({ length: 2001 }, (_, i) => {
+        const t = i / 2000, u = 1 - t;
+        return { x: u ** 3 * x0 + 3 * u * u * t * x1 + 3 * u * t * t * x2 + t ** 3 * x3, y: u ** 3 * y0 + 3 * u * u * t * y1 + 3 * u * t * t * y2 + t ** 3 * y3 };
+      });
+    };
+    for (const [name, shape] of Object.entries(STACKED)) {
+      it(`${name}: one node to a row, inside a 390 px and a 1440 px screen's column, no line, arrowhead or label on a node`, () => {
+        const wide = layoutDiagram(shape.nodes.map(id => ({ id })), shape.edges, { ...READABLE_SPACING, maxColumns: Number.POSITIVE_INFINITY });
+        expect(wide.width, 'wider than three columns left to right').toBeGreaterThan(1048);
+        const layout = layoutDiagram(shape.nodes.map(id => ({ id })), shape.edges, READABLE_SPACING);
+        expect([layout.width, layout.height]).toEqual(shape.size);
+        expect(layout.nodes.map(n => [n.id, n.x, n.y])).toEqual(shape.rows);
+        expect(layout.edges.map(e => e.d)).toEqual(shape.d);
+        expect(layout.width).toBeLessThanOrEqual(STACK_COLUMN);
+        expect(layout.width).toBeLessThanOrEqual(WIDE_COLUMN);
+        for (const e of layout.edges) {
+          for (const at of along(e.d)) expect(layout.nodes.filter(n => inside(at.x, at.y, n)).map(n => n.id), `${e.id} line`).toEqual([]);
+          for (const at of arrowheadOf(e.d)) expect(layout.nodes.filter(n => inside(at.x, at.y, n)).map(n => n.id), `${e.id} arrowhead`).toEqual([]);
+        }
+        const render = { nodes: shape.nodes.map(id => ({ id, label: id, epistemic: 'inferred' as const })), edges: shape.edges.map(e => ({ ...e, label: LONG_LABEL, epistemic: 'inferred' as const })) };
+        const svg = renderDiagramSvg(render, 0, text => text, READABLE_SPACING);
+        assertInertSvg(svg);
+        expect(Number(/ width="(\d+)"/u.exec(svg)![1])).toBe(shape.size[0]);
+        const labels = [...svg.matchAll(/<rect class="edge-label" x="([\d.]+)" y="([\d.]+)" width="([\d.]+)" height="([\d.]+)"/gu)].map(m => ({ left: Number(m[1]), top: Number(m[2]), right: Number(m[1]) + Number(m[3]), bottom: Number(m[2]) + Number(m[4]) }));
+        expect(labels).toHaveLength(shape.edges.length);
+        expect(labels.filter(l => layout.nodes.some(n => l.left < n.x + 200 && n.x < l.right && l.top < n.y + 56 && n.y < l.bottom))).toEqual([]);
+        expect(labels.filter(l => l.left < 0 || l.right > layout.width)).toEqual([]);
+      });
+    }
+
+    it('keeps the default spacing and a plain chain as they were', () => {
+      const ids = ['n0', 'n1', 'n2', 'n3', 'n4'];
+      const skip = [...ids.slice(1).map((id, i) => edge(`s${i}`, ids[i]!, id)), edge('skip', 'n0', 'n3')];
+      expect(layoutDiagram(ids.map(id => ({ id })), skip).width).toBe(1528);
+      expect(layoutDiagram(ids.map(id => ({ id })), skip.slice(0, 4), READABLE_SPACING).width).toBe(1048);
+    });
+  });
+
   describe('readable spacing keeps every edge label off every node', () => {
     const chainOf = (n: number) => Array.from({ length: n }, (_, i) => `n${i}`);
     const steps = (ids: string[]) => ids.slice(1).map((id, i) => edge(`${ids[i]}-${id}`, ids[i]!, id));
-    const SHAPES: Record<string, { nodes: string[]; edges: ReturnType<typeof edge>[]; bands: number }> = {
+    // `stacked`: wider than three columns and not a plain chain, so laid out top to bottom one node to a row (syzygy-3efd.19).
+    const SHAPES: Record<string, { nodes: string[]; edges: ReturnType<typeof edge>[]; bands: number; stacked?: true }> = {
       'plain chain': { nodes: chainOf(7), edges: steps(chainOf(7)), bands: 3 },
-      'chain with a loop back': { nodes: chainOf(5), edges: [...steps(chainOf(5)), edge('n2-n0', 'n2', 'n0')], bands: 1 },
-      'chain with two loops': { nodes: chainOf(5), edges: [...steps(chainOf(5)), edge('n3-n0', 'n3', 'n0'), edge('n4-n1', 'n4', 'n1')], bands: 1 },
-      'chain with a skip': { nodes: chainOf(7), edges: [...steps(chainOf(7)), edge('n0-n6', 'n0', 'n6')], bands: 1 },
-      'fan across a band break': { nodes: ['a', 'b', 'c', 'd1', 'd2', 'd3'], edges: [edge('ab', 'a', 'b'), edge('bc', 'b', 'c'), edge('cd1', 'c', 'd1'), edge('cd2', 'c', 'd2'), edge('cd3', 'c', 'd3')], bands: 1 },
+      'chain with a loop back': { nodes: chainOf(5), edges: [...steps(chainOf(5)), edge('n2-n0', 'n2', 'n0')], bands: 1, stacked: true },
+      'chain with two loops': { nodes: chainOf(5), edges: [...steps(chainOf(5)), edge('n3-n0', 'n3', 'n0'), edge('n4-n1', 'n4', 'n1')], bands: 1, stacked: true },
+      'chain with a skip': { nodes: chainOf(7), edges: [...steps(chainOf(7)), edge('n0-n6', 'n0', 'n6')], bands: 1, stacked: true },
+      'fan across a band break': { nodes: ['a', 'b', 'c', 'd1', 'd2', 'd3'], edges: [edge('ab', 'a', 'b'), edge('bc', 'b', 'c'), edge('cd1', 'c', 'd1'), edge('cd2', 'c', 'd2'), edge('cd3', 'c', 'd3')], bands: 1, stacked: true },
       'loop over a tall middle layer': { nodes: ['a', 'm1', 'm2', 'm3', 'x'], edges: [edge('am1', 'a', 'm1'), edge('am2', 'a', 'm2'), edge('am3', 'a', 'm3'), edge('m1x', 'm1', 'x'), edge('m2x', 'm2', 'x'), edge('m3x', 'm3', 'x'), edge('xa', 'x', 'a')], bands: 1 },
-      'tall column before a band break': { nodes: ['a', 'm1', 'm2', 'm3', 'x', 'y', 'z'], edges: [edge('am1', 'a', 'm1'), edge('am2', 'a', 'm2'), edge('am3', 'a', 'm3'), edge('m1x', 'm1', 'x'), edge('m2x', 'm2', 'x'), edge('m3x', 'm3', 'x'), edge('xy', 'x', 'y'), edge('yz', 'y', 'z')], bands: 1 },
+      'tall column before a band break': { nodes: ['a', 'm1', 'm2', 'm3', 'x', 'y', 'z'], edges: [edge('am1', 'a', 'm1'), edge('am2', 'a', 'm2'), edge('am3', 'a', 'm3'), edge('m1x', 'm1', 'x'), edge('m2x', 'm2', 'x'), edge('m3x', 'm3', 'x'), edge('xy', 'x', 'y'), edge('yz', 'y', 'z')], bands: 1, stacked: true },
       'fan inside one band': { nodes: ['hub', 'x', 'y', 'z'], edges: [edge('hx', 'hub', 'x'), edge('hy', 'hub', 'y'), edge('hz', 'hub', 'z')], bands: 1 },
-      'two skips from one node': { nodes: ['a', 'b', 'c', 'd'], edges: [edge('ab', 'a', 'b'), edge('bc', 'b', 'c'), edge('cd', 'c', 'd'), edge('ac', 'a', 'c'), edge('ad', 'a', 'd')], bands: 1 },
+      'two skips from one node': { nodes: ['a', 'b', 'c', 'd'], edges: [edge('ab', 'a', 'b'), edge('bc', 'b', 'c'), edge('cd', 'c', 'd'), edge('ac', 'a', 'c'), edge('ad', 'a', 'd')], bands: 1, stacked: true },
       'fan plus a skip': { nodes: ['hub', 'x', 'y', 'z', 'end'], edges: [edge('hx', 'hub', 'x'), edge('hy', 'hub', 'y'), edge('hz', 'hub', 'z'), edge('xe', 'x', 'end'), edge('he', 'hub', 'end')], bands: 1 },
       'crossing edges': { nodes: ['a', 'b', 'x', 'y'], edges: [edge('ax', 'a', 'x'), edge('ay', 'a', 'y'), edge('bx', 'b', 'x'), edge('by', 'b', 'y')], bands: 1 },
       'parallel edges': { nodes: ['a', 'b'], edges: [edge('ab1', 'a', 'b'), edge('ab2', 'a', 'b'), edge('ab3', 'a', 'b')], bands: 1 },
@@ -108,7 +176,8 @@ describe('layered left-to-right diagram layout', () => {
         const svg = renderDiagramSvg(render, 0, text => text, READABLE_SPACING);
         const layout = layoutDiagram(shape.nodes.map(id => ({ id })), shape.edges, READABLE_SPACING);
         expect(new Set(layout.nodes.map(n => n.y - (n.y % 144))).size >= shape.bands, 'band count').toBe(true);
-        if (shape.bands === 1) expect(layout.nodes.filter(n => n.layer > 0).every(n => n.x > 24), 'one band').toBe(true);
+        if (shape.stacked) expect(new Set(layout.nodes.map(n => n.x)).size === 1 && layout.width <= STACK_COLUMN, 'stacked in one column').toBe(true);
+        else if (shape.bands === 1) expect(layout.nodes.filter(n => n.layer > 0).every(n => n.x > 24), 'one band').toBe(true);
         const nodes = layout.nodes.map(n => ({ left: n.x, right: n.x + 200, top: n.y, bottom: n.y + 56 }));
         const labels = [...svg.matchAll(/<rect class="edge-label" x="([\d.]+)" y="([\d.]+)" width="([\d.]+)" height="([\d.]+)"/gu)].map(m => ({ left: Number(m[1]), top: Number(m[2]), right: Number(m[1]) + Number(m[3]), bottom: Number(m[2]) + Number(m[4]) }));
         expect(labels).toHaveLength(shape.edges.length);
@@ -173,6 +242,12 @@ describe('layered left-to-right diagram layout', () => {
       expect(place1({ x: 200, y: 200, width: 10, height: 10 }, [{ left: 180, top: 0, right: 220, bottom: 400 }, { left: 0, top: 180, right: 400, bottom: 220 }])).toEqual([{ x: 232, y: 168 }]);
     });
 
+    // The leader tests probe the placer on the left-to-right form, as they did before the readable form stacked a wide diagram: a graph
+    // it would stack keeps one band here.
+    const leftToRight = (ids: readonly string[], edges: readonly { id: string; from: string; to: string }[]) => {
+      const laid = layoutDiagram(ids.map(id => ({ id })), edges, READABLE_SPACING);
+      return ids.length > 1 && new Set(laid.nodes.map(n => n.x)).size === 1 ? { ...READABLE_SPACING, maxColumns: Number.POSITIVE_INFINITY } : READABLE_SPACING;
+    };
     const leadersIn = (svg: string) => [...svg.split('<g class="edge ').slice(1).entries()].map(([i, group]) => {
       const body = group.split('</g>')[0]!;
       const leader = /<path class="edge-leader" d="M ([\d.]+) ([\d.]+) L ([\d.]+) ([\d.]+)"/u.exec(body);
@@ -192,8 +267,9 @@ describe('layered left-to-right diagram layout', () => {
       for (let graph = 0; graph < 300; graph++) {
         const ids = Array.from({ length: 3 + next(8) }, (_, i) => `n${i}`);
         const edges = Array.from({ length: 2 + next(ids.length * 2) }, (_, i) => ({ id: `e${i}`, from: ids[next(ids.length)]!, to: ids[next(ids.length)]! }));
-        const svg = renderDiagramSvg(renderOf(ids, edges, graph % 2 === 0 ? 'carries the request onward' : 'sends'), graph, text => text, READABLE_SPACING);
-        const layout = layoutDiagram(ids.map(id => ({ id })), edges, READABLE_SPACING);
+        const form = leftToRight(ids, edges);
+        const svg = renderDiagramSvg(renderOf(ids, edges, graph % 2 === 0 ? 'carries the request onward' : 'sends'), graph, text => text, form);
+        const layout = layoutDiagram(ids.map(id => ({ id })), edges, form);
         const labels = placedLabels(svg);
         const blocks = [...labels, ...layout.nodes.map(n => ({ left: n.x, right: n.x + 200, top: n.y, bottom: n.y + 56 }))];
         const curvesIn = leadersIn(svg).map(group => group.curve);
@@ -300,9 +376,10 @@ describe('layered left-to-right diagram layout', () => {
       const pairs = [['n3', 'n4'], ['n7', 'n1'], ['n6', 'n7'], ['n1', 'n6'], ['n9', 'n7'], ['n1', 'n2'], ['n4', 'n6'], ['n9', 'n8'], ['n9', 'n6'], ['n3', 'n5']] as const;
       const edges = pairs.map(([from, to], i) => edge(`e${i}`, from, to));
       const ids = Array.from({ length: 10 }, (_, i) => `n${i}`);
-      const layout = layoutDiagram(ids.map(id => ({ id })), edges, READABLE_SPACING);
+      const form = leftToRight(ids, edges);
+      const layout = layoutDiagram(ids.map(id => ({ id })), edges, form);
       expect(layout.edges.some(e => e.back), 'the graph has a back edge').toBe(true);
-      const groups = leadersIn(renderDiagramSvg(renderOf(ids, edges, 'a long label that wraps twice over'), 1186, text => text, READABLE_SPACING));
+      const groups = leadersIn(renderDiagramSvg(renderOf(ids, edges, 'a long label that wraps twice over'), 1186, text => text, form));
       const lines = groups.map(group => curvePoints(group.curve, 64));
       const ends = groups.flatMap(({ i, leader }) => leader === undefined ? [] : [{ i, x: leader[2], y: leader[3] }]);
       expect(ends.length).toBeGreaterThan(0);
