@@ -1,0 +1,38 @@
+{
+  "format": "syzygy-f3-review-binding/1",
+  "subjectCommit": "c581a6304b7c7e9e9866b8ccad955998235d5d03",
+  "raw": "docs/evidence/syzygy-k54o-3/coverage-bridge-review-2026-11-22-RAW.md",
+  "rawSha256": "4ae845b64bacfc32ebce7d22ae76b105b0c715aff2203e6d87d535ac5f569697",
+  "verdict": "PASS",
+  "scope": "Delta f83692056 plus c581a6304, protected URL inventory coverage advice under current adopted2.12; source inspection only. Full native acceptance Unknown.",
+  "subjectFiles": [
+    {
+      "path": "packages/polaris-dossier/src/check-model.ts",
+      "sha256": "b59b7b03efb58f22e2c052ec39e9392bd004ab027a11e4797d96d94601ffb1c5"
+    },
+    {
+      "path": "packages/polaris-dossier/src/check.ts",
+      "sha256": "46eb743c3ee8fc49d6d9d235286e0bf6be800ca87d0c86f416804cf1f9475e78"
+    },
+    {
+      "path": "packages/polaris-dossier/src/cli.ts",
+      "sha256": "14a1e16a6da87d9db25b646b02f0d9f079b8c1c557a47f158d31c91fe175469d"
+    },
+    {
+      "path": "packages/polaris-dossier/src/inventory-coverage.ts",
+      "sha256": "736257e5fc9906e609ab5ff29dbfec022ece6c2412e8e0d1cf9c7bea877bf593"
+    },
+    {
+      "path": "packages/polaris-dossier/src/polaris.ts",
+      "sha256": "a2bd79bd31d3baa705e3592ca5488ad4b3f2bb54a750df758aa1abfe15e9d2d1"
+    },
+    {
+      "path": "packages/polaris-dossier/src/url-run-artifacts.ts",
+      "sha256": "721cd8dce3942e6b69b8cc2873ce9477210031bd4aefecd7436d10c8f66b074f"
+    },
+    {
+      "path": "packages/polaris-dossier/src/url-run-artifacts.test.ts",
+      "sha256": "fff9f84a3a42595886b03a5542dd068ce603763d79cfaf6d412f4d1be6685420"
+    }
+  ]
+}

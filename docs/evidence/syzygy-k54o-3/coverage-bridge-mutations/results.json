@@ -1,0 +1,55 @@
+{
+  "commit": "d0d0d9a43c59c130e05f5ae149ba0a85826caf87",
+  "mutants": [
+    {
+      "id": "reader-lease",
+      "file": "packages/polaris-dossier/src/inventory-coverage.ts",
+      "old": ", ...(inputs.productReads === undefined ? {} : { productReads: inputs.productReads })",
+      "new": "",
+      "commit": "d0d0d9a43c59c130e05f5ae149ba0a85826caf87",
+      "exit": 1,
+      "killed": true,
+      "log": "/home/orca/.tmp/f3-coverage-mutation-results/reader-lease.log"
+    },
+    {
+      "id": "protected-refusal",
+      "file": "packages/polaris-dossier/src/inventory-coverage.ts",
+      "old": "  } catch (cause) {\n    if (inputs.productReads !== undefined) throw new UrlProductReadRefusal();",
+      "new": "  } catch (cause) {",
+      "commit": "d0d0d9a43c59c130e05f5ae149ba0a85826caf87",
+      "exit": 1,
+      "killed": true,
+      "log": "/home/orca/.tmp/f3-coverage-mutation-results/protected-refusal.log"
+    },
+    {
+      "id": "compared-projection",
+      "file": "packages/polaris-dossier/src/url-run-artifacts.ts",
+      "old": "if (canonical(coverage) !== canonical(expected)) refuse();",
+      "new": "void expected;",
+      "commit": "d0d0d9a43c59c130e05f5ae149ba0a85826caf87",
+      "exit": 1,
+      "killed": true,
+      "log": "/home/orca/.tmp/f3-coverage-mutation-results/compared-projection.log"
+    },
+    {
+      "id": "inventory-parentage",
+      "file": "packages/polaris-dossier/src/url-run-artifacts.ts",
+      "old": "const receipt = compose(stored, [...inputParents, report.receipt, ...inventoryParents, ...sources]);",
+      "new": "const receipt = compose(stored, [...inputParents, report.receipt, ...sources]);",
+      "commit": "d0d0d9a43c59c130e05f5ae149ba0a85826caf87",
+      "exit": 1,
+      "killed": true,
+      "log": "/home/orca/.tmp/f3-coverage-mutation-results/inventory-parentage.log"
+    },
+    {
+      "id": "screen-policy-binding",
+      "file": "packages/polaris-dossier/src/url-run-artifacts.ts",
+      "old": "if (given.screen !== undefined && given.screen.policySha256 !== config.subject.screeningPolicy.sha256) refuse();",
+      "new": "void given.screen;",
+      "commit": "d0d0d9a43c59c130e05f5ae149ba0a85826caf87",
+      "exit": 1,
+      "killed": true,
+      "log": "/home/orca/.tmp/f3-coverage-mutation-results/screen-policy-binding.log"
+    }
+  ]
+}
