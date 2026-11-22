@@ -5,7 +5,8 @@ import * as path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { afterEach, beforeAll, describe, expect, it } from 'vitest';
 import { issueBrief } from './brief.js';
-import { blobRedaction, checkDraft, deriveFindings, draftRules, lineRanges, reviewVisibility, type CheckDeps, type CheckResult } from './check.js';
+import { blobRedaction, checkDraft, deriveFindings, draftRules, lineRanges, measureCheckRecord, reviewVisibility, type CheckDeps, type CheckResult } from './check.js';
+import { latestPassedDraft } from './review.js';
 import { runDossierCli } from './cli.js';
 import { NO_PROVIDER_STATEMENTS, type GateSources, type GateState } from './gate-sources.js';
 import { GitObjectReadRefusal, openPinnedObjectReader, type PinnedObjectReader, type PinnedObjectReaderOptions } from './git-object-reader.js';
@@ -174,7 +175,7 @@ const writeDraft = (run: string, draft: unknown, name = 'next.json'): string => 
 };
 const neverProbe = { probe: async () => { throw new Error('the credential probe must not run after a brief that permits no execution'); } };
 const deps = (over: Partial<CheckDeps> = {}): CheckDeps => ({ sources: sources(), now: () => LATER, probe: neverProbe, loadScreen: async () => SCREEN, ...over });
-const report = (result: CheckResult) => { if (!result.ok) throw new Error(`refused at ${result.refusal.stage}: ${result.refusal.reason}`); return result.report; };
+const report = (result: CheckResult) => { if (!result.ok) throw new Error(`refused at ${result.refusal.stage}: ${result.refusal.reason}`); if (!('quotations' in result.report)) throw new Error('the bounded form was written'); return result.report; };
 const read = (run: string, rel: string): string => fs.readFileSync(path.join(run, rel), 'utf8');
 
 describe('check: a draft that follows every rule', () => {
@@ -1518,5 +1519,88 @@ describe('check: figure kinds (schema v7)', () => {
   it('checks a v6 draft with a graph diagram exactly as before: no finding', async () => {
     const result = await findingsOf(drafted('polaris-dossier-local-draft-v6', homed({ kind: 'section', target: 'core-ideas' })));
     expect([result.outcome, listed(result)]).toEqual(['passed', []]);
+  });
+});
+
+// REQ-polaris-generation-034 version 2.10 (syzygy-3efd.73 (a)): every check record written lies within the read bound. The record is
+// measured before it is written; past any of 16,777,216 bytes, 2,000,000 values or 16 levels, its bounded form is written instead. No
+// subject within its own bounds is shown to reach the value or depth arm, so those, and the exact byte bound, are reached through an
+// injected measure: the real measure with one of its three figures replaced.
+describe('check: the record within its read bound (version 2.10)', () => {
+  const BOUNDED_KEYS = ['format', 'runId', 'revision', 'supersedes', 'pinnedRevision', 'checkedAt', 'outcome', 'draft', 'session', 'findings', 'screeningPolicy', 'credential', 'limits', 'label'];
+  const measured = (over: Partial<{ bytes: number; values: number; depth: number }>) => (text: string) => ({ ...measureCheckRecord(text), ...over });
+  const detail = (bytes: number, values: number, depth: number, quotations: number, cited: number, findings: number): string =>
+    `the check record would take ${bytes} bytes, ${values} values and ${depth} levels below its root, past the read bound of 16,777,216 bytes, 2,000,000 values and 16 levels; it would hold ${quotations} verified quotations, 0 excluded quotations, ${cited} cited files and ${findings} other findings, which this record leaves out: quote and cite less, then check again`;
+
+  it('measures a record as a reader does: UTF-8 bytes, every value but no key, and the deepest level below the root', () => {
+    expect(measureCheckRecord('{"a":[1,{"b":[]}],"c":"\u00e9"}\n')).toEqual({ bytes: 28, values: 6, depth: 3 });
+    expect(measureCheckRecord('[]\n')).toEqual({ bytes: 3, values: 1, depth: 0 });
+    expect(measureCheckRecord('{"a":{"b":{"c":null}}}\n')).toEqual({ bytes: 23, values: 4, depth: 3 });
+  });
+
+  it('writes a record at exactly the byte, value and depth bounds in full, byte for byte as the unmeasured check writes it, and passes', async () => {
+    const plain = await briefedRun();
+    writeDraft(plain, valid());
+    const unmeasured = report(await checkDraft(plain, {}, deps()));
+    for (const over of [{ bytes: 16_777_216 }, { values: 2_000_000 }, { depth: 16 }]) {
+      const run = await briefedRun({}, cloneOf(), tempDir('dossier-check-state-'));
+      writeDraft(run, valid());
+      const result = report(await checkDraft(run, {}, deps({ measureRecord: measured(over) })));
+      expect(result.outcome, JSON.stringify(over)).toBe('passed');
+      expect(result, JSON.stringify(over)).not.toHaveProperty('findingsLeftOut');
+      expect(result.mechanismAdvice, JSON.stringify(over)).toEqual(unmeasured.mechanismAdvice);
+      // Byte for byte, but for the clone path each run record names (in no member of this record) and the run directory.
+      expect(read(run, 'checks/rev-0.json'), JSON.stringify(over)).toBe(read(plain, 'checks/rev-0.json'));
+    }
+  });
+
+  it('writes the bounded form one byte, value or level past the bound: outcome findings, one check-record-bound finding, and the draft does not pass', async () => {
+    for (const [over, figures] of [
+      [{ bytes: 16_777_217 }, [16_777_217, null, null]], [{ values: 2_000_001 }, [null, 2_000_001, null]], [{ depth: 17 }, [null, null, 17]],
+    ] as const) {
+      const run = await briefedRun();
+      writeDraft(run, valid());
+      const full = measureCheckRecord;
+      let real: { bytes: number; values: number; depth: number } | undefined;
+      const result = await checkDraft(run, {}, deps({ measureRecord: (text) => { real = full(text); return { ...real, ...over }; } }));
+      if (!result.ok) throw new Error(result.refusal.reason);
+      const record = JSON.parse(read(run, 'checks/rev-0.json'));
+      expect(Object.keys(record), JSON.stringify(over)).toEqual(BOUNDED_KEYS);
+      expect(record.outcome).toBe('findings');
+      const [b, v, d] = figures;
+      expect(record.findings).toEqual([{ kind: 'check-record-bound', at: '$', detail: detail(b ?? real!.bytes, v ?? real!.values, d ?? real!.depth, 3, 2, 0) }]);
+      expect(read(run, 'checks/rev-0.json')).toBe(`${JSON.stringify(record, null, 2)}\n`);
+      // The report carries the record written and every finding the full record would have held (none here), and no fit advice.
+      expect(result.report).toMatchObject({ outcome: 'findings', findings: record.findings, findingsLeftOut: [] });
+      for (const member of ['figureFit', 'mechanismAdvice', 'readingLedger', 'manifestFacts', 'quotations', 'citedBlobs', 'executionFlags', 'excludedContent']) expect(result.report).not.toHaveProperty(member);
+      // The advice it computes from the draft itself is unchanged, and the derived record is written as before.
+      expect(result.report).toHaveProperty('readerAdvice');
+      expect(result.report).toHaveProperty('structureRecord');
+      expect(fs.existsSync(path.join(run, 'derived', 'rev-0.json'))).toBe(true);
+      // The step log counts the one finding the bounded form holds; the run file counts the bounded form as read.
+      expect(read(run, 'steps.jsonl').trim().split('\n').map((entry) => JSON.parse(entry)).at(-1)).toEqual(
+        { format: 'polaris-dossier-step/1', step: 'check', at: '2026-10-07T12:01:00.000Z', outcome: 'findings', revision: 0, findings: 1 });
+      expect(JSON.parse(read(run, 'run-advice.json')).checkRecords).toEqual({ read: 1, unreadable: 0 });
+      // Every reader reads it as a draft check refused.
+      expect(latestPassedDraft(run)).toEqual({ ok: false, reason: 'draft revision 0, the latest checked, has open findings; only a passed revision is reviewed' });
+    }
+  });
+
+  it('lists every finding of a draft with findings in findingsLeftOut, on the report alone', async () => {
+    const run = await briefedRun();
+    writeDraft(run, mutate((d) => { d.sections[0].paragraphs[1].citations[0].path = 'docs/absent.txt'; }));
+    const plain = await briefedRun();
+    writeDraft(plain, mutate((d) => { d.sections[0].paragraphs[1].citations[0].path = 'docs/absent.txt'; }));
+    const unbounded = (await checkDraft(plain, {}, deps()));
+    if (!unbounded.ok) throw new Error(unbounded.refusal.reason);
+    expect(unbounded.report.findings.map((finding) => finding.kind)).toEqual(['path-absent']);
+    const result = await checkDraft(run, {}, deps({ measureRecord: measured({ bytes: 20_000_000 }) }));
+    if (!result.ok) throw new Error(result.refusal.reason);
+    expect(result.report.findingsLeftOut).toEqual(unbounded.report.findings);
+    const record = JSON.parse(read(run, 'checks/rev-0.json'));
+    expect(record.findings.map((finding: { kind: string }) => finding.kind)).toEqual(['check-record-bound']);
+    expect(record.findings[0].detail).toContain(' and 1 other findings, which this record leaves out');
+    expect(JSON.stringify(record)).not.toContain('path-absent');
+    expect(fs.readdirSync(run).filter((name) => name.includes('left'))).toEqual([]);
   });
 });

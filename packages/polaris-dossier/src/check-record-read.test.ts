@@ -1,8 +1,10 @@
+import { execFileSync } from 'node:child_process';
 import { createHash } from 'node:crypto';
 import * as fs from 'node:fs';
 import * as path from 'node:path';
 import { describe, expect, it } from 'vitest';
 import { tempDir } from '@syzygy/test-kit';
+import { NotARegularFileError, readBoundedFile, readCheckRecord } from './check-record-read.js';
 import { patchFs } from './fs-patch.testkit.js';
 import { cycleBreakdown, latestChecks } from './polaris.js';
 import { latestPassedDraft } from './review.js';
@@ -42,8 +44,28 @@ const runWith = (record: string): string => {
 const READ = { passed: { ok: true, revision: 2 }, breakdown: ' (1 on drafts check refused, 1 on drafts that passed check)', latest: { n: 2, outcome: 'passed' } };
 const UNREADABLE = { passed: { ok: false, reason: 'the check result of draft revision 2 cannot be read' }, breakdown: ' (1 on drafts check refused, 0 on drafts that passed check)', latest: null };
 
-const readers = (record: string) => {
-  const run = runWith(record);
+/** The bytes `run` reads from `subject`, one total per time it opens it. */
+const bytesReadFrom = (subject: string, run: () => void): number[] => {
+  const opened = new Map<number, number>();
+  const totals: number[] = [];
+  const restoreOpen = patchFs('openSync', (original) => ((file: fs.PathLike, ...rest: unknown[]) => {
+    const fd = (original as (...args: unknown[]) => number)(file, ...rest);
+    opened.delete(fd);
+    if (file === subject) { opened.set(fd, totals.length); totals.push(0); }
+    return fd;
+  }) as typeof original);
+  const restoreRead = patchFs('readSync', (original) => ((fd: number, ...rest: unknown[]) => {
+    const read = (original as (...args: unknown[]) => number)(fd, ...rest);
+    const index = opened.get(fd);
+    if (index !== undefined) totals[index]! += read;
+    return read;
+  }) as typeof original);
+  try { run(); } finally { restoreRead(); restoreOpen(); }
+  return totals;
+};
+
+const readers = (record: string) => readersAt(runWith(record));
+const readersAt = (run: string) => {
   const draft = latestPassedDraft(run);
   const { draft: latest } = latestChecks(run);
   return {
@@ -62,21 +84,20 @@ describe('the check-record read bound (version 2.8)', () => {
   });
 
   it('refuses a record over 16,777,216 bytes from its size alone, never reading a byte of it, and reads one at the bound', () => {
-    const readsOf = (record: string): string[] => {
+    const readsOf = (record: string): number[] => {
       const run = runWith(record);
-      const subject = path.join(run, 'checks', 'rev-2.json');
-      const reads: string[] = [];
-      const restore = patchFs('readFileSync', (original) => ((file: fs.PathOrFileDescriptor, ...rest: unknown[]) => {
-        if (file === subject) reads.push('rev-2.json');
-        return (original as (...args: unknown[]) => unknown)(file, ...rest);
-      }) as typeof original);
-      try {
-        latestPassedDraft(run); cycleBreakdown(run); latestChecks(run);
-      } finally { restore(); }
-      return reads;
+      return bytesReadFrom(path.join(run, 'checks', 'rev-2.json'), () => { latestPassedDraft(run); cycleBreakdown(run); latestChecks(run); });
     };
-    expect(readsOf(ofBytes(16_777_217))).toEqual([]);
-    expect(readsOf(ofBytes(16_777_216))).toEqual(['rev-2.json', 'rev-2.json', 'rev-2.json']);
+    expect(readsOf(ofBytes(16_777_217))).toEqual([0, 0, 0]);
+    // Each reader opens the record once, and reads it to its end plus the one byte that shows the end: 16,777,216 bytes each.
+    expect(readsOf(ofBytes(16_777_216))).toEqual([16_777_216, 16_777_216, 16_777_216]);
+    // A record a gigabyte long, which no test writes whole: a sparse file whose descriptor's size alone refuses it.
+    const run = runWith('{}');
+    const sparse = path.join(run, 'checks', 'rev-2.json');
+    fs.truncateSync(sparse, 1_073_741_824);
+    let seen: ReturnType<typeof readersAt> | undefined;
+    expect(bytesReadFrom(sparse, () => { seen = readersAt(run); })).toEqual([0, 0, 0]);
+    expect(seen).toEqual(UNREADABLE);
   });
 
   it('reads a record of 2,000,000 values and refuses one of 2,000,001, in every reader', () => {
@@ -104,5 +125,69 @@ describe('the check-record read bound (version 2.8)', () => {
     for (const record of ['{', '[1, 2]', 'null', '"passed"']) {
       expect(readers(record), record).toEqual({ ...UNREADABLE, latest: null });
     }
+  });
+});
+
+// REQ-polaris-generation-034 version 2.10 (syzygy-3efd.74, review finding F1): every reader opens the path once without blocking, refuses
+// anything whose descriptor is not a regular file, or gives a size past the bound, before reading a byte, and reads at most one byte past
+// the bound. Each case below would block (a FIFO) or exhaust memory (a device) under a stat-then-read reader.
+describe('the check-record reader rule (version 2.10)', () => {
+  const plantAt = (plant: (file: string) => void): { run: string; subject: string } => {
+    const run = runWith('{}');
+    const subject = path.join(run, 'checks', 'rev-2.json');
+    fs.rmSync(subject);
+    plant(subject);
+    return { run, subject };
+  };
+  const plants: [string, (file: string) => void][] = [
+    ['a FIFO', (file) => execFileSync('mkfifo', [file])],
+    ['a symbolic link to /dev/zero', (file) => fs.symlinkSync('/dev/zero', file)],
+    ['a directory', (file) => fs.mkdirSync(file)],
+  ];
+
+  it('refuses a FIFO, a device and a directory at a check record\'s path in every reader, reading no byte and never blocking', () => {
+    for (const [what, plant] of plants) {
+      const { run, subject } = plantAt(plant);
+      let seen: ReturnType<typeof readersAt> | undefined;
+      expect(bytesReadFrom(subject, () => { seen = readersAt(run); }), what).toEqual([0, 0, 0]);
+      expect(seen, what).toEqual(UNREADABLE);
+    }
+  });
+
+  it('refuses each by its own error before reading a byte, and reads a regular file through a symbolic link', () => {
+    for (const [what, plant] of plants) {
+      const { subject } = plantAt(plant);
+      expect(() => readBoundedFile(subject, 16), what).toThrow(NotARegularFileError);
+    }
+    const { subject } = plantAt((file) => { fs.writeFileSync(`${file}.target`, '{"a":1}'); fs.symlinkSync(`${file}.target`, file); });
+    expect(readCheckRecord(subject)).toEqual({ a: 1 });
+  });
+
+  it('reads a file of exactly the bound and refuses one byte more, and a file far past it from its size alone', () => {
+    const { subject } = plantAt((file) => fs.writeFileSync(file, 'x'.repeat(16)));
+    expect(readBoundedFile(subject, 16).toString('utf8')).toBe('x'.repeat(16));
+    fs.writeFileSync(subject, 'x'.repeat(17));
+    expect(() => readBoundedFile(subject, 16)).toThrow(expect.objectContaining({ name: 'BoundedJsonError', code: 'byte-limit' }));
+    fs.truncateSync(subject, 1_073_741_824);
+    expect(bytesReadFrom(subject, () => expect(() => readBoundedFile(subject, 16)).toThrow(expect.objectContaining({ code: 'byte-limit' })))).toEqual([0]);
+  });
+
+  it('refuses a record grown past the bound after its size was taken, reading at most one byte past the bound, in every reader', () => {
+    const run = runWith(ofBytes(16_777_216));
+    const subject = path.join(run, 'checks', 'rev-2.json');
+    // After each reader takes the descriptor's size, the file grows by a mebibyte before a byte is read.
+    const restore = patchFs('fstatSync', (original) => ((fd: number, ...rest: unknown[]) => {
+      const stats = (original as (...args: unknown[]) => fs.Stats)(fd, ...rest);
+      if (stats.size === 16_777_216) fs.appendFileSync(subject, ' '.repeat(1_048_576));
+      return stats;
+    }) as typeof original);
+    let seen: ReturnType<typeof readersAt> | undefined;
+    let reads: number[];
+    try {
+      reads = bytesReadFrom(subject, () => { seen = readersAt(run); });
+    } finally { restore(); }
+    // The first reader saw the file at 16,777,216 bytes and read 16,777,217 of it; the file was then larger, so the others read none.
+    expect(reads).toEqual([16_777_217, 0, 0]);
+    expect(seen).toEqual(UNREADABLE);
   });
 });

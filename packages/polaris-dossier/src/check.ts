@@ -21,11 +21,12 @@ import { reviewReachAdvice, type ReviewReachAdvice } from './review-reach.js';
 import { screenCensusReport, withheldCensus, type ScreenCensusReport } from './census.js';
 import { deriveStructure, deriveTreeFacts, structureUnknown, type StructureRecord } from './derive.js';
 import { derivedRecordFile, encodeDerivedRecord, secretPathOf } from './derived-record.js';
+import { CHECK_RECORD_LIMITS } from './check-record-read.js';
 import { MANIFEST_BLOB_LIMIT, deriveManifestFacts, manifestFactsUnknown, type ManifestFacts } from './manifest-facts.js';
-import { BRIEF_JSON_LIMITS, CHECK_RECORD_FORMAT, type CheckCommand, type CheckDeps, type CheckFinding, type CheckRecord, type CheckRefusal, type CheckRequest, type CheckResult, type CheckStage, type CitedBlob, DEFAULT_DRAFT, DISCLOSURES, DRAFT_JSON_LIMITS, DRAFT_MAX_BYTES, type ExcludedQuotation, type MechanismAdvice, type ReviewVisibility, STEP_LOG_FORMAT, type VerifiedQuotation, errno, reviewVisibility, text } from './check-model.js';
+import { BRIEF_JSON_LIMITS, CHECK_RECORD_FORMAT, type BoundedCheckRecord, type RecordMeasure, type CheckCommand, type CheckDeps, type CheckFinding, type CheckRecord, type CheckRefusal, type CheckRequest, type CheckResult, type CheckStage, type CitedBlob, DEFAULT_DRAFT, DISCLOSURES, DRAFT_JSON_LIMITS, DRAFT_MAX_BYTES, type ExcludedQuotation, type MechanismAdvice, type ReviewVisibility, STEP_LOG_FORMAT, type VerifiedQuotation, errno, reviewVisibility, text } from './check-model.js';
 import { type Derived, type SubjectRules, deriveFindings, draftRules } from './check-derive.js';
 export { CHECK_RECORD_FORMAT, STEP_LOG_FORMAT, DEFAULT_DRAFT, DRAFT_MAX_BYTES, reviewVisibility, lineRanges, blobRedaction } from './check-model.js';
-export type { MechanismAdvice, CheckFindingKind, CheckFinding, VerifiedQuotation, ExcludedQuotation, ReviewVisibility, CitedBlob, BlobRedaction, CheckStage, CheckCommand, CheckRefusal, CheckRecord, CheckReport, CheckResult, CheckRequest, CheckDeps } from './check-model.js';
+export type { BoundedCheckRecord, BoundedRecordOmits, RecordMeasure, MechanismAdvice, CheckFindingKind, CheckFinding, VerifiedQuotation, ExcludedQuotation, ReviewVisibility, CitedBlob, BlobRedaction, CheckStage, CheckCommand, CheckRefusal, CheckRecord, CheckReport, CheckResult, CheckRequest, CheckDeps } from './check-model.js';
 export { deriveFindings, draftRules, collectBlocks, collectCitations } from './check-derive.js';
 export type { Derived, DeriveInputs, SubjectBlock, SubjectRules, Citation } from './check-derive.js';
 
@@ -95,7 +96,8 @@ export interface SubjectPlan<R extends object, G> {
 
 /** `screenCensus` (`census.ts`), `structureRecord` (`derive.ts`), `readerAdvice` (`reader-advice.ts`) and `reviewReach` (`review-reach.ts`) are on `check`'s report only: advice to the author, never written
  * to the check record and never a finding. */
-export type SubjectReport<R extends object> = R & { readonly command: CheckCommand; readonly run: string; readonly checkFile: string; readonly disclosures: readonly string[]; readonly screenCensus?: ScreenCensusReport; readonly structureRecord?: StructureRecord; readonly readerAdvice?: ReaderAdvice; readonly figureFit?: FigureFit; readonly readingLedger?: ReadingLedger; readonly readingDifference?: ReadingDifference; readonly reviewReach?: ReviewReachAdvice; readonly reviewVisibility?: ReviewVisibility; readonly mechanismAdvice?: MechanismAdvice };
+/** The record part is the record written: the full record, or its bounded form (version 2.10), whose report adds `findingsLeftOut`. */
+export type SubjectReport<R extends object> = (R | BoundedCheckRecord<R>) & { readonly command: CheckCommand; readonly run: string; readonly checkFile: string; readonly disclosures: readonly string[]; readonly screenCensus?: ScreenCensusReport; readonly structureRecord?: StructureRecord; readonly readerAdvice?: ReaderAdvice; readonly figureFit?: FigureFit; readonly readingLedger?: ReadingLedger; readonly readingDifference?: ReadingDifference; readonly reviewReach?: ReviewReachAdvice; readonly reviewVisibility?: ReviewVisibility; readonly mechanismAdvice?: MechanismAdvice; readonly findingsLeftOut?: readonly CheckFinding[] };
 export type SubjectResult<R extends object> = Outcome<SubjectReport<R>, CheckRefusal>;
 
 const DRAFT_PLAN: SubjectPlan<CheckRecord, null> = {
@@ -302,41 +304,92 @@ export async function checkSubject<R extends object, G>(runDir: string, file: st
     ...record, ...(fit === undefined ? {} : { figureFit: fit }), ...(ledger === undefined ? {} : { readingLedger: ledger }),
     ...(manifestFacts === undefined ? {} : { manifestFacts }),
   };
+  // Version 2.10 (syzygy-3efd.73 (a)): every check record written lies within the read bound. The record is measured as a reader measures
+  // it before it is written; past any bound, its bounded form is written in its place, with one repair finding, and the full findings go
+  // to the report alone. A record within the bound is written exactly as before.
+  const fullText = `${JSON.stringify(stored, null, 2)}\n`;
+  const measure = (deps.measureRecord ?? measureCheckRecord)(fullText);
+  const full = measure.bytes <= CHECK_RECORD_LIMITS.maxBytes && measure.values <= CHECK_RECORD_LIMITS.maxNodes && measure.depth <= CHECK_RECORD_LIMITS.maxDepth;
+  const written = full ? stored : boundedCheckRecord(stored, recordBoundFinding(measure, { quotations: quotations.length, excluded: excludedContent.length, citedFiles: citedBlobs.length, findings: findings.length }));
   try {
     if (derivedRecord !== undefined) {
       fs.mkdirSync(path.join(run, RUN_LAYOUT.derived), { recursive: true, mode: 0o700 });
       fs.writeFileSync(derivedRecordFile(run, revision), derivedRecord, { mode: 0o600, flag: 'wx' });
     }
     fs.mkdirSync(checksDir, { recursive: true, mode: 0o700 });
-    fs.writeFileSync(checkFile, `${JSON.stringify(stored, null, 2)}\n`, { mode: 0o600, flag: 'wx' });
+    fs.writeFileSync(checkFile, full ? fullText : `${JSON.stringify(written, null, 2)}\n`, { mode: 0o600, flag: 'wx' });
   } catch (cause) {
     return refuse('write', `${noun === 'draft' ? '' : `${noun} `}revision ${revision} was frozen, but its result could not be written to ${path.relative(run, checkFile)} (${errno(cause)})`);
   }
-  log({ outcome, revision, findings: findings.length });
+  // The step log counts the findings of the record written: the bounded form's one.
+  log({ outcome: full ? outcome : 'findings', revision, findings: full ? findings.length : 1 });
   // Advice no author can act on (version 2.9, syzygy-3efd.64): after its check record, a draft check writes the run file from the run's
   // check records, in place of any earlier one; a failure to write it changes no outcome and no record. The check record keeps every entry.
+  // A bounded form holds no `figureFit`, so its report carries no `mechanismAdvice` (version 2.10); the run file is written all the same.
   let mechanismAdvice: MechanismAdvice | undefined;
   if (plan.command === 'check') {
     const runAdvice = computeRunAdvice(run, runId);
-    let written = true;
-    try { writeRunAdvice(run, runAdvice); } catch { written = false; }
-    mechanismAdvice = { file: written ? RUN_ADVICE_FILE : null, thisRevision: mechanismEntries(stored).length, inRun: runAdvice.occurrences };
+    let fileWritten = true;
+    try { writeRunAdvice(run, runAdvice); } catch { fileWritten = false; }
+    if (full) mechanismAdvice = { file: fileWritten ? RUN_ADVICE_FILE : null, thisRevision: mechanismEntries(stored).length, inRun: runAdvice.occurrences };
   }
-  // Check's report carries only `author`-class advice: its `figureFit` leaves out every `mechanism` entry, `examined` unchanged.
-  const reportFit = fit === undefined ? {} : { figureFit: { ...fit, entries: fit.entries.filter((entry) => figureFitClass(entry) === 'author') } };
+  // Check's report carries only `author`-class advice: its `figureFit` leaves out every `mechanism` entry, `examined` unchanged. Where the
+  // bounded form was written, the report carries no `figureFit` and lists the full record's findings as `findingsLeftOut`.
+  const reportFit = fit === undefined || !full ? {} : { figureFit: { ...fit, entries: fit.entries.filter((entry) => figureFitClass(entry) === 'author') } };
+  const leftOut = full ? {} : { findingsLeftOut: findings };
   const disclosures = credential.required ? [...plan.disclosures, CREDENTIAL_CHECK_DISCLOSURE] : plan.disclosures;
   const visibility = reviewVisibility(citedBlobs, screen.contentClass, checked.contentClasses);
-  // The difference from the previous run of this repository: computed now from the state root, never written to any file.
-  const difference = plan.command === 'check' ? readingDifference(run, subject.repository.repositoryId, isoOf(started), ledger) : undefined;
+  // The difference from the previous run of this repository: computed now from the state root, never written to any file; for a bounded
+  // form, as for a check whose record carries no ledger.
+  const difference = plan.command === 'check' ? readingDifference(run, subject.repository.repositoryId, isoOf(started), full ? ledger : undefined) : undefined;
   // The claim blocks no fidelity verdict can confirm (syzygy-pdja.20), read from this derivation's own blobs.
   const reach = plan.command === 'check' && parseFault === null
     ? reviewReachAdvice(doc, { citedBlobs, admitted, screen, consented: checked.contentClasses }) : undefined;
   return { ok: true, report: {
-    command: plan.command, run, checkFile, ...stored, ...reportFit, ...(mechanismAdvice === undefined ? {} : { mechanismAdvice }), disclosures, ...(screenCensus === undefined ? {} : { screenCensus }),
+    command: plan.command, run, checkFile, ...written, ...reportFit, ...leftOut, ...(mechanismAdvice === undefined ? {} : { mechanismAdvice }), disclosures, ...(screenCensus === undefined ? {} : { screenCensus }),
     ...(structureRecord === undefined ? {} : { structureRecord }),
     ...(advice === undefined ? {} : { readerAdvice: advice }), ...(difference === undefined ? {} : { readingDifference: difference }), ...(reach === undefined ? {} : { reviewReach: reach }),
     ...(visibility === null ? {} : { reviewVisibility: visibility }),
   } };
+}
+
+/** A check record's encoded text measured as `parseBoundedJson` measures it (version 2.10): its UTF-8 bytes, its values (the root and every
+ * value below it; a key is not a value) and its deepest level below the root, the root at depth 0. */
+export function measureCheckRecord(text: string): RecordMeasure {
+  let values = 0, depth = 0;
+  const walk = (value: unknown, level: number): void => {
+    values += 1;
+    if (level > depth) depth = level;
+    if (Array.isArray(value)) { for (const item of value) walk(item, level + 1); }
+    else if (value !== null && typeof value === 'object') { for (const item of Object.values(value)) walk(item, level + 1); }
+  };
+  walk(JSON.parse(text), 0);
+  return { bytes: Buffer.byteLength(text, 'utf8'), values, depth };
+}
+
+/** The members a bounded check record keeps (version 2.10), in the full record's order: those whose size does not grow with the subject. */
+const BOUNDED_MEMBERS: ReadonlySet<string> = new Set([
+  'format', 'runId', 'revision', 'supersedes', 'pinnedRevision', 'checkedAt', 'outcome', 'draft', 'inventory', 'session', 'findings',
+  'screeningPolicy', 'credential', 'limits', 'counts', 'completeness', 'label',
+]);
+
+/** The bounded form of a check record (version 2.10): the members `BOUNDED_MEMBERS` names, in the full record's order, each as the full
+ * record holds it but `outcome`, which is `findings`, and `findings`, which holds `finding` alone. */
+export function boundedCheckRecord<R extends object>(stored: R, finding: CheckFinding): BoundedCheckRecord<R> & { readonly findings: readonly CheckFinding[] } {
+  const bounded: Record<string, unknown> = {};
+  for (const [key, value] of Object.entries(stored)) {
+    if (!BOUNDED_MEMBERS.has(key)) continue;
+    bounded[key] = key === 'outcome' ? 'findings' : key === 'findings' ? [finding] : value;
+  }
+  return bounded as BoundedCheckRecord<R> & { readonly findings: readonly CheckFinding[] };
+}
+
+/** The one repair finding of a bounded check record, its detail counting what the full record would have held. */
+export function recordBoundFinding(measure: RecordMeasure, counts: { readonly quotations: number; readonly excluded: number; readonly citedFiles: number; readonly findings: number }): CheckFinding {
+  return {
+    kind: 'check-record-bound', at: '$',
+    detail: `the check record would take ${measure.bytes} bytes, ${measure.values} values and ${measure.depth} levels below its root, past the read bound of 16,777,216 bytes, 2,000,000 values and 16 levels; it would hold ${counts.quotations} verified quotations, ${counts.excluded} excluded quotations, ${counts.citedFiles} cited files and ${counts.findings} other findings, which this record leaves out: quote and cite less, then check again`,
+  };
 }
 
 /** The instant the brief record states it was issued, or why the run counts as not briefed. */
