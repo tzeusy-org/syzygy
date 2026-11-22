@@ -363,6 +363,8 @@ async function start(options: UrlRunSessionsOptions, ports: typeof native): Prom
           dossierOrigins: options.dossierOrigins(role) },
         reserveRequest: value => { if (!budget.reserve(role, value)) return false; admission = deepFreeze({ ...value,
           classes: [...value.classes], originIds: [...value.originIds] }); return true; },
+        reserveCountRequest: (value: SessionAdmission) => budget.reserveCount(role, value),
+        observeCountResponse: () => budget.observeCount(role),
         observeUsage: value => { pendingUsage = { ...value }; return budget.observeUsage(role, value); },
         audit: async event => {
           try {
