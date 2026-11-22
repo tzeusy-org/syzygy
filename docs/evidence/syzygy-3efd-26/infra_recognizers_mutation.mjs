@@ -63,7 +63,6 @@ const MUTANTS = [
   ['makefile-eval-syntax', M, "if (content.startsWith('$(') || content.startsWith('${')) { beyond = true; continue; }", ''],
   ['makefile-conditional-open', M, 'if (conditionals > 0) syntax = true;', ''],
   ['makefile-continuation-parity', M, '% 2 === 1', '% 2 === 0'],
-  ['makefile-assignment-colon', M, 'if (found.op >= 0 && (found.colon < 0 || found.op < found.colon))', 'if (found.op >= 0 && found.colon < 0)'],
   ['makefile-define-open', M, 'if (depth > 0) syntax = true;', ''],
   ['cmake-case', X, 'const command = name!.toLowerCase();', 'const command = name!;'],
   ['cmake-no-argument', X, 'if (args.length === 0) { fieldType = true; continue; }', 'if (args.length === 0) continue;'],
@@ -74,6 +73,10 @@ const MUTANTS = [
   ['cmake-escaped-semicolon', X, "if (e === ';') return '\\\\;';", "if (e === ';') return ';';"],
   ['cmake-last-line', X, 'last: lineOf(i - 1)', 'last: lineOf(nameStart)'],
   ['cmake-unclosed-paren', X, 'if (c === undefined) fail();', 'if (c === undefined) break;'],
+  ['cmake-line-end-unchecked', X, "if (i < n && !isNewline(text[i]) && text[i] !== '#') fail();", ''],
+  ['cmake-line-end-bracket-comment', X, "if (text[i] === '#' && bracketOpen(i + 1) >= 0) { i++; bracket(); continue; }\n        break;", 'break;'],
+  ['cmake-inner-quote-breaks', X, "u === '(' || u === ')' || u === '#') break;", "u === '(' || u === ')' || u === '#' || u === '\"') break;"],
+  ['makefile-assignment-after-colon', M, 'if (found.op >= 0 && found.colon < 0) {', 'if (found.op >= 0) {'],
   ['yaml-second-document', Y, 'if (documents > 1 && !multi) beyond = true;', 'if (documents > 1) beyond = true;'],
   ['yaml-integer-text', Y, "INTEGER.test(plain) ? { kind: 'other', lines, int: plain } : ", ''],
   ['driver-format', F, "'polaris-dossier-manifest-facts/2'", "'polaris-dossier-manifest-facts/1'"],
@@ -97,7 +100,6 @@ const MUTANTS = [
 
 // A mutant that cannot change behaviour, with why; it is recorded with its explanation, never dropped.
 const EXPLAINED = {
-  'makefile-assignment-colon': 'Equivalent: scan() stops recording a separator once it has found an assignment operator, so op < colon never holds while colon >= 0; the clause the mutant drops can never decide.',
 };
 
 const sha = (bytes) => createHash('sha256').update(bytes).digest('hex');

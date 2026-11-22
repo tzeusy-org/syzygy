@@ -407,6 +407,7 @@ describe('cmake-lists version 1', () => {
   it('refuses an invocation followed on its line by anything but white space or a comment as syntax', () => {
     expect(facts(recognizeCMakeLists('project(a) add_executable(b x.c)\n'))).toBe('syntax');
     expect(facts(recognizeCMakeLists('project(a)x\n'))).toBe('syntax');
+    expect(facts(recognizeCMakeLists('project(a) #[[c]] project(b)\n'))).toBe('syntax');
     expect(facts(recognizeCMakeLists('project(a) \t#[[c]] # note\nadd_executable(b x.c)'))).toEqual([['cmake-project', 1, 1, 'a'], ['cmake-target', 2, 2, 'b', 'executable']]);
   });
   it('keeps an inner quote of an unquoted argument as written', () => {
