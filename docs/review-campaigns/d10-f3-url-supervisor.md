@@ -18,4 +18,4 @@
 
 [Observed] The resumed design inspection overlap source review records `PASS` (`F3-CONCURRENT-INSPECTION-REVIEW-RAW.md:1`) for the source at `27e83c50b`. The one-second sample and exact final authority recheck remain in force. A-91 records the adoption. Native acceptance was outside the source review.
 
-[Observed] The ordered screening image review records `PASS` (`F3-SCREEN-IMAGE-BRACKETING-REVIEW-RAW.md:1`) at `0a9680f98`. The held and named file checks remain in full before the worker starts. The test-only successor `9eb31ba04` preserves the old held inode while replacing the named path, isolating the recorded coverage residual.
+[Observed] The ordered screening image review records `PASS` (`F3-SCREEN-IMAGE-BRACKETING-REVIEW-RAW.md:1`) at `0a9680f98`. The held and named file checks remain in full before the worker starts. The test-only successor `9eb31ba04` preserves the old held inode while replacing the named path, isolating the recorded coverage residual. A-92 records the adoption.
