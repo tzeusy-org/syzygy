@@ -1,0 +1,92 @@
+{
+  "commit": "6e4813fcfa4d663b09261a8c8a2a359889f93011",
+  "sourceSha256": "191270378c1803bb127914ab396367c8edefa4f6f9788a03695d8a7f99a014da",
+  "testSha256": "a32884cc129d964e290f290762d6a22b4918743a3877545bd5a8b4d7e2fe2bce",
+  "controls": [
+    {
+      "id": "history-brand",
+      "old": "!isColdUrlRunMachineHistory(resumed.history)",
+      "new": "false",
+      "pattern": "refuses copy drift",
+      "sha256": "e0e654beedfc89849bc5b9aefb4592f1e140ed9a6c50c628ea58023e29a29887",
+      "exitCode": 1,
+      "killed": true,
+      "elapsedSeconds": 5.074338365026051,
+      "raw": "docs/evidence/syzygy-k54o-3/machine-reopen-mutations/f3-machine-reopen-mutant-history-brand.log",
+      "rawSha256": "49fd0e22a76b67e74cf857606410b6276b148a2d0d4b759585d693068bc81b73",
+      "path": "packages/polaris-dossier/src/url-run-machine.ts",
+      "subjectCommit": "6e4813fcfa4d663b09261a8c8a2a359889f93011"
+    },
+    {
+      "id": "binding",
+      "old": "|| !canonical(resumed.history.binding).equals(canonical(binding)) ",
+      "new": "",
+      "pattern": "refuses controller drift",
+      "sha256": "d559dc54eca77de448c5c9cea3065bbedba2db1b4694b91dbd3427b26ad179f3",
+      "exitCode": 1,
+      "killed": true,
+      "elapsedSeconds": 4.8710591349808965,
+      "raw": "docs/evidence/syzygy-k54o-3/machine-reopen-mutations/f3-machine-reopen-mutant-binding.log",
+      "rawSha256": "e811d6f24460a563516a295c44af31b112f7f994ebeeef6532d7d11b12bfe966",
+      "path": "packages/polaris-dossier/src/url-run-machine.ts",
+      "subjectCommit": "6e4813fcfa4d663b09261a8c8a2a359889f93011"
+    },
+    {
+      "id": "profile",
+      "old": "|| (plan !== undefined && context.profileSha256 !== plan.profile.digest)\n          ",
+      "new": "",
+      "pattern": "refuses profile drift",
+      "sha256": "919e9f67a1ccfa16d7beebaa96855f8a10df30762de703c77331a0ada0b201b9",
+      "exitCode": 1,
+      "killed": true,
+      "elapsedSeconds": 6.687334888003534,
+      "raw": "docs/evidence/syzygy-k54o-3/machine-reopen-mutations/f3-machine-reopen-mutant-profile.log",
+      "rawSha256": "b5f0c51384a100dea6f7ac82ee8683b2e4e0112a4065f863f3bcd5c7ea953495",
+      "path": "packages/polaris-dossier/src/url-run-machine.ts",
+      "subjectCommit": "6e4813fcfa4d663b09261a8c8a2a359889f93011"
+    },
+    {
+      "id": "deadline",
+      "old": "|| context.policySha256 !== input.originPolicySha256 || context.deadline !== input.deadline",
+      "new": "|| context.policySha256 !== input.originPolicySha256",
+      "pattern": "refuses deadline drift",
+      "sha256": "155f011d6a59feba8fee52ba18fbb63e0c509ca241f6ce832cbf837640ec3d66",
+      "exitCode": 1,
+      "killed": true,
+      "elapsedSeconds": 4.961413020006148,
+      "raw": "docs/evidence/syzygy-k54o-3/machine-reopen-mutations/f3-machine-reopen-mutant-deadline.log",
+      "rawSha256": "66d5d38b2567299cc0fbc5db4e47e663037d19cec34d1995a57a50bd7f865665",
+      "path": "packages/polaris-dossier/src/url-run-machine.ts",
+      "subjectCommit": "6e4813fcfa4d663b09261a8c8a2a359889f93011"
+    },
+    {
+      "id": "claim",
+      "old": "input.current() && (input.resume === undefined || input.resume.current() === true)",
+      "new": "input.current()",
+      "pattern": "withdraws both live currentness",
+      "sha256": "fdcad26a3daf09b07a548e47e491c18c58d3db29e506db709eaa8e4be9ca9e02",
+      "exitCode": 1,
+      "killed": true,
+      "elapsedSeconds": 4.978433131997008,
+      "raw": "docs/evidence/syzygy-k54o-3/machine-reopen-mutations/f3-machine-reopen-mutant-claim.log",
+      "rawSha256": "e1aa0eea14686c71c8225d22e096699d59ba8316617acae6df38c5297762a884",
+      "path": "packages/polaris-dossier/src/url-run-machine.ts",
+      "subjectCommit": "6e4813fcfa4d663b09261a8c8a2a359889f93011"
+    },
+    {
+      "id": "retired-head",
+      "old": "|| await verifyTerminal(context, terminal) === null ",
+      "new": "",
+      "pattern": "refuses a changed protected retired head",
+      "sha256": "c516e50aabec46669823cc7f603ca9b9adc3f17b06d48611c32558708c6451b6",
+      "exitCode": 1,
+      "killed": true,
+      "elapsedSeconds": 6.058154207014013,
+      "raw": "docs/evidence/syzygy-k54o-3/machine-reopen-mutations/f3-machine-reopen-mutant-retired-head.log",
+      "rawSha256": "a318530e2a22eacf67c7222485827195a116fbf7a1efe27c9682138299c40949",
+      "path": "packages/polaris-dossier/src/url-run-machine.ts",
+      "subjectCommit": "6e4813fcfa4d663b09261a8c8a2a359889f93011"
+    }
+  ],
+  "scope": "Historical focused machine-reopen mutation controls; later cold stop/resume acceptance is separate."
+}

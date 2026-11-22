@@ -1,0 +1,40 @@
+
+ RUN  v3.2.7 /home/orca/.tmp/syzygy-beads-looper-20261114-54ebc9f1/d10-f3-machine-store
+
+ ❯ |unit| packages/polaris-dossier/src/url-run-resume.test.ts (5 tests | 1 failed | 4 skipped) 17ms
+   ↓ fresh URL role selection from retained validated stages > selects unfinished producers and an independent reviewer without starting design
+   × fresh URL role selection from retained validated stages > requires a validated fidelity check for both exact current producer revisions 15ms
+     → expected [] to deeply equal [ 'fidelity' ]
+   ↓ fresh URL role selection from retained validated stages > retains already-notified blocking fidelity repairs for their affected producers
+   ↓ fresh URL role selection from retained validated stages > requires matching eligible site, current draft and checked verdict before a design repair
+   ↓ runtime continuation admission before effects > refuses a copied successful result and asserted current claim before touching production inputs
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  |unit| packages/polaris-dossier/src/url-run-resume.test.ts > fresh URL role selection from retained validated stages > requires a validated fidelity check for both exact current producer revisions
+AssertionError: expected [] to deeply equal [ 'fidelity' ]
+
+- Expected
++ Received
+
+- [
+-   "fidelity",
+- ]
++ []
+
+ ❯ packages/polaris-dossier/src/url-run-resume.test.ts:22:71
+     20|   it('requires a validated fidelity check for both exact current produ…
+     21|     expect(selectRoles({ ...ready(), fidelity: fidelity(1, 3) }, [])).…
+     22|     expect(selectRoles({ ...ready(), fidelity: fidelity(2, 2) }, [])).…
+       |                                                                       ^
+     23|     expect(selectRoles({ ...ready(), fidelity: { ...fidelity(2, 3), re…
+     24|     expect(selectRoles({ ...ready(), author: { ...passed(2), record: {…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 4 skipped (5)
+   Start at  15:12:13
+   Duration  4.92s (transform 3.07s, setup 37ms, collect 4.27s, tests 17ms, environment 0ms, prepare 94ms)
+

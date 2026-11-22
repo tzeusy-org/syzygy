@@ -1,0 +1,59 @@
+
+ RUN  v3.2.7 /home/orca/.tmp/syzygy-beads-looper-20261114-54ebc9f1/d10-f3-machine-store
+
+ ❯ |unit| packages/polaris-dossier/src/url-stored-render.test.ts (10 tests | 1 failed | 9 skipped) 20ms
+   ↓ supervisor verification of stored URL renders > reports the authenticated directory entry with its exact nested UTF-8 file population
+   ↓ supervisor verification of stored URL renders > refuses unexpected, replaced and missing files
+   ↓ supervisor verification of stored URL renders > refuses symlink and hard-link substitutions, even with identical file bytes
+   ↓ supervisor verification of stored URL renders > refuses if currentness ends during the census
+   ↓ read-only recovery of stored URL render metadata > returns exact immutable nested UTF-8 metadata in validator code-unit order
+   × read-only recovery of stored URL render metadata > refuses drift between its original snapshots and the final independent check 19ms
+     → expected { files: 2, pages: 1, bytes: 35, …(1) } to be null
+   ↓ read-only recovery of stored URL render metadata > refuses linked files, linked directories, unsupported files and unrepresented directories
+   ↓ read-only recovery of stored URL render metadata > admits the byte ceiling and refuses the next byte or an over-limit file population
+   ↓ read-only recovery of stored URL render metadata > refuses if currentness ends during discovery
+   ↓ read-only recovery of stored URL render metadata > retains a single currentness failure at every sampled checkpoint
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  |unit| packages/polaris-dossier/src/url-stored-render.test.ts > read-only recovery of stored URL render metadata > refuses drift between its original snapshots and the final independent check
+AssertionError: expected { files: 2, pages: 1, bytes: 35, …(1) } to be null
+
+- Expected: 
+null
+
++ Received: 
+{
+  "bytes": 35,
+  "files": 2,
+  "pages": 1,
+  "population": [
+    {
+      "bytes": 19,
+      "path": "index.html",
+      "sha256": "5cf375c2d8ffe73088e78c3479541c25f08d71c663b601e9e85c87da1520c211",
+    },
+    {
+      "bytes": 16,
+      "path": "linked/own.json",
+      "sha256": "7162e714b3a581084721ef9dfb5368e13988da97092ce5345cc0d5acaf12547d",
+    },
+  ],
+}
+
+ ❯ packages/polaris-dossier/src/url-stored-render.test.ts:111:91
+    109|       return captured;
+    110|     });
+    111|     try { expect(readStoredUrlRenderOutput(f.run, 2, outputDigest(f.ou…
+       |                                                                                           ^
+    112|     finally { spy.mockRestore(); }
+    113|     expect(readStoredUrlRenderOutput(f.run, 2, outputDigest(f.output),…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 9 skipped (10)
+   Start at  14:56:50
+   Duration  1.03s (transform 477ms, setup 46ms, collect 552ms, tests 20ms, environment 0ms, prepare 77ms)
+

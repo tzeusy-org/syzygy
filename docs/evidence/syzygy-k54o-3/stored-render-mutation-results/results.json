@@ -1,0 +1,89 @@
+{
+  "subjectCommit": "7433e887591f595b8686e48d43c4702e798862ce",
+  "mutants": [
+    {
+      "id": "independent-digest",
+      "subjectCommit": "7433e887591f595b8686e48d43c4702e798862ce",
+      "path": "packages/polaris-dossier/src/url-stored-render.ts",
+      "old": "sha256(encodeCanonicalJson(output, OUTPUT_JSON_LIMITS)) !== expectedSha256",
+      "new": "false",
+      "originalSha256": "3e689aaa21a0d28e54bbd6cc7ad6c4a1d2d50662d4160f516a66826705e28ab3",
+      "mutantSha256": "1f11b20ffe5f16645f67b5e48a4e5e2420fdac8ddeaccfae0c0504332d414f94",
+      "test": "returns exact immutable nested",
+      "exitCode": 1,
+      "killedByAssertion": true,
+      "raw": "docs/evidence/syzygy-k54o-3/stored-render-mutation-results/independent-digest.log",
+      "rawSha256": "994e2f7f7cc7650f3a75ec058929f0ac0d4d441bdd3ef31f41730c4980efd98e"
+    },
+    {
+      "id": "original-descriptor",
+      "subjectCommit": "7433e887591f595b8686e48d43c4702e798862ce",
+      "path": "packages/polaris-dossier/src/url-stored-render.ts",
+      "old": "files.some(file => !sameProductFile(file.snapshot, snapshotProductFile(run, file.name, file.snapshot.bytes!.length, check)))",
+      "new": "false",
+      "originalSha256": "3e689aaa21a0d28e54bbd6cc7ad6c4a1d2d50662d4160f516a66826705e28ab3",
+      "mutantSha256": "112041bd0a4e3cf42f966868a0517b5476ba36229d3d2210c1a1a624a762e9f7",
+      "test": "refuses drift between",
+      "exitCode": 1,
+      "killedByAssertion": true,
+      "raw": "docs/evidence/syzygy-k54o-3/stored-render-mutation-results/original-descriptor.log",
+      "rawSha256": "62875a17527f92ce34ccbdfda790f09084798de7338b96690d186e8bb26ad699"
+    },
+    {
+      "id": "latched-currentness",
+      "subjectCommit": "7433e887591f595b8686e48d43c4702e798862ce",
+      "path": "packages/polaris-dossier/src/url-stored-render.ts",
+      "old": "available = available && current() === true;",
+      "new": "available = current() === true;",
+      "originalSha256": "3e689aaa21a0d28e54bbd6cc7ad6c4a1d2d50662d4160f516a66826705e28ab3",
+      "mutantSha256": "ee4412d556f2ecee3425c207d95cfaf8228cf9b26cd65905ab3de1cd8c84b8cf",
+      "test": "retains a single currentness",
+      "exitCode": 1,
+      "killedByAssertion": true,
+      "raw": "docs/evidence/syzygy-k54o-3/stored-render-mutation-results/latched-currentness.log",
+      "rawSha256": "1c9b311cb3f727b6c6541c7b4a43577f3a1dcd0929342c58ab56348cbe3fce96"
+    },
+    {
+      "id": "file-bound",
+      "subjectCommit": "7433e887591f595b8686e48d43c4702e798862ce",
+      "path": "packages/polaris-dossier/src/url-stored-render.ts",
+      "old": "const MAX_FILES = 4096;",
+      "new": "const MAX_FILES = 4097;",
+      "originalSha256": "3e689aaa21a0d28e54bbd6cc7ad6c4a1d2d50662d4160f516a66826705e28ab3",
+      "mutantSha256": "55e1045712509bd80001029172cd985cb476b0695f5f116832addc7385e086fe",
+      "test": "admits the byte ceiling",
+      "exitCode": 1,
+      "killedByAssertion": true,
+      "raw": "docs/evidence/syzygy-k54o-3/stored-render-mutation-results/file-bound.log",
+      "rawSha256": "11768784262365804d12203c773f98e7fe381056e26604ecc2538c8c426bfd31"
+    },
+    {
+      "id": "byte-bound",
+      "subjectCommit": "7433e887591f595b8686e48d43c4702e798862ce",
+      "path": "packages/polaris-dossier/src/url-stored-render.ts",
+      "old": "const MAX_BYTES = 2_097_152;",
+      "new": "const MAX_BYTES = 2_097_153;",
+      "originalSha256": "3e689aaa21a0d28e54bbd6cc7ad6c4a1d2d50662d4160f516a66826705e28ab3",
+      "mutantSha256": "41bbd2db0753678f9ec353fcb8f58c8fa6afc42235dff483929b60d869015837",
+      "test": "admits the byte ceiling",
+      "exitCode": 1,
+      "killedByAssertion": true,
+      "raw": "docs/evidence/syzygy-k54o-3/stored-render-mutation-results/byte-bound.log",
+      "rawSha256": "21ab02a2428bbb924903fc7dcf8ba508c3983c29f8862815a5368956d3f571e4"
+    },
+    {
+      "id": "code-unit-order",
+      "subjectCommit": "7433e887591f595b8686e48d43c4702e798862ce",
+      "path": "packages/polaris-dossier/src/url-stored-render.ts",
+      "old": "population.sort((a, b) => a.path < b.path ? -1 : a.path > b.path ? 1 : 0);",
+      "new": "population.sort((a, b) => a.path.localeCompare(b.path));",
+      "originalSha256": "3e689aaa21a0d28e54bbd6cc7ad6c4a1d2d50662d4160f516a66826705e28ab3",
+      "mutantSha256": "4439cca7981392afe237807f858710afdfcf7f7b5f2e598965e8377c33abd8cf",
+      "test": "returns exact immutable nested",
+      "exitCode": 1,
+      "killedByAssertion": true,
+      "raw": "docs/evidence/syzygy-k54o-3/stored-render-mutation-results/code-unit-order.log",
+      "rawSha256": "48f491aa6c84ed508e631f96dc9670331e91e72abd3c4e36358dde29b4bab415"
+    }
+  ]
+}

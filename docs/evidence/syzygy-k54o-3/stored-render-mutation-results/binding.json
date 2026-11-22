@@ -1,0 +1,8 @@
+{
+  "subjectCommit": "7433e887591f595b8686e48d43c4702e798862ce",
+  "sourceFiles": {
+    "packages/polaris-dossier/src/url-stored-render.ts": "3e689aaa21a0d28e54bbd6cc7ad6c4a1d2d50662d4160f516a66826705e28ab3"
+  },
+  "evidenceRef": "refs/tags/evidence/stored-render-7433e8875",
+  "scope": "Historical focused source mutation controls only; later source and full native acceptance require separate verification. Raw logs retained verbatim."
+}

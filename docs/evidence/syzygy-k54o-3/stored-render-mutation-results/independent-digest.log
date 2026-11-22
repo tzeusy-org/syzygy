@@ -1,0 +1,74 @@
+
+ RUN  v3.2.7 /home/orca/.tmp/syzygy-beads-looper-20261114-54ebc9f1/d10-f3-machine-store
+
+ ❯ |unit| packages/polaris-dossier/src/url-stored-render.test.ts (10 tests | 1 failed | 9 skipped) 37ms
+   ↓ supervisor verification of stored URL renders > reports the authenticated directory entry with its exact nested UTF-8 file population
+   ↓ supervisor verification of stored URL renders > refuses unexpected, replaced and missing files
+   ↓ supervisor verification of stored URL renders > refuses symlink and hard-link substitutions, even with identical file bytes
+   ↓ supervisor verification of stored URL renders > refuses if currentness ends during the census
+   × read-only recovery of stored URL render metadata > returns exact immutable nested UTF-8 metadata in validator code-unit order 35ms
+     → expected { files: 5, pages: 2, bytes: 64, …(1) } to be null
+   ↓ read-only recovery of stored URL render metadata > refuses drift between its original snapshots and the final independent check
+   ↓ read-only recovery of stored URL render metadata > refuses linked files, linked directories, unsupported files and unrepresented directories
+   ↓ read-only recovery of stored URL render metadata > admits the byte ceiling and refuses the next byte or an over-limit file population
+   ↓ read-only recovery of stored URL render metadata > refuses if currentness ends during discovery
+   ↓ read-only recovery of stored URL render metadata > retains a single currentness failure at every sampled checkpoint
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  |unit| packages/polaris-dossier/src/url-stored-render.test.ts > read-only recovery of stored URL render metadata > returns exact immutable nested UTF-8 metadata in validator code-unit order
+AssertionError: expected { files: 5, pages: 2, bytes: 64, …(1) } to be null
+
+- Expected: 
+null
+
++ Received: 
+{
+  "bytes": 64,
+  "files": 5,
+  "pages": 2,
+  "population": [
+    {
+      "bytes": 14,
+      "path": "A.json",
+      "sha256": "d05d780f5f8797eb58c0c759c74722a4520b03c7e9a59b812c079e8eec0c55c4",
+    },
+    {
+      "bytes": 13,
+      "path": "Z.html",
+      "sha256": "a09951179b4f7e1125918a8128ce92ecc4edf4d675cd7c2db8733fa2730d902e",
+    },
+    {
+      "bytes": 19,
+      "path": "index.html",
+      "sha256": "5cf375c2d8ffe73088e78c3479541c25f08d71c663b601e9e85c87da1520c211",
+    },
+    {
+      "bytes": 16,
+      "path": "linked/own.json",
+      "sha256": "7162e714b3a581084721ef9dfb5368e13988da97092ce5345cc0d5acaf12547d",
+    },
+    {
+      "bytes": 2,
+      "path": "nested.html/page.json",
+      "sha256": "44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a",
+    },
+  ],
+}
+
+ ❯ packages/polaris-dossier/src/url-stored-render.test.ts:96:77
+     94|     expect(Object.isFrozen(result?.population[0])).toBe(true);
+     95|     expect(checkStoredUrlRender(f.run, f.site, result!, () => true)).t…
+     96|     expect(readStoredUrlRenderOutput(f.run, 2, '0'.repeat(64), () => t…
+       |                                                                             ^
+     97|     expect(readStoredUrlRenderOutput(f.run, -1, outputDigest(expected)…
+     98|   });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 9 skipped (10)
+   Start at  14:56:48
+   Duration  1.02s (transform 422ms, setup 51ms, collect 484ms, tests 37ms, environment 0ms, prepare 86ms)
+

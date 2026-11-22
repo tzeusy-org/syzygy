@@ -1,0 +1,103 @@
+{
+  "subjectCommit": "149a5231a50bd3501ad656dfbeae84e0cfc74c56",
+  "mutants": [
+    {
+      "id": "fidelity-draft",
+      "subjectCommit": "149a5231a50bd3501ad656dfbeae84e0cfc74c56",
+      "path": "packages/polaris-dossier/src/url-run-sessions.ts",
+      "old": "packet.draftRevision === draft",
+      "new": "true",
+      "originalSha256": "27310cf028e0084318b6aab7b9c60f5ff1b966079c1ee239f9cbafed34eeb162",
+      "mutantSha256": "03ac4b53c7fe8977faf5176d9cbe541155e7503300f32016dd1fa921cbb8a9e2",
+      "test": "requires a validated fidelity",
+      "exitCode": 1,
+      "killedByAssertion": true,
+      "raw": "docs/evidence/syzygy-k54o-3/runtime-resume-mutation-results/fidelity-draft.log",
+      "rawSha256": "794088cdfd764f3dfd4500556f8c46c397a99beea22f916a79055d841b4bbcfc"
+    },
+    {
+      "id": "fidelity-inventory",
+      "subjectCommit": "149a5231a50bd3501ad656dfbeae84e0cfc74c56",
+      "path": "packages/polaris-dossier/src/url-run-sessions.ts",
+      "old": "packet.inventoryRevision === inventory",
+      "new": "true",
+      "originalSha256": "27310cf028e0084318b6aab7b9c60f5ff1b966079c1ee239f9cbafed34eeb162",
+      "mutantSha256": "3b7359f7106413b35d98647ae81b6f2003ae087b18a61d5150dad858d9d117f6",
+      "test": "requires a validated fidelity",
+      "exitCode": 1,
+      "killedByAssertion": true,
+      "raw": "docs/evidence/syzygy-k54o-3/runtime-resume-mutation-results/fidelity-inventory.log",
+      "rawSha256": "781ce3c4ee2c6d5ebcb1dbb1b63ef3ed666dab602df29838e00eaae3ecdb1ce4"
+    },
+    {
+      "id": "inventory-repair",
+      "subjectCommit": "149a5231a50bd3501ad656dfbeae84e0cfc74c56",
+      "path": "packages/polaris-dossier/src/url-run-sessions.ts",
+      "old": "if (inventoryRepair) roles.add('inventory');",
+      "new": "if (false) roles.add('inventory');",
+      "originalSha256": "27310cf028e0084318b6aab7b9c60f5ff1b966079c1ee239f9cbafed34eeb162",
+      "mutantSha256": "c2e74721a332a2834f124c4a67dc3af9b71d870b3ecc5528118e40b9189d8f87",
+      "test": "retains already-notified",
+      "exitCode": 1,
+      "killedByAssertion": true,
+      "raw": "docs/evidence/syzygy-k54o-3/runtime-resume-mutation-results/inventory-repair.log",
+      "rawSha256": "caea6d762b70d9d3cd47635213838dc4b793dce7716bd17fff1cd82e7ff0c43d"
+    },
+    {
+      "id": "design-site",
+      "subjectCommit": "149a5231a50bd3501ad656dfbeae84e0cfc74c56",
+      "path": "packages/polaris-dossier/src/url-run-sessions.ts",
+      "old": "attempt.site === designPacket.site",
+      "new": "true",
+      "originalSha256": "27310cf028e0084318b6aab7b9c60f5ff1b966079c1ee239f9cbafed34eeb162",
+      "mutantSha256": "2b4560d475687e829274e1ca41faa21196c6345ab22729768a22a7b018f75b4f",
+      "test": "requires matching eligible",
+      "exitCode": 1,
+      "killedByAssertion": true,
+      "raw": "docs/evidence/syzygy-k54o-3/runtime-resume-mutation-results/design-site.log",
+      "rawSha256": "5c2ef7bf34e05b0a4161187deadf57f1e2881931853e66800d09a8661bed609a"
+    },
+    {
+      "id": "design-draft",
+      "subjectCommit": "149a5231a50bd3501ad656dfbeae84e0cfc74c56",
+      "path": "packages/polaris-dossier/src/url-run-sessions.ts",
+      "old": "attempt.draftRevision === draft",
+      "new": "true",
+      "originalSha256": "27310cf028e0084318b6aab7b9c60f5ff1b966079c1ee239f9cbafed34eeb162",
+      "mutantSha256": "03d20a2c09611989fd8e7297e5aa54bd061a37be5ec884b014c177748dddafd6",
+      "test": "requires matching eligible",
+      "exitCode": 1,
+      "killedByAssertion": true,
+      "raw": "docs/evidence/syzygy-k54o-3/runtime-resume-mutation-results/design-draft.log",
+      "rawSha256": "7098dfb2821925e5454be9d9a39b551661fce8817b8a2a310316a461030ab613"
+    },
+    {
+      "id": "design-verdict",
+      "subjectCommit": "149a5231a50bd3501ad656dfbeae84e0cfc74c56",
+      "path": "packages/polaris-dossier/src/url-run-sessions.ts",
+      "old": "attempt.number === checks.design!.revision",
+      "new": "true",
+      "originalSha256": "27310cf028e0084318b6aab7b9c60f5ff1b966079c1ee239f9cbafed34eeb162",
+      "mutantSha256": "420aef178f7b37dff4b887ec0e4d79c3b0949a56e81a26fccd0ce20501421d98",
+      "test": "requires matching eligible",
+      "exitCode": 1,
+      "killedByAssertion": true,
+      "raw": "docs/evidence/syzygy-k54o-3/runtime-resume-mutation-results/design-verdict.log",
+      "rawSha256": "1120354cb25e74fd3a89f21a257f90bf1da403ff12f20e06034033e3b94b29c0"
+    },
+    {
+      "id": "nominal-claim",
+      "subjectCommit": "149a5231a50bd3501ad656dfbeae84e0cfc74c56",
+      "path": "packages/polaris-dossier/src/url-run-sessions.ts",
+      "old": "!isClaimedStoppedUrlRun(resume.verified, resume.claim) || options.production === undefined",
+      "new": "false",
+      "originalSha256": "27310cf028e0084318b6aab7b9c60f5ff1b966079c1ee239f9cbafed34eeb162",
+      "mutantSha256": "2afa561615ffdf207a85a7e1ada265e6ed918d7265f4fc933e9eaea2ddd00d3f",
+      "test": "refuses a copied successful",
+      "exitCode": 1,
+      "killedByAssertion": true,
+      "raw": "docs/evidence/syzygy-k54o-3/runtime-resume-mutation-results/nominal-claim.log",
+      "rawSha256": "8eb4c2ddc4a7f56df65f2d660f172f8c778133b1ef62038b73a89a4fda90cc3e"
+    }
+  ]
+}

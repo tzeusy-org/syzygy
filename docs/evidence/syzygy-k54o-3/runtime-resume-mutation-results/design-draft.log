@@ -1,0 +1,40 @@
+
+ RUN  v3.2.7 /home/orca/.tmp/syzygy-beads-looper-20261114-54ebc9f1/d10-f3-machine-store
+
+ ❯ |unit| packages/polaris-dossier/src/url-run-resume.test.ts (5 tests | 1 failed | 4 skipped) 16ms
+   ↓ fresh URL role selection from retained validated stages > selects unfinished producers and an independent reviewer without starting design
+   ↓ fresh URL role selection from retained validated stages > requires a validated fidelity check for both exact current producer revisions
+   ↓ fresh URL role selection from retained validated stages > retains already-notified blocking fidelity repairs for their affected producers
+   × fresh URL role selection from retained validated stages > requires matching eligible site, current draft and checked verdict before a design repair 14ms
+     → expected [ 'author' ] to deeply equal []
+   ↓ runtime continuation admission before effects > refuses a copied successful result and asserted current claim before touching production inputs
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  |unit| packages/polaris-dossier/src/url-run-resume.test.ts > fresh URL role selection from retained validated stages > requires matching eligible site, current draft and checked verdict before a design repair
+AssertionError: expected [ 'author' ] to deeply equal []
+
+- Expected
++ Received
+
+- []
++ [
++   "author",
++ ]
+
+ ❯ packages/polaris-dossier/src/url-run-resume.test.ts:46:70
+     44|     expect(selectRoles(checks, [])).toEqual([]);
+     45|     expect(selectRoles(checks, [{ ...eligible, site: 4 }])).toEqual([]…
+     46|     expect(selectRoles(checks, [{ ...eligible, draftRevision: 1 }])).t…
+       |                                                                      ^
+     47|     expect(selectRoles(checks, [{ ...eligible, number: 6 }])).toEqual(…
+     48|     expect(selectRoles({ ...checks, design: { ...checks.design, record…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 4 skipped (5)
+   Start at  15:12:35
+   Duration  4.80s (transform 2.94s, setup 88ms, collect 3.96s, tests 16ms, environment 0ms, prepare 298ms)
+

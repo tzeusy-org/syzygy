@@ -1,0 +1,8 @@
+{
+  "subjectCommit": "149a5231a50bd3501ad656dfbeae84e0cfc74c56",
+  "sourceFiles": {
+    "packages/polaris-dossier/src/url-run-sessions.ts": "27310cf028e0084318b6aab7b9c60f5ff1b966079c1ee239f9cbafed34eeb162"
+  },
+  "evidenceRef": "refs/tags/evidence/runtime-resume-149a5231a",
+  "scope": "Historical focused source mutation controls only; later source and full native acceptance require separate verification. Raw logs retained verbatim."
+}

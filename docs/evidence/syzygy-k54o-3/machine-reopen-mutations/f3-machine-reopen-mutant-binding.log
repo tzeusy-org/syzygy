@@ -1,0 +1,67 @@
+
+ RUN  v3.2.7 /home/orca/.tmp/syzygy-beads-looper-20261114-54ebc9f1/d10-f3-machine-store
+
+ ❯ |unit| packages/polaris-dossier/src/url-run-machine-close.test.ts (28 tests | 1 failed | 27 skipped) 231ms
+   ↓ retained production machine closure evidence > retains eight actual never-issued anchors and immutable selected contexts from the exact clean result
+   ↓ retained production machine closure evidence > emits no clean evidence after expire
+   ↓ retained production machine closure evidence > emits no clean evidence after withdraw
+   ↓ retained production machine closure evidence > refuses clean closure when actual committed state contradicts in-memory never-issued state
+   ↓ retained production machine closure evidence > refuses clean closure when actual pending state contradicts in-memory never-issued state
+   ↓ same-store machine continuation seam > retains exact old anchors and allocates only 0 freshly prepared roles in the same store
+   ↓ same-store machine continuation seam > retains exact old anchors and allocates only 1 freshly prepared roles in the same store
+   ↓ same-store machine continuation seam > retains exact old anchors and allocates only 4 freshly prepared roles in the same store
+   ↓ same-store machine continuation seam > refuses copy drift without allocating fresh endpoints
+   ↓ same-store machine continuation seam > refuses identity drift without allocating fresh endpoints
+   × same-store machine continuation seam > refuses controller drift without allocating fresh endpoints 229ms
+     → promise resolved "{ …(4) }" instead of rejecting
+   ↓ same-store machine continuation seam > refuses parent drift without allocating fresh endpoints
+   ↓ same-store machine continuation seam > refuses deadline drift without allocating fresh endpoints
+   ↓ same-store machine continuation seam > refuses run drift without allocating fresh endpoints
+   ↓ same-store machine continuation seam > refuses pin drift without allocating fresh endpoints
+   ↓ same-store machine continuation seam > refuses origin drift without allocating fresh endpoints
+   ↓ same-store machine continuation seam > refuses profile drift without allocating fresh endpoints
+   ↓ same-store machine continuation seam > refuses missing-store drift without allocating fresh endpoints
+   ↓ same-store machine continuation seam > refuses clock drift without allocating fresh endpoints
+   ↓ same-store machine continuation seam > refuses claim drift without allocating fresh endpoints
+   ↓ same-store machine continuation seam > refuses unprepared drift without allocating fresh endpoints
+   ↓ same-store machine continuation seam > refuses extra-plan drift without allocating fresh endpoints
+   ↓ same-store machine continuation seam > refuses duplicate-role drift without allocating fresh endpoints
+   ↓ same-store machine continuation seam > refuses role-order drift without allocating fresh endpoints
+   ↓ same-store machine continuation seam > preserves an actually revoked old head through a fresh same-role allocation and close
+   ↓ same-store machine continuation seam > refuses a changed protected retired head after genuine cold capture and never allocates around it
+   ↓ same-store machine continuation seam > withdraws both live currentness and retirement when the independently held claim is lost
+   ↓ same-store machine continuation seam > refuses claim withdrawal after awaited revalidation before any fresh allocation
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  |unit| packages/polaris-dossier/src/url-run-machine-close.test.ts > same-store machine continuation seam > refuses controller drift without allocating fresh endpoints
+AssertionError: promise resolved "{ …(4) }" instead of rejecting
+
+- Expected
++ Received
+
+- Error {
+-   "message": "rejected promise",
++ {
++   "close": [Function close],
++   "current": [Function current],
++   "identitySha256": "ac4465a8030dbcfee446601231824abdbbb1bb0fe436686569146f067b02dbbb",
++   "transport": [Function transport],
+  }
+
+ ❯ packages/polaris-dossier/src/url-run-machine-close.test.ts:190:46
+    188|     if (fault === 'duplicate-role') options = { ...options, requiredRo…
+    189|     if (fault === 'role-order') options = { ...options, requiredRoles:…
+    190|     await expect(createUrlRunMachine(options)).rejects.toThrow('url-ru…
+       |                                              ^
+    191|     expect(await readFile(stateFile)).toEqual(before);
+    192|     expect((await readdir(f.root)).includes('alternate-store')).toBe(f…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 27 skipped (28)
+   Start at  14:10:34
+   Duration  3.07s (transform 1.57s, setup 84ms, collect 2.03s, tests 231ms, environment 0ms, prepare 106ms)
+

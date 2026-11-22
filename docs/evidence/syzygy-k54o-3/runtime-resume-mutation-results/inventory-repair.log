@@ -1,0 +1,40 @@
+
+ RUN  v3.2.7 /home/orca/.tmp/syzygy-beads-looper-20261114-54ebc9f1/d10-f3-machine-store
+
+ ❯ |unit| packages/polaris-dossier/src/url-run-resume.test.ts (5 tests | 1 failed | 4 skipped) 16ms
+   ↓ fresh URL role selection from retained validated stages > selects unfinished producers and an independent reviewer without starting design
+   ↓ fresh URL role selection from retained validated stages > requires a validated fidelity check for both exact current producer revisions
+   × fresh URL role selection from retained validated stages > retains already-notified blocking fidelity repairs for their affected producers 13ms
+     → expected [] to deeply equal [ 'inventory' ]
+   ↓ fresh URL role selection from retained validated stages > requires matching eligible site, current draft and checked verdict before a design repair
+   ↓ runtime continuation admission before effects > refuses a copied successful result and asserted current claim before touching production inputs
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  |unit| packages/polaris-dossier/src/url-run-resume.test.ts > fresh URL role selection from retained validated stages > retains already-notified blocking fidelity repairs for their affected producers
+AssertionError: expected [] to deeply equal [ 'inventory' ]
+
+- Expected
++ Received
+
+- [
+-   "inventory",
+- ]
++ []
+
+ ❯ packages/polaris-dossier/src/url-run-resume.test.ts:29:100
+     27|   it('retains already-notified blocking fidelity repairs for their aff…
+     28|     const inventoryAccuracy = [{ entryId: 'own-entry', accuracy: 'inac…
+     29|     expect(selectRoles({ ...ready(), fidelity: fidelity(2, 3, true, { …
+       |                                                                                                    ^
+     30|     expect(selectRoles({ ...ready(), fidelity: fidelity(2, 3, true, { …
+     31|     expect(selectRoles({ ...ready(), fidelity: fidelity(2, 3, true,
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 4 skipped (5)
+   Start at  15:12:20
+   Duration  7.13s (transform 4.45s, setup 61ms, collect 6.27s, tests 16ms, environment 0ms, prepare 97ms)
+
