@@ -1,0 +1,123 @@
+{
+  "format": "f3-render-phase-diagnostic/1",
+  "evidence": "Observed",
+  "subjectCommit": "236df7ecd971048a97069f2629ef2e03e2dad902",
+  "diagnosticPatchSha256": "4e3fc23271e51cd3630cf73e7f2265187f04dc33e54009ad336c67be1ba0fdd5",
+  "runtimeInputTreeSha256": "82eff6d8643070c93f7cb6dc5197e9d84e7b01946348c786d11d2027b16e24f8",
+  "runtimeManifestSha256": "7c9baad34e98537dd7013b58ceca47f147fa50fa36eec4f081d38fe7e08fe6e9",
+  "subjectBytesUnchanged": true,
+  "nativeSettled": true,
+  "sourceRestored": true,
+  "command": "TMPDIR=/home/orca/.tmp SYZYGY_COMPOSED_RETAIN=/home/orca/.tmp/f3-render-phase-cut.json SYZYGY_F3_NATIVE_EVIDENCE_FILE=/home/orca/.tmp/f3-render-phase-evidence.json npx vitest run --project integration packages/polaris-dossier/src/url-run-composed.test.ts -t 'to stop-resume$'",
+  "outcome": {
+    "failed": 1,
+    "skipped": 3,
+    "total": 4,
+    "seconds": 189.12
+  },
+  "chronology": [
+    {
+      "event": "f3-render-read",
+      "phase": "begin",
+      "operation": "render",
+      "deadline": 1795339505398,
+      "sampledNow": 1795339500446
+    },
+    {
+      "event": "f3-render-producer",
+      "phase": "begin",
+      "producerExpires": 172378.915923,
+      "sampledNow": 167378.994732
+    },
+    {
+      "event": "f3-render-lease",
+      "phase": "deadline",
+      "operation": "render",
+      "deadline": 1795339505398,
+      "sampledNow": 1795339505457
+    },
+    {
+      "event": "f3-render-producer",
+      "phase": "fidelity",
+      "result": "threw",
+      "producerExpires": 172378.915923,
+      "sampledNow": 167727.171505,
+      "signalAborted": false
+    }
+  ],
+  "currentBeforeReadBegin": {
+    "event": "f3-render-current",
+    "calls": 942,
+    "currentMs": 61795.14852900024,
+    "elapsedMs": 48.489111000002595,
+    "result": true
+  },
+  "currentBeforeProducerBegin": {
+    "event": "f3-render-current",
+    "calls": 1004,
+    "currentMs": 64984.6626350002,
+    "elapsedMs": 48.822441999975126,
+    "result": true
+  },
+  "currentBeforeFailedLease": {
+    "event": "f3-render-current",
+    "calls": 1007,
+    "currentMs": 65114.69013300018,
+    "elapsedMs": 46.803633999981685,
+    "result": true
+  },
+  "intervals": {
+    "readBeginToProducerBegin": {
+      "actualGuardCalls": 62,
+      "actualGuardMs": 3189.5141059999587
+    },
+    "privateReproductionToFailure": {
+      "actualGuardCalls": 3,
+      "actualGuardMs": 130.02749799998128
+    },
+    "readBeginToFailedLease": {
+      "actualGuardCalls": 65,
+      "actualGuardMs": 3319.54160399994,
+      "allReturnedTrue": true
+    }
+  },
+  "conclusion": "The actual authenticated product read lease expired during private fidelity reproduction, before checked producer validation/admission. The producer timer remained unexpired and signalAborted was false.",
+  "limits": [
+    "Instrumentation used the existing predicates once each and changed no limit. Diagnostic I/O adds overhead, so timings describe this run.",
+    "This establishes the failed predicate for this retained subject, not every practical recovery stop.",
+    "No public final ExecutionRecord was produced.",
+    "No render or validator production fix is established by this diagnostic."
+  ],
+  "artifacts": [
+    {
+      "path": "/home/orca/.tmp/f3-render-phase-subject.json",
+      "sha256": "1061ed1a5dfccd0b1d009123c8949bb62f4c7b3cf5915582496eab6fa9f6c04d",
+      "bytes": 1112
+    },
+    {
+      "path": "/home/orca/.tmp/f3-render-phase-result.json",
+      "sha256": "2cb0a6f1896f54876d6564d7c93a74152172ee5b5e0ad90326459423184b43a8",
+      "bytes": 172901
+    },
+    {
+      "path": "/home/orca/.tmp/f3-render-phase-cut.json",
+      "sha256": "06504375fdf815f4e3b80225892c270bb1d7ac2b476aa8b24854e36f3ffb87e6",
+      "bytes": 133202
+    },
+    {
+      "path": "/home/orca/.tmp/f3-render-phase-cut.json.failure.json",
+      "sha256": "69be58f82c7ab9b420a8761fa1af6250017cab9f0832ff2de5e9b36f3e16bbc6",
+      "bytes": 40149
+    },
+    {
+      "path": "/home/orca/.tmp/f3-render-phase-typecheck.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "path": "/home/orca/.tmp/f3-render-phase-probe.py",
+      "sha256": "77a905689a7bd39588f48bed0cc39826398c37b80afc75bc7bc2d8e19205d437",
+      "bytes": 9482
+    }
+  ]
+}
