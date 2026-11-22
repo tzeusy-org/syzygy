@@ -1,6 +1,6 @@
 # dossier-verify-text
 
-[Inferred] Candidate version 2.14 of the dossier specification line: one MODIFIED REQ-polaris-generation-033 that adds one command (bead syzygy-5dhm.23, pursuit 2026-11-21b move R2 slice 1). `syzygy dossier verify <run> --text <file> [--out <file>]` checks a free-form Markdown text about the run's pinned repository, whoever wrote it, with check's own citation and quotation derivation, and reports each claim's outcome, a tally of six outcomes and, with `--out`, an annotated copy. It binds nothing until its row in [AGENT-ADOPTIONS.md](../../../.syzygy/governance/decisions/AGENT-ADOPTIONS.md) and the tag `polaris-dossier-verify-text-v2.14`; adoption state is read from that ledger and from `PROJECT-STATUS.md`, never from this page.
+[Inferred] Candidate version 2.15 of the dossier specification line: one MODIFIED REQ-polaris-generation-033 that adds one command (bead syzygy-5dhm.23, pursuit 2026-11-21b move R2 slice 1). `syzygy dossier verify <run> --text <file> [--out <file>]` checks a free-form Markdown text about the run's pinned repository, whoever wrote it, with check's own citation and quotation derivation, and reports each claim's outcome, a tally of six outcomes and, with `--out`, an annotated copy. It binds nothing until its row in [AGENT-ADOPTIONS.md](../../../.syzygy/governance/decisions/AGENT-ADOPTIONS.md) and the tag `polaris-dossier-verify-text-v2.15`; adoption state is read from that ledger and from `PROJECT-STATUS.md`, never from this page.
 
 | File | What it holds |
 |---|---|

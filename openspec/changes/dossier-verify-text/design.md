@@ -56,3 +56,7 @@ One bead outcome (syzygy-5dhm.23) in one MODIFIED REQ-polaris-generation-033. Th
 - **F10** (usage error). The paragraph states that a malformed invocation is a usage error under the family's convention.
 
 The reviewer also found no retained record for the "66 references missing" figure; it is now labelled [Unknown] above.
+
+## Rebuilt as version 2.15
+
+[Observed] Version 2.14 was taken on the default branch by the infrastructure recognizers amendment (a MODIFIED REQ-034) while this change was under review, so the change is renumbered 2.15. Its predecessor is unchanged: no later version than 2.1 replaces REQ-033, so the requirement block is the same bytes; only the spec's header line names the new version, which changes the spec digest. The review above read the version 2.14 header.

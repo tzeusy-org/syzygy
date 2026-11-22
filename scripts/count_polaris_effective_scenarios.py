@@ -73,6 +73,10 @@ adoption binding verifies; each parser counts its one replacement (034).
 The coverage-precheck version2.12 amendment follows version2.11 when its own
 adoption binding verifies; each parser counts its one replacement (034).
 
+The verify-text version2.15 amendment replaces 033 after the URL
+declared-source version2.1 when its own adoption binding verifies; each parser
+counts its one replacement (033).
+
 The infrastructure-recognizers version2.14 amendment follows version2.12 when its
 own adoption binding verifies; each parser counts its one replacement (034).
 
@@ -562,6 +566,15 @@ def coverage_amendment(root: Path) -> str | None:
     return text
 
 
+def verify_amendment(root: Path) -> str | None:
+    """Verified text, a pending or retired amendment, or a counting refusal."""
+    import check_spec_reconciliation as adoption
+    text, records, subjects = adoption.verify_binding(root)
+    if records or subjects:
+        raise ScenarioCountError("verify text adoption findings:\n" + "\n".join(records + subjects))
+    return text
+
+
 def infra_amendment(root: Path) -> str | None:
     """Verified text, a pending or retired amendment, or a counting refusal."""
     import check_spec_reconciliation as adoption
@@ -607,7 +620,8 @@ def build_composition(root: Path) -> CompositionResult:
                         (adoption.BOUNDS_SPEC, bounds_amendment(root)),
                         (adoption.CORR_SPEC, corr_amendment(root)),
                         (adoption.COVERAGE_SPEC, coverage_amendment(root)),
-                        (adoption.INFRA_SPEC, infra_amendment(root))):
+                        (adoption.INFRA_SPEC, infra_amendment(root)),
+                        (adoption.VERIFY_SPEC, verify_amendment(root))):
         if text is not None:
             sources.append((label, text))
 
@@ -654,6 +668,7 @@ def composition_inputs(root: Path) -> list[Path]:
     bounds_amendment(root)
     corr_amendment(root)
     coverage_amendment(root)
+    verify_amendment(root)
     infra_amendment(root)
     paths = adoption.declared_source_inputs(root) | {
         adoption.URL_SOURCE_REPLACEMENTS, *adoption.URL_SOURCE_SUBJECTS,
@@ -661,6 +676,7 @@ def composition_inputs(root: Path) -> list[Path]:
         *adoption.LEDGER_SUBJECTS, *adoption.KINDS_SUBJECTS, *adoption.MANIFESTS_SUBJECTS,
         *adoption.REPAIRS_SUBJECTS, *adoption.MAPS_SUBJECTS, *adoption.BOUNDS_SUBJECTS, *adoption.CORR_SUBJECTS,
         *adoption.COVERAGE_SUBJECTS, *adoption.INFRA_SUBJECTS,
+        *adoption.VERIFY_SUBJECTS,
         *adoption.REACH_SUBJECTS, *adoption.READMIT_SUBJECTS,
     }
     files = discover_composition_files(root)
