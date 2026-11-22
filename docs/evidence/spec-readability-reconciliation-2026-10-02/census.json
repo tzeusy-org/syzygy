@@ -600,7 +600,7 @@
     },
     "POLARIS": {
       "requirements": 39,
-      "scenarios": 419,
+      "scenarios": 423,
       "members": {
         "REQ-polaris-generation-001": {
           "name": "Admitted project input",
@@ -1083,7 +1083,11 @@
             "Inventory too large for its check record",
             "Inventory check record read under the bound",
             "Inventory check record past the earlier reader bound counts",
-            "Derived record kept but unusable told apart from none kept"
+            "Derived record kept but unusable told apart from none kept",
+            "CI pipeline map lists parse as lists",
+            "Unknown files counted and not listed on a manifest map",
+            "Reading difference of a bounded check record",
+            "Readable layout stacks every graph of two or more layers"
           ]
         },
         "REQ-polaris-generation-035": {
