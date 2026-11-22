@@ -9,7 +9,7 @@ import type { ViewRole } from './session-view.js';
 import { isUrlMachinePeerHistoryMatch, isUrlMachinePeerHistorySnapshot, isUrlMachinePeerHistorySnapshotFor,
   verifyUrlMachinePeerHistoryRow, type UrlMachinePeerHistorySnapshot } from './url-machine-peer-history.js';
 import type { UrlMachinePeerAudit } from './url-machine-peer.js';
-import { isVerifiedRetainedUrlLaunchHistory, URL_HELPER_LAUNCH_FILES, verifyRetainedUrlLaunchHistory,
+import { isVerifiedRetainedUrlLaunchHistory, isUrlHelperLaunchFile, URL_HELPER_LAUNCH_FILES, verifyRetainedUrlLaunchHistory,
   type UrlLaunchHistoryRole, type UrlRetainedLaunchHistoryExpected, type UrlRetainedLaunchHistoryOptions } from './url-launch-history.js';
 import { verifyColdOrderedDesignAuditHistory, type UrlOrderedDesignHistoryExpected } from './url-ordered-design-audit-history.js';
 import { URL_SESSION_AUDIT_FORMAT, URL_SESSION_AUDIT_LIMITS, type UrlSessionAuditScope } from './url-session-audit.js';
@@ -37,6 +37,8 @@ type RetainedLaunchSubjects = Readonly<Partial<Record<UrlLaunchHistoryRole, Reta
 export interface UrlSessionAuditHistoryOptions {
   readonly parent: string; readonly name: string; readonly expected: UrlSessionAuditHistoryExpected;
   readonly current: () => boolean;
+  /** Original run deadline, independently verified by the recovery caller. */
+  readonly deadline?: number;
   /** Independently pinned input, role and executable identities for any retained helper launch row. */
   readonly retainedLaunches?: RetainedLaunchSubjects;
   /** Genuine snapshots made against independently retained store identity and client heads. */
@@ -49,7 +51,20 @@ export interface VerifiedUrlSessionAuditHistory {
   readonly capturedCountExchanges: number; readonly capturedHelperLaunches: number; readonly capturedMachineEffects: number;
   readonly capturedReportedTokens: number | 'Unknown';
   readonly capturedQuestions: number;
+  readonly capturedSettledRoles: readonly ViewRole[];
 }
+export interface UrlVerifiedAuditLaunches {
+  readonly runId: string; readonly sourceBindingSha256: string; readonly basePolicySha256: string;
+  readonly originPolicySha256: string; readonly pin: string; readonly principal: string;
+  readonly helperLaunchFiles: Readonly<Partial<Record<UrlLaunchHistoryRole, string>>>;
+}
+const verifiedHistories = new WeakMap<VerifiedUrlSessionAuditHistory, UrlVerifiedAuditLaunches>();
+/** Metadata only from the exact completed protected cold read, never a copied
+ * successful summary or filename census. It grants no role/process authority. */
+export function readVerifiedUrlAuditLaunches(value: unknown): UrlVerifiedAuditLaunches | null {
+  return isRecord(value) ? verifiedHistories.get(value as unknown as VerifiedUrlSessionAuditHistory) ?? null : null;
+}
+
 function fail(): never { throw new Error('url-session-audit-history-unavailable'); }
 const hex = (v: unknown): v is string => typeof v === 'string' && /^[a-f0-9]{64}$/u.test(v);
 const count = (v: unknown, max = Number.MAX_SAFE_INTEGER): v is number => Number.isSafeInteger(v) && Number(v) >= 0 && Number(v) <= max;
@@ -72,7 +87,7 @@ interface Row { readonly sequence: number; readonly sha256: string; readonly pre
 export async function verifyUrlSessionAuditHistory(given: UrlSessionAuditHistoryOptions): Promise<VerifiedUrlSessionAuditHistory | null> {
   let active = true, timer: ReturnType<typeof setTimeout> | undefined;
   const handles = new Set<FileHandle>();
-  const began = performance.now(), current = given.current;
+  const began = performance.now(), current = given.current, originalDeadline = given.deadline;
   const check = (): void => {
     if (!active || performance.now() - began >= URL_SESSION_AUDIT_LIMITS.milliseconds || current() !== true) fail();
   };
@@ -185,7 +200,9 @@ export async function verifyUrlSessionAuditHistory(given: UrlSessionAuditHistory
     if (previous !== expected.tipSha256) fail();
     const orderedRows = rows.filter(row => ['design-delivery', 'design-ordered', 'ordered-design-verdict'].includes(String(row.event.kind)));
     if (orderedRows.length > 0 || expected.ordered !== undefined) {
-      if (!Array.isArray(expected.ordered) || expected.ordered.length === 0 || expected.ordered.length > 64) fail();
+      if (!Array.isArray(expected.ordered) || expected.ordered.length === 0 || expected.ordered.length > 64
+        || !Number.isSafeInteger(originalDeadline) || Number(originalDeadline) <= 0
+        || expected.ordered.some(attempt => attempt.plan.manifest.binding.deadline !== new Date(originalDeadline!).toISOString())) fail();
       const declaration = expected.declarations.design;
       if (verifyColdOrderedDesignAuditHistory({ rows: orderedRows, attempts: expected.ordered,
         profileSha256: declaration.scope.profileSha256,
@@ -196,8 +213,13 @@ export async function verifyUrlSessionAuditHistory(given: UrlSessionAuditHistory
     await rootCurrent();
     for (const { file, name, stat } of files) if (!same(stat, await file.stat({ bigint: true })) || !same(stat, await lstat(name, { bigint: true }))) fail();
     check();
-    return deepFreeze({ kind: 'verified-local-audit-history', authorization: 'none', replay: 'forbidden', completeness: 'Unknown',
-      records: rows.length, bytes: expected.durableBytes, tipSha256: expected.tipSha256, ...captured });
+    const { helperLaunchFiles, ...counts } = captured;
+    const result: VerifiedUrlSessionAuditHistory = deepFreeze({ kind: 'verified-local-audit-history', authorization: 'none', replay: 'forbidden', completeness: 'Unknown',
+      records: rows.length, bytes: expected.durableBytes, tipSha256: expected.tipSha256, ...counts });
+    verifiedHistories.set(result, deepFreeze({ runId: reference.scope.binding.run, sourceBindingSha256: reference.scope.binding.sourceBinding,
+      basePolicySha256: reference.scope.binding.policy, originPolicySha256: reference.scope.originPolicySha256,
+      pin: reference.payload.pin, principal: reference.payload.principal, helperLaunchFiles }));
+    return result;
   };
   try {
     return await Promise.race([work(), new Promise<null>(resolve => { timer = setTimeout(() => { active = false; resolve(null); }, URL_SESSION_AUDIT_LIMITS.milliseconds); })]);
@@ -214,6 +236,8 @@ async function verifyCapturedBoundary(rows: readonly Row[], expected: UrlSession
   retainedLaunches: RetainedLaunchSubjects, machineSnapshots: ReadonlyMap<string, UrlMachinePeerHistorySnapshot>, check: () => void) {
   let capturedLaunchTerminals = 0, capturedCompleteExchanges = 0, capturedCountExchanges = 0;
   let capturedHelperLaunches = 0, capturedMachineEffects = 0, capturedReportedTokens = 0, capturedQuestions = 0;
+  const capturedSettledRoles: ViewRole[] = [];
+  const helperLaunchFiles: Partial<Record<UrlLaunchHistoryRole, string>> = {};
   for (const role of ROLES) {
     let attempt: { commandSha256: string; viewSha256: string } | null = null;
     let launchHistoryMatched = false, launched = false;
@@ -234,13 +258,13 @@ async function verifyCapturedBoundary(rows: readonly Row[], expected: UrlSession
           attempt = { commandSha256: p.commandSha256, viewSha256: p.viewSha256 }; launched = true; break;
         case 'launch-history': {
           if (role === 'author' || attempt === null || launchHistoryMatched) fail();
-          const subject = retainedLaunches[role], file = URL_HELPER_LAUNCH_FILES[role];
+          const subject = retainedLaunches[role], file = p.file;
           const { scope, payload } = expected.declarations[role];
           if (!subject || subject.runId !== scope.binding.run || subject.roleDeclaration.role !== role
             || subject.roleDeclaration.compiledProfileSha256 !== scope.profileSha256
             || subject.roleDeclaration.commandSha256 !== attempt.commandSha256 || subject.roleDeclaration.viewSha256 !== attempt.viewSha256
             || !exact(p, ['file', 'recordSha256', 'recordBytes', 'promptRecordSha256', 'promptSha256', 'sessionId'])
-            || p.file !== file || !hex(p.recordSha256) || !count(p.recordBytes, 2_097_152) || p.recordBytes === 0
+            || !isUrlHelperLaunchFile(role, file) || !hex(p.recordSha256) || !count(p.recordBytes, 2_097_152) || p.recordBytes === 0
             || !hex(p.promptRecordSha256) || !hex(p.promptSha256) || typeof p.sessionId !== 'string') fail();
           const history: UrlRetainedLaunchHistoryExpected = { file, recordSha256: p.recordSha256, recordBytes: p.recordBytes,
             promptRecordSha256: p.promptRecordSha256, promptSha256: p.promptSha256, sessionId: p.sessionId };
@@ -251,6 +275,7 @@ async function verifyCapturedBoundary(rows: readonly Row[], expected: UrlSession
             || result.sourceBindingSha256 !== scope.binding.sourceBinding || result.policySha256 !== scope.binding.policy || result.pin !== payload.pin
             || result.sessionId !== p.sessionId || result.recordSha256 !== p.recordSha256
             || result.promptRecordSha256 !== p.promptRecordSha256 || result.promptSha256 !== p.promptSha256) fail();
+          helperLaunchFiles[role] = file;
           launchHistoryMatched = true; capturedHelperLaunches++; break;
         }
         case 'launch-terminal':
@@ -370,7 +395,8 @@ async function verifyCapturedBoundary(rows: readonly Row[], expected: UrlSession
     }
     if (attempt !== null || exchange !== null || (tool !== null && !(role === 'design' && expected.ordered?.at(-1)?.disposition.kind === 'stopped')) || question !== null
       || (role !== 'author' && launched && retainedLaunches[role] !== undefined && !launchHistoryMatched)) fail();
+    if (launched) capturedSettledRoles.push(role);
   }
-  return { capturedLaunchTerminals, capturedCompleteExchanges, capturedCountExchanges, capturedHelperLaunches, capturedMachineEffects, capturedQuestions,
+  return { capturedLaunchTerminals, capturedCompleteExchanges, capturedCountExchanges, capturedHelperLaunches, capturedMachineEffects, capturedQuestions, capturedSettledRoles, helperLaunchFiles,
     capturedReportedTokens: capturedCompleteExchanges === 0 ? 'Unknown' as const : capturedReportedTokens };
 }
