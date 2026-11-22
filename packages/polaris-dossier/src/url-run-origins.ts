@@ -6,7 +6,7 @@ import { checkDraftShape, draftSchemaDocument, inventorySchemaDocument, verdictS
   localDraftSchema, localInventorySchema, localVerdictSchema, localDesignVerdictSchema } from './draft-schema.js';
 import { sourceBindingSha256 } from './run-record.js';
 import { createUrlOriginLedger, type UrlOriginLedgerOptions, type UrlOriginReceipt } from './url-origin-ledger.js';
-import { isPreparedUrlRolePlan, type UrlRolePlan } from './url-role-plan.js';
+import { isPreparedUrlRolePlan, urlRoleInputOriginId, type UrlRolePlan } from './url-role-plan.js';
 import { URL_ROLES, type UrlPlannedOrigin } from './url-run-record.js';
 import type { UrlLoadedRenderer } from './url-runtime.js';
 
@@ -63,7 +63,7 @@ async function create(given: UrlRunOriginsOptions) {
       || binding.provider !== record.declared.agentProvider || binding.model !== record.declared.model || declaration.role !== plan.role
       || declaration.sessionId !== plan.profile.input.sessionId || declaration.compiledProfileSha256 !== plan.profile.digest
       || declaration.instructionSha256 !== sha256(plan.profile.input.systemPrompt) || declaration.inputPacketSha256 !== sha256(plan.profile.input.initialPrompt)
-      || declaration.inputOriginId !== `origin:${plan.role}/initial` || plan.initialOrigin.id !== declaration.inputOriginId
+      || declaration.inputOriginId !== urlRoleInputOriginId(plan.role) || plan.initialOrigin.id !== declaration.inputOriginId
       || plan.initialOrigin.canonicalText !== plan.profile.input.initialPrompt || canonical(plan.initialOrigin.binding) !== canonical(binding)
       || canonical([...plan.initialOrigin.classes].sort()) !== canonical(INITIAL_CLASSES) || canonical([...plan.initialOrigin.originIds].sort()) !== canonical([...ROOT_IDS].sort())) refuse();
   }

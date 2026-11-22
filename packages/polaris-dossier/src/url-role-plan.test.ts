@@ -3,35 +3,32 @@ import os from 'node:os';
 import path from 'node:path';
 import { afterEach, describe, expect, it } from 'vitest';
 import { sha256 } from '@syzygy/support';
-import { policyFixture } from './full-run.testkit.js';
+import { makeClone, policyFixture } from './full-run.testkit.js';
 import { parseRunConfig } from './run-config.js';
-import { DOSSIER_CONTENT_CLASSES, NO_WORK_ITEM_REASON, recordRunConfig } from './run-record.js';
+import { DOSSIER_CONTENT_CLASSES, NO_WORK_ITEM_REASON, recordRunConfig, encodeRunRecord } from './run-record.js';
 import { buildDossierScreen } from './screen.js';
 import { createSessionProfile, isOrderedDesignSessionProfile } from './session-profile.js';
 import { screenOrderedDesignInitialRequest } from './session-egress-policy.js';
 import { createSessionController } from './session-controller.js';
 import { URL_CLI_PROGRAM } from './session-launch.js';
-import { URL_ROLES } from './url-run-record.js';
+import { URL_ROLES, URL_ORIGIN_POLICY_PATH, URL_PROFILE_ID, createUrlRunDeclaration, urlSourceTransportIdentity } from './url-run-record.js';
+import { createUrlRunOrigins } from './url-run-origins.js';
 import { isPreparedUrlRolePlan, prepareUrlRolePlans, type UrlRolePlanningOptions } from './url-role-plan.js';
 
 const cleanup: string[] = [];
 afterEach(async () => { for (const root of cleanup.splice(0)) await rm(root, { recursive: true, force: true }); });
-async function fixture(v2 = false) {
+async function fixture() {
   const root = await mkdtemp(path.join(os.tmpdir(), 'urp-')); cleanup.push(root);
   const run = path.join(root, 'own-run'), parent = path.join(root, 'views'), hidden = path.join(root, 'protected'), support = path.join(root, 'support');
   for (const directory of [run, parent, hidden, support]) await mkdir(directory, { mode: 0o700 });
-  const predecessor = policyFixture();
-  const policyBytes = v2 ? await readFile(new URL('../../../.syzygy/governance/policies/POLARIS-DOSSIER-DECLARED-SOURCE-POLICY-v2.json', import.meta.url)) : predecessor.bytes;
-  const document = JSON.parse(Buffer.from(policyBytes).toString()) as { policyId: string; policyVersion: string };
-  const snapshot = { bytes: policyBytes, binding: { ...predecessor.binding, path: v2 ? '.syzygy/governance/policies/POLARIS-DOSSIER-DECLARED-SOURCE-POLICY-v2.json' : predecessor.binding.path,
-    policyId: document.policyId, policyVersion: document.policyVersion, sha256: sha256(policyBytes) } };
-  const built = buildDossierScreen(snapshot.bytes, true, null, 'private'); if (!built.ok) throw new Error();
+  const { clone, commit } = makeClone(root);
+  const snapshot = policyFixture(), built = buildDossierScreen(snapshot.bytes, true, null, 'private'); if (!built.ok) throw new Error();
   const config = parseRunConfig(JSON.stringify({ operator: 'own-operator', agentTool: 'claude-code', agentToolVersion: '2.1.327', agentProvider: 'anthropic',
     model: 'claude-sonnet-4-6', deadline: 'PT1H', agentTurnBudget: 20, maxRepairCycles: 2, maxQuestions: 1, audience: 'own readers', operatorIsOwner: false }));
   if (!config.ok) throw new Error();
   const record = recordRunConfig(config.config, { repository: { url: 'example.invalid/own/source', repositoryId: 'own-source', role: 'observed-source' },
-    clone: { path: path.join(hidden, 'not-read-source'), declaredBy: 'operator', label: 'Inferred', use: 'read' },
-    pinnedRevision: { commit: 'a'.repeat(40), label: 'own fixture', pinnedAt: '2026-11-19T00:00:00.000Z' }, screeningPolicy: snapshot.binding,
+    clone: { path: clone, declaredBy: 'operator', label: 'Inferred', use: 'read' },
+    pinnedRevision: { commit, label: 'own fixture', pinnedAt: '2026-11-19T00:00:00.000Z' }, screeningPolicy: snapshot.binding,
     contentClasses: DOSSIER_CONTENT_CLASSES, visibility: { value: 'private', source: 'conservative-default', declaredBy: 'conservative default', label: 'Inferred' },
     governed: { kind: 'unstated', because: ['own fixture'] }, workItem: { identity: null, reason: NO_WORK_ITEM_REASON } });
   const sourceRoot = new URL('../../../', import.meta.url);
@@ -48,7 +45,7 @@ async function fixture(v2 = false) {
   const options: UrlRolePlanningOptions = { run, record, screen: built.screen,
     sessionDirectories: { author: run, inventory: path.join(root, 'inventory'), fidelity: path.join(root, 'fidelity'), design: path.join(root, 'design') },
     cliExecutable: await realpath(path.join(os.homedir(), '.local/share/claude/versions', URL_CLI_PROGRAM.version)), parent,
-    protectedPaths: [run, hidden], canaries, current: () => true, audit: () => { throw new Error('planning may not launch a CLI'); }, now: Date.now(),
+    protectedPaths: [run, hidden, clone], canaries, current: () => true, audit: () => { throw new Error('planning may not launch a CLI'); }, now: Date.now(),
     runtime: { worker: { node, nodeSha256: sha256(await readFile(node)), bundle: path.join(hidden, 'unused-worker.mjs'), bundleSha256: 'b'.repeat(64) },
       peerProgram: { executable: path.join(hidden, 'unused-peer'), sha256: 'a'.repeat(64) },
       supportDirectory: support, supportSha256: hashes, inputTreeSha256: 'c'.repeat(64), manifestSha256: 'd'.repeat(64), profileRegistrySha256: 'e'.repeat(64) } };
@@ -57,7 +54,7 @@ async function fixture(v2 = false) {
 
 describe('four restricted URL role plans before the brief', () => {
   it('probes four isolated native views and binds each initial host tool call before any CLI launch', async () => {
-    const f = await fixture(true), result = await prepareUrlRolePlans(f.options);
+    const f = await fixture(), result = await prepareUrlRolePlans(f.options);
     expect(result, JSON.stringify(result)).toMatchObject({ ok: true }); if (!result.ok) return;
     cleanup.push(result.socketRoot);
     expect(result.roles.map(plan => plan.role)).toEqual(['author', 'inventory', 'fidelity', 'design']);
@@ -85,7 +82,7 @@ describe('four restricted URL role plans before the brief', () => {
         expect(await readdir(directory)).toEqual([]); expect((await lstat(directory)).mode & 0o777).toBe(0o700);
       }
       const scanSecrets = (text: string) => f.options.screen.screenSecrets(text) !== undefined;
-      expect(plan.initialOrigin.id).toBe(`origin:${plan.role}/initial`);
+      expect(plan.initialOrigin.id).toBe(`origin:role-input-${URL_ROLES.indexOf(plan.role) + 1}`);
       const ordinary = isOrderedDesignSessionProfile(plan.profile) ? createSessionProfile(plan.profile.input) : { ok: true as const, value: { profile: plan.profile } };
       if (!ordinary.ok) throw new Error('own ordinary receipt compiler unavailable');
       const receiptController = () => createSessionController({ profile: ordinary.value.profile, initialOrigin: plan.initialOrigin,
@@ -114,6 +111,26 @@ describe('four restricted URL role plans before the brief', () => {
       }
       for (const other of result.roles.filter(other => other !== plan)) expect(plan.view.protectedPaths).toContain(other.view.workDirectory);
     }
+    const originBytes = await readFile(new URL(`../../../${URL_ORIGIN_POLICY_PATH}`, import.meta.url));
+    const originDoc = JSON.parse(originBytes.toString()) as { policyId: string; policyVersion: string };
+    const originPolicy = { bytes: originBytes, binding: { path: URL_ORIGIN_POLICY_PATH, commit: 'a'.repeat(40),
+      policyId: originDoc.policyId, policyVersion: originDoc.policyVersion, sha256: sha256(originBytes) } };
+    const origins = await createUrlRunOrigins({ runId: path.basename(f.options.run), record: f.options.record, screen: f.options.screen,
+      basePolicyBytes: policyFixture().bytes, originPolicy, current: () => true, roles: result.roles });
+    const identity = urlSourceTransportIdentity('https://example.invalid/own/source');
+    if (!identity.ok) throw new Error('own source identity unavailable');
+    const digest = sha256('own source selection');
+    const sourceTransport = { originalLocator: identity.originalLocator, destination: identity.destination, providerId: identity.providerId,
+      acquisitionId: 'acq-0123456789abcdef0123456789abcdef', metadataClasses: ['code-structure'] as const,
+      selectionOrigin: 'validated-destination-before-acquisition' as const, commandSha256: digest, protocolSha256: digest,
+      configurationSha256: digest, executableSha256: digest, environmentSha256: digest };
+    const declaration = createUrlRunDeclaration(encodeRunRecord(f.options.record.declared, f.options.record.subject), { runId: path.basename(f.options.run), originPolicy: originPolicy.binding,
+      sourceTransport, inference: { provider: 'anthropic', tool: 'claude-code', toolVersion: URL_CLI_PROGRAM.version, model: 'claude-sonnet-4-6',
+        modelSelection: 'supported-default', profile: { id: URL_PROFILE_ID, sha256: f.options.runtime.profileRegistrySha256 } },
+      roles: result.roles.map(plan => plan.declaration), plannedOrigins: origins.plannedOrigins, protectedAudit: 'url-audit:own-run' },
+    { runId: path.basename(f.options.run), expectedBasePolicy: f.options.record.subject.screeningPolicy, expectedOriginPolicy: originPolicy.binding,
+      expectedSourceTransport: sourceTransport, expectedProfileSha256: f.options.runtime.profileRegistrySha256 });
+    expect(declaration, JSON.stringify(declaration)).toMatchObject({ ok: true });
     expect(await readdir(result.viewRoot)).toEqual(expect.arrayContaining([...URL_ROLES, 'support']));
     expect(await readdir(f.options.run)).toEqual([]);
   }, 30_000);

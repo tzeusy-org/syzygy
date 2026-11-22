@@ -26,6 +26,8 @@ export interface UrlRolePlan {
   readonly probe: 'owned-synthetic-namespace-probe-passed';
 }
 const preparedPlans = new WeakSet<UrlRolePlan>();
+/** Fixed host aliases use the canonical role order and declaration ID grammar. */
+export const urlRoleInputOriginId = (role: ViewRole): string => `origin:role-input-${URL_ROLES.indexOf(role) + 1}`;
 /** Host-local evidence of this factory's completed native preparation, never a
  * serialized role assertion or authority for a later launch. */
 export const isPreparedUrlRolePlan = (plan: UrlRolePlan): boolean => preparedPlans.has(plan);
@@ -165,9 +167,9 @@ async function prepare(input: UrlRolePlanningOptions, designVariant: 'ordinary' 
         compiledProfileSha256: profile.digest, commandSha256: prepared.commandSha256, instructionSha256: sha256(prompts.system), viewSha256: prepared.viewSha256,
         scaffoldSha256: sha256(profile.baselineOrigin.canonicalText), mcpSha256: sha256(canonical(profile.baseline.tools)),
         configurationSha256: runtime.profileRegistrySha256, executableSha256: URL_CLI_PROGRAM.sha256,
-        // A slash keeps the host-owned author ID out of the unchanged credential
-        // grammar when receipt values are screened as one composition.
-        inputPacketSha256: sha256(prompts.initial), inputOriginId: `origin:${role}/initial`,
+        // Ordinals avoid a host-generated auth-key match when receipt values
+        // are screened as one composition, without widening the ID grammar.
+        inputPacketSha256: sha256(prompts.initial), inputOriginId: urlRoleInputOriginId(role),
         capture: { pid: 'Unknown', startedAt: 'Unknown', finishedAt: 'Unknown', outcome: 'Unknown' } };
       roles.push(Object.freeze({ role, profile, view: Object.freeze({ ...view, protectedPaths: Object.freeze([...view.protectedPaths]) }),
         declaration: deepFreeze(declaration), probe: prepared.probe, initialOrigin: deepFreeze({ binding, id: declaration.inputOriginId,
