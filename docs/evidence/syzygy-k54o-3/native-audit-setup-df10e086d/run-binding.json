@@ -1,0 +1,116 @@
+{
+  "subjectCommit": "df10e086df8868b0b260e217c88b6b2d3955a1e7",
+  "preparedSourceBindingByDigest": {
+    "bytes": 2575,
+    "sha256": "88f67cf9b35c18aeea210bc7edfe617307f66a52213b66f917ef352f70a12331"
+  },
+  "originalArtifactsByDigest": {
+    "nativeLog": {
+      "bytes": 36139,
+      "sha256": "84225c04dd67e8a85fbce7032e2d2aa4ef527b4c8bd06235e401ff5ae32c389b"
+    },
+    "cut": {
+      "bytes": 137298,
+      "sha256": "3fd4db7b106caec0c5fc718f539032ae1ffc6f08b38c59962b64ea9de8d427a3"
+    },
+    "failure": {
+      "bytes": 40323,
+      "sha256": "6aa54198b8ef594e9918ae900a19190cfda38b42ede575ce212457875c41da33"
+    },
+    "trace": {
+      "bytes": 146927,
+      "sha256": "ebca28fbe47633b642acbeefe224319f650c7794c136dd78f5d010606441fb26"
+    }
+  },
+  "fixture": {
+    "exitCode": 1,
+    "selectedElapsedMilliseconds": 374187,
+    "watchdogMilliseconds": 540000,
+    "suiteElapsedMilliseconds": 377800,
+    "screenOutcome": "transport-unavailable",
+    "resumeChecks": [
+      {
+        "phase": "verify",
+        "ok": true,
+        "nextDesignRound": 2
+      },
+      {
+        "phase": "claim",
+        "exactCut": true,
+        "current": true
+      },
+      {
+        "phase": "resumed-guards",
+        "policyWithdrawal": "refused",
+        "claimWithdrawal": "refused"
+      },
+      {
+        "phase": "machine-claim",
+        "current": true,
+        "claimChecks": 1,
+        "withdrawn": true,
+        "asyncCurrent": true,
+        "asyncWithdrawn": true
+      }
+    ],
+    "resumedSite1": true,
+    "executionRecord": false,
+    "designForwards": 0
+  },
+  "machineState": {
+    "byDigest": {
+      "bytes": 73426,
+      "sha256": "2d5f91c494bf7dbedbb5d8a2a65055da0cc51865fd54594329e19f3e26fcc0d7"
+    },
+    "sealedClients": 8,
+    "freshTerminalAnchors": {
+      "never-issued": 8
+    },
+    "retainedStoreLock": false
+  },
+  "freshAudits": {
+    "author": {
+      "kinds": [
+        "declaration"
+      ],
+      "mtimeUtc": "2026-11-22T13:56:08.145725+00:00",
+      "bytes": 1185,
+      "sha256": "34611dd03277265ff0de94ef36d46cb2442cc60a7c253a0d012945bdd8e1518f"
+    },
+    "inventory": {
+      "kinds": [
+        "declaration"
+      ],
+      "mtimeUtc": "2026-11-22T13:56:08.588731+00:00",
+      "bytes": 1253,
+      "sha256": "6185e80b52bc5275655c0266c163a19598d7b4b909d2517f9b0b55b0656e01df"
+    },
+    "fidelity": {
+      "kinds": [
+        "declaration"
+      ],
+      "mtimeUtc": "2026-11-22T13:56:09.025738+00:00",
+      "bytes": 1251,
+      "sha256": "c5fa42a7b1ed17fa0fe65df4a275c90c62dea0cfea42be8ce07203bef5069b50"
+    },
+    "design": {
+      "kinds": [
+        "declaration",
+        "launch-attempt",
+        "launch-history",
+        "launch-terminal"
+      ],
+      "mtimeUtc": "2026-11-22T13:58:02.917318+00:00",
+      "bytes": 5275,
+      "sha256": "5f07a7f89722f79ef910f894a6af67ab9020de676f6f577500fce8711518ed9c",
+      "terminal": {
+        "outcome": "inspection-failed",
+        "signal": "SIGTERM",
+        "viewTermination": "view-exited",
+        "groupTermination": "confirmed",
+        "toolTermination": "settled",
+        "pendingInvocations": 0
+      }
+    }
+  }
+}

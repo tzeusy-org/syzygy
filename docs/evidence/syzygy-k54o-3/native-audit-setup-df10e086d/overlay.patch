@@ -1,0 +1,328 @@
+diff --git a/packages/polaris-dossier/src/url-run-composed.test.ts b/packages/polaris-dossier/src/url-run-composed.test.ts
+index 74e313a8c..ddbdffc82 100644
+--- a/packages/polaris-dossier/src/url-run-composed.test.ts
++++ b/packages/polaris-dossier/src/url-run-composed.test.ts
+@@ -1,4 +1,6 @@
+ import * as fs from 'node:fs/promises';
++import { channel } from 'node:diagnostics_channel';
++import { closeSync, openSync, writeSync } from 'node:fs';
+ import path from 'node:path';
+ import { afterAll, afterEach, beforeAll, describe, expect, it, vi } from 'vitest';
+ import { encodeCanonicalJson } from '@syzygy/polaris-generation-core/live';
+@@ -111,6 +113,32 @@ function scripted(role: string, calls: readonly (ScriptCall | (() => ScriptCall
+ }
+ 
+ let runtime: UrlRuntime;
++const auditSetupTrace = channel('owned-f3-audit-setup');
++let auditSetupTraceFd: number | undefined;
++const auditSetupRows: string[] = [];
++const retainAuditSetupRow = (message: unknown): void => {
++  auditSetupRows.push(JSON.stringify(message));
++  const event = (message as { event?: unknown }).event;
++  if (auditSetupTraceFd !== undefined && (event === 'setup-ready' || event === 'setup-refused')) {
++    writeSync(auditSetupTraceFd, auditSetupRows.join('\n') + '\n');
++    auditSetupRows.length = 0;
++  }
++};
++beforeAll(() => {
++  const trace = process.env['SYZYGY_COMPOSED_AUDIT_TRACE'];
++  if (trace !== undefined) {
++    auditSetupTraceFd = openSync(trace, 'wx', 0o600);
++    auditSetupTrace.subscribe(retainAuditSetupRow);
++  }
++});
++afterAll(() => {
++  if (auditSetupTraceFd !== undefined) {
++    auditSetupTrace.unsubscribe(retainAuditSetupRow);
++    if (auditSetupRows.length !== 0) writeSync(auditSetupTraceFd, auditSetupRows.join('\n') + '\n');
++    closeSync(auditSetupTraceFd);
++    auditSetupTraceFd = undefined;
++  }
++});
+ const cleanup: (() => Promise<unknown>)[] = [];
+ beforeAll(async () => { await fs.mkdir(recoveryHost.root, { mode: 0o700 }); await fs.chmod(recoveryHost.root, 0o700); runtime = await buildComposedRuntime(); }, 60_000);
+ afterAll(async () => { if (process.env['SYZYGY_COMPOSED_RETAIN'] === undefined) await fs.rm(recoveryHost.root, { recursive: true, force: true }); });
+diff --git a/packages/polaris-dossier/src/url-session-audit.ts b/packages/polaris-dossier/src/url-session-audit.ts
+index f915c6e30..f37fcfbed 100644
+--- a/packages/polaris-dossier/src/url-session-audit.ts
++++ b/packages/polaris-dossier/src/url-session-audit.ts
+@@ -1,3 +1,4 @@
++import { channel } from 'node:diagnostics_channel';
+ import { closeSync, constants, fstatSync, lstatSync, openSync, readSync, realpathSync } from 'node:fs';
+ import { lstat, open, realpath, type FileHandle } from 'node:fs/promises';
+ import path from 'node:path';
+@@ -29,6 +30,18 @@ import { hasReadOrderedDesignTerminal, isIssuedOrderedDesignTerminal, createOrde
+ 
+ export const URL_SESSION_AUDIT_FORMAT = 'url-session-audit/2' as const;
+ export const URL_SESSION_AUDIT_LIMITS = Object.freeze({ events: 4096, eventBytes: 65_536, bytes: 16_777_216, pending: 8, milliseconds: 5000 });
++const auditSetupTrace = channel('owned-f3-audit-setup');
++let auditSetupOrdinal = 0;
++type AuditSetupStage = 'input' | 'profiles' | 'parent-current' | 'parent-realpath' | 'parent-open' | 'parent-stat'
++  | 'segment-open' | 'segment-stat' | 'directory-sync' | 'identities' | 'declaration-build'
++  | 'declaration-prefix-before' | 'declaration-write' | 'declaration-file-sync' | 'declaration-directory-sync'
++  | 'declaration-prefix-after' | 'return';
++type AuditSetupCause = 'guard-poisoned' | 'guard-closing' | 'guard-deadline' | 'timer-current' | 'timer-filesystem'
++  | 'current-false' | 'current-threw' | 'constructor-input' | 'constructor-profile'
++  | 'parent-identity' | 'segment-identity' | 'prefix-mismatch' | 'constructor-refused';
++type AuditSetupEvent = 'setup-entry' | 'cutoff-start' | 'stage-entry' | 'stage-return' | 'segment-created'
++  | 'current-entry' | 'current-return' | 'filesystem-entry' | 'filesystem-return' | 'declaration-committed'
++  | 'first-refusal' | 'setup-refused' | 'setup-ready';
+ type Limits = { readonly [K in keyof typeof URL_SESSION_AUDIT_LIMITS]: number };
+ export interface UrlSessionAuditScope {
+   readonly binding: SessionBinding; readonly originPolicySha256: string; readonly profileSha256: string;
+@@ -385,6 +398,28 @@ export type UrlSessionAuditResult = { readonly ok: true; readonly scope: (role:
+ export async function createUrlSessionAudit(given: UrlSessionAuditOptions): Promise<UrlSessionAuditResult> {
+   let poisoned = false, closing = false, pending = 0, filesystem = 0, callbacks = 0, records = 0, durableBytes = 0, declarations = 0;
+   let tip: string | null = null, limits: Limits = URL_SESSION_AUDIT_LIMITS;
++  const tracingSetup = auditSetupTrace.hasSubscribers;
++  const ordinal = tracingSetup ? ++auditSetupOrdinal : 0;
++  const setupStart = tracingSetup ? performance.now() : 0;
++  let mode: 'initial' | 'resumed' = 'initial';
++  let settingUp = tracingSetup, deadlineAt: number | null = null, firstCause: AuditSetupCause | null = null;
++  let stage: AuditSetupStage = 'input', setupRole: ViewRole | null = null;
++  let created = 0, currentChecks = 0;
++  const trace = (event: AuditSetupEvent, accepted: boolean | null = null): void => {
++    if (!settingUp) return;
++    const at = performance.now();
++    auditSetupTrace.publish({ event, ordinal, mode, stage, role: setupRole, at, elapsed: at - setupStart,
++      remaining: deadlineAt === null ? null : deadlineAt - at, bound: limits.milliseconds,
++      accepted, firstCause, currentChecks, created, declarations, filesystem, callbacks, poisoned, closing });
++  };
++  const traceStage = (next: AuditSetupStage, role: ViewRole | null = null): void => {
++    if (!settingUp) return;
++    stage = next; setupRole = role; trace('stage-entry');
++  };
++  const traceCause = (cause: AuditSetupCause): void => {
++    if (!settingUp || firstCause !== null) return;
++    firstCause = cause; trace('first-refusal', false);
++  };
+   const relayEvents = Object.fromEntries(SESSION_RELAY_EVENTS.map(event => [event, 0])) as Record<SessionAuditEvent['event'], number>;
+   const captured = zeroKinds(), totals = Object.fromEntries(ROLES.map(role => [role, { records: 0, bytes: 0, tipSha256: null, usageReports: 0, usage: zeroUsage() }])) as Record<ViewRole, Totals>;
+   const handles = new Set<FileHandle>(), shutting = new Map<FileHandle, Promise<void>>();
+@@ -394,16 +429,26 @@ export async function createUrlSessionAudit(given: UrlSessionAuditOptions): Prom
+     pendingAppends: pending, pendingFilesystemOperations: filesystem, pendingCallbacks: callbacks, tail: poisoned ? 'Unknown' : 'durable-prefix',
+     termination: closing ? (handles.size || filesystem || callbacks || pending ? 'Unknown' : 'closed') : 'open',
+     providerReceipts: 'Unknown', nativeSendCensus: 'Unknown', completeness: 'Unknown', hostileSameUidIsolation: 'Unknown', limits });
+-  function poison(): never { poisoned = true; throw refused(); }
+-  const guard = (deadline: number): void => { if (poisoned || closing || performance.now() >= deadline) poison(); };
++  function poison(cause?: AuditSetupCause): never {
++    if (cause !== undefined) traceCause(cause);
++    poisoned = true; throw refused();
++  }
++  const guard = (deadline: number): void => {
++    if (poisoned) { traceCause('guard-poisoned'); poison(); }
++    if (closing) { traceCause('guard-closing'); poison(); }
++    if (performance.now() >= deadline) { traceCause('guard-deadline'); poison(); }
++  };
+   const track = <T>(kind: 'filesystem' | 'callback', fn: () => Promise<T> | T): Promise<T> => {
+     if (kind === 'filesystem') filesystem++; else callbacks++;
+     return Promise.resolve().then(fn).finally(() => { if (kind === 'filesystem') filesystem--; else callbacks--; });
+   };
+-  const wait = async <T>(operation: Promise<T>, deadline: number): Promise<T> => {
++  const wait = async <T>(operation: Promise<T>, deadline: number, purpose?: 'current' | 'filesystem'): Promise<T> => {
+     let timer: ReturnType<typeof setTimeout> | undefined;
+     try { return await Promise.race([operation, new Promise<never>((_, reject) => {
+-      timer = setTimeout(() => { poisoned = true; reject(refused()); }, Math.max(1, deadline - performance.now()));
++      timer = setTimeout(() => {
++        if (purpose !== undefined) traceCause(purpose === 'current' ? 'timer-current' : 'timer-filesystem');
++        poisoned = true; reject(refused());
++      }, Math.max(1, deadline - performance.now()));
+     })]); } finally { clearTimeout(timer); }
+   };
+   const shut = (handle: FileHandle): Promise<void> => {
+@@ -428,13 +473,15 @@ export async function createUrlSessionAudit(given: UrlSessionAuditOptions): Prom
+   try {
+     // Retain genuine profile identity for history binding. Snapshot the audit
+     // options and callback ports before the first await.
+-    if (!Array.isArray(given.profiles) || given.profiles.length !== ROLES.length) poison();
++    if (!Array.isArray(given.profiles) || given.profiles.length !== ROLES.length) poison('constructor-profile');
+     const profiles = [given.profiles[0]!, given.profiles[1]!, given.profiles[2]!, given.profiles[3]!];
+     const input = copy({ parent: given.parent, name: given.name, binding: given.binding, originPolicySha256: given.originPolicySha256,
+       project: given.project, pin: given.pin, principal: given.principal, declaredClasses: given.declaredClasses, limits: given.limits ?? {},
+       ...(given.deadline === undefined ? {} : { deadline: given.deadline }),
+       ...(given.firstDesignRound === undefined ? {} : { firstDesignRound: given.firstDesignRound }) });
+     const current = given.current, screenBody = given.screen.screenBody, screenSecrets = given.screen.screenSecrets, policy = given.screen.policySha256;
++    if (settingUp && input.firstDesignRound !== undefined && input.firstDesignRound > 1) mode = 'resumed';
++    trace('setup-entry');
+     if (!exact(given, ['parent', 'name', 'binding', 'originPolicySha256', 'project', 'pin', 'principal', 'profiles', 'declaredClasses', 'screen', 'current', ...(given.limits === undefined ? [] : ['limits']), ...(given.deadline === undefined ? [] : ['deadline']), ...(given.firstDesignRound === undefined ? [] : ['firstDesignRound'])])
+       || !exact(input.binding, ['run', 'sourceBinding', 'policy', 'provider', 'model']) || !Object.values(input.binding).every(id)
+       || (input.deadline !== undefined && (!Number.isSafeInteger(input.deadline) || input.deadline <= Date.now()))
+@@ -446,7 +493,7 @@ export async function createUrlSessionAudit(given: UrlSessionAuditOptions): Prom
+       || !Array.isArray(input.declaredClasses) || !input.declaredClasses.length || input.declaredClasses.length > SESSION_CONTENT_CLASSES.length
+       || new Set(input.declaredClasses).size !== input.declaredClasses.length || input.declaredClasses.some(c => !one(c, SESSION_CONTENT_CLASSES))
+       || [current, screenBody, screenSecrets].some(f => typeof f !== 'function') || !exact(input.limits, Object.keys(input.limits))
+-      || Object.entries(input.limits).some(([key, value]) => !Object.hasOwn(URL_SESSION_AUDIT_LIMITS, key) || !count(value, URL_SESSION_AUDIT_LIMITS[key as keyof Limits]) || value === 0)) poison();
++      || Object.entries(input.limits).some(([key, value]) => !Object.hasOwn(URL_SESSION_AUDIT_LIMITS, key) || !count(value, URL_SESSION_AUDIT_LIMITS[key as keyof Limits]) || value === 0)) poison('constructor-input');
+     limits = Object.freeze({ ...URL_SESSION_AUDIT_LIMITS, ...input.limits });
+     const safe = (value: unknown): void => {
+       const fields: string[] = [], values: string[] = [];
+@@ -462,12 +509,13 @@ export async function createUrlSessionAudit(given: UrlSessionAuditOptions): Prom
+       for (const joined of [fields.join(''), values.join('')]) if (screenBody(joined) !== undefined || screenSecrets(joined) !== undefined) poison();
+     };
+     safe(input);
++    traceStage('profiles');
+     const scopes = new Map<ViewRole, UrlSessionAuditScope>();
+     const roleProfiles = new Map<ViewRole, NativeSessionProfile>();
+-    if (profiles.length !== ROLES.length) poison();
++    if (profiles.length !== ROLES.length) poison('constructor-profile');
+     for (const profile of profiles) {
+       if (!isNativeSessionProfile(profile) || !one(profile.input.binding.role, ROLES) || scopes.has(profile.input.binding.role as ViewRole)
+-        || !equal(profile.input.binding, { ...input.binding, role: profile.input.binding.role }) || !hex(profile.digest)) poison();
++        || !equal(profile.input.binding, { ...input.binding, role: profile.input.binding.role }) || !hex(profile.digest)) poison('constructor-profile');
+       const role = profile.input.binding.role as ViewRole;
+       roleProfiles.set(role, profile);
+       scopes.set(role, copy({ binding: profile.input.binding, originPolicySha256: input.originPolicySha256, profileSha256: profile.digest }));
+@@ -475,26 +523,43 @@ export async function createUrlSessionAudit(given: UrlSessionAuditOptions): Prom
+     const designProfile = roleProfiles.get('design');
+     const orderedDesignProfile = isOrderedDesignSessionProfile(designProfile) ? designProfile : null;
+     const checkCurrent = async (deadline: number): Promise<void> => {
+-      guard(deadline); if (await wait(track('callback', current), deadline) !== true) poison(); guard(deadline);
++      guard(deadline);
++      if (settingUp) currentChecks++;
++      trace('current-entry');
++      let authorized: boolean;
++      try { authorized = await wait(track('callback', current), deadline, 'current') === true; }
++      catch (error) { traceCause('current-threw'); throw error; }
++      trace('current-return', authorized);
++      if (!authorized) { traceCause('current-false'); poison(); }
++      guard(deadline);
+     };
+     const io = async <T>(deadline: number, fn: () => Promise<T>, cleanup = false): Promise<T> => {
+       // Closing verifies the historical physical prefix only; it grants no new
+       // act and must still release descriptors after the run becomes stale.
+       if (!cleanup) await checkCurrent(deadline);
+-      const result = await wait(track('filesystem', fn), deadline);
++      trace('filesystem-entry');
++      const result = await wait(track('filesystem', fn), deadline, 'filesystem');
++      trace('filesystem-return', true);
+       if (!cleanup) { guard(deadline); await checkCurrent(deadline); }
+       else if (poisoned || performance.now() >= deadline) poison();
+       return result;
+     };
+     const acquire = (deadline: number, fn: () => Promise<FileHandle>): Promise<FileHandle> => io(deadline, async () => {
+       const handle = await fn(); handles.add(handle);
++      if (settingUp && stage === 'segment-open') { created++; trace('segment-created', true); }
+       if (poisoned || closing) { void shut(handle); throw refused(); } return handle;
+     });
+     const began = performance.now() + limits.milliseconds;
+-    await checkCurrent(began); if (await io(began, () => realpath(input.parent)) !== input.parent) poison();
++    deadlineAt = began; trace('cutoff-start');
++    traceStage('parent-current'); await checkCurrent(began); trace('stage-return', true);
++    traceStage('parent-realpath'); if (await io(began, () => realpath(input.parent)) !== input.parent) poison('parent-identity');
++    trace('stage-return', true);
++    traceStage('parent-open');
+     const directory = await acquire(began, () => open(input.parent, constants.O_RDONLY | constants.O_DIRECTORY | constants.O_NOFOLLOW));
++    trace('stage-return', true); traceStage('parent-stat');
+     const directoryStat = await io(began, () => directory.stat({ bigint: true }));
+-    if (!directoryStat.isDirectory() || directoryStat.uid !== BigInt(process.getuid?.() ?? -1) || (directoryStat.mode & 0o777n) !== 0o700n) poison();
++    if (!directoryStat.isDirectory() || directoryStat.uid !== BigInt(process.getuid?.() ?? -1) || (directoryStat.mode & 0o777n) !== 0o700n) poison('parent-identity');
++    trace('stage-return', true);
+     type Stat = typeof directoryStat;
+     interface Segment { readonly file: FileHandle; readonly name: string; readonly initial: Stat; prefix: Buffer; modified: bigint; changed: bigint }
+     const segments = new Map<ViewRole, Segment>();
+@@ -518,29 +583,33 @@ export async function createUrlSessionAudit(given: UrlSessionAuditOptions): Prom
+       };
+       if (await inspect(() => realpath(input.parent)) !== input.parent
+         || !sameDirectory(await inspect(() => lstat(input.parent, { bigint: true })))
+-        || !sameDirectory(await inspect(() => directory.stat({ bigint: true })))) poison();
++        || !sameDirectory(await inspect(() => directory.stat({ bigint: true })))) poison('parent-identity');
+       for (const [role, segment] of segments) {
+         const expected = changed?.role === role ? changed : segment;
+         for (const stat of [await inspect(() => segment.file.stat({ bigint: true })), await inspect(() => lstat(path.join(input.parent, segment.name), { bigint: true }))]) {
+-          if (!sameSegment(segment, expected, stat)) poison();
++          if (!sameSegment(segment, expected, stat)) poison('segment-identity');
+         }
+         const buffer = Buffer.alloc(Math.min(65_536, Math.max(1, expected.prefix.length))); let offset = 0;
+         while (offset < expected.prefix.length) {
+           const wanted = Math.min(buffer.length, expected.prefix.length - offset);
+           const read = await inspect(() => segment.file.read(buffer, 0, wanted, offset));
+-          if (read.bytesRead !== wanted || !buffer.subarray(0, wanted).equals(expected.prefix.subarray(offset, offset + wanted))) poison();
++          if (read.bytesRead !== wanted || !buffer.subarray(0, wanted).equals(expected.prefix.subarray(offset, offset + wanted))) poison('prefix-mismatch');
+           offset += wanted;
+         }
+       }
+     };
+     for (const role of ROLES) {
+       const name = `${input.name}-${role}.jsonl`;
++      traceStage('segment-open', role);
+       const file = await acquire(began, () => open(`/proc/self/fd/${directory.fd}/${name}`, constants.O_RDWR | constants.O_CREAT | constants.O_EXCL | constants.O_NOFOLLOW | constants.O_APPEND, 0o600));
++      trace('stage-return', true); traceStage('segment-stat', role);
+       const stat = await io(began, () => file.stat({ bigint: true }));
+-      if (!stat.isFile() || stat.uid !== directoryStat.uid || (stat.mode & 0o777n) !== 0o600n || stat.nlink !== 1n || stat.size !== 0n) poison();
++      if (!stat.isFile() || stat.uid !== directoryStat.uid || (stat.mode & 0o777n) !== 0o600n || stat.nlink !== 1n || stat.size !== 0n) poison('segment-identity');
+       segments.set(role, { file, name, initial: stat, prefix: Buffer.alloc(0), modified: stat.mtimeNs, changed: stat.ctimeNs });
++      trace('stage-return', true);
+     }
+-    await io(began, () => directory.sync()); await io(began, () => inspectIdentities(began));
++    traceStage('directory-sync'); await io(began, () => directory.sync()); trace('stage-return', true);
++    traceStage('identities'); await io(began, () => inspectIdentities(began)); trace('stage-return', true);
+     verifyOnClose = deadline => io(deadline, () => inspectIdentities(deadline, undefined, true), true);
+     const classes = (v: unknown): void => {
+       if (!Array.isArray(v) || v.length === 0 || v.length > SESSION_CONTENT_CLASSES.length || new Set(v).size !== v.length
+@@ -699,7 +768,9 @@ export async function createUrlSessionAudit(given: UrlSessionAuditOptions): Prom
+       try {
+         const tail = await io(deadline, async (): Promise<SegmentPrefix> => {
+           // Each sample after a filesystem stage also admits the next stage.
++          if (declaration) traceStage('declaration-prefix-before', role);
+           await inspectIdentities(deadline);
++          if (declaration) trace('stage-return', true);
+           await checkEffectCurrent(deadline);
+           const writerFd = segment.file.fd, name = `/proc/self/fd/${directory.fd}/${segment.name}`;
+           if (!sameSegment(segment, segment, fstatSync(writerFd, { bigint: true }))
+@@ -707,7 +778,9 @@ export async function createUrlSessionAudit(given: UrlSessionAuditOptions): Prom
+           // Stage the exact append before the underlying write can change the
+           // extent. The new event becomes durable only after both syncs.
+           managedAppend = intent;
++          if (declaration) traceStage('declaration-write', role);
+           const wrote = await segment.file.write(bytes, 0, bytes.length, null);
++          if (declaration) trace('stage-return', true);
+           guard(deadline);
+           if (wrote.bytesWritten !== bytes.length) poison();
+           const stat = fstatSync(writerFd, { bigint: true });
+@@ -716,11 +789,17 @@ export async function createUrlSessionAudit(given: UrlSessionAuditOptions): Prom
+           const full = { prefix: intent.prefix, modified: stat.mtimeNs, changed: stat.ctimeNs };
+           intent.full = full;
+           await checkEffectCurrent(deadline);
++          if (declaration) traceStage('declaration-file-sync', role);
+           await segment.file.sync();
++          if (declaration) trace('stage-return', true);
+           await checkEffectCurrent(deadline);
++          if (declaration) traceStage('declaration-directory-sync', role);
+           await directory.sync();
++          if (declaration) trace('stage-return', true);
+           await checkEffectCurrent(deadline);
++          if (declaration) traceStage('declaration-prefix-after', role);
+           await inspectIdentities(deadline, { ...full, role });
++          if (declaration) trace('stage-return', true);
+           if (checkEffectCurrent !== checkCurrent) await checkEffectCurrent(deadline);
+           return full;
+         });
+@@ -760,7 +839,11 @@ export async function createUrlSessionAudit(given: UrlSessionAuditOptions): Prom
+       payload: { project: input.project, pin: input.pin, principal: input.principal, declaredClasses: input.declaredClasses,
+         profile: roleProfiles.get(role)!.id, limits, capture: 'host-callbacks-only', providerReceipts: 'Unknown', nativeSendCensus: 'Unknown' },
+     }])) as UrlSessionAuditHistoryExpected['declarations'];
+-    for (const role of ROLES) await commit({ kind: 'declaration', role, ...declarationsByRole[role] }, role, began, true);
++    for (const role of ROLES) {
++      traceStage('declaration-build', role);
++      await commit({ kind: 'declaration', role, ...declarationsByRole[role] }, role, began, true);
++      trace('declaration-committed', true);
++    }
+     const unstartedOrdered = new Map<string, UrlOrderedDesignHistoryExpected>();
+     const stoppedOrderedHistory: (() => UrlOrderedDesignHistoryExpected | null)[] = [];
+     const closedHistory = (): UrlSessionAuditHistoryExpected | null => {
+@@ -1300,11 +1383,14 @@ export async function createUrlSessionAudit(given: UrlSessionAuditOptions): Prom
+       await enqueue({ kind: 'machine-peer', role: event.role, scope: scopes.get(event.role)!, payload: event }, 'machine-peer');
+     };
+     const append = async (event: UrlSessionAuditEvent): Promise<void> => { await enqueue(event, null); };
++    traceStage('return'); trace('setup-ready', true); settingUp = false;
+     return Object.freeze({ ok: true as const, scope: (role: ViewRole) => { const scope = scopes.get(role); if (!scope) poison(); return scope!; },
+       append, appendMachinePeer, beginOrderedDesignAudit, commitLaunchHistory, commitDesignDelivery, revalidateDesignDelivery, readDesignDeliveryView,
+       commitDesignArtifactRead, readDesignReviewProof, readOrderedDesignReviewProof, commitOrderedDesignVerdict, commitDesignVerdict,
+       readDesignRenderContinuation, prepareDesignRenderContinuation, close, closedHistory, summary });
+   } catch {
+-    poisoned = true; await close(); return Object.freeze({ ok: false as const, code: 'url-session-audit-unavailable' as const, summary });
++    traceCause('constructor-refused');
++    poisoned = true; trace('setup-refused', false); settingUp = false;
++    await close(); return Object.freeze({ ok: false as const, code: 'url-session-audit-unavailable' as const, summary });
+   }
+ }

@@ -1,0 +1,80 @@
+{
+  "exactCommit": "df10e086df8868b0b260e217c88b6b2d3955a1e7",
+  "exactTree": "a63b71201c5a39e31e4f8d43e92d9ea09338c97d",
+  "patch": {
+    "bytes": 24151,
+    "sha256": "1a30ad0f0cd03f6b969e6741ec8d6c3c46087067c2af8bd952be817e96852a67"
+  },
+  "patchedFiles": {
+    "packages/polaris-dossier/src/url-run-composed.test.ts": {
+      "base": {
+        "bytes": 44817,
+        "sha256": "f999e7d0183f2187db676805d1978681d822198620e10938d7ebec229989f24e"
+      },
+      "overlaid": {
+        "bytes": 45942,
+        "sha256": "bffed337b5ab2554555269388010c20155ab8fe5ad9e3e2069296da74ff1245f"
+      }
+    },
+    "packages/polaris-dossier/src/url-session-audit.ts": {
+      "base": {
+        "bytes": 98696,
+        "sha256": "78292e4a0ac1ac6abe235adee9da523eb406258ec6390b5b27109244e0415aee"
+      },
+      "overlaid": {
+        "bytes": 103673,
+        "sha256": "294eb15dab28e7c8b44a6e56ce287f3230540a366b737145ab30745d7d87b85f"
+      }
+    }
+  },
+  "selectedFixture": {
+    "project": "integration",
+    "file": "packages/polaris-dossier/src/url-run-composed.test.ts",
+    "selector": "to stop-resume$",
+    "fixtureWatchdogMilliseconds": 540000,
+    "auditOperationMilliseconds": 5000
+  },
+  "replayBeforeOverlay": {
+    "retainedSourceBindingByDigest": {
+      "bytes": 8737,
+      "sha256": "280dddad9988a7dca903de7b7adf13c3103e26e4f296633c16cca512c7d5c524"
+    },
+    "retainedEvidence": {
+      "log": {
+        "bytes": 35753,
+        "sha256": "d4da84b284ef50cc93d1d1a6dcd517508677ac7972323d2e65b671d7bd28d34e"
+      },
+      "trace": {
+        "bytes": 4781,
+        "sha256": "6dac8920b16bd8be0b4b5df9ba063b9c47bed70b5aaf45131606ab873c04e1c9"
+      },
+      "cut": {
+        "bytes": 137298,
+        "sha256": "2e8df9a2ebe3ec41228632ab63152ca3269e0bd18817ed339805ba887fb7e1f9"
+      },
+      "failure": {
+        "bytes": 40165,
+        "sha256": "51a0d29a265da6b020dea5eb769bf0b91885fb6f45926779ae4730b594511b6a"
+      }
+    }
+  },
+  "verification": {
+    "patchSyntaxParsed": 2,
+    "nativeExecuted": false,
+    "buildExecuted": false
+  },
+  "originalPreparedBindingByDigest": {
+    "bytes": 2049,
+    "sha256": "c9b7b90fefcbec8757e692ad160c4a433c71adfe9861391944c746f34d36feb6"
+  },
+  "unchangedCandidateFiles": {
+    "packages/polaris-dossier/src/url-machine-store.ts": {
+      "bytes": 47710,
+      "sha256": "44e6768c59e6e963eaacb0852b683a2ade554cd2d02f49cc224a24d98c295fca"
+    },
+    "packages/polaris-dossier/src/url-machine-store.test.ts": {
+      "bytes": 33016,
+      "sha256": "214f490bb13bdc42130122b21d981573acfc4ae28c64ea77b5f10776ca2e8318"
+    }
+  }
+}
