@@ -31,6 +31,7 @@ const SITE = 'apps/three-surface-poc/src/polaris-generation/dossier-site.ts';
 const MUTANTS = [
   // The reader rule (syzygy-3efd.74).
   ['read-nonblock', READ, 'fs.constants.O_RDONLY | fs.constants.O_NONBLOCK', 'fs.constants.O_RDONLY'],
+  ['read-noctty', READ, 'fs.constants.O_NONBLOCK | fs.constants.O_NOCTTY', 'fs.constants.O_NONBLOCK'],
   ['read-regular-file', READ, 'if (!stats.isFile()) throw new NotARegularFileError();', 'if (false) throw new NotARegularFileError();'],
   ['read-size-first', READ, 'if (stats.size > maxBytes) throw new BoundedJsonError(\'byte-limit\');', 'if (false) throw new BoundedJsonError(\'byte-limit\');'],
   ['read-limit-plus-one', READ, 'const limit = maxBytes + 1;', 'const limit = maxBytes + 2;'],

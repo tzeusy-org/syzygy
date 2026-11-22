@@ -680,8 +680,8 @@ export function latestChecks(run: string): { readonly draft: CheckRecord; readon
   return { draft: latestRecord(path.join(run, RUN_LAYOUT.checks), REVISION_FILE, readCheckRecord), inventory: latestRecord(path.join(run, INVENTORY_CHECKS), REVISION_FILE, readCheckRecord) };
 }
 
-/** A review check record as the supervisor reads it today: with no bound. Neither version 2.10 nor its beads reach it; it is left as it
- * was, beside the reads syzygy-3efd.76 names, for a follow-on to bound. */
+/** A review check record as the supervisor reads it today: with no bound. Version 2.10 does not reach it; it is left as it was, and
+ * syzygy-3efd.76 names it among the reads still to bound. */
 const readReviewCheckUnbounded = (file: string): unknown => JSON.parse(fs.readFileSync(file, 'utf8'));
 
 function latestRecord(dir: string, pattern: RegExp, read: (file: string) => unknown): { n: number; doc: Record<string, unknown> } | null {

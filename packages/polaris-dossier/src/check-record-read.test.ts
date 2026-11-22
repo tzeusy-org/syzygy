@@ -204,4 +204,20 @@ describe('the check-record reader rule (version 2.10)', () => {
     } finally { restore(); }
     expect(reads).toEqual([17]);
   });
+
+  // Review note 7: a terminal device at the path must never become the reader's controlling terminal. That outcome is observable only in
+  // a process with no controlling terminal opening a pseudo-terminal, which node cannot allocate without a native module, so this pins the
+  // open's flags instead: read-only, non-blocking and no controlling terminal, and nothing else.
+  it('opens the path read-only, without blocking and never as a controlling terminal', () => {
+    const { subject } = plantAt((file) => fs.writeFileSync(file, '{}'));
+    const flags: unknown[] = [];
+    const restore = patchFs('openSync', (original) => ((file: fs.PathLike, ...rest: unknown[]) => {
+      if (file === subject) flags.push(rest[0]);
+      return (original as (...args: unknown[]) => number)(file, ...rest);
+    }) as typeof original);
+    try { readCheckRecord(subject); } finally { restore(); }
+    expect(flags).toEqual([fs.constants.O_RDONLY | fs.constants.O_NONBLOCK | fs.constants.O_NOCTTY]);
+    // On Linux: 0, 0o4000 and 0o400.
+    expect(flags).toEqual([0o4400]);
+  });
 });
