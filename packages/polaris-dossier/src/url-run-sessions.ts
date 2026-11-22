@@ -282,14 +282,18 @@ async function start(options: UrlRunSessionsOptions, ports: typeof native): Prom
       return 'settled';
     } catch { fail('role-ended'); return 'refused'; }
   };
-  const effectCurrent = (): boolean => {
-    if (stopping || failure !== null || !budget.current()) return false;
-    if (resume !== undefined && !isClaimedStoppedUrlRun(resume.verified, resume.claim)) { fail('binding-changed'); return false; }
+  const effectBudgetCurrent = (): boolean => !stopping && failure === null && budget.current();
+  const effectEnvironmentCurrent = (): boolean => {
     try { if (options.stopRequested?.() === true) return false; }
     catch { fail('control-unavailable'); return false; }
     if (!withinCpuBudget()) { fail('cpu-budget'); return false; }
     if ([...hostHealth.values()].some(healthy => !healthy())) { fail('transport-unavailable'); return false; }
     return true;
+  };
+  const effectCurrent = (): boolean => {
+    if (!effectBudgetCurrent()) return false;
+    if (resume !== undefined && !isClaimedStoppedUrlRun(resume.verified, resume.claim)) { fail('binding-changed'); return false; }
+    return effectEnvironmentCurrent();
   };
   const current = (): Promise<boolean> => checkUrlSessionCurrent({ settleCompletedDesign, effectCurrent,
     current: options.current, bindingChanged: () => fail('binding-changed') });
@@ -440,7 +444,10 @@ async function start(options: UrlRunSessionsOptions, ports: typeof native): Prom
       const production = options.production!;
       machine = await createUrlRunMachine({ ...production, originPolicySha256: options.originPolicySha256,
         pin: record.subject.pinnedRevision.commit, runId: binding.run, runtime: options.runtime, plans,
-        deadline: options.deadline, now: options.now, current: production.current, effectCurrent, reverify: options.current,
+        deadline: options.deadline, now: options.now, current: production.current, reverify: options.current,
+        // The machine checks the exact held claim through resume.current
+        // immediately before checking these local effect conditions.
+        effectCurrent: () => effectBudgetCurrent() && effectEnvironmentCurrent(),
         launch: role => processes.get(role), audit: event => audit.appendMachinePeer(event),
         ...(resume === undefined ? {} : { resume: { history: resume.verified.machine,
           identitySha256: resume.verified.machine.identitySha256, current: () => isClaimedStoppedUrlRun(resume.verified, resume.claim) } }),

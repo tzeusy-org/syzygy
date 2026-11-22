@@ -22,6 +22,7 @@ import { reconstructColdUrlRunMachineHistory } from './url-machine-cold-history.
 import { readVerifiedUrlAuditLaunches, verifyUrlSessionAuditHistory, type UrlSessionAuditHistoryOptions } from './url-session-audit-history.js';
 import { verifyColdOrderedDesignAuditHistory } from './url-ordered-design-audit-history.js';
 import * as recovery from './url-recovery.js';
+import * as runMachine from './url-run-machine.js';
 import * as policySnapshot from './policy-snapshot.js';
 
 const recoveryHost = await vi.hoisted(async () => {
@@ -488,10 +489,28 @@ describe('composed URL run with actual role processes', { timeout: 360_000 }, ()
             resumeChecks.push({ phase: 'claim', exactCut: claimedExactCut, current: result?.current() });
             return result;
           });
+          const createMachine = runMachine.createUrlRunMachine;
+          const machineChecks: { current: boolean; claimChecks: number; withdrawn: boolean }[] = [];
+          vi.spyOn(runMachine, 'createUrlRunMachine').mockImplementationOnce(async options => {
+            const machine = await createMachine(options);
+            const checkClaim = vi.spyOn(recovery, 'isClaimedStoppedUrlRun');
+            const current = machine.current(), claimChecks = checkClaim.mock.calls.length;
+            checkClaim.mockRestore();
+            const lock = path.join(recoveryHost.root, `${sha256(f.run)}.recovery.lock`);
+            const withdrawn = `${lock}.machine-withdrawal`;
+            await fs.rename(lock, withdrawn);
+            try {
+              const observation = { current, claimChecks, withdrawn: !machine.current() };
+              machineChecks.push(observation);
+              resumeChecks.push({ phase: 'machine-claim', ...observation });
+            } finally { await fs.rename(withdrawn, lock); }
+            return machine;
+          });
           if (cut) designRound = 2;
           vi.stubEnv('CLAUDE_CODE_OAUTH_TOKEN', undefined);
           vi.stubEnv('ANTHROPIC_API_KEY', 'OWN_SYNTHETIC_COMPOSED_CREDENTIAL');
           const exit = await runPolarisCli(['--supervise', '--resume', f.run, '--state-root', stateRoot], f.ports);
+          expect(machineChecks).toEqual([{ current: true, claimChecks: 1, withdrawn: true }]);
           expect(exit).toBe(0);
           expect(verifiedCuts).toHaveLength(1);
           expect(verifiedCuts[0]).toMatchObject({ ok: true, nextDesignRound: 2,
