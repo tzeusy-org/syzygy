@@ -237,7 +237,7 @@ const TOOLS = ['source_read', 'artifact_read', 'artifact_write', 'dossier_step']
 // Live launch evidence requires the selected values, including overrides. This
 // writer never reopens historical segments or upgrades an old record to a grant.
 const LAUNCH_LIMIT_KEYS = ['milliseconds', 'setupMilliseconds', 'cleanupMilliseconds', 'cpuSeconds', 'addressBytes',
-  'fileBytes', 'storageBytes', 'entries', 'processes', 'outputBytes', 'descriptors', 'sampleMilliseconds'] as const satisfies readonly (keyof UrlLaunchLimits)[];
+  'fileBytes', 'storageBytes', 'entries', 'processes', 'outputBytes', 'descriptors', 'sampleMilliseconds', 'inspectionMilliseconds'] as const satisfies readonly (keyof UrlLaunchLimits)[];
 const SIGNALS = ['SIGABRT', 'SIGALRM', 'SIGBUS', 'SIGCHLD', 'SIGCONT', 'SIGFPE', 'SIGHUP', 'SIGILL', 'SIGINT', 'SIGIO', 'SIGIOT',
   'SIGKILL', 'SIGPIPE', 'SIGPOLL', 'SIGPROF', 'SIGPWR', 'SIGQUIT', 'SIGSEGV', 'SIGSTKFLT', 'SIGSTOP', 'SIGSYS', 'SIGTERM', 'SIGTRAP',
   'SIGTSTP', 'SIGTTIN', 'SIGTTOU', 'SIGUNUSED', 'SIGURG', 'SIGUSR1', 'SIGUSR2', 'SIGVTALRM', 'SIGWINCH', 'SIGXCPU', 'SIGXFSZ'];

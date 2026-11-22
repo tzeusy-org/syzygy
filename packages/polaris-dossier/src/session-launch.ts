@@ -4,6 +4,7 @@ import { constants, type Stats } from 'node:fs';
 import { chmod, lstat, open, opendir, readdir, realpath } from 'node:fs/promises';
 import { createServer, type Server, type Socket } from 'node:net';
 import path from 'node:path';
+import { setImmediate as yieldToPoll } from 'node:timers/promises';
 import { encodeCanonicalJson } from '@syzygy/polaris-generation-core/live';
 import { deepFreeze, sha256 } from '@syzygy/support';
 import type { SessionHost } from './session-host.js';
@@ -15,7 +16,7 @@ import { probeUrlSessionView, URL_SESSION_BWRAP, urlSessionBwrapArgs, urlSession
 export { URL_CLI_PROGRAM };
 export const URL_LAUNCH_LIMITS = Object.freeze({ milliseconds: 1_800_000, setupMilliseconds: 20_000, cleanupMilliseconds: 2500,
   cpuSeconds: 600, addressBytes: 68_719_476_736, fileBytes: 2_097_152, storageBytes: 16_777_216,
-  entries: 16_384, processes: 64, outputBytes: 8_388_608, descriptors: 256, sampleMilliseconds: 200 });
+  entries: 16_384, processes: 64, outputBytes: 8_388_608, descriptors: 256, sampleMilliseconds: 200, inspectionMilliseconds: 1000 });
 export type UrlLaunchLimits = { readonly [K in keyof typeof URL_LAUNCH_LIMITS]: number };
 const canonical = (value: unknown): string => encodeCanonicalJson(value, { maxBytes: 2_097_152, maxNodes: 65_536, maxDepth: 32 });
 const TOOLS = ['source_read', 'artifact_read', 'artifact_write', 'dossier_step'] as const;
@@ -105,7 +106,10 @@ async function fileDigest(file: string, maxBytes: number, check: () => void): Pr
     if (!before.isFile() || before.nlink !== 1 || (before.mode & 0o022) !== 0 || before.size > maxBytes) throw refused();
     const hash = createHash('sha256'), buffer = Buffer.alloc(1_048_576); let count = 0;
     for (;;) { check(); const { bytesRead } = await handle.read(buffer, 0, buffer.length, null); check(); if (!bytesRead) break;
-      count += bytesRead; if (count > maxBytes) throw refused(); hash.update(buffer.subarray(0, bytesRead)); }
+      count += bytesRead; if (count > maxBytes) throw refused(); hash.update(buffer.subarray(0, bytesRead));
+      // A hot image can finish each read in the same poll phase. Let already
+      // running role samplers publish before hashing the next bounded chunk.
+      await yieldToPoll(); }
     const after = await handle.stat(), named = await lstat(file); check();
     if (count !== before.size || ['dev', 'ino', 'size', 'mtimeMs', 'ctimeMs'].some(key => before[key as keyof typeof before] !== after[key as keyof typeof after]
       || before[key as keyof typeof before] !== named[key as keyof typeof named])) throw refused();
@@ -391,8 +395,10 @@ export async function launchRestrictedUrlSession(input: { readonly preparation: 
     let sampleActive = true;
     const sampleBegan = performance.now();
     const checkSample = (): void => {
-      if (!sampleActive || exited || finishedCapture || reason !== 'exited' || performance.now() - sampleBegan >= limits.sampleMilliseconds) throw refused();
+      if (!sampleActive || exited || finishedCapture || reason !== 'exited' || performance.now() - sampleBegan >= limits.inspectionMilliseconds) throw refused();
     };
+    // Cadence and completion are separate finite limits. Other native roles
+    // and the shared host may delay descriptor IO; admit no partial census.
     pendingSample = bounded(async () => {
       // The walks share a deadline. Keep storage's earlier refusal and
       // publication order even if the process walk completes first.
@@ -411,7 +417,7 @@ export async function launchRestrictedUrlSession(input: { readonly preparation: 
       const stillCurrent = await state.current();
       checkSample();
       if (stillCurrent !== true) stop('inspection-failed');
-    }, limits.sampleMilliseconds).catch(() => { if (!exited && !finishedCapture) stop('inspection-failed'); })
+    }, limits.inspectionMilliseconds).catch(() => { if (!exited && !finishedCapture) stop('inspection-failed'); })
       .finally(() => { sampleActive = false; pendingSample = undefined; });
   }, limits.sampleMilliseconds);
   const wall = setTimeout(() => stop('wall-limit'), limits.milliseconds);
