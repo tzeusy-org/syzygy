@@ -84,6 +84,12 @@ export interface UrlSessionProcess {
   waitForSample(): Promise<boolean>;
   stop(): Promise<UrlSessionLaunchOutcome>;
 }
+const launchedProcesses = new WeakSet<object>();
+/** Identity only: a copied PID/outcome tuple cannot stand in for a launch the
+ * supervisor actually prepared and started. Liveness is checked separately. */
+export function isUrlSessionProcess(value: unknown): value is UrlSessionProcess {
+  return value !== null && typeof value === 'object' && launchedProcesses.has(value);
+}
 async function fileDigest(file: string, maxBytes: number, check: () => void): Promise<{ readonly bytes: number; readonly sha256: string }> {
   if (await realpath(file) !== file) throw refused(); check();
   const handle = await open(file, constants.O_RDONLY | constants.O_NOFOLLOW | constants.O_NONBLOCK);
@@ -412,10 +418,12 @@ export async function launchRestrictedUrlSession(input: { readonly preparation: 
       sampledStorageBytes, peakProcesses, aggregateEnforcement: 'sampled-stop-only', betweenSamples: 'Unknown' });
   })();
   if (child.pid === undefined) { await finished; throw refused(); }
-  return Object.freeze({ pid: child.pid, commandSha256: input.preparation.commandSha256, finished,
+  const launched: UrlSessionProcess = Object.freeze({ pid: child.pid, commandSha256: input.preparation.commandSha256, finished,
     waitForSample: async () => {
       await pendingSample;
       return !exited && !finishedCapture && reason === 'exited';
     },
     stop: () => { stop('stopped'); return finished; } });
+  launchedProcesses.add(launched);
+  return launched;
 }

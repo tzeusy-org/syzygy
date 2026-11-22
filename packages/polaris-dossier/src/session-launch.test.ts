@@ -27,7 +27,7 @@ import { createOrderedDesignSession } from './url-ordered-design-session.js';
 import { createUrlSessionBudget } from './url-session-budget.js';
 import { createUrlSessionAudit } from './url-session-audit.js';
 import { urlSessionMcpSupportPath } from './url-runtime.js';
-import { URL_CLI_PROGRAM, URL_LAUNCH_LIMITS, launchRestrictedUrlSession, prepareRestrictedUrlSession, restrictedSessionCliArgs, verifySupportedUrlCli, type UrlSessionLaunchOptions } from './session-launch.js';
+import { URL_CLI_PROGRAM, URL_LAUNCH_LIMITS, launchRestrictedUrlSession, isUrlSessionProcess, prepareRestrictedUrlSession, restrictedSessionCliArgs, verifySupportedUrlCli, type UrlSessionLaunchOptions } from './session-launch.js';
 import { URL_SESSION_BWRAP, urlSessionBwrapArgs, urlSessionCommand, urlSessionViewFor } from './session-url-view.js';
 
 const cleanup: (() => Promise<unknown> | void)[] = [];
@@ -715,6 +715,9 @@ describe('prepared private CLI launch',()=>{
     expect(await readdir(f.launch.view.brokerSocketDirectory)).toEqual([]);expect(await readdir(f.launch.view.relaySocketDirectory)).toEqual([]);
     expect(f.counts()).toEqual({artifactReads:0,forwards:0,responses:0,reservations:0});
     const host=await f.start();const child=await launchRestrictedUrlSession({preparation,host});
+    expect(isUrlSessionProcess(child)).toBe(true);
+    expect(isUrlSessionProcess({ ...child })).toBe(false);
+    expect(isUrlSessionProcess({ pid: child.pid, commandSha256: child.commandSha256 })).toBe(false);
     const result=await child.finished;
     expect(result,JSON.stringify({events:f.events,counts:f.counts(),diagnostics:f.diagnostics,result})).toMatchObject({outcome:'exited',exitCode:0,signal:null,viewTermination:'view-exited',groupTermination:'confirmed',toolTermination:'settled',pendingInvocations:0,aggregateEnforcement:'sampled-stop-only',betweenSamples:'Unknown'});
     expect(f.counts()).toEqual({artifactReads:1,forwards:2,responses:2,reservations:2});
