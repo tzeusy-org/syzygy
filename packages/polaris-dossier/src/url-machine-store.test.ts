@@ -11,6 +11,7 @@ import { encodeCanonicalJson } from '@syzygy/polaris-generation-core/live';
 import { sha256 } from '@syzygy/support';
 import { initializeUrlMachineStore, openUrlMachineStore, type UrlMachineStore, type UrlMachineStoreOptions } from './url-machine-store.js';
 import { publishUrlMachineLifecycle } from './url-machine-lifecycle.js';
+import { createOrderedDesignSessionProfile, createSessionProfile, DEFAULT_SESSION_MODEL, type NativeSessionProfile } from './session-profile.js';
 import { URL_MACHINE_CLIENT_LIMITS, type UrlMachineClientContext, type UrlMachineClientRecord } from './url-machine-instance.js';
 
 const NOW = Date.parse('2026-11-22T01:00:00.000Z');
@@ -41,11 +42,11 @@ async function fixture(duration = 60_000) {
   const store = await initializeUrlMachineStore(options);
   expect(store).not.toBeNull();
   cleanup.push(() => store!.close());
-  const allocate = async () => {
+  const allocate = async (profile?: NativeSessionProfile) => {
     const allocated = await store!.allocateClient(options.deadline);
     if (!allocated) throw new Error('owned fixture slot refused');
-    const context: UrlMachineClientContext = { clientId: allocated.clientId, policySha256: id(), profileSha256: id(), sourcePin: 'a'.repeat(40),
-      runId: `run-${'b'.repeat(32)}`, role: 'design', kind: 'mcp-shim', allowedScopes: ['artifact_read', 'dossier_step'], now: NOW, deadline: options.deadline };
+    const context: UrlMachineClientContext = { clientId: allocated.clientId, policySha256: id(), profileSha256: profile?.digest ?? id(), sourcePin: 'a'.repeat(40),
+      runId: profile?.input.binding.run ?? `run-${'b'.repeat(32)}`, role: 'design', kind: 'mcp-shim', allowedScopes: ['artifact_read', 'dossier_step'], now: NOW, deadline: options.deadline };
     const record: UrlMachineClientRecord = { format: 'polaris-dossier-local-machine-client/1', clientId: context.clientId, issuanceId: id(),
       revision: 1, projectId: 'project:syzygy', policySha256: context.policySha256, sourcePin: context.sourcePin, runId: context.runId,
       role: context.role, kind: context.kind, scopes: ['artifact_read'], issuedAt: new Date(NOW - 1000).toISOString(),
@@ -61,7 +62,68 @@ async function fixture(duration = 60_000) {
   return { root, options, canonicalRoot, store: store!, allocate, tick: (instant: number) => { now = instant; }, revoke: () => { valid = false; } };
 }
 
+function effectProfile(ordered: boolean): NativeSessionProfile {
+  const compiled = (ordered ? createOrderedDesignSessionProfile : createSessionProfile)({
+    binding: { run: `run-${'b'.repeat(32)}`, role: 'design', sourceBinding: id(), policy: id(), provider: 'anthropic', model: DEFAULT_SESSION_MODEL },
+    sessionId: '12345678-1234-4234-8234-123456789012', systemPrompt: 'Review owned material.',
+    initialPrompt: 'Inspect every ordered part.', utcDate: '2026-11-22', kernelRelease: os.release(),
+  });
+  if (!compiled.ok) throw new Error('owned profile refused');
+  return compiled.value.profile;
+}
+
 describe('protected URL machine lifecycle files', { timeout: 30_000 }, () => {
+  it.each(['unprofiled', 'ordinary', 'ordered'] as const)('bounds %s effects by the matching declared profile while retaining finite expiry', async kind => {
+    const profile = effectProfile(kind === 'ordered'), f = await fixture(), slot = await f.allocate(profile);
+    expect((await slot.publish()).ok).toBe(true);
+    expect(slot.context.policySha256).not.toBe(profile.input.binding.policy);
+    const original = performance.now.bind(performance);
+    let offset = 0;
+    const clock = vi.spyOn(performance, 'now').mockImplementation(() => original() + offset);
+    try {
+      let afterSixSeconds: boolean | undefined, afterThirtySeconds: boolean | undefined;
+      const result = await f.store.exclusive(slot.context.clientId, f.options.deadline, async lease => {
+        offset = 6000; afterSixSeconds = lease.current();
+        offset = 30_001; afterThirtySeconds = lease.current();
+      }, kind === 'unprofiled' ? undefined : profile);
+      expect(afterSixSeconds).toBe(kind === 'ordered');
+      expect(afterThirtySeconds).toBe(false);
+      expect(result).toBe(false);
+    } finally { clock.mockRestore(); }
+  });
+
+  it('rejects copied, oversized and mismatched effect profiles before entry', async () => {
+    const profile = effectProfile(true), f = await fixture(), slot = await f.allocate(profile);
+    expect((await slot.publish()).ok).toBe(true);
+    for (const candidate of [
+      { ...profile },
+      { ...profile, transcript: { ...('transcript' in profile ? profile.transcript : {}), nativeEffectMilliseconds: 30_001 } },
+      effectProfile(true),
+    ]) {
+      let entered = false;
+      expect(await f.store.exclusive(slot.context.clientId, f.options.deadline, async () => { entered = true; }, candidate as NativeSessionProfile)).toBe(false);
+      expect(entered).toBe(false);
+    }
+  });
+
+  it.each(['original-deadline', 'revocation'] as const)('prevents publication after %s during a declared ordered effect', async fault => {
+    const profile = effectProfile(true), f = await fixture(), slot = await f.allocate(profile);
+    expect((await slot.publish()).ok).toBe(true);
+    const before = await readFile(slot.file), projection = await readFile(slot.projection);
+    const wrapped = { ...f.store, exclusive: (clientId, deadline, operation) => f.store.exclusive(clientId, deadline, lease => operation({ ...lease,
+      preflightCanonical: async (...args) => {
+        const checked = await lease.preflightCanonical!(...args);
+        expect(checked).toBe(true);
+        if (fault === 'original-deadline') f.tick(f.options.deadline); else f.revoke();
+        expect(lease.current()).toBe(false);
+        return checked;
+      },
+    }), profile) } satisfies UrlMachineStore;
+    expect((await slot.publish({ ...slot.record, revision: 2 }, { revision: 1, sha256: sha256(before) }, wrapped)).ok).toBe(false);
+    expect(await readFile(slot.file)).toEqual(before);
+    expect(await readFile(slot.projection)).toEqual(projection);
+  });
+
   it('publishes through actual files, reopens the store, and refuses canonical plus projection rollback after revocation', async () => {
     const f = await fixture(), slot = await f.allocate();
     const first = await slot.publish();
