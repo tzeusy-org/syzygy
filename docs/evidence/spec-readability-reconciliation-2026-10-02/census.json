@@ -611,7 +611,7 @@
     },
     "POLARIS": {
       "requirements": 39,
-      "scenarios": 453,
+      "scenarios": 455,
       "members": {
         "REQ-polaris-generation-001": {
           "name": "Admitted project input",
@@ -1126,6 +1126,8 @@
             "Subsection titles and withheld subsections",
             "Makefile recipe inside a conditional",
             "Makefile tab-led line that is no recipe line",
+            "Makefile continuation lines and define bodies",
+            "Makefile directive lines are never rules",
             "Brief v13 states subsections"
           ]
         },
