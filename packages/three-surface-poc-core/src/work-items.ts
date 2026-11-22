@@ -49,7 +49,7 @@ export interface GoverningIntentUnknown {
 
 /** The basis sentence of every work item's governing-intent Unknown. */
 export const GOVERNING_INTENT_UNKNOWN_BASIS =
-  'No governing intent was captured for this work item: the observation reads no link from an item to the intent that warrants it, and none is taken from its title.';
+  'No governing intent was captured for any work item: the observation reads no link from an item to the intent that warrants it, and none is taken from its title.';
 
 /** POC-REQ-014: `Unknown`, primary reason `source-uncaptured-or-unreachable`,
  * and that reason's RFC2-24 route. The same value for every item. */
@@ -59,12 +59,6 @@ export function governingIntentUnknown(): GoverningIntentUnknown {
     closedReason: 'source-uncaptured-or-unreachable',
     resolutionRoutes: [resolutionRoute('source-uncaptured-or-unreachable')],
   };
-}
-
-/** The disclosure twin of an item's governing intent: the served value
- * with its basis sentence, as every rendered Unknown carries one. */
-export function governingIntentDisclosure(governedBy: GoverningIntentUnknown): PocUnknown {
-  return unknown(governedBy.closedReason, GOVERNING_INTENT_UNKNOWN_BASIS);
 }
 
 /** Every served item's title, stated once on the observation rather than on

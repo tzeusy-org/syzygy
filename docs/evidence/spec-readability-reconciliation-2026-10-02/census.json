@@ -276,7 +276,7 @@
     },
     "POC": {
       "requirements": 26,
-      "scenarios": 35,
+      "scenarios": 37,
       "members": {
         "POC-REQ-001": {
           "name": "Code-structure observation is bound to an exact revision",
@@ -378,7 +378,8 @@
         "POC-REQ-040": {
           "name": "Trajectory columns come from the closed status vocabulary",
           "scenarios": [
-            "Items placed by observed status"
+            "Items placed by observed status",
+            "A card shows its own facts"
           ]
         },
         "POC-REQ-041": {
@@ -397,7 +398,8 @@
           "name": "Activity is never rendered as satisfaction",
           "scenarios": [
             "Closed but unverified",
-            "Closed is the tracker's word, not done"
+            "Closed is the tracker's word, not done",
+            "Verification is Unknown once per board, with its count"
           ]
         },
         "POC-REQ-050": {
@@ -601,7 +603,7 @@
     },
     "POLARIS": {
       "requirements": 39,
-      "scenarios": 443,
+      "scenarios": 432,
       "members": {
         "REQ-polaris-generation-001": {
           "name": "Admitted project input",
@@ -1095,20 +1097,7 @@
             "Justified omission recorded by the author",
             "No inventory of record gives Unknown coverage",
             "Omission record in an earlier schema or malformed",
-            "Secret-matching path of an entry not named",
-            "Compose services, images, ports and dependencies",
-            "Kubernetes objects across documents",
-            "Terraform resources and modules, variable and state files never read",
-            "Make targets",
-            "CMake lists and other makefile names Unknown under the bound policy",
-            "Malformed infrastructure file is Unknown, never empty",
-            "Infrastructure files past the read limit",
-            "Coverage remainder sums to the tree",
-            "Coverage remainder on the directory map's page",
-            "Infrastructure map rendered",
-            "Provider mode unchanged by infrastructure recognizers",
-            "Bounded form of a draft that does not parse",
-            "Draft, frozen revisions and run file read under their bounds"
+            "Secret-matching path of an entry not named"
           ]
         },
         "REQ-polaris-generation-035": {
@@ -1174,10 +1163,12 @@
             "Withheld words, notebooks and vendored paths stay withheld",
             "Nested documentation admitted and scanned",
             "Configuration admitted and screened by the configuration detectors",
+            "Re-admitted formats placed as code-content and screened",
+            "Version 2.0.0 outcomes preserved",
             "Credential paths denied before any read",
             "Predecessor outcomes preserved",
             "Agent text quoting a configuration secret refused",
-            "Run bound to the predecessor not migrated"
+            "Run bound to an earlier policy not migrated"
           ]
         },
         "REQ-polaris-generation-047": {

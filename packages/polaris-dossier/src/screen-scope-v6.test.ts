@@ -226,7 +226,7 @@ describe('the declared dossier policy preserves version-8 detector and placement
       const loaded = await loadDossierScreen(root, now, { ...AT_TRIAL, visibility: 'public' });
       if (!loaded.ok) throw new Error(loaded.why);
       expect([loaded.screen.policyVersion, loaded.screen.governanceText, loaded.screen.documentationExemption, loaded.screen.scopeDetectors, loaded.screen.contentClass('redis.conf')])
-        .toEqual(['dossier-declared-source/2.0.0', true, true, 4, 'project-documentation']);
+        .toEqual(['dossier-declared-source/3.0.0', true, true, 4, 'project-documentation']);
     }
   });
 });

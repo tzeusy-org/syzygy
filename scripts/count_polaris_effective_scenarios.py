@@ -79,6 +79,9 @@ own adoption binding verifies; each parser counts its one replacement (034).
 The declared-source reach version2.6 amendment follows version2.0 when its own
 adoption binding verifies; each parser counts its one replacement (046).
 
+The declared-source re-admission version2.13 amendment follows version2.6 when
+its own adoption binding verifies; each parser counts its one replacement (046).
+
 ## Overlay semantics
 
 Applied in the order the real OpenSpec tool uses at archive time (confirmed
@@ -568,6 +571,15 @@ def infra_amendment(root: Path) -> str | None:
     return text
 
 
+def readmit_amendment(root: Path) -> str | None:
+    """Verified text, a pending or retired amendment, or a counting refusal."""
+    import check_spec_reconciliation as adoption
+    text, records, subjects = adoption.readmit_binding(root)
+    if records or subjects:
+        raise ScenarioCountError("declared-source re-admission adoption findings:\n" + "\n".join(records + subjects))
+    return text
+
+
 def reach_amendment(root: Path) -> str | None:
     """Verified text, a pending or retired amendment, or a counting refusal."""
     import check_spec_reconciliation as adoption
@@ -588,6 +600,7 @@ def build_composition(root: Path) -> CompositionResult:
                         (adoption.LEDGER_SPEC, ledger_amendment(root)),
                         (adoption.KINDS_SPEC, kinds_amendment(root)),
                         (adoption.REACH_SPEC, reach_amendment(root)),
+                        (adoption.READMIT_SPEC, readmit_amendment(root)),
                         (adoption.MANIFESTS_SPEC, manifests_amendment(root)),
                         (adoption.REPAIRS_SPEC, repairs_amendment(root)),
                         (adoption.MAPS_SPEC, maps_amendment(root)),
@@ -634,6 +647,7 @@ def composition_inputs(root: Path) -> list[Path]:
     ledger_amendment(root)
     kinds_amendment(root)
     reach_amendment(root)
+    readmit_amendment(root)
     manifests_amendment(root)
     repairs_amendment(root)
     maps_amendment(root)
@@ -647,7 +661,7 @@ def composition_inputs(root: Path) -> list[Path]:
         *adoption.LEDGER_SUBJECTS, *adoption.KINDS_SUBJECTS, *adoption.MANIFESTS_SUBJECTS,
         *adoption.REPAIRS_SUBJECTS, *adoption.MAPS_SUBJECTS, *adoption.BOUNDS_SUBJECTS, *adoption.CORR_SUBJECTS,
         *adoption.COVERAGE_SUBJECTS, *adoption.INFRA_SUBJECTS,
-        *adoption.REACH_SUBJECTS,
+        *adoption.REACH_SUBJECTS, *adoption.READMIT_SUBJECTS,
     }
     files = discover_composition_files(root)
     files += [root / rel for rel in sorted(paths) if (root / rel).is_file()]

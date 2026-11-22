@@ -9,7 +9,7 @@ import { FACT_KIND_ORDER, FACT_MEMBERS, type FactKind, type ParseFault, type Raw
 import { isNpmManifestPath, recognizeNpmManifest } from './manifest-npm.js';
 import { isPythonProjectPath, recognizePythonProject } from './manifest-python.js';
 import { isWorkflowPath, recognizeWorkflow } from './manifest-workflow.js';
-import type { DossierScreen } from './screen.js';
+import { secretPathOf, type DossierScreen } from './screen.js';
 
 /** Declared manifest facts (REQ-polaris-generation-034 version 2.7, syzygy-3efd.25): what five versioned recognizers read in the manifest
  * files of the pinned tree that the bound screening policy admits, stored as the draft check record's last member, `manifestFacts`. A fact
@@ -115,7 +115,7 @@ const unknownFile = (path: string, reason: ManifestUnknownReason, read: boolean,
 
 export async function deriveManifestFacts(inputs: ManifestInputs): Promise<ManifestFacts> {
   const { screen } = inputs;
-  const isSecretPath = (path: string): boolean => screen.screenPath(path) === 'secret-detector-match' || screen.screenBody(path, path) === 'secret-detector-match';
+  const isSecretPath = secretPathOf(screen);
   /** A body-taken value the value checks refuse: too long, a control character, or a detector match over text given with no path. */
   const refusedValue = (value: string): boolean => value.length > MANIFEST_VALUE_LIMIT || CONTROL.test(value) || screen.screenBody(value) === 'secret-detector-match';
   const recognizers: ManifestRecognizerEntry[] = [];

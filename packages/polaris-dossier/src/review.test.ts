@@ -46,7 +46,10 @@ const KESTREL = [
   '',
 ].join('\n');
 const NOTES = 'Café notes.\nSnapshots are written periodically.\n';
-const FILES: Record<string, string> = { 'src/kestrel.c': KESTREL, 'docs/notes.txt': NOTES, 'README.md': '# Kestrel\n', '.env': 'X=1\n' };
+/** A path both a denied-path rule (`.env` is a denied basename) and a secret detector (the directory is a token format, built from parts)
+ * match: path screening answers `denied-path` for it before it tries a detector (syzygy-8hm6). */
+const BOTH_PATH = `conf/${['gh', 'p_'].join('')}${'x'.repeat(24)}/.env`;
+const FILES: Record<string, string> = { 'src/kestrel.c': KESTREL, 'docs/notes.txt': NOTES, 'README.md': '# Kestrel\n', '.env': 'X=1\n', [BOTH_PATH]: 'Y=2\n' };
 const LIVE_POLICY = JSON.parse(fs.readFileSync(path.join(REAL_ROOT, '.syzygy/governance/policies/POLARIS-BUTLERS-SECRET-CLASSIFICATION-POLICY-CANDIDATE.json'), 'utf8'));
 const POLICY = new TextEncoder().encode(JSON.stringify({
   policyId: 'fixture-public-source', policyVersion: '1', detectors: LIVE_POLICY.detectors, sourceAdmission: LIVE_POLICY.sourceAdmission,
@@ -287,7 +290,7 @@ describe('review-packet --kind fidelity', () => {
     if (!result.ok) throw new Error(result.refusal.reason);
     const commit = JSON.parse(fs.readFileSync(path.join(run, 'run.json'), 'utf8')).subject.pinnedRevision.commit as string;
     expect(commit).toMatch(/^[0-9a-f]{40}$/u);
-    expect(seen).toEqual([{ repository: 'repository:redis-redis', commit, visibility: 'public', policySha256: policyFixture(worldPolicy()).binding.sha256, policyPath: '.syzygy/governance/policies/POLARIS-DOSSIER-DECLARED-SOURCE-POLICY-v2.json' }]);
+    expect(seen).toEqual([{ repository: 'repository:redis-redis', commit, visibility: 'public', policySha256: policyFixture(worldPolicy()).binding.sha256, policyPath: '.syzygy/governance/policies/POLARIS-DOSSIER-DECLARED-SOURCE-POLICY-v3.json' }]);
   });
 
   it('carries no authoring exchange, read account or excluded byte', async () => {
@@ -805,5 +808,22 @@ describe('fidelity criteria for presentation elements (syzygy-mea.10.5)', () => 
     expect(support).toContain('every claim a presentation element carries: a table cell, a block in a callout or a collapsible section, a step, a definition or a card\'s body');
     expect(support).toContain('Judge a table cell as it reads with its row\'s and its column\'s labels: a cell that is true alone but false under its headings is not supported.');
     expect(support).toContain('A code excerpt is Syzygy\'s own read of the file and has no entry.');
+  });
+});
+
+// syzygy-8hm6: a cited path both denied and matched by a secret detector is a span without its path or object id, under the outcome
+// screening gave. The packet's copy of the draft still carries the citation as the author wrote it; this is the span record alone.
+describe('a cited path both denied and secret-matching in the fidelity packet', () => {
+  it('carries the span with neither path nor object id, outcome denied-path', async () => {
+    const run = await prepared(undefined, (d) => { d['unresolved'] = [{ id: 'q0', question: 'Why?', reason: 'Not stated.', citations: [cite('c-q0', BOTH_PATH, 1, 1)] }]; });
+    const result = await reviewPacket(run, { kind: 'fidelity' }, deps());
+    if (!result.ok) throw new Error(result.refusal.reason);
+    const packet = JSON.parse(fs.readFileSync(path.join(result.report.directory, 'packet.json'), 'utf8'));
+    expect(packet.spans.slice(0, 2)).toEqual([
+      { id: 'span-1', path: '.env', startLine: 1, endLine: 1, objectId: objectIds['.env'], outcome: 'denied-path', citedBy: [{ subject: 'inventory', citationId: 'c-e-env' }] },
+      { id: 'span-2', path: null, startLine: 1, endLine: 1, objectId: null, outcome: 'denied-path', citedBy: [{ subject: 'draft', citationId: 'c-q0' }] },
+    ]);
+    // A boolean, so a failure prints no span.
+    expect(JSON.stringify(packet.spans).includes('x'.repeat(24))).toBe(false);
   });
 });
