@@ -437,7 +437,10 @@ async function startPreparedSupervisor(state: SupervisorState, prepared: Prepare
       stopRequested: () => stop.status() === 'requested',
       ...(prepared.continuation === undefined ? {} : { resume: { verified: prepared.continuation.verified, claim: prepared.continuation.claim } }),
       credential: loaded.credential, sourceReader: prepared.openReader,
-      production: { ...prepared.machine, current: prepared.current, policyBytes: prepared.basePolicyBytes, artifacts },
+      // The machine independently checks the exact held continuation claim at
+      // every boundary; supply the separate effective-run verifier here.
+      production: { ...prepared.machine, current: prepared.continuation?.verified.checkedContext.current ?? prepared.current,
+        policyBytes: prepared.basePolicyBytes, artifacts },
       launchHistory: { promptDigests, register: artifacts.registerLaunchHistory }, runDossier: artifacts.runDossier,
       artifactOrigins: artifacts.artifactOrigins, dossierOrigins: artifacts.dossierOrigins,
       toolReceipt: artifacts.toolReceipt, toolReceiptCommitted: artifacts.committed, ask: askUrlSessionQuestion,

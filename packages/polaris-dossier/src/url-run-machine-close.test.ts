@@ -217,17 +217,22 @@ describe('same-store machine continuation seam', () => {
     expect(await readFile(stateFile)).toEqual(before); expect(await readFile(canonicalFile)).toEqual(canon(next));
   });
 
-  it('withdraws both live currentness and retirement when the independently held claim is lost', async () => {
+  it.each(['run-authority', 'claim'] as const)('withdraws both live currentness and retirement when %s is lost', async guard => {
     const f = await closedFixture();
     const resumed = await createUrlRunMachine({ ...f.options, requiredRoles: [], plans: [] }); cleanup.push(() => resumed.close());
-    expect(resumed.current()).toBe(true); f.withdrawClaim(); expect(resumed.current()).toBe(false);
+    expect(resumed.current()).toBe(true);
+    if (guard === 'claim') f.withdrawClaim(); else f.withdraw();
+    expect(resumed.current()).toBe(false);
     const result = await resumed.close(); expect(result).toEqual({ lifecycle: 'Unknown' }); expect(readUrlRunMachineClosedHistory(result)).toBeNull();
   });
 
-  it('refuses claim withdrawal after awaited revalidation before any fresh allocation', async () => {
+  it.each(['run-authority', 'claim'] as const)('refuses %s withdrawal after awaited revalidation before any fresh allocation', async guard => {
     const f = await closedFixture(), stateFile = path.join(f.options.protectedRoot, 'state.json'), before = await readFile(stateFile);
     let count = 0;
-    await expect(createUrlRunMachine({ ...f.options, reverify: async () => { if (++count === 2) f.withdrawClaim(); return true; } }))
+    await expect(createUrlRunMachine({ ...f.options, reverify: async () => {
+      if (++count === 2) { if (guard === 'claim') f.withdrawClaim(); else f.withdraw(); }
+      return true;
+    } }))
       .rejects.toThrow('url-run-machine-unavailable');
     expect(await readFile(stateFile)).toEqual(before);
   });
