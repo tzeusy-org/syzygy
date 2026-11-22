@@ -11,13 +11,16 @@ import { DOSSIER_POLICY_PATH } from './policy-snapshot.js';
 import { buildDossierScreen } from './screen.js';
 import { createSessionProfile, DEFAULT_SESSION_MODEL } from './session-profile.js';
 import { URL_LAUNCH_LIMITS } from './session-launch.js';
+import { SESSION_COUNT_TOKENS_PATH } from './session-relay.js';
 import { createUrlSessionAudit, URL_SESSION_AUDIT_LIMITS, type UrlSessionAuditEvent } from './url-session-audit.js';
 import { verifyUrlSessionAuditHistory, type UrlSessionAuditHistoryExpected } from './url-session-audit-history.js';
 
 const ROLES = ['author', 'inventory', 'fidelity', 'design'] as const;
 afterEach(() => { vi.restoreAllMocks(); vi.useRealTimers(); });
 const canonical = (v: unknown): string => encodeCanonicalJson(v, { maxBytes: 65_536, maxNodes: 4096, maxDepth: 12 });
-async function fixture(fault?: 'incomplete-send' | 'uncertain-send' | 'unknown-cleanup' | 'missing-usage' | 'missing-terminal' | 'unfinished-tool' | 'unsupported-kind') {
+type ToolHistory = 'complete-tool' | 'count-without-continuation' | 'count-repeated' | 'count-with-usage' | 'count-wrong-origin' | 'different-consumed-receipt';
+async function fixture(fault?: 'incomplete-send' | 'uncertain-send' | 'unknown-cleanup' | 'missing-usage' | 'missing-terminal' | 'unfinished-tool' | 'unsupported-kind',
+  toolHistory?: ToolHistory) {
   const root = tempDir('url-audit-history-'), parent = path.join(root, 'protected'); fs.mkdirSync(parent, { mode: 0o700 });
   const loaded = buildDossierScreen(fs.readFileSync(path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../../..', DOSSIER_POLICY_PATH)), true, null, 'private');
   if (!loaded.ok) throw new Error('owned policy unavailable');
@@ -44,14 +47,42 @@ async function fixture(fault?: 'incomplete-send' | 'uncertain-send' | 'unknown-c
           received: { digest: 'e'.repeat(64), bytes: 101 }, route: 'messages', consumedToolResults: [], response: null, status: null };
         const relay = (event: string, outcome: string, extra = {}) => writer.append({ kind: 'relay', role, scope,
           payload: { ...initial, event, outcome, ...extra } } as UrlSessionAuditEvent);
+        const usage = () => writer.append({ kind: 'usage', role, scope,
+          payload: { inputTokens: 1, outputTokens: 2, cacheCreationInputTokens: 0, cacheReadInputTokens: 0 } });
+        const call = { id: 'toolu_own_read', name: 'mcp__syzygy__source_read', inputSha256: '5'.repeat(64) };
+        const completeResponse = { digest: '8'.repeat(64), bytes: 120, content: 'messages-event-stream', stopReason: 'end_turn', textBlocks: 1, tool: null };
         await relay('attempt-allowed', 'allowed'); await relay('send-attempt', 'attempted');
         if (fault === 'uncertain-send') await relay('transport-failed', 'Unknown');
         else if (fault !== 'incomplete-send') {
           await relay('send-outcome', 'local-request-flushed');
-          if (fault !== 'missing-usage') await writer.append({ kind: 'usage', role, scope,
-            payload: { inputTokens: 1, outputTokens: 2, cacheCreationInputTokens: 0, cacheReadInputTokens: 0 } });
-          await relay('response-admitted', 'response-admitted', { status: 200, response: { digest: '8'.repeat(64), bytes: 120,
-            content: 'messages-event-stream', stopReason: 'end_turn', textBlocks: 1, tool: null } });
+          if (fault !== 'missing-usage') await usage();
+          await relay('response-admitted', 'response-admitted', { status: 200,
+            response: toolHistory === undefined ? completeResponse : { ...completeResponse, stopReason: 'tool_use', tool: call } });
+        }
+        if (toolHistory !== undefined) {
+          const receipt = { id: `tool-${'1'.repeat(64)}`, toolName: call.name as 'mcp__syzygy__source_read',
+            inputSha256: call.inputSha256, digest: '2'.repeat(64), bytes: 84, classes: fixed.declaredClasses, originIds: ['source:own'] };
+          await writer.append({ kind: 'before-tool', role, scope, payload: { tool: 'source_read', inputSha256: call.inputSha256 } });
+          await writer.append({ kind: 'tool-receipt', role, scope, payload: receipt });
+          const exchange = async (request: object, response: object, captureUsage: boolean) => {
+            await relay('attempt-allowed', 'allowed', request);
+            await relay('send-attempt', 'attempted', request);
+            await relay('send-outcome', 'local-request-flushed', request);
+            if (captureUsage) await usage();
+            await relay('response-admitted', 'response-admitted', { ...request, status: 200, response });
+          };
+          const countRequest = { requestId: '12345678-1234-4234-8234-123456789013', route: SESSION_COUNT_TOKENS_PATH,
+            admission: { ...initial.admission, originIds: toolHistory === 'count-wrong-origin' ? ['source:own'] : [receipt.id] },
+            received: { bytes: initial.admission.bytes, digest: initial.admission.digest } };
+          const countResponse = { digest: '6'.repeat(64), bytes: 24, content: 'count-tokens-json', estimatedInputTokens: 25 };
+          await exchange(countRequest, countResponse, toolHistory === 'count-with-usage');
+          if (toolHistory === 'count-repeated') await exchange({ ...countRequest, requestId: '12345678-1234-4234-8234-123456789014' }, countResponse, false);
+          if (toolHistory !== 'count-without-continuation') await exchange({
+            requestId: '12345678-1234-4234-8234-123456789015',
+            admission: { ...initial.admission, originIds: [receipt.id] },
+            consumedToolResults: [{ receiptId: receipt.id, toolUseId: call.id,
+              bytes: receipt.bytes, digest: toolHistory === 'different-consumed-receipt' ? '9'.repeat(64) : receipt.digest }],
+          }, completeResponse, true);
         }
         if (fault === 'unsupported-kind') await writer.appendMachinePeer({ event: 'machine-peer-effect', clientId: 'own-client', instanceId: 'own-instance', revision: 1,
           runId: binding.run, role, operation: 'source_read', processIdentitySha256: '1'.repeat(64), channelIdentitySha256: '2'.repeat(64), at: Date.now() });
@@ -80,8 +111,20 @@ describe('read-only protected audit history', () => {
     const f = await fixture(), before = ROLES.map(role => fs.readFileSync(f.file(role)));
     expect(await verifyUrlSessionAuditHistory(f.options)).toEqual({ kind: 'verified-local-audit-history', authorization: 'none', replay: 'forbidden',
       completeness: 'Unknown', records: 17, bytes: f.expected.durableBytes, tipSha256: f.expected.tipSha256,
-      capturedLaunchTerminals: 4, capturedCompleteExchanges: 1 });
+      capturedLaunchTerminals: 4, capturedCompleteExchanges: 1, capturedCountExchanges: 0 });
     expect(ROLES.map(role => fs.readFileSync(f.file(role)))).toEqual(before);
+  });
+
+  it('joins a checked count estimate to its completed tool and separately verifies the Messages continuation', async () => {
+    const f = await fixture(undefined, 'complete-tool');
+    expect(await verifyUrlSessionAuditHistory(f.options)).toMatchObject({ authorization: 'none', replay: 'forbidden', completeness: 'Unknown',
+      capturedLaunchTerminals: 4, capturedCompleteExchanges: 2, capturedCountExchanges: 1 });
+  });
+
+  it.each(['count-without-continuation', 'count-repeated', 'count-with-usage', 'count-wrong-origin', 'different-consumed-receipt'] as const)
+  ('refuses a captured tool exchange with %s', async toolHistory => {
+    const f = await fixture(undefined, toolHistory);
+    expect(await verifyUrlSessionAuditHistory(f.options)).toBeNull();
   });
 
   it.each(['dropped', 'truncated', 'appended', 'relinked', 'symlink', 'hardlink', 'public-mode'] as const)('refuses %s physical bytes without repairing them', async fault => {

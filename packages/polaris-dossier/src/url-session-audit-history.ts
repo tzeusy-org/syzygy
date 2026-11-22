@@ -3,7 +3,8 @@ import { lstat, open, realpath, type FileHandle } from 'node:fs/promises';
 import path from 'node:path';
 import { encodeCanonicalJson, parseBoundedJson } from '@syzygy/polaris-generation-core/live';
 import { decodeUtf8, deepFreeze, isRecord, sha256 } from '@syzygy/support';
-import type { SessionContentClass } from './session-egress-policy.js';
+import { SESSION_TOOLS, type SessionContentClass } from './session-egress-policy.js';
+import { isSessionTokenCount, SESSION_COUNT_RESPONSE_MAX_BYTES, SESSION_COUNT_TOKENS_PATH } from './session-relay.js';
 import type { ViewRole } from './session-view.js';
 import { URL_SESSION_AUDIT_FORMAT, URL_SESSION_AUDIT_LIMITS, type UrlSessionAuditScope } from './url-session-audit.js';
 
@@ -32,6 +33,7 @@ export interface VerifiedUrlSessionAuditHistory {
   readonly kind: 'verified-local-audit-history'; readonly authorization: 'none'; readonly replay: 'forbidden';
   readonly completeness: 'Unknown'; readonly records: number; readonly bytes: number; readonly tipSha256: string;
   readonly capturedLaunchTerminals: number; readonly capturedCompleteExchanges: number;
+  readonly capturedCountExchanges: number;
 }
 function fail(): never { throw new Error('url-session-audit-history-unavailable'); }
 const hex = (v: unknown): v is string => typeof v === 'string' && /^[a-f0-9]{64}$/u.test(v);
@@ -166,10 +168,13 @@ export async function verifyUrlSessionAuditHistory(given: UrlSessionAuditHistory
 }
 
 function verifyCapturedBoundary(rows: readonly Row[], expected: UrlSessionAuditHistoryExpected) {
-  let capturedLaunchTerminals = 0, capturedCompleteExchanges = 0;
+  let capturedLaunchTerminals = 0, capturedCompleteExchanges = 0, capturedCountExchanges = 0;
   for (const role of ROLES) {
-    let launched = false, exchange: { id: unknown; stage: string; digest: string; usage: boolean; identity: string } | null = null;
-    let tool: string | null = null, question: unknown = null;
+    let launched = false;
+    let exchange: { id: string; stage: string; digest: string; usage: boolean; identity: string; count: boolean } | null = null;
+    let tool: { id: string; name: string; inputSha256: string; executing: boolean; counted: boolean;
+      receipt?: { receiptId: string; toolUseId: string; digest: string; bytes: number } } | null = null;
+    let question: unknown = null;
     const requests = new Set<unknown>();
     for (const row of rows.filter(row => row.event.role === role)) {
       const { kind, payload: p } = row.event;
@@ -184,29 +189,67 @@ function verifyCapturedBoundary(rows: readonly Row[], expected: UrlSessionAuditH
             || p.groupTermination !== 'confirmed' || p.toolTermination !== 'settled' || p.pendingInvocations !== 0) fail();
           launched = false; capturedLaunchTerminals++; break;
         case 'before-tool':
-          if (tool !== null || typeof p.tool !== 'string' || !hex(p.inputSha256)) fail(); tool = `${p.tool}:${p.inputSha256}`; break;
+          if (!launched || exchange !== null || tool === null || tool.executing || tool.receipt !== undefined
+            || !exact(p, ['tool', 'inputSha256']) || `mcp__syzygy__${String(p.tool)}` !== tool.name || p.inputSha256 !== tool.inputSha256) fail();
+          tool.executing = true; break;
         case 'tool-receipt':
-          if (tool === null || tool !== `${String(p.toolName).replace('mcp__syzygy__', '')}:${p.inputSha256}`) fail(); tool = null; break;
+          if (tool === null || !tool.executing || tool.receipt !== undefined
+            || !exact(p, ['id', 'toolName', 'inputSha256', 'digest', 'bytes', 'classes', 'originIds'])
+            || typeof p.id !== 'string' || !/^tool-[a-f0-9]{64}$/u.test(p.id) || p.toolName !== tool.name || p.inputSha256 !== tool.inputSha256
+            || !hex(p.digest) || !count(p.bytes, 2_097_152) || p.bytes === 0) fail();
+          tool.executing = false;
+          tool.receipt = { receiptId: p.id, toolUseId: tool.id, digest: p.digest, bytes: p.bytes }; break;
         case 'usage':
-          if (exchange === null || exchange.usage || exchange.stage !== 'send-outcome'
+          if (exchange === null || exchange.count || exchange.usage || exchange.stage !== 'send-outcome'
             || !exact(p, ['inputTokens', 'outputTokens', 'cacheCreationInputTokens', 'cacheReadInputTokens']) || Object.values(p).some(v => !count(v))) fail();
           exchange.usage = true; break;
         case 'relay': {
           if (!exact(p, ['event', 'subject', 'requestId', 'at', 'credentialIdentity', 'exposureMode', 'governingRule', 'admission', 'received',
             'route', 'consumedToolResults', 'response', 'outcome', 'status', 'previousExchangeSha256'])
             || !equal(p.subject, { binding: expected.declarations[role].scope.binding, project: expected.declarations[role].payload.project,
-              pin: expected.declarations[role].payload.pin, principal: expected.declarations[role].payload.principal })) fail();
+              pin: expected.declarations[role].payload.pin, principal: expected.declarations[role].payload.principal })
+            || !launched || typeof p.requestId !== 'string' || (p.route !== 'messages' && p.route !== SESSION_COUNT_TOKENS_PATH)
+            || !Array.isArray(p.consumedToolResults)) fail();
           const identity = canonical({ admission: p.admission, received: p.received, route: p.route, consumedToolResults: p.consumedToolResults });
           if (p.event === 'attempt-allowed') {
             if (exchange !== null || requests.has(p.requestId) || p.previousExchangeSha256 !== null || p.outcome !== 'allowed') fail();
-            requests.add(p.requestId); exchange = { id: p.requestId, stage: 'attempt-allowed', digest: row.sha256, usage: false, identity };
+            const tokenCount = p.route === SESSION_COUNT_TOKENS_PATH;
+            if (tokenCount) {
+              if (role === 'design' || tool?.receipt === undefined || tool.counted || p.consumedToolResults.length !== 0
+                || !isRecord(p.admission) || !exact(p.received, ['digest', 'bytes']) || p.received.digest !== p.admission.digest
+                || p.received.bytes !== p.admission.bytes || !Array.isArray(p.admission.originIds)
+                || !p.admission.originIds.includes(tool.receipt.receiptId)) fail();
+              tool.counted = true;
+            } else {
+              if (tool !== null && tool.receipt === undefined
+                || !equal(p.consumedToolResults, tool?.receipt === undefined ? [] : [tool.receipt])) fail();
+              tool = null;
+            }
+            requests.add(p.requestId); exchange = { id: p.requestId, stage: 'attempt-allowed', digest: row.sha256, usage: false, identity, count: tokenCount };
           } else {
             if (exchange === null || p.requestId !== exchange.id || p.previousExchangeSha256 !== exchange.digest || identity !== exchange.identity) fail();
             if (p.event === 'send-attempt' && exchange.stage === 'attempt-allowed' && p.outcome === 'attempted') exchange.stage = 'send-attempt';
             else if (p.event === 'send-outcome' && exchange.stage === 'send-attempt' && p.outcome === 'local-request-flushed') exchange.stage = 'send-outcome';
-            else if (p.event === 'response-admitted' && exchange.stage === 'send-outcome' && exchange.usage && p.outcome === 'response-admitted'
-              && p.status === 200 && isRecord(p.response) && p.response.tool === null && p.response.stopReason === 'end_turn') {
-              exchange = null; capturedCompleteExchanges++; break;
+            else if (p.event === 'response-admitted' && exchange.stage === 'send-outcome' && p.outcome === 'response-admitted' && p.status === 200) {
+              const response = p.response;
+              if (exchange.count) {
+                if (!exact(response, ['digest', 'bytes', 'content', 'estimatedInputTokens']) || response.content !== 'count-tokens-json'
+                  || !hex(response.digest) || !count(response.bytes, SESSION_COUNT_RESPONSE_MAX_BYTES) || response.bytes === 0
+                  || !isSessionTokenCount(response.estimatedInputTokens)) fail();
+                capturedCountExchanges++;
+              } else {
+                if (!exchange.usage || !exact(response, ['digest', 'bytes', 'content', 'stopReason', 'textBlocks', 'tool'])
+                  || !hex(response.digest) || !count(response.bytes, 8_388_608) || response.bytes === 0
+                  || !['messages-json', 'messages-event-stream'].includes(String(response.content))) fail();
+                if (response.stopReason === 'tool_use') {
+                  const call = response.tool;
+                  if (!exact(call, ['id', 'name', 'inputSha256']) || typeof call.id !== 'string' || !/^toolu_[A-Za-z0-9_-]{1,250}$/u.test(call.id)
+                    || typeof call.name !== 'string' || !SESSION_TOOLS.some(name => name === call.name) || !hex(call.inputSha256)) fail();
+                  tool = { id: call.id, name: call.name, inputSha256: call.inputSha256, executing: false, counted: false };
+                } else if (response.stopReason !== 'end_turn' || response.tool !== null) fail();
+                capturedCompleteExchanges++;
+              }
+              exchange = null; break;
             } else fail();
             exchange.digest = row.sha256;
           }
@@ -224,5 +267,5 @@ function verifyCapturedBoundary(rows: readonly Row[], expected: UrlSessionAuditH
     }
     if (launched || exchange !== null || tool !== null || question !== null) fail();
   }
-  return { capturedLaunchTerminals, capturedCompleteExchanges };
+  return { capturedLaunchTerminals, capturedCompleteExchanges, capturedCountExchanges };
 }
