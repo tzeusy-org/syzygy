@@ -9,7 +9,7 @@ import { launchRestrictedUrlSession, prepareRestrictedUrlSession, urlSessionStop
 import { planOrderedDesignBytes, orderedDesignPlanInputForDelivery } from './url-design-delivery.js';
 import { assertUrlDesignDeliveryViewCurrent, type UrlSessionAuditResult, type UrlCommittedLaunchHistory,
   type UrlDesignDeliveryView } from './url-session-audit.js';
-import { isUrlDesignProductLeaseOpen, type UrlDesignProductMetadata } from './url-design-product.js';
+import { isUrlDesignProductLeaseOpen, urlDesignProductLeaseState, type ValidatedUrlDesignProduct, type UrlDesignProductMetadata } from './url-design-product.js';
 import { startOrderedDesignHost, type OrderedDesignHost } from './url-ordered-design-host.js';
 import { createOrderedDesignSession } from './url-ordered-design-session.js';
 import { assertSessionMachineEffectCurrent, sessionMachineEffectCurrent } from './session-machine-transport.js';
@@ -72,14 +72,15 @@ export interface UrlOrderedAttemptOptions {
  * failure may request one genuine reproduction; an open but changed proof refuses.
  * The refresh port owns same-delivery verification and shared pending capacity. */
 export async function checkUrlOrderedProductCurrent(input: {
-  readonly leaseOpen: () => boolean;
+  readonly product: ValidatedUrlDesignProduct;
   readonly assertCurrent: () => void;
   readonly refresh: () => Promise<boolean>;
 }): Promise<boolean> {
-  if (input.leaseOpen()) {
+  const state = urlDesignProductLeaseState(input.product).state;
+  if (state === 'open') {
     try { input.assertCurrent(); return true; }
-    catch { if (input.leaseOpen()) return false; }
-  }
+    catch { if (urlDesignProductLeaseState(input.product).state !== 'expired') return false; }
+  } else if (state !== 'expired') return false;
   return input.refresh();
 }
 
@@ -120,8 +121,9 @@ export async function startUrlOrderedAttempt(input: UrlOrderedAttemptOptions) {
     if (closed || !(await input.current()) || sessionMachineEffectCurrent() === false || !input.machine.current()) return false;
     // Bootstrap has no controller yet; activation still gates every send/tool.
     if (delivery === null) return true;
+    if (render === null) return false;
     return checkUrlOrderedProductCurrent({
-      leaseOpen: () => render !== null && isUrlDesignProductLeaseOpen(render.product),
+      product: render.product,
       assertCurrent,
       refresh: () => renewing ??= (async () => {
         const next = await input.reproduce();
@@ -258,7 +260,8 @@ export async function startUrlOrderedAttempt(input: UrlOrderedAttemptOptions) {
         } finally { fresh.close(); }
       },
     });
-    assertCurrent(); activate(controller);
+    if (!(await current())) throw refused();
+    assertProcessingCurrent(); activate(controller);
     return Object.freeze({ delivery, launch, host, child, close,
       consumeTerminal,
       get terminalConsumed() { return consumedTerminal; },
