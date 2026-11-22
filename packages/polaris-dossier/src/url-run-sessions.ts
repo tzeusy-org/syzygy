@@ -31,7 +31,7 @@ import type { UrlParentAdoption } from './url-parent-adoption.js';
 import type { createUrlRunArtifacts } from './url-run-artifacts.js';
 import { createUrlRunCpuBudget } from './url-run-cpu-budget.js';
 import { sessionMachineEffectCurrent } from './session-machine-transport.js';
-import { isClaimedStoppedUrlRun, type verifyStoppedUrlRun } from './url-recovery.js';
+import { isClaimedStoppedUrlRun, isClaimedStoppedUrlRunAsync, type verifyStoppedUrlRun } from './url-recovery.js';
 import type { UrlRecoveryClaim } from './url-stopped-run.js';
 import { URL_HOST_ROOT } from './url-mode-registry.js';
 
@@ -451,7 +451,8 @@ async function start(options: UrlRunSessionsOptions, ports: typeof native): Prom
         effectCurrent: () => effectBudgetCurrent() && effectEnvironmentCurrent(),
         launch: role => processes.get(role), audit: event => audit.appendMachinePeer(event),
         ...(resume === undefined ? {} : { resume: { history: resume.verified.machine,
-          identitySha256: resume.verified.machine.identitySha256, current: () => isClaimedStoppedUrlRun(resume.verified, resume.claim) } }),
+          identitySha256: resume.verified.machine.identitySha256, current: () => isClaimedStoppedUrlRun(resume.verified, resume.claim),
+          currentAsync: () => isClaimedStoppedUrlRunAsync(resume.verified, resume.claim) } }),
         chargeNativeCpuMicroseconds: capacity => cpu!.charge('machine', capacity) });
     }
     await new Promise<void>((resolve, reject) => { probe.once('error', reject); probe.listen(0, '127.0.0.1', resolve); });

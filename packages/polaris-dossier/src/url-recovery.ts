@@ -34,6 +34,12 @@ export function isClaimedStoppedUrlRun(value: unknown, claim: unknown): claim is
     && (claim as UrlRecoveryClaim).current() === true;
 }
 
+/** Recheck the exact consumed claim across fresh asynchronous policy reads. */
+export async function isClaimedStoppedUrlRunAsync(value: unknown, claim: UrlRecoveryClaim): Promise<boolean> {
+  return isRecord(value) && claim !== undefined && claimedRuns.get(value) === claim && await claim.currentAsync() === true
+    && claimedRuns.get(value) === claim;
+}
+
 /** Only an exact successful cold-verifier result can request exclusive
  * recovery. Saved/copied results never issue a claim. A successful call
  * durably consumes the boundary before returning active ownership; the caller

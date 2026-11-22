@@ -494,17 +494,19 @@ describe('composed URL run with actual role processes', { timeout: 360_000 }, ()
             return result;
           });
           const createMachine = runMachine.createUrlRunMachine;
-          const machineChecks: { current: boolean; claimChecks: number; withdrawn: boolean }[] = [];
+          const machineChecks: { current: boolean; claimChecks: number; withdrawn: boolean; asyncCurrent: boolean; asyncWithdrawn: boolean }[] = [];
           vi.spyOn(runMachine, 'createUrlRunMachine').mockImplementationOnce(async options => {
             const machine = await createMachine(options);
             const checkClaim = vi.spyOn(recovery, 'isClaimedStoppedUrlRun');
             const current = machine.current(), claimChecks = checkClaim.mock.calls.length;
             checkClaim.mockRestore();
+            const asyncCurrent = await options.resume?.currentAsync?.() === true;
             const lock = path.join(recoveryHost.root, `${sha256(f.run)}.recovery.lock`);
             const withdrawn = `${lock}.machine-withdrawal`;
             await fs.rename(lock, withdrawn);
             try {
-              const observation = { current, claimChecks, withdrawn: !machine.current() };
+              const observation = { current, claimChecks, withdrawn: !machine.current(), asyncCurrent,
+                asyncWithdrawn: await options.resume?.currentAsync?.() === false };
               machineChecks.push(observation);
               resumeChecks.push({ phase: 'machine-claim', ...observation });
             } finally { await fs.rename(withdrawn, lock); }
@@ -514,7 +516,7 @@ describe('composed URL run with actual role processes', { timeout: 360_000 }, ()
           vi.stubEnv('CLAUDE_CODE_OAUTH_TOKEN', undefined);
           vi.stubEnv('ANTHROPIC_API_KEY', 'OWN_SYNTHETIC_COMPOSED_CREDENTIAL');
           const exit = await runPolarisCli(['--supervise', '--resume', f.run, '--state-root', stateRoot], f.ports);
-          expect(machineChecks).toEqual([{ current: true, claimChecks: 1, withdrawn: true }]);
+          expect(machineChecks).toEqual([{ current: true, claimChecks: 1, withdrawn: true, asyncCurrent: true, asyncWithdrawn: true }]);
           expect(exit).toBe(0);
           expect(verifiedCuts).toHaveLength(1);
           expect(verifiedCuts[0]).toMatchObject({ ok: true, nextDesignRound: 2,

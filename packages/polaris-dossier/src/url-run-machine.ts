@@ -53,6 +53,7 @@ export interface UrlRunMachineOptions {
     readonly history: ColdUrlRunMachineHistory;
     readonly identitySha256: string;
     readonly current: () => boolean;
+    readonly currentAsync?: () => Promise<boolean>;
   };
   readonly deadline: number;
   readonly now: () => number;
@@ -108,8 +109,11 @@ export async function createUrlRunMachine(input: UrlRunMachineOptions) {
   const resumed = input.resume;
   if (resumed !== undefined && (!isColdUrlRunMachineHistory(resumed.history)
     || resumed.identitySha256 !== resumed.history.identitySha256 || input.now() < resumed.history.observedAt || !resumed.current())) throw refuse();
+  const claimCurrentAsync = resumed?.currentAsync;
   const storeOptions = { governanceRoot: input.governanceRoot, protectedRoot: input.protectedRoot,
-    deadline: input.deadline, now: input.now, current: parentCurrent };
+    deadline: input.deadline, now: input.now, current: parentCurrent,
+    ...(claimCurrentAsync === undefined ? {} : { currentAsync: async () =>
+      input.current() && await claimCurrentAsync() === true && input.current() }) };
   const store = resumed === undefined ? await initializeUrlMachineStore(storeOptions)
     : await openUrlMachineStore(storeOptions, resumed.identitySha256);
   if (store === null) throw refuse();

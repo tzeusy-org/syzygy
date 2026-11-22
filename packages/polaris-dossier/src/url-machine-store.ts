@@ -62,6 +62,8 @@ export interface UrlMachineStoreOptions {
   readonly now: () => number;
   /** The host checks adoption, fixed policy, controller and namespace protection. */
   readonly current: () => boolean;
+  /** The same fresh authority check around asynchronous filesystem work. */
+  readonly currentAsync?: () => Promise<boolean>;
 }
 export interface UrlMachineStore extends UrlMachineLifecycleAdapter {
   /** Only a genuine profile matching this client's durable binding may select
@@ -263,20 +265,31 @@ async function openStore(options: UrlMachineStoreOptions, expectedIdentitySha256
       if (budget && (++budget.calls > URL_MACHINE_STORE_LIMITS.ioOperations
         || (budget.bytes += bytes) > URL_MACHINE_STORE_LIMITS.operationBytes)) throw refused();
     };
-    const live = (): number => {
+    const clock = (): number => {
       const instant = options.now();
-      if (closed || options.current() !== true || !Number.isSafeInteger(instant) || instant < lastNow || instant >= options.deadline) throw refused();
+      if (closed || !Number.isSafeInteger(instant) || instant < lastNow || instant >= options.deadline) throw refused();
       lastNow = instant;
       return instant;
     };
+    const live = (): number => {
+      clock();
+      if (options.current() !== true) throw refused();
+      return clock();
+    };
+    const currentAsync = options.currentAsync;
+    const liveAsync = async (authorize: () => Promise<boolean>): Promise<void> => {
+      clock();
+      if (await authorize() !== true) throw refused();
+      clock();
+    };
     const anchored = async (): Promise<void> => {
-      live();
+      if (currentAsync === undefined) live(); else await liveAsync(currentAsync);
       const [actualRoot, actualHome] = await Promise.all([lstat(options.protectedRoot), lstat(canonicalRoot)]);
       if (!actualRoot.isDirectory() || (actualRoot.mode & 0o077) !== 0 || actualRoot.uid !== rootStat.uid
         || !actualHome.isDirectory() || actualRoot.dev !== rootStat.dev || actualRoot.ino !== rootStat.ino
         || actualHome.dev !== homeStat.dev || actualHome.ino !== homeStat.ino
         || await realpath(options.protectedRoot) !== options.protectedRoot || await realpath(canonicalRoot) !== canonicalRoot) throw refused();
-      live();
+      if (currentAsync === undefined) live(); else await liveAsync(currentAsync);
     };
     const readFile = async (file: string, maximum: number, missing: boolean = false): Promise<Buffer | null> => {
       charge();
@@ -370,16 +383,28 @@ async function openStore(options: UrlMachineStoreOptions, expectedIdentitySha256
       const began = performance.now();
       let active = true, held = false, uncertain = false;
       const pending = new Set<Promise<unknown>>();
+      const checkDeadline = (): void => {
+        if (!active || clock() >= deadline || performance.now() - began >= operationMilliseconds) throw refused();
+      };
       const check = (): void => {
-        if (!active || live() >= deadline || performance.now() - began >= operationMilliseconds) throw refused();
+        checkDeadline();
+        live();
+        checkDeadline();
+      };
+      const checkAsync = async (authorize: () => Promise<boolean>): Promise<void> => {
+        checkDeadline();
+        await liveAsync(authorize);
+        checkDeadline();
       };
       const io = async <T>(start: () => Promise<T>): Promise<T> => {
-        check(); charge();
+        if (currentAsync === undefined) check(); else await checkAsync(currentAsync);
+        checkDeadline(); charge();
         const promise = start();
         pending.add(promise);
         try {
           const value = await promise;
-          check();
+          if (currentAsync === undefined) check(); else await checkAsync(currentAsync);
+          checkDeadline();
           return value;
         } finally { pending.delete(promise); }
       };
@@ -431,7 +456,9 @@ async function openStore(options: UrlMachineStoreOptions, expectedIdentitySha256
       void work.then(() => activeWork.delete(work), () => activeWork.delete(work));
       try {
         await Promise.race([work, new Promise<never>((_, reject) => {
-          timer = setTimeout(() => { uncertain = true; active = false; reject(refused()); }, Math.min(operationMilliseconds, Math.max(1, deadline - live())));
+          const operationRemaining = operationMilliseconds - (performance.now() - began);
+          timer = setTimeout(() => { uncertain = true; active = false; reject(refused()); },
+            Math.max(1, Math.min(operationRemaining, deadline - clock())));
         })]);
         return true;
       } catch { uncertain = true; return false; }

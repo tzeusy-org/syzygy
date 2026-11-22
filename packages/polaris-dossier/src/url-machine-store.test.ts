@@ -147,6 +147,48 @@ describe('protected URL machine lifecycle files', { timeout: 30_000 }, () => {
     expect(checked).toMatchObject({ anchor: { kind: 'committed', head: { record: { revision: 2 } } } });
   });
 
+  it('awaits fresh authority around real protected filesystem work', async () => {
+    const f = await fixture(), slot = await f.allocate();
+    expect((await slot.publish()).ok).toBe(true);
+    let asyncCurrent = true;
+    const current = vi.fn(f.options.current);
+    const currentAsync = vi.fn(async () => asyncCurrent);
+    const reopened = await openUrlMachineStore({ ...f.options, current, currentAsync }, f.store.identitySha256);
+    expect(reopened).not.toBeNull(); cleanup.push(() => reopened!.close());
+    current.mockClear(); currentAsync.mockClear();
+    expect(await reopened!.exclusive(slot.context.clientId, f.options.deadline, async lease => {
+      expect(await lease.read()).toMatchObject({ canonical: canon(slot.record), anchor: { kind: 'committed' } });
+      expect(currentAsync.mock.calls.length).toBeGreaterThan(current.mock.calls.length);
+      const asyncChecks = currentAsync.mock.calls.length, syncChecks = current.mock.calls.length;
+      expect(lease.current()).toBe(true);
+      expect(currentAsync.mock.calls).toHaveLength(asyncChecks);
+      expect(current.mock.calls).toHaveLength(syncChecks + 1);
+    })).toBe(true);
+    filesystem.afterSync = file => { if (file === f.options.protectedRoot) asyncCurrent = false; };
+    const run = vi.fn();
+    expect(await reopened!.exclusive(slot.context.clientId, f.options.deadline, run)).toBe(false);
+    expect(run).not.toHaveBeenCalled();
+    expect(current()).toBe(true);
+    expect(await readFile(slot.file)).toEqual(canon(slot.record));
+  });
+
+  it('discards filesystem results when authority outlasts the exclusive deadline', async () => {
+    const f = await fixture(), slot = await f.allocate();
+    expect((await slot.publish()).ok).toBe(true);
+    let afterSync = false;
+    const reopened = await openUrlMachineStore({ ...f.options, currentAsync: async () => {
+      if (afterSync) f.tick(NOW + 1000);
+      return true;
+    } }, f.store.identitySha256);
+    expect(reopened).not.toBeNull(); cleanup.push(() => reopened!.close());
+    filesystem.afterSync = file => { if (file === f.options.protectedRoot) afterSync = true; };
+    const run = vi.fn();
+    expect(await reopened!.exclusive(slot.context.clientId, NOW + 1000, run)).toBe(false);
+    expect(afterSync).toBe(true);
+    expect(run).not.toHaveBeenCalled();
+    expect(await readFile(slot.file)).toEqual(canon(slot.record));
+  });
+
   it('never reinitializes an existing store and refuses missing state, identity mismatch, or symlinked authority', async () => {
     const f = await fixture(), slot = await f.allocate();
     expect(await initializeUrlMachineStore(f.options)).toBeNull();
