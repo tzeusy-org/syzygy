@@ -203,7 +203,7 @@ export async function startUrlOrderedAttempt(input: UrlOrderedAttemptOptions) {
     delivery = await input.audit.readDesignDeliveryView(delivery.receipt, render.product, observeRead);
     const planInput = orderedDesignPlanInputForDelivery(profile, delivery.receipt, input.expectedProduct, input.pin, input.deadline);
     const plan = planOrderedDesignBytes({ ...planInput, envelope: delivery.view });
-    const envelope = { cpuMicroseconds: 64_000_000, wallMilliseconds: 10_000, auditReadBytes: 500_000_000,
+    const envelope = { cpuMicroseconds: 64_000_000, wallMilliseconds: 30_000, auditReadBytes: 500_000_000,
       inputCodeUnits: 8_388_608, secretCodeUnits: 103_000_000, secretCalls: 524_361, activeCodeUnits: 16_777_216, activeCalls: 32 };
     const enforcement: OrderedDesignWorkEnforcement = { runtimeSha256: input.runtime.inputTreeSha256, workerSha256: program.worker.sha256,
       operations: { request: envelope, response: envelope, tool: envelope, audit: envelope, terminal: envelope },
