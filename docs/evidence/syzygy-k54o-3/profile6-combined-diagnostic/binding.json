@@ -22,5 +22,9 @@
       "sha256": "7afe0fe0e3d445d21d9ff8c8a3fa03b7d900d512c86fc4ac8b320533fe593fa5",
       "bytes": 22974
     }
-  ]
+  ],
+  "reconstruction": {
+    "result": "eight diagnostic source digests match",
+    "method": "git read-tree of baseCommit, then git apply --cached of retained patch in a separate temporary index; hash git show :path for each subject. Repository working tree/index untouched."
+  }
 }
