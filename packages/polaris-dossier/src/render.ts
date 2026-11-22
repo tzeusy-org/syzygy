@@ -194,7 +194,7 @@ async function render(runDir: string, deps: RenderDeps, storedSite?: StoredUrlRe
     try {
       const stored = readEffectiveRunRecord(runDir, deps.sources.effectiveRunDeclaration);
       if (!stored.ok && stored.legacy) return refuse('run', stored.reason);
-      if (stored.ok && deps.renderer !== undefined && readRawReadDisclosure(runDir, stored.core.declared.agentProvider) === null)
+      if (stored.ok && readRawReadDisclosure(runDir, stored.core.declared.agentProvider) === null)
         return refuse('disclosure', RAW_READ_DISCLOSURE_REFUSAL);
     } catch { /* existing missing-run / missing-renderer handling below */ }
   }

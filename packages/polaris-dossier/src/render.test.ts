@@ -821,6 +821,9 @@ describe('render', () => {
       ok: false, refusal: { stage: 'disclosure', reason: RESTART_DISCLOSURE },
     });
     expect(renderer).not.toHaveBeenCalled();
+    expect(await renderRun(run, renderDeps({ renderer: undefined }))).toMatchObject({
+      ok: false, refusal: { stage: 'disclosure', reason: RESTART_DISCLOSURE },
+    });
     expect(fs.existsSync(path.join(run, 'site'))).toBe(false);
     expect(readSite(run)).toEqual(before);
   });
