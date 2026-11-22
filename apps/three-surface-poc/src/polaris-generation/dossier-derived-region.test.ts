@@ -34,7 +34,7 @@ describe('the derived-structure region', () => {
   it('draws the root, each directory and each containment solid, each with its fact identity, in the stated order', () => {
     const html = renderDerivedRegion(structure(2, [['docs', 2], ['src', 3]]));
     expect(html.startsWith('<section id="derived-structure" data-reading-level="1" data-topics=""><h2>Derived by Syzygy: top-level directories</h2>'
-      + `<figure class="derived-figure" data-visual-provenance="computed" data-derived-record="sha256:${SHA}"><figcaption>Derived by Syzygy from the pinned tree</figcaption>`
+      + `<figure class="derived-figure" data-visual-provenance="computed" data-derived-record="sha256:${SHA}"><figcaption id="diagram-title-derived">Derived by Syzygy from the pinned tree</figcaption>`
       + `<p class="derived-note">Derived by Syzygy from the paths and modes of the tree at revision ${REV}, listed at ${AT}, by rule top-level-unit version 1. No file body, size or object id was read. Current for that revision only.</p>`
       + '<div class="diagram-scroll"><svg ')).toBe(true);
     // Most files first: src before docs.
@@ -44,11 +44,11 @@ describe('the derived-structure region', () => {
     expect(html).toContain('<title>Repository root (observed)</title>');
     expect(html).toContain('<title>src/ (3 files) (observed)</title>');
     expect(legendOf(html)).toBe('<ul class="diagram-legend" aria-label="Line styles"><li><span class="legend-line observed" aria-hidden="true"></span>Solid: observed</li></ul><p class="diagram-tally">3 boxes and 2 arrows, derived by Syzygy: 5 observed, 0 inferred, 0 unknown.</p>');
-    expect(html).toContain(`<details><summary>Read every derived fact</summary><ul class="derived-facts"><li data-derived-id="_tree-root" data-derived-fact="tree-root" data-epistemic="observed" data-derived-rule="top-level-unit" data-derived-rule-version="1" data-derived-path="." data-derived-record="sha256:${SHA}" data-derived-revision="${REV}">Repository root: 2 files at the root. <span class="derived-mark">Derived by Syzygy</span><span class="visually-hidden ev"> Evidence: label Observed; derived by Syzygy by rule top-level-unit version 1; source path .; record sha256:${SHA}; current for revision ${REV}.</span></li>`);
+    expect(html).toContain(`<details><summary>Read every derived fact</summary><ul class="derived-facts" id="diagram-text-derived"><li data-derived-id="_tree-root" data-derived-fact="tree-root" data-epistemic="observed" data-derived-rule="top-level-unit" data-derived-rule-version="1" data-derived-path="." data-derived-record="sha256:${SHA}" data-derived-revision="${REV}">Repository root: 2 files at the root. <span class="derived-mark">Derived by Syzygy</span><span class="visually-hidden ev"> Evidence: label Observed; derived by Syzygy by rule top-level-unit version 1; source path .; record sha256:${SHA}; current for revision ${REV}.</span></li>`);
     expect(html).toContain(`<li data-derived-id="_tree-unit-2" data-derived-fact="top-level-unit" data-epistemic="observed" data-derived-rule="top-level-unit" data-derived-rule-version="1" data-derived-path="src" data-derived-record="sha256:${SHA}" data-derived-revision="${REV}">src/: 3 files. <span class="derived-mark">Derived by Syzygy</span>`);
     expect(html).toContain(`<li data-derived-id="_tree-contains-1" data-derived-fact="contains" data-epistemic="observed" data-derived-rule="top-level-unit" data-derived-rule-version="1" data-derived-path="docs" data-derived-record="sha256:${SHA}" data-derived-revision="${REV}">Repository root contains docs/. <span class="derived-mark">Derived by Syzygy</span><span class="visually-hidden ev"> Evidence: label Observed; derived by Syzygy by rule top-level-unit version 1; source path docs; record sha256:${SHA}; current for revision ${REV}.</span></li>`);
     expect(html.match(/<li data-derived-id=/gu)).toHaveLength(5);
-    const order = ['<figcaption>', 'class="derived-note"', '<svg ', 'class="diagram-legend"', 'class="diagram-tally"', 'Read every derived fact'].map((s) => html.indexOf(s));
+    const order = ['<figcaption id="diagram-title-derived">', 'class="derived-note"', '<svg ', 'class="diagram-legend"', 'class="diagram-tally"', 'Read every derived fact'].map((s) => html.indexOf(s));
     expect([...order].sort((a, b) => a - b)).toEqual(order);
     expect(html.endsWith('</ul></details></figure></section>')).toBe(true);
     expect(html).not.toContain('data-hue');
