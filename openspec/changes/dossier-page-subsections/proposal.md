@@ -1,4 +1,4 @@
-# Dossier page subsections — version 2.15
+# Dossier page subsections — version 2.16
 
 [Inferred] Candidate agent-decided change under VIS-4 as amended by GOVERNANCE-SIMPLIFICATION-D10. It binds only once its row in `AGENT-ADOPTIONS.md` and its version tag exist; no owner adoption is claimed. It decides no owner class: no doctrine edit; no change to secret detection or SEC-5's fail-closed rule; no write to a repository the owner does not own; no network exposure, release or multi-user use.
 
@@ -16,10 +16,10 @@
 - Draft schema `polaris-dossier-local-draft-v8`: a section may carry `subsections`, two to twelve, each `{id, title, answer, paragraphs}`. The title is a short label; the answer is one claim block whose text is one sentence; the paragraphs are zero to thirty, as a section's are. Every claim of a subsection is a claim of its section for every rule of REQ-034 and REQ-035.
 - A repair finding `subsection-answer`, by rule `one-sentence-answer` version 1, for an answer that is not one sentence; a `field-version` finding for `subsections` in a draft of schema v7 or earlier.
 - Rendering: each subsection is a `<section class="subsection" id="subsection-<id>">` headed by `<h3>`, its answer first; a page that renders a subsection carries an on-page contents list (`<nav class="page-contents">`) before its first section, linking each section and subsection it renders; the stylesheet rules for both ride only on such a page.
-- Brief `polaris-dossier-brief-v13`: brief v12 plus one paragraph, issuing schema v8.
+- Brief `polaris-dossier-brief-v14`: brief v13 (version 2.15, index and task routes) plus one paragraph, issuing schema v8.
 - The reading ledger and the RS-19 advice count a subsection's prose as its section's.
 - The `makefile` recognizer of version 2.14 corrected (syzygy-3efd.81): recipe lines are logical lines, conditional-directive lines no longer end a rule's recipe context, a directive line is never a rule, a blank line may hold tabs, and a tab-led logical line that is no recipe line and lies outside a `define` body is a `syntax` fault.
-- A paragraph stating what does not change; ten scenarios added; the four Form lines extended.
+- A paragraph stating what does not change, against version 2.15; ten scenarios added; the four Form lines extended.
 
 [Observed] Every other sentence and scenario of REQ-034 is carried unchanged.
 
