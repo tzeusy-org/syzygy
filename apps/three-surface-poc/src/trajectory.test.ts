@@ -1,7 +1,7 @@
 import { execFileSync } from 'node:child_process';
 import { mkdirSync, rmSync, writeFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
-import { afterEach, describe, expect, it } from 'vitest';
+import { afterEach, describe, expect, it, vi } from 'vitest';
 
 import { BUTLERS_POC_SEEDS, buildPocModel, STATUS_TO_COLUMN, UNMARKED_RECORD_REASON, workerChangeVerificationId, type PocModel, type TestArtifactRecord } from '@syzygy/three-surface-poc-core';
 
@@ -926,5 +926,182 @@ describe('Trajectory opens with its five answers (T3, POC-REQ-044)', () => {
     const dropped = html.replace(/<div class="answer" data-parity-field="trajectory-answer" data-answer-id="cost">[\s\S]*?<\/dd><\/div>/, '');
     expect(dropped).not.toBe(html);
     expect([...answersRegion(dropped).matchAll(/<dt>([^<]*)<\/dt>/g)].map((m) => m[1])).not.toEqual(QUESTIONS);
+  });
+});
+
+/** The elapsed-time region and its parity cells, by field, in page order. */
+function timeRegion(html: string): string {
+  return /<section class="time-measures"[^>]*>([\s\S]*?)<\/section>/.exec(html)?.[1] ?? '';
+}
+function timeCells(html: string): Record<string, string[]> {
+  const cells: Record<string, string[]> = {};
+  for (const m of timeRegion(html).matchAll(/data-parity-field="(time-[a-z0-9-]+)"[^>]*>([^<]*)</g)) (cells[m[1]!] ??= []).push(m[2]!);
+  return cells;
+}
+/** Every mismatch between the page's time cells and the machine measures. */
+function timeParityMismatches(html: string, served: PocModel): string[] {
+  if (served.trajectory.kind !== 'observed') return ['not observed'];
+  const t = served.trajectory.timeMeasures;
+  const hours = (v: number | null, total: number): string => (v === null ? `Unknown: 0 of ${total} covered` : String(v));
+  const expected: Record<string, string[]> = {
+    'time-measured-at': [t.measuredAt],
+    'time-source': [t.source],
+    'time-evidence-class': [t.evidenceClass],
+    'time-lead-covered': [String(t.leadTime.covered)],
+    'time-lead-total': [String(t.leadTime.total)],
+    'time-lead-median': [hours(t.leadTime.medianHours, t.leadTime.total)],
+    'time-lead-p90': [hours(t.leadTime.p90Hours, t.leadTime.total)],
+    'time-age-covered': [String(t.age.covered)],
+    'time-age-total': [String(t.age.total)],
+    'time-age-median': [hours(t.age.medianHours, t.age.total)],
+    'time-age-p90': [hours(t.age.p90Hours, t.age.total)],
+    'time-arrivals-covered': [String(t.arrivals.covered)],
+    'time-arrivals-total': [String(t.arrivals.total)],
+    'time-closures-covered': [String(t.closures.covered)],
+    'time-closures-total': [String(t.closures.total)],
+    'time-week-arrivals': t.weeks.map((w) => String(w.arrivals)),
+    'time-week-closures': t.weeks.map((w) => String(w.closures)),
+    'time-earlier-arrivals': [String(t.earlier.arrivals)],
+    'time-earlier-closures': [String(t.earlier.closures)],
+  };
+  const actual = timeCells(html);
+  return [...new Set([...Object.keys(expected), ...Object.keys(actual)])]
+    .filter((field) => JSON.stringify(actual[field] ?? []) !== JSON.stringify(expected[field] ?? []))
+    .map((field) => `${field}: page ${JSON.stringify(actual[field] ?? [])}, machine ${JSON.stringify(expected[field] ?? [])}`);
+}
+
+/** Every mismatch between the charts' marks and the machine measures: bar
+ * titles, weekly hover titles, and each line's point heights, which must
+ * order exactly as the machine values do (higher count, higher point). */
+function chartMismatches(html: string, served: PocModel): string[] {
+  if (served.trajectory.kind !== 'observed') return ['not observed'];
+  const t = served.trajectory.timeMeasures;
+  const region = timeRegion(html);
+  const out: string[] = [];
+  const bars = [...region.matchAll(/<rect class="tc-bar"[^>]*><title>([^<]*): (\d+) hours<\/title><\/rect><text class="tc-label"[^>]*>(\d+) h</g)];
+  const pageBars = bars.map((m) => `${m[1]}: ${m[2]}`);
+  const labels = bars.map((m) => `${m[1]}: ${m[3]}`);
+  const machineBars = ([['Lead time, median', t.leadTime.medianHours], ['Lead time, 90th percentile', t.leadTime.p90Hours], ['Age, median', t.age.medianHours], ['Age, 90th percentile', t.age.p90Hours]] as const)
+    .filter(([, v]) => v !== null)
+    .map(([label, v]) => `${label}: ${v}`);
+  if (JSON.stringify(pageBars) !== JSON.stringify(machineBars)) out.push(`bars: page ${JSON.stringify(pageBars)}, machine ${JSON.stringify(machineBars)}`);
+  if (JSON.stringify(labels) !== JSON.stringify(machineBars)) out.push(`bar labels: page ${JSON.stringify(labels)}, machine ${JSON.stringify(machineBars)}`);
+  const hits = [...region.matchAll(/<rect class="tc-hit"[^>]*><title>([^<]*)<\/title>/g)].map((m) => m[1]);
+  const machineHits = t.weeks.map((w) => `${w.week}: ${w.arrivals} arrived, ${w.closures} closed`);
+  if (JSON.stringify(hits) !== JSON.stringify(machineHits)) out.push(`weekly titles: page ${JSON.stringify(hits)}, machine ${JSON.stringify(machineHits)}`);
+  for (const key of ['arrivals', 'closures'] as const) {
+    const pts = new RegExp(`data-parity-field="trajectory-time-chart-${key}"[^>]*points="([^"]*)"`).exec(region)?.[1] ?? '';
+    const ys = pts.split(' ').map((p) => Number(p.split(',')[1]));
+    const values = t.weeks.map((w) => w[key]);
+    const ordered = ys.length === values.length && values.every((a, i) => values.every((b, j) => Math.sign(b - a) === Math.sign(ys[i]! - ys[j]!)));
+    if (!ordered) out.push(`${key} line: point heights do not order as the machine values`);
+  }
+  return out;
+}
+
+describe('Trajectory elapsed-time measures (T9, POC-REQ-045)', () => {
+  // As of 2026-08-30T12:00:00Z (the fixture evaluation). Hand-computed:
+  // lead time over t1 (48 h) and t2 (12 h); t3 has a timezone-less created
+  // instant and t4 closes before it was created, so 2 of 4 are covered.
+  // Age: t5 48 h, t6 12 h. ISO weeks: 08-01 W31, 08-03..08-05 W32, 08-28 and 08-30 W35.
+  const rows = () => [
+    fixtureWorkItemRow('bu-t1', 'closed', '2026-08-01T00:00:00Z', '2026-08-03T00:00:00Z', '2026-08-03T00:00:00Z'),
+    fixtureWorkItemRow('bu-t2', 'closed', '2026-08-01T00:00:00Z', '2026-08-01T12:00:00Z', '2026-08-01T12:00:00Z'),
+    fixtureWorkItemRow('bu-t3', 'closed', '2026-08-02T00:00:00', '2026-08-05T00:00:00Z', '2026-08-05T00:00:00Z'),
+    fixtureWorkItemRow('bu-t4', 'closed', '2026-08-05T00:00:00Z', '2026-08-05T00:00:00Z', '2026-08-04T00:00:00Z'),
+    fixtureWorkItemRow('bu-t5', 'open', '2026-08-28T12:00:00Z', '2026-08-28T12:00:00Z', null),
+    fixtureWorkItemRow('bu-t6', 'in_progress', '2026-08-30T00:00:00Z', '2026-08-30T00:00:00Z', null),
+  ];
+
+  it('serves the four measures with their coverage, literal by hand', async () => {
+    const served = await servedAnswer(buildFixtureModel(cleanups, { workItemRows: rows() }));
+    if (served.trajectory.kind !== 'observed') throw new Error('unreachable');
+    expect(served.trajectory.timeMeasures).toEqual({
+      source: 'tracker-recorded-instants',
+      evidenceClass: 'observed',
+      measuredAt: '2026-08-30T12:00:00Z',
+      leadTime: { covered: 2, total: 4, medianHours: 12, p90Hours: 48 },
+      age: { covered: 2, total: 2, medianHours: 12, p90Hours: 48 },
+      arrivals: { covered: 5, total: 6 },
+      closures: { covered: 2, total: 4 },
+      weeks: [
+        { week: '2026-W31', arrivals: 2, closures: 1 },
+        { week: '2026-W32', arrivals: 1, closures: 1 },
+        { week: '2026-W33', arrivals: 0, closures: 0 },
+        { week: '2026-W34', arrivals: 0, closures: 0 },
+        { week: '2026-W35', arrivals: 2, closures: 0 },
+      ],
+      earlier: { arrivals: 0, closures: 0 },
+    });
+  });
+
+  it('gives every number in a table cell equal to the machine answer, and a mutated cell fails (rule 6)', async () => {
+    const model = buildFixtureModel(cleanups, { workItemRows: rows() });
+    const html = renderTrajectoryPage(model);
+    const served = await servedAnswer(model);
+    expect(timeParityMismatches(html, served)).toEqual([]);
+    expect(timeCells(html)['time-lead-median']).toEqual(['12']);
+    expect(timeCells(html)['time-week-arrivals']).toEqual(['2', '1', '0', '0', '2']);
+    const mutated = html.replace('data-parity-field="time-age-p90">48<', 'data-parity-field="time-age-p90">47<');
+    expect(mutated).not.toBe(html);
+    expect(timeParityMismatches(mutated, served)).toEqual(['time-age-p90: page ["47"], machine ["48"]']);
+  });
+
+  it('draws two titled charts with labelled axes and a text alternative, no script, and no per-card time bar', () => {
+    const html = renderTrajectoryPage(buildFixtureModel(cleanups, { workItemRows: rows() }));
+    const region = timeRegion(html);
+    expect([...region.matchAll(/<svg class="time-chart"[^>]*role="img"[^>]*aria-labelledby="([^"]+)"/g)].map((m) => m[1])).toEqual(['tc-weekly-title tc-weekly-desc', 'tc-hours-title tc-hours-desc']);
+    for (const text of ['Work items arriving and closing per ISO week (UTC)', 'Lead time of closed items and age of open items, in hours', 'ISO week (UTC)', 'Items per week', '>Hours<', '>Arrivals<', '>Closures<']) {
+      expect(region, text).toContain(text);
+    }
+    expect(region).toContain('<desc id="tc-weekly-desc">5 weeks from 2026-W31 to 2026-W35, counted over 5 of 6 items with a usable created instant and 2 of 4 closed items with a usable closed instant;');
+    expect(html).not.toMatch(/<script/i);
+    expect(html).not.toContain('time-lane');
+    expect(html).not.toContain('lane-bar');
+    // The cost answer points at the measures, while staying Unknown.
+    expect(answerBody(html, 'cost')).toContain('<a href="#time-measures">lead time and age</a>');
+    expect(answerBody(html, 'cost')).toContain('Reason: <code>source-uncaptured-or-unreachable</code>');
+  });
+
+  it('draws every chart mark from the machine answer, and a mutated mark fails (rule 6)', async () => {
+    const model = buildFixtureModel(cleanups, { workItemRows: rows() });
+    const html = renderTrajectoryPage(model);
+    const served = await servedAnswer(model);
+    expect(chartMismatches(html, served)).toEqual([]);
+    const bar = html.replace('Lead time, median: 12 hours</title></rect><text class="tc-label"', 'Lead time, median: 13 hours</title></rect><text class="tc-label"');
+    expect(bar).not.toBe(html);
+    expect(chartMismatches(bar, served)).toEqual(['bars: page ["Lead time, median: 13","Lead time, 90th percentile: 48","Age, median: 12","Age, 90th percentile: 48"], machine ["Lead time, median: 12","Lead time, 90th percentile: 48","Age, median: 12","Age, 90th percentile: 48"]']);
+    // The closures line drawn from the arrivals values.
+    const points = (key: string): string => /data-parity-field="trajectory-time-chart-(?:arrivals|closures)"[^>]*points="([^"]*)"/g.exec(html.slice(html.indexOf(`trajectory-time-chart-${key}`) - 40))![1]!;
+    const swapped = html.replace(`points="${points('closures')}"`, `points="${points('arrivals')}"`);
+    expect(swapped).not.toBe(html);
+    expect(chartMismatches(swapped, served)).toContain('closures line: point heights do not order as the machine values');
+  });
+
+  it('states a measure with no covered item Unknown, never 0, on the page (RFC8-19)', async () => {
+    const reversed = [fixtureWorkItemRow('bu-r1', 'closed', '2026-08-05T00:00:00Z', '2026-08-05T00:00:00Z', '2026-08-04T00:00:00Z')];
+    const model = buildFixtureModel(cleanups, { workItemRows: reversed });
+    const html = renderTrajectoryPage(model);
+    const served = await servedAnswer(model);
+    expect(timeParityMismatches(html, served)).toEqual([]);
+    expect(timeCells(html)['time-lead-median']).toEqual(['Unknown: 0 of 1 covered']);
+    expect(timeCells(html)['time-lead-p90']).toEqual(['Unknown: 0 of 1 covered']);
+    expect(timeCells(html)['time-age-median']).toEqual(['Unknown: 0 of 0 covered']);
+    expect(timeRegion(html)).toContain('>Unknown: 0 of 1 covered</text>');
+    for (const field of ['time-lead-median', 'time-lead-p90', 'time-age-median', 'time-age-p90']) expect(timeCells(html)[field]).not.toContain('0');
+  });
+
+  it('renders one observation byte-equal at two wall-clock times (POC-REQ-041)', () => {
+    const model = buildFixtureModel(cleanups, { workItemRows: rows() });
+    vi.useFakeTimers();
+    try {
+      vi.setSystemTime(new Date('2026-08-30T12:00:00Z'));
+      const first = renderTrajectoryPage(model);
+      vi.setSystemTime(new Date('2031-01-01T00:00:00Z'));
+      const second = renderTrajectoryPage(model);
+      expect(second).toBe(first);
+    } finally {
+      vi.useRealTimers();
+    }
   });
 });

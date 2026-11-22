@@ -44,6 +44,8 @@ const EXCLUDES = [
   'projectShape.sources[].claim.evaluationId',
   'projectShape.sources[].stamp.capturedAt',
   'proposedWork.currentAuthority.claim.evaluationId',
+  'trajectory.timeMeasures.age',
+  'trajectory.timeMeasures.measuredAt',
   'walkthroughJudgment.evaluation.evaluationId',
   'walkthroughJudgment.evaluation.evaluationInstant',
   'workItems.capturedAt',
@@ -226,15 +228,16 @@ function assertStable(left: unknown, right: unknown, excludes: readonly string[]
 }
 
 describe('response identity independent census and mutation proofs', () => {
-  it('maps both evaluation instants to exactly the 25 declared structural paths, with no 26th path', () => {
+  it('maps both evaluation instants to exactly the 27 declared structural paths, with no 28th path', () => {
     const [first, second] = stampedFixtureBodies();
     const paths = new Set([
       ...instantPaths(JSON.parse(JSON.stringify(first)), [FIRST_AS_OF, SECOND_AS_OF]),
       ...instantPaths(JSON.parse(JSON.stringify(second)), [FIRST_AS_OF, SECOND_AS_OF]),
     ]);
     expect([...paths].sort()).toEqual([...EXCLUDES].sort());
-    expect(paths.size).toBe(25);
+    expect(paths.size).toBe(27);
   });
+
 
   it('removing each exercised exclusion makes the independent stability oracle fail and names that path', () => {
     const [first, second] = stampedFixtureBodies();
