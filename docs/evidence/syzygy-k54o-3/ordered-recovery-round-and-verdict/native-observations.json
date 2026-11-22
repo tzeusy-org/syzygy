@@ -1,0 +1,85 @@
+{
+  "stop-resume": {
+    "failure": "expected 1 to be +0 // Object.is equality",
+    "initialLoopEvents": [
+      "told the inventory session: draft revision 0 is frozen",
+      "delivered the fidelity packet for draft revision 0 and inventory revision 0",
+      "rendering draft revision 0",
+      "run ended: operator stop requested, checked history retained"
+    ],
+    "resumeChecks": [
+      {
+        "phase": "verify",
+        "ok": true,
+        "nextDesignRound": 2
+      },
+      {
+        "phase": "claim",
+        "exactCut": true,
+        "current": true
+      },
+      {
+        "phase": "resumed-guards",
+        "policyWithdrawal": "refused",
+        "claimWithdrawal": "refused"
+      },
+      {
+        "phase": "machine-claim",
+        "current": true,
+        "claimChecks": 1,
+        "withdrawn": true,
+        "asyncCurrent": true,
+        "asyncWithdrawn": true
+      }
+    ],
+    "retainedSiteOrdinals": [
+      0,
+      1
+    ],
+    "executionRecordPresent": false
+  },
+  "eligible-stop-resume": {
+    "failure": "expected 1 to be +0 // Object.is equality",
+    "initialLoopEvents": [
+      "told the inventory session: draft revision 0 is frozen",
+      "delivered the fidelity packet for draft revision 0 and inventory revision 0",
+      "rendering draft revision 0",
+      "prepared design round 1 for the reviewer",
+      "run ended: operator stop requested, checked history retained"
+    ],
+    "resumeChecks": [
+      {
+        "phase": "verify",
+        "ok": true,
+        "nextDesignRound": 2
+      },
+      {
+        "phase": "claim",
+        "exactCut": true,
+        "current": true
+      },
+      {
+        "phase": "resumed-guards",
+        "policyWithdrawal": "refused",
+        "claimWithdrawal": "refused"
+      },
+      {
+        "phase": "machine-claim",
+        "current": true,
+        "claimChecks": 1,
+        "withdrawn": true,
+        "asyncCurrent": true,
+        "asyncWithdrawn": true
+      },
+      {
+        "phase": "cold-final-factory",
+        "issued": true
+      }
+    ],
+    "retainedSiteOrdinals": [
+      0,
+      1
+    ],
+    "executionRecordPresent": false
+  }
+}

@@ -1,0 +1,210 @@
+{
+  "subject": "dc7b7a482472a8b8b39c7be73e37e58ed76d3b10",
+  "results": [
+    {
+      "id": "share-capture-cutoff",
+      "source": "packages/polaris-dossier/src/session-machine-transport.ts",
+      "old": "await before(deadline, () => authorize(captured, stillOpening))",
+      "new": "await before(captureDeadline, () => authorize(captured, stillOpening))",
+      "baseline": {
+        "command": [
+          "npx",
+          "--no-install",
+          "vitest",
+          "run",
+          "--project",
+          "integration",
+          "--maxWorkers=1",
+          "packages/polaris-dossier/src/session-machine-transport.test.ts",
+          "-t",
+          "paused until protected publication is published"
+        ],
+        "exit": 0,
+        "log": "share-capture-cutoff-baseline.log",
+        "sha256": "e2605500f9e9a8de3a3f8c0f75a69a5f9d2bc562de4d48d68b3764b1edab8580"
+      },
+      "mutantSourceSha256": "b079c7e63648c808848f115b011710ccd0f6cc80c30f9b89f6a699346cc1beb6",
+      "mutant": {
+        "command": [
+          "npx",
+          "--no-install",
+          "vitest",
+          "run",
+          "--project",
+          "integration",
+          "--maxWorkers=1",
+          "packages/polaris-dossier/src/session-machine-transport.test.ts",
+          "-t",
+          "paused until protected publication is published"
+        ],
+        "exit": 1,
+        "log": "share-capture-cutoff-mutant.log",
+        "sha256": "d090ba0f4d7b0141fdf77af85c90b95d2ce226c17baa54a4e03c247fd1c4bcfa"
+      }
+    },
+    {
+      "id": "miss-rename-guard",
+      "source": "packages/polaris-dossier/src/url-machine-store.ts",
+      "old": "          check();\n          // No asynchronous scheduling gap between currentness and publication.",
+      "new": "          checkWork();\n          // No asynchronous scheduling gap between currentness and publication.",
+      "baseline": {
+        "command": [
+          "npx",
+          "--no-install",
+          "vitest",
+          "run",
+          "--project",
+          "integration",
+          "--maxWorkers=1",
+          "packages/polaris-dossier/src/url-machine-store.test.ts",
+          "-t",
+          "prevents the first durable rename when parent-withdrawn"
+        ],
+        "exit": 0,
+        "log": "miss-rename-guard-baseline.log",
+        "sha256": "87282df114aa430b693a99ac1d730741c60fc869731413c52fabc5608da41cbc"
+      },
+      "mutantSourceSha256": "165bc9b18009cc109058fcbcfdaa77622a320a7a820b33e43a2fbb0677841edb",
+      "mutant": {
+        "command": [
+          "npx",
+          "--no-install",
+          "vitest",
+          "run",
+          "--project",
+          "integration",
+          "--maxWorkers=1",
+          "packages/polaris-dossier/src/url-machine-store.test.ts",
+          "-t",
+          "prevents the first durable rename when parent-withdrawn"
+        ],
+        "exit": 1,
+        "log": "miss-rename-guard-mutant.log",
+        "sha256": "4c6026de9f9c353513046adf63bd20d63a85b7aa0c346e6f24abe32c417f4eba"
+      }
+    },
+    {
+      "id": "ignore-closed-connection",
+      "source": "packages/polaris-dossier/src/url-machine-store.ts",
+      "old": "if (!active || (publication?.current !== undefined && publication.current() !== true)) throw refused();",
+      "new": "if (!active) throw refused();",
+      "baseline": {
+        "command": [
+          "npx",
+          "--no-install",
+          "vitest",
+          "run",
+          "--project",
+          "integration",
+          "--maxWorkers=1",
+          "packages/polaris-dossier/src/url-machine-store.test.ts",
+          "-t",
+          "prevents the first durable rename when connection-closed"
+        ],
+        "exit": 0,
+        "log": "ignore-closed-connection-baseline.log",
+        "sha256": "3440f027d42a7df65e1414d99fd84e9e30670482570703afcd2763b5d220ee12"
+      },
+      "mutantSourceSha256": "6635cc70e38e4307b89f0eca5bdbdb49afd0050aead4df20472b6713b98180ae",
+      "mutant": {
+        "command": [
+          "npx",
+          "--no-install",
+          "vitest",
+          "run",
+          "--project",
+          "integration",
+          "--maxWorkers=1",
+          "packages/polaris-dossier/src/url-machine-store.test.ts",
+          "-t",
+          "prevents the first durable rename when connection-closed"
+        ],
+        "exit": 1,
+        "log": "ignore-closed-connection-mutant.log",
+        "sha256": "0f55ae24e791a280c3d2952725ff36a3c3ce906f445ec01bd5c16398b7ca6186"
+      }
+    },
+    {
+      "id": "double-checked-clock",
+      "source": "packages/polaris-dossier/src/url-machine-lifecycle.ts",
+      "old": "    const now = lease.sampleCurrent === undefined ? lease.now() : lease.sampleCurrent();\n    if (now === null || (lease.sampleCurrent === undefined && lease.current() !== true)",
+      "new": "    const now = lease.now();\n    if (lease.current() !== true",
+      "baseline": {
+        "command": [
+          "npx",
+          "--no-install",
+          "vitest",
+          "run",
+          "--project",
+          "integration",
+          "--maxWorkers=1",
+          "packages/polaris-dossier/src/url-machine-store.test.ts",
+          "-t",
+          "trusted store with one checked clock"
+        ],
+        "exit": 0,
+        "log": "double-checked-clock-baseline.log",
+        "sha256": "4ca7614eeb31e1c9eb3b4e16a96fd8255fb7680853d52fa47022523b59dba733"
+      },
+      "mutantSourceSha256": "ca696b958c5a6ec0814d66fc8e52c157aa2ac80e872aed8b8a656adc1b11ea13",
+      "mutant": {
+        "command": [
+          "npx",
+          "--no-install",
+          "vitest",
+          "run",
+          "--project",
+          "integration",
+          "--maxWorkers=1",
+          "packages/polaris-dossier/src/url-machine-store.test.ts",
+          "-t",
+          "trusted store with one checked clock"
+        ],
+        "exit": 1,
+        "log": "double-checked-clock-mutant.log",
+        "sha256": "26d89e33d82f602539f292861ed6c2940d70bc21acbcc4ab11ccff4e685a36d5"
+      }
+    },
+    {
+      "id": "miss-post-io-authority",
+      "source": "packages/polaris-dossier/src/url-machine-store.ts",
+      "old": "          if (currentAsync === undefined || publication !== undefined) checkWork();\n          else await checkAsync(currentAsync);\n          checkDeadline();\n          return value;",
+      "new": "          if (currentAsync === undefined || publication !== undefined) checkWork();\n          checkDeadline();\n          return value;",
+      "baseline": {
+        "command": [
+          "npx",
+          "--no-install",
+          "vitest",
+          "run",
+          "--project",
+          "integration",
+          "--maxWorkers=1",
+          "packages/polaris-dossier/src/url-machine-store.test.ts",
+          "-t",
+          "checks authority after protected state I/O"
+        ],
+        "exit": 0,
+        "log": "miss-post-io-authority-baseline.log",
+        "sha256": "9f0e7a6a197aa639025c4cb541743b5524fce2199c430b6092b23eb73e4b5da0"
+      },
+      "mutantSourceSha256": "b0f093fe13029db0ae194bc5a2802a6fd402f46af5185cbc2f7e8d625b46cfdb",
+      "mutant": {
+        "command": [
+          "npx",
+          "--no-install",
+          "vitest",
+          "run",
+          "--project",
+          "integration",
+          "--maxWorkers=1",
+          "packages/polaris-dossier/src/url-machine-store.test.ts",
+          "-t",
+          "checks authority after protected state I/O"
+        ],
+        "exit": 1,
+        "log": "miss-post-io-authority-mutant.log",
+        "sha256": "51c12471be76190682177d2880c6a8b6b40e74f4fa9c93862d49082ef6a636c6"
+      }
+    }
+  ]
+}

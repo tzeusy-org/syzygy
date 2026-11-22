@@ -1,0 +1,73 @@
+{
+  "generatedAt": "2026-11-22T12:12:28.099105+00:00",
+  "parent": "dc7b7a482472a8b8b39c7be73e37e58ed76d3b10",
+  "subjects": [
+    {
+      "commit": "c42b5f26c52d8f39a23db888cbf6f88ea04732d9",
+      "tree": "27f3803fba6a7775c48a610c7a8c24f9b56d7298"
+    },
+    {
+      "commit": "362029189f44e2f4e6bcc045832e6b35f21e52d9",
+      "tree": "0e65be7052e483a06a1b2e935b4277b8211731e9"
+    }
+  ],
+  "diffSha256": "370fe22044c2441b59612b6dbdcd0779c24e013da2403b90742384f20c9d4cf8",
+  "sourceDigests": [
+    {
+      "path": "packages/polaris-dossier/src/url-launch-history.test.ts",
+      "sha256": "0c5eeedfb6f6e61bf4ae56f6568cb5f55fade4bfc65cd770047de2a8bb824f95"
+    },
+    {
+      "path": "packages/polaris-dossier/src/url-run-artifacts.ts",
+      "sha256": "d48dab193902acf6208cf089f38eb31ec36e8ddcd07db2eaa9a643bc01cfba16"
+    },
+    {
+      "path": "packages/polaris-dossier/src/url-session-audit.ts",
+      "sha256": "01296446a6260959658cd35e2af62ed7a44cc870c5b4a05f5f8e20f93a9a5c31"
+    }
+  ],
+  "artifacts": [
+    {
+      "path": "focused.log",
+      "bytes": 876,
+      "sha256": "f01b064f925a889d0a75b651541d858a7ffbabf6370bbb0aa59f7f675c4de0dd"
+    },
+    {
+      "path": "native-eligible-stop.log",
+      "bytes": 38790,
+      "sha256": "3459b8bf1ec4f5cebcf1993c88ec9c86db83303939d63c9593dc36e5d2a23fc7"
+    },
+    {
+      "path": "native-observations.json",
+      "bytes": 2129,
+      "sha256": "74ec7e32c620d76612504068b5160006d3da2d9ee30b179d8eca3f7d1703656e"
+    },
+    {
+      "path": "native-stop.log",
+      "bytes": 37371,
+      "sha256": "5345f33c35bd24807fe7896083efbe7256ce7d342047f575052d5ace04c32aa6"
+    },
+    {
+      "path": "source-review-RAW.md",
+      "bytes": 6018,
+      "sha256": "fecd482ad29d41d76fe759a6b082fef90ebbb9d459000d85ad718ed7ffd5b0f0"
+    },
+    {
+      "path": "typecheck.log",
+      "bytes": 37,
+      "sha256": "396901319daac4a4413b23478852db3c572014f86c71d148273565f0f3332696"
+    },
+    {
+      "path": "verdict-focused.log",
+      "bytes": 516,
+      "sha256": "67a418276bd608a89577f07528da8e516dbc334b4350a0982f3591f53fe2c649"
+    }
+  ],
+  "verification": {
+    "canonicalVerdict": "Selected positive ordered audit case passed on c42b5f26c.",
+    "wholeLaunchHistory": "39 integration cases passed on 362029189, with typecheck and independent source PASS.",
+    "publicInterrupted": "Clean initial stop and exact claim, fresh design delivery, then inspection refusal before provider forwarding. Execution Record absent.",
+    "publicEligible": "Clean eligible history retained. Exact cold verification and claim succeeded. Genuine cold final continuation factory issued a proof. Public resume exited 1 before write-once closure.",
+    "limits": "The exact first cause in each composed failure and the final write-once results were not established by these witnesses."
+  }
+}

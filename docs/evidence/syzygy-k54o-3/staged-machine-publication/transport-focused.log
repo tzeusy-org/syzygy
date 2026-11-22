@@ -1,0 +1,10 @@
+
+ RUN  v3.2.7 /home/orca/.tmp/syzygy-beads-looper-20261114-54ebc9f1/d10-f3-runtime-current
+
+ ✓ |integration| packages/polaris-dossier/src/session-machine-transport.test.ts (14 tests) 89ms
+
+ Test Files  1 passed (1)
+      Tests  14 passed (14)
+   Start at  19:46:06
+   Duration  1.01s (transform 492ms, setup 8ms, collect 644ms, tests 89ms, environment 0ms, prepare 49ms)
+

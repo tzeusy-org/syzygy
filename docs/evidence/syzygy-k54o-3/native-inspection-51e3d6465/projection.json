@@ -1,0 +1,842 @@
+{
+  "sourceBinding": {
+    "file": "source-binding.json",
+    "bytes": 9267,
+    "sha256": "00997a72c0c8043cc7c69248888379615b98901824ade5e532e28a53c8f25c5a"
+  },
+  "baseCommit": "51e3d646580d718e256c647dce325de993910fd4",
+  "rawArtifacts": [
+    {
+      "file": "overlay.patch",
+      "bytes": 70166,
+      "sha256": "550fdc5cf3fa416146399a7c281f1557b7526367dcfea4f471f81042ad71ff3a"
+    },
+    {
+      "file": "trace.jsonl",
+      "bytes": 1509622,
+      "sha256": "c9ddaf287d2f34a1018f3052b7eaa225773abe9a611eedb3ca3ca32e63fc9da4"
+    }
+  ],
+  "units": "milliseconds",
+  "traceValidation": {
+    "rowsPassedClosedFieldAndValueChecks": 4738,
+    "eventsByKind": {
+      "async-policy": 40,
+      "child-exit": 5,
+      "current-false": 1,
+      "first-terminal": 5,
+      "ordered-phase": 20,
+      "peer-phase": 331,
+      "product-phase": 10,
+      "sample-start": 89,
+      "sample-success": 88,
+      "spawn": 5,
+      "store-phase": 4050,
+      "sync-policy": 94
+    }
+  },
+  "launchedSessionRefusals": [
+    {
+      "spawn": {
+        "role": "design",
+        "launch": 5,
+        "event": "spawn",
+        "at": 174286.2,
+        "inspectionBound": 1000,
+        "cadence": 200
+      },
+      "orderedPhases": [
+        {
+          "role": "design",
+          "launch": 5,
+          "event": "ordered-phase",
+          "at": 174286.5,
+          "phase": "bootstrap-launched"
+        },
+        {
+          "role": "design",
+          "launch": 5,
+          "event": "ordered-phase",
+          "at": 174286.7,
+          "phase": "bootstrap-write-launch"
+        },
+        {
+          "role": "design",
+          "launch": 5,
+          "event": "ordered-phase",
+          "at": 174811.2,
+          "phase": "bootstrap-commit-launch"
+        },
+        {
+          "role": "design",
+          "launch": 5,
+          "event": "ordered-phase",
+          "at": 176123.5,
+          "phase": "bootstrap-register-launch"
+        },
+        {
+          "role": "design",
+          "launch": 5,
+          "event": "ordered-phase",
+          "at": 176123.7,
+          "phase": "register-launch-entry"
+        },
+        {
+          "role": "design",
+          "launch": 5,
+          "event": "ordered-phase",
+          "at": 176272,
+          "phase": "register-launch-start"
+        },
+        {
+          "role": "design",
+          "launch": 5,
+          "event": "ordered-phase",
+          "at": 176313.8,
+          "phase": "register-launch-prompt"
+        },
+        {
+          "role": "design",
+          "launch": 5,
+          "event": "ordered-phase",
+          "at": 176516.1,
+          "phase": "register-launch-poll"
+        },
+        {
+          "role": "design",
+          "launch": 5,
+          "event": "ordered-phase",
+          "at": 176684.8,
+          "phase": "register-launch-snapshot"
+        },
+        {
+          "role": "design",
+          "launch": 5,
+          "event": "ordered-phase",
+          "at": 176920.9,
+          "phase": "register-launch-retain"
+        },
+        {
+          "role": "design",
+          "launch": 5,
+          "event": "ordered-phase",
+          "at": 177014.7,
+          "phase": "bootstrap-post-launch-current"
+        },
+        {
+          "role": "design",
+          "launch": 5,
+          "event": "ordered-phase",
+          "at": 177165.8,
+          "phase": "bootstrap-post-launch-sample"
+        },
+        {
+          "role": "design",
+          "launch": 5,
+          "event": "ordered-phase",
+          "at": 177312.7,
+          "phase": "bootstrap-commit-delivery"
+        },
+        {
+          "role": "design",
+          "launch": 5,
+          "event": "ordered-phase",
+          "at": 177312.7,
+          "phase": "delivery-commit-entry"
+        },
+        {
+          "role": "design",
+          "launch": 5,
+          "event": "ordered-phase",
+          "at": 177312.7,
+          "phase": "delivery-commit-launch-inspect"
+        },
+        {
+          "role": "design",
+          "launch": 5,
+          "event": "ordered-phase",
+          "at": 177313.1,
+          "phase": "delivery-commit-first-poll"
+        },
+        {
+          "role": "design",
+          "launch": 5,
+          "event": "ordered-phase",
+          "at": 177313.1,
+          "phase": "delivery-commit-product-inspect"
+        },
+        {
+          "role": "design",
+          "launch": 5,
+          "event": "ordered-phase",
+          "at": 180500.6,
+          "phase": "delivery-commit-product-compare"
+        },
+        {
+          "role": "design",
+          "launch": 5,
+          "event": "ordered-phase",
+          "at": 180501.4,
+          "phase": "delivery-commit-first-capture"
+        },
+        {
+          "role": "design",
+          "launch": 5,
+          "event": "ordered-phase",
+          "at": 180507.5,
+          "phase": "delivery-commit-append"
+        }
+      ],
+      "productPhases": [
+        {
+          "role": "design",
+          "launch": 5,
+          "event": "product-phase",
+          "at": 177313.6,
+          "phase": "current-before",
+          "status": "start",
+          "elapsed": 0.029325000010430813,
+          "remaining": 16274
+        },
+        {
+          "role": "design",
+          "launch": 5,
+          "event": "product-phase",
+          "at": 177313.7,
+          "phase": "sample-before",
+          "status": "start",
+          "elapsed": 0.12684000001172535,
+          "remaining": 16274
+        },
+        {
+          "role": "design",
+          "launch": 5,
+          "event": "product-phase",
+          "at": 177531.6,
+          "phase": "first-stable",
+          "status": "start",
+          "elapsed": 218.0186340000073,
+          "remaining": 16056
+        },
+        {
+          "role": "design",
+          "launch": 5,
+          "event": "product-phase",
+          "at": 177954.8,
+          "phase": "renderer-current",
+          "status": "start",
+          "elapsed": 641.2618580000126,
+          "remaining": 15633
+        },
+        {
+          "role": "design",
+          "launch": 5,
+          "event": "product-phase",
+          "at": 179722.2,
+          "phase": "sample-after",
+          "status": "start",
+          "elapsed": 2408.6991299999936,
+          "remaining": 13865
+        },
+        {
+          "role": "design",
+          "launch": 5,
+          "event": "product-phase",
+          "at": 180006.5,
+          "phase": "second-stable",
+          "status": "start",
+          "elapsed": 2692.93922,
+          "remaining": 13581
+        },
+        {
+          "role": "design",
+          "launch": 5,
+          "event": "product-phase",
+          "at": 180499.5,
+          "phase": "current-before-copy",
+          "status": "start",
+          "elapsed": 3185.9152760000143,
+          "remaining": 13088
+        },
+        {
+          "role": "design",
+          "launch": 5,
+          "event": "product-phase",
+          "at": 180499.5,
+          "phase": "materialize",
+          "status": "start",
+          "elapsed": 3185.960271000018,
+          "remaining": 13088
+        },
+        {
+          "role": "design",
+          "launch": 5,
+          "event": "product-phase",
+          "at": 180500.5,
+          "phase": "current-at-release",
+          "status": "start",
+          "elapsed": 3186.932659000013,
+          "remaining": 13087
+        },
+        {
+          "role": "design",
+          "launch": 5,
+          "event": "product-phase",
+          "at": 180500.5,
+          "phase": "current-at-release",
+          "status": "passed",
+          "elapsed": 3186.983135000017,
+          "remaining": 13087
+        }
+      ],
+      "successfulSampleCountRecorded": 11,
+      "samplesRefused": [
+        {
+          "sample": {
+            "role": "design",
+            "launch": 5,
+            "event": "current-false",
+            "at": 180686.6,
+            "id": 12,
+            "began": 180524.7,
+            "gap": 879.9,
+            "elapsed": 161.9,
+            "bound": 1000,
+            "stage": "current",
+            "firstCheck": null,
+            "timerExpired": false,
+            "sampleActive": true,
+            "exited": false,
+            "finishedCapture": false,
+            "reason": "exited",
+            "storageMillis": 120.1,
+            "processMillis": 79.3,
+            "currentBegin": 120.1,
+            "currentSyncMillis": 0,
+            "currentMillis": 41.8,
+            "processError": null,
+            "storageDetail": null,
+            "storageEntries": null,
+            "storageBytesSeen": null,
+            "eventLoopMax": 606.6
+          },
+          "phaseAtStart": "delivery-commit-append",
+          "phaseChanges": [],
+          "allOverlappingPolicy": {
+            "checks": 1,
+            "refusals": 0,
+            "overlapMillis": 39.3,
+            "gitCalls": 3,
+            "gitMillis": 38.2
+          },
+          "fullyOverlappingPolicy": {
+            "checks": 1,
+            "refusals": 0,
+            "overlapMillis": 39.3,
+            "gitCalls": 3,
+            "gitMillis": 38.2
+          },
+          "asyncPolicy": {
+            "checks": 3,
+            "refusals": 0,
+            "overlapMillis": 225.5,
+            "gitCalls": 9,
+            "gitMillis": 884.9,
+            "unionElapsedMillis": 161.9,
+            "byCallSite": {
+              "machine-store": {
+                "checks": 2,
+                "refusals": 0,
+                "overlapMillis": 148.6,
+                "gitCalls": 6,
+                "gitMillis": 795.5
+              },
+              "session-audit": {
+                "checks": 1,
+                "refusals": 0,
+                "overlapMillis": 76.9,
+                "gitCalls": 3,
+                "gitMillis": 89.3
+              }
+            }
+          },
+          "storeOperations": [
+            {
+              "ordinal": 266,
+              "earliest": {
+                "role": "supervisor",
+                "launch": 0,
+                "event": "store-phase",
+                "at": 178621.7,
+                "lock": 266,
+                "phase": "lock-start",
+                "began": 178621.688401,
+                "elapsed": 0.0018740000086836517,
+                "operationMilliseconds": 5000,
+                "held": false,
+                "uncertain": false,
+                "pending": 0,
+                "syncChecks": 0,
+                "asyncChecks": 0,
+                "ioCalls": 0,
+                "reads": 0,
+                "publications": 0,
+                "retries": 0,
+                "outcome": null
+              },
+              "startState": {
+                "role": "supervisor",
+                "launch": 0,
+                "event": "store-phase",
+                "at": 179630.6,
+                "lock": 266,
+                "phase": "state-read-start",
+                "began": 178621.688401,
+                "elapsed": 1008.8741330000048,
+                "operationMilliseconds": 5000,
+                "held": true,
+                "uncertain": false,
+                "pending": 0,
+                "syncChecks": 3,
+                "asyncChecks": 8,
+                "ioCalls": 4,
+                "reads": 1,
+                "publications": 0,
+                "retries": 0,
+                "outcome": null
+              },
+              "changes": [],
+              "latest": {
+                "role": "supervisor",
+                "launch": 0,
+                "event": "store-phase",
+                "at": 183638.6,
+                "lock": 266,
+                "phase": "lock-result",
+                "began": 178621.688401,
+                "elapsed": 5016.953030000004,
+                "operationMilliseconds": 5000,
+                "held": true,
+                "uncertain": true,
+                "pending": 0,
+                "syncChecks": 22,
+                "asyncChecks": 30,
+                "ioCalls": 15,
+                "reads": 4,
+                "publications": 1,
+                "retries": 0,
+                "outcome": false
+              }
+            }
+          ],
+          "peerConnections": [
+            {
+              "ordinal": 33,
+              "earliest": {
+                "role": "supervisor",
+                "launch": 0,
+                "event": "peer-phase",
+                "at": 174880.8,
+                "connection": 33,
+                "phase": "raw-accept-start",
+                "bound": null,
+                "began": 174880.731019,
+                "armedAt": null,
+                "elapsed": 0.052399000007426366,
+                "expired": false,
+                "admitted": null
+              },
+              "startState": {
+                "role": "supervisor",
+                "launch": 0,
+                "event": "peer-phase",
+                "at": 180524.6,
+                "connection": 33,
+                "phase": "raw-accept-return",
+                "bound": 5000,
+                "began": 174880.731019,
+                "armedAt": 174948.655264,
+                "elapsed": 5643.831425000011,
+                "expired": true,
+                "admitted": false
+              },
+              "changes": [],
+              "latest": {
+                "role": "supervisor",
+                "launch": 0,
+                "event": "peer-phase",
+                "at": 183638.9,
+                "connection": 33,
+                "phase": "issuance-return",
+                "began": 178577.174939,
+                "elapsed": 5061.688261000003,
+                "targetRole": "design",
+                "peerKind": "inference-bridge",
+                "bound": null,
+                "exceeded": null,
+                "accepted": false
+              }
+            }
+          ],
+          "byPhaseAndSite": [
+            {
+              "phase": "delivery-commit-append",
+              "callSite": "session-current",
+              "checks": 1,
+              "refusals": 0,
+              "overlapMillis": 39.3,
+              "gitCalls": 3,
+              "gitMillis": 38.2
+            }
+          ]
+        }
+      ],
+      "timersExpired": [],
+      "terminal": [
+        {
+          "role": "design",
+          "launch": 5,
+          "event": "first-terminal",
+          "at": 180686.7,
+          "reason": "inspection-failed",
+          "requested": "inspection-failed",
+          "exited": false,
+          "finishedCapture": false
+        },
+        {
+          "role": "design",
+          "launch": 5,
+          "event": "child-exit",
+          "at": 180687.3,
+          "reason": "inspection-failed",
+          "code": null,
+          "signal": "SIGTERM"
+        }
+      ]
+    }
+  ],
+  "rawAcceptDeadlines": [
+    {
+      "connection": 33,
+      "boundMillis": 5000,
+      "dispatchAfterArmMillis": 5575.7,
+      "phases": [
+        {
+          "role": "supervisor",
+          "launch": 0,
+          "event": "peer-phase",
+          "at": 174880.8,
+          "connection": 33,
+          "phase": "raw-accept-start",
+          "bound": null,
+          "began": 174880.731019,
+          "armedAt": null,
+          "elapsed": 0.052399000007426366,
+          "expired": false,
+          "admitted": null
+        },
+        {
+          "role": "supervisor",
+          "launch": 0,
+          "event": "peer-phase",
+          "at": 174948.7,
+          "connection": 33,
+          "phase": "raw-accept-armed",
+          "bound": 5000,
+          "began": 174880.731019,
+          "armedAt": 174948.655264,
+          "elapsed": 67.95640600001207,
+          "expired": false,
+          "admitted": null
+        },
+        {
+          "role": "supervisor",
+          "launch": 0,
+          "event": "peer-phase",
+          "at": 175049.2,
+          "connection": 33,
+          "phase": "capture-start",
+          "began": 175049.180674,
+          "elapsed": 0.0009419999842066318,
+          "targetRole": "design",
+          "peerKind": "inference-bridge",
+          "bound": 5000,
+          "exceeded": false,
+          "accepted": null
+        },
+        {
+          "role": "supervisor",
+          "launch": 0,
+          "event": "peer-phase",
+          "at": 178577.1,
+          "connection": 33,
+          "phase": "capture-return",
+          "began": 175049.180674,
+          "elapsed": 3527.938519999996,
+          "targetRole": "design",
+          "peerKind": "inference-bridge",
+          "bound": 5000,
+          "exceeded": false,
+          "accepted": true
+        },
+        {
+          "role": "supervisor",
+          "launch": 0,
+          "event": "peer-phase",
+          "at": 178577.2,
+          "connection": 33,
+          "phase": "issuance-start",
+          "began": 178577.174939,
+          "elapsed": 0.0003510000242386013,
+          "targetRole": "design",
+          "peerKind": "inference-bridge",
+          "bound": null,
+          "exceeded": null,
+          "accepted": null
+        },
+        {
+          "role": "supervisor",
+          "launch": 0,
+          "event": "peer-phase",
+          "at": 178577.3,
+          "connection": 33,
+          "phase": "issuance-acquired",
+          "began": 178577.174939,
+          "elapsed": 0.07466100002056919,
+          "targetRole": "design",
+          "peerKind": "inference-bridge",
+          "bound": null,
+          "exceeded": null,
+          "accepted": null
+        },
+        {
+          "role": "supervisor",
+          "launch": 0,
+          "event": "peer-phase",
+          "at": 178621.5,
+          "connection": 33,
+          "phase": "issuance-publication-start",
+          "began": 178577.174939,
+          "elapsed": 44.282406000013,
+          "targetRole": "design",
+          "peerKind": "inference-bridge",
+          "bound": null,
+          "exceeded": null,
+          "accepted": null
+        },
+        {
+          "role": "supervisor",
+          "launch": 0,
+          "event": "peer-phase",
+          "at": 180524.4,
+          "connection": 33,
+          "phase": "raw-accept-timer",
+          "bound": 5000,
+          "began": 174880.731019,
+          "armedAt": 174948.655264,
+          "elapsed": 5643.696759999992,
+          "expired": true,
+          "admitted": null
+        },
+        {
+          "role": "supervisor",
+          "launch": 0,
+          "event": "peer-phase",
+          "at": 180524.6,
+          "connection": 33,
+          "phase": "raw-accept-return",
+          "bound": 5000,
+          "began": 174880.731019,
+          "armedAt": 174948.655264,
+          "elapsed": 5643.831425000011,
+          "expired": true,
+          "admitted": false
+        },
+        {
+          "role": "supervisor",
+          "launch": 0,
+          "event": "peer-phase",
+          "at": 183638.8,
+          "connection": 33,
+          "phase": "issuance-publication-return",
+          "began": 178577.174939,
+          "elapsed": 5061.6277370000025,
+          "targetRole": "design",
+          "peerKind": "inference-bridge",
+          "bound": null,
+          "exceeded": null,
+          "accepted": false
+        },
+        {
+          "role": "supervisor",
+          "launch": 0,
+          "event": "peer-phase",
+          "at": 183638.9,
+          "connection": 33,
+          "phase": "issuance-return",
+          "began": 178577.174939,
+          "elapsed": 5061.688261000003,
+          "targetRole": "design",
+          "peerKind": "inference-bridge",
+          "bound": null,
+          "exceeded": null,
+          "accepted": false
+        }
+      ],
+      "issuancePublicationUntilTimer": {
+        "elapsedMillis": 1902.9,
+        "syncPolicy": {
+          "checks": 22,
+          "refusals": 0,
+          "overlapMillis": 969.9,
+          "gitCalls": 66,
+          "gitMillis": 941.8
+        },
+        "asyncPolicy": {
+          "checks": 17,
+          "refusals": 0,
+          "overlapMillis": 1859.7,
+          "gitCalls": 51,
+          "gitMillis": 1947.5,
+          "unionElapsedMillis": 1619.2,
+          "byCallSite": {
+            "machine-store": {
+              "checks": 13,
+              "refusals": 0,
+              "overlapMillis": 1607.0,
+              "gitCalls": 39,
+              "gitMillis": 1622.8
+            },
+            "session-current": {
+              "checks": 2,
+              "refusals": 0,
+              "overlapMillis": 148.5,
+              "gitCalls": 6,
+              "gitMillis": 145.9
+            },
+            "session-audit": {
+              "checks": 2,
+              "refusals": 0,
+              "overlapMillis": 104.3,
+              "gitCalls": 6,
+              "gitMillis": 178.8
+            }
+          }
+        },
+        "storeOperations": [
+          {
+            "ordinal": 266,
+            "earliest": {
+              "role": "supervisor",
+              "launch": 0,
+              "event": "store-phase",
+              "at": 178621.7,
+              "lock": 266,
+              "phase": "lock-start",
+              "began": 178621.688401,
+              "elapsed": 0.0018740000086836517,
+              "operationMilliseconds": 5000,
+              "held": false,
+              "uncertain": false,
+              "pending": 0,
+              "syncChecks": 0,
+              "asyncChecks": 0,
+              "ioCalls": 0,
+              "reads": 0,
+              "publications": 0,
+              "retries": 0,
+              "outcome": null
+            },
+            "startState": null,
+            "changes": [
+              {
+                "role": "supervisor",
+                "launch": 0,
+                "event": "store-phase",
+                "at": 178621.7,
+                "lock": 266,
+                "phase": "lock-start",
+                "began": 178621.688401,
+                "elapsed": 0.0018740000086836517,
+                "operationMilliseconds": 5000,
+                "held": false,
+                "uncertain": false,
+                "pending": 0,
+                "syncChecks": 0,
+                "asyncChecks": 0,
+                "ioCalls": 0,
+                "reads": 0,
+                "publications": 0,
+                "retries": 0,
+                "outcome": null
+              },
+              {
+                "role": "supervisor",
+                "launch": 0,
+                "event": "store-phase",
+                "at": 179161.4,
+                "lock": 266,
+                "phase": "lock-held",
+                "began": 178621.688401,
+                "elapsed": 539.6610050000018,
+                "operationMilliseconds": 5000,
+                "held": true,
+                "uncertain": false,
+                "pending": 0,
+                "syncChecks": 1,
+                "asyncChecks": 4,
+                "ioCalls": 2,
+                "reads": 0,
+                "publications": 0,
+                "retries": 0,
+                "outcome": null
+              },
+              {
+                "role": "supervisor",
+                "launch": 0,
+                "event": "store-phase",
+                "at": 179630.6,
+                "lock": 266,
+                "phase": "state-read-start",
+                "began": 178621.688401,
+                "elapsed": 1008.8741330000048,
+                "operationMilliseconds": 5000,
+                "held": true,
+                "uncertain": false,
+                "pending": 0,
+                "syncChecks": 3,
+                "asyncChecks": 8,
+                "ioCalls": 4,
+                "reads": 1,
+                "publications": 0,
+                "retries": 0,
+                "outcome": null
+              }
+            ],
+            "latest": {
+              "role": "supervisor",
+              "launch": 0,
+              "event": "store-phase",
+              "at": 183638.6,
+              "lock": 266,
+              "phase": "lock-result",
+              "began": 178621.688401,
+              "elapsed": 5016.953030000004,
+              "operationMilliseconds": 5000,
+              "held": true,
+              "uncertain": true,
+              "pending": 0,
+              "syncChecks": 22,
+              "asyncChecks": 30,
+              "ioCalls": 15,
+              "reads": 4,
+              "publications": 1,
+              "retries": 0,
+              "outcome": false
+            }
+          }
+        ]
+      }
+    }
+  ]
+}

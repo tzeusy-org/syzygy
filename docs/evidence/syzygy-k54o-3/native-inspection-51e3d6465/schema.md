@@ -1,0 +1,12 @@
+# A77 resource and protected store trace
+
+The source binding fixes the exact candidate and instrumented files. The projector uses only the adjacent source binding, raw patch, and trace. Trace field names and strings are closed. Fields that would carry paths, process identifiers, native output, provider data, Git output, or raw errors are excluded.
+
+Native resource samples have positive launch ordinals. They report a periodic start, phase when refused, completed storage and process phases, currentness duration if reached, and the first terminal decision. Detailed fresh design samples record every sampled result and subscribed ordered delivery phase. Global store and connection rows use ordinal 0, with independent monotonic numeric lock and connection ordinals.
+
+- A store lock records acquisition, state read and publication progress, rename completion, any operation timer, and operation result. Counters record explicit synchronous check and asynchronous I/O check attempts, I/O entry, state-read entry, publication entry, and lock retry. Direct enclosing store checks also appear as policy events when a fresh design sample is traced. A lock result marks the protected operation's result, while a release row separately records the cleanup path.
+- Raw connection timing records accept begin, the exact original timer arm and bound, timer dispatch if it occurs, and admission result. Capture and issuance rows share the raw connection ordinal. The capture bound is the existing peer setup bound. The raw accept timer covers capture and issuance together. Issuance progress includes queue acquisition and lifecycle publication entry and return.
+- Synchronous policy events measure the exact check and cumulative Git call wall time. Asynchronous policy events are recorded when the check completes, with subprocess callback durations. Aggregate and union overlap values distinguish accumulated wait from actual wall time in an inspection window. Asynchronous overlap does not measure main-thread blocking.
+- All time values are milliseconds. `at` and `began` use the same process monotonic clock. Open phase intervals are limited to the last recorded trace timestamp. Timestamp overlap shows concurrency. It may include concurrent work serving different roles.
+
+The overlay uses the original sampler, peer, raw ingress, and store limits and changes no outcome predicate. Timings describe an instrumented replay that performs trace writes.

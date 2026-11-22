@@ -1,0 +1,219 @@
+{
+  "subject": "dc7b7a482472a8b8b39c7be73e37e58ed76d3b10",
+  "parent": "2ec147594b8ae203df73343f61da6d71f745e534",
+  "sourceAndFocusedTestSubject": "d16b24cf351917a9cef568098e817b9543f46021",
+  "tree": "18bc1675cb91d2c95fba753ace37d2ef9b0344cb",
+  "diffSha256": "591024e448231983c74a5171c851fd305551bf543d9bcb3584c98e9a487ded72",
+  "sourceDigests": [
+    {
+      "path": "packages/polaris-dossier/src/session-machine-transport.test.ts",
+      "sha256": "c18eaffa16e8e4b797acb13143926315b9c3a9334773348b17f6e8c715d1329a"
+    },
+    {
+      "path": "packages/polaris-dossier/src/session-machine-transport.ts",
+      "sha256": "6e97c572d7cfda33b2a46c466e3be65232611cdb5b066922cbb29740e4c9165c"
+    },
+    {
+      "path": "packages/polaris-dossier/src/url-machine-lifecycle.ts",
+      "sha256": "bb0436ce4017c3cf69b7bcaa697a64726eca52df77d94a0c5bf6fb065e22924d"
+    },
+    {
+      "path": "packages/polaris-dossier/src/url-machine-store.test.ts",
+      "sha256": "5ea12bef59e4085cc7bbee4b8a6cc50e96f7cb6211bf7fb637fe9a7ad9993b96"
+    },
+    {
+      "path": "packages/polaris-dossier/src/url-machine-store.ts",
+      "sha256": "1f8016ff5a44be5d169fe4504a1067fc9a4b8a7dd080a97a07521061ce712796"
+    },
+    {
+      "path": "packages/polaris-dossier/src/url-run-machine.ts",
+      "sha256": "62b517503741a70eaa24195d9a3f3a7d15ebed5680aa84f7de0c40d166f5c835"
+    }
+  ],
+  "artifacts": [
+    {
+      "path": "mutations/double-checked-clock-baseline.log",
+      "bytes": 394,
+      "sha256": "4ca7614eeb31e1c9eb3b4e16a96fd8255fb7680853d52fa47022523b59dba733"
+    },
+    {
+      "path": "mutations/double-checked-clock-mutant.log",
+      "bytes": 4800,
+      "sha256": "26d89e33d82f602539f292861ed6c2940d70bc21acbcc4ab11ccff4e685a36d5"
+    },
+    {
+      "path": "mutations/ignore-closed-connection-baseline.log",
+      "bytes": 394,
+      "sha256": "3440f027d42a7df65e1414d99fd84e9e30670482570703afcd2763b5d220ee12"
+    },
+    {
+      "path": "mutations/ignore-closed-connection-mutant.log",
+      "bytes": 4841,
+      "sha256": "0f55ae24e791a280c3d2952725ff36a3c3ce906f445ec01bd5c16398b7ca6186"
+    },
+    {
+      "path": "mutations/miss-post-io-authority-baseline.log",
+      "bytes": 394,
+      "sha256": "9f0e7a6a197aa639025c4cb541743b5524fce2199c430b6092b23eb73e4b5da0"
+    },
+    {
+      "path": "mutations/miss-post-io-authority-mutant.log",
+      "bytes": 4685,
+      "sha256": "51c12471be76190682177d2880c6a8b6b40e74f4fa9c93862d49082ef6a636c6"
+    },
+    {
+      "path": "mutations/miss-rename-guard-baseline.log",
+      "bytes": 395,
+      "sha256": "87282df114aa430b693a99ac1d730741c60fc869731413c52fabc5608da41cbc"
+    },
+    {
+      "path": "mutations/miss-rename-guard-mutant.log",
+      "bytes": 10303,
+      "sha256": "4c6026de9f9c353513046adf63bd20d63a85b7aa0c346e6f24abe32c417f4eba"
+    },
+    {
+      "path": "mutations/share-capture-cutoff-baseline.log",
+      "bytes": 403,
+      "sha256": "e2605500f9e9a8de3a3f8c0f75a69a5f9d2bc562de4d48d68b3764b1edab8580"
+    },
+    {
+      "path": "mutations/share-capture-cutoff-mutant.log",
+      "bytes": 3276,
+      "sha256": "d090ba0f4d7b0141fdf77af85c90b95d2ce226c17baa54a4e03c247fd1c4bcfa"
+    },
+    {
+      "path": "native-stop.log",
+      "bytes": 36118,
+      "sha256": "96010598fce47da90f11fa0998eb7bbf64a2b73b6e67dd916be3455a70457350"
+    },
+    {
+      "path": "predecessor-REVIEW-RAW.md",
+      "bytes": 5247,
+      "sha256": "db499ede5918079126d44a205d7383e04f68c2343679c3a13f526f80e7247dac"
+    },
+    {
+      "path": "predecessor-focused.log",
+      "bytes": 1900,
+      "sha256": "e945a5b435a9ffa749405a42a732dfe7d9a50bdefad015fd0cbf45975d4929a1"
+    },
+    {
+      "path": "predecessor-typecheck.log",
+      "bytes": 37,
+      "sha256": "396901319daac4a4413b23478852db3c572014f86c71d148273565f0f3332696"
+    },
+    {
+      "path": "successor-REVIEW-RAW.md",
+      "bytes": 3188,
+      "sha256": "cb488b1e830ae71c9a9a30185c8c963b02b3512285845e4d723e7982bf3e9ba2"
+    },
+    {
+      "path": "transport-focused.log",
+      "bytes": 374,
+      "sha256": "068b0bc7a9721971d535e800ab396887283194c153098303272bb3ea10ca7983"
+    },
+    {
+      "path": "native-eligible-stop.log",
+      "bytes": 37374,
+      "sha256": "8e916b05c491f36528d54145f2a5e80f2315e0bff25ad736935b40af4b0ff638"
+    }
+  ],
+  "results": {
+    "predecessorFocusedPassed": 114,
+    "predecessorFocusedFiles": 5,
+    "successorTransportPassed": 14,
+    "selectedFaultsDetected": 5
+  },
+  "nativeStopResume": {
+    "inputTreeSha256": "f33660b845442935d1773b11aa6ed9d7f9bbe8ce3fb375cf611d645f6a7be405",
+    "profileRegistrySha256": "b354e78bbb4096fbf7f61a53df092e2b3e99efe1ca2c06deae8349e8762b6d86",
+    "cutSha256": "e0ea223ac042d8e2e665414f4e367a6d295b0650df01050c5f953ef6f97764c2",
+    "failureManifestSha256": "6a8a0f140c94ce58fae8561bf368cf43024ec859e52b758550050b9ac9b66e98",
+    "resumeChecks": [
+      {
+        "phase": "verify",
+        "ok": true,
+        "nextDesignRound": 2
+      },
+      {
+        "phase": "claim",
+        "exactCut": true,
+        "current": true
+      },
+      {
+        "phase": "resumed-guards",
+        "policyWithdrawal": "refused",
+        "claimWithdrawal": "refused"
+      },
+      {
+        "phase": "machine-claim",
+        "current": true,
+        "claimChecks": 1,
+        "withdrawn": true,
+        "asyncCurrent": true,
+        "asyncWithdrawn": true
+      }
+    ],
+    "freshDesignAudit": {
+      "sha256": "48f685c395f1ea63af0f93bcfe442cd4a19bea255bb5bdaadc2bf2a19041fe52",
+      "events": [
+        "declaration",
+        "launch-attempt",
+        "launch-history",
+        "launch-terminal"
+      ],
+      "terminal": {
+        "outcome": "inspection-failed",
+        "signal": "SIGTERM",
+        "groupTermination": "confirmed",
+        "viewTermination": "view-exited",
+        "toolTermination": "settled",
+        "pendingInvocations": 0,
+        "sampledStorageBytes": 2192,
+        "peakProcesses": 5,
+        "betweenSamples": "Unknown"
+      }
+    },
+    "designForwards": 0,
+    "executionRecordPresent": false,
+    "passed": 0,
+    "failed": 1,
+    "skipped": 3
+  },
+  "scope": "The actual public stop and resume use the pinned native CLI, an owned synthetic source and synthetic provider. Source review and focused cases verify the two-stage boundaries. Latest exact public acceptance is still unverified after inspection-failed before fresh design delivery.",
+  "nativeEligibleStop": {
+    "cutSha256": "c5cae7997362c7a968259316739334430086c13d28149081852d408f7bbaf2e3",
+    "failureManifestSha256": "9cd2560fdd63cb4f67f8d62b63a4b35ede67763aef74f36092a828ef99ef1f7b",
+    "designAuditSha256": "66bf0897814914406781d0be11ac7cd800d380d9a1851c8a958a3fb6ac026c90",
+    "designForwards": 5,
+    "orderedVerdicts": 1,
+    "terminal": {
+      "outcome": "exited",
+      "exitCode": 0,
+      "viewTermination": "view-exited",
+      "groupTermination": "confirmed",
+      "toolTermination": "settled",
+      "pendingInvocations": 0
+    },
+    "machineLifecycle": "retired",
+    "stopEvent": "run ended: operator stop requested, recovery history unavailable",
+    "sealedBoundaryFiles": 0,
+    "retainedCanonicalProducts": [
+      {
+        "path": "reviews/design-verdict-0.json",
+        "bytes": 1562,
+        "sha256": "b85778931fa93b07c625775d1d50c218dc18cca13d0f78fec64020cdd7be3973"
+      },
+      {
+        "path": "reviews/checks/design-verdict-0.json",
+        "bytes": 1277,
+        "sha256": "31339ab9c11d994b26fdba8eabaad7e83d789de06bcb0f6a61acf7aa696a18c9"
+      }
+    ],
+    "workspaceVerdictPresent": false,
+    "executionRecordPresent": false,
+    "publicResumeCalls": 0,
+    "selectedTestSeconds": 125.88,
+    "failed": 1,
+    "skipped": 3
+  }
+}

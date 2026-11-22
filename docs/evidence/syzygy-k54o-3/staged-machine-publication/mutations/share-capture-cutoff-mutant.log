@@ -1,0 +1,47 @@
+
+ RUN  v3.2.7 /home/orca/.tmp/syzygy-beads-looper-20261114-54ebc9f1/d10-f3-final-verification
+
+ ❯ |integration| packages/polaris-dossier/src/session-machine-transport.test.ts (14 tests | 1 failed | 13 skipped) 18ms
+   ↓ verified-chunk session transport adapter > awaits actual broker listener preparation and honors its true result before returning a host
+   ↓ verified-chunk session transport adapter > awaits actual broker listener preparation and honors its false result before returning a host
+   ↓ verified-chunk session transport adapter > awaits actual relay listener preparation and honors its true result before returning a host
+   ↓ verified-chunk session transport adapter > awaits actual relay listener preparation and honors its false result before returning a host
+   ↓ verified-chunk session transport adapter > binds context to the exact accepted stream and writes only inside its active mediated boundary
+   × verified-chunk session transport adapter > keeps staged admission paused until protected publication is published 17ms
+     → expected false to be true // Object.is equality
+   ↓ verified-chunk session transport adapter > keeps staged admission paused until protected publication is capture-expired
+   ↓ verified-chunk session transport adapter > keeps staged admission paused until protected publication is connection-expired
+   ↓ verified-chunk session transport adapter > keeps staged admission paused until protected publication is publication-refused
+   ↓ verified-chunk session transport adapter > retains the exact async effect guard across awaits and revokes escaped descendants
+   ↓ verified-chunk session transport adapter > settles an in-flight native data chunk before any protected effect after ingress stops
+   ↓ verified-chunk session transport adapter > settles an in-flight native pending chunk before any protected effect after ingress stops
+   ↓ verified-chunk session transport adapter > refuses missing transport and peer/socket substitution before broker effects
+   ↓ verified-chunk session transport adapter > runs HTTP parsing and protected callbacks on verified chunks and refuses revoked mediation before forward
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  |integration| packages/polaris-dossier/src/session-machine-transport.test.ts > verified-chunk session transport adapter > keeps staged admission paused until protected publication is published
+AssertionError: expected false to be true // Object.is equality
+
+- Expected
++ Received
+
+- true
++ false
+
+ ❯ packages/polaris-dossier/src/session-machine-transport.test.ts:173:31
+    171|           expect(opening?.()).toBe(true);
+    172|           await vi.advanceTimersByTimeAsync(outcome === 'connection-ex…
+    173|           expect(opening?.()).toBe(outcome !== 'connection-expired');
+       |                               ^
+    174|           expect(backend.reads).toBe(0);
+    175|           expect(backend.mediations).toBe(0);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 13 skipped (14)
+   Start at  19:46:33
+   Duration  958ms (transform 494ms, setup 11ms, collect 662ms, tests 18ms, environment 0ms, prepare 55ms)
+

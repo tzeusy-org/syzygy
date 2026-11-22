@@ -1,0 +1,22 @@
+
+ RUN  v3.2.7 /home/orca/.tmp/syzygy-beads-looper-20261114-54ebc9f1/d10-f3-runtime-current
+
+ ✓ |integration| packages/polaris-dossier/src/url-run-machine.test.ts (6 tests) 31901ms
+   ✓ production URL run machine provisioner > issues and rotates only actual peers; close defeats awaited effects and permits durable retirement  6667ms
+   ✓ production URL run machine provisioner > issues and rotates only actual peers; withdraw-effects defeats awaited effects and permits durable retirement  6599ms
+   ✓ production URL run machine provisioner > close closes admission while a genuine socket awaits parent revalidation  5911ms
+   ✓ production URL run machine provisioner > withdraw-effects closes admission while a genuine socket awaits parent revalidation  5779ms
+   ✓ production URL run machine provisioner > refuses copied capabilities before creating a store and reports expired retirement as Unknown  5699ms
+ ✓ |integration| packages/polaris-dossier/src/url-machine-store.test.ts (28 tests) 3097ms
+   ✓ protected URL machine lifecycle files > retains an OS-process lock after its holder is killed and refuses a successor process  1118ms
+   ✓ protected URL machine lifecycle files > keeps globally consumed identifiers and the sixteen-client run cap across new adapters  693ms
+   ✓ protected URL machine lifecycle files > rechecks expiry after actual file sync and leaves late timed-out writes unpublished  367ms
+ ✓ |unit| packages/polaris-dossier/src/url-run-machine-close.test.ts (30 tests) 2153ms
+ ✓ |unit| packages/polaris-dossier/src/url-machine-lifecycle.test.ts (36 tests) 201ms
+ ✓ |integration| packages/polaris-dossier/src/session-machine-transport.test.ts (14 tests) 83ms
+
+ Test Files  5 passed (5)
+      Tests  114 passed (114)
+   Start at  19:44:00
+   Duration  42.54s (transform 2.69s, setup 54ms, collect 3.91s, tests 37.44s, environment 1ms, prepare 304ms)
+

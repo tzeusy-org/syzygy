@@ -1,0 +1,11 @@
+
+ RUN  v3.2.7 /home/orca/.tmp/syzygy-beads-looper-20261114-54ebc9f1/d10-f3-runtime-current
+
+ ✓ |integration| packages/polaris-dossier/src/url-launch-history.test.ts (38 tests | 37 skipped) 8798ms
+   ✓ protected URL design delivery audit > keeps a metadata-only event and rechecks after durability (ordered)  805ms
+
+ Test Files  1 passed (1)
+      Tests  1 passed | 37 skipped (38)
+   Start at  19:58:09
+   Duration  11.69s (transform 1.89s, setup 9ms, collect 2.54s, tests 8.80s, environment 0ms, prepare 57ms)
+

@@ -1,0 +1,245 @@
+{
+  "baseCommit": "dc7b7a482472a8b8b39c7be73e37e58ed76d3b10",
+  "baseTree": "18bc1675cb91d2c95fba753ace37d2ef9b0344cb",
+  "baseSourceFiles": {
+    "packages/polaris-dossier/src/policy-snapshot.ts": "16e5751856768c2c56c88226e233f9e71259ee1bcee2aff488fec451144d0bc0",
+    "packages/polaris-dossier/src/session-launch.ts": "f867296c11e4501220dafcfebc57374a65b93608d1cab4604d7125f16ad492a9",
+    "packages/polaris-dossier/src/session-machine-transport.ts": "6e97c572d7cfda33b2a46c466e3be65232611cdb5b066922cbb29740e4c9165c",
+    "packages/polaris-dossier/src/url-design-product.ts": "af45237606eecd398186fd69f6621641c5655ce2d4499967507b8ae853e4926c",
+    "packages/polaris-dossier/src/url-machine-peer.ts": "c4983d0d8d6d699e76fb1a1f18ca4f6731c31f98112150aaaf549b751a90606f",
+    "packages/polaris-dossier/src/url-machine-store.ts": "1f8016ff5a44be5d169fe4504a1067fc9a4b8a7dd080a97a07521061ce712796",
+    "packages/polaris-dossier/src/url-run-artifacts.ts": "18fd67c54177e10f2f619c656e3a6f34b16498f863fb7aa783792a66112b7f02",
+    "packages/polaris-dossier/src/url-run-machine.ts": "62b517503741a70eaa24195d9a3f3a7d15ebed5680aa84f7de0c40d166f5c835",
+    "packages/polaris-dossier/src/url-run-ordered-attempt.ts": "009b828db3cb2f5c9a527238ca0f3bf864af2d87a706e9753171bfe0a611cef4",
+    "packages/polaris-dossier/src/url-session-audit.ts": "38d3e2307ceec0178bdca8332688615d4cc8fb578218984c81fac618a17caf45",
+    "packages/polaris-dossier/src/url-run-composed.test.ts": "be9cfea3e96ed75d9a7ca22702bcba0df5b9547cfab49f922644dabd9348de2a",
+    "packages/polaris-dossier/src/url-run-composed.testkit.ts": "748f848bdcf4f8a862266cd8ddfd8db1191ea20d470b0b0334f17b36e1f21fc9"
+  },
+  "instrumentedSourceFiles": {
+    "packages/polaris-dossier/src/policy-snapshot.ts": "c2efaa40553168953da45d1368585eaf6dffe65d94adcaa244d34807640fb5a4",
+    "packages/polaris-dossier/src/session-launch.ts": "79e61c050939c7c2c0b8c8c994a3c667c0d377982d0e5fd93b3b6ef575573daa",
+    "packages/polaris-dossier/src/session-machine-transport.ts": "d7c4a62f07af16b51e1b7c9d5388d55142e71307b16d74597d7efa9f2109430f",
+    "packages/polaris-dossier/src/url-design-product.ts": "ede5fb22967255674b94bca55e3cacf0abc56fd3b06d2bacadbd6d520a0971fa",
+    "packages/polaris-dossier/src/url-machine-peer.ts": "62031d29167c2c071c2b3df74fbbd4f00b95e1826820b6d9dba03d616dd4c082",
+    "packages/polaris-dossier/src/url-machine-store.ts": "2b3b3edf21826dce2d403f4d0d8507b5f9ea12b300caf5b6ba10e1ce54aeae9d",
+    "packages/polaris-dossier/src/url-run-artifacts.ts": "fc536840673c71fa023a126c3957ef5b587cfd2d1ce555a6c446e9b8999f82b6",
+    "packages/polaris-dossier/src/url-run-machine.ts": "edf88b070408eca54ca28d438524b02ad22d5478b3413531e9a8c292717dab24",
+    "packages/polaris-dossier/src/url-run-ordered-attempt.ts": "113bd2f0b32a0c6e30380ce9d3eedfa1ff9c19807f3b8187129c132da289bc64",
+    "packages/polaris-dossier/src/url-session-audit.ts": "4fff9a4455b4bb6eaa245417fd3d4c4c4f394f240946d187a5164089f40081e0"
+  },
+  "rawArtifacts": [
+    {
+      "file": "overlay.patch",
+      "bytes": 76895,
+      "sha256": "a2bd9717a893052ee2da82dcce8bf5d11b88f25542327affe6746fea19f67f2d"
+    },
+    {
+      "file": "trace.jsonl",
+      "bytes": 2189381,
+      "sha256": "849dbd23efeafd6bc6243a5955dcef7b5e952a44aed84808cfb6f5ea9f961dd4"
+    }
+  ],
+  "retainedOriginalsByDigest": [
+    {
+      "file": "f3-a78-dc7b7a482-diagnostic-subject.txt",
+      "bytes": 1365,
+      "sha256": "bd8d65ea85ab5d1ae723631d86f9ba889a7500816e1bfafd6f5498de94d354ab"
+    },
+    {
+      "file": "f3-a78-dc7b7a482-diagnostic.log",
+      "bytes": 36120,
+      "sha256": "f8cbccb18cac1993edfe1efd8378367a582b6eb7d3da2edcfe698ee876437d44"
+    },
+    {
+      "file": "f3-a78-dc7b7a482-diagnostic-cut.json",
+      "bytes": 137296,
+      "sha256": "d12528d4cba8140d8c8dafbfcb08900d9ccad491a54786fcc190b9701d775fbc"
+    },
+    {
+      "file": "f3-a78-dc7b7a482-diagnostic-cut.json.failure.json",
+      "bytes": 40318,
+      "sha256": "ab701201fc1cc6fe7face2351feff4abfa234a23081a2da054858f60e9daa590"
+    },
+    {
+      "file": "f3-dc7b7a482-stop.log",
+      "bytes": 36118,
+      "sha256": "96010598fce47da90f11fa0998eb7bbf64a2b73b6e67dd916be3455a70457350"
+    },
+    {
+      "file": "f3-dc7b7a482-stop-cut.json",
+      "bytes": 137296,
+      "sha256": "e0ea223ac042d8e2e665414f4e367a6d295b0650df01050c5f953ef6f97764c2"
+    },
+    {
+      "file": "f3-dc7b7a482-stop-cut.json.failure.json",
+      "bytes": 40318,
+      "sha256": "6a8a0f140c94ce58fae8561bf368cf43024ec859e52b758550050b9ac9b66e98"
+    }
+  ],
+  "scope": "Owned synthetic public stop-resume fixture. Vitest integration with maxWorkers=1.",
+  "baseline": {
+    "result": {
+      "nativeResult": "\u00d7 composed URL run with actual role processes > runs the genuine production pipeline to stop-resume 204151ms",
+      "totals": [
+        "Test Files  1 failed (1)",
+        "Tests  1 failed | 3 skipped (4)",
+        "Duration  209.10s (transform 2.32s, setup 9ms, collect 3.07s, tests 205.67s, environment 0ms, prepare 58ms)"
+      ],
+      "designForwards": 0,
+      "resumeChecks": [
+        {
+          "phase": "verify",
+          "ok": true,
+          "nextDesignRound": 2
+        },
+        {
+          "phase": "claim",
+          "exactCut": true,
+          "current": true
+        },
+        {
+          "phase": "resumed-guards",
+          "policyWithdrawal": "refused",
+          "claimWithdrawal": "refused"
+        },
+        {
+          "phase": "machine-claim",
+          "current": true,
+          "claimChecks": 1,
+          "withdrawn": true,
+          "asyncCurrent": true,
+          "asyncWithdrawn": true
+        }
+      ],
+      "failureKinds": []
+    },
+    "designAudit": [
+      {
+        "file": {
+          "file": "sessions-design.jsonl",
+          "bytes": 5275,
+          "sha256": "48f685c395f1ea63af0f93bcfe442cd4a19bea255bb5bdaadc2bf2a19041fe52"
+        },
+        "kinds": [
+          "declaration",
+          "launch-attempt",
+          "launch-history",
+          "launch-terminal"
+        ],
+        "terminal": {
+          "outcome": "inspection-failed",
+          "signal": "SIGTERM",
+          "viewTermination": "view-exited",
+          "groupTermination": "confirmed",
+          "toolTermination": "settled",
+          "pendingInvocations": 0
+        }
+      },
+      {
+        "file": {
+          "file": "sessions-design.jsonl",
+          "bytes": 7548,
+          "sha256": "fcbd7ec36fbd8a3ba4489bc4e07803bad021c5002ec4dce6b22cc133d4979f44"
+        },
+        "kinds": [
+          "declaration",
+          "launch-attempt",
+          "launch-history",
+          "design-delivery",
+          "launch-terminal"
+        ],
+        "terminal": {
+          "outcome": "stopped",
+          "signal": "SIGTERM",
+          "viewTermination": "view-exited",
+          "groupTermination": "confirmed",
+          "toolTermination": "settled",
+          "pendingInvocations": 0
+        }
+      }
+    ]
+  },
+  "instrumented": {
+    "result": {
+      "nativeResult": "\u00d7 composed URL run with actual role processes > runs the genuine production pipeline to stop-resume 189746ms",
+      "totals": [
+        "Test Files  1 failed (1)",
+        "Tests  1 failed | 3 skipped (4)",
+        "Duration  195.41s (transform 2.54s, setup 14ms, collect 3.39s, tests 191.58s, environment 0ms, prepare 104ms)"
+      ],
+      "designForwards": 0,
+      "resumeChecks": [
+        {
+          "phase": "verify",
+          "ok": true,
+          "nextDesignRound": 2
+        },
+        {
+          "phase": "claim",
+          "exactCut": true,
+          "current": true
+        },
+        {
+          "phase": "resumed-guards",
+          "policyWithdrawal": "refused",
+          "claimWithdrawal": "refused"
+        },
+        {
+          "phase": "machine-claim",
+          "current": true,
+          "claimChecks": 1,
+          "withdrawn": true,
+          "asyncCurrent": true,
+          "asyncWithdrawn": true
+        }
+      ],
+      "failureKinds": []
+    },
+    "designAudit": [
+      {
+        "file": {
+          "file": "sessions-design.jsonl",
+          "bytes": 7548,
+          "sha256": "102961934e54c9a35ff1618f96bcd555cb3aec115c06702601ff5e9b120b177d"
+        },
+        "kinds": [
+          "declaration",
+          "launch-attempt",
+          "launch-history",
+          "design-delivery",
+          "launch-terminal"
+        ],
+        "terminal": {
+          "outcome": "stopped",
+          "signal": "SIGTERM",
+          "viewTermination": "view-exited",
+          "groupTermination": "confirmed",
+          "toolTermination": "settled",
+          "pendingInvocations": 0
+        }
+      },
+      {
+        "file": {
+          "file": "sessions-design.jsonl",
+          "bytes": 7605,
+          "sha256": "8f0fc2fd19c350c7bb9857421e1131adb451461f5181121f138d9bcf59756a96"
+        },
+        "kinds": [
+          "declaration",
+          "launch-attempt",
+          "launch-history",
+          "design-delivery",
+          "launch-terminal"
+        ],
+        "terminal": {
+          "outcome": "stopped",
+          "signal": "SIGTERM",
+          "viewTermination": "view-exited",
+          "groupTermination": "confirmed",
+          "toolTermination": "settled",
+          "pendingInvocations": 0
+        }
+      }
+    ]
+  }
+}

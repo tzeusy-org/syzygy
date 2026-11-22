@@ -1,0 +1,54 @@
+
+ RUN  v3.2.7 /home/orca/.tmp/syzygy-beads-looper-20261114-54ebc9f1/d10-f3-final-verification
+
+ ❯ |integration| packages/polaris-dossier/src/url-machine-store.test.ts (28 tests | 1 failed | 27 skipped) 67ms
+   ↓ protected URL machine lifecycle files > bounds unprofiled effects by the matching declared profile while retaining finite expiry
+   ↓ protected URL machine lifecycle files > bounds ordinary effects by the matching declared profile while retaining finite expiry
+   ↓ protected URL machine lifecycle files > bounds ordered effects by the matching declared profile while retaining finite expiry
+   ↓ protected URL machine lifecycle files > rejects copied, oversized and mismatched effect profiles before entry
+   ↓ protected URL machine lifecycle files > prevents publication after original-deadline during a declared ordered effect
+   ↓ protected URL machine lifecycle files > prevents publication after revocation during a declared ordered effect
+   ↓ protected URL machine lifecycle files > publishes through actual files, reopens the store, and refuses canonical plus projection rollback after revocation
+   × protected URL machine lifecycle files > publishes through the trusted store with one checked clock at each lifecycle boundary 66ms
+     → expected 39 to be less than 30
+   ↓ protected URL machine lifecycle files > prevents the first durable rename when parent-withdrawn during a private write
+   ↓ protected URL machine lifecycle files > prevents the first durable rename when connection-closed during a private write
+   ↓ protected URL machine lifecycle files > awaits fresh authority around real protected filesystem work
+   ↓ protected URL machine lifecycle files > checks authority after protected state I/O before using it to open the client
+   ↓ protected URL machine lifecycle files > discards filesystem results when authority outlasts the exclusive deadline
+   ↓ protected URL machine lifecycle files > never reinitializes an existing store and refuses missing state, identity mismatch, or symlinked authority
+   ↓ protected URL machine lifecycle files > refuses a replaced protected-root pathname even while its original descriptor remains open
+   ↓ protected URL machine lifecycle files > serializes independent adapters and accepts exactly one publication for one expected predecessor
+   ↓ protected URL machine lifecycle files > retains an OS-process lock after its holder is killed and refuses a successor process
+   ↓ protected URL machine lifecycle files > preserves pending evidence and the unstealable lock after an interrupted transaction
+   ↓ protected URL machine lifecycle files > cannot bypass archive preflight with omitted-preflight
+   ↓ protected URL machine lifecycle files > cannot bypass archive preflight with changed-intent
+   ↓ protected URL machine lifecycle files > cannot bypass archive preflight with changed-bytes
+   ↓ protected URL machine lifecycle files > cannot bypass archive preflight with changed-id-reservation
+   ↓ protected URL machine lifecycle files > cannot bypass archive preflight with changed-run
+   ↓ protected URL machine lifecycle files > retains pending evidence when the new pack reached disk but its state pointer did not
+   ↓ protected URL machine lifecycle files > keeps globally consumed identifiers and the sixteen-client run cap across new adapters
+   ↓ protected URL machine lifecycle files > rechecks expiry after actual file sync and leaves late timed-out writes unpublished
+   ↓ protected URL machine lifecycle files > fails closed when an operation exhausts its finite I/O-call ceiling
+   ↓ protected URL machine lifecycle files > refuses expired, backward-clock and revoked host leases before canonical publication
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  |integration| packages/polaris-dossier/src/url-machine-store.test.ts > protected URL machine lifecycle files > publishes through the trusted store with one checked clock at each lifecycle boundary
+AssertionError: expected 39 to be less than 30
+ ❯ packages/polaris-dossier/src/url-machine-store.test.ts:169:39
+    167|     expect(result.ok).toBe(true);
+    168|     expect(await readFile(slot.file)).toEqual(canon(slot.record));
+    169|     expect(current.mock.calls.length).toBeLessThan(30);
+       |                                       ^
+    170|     expect(currentAsync).not.toHaveBeenCalled();
+    171|     await expect(reopened!.exclusive(slot.context.clientId, f.options.…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 27 skipped (28)
+   Start at  19:46:43
+   Duration  858ms (transform 409ms, setup 10ms, collect 519ms, tests 67ms, environment 0ms, prepare 49ms)
+
