@@ -16,14 +16,15 @@ const NODE_HASH_CHUNK = 1_048_576;
 const ORDINARY_MCP = 'support/session-mcp.js';
 const DESIGN_MCP = 'design-support/session-mcp.js';
 const ORDERED_SCREEN = 'host/ordered-screen.mjs';
-const OUTPUTS = ['worker.mjs', 'renderer.mjs', 'support/session-bridge.js', ORDINARY_MCP, 'host/session-peer', DESIGN_MCP, ORDERED_SCREEN];
+const MACHINE_PEER = 'host/machine-peer';
+const OUTPUTS = ['worker.mjs', 'renderer.mjs', 'support/session-bridge.js', ORDINARY_MCP, 'host/session-peer', DESIGN_MCP, ORDERED_SCREEN, MACHINE_PEER];
 const RENDERER_ENTRY = 'apps/three-surface-poc/src/polaris-generation/dossier-site.ts';
 const PROFILE_SOURCES = ['session-profile', 'session-launch', 'session-controller', 'session-egress-policy', 'session-response',
   'session-tools', 'session-host', 'session-relay', 'session-broker', 'session-url-view', 'session-credential',
   'session-control', 'session-peer', 'url-role-plan', 'url-session-budget', 'url-session-audit', 'url-origin-ledger', 'url-run-origins', 'url-source-reader', 'git-object-reader',
   'url-run-sessions', 'url-run-artifacts', 'url-product-reads', 'url-operation-products', 'url-question-ui', 'url-supervisor-state', 'url-launch-history', 'url-design-view',
   'url-design-product', 'url-design-delivery', 'url-ordered-design-request', 'url-ordered-design-audit', 'url-ordered-design-writer',
-  'url-machine-instance', 'url-machine-lifecycle', 'url-machine-store', 'url-ordered-design-bounds', 'url-ordered-design-session', 'url-ordered-design-work-budget',
+  'url-machine-instance', 'url-machine-lifecycle', 'url-machine-store', 'url-machine-peer', 'url-ordered-design-bounds', 'url-ordered-design-session', 'url-ordered-design-work-budget',
   'url-ordered-design-screen', 'url-ordered-design-screen-worker', 'url-ordered-design-screen-protocol',
   'url-rendered-site-screen', 'url-rendered-source-proof', 'url-stored-render', 'url-dossier-result', 'url-ordered-render-value',
   'reverify', 'brief', 'inventory', 'review', 'review-packet', 'session-handover', 'session-statement', 'waiting-sessions', 'render', 'check',
@@ -109,13 +110,19 @@ export interface UrlRuntime {
 }
 
 const installed = new WeakMap<UrlRuntime, { readonly root: string; readonly rendererBytes: Uint8Array; readonly rendererSha256: string;
-  readonly orderedScreenProgram: OrderedScreenProgram }>();
+  readonly orderedScreenProgram: OrderedScreenProgram; readonly machineReaderProgram: KernelPeerProgram }>();
 
 /** Select only the screening images verified with this genuine runtime. The
  * runner reopens, holds and rehashes both images at invocation; the caller also
  * supplies protected currentness. A serialized runtime issues no selection. */
 export function urlOrderedScreenProgram(runtime: UrlRuntime): OrderedScreenProgram | null {
   return installed.get(runtime)?.orderedScreenProgram ?? null;
+}
+
+/** Select only the exact host-only native reader verified in this genuine runtime.
+ * The peer adapter reopens and rehashes its held executable on every invocation. */
+export function urlMachineReaderProgram(runtime: UrlRuntime): KernelPeerProgram | null {
+  return installed.get(runtime)?.machineReaderProgram ?? null;
 }
 
 /** Identify the payload for an explicitly requested support variant. This
@@ -152,14 +159,15 @@ export async function readUrlRuntime(root: string): Promise<{ readonly ok: true;
       || JSON.stringify(files.map(item => item.path)) !== JSON.stringify(OUTPUTS)
       || files[3]!.sha256 === files[5]!.sha256
       || !['packages/polaris-dossier/src/git-memory-worker.ts', 'packages/polaris-dossier/src/session-bridge.ts',
-        'packages/polaris-dossier/src/session-mcp.ts', 'packages/polaris-dossier/src/session-peer.c', RENDERER_ENTRY, 'scripts/build_dossier_runtime.mjs',
+        'packages/polaris-dossier/src/session-mcp.ts', 'packages/polaris-dossier/src/session-peer.c',
+        'packages/polaris-dossier/src/url-machine-peer.c', RENDERER_ENTRY, 'scripts/build_dossier_runtime.mjs',
         'scripts/compile_dossier_session_support.mjs', 'scripts/compile_dossier_ordered_screen.mjs',
         'package-lock.json', 'package.json', 'packages/polaris-dossier/package.json', ...PROFILE_SOURCES]
         .every(file => inputs.some(input => input.path === file))) throw new Error();
     let totalBytes = 0;
     for (const input of inputs) {
       if (!/^(?:packages|apps|node_modules|scripts)\//u.test(input.path) && !['package-lock.json', 'package.json'].includes(input.path)
-        || (!/\.(?:[cm]?[jt]sx?|json)$/u.test(input.path) && input.path !== 'packages/polaris-dossier/src/session-peer.c') || input.bytes > 16_777_216) throw new Error();
+        || (!/\.(?:[cm]?[jt]sx?|json)$/u.test(input.path) && !['packages/polaris-dossier/src/session-peer.c', 'packages/polaris-dossier/src/url-machine-peer.c'].includes(input.path)) || input.bytes > 16_777_216) throw new Error();
       totalBytes += input.bytes; if (totalBytes > 67_108_864) throw new Error();
     }
     const node = await realpath(process.execPath);
@@ -183,6 +191,7 @@ export async function readUrlRuntime(root: string): Promise<{ readonly ok: true;
         inputs })) });
     if (rendererBytes === undefined) throw new Error();
     installed.set(runtime, { root, rendererBytes, rendererSha256: files[1]!.sha256,
+      machineReaderProgram: deepFreeze({ executable: path.join(directory, MACHINE_PEER), sha256: files[7]!.sha256 }),
       orderedScreenProgram: deepFreeze({ node: { path: node, bytes: Number(manifest.node.bytes), sha256: manifest.node.sha256 },
         worker: { path: path.join(directory, ORDERED_SCREEN), bytes: files[6]!.bytes, sha256: files[6]!.sha256 } }) });
     return { ok: true, runtime };

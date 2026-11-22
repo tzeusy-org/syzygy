@@ -22,7 +22,7 @@ const profileSources = ['session-profile', 'session-launch', 'session-controller
   'session-control', 'session-peer', 'url-role-plan', 'url-session-budget', 'url-session-audit', 'url-origin-ledger', 'url-run-origins', 'url-source-reader', 'git-object-reader',
   'url-run-sessions', 'url-run-artifacts', 'url-product-reads', 'url-operation-products', 'url-question-ui', 'url-supervisor-state', 'url-launch-history', 'url-design-view',
   'url-design-product', 'url-design-delivery', 'url-ordered-design-request', 'url-ordered-design-audit', 'url-ordered-design-writer',
-  'url-machine-instance', 'url-machine-lifecycle', 'url-machine-store', 'url-ordered-design-bounds', 'url-ordered-design-session', 'url-ordered-design-work-budget', 'url-rendered-site-screen', 'url-rendered-source-proof', 'url-stored-render', 'url-dossier-result', 'url-ordered-render-value',
+  'url-machine-instance', 'url-machine-lifecycle', 'url-machine-store', 'url-machine-peer', 'url-ordered-design-bounds', 'url-ordered-design-session', 'url-ordered-design-work-budget', 'url-rendered-site-screen', 'url-rendered-source-proof', 'url-stored-render', 'url-dossier-result', 'url-ordered-render-value',
   'reverify', 'brief', 'inventory', 'review', 'review-packet', 'session-handover', 'session-statement', 'waiting-sessions', 'render', 'check',
   'check-model', 'review-model', 'credential-probe', 'cli', 'url-run-record', 'url-mode-registry', 'url-parent-adoption', 'url-runtime', 'polaris']
   .map(name => `packages/polaris-dossier/src/${name}.ts`);
@@ -62,22 +62,27 @@ const outputs = new Map([['worker.mjs', result.outputFiles[0].contents]]);
 // Compile only the exact captured first-party C input. The native helper stays
 // outside support/, which is the role-visible script mount. It never enters a
 // role's filesystem or selects an executable from observed-project content.
-const peerSource = 'packages/polaris-dossier/src/session-peer.c';
-const peerBytes = await readFile(path.join(root, peerSource)); capture(peerSource, peerBytes);
+const peerSources = [
+  ['packages/polaris-dossier/src/session-peer.c', 'host/session-peer'],
+  ['packages/polaris-dossier/src/url-machine-peer.c', 'host/machine-peer'],
+];
 const dist = path.join(root, 'packages/polaris-dossier/dist');
 await mkdir(dist, { recursive: true });
 const temporaryRoot = path.join(os.homedir(), '.tmp');
 await mkdir(temporaryRoot, { recursive: true });
-const scratch = await mkdtemp(path.join(temporaryRoot, 'syzygy-peer-build-'));
-try {
-  await writeFile(path.join(scratch, 'peer.c'), peerBytes, { flag: 'wx', mode: 0o600 });
-  execFileSync('/usr/bin/cc', ['-std=c11', '-Wall', '-Wextra', '-Werror', '-O2', 'peer.c', '-o', 'peer'],
-    { cwd: scratch, env: { PATH: '/usr/bin:/bin', LANG: 'C' }, stdio: 'pipe', timeout: 10_000, maxBuffer: 65_536 });
-  const native = await readFile(path.join(scratch, 'peer'));
-  if (native.length === 0 || native.length > 262_144 || !native.subarray(0, 4).equals(Buffer.from([0x7f, 0x45, 0x4c, 0x46])))
-    throw new Error('unexpected native peer helper output');
-  outputs.set('host/session-peer', native);
-} finally { await rm(scratch, { recursive: true, force: true }); }
+for (const [peerSource, output] of peerSources) {
+  const peerBytes = await readFile(path.join(root, peerSource)); capture(peerSource, peerBytes);
+  const scratch = await mkdtemp(path.join(temporaryRoot, 'syzygy-peer-build-'));
+  try {
+    await writeFile(path.join(scratch, 'peer.c'), peerBytes, { flag: 'wx', mode: 0o600 });
+    execFileSync('/usr/bin/cc', ['-std=c11', '-Wall', '-Wextra', '-Werror', '-O2', 'peer.c', '-o', 'peer'],
+      { cwd: scratch, env: { PATH: '/usr/bin:/bin', LANG: 'C' }, stdio: 'pipe', timeout: 10_000, maxBuffer: 65_536 });
+    const native = await readFile(path.join(scratch, 'peer'));
+    if (native.length === 0 || native.length > 262_144 || !native.subarray(0, 4).equals(Buffer.from([0x7f, 0x45, 0x4c, 0x46])))
+      throw new Error('unexpected native peer helper output');
+    outputs.set(output, native);
+  } finally { await rm(scratch, { recursive: true, force: true }); }
+}
 // Consume the trusted root's entire compiler graph as well as the worker's.
 // Reading a hand-picked source list after compilation cannot establish which
 // dependencies a control/origin/launcher implementation actually consumed.
@@ -93,7 +98,7 @@ const orderedScreen = await compileDossierOrderedScreen(root, [capturePlugin]);
 outputs.set('host/ordered-screen.mjs', orderedScreen.outputFiles[0].contents);
 const inputs = new Set([...Object.keys(result.metafile.inputs), ...Object.keys(host.metafile.inputs), ...Object.keys(design.metafile.inputs),
   ...Object.keys(orderedScreen.metafile.inputs), ...ORDERED_SCREEN_SOURCES, ...profileSources,
-  worker, peerSource, 'scripts/build_dossier_runtime.mjs', 'scripts/compile_dossier_session_support.mjs', 'package-lock.json']);
+  worker, ...peerSources.map(([source]) => source), 'scripts/build_dossier_runtime.mjs', 'scripts/compile_dossier_session_support.mjs', 'package-lock.json']);
 for (const name of [...Object.keys(host.metafile.inputs), ...Object.keys(design.metafile.inputs), ...Object.keys(orderedScreen.metafile.inputs)])
   if (!captured.has(name)) throw new Error('uncaptured host/renderer/screen compiler input');
 // Resolution metadata belongs to the captured graph even though esbuild does
@@ -131,10 +136,10 @@ for (const directory of ['support', 'design-support', 'host']) await mkdir(path.
 const files = [];
 // Keep the manifest order closed and independent of compilation order.
 for (const name of ['worker.mjs', 'renderer.mjs', 'support/session-bridge.js', 'support/session-mcp.js', 'host/session-peer',
-  'design-support/session-mcp.js', 'host/ordered-screen.mjs']) {
+  'design-support/session-mcp.js', 'host/ordered-screen.mjs', 'host/machine-peer']) {
   const bytes = outputs.get(name);
   if (bytes === undefined) throw new Error('missing runtime output');
-  await writeFile(path.join(destination, name), bytes, { flag: 'wx', mode: name === 'host/session-peer' ? 0o755 : 0o644 });
+  await writeFile(path.join(destination, name), bytes, { flag: 'wx', mode: name === 'host/session-peer' || name === 'host/machine-peer' ? 0o755 : 0o644 });
   files.push({ path: name, bytes: bytes.length, sha256: hash(bytes) });
 }
 for (const record of records) if (hash(await readFile(path.join(root, record.path))) !== record.sha256) throw new Error('build input changed before manifest');

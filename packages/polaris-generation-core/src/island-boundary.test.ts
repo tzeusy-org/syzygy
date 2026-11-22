@@ -332,13 +332,16 @@ describe('the live Node entries and the parked provider island', () => {
     const capture = read.tryBlock.statements.map(syntax);
     for (const statement of statementsOf(`
       for (const file of files) {
-        if (file.bytes > (file.path === 'worker.mjs' || file.path === 'renderer.mjs' ? 8_388_608 : 262_144)) throw new Error();
+        if (file.bytes > (file.path === 'worker.mjs' || file.path === 'renderer.mjs' || file.path === ORDERED_SCREEN ? 8_388_608 : 262_144)) throw new Error();
         const value = await read(path.join(directory, file.path), file.bytes, root, true);
         if (value.length !== file.bytes || sha256(value) !== file.sha256) throw new Error();
         if (file.path === 'renderer.mjs') rendererBytes = Uint8Array.from(value);
       }
       if (rendererBytes === undefined) throw new Error();
-      installed.set(runtime, { root, rendererBytes, rendererSha256: files[1]!.sha256 });
+      installed.set(runtime, { root, rendererBytes, rendererSha256: files[1]!.sha256,
+        machineReaderProgram: deepFreeze({ executable: path.join(directory, MACHINE_PEER), sha256: files[7]!.sha256 }),
+        orderedScreenProgram: deepFreeze({ node: { path: node, bytes: Number(manifest.node.bytes), sha256: manifest.node.sha256 },
+          worker: { path: path.join(directory, ORDERED_SCREEN), bytes: files[6]!.bytes, sha256: files[6]!.sha256 } }) });
     `)) expect(capture).toContain(statement);
     const builder = statementsOf(readModule(RUNTIME_BUILDER));
     for (const statement of statementsOf(`
@@ -348,10 +351,11 @@ describe('the live Node entries and the parked provider island', () => {
         write: false, metafile: true, logLevel: 'silent', plugins: [capturePlugin] });
       if (design.outputFiles.length !== 1 || design.outputFiles[0].contents.length > 8_388_608) throw new Error('unexpected renderer build output');
       outputs.set('renderer.mjs', design.outputFiles[0].contents);
-      const inputs = new Set([...Object.keys(result.metafile.inputs), ...Object.keys(host.metafile.inputs), ...Object.keys(design.metafile.inputs), ...profileSources,
-        worker, peerSource, 'scripts/build_dossier_runtime.mjs', 'scripts/compile_dossier_session_support.mjs', 'package-lock.json']);
-      for (const name of [...Object.keys(host.metafile.inputs), ...Object.keys(design.metafile.inputs)])
-        if (!captured.has(name)) throw new Error('uncaptured host/renderer compiler input');
+      const inputs = new Set([...Object.keys(result.metafile.inputs), ...Object.keys(host.metafile.inputs), ...Object.keys(design.metafile.inputs),
+        ...Object.keys(orderedScreen.metafile.inputs), ...ORDERED_SCREEN_SOURCES, ...profileSources,
+        worker, ...peerSources.map(([source]) => source), 'scripts/build_dossier_runtime.mjs', 'scripts/compile_dossier_session_support.mjs', 'package-lock.json']);
+      for (const name of [...Object.keys(host.metafile.inputs), ...Object.keys(design.metafile.inputs), ...Object.keys(orderedScreen.metafile.inputs)])
+        if (!captured.has(name)) throw new Error('uncaptured host/renderer/screen compiler input');
     `)) expect(builder).toContain(statement);
 
     const runtimeImports = importsOf(URL_RUNTIME, runtime.text);

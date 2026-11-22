@@ -123,6 +123,7 @@ export const INTEGRATION_TESTS: readonly string[] = [
   'packages/polaris-dossier/src/start-gates.test.ts',
   'packages/polaris-dossier/src/url-acquisition.test.ts',
   'packages/polaris-dossier/src/url-launch-history.test.ts',
+  'packages/polaris-dossier/src/url-machine-peer.test.ts',
   'packages/polaris-dossier/src/url-machine-store.test.ts',
   'packages/polaris-dossier/src/url-memory-acquisition.test.ts',
   'packages/polaris-dossier/src/url-mode-registry.test.ts',

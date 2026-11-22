@@ -40,6 +40,7 @@ const EXEMPT: Readonly<Record<string, string>> = {
 };
 const DOSSIER = 'packages/polaris-dossier/src/';
 const PEER_MODULE = DOSSIER + 'session-peer.ts';
+const MACHINE_PEER_MODULE = DOSSIER + 'url-machine-peer.ts';
 // Each exact location must be consumed once. Pin the parsed call, including argv and options.
 // Short fixture-only Git and FIFO calls have the same local-work rationale as their bare forms.
 const NATIVE_SITES = new Map<string, ReadonlyMap<string, string>>([
@@ -87,6 +88,9 @@ const NATIVE_SITES = new Map<string, ReadonlyMap<string, string>>([
   [PEER_MODULE, new Map([
     ['9d5395660d3f137ce72e2cdf199f9cf29f9c4857a215a40f8e96b8258af86a0c', 'execute the verified helper on fd 4 with no args, 1s SIGKILL and 128 output bytes'],
   ])],
+  [MACHINE_PEER_MODULE, new Map([
+    ['93d667e17a18698591d2e7abd0d883da65ad31c293109b5bd76132e372e6187c', 'held pinned native image, fixed listener/prepare/read modes, 1s SIGKILL and 64KiB plus 512 output bytes'],
+  ])],
   [DOSSIER + 'url-ordered-design-screen.ts', new Map([
     ['49ddffbf2f4a472f8db71aa384da61500ddb6b7e093885a6836564fcb68f29d9', 'one complete screening operation in the pinned sandbox, maximum 5s SIGKILL and 12MiB output'],
   ])],
@@ -106,6 +110,9 @@ const EMBEDDED_CALL = '496476a19a8b66906bd56990727e80e227041208e23bd8af1b0102675
 // Bind the child-file writer and the production fd verification to the admitted calls.
 const FIXTURE_WRITER = 'e49f3dc7ce221b2a257bcbc95f0ad98201ddcf5f433fd6e8f44ba7e71e852cb7';
 const PEER_CAPTURE = '0c99049517dab56bc93566dc9614d17b08f1231cd2dbc1f1bdeb93f220382045';
+// The call's limits and image verifier are shared helpers/constants. Bind that
+// complete context as well as the one admitted call; another call still fails.
+const MACHINE_PEER_SOURCE = '57eb68ad4ee9810658c38ea2a8bb49b295b4c4c6ab4ba334c7c93bb87a4d770f';
 const SELF = 'apps/three-surface-poc/src/sync-child-process-guard.test.ts';
 const SYNC_FUNCTIONS = ['execFileSync', 'execSync', 'spawnSync'];
 const MODULE_SPECIFIER = /(?:\bfrom|\bimport)\s*\(?\s*['"]([^'"]+)['"]/g;
@@ -235,6 +242,7 @@ function guardedSyncCalls(path: string, text: string): { calls: SyncCall[]; miss
   if (known === undefined && path !== EMBEDDED_FIXTURE) return { calls: longSyncCalls(text), missing: [] };
   const source = ts.createSourceFile(path, text, ts.ScriptTarget.Latest, true);
   const peerCapture = path === PEER_MODULE ? exactFunction(source, 'captureKernelUnixPeer', PEER_CAPTURE) : undefined;
+  const machinePeer = path !== MACHINE_PEER_MODULE || fingerprintOf(source, source) === MACHINE_PEER_SOURCE;
   const writesFixture = path === EMBEDDED_FIXTURE && exactFunction(source, 'fake', FIXTURE_WRITER) !== undefined;
   const sites = new Map<number, string>();
   let fixture: ts.TemplateExpression | undefined;
@@ -244,7 +252,7 @@ function guardedSyncCalls(path: string, text: string): { calls: SyncCall[]; miss
         const start = node.getStart(source);
         const inPeerCapture = peerCapture !== undefined && start >= peerCapture.getStart(source) && node.end <= peerCapture.end;
         const fingerprint = fingerprintOf(source, node, ts.EmitHint.Expression);
-        if (known.has(fingerprint) && (path !== PEER_MODULE || inPeerCapture)) sites.set(start, fingerprint);
+        if (known.has(fingerprint) && (path !== PEER_MODULE || inPeerCapture) && machinePeer) sites.set(start, fingerprint);
       }
       const argument = node.arguments[1];
       if (writesFixture && node.expression.text === 'fake' && fixture === undefined && argument !== undefined
@@ -371,6 +379,11 @@ describe('suite child processes and the vitest worker RPC', () => {
     const peer = fixture(PEER_MODULE);
     expect(commands(PEER_MODULE, change(peer, 'timeout: 1000', 'timeout: 60_000'))).toEqual(["'/proc/self/fd/4'"]);
     expect(commands(PEER_MODULE, change(peer, '!== program.sha256', '!== otherDigest'))).toEqual(["'/proc/self/fd/4'"]);
+
+    const machine = fixture(MACHINE_PEER_MODULE);
+    expect(commands(MACHINE_PEER_MODULE, change(machine, 'timeout: 1000', 'timeout: 60_000'))).toEqual(["'/proc/self/fd/4'"]);
+    expect(commands(MACHINE_PEER_MODULE, change(machine, '!== expected', '!== otherDigest'))).toEqual(["'/proc/self/fd/4'"]);
+    expect(commands(MACHINE_PEER_MODULE, change(machine, 'chunkBytes: 65_536', 'chunkBytes: 65_536_000'))).toEqual(["'/proc/self/fd/4'"]);
 
     const acquisition = fixture(EMBEDDED_FIXTURE);
     for (const changed of [
