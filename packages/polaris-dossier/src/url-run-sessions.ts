@@ -29,6 +29,7 @@ import { startUrlOrderedAttempt } from './url-run-ordered-attempt.js';
 import type { UrlParentAdoption } from './url-parent-adoption.js';
 import type { createUrlRunArtifacts } from './url-run-artifacts.js';
 import { createUrlRunCpuBudget } from './url-run-cpu-budget.js';
+import { sessionMachineEffectCurrent } from './session-machine-transport.js';
 
 const canonical = (value: unknown): string => encodeCanonicalJson(value, { maxBytes: 2_097_152, maxNodes: 65_536, maxDepth: 32 });
 type Failure = 'binding-changed' | 'launch-unavailable' | 'audit-unavailable' | 'control-unavailable' | 'role-ended' | 'transport-unavailable' | 'provenance-unavailable';
@@ -171,7 +172,8 @@ async function start(options: UrlRunSessionsOptions, ports: typeof native): Prom
   const audit = await createUrlSessionAudit({ parent: options.auditParent, name: options.auditName, binding,
     originPolicySha256: options.originPolicySha256, project: 'project:syzygy', pin: record.subject.pinnedRevision.commit,
     principal: options.principal, profiles: plans.map(plan => plan.profile), declaredClasses: options.declaredClasses,
-    screen: options.screen, current: options.current });
+    screen: options.screen, current: async () => sessionMachineEffectCurrent() !== false
+      && await options.current() === true && sessionMachineEffectCurrent() !== false });
   if (!audit.ok) throw new Error('url-run-sessions-unavailable');
   const designArtifact: NonNullable<SessionToolsOptions['designArtifact']> = async file => {
     const prepared = preparedDesign;

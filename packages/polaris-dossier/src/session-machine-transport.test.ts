@@ -6,7 +6,8 @@ import { afterEach, describe, expect, it, vi } from 'vitest';
 import { tempDir } from '@syzygy/test-kit';
 import { sha256 } from '@syzygy/support';
 import { createSessionMachineTransport, isSessionMachineTransport, openSessionMachineConnection,
-  prepareSessionMachineTransport, sessionMachineEffectContext, stopSessionMachineIngress, type SessionMachineEffectContext } from './session-machine-transport.js';
+  prepareSessionMachineTransport, sessionMachineEffectContext, stopSessionMachineIngress,
+  sessionMachineEffectCurrent, assertSessionMachineEffectCurrent, type SessionMachineEffectContext } from './session-machine-transport.js';
 import { startSessionBroker } from './session-broker.js';
 import { sessionRelayTestPort, SESSION_RELAY_LIMITS, type SessionRelayPorts, type SessionRelaySubject } from './session-relay.js';
 import type { UrlMachinePeer } from './url-machine-peer.js';
@@ -75,6 +76,43 @@ describe('verified-chunk session transport adapter', () => {
     const c = client(socketPath); c.socket.write('unverified raw bytes');
     expect(await c.output).toBe('checked reply');
     expect(context).not.toBeNull(); expect(actual?.listenerCount('data')).toBe(0); expect(actual?.listenerCount('readable')).toBe(0);
+  });
+
+  it('retains the exact async effect guard across awaits and revokes escaped descendants', async () => {
+    let opened!: (stream: Duplex) => void;
+    const accepted = new Promise<Duplex>(resolve => { opened = resolve; });
+    const transport = fixtureTransport([]), socketPath = join(tempDir('machine-effect-'), 's.sock');
+    const server = createServer({ pauseOnConnect: true, allowHalfOpen: true }, raw => { void (async () => {
+      const stream = await openSessionMachineConnection(raw, transport, { bytes: 128, milliseconds: 1000 });
+      if (!stream) throw new Error('owned stream refused');
+      opened(stream);
+    })(); });
+    server.listen(socketPath); await once(server, 'listening');
+    cleanup.push(() => new Promise<void>(resolve => server.close(() => resolve())));
+    const c = client(socketPath), stream = await accepted;
+    expect(stopSessionMachineIngress(stream)).toBe(true);
+    const context = sessionMachineEffectContext(stream)!;
+    expect(sessionMachineEffectCurrent()).toBeUndefined();
+    expect(assertSessionMachineEffectCurrent).toThrow('session-machine-transport-unavailable');
+    let release!: () => void, descendant: Promise<boolean | undefined> | undefined;
+    const released = new Promise<void>(resolve => { release = resolve; });
+    const admitted = await context.mediate('artifact_write', async () => {
+      await Promise.resolve();
+      assertSessionMachineEffectCurrent();
+      descendant = released.then(sessionMachineEffectCurrent);
+      return 'checked';
+    });
+    expect(admitted).toEqual({ ok: true, value: 'checked' });
+    release(); expect(await descendant).toBe(false);
+    let writes = 0;
+    const revoked = await context.mediate('artifact_write', async () => {
+      await Promise.resolve(); backend.deny = true;
+      assertSessionMachineEffectCurrent();
+      writes++;
+    });
+    expect(revoked).toEqual({ ok: false }); expect(writes).toBe(0);
+    expect(sessionMachineEffectCurrent()).toBeUndefined();
+    stream.destroy(); expect(await c.output).toBe('');
   });
 
   it('refuses an in-flight native data chunk returned after ingress was stopped', async () => {

@@ -1,4 +1,5 @@
 import { Socket, Server } from 'node:net';
+import { AsyncLocalStorage } from 'node:async_hooks';
 import { Duplex } from 'node:stream';
 import {
   closeUrlMachinePeer, isUrlMachinePeerFor, mediateUrlMachinePeer, readUrlMachinePeer,
@@ -28,6 +29,17 @@ interface ConnectionState {
 }
 const contexts = new WeakMap<SessionMachineEffectContext, ConnectionState>();
 const connections = new WeakMap<Duplex, SessionMachineEffectContext>();
+const effects = new AsyncLocalStorage<{ readonly boundary: () => boolean; active: boolean }>();
+/** Undefined means no mediated effect is active in this async chain. An expired
+ * descendant retains a revoked scope instead of inheriting a later effect. */
+export function sessionMachineEffectCurrent(): boolean | undefined {
+  const selected = effects.getStore();
+  return selected === undefined ? undefined : selected.active && selected.boundary();
+}
+/** Protected producers call this again immediately before an awaited write. */
+export function assertSessionMachineEffectCurrent(): void {
+  if (sessionMachineEffectCurrent() !== true) throw new Error('session-machine-transport-unavailable');
+}
 
 /** First-party factory only. Merely returning peer-shaped metadata cannot
  * authenticate: every accepted capability must belong to its exact raw socket. */
@@ -102,7 +114,9 @@ export async function openSessionMachineConnection(raw: Socket, transport: Sessi
         const boundary = () => !ended && !raw.destroyed && !stream.destroyed && performance.now() < deadline && current();
         if (!boundary()) throw new Error('session-machine-transport-unavailable');
         active.boundary = boundary;
-        try { return await effect(boundary); } finally { active.boundary = null; }
+        const selectedEffect = { boundary, active: true };
+        try { return await effects.run(selectedEffect, () => effect(boundary)); }
+        finally { selectedEffect.active = false; active.boundary = null; }
       });
     },
   });
