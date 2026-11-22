@@ -1,0 +1,39 @@
+{
+  "subjectCommit": "236df7ecd971048a97069f2629ef2e03e2dad902",
+  "runtimeInputTreeSha256": "82eff6d8643070c93f7cb6dc5197e9d84e7b01946348c786d11d2027b16e24f8",
+  "observed": "Genuine public recovery read lease expired during private fidelity reproduction before producer admission; own producer timer still open and signal un-aborted. No validator/final-factory claim.",
+  "readBegin": {
+    "event": "f3-render-read",
+    "phase": "begin",
+    "operation": "render",
+    "deadline": 1795339505398,
+    "sampledNow": 1795339500446
+  },
+  "producerBegin": {
+    "event": "f3-render-producer",
+    "phase": "begin",
+    "producerExpires": 172378.915923,
+    "sampledNow": 167378.994732
+  },
+  "expiry": {
+    "event": "f3-render-lease",
+    "phase": "deadline",
+    "operation": "render",
+    "deadline": 1795339505398,
+    "sampledNow": 1795339505457
+  },
+  "failure": {
+    "event": "f3-render-producer",
+    "phase": "fidelity",
+    "result": "threw",
+    "producerExpires": 172378.915923,
+    "sampledNow": 167727.171505,
+    "signalAborted": false
+  },
+  "currentCallbacksWithinLease": 65,
+  "currentMsWithinLease": 3319.54160399994,
+  "currentCallbacksAfterProducerBegin": 3,
+  "currentMsAfterProducerBegin": 130.02749799998128,
+  "producerElapsedMs": 348.2555820000125,
+  "limit": "Temporary source instrumentation; selected stop-resume failed 1, skipped 3. It establishes the first observed expiry, not a passing repair."
+}

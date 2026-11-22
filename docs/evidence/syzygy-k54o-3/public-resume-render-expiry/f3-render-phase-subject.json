@@ -1,0 +1,25 @@
+{
+  "subjectCommit": "236df7ecd971048a97069f2629ef2e03e2dad902",
+  "diagnosticPatch": "/home/orca/.tmp/f3-render-phase.patch",
+  "diagnosticPatchSha256": "4e3fc23271e51cd3630cf73e7f2265187f04dc33e54009ad336c67be1ba0fdd5",
+  "modifiedFiles": [
+    {
+      "path": "packages/polaris-dossier/src/polaris.ts",
+      "sha256": "926bbf6b317930df62928b820ac178675fe3d7449d38376f3ff8e98e8737a4b1"
+    },
+    {
+      "path": "packages/polaris-dossier/src/render.ts",
+      "sha256": "10042e0296e601bd3f7f6894de3aa0ba6be2afe7ad35e7fc91c2c5f9016f20d6"
+    },
+    {
+      "path": "packages/polaris-dossier/src/url-design-product.ts",
+      "sha256": "a6e8d3ffb2a7c30fe8d7ff12277d507ebc631e05a9c9aafa18275386cec58fd3"
+    },
+    {
+      "path": "packages/polaris-dossier/src/url-run-artifacts.ts",
+      "sha256": "b2383e5e7b0b206ac6ed98b405991fc5088de683e4188899972a1add935658b5"
+    }
+  ],
+  "typecheckLog": "/home/orca/.tmp/f3-render-phase-typecheck.log",
+  "purpose": "single actual public stop-resume; fixed stage/result/deadline/abort traces and aggregate actual guard costs; no authority predicate or limit changes"
+}

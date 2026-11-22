@@ -1,0 +1,271 @@
+diff --git a/packages/polaris-dossier/src/polaris.ts b/packages/polaris-dossier/src/polaris.ts
+index f533d07b7..dea62926c 100644
+--- a/packages/polaris-dossier/src/polaris.ts
++++ b/packages/polaris-dossier/src/polaris.ts
+@@ -553,7 +553,15 @@ async function prepareStoppedSupervisor(previous: SupervisorState, ports: CliPor
+   if (claim === null) throw new Error('url-recovery-ownership');
+   try {
+     const checked = verified.checkedContext, run = previous.run;
+-    const current = (): boolean => claim.current() && checked.current();
++    let probeCurrentCalls = 0, probeCurrentMs = 0;
++    const current = (): boolean => {
++      const began = performance.now();
++      const result = claim.current() && checked.current();
++      const elapsedMs = performance.now() - began;
++      probeCurrentCalls++; probeCurrentMs += elapsedMs;
++      process.stderr.write(JSON.stringify({ event: 'f3-render-current', calls: probeCurrentCalls, currentMs: probeCurrentMs, elapsedMs, result }) + '\n');
++      return result;
++    };
+     const sessionCurrent = async (): Promise<boolean> => current();
+     const generation = randomBytes(16).toString('hex');
+     const directories: Readonly<Record<ViewRole, string>> = { author: run, inventory: sessionDirectory(run, 1),
+diff --git a/packages/polaris-dossier/src/render.ts b/packages/polaris-dossier/src/render.ts
+index 79cbd7128..11c6f922d 100644
+--- a/packages/polaris-dossier/src/render.ts
++++ b/packages/polaris-dossier/src/render.ts
+@@ -321,8 +321,11 @@ async function render(runDir: string, deps: RenderDeps, storedSite?: StoredUrlRe
+   if (urlMode && (renderer.pageSinkContract !== PAGE_SINK_CONTRACT || pageSinkUnconfirmed(renderer, files) !== null))
+     return refuse('render', 'The complete URL renderer output does not satisfy the fixed page sink contract.');
+   if (deps.admitProducedSite !== undefined) {
++    let probePhase = 'reproduce-entry';
+     const reproduce = async (signal: AbortSignal) => {
++      const probeNull = () => { process.stderr.write(JSON.stringify({ event: 'f3-render-producer', phase: probePhase, result: 'reproduce-null', signalAborted: signal.aborted }) + '\n'); return null; };
+       if (!urlMode) return { input: { local, sources: built.sources }, derived };
++      probePhase = 'stored-input';
+       if (storedSite !== undefined || checkedDesign !== undefined) {
+         // These operations independently rebuild the reviewed packet. Check
+         // the exact inputs consumed by both draws again. The producer verifies
+@@ -330,65 +333,80 @@ async function render(runDir: string, deps: RenderDeps, storedSite?: StoredUrlRe
+         // full final site before counting completion.
+         if (signal.aborted
+           || !equalOrderedRenderValue(pendingInput, { local: built.local, sources: built.sources })
+-          || !equalOrderedRenderValue(finalInput, { local, sources: built.sources })) return null;
++          || !equalOrderedRenderValue(finalInput, { local, sources: built.sources })) return probeNull();
+         return { input: { local, sources: built.sources }, derived };
+       }
+       if (products?.waitForSample !== undefined) await yieldForProductReads(products, run);
++      probePhase = 'draft';
+       const again = latestPassedDraft(run, products);
+-      if (!again.ok || again.revision !== draftRev.revision || !Buffer.from(again.bytes).equals(draftRev.bytes)) return null;
++      if (!again.ok || again.revision !== draftRev.revision || !Buffer.from(again.bytes).equals(draftRev.bytes)) return probeNull();
+       const draft: unknown = JSON.parse(new TextDecoder('utf-8', { fatal: true }).decode(again.bytes));
+-      if (!isRecord(draft)) return null;
++      if (!isRecord(draft)) return probeNull();
+       const reader = deps.openReader!({ gitDir: path.join(subject.clone.path, '.git'), revision: pinned });
++      probePhase = 'derive';
+       const rederived = await deriveFindings(draft, { pinned, screen, reader }, draftRules(pinned, declared.maxQuestions, poleLimitOf(declared)));
+-      if (signal.aborted || rederived.findings.length > 0) return null;
++      if (signal.aborted || rederived.findings.length > 0) return probeNull();
++      probePhase = 'fidelity';
+       const fidelity = await reviewOfRecord(opened, deps);
+       const fidelityContinuation = fidelity.counts
+         ? continuationOf(run, 'fidelity', fidelity.session, fidelity.number, fidelity.packetSha256, fidelity.sessionId.value, products) : null;
++      probePhase = 'local';
+       const rebuilt = buildLocalInput({ opened, doc: draft, derived: rederived, review: fidelity, screen, credential, algorithm: reader.algorithm,
+         briefRecord: protectedProductRecord(products!, run, RUN_LAYOUT.briefRecord), fidelityContinuation });
+       if (!rebuilt.ok || signal.aborted
+-        || !equalOrderedRenderValue(pendingInput, { local: rebuilt.local, sources: rebuilt.sources })) return null;
++        || !equalOrderedRenderValue(pendingInput, { local: rebuilt.local, sources: rebuilt.sources })) return probeNull();
++      probePhase = 'pending-draw';
+       const pending = draw(rebuilt.local, rebuilt.sources);
+-      if (typeof pending === 'string') return null;
++      if (typeof pending === 'string') return probeNull();
++      probePhase = 'pending-packet';
+       const candidate = buildDesignPacket({ run, runId, pinnedRevision: pinned, audience: declared.audience, files: pending, ...standardsInput(standards) });
+-      if (!candidate.ok || candidate.bytes !== reviewed.bytes) return null;
++      if (!candidate.ok || candidate.bytes !== reviewed.bytes) return probeNull();
++      probePhase = 'design';
+       const design = await designReviewOfRecord(opened, candidate, { sources: deps.sources, now: () => now, productReads: products });
+       const designContinuation = design.counts
+         ? continuationOf(run, 'design', design.session, design.number, design.packetSha256, design.sessionId.value, products) : null;
+       const next = { ...rebuilt.local, reviewStatus: rebuilt.local.reviewStatus.map(item =>
+         item.id === 'review-status/design' ? designStatusItem(design, designContinuation) : item) };
+-      if (!equalOrderedRenderValue(finalInput, { local: next, sources: rebuilt.sources })) return null;
++      probePhase = 'final-input';
++      if (!equalOrderedRenderValue(finalInput, { local: next, sources: rebuilt.sources })) return probeNull();
++      probePhase = 'final-draw';
+       const drawn = draw(next, rebuilt.sources);
+-      if (typeof drawn === 'string' || drawn.size !== files.size || signal.aborted) return null;
++      if (typeof drawn === 'string' || drawn.size !== files.size || signal.aborted) return probeNull();
++      probePhase = 'final-files';
+       const expected = files.entries();
+       for (const [file, bytes] of drawn) {
+         const pair = expected.next().value;
+-        if (pair === undefined || pair[0] !== file || pair[1] !== bytes) return null;
++        if (pair === undefined || pair[0] !== file || pair[1] !== bytes) return probeNull();
+       }
+       return { input: { local: next, sources: rebuilt.sources }, derived: rederived };
+     };
+     const abort = new AbortController();
+     const expires = performance.now() + RENDER_PRODUCER_MILLISECONDS;
+     const expired = (): boolean => abort.signal.aborted || performance.now() >= expires;
++    process.stderr.write(JSON.stringify({ event: 'f3-render-producer', phase: 'begin', producerExpires: expires, sampledNow: performance.now() }) + '\n');
+     let timer: ReturnType<typeof setTimeout> | undefined, completed = false;
+     try {
+       const admitted = await Promise.race([
+         Promise.resolve().then(async () => {
+           const rebuilt = await reproduce(abort.signal);
+-          if (rebuilt === null || expired()) return false;
++          if (rebuilt === null || expired()) { process.stderr.write(JSON.stringify({ event: 'f3-render-producer', phase: probePhase, result: 'reproduce-or-expired', producerExpires: expires, sampledNow: performance.now(), signalAborted: abort.signal.aborted }) + '\n'); return false; }
+           const usedPaths = new Set(rebuilt.input.sources.filter(source => !source.exclusion.excluded).map(source => source.path));
++          probePhase = 'products-snapshot';
++          const probeProducts = products === undefined ? undefined : products.revalidate();
++          probePhase = 'admit';
++          process.stderr.write(JSON.stringify({ event: 'f3-render-producer', phase: probePhase, producerExpires: expires, sampledNow: performance.now(), signalAborted: abort.signal.aborted }) + '\n');
+           return deps.admitProducedSite!({ run, runId, pinnedRevision: pinned, draftRevision: draftRev.revision,
+-            ...(products === undefined ? {} : { products: products.revalidate() }),
++            ...(probeProducts === undefined ? {} : { products: probeProducts }),
+             input: rebuilt.input, files: new Map(files), signal: abort.signal, packet: { bytes: published.bytes, sha256: published.sha256 },
+             sourceBodies: [...rebuilt.derived.admitted].filter(([repositoryPath]) => !urlMode || usedPaths.has(repositoryPath))
+               .map(([repositoryPath, blob]) => ({ path: repositoryPath, objectId: blob.objectId,
+                 raw: blob.withheld === undefined ? blob.raw : null, redacted: blob.withheld !== undefined })) });
+         }),
+-        new Promise<false>(resolve => { timer = setTimeout(() => { abort.abort(); resolve(false); }, RENDER_PRODUCER_MILLISECONDS); }),
++        new Promise<false>(resolve => { timer = setTimeout(() => { abort.abort(); process.stderr.write(JSON.stringify({ event: 'f3-render-producer', phase: 'timer', result: false, producerExpires: expires, sampledNow: performance.now(), signalAborted: abort.signal.aborted }) + '\n'); resolve(false); }, RENDER_PRODUCER_MILLISECONDS); }),
+       ]);
+-      if (admitted !== true || expired()) return refuse('render', 'The rendered products were not admitted by the checked producer before storage.');
++      if (admitted !== true || expired()) { process.stderr.write(JSON.stringify({ event: 'f3-render-producer', phase: probePhase, result: admitted, producerExpires: expires, sampledNow: performance.now(), signalAborted: abort.signal.aborted }) + '\n'); return refuse('render', 'The rendered products were not admitted by the checked producer before storage.'); }
+       completed = true;
+-    } catch { return refuse('render', 'The rendered products were not admitted by the checked producer before storage.'); }
++    } catch { process.stderr.write(JSON.stringify({ event: 'f3-render-producer', phase: probePhase, result: 'threw', producerExpires: expires, sampledNow: performance.now(), signalAborted: abort.signal.aborted }) + '\n'); return refuse('render', 'The rendered products were not admitted by the checked producer before storage.'); }
+     finally { clearTimeout(timer); if (!completed) abort.abort(); }
+   }
+ 
+diff --git a/packages/polaris-dossier/src/url-design-product.ts b/packages/polaris-dossier/src/url-design-product.ts
+index 2f9f13dc9..b918e7e79 100644
+--- a/packages/polaris-dossier/src/url-design-product.ts
++++ b/packages/polaris-dossier/src/url-design-product.ts
+@@ -126,6 +126,8 @@ export async function admitUrlDesignProduct(input: ProducedSiteInput, options: D
+ export async function validateUrlDesignProduct(input: ProducedSiteInput, options: DesignProductOptions): Promise<ValidatedUrlDesignProduct | null> {
+   const { run, record, declaration, screen, renderer, ledger, scaffold, products, current } = options;
+   const signal = input.signal;
++  const probeBegan = performance.now();
++  let probePhase = 'identity', probeResult = false, probeDeadline: number | null = null;
+   const waitForValidation = (): Promise<void> => products.waitForSample?.() ?? yieldToPoll();
+   const live = (): boolean => input.signal === signal && !signal.aborted && current();
+   try {
+@@ -134,10 +136,13 @@ export async function validateUrlDesignProduct(input: ProducedSiteInput, options
+       || input.pinnedRevision !== record.subject.pinnedRevision.commit || screen.policySha256 !== declaration.basePolicy.sha256
+       || screen.visibility !== record.subject.visibility.value || renderer.identity.profileRegistrySha256 !== declaration.inference.profile.sha256
+       || input.products === undefined || input.products.metadata.operation !== 'render') return null;
++    probePhase = 'initial-sample';
+     if (products.waitForSample !== undefined) await products.waitForSample();
++    probePhase = 'initial-snapshot';
+     const initial = products.revalidate();
++    probePhase = 'initial-equality';
+     if (!sameProducts(input.products, initial)) return null;
+-    const deadline = initial.metadata.deadline;
++    const deadline = initial.metadata.deadline; probeDeadline = deadline;
+     if (!Number.isSafeInteger(deadline)) return null;
+     // A backend timer cannot interrupt synchronous comparison/copy work. Keep
+     // the original lease deadline and signal available for cheap final samples.
+@@ -153,21 +158,28 @@ export async function validateUrlDesignProduct(input: ProducedSiteInput, options
+       input: input.input, files: input.files, packet: input.packet, sourceBodies: input.sourceBodies });
+     const bindings = copy({ record, declaration, renderer: renderer.identity, products: checked.metadata });
+     const screening = { ...screen };
++    probePhase = 'scaffold';
+     const scaffoldMetadata = ledger.metadata(scaffold);
+     if (!declaration.plannedOrigins.some(origin => origin.id === scaffoldMetadata.id && origin.sha256 === scaffoldMetadata.digest
+       && origin.species === 'authenticated-local-renderer-design-product-and-inert-view'
+       && origin.classes.length === 1 && origin.classes[0] === 'code-content')) return null;
++    probePhase = 'screen-sample';
+     await waitForValidation();
+     if (!leaseCurrent()) return null;
++    probePhase = 'screen';
+     const screened = screenUrlRenderedSite(subject.files, screening);
+     if (!screened.ok || !live()) return null;
++    probePhase = 'source-proof';
+     const verified = await verifyUrlRenderedSources(input, record, ledger);
++    probePhase = 'initial-sample';
+     if (products.waitForSample !== undefined) await products.waitForSample();
+     if (!live() || verified.some(body => body.policies.originSha256 !== declaration.originPolicy.sha256)) return null;
+     const parents = [...new Set([scaffold, ...checked.receipts, ...verified.map(body => body.origin)])];
+     if (parents.length > URL_ORIGIN_LEDGER_LIMITS.parents) return null;
+     const parentSubjects = parents.map(receipt => ({ receipt }));
++    probePhase = 'parents';
+     const parentMetadata = copy(ledger.inspectMetadata(parentSubjects));
++    probePhase = 'semantic';
+     const semanticParentsSha256 = ledger.semanticProvenance(parents);
+     const semanticInputsSha256 = sha256(encodeCanonicalJson({ format: 'polaris-url-semantic-design-inputs/1',
+       binding: { run, runId: input.runId, pinnedRevision: input.pinnedRevision, draftRevision: input.draftRevision,
+@@ -177,9 +189,11 @@ export async function validateUrlDesignProduct(input: ProducedSiteInput, options
+       records: checked.metadata.records.map(({ originId: _allocation, ...record }) => record),
+       selections: checked.metadata.selections.map(({ originId: _allocation, ...selection }) => selection),
+     }, { maxBytes: 2_097_152, maxNodes: 65_536, maxDepth: 32 }));
++    probePhase = 'classes';
+     const classes = new Set(parentMetadata.flatMap(parent => parent.classes));
+     classes.add('derived-composites');
+     for (const contentClass of classes) if (!declaration.plannedClasses.includes(contentClass)) return null;
++    probePhase = 'packet';
+     const packet = buildDesignPacket({ run, runId: input.runId, pinnedRevision: input.pinnedRevision, audience: record.declared.audience,
+       files: input.files, ...standardsInput(briefStandardsFromRecord(protectedProductRecord(products, run, 'brief.json'))) });
+     if (!packet.ok || packet.bytes !== input.packet.bytes || packet.sha256 !== input.packet.sha256) return null;
+@@ -187,8 +201,10 @@ export async function validateUrlDesignProduct(input: ProducedSiteInput, options
+       bytes: original.length };
+     // Creation already checks the exact canonical envelope with the independent
+     // inverse and full screening. No untrusted copy crosses this boundary.
++    probePhase = 'view';
+     const checkedView = await createUrlDesignViewWithPolling({ original, expected, screen: screening }, leaseCurrent, waitForValidation);
+     if (checkedView === null) return null;
++    probePhase = 'screen-sample';
+     await waitForValidation();
+     if (!leaseCurrent()) return null;
+     const stable = (): boolean => {
+@@ -202,6 +218,7 @@ export async function validateUrlDesignProduct(input: ProducedSiteInput, options
+         && semanticParentsSha256 === ledger.semanticProvenance(parents) && leaseCurrent();
+     };
+     const rendererCurrent = (): Promise<boolean> => urlRendererCurrent(renderer);
++    probePhase = 'stable-renderer';
+     if (checkedView.files !== screened.files || checkedView.pages !== screened.pages
+       || !stable() || !(await rendererCurrent())) return null;
+     const population = [...subject.files].sort(([a], [b]) => a < b ? -1 : a > b ? 1 : 0)
+@@ -214,6 +231,7 @@ export async function validateUrlDesignProduct(input: ProducedSiteInput, options
+       parents: parentMetadata, semanticParentsSha256, semanticInputsSha256, products: checked.metadata,
+       output: { files: screened.files, pages: screened.pages, bytes: screened.bytes, population }, rawActive: checkedView.rawActive });
+     if (!stable()) return null;
++    probePhase = 'publish';
+     const capability = Object.freeze({}) as ValidatedUrlDesignProduct;
+     const entry: ProductEntry = { metadata, original: Uint8Array.from(original), view: Uint8Array.from(checkedView.bytes),
+       parents, rendererCurrent, stable, leaseCurrent,
+@@ -225,8 +243,10 @@ export async function validateUrlDesignProduct(input: ProducedSiteInput, options
+     signal.addEventListener('abort', () => { if (Date.now() < deadline) lifetime.retired = true; }, { once: true });
+     lifetimes.set(capability, lifetime);
+     validated.set(capability, entry);
++    probeResult = true;
+     return capability;
+   } catch { return null; }
++  finally { process.stderr.write(JSON.stringify({ event: 'f3-render-validation', phase: probePhase, result: probeResult, elapsedMs: performance.now() - probeBegan, deadline: probeDeadline, sampledNow: Date.now(), signalAborted: signal.aborted }) + '\n'); }
+ }
+ 
+ /** Materialize the defensive copy in the same synchronous continuation as the
+diff --git a/packages/polaris-dossier/src/url-run-artifacts.ts b/packages/polaris-dossier/src/url-run-artifacts.ts
+index 5b420d08b..ada9d3831 100644
+--- a/packages/polaris-dossier/src/url-run-artifacts.ts
++++ b/packages/polaris-dossier/src/url-run-artifacts.ts
+@@ -1089,13 +1089,14 @@ function create(given: UrlRunArtifactsOptions) {
+     state.entries.clear(); state.selections.clear(); activeReads.delete(state);
+   }
+   const readLease = (state: ReadState): void => {
+-    if (state.terminal !== undefined) refuse();
+-    if (state.signal?.aborted) { closeRead(state); refuse(); }
+-    if (Date.now() >= state.deadline) { closeRead(state, 'expired'); refuse(); }
++    if (state.terminal !== undefined) { process.stderr.write(JSON.stringify({ event: 'f3-render-lease', phase: 'terminal', operation: state.operation, deadline: state.deadline, terminal: state.terminal }) + '\n'); refuse(); }
++    if (state.signal?.aborted) { process.stderr.write(JSON.stringify({ event: 'f3-render-lease', phase: 'abort', operation: state.operation, deadline: state.deadline }) + '\n'); closeRead(state); refuse(); }
++    const sampledNow = Date.now();
++    if (sampledNow >= state.deadline) { process.stderr.write(JSON.stringify({ event: 'f3-render-lease', phase: 'deadline', operation: state.operation, deadline: state.deadline, sampledNow }) + '\n'); closeRead(state, 'expired'); refuse(); }
+   };
+   const readLive = (state: ReadState): void => {
+     readLease(state);
+-    try { live(); } catch { closeRead(state); refuse(); }
++    try { live(); } catch { process.stderr.write(JSON.stringify({ event: 'f3-render-lease', phase: 'authority', operation: state.operation, deadline: state.deadline }) + '\n'); closeRead(state); refuse(); }
+     readLease(state);
+   };
+   function contextState(context: UrlProductReadContext): ReadState {
+@@ -1118,6 +1119,7 @@ function create(given: UrlRunArtifactsOptions) {
+     state.timer = setTimeout(() => closeRead(state, 'expired'), input.deadline - now); state.timer.unref();
+     state.abort = () => closeRead(state); input.signal?.addEventListener('abort', state.abort, { once: true });
+     readContexts.set(context, state); activeReads.add(state);
++    process.stderr.write(JSON.stringify({ event: 'f3-render-read', phase: 'begin', operation: state.operation, deadline: state.deadline, sampledNow: now }) + '\n');
+     return context;
+   }
+   const stageSelectors = {

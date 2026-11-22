@@ -1,0 +1,31 @@
+{
+  "subjectCommit": "236df7ecd971048a97069f2629ef2e03e2dad902",
+  "sourceVerified": "Each of four temporary source digests independently reconstructed from frozen base and patch in a separate Git index.",
+  "countsVerified": "65 true current callbacks within failing read lease, three after producer begin, computed directly from event interval.",
+  "files": [
+    {
+      "path": "causal-projection.json",
+      "sha256": "e45576d365ee3a794bc6643d9413df8daf62afe7a3c109d9e2dfdd7aa0dd0ab2"
+    },
+    {
+      "path": "f3-render-phase-result.json",
+      "sha256": "2cb0a6f1896f54876d6564d7c93a74152172ee5b5e0ad90326459423184b43a8"
+    },
+    {
+      "path": "f3-render-phase-subject.json",
+      "sha256": "1061ed1a5dfccd0b1d009123c8949bb62f4c7b3cf5915582496eab6fa9f6c04d"
+    },
+    {
+      "path": "f3-render-phase-typecheck.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "f3-render-phase.log",
+      "sha256": "feb9dffc00dbcc4975498f097d5c3dd5f9e0c16c9d98f4548e44d1e3726c1608"
+    },
+    {
+      "path": "f3-render-phase.patch",
+      "sha256": "4e3fc23271e51cd3630cf73e7f2265187f04dc33e54009ad336c67be1ba0fdd5"
+    }
+  ]
+}
