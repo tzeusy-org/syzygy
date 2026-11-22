@@ -1,0 +1,72 @@
+
+ RUN  v3.2.7 /home/orca/.tmp/syzygy-beads-looper-20261114-54ebc9f1/d10-f3-final-verification
+
+ ❯ |integration| packages/polaris-dossier/src/url-launch-history.test.ts (39 tests | 1 failed | 38 skipped) 8851ms
+   ↓ protected URL design delivery audit > keeps a metadata-only event and rechecks after durability (valid)
+   × protected URL design delivery audit > keeps a metadata-only event and rechecks after durability (ordered) 793ms
+     → url-product-read-unavailable
+   ↓ protected URL design delivery audit > keeps a metadata-only event and rechecks after durability (ordered-resumed)
+   ↓ protected URL design delivery audit > keeps a metadata-only event and rechecks after durability (ordered-mutated)
+   ↓ protected URL design delivery audit > keeps a metadata-only event and rechecks after durability (ordered-extra)
+   ↓ protected URL design delivery audit > keeps a metadata-only event and rechecks after durability (expiry)
+   ↓ protected URL design delivery audit > keeps a metadata-only event and rechecks after durability (launch-drift)
+   ↓ protected URL design delivery audit > keeps a metadata-only event and rechecks after durability (sample-refusal)
+   ↓ URL stored launch history > writes fixed exclusive0600 helper files with exact prompt/profile/command/session identities and Inferred captures
+   ↓ URL stored launch history > issues an opaque capability for exact durable bytes and refuses a same-byte prompt replacement
+   ↓ URL stored launch history > resolves a logical helper launch through its newly audited immutable physical generation
+   ↓ URL stored launch history > authenticates each exact helper history in product contexts after its own durable host audit
+   ↓ URL stored launch history > refuses a later writer and audit against a byte-identical replacement of the registered prompt
+   ↓ URL stored launch history > keeps a launch history unpublished while resource polls run and registers each file once
+   ↓ URL stored launch history > keeps helper history unpublished when the sample fails during registration
+   ↓ URL stored launch history > lets a pending sample finish before inspecting or registering launch history
+   ↓ URL stored launch history > checks authority after yielding before reopening the launch audit
+   ↓ URL stored launch history > refuses launch history when its protected audit changes during registration
+   ↓ URL stored launch history > checks already committed history during 'inventory' 'fsync' with null drift
+   ↓ URL stored launch history > checks already committed history during 'design' 'fsync' with null drift
+   ↓ URL stored launch history > checks already committed history during 'design' 'fsync' with 'prefix' drift
+   ↓ URL stored launch history > checks already committed history during 'design' 'fsync' with 'tail' drift
+   ↓ URL stored launch history > checks already committed history during 'design' 'fsync' with 'unrelated-file' drift
+   ↓ URL stored launch history > checks already committed history during 'design' 'before-write' with null drift
+   ↓ URL stored launch history > checks already committed history during 'inventory' 'after-write' with null drift
+   ↓ URL stored launch history > checks already committed history during 'design' 'after-write' with null drift
+   ↓ URL stored launch history > checks already committed history during 'design' 'after-write' with 'tail' drift
+   ↓ URL stored launch history > checks already committed history during 'design' 'after-write' with 'short-write' drift
+   ↓ URL stored launch history > checks already committed history during 'design' 'after-write' with 'stamp' drift
+   ↓ URL stored launch history > checks already committed history during 'design' 'after-write' with 'mode' drift
+   ↓ URL stored launch history > checks already committed history during 'design' 'after-write' with 'hard-link' drift
+   ↓ URL stored launch history > refuses stale or incorrectly scoped audit registration with safe exact writer bytes
+   ↓ URL stored launch history > refuses an exact audited attempt in a directory outside the genuine prepared view protections
+   ↓ URL stored launch history > returns author metadata without a helper file and discloses missing actual runtime captures
+   ↓ URL stored launch history > refuses copied plans, foreign run bindings, mismatched issued prompts and invalid captured PID without creating history
+   ↓ URL stored launch history > refuses revoked current, a policy mismatch, and detector failures before writing
+   ↓ URL stored launch history > refuses a foreign directory with the same runId and byte-identical replaced prompt records
+   ↓ URL stored launch history > refuses a symlink destination and helper directory replaced while current is pending without writing through either
+   ↓ URL stored launch history > requires Inferred URL history only under actual protected effective authority and preserves legacy marker Observed behavior
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  |integration| packages/polaris-dossier/src/url-launch-history.test.ts > protected URL design delivery audit > keeps a metadata-only event and rechecks after durability (ordered)
+Error: url-product-read-unavailable
+ ❯ bad packages/polaris-dossier/src/url-product-reads.ts:18:34
+     16|   readonly missingAt: number | null;
+     17| }
+     18| const bad = (): never => { throw new Error('url-product-read-unavailab…
+       |                                  ^
+     19| function guarded<T>(work: () => T): T { try { return work(); } catch {…
+     20| const relative = (s: string): boolean => typeof s === 'string' && s.le…
+ ❯ guarded packages/polaris-dossier/src/url-product-reads.ts:19:79
+ ❯ snapshotProductFile packages/polaris-dossier/src/url-product-reads.ts:48:10
+ ❯ packages/polaris-dossier/src/url-run-artifacts.ts:1411:26
+ ❯ read packages/polaris-dossier/src/url-run-artifacts.ts:1409:58
+ ❯ snapshotWithAuthority packages/polaris-dossier/src/url-run-artifacts.ts:258:20
+ ❯ Object.captureFrozenHistory packages/polaris-dossier/src/url-run-artifacts.ts:1348:12
+ ❯ packages/polaris-dossier/src/url-launch-history.test.ts:483:44
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 38 skipped (39)
+   Start at  20:14:15
+   Duration  11.72s (transform 1.90s, setup 11ms, collect 2.53s, tests 8.85s, environment 0ms, prepare 57ms)
+

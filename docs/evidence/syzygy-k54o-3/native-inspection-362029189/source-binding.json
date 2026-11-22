@@ -1,0 +1,252 @@
+{
+  "baseCommit": "362029189f44e2f4e6bcc045832e6b35f21e52d9",
+  "baseTree": "0e65be7052e483a06a1b2e935b4277b8211731e9",
+  "baseSourceFiles": {
+    "packages/polaris-dossier/src/policy-snapshot.ts": "16e5751856768c2c56c88226e233f9e71259ee1bcee2aff488fec451144d0bc0",
+    "packages/polaris-dossier/src/session-launch.ts": "f867296c11e4501220dafcfebc57374a65b93608d1cab4604d7125f16ad492a9",
+    "packages/polaris-dossier/src/session-machine-transport.ts": "6e97c572d7cfda33b2a46c466e3be65232611cdb5b066922cbb29740e4c9165c",
+    "packages/polaris-dossier/src/session-relay.ts": "c7ab6f4f29cc7df6db88fc6189d2ff27313cbf8926893f7df703fa8118ec41a2",
+    "packages/polaris-dossier/src/url-design-product.ts": "af45237606eecd398186fd69f6621641c5655ce2d4499967507b8ae853e4926c",
+    "packages/polaris-dossier/src/url-machine-peer.ts": "c4983d0d8d6d699e76fb1a1f18ca4f6731c31f98112150aaaf549b751a90606f",
+    "packages/polaris-dossier/src/url-machine-store.ts": "1f8016ff5a44be5d169fe4504a1067fc9a4b8a7dd080a97a07521061ce712796",
+    "packages/polaris-dossier/src/url-ordered-design-host.ts": "c0a49ed4238823d5ea600e417255362c0942844aa9d43f8426752e7332de533e",
+    "packages/polaris-dossier/src/url-run-artifacts.ts": "d48dab193902acf6208cf089f38eb31ec36e8ddcd07db2eaa9a643bc01cfba16",
+    "packages/polaris-dossier/src/url-run-machine.ts": "62b517503741a70eaa24195d9a3f3a7d15ebed5680aa84f7de0c40d166f5c835",
+    "packages/polaris-dossier/src/url-run-ordered-attempt.ts": "009b828db3cb2f5c9a527238ca0f3bf864af2d87a706e9753171bfe0a611cef4",
+    "packages/polaris-dossier/src/url-run-sessions.ts": "5befb57d366ca6611b0cc9c5e08e7bbaa43819ef1d69e2770d695dd87fc37aa0",
+    "packages/polaris-dossier/src/url-session-audit.ts": "01296446a6260959658cd35e2af62ed7a44cc870c5b4a05f5f8e20f93a9a5c31",
+    "packages/polaris-dossier/src/url-run-composed.test.ts": "be9cfea3e96ed75d9a7ca22702bcba0df5b9547cfab49f922644dabd9348de2a",
+    "packages/polaris-dossier/src/url-run-composed.testkit.ts": "748f848bdcf4f8a862266cd8ddfd8db1191ea20d470b0b0334f17b36e1f21fc9"
+  },
+  "instrumentedSourceFiles": {
+    "packages/polaris-dossier/src/policy-snapshot.ts": "c2efaa40553168953da45d1368585eaf6dffe65d94adcaa244d34807640fb5a4",
+    "packages/polaris-dossier/src/session-launch.ts": "57e2133691981ddb46acc10dfc231697d0ace28d6d9479ce73ef26a1ed6bde8d",
+    "packages/polaris-dossier/src/session-machine-transport.ts": "d7c4a62f07af16b51e1b7c9d5388d55142e71307b16d74597d7efa9f2109430f",
+    "packages/polaris-dossier/src/session-relay.ts": "a584c18078c90eb86abe6c20b4c151fad1ed24d4407690d85cb816be2b71c3ef",
+    "packages/polaris-dossier/src/url-design-product.ts": "ede5fb22967255674b94bca55e3cacf0abc56fd3b06d2bacadbd6d520a0971fa",
+    "packages/polaris-dossier/src/url-machine-peer.ts": "a732b56a47cc67ab3f1544576dc6e21396b564e5731a89235c2cd77d925009a6",
+    "packages/polaris-dossier/src/url-machine-store.ts": "2b3b3edf21826dce2d403f4d0d8507b5f9ea12b300caf5b6ba10e1ce54aeae9d",
+    "packages/polaris-dossier/src/url-ordered-design-host.ts": "a8c83d3e10179893d605e5099ed78d99fcef5c30ed7229a0a9c45a2d70eede65",
+    "packages/polaris-dossier/src/url-run-artifacts.ts": "3966979a6e1c7da04007629bdae9c987c4b0b02bcdc2955148debc9250bbc871",
+    "packages/polaris-dossier/src/url-run-machine.ts": "edf88b070408eca54ca28d438524b02ad22d5478b3413531e9a8c292717dab24",
+    "packages/polaris-dossier/src/url-run-ordered-attempt.ts": "7348f9cfd562d23a59cc40a138b7600490e2f2a345bcdd132940f8381bb28db6",
+    "packages/polaris-dossier/src/url-run-sessions.ts": "a7f6d00f29e7a49510b739eee819ca85a03e7926bfb00f8e11f7d2c7997b10cd",
+    "packages/polaris-dossier/src/url-session-audit.ts": "973f7ab0db8ab41ff8774656af1817643a0c754bf53c78a0c80723f231116aa2"
+  },
+  "rawArtifacts": [
+    {
+      "file": "overlay.patch",
+      "bytes": 97579,
+      "sha256": "80b9a3326ba26b227e51461dbafc72f74057808e19fa8155bd1e865c96339726"
+    },
+    {
+      "file": "trace.jsonl",
+      "bytes": 2196004,
+      "sha256": "c0399ddd48420aef2aa264f5ef14498ebd4ff733a805cb991b54dad3431f375d"
+    }
+  ],
+  "retainedOriginalsByDigest": [
+    {
+      "file": "f3-362029189-diagnostic-subject.txt",
+      "bytes": 1710,
+      "sha256": "267ac78a1255aec79ee21f58337a8ec88cb941a34f3fed1cef2cc07db5399c01"
+    },
+    {
+      "file": "f3-362029189-diagnostic.log",
+      "bytes": 37367,
+      "sha256": "70b389a28b1bf9b72bc8f6119f79dffc2e3dd7cbc1cfda86ea4112d61d9da3e6"
+    },
+    {
+      "file": "f3-362029189-diagnostic-cut.json",
+      "bytes": 137296,
+      "sha256": "8891040d2cdada22d3bbb2eeb85b9b443dc4c8a4523014d1d5b0b95c5f64cff6"
+    },
+    {
+      "file": "f3-362029189-diagnostic-cut.json.failure.json",
+      "bytes": 40318,
+      "sha256": "3782006acb64dc90bbb34b26662bee378c0243c9e3eae39ce2483ab7d0353cc6"
+    },
+    {
+      "file": "f3-362029189-stop.log",
+      "bytes": 37371,
+      "sha256": "5345f33c35bd24807fe7896083efbe7256ce7d342047f575052d5ace04c32aa6"
+    },
+    {
+      "file": "f3-362029189-stop-cut.json",
+      "bytes": 137296,
+      "sha256": "9d94494174de091acfbe681d06b3c683976c10f576c8b7c2b6bc4fd487ce2118"
+    },
+    {
+      "file": "f3-362029189-stop-cut.json.failure.json",
+      "bytes": 40318,
+      "sha256": "613373b156d2513f3015db96fe7c94a2739a158bde3c74d549a9dcfcc7a34d8c"
+    }
+  ],
+  "scope": "Owned synthetic public stop-resume fixture. Vitest integration with maxWorkers=1.",
+  "baseline": {
+    "result": {
+      "nativeResult": "\u00d7 composed URL run with actual role processes > runs the genuine production pipeline to stop-resume 191760ms",
+      "totals": [
+        "Test Files  1 failed (1)",
+        "Tests  1 failed | 3 skipped (4)",
+        "Duration  196.56s (transform 2.20s, setup 11ms, collect 2.94s, tests 193.28s, environment 0ms, prepare 53ms)"
+      ],
+      "designForwards": 0,
+      "resumeChecks": [
+        {
+          "phase": "verify",
+          "ok": true,
+          "nextDesignRound": 2
+        },
+        {
+          "phase": "claim",
+          "exactCut": true,
+          "current": true
+        },
+        {
+          "phase": "resumed-guards",
+          "policyWithdrawal": "refused",
+          "claimWithdrawal": "refused"
+        },
+        {
+          "phase": "machine-claim",
+          "current": true,
+          "claimChecks": 1,
+          "withdrawn": true,
+          "asyncCurrent": true,
+          "asyncWithdrawn": true
+        }
+      ],
+      "failureKinds": []
+    },
+    "designAudit": [
+      {
+        "file": {
+          "file": "sessions-design.jsonl",
+          "bytes": 7548,
+          "sha256": "f121df1acba637ff57f41b630e80a9cc5314b53d6c6ea2b881ee2fef3b9d427c"
+        },
+        "kinds": [
+          "declaration",
+          "launch-attempt",
+          "launch-history",
+          "design-delivery",
+          "launch-terminal"
+        ],
+        "terminal": {
+          "outcome": "stopped",
+          "signal": "SIGTERM",
+          "viewTermination": "view-exited",
+          "groupTermination": "confirmed",
+          "toolTermination": "settled",
+          "pendingInvocations": 0
+        }
+      },
+      {
+        "file": {
+          "file": "sessions-design.jsonl",
+          "bytes": 7615,
+          "sha256": "a7c8408834f0469e55d1f2a88aa25cb3c16e0dc48951f11eb81d7a3a51c07851"
+        },
+        "kinds": [
+          "declaration",
+          "launch-attempt",
+          "launch-history",
+          "design-delivery",
+          "launch-terminal"
+        ],
+        "terminal": {
+          "outcome": "inspection-failed",
+          "signal": "SIGTERM",
+          "viewTermination": "view-exited",
+          "groupTermination": "confirmed",
+          "toolTermination": "settled",
+          "pendingInvocations": 0
+        }
+      }
+    ]
+  },
+  "instrumented": {
+    "result": {
+      "nativeResult": "\u00d7 composed URL run with actual role processes > runs the genuine production pipeline to stop-resume 190675ms",
+      "totals": [
+        "Test Files  1 failed (1)",
+        "Tests  1 failed | 3 skipped (4)",
+        "Duration  195.39s (transform 2.22s, setup 10ms, collect 2.96s, tests 192.11s, environment 0ms, prepare 49ms)"
+      ],
+      "designForwards": 0,
+      "resumeChecks": [
+        {
+          "phase": "verify",
+          "ok": true,
+          "nextDesignRound": 2
+        },
+        {
+          "phase": "claim",
+          "exactCut": true,
+          "current": true
+        },
+        {
+          "phase": "resumed-guards",
+          "policyWithdrawal": "refused",
+          "claimWithdrawal": "refused"
+        },
+        {
+          "phase": "machine-claim",
+          "current": true,
+          "claimChecks": 1,
+          "withdrawn": true,
+          "asyncCurrent": true,
+          "asyncWithdrawn": true
+        }
+      ],
+      "failureKinds": []
+    },
+    "designAudit": [
+      {
+        "file": {
+          "file": "sessions-design.jsonl",
+          "bytes": 7548,
+          "sha256": "dfde2d212a877291f9e93e2e59c600accc0ba36880b8f4b3575e116c74a5229f"
+        },
+        "kinds": [
+          "declaration",
+          "launch-attempt",
+          "launch-history",
+          "design-delivery",
+          "launch-terminal"
+        ],
+        "terminal": {
+          "outcome": "stopped",
+          "signal": "SIGTERM",
+          "viewTermination": "view-exited",
+          "groupTermination": "confirmed",
+          "toolTermination": "settled",
+          "pendingInvocations": 0
+        }
+      },
+      {
+        "file": {
+          "file": "sessions-design.jsonl",
+          "bytes": 7615,
+          "sha256": "dbb105466d77ceec4bb59a56c8c0902559d7857a85729b47517c4a7fded6285b"
+        },
+        "kinds": [
+          "declaration",
+          "launch-attempt",
+          "launch-history",
+          "design-delivery",
+          "launch-terminal"
+        ],
+        "terminal": {
+          "outcome": "inspection-failed",
+          "signal": "SIGTERM",
+          "viewTermination": "view-exited",
+          "groupTermination": "confirmed",
+          "toolTermination": "settled",
+          "pendingInvocations": 0
+        }
+      }
+    ]
+  }
+}

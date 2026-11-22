@@ -1,0 +1,49 @@
+{
+  "subject": "362029189f44e2f4e6bcc045832e6b35f21e52d9",
+  "results": [
+    {
+      "id": "virtual-workspace-verdict",
+      "source": "packages/polaris-dossier/src/url-run-artifacts.ts",
+      "old": "    // Ordered submission consumes stdin and freezes the verdict in reviews/.\n    // The authenticated records already hold its exact producer receipt.\n",
+      "new": "    bind('design', `round-${proof.round}/verdict.json`, read(run, `reviews/${name}`), captured.payload!.receipt);\n",
+      "mutantSourceSha256": "18fd67c54177e10f2f619c656e3a6f34b16498f863fb7aa783792a66112b7f02",
+      "command": [
+        "npx",
+        "--no-install",
+        "vitest",
+        "run",
+        "--project",
+        "integration",
+        "--maxWorkers=1",
+        "packages/polaris-dossier/src/url-launch-history.test.ts",
+        "-t",
+        "rechecks after durability \\(ordered\\)$"
+      ],
+      "exit": 1,
+      "log": "virtual-workspace-verdict.log",
+      "sha256": "747fbc41dff7c170c8fc9489a0fb8a328e44b4a1963015538df51d3c98392748"
+    },
+    {
+      "id": "reset-resumed-audit-epoch",
+      "source": "packages/polaris-dossier/src/url-session-audit.ts",
+      "old": "    let nextOrderedEpoch = firstDesignRound;",
+      "new": "    let nextOrderedEpoch = 1;",
+      "mutantSourceSha256": "4f11a3208b49ca3055b5fd03b6e560aee2a3e8b659c6163f406d661914e40625",
+      "command": [
+        "npx",
+        "--no-install",
+        "vitest",
+        "run",
+        "--project",
+        "integration",
+        "--maxWorkers=1",
+        "packages/polaris-dossier/src/url-launch-history.test.ts",
+        "-t",
+        "rechecks after durability \\(ordered-resumed\\)$"
+      ],
+      "exit": 1,
+      "log": "reset-resumed-audit-epoch.log",
+      "sha256": "5871f4d8c1b19315f1f3ec02962c283ec60be0f5a92b264c5e03a57401f49d1d"
+    }
+  ]
+}
