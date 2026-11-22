@@ -18,6 +18,16 @@ import { URL_MACHINE_CLIENT_LIMITS, type UrlMachineClientContext, type UrlMachin
 import { captureKernelUnixPeer } from './session-peer.js';
 
 const nativeObservations = vi.hoisted(() => ({ calls: (): readonly (readonly unknown[])[] => [] }));
+const filesystemBoundary = vi.hoisted(() => ({ refuseLargeSyncReads: false, largeSyncReads: 0 }));
+vi.mock('node:fs', async importOriginal => {
+  const actual = await importOriginal<typeof import('node:fs')>();
+  return { ...actual, readSync: (...args: Parameters<typeof actual.readSync>): number => {
+    if (filesystemBoundary.refuseLargeSyncReads && actual.fstatSync(args[0]).size > 1_048_576) {
+      filesystemBoundary.largeSyncReads++; throw new Error('owned large synchronous read refused');
+    }
+    return Reflect.apply(actual.readSync, actual, args) as number;
+  } };
+});
 vi.mock('node:child_process', async importOriginal => {
   const actual = await importOriginal<typeof import('node:child_process')>();
   // Observe real helper execution at the OS boundary; keep its actual result.
@@ -30,7 +40,7 @@ const exec = promisify(execFile), id = () => randomBytes(32).toString('hex');
 const canonical = (value: unknown) => Buffer.from(encodeCanonicalJson(value, URL_MACHINE_CLIENT_LIMITS));
 const cleanup: (() => void | Promise<unknown>)[] = [];
 let programs: UrlMachinePeerOptions['programs'], buildRoot: string;
-afterEach(async () => { for (const close of cleanup.splice(0).reverse()) await close(); });
+afterEach(async () => { filesystemBoundary.refuseLargeSyncReads = false; for (const close of cleanup.splice(0).reverse()) await close(); });
 afterAll(async () => { await fs.rm(buildRoot, { recursive: true, force: true }); });
 beforeAll(async () => {
   const root = buildRoot = await fs.mkdtemp(path.join(os.tmpdir(), 'mp-build-'));
@@ -143,6 +153,12 @@ async function fixture(scenario: 'live' | 'inherited' | 'mixed' | 'exit' = 'live
 }
 
 describe('live URL machine peer binding', { timeout: 60_000 }, () => {
+  it('pins the actual installed Node image without large synchronous reads on the supervisor event loop', async () => {
+    filesystemBoundary.largeSyncReads = 0; filesystemBoundary.refuseLargeSyncReads = true;
+    const f = await fixture(); expect(f.peer, 'genuine capture must survive refusal of large synchronous file reads').not.toBeNull();
+    expect(filesystemBoundary.largeSyncReads).toBe(0);
+  });
+
   it('reserves hard CPU capacity before every actual helper and executes none when its retained reservation refuses', async () => {
     const calls = nativeObservations.calls, before = calls().length, charges: number[] = [];
     let denied = false;

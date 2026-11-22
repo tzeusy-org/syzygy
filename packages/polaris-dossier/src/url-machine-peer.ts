@@ -1,8 +1,10 @@
 import * as fs from 'node:fs';
+import { open as openFile, realpath as realFilePath, lstat as namedFileStat } from 'node:fs/promises';
+import { setImmediate as yieldToPoll } from 'node:timers/promises';
 import { Socket, Server } from 'node:net';
 import { spawnSync } from 'node:child_process';
 import path from 'node:path';
-import { randomBytes } from 'node:crypto';
+import { createHash, randomBytes } from 'node:crypto';
 import { encodeCanonicalJson } from '@syzygy/polaris-generation-core/live';
 import { sha256 } from '@syzygy/support';
 import { captureKernelUnixPeer, type KernelPeerProgram } from './session-peer.js';
@@ -100,6 +102,33 @@ function pinnedFile(file: string, expected: string, maximum: number): fs.BigIntS
       || !sameFile(before, fs.fstatSync(fd, { bigint: true })) || !sameFile(before, fs.lstatSync(file, { bigint: true }))) throw refused();
     return before;
   } finally { fs.closeSync(fd); }
+}
+/** A large installed Node image must not block the supervisor's 200ms sampler.
+ * Hold one image, hash at most 1MiB per poll turn, then compare held and named
+ * identities. An expiry or pathname replacement discards the entire capture. */
+async function pinnedExecutable(file: string, expected: string, maximum: number, check: () => void): Promise<fs.BigIntStats> {
+  check();
+  if (!safePath(file) || !digest(expected) || await realFilePath(file) !== file) throw refused();
+  const handle = await openFile(file, fs.constants.O_RDONLY | fs.constants.O_NOFOLLOW | fs.constants.O_NONBLOCK);
+  try {
+    check();
+    const before = await handle.stat({ bigint: true });
+    if (!before.isFile() || before.nlink !== 1n || before.size < 1n || before.size > BigInt(maximum) || (before.mode & 0o022n) !== 0n) throw refused();
+    const chunk = Buffer.alloc(1_048_576), hash = createHash('sha256');
+    let length = 0;
+    while (length <= Number(before.size)) {
+      check();
+      const part = await handle.read(chunk, 0, Math.min(chunk.length, Number(before.size) + 1 - length), null);
+      check();
+      if (part.bytesRead === 0) break;
+      hash.update(chunk.subarray(0, part.bytesRead)); length += part.bytesRead;
+      await yieldToPoll();
+    }
+    if (length !== Number(before.size) || hash.digest('hex') !== expected
+      || !sameFile(before, await handle.stat({ bigint: true })) || !sameFile(before, await namedFileStat(file, { bigint: true }))
+      || await realFilePath(file) !== file) throw refused();
+    check(); return before;
+  } finally { await handle.close(); }
 }
 function sample(fd: number): ProcessSample {
   const text = bytesAt(`/proc/self/fd/${fd}/stat`, 8192).toString('ascii');
@@ -274,8 +303,14 @@ export async function captureUrlMachinePeer(options: UrlMachinePeerOptions): Pro
       try { fs.lstatSync(`${base}/root${file}`); throw refused(); }
       catch (error) { if ((error as NodeJS.ErrnoException).code !== 'ENOENT') throw error; }
     }
-    const executable = pinnedFile(selected.installed.executable, selected.installed.sha256,
-      context.kind === 'role-cli' ? URL_CLI_PROGRAM.bytes : 134_217_728);
+    let pinNow = context.now;
+    const executable = await pinnedExecutable(selected.installed.executable, selected.installed.sha256,
+      context.kind === 'role-cli' ? URL_CLI_PROGRAM.bytes : 134_217_728, () => {
+        const now = selected.now();
+        if (!isUrlSessionProcess(selected.launch) || !Number.isSafeInteger(now) || now < pinNow || now >= context.deadline
+          || performance.now() - began >= URL_MACHINE_PEER_LIMITS.setupMilliseconds) throw refused();
+        pinNow = now;
+      });
     let expectedCommand: readonly string[], script: fs.BigIntStats | null = null;
     if (context.kind === 'role-cli') {
       if (selected.installed.sha256 !== URL_CLI_PROGRAM.sha256 || selected.installed.script !== null || selected.installed.scriptSha256 !== null) throw refused();
@@ -290,7 +325,7 @@ export async function captureUrlMachinePeer(options: UrlMachinePeerOptions): Pro
     const mountBytes = bytesAt(`${base}/mountinfo`, URL_MACHINE_PEER_LIMITS.procBytes), mounts = mountBytes.toString('utf8').split('\n');
     if (script !== null && !mounts.some(line => { const fields = line.split(' '); return fields[4] === '/tool/support' && fields[5]?.split(',').includes('ro'); })) throw refused();
     state = { options: selected, native: observed, processes: held, namespaces, mountSha256: sha256(mountBytes), executable, script, command,
-      closed: false, finished: false, reading: false, mediating: false, chunks: 0, bytes: 0, lastNow: context.now };
+      closed: false, finished: false, reading: false, mediating: false, chunks: 0, bytes: 0, lastNow: pinNow };
     void selected.launch.finished.then(() => { if (state) state.finished = true; }, () => { if (state) state.finished = true; });
     await current(state);
     if (performance.now() - began >= URL_MACHINE_PEER_LIMITS.setupMilliseconds) throw refused();

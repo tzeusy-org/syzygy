@@ -112,7 +112,7 @@ const FIXTURE_WRITER = 'e49f3dc7ce221b2a257bcbc95f0ad98201ddcf5f433fd6e8f44ba7e7
 const PEER_CAPTURE = 'd86d226376e181d0a60e72a76d777b39486dcbbf4e8c8f5b664b8a66ac823f81';
 // The call's limits and image verifier are shared helpers/constants. Bind that
 // complete context as well as the one admitted call; another call still fails.
-const MACHINE_PEER_SOURCE = '677b35f4dad71b830dcb1d2901865d57c1bb7517aa99e721d6054ffb6b105c18';
+const MACHINE_PEER_SOURCE = '3c961ec6a5cd22453194879988bbb13d424fb4c75301e18bdef14d268474f751';
 const SELF = 'apps/three-surface-poc/src/sync-child-process-guard.test.ts';
 const SYNC_FUNCTIONS = ['execFileSync', 'execSync', 'spawnSync'];
 const MODULE_SPECIFIER = /(?:\bfrom|\bimport)\s*\(?\s*['"]([^'"]+)['"]/g;
