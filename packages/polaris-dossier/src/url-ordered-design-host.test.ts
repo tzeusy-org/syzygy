@@ -272,8 +272,18 @@ describe('production ordered host activation', () => {
  * accepted sockets, per-chunk sender proofs, lifecycle files and effect leases
  * are the real production components. Provider receipt remains Unknown. */
 async function nativeExchange(revoke: false | 'send' | 'stage' | 'proof-expiry' = false) {
-  let proofExpired = false;
-  const f = await fixture({ assertCurrent: () => { if (proofExpired) throw new Error('owned proof expired at release'); } }), root = tempDir('ohn-');
+  let proofExpired = false, responseProofRenewals = 0;
+  const f = await fixture({
+    current: () => {
+      if (revoke === false && proofExpired) {
+        assertSessionMachineEffectCurrent();
+        proofExpired = false;
+        responseProofRenewals++;
+      }
+      return true;
+    },
+    assertCurrent: () => { if (proofExpired) throw new Error('owned product proof expired'); },
+  }), root = tempDir('ohn-');
   for (const name of ['support', 'home', 'work', 'broker', 'relay', 'hidden']) await mkdir(path.join(root, name), { mode: 0o700 });
   const canary = path.join(root, 'hidden/canary'); await writeFile(canary, 'OWN SYNTHETIC CANARY');
   const bridge = support.get('support/session-bridge.js')!, mcp = support.get('design-support/session-mcp.js')!;
@@ -405,6 +415,9 @@ async function nativeExchange(revoke: false | 'send' | 'stage' | 'proof-expiry' 
     audit: async row => {
       observed.push(row);
       if (revoke === 'send' && row.event === 'attempt-allowed') current = false;
+      // Expire the checked view after the controller finishes the first send
+      // audit. The next controller operation is mediated response screening.
+      if (revoke === false && row.event === 'send-outcome' && forwards === 1) proofExpired = true;
       if (row.event === 'response-admitted' && row.response?.stopReason === 'end_turn') {
         assertSessionMachineEffectCurrent();
         terminal = await f.controller.readTerminal();
@@ -421,7 +434,8 @@ async function nativeExchange(revoke: false | 'send' | 'stage' | 'proof-expiry' 
   const outcome = await Promise.race([launch.finished, authenticationRefused.then(() => launch!.stop())]);
   eventLoop.disable();
   const recordKinds = await Promise.all(f.stored.map(async file => (JSON.parse(await readFile(file, 'utf8')) as { kind: string }).kind));
-  return { f, outcome, forwards, observed, terminal, requests, recordKinds, captures, machineAudits, screenTimes, stages, reads, peerChecks, maximumEventLoopMilliseconds: Math.ceil(eventLoop.max / 1_000_000) };
+  return { f, outcome, forwards, observed, terminal, requests, recordKinds, captures, machineAudits, screenTimes, stages, reads, peerChecks,
+    responseProofRenewals, maximumEventLoopMilliseconds: Math.ceil(eventLoop.max / 1_000_000) };
 }
 
 function exchangeDiagnostic(result: Awaited<ReturnType<typeof nativeExchange>>): string {
@@ -437,6 +451,7 @@ describe('native authenticated ordered host', { timeout: 180_000 }, () => {
     const result = await nativeExchange();
     expect(result.outcome, exchangeDiagnostic(result)).toMatchObject({ outcome: 'exited', exitCode: 0 });
     expect(result.forwards).toBe(5); expect(result.captures).toBeGreaterThanOrEqual(9); expect(result.machineAudits).toBeGreaterThan(20);
+    expect(result.responseProofRenewals).toBe(1);
     expect(result.f.staged()).toBe(1); expect(result.f.workerCpu()).toBeGreaterThan(0);
     expect(result.terminal).toMatchObject({ packetSha256: result.f.packet.sha256 });
     const last = result.requests.at(-1) as { messages: { content: string | { type: string; tool_use_id?: string; content: { text: string }[] }[] }[] };
