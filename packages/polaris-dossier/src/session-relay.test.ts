@@ -166,7 +166,11 @@ describe('session relay choke point ordering', () => {
     client.write(`POST /v1/messages HTTP/1.1\r\nHost: own-fixture\r\nContent-Type: application/json\r\nAuthorization: Bearer NONSECRET-fixture\r\nContent-Length: ${Buffer.byteLength(BODY)}\r\n\r\n${BODY}`);
     await new Promise(resolve => setTimeout(resolve, 180));
     expect(responseAudited).toBe(true); expect(hostSocket).toBeDefined();
-    expect(hostSocket!.destroyed).toBe(true); expect(hostSocket!.writableLength).toBe(0);
+    expect(hostSocket!.destroyed).toBe(true);
+    // destroy() runs at the deadline; Node releases its queued write after
+    // the native close callback, which can follow this timer under load.
+    await expect.poll(() => hostSocket!.closed, { timeout: 1000 }).toBe(true);
+    expect(hostSocket!.writableLength).toBe(0);
   });
   it('admits the complete request, persists the attempt, then sends; admits response before release', async () => {
     const f = await fixture();

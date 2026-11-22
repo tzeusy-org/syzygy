@@ -24,6 +24,7 @@ interface ConnectionState {
   readonly raw: Socket; readonly peer: UrlMachinePeer; readonly stream: Duplex;
   readonly deadline: number;
   boundary: (() => boolean) | null;
+  ingressComplete: boolean;
 }
 const contexts = new WeakMap<SessionMachineEffectContext, ConnectionState>();
 const connections = new WeakMap<Duplex, SessionMachineEffectContext>();
@@ -42,6 +43,15 @@ export function prepareSessionMachineTransport(transport: SessionMachineTranspor
 }
 export function sessionMachineEffectContext(stream: Duplex): SessionMachineEffectContext | null {
   return connections.get(stream) ?? null;
+}
+
+/** A complete single HTTP request needs no further ingress while awaiting its
+ * response. Keep the authenticated peer for separately mediated effects. */
+export function stopSessionMachineIngress(stream: Duplex): boolean {
+  const context = connections.get(stream), state = context === undefined ? undefined : contexts.get(context);
+  if (!state || state.stream !== stream || stream.destroyed || state.ingressComplete) return false;
+  state.ingressComplete = true;
+  return true;
 }
 
 /** Node never consumes the accepted raw socket. The native sender verifier is
@@ -82,7 +92,7 @@ export async function openSessionMachineConnection(raw: Socket, transport: Sessi
       ended = true; resume?.(); resume = null; clearTimeout(lifetime); closeUrlMachinePeer(selected); raw.destroy(); done(error ? new Error('session-machine-transport-unavailable') : undefined);
     },
   });
-  state = { raw, peer: selected, stream, deadline, boundary: null };
+  state = { raw, peer: selected, stream, deadline, boundary: null, ingressComplete: false };
   const context: SessionMachineEffectContext = Object.freeze({ peer: selected,
     async mediate<T>(this: SessionMachineEffectContext, operation: UrlMachineOperation,
       effect: (current: () => boolean) => T | Promise<T>): Promise<{ readonly ok: true; readonly value: T } | { readonly ok: false }> {
@@ -105,9 +115,13 @@ export async function openSessionMachineConnection(raw: Socket, transport: Sessi
     if (reading) return;
     reading = true;
     try {
-      while (!ended && !stream.destroyed && performance.now() < deadline) {
+      while (!ended && !stream.destroyed && !state.ingressComplete && performance.now() < deadline) {
         const chunk = await readUrlMachinePeer(selected);
         if (!chunk || ended || stream.destroyed || performance.now() >= deadline) throw new Error();
+        if (state.ingressComplete) {
+          if (chunk.kind === 'data') throw new Error();
+          return;
+        }
         if (chunk.kind === 'end') { stream.push(null); return; }
         if (chunk.kind === 'pending') { await new Promise(resolve => setTimeout(resolve, 5)); continue; }
         if (chunk.kind !== 'data') throw new Error();
@@ -115,7 +129,7 @@ export async function openSessionMachineConnection(raw: Socket, transport: Sessi
         if (bytes > limits.bytes || chunk.bytes.length === 0 || chunk.bytes.length > 65_536) throw new Error();
         if (!stream.push(Buffer.from(chunk.bytes)) && !ended && !stream.destroyed) await new Promise<void>(resolve => { resume = resolve; });
       }
-      if (!ended) stream.destroy(new Error('session-machine-transport-unavailable'));
+      if (!ended && !state.ingressComplete) stream.destroy(new Error('session-machine-transport-unavailable'));
     } catch { stream.destroy(new Error('session-machine-transport-unavailable')); }
     finally { reading = false; }
   };

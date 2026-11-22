@@ -6,7 +6,7 @@ import path from 'node:path';
 import { randomUUID } from 'node:crypto';
 import { deepFreeze, sha256 } from '@syzygy/support';
 import { SESSION_CONTENT_CLASSES, type SessionAdmission, type SessionBinding, type SessionConsumedToolResult, type SessionTool } from './session-egress-policy.js';
-import { isSessionMachineTransport, openSessionMachineConnection, prepareSessionMachineTransport, sessionMachineEffectContext,
+import { isSessionMachineTransport, openSessionMachineConnection, prepareSessionMachineTransport, sessionMachineEffectContext, stopSessionMachineIngress,
   type SessionMachineTransport, type SessionMachineEffectContext } from './session-machine-transport.js';
 import type { SessionResponseStopReason, SessionResponseUsage } from './session-response.js';
 
@@ -150,7 +150,10 @@ async function start(socket: string, subject: SessionRelaySubject, ports: Sessio
   let pending = false, poisoned = false, closing = false, responseFlushed = false;
   const server = http.createServer({ maxHeaderSize: 16_384, requestTimeout: limits.milliseconds, headersTimeout: Math.min(limits.milliseconds, 10_000) }, (incoming, outgoing) => {
     const context = fixture ? null : sessionMachineEffectContext(incoming.socket);
-    if ((!fixture && context === null) || pending || poisoned || closing) { outgoing.writeHead(503, { 'content-type': 'application/json', connection: 'close' }); outgoing.end(SAFE_FAILURE); incoming.resume(); return; }
+    if ((!fixture && context === null) || pending || poisoned || closing) {
+      if (!fixture) { poisoned = true; incoming.socket.destroy(); return; }
+      outgoing.writeHead(503, { 'content-type': 'application/json', connection: 'close' }); outgoing.end(SAFE_FAILURE); incoming.resume(); return;
+    }
     pending = true;
     responseFlushed = false;
     const controller = new AbortController(); controllers.add(controller);
@@ -239,6 +242,7 @@ async function start(socket: string, subject: SessionRelaySubject, ports: Sessio
     incoming.on('end', () => { void (async () => {
       if (terminal || refusing) return;
       try {
+        if (!fixture && !stopSessionMachineIngress(incoming.socket)) throw new Error('session-machine-transport-unavailable');
         if (!(await ports.current()) || terminal) { await auditRefusal(409); return; }
         const body = Buffer.concat(chunks, size);
         received = { digest: sha256(body), bytes: body.byteLength };
