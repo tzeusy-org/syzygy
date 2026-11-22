@@ -9,7 +9,7 @@ import type { SessionCredential } from './session-credential.js';
 import type { SessionAdmission, SessionContentClass } from './session-egress-policy.js';
 import { startSessionHost, type SessionHost } from './session-host.js';
 import { isOrderedDesignSessionProfile } from './session-profile.js';
-import { launchRestrictedUrlSession, prepareRestrictedUrlSession, urlSessionStoppedCleanly, type UrlSessionLaunchOutcome, type UrlSessionProcess } from './session-launch.js';
+import { isUrlSessionProcess, launchRestrictedUrlSession, prepareRestrictedUrlSession, urlSessionStoppedCleanly, type UrlSessionLaunchOutcome, type UrlSessionProcess } from './session-launch.js';
 import type { SessionDesignArtifactRead, SessionToolsOptions, SessionToolsReceipt } from './session-tools.js';
 import type { ViewRole } from './session-view.js';
 import { sourceBindingSha256, type RecordedRunConfig } from './run-record.js';
@@ -36,6 +36,12 @@ import type { UrlRecoveryClaim } from './url-stopped-run.js';
 import { URL_HOST_ROOT } from './url-mode-registry.js';
 
 const canonical = (value: unknown): string => encodeCanonicalJson(value, { maxBytes: 2_097_152, maxNodes: 65_536, maxDepth: 32 });
+/** A semantic terminal permits cleanup; only the actual successful launch
+ * outcome permits retiring its transport health check. */
+export function isCompletedUrlDesignExit(outcome: UrlSessionLaunchOutcome | 'Unknown'): boolean {
+  return outcome !== 'Unknown' && outcome.outcome === 'exited' && outcome.exitCode === 0 && outcome.signal === null
+    && urlSessionStoppedCleanly(outcome);
+}
 type Failure = 'binding-changed' | 'launch-unavailable' | 'audit-unavailable' | 'control-unavailable' | 'role-ended'
   | 'transport-unavailable' | 'provenance-unavailable' | 'cleanup-unconfirmed' | 'cpu-budget';
 interface LaunchHistoryPort {
@@ -218,6 +224,8 @@ async function start(options: UrlRunSessionsOptions, ports: typeof native): Prom
   };
   let stopping = false, failure: Failure | null = null, questions = resume?.verified.cumulativeQuestionCount ?? 0;
   const hostHealth = new Map<ViewRole, () => boolean>();
+  let completedDesign: { readonly child: UrlSessionProcess; readonly health: SessionHost['healthy'];
+    readonly terminalConsumed: () => boolean; retired: boolean } | null = null;
   let designLaunch: UrlCommittedLaunchHistory | null = null;
   type PreparedDesign = { readonly receipt: UrlDesignDeliveryAuditRecord; readonly artifact: DesignArtifactPort };
   type PendingDesignReview = {
@@ -234,6 +242,28 @@ async function start(options: UrlRunSessionsOptions, ports: typeof native): Prom
     failure = reason;
     try { options.onFailure(reason); } catch { /* Failure never reopens the host. */ }
   };
+  const settleCompletedDesign = async (): Promise<boolean> => {
+    if (stopping || failure !== null) return false;
+    const completed = completedDesign;
+    if (completed?.retired === true) return true;
+    // A live unhealthy transport still refuses immediately. Once a genuine
+    // completed reviewer has exited, let its already-bounded cleanup publish
+    // the actual outcome before deciding whether this health check can retire.
+    const childIsLive: boolean = isUrlSessionProcess(completed?.child);
+    if (completed === null || !completed.terminalConsumed() || hostHealth.get('design') !== completed.health
+      || completed.health?.() !== false || childIsLive) return true;
+    try {
+      const outcome = await completed.child.finished;
+      if (completedDesign === completed && completed.retired) return true;
+      if (completedDesign !== completed || hostHealth.get('design') !== completed.health
+        || !completed.terminalConsumed() || !isCompletedUrlDesignExit(outcome)) {
+        fail('role-ended'); return false;
+      }
+      completed.retired = true;
+      hostHealth.delete('design');
+      return true;
+    } catch { fail('role-ended'); return false; }
+  };
   const effectCurrent = (): boolean => {
     if (stopping || failure !== null || !budget.current()) return false;
     if (resume !== undefined && !isClaimedStoppedUrlRun(resume.verified, resume.claim)) { fail('binding-changed'); return false; }
@@ -244,11 +274,11 @@ async function start(options: UrlRunSessionsOptions, ports: typeof native): Prom
     return true;
   };
   const current = async (): Promise<boolean> => {
-    if (!effectCurrent()) return false;
+    if (!(await settleCompletedDesign()) || !effectCurrent()) return false;
     try {
       const valid = await options.current() === true;
       if (!valid) { fail('binding-changed'); return false; }
-      return effectCurrent();
+      return await settleCompletedDesign() && effectCurrent();
     }
     catch { fail('binding-changed'); return false; }
   };
@@ -334,7 +364,8 @@ async function start(options: UrlRunSessionsOptions, ports: typeof native): Prom
       .map(([, child]) => child.waitForSample()));
     return settled.every(Boolean) && !stopping && failure === null;
   };
-  const waitForProductSamples = async (): Promise<boolean> => effectCurrent() && (await waitForSamples()) && effectCurrent();
+  const waitForProductSamples = async (): Promise<boolean> => await settleCompletedDesign() && effectCurrent()
+    && (await waitForSamples()) && await settleCompletedDesign() && effectCurrent();
   const captures = new Map<ViewRole, { role: ViewRole; pid: number | 'Unknown'; startedAt: number | 'Unknown';
     finishedAt: number | 'Unknown'; outcome: UrlSessionLaunchOutcome | 'Unknown' }>(URL_ROLES.map(role => [role,
     { role, pid: 'Unknown', startedAt: 'Unknown', finishedAt: 'Unknown', outcome: 'Unknown' }]));
@@ -347,9 +378,13 @@ async function start(options: UrlRunSessionsOptions, ports: typeof native): Prom
       if (stopping) failure ??= 'role-ended';
       else fail('role-ended');
     };
+    const design = role === 'design' && completedDesign?.child === child ? completedDesign : null;
     terminals.push(child.finished.then(async outcome => {
       capture.outcome = outcome; capture.finishedAt = options.now();
-      if (!urlSessionStoppedCleanly(outcome) || (!stopping && !canExit())) unexpectedTerminal();
+      const permitted = canExit();
+      const completed = design !== null && permitted && isCompletedUrlDesignExit(outcome);
+      if (!urlSessionStoppedCleanly(outcome) || (!stopping && (!permitted
+        || design !== null && completedDesign === design && !completed))) unexpectedTerminal();
       try { await audit.append({ kind: 'launch-terminal', role, scope: audit.scope(role), payload: outcome }); }
       catch { if (stopping) failure ??= 'audit-unavailable'; else fail('audit-unavailable'); }
     }, unexpectedTerminal));
@@ -551,7 +586,9 @@ async function start(options: UrlRunSessionsOptions, ports: typeof native): Prom
         if (!(await current()) || launchHistory === undefined || machine === undefined || !isUrlDesignProductLeaseOpen(product)) return null;
         if (orderedAttempt !== null) {
           if (!orderedAttempt.terminalConsumed) return null;
-          hostHealth.delete('design');
+          const completed = completedDesign;
+          if (completed === null || !isCompletedUrlDesignExit(await completed.child.finished)
+            || !(await settleCompletedDesign())) { fail('role-ended'); return null; }
           if (!(await orderedAttempt.close())) { fail('cleanup-unconfirmed'); return null; }
           orderedAttempt = null;
         }
@@ -560,6 +597,7 @@ async function start(options: UrlRunSessionsOptions, ports: typeof native): Prom
         try {
           const plan = plans.find(candidate => candidate.role === 'design')!;
           const address = probe.address(); if (address === null || typeof address === 'string') throw new Error();
+          let launchedAttempt: Awaited<ReturnType<typeof startUrlOrderedAttempt>> | null = null;
           orderedAttempt = await startUrlOrderedAttempt({ run, pin: record.subject.pinnedRevision.commit,
             principal: options.principal, runtime: options.runtime, plan, machine, audit, budget,
             artifacts: options.production!.artifacts, credential: options.credential, screen: options.screen,
@@ -568,13 +606,16 @@ async function start(options: UrlRunSessionsOptions, ports: typeof native): Prom
             deadline: options.deadline, now: options.now, current, waitForSamples,
             launched: (child, host) => {
               hosts.set('design', host); processes.set('design', child);
+              const terminalConsumed = () => launchedAttempt?.terminalConsumed === true;
+              completedDesign = { child, health: host.healthy, terminalConsumed, retired: false };
               if (host.healthy !== undefined) hostHealth.set('design', host.healthy);
-              rememberTerminal('design', child, () => orderedAttempt?.terminalConsumed === true);
+              rememberTerminal('design', child, terminalConsumed);
             },
             compatiblePromptSha256: launchHistory.promptDigests.design, firstLaunch: designLaunch,
             ...(resume === undefined ? {} : { generation: resume.verified.boundary.sha256 }),
             registerLaunch: async committed => { await launchHistory.register(committed, waitForSamples); designLaunch = committed; },
             expectedProduct, sitePath, round, reproduce: artifact.reproduce, work: { ...work, observeProtectedRead } });
+          launchedAttempt = orderedAttempt;
           preparedDesign = { receipt: orderedAttempt.delivery.receipt, artifact };
           return orderedAttempt.delivery;
         } catch { work.release(); fail('launch-unavailable'); return null; }
