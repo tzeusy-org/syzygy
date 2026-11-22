@@ -16,7 +16,8 @@ export const SESSION_PROFILE_TOOL_CHOICE = Object.freeze({ type: 'auto', disable
 /** This is a fabricated public marker, never a real credential. Host transport substitutes auth. */
 export const SESSION_PROFILE_SYNTHETIC_AUTHORIZATION = 'Bearer NONSECRET-SYNTHETIC-OAUTH-TOKEN-ONLY';
 export const SESSION_PROFILE_BETA = 'claude-code-20250219,oauth-2025-04-20,interleaved-thinking-2025-05-14,context-management-2025-06-27,thinking-token-count-2026-05-13,effort-2025-11-24,extended-cache-ttl-2025-04-11';
-const COUNT_TOKENS_BETA = 'claude-code-20250219,oauth-2025-04-20,interleaved-thinking-2025-05-14,context-management-2025-06-27,token-counting-2024-11-01';
+export const SESSION_COUNT_TOKENS_PATH = '/v1/messages/count_tokens?beta=true' as const;
+export const COUNT_TOKENS_BETA = 'claude-code-20250219,oauth-2025-04-20,interleaved-thinking-2025-05-14,context-management-2025-06-27,token-counting-2024-11-01';
 const LIMITS = { maxBytes: 2_097_152, maxNodes: 65_536, maxDepth: 32 } as const;
 const CACHE = { type: 'ephemeral', ttl: '1h' } as const;
 const TOOL_DESCRIPTOR_DIGEST = '91876b623f527e1c293b55296f89c38a07a5a2774351be6a6094f948a8b7fe4a';
@@ -44,6 +45,13 @@ const ORDERED_DESIGN_TRANSCRIPT = deepFreeze({
   continuation: { stopReason: 'tool_use', toolCalls: 1, textBlocks: 0 },
   terminal: { stopReason: 'end_turn', textBlocks: 1, maxTextBytes: 4096, toolCalls: 0 },
 } as const);
+const ORDINARY_SESSION_SUPPORT = deepFreeze({
+  cli: URL_CLI_PROGRAM,
+  supportSha256: { 'session-bridge.js': '33a3f07df8001244cebefec75fe2110073196b9cb11fb2994553659a6865bac3',
+    'session-mcp.js': '403e8c4a7ae11930d78c87b240c1b43f5241707cfcbe2561e8a7acd43d695bca' },
+  artifactReadMaxResultSizeChars: 500_000,
+  countTokens: { route: SESSION_COUNT_TOKENS_PATH, beta: COUNT_TOKENS_BETA },
+} as const);
 export interface SessionProfileInput {
   readonly binding: SessionBinding;
   readonly sessionId: string;
@@ -55,6 +63,7 @@ export interface SessionProfileInput {
 }
 export interface SessionProfile {
   readonly id: typeof SESSION_PROFILE_ID;
+  readonly support: typeof ORDINARY_SESSION_SUPPORT;
   readonly input: SessionProfileInput;
   readonly baseline: Readonly<Record<string, unknown>>;
   readonly baselineOrigin: SessionOrigin;
@@ -66,7 +75,7 @@ export interface SessionProfile {
   readonly digest: string;
   readonly bytes: number;
 }
-export interface OrderedDesignSessionProfile extends Omit<SessionProfile, 'id'> {
+export interface OrderedDesignSessionProfile extends Omit<SessionProfile, 'id' | 'support'> {
   readonly id: typeof ORDERED_DESIGN_SESSION_PROFILE_ID;
   readonly transcript: typeof ORDERED_DESIGN_TRANSCRIPT;
 }
@@ -160,7 +169,7 @@ export function createSessionProfile(input: SessionProfileInput): SessionProfile
     const originIds = [SESSION_PROFILE_ID, `profile-binding:${sha256(canonical(v.binding))}`];
     const baselineOrigin: SessionOrigin = { binding: v.binding, id: 'session-profile:baseline', kind: 'scaffolding', canonicalText: canonical(baseline), classes: SCAFFOLD_CLASSES, originIds };
     const initialScaffoldingOrigin: SessionOrigin = { binding: v.binding, id: 'session-profile:initial-scaffolding', kind: 'scaffolding', canonicalText: canonical(scaffold), classes: SCAFFOLD_CLASSES, originIds };
-    const data = copy({ id: SESSION_PROFILE_ID, input: v, baseline, baselineOrigin, initialScaffoldingOrigin, initialMessage, historicalInitialMessage });
+    const data = copy({ id: SESSION_PROFILE_ID, support: ORDINARY_SESSION_SUPPORT, input: v, baseline, baselineOrigin, initialScaffoldingOrigin, initialMessage, historicalInitialMessage });
     const canonicalText = canonical(data);
     const profile: SessionProfile = deepFreeze({ ...data, canonicalText, digest: sha256(canonicalText), bytes: Buffer.byteLength(canonicalText, 'utf8') });
     issued.add(profile); return { profile };
@@ -268,7 +277,7 @@ export function sessionProfileProviderHeaders(profile: NativeSessionProfile, inc
   route = '/v1/messages'): SessionProfileResult<{ readonly headers: Readonly<Record<string, string>> }> {
   return result('profile-headers-refused', () => {
     if (!isNativeSessionProfile(profile)) refuse('unsupported-session-profile');
-    const countTokens = route === '/v1/messages/count_tokens?beta=true';
+    const countTokens = route === SESSION_COUNT_TOKENS_PATH;
     if (countTokens ? !isSessionProfile(profile) : route !== '/v1/messages' && route !== '/v1/messages?beta=true') refuse('profile-headers-refused');
     const value = copy(incoming);
     const fixed = { 'anthropic-version': '2023-06-01', 'anthropic-beta': countTokens ? COUNT_TOKENS_BETA : SESSION_PROFILE_BETA, 'content-type': 'application/json', 'user-agent': 'claude-cli/2.1.327 (external, sdk-cli)', 'x-app': 'cli' };

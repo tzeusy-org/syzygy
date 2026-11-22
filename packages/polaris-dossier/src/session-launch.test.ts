@@ -562,9 +562,10 @@ describe('prepared private CLI launch',()=>{
     const ordinary = createSessionProfile(fixedProfileInput), ordered = createOrderedDesignSessionProfile(fixedProfileInput);
     if (!ordinary.ok || !ordered.ok) throw new Error('own fixed profile refused');
     const base = ordinary.value.profile, profile = ordered.value.profile;
-    expect(base).toMatchObject({ id: 'claude-2.1.327-sonnet46/2', bytes: 9299,
-      digest: 'a1f5166c9d049c418c8e1fe7dce6bbdf7ee72aaf830e16dcb3cf39dc175a8d11' });
+    expect(base).toMatchObject({ id: 'claude-2.1.327-sonnet46/2', bytes: 9859,
+      digest: '0e2da6aa27c54d5a3750c6d61e02b524ee29752762552fad509f587971df3623' });
     expect(profile.id).toBe('claude-2.1.327-sonnet46/ordered-design-3');
+    expect(profile).toMatchObject({ bytes: 11029, digest: '790db41d040070dbf1f90d5b5169e05eb827ab97d08a8a4d74a1d600448b28d1' });
     expect(profile.baseline).toEqual(base.baseline);
     expect(profile.baselineOrigin.originIds[0]).toBe(profile.id);
     expect(profile.initialScaffoldingOrigin.originIds[0]).toBe(profile.id);
@@ -624,15 +625,15 @@ describe('prepared private CLI launch',()=>{
     }
   });
 
-  it('builds and selects only the design variant with the artifact result hint', async () => {
+  it('builds pinned ordinary and design variants with the same artifact result capability', async () => {
     const root = await mkdtemp(path.join(os.tmpdir(), 'session-support-'));
     cleanup.push(() => rm(root, { force: true, recursive: true }));
     const compiled = await compiledSessionSupport();
     const ordinary = compiled.get('support/session-mcp.js')!;
     const design = compiled.get('design-support/session-mcp.js')!;
-    // Measured independently from the exact predecessor's ordinary build.
+    // Exact compiler outputs: the design executable stays byte-identical.
     expect(sha256(compiled.get('support/session-bridge.js')!)).toBe('33a3f07df8001244cebefec75fe2110073196b9cb11fb2994553659a6865bac3');
-    expect(sha256(ordinary)).toBe('7ab492fb6a69e8476049068b5bcf820a95cfcb1a1ea656f34f3c7bdaa6a2fd33');
+    expect(sha256(ordinary)).toBe('403e8c4a7ae11930d78c87b240c1b43f5241707cfcbe2561e8a7acd43d695bca');
     expect(sha256(design)).not.toBe(sha256(ordinary));
     for (const role of ['author', 'inventory', 'fidelity'] as const) {
       expect(urlSessionMcpSupportPath(role, 'ordinary')).toBe('support/session-mcp.js');
@@ -665,9 +666,8 @@ describe('prepared private CLI launch',()=>{
     }
     const baseline = await catalogue('ordinary', ordinary);
     expect(baseline.result.tools.map(tool => tool.name)).toEqual(['source_read', 'artifact_read', 'artifact_write', 'dossier_step']);
-    expect(baseline.result.tools.every(tool => !Object.hasOwn(tool, '_meta'))).toBe(true);
-    expect(await catalogue('ordered-design', design)).toEqual({ ...baseline, result: { tools: baseline.result.tools.map(tool =>
-      tool.name === 'artifact_read' ? { ...tool, _meta: { 'anthropic/maxResultSizeChars': 500000 } } : tool) } });
+    expect(baseline.result.tools.filter(tool => Object.hasOwn(tool, '_meta'))).toEqual([expect.objectContaining({ name: 'artifact_read', _meta: { 'anthropic/maxResultSizeChars': 500000 } })]);
+    expect(await catalogue('ordered-design', design)).toEqual(baseline);
   });
 
   it.each(['ready', 'stale-verdict', 'out-of-order', 'truncated-terminal', 'insufficient-turns', 'oversized-verdict', 'insufficient-shape', 'insufficient-work'] as const)('observes the actual ordered design CLI exchange (%s)', async scenario => {
@@ -779,6 +779,17 @@ describe('prepared private CLI launch',()=>{
     expect(await verifySupportedUrlCli(neverRun)).toBe(false);await expect(access(marker)).rejects.toThrow();
 
     await expect(prepareRestrictedUrlSession({...f.launch,expected:{...f.launch.expected,nodeSha256:'f'.repeat(64)}})).rejects.toThrow('url-session-launch-refused');
+    // The predecessor no-meta executable and its matching declared digest are
+    // self-consistent, but cannot replace the compiled profile's fixed support.
+    const { transform } = await import('esbuild');
+    const stale = Buffer.from((await transform(await readFile(new URL('./session-mcp.ts', import.meta.url), 'utf8'),
+      { loader: 'ts', format: 'esm', target: 'node24', sourcemap: false })).code);
+    expect(sha256(stale)).toBe('7ab492fb6a69e8476049068b5bcf820a95cfcb1a1ea656f34f3c7bdaa6a2fd33');
+    const mcpPath = path.join(f.launch.view.supportDirectory, 'session-mcp.js'), currentMcp = await readFile(mcpPath);
+    await writeFile(mcpPath, stale);
+    await expect(prepareRestrictedUrlSession({ ...f.launch, expected: { ...f.launch.expected, supportSha256: { ...f.launch.expected.supportSha256,
+      'session-mcp.js': sha256(stale) } } })).rejects.toThrow('url-session-launch-refused');
+    await writeFile(mcpPath, currentMcp);
     const preparation=await prepareRestrictedUrlSession(f.launch),host=await f.start();
     await expect(launchRestrictedUrlSession({preparation:{...preparation},host})).rejects.toThrow('url-session-launch-refused');
     await writeFile(path.join(f.launch.view.supportDirectory,'session-mcp.js'),'// own changed trusted bytes');

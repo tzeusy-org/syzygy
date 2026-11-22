@@ -9,7 +9,7 @@ import { SESSION_CONTENT_CLASSES, type SessionAdmission, type SessionBinding, ty
 import { isSessionMachineTransport, openSessionMachineConnection, prepareSessionMachineTransport, sessionMachineEffectContext, stopSessionMachineIngress,
   type SessionMachineTransport, type SessionMachineEffectContext } from './session-machine-transport.js';
 import type { SessionResponseStopReason, SessionResponseUsage } from './session-response.js';
-import { SESSION_PROFILE_TOKEN_BUDGET } from './session-profile.js';
+import { SESSION_PROFILE_TOKEN_BUDGET, SESSION_COUNT_TOKENS_PATH } from './session-profile.js';
 
 export interface SessionRelayLimits {
   readonly requestBytes: number; readonly responseBytes: number;
@@ -29,7 +29,7 @@ export interface SessionResponseObservation {
   readonly textBlocks: number;
   readonly tool: { readonly id: string; readonly name: SessionTool; readonly inputSha256: string } | null;
 }
-export const SESSION_COUNT_TOKENS_PATH = '/v1/messages/count_tokens?beta=true';
+export { SESSION_COUNT_TOKENS_PATH } from './session-profile.js';
 const ROUTES = ['/v1/messages', '/v1/messages?beta=true', SESSION_COUNT_TOKENS_PATH] as const;
 type SessionRelayPath = typeof ROUTES[number];
 export const SESSION_COUNT_RESPONSE_MAX_BYTES = 1024;

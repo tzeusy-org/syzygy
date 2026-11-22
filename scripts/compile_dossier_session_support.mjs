@@ -5,9 +5,9 @@ const supportRoot = 'packages/polaris-dossier/src/';
 const bridge = `${supportRoot}session-bridge.ts`;
 const mcp = `${supportRoot}session-mcp.ts`;
 
-// Keep the existing transport and ordinary standalone build intact. Add the
-// ordered-design catalogue hint and request-only bound at verified AST points.
-function withOrderedDesignLimits(source) {
+// Both pinned CLI catalogues retain whole artifact replies up to the fixed
+// verified capability. Only ordered-design changes its request ingress bound.
+function withSessionLimits(source, orderedDesign) {
   const parsed = ts.createSourceFile(mcp, source, ts.ScriptTarget.Latest, true, ts.ScriptKind.TS);
   const catalogues = parsed.statements
     .filter(statement => ts.isVariableStatement(statement)
@@ -40,15 +40,17 @@ function withOrderedDesignLimits(source) {
     if (found.length !== 1) throw new Error(`unrecognized ordered MCP ${kind} check`);
     ingressChecks.set(found[0], kind);
   };
-  findIngress('handleRequest', 'request', node => ts.isCallExpression(node)
-    && node.expression.getText(parsed) === 'boundedJson' && node.arguments.length === 2
-    && node.arguments[0].getText(parsed) === 'request' && node.arguments[1].getText(parsed) === 'limits');
-  findIngress('serveSessionMcp', 'framing', node => ts.isBinaryExpression(node)
-    && node.operatorToken.kind === ts.SyntaxKind.GreaterThanToken
-    && node.left.getText(parsed) === 'chunk.byteLength + partial.length' && node.right.getText(parsed) === 'limits.maxBytes');
-  findIngress('serveSessionMcp', 'decode', node => ts.isCallExpression(node)
-    && node.expression.getText(parsed) === 'decode' && node.arguments.length === 2
-    && node.arguments[0].getText(parsed) === 'bytes.subarray(start, end)' && node.arguments[1].getText(parsed) === 'limits');
+  if (orderedDesign) {
+    findIngress('handleRequest', 'request', node => ts.isCallExpression(node)
+      && node.expression.getText(parsed) === 'boundedJson' && node.arguments.length === 2
+      && node.arguments[0].getText(parsed) === 'request' && node.arguments[1].getText(parsed) === 'limits');
+    findIngress('serveSessionMcp', 'framing', node => ts.isBinaryExpression(node)
+      && node.operatorToken.kind === ts.SyntaxKind.GreaterThanToken
+      && node.left.getText(parsed) === 'chunk.byteLength + partial.length' && node.right.getText(parsed) === 'limits.maxBytes');
+    findIngress('serveSessionMcp', 'decode', node => ts.isCallExpression(node)
+      && node.expression.getText(parsed) === 'decode' && node.arguments.length === 2
+      && node.arguments[0].getText(parsed) === 'bytes.subarray(start, end)' && node.arguments[1].getText(parsed) === 'limits');
+  }
   const { factory } = ts;
   const requestBytes = () => factory.createCallExpression(factory.createPropertyAccessExpression(factory.createIdentifier('Math'), 'min'), undefined, [
     factory.createPropertyAccessExpression(factory.createIdentifier('limits'), 'maxBytes'), factory.createNumericLiteral(2_097_152),
@@ -78,8 +80,8 @@ export async function compileDossierSessionSupport(readInput) {
   const [bridgeSource, mcpSource] = await Promise.all([readInput(bridge), readInput(mcp)]);
   const sources = [
     ['support/session-bridge.js', bridgeSource.toString('utf8')],
-    ['support/session-mcp.js', mcpSource.toString('utf8')],
-    ['design-support/session-mcp.js', withOrderedDesignLimits(mcpSource.toString('utf8'))],
+    ['support/session-mcp.js', withSessionLimits(mcpSource.toString('utf8'), false)],
+    ['design-support/session-mcp.js', withSessionLimits(mcpSource.toString('utf8'), true)],
   ];
   const options = { loader: 'ts', format: 'esm', target: 'node24', sourcemap: false };
   return new Map(await Promise.all(sources.map(async ([name, source]) => {
