@@ -11,7 +11,7 @@ d12a4ddbcdc525f3c7fec744b4c26f97a64cc5ae33ec7a3ae5eb911be386e056  rfcs/RFC-0002/
 7f573ba19df09b00db90954d41e49cb352b67f4433eb34b57be1a37bfe2b3526  rfcs/RFC-0002/snapshot-and-evaluation-core.md
 b8f489f52e7de013dc17e0820a45fb18ce608b907095db158e6c0745ce6281ad  rfcs/RFC-0003/README.md
 03e86ef1007d127060d90c8cd21dafc0b9ce3c3885414eaebc0a72cea606b810  rfcs/RFC-0003/governance-homes-and-owner-acts.md
-9bd3824dd97f1d0cc497be4e4cf36acb26a9a9fbad0c7273593c29cfd9bcf7af  rfcs/RFC-0003/manifests-and-namespace.md
+f054c6ba65634da912b0c7d178e650eb7bb8e007299cfefa49f7f395f69a92b9  rfcs/RFC-0003/manifests-and-namespace.md
 7b9fcd0ca5dddd4df368b7567fb6553bafa8aba072b2add4d643334a0af0f58d  rfcs/RFC-0004/README.md
 4547fe3a0ec3c504d12252fad35f35574caf547aa7fed2f4bc4020a899f63649  rfcs/RFC-0004/execution-record.md
 4eebe43c50050e16c9836b7a12db7b1775c86c967d8540afdcaa5db251212833  rfcs/RFC-0004/fidelity-joins-and-mappings.md
@@ -19,7 +19,7 @@ b8f489f52e7de013dc17e0820a45fb18ce608b907095db158e6c0745ce6281ad  rfcs/RFC-0003/
 8c0cce7fdc682c1880f3e1317e294506b4f83c0b4b855668c5dc7b8a1a68f847  rfcs/RFC-0004/named-adapters.md
 2436a7bc5cfc5dcccb7b7543845bedacde6d439f9039ecbcda31a5127cd40bef  rfcs/RFC-0005/README.md
 814e527457ebcfa4d5cab51d5cf2292beca4088aafc32404081e64fed0b9bb77  rfcs/RFC-0005/admission-and-boundary.md
-9ad92640a523a817b5da3a5b03feff280ce4d5a0b393be399471a2db3ec5b269  rfcs/RFC-0005/consent-egress-secrets.md
+d03a729e291bc84817cd4b4daab76a2ee66d08dcb3562b69839bd390ca6f34a6  rfcs/RFC-0005/consent-egress-secrets.md
 4da6ff36e967264e867f0ff8715d908d5171e886b394e71c86470fdaf05d8277  rfcs/RFC-0005/execution-profiles.md
 aa83ae4f592639b03b354b2b8df57f600500fab1d8502163b2dace9cefc90f5d  rfcs/RFC-0006-cross-surface-selection-query-drawer.md
 eb63af0ca644dcb49dc0a05c7308babb074174e5f4381d06dc862d052d88dda3  rfcs/RFC-0007/README.md

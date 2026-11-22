@@ -27,6 +27,14 @@ decision. Where this module and VIS-4 or SEC-1 to SEC-5 disagree, doctrine
 governs. Since D10, contracts are agent-maintained under VIS-4 and their
 status is read from adoption records (RFC3-16 as amended).
 
+**Amended after doctrine amendment D11** (owner-adopted 2026-11-21; this text
+is an agent adoption recorded in `.syzygy/governance/decisions/AGENT-ADOPTIONS.md`).
+RFC5-14 and RFC5-15 name SEC-2's one accepted exception: the authoring
+session of a Polaris dossier run reads the raw clone through its own agent
+tool, and that session's traffic to its model provider does not traverse the
+choke point. Everything Syzygy itself transmits still does, and still passes
+secret screening.
+
 **Package:** module 2 of 3 of the RFC 0005 contract package. Index, clause map,
 lookup rule, package-spanning integration and the package question list:
 `README.md`. Rationale, amendment history, alternatives, and answered §8
@@ -176,7 +184,9 @@ content-class vocabulary is closed at this RFC (amend to extend):
   concrete content into it** is agent-maintained (VIS-4) and honored at its
   adopted bytes on the default branch. A change that would let content the
   secret-detection policy matches, or cannot classify, reach a provider is
-  the owner's decision (SEC-5).
+  the owner's decision (SEC-5). The one such change the owner has made is
+  D11's: a dossier session's own raw reads (SEC-2's accepted exception;
+  RFC5-15).
 - A provider not declared for the run receives nothing; with no declared
   provider the inferred layer **is not computed** and renders Unknown
   (RFC2-7).
@@ -210,7 +220,7 @@ must pass:
 - the provider is **declared for the run** (RFC5-14); and
 - the content's class is **determinable** (RFC5-14 — undeterminable fails
   closed) and the content **passed secret screening** under RFC5-16 (SEC-5:
-  matching or unclassifiable content never leaves).
+  matching or unclassifiable content never leaves through Syzygy).
 
 *(Amended by GOVERNANCE-SIMPLIFICATION-D10. The retired third part — a consent record carrying an
 effective owner act under RFC3-16(a) — and the owner-act requirement on the
@@ -220,6 +230,15 @@ classification policy went with the egress consent class.)*
   succeeded or that any transmitted claim is true.
 - A feature that transmits as a side effect without traversing the choke
   point is the SEC-2 violation, whatever its intent.
+- **A dossier session's own reads are outside the choke point (D11).** The
+  authoring session of a Polaris dossier run reads the raw clone through its
+  own agent tool, and what it reads reaches that session's model provider
+  without passing this check; Syzygy can neither screen nor observe that
+  traffic. It is not the side-effect violation above when the provider is
+  declared for the run and the run discloses the unscreened read where the
+  dossier specification puts its authoring disclosure (SEC-2). Every prompt,
+  brief, request or payload Syzygy itself builds and sends still traverses
+  the choke point, and no other session or feature gains this exception.
 - Remote backing dependencies (a remote database, FD-009) are permitted under
   the same rule — a backing store the owner does not control is a provider and
   is declared.
