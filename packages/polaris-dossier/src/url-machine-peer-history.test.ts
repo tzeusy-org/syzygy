@@ -1,21 +1,22 @@
 import { mkdir, readFile, readdir, writeFile, unlink, link } from 'node:fs/promises';
 import path from 'node:path';
 import { randomBytes } from 'node:crypto';
-import { afterEach, describe, expect, it } from 'vitest';
+import { afterEach, describe, expect, it, vi } from 'vitest';
 import { tempDir } from '@syzygy/test-kit';
 import { sha256 } from '@syzygy/support';
 import { encodeCanonicalJson } from '@syzygy/polaris-generation-core/live';
 import { identifyUrlMachineLifecycleRecord, publishUrlMachineLifecycle } from './url-machine-lifecycle.js';
+import * as machineStore from './url-machine-store.js';
 import { initializeUrlMachineStore, openUrlMachineStore, readUrlMachineStoreHistory, type UrlMachineStore } from './url-machine-store.js';
 import { encodeUrlMachineArchive, urlMachineArchiveCapacity, URL_MACHINE_ARCHIVE_LIMITS } from './url-machine-archive.js';
 import { URL_MACHINE_CLIENT_LIMITS, type UrlMachineClientContext, type UrlMachineClientRecord } from './url-machine-instance.js';
-import { verifyUrlMachinePeerHistory, type UrlMachinePeerHistoryOptions } from './url-machine-peer-history.js';
+import { captureUrlMachinePeerHistory, isUrlMachinePeerHistoryMatch, isUrlMachinePeerHistorySnapshot, verifyUrlMachinePeerHistoryRow, verifyUrlMachinePeerHistory, type UrlMachinePeerHistoryOptions } from './url-machine-peer-history.js';
 
 const NOW = Date.parse('2026-11-22T01:00:00.000Z');
 const id = () => randomBytes(32).toString('hex');
 const canon = (v: unknown) => Buffer.from(encodeCanonicalJson(v, URL_MACHINE_CLIENT_LIMITS));
 const close: (() => Promise<unknown>)[] = [];
-afterEach(async () => { for (const fn of close.splice(0).reverse()) await fn(); });
+afterEach(async () => { vi.restoreAllMocks(); for (const fn of close.splice(0).reverse()) await fn(); });
 
 async function fixture(revoke = true) {
   const root = tempDir('url-peer-history-'), governanceRoot = path.join(root, 'observing/.syzygy');
@@ -60,6 +61,56 @@ async function fixture(revoke = true) {
 }
 
 describe('cold historical machine-peer joins', () => {
+  it('checks 220 exact captured rows using one genuine protected read and no per-row filesystem work', async () => {
+    const f = await fixture(), before = await Promise.all(f.files.map(file => readFile(file)));
+    const read = vi.spyOn(machineStore, 'readUrlMachineStoreHistory');
+    const captured = await captureUrlMachinePeerHistory(f.options); expect(captured.ok).toBe(true); if (!captured.ok) return;
+    expect(isUrlMachinePeerHistorySnapshot(captured.snapshot)).toBe(true);
+    expect(Object.isFrozen(captured.snapshot)).toBe(true);
+    const results = [];
+    for (let index = 0; index < 220; index++) {
+      const row = { ...f.options.row, at: NOW + 500 + index };
+      const match = verifyUrlMachinePeerHistoryRow(captured.snapshot, row);
+      expect(match).toMatchObject({ ok: true, authorization: 'none', replay: 'forbidden', revision: 1 });
+      expect(isUrlMachinePeerHistoryMatch(match, row)).toBe(true); results.push(match);
+    }
+    expect(results).toHaveLength(220); expect(read).toHaveBeenCalledTimes(1);
+    expect(await Promise.all(f.files.map(file => readFile(file)))).toEqual(before);
+    // Closing the live adapter does not turn a retained historical match into a
+    // live grant, and the pure checker neither reopens it nor changes history.
+    await f.options.store.close();
+    expect(verifyUrlMachinePeerHistoryRow(captured.snapshot, f.options.row)).toMatchObject({ ok: true, authorization: 'none' });
+    expect(read).toHaveBeenCalledTimes(1);
+    expect(await verifyUrlMachinePeerHistory(f.options)).toMatchObject({ ok: false, code: 'store-unavailable' });
+  });
+
+  it('refuses snapshot copies, successful-result copies and genuine result substitution for another row', async () => {
+    const f = await fixture(), captured = await captureUrlMachinePeerHistory(f.options); if (!captured.ok) throw new Error('owned capture refused');
+    const snapshot = captured.snapshot, match = verifyUrlMachinePeerHistoryRow(snapshot, f.options.row);
+    expect(isUrlMachinePeerHistoryMatch(match, f.options.row)).toBe(true); expect(Object.isFrozen(match)).toBe(true);
+    for (const copy of [{ ...snapshot }, JSON.parse(JSON.stringify(snapshot))]) {
+      expect(isUrlMachinePeerHistorySnapshot(copy)).toBe(false);
+      expect(verifyUrlMachinePeerHistoryRow(copy, f.options.row)).toEqual({ ok: false, code: 'input' });
+    }
+    for (const copy of [{ ...match }, JSON.parse(JSON.stringify(match))]) expect(isUrlMachinePeerHistoryMatch(copy, f.options.row)).toBe(false);
+    const nextRow = { ...f.options.row, at: f.options.row.at + 1 };
+    const nextMatch = verifyUrlMachinePeerHistoryRow(snapshot, nextRow);
+    expect(nextMatch).toMatchObject({ ok: true }); expect(isUrlMachinePeerHistoryMatch(nextMatch, nextRow)).toBe(true);
+    expect(isUrlMachinePeerHistoryMatch(match, nextRow)).toBe(false);
+    expect(isUrlMachinePeerHistoryMatch(nextMatch, f.options.row)).toBe(false);
+  });
+
+  it('retains exact hash, process, scope and temporal checks after caches have been populated', async () => {
+    const f = await fixture(), captured = await captureUrlMachinePeerHistory(f.options); if (!captured.ok) throw new Error('owned capture refused');
+    const snapshot = captured.snapshot;
+    expect(verifyUrlMachinePeerHistoryRow(snapshot, f.options.row)).toMatchObject({ ok: true });
+    expect(verifyUrlMachinePeerHistoryRow(snapshot, f.options.row, canon({ ...f.record, issuanceId: id() }))).toEqual({ ok: false, code: 'revision' });
+    expect(verifyUrlMachinePeerHistoryRow(snapshot, { ...f.options.row, processIdentitySha256: id() })).toEqual({ ok: false, code: 'binding' });
+    expect(verifyUrlMachinePeerHistoryRow(snapshot, { ...f.options.row, operation: 'dossier_step' })).toEqual({ ok: false, code: 'binding' });
+    expect(verifyUrlMachinePeerHistoryRow(snapshot, { ...f.options.row, at: NOW + 1500 })).toEqual({ ok: false, code: 'time' });
+    expect(isUrlMachinePeerHistoryMatch({ ok: false, code: 'time' }, f.options.row)).toBe(false);
+  });
+
   it('reads exact protected revisions from a genuine reopened store and joins retained old bytes without reviving revocation', async () => {
     const f = await fixture(), before = await Promise.all(f.files.map(file => readFile(file)));
     const history = await readUrlMachineStoreHistory(f.options.store, f.record.clientId, f.options.expectedHead, f.options.context.deadline);
