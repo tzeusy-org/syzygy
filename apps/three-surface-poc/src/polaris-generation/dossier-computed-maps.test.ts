@@ -244,6 +244,41 @@ describe('the unit map', () => {
     expect(units).toContain('>m6/go.mod: Unknown, no facts taken (class-not-consented).</li>');
   });
 
+  // Version 2.11, item (7): "Unknown files counted and not listed on a manifest map".
+  it('counts the Unknown files its recognizers count and do not list, and claims every file read only where that is true', () => {
+    const member = workspaceMember() as Extract<LocalManifestFacts, { state: 'derived' }>;
+    const listOf = (m: LocalManifestFacts): string => {
+      const units = sectionOf(site(structure(1, []), m).get('maps/units.html')!);
+      return units.slice(units.indexOf('<ul class="map-unknown-files">'), units.indexOf('</ul>', units.indexOf('<ul class="map-unknown-files">')) + '</ul>'.length);
+    };
+    const npmOnly = (r: LocalManifestRecognizerEntry | null): LocalManifestFacts => ({ ...member, recognizers: member.recognizers.map((x) => (x.rule === NPM && r !== null ? r : x.rule === WF || x.rule === NPM ? recognizer(x.rule) : x)) });
+    // The 260-file tree: the first 250 read and listed, the other 10 Unknown over-read-limit, counted and not listed.
+    const read = Array.from({ length: 250 }, (_, i) => file(`p/${String(i).padStart(3, '0')}/package.json`, 1));
+    const over = npmOnly(recognizer(NPM, { candidates: 260, inferred: 250, unknown: 10, facts: 250, files: read, filesNotListed: 10 }));
+    expect(listOf(over)).toBe('<ul class="map-unknown-files"><li>10 files whose facts are Unknown are counted and not listed.</li></ul>');
+    expect(listOf(over)).not.toContain('Every candidate file not left out or set apart was read for facts.');
+    // No Unknown file at all: the sentence is true and stays.
+    const none = npmOnly(recognizer(NPM, { candidates: 2, inferred: 2, facts: 2, files: [file('a/package.json', 1), file('b/package.json', 1)] }));
+    expect(listOf(none)).toBe('<ul class="map-unknown-files"><li>Every candidate file not left out or set apart was read for facts.</li></ul>');
+    // No candidate file.
+    expect(listOf(npmOnly(null))).toBe('<ul class="map-unknown-files"><li>No candidate file.</li></ul>');
+    // Every Unknown file listed: the entries alone, no count item.
+    const allListed = listOf(npmOnly(recognizer(NPM, { candidates: 2, inferred: 1, unknown: 1, facts: 1, files: [file('a/package.json', 1), unknownFile('b/package.json', 'too-large')] })));
+    expect(allListed).toBe('<ul class="map-unknown-files"><li data-epistemic="unknown" data-unknown-reason="mapping-coverage-absent" data-manifest-path="b/package.json" data-manifest-file-reason="too-large">b/package.json: Unknown, no facts taken (too-large).</li></ul>');
+    // Some listed and one more counted: the entries, then the singular count item.
+    const someListed = listOf(npmOnly(recognizer(NPM, { candidates: 3, unknown: 3, files: [unknownFile('a/package.json', 'too-large'), unknownFile('b/package.json', 'symbolic-link')], filesNotListed: 1 })));
+    expect(someListed).toBe('<ul class="map-unknown-files">'
+      + '<li data-epistemic="unknown" data-unknown-reason="mapping-coverage-absent" data-manifest-path="a/package.json" data-manifest-file-reason="too-large">a/package.json: Unknown, no facts taken (too-large).</li>'
+      + '<li data-epistemic="unknown" data-unknown-reason="mapping-coverage-absent" data-manifest-path="b/package.json" data-manifest-file-reason="symbolic-link">b/package.json: Unknown, no facts taken (symbolic-link).</li>'
+      + '<li>1 file whose facts are Unknown is counted and not listed.</li></ul>');
+    // The count is summed over the map's recognizers: two unlisted here and three there make five.
+    const two: LocalManifestFacts = { ...member, recognizers: member.recognizers.map((x) => (x.rule === NPM ? recognizer(NPM, { candidates: 2, unknown: 2, filesNotListed: 2 }) : x.rule === 'cargo-manifest' ? recognizer('cargo-manifest', { candidates: 3, unknown: 3, filesNotListed: 3 }) : x.rule === WF ? recognizer(WF) : x)) };
+    expect(listOf(two)).toBe('<ul class="map-unknown-files"><li>5 files whose facts are Unknown are counted and not listed.</li></ul>');
+    // The CI map counts only its own recognizer's files.
+    const ci = sectionOf(site(structure(1, []), { ...member, recognizers: member.recognizers.map((x) => (x.rule === WF ? recognizer(WF, { candidates: 4, unknown: 4, filesNotListed: 4 }) : x.rule === NPM ? recognizer(NPM) : x)) }).get('maps/ci.html')!);
+    expect(ci).toContain('<ul class="map-unknown-files"><li>4 files whose facts are Unknown are counted and not listed.</li></ul>');
+  });
+
   it('refuses the render for an Unknown file whose reason this version does not name, never taking a reason for it', () => {
     const member = workspaceMember() as Extract<LocalManifestFacts, { state: 'derived' }>;
     for (const reason of ['unforeseen-reason', 'toString', null]) {
