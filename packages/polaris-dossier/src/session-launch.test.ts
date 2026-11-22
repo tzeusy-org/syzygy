@@ -807,14 +807,25 @@ describe('prepared private CLI launch',()=>{
     expect(await host.close()).toMatchObject({ termination: 'settled' });
   }, 20_000);
 
-  it('bounds a stuck launch audit, closes the host and does not launch late when the callback resolves',async()=>{
-    const f=await launchFixture({setupMilliseconds:2000,cleanupMilliseconds:100});let release!:()=>void;
-    const held=new Promise<void>(resolve=>release=resolve);
-    const preparation=await prepareRestrictedUrlSession({...f.launch,audit:()=>held}),host=await f.start();
-    try{await expect(launchRestrictedUrlSession({preparation,host})).rejects.toThrow('url-session-launch-refused');}
-    finally{release();}
-    expect(f.counts().forwards).toBe(0);expect(await host.close()).toMatchObject({termination:'settled'});
-  },15000);
+  it('bounds a stuck launch audit, closes the host and does not launch late when the callback resolves', async () => {
+    const f = await launchFixture({ setupMilliseconds: 2000 });
+    let release!: () => void;
+    const held = new Promise<void>(resolve => { release = resolve; });
+    const audit = vi.fn(() => held);
+    const preparation = await prepareRestrictedUrlSession({ ...f.launch, audit });
+    const host = await f.start();
+    const close = vi.fn(() => host.close());
+    const before = nativeSpawns.calls().length;
+    try {
+      await expect(launchRestrictedUrlSession({ preparation, host: { ...host, close } })).rejects.toThrow('url-session-launch-refused');
+      expect(audit).toHaveBeenCalledTimes(1);
+      expect(close).toHaveBeenCalledTimes(1);
+    } finally { release(); }
+    await new Promise<void>(resolve => setImmediate(resolve));
+    expect(nativeSpawns.calls()).toHaveLength(before);
+    expect(f.counts().forwards).toBe(0);
+    expect(await host.close()).toMatchObject({ termination: 'settled' });
+  }, 15000);
 
   it('enforces output, storage, wall and explicit stop boundaries on the actual CLI',async()=>{
     for(const [wanted,limits] of [
@@ -933,7 +944,7 @@ describe('prepared private CLI launch',()=>{
     }
   }, 15000);
 
-  it.each(['current', 'withdrawn', 'timed-out'] as const)(
+  it.each(['current', 'withdrawn', 'timed-out', 'confirmation-expired'] as const)(
     'joins independent inspection authority with the live census when %s', async disposition => {
       const f = await launchFixture();
       let releaseCensus!: () => void, startedCensus!: (value: true) => void;
@@ -945,7 +956,14 @@ describe('prepared private CLI launch',()=>{
       const enteredVerification = new Promise<true>(resolve => { startedVerification = resolve; });
       const heldTool = new Promise<void>(resolve => { releaseTool = resolve; });
       let authorityCurrent = true;
-      const confirm = vi.fn((accepted: boolean) => accepted && authorityCurrent);
+      const confirm = vi.fn((accepted: boolean) => {
+        if (disposition === 'confirmation-expired') {
+          // Block timer delivery while the confirmation exhausts the original
+          // sample interval. The final monotonic check must still refuse.
+          Atomics.wait(new Int32Array(new SharedArrayBuffer(4)), 0, 0, 1000);
+        }
+        return accepted && authorityCurrent;
+      });
       const preparation = await prepareRestrictedUrlSession({ ...f.launch, inspectionAuthority: {
         verify: () => { startedVerification(true); return verified; }, confirm,
       } });
@@ -976,13 +994,13 @@ describe('prepared private CLI launch',()=>{
           resolveVerification(true);
           await verified;
           expect(confirm).not.toHaveBeenCalled();
-          authorityCurrent = disposition === 'current';
+          authorityCurrent = disposition !== 'withdrawn';
           releaseCensus();
-          expect(await sample).toBe(authorityCurrent);
+          expect(await sample).toBe(disposition === 'current');
           expect(confirm.mock.calls).toEqual([[true]]);
           releaseTool();
           expect(await child.finished).toMatchObject({
-            outcome: authorityCurrent ? 'exited' : 'inspection-failed', groupTermination: 'confirmed',
+            outcome: disposition === 'current' ? 'exited' : 'inspection-failed', groupTermination: 'confirmed',
           });
         }
       } finally {
@@ -1001,7 +1019,7 @@ describe('prepared private CLI launch',()=>{
     const disappearing = Array.from({ length: disappearingEntries }, (_, index) => `own-disappearing-entry-${index}`);
     const retained = 'own-retained-entry';
     const work = f.launch.view.workDirectory;
-    let toolHeld = false, rootOpens = 0, removed = 0;
+    let rootOpens = 0, removed = 0;
     const completedSamples: number[] = [];
     const preparation = await prepareRestrictedUrlSession({ ...f.launch, current: () => {
       if (rootOpens > 0) completedSamples.push(rootOpens);
@@ -1009,18 +1027,16 @@ describe('prepared private CLI launch',()=>{
     } });
     let releaseTool!: () => void;
     const heldTool = new Promise<void>(resolve => { releaseTool = resolve; });
-    const host = await f.start({ beforeTool: () => {
-      toolHeld = true;
-      return heldTool;
-    } });
+    const host = await f.start({ beforeTool: () => heldTool });
     let observeRetry!: (observed: true) => void;
     const retryObserved = new Promise<true>(resolve => { observeRetry = resolve; });
 
     filesystem.beforeOpen = async file => {
-      if (file !== work || !toolHeld) return;
+      if (file !== work) return;
       rootOpens++;
       if (rootOpens !== 1) return;
-      // Seed the work directory after the CLI is waiting for its tool result.
+      // Seed the first eligible census. The held native tool keeps the CLI
+      // alive independently of when this census starts.
       await Promise.all([...disappearing, retained].map(name => writeFile(path.join(work, name), 'owned')));
     };
     filesystem.beforeLstat = async file => {
@@ -1037,7 +1053,8 @@ describe('prepared private CLI launch',()=>{
       } });
       cleanup.push(child.stop);
       if (expected === 'exited') {
-        expect(await Promise.race([retryObserved, child.finished.then(() => false)])).toBe(true);
+        const observed = await Promise.race([retryObserved, child.finished.then(result => result.outcome)]);
+        expect(observed, `work roots opened: ${rootOpens}, entries removed: ${removed}`).toBe(true);
         expect(await child.waitForSample()).toBe(true);
         expect(rootOpens).toBe(2);
         // A subsequent sample cannot stand in for the retry in this one.
