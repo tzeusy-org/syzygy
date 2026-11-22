@@ -291,7 +291,7 @@ async function parentCurrent(options: UrlMachinePeerOptions): Promise<boolean> {
     return valid === true && (options.effectCurrent === undefined || options.effectCurrent() === true);
   } finally { clearTimeout(timer); }
 }
-async function current(state: PeerState): Promise<number> {
+async function current(state: PeerState, drainSample = false): Promise<number> {
   await yieldToPoll();
   check(state);
   await yieldToPoll();
@@ -304,6 +304,7 @@ async function current(state: PeerState): Promise<number> {
   const peerNow = await captureKernelUnixPeerAsync(options.socket, options.programs.peer, options.chargeNativeCpuMicroseconds);
   if (!peerNow || peerNow.pid !== state.native.pid || peerNow.uid !== state.native.uid || peerNow.gid !== state.native.gid) throw refused();
   await yieldToPoll();
+  if (drainSample && !(await options.launch.waitForSample())) throw refused();
   return check(state);
 }
 
@@ -444,9 +445,17 @@ export async function mediateUrlMachinePeer<T>(peer: UrlMachinePeer, operation: 
       await options.audit({ event: 'machine-peer-effect', clientId: record.clientId, instanceId: active.instanceId, revision: record.revision,
         runId: record.runId, role: record.role, operation, processIdentitySha256: peer.verifier.processIdentitySha256,
         channelIdentitySha256: peer.verifier.channelIdentitySha256, at: now });
-      await current(state);
+      // Native reattestation can start a fresh inspection. Settle that sample
+      // before the synchronous effect guards, within the same held lease.
+      await current(state, true);
       const effectiveUntil = Math.min(context.deadline, Date.parse(record.expiresAt), Date.parse(active.expiresAt));
-      const boundary = (): boolean => { try { return check(state) < effectiveUntil && lease.current() && lease.now() < effectiveUntil; } catch { return false; } };
+      const boundary = (): boolean => {
+        try {
+          if (check(state) >= effectiveUntil) return false;
+          const now = lease.sampleCurrent === undefined ? lease.current() ? lease.now() : null : lease.sampleCurrent();
+          return now !== null && now < effectiveUntil;
+        } catch { return false; }
+      };
       if (!boundary()) throw refused();
       const value = await effect(boundary);
       if (!boundary()) throw refused();
