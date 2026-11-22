@@ -1,6 +1,8 @@
 import * as fs from 'node:fs';
 import { urlStructureRecordShape, urlReadingLedgerShape, urlReadingDifferenceShape, urlManifestFactsShape } from './url-check-product-shape.js';
 import type { ManifestFacts } from './manifest-facts.js';
+import type { FigureFit } from './figure-fit.js';
+import { figureFitClass } from './reader-advice.js';
 import path from 'node:path';
 import { setImmediate as yieldToPoll } from 'node:timers/promises';
 import { encodeCanonicalJson, parseBoundedJson } from '@syzygy/polaris-generation-core/live';
@@ -458,7 +460,8 @@ function create(given: UrlRunArtifactsOptions) {
         distinctFrom: text }), limits: shape({ repairCycles: repairs, deadline }), counts: text, completeness: shape({ label: lit('Inferred'), basis: text }) }),
       ...(report ? reportFields : {}) };
     const optional = { ...(command === 'check' ? { figureFit, readingLedger: urlReadingLedgerShape, manifestFacts: urlManifestFactsShape } : {}),
-      ...(report && command === 'check' ? { structureRecord: urlStructureRecordShape, readingDifference: urlReadingDifferenceShape } : {}),
+      ...(report && command === 'check' ? { structureRecord: urlStructureRecordShape, readingDifference: urlReadingDifferenceShape,
+        mechanismAdvice: shape({ file: nullable(lit('run-advice.json')), thisRevision: integer, inRun: integer }) } : {}),
       ...(report ? { screenCensus: census, readerAdvice: advice, reviewReach: reach, reviewVisibility: visibility } : {}) };
     return shape(fields, optional)(v)
       && record(v)['format'] === (command === 'check' ? 'polaris-dossier-check/1' : 'polaris-dossier-inventory-check/1')
@@ -492,8 +495,33 @@ function create(given: UrlRunArtifactsOptions) {
     if (!checkShape(document, 'check', true) || !integer(document['revision']) || document['checkFile'] !== path.join(run, `checks/rev-${document['revision']}.json`)) refuse();
     const stored = read(run, `checks/rev-${document['revision']}.json`), doc = json(stored);
     if (!checkShape(doc, 'check', false)) refuse();
-    const base = { ...document }; for (const k of ['command', 'run', 'checkFile', 'disclosures', 'screenCensus', 'readerAdvice', 'reviewReach', 'reviewVisibility', 'structureRecord', 'readingDifference']) delete base[k];
-    if (canonical(doc) !== canonical(base)) refuse();
+    const base = { ...document }; for (const k of ['command', 'run', 'checkFile', 'disclosures', 'screenCensus', 'readerAdvice', 'reviewReach', 'reviewVisibility', 'structureRecord', 'readingDifference', 'mechanismAdvice']) delete base[k];
+    const projected = { ...doc };
+    if (document['mechanismAdvice'] !== undefined) {
+      // The report alone drops mechanism advice; its receipt still binds the
+      // complete frozen check. Count only the exact authenticated run census.
+      const names = selectionNames(snapshotProductNames(run, 'checks', 4096, live), 'author-checks');
+      const expected = [...checks.values()].map(prior => prior.path).concat(`checks/rev-${doc['revision']}.json`);
+      if (names.length !== expected.length || expected.some(file => !names.includes(file))) refuse();
+      const fit = doc['figureFit'] as FigureFit | undefined;
+      const mechanismEntries = (value: Record<string, unknown>) => ((value['figureFit'] as FigureFit | undefined)?.entries ?? [])
+        .filter(entry => figureFitClass(entry) === 'mechanism');
+      const entries = mechanismEntries(doc);
+      const uniqueCount = (value: Record<string, unknown>) => new Set(mechanismEntries(value).map(entry => canonical(entry))).size;
+      let inRun = new Set(entries.map(entry => canonical(entry))).size;
+      for (const prior of checks.values()) {
+        if (!prior.committed || prior.revision >= Number(doc['revision'])) refuse();
+        const storedPrior = packetRecord(prior.path);
+        if (storedPrior.receipt !== prior.receipt || sha256(storedPrior.bytes) !== prior.digest) refuse();
+        const record = json(storedPrior.bytes);
+        if (!checkShape(record, 'check', false) || record['revision'] !== prior.revision) refuse();
+        inRun += uniqueCount(record);
+      }
+      const advice = record(document['mechanismAdvice']);
+      if (advice['thisRevision'] !== entries.length || advice['inRun'] !== inRun) refuse();
+      if (fit !== undefined) projected['figureFit'] = { ...fit, entries: fit.entries.filter(entry => figureFitClass(entry) === 'author') };
+    }
+    if (canonical(projected) !== canonical(base)) refuse();
     const subject = record(doc['draft']), report = reports.get(`author:${subject['sha256']}`);
     if (!report || !report.committed || subject['file'] !== `drafts/rev-${document['revision']}.json`) refuse();
     const frozen = read(run, subject['file']); if (sha256(frozen) !== report.digest || frozen.length !== subject['bytes']) refuse();

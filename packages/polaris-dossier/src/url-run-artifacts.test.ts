@@ -24,6 +24,7 @@ import type { SessionAdmission } from './session-egress-policy.js';
 import { runStatus } from './status.js';
 import { buildDesignPacket } from './design-review.js';
 import type { DossierRenderer } from './render.js';
+import type { FigureLayout } from './figure-fit.js';
 import { generationSourcesForBody } from '@syzygy/polaris-generation-core/live';
 import { createUrlRunDeclaration, urlSourceTransportIdentity, URL_PROFILE_ID } from './url-run-record.js';
 import { bindUrlSourceReader } from './url-source-reader.js';
@@ -210,6 +211,12 @@ describe('trusted URL artifact producer bridge', () => {
     const f = fixture(undefined, { 'README.md': 'Own documented purpose.\n', 'package.json': manifest, 'Cargo.toml': excludedManifest }, 'v2');
     Object.assign(f.draft.understanding, { purpose: [{ id: 'own-purpose', label: 'inferred', statement: 'Own documented purpose.', scope: 'Own fixture.',
       citations: [{ id: 'own-readme', path: 'README.md', startLine: 1, endLine: 1 }] }] });
+    const site = await import(new URL('../../../apps/three-surface-poc/src/polaris-generation/dossier-site.ts', import.meta.url).href) as { figureLaidOutWidth: FigureLayout };
+    const cite = (id: string) => ({ id, path: 'README.md', startLine: 1, endLine: 1 });
+    Object.assign(f.draft, { schemaVersion: 'polaris-dossier-local-draft-v5', diagrams: [{ id: 'own-flow', title: 'Own flow',
+      home: { kind: 'section', target: 'own-section' }, kind: 'flow', relationship: 'Own order.', disposition: { kind: 'produced', assetIds: ['own-flow'] },
+      nodes: ['own-a', 'own-b'].map(id => ({ id, label: id, epistemic: 'inferred', citations: [cite(`cite-${id}`)] })),
+      edges: [{ id: 'own-edge', from: 'own-a', to: 'own-b', label: 'then', epistemic: 'inferred', citations: [cite('cite-edge')] }] }] });
     const H = 'e'.repeat(64), core = encodeRunRecord(f.options.record.declared, f.options.record.subject);
     const identity = urlSourceTransportIdentity('https://own.example.invalid/source'); if (!identity.ok) throw Error('own transport');
     const sourceTransport = { originalLocator: identity.originalLocator, destination: identity.destination, providerId: identity.providerId,
@@ -261,7 +268,7 @@ describe('trusted URL artifact producer bridge', () => {
         async () => ++checkWaits < 4);
       try {
         const result = await checkDraft(f.run, {}, { sources, openReader, productReads: checkReads,
-          now: () => readAt, loadScreen: async () => ({ ok: true, screen: f.screen }),
+          now: () => readAt, loadScreen: async () => ({ ok: true, screen: f.screen }), layoutFigure: site.figureLaidOutWidth,
           probe: { probe: async () => { throw Error('own check permits no execution'); } } });
         expect(result).toMatchObject({ ok: false, refusal: { stage: 'reverify', reason: 'the authenticated URL products are unavailable or changed' } });
         expect(checkWaits).toBe(4);
@@ -281,9 +288,10 @@ describe('trusted URL artifact producer bridge', () => {
       const authorReads = beginRunProductReads(f.run, bridge, 'author-check', Date.now() + 4000);
       try {
         const result = await checkDraft(f.run, {}, { sources, openReader, productReads: authorReads,
-          now: () => readAt, loadScreen: async () => ({ ok: true, screen: f.screen }),
+          now: () => readAt, loadScreen: async () => ({ ok: true, screen: f.screen }), layoutFigure: site.figureLaidOutWidth,
           probe: { probe: async () => { throw Error('own check permits no execution'); } } });
-        expect(result).toMatchObject({ ok: true, report: { outcome: 'passed', figureFit: { examined: 0 } } });
+        expect(result).toMatchObject({ ok: true, report: { outcome: 'passed', figureFit: { examined: 1, entries: [] },
+          mechanismAdvice: { file: 'run-advice.json', thisRevision: 1, inRun: 1 } } });
         if (!result.ok) throw Error('own protected check');
         expect(result.report.citedBlobs.map(blob => blob.path)).toEqual(['README.md']);
         expect(result.report.manifestFacts).toMatchObject({ state: 'derived', facts: expect.arrayContaining([
@@ -296,6 +304,29 @@ describe('trusted URL artifact producer bridge', () => {
           .toEqual([expect.objectContaining({ path: 'Cargo.toml', epistemic: 'unknown', unknownReason: 'secret-detector-match' })]);
         const response = { stdout: JSON.stringify(result.report), stderr: '', exit: 0 };
         const argv = ['dossier', 'check', f.run];
+        const storedBytes = fs.readFileSync(path.join(f.run, 'checks/rev-0.json'));
+        const stored = JSON.parse(storedBytes.toString());
+        expect(stored.figureFit.entries).toEqual([expect.objectContaining({ diagram: 'own-flow', viewportPx: 390, laidOutPx: 648 })]);
+        expect(stored).not.toHaveProperty('mechanismAdvice');
+        // An unknown check with no mechanism entries would leave these counts
+        // unchanged; the bridge must still reject the unrecognized population.
+        f.write('checks/rev-999.json', b({ ...stored, revision: 999, figureFit: { ...stored.figureFit, entries: [] } }));
+        f.replyQueue.push(response);
+        await expect(bridge.runDossier('author')(argv, null)).rejects.toThrow();
+        fs.unlinkSync(path.join(f.run, 'checks/rev-999.json'));
+        const mutants = [
+          { ...result.report, mechanismAdvice: { ...result.report.mechanismAdvice, extra: true } },
+          { ...result.report, mechanismAdvice: { ...result.report.mechanismAdvice, file: 'checks/rev-0.json' } },
+          { ...result.report, mechanismAdvice: { ...result.report.mechanismAdvice, thisRevision: 0 } },
+          { ...result.report, mechanismAdvice: { ...result.report.mechanismAdvice, inRun: 2 } },
+          { ...result.report, figureFit: stored.figureFit },
+          { ...result.report, figureFit: { ...result.report.figureFit, examined: 0 } },
+          { ...result.report, figureFit: { ...result.report.figureFit, extra: true } },
+        ];
+        for (const mutant of mutants) {
+          f.replyQueue.push({ ...response, stdout: JSON.stringify(mutant) });
+          await expect(bridge.runDossier('author')(argv, null)).rejects.toThrow();
+        }
         f.replyQueue.push(response);
         await expect(bridge.runDossier('author')(argv, null)).resolves.toEqual(response);
         const origins = bridge.dossierOrigins('author')(argv, response);
@@ -311,8 +342,43 @@ describe('trusted URL artifact producer bridge', () => {
         await bridge.toolReceipt('author', receipt, f.admission('author'));
         bridge.committed('author', receipt.id);
         expect(f.ledger.metadata(bridge.checkReceipt(0)).originIds).toEqual(expect.arrayContaining([body!.id, structure!.id]));
-        expect(bridge.latestStageCheck('author')).toMatchObject({ revision: 0, record: { figureFit: { examined: 0 } } });
+        expect(bridge.latestStageCheck('author')).toMatchObject({ revision: 0, record: { figureFit: stored.figureFit } });
+        expect(f.ledger.origins(bridge.checkReceipt(0), storedBytes)).toBeDefined();
       } finally { authorReads.close(); }
+      for (const revision of [1, 2]) {
+        f.draft.title = `Own dossier revision ${revision}`;
+        const next = b(f.draft), args = { path: 'drafts/next.json', content: next.toString() };
+        f.write(args.path, next);
+        const writeReceipt = f.receipt('author', 'mcp__syzygy__artifact_write', args,
+          { ok: true, kind: 'artifact-written', path: args.path, sha256: sha256(next) });
+        await bridge.toolReceipt('author', writeReceipt, f.admission('author')); bridge.committed('author', writeReceipt.id);
+        const reads = beginRunProductReads(f.run, bridge, 'author-check', Date.now() + 4000);
+        try {
+          const result = await checkDraft(f.run, {}, { sources, openReader, productReads: reads,
+            now: () => readAt + revision * 1000, loadScreen: async () => ({ ok: true, screen: f.screen }), layoutFigure: site.figureLaidOutWidth,
+            probe: { probe: async () => { throw Error('own check permits no execution'); } } });
+          expect(result).toMatchObject({ ok: true, report: { revision, figureFit: { examined: 1, entries: [] },
+            mechanismAdvice: { thisRevision: 1, inRun: revision + 1 } } });
+          if (!result.ok) throw Error('own protected later check');
+          const response = { stdout: JSON.stringify(result.report), stderr: '', exit: 0 }, argv = ['dossier', 'check', f.run];
+          if (revision === 2) {
+            const previous = JSON.parse(fs.readFileSync(path.join(f.run, 'checks/rev-0.json'), 'utf8'));
+            previous.figureFit.entries = [];
+            f.write('checks/rev-0.json', b(previous));
+            f.replyQueue.push(response);
+            await expect(bridge.runDossier('author')(argv, null)).rejects.toThrow();
+          } else {
+            f.replyQueue.push({ ...response, stdout: JSON.stringify({ ...result.report,
+              mechanismAdvice: { ...result.report.mechanismAdvice, inRun: 1 } }) });
+            await expect(bridge.runDossier('author')(argv, null)).rejects.toThrow();
+            f.replyQueue.push(response);
+            await expect(bridge.runDossier('author')(argv, null)).resolves.toEqual(response);
+            const receipt = f.receipt('author', 'mcp__syzygy__dossier_step', { argv }, { ok: true, kind: 'dossier-result', ...response });
+            await bridge.toolReceipt('author', receipt, f.admission('author')); bridge.committed('author', receipt.id);
+            expect(bridge.latestStageCheck('author')).toMatchObject({ revision, record: { figureFit: { entries: [expect.anything()] } } });
+          }
+        } finally { reads.close(); }
+      }
     } finally { products.close(); }
     f.write('url-declaration.json', `${issued.text} `); expect(() => bridge.revalidateRead(ctx)).toThrow();
     expect(() => createUrlRunArtifacts({ ...f.options, effectiveDeclaration: { ...effectiveDeclaration, context: { ...effectiveDeclaration.context, expectedSidecarSha256: H } } })).toThrow();
