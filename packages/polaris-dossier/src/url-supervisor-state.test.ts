@@ -263,6 +263,16 @@ describe('generation-bound URL supervisor stop requests', () => {
     }
   });
 
+  it('retires its old offer but refuses a displaced state generation', () => {
+    const f = stopFixture(), control = openUrlSupervisorStop(f.root, f.active);
+    const next = changed(f.active, { stopGeneration: '5'.repeat(32) });
+    writeUrlSupervisorState(f.root, next);
+    expect(() => control.status()).toThrow(STOP_ERROR);
+    expect(() => control.close()).toThrow(STOP_ERROR);
+    expect(() => control.close()).toThrow(STOP_ERROR);
+    expect(openUrlSupervisorStop(f.root, next).close()).toBe('ready');
+  });
+
   it('refuses a replacement with identical bytes and never retires its name through the old handle', () => {
     const f = stopFixture(), control = openUrlSupervisorStop(f.root, f.active);
     const retired = `${f.offer}.retired`;

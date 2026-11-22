@@ -217,10 +217,14 @@ function stopBinding(stateRoot: string, expected: SupervisorState): StopBinding 
     || expected.stopped !== undefined || expected.done !== undefined) refuseStop();
   return { runId: expected.runId, declaration: expected.declarationSha256, generation: expected.stopGeneration };
 }
-function liveBinding(root: Root, binding: StopBinding): void {
+function currentBinding(root: Root, binding: StopBinding): SupervisorState {
   const persisted = readAt(root)?.value;
-  if (!persisted || persisted.declarationSha256 !== binding.declaration || persisted.stopGeneration !== binding.generation
-    || persisted.stopped !== undefined || persisted.done !== undefined) refuseStop();
+  if (!persisted || persisted.declarationSha256 !== binding.declaration || persisted.stopGeneration !== binding.generation) refuseStop();
+  return persisted;
+}
+function liveBinding(root: Root, binding: StopBinding): void {
+  const persisted = currentBinding(root, binding);
+  if (persisted.stopped !== undefined || persisted.done !== undefined) refuseStop();
 }
 const stopSlot = (root: Root): string => `/proc/self/fd/${root.fd}/${root.runId}.supervisor-stop`;
 const stopPrefix = (binding: StopBinding): Buffer => Buffer.from(`polaris-supervisor-stop/1\n${binding.generation}\n${binding.declaration}\n`, 'ascii');
@@ -306,6 +310,7 @@ export function openUrlSupervisorStop(stateRoot: string, expected: SupervisorSta
           // A request that verified the named offer before unlink must be
           // visible here. A later writer cannot confirm the retired name.
           disposition = observe(null);
+          currentBinding(heldRoot, binding);
         } catch { return refuseStop(); }
         finally { closeStopDescriptors(heldFd, heldRoot); }
         closed = disposition;
