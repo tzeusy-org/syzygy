@@ -77,8 +77,13 @@ export async function verifyTextInRun(runDir: string, request: VerifyTextRequest
   const outFile = request.outFile === undefined ? undefined : path.resolve(request.outFile);
   const outReal = outFile === undefined ? undefined : realOf(outFile);
   const forbidden = [run, `${run}.agents`, `${run}.sessions`].flatMap((dir) => [dir, realOf(dir)]);
-  if (outFile !== undefined && outReal !== undefined && forbidden.some((dir) => inside(dir, outFile) || inside(dir, outReal))) {
-    return refuse('out', 'verify writes nothing into a run directory or its session directories; name an --out outside them');
+  // Nor into any other run (a path segment named like a run, or its .agents or .sessions sibling), nor under the records root.
+  const runLike = (target: string): boolean => target.split(path.sep).some((segment) => RUN_ID.test(segment.replace(/\.(agents|sessions)$/u, '')));
+  const recordsRoot = typeof deps.sources?.recordsRoot === 'string' ? path.resolve(deps.sources.recordsRoot) : undefined;
+  if (recordsRoot !== undefined) forbidden.push(recordsRoot, realOf(recordsRoot));
+  if (outFile !== undefined && outReal !== undefined
+      && (runLike(outFile) || runLike(outReal) || forbidden.some((dir) => inside(dir, outFile) || inside(dir, outReal)))) {
+    return refuse('out', 'verify writes nothing into a run directory, its session directories, any other run or the records root; name an --out outside them');
   }
   if (outFile !== undefined && fs.existsSync(outFile)) return refuse('out', `${outFile} already exists; verify writes a new file only`);
 

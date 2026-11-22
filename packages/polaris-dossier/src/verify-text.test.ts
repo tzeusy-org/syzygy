@@ -305,6 +305,24 @@ describe('syzygy dossier verify', () => {
     expect(JSON.parse(out.join(''))).toMatchObject({ stage: 'out' });
     expect(fs.readdirSync(run)).toEqual(['run.json']);
   });
+  it('refuses an --out into another run, its session directories, or the records root', async () => {
+    const scratch = tempDir('verify-text-');
+    const run = path.join(scratch, `run-${'e'.repeat(32)}`);
+    fs.mkdirSync(run);
+    fs.writeFileSync(path.join(run, 'run.json'), '{}');
+    const records = path.join(scratch, 'records');
+    const targets = [
+      path.join(scratch, `run-${'f'.repeat(32)}`, 'a.md'),
+      path.join(scratch, `run-${'f'.repeat(32)}.sessions`, 'a.md'),
+      path.join(records, 'a.md'),
+    ];
+    for (const target of targets) {
+      const { io: ports, out } = io();
+      expect(await runDossierCli(['verify', run, '--text', '/nowhere.md', '--out', target, '--json'], ports, { sources: { recordsRoot: records } as never })).toBe(1);
+      expect(JSON.parse(out.join(''))).toMatchObject({ stage: 'out' });
+    }
+    expect(fs.readdirSync(scratch).sort()).toEqual([`run-${'e'.repeat(32)}`]);
+  });
   it('refuses an existing --out, and a run whose record does not re-verify, leaving the run unchanged', async () => {
     const scratch = tempDir('verify-text-');
     const run = path.join(scratch, `run-${'c'.repeat(32)}`);

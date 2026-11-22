@@ -612,7 +612,7 @@ VERIFY_UNION = f"{VERIFY_HOME}/GOVERNING-DEPENDENCIES.json"
 VERIFY_TAG = "polaris-dossier-verify-text-v2.15"
 VERIFY_STATUS_PREFIX = f"[Verify-text amendment 2.15]({VERIFY_HOME})"
 VERIFY_SUBJECTS = {
-    VERIFY_SPEC: "192fefc3d6ca5ba9ae901ca8216320ae77ff0604a3273ee7c94d56ba2b32957d",
+    VERIFY_SPEC: "5d757250643d10d993081d68670dca1fabe5f915e232fe051c77a03305e6399c",
 }
 VERIFY_BOUND_PARTS = len(VERIFY_SUBJECTS)
 # The v2.14 infrastructure-recognizers amendment (syzygy-3efd.26, .76, .79): one

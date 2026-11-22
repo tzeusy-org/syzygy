@@ -623,6 +623,36 @@ bd ready --label dossier
 Ready with no predecessor: R1 slice 1, R2 slice 1, R3 slice 1, R4 slice 1, R5 slices 1 and 4, R6 slices 1
 and 3, R8 slice 1, R11 slice 1, R14 slice 1, R16 slice 1, R17 slice 1, R27 slice 1.
 
+## R2 slice 1: first measurement (2026-11-22)
+
+[Observed] `syzygy dossier verify` (bead syzygy-5dhm.23) checked two texts about the pilot's Redis
+revision `498ecd0d`, through the dossier check's own derivation and screen. Each claim gets one
+of six outcomes. Figures and method are in
+`docs/evidence/syzygy-5dhm-23/verify-text-pilot-2026-11-22.json`; "before" is the first
+implementation (`d2b84f57`), "after" is the code after its review corrections (`7107dc97`).
+
+| Claims | Plain synthesis before | after | Dossier text before | after |
+|---|---|---|---|---|
+| quotation-verified | 2 | 1 | 0 | 0 |
+| reference-unverified | 58 | 57 | 255 | 255 |
+| path-missing | 2 | 2 | 17 | 17 |
+| quotation-not-found | 0 | 1 | 0 | 0 |
+| unanchored | 34 | 33 | 397 | 397 |
+| withheld | 7 | 7 | 20 | 20 |
+| total | 103 | 101 | 689 | 689 |
+
+- [Observed] The plain synthesis names 127 file references and attaches lines to none. The
+  dossier text names 336, 180 with lines.
+- [Observed] Before the corrections, one plain claim counted as verified only because the reader
+  paired the quote marks of two different quotations that wrapped across a line. It "verified"
+  the span ` and ` between them. Read correctly, neither quotation is a contiguous span of the
+  files the claim names, so the claim is `quotation-not-found`. The other plain changes are two
+  table header rows that no longer count as claims, and one prose `.js` name that is no longer a
+  reference.
+- [Inferred] The dossier's quotations are under-counted: `scripts/dossier_site_to_text.py` drops
+  the quote marks around its rendered quotations. The dossier's 17 missing paths are mostly its
+  own pages and generator files. Neither arm's figures say whether an unquoted claim is true.
+
 ## Known ledger and deviations
 
 - **No release gate.** The pursuit skill asks that filed work wait behind a gate the owner

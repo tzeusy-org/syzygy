@@ -193,6 +193,13 @@ function codeSpans(text: string): [number, number][] {
 
 const inside = (spans: readonly [number, number][], at: number): boolean => spans.some(([a, b]) => at >= a && at < b);
 
+/** The text with every code span blanked to spaces of the same UTF-16 length, so offsets keep their meaning; one pass over the spans. */
+function maskSpans(text: string, spans: readonly [number, number][]): string {
+  let out = '', from = 0;
+  for (const [a, b] of spans) { out += text.slice(from, a) + ' '.repeat(b - a); from = b; }
+  return out + text.slice(from);
+}
+
 /** The path references of one claim, in order, each path once with every range written after any of its mentions. */
 export function referencesIn(text: string): TextReference[] {
   const spans = codeSpans(text);
@@ -246,7 +253,7 @@ function rangesAfter(rest: string): LineRange[] {
 /** The double-quoted spans of one claim outside code spans, in order; a span with no letter or digit is not a quotation. */
 export function quotationsIn(text: string): string[] {
   const spans = codeSpans(text);
-  const masked = [...text].map((char, i) => (inside(spans, i) ? ' ' : char)).join('');
+  const masked = maskSpans(text, spans);
   const found: { at: number; inner: string }[] = [];
   const curly: [number, number][] = [];
   for (const match of masked.matchAll(CURLY_QUOTE)) {
@@ -262,7 +269,7 @@ export function quotationsIn(text: string): string[] {
 /** Whether a quotation opened in a claim's text so far is still open: an odd count of straight quotes, or a curly open without its close. */
 function quotationOpen(text: string): boolean {
   const spans = codeSpans(text);
-  const masked = [...text].map((char, i) => (inside(spans, i) ? ' ' : char)).join('');
+  const masked = maskSpans(text, spans);
   const curlyLeft = masked.replace(CURLY_QUOTE, '');
   if (curlyLeft.includes('“')) return true;
   return (curlyLeft.match(/"/gu)?.length ?? 0) % 2 === 1;
@@ -328,11 +335,19 @@ export async function verifyClaims(extracted: ExtractedText, inputs: DeriveInput
   const blobs: string[] = [];
   for (const entry of await inputs.reader.listTree()) if (BLOB_MODES.has(entry.mode)) blobs.push(entry.path);
   const listed = new Set(blobs);
+  // Blobs by base name, so a written name is compared only with the blobs that end in its own base name (one pass over the listing).
+  const byBase = new Map<string, string[]>();
+  for (const blob of blobs) {
+    const base = blob.slice(blob.lastIndexOf('/') + 1);
+    const known = byBase.get(base);
+    if (known === undefined) byBase.set(base, [blob]); else known.push(blob);
+  }
   const resolution = new Map<string, string>();
   const resolve = (written: string): string => {
     let found = resolution.get(written);
     if (found === undefined) {
-      const candidates = listed.has(written) ? [written] : blobs.filter((blob) => blob.endsWith(`/${written}`));
+      const candidates = listed.has(written) ? [written]
+        : (byBase.get(written.slice(written.lastIndexOf('/') + 1)) ?? []).filter((blob) => blob.endsWith(`/${written}`));
       found = candidates.length === 1 ? candidates[0]! : written;
       resolution.set(written, found);
     }
