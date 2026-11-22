@@ -4,7 +4,7 @@ import path from 'node:path';
 import { execFileSync } from 'node:child_process';
 import { afterEach, describe, expect, it } from 'vitest';
 import { sha256 } from '@syzygy/support';
-import { DOSSIER_POLICY_PATH } from './policy-snapshot.js';
+import { DOSSIER_POLICY_PATH, DOSSIER_PREDECESSOR_POLICY_PATH } from './policy-snapshot.js';
 import { URL_ORIGIN_POLICY_PATH, urlSourceTransportIdentity } from './url-run-record.js';
 import { registerUrlRunMode, urlRunModeAuthority } from './url-mode-registry.js';
 
@@ -19,7 +19,7 @@ function fixture() {
   const digest = 'a'.repeat(64), commit = 'c'.repeat(40);
   const context = {
     runId,
-    expectedBasePolicy: { path: DOSSIER_POLICY_PATH, policyId: 'polaris-butlers-project-shape-secrets', policyVersion: 'dossier-declared-source/1.0.0', commit, sha256: digest },
+    expectedBasePolicy: { path: DOSSIER_POLICY_PATH, policyId: 'polaris-butlers-project-shape-secrets', policyVersion: 'dossier-declared-source/2.0.0', commit, sha256: digest },
     expectedOriginPolicy: { path: URL_ORIGIN_POLICY_PATH, policyId: 'POLARIS-DOSSIER-URL-ORIGIN-SPECIES-POLICY-v1', policyVersion: '1.0.0', commit, sha256: digest },
     expectedSourceTransport: { originalLocator: identity.originalLocator, destination: identity.destination, providerId: identity.providerId,
       acquisitionId: `acq-${'a'.repeat(32)}`, metadataClasses: ['code-structure'] as const, selectionOrigin: 'validated-destination-before-acquisition' as const,
@@ -56,6 +56,14 @@ describe('persistent host URL mode declaration binding', () => {
     expect(result.screenMetadata('own-safe')).toBe(true); expect(result.screenMetadata('different')).toBe(false); expect(calls).toBe(2);
     expect(fs.statSync(f.file).mode & 0o777).toBe(0o600);
     expect(authority(f.run, 'other-run')).toEqual({ kind: 'refused' });
+    // Retained declarations keep their exact predecessor pair. Reading them
+    // neither migrates their binding nor permits new predecessor registration.
+    const legacy = { ...f.context, expectedBasePolicy: { ...f.context.expectedBasePolicy,
+      path: DOSSIER_PREDECESSOR_POLICY_PATH, policyVersion: 'dossier-declared-source/1.0.0' } };
+    fs.writeFileSync(f.file, JSON.stringify({ format: 'polaris-url-mode-binding/1', run: f.run, runId: f.runId, context: legacy }));
+    const retained = authority(f.run, f.runId);
+    expect(retained.kind).toBe('url');
+    if (retained.kind === 'url') expect(retained.context.expectedBasePolicy).toEqual(legacy.expectedBasePolicy);
     fs.writeFileSync(path.join(f.run, 'launched.json'), '{}'); fs.unlinkSync(f.file);
     expect(authority(f.run, f.runId)).toEqual({ kind: 'refused' });
   });
@@ -67,6 +75,10 @@ describe('persistent host URL mode declaration binding', () => {
       { ...f.context, expectedBasePolicy: { ...f.context.expectedBasePolicy, path: URL_ORIGIN_POLICY_PATH } },
       { ...f.context, expectedBasePolicy: { ...f.context.expectedBasePolicy, policyId: 'POLARIS-DOSSIER-DECLARED-SOURCE-POLICY-v1' } },
       { ...f.context, expectedBasePolicy: { ...f.context.expectedBasePolicy, policyVersion: '1.0.0' } },
+      { ...f.context, expectedBasePolicy: { ...f.context.expectedBasePolicy, policyVersion: 'dossier-declared-source/1.0.0' } },
+      { ...f.context, expectedBasePolicy: { ...f.context.expectedBasePolicy, path: DOSSIER_PREDECESSOR_POLICY_PATH } },
+      { ...f.context, expectedBasePolicy: { ...f.context.expectedBasePolicy, path: DOSSIER_PREDECESSOR_POLICY_PATH,
+        policyVersion: 'dossier-declared-source/1.0.0' } },
       { ...f.context, expectedSourceTransport: { ...f.context.expectedSourceTransport, providerId: 'git-source:forged' } },
       { ...f.context, expectedSourceTransport: { ...f.context.expectedSourceTransport, metadataClasses: ['work-history'] } } ];
     for (const context of cases) {

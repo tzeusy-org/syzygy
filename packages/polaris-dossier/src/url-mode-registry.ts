@@ -3,7 +3,8 @@ import os from 'node:os';
 import path from 'node:path';
 import { encodeCanonicalJson, parseBoundedJson } from '@syzygy/polaris-generation-core/live';
 import { deepFreeze, isRecord, sha256 } from '@syzygy/support';
-import { DOSSIER_POLICY_PATH, readCommittedPolicy, type PolicyBinding } from './policy-snapshot.js';
+import { DOSSIER_POLICY_PATH, DOSSIER_POLICY_VERSION, DOSSIER_PREDECESSOR_POLICY_PATH,
+  DOSSIER_PREDECESSOR_POLICY_VERSION, readCommittedPolicy, type PolicyBinding } from './policy-snapshot.js';
 import { buildDossierScreen } from './screen.js';
 import { URL_ORIGIN_POLICY_PATH, urlSourceTransportIdentity, type UrlRunDeclarationContext } from './url-run-record.js';
 import type { EffectiveRunAuthority } from './effective-run-record.js';
@@ -29,7 +30,8 @@ function policy(value: unknown, expectedPath: string, expectedId: string, expect
 function context(value: unknown, runId: string): value is Context {
   if (!isRecord(value) || !exact(value, ['runId', 'expectedBasePolicy', 'expectedOriginPolicy', 'expectedSourceTransport',
     'expectedProfileSha256', 'expectedSidecarSha256']) || value.runId !== runId
-    || !policy(value.expectedBasePolicy, DOSSIER_POLICY_PATH, 'polaris-butlers-project-shape-secrets', 'dossier-declared-source/1.0.0')
+    || !(policy(value.expectedBasePolicy, DOSSIER_POLICY_PATH, 'polaris-butlers-project-shape-secrets', DOSSIER_POLICY_VERSION)
+      || policy(value.expectedBasePolicy, DOSSIER_PREDECESSOR_POLICY_PATH, 'polaris-butlers-project-shape-secrets', DOSSIER_PREDECESSOR_POLICY_VERSION))
     || !policy(value.expectedOriginPolicy, URL_ORIGIN_POLICY_PATH, 'POLARIS-DOSSIER-URL-ORIGIN-SPECIES-POLICY-v1', '1.0.0')
     || typeof value.expectedProfileSha256 !== 'string' || !HEX.test(value.expectedProfileSha256)
     || typeof value.expectedSidecarSha256 !== 'string' || !HEX.test(value.expectedSidecarSha256)) return false;
@@ -65,6 +67,7 @@ export function registerUrlRunMode(input: { readonly root: string; readonly run:
   let fd: number | undefined;
   try {
     if (!runIdentity(input.run, input.context.runId) || !context(input.context, input.context.runId)
+      || !policy(input.context.expectedBasePolicy, DOSSIER_POLICY_PATH, 'polaris-butlers-project-shape-secrets', DOSSIER_POLICY_VERSION)
       || !separated(input.root, input.run) || !ownedDirectory(input.root)) return false;
     const text = canonical({ format: FORMAT, run: input.run, runId: input.context.runId, context: input.context });
     fd = fs.openSync(slot(input.root, input.run), fs.constants.O_WRONLY | fs.constants.O_CREAT | fs.constants.O_EXCL | fs.constants.O_NOFOLLOW, 0o600);
