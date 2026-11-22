@@ -61,6 +61,7 @@ interface HeldProcess { readonly fd: number; readonly identity: string; readonly
 interface NativeIdentity { readonly pid: number; readonly uid: number; readonly gid: number; readonly lifetime: string; readonly channel: string }
 interface PeerState {
   readonly options: UrlMachinePeerOptions; readonly native: NativeIdentity; readonly processes: readonly HeldProcess[];
+  readonly socketHandle: unknown; readonly socketDescriptor: number;
   readonly namespaces: Readonly<Record<typeof NAMESPACES[number], string>>; readonly mountSha256: string;
   readonly executable: fs.BigIntStats; readonly script: fs.BigIntStats | null; readonly command: Buffer;
   closed: boolean; finished: boolean; reading: boolean; mediating: boolean; chunks: number; bytes: number; lastNow: number;
@@ -233,6 +234,14 @@ function check(state: PeerState): number {
     || !Number.isSafeInteger(now) || now < state.lastNow || now >= options.context.deadline
     || !listenerCurrent(options) || options.socket.destroyed || !options.socket.isPaused() || options.socket.readableLength !== 0) throw refused();
   state.lastNow = now;
+  const handle = (options.socket as Socket & { readonly _handle?: { readonly fd?: unknown } })._handle;
+  if (handle !== state.socketHandle || handle?.fd !== state.socketDescriptor) throw refused();
+  const channel = fs.fstatSync(state.socketDescriptor, { bigint: true });
+  // RFC5-7(d)/REQ048: an established socket's peer credentials are immutable.
+  // Re-read its actual kernel channel identity at every synchronous boundary;
+  // retain the attested process/proc lifetime below. Each native read separately
+  // verifies SCM_CREDENTIALS and SCM_PIDFD against the original connector.
+  if (!channel.isSocket() || `${channel.dev}:${channel.ino}` !== state.native.channel) throw refused();
   for (const held of state.processes) {
     const actual = sample(held.fd);
     if (actual.pid !== held.sample.pid || actual.parent !== held.sample.parent || actual.start !== held.sample.start) throw refused();
@@ -246,8 +255,6 @@ function check(state: PeerState): number {
     || !bytesAt(`${base}/cmdline`, URL_MACHINE_PEER_LIMITS.procBytes).equals(state.command)
     || !sameFile(state.executable, fs.statSync(`${base}/exe`, { bigint: true }))) throw refused();
   if (state.script !== null && !sameFile(state.script, fs.statSync(`${base}/root/tool/support/${path.basename(options.installed.script!)}`, { bigint: true }))) throw refused();
-  const peerNow = captureKernelUnixPeer(options.socket, options.programs.peer, options.chargeNativeCpuMicroseconds);
-  if (!peerNow || peerNow.pid !== state.native.pid || peerNow.uid !== state.native.uid || peerNow.gid !== state.native.gid) throw refused();
   return now;
 }
 async function parentCurrent(options: UrlMachinePeerOptions): Promise<boolean> {
@@ -259,8 +266,15 @@ async function parentCurrent(options: UrlMachinePeerOptions): Promise<boolean> {
   } finally { clearTimeout(timer); }
 }
 async function current(state: PeerState): Promise<number> {
+  await yieldToPoll();
   check(state);
   if (await parentCurrent(state.options) !== true) throw refused();
+  await yieldToPoll();
+  check(state);
+  const { options } = state;
+  const peerNow = captureKernelUnixPeer(options.socket, options.programs.peer, options.chargeNativeCpuMicroseconds);
+  if (!peerNow || peerNow.pid !== state.native.pid || peerNow.uid !== state.native.uid || peerNow.gid !== state.native.gid) throw refused();
+  await yieldToPoll();
   return check(state);
 }
 
@@ -289,6 +303,9 @@ export async function captureUrlMachinePeer(options: UrlMachinePeerOptions): Pro
     const prepared = native(options.socket, selected.programs.reader, 'prepare', selected.chargeNativeCpuMicroseconds);
     if (!kernel || !prepared.identity || kernel.pid !== prepared.identity.pid || kernel.uid !== prepared.identity.uid || kernel.gid !== prepared.identity.gid) throw refused();
     const observed = prepared.identity;
+    const socketHandle = (options.socket as Socket & { readonly _handle?: { readonly fd?: unknown } })._handle;
+    const socketDescriptor = socketHandle?.fd;
+    if (typeof socketDescriptor !== 'number' || !Number.isSafeInteger(socketDescriptor) || socketDescriptor < 0) throw refused();
     if (observed.uid !== process.getuid!() || observed.gid !== process.getgid!() || observed.pid === selected.launch.pid) throw refused();
     for (let pid = observed.pid; ;) {
       if (held.length >= URL_MACHINE_PEER_LIMITS.ancestors || held.some(entry => entry.sample.pid === pid)) throw refused();
@@ -324,7 +341,7 @@ export async function captureUrlMachinePeer(options: UrlMachinePeerOptions): Pro
     const command = Buffer.from(expectedCommand.join('\0') + '\0');
     const mountBytes = bytesAt(`${base}/mountinfo`, URL_MACHINE_PEER_LIMITS.procBytes), mounts = mountBytes.toString('utf8').split('\n');
     if (script !== null && !mounts.some(line => { const fields = line.split(' '); return fields[4] === '/tool/support' && fields[5]?.split(',').includes('ro'); })) throw refused();
-    state = { options: selected, native: observed, processes: held, namespaces, mountSha256: sha256(mountBytes), executable, script, command,
+    state = { options: selected, native: observed, processes: held, socketHandle, socketDescriptor, namespaces, mountSha256: sha256(mountBytes), executable, script, command,
       closed: false, finished: false, reading: false, mediating: false, chunks: 0, bytes: 0, lastNow: pinNow };
     void selected.launch.finished.then(() => { if (state) state.finished = true; }, () => { if (state) state.finished = true; });
     await current(state);

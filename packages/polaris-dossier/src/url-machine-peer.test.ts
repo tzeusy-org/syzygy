@@ -202,6 +202,7 @@ describe('live URL machine peer binding', { timeout: 60_000 }, () => {
 
   it('rejects copied launch objects and an unrelated same-UID socket carrying copied claims', async () => {
     const f = await fixture(); expect(f.peer).not.toBeNull();
+    expect((await f.publish(f.record(f.peer!))).ok).toBe(true);
     const endpoint = path.join(os.tmpdir(), `mp-other-${id().slice(0, 12)}`);
     let accept!: (socket: Socket) => void;
     const accepted = new Promise<Socket>(resolve => { accept = resolve; });
@@ -215,6 +216,33 @@ describe('live URL machine peer binding', { timeout: 60_000 }, () => {
     client.write(JSON.stringify({ pid: f.launch.pid, verifier: f.peer!.verifier }));
     expect(await captureUrlMachinePeer({ ...f.options, socket, listener: listener!, launch: { ...f.launch } })).toBeNull();
     expect(await captureUrlMachinePeer({ ...f.options, socket, listener: listener! })).toBeNull();
+    const original = (f.socket as Socket & { _handle: { readonly fd: number } })._handle;
+    const foreign = (socket as Socket & { _handle: { readonly fd: number } })._handle;
+    const descriptor = Object.getOwnPropertyDescriptor(original, 'fd');
+    expect(descriptor?.configurable ?? true).toBe(true);
+    let effects = 0;
+    for (const substitution of ['handle', 'descriptor'] as const) {
+      let entered = 0, applied = false, allowed: boolean | undefined, helperCalls: number | undefined;
+      const result = await mediateUrlMachinePeer(f.peer!, 'artifact_read', boundary => {
+        entered++;
+        try {
+          if (substitution === 'handle') (f.socket as Socket & { _handle: unknown })._handle = foreign;
+          else Object.defineProperty(original, 'fd', { configurable: true, value: foreign.fd });
+          applied = true;
+          const before = nativeObservations.calls().length;
+          allowed = boundary(); helperCalls = nativeObservations.calls().length - before;
+          if (!allowed) throw new Error('owned channel substitution refused');
+          effects++;
+        } finally {
+          if (substitution === 'handle') (f.socket as Socket & { _handle: unknown })._handle = original;
+          else if (descriptor) Object.defineProperty(original, 'fd', descriptor);
+          else delete (original as { fd?: number }).fd;
+        }
+      });
+      expect(result).toEqual({ ok: false }); expect(entered).toBe(1); expect(applied).toBe(true);
+      expect(allowed).toBe(false); expect(helperCalls).toBe(0);
+    }
+    expect(effects).toBe(0);
   });
 
   it.each(['inherited', 'mixed'] as const)('refuses the %s descriptor sender rather than authenticating it as the living connector', async scenario => {
