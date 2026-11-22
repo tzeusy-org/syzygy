@@ -603,7 +603,7 @@
     },
     "POLARIS": {
       "requirements": 39,
-      "scenarios": 430,
+      "scenarios": 432,
       "members": {
         "REQ-polaris-generation-001": {
           "name": "Admitted project input",
@@ -1163,10 +1163,12 @@
             "Withheld words, notebooks and vendored paths stay withheld",
             "Nested documentation admitted and scanned",
             "Configuration admitted and screened by the configuration detectors",
+            "Re-admitted formats placed as code-content and screened",
+            "Version 2.0.0 outcomes preserved",
             "Credential paths denied before any read",
             "Predecessor outcomes preserved",
             "Agent text quoting a configuration secret refused",
-            "Run bound to the predecessor not migrated"
+            "Run bound to an earlier policy not migrated"
           ]
         },
         "REQ-polaris-generation-047": {
