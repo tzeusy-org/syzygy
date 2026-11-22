@@ -297,3 +297,9 @@ export async function loadDossierScreen(root: string, _now: number, subject: Dos
   }
   return buildDossierScreen(snapshot.bytes, true, subject, subject?.visibility ?? 'private');
 }
+
+/** A path a secret detector of the bound screening policy matches, read as a path or as text, whether or not a denied-path rule also
+ * names it. `screenPath` answers `denied-path` before it tries a detector, so comparing its answer with `secret-detector-match` alone
+ * misses a path that is both (syzygy-8hm6): every decision to name a path, or not, asks this instead. */
+export const secretPathOf = (screen: Pick<DossierScreen, 'screenPath' | 'screenBody'>) => (repositoryPath: string): boolean =>
+  screen.screenPath(repositoryPath) === 'secret-detector-match' || screen.screenBody(repositoryPath, repositoryPath) === 'secret-detector-match';

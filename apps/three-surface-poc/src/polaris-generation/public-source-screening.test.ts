@@ -163,6 +163,16 @@ describe('synthetic secrets of each detector class', () => {
     expect((await readRepoCorpus(only.root, cfg(revision), { admission: allow })).unrepresentable).toHaveLength(3);
   });
 
+  // syzygy-8hm6: the path screen answers `denied-path` before it tries a detector, so a denied path was not counted as a match.
+  it('counts a secret in an unrepresentable path that a denied-path rule also names', async () => {
+    const denied = `src/back\\${DIR_TOKEN}/.env`, plain = 'src/back\\plain/.env';
+    const only = fixtureRepo({ 'src/ok.c': 'int ok;\n', [denied]: 'A=1\n', [plain]: 'B=2\n' });
+    const revision = execFileSync('git', ['-C', only.root, 'rev-parse', 'HEAD'], { encoding: 'utf8' }).trim();
+    const corpus = await readScreenedRepoCorpus(only.root, cfg(revision), { admission: allow, policyAct: goodPort });
+    expect(corpus.count).toMatchObject({ listed: 3, unquotablePath: 2, selected: 1, unquotablePathSecretMatches: 1, secretDetectorMatches: 0, sourceRows: 1 });
+    expect(JSON.stringify(corpus).includes(DIR_TOKEN)).toBe(false);
+  });
+
   it('screens the whole body before splitting: a match past the first 100,000-character piece withholds the file', async () => {
     expect(LATE_SECRET.length).toBeGreaterThan(100_000);
     expect(LATE_SECRET.indexOf(SECRETS['known-token-formats'])).toBeGreaterThan(100_000);

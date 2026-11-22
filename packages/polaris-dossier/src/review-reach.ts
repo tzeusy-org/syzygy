@@ -5,7 +5,7 @@ import type { Derived } from './check-derive.js';
 import { collectBlocks } from './check-derive.js';
 import { LOCAL_DRAFT_SCHEMA_VERSION } from './draft-schema.js';
 import type { CitedBlob } from './check-model.js';
-import type { DossierScreen } from './screen.js';
+import { secretPathOf, type DossierScreen } from './screen.js';
 import { citationIdsOf, isWithheldItem, type SpanStanding } from './withheld-items.js';
 
 /** Which claim blocks the fidelity review can never confirm, told to the author at check time (syzygy-pdja.20), and which understanding
@@ -49,7 +49,7 @@ export function citationReach(citation: Readonly<Record<string, unknown>>, input
     // `citedBlobs` names no file at the pinned revision, a span the packet gives outcome `absent`, never withheld (R-PDJA-20-REVIEW-REACH-1
     // finding 1).
     const recorded = inputs.citedBlobs.find((entry) => entry.path === cited)?.outcome;
-    const outcome = recorded ?? (inputs.citedBlobs.some((entry) => entry.path === null) && inputs.screen.screenPath(cited) === 'secret-detector-match' ? 'secret-detector-match' : undefined);
+    const outcome = recorded ?? (inputs.citedBlobs.some((entry) => entry.path === null) && secretPathOf(inputs.screen)(cited) ? 'secret-detector-match' : undefined);
     return outcome === undefined || outcome === 'admitted' ? 'reaches-review' : 'withheld';
   }
   // The packet applies the class gate to a body screening admitted, before any redaction.
