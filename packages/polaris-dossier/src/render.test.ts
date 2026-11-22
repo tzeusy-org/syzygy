@@ -8,7 +8,7 @@ import { createUrlRunArtifacts } from './url-run-artifacts.js';
 import { beginRunProductReads } from './url-operation-products.js';
 import { createUrlRunDeclaration, URL_PROFILE_ID, URL_ORIGIN_POLICY_PATH, urlSourceTransportIdentity } from './url-run-record.js';
 import { loadUrlDossierRenderer, type UrlLoadedRenderer } from './url-runtime.js';
-import { buildComposedRuntime } from './url-run-composed.testkit.js';
+import { buildIsolatedComposedRuntime } from './url-run-composed.testkit.js';
 import { DOSSIER_POLICY_PATH } from './policy-snapshot.js';
 import { checkDraftShape, draftSchemaDocument, inventorySchemaDocument, verdictSchemaDocument, localDraftSchema } from './draft-schema.js';
 import type { SessionToolsReceipt } from './session-tools.js';
@@ -268,7 +268,10 @@ async function handedPacket(run: string, editInventory?: (inv: Doc) => void) {
 let timingRenderer: Promise<UrlLoadedRenderer> | undefined;
 async function preparedUrlRender() {
   const installed = await (timingRenderer ??= (async () => {
-    const value = await loadUrlDossierRenderer(await buildComposedRuntime());
+    const checkout = tempDir('url-render-timing-runtime-');
+    const runtime = await buildIsolatedComposedRuntime(checkout);
+    expect(runtime.worker.bundle).toBe(path.join(checkout, 'packages/polaris-dossier/dist/runtime/worker.mjs'));
+    const value = await loadUrlDossierRenderer(runtime);
     if (value === null) throw new Error('URL timing renderer refused');
     return value;
   })());

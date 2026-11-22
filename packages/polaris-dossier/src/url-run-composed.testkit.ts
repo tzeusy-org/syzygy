@@ -74,13 +74,36 @@ const own = <T extends { readonly ok: boolean }>(result: T, operation: string): 
   return result as Extract<T, { readonly ok: true }>;
 };
 
-/** Rebuild in this isolated checkout; no role or observed-project program runs. */
+/** The public composed fixture requires the runtime at its CLI checkout. */
 export async function buildComposedRuntime(): Promise<UrlRuntime> {
   await fs.rm(path.join(root, 'packages/polaris-dossier/dist/runtime'), { recursive: true, force: true });
+  return buildRuntime(root);
+}
+
+/** Build from the current source bytes in the renderer test's own directory.
+ * Keep npm's relative workspace links pointed at the copied sources. */
+export async function buildIsolatedComposedRuntime(checkout: string): Promise<UrlRuntime> {
+  const entries = ['apps', 'packages', 'scripts', 'node_modules', 'package.json', 'package-lock.json',
+    'tsconfig.json', 'tsconfig.base.json'];
+  for (const entry of entries) {
+    await fs.cp(path.join(root, entry), path.join(checkout, entry), {
+      recursive: true,
+      verbatimSymlinks: true,
+      filter: source => {
+        const relative = path.relative(root, source).split(path.sep).join('/');
+        return !/^(?:apps|packages)\/[^/]+\/(?:dist|node_modules)$/u.test(relative)
+          && !/^node_modules\/\.vite(?:-temp)?$/u.test(relative);
+      },
+    });
+  }
+  return buildRuntime(checkout);
+}
+
+async function buildRuntime(checkout: string): Promise<UrlRuntime> {
   await exec(process.execPath, ['scripts/build_dossier_runtime.mjs'], {
-    cwd: root, env: { PATH: '/usr/bin:/bin', LANG: 'C' }, timeout: 60_000, maxBuffer: 65_536,
+    cwd: checkout, env: { PATH: '/usr/bin:/bin', LANG: 'C' }, timeout: 60_000, maxBuffer: 65_536,
   });
-  return own(await readUrlRuntime(root), 'runtime').runtime;
+  return own(await readUrlRuntime(checkout), 'runtime').runtime;
 }
 
 /** Actual initial producers and genuine role/origin capabilities. Provider
