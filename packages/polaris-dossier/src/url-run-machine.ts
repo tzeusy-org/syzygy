@@ -132,12 +132,14 @@ export async function createUrlRunMachine(input: UrlRunMachineOptions) {
           if (launch === undefined || listener === null || !current() || !(await input.reverify()) || !current()) return null;
           const support = isOrderedDesignSessionProfile(plan.profile) ? plan.profile.transcript.supportSha256 : input.runtime.supportSha256;
           const name = kind === 'mcp-shim' ? 'session-mcp.js' : 'session-bridge.js';
-          const peer = await captureUrlMachinePeer({ socket, listener, launch, profile: plan.profile, context,
+          const selectedLaunch = launch;
+          const peer = await captureUrlMachinePeer({ socket, listener, launch: selectedLaunch, profile: plan.profile, context,
             store, binding, programs: { peer: input.runtime.peerProgram, reader },
             installed: { executable: input.runtime.worker.node, sha256: input.runtime.worker.nodeSha256,
               script: path.join(plan.view.supportDirectory, name), scriptSha256: support[name] },
             protectedPaths: [...plan.view.protectedPaths, input.governanceRoot, input.protectedRoot], now: input.now,
-            current: async () => current() && await input.reverify() === true && current(),
+            current: async () => current() && await selectedLaunch.waitForSample()
+              && await input.reverify() === true && current(),
             effectCurrent: current, audit: input.audit,
             chargeNativeCpuMicroseconds: input.chargeNativeCpuMicroseconds });
           if (peer === null) return null;

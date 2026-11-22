@@ -273,8 +273,11 @@ async function parentCurrent(options: UrlMachinePeerOptions): Promise<boolean> {
 async function current(state: PeerState): Promise<number> {
   await yieldToPoll();
   check(state);
-  if (await parentCurrent(state.options) !== true) throw refused();
   await yieldToPoll();
+  // The parent may drain the genuine launcher's in-flight resource sample.
+  // Keep that proof adjacent to the synchronous kernel capture: a poll here
+  // could otherwise start a new bounded sample immediately before blocking it.
+  if (await parentCurrent(state.options) !== true) throw refused();
   check(state);
   const { options } = state;
   const peerNow = captureKernelUnixPeer(options.socket, options.programs.peer, options.chargeNativeCpuMicroseconds);
@@ -375,6 +378,10 @@ export async function readUrlMachinePeer(peer: UrlMachinePeer): Promise<UrlMachi
   try {
     await current(state);
     if (++state.chunks > URL_MACHINE_PEER_LIMITS.chunks) throw refused();
+    // current() yields after its fresh peer capture. Drain a sample that may
+    // have started in that poll turn before the separate synchronous read.
+    if (await parentCurrent(state.options) !== true) throw refused();
+    check(state);
     const result = native(state.options.socket, state.options.programs.reader, 'read', state.options.chargeNativeCpuMicroseconds);
     if (result.identity !== null && !equal(result.identity, state.native)) throw refused();
     if (result.chunk?.kind === 'data' && (state.bytes += result.chunk.bytes.length) > URL_MACHINE_PEER_LIMITS.bytes) throw refused();
