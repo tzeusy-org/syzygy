@@ -759,7 +759,7 @@ export function renderDossierSite(input: DossierSiteInput & { readonly local?: L
     // at reading level 1 with no topics; none where the page shows no part of the draft (syzygy-3efd.18).
     const overviewDrawn = view.drafted ? draft.diagrams.map((d, i) => d.home?.kind === 'overview' ? diagram(from, d, i) : '').join('') : '';
     const overviewFigures = overviewDrawn === '' ? '' : `<section id="overview-figures" data-reading-level="1" data-topics="">${overviewDrawn}</section>`;
-    add(from, 0, 'Overview', `<header data-reading-level="0"><span class="eyebrow">Polaris · Editorial draft</span><h1>${escape(draft.title)}</h1>${banner}${introduction}${unresolved}</header>${poleMap}${overviewFigures}${sections}${missingList}${derivedRegion}`);
+    add(from, 0, 'Overview', `<header data-reading-level="0"><span class="eyebrow">Polaris · Editorial draft</span><h1>${escape(draft.title)}</h1>${banner}${introduction}${unresolved}</header>${overviewFigures}${poleMap}${sections}${missingList}${derivedRegion}`);
   }
 
   // --- find by task (the index-and-task-routes change): the draft's task routes, right after the overview in the reading order. A step is a claim block and

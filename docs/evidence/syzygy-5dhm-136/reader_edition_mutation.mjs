@@ -21,15 +21,16 @@ const SITE = `${APP}/dossier-site.ts`;
 const EDITION_TEST = `${APP}/dossier-reader-edition.test.ts`;
 const TO_TEXT = 'scripts/dossier_site_to_text.py';
 const CLASSES = 'scripts/dossier_page_classes.json';
+const RENDER_TEST = 'packages/polaris-dossier/src/render.test.ts';
 
 // The checks a mutant of each file runs: vitest files, or the Python commands (each must exit 0).
 const SITE_TESTS = [EDITION_TEST, `${APP}/dossier-finding.test.ts`, `${APP}/dossier-reading.test.ts`, `${APP}/dossier-render-provider-golden.test.ts`];
 const PYTHON = [['scripts/dossier_site_to_text.py', '--selftest'], ['scripts/dossier_pilot_runs.py', '--selftest'], ['scripts/dossier_pilot_runs.py', '--check'], ['scripts/test_dossier_pilot.py']];
 const TESTS = {
-  [SITE]: SITE_TESTS,
+  [SITE]: [...SITE_TESTS, RENDER_TEST],
   [EDITION_TEST]: [EDITION_TEST],
   [TO_TEXT]: { python: PYTHON },
-  [CLASSES]: { python: PYTHON, vitest: [EDITION_TEST] },
+  [CLASSES]: { python: PYTHON, vitest: [EDITION_TEST, RENDER_TEST] },
 };
 const TIMEOUT_MS = 900_000;
 
@@ -38,13 +39,15 @@ const MUTANTS = [
   ['fold-old-label', SITE, '<summary>${ABOUT_THIS_RUN}</summary>', '<summary>Review report</summary>'],
   ['fold-misses-size-report', SITE, '${localNav(from)}<li><a href="${href(from, \'size-report.html\')}">Size report</a></li>', '${localNav(from)}'],
   ['fold-not-last', SITE, '<li><a href="${href(from, \'glossary.html\')}">Glossary</a></li><li><a href="${href(from, \'sources/index.html\')}">Sources</a></li>${reviewReport(from)}`;', '<li><a href="${href(from, \'glossary.html\')}">Glossary</a></li>${reviewReport(from)}<ol><li><a href="${href(from, \'sources/index.html\')}">Sources</a></li></ol>`;'],
+  ['fold-holds-unclassed-page', SITE, '`${localNav(from)}<li><a href="${href(from, \'size-report.html\')}">Size report</a></li>', '`<li><a href="${href(from, \'glossary.html\')}">Glossary</a></li>${localNav(from)}<li><a href="${href(from, \'size-report.html\')}">Size report</a></li>'],
   ['contents-about-heading-old', SITE, '`</ol><h2 id="about-this-run">${ABOUT_THIS_RUN}</h2>', '`</ol><h2 id="review-report">Review report</h2>'],
   // --- the finding pages near the top
   ['nav-index-dropped', SITE, '<li><a href="${href(from, FIND_BY_TASK_PAGE)}">Find by task</a></li><li><a href="${href(from, NAME_INDEX_PAGE)}">Index</a></li>`}${poles', '<li><a href="${href(from, FIND_BY_TASK_PAGE)}">Find by task</a></li>`}${poles'],
   ['contents-index-dropped', SITE, '<li><a href="${FIND_BY_TASK_PAGE}">Find by task</a></li><li><a href="${NAME_INDEX_PAGE}">Index</a></li>`}', '<li><a href="${FIND_BY_TASK_PAGE}">Find by task</a></li>`}'],
   ['reading-order-index-last', SITE, 'if (indexAt !== -1) pages.splice(', 'if (indexAt === -2) pages.splice('],
   // --- the landing page leads with the thesis and the map
-  ['landing-map-after-sections', SITE, '</header>${poleMap}${overviewFigures}${sections}${missingList}', '</header>${overviewFigures}${sections}${poleMap}${missingList}'],
+  ['landing-map-after-sections', SITE, '</header>${overviewFigures}${poleMap}${sections}${missingList}', '</header>${overviewFigures}${sections}${poleMap}${missingList}'],
+  ['landing-map-before-figure', SITE, '</header>${overviewFigures}${poleMap}${sections}', '</header>${poleMap}${overviewFigures}${sections}'],
   // --- a disclosure stays on its claim's page
   ['unknown-marking-dropped', SITE, 'const mark = (from: string, m: EpistemicMarking): string => (narrative(from) ? clipped(marking(m)) : marking(m));', 'const mark = (from: string, m: EpistemicMarking): string => (m === \'unknown\' ? \'\' : narrative(from) ? clipped(marking(m)) : marking(m));'],
   ['unknown-lead-dropped', SITE, 'const lead = reading && b.marking === \'unknown\' ? \'<span class="not-established">Not established.</span> \' : \'\';', 'const lead = \'\';'],
@@ -57,9 +60,11 @@ const MUTANTS = [
   ['predicate-links-skip-fragments', EDITION_TEST, "if (onPage === undefined || (to.fragment !== '' && !onPage.has(to.fragment)))", 'if (onPage === undefined)'],
   // --- the reader form and the one page-class definition
   ['reader-form-keeps-run-pages', TO_TEXT, "if reader and page_class(relative) == 'run':", "if reader and page_class(relative) == 'other':"],
+  ['reader-form-other-uncounted', TO_TEXT, "if reader and page_class(relative) == 'other':", 'if False:'],
   ['page-class-prefix-ignored', TO_TEXT, 'if relative in paths or relative.startswith(prefixes):', 'if relative in paths:'],
   ['classes-appendix-not-run', CLASSES, '"size-report.html", "appendix.html"]', '"size-report.html"]'],
   ['classes-name-index-run', CLASSES, '"sources/index.html", "name-index.html"], "prefixes": []},\n  {"class": "run", "paths": [', '"sources/index.html"], "prefixes": []},\n  {"class": "run", "paths": ["name-index.html", '],
+  ['classes-size-report-navigation', CLASSES, '"name-index.html"], "prefixes": []},', '"name-index.html", "size-report.html"], "prefixes": []},'],
 ].filter(([id]) => only === null || only.has(id));
 
 // A mutant no test can kill, with the reason; recorded, never run and never counted as killed.

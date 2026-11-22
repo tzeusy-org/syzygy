@@ -4,7 +4,8 @@
  "readers": [
   "scripts/dossier_site_to_text.py (page_class, --reader)",
   "scripts/dossier_pilot_runs.py (through dossier_site_to_text.py)",
-  "apps/three-surface-poc/src/polaris-generation/dossier-reader-edition.test.ts (the renderer's About this run fold holds exactly the rendered run pages)"
+  "apps/three-surface-poc/src/polaris-generation/dossier-reader-edition.test.ts (the renderer's About this run fold holds exactly the rendered run pages)",
+  "packages/polaris-dossier/src/render.test.ts (the fold of a full render holds exactly the run pages present, in this order)"
  ],
  "classes": [
   {"class": "reader", "paths": ["index.html", "glossary.html", "find-by-task.html"], "prefixes": ["poles/", "deep-dives/", "maps/"]},

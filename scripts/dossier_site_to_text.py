@@ -33,7 +33,8 @@ BLOCK = {'p', 'div', 'section', 'article', 'header', 'footer', 'figure', 'figcap
          'dd', 'blockquote', 'pre', 'details', 'summary', 'caption', 'aside'}
 SKIP = {'style', 'script', 'noscript', 'template'}
 RULE = ('every .html under the site except sources/*.html other than sources/index.html; text from <main> only')
-READER_RULE = RULE + '; with --reader, pages of class run (scripts/dossier_page_classes.json) are left out too'
+READER_RULE = (RULE + '; with --reader, pages of class run (scripts/dossier_page_classes.json) are left out too, and pages the '
+               'definition classes as none of reader, navigation or run are kept and counted as other')
 PAGE_CLASSES_FILE = pathlib.Path(__file__).resolve().parent / 'dossier_page_classes.json'
 PAGE_CLASSES_FORMAT = 'polaris-dossier-page-classes/1'
 
@@ -182,9 +183,10 @@ def site_pages(site):
 
 
 def convert_site(site, out, reader=False):
-    """Write the reader text of every kept page under `out`; returns the counts. With `reader`, run pages are left out too."""
+    """Write the reader text of every kept page under `out`; returns the counts. With `reader`, run pages are left out too, and a kept
+    page of class `other` is counted apart, so a page the definition does not know is reported rather than silently read as the subject."""
     site, out = pathlib.Path(site), pathlib.Path(out)
-    per_page, left_out, run_left_out = {}, 0, {}
+    per_page, left_out, run_left_out, other_kept = {}, 0, {}, {}
     for relative in site_pages(site):
         if is_source_page(relative):
             left_out += 1
@@ -197,11 +199,15 @@ def convert_site(site, out, reader=False):
         target.parent.mkdir(parents=True, exist_ok=True)
         target.write_text(text, encoding='utf-8')
         per_page[relative] = len(text.split())
+        if reader and page_class(relative) == 'other':
+            other_kept[relative] = per_page[relative]
     summary = {'pages': len(per_page), 'words': sum(per_page.values()), 'sourcesPagesExcluded': left_out,
                'perPageWords': per_page, 'rule': READER_RULE if reader else RULE, 'form': 'reader' if reader else 'full'}
     if reader:
         summary['runPagesExcluded'] = len(run_left_out)
         summary['runPagesWords'] = run_left_out
+        summary['otherPagesKept'] = len(other_kept)
+        summary['otherPagesWords'] = other_kept
     return summary
 
 
@@ -270,19 +276,21 @@ def selftest():
     import tempfile
     with tempfile.TemporaryDirectory() as tmp:
         site = pathlib.Path(tmp, 'site')
-        for relative in ('index.html', 'appendix.html', 'sources/index.html', 'sources/ab.html', 'review.html'):
+        for relative in ('index.html', 'appendix.html', 'sources/index.html', 'sources/ab.html', 'review.html', 'unclassed.html'):
             (site / relative).parent.mkdir(parents=True, exist_ok=True)
             (site / relative).write_text(FIXTURE, encoding='utf-8')
         full = convert_site(site, pathlib.Path(tmp, 'full'))
         reader = convert_site(site, pathlib.Path(tmp, 'reader'), reader=True)
-        if sorted(full['perPageWords']) != ['appendix.html', 'index.html', 'review.html', 'sources/index.html']:
+        if sorted(full['perPageWords']) != ['appendix.html', 'index.html', 'review.html', 'sources/index.html', 'unclassed.html']:
             failures.append(f'the full form kept {sorted(full["perPageWords"])}')
-        if sorted(reader['perPageWords']) != ['index.html', 'sources/index.html'] or reader['runPagesExcluded'] != 2:
+        if sorted(reader['perPageWords']) != ['index.html', 'sources/index.html', 'unclassed.html'] or reader['runPagesExcluded'] != 2:
             failures.append(f'the reader form kept {sorted(reader["perPageWords"])}')
-        if sorted(p.relative_to(tmp, ).as_posix() for p in pathlib.Path(tmp, 'reader').rglob('*.md')) != ['reader/index.md', 'reader/sources/index.md']:
+        if sorted(p.relative_to(tmp, ).as_posix() for p in pathlib.Path(tmp, 'reader').rglob('*.md')) != ['reader/index.md', 'reader/sources/index.md', 'reader/unclassed.md']:
             failures.append('the reader form wrote a run page')
         if reader['words'] + sum(reader['runPagesWords'].values()) != full['words']:
             failures.append('the reader form and the run pages it left out do not add up to the full form')
+        if sorted(reader['otherPagesWords']) != ['unclassed.html'] or reader['otherPagesKept'] != 1:
+            failures.append(f'the reader form counted {sorted(reader["otherPagesWords"])} as other')
     sessions = (('/s/run-1.agents/site/1', True), ('/s/run-1.sessions', True), ('/s/run-1/site/1', False), ('/s/agents/x', False))
     for candidate, want in sessions:
         if is_session_path(candidate) is not want:
@@ -328,7 +336,7 @@ def main(argv=None):
     if report is not None:
         report.write_text(json.dumps({**summary, 'site': str(site)}, indent=1), encoding='utf-8')
     print('pages', summary['pages'], 'words', summary['words'], 'sources pages excluded', summary['sourcesPagesExcluded'],
-          *(('run pages excluded', summary['runPagesExcluded']) if args.reader else ()))
+          *(('run pages excluded', summary['runPagesExcluded'], 'other pages kept', summary['otherPagesKept']) if args.reader else ()))
     return 0
 
 

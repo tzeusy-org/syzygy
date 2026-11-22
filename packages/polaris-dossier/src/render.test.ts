@@ -650,6 +650,33 @@ describe('render', () => {
     expect(contents.indexOf('href="sources/index.html"')).toBeLessThan(heading);
   });
 
+  it('folds exactly the pages the one page-class definition classes as run pages (scripts/dossier_page_classes.json, syzygy-5dhm.136)', async () => {
+    // The renderer folds the pages the render step passes it, the size report and the appendix; the text converter and the pilot class
+    // pages by the JSON. A run page added to one and not the other fails here.
+    const definition = JSON.parse(fs.readFileSync(path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../../../scripts/dossier_page_classes.json'), 'utf8')) as {
+      readonly classes: readonly { readonly class: string; readonly paths: readonly string[]; readonly prefixes: readonly string[] }[] };
+    const runRow = definition.classes.filter(row => row.class === 'run');
+    expect(runRow).toHaveLength(1);
+    expect(runRow[0]!.prefixes).toEqual([]);
+    const run = await prepared();
+    const result = await renderRun(run, renderDeps());
+    if (!result.ok) throw new Error(result.refusal.reason);
+    const files = readSite(result.report.site);
+    const runPages = runRow[0]!.paths.filter(page => files.has(page));
+    expect(runPages.length).toBeGreaterThan(3);
+    for (const [file, page] of html(files)) {
+      const up = file.includes('/') ? '../' : '';
+      for (const nav of [...page.matchAll(/<nav aria-label="Dossier">([\s\S]*?)<\/nav>/gu)].map(match => match[1]!)) {
+        const folded = nav.slice(nav.indexOf('<details class="about-this-run"'));
+        const linked = [...folded.matchAll(/href="([^"#]*)/gu)].map(match => match[1]!.slice(up.length));
+        expect(linked, file).toEqual(runPages);
+      }
+    }
+    const contents = files.get('contents.html')!.split('<section id="contents">')[1]!;
+    const after = contents.slice(contents.indexOf('<h2 id="about-this-run">About this run</h2>'));
+    expect([...after.matchAll(/href="([^"#]*)/gu)].map(match => match[1]!)).toEqual(runPages);
+  });
+
   it('renders an attributed editorial draft without an RFC7-20 reading act', async () => {
     const run = await prepared(); const result = await renderRun(run, renderDeps({ sources: sources(RULING_ABSENT) })); if (!result.ok) throw new Error(result.refusal.reason);
     expect(result.report.draftLayer).toEqual({ state: 'editorial-draft' });

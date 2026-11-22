@@ -158,6 +158,24 @@ describe('the reader\'s edition (syzygy-5dhm.136)', () => {
     expect(main.indexOf('data-claim-id="introduction"')).toBeLessThan(header);
   });
 
+  it('draws a figure homed on the overview after the thesis, then the map, then the sections', () => {
+    // A fixture with both: the 'flow' diagram homed on the overview (schema v5) and the Poles.
+    const input = readingInput();
+    const draft = input.local.draft as unknown as { readonly diagrams: readonly Record<string, unknown>[] };
+    const diagrams = draft.diagrams.map(d => {
+      if (d['id'] !== 'flow') return d;
+      const { sectionId: _sectionId, ...rest } = d;
+      return { ...rest, home: { kind: 'overview' } };
+    });
+    const site = renderLocalDossier({ ...input, local: { ...input.local, poles: POLES, draft: { ...draft, diagrams } as unknown as typeof input.local.draft } }).files;
+    const main = site.get('index.html')!.split('<main')[1]!;
+    const at = ['</header>', '<section id="overview-figures"', '<nav class="pole-map"', '<section id="section-one"'].map(mark => main.indexOf(mark));
+    expect(at.every(i => i > -1), JSON.stringify(at)).toBe(true);
+    expect(main.slice(at[0]!, at[0]! + '</header><section id="overview-figures"'.length)).toBe('</header><section id="overview-figures"');
+    expect([...at].sort((a, b) => a - b)).toEqual(at);
+    expect(main.indexOf('</section><nav class="pole-map"')).toBeGreaterThan(at[1]!);
+  });
+
   it('resolves every link of the site: 432 of 432, the run pages reached from every page', () => {
     const census = linkCensus(files);
     expect(census.unresolved).toEqual([]);

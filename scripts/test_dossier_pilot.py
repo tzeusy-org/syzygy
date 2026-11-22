@@ -221,7 +221,7 @@ class SiteToTextTests(unittest.TestCase):
             pages = {"index.html": "<main><p>one two three</p></main>", "name-index.html": "<main><p>four</p></main>",
                      "maps/ci.html": "<main><p>five six</p></main>", "appendix.html": "<main><p>run words here</p></main>",
                      "understanding.html": "<main><p>more run</p></main>", "size-report.html": "<main><p>size</p></main>",
-                     "sources/a.html": "<main><p>RAW SOURCE BODY</p></main>"}
+                     "sources/a.html": "<main><p>RAW SOURCE BODY</p></main>", "unknown-page.html": "<main><p>seven eight</p></main>"}
             for relative, body in pages.items():
                 (site / relative).parent.mkdir(parents=True, exist_ok=True)
                 (site / relative).write_text(body)
@@ -229,11 +229,13 @@ class SiteToTextTests(unittest.TestCase):
             done = subprocess.run([sys.executable, str(SCRIPTS / "dossier_site_to_text.py"), str(site), str(out), "--reader", "--report", str(report)],
                                   capture_output=True, text=True)
             self.assertEqual(done.returncode, 0, done.stderr)
-            self.assertEqual(done.stdout, "pages 3 words 6 sources pages excluded 1 run pages excluded 3\n")
-            self.assertEqual(sorted(p.relative_to(out).as_posix() for p in out.rglob("*") if p.is_file()), ["index.md", "maps/ci.md", "name-index.md"])
+            self.assertEqual(done.stdout, "pages 4 words 8 sources pages excluded 1 run pages excluded 3 other pages kept 1\n")
+            self.assertEqual(sorted(p.relative_to(out).as_posix() for p in out.rglob("*") if p.is_file()), ["index.md", "maps/ci.md", "name-index.md", "unknown-page.md"])
             recorded = json.loads(report.read_text())
             self.assertEqual(recorded["form"], "reader")
             self.assertEqual(recorded["runPagesWords"], {"appendix.html": 3, "size-report.html": 1, "understanding.html": 2})
+            # A page the definition does not know is kept, and reported apart rather than read silently as the subject.
+            self.assertEqual(recorded["otherPagesWords"], {"unknown-page.html": 2})
 
     def test_one_page_class_definition(self):
         # The pilot's split reads the classes the converter applies, from the one JSON definition.

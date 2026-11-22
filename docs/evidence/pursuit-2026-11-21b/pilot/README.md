@@ -101,7 +101,8 @@ from the prompt named.
 
    Add `--reader` for the reading path alone (syzygy-5dhm.136): the pages of
    class `run`, which a dossier lists under its "About this run" entry, are
-   left out too and counted with their words. The page classes are one
+   left out too and counted with their words, and a page the definition does
+   not know is kept and counted apart as `other`. The page classes are one
    definition, `scripts/dossier_page_classes.json`, which this script and
    `scripts/dossier_pilot_runs.py` both read. The pilot's arms were given the
    full text, so a share measured on the reader form is a different arm.
