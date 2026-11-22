@@ -294,16 +294,22 @@ describe('syzygy dossier verify', () => {
     expect(JSON.parse(out.join(''))).toMatchObject({ stage: 'out' });
     expect(fs.readdirSync(run)).toEqual(['run.json']);
   });
-  it('refuses an --out reached through a symbolic link into the run', async () => {
+  it('refuses an --out reached through a symbolic link into the run or the records root', async () => {
     const scratch = tempDir('verify-text-');
     const run = path.join(scratch, `run-${'d'.repeat(32)}`);
     fs.mkdirSync(run);
     fs.writeFileSync(path.join(run, 'run.json'), '{}');
+    const records = path.join(scratch, 'records');
+    fs.mkdirSync(records);
     fs.symlinkSync(run, path.join(scratch, 'link'));
-    const { io: ports, out } = io();
-    expect(await runDossierCli(['verify', run, '--text', '/nowhere.md', '--out', path.join(scratch, 'link', 'sub', 'a.md'), '--json'], ports, { sources: {} as never })).toBe(1);
-    expect(JSON.parse(out.join(''))).toMatchObject({ stage: 'out' });
+    fs.symlinkSync(records, path.join(scratch, 'shelf'));
+    for (const target of [path.join(scratch, 'link', 'sub', 'a.md'), path.join(scratch, 'shelf', 'a.md')]) {
+      const { io: ports, out } = io();
+      expect(await runDossierCli(['verify', run, '--text', '/nowhere.md', '--out', target, '--json'], ports, { sources: { recordsRoot: records } as never })).toBe(1);
+      expect(JSON.parse(out.join(''))).toMatchObject({ stage: 'out' });
+    }
     expect(fs.readdirSync(run)).toEqual(['run.json']);
+    expect(fs.readdirSync(records)).toEqual([]);
   });
   it('refuses an --out into another run, its session directories, or the records root', async () => {
     const scratch = tempDir('verify-text-');
