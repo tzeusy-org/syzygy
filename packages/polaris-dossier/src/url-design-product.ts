@@ -73,6 +73,28 @@ interface ProductEntry {
   readonly waitForSample?: () => Promise<void>;
 }
 const validated = new WeakMap<ValidatedUrlDesignProduct, ProductEntry>();
+// Preserve the original operation deadline and irreversible retirement even
+// after a failed inspection removes the materializing capability entry.
+const lifetimes = new WeakMap<ValidatedUrlDesignProduct, { readonly deadline: number; readonly authorityCurrent: () => boolean; retired: boolean }>();
+function retireProduct(capability: ValidatedUrlDesignProduct): void {
+  const lifetime = lifetimes.get(capability);
+  if (lifetime && Date.now() < lifetime.deadline) lifetime.retired = true;
+  validated.delete(capability);
+}
+export function urlDesignProductLeaseState(capability: ValidatedUrlDesignProduct):
+  { readonly state: 'open' | 'expired' | 'retired'; readonly deadline: number } | { readonly state: 'Unknown' } {
+  const lifetime = lifetimes.get(capability);
+  if (!lifetime) return { state: 'Unknown' };
+  try { if (!lifetime.authorityCurrent()) lifetime.retired = true; }
+  catch { lifetime.retired = true; }
+  if (lifetime.retired) { validated.delete(capability); return { state: 'retired', deadline: lifetime.deadline }; }
+  if (Date.now() >= lifetime.deadline) return { state: 'expired', deadline: lifetime.deadline };
+  try { if (validated.get(capability)?.leaseCurrent() === true) return { state: 'open', deadline: lifetime.deadline }; }
+  catch { /* A failed lease predicate retires the original capability. */ }
+  lifetime.retired = true; validated.delete(capability);
+  return { state: 'retired', deadline: lifetime.deadline };
+}
+
 const sameProducts = (left: NonNullable<ProducedSiteInput['products']>, right: NonNullable<ProducedSiteInput['products']>): boolean =>
   isDeepStrictEqual(left.metadata, right.metadata) && left.receipts.length === right.receipts.length
   && left.receipts.every((receipt, index) => receipt === right.receipts[index]);
@@ -193,6 +215,9 @@ export async function validateUrlDesignProduct(input: ProducedSiteInput, options
     // Copying can itself cross the deadline. Publish only after a fresh cheap
     // lease sample, with no await between that sample and publication.
     if (!leaseCurrent()) return null;
+    const lifetime = { deadline, authorityCurrent: current, retired: false };
+    signal.addEventListener('abort', () => { if (Date.now() < deadline) lifetime.retired = true; }, { once: true });
+    lifetimes.set(capability, lifetime);
     validated.set(capability, entry);
     return capability;
   } catch { return null; }
@@ -222,7 +247,7 @@ async function withCurrentProduct<T>(capability: ValidatedUrlDesignProduct, expe
       if (current()) return value;
     }
   } catch { /* A failed currentness/identity check irreversibly retires this token. */ }
-  validated.delete(capability);
+  retireProduct(capability);
   return null;
 }
 
@@ -243,7 +268,7 @@ export function recheckUrlDesignProductInputs(capability: ValidatedUrlDesignProd
   try {
     if (entry.leaseCurrent() && entry.stable()) return true;
   } catch { /* A failed recheck retires the active capability. */ }
-  validated.delete(capability);
+  retireProduct(capability);
   return false;
 }
 

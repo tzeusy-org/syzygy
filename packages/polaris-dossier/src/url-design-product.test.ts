@@ -4,13 +4,14 @@ import { beforeAll, beforeEach, describe, expect, it, vi } from 'vitest';
 import { sha256 } from '@syzygy/support';
 import { generationSourcesForBody, type EvidenceAnchor } from '@syzygy/polaris-generation-core/live';
 import { buildDesignPacket } from './design-review.js';
+import { checkUrlOrderedProductCurrent } from './url-run-ordered-attempt.js';
 import { buildDossierScreen, type DossierScreen } from './screen.js';
 import type { ProducedSiteInput, DossierRenderer } from './render.js';
 import type { ProductReadEvidence, RunProductReads } from './url-operation-products.js';
 import type { UrlOriginMetadata, UrlOriginReceipt } from './url-origin-ledger.js';
 import {
   admitUrlDesignProduct, inspectUrlDesignProduct, readInertUrlDesignProduct, readUrlDesignProduct, recheckUrlDesignProductInputs,
-  sameReproducedUrlDesignProduct, validateUrlDesignProduct,
+  sameReproducedUrlDesignProduct, validateUrlDesignProduct, urlDesignProductLeaseState,
   type DesignProductOptions, type ValidatedUrlDesignProduct,
 } from './url-design-product.js';
 
@@ -106,6 +107,80 @@ async function validatedFixture() {
 }
 
 describe('active URL design product capability', () => {
+  it('checks the actual open product once without reproduction', async () => {
+    const f = await validatedFixture(), refresh = vi.fn(async () => true), assertCurrent = vi.fn(() => {
+      if (!recheckUrlDesignProductInputs(f.capability)) throw new Error('owned input refused');
+    });
+    expect(urlDesignProductLeaseState(f.capability).state).toBe('open');
+    expect(await checkUrlOrderedProductCurrent({ product: f.capability, assertCurrent, refresh })).toBe(true);
+    expect(assertCurrent).toHaveBeenCalledTimes(1); expect(refresh).not.toHaveBeenCalled();
+  });
+
+  it('refuses a delivery check failure while its genuine product lease remains open', async () => {
+    const f = await validatedFixture(), refresh = vi.fn(async () => true);
+    expect(await checkUrlOrderedProductCurrent({ product: f.capability,
+      assertCurrent: () => { throw new Error('owned delivery digest drift'); }, refresh })).toBe(false);
+    expect(urlDesignProductLeaseState(f.capability).state).toBe('open');
+    expect(refresh).not.toHaveBeenCalled();
+  });
+
+  it('never renews actual invalidator retirement, including after its original deadline', async () => {
+    const f = await validatedFixture(), deadline = f.evidence.metadata.deadline, refresh = vi.fn(async () => true);
+    const revalidate = f.reads.revalidate;
+    Object.assign(f.reads, { revalidate: () => { throw new Error('owned input drift'); } });
+    const assertCurrent = () => { if (!recheckUrlDesignProductInputs(f.capability)) throw new Error('owned retired input'); };
+    expect(await checkUrlOrderedProductCurrent({ product: f.capability, assertCurrent, refresh })).toBe(false);
+    Object.assign(f.reads, { revalidate });
+    expect(urlDesignProductLeaseState(f.capability).state).toBe('retired');
+    const clock = vi.spyOn(Date, 'now').mockReturnValue(deadline + 1);
+    try {
+      expect(urlDesignProductLeaseState(f.capability).state).toBe('retired');
+      expect(await checkUrlOrderedProductCurrent({ product: f.capability, assertCurrent, refresh })).toBe(false);
+      expect(refresh).not.toHaveBeenCalled();
+    } finally { clock.mockRestore(); }
+  });
+
+  it.each([true, false])('refreshes once when the actual full product check reaches expiry: refreshed=%s', async refreshed => {
+    const f = await validatedFixture(), deadline = f.evidence.metadata.deadline, refresh = vi.fn(async () => refreshed);
+    let now = deadline - 1;
+    const clock = vi.spyOn(Date, 'now').mockImplementation(() => now);
+    try {
+      const assertCurrent = () => {
+        now = deadline;
+        if (!recheckUrlDesignProductInputs(f.capability)) throw new Error('owned timed expiry');
+      };
+      expect(await checkUrlOrderedProductCurrent({ product: f.capability, assertCurrent, refresh })).toBe(refreshed);
+      expect(urlDesignProductLeaseState(f.capability).state).toBe('expired');
+      expect(refresh).toHaveBeenCalledTimes(1);
+    } finally { clock.mockRestore(); }
+  });
+
+  it.each(['abort', 'revocation', 'operation-close'] as const)('never treats %s before the deadline as timed expiry', async kind => {
+    const f = await validatedFixture(), deadline = f.evidence.metadata.deadline, refresh = vi.fn(async () => true);
+    if (kind === 'abort') f.abort.abort(); else if (kind === 'revocation') f.revoke(); else f.reads.close();
+    expect(urlDesignProductLeaseState(f.capability).state).toBe('retired');
+    const clock = vi.spyOn(Date, 'now').mockReturnValue(deadline + 1);
+    try {
+      expect(await checkUrlOrderedProductCurrent({ product: f.capability, assertCurrent: () => {}, refresh })).toBe(false);
+      expect(refresh).not.toHaveBeenCalled();
+    } finally { clock.mockRestore(); }
+  });
+
+  it('never refreshes unknown or copied capabilities and never loops a rejected genuine refresh', async () => {
+    const f = await validatedFixture(), refresh = vi.fn(async () => true);
+    for (const product of [Object.freeze({}), { ...f.capability }] as ValidatedUrlDesignProduct[]) {
+      expect(urlDesignProductLeaseState(product).state).toBe('Unknown');
+      expect(await checkUrlOrderedProductCurrent({ product, assertCurrent: () => {}, refresh })).toBe(false);
+    }
+    expect(refresh).not.toHaveBeenCalled();
+    const clock = vi.spyOn(Date, 'now').mockReturnValue(f.evidence.metadata.deadline);
+    const failed = vi.fn(async () => { throw new Error('owned reproduction failed'); });
+    try {
+      await expect(checkUrlOrderedProductCurrent({ product: f.capability, assertCurrent: () => {}, refresh: failed })).rejects.toThrow('owned reproduction failed');
+      expect(failed).toHaveBeenCalledTimes(1);
+    } finally { clock.mockRestore(); }
+  });
+
   it('recomposes packet criteria from the authenticated brief standards and refuses standards drift', async () => {
     const f = fixture();
     const standards = { sha256: '623c8b83e2c2573502e15a02b33347c7f3f886da09b2e6356e65558ea480f2b4', packs: ['default@1'] };
@@ -250,6 +325,7 @@ describe('active URL design product capability', () => {
     for (const changed of [{ ...binding, run: '/other' }, { ...binding, runId: 'other' }, { ...binding, pinnedRevision: 'b'.repeat(40) }]) {
       const f = await validatedFixture();
       expect(await inspectUrlDesignProduct(f.capability, changed)).toBeNull();
+      expect(urlDesignProductLeaseState(f.capability).state).toBe('retired');
       expect(await inspectUrlDesignProduct(f.capability, binding)).toBeNull();
     }
   });
@@ -261,6 +337,7 @@ describe('active URL design product capability', () => {
     expect(await inspectUrlDesignProduct(revoked.capability, binding)).toBeNull();
     const stale = await validatedFixture(); gates.currentRenderer.mockResolvedValue(false);
     expect(await inspectUrlDesignProduct(stale.capability, binding)).toBeNull();
+    expect(urlDesignProductLeaseState(stale.capability).state).toBe('retired');
   });
   it.each([
     ['full output', (f: Awaited<ReturnType<typeof validatedFixture>>) => f.files.set('index.html', f.files.get('index.html')! + 'changed')],
