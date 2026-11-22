@@ -382,7 +382,10 @@ export async function issueBrief(runDir: string, deps: BriefDeps): Promise<Brief
   // Shape packs (version 2.4): selected from the pinned tree's trait profile, they supply RS-11's technology dimensions.
   const selection = shapePackSelection(await shapePackTraits(subject, deps, issuedAt));
   const standards = composeReaderStandards(selection.packs);
-  const schemaText = `${JSON.stringify(draftSchemaDocument({ pinnedRevision: subject.pinnedRevision.commit, maxQuestions: declared.maxQuestions }), null, 2)}\n`;
+  const schema = draftSchemaDocument({ pinnedRevision: subject.pinnedRevision.commit, maxQuestions: declared.maxQuestions });
+  // Keep the full schema inside the ordinary native client's inline artifact result.
+  const indentation = checked.effective?.kind === 'url' ? undefined : 2;
+  const schemaText = `${JSON.stringify(schema, null, indentation)}\n`;
   const schemaSha256 = sha256(schemaText);
   const briefText = renderBrief({ runId, subject, declared, issuedAt, schemaSha256, executionRule, revisionLabel: checked.revision.label, copy: copy.copy, effective: checked.effective, readerStandards: standards });
   const deadlineEnds = issuedAt + declared.deadline.seconds * 1000;
