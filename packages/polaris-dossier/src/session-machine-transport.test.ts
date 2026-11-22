@@ -76,8 +76,24 @@ describe('verified-chunk session transport adapter', () => {
   });
 
   it('binds context to the exact accepted stream and writes only inside its active mediated boundary', async () => {
-    let context: SessionMachineEffectContext | null = null, actual: Socket | undefined;
-    const transport = fixtureTransport([Buffer.from('verified\n')], socket => { actual = socket; });
+    let context: SessionMachineEffectContext | null = null, actual: Socket | undefined, emptyNativeWrites = 0;
+    let finished!: (value: unknown) => void;
+    const completed = new Promise<unknown>(resolve => { finished = resolve; });
+    const transport = fixtureTransport([Buffer.from('verified\n')], socket => {
+      actual = socket;
+      const write = socket.write.bind(socket);
+      const spy = vi.spyOn(socket, 'write').mockImplementation(((...args: unknown[]) => {
+        const chunk = args[0];
+        if ((typeof chunk === 'string' || Buffer.isBuffer(chunk)) && chunk.length === 0) {
+          emptyNativeWrites++;
+          const callback = args.at(-1);
+          if (typeof callback === 'function') queueMicrotask(() => callback(Object.assign(new Error('own closed-response fixture'), { code: 'EPIPE' })));
+          return false;
+        }
+        return Reflect.apply(write, socket, args);
+      }) as Socket['write']);
+      cleanup.push(() => { spy.mockRestore(); });
+    });
     expect(isSessionMachineTransport(transport)).toBe(true);
     expect(isSessionMachineTransport({ ...transport })).toBe(false);
     const server = createServer({ pauseOnConnect: true, allowHalfOpen: true }, raw => { void (async () => {
@@ -91,14 +107,23 @@ describe('verified-chunk session transport adapter', () => {
         expect(stopSessionMachineIngress(stream)).toBe(true);
         expect(stopSessionMachineIngress(stream)).toBe(false);
         expect(await context!.mediate.call({ ...context! }, 'artifact_read', () => undefined)).toEqual({ ok: false });
-        await context!.mediate('artifact_read', guard => { expect(guard()).toBe(true); stream.end('checked reply'); });
+        const result = await context!.mediate('artifact_read', async guard => {
+          expect(guard()).toBe(true);
+          // HTTP may finish an already complete response with an empty write
+          // after its reader closed. No additional bytes need an OS write.
+          await new Promise<void>((resolve, reject) => stream.write(Buffer.alloc(0), error => error ? reject(error) : resolve()));
+          expect(guard()).toBe(true); stream.end('checked reply');
+        });
+        finished(result);
       })(); });
     })(); });
     const socketPath = join(tempDir('machine-adapter-'), 'a.sock'); server.listen(socketPath); await once(server, 'listening');
     cleanup.push(() => new Promise<void>(resolve => server.close(() => resolve())));
     expect(await prepareSessionMachineTransport(transport, server)).toBe(true);
     const c = client(socketPath); c.socket.write('unverified raw bytes');
-    expect(await c.output).toBe('checked reply');
+    const output = await c.output;
+    expect(await completed).toEqual({ ok: true, value: undefined });
+    expect(emptyNativeWrites).toBe(0); expect(output).toBe('checked reply');
     expect(context).not.toBeNull(); expect(actual?.listenerCount('data')).toBe(0); expect(actual?.listenerCount('readable')).toBe(0);
   });
 
@@ -136,6 +161,8 @@ describe('verified-chunk session transport adapter', () => {
     });
     expect(revoked).toEqual({ ok: false }); expect(writes).toBe(0);
     expect(sessionMachineEffectCurrent()).toBeUndefined();
+    const emptyError = await new Promise<Error | null | undefined>(resolve => stream.write(Buffer.alloc(0), resolve));
+    expect(emptyError?.message).toBe('session-machine-transport-unavailable');
     stream.destroy(); expect(await c.output).toBe('');
   });
 

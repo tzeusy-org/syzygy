@@ -100,6 +100,9 @@ export async function openSessionMachineConnection(raw: Socket, transport: Sessi
     read() { resume?.(); resume = null; },
     write(chunk: Buffer, _encoding, done) {
       if (!state.boundary?.() || raw.destroyed || performance.now() >= deadline) { done(new Error('session-machine-transport-unavailable')); return; }
+      // HTTP completion can write no bytes after the bridge consumed its full
+      // response. Keep the guard, but perform no needless write to that peer.
+      if (chunk.length === 0) { done(); return; }
       raw.write(chunk, error => done(error ? new Error('session-machine-transport-unavailable') : undefined));
     },
     final(done) { raw.end(done); },
