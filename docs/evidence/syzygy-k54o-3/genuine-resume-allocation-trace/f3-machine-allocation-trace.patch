@@ -1,0 +1,123 @@
+diff --git a/packages/polaris-dossier/src/url-machine-store.ts b/packages/polaris-dossier/src/url-machine-store.ts
+index bba6bbd2f..dc501612c 100644
+--- a/packages/polaris-dossier/src/url-machine-store.ts
++++ b/packages/polaris-dossier/src/url-machine-store.ts
+@@ -257,7 +257,15 @@ async function openStore(options: UrlMachineStoreOptions, expectedIdentitySha256
+     const base = `/proc/self/fd/${heldRoot.fd}`, home = `/proc/self/fd/${heldHome.fd}`;
+     let closed = false, lastNow = 0;
+     const activeWork = new Set<Promise<unknown>>();
+-    const budgets = new AsyncLocalStorage<{ calls: number; bytes: number }>();
++    type Trace = { operation: string; phase: string; refusal: string | null; currentCalls: number; currentFalse: number; currentMs: number; maxCurrentMs: number };
++    const budgets = new AsyncLocalStorage<{ calls: number; bytes: number; trace?: Trace }>();
++    const tracePhase = (phase: string): void => { const trace = budgets.getStore()?.trace; if (trace) trace.phase = phase; };
++    const traceCurrent = (): boolean => {
++      const trace = budgets.getStore()?.trace, began = performance.now();
++      try { const valid = options.current(); if (trace) { trace.currentCalls++; if (valid !== true) trace.currentFalse++; } return valid; }
++      catch (error) { if (trace) trace.refusal ??= 'current-threw'; throw error; }
++      finally { if (trace) { const elapsed = performance.now() - began; trace.currentMs += elapsed; trace.maxCurrentMs = Math.max(trace.maxCurrentMs, elapsed); } }
++    };
+     const charge = (bytes = 0): void => {
+       const budget = budgets.getStore();
+       if (budget && (++budget.calls > URL_MACHINE_STORE_LIMITS.ioOperations
+@@ -265,7 +273,10 @@ async function openStore(options: UrlMachineStoreOptions, expectedIdentitySha256
+     };
+     const live = (): number => {
+       const instant = options.now();
+-      if (closed || options.current() !== true || !Number.isSafeInteger(instant) || instant < lastNow || instant >= options.deadline) throw refused();
++      if (closed || traceCurrent() !== true || !Number.isSafeInteger(instant) || instant < lastNow || instant >= options.deadline) {
++        const trace = budgets.getStore()?.trace; if (trace) trace.refusal ??= closed ? 'closed' : trace.currentFalse ? 'current-false' : 'clock';
++        throw refused();
++      }
+       lastNow = instant;
+       return instant;
+     };
+@@ -366,12 +377,15 @@ async function openStore(options: UrlMachineStoreOptions, expectedIdentitySha256
+     const ready = await readState();
+     if (ready.clients.some(entry => entry.anchor.kind === 'pending')) throw refused();
+     setupCurrent();
+-    const withLock = async (deadline: number, operation: (check: () => void, state: () => Promise<StoreState>, write: (file: string, bytes: Uint8Array, predecessor?: Uint8Array | null) => Promise<void>) => Promise<void>, operationMilliseconds: number = URL_MACHINE_STORE_LIMITS.operationMilliseconds): Promise<boolean> => {
++    const withLock = async (deadline: number, operation: (check: () => void, state: () => Promise<StoreState>, write: (file: string, bytes: Uint8Array, predecessor?: Uint8Array | null) => Promise<void>) => Promise<void>, operationMilliseconds: number = URL_MACHINE_STORE_LIMITS.operationMilliseconds, diagnosticOperation = 'exclusive'): Promise<boolean> => {
+       const began = performance.now();
++      const trace: Trace = { operation: diagnosticOperation, phase: 'entry', refusal: null, currentCalls: 0, currentFalse: 0, currentMs: 0, maxCurrentMs: 0 };
+       let active = true, held = false, uncertain = false;
+       const pending = new Set<Promise<unknown>>();
+       const check = (): void => {
+-        if (!active || live() >= deadline || performance.now() - began >= operationMilliseconds) throw refused();
++        if (!active) { trace.refusal ??= 'inactive'; throw refused(); }
++        if (live() >= deadline) { trace.refusal ??= 'original-deadline'; throw refused(); }
++        if (performance.now() - began >= operationMilliseconds) { trace.refusal ??= 'operation-cap'; throw refused(); }
+       };
+       const io = async <T>(start: () => Promise<T>): Promise<T> => {
+         check(); charge();
+@@ -401,10 +415,14 @@ async function openStore(options: UrlMachineStoreOptions, expectedIdentitySha256
+           // No asynchronous scheduling gap between currentness and publication.
+           // POSIX cannot predicate rename on expiry or preempt a stalled syscall.
+           // A failed post-boundary check leaves a pending, non-authorizing anchor.
++          tracePhase(file.endsWith('/state.json') ? 'state-rename' : 'other-rename');
+           renameSync(temporary, file);
++          tracePhase(file.endsWith('/state.json') ? 'state-directory-sync' : 'other-directory-sync');
+           await io(() => (parent === home ? heldHome : heldRoot).sync());
++          tracePhase(file.endsWith('/state.json') ? 'state-readback' : 'other-readback');
+           const readback = await io(() => readFile(file, bytes.byteLength));
+           if (readback === null || !readback.equals(Buffer.from(bytes))) throw refused();
++          tracePhase(file.endsWith('/state.json') ? 'state-readback-checked' : 'other-readback-checked');
+           check();
+         } finally {
+           await handle?.close().catch(() => {});
+@@ -412,8 +430,10 @@ async function openStore(options: UrlMachineStoreOptions, expectedIdentitySha256
+         }
+       };
+       let timer: ReturnType<typeof setTimeout> | undefined;
+-      const work = budgets.run({ calls: 0, bytes: 0 }, async () => {
++      const operationBudget = { calls: 0, bytes: 0, trace };
++      const work = budgets.run(operationBudget, async () => {
+         if (!Number.isSafeInteger(deadline) || deadline > options.deadline || deadline <= live()) throw refused();
++        tracePhase('lock-acquire');
+         for (;;) {
+           check(); await io(anchored);
+           try { await io(() => mkdir(`${base}/lock`, { mode: 0o700 })); held = true; break; }
+@@ -424,6 +444,7 @@ async function openStore(options: UrlMachineStoreOptions, expectedIdentitySha256
+         }
+         await io(() => heldRoot.sync());
+         await io(census);
++        tracePhase('operation');
+         await operation(check, () => io(readState), write);
+         check();
+       });
+@@ -431,12 +452,14 @@ async function openStore(options: UrlMachineStoreOptions, expectedIdentitySha256
+       void work.then(() => activeWork.delete(work), () => activeWork.delete(work));
+       try {
+         await Promise.race([work, new Promise<never>((_, reject) => {
+-          timer = setTimeout(() => { uncertain = true; active = false; reject(refused()); }, Math.min(operationMilliseconds, Math.max(1, deadline - live())));
++          timer = setTimeout(() => { trace.refusal ??= 'operation-timer'; uncertain = true; active = false; reject(refused()); }, Math.min(operationMilliseconds, Math.max(1, deadline - budgets.run({ calls: 0, bytes: 0, trace }, live))));
+         })]);
+         return true;
+       } catch { uncertain = true; return false; }
+       finally {
+         clearTimeout(timer); active = false;
++        if (diagnosticOperation === 'allocate' || uncertain) process.stderr.write(JSON.stringify({ event: 'f3-machine-allocation-trace', ...trace,
++          elapsedMs: performance.now() - began, remainingMs: Math.max(0, operationMilliseconds - (performance.now() - began)), operationMilliseconds, held, uncertain, pending: pending.size, ioCalls: operationBudget.calls, ioBytes: operationBudget.bytes }) + '\n');
+         // An unresolved operation leaves a durable lock. No successor steals it.
+         if (held && !uncertain && pending.size === 0) {
+           await rmdir(`${base}/lock`).catch(() => { uncertain = true; });
+@@ -447,6 +470,7 @@ async function openStore(options: UrlMachineStoreOptions, expectedIdentitySha256
+     const allocateClient = async (deadline: number) => {
+       let issued: { readonly clientId: string; readonly witnessSha256: string } | null = null;
+       const finished = await withLock(deadline, async (check, state, write) => {
++        tracePhase('allocate-read-initial-state');
+         const current = await state();
+         if (current.clients.length >= URL_MACHINE_STORE_LIMITS.clients) throw refused();
+         const clientId = opaque();
+@@ -458,9 +482,11 @@ async function openStore(options: UrlMachineStoreOptions, expectedIdentitySha256
+         const bytes = Buffer.from(canonical(next));
+         await write(`${base}/state.json`, bytes);
+         validatedState = { sha256: sha256(bytes), value: next };
++        tracePhase('allocate-read-final-state');
+         if (!equal(await state(), next)) throw refused();
+         check(); issued = { clientId, witnessSha256 };
+-      });
++        tracePhase('allocate-issued');
++      }, URL_MACHINE_STORE_LIMITS.operationMilliseconds, 'allocate');
+       return finished ? issued : null;
+     };
+     const exclusive: UrlMachineStore['exclusive'] = async (clientId, deadline, operation, effectProfile) => {

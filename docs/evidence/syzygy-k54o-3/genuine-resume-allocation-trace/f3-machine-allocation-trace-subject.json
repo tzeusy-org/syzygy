@@ -1,0 +1,13 @@
+{
+  "subjectCommit": "7958317721201b1202d373933191337be82dfaa3",
+  "diagnosticPatch": "/home/orca/.tmp/f3-machine-allocation-trace.patch",
+  "diagnosticPatchSha256": "261ff9956c2d68d87cf229fbca3cf107f8577c8dcecf9744791c38b311f8c669",
+  "modifiedFiles": [
+    {
+      "path": "packages/polaris-dossier/src/url-machine-store.ts",
+      "sha256": "9b8b6fd0b3b6db3e0b4a87ecb0ad8d9bf3ce54aab1492331646801f3a77d0380"
+    }
+  ],
+  "typecheckLog": "/home/orca/.tmp/f3-machine-allocation-trace-typecheck.log",
+  "purpose": "aggregate actual parent-current duration and exact bounded store allocation refusal, no authority or limit changes"
+}

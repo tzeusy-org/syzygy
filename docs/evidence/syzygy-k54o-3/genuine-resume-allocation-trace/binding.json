@@ -1,0 +1,28 @@
+{
+  "subjectCommit": "7958317721201b1202d373933191337be82dfaa3",
+  "sourceVerified": "Independent separate-index reconstruction matches every frozen modified source digest.",
+  "aggregateVerified": "Parsed16 observations,8 genuine resumed allocations,360 authority calls,0 false; recomputed summed current durations match manifest.",
+  "files": [
+    {
+      "path": "f3-machine-allocation-trace-result.json",
+      "sha256": "1fbbb3a15662abeac675743b31470daaafbd5f2544f61d2851c3b41fdea2e6e8"
+    },
+    {
+      "path": "f3-machine-allocation-trace-subject.json",
+      "sha256": "4f30eab369249c4d3e17c084aadd4958e9e4f57be5ec75f513919c8d90ca3c7a"
+    },
+    {
+      "path": "f3-machine-allocation-trace.patch",
+      "sha256": "261ff9956c2d68d87cf229fbca3cf107f8577c8dcecf9744791c38b311f8c669"
+    },
+    {
+      "path": "f3-machine-allocation-trace.log",
+      "sha256": "9c5dda89540bb5a0d13a1615c5146809e30bf3c88926e3a16c74e8be30c5327d"
+    },
+    {
+      "path": "f3-machine-allocation-trace-typecheck.log",
+      "sha256": "396901319daac4a4413b23478852db3c572014f86c71d148273565f0f3332696"
+    }
+  ],
+  "limit": "Temporary trace, not passing acceptance. Actual allocations succeeded; later public render admission refused. Previous allocation refusal was not reproduced. Initial fixture-current timings do not describe public initial CLI authority."
+}
