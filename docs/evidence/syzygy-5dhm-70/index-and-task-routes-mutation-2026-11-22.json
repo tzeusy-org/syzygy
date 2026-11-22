@@ -1,0 +1,1277 @@
+{
+  "format": "mutation-run/1",
+  "ranAt": "2026-11-22T08:05:13.451Z",
+  "commit": "040e47c5a8bb037cee91d7de5efbb49e7b39a88d",
+  "subject": {
+    "apps/three-surface-poc/src/polaris-generation/dossier-finding.ts": "709fe3814dbd5cfd2abdad3874445e89748c2604b6da24f460ffe6b624ada2cb",
+    "apps/three-surface-poc/src/polaris-generation/dossier-site.ts": "5391eafe8ff2232e4bc72550a984cadffd7e4c040e51d448631214e7b99d94c1",
+    "packages/polaris-dossier/src/brief.ts": "83bbc31877b65ed5f020a8a4107e8ac2f61f016c013e838385a408168dc2f2aa",
+    "packages/polaris-dossier/src/check-derive.ts": "dd500b1e90b7f4b371533e7046167a26cab483faa1941d396d9574c8ab863cee",
+    "packages/polaris-dossier/src/draft-schema.ts": "df6e610342b09f274a2772c2eed143d9a0cf579ce7cce2d86af7851f89380efd",
+    "packages/polaris-dossier/src/inventory-coverage.ts": "d0e496cedc82baabfd6019b479235e313bd2591188c8a59aa355319d4ae833ff",
+    "packages/polaris-dossier/src/render.ts": "6a00391d18a7461dfd91e3790f919ad5aa7f90bbfc2848ba3af24ef2bad50455"
+  },
+  "command": "npx vitest run <the test files of the mutant's source file> --reporter=json --outputFile=<scratch>/mutation-<id>.json",
+  "method": "Each mutant replaces one fragment (asserted to occur exactly once) in its file, runs the test files listed for that file under vitest with the JSON reporter, and restores every source in finally. A mutant is killed when the run exits non-zero and at least one test fails (failedTests lists each) or is stopped after 600 s; a run that exits non-zero with no failed test and no timeout is recorded as not run, never as killed. The unmutated baseline of each group runs first and must pass.",
+  "testFiles": {
+    "apps/three-surface-poc/src/polaris-generation/dossier-finding.ts": [
+      "apps/three-surface-poc/src/polaris-generation/dossier-finding.test.ts",
+      "apps/three-surface-poc/src/polaris-generation/figure-kinds.test.ts",
+      "apps/three-surface-poc/src/polaris-generation/dossier-reading.test.ts",
+      "apps/three-surface-poc/src/polaris-generation/dossier-derived-region.test.ts",
+      "apps/three-surface-poc/src/polaris-generation/dossier-render-provider-golden.test.ts",
+      "packages/polaris-dossier/src/render.test.ts"
+    ],
+    "apps/three-surface-poc/src/polaris-generation/dossier-site.ts": [
+      "apps/three-surface-poc/src/polaris-generation/dossier-finding.test.ts",
+      "apps/three-surface-poc/src/polaris-generation/figure-kinds.test.ts",
+      "apps/three-surface-poc/src/polaris-generation/dossier-reading.test.ts",
+      "apps/three-surface-poc/src/polaris-generation/dossier-derived-region.test.ts",
+      "apps/three-surface-poc/src/polaris-generation/dossier-render-provider-golden.test.ts",
+      "packages/polaris-dossier/src/render.test.ts"
+    ],
+    "packages/polaris-dossier/src/check-derive.ts": [
+      "packages/polaris-dossier/src/check.test.ts",
+      "packages/polaris-dossier/src/inventory-coverage.test.ts"
+    ],
+    "packages/polaris-dossier/src/inventory-coverage.ts": [
+      "packages/polaris-dossier/src/inventory-coverage.test.ts",
+      "packages/polaris-dossier/src/check.test.ts"
+    ],
+    "packages/polaris-dossier/src/draft-schema.ts": [
+      "packages/polaris-dossier/src/draft-schema.test.ts",
+      "packages/polaris-dossier/src/check.test.ts",
+      "packages/polaris-dossier/src/brief.test.ts"
+    ],
+    "packages/polaris-dossier/src/render.ts": [
+      "packages/polaris-dossier/src/render.test.ts"
+    ],
+    "packages/polaris-dossier/src/brief.ts": [
+      "packages/polaris-dossier/src/brief.test.ts"
+    ]
+  },
+  "baselines": [
+    {
+      "file": "apps/three-surface-poc/src/polaris-generation/dossier-finding.ts",
+      "exitCode": 0,
+      "tests": 218,
+      "failedTests": []
+    },
+    {
+      "file": "apps/three-surface-poc/src/polaris-generation/dossier-site.ts",
+      "exitCode": 0,
+      "tests": 218,
+      "failedTests": []
+    },
+    {
+      "file": "packages/polaris-dossier/src/brief.ts",
+      "exitCode": 0,
+      "tests": 41,
+      "failedTests": []
+    },
+    {
+      "file": "packages/polaris-dossier/src/check-derive.ts",
+      "exitCode": 0,
+      "tests": 253,
+      "failedTests": []
+    },
+    {
+      "file": "packages/polaris-dossier/src/draft-schema.ts",
+      "exitCode": 0,
+      "tests": 323,
+      "failedTests": []
+    },
+    {
+      "file": "packages/polaris-dossier/src/inventory-coverage.ts",
+      "exitCode": 0,
+      "tests": 253,
+      "failedTests": []
+    },
+    {
+      "file": "packages/polaris-dossier/src/render.ts",
+      "exitCode": 0,
+      "tests": 116,
+      "failedTests": []
+    }
+  ],
+  "mutants": [
+    {
+      "id": "identifier-one-character",
+      "file": "apps/three-surface-poc/src/polaris-generation/dossier-finding.ts",
+      "old": "length >= 2 && length <= 80",
+      "new": "length >= 1 && length <= 80",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 218,
+      "failedTests": [
+        "apps/three-surface-poc/src/polaris-generation/dossier-finding.test.ts > buildNameIndex reads an identifier as one backticked token of 2 to 80 characters holding a letter"
+      ],
+      "seconds": 26
+    },
+    {
+      "id": "identifier-81-characters",
+      "file": "apps/three-surface-poc/src/polaris-generation/dossier-finding.ts",
+      "old": "length >= 2 && length <= 80",
+      "new": "length >= 2 && length <= 81",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 218,
+      "failedTests": [
+        "apps/three-surface-poc/src/polaris-generation/dossier-finding.test.ts > buildNameIndex reads an identifier as one backticked token of 2 to 80 characters holding a letter"
+      ],
+      "seconds": 30
+    },
+    {
+      "id": "identifier-with-white-space",
+      "file": "apps/three-surface-poc/src/polaris-generation/dossier-finding.ts",
+      "old": " && !/\\s/u.test(span)",
+      "new": "",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 218,
+      "failedTests": [
+        "apps/three-surface-poc/src/polaris-generation/dossier-finding.test.ts > buildNameIndex reads an identifier as one backticked token of 2 to 80 characters holding a letter"
+      ],
+      "seconds": 28
+    },
+    {
+      "id": "identifier-without-letter",
+      "file": "apps/three-surface-poc/src/polaris-generation/dossier-finding.ts",
+      "old": " && /\\p{L}/u.test(span)",
+      "new": "",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 218,
+      "failedTests": [
+        "apps/three-surface-poc/src/polaris-generation/dossier-finding.test.ts > buildNameIndex reads an identifier as one backticked token of 2 to 80 characters holding a letter"
+      ],
+      "seconds": 27
+    },
+    {
+      "id": "identifier-assignment",
+      "file": "apps/three-surface-poc/src/polaris-generation/dossier-finding.ts",
+      "old": " && !span.includes('=')",
+      "new": "",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 218,
+      "failedTests": [
+        "apps/three-surface-poc/src/polaris-generation/dossier-finding.test.ts > buildNameIndex leaves out an assignment and a single common lower-case word"
+      ],
+      "seconds": 72
+    },
+    {
+      "id": "identifier-common-word",
+      "file": "apps/three-surface-poc/src/polaris-generation/dossier-finding.ts",
+      "old": " && !COMMON_WORDS.has(span)",
+      "new": "",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 218,
+      "failedTests": [
+        "apps/three-surface-poc/src/polaris-generation/dossier-finding.test.ts > buildNameIndex leaves out an assignment and a single common lower-case word"
+      ],
+      "seconds": 48
+    },
+    {
+      "id": "identifier-from-quotation",
+      "file": "apps/three-surface-poc/src/polaris-generation/dossier-finding.ts",
+      "old": "new Set(identifiersIn(block.prose))",
+      "new": "new Set(identifiersIn(shown(block)))",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 218,
+      "failedTests": [
+        "apps/three-surface-poc/src/polaris-generation/dossier-finding.test.ts > buildNameIndex takes identifiers from a block's own prose alone, never from a quotation Syzygy located for it"
+      ],
+      "seconds": 31
+    },
+    {
+      "id": "identifier-already-path-or-unit",
+      "file": "apps/three-surface-poc/src/polaris-generation/dossier-finding.ts",
+      "old": "!taken.has(span) && ",
+      "new": "",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 218,
+      "failedTests": [
+        "apps/three-surface-poc/src/polaris-generation/dossier-finding.test.ts > buildNameIndex keeps an identifier out when it is already a term, a file or a directory of the index",
+        "apps/three-surface-poc/src/polaris-generation/dossier-finding.test.ts > buildNameIndex never lists as an identifier a backticked span named as matching a secret detector",
+        "packages/polaris-dossier/src/render.test.ts > render: task routes and the generated index keeps a backticked span the path detector matches out of the index, pairing backticks inside each prose segment"
+      ],
+      "seconds": 30
+    },
+    {
+      "id": "identifier-already-term",
+      "file": "apps/three-surface-poc/src/polaris-generation/dossier-finding.ts",
+      "old": " && !termNames.has(span.toLowerCase())",
+      "new": "",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 218,
+      "failedTests": [
+        "apps/three-surface-poc/src/polaris-generation/dossier-finding.test.ts > the generated index of the reading fixture lists every glossary term, cited file and figure title, each with its home and every block that names it",
+        "apps/three-surface-poc/src/polaris-generation/dossier-finding.test.ts > the generated index of the reading fixture draws the page from those entries: counts, one section per kind, and a plain sentence where a kind is empty",
+        "apps/three-surface-poc/src/polaris-generation/dossier-finding.test.ts > the generated index of the reading fixture resolves every link of the index page: 43 of 43 in its region, and every link of the site's navigation",
+        "apps/three-surface-poc/src/polaris-generation/dossier-finding.test.ts > the generated index of the reading fixture puts no link target inside a details element, and no script on any page",
+        "apps/three-surface-poc/src/polaris-generation/dossier-finding.test.ts > the find-by-task page counts each step among the claims and indexes what the steps name, every link resolving",
+        "apps/three-surface-poc/src/polaris-generation/dossier-finding.test.ts > the finding pages: withheld, folded and several-piece cases draws a withheld step with no file and no dossier link beside it, and lists it under no name",
+        "apps/three-surface-poc/src/polaris-generation/dossier-finding.test.ts > the finding pages: withheld, folded and several-piece cases draws a step whose own text a secret detector matches with no file and no dossier link, and lists it under no name",
+        "apps/three-surface-poc/src/polaris-generation/dossier-finding.test.ts > the finding pages: withheld, folded and several-piece cases reaches a block folded twice, and a repeating list folded inside a collapsible section, through the outermost folded element",
+        "apps/three-surface-poc/src/polaris-generation/dossier-finding.test.ts > buildNameIndex keeps an identifier out when it is already a term, a file or a directory of the index"
+      ],
+      "seconds": 31
+    },
+    {
+      "id": "identifier-secret-span-listed",
+      "file": "apps/three-surface-poc/src/polaris-generation/dossier-finding.ts",
+      "old": "for (const span of input.unindexed ?? []) taken.add(span);",
+      "new": "",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 218,
+      "failedTests": [
+        "apps/three-surface-poc/src/polaris-generation/dossier-finding.test.ts > buildNameIndex never lists as an identifier a backticked span named as matching a secret detector",
+        "packages/polaris-dossier/src/render.test.ts > render: task routes and the generated index keeps a backticked span the path detector matches out of the index, pairing backticks inside each prose segment"
+      ],
+      "seconds": 40
+    },
+    {
+      "id": "term-case-sensitive",
+      "file": "apps/three-surface-poc/src/polaris-generation/dossier-finding.ts",
+      "old": ")s?(?![${WORD}])`, 'iu')",
+      "new": ")s?(?![${WORD}])`, 'u')",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 218,
+      "failedTests": [
+        "apps/three-surface-poc/src/polaris-generation/dossier-finding.test.ts > the generated index of the reading fixture lists every glossary term, cited file and figure title, each with its home and every block that names it",
+        "apps/three-surface-poc/src/polaris-generation/dossier-finding.test.ts > the generated index of the reading fixture draws the page from those entries: counts, one section per kind, and a plain sentence where a kind is empty",
+        "apps/three-surface-poc/src/polaris-generation/dossier-finding.test.ts > the generated index of the reading fixture resolves every link of the index page: 43 of 43 in its region, and every link of the site's navigation",
+        "apps/three-surface-poc/src/polaris-generation/dossier-finding.test.ts > the generated index of the reading fixture puts no link target inside a details element, and no script on any page",
+        "apps/three-surface-poc/src/polaris-generation/dossier-finding.test.ts > the find-by-task page counts each step among the claims and indexes what the steps name, every link resolving",
+        "apps/three-surface-poc/src/polaris-generation/dossier-finding.test.ts > buildNameIndex matches a term as a whole word in any case, with a plural s and a spaced form of a hyphenated name",
+        "packages/polaris-dossier/src/render.test.ts > render: derived structure (version 2.3) tells an entry that is no readable record, or a path that cannot be examined, apart from no entry, in both pages and both states (version 2.10)"
+      ],
+      "seconds": 81
+    },
+    {
+      "id": "term-no-plural",
+      "file": "apps/three-surface-poc/src/polaris-generation/dossier-finding.ts",
+      "old": ")s?(?![${WORD}])`, 'iu')",
+      "new": ")(?![${WORD}])`, 'iu')",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 218,
+      "failedTests": [
+        "apps/three-surface-poc/src/polaris-generation/dossier-finding.test.ts > the generated index of the reading fixture lists every glossary term, cited file and figure title, each with its home and every block that names it",
+        "apps/three-surface-poc/src/polaris-generation/dossier-finding.test.ts > the generated index of the reading fixture draws the page from those entries: counts, one section per kind, and a plain sentence where a kind is empty",
+        "apps/three-surface-poc/src/polaris-generation/dossier-finding.test.ts > the generated index of the reading fixture resolves every link of the index page: 43 of 43 in its region, and every link of the site's navigation",
+        "apps/three-surface-poc/src/polaris-generation/dossier-finding.test.ts > the generated index of the reading fixture puts no link target inside a details element, and no script on any page",
+        "apps/three-surface-poc/src/polaris-generation/dossier-finding.test.ts > the find-by-task page counts each step among the claims and indexes what the steps name, every link resolving",
+        "apps/three-surface-poc/src/polaris-generation/dossier-finding.test.ts > buildNameIndex matches a term as a whole word in any case, with a plural s and a spaced form of a hyphenated name"
+      ],
+      "seconds": 59
+    },
+    {
+      "id": "term-inside-a-word",
+      "file": "apps/three-surface-poc/src/polaris-generation/dossier-finding.ts",
+      "old": "`(?<![${WORD}])(?:${forms.map(quoteRegex).join('|')})",
+      "new": "`(?:${forms.map(quoteRegex).join('|')})",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 218,
+      "failedTests": [
+        "apps/three-surface-poc/src/polaris-generation/dossier-finding.test.ts > buildNameIndex matches a term as a whole word in any case, with a plural s and a spaced form of a hyphenated name"
+      ],
+      "seconds": 39
+    },
+    {
+      "id": "term-no-spaced-form",
+      "file": "apps/three-surface-poc/src/polaris-generation/dossier-finding.ts",
+      "old": "new Set([term.name, term.name.replace(/-/gu, ' ')])",
+      "new": "new Set([term.name])",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 218,
+      "failedTests": [
+        "apps/three-surface-poc/src/polaris-generation/dossier-finding.test.ts > the generated index of the reading fixture lists every glossary term, cited file and figure title, each with its home and every block that names it",
+        "apps/three-surface-poc/src/polaris-generation/dossier-finding.test.ts > the generated index of the reading fixture draws the page from those entries: counts, one section per kind, and a plain sentence where a kind is empty",
+        "apps/three-surface-poc/src/polaris-generation/dossier-finding.test.ts > the generated index of the reading fixture resolves every link of the index page: 43 of 43 in its region, and every link of the site's navigation",
+        "apps/three-surface-poc/src/polaris-generation/dossier-finding.test.ts > the generated index of the reading fixture puts no link target inside a details element, and no script on any page",
+        "apps/three-surface-poc/src/polaris-generation/dossier-finding.test.ts > the find-by-task page counts each step among the claims and indexes what the steps name, every link resolving",
+        "apps/three-surface-poc/src/polaris-generation/dossier-finding.test.ts > buildNameIndex matches a term as a whole word in any case, with a plural s and a spaced form of a hyphenated name"
+      ],
+      "seconds": 35
+    },
+    {
+      "id": "title-any-case",
+      "file": "apps/three-surface-poc/src/polaris-generation/dossier-finding.ts",
+      "old": "${quoteRegex(title)}(?![${WORD}])`, 'u')",
+      "new": "${quoteRegex(title)}(?![${WORD}])`, 'iu')",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 218,
+      "failedTests": [
+        "apps/three-surface-poc/src/polaris-generation/dossier-finding.test.ts > the generated index of the reading fixture lists every glossary term, cited file and figure title, each with its home and every block that names it",
+        "apps/three-surface-poc/src/polaris-generation/dossier-finding.test.ts > the generated index of the reading fixture draws the page from those entries: counts, one section per kind, and a plain sentence where a kind is empty",
+        "apps/three-surface-poc/src/polaris-generation/dossier-finding.test.ts > the generated index of the reading fixture resolves every link of the index page: 43 of 43 in its region, and every link of the site's navigation",
+        "apps/three-surface-poc/src/polaris-generation/dossier-finding.test.ts > the generated index of the reading fixture puts no link target inside a details element, and no script on any page",
+        "apps/three-surface-poc/src/polaris-generation/dossier-finding.test.ts > the find-by-task page counts each step among the claims and indexes what the steps name, every link resolving",
+        "apps/three-surface-poc/src/polaris-generation/dossier-finding.test.ts > buildNameIndex gives a figure its repeating list first, then the blocks that write its title exactly"
+      ],
+      "seconds": 32
+    },
+    {
+      "id": "path-as-tail-of-longer",
+      "file": "apps/three-surface-poc/src/polaris-generation/dossier-finding.ts",
+      "old": "`(?<![${WORD}./-])${quoteRegex(path)}",
+      "new": "`${quoteRegex(path)}",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 218,
+      "failedTests": [
+        "apps/three-surface-poc/src/polaris-generation/dossier-finding.test.ts > buildNameIndex lists a file a block cites or writes out whole, and never a file no block touches"
+      ],
+      "seconds": 29
+    },
+    {
+      "id": "path-as-head-of-longer",
+      "file": "apps/three-surface-poc/src/polaris-generation/dossier-finding.ts",
+      "old": "${quoteRegex(path)}(?![${WORD}/-]|\\\\.[${WORD}])`",
+      "new": "${quoteRegex(path)}`",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 218,
+      "failedTests": [
+        "apps/three-surface-poc/src/polaris-generation/dossier-finding.test.ts > buildNameIndex lists a file a block cites or writes out whole, and never a file no block touches"
+      ],
+      "seconds": 35
+    },
+    {
+      "id": "unit-without-slash",
+      "file": "apps/three-surface-poc/src/polaris-generation/dossier-finding.ts",
+      "old": "${quoteRegex(unit)}/`",
+      "new": "${quoteRegex(unit)}`",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 218,
+      "failedTests": [
+        "apps/three-surface-poc/src/polaris-generation/dossier-finding.test.ts > buildNameIndex lists every derived top-level directory, named or not, by the paths written under it"
+      ],
+      "seconds": 33
+    },
+    {
+      "id": "path-cited-not-counted",
+      "file": "apps/three-surface-poc/src/polaris-generation/dossier-finding.ts",
+      "old": "block.sourceIds.some((id) => ids.has(id)) || ",
+      "new": "",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 218,
+      "failedTests": [
+        "apps/three-surface-poc/src/polaris-generation/dossier-finding.test.ts > the generated index of the reading fixture lists every glossary term, cited file and figure title, each with its home and every block that names it",
+        "apps/three-surface-poc/src/polaris-generation/dossier-finding.test.ts > the generated index of the reading fixture draws the page from those entries: counts, one section per kind, and a plain sentence where a kind is empty",
+        "apps/three-surface-poc/src/polaris-generation/dossier-finding.test.ts > the generated index of the reading fixture resolves every link of the index page: 43 of 43 in its region, and every link of the site's navigation",
+        "apps/three-surface-poc/src/polaris-generation/dossier-finding.test.ts > the generated index of the reading fixture puts no link target inside a details element, and no script on any page",
+        "apps/three-surface-poc/src/polaris-generation/dossier-finding.test.ts > the find-by-task page counts each step among the claims and indexes what the steps name, every link resolving",
+        "apps/three-surface-poc/src/polaris-generation/dossier-finding.test.ts > the finding pages: withheld, folded and several-piece cases draws a withheld step with no file and no dossier link beside it, and lists it under no name",
+        "apps/three-surface-poc/src/polaris-generation/dossier-finding.test.ts > buildNameIndex collapses a file more than 24 blocks cite to a count and its source page, and lists 24 one by one",
+        "apps/three-surface-poc/src/polaris-generation/dossier-finding.test.ts > buildNameIndex lists a file a block cites or writes out whole, and never a file no block touches",
+        "apps/three-surface-poc/src/polaris-generation/dossier-finding.test.ts > buildNameIndex orders entries by kind, then by name without regard to case, and is the same for the same input",
+        "packages/polaris-dossier/src/render.test.ts > render: task routes and the generated index draws the routes after the overview, each step with its label, its source, its file and lines, and indexes what they name",
+        "packages/polaris-dossier/src/render.test.ts > render: task routes and the generated index withholds a step whose cited file is withheld, and never names a path a secret detector matches on either page"
+      ],
+      "seconds": 38
+    },
+    {
+      "id": "path-written-not-counted",
+      "file": "apps/three-surface-poc/src/polaris-generation/dossier-finding.ts",
+      "old": "ids.has(id)) || pattern.test(shown(block)));",
+      "new": "ids.has(id)));",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 218,
+      "failedTests": [
+        "apps/three-surface-poc/src/polaris-generation/dossier-finding.test.ts > buildNameIndex lists a file a block cites or writes out whole, and never a file no block touches"
+      ],
+      "seconds": 32
+    },
+    {
+      "id": "path-collapsed-at-24",
+      "file": "apps/three-surface-poc/src/polaris-generation/dossier-finding.ts",
+      "old": "blocks.length > PATH_LINK_MAX ? {",
+      "new": "blocks.length >= PATH_LINK_MAX ? {",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 218,
+      "failedTests": [
+        "apps/three-surface-poc/src/polaris-generation/dossier-finding.test.ts > buildNameIndex collapses a file more than 24 blocks cite to a count and its source page, and lists 24 one by one"
+      ],
+      "seconds": 37
+    },
+    {
+      "id": "path-never-collapsed",
+      "file": "apps/three-surface-poc/src/polaris-generation/dossier-finding.ts",
+      "old": "blocks.length > PATH_LINK_MAX ? {",
+      "new": "false ? {",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 218,
+      "failedTests": [
+        "apps/three-surface-poc/src/polaris-generation/dossier-finding.test.ts > buildNameIndex collapses a file more than 24 blocks cite to a count and its source page, and lists 24 one by one"
+      ],
+      "seconds": 70
+    },
+    {
+      "id": "collapsed-count-not-drawn",
+      "file": "apps/three-surface-poc/src/polaris-generation/dossier-finding.ts",
+      "old": "entry.namedBy !== undefined ? ` <span class=\"index-many\">",
+      "new": "false ? ` <span class=\"index-many\">",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 218,
+      "failedTests": [
+        "apps/three-surface-poc/src/polaris-generation/dossier-finding.test.ts > buildNameIndex collapses a file more than 24 blocks cite to a count and its source page, and lists 24 one by one"
+      ],
+      "seconds": 66
+    },
+    {
+      "id": "path-no-block-listed",
+      "file": "apps/three-surface-poc/src/polaris-generation/dossier-finding.ts",
+      "old": "if (blocks.length === 0) continue;",
+      "new": "",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 218,
+      "failedTests": [
+        "apps/three-surface-poc/src/polaris-generation/dossier-finding.test.ts > the generated index of the reading fixture indexes no name of the agent's while the draft layer is Unknown",
+        "apps/three-surface-poc/src/polaris-generation/dossier-finding.test.ts > the finding pages: withheld, folded and several-piece cases shows no route and lists none in machine.json while the draft layer is Unknown, whatever routes the draft carries",
+        "apps/three-surface-poc/src/polaris-generation/dossier-finding.test.ts > buildNameIndex lists a file a block cites or writes out whole, and never a file no block touches"
+      ],
+      "seconds": 29
+    },
+    {
+      "id": "figure-repeating-list-dropped",
+      "file": "apps/three-surface-poc/src/polaris-generation/dossier-finding.ts",
+      "old": "pattern.test(shown(block)), figure.repeatedBy)",
+      "new": "pattern.test(shown(block)))",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 218,
+      "failedTests": [
+        "apps/three-surface-poc/src/polaris-generation/dossier-finding.test.ts > the finding pages: withheld, folded and several-piece cases reaches a block folded twice, and a repeating list folded inside a collapsible section, through the outermost folded element",
+        "apps/three-surface-poc/src/polaris-generation/dossier-finding.test.ts > buildNameIndex gives a figure its repeating list first, then the blocks that write its title exactly",
+        "apps/three-surface-poc/src/polaris-generation/dossier-finding.test.ts > buildNameIndex numbers places of the same words across a whole entry, and lists a repeating list once"
+      ],
+      "seconds": 33
+    },
+    {
+      "id": "place-listed-twice",
+      "file": "apps/three-surface-poc/src/polaris-generation/dossier-finding.ts",
+      "old": "if (seen.has(key) || !names(block)) continue;",
+      "new": "if (!names(block)) continue;",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 218,
+      "failedTests": [
+        "apps/three-surface-poc/src/polaris-generation/dossier-finding.test.ts > buildNameIndex gives a figure its repeating list first, then the blocks that write its title exactly"
+      ],
+      "seconds": 41
+    },
+    {
+      "id": "place-never-numbered",
+      "file": "apps/three-surface-poc/src/polaris-generation/dossier-finding.ts",
+      "old": "label: nth === 1 ? block.label : ",
+      "new": "label: true ? block.label : ",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 218,
+      "failedTests": [
+        "apps/three-surface-poc/src/polaris-generation/dossier-finding.test.ts > the generated index of the reading fixture draws the page from those entries: counts, one section per kind, and a plain sentence where a kind is empty",
+        "apps/three-surface-poc/src/polaris-generation/dossier-finding.test.ts > buildNameIndex matches a term as a whole word in any case, with a plural s and a spaced form of a hyphenated name",
+        "apps/three-surface-poc/src/polaris-generation/dossier-finding.test.ts > buildNameIndex gives a figure its repeating list first, then the blocks that write its title exactly",
+        "apps/three-surface-poc/src/polaris-generation/dossier-finding.test.ts > buildNameIndex numbers places of the same words across a whole entry, and lists a repeating list once"
+      ],
+      "seconds": 71
+    },
+    {
+      "id": "link-count-without-homes",
+      "file": "apps/three-surface-poc/src/polaris-generation/dossier-finding.ts",
+      "old": "(entry.home === null ? 0 : 1) + entry.blocks.length",
+      "new": "entry.blocks.length",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 218,
+      "failedTests": [
+        "apps/three-surface-poc/src/polaris-generation/dossier-finding.test.ts > the generated index of the reading fixture lists every glossary term, cited file and figure title, each with its home and every block that names it",
+        "apps/three-surface-poc/src/polaris-generation/dossier-finding.test.ts > the generated index of the reading fixture draws the page from those entries: counts, one section per kind, and a plain sentence where a kind is empty",
+        "apps/three-surface-poc/src/polaris-generation/dossier-finding.test.ts > the find-by-task page counts each step among the claims and indexes what the steps name, every link resolving",
+        "apps/three-surface-poc/src/polaris-generation/dossier-finding.test.ts > buildNameIndex collapses a file more than 24 blocks cite to a count and its source page, and lists 24 one by one",
+        "apps/three-surface-poc/src/polaris-generation/dossier-finding.test.ts > buildNameIndex gives a figure its repeating list first, then the blocks that write its title exactly"
+      ],
+      "seconds": 105
+    },
+    {
+      "id": "unnamed-says-nothing",
+      "file": "apps/three-surface-poc/src/polaris-generation/dossier-finding.ts",
+      "old": "entry.blocks.length === 0 ? ' <span class=\"index-unnamed\">",
+      "new": "false ? ' <span class=\"index-unnamed\">",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 218,
+      "failedTests": [
+        "apps/three-surface-poc/src/polaris-generation/dossier-finding.test.ts > the generated index of the reading fixture draws the page from those entries: counts, one section per kind, and a plain sentence where a kind is empty"
+      ],
+      "seconds": 65
+    },
+    {
+      "id": "withheld-layer-words",
+      "file": "apps/three-surface-poc/src/polaris-generation/dossier-finding.ts",
+      "old": "agentNames || kind === 'unit' ? KIND_EMPTY[kind]",
+      "new": "true ? KIND_EMPTY[kind]",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 218,
+      "failedTests": [
+        "apps/three-surface-poc/src/polaris-generation/dossier-finding.test.ts > the generated index of the reading fixture indexes no name of the agent's while the draft layer is Unknown"
+      ],
+      "seconds": 31
+    },
+    {
+      "id": "block-id-inside-fold",
+      "file": "apps/three-surface-poc/src/polaris-generation/dossier-site.ts",
+      "old": "return fold === null ? ` id=\"block-${escape(p.id)}\"` : '';",
+      "new": "return ` id=\"block-${escape(p.id)}\"`;",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 218,
+      "failedTests": [
+        "apps/three-surface-poc/src/polaris-generation/dossier-finding.test.ts > the generated index of the reading fixture resolves every link of the index page: 43 of 43 in its region, and every link of the site's navigation",
+        "apps/three-surface-poc/src/polaris-generation/dossier-finding.test.ts > the generated index of the reading fixture puts no link target inside a details element, and no script on any page",
+        "apps/three-surface-poc/src/polaris-generation/dossier-finding.test.ts > the finding pages: withheld, folded and several-piece cases reaches a block folded twice, and a repeating list folded inside a collapsible section, through the outermost folded element"
+      ],
+      "seconds": 28
+    },
+    {
+      "id": "folded-block-linked-directly",
+      "file": "apps/three-surface-poc/src/polaris-generation/dossier-site.ts",
+      "old": "fragment: fold ?? `block-${p.id}`, label: place",
+      "new": "fragment: `block-${p.id}`, label: place",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 218,
+      "failedTests": [
+        "apps/three-surface-poc/src/polaris-generation/dossier-finding.test.ts > the generated index of the reading fixture lists every glossary term, cited file and figure title, each with its home and every block that names it",
+        "apps/three-surface-poc/src/polaris-generation/dossier-finding.test.ts > the generated index of the reading fixture draws the page from those entries: counts, one section per kind, and a plain sentence where a kind is empty",
+        "apps/three-surface-poc/src/polaris-generation/dossier-finding.test.ts > the generated index of the reading fixture resolves every link of the index page: 43 of 43 in its region, and every link of the site's navigation",
+        "apps/three-surface-poc/src/polaris-generation/dossier-finding.test.ts > the generated index of the reading fixture puts no link target inside a details element, and no script on any page",
+        "apps/three-surface-poc/src/polaris-generation/dossier-finding.test.ts > the find-by-task page counts each step among the claims and indexes what the steps name, every link resolving",
+        "apps/three-surface-poc/src/polaris-generation/dossier-finding.test.ts > the finding pages: withheld, folded and several-piece cases reaches a block folded twice, and a repeating list folded inside a collapsible section, through the outermost folded element"
+      ],
+      "seconds": 29
+    },
+    {
+      "id": "withheld-block-indexed",
+      "file": "apps/three-surface-poc/src/polaris-generation/dossier-site.ts",
+      "old": "if (b.withheld === undefined && b.secretMatched !== true) {\n      const texts",
+      "new": "if (b.secretMatched !== true) {\n      const texts",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 218,
+      "failedTests": [
+        "apps/three-surface-poc/src/polaris-generation/dossier-finding.test.ts > the finding pages: withheld, folded and several-piece cases draws a withheld step with no file and no dossier link beside it, and lists it under no name"
+      ],
+      "seconds": 28
+    },
+    {
+      "id": "secret-matched-block-indexed",
+      "file": "apps/three-surface-poc/src/polaris-generation/dossier-site.ts",
+      "old": "if (b.withheld === undefined && b.secretMatched !== true) {\n      const texts",
+      "new": "if (b.withheld === undefined) {\n      const texts",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 218,
+      "failedTests": [
+        "apps/three-surface-poc/src/polaris-generation/dossier-finding.test.ts > the finding pages: withheld, folded and several-piece cases draws a step whose own text a secret detector matches with no file and no dossier link, and lists it under no name",
+        "packages/polaris-dossier/src/render.test.ts > render: task routes and the generated index withholds a step whose cited file is withheld, and never names a path a secret detector matches on either page"
+      ],
+      "seconds": 30
+    },
+    {
+      "id": "inner-fold-wins",
+      "file": "apps/three-surface-poc/src/polaris-generation/dossier-site.ts",
+      "old": "fold = outer ?? `element-${elementId}`;",
+      "new": "fold = `element-${elementId}`;",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 218,
+      "failedTests": [
+        "apps/three-surface-poc/src/polaris-generation/dossier-finding.test.ts > the finding pages: withheld, folded and several-piece cases reaches a block folded twice, and a repeating list folded inside a collapsible section, through the outermost folded element"
+      ],
+      "seconds": 29
+    },
+    {
+      "id": "repeating-list-inner-target",
+      "file": "apps/three-surface-poc/src/polaris-generation/dossier-site.ts",
+      "old": "target: { page: from, fragment: fold ?? `element-${id}`, label: place }",
+      "new": "target: { page: from, fragment: `element-${id}`, label: place }",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 218,
+      "failedTests": [
+        "apps/three-surface-poc/src/polaris-generation/dossier-finding.test.ts > the finding pages: withheld, folded and several-piece cases reaches a block folded twice, and a repeating list folded inside a collapsible section, through the outermost folded element"
+      ],
+      "seconds": 31
+    },
+    {
+      "id": "graph-figure-no-id",
+      "file": "apps/three-surface-poc/src/polaris-generation/dossier-site.ts",
+      "old": "${curated}${local === undefined ? '' : ` id=\"figure-${escape(d.id)}\"`}><figcaption",
+      "new": "${curated}><figcaption",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 218,
+      "failedTests": [
+        "apps/three-surface-poc/src/polaris-generation/dossier-finding.test.ts > the generated index of the reading fixture resolves every link of the index page: 43 of 43 in its region, and every link of the site's navigation",
+        "apps/three-surface-poc/src/polaris-generation/dossier-finding.test.ts > the generated index of the reading fixture puts no link target inside a details element, and no script on any page",
+        "apps/three-surface-poc/src/polaris-generation/dossier-finding.test.ts > the find-by-task page counts each step among the claims and indexes what the steps name, every link resolving",
+        "apps/three-surface-poc/src/polaris-generation/dossier-reading.test.ts > Poles: a landing page with the why section and a map, then one page per Pole (dossier spec v1.5) colours a Pole page by its Pole, its diagrams included, and a diagram on the landing page by its own hue (syzygy-pdja.14)",
+        "apps/three-surface-poc/src/polaris-generation/dossier-reading.test.ts > colour: six hues for Poles, diagrams and cards, none carrying a claim (syzygy-pdja.14) gives each diagram outside a Pole page a hue in turn, and a diagram on a Pole page its Pole's",
+        "packages/polaris-dossier/src/render.test.ts > readability guidance and diagram-led sections (syzygy-mea.10.4) draws a section's diagrams before its blocks on an operator-agent page",
+        "packages/polaris-dossier/src/render.test.ts > render: derived structure (version 2.3) keeps an authored figure matching a derived fact dashed and curated, and a draft cannot set Observed"
+      ],
+      "seconds": 35
+    },
+    {
+      "id": "graph-figure-id-in-provider-mode",
+      "file": "apps/three-surface-poc/src/polaris-generation/dossier-site.ts",
+      "old": "${curated}${local === undefined ? '' : ` id=\"figure-${escape(d.id)}\"`}><figcaption",
+      "new": "${curated}${` id=\"figure-${escape(d.id)}\"`}><figcaption",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 218,
+      "failedTests": [
+        "apps/three-surface-poc/src/polaris-generation/dossier-render-provider-golden.test.ts > provider-mode render output is unchanged by the operator-agent inputs renders every fixture run to the captured bytes, file by file"
+      ],
+      "seconds": 32
+    },
+    {
+      "id": "sequence-figure-no-id",
+      "file": "apps/three-surface-poc/src/polaris-generation/dossier-site.ts",
+      "old": "data-figure-kind=\"${figure.kind}\"${local === undefined ? '' : ` id=\"figure-${escape(d.id)}\"`}>",
+      "new": "data-figure-kind=\"${figure.kind}\">",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 218,
+      "failedTests": [
+        "apps/three-surface-poc/src/polaris-generation/figure-kinds.test.ts > figure kinds on the operator-agent site gives each sequence and swimlane its fragment identity, outside every details element, and the index its title and home",
+        "apps/three-surface-poc/src/polaris-generation/figure-kinds.test.ts > figure kinds on the operator-agent site draws the sequence with its lifelines, a wrapped message label, a loop and an escaped Unknown label"
+      ],
+      "seconds": 35
+    },
+    {
+      "id": "nav-link-in-provider-mode",
+      "file": "apps/three-surface-poc/src/polaris-generation/dossier-site.ts",
+      "old": "${local === undefined ? '' : `<li><a href=\"${href(from, FIND_BY_TASK_PAGE)}\">Find by task</a></li>`}",
+      "new": "${`<li><a href=\"${href(from, FIND_BY_TASK_PAGE)}\">Find by task</a></li>`}",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 218,
+      "failedTests": [
+        "apps/three-surface-poc/src/polaris-generation/dossier-render-provider-golden.test.ts > provider-mode render output is unchanged by the operator-agent inputs renders every fixture run to the captured bytes, file by file"
+      ],
+      "seconds": 45
+    },
+    {
+      "id": "routes-shown-while-withheld",
+      "file": "apps/three-surface-poc/src/polaris-generation/dossier-site.ts",
+      "old": "const routes = withheld ? [] : local.taskRoutes ?? [];",
+      "new": "const routes = local.taskRoutes ?? [];",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 218,
+      "failedTests": [
+        "apps/three-surface-poc/src/polaris-generation/dossier-finding.test.ts > the finding pages: withheld, folded and several-piece cases shows no route and lists none in machine.json while the draft layer is Unknown, whatever routes the draft carries"
+      ],
+      "seconds": 43
+    },
+    {
+      "id": "machine-routes-while-withheld",
+      "file": "apps/three-surface-poc/src/polaris-generation/dossier-site.ts",
+      "old": "taskRoutes: (withheld ? [] : local.taskRoutes ?? []).map(",
+      "new": "taskRoutes: (local.taskRoutes ?? []).map(",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 218,
+      "failedTests": [
+        "apps/three-surface-poc/src/polaris-generation/dossier-finding.test.ts > the finding pages: withheld, folded and several-piece cases shows no route and lists none in machine.json while the draft layer is Unknown, whatever routes the draft carries"
+      ],
+      "seconds": 48
+    },
+    {
+      "id": "terms-indexed-while-withheld",
+      "file": "apps/three-surface-poc/src/polaris-generation/dossier-site.ts",
+      "old": "terms: withheld ? [] : local.glossary.map(term => ({ id: term.id, name:",
+      "new": "terms: local.glossary.map(term => ({ id: term.id, name:",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 218,
+      "failedTests": [
+        "apps/three-surface-poc/src/polaris-generation/dossier-finding.test.ts > the generated index of the reading fixture indexes no name of the agent's while the draft layer is Unknown",
+        "apps/three-surface-poc/src/polaris-generation/dossier-finding.test.ts > the finding pages: withheld, folded and several-piece cases shows no route and lists none in machine.json while the draft layer is Unknown, whatever routes the draft carries"
+      ],
+      "seconds": 34
+    },
+    {
+      "id": "withheld-step-shows-its-file",
+      "file": "apps/three-surface-poc/src/polaris-generation/dossier-site.ts",
+      "old": "return own?.withheld === undefined && own?.secretMatched !== true; };",
+      "new": "return own?.secretMatched !== true; };",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 218,
+      "failedTests": [
+        "packages/polaris-dossier/src/render.test.ts > render: task routes and the generated index withholds a step whose cited file is withheld, and never names a path a secret detector matches on either page",
+        "apps/three-surface-poc/src/polaris-generation/dossier-finding.test.ts > the finding pages: withheld, folded and several-piece cases draws a withheld step with no file and no dossier link beside it, and lists it under no name"
+      ],
+      "seconds": 76
+    },
+    {
+      "id": "secret-matched-step-shows-its-file",
+      "file": "apps/three-surface-poc/src/polaris-generation/dossier-site.ts",
+      "old": "return own?.withheld === undefined && own?.secretMatched !== true; };",
+      "new": "return own?.withheld === undefined; };",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 218,
+      "failedTests": [
+        "apps/three-surface-poc/src/polaris-generation/dossier-finding.test.ts > the finding pages: withheld, folded and several-piece cases draws a step whose own text a secret detector matches with no file and no dossier link, and lists it under no name",
+        "packages/polaris-dossier/src/render.test.ts > render: task routes and the generated index withholds a step whose cited file is withheld, and never names a path a secret detector matches on either page"
+      ],
+      "seconds": 33
+    },
+    {
+      "id": "one-route-says-tasks",
+      "file": "apps/three-surface-poc/src/polaris-generation/dossier-site.ts",
+      "old": "routes.length === 1 ? '1 task' : ",
+      "new": "false ? '1 task' : ",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 218,
+      "failedTests": [
+        "apps/three-surface-poc/src/polaris-generation/dossier-finding.test.ts > the finding pages: withheld, folded and several-piece cases writes one route as \"1 task\", never \"1 tasks\""
+      ],
+      "seconds": 29
+    },
+    {
+      "id": "file-once-per-piece",
+      "file": "apps/three-surface-poc/src/polaris-generation/dossier-site.ts",
+      "old": "const files = [...new Set(cited.map(piece => piece.path))].map(path => {",
+      "new": "const files = cited.map(piece => piece.path).map(path => {",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 218,
+      "failedTests": [
+        "apps/three-surface-poc/src/polaris-generation/dossier-finding.test.ts > the finding pages: withheld, folded and several-piece cases names a file once for a step that cites two pieces of it, linked at the first piece, with each piece's lines"
+      ],
+      "seconds": 72
+    },
+    {
+      "id": "no-routes-sentence-dropped",
+      "file": "apps/three-surface-poc/src/polaris-generation/dossier-site.ts",
+      "old": ": routes.length === 0 ? `<p class=\"no-routes\" data-task-routes=\"none\">",
+      "new": ": false ? `<p class=\"no-routes\" data-task-routes=\"none\">",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 218,
+      "failedTests": [
+        "apps/three-surface-poc/src/polaris-generation/dossier-finding.test.ts > the find-by-task page says plainly that a draft with no routes has none, and writes no route of its own",
+        "packages/polaris-dossier/src/render.test.ts > render: task routes and the generated index a draft with no routes renders, and its find-by-task page says so"
+      ],
+      "seconds": 36
+    },
+    {
+      "id": "withheld-routes-sentence-dropped",
+      "file": "apps/three-surface-poc/src/polaris-generation/dossier-site.ts",
+      "old": "const body = withheld ? `<p class=\"no-routes\" data-task-routes=\"withheld\">",
+      "new": "const body = false ? `<p class=\"no-routes\" data-task-routes=\"withheld\">",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 218,
+      "failedTests": [
+        "apps/three-surface-poc/src/polaris-generation/dossier-finding.test.ts > the generated index of the reading fixture indexes no name of the agent's while the draft layer is Unknown",
+        "apps/three-surface-poc/src/polaris-generation/dossier-finding.test.ts > the finding pages: withheld, folded and several-piece cases shows no route and lists none in machine.json while the draft layer is Unknown, whatever routes the draft carries"
+      ],
+      "seconds": 28
+    },
+    {
+      "id": "index-in-drawing-order",
+      "file": "apps/three-surface-poc/src/polaris-generation/dossier-site.ts",
+      "old": "blocks: [0, 1, 2, 3].flatMap(stage => indexed.filter(block => block.rank === stage)),",
+      "new": "blocks: indexed,",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 218,
+      "failedTests": [
+        "apps/three-surface-poc/src/polaris-generation/dossier-finding.test.ts > the generated index of the reading fixture lists every glossary term, cited file and figure title, each with its home and every block that names it",
+        "apps/three-surface-poc/src/polaris-generation/dossier-finding.test.ts > the generated index of the reading fixture draws the page from those entries: counts, one section per kind, and a plain sentence where a kind is empty",
+        "packages/polaris-dossier/src/render.test.ts > render: task routes and the generated index draws the routes after the overview, each step with its label, its source, its file and lines, and indexes what they name"
+      ],
+      "seconds": 29
+    },
+    {
+      "id": "units-never-listed",
+      "file": "apps/three-surface-poc/src/polaris-generation/dossier-site.ts",
+      "old": "units: local.derivedStructure?.state === 'derived' ? local.derivedStructure.facts",
+      "new": "units: local.derivedStructure?.state === 'never' ? local.derivedStructure.facts",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 218,
+      "failedTests": [
+        "apps/three-surface-poc/src/polaris-generation/dossier-derived-region.test.ts > the derived structure on an operator-agent site lists in the generated index only the top-level directories stated as Observed"
+      ],
+      "seconds": 26
+    },
+    {
+      "id": "units-whatever-their-marking",
+      "file": "apps/three-surface-poc/src/polaris-generation/dossier-site.ts",
+      "old": "fact.fact === 'top-level-unit' && fact.epistemic === 'observed' ? [fact.path]",
+      "new": "fact.fact === 'top-level-unit' ? [fact.path]",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 218,
+      "failedTests": [
+        "apps/three-surface-poc/src/polaris-generation/dossier-derived-region.test.ts > the derived structure on an operator-agent site lists in the generated index only the top-level directories stated as Observed"
+      ],
+      "seconds": 36
+    },
+    {
+      "id": "index-style-on-every-page",
+      "file": "apps/three-surface-poc/src/polaris-generation/dossier-site.ts",
+      "old": "${path === FIND_BY_TASK_PAGE || path === NAME_INDEX_PAGE ? FINDING_CSS : ''}",
+      "new": "${FINDING_CSS}",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 218,
+      "failedTests": [
+        "apps/three-surface-poc/src/polaris-generation/dossier-finding.test.ts > the generated index of the reading fixture carries the two pages' style rules on those two pages and on no other"
+      ],
+      "seconds": 34
+    },
+    {
+      "id": "step-not-collected",
+      "file": "packages/polaris-dossier/src/check-derive.ts",
+      "old": "  routeSteps(doc, (step, at) => out.push({ ...claim(at, step), allowed: ['inferred'] }));\n",
+      "new": "",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 253,
+      "failedTests": [
+        "packages/polaris-dossier/src/check.test.ts > check: task routes passes a draft whose every route step cites a real file and range, and verifies a quotation in a step",
+        "packages/polaris-dossier/src/check.test.ts > check: task routes refuses a step with an altered quotation",
+        "packages/polaris-dossier/src/check.test.ts > check: task routes refuses a step with no citation",
+        "packages/polaris-dossier/src/check.test.ts > check: task routes refuses a step labelled Unknown",
+        "packages/polaris-dossier/src/check.test.ts > check: task routes refuses a step labelled Observed",
+        "packages/polaris-dossier/src/inventory-coverage.test.ts > inventory coverage: the overlap-or-path-named rule counts a task route's step as reading content: its citation covers by overlap and its text by a named path"
+      ],
+      "seconds": 34
+    },
+    {
+      "id": "step-any-label",
+      "file": "packages/polaris-dossier/src/check-derive.ts",
+      "old": "...claim(at, step), allowed: ['inferred'] }));",
+      "new": "...claim(at, step), allowed: ['inferred', 'unknown', 'non-normative'] }));",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 253,
+      "failedTests": [
+        "packages/polaris-dossier/src/check.test.ts > check: task routes refuses a step labelled Unknown"
+      ],
+      "seconds": 31
+    },
+    {
+      "id": "field-version-never",
+      "file": "packages/polaris-dossier/src/check-derive.ts",
+      "old": "if ((PRE_V5_SCHEMA_VERSIONS as readonly unknown[]).includes(doc['schemaVersion'])) add({ kind: 'field-version', at: `$.${TASK_ROUTE_FIELD}`",
+      "new": "if (false) add({ kind: 'field-version', at: `$.${TASK_ROUTE_FIELD}`",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 253,
+      "failedTests": [
+        "packages/polaris-dossier/src/check.test.ts > check: task routes refuses task routes in a draft of the earlier schema polaris-dossier-local-draft-v2",
+        "packages/polaris-dossier/src/check.test.ts > check: task routes refuses task routes in a draft of the earlier schema polaris-dossier-local-draft-v3",
+        "packages/polaris-dossier/src/check.test.ts > check: task routes refuses task routes in a draft of the earlier schema polaris-dossier-local-draft-v4"
+      ],
+      "seconds": 38
+    },
+    {
+      "id": "field-version-v4-only",
+      "file": "packages/polaris-dossier/src/check-derive.ts",
+      "old": "if ((PRE_V5_SCHEMA_VERSIONS as readonly unknown[]).includes(doc['schemaVersion'])) add({ kind: 'field-version', at: `$.${TASK_ROUTE_FIELD}`",
+      "new": "if (([LOCAL_DRAFT_SCHEMA_VERSION_V4] as readonly unknown[]).includes(doc['schemaVersion'])) add({ kind: 'field-version', at: `$.${TASK_ROUTE_FIELD}`",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 253,
+      "failedTests": [
+        "packages/polaris-dossier/src/check.test.ts > check: task routes refuses task routes in a draft of the earlier schema polaris-dossier-local-draft-v2",
+        "packages/polaris-dossier/src/check.test.ts > check: task routes refuses task routes in a draft of the earlier schema polaris-dossier-local-draft-v3"
+      ],
+      "seconds": 20
+    },
+    {
+      "id": "see-never-resolved",
+      "file": "packages/polaris-dossier/src/check-derive.ts",
+      "old": "if (!(kind === 'section' ? sectionIds : diveIds).has(target)) add(",
+      "new": "if (false) add(",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 253,
+      "failedTests": [
+        "packages/polaris-dossier/src/check.test.ts > check: task routes refuses a step pointing at a section the draft does not have",
+        "packages/polaris-dossier/src/check.test.ts > check: task routes refuses a step pointing at a deep dive the draft does not have",
+        "packages/polaris-dossier/src/check.test.ts > check: task routes names the exact finding for an unverifiable citation, and nothing else"
+      ],
+      "seconds": 22
+    },
+    {
+      "id": "see-either-kind",
+      "file": "packages/polaris-dossier/src/check-derive.ts",
+      "old": "if (!(kind === 'section' ? sectionIds : diveIds).has(target)) add(",
+      "new": "if (!(sectionIds.has(target) || diveIds.has(target))) add(",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 253,
+      "failedTests": [
+        "packages/polaris-dossier/src/check.test.ts > check: task routes refuses a step pointing at a deep dive the draft does not have"
+      ],
+      "seconds": 27
+    },
+    {
+      "id": "task-label-unchecked",
+      "file": "packages/polaris-dossier/src/check-derive.ts",
+      "old": "if (isRecord(route) && typeof route['task'] === 'string') out.push({ at: `$.${TASK_ROUTE_FIELD}[${i}].task`, value: route['task'] });",
+      "new": "",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 253,
+      "failedTests": [
+        "packages/polaris-dossier/src/check.test.ts > check: task routes refuses a task that carries markup",
+        "packages/polaris-dossier/src/check.test.ts > check: task routes refuses a task that carries a quotation"
+      ],
+      "seconds": 30
+    },
+    {
+      "id": "seven-routes",
+      "file": "packages/polaris-dossier/src/draft-schema.ts",
+      "old": "export const TASK_ROUTE_MIN = 8;",
+      "new": "export const TASK_ROUTE_MIN = 7;",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 323,
+      "failedTests": [
+        "packages/polaris-dossier/src/draft-schema.test.ts > local-agent draft schema refuses task routes with seven routes",
+        "packages/polaris-dossier/src/draft-schema.test.ts > local-agent draft schema refuses task routes with sixteen routes",
+        "packages/polaris-dossier/src/brief.test.ts > brief: issued asks for task routes after the Poles: eight to fifteen reader tasks, each step citing the file and lines (the index-and-task-routes change)",
+        "packages/polaris-dossier/src/brief.test.ts > brief: shape packs (version 2.4) a server entry selects default@1 then server@1, and the brief is the v10 golden but for its version line, draft-schema line, thesis paragraph, figure-kinds paragraph and task-routes section",
+        "packages/polaris-dossier/src/check.test.ts > check: task routes refuses seven routes"
+      ],
+      "seconds": 71
+    },
+    {
+      "id": "sixteen-routes",
+      "file": "packages/polaris-dossier/src/draft-schema.ts",
+      "old": "export const TASK_ROUTE_MAX = 15;",
+      "new": "export const TASK_ROUTE_MAX = 16;",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 323,
+      "failedTests": [
+        "packages/polaris-dossier/src/brief.test.ts > brief: issued asks for task routes after the Poles: eight to fifteen reader tasks, each step citing the file and lines (the index-and-task-routes change)",
+        "packages/polaris-dossier/src/brief.test.ts > brief: shape packs (version 2.4) a server entry selects default@1 then server@1, and the brief is the v10 golden but for its version line, draft-schema line, thesis paragraph, figure-kinds paragraph and task-routes section",
+        "packages/polaris-dossier/src/draft-schema.test.ts > local-agent draft schema refuses task routes with seven routes",
+        "packages/polaris-dossier/src/draft-schema.test.ts > local-agent draft schema refuses task routes with sixteen routes"
+      ],
+      "seconds": 69
+    },
+    {
+      "id": "nine-steps",
+      "file": "packages/polaris-dossier/src/draft-schema.ts",
+      "old": "export const TASK_ROUTE_STEP_MAX = 8;",
+      "new": "export const TASK_ROUTE_STEP_MAX = 9;",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 323,
+      "failedTests": [
+        "packages/polaris-dossier/src/draft-schema.test.ts > local-agent draft schema refuses task routes with a route with no step",
+        "packages/polaris-dossier/src/draft-schema.test.ts > local-agent draft schema refuses task routes with a route with nine steps",
+        "packages/polaris-dossier/src/brief.test.ts > brief: issued asks for task routes after the Poles: eight to fifteen reader tasks, each step citing the file and lines (the index-and-task-routes change)",
+        "packages/polaris-dossier/src/brief.test.ts > brief: shape packs (version 2.4) a server entry selects default@1 then server@1, and the brief is the v10 golden but for its version line, draft-schema line, thesis paragraph, figure-kinds paragraph and task-routes section"
+      ],
+      "seconds": 31
+    },
+    {
+      "id": "no-step",
+      "file": "packages/polaris-dossier/src/draft-schema.ts",
+      "old": "steps: list(ref('routeStep'), 1, TASK_ROUTE_STEP_MAX)",
+      "new": "steps: list(ref('routeStep'), 0, TASK_ROUTE_STEP_MAX)",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 323,
+      "failedTests": [
+        "packages/polaris-dossier/src/draft-schema.test.ts > local-agent draft schema refuses task routes with a route with no step",
+        "packages/polaris-dossier/src/draft-schema.test.ts > local-agent draft schema refuses task routes with a route with nine steps"
+      ],
+      "seconds": 25
+    },
+    {
+      "id": "step-without-citation",
+      "file": "packages/polaris-dossier/src/draft-schema.ts",
+      "old": "basis: one('source'), text, citations: citations(1), quotations: quotationRefs(QUOTATION_FORM),\n    see:",
+      "new": "basis: one('source'), text, citations: citations(0), quotations: quotationRefs(QUOTATION_FORM),\n    see:",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 323,
+      "failedTests": [
+        "packages/polaris-dossier/src/draft-schema.test.ts > local-agent draft schema refuses task routes with a step with no citation"
+      ],
+      "seconds": 24
+    },
+    {
+      "id": "routes-required",
+      "file": "packages/polaris-dossier/src/draft-schema.ts",
+      "old": "}, ['poles', 'whySection', 'inventoryOmissions', TASK_ROUTE_FIELD]) };",
+      "new": "}, ['poles', 'whySection', 'inventoryOmissions']) };",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 323,
+      "failedTests": [
+        "packages/polaris-dossier/src/draft-schema.test.ts > local-agent draft schema admits a draft that follows every rule",
+        "packages/polaris-dossier/src/draft-schema.test.ts > local-agent draft schema admits a v3 draft carrying every rich element kind (syzygy-mea.10.5)",
+        "packages/polaris-dossier/src/draft-schema.test.ts > local-agent draft schema admits eight to fifteen task routes, a step naming where the dossier explains it, and a draft with none",
+        "packages/polaris-dossier/src/draft-schema.test.ts > local-agent draft schema allows zero clarifications when the limit is zero",
+        "packages/polaris-dossier/src/draft-schema.test.ts > local-agent draft schema: the thesis basis (v6) requires thesisBasis, one of stated, code-reading and none",
+        "packages/polaris-dossier/src/draft-schema.test.ts > local-agent draft schema: the thesis basis (v6) has no thesisBasis member in the form check applies to a v5 or earlier draft",
+        "packages/polaris-dossier/src/check.test.ts > check: a draft that follows every rule freezes revision 0, verifies every quotation against the committed blob and records its byte range",
+        "packages/polaris-dossier/src/check.test.ts > check: a draft that follows every rule never reads the working tree: a quotation of the uncommitted text fails",
+        "packages/polaris-dossier/src/check.test.ts > check: schema v5 diagram homes (syzygy-3efd.18) passes a diagram whose home is a section",
+        "packages/polaris-dossier/src/check.test.ts > check: schema v5 diagram homes (syzygy-3efd.18) passes a diagram whose home is a deep dive",
+        "packages/polaris-dossier/src/check.test.ts > check: schema v5 diagram homes (syzygy-3efd.18) passes a diagram whose home is the overview",
+        "packages/polaris-dossier/src/check.test.ts > check: schema v5 diagram homes (syzygy-3efd.18) refuses `home` in a v4 draft, which names its section in `sectionId`",
+        "packages/polaris-dossier/src/check.test.ts > check: schema v5 diagram homes (syzygy-3efd.18) keeps a v4 draft's findings: a diagram with no sectionId",
+        "packages/polaris-dossier/src/check.test.ts > check: schema v5 diagram homes (syzygy-3efd.18) keeps a v4 draft's findings: a diagram naming an unknown section, and a deep dive too",
+        "packages/polaris-dossier/src/check.test.ts > check: schema v5 diagram homes (syzygy-3efd.18) keeps a v4 draft's findings: a malformed home beside its sectionId",
+        "packages/polaris-dossier/src/check.test.ts > check: figure fit writes figureFit into checks/rev-<n>.json and onto the report, byte-identical across two checks of the same draft",
+        "packages/polaris-dossier/src/check.test.ts > check: mechanism advice and run-advice.json counts a record past the read bound unreadable, takes nothing from one without figureFit, and is read by no outcome",
+        "packages/polaris-dossier/src/check.test.ts > check: the thesis basis (schema v6) passes a code-reading introduction citing two code files and quoting nothing",
+        "packages/polaris-dossier/src/check.test.ts > check: the thesis basis (schema v6) passes a stated introduction citing a statement",
+        "packages/polaris-dossier/src/check.test.ts > check: the thesis basis (schema v6) passes a none introduction that is Unknown",
+        "packages/polaris-dossier/src/check.test.ts > check: the thesis basis (schema v6) passes a none introduction that is non-normative",
+        "packages/polaris-dossier/src/check.test.ts > check: the thesis basis (schema v6) a v6 draft without thesisBasis fails its schema, and one with another value too",
+        "packages/polaris-dossier/src/check.test.ts > check: the thesis basis (schema v6) a polaris-dossier-local-draft-v2 draft carrying thesisBasis has a field-version finding and nothing else",
+        "packages/polaris-dossier/src/check.test.ts > check: the thesis basis (schema v6) a polaris-dossier-local-draft-v4 draft carrying thesisBasis has a field-version finding and nothing else",
+        "packages/polaris-dossier/src/check.test.ts > check: the thesis basis (schema v6) a polaris-dossier-local-draft-v5 draft carrying thesisBasis has a field-version finding and nothing else",
+        "packages/polaris-dossier/src/check.test.ts > check: the thesis basis (schema v6) a v5 draft without thesisBasis checks as before",
+        "packages/polaris-dossier/src/check.test.ts > check: reading ledger writes readingLedger into the check record beside figureFit, byte-identical across two checks of the same draft, and on the report",
+        "packages/polaris-dossier/src/check.test.ts > check: schema v4 (dossier spec v1.5) passes an uncited judgement and a list repeating a diagram of its own section",
+        "packages/polaris-dossier/src/check.test.ts > check: each rule refuses its own violation reports no range finding for an excerpt of a file screening read and excluded, within its lines, nor for a path-excluded file it never reads",
+        "packages/polaris-dossier/src/check.test.ts > check: each rule refuses its own violation passes plain labels, a snake_case name and a multiplication among them (syzygy-mea.10.5)",
+        "packages/polaris-dossier/src/check.test.ts > check: each rule refuses its own violation checks invalid-UTF-8 excerpt ending at line 2 without disclosing its body or length",
+        "packages/polaris-dossier/src/check.test.ts > check: each rule refuses its own violation checks invalid-UTF-8 excerpt ending at line 3 without disclosing its body or length",
+        "packages/polaris-dossier/src/check.test.ts > check: each rule refuses its own violation checks read-then-excluded src/types.ts (active-content) ending at 2 throughout citations",
+        "packages/polaris-dossier/src/check.test.ts > check: each rule refuses its own violation checks read-then-excluded src/types.ts (active-content) ending at 3 throughout citations",
+        "packages/polaris-dossier/src/check.test.ts > check: each rule refuses its own violation checks read-then-excluded src/invalid.c (not-utf8-text) ending at 2 throughout citations",
+        "packages/polaris-dossier/src/check.test.ts > check: each rule refuses its own violation checks read-then-excluded src/invalid.c (not-utf8-text) ending at 3 throughout citations",
+        "packages/polaris-dossier/src/check.test.ts > check: each rule refuses its own violation checks read-then-excluded src/types.ts (active-content) ending at 2 throughout evidence",
+        "packages/polaris-dossier/src/check.test.ts > check: each rule refuses its own violation checks read-then-excluded src/types.ts (active-content) ending at 3 throughout evidence",
+        "packages/polaris-dossier/src/check.test.ts > check: each rule refuses its own violation checks read-then-excluded src/invalid.c (not-utf8-text) ending at 2 throughout evidence",
+        "packages/polaris-dossier/src/check.test.ts > check: each rule refuses its own violation checks read-then-excluded src/invalid.c (not-utf8-text) ending at 3 throughout evidence",
+        "packages/polaris-dossier/src/check.test.ts > check: a quotation from a body retained as redacted-span verifies a quotation from a line no match or guard touches, and records the redaction count, detector ids and line ranges, not the lines",
+        "packages/polaris-dossier/src/check.test.ts > check: a quotation from a body retained as redacted-span keeps original line and byte coordinates across a bare CR before withheld LF lines",
+        "packages/polaris-dossier/src/check.test.ts > check: a quotation from a body retained as redacted-span renders a quotation from a withheld guard line Unknown (excluded-content), with no finding",
+        "packages/polaris-dossier/src/check.test.ts > check: a quotation from an excluded file renders its block Unknown (excluded-content) for a file outside the code-content extensions, with no finding and none of its bytes",
+        "packages/polaris-dossier/src/check.test.ts > check: a quotation from an excluded file renders its block Unknown (excluded-content) for a file whose body holds active content, with no finding and none of its bytes",
+        "packages/polaris-dossier/src/check.test.ts > check: a quotation from an excluded file renders its block Unknown (excluded-content) for a file whose body a secret detector matches, with no finding and none of its bytes",
+        "packages/polaris-dossier/src/check.test.ts > check: a quotation from an excluded file renders its block Unknown (excluded-content) for a denied path, with no finding and none of its bytes",
+        "packages/polaris-dossier/src/check.test.ts > check: a quotation from an excluded file records each cited blob with its screening outcome, and reads no blob a path rule excludes",
+        "packages/polaris-dossier/src/check.test.ts > check: a quotation from an excluded file names a path a secret detector matches by neither path nor object identifier, in the record or a finding",
+        "packages/polaris-dossier/src/check.test.ts > check: the adapter-credential check after a permitting brief reports a readable credential as a finding of the step, telling the agent to run nothing further, and logs it",
+        "packages/polaris-dossier/src/check.test.ts > check: the command reports the path-only census of every withheld file on the author's first check, outside the check record",
+        "packages/polaris-dossier/src/check.test.ts > check: the command reports the structure record of the pinned tree on check, outside the check record, naming no secret path",
+        "packages/polaris-dossier/src/check.test.ts > check: the command reports the counted reader standards as advice on the report alone, never a finding and never in the check record",
+        "packages/polaris-dossier/src/check.test.ts > check: the command lists on the report the blocks the review can never confirm, and leaves the outcome, the findings and the record as they were",
+        "packages/polaris-dossier/src/check.test.ts > check: the command states zero blocks for a draft every cited span of which reaches the review",
+        "packages/polaris-dossier/src/check.test.ts > check: the command never names a path both a denied-path rule and a secret detector match in screenCensus (round-2 review finding 1)",
+        "packages/polaris-dossier/src/check.test.ts > check: the command admits a recognized documentation class without a provider statement grant",
+        "packages/polaris-dossier/src/check.test.ts > check: the command keeps a clone path that holds a line break on one line of human output (round-1 note 3)",
+        "packages/polaris-dossier/src/check.test.ts > check: the command exits 0 on a passing draft and 1 on findings, printing the same document with --json",
+        "packages/polaris-dossier/src/check.test.ts > check: inventory coverage advice and the justified-omission record lists each uncovered entry by identifier and path, sets no outcome and stays out of the check record",
+        "packages/polaris-dossier/src/check.test.ts > check: inventory coverage advice and the justified-omission record does not list an entry the v5 draft records as a justified omission, and the record is no finding",
+        "packages/polaris-dossier/src/check.test.ts > check: inventory coverage advice and the justified-omission record is Unknown where the check has no reader of the inventory, and where none counts",
+        "packages/polaris-dossier/src/check.test.ts > check: inventory coverage advice and the justified-omission record refuses no check when the reader fails: the draft still passes and the advice is Unknown",
+        "packages/polaris-dossier/src/check.test.ts > check: inventory coverage advice and the justified-omission record reports the omission record in a draft before v5 as a field-version finding, and a malformed one as a schema finding",
+        "packages/polaris-dossier/src/check.test.ts > check: task routes still passes a draft with no routes, in the current schema and in an earlier one",
+        "packages/polaris-dossier/src/check.test.ts > check: figure kinds (schema v7) passes a v7 draft holding a sequence, a swimlane and a graph diagram",
+        "packages/polaris-dossier/src/check.test.ts > check: figure kinds (schema v7) reports a message naming an unknown participant as unresolved-reference, naming the diagram",
+        "packages/polaris-dossier/src/check.test.ts > check: figure kinds (schema v7) reports a step naming an unknown lane as unresolved-reference, and the lane it left empty as figure-unused",
+        "packages/polaris-dossier/src/check.test.ts > check: figure kinds (schema v7) reports a participant no message names as figure-unused",
+        "packages/polaris-dossier/src/check.test.ts > check: figure kinds (schema v7) reports members that do not fit the kind as figure-kind, with no schema finding at their paths",
+        "packages/polaris-dossier/src/check.test.ts > check: figure kinds (schema v7) reports a v7 graph diagram lacking edges or carrying steps as figure-kind alone, and the same pair in v6 as v6 does (version 2.8)",
+        "packages/polaris-dossier/src/check.test.ts > check: figure kinds (schema v7) reports a count outside its bounds as a schema finding",
+        "packages/polaris-dossier/src/check.test.ts > check: figure kinds (schema v7) reports a message whose receiver is not a well-formed identity as a schema finding",
+        "packages/polaris-dossier/src/check.test.ts > check: figure kinds (schema v7) reports a polaris-dossier-local-draft-v6 draft carrying a sequence as field-version, keeping the missing nodes and edges",
+        "packages/polaris-dossier/src/check.test.ts > check: figure kinds (schema v7) reports a polaris-dossier-local-draft-v5 draft carrying a sequence as field-version, keeping the missing nodes and edges",
+        "packages/polaris-dossier/src/check.test.ts > check: figure kinds (schema v7) reports a v7 diagram with an unknown kind at its kind and each fault inside it, with no single fault for the whole diagram",
+        "packages/polaris-dossier/src/check.test.ts > check: figure kinds (schema v7) reports a v7 diagram with a kind in the wrong case at its kind and each fault inside it, with no single fault for the whole diagram",
+        "packages/polaris-dossier/src/check.test.ts > check: figure kinds (schema v7) reports a v7 diagram with no kind at its kind and each fault inside it, with no single fault for the whole diagram",
+        "packages/polaris-dossier/src/check.test.ts > check: figure kinds (schema v7) reports a v4 draft carrying a sequence as field-version, keeping the missing nodes and edges",
+        "packages/polaris-dossier/src/check.test.ts > check: figure kinds (schema v7) checks a v6 draft with a graph diagram exactly as before: no finding",
+        "packages/polaris-dossier/src/check.test.ts > check: the record within its read bound (version 2.10) writes a record at exactly the byte, value and depth bounds in full, byte for byte as the unmeasured check writes it, and passes",
+        "packages/polaris-dossier/src/check.test.ts > check: the record within its read bound (version 2.10) writes the bounded form one byte, value or level past the bound: outcome findings, one check-record-bound finding, and the draft does not pass",
+        "packages/polaris-dossier/src/check.test.ts > check: the record within its read bound (version 2.10) lists every finding of a draft with findings in findingsLeftOut, on the report alone"
+      ],
+      "seconds": 22
+    },
+    {
+      "id": "see-required",
+      "file": "packages/polaris-dossier/src/draft-schema.ts",
+      "old": "target: handle }) }, ['see']),",
+      "new": "target: handle }) }, []),",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 323,
+      "failedTests": [
+        "packages/polaris-dossier/src/draft-schema.test.ts > local-agent draft schema admits eight to fifteen task routes, a step naming where the dossier explains it, and a draft with none",
+        "packages/polaris-dossier/src/check.test.ts > check: task routes passes a draft whose every route step cites a real file and range, and verifies a quotation in a step",
+        "packages/polaris-dossier/src/check.test.ts > check: task routes names the exact finding for an unverifiable citation, and nothing else",
+        "packages/polaris-dossier/src/check.test.ts > check: task routes refuses task routes in a draft of the earlier schema polaris-dossier-local-draft-v2",
+        "packages/polaris-dossier/src/check.test.ts > check: task routes refuses task routes in a draft of the earlier schema polaris-dossier-local-draft-v3",
+        "packages/polaris-dossier/src/check.test.ts > check: task routes refuses task routes in a draft of the earlier schema polaris-dossier-local-draft-v4"
+      ],
+      "seconds": 37
+    },
+    {
+      "id": "secret-span-not-reported",
+      "file": "packages/polaris-dossier/src/render.ts",
+      "old": "if (screen.screenPath(span) === 'secret-detector-match') unindexedNames.add(span);",
+      "new": "if (false) unindexedNames.add(span);",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 116,
+      "failedTests": [
+        "packages/polaris-dossier/src/render.test.ts > render: task routes and the generated index keeps a backticked span the path detector matches out of the index, pairing backticks inside each prose segment"
+      ],
+      "seconds": 92
+    },
+    {
+      "id": "secret-span-paired-over-whole-text",
+      "file": "packages/polaris-dossier/src/render.ts",
+      "old": "for (const part of segments) if (part.kind === 'prose') for (const span of backtickSpans(part.text)) if",
+      "new": "for (const span of backtickSpans(prose)) if",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 116,
+      "failedTests": [
+        "packages/polaris-dossier/src/render.test.ts > render: task routes and the generated index keeps a backticked span the path detector matches out of the index, pairing backticks inside each prose segment"
+      ],
+      "seconds": 61
+    },
+    {
+      "id": "secret-match-not-carried",
+      "file": "packages/polaris-dossier/src/render.ts",
+      "old": "const matched = secret ? { secretMatched: true as const } : {};",
+      "new": "const matched = {};",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 116,
+      "failedTests": [
+        "packages/polaris-dossier/src/render.test.ts > render: task routes and the generated index withholds a step whose cited file is withheld, and never names a path a secret detector matches on either page"
+      ],
+      "seconds": 26
+    },
+    {
+      "id": "see-always-section",
+      "file": "packages/polaris-dossier/src/render.ts",
+      "old": "see['kind'] === 'deep-dive' ? 'deep-dive' as const : 'section' as const",
+      "new": "'section' as const",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 116,
+      "failedTests": [
+        "packages/polaris-dossier/src/render.test.ts > render: task routes and the generated index sends a step that names a deep dive to that deep dive's page"
+      ],
+      "seconds": 37
+    },
+    {
+      "id": "route-citations-not-reading-content",
+      "file": "packages/polaris-dossier/src/inventory-coverage.ts",
+      "old": "|unresolved|taskRoutes)(?:$|[.[])/u;",
+      "new": "|unresolved)(?:$|[.[])/u;",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 253,
+      "failedTests": [
+        "packages/polaris-dossier/src/inventory-coverage.test.ts > inventory coverage: the overlap-or-path-named rule counts a task route's step as reading content: its citation covers by overlap and its text by a named path"
+      ],
+      "seconds": 33
+    },
+    {
+      "id": "coverage-rule-version-kept",
+      "file": "packages/polaris-dossier/src/inventory-coverage.ts",
+      "old": "id: 'overlap-or-path-named', version: 2 } as const",
+      "new": "id: 'overlap-or-path-named', version: 1 } as const",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 253,
+      "failedTests": [
+        "packages/polaris-dossier/src/inventory-coverage.test.ts > inventory coverage: the advice at one check compares the draft with the inventory of record and names the revision and digest it read",
+        "packages/polaris-dossier/src/check.test.ts > check: inventory coverage advice and the justified-omission record lists each uncovered entry by identifier and path, sets no outcome and stays out of the check record"
+      ],
+      "seconds": 33
+    },
+    {
+      "id": "brief-section-dropped",
+      "file": "packages/polaris-dossier/src/brief.ts",
+      "old": "    '## Task routes',\n    '',\n    TASK_ROUTES_RULE,\n    '',\n",
+      "new": "",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 41,
+      "failedTests": [
+        "packages/polaris-dossier/src/brief.test.ts > brief: issued asks for task routes after the Poles: eight to fifteen reader tasks, each step citing the file and lines (the index-and-task-routes change)",
+        "packages/polaris-dossier/src/brief.test.ts > brief: shape packs (version 2.4) a server entry selects default@1 then server@1, and the brief is the v10 golden but for its version line, draft-schema line, thesis paragraph, figure-kinds paragraph and task-routes section"
+      ],
+      "seconds": 4
+    },
+    {
+      "id": "brief-version-kept",
+      "file": "packages/polaris-dossier/src/brief.ts",
+      "old": "export const BRIEF_VERSION = 'polaris-dossier-brief-v13';",
+      "new": "export const BRIEF_VERSION = 'polaris-dossier-brief-v12';",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 41,
+      "failedTests": [
+        "packages/polaris-dossier/src/brief.test.ts > brief: issued writes the brief, the schema and the brief record, binding the run, the pinned revision and the schema version",
+        "packages/polaris-dossier/src/brief.test.ts > brief: shape packs (version 2.4) a server entry selects default@1 then server@1, and the brief is the v10 golden but for its version line, draft-schema line, thesis paragraph, figure-kinds paragraph and task-routes section"
+      ],
+      "seconds": 3
+    }
+  ],
+  "equivalent": [
+    {
+      "id": "units-while-not-derived",
+      "file": "apps/three-surface-poc/src/polaris-generation/dossier-site.ts",
+      "old": "units: local.derivedStructure?.state === 'derived' ? local.derivedStructure.facts",
+      "new": "units: local.derivedStructure !== undefined ? (local.derivedStructure.facts ?? [])",
+      "reason": "[Inferred] Equivalent by the type: only the `derived` arm of `LocalDerivedStructure` carries `facts` (local-render.ts), so a structure in any other state has none to list and the guard changes no output. The mutant `units-never-listed` shows the tests do read the listed directories."
+    }
+  ],
+  "summary": {
+    "mutants": 75,
+    "killed": 75,
+    "survived": 0,
+    "byTimeout": 0,
+    "equivalentNotRun": 1
+  }
+}

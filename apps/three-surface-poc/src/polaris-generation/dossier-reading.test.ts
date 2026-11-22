@@ -22,7 +22,7 @@ describe('Poles: a landing page with the why section and a map, then one page pe
   it('draws the why section and the map on the landing page, each other Pole on its own page, and a why-only Pole on none', () => {
     const files = withPoles(SPEC);
     const order = (JSON.parse(files.get('dossier.json')!) as { pages: { path: string }[] }).pages.map(page => page.path);
-    expect(order.slice(0, 3)).toEqual(['index.html', 'poles/2.html', 'poles/3.html']);
+    expect(order.slice(0, 4)).toEqual(['index.html', 'find-by-task.html', 'poles/2.html', 'poles/3.html']);
     expect(files.has('poles/1.html')).toBe(false);
     const index = files.get('index.html')!;
     expect(sectionsOn(index)).toEqual(['one']);
@@ -40,8 +40,8 @@ describe('Poles: a landing page with the why section and a map, then one page pe
     const files = withPoles(SPEC);
     const pole = files.get('poles/2.html')!;
     expect(pole).toContain('<section id="pole" data-reading-level="1" data-pole="poles/2.html" data-hue="2">');
-    expect(pole).toContain('<figure data-visual-provenance="curated"><figcaption id="diagram-title-1">Loop</figcaption>');
-    expect(files.get('index.html')!).toContain('<figure data-hue="1" data-visual-provenance="curated"><figcaption id="diagram-title-0">Flow</figcaption>');
+    expect(pole).toContain('<figure data-visual-provenance="curated" id="figure-loop"><figcaption id="diagram-title-1">Loop</figcaption>');
+    expect(files.get('index.html')!).toContain('<figure data-hue="1" data-visual-provenance="curated" id="figure-flow"><figcaption id="diagram-title-0">Flow</figcaption>');
   });
 
   it('loses and repeats no claim against the page division with no Poles', () => {
@@ -119,7 +119,7 @@ describe('an operator-agent dossier page reads without its machinery', () => {
     // Not in the text of the open questions, the sources list or the size report; the attribute that carries it is not reading text.
     const text = (html: string): string => main(html).replace(/<[^>]+>/gu, ' ');
     const reading = [...files.keys()].filter(path => path.endsWith('.html') && (!path.startsWith('sources/') || path === 'sources/index.html'));
-    expect(reading).toEqual(['index.html', 'contents.html', 'glossary.html', 'sources/index.html', 'understanding.html', 'appendix.html', 'size-report.html']);
+    expect(reading).toEqual(['index.html', 'find-by-task.html', 'contents.html', 'glossary.html', 'name-index.html', 'sources/index.html', 'understanding.html', 'appendix.html', 'size-report.html']);
     for (const page of reading) expect(text(files.get(page)!), page).not.toContain(ID);
     // The open questions sit in the appendix (dossier spec v1.5), their references numbered as any citation is.
     expect(main(files.get('appendix.html')!)).toContain(`<span class="asset-references">(<span class="sources"><a class="cite" href="sources/`);
@@ -215,7 +215,7 @@ describe('colour: six hues for Poles, diagrams and cards, none carrying a claim 
 
   it('gives each diagram outside a Pole page a hue in turn, and a diagram on a Pole page its Pole\'s', () => {
     const files = render();
-    const figures = [...files].flatMap(([path, html]) => path.endsWith('.html') ? [...html.matchAll(/<figure( data-hue="(\d)")? data-visual-provenance="curated"><figcaption id="diagram-title-\d+">[^<]*<\/figcaption><p class="diagram-relationship">/gu)].map(match => ({ path, hue: match[2] })) : []);
+    const figures = [...files].flatMap(([path, html]) => path.endsWith('.html') ? [...html.matchAll(/<figure( data-hue="(\d)")? data-visual-provenance="curated" id="figure-[^"]+"><figcaption id="diagram-title-\d+">[^<]*<\/figcaption><p class="diagram-relationship">/gu)].map(match => ({ path, hue: match[2] })) : []);
     expect(figures.length).toBeGreaterThan(0);
     expect(figures[0]).toEqual({ path: 'index.html', hue: '1' });
     for (const figure of figures) expect(figure.hue === undefined, figure.path).toBe(figure.path.startsWith('poles/'));
