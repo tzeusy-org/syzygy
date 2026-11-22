@@ -644,6 +644,7 @@ export function renderDossierSite(input: DossierSiteInput & { readonly local?: L
   const claimsByPage: { page: string; id: string; epistemic: EpistemicMarking; unknownReason: string | null; v15?: ClaimMarks }[] = [];
   // A page citing a redacted file says once what the mark on its citations means (RFC7-34: a visual encoding is legended).
   const legended = (path: string, main: string): string => narrative(path) ? `${READING_LEGEND}${main}`
+    : MAP_PATHS.has(path) ? `${MAP_READING_LEGEND}${main}`
     : local !== undefined && main.includes('class="redaction-mark"')
     ? `${main}<p class="redaction-legend"><span aria-hidden="true">†N</span> on a citation: N lines of that file are withheld by screening. Its source page marks where.</p>` : main;
   const add = (path: string, depth: number, pageTitle: string, main: string, mapCss = ''): void => {
@@ -1066,6 +1067,14 @@ export const COMPUTED_MAPS: readonly { readonly map: 'directories' | 'units' | '
 ];
 
 /** The region's closing line: it links each map by its title. */
+const MAP_PATHS: ReadonlySet<string> = new Set(COMPUTED_MAPS.map(m => m.path));
+/** The legend each map page carries (version 2.9): the same view switch as a narrative page's, outside any `<details>`, so a sighted reader
+ * can open the evidence view and read each entry's label (Observed, Inferred or Unknown) and evidence; with scripts off. */
+export const MAP_READING_LEGEND = '<aside class="reading-legend" aria-label="How to read this page"><p class="view-switch"><a href="#evidence-view">Show the evidence view</a> · <a href="#content">Back to the reading view</a></p><span id="evidence-view"></span><ul>'
+  + '<li><span class="derived-mark">Derived by Syzygy</span> marks a fact Syzygy derived from the tree or read from a manifest file; the evidence view shows its label, Observed, Inferred or Unknown, and where it comes from.</li>'
+  + '<li>In a figure, a solid line is Observed, a dashed line Inferred and a dotted line Unknown; a label ending in ? is Unknown.</li>'
+  + '<li><span class="not-established">Not established.</span> introduces an Unknown statement, whose reason follows in words.</li>'
+  + '</ul></aside>';
 export const DERIVED_MAPS_LINE = `<p class="derived-maps">Computed maps: ${COMPUTED_MAPS.map(m => `<a href="${m.path}">${m.title}</a>`).join(' · ')}.</p>`;
 
 /** The readable spacing, never laid out in three columns. */
@@ -1183,6 +1192,13 @@ const MANIFEST_UNKNOWN_REASON: Readonly<Record<string, string>> = {
   'over-read-limit': 'mapping-coverage-absent', 'too-large': 'mapping-coverage-absent', unparsed: 'mapping-coverage-absent',
 };
 
+/** A file's RFC2-24 reason; a file reason this version does not name refuses the render rather than taking a reason it may not have. */
+function manifestUnknownReason(file: LocalManifestFileEntry): string {
+  const key = file.unknownReason ?? '';
+  if (!Object.hasOwn(MANIFEST_UNKNOWN_REASON, key)) throw new DossierRenderError('not-renderable');
+  return MANIFEST_UNKNOWN_REASON[key]!;
+}
+
 const value = (fact: LocalManifestFact, member: string): string => { const v = fact[member]; return typeof v === 'string' ? v : ''; };
 /** A fact in Syzygy's words. */
 function factWords(fact: LocalManifestFact, jobs?: ReadonlySet<string>): string {
@@ -1226,7 +1242,7 @@ function manifestPage(map: 'units' | 'ci', title: string, member: DerivedManifes
   const unknownFiles = recognizers.flatMap(r => r.files.filter(file => file.epistemic === 'unknown'));
   const word = (file: LocalManifestFileEntry): string => `${file.unknownReason ?? ''}${file.unknownReason === 'unparsed' && file.parseFault !== null ? `, ${file.parseFault}` : ''}`;
   const unknownList = unknownFiles.length > 0
-    ? unknownFiles.map(file => `<li data-epistemic="unknown" data-unknown-reason="${MANIFEST_UNKNOWN_REASON[file.unknownReason ?? ''] ?? 'mapping-coverage-absent'}" data-manifest-path="${escape(file.path)}" data-manifest-file-reason="${escape(word(file))}">${escape(`${file.path}: Unknown, no facts taken (${word(file)}).`)}</li>`).join('')
+    ? unknownFiles.map(file => `<li data-epistemic="unknown" data-unknown-reason="${manifestUnknownReason(file)}" data-manifest-path="${escape(file.path)}" data-manifest-file-reason="${escape(word(file))}">${escape(`${file.path}: Unknown, no facts taken (${word(file)}).`)}</li>`).join('')
     : `<li>${recognizers.every(r => r.candidates === 0) ? 'No candidate file.' : 'Every candidate file not left out or set apart was read for facts.'}</li>`;
   return mapSection(map, title, `${note}${coverage}${body}<h2>Files whose facts are Unknown</h2><ul class="map-unknown-files">${unknownList}</ul>`);
 }

@@ -82,6 +82,16 @@ it.skipIf(executable === undefined)('switches each map figure to its text form b
         expect(await page.evaluate(`(() => { const forms = document.querySelector(".map-forms"); forms.style.width = "${boxPx}px";
           return [forms.clientWidth, ...[".map-drawing", ".map-list"].map(s => getComputedStyle(forms.querySelector(s)).display !== "none")]; })()`), `${boxPx} px`).toEqual([boxPx, ...shown]);
       }
+      // The evidence view: the switch is a fragment link, so it works with no script. Before it, an entry's evidence is clipped; after it, the
+      // entry's label and evidence are shown; back at the reading view they are clipped again.
+      const EVIDENCE = `(() => { const ev = document.querySelector('#computed-map .derived-facts .ev'); const r = ev.getBoundingClientRect();
+        return { width: Math.round(r.width) > 1, position: getComputedStyle(ev).position, text: ev.innerText.trim().slice(0, 40) }; })()`;
+      expect(await page.evaluate(EVIDENCE)).toEqual({ width: false, position: 'absolute', text: 'Evidence: label Observed; derived by Syz' });
+      // Activated as a reader activates it: the link in the switch (a same-document navigation, so no load event follows).
+      expect(await page.evaluate(`(() => { document.querySelector('.view-switch a[href="#evidence-view"]').click(); return location.hash; })()`)).toBe('#evidence-view');
+      expect(await page.evaluate(EVIDENCE)).toEqual({ width: true, position: 'static', text: 'Evidence: label Observed; derived by Syz' });
+      expect(await page.evaluate(`(() => { document.querySelector('.view-switch a[href="#content"]').click(); return location.hash; })()`)).toBe('#content');
+      expect(await page.evaluate(EVIDENCE)).toMatchObject({ width: false, position: 'absolute' });
       // Each text-form item's left border is styled by its mark: solid for an Observed arrow.
       expect(await page.evaluate('getComputedStyle(document.querySelector(".map-list > li")).borderLeftStyle')).toBe('solid');
     } finally {

@@ -1,8 +1,9 @@
 import { randomBytes } from 'node:crypto';
 import * as fs from 'node:fs';
 import * as path from 'node:path';
+import { BoundedJsonError, parseBoundedJson } from '@syzygy/polaris-generation-core/live';
 import { isRecord } from '@syzygy/support';
-import { isCheckRecordOf, readCheckRecord } from './check-record-read.js';
+import { CHECK_RECORD_LIMITS, isCheckRecordOf, readCheckRecord } from './check-record-read.js';
 import type { FigureFitEntry } from './figure-fit.js';
 import { MECHANISM_RULES, mechanismRuleOf, type MechanismRuleId } from './reader-advice.js';
 import { REVISION_FILE, RUN_LAYOUT } from './state-directory.js';
@@ -98,13 +99,21 @@ export function writeRunAdvice(run: string, advice: RunAdvice): void {
   }
 }
 
-/** The run file as written, or null where it is missing or is not exactly what `writeRunAdvice` writes for some content. For the operator
- * and tests only: no check outcome, render, review, close or reading difference calls it. */
+/** The run file's read bound: the check record's, since the file holds no more than the entries of the run's records. */
+export const RUN_ADVICE_LIMITS = CHECK_RECORD_LIMITS;
+
+/** The run file as written, or null where it is missing, past the read bound (refused from its size before any byte is read), or is not
+ * exactly what `writeRunAdvice` writes for some content. For the operator and tests only: no check outcome, render, review, close or reading
+ * difference calls it. */
 export function readRunAdvice(run: string): RunAdvice | null {
+  const file = path.join(run, RUN_ADVICE_FILE);
   let text: string;
-  try { text = fs.readFileSync(path.join(run, RUN_ADVICE_FILE), 'utf8'); } catch { return null; }
   try {
-    const doc: unknown = JSON.parse(text);
+    if (fs.statSync(file).size > RUN_ADVICE_LIMITS.maxBytes) throw new BoundedJsonError('byte-limit');
+    text = fs.readFileSync(file, 'utf8');
+  } catch { return null; }
+  try {
+    const doc: unknown = parseBoundedJson(text, RUN_ADVICE_LIMITS);
     if (!isRecord(doc) || doc['format'] !== RUN_ADVICE_FORMAT || encodeRunAdvice(doc as unknown as RunAdvice) !== text) return null;
     return doc as unknown as RunAdvice;
   } catch {

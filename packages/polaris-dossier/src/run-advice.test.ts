@@ -75,6 +75,24 @@ describe('the run file', () => {
     expect(fs.readdirSync(run).sort()).toEqual(['checks', 'run-advice.json']);
   });
 
+  it('reads the run file under the check record\'s bound: one past 16,777,216 bytes from its size alone, or nested past 16 levels, is null', () => {
+    const run = runWith({ 0: record(0, [at(390, 261, 1048)]) });
+    const advice = computeRunAdvice(run, 'run-b');
+    writeRunAdvice(run, advice);
+    const file = path.join(run, 'run-advice.json');
+    expect(readRunAdvice(run)).toEqual(advice);
+    // Padded with trailing spaces to the bound, it still reads as JSON; one byte past it, it is refused unread.
+    const text = fs.readFileSync(file, 'utf8');
+    fs.writeFileSync(file, text + ' '.repeat(16_777_216 - Buffer.byteLength(text)));
+    expect(fs.statSync(file).size).toBe(16_777_216);
+    expect(() => JSON.parse(fs.readFileSync(file, 'utf8'))).not.toThrow();
+    fs.truncateSync(file, 16_777_217);
+    expect(readRunAdvice(run)).toBeNull();
+    // Seventeen levels of nesting below the root: past the depth bound.
+    fs.writeFileSync(file, `${JSON.stringify({ ...advice, rules: [[[[[[[[[[[[[[[[[0]]]]]]]]]]]]]]]]] }, null, 2)}\n`);
+    expect(readRunAdvice(run)).toBeNull();
+  });
+
   it('is empty for a run with no check record', () => {
     expect(computeRunAdvice(tempDir('run-advice-empty-'), 'run-y')).toMatchObject({ checkRecords: { read: 0, unreadable: 0 }, occurrences: 0, advisories: [] });
   });

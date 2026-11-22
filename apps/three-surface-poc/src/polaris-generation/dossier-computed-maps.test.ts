@@ -243,6 +243,14 @@ describe('the unit map', () => {
     ]);
     expect(units).toContain('>m6/go.mod: Unknown, no facts taken (class-not-consented).</li>');
   });
+
+  it('refuses the render for an Unknown file whose reason this version does not name, never taking a reason for it', () => {
+    const member = workspaceMember() as Extract<LocalManifestFacts, { state: 'derived' }>;
+    for (const reason of ['unforeseen-reason', 'toString', null]) {
+      const odd: LocalManifestFacts = { ...member, recognizers: member.recognizers.map((r) => (r.rule === NPM ? { ...r, files: [...r.files, { ...unknownFile('odd/package.json', 'x'), unknownReason: reason }] } : r)) };
+      expect(() => site(structure(1, []), odd), String(reason)).toThrow('not-renderable');
+    }
+  });
 });
 
 describe('the CI pipeline map', () => {
@@ -290,6 +298,32 @@ describe('the CI pipeline map', () => {
     expect(page).toContain(`<h2>${many}</h2>`);
     expect(page).toContain('<p class="map-note">25 jobs are declared: too many to draw in one figure, so they are listed below.</p>');
     expect(page.match(/data-manifest-fact="job" /gu)).toHaveLength(28);
+  });
+});
+
+describe('the evidence view on a map page', () => {
+  const SWITCH = '<aside class="reading-legend" aria-label="How to read this page"><p class="view-switch"><a href="#evidence-view">Show the evidence view</a> \u00b7 <a href="#content">Back to the reading view</a></p><span id="evidence-view"></span><ul>';
+
+  it('opens each map page with the view switch and its target, outside any details, and a legend naming the labels', () => {
+    const files = site(structure(1, [['.github', 1], ['packages', 2]]), workspaceMember());
+    for (const path of ['maps/directories.html', 'maps/units.html', 'maps/ci.html']) {
+      const html = files.get(path)!;
+      const main = html.slice(html.indexOf('<main'), html.indexOf('</main>'));
+      // The legend comes first in the main content, before the map's section.
+      expect(main.slice(main.indexOf('>') + 1).startsWith(SWITCH), path).toBe(true);
+      expect(main.indexOf(SWITCH), path).toBeLessThan(main.indexOf('<section id="computed-map"'));
+      expect(html.match(/id="evidence-view"/gu), path).toHaveLength(1);
+      const before = html.slice(0, html.indexOf('id="evidence-view"'));
+      expect((before.match(/<details\b/gu) ?? []).length, path).toBe((before.match(/<\/details>/gu) ?? []).length);
+      expect(main, path).toContain('<li><span class="derived-mark">Derived by Syzygy</span> marks a fact Syzygy derived from the tree or read from a manifest file; the evidence view shows its label, Observed, Inferred or Unknown, and where it comes from.</li>');
+      // The rule that shows the clipped evidence when the target is selected is on the page.
+      expect(html, path).toContain('main:has(#evidence-view:target) .visually-hidden.ev{position:static;');
+    }
+    // Each entry's label is in its evidence text: Observed on the directory map, Inferred on the manifest maps.
+    expect(files.get('maps/directories.html')).toContain('<span class="visually-hidden ev"> Evidence: label Observed; derived by Syzygy by rule top-level-unit version 1;');
+    expect(files.get('maps/ci.html')).toContain('<span class="visually-hidden ev"> Evidence: label Inferred; declared in .github/workflows/ci.yml, lines 1 to 1;');
+    // No other non-narrative page takes the map legend.
+    for (const [path, html] of files) if (path.endsWith('.html') && !path.startsWith('maps/')) expect(html, path).not.toContain('read from a manifest file; the evidence view shows its label');
   });
 });
 
