@@ -33,7 +33,7 @@ import { sessionMachineEffectCurrent } from './session-machine-transport.js';
 
 const canonical = (value: unknown): string => encodeCanonicalJson(value, { maxBytes: 2_097_152, maxNodes: 65_536, maxDepth: 32 });
 type Failure = 'binding-changed' | 'launch-unavailable' | 'audit-unavailable' | 'control-unavailable' | 'role-ended'
-  | 'transport-unavailable' | 'provenance-unavailable' | 'cleanup-unconfirmed';
+  | 'transport-unavailable' | 'provenance-unavailable' | 'cleanup-unconfirmed' | 'cpu-budget';
 interface LaunchHistoryPort {
   readonly promptDigests: Readonly<Record<UrlLaunchHistoryRole, string>>;
   readonly register: (history: UrlCommittedLaunchHistory, waitForSamples: () => Promise<boolean>) => void | Promise<void>;
@@ -90,6 +90,7 @@ export interface UrlRunSessions {
     sitePath: string, round: number, artifact: DesignArtifactPort): Promise<UrlDesignDeliveryView | null>;
   prepareFinalRender(number: number, site: number): Promise<UrlDesignRenderContinuation | null>;
   current(): Promise<boolean>;
+  withinCpuBudget(): boolean;
   waitForProductSamples(): Promise<boolean>;
   stop(): Promise<UrlRunSessionsSummary>;
   summary(): Omit<UrlRunSessionsSummary, 'control' | 'hosts'>;
@@ -133,6 +134,7 @@ async function start(options: UrlRunSessionsOptions, ports: typeof native): Prom
   const cpu = ordered ? createUrlRunCpuBudget(Math.max(1, (options.deadline - options.now()) * 1000), () => {
     const usage = process.cpuUsage(); return usage.user + usage.system;
   }) : null;
+  const withinCpuBudget = (): boolean => cpu?.current() !== false;
   let protectedReadBytes = 0;
   const observeProtectedRead = (bytes: number): void => {
     protectedReadBytes += bytes;
@@ -160,7 +162,8 @@ async function start(options: UrlRunSessionsOptions, ports: typeof native): Prom
     try { options.onFailure(reason); } catch { /* Failure never reopens the host. */ }
   };
   const effectCurrent = (): boolean => {
-    if (stopping || failure !== null || !budget.current() || cpu?.current() === false) return false;
+    if (stopping || failure !== null || !budget.current()) return false;
+    if (!withinCpuBudget()) { fail('cpu-budget'); return false; }
     if ([...hostHealth.values()].some(healthy => !healthy())) { fail('transport-unavailable'); return false; }
     return true;
   };
@@ -296,6 +299,7 @@ async function start(options: UrlRunSessionsOptions, ports: typeof native): Prom
     if (orderedAttempt !== null && !(await orderedAttempt.close())) failure ??= 'cleanup-unconfirmed';
     options.credential.close(); probe.close();
     const auditResult = await audit.close();
+    if (!withinCpuBudget()) failure ??= 'cpu-budget';
     return deepFreeze({ ...summary(), control: control.close(), hosts: hostResults, audit: auditResult });
   })();
   try {
@@ -496,7 +500,7 @@ async function start(options: UrlRunSessionsOptions, ports: typeof native): Prom
       } catch { return null; }
       finally { render.close(); }
     };
-    return Object.freeze({ current, summary, stop, prepareDesignDelivery, prepareFinalRender, publish,
+    return Object.freeze({ current, withinCpuBudget, summary, stop, prepareDesignDelivery, prepareFinalRender, publish,
       waitForProductSamples,
     });
   } catch {

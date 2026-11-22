@@ -1294,9 +1294,9 @@ async function loop(options: Options, ports: CliPorts, state: SupervisorState, s
       const close = await closeRun(run, {}, {
         ...renderDeps,
         urlSupervisorCapture: stopped,
-        admitRecord: () => current()
+        admitRecord: () => current() && context.runtime.withinCpuBudget()
           && checkStoredUrlRender(run, result.path, result.output, () => Date.now() < deadline) === result.record.site
-          && current() && Date.now() < deadline,
+          && current() && context.runtime.withinCpuBudget() && Date.now() < deadline,
       });
       if (close.ok) {
         state.finalSite = result.record;
