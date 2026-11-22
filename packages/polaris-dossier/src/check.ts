@@ -1,6 +1,6 @@
 import * as fs from 'node:fs';
 import * as path from 'node:path';
-import { parseBoundedJson } from '@syzygy/polaris-generation-core/live';
+import { BoundedJsonError, parseBoundedJson } from '@syzygy/polaris-generation-core/live';
 import { isRecord, sha256 } from '@syzygy/support';
 import { CREDENTIAL_CHECK_DISCLOSURE, credentialStepCheck, storedBriefArm, type CredentialStepResult } from './credential-probe.js';
 import { SESSION_ID_PATTERN } from './draft-schema.js';
@@ -21,7 +21,7 @@ import { reviewReachAdvice, type ReviewReachAdvice } from './review-reach.js';
 import { screenCensusReport, withheldCensus, type ScreenCensusReport } from './census.js';
 import { deriveStructure, deriveTreeFacts, structureUnknown, type StructureRecord } from './derive.js';
 import { derivedRecordFile, encodeDerivedRecord, secretPathOf } from './derived-record.js';
-import { CHECK_RECORD_LIMITS } from './check-record-read.js';
+import { CHECK_RECORD_LIMITS, NotARegularFileError, readBoundedFile } from './check-record-read.js';
 import { MANIFEST_BLOB_LIMIT, deriveManifestFacts, manifestFactsUnknown, type ManifestFacts } from './manifest-facts.js';
 import { BRIEF_JSON_LIMITS, CHECK_RECORD_FORMAT, type BoundedCheckRecord, type RecordMeasure, type CheckCommand, type CheckDeps, type CheckFinding, type CheckRecord, type CheckRefusal, type CheckRequest, type CheckResult, type CheckStage, type CitedBlob, DEFAULT_DRAFT, DISCLOSURES, DRAFT_JSON_LIMITS, DRAFT_MAX_BYTES, type ExcludedQuotation, type MechanismAdvice, type ReviewVisibility, STEP_LOG_FORMAT, type VerifiedQuotation, errno, reviewVisibility, text } from './check-model.js';
 import { type Derived, type SubjectRules, deriveFindings, draftRules } from './check-derive.js';
@@ -396,7 +396,9 @@ export function recordBoundFinding(measure: RecordMeasure, counts: { readonly qu
 export function briefIssuedAt(run: string, pinned: string, noun = 'draft'): number | string {
   let record: unknown;
   try {
-    record = parseBoundedJson(fs.readFileSync(path.join(run, RUN_LAYOUT.briefRecord), 'utf8'), BRIEF_JSON_LIMITS);
+    // Read by the reader rule under the brief record's 262,144 bytes (version 2.12, syzygy-3efd.76): a FIFO, a device, a directory or a
+    // record past the bound is one check cannot read.
+    record = parseBoundedJson(readBoundedFile(path.join(run, RUN_LAYOUT.briefRecord), BRIEF_JSON_LIMITS.maxBytes).toString('utf8'), BRIEF_JSON_LIMITS);
   } catch {
     return `the run holds no readable ${RUN_LAYOUT.briefRecord}: no brief was issued, so the deadline clock has not started and no ${noun} is checked`;
   }
@@ -414,13 +416,15 @@ export function nextRevision(dir: string): number {
   return numbers.length === 0 ? 0 : Math.max(...numbers) + 1;
 }
 
+/** The draft or inventory check is given, read by the reader rule under the draft's 4,194,304 bytes (version 2.12, syzygy-3efd.76): opened
+ * once without blocking, refused before any byte is read where it is not a regular file or its size is past the bound, and refused where
+ * more than the bound is read after its size was taken. Check freezes exactly these bytes. */
 function readSubject(file: string, noun: string): Uint8Array | string {
   try {
-    const stats = fs.statSync(file);
-    if (!stats.isFile()) return `${file} is not a regular file`;
-    if (stats.size > DRAFT_MAX_BYTES) return `${file} is larger than the ${DRAFT_MAX_BYTES}-byte ${noun} bound`;
-    return new Uint8Array(fs.readFileSync(file));
+    return new Uint8Array(readBoundedFile(file, DRAFT_MAX_BYTES));
   } catch (cause) {
+    if (cause instanceof NotARegularFileError) return `${file} is not a regular file`;
+    if (cause instanceof BoundedJsonError && cause.code === 'byte-limit') return `${file} is larger than the ${DRAFT_MAX_BYTES}-byte ${noun} bound`;
     return `the ${noun} ${file} cannot be read (${errno(cause)})`;
   }
 }

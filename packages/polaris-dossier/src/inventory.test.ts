@@ -852,3 +852,35 @@ describe('Syzygy starts no session', () => {
     for (const name of ['session-handover.ts', 'inventory.ts', 'review.ts']) expect(PROCESS.test(fs.readFileSync(path.join(SRC, name), 'utf8'))).toBe(false);
   });
 });
+
+// REQ-polaris-generation-034 version 2.12 (syzygy-3efd.76): check reads the inventory submission by the reader rule under the draft's
+// 4,194,304 bytes, with the existing inventory words. A FIFO blocks a reader that opens it without O_NONBLOCK; the mutation runner bounds
+// each run by a process timeout.
+describe('inventory-check: the reader rule for the submission (version 2.12)', () => {
+  const padTo = (text: string, bytes: number): string => text + ' '.repeat(bytes - Buffer.byteLength(text));
+
+  it('checks a submission of exactly 4,194,304 bytes and refuses one of 4,194,305 with the inventory words, freezing nothing', async () => {
+    const run = await runWithDrafts();
+    const dir = await handedOver(run);
+    const file = writeInventory(dir, padTo(JSON.stringify(validInventory(), null, 2), 4_194_304));
+    expect(fs.statSync(file).size).toBe(4_194_304);
+    passed(await checkInventory(run, {}, deps()));
+    expect(fs.statSync(path.join(run, 'inventory', 'rev-0.json')).size).toBe(4_194_304);
+    fs.appendFileSync(file, ' ');
+    expect(await checkInventory(run, {}, deps())).toMatchObject({ ok: false, refusal: { stage: 'inventory', reason: `${file} is larger than the 4194304-byte inventory bound` } });
+    expect(fs.existsSync(path.join(run, 'inventory', 'rev-1.json'))).toBe(false);
+  });
+
+  it.each<[string, (file: string) => void]>([
+    ['a FIFO', (file) => execFileSync('mkfifo', [file])],
+    ['a symbolic link to /dev/zero', (file) => fs.symlinkSync('/dev/zero', file)],
+    ['a directory', (file) => fs.mkdirSync(file)],
+  ])('refuses %s given as the submission, without blocking', async (_what, plant) => {
+    const run = await runWithDrafts();
+    const dir = await handedOver(run);
+    const file = path.join(dir, 'inventory.json');
+    plant(file);
+    expect(await checkInventory(run, {}, deps())).toMatchObject({ ok: false, refusal: { stage: 'inventory', reason: `${file} is not a regular file` } });
+    expect(fs.existsSync(path.join(run, 'inventory', 'rev-0.json'))).toBe(false);
+  });
+});

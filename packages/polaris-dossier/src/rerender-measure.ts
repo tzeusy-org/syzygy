@@ -3,7 +3,8 @@ import * as path from 'node:path';
 import { parseBoundedJson } from '@syzygy/polaris-generation-core/live';
 import { decodeUtf8, isRecord, sha256 } from '@syzygy/support';
 import { draftRules } from './check-derive.js';
-import { DRAFT_JSON_LIMITS } from './check-model.js';
+import { DRAFT_JSON_LIMITS, DRAFT_MAX_BYTES } from './check-model.js';
+import { NotARegularFileError, readBoundedFile } from './check-record-read.js';
 import { LOCAL_DRAFT_SCHEMA_VERSIONS, checkDraftShape } from './draft-schema.js';
 import { FIGURE_MIN_TEXT_PX, FIGURE_TEXT_PX, FIGURE_VIEWPORTS, figureFit, type FigureLayout } from './figure-fit.js';
 import { readerAdvice } from './reader-advice.js';
@@ -77,8 +78,10 @@ export function listStoredDrafts(stateRoot: string): DraftListing {
     }
     for (const revision of revisions.sort((a, b) => a - b)) {
       let bytes: Uint8Array;
-      try { bytes = fs.readFileSync(path.join(dir, `rev-${revision}.json`)); } catch (cause) {
-        drafts.push({ run: entry.name, revision, bytes: null, readError: code(cause) });
+      // The reader rule under the draft's 4,194,304 bytes (version 2.12, syzygy-3efd.76): a revision past it, or one that is not a regular
+      // file when opened, is a revision this measurement could not read.
+      try { bytes = readBoundedFile(path.join(dir, `rev-${revision}.json`), DRAFT_MAX_BYTES); } catch (cause) {
+        drafts.push({ run: entry.name, revision, bytes: null, readError: cause instanceof NotARegularFileError ? 'not-a-regular-file' : code(cause) });
         continue;
       }
       drafts.push({ run: entry.name, revision, bytes });

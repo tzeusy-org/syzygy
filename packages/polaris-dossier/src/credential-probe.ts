@@ -2,6 +2,7 @@ import * as fs from 'node:fs';
 import * as path from 'node:path';
 import { parseBoundedJson } from '@syzygy/polaris-generation-core/live';
 import type { CredentialProbe } from './execution-rule.js';
+import { readBoundedFile } from './check-record-read.js';
 import { RUN_LAYOUT } from './state-directory.js';
 import { isoOf } from './iso-of.js';
 
@@ -199,7 +200,8 @@ export async function credentialStepCheck(runDir: string, step: CredentialStep, 
 /** The arm the stored brief record names; null when it cannot be read, which every caller treats as permitting (fail closed). */
 export function storedBriefArm(run: string): 'sec-3' | 'permitting' | null {
   try {
-    const record = parseBoundedJson(fs.readFileSync(path.join(run, RUN_LAYOUT.briefRecord), 'utf8'), { maxBytes: 262_144, maxNodes: 4096, maxDepth: 8 }) as { executionRule?: { arm?: unknown } };
+    // The reader rule under 262,144 bytes (version 2.12, syzygy-3efd.76): a record that is not a regular file or is past it names no arm.
+    const record = parseBoundedJson(readBoundedFile(path.join(run, RUN_LAYOUT.briefRecord), 262_144).toString('utf8'), { maxBytes: 262_144, maxNodes: 4096, maxDepth: 8 }) as { executionRule?: { arm?: unknown } };
     const arm = record.executionRule?.arm;
     return arm === 'sec-3' || arm === 'permitting' ? arm : null;
   } catch {

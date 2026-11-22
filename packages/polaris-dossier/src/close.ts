@@ -7,6 +7,7 @@ import { executionFlags } from './execution-flags.js';
 import type { CredentialProbe } from './execution-rule.js';
 import { RECORDS_WITHIN_REACH } from './gate-sources.js';
 import { errno, logStep, openRun, readRecord } from './inventory.js';
+import { readBriefRecord } from './run-dir.js';
 import { isoOf } from './iso-of.js';
 import type { Outcome } from './outcome.js';
 import { latestPassedDraft, type ReviewDeps } from './review.js';
@@ -122,7 +123,7 @@ export async function closeRun(runDir: string, request: CloseRequest, deps: Clos
   if (!screenLoad.ok) return refuse('screen', screenLoad.why);
   const secret = (value: string): boolean => screenLoad.screen.screenBody(value) === 'secret-detector-match';
 
-  const brief = readRecord(path.join(run, RUN_LAYOUT.briefRecord));
+  const brief = readBriefRecord(run);
   const stored = storedFiles(run);
   const record = {
     format: EXECUTION_RECORD_FORMAT,
