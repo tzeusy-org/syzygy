@@ -1,10 +1,13 @@
 import path from 'node:path';
+import { AsyncLocalStorage } from 'node:async_hooks';
 import { encodeCanonicalJson } from '@syzygy/polaris-generation-core/live';
 import { isRecord, sha256 } from '@syzygy/support';
 import { sourceBindingSha256 } from './run-record.js';
-import { startSessionBroker, type SessionBroker, type SessionBrokerLimits } from './session-broker.js';
+import { startSessionBroker, sessionBrokerTestPort, type SessionBroker, type SessionBrokerLimits } from './session-broker.js';
 import { createSessionController } from './session-controller.js';
 import type { SessionCredential } from './session-credential.js';
+import { isSessionMachineTransport, type SessionMachineTransport } from './session-machine-transport.js';
+import type { UrlMachineOperation } from './url-machine-instance.js';
 import { SESSION_POLICY_LIMITS, SESSION_TOOLS, type SessionAdmission, type SessionContentClass, type SessionOrigin } from './session-egress-policy.js';
 import { isSessionProfile, sessionProfileProviderHeaders, type NativeSessionProfile } from './session-profile.js';
 import { readSessionRelayAuditEvidence, startSessionRelay, type SessionAuditEvent, type SessionRelay, type SessionRelayLimits, type SessionRelayPorts,
@@ -38,6 +41,7 @@ export interface SessionHostOptions {
   readonly observeUsage: (usage: SessionResponseUsage) => boolean;
   readonly relayLimits?: SessionRelayLimits;
   readonly brokerLimits?: SessionBrokerLimits;
+  readonly machine?: { readonly broker: SessionMachineTransport; readonly relay: SessionMachineTransport };
 }
 export interface SessionHost {
   readonly brokerSocket: string; readonly relaySocket: string;
@@ -48,12 +52,13 @@ type RelayStart = typeof startSessionRelay;
 /** Compose the single host policy cursor with the actual broker and transport.
  * This module neither starts a CLI nor loads a credential, and makes no OS
  * containment/child-termination claim. The caller owns those separate gates. */
-export const startSessionHost = (input: SessionHostOptions): Promise<SessionHost> => start(input, startSessionRelay);
+export const startSessionHost = (input: SessionHostOptions): Promise<SessionHost> => start(input, startSessionRelay, false);
 /** Own-fixture seam only, absent from package exports and CLI configuration. */
-export const sessionHostTestPort = (relay: RelayStart) => (input: SessionHostOptions): Promise<SessionHost> => start(input, relay);
+export const sessionHostTestPort = (relay: RelayStart) => (input: SessionHostOptions): Promise<SessionHost> => start(input, relay, input.machine === undefined);
 
-async function start(input: SessionHostOptions, relayStart: RelayStart): Promise<SessionHost> {
-  if (!isSessionProfile(input.profile)) throw new Error('session-host-unavailable');
+async function start(input: SessionHostOptions, relayStart: RelayStart, fixture: boolean): Promise<SessionHost> {
+  if ((!fixture && (input.machine === undefined || !isSessionMachineTransport(input.machine.broker)
+    || !isSessionMachineTransport(input.machine.relay))) || !isSessionProfile(input.profile)) throw new Error('session-host-unavailable');
   const profile = input.profile, binding = profile.input.binding, record = input.tools.record;
   if (binding.role !== input.tools.role || binding.run !== path.basename(input.tools.run)
     || binding.sourceBinding !== sourceBindingSha256(record.subject) || binding.policy !== record.subject.screeningPolicy.sha256
@@ -74,7 +79,11 @@ async function start(input: SessionHostOptions, relayStart: RelayStart): Promise
   let broker: SessionBroker | undefined, relay: SessionRelay | undefined;
   let closeResult: ReturnType<SessionHost['close']> | undefined;
   const live = (): boolean => !closing && !failed && (relay === undefined || relay.healthy());
-  const current = async (): Promise<boolean> => live() && await ports.current() && live();
+  const toolBoundary = new AsyncLocalStorage<() => boolean>();
+  const current = async (): Promise<boolean> => {
+    const boundary = toolBoundary.getStore();
+    return live() && (boundary === undefined || boundary()) && await ports.current() && live() && (boundary === undefined || boundary());
+  };
   const poison = (): void => { failed = true; controller.poison(); };
   const close: SessionHost['close'] = () => closeResult ??= (async () => {
     closing = true; poison();
@@ -133,25 +142,35 @@ async function start(input: SessionHostOptions, relayStart: RelayStart): Promise
     },
   };
   try {
-    relay = await relayStart(input.relaySocket, input.subject, relayPorts, input.relayLimits);
-    broker = await startSessionBroker(input.brokerSocket, async (value, release) => {
+    relay = await relayStart(input.relaySocket, input.subject, relayPorts, input.relayLimits, input.machine?.relay);
+    const brokerStart = fixture ? sessionBrokerTestPort : startSessionBroker;
+    broker = await brokerStart(input.brokerSocket, async (value, release, context) => {
       // A response audit precedes revalidation and the local write. The tool
       // cursor can advance only after the relay completes that write.
       if (!(await current()) || !relay?.responseFlushed() || !controller.beginTool(value)) { poison(); throw new Error('session-host-unavailable'); }
       const invocation = value as { readonly tool: string; readonly input: Readonly<Record<string, unknown>> };
-      try {
-        await ports.beforeTool({ tool: invocation.tool, inputSha256: sha256(encodeCanonicalJson(invocation.input,
-          { maxBytes: 2_097_152, maxNodes: 65_536, maxDepth: 32 })) });
-        if (!(await current())) throw new Error('session-host-unavailable');
-        let released = false;
-        await tools!.invoke(value, (reply, revalidate) => {
-          if (!controller.completeTool(reply)) throw new Error('session-host-unavailable');
-          release(reply, revalidate);
-          released = true;
-        });
-        if (!released) throw new Error('session-host-unavailable');
-      } catch { poison(); throw new Error('session-host-unavailable'); }
-    }, poison, input.brokerLimits);
+      const perform = async (boundary: () => boolean): Promise<void> => {
+        try {
+          if (!boundary()) throw new Error('session-host-unavailable');
+          await ports.beforeTool({ tool: invocation.tool, inputSha256: sha256(encodeCanonicalJson(invocation.input,
+            { maxBytes: 2_097_152, maxNodes: 65_536, maxDepth: 32 })) });
+          if (!(await current()) || !boundary()) throw new Error('session-host-unavailable');
+          let released = false;
+          await tools!.invoke(value, (reply, revalidate) => {
+            if (!boundary() || !controller.completeTool(reply)) throw new Error('session-host-unavailable');
+            release(reply, revalidate);
+            released = true;
+          });
+          if (!released) throw new Error('session-host-unavailable');
+        } catch { poison(); throw new Error('session-host-unavailable'); }
+      };
+      if (fixture) { await perform(() => true); return; }
+      if (context === null || !['source_read', 'artifact_read', 'artifact_write', 'dossier_step'].includes(invocation.tool)) {
+        poison(); throw new Error('session-host-unavailable');
+      }
+      const mediated = await context.mediate(invocation.tool as UrlMachineOperation, boundary => toolBoundary.run(boundary, () => perform(boundary)));
+      if (!mediated.ok) { poison(); throw new Error('session-host-unavailable'); }
+    }, poison, input.brokerLimits, input.machine?.broker);
     if (!(await current())) throw new Error('session-host-unavailable');
     return Object.freeze({ brokerSocket: input.brokerSocket, relaySocket: input.relaySocket, close });
   } catch { await close(); throw new Error('session-host-unavailable'); }

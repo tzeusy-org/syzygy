@@ -4,15 +4,15 @@ import path from 'node:path';
 import { afterEach, describe, expect, it } from 'vitest';
 import { tempDir } from '@syzygy/test-kit';
 import { createSessionBrokerInvocation } from './session-mcp.js';
-import { SESSION_BROKER_LIMITS, startSessionBroker, type SessionBroker } from './session-broker.js';
+import { SESSION_BROKER_LIMITS, sessionBrokerTestPort, type SessionBroker } from './session-broker.js';
 
 const cleanup: (() => void | Promise<unknown>)[] = [];
 afterEach(async () => { for (const close of cleanup.splice(0).reverse()) await close(); });
 const pause = (ms: number) => new Promise<void>(resolve => setTimeout(resolve, ms));
 const address = () => path.join(tempDir('session-broker-'), 'b.sock');
-async function fixture(invoke: Parameters<typeof startSessionBroker>[1], lower: Partial<typeof SESSION_BROKER_LIMITS> = {}) {
+async function fixture(invoke: Parameters<typeof sessionBrokerTestPort>[1], lower: Partial<typeof SESSION_BROKER_LIMITS> = {}) {
   let faults = 0;
-  const broker = await startSessionBroker(address(), invoke, () => { faults++; }, { ...SESSION_BROKER_LIMITS, milliseconds: 500, ...lower });
+  const broker = await sessionBrokerTestPort(address(), invoke, () => { faults++; }, { ...SESSION_BROKER_LIMITS, milliseconds: 500, ...lower });
   cleanup.push(() => broker.close());
   return { broker, faults: () => faults };
 }
@@ -134,9 +134,9 @@ describe('complete bounded host broker frames', () => {
 
   it('refuses existing endpoints or invalid configuration without replacing existing bytes', async () => {
     const socket = address(); fs.writeFileSync(socket, 'NONSECRET-prior-endpoint');
-    await expect(startSessionBroker(socket, async () => ({}), () => undefined)).rejects.toThrow('session-broker-start-failed');
+    await expect(sessionBrokerTestPort(socket, async () => ({}), () => undefined)).rejects.toThrow('session-broker-start-failed');
     expect(fs.readFileSync(socket, 'utf8')).toBe('NONSECRET-prior-endpoint');
-    await expect(startSessionBroker('/NONSECRET-absent-parent/b.sock', async () => ({}), () => undefined)).rejects.toThrow('invalid-session-broker');
-    await expect(startSessionBroker(address(), async () => ({}), () => undefined, { ...SESSION_BROKER_LIMITS, invocations: 0 })).rejects.toThrow('invalid-session-broker');
+    await expect(sessionBrokerTestPort('/NONSECRET-absent-parent/b.sock', async () => ({}), () => undefined)).rejects.toThrow('invalid-session-broker');
+    await expect(sessionBrokerTestPort(address(), async () => ({}), () => undefined, { ...SESSION_BROKER_LIMITS, invocations: 0 })).rejects.toThrow('invalid-session-broker');
   });
 });

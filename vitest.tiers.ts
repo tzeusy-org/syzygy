@@ -113,6 +113,7 @@ export const INTEGRATION_TESTS: readonly string[] = [
   'packages/polaris-dossier/src/session-credential.test.ts',
   'packages/polaris-dossier/src/session-host.test.ts',
   'packages/polaris-dossier/src/session-launch.test.ts',
+  'packages/polaris-dossier/src/session-machine-transport.test.ts',
   'packages/polaris-dossier/src/session-mcp-support.test.ts',
   'packages/polaris-dossier/src/session-peer.test.ts',
   'packages/polaris-dossier/src/session-relay.test.ts',

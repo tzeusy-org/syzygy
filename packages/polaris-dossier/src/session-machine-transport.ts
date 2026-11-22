@@ -1,0 +1,125 @@
+import { Socket, Server } from 'node:net';
+import { Duplex } from 'node:stream';
+import {
+  closeUrlMachinePeer, isUrlMachinePeerFor, mediateUrlMachinePeer, readUrlMachinePeer,
+  type UrlMachinePeer,
+} from './url-machine-peer.js';
+import type { UrlMachineOperation } from './url-machine-instance.js';
+
+export interface SessionMachineTransport { readonly authentication: 'url-machine-peer/1' }
+export interface SessionMachineEffectContext {
+  readonly peer: UrlMachinePeer;
+  mediate<T>(operation: UrlMachineOperation, effect: (current: () => boolean) => T | Promise<T>):
+    Promise<{ readonly ok: true; readonly value: T } | { readonly ok: false }>;
+}
+interface TransportPorts {
+  /** Configure sender metadata on the actual listener before any client launch. */
+  readonly prepare: (server: Server) => boolean;
+  /** The trusted closure selects the genuine launch and captures this exact socket.
+   * It may await launch registration within the connection's original deadline. */
+  readonly accept: (socket: Socket) => Promise<UrlMachinePeer | null>;
+}
+const transports = new WeakMap<SessionMachineTransport, TransportPorts>();
+interface ConnectionState {
+  readonly raw: Socket; readonly peer: UrlMachinePeer; readonly stream: Duplex;
+  readonly deadline: number;
+  boundary: (() => boolean) | null;
+}
+const contexts = new WeakMap<SessionMachineEffectContext, ConnectionState>();
+const connections = new WeakMap<Duplex, SessionMachineEffectContext>();
+
+/** First-party factory only. Merely returning peer-shaped metadata cannot
+ * authenticate: every accepted capability must belong to its exact raw socket. */
+export function createSessionMachineTransport(ports: TransportPorts): SessionMachineTransport | null {
+  if (typeof ports?.prepare !== 'function' || typeof ports.accept !== 'function') return null;
+  const transport: SessionMachineTransport = Object.freeze({ authentication: 'url-machine-peer/1' });
+  transports.set(transport, Object.freeze({ prepare: ports.prepare, accept: ports.accept }));
+  return transport;
+}
+export const isSessionMachineTransport = (transport: SessionMachineTransport): boolean => transports.has(transport);
+export function prepareSessionMachineTransport(transport: SessionMachineTransport, server: Server): boolean {
+  try { return transports.get(transport)?.prepare(server) === true; } catch { return false; }
+}
+export function sessionMachineEffectContext(stream: Duplex): SessionMachineEffectContext | null {
+  return connections.get(stream) ?? null;
+}
+
+/** Node never consumes the accepted raw socket. The native sender verifier is
+ * its sole reader; only checked chunks enter this bounded parser-facing stream.
+ * Native writes require the active effect's immediate boundary guard. */
+export async function openSessionMachineConnection(raw: Socket, transport: SessionMachineTransport,
+  limits: { readonly bytes: number; readonly milliseconds: number }): Promise<Duplex | null> {
+  const ports = transports.get(transport), deadline = performance.now() + limits.milliseconds;
+  if (!ports || !(raw instanceof Socket) || !raw.isPaused() || raw.readableLength !== 0
+    || raw.listenerCount('data') !== 0 || raw.listenerCount('readable') !== 0
+    || !Number.isSafeInteger(limits.bytes) || limits.bytes <= 0 || limits.bytes > 8_388_608
+    || !Number.isSafeInteger(limits.milliseconds) || limits.milliseconds <= 0 || limits.milliseconds > 180_000) return null;
+  let peer: UrlMachinePeer | null = null, expired = false;
+  let timer: ReturnType<typeof setTimeout> | undefined;
+  try {
+    const capture = ports.accept(raw);
+    void capture.then(value => { if (expired && value) closeUrlMachinePeer(value); }, () => {});
+    peer = await Promise.race([capture, new Promise<null>(resolve => {
+      timer = setTimeout(() => { expired = true; resolve(null); }, Math.min(5000, limits.milliseconds));
+    })]);
+  } catch { /* Fixed refusal only. */ }
+  finally { clearTimeout(timer); }
+  if (!peer || expired || raw.destroyed || performance.now() >= deadline || !isUrlMachinePeerFor(peer, raw)) {
+    if (peer) closeUrlMachinePeer(peer);
+    return null;
+  }
+  const selected = peer;
+  let bytes = 0, reading = false, ended = false, resume: (() => void) | null = null;
+  let state: ConnectionState;
+  const stream = new Duplex({ allowHalfOpen: true, autoDestroy: false, readableHighWaterMark: 65_536, writableHighWaterMark: 65_536,
+    read() { resume?.(); resume = null; },
+    write(chunk: Buffer, _encoding, done) {
+      if (!state.boundary?.() || raw.destroyed || performance.now() >= deadline) { done(new Error('session-machine-transport-unavailable')); return; }
+      raw.write(chunk, error => done(error ? new Error('session-machine-transport-unavailable') : undefined));
+    },
+    final(done) { raw.end(done); },
+    destroy(error, done) {
+      ended = true; resume?.(); resume = null; clearTimeout(lifetime); closeUrlMachinePeer(selected); raw.destroy(); done(error ? new Error('session-machine-transport-unavailable') : undefined);
+    },
+  });
+  state = { raw, peer: selected, stream, deadline, boundary: null };
+  const context: SessionMachineEffectContext = Object.freeze({ peer: selected,
+    async mediate<T>(this: SessionMachineEffectContext, operation: UrlMachineOperation,
+      effect: (current: () => boolean) => T | Promise<T>): Promise<{ readonly ok: true; readonly value: T } | { readonly ok: false }> {
+      const active = contexts.get(this);
+      if (!active || active !== state || ended || stream.destroyed || active.boundary !== null) return { ok: false };
+      return mediateUrlMachinePeer(selected, operation, async current => {
+        const boundary = () => !ended && !raw.destroyed && !stream.destroyed && performance.now() < deadline && current();
+        if (!boundary()) throw new Error('session-machine-transport-unavailable');
+        active.boundary = boundary;
+        try { return await effect(boundary); } finally { active.boundary = null; }
+      });
+    },
+  });
+  contexts.set(context, state); connections.set(stream, context);
+  const lifetime = setTimeout(() => stream.destroy(new Error('session-machine-transport-unavailable')), Math.max(1, deadline - performance.now()));
+  raw.once('close', () => stream.destroy()); raw.on('error', () => stream.destroy());
+  stream.on('error', () => undefined);
+  stream.once('finish', () => { setImmediate(() => stream.destroy()); });
+  const pump = async (): Promise<void> => {
+    if (reading) return;
+    reading = true;
+    try {
+      while (!ended && !stream.destroyed && performance.now() < deadline) {
+        const chunk = await readUrlMachinePeer(selected);
+        if (!chunk || ended || stream.destroyed || performance.now() >= deadline) throw new Error();
+        if (chunk.kind === 'end') { stream.push(null); return; }
+        if (chunk.kind === 'pending') { await new Promise(resolve => setTimeout(resolve, 5)); continue; }
+        if (chunk.kind !== 'data') throw new Error();
+        bytes += chunk.bytes.length;
+        if (bytes > limits.bytes || chunk.bytes.length === 0 || chunk.bytes.length > 65_536) throw new Error();
+        if (!stream.push(Buffer.from(chunk.bytes)) && !ended && !stream.destroyed) await new Promise<void>(resolve => { resume = resolve; });
+      }
+      if (!ended) stream.destroy(new Error('session-machine-transport-unavailable'));
+    } catch { stream.destroy(new Error('session-machine-transport-unavailable')); }
+    finally { reading = false; }
+  };
+  // Let the caller attach its bounded parser before the first checked chunk.
+  setImmediate(() => { void pump(); });
+  return stream;
+}

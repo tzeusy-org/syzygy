@@ -1,10 +1,13 @@
 import * as fs from 'node:fs';
 import * as http from 'node:http';
+import * as net from 'node:net';
 import * as https from 'node:https';
 import path from 'node:path';
 import { randomUUID } from 'node:crypto';
 import { deepFreeze, sha256 } from '@syzygy/support';
 import { SESSION_CONTENT_CLASSES, type SessionAdmission, type SessionBinding, type SessionConsumedToolResult, type SessionTool } from './session-egress-policy.js';
+import { isSessionMachineTransport, openSessionMachineConnection, prepareSessionMachineTransport, sessionMachineEffectContext,
+  type SessionMachineTransport, type SessionMachineEffectContext } from './session-machine-transport.js';
 import type { SessionResponseStopReason, SessionResponseUsage } from './session-response.js';
 
 export interface SessionRelayLimits {
@@ -45,19 +48,19 @@ export interface SessionRelayPorts {
   /** Must revalidate the run/pin/policy/provider binding, not consult consent records. */
   readonly current: () => boolean | Promise<boolean>;
   /** Host commits the new opaque policy state before returning success. */
-  readonly request: (bytes: Uint8Array) => { readonly ok: true; readonly body: Uint8Array; readonly admission: SessionAdmission;
+  readonly request: (bytes: Uint8Array, context: SessionMachineEffectContext | null) => { readonly ok: true; readonly body: Uint8Array; readonly admission: SessionAdmission;
     readonly consumedToolResults: readonly SessionConsumedToolResult[] } | { readonly ok: false };
   /** Independently pinned protocol headers and host-owned credentials only.
    * Incoming CLI values must not become an unchecked content/credential channel.
    * The host may validate a fixed synthetic CLI marker and substitute its own
    * credential here, without giving the role the credential or its source file.
    */
-  readonly providerHeaders: (incoming: Readonly<Record<string, string>>) => Readonly<Record<string, string>> | null;
+  readonly providerHeaders: (incoming: Readonly<Record<string, string>>, context: SessionMachineEffectContext | null) => Readonly<Record<string, string>> | null;
   /** Complete buffered response ingest, including SSE reconstruction and screening,
    * must succeed before any response body is released to the CLI. */
-  readonly response: (bytes: Uint8Array, contentType: string) => { readonly ok: true; readonly observation: SessionResponseObservation;
+  readonly response: (bytes: Uint8Array, contentType: string, context: SessionMachineEffectContext | null) => { readonly ok: true; readonly observation: SessionResponseObservation;
     readonly usage?: SessionResponseUsage } | { readonly ok: false };
-  readonly audit: (event: SessionAuditEvent) => void | Promise<void>;
+  readonly audit: (event: SessionAuditEvent, context: SessionMachineEffectContext | null) => void | Promise<void>;
 }
 export interface SessionRelay {
   readonly socket: string;
@@ -125,13 +128,16 @@ const forwardToAnthropic: Forward = input => new Promise((resolve, reject) => {
 });
 
 export const startSessionRelay = (socket: string, subject: SessionRelaySubject, ports: SessionRelayPorts,
-  limits: SessionRelayLimits = SESSION_RELAY_LIMITS): Promise<SessionRelay> => start(socket, subject, ports, limits, forwardToAnthropic);
+  limits: SessionRelayLimits = SESSION_RELAY_LIMITS, machine?: SessionMachineTransport): Promise<SessionRelay> =>
+  start(socket, subject, ports, limits, forwardToAnthropic, undefined, machine, false);
 /** Internal own-fixture seam, absent from workspace exports and CLI options. */
 export const sessionRelayTestPort = (forward: Forward, observe?: (server: http.Server) => void) => (socket: string, subject: SessionRelaySubject, ports: SessionRelayPorts,
-  limits: SessionRelayLimits = SESSION_RELAY_LIMITS): Promise<SessionRelay> => start(socket, subject, ports, limits, forward, observe);
+  limits: SessionRelayLimits = SESSION_RELAY_LIMITS, machine?: SessionMachineTransport): Promise<SessionRelay> =>
+  start(socket, subject, ports, limits, forward, observe, machine, machine === undefined);
 
-async function start(socket: string, subject: SessionRelaySubject, ports: SessionRelayPorts, limits: SessionRelayLimits, forward: Forward, observe?: (server: http.Server) => void): Promise<SessionRelay> {
-  if (!path.isAbsolute(socket) || Buffer.byteLength(socket) > 103 || subject.binding.provider !== 'anthropic'
+async function start(socket: string, subject: SessionRelaySubject, ports: SessionRelayPorts, limits: SessionRelayLimits, forward: Forward,
+  observe: ((server: http.Server) => void) | undefined, machine: SessionMachineTransport | undefined, fixture: boolean): Promise<SessionRelay> {
+  if ((!fixture && (machine === undefined || !isSessionMachineTransport(machine))) || !path.isAbsolute(socket) || Buffer.byteLength(socket) > 103 || subject.binding.provider !== 'anthropic'
     || Object.keys(limits).sort().join(',') !== Object.keys(SESSION_RELAY_LIMITS).sort().join(',')
     || Object.entries(limits).some(([key, value]) => !Number.isSafeInteger(value) || value <= 0
       || value > SESSION_RELAY_LIMITS[key as keyof SessionRelayLimits])
@@ -143,11 +149,23 @@ async function start(socket: string, subject: SessionRelaySubject, ports: Sessio
   const evidence = new WeakMap<SessionAuditEvent, SessionRelayAuditEvidence>();
   let pending = false, poisoned = false, closing = false, responseFlushed = false;
   const server = http.createServer({ maxHeaderSize: 16_384, requestTimeout: limits.milliseconds, headersTimeout: Math.min(limits.milliseconds, 10_000) }, (incoming, outgoing) => {
-    if (pending || poisoned || closing) { outgoing.writeHead(503, { 'content-type': 'application/json', connection: 'close' }); outgoing.end(SAFE_FAILURE); incoming.resume(); return; }
+    const context = fixture ? null : sessionMachineEffectContext(incoming.socket);
+    if ((!fixture && context === null) || pending || poisoned || closing) { outgoing.writeHead(503, { 'content-type': 'application/json', connection: 'close' }); outgoing.end(SAFE_FAILURE); incoming.resume(); return; }
     pending = true;
     responseFlushed = false;
     const controller = new AbortController(); controllers.add(controller);
     const requestId = randomUUID();
+    const effect = async <T>(act: (boundary: () => boolean) => T | Promise<T>): Promise<T> => {
+      if (fixture) return act(() => true);
+      if (context === null) throw new Error('session-machine-transport-unavailable');
+      const result = await context.mediate('inference-forward', act);
+      if (!result.ok) throw new Error('session-machine-transport-unavailable');
+      return result.value;
+    };
+    const audit = (row: SessionAuditEvent): Promise<void> => effect(async boundary => {
+      if (!boundary()) throw new Error('session-machine-transport-unavailable');
+      await ports.audit(row, context);
+    });
     let terminal = false, refusing = false, writingAdmittedResponse = false, admission: SessionAdmission | null = null;
     let received: SessionAuditEvent['received'] = null;
     let consumedToolResults: SessionAuditEvent['consumedToolResults'] = [];
@@ -176,11 +194,11 @@ async function start(socket: string, subject: SessionRelaySubject, ports: Sessio
     const auditRefusal = async (status: number): Promise<void> => {
       if (terminal || refusing) return;
       refusing = true;
-      try { await ports.audit(event('attempt-refused', 'refused', null)); } catch { /* No body/send occurs if the audit is unavailable. */ }
+      try { await audit(event('attempt-refused', 'refused', null)); } catch { /* No body/send occurs if the audit is unavailable. */ }
       refuse(status);
     };
     const timer = setTimeout(() => {
-      void Promise.resolve().then(() => ports.audit(event('transport-failed', 'Unknown', null))).catch(() => undefined);
+      void Promise.resolve().then(() => audit(event('transport-failed', 'Unknown', null))).catch(() => undefined);
       // An absolute transport deadline includes output backpressure. Destroy
       // immediately; a complete HTTP error cannot be promised to a stalled peer.
       poisoned = true; refusing = true; controller.abort(); incoming.destroy(); outgoing.destroy(); finish();
@@ -224,7 +242,10 @@ async function start(socket: string, subject: SessionRelaySubject, ports: Sessio
         if (!(await ports.current()) || terminal) { await auditRefusal(409); return; }
         const body = Buffer.concat(chunks, size);
         received = { digest: sha256(body), bytes: body.byteLength };
-        const decision = ports.request(body);
+        const decision = await effect(boundary => {
+          if (!boundary()) throw new Error('session-machine-transport-unavailable');
+          return ports.request(body, context);
+        });
         if (!decision.ok) { await auditRefusal(403); return; }
         if (!(decision.body instanceof Uint8Array) || decision.body.byteLength > limits.requestBytes) { await auditRefusal(403); return; }
         const forwardingBody = Buffer.from(decision.body);
@@ -233,43 +254,51 @@ async function start(socket: string, subject: SessionRelaySubject, ports: Sessio
           originIds: [...decision.admission.originIds], classes: [...decision.admission.classes] };
         consumedToolResults = Object.freeze(decision.consumedToolResults.map(result => Object.freeze({ ...result })));
         const admittedHeaders = (): Readonly<Record<string, string>> | null => {
-          const projected = ports.providerHeaders(Object.freeze({ ...headers }));
+          const projected = ports.providerHeaders(Object.freeze({ ...headers }), context);
           if (projected === null || Object.entries(projected).some(([name, value]) => !HEADER_NAMES.includes(name)
           || typeof value !== 'string' || value.length > 8192 || /[\0\r\n]/u.test(value))
             || (projected['authorization'] === undefined) === (projected['x-api-key'] === undefined)) return null;
           return { ...projected };
         };
-        if (admittedHeaders() === null) { await auditRefusal(403); return; }
+        if (await effect(boundary => boundary() ? admittedHeaders() : null) === null) { await auditRefusal(403); return; }
         // This await is the actual choke point ordering, not an after-send log.
-        await ports.audit(event('attempt-allowed', 'allowed', null));
+        await audit(event('attempt-allowed', 'allowed', null));
         if (terminal) return;
         if (!(await ports.current()) || terminal) { await auditRefusal(409); return; }
         // Credential expiry and current policy are checked after the audit,
         // without another await between header preparation and native send.
-        const forwardingHeaders = admittedHeaders();
-        if (forwardingHeaders === null) { await auditRefusal(403); return; }
-        const exchange = forward({ route: incoming.url!, headers: forwardingHeaders, body: forwardingBody, signal: controller.signal, limits });
+        const sending = await effect(boundary => {
+          const forwardingHeaders = admittedHeaders();
+          if (forwardingHeaders === null) return null;
+          if (!boundary()) throw new Error('session-machine-transport-unavailable');
+          return { exchange: forward({ route: incoming.url!, headers: forwardingHeaders, body: forwardingBody, signal: controller.signal, limits }) };
+        });
+        if (sending === null) { await auditRefusal(403); return; }
+        const exchange = sending.exchange;
         // Keep a rejection observed while persisting the actual invocation.
         void exchange.catch(() => undefined);
-        await ports.audit(event('send-attempt', 'attempted', null));
+        await audit(event('send-attempt', 'attempted', null));
         const response = await exchange;
         if (terminal) return;
         if (!response.requestFlushed) throw new Error('provider-send-unconfirmed');
-        await ports.audit(event('send-outcome', 'local-request-flushed', null));
+        await audit(event('send-outcome', 'local-request-flushed', null));
         if (terminal) return;
         if (!(response.body instanceof Uint8Array) || response.body.byteLength > limits.responseBytes) {
-          await ports.audit(event('response-refused', 'refused', response.status)); refuse(502); return;
+          await audit(event('response-refused', 'refused', response.status)); refuse(502); return;
         }
         const responseBody = Buffer.from(response.body), responseStatus = response.status, responseType = response.contentType;
         if (!(await ports.current()) || terminal) {
-          if (!terminal) { await ports.audit(event('response-refused', 'refused', responseStatus)); refuse(409); } return;
+          if (!terminal) { await audit(event('response-refused', 'refused', responseStatus)); refuse(409); } return;
         }
         const checkingBody = Buffer.from(responseBody), responseDigest = sha256(responseBody);
         const content = /^text\/event-stream(?:\s*;\s*charset=utf-8)?$/iu.test(responseType) ? 'messages-event-stream'
           : /^application\/json(?:\s*;\s*charset=utf-8)?$/iu.test(responseType) ? 'messages-json' : null;
-        const accepted = responseStatus === 200 && content !== null ? ports.response(checkingBody, responseType) : { ok: false } as const;
+        const accepted = responseStatus === 200 && content !== null ? await effect(boundary => {
+          if (!boundary()) throw new Error('session-machine-transport-unavailable');
+          return ports.response(checkingBody, responseType, context);
+        }) : { ok: false } as const;
         if (!content || !accepted.ok || sha256(checkingBody) !== responseDigest) {
-          await ports.audit(event('response-refused', 'refused', responseStatus)); refuse(502); return;
+          await audit(event('response-refused', 'refused', responseStatus)); refuse(502); return;
         }
         const { stopReason, textBlocks, tool } = accepted.observation;
         const usage = accepted.usage;
@@ -279,36 +308,55 @@ async function start(socket: string, subject: SessionRelaySubject, ports: Sessio
         }
         observedResponse = Object.freeze({ digest: responseDigest, bytes: responseBody.byteLength, content, stopReason, textBlocks,
           tool: tool === null ? null : Object.freeze({ id: tool.id, name: tool.name, inputSha256: tool.inputSha256 }) });
-        await ports.audit(event('response-admitted', 'response-admitted', responseStatus));
+        await audit(event('response-admitted', 'response-admitted', responseStatus));
         if (terminal) return;
         if (!(await ports.current()) || terminal) {
-          if (!terminal) { await ports.audit(event('response-refused', 'refused', responseStatus)); refuse(409); } return;
+          if (!terminal) { await audit(event('response-refused', 'refused', responseStatus)); refuse(409); } return;
         }
-        outgoing.writeHead(responseStatus, { 'content-type': responseType, 'content-length': responseBody.byteLength, connection: 'close' });
-        writingAdmittedResponse = true;
-        outgoing.end(responseBody);
+        await effect(boundary => new Promise<void>((resolve, reject) => {
+          if (!boundary()) { reject(new Error('session-machine-transport-unavailable')); return; }
+          outgoing.once('finish', resolve);
+          outgoing.once('error', () => reject(new Error('session-machine-transport-unavailable')));
+          outgoing.once('close', () => { if (!outgoing.writableFinished) reject(new Error('session-machine-transport-unavailable')); });
+          outgoing.writeHead(responseStatus, { 'content-type': responseType, 'content-length': responseBody.byteLength, connection: 'close' });
+          writingAdmittedResponse = true;
+          outgoing.end(responseBody);
+        }));
       } catch {
-        try { await ports.audit(event('transport-failed', 'Unknown', null)); } catch { /* Retained attempt never becomes a receipt. */ }
+        try { await audit(event('transport-failed', 'Unknown', null)); } catch { /* Retained attempt never becomes a receipt. */ }
         refuse(502);
       }
     })(); });
   });
-  server.maxConnections = limits.connections;
+  const rawSockets = new Set<net.Socket>();
+  const listener = fixture ? server : net.createServer({ allowHalfOpen: true, pauseOnConnect: true }, raw => {
+    rawSockets.add(raw); raw.on('error', () => undefined); raw.once('close', () => rawSockets.delete(raw));
+    if (closing || poisoned || rawSockets.size > limits.connections) { raw.destroy(); return; }
+    void openSessionMachineConnection(raw, machine!, { bytes: limits.requestBytes + 16_384, milliseconds: limits.milliseconds }).then(stream => {
+      if (!stream || closing || poisoned) { poisoned = true; stream?.destroy(); raw.destroy(); return; }
+      stream.once('error', () => { poisoned = true; for (const controller of controllers) controller.abort(); });
+      server.emit('connection', stream);
+    }, () => { poisoned = true; raw.destroy(); });
+  });
+  listener.maxConnections = limits.connections;
   observe?.(server);
   try {
     await new Promise<void>((resolve, reject) => {
       const failed = (): void => { reject(new Error('session-relay-start-failed')); };
-      server.once('error', failed); server.listen(socket, () => { server.off('error', failed); resolve(); });
+      listener.once('error', failed); listener.listen(socket, () => { listener.off('error', failed); resolve(); });
     });
-    server.on('error', () => { poisoned = true; for (const controller of controllers) controller.abort(); server.closeAllConnections(); });
+    if (!fixture && !prepareSessionMachineTransport(machine!, listener)) throw new Error('session-relay-start-failed');
+    listener.on('error', () => { poisoned = true; for (const controller of controllers) controller.abort(); server.closeAllConnections();
+      for (const raw of rawSockets) raw.destroy(); });
     fs.chmodSync(socket, 0o600);
   }
-  catch { server.close(); throw new Error('session-relay-start-failed'); }
+  catch { listener.close(); throw new Error('session-relay-start-failed'); }
   const relay = Object.freeze({ socket, healthy: () => !poisoned && !closing, responseFlushed: () => responseFlushed && !poisoned && !closing, close: async () => {
     closing = true; poisoned = true;
     for (const controller of controllers) controller.abort();
     server.closeAllConnections();
-    await new Promise<void>(resolve => server.close(() => resolve()));
+    for (const raw of rawSockets) raw.destroy();
+    await new Promise<void>(resolve => listener.close(() => resolve()));
     try { fs.unlinkSync(socket); } catch { /* Retain only safe lifecycle metadata outside this transport. */ }
   } });
   relayEvidence.set(relay, evidence);

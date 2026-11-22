@@ -81,7 +81,7 @@ async function fixture() {
   const relay = sessionRelayTestPort(async input => {
     forwards++; events.push('forward'); expect(events.at(-2)).toBe('audit:attempt-allowed');
     expect(input.headers.authorization).toBe('Bearer NONSECRET-own-host-token');
-    expect(JSON.parse(Buffer.from(input.body).toString()).metadata.user_id).toBe(`syzygy:own-run:author:${profile.input.sessionId}`);
+    expect(JSON.parse(Buffer.from(input.body).toString()).metadata.user_id).toBe(`syzygy:own-run:author/${profile.input.sessionId}`);
     return { status: 200, contentType: 'application/json', requestFlushed: true, body: response(forwards === 1 ? [call] : [{ type: 'text', text: 'Own fixture complete.' }]) };
   }, server => {
     server.on('request', (_request, response) => { response.once('close', relayClosed); });
@@ -89,7 +89,7 @@ async function fixture() {
   });
   const start = async (changes: Partial<SessionHostOptions> = {}, copyRelayEvent = false) => {
     const startRelay: typeof relay = copyRelayEvent
-      ? (socket, subject, ports, limits) => relay(socket, subject, { ...ports, audit: event => ports.audit(structuredClone(event)) }, limits)
+      ? (socket, subject, ports, limits) => relay(socket, subject, { ...ports, audit: event => ports.audit(structuredClone(event), null) }, limits)
       : relay;
     const host = await sessionHostTestPort(startRelay)({ ...options, ...changes }); cleanup.push(() => host.close()); return host;
   };
