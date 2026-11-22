@@ -119,7 +119,7 @@ export async function verifyStoppedUrlRun(state: SupervisorState, input: {
         roleDeclaration: role, executable, screen: screen.screen }]));
     let machine: Awaited<ReturnType<typeof reconstructColdUrlRunMachineHistory>> = null;
     let audit: Awaited<ReturnType<typeof verifyUrlSessionAuditHistory>> = null;
-    let requests = 0, responses = 0, tokens = 0;
+    let requests = 0, responses = 0, tokens = 0, cumulativeQuestionCount = 0;
     for (const boundary of history) {
       machine = await reconstructColdUrlRunMachineHistory({ governanceRoot, protectedRoot, sealed: boundary.record.machine,
         expected: { identitySha256: sealed.record.machine.identitySha256, binding, runId: expected.runId,
@@ -131,8 +131,10 @@ export async function verifyStoppedUrlRun(state: SupervisorState, input: {
       requests += audit.capturedCompleteExchanges + audit.capturedCountExchanges;
       responses += audit.capturedCompleteExchanges;
       tokens += audit.capturedReportedTokens === 'Unknown' ? 0 : audit.capturedReportedTokens;
+      cumulativeQuestionCount += audit.capturedQuestions;
       const spend = boundary.record.spend;
-      if (![requests, responses, tokens].every(Number.isSafeInteger)
+      if (![requests, responses, tokens, cumulativeQuestionCount].every(Number.isSafeInteger)
+        || cumulativeQuestionCount > record.declared.maxQuestions
         || spend.requestReservations !== requests || spend.completeUsageReports !== responses
         || spend.reportedTokens !== (responses === 0 ? 'Unknown' : tokens)) return refuse('budget');
     }
@@ -146,7 +148,7 @@ export async function verifyStoppedUrlRun(state: SupervisorState, input: {
       machine, now, current });
     if (!products || !current()) return refuse('checkpoint');
     const verified = Object.freeze({ ok: true as const, machine, record, audit, boundary: sealed, history,
-      resumeBudget, products, checkedContext: Object.freeze({ runtime: runtime.runtime, executable,
+      resumeBudget, products, cumulativeQuestionCount, checkedContext: Object.freeze({ runtime: runtime.runtime, executable,
         screen: screen.screen, policy, origin, adoption, openReader, authority, current, policyCurrent,
         effective: read.effective, sourceStore: sealed.record.sourceStore, deadline }) });
     verifiedRuns.set(verified, async () => {

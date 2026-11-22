@@ -103,9 +103,12 @@ describe('retained URL stop expectation', () => {
     const f = stoppedFixture(); f.write(); const boundary = f.load()!;
     let live = true;
     const input = { root: f.root, expected: f.expected, sha256: boundary.sha256, now: () => 2000, current: () => live };
-    const claim = acquireUrlRecoveryClaim(input)!;
+    let claim = acquireUrlRecoveryClaim(input)!;
     expect(claim).not.toBeNull(); expect(isUrlRecoveryClaim(claim)).toBe(true); expect(isUrlRecoveryClaim({ ...claim })).toBe(false);
     expect(claim.current()).toBe(false); expect(acquireUrlRecoveryClaim(input)).toBeNull();
+    expect(claim.release()).toBe(true);
+    claim = acquireUrlRecoveryClaim(input)!;
+    expect(claim).not.toBeNull();
     expect(claim.consume()).toBe(true); expect(claim.consume()).toBe(true);
     expect(claim.current()).toBe(true);
     live = false; expect(claim.current()).toBe(false); expect(claim.release()).toBe(true); expect(claim.current()).toBe(false);
