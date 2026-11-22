@@ -1,46 +1,45 @@
-# Redis dossier runbook (local-agent mode, S12)
+# Redis dossier runbook
 
-**Candidate. Binds nothing.** This page is operating guidance for
-`syzygy-qkea.13` (S12): attended end-to-end dossier runs against Redis. It
-performs no act, records no consent and is never authority. The owner, as
-operator, starts and attends every session. No agent starts one, and this
-page never lists an agent doing so. State claims below are dated 2026-10-07
-where they are not a command to run. Re-read `PROJECT-STATUS.md` and the act
-records before relying on any of them.
+**Candidate operating guidance for a real target.** The owner starts and
+attends each session. The Redis sitting references below record the
+2026-10-07 setup. Check the act records and
+[`PROJECT-STATUS.md`](../../PROJECT-STATUS.md) for the checkout you will use.
 
-**The default path is Run A:** Claude Code, with no execution, against Redis.
-A Redis dossier needs no building or running of Redis. Run B (Codex, with
-execution permitted) is blocked, and its section says why.
+## Complete the fixture proof first
 
-## Can the flow run before the sitting? No
+[Observed] S12 (`syzygy-qkea.13`) requires one attended end-to-end run
+per tool against a consented fixture repository before any real target.
+The [local-agent checklist](../../openspec/changes/polaris-dossier-local-agent-mode/tasks.md#required-implementation-and-proof-after-applicable-authorization)
+records that prerequisite. S12 tracks the fixture admission, the Claude
+Code and Codex runs, and the applicable permitting run. Redis is the
+real target for the steps on this page.
 
-[Observed] The production command reads its gate records from one place only:
-the Syzygy checkout it runs from. In
-`packages/polaris-dossier/src/cli.ts`, `RECORDS_ROOT` is the checkout root,
-and there is no environment variable or flag that overrides it. The only seam
-that injects other records is `CliPorts.sources`, and only tests use it. A
-"scratch governance root" would therefore have to be a copy of Syzygy with
-owner-act records written into it. Recorder-produced records in that copy
-would claim acts the owner never performed (VIS-4), so no rehearsal is built
-that way.
+[Observed, 2026-11-22] The production permitting arm is disabled. Two
+no-execution fixture runs can provide the per-tool evidence. The required
+permitting run would still be pending.
 
-The end-to-end path is already exercised under injected fixture sources, by
-`packages/polaris-dossier/src/full-run.testkit.ts` and the tests that use it.
-A separate fixture repository would add nothing the binary could use, because
-the binary cannot read fixture records. S12 therefore runs once, after the
-sitting, against Redis itself.
+[Observed] The production CLI reads the gate records from its Syzygy
+checkout. The tests using `packages/polaris-dossier/src/full-run.testkit.ts`
+exercise the path with injected sources. That evidence covers the
+synthetic path. The attended fixture needs its own admitted repository,
+pinned revision, production preflight and per-tool evidence.
+
+After the fixture proof and the Redis preflight pass, Run A is the
+no-execution Claude Code path. Run B describes the conditional Codex
+permitting path.
 
 ## What must be true first
 
 Each item is checked by the command named, never by reading a status word.
 
-### Owner acts
+### Historical owner-act checklist
 
-The sitting the owner holds is put from
+The 2026-10-07 sitting was prepared from
 `.syzygy/governance/contracts/candidates/REDIS-LOCAL-AGENT-SITTING-BRIEF.md`,
-items A to I. Read its sibling `REDIS-LOCAL-AGENT-SITTING-BRIEF-REVIEW-NOTES.md`
-beside it. Items J to M were settled before the sitting and are not asked. The
-item letters and owning packets below are copied from the brief's table "The
+items A to I, and its sibling `REDIS-LOCAL-AGENT-SITTING-BRIEF-REVIEW-NOTES.md`.
+Current gate decisions come from the checked-out records and preflight.
+Items J to M were settled before that sitting. The item letters and owning
+packets below are copied from the brief's table "The
 decisions, in the order you would be asked". The dossier packet is
 `.syzygy/governance/contracts/candidates/dossier-local-agent-acts/OWNER-SITTING-PACKET.md`,
 the package of PR #370.
@@ -214,14 +213,11 @@ Then build the evidence record (below), with `<tool>` set to `claude-code`.
 
 ## Run B: Codex, execution permitted (blocked)
 
-> **Blocked: not offered until D9 (G) is in force, `PERMITTING_ARM_ENABLED`
-> is switched on by its own reviewed change, and the owner chooses to permit
-> execution for that run.** The owner's sitting choices decide whether it is
-> ever offered. Declining G closes it for good, until a later act.
-> [Observed] Today `PERMITTING_ARM_ENABLED` is `false` in
-> `packages/polaris-dossier/src/execution-rule.ts`. While it is false, every
-> brief carries SEC-3's rule, whatever was recorded. Check with
-> `grep -n "PERMITTING_ARM_ENABLED = " <syzygy checkout>/packages/polaris-dossier/src/execution-rule.ts`.
+> **Blocked.** [Observed, 2026-11-22] `PERMITTING_ARM_ENABLED` is `false`
+> in `packages/polaris-dossier/src/execution-rule.ts`. While it is false,
+> every brief carries the SEC-3 refusal. A permitting run requires the
+> applicable SEC-3 conditions, an enabled arm and the owner's recorded
+> choice for the run. Check the flag in the checkout you will use.
 
 The steps are kept here so the run is ready if it is ever offered. Do not
 start it while the banner holds.
@@ -256,7 +252,7 @@ Run A never carries to Run B.
 Build it once the run is closed:
 
 ```
-node <syzygy checkout>/scripts/dossier_run_evidence.mjs <run> > <syzygy checkout>/docs/evidence/polaris-dossier-s12-<tool>-<date>.json
+node <syzygy checkout>/scripts/dossier_run_evidence.mjs <run> > <syzygy checkout>/docs/evidence/polaris-dossier-redis-<tool>-<date>.json
 ```
 
 `scripts/dossier_run_evidence.mjs` reads only three things: the run

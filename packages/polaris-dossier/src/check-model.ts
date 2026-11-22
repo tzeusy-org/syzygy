@@ -17,6 +17,7 @@ import type { FigureFit, FigureLayout } from './figure-fit.js';
 import type { RunProductReads } from './url-operation-products.js';
 import type { ReadingDifference, ReadingLedger } from './reading-ledger.js';
 import type { ManifestFacts } from './manifest-facts.js';
+import type { InventoryCoverageAdvice, InventoryOfRecordReader } from './inventory-coverage.js';
 
 /** The check's record formats, finding and result types, and the small shared readers; split out of `check.ts` unchanged. */
 
@@ -218,6 +219,9 @@ export interface CheckReportMembers {
   readonly mechanismAdvice?: MechanismAdvice;
   /** Version 2.10: where the record written is the bounded form, every finding the full record would have held; written to no file. */
   readonly findingsLeftOut?: readonly CheckFinding[];
+  /** The entries of the inventory of record that no block of the draft covers (`inventory-coverage.ts`, syzygy-5dhm.28); on the report,
+   * never the record, and never a finding. */
+  readonly inventoryCoverageAdvice?: InventoryCoverageAdvice;
 }
 
 /** `file` is null where the run file could not be written, `inRun` then the count this check computed for it. */
@@ -243,6 +247,9 @@ export interface CheckDeps {
   /** How a check record's encoded text is measured against the read bound (version 2.10); `measureCheckRecord` by default. Injected only
    * by tests, to reach the value and depth arms, which no subject within its own bounds is shown to reach. */
   readonly measureRecord?: (text: string) => RecordMeasure;
+  /** The reader of the inventory of record, which the coverage advice compares the draft with (syzygy-5dhm.28); without it that advice
+   * is Unknown. A port, not an import: `inventory.ts` imports the check. */
+  readonly inventoryOfRecord?: InventoryOfRecordReader;
 }
 
 /** A check record's size as a reader measures it (version 2.10): UTF-8 bytes, values (the root and every value below it, never a key) and
