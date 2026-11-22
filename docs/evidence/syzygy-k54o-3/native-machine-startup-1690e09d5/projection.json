@@ -1,0 +1,86 @@
+{
+  "baseCommit": "1690e09d56566637979451af67cfe0a179b36ea3",
+  "sourceBinding": {
+    "bytes": 8737,
+    "sha256": "280dddad9988a7dca903de7b7adf13c3103e26e4f296633c16cca512c7d5c524"
+  },
+  "closedTrace": {
+    "rows": 38,
+    "components": {
+      "ordered": 8,
+      "sample": 30
+    }
+  },
+  "machineCreation": [],
+  "storeOperationTerminals": [],
+  "firstAllocationOperations": [],
+  "otherRefusedStoreOperations": [],
+  "orderedPhases": [
+    {
+      "component": "ordered",
+      "phase": "entry",
+      "at": 68684.100482,
+      "round": 1
+    },
+    {
+      "component": "ordered",
+      "phase": "prelaunch-render-enter",
+      "at": 68684.908871,
+      "round": 1
+    },
+    {
+      "component": "ordered",
+      "phase": "prelaunch-render-return",
+      "at": 69797.137062,
+      "round": 1
+    },
+    {
+      "component": "ordered",
+      "phase": "launched",
+      "at": 71831.124319,
+      "round": 1
+    },
+    {
+      "component": "ordered",
+      "phase": "launch-registration-enter",
+      "at": 71851.747713,
+      "round": 1
+    },
+    {
+      "component": "ordered",
+      "phase": "launch-registration-return",
+      "at": 71856.574822,
+      "round": 1
+    },
+    {
+      "component": "ordered",
+      "phase": "delivery-commit-enter",
+      "at": 71857.399141,
+      "round": 1
+    },
+    {
+      "component": "ordered",
+      "phase": "bootstrap-refused",
+      "at": 74948.121101,
+      "round": 1
+    }
+  ],
+  "designSamples": {
+    "phases": {
+      "sample-start": 15,
+      "sample-passed": 14,
+      "sample-refused": 1
+    },
+    "nonSuccess": [
+      {
+        "component": "sample",
+        "phase": "sample-refused",
+        "stage": "storage",
+        "at": 74981.121272,
+        "elapsed": 60.28415099999984,
+        "ordinal": 15,
+        "bound": 1000
+      }
+    ]
+  }
+}

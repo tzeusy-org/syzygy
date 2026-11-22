@@ -1,0 +1,146 @@
+{
+  "subject": {
+    "commit": "1690e09d56566637979451af67cfe0a179b36ea3",
+    "tree": "d211a1211dc3a565713313b1693e50af090fde33",
+    "baseSource": {
+      "packages/polaris-dossier/src/session-launch.ts": {
+        "sha256": "f867296c11e4501220dafcfebc57374a65b93608d1cab4604d7125f16ad492a9",
+        "bytes": 29305
+      },
+      "packages/polaris-dossier/src/url-machine-store.ts": {
+        "sha256": "1f8016ff5a44be5d169fe4504a1067fc9a4b8a7dd080a97a07521061ce712796",
+        "bytes": 45492
+      },
+      "packages/polaris-dossier/src/url-run-composed.test.ts": {
+        "sha256": "f999e7d0183f2187db676805d1978681d822198620e10938d7ebec229989f24e",
+        "bytes": 44817
+      },
+      "packages/polaris-dossier/src/url-run-machine.ts": {
+        "sha256": "62b517503741a70eaa24195d9a3f3a7d15ebed5680aa84f7de0c40d166f5c835",
+        "bytes": 20085
+      },
+      "packages/polaris-dossier/src/url-run-ordered-attempt.ts": {
+        "sha256": "8edcd9c6d5486b0e38c7241136544fbed20da24a225e6466cbe793f61da47320",
+        "bytes": 17451
+      }
+    },
+    "overlaidSource": {
+      "packages/polaris-dossier/src/session-launch.ts": {
+        "sha256": "a54499989f9530b27a89e29eabd2c4f986e1f6c8972b8ee53caab02035b094dc",
+        "bytes": 30029
+      },
+      "packages/polaris-dossier/src/url-machine-store.ts": {
+        "sha256": "f626294e2a306be36c55e028cef598de582ba218b422e2176c3c4d7e405570d8",
+        "bytes": 47826
+      },
+      "packages/polaris-dossier/src/url-run-composed.test.ts": {
+        "sha256": "07d53078baf03e28a0fd41f4ff19297fe136b814971205cac097ce5089e4a79e",
+        "bytes": 45597
+      },
+      "packages/polaris-dossier/src/url-run-machine.ts": {
+        "sha256": "3484f7192dbde3cb5455bcfc8e3ff47da07ce9a456efe268ce49edb85ac0c921",
+        "bytes": 21871
+      },
+      "packages/polaris-dossier/src/url-run-ordered-attempt.ts": {
+        "sha256": "8c85be3a1ad13b455717bee56db302f10759131d2a7b0ecd377b7797b0ee14c7",
+        "bytes": 18252
+      }
+    },
+    "overlayPatch": {
+      "sha256": "34bf4b5ccfa3d413239a48fb69cf16decdb421b64390aedb00a1128e539f0a86",
+      "bytes": 28361
+    }
+  },
+  "test": {
+    "project": "integration",
+    "selected": "runs the genuine production pipeline to stop-resume",
+    "selector": "to stop-resume$",
+    "maxWorkers": 1,
+    "fixtureWatchdogMilliseconds": 540000
+  },
+  "baseline": {
+    "retainedOriginalsByDigest": {
+      "log": {
+        "sha256": "b92277a4278e6db00a144e2415375665a2b4469365a6c76f3a4031341180db28",
+        "bytes": 35807
+      },
+      "cut": {
+        "sha256": "e9fe01d1750daabd798ca86d589816b644b26d9a71c8cce1245b26b5a85437d4",
+        "bytes": 137296
+      },
+      "failure": {
+        "sha256": "8317eddbf869480b60d1bf4a155d2ac361d2186d45112cd7c19d1c4f51cc230f",
+        "bytes": 40160
+      }
+    },
+    "selectedElapsedMilliseconds": 207092,
+    "resumeChecks": [
+      {
+        "phase": "verify",
+        "ok": true,
+        "nextDesignRound": 2
+      },
+      {
+        "phase": "claim",
+        "exactCut": true,
+        "current": true
+      },
+      {
+        "phase": "resumed-guards",
+        "policyWithdrawal": "refused",
+        "claimWithdrawal": "refused"
+      }
+    ],
+    "screenOutcome": "launch-unavailable",
+    "executionRecord": false,
+    "freshRoleAuditsByDigest": {
+      "author": {
+        "sha256": "16b96753f7a630760800a70e002ec0de131ae890fd75cb661224a1ec7319b143",
+        "bytes": 1185,
+        "eventKinds": [
+          "declaration"
+        ]
+      },
+      "inventory": {
+        "sha256": "9795c47eb5ee74cb48b1ce0195cd0a12299c5bae452202d424733ff93c33898a",
+        "bytes": 1253,
+        "eventKinds": [
+          "declaration"
+        ]
+      },
+      "fidelity": {
+        "sha256": "41665dbd9a7883f013733fe167725b9f2c5fe076448c1410165ea5b4a5b08925",
+        "bytes": 1251,
+        "eventKinds": [
+          "declaration"
+        ]
+      },
+      "design": {
+        "sha256": "850f6fdc35d98a1ca7e14e1d3bcb4da08c580bae2e09bcc2ecee99abf5db7cc5",
+        "bytes": 1262,
+        "eventKinds": [
+          "declaration"
+        ]
+      }
+    },
+    "protectedStoreStateByDigest": {
+      "sha256": "1c5e25da73c51bb259512d0e8413fdd07eba30485b9c3e7b9e547b17ddb563c1",
+      "bytes": 70850
+    },
+    "protectedStore": {
+      "sealedClientCount": 8,
+      "sealedTerminalKinds": {
+        "revoked": 7,
+        "never-issued": 1
+      },
+      "matchingSealedClientCountAfterFailure": 8,
+      "freshSlotCountAfterFailure": 1,
+      "freshSlotAnchor": "never-issued",
+      "stateFileMtimeUtc": "2026-11-22T13:35:41.948050+00:00",
+      "storeLockMtimeUtc": "2026-11-22T13:35:39.825012+00:00",
+      "stateFileBirth": "2026-11-22 21:35:41.653197910 +0800",
+      "storeLockBirth": "2026-11-22 21:35:39.825012170 +0800",
+      "retainedEmptyDirectoryLock": true
+    }
+  }
+}
