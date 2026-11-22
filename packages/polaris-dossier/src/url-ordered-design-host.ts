@@ -86,9 +86,9 @@ async function start(input: OrderedDesignHostOptions, startRelay: typeof startSe
     if (await Promise.race([Promise.resolve(input.current()), cancelled]) !== true || closing || failed) throw refused();
     relay = await startRelay(input.relaySocket, input.subject, {
       current,
-      request: bytes => {
+      request: async bytes => {
         try {
-          const checked = selectedController().checkRequest(bytes);
+          const checked = await selectedController().checkRequest(bytes);
           if (!checked.ok) throw refused();
           const parsed = parseBoundedJson(new TextDecoder('utf-8', { fatal: true }).decode(bytes), SESSION_POLICY_LIMITS);
           if (!isRecord(parsed) || Object.hasOwn(parsed, 'tool_choice')) throw refused();

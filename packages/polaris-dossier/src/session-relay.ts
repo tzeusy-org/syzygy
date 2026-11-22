@@ -44,12 +44,15 @@ export interface SessionAuditEvent {
   readonly outcome: 'allowed' | 'refused' | 'attempted' | 'local-request-flushed' | 'Unknown' | 'response-admitted';
   readonly status: number | null;
 }
+export type SessionRequestDecision = { readonly ok: true; readonly body: Uint8Array; readonly admission: SessionAdmission;
+  readonly consumedToolResults: readonly SessionConsumedToolResult[] } | { readonly ok: false };
+export type SessionResponseDecision = { readonly ok: true; readonly observation: SessionResponseObservation;
+  readonly usage?: SessionResponseUsage } | { readonly ok: false };
 export interface SessionRelayPorts {
   /** Must revalidate the run/pin/policy/provider binding, not consult consent records. */
   readonly current: () => boolean | Promise<boolean>;
   /** Host commits the new opaque policy state before returning success. */
-  readonly request: (bytes: Uint8Array, context: SessionMachineEffectContext | null) => { readonly ok: true; readonly body: Uint8Array; readonly admission: SessionAdmission;
-    readonly consumedToolResults: readonly SessionConsumedToolResult[] } | { readonly ok: false };
+  readonly request: (bytes: Uint8Array, context: SessionMachineEffectContext | null) => SessionRequestDecision | Promise<SessionRequestDecision>;
   /** Independently pinned protocol headers and host-owned credentials only.
    * Incoming CLI values must not become an unchecked content/credential channel.
    * The host may validate a fixed synthetic CLI marker and substitute its own
@@ -58,8 +61,7 @@ export interface SessionRelayPorts {
   readonly providerHeaders: (incoming: Readonly<Record<string, string>>, context: SessionMachineEffectContext | null) => Readonly<Record<string, string>> | null;
   /** Complete buffered response ingest, including SSE reconstruction and screening,
    * must succeed before any response body is released to the CLI. */
-  readonly response: (bytes: Uint8Array, contentType: string, context: SessionMachineEffectContext | null) => { readonly ok: true; readonly observation: SessionResponseObservation;
-    readonly usage?: SessionResponseUsage } | { readonly ok: false };
+  readonly response: (bytes: Uint8Array, contentType: string, context: SessionMachineEffectContext | null) => SessionResponseDecision | Promise<SessionResponseDecision>;
   readonly audit: (event: SessionAuditEvent, context: SessionMachineEffectContext | null) => void | Promise<void>;
 }
 export interface SessionRelay {
