@@ -123,7 +123,7 @@ export function boundOrderedDesignTransfer(input: Input): OrderedDesignTransferB
     const { wrapper } = transcript;
     // The longest possible reminder uses the widest allowed decimal count.
     // This is a size representative. The relay supplies real usage at each turn.
-    const reminder = sessionProfileReminderText(wrapper.tokenBudget);
+    const reminder = sessionProfileReminderText(wrapper.contextAllowance);
     const result = (id: string, reply: string, cached: boolean) => ({ role: wrapper.resultRole, content: [{
       type: wrapper.resultType, tool_use_id: id,
       content: [{ type: wrapper.textBlockType, text: wrapper.leading + reply + wrapper.trailing }, { type: wrapper.textBlockType, text: reminder }],

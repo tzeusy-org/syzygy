@@ -438,14 +438,14 @@ export async function createUrlSessionAudit(given: UrlSessionAuditOptions): Prom
       const p = event.payload, role = event.role as ViewRole;
       switch (event.kind) {
         case 'relay': {
-          if (!exact(p, ['event', 'subject', 'requestId', 'at', 'credentialIdentity', 'exposureMode', 'authority', 'admission', 'received',
+          if (!exact(p, ['event', 'subject', 'requestId', 'at', 'credentialIdentity', 'exposureMode', 'governingRule', 'admission', 'received',
             'route', 'consumedToolResults', 'response', 'outcome', 'status'])
             || !one(p.event, SESSION_RELAY_EVENTS)
             || !exact(p.subject, ['binding', 'project', 'pin', 'principal']) || !equal(p.subject.binding, scopes.get(role)!.binding)
             || p.subject.project !== input.project || p.subject.pin !== input.pin || p.subject.principal !== input.principal
             || typeof p.requestId !== 'string' || !/^[a-f0-9]{8}-[a-f0-9]{4}-4[a-f0-9]{3}-[89ab][a-f0-9]{3}-[a-f0-9]{12}$/u.test(p.requestId)
             || typeof p.at !== 'string' || !/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{3}Z$/u.test(p.at) || new Date(p.at).toISOString() !== p.at
-            || p.credentialIdentity !== 'Unknown' || p.exposureMode !== 'private-local-cli' || p.authority !== 'GOVERNANCE-SIMPLIFICATION-D10'
+            || p.credentialIdentity !== 'Unknown' || p.exposureMode !== 'private-local-cli' || p.governingRule !== 'GOVERNANCE-SIMPLIFICATION-D10'
             || (p.status !== null && (!count(p.status, 599) || p.status < 100))
             || (p.route !== null && !one(p.route, ['messages', 'count-tokens']))) poison();
           if (p.admission !== null) admission(p.admission);

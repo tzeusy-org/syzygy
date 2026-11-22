@@ -21,7 +21,7 @@ import type { createUrlRunOrigins } from './url-run-origins.js';
 import type { RecordedRunConfig } from './run-record.js';
 import type { effectiveUrlProjection } from './effective-run-record.js';
 import { urlDossierReportExit } from './url-dossier-result.js';
-import { isSessionProfile } from './session-profile.js';
+import { isNativeSessionProfile } from './session-profile.js';
 import { encodeRunRecord, readRunRecord } from './run-record.js';
 import { readEffectiveRunDeclaration, type UrlRunDeclaration } from './url-run-record.js';
 import type { ProtectedUrlRunContext } from './effective-run-record.js';
@@ -145,7 +145,7 @@ function create(given: UrlRunArtifactsOptions) {
   const origins = given.origins, ledger = origins.ledger, live = (): void => { if (current() !== true) refuse(); };
   const schemaDocuments = Object.fromEntries(Object.entries(origins.schemaDocuments).map(([key, value]) => [key, Uint8Array.from(value)])) as Origins['schemaDocuments'];
   live();
-  if (!Array.isArray(given.roles) || given.roles.length !== 4 || given.roles.some((p, i) => p.role !== ROLES[i] || !isSessionProfile(p.profile) || p.profile.input.binding.run !== runId)) refuse();
+  if (!Array.isArray(given.roles) || given.roles.length !== 4 || given.roles.some((p, i) => p.role !== ROLES[i] || !isNativeSessionProfile(p.profile) || p.profile.input.binding.run !== runId)) refuse();
   const rolePlans: readonly Pick<UrlRolePlan, 'role' | 'profile'>[] = given.roles;
   if (retainedDeclaration !== null && retainedDeclaration.roles.some((role, i) => role.role !== rolePlans[i]!.role
     || role.sessionId !== rolePlans[i]!.profile.input.sessionId || role.compiledProfileSha256 !== rolePlans[i]!.profile.digest

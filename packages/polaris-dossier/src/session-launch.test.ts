@@ -523,7 +523,7 @@ describe('prepared private CLI launch',()=>{
     const base = ordinary.value.profile, profile = ordered.value.profile;
     expect(base).toMatchObject({ id: 'claude-2.1.327-sonnet46/2', bytes: 9299,
       digest: 'a1f5166c9d049c418c8e1fe7dce6bbdf7ee72aaf830e16dcb3cf39dc175a8d11' });
-    expect(profile.id).toBe('claude-2.1.327-sonnet46/ordered-design-2');
+    expect(profile.id).toBe('claude-2.1.327-sonnet46/ordered-design-3');
     expect(profile.baseline).toEqual(base.baseline);
     expect(profile.baselineOrigin.originIds[0]).toBe(profile.id);
     expect(profile.initialScaffoldingOrigin.originIds[0]).toBe(profile.id);
@@ -719,6 +719,7 @@ describe('prepared private CLI launch',()=>{
     expect(isUrlSessionProcess({ ...child })).toBe(false);
     expect(isUrlSessionProcess({ pid: child.pid, commandSha256: child.commandSha256 })).toBe(false);
     const result=await child.finished;
+    expect(isUrlSessionProcess(child)).toBe(false);
     expect(result,JSON.stringify({events:f.events,counts:f.counts(),diagnostics:f.diagnostics,result})).toMatchObject({outcome:'exited',exitCode:0,signal:null,viewTermination:'view-exited',groupTermination:'confirmed',toolTermination:'settled',pendingInvocations:0,aggregateEnforcement:'sampled-stop-only',betweenSamples:'Unknown'});
     expect(f.counts()).toEqual({artifactReads:1,forwards:2,responses:2,reservations:2});
     expect(f.events.indexOf('launch-audit')).toBeLessThan(f.events.indexOf('reserve'));

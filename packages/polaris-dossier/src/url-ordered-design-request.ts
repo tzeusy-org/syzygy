@@ -87,7 +87,7 @@ export function projectOrderedDesignRequest(
   // profile budget reminder. It contributes no live cache, usage or receipt.
   const logicalResult = { role: wrapper.resultRole, content: [{ type: wrapper.resultType, tool_use_id: transcript.logical.toolUseId,
     content: [{ type: wrapper.textBlockType, text: wrapper.leading + wholeReply + wrapper.trailing },
-      { type: wrapper.textBlockType, text: sessionProfileReminderText(wrapper.tokenBudget) }] }] };
+      { type: wrapper.textBlockType, text: sessionProfileReminderText(wrapper.contextAllowance) }] }] };
 
   const projected: unknown[] = [];
   const receivedParts: string[] = [];

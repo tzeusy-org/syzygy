@@ -1,3 +1,4 @@
+import { isOrderedDesignSessionProfile } from './session-profile.js';
 import * as fs from 'node:fs';
 import path from 'node:path';
 import { encodeCanonicalJson, parseBoundedJson } from '@syzygy/polaris-generation-core/live';
@@ -105,7 +106,7 @@ export async function writeUrlLaunchHistory(given: UrlLaunchHistoryOptions) {
       || binding.sourceBinding !== sourceBindingSha256(read.record.subject) || binding.provider !== read.record.declared.agentProvider || binding.model !== read.record.declared.model
       || declaration.role !== plan.role || declaration.sessionId !== plan.profile.input.sessionId || declaration.compiledProfileSha256 !== sha256(plan.profile.canonicalText)
       || declaration.inputPacketSha256 !== sha256(plan.profile.input.initialPrompt) || declaration.instructionSha256 !== sha256(plan.profile.input.systemPrompt)
-      || !plan.profile.input.initialPrompt.includes(canonical(['dossier', 'poll', run]))
+      || !plan.profile.input.initialPrompt.includes(canonical(['dossier', 'poll', isOrderedDesignSessionProfile(plan.profile) ? runId : run]))
       || declaration.viewSha256 !== sha256(canonical(urlSessionViewFor(plan.view))) || declaration.executableSha256 !== URL_CLI_PROGRAM.sha256
       || [declaration.commandSha256, declaration.configurationSha256, declaration.scaffoldSha256, declaration.mcpSha256].some(value => !hex(value))) return refuse();
     const helperRole = plan.role === 'inventory' ? 'inventory' : 'review';
@@ -125,7 +126,7 @@ export async function writeUrlLaunchHistory(given: UrlLaunchHistoryOptions) {
         || parsed['promptSha256'] !== compatiblePromptSha256 || sha256(parsed['prompt']) !== compatiblePromptSha256
         || parsed['directory'] !== path.relative(path.dirname(run), directory)) return refuse();
       safe(parsed);
-      if (!plan.profile.input.initialPrompt.includes(canonical(['dossier', 'await', directory]))) return refuse();
+      if (!plan.profile.input.initialPrompt.includes(canonical(['dossier', 'await', isOrderedDesignSessionProfile(plan.profile) ? '/work' : directory]))) return refuse();
     }
     const record = deepFreeze({ format: URL_LAUNCH_HISTORY_FORMAT, runId, ...roleFields,
       form: { value: 'syzygy-launched', declaredBy: 'syzygy', label: 'Inferred' }, promptSha256: compatiblePromptSha256,

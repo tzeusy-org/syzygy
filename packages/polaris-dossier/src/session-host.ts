@@ -6,7 +6,7 @@ import { startSessionBroker, type SessionBroker, type SessionBrokerLimits } from
 import { createSessionController } from './session-controller.js';
 import type { SessionCredential } from './session-credential.js';
 import { SESSION_POLICY_LIMITS, SESSION_TOOLS, type SessionAdmission, type SessionContentClass, type SessionOrigin } from './session-egress-policy.js';
-import { isSessionProfile, sessionProfileProviderHeaders, type SessionProfile } from './session-profile.js';
+import { isSessionProfile, sessionProfileProviderHeaders, type NativeSessionProfile } from './session-profile.js';
 import { readSessionRelayAuditEvidence, startSessionRelay, type SessionAuditEvent, type SessionRelay, type SessionRelayLimits, type SessionRelayPorts,
   type SessionRelaySubject } from './session-relay.js';
 import { decodeSessionResponse, type SessionResponseUsage } from './session-response.js';
@@ -15,7 +15,7 @@ import { createSessionTools, type SessionToolsOptions, type SessionToolsReceipt 
 type ToolOptions = Omit<SessionToolsOptions, 'binding' | 'scanSecrets' | 'reverify' | 'inputOrigins' | 'onReceipt'>;
 export interface SessionHostOptions {
   readonly tools: ToolOptions;
-  readonly profile: SessionProfile;
+  readonly profile: NativeSessionProfile;
   readonly initialOrigin: SessionOrigin;
   readonly declaredClasses: readonly SessionContentClass[];
   readonly subject: SessionRelaySubject;

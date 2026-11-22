@@ -5,7 +5,7 @@ import type { SessionBinding, SessionOrigin } from './session-egress-policy.js';
 
 /** Deliberately versioned offline-supported profile. There is no model fallback. */
 export const SESSION_PROFILE_ID = 'claude-2.1.327-sonnet46/2' as const;
-export const ORDERED_DESIGN_SESSION_PROFILE_ID = 'claude-2.1.327-sonnet46/ordered-design-2' as const;
+export const ORDERED_DESIGN_SESSION_PROFILE_ID = 'claude-2.1.327-sonnet46/ordered-design-3' as const;
 export const DEFAULT_SESSION_MODEL = 'claude-sonnet-4-6' as const;
 /** Independently pinned installed CLI shared by the profile and launcher. */
 export const URL_CLI_PROGRAM = Object.freeze({ version: '2.1.327', bytes: 372_904_464,
@@ -39,7 +39,7 @@ const ORDERED_DESIGN_TRANSCRIPT = deepFreeze({
     selector: 'round-{round}/design-view.json', toolUseId: 'toolu_syzygy_035_logical_view',
     replacedBlocks: ['numbered-tool-use', 'numbered-tool-result', 'numbered-result-reminder'] },
   wrapper: { leading: '', trailing: '\n', resultRole: 'user', resultType: 'tool_result', textBlockType: 'text',
-    reminder: 'latest-complete-response-usage', tokenBudget: SESSION_PROFILE_TOKEN_BUDGET, cache: CACHE, cachePlacement: 'latest-result' },
+    reminder: 'latest-complete-response-usage', contextAllowance: SESSION_PROFILE_TOKEN_BUDGET, cache: CACHE, cachePlacement: 'latest-result' },
   continuation: { stopReason: 'tool_use', toolCalls: 1, textBlocks: 0 },
   terminal: { stopReason: 'end_turn', textBlocks: 1, maxTextBytes: 4096, toolCalls: 0 },
 } as const);

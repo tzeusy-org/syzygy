@@ -2,7 +2,6 @@ import * as fs from 'node:fs';
 import { mkdtemp, mkdir, open, readFile, realpath, rm, writeFile, type FileHandle } from 'node:fs/promises';
 import os from 'node:os';
 import path from 'node:path';
-import ts from 'typescript';
 import { afterAll, beforeAll, beforeEach, describe, expect, it, vi } from 'vitest';
 import { tempDir } from '@syzygy/test-kit';
 import { sha256 } from '@syzygy/support';
@@ -11,7 +10,7 @@ import { parseRunConfig } from './run-config.js';
 import { DOSSIER_CONTENT_CLASSES, NO_WORK_ITEM_REASON, recordRunConfig, readRunRecord, encodeRunRecord } from './run-record.js';
 import { buildDossierScreen } from './screen.js';
 import { URL_CLI_PROGRAM } from './session-launch.js';
-import { prepareUrlRolePlans, type UrlRolePlanningOptions, type UrlRolePlan } from './url-role-plan.js';
+import { prepareHistoricalUrlRolePlansTestPort, type UrlRolePlanningOptions, type UrlRolePlan } from './url-role-plan.js';
 import { inspectUrlLaunchHistory, URL_HELPER_LAUNCH_FILES, writeUrlLaunchHistory, type UrlLaunchHistoryRole } from './url-launch-history.js';
 import { assertUrlDesignDeliveryViewCurrent, assertUrlDesignReviewProofCurrent, createUrlSessionAudit,
   inspectCommittedUrlLaunchHistory, isIssuedUrlDesignDeliveryView } from './url-session-audit.js';
@@ -43,12 +42,15 @@ async function planningFixture() {
     pinnedRevision: { commit: 'a'.repeat(40), label: 'own fixture', pinnedAt: '2026-11-19T00:00:00.000Z' }, screeningPolicy: snapshot.binding,
     contentClasses: DOSSIER_CONTENT_CLASSES, visibility: { value: 'private', source: 'conservative-default', declaredBy: 'conservative default', label: 'Inferred' },
     governed: { kind: 'unstated', because: ['own fixture'] }, workItem: { identity: null, reason: NO_WORK_ITEM_REASON } });
-  const hashes = {} as Record<'session-bridge.js' | 'session-mcp.js', string>;
-  for (const name of ['session-bridge', 'session-mcp'] as const) {
-    const source = await readFile(new URL(`./${name}.ts`, import.meta.url), 'utf8');
-    const text = ts.transpileModule(source, { compilerOptions: { target: ts.ScriptTarget.ES2022, module: ts.ModuleKind.ES2022, sourceMap: false } }).outputText;
-    await writeFile(path.join(support, `${name}.js`), text, { mode: 0o600 }); hashes[`${name}.js`] = sha256(text);
-  }
+  const sourceRoot = new URL('../../../', import.meta.url);
+  const { compileDossierSessionSupport } = await import(new URL('scripts/compile_dossier_session_support.mjs', sourceRoot).href) as {
+    compileDossierSessionSupport: (read: (name: string) => Promise<Buffer>) => Promise<ReadonlyMap<string, Buffer>>;
+  };
+  const compiled = await compileDossierSessionSupport(name => readFile(new URL(name, sourceRoot)));
+  await mkdir(path.join(root, 'design-support'), { mode: 0o700 });
+  for (const [name, bytes] of compiled) await writeFile(path.join(root, name), bytes, { mode: 0o600 });
+  const hashes = { 'session-bridge.js': sha256(compiled.get('support/session-bridge.js')!),
+    'session-mcp.js': sha256(compiled.get('support/session-mcp.js')!) };
   const node = await realpath(process.execPath), canaries = ['source', 'auth', 'audit'].map(name => path.join(hidden, name));
   for (const file of canaries) await writeFile(file, 'OWN SYNTHETIC CANARY', { mode: 0o600 });
   const options: UrlRolePlanningOptions = { run, record, screen: built.screen,
@@ -123,7 +125,7 @@ const promptText = 'Own actual issued compatibility prompt, distinct from the na
 const promptPath = (role: string) => path.join(planning.options.run, role === 'inventory' ? 'inventory/session-1.json' : `reviews/${role}-session-1.json`);
 const historyPath = (role: string) => promptPath(role).replace(/\.json$/u, '.launch.json');
 beforeAll(async () => {
-  planning = await planningFixture(); const result = await prepareUrlRolePlans(planning.options);
+  planning = await planningFixture(); const result = await prepareHistoricalUrlRolePlansTestPort(planning.options);
   expect(result.ok).toBe(true); if (!result.ok) throw Error('own preparation refused'); plans = result.roles; cleanup.push(result.socketRoot);
   for (const child of ['inventory', 'reviews']) fs.mkdirSync(path.join(planning.options.run, child));
 }, 30_000);
@@ -375,7 +377,7 @@ describe('protected URL design delivery audit', () => {
           const appendExchange = async (requestId: string, consumedToolResults: SessionAuditEvent['consumedToolResults']) => {
             const exchange = { subject: { binding: scope.binding, project: 'project:syzygy', pin: pinnedRevision, principal: 'operator:own-fixture' },
               requestId, at: '2026-11-19T00:00:00.000Z', credentialIdentity: 'Unknown', exposureMode: 'private-local-cli',
-              authority: 'GOVERNANCE-SIMPLIFICATION-D10', admission, received: { digest: '9'.repeat(64), bytes: 95 },
+              governingRule: 'GOVERNANCE-SIMPLIFICATION-D10', admission, received: { digest: '9'.repeat(64), bytes: 95 },
               route: 'messages', consumedToolResults, response: null, status: null } as const;
             await appendRelay({ ...exchange, event: 'attempt-allowed', outcome: 'allowed' });
             await appendRelay({ ...exchange, event: 'send-attempt', outcome: 'attempted' });

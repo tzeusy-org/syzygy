@@ -46,7 +46,7 @@ function fixture(extraDetector?: { id: string; kind: string; [key: string]: unkn
     const payloads: Record<UrlSessionAuditEvent['kind'], unknown> = {
       relay: { event: 'attempt-allowed', subject: { binding: scope.binding, project: options.project, pin: options.pin, principal: options.principal },
         requestId: '12345678-1234-4234-8234-123456789012', at: '2026-11-19T00:00:00.000Z', credentialIdentity: 'Unknown', exposureMode: 'private-local-cli',
-        authority: 'GOVERNANCE-SIMPLIFICATION-D10', admission: { digest: 'd'.repeat(64), bytes: 100, classes: ['project-documentation'], originIds: ['source:own'] },
+        governingRule: 'GOVERNANCE-SIMPLIFICATION-D10', admission: { digest: 'd'.repeat(64), bytes: 100, classes: ['project-documentation'], originIds: ['source:own'] },
         received: { digest: 'e'.repeat(64), bytes: 101 }, route: 'messages', consumedToolResults: [], response: null, outcome: 'allowed', status: null },
       control: { event: 'clarification-question', questionSha256: '1'.repeat(64), questionBytes: 100, nonceSha256: '2'.repeat(64), questionNumber: 1 },
       'launch-attempt': { event: 'session-launch-attempt', profileSha256: scope.profileSha256, commandSha256: '3'.repeat(64), viewSha256: '4'.repeat(64) },

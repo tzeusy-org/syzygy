@@ -84,11 +84,11 @@ export interface UrlSessionProcess {
   waitForSample(): Promise<boolean>;
   stop(): Promise<UrlSessionLaunchOutcome>;
 }
-const launchedProcesses = new WeakSet<object>();
-/** Identity only: a copied PID/outcome tuple cannot stand in for a launch the
- * supervisor actually prepared and started. Liveness is checked separately. */
+const launchedProcesses = new WeakMap<object, () => boolean>();
+/** A copied PID/outcome tuple cannot stand in for a live launch the supervisor
+ * actually prepared and started. Peer lifetime is checked independently too. */
 export function isUrlSessionProcess(value: unknown): value is UrlSessionProcess {
-  return value !== null && typeof value === 'object' && launchedProcesses.has(value);
+  return value !== null && typeof value === 'object' && launchedProcesses.get(value)?.() === true;
 }
 async function fileDigest(file: string, maxBytes: number, check: () => void): Promise<{ readonly bytes: number; readonly sha256: string }> {
   if (await realpath(file) !== file) throw refused(); check();
@@ -424,6 +424,6 @@ export async function launchRestrictedUrlSession(input: { readonly preparation: 
       return !exited && !finishedCapture && reason === 'exited';
     },
     stop: () => { stop('stopped'); return finished; } });
-  launchedProcesses.add(launched);
+  launchedProcesses.set(launched, () => !exited && !closed && !finishedCapture && child.exitCode === null && child.signalCode === null);
   return launched;
 }

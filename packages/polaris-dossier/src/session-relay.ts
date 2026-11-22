@@ -30,7 +30,7 @@ export interface SessionAuditEvent {
   readonly subject: SessionRelaySubject;
   readonly requestId: string; readonly at: string;
   readonly credentialIdentity: 'Unknown'; readonly exposureMode: 'private-local-cli';
-  readonly authority: 'GOVERNANCE-SIMPLIFICATION-D10';
+  readonly governingRule: 'GOVERNANCE-SIMPLIFICATION-D10';
   readonly admission: SessionAdmission | null;
   /** Identity of received bytes before the explicit protocol metadata projection. */
   readonly received: { readonly digest: string; readonly bytes: number } | null;
@@ -159,7 +159,7 @@ async function start(socket: string, subject: SessionRelaySubject, ports: Sessio
     const event = (kind: SessionAuditEvent['event'], outcome: SessionAuditEvent['outcome'], status: number | null): SessionAuditEvent => {
       const row = deepFreeze({
         event: kind, subject, requestId, at: new Date().toISOString(), credentialIdentity: 'Unknown', exposureMode: 'private-local-cli',
-        authority: 'GOVERNANCE-SIMPLIFICATION-D10', admission, received,
+        governingRule: 'GOVERNANCE-SIMPLIFICATION-D10', admission, received,
         route: ROUTES.has(incoming.url ?? '') ? incoming.url!.includes('/count_tokens') ? 'count-tokens' : 'messages' : null,
         consumedToolResults, response: kind === 'response-admitted' ? observedResponse : null, outcome, status,
       } satisfies SessionAuditEvent);
@@ -332,7 +332,7 @@ export function createSessionAuditSegment(file: string, scanSecrets: (text: stri
       };
       if (!['attempt-allowed', 'attempt-refused', 'transport-failed', 'response-refused', 'response-admitted'].includes(event.event)
         || !['allowed', 'refused', 'Unknown', 'response-admitted'].includes(event.outcome)
-        || event.credentialIdentity !== 'Unknown' || event.exposureMode !== 'private-local-cli' || event.authority !== 'GOVERNANCE-SIMPLIFICATION-D10'
+        || event.credentialIdentity !== 'Unknown' || event.exposureMode !== 'private-local-cli' || event.governingRule !== 'GOVERNANCE-SIMPLIFICATION-D10'
         || (event.status !== null && (!Number.isInteger(event.status) || event.status < 100 || event.status > 599))) throw new Error('audit-metadata-refused');
       const binding = event.subject.binding;
       const admission = event.admission;
@@ -343,7 +343,7 @@ export function createSessionAuditSegment(file: string, scanSecrets: (text: stri
         || admission.originIds.length > 1024)) throw new Error('audit-admission-refused');
       const safe = {
         event: event.event, requestId: text(event.requestId), at: text(event.at), credentialIdentity: 'Unknown', exposureMode: 'private-local-cli',
-        authority: 'GOVERNANCE-SIMPLIFICATION-D10', outcome: event.outcome, status: event.status,
+        governingRule: 'GOVERNANCE-SIMPLIFICATION-D10', outcome: event.outcome, status: event.status,
         subject: { project: text(event.subject.project), pin: text(event.subject.pin), principal: text(event.subject.principal),
           binding: { run: text(binding.run), role: text(binding.role), sourceBinding: text(binding.sourceBinding), policy: text(binding.policy), provider: text(binding.provider), model: text(binding.model) } },
         admission: admission === null ? null : { digest: admission.digest, bytes: admission.bytes, classes: [...admission.classes], originIds: admission.originIds.map(text) },

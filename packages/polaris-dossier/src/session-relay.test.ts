@@ -255,7 +255,7 @@ describe('session relay choke point ordering', () => {
 
 describe('protected durable safe audit segments', () => {
   const event = (): SessionAuditEvent => ({ event: 'attempt-allowed', subject: SUBJECT, requestId: 'fixture-request', at: '2026-11-18T21:00:00Z',
-    credentialIdentity: 'Unknown', exposureMode: 'private-local-cli', authority: 'GOVERNANCE-SIMPLIFICATION-D10', admission: ADMISSION,
+    credentialIdentity: 'Unknown', exposureMode: 'private-local-cli', governingRule: 'GOVERNANCE-SIMPLIFICATION-D10', admission: ADMISSION,
     received: { digest: ADMISSION.digest, bytes: ADMISSION.bytes }, route: 'messages', consumedToolResults: [], response: null,
     outcome: 'allowed', status: null });
   it('stores only explicit safe fields and links successive fsynced records by their exact predecessor bytes', () => {

@@ -1,7 +1,6 @@
 import { mkdtemp, mkdir, readFile, realpath, rm, writeFile, readdir } from 'node:fs/promises';
 import os from 'node:os';
 import path from 'node:path';
-import ts from 'typescript';
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 import { sha256 } from '@syzygy/support';
 import { policyFixture } from './full-run.testkit.js';
@@ -12,7 +11,7 @@ import { URL_CLI_PROGRAM, type UrlSessionLaunchOutcome } from './session-launch.
 import type { SessionHostOptions } from './session-host.js';
 import type { ViewRole } from './session-view.js';
 import { URL_ROLES } from './url-run-record.js';
-import { prepareUrlRolePlans, type UrlRolePlanningOptions } from './url-role-plan.js';
+import { prepareHistoricalUrlRolePlansTestPort, type UrlRolePlanningOptions } from './url-role-plan.js';
 import { inspectCommittedUrlLaunchHistory } from './url-session-audit.js';
 import { startUrlRunSessions, urlRunSessionsTestPort, type UrlRunSessionsOptions } from './url-run-sessions.js';
 const cleanup: string[] = [];
@@ -30,12 +29,15 @@ async function planningFixture() {
     pinnedRevision: { commit: 'a'.repeat(40), label: 'own fixture', pinnedAt: '2026-11-19T00:00:00.000Z' }, screeningPolicy: snapshot.binding,
     contentClasses: DOSSIER_CONTENT_CLASSES, visibility: { value: 'private', source: 'conservative-default', declaredBy: 'conservative default', label: 'Inferred' },
     governed: { kind: 'unstated', because: ['own fixture'] }, workItem: { identity: null, reason: NO_WORK_ITEM_REASON } });
-  const hashes = {} as Record<'session-bridge.js' | 'session-mcp.js', string>;
-  for (const name of ['session-bridge', 'session-mcp'] as const) {
-    const source = await readFile(new URL(`./${name}.ts`, import.meta.url), 'utf8');
-    const text = ts.transpileModule(source, { compilerOptions: { target: ts.ScriptTarget.ES2022, module: ts.ModuleKind.ES2022, sourceMap: false } }).outputText;
-    await writeFile(path.join(support, `${name}.js`), text, { mode: 0o600 }); hashes[`${name}.js`] = sha256(text);
-  }
+  const sourceRoot = new URL('../../../', import.meta.url);
+  const { compileDossierSessionSupport } = await import(new URL('scripts/compile_dossier_session_support.mjs', sourceRoot).href) as {
+    compileDossierSessionSupport: (read: (name: string) => Promise<Buffer>) => Promise<ReadonlyMap<string, Buffer>>;
+  };
+  const compiled = await compileDossierSessionSupport(name => readFile(new URL(name, sourceRoot)));
+  await mkdir(path.join(root, 'design-support'), { mode: 0o700 });
+  for (const [name, bytes] of compiled) await writeFile(path.join(root, name), bytes, { mode: 0o600 });
+  const hashes = { 'session-bridge.js': sha256(compiled.get('support/session-bridge.js')!),
+    'session-mcp.js': sha256(compiled.get('support/session-mcp.js')!) };
   const node = await realpath(process.execPath), canaries = ['source', 'auth', 'audit'].map(name => path.join(hidden, name));
   for (const file of canaries) await writeFile(file, 'OWN SYNTHETIC CANARY', { mode: 0o600 });
   const options: UrlRolePlanningOptions = { run, record, screen: built.screen,
@@ -50,10 +52,10 @@ async function planningFixture() {
 }
 
 
-let prepared: Extract<Awaited<ReturnType<typeof prepareUrlRolePlans>>, { ok: true }>;
+let prepared: Extract<Awaited<ReturnType<typeof prepareHistoricalUrlRolePlansTestPort>>, { ok: true }>;
 let planning: Awaited<ReturnType<typeof planningFixture>>;
 beforeAll(async () => {
-  planning = await planningFixture(); const result = await prepareUrlRolePlans(planning.options);
+  planning = await planningFixture(); const result = await prepareHistoricalUrlRolePlansTestPort(planning.options);
   expect(result.ok).toBe(true); if (!result.ok) throw new Error('own native role planning refused');
   prepared = result; cleanup.push(result.socketRoot);
 }, 30_000);
@@ -134,7 +136,7 @@ describe('one root lifecycle for four restricted URL roles', () => {
     const admission = { digest: 'a'.repeat(64), bytes: 100, classes: ['code-structure'] as const, originIds: ['origin:own-request'] };
     expect(host.reserveRequest(admission)).toBe(true);
     const exchange = { subject: host.subject, requestId: '11111111-1111-4111-8111-111111111111', at: new Date().toISOString(),
-      credentialIdentity: 'Unknown', exposureMode: 'private-local-cli', authority: 'GOVERNANCE-SIMPLIFICATION-D10', admission,
+      credentialIdentity: 'Unknown', exposureMode: 'private-local-cli', governingRule: 'GOVERNANCE-SIMPLIFICATION-D10', admission,
       received: { digest: 'a'.repeat(64), bytes: 100 }, route: 'messages', consumedToolResults: [], response: null, status: null } as const;
     await host.audit({ ...exchange, event: 'attempt-allowed', outcome: 'allowed' });
     await host.audit({ ...exchange, event: 'send-attempt', outcome: 'attempted' });
