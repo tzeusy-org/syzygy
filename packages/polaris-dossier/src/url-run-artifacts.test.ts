@@ -1420,13 +1420,21 @@ describe('trusted URL artifact producer bridge', () => {
   });
   it('accepts exact help and an actual own-run status report while bounding limits and refusing response drift', async () => {
     const f = fixture(); f.initialize(); f.write('run.json', encodeRunRecord(f.options.record.declared, f.options.record.subject));
+    f.write('raw-read-disclosure.json', JSON.stringify({ schemaVersion: 'polaris-dossier-raw-read-disclosure/1', runId: path.basename(f.run),
+      declaredProvider: f.options.record.declared.agentProvider, authorHandoff: 'reached' }));
     const status = runStatus(f.run, () => Date.UTC(2026, 10, 19, 0, 1)); if (!status.ok) throw Error(status.reason);
+    expect(status.report.rawReadDisclosure).toMatchObject({ authorHandoff: 'reached', label: 'Inferred', uncapturedTransmissions: 'Unknown' });
     for (const [argv, response] of [[['dossier', 'help'], { stdout: f.options.helpText, stderr: '', exit: 0 }],
       [['dossier', 'status', f.run], { stdout: JSON.stringify(status.report), stderr: '', exit: 0 }]] as const) {
       f.replyQueue.push(response); const returned = await f.bridge.runDossier('author')(argv, null);
       expect(f.bridge.dossierOrigins('author')(argv, { ...returned, stdout: `${returned.stdout} ` })).toBeNull();
       const raw = f.receipt('author', 'mcp__syzygy__dossier_step', { argv }, { ok: true, kind: 'dossier-result', ...returned });
       await f.bridge.toolReceipt('author', raw, f.admission('author')); f.bridge.committed('author', raw.id);
+    }
+    for (const mutate of [{ authorHandoff: 'not-reached' }, { uncapturedTransmissions: 'none' }]) {
+      const changed = { ...status.report, rawReadDisclosure: { ...status.report.rawReadDisclosure, ...mutate } };
+      f.replyQueue.push({ stdout: JSON.stringify(changed), stderr: '', exit: 0 });
+      await expect(f.bridge.runDossier('author')(['dossier', 'status', f.run], null)).rejects.toThrow('url-run-artifacts-unavailable');
     }
     expect(() => createUrlRunArtifacts({ ...f.options, limits: [] as never })).toThrow();
     const limited = fixture(), bridge = createUrlRunArtifacts({ ...limited.options, limits: { readBytes: 1 } });

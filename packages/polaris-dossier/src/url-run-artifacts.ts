@@ -32,6 +32,7 @@ import { URL_HELPER_LAUNCH_FILES, isUrlHelperLaunchFile } from './url-launch-his
 import { URL_DESIGN_VIEW_ARTIFACT } from './url-design-view.js';
 import type { createUrlRunOrigins } from './url-run-origins.js';
 import type { RecordedRunConfig } from './run-record.js';
+import { describeRawReadDisclosure, readRawReadDisclosure } from './raw-read-disclosure.js';
 import type { effectiveUrlProjection } from './effective-run-record.js';
 import { urlDossierReportExit } from './url-dossier-result.js';
 import { isNativeSessionProfile } from './session-profile.js';
@@ -658,9 +659,11 @@ function create(given: UrlRunArtifactsOptions) {
   function statusShape(v: unknown): boolean {
     const projection = statusProjection;
     const subject = projection === undefined ? config.subject : { ...config.subject, workItem: projection.workItem };
+    const disclosure = canonical(describeRawReadDisclosure(readRawReadDisclosure(run, config.declared.agentProvider)));
     return shape({ command: lit('status'), outcome: lit('reported'), run: lit(run), label: lit('Inferred'), basis: text, mode: lit('operator-agent', 'URL-supervised local CLI through checked transport relay'),
       route: text, principal: item => canonical(item) === canonical(config.principal), subject: item => canonical(item) === canonical(subject),
       state: lit('configured', 'briefed', 'drafting', 'reviewing', 'rendered', 'closed'),
+      rawReadDisclosure: item => canonical(item) === disclosure,
       configuration: shape({ declaredBy: lit('operator', 'URL run configuration'), label: lit('Inferred'), modelVersionProvider: text,
         values: item => keys(item, ['operator', 'agentTool', 'agentToolVersion', 'agentProvider', 'model', 'modelVersion', 'deadline', 'agentTurnBudget', 'maxRepairCycles', 'maxQuestions', 'audience', 'operatorIsOwner', 'agentTokenBudget'])
           && Object.values(item).every(value => typeof value === 'string' || typeof value === 'number' && Number.isFinite(value) || typeof value === 'boolean') }),
