@@ -1,0 +1,292 @@
+{
+  "commit": "d2b84f57f32fc1fb9f288ca235c440f92e4a7dc7",
+  "file": "packages/polaris-dossier/src/verify-text.ts",
+  "test": "packages/polaris-dossier/src/verify-text.test.ts",
+  "command": "npx vitest run packages/polaris-dossier/src/verify-text.test.ts",
+  "mutants": [
+    {
+      "mutant": "claim-split-list-item",
+      "old": "    if (LIST_ITEM.test(line)) close();\n",
+      "new": "    if (false) close();\n",
+      "outcome": "killed",
+      "failingTests": [
+        "\u00d7 verify a free-form text: the six outcomes > gives each fixture claim its outcome, with a literal tally 33ms",
+        "\u00d7 verify a free-form text: the six outcomes > never reads a withheld path, and never prints its body 12ms",
+        "\u00d7 extraction > splits claims by paragraph, list item and table row, skipping headings, fences and separators 11ms"
+      ]
+    },
+    {
+      "mutant": "claim-skip-heading",
+      "old": "if (HEADING.test(line)) { close(); headingLines += 1; return; }",
+      "new": "if (false) { close(); headingLines += 1; return; }",
+      "outcome": "killed",
+      "failingTests": [
+        "\u00d7 extraction > splits claims by paragraph, list item and table row, skipping headings, fences and separators 14ms"
+      ]
+    },
+    {
+      "mutant": "claim-table-row",
+      "old": "    if (TABLE_ROW.test(line)) {\n      close();",
+      "new": "    if (false) {\n      close();",
+      "outcome": "killed",
+      "failingTests": [
+        "\u00d7 extraction > splits claims by paragraph, list item and table row, skipping headings, fences and separators 19ms",
+        "\u00d7 the annotated copy > marks each claim in place, inside a table row, and closes with the tally 4ms"
+      ]
+    },
+    {
+      "mutant": "ref-host-after-at",
+      "old": "if (text[at - 1] === '@' || /^www\\./iu.test(token) ||",
+      "new": "if (/^www\\./iu.test(token) ||",
+      "outcome": "killed",
+      "failingTests": [
+        "\u00d7 extraction > takes no URL, absolute path, glob, bare extension, directory, abbreviation or unknown bare name as a path 9ms"
+      ]
+    },
+    {
+      "mutant": "ref-www",
+      "old": "if (text[at - 1] === '@' || /^www\\./iu.test(token) ||",
+      "new": "if (text[at - 1] === '@' ||",
+      "outcome": "killed",
+      "failingTests": [
+        "\u00d7 extraction > takes no URL, absolute path, glob, bare extension, directory, abbreviation or unknown bare name as a path 15ms"
+      ]
+    },
+    {
+      "mutant": "ref-glob-skip",
+      "old": "|| /[*?]$/u.test(text.slice(0, at))) continue;",
+      "new": ") continue;",
+      "outcome": "killed",
+      "failingTests": [
+        "\u00d7 extraction > takes no URL, absolute path, glob, bare extension, directory, abbreviation or unknown bare name as a path 17ms"
+      ]
+    },
+    {
+      "mutant": "ref-empty-segment",
+      "old": "segments.some((segment) => segment === '' || segment === '.' || segment === '..')",
+      "new": "segments.some((segment) => segment === '.' || segment === '..')",
+      "outcome": "killed",
+      "failingTests": [
+        "\u00d7 extraction > takes no URL, absolute path, glob, bare extension, directory, abbreviation or unknown bare name as a path 12ms"
+      ]
+    },
+    {
+      "mutant": "ref-bare-extension",
+      "old": "const isPath = bareExtension ? false :",
+      "new": "const isPath = false ? false :",
+      "outcome": "killed",
+      "failingTests": [
+        "\u00d7 extraction > takes no URL, absolute path, glob, bare extension, directory, abbreviation or unknown bare name as a path 13ms"
+      ]
+    },
+    {
+      "mutant": "ref-dotfile",
+      "old": "const dotfile = segments.length === 1 && pathText.startsWith('.') && inside(spans, at);",
+      "new": "const dotfile = false;",
+      "outcome": "killed",
+      "failingTests": [
+        "\u00d7 verify a free-form text: the six outcomes > never reads a withheld path, and never prints its body 22ms"
+      ]
+    },
+    {
+      "mutant": "ref-bare-name-needs-known-extension",
+      "old": "slash || BARE_EXTENSIONS.has(extension.toLowerCase()) || ranges.length > 0",
+      "new": "true",
+      "outcome": "killed",
+      "failingTests": [
+        "\u00d7 extraction > takes no URL, absolute path, glob, bare extension, directory, abbreviation or unknown bare name as a path 20ms"
+      ]
+    },
+    {
+      "mutant": "ref-slashed-dir-needs-lines",
+      "old": ": slash && ranges.length > 0);",
+      "new": ": slash);",
+      "outcome": "killed",
+      "failingTests": [
+        "\u00d7 extraction > takes no URL, absolute path, glob, bare extension, directory, abbreviation or unknown bare name as a path 15ms"
+      ]
+    },
+    {
+      "mutant": "range-colon",
+      "old": "const colon = COLON_LINES.exec(tail) ?? ANCHOR_LINES.exec(tail);",
+      "new": "const colon = ANCHOR_LINES.exec(tail);",
+      "outcome": "killed",
+      "failingTests": [
+        "\u00d7 verify a free-form text: the six outcomes > never reads a withheld path, and never prints its body 14ms",
+        "\u00d7 verify a free-form text: the six outcomes > reports lines past the end of a file as path-missing, not as resolving 8ms",
+        "\u00d7 extraction > reads every reference form 3ms",
+        "\u00d7 extraction > merges repeated mentions of one path 2ms"
+      ]
+    },
+    {
+      "mutant": "range-anchor",
+      "old": "const colon = COLON_LINES.exec(tail) ?? ANCHOR_LINES.exec(tail);",
+      "new": "const colon = COLON_LINES.exec(tail);",
+      "outcome": "killed",
+      "failingTests": [
+        "\u00d7 extraction > reads every reference form 12ms"
+      ]
+    },
+    {
+      "mutant": "range-words",
+      "old": "for (let match = WORD_LINES.exec(remaining); match !== null;",
+      "new": "for (let match = null as RegExpExecArray | null; match !== null;",
+      "outcome": "killed",
+      "failingTests": [
+        "\u00d7 extraction > reads every reference form 13ms"
+      ]
+    },
+    {
+      "mutant": "quote-code-span-mask",
+      "old": "const masked = [...text].map((char, i) => (inside(spans, i) ? ' ' : char)).join('');",
+      "new": "const masked = text;",
+      "outcome": "killed",
+      "failingTests": [
+        "\u00d7 extraction > reads straight and curly quotations outside code spans 11ms"
+      ]
+    },
+    {
+      "mutant": "quote-has-word",
+      "old": "if (HAS_WORD.test(match[1]!)) found.push",
+      "new": "found.push",
+      "outcome": "killed",
+      "failingTests": [
+        "\u00d7 extraction > reads straight and curly quotations outside code spans 10ms"
+      ]
+    },
+    {
+      "mutant": "quote-curly",
+      "old": "for (const pattern of [STRAIGHT_QUOTE, CURLY_QUOTE])",
+      "new": "for (const pattern of [STRAIGHT_QUOTE])",
+      "outcome": "killed",
+      "failingTests": [
+        "\u00d7 extraction > reads straight and curly quotations outside code spans 9ms"
+      ]
+    },
+    {
+      "mutant": "resolve-unique-suffix",
+      "old": "found = candidates.length === 1 ? candidates[0]! : written;",
+      "new": "found = candidates.length >= 1 ? candidates[0]! : written;",
+      "outcome": "killed",
+      "failingTests": [
+        "\u00d7 verify a free-form text: the six outcomes > resolves a bare or partial name to the one blob ending with it, and leaves an ambiguous one missing 13ms"
+      ]
+    },
+    {
+      "mutant": "resolve-suffix-at-all",
+      "old": "const candidates = listed.has(written) ? [written] : blobs.filter((blob) => blob.endsWith(`/${written}`));",
+      "new": "const candidates = [written];",
+      "outcome": "killed",
+      "failingTests": [
+        "\u00d7 verify a free-form text: the six outcomes > resolves a bare or partial name to the one blob ending with it, and leaves an ambiguous one missing 14ms"
+      ]
+    },
+    {
+      "mutant": "state-withheld-vs-admitted",
+      "old": "absent.has(path) ? 'missing' : linesOf.has(path) ? 'admitted' : 'withheld'",
+      "new": "absent.has(path) ? 'missing' : 'admitted'",
+      "outcome": "killed",
+      "failingTests": [
+        "\u00d7 verify a free-form text: the six outcomes > gives each fixture claim its outcome, with a literal tally 21ms",
+        "\u00d7 verify a free-form text: the six outcomes > never reads a withheld path, and never prints its body 5ms"
+      ]
+    },
+    {
+      "mutant": "state-lines-missing",
+      "old": "state: beyond ? 'lines-missing' : 'resolves' }",
+      "new": "state: 'resolves' }",
+      "outcome": "killed",
+      "failingTests": [
+        "\u00d7 verify a free-form text: the six outcomes > reports lines past the end of a file as path-missing, not as resolving 24ms"
+      ]
+    },
+    {
+      "mutant": "secret-name-hidden",
+      "old": "const named = !(state === 'withheld' && isSecretPath(reference.path));",
+      "new": "const named = true;",
+      "outcome": "killed",
+      "failingTests": [
+        "\u00d7 verify a free-form text: the six outcomes > never reads a withheld path, and never prints its body 21ms"
+      ]
+    },
+    {
+      "mutant": "quote-any-reference-verifies",
+      "old": "if (verified.has(id)) return 'verified';",
+      "new": "if (verified.has(id) && r === 0) return 'verified';",
+      "outcome": "killed",
+      "failingTests": [
+        "\u00d7 verify a free-form text: the six outcomes > checks a quotation against every file its claim names, verified when any holds it 20ms"
+      ]
+    },
+    {
+      "mutant": "quote-withheld-ref",
+      "old": "if (references[r]!.state === 'withheld') { withheld = true; continue; }",
+      "new": "if (references[r]!.state === 'withheld') { continue; }",
+      "outcome": "killed",
+      "failingTests": [
+        "\u00d7 verify a free-form text: the six outcomes > never reads a withheld path, and never prints its body 17ms"
+      ]
+    },
+    {
+      "mutant": "outcome-path-missing-first",
+      "old": "references.some((reference) => reference.state === 'missing' || reference.state === 'lines-missing') ? 'path-missing'",
+      "new": "false ? 'path-missing'",
+      "outcome": "killed",
+      "failingTests": [
+        "\u00d7 verify a free-form text: the six outcomes > gives each fixture claim its outcome, with a literal tally 27ms",
+        "\u00d7 verify a free-form text: the six outcomes > reports lines past the end of a file as path-missing, not as resolving 5ms",
+        "\u00d7 the annotated copy > marks each claim in place, inside a table row, and closes with the tally 2ms"
+      ]
+    },
+    {
+      "mutant": "outcome-not-found",
+      "old": "quotations.some((state) => state === 'not-found' || state === 'no-file') ? 'quotation-not-found'",
+      "new": "false ? 'quotation-not-found'",
+      "outcome": "killed",
+      "failingTests": [
+        "\u00d7 verify a free-form text: the six outcomes > gives each fixture claim its outcome, with a literal tally 23ms",
+        "\u00d7 verify a free-form text: the six outcomes > flips a verified quotation to not found when one quoted character is mutated 9ms"
+      ]
+    },
+    {
+      "mutant": "outcome-withheld",
+      "old": "references.some((reference) => reference.state === 'withheld') || quotations.some((state) => state === 'withheld') ? 'withheld'",
+      "new": "false ? 'withheld'",
+      "outcome": "killed",
+      "failingTests": [
+        "\u00d7 verify a free-form text: the six outcomes > gives each fixture claim its outcome, with a literal tally 22ms",
+        "\u00d7 verify a free-form text: the six outcomes > never reads a withheld path, and never prints its body 8ms"
+      ]
+    },
+    {
+      "mutant": "outcome-verified-vs-unverified",
+      "old": "quotations.length > 0 ? 'quotation-verified' : 'reference-unverified'",
+      "new": "'reference-unverified'",
+      "outcome": "killed",
+      "failingTests": [
+        "\u00d7 verify a free-form text: the six outcomes > gives each fixture claim its outcome, with a literal tally 24ms",
+        "\u00d7 verify a free-form text: the six outcomes > flips a verified quotation to not found when one quoted character is mutated 4ms",
+        "\u00d7 verify a free-form text: the six outcomes > checks a quotation against every file its claim names, verified when any holds it 4ms"
+      ]
+    },
+    {
+      "mutant": "unanchored-no-reference",
+      "old": "if (claim.references.length === 0) {\n      return { index: claim.index, startLine: claim.startLine, endLine: claim.endLine, outcome: 'unanchored'",
+      "new": "if (claim.references.length === -1) {\n      return { index: claim.index, startLine: claim.startLine, endLine: claim.endLine, outcome: 'unanchored'",
+      "outcome": "killed",
+      "failingTests": [
+        "\u00d7 verify a free-form text: the six outcomes > gives each fixture claim its outcome, with a literal tally 28ms",
+        "\u00d7 the annotated copy > marks each claim in place, inside a table row, and closes with the tally 2ms"
+      ]
+    },
+    {
+      "mutant": "annotate-table-cell",
+      "old": "return TABLE_ROW.test(text) && trimmed.endsWith('|')",
+      "new": "return false && trimmed.endsWith('|')",
+      "outcome": "killed",
+      "failingTests": [
+        "\u00d7 the annotated copy > marks each claim in place, inside a table row, and closes with the tally 12ms"
+      ]
+    }
+  ]
+}
