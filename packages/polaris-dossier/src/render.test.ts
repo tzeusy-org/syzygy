@@ -851,7 +851,8 @@ describe('render', () => {
     const files = readSite(result.report.site);
     const machine = JSON.parse(files.get('machine.json')!);
     const ids = (machine.disclosure as { id: string }[]).map((item) => item.id);
-    expect(ids).toEqual(['mode', 'agent', 'declared-content-classes', 'source-screening-boundary', 'read-account', 'execution-rule', 'reported-commands', 'no-provider-call', 'pinned-revision',
+    expect(ids).toEqual(['mode', 'agent', 'declared-content-classes', 'source-screening-boundary', 'raw-read-disclosure',
+      'read-account', 'execution-rule', 'reported-commands', 'no-provider-call', 'pinned-revision',
       'pinned-revision-verified', 'source-visibility', 'screening-policy-binding', 'quotations', 'stored-records', 'records-within-reach', 'unattributed-execution', 'draft-layer']);
     expect(html(files).length).toBeGreaterThan(5);
     const sentence = 'This is a draft written by claude-code with claude-opus-5-5; no human review is recorded. It has 2 Unknown claim(s).';
