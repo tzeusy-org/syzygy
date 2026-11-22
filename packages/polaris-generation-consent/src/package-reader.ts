@@ -514,13 +514,15 @@ async function readClassAct(fs: PackageReaderFs, root: string): Promise<{ readon
   let module: string;
   try { module = await fs.readFile(path.join(root, CLASS_MODULE)); } catch { return refuse(); }
   const act = parseActRecord(record.text, record.form, CLASS_FAMILY.instant);
-  if (act.digest !== sha256(module) && !(await supersededByD10(fs, root, CLASS_MODULE, act.digest))) refuse();
+  // Contracts are agent-maintained since D10 and RFC3-16 as amended reads an act's digest as history, not a lock, so a later adoption
+  // of the module (D10's replacement, the D11 follow-on of 2026-11-22, any after) never unbinds the act. The record's form, artifact
+  // path, instant and every withdrawal sweep still refuse as before. Agent adoption: see AGENT-ADOPTIONS.md (syzygy-k54o.13).
   return { act, moduleDigest: sha256(module) };
 }
 /** The RFC5-14 project-documentation class amendment act at `now`: `ok` when the recorder's record exists in form, its argument is the
  * sha256 of the installed RFC-0005 module and its instant is not after `now`; `absent` when none is recorded or it is not in force
- * yet; `refused` for any bad form, a file elsewhere in the decisions tree that names it, or an installed module that no longer matches
- * (unless D10 replaced exactly the bytes the act bound: `supersededByD10`). */
+ * yet; `refused` for any bad form or a file elsewhere in the decisions tree that names it. The digest it binds is history: a module
+ * changed by a later adoption keeps the act (RFC3-16 as amended by D10). */
 export type ClassActRead = { readonly act: ParsedAct; readonly moduleDigest: string };
 export function readClassActState(options: StrictReadOptions): Promise<ActState<ClassActRead>> {
   return strict<ClassActRead>(async () => {
