@@ -160,6 +160,7 @@ export const E2E_TESTS: readonly string[] = [
   'apps/three-surface-poc/src/orrery.browser.test.ts',
   'apps/three-surface-poc/src/polaris-accessibility.browser.test.ts',
   'apps/three-surface-poc/src/polaris-accessible-names.browser.test.ts',
+  'apps/three-surface-poc/src/polaris-generation/computed-maps.browser.test.ts',
   'apps/three-surface-poc/src/polaris-generation/dossier-reading.browser.test.ts',
   'apps/three-surface-poc/src/polaris-generation/draft-preview.browser.test.ts',
   'apps/three-surface-poc/src/polaris-generation/figure-kinds.browser.test.ts',

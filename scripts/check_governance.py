@@ -1075,6 +1075,9 @@ def cg4_candidate_banners(paths, res):
     cg4b_no_accepted_claim(paths, res)
 
 
+AGENT_ADOPTIONS = ".syzygy/governance/decisions/AGENT-ADOPTIONS.md"
+
+
 def _act_bound_names(paths):
     """Names a truthful acceptance claim inside the candidate tree may cite.
 
@@ -1105,6 +1108,17 @@ def _act_bound_names(paths):
             parent = os.path.basename(os.path.dirname(rel))
             if parent and parent != os.path.basename(CANDIDATES):
                 names.add(parent)
+    # Since D10 an agent adoption binds by its AGENT-ADOPTIONS.md row, not by
+    # a digest (RFC3-16 as amended: digests are history, not locks). A file
+    # an adoption row names by basename may say it is in force after it is
+    # edited (`syzygy-yjoq`, 2026-11-22).
+    adoptions = os.path.join(ROOT, AGENT_ADOPTIONS)
+    if os.path.exists(adoptions):
+        rows = "\n".join(line for line in read(AGENT_ADOPTIONS).split("\n")
+                         if line.startswith("| A-"))
+        for rel in paths:
+            if rel.startswith(f"{CANDIDATES}/") and os.path.basename(rel) in rows:
+                names.add(os.path.basename(rel))
     return names
 
 

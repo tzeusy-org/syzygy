@@ -29,7 +29,11 @@ classes (next section). Each section cites the record that owns its rows.
 [Observed] Doctrine amendment D10 was adopted by the owner on 2026-11-18
 (`decisions/GOVERNANCE-SIMPLIFICATION-D10-ACT.md`; tag
 `governance-simplification-d10-adopted-2026-11-18`). VIS-4 as amended is
-the rule; this section only routes to it.
+the rule; this section only routes to it. Doctrine amendment D11 (adopted
+2026-11-21, "Adopt D11") accepts one disclosed secrets exception: a Polaris
+dossier session's own raw reads may reach the run's declared provider
+unscreened (`doctrine/security.md` SEC-2, SEC-5; row D11 of
+`decisions/DOCTRINE-AMENDMENT-LOG.md`).
 
 - **The owner decides four classes, and only the owner:**
   1. doctrine (`governance/doctrine/`);

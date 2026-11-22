@@ -131,7 +131,7 @@ describe('brief: issued', () => {
       readerStandards: { version: 'polaris-reader-standards-v1', sha256: sha(STANDARDS) },
       deadline: { declared: 'PT1H', seconds: 3600, endsAt: '2026-10-07T13:00:00.000Z' },
       files: { brief: { name: 'brief.md', sha256: sha(brief) }, draftSchema: { name: 'draft.schema.json', sha256: sha(schema) } },
-      executionRule: { arm: 'sec-3', cites: 'SEC-3', sec3Head: { text: lines(74, 76), startLine: 74, endLine: 76 } },
+      executionRule: { arm: 'sec-3', cites: 'SEC-3', sec3Head: { text: lines(97, 99), startLine: 97, endLine: 99 } },
       agent: { tool: 'claude-code', provider: 'anthropic', declaredBy: 'operator', label: 'Inferred' },
       copy: null,
       label: 'Inferred',
@@ -210,7 +210,7 @@ describe('brief: issued', () => {
   it('quotes SEC-3\'s head byte-equal to the adopted security.md, read live', async () => {
     const run = runDirectory();
     await issueBrief(run, { sources: sources(), openReader: tree(), now: () => NOW });
-    expect(read(run, 'brief.md')).toContain(`\`\`\`text\n${lines(74, 76)}\n\`\`\``);
+    expect(read(run, 'brief.md')).toContain(`\`\`\`text\n${lines(97, 99)}\n\`\`\``);
   });
 
   it('carries no project content beyond the repository identity and the pinned revision', async () => {
@@ -280,6 +280,9 @@ describe('brief: issued', () => {
 // the file holding `{"brief": <brief.md>}`. Nothing rewrites it. Recaptured 2026-11-22 the same way at 379be88d with only
 // `.syzygy/governance/doctrine/security.md` replaced by its bytes at 4086c1b0 (doctrine amendment D13): the only line that
 // changed is SEC-3's file digest, its quoted lines 74–76 unchanged; a capture with 379be88d's own file reproduced the earlier golden.
+// Recaptured 2026-11-22 again the same way with security.md at doctrine amendment D11 (sha256 0f2ae0ad…): the line naming
+// SEC-3's place changed (lines 97–99, the new digest; D11 grew SEC-2 by 23 lines) and SEC-3's quoted text did not; a control capture
+// with the pre-D11 file reproduced the previous golden byte for byte.
 // A later change to security.md is recaptured the same way, never hand-edited.
 const BRIEF_V10_GOLDEN = new URL('./brief-v10-golden.json', import.meta.url);
 // Shape packs (REQ-polaris-generation-034 version 2.4, syzygy-3efd.43). Digests are literals computed outside the module under test.
@@ -404,10 +407,10 @@ describe('brief: the permitting arm, switched on with fixture ports', () => {
     const result = await issueBrief(run, { sources: sources(), openReader: tree(), now: () => NOW, permitting: permitting(CHOICE) });
     expect(result).toMatchObject({ ok: true, report: { executionRule: { arm: 'permitting' } } });
     const record = JSON.parse(read(run, 'brief.json'));
-    expect(record.executionRule).toMatchObject({ arm: 'permitting', cites: 'SEC-3 (D9)', choice: CHOICE, choiceLabel: 'Inferred', cost: { text: lines(106, 112), startLine: 106, endLine: 112 } });
+    expect(record.executionRule).toMatchObject({ arm: 'permitting', cites: 'SEC-3 (D9)', choice: CHOICE, choiceLabel: 'Inferred', cost: { text: lines(129, 135), startLine: 129, endLine: 135 } });
     const brief = read(run, 'brief.md');
     expect(brief).toContain('This permission lapses if the owner stops attending this session');
-    expect(brief).toContain(`\`\`\`text\n${lines(106, 112)}\n\`\`\``);
+    expect(brief).toContain(`\`\`\`text\n${lines(129, 135)}\n\`\`\``);
   });
 
   it('a choice recorded in run.json is never read: the record is refused and no brief is issued', async () => {

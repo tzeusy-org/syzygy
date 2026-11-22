@@ -15,7 +15,8 @@ import { LOCAL_DRAFT_SCHEMA_VERSION, UNDERSTANDING_ITEMS, hasThesisBasisForm } f
 import { EXECUTION_FLAGS_BASIS, executionFlags, type ExecutionFlags } from './execution-flags.js';
 import type { CredentialProbe } from './execution-rule.js';
 import { RECORDS_WITHIN_REACH } from './gate-sources.js';
-import { GitObjectReadRefusal, openPinnedObjectReader } from './git-object-reader.js';
+import { GitObjectReadRefusal, openPinnedObjectReader, type TreeEntry } from './git-object-reader.js';
+import { MANIFEST_BLOB_LIMIT, deriveManifestFacts, manifestFactsUnknown, type ManifestFacts } from './manifest-facts.js';
 import { errno, latestInventorySession, logStep, openRun, promptRecordName, readRecord, type OpenedRun } from './inventory.js';
 import { briefStandardsOf, buildDesignPacket, standardsInput } from './design-review.js';
 import { derivedStructureAt, readCurrencyPolicy, secretPathOf, type CurrencyPolicy } from './derived-record.js';
@@ -254,13 +255,17 @@ async function render(runDir: string, deps: RenderDeps, storedSite?: StoredUrlRe
   const input = buildLocalInput({ opened, doc, derived, review, screen, credential, algorithm: reader.algorithm,
     briefRecord, fidelityContinuation });
   if (!input.ok) return refuse(input.stage, input.reason);
-  // URL renders read through the protected product bridge. Until the derived
-  // record has a producer receipt there, the ordinary filesystem record
-  // cannot supply facts to the review packet.
-  const built = urlMode ? input : { ...input, local: { ...input.local, derivedStructure: await derivedStructureAt({
-    run, revision: draftRev.revision, pinned, repositoryId: subject.repository.repositoryId, reader, isSecretPath: secretPathOf(screen),
-    policy: (deps.currencyPolicy ?? (() => readCurrencyPolicy(deps.sources.recordsRoot)))(),
-  }) } };
+  // URL renders read through the protected product bridge. Derived records
+  // and independently read manifest bodies need producer receipts there before
+  // they can supply facts to that mode's review packet.
+  const built = urlMode ? input : { ...input, local: { ...input.local,
+    derivedStructure: await derivedStructureAt({ run, revision: draftRev.revision, pinned,
+      repositoryId: subject.repository.repositoryId, reader, isSecretPath: secretPathOf(screen),
+      policy: (deps.currencyPolicy ?? (() => readCurrencyPolicy(deps.sources.recordsRoot)))() }),
+    // Re-derive operator-agent facts from the pinned tree and bounded reader,
+    // never from an agent-writable check record.
+    manifestFacts: await renderManifestFacts(subject.clone.path, pinned, deps, screen, opened.contentClasses, reader),
+  } };
 
   const renderer = deps.renderer;
   const draw = (local: LocalRenderInput, sources = built.sources): ReadonlyMap<string, string> | string => {
@@ -446,6 +451,21 @@ async function render(runDir: string, deps: RenderDeps, storedSite?: StoredUrlRe
   if (storedSite === undefined) logStep(run, 'render', now, { outcome: 'rendered', site: path.relative(run, site), draftRevision: draftRev.revision, draftLayer: report.draftLayer.state });
   else ensureStorageCurrent();
   return { ok: true, report };
+}
+
+/** The render's own manifest-facts member (version 2.9): the tree listed by `reader`, each manifest read alone through a second pinned
+ * reader on the same clone whose object bound is `MANIFEST_BLOB_LIMIT`; `unknown` where the tree cannot be listed. */
+export async function renderManifestFacts(clonePath: string, pinned: string, deps: Pick<RenderDeps, 'openReader'>, screen: DossierScreen,
+  consented: readonly string[] | null, reader: { readonly listTree: () => Promise<readonly TreeEntry[]> }): Promise<ManifestFacts> {
+  let entries: readonly TreeEntry[];
+  try {
+    entries = await reader.listTree();
+  } catch (cause) {
+    if (!(cause instanceof GitObjectReadRefusal)) throw cause;
+    return manifestFactsUnknown(cause.reason);
+  }
+  const manifestReader = (deps.openReader ?? openPinnedObjectReader)({ gitDir: path.join(clonePath, '.git'), revision: pinned, maxObjectBytes: MANIFEST_BLOB_LIMIT });
+  return deriveManifestFacts({ entries, screen, consented, read: async (manifestPath) => (await manifestReader.readBlobs([manifestPath]))[0]! });
 }
 
 /** Write the site into a new numbered directory under `site/`, through a staging directory renamed into place only when every file is

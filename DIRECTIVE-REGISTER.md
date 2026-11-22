@@ -44,11 +44,11 @@ defining its identifiers renders an empty table rather than a stale one.
 
 | Identifier | Title, as the corpus marks it | Defined at |
 |---|---|---|
-| `SEC-1` | Authenticated by default | `.syzygy/governance/doctrine/security.md`:15 |
-| `SEC-2` | Portfolio data leaves owner-controlled infrastructure only for a declared provider | `.syzygy/governance/doctrine/security.md`:49 |
-| `SEC-3` | Observed code is untrusted, everywhere | `.syzygy/governance/doctrine/security.md`:74 |
-| `SEC-4` | Writes are consented, attributed, and revertable | `.syzygy/governance/doctrine/security.md`:127 |
-| `SEC-5` | Secrets are never indexed | `.syzygy/governance/doctrine/security.md`:149 |
+| `SEC-1` | Authenticated by default | `.syzygy/governance/doctrine/security.md`:17 |
+| `SEC-2` | Portfolio data leaves owner-controlled infrastructure only for a declared provider | `.syzygy/governance/doctrine/security.md`:51 |
+| `SEC-3` | Observed code is untrusted, everywhere | `.syzygy/governance/doctrine/security.md`:97 |
+| `SEC-4` | Writes are consented, attributed, and revertable | `.syzygy/governance/doctrine/security.md`:150 |
+| `SEC-5` | Secrets are never indexed | `.syzygy/governance/doctrine/security.md`:172 |
 
 ## Craft-and-care policy — `CC`
 
@@ -122,15 +122,15 @@ Owner-approved craft. 55 identifiers, defined across 8 files.
 |---|---|---|
 | `CC-SPEC-1` | Capability and scope are clear | `.syzygy/governance/contracts/candidates/policy-candidates/SPECIFICATION-ACCEPTANCE-POLICY-CANDIDATE.md`:80 |
 | `CC-SPEC-2` | Every requirement names all its material governing warrants | `.syzygy/governance/contracts/candidates/policy-candidates/SPECIFICATION-ACCEPTANCE-POLICY-CANDIDATE.md`:100 |
-| `CC-SPEC-3` | Every requirement has a stable identity | `.syzygy/governance/contracts/candidates/policy-candidates/SPECIFICATION-ACCEPTANCE-POLICY-CANDIDATE.md`:166 |
-| `CC-SPEC-4` | Every requirement is falsifiable in a named form | `.syzygy/governance/contracts/candidates/policy-candidates/SPECIFICATION-ACCEPTANCE-POLICY-CANDIDATE.md`:179 |
-| `CC-SPEC-5` | Non-goals and Unknowns are explicit | `.syzygy/governance/contracts/candidates/policy-candidates/SPECIFICATION-ACCEPTANCE-POLICY-CANDIDATE.md`:246 |
-| `CC-SPEC-6` | No unresolved shape decision is silently selected | `.syzygy/governance/contracts/candidates/policy-candidates/SPECIFICATION-ACCEPTANCE-POLICY-CANDIDATE.md`:251 |
-| `CC-SPEC-7` | Implementation detail appears only when it is required behavior | `.syzygy/governance/contracts/candidates/policy-candidates/SPECIFICATION-ACCEPTANCE-POLICY-CANDIDATE.md`:269 |
-| `CC-SPEC-8` | Applicable contract clauses are covered or lawfully N/A | `.syzygy/governance/contracts/candidates/policy-candidates/SPECIFICATION-ACCEPTANCE-POLICY-CANDIDATE.md`:274 |
-| `CC-SPEC-9` | A fresh technical reader can restate it | `.syzygy/governance/contracts/candidates/policy-candidates/SPECIFICATION-ACCEPTANCE-POLICY-CANDIDATE.md`:343 |
-| `CC-SPEC-10` | Lawful adoption is recorded at the adopting commit | `.syzygy/governance/contracts/candidates/policy-candidates/SPECIFICATION-ACCEPTANCE-POLICY-CANDIDATE.md`:355 |
-| `CC-SPEC-11` | The requirement set covers the capability, and the coverage is demonstrated | `.syzygy/governance/contracts/candidates/policy-candidates/SPECIFICATION-ACCEPTANCE-POLICY-CANDIDATE.md`:380 |
+| `CC-SPEC-3` | Every requirement has a stable identity | `.syzygy/governance/contracts/candidates/policy-candidates/SPECIFICATION-ACCEPTANCE-POLICY-CANDIDATE.md`:171 |
+| `CC-SPEC-4` | Every requirement is falsifiable in a named form | `.syzygy/governance/contracts/candidates/policy-candidates/SPECIFICATION-ACCEPTANCE-POLICY-CANDIDATE.md`:184 |
+| `CC-SPEC-5` | Non-goals and Unknowns are explicit | `.syzygy/governance/contracts/candidates/policy-candidates/SPECIFICATION-ACCEPTANCE-POLICY-CANDIDATE.md`:251 |
+| `CC-SPEC-6` | No unresolved shape decision is silently selected | `.syzygy/governance/contracts/candidates/policy-candidates/SPECIFICATION-ACCEPTANCE-POLICY-CANDIDATE.md`:256 |
+| `CC-SPEC-7` | Implementation detail appears only when it is required behavior | `.syzygy/governance/contracts/candidates/policy-candidates/SPECIFICATION-ACCEPTANCE-POLICY-CANDIDATE.md`:274 |
+| `CC-SPEC-8` | Applicable contract clauses are covered or lawfully N/A | `.syzygy/governance/contracts/candidates/policy-candidates/SPECIFICATION-ACCEPTANCE-POLICY-CANDIDATE.md`:279 |
+| `CC-SPEC-9` | A fresh technical reader can restate it | `.syzygy/governance/contracts/candidates/policy-candidates/SPECIFICATION-ACCEPTANCE-POLICY-CANDIDATE.md`:356 |
+| `CC-SPEC-10` | Lawful adoption is recorded at the adopting commit | `.syzygy/governance/contracts/candidates/policy-candidates/SPECIFICATION-ACCEPTANCE-POLICY-CANDIDATE.md`:368 |
+| `CC-SPEC-11` | The requirement set covers the capability, and the coverage is demonstrated | `.syzygy/governance/contracts/candidates/policy-candidates/SPECIFICATION-ACCEPTANCE-POLICY-CANDIDATE.md`:393 |
 
 ## Shape-to-spec impact rule — `CC-IMPACT`
 

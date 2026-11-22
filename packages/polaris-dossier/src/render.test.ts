@@ -411,15 +411,16 @@ describe('render', () => {
       }
     });
 
-    it('carries the legend and the evidence-view target once per narrative page, and the redaction legend elsewhere', async () => {
+    it('carries the legend and the evidence-view target once per narrative page and map page, and the redaction legend elsewhere', async () => {
       const run = await prepared();
       const result = await renderRun(run, renderDeps());
       if (!result.ok) throw new Error(result.refusal.reason);
       const files = readSite(result.report.site);
       for (const [file, page] of html(files)) {
-        const narrative = file === 'index.html' || file.startsWith('deep-dives/');
-        expect(page.split('class="reading-legend"').length - 1, file).toBe(narrative ? 1 : 0);
-        expect(page.split('id="evidence-view"').length - 1, file).toBe(narrative ? 1 : 0);
+        // Version 2.9: each computed map page carries its own legend with the same switch and target.
+        const legended = file === 'index.html' || file.startsWith('deep-dives/') || file.startsWith('maps/');
+        expect(page.split('class="reading-legend"').length - 1, file).toBe(legended ? 1 : 0);
+        expect(page.split('id="evidence-view"').length - 1, file).toBe(legended ? 1 : 0);
       }
       const legend = files.get('index.html')!;
       expect(legend).toContain('<a href="#evidence-view">Show the evidence view</a>');
@@ -1756,7 +1757,7 @@ describe('render: derived structure (version 2.3)', () => {
     const region = regionOfIndex(index);
     expect(region).toContain(`<figure class="derived-figure" data-visual-provenance="computed" data-derived-record="sha256:${digest}">`);
     expect(index.indexOf('<section id="derived-structure"')).toBeGreaterThan(index.indexOf('<section id="section-core-ideas"'));
-    expect(region.endsWith('</figure></section>')).toBe(true);
+    expect(region.endsWith('</figure><p class="derived-maps">Computed maps: <a href="maps/directories.html">Directory map</a> · <a href="maps/units.html">Unit map</a> · <a href="maps/ci.html">CI pipeline map</a>.</p></section>')).toBe(true);
     expect(drawnGroups(region).sort()).toEqual(['edge observed _tree-contains-1', 'edge observed _tree-contains-2', 'node observed _tree-root', 'node observed _tree-unit-1', 'node observed _tree-unit-2']);
     expect(region).toContain('<p class="diagram-tally">3 boxes and 2 arrows, derived by Syzygy: 5 observed, 0 inferred, 0 unknown.</p>');
     for (const fact of FACTS) {
@@ -1814,7 +1815,7 @@ describe('render: derived structure (version 2.3)', () => {
   });
 
   it('states Not established with no figure, list or published record where no record was kept, the record is Unknown, or the render cannot list the tree', async () => {
-    const sentence = (reason: string, words: string): string => `<section id="derived-structure" data-reading-level="1" data-topics=""><h2>Derived by Syzygy: top-level directories</h2><p class="derived-unknown" data-epistemic="unknown" data-unknown-reason="${reason}"><span class="not-established">Not established.</span> The top-level directories of the tree at revision ${commit} are Unknown at this render: ${words}.</p></section>`;
+    const sentence = (reason: string, words: string): string => `<section id="derived-structure" data-reading-level="1" data-topics=""><h2>Derived by Syzygy: top-level directories</h2><p class="derived-unknown" data-epistemic="unknown" data-unknown-reason="${reason}"><span class="not-established">Not established.</span> The top-level directories of the tree at revision ${commit} are Unknown at this render: ${words}.</p><p class="derived-maps">Computed maps: <a href="maps/directories.html">Directory map</a> · <a href="maps/units.html">Unit map</a> · <a href="maps/ci.html">CI pipeline map</a>.</p></section>`;
     const expectNotEstablished = (out: Awaited<ReturnType<typeof rendered>>, reason: string, words: string, state: string): void => {
       expect(regionOfIndex(out.index)).toBe(sentence(reason, words));
       expect(out.files.has('derived-structure.json')).toBe(false);
@@ -1866,6 +1867,43 @@ describe('render: derived structure (version 2.3)', () => {
     for (const fact of JSON.parse(record).facts as Record<string, unknown>[]) expect(Object.keys(fact).filter((key) => /size|bytes|object|blob|sha|id$/iu.test(key) && key !== 'id')).toEqual([]);
   });
 
+  // Version 2.9 (syzygy-3efd.36): the directory map counts what the render re-derives from the tree: FILES holds 8 blob entries, 2 at the
+  // root, 5 under docs/ and src/, and 1 a secret detector matches.
+  it('counts the directory map from the tree, never the record, and marks its line Unknown where the record\'s files alone was edited', async () => {
+    const coverage = (mark: string, ending = ''): string => `<p class="map-coverage" ${mark}>Coverage: 8 files in the tree at that revision: 2 at the root; 5 under the 2 top-level directories listed here; 0 under 0 more top-level directories counted and not listed; 1 left out and not named, because a secret detector matches their path; and 0 submodules, not followed. Directories below the top level are not mapped: no rule of this version derives them.${ending}</p>`;
+    const run = await prepared(draft(), false);
+    const current = await rendered(run);
+    expect(current.files.get('maps/directories.html')).toContain(coverage('data-epistemic="observed"'));
+    const doc = JSON.parse(fs.readFileSync(recordPath(run), 'utf8'));
+    doc.files = 80;
+    fs.writeFileSync(recordPath(run), `${JSON.stringify(doc, null, 2)}\n`);
+    const edited = await rendered(run);
+    const map = edited.files.get('maps/directories.html')!;
+    expect(map).toContain(coverage('data-epistemic="unknown" data-unknown-reason="stale-beyond-currency-bound"', ' The derived record\'s counts differ from the tree\'s at this revision.'));
+    expect(map).not.toContain('80 files');
+    // The record's facts still equal the tree's, so the region and the map's figures and list stay Observed and unchanged.
+    const unhashed = (html: string): string => html.replace(/sha256:[0-9a-f]{64}/gu, 'sha256:x');
+    expect(unhashed(regionOfIndex(edited.index))).toBe(unhashed(regionOfIndex(current.index)));
+    expect(drawnGroups(map).every((g) => g.split(' ')[1] === 'observed')).toBe(true);
+    expect(edited.machine.computedMaps.directories).toEqual({ state: 'derived', figures: 1 });
+  });
+
+  it('never takes a manifest fact from the stored check record: a planted manifestFacts member reaches no map or machine view', async () => {
+    const run = await prepared(draft(), false);
+    const checkFile = path.join(run, 'checks', 'rev-0.json');
+    const record = JSON.parse(fs.readFileSync(checkFile, 'utf8'));
+    const planted = { id: '_manifest-1', fact: 'package', rule: 'npm-package-manifest', ruleVersion: 1, path: 'package.json', lines: [2, 2], name: 'zq-planted-package', epistemic: 'inferred' };
+    const job = { id: '_manifest-2', fact: 'job', rule: 'github-actions-workflow', ruleVersion: 1, path: '.github/workflows/ci.yml', lines: [3, 3], job: 'zq-planted-job', epistemic: 'inferred' };
+    record.manifestFacts = { ...record.manifestFacts, facts: [job, planted] };
+    fs.writeFileSync(checkFile, `${JSON.stringify(record, null, 2)}\n`);
+    const { files, machine } = await rendered(run);
+    for (const [file, text] of files) for (const name of ['zq-planted-package', 'zq-planted-job']) expect(text, `${file} ${name}`).not.toContain(name);
+    expect(machine.computedMaps.units).toEqual({ figures: 0, facts: [], files: [] });
+    expect(machine.computedMaps.ci).toEqual({ figures: 0, facts: [], files: [] });
+    expect(machine.computedMaps.manifests.state).toBe('derived');
+    expect(files.get('maps/units.html')).toContain('<ul class="map-unknown-files"><li>No candidate file.</li></ul>');
+  });
+
   it('keeps an authored figure matching a derived fact dashed and curated, and a draft cannot set Observed', async () => {
     const doc = draft();
     doc.diagrams = [{ id: 'd-tree', title: 'zq-authored tree', sectionId: 'core-ideas', kind: 'flow', relationship: 'The root holds src.', disposition: { kind: 'produced', assetIds: ['d-tree'] },
@@ -1879,7 +1917,8 @@ describe('render: derived structure (version 2.3)', () => {
     expect(authored).not.toContain('Solid: observed');
     expect(authored).not.toContain('data-derived-id');
     expect(drawnGroups(regionOfIndex(index)).every((g) => g.split(' ')[1] === 'observed')).toBe(true);
-    expect([...files.values()].join('').split('data-visual-provenance="computed"').length - 1).toBe(1);
+    // One computed figure outside the map pages (version 2.9 adds the map pages' own).
+    expect([...files].filter(([file]) => !file.startsWith('maps/')).map(([, text]) => text).join('').split('data-visual-provenance="computed"').length - 1).toBe(1);
 
     // A draft element labelled Observed, and a draft member naming the derived figure, are findings: the draft does not proceed.
     const observed = structuredClone(doc);
@@ -1923,7 +1962,7 @@ describe('render: derived structure (version 2.3)', () => {
   // reading rule of the record itself (exact rebuild, own repository, forms, no secret-matching path); the render refuses it because a
   // path or rule it names is not one the render's own re-derivation holds.
   it('publishes and draws nothing of a record naming a directory the tree does not hold, or a rule other than top-level-unit version 1 (version 2.8)', async () => {
-    const sentence = `<section id="derived-structure" data-reading-level="1" data-topics=""><h2>Derived by Syzygy: top-level directories</h2><p class="derived-unknown" data-epistemic="unknown" data-unknown-reason="missing-evidence"><span class="not-established">Not established.</span> The top-level directories of the tree at revision ${commit} are Unknown at this render: no derived record was kept when this draft revision was checked.</p></section>`;
+    const sentence = `<section id="derived-structure" data-reading-level="1" data-topics=""><h2>Derived by Syzygy: top-level directories</h2><p class="derived-unknown" data-epistemic="unknown" data-unknown-reason="missing-evidence"><span class="not-established">Not established.</span> The top-level directories of the tree at revision ${commit} are Unknown at this render: no derived record was kept when this draft revision was checked.</p><p class="derived-maps">Computed maps: <a href="maps/directories.html">Directory map</a> · <a href="maps/units.html">Unit map</a> · <a href="maps/ci.html">CI pipeline map</a>.</p></section>`;
     const planted: [string, string, (doc: Doc) => void][] = [
       ['a non-secret directory absent from the tree', 'zqplanteddir', (doc) => { doc.facts[1].path = 'zqplanteddir'; doc.facts[3].path = 'zqplanteddir'; }],
       ['a rule other than top-level-unit', 'zq-planted-rule', (doc) => { doc.facts[2].rule = 'zq-planted-rule'; }],
