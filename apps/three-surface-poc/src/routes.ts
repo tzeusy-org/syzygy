@@ -1,5 +1,5 @@
 import { escapeHtml, type Route, type RouteResponse } from '@syzygy/http-host';
-import { PWB_RESOURCE_LIMITS, buildResponseIdentity, withServedResourceBreaches, type PocEntity, type PocModel, type PocSurface, type PwbResourceLimits, type Reevaluation } from '@syzygy/three-surface-poc-core';
+import { PWB_RESOURCE_LIMITS, buildResponseIdentity, withServedResourceBreaches, type PocEntity, type PocModel, type PocSurface, type PwbResourceLimits, type Reevaluation, type TrajectoryViewRefusal } from '@syzygy/three-surface-poc-core';
 
 import { BROWSER_ORIGIN_REFUSAL, browserRequestAllowed } from './browser-origin.js';
 import { epistemicText, exactTablesSection } from './exact-tables.js';
@@ -8,7 +8,7 @@ import { pageShell, type HumanOperabilityStatus } from './page-shell.js';
 import { POLARIS_HUMAN_PATH, POLARIS_TAILNET_PATH, renderPolarisPage, renderPolarisPresentation, type PolarisRenderInputs } from './polaris.js';
 import { POLARIS_SOURCE_PATH, POLARIS_SOURCE_TAILNET_PATH, renderPolarisSourcePage, SOURCE_IDENTITY_PARAM } from './polaris-source.js';
 import { mountPrefixForRequest, TAILNET_MOUNT_PREFIX } from './tailnet.js';
-import { renderTrajectoryPage, TRAJECTORY_HUMAN_PATH, TRAJECTORY_TAILNET_PATH } from './trajectory.js';
+import { renderTrajectoryRoute, TRAJECTORY_HUMAN_PATH, TRAJECTORY_TAILNET_PATH } from './trajectory.js';
 import { ServedResponseRecorder } from './served-response-recorder.js';
 
 export { BROWSER_ORIGIN_REFUSAL } from './browser-origin.js';
@@ -274,14 +274,21 @@ export function pocRoutes(getModel: () => PocModel, limits: PwbResourceLimits = 
   function humanSurfaceRoutes(
     directPath: string,
     tailnetPath: string,
-    render: (model: PocModel, mountPrefix: string, status: HumanOperabilityStatus) => string,
+    render: (model: PocModel, mountPrefix: string, status: HumanOperabilityStatus, query: URLSearchParams) => string | TrajectoryViewRefusal,
   ): readonly Route[] {
     const handle: Route['handle'] = ({ request }) => {
       if (!browserRequestAllowed(request.headers)) {
         return { status: 403, contentType: 'application/json', body: JSON.stringify(BROWSER_ORIGIN_REFUSAL) };
       }
       const model = servedModel();
-      return html(model, render(model, mountPrefixForRequest(request.headers), statusFor(model)));
+      const rendered = render(model, mountPrefixForRequest(request.headers), statusFor(model), request.query);
+      if (typeof rendered !== 'string') {
+        // POC-REQ-042: a parameter outside the declared set is refused with
+        // its reason, never ignored; the refusal goes through the same bound.
+        const bounded = boundedResponse(model, limits, 'maxHumanResponseBytes', 'application/json', JSON.stringify(rendered), recorder);
+        return bounded.status === 200 ? { ...bounded, status: 400 } : bounded;
+      }
+      return html(model, rendered);
     };
     return [
       { method: 'GET', path: directPath, credentialClass: 'human-open', handle },
@@ -306,7 +313,7 @@ export function pocRoutes(getModel: () => PocModel, limits: PwbResourceLimits = 
     ...humanSurfaceRoutes(POLARIS_HUMAN_PATH, POLARIS_TAILNET_PATH, (model, mountPrefix, status) => renderPolarisPage(model, mountPrefix, {}, polarisInputs === undefined ? {} : polarisInputs(model), status)),
     { method: 'GET', path: POLARIS_SOURCE_PATH, credentialClass: 'human-open', handle: sourceHandle },
     { method: 'GET', path: POLARIS_SOURCE_TAILNET_PATH, credentialClass: 'human-open', handle: sourceHandle },
-    ...humanSurfaceRoutes(TRAJECTORY_HUMAN_PATH, TRAJECTORY_TAILNET_PATH, renderTrajectoryPage),
+    ...humanSurfaceRoutes(TRAJECTORY_HUMAN_PATH, TRAJECTORY_TAILNET_PATH, renderTrajectoryRoute),
     ...humanSurfaceRoutes(ORRERY_HUMAN_PATH, ORRERY_TAILNET_PATH, renderOrreryPage),
     {
       method: 'GET',
