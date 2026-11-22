@@ -23,7 +23,8 @@ import { decodeSessionResponse, type SessionResponseUsage } from './session-resp
 import { buildDesignPacket, validateDesignVerdict } from './design-review.js';
 import { createUrlDesignView } from './url-design-view.js';
 import { materializeOrderedDesignPart, planOrderedDesignBytes } from './url-design-delivery.js';
-import { createOrderedDesignSession } from './url-ordered-design-session.js';
+import type { OrderedScreenProgram } from './url-ordered-design-screen.js';
+import { createOrderedDesignSession, isOrderedDesignSession, isProductionOrderedDesignSession } from './url-ordered-design-session.js';
 import { createUrlSessionBudget } from './url-session-budget.js';
 import { createUrlSessionAudit } from './url-session-audit.js';
 import { urlSessionMcpSupportPath } from './url-runtime.js';
@@ -203,7 +204,7 @@ async function privateLaunchOptions(root: string, profile: NativeSessionProfile,
 
 const orderedCanonical = (value: unknown): string => encodeCanonicalJson(value, SESSION_POLICY_LIMITS);
 const sameWireValue = (actual: unknown, expected: unknown): boolean => orderedCanonical(actual) === orderedCanonical(expected);
-type OrderedScenario = 'ready' | 'stale-verdict' | 'out-of-order' | 'truncated-terminal' | 'insufficient-turns' | 'oversized-verdict' | 'insufficient-shape';
+type OrderedScenario = 'ready' | 'stale-verdict' | 'out-of-order' | 'truncated-terminal' | 'insufficient-turns' | 'oversized-verdict' | 'insufficient-shape' | 'insufficient-work';
 
 /** Run only the prepared byte-identical namespace command, with its native
  * resource limits and an independent fixture timeout. The production sampled
@@ -266,7 +267,7 @@ async function runNativeOrderedFixture(scenario: OrderedScenario) {
   const original = Buffer.from(packet.bytes);
   const view = createUrlDesignView({ original, screen, expected: { runId: run, pinnedRevision: pin, bytes: original.length, sha256: packet.sha256 } });
   expect(view.rawActive.status).toBe('failed');
-  const plan = planOrderedDesignBytes({ envelope: view.bytes, envelopeSha256: view.sha256,
+  const planInput: Omit<Parameters<typeof planOrderedDesignBytes>[0], 'envelope'> = { envelopeSha256: view.sha256,
     original: { bytes: original.length, sha256: packet.sha256 }, fileCount: packet.files.length, pageCount: packet.pages.length,
     binding: { basePolicySha256: binding.policy, originPolicySha256: sha256('own origin policy'), originalReceiptSha256: sha256('own receipt'),
       producerSha256: sha256('own fixture producer'), profileSha256: profile.digest, encoding: 'html-entities-five/1',
@@ -274,7 +275,8 @@ async function runNativeOrderedFixture(scenario: OrderedScenario) {
       deadline: '2099-01-01T00:00:00.000Z' }, parents: [sha256('own parent')],
     instructionProfileSha256: sha256(profile.input.systemPrompt),
     limits: { partBytes: profile.transcript.partition.partBytes, partCount: profile.transcript.partition.partCount,
-      replyBytes: profile.transcript.partition.replyBytes, preparedBytes: profile.transcript.partition.preparedBytes } });
+      replyBytes: profile.transcript.partition.replyBytes, preparedBytes: profile.transcript.partition.preparedBytes } };
+  const plan = planOrderedDesignBytes({ ...planInput, envelope: view.bytes });
   expect(plan.manifest.parts).toHaveLength(2);
   expect(plan.replies.every(reply => reply.bytes > 10_000)).toBe(true);
   const verdict = { schemaVersion: 'polaris-dossier-local-design-verdict-v1', pinnedRevision: pin,
@@ -334,11 +336,33 @@ async function runNativeOrderedFixture(scenario: OrderedScenario) {
     project, pin, principal, profiles: [...otherProfiles, profile], declaredClasses: SESSION_CONTENT_CLASSES, screen, current: () => true });
   if (!protectedAudit.ok) throw new Error('own protected audit refused');
   cleanup.push(protectedAudit.close);
-  const writer = protectedAudit.beginOrderedDesignAudit(plan, () => true);
+  let orderedSession: ReturnType<typeof createOrderedDesignSession>;
+  const writer = protectedAudit.beginOrderedDesignAudit(plan, () => true, bytes => orderedSession.chargeAuditRead(bytes));
   const budget = createUrlSessionBudget({ deadline: Date.parse(plan.manifest.binding.deadline), now: Date.now,
     turnBudget: scenario === 'insufficient-turns' ? 4 : 5, tokenBudget: null });
   let relay: SessionRelay;
-  const orderedSession = createOrderedDesignSession({ profile, plan, principal, writer, budget,
+  const operationEnvelope = { cpuMicroseconds: 10_000_000, wallMilliseconds: 10_000, auditReadBytes: 500_000_000,
+    inputCodeUnits: 8_388_608, secretCodeUnits: 103_000_000, secretCalls: 524_361, activeCodeUnits: 16_777_216, activeCalls: 32 };
+  let workerCpu = 0;
+  const cpuMicroseconds = () => { const usage = process.cpuUsage(); return usage.user + usage.system + workerCpu; };
+  let screening: Parameters<typeof createOrderedDesignSession>[0]['screening'] = { kind: 'test-only-detectors',
+    detectors: { scanSecrets: text => screen.screenSecrets(text) !== undefined, scanDesignView: text => screen.screenBody(text) !== undefined } };
+  if (scenario === 'ready') {
+    const { compileDossierOrderedScreen } = await import(new URL('../../../scripts/compile_dossier_ordered_screen.mjs', import.meta.url).href) as {
+      compileDossierOrderedScreen(root: string): Promise<{ outputFiles: { contents: Uint8Array }[] }> };
+    const compiledWorker = await compileDossierOrderedScreen(new URL('../../../', import.meta.url).pathname);
+    const worker = path.join(root, 'hidden/ordered-screen.mjs'), bytes = compiledWorker.outputFiles[0]!.contents;
+    await writeFile(worker, bytes, { mode: 0o600 });
+    const node = await realpath(process.execPath), nodeBytes = await readFile(node);
+    const program: OrderedScreenProgram = { node: { path: node, bytes: nodeBytes.length, sha256: sha256(nodeBytes) },
+      worker: { path: worker, bytes: bytes.length, sha256: sha256(bytes) } };
+    screening = { kind: 'bounded-worker', program, policyBytes: policyFixture().bytes, planInput };
+  }
+  orderedSession = createOrderedDesignSession({ profile, plan, principal, writer, budget, screening,
+    work: { runtimeSha256: sha256('owned runtime'), enforcement: { runtimeSha256: sha256('owned runtime'), workerSha256: screening.kind === 'bounded-worker' ? screening.program.worker.sha256 : sha256('owned test adapter'),
+      operations: { request: operationEnvelope, response: operationEnvelope, tool: operationEnvelope, audit: operationEnvelope, terminal: operationEnvelope },
+      relayMilliseconds: 180_000, brokerMilliseconds: 85_000 }, remainingRunCpuMicroseconds: () => (scenario === 'insufficient-work' && responseUsage.length > 0 ? 10_000_000 : 1_000_000_000) - workerCpu,
+      cpuMicroseconds, chargeScreenCpuMicroseconds: value => { workerCpu += value; } },
     ...(scenario === 'insufficient-shape' ? { requestMaxBytes: 16_384 } : {}), relay: () => relay, envelope: () => view.bytes,
     current: () => true, assertCurrent: () => {}, stageVerdict: async ({ stdin, assertCurrent }) => {
       await expect(writer.readTerminal()).rejects.toThrow('url-ordered-design-audit-writer-refused');
@@ -351,6 +375,10 @@ async function runNativeOrderedFixture(scenario: OrderedScenario) {
       return verdictValidated ? sha256(orderedCanonical({ verdictSha256: sha256(stdin), packetSha256: packet.sha256 })) : null;
     },
   });
+  expect(isOrderedDesignSession(orderedSession)).toBe(true);
+  expect(isOrderedDesignSession({ ...orderedSession })).toBe(false);
+  expect(isProductionOrderedDesignSession(orderedSession)).toBe(scenario === 'ready');
+  expect(isProductionOrderedDesignSession({ ...orderedSession })).toBe(false);
   relay = await sessionRelayTestPort(async input => {
     const index = forwarded.length;
     if (input.route !== '/v1/messages?beta=true' || index >= 5) throw new Error('own route refused');
@@ -412,7 +440,7 @@ async function runNativeOrderedFixture(scenario: OrderedScenario) {
         const detectors = { scanSecrets: (text: string) => screen.screenSecrets(text) !== undefined,
           scanDesignView: (text: string) => screen.screenBody(text) !== undefined };
         if (checked === 0) {
-          const admission = orderedSession.checkRequest(bytes, detectors);
+          const admission = orderedSession.checkRequest(bytes);
           if (!admission.ok || !sameWireValue(admission.value.received, { bytes: bytes.length, sha256: sha256(bytes) })
             || !sameWireValue(admission.value.forwarded, { bytes: body.length, sha256: sha256(body) })) throw new Error('initial request refused');
         }
@@ -427,10 +455,10 @@ async function runNativeOrderedFixture(scenario: OrderedScenario) {
               [...messages, { role: 'user', content: 'Unregistered extra history.' }],
               [...messages.slice(0, -1), { ...messages.at(-1), content: [...messages.at(-1)!.content,
                 { type: 'text', text: 'Unregistered result suffix.' }] }],
-            ]) expect(() => orderedSession.checkRequest(Buffer.from(orderedCanonical({ ...controls, messages: unknownHistory })), detectors))
+            ]) expect(() => orderedSession.checkRequest(Buffer.from(orderedCanonical({ ...controls, messages: unknownHistory }))))
               .toThrow('url-ordered-design-session-refused');
           }
-          const admission = orderedSession.checkRequest(bytes, detectors);
+          const admission = orderedSession.checkRequest(bytes);
           if (!admission.ok) throw new Error(`ordered detector branches refused (${admission.code})`);
           if (!sameWireValue(admission.value.received, { bytes: bytes.length, sha256: sha256(bytes) })
             || !sameWireValue(admission.value.forwarded, { bytes: body.length, sha256: sha256(body) })
@@ -457,7 +485,7 @@ async function runNativeOrderedFixture(scenario: OrderedScenario) {
       if (scenario !== 'out-of-order' || checked !== 2) {
         if (scenario === 'oversized-verdict' && checked === 4)
           expect(decodeSessionResponse(bytes, contentType, DEFAULT_SESSION_MODEL, scanSecrets).ok).toBe(true);
-        const accepted = orderedSession.checkResponse(bytes, contentType, scanSecrets);
+        const accepted = orderedSession.checkResponse(bytes, contentType);
         if (!accepted.ok || accepted.usage === undefined) {
           faults.push('fixture response codec refused');
           return { ok: false };
@@ -502,7 +530,7 @@ async function runNativeOrderedFixture(scenario: OrderedScenario) {
   const stored = await readFile(path.join(auditParent, 'audit-design.jsonl'), 'utf8');
   const orderedRecords = stored.trimEnd().split('\n').map(line => JSON.parse(line)).filter(row => row.event.kind === 'design-ordered')
     .map(row => row.event.payload as { kind: string; payload: unknown });
-  return { result, checked, screened, terminalResponseDecoded, verdictValidated, audit, forwarded, delivered, faults, cachePositions, budget: budget.snapshot(),
+  return { result, checked, screened, terminalResponseDecoded, verdictValidated, audit, forwarded, delivered, faults, cachePositions, workerCpu, work: orderedSession.workSnapshot(), budget: budget.snapshot(),
     reconstructed: receivedParts.join('') === new TextDecoder().decode(view.bytes), plan, terminal, orderedRecords };
 }
 
@@ -629,7 +657,7 @@ describe('prepared private CLI launch',()=>{
       tool.name === 'artifact_read' ? { ...tool, _meta: { 'anthropic/maxResultSizeChars': 500000 } } : tool) } });
   });
 
-  it.each(['ready', 'stale-verdict', 'out-of-order', 'truncated-terminal', 'insufficient-turns', 'oversized-verdict', 'insufficient-shape'] as const)('observes the actual ordered design CLI exchange (%s)', async scenario => {
+  it.each(['ready', 'stale-verdict', 'out-of-order', 'truncated-terminal', 'insufficient-turns', 'oversized-verdict', 'insufficient-shape', 'insufficient-work'] as const)('observes the actual ordered design CLI exchange (%s)', async scenario => {
     const observed = await runNativeOrderedFixture(scenario);
     const evidence = JSON.stringify({ faults: observed.faults, checked: observed.checked, delivered: observed.delivered.length,
       audit: observed.audit.map(event => event.event),
@@ -639,7 +667,7 @@ describe('prepared private CLI launch',()=>{
       expect(observed.orderedRecords.map(record => record.kind)).not.toContain('eligible');
       expect(observed.orderedRecords.at(-1)?.kind).toBe('retired');
     }
-    if (scenario === 'insufficient-turns' || scenario === 'insufficient-shape') {
+    if (scenario === 'insufficient-turns' || scenario === 'insufficient-shape' || scenario === 'insufficient-work') {
       expect(observed.checked, evidence).toBe(1);
       expect(observed.delivered).toEqual([]);
       expect(observed.forwarded).toHaveLength(1);
@@ -705,6 +733,8 @@ describe('prepared private CLI launch',()=>{
       expect(observed.orderedRecords.slice(-6).map(record => record.kind)).toEqual([
         'acknowledgment-receipt', 'request-admitted', 'send-attempt', 'send-outcome', 'response-admitted', 'eligible',
       ]);
+      expect(observed.workerCpu).toBe(60_000_000);
+      expect(observed.work).toMatchObject({ state: 'complete', used: { request: 4, response: 4, tool: 4, audit: 23, terminal: 1 } });
       expect(observed.terminal, evidence).toMatchObject({ packetSha256: observed.plan.manifest.originalSha256 });
       expect(observed.budget).toMatchObject({ state: 'open', heldDesignTurns: 0, requestReservations: 5, completeUsageReports: 5, reportedTokens: 35 });
     }

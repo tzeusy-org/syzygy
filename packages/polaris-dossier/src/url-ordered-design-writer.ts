@@ -31,6 +31,9 @@ interface OrderedDesignAuditStore {
   current(): Promise<boolean>;
 }
 
+const observedReaders = new WeakSet<OrderedDesignAuditWriter>();
+export const hasOrderedDesignReadObserver = (writer: OrderedDesignAuditWriter): boolean => observedReaders.has(writer);
+
 const refused = (): Error => new Error('url-ordered-design-audit-writer-refused');
 const canonical = (value: unknown): Buffer => Buffer.from(encodeCanonicalJson(value, ORDERED_DESIGN_AUDIT_RECORD_LIMITS));
 
@@ -41,6 +44,7 @@ const canonical = (value: unknown): Buffer => Buffer.from(encodeCanonicalJson(va
  */
 export function createOrderedDesignAuditWriter(
   context: Omit<OrderedDesignAuditPrefixInput, 'asOf' | 'records'>, store: OrderedDesignAuditStore,
+  observeRead?: (bytes: number) => void,
 ): OrderedDesignAuditWriter {
   const { profile, plan, principal } = context;
   const deadline = Date.parse(plan.manifest.binding.deadline);
@@ -59,15 +63,18 @@ export function createOrderedDesignAuditWriter(
     if (!(asOf < deadline)) throw refused();
     return asOf;
   }
-  const readRecords = (): Uint8Array[] => readers.map(read => read());
+  const checkedRead = (read: () => Uint8Array): Uint8Array => {
+    const bytes = read(); observeRead?.(bytes.byteLength); return bytes;
+  };
+  const readRecords = (): Uint8Array[] => readers.map(checkedRead);
 
   const durable = async (record: OrderedDesignStoredRecord, bytes: Buffer): Promise<void> => {
     // The started write may have reached disk even if its wait rejects.
     disposition = 'uncertain';
     const read = await store.append(record);
-    if (!bytes.equals(read())) throw refused();
+    if (!bytes.equals(checkedRead(read))) throw refused();
     await current();
-    if (!bytes.equals(read()) || !(Date.now() < deadline)) throw refused();
+    if (!bytes.equals(checkedRead(read)) || !(Date.now() < deadline)) throw refused();
     readers.push(read);
   };
   const append: OrderedDesignAuditWriter['append'] = async (kind, payload) => {
@@ -117,5 +124,7 @@ export function createOrderedDesignAuditWriter(
       return evidence;
     } finally { busy = false; }
   };
-  return Object.freeze({ append, retire, readTerminal });
+  const writer = Object.freeze({ append, retire, readTerminal });
+  if (observeRead !== undefined) observedReaders.add(writer);
+  return writer;
 }

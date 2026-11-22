@@ -10,7 +10,10 @@ import { decodeSessionResponse, type SessionResponseUsage } from './session-resp
 import { isOrderedDesignPlanFor, materializeOrderedDesignPart, type OrderedDesignPlan } from './url-design-delivery.js';
 import { boundOrderedDesignTransfer, type OrderedDesignTransferBounds } from './url-ordered-design-bounds.js';
 import type { OrderedDesignAuditPayloads, OrderedDesignAuditReference } from './url-ordered-design-audit.js';
-import type { OrderedDesignAuditWriter } from './url-ordered-design-writer.js';
+import { hasOrderedDesignReadObserver, type OrderedDesignAuditWriter } from './url-ordered-design-writer.js';
+import { runOrderedDesignScreen, type OrderedScreenProgram } from './url-ordered-design-screen.js';
+import { ORDERED_SCREEN_LIMITS, type OrderedScreenInput, type OrderedScreenObservation } from './url-ordered-design-screen-protocol.js';
+import { createOrderedDesignWorkBudget, planOrderedDesignWork, type OrderedDesignWorkEnforcement } from './url-ordered-design-work-budget.js';
 import type { createUrlSessionBudget, UrlOrderedDesignTurnReservation } from './url-session-budget.js';
 
 type Call = OrderedDesignAuditPayloads['prepared']['call'];
@@ -29,7 +32,20 @@ interface InFlight {
   sendOutcome?: OrderedDesignAuditReference;
 }
 
+export interface OrderedDesignSessionWork {
+  readonly enforcement: OrderedDesignWorkEnforcement;
+  readonly runtimeSha256: string;
+  readonly remainingRunCpuMicroseconds: () => number;
+  readonly cpuMicroseconds: () => number;
+  readonly chargeScreenCpuMicroseconds: (value: number) => void;
+}
+export type OrderedDesignSessionScreening = { readonly kind: 'bounded-worker'; readonly program: OrderedScreenProgram;
+  readonly policyBytes: Uint8Array; readonly planInput: Omit<Parameters<typeof import('./url-design-delivery.js').planOrderedDesignBytes>[0], 'envelope'> }
+  | { readonly kind: 'test-only-detectors'; readonly detectors: Parameters<typeof screenOrderedDesignRequest>[2] };
+
 interface Options {
+  readonly screening: OrderedDesignSessionScreening;
+  readonly work: OrderedDesignSessionWork;
   readonly profile: OrderedDesignSessionProfile;
   readonly plan: OrderedDesignPlan;
   readonly principal: string;
@@ -63,12 +79,27 @@ function nativeResponse(native: NonNullable<SessionAuditEvent['response']>): Ord
   throw refused();
 }
 
+const issuedSessions = new WeakSet<object>(), productionSessions = new WeakSet<object>();
+export const isOrderedDesignSession = (value: unknown): boolean =>
+  value !== null && typeof value === 'object' && issuedSessions.has(value);
+export const isProductionOrderedDesignSession = (value: unknown): boolean =>
+  value !== null && typeof value === 'object' && productionSessions.has(value);
+
 /** Host-only cursor for one exact sealed transfer. A role supplies an invocation,
  * and only the selected relay contributes admitted request/response evidence. */
 export function createOrderedDesignSession(options: Options) {
   const { profile, plan, principal, relay, writer, budget, envelope, current, assertCurrent, stageVerdict } = options;
-  if (!isOrderedDesignSessionProfile(profile) || !isOrderedDesignPlanFor(plan, profile.transcript.partition)) throw refused();
+  if (!hasOrderedDesignReadObserver(writer) || !isOrderedDesignSessionProfile(profile) || !isOrderedDesignPlanFor(plan, profile.transcript.partition)) throw refused();
   const { transcript } = profile;
+  const { work, screening } = options;
+  const policy = screening.kind === 'bounded-worker' ? Uint8Array.from(screening.policyBytes) : null;
+  if (work.enforcement.runtimeSha256 !== work.runtimeSha256 || screening.kind === 'bounded-worker' && (sha256(policy!) !== profile.input.binding.policy
+    || screening.program.worker.sha256 !== work.enforcement.workerSha256
+    || (['request', 'response'] as const).some(kind => work.enforcement.operations[kind].cpuMicroseconds <= 2 * (ORDERED_SCREEN_LIMITS.cpuSeconds + 1) * 1_000_000
+      || work.enforcement.operations[kind].wallMilliseconds <= ORDERED_SCREEN_LIMITS.wallMilliseconds))) throw refused();
+  type WorkBudget = ReturnType<typeof createOrderedDesignWorkBudget>;
+  let workBudget: WorkBudget | null = null;
+  let activeRead: ((bytes: number) => void) | null = null;
   const { binding, parts, originalBytes, originalSha256 } = plan.manifest;
   const canonical = (value: unknown) => encodeCanonicalJson(value, transcript.requestLimits);
   const equal = (left: unknown, right: unknown): boolean => canonical(left) === canonical(right);
@@ -92,7 +123,7 @@ export function createOrderedDesignSession(options: Options) {
     return selectedRelay ??= actual;
   };
   const requireLive = (): void => {
-    if (stopped || !selected().healthy() || !(Date.now() < deadline)
+    if (stopped || (workBudget !== null && !workBudget.current()) || !selected().healthy() || !(Date.now() < deadline)
       || !(budgetReservation === null ? budget.current() : budgetReservation.current())) throw refused();
     assertCurrent();
   };
@@ -111,12 +142,13 @@ export function createOrderedDesignSession(options: Options) {
     retirement = reason;
     if (initialBudgetPending) budget.uncertainAttempt('design');
     budgetReservation?.retire();
+    workBudget?.retire();
     response = null;
     request = null;
     checkedResponse = null;
     submission = null;
   };
-  const flushRetirement = () => retirement === null ? Promise.resolve() : retiring ??= writer.retire(retirement);
+  const flushRetirement = () => retirement === null ? Promise.resolve() : retiring ??= auditOperation('audit', () => writer.retire(retirement!));
   const retire = async (reason: RetireReason): Promise<void> => {
     stop(reason);
     if (!busy) await flushRetirement();
@@ -134,12 +166,103 @@ export function createOrderedDesignSession(options: Options) {
     }
   };
 
-  const checkRequest = (bytes: Uint8Array, detectors: Parameters<typeof screenOrderedDesignRequest>[2]): ReturnType<typeof screenOrderedDesignRequest> => {
+  const openOperation = (operation: 'request' | 'response' | 'tool' | 'audit' | 'terminal', turn: number) => {
+    const cap = work.enforcement.operations[operation], began = performance.now(), cpu = work.cpuMicroseconds();
+    const expires = Math.min(deadline, workBudget?.snapshot().expiresAt ?? deadline, Date.now() + cap.wallMilliseconds);
+    const ledger = stopped ? null : workBudget;
+    const ticket = ledger?.begin(operation, turn) ?? null;
+    const remaining = work.remainingRunCpuMicroseconds();
+    if (!Object.values(cap).every(value => Number.isSafeInteger(value) && value >= 0) || cap.cpuMicroseconds <= 0 || cap.wallMilliseconds <= 0
+      || !Number.isSafeInteger(cpu) || cpu < 0 || !Number.isSafeInteger(remaining) || remaining < cap.cpuMicroseconds
+      || (ledger !== null && ticket === null) || !(Date.now() < expires)) throw refused();
+    let reads = 0;
+    const check = (): void => {
+      const actualCpu = work.cpuMicroseconds(), available = work.remainingRunCpuMicroseconds();
+      if (!Number.isSafeInteger(actualCpu) || actualCpu < cpu || !Number.isSafeInteger(available) || available < 0 || !(Date.now() < expires) || performance.now() - began >= cap.wallMilliseconds
+        || actualCpu - cpu > cap.cpuMicroseconds
+        || (ledger !== null && !ledger.current())) throw refused();
+    };
+    return { ticket, expires, check, read: (bytes: number): void => {
+      reads += bytes;
+      if (!Number.isSafeInteger(bytes) || bytes < 0 || !Number.isSafeInteger(reads) || reads > cap.auditReadBytes
+        || (ticket !== null && ledger?.auditRead(ticket, bytes) !== true)) throw refused();
+      check();
+    }, finish: (): void => { check(); if (ticket !== null && ledger?.finish(ticket) !== true) throw refused(); } };
+  };
+  const waitOperation = async <T>(boundary: ReturnType<typeof openOperation>, operation: () => Promise<T>): Promise<T> => {
+    let timer: ReturnType<typeof setTimeout> | undefined;
+    try {
+      return await Promise.race([operation(), new Promise<never>((_resolve, reject) => {
+        timer = setTimeout(() => { stop('refused'); reject(refused()); }, Math.max(1, boundary.expires - Date.now()));
+      })]);
+    } finally { if (timer !== undefined) clearTimeout(timer); }
+  };
+  const auditOperation = async <T>(kind: 'audit' | 'terminal', operation: () => Promise<T>): Promise<T> => {
+    const boundary = openOperation(kind, Math.max(0, receipts.length - 1));
+    const priorRead = activeRead; activeRead = boundary.read;
+    try { return await waitOperation(boundary, operation); }
+    finally { activeRead = priorRead; boundary.finish(); }
+  };
+  const append: OrderedDesignAuditWriter['append'] = (kind, payload) => auditOperation('audit', () => writer.append(kind, payload));
+  type ScreenInput = OrderedScreenInput | Omit<Extract<OrderedScreenInput, { operation: 'request' }>, 'planInput'>;
+  const screen = (input: ScreenInput, boundary: ReturnType<typeof openOperation>): OrderedScreenObservation => {
+    if (screening.kind === 'bounded-worker') {
+      if (input.operation === 'request' && !('planInput' in input)) throw refused();
+      const result = runOrderedDesignScreen({ program: screening.program, input, deadlineEpochMilliseconds: boundary.expires,
+        current: () => { try { requireLive(); boundary.check(); return true; } catch { return false; } } });
+      work.chargeScreenCpuMicroseconds(result.charge.cpuMicroseconds);
+      workBudget?.current();
+      boundary.check();
+      if (!result.ok) throw refused();
+      return result.observation;
+    }
+    const empty = () => ({ secretCalls: 0, secretCodeUnits: 0, activeCalls: 0, activeCodeUnits: 0, maximumInputCodeUnits: 0 });
+    const counts = empty(), branches = { raw: empty(), received: empty(), prepared: empty(), logicalReceived: empty(), logicalPrepared: empty() };
+    const inverseInputs: number[] = [];
+    let branch: keyof typeof branches = 'raw';
+    const detectors = { observeBranch: (value: typeof branch) => { branch = value; }, observeInverse: (units: number) => { inverseInputs.push(units); },
+      scanSecrets: (text: string): boolean => { for (const value of [counts, branches[branch]]) { value.secretCalls++; value.secretCodeUnits += text.length; value.maximumInputCodeUnits = Math.max(value.maximumInputCodeUnits, text.length); } return screening.detectors.scanSecrets(text); },
+      scanDesignView: (text: string): boolean => { for (const value of [counts, branches[branch]]) { value.activeCalls++; value.activeCodeUnits += text.length; value.maximumInputCodeUnits = Math.max(value.maximumInputCodeUnits, text.length); } return screening.detectors.scanDesignView?.(text) ?? true; } };
+    const bytes = Buffer.from(input.receivedBase64, 'base64');
+    const outcome: OrderedScreenObservation['outcome'] = input.operation === 'response'
+      ? { operation: 'response', result: decodeSessionResponse(bytes, input.contentType, profile.input.binding.model, detectors.scanSecrets) }
+      : { operation: input.operation, result: input.operation === 'initial' ? screenOrderedDesignInitialRequest(bytes, profile, detectors)
+        : screenOrderedDesignRequest(bytes, { ...input.bindings, profile, plan, envelope: envelope() }, detectors) };
+    return { format: 'ordered-design-screen/1', policySha256: profile.input.binding.policy, profileSha256: profile.digest,
+      counts, branches, inverseInputs, selfCpuMicrosecondsBeforeOutput: 0, outcome };
+  };
+  const screenOperation = (input: ScreenInput): OrderedScreenObservation => {
+    const boundary = openOperation(input.operation === 'response' ? 'response' : 'request', Math.max(0, receipts.length - 1));
+    try {
+      const observed = screen(input, boundary);
+      if (observed.outcome.operation !== input.operation || !Array.isArray(observed.inverseInputs) || observed.inverseInputs.length > 2) throw refused();
+      if (input.operation === 'request' && observed.outcome.result.ok && observed.inverseInputs.length !== 2) throw refused();
+      const cap = work.enforcement.operations[input.operation === 'response' ? 'response' : 'request'];
+      for (const key of ['secretCalls', 'secretCodeUnits', 'activeCalls', 'activeCodeUnits', 'maximumInputCodeUnits'] as const) {
+        const value = observed.counts[key], maximum = key === 'maximumInputCodeUnits' ? cap.inputCodeUnits : cap[key];
+        if (!Number.isSafeInteger(value) || value < 0 || value > maximum) throw refused();
+      }
+      if (boundary.ticket !== null) {
+        if (input.operation === 'request') {
+          for (const branch of ['raw', 'received', 'prepared', 'logicalReceived', 'logicalPrepared'] as const)
+            if (workBudget?.detectors(boundary.ticket, branch, observed.branches[branch]) !== true) throw refused();
+          for (const units of observed.inverseInputs) if (workBudget?.inverse(boundary.ticket, units) !== true) throw refused();
+        } else if (workBudget?.detectors(boundary.ticket, 'operation', observed.counts) !== true) throw refused();
+      }
+      return observed;
+    } finally { boundary.finish(); }
+  };
+  const common = (bytes: Uint8Array) => ({ policyBase64: policy === null ? '' : Buffer.from(policy).toString('base64'),
+    policySha256: profile.input.binding.policy, profileInput: profile.input, profileSha256: profile.digest,
+    receivedBase64: Buffer.from(bytes).toString('base64') });
+  const checkRequest = (bytes: Uint8Array): ReturnType<typeof screenOrderedDesignRequest> => {
     if (stopped || eligible || busy || request !== null || pending !== null) throw refused();
     requireLive();
     if (initial) {
       if (admittedInitial || receipts.length !== 0) throw refused();
-      const checks = screenOrderedDesignInitialRequest(bytes, profile, detectors);
+      const observed = screenOperation({ ...common(bytes), operation: 'initial' });
+      if (observed.outcome.operation !== 'initial') throw refused();
+      const checks = observed.outcome.result;
       if (checks.ok) request = checks.value;
       return checks;
     }
@@ -161,20 +284,25 @@ export function createOrderedDesignSession(options: Options) {
     }
     const prepared = receipts[0]!;
     const asResult = ({ call, usage }: Receipt) => ({ toolUseId: call.id, usage });
-    const checks = screenOrderedDesignRequest(bytes, { profile, plan, envelope: envelope(), prepared: asResult(prepared),
-      parts: receipts.slice(1, parts.length + 1).map(asResult),
-      ...(submission === null ? {} : { acknowledgment: { ...asResult(receipts.at(-1)!), input: submission } }) }, detectors);
+    const observed = screenOperation({ ...common(bytes), operation: 'request', envelopeUtf8: new TextDecoder('utf-8', { fatal: true }).decode(envelope()),
+      ...(screening.kind === 'bounded-worker' ? { planInput: screening.planInput } : {}), manifestSha256: plan.manifestSha256,
+      bindings: { prepared: asResult(prepared), parts: receipts.slice(1, parts.length + 1).map(asResult),
+        ...(submission === null ? {} : { acknowledgment: { ...asResult(receipts.at(-1)!), input: submission } }) } });
+    if (observed.outcome.operation !== 'request') throw refused();
+    const checks = observed.outcome.result;
     if (checks.ok) request = checks.value;
     return checks;
   };
 
-  const checkResponse = (bytes: Uint8Array, contentType: string, scanSecrets: (text: string) => boolean): ReturnType<SessionRelayPorts['response']> => {
+  const checkResponse = (bytes: Uint8Array, contentType: string): ReturnType<SessionRelayPorts['response']> => {
     try {
       requireLive();
       if (busy || eligible || checkedResponse !== null || pending?.step !== 'response-admitted'
         || !/^text\/event-stream(?:\s*;\s*charset=utf-8)?$/iu.test(contentType))
         throw refused();
-      const decoded = decodeSessionResponse(bytes, contentType, profile.input.binding.model, scanSecrets);
+      const observed = screenOperation({ ...common(bytes), operation: 'response', contentType });
+      if (observed.outcome.operation !== 'response') throw refused();
+      const decoded = observed.outcome.result;
       if (!decoded.ok) throw refused();
       const charged = initial
         ? budget.observeUsage('design', decoded.usage)
@@ -247,7 +375,7 @@ export function createOrderedDesignSession(options: Options) {
           if (toolUseId !== receipt.call.id) throw refused();
           return { receipt: receipt.receipt, wrapper };
         });
-        const admission = await writer.append('request-admitted', { ...scope, results, logical: checked.logical, transcriptSha256: checked.transcriptSha256 });
+        const admission = await append('request-admitted', { ...scope, results, logical: checked.logical, transcriptSha256: checked.transcriptSha256 });
         pending = { scope, admission, wrapper: results.at(-1)!.wrapper, step: 'send-attempt' };
         await requireCurrent();
         return;
@@ -255,10 +383,10 @@ export function createOrderedDesignSession(options: Options) {
       const active = pending;
       if (!active || active.step !== event.event || !equal(active.scope, scope)) throw refused();
       if (event.event === 'send-attempt' && event.outcome === 'attempted') {
-        if (active.admission) active.sendAttempt = await writer.append('send-attempt', { ...scope, admission: active.admission, outcome: event.outcome });
+        if (active.admission) active.sendAttempt = await append('send-attempt', { ...scope, admission: active.admission, outcome: event.outcome });
         active.step = 'send-outcome';
       } else if (event.event === 'send-outcome' && event.outcome === 'local-request-flushed') {
-        if (active.admission && active.sendAttempt) active.sendOutcome = await writer.append('send-outcome',
+        if (active.admission && active.sendAttempt) active.sendOutcome = await append('send-outcome',
           { ...scope, admission: active.admission, sendAttempt: active.sendAttempt, outcome: event.outcome });
         active.step = 'response-admitted';
       } else if (event.event === 'response-admitted' && event.outcome === 'response-admitted' && event.status === 200) {
@@ -276,7 +404,7 @@ export function createOrderedDesignSession(options: Options) {
           const { admission, sendAttempt, sendOutcome, wrapper } = active;
           if (!admission || !sendAttempt || !sendOutcome || !wrapper) throw refused();
           const exactResponse = nativeResponse(native);
-          const admitted = await writer.append('response-admitted',
+          const admitted = await append('response-admitted',
             { ...scope, admission, sendAttempt, sendOutcome, native: exactResponse, usage, outcome: event.outcome, status: event.status });
           const exchange = { admission, sendAttempt, sendOutcome, response: admitted };
           exchanges.push(exchange);
@@ -284,7 +412,7 @@ export function createOrderedDesignSession(options: Options) {
           else {
             if (!completion || !stage || submission === null || budgetReservation?.complete() !== true) throw refused();
             await requireCurrent();
-            await writer.append('eligible', { ...exchange, completion, stage, acknowledgment: receipts.at(-1)!.receipt, wrapper });
+            await append('eligible', { ...exchange, completion, stage, acknowledgment: receipts.at(-1)!.receipt, wrapper });
             requireLive();
             eligible = true;
             submission = null;
@@ -302,6 +430,7 @@ export function createOrderedDesignSession(options: Options) {
     if (initial || issued === null || !selected().responseFlushed() || !isRecord(invocation) || Object.keys(invocation).length !== 2
       || typeof invocation.tool !== 'string' || !isRecord(invocation.input)
       || issued.call.name !== `mcp__syzygy__${invocation.tool}` || issued.call.inputSha256 !== sha256(canonical(invocation.input))) throw refused();
+    const toolInput = invocation.input;
     response = null;
     const ordinal = receipts.length;
     let reply: string, receipt: OrderedDesignAuditReference;
@@ -312,54 +441,71 @@ export function createOrderedDesignSession(options: Options) {
           id: issued.call.id, name: issued.call.name, input: pollInput }] }]),
         ...(options.requestMaxBytes === undefined ? {} : { requestMaxBytes: options.requestMaxBytes }) });
       if (transferBounds === null) throw refused();
-      budgetReservation = budget.holdOrderedDesignTurns(transcript.resultTurns.length, deadline);
+      const held = planOrderedDesignWork({ shape: transferBounds, view: { envelopeBytes: plan.manifest.envelopeBytes, originalBytes },
+        enforcement: work.enforcement, expectedRuntimeSha256: work.runtimeSha256,
+        expectedWorkerSha256: screening.kind === 'bounded-worker' ? screening.program.worker.sha256 : work.enforcement.workerSha256,
+        deadline, now: Date.now(), remainingRunCpuMicroseconds: work.remainingRunCpuMicroseconds() });
+      if (held === null) throw refused();
+      workBudget = createOrderedDesignWorkBudget(held, { now: Date.now, monotonicMilliseconds: () => performance.now(), cpuMicroseconds: work.cpuMicroseconds });
+      budgetReservation = budget.holdOrderedDesignTurns(transcript.resultTurns.length, held.expiresAt);
       requireNextSend();
-      reply = canonical({ kind: 'session-control', ok: true, state: 'events', events: [{ event: transcript.prepared.event, ...plan.prepared }] });
-      receipt = await writer.append('prepared', { call: issued.call, prepared: identify(plan.preparedText), reply: identify(reply) });
-    } else if (ordinal <= parts.length) {
-      requireNextSend();
-      const prior = exchanges[ordinal - 1]!;
-      reply = materializeOrderedDesignPart(plan, envelope(), parts[ordinal - 1]!.path);
-      receipt = await writer.append('part-receipt', { ordinal, issuedBy: prior.response, call: issued.call, reply: identify(reply) });
-    } else {
-      requireNextSend();
-      const prior = exchanges.at(-1)!;
-      if (ordinal !== parts.length + 1 || exchanges.length !== ordinal || completion !== null || !Array.isArray(invocation.input.argv)
-        || typeof invocation.input.stdin !== 'string'
-        || Buffer.byteLength(invocation.input.stdin) > transcript.maxVerdictBytes
-        || !equal(invocation.input, { argv: verdictArgv, stdin: invocation.input.stdin })) throw refused();
-      const stdin = invocation.input.stdin;
-      completion = await writer.append('delivery-completed', { prepared: receipts[0]!.receipt, preparedExchange: exchanges[0]!,
-        parts: receipts.slice(1).map(({ receipt }, index) => ({ receipt, ...exchanges[index + 1]! })),
-        finalAdmission: prior.admission, verdictResponse: prior.response, verdictCall: issued.call });
-      await requireCurrent();
-      requireNextSend();
-      const checkedVerdictSha256 = await stageVerdict({ stdin, call: issued.call, completion, assertCurrent: requireNextSend });
-      if (checkedVerdictSha256 === null) throw refused();
-      await requireCurrent();
-      stage = await writer.append('verdict-staged', { completion, issuedBy: prior.response, verdictCall: issued.call,
-        packet: { bytes: originalBytes, sha256: originalSha256 }, checkedVerdictSha256, verdict: identify(stdin) });
-      reply = canonical({ kind: 'dossier-result', ok: true, exit: 0, stderr: '',
-        stdout: canonical({ outcome: transcript.verdict.stagedOutcome, eligibility: transcript.verdict.eligibility, packetSha256: originalSha256 }) });
-      receipt = await writer.append('acknowledgment-receipt', { stage, call: issued.call, reply: identify(reply) });
-      submission = Object.freeze({ argv: Object.freeze([...verdictArgv]), stdin });
     }
-    await requireCurrent();
-    release(parseBoundedJson(reply, transcript.requestLimits), requireNextSend);
-    receipts.push({ ...issued, receipt, reply: identify(reply) });
+    const tool = openOperation('tool', ordinal);
+    try { await waitOperation(tool, async () => {
+      if (ordinal === 0) {
+        reply = canonical({ kind: 'session-control', ok: true, state: 'events', events: [{ event: transcript.prepared.event, ...plan.prepared }] });
+        receipt = await append('prepared', { call: issued.call, prepared: identify(plan.preparedText), reply: identify(reply) });
+      } else if (ordinal <= parts.length) {
+        requireNextSend();
+        const prior = exchanges[ordinal - 1]!;
+        reply = materializeOrderedDesignPart(plan, envelope(), parts[ordinal - 1]!.path);
+        receipt = await append('part-receipt', { ordinal, issuedBy: prior.response, call: issued.call, reply: identify(reply) });
+      } else {
+        requireNextSend();
+        const prior = exchanges.at(-1)!;
+        if (ordinal !== parts.length + 1 || exchanges.length !== ordinal || completion !== null || !Array.isArray(toolInput.argv)
+          || typeof toolInput.stdin !== 'string'
+          || Buffer.byteLength(toolInput.stdin) > transcript.maxVerdictBytes
+          || !equal(toolInput, { argv: verdictArgv, stdin: toolInput.stdin })) throw refused();
+        const stdin = toolInput.stdin;
+        completion = await append('delivery-completed', { prepared: receipts[0]!.receipt, preparedExchange: exchanges[0]!,
+          parts: receipts.slice(1).map(({ receipt }, index) => ({ receipt, ...exchanges[index + 1]! })),
+          finalAdmission: prior.admission, verdictResponse: prior.response, verdictCall: issued.call });
+        await requireCurrent();
+        requireNextSend();
+        const checkedVerdictSha256 = await stageVerdict({ stdin, call: issued.call, completion, assertCurrent: requireNextSend });
+        if (checkedVerdictSha256 === null) throw refused();
+        await requireCurrent();
+        stage = await append('verdict-staged', { completion, issuedBy: prior.response, verdictCall: issued.call,
+          packet: { bytes: originalBytes, sha256: originalSha256 }, checkedVerdictSha256, verdict: identify(stdin) });
+        reply = canonical({ kind: 'dossier-result', ok: true, exit: 0, stderr: '',
+          stdout: canonical({ outcome: transcript.verdict.stagedOutcome, eligibility: transcript.verdict.eligibility, packetSha256: originalSha256 }) });
+        receipt = await append('acknowledgment-receipt', { stage, call: issued.call, reply: identify(reply) });
+        submission = Object.freeze({ argv: Object.freeze([...verdictArgv]), stdin });
+      }
+      await requireCurrent();
+      release(parseBoundedJson(reply, transcript.requestLimits), requireNextSend);
+      receipts.push({ ...issued, receipt, reply: identify(reply) });
+    }); } finally { tool.finish(); }
   });
   const readTerminal = async () => {
     if (!eligible || stopped || busy) throw refused();
     busy = true;
     try {
       await requireCurrent();
-      const terminal = await writer.readTerminal();
+      const terminal = await auditOperation('terminal', () => writer.readTerminal());
       await requireCurrent();
+      if (workBudget?.complete() !== true) throw refused();
       return terminal;
     } catch {
       stopped = true;
       throw refused();
     } finally { busy = false; }
   };
-  return Object.freeze({ checkRequest, checkResponse, observe, issueReply, retire, readTerminal });
+  const session = Object.freeze({ checkRequest, checkResponse, observe, issueReply, retire, readTerminal,
+    chargeAuditRead: (bytes: number): void => { if (activeRead === null) throw refused(); activeRead(bytes); },
+    workSnapshot: () => workBudget?.snapshot() ?? null });
+  issuedSessions.add(session);
+  if (screening.kind === 'bounded-worker') productionSessions.add(session);
+  return session;
 }

@@ -176,6 +176,8 @@ export function createOrderedDesignWorkBudget(plan: OrderedDesignWorkPlan, clock
   let operationBegan = monotonic, operationCpu = cpu, inversePasses = 0, inverseCodeUnits = 0, auditBytes = 0;
   let branchSpent = Object.fromEntries(BRANCHES.map(branch => [branch, empty()])) as Record<Branch, Spent>;
   let otherSpent = empty();
+  const parents: Array<{ ticket: Ticket; began: number; cpu: number; inversePasses: number; inverseCodeUnits: number;
+    auditBytes: number; branchSpent: Record<Branch, Spent>; otherSpent: Spent }> = [];
   const stop = (why: Failure = 'invalid-operation'): false => {
     if (state === 'open') { state = 'stopped'; reason = why; }
     return false;
@@ -190,10 +192,10 @@ export function createOrderedDesignWorkBudget(plan: OrderedDesignWorkPlan, clock
       if (state === 'stopped') return false;
       if (wall >= plan.expiresAt || monotonic - monotonicStart >= plan.expiresAt - plan.startsAt) return stop('expired');
       if (cpu - cpuStart > plan.cpuMicroseconds || cpu - cpuStart > plan.remainingRunCpuMicroseconds) return stop('cpu-limit');
-      if (active !== null) {
-        const cap = plan.enforcement.operations[active.operation];
-        if (monotonic - operationBegan >= cap.wallMilliseconds) return stop('operation-wall-limit');
-        if (cpu - operationCpu > cap.cpuMicroseconds) return stop('operation-cpu-limit');
+      for (const entry of [...parents, ...(active === null ? [] : [{ ticket: active, began: operationBegan, cpu: operationCpu }])]) {
+        const cap = plan.enforcement.operations[entry.ticket.operation];
+        if (monotonic - entry.began >= cap.wallMilliseconds) return stop('operation-wall-limit');
+        if (cpu - entry.cpu > cap.cpuMicroseconds) return stop('operation-cpu-limit');
       }
       return true;
     } catch { return stop('clock'); }
@@ -218,10 +220,11 @@ export function createOrderedDesignWorkBudget(plan: OrderedDesignWorkPlan, clock
   return Object.freeze({
     current,
     begin: (operation: Operation, turn: number): Ticket | null => {
-      if (!current() || active !== null || !OPERATIONS.includes(operation) || !nonnegative(turn) || turn >= 4
+      if (!current() || (active !== null && !(active.operation === 'tool' && operation === 'audit' && parents.length === 0)) || !OPERATIONS.includes(operation) || !nonnegative(turn) || turn >= 4
         || used[operation] >= COUNTS[operation]) { stop(); return null; }
       if ((operation === 'request' || operation === 'response' || operation === 'tool') && turns[operation].has(turn)) { stop(); return null; }
       if (operation === 'request' || operation === 'response' || operation === 'tool') turns[operation].add(turn);
+      if (active !== null) parents.push({ ticket: active, began: operationBegan, cpu: operationCpu, inversePasses, inverseCodeUnits, auditBytes, branchSpent, otherSpent });
       used[operation]++;
       active = Object.freeze({ operation, turn });
       tickets.add(active);
@@ -251,7 +254,11 @@ export function createOrderedDesignWorkBudget(plan: OrderedDesignWorkPlan, clock
     },
     finish: (ticket: Ticket): boolean => {
       if (!selected(ticket)) return stop();
-      tickets.delete(ticket); active = null;
+      tickets.delete(ticket);
+      const parent = parents.pop();
+      active = parent?.ticket ?? null;
+      if (parent) { operationBegan = parent.began; operationCpu = parent.cpu; inversePasses = parent.inversePasses;
+        inverseCodeUnits = parent.inverseCodeUnits; auditBytes = parent.auditBytes; branchSpent = parent.branchSpent; otherSpent = parent.otherSpent; }
       return current();
     },
     complete: (): boolean => {

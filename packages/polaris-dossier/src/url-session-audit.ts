@@ -245,7 +245,7 @@ export interface UrlSessionAuditSummary {
 }
 export type UrlSessionAuditResult = { readonly ok: true; readonly scope: (role: ViewRole) => UrlSessionAuditScope;
   readonly append: (event: UrlSessionAuditEvent) => Promise<void>;
-  readonly beginOrderedDesignAudit: (plan: OrderedDesignPlan, current: () => boolean | Promise<boolean>) => OrderedDesignAuditWriter;
+  readonly beginOrderedDesignAudit: (plan: OrderedDesignPlan, current: () => boolean | Promise<boolean>, observeRead?: (bytes: number) => void) => OrderedDesignAuditWriter;
   readonly commitLaunchHistory: (history: UrlLaunchHistoryCapability) => Promise<UrlCommittedLaunchHistory>;
   readonly commitDesignDelivery: (input: UrlDesignDeliveryAuditInput, waitForSample?: () => Promise<boolean>) => Promise<UrlDesignDeliveryView>;
   readonly revalidateDesignDelivery: (record: UrlDesignDeliveryAuditRecord, product: ValidatedUrlDesignProduct) => Promise<void>;
@@ -627,7 +627,7 @@ export async function createUrlSessionAudit(given: UrlSessionAuditOptions): Prom
     // A pending write may expose the unchanged prefix or its exact complete
     // append. A short write has no supported intermediate extent. An event
     // can authenticate a product only inside the already durable prefix.
-    const verifyDurableEvent = (role: ViewRole, event: DurableEvent): Buffer => {
+    const verifyDurableEvent = (role: ViewRole, event: DurableEvent, observeRead?: (bytes: number) => void): Buffer => {
       if (poisoned) throw refused();
       const intent = managedAppend, writer = intent && segments.get(intent.role)!;
       let extent: SegmentPrefix | undefined;
@@ -660,7 +660,8 @@ export async function createUrlSessionAudit(given: UrlSessionAuditOptions): Prom
           const chunk = Buffer.alloc(Math.min(65_536, extent.prefix.length));
           for (let offset = 0; offset < extent.prefix.length; offset += chunk.length) {
             const end = Math.min(offset + chunk.length, extent.prefix.length), length = end - offset;
-            if (readSync(writerFd, chunk, 0, length, offset) !== length
+            const read = readSync(writerFd, chunk, 0, length, offset); observeRead?.(read);
+            if (read !== length
               || !chunk.subarray(0, length).equals(extent.prefix.subarray(offset, end))) throw refused();
           }
           if (!sameSegment(writer, extent, fstatSync(writerFd, { bigint: true }))) throw refused();
@@ -670,8 +671,9 @@ export async function createUrlSessionAudit(given: UrlSessionAuditOptions): Prom
         const file = openSync(path.join(anchor, segment.name), constants.O_RDONLY | constants.O_NOFOLLOW | constants.O_NONBLOCK);
         try {
           const bytes = Buffer.alloc(event.bytes.length), prefix = expected(role, segment);
-          if (!sameSegment(segment, prefix, fstatSync(file, { bigint: true }))
-            || readSync(file, bytes, 0, bytes.length, event.offset) !== bytes.length || !bytes.equals(event.bytes)
+          if (!sameSegment(segment, prefix, fstatSync(file, { bigint: true }))) throw refused();
+          const read = readSync(file, bytes, 0, bytes.length, event.offset); observeRead?.(read);
+          if (read !== bytes.length || !bytes.equals(event.bytes)
             || !sameSegment(segment, prefix, fstatSync(file, { bigint: true }))) throw refused();
           verifyNames(); verifyDirectory();
           // A checked full extent fixes its stamp while the write promise is
@@ -684,7 +686,7 @@ export async function createUrlSessionAudit(given: UrlSessionAuditOptions): Prom
     // A new, exclusive audit segment permits one live first-epoch attempt.
     // A resumed attempt needs a separate authenticated history reader.
     let orderedDesignOpened = false;
-    const beginOrderedDesignAudit: Extract<UrlSessionAuditResult, { ok: true }>['beginOrderedDesignAudit'] = (plan, attemptCurrent) => {
+    const beginOrderedDesignAudit: Extract<UrlSessionAuditResult, { ok: true }>['beginOrderedDesignAudit'] = (plan, attemptCurrent, observeRead) => {
       if (orderedDesignOpened || poisoned || closing || orderedDesignProfile === null || typeof attemptCurrent !== 'function'
         || !isOrderedDesignPlanFor(plan, orderedDesignProfile.transcript.partition)) throw refused();
       const { binding } = plan.manifest;
@@ -704,13 +706,13 @@ export async function createUrlSessionAudit(given: UrlSessionAuditOptions): Prom
         append: async record => {
           const event = await enqueue({ kind: 'design-ordered', role: 'design', scope, payload: record }, 'design-ordered', checkAttemptCurrent);
           return () => {
-            const bytes = verifyDurableEvent('design', event);
+            const bytes = verifyDurableEvent('design', event, observeRead);
             const row = parseBoundedJson(bytes.toString('utf8'), { maxBytes: limits.eventBytes + 1, maxNodes: 4096, maxDepth: 12 });
             if (!isRecord(row) || !isRecord(row.event) || row.event.kind !== 'design-ordered') throw refused();
             return Buffer.from(canonical(row.event.payload, limits.eventBytes));
           };
         },
-      });
+      }, observeRead);
       orderedDesignOpened = true;
       return writer;
     };

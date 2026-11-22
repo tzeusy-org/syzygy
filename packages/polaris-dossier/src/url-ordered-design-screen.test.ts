@@ -76,6 +76,7 @@ describe('preemptible ordered design screen', () => {
     expect(JSON.stringify(request.observation).includes('a'.repeat(100))).toBe(false);
     expect(request.observation.counts.secretCalls).toBeGreaterThan(0);
     expect(request.observation.counts.activeCalls).toBeGreaterThan(0);
+    expect(request.observation.inverseInputs).toEqual([Buffer.byteLength(f.request.envelopeUtf8), Buffer.byteLength(f.request.envelopeUtf8)]);
     for (const value of Object.values(request.observation.branches)) expect(value.secretCalls).toBeGreaterThan(0);
     expect(Object.values(request.observation.branches).reduce((sum, value) => sum + value.secretCalls, 0)).toBe(request.observation.counts.secretCalls);
     const initial = run(f.initial);

@@ -164,7 +164,7 @@ function designViewPath(origin: SessionOrigin): string | null {
   return origin.kind === 'tool-result' && origin.toolName === 'mcp__syzygy__artifact_read'
     && typeof path === 'string' && URL_DESIGN_VIEW_ARTIFACT.test(path) ? path : null;
 }
-type ScreeningOptions = Pick<SessionPolicyOptions, 'binding' | 'limits' | 'scanSecrets' | 'scanDesignView'>;
+type ScreeningOptions = Pick<SessionPolicyOptions, 'binding' | 'limits' | 'scanSecrets' | 'scanDesignView'> & { readonly observeInverse?: (codeUnits: number) => void };
 type WholeViewDetectorInput = Pick<SessionOrigin, 'toolUseId' | 'canonicalText'>;
 
 /** Scan serialized content, individual decoded fields, and both wire-order and canonical-order
@@ -212,6 +212,7 @@ function* screenSteps(value: unknown, options: ScreeningOptions, receipts: reado
       const text = value as string;
       payload.push(text);
       try {
+        options.observeInverse?.(text.length);
         const projection = inspectUrlDesignSecretContribution(text, options.binding.run, (view, original, fields) => {
           const inert: string[] = [], values: string[] = [], keyed: string[] = [];
           collect(view, inert, false, true);
@@ -292,6 +293,7 @@ export type OrderedDesignScreeningBranch = 'raw' | 'received' | 'prepared' | 'lo
 export type OrderedDesignScreeningDetectors = Pick<ScreeningOptions, 'scanSecrets' | 'scanDesignView'> & {
   /** First-party accounting only. A thrown observer error refuses the operation. */
   readonly observeBranch?: (branch: OrderedDesignScreeningBranch) => void;
+  readonly observeInverse?: (codeUnits: number) => void;
 };
 
 /** The first ordered request contains only the independently issued initial

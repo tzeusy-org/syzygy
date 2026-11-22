@@ -31,6 +31,7 @@ function screen(input: OrderedScreenInput, limits: OrderedScreenLimits): Ordered
   const { profile } = issued.value;
   const empty = () => ({ secretCalls: 0, secretCodeUnits: 0, activeCalls: 0, activeCodeUnits: 0, maximumInputCodeUnits: 0 });
   const counts = empty();
+  const inverseInputs: number[] = [];
   const branches = { raw: empty(), received: empty(), prepared: empty(), logicalReceived: empty(), logicalPrepared: empty() };
   let branch: OrderedDesignScreeningBranch = 'raw', exhausted = false;
   const charge = (kind: 'secret' | 'active', text: string): void => {
@@ -44,7 +45,10 @@ function screen(input: OrderedScreenInput, limits: OrderedScreenLimits): Ordered
   };
   const scanSecrets = (text: string): boolean => { charge('secret', text); return compiled.screen.screenSecrets(text) !== undefined; };
   const scanDesignView = (text: string): boolean => { charge('active', text); return compiled.screen.screenBody(text) !== undefined; };
-  const detectors = { scanSecrets, scanDesignView, observeBranch: (value: OrderedDesignScreeningBranch) => { branch = value; } };
+  const detectors = { scanSecrets, scanDesignView, observeInverse: (units: number) => {
+    if (inverseInputs.length >= 2 || !Number.isSafeInteger(units) || units <= 0 || units > 2_097_152) refuse();
+    inverseInputs.push(units);
+  }, observeBranch: (value: OrderedDesignScreeningBranch) => { branch = value; } };
   let outcome: OrderedScreenObservation['outcome'];
   if (input.operation === 'initial') {
     outcome = { operation: 'initial', result: screenOrderedDesignInitialRequest(base64(input.receivedBase64, 2_097_152), profile, detectors) };
@@ -62,7 +66,7 @@ function screen(input: OrderedScreenInput, limits: OrderedScreenLimits): Ordered
   if (exhausted) refuse();
   const usage = process.resourceUsage();
   return { format: ORDERED_SCREEN_FORMAT, policySha256: input.policySha256, profileSha256: profile.digest,
-    counts, branches, selfCpuMicrosecondsBeforeOutput: usage.userCPUTime + usage.systemCPUTime, outcome };
+    counts, branches, inverseInputs, selfCpuMicrosecondsBeforeOutput: usage.userCPUTime + usage.systemCPUTime, outcome };
 }
 
 try {

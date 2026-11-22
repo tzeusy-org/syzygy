@@ -479,11 +479,14 @@ describe('protected URL session audit', () => {
     await vi.waitFor(() => expect(result.summary().pendingFilesystemOperations).toBe(0)); expect(result.summary().closed).toBe(true);
   });
 
-  it('refuses normalized usage sum overflow before counting or persisting the second report', async () => {
+  it('withholds credential-shaped large usage before counting or persisting it', async () => {
     const f = fixture(), writer = await f.create(), event = structuredClone(f.event(writer, 'usage')) as any;
-    event.payload.inputTokens = Number.MAX_SAFE_INTEGER; await writer.append(event);
-    const next = f.event(writer, 'usage', 'design'); await expect(writer.append(next)).rejects.toThrow();
-    expect(writer.summary()).toMatchObject({ usageReports: 1, capturedUsage: { inputTokens: Number.MAX_SAFE_INTEGER } });
+    event.payload.inputTokens = Number.MAX_SAFE_INTEGER;
+    // The actual committed policy excludes this token-key numeric literal
+    // before arithmetic; it cannot serve as an admitted overflow baseline.
+    expect(f.options.screen.screenSecrets(JSON.stringify(event))).toBeDefined();
+    await expect(writer.append(event)).rejects.toThrow();
+    expect(writer.summary()).toMatchObject({ usageReports: 0, capturedUsage: { inputTokens: 0 } });
   });
 
 

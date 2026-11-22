@@ -217,6 +217,27 @@ describe('ordered design live work reservation', () => {
     expect(rollback.budget.current()).toBe(false);
   });
 
+  it('charges nested durable audits inside the inclusive tool envelope and restores its parent', () => {
+    const f = fixture(), tool = f.budget.begin('tool', 0)!;
+    const audit = f.budget.begin('audit', 0)!;
+    expect(f.budget.auditRead(audit, 100)).toBe(true);
+    f.clock(2, 2, 2);
+    expect(f.budget.finish(audit)).toBe(true);
+    expect(f.budget.detector(tool, 'operation', 'secret', 1)).toBe(true);
+    expect(f.budget.finish(tool)).toBe(true);
+    expect(f.budget.snapshot()).toMatchObject({ used: { tool: 1, audit: 1 }, cpuMicroseconds: 2 });
+    const inclusive = fixture();
+    inclusive.budget.begin('tool', 0);
+    inclusive.clock(9, 9, 0);
+    const nested = inclusive.budget.begin('audit', 0)!;
+    inclusive.clock(11, 11, 0);
+    expect(inclusive.budget.finish(nested)).toBe(false);
+    expect(inclusive.budget.snapshot()).toMatchObject({ reason: 'operation-wall-limit' });
+    const wrong = fixture().budget;
+    wrong.begin('request', 0);
+    expect(wrong.begin('audit', 0)).toBeNull();
+  });
+
   it('consumes each planned operation once and completes only after all 23 durable audit writes and the terminal read', () => {
     const { budget } = fixture();
     expect(budget.complete()).toBe(false);

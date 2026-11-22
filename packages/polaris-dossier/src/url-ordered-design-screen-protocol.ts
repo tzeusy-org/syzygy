@@ -43,6 +43,7 @@ export interface OrderedScreenObservation {
   readonly branches: Readonly<Record<OrderedDesignScreeningBranch, OrderedScreenCounts>>;
   /** Kernel self rusage sampled before the output encoding/write, not total child-tree CPU. */
   readonly selfCpuMicrosecondsBeforeOutput: number;
+  readonly inverseInputs: readonly number[];
   readonly outcome: { readonly operation: 'request' | 'initial'; readonly result: SessionPolicyResult<OrderedDesignRequestChecks> }
     | { readonly operation: 'response'; readonly result: SessionResponseResult };
 }
