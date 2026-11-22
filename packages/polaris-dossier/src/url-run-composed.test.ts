@@ -142,7 +142,7 @@ type ResumeSample = { ordinal: number; verify: ResumeStamp; confirm?: ResumeStam
 type ResumeBrokerStage = 'invoke' | 'host-current' | 'mediate-peer' | 'host-action' | 'transfer-bounds'
   | 'plan-work-hold' | 'create-work-budget' | 'tool-before-plan-current' | 'tool-before-release-current'
   | 'tool-before-audit-guard' | 'prepared-store-append' | 'prepared-store-recheck'
-  | 'tool-release-guard' | 'release' | 'release-check';
+  | 'tool-release-guard' | 'release' | 'release-check' | 'release-final-budget';
 
 function projectWorkPlanRefusal(
   input: Parameters<typeof orderedWork.reserveOrderedDesignWork>[0],
@@ -281,9 +281,11 @@ function observeInterruptedResume() {
       brokerInvocations++;
       if (context === null || context.peer !== firstMcpPeer || ++firstPeerInvocations !== 1) return invoke(value, release, context);
       // Keep the original context, peer and effect guard identities.
-      return firstBrokerInvocation.run(true, () => brokerPhase('invoke', () => invoke(value, (reply, revalidate) =>
-        brokerPhase('release', () => release(reply, revalidate === undefined ? undefined : () =>
-          brokerPhase('release-check', revalidate, () => true)), () => true), context), () => true));
+      return firstBrokerInvocation.run(true, () => brokerPhase('invoke', () => invoke(value,
+        (reply, revalidate, finalToolBudgetCheck) => brokerPhase('release', () => release(reply,
+          revalidate === undefined ? undefined : () => brokerPhase('release-check', revalidate, () => true),
+          finalToolBudgetCheck === undefined ? undefined : () => brokerPhase('release-final-budget', finalToolBudgetCheck, () => true)),
+        () => true), context), () => true));
     }, () => { brokerFaultMs ??= clock(); onFault(); }, limits, machine);
   });
 
