@@ -18,8 +18,8 @@
 - Rendering: each subsection is a `<section class="subsection" id="subsection-<id>">` headed by `<h3>`, its answer first; a page that renders a subsection carries an on-page contents list (`<nav class="page-contents">`) before its first section, linking each section and subsection it renders; the stylesheet rules for both ride only on such a page.
 - Brief `polaris-dossier-brief-v13`: brief v12 plus one paragraph, issuing schema v8.
 - The reading ledger and the RS-19 advice count a subsection's prose as its section's.
-- The `makefile` recognizer of version 2.14 corrected (syzygy-3efd.81): conditional-directive lines no longer end a rule's recipe context, and a tab-led line that is no recipe line is a `syntax` fault.
-- A paragraph stating what does not change; eight scenarios added; the four Form lines extended.
+- The `makefile` recognizer of version 2.14 corrected (syzygy-3efd.81): recipe lines are logical lines, conditional-directive lines no longer end a rule's recipe context, a directive line is never a rule, a blank line may hold tabs, and a tab-led logical line that is no recipe line and lies outside a `define` body is a `syntax` fault.
+- A paragraph stating what does not change; ten scenarios added; the four Form lines extended.
 
 [Observed] Every other sentence and scenario of REQ-034 is carried unchanged.
 
