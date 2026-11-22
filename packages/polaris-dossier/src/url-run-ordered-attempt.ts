@@ -1,4 +1,5 @@
 import path from 'node:path';
+import { setImmediate as yieldToPoll } from 'node:timers/promises';
 import { encodeCanonicalJson } from '@syzygy/polaris-generation-core/live';
 import { sha256 } from '@syzygy/support';
 import { readSessionRelayAuditEvidence } from './session-relay.js';
@@ -265,6 +266,10 @@ export async function startUrlOrderedAttempt(input: UrlOrderedAttemptOptions) {
       },
     });
     if (!(await current())) throw refused();
+    // The host independently rechecks the delivery when activation resolves.
+    // Let any sampler started during the bootstrap check finish first.
+    await yieldToPoll();
+    if (!(await input.waitForSamples())) throw refused();
     assertProcessingCurrent(); activate(controller);
     return Object.freeze({ delivery, launch, host, child, close,
       consumeTerminal,
