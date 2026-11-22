@@ -446,7 +446,7 @@ export async function mediateUrlMachinePeer<T>(peer: UrlMachinePeer, operation: 
       if (!boundary()) throw refused();
       result = { ok: true, value };
       } catch { result = undefined; }
-    });
+    }, options.profile);
     return completed && result ? result : { ok: false };
   } catch { closeState(state); return { ok: false }; }
   finally { state.mediating = false; }

@@ -6,7 +6,7 @@ import type { SessionBinding, SessionOrigin } from './session-egress-policy.js';
 
 /** Deliberately versioned offline-supported profile. There is no model fallback. */
 export const SESSION_PROFILE_ID = 'claude-2.1.327-sonnet46/2' as const;
-export const ORDERED_DESIGN_SESSION_PROFILE_ID = 'claude-2.1.327-sonnet46/ordered-design-5' as const;
+export const ORDERED_DESIGN_SESSION_PROFILE_ID = 'claude-2.1.327-sonnet46/ordered-design-6' as const;
 export const DEFAULT_SESSION_MODEL = 'claude-sonnet-4-6' as const;
 /** Independently pinned installed CLI shared by the profile and launcher. */
 export const URL_CLI_PROGRAM = Object.freeze({ version: '2.1.327', bytes: 372_904_464,
@@ -32,6 +32,7 @@ const ORDERED_DESIGN_TRANSCRIPT = deepFreeze({
   partition: { algorithm: 'maximal-utf8-scalar-prefix', partBytes: 400_000, partCount: 2, replyBytes: 490_000, preparedBytes: 4096 },
   nativeMcpOutputTokens: URL_DESIGN_MCP_OUTPUT_TOKENS,
   nativeResultPersistenceCharacters: 500_000,
+  nativeEffectMilliseconds: 30_000,
   requestLimits: LIMITS,
   maxVerdictBytes: 32_768,
   maxAcknowledgmentBytes: 4096,

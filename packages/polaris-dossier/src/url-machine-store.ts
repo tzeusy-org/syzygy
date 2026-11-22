@@ -6,6 +6,7 @@ import path from 'node:path';
 import { encodeCanonicalJson, parseBoundedJson } from '@syzygy/polaris-generation-core/live';
 import { deepFreeze, isRecord, sha256 } from '@syzygy/support';
 import { identifyUrlMachineLifecycleRecord } from './url-machine-lifecycle.js';
+import { isNativeSessionProfile, isOrderedDesignSessionProfile, type NativeSessionProfile } from './session-profile.js';
 import { encodeUrlMachineArchive, isUrlMachineArchivePointer, readUrlMachineArchive, urlMachineArchiveCapacity, URL_MACHINE_ARCHIVE_LIMITS, type UrlMachineArchive, type UrlMachineArchivePointer } from './url-machine-archive.js';
 import type { UrlMachineLifecycleAdapter, UrlMachineLifecycleLease, UrlMachineLifecycleSnapshot, UrlMachineLifecycleStep } from './url-machine-lifecycle.js';
 import { readUrlMachineClient, URL_MACHINE_CLIENT_LIMITS, type UrlMachineClientContext } from './url-machine-instance.js';
@@ -63,6 +64,9 @@ export interface UrlMachineStoreOptions {
   readonly current: () => boolean;
 }
 export interface UrlMachineStore extends UrlMachineLifecycleAdapter {
+  /** Only a genuine profile matching this client's durable binding may select
+   * its declared native effect envelope. Ordinary lifecycle I/O keeps five seconds. */
+  exclusive(clientId: string, deadline: number, run: (lease: UrlMachineLifecycleLease) => Promise<void>, effectProfile?: NativeSessionProfile): Promise<boolean>;
   readonly identitySha256: string;
   readonly protection: 'role-namespace-exclusion-required; privileged-store-rollback-Unknown';
   /** Allocate a new slot durably. Absence alone never produces a witness. */
@@ -362,12 +366,12 @@ async function openStore(options: UrlMachineStoreOptions, expectedIdentitySha256
     const ready = await readState();
     if (ready.clients.some(entry => entry.anchor.kind === 'pending')) throw refused();
     setupCurrent();
-    const withLock = async (deadline: number, operation: (check: () => void, state: () => Promise<StoreState>, write: (file: string, bytes: Uint8Array, predecessor?: Uint8Array | null) => Promise<void>) => Promise<void>): Promise<boolean> => {
+    const withLock = async (deadline: number, operation: (check: () => void, state: () => Promise<StoreState>, write: (file: string, bytes: Uint8Array, predecessor?: Uint8Array | null) => Promise<void>) => Promise<void>, operationMilliseconds: number = URL_MACHINE_STORE_LIMITS.operationMilliseconds): Promise<boolean> => {
       const began = performance.now();
       let active = true, held = false, uncertain = false;
       const pending = new Set<Promise<unknown>>();
       const check = (): void => {
-        if (!active || live() >= deadline || performance.now() - began >= URL_MACHINE_STORE_LIMITS.operationMilliseconds) throw refused();
+        if (!active || live() >= deadline || performance.now() - began >= operationMilliseconds) throw refused();
       };
       const io = async <T>(start: () => Promise<T>): Promise<T> => {
         check(); charge();
@@ -427,7 +431,7 @@ async function openStore(options: UrlMachineStoreOptions, expectedIdentitySha256
       void work.then(() => activeWork.delete(work), () => activeWork.delete(work));
       try {
         await Promise.race([work, new Promise<never>((_, reject) => {
-          timer = setTimeout(() => { uncertain = true; active = false; reject(refused()); }, Math.min(URL_MACHINE_STORE_LIMITS.operationMilliseconds, Math.max(1, deadline - live())));
+          timer = setTimeout(() => { uncertain = true; active = false; reject(refused()); }, Math.min(operationMilliseconds, Math.max(1, deadline - live())));
         })]);
         return true;
       } catch { uncertain = true; return false; }
@@ -459,9 +463,17 @@ async function openStore(options: UrlMachineStoreOptions, expectedIdentitySha256
       });
       return finished ? issued : null;
     };
-    const exclusive: UrlMachineLifecycleAdapter['exclusive'] = async (clientId, deadline, operation) => {
-      if (!digest(clientId)) return false;
+    const exclusive: UrlMachineStore['exclusive'] = async (clientId, deadline, operation, effectProfile) => {
+      if (!digest(clientId) || (effectProfile !== undefined && !isNativeSessionProfile(effectProfile))) return false;
+      const operationMilliseconds = effectProfile !== undefined && isOrderedDesignSessionProfile(effectProfile)
+        ? effectProfile.transcript.nativeEffectMilliseconds : URL_MACHINE_STORE_LIMITS.operationMilliseconds;
+      if (!positive(operationMilliseconds) || operationMilliseconds > 30_000) return false;
       return withLock(deadline, async (check, state, write) => {
+        if (effectProfile !== undefined) {
+          const audit = (await state()).clients.find(client => client.clientId === clientId)?.audit.at(-1);
+          if (!audit || audit.profileSha256 !== effectProfile.digest || audit.role !== effectProfile.input.binding.role
+            || audit.runId !== effectProfile.input.binding.run) throw refused();
+        }
         let phase = 0;
         const order = ['reserve', 'publish', 'synchronize', 'audit', 'commit'];
         let prepared: { canonical: Buffer; head: Head; runId: string; newIdentities: readonly string[]; archive: Buffer; predecessor: Buffer | null; pointer: UrlMachineArchivePointer } | null = null;
@@ -567,7 +579,7 @@ async function openStore(options: UrlMachineStoreOptions, expectedIdentitySha256
         };
         await operation(Object.freeze({ now: () => live(), current: () => { try { check(); return true; } catch { return false; } }, read, preflightCanonical, advance }));
         if (phase !== 0 && phase !== 5) throw refused();
-      });
+      }, operationMilliseconds);
     };
     const adapter = Object.freeze({ identitySha256: expectedIdentitySha256, protection: 'role-namespace-exclusion-required; privileged-store-rollback-Unknown' as const,
       allocateClient, exclusive, close: async () => {
