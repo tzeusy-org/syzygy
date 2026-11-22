@@ -201,7 +201,8 @@ describe('bounded processing and protected result validation', () => {
       expect(refreshes).toBeGreaterThanOrEqual(2);
       expect(f.workerCpu()).toBe(18_000_000);
     } else {
-      await expect(checked).rejects.toThrow('url-ordered-design-session-refused');
+      await expect(checked).rejects.toThrow(scenario === 'expired-at-entry'
+        ? 'owned product proof expired' : 'url-ordered-design-session-refused');
       expect(f.workerCpu()).toBe(scenario === 'changed' ? 18_000_000 : 0);
     }
     if (scenario === 'unavailable' || scenario === 'expired-at-entry') {
