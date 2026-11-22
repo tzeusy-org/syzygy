@@ -1461,7 +1461,7 @@ function create(given: UrlRunArtifactsOptions) {
     registerFeedback: (input: Parameters<typeof feedback>[0]) => { try { return feedback(input); } catch { return refuse(); } },
     runDossier: runner,
     stageOrderedDesignVerdict: (...args: Parameters<typeof stageOrderedDesignVerdict>) => duringProducer(() => stageOrderedDesignVerdict(...args)),
-    commitOrderedDesignVerdict: (...args: Parameters<typeof commitOrderedDesignVerdict>) => duringProducer(() => commitOrderedDesignVerdict(...args)),
+    commitOrderedDesignVerdict,
     artifactOrigins: (role: Role) => { roleOf(role); return (file: string, bytes: Uint8Array): SessionToolOrigins | null => {
       try { roleOf(role); if (!initial) return null; return ledger.artifactOrigins(role, file, bytes); } catch { return null; } }; },
     dossierOrigins: (role: Role) => { roleOf(role); return (argv: readonly string[], response: BrokerResponse): SessionToolOrigins | null => {
