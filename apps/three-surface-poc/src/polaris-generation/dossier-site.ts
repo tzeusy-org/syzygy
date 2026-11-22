@@ -1120,8 +1120,8 @@ export function mapFigure(map: string, index: string, caption: string, boxes: re
   const legend = figureLegend([...boxes, ...arrows].map(element => element.epistemic), boxes.length, arrows.length, 'derived by Syzygy');
   return {
     width,
-    html: `<figure class="computed-map" data-visual-provenance="computed" data-map="${map}"><figcaption>${escape(caption)}</figcaption>`
-      + `<div class="map-forms" data-figure-width="${width}"><div class="diagram-scroll map-drawing">${svg}</div><ol class="map-list">${items}</ol></div>${legend}</figure>`,
+    html: `<figure class="computed-map" data-visual-provenance="computed" data-map="${map}"><figcaption id="diagram-title-${index}">${escape(caption)}</figcaption>`
+      + `<div class="map-forms" data-figure-width="${width}"><div class="diagram-scroll map-drawing">${svg}</div><ol class="map-list" id="diagram-text-${index}">${items}</ol></div>${legend}</figure>`,
   };
 }
 

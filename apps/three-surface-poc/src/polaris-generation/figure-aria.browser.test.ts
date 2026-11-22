@@ -4,7 +4,7 @@ import { dirname, join } from 'node:path';
 import { pathToFileURL } from 'node:url';
 import { expect, it } from 'vitest';
 import { findBrowserExecutable, launchBrowser, type Browser } from '../cdp-browser.js';
-import { figureKindsInput, readingInput } from './dossier-reading.testkit.js';
+import { computedMapsInput, figureKindsInput, readingInput } from './dossier-reading.testkit.js';
 import { renderLocalDossier } from './dossier-site.js';
 
 const executable = findBrowserExecutable();
@@ -15,18 +15,22 @@ const RESOLVED = `[...document.querySelectorAll("svg[role=img]")].map(svg => ["a
 }))`;
 
 // syzygy-3efd.70: in Chrome, opened from disk as a reader opens a dossier, each figure's drawing takes its accessible name from its
-// caption, as the browser computes it, and its description reference resolves to the figure's own list.
-it.skipIf(executable === undefined)('names each drawing by its caption in the browser\'s accessibility tree, graph, sequence and swimlane', async () => {
+// caption, as the browser computes it, and its description reference resolves to the figure's own list (a map figure's is `ol.map-list`).
+it.skipIf(executable === undefined)('names each drawing by its caption in the browser\'s accessibility tree, graph, sequence, swimlane and computed map', async () => {
   if (!executable) throw Error('Browser required');
   let browser: Browser | undefined;
   const directories: string[] = [];
   try {
     browser = await launchBrowser(executable);
-    for (const [name, files, names] of [
-      ['graph', renderLocalDossier(readingInput()).files, ['Flow', 'Loop', 'Pair']],
-      ['kinds', renderLocalDossier(figureKindsInput()).files, ['Handshake', 'Release']],
+    const maps = renderLocalDossier(computedMapsInput()).files;
+    for (const [name, files, path, names, list] of [
+      ['graph', renderLocalDossier(readingInput()).files, 'index.html', ['Flow', 'Loop', 'Pair'], 'details'],
+      ['kinds', renderLocalDossier(figureKindsInput()).files, 'index.html', ['Handshake', 'Release'], 'details'],
+      ['directory map', maps, 'maps/directories.html', ['Top-level directories 1 to 1 of 1, by path'], 'ol'],
+      ['unit map', maps, 'maps/units.html', ['src/: packages and modules 1 to 1 of 1, as their manifests declare, placed by path'], 'ol'],
+      ['CI map', maps, 'maps/ci.html', ['.github/workflows/ci.yml: jobs and what each needs, as declared'], 'ol'],
     ] as const) {
-      const directory = await mkdtemp(join(tmpdir(), `polaris-figure-aria-${name}-`));
+      const directory = await mkdtemp(join(tmpdir(), `polaris-figure-aria-${name.replace(/ /gu, '-')}-`));
       directories.push(directory);
       for (const [path, content] of files) {
         await mkdir(dirname(join(directory, path)), { recursive: true });
@@ -35,8 +39,8 @@ it.skipIf(executable === undefined)('names each drawing by its caption in the br
       const page = await browser.newPage();
       try {
         await page.setViewport(1440, 900);
-        await page.navigate(pathToFileURL(join(directory, 'index.html')).href);
-        expect(await page.evaluate(RESOLVED), name).toEqual(names.map(() => ['figcaption', 'details']));
+        await page.navigate(pathToFileURL(join(directory, path)).href);
+        expect(await page.evaluate(RESOLVED), name).toEqual(names.map(() => ['figcaption', list]));
         expect(await page.accessibleNames('[...document.querySelectorAll("svg[role=img]")]'), name).toEqual(names);
       } finally {
         await page.close();

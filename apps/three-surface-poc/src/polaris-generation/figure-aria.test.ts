@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import type { LocalDerivedStructure, LocalRenderInput } from '@syzygy/polaris-generation-core/live';
-import { figureKindsInput, readingInput } from './dossier-reading.testkit.js';
+import { computedMapsInput, figureKindsInput, readingInput } from './dossier-reading.testkit.js';
 import { renderLocalDossier } from './dossier-site.js';
 
 // syzygy-3efd.70: every figure's drawing is `role="img"`, named by `aria-labelledby` and described by `aria-describedby`. Each id those
@@ -28,6 +28,7 @@ const SITES: readonly (readonly [string, () => ReturnType<typeof renderLocalDoss
   }],
   ['sequence and swimlane figures', () => renderLocalDossier(figureKindsInput()).files],
   ['the derived figure', () => { const input = readingInput(); return renderLocalDossier({ ...input, local: { ...input.local, derivedStructure: derived } }).files; }],
+  ['the computed map figures', () => renderLocalDossier(computedMapsInput()).files],
 ];
 
 /** Every `aria-labelledby` and `aria-describedby` reference on a page, one per id token, with the tag of the element carrying the id. */
@@ -47,7 +48,8 @@ describe('figure accessible names: every aria reference resolves (syzygy-3efd.70
         checked += 1;
         const where = `${path} ${ref.attribute}="${ref.id}"`;
         expect(ref.tags, where).toHaveLength(1);
-        if (ref.id.startsWith('diagram-')) expect(ref.tags, where).toEqual([ref.attribute === 'aria-labelledby' ? 'figcaption' : 'details']);
+        // A map figure's text form is its list (`ol.map-list`); every other figure's is its `<details>`.
+        if (ref.id.startsWith('diagram-')) expect(ref.tags, where).toEqual([ref.attribute === 'aria-labelledby' ? 'figcaption' : ref.id.startsWith('diagram-text-map-') ? 'ol' : 'details']);
       }
     }
     expect(checked).toBeGreaterThan(0);
@@ -56,7 +58,7 @@ describe('figure accessible names: every aria reference resolves (syzygy-3efd.70
   it('counts the references it checks: two per drawn figure', () => {
     const count = (files: ReadonlyMap<string, string>): number => [...files].reduce((n, [path, html]) => n + (path.endsWith('.html') ? references(html).length : 0), 0);
     expect(SITES.map(([name, render]) => [name, count(render())])).toEqual([
-      ['graph figures', 6], ['graph figures on Pole pages', 6], ['sequence and swimlane figures', 4], ['the derived figure', 8]]);
+      ['graph figures', 6], ['graph figures on Pole pages', 6], ['sequence and swimlane figures', 4], ['the derived figure', 8], ['the computed map figures', 14]]);
   });
 
   it('names the drawing by its caption and describes it by its list, inside the one figure', () => {
