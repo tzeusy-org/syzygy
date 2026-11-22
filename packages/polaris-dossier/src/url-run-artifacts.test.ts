@@ -35,6 +35,7 @@ import { buildFidelityPacket } from './review-packet.js';
 import { reviewOfRecord } from './review.js';
 import { inventoryOfRecord } from './inventory.js';
 import { fixtureSources } from './full-run.testkit.js';
+import { shapePackSelection } from './brief.js';
 
 const canonical = (v: unknown): string => encodeCanonicalJson(v, { maxBytes: 2_097_152, maxNodes: 65_536, maxDepth: 32 });
 const b = (v: unknown): Buffer => Buffer.from(canonical(v));
@@ -89,7 +90,8 @@ function fixture(source = 'Own pinned source.\n', extraFiles: Readonly<Record<st
     const schema = `${JSON.stringify(draftSchemaDocument({ pinnedRevision: pin, maxQuestions: 1 }), null, 2)}\n`, briefText = 'Own actual host-issued no-execution brief.\n';
     write('draft.schema.json', schema); write('brief.md', briefText);
     const briefRecord = { format: 'polaris-dossier-brief/1', role: 'authoring', runId, pinnedRevision: pin, issuedAt: '2026-11-19T00:00:00.000Z',
-      sourceBindingSha256: sourceBindingSha256(record.subject), executionRule: { arm: 'sec-3' },
+      sourceBindingSha256: sourceBindingSha256(record.subject), shapePacks: shapePackSelection({ state: 'derived',
+        serverEntry: { rule: 'server-entry', ruleVersion: 1, holds: false, paths: [], pathsNotListed: 0 } }).record, executionRule: { arm: 'sec-3' },
       agent: { tool: record.declared.agentTool, provider: record.declared.agentProvider },
       files: { brief: { name: 'brief.md', sha256: sha256(briefText) }, draftSchema: { name: 'draft.schema.json', sha256: sha256(schema) } } }; write('brief.json', b(briefRecord));
     const sessions = roles.filter(role => role !== 'author').map(role => {
@@ -192,7 +194,24 @@ function fixture(source = 'Own pinned source.\n', extraFiles: Readonly<Record<st
 
 describe('trusted URL artifact producer bridge', () => {
   it('authenticates actual initial/core reads once, isolates returned bytes and reports deduplicated metadata only', () => {
-    const f = fixture(); f.initialize(); f.write('run.json', encodeRunRecord(f.options.record.declared, f.options.record.subject));
+    const f = fixture(), initial = f.produceInitial();
+    const issued = JSON.parse(fs.readFileSync(path.join(f.run, 'brief.json'), 'utf8'));
+    const packs = issued.shapePacks;
+    for (const shapePacks of [{ ...packs, extra: true }, { ...packs, traits: { ...packs.traits, extra: true } },
+      { ...packs, traits: { ...packs.traits, serverEntry: { ...packs.traits.serverEntry, extra: true } } },
+      { ...packs, selected: [{ ...packs.selected[0], extra: true }] },
+      { ...packs, selected: [{ ...packs.selected[0], sha256: 'invalid-digest' }] }]) {
+      f.write('brief.json', b({ ...issued, shapePacks }));
+      expect(() => f.bridge.registerInitial(initial)).toThrow();
+      expect(f.bridge.metadata().artifacts).toEqual([]);
+    }
+    f.write('brief.json', b(issued)); f.bridge.registerInitial(initial);
+    const unavailable = fixture(), unavailableInitial = unavailable.produceInitial();
+    const unavailableRecord = JSON.parse(fs.readFileSync(path.join(unavailable.run, 'brief.json'), 'utf8'));
+    unavailableRecord.shapePacks = shapePackSelection({ state: 'unknown', why: 'Own unavailable trait profile.' }).record;
+    unavailable.write('brief.json', b(unavailableRecord));
+    expect(() => unavailable.bridge.registerInitial(unavailableInitial)).not.toThrow();
+    f.write('run.json', encodeRunRecord(f.options.record.declared, f.options.record.subject));
     const ctx = f.bridge.beginRead({ operation: 'render', deadline: Date.now() + 4000 });
     for (const file of ['run.json', 'brief.json', 'inventory/session-1.json', 'reviews/fidelity-session-1.json', 'reviews/design-session-1.json'])
       expect(f.bridge.readProduct(ctx, file).kind).toBe('present');

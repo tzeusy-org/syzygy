@@ -3,6 +3,7 @@ import { urlStructureRecordShape, urlReadingLedgerShape, urlReadingDifferenceSha
 import type { ManifestFacts } from './manifest-facts.js';
 import type { FigureFit } from './figure-fit.js';
 import { figureFitClass } from './reader-advice.js';
+import { SERVER_ENTRY } from './derive-rules.js';
 import path from 'node:path';
 import { setImmediate as yieldToPoll } from 'node:timers/promises';
 import { encodeCanonicalJson, parseBoundedJson } from '@syzygy/polaris-generation-core/live';
@@ -326,7 +327,13 @@ function create(given: UrlRunArtifactsOptions) {
     const briefBytes = read(run, 'brief.md'), schemaBytes = read(run, 'draft.schema.json'), recordBytes = read(run, 'brief.json'), issued = json(recordBytes);
     const files = record(issued['files']), briefFile = record(files['brief']), schemaFile = record(files['draftSchema']);
     if (!keys(issued, ['format', 'role', 'runId', 'pinnedRevision', 'issuedAt', 'files'], ['briefVersion', 'sourceBindingSha256', 'schemaVersion', 'guidanceVersion',
-      'readerStandards', 'deadline', 'executionRule', 'agent', 'effectiveRun', 'urlDeclarationSha256', 'copy', 'stageStatement', 'label'])
+      'readerStandards', 'shapePacks', 'deadline', 'executionRule', 'agent', 'effectiveRun', 'urlDeclarationSha256', 'copy', 'stageStatement', 'label'])
+      || (issued['shapePacks'] !== undefined && !shape({
+        traits: value => shape({ state: lit('unknown'), why: text })(value) || shape({ state: lit('derived'),
+          serverEntry: shape({ rule: lit(SERVER_ENTRY.id), ruleVersion: lit(SERVER_ENTRY.version), holds: boolean,
+            paths: value => strings(value) && (value as string[]).length <= 20, pathsNotListed: integer }) })(value),
+        selected: array(shape({ id: text, version: integer, sha256: hex, because: text })),
+      })(issued['shapePacks']))
       || !keys(files, ['brief', 'draftSchema']) || !keys(briefFile, ['name', 'sha256']) || !keys(schemaFile, ['name', 'sha256'])
       || issued['format'] !== 'polaris-dossier-brief/1' || issued['role'] !== 'authoring' || issued['runId'] !== runId || issued['pinnedRevision'] !== pin
       || issued['issuedAt'] !== brief.issuedAt || briefFile['name'] !== 'brief.md' || briefFile['sha256'] !== sha256(briefBytes)
