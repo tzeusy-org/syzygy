@@ -283,6 +283,10 @@ async function checkOpenSubject<R extends object, G>(runDir: string, file: strin
     findings.push({ kind: 'adapter-credential-readable', at: '$', detail: `${credential.finding.why}. ${credential.finding.instruction}` });
   }
 
+  // Protected reads must finish before the new producer files enter the checked population.
+  const protectedCoverage = products !== undefined && plan.command === 'check' && parseFault === null
+    ? await inventoryCoverageAdvice(run, doc, { ...(deps.inventoryOfRecord ? { inventoryOfRecord: deps.inventoryOfRecord } : {}),
+      sources: deps.sources, now: started, productReads: products, isSecretPath: secretPathOf(screen) }) : undefined;
   const frozen = path.join(frozenDir, `rev-${revision}.json`), checkFile = path.join(checksDir, `rev-${revision}.json`);
   // A derived record already in place for this revision (planted, or left by a crash) is never overwritten or adopted: refused here,
   // before the draft is frozen, so the revision is not spent.
@@ -374,10 +378,10 @@ async function checkOpenSubject<R extends object, G>(runDir: string, file: strin
   const reach = plan.command === 'check' && parseFault === null
     ? reviewReachAdvice(doc, { citedBlobs, admitted, screen, consented: checked.contentClasses }) : undefined;
   // The inventory entries no block of this draft covers (syzygy-5dhm.28), from the inventory of record as it reads now.
-  const coverage = plan.command === 'check' && parseFault === null
+  const coverage = protectedCoverage ?? (plan.command === 'check' && parseFault === null
     ? await inventoryCoverageAdvice(run, doc, { ...(deps.inventoryOfRecord ? { inventoryOfRecord: deps.inventoryOfRecord } : {}), sources: deps.sources, now: started,
       isSecretPath: secretPathOf(screen) })
-    : undefined;
+    : undefined);
   return { ok: true, report: {
     command: plan.command, run, checkFile, ...written, ...reportFit, ...leftOut, ...(mechanismAdvice === undefined ? {} : { mechanismAdvice }), disclosures, ...(screenCensus === undefined ? {} : { screenCensus }),
     ...(structureRecord === undefined ? {} : { structureRecord }),

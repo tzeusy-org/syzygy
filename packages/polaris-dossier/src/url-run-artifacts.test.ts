@@ -98,7 +98,7 @@ function fixture(source = 'Own pinned source.\n', extraFiles: Readonly<Record<st
     sessionId: sessionId(role), systemPrompt: `Own ${role} system policy.`, initialPrompt: `Own ${role} initial prompt.`, utcDate: '2026-11-19', kernelRelease: 'own-linux' }); if (!p.ok) throw Error('profile'); return { role, profile: p.value.profile }; });
   const origins = { ledger, roots: { rolePolicy, runControl, toolMetadata }, initialReceipts, schemaDocuments } as UrlRunArtifactsOptions['origins'];
   const replyQueue: BrokerResponse[] = [], calls: string[][] = [];
-  let options: UrlRunArtifactsOptions = { run, record, origins, roles: plans, current: verifyCurrent, helpText: 'syzygy dossier own fixed help\n',
+  let options: UrlRunArtifactsOptions = { screen: loaded.screen, run, record, origins, roles: plans, current: verifyCurrent, helpText: 'syzygy dossier own fixed help\n',
     runDossier: () => async argv => { calls.push([...argv]); const next = replyQueue.shift(); if (!next) throw Error('no own response'); return next; } };
   const write = (relative: string, bytes: string | Uint8Array): void => { const file = path.join(run, relative); fs.mkdirSync(path.dirname(file), { recursive: true }); fs.writeFileSync(file, bytes); };
   const dir = (role: Role): string => role === 'author' ? run : `${run}.sessions/${role === 'inventory' ? 'session' : role}-1`;
@@ -120,7 +120,7 @@ function fixture(source = 'Own pinned source.\n', extraFiles: Readonly<Record<st
       const inventory = 'Own actual inventory brief, paths are metadata.\n'; if (role === 'inventory') fs.writeFileSync(path.join(dir(role), 'inventory-brief.md'), inventory);
       write(role === 'inventory' ? 'inventory/session-1.json' : `reviews/${role}-session-1.json`, b({ format: 'polaris-dossier-session-prompt/2', role: item.role,
         ...(role === 'inventory' ? { brief: { name: 'inventory-brief.md', sha256: sha256(inventory) } } : { kind: role }), runId, pinnedRevision: pin, session: 1,
-        directory: path.relative(path.dirname(run), dir(role)), prompt, promptSha256 })); return item;
+        directory: path.relative(path.dirname(run), dir(role)), context: { agentTool: record.declared.agentTool, provider: record.declared.agentProvider }, prompt, promptSha256 })); return item;
     });
     return { brief, sessions: { command: 'session-prompt', outcome: 'issued', role: 'all', run, sessions } as unknown as StartSessionsReport };
   };
@@ -171,7 +171,7 @@ function fixture(source = 'Own pinned source.\n', extraFiles: Readonly<Record<st
     executionFlags: { applies: false, why: 'Own no execution.' }, quotations: [], excludedContent: [], citedBlobs: [{ path: 'own.ts', objectId: blob, read: true, outcome: 'admitted' }],
     screeningPolicy: { policyId: policy.policyId, policyVersion: policy.policyVersion, sha256: policy.sha256 }, credential: { required: false, why: 'Own no execution.' },
     limits: { repairCycles: { declared: 2, thisRevision: 0, label: 'Inferred', basis: 'Own' }, questions: { declared: 1, recorded: 0 }, deadline: { endsAt: '2026-11-19T01:00:00.000Z', label: 'Inferred', basis: 'Own' } }, label: 'Inferred' });
-  const commitInventory = async (passed = true) => {
+  const commitInventory = async (passed = true, target = bridge) => {
     const bytes = b(inventory), checked = { format: 'polaris-dossier-inventory-check/1', runId, revision: 0, supersedes: null, pinnedRevision: pin, checkedAt: '2026-11-19T00:00:01.000Z', outcome: passed ? 'passed' : 'findings',
       inventory: { file: 'inventory/rev-0.json', sha256: sha256(bytes), bytes: bytes.length }, session: { number: 1, sessionId: sessionId('inventory'), declaredBy: 'the inventory session', label: 'Inferred', distinctFrom: 'Own author.' },
       findings: [], quotations: [], excludedContent: [], citedBlobs: [{ path: 'own.ts', objectId: blob, read: true, outcome: 'admitted' }], screeningPolicy: { policyId: policy.policyId, policyVersion: policy.policyVersion, sha256: policy.sha256 },
@@ -182,10 +182,10 @@ function fixture(source = 'Own pinned source.\n', extraFiles: Readonly<Record<st
     write('inventory/rev-0.json', bytes); const checkedBytes = `${JSON.stringify(checked, null, 2)}\n`; write('inventory/checks/rev-0.json', checkedBytes);
     const response = { stdout: JSON.stringify(result), stderr: '', exit: passed ? 0 : 1 }; replyQueue.push(response);
     const argv = ['dossier', 'await', dir('inventory'), '--submit', 'inventory.json', '--stdin', '--json'];
-    await bridge.runDossier('inventory')(argv, bytes);
+    await target.runDossier('inventory')(argv, bytes);
     const raw = receipt('inventory', 'mcp__syzygy__dossier_step', { argv, stdin: bytes.toString() }, { ok: true, kind: 'dossier-result', ...response });
-    await bridge.toolReceipt('inventory', raw, admission('inventory')); expect(bridge.hasCommittedProduct('inventory/checks/rev-0.json', sha256(checkedBytes))).toBe(false);
-    bridge.committed('inventory', raw.id); expect(bridge.hasCommittedProduct('inventory/checks/rev-0.json', sha256(checkedBytes))).toBe(true); return { bytes, checked, checkedBytes, raw, response, argv };
+    await target.toolReceipt('inventory', raw, admission('inventory')); expect(target.hasCommittedProduct('inventory/checks/rev-0.json', sha256(checkedBytes))).toBe(false);
+    target.committed('inventory', raw.id); expect(target.hasCommittedProduct('inventory/checks/rev-0.json', sha256(checkedBytes))).toBe(true); return { bytes, checked, checkedBytes, raw, response, argv };
   };
   const commitCheck = async (commit = true) => {
     const draft = await writeDraft(); bridge.committed('author', draft.raw.id); write('drafts/rev-0.json', draft.bytes);
@@ -465,6 +465,7 @@ describe('trusted URL artifact producer bridge', () => {
     const metadata = JSON.stringify(summary.metadata); for (const body of ['Own actual', f.source, 'Own fixed']) expect(metadata).not.toContain(body);
     f.bridge.cancelRead(ctx); expect(() => f.bridge.revalidateRead(ctx)).toThrow();
     expect(() => createUrlRunArtifacts({ ...f.options, initializedCoreBytes: Buffer.from('{}') })).toThrow();
+    expect(() => createUrlRunArtifacts({ ...f.options, screen: { ...f.screen, policySha256: '0'.repeat(64) } })).toThrow();
   });
   it('reverifies the exact retained initialized bytes and sidecar under the protected bindings', async () => {
     // Both facts lie past the source-span ceiling; bare CR is also a manifest
@@ -518,6 +519,22 @@ describe('trusted URL artifact producer bridge', () => {
       } });
     const schema = bridge.registerInitial(f.produceInitial(briefing.report)).find(artifact => artifact.path === 'draft.schema.json');
     if (!schema) throw Error('own complete schema missing');
+    // Use the existing inventory producer fixture with this actual check bridge.
+    const countedInventory = await f.commitInventory(true, bridge);
+    fs.writeFileSync(path.join(`${f.run}.sessions/session-1`, 'inventory.json'), countedInventory.bytes);
+    const promptFile = 'inventory/session-1.json', promptBytes = fs.readFileSync(path.join(f.run, promptFile));
+    const prompt = JSON.parse(promptBytes.toString()), stat = fs.statSync(path.join(f.run, promptFile));
+    const plan = f.options.roles.find(value => value.role === 'inventory')!;
+    const launchFile = urlHelperLaunchFile('inventory'), launchBytes = b({ role: 'inventory', session: 1,
+      promptSha256: prompt.promptSha256, form: { value: 'syzygy-launched', label: 'Inferred' } });
+    f.write(launchFile, launchBytes);
+    const launch = Object.freeze({});
+    committedLaunches.set(launch, { history: { run: f.run, runId: f.runId, role: 'inventory', file: launchFile,
+      bytes: launchBytes, sha256: sha256(launchBytes), plan: { ...plan, declaration: issued.declaration.roles.find(value => value.role === 'inventory') },
+      pin: f.pin, coreSha256: sha256(core), promptFile, promptSha256: prompt.promptSha256,
+      promptRecordSha256: sha256(promptBytes), promptIdentity: { device: BigInt(stat.dev), inode: BigInt(stat.ino) } },
+      project: issued.declaration.observingProject, scope: { originPolicySha256: issued.declaration.originPolicy.sha256 }, eventSha256: sha256('own genuine audit-capability seam') });
+    await bridge.registerLaunchHistory(launch as never);
     const schemaText = fs.readFileSync(path.join(f.run, schema.path), 'utf8');
     expect(JSON.parse(schemaText)).toEqual(draftSchemaDocument({ pinnedRevision: f.pin, maxQuestions: 1 }));
     const schemaReply = canonical({ ok: true, kind: 'artifact', path: schema.path, text: schemaText, sha256: sha256(schemaText) });
@@ -573,14 +590,31 @@ describe('trusted URL artifact producer bridge', () => {
       // A directory at the optional sidecar path causes its rename to fail;
       // the genuine producer still returns its checked result with file:null.
       fs.mkdirSync(path.join(f.run, 'run-advice.json'));
+      const withdrawnReads = beginRunProductReads(f.run, bridge, 'author-check', Date.now() + 4000);
+      let adviceReached = false;
+      try {
+        const refused = await checkDraft(f.run, {}, { sources, openReader, productReads: withdrawnReads,
+          inventoryOfRecord: async (run, recheck) => {
+            expect(recheck.productReads).toBe(withdrawnReads);
+            const counted = await inventoryOfRecord(run, recheck);
+            expect(counted.counts).toBe(true);
+            adviceReached = true; withdrawnReads.close(); return counted;
+          }, now: () => readAt, loadScreen: async () => ({ ok: true, screen: f.screen }), layoutFigure: () => 648,
+          probe: { probe: async () => { throw Error('own check permits no execution'); } } });
+        expect(adviceReached).toBe(true);
+        expect(refused).toMatchObject({ ok: false, refusal: { stage: 'reverify' } });
+        expect(fs.existsSync(path.join(f.run, 'drafts/rev-0.json'))).toBe(false);
+        expect(fs.existsSync(path.join(f.run, 'checks/rev-0.json'))).toBe(false);
+      } finally { withdrawnReads.close(); }
       const authorReads = beginRunProductReads(f.run, bridge, 'author-check', Date.now() + 4000);
       try {
-        const result = await checkDraft(f.run, {}, { sources, openReader, productReads: authorReads,
+        const result = await checkDraft(f.run, {}, { sources, openReader, productReads: authorReads, inventoryOfRecord,
           now: () => readAt, loadScreen: async () => ({ ok: true, screen: f.screen }), layoutFigure: () => 648,
           probe: { probe: async () => { throw Error('own check permits no execution'); } } });
         expect(result).toMatchObject({ ok: true, report: { outcome: 'passed', figureFit: { examined: 1, entries: [] },
           mechanismAdvice: { file: null, thisRevision: 1, inRun: 1 } } });
         if (!result.ok || result.report.outcome !== 'passed') throw Error('own protected check');
+        expect(result.report.inventoryCoverageAdvice).toMatchObject({ state: 'compared', inventory: { revision: 0, sha256: sha256(countedInventory.bytes) }, counts: { entries: 1, covered: 0, omitted: 0, uncovered: 1 }, uncovered: [{ entryId: 'own-purpose', paths: ['own.ts'], unnamedPaths: 0 }] });
         expect(result.report.citedBlobs.map(blob => blob.path)).toEqual(['README.md']);
         expect(result.report.manifestFacts).toMatchObject({ state: 'derived', facts: expect.arrayContaining([
           expect.objectContaining({ path: 'package.json', fact: 'package', name: 'own-uncited-package' }),
@@ -596,13 +630,23 @@ describe('trusted URL artifact producer bridge', () => {
         const stored = JSON.parse(storedBytes.toString());
         expect(stored.figureFit.entries).toEqual([expect.objectContaining({ diagram: 'own-flow', viewportPx: 390, laidOutPx: 648 })]);
         expect(stored).not.toHaveProperty('mechanismAdvice');
+        expect(stored).not.toHaveProperty('inventoryCoverageAdvice');
         // An unknown check with no mechanism entries would leave these counts
         // unchanged; the bridge must still reject the unrecognized population.
         f.write('checks/rev-999.json', b({ ...stored, revision: 999, figureFit: { ...stored.figureFit, entries: [] } }));
         f.replyQueue.push(response);
         await expect(bridge.runDossier('author')(argv, null)).rejects.toThrow();
         fs.unlinkSync(path.join(f.run, 'checks/rev-999.json'));
+        const coverage = result.report.inventoryCoverageAdvice!;
+        if (coverage.state !== 'compared') throw Error('own coverage comparison missing');
         const mutants = [
+          { ...result.report, inventoryCoverageAdvice: { ...coverage, extra: true } },
+          { ...result.report, inventoryCoverageAdvice: { ...coverage, inventory: { ...coverage.inventory, sha256: '0'.repeat(64) } } },
+          { ...result.report, inventoryCoverageAdvice: { ...coverage, inventory: { ...coverage.inventory, revision: 1 } } },
+          { ...result.report, inventoryCoverageAdvice: { ...coverage, counts: { ...coverage.counts, covered: 1, uncovered: 0 } } },
+          { ...result.report, inventoryCoverageAdvice: { ...coverage, uncovered: [{ ...coverage.uncovered[0], entryId: 'copied-id' }] } },
+          { ...result.report, inventoryCoverageAdvice: { ...coverage, uncovered: [{ ...coverage.uncovered[0], paths: ['different.ts'] }] } },
+
           { ...result.report, mechanismAdvice: { ...result.report.mechanismAdvice, extra: true } },
           { ...result.report, mechanismAdvice: { ...result.report.mechanismAdvice, file: 'checks/rev-0.json' } },
           { ...result.report, mechanismAdvice: { ...result.report.mechanismAdvice, thisRevision: 0 } },
@@ -630,6 +674,9 @@ describe('trusted URL artifact producer bridge', () => {
         await bridge.toolReceipt('author', receipt, f.admission('author'));
         bridge.committed('author', receipt.id);
         expect(f.ledger.metadata(bridge.checkReceipt(0)).originIds).toEqual(expect.arrayContaining([body!.id, structure!.id]));
+        const ancestry = f.ledger.captureProvenance([bridge.checkReceipt(0)]).graph.nodes;
+        for (const digest of [sha256(countedInventory.bytes), sha256(countedInventory.checkedBytes), sha256(promptBytes), sha256(launchBytes)])
+          expect(ancestry.some(node => node.metadata.digest === digest)).toBe(true);
         expect(bridge.latestStageCheck('author')).toMatchObject({ revision: 0, record: { figureFit: stored.figureFit } });
         expect(f.ledger.origins(bridge.checkReceipt(0), storedBytes)).toBeDefined();
       } finally { authorReads.close(); }

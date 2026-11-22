@@ -249,6 +249,7 @@ export interface CheckDeps {
   readonly measureRecord?: (text: string) => RecordMeasure;
   /** The reader of the inventory of record, which the coverage advice compares the draft with (syzygy-5dhm.28); without it that advice
    * is Unknown. A port, not an import: `inventory.ts` imports the check. */
+  /** Carries this check’s protected product lease through the inventory reader. */
   readonly inventoryOfRecord?: InventoryOfRecordReader;
 }
 
