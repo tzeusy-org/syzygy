@@ -1,0 +1,16 @@
+{
+  "subject": "/home/orca/.tmp/syzygy-beads-looper-20261114-54ebc9f1/d10-f3-stop-cut-regression",
+  "commit": "0ad506f1f7c5261d29e8ef0cf6dc8495e2b5a01c",
+  "tree": "06e45343627f9a4e291ba086da51bbb41105f24f",
+  "trackedStatus": "",
+  "files": {
+    "packages/polaris-dossier/src/url-run-composed.test.ts": "4691a617a9cca6ee1f4e950d969f034e9a560eb13f4844be9b7df37e33e37806",
+    "packages/polaris-dossier/src/url-run-composed.testkit.ts": "a5f2fd9e220252673562e463c1d9a52e193216444ed5770d27ccc81e35ba984f",
+    "packages/polaris-dossier/src/polaris.ts": "70a79b1afe681b74611070f497d6432193ade6557419d0d05baac270fe7ced75",
+    "packages/polaris-dossier/src/url-run-sessions.ts": "ef4edafa3c81fec0f5cb9516e136e8833a50823d7c3f1c909c622b965633771d",
+    "packages/polaris-dossier/src/url-session-audit.ts": "d0a3e3be202e413f1a1873980b9bc9e6d8687575060c5dd3c5029bd7b060218f",
+    "packages/polaris-dossier/src/url-runtime.ts": "35d53b32f24c5c36997fc16799f207bb678cabd29d34b0ba54c1428cacb89977",
+    "scripts/build_dossier_runtime.mjs": "4cbe5a1b6242f62f5d3307e9c4fd307ec2ada23d30e5a41965847a66d9c25985"
+  },
+  "scope": "two separate actual public recovery scenarios on same frozen source; native execution pending"
+}

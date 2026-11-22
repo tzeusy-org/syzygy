@@ -1,0 +1,45 @@
+{
+  "subjectCommit": "0ad506f1f7c5261d29e8ef0cf6dc8495e2b5a01c",
+  "files": [
+    {
+      "path": "f3-recovery-0ad-source.json",
+      "sha256": "87ddb4de5bf67e3a5cee66604b2470f13f5b503563905561c80b92b222652eb6"
+    },
+    {
+      "path": "f3-recovery-0ad-stop.log",
+      "sha256": "b15e2a78083e0df4c96c46a64a600c8ec1562231b706a8acec2434e0d374c3dd"
+    },
+    {
+      "path": "f3-recovery-0ad-stop-cut.json",
+      "sha256": "5151aafce43e468acdfcc88eba025a36c043c6ba5189b6f1a2b290a482c1ece6"
+    },
+    {
+      "path": "f3-recovery-0ad-stop-projection.json",
+      "sha256": "b576dd7927b213d25e5f3291408a8c677d5065cf01e822176ef1116213400421"
+    }
+  ],
+  "outcome": "REFUSED before resumed launch; no completed recovery claim",
+  "observed": [
+    {
+      "phase": "verify",
+      "ok": true,
+      "nextDesignRound": 2
+    },
+    {
+      "phase": "claim",
+      "exactCut": true,
+      "current": true
+    },
+    {
+      "phase": "resumed-guards",
+      "policyWithdrawal": "refused",
+      "claimWithdrawal": "refused"
+    }
+  ],
+  "nextPhase": "Fresh audit has four declarations; machine reopen allocated one new client. Exact machine-allocation refusal under investigation.",
+  "limits": [
+    "Synthetic provider, actual pinned CLI and public resume",
+    "No final resumed Execution Record",
+    "Frozen predecessor checkpoint; later source changes require a new cut, not rebinding"
+  ]
+}
