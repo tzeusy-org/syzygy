@@ -73,6 +73,7 @@ export interface UrlRunArtifactsOptions {
   readonly screen?: DossierScreen;
 }
 export type UrlProductReadOperation = 'render' | 'review-packet' | 'review-check' | 'inventory-check' | 'author-check';
+export type UrlProductReadLeaseState = 'open' | 'expired' | 'retired' | 'Unknown';
 /** No object shape authenticates this token; each bridge owns its WeakMap. */
 export interface UrlProductReadContext { readonly kind: 'url-product-read-context'; }
 export interface UrlAuthenticatedProductRead {
@@ -1063,7 +1064,7 @@ function create(given: UrlRunArtifactsOptions) {
     readonly entries: Map<string, ReadEntry>;
     readonly excludedOrdered: ReadonlyMap<string, NonNullable<ReturnType<typeof authenticatedRecords.get>>>;
     readonly selections: Map<UrlProductSelector, { readonly snapshot: ProductNameSnapshot; readonly names: readonly string[]; readonly receipt: UrlOriginReceipt }>;
-    cancelled: boolean; bytes: number; timer?: ReturnType<typeof setTimeout>; abort?: () => void;
+    terminal?: 'expired' | 'retired'; bytes: number; timer?: ReturnType<typeof setTimeout>; abort?: () => void;
   }
   const readContexts = new WeakMap<UrlProductReadContext, ReadState>(), activeReads = new Set<ReadState>();
   const readProofs = new Map<string, { readonly path: Pick<ProductFileSnapshot, 'chain' | 'missingAt'>;
@@ -1082,13 +1083,15 @@ function create(given: UrlRunArtifactsOptions) {
     return receipt;
   }
   let readContextCount = 0, activeReadBytes = 0;
-  function closeRead(state: ReadState): void {
-    if (!state.cancelled) { state.cancelled = true; activeReadBytes -= state.bytes; }
+  function closeRead(state: ReadState, reason: 'expired' | 'retired' = 'retired'): void {
+    if (state.terminal === undefined) { state.terminal = reason; activeReadBytes -= state.bytes; }
     clearTimeout(state.timer); if (state.abort) state.signal?.removeEventListener('abort', state.abort);
     state.entries.clear(); state.selections.clear(); activeReads.delete(state);
   }
   const readLease = (state: ReadState): void => {
-    if (state.cancelled || state.signal?.aborted || Date.now() >= state.deadline) { closeRead(state); refuse(); }
+    if (state.terminal !== undefined) refuse();
+    if (state.signal?.aborted) { closeRead(state); refuse(); }
+    if (Date.now() >= state.deadline) { closeRead(state, 'expired'); refuse(); }
   };
   const readLive = (state: ReadState): void => {
     readLease(state);
@@ -1098,6 +1101,12 @@ function create(given: UrlRunArtifactsOptions) {
   function contextState(context: UrlProductReadContext): ReadState {
     const state = readContexts.get(context); if (!state) refuse(); readLease(state); return state;
   }
+  function readLeaseState(context: UrlProductReadContext): UrlProductReadLeaseState {
+    const state = readContexts.get(context);
+    if (state === undefined) return 'Unknown';
+    try { readLease(state); return 'open'; }
+    catch { if (state.terminal === undefined) closeRead(state); return state.terminal ?? 'retired'; }
+  }
   function beginRead(input: { readonly operation: UrlProductReadOperation; readonly deadline: number; readonly signal?: AbortSignal }): UrlProductReadContext {
     live(); const now = Date.now();
     if (!initial || !keys(input, ['operation', 'deadline'], ['signal']) || !['render', 'review-packet', 'review-check', 'inventory-check', 'author-check'].includes(input.operation)
@@ -1105,8 +1114,8 @@ function create(given: UrlRunArtifactsOptions) {
       || (input.signal !== undefined && (!(input.signal instanceof AbortSignal) || input.signal.aborted))
       || activeReads.size >= 16 || ++readContextCount > limits.registrations) refuse();
     const context: UrlProductReadContext = Object.freeze({ kind: 'url-product-read-context' });
-    const state: ReadState = { operation: input.operation, deadline: input.deadline, signal: input.signal, entries: new Map(), excludedOrdered: input.operation === 'render' ? new Map(orderedPendingFiles) : new Map(), selections: new Map(), cancelled: false, bytes: 0 };
-    state.timer = setTimeout(() => closeRead(state), input.deadline - now); state.timer.unref();
+    const state: ReadState = { operation: input.operation, deadline: input.deadline, signal: input.signal, entries: new Map(), excludedOrdered: input.operation === 'render' ? new Map(orderedPendingFiles) : new Map(), selections: new Map(), bytes: 0 };
+    state.timer = setTimeout(() => closeRead(state, 'expired'), input.deadline - now); state.timer.unref();
     state.abort = () => closeRead(state); input.signal?.addEventListener('abort', state.abort, { once: true });
     readContexts.set(context, state); activeReads.add(state);
     return context;
@@ -1529,11 +1538,8 @@ function create(given: UrlRunArtifactsOptions) {
     beginRead, readProduct, readProducts, selectProducts, selectProductGroups, revalidateRead, openDesignArtifact, captureFrozenHistory,
     latestStageCheck: (role: Role) => stageChecks([role])[role],
     latestStageChecks: () => stageChecks(ROLES),
-    isReadLeaseOpen: (context: UrlProductReadContext): boolean => {
-      const state = readContexts.get(context);
-      if (state === undefined) return false;
-      try { readLease(state); return true; } catch { return false; }
-    },
+    readLeaseState,
+    isReadLeaseOpen: (context: UrlProductReadContext): boolean => readLeaseState(context) === 'open',
     cancelRead: (context: UrlProductReadContext): void => { const state = readContexts.get(context); if (!state) refuse(); closeRead(state); },
     registerInitial: (input: Parameters<typeof initialProducts>[0]) => { try { return initialProducts(input); } catch { return refuse(); } },
     registerLaunchHistory: (...args: Parameters<typeof registerLaunchHistory>) => duringProducer(async () => {

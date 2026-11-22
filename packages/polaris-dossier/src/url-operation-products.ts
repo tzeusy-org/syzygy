@@ -2,7 +2,7 @@ import path from 'node:path';
 import { setImmediate as yieldToPoll } from 'node:timers/promises';
 import { isRecord, sha256 } from '@syzygy/support';
 import { parseBoundedJson } from '@syzygy/polaris-generation-core/live';
-import type { createUrlRunArtifacts, UrlProductReadOperation, UrlProductSelector } from './url-run-artifacts.js';
+import type { createUrlRunArtifacts, UrlProductReadOperation, UrlProductReadLeaseState, UrlProductSelector } from './url-run-artifacts.js';
 import { URL_HELPER_LAUNCH_FILES, type UrlLaunchHistoryRole } from './url-launch-history.js';
 
 type ArtifactBridge = ReturnType<typeof createUrlRunArtifacts>;
@@ -15,6 +15,7 @@ export interface RunProductReads {
   readonly selectGroups: (selectors: readonly UrlProductSelector[]) => readonly (readonly string[])[];
   readonly revalidate: () => ProductReadEvidence;
   readonly isLeaseOpen: () => boolean;
+  readonly leaseState: () => UrlProductReadLeaseState;
   readonly waitForSample?: () => Promise<void>;
   readonly close: () => void;
 }
@@ -44,6 +45,7 @@ export function beginRunProductReads(run: string, artifacts: ArtifactBridge, ope
     selectGroups: (selectors: readonly UrlProductSelector[]) => guarded(() => artifacts.selectProductGroups(context, selectors)),
     revalidate: () => guarded(() => artifacts.revalidateRead(context)),
     isLeaseOpen: () => artifacts.isReadLeaseOpen(context),
+    leaseState: () => artifacts.readLeaseState(context),
     ...(awaitProductRead === undefined ? {} : { waitForSample: async () => {
       try {
         await yieldToPoll();

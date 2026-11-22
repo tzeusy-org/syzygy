@@ -893,6 +893,52 @@ describe('trusted URL artifact producer bridge', () => {
     const held = Array.from({ length: 16 }, begin); expect(() => begin()).toThrow(); for (const cap of held) f.bridge.cancelRead(cap);
     const stale = begin(); f.bridge.readProduct(stale, 'brief.json'); await Promise.resolve(); f.stale(); expect(() => f.bridge.revalidateRead(stale)).toThrow();
   });
+  it.each(['cancel', 'abort', 'drift', 'current', 'timer', 'clock'] as const)('retains the first %s read termination when first inspected after its deadline', kind => {
+    const f = fixture(), other = fixture(); f.initialize(); other.initialize();
+    vi.useFakeTimers();
+    try {
+      const abort = new AbortController(), deadline = Date.now() + 4000;
+      const context = f.bridge.beginRead({ operation: 'render', deadline, signal: abort.signal });
+      expect(f.bridge.readLeaseState(context)).toBe('open');
+      expect(f.bridge.readLeaseState({ ...context })).toBe('Unknown');
+      expect(other.bridge.readLeaseState(context)).toBe('Unknown');
+      f.bridge.readProduct(context, 'brief.json');
+      if (kind === 'cancel') f.bridge.cancelRead(context);
+      if (kind === 'abort') abort.abort();
+      if (kind === 'drift') {
+        fs.appendFileSync(path.join(f.run, 'brief.json'), ' ');
+        expect(() => f.bridge.revalidateRead(context)).toThrow();
+      }
+      if (kind === 'current') {
+        f.stale();
+        expect(() => f.bridge.revalidateRead(context)).toThrow();
+      }
+      if (kind === 'timer') vi.advanceTimersByTime(4001);
+      else vi.setSystemTime(deadline + 1);
+      const terminal = kind === 'timer' || kind === 'clock' ? 'expired' : 'retired';
+      expect(f.bridge.readLeaseState(context)).toBe(terminal);
+      expect(f.bridge.isReadLeaseOpen(context)).toBe(false);
+      // A later cleanup or a regressed clock cannot replace the first cause.
+      f.bridge.cancelRead(context);
+      vi.setSystemTime(deadline - 1);
+      expect(f.bridge.readLeaseState(context)).toBe(terminal);
+      expect(() => f.bridge.readProduct(context, 'brief.json')).toThrow();
+    } finally { vi.useRealTimers(); }
+  });
+  it('retains an early close through the genuine product-read adapter when first queried after expiry', () => {
+    const f = fixture(); f.initialize();
+    vi.useFakeTimers();
+    try {
+      const deadline = Date.now() + 4000;
+      const reads = beginRunProductReads(f.run, f.bridge, 'render', deadline);
+      expect(reads.read('brief.json')).not.toBeNull();
+      reads.close();
+      vi.setSystemTime(deadline + 1);
+      expect(reads.leaseState()).toBe('retired');
+      expect(reads.isLeaseOpen()).toBe(false);
+      expect(() => reads.revalidate()).toThrow();
+    } finally { vi.useRealTimers(); }
+  });
   it.each(['record', 'record batch', 'selection', 'selection batch', 'revalidation'] as const)('checks current authority before and after the bounded %s read', (kind) => {
     const f = fixture(), current = vi.fn(() => true);
     const bridge = createUrlRunArtifacts({ ...f.options, current });
