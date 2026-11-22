@@ -19,6 +19,16 @@ import { buildDossierScreen } from './screen.js';
 export const FULL_RUN_ROOT_ENV = 'SYZYGY_FULL_RUN_ROOT';
 export const REAL_ROOT = process.env[FULL_RUN_ROOT_ENV] ?? path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../../..');
 export const FIXTURE_URL = 'https://github.com/redis/redis';
+
+/** A manually assembled run receives the same wire shape as a new run. */
+export function addRawReadDisclosureFixture(run: string, declaredProvider = 'anthropic'): void {
+  fs.writeFileSync(path.join(run, 'raw-read-disclosure.json'), JSON.stringify({
+    schemaVersion: 'polaris-dossier-raw-read-disclosure/1',
+    runId: path.basename(run),
+    declaredProvider,
+    authorHandoff: 'not-reached',
+  }));
+}
 /** No automatic gc or maintenance in any fixture repository: a detached `git maintenance run --auto` after a commit or fetch can
  * still be writing when the fixture is removed (syzygy-y733). Set through the environment, never the repository's config, which
  * init's clone check admits only as `git init` writes it. */

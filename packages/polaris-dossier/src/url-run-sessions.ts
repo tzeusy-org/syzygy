@@ -4,6 +4,7 @@ import path from 'node:path';
 import { encodeCanonicalJson, parseBoundedJson } from '@syzygy/polaris-generation-core/live';
 import { deepFreeze, isRecord, sha256 } from '@syzygy/support';
 import type { BrokerRunner } from './broker.js';
+import { RAW_READ_DISCLOSURE_REFUSAL } from './raw-read-disclosure.js';
 import { createUrlSessionControl, type UrlSessionControlEvent, type UrlSessionControlOptions } from './session-control.js';
 import type { SessionCredential } from './session-credential.js';
 import type { SessionAdmission, SessionContentClass } from './session-egress-policy.js';
@@ -478,11 +479,16 @@ async function start(options: UrlRunSessionsOptions, ports: typeof native): Prom
         const plan = plans.find(plan => plan.role === role);
         if (plan === undefined || (ordered && role === 'design')) throw new Error('url-run-sessions-unavailable');
         const scope = audit.scope(role);
-        if (!(await current()) || (role === 'author' && options.authorHandoff?.current() === false)) throw new Error();
+        const disclosure = role === 'author' ? options.authorHandoff : undefined;
+        let handingOff = disclosure !== undefined;
+        const launchCurrent = disclosure === undefined ? current : async (): Promise<boolean> =>
+          await current() && (!handingOff || disclosure.current());
+        if (!(await current())) throw new Error();
+        if (disclosure?.current() === false) throw new Error(RAW_READ_DISCLOSURE_REFUSAL);
         // Probe before binding the actual host: an empty probe connection to a
         // live relay is deliberately terminal and must never touch that relay.
         const preparation = await ports.prepare({ view: plan.view, profile: plan.profile,
-          expected: { nodeSha256: options.runtime.worker.nodeSha256, supportSha256: options.runtime.supportSha256 }, current,
+          expected: { nodeSha256: options.runtime.worker.nodeSha256, supportSha256: options.runtime.supportSha256 }, current: launchCurrent,
           audit: event => audit.append({ kind: 'launch-attempt', role, scope, payload: event }),
           canaries: options.canaries, hostLoopbackPort: address.port });
         if (preparation.profileSha256 !== plan.declaration.compiledProfileSha256 || preparation.commandSha256 !== plan.declaration.commandSha256
@@ -580,12 +586,17 @@ async function start(options: UrlRunSessionsOptions, ports: typeof native): Prom
           } });
         hosts.set(role, host);
         if (host.healthy !== undefined) hostHealth.set(role, host.healthy);
-        if (role === 'author' && options.authorHandoff?.current() === false) throw new Error('url-run-sessions-unavailable');
-        const child = await ports.launch({ preparation, host }); processes.set(role, child);
+        if (disclosure?.current() === false) throw new Error(RAW_READ_DISCLOSURE_REFUSAL);
+        const child = await ports.launch({ preparation, host }).catch(cause => {
+          if (disclosure?.current() === false) throw new Error(RAW_READ_DISCLOSURE_REFUSAL);
+          throw cause;
+        });
+        handingOff = false;
+        processes.set(role, child);
         const capture = captures.get(role)!;
         rememberTerminal(role, child, () => false);
-        if (role === 'author' && options.authorHandoff?.reached() === false) {
-          fail('provenance-unavailable'); throw new Error('url-run-sessions-unavailable');
+        if (disclosure?.reached() === false) {
+          fail('provenance-unavailable'); throw new Error(RAW_READ_DISCLOSURE_REFUSAL);
         }
         if (role !== 'author' && launchHistory !== undefined) {
           try {
@@ -722,7 +733,10 @@ async function start(options: UrlRunSessionsOptions, ports: typeof native): Prom
     return Object.freeze({ current: continueCurrent, withinCpuBudget, summary, stop, prepareDesignDelivery, prepareFinalRender, publish,
       waitForProductSamples,
     });
-  } catch {
-    fail('launch-unavailable'); await stop(); throw new Error('url-run-sessions-unavailable');
+  } catch (cause) {
+    fail('launch-unavailable');
+    await stop();
+    if (cause instanceof Error && cause.message === RAW_READ_DISCLOSURE_REFUSAL) throw cause;
+    throw new Error('url-run-sessions-unavailable');
   }
 }

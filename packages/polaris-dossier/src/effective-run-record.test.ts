@@ -16,7 +16,7 @@ import { bindUrlSourceReader } from './url-source-reader.js';
 import { runStatus } from './status.js';
 import { closeRun } from './close.js';
 import { renderRun, type DossierRenderer, type DossierRendererInput } from './render.js';
-import { FIXTURE_SCREEN, commitPolicyFixture, fixtureSources, fullFixtureRun, makeClone, NOW, LATER, policyFixture, REAL_ROOT } from './full-run.testkit.js';
+import { addRawReadDisclosureFixture, FIXTURE_SCREEN, commitPolicyFixture, fixtureSources, fullFixtureRun, makeClone, NOW, LATER, policyFixture, REAL_ROOT } from './full-run.testkit.js';
 import { readCommittedPolicy } from './policy-snapshot.js';
 import { packageUrlRunModeAuthority, registerUrlRunMode } from './url-mode-registry.js';
 
@@ -41,6 +41,7 @@ function ownRun(screeningPolicy = policyFixture().binding): string {
     governed: { kind: 'unstated', because: ['synthetic fixture has no project declaration'] },
     workItem: { identity: null, reason: NO_WORK_ITEM_REASON },
   }));
+  addRawReadDisclosureFixture(run);
   return run;
 }
 function bindUrl(run: string, screenMetadata: (text: string) => boolean = () => true) {

@@ -1,4 +1,4 @@
-import { declaredSubjectFixture, policyFixture } from './full-run.testkit.js';
+import { addRawReadDisclosureFixture, declaredSubjectFixture, policyFixture } from './full-run.testkit.js';
 import { execFileSync } from 'node:child_process';
 import * as fs from 'node:fs';
 import * as path from 'node:path';
@@ -133,6 +133,7 @@ async function briefedRun(over: Record<string, unknown> = {}, clone: string = cl
   }));
   if (!parsed.ok) throw new Error('fixture configuration refused');
   fs.writeFileSync(path.join(run, 'run.json'), encodeRunRecord(parsed.config, subject(clone)));
+  addRawReadDisclosureFixture(run);
   const brief = await issueBrief(run, { sources: sources(), now: () => NOW });
   if (!brief.ok) throw new Error(`fixture brief refused: ${brief.refusal.reason}`);
   return run;

@@ -9,6 +9,7 @@ import { draft, inventory, fidelityVerdict, designVerdict } from './full-run.tes
 import { closeRun } from './close.js';
 import * as rendering from './render.js';
 import { RUN_LAYOUT } from './state-directory.js';
+import { readRawReadDisclosure, recordRawReadHandoff } from './raw-read-disclosure.js';
 import { createCredentialProbe, credentialListFromEnv } from './credential-probe.js';
 import { runPolarisCli, runUrlSupervisorLoop, type SupervisorState } from './polaris.js';
 import { openUrlSupervisorStop, readUrlSupervisorState, requestUrlSupervisorStop, writeUrlSupervisorState } from './url-supervisor-state.js';
@@ -490,6 +491,10 @@ async function start(f: Fixture, failures: string[], onFailure: (reason: string)
     auditParent: f.hidden, auditName: 'sessions', principal: f.record.declared.operator,
     sessionDirectories: f.directories, canaries: f.canaries, current: f.current, now: Date.now, deadline: f.deadline,
     credential: credential.credential, sourceReader: f.openReader, stopRequested,
+    authorHandoff: {
+      current: () => readRawReadDisclosure(f.run, f.record.declared.agentProvider) !== null,
+      reached: () => recordRawReadHandoff(f.run, f.record.declared.agentProvider, 'reached'),
+    },
     production: { ...(f.machine ?? { governanceRoot: path.join(f.root, 'observing/.syzygy'), protectedRoot: path.join(f.hidden, 'machine'),
       parent: { rowId: 'A-1', landedCommit: 'a'.repeat(40), defaultCommit: 'a'.repeat(40), tagObject: 'b'.repeat(40),
         subjects: [{ path: f.origin.binding.path, sha256: f.origin.binding.sha256 }] } }), current: f.current,
@@ -739,6 +744,9 @@ describe('composed URL run with actual role processes', { timeout: 360_000 }, ()
       const initialDesignAudit = eligibleStop ? await readDesignAuditKinds(path.join(f.hidden, 'sessions-design.jsonl')) : undefined;
       throw new Error(JSON.stringify({ ownStartFailure: failures, relayRoles, audit, initialDesignAudit }));
     }); cleanup.push(controller.stop);
+    expect(JSON.parse(await fs.readFile(path.join(f.run, 'raw-read-disclosure.json'), 'utf8'))).toEqual({
+      schemaVersion: 'polaris-dossier-raw-read-disclosure/1', runId: f.runId, declaredProvider: 'anthropic', authorHandoff: 'reached',
+    });
     function beginOwnedStop() {
       try {
         if (resumeAfterStop) requestUrlSupervisorStop(stateRoot, state);

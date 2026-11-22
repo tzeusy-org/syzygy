@@ -1,4 +1,4 @@
-import { declaredSubjectFixture, policyFixture } from './full-run.testkit.js';
+import { addRawReadDisclosureFixture, declaredSubjectFixture, policyFixture } from './full-run.testkit.js';
 import * as fs from 'node:fs';
 import * as path from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -41,6 +41,7 @@ const runDirectory = (operatorIsOwner = true, name = RUN_ID): string => {
   }));
   if (!parsed.ok) throw new Error('fixture configuration refused');
   fs.writeFileSync(path.join(run, 'run.json'), encodeRunRecord(parsed.config, SUBJECT));
+  addRawReadDisclosureFixture(run);
   return run;
 };
 const OK: GateState = { state: 'ok', record: 'FIXTURE-ACT' };

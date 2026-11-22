@@ -1,4 +1,4 @@
-import { declaredSubjectFixture, policyFixture } from './full-run.testkit.js';
+import { addRawReadDisclosureFixture, declaredSubjectFixture, policyFixture } from './full-run.testkit.js';
 import { execFileSync } from 'node:child_process';
 import { createHash } from 'node:crypto';
 import * as fs from 'node:fs';
@@ -58,6 +58,7 @@ const runDirectory = (subject: RunSubject = SUBJECT, config: RunConfig = configO
   const run = path.join(root, name);
   fs.mkdirSync(run);
   fs.writeFileSync(path.join(run, 'run.json'), encodeRunRecord(config, subject));
+  addRawReadDisclosureFixture(run, config.agentProvider);
   return run;
 };
 const OK: GateState = { state: 'ok', record: 'FIXTURE-ACT' };
@@ -82,6 +83,25 @@ const tree = (paths: readonly string[] = ['src/server.c']) => (): PinnedObjectRe
 const read = (run: string, name: string): string => fs.readFileSync(path.join(run, name), 'utf8');
 
 describe('brief: issued', () => {
+  it.each(['missing', 'malformed', 'wrong run', 'wrong provider'] as const)('refuses a %s disclosure before writing handoff files', async fault => {
+    const run = runDirectory();
+    const file = path.join(run, 'raw-read-disclosure.json');
+    if (fault === 'missing') fs.unlinkSync(file);
+    else if (fault === 'malformed') fs.writeFileSync(file, '{"authorHandoff":');
+    else {
+      const companion = JSON.parse(fs.readFileSync(file, 'utf8'));
+      if (fault === 'wrong run') companion.runId = `run-${'b'.repeat(32)}`;
+      if (fault === 'wrong provider') companion.declaredProvider = 'openai';
+      fs.writeFileSync(file, JSON.stringify(companion));
+    }
+    const before = () => fs.readdirSync(run).sort().map(name => [name, fs.readFileSync(path.join(run, name))]);
+    const retained = before();
+    expect(await issueBrief(run, { sources: sources(), openReader: tree(), now: () => NOW })).toMatchObject({
+      ok: false, refusal: { stage: 'raw-read-disclosure', reason: expect.stringMatching(/REQ-polaris-generation-033.*syzygy dossier init/u) },
+    });
+    expect(before()).toEqual(retained);
+  });
+
   it.each(['repository', 'clone', 'visibility'] as const)('refuses a changed %s declaration after the brief binds its source', async field => {
     const run = runDirectory(); const ports = { sources: sources(), openReader: tree(), now: () => NOW };
     expect((await issueBrief(run, ports)).ok).toBe(true);
@@ -100,6 +120,9 @@ describe('brief: issued', () => {
       command: 'brief', outcome: 'issued', run, briefVersion: 'polaris-dossier-brief-v13', schemaVersion: 'polaris-dossier-local-draft-v7',
       pinnedRevision: REV, issuedAt: '2026-10-07T12:00:00.000Z', deadlineEndsAt: '2026-10-07T13:00:00.000Z', executionRule: { arm: 'sec-3' },
     } });
+    expect(JSON.parse(read(run, 'raw-read-disclosure.json'))).toEqual({
+      schemaVersion: 'polaris-dossier-raw-read-disclosure/1', runId: RUN_ID, declaredProvider: 'anthropic', authorHandoff: 'unknown',
+    });
     const brief = read(run, 'brief.md'), schema = read(run, 'draft.schema.json');
     expect(schema).toBe(`${JSON.stringify(JSON.parse(schema), null, 2)}\n`);
     expect(brief).toContain('Repository role: observed-source (Inferred); governance-root material keeps this same repository identity.');

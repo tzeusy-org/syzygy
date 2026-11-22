@@ -41,7 +41,7 @@ import { buildFidelityPacket } from './review-packet.js';
 import { reviewOfRecord } from './review.js';
 import { inventoryOfRecord } from './inventory.js';
 import { inventoryCoverageAdvice } from './inventory-coverage.js';
-import { fixtureSources } from './full-run.testkit.js';
+import { addRawReadDisclosureFixture, fixtureSources } from './full-run.testkit.js';
 import { issueBrief, shapePackSelection, type BriefReport } from './brief.js';
 
 // Alias component tests substitute only the upstream audit capability check.
@@ -499,6 +499,7 @@ describe('trusted URL artifact producer bridge', () => {
     if (!issued.ok) throw Error(`own declaration ${issued.code}`);
     const effectiveDeclaration = { declaration: issued.declaration, bytes: Buffer.from(issued.text), context: { ...context, expectedSidecarSha256: issued.sha256 } };
     f.write('run.json', core);
+    addRawReadDisclosureFixture(f.run, f.options.record.declared.agentProvider);
     f.write('url-declaration.json', issued.text);
     const createMetadataScreen = () => () => true;
     const sources = { ...fixtureSources(f.pin),

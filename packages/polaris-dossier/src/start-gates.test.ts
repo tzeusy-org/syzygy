@@ -689,7 +689,14 @@ describe('declared-source admission and continuation boundaries', () => {
     const result = await initRun({ clone: cloneAt(commits.U), url: URL_, configText: CONFIG, stateRoot: path.join(tempDir('declared-state-'), 'runs') }, { sources, now: () => NOW });
     expect(result.ok).toBe(true);
     if (!result.ok) return;
-    expect((await reverifyPinnedRevision(result.report.run, sources, NOW)).ok).toBe(true);
+    const run = result.report.run;
+    expect(JSON.parse(fs.readFileSync(path.join(run, 'raw-read-disclosure.json'), 'utf8'))).toEqual({
+      schemaVersion: 'polaris-dossier-raw-read-disclosure/1', runId: result.report.runId,
+      declaredProvider: 'anthropic', authorHandoff: 'not-reached',
+    });
+    expect(fs.existsSync(path.join(run, 'brief.json'))).toBe(false);
+    expect(fs.existsSync(path.join(run, 'site'))).toBe(false);
+    expect((await reverifyPinnedRevision(run, sources, NOW)).ok).toBe(true);
   });
   it.each(['public', 'private'] as const)('records explicit %s visibility as an attributed declaration', async visibility => {
     const root = records(); const result = await initRun({ clone: cloneAt(commits.A), url: URL_, visibility, configText: CONFIG, stateRoot: path.join(tempDir('declared-visible-'), 'runs') }, { sources: createPackageGateSources({ root, now: () => NOW }), now: () => NOW });
