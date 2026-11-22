@@ -1,0 +1,177 @@
+{
+  "format": "f3-comprehension-preparation/1",
+  "capturedAt": "2026-11-22T07:37:36.236718+00:00",
+  "source": {
+    "commit": "781519d484235acb2b81cfcb317c93f7e03cf9b9",
+    "trackedChanges": 0,
+    "clone": "/home/orca/.tmp/f3-comprehension-781519d48/build-source",
+    "build": "npm run build",
+    "buildExitCode": 0,
+    "buildLogSha256": "769467a9b1798586b17628153d0e8c95cc8ba6bf3890a0d15e6f3a0caf2b8b7a"
+  },
+  "subject": {
+    "runId": "run-658f2f90470f73eea1dc1d90209c5ef7",
+    "originalRun": "/home/orca/.local/state/syzygy-dossier/run-658f2f90470f73eea1dc1d90209c5ef7",
+    "originalRunFiles": 149,
+    "originalRunUnchanged": true,
+    "independentSha256sumAgrees": true,
+    "originalRunManifestSha256": "60f55aa0c03d1798801036f1a4da3028f4e656aa0cce95ae83c09a94add391c7",
+    "draftRevision": 4,
+    "draftSha256": "927b9e84408d04fe922bd1d83add7553314f4202a91008f4dab347d47aad7d77",
+    "retainedSite": 1
+  },
+  "before": {
+    "directory": "/home/orca/.tmp/f3-comprehension-781519d48/before-reader-text",
+    "counts": {
+      "pages": 15,
+      "words": 12574,
+      "sourcesPagesExcluded": 27,
+      "perPageWords": {
+        "appendix.html": 1024,
+        "clarifications.html": 107,
+        "contents.html": 144,
+        "deep-dives/mechanism-deep-dive.html": 696,
+        "discovery.html": 945,
+        "executions.html": 198,
+        "glossary.html": 451,
+        "index.html": 1563,
+        "poles/1.html": 1172,
+        "poles/2.html": 1298,
+        "poles/3.html": 2015,
+        "review.html": 460,
+        "size-report.html": 511,
+        "sources/index.html": 777,
+        "understanding.html": 1213
+      },
+      "rule": "every .html under the site except sources/*.html other than sources/index.html; text from <main> only",
+      "site": "/home/orca/.tmp/f3-comprehension-781519d48/private-state/run-658f2f90470f73eea1dc1d90209c5ef7/site/1"
+    },
+    "files": [
+      {
+        "path": "appendix.md",
+        "sha256": "253d5e9e8188b636896ab0a539cff86ea4ecbaedd12f8f4bfdc4559614b98ea1",
+        "bytes": 6740
+      },
+      {
+        "path": "clarifications.md",
+        "sha256": "2a906332321b224b92087dd7b2bdcc568bd0d1ce01e3ee50539c3207c056b0ae",
+        "bytes": 760
+      },
+      {
+        "path": "contents.md",
+        "sha256": "17320587d84775dfc1c1ff60cca546350d354098a67b627da3ee72937e9ba1f3",
+        "bytes": 918
+      },
+      {
+        "path": "deep-dives/mechanism-deep-dive.md",
+        "sha256": "a885fa09877fadbc6d71a7da64b253b6308650a9d6faa2c4c2355286b176af1f",
+        "bytes": 4768
+      },
+      {
+        "path": "discovery.md",
+        "sha256": "ebdfaafce637460152a75f526e41939175711d336c9b8af682c6a86a29817e3f",
+        "bytes": 8424
+      },
+      {
+        "path": "executions.md",
+        "sha256": "b29c61d0ee902ce5991f6ad89b98fd593e6482e0d7b41f46b89c134d220ddca7",
+        "bytes": 1550
+      },
+      {
+        "path": "glossary.md",
+        "sha256": "67bd898c90c81df0adfe1c5a1cf0cef37be11f348e147e8d20b781fb5d09af74",
+        "bytes": 3114
+      },
+      {
+        "path": "index.md",
+        "sha256": "7b8f84c173e9c735afc62a288665b42e4a1fdc8a9e3db17b4eabd8e45182a299",
+        "bytes": 10992
+      },
+      {
+        "path": "poles/1.md",
+        "sha256": "fbee14adc7d701f5b154ce6b888833e092af39c0664ecffc172650ea3229a554",
+        "bytes": 8137
+      },
+      {
+        "path": "poles/2.md",
+        "sha256": "7db8af46cad144c8e8085bd6ddb68de8c14bbff6558405429775fe3869b42651",
+        "bytes": 9548
+      },
+      {
+        "path": "poles/3.md",
+        "sha256": "3496f604b538e6e90c3ebb6cf73f78f522f787781ca9741a8d04a1d9a60b4c62",
+        "bytes": 14518
+      },
+      {
+        "path": "review.md",
+        "sha256": "5d37f79c865bbbfc1451b81b592ea4fec84b2093cf51f9491f5451fb5a8e51f3",
+        "bytes": 3104
+      },
+      {
+        "path": "size-report.md",
+        "sha256": "21bf8f7b30b04a072597bcf0ed23a8c6bd1cd5a26062b10496cb4212863d737c",
+        "bytes": 2594
+      },
+      {
+        "path": "sources/index.md",
+        "sha256": "8806f6e537d11ed3f6c236bd2a108d77058e24bfaae57bd2f91dd14242c79493",
+        "bytes": 5115
+      },
+      {
+        "path": "understanding.md",
+        "sha256": "bff6fdeed6b271c50ba9bfec0d0f78293a5fcdd270cb88d67a1a3de7065ab247",
+        "bytes": 8477
+      }
+    ]
+  },
+  "genuineRenderAttempt": {
+    "command": "node apps/syzygy/dist/main.js dossier render /home/orca/.tmp/f3-comprehension-781519d48/private-state/run-658f2f90470f73eea1dc1d90209c5ef7 --json",
+    "cwd": "/home/orca/.tmp/f3-comprehension-781519d48/build-source",
+    "exitCode": 1,
+    "result": {
+      "command": "render",
+      "outcome": "refused",
+      "stage": "reverify",
+      "reason": "the pinned revision could not be verified again, so nothing is rendered",
+      "reasons": [
+        "The run mode cannot be matched to its protected URL binding; preserve the run and restore its checked host declaration or restart it."
+      ],
+      "refusals": [
+        {
+          "code": "record-invalid",
+          "reason": "The run mode cannot be matched to its protected URL binding; preserve the run and restore its checked host declaration or restart it."
+        }
+      ],
+      "disclosures": [
+        "the Syzygy checkout and local run records lie within the agent sessions write reach; stored history and declarations remain Inferred",
+        "Every quotation, source page, check result and review binding on the rendered pages was derived at this render from Git objects read by identifier at the pinned revision and re-hashed now; no stored byte range, check result or packet was used.",
+        "Every value the pages show from Syzygy's stored records rather than re-deriving it is labelled Inferred."
+      ]
+    },
+    "resultSha256": "24bf0c6a96da7ae58d2755ea028c18c9b5fbbc70acb7def7bc2e31edad4dd555",
+    "stderrSha256": "ba7b954838479d7629ec5f835e3708d64bca3f7dd2aefcd6207b15ddb42dde2e"
+  },
+  "metadataDiagnosis": {
+    "path": "/home/orca/.tmp/f3-comprehension-781519d48/metadata-diagnosis.json",
+    "sha256": "b3a4416fb0c3aaf1e6b7003ad132f002a39bc18946d9f1acb803e89e1e9c01dc",
+    "scriptSha256": "c4c2066c22e11d25c2e3ad7b91614262e917e73135312a99aa2dfc248e819074",
+    "scope": "read-only checks against both original and copy; no source bodies read by these checks"
+  },
+  "after": {
+    "available": false,
+    "reason": "The real render path refuses the retained legacy run. Both original and copied run have the same effective mode-binding failure; readRunRecord separately refuses legacy polaris-dossier-run/1. No migration, declarations, authorities, receipts or checks were fabricated or changed."
+  },
+  "directRendererAssessment": {
+    "performed": false,
+    "reason": "Retained artifacts inventoried (149 files): draft/check/review packet files and site HTML/machine projections; no complete serialized DossierRendererInput snapshot was identified. machine.json is a projection without draft, blocks/segments, citationLines or complete GenerationSource inputs. Faithful input reconstruction was not established, so no surrogate render was emitted."
+  },
+  "protocol": {
+    "readerStarted": false,
+    "graderStarted": false,
+    "heldOutKeyOrAnswersRead": false,
+    "networkOrProviderCalls": false,
+    "observedCodeExecuted": false,
+    "broadTestsRun": false
+  },
+  "claimLimit": "Before-only preparation plus a real render refusal; no product success, comprehension share or before/after comparison is claimed."
+}
