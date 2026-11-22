@@ -1290,9 +1290,13 @@
 > (`syzygy-pdja.6`). Both rows, as they stood, are in `DECISION-HISTORY.md`
 > §"Disposed on 2026-11-22".
 
+> **Updated 2026-11-22 (D11 adopted).** The owner said "Adopt D11" on
+> 2026-11-21; P-119 is resolved and its row is in `DECISION-HISTORY.md`
+> §"Resolved on 2026-11-21 (P-119 — doctrine amendment D11 adopted)".
+> No row is open.
+
 | # | Decision | Class | Owning record |
 |---|---|---|---|
-| P-119 | Doctrine amendment **D11**: an agent session's own raw reads may reach the run's declared provider unscreened, disclosed on every run page; everything Syzygy itself sends, keeps or renders stays screened. It writes the owner's 2026-11-21 answer A on `secrets-raw-clone-to-provider` into SEC-2 and SEC-5. Adopt, amend or decline; until adopted, SEC-2 and SEC-5 stand as written | doctrine; secrets | `../contracts/candidates/doctrine-amendment-session-raw-reads-d11/PROPOSAL.md`; [`OWNER-DIRECTION-QUESTIONNAIRE-ANSWERS-2026-11-21.md`](OWNER-DIRECTION-QUESTIONNAIRE-ANSWERS-2026-11-21.md) |
 
 **Nothing in this register is self-executing.** An owner decision is
 recorded from the owner's own words in a dated record in this directory.

@@ -1,5 +1,10 @@
 # Doctrine amendment D11 (proposed): a dossier session's own raw reads
 
+> **ADOPTED 2026-11-21 by the owner ("Adopt D11"), as drafted.** The five
+> edits below are applied to `doctrine/security.md`; the record is row D11 of
+> `decisions/DOCTRINE-AMENDMENT-LOG.md`. The banner beneath predates the
+> adoption and is kept as written.
+
 **Candidate. Not adopted; changes no doctrine byte until the owner adopts it.**
 Doctrine is an owner class (VIS-4 as amended by D10). This page offers the
 text; it does not apply it. Review round 1 (`REVIEW-1-RAW.md` beside this
