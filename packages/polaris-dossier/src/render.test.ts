@@ -614,7 +614,7 @@ describe('render', () => {
     expect(onIndex).toEqual([2, 4]);
   });
 
-  it('folds how the dossier was made under one Review report entry, apart from the product, open on the pages it holds (syzygy-pdja.13)', async () => {
+  it('folds how the dossier was made under one About this run entry, the last of the navigation, apart from the subject, open on the pages it holds (syzygy-pdja.13, syzygy-5dhm.136)', async () => {
     const run = await prepared();
     const result = await renderRun(run, renderDeps());
     if (!result.ok) throw new Error(result.refusal.reason);
@@ -625,7 +625,7 @@ describe('render', () => {
       const navs = [...page.matchAll(/<nav aria-label="Dossier">([\s\S]*?)<\/nav>/gu)].map(match => match[1]!);
       expect(navs.length, file).toBeGreaterThan(0);
       for (const nav of navs) {
-        const fold = nav.indexOf('<details class="review-report"');
+        const fold = nav.indexOf('<details class="about-this-run"');
         expect(fold, file).toBeGreaterThan(0);
         const product = nav.slice(0, fold);
         const folded = nav.slice(fold);
@@ -636,11 +636,13 @@ describe('render', () => {
         }
         expect(product, file).toContain(`href="${up}sources/index.html"`);
         expect(product, file).toContain(`href="${up}index.html"`);
-        expect(folded.startsWith(`<details class="review-report"${report.includes(file) ? ' open' : ''}><summary>Review report</summary>`), file).toBe(true);
+        expect(folded.startsWith(`<details class="about-this-run"${report.includes(file) ? ' open' : ''}><summary>About this run</summary>`), file).toBe(true);
+        // The last entry of the navigation: nothing follows the fold.
+        expect(folded.endsWith('</ol></details>'), file).toBe(true);
       }
     }
     const contents = files.get('contents.html')!.split('<section id="contents">')[1]!;
-    const heading = contents.indexOf('<h2 id="review-report">Review report</h2>');
+    const heading = contents.indexOf('<h2 id="about-this-run">About this run</h2>');
     expect(heading).toBeGreaterThan(0);
     for (const path of report) {
       expect(contents.indexOf(`href="${path}"`), path).toBeGreaterThan(heading);

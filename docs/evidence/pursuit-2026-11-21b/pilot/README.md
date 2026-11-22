@@ -99,6 +99,13 @@ from the prompt named.
    Over run 658f2f90's site 1 it prints 15 pages, 12574 words and 27 source
    pages left out, the figures in `manifest.json`.
 
+   Add `--reader` for the reading path alone (syzygy-5dhm.136): the pages of
+   class `run`, which a dossier lists under its "About this run" entry, are
+   left out too and counted with their words. The page classes are one
+   definition, `scripts/dossier_page_classes.json`, which this script and
+   `scripts/dossier_pilot_runs.py` both read. The pilot's arms were given the
+   full text, so a share measured on the reader form is a different arm.
+
 2. The screened tree, for the key, plain-author, source-reader and
    claim-checker sessions. Fetch the manifest's commit into a bare clone
    yourself; the script never fetches and runs nothing from the clone.

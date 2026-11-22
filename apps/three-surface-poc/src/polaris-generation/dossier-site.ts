@@ -163,7 +163,7 @@ export const DOSSIER_THEME_CSS = ':root{--void:#262624;--panel:#30302e;--panel-r
   + '.contents,.contents a,.contents .eyebrow,.pipeline-notice,.eyebrow,.asset-references,.sources,.diagram-legend,.marking,.deep-links,a.cite,.anchor-link,.source-anchor{font-family:var(--font-serif)}'
   // The navigation folds with no script; the reading column takes the room it leaves.
   + '.cited-on,.selected-why{display:block;font-size:.88rem;color:var(--muted)}'
-  + '.review-report{margin-top:1rem;border-top:1px solid var(--line);padding-top:.5rem}.review-report>summary{cursor:pointer;color:var(--muted);font-weight:600}.review-report>summary:focus-visible{outline:2px solid var(--focus);outline-offset:2px}'
+  + '.about-this-run{margin-top:1rem;border-top:1px solid var(--line);padding-top:.5rem}.about-this-run>summary{cursor:pointer;color:var(--muted);font-weight:600}.about-this-run>summary:focus-visible{outline:2px solid var(--focus);outline-offset:2px}'
   + '.nav-panel>summary{cursor:pointer;font-weight:600;color:var(--muted)}.layout:has(>.nav-panel:not([open])){grid-template-columns:auto minmax(0,1fr)}.nav-panel>summary:focus-visible,.mobile-contents>summary:focus-visible{outline-offset:-3px}'
   // A three-column diagram (1048 px) may shrink to fit its column (text no smaller than 10.7px); any wider one keeps its size and scrolls.
   // Since syzygy-3efd.66 the readable layout stacks every diagram of two or more layers, so no operator-agent figure is 1048 px wide and
@@ -201,7 +201,7 @@ export const DOSSIER_THEME_CSS = ':root{--void:#262624;--panel:#30302e;--panel-r
   + 'section[data-hue]>h1{border-bottom:4px solid var(--accent);padding-bottom:.4rem}section[data-hue] h2{border-bottom-color:color-mix(in srgb,var(--accent) 45%,var(--line))}'
   + '.pole-map>ol{list-style:none;padding:0;display:grid;grid-template-columns:repeat(auto-fit,minmax(15rem,1fr));gap:.9rem}.pole-map>ol>li{background:var(--accent-tint);border:1px solid var(--line);border-top:4px solid var(--accent);border-radius:12px;padding:.85rem 1rem}.pole-map>ol>li>a{font-weight:600;font-size:1.05rem}.pole-map>ol>li>ul{margin:.4rem 0 0;padding-left:1.1rem;font-size:.92rem}'
   + '.contents li[data-hue]>a::before{content:"";display:inline-block;width:.6em;height:.6em;border-radius:50%;background:var(--accent);margin-right:.45em;vertical-align:.05em}'
-  + '.pole-map,.review-report>summary{font-family:var(--font-serif)}.legend-line{border-top-color:var(--muted)}'
+  + '.pole-map,.about-this-run>summary{font-family:var(--font-serif)}.legend-line{border-top-color:var(--muted)}'
   + 'li.card{background:var(--accent-tint);border-top:3px solid var(--accent)}th{background:color-mix(in srgb,var(--accent) 12%,var(--panel))}ol.steps>li::before{border-color:var(--accent);background:var(--accent-tint)}'
   + '.run-sentence{margin:.5rem 0;font-size:.9rem;color:var(--muted)}.reading-legend{border:1px solid var(--line);border-radius:10px;padding:.5rem 1rem;margin:0 0 1.5rem;font-size:.85rem;color:var(--muted)}.reading-legend ul{margin:.25rem 0;padding-left:1.2rem}.view-switch{margin:0}.legend-sample{font:600 .9em var(--font-mono)}.diagram-tally{margin:.25rem 0 0;font:.8rem var(--font-mono);color:var(--muted)}';
 
@@ -656,14 +656,15 @@ export function renderDossierSite(input: DossierSiteInput & { readonly local?: L
     reserved.add(localPage.path);
   }
   const localNav = (from: string): string => localPages.map(localPage => `<li><a href="${escape(href(from, localPage.path))}">${escape(localPage.title)}</a></li>`).join('');
-  // How the dossier was made, kept apart from the product (owner review of the Redis run, syzygy-pdja.13): the run's own pages, the size
-  // report and the appendix fold under one "Review report" entry after the product's pages. The appendix stays the last page of the
-  // reading order (dossier spec v1.5), and the fold opens itself on the pages it holds.
+  // How the dossier was made, kept apart from the subject (owner review of the Redis run, syzygy-pdja.13; the reader's edition,
+  // syzygy-5dhm.136): the run's own pages, the size report and the appendix fold under one "About this run" entry, the last entry of
+  // every page's navigation and the last part of the contents page. The appendix stays the last page of the reading order (dossier spec
+  // v1.5), and the fold opens itself on the pages it holds. `scripts/dossier_page_classes.json` classes exactly these paths as `run`.
   const reportPaths = [...localPages.map(localPage => localPage.path), 'size-report.html', ...(local === undefined ? [] : [APPENDIX])];
   const reportItems = (from: string): string => `${localNav(from)}<li><a href="${href(from, 'size-report.html')}">Size report</a></li>${local === undefined ? '' : `<li><a href="${href(from, APPENDIX)}">Appendix</a></li>`}`;
   // A provider run's bytes are pinned, so its list keeps its old shape.
-  const reviewReport = (from: string): string => local === undefined ? `${reportItems(from)}</ol>` : `</ol><details class="review-report"${reportPaths.includes(from) ? ' open' : ''}><summary>Review report</summary><ol>${reportItems(from)}</ol></details>`;
-  const nav = (from: string): string => `<span class="eyebrow">${escape(title)}</span><ol><li><a href="${href(from, 'index.html')}">Overview</a></li>${local === undefined ? '' : `<li><a href="${href(from, FIND_BY_TASK_PAGE)}">Find by task</a></li>`}${poles.map(pole => pole.path === null ? '' : `<li${hueAttr(pole.hue)}><a href="${escape(href(from, pole.path))}">${escape(pole.label)}</a></li>`).join('')}<li><a href="${href(from, 'contents.html')}">Contents</a></li>${deepDives.map(dive => `<li><a href="${escape(href(from, deepPaths.get(dive.id)!))}">${escape(dive.title)}</a></li>`).join('')}<li><a href="${href(from, 'glossary.html')}">Glossary</a></li>${local === undefined ? '' : `<li><a href="${href(from, NAME_INDEX_PAGE)}">Index</a></li>`}<li><a href="${href(from, 'sources/index.html')}">Sources</a></li>${reviewReport(from)}`;
+  const reviewReport = (from: string): string => local === undefined ? `${reportItems(from)}</ol>` : `</ol><details class="about-this-run"${reportPaths.includes(from) ? ' open' : ''}><summary>${ABOUT_THIS_RUN}</summary><ol>${reportItems(from)}</ol></details>`;
+  const nav = (from: string): string => `<span class="eyebrow">${escape(title)}</span><ol><li><a href="${href(from, 'index.html')}">Overview</a></li>${local === undefined ? '' : `<li><a href="${href(from, FIND_BY_TASK_PAGE)}">Find by task</a></li><li><a href="${href(from, NAME_INDEX_PAGE)}">Index</a></li>`}${poles.map(pole => pole.path === null ? '' : `<li${hueAttr(pole.hue)}><a href="${escape(href(from, pole.path))}">${escape(pole.label)}</a></li>`).join('')}<li><a href="${href(from, 'contents.html')}">Contents</a></li>${deepDives.map(dive => `<li><a href="${escape(href(from, deepPaths.get(dive.id)!))}">${escape(dive.title)}</a></li>`).join('')}<li><a href="${href(from, 'glossary.html')}">Glossary</a></li><li><a href="${href(from, 'sources/index.html')}">Sources</a></li>${reviewReport(from)}`;
   // The dossier's open questions and Unknown claims, counted for the one sentence before any page is drawn.
   const openQuestions = withheld ? 0 : draft.unresolved.length;
   const unknownClaims = local === undefined || withheld ? 0 : [...local.blocks.values()].filter(b => b.marking === 'unknown').length
@@ -758,7 +759,7 @@ export function renderDossierSite(input: DossierSiteInput & { readonly local?: L
     // at reading level 1 with no topics; none where the page shows no part of the draft (syzygy-3efd.18).
     const overviewDrawn = view.drafted ? draft.diagrams.map((d, i) => d.home?.kind === 'overview' ? diagram(from, d, i) : '').join('') : '';
     const overviewFigures = overviewDrawn === '' ? '' : `<section id="overview-figures" data-reading-level="1" data-topics="">${overviewDrawn}</section>`;
-    add(from, 0, 'Overview', `<header data-reading-level="0"><span class="eyebrow">Polaris · Editorial draft</span><h1>${escape(draft.title)}</h1>${banner}${introduction}${unresolved}</header>${overviewFigures}${sections}${poleMap}${missingList}${derivedRegion}`);
+    add(from, 0, 'Overview', `<header data-reading-level="0"><span class="eyebrow">Polaris · Editorial draft</span><h1>${escape(draft.title)}</h1>${banner}${introduction}${unresolved}</header>${poleMap}${overviewFigures}${sections}${missingList}${derivedRegion}`);
   }
 
   // --- find by task (the index-and-task-routes change): the draft's task routes, right after the overview in the reading order. A step is a claim block and
@@ -832,8 +833,8 @@ export function renderDossierSite(input: DossierSiteInput & { readonly local?: L
   }
 
   // --- contents
-  const contents = `<ol>${local === undefined ? '' : `<li><a href="${FIND_BY_TASK_PAGE}">Find by task</a></li>`}${(withheld ? [] : draft.sections).map(section => `<li><a href="${escape(sectionHref('contents.html', section.id))}">${escape(section.title)}</a>${draft.deepDives.some(dive => dive.sectionId === section.id && deepPaths.has(dive.id))
-    ? `<ol>${draft.deepDives.filter(dive => dive.sectionId === section.id && deepPaths.has(dive.id)).map(dive => `<li><a href="${escape(href('contents.html', deepPaths.get(dive.id)!))}">${escape(dive.title)}</a></li>`).join('')}</ol>` : ''}</li>`).join('')}<li><a href="glossary.html">Glossary</a></li>${local === undefined ? '' : `<li><a href="${NAME_INDEX_PAGE}">Index</a></li>`}<li><a href="sources/index.html">Sources</a></li>${maps === undefined ? '' : COMPUTED_MAPS.map(m => `<li><a href="${m.path}">${m.title}</a></li>`).join('')}${local === undefined ? `${reportItems('contents.html')}</ol>` : `</ol><h2 id="review-report">Review report</h2><p>How this dossier was made, apart from what it says about the project.</p><ol>${reportItems('contents.html')}</ol>`}`;
+  const contents = `<ol>${local === undefined ? '' : `<li><a href="${FIND_BY_TASK_PAGE}">Find by task</a></li><li><a href="${NAME_INDEX_PAGE}">Index</a></li>`}${(withheld ? [] : draft.sections).map(section => `<li><a href="${escape(sectionHref('contents.html', section.id))}">${escape(section.title)}</a>${draft.deepDives.some(dive => dive.sectionId === section.id && deepPaths.has(dive.id))
+    ? `<ol>${draft.deepDives.filter(dive => dive.sectionId === section.id && deepPaths.has(dive.id)).map(dive => `<li><a href="${escape(href('contents.html', deepPaths.get(dive.id)!))}">${escape(dive.title)}</a></li>`).join('')}</ol>` : ''}</li>`).join('')}<li><a href="glossary.html">Glossary</a></li><li><a href="sources/index.html">Sources</a></li>${maps === undefined ? '' : COMPUTED_MAPS.map(m => `<li><a href="${m.path}">${m.title}</a></li>`).join('')}${local === undefined ? `${reportItems('contents.html')}</ol>` : `</ol><h2 id="about-this-run">${ABOUT_THIS_RUN}</h2><p>How this dossier was made, apart from what it says about the project.</p><ol>${reportItems('contents.html')}</ol>`}`;
   add('contents.html', 1, 'Contents', `<section id="contents"><h1>Contents</h1>${contents}</section>`);
 
   // --- glossary: inventory terms, each an Inferred claim; for an operator-agent run, the understanding record's terminology
@@ -958,6 +959,10 @@ export function renderDossierSite(input: DossierSiteInput & { readonly local?: L
     if (new Set(ids).size !== ids.length) throw new DossierRenderError('duplicate-claim');
   }
 
+  // The index is drawn last of the reading pages, since it lists every block, but it is read third: directly after find-by-task, as it
+  // is listed in every page's navigation and on the contents page (the reader's edition, syzygy-5dhm.136).
+  const indexAt = pages.findIndex(p => p.path === NAME_INDEX_PAGE);
+  if (indexAt !== -1) pages.splice(pages.findIndex(p => p.path === FIND_BY_TASK_PAGE) + 1, 0, ...pages.splice(indexAt, 1));
   const manifest = parseDossierManifest(JSON.stringify({ format: DOSSIER_FORMAT, title, entryPage: 'index.html', pages }));
   files.set('dossier.json', `${JSON.stringify(manifest, null, 2)}\n`);
   // An operator-agent page is measured without its review-status region, so a render that changes only the region leaves the size
@@ -1066,6 +1071,8 @@ const HUES = 6;
 
 /** The appendix page (dossier spec v1.5). */
 const APPENDIX = 'appendix.html';
+/** The one entry, last in every operator-agent page's navigation, under which the run's own pages fold (syzygy-5dhm.136). */
+export const ABOUT_THIS_RUN = 'About this run';
 
 /** The provider mode's figure legend, whatever the figure draws. */
 const FIXED_DIAGRAM_LEGEND = '<ul class="diagram-legend" aria-label="Line styles"><li><span class="legend-line observed" aria-hidden="true"></span>Solid: observed</li><li><span class="legend-line inferred" aria-hidden="true"></span>Dashed: inferred</li><li><span class="legend-line unknown" aria-hidden="true"></span>Dotted: unknown (label ends “?”)</li></ul>';

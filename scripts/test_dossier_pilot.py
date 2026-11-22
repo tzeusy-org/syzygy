@@ -214,6 +214,35 @@ class SiteToTextTests(unittest.TestCase):
             self.assertEqual(report.read_bytes(), kept)
             self.assertFalse(pathlib.Path(f"{scratch}/text2").exists())
 
+    def test_reader_form_leaves_out_the_run_pages(self):
+        # syzygy-5dhm.136: --reader keeps the reading path alone; the run pages it leaves out are counted with their words.
+        with tempfile.TemporaryDirectory() as scratch:
+            site, out = pathlib.Path(scratch) / "site", pathlib.Path(scratch) / "text"
+            pages = {"index.html": "<main><p>one two three</p></main>", "name-index.html": "<main><p>four</p></main>",
+                     "maps/ci.html": "<main><p>five six</p></main>", "appendix.html": "<main><p>run words here</p></main>",
+                     "understanding.html": "<main><p>more run</p></main>", "size-report.html": "<main><p>size</p></main>",
+                     "sources/a.html": "<main><p>RAW SOURCE BODY</p></main>"}
+            for relative, body in pages.items():
+                (site / relative).parent.mkdir(parents=True, exist_ok=True)
+                (site / relative).write_text(body)
+            report = pathlib.Path(scratch) / "report.json"
+            done = subprocess.run([sys.executable, str(SCRIPTS / "dossier_site_to_text.py"), str(site), str(out), "--reader", "--report", str(report)],
+                                  capture_output=True, text=True)
+            self.assertEqual(done.returncode, 0, done.stderr)
+            self.assertEqual(done.stdout, "pages 3 words 6 sources pages excluded 1 run pages excluded 3\n")
+            self.assertEqual(sorted(p.relative_to(out).as_posix() for p in out.rglob("*") if p.is_file()), ["index.md", "maps/ci.md", "name-index.md"])
+            recorded = json.loads(report.read_text())
+            self.assertEqual(recorded["form"], "reader")
+            self.assertEqual(recorded["runPagesWords"], {"appendix.html": 3, "size-report.html": 1, "understanding.html": 2})
+
+    def test_one_page_class_definition(self):
+        # The pilot's split reads the classes the converter applies, from the one JSON definition.
+        self.assertIs(runs.page_class.__code__, runs._CONVERTER.page_class.__code__)
+        record = json.loads((SCRIPTS / "dossier_page_classes.json").read_text())
+        self.assertEqual([row["class"] for row in record["classes"]], ["reader", "navigation", "run"])
+        self.assertEqual(sorted(record["classes"][2]["paths"]), ["appendix.html", "clarifications.html", "discovery.html", "executions.html",
+                                                                  "review.html", "size-report.html", "understanding.html"])
+
     def test_agent_and_session_directories_are_refused(self):
         with tempfile.TemporaryDirectory() as scratch:
             for suffix in (".agents", ".sessions"):
