@@ -214,11 +214,12 @@ function productFixture(orderedDesign = false) {
   return { bridge, ledger, originPolicy, artifactOptions, initial, current };
 }
 
-async function auditFixture(originPolicySha256: string, name: string, parent = planning.hidden) {
+async function auditFixture(originPolicySha256: string, name: string, parent = planning.hidden, firstDesignRound?: number) {
   const { role: _role, ...binding } = plans[0]!.profile.input.binding;
   const audit = await createUrlSessionAudit({ parent, name, binding, originPolicySha256, project: 'project:syzygy',
     pin: planning.options.record.subject.pinnedRevision.commit, principal: 'operator:own-fixture',
-    profiles: plans.map(plan => plan.profile), declaredClasses: SESSION_CONTENT_CLASSES, screen: planning.options.screen, current: () => true });
+    profiles: plans.map(plan => plan.profile), declaredClasses: SESSION_CONTENT_CLASSES, screen: planning.options.screen, current: () => true,
+    ...(firstDesignRound === undefined ? {} : { firstDesignRound }) });
   if (!audit.ok) throw Error('fixture audit');
   const attempt = async (role: UrlLaunchHistoryRole, changes: { commandSha256?: string; viewSha256?: string } = {}) => {
     const { commandSha256, viewSha256, compiledProfileSha256 } = options(role).plan.declaration;
@@ -257,7 +258,7 @@ async function orderedDeliveryPrefix(writer: OrderedDesignAuditWriter, plan: Ord
   const preparedExchange = await exchange(currentCall), parts = [];
   let previous = preparedExchange;
   const stdin = encode({ own: 'checked verdict', packetSha256: plan.manifest.originalSha256 });
-  const submit = call('submit', step, { argv: ['dossier', 'await', '/work', '--submit', 'round-1/verdict.json', '--stdin'], stdin });
+  const submit = call('submit', step, { argv: ['dossier', 'await', '/work', '--submit', `round-${plan.manifest.binding.round}/verdict.json`, '--stdin'], stdin });
   for (const [index, part] of plan.manifest.parts.entries()) {
     const reply = plan.replies[index]!;
     const receipt = await writer.append('part-receipt', { ordinal: index + 1, issuedBy: previous.response, call: currentCall, reply: { bytes: reply.bytes, sha256: reply.sha256 } });
@@ -281,12 +282,14 @@ async function orderedDeliveryPrefix(writer: OrderedDesignAuditWriter, plan: Ord
 }
 
 describe('protected URL design delivery audit', () => {
-  it.each(['valid', 'ordered', 'ordered-mutated', 'ordered-extra', 'expiry', 'launch-drift', 'sample-refusal'] as const)(
+  it.each(['valid', 'ordered', 'ordered-resumed', 'ordered-mutated', 'ordered-extra', 'expiry', 'launch-drift', 'sample-refusal'] as const)(
     'keeps a metadata-only event and rechecks after durability (%s)', async mode => {
     if (mode.startsWith('ordered')) plans = orderedPlans;
     const { originPolicy, ledger, artifactOptions, initial } = productFixture(mode.startsWith('ordered'));
-    const { audit, attempt, segment } = await auditFixture(originPolicy.sha256, `design-proof-${mode}`);
-    const other = await auditFixture(originPolicy.sha256, `other-proof-${mode}`);
+    const firstDesignRound = mode === 'ordered-resumed' ? 2 : undefined;
+    const round = firstDesignRound ?? 1;
+    const { audit, attempt, segment } = await auditFixture(originPolicy.sha256, `design-proof-${mode}`, undefined, firstDesignRound);
+    const other = await auditFixture(originPolicy.sha256, `other-proof-${mode}`, undefined, firstDesignRound);
     const run = planning.options.run, runId = path.basename(run), pinnedRevision = planning.options.record.subject.pinnedRevision.commit;
     const site = 50, sitePath = path.join(run, 'site', String(site));
     const content = '<!doctype html><title>OWN UNEXPOSED RENDER</title>';
@@ -349,10 +352,10 @@ describe('protected URL design delivery audit', () => {
       const history = await writeUrlLaunchHistory(options('design'));
       const launch = await audit.commitLaunchHistory(history.capability!);
       const expectedProduct = { ...metadata, products: { ...metadata.products, deadline: deadline - 4500 } };
-      const request = { product: token, expectedProduct, launch, run, runId, pinnedRevision, sitePath, round: 1 };
+      const request = { product: token, expectedProduct, launch, run, runId, pinnedRevision, sitePath, round };
       const before = audit.summary().durableRecords;
       await expect(other.audit.commitDesignDelivery(request)).rejects.toThrow('url-session-audit-refused');
-      await expect(audit.commitDesignDelivery({ ...request, round: 2 })).rejects.toThrow('url-session-audit-refused');
+      await expect(audit.commitDesignDelivery({ ...request, round: round + 1 })).rejects.toThrow('url-session-audit-refused');
       await expect(audit.commitDesignDelivery({ ...request, product: { ...token } })).rejects.toThrow('url-session-audit-refused');
       await expect(audit.commitDesignDelivery({ ...request, expectedProduct: { ...expectedProduct, draftRevision: 8 } }))
         .rejects.toThrow('url-session-audit-refused');
@@ -378,20 +381,25 @@ describe('protected URL design delivery audit', () => {
           expect(read).not.toHaveBeenCalled();
         }
         await expect(audit.commitDesignDelivery(request)).rejects.toThrow('url-session-audit-refused');
-        await expect(audit.commitDesignDelivery({ ...request, round: 2 })).rejects.toThrow('url-session-audit-refused');
+        await expect(audit.commitDesignDelivery({ ...request, round: round + 1 })).rejects.toThrow('url-session-audit-refused');
       } else {
         const delivered = await first;
         expect(sampledDurability).toEqual([0, 0, 1, 1, 1]);
         const sealed = delivered.receipt;
         if (mode.startsWith('ordered')) {
           if (!isOrderedDesignSessionProfile(profile)) throw Error('own ordered profile missing');
-          const plan = planOrderedDesignBytes({ envelope: view, envelopeSha256: sha256(view), original: metadata.original,
+          const planInput = { envelope: view, envelopeSha256: sha256(view), original: metadata.original,
             fileCount: 1, pageCount: 1, instructionProfileSha256: sha256(profile.input.systemPrompt), limits: { partBytes: profile.transcript.partition.partBytes, partCount: profile.transcript.partition.partCount, replyBytes: profile.transcript.partition.replyBytes, preparedBytes: profile.transcript.partition.preparedBytes },
             parents: metadata.parents.map(parent => sha256(encodeCanonicalJson(parent, { maxBytes: 2_097_152, maxNodes: 65_536, maxDepth: 32 }))), binding: {
               basePolicySha256: metadata.basePolicy.sha256, deadline: new Date(Date.now() + 30_000).toISOString(), encoding: URL_DESIGN_VIEW_ENCODING,
               originPolicySha256: originPolicy.sha256, originalReceiptSha256: sealed.eventSha256, pin: pinnedRevision,
               producerSha256: metadata.renderer.programSha256, profileSha256: profile.digest, project: 'project:syzygy', provider: 'anthropic', role: 'design',
-              round: 1, run: runId, session: profile.input.sessionId, transferEpoch: 1 } });
+              round, run: runId, session: profile.input.sessionId, transferEpoch: round } } as const;
+          const plan = planOrderedDesignBytes(planInput);
+          if (firstDesignRound !== undefined) {
+            const stale = planOrderedDesignBytes({ ...planInput, binding: { ...planInput.binding, round: 1, transferEpoch: 1 } });
+            expect(() => audit.beginOrderedDesignAudit(stale, () => true)).toThrow('url-session-audit-refused');
+          }
           expect(plan.manifest.parts.map(part => part.bytes)).toEqual([
             profile.transcript.partition.partBytes, view.byteLength - profile.transcript.partition.partBytes,
           ]);
@@ -413,8 +421,9 @@ describe('protected URL design delivery audit', () => {
           expect(observedReadBytes).toBeGreaterThan(0);
           expect(sessionAudit.orderedUrlDesignReviewParents(proof)).toEqual([parent]);
           expect(() => sessionAudit.orderedUrlDesignReviewParents({ ...proof })).toThrow('url-session-audit-refused');
+          const submittedPath = `round-${round}/verdict.json`;
           const actualRunner = vi.fn(async (argv: readonly string[], bytes: Uint8Array | null) => {
-            expect(argv).toEqual(['dossier', 'await', `${planning.options.sessionDirectories.design}/`, '--submit', 'round-1/verdict.json', '--stdin', '--json']);
+            expect(argv).toEqual(['dossier', 'await', `${planning.options.sessionDirectories.design}/`, '--submit', submittedPath, '--stdin', '--json']);
             if (!bytes) throw Error('own missing verdict');
             const file = 'reviews/design-verdict-0.json', checkFile = 'reviews/checks/design-verdict-0.json';
             fs.mkdirSync(path.join(run, 'reviews/checks'), { recursive: true });
@@ -433,7 +442,7 @@ describe('protected URL design delivery audit', () => {
           });
           const producer = createUrlRunArtifacts({ ...artifactOptions, runDossier: () => actualRunner });
           producer.registerInitial(initial);
-          const nativeArgv = ['dossier', 'await', '/work', '--submit', 'round-1/verdict.json', '--stdin'];
+          const nativeArgv = ['dossier', 'await', '/work', '--submit', submittedPath, '--stdin'];
           const staged = await producer.stageOrderedDesignVerdict(nativeArgv, Buffer.from(protocol.stdin), proof);
           expect(actualRunner).toHaveBeenCalledTimes(1);
           const checked = staged.checked;
@@ -468,7 +477,7 @@ describe('protected URL design delivery audit', () => {
           await audit.commitOrderedDesignVerdict(fresh, checked, terminal);
           producer.commitOrderedDesignVerdict(staged, fresh, terminal);
           expect(producer.hasCommittedProduct('reviews/checks/design-verdict-0.json', checked.checkSha256)).toBe(true);
-          expect(fs.existsSync(path.join(planning.options.sessionDirectories.design, 'round-1/verdict.json'))).toBe(false);
+          expect(fs.existsSync(path.join(planning.options.sessionDirectories.design, submittedPath))).toBe(false);
           await producer.registerLaunchHistory(launch);
           fs.writeFileSync(path.join(run, 'url-declaration.json'), artifactOptions.effectiveDeclaration.bytes);
           const stoppedProducts = producer.captureFrozenHistory();
@@ -476,7 +485,7 @@ describe('protected URL design delivery audit', () => {
             expect.objectContaining({ path: 'reviews/design-verdict-0.json', sha256: checked.verdictSha256 }),
             expect.objectContaining({ path: 'reviews/checks/design-verdict-0.json', sha256: checked.checkSha256 }),
           ]));
-          expect(stoppedProducts.artifacts.some(artifact => artifact.role === 'design' && artifact.path === 'round-1/verdict.json')).toBe(false);
+          expect(stoppedProducts.artifacts.some(artifact => artifact.role === 'design' && artifact.path === submittedPath)).toBe(false);
           expect(() => producer.commitOrderedDesignVerdict(staged, fresh, terminal)).toThrow('url-run-artifacts-unavailable');
           await expect(audit.commitOrderedDesignVerdict(fresh, checked, terminal)).rejects.toThrow('url-session-audit-refused');
           const continuation = await audit.readDesignRenderContinuation(sealed, reproduced, checked.number);

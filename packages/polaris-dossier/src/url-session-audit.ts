@@ -830,7 +830,8 @@ export async function createUrlSessionAudit(given: UrlSessionAuditOptions): Prom
     };
     // Fresh repair rounds use distinct monotonic attempt cursors; no uncertain
     // provider call is replayed and no durable cursor is reopened after loss.
-    let nextOrderedEpoch = 1;
+    const firstDesignRound = input.firstDesignRound ?? 1;
+    let nextOrderedEpoch = firstDesignRound;
     let previousOrdered: OrderedDesignAuditWriter | undefined;
     const capturedDeliveries = new Map<string, UrlDesignDeliveryAuditRecord>();
     const eligibleOrdered = new WeakMap<OrderedDesignAuditWriter, UrlOrderedDesignHistoryExpected>();
@@ -920,7 +921,7 @@ export async function createUrlSessionAudit(given: UrlSessionAuditOptions): Prom
       ownLaunches.add(committed);
       return committed;
     };
-    let nextDesignRound = input.firstDesignRound ?? 1, designPending = false, designRetired = false;
+    let nextDesignRound = firstDesignRound, designPending = false, designRetired = false;
     const designReads = new WeakMap<UrlDesignDeliveryAuditRecord, {
       readonly receipt: UrlSessionToolReceiptMetadata; readonly event: DurableEvent; readonly product: WeakRef<ValidatedUrlDesignProduct>;
     }>();
