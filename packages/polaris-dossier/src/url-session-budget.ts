@@ -46,7 +46,7 @@ export function createUrlSessionBudget(input: {
     || (turnBudget === null && tokenBudget === null) || typeof now !== 'function') throw new Error('url-budget-unavailable');
   let reason: UrlBudgetSnapshot['reason'] = null, requests = 0, responses = 0, tokens = 0, lastInstant = 0;
   let designState: 'available' | 'held' | 'complete' | 'retired' = 'available';
-  let heldDesignTurns = 0;
+  let heldDesignTurns = 0, designGeneration = 0;
   const pending = new Map<ViewRole, string>();
   const stop = (why: NonNullable<UrlBudgetSnapshot['reason']>): false => { reason ??= why; return false; };
   const current = (): boolean => {
@@ -83,18 +83,20 @@ export function createUrlSessionBudget(input: {
     return current();
   };
   const holdOrderedDesignTurns = (turns: number, expires: number): UrlOrderedDesignTurnReservation | null => {
-    if (designState !== 'available' || !current() || !positive(turns) || !positive(expires)
+    if ((designState !== 'available' && designState !== 'complete') || !current() || !positive(turns) || !positive(expires)
       || expires > deadline || expires <= lastInstant || pending.has('design') || !tokenAvailable()
       || !Number.isSafeInteger(requests + turns)) return null;
     if (turnBudget !== null && requests + turns > turnBudget) {
       stop('turn-budget');
       return null;
     }
+    const generation = ++designGeneration;
+    const own = (): boolean => generation === designGeneration;
     designState = 'held';
     heldDesignTurns = turns;
     const reservationCurrent = (): boolean =>
-      (designState === 'held' || designState === 'complete') && current() && lastInstant < expires;
-    const canSend = (): boolean => designState === 'held' && heldDesignTurns > 0 && !pending.has('design')
+      own() && (designState === 'held' || designState === 'complete') && current() && lastInstant < expires;
+    const canSend = (): boolean => own() && designState === 'held' && heldDesignTurns > 0 && !pending.has('design')
       && reservationCurrent() && tokenAvailable();
     return Object.freeze({
       current: reservationCurrent,
@@ -105,14 +107,14 @@ export function createUrlSessionBudget(input: {
         return true;
       },
       observeUsage: (usage: SessionResponseUsage): boolean =>
-        (designState === 'held' || designState === 'retired') && observeUsage('design', usage) && reservationCurrent(),
+        own() && (designState === 'held' || designState === 'retired') && observeUsage('design', usage) && reservationCurrent(),
       complete: (): boolean => {
-        if (designState !== 'held' || heldDesignTurns !== 0 || pending.has('design') || !reservationCurrent()) return false;
+        if (!own() || designState !== 'held' || heldDesignTurns !== 0 || pending.has('design') || !reservationCurrent()) return false;
         designState = 'complete';
         return true;
       },
       retire: (): void => {
-        if (designState !== 'held') return;
+        if (!own() || designState !== 'held') return;
         designState = 'retired';
         heldDesignTurns = 0;
         if (pending.has('design')) stop('usage-unavailable');
@@ -123,7 +125,8 @@ export function createUrlSessionBudget(input: {
     current,
     holdOrderedDesignTurns,
     reserve: (role: ViewRole, admission: SessionAdmission): boolean => {
-      if (!current() || (role === 'design' && designState !== 'available')) return false;
+      if (!current() || (role === 'design' && designState !== 'available' && designState !== 'complete')) return false;
+      if (role === 'design' && designState === 'complete') { designState = 'available'; designGeneration++; }
       if (turnBudget !== null) {
         if (designState === 'held' && requests + heldDesignTurns >= turnBudget) return false;
         if (requests >= turnBudget) return stop('turn-budget');

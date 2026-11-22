@@ -69,7 +69,29 @@ describe('shared URL host budget capture', () => {
     expect(held.complete()).toBe(true);
     expect(held.complete()).toBe(false);
     expect(b.holdOrderedDesignTurns(1, 100)).toBeNull();
-    expect(b.snapshot()).toMatchObject({ state: 'open', heldDesignTurns: 0, requestReservations: 6, reportedTokens: 156 });
+    expect(b.snapshot()).toMatchObject({ state: 'stopped', reason: 'turn-budget', heldDesignTurns: 0, requestReservations: 6, reportedTokens: 156 });
+  });
+  it('starts a fresh repair round only after completion and never reactivates an old reservation', () => {
+    const b = createUrlSessionBudget({ deadline: 100, turnBudget: 10, tokenBudget: 300, now: () => 1 });
+    expect(b.reserve('design', admission)).toBe(true);
+    expect(b.observeUsage('design', usage)).toBe(true);
+    const first = b.holdOrderedDesignTurns(4, 90)!;
+    expect(b.holdOrderedDesignTurns(4, 90)).toBeNull();
+    for (let turn = 0; turn < 4; turn++) { expect(first.reserve(admission)).toBe(true); expect(first.observeUsage(usage)).toBe(true); }
+    expect(first.complete()).toBe(true);
+    expect(b.reserve('design', admission)).toBe(true);
+    expect(first.current()).toBe(false);
+    expect(b.observeUsage('design', usage)).toBe(true);
+    const repair = b.holdOrderedDesignTurns(4, 90)!;
+    expect(first.reserve(admission)).toBe(false);
+    expect(first.observeUsage(usage)).toBe(false);
+    expect(first.complete()).toBe(false);
+    first.retire();
+    expect(repair.current()).toBe(true);
+    for (let turn = 0; turn < 4; turn++) { expect(repair.reserve(admission)).toBe(true); expect(repair.observeUsage(usage)).toBe(true); }
+    expect(repair.complete()).toBe(true);
+    expect(b.snapshot()).toMatchObject({ requestReservations: 10, completeUsageReports: 10, reportedTokens: 260, heldDesignTurns: 0 });
+    expect(b.holdOrderedDesignTurns(4, 90)).toBeNull();
   });
   it('refuses a short budget before consuming a turn and cannot extend an expired or retired reservation', () => {
     let now = 5;
