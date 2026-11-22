@@ -1,0 +1,30 @@
+{
+  "format": "syzygy-f3-review-binding/1",
+  "subjectCommit": "e1948f97fee627f3a8f137cdebc46f4479abf39f",
+  "raw": "docs/evidence/syzygy-k54o-3/profile6-envelope-review-2026-11-22-RAW.md",
+  "rawSha256": "20fb73cde5fbe6ece7d63b2ea5f864828a13b8cadf864586fe7998a1d845bb9f",
+  "verdict": "PASS",
+  "scope": "Profile6 effect envelope source only; fullnormal later failed and is not accepted. No tests run by reviewer.",
+  "subjectFiles": [
+    {
+      "path": "packages/polaris-dossier/src/session-launch.test.ts",
+      "sha256": "feecf1661ca2a1860a702b7dd9927b6c85ff6a6ea7f6c3dbf8e87a589d2e036d"
+    },
+    {
+      "path": "packages/polaris-dossier/src/session-profile.ts",
+      "sha256": "1d401d51c0cd7c84837a27b53506ff086eaa59d302b03c6f33e3115851a62a14"
+    },
+    {
+      "path": "packages/polaris-dossier/src/url-machine-peer.ts",
+      "sha256": "7b0823d5b93092cb734db9a1ef7623a9d5db8a7470a9086a50fbd437c55dbd38"
+    },
+    {
+      "path": "packages/polaris-dossier/src/url-machine-store.test.ts",
+      "sha256": "3e3d00d9654eed233fe8186f09a3ddbcc26da0805ec3677a20d15b5e14486572"
+    },
+    {
+      "path": "packages/polaris-dossier/src/url-machine-store.ts",
+      "sha256": "b93c94a73fa2a9a13c86ba5384817846d9cca0720199d0a8e6eaebf35c5b0b79"
+    }
+  ]
+}
