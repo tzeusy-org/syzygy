@@ -1,0 +1,120 @@
+{
+  "subject": "cfd31621e45e4f54e445d24342c322b768fe9283",
+  "tree": "0bc07342306224a84b07edd48b76ac50d71040dd",
+  "sources": [
+    {
+      "path": "packages/polaris-dossier/src/polaris.ts",
+      "sha256": "8108ed7afa7b477d38ec1b649f156b64dc891d01b335b1f126fb1bd79ea3be3e"
+    },
+    {
+      "path": "packages/polaris-dossier/src/url-recovery.ts",
+      "sha256": "0af885f068b313bd70895d75492545aab4d3b25b4d0a8db542edbaa5244088d5"
+    },
+    {
+      "path": "packages/polaris-dossier/src/url-run-ordered-attempt.ts",
+      "sha256": "009b828db3cb2f5c9a527238ca0f3bf864af2d87a706e9753171bfe0a611cef4"
+    },
+    {
+      "path": "packages/polaris-dossier/src/url-mode-registry.ts",
+      "sha256": "a96886c2339e2b3693a5d73c31156349819d14e1d1b83e559dc35c051b014478"
+    },
+    {
+      "path": "packages/polaris-dossier/src/url-stopped-run.ts",
+      "sha256": "7d8713e299385d57e4888a6dfeb37fef0146fc39482839e8ed91c604c13fb70e"
+    },
+    {
+      "path": "packages/polaris-dossier/src/url-run-composed.test.ts",
+      "sha256": "edc01db813e698ffbba741e0306de61ad6fe800f520946d1eead0a54dcd4dc3f"
+    },
+    {
+      "path": "packages/polaris-dossier/src/url-run-composed.testkit.ts",
+      "sha256": "748f848bdcf4f8a862266cd8ddfd8db1191ea20d470b0b0334f17b36e1f21fc9"
+    }
+  ],
+  "artifacts": [
+    {
+      "path": "native-stop.log",
+      "bytes": 35898,
+      "sha256": "ccc92b3912e6876addb472d1935777583dae22998430355b99180c053313a516"
+    }
+  ],
+  "rawFailureManifestSha256": "d87c9cb2fabdbe610516240026a8207bb0d44228512341e4e3dbef3ff2ee0841",
+  "inputTreeSha256": "392d7dcdf3da9e8965431c81f3fa5fa4a37caa16fc41054eefade2e97393e91a",
+  "profileRegistrySha256": "17a2fa1695b1747b61880ddbfd6d9ddf0abcdf159ffb7f9167c76d6b84d27554",
+  "command": "npx --no-install vitest run --project integration --maxWorkers=1 packages/polaris-dossier/src/url-run-composed.test.ts -t \"pipeline to stop-resume$\"",
+  "testResult": {
+    "failed": 1,
+    "skipped": 3,
+    "durationSeconds": 232.41
+  },
+  "resumeChecks": [
+    {
+      "phase": "verify",
+      "ok": true,
+      "nextDesignRound": 2
+    },
+    {
+      "phase": "claim",
+      "exactCut": true,
+      "current": true
+    },
+    {
+      "phase": "resumed-guards",
+      "policyWithdrawal": "refused",
+      "claimWithdrawal": "refused"
+    }
+  ],
+  "initialEvents": [
+    "told the inventory session: draft revision 0 is frozen",
+    "delivered the fidelity packet for draft revision 0 and inventory revision 0",
+    "rendering draft revision 0",
+    "run ended: operator stop requested, checked history retained"
+  ],
+  "designAudits": [
+    {
+      "old": false,
+      "path": "/home/orca/.tmp/url-composed-host-3867703-1795344136062/acquisitions/attempt-BNuu57/sessions-design.jsonl",
+      "sha256": "90bbd0abf5417e6321232b7d5750052467adb049d9b09b8a2904a0a743dce032",
+      "events": [
+        "declaration",
+        "launch-attempt",
+        "launch-history",
+        "launch-terminal"
+      ],
+      "terminal": {
+        "outcome": "inspection-failed",
+        "signal": "SIGTERM",
+        "groupTermination": "confirmed",
+        "toolTermination": "settled",
+        "pendingInvocations": 0,
+        "sampledStorageBytes": 2192,
+        "peakProcesses": 5,
+        "betweenSamples": "Unknown"
+      }
+    },
+    {
+      "old": true,
+      "path": "/home/orca/.tmp/url-composed-host-3867703-1795344136062/acquisitions/attempt-Kk9XKI/sessions-design.jsonl",
+      "sha256": "edbaaf8a4f9639ecff2d55026e2076d98d6848affa803d9c32ba0a7e4e428fbd",
+      "events": [
+        "declaration",
+        "launch-attempt",
+        "launch-history",
+        "design-delivery",
+        "launch-terminal"
+      ],
+      "terminal": {
+        "outcome": "stopped",
+        "signal": "SIGTERM",
+        "groupTermination": "confirmed",
+        "toolTermination": "settled",
+        "pendingInvocations": 0,
+        "sampledStorageBytes": 2192,
+        "peakProcesses": 5,
+        "betweenSamples": "Unknown"
+      }
+    }
+  ],
+  "executionRecordPresent": false,
+  "scope": "The default real resolver was selected with an owned root and the exact async guard refused policy and scoped lock withdrawal. Initial delivery followed prelaunch reproduction; initial stop retained clean. Fresh launch committed audited history, then inspection-failed before delivery. The uninstrumented result leaves the sampler subphase unresolved."
+}
