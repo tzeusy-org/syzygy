@@ -2,7 +2,7 @@
 
 ## Patterns
 
-- `F3-(STAGED-MACHINE-PUBLICATION-SUCCESSOR|ORDERED-SCREEN-ENTRY|POST-AUDIT-PEER-DRAIN|RENEWAL-SOURCE-SAMPLES|STAGED-ALLOCATION|STAGED-ALLOCATION-INITIAL|PRIVATE-AUDIT-SETUP|PRIVATE-AUDIT-SETUP-INITIAL|CONCURRENT-INSPECTION|SCREEN-IMAGE-BRACKETING|CURRENT-COVERAGE-RULE|CPU-RESERVATION-INITIAL|CPU-RESERVATION-HANDOFF|CPU-RESERVATION|INSPECTION-OBSERVER)-REVIEW-RAW\.md`
+- `F3-(STAGED-MACHINE-PUBLICATION-SUCCESSOR|ORDERED-SCREEN-ENTRY|POST-AUDIT-PEER-DRAIN|RENEWAL-SOURCE-SAMPLES|STAGED-ALLOCATION|STAGED-ALLOCATION-INITIAL|PRIVATE-AUDIT-SETUP|PRIVATE-AUDIT-SETUP-INITIAL|CONCURRENT-INSPECTION|SCREEN-IMAGE-BRACKETING|CURRENT-COVERAGE-RULE|CPU-RESERVATION-INITIAL|CPU-RESERVATION-HANDOFF|CPU-RESERVATION|INSPECTION-OBSERVER|STAGE-CENSUS-DRAIN)-REVIEW-RAW\.md`
 
 ## What was under review
 
@@ -29,3 +29,5 @@
 [Observed] The continuation CPU reservation and reply boundary review records `PASS` (`F3-CPU-RESERVATION-REVIEW-RAW.md:1`) for source `807476dd`. A-98 records the adoption and tested revert sequence. The first tool starts from the reservation sample and checks its live CPU and wall budgets at the guarded socket write. [Unknown] Native interrupted completion at this source checkpoint.
 
 [Observed] The resumed Design inspection observer review records `PASS` (`F3-INSPECTION-OBSERVER-REVIEW-RAW.md:1`) for source `7ccac1f21`. The observer records the census and authority phases at a refusal. Seven focused native launcher controls passed under the existing inspection limits.
+
+[Observed] The resumed stage census drain review records `PASS` (`F3-STAGE-CENSUS-DRAIN-REVIEW-RAW.md:1`). A-100 records the exact source and revert. The stage read follows accepted live-sample settlement. Five existing native launcher variants cover the ordering.
