@@ -325,7 +325,7 @@ describe('composed URL run with actual role processes', { timeout: 360_000 }, ()
         return proof;
       },
       stop: async () => {
-        if (cutTaken) return controller.stop();
+        if (cutTaken || finalProductAssertions !== 3) return controller.stop();
         // This is the production cleanup entry after final render/reproduction,
         // before its stop decision and write-once execution record.
         expect(liveFinals).toHaveLength(2);
@@ -504,7 +504,17 @@ describe('composed URL run with actual role processes', { timeout: 360_000 }, ()
       await writeEvidence({ recordSha256: sha256(recordBytes), state, events, roles: controller.summary().roles,
         requests: { author: author.count(), inventory: inv.count(), fidelity: fidelity.count(), design: design.count() } });
     } catch (error) {
-      await controller.stop(); await loop.catch(() => {});
+      const stopped = await controller.stop(); await loop.catch(() => {});
+      const retainedCut = process.env['SYZYGY_COMPOSED_RETAIN'];
+      if (retainedCut !== undefined) {
+        const closing = cleanup.indexOf(f.close);
+        if (closing >= 0) cleanup.splice(closing, 1);
+        // Preserve failed pre-cut artifacts only after real bounded cleanup.
+        // A failure manifest is separate from any already retained valid cut.
+        await fs.writeFile(`${retainedCut}.failure.json`, JSON.stringify({ scenario, run: f.run, root: f.root, hidden: f.hidden,
+          failure: error instanceof Error ? error.message : 'Unknown', inputTreeSha256: runtime.inputTreeSha256,
+          profileRegistrySha256: runtime.profileRegistrySha256, stopped, events, failures, resumeChecks }, null, 2));
+      }
       throw new Error(JSON.stringify({ failure: error instanceof Error ? error.message : 'Unknown', events, failures,
         roles: controller.summary(), authorForwards: author.count(), inventoryForwards: inv.count(), fidelityForwards: fidelity.count(), designForwards: design.count(),
         resumeChecks, producerReports: f.producerReports(), reads: f.productReadReports(), relayObservations, receipts }));

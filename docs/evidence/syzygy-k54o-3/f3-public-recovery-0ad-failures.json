@@ -1,0 +1,297 @@
+{
+  "format": "f3-public-recovery-acceptance-checkpoint/1",
+  "evidence": "Observed",
+  "source": {
+    "subject": "/home/orca/.tmp/syzygy-beads-looper-20261114-54ebc9f1/d10-f3-stop-cut-regression",
+    "commit": "0ad506f1f7c5261d29e8ef0cf6dc8495e2b5a01c",
+    "tree": "06e45343627f9a4e291ba086da51bbb41105f24f",
+    "trackedStatus": "",
+    "files": {
+      "packages/polaris-dossier/src/url-run-composed.test.ts": "4691a617a9cca6ee1f4e950d969f034e9a560eb13f4844be9b7df37e33e37806",
+      "packages/polaris-dossier/src/url-run-composed.testkit.ts": "a5f2fd9e220252673562e463c1d9a52e193216444ed5770d27ccc81e35ba984f",
+      "packages/polaris-dossier/src/polaris.ts": "70a79b1afe681b74611070f497d6432193ade6557419d0d05baac270fe7ced75",
+      "packages/polaris-dossier/src/url-run-sessions.ts": "ef4edafa3c81fec0f5cb9516e136e8833a50823d7c3f1c909c622b965633771d",
+      "packages/polaris-dossier/src/url-session-audit.ts": "d0a3e3be202e413f1a1873980b9bc9e6d8687575060c5dd3c5029bd7b060218f",
+      "packages/polaris-dossier/src/url-runtime.ts": "35d53b32f24c5c36997fc16799f207bb678cabd29d34b0ba54c1428cacb89977",
+      "scripts/build_dossier_runtime.mjs": "4cbe5a1b6242f62f5d3307e9c4fd307ec2ada23d30e5a41965847a66d9c25985"
+    },
+    "scope": "two separate actual public recovery scenarios on same frozen source; native execution pending"
+  },
+  "runtime": {
+    "manifestSha256": "c30bc01e90ca3fec3624a320c3b98cf7b1071a48f68c0609fe55766e7a20bd40",
+    "format": "polaris-url-runtime/1",
+    "inputTreeSha256": "2bb753329f326a40881022d6819d688f66a6c738bd52a1f918adc13ac8d65575"
+  },
+  "subjects": [
+    {
+      "path": "/home/orca/.tmp/f3-recovery-0ad-stop.log",
+      "sha256": "b15e2a78083e0df4c96c46a64a600c8ec1562231b706a8acec2434e0d374c3dd",
+      "bytes": 35781
+    },
+    {
+      "path": "/home/orca/.tmp/f3-recovery-0ad-stop-cut.json",
+      "sha256": "5151aafce43e468acdfcc88eba025a36c043c6ba5189b6f1a2b290a482c1ece6",
+      "bytes": 133202
+    },
+    {
+      "path": "/home/orca/.tmp/f3-recovery-0ad-eligible.log",
+      "sha256": "60fbcf9acfffe5de8591f0655570cbc4cdba8c2eab7f4cf671ac0d1e00ece505",
+      "bytes": 34961
+    }
+  ],
+  "stopResume": {
+    "failure": "expected 1 to be +0 // Object.is equality",
+    "events": [
+      "told the inventory session: draft revision 0 is frozen",
+      "delivered the fidelity packet for draft revision 0 and inventory revision 0",
+      "rendering draft revision 0",
+      "run ended: operator stop requested, checked history retained"
+    ],
+    "controllerFailures": [],
+    "providerForwards": {
+      "author": 7,
+      "inventory": 6,
+      "fidelity": 4,
+      "design": 0
+    },
+    "resumeChecks": [
+      {
+        "phase": "verify",
+        "ok": true,
+        "nextDesignRound": 2
+      },
+      {
+        "phase": "claim",
+        "exactCut": true,
+        "current": true
+      },
+      {
+        "phase": "resumed-guards",
+        "policyWithdrawal": "refused",
+        "claimWithdrawal": "refused"
+      }
+    ],
+    "audit": {
+      "closed": true,
+      "poisoned": false,
+      "durableRecords": 294,
+      "captured": {
+        "before-tool": 14,
+        "control": 1,
+        "design-delivery": 1,
+        "design-ordered": 0,
+        "design-verdict": 0,
+        "launch-attempt": 4,
+        "launch-history": 3,
+        "launch-terminal": 4,
+        "machine-peer": 164,
+        "ordered-design-verdict": 0,
+        "relay": 68,
+        "tool-receipt": 14,
+        "usage": 17
+      },
+      "relayEvents": {
+        "attempt-allowed": 17,
+        "attempt-refused": 0,
+        "response-admitted": 17,
+        "response-refused": 0,
+        "send-attempt": 17,
+        "send-outcome": 17,
+        "transport-failed": 0
+      }
+    },
+    "cleanup": [
+      {
+        "role": "author",
+        "pid": 2394055,
+        "startedAt": 1795338082715,
+        "finishedAt": 1795338131467,
+        "outcome": "stopped",
+        "groupTermination": "confirmed",
+        "toolTermination": "settled"
+      },
+      {
+        "role": "inventory",
+        "pid": 2394918,
+        "startedAt": 1795338084961,
+        "finishedAt": 1795338131482,
+        "outcome": "stopped",
+        "groupTermination": "confirmed",
+        "toolTermination": "settled"
+      },
+      {
+        "role": "fidelity",
+        "pid": 2395835,
+        "startedAt": 1795338087491,
+        "finishedAt": 1795338131486,
+        "outcome": "stopped",
+        "groupTermination": "confirmed",
+        "toolTermination": "settled"
+      },
+      {
+        "role": "design",
+        "pid": 2415520,
+        "startedAt": 1795338128241,
+        "finishedAt": 1795338131484,
+        "outcome": "stopped",
+        "groupTermination": "confirmed",
+        "toolTermination": "settled"
+      }
+    ],
+    "outcome": "failed before new role launch or final ExecutionRecord",
+    "durationSeconds": 164.67,
+    "testPopulation": {
+      "failed": 1,
+      "skipped": 3,
+      "total": 4
+    },
+    "newAuditFiles": [
+      {
+        "path": "acquisitions/attempt-W99zdb/sessions-author.jsonl",
+        "bytes": 1185,
+        "mode": "0o600",
+        "rows": 1,
+        "kinds": {
+          "declaration": 1
+        }
+      },
+      {
+        "path": "acquisitions/attempt-W99zdb/sessions-design.jsonl",
+        "bytes": 1262,
+        "mode": "0o600",
+        "rows": 1,
+        "kinds": {
+          "declaration": 1
+        }
+      },
+      {
+        "path": "acquisitions/attempt-W99zdb/sessions-fidelity.jsonl",
+        "bytes": 1251,
+        "mode": "0o600",
+        "rows": 1,
+        "kinds": {
+          "declaration": 1
+        }
+      },
+      {
+        "path": "acquisitions/attempt-W99zdb/sessions-inventory.jsonl",
+        "bytes": 1253,
+        "mode": "0o600",
+        "rows": 1,
+        "kinds": {
+          "declaration": 1
+        }
+      }
+    ],
+    "retainedMachine": {
+      "stateSha256": "8fb03fb4faaece6fbd55860902cd4b9f39529e959d37204bb4d242abf244769c",
+      "clientCount": 9,
+      "historicalClientCount": 8,
+      "durableLockPresent": true,
+      "earliestNarrowedWindow": "new client anchor was published; allocation guarded readback/completion may have failed before returning; exact cause Unknown"
+    },
+    "executionRecordExists": false
+  },
+  "eligibleStopResume": {
+    "failure": "expected [] to have a length of 2 but got +0",
+    "events": [
+      "told the inventory session: draft revision 0 is frozen",
+      "delivered the fidelity packet for draft revision 0 and inventory revision 0",
+      "rendering draft revision 0",
+      "prepared design round 1 for the reviewer"
+    ],
+    "controllerFailures": [
+      "transport-unavailable"
+    ],
+    "providerForwards": {
+      "author": 7,
+      "inventory": 6,
+      "fidelity": 4,
+      "design": 2
+    },
+    "resumeChecks": [],
+    "audit": {
+      "closed": true,
+      "poisoned": false,
+      "durableRecords": 312,
+      "captured": {
+        "before-tool": 14,
+        "control": 1,
+        "design-delivery": 1,
+        "design-ordered": 6,
+        "design-verdict": 0,
+        "launch-attempt": 4,
+        "launch-history": 3,
+        "launch-terminal": 4,
+        "machine-peer": 175,
+        "ordered-design-verdict": 0,
+        "relay": 70,
+        "tool-receipt": 14,
+        "usage": 16
+      },
+      "relayEvents": {
+        "attempt-allowed": 19,
+        "attempt-refused": 0,
+        "response-admitted": 16,
+        "response-refused": 0,
+        "send-attempt": 19,
+        "send-outcome": 16,
+        "transport-failed": 0
+      }
+    },
+    "cleanup": [
+      {
+        "role": "author",
+        "pid": 2479655,
+        "startedAt": 1795338289333,
+        "finishedAt": 1795338351829,
+        "outcome": "inspection-failed",
+        "groupTermination": "confirmed",
+        "toolTermination": "settled"
+      },
+      {
+        "role": "inventory",
+        "pid": 2480625,
+        "startedAt": 1795338291595,
+        "finishedAt": 1795338351837,
+        "outcome": "inspection-failed",
+        "groupTermination": "confirmed",
+        "toolTermination": "settled"
+      },
+      {
+        "role": "fidelity",
+        "pid": 2481579,
+        "startedAt": 1795338293924,
+        "finishedAt": 1795338351840,
+        "outcome": "inspection-failed",
+        "groupTermination": "confirmed",
+        "toolTermination": "settled"
+      },
+      {
+        "role": "design",
+        "pid": 2487893,
+        "startedAt": 1795338334506,
+        "finishedAt": 1795338351841,
+        "outcome": "inspection-failed",
+        "groupTermination": "confirmed",
+        "toolTermination": "settled"
+      }
+    ],
+    "outcome": "failed before eligible stop or public resume",
+    "durationSeconds": 74.93,
+    "testPopulation": {
+      "failed": 1,
+      "skipped": 3,
+      "total": 4
+    },
+    "designResponseAdmitted": 2,
+    "coldFactoryCalls": 0,
+    "limitation": "The pre-cut fixture failure was cleaned before retention below the successful-stop assertion; native audit/run artifacts were not retained. Raw diagnostics preserve cleanup and phase counts. A fixture follow-up retains future failures after real cleanup."
+  },
+  "limits": [
+    "Neither public recovery case passed or wrote a proven final ExecutionRecord.",
+    "The normal native case passed separately; that success does not establish public recovery.",
+    "No production or fixture changes were made during these two runs.",
+    "No diagnostic retry was performed."
+  ]
+}
