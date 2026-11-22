@@ -67,6 +67,18 @@
 - [Unknown] Whether authoring sessions will use subsections without a reader advisory asking for them; the next pursuit run measures it.
 - [Inferred] Counter-incentive (review finding 10): RS-19's about-300-word limit counts a section's subsections with it, so a section using subsections will often draw the advisory that tells the author to move prose out of the structure this version asks for. Left for the depth slice (syzygy-3efd.51) or the next pursuit to measure and decide; RS-19's text is not changed here.
 
+## D11. The makefile recipe-context correction (syzygy-3efd.81), folded into 2.15
+
+[Observed] Review r26impl of the 2.14 implementation, finding 1, and bead syzygy-3efd.81: the 2.14 text defines a recipe line as a tab-led physical line that "follows a rule's logical line or another recipe line, with only blank lines, comment lines and recipe lines between". A conditional-directive line between them therefore ends recipe context, so `build:`, `ifdef V`, a tab-led `scp out host:/srv`, `endif` yields `make-target` facts `build`, `scp`, `out` and `host`: recipe text read as a rule, against the same paragraph's "prerequisites and recipes are never read".
+
+- [Inferred] The repair: a conditional-directive line (a logical line not beginning with a tab whose first word is `ifeq`, `ifneq`, `ifdef`, `ifndef`, `else` or `endif`, with its arguments) may stand between a rule's logical line and its recipe lines, and between recipe lines, without ending recipe context. This is GNU make's own reading: conditionals are processed before recipe parsing, and a recipe may be split by them.
+- [Inferred] And a physical line that begins with a tab and is no recipe line is a `syntax` fault, so a tab-led line after an assignment or a directive (GNU make's "recipe commences before first target") makes the file Unknown instead of being misread.
+- [Inferred] Folded into 2.15 because 2.15 is unmerged and carries 2.14's text; a separate version would only add a composition step. It is a REQ-034 change to the 2.14 recognizer, independent of subsections; two scenarios ("Makefile recipe inside a conditional", "Makefile tab-led line that is no recipe line") pin both probes, and the Case and Falsifier lines name them.
+- [Inferred] Bytes: only the `manifestFacts`, `computedMaps` and infrastructure map page of a run whose makefile holds a conditional inside recipe context (spurious facts disappear) or a tab-led non-recipe line (the file becomes Unknown, `syntax`). The 2.14 code is not yet on `main`; the syzygy-3efd.26 implementation follows this text.
+- Code: the `makefile` recognizer (2.14's implementation) treats a conditional-directive line as transparent to recipe context and reports `syntax` for a tab-led line outside it; tests with both probe inputs as literals, and the second probe's reordering yielding `build`.
+
+[Observed] This delta changes reviewed spec bytes (sha256 `521e039c…` to `dd56d187…`); review 1 does not cover it. A focused review of the delta is the lead's to dispatch (this session dispatches none).
+
 ## Carried corrections to version 2.14's design notes
 
 [Observed] Version 2.14's `design.md` (section "The reader rule for four more files (syzygy-3efd.76)") lists `close.ts` 243 among "further same-class reads that the bead does not name; listed so that the remainder has a denominator, none specified here", glossing it as "site files". That classification is wrong, and this note corrects it here without editing 2.14's package (its spec bytes are digest-bound by row A-46; its design notes are not, but the correction belongs with the next version's notes).

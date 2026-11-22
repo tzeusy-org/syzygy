@@ -1,6 +1,6 @@
 # dossier-page-subsections
 
-[Inferred] Candidate version 2.15 of the dossier specification line: one MODIFIED REQ-polaris-generation-034 for bead syzygy-3efd.50. It adds draft schema `polaris-dossier-local-draft-v8`, in which a section may carry answer-led subsections, a mechanical one-sentence rule for each answer, third-level headings and an on-page contents list in the renderer, and brief `polaris-dossier-brief-v13`. Drafts without subsections, stored drafts and the provider mode keep their bytes.
+[Inferred] Candidate version 2.15 of the dossier specification line: one MODIFIED REQ-polaris-generation-034 for bead syzygy-3efd.50. It adds draft schema `polaris-dossier-local-draft-v8`, in which a section may carry answer-led subsections, a mechanical one-sentence rule for each answer, third-level headings and an on-page contents list in the renderer, and brief `polaris-dossier-brief-v13`. Drafts without subsections, stored drafts and the provider mode keep their bytes. It also corrects the 2.14 `makefile` recognizer's recipe context (syzygy-3efd.81).
 
 | File | What it holds |
 |---|---|

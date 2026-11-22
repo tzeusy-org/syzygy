@@ -611,7 +611,7 @@
     },
     "POLARIS": {
       "requirements": 39,
-      "scenarios": 451,
+      "scenarios": 453,
       "members": {
         "REQ-polaris-generation-001": {
           "name": "Admitted project input",
@@ -1124,6 +1124,8 @@
             "Subsections in an earlier schema",
             "A draft without subsections renders as today",
             "Subsection titles and withheld subsections",
+            "Makefile recipe inside a conditional",
+            "Makefile tab-led line that is no recipe line",
             "Brief v13 states subsections"
           ]
         },

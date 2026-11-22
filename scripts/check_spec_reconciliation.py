@@ -622,7 +622,7 @@ SUBSEC_UNION = f"{SUBSEC_HOME}/GOVERNING-DEPENDENCIES.json"
 SUBSEC_TAG = "polaris-dossier-page-subsections-v2.15"
 SUBSEC_STATUS_PREFIX = f"[Page subsections amendment 2.15]({SUBSEC_HOME})"
 SUBSEC_SUBJECTS = {
-    SUBSEC_SPEC: "521e039cf6deabce5893c502e0850678b949346c8dffccbd39c512f77c088f83",
+    SUBSEC_SPEC: "dd56d18750634245db548fad0c40dbee0d9ded41d8fdf26bf0268b0eecfbb9ee",
 }
 SUBSEC_BOUND_PARTS = len(SUBSEC_SUBJECTS)
 ADOPTION_LEDGER_TITLE = "# Agent adoptions"
@@ -6824,11 +6824,11 @@ def subsec_cases(tmp, base, witnesses, failures):
     current = current_pop["POLARIS"]
     held = (subsec_binding(tree) == (original, [], []) and not current_findings
             and set(current) == set(predecessor)
-            and len(current[ident]["scenarios"]) == 136
+            and len(current[ident]["scenarios"]) == 138
             and current[ident]["name"] == predecessor[ident]["name"]
             and all(current[i] == r for i, r in predecessor.items() if i != ident))
     record("subsec-adopted", AGENT_ADOPTIONS, "<no v2.15 row>", row,
-           "v2.15 replaces exactly 034 (130 to 136 scenarios)", current_findings, held, True)
+           "v2.15 replaces exactly 034 (130 to 138 scenarios)", current_findings, held, True)
 
     for name, old, new in (("duplicate-row", row, row + row),
                            ("wrong-tag", SUBSEC_TAG, SUBSEC_TAG + "-wrong"),
