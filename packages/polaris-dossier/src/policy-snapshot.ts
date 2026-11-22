@@ -7,20 +7,33 @@ import { isRecord, sha256 } from '@syzygy/support';
 /** The dossier successor is versioned separately from the PWB/provider policy.
  * Its screening predicates are preserved; its admission provenance follows D10.
  *
- * From specification version 2.6 (REQ-polaris-generation-046, adoption row A-22) every new run binds version 2.0.0, the two-stage class
- * decision. Version 1.0.0 stays committed and unedited, and stays the binding of every run whose record names it: such a run is screened
- * under it, never re-screened under 2.0.0, and a step of it that can no longer read it as its binding refuses with `restartExplanation`. */
-export const DOSSIER_POLICY_PATH = '.syzygy/governance/policies/POLARIS-DOSSIER-DECLARED-SOURCE-POLICY-v2.json';
-export const DOSSIER_POLICY_VERSION = 'dossier-declared-source/2.0.0';
+ * From specification version 2.13 (REQ-polaris-generation-046, adoption row A-42) every new run binds version 3.0.0, version 2.0.0 with
+ * the Stage-2 entries a census re-admitted. Versions 1.0.0 and 2.0.0 stay committed and unedited, and each stays the binding of every run
+ * whose record names it: such a run is screened under it, never re-screened under another version, and a step of it that can no longer
+ * read it as its binding refuses with `restartExplanation`. */
+export const DOSSIER_POLICY_PATH = '.syzygy/governance/policies/POLARIS-DOSSIER-DECLARED-SOURCE-POLICY-v3.json';
+export const DOSSIER_POLICY_VERSION = 'dossier-declared-source/3.0.0';
+/** Version 2.6's binding, 2.0.0: the two-stage class decision before the re-admission. */
+export const DOSSIER_REACH_POLICY_PATH = '.syzygy/governance/policies/POLARIS-DOSSIER-DECLARED-SOURCE-POLICY-v2.json';
+export const DOSSIER_REACH_POLICY_VERSION = 'dossier-declared-source/2.0.0';
+/** "The predecessor" of REQ-polaris-generation-046's text: version 1.0.0, the one-stage screen. */
 export const DOSSIER_PREDECESSOR_POLICY_PATH = '.syzygy/governance/policies/POLARIS-DOSSIER-DECLARED-SOURCE-POLICY-v1.json';
 export const DOSSIER_PREDECESSOR_POLICY_VERSION = 'dossier-declared-source/1.0.0';
-/** The policy files a run record may bind: the one new runs bind, and the predecessor earlier runs bound. */
-export const DOSSIER_POLICY_PATHS: readonly string[] = Object.freeze([DOSSIER_POLICY_PATH, DOSSIER_PREDECESSOR_POLICY_PATH]);
+/** Each earlier policy a run record may still bind, by path, with its version. */
+const EARLIER_POLICIES: ReadonlyMap<string, string> = new Map([
+  [DOSSIER_REACH_POLICY_PATH, DOSSIER_REACH_POLICY_VERSION],
+  [DOSSIER_PREDECESSOR_POLICY_PATH, DOSSIER_PREDECESSOR_POLICY_VERSION],
+]);
+/** The policy files a run record may bind: the one new runs bind, and each earlier one earlier runs bound. */
+export const DOSSIER_POLICY_PATHS: readonly string[] = Object.freeze([DOSSIER_POLICY_PATH, ...EARLIER_POLICIES.keys()]);
 
-/** Why a step of a run bound to the predecessor refuses when it can no longer read the predecessor as its binding: both versions named,
- * the run never moved to the new one. */
-export const restartExplanation = (why: string): string =>
-  `this run is bound to the screening policy ${DOSSIER_PREDECESSOR_POLICY_PATH} (${DOSSIER_PREDECESSOR_POLICY_VERSION}), which can no longer be read as its binding (${why}); `
+/** Whether `boundPath` is an earlier policy than the one new runs bind: a run bound to it is never moved to the current one. */
+export const isEarlierPolicy = (boundPath: string): boolean => EARLIER_POLICIES.has(boundPath);
+
+/** Why a step of a run bound to an earlier policy refuses when it can no longer read that policy as its binding: the run's version and
+ * the current one named, the run never moved to the current one. */
+export const restartExplanation = (why: string, boundPath: string): string =>
+  `this run is bound to the screening policy ${boundPath} (${EARLIER_POLICIES.get(boundPath) ?? 'an unknown version'}), which can no longer be read as its binding (${why}); `
   + `a run is never re-screened under another version or moved to it, so start a new run, which binds ${DOSSIER_POLICY_PATH} (${DOSSIER_POLICY_VERSION})`;
 const MAX_POLICY_BYTES = 2_097_152;
 

@@ -283,7 +283,7 @@ describe('POC-REQ-014: every work item\'s governing intent renders as a counted 
       ['channels that disagree', (p) => p.replace('data-parity-field="governed-by-unknown-count">54<', 'data-parity-field="governed-by-unknown-count">55<'), /the channels serve different counts/],
       ['an inside figure that is not the rendered selection', (p) => p.replace('data-parity-field="governed-by-unknown-inside">52<', 'data-parity-field="governed-by-unknown-inside">54<'), /inside 54 differs from the 52 rendered cards/],
       ['inside plus outside that misses the count', (p) => p.replace('data-parity-field="governed-by-unknown-outside">2<', 'data-parity-field="governed-by-unknown-outside">0<'), /plus outside 0 differs from 54/],
-      ['a region missing the reason', (p) => p.replace('Reason: <code>source-uncaptured-or-unreachable</code>.', 'Reason: none.'), /lacks the reason$/],
+      ['a region missing the reason', (p) => p.replace(/(data-parity-field="work-item-governed-by-count"[\s\S]*?)Reason: <code>source-uncaptured-or-unreachable<\/code>\./, '$1Reason: none.'), /lacks the reason$/],
       ['a region missing the route', (p) => p.replace(/(data-parity-field="work-item-governed-by-count"[\s\S]*?)Repair the observer\/source; new snapshot/, '$1Repair it'), /lacks the route$/],
       ['a region missing the resolution statement', (p) => p.replace("Supplying an item's warrant resolves its governing intent.", ''), /warrant resolution statement/],
       ['no count region', (p) => p.replace('data-parity-field="work-item-governed-by-count"', 'data-parity-field="other"'), /no count region/],

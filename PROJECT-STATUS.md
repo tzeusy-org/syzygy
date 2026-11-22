@@ -95,7 +95,7 @@ authority and no model yet called on the current path.
     [v1.4 sign-off](.syzygy/governance/decisions/POLARIS-DOSSIER-LOCAL-AGENT-MODE-SIGNOFF-v1.4.md);
     [v1.5 sign-off](.syzygy/governance/decisions/POLARIS-DOSSIER-LOCAL-AGENT-MODE-SIGNOFF-v1.5.md);
     [v1.6 sign-off](.syzygy/governance/decisions/POLARIS-DOSSIER-LOCAL-AGENT-MODE-SIGNOFF-v1.6.md)), and
-    39 requirements and 436 scenarios in the effective composition with it and with the signed-off
+    39 requirements and 445 scenarios in the effective composition with it and with the signed-off
     [launch-consent addition](openspec/changes/polaris-dossier-launch-consent/specs/polaris-generation/spec.md)
     ([v1.0 sign-off](.syzygy/governance/decisions/POLARIS-DOSSIER-LAUNCH-CONSENT-SIGNOFF-v1.0.md);
     [v1.1 sign-off](.syzygy/governance/decisions/POLARIS-DOSSIER-LAUNCH-CONSENT-SIGNOFF-v1.1.md);
@@ -162,11 +162,22 @@ authority and no model yet called on the current path.
     code changes landed in PR #886, merge commit `06529d12`, and the layouts in PR #883, merge commit `f0da8139`.)*
     *(2026-11-22: the predecessor figure "419 scenarios" is superseded by that
     amendment; all 39 identities remain.)*
-    [Infrastructure recognizers amendment 2.12](openspec/changes/dossier-infrastructure-recognizers) is agent-adopted in A-38.
-    It replaces REQ-polaris-generation-034 again (110 to 123 scenarios: five infrastructure recognizers, a coverage
+    [Coverage pre-check amendment 2.12](openspec/changes/dossier-coverage-precheck) is agent-adopted in A-40.
+    It replaces REQ-polaris-generation-034 again (110 to 117 scenarios: inventory-coverage advice on check's
+    report and the author's justified-omission record); its implementation (syzygy-5dhm.28) lands with it.
+    *(2026-11-22: the predecessor figure "423 scenarios" is superseded by that
+    amendment; all 39 identities remain.)*
+    [Declared-source re-admission amendment 2.13](openspec/changes/dossier-declared-source-readmission) is agent-adopted in A-42.
+    It replaces REQ-polaris-generation-046 again (11 to 13 scenarios) and binds the screening-policy successor
+    `POLARIS-DOSSIER-DECLARED-SOURCE-POLICY-v3.json` (44 Stage-2 entries re-admitted on a thirty-repository census);
+    its code change (bind 3.0.0 for new runs) is not yet landed, and until it lands runs stay on the policy they bound.
+    *(2026-11-22: the predecessor figure "430 scenarios" is superseded by that
+    amendment; all 39 identities remain.)*
+    [Infrastructure recognizers amendment 2.14](openspec/changes/dossier-infrastructure-recognizers) is agent-adopted in A-46.
+    It replaces REQ-polaris-generation-034 again (117 to 130 scenarios: five infrastructure recognizers, a coverage
     remainder, an infrastructure map page, the 2.10 reader rule for the draft, frozen revisions, the brief record and
     `run-advice.json`, and the bounded form's words for a draft that does not parse); its code is not yet landed.
-    *(2026-11-22: the predecessor figure "423 scenarios" is superseded by that
+    *(2026-11-22: the predecessor figure "432 scenarios" is superseded by that
     amendment; all 39 identities remain.)*
     *(2026-11-18: the predecessor figure "329 scenarios" is superseded by that
     overlay; all38 identities remain, and046 is now Declared local-source admission.)*
@@ -638,9 +649,16 @@ python3 scripts/record_launch_consent_write_consent_act.py --check 53efd343b0ed5
 python3 scripts/record_launch_consent_write_consent_act.py --selftest   # launch-record write-consent recorder fixtures
 python3 scripts/record_narrative_profile_adoption.py --check --date 2026-10-07 --question-opening 'Do you adopt the non-governed narrative profile, requirement 032, at its row of the profile manifest?' --selection-label 'Adopt as recommended' --selection-description 'O1 to O7 as the packet recommends; Scope A is not read to cover it; the two known limitations stand.'   # narrative profile --check
 python3 scripts/record_rfc5_project_documentation_act.py --selftest   # rfc5 --selftest
+python3 scripts/dossier_pilot_totals.py --check   # comprehension-regression pilot (R29): recorded shares per arm and question kind recomputed from the stored grades
+python3 scripts/dossier_pilot_totals.py --selftest   # one in-memory mutation per predicate must fail that check
+python3 scripts/dossier_pilot_grading_input.py --selftest   # blind grader input: only id and answer carried, label draws
+python3 scripts/dossier_site_to_text.py --selftest   # dossier site to reader text, fixture page
+python3 scripts/dossier_pilot_runs.py --check   # stored runs: page-class split re-derived from the recorded words per page
+python3 scripts/dossier_pilot_runs.py --selftest   # page classes and one mutation per compared member
+python3 scripts/test_dossier_pilot.py   # the pilot harness tests, literal expectations; needs node and git for the screened-tree cases
 ```
 
-The one hundred and twenty-eight checks above are the same one hundred and twenty-eight the hosted workflow runs
+The one hundred and thirty-five checks above are the same one hundred and thirty-five the hosted workflow runs
 (`.github/workflows/governance-docs.yml`), so "hosted CI is green" and "the
 battery is clean" are one claim rather than two a reader conflates. The
 `git tag` line is orientation, not a check — it prints and cannot fail.

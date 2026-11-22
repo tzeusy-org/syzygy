@@ -564,7 +564,11 @@ describe('three-surface POC routes', () => {
       entities: [],
       relationships: [],
       surfaces: [],
-      trajectory: { kind: 'unknown', reason: 'No seed-backed work-item graph was supplied to this evaluation.' },
+      trajectory: {
+        kind: 'unknown',
+        reason: 'No seed-backed work-item graph was supplied to this evaluation.',
+        answers: (['remains', 'running', 'changed', 'cost', 'intent'] as const).map((id) => ({ id, state: 'unknown' as const, disclosure: 'region:work-items' })),
+      },
       orrery: { kind: 'unknown', reason: 'No seed-backed capability-to-path mappings were supplied to this evaluation.' },
     };
     const { daemon, token } = await startPoc(empty);

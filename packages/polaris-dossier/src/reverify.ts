@@ -3,7 +3,7 @@ import * as path from 'node:path';
 import { isRecord } from '@syzygy/support';
 import { parseBoundedJson } from '@syzygy/polaris-generation-core/live';
 import type { GateSources } from './gate-sources.js';
-import { DOSSIER_PREDECESSOR_POLICY_PATH, restartExplanation, samePolicy } from './policy-snapshot.js';
+import { isEarlierPolicy, restartExplanation, samePolicy } from './policy-snapshot.js';
 import { buildDossierScreen } from './screen.js';
 import { GitObjectReadRefusal, openPinnedObjectReader, type PinnedObjectReader, type PinnedObjectReaderOptions } from './git-object-reader.js';
 import { governedSubject, type GovernedDecision } from './governed.js';
@@ -97,17 +97,18 @@ export async function reverifyPinnedRevision(runDir: string, sources: GateSource
   const { repositoryId } = subject.repository;
   const commit = subject.pinnedRevision.commit;
 
-  // The run is screened under the policy file its record binds; one bound to the predecessor is never moved to the successor
-  // (REQ-polaris-generation-046 from version 2.6), and refuses with the restart explanation when it can no longer read the predecessor.
-  const predecessor = subject.screeningPolicy.path === DOSSIER_PREDECESSOR_POLICY_PATH;
+  // The run is screened under the policy file its record binds; one bound to an earlier version is never moved to the current one
+  // (REQ-polaris-generation-046 from version 2.13), and refuses with the restart explanation when it can no longer read its binding.
+  const bound = subject.screeningPolicy.path;
+  const predecessor = isEarlierPolicy(bound);
   const snapshot = await sources.declaredPolicy?.(subject.screeningPolicy.path);
   if (snapshot === undefined || !snapshot.ok) {
     const why = snapshot === undefined ? 'no committed dossier policy source is available' : snapshot.why;
-    refusals.push({ code: 'policy', reason: predecessor ? restartExplanation(why) : why });
+    refusals.push({ code: 'policy', reason: predecessor ? restartExplanation(why, bound) : why });
     return refuse();
   }
   if (!samePolicy(snapshot.binding, subject.screeningPolicy)) {
-    refusals.push({ code: 'policy-changed', reason: predecessor ? restartExplanation('the committed predecessor identity, version or bytes differ from this run binding')
+    refusals.push({ code: 'policy-changed', reason: predecessor ? restartExplanation('the committed policy identity, version or bytes differ from this run binding', bound)
       : 'the committed dossier policy identity, version or bytes differ from this run binding; start a new run instead of silently upgrading it' });
     return refuse();
   }

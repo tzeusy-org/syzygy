@@ -388,6 +388,17 @@ DECLARED_SOURCE_SPEC = f"{CHANGES}/{DECLARED_SOURCE_CHANGE}/proposed/polaris-gen
 DECLARED_SOURCE_UNION = f"{CHANGES}/{DECLARED_SOURCE_CHANGE}/GOVERNING-DEPENDENCIES.json"
 AGENT_ADOPTIONS = f"{DECISIONS}/AGENT-ADOPTIONS.md"
 DECLARED_SOURCE_ROW = 'A-4'
+# POC amendments adopted since D10 that add Scenarios, each by its version
+# tag and the Scenarios it adds per requirement; a requirement the literal
+# does not hold is a new one with that many Scenarios. R3 expects an
+# amendment's requirements and Scenarios exactly when its adoption row is in
+# the tree, so a tree from before it (the P115 signed selftest's frozen
+# core) keeps its 26 / 34 census.
+POC_SCENARIO_AMENDMENTS = (
+    ('three-surface-poc-closure-wording-amendment-v1.0', {"043": 1}),  # syzygy-t3jk.14
+    ('three-surface-poc-board-unknowns-amendment-v1.0', {"040": 1, "043": 1}),  # syzygy-t3jk.15
+    ('three-surface-poc-five-answers-amendment-v1.0', {"044": 3}),  # syzygy-t3jk.16, new POC-REQ-044
+)
 DECLARED_SOURCE_COMMIT = '182a703b2dbae97a16ae7334cd84a32b634cedc0'
 DECLARED_SOURCE_TAG = 'polaris-dossier-declared-source-model-v2.0'
 DECLARED_SOURCE_SUBJECTS = {
@@ -562,17 +573,46 @@ CORR_SUBJECTS = {
     CORR_SPEC: "376f27c0261120d0238d0d4a6685fe08b19ff03a9d00fcb4a6702349f64834c3",
 }
 CORR_BOUND_PARTS = len(CORR_SUBJECTS)
-# The v2.12 infrastructure-recognizers amendment (syzygy-3efd.26): one MODIFIED
+# The v2.13 declared-source re-admission amendment (syzygy-3efd.69): one
+# MODIFIED REQ-polaris-generation-046 after v2.6 (versions 2.7 to 2.12 replace
+# REQ-034 alone), binding the screening-policy successor v3, pending until its
+# own VIS-4 ledger row, found by its tag as v2.6's is.
+READMIT_CHANGE = "dossier-declared-source-readmission"
+READMIT_HOME = f"{CHANGES}/{READMIT_CHANGE}"
+READMIT_SPEC = f"{READMIT_HOME}/proposed/polaris-generation/spec.md"
+READMIT_UNION = f"{READMIT_HOME}/GOVERNING-DEPENDENCIES.json"
+READMIT_POLICY = ".syzygy/governance/policies/POLARIS-DOSSIER-DECLARED-SOURCE-POLICY-v3.json"
+READMIT_TAG = "polaris-dossier-declared-source-readmission-v2.13"
+READMIT_STATUS_PREFIX = f"[Declared-source re-admission amendment 2.13]({READMIT_HOME})"
+READMIT_SUBJECTS = {
+    READMIT_SPEC: "494dcd81b3bb8d0638c5a517e9fa1005720cac8b39cba34751f5f6ee62eeb018",
+    READMIT_POLICY: "1b9726884376922805fc8ebd973bdb4dc25ff54464264cdb995662806117a16e",
+}
+READMIT_BOUND_PARTS = len(READMIT_SUBJECTS)
+# The v2.12 coverage-precheck amendment (syzygy-5dhm.28): one MODIFIED
 # REQ-polaris-generation-034 after v2.11, pending until its own VIS-4 ledger
 # row, found by its tag as v2.11's is.
+COVERAGE_CHANGE = "dossier-coverage-precheck"
+COVERAGE_HOME = f"{CHANGES}/{COVERAGE_CHANGE}"
+COVERAGE_SPEC = f"{COVERAGE_HOME}/proposed/polaris-generation/spec.md"
+COVERAGE_UNION = f"{COVERAGE_HOME}/GOVERNING-DEPENDENCIES.json"
+COVERAGE_TAG = "polaris-dossier-coverage-precheck-v2.12"
+COVERAGE_STATUS_PREFIX = f"[Coverage pre-check amendment 2.12]({COVERAGE_HOME})"
+COVERAGE_SUBJECTS = {
+    COVERAGE_SPEC: "995c2ec47619567a86a5899eacbe3b1cf96a652686af4bfa7cd51e0ea1841287",
+}
+COVERAGE_BOUND_PARTS = len(COVERAGE_SUBJECTS)
+# The v2.14 infrastructure-recognizers amendment (syzygy-3efd.26, .76, .79): one
+# MODIFIED REQ-polaris-generation-034 after v2.12, pending until its own VIS-4
+# ledger row, found by its tag as v2.12's is.
 INFRA_CHANGE = "dossier-infrastructure-recognizers"
 INFRA_HOME = f"{CHANGES}/{INFRA_CHANGE}"
 INFRA_SPEC = f"{INFRA_HOME}/proposed/polaris-generation/spec.md"
 INFRA_UNION = f"{INFRA_HOME}/GOVERNING-DEPENDENCIES.json"
-INFRA_TAG = "polaris-dossier-infrastructure-recognizers-v2.12"
-INFRA_STATUS_PREFIX = f"[Infrastructure recognizers amendment 2.12]({INFRA_HOME})"
+INFRA_TAG = "polaris-dossier-infrastructure-recognizers-v2.14"
+INFRA_STATUS_PREFIX = f"[Infrastructure recognizers amendment 2.14]({INFRA_HOME})"
 INFRA_SUBJECTS = {
-    INFRA_SPEC: "f50435e796c6852359ad73936550bd8f3f6f3511aa0b928661042f4249d6b48e",
+    INFRA_SPEC: "1c87f9db33cee275bcc4f93516eed9b74d7345b3b3e8cb21a51303ad7deb42de",
 }
 INFRA_BOUND_PARTS = len(INFRA_SUBJECTS)
 ADOPTION_LEDGER_TITLE = "# Agent adoptions"
@@ -1013,8 +1053,66 @@ def corr_disposition(root, rows):
     return None
 
 
+def is_readmit_row(line):
+    """A ledger row claiming the v2.13 declared-source re-admission amendment, well formed or not."""
+    if not line.startswith("|"):
+        return False
+    cells = [cell.strip() for cell in line.split("|")[1:-1]]
+    tag = f"`{READMIT_TAG}`"
+    if len(cells) == 7 and cells[6] == tag:
+        return True
+    if len(cells) != 7 and tag in cells:
+        return True
+    if len(cells) < 4 or not re.fullmatch(r"`[0-9a-f]{40}`", cells[2]):
+        return False
+    snapshot = f"https://github.com/tzeusy-org/syzygy/blob/{cells[2][1:-1]}/"
+    return all(f"]({snapshot}{path})" in cells[3] for path in READMIT_SUBJECTS)
+
+
+def readmit_rows(root):
+    return [[cell.strip() for cell in line.split("|")[1:-1]]
+            for line in adoption_table_rows(root) if is_readmit_row(line)]
+
+
+def readmit_disposition(root, rows):
+    if len(rows) == 1 and len(rows[0]) == 7:
+        identity, _date, commit, _changed, _why, _revert, _tag = rows[0]
+        return recorded_disposition(root, identity, commit.strip("`"), READMIT_TAG,
+                                    READMIT_SUBJECTS, plain_revert=True)
+    return None
+
+
+def is_coverage_row(line):
+    """A ledger row claiming the v2.12 coverage-precheck amendment, well formed or not."""
+    if not line.startswith("|"):
+        return False
+    cells = [cell.strip() for cell in line.split("|")[1:-1]]
+    tag = f"`{COVERAGE_TAG}`"
+    if len(cells) == 7 and cells[6] == tag:
+        return True
+    if len(cells) != 7 and tag in cells:
+        return True
+    if len(cells) < 4 or not re.fullmatch(r"`[0-9a-f]{40}`", cells[2]):
+        return False
+    snapshot = f"https://github.com/tzeusy-org/syzygy/blob/{cells[2][1:-1]}/"
+    return all(f"]({snapshot}{path})" in cells[3] for path in COVERAGE_SUBJECTS)
+
+
+def coverage_rows(root):
+    return [[cell.strip() for cell in line.split("|")[1:-1]]
+            for line in adoption_table_rows(root) if is_coverage_row(line)]
+
+
+def coverage_disposition(root, rows):
+    if len(rows) == 1 and len(rows[0]) == 7:
+        identity, _date, commit, _changed, _why, _revert, _tag = rows[0]
+        return recorded_disposition(root, identity, commit.strip("`"), COVERAGE_TAG,
+                                    COVERAGE_SUBJECTS, plain_revert=True)
+    return None
+
+
 def is_infra_row(line):
-    """A ledger row claiming the v2.12 infrastructure-recognizers amendment, well formed or not."""
+    """A ledger row claiming the v2.14 infrastructure-recognizers amendment, well formed or not."""
     if not line.startswith("|"):
         return False
     cells = [cell.strip() for cell in line.split("|")[1:-1]]
@@ -1616,6 +1714,44 @@ def reach_binding(root):
     return (None if records or subjects else read_text(root, REACH_SPEC), records, subjects)
 
 
+def readmit_binding(root):
+    """Read v2.13's published composition: pending until its row, like v2.6.
+
+    The row names the commit carrying the adopted bytes (a plain commit, so
+    its revert may omit `-m 1`), the reviewed spec and the screening-policy
+    successor v3 at that commit, and the version tag. Its predecessor is
+    v2.6's text of REQ-polaris-generation-046, so v2.6 must itself be in force.
+    """
+    rows = readmit_rows(root)
+    if not rows or readmit_disposition(root, rows):
+        return None, [], []
+    records, subjects = [], []
+    if reach_binding(root)[0] is None:
+        records.append("declared-source re-admission: prior v2.6 declared-source reach adoption is unavailable")
+    if len(rows) != 1 or len(rows[0]) != 7:
+        records.append("declared-source re-admission: expected one seven-column agent adoption row")
+    else:
+        identity, date, commit, changed, reason, revert, tag = rows[0]
+        landed = re.fullmatch(r"`([0-9a-f]{40})`", commit)
+        if (not re.fullmatch(r"A-[1-9][0-9]*", identity)
+                or not valid_adoption_date(date)
+                or not landed or tag != f"`{READMIT_TAG}`" or not reason):
+            records.append("declared-source re-admission: malformed adoption identity, date, commit, reason or tag")
+        if landed:
+            oid = landed.group(1)
+            if revert.split("`")[1:2] not in ([f"git revert {oid}"], [f"git revert -m 1 {oid}"]):
+                records.append("declared-source re-admission: revert does not name the landed commit")
+            for rel in READMIT_SUBJECTS:
+                snapshot = f"https://github.com/tzeusy-org/syzygy/blob/{oid}/{rel}"
+                if f"]({snapshot})" not in changed:
+                    records.append(f"declared-source re-admission: adoption row does not name `{rel}`")
+    for rel, digest in READMIT_SUBJECTS.items():
+        body = read_bytes(root, rel)
+        if body is None or sha(body) != digest:
+            subjects.append(f"declared-source re-admission: `{rel}` differs from the reviewed v2.13 subject")
+    return (None if records or subjects else read_text(root, READMIT_SPEC), records, subjects)
+
+
 def manifests_binding(root):
     """Read v2.7's published composition: pending until its row, like v2.5.
 
@@ -1806,7 +1942,7 @@ def corr_binding(root):
     return (None if records or subjects else read_text(root, CORR_SPEC), records, subjects)
 
 
-def infra_binding(root):
+def coverage_binding(root):
     """Read v2.12's published composition: pending until its row, like v2.11.
 
     The row names the installing commit (a plain commit, so its revert may
@@ -1814,12 +1950,50 @@ def infra_binding(root):
     predecessor is v2.11's text of REQ-polaris-generation-034, so v2.11 must
     itself be in force.
     """
+    rows = coverage_rows(root)
+    if not rows or coverage_disposition(root, rows):
+        return None, [], []
+    records, subjects = [], []
+    if corr_binding(root)[0] is None:
+        records.append("coverage precheck: prior v2.11 spec corrections adoption is unavailable")
+    if len(rows) != 1 or len(rows[0]) != 7:
+        records.append("coverage precheck: expected one seven-column agent adoption row")
+    else:
+        identity, date, commit, changed, reason, revert, tag = rows[0]
+        landed = re.fullmatch(r"`([0-9a-f]{40})`", commit)
+        if (not re.fullmatch(r"A-[1-9][0-9]*", identity)
+                or not valid_adoption_date(date)
+                or not landed or tag != f"`{COVERAGE_TAG}`" or not reason):
+            records.append("coverage precheck: malformed adoption identity, date, commit, reason or tag")
+        if landed:
+            oid = landed.group(1)
+            if revert.split("`")[1:2] not in ([f"git revert {oid}"], [f"git revert -m 1 {oid}"]):
+                records.append("coverage precheck: revert does not name the landed commit")
+            for rel in COVERAGE_SUBJECTS:
+                snapshot = f"https://github.com/tzeusy-org/syzygy/blob/{oid}/{rel}"
+                if f"]({snapshot})" not in changed:
+                    records.append(f"coverage precheck: adoption row does not name `{rel}`")
+    for rel, digest in COVERAGE_SUBJECTS.items():
+        body = read_bytes(root, rel)
+        if body is None or sha(body) != digest:
+            subjects.append(f"coverage precheck: `{rel}` differs from the reviewed v2.12 subject")
+    return (None if records or subjects else read_text(root, COVERAGE_SPEC), records, subjects)
+
+
+def infra_binding(root):
+    """Read v2.14's published composition: pending until its row, like v2.12.
+
+    The row names the installing commit (a plain commit, so its revert may
+    omit `-m 1`), the reviewed spec at that commit and the version tag. Its
+    predecessor is v2.12's text of REQ-polaris-generation-034, so v2.12 must
+    itself be in force.
+    """
     rows = infra_rows(root)
     if not rows or infra_disposition(root, rows):
         return None, [], []
     records, subjects = [], []
-    if corr_binding(root)[0] is None:
-        records.append("infrastructure recognizers: prior v2.11 spec corrections adoption is unavailable")
+    if coverage_binding(root)[0] is None:
+        records.append("infrastructure recognizers: prior v2.12 coverage precheck adoption is unavailable")
     if len(rows) != 1 or len(rows[0]) != 7:
         records.append("infrastructure recognizers: expected one seven-column agent adoption row")
     else:
@@ -1840,7 +2014,7 @@ def infra_binding(root):
     for rel, digest in INFRA_SUBJECTS.items():
         body = read_bytes(root, rel)
         if body is None or sha(body) != digest:
-            subjects.append(f"infrastructure recognizers: `{rel}` differs from the reviewed v2.12 subject")
+            subjects.append(f"infrastructure recognizers: `{rel}` differs from the reviewed v2.14 subject")
     return (None if records or subjects else read_text(root, INFRA_SPEC), records, subjects)
 
 
@@ -2334,6 +2508,15 @@ def check_outcomes(root, report):
         subjects_seen += CORR_BOUND_PARTS
     r1 += corr_records
     r2 += corr_subjects
+    coverage_retired_by = coverage_disposition(root, coverage_rows(root))
+    coverage_amendment, coverage_records, coverage_subjects = coverage_binding(root)
+    if coverage_retired_by:
+        records += 2
+    elif coverage_amendment is not None or coverage_records or coverage_subjects:
+        records += 1
+        subjects_seen += COVERAGE_BOUND_PARTS
+    r1 += coverage_records
+    r2 += coverage_subjects
     infra_retired_by = infra_disposition(root, infra_rows(root))
     infra_amendment, infra_records, infra_subjects = infra_binding(root)
     if infra_retired_by:
@@ -2343,6 +2526,15 @@ def check_outcomes(root, report):
         subjects_seen += INFRA_BOUND_PARTS
     r1 += infra_records
     r2 += infra_subjects
+    readmit_retired_by = readmit_disposition(root, readmit_rows(root))
+    readmit_amendment, readmit_records, readmit_subjects = readmit_binding(root)
+    if readmit_retired_by:
+        records += 2
+    elif readmit_amendment is not None or readmit_records or readmit_subjects:
+        records += 1
+        subjects_seen += READMIT_BOUND_PARTS
+    r1 += readmit_records
+    r2 += readmit_subjects
     retirement = ""
     if declared_retired_by:
         retirement += f"; v2.0 inactive by {declared_retired_by}"
@@ -2368,8 +2560,12 @@ def check_outcomes(root, report):
         retirement += f"; v2.10 inactive by {bounds_retired_by}"
     if corr_retired_by:
         retirement += f"; v2.11 inactive by {corr_retired_by}"
+    if coverage_retired_by:
+        retirement += f"; v2.12 inactive by {coverage_retired_by}"
     if infra_retired_by:
-        retirement += f"; v2.12 inactive by {infra_retired_by}"
+        retirement += f"; v2.14 inactive by {infra_retired_by}"
+    if readmit_retired_by:
+        retirement += f"; v2.13 inactive by {readmit_retired_by}"
     report.add("R1", "terminal outcome for every child", records, r1,
                f"{len(CHILDREN)} children and {len(additions)} installed Polaris "
                "additions; digest acts: phrase = manifest sha256 and in the "
@@ -2391,8 +2587,11 @@ def check_outcomes(root, report):
                "pending until recorded; computed maps: one v2.9 row over effective "
                "v2.8, pending until recorded; record bounds: one v2.10 row over "
                "effective v2.9, pending until recorded; spec corrections: one v2.11 row "
-               "over effective v2.10, pending until recorded; infrastructure recognizers: one v2.12 "
-               "row over effective v2.11, pending until recorded" + retirement)
+               "over effective v2.10, pending until recorded; coverage precheck: one v2.12 row "
+               "over effective v2.11, pending until recorded; declared-source "
+               "re-admission: one v2.13 row over effective v2.6 naming spec and "
+               "policy, pending until recorded; infrastructure recognizers: one v2.14 "
+               "row over effective v2.12, pending until recorded" + retirement)
     report.add("R2", "reviewed and signed subjects hash to their rows", subjects_seen, r2)
 
 
@@ -3100,6 +3299,16 @@ def census(root):
                 b, extra_b = compose_figure_by_name(b, reach_amendment, REACH_REPLACES)
                 pa += extra_a
                 pb += extra_b
+        readmit_amendment, readmit_records, readmit_subjects = readmit_binding(root)
+        findings += readmit_records + readmit_subjects
+        if readmit_amendment is not None:
+            if reach_amendment is None or amendment is None:
+                findings.append("POLARIS: declared-source re-admission requires effective declared-source reach v2.6")
+            else:
+                a, extra_a = compose_figure_by_id(a, readmit_amendment, REACH_REPLACES)
+                b, extra_b = compose_figure_by_name(b, readmit_amendment, REACH_REPLACES)
+                pa += extra_a
+                pb += extra_b
         manifests_amendment, manifests_records, manifests_subjects = manifests_binding(root)
         findings += manifests_records + manifests_subjects
         if manifests_amendment is not None:
@@ -3158,13 +3367,26 @@ def census(root):
                 b, extra_b = compose_figure_by_name(b, corr_amendment)
                 pa += extra_a
                 pb += extra_b
+        coverage_amendment, coverage_records, coverage_subjects = coverage_binding(root)
+        findings += coverage_records + coverage_subjects
+        if coverage_amendment is not None:
+            if (corr_amendment is None or bounds_amendment is None or maps_amendment is None or repairs_amendment is None or manifests_amendment is None
+                    or kinds_amendment is None or ledger_amendment is None or derived_amendment is None
+                    or figure_amendment is None or amendment is None):
+                findings.append("POLARIS: coverage precheck requires effective spec corrections v2.11")
+            else:
+                a, extra_a = compose_figure_by_id(a, coverage_amendment)
+                b, extra_b = compose_figure_by_name(b, coverage_amendment)
+                pa += extra_a
+                pb += extra_b
         infra_amendment, infra_records, infra_subjects = infra_binding(root)
         findings += infra_records + infra_subjects
         if infra_amendment is not None:
-            if (corr_amendment is None or bounds_amendment is None or maps_amendment is None or repairs_amendment is None
-                    or manifests_amendment is None or kinds_amendment is None or ledger_amendment is None
-                    or derived_amendment is None or figure_amendment is None or amendment is None):
-                findings.append("POLARIS: infrastructure recognizers requires effective spec corrections v2.11")
+            if (coverage_amendment is None or corr_amendment is None or bounds_amendment is None or maps_amendment is None
+                    or repairs_amendment is None or manifests_amendment is None
+                    or kinds_amendment is None or ledger_amendment is None or derived_amendment is None
+                    or figure_amendment is None or amendment is None):
+                findings.append("POLARIS: infrastructure recognizers requires effective coverage precheck v2.12")
             else:
                 a, extra_a = compose_figure_by_id(a, infra_amendment)
                 b, extra_b = compose_figure_by_name(b, infra_amendment)
@@ -3259,6 +3481,14 @@ def polaris_expected(root, findings):
                 findings.append("POLARIS declared-source reach: methods disagree or change identities")
             n_scen += sum(len(row["scenarios"]) for row in rea_a.values()) - sum(
                 len(row["scenarios"]) for row in after_a.values())
+            readmit_amendment, _records, _subjects = readmit_binding(root)
+            if readmit_amendment is not None:
+                rad_a, pa = compose_figure_by_id(rea_a, readmit_amendment, REACH_REPLACES)
+                rad_b, pb = compose_figure_by_name(rea_b, readmit_amendment, REACH_REPLACES)
+                if pa or pb or rad_a != rad_b or set(rad_a) != set(rea_a):
+                    findings.append("POLARIS declared-source re-admission: methods disagree or change identities")
+                n_scen += sum(len(row["scenarios"]) for row in rad_a.values()) - sum(
+                    len(row["scenarios"]) for row in rea_a.values())
         figure_amendment, _records, _subjects = figure_binding(root)
         if figure_amendment is not None:
             fig_a, pa = compose_figure_by_id(after_a, figure_amendment)
@@ -3331,15 +3561,36 @@ def polaris_expected(root, findings):
                                                 findings.append("POLARIS spec corrections: methods disagree or change identities")
                                             n_scen += sum(len(row["scenarios"]) for row in cor_a.values()) - sum(
                                                 len(row["scenarios"]) for row in bnd_a.values())
-                                            infra_amendment, _records, _subjects = infra_binding(root)
-                                            if infra_amendment is not None:
-                                                inf_a, pa = compose_figure_by_id(cor_a, infra_amendment)
-                                                inf_b, pb = compose_figure_by_name(cor_b, infra_amendment)
-                                                if pa or pb or inf_a != inf_b or set(inf_a) != set(cor_a):
-                                                    findings.append("POLARIS infrastructure recognizers: methods disagree or change identities")
-                                                n_scen += sum(len(row["scenarios"]) for row in inf_a.values()) - sum(
+                                            coverage_amendment, _records, _subjects = coverage_binding(root)
+                                            if coverage_amendment is not None:
+                                                cov_a, pa = compose_figure_by_id(cor_a, coverage_amendment)
+                                                cov_b, pb = compose_figure_by_name(cor_b, coverage_amendment)
+                                                if pa or pb or cov_a != cov_b or set(cov_a) != set(cor_a):
+                                                    findings.append("POLARIS coverage precheck: methods disagree or change identities")
+                                                n_scen += sum(len(row["scenarios"]) for row in cov_a.values()) - sum(
                                                     len(row["scenarios"]) for row in cor_a.values())
+                                                infra_amendment, _records, _subjects = infra_binding(root)
+                                                if infra_amendment is not None:
+                                                    inf_a, pa = compose_figure_by_id(cov_a, infra_amendment)
+                                                    inf_b, pb = compose_figure_by_name(cov_b, infra_amendment)
+                                                    if pa or pb or inf_a != inf_b or set(inf_a) != set(cov_a):
+                                                        findings.append("POLARIS infrastructure recognizers: methods disagree or change identities")
+                                                    n_scen += sum(len(row["scenarios"]) for row in inf_a.values()) - sum(
+                                                        len(row["scenarios"]) for row in cov_a.values())
     return n_req, n_scen, ids
+
+
+def poc_scenarios_added(root):
+    """Scenarios per POC requirement added by amendments whose adoption row
+    (naming the POC change and the amendment's tag) is in the tree."""
+    rows = [line for line in (read_text(root, AGENT_ADOPTIONS) or "").split("\n")
+            if line.startswith("| A-") and "three-surface-poc-experience" in line]
+    added = {}
+    for tag, scenarios in POC_SCENARIO_AMENDMENTS:
+        if any(f"`{tag}`" in line for line in rows):
+            for req, count in scenarios.items():
+                added[req] = added.get(req, 0) + count
+    return added
 
 
 def check_census(root, report):
@@ -3349,7 +3600,12 @@ def check_census(root, report):
     signed_reference = reference_signed(root)
     totals = dict(EXPECTED_TOTALS, POLARIS=(p_req, p_scen))
     if signed_reference:
-        totals["POC"] = (26, 34)
+        poc_added = poc_scenarios_added(root)
+        poc_literal = {**EXPECTED["POC"], "014": 8}
+        if (len(poc_literal), sum(poc_literal.values())) != (26, 34):
+            findings.append("POC: the signed literal is no longer 26 / 34 before amendments")
+        poc_literal = {**poc_literal, **{req: poc_literal.get(req, 0) + count for req, count in poc_added.items()}}
+        totals["POC"] = (len(poc_literal), sum(poc_literal.values()))
     for family, (n_req, n_scen) in totals.items():
         reqs = pop.get(family, {})
         got = (len(reqs), sum(len(r["scenarios"]) for r in reqs.values()))
@@ -3359,7 +3615,7 @@ def check_census(root, report):
                             f"scenarios, expected {n_req} / {n_scen}")
         literal = EXPECTED.get(family)
         if family == "POC" and signed_reference:
-            literal = {**literal, "014": 8}
+            literal = poc_literal
         if literal is not None:
             prefix = f"{family}-REQ-"
             have = {k[len(prefix):]: len(v["scenarios"]) for k, v in reqs.items()}
@@ -3489,12 +3745,18 @@ def check_generated(root, pop, report):
     corr_amendment, _records, _subjects = corr_binding(root)
     if corr_amendment is not None:
         files += tracked(root, CORR_HOME)
+    coverage_amendment, _records, _subjects = coverage_binding(root)
+    if coverage_amendment is not None:
+        files += tracked(root, COVERAGE_HOME)
     infra_amendment, _records, _subjects = infra_binding(root)
     if infra_amendment is not None:
         files += tracked(root, INFRA_HOME)
     reach_amendment, _records, _subjects = reach_binding(root)
     if reach_amendment is not None:
         files += tracked(root, REACH_HOME)
+    readmit_amendment, _records, _subjects = readmit_binding(root)
+    if readmit_amendment is not None:
+        files += tracked(root, READMIT_HOME)
     candidate_ref_dirs = addition_dirs + (URL_SOURCE_HOME + "/",)
     files += list(ROUTE_PAGES)
     # An addition may cite a candidate Polaris requirement still under
@@ -3544,7 +3806,8 @@ def check_generated(root, pop, report):
                        (reach_amendment, REACH_UNION), (manifests_amendment, MANIFESTS_UNION),
                        (repairs_amendment, REPAIRS_UNION), (maps_amendment, MAPS_UNION),
                        (bounds_amendment, BOUNDS_UNION), (corr_amendment, CORR_UNION),
-                       (infra_amendment, INFRA_UNION)):
+                       (coverage_amendment, COVERAGE_UNION),
+                       (readmit_amendment, READMIT_UNION), (infra_amendment, INFRA_UNION)):
         if delta is None:
             continue
         examined += 1
@@ -3833,6 +4096,24 @@ def check_routes(root, pop, report):
             findings.append(f"`{STATUS}` calls spec corrections v2.11 adopted while it is not in force")
         if any(CORR_TAG in line and "Agent adoption" in line for line in rows.get(CORR_CHANGE, [])):
             findings.append(f"`{OPENSPEC_README}` calls spec corrections v2.11 adopted while it is not in force")
+    coverage_amendment, _records, _subjects = coverage_binding(root)
+    coverage_fields = [line.strip() for line in visible_route_lines(status)
+                    if line.strip().startswith(COVERAGE_STATUS_PREFIX)]
+    if coverage_amendment is not None:
+        examined += 2
+        if not any(Path(AGENT_ADOPTIONS).name in line and COVERAGE_TAG in line
+                   for line in rows.get(COVERAGE_CHANGE, [])):
+            findings.append(f"`{OPENSPEC_README}` does not route coverage precheck v2.12 "
+                            f"to `{AGENT_ADOPTIONS}` and its version tag")
+        identity = coverage_rows(root)[0][0]
+        if AGENT_ADOPTIONS not in status or coverage_fields != [f"{COVERAGE_STATUS_PREFIX} is agent-adopted in {identity}."]:
+            findings.append(f"`{STATUS}` does not route coverage precheck v2.12 and its adoption {identity}")
+    elif COVERAGE_CHANGE in changes:
+        examined += 2
+        if any("is agent-adopted" in field for field in coverage_fields):
+            findings.append(f"`{STATUS}` calls coverage precheck v2.12 adopted while it is not in force")
+        if any(COVERAGE_TAG in line and "Agent adoption" in line for line in rows.get(COVERAGE_CHANGE, [])):
+            findings.append(f"`{OPENSPEC_README}` calls coverage precheck v2.12 adopted while it is not in force")
     infra_amendment, _records, _subjects = infra_binding(root)
     infra_fields = [line.strip() for line in visible_route_lines(status)
                     if line.strip().startswith(INFRA_STATUS_PREFIX)]
@@ -3840,17 +4121,35 @@ def check_routes(root, pop, report):
         examined += 2
         if not any(Path(AGENT_ADOPTIONS).name in line and INFRA_TAG in line
                    for line in rows.get(INFRA_CHANGE, [])):
-            findings.append(f"`{OPENSPEC_README}` does not route infrastructure recognizers v2.12 "
+            findings.append(f"`{OPENSPEC_README}` does not route infrastructure recognizers v2.14 "
                             f"to `{AGENT_ADOPTIONS}` and its version tag")
         identity = infra_rows(root)[0][0]
         if AGENT_ADOPTIONS not in status or infra_fields != [f"{INFRA_STATUS_PREFIX} is agent-adopted in {identity}."]:
-            findings.append(f"`{STATUS}` does not route infrastructure recognizers v2.12 and its adoption {identity}")
+            findings.append(f"`{STATUS}` does not route infrastructure recognizers v2.14 and its adoption {identity}")
     elif INFRA_CHANGE in changes:
         examined += 2
         if any("is agent-adopted" in field for field in infra_fields):
-            findings.append(f"`{STATUS}` calls infrastructure recognizers v2.12 adopted while it is not in force")
+            findings.append(f"`{STATUS}` calls infrastructure recognizers v2.14 adopted while it is not in force")
         if any(INFRA_TAG in line and "Agent adoption" in line for line in rows.get(INFRA_CHANGE, [])):
-            findings.append(f"`{OPENSPEC_README}` calls infrastructure recognizers v2.12 adopted while it is not in force")
+            findings.append(f"`{OPENSPEC_README}` calls infrastructure recognizers v2.14 adopted while it is not in force")
+    readmit_amendment, _records, _subjects = readmit_binding(root)
+    readmit_fields = [line.strip() for line in visible_route_lines(status)
+                      if line.strip().startswith(READMIT_STATUS_PREFIX)]
+    if readmit_amendment is not None:
+        examined += 2
+        if not any(Path(AGENT_ADOPTIONS).name in line and READMIT_TAG in line
+                   for line in rows.get(READMIT_CHANGE, [])):
+            findings.append(f"`{OPENSPEC_README}` does not route declared-source re-admission v2.13 "
+                            f"to `{AGENT_ADOPTIONS}` and its version tag")
+        identity = readmit_rows(root)[0][0]
+        if AGENT_ADOPTIONS not in status or readmit_fields != [f"{READMIT_STATUS_PREFIX} is agent-adopted in {identity}."]:
+            findings.append(f"`{STATUS}` does not route declared-source re-admission v2.13 and its adoption {identity}")
+    elif READMIT_CHANGE in changes:
+        examined += 2
+        if any("is agent-adopted" in field for field in readmit_fields):
+            findings.append(f"`{STATUS}` calls declared-source re-admission v2.13 adopted while it is not in force")
+        if any(READMIT_TAG in line and "Agent adoption" in line for line in rows.get(READMIT_CHANGE, [])):
+            findings.append(f"`{OPENSPEC_README}` calls declared-source re-admission v2.13 adopted while it is not in force")
     reach_amendment, _records, _subjects = reach_binding(root)
     reach_fields = [line.strip() for line in visible_route_lines(status)
                     if line.strip().startswith(REACH_STATUS_PREFIX)]
@@ -4064,11 +4363,13 @@ def inputs(root):
     paths |= {LEDGER_UNION, *LEDGER_SUBJECTS}
     paths |= {KINDS_UNION, *KINDS_SUBJECTS}
     paths |= {REACH_UNION, *REACH_SUBJECTS}
+    paths |= {READMIT_UNION, *READMIT_SUBJECTS}
     paths |= {MANIFESTS_UNION, *MANIFESTS_SUBJECTS}
     paths |= {REPAIRS_UNION, *REPAIRS_SUBJECTS}
     paths |= {MAPS_UNION, *MAPS_SUBJECTS}
     paths |= {BOUNDS_UNION, *BOUNDS_SUBJECTS}
     paths |= {CORR_UNION, *CORR_SUBJECTS}
+    paths |= {COVERAGE_UNION, *COVERAGE_SUBJECTS}
     paths |= {INFRA_UNION, *INFRA_SUBJECTS}
     paths |= poc_reference().validation_inputs(root)
     return sorted(paths)
@@ -4440,14 +4741,17 @@ def declared_source_historical_cases(tmp, base, clean, witnesses, failures):
     had_maps = any(is_maps_row(line) for line in original.splitlines())
     had_bounds = any(is_bounds_row(line) for line in original.splitlines())
     had_corr = any(is_corr_row(line) for line in original.splitlines())
+    had_coverage = any(is_coverage_row(line) for line in original.splitlines())
     had_infra = any(is_infra_row(line) for line in original.splitlines())
+    had_readmit = any(is_readmit_row(line) for line in original.splitlines())
     absent_ledger = "".join(line for line in original.splitlines(keepends=True)
                             if line.rstrip("\n") != row and not is_url_source_row(line)
                             and not is_figure_row(line) and not is_derived_row(line)
                             and not is_ledger_row(line) and not is_kinds_row(line)
                             and not is_reach_row(line) and not is_manifests_row(line) and not is_repairs_row(line) and not is_maps_row(line)
                             and not is_bounds_row(line)
-                      and not is_corr_row(line)
+                      and not is_corr_row(line) and not is_coverage_row(line)
+                      and not is_readmit_row(line)
                       and not is_infra_row(line))
     ledger.write_text(absent_ledger)
     report = Report()
@@ -4461,7 +4765,7 @@ def declared_source_historical_cases(tmp, base, clean, witnesses, failures):
             and declared_source_binding(tree) == (None, [], [])
             and not report.failed
             and examined(report, "R1") == examined(clean, "R1") - 1 - had_url_source - had_figure - had_derived - had_ledger - had_kinds - had_manifests
-            - had_reach - had_repairs - had_maps - had_bounds - had_corr - had_infra
+            - had_reach - had_repairs - had_maps - had_bounds - had_corr - had_coverage - had_readmit - had_infra
             and examined(report, "R2") == examined(clean, "R2") - 3
             - (URL_SOURCE_BOUND_PARTS if had_url_source else 0)
             - (FIGURE_BOUND_PARTS if had_figure else 0)
@@ -4474,6 +4778,8 @@ def declared_source_historical_cases(tmp, base, clean, witnesses, failures):
             - (MAPS_BOUND_PARTS if had_maps else 0)
             - (BOUNDS_BOUND_PARTS if had_bounds else 0)
             - (CORR_BOUND_PARTS if had_corr else 0)
+            - (COVERAGE_BOUND_PARTS if had_coverage else 0)
+            - (READMIT_BOUND_PARTS if had_readmit else 0)
             - (INFRA_BOUND_PARTS if had_infra else 0))
     witnesses.append({"mutant": "declared-historical-control", "path": change,
                       "old": "<no amendment, row, subjects or D10 act>",
@@ -4871,7 +5177,7 @@ def figure_cases(tmp, base, witnesses, failures):
                       and not is_ledger_row(line) and not is_kinds_row(line)
                       and not is_manifests_row(line) and not is_repairs_row(line) and not is_maps_row(line)
                       and not is_bounds_row(line)
-                      and not is_corr_row(line)
+                      and not is_corr_row(line) and not is_coverage_row(line)
                       and not is_infra_row(line))
     ledger.write_text(pending)
     pending_pop, pending_findings = census(tree)
@@ -5008,7 +5314,7 @@ def derived_cases(tmp, base, witnesses, failures):
                       and not is_kinds_row(line)
                       and not is_manifests_row(line) and not is_repairs_row(line) and not is_maps_row(line)
                       and not is_bounds_row(line)
-                      and not is_corr_row(line)
+                      and not is_corr_row(line) and not is_coverage_row(line)
                       and not is_infra_row(line))
     ledger.write_text(pending)
     pending_pop, pending_findings = census(tree)
@@ -5140,7 +5446,7 @@ def ledger_cases(tmp, base, witnesses, failures):
                       if not is_ledger_row(line) and not is_kinds_row(line)
                       and not is_manifests_row(line) and not is_repairs_row(line) and not is_maps_row(line)
                       and not is_bounds_row(line)
-                      and not is_corr_row(line)
+                      and not is_corr_row(line) and not is_coverage_row(line)
                       and not is_infra_row(line))
     ledger.write_text(pending)
     pending_pop, pending_findings = census(tree)
@@ -5270,7 +5576,7 @@ def kinds_cases(tmp, base, witnesses, failures):
     pending = "".join(line for line in ledger.read_text().splitlines(keepends=True)
                       if not is_kinds_row(line) and not is_manifests_row(line) and not is_repairs_row(line) and not is_maps_row(line)
                       and not is_bounds_row(line)
-                      and not is_corr_row(line)
+                      and not is_corr_row(line) and not is_coverage_row(line)
                       and not is_infra_row(line))
     ledger.write_text(pending)
     pending_pop, pending_findings = census(tree)
@@ -5400,7 +5706,7 @@ def manifests_cases(tmp, base, witnesses, failures):
     pending = "".join(line for line in ledger.read_text().splitlines(keepends=True)
                       if not is_manifests_row(line) and not is_repairs_row(line) and not is_maps_row(line)
                       and not is_bounds_row(line)
-                      and not is_corr_row(line)
+                      and not is_corr_row(line) and not is_coverage_row(line)
                       and not is_infra_row(line))
     ledger.write_text(pending)
     pending_pop, pending_findings = census(tree)
@@ -5530,7 +5836,7 @@ def repairs_cases(tmp, base, witnesses, failures):
     pending = "".join(line for line in ledger.read_text().splitlines(keepends=True)
                       if not is_repairs_row(line) and not is_maps_row(line)
                       and not is_bounds_row(line)
-                      and not is_corr_row(line)
+                      and not is_corr_row(line) and not is_coverage_row(line)
                       and not is_infra_row(line))
     ledger.write_text(pending)
     pending_pop, pending_findings = census(tree)
@@ -5659,7 +5965,7 @@ def maps_cases(tmp, base, witnesses, failures):
     ledger = tree / AGENT_ADOPTIONS
     pending = "".join(line for line in ledger.read_text().splitlines(keepends=True)
                       if not is_maps_row(line) and not is_bounds_row(line)
-                      and not is_corr_row(line)
+                      and not is_corr_row(line) and not is_coverage_row(line)
                       and not is_infra_row(line))
     ledger.write_text(pending)
     pending_pop, pending_findings = census(tree)
@@ -5857,7 +6163,7 @@ def bounds_cases(tmp, base, witnesses, failures):
     shutil.copytree(base, tree)
     ledger = tree / AGENT_ADOPTIONS
     pending = "".join(line for line in ledger.read_text().splitlines(keepends=True)
-                      if not is_bounds_row(line) and not is_corr_row(line)
+                      if not is_bounds_row(line) and not is_corr_row(line) and not is_coverage_row(line)
                       and not is_infra_row(line))
     ledger.write_text(pending)
     pending_pop, pending_findings = census(tree)
@@ -5985,7 +6291,8 @@ def corr_cases(tmp, base, witnesses, failures):
     shutil.copytree(base, tree)
     ledger = tree / AGENT_ADOPTIONS
     pending = "".join(line for line in ledger.read_text().splitlines(keepends=True)
-                      if not is_corr_row(line) and not is_infra_row(line))
+                      if not is_corr_row(line) and not is_coverage_row(line)
+                      and not is_infra_row(line))
     ledger.write_text(pending)
     pending_pop, pending_findings = census(tree)
     predecessor = pending_pop["POLARIS"]
@@ -6095,10 +6402,138 @@ def corr_cases(tmp, base, witnesses, failures):
                bool(ida and names and a == b == kin_pop), False)
 
 
-def infra_cases(tmp, base, witnesses, failures):
+def coverage_cases(tmp, base, witnesses, failures):
     """The v2.12 pending-to-adopted transition over v2.11, its ledger and byte guards, and the predecessor guard."""
-    original = read_text(base, INFRA_SPEC)
+    original = read_text(base, COVERAGE_SPEC)
     if original is None or corr_binding(base)[0] is None:
+        return
+
+    def record(name, rel, old, new, expect, found, caught, stood):
+        witnesses.append({"mutant": name, "path": rel, "old": old, "new": new,
+                          "expected": expect, "failed": found,
+                          "outcome": ("held" if stood else "killed") if caught else "SURVIVED"})
+        if not caught:
+            failures.append(name)
+
+    tree = Path(tmp) / "coverage-precheck"
+    shutil.copytree(base, tree)
+    ledger = tree / AGENT_ADOPTIONS
+    pending = "".join(line for line in ledger.read_text().splitlines(keepends=True)
+                      if not is_coverage_row(line)
+                      and not is_infra_row(line))
+    ledger.write_text(pending)
+    pending_pop, pending_findings = census(tree)
+    predecessor = pending_pop["POLARIS"]
+    ident = FIGURE_REPLACES[0]
+    held = (coverage_binding(tree) == (None, [], []) and not pending_findings
+            and len(predecessor[ident]["scenarios"]) == 110)
+    record("coverage-pending", AGENT_ADOPTIONS, "<no v2.12 row>", "<unchanged>",
+           "landed package alone keeps v2.12 pending", pending_findings, held, True)
+
+    oid = "0123456789abcdef" * 2 + "01234567"
+    row = (f"| A-999 | 2026-11-21 | `{oid}` | [spec](https://github.com/tzeusy-org/syzygy/blob/{oid}/{COVERAGE_SPEC}) "
+           f"| Selftest | `git revert {oid}` | `{COVERAGE_TAG}` |\n")
+    ledger.write_text(pending + row)
+    current_pop, current_findings = census(tree)
+    current = current_pop["POLARIS"]
+    held = (coverage_binding(tree) == (original, [], []) and not current_findings
+            and set(current) == set(predecessor)
+            and len(current[ident]["scenarios"]) == 117
+            and current[ident]["name"] == predecessor[ident]["name"]
+            and all(current[i] == r for i, r in predecessor.items() if i != ident))
+    record("coverage-adopted", AGENT_ADOPTIONS, "<no v2.12 row>", row,
+           "v2.12 replaces exactly 034 (110 to 117 scenarios)", current_findings, held, True)
+
+    for name, old, new in (("duplicate-row", row, row + row),
+                           ("wrong-tag", COVERAGE_TAG, COVERAGE_TAG + "-wrong"),
+                           ("wrong-revert", f"git revert {oid}", "git revert " + "0" * 40),
+                           ("missing-spec-link", f"/blob/{oid}/{COVERAGE_SPEC})", f"/blob/other/{COVERAGE_SPEC})"),
+                           ("bad-date", "2026-11-21", "2026-99-21"),
+                           ("no-reason", "| Selftest |", "|  |")):
+        assert old in row
+        ledger.write_text(pending + row.replace(old, new, 1))
+        effective, r1, r2 = coverage_binding(tree)
+        record(f"coverage-{name}", AGENT_ADOPTIONS, old, new,
+               "R1 refusal with no effective amendment", r1 + r2,
+               effective is None and bool(r1) and not r2, False)
+
+    veto = (f"| A-1000 | 2026-11-22 | `8a468bc` | Veto A-999 | Test only | `git revert 8a468bc` | — |\n")
+    ledger.write_text(pending + row + veto)
+    pop, found = census(tree)
+    held = (coverage_disposition(tree, coverage_rows(tree)) == "A-1000" and not found
+            and pop["POLARIS"] == predecessor)
+    record("coverage-vetoed", AGENT_ADOPTIONS, row, veto, "restore the v2.11 034", found, held, True)
+    prior_row = next((line for line in pending.splitlines(keepends=True) if is_corr_row(line)), None)
+    if prior_row is not None:
+        no_prior = "".join(line for line in pending.splitlines(keepends=True) if not is_corr_row(line))
+        ledger.write_text(no_prior + row)
+        effective, r1, r2 = coverage_binding(tree)
+        record("coverage-predecessor-missing", AGENT_ADOPTIONS, prior_row, "",
+               "R1 refusal while v2.11 is not in force", r1 + r2,
+               effective is None and any("prior v2.11" in f for f in r1), False)
+
+    ledger.write_text(pending + row)
+    for rel in COVERAGE_SUBJECTS:
+        subject = tree / rel
+        previous = subject.read_bytes()
+        subject.write_bytes(previous + b"\n")
+        effective, r1, r2 = coverage_binding(tree)
+        subject.write_bytes(previous)
+        record(f"coverage-subject-changed-{Path(rel).name}", rel, "<end of file>", "\n",
+               "R2 refusal with no effective amendment", r1 + r2,
+               effective is None and not r1 and bool(r2), False)
+    union = tree / COVERAGE_UNION
+    previous = union.read_text()
+    assert '"REQ-polaris-generation-014"' in previous
+    union.write_text(previous.replace('"REQ-polaris-generation-014"', '"REQ-polaris-generation-099"', 1))
+    report = Report()
+    check_generated(tree, current_pop, report)
+    union.write_text(previous)
+    record("coverage-union-changed", COVERAGE_UNION, '"REQ-polaris-generation-014"', '"REQ-polaris-generation-099"', "R4 refusal",
+           report.findings.get("R4", []), any(COVERAGE_UNION in f for f in report.findings.get("R4", [])), False)
+    status = tree / STATUS
+    previous = status.read_text()
+    status.write_text("\n".join(line for line in previous.split("\n")
+                                if not line.strip().startswith(COVERAGE_STATUS_PREFIX)))
+    report = Report()
+    check_routes(tree, current_pop, report)
+    status.write_text(previous)
+    record("coverage-status-route-missing", STATUS, COVERAGE_STATUS_PREFIX, "", "R5 refusal",
+           report.findings.get("R5", []),
+           any("coverage precheck v2.12" in f for f in report.findings.get("R5", [])), False)
+    ledger.write_text(pending)
+    report = Report()
+    check_routes(tree, pending_pop, report)
+    claims = [f for f in report.findings.get("R5", []) if "while it is not in force" in f]
+    adopted_status = any(line.strip().startswith(COVERAGE_STATUS_PREFIX) and "is agent-adopted" in line
+                         for line in previous.split("\n"))
+    record("coverage-pending-claims-adoption", AGENT_ADOPTIONS, row, "",
+           "R5 refuses an adopted route while the row is missing", claims,
+           bool(claims) if adopted_status else not claims, not adopted_status)
+    ledger.write_text(pending + row)
+
+    cases = [
+        ("added-section", DECLARED_SOURCE_MODIFIED, ADDED_HEADING),
+        ("wrong-id", "ID: " + ident, "ID: " + POLARIS_ID + "035"),
+        ("renamed", "### Requirement: Agent brief and mechanically checked draft",
+         "### Requirement: Agent brief and coverage precheck"),
+        ("second-block", "ID: " + ident, "ID: " + ident + "\n\n### Requirement: Extra\n\nID: " + POLARIS_ID + "099"),
+    ]
+    kin_pop = predecessor
+    for name, old, new in cases:
+        assert old in original, name
+        mutant = original.replace(old, new, 1)
+        a, ida = compose_figure_by_id(kin_pop, mutant)
+        b, names = compose_figure_by_name(kin_pop, mutant)
+        record(f"coverage-compose-{name}", COVERAGE_SPEC, old, new,
+               "both parsers refuse without partial application", ida + names,
+               bool(ida and names and a == b == kin_pop), False)
+
+
+def infra_cases(tmp, base, witnesses, failures):
+    """The v2.14 pending-to-adopted transition over v2.12, its ledger and byte guards, and the predecessor guard."""
+    original = read_text(base, INFRA_SPEC)
+    if original is None or coverage_binding(base)[0] is None:
         return
 
     def record(name, rel, old, new, expect, found, caught, stood):
@@ -6118,9 +6553,9 @@ def infra_cases(tmp, base, witnesses, failures):
     predecessor = pending_pop["POLARIS"]
     ident = FIGURE_REPLACES[0]
     held = (infra_binding(tree) == (None, [], []) and not pending_findings
-            and len(predecessor[ident]["scenarios"]) == 110)
-    record("infra-pending", AGENT_ADOPTIONS, "<no v2.12 row>", "<unchanged>",
-           "landed package alone keeps v2.12 pending", pending_findings, held, True)
+            and len(predecessor[ident]["scenarios"]) == 117)
+    record("infra-pending", AGENT_ADOPTIONS, "<no v2.14 row>", "<unchanged>",
+           "landed package alone keeps v2.14 pending", pending_findings, held, True)
 
     oid = "0123456789abcdef" * 2 + "01234567"
     row = (f"| A-999 | 2026-11-21 | `{oid}` | [spec](https://github.com/tzeusy-org/syzygy/blob/{oid}/{INFRA_SPEC}) "
@@ -6130,11 +6565,11 @@ def infra_cases(tmp, base, witnesses, failures):
     current = current_pop["POLARIS"]
     held = (infra_binding(tree) == (original, [], []) and not current_findings
             and set(current) == set(predecessor)
-            and len(current[ident]["scenarios"]) == 123
+            and len(current[ident]["scenarios"]) == 130
             and current[ident]["name"] == predecessor[ident]["name"]
             and all(current[i] == r for i, r in predecessor.items() if i != ident))
-    record("infra-adopted", AGENT_ADOPTIONS, "<no v2.12 row>", row,
-           "v2.12 replaces exactly 034 (110 to 123 scenarios)", current_findings, held, True)
+    record("infra-adopted", AGENT_ADOPTIONS, "<no v2.14 row>", row,
+           "v2.14 replaces exactly 034 (117 to 130 scenarios)", current_findings, held, True)
 
     for name, old, new in (("duplicate-row", row, row + row),
                            ("wrong-tag", INFRA_TAG, INFRA_TAG + "-wrong"),
@@ -6154,15 +6589,15 @@ def infra_cases(tmp, base, witnesses, failures):
     pop, found = census(tree)
     held = (infra_disposition(tree, infra_rows(tree)) == "A-1000" and not found
             and pop["POLARIS"] == predecessor)
-    record("infra-vetoed", AGENT_ADOPTIONS, row, veto, "restore the v2.11 034", found, held, True)
-    prior_row = next((line for line in pending.splitlines(keepends=True) if is_corr_row(line)), None)
+    record("infra-vetoed", AGENT_ADOPTIONS, row, veto, "restore the v2.12 034", found, held, True)
+    prior_row = next((line for line in pending.splitlines(keepends=True) if is_coverage_row(line)), None)
     if prior_row is not None:
-        no_prior = "".join(line for line in pending.splitlines(keepends=True) if not is_corr_row(line))
+        no_prior = "".join(line for line in pending.splitlines(keepends=True) if not is_coverage_row(line))
         ledger.write_text(no_prior + row)
         effective, r1, r2 = infra_binding(tree)
         record("infra-predecessor-missing", AGENT_ADOPTIONS, prior_row, "",
-               "R1 refusal while v2.11 is not in force", r1 + r2,
-               effective is None and any("prior v2.11" in f for f in r1), False)
+               "R1 refusal while v2.12 is not in force", r1 + r2,
+               effective is None and any("prior v2.12" in f for f in r1), False)
 
     ledger.write_text(pending + row)
     for rel in INFRA_SUBJECTS:
@@ -6192,7 +6627,7 @@ def infra_cases(tmp, base, witnesses, failures):
     status.write_text(previous)
     record("infra-status-route-missing", STATUS, INFRA_STATUS_PREFIX, "", "R5 refusal",
            report.findings.get("R5", []),
-           any("infrastructure recognizers v2.12" in f for f in report.findings.get("R5", [])), False)
+           any("infrastructure recognizers v2.14" in f for f in report.findings.get("R5", [])), False)
     ledger.write_text(pending)
     report = Report()
     check_routes(tree, pending_pop, report)
@@ -6239,7 +6674,7 @@ def reach_cases(tmp, base, witnesses, failures):
     shutil.copytree(base, tree)
     ledger = tree / AGENT_ADOPTIONS
     pending = "".join(line for line in ledger.read_text().splitlines(keepends=True)
-                      if not is_reach_row(line))
+                      if not is_reach_row(line) and not is_readmit_row(line))
     ledger.write_text(pending)
     pending_pop, pending_findings = census(tree)
     predecessor = pending_pop["POLARIS"]
@@ -6346,6 +6781,134 @@ def reach_cases(tmp, base, witnesses, failures):
         a, ida = compose_figure_by_id(predecessor, mutant, REACH_REPLACES)
         b, names = compose_figure_by_name(predecessor, mutant, REACH_REPLACES)
         record(f"reach-compose-{name}", REACH_SPEC, old, new,
+               "both parsers refuse without partial application", ida + names,
+               bool(ida and names and a == b == predecessor), False)
+
+
+def readmit_cases(tmp, base, witnesses, failures):
+    """The v2.13 pending-to-adopted transition over v2.6, its ledger and byte guards, and the predecessor guard."""
+    original = read_text(base, READMIT_SPEC)
+    if original is None or reach_binding(base)[0] is None:
+        return
+
+    def record(name, rel, old, new, expect, found, caught, stood):
+        witnesses.append({"mutant": name, "path": rel, "old": old, "new": new,
+                          "expected": expect, "failed": found,
+                          "outcome": ("held" if stood else "killed") if caught else "SURVIVED"})
+        if not caught:
+            failures.append(name)
+
+    tree = Path(tmp) / "declared-source-readmission"
+    shutil.copytree(base, tree)
+    ledger = tree / AGENT_ADOPTIONS
+    pending = "".join(line for line in ledger.read_text().splitlines(keepends=True)
+                      if not is_readmit_row(line))
+    ledger.write_text(pending)
+    pending_pop, pending_findings = census(tree)
+    predecessor = pending_pop["POLARIS"]
+    ident = REACH_REPLACES[0]
+    held = (readmit_binding(tree) == (None, [], []) and not pending_findings
+            and len(predecessor[ident]["scenarios"]) == 11)
+    record("readmit-pending", AGENT_ADOPTIONS, "<no v2.13 row>", "<unchanged>",
+           "landed package alone keeps v2.13 pending", pending_findings, held, True)
+
+    oid = "0123456789abcdef" * 2 + "01234567"
+    row = (f"| A-999 | 2026-11-22 | `{oid}` | [spec](https://github.com/tzeusy-org/syzygy/blob/{oid}/{READMIT_SPEC}) "
+           f"· [policy](https://github.com/tzeusy-org/syzygy/blob/{oid}/{READMIT_POLICY}) "
+           f"| Selftest | `git revert {oid}` | `{READMIT_TAG}` |\n")
+    ledger.write_text(pending + row)
+    current_pop, current_findings = census(tree)
+    current = current_pop["POLARIS"]
+    held = (readmit_binding(tree) == (original, [], []) and not current_findings
+            and set(current) == set(predecessor)
+            and len(current[ident]["scenarios"]) == 13
+            and current[ident]["name"] == predecessor[ident]["name"]
+            and all(current[i] == r for i, r in predecessor.items() if i != ident))
+    record("readmit-adopted", AGENT_ADOPTIONS, "<no v2.13 row>", row,
+           "v2.13 replaces exactly 046 (11 to 13 scenarios)", current_findings, held, True)
+
+    for name, old, new in (("duplicate-row", row, row + row),
+                           ("wrong-tag", READMIT_TAG, READMIT_TAG + "-wrong"),
+                           ("wrong-revert", f"git revert {oid}", "git revert " + "0" * 40),
+                           ("missing-spec-link", f"/blob/{oid}/{READMIT_SPEC})", f"/blob/other/{READMIT_SPEC})"),
+                           ("missing-policy-link", f"/blob/{oid}/{READMIT_POLICY})", f"/blob/other/{READMIT_POLICY})"),
+                           ("bad-date", "2026-11-22", "2026-99-22"),
+                           ("no-reason", "| Selftest |", "|  |")):
+        assert old in row
+        ledger.write_text(pending + row.replace(old, new, 1))
+        effective, r1, r2 = readmit_binding(tree)
+        record(f"readmit-{name}", AGENT_ADOPTIONS, old, new,
+               "R1 refusal with no effective amendment", r1 + r2,
+               effective is None and bool(r1) and not r2, False)
+
+    veto = (f"| A-1000 | 2026-11-23 | `8a468bc` | Veto A-999 | Test only | `git revert 8a468bc` | — |\n")
+    ledger.write_text(pending + row + veto)
+    pop, found = census(tree)
+    held = (readmit_disposition(tree, readmit_rows(tree)) == "A-1000" and not found
+            and pop["POLARIS"] == predecessor)
+    record("readmit-vetoed", AGENT_ADOPTIONS, row, veto, "restore the v2.6 046", found, held, True)
+    prior_row = next((line for line in pending.splitlines(keepends=True) if is_reach_row(line)), None)
+    if prior_row is not None:
+        no_prior = "".join(line for line in pending.splitlines(keepends=True) if not is_reach_row(line))
+        ledger.write_text(no_prior + row)
+        effective, r1, r2 = readmit_binding(tree)
+        record("readmit-predecessor-missing", AGENT_ADOPTIONS, prior_row, "",
+               "R1 refusal while v2.6 is not in force", r1 + r2,
+               effective is None and any("prior v2.6" in f for f in r1), False)
+
+    ledger.write_text(pending + row)
+    for rel in READMIT_SUBJECTS:
+        subject = tree / rel
+        previous = subject.read_bytes()
+        subject.write_bytes(previous + b"\n")
+        effective, r1, r2 = readmit_binding(tree)
+        subject.write_bytes(previous)
+        record(f"readmit-subject-changed-{Path(rel).name}", rel, "<end of file>", "\n",
+               "R2 refusal with no effective amendment", r1 + r2,
+               effective is None and not r1 and bool(r2), False)
+    union = tree / READMIT_UNION
+    previous = union.read_text()
+    assert '"REQ-polaris-generation-048"' in previous
+    union.write_text(previous.replace('"REQ-polaris-generation-048"', '"REQ-polaris-generation-099"', 1))
+    report = Report()
+    check_generated(tree, current_pop, report)
+    union.write_text(previous)
+    record("readmit-union-changed", READMIT_UNION, '"REQ-polaris-generation-048"', '"REQ-polaris-generation-099"', "R4 refusal",
+           report.findings.get("R4", []), any(READMIT_UNION in f for f in report.findings.get("R4", [])), False)
+    status = tree / STATUS
+    previous = status.read_text()
+    status.write_text("\n".join(line for line in previous.split("\n")
+                                if not line.strip().startswith(READMIT_STATUS_PREFIX)))
+    report = Report()
+    check_routes(tree, current_pop, report)
+    status.write_text(previous)
+    record("readmit-status-route-missing", STATUS, READMIT_STATUS_PREFIX, "", "R5 refusal",
+           report.findings.get("R5", []),
+           any("declared-source re-admission v2.13" in f for f in report.findings.get("R5", [])), False)
+    ledger.write_text(pending)
+    report = Report()
+    check_routes(tree, pending_pop, report)
+    claims = [f for f in report.findings.get("R5", []) if "while it is not in force" in f]
+    adopted_status = any(line.strip().startswith(READMIT_STATUS_PREFIX) and "is agent-adopted" in line
+                         for line in previous.split("\n"))
+    record("readmit-pending-claims-adoption", AGENT_ADOPTIONS, row, "",
+           "R5 refuses an adopted route while the row is missing", claims,
+           bool(claims) if adopted_status else not claims, not adopted_status)
+    ledger.write_text(pending + row)
+
+    cases = [
+        ("added-section", DECLARED_SOURCE_MODIFIED, ADDED_HEADING),
+        ("wrong-id", "ID: " + ident, "ID: " + POLARIS_ID + "035"),
+        ("renamed", "### Requirement: Declared local-source admission",
+         "### Requirement: Declared source re-admission"),
+        ("second-block", "ID: " + ident, "ID: " + ident + "\n\n### Requirement: Extra\n\nID: " + POLARIS_ID + "099"),
+    ]
+    for name, old, new in cases:
+        assert old in original, name
+        mutant = original.replace(old, new, 1)
+        a, ida = compose_figure_by_id(predecessor, mutant, REACH_REPLACES)
+        b, names = compose_figure_by_name(predecessor, mutant, REACH_REPLACES)
+        record(f"readmit-compose-{name}", READMIT_SPEC, old, new,
                "both parsers refuse without partial application", ida + names,
                bool(ida and names and a == b == predecessor), False)
 
@@ -6775,9 +7338,11 @@ def _selftest_cases(tmp, commit, witnesses, failures, witness_path, base, clean,
     maps_cases(tmp, base, witnesses, failures)
     bounds_cases(tmp, base, witnesses, failures)
     corr_cases(tmp, base, witnesses, failures)
+    coverage_cases(tmp, base, witnesses, failures)
     infra_cases(tmp, base, witnesses, failures)
     poc_d10_cases(base, witnesses, failures)
     reach_cases(tmp, base, witnesses, failures)
+    readmit_cases(tmp, base, witnesses, failures)
     # Two cases a one-file mutation cannot express. A second record of the
     # same version fails R1 by its own finding; --regenerate refuses an
     # unsigned addition and writes nothing.

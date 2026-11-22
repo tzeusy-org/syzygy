@@ -17,7 +17,7 @@ import { isNpmManifestPath, recognizeNpmManifest } from './manifest-npm.js';
 import { isPythonProjectPath, recognizePythonProject } from './manifest-python.js';
 import { isTerraformPath, recognizeTerraform } from './manifest-terraform.js';
 import { isWorkflowPath, recognizeWorkflow } from './manifest-workflow.js';
-import type { DossierScreen } from './screen.js';
+import { secretPathOf, type DossierScreen } from './screen.js';
 
 /** Declared manifest facts (REQ-polaris-generation-034 version 2.7, syzygy-3efd.25; the infrastructure recognizers, syzygy-3efd.26): what ten versioned
  * recognizers read in the manifest and infrastructure files of the pinned tree that the bound screening policy admits, stored as the draft
@@ -151,7 +151,7 @@ const unknownFile = (path: string, reason: ManifestUnknownReason, read: boolean,
 
 export async function deriveManifestFacts(inputs: ManifestInputs): Promise<ManifestFacts> {
   const { screen } = inputs;
-  const isSecretPath = (path: string): boolean => screen.screenPath(path) === 'secret-detector-match' || screen.screenBody(path, path) === 'secret-detector-match';
+  const isSecretPath = secretPathOf(screen);
   /** A body-taken value the value checks refuse: too long, a control character, or a detector match over text given with no path. */
   const refusedValue = (value: string): boolean => value.length > MANIFEST_VALUE_LIMIT || CONTROL.test(value) || screen.screenBody(value) === 'secret-detector-match';
   const recognizers: ManifestRecognizerEntry[] = [];
