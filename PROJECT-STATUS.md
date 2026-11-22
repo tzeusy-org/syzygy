@@ -95,7 +95,7 @@ authority and no model yet called on the current path.
     [v1.4 sign-off](.syzygy/governance/decisions/POLARIS-DOSSIER-LOCAL-AGENT-MODE-SIGNOFF-v1.4.md);
     [v1.5 sign-off](.syzygy/governance/decisions/POLARIS-DOSSIER-LOCAL-AGENT-MODE-SIGNOFF-v1.5.md);
     [v1.6 sign-off](.syzygy/governance/decisions/POLARIS-DOSSIER-LOCAL-AGENT-MODE-SIGNOFF-v1.6.md)), and
-    39 requirements and 430 scenarios in the effective composition with it and with the signed-off
+    39 requirements and 443 scenarios in the effective composition with it and with the signed-off
     [launch-consent addition](openspec/changes/polaris-dossier-launch-consent/specs/polaris-generation/spec.md)
     ([v1.0 sign-off](.syzygy/governance/decisions/POLARIS-DOSSIER-LAUNCH-CONSENT-SIGNOFF-v1.0.md);
     [v1.1 sign-off](.syzygy/governance/decisions/POLARIS-DOSSIER-LAUNCH-CONSENT-SIGNOFF-v1.1.md);
@@ -166,6 +166,12 @@ authority and no model yet called on the current path.
     It replaces REQ-polaris-generation-034 again (110 to 117 scenarios: inventory-coverage advice on check's
     report and the author's justified-omission record); its implementation (syzygy-5dhm.28) lands with it.
     *(2026-11-22: the predecessor figure "423 scenarios" is superseded by that
+    amendment; all 39 identities remain.)*
+    [Infrastructure recognizers amendment 2.14](openspec/changes/dossier-infrastructure-recognizers) is agent-adopted in A-43.
+    It replaces REQ-polaris-generation-034 again (117 to 130 scenarios: five infrastructure recognizers, a coverage
+    remainder, an infrastructure map page, the 2.10 reader rule for the draft, frozen revisions, the brief record and
+    `run-advice.json`, and the bounded form's words for a draft that does not parse); its code is not yet landed.
+    *(2026-11-22: the predecessor figure "430 scenarios" is superseded by that
     amendment; all 39 identities remain.)*
     *(2026-11-18: the predecessor figure "329 scenarios" is superseded by that
     overlay; all38 identities remain, and046 is now Declared local-source admission.)*

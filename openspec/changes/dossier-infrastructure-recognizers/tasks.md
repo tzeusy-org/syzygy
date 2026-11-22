@@ -6,7 +6,7 @@
 - [x] Wire the overlay into `scripts/check_spec_reconciliation.py` (pending until its row) and `scripts/count_polaris_effective_scenarios.py`, with selftest cases (`infra_cases`).
 - [x] One independent fresh-reader review (CC-REV-4), raw retained, findings dispositioned (`design.md`, "Review").
 - [x] Carry the text onto coverage pre-check 2.12 and renumber it 2.14 (`design.md`, "Carried onto 2.12 and renumbered 2.14").
-- [ ] Append the agent-adoption row naming the installing commit.
+- [x] Append the agent-adoption row naming the installing commit (A-43; numbered A-38 on this branch before the carry-over).
 - [ ] Create the version tag `polaris-dossier-infrastructure-recognizers-v2.14` at the installing commit once it is on the default branch.
 - [ ] The five recognizers, the YAML reader's multi-document and integer-text readings, the per-recognizer limits, the member's format and `remainder` (`packages/polaris-dossier/src/`), with golden fixtures per format and a recorded mutation run per recognizer.
 - [ ] The infrastructure map, the `coverage-remainder` section and `computedMaps` (`apps/three-surface-poc/src/polaris-generation/dossier-site.ts`), with the provider golden unchanged.

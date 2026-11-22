@@ -601,7 +601,7 @@
     },
     "POLARIS": {
       "requirements": 39,
-      "scenarios": 430,
+      "scenarios": 443,
       "members": {
         "REQ-polaris-generation-001": {
           "name": "Admitted project input",
@@ -1095,7 +1095,20 @@
             "Justified omission recorded by the author",
             "No inventory of record gives Unknown coverage",
             "Omission record in an earlier schema or malformed",
-            "Secret-matching path of an entry not named"
+            "Secret-matching path of an entry not named",
+            "Compose services, images, ports and dependencies",
+            "Kubernetes objects across documents",
+            "Terraform resources and modules, variable and state files never read",
+            "Make targets",
+            "CMake lists and other makefile names Unknown under the bound policy",
+            "Malformed infrastructure file is Unknown, never empty",
+            "Infrastructure files past the read limit",
+            "Coverage remainder sums to the tree",
+            "Coverage remainder on the directory map's page",
+            "Infrastructure map rendered",
+            "Provider mode unchanged by infrastructure recognizers",
+            "Bounded form of a draft that does not parse",
+            "Draft, frozen revisions and run file read under their bounds"
           ]
         },
         "REQ-polaris-generation-035": {
