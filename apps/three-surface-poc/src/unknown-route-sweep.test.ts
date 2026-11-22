@@ -236,18 +236,28 @@ function model(name: string): PocModel {
 // governing intent, verification); worker-change: 6 - 1 x 3 + 1 = 4 (those
 // three and the worker-change verification). unreachable and
 // unsupported-repository render no board and do not move.
+// syzygy-t3jk.16 opens Trajectory with five answers (POC-REQ-044). On an
+// observed board four answer parts are their own disclosures (running
+// liveness, changed, cost, orphaned-work count): plain and observed-shape
+// 3 + 4 = 7, worker-change 4 + 4 = 8 (its worker change is observed, so no
+// chain-membership disclosure). The Unknown-provenance count adds one
+// reference to the governing-intent notice (15 + 1, 3 + 1). On a board
+// with no work items each of the five answers is a reference to the
+// work-items notice and no disclosure: unreachable and
+// unsupported-repository keep 1 and 2, references 0 + 5.
 const DENOMINATORS: Readonly<Record<string, Readonly<Record<Surface, number>>>> = {
-  plain: { polaris: 21, trajectory: 3, orrery: 9 },
-  'observed-shape': { polaris: 13, trajectory: 3, orrery: 9 },
+  plain: { polaris: 21, trajectory: 7, orrery: 9 },
+  'observed-shape': { polaris: 13, trajectory: 7, orrery: 9 },
   unreachable: { polaris: 24, trajectory: 1, orrery: 10 },
   'unsupported-repository': { polaris: 22, trajectory: 2, orrery: 9 },
-  'worker-change': { polaris: 19, trajectory: 4, orrery: 7 },
+  'worker-change': { polaris: 19, trajectory: 8, orrery: 7 },
 };
 
-/** Trajectory's card marks that refer to a board disclosure: three per
- * rendered card (title, governing intent, verification). */
+/** Trajectory's marks that refer to a board disclosure: three per rendered
+ * card (title, governing intent, verification), one Unknown-provenance mark
+ * on an observed board, and five answer marks on a board with no work items. */
 const REFERENCES: Readonly<Record<string, number>> = {
-  plain: 15, 'observed-shape': 15, unreachable: 0, 'unsupported-repository': 0, 'worker-change': 3,
+  plain: 16, 'observed-shape': 16, unreachable: 5, 'unsupported-repository': 5, 'worker-change': 4,
 };
 
 describe('every surface Unknown carries a closed reason and a route (M4 slice 1, POC-REQ-060)', () => {
@@ -274,7 +284,7 @@ describe('every surface Unknown carries a closed reason and a route (M4 slice 1,
         for (const disclosure of disclosures(RENDER[surface](model(name)))) ids.add(disclosure.id.replace(/^(work-item|worker-change):[^/]+/, '$1:*'));
       }
     }
-    for (const id of ['worker-change:*/verification', 'region:work-item-verification', 'region:work-item-governing-intent', 'materialization', 'region:code-structure', 'region:work-items', 'region:work-item-titles', 'relationship:intent-to-work', 'region:unmapped-code']) {
+    for (const id of ['worker-change:*/verification', 'region:work-item-verification', 'region:work-item-governing-intent', 'materialization', 'region:code-structure', 'region:work-items', 'region:work-item-titles', 'relationship:intent-to-work', 'region:unmapped-code', 'region:trajectory-running-liveness', 'region:trajectory-changed', 'region:trajectory-cost', 'region:trajectory-orphaned-work']) {
       expect(ids, id).toContain(id);
     }
     expect([...ids].some((id) => id.endsWith('/lifecycle')), 'a proposal lifecycle disclosure').toBe(true);

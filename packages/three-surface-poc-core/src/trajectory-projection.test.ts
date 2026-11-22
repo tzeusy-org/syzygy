@@ -65,9 +65,51 @@ describe('Trajectory projection', () => {
     expect(first.timeRange).toEqual({ earliest: '2026-07-01T00:00:00Z', latest: '2026-08-06T00:00:00Z' });
   });
 
+  it('answers the five questions over every served item, not the rendered selection (POC-REQ-044)', () => {
+    // recentClosedWindow 1 renders three of four items; the answers count four.
+    const projection = projectTrajectory(itemsFixture(), { nonClosedLimit: 10, recentClosedWindow: 1 });
+    if (projection.kind !== 'observed') throw new Error('unreachable');
+    expect(projection.renderedCount).toBe(3);
+    expect(projection.answers).toEqual([
+      { id: 'remains', state: 'observed', served: 4, byStatus: { open: 1, in_progress: 1, blocked: 0, deferred: 0, pinned: 0, hooked: 0, closed: 2 } },
+      { id: 'running', state: 'observed', claimed: 1, served: 4, liveness: { state: 'unknown', disclosure: 'region:trajectory-running-liveness' } },
+      { id: 'changed', state: 'unknown', disclosure: 'region:trajectory-changed' },
+      { id: 'cost', state: 'unknown', disclosure: 'region:trajectory-cost' },
+      {
+        id: 'intent',
+        state: 'observed',
+        unknownProvenance: { count: 4, served: 4, disclosure: 'region:work-item-governing-intent' },
+        reconciliationChain: { members: 0, memberEvidence: 'reconciliation-evidence-absent' },
+        orphanedWork: { state: 'unknown', disclosure: 'region:trajectory-orphaned-work' },
+      },
+    ]);
+  });
+
+  it.each([
+    ['nothing materialized', { materializedBeadId: null, workerChange: null }, 0],
+    ['materialized, no commit yet', { materializedBeadId: 'bu-2', workerChange: { kind: 'observed', state: 'planned' } }, 0],
+    ['materialized, commit off the default branch', { materializedBeadId: 'bu-2', workerChange: { kind: 'observed', state: 'active' } }, 0],
+    ['materialized and on the default branch', { materializedBeadId: 'bu-2', workerChange: { kind: 'observed', state: 'changed-or-merged' } }, 1],
+    ['materialized, worker change unobserved', { materializedBeadId: 'bu-2', workerChange: { kind: 'unknown' } }, { state: 'unknown', disclosure: 'region:trajectory-chain-membership' }],
+  ] as const)('counts the reconciliation chain (RFC2-18): %s', (_name, reconciliationChain, members) => {
+    const projection = projectTrajectory(itemsFixture(), { nonClosedLimit: 10, recentClosedWindow: 5, reconciliationChain });
+    const intent = projection.answers.find((answer) => answer.id === 'intent');
+    expect(intent).toMatchObject({ reconciliationChain: { members }, unknownProvenance: { count: 4 } });
+  });
+
   it('propagates Unknown from the work-items observation', () => {
     const projection = projectTrajectory({ kind: 'unknown', reason: 'db unreachable' }, { nonClosedLimit: 10, recentClosedWindow: 5 });
-    expect(projection).toEqual({ kind: 'unknown', reason: 'db unreachable' });
+    expect(projection).toEqual({
+      kind: 'unknown',
+      reason: 'db unreachable',
+      answers: [
+        { id: 'remains', state: 'unknown', disclosure: 'region:work-items' },
+        { id: 'running', state: 'unknown', disclosure: 'region:work-items' },
+        { id: 'changed', state: 'unknown', disclosure: 'region:work-items' },
+        { id: 'cost', state: 'unknown', disclosure: 'region:work-items' },
+        { id: 'intent', state: 'unknown', disclosure: 'region:work-items' },
+      ],
+    });
   });
 
   it.each([

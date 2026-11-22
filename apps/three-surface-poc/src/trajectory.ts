@@ -3,12 +3,14 @@ import {
   WORK_ITEM_GOVERNING_INTENT_REGION_ID,
   WORK_ITEM_TITLES_REGION_ID,
   WORK_ITEM_VERIFICATION_REGION_ID,
+  WORK_ITEMS_REGION_ID,
+  STATUS_TO_COLUMN,
   workerChangeVerificationId,
   type PocModel,
   type PocUnknown,
   type WorkerChangeObserved,
 } from '@syzygy/three-surface-poc-core';
-import type { TrajectoryColumn, TrajectoryLaneItem } from '@syzygy/three-surface-poc-core';
+import type { TrajectoryAnswer, TrajectoryAnswerId, TrajectoryColumn, TrajectoryLaneItem, WorkItemStatus } from '@syzygy/three-surface-poc-core';
 import type { TestArtifactVerificationResult } from '@syzygy/three-surface-poc-core';
 
 import {
@@ -140,10 +142,13 @@ function closureNotice(rendered: readonly TrajectoryLaneItem[]): string {
 }
 
 /** The element id of each board-level disclosure a card mark refers to. */
+const GOVERNING_INTENT_DISCLOSURE = WORK_ITEM_GOVERNING_INTENT_REGION_ID;
+
 const NOTICE_ELEMENT_ID = {
   [WORK_ITEM_TITLES_REGION_ID]: 'n-titles',
   [WORK_ITEM_GOVERNING_INTENT_REGION_ID]: 'n-intent',
   [WORK_ITEM_VERIFICATION_REGION_ID]: 'n-verification',
+  [WORK_ITEMS_REGION_ID]: 'n-work-items',
 } as const;
 
 type BoardDisclosureId = keyof typeof NOTICE_ELEMENT_ID;
@@ -182,6 +187,71 @@ function verificationRegion(model: PocModel, counts: { readonly served: number; 
         <span data-parity-field="verification-unknown-inside">${counts.inside}</span> are in this selection and <span data-parity-field="verification-unknown-outside">${counts.outside}</span> are outside it.
         ${escapeHtml(unknown.reason)} Reason: <code>${escapeHtml(unknown.closedReason)}</code>. ${unknownRoute(unknown)}
       </p>`;
+}
+
+/** POC-REQ-044 (syzygy-t3jk.16): README.md:99's five questions. */
+const ANSWER_QUESTION: Readonly<Record<TrajectoryAnswerId, string>> = {
+  remains: 'What remains?',
+  running: 'What is running?',
+  changed: 'What changed?',
+  cost: 'What did it cost?',
+  intent: 'Has the result been verified against intent?',
+};
+
+/** An answer part that is its own disclosure: label, basis, closed reason
+ * and route in place, under the subject id the machine answer names. */
+function answerDisclosure(model: PocModel, field: string, id: string, label: string): string {
+  const unknown = unknownSubject(model, id);
+  return `<span class="epistemic epistemic-unknown" data-parity-field="${field}"${unknownMarker(id, unknown)}>${escapeHtml(label)}: Unknown. ${escapeHtml(unknown.reason)} Reason: <code>${escapeHtml(unknown.closedReason)}</code>. ${unknownRoute(unknown)}</span>`;
+}
+
+function answerBody(model: PocModel, answer: TrajectoryAnswer): string {
+  if (answer.state === 'unknown' && answer.disclosure === WORK_ITEMS_REGION_ID) {
+    const unknown = unknownSubject(model, WORK_ITEMS_REGION_ID);
+    return cardMark(`answer-${answer.id}`, WORK_ITEMS_REGION_ID, 'epistemic-unknown', unknown.closedReason, 'Unknown: work items were not observed');
+  }
+  switch (answer.id) {
+    case 'remains': {
+      if (!('byStatus' in answer)) break;
+      const parts = (Object.keys(STATUS_TO_COLUMN) as WorkItemStatus[])
+        .map((status) => `<span data-parity-field="answer-remains-${status}">${answer.byStatus[status]}</span> <code>${escapeHtml(status)}</code>`)
+        .join(' · ');
+      return `<span data-parity-field="answer-remains-served">${answer.served}</span> served work items, by tracker status: ${parts}. Counted over every served item, not this board's selection.`;
+    }
+    case 'running': {
+      if (!('claimed' in answer)) break;
+      return `<span data-parity-field="answer-running-claimed">${answer.claimed}</span> of ${answer.served} served work items are claimed in the tracker (status <code>in_progress</code>), which is the tracker's claim. ${answerDisclosure(model, 'answer-running-liveness', answer.liveness.disclosure, 'Liveness')}`;
+    }
+    case 'changed':
+    case 'cost':
+      if (answer.state === 'unknown') return answerDisclosure(model, `answer-${answer.id}`, answer.disclosure, answer.id === 'changed' ? 'What changed' : 'Cost');
+      break;
+    case 'intent': {
+      if (!('unknownProvenance' in answer)) break;
+      const provenance = unknownSubject(model, answer.unknownProvenance.disclosure);
+      const members = answer.reconciliationChain.members;
+      const chain = typeof members === 'number'
+        ? `<span data-parity-field="answer-intent-chain-members">${members}</span>`
+        : answerDisclosure(model, 'answer-intent-chain-members', members.disclosure, 'Members');
+      return `<ul class="answer-counts">
+          <li>Unknown-provenance: <span data-parity-field="answer-intent-unknown-provenance">${answer.unknownProvenance.count}</span> of ${answer.unknownProvenance.served} served work items have no traceable warrant. ${cardMark('answer-intent-unknown-provenance-mark', GOVERNING_INTENT_DISCLOSURE, 'epistemic-unknown', provenance.closedReason, 'Governing intent: Unknown')}</li>
+          <li>Reconciliation chain: ${chain} materialized work items whose change is on the default branch. For each member: <span class="chain-state" data-parity-field="answer-intent-chain-evidence">reconciliation evidence absent / Unknown</span>; running a reconciliation evaluation resolves it.</li>
+          <li>Orphaned work: not checked. ${answerDisclosure(model, 'answer-intent-orphaned', answer.orphanedWork.disclosure, 'Count')}</li>
+        </ul>
+        <p class="answer-note">The three counts are separate and never added together. Each item's own verification is in the <a href="#n-verification">verification notice</a>.</p>`;
+    }
+  }
+  throw new Error(`unrenderable Trajectory answer ${answer.id}`);
+}
+
+/** POC-REQ-044: the five answers, first on the page, in their fixed order;
+ * an Unknown answer is rendered, never dropped. */
+function answersRegion(model: PocModel, answers: readonly TrajectoryAnswer[]): string {
+  return `<section class="answers" aria-label="Five answers about the work" data-parity-field="trajectory-answers">
+      <dl>${answers.map((answer) => `
+        <div class="answer" data-parity-field="trajectory-answer" data-answer-id="${answer.id}"><dt>${escapeHtml(ANSWER_QUESTION[answer.id])}</dt><dd>${answerBody(model, answer)}</dd></div>`).join('')}
+      </dl>
+    </section>`;
 }
 
 /** POC-REQ-040 (syzygy-t3jk.15): what is known about the item, as text:
@@ -264,6 +334,13 @@ function itemCard(
 
 const TRAJECTORY_STYLE = `
   .scope-statement { max-width: 78ch; }
+  .answers dl { display: grid; gap: .6rem; margin: 0 0 1.5rem; max-width: 96ch; }
+  .answer { display: grid; grid-template-columns: minmax(10rem, 16rem) 1fr; gap: .2rem 1rem; border-top: 1px solid var(--line); padding-top: .5rem; }
+  .answer dt { font-weight: 600; }
+  .answer dd { margin: 0; }
+  .answer-counts { margin: 0; padding-left: 1.1rem; display: grid; gap: .3rem; }
+  .answer-note { margin: .4rem 0 0; color: var(--muted); }
+  @media (max-width: 40rem) { .answer { grid-template-columns: 1fr; } }
   /* syzygy-t3jk.15: the seven columns stay one row and the board scrolls
      inside itself when narrower; no code identity widens the page. */
   code { overflow-wrap: anywhere; }
@@ -301,7 +378,8 @@ export function renderTrajectoryPage(model: PocModel, mountPrefix = '', status?:
   let body: string;
   if (trajectory.kind === 'unknown') {
     const unknown = unknownSubject(model, 'region:work-items');
-    body = `<p class="unavailable-notice"${unknownMarker('region:work-items', unknown)}>Unknown — ${escapeHtml(trajectory.reason)}. ${unknownRoute(unknown)} This is a distinct state from an observed-empty board: no board is rendered because the seeded work-item graph is unavailable. Independently observed work-item denominator: Unknown (work items were not independently observed).</p>`;
+    body = `${answersRegion(model, trajectory.answers)}
+      <p class="unavailable-notice" id="${NOTICE_ELEMENT_ID[WORK_ITEMS_REGION_ID]}"${unknownMarker('region:work-items', unknown)}>Unknown — ${escapeHtml(trajectory.reason)}. ${unknownRoute(unknown)} This is a distinct state from an observed-empty board: no board is rendered because the seeded work-item graph is unavailable. Independently observed work-item denominator: Unknown (work items were not independently observed).</p>`;
   } else {
     const byColumn = new Map<TrajectoryColumn, TrajectoryLaneItem[]>();
     for (const column of COLUMN_ORDER) {
@@ -341,6 +419,7 @@ export function renderTrajectoryPage(model: PocModel, mountPrefix = '', status?:
           : `<p class="demo-callout notice">The demonstrated item <code>${escapeHtml(demonstratedId)}</code> was materialized by this POC but falls outside the current board selection, so no card is shown for it.</p>`;
 
     body = `
+      ${answersRegion(model, trajectory.answers)}
       <p class="scope-statement notice" data-parity-field="trajectory-scope">
         Rendering ${trajectory.renderedCount} of ${trajectory.totalCount} observed work items (${trajectory.selectionRule});
         <span data-parity-field="trajectory-excluded-count">${trajectory.excludedCount}</span> items are outside this selection and not shown.
@@ -360,7 +439,7 @@ export function renderTrajectoryPage(model: PocModel, mountPrefix = '', status?:
     current: 'trajectory',
     eyebrow: `Trajectory · ${escapeHtml(model.project.name)} ${model.project.revision.slice(0, 12)}`,
     heading: 'Work and time, observed',
-    lede: 'A board over the registered Beads Dolt database, columns from a declared status mapping, time from recorded instants only.',
+    lede: 'Five answers over every observed work item, then a board of a selection: columns from a declared status mapping, time from recorded instants only.',
     extraStyle: TRAJECTORY_STYLE,
     body,
     status,

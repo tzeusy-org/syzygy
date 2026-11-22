@@ -24,6 +24,72 @@ export interface TrajectoryLaneItem {
   readonly verification: 'unknown';
 }
 
+/** POC-REQ-044 (syzygy-t3jk.16): the disclosures the five answers name.
+ * Each exists in `unknownSubjects` exactly when its answer part renders. */
+export const TRAJECTORY_RUNNING_LIVENESS_ID = 'region:trajectory-running-liveness' as const;
+export const TRAJECTORY_CHANGED_ID = 'region:trajectory-changed' as const;
+export const TRAJECTORY_COST_ID = 'region:trajectory-cost' as const;
+export const TRAJECTORY_ORPHANED_WORK_ID = 'region:trajectory-orphaned-work' as const;
+export const TRAJECTORY_CHAIN_MEMBERSHIP_ID = 'region:trajectory-chain-membership' as const;
+/** The board's governing-intent disclosure (POC-REQ-014); model.ts exports it. */
+export const GOVERNING_INTENT_REGION_ID = 'region:work-item-governing-intent' as const;
+/** The disclosure every answer names when work items were not observed. */
+export const WORK_ITEMS_REGION_ID = 'region:work-items' as const;
+
+/** README.md:99's five Trajectory questions, in their fixed order. */
+export const TRAJECTORY_ANSWER_ORDER = ['remains', 'running', 'changed', 'cost', 'intent'] as const;
+export type TrajectoryAnswerId = (typeof TRAJECTORY_ANSWER_ORDER)[number];
+
+/** An answer, or a part of one, that is Unknown: the id of the
+ * `unknownSubjects` entry that carries its reason and route. */
+export interface TrajectoryAnswerUnknown {
+  readonly state: 'unknown';
+  readonly disclosure: string;
+}
+
+/** POC-REQ-044. Every count is over all served work items, never the
+ * rendered selection. No answer is omitted for being Unknown. */
+export type TrajectoryAnswer =
+  | {
+      readonly id: 'remains';
+      readonly state: 'observed';
+      /** Served items per tracker status, every status listed; sums to `served`. */
+      readonly byStatus: Readonly<Record<WorkItemStatus, number>>;
+      readonly served: number;
+    }
+  | {
+      readonly id: 'running';
+      readonly state: 'observed';
+      /** Items the tracker marks in_progress: the tracker's claim. */
+      readonly claimed: number;
+      readonly served: number;
+      readonly liveness: TrajectoryAnswerUnknown;
+    }
+  | ({ readonly id: 'changed' | 'cost' } & TrajectoryAnswerUnknown)
+  | {
+      readonly id: 'intent';
+      readonly state: 'observed';
+      /** Three counts, each with its own denominator, never summed. */
+      readonly unknownProvenance: { readonly count: number; readonly served: number; readonly disclosure: string };
+      /** RFC2-18: materialized work whose change reached the default branch.
+       * Each member's reconciliation evidence is absent (RFC8-29), a
+       * chain-state fact carrying no RFC2-24 reason. */
+      readonly reconciliationChain: {
+        readonly members: number | TrajectoryAnswerUnknown;
+        readonly memberEvidence: 'reconciliation-evidence-absent';
+      };
+      /** RFC8-8: no orphaned-work check runs, so the count is Unknown. */
+      readonly orphanedWork: TrajectoryAnswerUnknown;
+    }
+  | ({ readonly id: TrajectoryAnswerId } & TrajectoryAnswerUnknown);
+
+/** What the reconciliation-chain count reads: the one materialized item
+ * and the worker change observed for it. */
+export interface ReconciliationChainInput {
+  readonly materializedBeadId: string | null;
+  readonly workerChange: { readonly kind: 'observed'; readonly state: string } | { readonly kind: 'unknown' } | null;
+}
+
 interface TrajectoryProjectionObserved {
   readonly kind: 'observed';
   readonly doltRevision: string;
@@ -37,11 +103,15 @@ interface TrajectoryProjectionObserved {
    * are served but outside the selection. Both channels read these. */
   readonly verificationUnknown: { readonly served: number; readonly inside: number; readonly outside: number };
   readonly timeRange: { readonly earliest: string; readonly latest: string } | null;
+  /** POC-REQ-044: the five answers, in TRAJECTORY_ANSWER_ORDER. */
+  readonly answers: readonly TrajectoryAnswer[];
 }
 
 export interface TrajectoryProjectionUnknown {
   readonly kind: 'unknown';
   readonly reason: string;
+  /** POC-REQ-044: all five answers, each Unknown under `region:work-items`. */
+  readonly answers: readonly TrajectoryAnswer[];
 }
 
 export type TrajectoryProjection = TrajectoryProjectionObserved | TrajectoryProjectionUnknown;
@@ -49,6 +119,36 @@ export type TrajectoryProjection = TrajectoryProjectionObserved | TrajectoryProj
 interface ProjectTrajectoryOptions {
   readonly nonClosedLimit: number;
   readonly recentClosedWindow: number;
+  /** Absent: nothing was materialized, so the chain has no member. */
+  readonly reconciliationChain?: ReconciliationChainInput;
+}
+
+/** RFC2-18: only materialized work that reached merge enters the chain.
+ * Nothing materialized is an observed 0; a materialized item whose worker
+ * change could not be observed is Unknown, never 0. */
+function chainMembers(input: ReconciliationChainInput | undefined): number | TrajectoryAnswerUnknown {
+  if (input === undefined || input.materializedBeadId === null) return 0;
+  if (input.workerChange === null || input.workerChange.kind === 'unknown') return { state: 'unknown', disclosure: TRAJECTORY_CHAIN_MEMBERSHIP_ID };
+  return input.workerChange.state === 'changed-or-merged' ? 1 : 0;
+}
+
+function observedAnswers(workItems: Extract<WorkItemsResult, { kind: 'observed' }>, chain: ReconciliationChainInput | undefined): readonly TrajectoryAnswer[] {
+  const byStatus = Object.fromEntries(Object.keys(STATUS_TO_COLUMN).map((status) => [status, 0])) as Record<WorkItemStatus, number>;
+  for (const item of workItems.items) byStatus[item.status] += 1;
+  const served = workItems.items.length;
+  return [
+    { id: 'remains', state: 'observed', byStatus, served },
+    { id: 'running', state: 'observed', claimed: byStatus.in_progress, served, liveness: { state: 'unknown', disclosure: TRAJECTORY_RUNNING_LIVENESS_ID } },
+    { id: 'changed', state: 'unknown', disclosure: TRAJECTORY_CHANGED_ID },
+    { id: 'cost', state: 'unknown', disclosure: TRAJECTORY_COST_ID },
+    {
+      id: 'intent',
+      state: 'observed',
+      unknownProvenance: { count: workItems.governedByUnknownCount, served, disclosure: GOVERNING_INTENT_REGION_ID },
+      reconciliationChain: { members: chainMembers(chain), memberEvidence: 'reconciliation-evidence-absent' },
+      orphanedWork: { state: 'unknown', disclosure: TRAJECTORY_ORPHANED_WORK_ID },
+    },
+  ];
 }
 
 function byId(a: WorkItemFact, b: WorkItemFact): number {
@@ -110,7 +210,11 @@ export function projectTrajectory(
   options: ProjectTrajectoryOptions,
 ): TrajectoryProjection {
   if (workItems.kind === 'unknown') {
-    return { kind: 'unknown', reason: workItems.reason };
+    return {
+      kind: 'unknown',
+      reason: workItems.reason,
+      answers: TRAJECTORY_ANSWER_ORDER.map((id) => ({ id, state: 'unknown', disclosure: WORK_ITEMS_REGION_ID })),
+    };
   }
 
   const sorted = [...workItems.items].sort(byId);
@@ -153,5 +257,6 @@ export function projectTrajectory(
       outside: workItems.items.length - rendered.filter((item) => item.verification === 'unknown').length,
     },
     timeRange,
+    answers: observedAnswers(workItems, options.reconciliationChain),
   };
 }
