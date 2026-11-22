@@ -360,13 +360,18 @@ async function nativeExchange(revoke: false | 'send' | 'stage' = false) {
   return { f, outcome, forwards, observed, terminal, requests, recordKinds, captures, machineAudits, screenTimes, stages, reads, peerChecks, maximumEventLoopMilliseconds: Math.ceil(eventLoop.max / 1_000_000) };
 }
 
+function exchangeDiagnostic(result: Awaited<ReturnType<typeof nativeExchange>>): string {
+  return JSON.stringify({ outcome: result.outcome.outcome, forwards: result.forwards, captures: result.captures,
+    machineAudits: result.machineAudits, observed: result.observed.map(row => row.event), recordKinds: result.recordKinds,
+    screenTimes: result.screenTimes, stages: result.stages, reads: result.reads, peerChecks: result.peerChecks,
+    maximumEventLoopMilliseconds: result.maximumEventLoopMilliseconds, workerCapacityCpuMicroseconds: result.f.workerCpu(),
+    nativeCapacityCpuMicroseconds: result.f.nativeCpu(), runCpuBoundMicroseconds: result.f.cpuBound });
+}
+
 describe('native authenticated ordered host', { timeout: 180_000 }, () => {
   it('transfers both sealed parts, validates and stages the verdict, consumes the acknowledgment and reaches eligible', async () => {
     const result = await nativeExchange();
-    expect(result.outcome, JSON.stringify({ forwards: result.forwards, captures: result.captures, machineAudits: result.machineAudits,
-      observed: result.observed.map(row => row.event), recordKinds: result.recordKinds, screenTimes: result.screenTimes, stages: result.stages,
-      reads: result.reads, peerChecks: result.peerChecks, maximumEventLoopMilliseconds: result.maximumEventLoopMilliseconds,
-      workerCapacityCpuMicroseconds: result.f.workerCpu(), nativeCapacityCpuMicroseconds: result.f.nativeCpu(), runCpuBoundMicroseconds: result.f.cpuBound })).toMatchObject({ outcome: 'exited', exitCode: 0 });
+    expect(result.outcome, exchangeDiagnostic(result)).toMatchObject({ outcome: 'exited', exitCode: 0 });
     expect(result.forwards).toBe(5); expect(result.captures).toBeGreaterThanOrEqual(9); expect(result.machineAudits).toBeGreaterThan(20);
     expect(result.f.staged()).toBe(1); expect(result.f.workerCpu()).toBeGreaterThan(0);
     expect(result.terminal).toMatchObject({ packetSha256: result.f.packet.sha256 });
@@ -392,13 +397,13 @@ describe('native authenticated ordered host', { timeout: 180_000 }, () => {
   });
   it('revokes actual peer authority after the pre-send audit and forwards no provider bytes', async () => {
     const result = await nativeExchange('send');
-    expect(result.forwards).toBe(0); expect(result.f.staged()).toBe(0); expect(result.terminal).toBeUndefined();
+    expect(result.forwards, exchangeDiagnostic(result)).toBe(0); expect(result.f.staged()).toBe(0); expect(result.terminal).toBeUndefined();
     expect(result.observed.some(row => row.event === 'attempt-allowed')).toBe(true);
     expect(result.machineAudits).toBeGreaterThan(0);
   });
   it('withdraws the active native effect after the stage await and refuses the protected write and acknowledgment', async () => {
     const result = await nativeExchange('stage');
-    expect(result.forwards).toBe(4); expect(result.f.stageWriteReached()).toBe(true);
+    expect(result.forwards, exchangeDiagnostic(result)).toBe(4); expect(result.f.stageWriteReached()).toBe(true);
     expect(await readFile(result.f.stagedFile)).toHaveLength(0);
     expect(result.f.staged()).toBe(0); expect(result.terminal).toBeUndefined();
     const records = await Promise.all(result.f.stored.map(async file => JSON.parse(await readFile(file, 'utf8'))));
