@@ -2,7 +2,7 @@
 
 ## Patterns
 
-- `F3-(STAGED-MACHINE-PUBLICATION-SUCCESSOR|ORDERED-SCREEN-ENTRY|POST-AUDIT-PEER-DRAIN|RENEWAL-SOURCE-SAMPLES|STAGED-ALLOCATION|STAGED-ALLOCATION-INITIAL|PRIVATE-AUDIT-SETUP|PRIVATE-AUDIT-SETUP-INITIAL)-REVIEW-RAW\.md`
+- `F3-(STAGED-MACHINE-PUBLICATION-SUCCESSOR|ORDERED-SCREEN-ENTRY|POST-AUDIT-PEER-DRAIN|RENEWAL-SOURCE-SAMPLES|STAGED-ALLOCATION|STAGED-ALLOCATION-INITIAL|PRIVATE-AUDIT-SETUP|PRIVATE-AUDIT-SETUP-INITIAL|CONCURRENT-INSPECTION)-REVIEW-RAW\.md`
 
 ## What was under review
 
@@ -15,3 +15,5 @@
 [Observed] The initial staged allocation review records `REVISE` (`F3-STAGED-ALLOCATION-INITIAL-REVIEW-RAW.md:1`) at `df10e086d`. The successor review records `PASS` (`F3-STAGED-ALLOCATION-REVIEW-RAW.md:1`) at `71983d7c8` after repairs to lock authority, contention and final witness admission. [Unknown] Whether the successor completes the native public replay.
 
 [Observed] The private audit setup review records `REVISE` (`F3-PRIVATE-AUDIT-SETUP-INITIAL-REVIEW-RAW.md:1`) at `dbe17dc40`. The successor review records `PASS` (`F3-PRIVATE-AUDIT-SETUP-REVIEW-RAW.md:1`) at `7ea0d3054` after applying the original wall budget through the final declaration. A-89 records the adoption.
+
+[Observed] The resumed design inspection overlap source review records `PASS` (`F3-CONCURRENT-INSPECTION-REVIEW-RAW.md:1`) for the source at `27e83c50b`. The one-second sample and exact final authority recheck remain in force. Native acceptance was outside the source review.
