@@ -140,10 +140,10 @@ type ResumeSample = { ordinal: number; verify: ResumeStamp; confirm?: ResumeStam
 type ResumeBrokerStage = 'invoke' | 'host-current' | 'mediate-peer' | 'host-action' | 'transfer-bounds'
   | 'plan-work-hold' | 'create-work-budget' | 'release' | 'release-check';
 
-const resumedOrderedKinds = ['prepared', 'part-receipt', 'request-admitted', 'send-attempt', 'send-outcome', 'response-admitted',
+const observedOrderedKinds = ['prepared', 'part-receipt', 'request-admitted', 'send-attempt', 'send-outcome', 'response-admitted',
   'delivery-completed', 'verdict-staged', 'acknowledgment-receipt', 'eligible', 'retired'];
 
-async function readResumedDesignAuditKinds(file: string | undefined) {
+async function readDesignAuditKinds(file: string | undefined) {
   if (file === undefined) return { status: 'not-created' };
   try {
     const handle = await fs.open(file, fs.constants.O_RDONLY | fs.constants.O_NOFOLLOW);
@@ -161,7 +161,7 @@ async function readResumedDesignAuditKinds(file: string | undefined) {
         if (!isRecord(row) || !isRecord(row.event)) return 'other';
         const { kind, payload } = row.event;
         if (isRecord(payload) && kind === 'design-ordered' && typeof payload.kind === 'string'
-          && resumedOrderedKinds.includes(payload.kind)) return `ordered:${payload.kind}`;
+          && observedOrderedKinds.includes(payload.kind)) return `ordered:${payload.kind}`;
         if (isRecord(payload) && kind === 'relay' && typeof payload.event === 'string'
           && ['attempt-allowed', 'send-attempt', 'send-outcome', 'response-admitted', 'attempt-refused', 'transport-failed',
             'response-refused'].includes(payload.event)) return `relay:${payload.event}`;
@@ -223,8 +223,10 @@ function observeInterruptedResume() {
   }
 
   const firstBrokerInvocation = new AsyncLocalStorage<true>();
+  const orderedBrokers = new WeakSet<machineTransport.SessionMachineTransport>();
   const brokerStages: Partial<Record<ResumeBrokerStage, ResumeStamp>> = {};
-  let brokerInvocations = 0, brokerContextPresent: boolean | undefined, brokerFaultMs: number | undefined;
+  let firstMcpPeer: machinePeer.UrlMachinePeer | undefined;
+  let brokerInvocations = 0, firstPeerInvocations = 0, brokerFaultMs: number | undefined;
 
   function brokerPhase<T>(stage: ResumeBrokerStage, call: () => T, accepted: (value: Awaited<T>) => boolean): T {
     if (firstBrokerInvocation.getStore() !== true || brokerStages[stage] !== undefined) return call();
@@ -241,19 +243,23 @@ function observeInterruptedResume() {
   }
 
   const startBroker = sessionBroker.startSessionBroker;
-  vi.spyOn(sessionBroker, 'startSessionBroker').mockImplementation((socket, invoke, onFault, limits, machine) =>
-    startBroker(socket, (value, release, context) => {
-      if (++brokerInvocations !== 1) return invoke(value, release, context);
-      brokerContextPresent = context !== null;
+  vi.spyOn(sessionBroker, 'startSessionBroker').mockImplementation((socket, invoke, onFault, limits, machine) => {
+    if (machine === undefined || !orderedBrokers.has(machine)) return startBroker(socket, invoke, onFault, limits, machine);
+    return startBroker(socket, (value, release, context) => {
+      brokerInvocations++;
+      if (context === null || context.peer !== firstMcpPeer || ++firstPeerInvocations !== 1) return invoke(value, release, context);
       // Keep the original context, peer and effect guard identities.
       return firstBrokerInvocation.run(true, () => brokerPhase('invoke', () => invoke(value, (reply, revalidate) =>
         brokerPhase('release', () => release(reply, revalidate === undefined ? undefined : () =>
           brokerPhase('release-check', revalidate, () => true)), () => true), context), () => true));
-    }, () => { brokerFaultMs ??= clock(); onFault(); }, limits, machine));
+    }, () => { brokerFaultMs ??= clock(); onFault(); }, limits, machine);
+  });
 
   const startHost = orderedHost.startOrderedDesignHost;
-  vi.spyOn(orderedHost, 'startOrderedDesignHost').mockImplementation(input =>
-    startHost({ ...input, current: () => brokerPhase('host-current', input.current, value => value === true) }));
+  vi.spyOn(orderedHost, 'startOrderedDesignHost').mockImplementation(input => {
+    orderedBrokers.add(input.brokerMachine);
+    return startHost({ ...input, current: () => brokerPhase('host-current', () => input.current(), value => value === true) });
+  });
 
   const mediatePeer = machinePeer.mediateUrlMachinePeer;
   vi.spyOn(machinePeer, 'mediateUrlMachinePeer').mockImplementation((peer, operation, effect) => {
@@ -309,7 +315,6 @@ function observeInterruptedResume() {
   });
 
   const capture = machinePeer.captureUrlMachinePeer;
-  let firstMcpPeer: machinePeer.UrlMachinePeer | undefined;
   const mcpReads = { started: 0, data: 0, end: 0, pending: 0, refused: 0, rejected: 0 };
   let mcpReadStartedMs: number | undefined, mcpReadDataMs: number | undefined;
   let mcpReadEndMs: number | undefined, mcpReadRefusedMs: number | undefined;
@@ -398,7 +403,7 @@ function observeInterruptedResume() {
 
   return () => ({ connectionCount, transportCounts, connections, refusals, inspectedLaunches, samples,
     latestSample: snapshotSample(latestSample), lastConfirmed, firstSampleRefusal, terminal,
-    broker: { invocations: brokerInvocations, contextPresent: brokerContextPresent, faultMs: brokerFaultMs, stages: brokerStages },
+    broker: { invocations: brokerInvocations, firstPeerInvocations, faultMs: brokerFaultMs, stages: brokerStages },
     mcpIngress: { counts: mcpReads, startedMs: mcpReadStartedMs, firstDataMs: mcpReadDataMs,
       endMs: mcpReadEndMs, firstRefusalMs: mcpReadRefusedMs } });
 }
@@ -664,7 +669,8 @@ describe('composed URL run with actual role processes', { timeout: 360_000 }, ()
           audit.push({ role, kind: row.event.kind, payload: row.event.payload });
         }
       }
-      throw new Error(JSON.stringify({ ownStartFailure: failures, relayRoles, audit }));
+      const initialDesignAudit = eligibleStop ? await readDesignAuditKinds(path.join(f.hidden, 'sessions-design.jsonl')) : undefined;
+      throw new Error(JSON.stringify({ ownStartFailure: failures, relayRoles, audit, initialDesignAudit }));
     }); cleanup.push(controller.stop);
     function beginOwnedStop() {
       try {
@@ -905,9 +911,10 @@ describe('composed URL run with actual role processes', { timeout: 360_000 }, ()
         requests: { author: author.count(), inventory: inv.count(), fidelity: fidelity.count(), design: design.count() } });
     } catch (error) {
       const stopped = await controller.stop(); await loop.catch(() => {});
-      const resumeEvidence = resumeDiagnostic === undefined ? undefined : {
-        ...resumeDiagnostic(), audit: await readResumedDesignAuditKinds(resumedDesignAudit),
-      };
+      const initialDesignAudit = eligibleStop && resumeChecks.length === 0
+        ? await readDesignAuditKinds(path.join(f.hidden, 'sessions-design.jsonl')) : undefined;
+      const resumedAudit = resumeDiagnostic === undefined ? undefined : await readDesignAuditKinds(resumedDesignAudit);
+      const resumeEvidence = resumeDiagnostic === undefined ? undefined : { ...resumeDiagnostic(), audit: resumedAudit };
       const retainedCut = process.env['SYZYGY_COMPOSED_RETAIN'];
       if (retainedCut !== undefined) {
         const closing = cleanup.indexOf(f.close);
@@ -916,11 +923,13 @@ describe('composed URL run with actual role processes', { timeout: 360_000 }, ()
         // A failure manifest is separate from any already retained valid cut.
         await fs.writeFile(`${retainedCut}.failure.json`, JSON.stringify({ scenario, run: f.run, root: f.root, hidden: f.hidden,
           failure: error instanceof Error ? error.message : 'Unknown', inputTreeSha256: runtime.inputTreeSha256,
-          profileRegistrySha256: runtime.profileRegistrySha256, stopped, events, failures, resumeChecks, resumeDiagnostic: resumeEvidence }, null, 2));
+          profileRegistrySha256: runtime.profileRegistrySha256, stopped, events, failures, resumeChecks, resumeDiagnostic: resumeEvidence,
+          initialDesignAudit }, null, 2));
       }
       throw new Error(JSON.stringify({ failure: error instanceof Error ? error.message : 'Unknown', events, failures,
         roles: controller.summary(), authorForwards: author.count(), inventoryForwards: inv.count(), fidelityForwards: fidelity.count(), designForwards: design.count(),
-        resumeChecks, resumeDiagnostic: resumeEvidence, producerReports: f.producerReports(), reads: f.productReadReports(), relayObservations, receipts }));
+        resumeChecks, resumeDiagnostic: resumeEvidence, initialDesignAudit, producerReports: f.producerReports(),
+        reads: f.productReadReports(), relayObservations, receipts }));
     }
   }, scenario === 'stop-resume' ? 540_000 : 360_000);
 });
