@@ -216,6 +216,23 @@ describe('Trajectory', () => {
     const card = cardBody(html, 'bu-worker-change-1');
     expect(card).toContain('data-parity-field="worker-change-state"');
     expect(card).toContain('External worker: Commit on the default branch');
+
+    // T1 (review R-T1-CLOSURE-WORDING-1 finding 1): each observed state's
+    // label, rendered on the same card, says what git showed and passes the
+    // closure-wording sweep with its worker-label arm non-empty.
+    const observed = model.workerChange;
+    for (const [state, label] of [
+      ['planned', 'No commit observed'],
+      ['active', 'Commit observed, not on the default branch'],
+      ['changed-or-merged', 'Commit on the default branch'],
+    ] as const) {
+      const variant = { ...model, workerChange: { ...observed, state } } as PocModel;
+      const variantHtml = renderTrajectoryPage(variant);
+      expect(cardBody(variantHtml, 'bu-worker-change-1')).toContain(`<span class="worker-change-label">External worker: ${label}</span>`);
+      const labels = [...variantHtml.matchAll(/<span class="worker-change-label">([\s\S]*?)<\/span>/g)];
+      expect(labels).toHaveLength(1);
+      expect(closureWordingPopulation(variantHtml, variant).filter((text) => CLOSURE_AS_COMPLETION.test(text))).toEqual([]);
+    }
     expect(card).toContain('data-parity-field="worker-change-verification"');
     expect(card).toContain('Verification: Not verified');
     expect(card).not.toContain('Verification: Verified');
@@ -553,7 +570,7 @@ describe('Trajectory', () => {
 // own `work-item-status` text and `workerChange.state` are outside the
 // population by rule: they are the tracker's and the observer's identifiers.
 // Predicate: case-folded, word-bounded, exactly this regex.
-const CLOSURE_AS_COMPLETION = /\b(?:done|complete|completed|finished|resolved|in progress|active)\b/i;
+const CLOSURE_AS_COMPLETION = /\b(?:done|complete|completed|finished|resolved|satisfied|in[ _-]progress|active)\b/i;
 
 function stripTags(html: string): string {
   return html.replace(/<[^>]*>/g, ' ').replace(/\s+/g, ' ').trim();
@@ -615,6 +632,7 @@ describe('Trajectory closure wording (T1)', () => {
     expect(closureWordingPopulation(mutatedPage, served).some((text) => CLOSURE_AS_COMPLETION.test(text))).toBe(true);
     if (served.trajectory.kind !== 'observed') throw new Error('unreachable');
     const closedIndex = served.trajectory.rendered.findIndex((item) => item.column === 'Closed');
+    if (which === 'rows') expect(closedIndex).toBeGreaterThanOrEqual(0);
     if (closedIndex >= 0) {
       const mutatedAnswer = structuredClone(served) as PocModel & { trajectory: { rendered: { column: string }[] } };
       mutatedAnswer.trajectory.rendered[closedIndex]!.column = 'Done';
@@ -644,7 +662,7 @@ describe('Trajectory closure wording (T1)', () => {
     expect(html.match(/data-parity-field="trajectory-closure-notice"/g)).toHaveLength(1);
     expect(html.indexOf('trajectory-closure-notice')).toBeLessThan(html.indexOf('<div class="board"'));
     expect(html).toContain(`data-parity-field="trajectory-closed-count">${closed.length}</span> of these items are closed in the tracker. Closed is the tracker's word, not a verification`);
-    expect(html).toContain(`data-parity-field="trajectory-closed-unverified-count">${unverified}</span>`);
+    expect(html).toContain(`data-parity-field="trajectory-closed-unverified-count">${unverified}</span> of them, because no test or merge evidence is ingested for a work item`);
   });
 });
 

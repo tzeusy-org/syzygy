@@ -36,10 +36,11 @@ describes a state that cannot be served.
 - POC-REQ-043 gains a wording limb: no heading, count label, badge,
   worker-change label or sentence on the surface, and no column value on
   the machine answer, names tracker closure or a tracker claim with a word
-  meaning done, complete, finished, resolved, in progress or active. The
+  done, complete, completed, finished, resolved, satisfied, in progress or
+  active (the Oracle's regex). The
   closed column is "Closed", the claimed column "Claimed"; the worker row
   says only what git showed. One notice above the board states the rendered
-  closed count and that verification is Unknown for each of them.
+  closed count and that verification is Unknown for each of them, with its reason.
 - The Oracle publishes the predicate (case-folded, word-bounded regex over
   a stated population); the Falsifier adds the wording failure; one
   Scenario, "Closed is the tracker's word, not done", is added.
@@ -49,7 +50,8 @@ describes a state that cannot be served.
 
 ## What explicitly does NOT change
 
-- No layout change, no new fact, no new tracker read; the card keeps the
+- No layout change and no new tracker read; the notice's two counts are
+  derived from `trajectory.rendered[]` on render, not a new served field; the card keeps the
   tracker's own status word, and `workerChange.state` values (`planned`,
   `active`, `changed-or-merged`) stay as identifiers.
 - No other requirement, Scenario or coverage row moves; RFC8-16 stays out
@@ -82,7 +84,8 @@ None. "Closed" and "Claimed" are column labels, not registry terms.
 
 Method: `git grep -n -F` for `'Done'`, `'In Progress'`, `Changed / merged`
 and `In Progress` over `apps/`, `packages/`, `scripts/` and
-`docs/THREE-SURFACE-POC.md` (8 hits in 4 files, all updated: the projection
+`docs/THREE-SURFACE-POC.md`, plus `Planned` and `Active` as label
+literals in `trajectory.ts` (8 hits in 4 files, all updated: the projection
 map, the page's column order and labels, two test assertions, and the doc).
 Generated: `GOVERNING-DEPENDENCIES.md` (source digest);
 `docs/evidence/spec-readability-reconciliation-2026-10-02/census.json` and
@@ -136,7 +139,7 @@ index 48c69b026..3b44e0f2f 100644
  | RFC8-31 | Every rendered state/cause/absence value recoverable by text alone (no colour/position-only encoding); every traversal keyboard-operable | covered — Non-visual-parity limb matches the design-token/epistemic-encoding and accessibility-floor requirements directly; the RFC 0006 selection/drawer/scenario-context conformance bundle this clause also invokes is not touched (no drawer/selection UX in the POC-REQ list), so that limb is omitted rather than rowed | POC-REQ-060, POC-REQ-061 |
  | RFC9-1 | Map surface is a non-authoritative projection of the shared fact model | covered — POC's Orrery projects the same shared fact model that parity (020) enforces; intended/proposed/historical planes and RFC2/RFC6 vocabulary limbs not touched | POC-REQ-020 |
 diff --git a/openspec/changes/three-surface-poc-experience/specs/three-surface-poc-experience/spec.md b/openspec/changes/three-surface-poc-experience/specs/three-surface-poc-experience/spec.md
-index 1e28c408c..76906e33e 100644
+index 1e28c408c..68b2599be 100644
 --- a/openspec/changes/three-surface-poc-experience/specs/three-surface-poc-experience/spec.md
 +++ b/openspec/changes/three-surface-poc-experience/specs/three-surface-poc-experience/spec.md
 @@ -664,5 +664,7 @@ warranted, green or complete state.
@@ -154,14 +157,14 @@ index 1e28c408c..76906e33e 100644
 -closure, or merge state as intent satisfaction or verification.
 -
 -- **Scope.** every satisfaction/verification encoding on the surface.
-+closure, or merge state as intent satisfaction or verification. No column
-+heading, count label, badge, worker-change label or sentence on the surface,
-+and no column value on the machine answer, SHALL name tracker closure or a
-+tracker claim with a word meaning done, complete, finished, resolved, in
++closure, or merge state as intent satisfaction or verification. No text in
++the wording population (Scope) SHALL name tracker closure or a tracker claim
++with the words done, complete, completed, finished, resolved, satisfied, in
 +progress or active: the closed column is headed "Closed" and the claimed
-+column "Claimed", and the worker-change row says only what git showed on the
-+bounded seam. One notice above the board SHALL state how many rendered items
-+are closed and that verification is Unknown for each of them.
++column "Claimed", and the worker-change state label says only what git
++showed on the bounded seam. One notice above the board SHALL state how many
++rendered items are closed and that verification is Unknown for each of
++them, with its reason.
 +
 +- **Scope.** every satisfaction/verification encoding on the surface, and
 +  the wording population: the page heading and lede, every board heading
@@ -176,9 +179,9 @@ index 1e28c408c..76906e33e 100644
    answer's relationship state (not the item's activity state); equality
 -  decides.
 +  decides. For wording, a case-folded, word-bounded match of
-+  `done|complete|completed|finished|resolved|in progress|active` over the
-+  wording population finds nothing, and the notice's closed count equals
-+  the machine answer's rendered items with status closed.
++  `done|complete|completed|finished|resolved|satisfied|in[ _-]progress|active`
++  over the wording population finds nothing, and the notice's closed count
++  equals the machine answer's rendered items with status closed.
  - **Oracle independence**: the relationship state comes from the
    machine answer; the checker induced the mismatch.
  - **Falsifier**: a closed or merged item rendered with a verified,
@@ -204,3 +207,41 @@ index 1e28c408c..76906e33e 100644
  ```yaml
  warrants:
 ````
+
+## Dispositions
+
+Review `docs/reviews/R-T1-CLOSURE-WORDING-1-RAW.md`, verdict
+`CONFIRM WITH EXCEPTIONS`, over commit `a765e621f`. The exact text above is
+regenerated after the repairs; the review is bound to the earlier bytes
+(rule 10).
+
+1. Worker labels never reached the sweep — accepted. The worker-change test
+   now renders each of the three states on its card, asserts its label, and
+   runs the sweep with one label present.
+2. The notice gave no reason — accepted. It now says no test or merge
+   evidence is ingested for a work item and that each card carries its own
+   disclosure and route.
+3. Required behavior wider than the oracle — accepted. Required behavior
+   now names the wording population in Scope and the closed word list
+   rather than "a word meaning"; badges stay under the first limb.
+4. The regex missed `satisfied` and `in-progress`/`in_progress` — accepted.
+   The test and the Oracle now use
+   `done|complete|completed|finished|resolved|satisfied|in[ _-]progress|active`.
+5. The population runs from the board to the page end — noted; it is a
+   superset of the board, so it can only find more.
+6. The answer-side mutant could be skipped — accepted. On the 252-row
+   fixture the test now asserts a closed item exists before mutating.
+7. Mutants cover only the heading and the served column — noted; the regex
+   is shared by every arm.
+8. The notice's counts have no served field — noted; the bead asks for a
+   count derived from the model, and the answer's `trajectory.rendered[]`
+   is the twin.
+9. "Named by the tracker's word" was false for Claimed and Backlog —
+   accepted; the doc now says the heading never uses a word for done.
+10. "The worker-change row says only what git showed" — accepted; it now
+    says the worker-change state label.
+11. "No new fact" was loose and the sweep missed `Planned`/`Active` —
+    accepted; both sentences above are corrected.
+12. The adoption row's shape — accepted as the plan: the row names
+    `three-surface-poc-experience` and the change commit, in the
+    seven-column form.

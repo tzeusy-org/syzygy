@@ -1045,14 +1045,14 @@ warrants:
 Group: Trajectory. Form: **prohibition**.
 
 **Required behavior.** Trajectory SHALL NOT render work-item activity,
-closure, or merge state as intent satisfaction or verification. No column
-heading, count label, badge, worker-change label or sentence on the surface,
-and no column value on the machine answer, SHALL name tracker closure or a
-tracker claim with a word meaning done, complete, finished, resolved, in
+closure, or merge state as intent satisfaction or verification. No text in
+the wording population (Scope) SHALL name tracker closure or a tracker claim
+with the words done, complete, completed, finished, resolved, satisfied, in
 progress or active: the closed column is headed "Closed" and the claimed
-column "Claimed", and the worker-change row says only what git showed on the
-bounded seam. One notice above the board SHALL state how many rendered items
-are closed and that verification is Unknown for each of them.
+column "Claimed", and the worker-change state label says only what git
+showed on the bounded seam. One notice above the board SHALL state how many
+rendered items are closed and that verification is Unknown for each of
+them, with its reason.
 
 - **Scope.** every satisfaction/verification encoding on the surface, and
   the wording population: the page heading and lede, every board heading
@@ -1070,9 +1070,9 @@ are closed and that verification is Unknown for each of them.
 - **Oracle**: the rendered verification encoding equals the machine
   answer's relationship state (not the item's activity state); equality
   decides. For wording, a case-folded, word-bounded match of
-  `done|complete|completed|finished|resolved|in progress|active` over the
-  wording population finds nothing, and the notice's closed count equals
-  the machine answer's rendered items with status closed.
+  `done|complete|completed|finished|resolved|satisfied|in[ _-]progress|active`
+  over the wording population finds nothing, and the notice's closed count
+  equals the machine answer's rendered items with status closed.
 - **Oracle independence**: the relationship state comes from the
   machine answer; the checker induced the mismatch.
 - **Falsifier**: a closed or merged item rendered with a verified,

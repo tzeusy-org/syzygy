@@ -249,9 +249,9 @@ selected item's text. The size-only comparison and choice rationale are in
    - the worker-change observer's state, saying only what git showed on the
      bounded seam: "External worker: No commit observed", "Commit observed,
      not on the default branch" or "Commit on the default branch";
-   - its independent Bead status, in a column named by the tracker's word,
-     never by a word for done: closed items sit under "Closed" and claimed
-     items under "Claimed". One notice above the board says how many rendered
+   - its independent Bead status, in a column whose heading never uses a
+     word for done: closed items sit under "Closed" and claimed items under
+     "Claimed". One notice above the board says how many rendered
      items are closed and that closed is not verified: verification is
      Unknown for each of them (`trajectory-closure-notice`).
    - An ingested, operator-reported test-run artifact (see below) for the

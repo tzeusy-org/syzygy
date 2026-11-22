@@ -135,7 +135,7 @@ function closureNotice(rendered: readonly TrajectoryLaneItem[]): string {
   const unverified = closed.filter((item) => item.verification === 'unknown').length;
   return `<p class="closure-notice notice" data-parity-field="trajectory-closure-notice">
         <span data-parity-field="trajectory-closed-count">${closed.length}</span> of these items are closed in the tracker. Closed is the tracker's word, not a verification:
-        verification is Unknown for <span data-parity-field="trajectory-closed-unverified-count">${unverified}</span> of them.
+        verification is Unknown for <span data-parity-field="trajectory-closed-unverified-count">${unverified}</span> of them, because no test or merge evidence is ingested for a work item; each card carries its own disclosure and route.
       </p>`;
 }
 
