@@ -1,0 +1,46 @@
+{
+  "commit": "dae1a0c96a2d63a5351f4ebc4b13713a56abd14f",
+  "targetSha256": "b484793eb7e8f8055f35da889372bbb46e23a2850f8a9c855678348e7e9e05b3",
+  "command": [
+    "npx",
+    "--no-install",
+    "vitest",
+    "run",
+    "--project",
+    "integration",
+    "--maxWorkers=1",
+    "packages/polaris-dossier/src/url-origin-ledger.test.ts",
+    "-t",
+    "matches the renderer\u2019s complete ordered pieces to a native full-body receipt"
+  ],
+  "results": [
+    {
+      "id": "baseline",
+      "old": null,
+      "new": null,
+      "exit": 0,
+      "sha256": "d0455d741efc5bfe301b1f04bdffaf7bbe7f6b49fa09248d726c46e64628b121"
+    },
+    {
+      "id": "omit-pre-source-sample",
+      "old": "    if (waitForSample !== undefined) await waitForSample();\n    const pieces",
+      "new": "    const pieces",
+      "exit": 1,
+      "sha256": "54187dba8f2c054b6adb42e8beb26f10fa09e31357bb2cb9f5b0623ef8d2d006"
+    },
+    {
+      "id": "omit-post-source-sample",
+      "old": "    if (waitForSample !== undefined) await waitForSample();\n    if (input.signal.aborted) return refuse();",
+      "new": "    if (input.signal.aborted) return refuse();",
+      "exit": 1,
+      "sha256": "6c91c68746167e8c0226732888a0a7c1dd5e96ed65a6d5e24e21a726c8d46b35"
+    },
+    {
+      "id": "inspect-cancelled-capability",
+      "old": "    if (input.signal.aborted) return refuse();\n    const exact",
+      "new": "    const exact",
+      "exit": 1,
+      "sha256": "7297a19edd6b24f76668f69078ae5b8b63eb2440a14d40741cb3816c153cd214"
+    }
+  ]
+}

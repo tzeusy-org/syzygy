@@ -1,0 +1,11 @@
+
+ RUN  v3.2.7 /home/orca/.tmp/syzygy-beads-looper-20261114-54ebc9f1/d10-f3-final-verification
+
+ ✓ |integration| packages/polaris-dossier/src/url-origin-ledger.test.ts (20 tests | 19 skipped) 314ms
+   ✓ host-owned URL origin ledger > matches the renderer’s complete ordered pieces to a native full-body receipt  311ms
+
+ Test Files  1 passed (1)
+      Tests  1 passed | 19 skipped (20)
+   Start at  21:47:05
+   Duration  6.94s (transform 4.12s, setup 20ms, collect 5.99s, tests 314ms, environment 0ms, prepare 95ms)
+
