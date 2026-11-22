@@ -3036,11 +3036,12 @@ def selftest(root: Path) -> int:
             population, report = census_report(tree)
             expect("signed census requires regeneration", "R3" in report.failed)
             (tree / reconciliation.CENSUS).write_text(reconciliation.census_json(population))
-            expect("signed census admits exactly 26 requirements and 34 scenarios",
+            expect("signed census admits exactly 26 requirements and 35 scenarios",
                    not census_report(tree)[1].failed
                    and len(population["POC"]) == 26
-                   and sum(len(row["scenarios"]) for row in population["POC"].values()) == 34
-                   and len(population["POC"]["POC-REQ-014"]["scenarios"]) == 8)
+                   and sum(len(row["scenarios"]) for row in population["POC"].values()) == 35  # syzygy-t3jk.14, A-38
+                   and len(population["POC"]["POC-REQ-014"]["scenarios"]) == 8
+                   and len(population["POC"]["POC-REQ-043"]["scenarios"]) == 2)
             route_report = reconciliation.Report()
             reconciliation.check_routes(tree, population, route_report)
             expect("signed route activation requires root-owned terminal entries",

@@ -90,7 +90,9 @@ map, the page's column order and labels, two test assertions, and the doc).
 Generated: `GOVERNING-DEPENDENCIES.md` (source digest);
 `docs/evidence/spec-readability-reconciliation-2026-10-02/census.json` and
 the R3 literal in `scripts/check_spec_reconciliation.py` (POC 26/34 → 26/35;
-POC-REQ-043 1 → 2 Scenarios).
+POC-REQ-043 1 → 2 Scenarios), and the same literal in the signed-census
+case of `scripts/prepare_three_surface_poc_governedby_reference_recording.py
+--selftest` (found by hosted CI on the first push).
 
 ## Migration / supersession plan
 
