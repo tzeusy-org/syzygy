@@ -14,7 +14,7 @@ import { checkDraftShape, draftSchemaDocument, inventorySchemaDocument, verdictS
   localDraftSchema, localInventorySchema, localVerdictSchema, localDesignVerdictSchema, UNDERSTANDING_ITEMS } from './draft-schema.js';
 import { createSessionProfile } from './session-profile.js';
 import { createUrlOriginLedger } from './url-origin-ledger.js';
-import { createUrlRunArtifacts, type UrlRunArtifactsOptions } from './url-run-artifacts.js';
+import { createUrlRunArtifacts, verifyUrlFrozenProductHistory, type UrlRunArtifactsOptions } from './url-run-artifacts.js';
 import * as productReads from './url-product-reads.js';
 import type { SessionToolsReceipt } from './session-tools.js';
 import type { BrokerResponse } from './broker.js';
@@ -273,6 +273,8 @@ describe('trusted URL artifact producer bridge', () => {
     expect(schemaReply.length).toBeLessThanOrEqual(50_000);
     const ctx = bridge.beginRead({ operation: 'render', deadline: Date.now() + 4000 });
     expect(bridge.readProduct(ctx, 'url-declaration.json').kind).toBe('present'); expect(bridge.revalidateRead(ctx).metadata.records).toHaveLength(1);
+    expect(() => bridge.captureFrozenHistory()).toThrow('url-run-artifacts-unavailable');
+    bridge.cancelRead(ctx);
     const products = beginRunProductReads(f.run, bridge, 'render', Date.now() + 4000);
     try {
       const snapshots = vi.spyOn(productReads, 'snapshotProductFile');
@@ -290,6 +292,7 @@ describe('trusted URL artifact producer bridge', () => {
         }
       } finally { snapshots.mockRestore(); }
       const checked = await reverifyPinnedRevision(f.run, sources, readAt, { productReads: products, openReader });
+      products.close();
       expect(checked).toMatchObject({ ok: true, revision: { commit: f.pin } });
       if (!checked.ok) throw Error('own run reverify');
       expect(encodeRunRecord(checked.record.declared, checked.record.subject)).not.toBe(core);
@@ -379,6 +382,20 @@ describe('trusted URL artifact producer bridge', () => {
         expect(bridge.latestStageCheck('author')).toMatchObject({ revision: 0, record: { figureFit: stored.figureFit } });
         expect(f.ledger.origins(bridge.checkReceipt(0), storedBytes)).toBeDefined();
       } finally { authorReads.close(); }
+      const history = bridge.captureFrozenHistory();
+      expect(history).toMatchObject({ coreSha256: sha256(core), declarationSha256: issued.sha256,
+        records: expect.arrayContaining([expect.objectContaining({ path: 'drafts/rev-0.json', sha256: sha256(draft) }),
+          expect.objectContaining({ path: 'checks/rev-0.json' })]) });
+      const verify = () => verifyUrlFrozenProductHistory(f.run, history, f.options.current);
+      expect(verify()).toEqual({ kind: 'verified-frozen-products', authorization: 'none', records: history.records.length });
+      f.write('checks/rev-999.json', '{}');
+      expect(verify()).toBeNull();
+      expect(() => bridge.captureFrozenHistory()).toThrow('url-run-artifacts-unavailable');
+      fs.unlinkSync(path.join(f.run, 'checks/rev-999.json'));
+      const changed = { ...history, records: history.records.map(record =>
+        record.path === 'checks/rev-0.json' ? { ...record, sha256: '0'.repeat(64) } : record) };
+      expect(verifyUrlFrozenProductHistory(f.run, changed, f.options.current)).toBeNull();
+      expect(verifyUrlFrozenProductHistory(f.run, history, () => false)).toBeNull();
       fs.rmdirSync(path.join(f.run, 'run-advice.json'));
       for (const revision of [1, 2]) {
         f.draft.title = `Own dossier revision ${revision}`;
