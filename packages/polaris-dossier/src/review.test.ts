@@ -800,6 +800,8 @@ describe('the CLI', () => {
 describe('fidelity criteria for presentation elements (syzygy-mea.10.5)', () => {
   it('asks for a support entry for every claim an element carries, judged under a cell\'s headings', () => {
     const support = fidelityCriteria('/run').find((line) => line.startsWith('Support:'))!;
+    // syzygy-5dhm.28: the reviewer is told of the author's omission record and that a reason settles nothing.
+    expect(fidelityCriteria('/run').find((line) => line.startsWith('Coverage:'))).toContain('The draft may carry `inventoryOmissions`, the authoring session\'s own record of entries it left out and why: each `reason` there is the author\'s unverified statement and settles nothing');
     expect(support).toContain('every claim a presentation element carries: a table cell, a block in a callout or a collapsible section, a step, a definition or a card\'s body');
     expect(support).toContain('Judge a table cell as it reads with its row\'s and its column\'s labels: a cell that is true alone but false under its headings is not supported.');
     expect(support).toContain('A code excerpt is Syzygy\'s own read of the file and has no entry.');
