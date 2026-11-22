@@ -159,8 +159,9 @@ export function extractClaims(markdown: string): ExtractedText {
       units.push({ start: number, end: number, text: [line] });
       return;
     }
-    // A list marker starts a new claim, unless a quotation of the open claim is still open: then it is a wrapped line of that quotation.
-    if (LIST_ITEM.test(line) && !(open !== null && quotationOpen(open.text.join('\n')))) close();
+    // A list marker starts a new claim, unless it is a wrapped line that closes a quotation the open claim left open. An unpaired mark
+    // (an inch mark, a stray quote) that this line does not close starts no merge: the item is its own claim, as before.
+    if (LIST_ITEM.test(line) && !(open !== null && quotationOpen(open.text.join('\n')) && !quotationOpen(`${open.text.join('\n')}\n${line}`))) close();
     if (open === null) open = { start: number, end: number, text: [line] };
     else { open.end = number; open.text.push(line); }
   });

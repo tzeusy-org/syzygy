@@ -231,6 +231,13 @@ describe('extraction', () => {
       [5, 6, ['a quote that wraps onto\n- a line that looks like a list item']],
     ]);
     expect(extractClaims('It says \u201ca curly quote wraps\n- onto a list-like line\u201d here.\n').claims.map((claim) => [claim.startLine, claim.endLine])).toEqual([[1, 2]]);
+    // An unpaired mark that the next marker line does not close merges nothing: each item stays its own claim.
+    const inchList = extractClaims('- A 13" screen (src/kestrel.c:1)\n- B src/none.c\n- C "the next one starts" (src/kestrel.c:3)\n- D src/kestrel.c:4\n');
+    expect(inchList.claims.map((claim) => [claim.startLine, claim.endLine, claim.quotations])).toEqual([
+      [1, 1, []], [2, 2, []], [3, 3, ['the next one starts']], [4, 4, []],
+    ]);
+    const strayCurly = extractClaims('- A \u201cnever closed (src/kestrel.c:1)\n- B src/none.c\n- C src/kestrel.c:4\n');
+    expect(strayCurly.claims.map((claim) => [claim.startLine, claim.endLine])).toEqual([[1, 1], [2, 2], [3, 3]]);
   });
   it('splits claims by paragraph, list item and table row, skipping headings, fences and separators', () => {
     const extracted = extractClaims('# Title\n\nPara one\ncontinues.\n- item a\n- item b\n\n| h | i |\n|---|---|\n| r | s |\n\n```\ncode src/x.c:1\n```\n');
