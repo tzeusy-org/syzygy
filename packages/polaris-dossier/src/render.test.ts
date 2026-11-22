@@ -1857,6 +1857,42 @@ describe('render: derived structure (version 2.3)', () => {
     expect(files.get('maps/units.html')).toContain('<ul class="map-unknown-files"><li>No candidate file.</li></ul>');
   });
 
+  // Version 2.10 (syzygy-3efd.73 (b)), the scenario "Derived record kept but unusable told apart from none kept": the words and the state
+  // split on what examining the path without following a link reports; the reason stays `missing-evidence` in both.
+  it('tells an entry that is no readable record, or a path that cannot be examined, apart from no entry, in both pages and both states (version 2.10)', async () => {
+    const paragraph = (words: string): string => `<p class="derived-unknown" data-epistemic="unknown" data-unknown-reason="missing-evidence"><span class="not-established">Not established.</span> The top-level directories of the tree at revision ${commit} are Unknown at this render: ${words}.</p>`;
+    const UNUSABLE_WORDS = 'this draft revision\'s derived-record path holds something this render cannot use or cannot examine; Syzygy or its screen may have changed since the revision was checked, or the path may have been altered';
+    const MISSING_WORDS = 'no derived record was kept when this draft revision was checked';
+    const expectState = (out: Awaited<ReturnType<typeof rendered>>, what: string, words: string, state: string): void => {
+      expect(regionOfIndex(out.index), what).toBe(`<section id="derived-structure" data-reading-level="1" data-topics=""><h2>Derived by Syzygy: top-level directories</h2>${paragraph(words)}<p class="derived-maps">Computed maps: <a href="maps/directories.html">Directory map</a> · <a href="maps/units.html">Unit map</a> · <a href="maps/ci.html">CI pipeline map</a>.</p></section>`);
+      expect(out.files.get('maps/directories.html'), what).toContain(paragraph(words));
+      expect(out.files.has('derived-structure.json'), what).toBe(false);
+      expect(out.machine.derivedStructure, what).toEqual({ file: null, sha256: null, revision: commit, state, currencyPolicy: null, facts: [] });
+      expect(out.machine.computedMaps.directories.state, what).toBe(state);
+    };
+    const planted: [string, (file: string) => void][] = [
+      ['a directory', (file) => { fs.rmSync(file); fs.mkdirSync(file); }],
+      ['a FIFO', (file) => { fs.rmSync(file); execFileSync('mkfifo', [file]); }],
+      ['a symbolic link to /dev/zero', (file) => { fs.rmSync(file); fs.symlinkSync('/dev/zero', file); }],
+      ['a dangling symbolic link', (file) => { fs.rmSync(file); fs.symlinkSync(`${file}.gone`, file); }],
+      ['a record past its 4,194,304-byte bound', (file) => { fs.appendFileSync(file, ' '.repeat(4_194_305)); }],
+      ['a path that cannot be examined (a parent that is a link to itself)', (file) => { const dir = path.dirname(file); fs.rmSync(dir, { recursive: true }); fs.symlinkSync(dir, dir); }],
+    ];
+    for (const [what, plant] of planted) {
+      const run = await prepared(draft(), false);
+      plant(recordPath(run));
+      expectState(await rendered(run), what, UNUSABLE_WORDS, 'unusable');
+    }
+    // Nothing at the path, or a parent that is not a directory: the version 2.9 words and state, byte for byte.
+    const removed = await prepared(draft(), false);
+    fs.rmSync(recordPath(removed));
+    expectState(await rendered(removed), 'removed', MISSING_WORDS, 'missing');
+    const notADirectory = await prepared(draft(), false);
+    fs.rmSync(path.dirname(recordPath(notADirectory)), { recursive: true });
+    fs.writeFileSync(path.dirname(recordPath(notADirectory)), 'a file\n');
+    expectState(await rendered(notADirectory), 'a parent that is a file', MISSING_WORDS, 'missing');
+  });
+
   it('keeps an authored figure matching a derived fact dashed and curated, and a draft cannot set Observed', async () => {
     const doc = draft();
     doc.diagrams = [{ id: 'd-tree', title: 'zq-authored tree', sectionId: 'core-ideas', kind: 'flow', relationship: 'The root holds src.', disposition: { kind: 'produced', assetIds: ['d-tree'] },
@@ -1903,7 +1939,7 @@ describe('render: derived structure (version 2.3)', () => {
       expect(files.has('derived-structure.json'), what).toBe(false);
       expect(regionOfIndex(index), what).toContain('data-unknown-reason="missing-evidence"');
       expect(regionOfIndex(index), what).not.toContain('<figure');
-      expect(machine.derivedStructure, what).toEqual({ file: null, sha256: null, revision: commit, state: 'missing', currencyPolicy: null, facts: [] });
+      expect(machine.derivedStructure, what).toEqual({ file: null, sha256: null, revision: commit, state: 'unusable', currencyPolicy: null, facts: [] });
       for (const [file, text] of files) {
         expect(text, `${what} ${file}`).not.toContain('token=');
         expect(text, `${what} ${file}`).not.toContain('someone-else');
@@ -1914,8 +1950,8 @@ describe('render: derived structure (version 2.3)', () => {
   // Version 2.8 (syzygy-3efd.67), the scenario "Derived record naming a directory not in the tree": each planted record below passes every
   // reading rule of the record itself (exact rebuild, own repository, forms, no secret-matching path); the render refuses it because a
   // path or rule it names is not one the render's own re-derivation holds.
-  it('publishes and draws nothing of a record naming a directory the tree does not hold, or a rule other than top-level-unit version 1 (version 2.8)', async () => {
-    const sentence = `<section id="derived-structure" data-reading-level="1" data-topics=""><h2>Derived by Syzygy: top-level directories</h2><p class="derived-unknown" data-epistemic="unknown" data-unknown-reason="missing-evidence"><span class="not-established">Not established.</span> The top-level directories of the tree at revision ${commit} are Unknown at this render: no derived record was kept when this draft revision was checked.</p><p class="derived-maps">Computed maps: <a href="maps/directories.html">Directory map</a> · <a href="maps/units.html">Unit map</a> · <a href="maps/ci.html">CI pipeline map</a>.</p></section>`;
+  it('publishes and draws nothing of a record naming a directory the tree does not hold, or a rule other than top-level-unit version 1 (versions 2.8, 2.10)', async () => {
+    const sentence = `<section id="derived-structure" data-reading-level="1" data-topics=""><h2>Derived by Syzygy: top-level directories</h2><p class="derived-unknown" data-epistemic="unknown" data-unknown-reason="missing-evidence"><span class="not-established">Not established.</span> The top-level directories of the tree at revision ${commit} are Unknown at this render: this draft revision's derived-record path holds something this render cannot use or cannot examine; Syzygy or its screen may have changed since the revision was checked, or the path may have been altered.</p><p class="derived-maps">Computed maps: <a href="maps/directories.html">Directory map</a> · <a href="maps/units.html">Unit map</a> · <a href="maps/ci.html">CI pipeline map</a>.</p></section>`;
     const planted: [string, string, (doc: Doc) => void][] = [
       ['a non-secret directory absent from the tree', 'zqplanteddir', (doc) => { doc.facts[1].path = 'zqplanteddir'; doc.facts[3].path = 'zqplanteddir'; }],
       ['a rule other than top-level-unit', 'zq-planted-rule', (doc) => { doc.facts[2].rule = 'zq-planted-rule'; }],
@@ -1933,7 +1969,7 @@ describe('render: derived structure (version 2.3)', () => {
       const { files, index, machine } = await rendered(run);
       expect(regionOfIndex(index), what).toBe(sentence);
       expect(files.has('derived-structure.json'), what).toBe(false);
-      expect(machine.derivedStructure, what).toEqual({ file: null, sha256: null, revision: commit, state: 'missing', currencyPolicy: null, facts: [] });
+      expect(machine.derivedStructure, what).toEqual({ file: null, sha256: null, revision: commit, state: 'unusable', currencyPolicy: null, facts: [] });
       expect([...files.keys()].filter((file) => !file.endsWith('.html')).sort(), what).toEqual(['dossier.json', 'machine.json', 'size-report.json']);
       for (const [file, text] of files) expect(text, `${what} ${file}`).not.toContain(name);
     }

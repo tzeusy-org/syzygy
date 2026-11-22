@@ -1011,9 +1011,12 @@ const DERIVED_SITE_FILE = 'derived-structure.json';
 /** How many top-level directories the derived figure draws; the list holds every listed one. */
 const DERIVED_DRAWN = 12;
 
-const unknownWords: Readonly<Record<'missing-evidence' | 'source-uncaptured-or-unreachable', string>> = {
-  'missing-evidence': 'no derived record was kept when this draft revision was checked',
-  'source-uncaptured-or-unreachable': 'the pinned tree could not be listed',
+/** The region's words, chosen by state (version 2.10): the reason stays `missing-evidence` for both `missing` and `unusable`, and only the
+ * words and the machine view's `state` tell nothing kept apart from something kept that this render cannot use or cannot examine. */
+const unknownWords: Readonly<Record<'missing' | 'unusable' | 'unknown', string>> = {
+  missing: 'no derived record was kept when this draft revision was checked',
+  unusable: 'this draft revision\'s derived-record path holds something this render cannot use or cannot examine; Syzygy or its screen may have changed since the revision was checked, or the path may have been altered',
+  unknown: 'the pinned tree could not be listed',
 };
 
 /** The derived-structure region (REQ-polaris-generation-034 version 2.3): the figure Syzygy computes from the kept record, never from the
@@ -1123,8 +1126,8 @@ const chunks = <T>(items: readonly T[], size: number): T[][] => {
 const byCodeUnit = (a: string, b: string): number => (a < b ? -1 : a > b ? 1 : 0);
 
 /** The sentence the region and the directory map state where no derived record is in force. */
-function derivedUnknownSentence(derived: Extract<LocalDerivedStructure, { state: 'missing' | 'unknown' }>): string {
-  return `<p class="derived-unknown" data-epistemic="unknown" data-unknown-reason="${derived.unknownReason}"><span class="not-established">Not established.</span> The top-level directories of the tree at revision ${escape(derived.revision)} are Unknown at this render: ${unknownWords[derived.unknownReason]}.</p>`;
+function derivedUnknownSentence(derived: Extract<LocalDerivedStructure, { state: 'missing' | 'unusable' | 'unknown' }>): string {
+  return `<p class="derived-unknown" data-epistemic="unknown" data-unknown-reason="${derived.unknownReason}"><span class="not-established">Not established.</span> The top-level directories of the tree at revision ${escape(derived.revision)} are Unknown at this render: ${unknownWords[derived.state]}.</p>`;
 }
 const derivedNote = (derived: Extract<LocalDerivedStructure, { state: 'derived' }>): string =>
   `<p class="derived-note">Derived by Syzygy from the paths and modes of the tree at revision ${escape(derived.recordRevision)}, listed at ${escape(derived.capturedAt)}, by rule top-level-unit version 1. No file body, size or object id was read. Current for that revision only.</p>`;
