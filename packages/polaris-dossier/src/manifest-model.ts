@@ -13,8 +13,9 @@ export type MKey = { readonly kind: 'string'; readonly value: string } | { reado
 export interface MEntry { readonly key: MKey; readonly value: MNode; readonly lines: Lines }
 export type MNode =
   | { readonly kind: 'string'; readonly value: string; readonly lines: Lines }
-  /** A number, boolean, null or other scalar that is not a string. */
-  | { readonly kind: 'other'; readonly lines: Lines }
+  /** A number, boolean, null or other scalar that is not a string; for a plain YAML scalar the core schema resolves to an integer, its
+   * text as written (`int`, version 2.12: only `compose-file` reads it). */
+  | { readonly kind: 'other'; readonly lines: Lines; readonly int?: string }
   /** A value in a form the reader does not read (a YAML alias, a TOML date-time). */
   | { readonly kind: 'beyond'; readonly lines: Lines }
   | { readonly kind: 'array'; readonly items: readonly MNode[]; readonly lines: Lines }
@@ -27,9 +28,13 @@ export interface Parsed {
   readonly beyond: boolean;
   /** The key path of every mapping in which a name was repeated. */
   readonly duplicates: readonly (readonly string[])[];
+  /** A YAML stream's documents, each root in order (null for an empty document), where the reader read one (version 2.12). */
+  readonly documents?: readonly (MNode | null)[];
 }
 
-export type FactKind = 'package' | 'module' | 'workspace-member' | 'dependency' | 'workflow' | 'workflow-trigger' | 'job' | 'job-needs';
+export type FactKind = 'package' | 'module' | 'workspace-member' | 'dependency' | 'workflow' | 'workflow-trigger' | 'job' | 'job-needs'
+  | 'service' | 'service-image' | 'service-port' | 'service-depends-on' | 'kubernetes-object' | 'terraform-resource' | 'terraform-module'
+  | 'make-target' | 'cmake-project' | 'cmake-target';
 /** One fact a recognizer reads, before the value checks: its kind, its lines and its members' values in the requirement's member order. */
 export interface RawFact { readonly fact: FactKind; readonly lines: Lines; readonly values: readonly (string | null)[] }
 export type Recognized = { readonly ok: true; readonly facts: readonly RawFact[] } | { readonly ok: false; readonly parseFault: ParseFault };
@@ -44,8 +49,23 @@ export const FACT_MEMBERS: Readonly<Record<FactKind, readonly { readonly name: s
   'workflow-trigger': [{ name: 'event', fromBody: true }],
   job: [{ name: 'job', fromBody: true }],
   'job-needs': [{ name: 'from', fromBody: true }, { name: 'to', fromBody: true }],
+  // Version 2.12. A `targetKind` is bounded by the rule (the command's name), never taken from the body.
+  service: [{ name: 'service', fromBody: true }],
+  'service-image': [{ name: 'service', fromBody: true }, { name: 'image', fromBody: true }],
+  'service-port': [{ name: 'service', fromBody: true }, { name: 'port', fromBody: true }],
+  'service-depends-on': [{ name: 'from', fromBody: true }, { name: 'to', fromBody: true }],
+  'kubernetes-object': [{ name: 'kind', fromBody: true }, { name: 'name', fromBody: true }],
+  'terraform-resource': [{ name: 'type', fromBody: true }, { name: 'name', fromBody: true }],
+  'terraform-module': [{ name: 'name', fromBody: true }, { name: 'source', fromBody: true }],
+  'make-target': [{ name: 'target', fromBody: true }],
+  'cmake-project': [{ name: 'name', fromBody: true }],
+  'cmake-target': [{ name: 'target', fromBody: true }, { name: 'targetKind', fromBody: false }],
 };
-export const FACT_KIND_ORDER: readonly FactKind[] = ['package', 'module', 'workspace-member', 'dependency', 'workflow', 'workflow-trigger', 'job', 'job-needs'];
+export const FACT_KIND_ORDER: readonly FactKind[] = [
+  'package', 'module', 'workspace-member', 'dependency', 'workflow', 'workflow-trigger', 'job', 'job-needs',
+  'service', 'service-image', 'service-port', 'service-depends-on', 'kubernetes-object', 'terraform-resource', 'terraform-module',
+  'make-target', 'cmake-project', 'cmake-target',
+];
 
 /** The 1-based line of each UTF-16 offset of `text`, by the path-and-range check's line rule. */
 export function lineIndex(text: string): (offset: number) => number {

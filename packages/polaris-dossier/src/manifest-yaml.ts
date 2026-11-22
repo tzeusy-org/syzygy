@@ -23,13 +23,20 @@ const NON_STRING = [
   /^[-+]?(?:\.[0-9]+|[0-9]+(?:\.[0-9]*)?)(?:[eE][-+]?[0-9]+)?$/u, /^[-+]?\.(?:inf|Inf|INF)$/u, /^\.(?:nan|NaN|NAN)$/u,
 ];
 const isString = (plain: string): boolean => !NON_STRING.some((pattern) => pattern.test(plain));
+/** The core schema's integer forms (version 2.12 keeps such a plain scalar's text, which `compose-file` reads as a port). */
+const INTEGER = /^(?:[-+]?[0-9]+|0o[0-7]+|0x[0-9a-fA-F]+)$/u;
+/** A plain scalar's node: a string, or another scalar, keeping an integer's text as written. */
+const plainNode = (plain: string, lines: { readonly first: number; readonly last: number }): MNode =>
+  isString(plain) ? { kind: 'string', value: plain, lines } : INTEGER.test(plain) ? { kind: 'other', lines, int: plain } : { kind: 'other', lines };
 const DOUBLE_ESCAPES: Readonly<Record<string, string>> = {
   '0': '\0', a: '\x07', b: '\b', t: '\t', '\t': '\t', n: '\n', v: '\v', f: '\f', r: '\r', e: '\x1b', ' ': ' ', '"': '"', '/': '/', '\\': '\\',
   N: '\x85', _: '\xa0', L: '\u2028', P: '\u2029',
 };
 const FLOW_INDICATOR = /[,[\]{}]/u;
 
-export function readYaml(text: string): Parsed {
+/** `multi` (version 2.12, `kubernetes-manifest` alone): read a stream of several documents, each root in `documents`; otherwise a second
+ * document is `beyond`, as for a workflow and a Compose file. */
+export function readYaml(text: string, multi = false): Parsed {
   const duplicates: string[][] = [];
   let beyond = false;
   if (/^[ \t\r\n]*$/u.test(text) || NOT_PRINTABLE.test(text)) return { root: null, syntax: true, beyond: false, duplicates };
@@ -187,7 +194,7 @@ export function readYaml(text: string): Parsed {
       }
     }
     ln = last; col = lastEnd; mid = true;
-    return isString(out) ? { kind: 'string', value: out, lines: { first: first + 1, last: last + 1 } } : { kind: 'other', lines: { first: first + 1, last: last + 1 } };
+    return plainNode(out, { first: first + 1, last: last + 1 });
   };
 
   const blockScalar = (parentIndent: number): MNode => {
@@ -274,7 +281,7 @@ export function readYaml(text: string): Parsed {
       ln = k; col = from;
     }
     const lines_ = { first: first + 1, last: last + 1 };
-    return isString(out) ? { kind: 'string', value: out, lines: lines_ } : { kind: 'other', lines: lines_ };
+    return plainNode(out, lines_);
   };
 
   const flowItem = (parentIndent: number, path: readonly string[], depth: number): MNode => {
@@ -449,6 +456,7 @@ export function readYaml(text: string): Parsed {
 
   try {
     let root: MNode | null = null, documents = 0;
+    const roots: (MNode | null)[] = [];
     for (;;) {
       skipVoid();
       while (ln < N && line().startsWith('%')) { beyond = true; ln++; skipVoid(); }
@@ -456,16 +464,17 @@ export function readYaml(text: string): Parsed {
       if (/^\.\.\.(?:[ \t]|$)/u.test(line())) { col = 3; mid = true; finishLine(); continue; }
       if (/^---(?:[ \t]|$)/u.test(line())) { col = 3; if (!restEmpty()) throw new Stop(true); mid = true; finishLine(); }
       documents++;
-      if (documents > 1) beyond = true;
+      if (documents > 1 && !multi) beyond = true;
       const node = blockNode(-1, false, [], 0);
       if (documents === 1) root = node;
+      roots.push(node);
       skipVoid();
       if (ln < N && !(markerAt(ln) && spacesAt(ln) === 0)) syntax();
     }
-    return { root, syntax: false, beyond, duplicates };
+    return { root, syntax: false, beyond, duplicates, documents: roots };
   } catch (stop) {
     if (!(stop instanceof Stop)) throw stop;
-    return { root: null, syntax: !stop.beyond, beyond: beyond || stop.beyond, duplicates };
+    return { root: null, syntax: !stop.beyond, beyond: beyond || stop.beyond, duplicates, documents: [] };
   }
 }
 
