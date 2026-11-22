@@ -15,7 +15,7 @@ import { captureUrlMachinePeer, isUrlMachinePeerFor, prepareUrlMachineListener, 
 import { initializeUrlMachineStore } from './url-machine-store.js';
 import { publishUrlMachineLifecycle } from './url-machine-lifecycle.js';
 import { URL_MACHINE_CLIENT_LIMITS, type UrlMachineClientContext, type UrlMachineClientRecord } from './url-machine-instance.js';
-import { captureKernelUnixPeer } from './session-peer.js';
+import { captureKernelUnixPeer, captureKernelUnixPeerAsync } from './session-peer.js';
 
 const nativeObservations = vi.hoisted(() => ({ calls: (): readonly (readonly unknown[])[] => [] }));
 const filesystemBoundary = vi.hoisted(() => ({ refuseLargeSyncReads: false, largeSyncReads: 0 }));
@@ -31,9 +31,10 @@ vi.mock('node:fs', async importOriginal => {
 vi.mock('node:child_process', async importOriginal => {
   const actual = await importOriginal<typeof import('node:child_process')>();
   // Observe real helper execution at the OS boundary; keep its actual result.
-  const observed = vi.fn(actual.spawnSync);
-  nativeObservations.calls = () => observed.mock.calls;
-  return { ...actual, spawnSync: observed };
+  const observed = vi.fn(actual.spawnSync), asynchronous = vi.fn(actual.spawn);
+  nativeObservations.calls = () => [...observed.mock.calls, ...asynchronous.mock.calls]
+    .filter(call => call[0] === '/usr/bin/prlimit' && Array.isArray(call[1]) && call[1][2] === '/proc/self/fd/4');
+  return { ...actual, spawnSync: observed, spawn: asynchronous };
 });
 
 const exec = promisify(execFile), id = () => randomBytes(32).toString('hex');
@@ -169,18 +170,20 @@ describe('live URL machine peer binding', { timeout: 60_000 }, () => {
     expect(await mediateUrlMachinePeer(f.peer, 'artifact_read', () => 'owned')).toEqual({ ok: true, value: 'owned' });
     expect(charges.length).toBeGreaterThan(5); expect(charges.every(value => value === 2_000_000)).toBe(true);
     expect(calls().length - before).toBe(charges.length);
-    for (const call of calls().slice(before)) {
+    for (const call of calls()) {
       const args: unknown = call[1];
       expect(call[0]).toBe('/usr/bin/prlimit'); expect(Array.isArray(args)).toBe(true);
       if (Array.isArray(args)) expect(args.slice(0, 3)).toEqual(['--cpu=1:1', '--', '/proc/self/fd/4']);
+      expect(call[2]).toMatchObject({ timeout: 1000, killSignal: 'SIGKILL', env: { LANG: 'C' } });
     }
     expect(await f.launch.waitForSample()).toBe(true);
     denied = true; const invoked = calls().length, reserved = charges.length;
     const server = (f.socket as Socket & { readonly server: Server }).server;
     expect(prepareUrlMachineListener(server, programs.reader, charge)).toBeNull();
     expect(captureKernelUnixPeer(f.socket, programs.peer, charge)).toBeNull();
+    expect(await captureKernelUnixPeerAsync(f.socket, programs.peer, charge)).toBeNull();
     expect(await f.read()).toBeNull();
-    expect(charges).toHaveLength(reserved + 3); expect(calls()).toHaveLength(invoked);
+    expect(charges).toHaveLength(reserved + 4); expect(calls()).toHaveLength(invoked);
   });
 
   it('captures a genuine isolated descendant and authorizes its scoped effect against actual protected lifecycle files', async () => {

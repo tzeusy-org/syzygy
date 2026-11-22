@@ -109,10 +109,11 @@ const EMBEDDED_FIXTURE = DOSSIER + 'acquisition-process.test.ts';
 const EMBEDDED_CALL = '496476a19a8b66906bd56990727e80e227041208e23bd8af1b01026751afd69b';
 // Bind the child-file writer and the production fd verification to the admitted calls.
 const FIXTURE_WRITER = 'e49f3dc7ce221b2a257bcbc95f0ad98201ddcf5f433fd6e8f44ba7e71e852cb7';
-const PEER_CAPTURE = 'd86d226376e181d0a60e72a76d777b39486dcbbf4e8c8f5b664b8a66ac823f81';
+const PEER_SOURCE = '4063d681c237038ba686e70d7edf3cf24f1b9bf34562766927c5833fbf6c7fea';
+const PEER_CAPTURE = '008ddd0641401d72b40fe0524fc920588d8da678ed7f46c8fcc5035ac27ccef5';
 // The call's limits and image verifier are shared helpers/constants. Bind that
 // complete context as well as the one admitted call; another call still fails.
-const MACHINE_PEER_SOURCE = 'c5c1f833fd5c81a99d65990da54852673952ea9a7821ede7f7b7118921b27944';
+const MACHINE_PEER_SOURCE = '08a7e5d24425834746c47539151773a00f9545977750a2a967de9a2a23045815';
 const SELF = 'apps/three-surface-poc/src/sync-child-process-guard.test.ts';
 const SYNC_FUNCTIONS = ['execFileSync', 'execSync', 'spawnSync'];
 const MODULE_SPECIFIER = /(?:\bfrom|\bimport)\s*\(?\s*['"]([^'"]+)['"]/g;
@@ -241,7 +242,8 @@ function guardedSyncCalls(path: string, text: string): { calls: SyncCall[]; miss
   const known = NATIVE_SITES.get(path);
   if (known === undefined && path !== EMBEDDED_FIXTURE) return { calls: longSyncCalls(text), missing: [] };
   const source = ts.createSourceFile(path, text, ts.ScriptTarget.Latest, true);
-  const peerCapture = path === PEER_MODULE ? exactFunction(source, 'captureKernelUnixPeer', PEER_CAPTURE) : undefined;
+  const peerCapture = path === PEER_MODULE && fingerprintOf(source, source) === PEER_SOURCE
+    ? exactFunction(source, 'captureKernelUnixPeer', PEER_CAPTURE) : undefined;
   const machinePeer = path !== MACHINE_PEER_MODULE || fingerprintOf(source, source) === MACHINE_PEER_SOURCE;
   const writesFixture = path === EMBEDDED_FIXTURE && exactFunction(source, 'fake', FIXTURE_WRITER) !== undefined;
   const sites = new Map<number, string>();
@@ -379,6 +381,12 @@ describe('suite child processes and the vitest worker RPC', () => {
     const peer = fixture(PEER_MODULE);
     expect(commands(PEER_MODULE, change(peer, 'timeout: 1000', 'timeout: 60_000'))).toEqual(["'/usr/bin/prlimit'"]);
     expect(commands(PEER_MODULE, change(peer, '!== program.sha256', '!== otherDigest'))).toEqual(["'/usr/bin/prlimit'"]);
+    for (const [from, to] of [
+      ['total > maximum', 'false'],
+      ["child.stderr!.on('data', refuse);", ''],
+      ['channel.ino !== afterChannel.ino', 'false'],
+      ["mode === 'identity' ? 128 : 65_536 + 512", '134_217_728'],
+    ]) expect(commands(PEER_MODULE, change(peer, from!, to!))).toEqual(["'/usr/bin/prlimit'"]);
 
     const machine = fixture(MACHINE_PEER_MODULE);
     expect(commands(MACHINE_PEER_MODULE, change(machine, 'timeout: 1000', 'timeout: 60_000'))).toEqual(["'/usr/bin/prlimit'"]);

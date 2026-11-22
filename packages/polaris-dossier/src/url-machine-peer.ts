@@ -7,7 +7,7 @@ import path from 'node:path';
 import { createHash, randomBytes } from 'node:crypto';
 import { encodeCanonicalJson } from '@syzygy/polaris-generation-core/live';
 import { sha256 } from '@syzygy/support';
-import { captureKernelUnixPeer, type KernelPeerProgram } from './session-peer.js';
+import { captureKernelUnixPeerAsync, executeKernelPeerProgramAsync, type KernelPeerProgram } from './session-peer.js';
 import { isUrlSessionProcess, restrictedSessionCliArgs, type UrlSessionProcess } from './session-launch.js';
 import { isNativeSessionProfile, URL_CLI_PROGRAM, type NativeSessionProfile } from './session-profile.js';
 import { urlSessionCommand } from './session-url-view.js';
@@ -203,14 +203,15 @@ function listenerCurrent(options: UrlMachinePeerOptions): boolean {
     && (options.socket as Socket & { readonly server?: Server }).server === selected.server
     && serverIdentity(selected.server) === selected.identity;
 }
-function native(socket: Socket, program: KernelPeerProgram, mode: 'prepare' | 'read',
-  chargeNativeCpuMicroseconds?: (capacity: number) => void): { readonly identity: NativeIdentity | null; readonly chunk: UrlMachinePeerChunk | null } {
+async function native(socket: Socket, program: KernelPeerProgram, mode: 'prepare' | 'read',
+  chargeNativeCpuMicroseconds?: (capacity: number) => void): Promise<{ readonly identity: NativeIdentity | null; readonly chunk: UrlMachinePeerChunk | null }> {
   const handle = (socket as Socket & { readonly _handle?: { readonly fd?: unknown } })._handle;
   const descriptor = handle?.fd;
   if (socket.destroyed || !socket.isPaused() || socket.readableLength !== 0 || socket.listenerCount('data') !== 0
     || socket.listenerCount('readable') !== 0 || typeof descriptor !== 'number' || !Number.isSafeInteger(descriptor) || descriptor < 0) throw refused();
-  const result = runNative(program, descriptor, mode, chargeNativeCpuMicroseconds);
-  if (socket.destroyed || (socket as Socket & { readonly _handle?: unknown })._handle !== handle) throw refused();
+  const result = await executeKernelPeerProgramAsync(descriptor, program, mode, chargeNativeCpuMicroseconds);
+  if (!result || socket.destroyed || !socket.isPaused() || socket.readableLength !== 0 || handle?.fd !== descriptor
+    || (socket as Socket & { readonly _handle?: unknown })._handle !== handle) throw refused();
   if (mode === 'read' && result.status === 75 && result.stdout.length === 0) return { identity: null, chunk: { kind: 'pending' } };
   if (result.status !== 0) throw refused();
   if (mode === 'read' && result.stdout.equals(Buffer.from('E\n'))) return { identity: null, chunk: { kind: 'end' } };
@@ -275,12 +276,12 @@ async function current(state: PeerState): Promise<number> {
   check(state);
   await yieldToPoll();
   // The parent may drain the genuine launcher's in-flight resource sample.
-  // Keep that proof adjacent to the synchronous kernel capture: a poll here
-  // could otherwise start a new bounded sample immediately before blocking it.
+  // Preserve current parent and sampled process authority before launching
+  // the asynchronous helper; the event loop remains available during exec.
   if (await parentCurrent(state.options) !== true) throw refused();
   check(state);
   const { options } = state;
-  const peerNow = captureKernelUnixPeer(options.socket, options.programs.peer, options.chargeNativeCpuMicroseconds);
+  const peerNow = await captureKernelUnixPeerAsync(options.socket, options.programs.peer, options.chargeNativeCpuMicroseconds);
   if (!peerNow || peerNow.pid !== state.native.pid || peerNow.uid !== state.native.uid || peerNow.gid !== state.native.gid) throw refused();
   await yieldToPoll();
   return check(state);
@@ -308,8 +309,9 @@ export async function captureUrlMachinePeer(options: UrlMachinePeerOptions): Pro
     const selected = Object.freeze({ ...options, context, installed: Object.freeze({ ...options.installed }),
       binding: Object.freeze({ ...options.binding }), programs: Object.freeze({ peer: Object.freeze({ ...options.programs.peer }), reader: Object.freeze({ ...options.programs.reader }) }),
       protectedPaths: Object.freeze([...options.protectedPaths]) });
-    const kernel = captureKernelUnixPeer(options.socket, selected.programs.peer, selected.chargeNativeCpuMicroseconds);
-    const prepared = native(options.socket, selected.programs.reader, 'prepare', selected.chargeNativeCpuMicroseconds);
+    const kernel = await captureKernelUnixPeerAsync(options.socket, selected.programs.peer, selected.chargeNativeCpuMicroseconds);
+    if (await parentCurrent(selected) !== true) throw refused();
+    const prepared = await native(options.socket, selected.programs.reader, 'prepare', selected.chargeNativeCpuMicroseconds);
     if (!kernel || !prepared.identity || kernel.pid !== prepared.identity.pid || kernel.uid !== prepared.identity.uid || kernel.gid !== prepared.identity.gid) throw refused();
     const observed = prepared.identity;
     const socketHandle = (options.socket as Socket & { readonly _handle?: { readonly fd?: unknown } })._handle;
@@ -379,10 +381,10 @@ export async function readUrlMachinePeer(peer: UrlMachinePeer): Promise<UrlMachi
     await current(state);
     if (++state.chunks > URL_MACHINE_PEER_LIMITS.chunks) throw refused();
     // current() yields after its fresh peer capture. Drain a sample that may
-    // have started in that poll turn before the separate synchronous read.
+    // have started in that poll turn before the separate asynchronous read.
     if (await parentCurrent(state.options) !== true) throw refused();
     check(state);
-    const result = native(state.options.socket, state.options.programs.reader, 'read', state.options.chargeNativeCpuMicroseconds);
+    const result = await native(state.options.socket, state.options.programs.reader, 'read', state.options.chargeNativeCpuMicroseconds);
     if (result.identity !== null && !equal(result.identity, state.native)) throw refused();
     if (result.chunk?.kind === 'data' && (state.bytes += result.chunk.bytes.length) > URL_MACHINE_PEER_LIMITS.bytes) throw refused();
     await current(state);

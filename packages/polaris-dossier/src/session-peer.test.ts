@@ -7,7 +7,7 @@ import { promisify } from 'node:util';
 import { afterEach, beforeAll, describe, expect, it } from 'vitest';
 import { tempDir } from '@syzygy/test-kit';
 import { sha256 } from '@syzygy/support';
-import { captureKernelUnixPeer, type KernelPeerProgram } from './session-peer.js';
+import { captureKernelUnixPeer, captureKernelUnixPeerAsync, executeKernelPeerProgramAsync, type KernelPeerProgram } from './session-peer.js';
 
 const cleanup: (() => Promise<void>)[] = [];
 const fixtureEnv = { PATH: '/usr/bin:/bin', LANG: 'C' };
@@ -60,7 +60,8 @@ describe('host kernel Unix peer identity primitive', () => {
         String(server.endpoint), String(process.pid)], { stdio: 'ignore', env: { LANG: 'C' } });
       cleanup.push(() => stopChild(child));
       const socket = await server.accepted;
-      const peer = captureKernelUnixPeer(socket, program);
+      const peer = await captureKernelUnixPeerAsync(socket, program);
+      expect(captureKernelUnixPeer(socket, program)).toEqual(peer);
       expect(peer).toEqual({ pid: child.pid, uid: process.getuid!(), gid: process.getgid!() });
       expect(peer!.pid).not.toBe(process.pid); ids.push(peer!.pid);
     }
@@ -85,9 +86,46 @@ describe('host kernel Unix peer identity primitive', () => {
     expect(captureKernelUnixPeer(socket, { ...copied, executable: fifo })).toBeNull();
     expect(captureKernelUnixPeer(socket, program)).not.toBeNull();
   });
+
+  it('keeps the event loop alive during a real delayed helper and refuses timeout, excess output and stderr', async () => {
+    const source = fileURLToPath(new URL('./session-peer.c', import.meta.url));
+    const programs = new Map<string, KernelPeerProgram>();
+    for (const [variant, action] of [
+      ['delay', 'struct timespec delay = {0, 250000000}; nanosleep(&delay, NULL);'],
+      ['timeout', 'struct timespec delay = {1, 500000000}; nanosleep(&delay, NULL);'],
+      ['overflow', 'for (int i=0; i<131072; i++) putchar(65); return 0;'],
+      ['stderr', 'fputs("owned error", stderr); return 0;'],
+    ]) {
+      const directory = tempDir('sp-async-'), file = path.join(directory, 'helper.c'), executable = path.join(directory, 'helper');
+      fs.writeFileSync(file, `#define main kernel_main\n#include ${JSON.stringify(source)}\n#undef main\n#include <time.h>\nint main(int argc, char **argv) { ${action} return kernel_main(argc, argv); }\n`);
+      await execFileAsync('/usr/bin/cc', ['-std=c11', '-Wall', '-Wextra', '-Werror', '-O2', file, '-o', executable],
+        { env: fixtureEnv, timeout: 10_000, killSignal: 'SIGKILL', maxBuffer: 65_536 });
+      programs.set(variant!, { executable, sha256: sha256(fs.readFileSync(executable)) });
+    }
+    const { socket } = await ownConnection(); let beats = 0; const charges: number[] = [];
+    const heartbeat = setInterval(() => { beats++; }, 5);
+    try {
+      expect(await captureKernelUnixPeerAsync(socket, programs.get('delay')!, capacity => charges.push(capacity)))
+        .toEqual({ pid: process.pid, uid: process.getuid!(), gid: process.getgid!() });
+      expect(beats).toBeGreaterThan(3);
+      const descriptor = (socket as net.Socket & { readonly _handle: { readonly fd: number } })._handle.fd;
+      for (const variant of ['timeout', 'overflow', 'stderr'])
+        expect(await executeKernelPeerProgramAsync(descriptor, programs.get(variant)!, variant === 'overflow' ? 'read' : 'identity', capacity => charges.push(capacity))).toBeNull();
+      expect(charges).toEqual([2_000_000, 2_000_000, 2_000_000, 2_000_000]);
+      const other = await ownConnection(), original = (socket as net.Socket & { _handle: unknown })._handle;
+      let replaced = false;
+      try {
+        const capture = captureKernelUnixPeerAsync(socket, programs.get('delay')!, () => {
+          setImmediate(() => { (socket as net.Socket & { _handle: unknown })._handle = (other.socket as net.Socket & { _handle: unknown })._handle; replaced = true; });
+        });
+        expect(await capture).toBeNull(); expect(replaced).toBe(true);
+      } finally { (socket as net.Socket & { _handle: unknown })._handle = original; }
+    } finally { clearInterval(heartbeat); }
+  }, 15_000);
   it('refuses TCP, disconnected and destroyed sockets without treating loopback as client identity', async () => {
     const tcp = await ownConnection(true);
     expect(captureKernelUnixPeer(tcp.socket, program)).toBeNull();
+    expect(await captureKernelUnixPeerAsync(tcp.socket, program)).toBeNull();
     const disconnected = new net.Socket(); expect(captureKernelUnixPeer(disconnected, program)).toBeNull(); disconnected.destroy();
     const unix = await ownConnection(); unix.socket.destroy();
     expect(captureKernelUnixPeer(unix.socket, program)).toBeNull();
