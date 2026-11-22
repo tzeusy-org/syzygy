@@ -94,6 +94,12 @@ export function briefStandardsOf(run: string): BriefStandardsRead {
   try { text = fs.readFileSync(path.join(run, name), 'utf8'); } catch (cause) { return { ok: false, reason: `${name} cannot be read (${errno(cause)})` }; }
   let record: unknown;
   try { record = parseBoundedJson(text, BRIEF_RECORD_LIMITS); } catch { return { ok: false, reason: `${name} is not JSON within its bounds` }; }
+  return briefStandardsFromRecord(record);
+}
+
+/** The same interpretation for a caller's already authenticated brief snapshot. */
+export function briefStandardsFromRecord(record: unknown): BriefStandardsRead {
+  const name = RUN_LAYOUT.briefRecord;
   if (!isRecord(record)) return { ok: false, reason: `${name} is not a JSON object` };
   if (!Object.hasOwn(record, 'readerStandards')) return { ok: true };
   const standards = record['readerStandards'];

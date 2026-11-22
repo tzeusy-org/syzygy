@@ -3,11 +3,11 @@ import { setImmediate as yieldToPoll } from 'node:timers/promises';
 import { isDeepStrictEqual } from 'node:util';
 import { copyOrderedRenderValue as copy, equalOrderedRenderValue } from './url-ordered-render-value.js';
 import { sha256 } from '@syzygy/support';
-import { buildDesignPacket } from './design-review.js';
+import { briefStandardsFromRecord, buildDesignPacket, standardsInput } from './design-review.js';
 import type { ProducedSiteInput } from './render.js';
 import type { RecordedRunConfig } from './run-record.js';
 import { createUrlDesignViewWithPolling, URL_DESIGN_VIEW_ENCODING, URL_DESIGN_VIEW_FORMAT, type ValidatedUrlDesignView } from './url-design-view.js';
-import { isRunProductReads, type RunProductReads } from './url-operation-products.js';
+import { isRunProductReads, protectedProductRecord, type RunProductReads } from './url-operation-products.js';
 import { URL_ORIGIN_LEDGER_LIMITS, type createUrlOriginLedger, type UrlOriginReceipt, type UrlOriginMetadata } from './url-origin-ledger.js';
 import { screenUrlRenderedSite } from './url-rendered-site-screen.js';
 import { verifyUrlRenderedSources } from './url-rendered-source-proof.js';
@@ -141,7 +141,7 @@ export async function validateUrlDesignProduct(input: ProducedSiteInput, options
     classes.add('derived-composites');
     for (const contentClass of classes) if (!declaration.plannedClasses.includes(contentClass)) return null;
     const packet = buildDesignPacket({ run, runId: input.runId, pinnedRevision: input.pinnedRevision, audience: record.declared.audience,
-      files: input.files });
+      files: input.files, ...standardsInput(briefStandardsFromRecord(protectedProductRecord(products, run, 'brief.json'))) });
     if (!packet.ok || packet.bytes !== input.packet.bytes || packet.sha256 !== input.packet.sha256) return null;
     const original = Buffer.from(packet.bytes), expected = { runId: input.runId, pinnedRevision: input.pinnedRevision, sha256: packet.sha256,
       bytes: original.length };
