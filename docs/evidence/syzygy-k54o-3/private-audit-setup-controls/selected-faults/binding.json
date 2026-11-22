@@ -1,0 +1,139 @@
+{
+  "commit": "7ea0d30543207d07f5d14641ce8164f3da57958c",
+  "targetSha256": "145c864cb8114e832b5cdd8aecf139dd80d3933475a6eb2258290d0f0287e03a",
+  "results": [
+    {
+      "id": "baseline",
+      "old": null,
+      "new": null,
+      "exit": 0,
+      "command": [
+        "npx",
+        "--no-install",
+        "vitest",
+        "run",
+        "--project",
+        "integration",
+        "--maxWorkers=1",
+        "packages/polaris-dossier/src/url-session-audit.test.ts",
+        "-t",
+        "keeps one setup cutoff through all declarations at |does not open private audit files after initial authority refusal|writes no declaration when authority is withdrawn during empty setup|checks the named empty segments before refreshing setup authority|applies the original wall deadline during "
+      ],
+      "logSha256": "82a1307932196729e4ef920da5f630ba2c993b5acbe2d9932eadde0f79d38a80"
+    },
+    {
+      "id": "restore-io-refreshes",
+      "old": "      const result = await wait(track('filesystem', fn), setupDeadline);",
+      "new": "      const result = await io(setupDeadline, fn);",
+      "exit": 1,
+      "command": [
+        "npx",
+        "--no-install",
+        "vitest",
+        "run",
+        "--project",
+        "integration",
+        "--maxWorkers=1",
+        "packages/polaris-dossier/src/url-session-audit.test.ts",
+        "-t",
+        "keeps one setup cutoff through all declarations at 150 ms"
+      ],
+      "logSha256": "61b0726dea75d412091bd8764dc839dd0f56f21dd7edf863fec5cd76ed9dfb5b"
+    },
+    {
+      "id": "omit-initial-authorization",
+      "old": "    await checkCurrent(setupDeadline);\n    if (await setupIo",
+      "new": "    if (await setupIo",
+      "exit": 1,
+      "command": [
+        "npx",
+        "--no-install",
+        "vitest",
+        "run",
+        "--project",
+        "integration",
+        "--maxWorkers=1",
+        "packages/polaris-dossier/src/url-session-audit.test.ts",
+        "-t",
+        "does not open private audit files after initial authority refusal"
+      ],
+      "logSha256": "0c94fdeac1e5a229236f883e56bf84fbe70ec22d18a916cc07263a17258b081e"
+    },
+    {
+      "id": "omit-authorization-after-census",
+      "old": "    await checkCurrent(setupDeadline);\n    verifyOnClose",
+      "new": "    verifyOnClose",
+      "exit": 1,
+      "command": [
+        "npx",
+        "--no-install",
+        "vitest",
+        "run",
+        "--project",
+        "integration",
+        "--maxWorkers=1",
+        "packages/polaris-dossier/src/url-session-audit.test.ts",
+        "-t",
+        "writes no declaration when authority is withdrawn during empty setup"
+      ],
+      "logSha256": "643f011de3cc4f14ad81396c80b9c09196d26874cb82b31ab893fb026c1434f0"
+    },
+    {
+      "id": "omit-named-census",
+      "old": "    await setupIo(() => inspectIdentities(setupDeadline));\n",
+      "new": "",
+      "exit": 1,
+      "command": [
+        "npx",
+        "--no-install",
+        "vitest",
+        "run",
+        "--project",
+        "integration",
+        "--maxWorkers=1",
+        "packages/polaris-dossier/src/url-session-audit.test.ts",
+        "-t",
+        "checks the named empty segments before refreshing setup authority"
+      ],
+      "logSha256": "7d1fb44ecf0d42d767624caa5a8afc36048a41b1601555f75509a4ff13d80ac1"
+    },
+    {
+      "id": "restart-declaration-clock",
+      "old": "role, setupDeadline, true);\n    guard(setupDeadline);",
+      "new": "role, performance.now() + limits.milliseconds, true);\n    guard(performance.now() + limits.milliseconds);",
+      "exit": 1,
+      "command": [
+        "npx",
+        "--no-install",
+        "vitest",
+        "run",
+        "--project",
+        "integration",
+        "--maxWorkers=1",
+        "packages/polaris-dossier/src/url-session-audit.test.ts",
+        "-t",
+        "keeps one setup cutoff through all declarations at 250 ms"
+      ],
+      "logSha256": "eb995ec05ad508992dfd6a8ede3e9a3da0581a404175b0859fa9a9025d9f1f07"
+    },
+    {
+      "id": "omit-setup-wall-bound",
+      "old": "    setupWallDeadline = input.deadline;\n",
+      "new": "",
+      "exit": 1,
+      "command": [
+        "npx",
+        "--no-install",
+        "vitest",
+        "run",
+        "--project",
+        "integration",
+        "--maxWorkers=1",
+        "packages/polaris-dossier/src/url-session-audit.test.ts",
+        "-t",
+        "applies the original wall deadline during "
+      ],
+      "logSha256": "6b784dd798631b57dd2248a7718c02075537c89f7915379194e7889b19db1010"
+    }
+  ]
+}

@@ -1,0 +1,190 @@
+{
+  "subjectCommit": "7ea0d30543207d07f5d14641ce8164f3da57958c",
+  "subjectTree": "981ac5a4193032c043bfd7b233883e5726eba35d",
+  "fixture": {
+    "exitCode": 1,
+    "selectedElapsedMilliseconds": 359535,
+    "suiteTestsElapsedMilliseconds": 365850,
+    "totalElapsedMilliseconds": 378130,
+    "failed": 1,
+    "skipped": 3,
+    "watchdogMilliseconds": 540000,
+    "screenDisposition": "transport-unavailable",
+    "resumeChecks": [
+      {
+        "phase": "verify",
+        "ok": true,
+        "nextDesignRound": 2
+      },
+      {
+        "phase": "claim",
+        "exactCut": true,
+        "current": true
+      },
+      {
+        "phase": "resumed-guards",
+        "policyWithdrawal": "refused",
+        "claimWithdrawal": "refused"
+      },
+      {
+        "phase": "machine-claim",
+        "current": true,
+        "claimChecks": 1,
+        "withdrawn": true,
+        "asyncCurrent": true,
+        "asyncWithdrawn": true
+      }
+    ],
+    "designForwardsTotal": 0,
+    "executionRecord": false
+  },
+  "initialAudits": {
+    "author": {
+      "records": 118,
+      "kinds": {
+        "declaration": 1,
+        "launch-attempt": 1,
+        "machine-peer": 68,
+        "relay": 28,
+        "usage": 7,
+        "other": 12,
+        "launch-terminal": 1
+      },
+      "terminal": {
+        "outcome": "stopped",
+        "signal": "SIGTERM",
+        "viewTermination": "view-exited",
+        "groupTermination": "confirmed",
+        "toolTermination": "settled",
+        "pendingInvocations": 0
+      },
+      "sha256": "6be1c4fb20b39dbf686b4e5e3a5db1ed79275618b909279529f1c917d9086747",
+      "bytes": 202048
+    },
+    "inventory": {
+      "records": 103,
+      "kinds": {
+        "declaration": 1,
+        "launch-attempt": 1,
+        "launch-history": 1,
+        "machine-peer": 58,
+        "relay": 24,
+        "other": 11,
+        "usage": 6,
+        "launch-terminal": 1
+      },
+      "terminal": {
+        "outcome": "stopped",
+        "signal": "SIGTERM",
+        "viewTermination": "view-exited",
+        "groupTermination": "confirmed",
+        "toolTermination": "settled",
+        "pendingInvocations": 0
+      },
+      "sha256": "02bd71dc6ca8721c7650f82bf4e254a7e57bd1d28d239c00777cd272ce80ecaa",
+      "bytes": 171864
+    },
+    "fidelity": {
+      "records": 68,
+      "kinds": {
+        "declaration": 1,
+        "launch-attempt": 1,
+        "launch-history": 1,
+        "machine-peer": 38,
+        "relay": 16,
+        "usage": 4,
+        "other": 6,
+        "launch-terminal": 1
+      },
+      "terminal": {
+        "outcome": "stopped",
+        "signal": "SIGTERM",
+        "viewTermination": "view-exited",
+        "groupTermination": "confirmed",
+        "toolTermination": "settled",
+        "pendingInvocations": 0
+      },
+      "sha256": "b4e7d91bded02d14b8ee8840ccd898fc87a9481560176762ee94600605291d12",
+      "bytes": 138343
+    },
+    "design": {
+      "records": 5,
+      "kinds": {
+        "declaration": 1,
+        "launch-attempt": 1,
+        "launch-history": 1,
+        "design-delivery": 1,
+        "launch-terminal": 1
+      },
+      "terminal": {
+        "outcome": "stopped",
+        "signal": "SIGTERM",
+        "viewTermination": "view-exited",
+        "groupTermination": "confirmed",
+        "toolTermination": "settled",
+        "pendingInvocations": 0
+      },
+      "sha256": "cd848ad9965cffb211e8f65a6486ac582ae3fa578b5af085257ca2da928e642d",
+      "bytes": 7548
+    }
+  },
+  "freshAudits": {
+    "author": {
+      "records": 1,
+      "kinds": {
+        "declaration": 1
+      },
+      "sha256": "8a98e59410c54f9e8e32ed7c1d24bc31cf63ccb939a47531ec7cf7056d5cbc19",
+      "bytes": 1185
+    },
+    "inventory": {
+      "records": 1,
+      "kinds": {
+        "declaration": 1
+      },
+      "sha256": "9d86404b061ea654e35eb2d0768f0302ad1b2fff1dff168ae0e699d62d650223",
+      "bytes": 1253
+    },
+    "fidelity": {
+      "records": 1,
+      "kinds": {
+        "declaration": 1
+      },
+      "sha256": "263e69ef65062eb7e55d17cdbe5cd2cde6db5923b2b6adbd92d036e1a925bfce",
+      "bytes": 1251
+    },
+    "design": {
+      "records": 5,
+      "kinds": {
+        "declaration": 1,
+        "launch-attempt": 1,
+        "launch-history": 1,
+        "design-delivery": 1,
+        "launch-terminal": 1
+      },
+      "terminal": {
+        "outcome": "inspection-failed",
+        "signal": "SIGTERM",
+        "viewTermination": "view-exited",
+        "groupTermination": "confirmed",
+        "toolTermination": "settled",
+        "pendingInvocations": 0
+      },
+      "sha256": "30f4d30271cc34d4401f57422cd87f15b4649969a428b037449459bac6071916",
+      "bytes": 7615
+    }
+  },
+  "retainedOriginalArtifactsByDigest": {
+    "cut": "84d1713e681bafa188d2e0b6c9ca2b8969ec6ca120d703eb4accd8845850b6ba",
+    "failureManifest": "385f0973f6fee3c4b1900598553c2a53aeb515e524f29a89c8fede3f6462cf4d",
+    "nativeLog": "51b05deba70a5b2e07bc70fe90e40a8d3e548a8439653f59a16db4c07f056ad7",
+    "trace": "7c80ee5b8a94255e2d370a757234add930221052caad4276cd7b56a0bd3eca31"
+  },
+  "portableArtifactsByDigest": {
+    "overlay.patch": "98c8a16bb634987666cfc1b49bbb6bf473dd46cf9d73e588226a0627a95322b2",
+    "source-binding.json": "b424fa99c70ee98406e96c70459ee282b4fc9d698bcf8350d5311bf498525522",
+    "project.py": "59264f0eaf90c73472335f848756ce2b83f810944026eb298a6b8a6baba0de67",
+    "trace.jsonl": "7c80ee5b8a94255e2d370a757234add930221052caad4276cd7b56a0bd3eca31",
+    "projection.json": "cd68d54e4f99f497c9f17034d750d2171b83126fafba676f4f9e89534c6c1ce7"
+  }
+}

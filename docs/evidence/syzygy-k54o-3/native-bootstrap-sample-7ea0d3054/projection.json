@@ -1,0 +1,407 @@
+{
+  "traceSha256": "7c80ee5b8a94255e2d370a757234add930221052caad4276cd7b56a0bd3eca31",
+  "eventCount": 22906,
+  "launches": [
+    {
+      "launch": 1,
+      "spawnAt": 194890.27468,
+      "sampleCount": 24,
+      "stop": {
+        "component": "sampler",
+        "stage": "child",
+        "event": "stop",
+        "detail": "stopped",
+        "elapsed": 0,
+        "launch": 1,
+        "sample": 24,
+        "at": 200328.170852
+      },
+      "exit": {
+        "component": "sampler",
+        "stage": "child",
+        "event": "exit",
+        "detail": "none",
+        "elapsed": 0,
+        "launch": 1,
+        "sample": 24,
+        "at": 200338.94728
+      },
+      "inspection": null
+    },
+    {
+      "launch": 2,
+      "spawnAt": 347154.928018,
+      "sampleCount": 14,
+      "stop": {
+        "component": "sampler",
+        "stage": "child",
+        "event": "stop",
+        "detail": "inspection-failed",
+        "elapsed": 0,
+        "launch": 2,
+        "sample": 14,
+        "at": 358073.739147
+      },
+      "exit": {
+        "component": "sampler",
+        "stage": "child",
+        "event": "exit",
+        "detail": "none",
+        "elapsed": 0,
+        "launch": 2,
+        "sample": 14,
+        "at": 358074.89984
+      },
+      "inspection": {
+        "first": {
+          "component": "sampler",
+          "stage": "current",
+          "event": "return",
+          "detail": "false",
+          "elapsed": 111.92755899997428,
+          "launch": 2,
+          "sample": 14,
+          "at": 358073.677761
+        },
+        "rowsForFailingSample": [
+          {
+            "component": "sampler",
+            "stage": "census",
+            "event": "begin",
+            "detail": "cadence",
+            "elapsed": 441.4358040000079,
+            "launch": 2,
+            "sample": 14,
+            "at": 357961.751254
+          },
+          {
+            "component": "sampler",
+            "stage": "storage",
+            "event": "begin",
+            "detail": "none",
+            "elapsed": 0.07574299996485934,
+            "launch": 2,
+            "sample": 14,
+            "at": 357961.824092
+          },
+          {
+            "component": "sampler",
+            "stage": "storage",
+            "event": "return",
+            "detail": "none",
+            "elapsed": 50.05487199994968,
+            "launch": 2,
+            "sample": 14,
+            "at": 358011.805785
+          },
+          {
+            "component": "sampler",
+            "stage": "process",
+            "event": "begin",
+            "detail": "none",
+            "elapsed": 50.06269599997904,
+            "launch": 2,
+            "sample": 14,
+            "at": 358011.811576
+          },
+          {
+            "component": "sampler",
+            "stage": "process",
+            "event": "return",
+            "detail": "counted",
+            "elapsed": 50.064348999992944,
+            "launch": 2,
+            "sample": 14,
+            "at": 358011.812608
+          },
+          {
+            "component": "sampler",
+            "stage": "current",
+            "event": "begin",
+            "detail": "none",
+            "elapsed": 50.06601299997419,
+            "launch": 2,
+            "sample": 14,
+            "at": 358011.818409
+          },
+          {
+            "component": "sampler",
+            "stage": "current",
+            "event": "return",
+            "detail": "false",
+            "elapsed": 111.92755899997428,
+            "launch": 2,
+            "sample": 14,
+            "at": 358073.677761
+          },
+          {
+            "component": "sampler",
+            "stage": "child",
+            "event": "stop",
+            "detail": "inspection-failed",
+            "elapsed": 0,
+            "launch": 2,
+            "sample": 14,
+            "at": 358073.739147
+          },
+          {
+            "component": "sampler",
+            "stage": "current",
+            "event": "settled",
+            "detail": "none",
+            "elapsed": 112.11737799999537,
+            "launch": 2,
+            "sample": 14,
+            "at": 358073.865726
+          },
+          {
+            "component": "sampler",
+            "stage": "child",
+            "event": "exit",
+            "detail": "none",
+            "elapsed": 0,
+            "launch": 2,
+            "sample": 14,
+            "at": 358074.89984
+          }
+        ],
+        "overlappingPhases": [
+          {
+            "component": "ordered",
+            "round": 2,
+            "stage": "delivery-commit",
+            "beginFromSampleMs": -6813.546,
+            "endFromSampleMs": null,
+            "outcome": null,
+            "openAtFirstRefusal": true
+          },
+          {
+            "component": "delivery",
+            "round": 2,
+            "stage": "entry",
+            "beginFromSampleMs": -6813.48,
+            "endFromSampleMs": null,
+            "outcome": null,
+            "openAtFirstRefusal": true
+          },
+          {
+            "component": "authority",
+            "check": 2244,
+            "stage": "first-settlement",
+            "beginFromSampleMs": 50.076,
+            "endFromSampleMs": 50.085,
+            "outcome": "return",
+            "openAtFirstRefusal": false
+          },
+          {
+            "component": "authority",
+            "check": 2244,
+            "stage": "first-effect",
+            "beginFromSampleMs": 50.085,
+            "endFromSampleMs": 111.913,
+            "outcome": "refused",
+            "openAtFirstRefusal": false
+          }
+        ]
+      }
+    }
+  ],
+  "orderedChronology": [
+    {
+      "component": "ordered",
+      "stage": "native-launch",
+      "event": "begin",
+      "round": 1,
+      "at": 193145.059844
+    },
+    {
+      "component": "ordered",
+      "stage": "native-launch",
+      "event": "return",
+      "round": 1,
+      "at": 194890.785485
+    },
+    {
+      "component": "ordered",
+      "stage": "history-write",
+      "event": "begin",
+      "round": 1,
+      "at": 194890.789212
+    },
+    {
+      "component": "ordered",
+      "stage": "history-write",
+      "event": "return",
+      "round": 1,
+      "at": 194909.075317
+    },
+    {
+      "component": "ordered",
+      "stage": "history-commit",
+      "event": "begin",
+      "round": 1,
+      "at": 194909.079405
+    },
+    {
+      "component": "ordered",
+      "stage": "history-commit",
+      "event": "return",
+      "round": 1,
+      "at": 194943.917388
+    },
+    {
+      "component": "ordered",
+      "stage": "history-register",
+      "event": "begin",
+      "round": 1,
+      "at": 194943.922528
+    },
+    {
+      "component": "ordered",
+      "stage": "history-register",
+      "event": "return",
+      "round": 1,
+      "at": 194953.112849
+    },
+    {
+      "component": "ordered",
+      "stage": "runtime-current",
+      "event": "begin",
+      "round": 1,
+      "at": 194953.129841
+    },
+    {
+      "component": "ordered",
+      "stage": "runtime-current",
+      "event": "return",
+      "round": 1,
+      "at": 194954.131433
+    },
+    {
+      "component": "ordered",
+      "stage": "sample-drain",
+      "event": "begin",
+      "round": 1,
+      "at": 194954.138577
+    },
+    {
+      "component": "ordered",
+      "stage": "sample-drain",
+      "event": "return",
+      "round": 1,
+      "at": 194954.163694
+    },
+    {
+      "component": "ordered",
+      "stage": "delivery-commit",
+      "event": "begin",
+      "round": 1,
+      "at": 194954.164135
+    },
+    {
+      "component": "ordered",
+      "stage": "delivery-commit",
+      "event": "refused",
+      "round": 1,
+      "at": 200328.00015
+    },
+    {
+      "component": "ordered",
+      "stage": "native-launch",
+      "event": "begin",
+      "round": 2,
+      "at": 345255.571179
+    },
+    {
+      "component": "ordered",
+      "stage": "native-launch",
+      "event": "return",
+      "round": 2,
+      "at": 347155.383688
+    },
+    {
+      "component": "ordered",
+      "stage": "history-write",
+      "event": "begin",
+      "round": 2,
+      "at": 347155.384951
+    },
+    {
+      "component": "ordered",
+      "stage": "history-write",
+      "event": "return",
+      "round": 2,
+      "at": 348020.225883
+    },
+    {
+      "component": "ordered",
+      "stage": "history-commit",
+      "event": "begin",
+      "round": 2,
+      "at": 348020.227046
+    },
+    {
+      "component": "ordered",
+      "stage": "history-commit",
+      "event": "return",
+      "round": 2,
+      "at": 349637.474445
+    },
+    {
+      "component": "ordered",
+      "stage": "history-register",
+      "event": "begin",
+      "round": 2,
+      "at": 349637.477771
+    },
+    {
+      "component": "ordered",
+      "stage": "history-register",
+      "event": "return",
+      "round": 2,
+      "at": 350779.468555
+    },
+    {
+      "component": "ordered",
+      "stage": "runtime-current",
+      "event": "begin",
+      "round": 2,
+      "at": 350779.469186
+    },
+    {
+      "component": "ordered",
+      "stage": "runtime-current",
+      "event": "return",
+      "round": 2,
+      "at": 350941.558509
+    },
+    {
+      "component": "ordered",
+      "stage": "sample-drain",
+      "event": "begin",
+      "round": 2,
+      "at": 350941.55899
+    },
+    {
+      "component": "ordered",
+      "stage": "sample-drain",
+      "event": "return",
+      "round": 2,
+      "at": 351148.204897
+    },
+    {
+      "component": "ordered",
+      "stage": "delivery-commit",
+      "event": "begin",
+      "round": 2,
+      "at": 351148.205408
+    },
+    {
+      "component": "ordered",
+      "stage": "delivery-commit",
+      "event": "refused",
+      "round": 2,
+      "at": 358266.965122
+    }
+  ]
+}

@@ -1,0 +1,136 @@
+
+ RUN  v3.2.7 /home/orca/.tmp/syzygy-beads-looper-20261114-54ebc9f1/d10-f3-final-verification
+
+ ❯ |integration| packages/polaris-dossier/src/url-session-audit.test.ts (101 tests | 2 failed | 99 skipped) 99ms
+   ↓ protected URL session audit > durably captures only the independently scoped machine peer effect metadata
+   ↓ protected URL session audit > refuses machine peer effect foreign-run without persisting it
+   ↓ protected URL session audit > refuses machine peer effect unknown-role without persisting it
+   ↓ protected URL session audit > refuses machine peer effect unknown-operation without persisting it
+   ↓ protected URL session audit > refuses machine peer effect raw-extension without persisting it
+   ↓ protected URL session audit > refuses machine peer effect future without persisting it
+   ↓ protected URL session audit > refuses machine peer effect bad-digest without persisting it
+   ↓ protected URL session audit > refuses machine peer effect zero-revision without persisting it
+   ↓ protected URL session audit > records first-epoch ordered evidence and one retirement in the protected design segment
+   ↓ protected URL session audit > rejects the ordered event through the ordinary append port
+   ↓ protected URL session audit > refuses ordered continuation after changed segment
+   ↓ protected URL session audit > refuses ordered continuation after revoked attempt
+   ↓ protected URL session audit > withholds an ordered append when attempt authority is revoked during segment sync
+   ↓ protected URL session audit > links the exact complete request exchange across interleaved accounting records
+   ↓ protected URL session audit > retains count evidence on its own route with no usage report or inference tool result
+   ↓ protected URL session audit > refuses count evidence relabeled as an inference response
+   ↓ protected URL session audit > refuses a response trace with missing flush
+   ↓ protected URL session audit > refuses a response trace with changed request
+   ↓ protected URL session audit > refuses a response trace with duplicate response
+   ↓ protected URL session audit > creates four exclusive0600 role segments with durable declarations distinct from captured events and an independently reproducible global/role chain
+   ↓ protected URL session audit > refuses reader-shaped history tokens and a forged history event through ordinary append
+   ↓ protected URL session audit > requires scoped capabilities for a design append and rejects it through ordinary audit append
+   ↓ protected URL session audit > refuses absent, copied, duplicate, cross-bound or missing profile capabilities and unknown factory fields before creating role files
+   ↓ protected URL session audit > requires an actual string rather than a structural array for kind
+   ↓ protected URL session audit > requires an actual string rather than a structural array for role
+   ↓ protected URL session audit > requires an actual string rather than a structural array for relay-event
+   ↓ protected URL session audit > requires an actual string rather than a structural array for relay-outcome
+   ↓ protected URL session audit > requires an actual string rather than a structural array for control-event
+   ↓ protected URL session audit > requires an actual string rather than a structural array for answer-kind
+   ↓ protected URL session audit > requires an actual string rather than a structural array for tool
+   ↓ protected URL session audit > requires an actual string rather than a structural array for tool-name
+   ↓ protected URL session audit > requires an actual string rather than a structural array for launch-event
+   ↓ protected URL session audit > requires an actual string rather than a structural array for launch-outcome
+   ↓ protected URL session audit > requires an actual string rather than a structural array for launch-signal
+   ↓ protected URL session audit > requires an actual string rather than a structural array for launch-group
+   ↓ protected URL session audit > refuses extra binding/schema/raw-content substitution without persisting any supplied extension
+   ↓ protected URL session audit > refuses scope binding/schema/raw-content substitution without persisting any supplied extension
+   ↓ protected URL session audit > refuses nested-binding binding/schema/raw-content substitution without persisting any supplied extension
+   ↓ protected URL session audit > refuses project binding/schema/raw-content substitution without persisting any supplied extension
+   ↓ protected URL session audit > refuses admission-class binding/schema/raw-content substitution without persisting any supplied extension
+   ↓ protected URL session audit > refuses origin binding/schema/raw-content substitution without persisting any supplied extension
+   ↓ protected URL session audit > refuses received binding/schema/raw-content substitution without persisting any supplied extension
+   ↓ protected URL session audit > refuses status binding/schema/raw-content substitution without persisting any supplied extension
+   ↓ protected URL session audit > refuses usage binding/schema/raw-content substitution without persisting any supplied extension
+   ↓ protected URL session audit > refuses receipt-text binding/schema/raw-content substitution without persisting any supplied extension
+   ↓ protected URL session audit > refuses receipt-input binding/schema/raw-content substitution without persisting any supplied extension
+   ↓ protected URL session audit > refuses question binding/schema/raw-content substitution without persisting any supplied extension
+   ↓ protected URL session audit > refuses answer binding/schema/raw-content substitution without persisting any supplied extension
+   ↓ protected URL session audit > refuses stream-text binding/schema/raw-content substitution without persisting any supplied extension
+   ↓ protected URL session audit > refuses pending binding/schema/raw-content substitution without persisting any supplied extension
+   ↓ protected URL session audit > refuses signal-pair binding/schema/raw-content substitution without persisting any supplied extension
+   ↓ protected URL session audit > records selected finite launch overrides as a durable snapshot without changing historical record format
+   ↓ protected URL session audit > refuses historical-no-limits launch limits before persisting live evidence
+   ↓ protected URL session audit > refuses unknown launch limits before persisting live evidence
+   ↓ protected URL session audit > refuses missing launch limits before persisting live evidence
+   ↓ protected URL session audit > refuses zero launch limits before persisting live evidence
+   ↓ protected URL session audit > refuses negative launch limits before persisting live evidence
+   ↓ protected URL session audit > refuses fraction launch limits before persisting live evidence
+   ↓ protected URL session audit > refuses unsafe launch limits before persisting live evidence
+   ↓ protected URL session audit > refuses nan launch limits before persisting live evidence
+   ↓ protected URL session audit > refuses infinity launch limits before persisting live evidence
+   ↓ protected URL session audit > retains exact launch refusal and Unknown termination fields and accepts only declared content classes
+   ↓ protected URL session audit > screens complete metadata fields and origin compositions "SYNTHETIC_SECRET_AUDIT"
+   ↓ protected URL session audit > screens complete metadata fields and origin compositions "SYNTHETIC_"
+   ↓ protected URL session audit > screens active content in otherwise valid factory metadata before creating any file
+   ↓ protected URL session audit > checks every role segment and the parent before acknowledging another role after append tamper
+   ↓ protected URL session audit > checks every role segment and the parent before acknowledging another role after truncate tamper
+   ↓ protected URL session audit > checks every role segment and the parent before acknowledging another role after replace-inode tamper
+   ↓ protected URL session audit > checks every role segment and the parent before acknowledging another role after hardlink tamper
+   ↓ protected URL session audit > checks every role segment and the parent before acknowledging another role after file-mode tamper
+   ↓ protected URL session audit > checks every role segment and the parent before acknowledging another role after parent-mode tamper
+   ↓ protected URL session audit > checks every role segment and the parent before acknowledging another role after parent-alias tamper
+   ↓ protected URL session audit > compares the actual descriptor prefix, not only size and inode metadata
+   ↓ protected URL session audit > refuses existing/symlink files and a non-private or aliased parent without overwriting owned fixtures
+   ↓ protected URL session audit > poisons globally on partial writes without retry, and retains the unacknowledged tail as Unknown
+   ↓ protected URL session audit > withholds acknowledgement/counters and permanently poisons if file fsync is throw
+   ↓ protected URL session audit > withholds acknowledgement/counters and permanently poisons if file fsync is stale
+   ↓ protected URL session audit > rechecks authority after directory fsync before counting the durable append
+   ↓ protected URL session audit > checks authority again if withdrawn during the before-append prefix read
+   ↓ protected URL session audit > checks authority again if withdrawn during the after-append prefix read
+   ↓ protected URL session audit > waits for directory fsync before acknowledging a durable event
+   ↓ protected URL session audit > enforces finite events capacity without acknowledging overflow
+   ↓ protected URL session audit > enforces finite bytes capacity without acknowledging overflow
+   ↓ protected URL session audit > enforces finite eventBytes capacity without acknowledging overflow
+   ↓ protected URL session audit > enforces finite pending capacity without acknowledging overflow
+   ↓ protected URL session audit > bounds queue-inclusive waits and close, reporting an uncancelled filesystem operation as Unknown
+   ↓ protected URL session audit > snapshots callbacks/config/event input before awaiting a current check
+   ↓ protected URL session audit > serializes concurrent cross-role events into one global chain
+   ↓ protected URL session audit > refuses a close that overtakes an in-flight current callback without acknowledging its event
+   ↓ protected URL session audit > keeps one setup cutoff through all declarations at 150 ms per check
+   ↓ protected URL session audit > keeps one setup cutoff through all declarations at 250 ms per check
+   ↓ protected URL session audit > does not open private audit files after initial authority refusal
+   × protected URL session audit > applies the original wall deadline during empty setup 63ms
+     → expected true to be false // Object.is equality
+   × protected URL session audit > applies the original wall deadline during first declaration sync 34ms
+     → expected true to be false // Object.is equality
+   ↓ protected URL session audit > writes no declaration when authority is withdrawn during empty setup
+   ↓ protected URL session audit > checks the named empty segments before refreshing setup authority
+   ↓ protected URL session audit > bounds setup and retains honest Unknown for an uncancelled current callback
+   ↓ protected URL session audit > bounds setup filesystem work and closes a descriptor while retaining an unfinished operation as Unknown
+   ↓ protected URL session audit > withholds credential-shaped large usage before counting or persisting it
+   ↓ protected URL session audit > checks the final named prefix at close instead of sealing a segment tampered after its last append
+   ↓ protected URL session audit > closes idempotently and shares concurrent close work without poisoning a clean prefix
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  |integration| packages/polaris-dossier/src/url-session-audit.test.ts > protected URL session audit > applies the original wall deadline during empty setup
+ FAIL  |integration| packages/polaris-dossier/src/url-session-audit.test.ts > protected URL session audit > applies the original wall deadline during first declaration sync
+AssertionError: expected true to be false // Object.is equality
+
+- Expected
++ Received
+
+- false
++ true
+
+ ❯ packages/polaris-dossier/src/url-session-audit.test.ts:592:23
+    590|     if (result.ok) writers.push(result);
+    591|     expect(expired).toBe(true);
+    592|     expect(result.ok).toBe(false);
+       |                       ^
+    593|     expect(write).toHaveBeenCalledTimes(phase === 'empty setup' ? 0 : …
+    594|     expect(result.summary()).toMatchObject({ closed: true, poisoned: t…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  2 failed | 99 skipped (101)
+   Start at  22:13:09
+   Duration  4.02s (transform 2.55s, setup 16ms, collect 3.43s, tests 99ms, environment 0ms, prepare 142ms)
+
