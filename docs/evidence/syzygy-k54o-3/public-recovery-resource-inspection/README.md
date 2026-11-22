@@ -13,11 +13,21 @@ resource walks were pending at expiry and the sample's currentness check
 had yet to start. The stop was recorded as `inspection-failed` and the
 child exited on SIGTERM. No fresh design delivery or ordered send occurred.
 
-[Unknown] This trace establishes where the sample ran out of time. It
-leaves the source of the overlapping delay unresolved. The reported
-event-loop maximum spans earlier launch phases and cannot attribute
-the failed window. The fixture used an owned source and simulated
-provider responses.
+[Observed] The first trace locates expiry within the sample. Its
+event-loop maximum spans earlier launch phases. A second phase trace
+measured the overlap directly. During bootstrap render's open-run phase,
+the third sample's timer fired at 1,091.5 ms. Both walks were pending and
+the sample's currentness callback had yet to start. Within this window,
+23 successful synchronous committed-policy checks occupied 965.2 ms.
+Their 69 synchronous Git calls accounted for 935.3 ms. The two earlier
+samples completed in 984.7 ms and 820.0 ms during launch-history commit
+and registration.
+
+[Unknown] The trace records policy-check intervals without call stacks.
+The exact allocation among protected product reads, host and machine
+callbacks remains unresolved. Both runs used an owned source and
+simulated provider responses.
+[Phase binding](phase-binding.json) · [Phase overlay](phase-diagnostic.patch) · [Phase trace](phase-trace.jsonl)
 
 [Observed] The binding records the base commit, the byte digests of the
 source before and after the overlay, the test totals and the selected

@@ -1,0 +1,405 @@
+{
+  "subject": "be75f5a91dadb1b188561bc7600c45d61a1def9a",
+  "tree": "404958ee77c5d6585441246b961bfbe30f02bbea",
+  "sources": [
+    {
+      "path": "packages/polaris-dossier/src/session-launch.ts",
+      "baseSha256": "f867296c11e4501220dafcfebc57374a65b93608d1cab4604d7125f16ad492a9",
+      "instrumentedSha256": "5c2106fc17fdf0af28d8edcfc86973f3d644cf1bb70fe62c68af5243a04d9901"
+    },
+    {
+      "path": "packages/polaris-dossier/src/policy-snapshot.ts",
+      "baseSha256": "16e5751856768c2c56c88226e233f9e71259ee1bcee2aff488fec451144d0bc0",
+      "instrumentedSha256": "23340934c5d7fa5f2e21863084f9e09821f6770895230f1f7776e24b46f667a5"
+    },
+    {
+      "path": "packages/polaris-dossier/src/url-run-ordered-attempt.ts",
+      "baseSha256": "687ae525a0714181cdcc625a046750005be2a9bbc20c71bc49cbb2556f32d793",
+      "instrumentedSha256": "23e792715f30a2ca9ba3dfe9d7573124febff39bcde274ae73ee463ca1b7ef22"
+    },
+    {
+      "path": "packages/polaris-dossier/src/render.ts",
+      "baseSha256": "53cd99c6cc5613a8739cf48ed64548cbd68c0f3183b88c0f04b9ca669f0b1e1b",
+      "instrumentedSha256": "a12e2ba7fd93588d13a63507bc101e59b37ac8159172f53cc71a9614124b58e3"
+    },
+    {
+      "path": "packages/polaris-dossier/src/session-relay.ts",
+      "baseSha256": "c7ab6f4f29cc7df6db88fc6189d2ff27313cbf8926893f7df703fa8118ec41a2",
+      "instrumentedSha256": "543ca6383c9ea629436e125252eb5e8f221340f7283fc32caa16d9230c32aa23"
+    }
+  ],
+  "artifacts": [
+    {
+      "path": "phase-diagnostic.patch",
+      "bytes": 36622,
+      "sha256": "2077eb5010f0054dcc68b906f8dd95f1d84b7e95989a5f7500f46fb4269d7802"
+    },
+    {
+      "path": "phase-trace.jsonl",
+      "bytes": 103424,
+      "sha256": "8fa45c8e403a05b22f09869816e4715a7b5608b29d648df37e81cb908f2d7002"
+    }
+  ],
+  "rawLogSha256": "7989ad3a47b30aa0895915611db91e8171dae995f6768fe410f9dbbcae464dba",
+  "invocation": "npx --no-install vitest run --project integration --maxWorkers=1 packages/polaris-dossier/src/render.test.ts packages/polaris-dossier/src/url-run-composed.test.ts -t \"actual URL produc|pipeline to stop-resume$\"",
+  "tracePopulation": 323,
+  "result": {
+    "totals": [
+      "Test Files  1 failed | 1 passed (2)",
+      "Tests  1 failed | 3 passed | 119 skipped (123)",
+      "Duration  223.86s (transform 2.58s, setup 14ms, collect 3.63s, tests 219.65s, environment 0ms, prepare 103ms)"
+    ],
+    "native": "\u00d7 composed URL run with actual role processes > runs the genuine production pipeline to stop-resume 213154ms",
+    "resumeChecks": [
+      {
+        "phase": "verify",
+        "ok": true,
+        "nextDesignRound": 2
+      },
+      {
+        "phase": "claim",
+        "exactCut": true,
+        "current": true
+      },
+      {
+        "phase": "resumed-guards",
+        "policyWithdrawal": "refused",
+        "claimWithdrawal": "refused"
+      }
+    ],
+    "events": [
+      "told the inventory session: draft revision 0 is frozen",
+      "delivered the fidelity packet for draft revision 0 and inventory revision 0",
+      "rendering draft revision 0",
+      "run ended: operator stop requested, checked history retained"
+    ],
+    "failureKinds": [],
+    "stoppedAuditPoisoned": false,
+    "forwards": {
+      "authorForwards": 7,
+      "inventoryForwards": 6,
+      "fidelityForwards": 4,
+      "designForwards": 0
+    },
+    "selectedPassedTimerCases": [
+      "\u2713 render > lets an actual URL producer finish after six seconds within its original thirty-second context  3576ms",
+      "\u2713 render > aborts an actual URL producer at the remaining shared deadline after initial rendering has consumed time  655ms",
+      "\u2713 render > refuses actual URL production at the remaining monotonic boundary before its timer runs  513ms"
+    ]
+  },
+  "designAudits": [
+    {
+      "artifact": {
+        "file": "/home/orca/.tmp/url-composed-host-3800417-1795343503277/acquisitions/attempt-FpPi3W/sessions-design.jsonl",
+        "bytes": 5275,
+        "sha256": "273b53a52605de5f897fe6d09f3646933a1225dce2d0a6a9942a50735410f489",
+        "mtimeUtc": "2026-11-22T10:34:57.980497+00:00"
+      },
+      "kinds": [
+        "declaration",
+        "launch-attempt",
+        "launch-history",
+        "launch-terminal"
+      ],
+      "terminal": {
+        "outcome": "inspection-failed",
+        "signal": "SIGTERM",
+        "viewTermination": "view-exited",
+        "groupTermination": "confirmed",
+        "toolTermination": "settled",
+        "pendingInvocations": 0,
+        "sampledStorageBytes": 2192,
+        "peakProcesses": 5
+      }
+    },
+    {
+      "artifact": {
+        "file": "/home/orca/.tmp/url-composed-host-3800417-1795343503277/acquisitions/attempt-LGonJa/sessions-design.jsonl",
+        "bytes": 7548,
+        "sha256": "6ab9ef4a0c29376349c00f11790ba97afce61932cdeb7b0b42d04b0793c5748e",
+        "mtimeUtc": "2026-11-22T10:32:46.056292+00:00"
+      },
+      "kinds": [
+        "declaration",
+        "launch-attempt",
+        "launch-history",
+        "design-delivery",
+        "launch-terminal"
+      ],
+      "terminal": {
+        "outcome": "stopped",
+        "signal": "SIGTERM",
+        "viewTermination": "view-exited",
+        "groupTermination": "confirmed",
+        "toolTermination": "settled",
+        "pendingInvocations": 0,
+        "sampledStorageBytes": 2192,
+        "peakProcesses": 5
+      }
+    }
+  ],
+  "freshDesign": {
+    "launch": 5,
+    "role": "design",
+    "spawn": {
+      "role": "design",
+      "launch": 5,
+      "event": "spawn",
+      "at": 189241.1,
+      "inspectionBound": 1000,
+      "cadence": 200
+    },
+    "traceCounts": {
+      "spawn": 1,
+      "ordered-phase": 7,
+      "sync-policy": 94,
+      "sample-start": 3,
+      "sample-success": 2,
+      "timer-expired": 1,
+      "sample-refused": 1,
+      "first-terminal": 1,
+      "child-exit": 1
+    },
+    "retainedSuccessfulSamples": {
+      "gap": {
+        "n": 2,
+        "min": 937.4,
+        "max": 1243.6
+      },
+      "elapsed": {
+        "n": 2,
+        "min": 820,
+        "max": 984.7
+      },
+      "storageMillis": {
+        "n": 2,
+        "min": 607,
+        "max": 796.6
+      },
+      "processMillis": {
+        "n": 2,
+        "min": 605.8,
+        "max": 796.8
+      },
+      "currentSyncMillis": {
+        "n": 2,
+        "min": 0,
+        "max": 0
+      },
+      "currentMillis": {
+        "n": 2,
+        "min": 187.9,
+        "max": 213
+      },
+      "eventLoopMax": {
+        "n": 2,
+        "min": 677.9,
+        "max": 677.9
+      }
+    },
+    "lastSuccessfulSample": {
+      "role": "design",
+      "launch": 5,
+      "event": "sample-success",
+      "at": 192242.1,
+      "id": 2,
+      "began": 191422.2,
+      "gap": 1243.6,
+      "elapsed": 820,
+      "bound": 1000,
+      "stage": "current",
+      "firstCheck": null,
+      "timerExpired": false,
+      "sampleActive": true,
+      "exited": false,
+      "finishedCapture": false,
+      "reason": "exited",
+      "storageMillis": 607,
+      "processMillis": 605.8,
+      "currentBegin": 607,
+      "currentSyncMillis": 0,
+      "currentMillis": 213,
+      "processError": null,
+      "storageDetail": null,
+      "storageEntries": null,
+      "storageBytesSeen": null,
+      "eventLoopMax": 677.9
+    },
+    "anomalies": [
+      {
+        "role": "design",
+        "launch": 5,
+        "event": "timer-expired",
+        "at": 194131.2,
+        "id": 3,
+        "began": 193039.7,
+        "gap": 1617.6,
+        "elapsed": 1091.5,
+        "bound": 1000,
+        "stage": "storage",
+        "firstCheck": null,
+        "timerExpired": true,
+        "sampleActive": true,
+        "exited": false,
+        "finishedCapture": false,
+        "reason": "exited",
+        "storageMillis": null,
+        "processMillis": null,
+        "currentBegin": null,
+        "currentSyncMillis": null,
+        "currentMillis": null,
+        "processError": null,
+        "storageDetail": null,
+        "storageEntries": null,
+        "storageBytesSeen": null,
+        "eventLoopMax": 1015.5
+      },
+      {
+        "role": "design",
+        "launch": 5,
+        "event": "sample-refused",
+        "at": 194131.6,
+        "id": 3,
+        "began": 193039.7,
+        "gap": 1617.6,
+        "elapsed": 1091.8,
+        "bound": 1000,
+        "stage": "storage",
+        "firstCheck": null,
+        "timerExpired": true,
+        "sampleActive": true,
+        "exited": false,
+        "finishedCapture": false,
+        "reason": "exited",
+        "storageMillis": null,
+        "processMillis": null,
+        "currentBegin": null,
+        "currentSyncMillis": null,
+        "currentMillis": null,
+        "processError": null,
+        "storageDetail": null,
+        "storageEntries": null,
+        "storageBytesSeen": null,
+        "eventLoopMax": 1015.5,
+        "errno": "other"
+      },
+      {
+        "role": "design",
+        "launch": 5,
+        "event": "first-terminal",
+        "at": 194131.7,
+        "reason": "inspection-failed",
+        "requested": "inspection-failed",
+        "exited": false,
+        "finishedCapture": false
+      },
+      {
+        "role": "design",
+        "launch": 5,
+        "event": "child-exit",
+        "at": 194239.6,
+        "reason": "inspection-failed",
+        "code": null,
+        "signal": "SIGTERM"
+      }
+    ],
+    "orderedPhases": [
+      {
+        "role": "design",
+        "launch": 5,
+        "event": "ordered-phase",
+        "at": 189241.4,
+        "phase": "bootstrap-launched"
+      },
+      {
+        "role": "design",
+        "launch": 5,
+        "event": "ordered-phase",
+        "at": 189241.5,
+        "phase": "bootstrap-write-launch"
+      },
+      {
+        "role": "design",
+        "launch": 5,
+        "event": "ordered-phase",
+        "at": 190068.1,
+        "phase": "bootstrap-commit-launch"
+      },
+      {
+        "role": "design",
+        "launch": 5,
+        "event": "ordered-phase",
+        "at": 191766.8,
+        "phase": "bootstrap-register-launch"
+      },
+      {
+        "role": "design",
+        "launch": 5,
+        "event": "ordered-phase",
+        "at": 192774.6,
+        "phase": "bootstrap-reproduce-render"
+      },
+      {
+        "role": "design",
+        "launch": 5,
+        "event": "ordered-phase",
+        "at": 192828.4,
+        "phase": "reproduce-open-run"
+      },
+      {
+        "role": "design",
+        "launch": 5,
+        "event": "ordered-phase",
+        "at": 194132,
+        "phase": "bootstrap-post-render-check"
+      }
+    ],
+    "policyWindows": [
+      {
+        "id": 1,
+        "result": "sample-success",
+        "start": 190178.6,
+        "elapsed": 984.7,
+        "phaseAtStart": "bootstrap-commit-launch",
+        "phaseChanges": [],
+        "syncPolicyOverlapMs": 909.3,
+        "fullyOverlappingChecks": 17,
+        "fullyOverlappingGitCalls": 51,
+        "fullyOverlappingGitMs": 882.9,
+        "policyRefusals": 0
+      },
+      {
+        "id": 2,
+        "result": "sample-success",
+        "start": 191422.2,
+        "elapsed": 820,
+        "phaseAtStart": "bootstrap-commit-launch",
+        "phaseChanges": [
+          {
+            "phase": "bootstrap-register-launch",
+            "at": 191766.8
+          }
+        ],
+        "syncPolicyOverlapMs": 755.4,
+        "fullyOverlappingChecks": 17,
+        "fullyOverlappingGitCalls": 51,
+        "fullyOverlappingGitMs": 724.0,
+        "policyRefusals": 0
+      },
+      {
+        "id": 3,
+        "result": "sample-refused",
+        "start": 193039.7,
+        "elapsed": 1091.8,
+        "phaseAtStart": "reproduce-open-run",
+        "phaseChanges": [],
+        "syncPolicyOverlapMs": 965.2,
+        "fullyOverlappingChecks": 23,
+        "fullyOverlappingGitCalls": 69,
+        "fullyOverlappingGitMs": 935.3,
+        "policyRefusals": 0
+      }
+    ],
+    "relayTerminalOrdinals": []
+  }
+}
