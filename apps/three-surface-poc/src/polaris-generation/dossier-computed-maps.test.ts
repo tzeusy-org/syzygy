@@ -265,6 +265,9 @@ describe('the unit map', () => {
     const over = npmOnly(recognizer(NPM, { candidates: 260, inferred: 250, unknown: 10, facts: 250, files: read, filesNotListed: 10 }));
     expect(listOf(over)).toBe('<ul class="map-unknown-files"><li>10 files whose facts are Unknown are counted and not listed.</li></ul>');
     expect(listOf(over)).not.toContain('Every candidate file not left out or set apart was read for facts.');
+    // The count is of Unknown files, never of every file not listed: 300 files, 260 readable, leave 10 read and 40 Unknown unlisted.
+    const mixed = npmOnly(recognizer(NPM, { candidates: 300, inferred: 260, unknown: 40, facts: 260, files: read, filesNotListed: 50 }));
+    expect(listOf(mixed)).toBe('<ul class="map-unknown-files"><li>40 files whose facts are Unknown are counted and not listed.</li></ul>');
     // No Unknown file at all: the sentence is true and stays.
     const none = npmOnly(recognizer(NPM, { candidates: 2, inferred: 2, facts: 2, files: [file('a/package.json', 1), file('b/package.json', 1)] }));
     expect(listOf(none)).toBe('<ul class="map-unknown-files"><li>Every candidate file not left out or set apart was read for facts.</li></ul>');
