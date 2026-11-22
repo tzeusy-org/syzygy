@@ -1,0 +1,62 @@
+
+ RUN  v3.2.7 /home/orca/.tmp/syzygy-beads-looper-20261114-54ebc9f1/d10-f3-final-verification
+
+ ❯ |integration| packages/polaris-dossier/src/session-launch.test.ts (29 tests | 1 failed | 28 skipped) 3759ms
+   ↓ prepared private CLI launch > compiles the independently named design profile with pinned version-two metadata
+   ↓ prepared private CLI launch > checks exact canonical ordered result, usage, latest-cache position and terminal shape
+   ↓ prepared private CLI launch > builds and selects only the design variant with the artifact result hint
+   ↓ prepared private CLI launch > observes the actual ordered design CLI exchange (ready)
+   ↓ prepared private CLI launch > observes the actual ordered design CLI exchange (stale-verdict)
+   ↓ prepared private CLI launch > observes the actual ordered design CLI exchange (out-of-order)
+   ↓ prepared private CLI launch > observes the actual ordered design CLI exchange (truncated-terminal)
+   ↓ prepared private CLI launch > observes the actual ordered design CLI exchange (insufficient-turns)
+   ↓ prepared private CLI launch > observes the actual ordered design CLI exchange (oversized-verdict)
+   ↓ prepared private CLI launch > observes the actual ordered design CLI exchange (insufficient-shape)
+   ↓ prepared private CLI launch > observes the actual ordered design CLI exchange (insufficient-work)
+   ↓ prepared private CLI launch > runs the pinned CLI through actual namespace, bridge, MCP and composed host without raw output
+   ↓ prepared private CLI launch > refuses forged preparation/profile and changed support identities before actual host work
+   ↓ prepared private CLI launch > captures frozen selected launch limits before spawn and starts no child when their protected record fails
+   ↓ prepared private CLI launch > bounds a stuck launch audit, closes the host and does not launch late when the callback resolves
+   ↓ prepared private CLI launch > enforces output, storage, wall and explicit stop boundaries on the actual CLI
+   ↓ prepared private CLI launch > stops an actual private CLI at its sampled process bound and reports bounded unknown host cleanup
+   ↓ prepared private CLI launch > preserves an observed failed exit when supervisor stop arrives before the pipes close
+   ↓ prepared private CLI launch > keeps the 200ms cadence, bounds one pending inspection to 1000ms and withholds both samples on timeout
+   ↓ prepared private CLI launch > joins independent inspection authority with the live census when current
+   × prepared private CLI launch > joins independent inspection authority with the live census when withdrawn 3670ms
+     → expected true to be false // Object.is equality
+   ↓ prepared private CLI launch > joins independent inspection authority with the live census when timed-out
+   ↓ prepared private CLI launch > joins independent inspection authority with the live census when confirmation-expired
+   ↓ prepared private CLI launch > bounds storage census retries with 1 disappearing entries
+   ↓ prepared private CLI launch > bounds storage census retries with 2 disappearing entries
+   ↓ prepared private CLI launch > distinguishes 'one child' vanishing at directory open
+   ↓ prepared private CLI launch > distinguishes 'two children' vanishing at directory open
+   ↓ prepared private CLI launch > distinguishes 'root' vanishing at directory open
+   ↓ prepared private CLI launch > distinguishes 'replaced child' vanishing at directory open
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  |integration| packages/polaris-dossier/src/session-launch.test.ts > prepared private CLI launch > joins independent inspection authority with the live census when withdrawn
+AssertionError: expected true to be false // Object.is equality
+
+- Expected
++ Received
+
+- false
++ true
+
+ ❯ packages/polaris-dossier/src/session-launch.test.ts:999:32
+    997|           authorityCurrent = disposition !== 'withdrawn';
+    998|           releaseCensus();
+    999|           expect(await sample).toBe(disposition === 'current');
+       |                                ^
+    1000|           expect(confirm.mock.calls).toEqual([[true]]);
+    1001|           releaseTool();
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 28 skipped (29)
+   Start at  22:45:52
+   Duration  7.52s (transform 2.53s, setup 18ms, collect 3.32s, tests 3.76s, environment 0ms, prepare 72ms)
+

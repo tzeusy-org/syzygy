@@ -1,0 +1,58 @@
+{
+  "selectedSourceAtStart": "27e83c50b66723f2b87c54e7ea254c7f401507a7",
+  "selectedTree": "902e744770db877bef05be32844ab111603e7f63",
+  "observedHeadAfterStart": "db7dbbd88db2bfc50dd4e8bfd36e4fae5f28de28",
+  "observedHeadTree": "47a78059cdb43a89784de2c0ebf458267f88641d",
+  "headDeltaFiles": [
+    "packages/polaris-dossier/src/session-launch.test.ts"
+  ],
+  "sourceSha256": {
+    "packages/polaris-dossier/src/url-run-composed.test.ts": {
+      "atLaunchCommit": "f999e7d0183f2187db676805d1978681d822198620e10938d7ebec229989f24e",
+      "atObservedHead": "f999e7d0183f2187db676805d1978681d822198620e10938d7ebec229989f24e",
+      "inCheckout": "f999e7d0183f2187db676805d1978681d822198620e10938d7ebec229989f24e"
+    },
+    "packages/polaris-dossier/src/url-run-composed.testkit.ts": {
+      "atLaunchCommit": "748f848bdcf4f8a862266cd8ddfd8db1191ea20d470b0b0334f17b36e1f21fc9",
+      "atObservedHead": "748f848bdcf4f8a862266cd8ddfd8db1191ea20d470b0b0334f17b36e1f21fc9",
+      "inCheckout": "748f848bdcf4f8a862266cd8ddfd8db1191ea20d470b0b0334f17b36e1f21fc9"
+    },
+    "packages/polaris-dossier/src/session-launch.ts": {
+      "atLaunchCommit": "ca6a02828de4d7cd5348f8c7deb8eb32f2a662eca0ef271f3738bbded313ed1e",
+      "atObservedHead": "ca6a02828de4d7cd5348f8c7deb8eb32f2a662eca0ef271f3738bbded313ed1e",
+      "inCheckout": "ca6a02828de4d7cd5348f8c7deb8eb32f2a662eca0ef271f3738bbded313ed1e"
+    },
+    "packages/polaris-dossier/src/url-run-ordered-attempt.ts": {
+      "atLaunchCommit": "012aaa4449875596aea3aee69b6f1ff530e7065630eef92a6bd97cf8ade2cfc0",
+      "atObservedHead": "012aaa4449875596aea3aee69b6f1ff530e7065630eef92a6bd97cf8ade2cfc0",
+      "inCheckout": "012aaa4449875596aea3aee69b6f1ff530e7065630eef92a6bd97cf8ade2cfc0"
+    },
+    "packages/polaris-dossier/src/url-run-sessions.ts": {
+      "atLaunchCommit": "43d7349918a2e5ed1c6165dbc4d777cf2032795bddc5273d81008f2ed5095182",
+      "atObservedHead": "43d7349918a2e5ed1c6165dbc4d777cf2032795bddc5273d81008f2ed5095182",
+      "inCheckout": "43d7349918a2e5ed1c6165dbc4d777cf2032795bddc5273d81008f2ed5095182"
+    },
+    "vitest.config.ts": {
+      "atLaunchCommit": "3b677756d41400ea04e50816c4b834d07a96593bef097b67c7d1934d5ca9de22",
+      "atObservedHead": "3b677756d41400ea04e50816c4b834d07a96593bef097b67c7d1934d5ca9de22",
+      "inCheckout": "3b677756d41400ea04e50816c4b834d07a96593bef097b67c7d1934d5ca9de22"
+    },
+    "vitest.tiers.ts": {
+      "atLaunchCommit": "aa73dd2ee4429bda9571ea79311d35f0372decbc84fb229b73c49d1407f76e57",
+      "atObservedHead": "aa73dd2ee4429bda9571ea79311d35f0372decbc84fb229b73c49d1407f76e57",
+      "inCheckout": "aa73dd2ee4429bda9571ea79311d35f0372decbc84fb229b73c49d1407f76e57"
+    }
+  },
+  "runtime": {
+    "manifestSha256": "56547e2c8a746f93a905c002284e25cc765196ddd4d67b34e7375967e50f0d78",
+    "inputTreeSha256": "74c9bf3c3bd5f46eaccdb55eb66ea24ace0bd9999c23010cc85c9139ca22ac08",
+    "manifestTimeUtc": "2026-11-22T14:40:42.290262+00:00",
+    "manifestInputs": 380,
+    "inputBlobsMatchingLaunchCommit": 286,
+    "untrackedManifestInputs": 94,
+    "trackedInputMismatchCount": 0,
+    "inputFilesMatchingCurrentCheckout": 380,
+    "nativeAndOtherRuntimeOutputs": 8,
+    "matchingRuntimeOutputs": 8
+  }
+}

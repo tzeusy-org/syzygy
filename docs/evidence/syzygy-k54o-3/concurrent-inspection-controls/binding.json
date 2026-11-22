@@ -1,0 +1,121 @@
+{
+  "commit": "db7dbbd88db2bfc50dd4e8bfd36e4fae5f28de28",
+  "source": "packages/polaris-dossier/src/session-launch.ts",
+  "sourceSha256": "ca6a02828de4d7cd5348f8c7deb8eb32f2a662eca0ef271f3738bbded313ed1e",
+  "results": [
+    {
+      "id": "baseline",
+      "edits": [],
+      "exit": 0,
+      "command": [
+        "npx",
+        "--no-install",
+        "vitest",
+        "run",
+        "--project",
+        "integration",
+        "--maxWorkers=1",
+        "packages/polaris-dossier/src/session-launch.test.ts",
+        "-t",
+        "joins independent inspection authority|bounds storage census retries|keeps the 200ms cadence|bounds a stuck launch audit"
+      ],
+      "logSha256": "c5996aae64310fe8ca9e45e2217cdd5e7681e296ee42e25e58a6c2c221609f2e"
+    },
+    {
+      "id": "start-after-census",
+      "edits": [
+        [
+          "      const authority = state.inspectionAuthority;\n      // Verification reads authority only. Census refusal takes precedence and\n      // the exact live guard runs when both the census and verification settle.\n      const verification = authority === undefined ? undefined\n        : Promise.resolve().then(authority.verify).then(result => result === true, () => false);\n",
+          ""
+        ],
+        [
+          "      let stillCurrent = await (verification ?? state.current());\n",
+          "      const authority = state.inspectionAuthority;\n      // Verification reads authority only. Census refusal takes precedence and\n      // the exact live guard runs when both the census and verification settle.\n      const verification = authority === undefined ? undefined\n        : Promise.resolve().then(authority.verify).then(result => result === true, () => false);\n      let stillCurrent = await (verification ?? state.current());\n"
+        ]
+      ],
+      "exit": 1,
+      "command": [
+        "npx",
+        "--no-install",
+        "vitest",
+        "run",
+        "--project",
+        "integration",
+        "--maxWorkers=1",
+        "packages/polaris-dossier/src/session-launch.test.ts",
+        "-t",
+        "joins independent inspection authority with the live census when current$"
+      ],
+      "logSha256": "7d3cdb11a027738f138f295d1d40b9d35ec9e910c569d2aa04b71e8cfc53165c"
+    },
+    {
+      "id": "omit-confirmation",
+      "edits": [
+        [
+          "        stillCurrent = authority.confirm(stillCurrent === true);\n",
+          "        stillCurrent = stillCurrent === true;\n"
+        ]
+      ],
+      "exit": 1,
+      "command": [
+        "npx",
+        "--no-install",
+        "vitest",
+        "run",
+        "--project",
+        "integration",
+        "--maxWorkers=1",
+        "packages/polaris-dossier/src/session-launch.test.ts",
+        "-t",
+        "joins independent inspection authority with the live census when withdrawn$"
+      ],
+      "logSha256": "e1c66ee66934ebd0c08988795c06461d26ea64dd0710859f62650bd180a318ab"
+    },
+    {
+      "id": "omit-pre-confirmation-deadline",
+      "edits": [
+        [
+          "      let stillCurrent = await (verification ?? state.current());\n      checkSample();\n",
+          "      let stillCurrent = await (verification ?? state.current());\n"
+        ]
+      ],
+      "exit": 1,
+      "command": [
+        "npx",
+        "--no-install",
+        "vitest",
+        "run",
+        "--project",
+        "integration",
+        "--maxWorkers=1",
+        "packages/polaris-dossier/src/session-launch.test.ts",
+        "-t",
+        "joins independent inspection authority with the live census when timed-out$"
+      ],
+      "logSha256": "14daa5618b4a365808a8fabf1d09f9270ea0543845c502de37cb5f47d4e877e4"
+    },
+    {
+      "id": "omit-post-confirmation-deadline",
+      "edits": [
+        [
+          "        stillCurrent = authority.confirm(stillCurrent === true);\n        checkSample();\n",
+          "        stillCurrent = authority.confirm(stillCurrent === true);\n"
+        ]
+      ],
+      "exit": 1,
+      "command": [
+        "npx",
+        "--no-install",
+        "vitest",
+        "run",
+        "--project",
+        "integration",
+        "--maxWorkers=1",
+        "packages/polaris-dossier/src/session-launch.test.ts",
+        "-t",
+        "joins independent inspection authority with the live census when confirmation-expired$"
+      ],
+      "logSha256": "2fa28b1108758278b7e16382cfd4f54702dbb1879819cf370e41689990994c5d"
+    }
+  ]
+}
