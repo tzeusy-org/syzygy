@@ -1,3 +1,4 @@
+import { renameSync, writeFileSync } from 'node:fs';
 import { readFile, writeFile, realpath, stat } from 'node:fs/promises';
 import { join } from 'node:path';
 import { createServer } from 'node:net';
@@ -139,14 +140,78 @@ describe('preemptible ordered design screen', () => {
     }
   }, 30_000);
 
-  it('refuses authority revoked during held runtime hashing before charging or spawning a worker', async () => {
-    let checks = 0;
+  it('hashes trusted images under the private guard and retains full authority checks for the worker', async () => {
+    let fullChecks = 0, readChecks = 0;
+    const charged = vi.fn(() => {
+      // The pinned Node image takes many reads. Only held-image and admission
+      // boundaries use full authority before charging.
+      expect(readChecks).toBeGreaterThan(10);
+      expect(fullChecks).toBeLessThan(10);
+    });
+    const result = await run(fixture().initial, {
+      current: () => { fullChecks++; return true; },
+      imageReadCurrent: () => { readChecks++; return true; },
+      chargeCpuMicroseconds: charged,
+    });
+    expect(result.ok).toBe(true);
+    expect(charged).toHaveBeenCalledTimes(1);
+  });
+
+  it.each(['authority', 'private-guard'] as const)('refuses %s withdrawn during held image hashing before charging', async guard => {
+    let current = true, reads = 0;
     const charged = vi.fn();
-    const result = await run(fixture().initial, { current: () => ++checks < 10, chargeCpuMicroseconds: charged });
-    expect(checks).toBe(10);
+    const result = await run(fixture().initial, {
+      current: () => current,
+      imageReadCurrent: () => {
+        reads++;
+        if (guard === 'authority') current = false;
+        return guard !== 'private-guard';
+      },
+      chargeCpuMicroseconds: charged,
+    });
+    expect(reads).toBeGreaterThan(0);
     expect(result.ok).toBe(false);
     expect(result.charge.cpuMicroseconds).toBe(0);
     expect(charged).not.toHaveBeenCalled();
+  });
+
+  it.each(['held-bytes', 'named-identity'] as const)('rechecks worker %s after hashing Node and before charging', async change => {
+    const worker = join(directory, `private-hash-${change}.mjs`);
+    const replacement = join(directory, `replacement-${change}.mjs`);
+    const original = 'void 0;\n';
+    await writeFile(worker, original, { mode: 0o600 });
+    await writeFile(replacement, original, { mode: 0o600 });
+    const pinned = await selected(worker);
+    const charged = vi.fn();
+    let reads = 0;
+    const result = await run(fixture().initial, {
+      program: { ...program, worker: pinned },
+      imageReadCurrent: () => {
+        // The tiny worker was read in one chunk. The second read is in Node.
+        if (++reads === 2) {
+          if (change === 'held-bytes') writeFileSync(worker, 'void 1;\n');
+          else renameSync(replacement, worker);
+        }
+        return true;
+      },
+      chargeCpuMicroseconds: charged,
+    });
+    expect(reads).toBeGreaterThan(1);
+    expect(result.ok).toBe(false);
+    expect(result.charge.cpuMicroseconds).toBe(0);
+    expect(charged).not.toHaveBeenCalled();
+  });
+
+  it('rechecks full authority after charging before scheduling the worker', async () => {
+    let authorized = true;
+    const result = await run(fixture().initial, {
+      current: () => authorized,
+      imageReadCurrent: () => true,
+      chargeCpuMicroseconds: () => { authorized = false; },
+    });
+    expect(result.ok).toBe(false);
+    expect(result.charge.cpuMicroseconds).toBe(18_000_000);
+    expect(result.charge.enforcedWallMilliseconds).toBe(0);
   });
 
   it('stops an asynchronous worker when live authority is revoked and retains its charged capacity', async () => {

@@ -30,7 +30,8 @@ const same = (a: fs.BigIntStats, b: fs.BigIntStats): boolean =>
   ['dev', 'ino', 'mode', 'nlink', 'size', 'mtimeNs', 'ctimeNs'].every(key => a[key as keyof fs.BigIntStats] === b[key as keyof fs.BigIntStats]);
 interface Held { readonly handle: FileHandle; readonly fd: number; readonly file: OrderedScreenProgramFile; readonly stat: fs.BigIntStats }
 function refuse(): never { throw new Error('ordered-screen-refused'); }
-async function hold(file: OrderedScreenProgramFile, executable: boolean, current: () => void): Promise<Held> {
+async function hold(file: OrderedScreenProgramFile, executable: boolean, current: () => void,
+  imageReadCurrent: () => void): Promise<Held> {
   if (!path.isAbsolute(file.path) || path.resolve(file.path) !== file.path || await fs.promises.realpath(file.path) !== file.path
     || !/^[a-f0-9]{64}$/u.test(file.sha256) || !Number.isSafeInteger(file.bytes)
     || file.bytes <= 0 || file.bytes > (executable ? 536_870_912 : 8_388_608)) refuse();
@@ -42,13 +43,12 @@ async function hold(file: OrderedScreenProgramFile, executable: boolean, current
     if (!stat.isFile() || stat.nlink !== 1n || stat.size !== BigInt(file.bytes) || (stat.mode & 0o022n) !== 0n
       || (executable && (stat.mode & 0o111n) === 0n)
       || (stat.uid !== 0n && stat.uid !== BigInt(process.getuid!()))) refuse();
-    // These are trusted held runtime images, not native peer input. Bound each
-    // read and yield between chunks without repeating the native effect's full
-    // process attestation for every 64 KiB of a large executable.
+    // Read only the trusted held image under the operation's existing bound.
+    // The exact authority checks surround the private digest and identity proof.
     const hash = createHash('sha256'), buffer = Buffer.alloc(1_048_576);
     let offset = 0;
     while (offset < file.bytes) {
-      current();
+      imageReadCurrent();
       const { bytesRead: count } = await handle.read(buffer, 0, Math.min(buffer.length, file.bytes - offset), offset);
       if (count === 0) refuse();
       hash.update(buffer.subarray(0, count)); offset += count;
@@ -76,6 +76,8 @@ export async function runOrderedDesignScreen(options: {
   readonly limits?: OrderedScreenLimits;
   readonly deadlineEpochMilliseconds: number;
   readonly current: () => boolean;
+  /** Keep the private trusted image reads within the current operation's bounds. */
+  readonly imageReadCurrent?: () => boolean;
   /** Charge before spawn so an asynchronous refusal cannot lose child capacity. */
   readonly chargeCpuMicroseconds?: (value: number) => void;
 }): Promise<OrderedScreenRun> {
@@ -96,10 +98,12 @@ export async function runOrderedDesignScreen(options: {
       || options.deadlineEpochMilliseconds <= Date.now()) refuse();
     const input = Buffer.from(encodeCanonicalJson({ format: ORDERED_SCREEN_FORMAT, input: options.input, limits }, ORDERED_SCREEN_INPUT_LIMITS));
     const current = (): void => { if (!options.current() || Date.now() >= options.deadlineEpochMilliseconds) refuse(); };
-    const worker = await hold(options.program.worker, false, current); held.push(worker);
-    const node = await hold(options.program.node, true, current); held.push(node);
-    enforcedWallMilliseconds = Math.min(limits.wallMilliseconds, options.deadlineEpochMilliseconds - Date.now());
-    if (enforcedWallMilliseconds <= 0 || !options.current()) refuse();
+    const readCurrent = options.imageReadCurrent ?? options.current;
+    const imageReadCurrent = (): void => { if (!readCurrent() || Date.now() >= options.deadlineEpochMilliseconds) refuse(); };
+    const worker = await hold(options.program.worker, false, current, imageReadCurrent); held.push(worker);
+    const node = await hold(options.program.node, true, current, imageReadCurrent); held.push(node);
+    current();
+    if (!held.every(unchanged)) refuse();
     // --as-pid-1 removes bwrap's separate PID-1 reaper. There are exactly the
     // bwrap supervisor and one trusted Node process. Node cannot spawn or load
     // addons; process/thread CPU is included in each process's RLIMIT_CPU.
@@ -114,6 +118,10 @@ export async function runOrderedDesignScreen(options: {
       '--max-old-space-size=256', '--max-semi-space-size=4', '--stack-size=512', '--allow-fs-read=/tool/worker.mjs', '/tool/worker.mjs'];
     cpuMicroseconds = 2 * (limits.cpuSeconds + 1) * 1_000_000;
     options.chargeCpuMicroseconds?.(cpuMicroseconds);
+    current();
+    if (!held.every(unchanged)) refuse();
+    enforcedWallMilliseconds = Math.min(limits.wallMilliseconds, options.deadlineEpochMilliseconds - Date.now());
+    if (enforcedWallMilliseconds <= 0) refuse();
     const result = await new Promise<{ failed: boolean; status: number | null; signal: NodeJS.Signals | null; stdout: Buffer }>(resolve => {
       // The outer child owns a new session/group. Keep the worker in that
       // group so a wall timeout kills both supervisor and worker, even idle.

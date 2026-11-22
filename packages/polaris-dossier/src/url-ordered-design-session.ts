@@ -225,6 +225,7 @@ export function createOrderedDesignSession(options: Options) {
       if (input.operation === 'request' && !('planInput' in input)) throw refused();
       const result = await runOrderedDesignScreen({ program: screening.program, input, deadlineEpochMilliseconds: boundary.expires,
         current: () => { try { requireProcessingCurrent(); boundary.check(); return true; } catch { return false; } },
+        imageReadCurrent: () => { try { requireAuthority(); boundary.check(); return true; } catch { return false; } },
         chargeCpuMicroseconds: value => { work.chargeScreenCpuMicroseconds(value); workBudget?.current(); boundary.check(); } });
       workBudget?.current();
       boundary.check();
