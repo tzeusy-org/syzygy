@@ -1,0 +1,84 @@
+{
+  "format": "f3-native-composed-evidence/1",
+  "subjectCommit": "22e59be1c6313d2546dbc0c4f47a17bd1c8c0ab2",
+  "tree": "d49689e741634df52f687a010419405c4a9fd21e",
+  "files": [
+    {
+      "path": "packages/polaris-dossier/src/polaris.ts",
+      "sha256": "0aeafeb816d9c04c4728ae835f5add409331a70b6d0cab5b71d5eb4892983cc2"
+    },
+    {
+      "path": "packages/polaris-dossier/src/render.ts",
+      "sha256": "753e1279de1d6c166ee905322839760014190abfc8d87fb371582e3d7325fa13"
+    },
+    {
+      "path": "packages/polaris-dossier/src/url-design-product.ts",
+      "sha256": "25827df699e2060bd16c78f0659c2a0413ba8052cbbb7203aedb9a8030e4e742"
+    },
+    {
+      "path": "packages/polaris-dossier/src/url-launch-history.test.ts",
+      "sha256": "e9609662a9a4964b57d3eaf864ea67aa7c40627f11a57685979efea5bb0c64d5"
+    },
+    {
+      "path": "packages/polaris-dossier/src/url-run-sessions.ts",
+      "sha256": "a09d782c01b7b04a4abf2c265667ebf1f4caae33688f5beb9cf5832e0067b2c7"
+    },
+    {
+      "path": "packages/polaris-dossier/src/url-session-audit.ts",
+      "sha256": "78292e4a0ac1ac6abe235adee9da523eb406258ec6390b5b27109244e0415aee"
+    },
+    {
+      "path": "packages/polaris-dossier/src/url-run-composed.test.ts",
+      "sha256": "96c9f0daa2cafea41dd18d490c6c34f4bacfdd031d252f55ed31896ea38db1b7"
+    },
+    {
+      "path": "packages/polaris-dossier/src/url-run-composed.testkit.ts",
+      "sha256": "748f848bdcf4f8a862266cd8ddfd8db1191ea20d470b0b0334f17b36e1f21fc9"
+    },
+    {
+      "path": "packages/polaris-dossier/src/url-run-ordered-attempt.ts",
+      "sha256": "8edcd9c6d5486b0e38c7241136544fbed20da24a225e6466cbe793f61da47320"
+    }
+  ],
+  "inputTreeSha256": "4076830dffc7a392cfa9bfabafa520d9c2128da5667be9da815f88f19f5a132a",
+  "profileRegistrySha256": "7ce1d696d7f6bd3f97b8234c3350838402a8b2860d2fced0ff1adcce7cd344a1",
+  "command": "npx --no-install vitest run --project integration --maxWorkers=1 packages/polaris-dossier/src/url-run-composed.test.ts -t 'pipeline to complete$'",
+  "artifacts": [
+    {
+      "path": "vitest.log",
+      "bytes": 511,
+      "sha256": "cd1b886c141d1babaf2b3fd5534b928e5a0b47462bcfb22d821b31ca7f73ce4c"
+    },
+    {
+      "path": "witness.json",
+      "bytes": 7596,
+      "sha256": "a33d5bf21f689838ceb7e1b2d59bcd626b4c7e7e4176ac96a267d0d19ad2115a"
+    }
+  ],
+  "result": {
+    "testsPassed": 1,
+    "testsSkipped": 3,
+    "testsTotal": 4,
+    "caseMilliseconds": 108660,
+    "totalSeconds": 113.36,
+    "executionRecordSha256": "a168b8b580b4a0c224b77d5aaf7a5497f0d13266b01f38771006488c5b698232",
+    "roles": 4,
+    "secondCloseStage": "closed-already",
+    "existingRecordLoss": false,
+    "requests": {
+      "author": 7,
+      "inventory": 6,
+      "fidelity": 4,
+      "design": 5
+    },
+    "finalSite": {
+      "site": 1,
+      "draftRevision": 0,
+      "verdict": 0,
+      "packetSha256": "c7c569b39443f84b9bb618193595fd0fb66aae4e027aad35d2ca6bd46390f129",
+      "verdictEventSha256": "85bc4b6a1ef02ae88d10ddd01f7ed7ad5cb107c22b08508804d43834896a33c5",
+      "populationSha256": "dcc23cf167ad59536922593186ff7ab4b9543ece20ba347a031f2e380835aad1"
+    }
+  },
+  "limits": "Initial preparation and provider forwarding were fixture-controlled using owned synthetic inputs. Four actual role processes passed the genuine production supervisor. The fixture removed the test run after checking record creation and byte-for-byte repeat-close refusal. Between-sample accounting, provider receipts and uncaptured sends remain Unknown."
+}
