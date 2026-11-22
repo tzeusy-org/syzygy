@@ -1,0 +1,198 @@
+{
+  "subject": {
+    "commit": "3340a565402509525290e086d7b8c8d33ec845cd",
+    "testPath": "packages/polaris-dossier/src/url-run-composed.test.ts",
+    "testSha256": "599d37e2630704ca2530f1a7ef86aa6d2c1a2b7ead5de9dec2c7ae6b65eff0dc"
+  },
+  "hostedJob": {
+    "completedAt": "2026-11-22T16:30:03Z",
+    "conclusion": "failure",
+    "headSha": "3340a565402509525290e086d7b8c8d33ec845cd",
+    "jobId": 137272131981,
+    "runId": 45042105804,
+    "startedAt": "2026-11-22T16:20:12Z",
+    "status": "completed",
+    "url": "https://github.com/tzeusy-org/syzygy/actions/runs/45042105804/job/137272131981",
+    "runAttempt": 2,
+    "logSha256": "752ad6e4b91f22dff8712bf32d0657bd5996f75b22079df57d3ac7847ff550ff"
+  },
+  "suite": {
+    "files": 136,
+    "passed": 3757,
+    "failed": 4,
+    "skipped": 3
+  },
+  "case": {
+    "name": "stop-resume",
+    "milliseconds": 223032,
+    "runDeadline": "PT2H"
+  },
+  "resumeChecks": [
+    {
+      "phase": "verify",
+      "ok": true,
+      "nextDesignRound": 2
+    },
+    {
+      "phase": "claim",
+      "exactCut": true,
+      "current": true
+    },
+    {
+      "phase": "resumed-guards",
+      "policyWithdrawal": "refused",
+      "claimWithdrawal": "refused"
+    },
+    {
+      "phase": "machine-claim",
+      "current": true,
+      "claimChecks": 1,
+      "withdrawn": true,
+      "asyncCurrent": true,
+      "asyncWithdrawn": true
+    },
+    {
+      "phase": "resumed-exit",
+      "exit": 1,
+      "failure": "transport-unavailable",
+      "roles": [
+        {
+          "role": "author",
+          "outcome": "Unknown"
+        },
+        {
+          "role": "inventory",
+          "outcome": "Unknown"
+        },
+        {
+          "role": "fidelity",
+          "outcome": "Unknown"
+        },
+        {
+          "role": "design",
+          "outcome": "stopped",
+          "exitCode": null,
+          "signal": "SIGTERM"
+        }
+      ]
+    }
+  ],
+  "transportAndInspection": {
+    "connectionCount": 2,
+    "transportCounts": {
+      "open": 2,
+      "accept": 2,
+      "capture": 2,
+      "authorize": 2
+    },
+    "connections": [
+      {
+        "ordinal": 1,
+        "stages": {
+          "open": {
+            "startedMs": 65851.472,
+            "settledMs": 70463.612,
+            "outcome": "accepted"
+          },
+          "accept": {
+            "startedMs": 65851.569,
+            "settledMs": 68155.846,
+            "outcome": "accepted"
+          },
+          "capture": {
+            "startedMs": 65972.898,
+            "settledMs": 68155.786,
+            "outcome": "accepted"
+          },
+          "authorize": {
+            "startedMs": 68156.027,
+            "settledMs": 70463.451,
+            "outcome": "accepted"
+          }
+        },
+        "boundMs": 180000,
+        "kind": "inference-bridge"
+      },
+      {
+        "ordinal": 2,
+        "stages": {
+          "open": {
+            "startedMs": 141227.809,
+            "settledMs": 143572.867,
+            "outcome": "accepted"
+          },
+          "accept": {
+            "startedMs": 141227.895,
+            "settledMs": 142213.723,
+            "outcome": "accepted"
+          },
+          "capture": {
+            "startedMs": 141313.046,
+            "settledMs": 142213.688,
+            "outcome": "accepted"
+          },
+          "authorize": {
+            "startedMs": 142213.791,
+            "settledMs": 143572.753,
+            "outcome": "accepted"
+          }
+        },
+        "boundMs": 85000,
+        "kind": "mcp-shim"
+      }
+    ],
+    "refusals": {},
+    "inspectedLaunches": 1,
+    "samples": {
+      "started": 220,
+      "verified": 220,
+      "verifyRefused": 0,
+      "verifyRejected": 0,
+      "confirmed": 219,
+      "confirmRefused": 0,
+      "confirmRejected": 0
+    },
+    "latestSample": {
+      "ordinal": 220,
+      "verify": {
+        "startedMs": 154016.42,
+        "settledMs": 154236.978,
+        "outcome": "accepted"
+      }
+    },
+    "lastConfirmed": {
+      "ordinal": 219,
+      "verify": {
+        "startedMs": 153753.999,
+        "settledMs": 153816.771,
+        "outcome": "accepted"
+      },
+      "confirmationInput": true,
+      "confirm": {
+        "startedMs": 153816.776,
+        "settledMs": 153842.637,
+        "outcome": "accepted"
+      }
+    },
+    "terminal": {
+      "atMs": 154536.883,
+      "outcome": "stopped",
+      "latestSample": {
+        "ordinal": 220,
+        "verify": {
+          "startedMs": 154016.42,
+          "settledMs": 154236.978,
+          "outcome": "accepted"
+        }
+      }
+    }
+  },
+  "designProviderForwards": 1,
+  "designRelayEvents": [
+    "attempt-allowed",
+    "send-attempt",
+    "send-outcome",
+    "response-admitted"
+  ],
+  "designFixtureToolReceipts": 0
+}
