@@ -72,7 +72,8 @@ describe('whole-packet URL design representation data', () => {
   });
 
   it('admits every actual renderer file through a fully screened inert view while preserving the FAILED raw finding', () => {
-    expect(screenUrlRenderedSite(actualFiles, screen)).toEqual({ ok: true, files: 10, pages: 7,
+    expect([...actualFiles.keys()]).toEqual(expect.arrayContaining(['find-by-task.html', 'name-index.html']));
+    expect(screenUrlRenderedSite(actualFiles, screen)).toEqual({ ok: true, files: 12, pages: 9,
       bytes: [...actualFiles.values()].reduce((total, file) => total + Buffer.byteLength(file), 0) });
     expect(screen.screenBody(renderedOriginal.toString())).toBe('active-content');
     const result = createUrlDesignView(input(renderedOriginal));
@@ -81,7 +82,7 @@ describe('whole-packet URL design representation data', () => {
     expect(envelope.format).toBe('polaris-dossier-url-design-inert-view/1'); expect(envelope.encoding).toBe('html-entities-five/1');
     expect(result.kind).toBe('validated-representation-data-only'); expect(result.rawActive).toEqual({ status: 'failed', finding: 'active-content' });
     const original = JSON.parse(renderedOriginal.toString());
-    expect(result.files).toBe(original.files.length); expect(result.files).toBe(10); expect(result.pages).toBe(7);
+    expect(result.files).toBe(original.files.length); expect(result.files).toBe(12); expect(result.pages).toBe(9);
     expect(result.originalSha256).toBe(sha256(renderedOriginal)); expect(result.originalBytes).toBe(renderedOriginal.byteLength);
     expect(result.payloadSha256).toBe(sha256(envelope.payload)); expect(result.payloadBytes).toBe(Buffer.byteLength(envelope.payload));
     expect(result.sha256).toBe(sha256(result.bytes)); expect(result.byteLength).toBe(result.bytes.byteLength);
