@@ -222,10 +222,16 @@ export interface UrlRetainedLaunchHistoryOptions {
   readonly roleDeclaration: UrlRoleDeclaration; readonly executable: string;
   readonly screen: DossierScreen; readonly current: () => boolean | Promise<boolean>;
 }
+declare const retainedHistoryBrand: unique symbol;
 export interface VerifiedRetainedUrlLaunchHistory {
+  readonly [retainedHistoryBrand]: true;
   readonly authorization: 'none'; readonly replay: 'forbidden';
   readonly role: UrlLaunchHistoryRole; readonly sessionId: string; readonly pin: string;
   readonly recordSha256: string; readonly promptRecordSha256: string; readonly promptSha256: string;
+}
+const verifiedRetainedHistory = new WeakSet<VerifiedRetainedUrlLaunchHistory>();
+export function isVerifiedRetainedUrlLaunchHistory(value: unknown): value is VerifiedRetainedUrlLaunchHistory {
+  return typeof value === 'object' && value !== null && verifiedRetainedHistory.has(value as VerifiedRetainedUrlLaunchHistory);
 }
 
 const EXPECTED_FIELDS = ['file', 'recordSha256', 'recordBytes', 'promptRecordSha256', 'promptSha256', 'sessionId'];
@@ -314,8 +320,11 @@ export async function verifyRetainedUrlLaunchHistory(given: UrlRetainedLaunchHis
     checkDirectories();
     if (![core, sidecar, launch, prompt].every((prior, index) => matchesFile(prior, read(files[index]!)))) refuse();
     checkDirectories();
-    return Object.freeze({ authorization: 'none', replay: 'forbidden', role, sessionId: declaration.sessionId, pin,
-      recordSha256: expected.recordSha256, promptRecordSha256: expected.promptRecordSha256, promptSha256: expected.promptSha256 });
+    const verified = Object.freeze({ authorization: 'none', replay: 'forbidden', role, sessionId: declaration.sessionId, pin,
+      recordSha256: expected.recordSha256, promptRecordSha256: expected.promptRecordSha256,
+      promptSha256: expected.promptSha256 }) as VerifiedRetainedUrlLaunchHistory;
+    verifiedRetainedHistory.add(verified);
+    return verified;
   } catch { return refuse(); }
   finally {
     let closed = true;

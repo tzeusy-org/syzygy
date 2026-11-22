@@ -10,7 +10,8 @@ import { DOSSIER_CONTENT_CLASSES, encodeRunRecord, NO_WORK_ITEM_REASON } from '.
 import { buildDossierScreen } from './screen.js';
 import { URL_CLI_PROGRAM } from './session-launch.js';
 import { createUrlRunDeclaration, URL_ORIGIN_POLICY_PATH, URL_PROFILE_ID, URL_ROLES, urlSourceTransportIdentity } from './url-run-record.js';
-import { verifyRetainedUrlLaunchHistory, type UrlLaunchHistoryRole, type UrlRetainedLaunchHistoryOptions } from './url-launch-history.js';
+import { isVerifiedRetainedUrlLaunchHistory, verifyRetainedUrlLaunchHistory,
+  type UrlLaunchHistoryRole, type UrlRetainedLaunchHistoryOptions } from './url-launch-history.js';
 
 const PROMPT = 'Own previously issued compatible prompt.';
 const PIN = 'c'.repeat(40);
@@ -104,7 +105,10 @@ describe('retained URL helper launch history', () => {
     const f = fixture(role);
     const before = Object.values(f.cores).map(file => fs.readFileSync(file));
     const { recordSha256, promptRecordSha256, promptSha256, sessionId } = f.input.expected;
-    await expect(verifyRetainedUrlLaunchHistory(f.input)).resolves.toEqual({
+    const verified = await verifyRetainedUrlLaunchHistory(f.input);
+    expect(isVerifiedRetainedUrlLaunchHistory(verified)).toBe(true);
+    expect(isVerifiedRetainedUrlLaunchHistory({ ...verified })).toBe(false);
+    expect(verified).toEqual({
       role, sessionId, recordSha256, promptRecordSha256, promptSha256, pin: PIN, authorization: 'none', replay: 'forbidden',
     });
     expect(Object.values(f.cores).map(file => fs.readFileSync(file))).toEqual(before);
