@@ -9,6 +9,11 @@ interface Patchable {
   openSync: typeof fs.openSync;
   fstatSync: typeof fs.fstatSync;
   readSync: typeof fs.readSync;
+  writeSync: typeof fs.writeSync;
+  fsyncSync: typeof fs.fsyncSync;
+  linkSync: typeof fs.linkSync;
+  unlinkSync: typeof fs.unlinkSync;
+  renameSync: typeof fs.renameSync;
   readlinkSync: typeof fs.readlinkSync;
   open: typeof fs.open;
   readFileSync: typeof fs.readFileSync;

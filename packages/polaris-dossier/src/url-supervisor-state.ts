@@ -11,8 +11,9 @@ export const URL_SUPERVISOR_STATE_LIMITS = Object.freeze({ maxBytes: 262_144, ma
   population: 1024, revision: 999_999 });
 const REQUIRED = ['format', 'mode', 'declarationSha256', 'run', 'runId', 'tmuxSession', 'clone', 'url', 'model',
   'authorSkipPermissions', 'briefIssuedAt', 'deadlineSeconds', 'sessions', 'fidelityDeliveredFor', 'designDeliveredFor', 'notified', 'siteFor', 'launches'];
-const OPTIONAL = ['fidelityDeliveredPairs', 'pendingRepair', 'finalSite', 'stopped', 'done'];
+const OPTIONAL = ['fidelityDeliveredPairs', 'pendingRepair', 'finalSite', 'stopped', 'done', 'stopGeneration'];
 const HEX = /^[a-f0-9]{64}$/u;
+const STOP_GENERATION = /^[a-f0-9]{32}$/u;
 const REVISION = /^(?:0|[1-9][0-9]{0,5})$/u;
 const JSON_LIMITS = URL_SUPERVISOR_STATE_LIMITS;
 function refuse(): never { throw new Error('url-supervisor-state-unavailable'); }
@@ -43,6 +44,7 @@ function instant(value: unknown, beginning: number): boolean {
 function schema(value: unknown, root: string, runId: string): value is SupervisorState {
   if (!fields(value, REQUIRED, OPTIONAL) || value.format !== 'polaris-supervisor/2' || value.mode !== URL_RUN_MODE
     || !digest(value.declarationSha256) || value.runId !== runId || value.run !== path.join(root, runId)
+    || (Object.hasOwn(value, 'stopGeneration') && (typeof value.stopGeneration !== 'string' || !STOP_GENERATION.test(value.stopGeneration)))
     || !text(value.tmuxSession) || !/^polaris-[a-z0-9]{1,64}$/u.test(value.tmuxSession)
     || !absolute(value.clone) || !text(value.url) || !urlSourceTransportIdentity(value.url).ok
     || value.model !== URL_SUPPORTED_MODEL || value.authorSkipPermissions !== false || !positive(value.briefIssuedAt)
@@ -82,13 +84,24 @@ function schema(value: unknown, root: string, runId: string): value is Superviso
 }
 
 type Stat = fs.BigIntStats;
-const same = (a: Stat, b: Stat): boolean => a.dev === b.dev && a.ino === b.ino && a.mode === b.mode && a.uid === b.uid
-  && a.gid === b.gid && a.nlink === b.nlink && a.size === b.size && a.mtimeNs === b.mtimeNs && a.ctimeNs === b.ctimeNs;
+const sameFile = (a: Stat, b: Stat): boolean => a.dev === b.dev && a.ino === b.ino && a.mode === b.mode
+  && a.uid === b.uid && a.gid === b.gid && a.size === b.size;
+const sameShape = (a: Stat, b: Stat): boolean => sameFile(a, b) && a.nlink === b.nlink;
+const same = (a: Stat, b: Stat): boolean => sameShape(a, b) && a.mtimeNs === b.mtimeNs && a.ctimeNs === b.ctimeNs;
 const ownedFile = (stat: Stat): boolean => stat.isFile() && stat.uid === BigInt(process.getuid!()) && stat.nlink === 1n
   && (stat.mode & 0o7777n) === 0o600n && stat.size > 0n && stat.size <= BigInt(JSON_LIMITS.maxBytes);
 interface Root { readonly name: string; readonly fd: number; readonly stat: Stat; readonly slot: string; readonly runId: string }
-function close(fd: number | undefined): void {
-  if (fd !== undefined) { try { fs.closeSync(fd); } catch { /* fixed public failure vocabulary */ } }
+function close(fd: number | undefined): boolean {
+  try {
+    if (fd !== undefined) fs.closeSync(fd);
+    return true;
+  } catch { return false; }
+}
+function removeIfOwned(file: string, created: Stat): void {
+  try {
+    const named = fs.lstatSync(file, { bigint: true });
+    if (named.isFile() && named.dev === created.dev && named.ino === created.ino) fs.unlinkSync(file);
+  } catch { /* Cleanup cannot prove retirement after an IO failure. */ }
 }
 function openRoot(stateRoot: string, runId: string): Root {
   if (!absolute(stateRoot) || !text(runId) || !RUN_ID.test(runId) || fs.realpathSync(stateRoot) !== stateRoot) refuse();
@@ -105,18 +118,27 @@ function rootCurrent(root: Root): void {
   if (fs.realpathSync(root.name) !== root.name || !named.isDirectory() || named.dev !== actual.dev || named.ino !== actual.ino
     || actual.dev !== root.stat.dev || actual.ino !== root.stat.ino || actual.mode !== root.stat.mode || actual.uid !== root.stat.uid) refuse();
 }
+function readBytes(fd: number, size: number): Buffer {
+  const bytes = Buffer.alloc(size + 1);
+  let offset = 0;
+  while (offset < bytes.length) {
+    const count = fs.readSync(fd, bytes, offset, bytes.length - offset, offset);
+    if (count === 0) break;
+    offset += count;
+  }
+  if (offset !== size) refuse();
+  return bytes.subarray(0, size);
+}
 function readAt(root: Root): { readonly value: SupervisorState; readonly stat: Stat } | null {
   let fd: number;
   try { fd = fs.openSync(root.slot, fs.constants.O_RDONLY | fs.constants.O_NOFOLLOW | fs.constants.O_NONBLOCK); }
   catch (error) { if ((error as NodeJS.ErrnoException).code === 'ENOENT') return null; return refuse(); }
   try {
     const before = fs.fstatSync(fd, { bigint: true }); if (!ownedFile(before)) refuse();
-    const bytes = Buffer.alloc(Number(before.size) + 1); let size = 0;
-    while (size < bytes.length) { const count = fs.readSync(fd, bytes, size, bytes.length - size, null); if (count === 0) break; size += count; }
-    if (size !== Number(before.size) || !same(before, fs.fstatSync(fd, { bigint: true }))
-      || !same(before, fs.lstatSync(root.slot, { bigint: true }))) refuse();
+    const bytes = readBytes(fd, Number(before.size));
+    if (!same(before, fs.fstatSync(fd, { bigint: true })) || !same(before, fs.lstatSync(root.slot, { bigint: true }))) refuse();
     rootCurrent(root);
-    const text = decodeUtf8(bytes.subarray(0, size)); if (text === undefined) refuse();
+    const text = decodeUtf8(bytes); if (text === undefined) refuse();
     const value: unknown = parseBoundedJson(text, JSON_LIMITS);
     if (!schema(value, root.name, root.runId)) refuse();
     return { value, stat: before };
@@ -172,12 +194,153 @@ export function writeUrlSupervisorState(stateRoot: string, state: SupervisorStat
   } catch { return refuse(); }
   finally {
     close(fd);
-    if (temporary !== undefined && created !== undefined) {
-      try {
-        const named = fs.lstatSync(temporary, { bigint: true });
-        if (named.isFile() && named.dev === created.dev && named.ino === created.ino) fs.unlinkSync(temporary);
-      } catch { /* no raw path or body diagnostics; cleanup is not claimed after IO failure */ }
-    }
+    if (temporary !== undefined && created !== undefined) removeIfOwned(temporary, created);
     close(root?.fd);
   }
+}
+
+const STOP_READY = 0x30, STOP_REQUESTED = 0x31;
+const STOP_REQUEST = Buffer.from([STOP_REQUESTED]);
+const STOP_ERROR = 'url-supervisor-stop-unavailable';
+type StopStatus = 'ready' | 'requested';
+interface StopBinding { readonly runId: string; readonly declaration: string; readonly generation: string }
+export interface UrlSupervisorStop {
+  readonly status: () => StopStatus;
+  /** Retire this offer, then return its final request disposition. */
+  readonly close: () => StopStatus;
+}
+
+function refuseStop(): never { throw new Error(STOP_ERROR); }
+function stopBinding(stateRoot: string, expected: SupervisorState): StopBinding {
+  if (!fields(expected, REQUIRED, OPTIONAL) || !text(expected.runId) || !schema(expected, stateRoot, expected.runId)
+    || !digest(expected.declarationSha256) || typeof expected.stopGeneration !== 'string'
+    || expected.stopped !== undefined || expected.done !== undefined) refuseStop();
+  return { runId: expected.runId, declaration: expected.declarationSha256, generation: expected.stopGeneration };
+}
+function liveBinding(root: Root, binding: StopBinding): void {
+  const persisted = readAt(root)?.value;
+  if (!persisted || persisted.declarationSha256 !== binding.declaration || persisted.stopGeneration !== binding.generation
+    || persisted.stopped !== undefined || persisted.done !== undefined) refuseStop();
+}
+const stopSlot = (root: Root): string => `/proc/self/fd/${root.fd}/${root.runId}.supervisor-stop`;
+const stopPrefix = (binding: StopBinding): Buffer => Buffer.from(`polaris-supervisor-stop/1\n${binding.generation}\n${binding.declaration}\n`, 'ascii');
+function stopStatus(root: Root, slot: string | null, fd: number, prefix: Buffer, original: Stat): StopStatus {
+  const before = fs.fstatSync(fd, { bigint: true }), size = prefix.length + 1;
+  if (!ownedFile(original) || !sameFile(original, before) || before.size !== BigInt(size)
+    || before.nlink !== (slot === null ? 0n : 1n)) refuseStop();
+  const bytes = readBytes(fd, size);
+  // A concurrent request can update the last byte and timestamps. Identity,
+  // mode, exact length and the immutable prefix must still agree.
+  if (!sameShape(before, fs.fstatSync(fd, { bigint: true })) || (slot !== null && !sameShape(before, fs.lstatSync(slot, { bigint: true })))
+    || !bytes.subarray(0, prefix.length).equals(prefix)) refuseStop();
+  rootCurrent(root);
+  if (bytes[prefix.length] === STOP_REQUESTED) return 'requested';
+  if (bytes[prefix.length] !== STOP_READY) refuseStop();
+  return 'ready';
+}
+function closeStopDescriptors(fd: number | undefined, root: Root | undefined): void {
+  const descriptorClosed = close(fd);
+  const directoryClosed = close(root?.fd);
+  if (!descriptorClosed || !directoryClosed) refuseStop();
+}
+
+/** Publish the stop offer before starting owned work. The caller supplies a
+ * fresh generation in its persisted state. This handle owns that offer only.
+ * The private root and named-file checks do not isolate hostile same-UID code. */
+export function openUrlSupervisorStop(stateRoot: string, expected: SupervisorState): UrlSupervisorStop {
+  let root: Root | undefined, fd: number | undefined, created: Stat | undefined;
+  let temporary: string | undefined, published: string | undefined;
+  try {
+    const binding = stopBinding(stateRoot, expected), prefix = stopPrefix(binding);
+    root = openRoot(stateRoot, binding.runId);
+    liveBinding(root, binding);
+    const slot = stopSlot(root);
+    temporary = `/proc/self/fd/${root.fd}/.${root.runId}.stop-${randomBytes(16).toString('hex')}.tmp`;
+    fd = fs.openSync(temporary, fs.constants.O_RDWR | fs.constants.O_CREAT | fs.constants.O_EXCL | fs.constants.O_NOFOLLOW | fs.constants.O_NONBLOCK, 0o600);
+    created = fs.fstatSync(fd, { bigint: true });
+    if (!created.isFile() || created.uid !== root.stat.uid || created.nlink !== 1n || (created.mode & 0o7777n) !== 0o600n || created.size !== 0n) refuseStop();
+    const bytes = Buffer.concat([prefix, Buffer.from([STOP_READY])]);
+    if (fs.writeSync(fd, bytes, 0, bytes.length, 0) !== bytes.length) refuseStop();
+    fs.fsyncSync(fd);
+    const staged = fs.fstatSync(fd, { bigint: true });
+    if (!ownedFile(staged) || staged.size !== BigInt(bytes.length) || staged.dev !== created.dev || staged.ino !== created.ino
+      || !same(staged, fs.lstatSync(temporary, { bigint: true }))) refuseStop();
+    rootCurrent(root);
+    // A hard link publishes complete bytes without replacing an existing offer.
+    // The reader refuses the short two-link interval before the temp name drops.
+    fs.linkSync(temporary, slot);
+    published = slot;
+    const linked = fs.fstatSync(fd, { bigint: true });
+    if (linked.nlink !== 2n || !same(linked, fs.lstatSync(temporary, { bigint: true }))) refuseStop();
+    fs.unlinkSync(temporary);
+    temporary = undefined;
+    fs.fsyncSync(root.fd);
+    const heldRoot = root, heldFd = fd;
+    const original = fs.fstatSync(heldFd, { bigint: true });
+    liveBinding(heldRoot, binding);
+    let requested = stopStatus(heldRoot, slot, heldFd, prefix, original) === 'requested';
+    const observe = (named: string | null): StopStatus => {
+      const status = stopStatus(heldRoot, named, heldFd, prefix, original);
+      if (requested && status === 'ready') refuseStop();
+      requested = status === 'requested';
+      return status;
+    };
+    let closed: 'open' | 'failed' | StopStatus = 'open';
+    return Object.freeze({
+      status(): StopStatus {
+        try {
+          if (closed !== 'open') refuseStop();
+          liveBinding(heldRoot, binding);
+          return observe(slot);
+        } catch { return refuseStop(); }
+      },
+      close(): StopStatus {
+        if (closed === 'ready' || closed === 'requested') return closed;
+        if (closed === 'failed') refuseStop();
+        closed = 'failed';
+        let disposition: StopStatus;
+        try {
+          observe(slot);
+          fs.unlinkSync(slot);
+          fs.fsyncSync(heldRoot.fd);
+          // A request that verified the named offer before unlink must be
+          // visible here. A later writer cannot confirm the retired name.
+          disposition = observe(null);
+        } catch { return refuseStop(); }
+        finally { closeStopDescriptors(heldFd, heldRoot); }
+        closed = disposition;
+        return disposition;
+      },
+    });
+  } catch {
+    if (created) {
+      if (published !== undefined) removeIfOwned(published, created);
+      if (temporary !== undefined) removeIfOwned(temporary, created);
+    }
+    closeStopDescriptors(fd, root);
+    return refuseStop();
+  }
+}
+
+/** Request this persisted generation to stop. Resolving proves a local request
+ * only. The supervisor owns termination and its evidence. */
+export function requestUrlSupervisorStop(stateRoot: string, expected: SupervisorState): void {
+  let root: Root | undefined, fd: number | undefined;
+  try {
+    const binding = stopBinding(stateRoot, expected), prefix = stopPrefix(binding);
+    root = openRoot(stateRoot, binding.runId);
+    liveBinding(root, binding);
+    const slot = stopSlot(root);
+    fd = fs.openSync(slot, fs.constants.O_RDWR | fs.constants.O_NOFOLLOW | fs.constants.O_NONBLOCK);
+    const original = fs.fstatSync(fd, { bigint: true });
+    if (stopStatus(root, slot, fd, prefix, original) === 'ready') {
+      // Only the pinned open descriptor can be modified. If the generation
+      // retires between check and write, this cannot mark its replacement.
+      if (fs.writeSync(fd, STOP_REQUEST, 0, 1, prefix.length) !== 1) refuseStop();
+    }
+    fs.fsyncSync(fd);
+    liveBinding(root, binding);
+    if (stopStatus(root, slot, fd, prefix, original) !== 'requested') refuseStop();
+  } catch { return refuseStop(); }
+  finally { closeStopDescriptors(fd, root); }
 }

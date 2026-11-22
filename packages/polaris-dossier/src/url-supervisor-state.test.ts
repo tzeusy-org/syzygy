@@ -1,11 +1,11 @@
 import * as fs from 'node:fs';
 import path from 'node:path';
-import { createRequire, syncBuiltinESMExports } from 'node:module';
 import { describe, expect, it } from 'vitest';
 import { tempDir } from '@syzygy/test-kit';
 import { patchFs } from './fs-patch.testkit.js';
 import { URL_ROLES, URL_RUN_MODE, URL_SUPPORTED_MODEL } from './url-run-record.js';
-import { readUrlSupervisorState, writeUrlSupervisorState, URL_SUPERVISOR_STATE_LIMITS } from './url-supervisor-state.js';
+import { openUrlSupervisorStop, readUrlSupervisorState, requestUrlSupervisorStop, writeUrlSupervisorState, URL_SUPERVISOR_STATE_LIMITS,
+  type UrlSupervisorStop } from './url-supervisor-state.js';
 import type { SupervisorState } from './polaris.js';
 
 function fixture() {
@@ -20,11 +20,8 @@ function fixture() {
   return { root, runId, run, state, file, raw };
 }
 const changed = (state: SupervisorState, patch: Record<string, unknown>): SupervisorState => ({ ...state, ...patch }) as SupervisorState;
-function failIo(name: 'fsyncSync' | 'renameSync'): () => void {
-  const builtin = createRequire(import.meta.url)('node:fs') as typeof fs;
-  const original = builtin[name];
-  Object.assign(builtin, { [name]: () => { throw new Error('Own IO failure with a diagnostic that must stay private'); } }); syncBuiltinESMExports();
-  return () => { Object.assign(builtin, { [name]: original }); syncBuiltinESMExports(); };
+function failIo(name: 'fsyncSync' | 'renameSync' | 'linkSync'): () => void {
+  return patchFs(name, () => () => { throw new Error('Own IO failure with a diagnostic that must stay private'); });
 }
 
 describe('bounded URL supervisor metadata', () => {
@@ -165,5 +162,172 @@ describe('bounded URL supervisor metadata', () => {
     try { expect(() => writeUrlSupervisorState(f.root, f.state)).toThrow(/^url-supervisor-state-unavailable$/u); }
     finally { restore(); }
     expect(collision).toBeDefined(); expect(fs.readFileSync(collision!, 'utf8')).toBe('Own unrelated collision');
+  });
+});
+
+const STOP_ERROR = /^url-supervisor-stop-unavailable$/u;
+function stopFixture() {
+  const f = fixture(), active = changed(f.state, { stopGeneration: 'f'.repeat(32) });
+  const offer = path.join(f.root, `${f.runId}.supervisor-stop`);
+  writeUrlSupervisorState(f.root, active);
+  return { ...f, active, offer };
+}
+
+describe('generation-bound URL supervisor stop requests', () => {
+  it('publishes a bounded private offer and accepts duplicate requests without changing supervisor metadata', () => {
+    const f = stopFixture();
+    expect(() => requestUrlSupervisorStop(f.root, f.active)).toThrow(STOP_ERROR);
+    expect(() => openUrlSupervisorStop(f.root, f.state)).toThrow(STOP_ERROR);
+    const control = openUrlSupervisorStop(f.root, f.active);
+    try {
+      const stateBytes = fs.readFileSync(f.file), ready = fs.readFileSync(f.offer);
+      expect(ready.toString('ascii')).toEqual(`polaris-supervisor-stop/1\n${'f'.repeat(32)}\n${'b'.repeat(64)}\n0`);
+      const initial = fs.statSync(f.offer);
+      expect(initial.mode & 0o777).toBe(0o600);
+      expect(initial.nlink).toBe(1);
+      expect(control.status()).toBe('ready');
+      expect(() => openUrlSupervisorStop(f.root, f.active)).toThrow(STOP_ERROR);
+      expect(fs.readFileSync(f.offer)).toEqual(ready);
+      expect(() => requestUrlSupervisorStop(f.root, changed(f.active, { declarationSha256: 'd'.repeat(64) }))).toThrow(STOP_ERROR);
+      requestUrlSupervisorStop(f.root, f.active);
+      requestUrlSupervisorStop(f.root, f.active);
+      expect(control.status()).toBe('requested');
+      const requested = fs.readFileSync(f.offer);
+      expect(requested.subarray(0, -1)).toEqual(ready.subarray(0, -1));
+      expect(requested.at(-1)).toBe(0x31);
+      expect(fs.statSync(f.offer).ino).toBe(initial.ino);
+      expect(fs.readFileSync(f.file)).toEqual(stateBytes);
+    } finally { expect(control.close()).toBe('requested'); }
+    expect(control.close()).toBe('requested');
+    expect(() => control.status()).toThrow(STOP_ERROR);
+    expect(() => requestUrlSupervisorStop(f.root, f.active)).toThrow(STOP_ERROR);
+    expect(fs.readdirSync(f.root)).toEqual([path.basename(f.file)]);
+  });
+
+  it('rejects a stale snapshot and never gives a delayed writer the successor inode', () => {
+    const f = stopFixture(), control = openUrlSupervisorStop(f.root, f.active);
+    const next = changed(f.active, { stopGeneration: '5'.repeat(32) });
+    let successor: UrlSupervisorStop | undefined;
+    const restore = patchFs('writeSync', original => ((...args: unknown[]) => {
+      if (successor === undefined && args[3] === 1) {
+        control.close();
+        writeUrlSupervisorState(f.root, next);
+        successor = openUrlSupervisorStop(f.root, next);
+      }
+      return Reflect.apply(original, fs, args);
+    }) as typeof fs.writeSync);
+    try {
+      expect(() => requestUrlSupervisorStop(f.root, f.active)).toThrow(STOP_ERROR);
+      expect(successor?.status()).toBe('ready');
+      expect(() => requestUrlSupervisorStop(f.root, f.active)).toThrow(STOP_ERROR);
+      expect(successor?.status()).toBe('ready');
+      requestUrlSupervisorStop(f.root, next);
+      expect(successor?.status()).toBe('requested');
+    } finally { restore(); control.close(); successor?.close(); }
+  });
+
+  it('seals the last accepted request even when it lands immediately before offer retirement', () => {
+    const f = stopFixture(), control = openUrlSupervisorStop(f.root, f.active);
+    expect(control.status()).toBe('ready');
+    let accepted = false;
+    const restore = patchFs('unlinkSync', original => (file => {
+      if (path.basename(String(file)) === path.basename(f.offer)) {
+        requestUrlSupervisorStop(f.root, f.active);
+        accepted = true;
+      }
+      return original(file);
+    }));
+    try {
+      expect(control.close()).toBe('requested');
+      expect(accepted).toBe(true);
+      expect(control.close()).toBe('requested');
+    } finally { restore(); }
+    expect(() => requestUrlSupervisorStop(f.root, f.active)).toThrow(STOP_ERROR);
+  });
+
+  it('refuses an invalid root after offer retirement instead of reporting readiness', () => {
+    const f = stopFixture(), control = openUrlSupervisorStop(f.root, f.active), moved = `${f.root}-retired`;
+    const restore = patchFs('unlinkSync', original => (file => {
+      original(file);
+      if (path.basename(String(file)) === path.basename(f.offer)) {
+        fs.renameSync(f.root, moved);
+        fs.mkdirSync(f.root, { mode: 0o700 });
+      }
+    }));
+    try {
+      expect(() => control.close()).toThrow(STOP_ERROR);
+      expect(() => control.close()).toThrow(STOP_ERROR);
+    } finally {
+      restore();
+      if (fs.existsSync(moved)) { fs.rmdirSync(f.root); fs.renameSync(moved, f.root); }
+    }
+  });
+
+  it('refuses a replacement with identical bytes and never retires its name through the old handle', () => {
+    const f = stopFixture(), control = openUrlSupervisorStop(f.root, f.active);
+    const retired = `${f.offer}.retired`;
+    fs.renameSync(f.offer, retired);
+    fs.copyFileSync(retired, f.offer);
+    expect(() => control.status()).toThrow(STOP_ERROR);
+    expect(() => control.close()).toThrow(STOP_ERROR);
+    expect(() => control.close()).toThrow(STOP_ERROR);
+    expect(fs.readFileSync(f.offer)).toEqual(fs.readFileSync(retired));
+  });
+
+  it('refuses a missing or malformed offer and malformed or terminal state with fixed errors', () => {
+    const f = stopFixture();
+    for (const stopGeneration of ['F'.repeat(32), '0'.repeat(31), '0'.repeat(33), `${'0'.repeat(32)}\n`, undefined]) {
+      const changedState = changed(f.active, { stopGeneration });
+      expect(() => writeUrlSupervisorState(f.root, changedState)).toThrow('url-supervisor-state-unavailable');
+      expect(() => requestUrlSupervisorStop(f.root, changedState)).toThrow(STOP_ERROR);
+    }
+    const control = openUrlSupervisorStop(f.root, f.active);
+    const valid = fs.readFileSync(f.offer);
+    const at = new Date(f.state.briefIssuedAt + 1000).toISOString();
+    try {
+      for (const bytes of [Buffer.alloc(10_000), Buffer.alloc(valid.length, 0x30), Buffer.concat([valid.subarray(0, -1), Buffer.of(0x32)])]) {
+        fs.writeFileSync(f.offer, bytes);
+        expect(() => control.status()).toThrow(STOP_ERROR);
+        expect(() => requestUrlSupervisorStop(f.root, f.active)).toThrow(STOP_ERROR);
+      }
+      fs.writeFileSync(f.offer, valid);
+      writeUrlSupervisorState(f.root, changed(f.active, { stopped: at }));
+      expect(() => control.status()).toThrow(STOP_ERROR);
+      expect(() => requestUrlSupervisorStop(f.root, f.active)).toThrow(STOP_ERROR);
+    } finally { expect(control.close()).toBe('ready'); }
+    expect(() => requestUrlSupervisorStop(f.root, f.active)).toThrow(STOP_ERROR);
+  });
+
+  it('refuses nonprivate files and aliases without replacing their targets', () => {
+    const f = stopFixture(), target = path.join(f.root, 'target');
+    fs.writeFileSync(target, 'Own unrelated bytes', { mode: 0o600 });
+    for (const kind of ['symbolic', 'hardlink', 'private-mode'] as const) {
+      if (kind === 'symbolic') fs.symlinkSync(target, f.offer);
+      else if (kind === 'hardlink') fs.linkSync(target, f.offer);
+      else fs.writeFileSync(f.offer, 'Own nonprivate offer', { mode: 0o640 });
+      expect(() => openUrlSupervisorStop(f.root, f.active)).toThrow(STOP_ERROR);
+      expect(() => requestUrlSupervisorStop(f.root, f.active)).toThrow(STOP_ERROR);
+      expect(fs.readFileSync(target, 'utf8')).toBe('Own unrelated bytes');
+      fs.unlinkSync(f.offer);
+    }
+    fs.chmodSync(f.root, 0o750);
+    try { expect(() => openUrlSupervisorStop(f.root, f.active)).toThrow(STOP_ERROR); }
+    finally { fs.chmodSync(f.root, 0o700); }
+  });
+
+  it('keeps an offer whose publication fails unavailable and retries persistence for a recorded request', () => {
+    const f = stopFixture();
+    const failPublish = failIo('linkSync');
+    try { expect(() => openUrlSupervisorStop(f.root, f.active)).toThrow(STOP_ERROR); }
+    finally { failPublish(); }
+    expect(fs.readdirSync(f.root)).toEqual([path.basename(f.file)]);
+    const control = openUrlSupervisorStop(f.root, f.active);
+    try {
+      const failFlush = failIo('fsyncSync');
+      try { expect(() => requestUrlSupervisorStop(f.root, f.active)).toThrow(STOP_ERROR); }
+      finally { failFlush(); }
+      requestUrlSupervisorStop(f.root, f.active);
+      expect(control.status()).toBe('requested');
+    } finally { control.close(); }
   });
 });
