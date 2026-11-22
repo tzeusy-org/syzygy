@@ -1,12 +1,75 @@
 import path from 'node:path';
-import { isDossierPagePath } from '@syzygy/polaris-generation-core/live';
-import { sha256 } from '@syzygy/support';
+import { encodeCanonicalJson, isDossierPagePath } from '@syzygy/polaris-generation-core/live';
+import { deepFreeze, sha256 } from '@syzygy/support';
 import { RUN_LAYOUT } from './state-directory.js';
 import type { UrlDesignProductMetadata } from './url-design-product.js';
 import { sameProductFile, sameProductPath, snapshotProductFile, snapshotProductNames } from './url-product-reads.js';
 
 const MAX_FILES = 4096;
 const MAX_BYTES = 2_097_152;
+const OUTPUT_JSON_LIMITS = { maxBytes: MAX_BYTES, maxNodes: 65_536, maxDepth: 32 };
+
+/** Recover descriptive output metadata only. The independently retained digest
+ * binds this census; it does not restore a renderer receipt or delivery grant. */
+export function readStoredUrlRenderOutput(
+  run: string, site: number, expectedSha256: string, current: () => boolean,
+): UrlDesignProductMetadata['output'] | null {
+  try {
+    if (!Number.isSafeInteger(site) || site < 0 || site > 999_999 || typeof expectedSha256 !== 'string'
+      || !/^[a-f0-9]{64}$/u.test(expectedSha256)) return null;
+    let available = true;
+    const check = (): void => {
+      available = available && current() === true;
+      if (!available) throw new Error('url-stored-render-unavailable');
+    };
+    const relative = `${RUN_LAYOUT.site}/${site}`;
+    const directories: { name: string; captured: ReturnType<typeof snapshotProductNames> }[] = [];
+    const files: { name: string; snapshot: ReturnType<typeof snapshotProductFile> }[] = [];
+    const population: { path: string; sha256: string; bytes: number }[] = [];
+    let bytes = 0, pages = 0, entries = 0;
+    const captureDirectory = (name: string) => {
+      const captured = snapshotProductNames(run, name, MAX_FILES, check);
+      // Empty directories cannot be represented by the admitted file population.
+      // Bound directory/entry work as well as file bodies during discovery.
+      if (captured.missingAt !== null || captured.names.length === 0 || directories.length >= MAX_FILES
+        || entries + captured.names.length > MAX_FILES * 2) throw new Error('url-stored-render-unavailable');
+      entries += captured.names.length;
+      return { name, captured };
+    };
+    directories.push(captureDirectory(relative));
+    for (let i = 0; i < directories.length; i++) {
+      const directory = directories[i]!;
+      for (const entry of directory.captured.names) {
+        check();
+        const name = `${directory.name}/${entry}`, file = name.slice(relative.length + 1);
+        if (!isDossierPagePath(file)) return null;
+        let child: ReturnType<typeof captureDirectory> | null = null;
+        // A directory may itself have an html/json suffix. Descriptor opens,
+        // rather than extensions, distinguish directories from regular files.
+        try { child = captureDirectory(name); } catch { /* try a bounded regular file below */ }
+        if (child !== null) { directories.push(child); continue; }
+        if (!/\.(?:html|json)$/u.test(file) || files.length >= MAX_FILES || bytes >= MAX_BYTES) return null;
+        const snapshot = snapshotProductFile(run, name, MAX_BYTES - bytes, check);
+        if (snapshot.bytes === null) return null;
+        bytes += snapshot.bytes.length;
+        if (file.endsWith('.html')) pages++;
+        files.push({ name, snapshot });
+        population.push({ path: file, sha256: sha256(snapshot.bytes), bytes: snapshot.bytes.length });
+      }
+    }
+    population.sort((a, b) => a.path < b.path ? -1 : a.path > b.path ? 1 : 0);
+    const output = deepFreeze({ files: population.length, pages, bytes, population });
+    if (sha256(encodeCanonicalJson(output, OUTPUT_JSON_LIMITS)) !== expectedSha256
+      || files.some(file => !sameProductFile(file.snapshot, snapshotProductFile(run, file.name, file.snapshot.bytes!.length, check)))
+      || directories.some(directory => {
+        const next = snapshotProductNames(run, directory.name, MAX_FILES, check);
+        return !sameProductPath(directory.captured, next) || directory.captured.names.length !== next.names.length
+          || directory.captured.names.some((name, i) => name !== next.names[i]);
+      }) || checkStoredUrlRender(run, path.join(run, RUN_LAYOUT.site, String(site)), output, current) !== site) return null;
+    check();
+    return output;
+  } catch { return null; }
+}
 
 /** Recheck the installed renderer's admitted site under the exact directory
  * reported by the writer. The result is local evidence, not a delivery grant. */
