@@ -2,7 +2,7 @@
   "record": "syzygy-5dhm.23 verify-text pilot comparison",
   "label": "Observed",
   "measuredAt": "2026-11-22",
-  "syzygyCommit": "d2b84f57f32fc1fb9f288ca235c440f92e4a7dc7",
+  "syzygyCommit": "7107dc97b4805671094fbdca513d3a7607045385",
   "command": "node scripts/dossier_verify_text.mjs --clone <pilot bare clone> --text <file> --out <scratch file>, manifest docs/evidence/pursuit-2026-11-21b/pilot/manifest.json",
   "subject": {
     "repository": "github.com/redis/redis",
@@ -22,36 +22,38 @@
         "sha256": "f5d325377800c76b49cbf4009bb6bb8c9b9ab5a44e8b76526dd6274e7e4da80c",
         "bytes": 19521
       },
-      "claims": 103,
+      "claims": 101,
       "tally": {
-        "quotation-verified": 2,
-        "reference-unverified": 58,
+        "quotation-verified": 1,
+        "reference-unverified": 57,
         "path-missing": 2,
-        "quotation-not-found": 0,
-        "unanchored": 34,
+        "quotation-not-found": 1,
+        "unanchored": 33,
         "withheld": 7
       },
-      "cannotBeChecked": 34,
+      "cannotBeChecked": 33,
       "items": {
         "references": {
-          "resolves": 111,
+          "resolves": 110,
           "missing": 2,
           "lines-missing": 0,
           "withheld": 15
         },
         "quotations": {
-          "verified": 2,
-          "not-found": 0,
+          "verified": 1,
+          "not-found": 2,
           "withheld": 0,
           "no-file": 0,
           "unanchored": 1
         }
       },
       "referencesWithLines": 0,
-      "referencesWholeFile": 128,
+      "referencesWithLinesAndWholeFile": 0,
+      "referencesWholeFile": 127,
       "skipped": {
         "headingLines": 21,
         "fencedLines": 28,
+        "tableHeaderLines": 2,
         "tableSeparatorLines": 2
       }
     },
@@ -88,6 +90,92 @@
         }
       },
       "referencesWithLines": 180,
+      "referencesWithLinesAndWholeFile": 7,
+      "referencesWholeFile": 156,
+      "skipped": {
+        "headingLines": 76,
+        "fencedLines": 0,
+        "tableHeaderLines": 0,
+        "tableSeparatorLines": 0
+      }
+    }
+  },
+  "beforeReviewCorrections": {
+    "syzygyCommit": "d2b84f57f32fc1fb9f288ca235c440f92e4a7dc7",
+    "why": "the same two texts measured before the code-review corrections of PR #902 (quotations spanning a wrapped line, table header rows skipped, a path written with lines and alone checked for both, bare js/ts/in names only in code marks or with lines)",
+    "plain": {
+      "text": {
+        "file": "plain-synthesis.txt",
+        "sha256": "f5d325377800c76b49cbf4009bb6bb8c9b9ab5a44e8b76526dd6274e7e4da80c",
+        "bytes": 19521
+      },
+      "claims": 103,
+      "tally": {
+        "quotation-verified": 2,
+        "reference-unverified": 58,
+        "path-missing": 2,
+        "quotation-not-found": 0,
+        "unanchored": 34,
+        "withheld": 7
+      },
+      "cannotBeChecked": 34,
+      "items": {
+        "references": {
+          "resolves": 111,
+          "missing": 2,
+          "lines-missing": 0,
+          "withheld": 15
+        },
+        "quotations": {
+          "verified": 2,
+          "not-found": 0,
+          "withheld": 0,
+          "no-file": 0,
+          "unanchored": 1
+        }
+      },
+      "referencesWithLines": 0,
+      "referencesWithLinesAndWholeFile": 0,
+      "referencesWholeFile": 128,
+      "skipped": {
+        "headingLines": 21,
+        "fencedLines": 28,
+        "tableSeparatorLines": 2
+      }
+    },
+    "dossier": {
+      "text": {
+        "file": "dossier-all.md",
+        "sha256": "07a821b2b76e78cb7daec63b18145f54159d7209190c22ac11e8969cc7481ee6",
+        "bytes": 89110
+      },
+      "claims": 689,
+      "tally": {
+        "quotation-verified": 0,
+        "reference-unverified": 255,
+        "path-missing": 17,
+        "quotation-not-found": 0,
+        "unanchored": 397,
+        "withheld": 20
+      },
+      "cannotBeChecked": 397,
+      "items": {
+        "references": {
+          "resolves": 296,
+          "missing": 17,
+          "lines-missing": 0,
+          "withheld": 23
+        },
+        "quotations": {
+          "verified": 0,
+          "not-found": 0,
+          "withheld": 0,
+          "no-file": 0,
+          "unanchored": 38
+        }
+      },
+      "referencesWithLines": 180,
+      "referencesWithLinesAndWholeFile": 0,
       "referencesWholeFile": 156,
       "skipped": {
         "headingLines": 76,
@@ -97,11 +185,12 @@
     }
   },
   "reading": [
-    "The plain synthesis names 128 file references and attaches lines to none; the dossier text names 336, 180 with lines, all 180 resolving at the pinned revision.",
-    "Quotations: the plain synthesis has 2 double-quoted spans, each verified somewhere in a whole file its claim names. The dossier text shows none, because scripts/dossier_site_to_text.py drops the quotation marks around the 9 lead-in quotations the dossier renders ('The project states:'), so the dossier arm is under-counted on quotations.",
+    "Before and after the review corrections: the plain synthesis goes from 103 to 101 claims (its 2 table header rows are no longer claims) and from one verified claim of 2 to 1 verified and 1 quotation-not-found. The claim at plain-synthesis.txt lines 136-139 wraps a quotation across a line; before the correction the line-bound reader paired the closing quote of one quotation with the opening quote of the next and verified the span ' and ' it found between them; now it reads the two written quotations, and neither is a contiguous span of the files the claim names. The dossier arm is unchanged in every count.",
+    "The plain synthesis names 127 file references (128 before the corrections, one of them a bare js name in prose) and attaches lines to none; the dossier text names 336, 180 with lines, all 180 resolving at the pinned revision.",
+    "Quotations: the plain synthesis has 4 double-quoted spans: 1 verified in a whole file its claim names, 2 not found, 1 in a claim naming no file. The dossier text shows none checked, because scripts/dossier_site_to_text.py drops the quotation marks around the 9 lead-in quotations the dossier renders ('The project states:'), so the dossier arm is under-counted on quotations.",
     "path-missing in the dossier arm (17 references) is mostly the dossier naming its own pages (index.html, poles/1.html and the like) and generator files that are not in the repository; in the plain arm (2) a configuration file and a header that resolve to no blob.",
     "A bare or partial name resolves to the one blob whose path ends with it; an ambiguous one stays missing.",
-    "unanchored counts claims naming no file: 34 of 103 plain claims and 397 of 689 dossier claims (the dossier text includes navigation lists, glossary entries and labels). The checker measures whether a claim can be checked and whether its quotation is real, not whether an unquoted claim is true.",
+    "unanchored counts claims naming no file: 33 of 101 plain claims and 397 of 689 dossier claims (the dossier text includes navigation lists, glossary entries and labels). The checker measures whether a claim can be checked and whether its quotation is real, not whether an unquoted claim is true.",
     "The pilot's stored run is a legacy polaris-dossier-run/1 record that `syzygy dossier verify` refuses to re-verify, so this measurement used the script over the pilot manifest; both call the same verifyText."
   ]
 }

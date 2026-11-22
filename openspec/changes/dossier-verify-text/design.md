@@ -60,3 +60,18 @@ The reviewer also found no retained record for the "66 references missing" figur
 ## Rebuilt as version 2.15
 
 [Observed] Version 2.14 was taken on the default branch by the infrastructure recognizers amendment (a MODIFIED REQ-034) while this change was under review, so the change is renumbered 2.15. Its predecessor is unchanged: no later version than 2.1 replaces REQ-033, so the requirement block is the same bytes; only the spec's header line names the new version, which changes the spec digest. The review above read the version 2.14 header.
+
+## Code review of the implementation (PR #902)
+
+[Observed] An independent code review of the branch at `9059262f8` found no secret leak and asked for corrections, which landed in `7107dc97b`. Each finding and what was done:
+
+- **M1** (untrusted text crashed the command). A range below line 1 or past the largest safe integer is a range fault before the derivation (the claim is `path-missing`); a quotation that itself holds the lead-in `The project states:` would split the synthetic lead-in, so it is not found and never derived; any other failure of the derivation is a `derive` refusal, never a crash. The first two have fixtures. [Inferred] The refusal is a backstop with no known input left that reaches it, so it has no unit fixture: reaching it needs a run that re-verifies, which is the integration tier.
+- **M2** (the withheld-line rule was untested). A redacted-span fixture (check's P-110 policy form) withholds a quotation from a withheld guard line and verifies one from a retained line; its mutant is in the record.
+- **M3** (wrapped quotations). A quotation may span the lines of its claim, and a line that starts with a list marker while a quotation of the open claim is still open stays in that claim. [Observed] Most generated Markdown is hard-wrapped: in the pilot's plain synthesis the line-bound reader had paired two quotations' inner quote marks and verified the span between them (`docs/evidence/syzygy-5dhm-23/verify-text-pilot-2026-11-22.json`, "beforeReviewCorrections").
+- **L1** A path written with lines and also alone is checked against its ranges and its whole file (`wholeFile` on the reference).
+- **L2** A bare `js`, `ts` or `in` name (`Node.js` in prose) is a reference only in code marks or with lines.
+- **L3** A table's header row, the row above its separator, is not a claim; it is counted with the skipped lines.
+- **L4** A straight-quoted span inside a curly quotation is part of it. Backslash escapes are not interpreted; the disclosures say so.
+- **L6** The operator script refuses a text that is not a regular file, is over the command's bound or is not strict UTF-8, and a manifest whose policy blob id is not 40 hexadecimal characters.
+- **L7** The mutation record is re-run at `7107dc97b`, a commit on the branch, with a mutant for each corrected predicate.
+- **L8** The annotated copy keeps each line's own terminator (LF, CRLF or CR) and closes in the text's first one.

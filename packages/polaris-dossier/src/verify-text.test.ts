@@ -151,6 +151,8 @@ describe('verify a free-form text: the six outcomes', () => {
   it('counts a quotation that holds the dossier lead-in as not found, without deriving it', async () => {
     const { verified } = await check('It "The project states: keeps every key" (`src/kestrel.c:1`).');
     expect(verified.claims[0]).toMatchObject({ outcome: 'quotation-not-found', quotations: ['not-found'] });
+    const withheldOnly = await check('It "The project states: setup" (`docs/guide.md`).');
+    expect(withheldOnly.verified.claims[0]).toMatchObject({ outcome: 'quotation-not-found', quotations: ['not-found'] });
   });
 
   it('checks a path written with lines and alone against the whole file as well', async () => {
