@@ -53,6 +53,7 @@ export interface UrlOrderedAttemptOptions {
   readonly launched: (child: UrlSessionProcess, host: OrderedDesignHost) => void;
   readonly compatiblePromptSha256: string;
   readonly firstLaunch: UrlCommittedLaunchHistory | null;
+  readonly generation?: string;
   readonly registerLaunch: (launch: UrlCommittedLaunchHistory) => Promise<void>;
   readonly expectedProduct: UrlDesignProductMetadata;
   readonly sitePath: string;
@@ -191,6 +192,7 @@ export async function startUrlOrderedAttempt(input: UrlOrderedAttemptOptions) {
     if (launch === null) {
       const written = await writeUrlLaunchHistory({ run: input.run, runId: path.basename(input.run), plan: input.plan,
         screen: input.screen, current: input.current, compatiblePromptSha256: input.compatiblePromptSha256,
+        ...(input.generation === undefined ? {} : { generation: input.generation }),
         capture: { pid: child.pid, startedAt: input.now() } });
       if (written.capability === null) throw refused();
       launch = await input.audit.commitLaunchHistory(written.capability);
