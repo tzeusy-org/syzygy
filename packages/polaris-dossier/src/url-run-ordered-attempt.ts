@@ -6,7 +6,7 @@ import { readSessionRelayAuditEvidence } from './session-relay.js';
 import type { SessionCredential } from './session-credential.js';
 import type { SessionAdmission, SessionContentClass } from './session-egress-policy.js';
 import { isOrderedDesignSessionProfile } from './session-profile.js';
-import { launchRestrictedUrlSession, prepareRestrictedUrlSession, urlSessionStoppedCleanly, type UrlSessionProcess } from './session-launch.js';
+import { isUrlSessionProcess, launchRestrictedUrlSession, prepareRestrictedUrlSession, urlSessionStoppedCleanly, type UrlSessionProcess } from './session-launch.js';
 import { planOrderedDesignBytes, orderedDesignPlanInputForDelivery } from './url-design-delivery.js';
 import { assertUrlDesignDeliveryViewCurrent, type UrlSessionAuditResult, type UrlCommittedLaunchHistory,
   type UrlDesignDeliveryView } from './url-session-audit.js';
@@ -119,10 +119,16 @@ export async function startUrlOrderedAttempt(input: UrlOrderedAttemptOptions) {
     assertUrlDesignDeliveryViewCurrent(delivery!);
   };
   const current = async (): Promise<boolean> => {
-    if (closed || !(await input.current()) || sessionMachineEffectCurrent() === false || !input.machine.current()) return false;
+    if (closed || !(await input.current()) || sessionMachineEffectCurrent() === false) return false;
     // Bootstrap has no controller yet; activation still gates every send/tool.
-    if (delivery === null) return true;
-    if (render === null) return false;
+    if (delivery === null) return input.machine.current();
+    // Activation and the first parsed request can wake in consecutive turns.
+    // Drain before reading the full delivery proof for a live child.
+    if (isUrlSessionProcess(child)) {
+      await yieldToPoll();
+      if (!(await input.waitForSamples())) return false;
+    }
+    if (closed || render === null || sessionMachineEffectCurrent() === false || !input.machine.current()) return false;
     return checkUrlOrderedProductCurrent({
       product: render.product,
       assertCurrent,
