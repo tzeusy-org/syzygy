@@ -34,6 +34,7 @@ const RUNDIR = `${SRC}run-dir.ts`;
 const DESIGN = `${SRC}design-review.ts`;
 const RENDER = `${SRC}render.ts`;
 const CLOSE = `${SRC}close.ts`;
+const READ = `${SRC}check-record-read.ts`;
 
 const MUTANTS = [
   // check: the draft (or inventory) it is given, under 4,194,304 bytes.
@@ -73,6 +74,16 @@ const MUTANTS = [
   ['brief-record-old-reader', RUNDIR, "readBoundedFile(path.join(run, RUN_LAYOUT.briefRecord), BRIEF_RECORD_MAX_BYTES).toString('utf8')", "fs.readFileSync(path.join(run, RUN_LAYOUT.briefRecord), 'utf8')"],
   ['render-unbounded-brief', RENDER, 'const brief = readBriefRecord(run);', 'const brief = readRecord(path.join(run, RUN_LAYOUT.briefRecord));'],
   ['close-unbounded-brief', CLOSE, 'const brief = readBriefRecord(run);', 'const brief = readRecord(path.join(run, RUN_LAYOUT.briefRecord));'],
+  // close's digest of every stored file: each read by the reader rule, under its stated bound or its own size.
+  ['stored-old-reader', CLOSE, 'const bytes = bound === undefined ? readFileAsSized(full) : readBoundedFile(full, bound);', 'const bytes = fs.readFileSync(full);'],
+  ['stored-as-sized-unbounded', CLOSE, 'readFileAsSized(full)', 'readBoundedFile(full, Number.MAX_SAFE_INTEGER)'],
+  ['stored-brief-bound', CLOSE, "if (rel === 'brief.json') return 262_144;", "if (rel === 'brief.json') return 262_145;"],
+  ['stored-draft-bound', CLOSE, 'if (/^drafts', 'if (false && /^drafts'],
+  ['stored-advice-bound', CLOSE, "if (rel === 'run-advice.json') return 16_777_216;", "if (rel === 'run-advice.json') return 16_777_217;"],
+  ['stored-check-record-bound', CLOSE, 'if (/^(?:inventory', 'if (false && /^(?:inventory'],
+  ['stored-inventory-check-record-bound', CLOSE, '/^(?:inventory\\/)?checks', '/^checks'],
+  ['stored-derived-bound', CLOSE, 'if (/^derived', 'if (false && /^derived'],
+  ['as-sized-bound', READ, 'return readRegularFile(file, (size) => size);', 'return readRegularFile(file, (size) => size + 1);'],
   // briefStandardsOf (the design packet), under 262,144 bytes, with its words.
   ['standards-bound', DESIGN, 'readBoundedFile(path.join(run, name), BRIEF_RECORD_LIMITS.maxBytes)', 'readBoundedFile(path.join(run, name), BRIEF_RECORD_LIMITS.maxBytes + 1)'],
   ['standards-old-reader', DESIGN, "readBoundedFile(path.join(run, name), BRIEF_RECORD_LIMITS.maxBytes).toString('utf8')", "fs.readFileSync(path.join(run, name), 'utf8')"],

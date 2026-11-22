@@ -1,4 +1,4 @@
-import { execFile } from 'node:child_process';
+import { execFile, execFileSync } from 'node:child_process';
 import { createHash } from 'node:crypto';
 import * as fs from 'node:fs';
 import * as path from 'node:path';
@@ -231,23 +231,110 @@ function walk(dir: string): string[] {
   return out.sort();
 }
 
-// REQ-polaris-generation-034 (syzygy-3efd.76): every reader of the brief record reads it by the reader rule under 262,144 bytes. The
-// reverification each step runs refuses an unreadable record before the render's run disclosure or close's execution rule reads it, so
-// those two readers are pinned here by how they read: through one bounded open of a descriptor, never `readFileSync` of the path, which
-// blocks on a FIFO and reads a file of any size.
-describe('the brief record\'s readers in a full run', () => {
-  it('never read brief.json with readFileSync, from check through render and close', async () => {
+// REQ-polaris-generation-034 (syzygy-3efd.76): every reader of the brief record, of a frozen draft revision and of the run file reads it by
+// the reader rule under its bound. The reverification each step runs refuses an unreadable brief record before the render's run disclosure,
+// close's execution rule or close's digest of every stored file reads it, so those readers are pinned two ways: by how they read (through
+// one bounded open of a descriptor, never `readFileSync` of the path, which blocks on a FIFO and reads a file of any size), and by what close
+// records when a file is replaced at the moment its digest of the stored files opens it. A FIFO blocks a reader that opens it without
+// O_NONBLOCK inside a synchronous call no test timeout interrupts; the mutation runner bounds each run by a process timeout.
+describe('the readers of the run files in a full run', () => {
+  it('never read brief.json, a draft or run-advice.json with readFileSync, from check through render and close', async () => {
     const unbounded: string[] = [];
+    const watched = /(?:^|\/)(?:brief\.json|run-advice\.json|drafts\/(?:next|rev-\d+)\.json)$/u;
     const restore = patchFs('readFileSync', (original) => ((target: fs.PathOrFileDescriptor, ...rest: unknown[]) => {
-      // close's digest of every stored file (storedFiles, Dirent-filtered to regular files) hashes the record's bytes and reads none of
-      // its content; it is the one other read, and is left out here.
-      const stack = new Error().stack ?? '';
-      if (typeof target === 'string' && path.basename(target) === 'brief.json' && !stack.includes('at storedFiles')) unbounded.push(`${target}\n${stack}`);
+      if (typeof target === 'string' && watched.test(target.split(path.sep).join('/'))) unbounded.push(`${target}\n${new Error().stack ?? ''}`);
       return (original as (...args: unknown[]) => unknown)(target, ...rest);
     }) as typeof original);
     let run: string;
     try { ({ run } = await fullRun()); } finally { restore(); }
     expect(readJson(path.join(run, 'record.json')).executionRule).toMatchObject({ arm: 'sec-3', label: 'Inferred' });
     expect(unbounded).toEqual([]);
+  });
+
+  /** A full run in which `change` is applied to the run file `rel` at the moment close's digest of the stored files opens it, once. */
+  const runSwapping = async (rel: string, change: (file: string) => void) => {
+    let swapped = false;
+    const restore = patchFs('openSync', (original) => ((file: fs.PathLike, ...rest: unknown[]) => {
+      if (!swapped && typeof file === 'string' && file.split(path.sep).join('/').endsWith(`/${rel}`) && (new Error().stack ?? '').includes('at storedFiles')) {
+        swapped = true;
+        change(file);
+      }
+      return (original as (...args: unknown[]) => number)(file, ...rest);
+    }) as typeof original);
+    let run: string;
+    try { ({ run } = await fullRun()); } finally { restore(); }
+    expect(swapped).toBe(true);
+    return readJson(path.join(run, 'record.json')).stored as { files: { path: string; bytes: number }[]; notListed: number };
+  };
+  const replaceWith = (bytes: number) => (file: string): void => { fs.rmSync(file); fs.writeFileSync(file, ' '.repeat(bytes)); };
+
+  it('digests every stored file of an untouched run, listing them all', async () => {
+    const stored = await runSwapping('brief.json', () => { /* unchanged */ });
+    expect(stored.notListed).toBe(0);
+    expect(stored.files.map((entry) => entry.path)).toContain('brief.json');
+  });
+
+  it.each<[string, (file: string) => void]>([
+    ['a FIFO', (file) => { fs.rmSync(file); execFileSync('mkfifo', [file]); }],
+    ['a symbolic link to /dev/zero', (file) => { fs.rmSync(file); fs.symlinkSync('/dev/zero', file); }],
+    ['a directory', (file) => { fs.rmSync(file); fs.mkdirSync(file); }],
+  ])('counts a brief record that is %s when its digest opens it as not listed, without blocking', async (_what, change) => {
+    const stored = await runSwapping('brief.json', change);
+    expect(stored.notListed).toBe(1);
+    expect(stored.files.map((entry) => entry.path)).not.toContain('brief.json');
+  });
+
+  it('digests a brief record of exactly 262,144 bytes and counts one of 262,145 as not listed', async () => {
+    const at = await runSwapping('brief.json', replaceWith(262_144));
+    expect(at.notListed).toBe(0);
+    expect(at.files.find((entry) => entry.path === 'brief.json')?.bytes).toBe(262_144);
+    const past = await runSwapping('brief.json', replaceWith(262_145));
+    expect(past.notListed).toBe(1);
+    expect(past.files.map((entry) => entry.path)).not.toContain('brief.json');
+  });
+
+  it('digests a frozen draft revision of exactly 4,194,304 bytes and counts one of 4,194,305 as not listed', async () => {
+    const at = await runSwapping('drafts/rev-0.json', replaceWith(4_194_304));
+    expect(at.files.find((entry) => entry.path === 'drafts/rev-0.json')?.bytes).toBe(4_194_304);
+    expect(at.notListed).toBe(0);
+    const past = await runSwapping('drafts/rev-0.json', replaceWith(4_194_305));
+    expect(past.notListed).toBe(1);
+    expect(past.files.map((entry) => entry.path)).not.toContain('drafts/rev-0.json');
+  });
+
+  it('digests run-advice.json of exactly 16,777,216 bytes and counts one of 16,777,217 as not listed', async () => {
+    const at = await runSwapping('run-advice.json', replaceWith(16_777_216));
+    expect(at.files.find((entry) => entry.path === 'run-advice.json')?.bytes).toBe(16_777_216);
+    const past = await runSwapping('run-advice.json', replaceWith(16_777_217));
+    expect(past.notListed).toBe(1);
+    expect(past.files.map((entry) => entry.path)).not.toContain('run-advice.json');
+  });
+
+  it.each<[string, number]>([
+    ['checks/rev-0.json', 16_777_216],
+    ['inventory/checks/rev-0.json', 16_777_216],
+    ['derived/rev-0.json', 4_194_304],
+  ])('digests %s at its bound of %i bytes and counts it one byte past as not listed', async (rel, bound) => {
+    const at = await runSwapping(rel, replaceWith(bound));
+    expect(at.files.find((entry) => entry.path === rel)?.bytes).toBe(bound);
+    const past = await runSwapping(rel, replaceWith(bound + 1));
+    expect(past.notListed).toBe(1);
+    expect(past.files.map((entry) => entry.path)).not.toContain(rel);
+  });
+
+  it('counts a file no stated bound covers as not listed when it grows after its size was taken', async () => {
+    // steps.jsonl: read under its own size. It grows by a byte between the open and the read.
+    let fd: number | undefined;
+    const stored = await runSwapping('steps.jsonl', (file) => {
+      // Grow it once its size has been taken: on the next fstat of the descriptor about to be opened.
+      const restore = patchFs('fstatSync', (original) => ((descriptor: number, ...rest: unknown[]) => {
+        const stats = (original as (...args: unknown[]) => fs.Stats)(descriptor, ...rest);
+        if (fd === undefined) { fd = descriptor; fs.appendFileSync(file, 'x'); restore(); }
+        return stats;
+      }) as typeof original);
+    });
+    expect(fd).not.toBeUndefined();
+    expect(stored.notListed).toBe(1);
+    expect(stored.files.map((entry) => entry.path)).not.toContain('steps.jsonl');
   });
 });

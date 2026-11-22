@@ -122,10 +122,15 @@ const READERS: readonly Reader[] = [
   {
     name: 'readRunAdvice', bound: RUN_FILE_BOUND,
     fresh: () => { const run = tempDir('bounded-run-advice-'); return { run, subject: path.join(run, 'run-advice.json') }; },
-    // Padded, the file is not exactly what check writes, so even read it is null: the bytes read tell the cases apart.
-    atBound: (_run, bytes) => padded('{"format":"polaris-dossier-run-advice/1"}', bytes),
-    read: (run) => readRunAdvice(run),
-    readAtBound: null,
+    // Exactly what check writes for an empty run file whose run identity is padded to the size: 316 bytes with an empty one.
+    atBound: (_run, bytes) => {
+      const doc = { format: 'polaris-dossier-run-advice/1', runId: '', rules: [{ id: 'no-figure-layout', version: 1 }, { id: 'graph-without-narrow-form', version: 1 }], checkRecords: { read: 0, unreadable: 0 }, occurrences: 0, advisories: [] };
+      const text = `${JSON.stringify({ ...doc, runId: 'r'.repeat(bytes - 316) }, null, 2)}\n`;
+      if (Buffer.byteLength(text) !== bytes) throw new Error('fixture: the run file missed its size');
+      return text;
+    },
+    read: (run) => { const advice = readRunAdvice(run); return advice === null ? null : { format: advice.format, runIdLength: advice.runId.length, occurrences: advice.occurrences }; },
+    readAtBound: { format: 'polaris-dossier-run-advice/1', runIdLength: 16_776_900, occurrences: 0 },
     pastBound: null,
     notRegular: null,
   },
