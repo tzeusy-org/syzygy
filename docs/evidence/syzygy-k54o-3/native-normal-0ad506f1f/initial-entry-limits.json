@@ -1,0 +1,18 @@
+{
+  "subjectCommit": "0ad506f1f7c5261d29e8ef0cf6dc8495e2b5a01c",
+  "files": {
+    "packages/polaris-dossier/src/url-run-composed.testkit.ts": "a5f2fd9e220252673562e463c1d9a52e193216444ed5770d27ccc81e35ba984f",
+    "packages/polaris-dossier/src/url-run-composed.test.ts": "4691a617a9cca6ee1f4e950d969f034e9a560eb13f4844be9b7df37e33e37806"
+  },
+  "observed": [
+    "The normal canonical case runs actual runUrlSupervisorLoop, native roles, kernel mediation, producers, ordered design and record admission.",
+    "Its initial preparations are supplied by prepareComposedRun; the initial current callback is a fixture-controlled live boolean, not the public CLI policy/record currentness chain. Its parent fixture is synthetic.",
+    "The provider boundary is synthetic; no network provider compatibility is established.",
+    "Public resume cases use the real runPolarisCli, stopped verifier and genuine exclusive claim with current policy/record/lock guards."
+  ],
+  "limits": [
+    "The normal PASS does not independently establish the public initial CLI command or its policy-currentness timing.",
+    "Initial allocation callback counts are observable structure, but their cheap timings must not be described as public initial-policy timing.",
+    "The public recovery failures and measured real-claim timings are retained separately."
+  ]
+}
