@@ -10,7 +10,7 @@ import * as machineStore from './url-machine-store.js';
 import { initializeUrlMachineStore, openUrlMachineStore, readUrlMachineStoreHistory, type UrlMachineStore } from './url-machine-store.js';
 import { encodeUrlMachineArchive, urlMachineArchiveCapacity, URL_MACHINE_ARCHIVE_LIMITS } from './url-machine-archive.js';
 import { URL_MACHINE_CLIENT_LIMITS, type UrlMachineClientContext, type UrlMachineClientRecord } from './url-machine-instance.js';
-import { captureUrlMachinePeerHistory, isUrlMachinePeerHistoryMatch, isUrlMachinePeerHistorySnapshot, verifyUrlMachinePeerHistoryRow, verifyUrlMachinePeerHistory, type UrlMachinePeerHistoryOptions } from './url-machine-peer-history.js';
+import { captureUrlMachinePeerHistory, isUrlMachinePeerHistoryMatch, isUrlMachinePeerHistorySnapshot, isUrlMachinePeerHistorySnapshotFor, verifyUrlMachinePeerHistoryRow, verifyUrlMachinePeerHistory, type UrlMachinePeerHistoryOptions } from './url-machine-peer-history.js';
 
 const NOW = Date.parse('2026-11-22T01:00:00.000Z');
 const id = () => randomBytes(32).toString('hex');
@@ -57,7 +57,7 @@ async function fixture(revoke = true) {
       channelIdentitySha256: record.instances[0]!.verifier.channelIdentitySha256, at: NOW + 500 }, revisionBytes: canon(record) };
   const files = [path.join(storeOptions.protectedRoot, 'identity.json'), path.join(storeOptions.protectedRoot, 'state.json'),
     path.join(storeOptions.protectedRoot, `projection-${record.clientId}.json`), path.join(canonicalRoot, `${record.clientId}.json`), path.join(storeOptions.protectedRoot, 'canonical-history.json')];
-  return { options, storeOptions, record, rotated, revoked, firstHead, files, withdraw: () => { current = false; } };
+  return { options, storeOptions, record, rotated, revoked, firstHead, files, tick: (instant: number) => { now = instant; }, withdraw: () => { current = false; } };
 }
 
 describe('cold historical machine-peer joins', () => {
@@ -98,6 +98,27 @@ describe('cold historical machine-peer joins', () => {
     expect(nextMatch).toMatchObject({ ok: true }); expect(isUrlMachinePeerHistoryMatch(nextMatch, nextRow)).toBe(true);
     expect(isUrlMachinePeerHistoryMatch(match, nextRow)).toBe(false);
     expect(isUrlMachinePeerHistoryMatch(nextMatch, f.options.row)).toBe(false);
+  });
+
+  it('binds the genuine snapshot to each exact independently expected immutable audit subject field', async () => {
+    const f = await fixture(), captured = await captureUrlMachinePeerHistory(f.options); if (!captured.ok) throw new Error('owned capture refused');
+    const subject = { projectId: f.record.projectId, policySha256: f.options.context.policySha256, profileSha256: f.options.context.profileSha256,
+      sourcePin: f.options.context.sourcePin, runId: f.options.context.runId, role: f.options.context.role };
+    expect(isUrlMachinePeerHistorySnapshotFor(captured.snapshot, subject)).toBe(true);
+    for (const key of ['projectId', 'policySha256', 'profileSha256', 'sourcePin', 'runId', 'role'] as const) {
+      const changed = { ...subject, [key]: key === 'projectId' ? 'project:other' : key === 'role' ? 'author' : key === 'runId' ? `run-${'c'.repeat(32)}` : id() };
+      expect(isUrlMachinePeerHistorySnapshotFor(captured.snapshot, changed)).toBe(false);
+    }
+    expect(isUrlMachinePeerHistorySnapshotFor({ ...captured.snapshot }, subject)).toBe(false);
+    const wrongContext = await captureUrlMachinePeerHistory({ ...f.options, context: { ...f.options.context, profileSha256: id() } });
+    expect(wrongContext.ok).toBe(true);
+    if (wrongContext.ok) expect(isUrlMachinePeerHistorySnapshotFor(wrongContext.snapshot, subject)).toBe(false);
+  });
+
+  it('refuses a new capture once the independently retained original deadline expires', async () => {
+    const f = await fixture(); expect((await captureUrlMachinePeerHistory(f.options)).ok).toBe(true);
+    f.tick(f.options.context.deadline);
+    expect(await captureUrlMachinePeerHistory(f.options)).toEqual({ ok: false, code: 'store-unavailable' });
   });
 
   it('retains exact hash, process, scope and temporal checks after caches have been populated', async () => {

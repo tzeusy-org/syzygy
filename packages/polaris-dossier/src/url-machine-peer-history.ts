@@ -56,7 +56,9 @@ const matchedRows = new WeakMap<object, string>();
 
 /** Captures one exact protected historical cut for repeated cold checks. The
  * snapshot proves its retained store/head read only. Every row still needs the
- * semantic checker below; neither object supplies current authority. */
+ * semantic checker below; neither object supplies current authority. Capture
+ * requires the independently retained original context deadline to remain live;
+ * it never extends the deadline or proves its provenance from these files. */
 export async function captureUrlMachinePeerHistory(given: UrlMachinePeerHistoryBinding): Promise<UrlMachinePeerHistorySnapshotResult> {
   try {
     const { store, expectedIdentitySha256 } = given;
@@ -78,6 +80,20 @@ export async function captureUrlMachinePeerHistory(given: UrlMachinePeerHistoryB
 
 export function isUrlMachinePeerHistorySnapshot(value: unknown): value is UrlMachinePeerHistorySnapshot {
   return isRecord(value) && snapshots.has(value as unknown as UrlMachinePeerHistorySnapshot);
+}
+export type UrlMachinePeerHistorySubject = Pick<UrlMachineClientContext, 'policySha256' | 'profileSha256' | 'sourcePin' | 'runId' | 'role'>
+  & { readonly projectId: string };
+/** Compare a genuine historical cut to the independent cold audit subject.
+ * Supplying the expected values does not itself establish their provenance. */
+export function isUrlMachinePeerHistorySnapshotFor(value: unknown, binding: UrlMachinePeerHistorySubject): value is UrlMachinePeerHistorySnapshot {
+  try {
+    if (!isUrlMachinePeerHistorySnapshot(value)) return false;
+    const state = snapshots.get(value)!;
+    if (!state.latest.ok || !exact(binding, ['projectId', 'policySha256', 'profileSha256', 'sourcePin', 'runId', 'role'])) return false;
+    const record = state.latest.record;
+    return equal(binding, { projectId: record.projectId, policySha256: record.policySha256,
+      profileSha256: record.instances[0]!.verifier.profileSha256, sourcePin: record.sourcePin, runId: record.runId, role: record.role });
+  } catch { return false; }
 }
 /** A success-shaped copy cannot replace an issued match, and an issued match
  * for another captured row cannot be substituted, even in the same revision. */
