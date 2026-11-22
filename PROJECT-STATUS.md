@@ -95,7 +95,7 @@ authority and no model yet called on the current path.
     [v1.4 sign-off](.syzygy/governance/decisions/POLARIS-DOSSIER-LOCAL-AGENT-MODE-SIGNOFF-v1.4.md);
     [v1.5 sign-off](.syzygy/governance/decisions/POLARIS-DOSSIER-LOCAL-AGENT-MODE-SIGNOFF-v1.5.md);
     [v1.6 sign-off](.syzygy/governance/decisions/POLARIS-DOSSIER-LOCAL-AGENT-MODE-SIGNOFF-v1.6.md)), and
-    39 requirements and 432 scenarios in the effective composition with it and with the signed-off
+    39 requirements and 450 scenarios in the effective composition with it and with the signed-off
     [launch-consent addition](openspec/changes/polaris-dossier-launch-consent/specs/polaris-generation/spec.md)
     ([v1.0 sign-off](.syzygy/governance/decisions/POLARIS-DOSSIER-LAUNCH-CONSENT-SIGNOFF-v1.0.md);
     [v1.1 sign-off](.syzygy/governance/decisions/POLARIS-DOSSIER-LAUNCH-CONSENT-SIGNOFF-v1.1.md);
@@ -169,6 +169,12 @@ authority and no model yet called on the current path.
     `POLARIS-DOSSIER-DECLARED-SOURCE-POLICY-v3.json` (44 Stage-2 entries re-admitted on a thirty-repository census);
     its code change (bind 3.0.0 for new runs) is not yet landed, and until it lands runs stay on the policy they bound.
     *(2026-11-22: the predecessor figure "430 scenarios" is superseded by that
+    amendment; all 39 identities remain.)*
+    [Index and task routes amendment 2.14](openspec/changes/dossier-index-and-task-routes) is agent-adopted in A-45.
+    It replaces REQ-polaris-generation-034 again (117 to 135 scenarios: a generated index and a find-by-task
+    page on every operator-agent dossier, and task routes in the draft); its implementation (syzygy-5dhm.70,
+    syzygy-5dhm.71) lands with it.
+    *(2026-11-22: the predecessor figure "432 scenarios" is superseded by that
     amendment; all 39 identities remain.)*
     *(2026-11-18: the predecessor figure "329 scenarios" is superseded by that
     overlay; all38 identities remain, and046 is now Declared local-source admission.)*
