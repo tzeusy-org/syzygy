@@ -99,7 +99,7 @@ export function disclosuresOffTheirPage(files: Files): string[] {
     const element = html.slice(start, elementEnd(html, start));
     const tag = element.slice(0, element.indexOf('>') + 1);
     if (!tag.includes(`data-epistemic="${claim.epistemic}"`)) off.push(`${claim.id}: label not ${claim.epistemic} on ${claim.page}`);
-    if (claim.epistemic === 'unknown' && !/\[Unknown\]|Not established\./u.test(element)) off.push(`${claim.id}: no Unknown marking on ${claim.page}`);
+    if (claim.epistemic === 'unknown' && !element.includes('<span class="marking unknown">[Unknown]</span>')) off.push(`${claim.id}: no Unknown marking on ${claim.page}`);
     // The reason in the element's own text, not only in an attribute, so plain-text extraction and an assistive technology read it; a
     // withheld item's reason is said by Syzygy's withheld words.
     const withheldWords = /Withheld from this dossier|Withheld item/u.test(element.slice(tag.length));
@@ -184,6 +184,13 @@ describe('the reader\'s edition (syzygy-5dhm.136)', () => {
     const reasonless = new Map(site);
     reasonless.set('index.html', index.split('missing-evidence').join(''));
     expect(disclosuresOffTheirPage(reasonless)).toContain('forms: reason missing-evidence not on index.html');
+    const unmarked = new Map(site);
+    unmarked.set('index.html', index.replace(/(id="block-forms">[\s\S]*?)<span class="marking unknown">\[Unknown\]<\/span>/u, '$1'));
+    expect(disclosuresOffTheirPage(unmarked)).toEqual(['forms: no Unknown marking on index.html']);
+    const attributeOnly = new Map(site);
+    attributeOnly.set('index.html', index.split('missing-evidence').join('').split('data-unknown-reason=""').join('data-unknown-reason="missing-evidence"'));
+    expect(attributeOnly.get('index.html')).toContain('data-unknown-reason="missing-evidence"');
+    expect(disclosuresOffTheirPage(attributeOnly)).toEqual(['forms: reason missing-evidence not on index.html']);
     const relabelled = new Map(site);
     relabelled.set('index.html', index.replace('data-claim-id="forms" data-epistemic="unknown"', 'data-claim-id="forms" data-epistemic="inferred"'));
     expect(disclosuresOffTheirPage(relabelled)).toContain('forms: label not unknown on index.html');
