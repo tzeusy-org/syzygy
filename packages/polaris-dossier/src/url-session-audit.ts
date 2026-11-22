@@ -1145,7 +1145,7 @@ export async function createUrlSessionAudit(given: UrlSessionAuditOptions): Prom
         } });
       } finally { pendingDesignVerdicts.delete(delivery); }
     };
-    const prepareDesignRenderContinuation: Extract<UrlSessionAuditResult, { ok: true }>['prepareDesignRenderContinuation'] = async (delivery, product, number) => {
+    const checkedDesignRender = async (delivery: UrlDesignDeliveryAuditRecord, product: ValidatedUrlDesignProduct, number: number) => {
       const record = currentDesignRecord(delivery), verdict = designVerdicts.get(delivery);
       if (!verdict || verdict.checked.number !== number || product === record.prepared.deref() || usedDesignProducts.has(product)) throw refused();
       const original = await inspectUrlDesignProduct(product, record.binding);
@@ -1174,11 +1174,13 @@ export async function createUrlSessionAudit(given: UrlSessionAuditOptions): Prom
       const subject = deepFreeze({ binding: record.binding, checked: verdict.checked, delivery,
         verdictEventSha256: verdict.eventSha256, original, earlierRounds });
       usedDesignProducts.add(product);
-      return makeDesignRenderContinuationFactory(subject, readDeadline, check);
+      return { factory: makeDesignRenderContinuationFactory(subject, readDeadline, check), deadline };
     };
+    const prepareDesignRenderContinuation: Extract<UrlSessionAuditResult, { ok: true }>['prepareDesignRenderContinuation'] = async (...args) =>
+      (await checkedDesignRender(...args)).factory;
     const readDesignRenderContinuation: Extract<UrlSessionAuditResult, { ok: true }>['readDesignRenderContinuation'] = async (delivery, product, number) => {
-      const factory = await prepareDesignRenderContinuation(delivery, product, number);
-      const continuation = factory({ deadline: input.deadline ?? Number.MAX_SAFE_INTEGER, packetSha256: delivery.identity.original.sha256 });
+      const { factory, deadline } = await checkedDesignRender(delivery, product, number);
+      const continuation = factory({ deadline, packetSha256: delivery.identity.original.sha256 });
       if (continuation === null) throw refused();
       return continuation;
     };
