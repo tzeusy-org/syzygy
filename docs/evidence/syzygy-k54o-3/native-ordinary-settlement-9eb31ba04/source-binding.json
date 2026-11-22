@@ -1,0 +1,77 @@
+{
+  "sourceCommit": "9eb31ba04eb3164b269727fc57417e7117528efc",
+  "sourceTree": "93a152ec6b4f7537c05a3a901f16dbecce65b121",
+  "overlaySha256": "ba725cfc5dfbd0e2aba23c395d5e474f311c3e6cb22b40cb40d73cf756d847a7",
+  "changedSourceSha256": {
+    "packages/polaris-dossier/src/session-broker.ts": {
+      "before": "79a30d748606c2b621209a77a6cbb37716cdfb0531c551a603bef9a78c88bbbd",
+      "after": "f9d490d3cc2353ec44cfa034ce18b983867cd8e7378df37ac35441461c90b3a5"
+    },
+    "packages/polaris-dossier/src/session-launch.ts": {
+      "before": "ca6a02828de4d7cd5348f8c7deb8eb32f2a662eca0ef271f3738bbded313ed1e",
+      "after": "51f13816f7900352f4c895ab33e935601912f21384b63102bc4cd6b4abdf7991"
+    },
+    "packages/polaris-dossier/src/session-machine-transport.ts": {
+      "before": "6e97c572d7cfda33b2a46c466e3be65232611cdb5b066922cbb29740e4c9165c",
+      "after": "59eda393cc54942679de343984d31bd1a34bbdad5b2e1a73269cc15e2f849b2b"
+    },
+    "packages/polaris-dossier/src/session-relay.ts": {
+      "before": "c7ab6f4f29cc7df6db88fc6189d2ff27313cbf8926893f7df703fa8118ec41a2",
+      "after": "8c59bedd32604d7bd218148b2a2fc6f56e0b580b46c49c06cde0967616e45200"
+    },
+    "packages/polaris-dossier/src/url-machine-peer.ts": {
+      "before": "4579210c3643213b7b2f1344e64b1f7d991866f4d3cb3848668490f65166927e",
+      "after": "e30e7252482534286a7d3ac243d195d9364d01b8b23b17f16a40611f8f232e99"
+    },
+    "packages/polaris-dossier/src/url-machine-store.ts": {
+      "before": "0b34b3989c5055f4d401dca8945f504f410c94003935adafb5c836ad79d13983",
+      "after": "a660f507566b2726c1965246ec9270f4445f979c34938ed06bb314ea6fa14c78"
+    },
+    "packages/polaris-dossier/src/url-ordered-design-host.ts": {
+      "before": "c0a49ed4238823d5ea600e417255362c0942844aa9d43f8426752e7332de533e",
+      "after": "ae2ca801af6cdfe164d09bb1e903e9f4720b23620da6b17318acb641b2dd4ff9"
+    },
+    "packages/polaris-dossier/src/url-ordered-design-screen.ts": {
+      "before": "b20bfae804f552fa65f44cfe910054865b1f1cfde528b0944295d82e3df90c12",
+      "after": "513fcc915e447f9dcd1355abf4ab8e4bb1761517e65e7289b455d7724bf22827"
+    },
+    "packages/polaris-dossier/src/url-run-composed.test.ts": {
+      "before": "f999e7d0183f2187db676805d1978681d822198620e10938d7ebec229989f24e",
+      "after": "135827b904499f7a178d55c1f9ef10dc6b0cbca09a19fa3d2b24db9c602ac3fc"
+    },
+    "packages/polaris-dossier/src/url-run-machine.ts": {
+      "before": "62b517503741a70eaa24195d9a3f3a7d15ebed5680aa84f7de0c40d166f5c835",
+      "after": "48387cb9abea8b2835b0f12f9940dc95688fecb37fc510d3a420417903c773e5"
+    },
+    "packages/polaris-dossier/src/url-run-sessions.ts": {
+      "before": "43d7349918a2e5ed1c6165dbc4d777cf2032795bddc5273d81008f2ed5095182",
+      "after": "9c828ee1f87aefb449c3dc03246820b00ee7f041dc38e4f64728ef25cb66321c"
+    }
+  },
+  "runtime": {
+    "manifestSha256": "7bcaba65c5d3dc38ec2506fd8ac49bed66591ca9d0daacf3723a2935a824ca9f",
+    "manifestTimeUtc": "2026-11-22T15:12:10.040+00:00",
+    "inputTreeSha256": "15757cd1f758405ccc5498ac5239f837747a07a549a4ef433b92e0eed4b5ce2c",
+    "manifestInputs": 380,
+    "inputsMatchingPhysicalBytes": 380,
+    "unmodifiedTrackedInputsMatchingBase": 276,
+    "overlayManifestInputs": [
+      "packages/polaris-dossier/src/session-broker.ts",
+      "packages/polaris-dossier/src/session-launch.ts",
+      "packages/polaris-dossier/src/session-machine-transport.ts",
+      "packages/polaris-dossier/src/session-relay.ts",
+      "packages/polaris-dossier/src/url-machine-peer.ts",
+      "packages/polaris-dossier/src/url-machine-store.ts",
+      "packages/polaris-dossier/src/url-ordered-design-host.ts",
+      "packages/polaris-dossier/src/url-ordered-design-screen.ts",
+      "packages/polaris-dossier/src/url-run-machine.ts",
+      "packages/polaris-dossier/src/url-run-sessions.ts"
+    ],
+    "overlayFixtureOrUnbundledFiles": [
+      "packages/polaris-dossier/src/url-run-composed.test.ts"
+    ],
+    "installInputsMatchingManifest": 94,
+    "manifestOutputs": 8,
+    "outputsMatchingPhysicalBytes": 8
+  }
+}

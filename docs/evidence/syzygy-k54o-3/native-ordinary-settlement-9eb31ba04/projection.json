@@ -1,0 +1,221 @@
+{
+  "traceSha256": "fc980f1d3d93f34e74378ea6783f506adf47e509a696c80a965542e029a7fe81",
+  "eventCount": 22713,
+  "counts": {
+    "authority": 22050,
+    "broker": 28,
+    "connection": 273,
+    "host": 4,
+    "machine": 5,
+    "peer-capture": 20,
+    "process": 3,
+    "relay": 109,
+    "sampler": 214,
+    "supervisor": 7
+  },
+  "sampleAndScreen": {
+    "traceSha256": "fc980f1d3d93f34e74378ea6783f506adf47e509a696c80a965542e029a7fe81",
+    "eventCount": 217,
+    "componentCounts": {
+      "process": 3,
+      "sampler": 214
+    },
+    "initialScreens": [],
+    "resumed": null
+  },
+  "initialPreResumeFailure": {
+    "supervisorFailure": {
+      "component": "supervisor",
+      "stage": "failure",
+      "event": "transport-unavailable",
+      "resumed": false,
+      "at": 173225.39763
+    },
+    "earliestHostOrTransportRefusal": {
+      "component": "relay",
+      "role": "design",
+      "relay": 4,
+      "stage": "close",
+      "event": "poison",
+      "at": 173117.703854
+    },
+    "launcherLifecycle": [
+      {
+        "component": "sampler",
+        "stage": "child",
+        "event": "spawn",
+        "detail": "none",
+        "elapsed": 0,
+        "launch": 1,
+        "sample": 0,
+        "at": 165028.286979
+      },
+      {
+        "component": "sampler",
+        "stage": "child",
+        "event": "stop",
+        "detail": "stopped",
+        "elapsed": 0,
+        "launch": 1,
+        "sample": 22,
+        "at": 173111.910174
+      },
+      {
+        "component": "process",
+        "event": "exit",
+        "code": null,
+        "launch": 1,
+        "detail": "none",
+        "signal": "SIGTERM",
+        "at": 173145.238312
+      },
+      {
+        "component": "process",
+        "event": "close",
+        "code": null,
+        "launch": 1,
+        "detail": "none",
+        "signal": "SIGTERM",
+        "at": 173248.982544
+      },
+      {
+        "component": "process",
+        "event": "finished",
+        "code": null,
+        "launch": 1,
+        "detail": "stopped",
+        "signal": "SIGTERM",
+        "at": 173253.319942
+      }
+    ],
+    "hostBrokerDesignRelaySupervisor": [
+      {
+        "component": "host",
+        "host": 1,
+        "stage": "activation-cutoff",
+        "event": "scheduled",
+        "at": 162183.890573
+      },
+      {
+        "component": "host",
+        "host": 1,
+        "stage": "ready",
+        "event": "return",
+        "at": 162253.563131
+      },
+      {
+        "component": "relay",
+        "role": "design",
+        "relay": 4,
+        "stage": "raw",
+        "event": "begin",
+        "at": 168027.390092
+      },
+      {
+        "component": "relay",
+        "role": "design",
+        "relay": 4,
+        "stage": "raw-open",
+        "event": "return",
+        "at": 172512.717248
+      },
+      {
+        "component": "host",
+        "host": 1,
+        "stage": "close",
+        "event": "begin",
+        "at": 173112.553039
+      },
+      {
+        "component": "relay",
+        "role": "design",
+        "relay": 4,
+        "stage": "close",
+        "event": "poison",
+        "at": 173117.703854
+      },
+      {
+        "component": "relay",
+        "role": "design",
+        "relay": 4,
+        "stage": "raw",
+        "event": "closed",
+        "at": 173145.569268
+      },
+      {
+        "component": "host",
+        "host": 1,
+        "stage": "health-closing",
+        "event": "refused",
+        "at": 173225.237748
+      },
+      {
+        "component": "supervisor",
+        "stage": "effect-health",
+        "event": "refused",
+        "resumed": false,
+        "at": 173225.349799
+      },
+      {
+        "component": "supervisor",
+        "stage": "failure",
+        "event": "transport-unavailable",
+        "resumed": false,
+        "at": 173225.39763
+      },
+      {
+        "component": "supervisor",
+        "stage": "terminal-observed",
+        "event": "stopped",
+        "resumed": false,
+        "at": 173253.491125
+      },
+      {
+        "component": "supervisor",
+        "stage": "terminal-expected",
+        "event": "refused",
+        "resumed": false,
+        "at": 173253.553413
+      },
+      {
+        "component": "supervisor",
+        "stage": "terminal-audit",
+        "event": "begin",
+        "resumed": false,
+        "at": 173253.573
+      },
+      {
+        "component": "supervisor",
+        "stage": "terminal-audit",
+        "event": "return",
+        "resumed": false,
+        "at": 173569.225338
+      }
+    ],
+    "connectionRefusalsBeforeSupervisor": [
+      {
+        "component": "connection",
+        "edge": "relay",
+        "connection": 32,
+        "owner": 4,
+        "stage": "stream-read",
+        "event": "refused",
+        "detail": "native-null",
+        "bound": 0,
+        "at": 173146.654088
+      },
+      {
+        "component": "connection",
+        "edge": "relay",
+        "connection": 32,
+        "owner": 4,
+        "stage": "stream-read",
+        "event": "refused",
+        "detail": "pump",
+        "bound": 0,
+        "at": 173146.666962
+      }
+    ]
+  },
+  "resumedTransport": null
+}

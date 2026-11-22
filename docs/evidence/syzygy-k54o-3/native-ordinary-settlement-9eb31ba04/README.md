@@ -1,0 +1,11 @@
+# Native interruption fixture settlement at 9eb31ba04
+
+[Observed] One selected native replay of `9eb31ba04eb3164b269727fc57417e7117528efc` plus the bound trace overlay failed after 174.047 seconds. The original run used PT2H and the case retained its 540-second watchdog. The initial Design launch and Round 1 delivery were durable. The fixture recorded 7 Author, 6 Inventory, 4 Fidelity and 0 Design provider forwards. None of the three ordinary roles recorded an admitted final `end_turn`. The last Author send outcome arrived 89.504 seconds after its send attempt. The final Inventory and Fidelity send attempts had no recorded outcome.
+
+[Observed] The ordered host closed 10.929 seconds into its 20-second activation window. The trace contains no activation or timer expiration. The Design process entered `stopped` before host close, and the supervisor subsequently saw closing health and reported `transport-unavailable` 113.487 ms after the child stop. The fixture saved a local cut-shaped archive. The initial supervisor reported `protected rendered site evidence changed or expired` and the public verify and claim checks never ran.
+
+[Inferred] Ordinary settlement in the fixture exhausted its window inside the initial Design delivery hook. The source releases the three synthetic replies serially and awaits a genuine durable Author end-turn before enabling Inventory. Failure there precedes the authenticated Stop call and explains the cleanup path. Commit `61bc59b08243d3315821b0f7ea65f5fd1afee6b8` permits each synthetic reply in durable audit order earlier in its exchange. The fixture still verifies the delivered Design audit and holds ordinary final delivery through authenticated Stop. The runtime, production deadlines and eligible fixture are unchanged.
+
+[Unknown] Which predicate refused after the fresh Round 2 delivery in the separate [uninstrumented run](../native-stop-resume-9eb31ba04/README.md).
+
+The closed projections bind 22,713 trace events, 380 runtime inputs and eight outputs. The original diagnostic trace, overlay, schema checks and reproduction scripts are in the owned `f3-9eb-adaptive-evidence` scratch bundle identified by `diagnostic-sha256sums.txt`. The diagnostic validation detected 28 deliberately invalid schema fixtures.
