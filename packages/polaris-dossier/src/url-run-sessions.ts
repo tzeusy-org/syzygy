@@ -8,7 +8,7 @@ import { createUrlSessionControl, type UrlSessionControlEvent, type UrlSessionCo
 import type { SessionCredential } from './session-credential.js';
 import type { SessionAdmission, SessionContentClass } from './session-egress-policy.js';
 import { startSessionHost, type SessionHost } from './session-host.js';
-import { isSessionProfile, SESSION_PROFILE_ID } from './session-profile.js';
+import { isOrderedDesignSessionProfile } from './session-profile.js';
 import { launchRestrictedUrlSession, prepareRestrictedUrlSession, type UrlSessionLaunchOutcome, type UrlSessionProcess } from './session-launch.js';
 import type { SessionDesignArtifactRead, SessionToolsOptions, SessionToolsReceipt } from './session-tools.js';
 import type { ViewRole } from './session-view.js';
@@ -24,6 +24,11 @@ import { assertUrlDesignRenderContinuationCurrent, createUrlSessionAudit, type U
   type UrlDesignRenderContinuation, type UrlDesignReviewProof, type UrlSessionAuditSummary } from './url-session-audit.js';
 import { createUrlSessionBudget, type UrlBudgetSnapshot } from './url-session-budget.js';
 import { URL_DESIGN_VIEW_ARTIFACT } from './url-design-view.js';
+import { createUrlRunMachine } from './url-run-machine.js';
+import { startUrlOrderedAttempt } from './url-run-ordered-attempt.js';
+import type { UrlParentAdoption } from './url-parent-adoption.js';
+import type { createUrlRunArtifacts } from './url-run-artifacts.js';
+import { createUrlRunCpuBudget } from './url-run-cpu-budget.js';
 
 const canonical = (value: unknown): string => encodeCanonicalJson(value, { maxBytes: 2_097_152, maxNodes: 65_536, maxDepth: 32 });
 type Failure = 'binding-changed' | 'launch-unavailable' | 'audit-unavailable' | 'control-unavailable' | 'role-ended' | 'transport-unavailable' | 'provenance-unavailable';
@@ -51,6 +56,11 @@ export interface UrlRunSessionsOptions {
    * check is independent of this component's lifecycle and shared budgets. */
   readonly current: () => boolean | Promise<boolean>; readonly now: () => number; readonly deadline: number;
   readonly credential: SessionCredential;
+  readonly production?: {
+    readonly governanceRoot: string; readonly protectedRoot: string; readonly parent: UrlParentAdoption;
+    readonly current: () => boolean; readonly policyBytes: Uint8Array;
+    readonly artifacts: Pick<ReturnType<typeof createUrlRunArtifacts>, 'stageOrderedDesignVerdict' | 'commitOrderedDesignVerdict'>;
+  };
   readonly sourceReader?: NonNullable<SessionToolsOptions['sourceReader']>;
   readonly launchHistory?: LaunchHistoryPort;
   readonly runDossier: (role: ViewRole) => UrlRunDossier;
@@ -70,6 +80,7 @@ export interface UrlRunSessionsSummary {
   readonly control: { readonly pendingCallbacks: number; readonly termination: 'settled' | 'Unknown' };
   readonly hosts: readonly { readonly role: ViewRole; readonly pendingInvocations: number | null; readonly termination: 'settled' | 'Unknown' }[];
   readonly audit: UrlSessionAuditSummary;
+  readonly machine?: { readonly identitySha256: string; readonly lifecycle: 'open' | 'retired' | 'Unknown' };
 }
 export interface UrlRunSessions {
   publish(role: ViewRole, event: Exclude<UrlSessionControlEvent, { readonly event: 'design-round-prepared' }>): Promise<boolean>;
@@ -89,10 +100,9 @@ const native = { prepare: prepareRestrictedUrlSession, host: startSessionHost, l
 export const startUrlRunSessions = (options: UrlRunSessionsOptions & { readonly launchHistory: LaunchHistoryPort }): Promise<UrlRunSessions> => {
   if (options.launchHistory === undefined) return Promise.reject(new Error('url-run-sessions-unavailable'));
   const design = options.plans.find(plan => plan.role === 'design');
-  // The installed catalogue's historical design profile uses a single
-  // whole-view reply. Package 256 requires a separately supported profile.
-  if (!design || !isSessionProfile(design.profile) || design.profile.id === SESSION_PROFILE_ID)
+  if (!design || !isOrderedDesignSessionProfile(design.profile))
     return Promise.reject(new Error('url-ordered-design-profile-unavailable'));
+  if (options.production === undefined) return Promise.reject(new Error('url-run-sessions-unavailable'));
   return start(options, native);
 };
 /** Owned component fixtures only; absent from package exports and CLI options. */
@@ -108,15 +118,29 @@ async function start(options: UrlRunSessionsOptions, ports: typeof native): Prom
     || plans.some(plan => plan.role !== 'author' && !/^[a-f0-9]{64}$/u.test(launchHistory.promptDigests[plan.role]))))
     throw new Error('url-run-sessions-unavailable');
   const clone = <T>(value: T): T => deepFreeze(parseBoundedJson(canonical(value), { maxBytes: 2_097_152, maxNodes: 65_536, maxDepth: 32 })) as T;
-  options = Object.freeze({ ...options, plans: Object.freeze(plans), record: clone(options.record), runtime: clone(options.runtime),
+  options = Object.freeze({ ...options, plans: Object.freeze(plans), record: clone(options.record), runtime: options.runtime,
     declaredClasses: Object.freeze([...options.declaredClasses]), sessionDirectories: Object.freeze({ ...options.sessionDirectories }),
     canaries: Object.freeze([...options.canaries]), screen: Object.freeze({ ...options.screen }) });
   const record = options.record, run = options.run;
+  const ordered = plans.some(plan => isOrderedDesignSessionProfile(plan.profile));
+  if (ordered && (ports !== native || options.production === undefined)) throw new Error('url-run-sessions-unavailable');
   const binding = { run: path.basename(run), sourceBinding: sourceBindingSha256(record.subject), policy: record.subject.screeningPolicy.sha256,
     provider: record.declared.agentProvider, model: record.declared.model };
   const budget = createUrlSessionBudget({ deadline: options.deadline, now: options.now,
     turnBudget: record.declared.agentTurnBudget, tokenBudget: record.declared.agentTokenBudget });
+  const cpu = ordered ? createUrlRunCpuBudget(Math.max(1, (options.deadline - options.now()) * 1000), () => {
+    const usage = process.cpuUsage(); return usage.user + usage.system;
+  }) : null;
+  let protectedReadBytes = 0;
+  const observeProtectedRead = (bytes: number): void => {
+    protectedReadBytes += bytes;
+    // A finite shared allowance over the four bounded session segments and
+    // their maximum 4096-event population; no provider/source body is counted.
+    if (!Number.isSafeInteger(bytes) || bytes < 0 || !Number.isSafeInteger(protectedReadBytes)
+      || protectedReadBytes > 4 * 16_777_216 * 4096) throw new Error('url-run-sessions-unavailable');
+  };
   let stopping = false, failure: Failure | null = null, questions = 0;
+  const hostHealth = new Map<ViewRole, () => boolean>();
   let designLaunch: UrlCommittedLaunchHistory | null = null;
   type PreparedDesign = { readonly receipt: UrlDesignDeliveryAuditRecord; readonly artifact: DesignArtifactPort };
   type PendingDesignReview = {
@@ -134,7 +158,8 @@ async function start(options: UrlRunSessionsOptions, ports: typeof native): Prom
     try { options.onFailure(reason); } catch { /* Failure never reopens the host. */ }
   };
   const current = async (): Promise<boolean> => {
-    if (stopping || failure !== null || !budget.current()) return false;
+    if (stopping || failure !== null || !budget.current() || cpu?.current() === false) return false;
+    if ([...hostHealth.values()].some(healthy => !healthy())) { fail('transport-unavailable'); return false; }
     try {
       const valid = await options.current() === true;
       if (!valid) { fail('binding-changed'); return false; }
@@ -213,8 +238,12 @@ async function start(options: UrlRunSessionsOptions, ports: typeof native): Prom
       scope: audit.scope(event.event === 'control-published' ? event.role : 'author'), payload: event }),
     ask: options.ask, onFailure: () => { fail('control-unavailable'); } });
   const hosts = new Map<ViewRole, SessionHost>(), processes = new Map<ViewRole, UrlSessionProcess>();
+  let machine: Awaited<ReturnType<typeof createUrlRunMachine>> | undefined;
+  let machineLifecycle: 'open' | 'retired' | 'Unknown' = 'open';
+  let orderedAttempt: Awaited<ReturnType<typeof startUrlOrderedAttempt>> | null = null;
   const waitForSamples = async (): Promise<boolean> => {
-    const settled = await Promise.all([...processes.values()].map(child => child.waitForSample()));
+    const settled = await Promise.all([...processes].filter(([role]) => role !== 'design' || !orderedAttempt?.terminalConsumed)
+      .map(([, child]) => child.waitForSample()));
     return settled.every(Boolean) && !stopping && failure === null;
   };
   const waitForProductSamples = async (): Promise<boolean> => budget.current() && (await waitForSamples()) && budget.current();
@@ -225,9 +254,11 @@ async function start(options: UrlRunSessionsOptions, ports: typeof native): Prom
   const probe = createServer(socket => socket.destroy()); probe.on('error', () => {});
   let stopped: Promise<UrlRunSessionsSummary> | undefined;
   const summary = (): Omit<UrlRunSessionsSummary, 'control' | 'hosts'> => deepFreeze({ failure, budget: budget.snapshot(),
-    roles: URL_ROLES.map(role => ({ ...captures.get(role)! })), audit: audit.summary() });
+    roles: URL_ROLES.map(role => ({ ...captures.get(role)! })), audit: audit.summary(),
+    ...(machine === undefined ? {} : { machine: { identitySha256: machine.identitySha256, lifecycle: machineLifecycle } }) });
   const stop = (): Promise<UrlRunSessionsSummary> => stopped ??= (async () => {
     stopping = true;
+    const retirement = machine?.close();
     preparedDesign = null;
     pendingDesignReview = null;
     control.close();
@@ -237,14 +268,27 @@ async function start(options: UrlRunSessionsOptions, ports: typeof native): Prom
       catch { return { role, pendingInvocations: null, termination: 'Unknown' as const }; }
     }));
     await Promise.allSettled(terminals);
+    if (retirement !== undefined) {
+      try { machineLifecycle = (await retirement).lifecycle; } catch { machineLifecycle = 'Unknown'; }
+    }
+    await orderedAttempt?.close();
     options.credential.close(); probe.close();
     const auditResult = await audit.close();
     return deepFreeze({ ...summary(), control: control.close(), hosts: hostResults, audit: auditResult });
   })();
   try {
+    if (ordered) {
+      const production = options.production!;
+      machine = await createUrlRunMachine({ ...production, originPolicySha256: options.originPolicySha256,
+        pin: record.subject.pinnedRevision.commit, runId: binding.run, runtime: options.runtime, plans,
+        deadline: options.deadline, now: options.now, current: production.current, reverify: options.current,
+        launch: role => processes.get(role), audit: event => audit.appendMachinePeer(event),
+        chargeNativeCpuMicroseconds: capacity => cpu!.charge('machine', capacity) });
+    }
     await new Promise<void>((resolve, reject) => { probe.once('error', reject); probe.listen(0, '127.0.0.1', resolve); });
     const address = probe.address(); if (address === null || typeof address === 'string') throw new Error();
     for (const plan of plans) {
+      if (ordered && plan.role === 'design') continue;
       const role = plan.role, scope = audit.scope(role);
       if (!(await current())) throw new Error();
       // Probe before binding the actual host: an empty probe connection to a
@@ -282,6 +326,7 @@ async function start(options: UrlRunSessionsOptions, ports: typeof native): Prom
         } finally { render.close(); }
       };
       const host = await ports.host({ profile: plan.profile, initialOrigin: plan.initialOrigin, declaredClasses: options.declaredClasses,
+        ...(machine === undefined ? {} : { machine: { broker: machine.transport(role, 'mcp-shim'), relay: machine.transport(role, 'inference-bridge') } }),
         current, credential: options.credential, brokerSocket: path.join(plan.view.brokerSocketDirectory, 'b.sock'),
         relaySocket: path.join(plan.view.relaySocketDirectory, 'r.sock'), subject: { binding: plan.profile.input.binding,
           project: 'project:syzygy', pin: record.subject.pinnedRevision.commit, principal: options.principal },
@@ -344,6 +389,7 @@ async function start(options: UrlRunSessionsOptions, ports: typeof native): Prom
           finally { if (review) pendingDesignReview = null; }
         } });
       hosts.set(role, host);
+      if (host.healthy !== undefined) hostHealth.set(role, host.healthy);
       const child = await ports.launch({ preparation, host }); processes.set(role, child);
       const capture = captures.get(role)!; capture.pid = child.pid; capture.startedAt = options.now();
       terminals.push(child.finished.then(async outcome => {
@@ -366,8 +412,46 @@ async function start(options: UrlRunSessionsOptions, ports: typeof native): Prom
         } catch { fail('provenance-unavailable'); throw new Error('url-run-sessions-unavailable'); }
       }
     }
-    probe.close();
+    if (!ordered) probe.close();
     const prepareDesignDelivery: UrlRunSessions['prepareDesignDelivery'] = async (product, expectedProduct, sitePath, round, artifact) => {
+      if (ordered) {
+        if (!(await current()) || launchHistory === undefined || machine === undefined || !isUrlDesignProductLeaseOpen(product)) return null;
+        if (orderedAttempt !== null) {
+          if (!orderedAttempt.terminalConsumed) return null;
+          hostHealth.delete('design');
+          await orderedAttempt.close();
+          orderedAttempt = null;
+        }
+        const work = cpu!.holdOrdered(39 * 64_000_000);
+        if (work === null) return null;
+        try {
+          const plan = plans.find(candidate => candidate.role === 'design')!;
+          const address = probe.address(); if (address === null || typeof address === 'string') throw new Error();
+          orderedAttempt = await startUrlOrderedAttempt({ run, pin: record.subject.pinnedRevision.commit,
+            principal: options.principal, runtime: options.runtime, plan, machine, audit, budget,
+            artifacts: options.production!.artifacts, credential: options.credential, screen: options.screen,
+            policyBytes: options.production!.policyBytes, declaredClasses: options.declaredClasses,
+            originPolicySha256: options.originPolicySha256, canaries: options.canaries, probePort: address.port,
+            deadline: options.deadline, now: options.now, current, waitForSamples,
+            launched: (child, host) => {
+              hosts.set('design', host); processes.set('design', child);
+              if (host.healthy !== undefined) hostHealth.set('design', host.healthy);
+              const capture = captures.get('design')!; capture.pid = child.pid; capture.startedAt = options.now();
+              capture.outcome = 'Unknown'; capture.finishedAt = 'Unknown';
+              terminals.push(child.finished.then(async outcome => {
+                capture.outcome = outcome; capture.finishedAt = options.now();
+                try { await audit.append({ kind: 'launch-terminal', role: 'design', scope: audit.scope('design'), payload: outcome }); }
+                catch { fail('audit-unavailable'); }
+                if (!stopping && !orderedAttempt?.terminalConsumed) fail('role-ended');
+              }, () => { fail('role-ended'); }));
+            },
+            compatiblePromptSha256: launchHistory.promptDigests.design, firstLaunch: designLaunch,
+            registerLaunch: async committed => { await launchHistory.register(committed, waitForSamples); designLaunch = committed; },
+            expectedProduct, sitePath, round, reproduce: artifact.reproduce, work: { ...work, observeProtectedRead } });
+          preparedDesign = { receipt: orderedAttempt.delivery.receipt, artifact };
+          return orderedAttempt.delivery;
+        } catch { work.release(); fail('launch-unavailable'); return null; }
+      }
       if (designLaunch === null || !(await current())) return null;
       try {
         const result = await audit.commitDesignDelivery({ product, expectedProduct, launch: designLaunch, sitePath, round, run,

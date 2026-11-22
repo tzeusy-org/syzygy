@@ -337,6 +337,8 @@ interface PreparedUrlRun {
   readonly current: () => boolean; readonly sessionCurrent: () => Promise<boolean>; readonly canaries: readonly string[];
   readonly directories: Readonly<Record<ViewRole, string>>; readonly auditDirectory: string;
   readonly originPolicySha256: string;
+  readonly basePolicyBytes: Uint8Array;
+  readonly machine: { readonly governanceRoot: string; readonly protectedRoot: string; readonly parent: UrlParentAdoption };
   readonly openReader: ReturnType<typeof bindUrlSourceReader>;
   readonly initializedCoreBytes: Uint8Array;
   readonly effectiveDeclaration: NonNullable<Parameters<typeof createUrlRunArtifacts>[0]['effectiveDeclaration']>;
@@ -382,6 +384,39 @@ async function prepareSupervisorArtifacts(run: string, prepared: PreparedUrlRun,
   await artifacts.registerInitial(prepared.initial);
   if (!(await prepared.sessionCurrent())) throw new Error('url-supervisor-unavailable');
   return artifacts;
+}
+
+/** Compose only root-created preparation, checked producers and the host-owned
+ * credential. Saved supervisor JSON supplies no live adoption or peer grant. */
+async function startPreparedSupervisor(state: SupervisorState, prepared: PreparedUrlRun, artifacts: UrlArtifacts,
+  screen: Screen, ports: CliPorts): Promise<UrlRunSessions> {
+  if (!(await prepared.sessionCurrent())) throw new Error('url-supervisor-unavailable');
+  const compatible = (role: 'inventory' | 'fidelity' | 'design'): string => {
+    const selected = prepared.initial.sessions.sessions.filter(session => role === 'inventory'
+      ? session.role === 'inventory' : session.role === 'review' && session.kind === role);
+    if (selected.length !== 1) throw new Error('url-supervisor-unavailable');
+    return selected[0]!.promptSha256;
+  };
+  const promptDigests = { inventory: compatible('inventory'), fidelity: compatible('fidelity'), design: compatible('design') };
+  const loaded = await loadSessionCredential({ environment: {
+    ...(process.env['CLAUDE_CODE_OAUTH_TOKEN'] === undefined ? {} : { CLAUDE_CODE_OAUTH_TOKEN: process.env['CLAUDE_CODE_OAUTH_TOKEN'] }),
+    ...(process.env['ANTHROPIC_API_KEY'] === undefined ? {} : { ANTHROPIC_API_KEY: process.env['ANTHROPIC_API_KEY'] }),
+  }, credentialFile: path.join(os.homedir(), '.claude', '.credentials.json'), now: ports.now ?? Date.now });
+  if (!loaded.ok) throw new Error('url-supervisor-unavailable');
+  try {
+    return await startUrlRunSessions({ run: state.run, record: prepared.record, screen: prepared.screen,
+      plans: prepared.roles, runtime: prepared.runtime, declaredClasses: prepared.effectiveDeclaration.declaration.plannedClasses,
+      originPolicySha256: prepared.originPolicySha256, auditParent: prepared.auditDirectory, auditName: 'sessions',
+      principal: prepared.record.declared.operator, sessionDirectories: prepared.directories, canaries: prepared.canaries,
+      current: prepared.sessionCurrent, now: ports.now ?? Date.now, deadline: state.briefIssuedAt + state.deadlineSeconds * 1000,
+      credential: loaded.credential, sourceReader: prepared.openReader,
+      production: { ...prepared.machine, current: prepared.current, policyBytes: prepared.basePolicyBytes, artifacts },
+      launchHistory: { promptDigests, register: artifacts.registerLaunchHistory }, runDossier: artifacts.runDossier,
+      artifactOrigins: artifacts.artifactOrigins, dossierOrigins: artifacts.dossierOrigins,
+      toolReceipt: artifacts.toolReceipt, toolReceiptCommitted: artifacts.committed, ask: askUrlSessionQuestion,
+      onFailure: reason => { screen.event(`checked session stopped: ${reason}`); },
+    });
+  } catch { loaded.credential.close(); throw new Error('url-supervisor-unavailable'); }
 }
 const boundedCanonical = (value: unknown): string => encodeCanonicalJson(value, { maxBytes: 2_097_152, maxNodes: 65_536, maxDepth: 32 });
 function metadataAdmitted(value: unknown, screen: DossierScreen): boolean {
@@ -754,6 +789,8 @@ async function setUp(options: Options, ports: CliPorts, screen: Screen): Promise
   if (brief.doc === null) return 'The brief producer returned no supported bounded result.';
   preparedUrlRuns.set(run, { record, screen: runScreen.screen, runtime: runtime.runtime, renderer, roles: rolePlans.roles, origins,
     current: currentRun, sessionCurrent, directories, canaries, auditDirectory: attemptDirectory, originPolicySha256: origin.binding.sha256,
+    basePolicyBytes: Uint8Array.from(policy.bytes),
+    machine: { governanceRoot: path.join(policyRoot, '.syzygy'), protectedRoot: path.join(attemptDirectory, 'machine-lifecycle'), parent: adoption },
     openReader, initializedCoreBytes: Buffer.from(baseText), effectiveDeclaration: {
       declaration: declaration.declaration, bytes: Buffer.from(declaration.text), context,
     }, initial: { brief: brief.doc as unknown as BriefReport, sessions: all.report } });
@@ -977,6 +1014,7 @@ function cleanupConfirmed(summary: UrlRunSessionsSummary): boolean {
     && role.outcome.toolTermination === 'settled' && role.outcome.pendingInvocations === 0)
     && summary.hosts.length === 4 && summary.hosts.every(host => host.termination === 'settled' && host.pendingInvocations === 0)
     && summary.control.termination === 'settled' && summary.control.pendingCallbacks === 0
+    && (summary.machine === undefined || summary.machine.lifecycle === 'retired')
     && !summary.audit.poisoned && summary.audit.tail === 'durable-prefix' && summary.audit.termination === 'closed';
 }
 

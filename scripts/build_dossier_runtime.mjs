@@ -18,9 +18,9 @@ const hash = bytes => createHash('sha256').update(bytes).digest('hex');
 const worker = 'packages/polaris-dossier/src/git-memory-worker.ts';
 const renderer = 'apps/three-surface-poc/src/polaris-generation/dossier-site.ts';
 const profileSources = ['session-profile', 'session-launch', 'session-controller', 'session-egress-policy', 'session-response',
-  'session-tools', 'session-host', 'session-relay', 'session-broker', 'session-url-view', 'session-credential',
+  'session-tools', 'session-host', 'session-machine-transport', 'session-relay', 'session-broker', 'session-url-view', 'session-credential',
   'session-control', 'session-peer', 'url-role-plan', 'url-session-budget', 'url-session-audit', 'url-origin-ledger', 'url-run-origins', 'url-source-reader', 'git-object-reader',
-  'url-run-sessions', 'url-run-artifacts', 'url-product-reads', 'url-operation-products', 'url-question-ui', 'url-supervisor-state', 'url-launch-history', 'url-design-view',
+  'url-run-sessions', 'url-run-machine', 'url-run-ordered-attempt', 'url-run-cpu-budget', 'url-ordered-design-host', 'url-run-artifacts', 'url-check-product-shape', 'url-product-reads', 'url-operation-products', 'url-question-ui', 'url-supervisor-state', 'url-launch-history', 'url-design-view',
   'url-design-product', 'url-design-delivery', 'url-ordered-design-request', 'url-ordered-design-audit', 'url-ordered-design-writer',
   'url-machine-instance', 'url-machine-lifecycle', 'url-machine-store', 'url-machine-peer', 'url-ordered-design-bounds', 'url-ordered-design-session', 'url-ordered-design-work-budget', 'url-rendered-site-screen', 'url-rendered-source-proof', 'url-stored-render', 'url-dossier-result', 'url-ordered-render-value',
   'reverify', 'brief', 'inventory', 'review', 'review-packet', 'session-handover', 'session-statement', 'waiting-sessions', 'render', 'check',
