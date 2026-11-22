@@ -239,6 +239,13 @@ describe('host-owned URL origin ledger', () => {
       if (sequence.includes('verify')) throw new Error('owned sample expired');
     })).rejects.toThrow('owned sample expired');
     expect(sequence).toEqual(['sample', 'verify', 'sample']);
+    sequence.length = 0;
+    const cancelled = new AbortController();
+    await expect(verifyUrlRenderedSources({ ...input, signal: cancelled.signal }, record, ledger, async () => {
+      sequence.push('sample');
+      if (sequence.includes('verify')) cancelled.abort();
+    })).rejects.toThrow('url-rendered-source-proof-unavailable');
+    expect(sequence).toEqual(['sample', 'verify', 'sample']);
     const last = sources.at(-1)!;
     const incorrect = [sources.slice(0, -1), [...sources].reverse(), [...sources, last],
       [...sources.slice(0, -1), { ...last, body: 'Own different tail.' }],
