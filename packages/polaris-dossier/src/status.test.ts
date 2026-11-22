@@ -24,9 +24,12 @@ const SUBJECT: RunSubject = {
 
   workItem: { identity: null, reason: NO_WORK_ITEM_REASON },
 };
+const RUN_ID = 'run-f2a98f0e1d12c491f3ec398a387169de';
+const RISK = "The dossier authoring session's own reads of the raw clone are unscreened. A secret from that clone may reach the run's declared provider.";
 let runDir: string;
 beforeEach(() => {
-  runDir = tempDir('dossier-status-');
+  runDir = path.join(tempDir('dossier-status-'), RUN_ID);
+  fs.mkdirSync(runDir);
   const parsed = parseRunConfig(JSON.stringify(CONFIG));
   if (!parsed.ok) throw new Error('fixture configuration refused');
   fs.writeFileSync(path.join(runDir, 'run.json'), encodeRunRecord(parsed.config, SUBJECT));
@@ -54,6 +57,7 @@ describe('status (REQ-polaris-generation-033)', () => {
       route: 'none: the dossier commands serve no route, accept no network request and hold no credential that authenticates to Syzygy',
       principal: { name: 'Tzeusy', declaredBy: 'operator', credentialIdentity: 'Unknown' },
       subject: SUBJECT,
+      rawReadDisclosure: { authorHandoff: 'Unknown', label: 'Unknown', risk: RISK, uncapturedTransmissions: 'Unknown' },
       state: 'configured',
       configuration: {
         declaredBy: 'operator',
@@ -145,8 +149,32 @@ describe('status (REQ-polaris-generation-033)', () => {
 
   it('writes nothing', () => {
     const before = snapshot(runDir);
-    runStatus(runDir);
+    const record = fs.readFileSync(path.join(runDir, 'run.json'));
+    const result = runStatus(runDir);
+    expect(result.ok && result.report.rawReadDisclosure).toEqual({
+      authorHandoff: 'Unknown', label: 'Unknown', risk: RISK, uncapturedTransmissions: 'Unknown',
+    });
     expect(snapshot(runDir)).toEqual(before);
+    expect(fs.readFileSync(path.join(runDir, 'run.json'))).toEqual(record);
+  });
+
+  it.each([
+    { authorHandoff: 'not-reached', provider: 'openai', projected: 'not-reached', label: 'Inferred' },
+    { authorHandoff: 'reached', provider: 'openai', projected: 'reached', label: 'Inferred' },
+    { authorHandoff: 'unknown', provider: 'openai', projected: 'unknown', label: 'Unknown' },
+    { authorHandoff: 'reached', provider: 'wrong-provider', projected: 'Unknown', label: 'Unknown' },
+  ])('reports the raw-read risk and $projected handoff for $authorHandoff with $provider without rewriting the record', ({ authorHandoff, provider, projected, label }) => {
+    const file = path.join(runDir, 'raw-read-disclosure.json');
+    const bytes = JSON.stringify({ schemaVersion: 'polaris-dossier-raw-read-disclosure/1', runId: RUN_ID, declaredProvider: provider, authorHandoff });
+    fs.writeFileSync(file, bytes);
+    const before = snapshot(runDir);
+    const result = runStatus(runDir);
+    expect(result.ok && result.report).toMatchObject({
+      rawReadDisclosure: { authorHandoff: projected, label, risk: RISK, uncapturedTransmissions: 'Unknown' },
+      unrecognizedEntries: [],
+    });
+    expect(snapshot(runDir)).toEqual(before);
+    expect(fs.readFileSync(file, 'utf8')).toBe(bytes);
   });
 
   it.each([

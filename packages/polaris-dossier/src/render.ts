@@ -25,6 +25,7 @@ import type { Outcome } from './outcome.js';
 import { designReviewOfRecord, latestPassedDraft, reviewOfRecord, type DesignReviewOfRecord, type ReviewDeps, type ReviewOfRecord } from './review.js';
 import type { ReverifyRefusal } from './reverify.js';
 import { NO_WORK_ITEM_REASON } from './run-record.js';
+import { describeRawReadDisclosure, RAW_READ_DISCLOSURE_REFUSAL, readRawReadDisclosure } from './raw-read-disclosure.js';
 import { CLASS_NOT_CONSENTED, unconsentedClass, unconsentedText } from './class-gate.js';
 import { placementSubjectOf, screenLoaderOf, type DossierScreen, type ScreenExclusion } from './screen.js';
 import { readBriefRecord } from './run-dir.js';
@@ -62,6 +63,7 @@ import { assertUrlDesignRenderContinuationCurrent, type UrlDesignRenderContinuat
 
 export const RENDER_REPORT_FORMAT = 'polaris-dossier-render/1';
 export const NO_RENDERER = 'no renderer wired: the dossier pages are drawn by the multi-page dossier renderer of apps/three-surface-poc, which the `syzygy` composition root injects; this caller injected none, so nothing is rendered';
+const RAW_READ_DISCLOSURE_ID = 'raw-read-disclosure';
 const WITHHELD_TEXT = '[withheld: a secret detector matches this text]';
 const SECRET_PATH = 'a path a secret detector matches (not shown)';
 
@@ -105,7 +107,7 @@ export interface ProducedSiteInput {
 }
 export const RENDER_PRODUCER_MILLISECONDS = 5000;
 
-export type RenderStage = 'renderer' | 'run' | 'reverify' | 'not-briefed' | 'deadline' | 'draft' | 'screen' | 'object-read' | 'rederive' | 'sources' | 'render' | 'write';
+export type RenderStage = 'renderer' | 'run' | 'reverify' | 'disclosure' | 'not-briefed' | 'deadline' | 'draft' | 'screen' | 'object-read' | 'rederive' | 'sources' | 'render' | 'write';
 
 export interface RenderRefusal {
   readonly command: 'render';
@@ -192,6 +194,8 @@ async function render(runDir: string, deps: RenderDeps, storedSite?: StoredUrlRe
     try {
       const stored = readEffectiveRunRecord(runDir, deps.sources.effectiveRunDeclaration);
       if (!stored.ok && stored.legacy) return refuse('run', stored.reason);
+      if (stored.ok && deps.renderer !== undefined && readRawReadDisclosure(runDir, stored.core.declared.agentProvider) === null)
+        return refuse('disclosure', RAW_READ_DISCLOSURE_REFUSAL);
     } catch { /* existing missing-run / missing-renderer handling below */ }
   }
   if (deps.renderer === undefined) return refuse('renderer', NO_RENDERER);
@@ -199,6 +203,15 @@ async function render(runDir: string, deps: RenderDeps, storedSite?: StoredUrlRe
   if (!opened.ok) return refuse(opened.stage, opened.reason, { ...(opened.reasons ? { reasons: opened.reasons } : {}), ...(opened.refusals ? { refusals: opened.refusals } : {}) });
   const { run, runId, subject, declared } = opened;
   const urlMode = opened.effective?.kind === 'url';
+  const rawRead = readRawReadDisclosure(run, declared.agentProvider);
+  if (rawRead === null) return refuse('disclosure', RAW_READ_DISCLOSURE_REFUSAL);
+  const disclosed = describeRawReadDisclosure(rawRead);
+  const transmissionScope = urlMode
+    ? 'Checked URL relay facts apply to the relay’s captured traffic. Transmissions outside those captures are'
+    : 'Transmissions from the operator’s authoring tool are';
+  const rawReadDisclosure: LocalDisclosureItem = { id: RAW_READ_DISCLOSURE_ID, label: disclosed.label,
+    text: `${disclosed.risk} The run records the author handoff as ${disclosed.authorHandoff}. ${transmissionScope} ${disclosed.uncapturedTransmissions}.`,
+  };
   if (continuationSource !== undefined && !urlMode) return refuse('reverify', 'The protected design continuation requires a URL run.');
   if (storedSite !== undefined && !urlMode) return refuse('reverify', 'Stored site reproduction requires a protected URL run.');
   const products = deps.productReads;
@@ -258,7 +271,7 @@ async function render(runDir: string, deps: RenderDeps, storedSite?: StoredUrlRe
   const fidelityContinuation = review.counts
     ? continuationOf(run, 'fidelity', review.session, review.number, review.packetSha256, review.sessionId.value, products) : null;
   const input = buildLocalInput({ opened, doc, derived, review, screen, credential, algorithm: reader.algorithm,
-    briefRecord, fidelityContinuation });
+    briefRecord, fidelityContinuation, rawReadDisclosure });
   if (!input.ok) return refuse(input.stage, input.reason);
   // URL renders read through the protected product bridge. Derived records
   // and independently read manifest bodies need producer receipts there before
@@ -310,11 +323,24 @@ async function render(runDir: string, deps: RenderDeps, storedSite?: StoredUrlRe
     return refuse('render', 'stating the rendered-design review in the review-status region changed the pages outside that region, so the review of record cannot be decided from them');
   }
   // The first RFC7-20 condition, checked on the output itself (dossier spec v1.5): every page carries the one sentence and its machine
-  // disclosure, the appendix carries the disclosure in human form, and the machine view exists.
-  const pagesMissing = [...files].filter(([file, html]) => file.endsWith('.html') && !(html.includes('class="run-sentence"') && html.includes(' data-disclosure-ids="'))).map(([file]) => file);
+  // disclosure, the appendix carries the disclosure in human form, and the machine view has the same raw-read item.
+  const pagesMissing = [...files].filter(([file, html]) => {
+    if (!file.endsWith('.html')) return false;
+    const ids = / data-disclosure-ids="([^"]*)"/u.exec(html)?.[1]?.split(' ');
+    return !html.includes('class="run-sentence"') || !ids?.includes(RAW_READ_DISCLOSURE_ID);
+  }).map(([file]) => file);
   const appendix = files.get('appendix.html');
-  if (pagesMissing.length > 0 || appendix === undefined || !appendix.includes('class="run-disclosure"') || !files.has('machine.json')) {
-    return refuse('render', `the rendered site does not carry the run disclosure: the one sentence and machine form on every page, the appendix and the machine view (${[...pagesMissing, ...(appendix === undefined ? ['appendix.html'] : [])].join(', ') || 'machine.json'})`);
+  const appendixItem = `data-disclosure-id="${RAW_READ_DISCLOSURE_ID}" data-label="${rawReadDisclosure.label}">${rawReadDisclosure.text.replaceAll("'", '&#39;')}`;
+  if (!appendix?.includes('class="run-disclosure"') || !appendix.includes(appendixItem))
+    pagesMissing.push('appendix.html');
+  // The design packet above already verified the machine view’s JSON and serialization.
+  const machine: { readonly disclosure?: unknown } = JSON.parse(files.get('machine.json')!);
+  const matching = list(machine.disclosure).filter(item => isRecord(item) && item['id'] === RAW_READ_DISCLOSURE_ID);
+  const item = matching[0];
+  if (matching.length !== 1 || !isRecord(item) || item['text'] !== rawReadDisclosure.text || item['label'] !== rawReadDisclosure.label)
+    pagesMissing.push('machine.json');
+  if (pagesMissing.length > 0) {
+    return refuse('render', `the rendered site does not carry the run disclosure: the one sentence and machine form on every page, the appendix and the machine view (${pagesMissing.join(', ')})`);
   }
   // The code-content exemption (policy version 3) and the project-documentation exemption (version 5) admitted some bodies without the
   // active-content scan. Each holds at these pages only while they meet the renderCondition (version 7's text); where that cannot be confirmed,
@@ -359,7 +385,7 @@ async function render(runDir: string, deps: RenderDeps, storedSite?: StoredUrlRe
       const fidelityContinuation = fidelity.counts
         ? continuationOf(run, 'fidelity', fidelity.session, fidelity.number, fidelity.packetSha256, fidelity.sessionId.value, products) : null;
       const rebuilt = buildLocalInput({ opened, doc: draft, derived: rederived, review: fidelity, screen, credential, algorithm: reader.algorithm,
-        briefRecord: protectedProductRecord(products!, run, RUN_LAYOUT.briefRecord), fidelityContinuation });
+        briefRecord: protectedProductRecord(products!, run, RUN_LAYOUT.briefRecord), fidelityContinuation, rawReadDisclosure });
       if (!rebuilt.ok || signal.aborted
         || !equalOrderedRenderValue(pendingInput, { local: rebuilt.local, sources: rebuilt.sources })) return null;
       const pending = draw(rebuilt.local, rebuilt.sources);
@@ -415,6 +441,10 @@ async function render(runDir: string, deps: RenderDeps, storedSite?: StoredUrlRe
   }
 
   if (urlMode && !(await urlRendererCurrent(installed!))) return refuse('renderer', 'The bound URL renderer changed before site storage.');
+  if (readRawReadDisclosure(run, declared.agentProvider)?.authorHandoff !== rawRead.authorHandoff) {
+    logRun = undefined;
+    return refuse('disclosure', RAW_READ_DISCLOSURE_REFUSAL);
+  }
   const productLeaseCurrent = (): boolean => products?.isLeaseOpen() === true
     && (checkedDesign === undefined || Date.now() < checkedDesign.deadline);
   const ensureStorageCurrent = (): void => {
@@ -531,6 +561,7 @@ interface BuildInputs {
   readonly algorithm: 'sha1' | 'sha256';
   readonly briefRecord: Readonly<Record<string, unknown>> | undefined;
   readonly fidelityContinuation: Continuation | null;
+  readonly rawReadDisclosure: LocalDisclosureItem;
   readonly designContinuation?: Continuation | null;
 }
 
@@ -562,7 +593,7 @@ export function languageOf(repositoryPath: string): string {
 }
 
 export function buildLocalInput(inputs: BuildInputs): Built {
-  const { opened, doc, derived, review, design, screen, credential, algorithm, briefRecord, fidelityContinuation, designContinuation } = inputs;
+  const { opened, doc, derived, review, design, screen, credential, algorithm, briefRecord, fidelityContinuation, designContinuation, rawReadDisclosure } = inputs;
   const { run, runId, subject, declared } = opened;
   const pinned = subject.pinnedRevision.commit;
   const clean = (value: string): string => (screen.screenBody(value) === 'secret-detector-match' ? WITHHELD_TEXT : value);
@@ -1043,7 +1074,7 @@ export function buildLocalInput(inputs: BuildInputs): Built {
     : { state: 'unknown', reason: 'missing-declaration', why };
 
   const quotationCount = [...blocks.values()].reduce((n, block) => n + block.segments.filter((part) => part.kind === 'quotation').length, 0);
-  const disclosure = disclosureItems({ opened, draftLayer, executionList, flags, quotationCount, credential, clean, briefRecord });
+  const disclosure = disclosureItems({ opened, draftLayer, executionList, flags, quotationCount, credential, clean, briefRecord, rawReadDisclosure });
   const reviewStatus: LocalDisclosureItem[] = [
     review.counts
       ? { id: 'review-status/fidelity', text: `Fidelity review: one counts, bound to packet ${review.packetSha256} rebuilt at this render; its verdict, ${review.verdict.readiness}, is the review session's.${fidelityContinuation!.continuing ? ' Its reviewer continued across revisions (see the review page).' : ''}`, label: 'Inferred' }
@@ -1130,16 +1161,18 @@ const UNDERSTANDING_HEADINGS: Readonly<Record<(typeof UNDERSTANDING_ITEMS)[numbe
 function disclosureItems(inputs: {
   readonly opened: Extract<OpenedRun, { ok: true }>; readonly draftLayer: LocalDraftLayer; readonly executionList: readonly Readonly<Record<string, unknown>>[];
   readonly flags: ExecutionFlags; readonly quotationCount: number; readonly credential: CredentialStepResult; readonly clean: (value: string) => string; readonly briefRecord: Readonly<Record<string, unknown>> | undefined;
+  readonly rawReadDisclosure: LocalDisclosureItem;
 }): LocalDisclosureItem[] {
-  const { opened, draftLayer, executionList, flags, quotationCount, credential, clean, briefRecord: brief } = inputs;
+  const { opened, draftLayer, executionList, flags, quotationCount, credential, clean, briefRecord: brief, rawReadDisclosure } = inputs;
   const { subject, declared } = opened;
   const rule = isRecord(brief) && isRecord(brief['executionRule']) ? brief['executionRule'] : {};
   const commands = executionList.map((entry) => clean(text(entry['command']) ?? ''));
   const items: LocalDisclosureItem[] = [
-    { id: 'mode', text: 'Authoring mode: operator-agent. The operator\'s own agent session read the clone and wrote the draft; Syzygy pinned the revision, checked the draft and rendered these pages.', label: null },
+    { id: 'mode', text: 'Authoring mode is operator-agent. The operator\'s own agent session supplies the draft. Syzygy pinned the revision, checked the draft and rendered these pages.', label: null },
     { id: 'agent', text: `Agent tool ${declared.agentTool} ${declared.agentToolVersion}, provider ${declared.agentProvider}, model ${declared.model}${declared.modelVersion === null ? ' (version not shown by the agent tool)' : ` ${declared.modelVersion}`}, as the operator declared them; no provider-reported model version exists in this mode.`, label: 'Inferred' },
     { id: 'declared-content-classes', text: `Eligible content classes: ${subject.contentClasses.join(', ')}; declarations, not an account of what the agent transmitted.`, label: 'Inferred' },
-    { id: 'source-screening-boundary', text: 'SEC-2 and SEC-5 require the agent to send content only to its declared provider and never send secrets. Syzygy screens its own reads and artifacts; actual agent transmissions and compliance are not observed.', label: null },
+    { id: 'source-screening-boundary', text: 'Syzygy screens the Git objects and artifacts it reads through its checked flow. SEC-2 and SEC-5 govern that flow.', label: null },
+    rawReadDisclosure,
     { id: 'read-account', text: 'The agent\'s account of what it read is its own report (Discovery): self-reported, never complete or verified.', label: 'Inferred' },
     rule['arm'] === 'permitting'
       ? { id: 'execution-rule', text: `The brief permitted building and running the observed project from the authoring session, under the owner's execution choice it names (who entered the choice is the operator's declaration). What that costs, as D9 states: ${isRecord(rule['cost']) ? text(rule['cost']['text']) ?? '' : ''}`, label: 'Inferred' }

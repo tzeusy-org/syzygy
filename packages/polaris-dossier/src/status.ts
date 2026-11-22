@@ -4,6 +4,7 @@ import { parseBoundedJson } from '@syzygy/polaris-generation-core/live';
 import { briefIssuedAt } from './check.js';
 import { USAGE_NOT_RECORDED } from './close.js';
 import { type RecordedRunConfig } from './run-record.js';
+import { describeRawReadDisclosure, readRawReadDisclosure } from './raw-read-disclosure.js';
 import { effectiveUrlProjection, readEffectiveRunRecord, URL_MODE_MARKERS, URL_RUN_SIDECAR, type EffectiveRunAuthority } from './effective-run-record.js';
 import type { UrlRunDeclaration } from './url-run-record.js';
 import { REVIEW_PACKET_DIR, REVIEW_VERDICT_FILE, REVISION_FILE, RUN_LAYOUT } from './state-directory.js';
@@ -32,6 +33,7 @@ export interface StatusReport {
    * on and the absent work item. Which revision the run was pinned to is shown, not verified, here; later steps verify it. */
   readonly subject: RecordedRunConfig['subject'] | (Omit<RecordedRunConfig['subject'], 'workItem'> & { readonly workItem: UrlRunDeclaration['workItem'] });
   readonly effectiveRun?: ReturnType<typeof effectiveUrlProjection>;
+  readonly rawReadDisclosure: ReturnType<typeof describeRawReadDisclosure>;
   readonly state: RunState;
   readonly configuration: {
     readonly declaredBy: 'operator' | 'URL run configuration';
@@ -163,6 +165,7 @@ export function runStatus(runDir: string, now: () => number = Date.now, authorit
       principal: record.record.principal,
       subject: url === undefined ? record.record.subject : { ...record.record.subject, workItem: url.workItem },
       ...(url === undefined ? {} : { effectiveRun: effectiveUrlProjection(read.core, url) }),
+      rawReadDisclosure: describeRawReadDisclosure(readRawReadDisclosure(run, declared.agentProvider)),
       state,
       configuration: { declaredBy: url === undefined ? 'operator' : 'URL run configuration', label: 'Inferred', values,
         modelVersionProvider: url === undefined ? record.record.modelVersionProvider : 'Unknown; no supported provider-reported model/version capture is bound to this declaration' },

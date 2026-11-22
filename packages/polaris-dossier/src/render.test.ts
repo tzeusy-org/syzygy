@@ -50,6 +50,10 @@ const RENDERER_MODULE = pathToFileURL(path.join(REAL_ROOT, 'apps/three-surface-p
 const NOW = Date.UTC(2026, 9, 7, 12, 0, 0);
 const LATER = NOW + 60_000;
 const RUN_ID = `run-${'f'.repeat(32)}`;
+const RISK = "The dossier authoring session's own reads of the raw clone are unscreened. A secret from that clone may reach the run's declared provider.";
+const RESTART_DISCLOSURE = 'REQ-polaris-generation-033 requires a valid raw-read disclosure before this step. Start a new run with syzygy dossier init or syzygy polaris <url>.';
+const rawReadCompanion = (authorHandoff: 'not-reached' | 'reached' | 'unknown', runId = RUN_ID, declaredProvider = 'anthropic'): string =>
+  JSON.stringify({ schemaVersion: 'polaris-dossier-raw-read-disclosure/1', runId, declaredProvider, authorHandoff });
 
 const KESTREL = [
   '/* Kestrel keeps every key in memory.',
@@ -218,6 +222,7 @@ async function started(doc: Doc): Promise<{ run: string; checked: Awaited<Return
   }));
   if (!parsed.ok) throw new Error('fixture configuration refused');
   fs.writeFileSync(path.join(run, 'run.json'), encodeRunRecord(parsed.config, subject(clone)));
+  fs.writeFileSync(path.join(run, 'raw-read-disclosure.json'), rawReadCompanion('not-reached'));
   const brief = await issueBrief(run, { sources: sources(), now: () => NOW, loadScreen: async () => buildDossierScreen(fixturePolicy, true, null, fixtureVisibility) });
   if (!brief.ok) throw new Error(`fixture brief refused: ${brief.refusal.reason}`);
   fs.mkdirSync(path.join(run, 'drafts'), { recursive: true });
@@ -296,6 +301,7 @@ async function preparedUrlRender() {
   const record = recordRunConfig(config.config, { ...subject(clone), screeningPolicy: policyBinding,
     visibility: { value: 'private', source: 'declaration', declaredBy: 'owned timer fixture', label: 'Inferred' } });
   const core = encodeRunRecord(record.declared, record.subject); write('run.json', core);
+  write('raw-read-disclosure.json', rawReadCompanion('reached'));
   const roles = ['author', 'inventory', 'fidelity', 'design'] as const;
   const fixed = [{ id: 'origin:policy', kind: 'policy', bytes: bytes({ policy: policyBinding }) },
     { id: 'origin:control', kind: 'run-control', bytes: bytes({ run: RUN_ID }) },
@@ -436,7 +442,13 @@ describe('render', () => {
       expect(reads.isLeaseOpen()).toBe(true);
       expect(fs.existsSync(path.join(f.run, 'site'))).toBe(false);
       admit(true);
-      expect(await rendered).toMatchObject({ ok: true });
+      const result = await rendered;
+      if (!result.ok) throw Error(result.refusal.reason);
+      const machine = JSON.parse(readSite(result.report.site).get('machine.json')!);
+      expect(machine.disclosure).toContainEqual({ id: 'raw-read-disclosure', label: 'Inferred',
+        text: `${RISK} The run records the author handoff as reached. Checked URL relay facts apply to the relay’s captured traffic. Transmissions outside those captures are Unknown.` });
+      expect(machine.disclosure).toContainEqual({ id: 'url-capture-scope', label: 'Unknown',
+        text: expect.stringContaining('capture completeness are Unknown') });
     } finally { admit(false); await rendered; reads.close(); vi.useRealTimers(); }
   }, 60_000);
 
@@ -777,11 +789,59 @@ describe('render', () => {
     expect([...files.values()].join('')).not.toContain('LEGACY-LAUNCH-SHOULD-NOT-RENDER'); expect(fs.readFileSync(file, 'utf8')).toBe(legacy);
   });
 
-  it('keeps actual agent transmissions unobserved in the disclosure', async () => {
+  it('renders the raw-read risk without asserting a read or send when the run records no author handoff', async () => {
     const run = await prepared(); const result = await renderRun(run, renderDeps()); if (!result.ok) throw new Error(result.refusal.reason);
-    const machine = JSON.parse(readSite(result.report.site).get('machine.json')!);
-    expect(machine.disclosure).toContainEqual({ id: 'source-screening-boundary', text: 'SEC-2 and SEC-5 require the agent to send content only to its declared provider and never send secrets. Syzygy screens its own reads and artifacts; actual agent transmissions and compliance are not observed.', label: null });
+    const files = readSite(result.report.site);
+    const machine = JSON.parse(files.get('machine.json')!);
+    expect(machine.disclosure).toContainEqual({ id: 'source-screening-boundary', text: 'Syzygy screens the Git objects and artifacts it reads through its checked flow. SEC-2 and SEC-5 govern that flow.', label: null });
+    expect(machine.disclosure).toContainEqual({ id: 'raw-read-disclosure', label: 'Inferred',
+      text: `${RISK} The run records the author handoff as not-reached. Transmissions from the operator’s authoring tool are Unknown.` });
+    const appendix = files.get('appendix.html')!;
+    expect(appendix).toMatch(/data-disclosure-id="raw-read-disclosure"[^>]*>.*?own reads of the raw clone are unscreened\. A secret from that clone may reach the run&#39;s declared provider\./u);
+    const html = [...files].filter(([file]) => file.endsWith('.html'));
+    expect(html.map(([file]) => file)).toEqual(expect.arrayContaining(['index.html', 'appendix.html', 'discovery.html']));
+    for (const [file, page] of html)
+      expect(page.match(/ data-disclosure-ids="([^"]*)"/u)?.[1]?.split(' '), file).toContain('raw-read-disclosure');
     expect(machine.disclosure.some((d: any) => d.id.startsWith('launch/'))).toBe(false);
+  });
+
+  it.each([
+    ['absent', null],
+    ['malformed', '{}'],
+    ['mismatched run', rawReadCompanion('reached', `run-${'e'.repeat(32)}`)],
+    ['mismatched provider', rawReadCompanion('reached', RUN_ID, 'openai')],
+  ])('refuses an %s raw-read companion before the renderer, site or step log changes', async (_case, bytes) => {
+    const run = await prepared(draft(), false);
+    const file = path.join(run, 'raw-read-disclosure.json');
+    if (bytes === null) fs.unlinkSync(file);
+    else fs.writeFileSync(file, bytes);
+    const before = readSite(run);
+    const renderer = vi.fn(renderLocalDossier);
+    expect(await renderRun(run, renderDeps({ renderer }))).toMatchObject({
+      ok: false, refusal: { stage: 'disclosure', reason: RESTART_DISCLOSURE },
+    });
+    expect(renderer).not.toHaveBeenCalled();
+    expect(fs.existsSync(path.join(run, 'site'))).toBe(false);
+    expect(readSite(run)).toEqual(before);
+  });
+
+  it.each([
+    ['discovery.html', (body: string) => body.replace(' raw-read-disclosure ', ' ')],
+    ['appendix.html', (body: string) => body.replace('A secret from that clone may reach the run&#39;s declared provider.', 'The provider is declared.')],
+    ['machine.json', (body: string) => body.replace("A secret from that clone may reach the run's declared provider.", 'The provider is declared.')],
+  ])('refuses a raw-read disclosure changed in %s before writing the site', async (target, mutate) => {
+    const run = await prepared(draft(), false);
+    const renderer: DossierRenderer = input => {
+      const files = new Map(renderLocalDossier(input).files);
+      const original = files.get(target)!;
+      const changed = mutate(original);
+      expect(changed).not.toBe(original);
+      files.set(target, changed);
+      return { files };
+    };
+    const result = await renderRun(run, renderDeps({ renderer }));
+    expect(result).toMatchObject({ ok: false, refusal: { stage: 'render', reason: expect.stringContaining('does not carry the run disclosure') } });
+    expect(fs.existsSync(path.join(run, 'site'))).toBe(false);
   });
 
   it('carries the one sentence and the machine disclosure on every page, the human disclosure in the appendix, and one review-status region per page holding no claim', async () => {
