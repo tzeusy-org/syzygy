@@ -339,7 +339,7 @@ describe('trusted URL artifact producer bridge', () => {
         async () => ++checkWaits < 4);
       try {
         const result = await checkDraft(f.run, {}, { sources, openReader, productReads: checkReads,
-          now: () => readAt, loadScreen: async () => ({ ok: true, screen: f.screen }), layoutFigure: site.figureLaidOutWidth,
+          now: () => readAt, loadScreen: async () => ({ ok: true, screen: f.screen }), layoutFigure: () => 648,
           probe: { probe: async () => { throw Error('own check permits no execution'); } } });
         expect(result).toMatchObject({ ok: false, refusal: { stage: 'reverify', reason: 'the authenticated URL products are unavailable or changed' } });
         expect(checkWaits).toBe(4);
@@ -362,7 +362,7 @@ describe('trusted URL artifact producer bridge', () => {
       const authorReads = beginRunProductReads(f.run, bridge, 'author-check', Date.now() + 4000);
       try {
         const result = await checkDraft(f.run, {}, { sources, openReader, productReads: authorReads,
-          now: () => readAt, loadScreen: async () => ({ ok: true, screen: f.screen }), layoutFigure: site.figureLaidOutWidth,
+          now: () => readAt, loadScreen: async () => ({ ok: true, screen: f.screen }), layoutFigure: () => 648,
           probe: { probe: async () => { throw Error('own check permits no execution'); } } });
         expect(result).toMatchObject({ ok: true, report: { outcome: 'passed', figureFit: { examined: 1, entries: [] },
           mechanismAdvice: { file: null, thisRevision: 1, inRun: 1 } } });
@@ -476,7 +476,7 @@ describe('trusted URL artifact producer bridge', () => {
         const reads = beginRunProductReads(f.run, bridge, 'author-check', Date.now() + 4000);
         try {
           const result = await checkDraft(f.run, {}, { sources, openReader, productReads: reads,
-            now: () => readAt + revision * 1000, loadScreen: async () => ({ ok: true, screen: f.screen }), layoutFigure: site.figureLaidOutWidth,
+            now: () => readAt + revision * 1000, loadScreen: async () => ({ ok: true, screen: f.screen }), layoutFigure: () => 648,
             probe: { probe: async () => { throw Error('own check permits no execution'); } } });
           expect(result).toMatchObject({ ok: true, report: { revision, figureFit: { examined: 1, entries: [] },
             mechanismAdvice: { file: 'run-advice.json', thisRevision: 1, inRun: revision + 1 } } });
