@@ -3,7 +3,7 @@ import os from 'node:os';
 import path from 'node:path';
 import { encodeCanonicalJson, parseBoundedJson } from '@syzygy/polaris-generation-core/live';
 import { deepFreeze, isRecord, sha256 } from '@syzygy/support';
-import { DOSSIER_POLICY_PATH, DOSSIER_POLICY_VERSION, DOSSIER_PREDECESSOR_POLICY_PATH,
+import { DOSSIER_POLICY_PATH, DOSSIER_POLICY_VERSION, DOSSIER_REACH_POLICY_PATH, DOSSIER_REACH_POLICY_VERSION, DOSSIER_PREDECESSOR_POLICY_PATH,
   DOSSIER_PREDECESSOR_POLICY_VERSION, readCommittedPolicy, type PolicyBinding } from './policy-snapshot.js';
 import { buildDossierScreen } from './screen.js';
 import { URL_ORIGIN_POLICY_PATH, urlSourceTransportIdentity, type UrlRunDeclarationContext } from './url-run-record.js';
@@ -31,6 +31,7 @@ function context(value: unknown, runId: string): value is Context {
   if (!isRecord(value) || !exact(value, ['runId', 'expectedBasePolicy', 'expectedOriginPolicy', 'expectedSourceTransport',
     'expectedProfileSha256', 'expectedSidecarSha256']) || value.runId !== runId
     || !(policy(value.expectedBasePolicy, DOSSIER_POLICY_PATH, 'polaris-butlers-project-shape-secrets', DOSSIER_POLICY_VERSION)
+      || policy(value.expectedBasePolicy, DOSSIER_REACH_POLICY_PATH, 'polaris-butlers-project-shape-secrets', DOSSIER_REACH_POLICY_VERSION)
       || policy(value.expectedBasePolicy, DOSSIER_PREDECESSOR_POLICY_PATH, 'polaris-butlers-project-shape-secrets', DOSSIER_PREDECESSOR_POLICY_VERSION))
     || !policy(value.expectedOriginPolicy, URL_ORIGIN_POLICY_PATH, 'POLARIS-DOSSIER-URL-ORIGIN-SPECIES-POLICY-v1', '1.0.0')
     || typeof value.expectedProfileSha256 !== 'string' || !HEX.test(value.expectedProfileSha256)
