@@ -55,7 +55,8 @@ beforeAll(async () => {
     reader: { executable: path.join(root, 'url-machine-peer'), sha256: sha256(await fs.readFile(path.join(root, 'url-machine-peer'))) } };
 });
 
-async function fixture(scenario: 'live' | 'inherited' | 'mixed' | 'exit' = 'live', chargeNativeCpuMicroseconds?: (capacity: number) => void) {
+async function fixture(scenario: 'live' | 'inherited' | 'mixed' | 'exit' = 'live',
+  chargeNativeCpuMicroseconds?: (capacity: number) => void, imageGuards?: Pick<UrlMachinePeerOptions, 'effectCurrent' | 'readImageCurrent'>) {
   const root = await fs.mkdtemp(path.join(os.tmpdir(), 'mp-'));
   cleanup.push(() => fs.rm(root, { recursive: true, force: true }));
   for (const name of ['support', 'home', 'work', 'broker', 'relay', 'hidden']) await fs.mkdir(path.join(root, name), { mode: 0o700 });
@@ -133,7 +134,8 @@ async function fixture(scenario: 'live' | 'inherited' | 'mixed' | 'exit' = 'live
   const options: UrlMachinePeerOptions = { socket, listener: listener!, launch, profile, context, store, binding, programs,
     installed: { executable: nodeExecutable, sha256: nodeSha256, script: mcpPath, scriptSha256: sha256(mcp) },
     protectedPaths: [path.join(root, 'hidden'), governanceRoot], now: () => now, current: () => current,
-    audit: () => { audited++; if (expireDuringAudit) now = deadline; if (failAudit) throw new Error('owned audit failure'); }, chargeNativeCpuMicroseconds };
+    audit: () => { audited++; if (expireDuringAudit) now = deadline; if (failAudit) throw new Error('owned audit failure'); },
+    chargeNativeCpuMicroseconds, ...imageGuards };
   const peer = await captureUrlMachinePeer(options);
   if (peer) cleanup.push(() => closeUrlMachinePeer(peer));
   const record = (credential: UrlMachinePeer): UrlMachineClientRecord => ({ format: 'polaris-dossier-local-machine-client/1', clientId: slot.clientId, issuanceId: id(),
@@ -160,6 +162,22 @@ describe('live URL machine peer binding', { timeout: 60_000 }, () => {
     filesystemBoundary.largeSyncReads = 0; filesystemBoundary.refuseLargeSyncReads = true;
     const f = await fixture(); expect(f.peer, 'genuine capture must survive refusal of large synchronous file reads').not.toBeNull();
     expect(filesystemBoundary.largeSyncReads).toBe(0);
+  });
+
+  it.each([false, true])('checks full authority at the installed image read boundaries (withdrawal: %s)', async withdrawn => {
+    let authorized = true;
+    const effectCurrent = vi.fn(() => authorized), fullChecksDuringRead = new Set<number>();
+    const readImageCurrent = vi.fn(() => {
+      fullChecksDuringRead.add(effectCurrent.mock.calls.length);
+      if (withdrawn) authorized = false;
+      return true;
+    });
+    const f = await fixture('live', undefined, { effectCurrent, readImageCurrent });
+    expect(readImageCurrent.mock.calls.length).toBeGreaterThan(1);
+    expect(fullChecksDuringRead.size).toBe(1);
+    expect(effectCurrent.mock.calls.length).toBeGreaterThan([...fullChecksDuringRead][0]!);
+    if (withdrawn) expect(f.peer).toBeNull();
+    else expect(f.peer).not.toBeNull();
   });
 
   it('reserves hard CPU capacity before every actual helper and executes none when its retained reservation refuses', async () => {

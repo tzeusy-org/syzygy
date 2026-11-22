@@ -49,6 +49,9 @@ export interface UrlMachinePeerOptions {
   readonly current: () => boolean | Promise<boolean>;
   /** Synchronous supervisor health/budget authority at every actual effect. */
   readonly effectCurrent?: () => boolean;
+  /** Local stop, budget and health during a private read of the installed image.
+   * Full effect authority still brackets the read and gates peer issuance. */
+  readonly readImageCurrent?: () => boolean;
   readonly audit: (event: UrlMachinePeerAudit) => void | Promise<void>;
   /** Trusted monotonic capacity reservation; throwing refuses before exec.
    * Each helper reserves its CPU hard limit plus accounting granularity. */
@@ -348,15 +351,18 @@ export async function captureUrlMachinePeer(options: UrlMachinePeerOptions): Pro
       try { fs.lstatSync(`${base}/root${file}`); throw refused(); }
       catch (error) { if ((error as NodeJS.ErrnoException).code !== 'ENOENT') throw error; }
     }
+    if (selected.effectCurrent !== undefined && selected.effectCurrent() !== true) throw refused();
     let pinNow = context.now;
+    const readImageCurrent = selected.readImageCurrent ?? selected.effectCurrent;
     const executable = await pinnedExecutable(selected.installed.executable, selected.installed.sha256,
       context.kind === 'role-cli' ? URL_CLI_PROGRAM.bytes : 134_217_728, () => {
         const now = selected.now();
-        if ((selected.effectCurrent !== undefined && selected.effectCurrent() !== true)
+        if ((readImageCurrent !== undefined && readImageCurrent() !== true)
           || !isUrlSessionProcess(selected.launch) || !Number.isSafeInteger(now) || now < pinNow || now >= context.deadline
           || performance.now() - began >= URL_MACHINE_PEER_LIMITS.setupMilliseconds) throw refused();
         pinNow = now;
       });
+    if (selected.effectCurrent !== undefined && selected.effectCurrent() !== true) throw refused();
     let expectedCommand: readonly string[], script: fs.BigIntStats | null = null;
     if (context.kind === 'role-cli') {
       if (selected.installed.sha256 !== URL_CLI_PROGRAM.sha256 || selected.installed.script !== null || selected.installed.scriptSha256 !== null) throw refused();

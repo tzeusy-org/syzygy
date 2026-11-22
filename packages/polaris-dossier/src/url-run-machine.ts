@@ -125,8 +125,9 @@ export async function createUrlRunMachine(input: UrlRunMachineOptions) {
     mutations = result.catch(() => undefined);
     return result;
   };
+  const effectCurrent = (): boolean => input.effectCurrent === undefined || input.effectCurrent() === true;
   const current = (): boolean => !stopped && !closing && parentCurrent()
-    && (input.effectCurrent === undefined || input.effectCurrent() === true) && input.now() < input.deadline;
+    && effectCurrent() && input.now() < input.deadline;
   const verifyTerminal = async (context: UrlMachineClientContext, terminal: Terminal): Promise<number | null> => {
     let confirmedAt: number | null = null;
     const verified = await store.exclusive(context.clientId, input.deadline, async lease => {
@@ -257,7 +258,7 @@ export async function createUrlRunMachine(input: UrlRunMachineOptions) {
             protectedPaths: [...plan.view.protectedPaths, input.governanceRoot, input.protectedRoot], now: input.now,
             current: async () => current() && await selectedLaunch.waitForSample()
               && await input.reverify() === true && current(),
-            effectCurrent: current, audit: input.audit,
+            effectCurrent: current, readImageCurrent: () => !stopped && !closing && effectCurrent(), audit: input.audit,
             chargeNativeCpuMicroseconds: input.chargeNativeCpuMicroseconds });
           if (peer === null) return null;
           peers.add(peer);
