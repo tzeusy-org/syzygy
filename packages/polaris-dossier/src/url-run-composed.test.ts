@@ -140,7 +140,10 @@ type ResumeSample = { ordinal: number; verify: ResumeStamp; confirm?: ResumeStam
 type ResumeBrokerStage = 'invoke' | 'host-current' | 'mediate-peer' | 'host-action' | 'transfer-bounds'
   | 'plan-work-hold' | 'create-work-budget' | 'release' | 'release-check';
 
-function projectWorkPlanRefusal(input: Parameters<typeof orderedWork.planOrderedDesignWork>[0]) {
+function projectWorkPlanRefusal(
+  input: Parameters<typeof orderedWork.reserveOrderedDesignWork>[0],
+  reservation: { requiredCpuMicroseconds: number; reservedCpuMicroseconds: number | null } | undefined,
+) {
   const { shape, view, enforcement } = input;
   const bound = ({ bytes, nodes, depth }: orderedBounds.OrderedDesignJsonBound) => ({ bytes, nodes, depth });
   const operations = (['request', 'response', 'tool', 'audit', 'terminal'] as const).map(kind => {
@@ -151,7 +154,7 @@ function projectWorkPlanRefusal(input: Parameters<typeof orderedWork.planOrdered
   });
   return {
     envelopeBytes: view.envelopeBytes, originalBytes: view.originalBytes,
-    remainingWallMilliseconds: input.deadline - input.now, remainingRunCpuMicroseconds: input.remainingRunCpuMicroseconds,
+    remainingWallMilliseconds: input.deadline - input.now, reservation,
     runtimeMatches: enforcement.runtimeSha256 === input.expectedRuntimeSha256,
     workerMatches: enforcement.workerSha256 === input.expectedWorkerSha256,
     relayMilliseconds: enforcement.relayMilliseconds, brokerMilliseconds: enforcement.brokerMilliseconds,
@@ -296,10 +299,16 @@ function observeInterruptedResume() {
   const boundTransfer = orderedBounds.boundOrderedDesignTransfer;
   vi.spyOn(orderedBounds, 'boundOrderedDesignTransfer').mockImplementation(input =>
     brokerPhase('transfer-bounds', () => boundTransfer(input), result => result !== null));
-  const planWork = orderedWork.planOrderedDesignWork;
-  vi.spyOn(orderedWork, 'planOrderedDesignWork').mockImplementation(input => {
-    const result = brokerPhase('plan-work-hold', () => planWork(input), value => value !== null);
-    if (result === null && firstBrokerInvocation.getStore() === true) workPlanRefusal ??= projectWorkPlanRefusal(input);
+  const planWork = orderedWork.reserveOrderedDesignWork;
+  vi.spyOn(orderedWork, 'reserveOrderedDesignWork').mockImplementation((input, reserveRemaining) => {
+    if (firstBrokerInvocation.getStore() !== true) return planWork(input, reserveRemaining);
+    let reservation: Parameters<typeof projectWorkPlanRefusal>[1];
+    const result = brokerPhase('plan-work-hold', () => planWork(input, requiredCpuMicroseconds => {
+      const reservedCpuMicroseconds = reserveRemaining(requiredCpuMicroseconds);
+      reservation = { requiredCpuMicroseconds, reservedCpuMicroseconds };
+      return reservedCpuMicroseconds;
+    }), value => value !== null);
+    if (result === null) workPlanRefusal ??= projectWorkPlanRefusal(input, reservation);
     return result;
   });
   const createWorkBudget = orderedWork.createOrderedDesignWorkBudget;
