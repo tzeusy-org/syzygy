@@ -109,7 +109,7 @@ The view contains no source checkout or real credential, and grants no observed-
 Declared profiles and stored history are Inferred; unrecorded sends and termination remain Unknown.
 `;
 
-const CHECKOUT = fileURLToPath(new URL('../../..', import.meta.url));
+const CHECKOUT = path.resolve(fileURLToPath(new URL('../../..', import.meta.url)));
 const MAIN = path.join(CHECKOUT, 'apps/syzygy/dist/main.js');
 const POLL_MS = 3000;
 /** Every draft revision after the first counts against the repair-cycle limit, a check that finds something included
