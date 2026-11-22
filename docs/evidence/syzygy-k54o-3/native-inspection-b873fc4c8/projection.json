@@ -1,0 +1,926 @@
+{
+  "sourceBinding": {
+    "file": "source-binding.json",
+    "bytes": 6969,
+    "sha256": "7ea9224e8b8f864d18e21cbbf31593f48fbd0482bf3cbeaadabf70d8f092591d"
+  },
+  "baseCommit": "b873fc4c8c038a80738d3415adfa4652e706d1e5",
+  "rawArtifacts": [
+    {
+      "file": "overlay.patch",
+      "bytes": 74511,
+      "sha256": "f92efb246c4e657b4d91b19ffd4a23d97636ceedd61b0c600c353bb35552c48c"
+    },
+    {
+      "file": "trace.jsonl",
+      "bytes": 228243,
+      "sha256": "6e6c3eebd1a50a4ff575bc4cd0698c478bf07f5ac8349a1756dd3e712272405d"
+    }
+  ],
+  "units": "milliseconds",
+  "traceValidation": {
+    "rowsPassedClosedFieldAndValueChecks": 946,
+    "eventsByKind": {
+      "child-exit": 5,
+      "first-terminal": 5,
+      "ordered-phase": 17,
+      "prelaunch-metadata": 10,
+      "prelaunch-ordered-phase": 21,
+      "prelaunch-phase": 11,
+      "prelaunch-policy": 553,
+      "product-phase": 4,
+      "relay-phase": 48,
+      "sample-refused": 5,
+      "sample-start": 86,
+      "sample-success": 84,
+      "spawn": 5,
+      "sync-policy": 91,
+      "timer-expired": 1
+    }
+  },
+  "prelaunchRenderLease": [
+    {
+      "role": "design",
+      "launch": 0,
+      "event": "prelaunch-phase",
+      "at": 149265.9,
+      "phase": "start",
+      "elapsed": 0.024686000018846244
+    },
+    {
+      "role": "design",
+      "launch": 0,
+      "event": "prelaunch-phase",
+      "at": 149326.4,
+      "phase": "render-read-open",
+      "elapsed": 60.647979000001214,
+      "remaining": 29940
+    },
+    {
+      "role": "design",
+      "launch": 0,
+      "event": "prelaunch-phase",
+      "at": 161125,
+      "phase": "render-step-return",
+      "elapsed": 11859.257539000013,
+      "remaining": 18141,
+      "rendered": true,
+      "productPresent": true
+    },
+    {
+      "role": "design",
+      "launch": 0,
+      "event": "prelaunch-phase",
+      "at": 161125.1,
+      "phase": "metadata-inspection-start",
+      "elapsed": 11859.336758999998,
+      "remaining": 18141
+    },
+    {
+      "role": "design",
+      "launch": 0,
+      "event": "prelaunch-phase",
+      "at": 162297.2,
+      "phase": "metadata-inspection-return",
+      "elapsed": 13031.488834000018,
+      "remaining": 16969,
+      "metadataPresent": true
+    },
+    {
+      "role": "design",
+      "launch": 0,
+      "event": "prelaunch-phase",
+      "at": 162297.2,
+      "phase": "metadata-accepted",
+      "elapsed": 13031.53300700002,
+      "remaining": 16969
+    },
+    {
+      "role": "design",
+      "launch": 0,
+      "event": "prelaunch-phase",
+      "at": 162344.6,
+      "phase": "reproduce-read-open",
+      "elapsed": 13078.860634000011,
+      "remaining": 29953
+    },
+    {
+      "role": "design",
+      "launch": 0,
+      "event": "prelaunch-phase",
+      "at": 169343.1,
+      "phase": "reproduce-render-return",
+      "elapsed": 20077.309536000015,
+      "remaining": 22954,
+      "verified": true,
+      "productPresent": true
+    },
+    {
+      "role": "design",
+      "launch": 0,
+      "event": "prelaunch-phase",
+      "at": 169626.6,
+      "phase": "reproduce-read-open",
+      "elapsed": 20360.84426100002,
+      "remaining": 29961
+    },
+    {
+      "role": "design",
+      "launch": 0,
+      "event": "prelaunch-phase",
+      "at": 176558.9,
+      "phase": "reproduce-render-return",
+      "elapsed": 27293.144839000015,
+      "remaining": 23029,
+      "verified": true,
+      "productPresent": true
+    },
+    {
+      "role": "design",
+      "launch": 0,
+      "event": "prelaunch-phase",
+      "at": 179804.6,
+      "phase": "end",
+      "cause": "fresh-design-spawn"
+    }
+  ],
+  "prelaunchMetadata": [
+    {
+      "role": "design",
+      "launch": 0,
+      "event": "prelaunch-metadata",
+      "at": 161125.1,
+      "phase": "current-before",
+      "status": "start",
+      "elapsed": 0.01303499998175539,
+      "remaining": 18141
+    },
+    {
+      "role": "design",
+      "launch": 0,
+      "event": "prelaunch-metadata",
+      "at": 161125.2,
+      "phase": "sample-before",
+      "status": "start",
+      "elapsed": 0.07644499998423271,
+      "remaining": 18141
+    },
+    {
+      "role": "design",
+      "launch": 0,
+      "event": "prelaunch-metadata",
+      "at": 161217.7,
+      "phase": "first-stable",
+      "status": "start",
+      "elapsed": 92.63115400000243,
+      "remaining": 18049
+    },
+    {
+      "role": "design",
+      "launch": 0,
+      "event": "prelaunch-metadata",
+      "at": 161662.3,
+      "phase": "renderer-current",
+      "status": "start",
+      "elapsed": 537.2605009999825,
+      "remaining": 17604
+    },
+    {
+      "role": "design",
+      "launch": 0,
+      "event": "prelaunch-metadata",
+      "at": 161780,
+      "phase": "sample-after",
+      "status": "start",
+      "elapsed": 654.956829999981,
+      "remaining": 17486
+    },
+    {
+      "role": "design",
+      "launch": 0,
+      "event": "prelaunch-metadata",
+      "at": 161862.7,
+      "phase": "second-stable",
+      "status": "start",
+      "elapsed": 737.5647239999962,
+      "remaining": 17404
+    },
+    {
+      "role": "design",
+      "launch": 0,
+      "event": "prelaunch-metadata",
+      "at": 162296.5,
+      "phase": "current-before-copy",
+      "status": "start",
+      "elapsed": 1171.3833900000027,
+      "remaining": 16970
+    },
+    {
+      "role": "design",
+      "launch": 0,
+      "event": "prelaunch-metadata",
+      "at": 162296.5,
+      "phase": "materialize",
+      "status": "start",
+      "elapsed": 1171.4134670000058,
+      "remaining": 16970
+    },
+    {
+      "role": "design",
+      "launch": 0,
+      "event": "prelaunch-metadata",
+      "at": 162297.1,
+      "phase": "current-at-release",
+      "status": "start",
+      "elapsed": 1172.0277389999828,
+      "remaining": 16969
+    },
+    {
+      "role": "design",
+      "launch": 0,
+      "event": "prelaunch-metadata",
+      "at": 162297.1,
+      "phase": "current-at-release",
+      "status": "passed",
+      "elapsed": 1172.064419000002,
+      "remaining": 16969
+    }
+  ],
+  "prelaunchStablePasses": [
+    {
+      "phase": "first-stable",
+      "begin": 161217.7,
+      "end": 161662.3,
+      "elapsedMillis": 444.6,
+      "checks": 10,
+      "refusals": 0,
+      "overlapMillis": 400.3,
+      "gitCalls": 30,
+      "gitMillis": 387.5,
+      "checksBySite": {
+        "run-artifacts": 4,
+        "supervisor": 6
+      }
+    },
+    {
+      "phase": "second-stable",
+      "begin": 161862.7,
+      "end": 162296.5,
+      "elapsedMillis": 433.8,
+      "checks": 10,
+      "refusals": 0,
+      "overlapMillis": 390.1,
+      "gitCalls": 30,
+      "gitMillis": 378.0,
+      "checksBySite": {
+        "run-artifacts": 4,
+        "supervisor": 6
+      }
+    }
+  ],
+  "launchedSessionRefusals": [
+    {
+      "spawn": {
+        "role": "author",
+        "launch": 1,
+        "event": "spawn",
+        "at": 11538.3,
+        "inspectionBound": 1000,
+        "cadence": 200
+      },
+      "orderedPhases": [],
+      "productPhases": [],
+      "successfulSampleCountRecorded": 26,
+      "samplesRefused": [
+        {
+          "sample": {
+            "role": "author",
+            "launch": 1,
+            "event": "sample-refused",
+            "at": 63421.6,
+            "id": 253,
+            "began": 63371.3,
+            "gap": 200.9,
+            "elapsed": 50.3,
+            "bound": 1000,
+            "stage": "storage",
+            "firstCheck": "stopping",
+            "timerExpired": false,
+            "sampleActive": true,
+            "exited": true,
+            "finishedCapture": false,
+            "reason": "stopped",
+            "storageMillis": null,
+            "processMillis": 20.5,
+            "currentBegin": null,
+            "currentSyncMillis": null,
+            "currentMillis": null,
+            "processError": null,
+            "storageDetail": null,
+            "storageEntries": null,
+            "storageBytesSeen": null,
+            "eventLoopMax": 208.5,
+            "errno": "other"
+          },
+          "phaseAtStart": null,
+          "phaseChanges": [],
+          "allOverlappingPolicy": {
+            "checks": 0,
+            "refusals": 0,
+            "overlapMillis": 0,
+            "gitCalls": 0,
+            "gitMillis": 0
+          },
+          "fullyOverlappingPolicy": {
+            "checks": 0,
+            "refusals": 0,
+            "overlapMillis": 0,
+            "gitCalls": 0,
+            "gitMillis": 0
+          },
+          "byPhaseAndSite": []
+        }
+      ],
+      "timersExpired": [],
+      "terminal": [
+        {
+          "role": "author",
+          "launch": 1,
+          "event": "first-terminal",
+          "at": 63406.2,
+          "reason": "stopped",
+          "requested": "stopped",
+          "exited": false,
+          "finishedCapture": false
+        },
+        {
+          "role": "author",
+          "launch": 1,
+          "event": "child-exit",
+          "at": 63408.3,
+          "reason": "stopped",
+          "code": null,
+          "signal": "SIGTERM"
+        }
+      ]
+    },
+    {
+      "spawn": {
+        "role": "inventory",
+        "launch": 2,
+        "event": "spawn",
+        "at": 13850.7,
+        "inspectionBound": 1000,
+        "cadence": 200
+      },
+      "orderedPhases": [],
+      "productPhases": [],
+      "successfulSampleCountRecorded": 25,
+      "samplesRefused": [
+        {
+          "sample": {
+            "role": "inventory",
+            "launch": 2,
+            "event": "sample-refused",
+            "at": 63421.7,
+            "id": 242,
+            "began": 63371.4,
+            "gap": 200.9,
+            "elapsed": 50.3,
+            "bound": 1000,
+            "stage": "storage",
+            "firstCheck": "stopping",
+            "timerExpired": false,
+            "sampleActive": true,
+            "exited": true,
+            "finishedCapture": false,
+            "reason": "stopped",
+            "storageMillis": null,
+            "processMillis": 21.3,
+            "currentBegin": null,
+            "currentSyncMillis": null,
+            "currentMillis": null,
+            "processError": null,
+            "storageDetail": null,
+            "storageEntries": null,
+            "storageBytesSeen": null,
+            "eventLoopMax": 208.5,
+            "errno": "other"
+          },
+          "phaseAtStart": null,
+          "phaseChanges": [],
+          "allOverlappingPolicy": {
+            "checks": 0,
+            "refusals": 0,
+            "overlapMillis": 0,
+            "gitCalls": 0,
+            "gitMillis": 0
+          },
+          "fullyOverlappingPolicy": {
+            "checks": 0,
+            "refusals": 0,
+            "overlapMillis": 0,
+            "gitCalls": 0,
+            "gitMillis": 0
+          },
+          "byPhaseAndSite": []
+        }
+      ],
+      "timersExpired": [],
+      "terminal": [
+        {
+          "role": "inventory",
+          "launch": 2,
+          "event": "first-terminal",
+          "at": 63406.3,
+          "reason": "stopped",
+          "requested": "stopped",
+          "exited": false,
+          "finishedCapture": false
+        },
+        {
+          "role": "inventory",
+          "launch": 2,
+          "event": "child-exit",
+          "at": 63408.4,
+          "reason": "stopped",
+          "code": null,
+          "signal": "SIGTERM"
+        }
+      ]
+    },
+    {
+      "spawn": {
+        "role": "fidelity",
+        "launch": 3,
+        "event": "spawn",
+        "at": 16155.7,
+        "inspectionBound": 1000,
+        "cadence": 200
+      },
+      "orderedPhases": [],
+      "productPhases": [],
+      "successfulSampleCountRecorded": 23,
+      "samplesRefused": [
+        {
+          "sample": {
+            "role": "fidelity",
+            "launch": 3,
+            "event": "sample-refused",
+            "at": 63421.8,
+            "id": 230,
+            "began": 63371.2,
+            "gap": 200.7,
+            "elapsed": 50.6,
+            "bound": 1000,
+            "stage": "storage",
+            "firstCheck": "child-exited",
+            "timerExpired": false,
+            "sampleActive": true,
+            "exited": true,
+            "finishedCapture": false,
+            "reason": "stopped",
+            "storageMillis": null,
+            "processMillis": 21.4,
+            "currentBegin": null,
+            "currentSyncMillis": null,
+            "currentMillis": null,
+            "processError": null,
+            "storageDetail": null,
+            "storageEntries": null,
+            "storageBytesSeen": null,
+            "eventLoopMax": 208.5,
+            "errno": "other"
+          },
+          "phaseAtStart": null,
+          "phaseChanges": [],
+          "allOverlappingPolicy": {
+            "checks": 0,
+            "refusals": 0,
+            "overlapMillis": 0,
+            "gitCalls": 0,
+            "gitMillis": 0
+          },
+          "fullyOverlappingPolicy": {
+            "checks": 0,
+            "refusals": 0,
+            "overlapMillis": 0,
+            "gitCalls": 0,
+            "gitMillis": 0
+          },
+          "byPhaseAndSite": []
+        }
+      ],
+      "timersExpired": [],
+      "terminal": [
+        {
+          "role": "fidelity",
+          "launch": 3,
+          "event": "first-terminal",
+          "at": 63406.3,
+          "reason": "stopped",
+          "requested": "stopped",
+          "exited": false,
+          "finishedCapture": false
+        },
+        {
+          "role": "fidelity",
+          "launch": 3,
+          "event": "child-exit",
+          "at": 63408.4,
+          "reason": "stopped",
+          "code": null,
+          "signal": "SIGTERM"
+        }
+      ]
+    },
+    {
+      "spawn": {
+        "role": "design",
+        "launch": 4,
+        "event": "spawn",
+        "at": 61100,
+        "inspectionBound": 1000,
+        "cadence": 200
+      },
+      "orderedPhases": [],
+      "productPhases": [],
+      "successfulSampleCountRecorded": 2,
+      "samplesRefused": [
+        {
+          "sample": {
+            "role": "design",
+            "launch": 4,
+            "event": "sample-refused",
+            "at": 63421.8,
+            "id": 11,
+            "began": 63371.2,
+            "gap": 200.8,
+            "elapsed": 50.6,
+            "bound": 1000,
+            "stage": "storage",
+            "firstCheck": "child-exited",
+            "timerExpired": false,
+            "sampleActive": true,
+            "exited": true,
+            "finishedCapture": false,
+            "reason": "stopped",
+            "storageMillis": null,
+            "processMillis": 21.5,
+            "currentBegin": null,
+            "currentSyncMillis": null,
+            "currentMillis": null,
+            "processError": null,
+            "storageDetail": null,
+            "storageEntries": null,
+            "storageBytesSeen": null,
+            "eventLoopMax": 208.5,
+            "errno": "other"
+          },
+          "phaseAtStart": null,
+          "phaseChanges": [],
+          "allOverlappingPolicy": {
+            "checks": 0,
+            "refusals": 0,
+            "overlapMillis": 0,
+            "gitCalls": 0,
+            "gitMillis": 0
+          },
+          "fullyOverlappingPolicy": {
+            "checks": 0,
+            "refusals": 0,
+            "overlapMillis": 0,
+            "gitCalls": 0,
+            "gitMillis": 0
+          },
+          "byPhaseAndSite": []
+        }
+      ],
+      "timersExpired": [],
+      "terminal": [
+        {
+          "role": "design",
+          "launch": 4,
+          "event": "first-terminal",
+          "at": 63406,
+          "reason": "stopped",
+          "requested": "stopped",
+          "exited": false,
+          "finishedCapture": false
+        },
+        {
+          "role": "design",
+          "launch": 4,
+          "event": "child-exit",
+          "at": 63408.5,
+          "reason": "stopped",
+          "code": null,
+          "signal": "SIGTERM"
+        }
+      ]
+    },
+    {
+      "spawn": {
+        "role": "design",
+        "launch": 5,
+        "event": "spawn",
+        "at": 179804.9,
+        "inspectionBound": 1000,
+        "cadence": 200
+      },
+      "orderedPhases": [
+        {
+          "role": "design",
+          "launch": 5,
+          "event": "ordered-phase",
+          "at": 179805.1,
+          "phase": "bootstrap-launched"
+        },
+        {
+          "role": "design",
+          "launch": 5,
+          "event": "ordered-phase",
+          "at": 179805.3,
+          "phase": "bootstrap-write-launch"
+        },
+        {
+          "role": "design",
+          "launch": 5,
+          "event": "ordered-phase",
+          "at": 180282.9,
+          "phase": "bootstrap-commit-launch"
+        },
+        {
+          "role": "design",
+          "launch": 5,
+          "event": "ordered-phase",
+          "at": 181280.2,
+          "phase": "bootstrap-register-launch"
+        },
+        {
+          "role": "design",
+          "launch": 5,
+          "event": "ordered-phase",
+          "at": 181280.4,
+          "phase": "register-launch-entry"
+        },
+        {
+          "role": "design",
+          "launch": 5,
+          "event": "ordered-phase",
+          "at": 181340.3,
+          "phase": "register-launch-start"
+        },
+        {
+          "role": "design",
+          "launch": 5,
+          "event": "ordered-phase",
+          "at": 181381.9,
+          "phase": "register-launch-prompt"
+        },
+        {
+          "role": "design",
+          "launch": 5,
+          "event": "ordered-phase",
+          "at": 181584.9,
+          "phase": "register-launch-poll"
+        },
+        {
+          "role": "design",
+          "launch": 5,
+          "event": "ordered-phase",
+          "at": 181891.3,
+          "phase": "register-launch-snapshot"
+        },
+        {
+          "role": "design",
+          "launch": 5,
+          "event": "ordered-phase",
+          "at": 182099.8,
+          "phase": "register-launch-retain"
+        },
+        {
+          "role": "design",
+          "launch": 5,
+          "event": "ordered-phase",
+          "at": 182182,
+          "phase": "bootstrap-post-launch-current"
+        },
+        {
+          "role": "design",
+          "launch": 5,
+          "event": "ordered-phase",
+          "at": 182315.9,
+          "phase": "bootstrap-post-launch-sample"
+        },
+        {
+          "role": "design",
+          "launch": 5,
+          "event": "ordered-phase",
+          "at": 182441.9,
+          "phase": "bootstrap-commit-delivery"
+        },
+        {
+          "role": "design",
+          "launch": 5,
+          "event": "ordered-phase",
+          "at": 182442,
+          "phase": "delivery-commit-entry"
+        },
+        {
+          "role": "design",
+          "launch": 5,
+          "event": "ordered-phase",
+          "at": 182442,
+          "phase": "delivery-commit-launch-inspect"
+        },
+        {
+          "role": "design",
+          "launch": 5,
+          "event": "ordered-phase",
+          "at": 182442.4,
+          "phase": "delivery-commit-first-poll"
+        },
+        {
+          "role": "design",
+          "launch": 5,
+          "event": "ordered-phase",
+          "at": 182442.4,
+          "phase": "delivery-commit-product-inspect"
+        }
+      ],
+      "productPhases": [
+        {
+          "role": "design",
+          "launch": 5,
+          "event": "product-phase",
+          "at": 182442.6,
+          "phase": "current-before",
+          "status": "start",
+          "elapsed": 0.007244000007631257,
+          "remaining": 17145
+        },
+        {
+          "role": "design",
+          "launch": 5,
+          "event": "product-phase",
+          "at": 182442.6,
+          "phase": "sample-before",
+          "status": "start",
+          "elapsed": 0.06197700000484474,
+          "remaining": 17145
+        },
+        {
+          "role": "design",
+          "launch": 5,
+          "event": "product-phase",
+          "at": 182687,
+          "phase": "first-stable",
+          "status": "start",
+          "elapsed": 244.51780100000906,
+          "remaining": 16900
+        },
+        {
+          "role": "design",
+          "launch": 5,
+          "event": "product-phase",
+          "at": 183131.4,
+          "phase": "renderer-current",
+          "status": "start",
+          "elapsed": 688.8449160000018,
+          "remaining": 16456
+        }
+      ],
+      "successfulSampleCountRecorded": 8,
+      "samplesRefused": [
+        {
+          "sample": {
+            "role": "design",
+            "launch": 5,
+            "event": "sample-refused",
+            "at": 184924,
+            "id": 9,
+            "began": 183902.6,
+            "gap": 560.9,
+            "elapsed": 1021.4,
+            "bound": 1000,
+            "stage": "storage",
+            "firstCheck": null,
+            "timerExpired": true,
+            "sampleActive": true,
+            "exited": false,
+            "finishedCapture": false,
+            "reason": "exited",
+            "storageMillis": null,
+            "processMillis": 953.3,
+            "currentBegin": null,
+            "currentSyncMillis": null,
+            "currentMillis": null,
+            "processError": null,
+            "storageDetail": null,
+            "storageEntries": null,
+            "storageBytesSeen": null,
+            "eventLoopMax": 539,
+            "errno": "other"
+          },
+          "phaseAtStart": "delivery-commit-product-inspect",
+          "phaseChanges": [],
+          "allOverlappingPolicy": {
+            "checks": 21,
+            "refusals": 0,
+            "overlapMillis": 915.0,
+            "gitCalls": 63,
+            "gitMillis": 888.9
+          },
+          "fullyOverlappingPolicy": {
+            "checks": 21,
+            "refusals": 0,
+            "overlapMillis": 915.0,
+            "gitCalls": 63,
+            "gitMillis": 888.9
+          },
+          "byPhaseAndSite": [
+            {
+              "phase": "delivery-commit-product-inspect",
+              "callSite": "peer-capture",
+              "checks": 1,
+              "refusals": 0,
+              "overlapMillis": 46.5,
+              "gitCalls": 3,
+              "gitMillis": 45.2
+            },
+            {
+              "phase": "delivery-commit-product-inspect",
+              "callSite": "run-machine",
+              "checks": 1,
+              "refusals": 0,
+              "overlapMillis": 37.5,
+              "gitCalls": 3,
+              "gitMillis": 36.4
+            },
+            {
+              "phase": "delivery-commit-product-inspect",
+              "callSite": "machine-store",
+              "checks": 19,
+              "refusals": 0,
+              "overlapMillis": 831.0,
+              "gitCalls": 57,
+              "gitMillis": 807.3
+            }
+          ]
+        }
+      ],
+      "timersExpired": [
+        {
+          "role": "design",
+          "launch": 5,
+          "event": "timer-expired",
+          "at": 184923.8,
+          "id": 9,
+          "began": 183902.6,
+          "gap": 560.9,
+          "elapsed": 1021.1,
+          "bound": 1000,
+          "stage": "storage",
+          "firstCheck": null,
+          "timerExpired": true,
+          "sampleActive": true,
+          "exited": false,
+          "finishedCapture": false,
+          "reason": "exited",
+          "storageMillis": null,
+          "processMillis": 953.3,
+          "currentBegin": null,
+          "currentSyncMillis": null,
+          "currentMillis": null,
+          "processError": null,
+          "storageDetail": null,
+          "storageEntries": null,
+          "storageBytesSeen": null,
+          "eventLoopMax": 539
+        }
+      ],
+      "terminal": [
+        {
+          "role": "design",
+          "launch": 5,
+          "event": "first-terminal",
+          "at": 184924.2,
+          "reason": "inspection-failed",
+          "requested": "inspection-failed",
+          "exited": false,
+          "finishedCapture": false
+        },
+        {
+          "role": "design",
+          "launch": 5,
+          "event": "child-exit",
+          "at": 185018.6,
+          "reason": "inspection-failed",
+          "code": null,
+          "signal": "SIGTERM"
+        }
+      ]
+    }
+  ]
+}

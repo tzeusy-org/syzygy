@@ -1,0 +1,104 @@
+{
+  "subject": "51e3d646580d718e256c647dce325de993910fd4",
+  "parent": "23fcac2be2c1f82230dee12e886c3fa93299d6d8",
+  "tree": "06a0daf4b0242b3e21c29b7518fa0e08919d8bcd",
+  "diffSha256": "b762a216369d7e8c41380b04d2473170a60b7c43ed02a29dc7800bdc6b1e1819",
+  "sourceDigests": [
+    {
+      "path": "packages/polaris-dossier/src/url-machine-store.test.ts",
+      "sha256": "f4830f705645389f4b8fb7e40148b68cf4d99929ccc4aff89743723f32f1772d"
+    },
+    {
+      "path": "packages/polaris-dossier/src/url-machine-store.ts",
+      "sha256": "25a05d587987eec3b20562d896b0511fa7a55a39cedf8a5df7254fd5d0872fb6"
+    },
+    {
+      "path": "packages/polaris-dossier/src/url-recovery.ts",
+      "sha256": "3532a34feb10fddffe03d2ef1cc05ea1ecc3b1f31363fed87400932f9766827e"
+    },
+    {
+      "path": "packages/polaris-dossier/src/url-run-composed.test.ts",
+      "sha256": "be9cfea3e96ed75d9a7ca22702bcba0df5b9547cfab49f922644dabd9348de2a"
+    },
+    {
+      "path": "packages/polaris-dossier/src/url-run-machine.ts",
+      "sha256": "ccd441bb7bd3293c3a99c97554d5dff826ab4557667db4083020ec4138933dc7"
+    },
+    {
+      "path": "packages/polaris-dossier/src/url-run-sessions.ts",
+      "sha256": "5befb57d366ca6611b0cc9c5e08e7bbaa43819ef1d69e2770d695dd87fc37aa0"
+    }
+  ],
+  "artifacts": [
+    {
+      "path": "native-stop.log",
+      "bytes": 36138,
+      "sha256": "4bbb27599e64e71761250dc12c363ea22b609e3d56b18ee4f36e845c4d4ad454"
+    },
+    {
+      "path": "source-review-RAW.md",
+      "bytes": 4837,
+      "sha256": "b696aed31fdd48af8f13ba8389644266226281be8234e10cb9a17d478ac82420"
+    }
+  ],
+  "inputTreeSha256": "ae1c2b739c26cd89fd8d22fcd48033051d02bbf2fa3089d64632e1b1b9cf3a0d",
+  "profileRegistrySha256": "723a84200dae71bba4d84cb5deb3cba521afb62a73c0dc5e21db1aba8cbe8ea1",
+  "nativeCutSha256": "cfa595e85b7431386f19a99ef6dab563712932a81e3a4d2ffc402c4a46ab6b4c",
+  "nativeFailureManifestSha256": "96c5bdc9ee23d8d49fe1e9987087152589024f8e4b41fc91ce9ed3bef18b4a3e",
+  "nativeResumeChecks": [
+    {
+      "phase": "verify",
+      "ok": true,
+      "nextDesignRound": 2
+    },
+    {
+      "phase": "claim",
+      "exactCut": true,
+      "current": true
+    },
+    {
+      "phase": "resumed-guards",
+      "policyWithdrawal": "refused",
+      "claimWithdrawal": "refused"
+    },
+    {
+      "phase": "machine-claim",
+      "current": true,
+      "claimChecks": 1,
+      "withdrawn": true,
+      "asyncCurrent": true,
+      "asyncWithdrawn": true
+    }
+  ],
+  "freshDesignAudit": {
+    "sha256": "b2343fe3bdce94aeeda4bdeba9690e8ea39bc3bb347bbd400d9c70e5d3d9964e",
+    "events": [
+      "declaration",
+      "launch-attempt",
+      "launch-history",
+      "design-delivery",
+      "launch-terminal"
+    ],
+    "terminal": {
+      "outcome": "inspection-failed",
+      "signal": "SIGTERM",
+      "groupTermination": "confirmed",
+      "viewTermination": "view-exited",
+      "toolTermination": "settled",
+      "pendingInvocations": 0,
+      "sampledStorageBytes": 2192,
+      "peakProcesses": 5,
+      "betweenSamples": "Unknown"
+    }
+  },
+  "designForwards": 0,
+  "executionRecordPresent": false,
+  "results": {
+    "focusedPassed": 42,
+    "focusedFiles": 3,
+    "nativeFailed": 1,
+    "nativeSkipped": 3,
+    "nativeDurationSeconds": 203.64
+  },
+  "scope": "The public stop and resume used the pinned native CLI, an owned synthetic source, and a synthetic provider. The second design generation committed durable delivery and then failed resource inspection before its first provider forward. Final acceptance is unverified."
+}

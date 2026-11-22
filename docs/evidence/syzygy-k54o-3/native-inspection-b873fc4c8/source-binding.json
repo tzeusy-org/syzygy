@@ -1,0 +1,174 @@
+{
+  "baseCommit": "b873fc4c8c038a80738d3415adfa4652e706d1e5",
+  "baseTree": "9891deb89a2481f3257b6009f89f2d06c8ef9806",
+  "baseSourceFiles": {
+    "packages/polaris-dossier/src/polaris.ts": "8108ed7afa7b477d38ec1b649f156b64dc891d01b335b1f126fb1bd79ea3be3e",
+    "packages/polaris-dossier/src/policy-snapshot.ts": "16e5751856768c2c56c88226e233f9e71259ee1bcee2aff488fec451144d0bc0",
+    "packages/polaris-dossier/src/render.ts": "53cd99c6cc5613a8739cf48ed64548cbd68c0f3183b88c0f04b9ca669f0b1e1b",
+    "packages/polaris-dossier/src/session-launch.ts": "f867296c11e4501220dafcfebc57374a65b93608d1cab4604d7125f16ad492a9",
+    "packages/polaris-dossier/src/session-relay.ts": "c7ab6f4f29cc7df6db88fc6189d2ff27313cbf8926893f7df703fa8118ec41a2",
+    "packages/polaris-dossier/src/url-design-product.ts": "af45237606eecd398186fd69f6621641c5655ce2d4499967507b8ae853e4926c",
+    "packages/polaris-dossier/src/url-machine-peer.ts": "c4983d0d8d6d699e76fb1a1f18ca4f6731c31f98112150aaaf549b751a90606f",
+    "packages/polaris-dossier/src/url-run-artifacts.ts": "18fd67c54177e10f2f619c656e3a6f34b16498f863fb7aa783792a66112b7f02",
+    "packages/polaris-dossier/src/url-run-ordered-attempt.ts": "009b828db3cb2f5c9a527238ca0f3bf864af2d87a706e9753171bfe0a611cef4",
+    "packages/polaris-dossier/src/url-session-audit.ts": "d0a3e3be202e413f1a1873980b9bc9e6d8687575060c5dd3c5029bd7b060218f",
+    "packages/polaris-dossier/src/url-run-composed.test.ts": "95484d941f449496d1873a7526cfb83da2291a557827aff94ee28c20821cdcd4",
+    "packages/polaris-dossier/src/url-run-composed.testkit.ts": "748f848bdcf4f8a862266cd8ddfd8db1191ea20d470b0b0334f17b36e1f21fc9",
+    "packages/polaris-dossier/src/render.test.ts": "f509e5730c1f9bf5d87f9f462f72ab487be0a9b59c6f4f9b0d25a8c38d4a2153"
+  },
+  "instrumentedSourceFiles": {
+    "packages/polaris-dossier/src/polaris.ts": "6076656a71892b4c990961e8f1a879d7020be212ae5f5fa3e4a3d525250df33f",
+    "packages/polaris-dossier/src/policy-snapshot.ts": "1cb479ac4ac81f7397f111ae956838f44fb5911654cd8c05d0c4c1428f8ab277",
+    "packages/polaris-dossier/src/render.ts": "a12e2ba7fd93588d13a63507bc101e59b37ac8159172f53cc71a9614124b58e3",
+    "packages/polaris-dossier/src/session-launch.ts": "f7e1143f37932645170d68688b13dd02a1528f58b9c117a16cbad3dab556252b",
+    "packages/polaris-dossier/src/session-relay.ts": "543ca6383c9ea629436e125252eb5e8f221340f7283fc32caa16d9230c32aa23",
+    "packages/polaris-dossier/src/url-design-product.ts": "ede5fb22967255674b94bca55e3cacf0abc56fd3b06d2bacadbd6d520a0971fa",
+    "packages/polaris-dossier/src/url-machine-peer.ts": "73144d3a9e79dbf08c571166d135563c90ce26a171bad02d5689c5383269ff5a",
+    "packages/polaris-dossier/src/url-run-artifacts.ts": "fc536840673c71fa023a126c3957ef5b587cfd2d1ce555a6c446e9b8999f82b6",
+    "packages/polaris-dossier/src/url-run-ordered-attempt.ts": "113bd2f0b32a0c6e30380ce9d3eedfa1ff9c19807f3b8187129c132da289bc64",
+    "packages/polaris-dossier/src/url-session-audit.ts": "900c52b4d8b72c4ec7483506cbe5f4af11aaebfa732a3f60dab3f2039af2b536"
+  },
+  "rawArtifacts": [
+    {
+      "file": "overlay.patch",
+      "bytes": 74511,
+      "sha256": "f92efb246c4e657b4d91b19ffd4a23d97636ceedd61b0c600c353bb35552c48c"
+    },
+    {
+      "file": "trace.jsonl",
+      "bytes": 228243,
+      "sha256": "6e6c3eebd1a50a4ff575bc4cd0698c478bf07f5ac8349a1756dd3e712272405d"
+    }
+  ],
+  "retainedOriginalsByDigest": [
+    {
+      "file": "f3-b873fc4c8-diagnostic-subject.txt",
+      "bytes": 1330,
+      "sha256": "bd020e981cf453d347aa98eec3d41c9acf7a32e372fbc65049dafe97fff04d1b"
+    },
+    {
+      "file": "f3-b873fc4c8-stop.log",
+      "bytes": 36043,
+      "sha256": "f523c57320fb48e73db2175d886d84c25df03a72b9b35155f2474060389a0563"
+    },
+    {
+      "file": "f3-b873fc4c8-stop-cut.json",
+      "bytes": 137298,
+      "sha256": "443ba544714b5b051ba9890f6fe1e84993a17cd51c6525ba4239a846e43fe797"
+    },
+    {
+      "file": "f3-b873fc4c8-stop-cut.json.failure.json",
+      "bytes": 40265,
+      "sha256": "78b83cf6d887d98df94d568ba6d6bc730fb0386d03ece18b47a36727ec8f0e21"
+    },
+    {
+      "file": "f3-b873fc4c8-diagnostic.log",
+      "bytes": 36520,
+      "sha256": "147337da6136f809394601fb8dcef7f7e6975810365f103e66e4c96494a4ca7a"
+    },
+    {
+      "file": "f3-b873fc4c8-diagnostic-cut.json",
+      "bytes": 137298,
+      "sha256": "87f39621af2c5434e83b9b08e72677cc98b9eb29bb33a04f138ff9189fc0c8b4"
+    },
+    {
+      "file": "f3-b873fc4c8-diagnostic-cut.json.failure.json",
+      "bytes": 40265,
+      "sha256": "3b547228be43f18d0190f4206422772a84101944e093abdda117bff5db79f66d"
+    }
+  ],
+  "scope": "Owned synthetic public stop-resume fixture. Vitest integration, maxWorkers=1. The base run selected the public case. The instrumented replay also selected the three actual producer timer cases.",
+  "baselineLogAndAuditSummary": {
+    "exitCode": 1,
+    "nativeTestMilliseconds": 206524,
+    "commandMilliseconds": 212230,
+    "resumeChecks": [
+      {
+        "phase": "verify",
+        "ok": true,
+        "nextDesignRound": 2
+      },
+      {
+        "phase": "claim",
+        "exactCut": true,
+        "current": true
+      },
+      {
+        "phase": "resumed-guards",
+        "policyWithdrawal": "refused",
+        "claimWithdrawal": "refused"
+      },
+      {
+        "phase": "machine-claim",
+        "current": true,
+        "claimChecks": 1,
+        "withdrawn": true
+      }
+    ],
+    "freshDesignAuditKinds": [
+      "declaration",
+      "launch-attempt",
+      "launch-history",
+      "launch-terminal"
+    ],
+    "freshDesignTerminal": {
+      "outcome": "inspection-failed",
+      "signal": "SIGTERM",
+      "viewTermination": "view-exited",
+      "groupTermination": "confirmed",
+      "toolTermination": "settled",
+      "pendingInvocations": 0,
+      "sampledStorageBytes": 2192,
+      "peakProcesses": 5
+    },
+    "designForwards": 0
+  },
+  "instrumentedLogAndAuditSummary": {
+    "exitCode": 1,
+    "nativeTestMilliseconds": 202840,
+    "commandMilliseconds": 216940,
+    "resumeChecks": [
+      {
+        "phase": "verify",
+        "ok": true,
+        "nextDesignRound": 2
+      },
+      {
+        "phase": "claim",
+        "exactCut": true,
+        "current": true
+      },
+      {
+        "phase": "resumed-guards",
+        "policyWithdrawal": "refused",
+        "claimWithdrawal": "refused"
+      },
+      {
+        "phase": "machine-claim",
+        "current": true,
+        "claimChecks": 1,
+        "withdrawn": true
+      }
+    ],
+    "freshDesignAuditKinds": [
+      "declaration",
+      "launch-attempt",
+      "launch-history",
+      "launch-terminal"
+    ],
+    "freshDesignTerminal": {
+      "outcome": "inspection-failed",
+      "signal": "SIGTERM",
+      "viewTermination": "view-exited",
+      "groupTermination": "confirmed",
+      "toolTermination": "settled",
+      "pendingInvocations": 0,
+      "sampledStorageBytes": 2192,
+      "peakProcesses": 5
+    },
+    "designForwards": 0,
+    "timerCasesPassed": 3,
+    "nativeCasesFailed": 1,
+    "testsSkipped": 119
+  }
+}
