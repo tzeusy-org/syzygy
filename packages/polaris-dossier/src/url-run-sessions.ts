@@ -109,6 +109,44 @@ export interface UrlRunSessions {
   summary(): Omit<UrlRunSessionsSummary, 'control' | 'hosts' | 'closedAuditHistory' | 'closedMachineHistory'>;
 }
 
+type ResumeStageChecks = ReturnType<ReturnType<typeof createUrlRunArtifacts>['latestStageChecks']>;
+type EligibleDesignSubject = { readonly site: number; readonly draftRevision: number; readonly number: number };
+/** Selection is descriptive only. The caller must supply checks from its live
+ * authenticated bridge and eligible subjects from nominal cold audit reads. */
+function selectResumeRoles(checks: ResumeStageChecks, eligibleDesign: readonly EligibleDesignSubject[]): readonly ViewRole[] {
+  const draft = checks.author?.record.outcome === 'passed' ? checks.author.revision : null;
+  const inventory = checks.inventory?.record.outcome === 'passed' ? checks.inventory.revision : null;
+  const packet = checks.fidelity?.record.packet;
+  const currentFidelity = draft !== null && inventory !== null && checks.fidelity?.record.outcome === 'validated'
+    && isRecord(packet) && packet.draftRevision === draft && packet.inventoryRevision === inventory;
+  const roles = new Set<ViewRole>();
+  if (draft === null) roles.add('author');
+  if (inventory === null) roles.add('inventory');
+  if (!currentFidelity) roles.add('fidelity');
+  const readiness = checks.fidelity?.record.readiness;
+  if (currentFidelity && isRecord(readiness) && readiness.blocking === true) {
+    const verdict = checks.fidelity?.verdict;
+    if (verdict === null || verdict === undefined) throw new Error('url-run-sessions-unavailable');
+    const rows = (key: string) => Array.isArray(verdict[key]) ? verdict[key].filter(isRecord) : [];
+    const inventoryRepair = rows('inventoryAccuracy').some(row => row.accuracy !== 'accurate');
+    const authorRepair = rows('findings').some(row => row.severity === 'blocking')
+      || rows('inventoryCoverage').some(row => row.disposition !== 'represented' && row.disposition !== 'justified-omission')
+      || rows('blockSupport').some(row => row.verdict !== 'supported') || !inventoryRepair;
+    if (authorRepair) roles.add('author');
+    if (inventoryRepair) roles.add('inventory');
+  }
+  const designPacket = checks.design?.record.packet, designReadiness = checks.design?.record.readiness;
+  if (draft !== null && checks.design?.record.outcome === 'validated' && isRecord(designPacket)
+    && isRecord(designReadiness) && designReadiness.blocking === true) {
+    const matching = eligibleDesign.some(attempt => attempt.site === designPacket.site
+      && attempt.draftRevision === draft && attempt.number === checks.design!.revision);
+    if (matching) roles.add('author');
+  }
+  return URL_ROLES.filter(role => roles.has(role));
+}
+/** Pure fixture seam; supplies no claim, process, receipt or effect authority. */
+export const urlRunResumeRolesTestPort = selectResumeRoles;
+
 /** One supervisor owns fresh role processes, typed operator input, cumulative
  * reservation ledger and safe durable audit. Claimed continuation keeps old
  * captures historical. Raw CLI streams and tool/question text are never stored. */
@@ -130,13 +168,17 @@ async function start(options: UrlRunSessionsOptions, ports: typeof native): Prom
       throw new Error('url-run-sessions-unavailable');
     const { verified } = resume, context = verified.checkedContext, declaration = context.effective.declaration;
     const audit = readVerifiedUrlAuditLaunches(verified.verifiedAudits.at(-1));
+    const parent = options.production.parent;
+    const parentBinding = sha256(canonical({ rowId: parent.rowId, landedCommit: parent.landedCommit,
+      tagObject: parent.tagObject, subjects: parent.subjects }));
     if (options.run !== verified.boundary.record.run || canonical(options.record) !== canonical(verified.record)
       || options.deadline !== context.deadline || options.deadline !== verified.boundary.record.deadline
       || options.runtime !== context.runtime || options.originPolicySha256 !== context.origin.binding.sha256
+      || options.screen !== context.screen || sha256(options.production.policyBytes) !== context.policy.binding.sha256
       || canonical(options.declaredClasses) !== canonical(declaration.plannedClasses)
       || canonical(options.plans.map(plan => plan.declaration)) !== canonical(declaration.roles)
       || options.production.protectedRoot !== path.join(URL_HOST_ROOT, 'acquisitions', verified.boundary.record.machineAttempt, 'machine-lifecycle')
-      || canonical(options.production.parent) !== canonical(context.adoption)
+      || parentBinding !== verified.machine.binding.parentBindingSha256
       || audit === null || options.principal !== audit.principal) throw new Error('url-run-sessions-unavailable');
   }
   const plans = [...options.plans];
@@ -493,36 +535,14 @@ async function start(options: UrlRunSessionsOptions, ports: typeof native): Prom
     const resumeRoles = (): readonly ViewRole[] => {
       if (resume === undefined) return plans.filter(plan => !ordered || plan.role !== 'design').map(plan => plan.role);
       const checks = options.production!.artifacts.latestStageChecks();
-      const draft = checks.author?.record.outcome === 'passed' ? checks.author.revision : null;
-      const inventory = checks.inventory?.record.outcome === 'passed' ? checks.inventory.revision : null;
-      const packet = checks.fidelity?.record.packet;
-      const currentFidelity = draft !== null && inventory !== null && checks.fidelity?.record.outcome === 'validated'
-        && isRecord(packet) && packet.draftRevision === draft && packet.inventoryRevision === inventory;
-      const roles = new Set<ViewRole>();
-      if (draft === null) roles.add('author');
-      if (inventory === null) roles.add('inventory');
-      if (!currentFidelity) roles.add('fidelity');
-      const readiness = checks.fidelity?.record.readiness;
-      if (currentFidelity && isRecord(readiness) && readiness.blocking === true) {
-        const verdict = checks.fidelity?.verdict;
-        if (verdict === null || verdict === undefined) throw new Error('url-run-sessions-unavailable');
-        const rows = (key: string) => Array.isArray(verdict[key]) ? verdict[key].filter(isRecord) : [];
-        const inventoryRepair = rows('inventoryAccuracy').some(row => row.accuracy !== 'accurate');
-        const authorRepair = rows('findings').some(row => row.severity === 'blocking')
-          || rows('inventoryCoverage').some(row => row.disposition !== 'represented' && row.disposition !== 'justified-omission')
-          || rows('blockSupport').some(row => row.verdict !== 'supported') || !inventoryRepair;
-        if (authorRepair) roles.add('author');
-        if (inventoryRepair) roles.add('inventory');
-      }
-      const designPacket = checks.design?.record.packet, designReadiness = checks.design?.record.readiness;
-      if (draft !== null && checks.design?.record.outcome === 'validated' && isRecord(designPacket)
-        && isRecord(designReadiness) && designReadiness.blocking === true) {
-        const matching = resume.verified.verifiedAudits.some(audit => readVerifiedUrlAuditLaunches(audit)?.ordered.some(attempt =>
-          attempt.receipt.identity.site === designPacket.site && attempt.receipt.identity.draftRevision === draft
-          && attempt.disposition.kind === 'eligible' && attempt.disposition.checked.number === checks.design!.revision));
-        if (matching) roles.add('author');
-      }
-      return URL_ROLES.filter(role => roles.has(role));
+      const eligibleDesign = resume.verified.verifiedAudits.flatMap(audit => {
+        const metadata = readVerifiedUrlAuditLaunches(audit);
+        if (metadata === null) throw new Error('url-run-sessions-unavailable');
+        return metadata.ordered.flatMap(attempt => attempt.disposition.kind === 'eligible'
+          ? [{ site: attempt.receipt.identity.site, draftRevision: attempt.receipt.identity.draftRevision,
+            number: attempt.disposition.checked.number }] : []);
+      });
+      return selectResumeRoles(checks, eligibleDesign);
     };
     for (const role of resumeRoles()) await launchRole(role);
     if (!ordered) probe.close();
