@@ -25,6 +25,9 @@ import { readVerifiedUrlAuditLaunches, verifyUrlSessionAuditHistory, type UrlSes
 import { verifyColdOrderedDesignAuditHistory } from './url-ordered-design-audit-history.js';
 import * as recovery from './url-recovery.js';
 import * as runMachine from './url-run-machine.js';
+import * as machineTransport from './session-machine-transport.js';
+import * as machinePeer from './url-machine-peer.js';
+import * as sessionLaunch from './session-launch.js';
 import * as policySnapshot from './policy-snapshot.js';
 
 const recoveryHost = await vi.hoisted(async () => {
@@ -119,6 +122,172 @@ beforeAll(async () => { await fs.mkdir(recoveryHost.root, { mode: 0o700 }); awai
 afterAll(async () => { if (process.env['SYZYGY_COMPOSED_RETAIN'] === undefined) await fs.rm(recoveryHost.root, { recursive: true, force: true }); });
 afterEach(async () => { for (const close of cleanup.splice(0).reverse()) await close(); provider.clear(); relayRoles.length = 0; relayObservations.length = 0; settledProviderRoles.clear(); finalResponseDelivery.wait = null; finalResponseDelivery.afterEndTurn = null; vi.restoreAllMocks(); vi.unstubAllEnvs(); });
 
+type ResumeTransportStage = 'open' | 'accept' | 'capture' | 'authorize';
+type ResumeObservation = 'accepted' | 'refused' | 'rejected';
+type ResumeStamp = { startedMs: number; settledMs?: number; outcome?: ResumeObservation };
+type ResumeConnection = {
+  ordinal: number;
+  boundMs?: number;
+  kind?: Parameters<typeof machinePeer.captureUrlMachinePeer>[0]['context']['kind'];
+  stages: Partial<Record<ResumeTransportStage, ResumeStamp>>;
+};
+type ResumeSample = { ordinal: number; verify: ResumeStamp; confirm?: ResumeStamp; confirmationInput?: boolean };
+
+function observeInterruptedResume() {
+  const began = performance.now();
+  const clock = () => Math.round((performance.now() - began) * 1000) / 1000;
+  const socketLinks = new WeakMap<Parameters<typeof machineTransport.openSessionMachineConnection>[0], ResumeConnection>();
+  const peerLinks = new WeakMap<machinePeer.UrlMachinePeer, ResumeConnection>();
+  const connections: ResumeConnection[] = [];
+  const refusals: Partial<Record<ResumeTransportStage, ReturnType<typeof snapshotConnection>>> = {};
+  const transportCounts = { open: 0, accept: 0, capture: 0, authorize: 0 };
+  const samples = { started: 0, verified: 0, verifyRefused: 0, verifyRejected: 0, confirmed: 0, confirmRefused: 0, confirmRejected: 0 };
+  let connectionCount = 0, inspectedLaunches = 0;
+  let latestSample: ResumeSample | undefined, lastConfirmed: ResumeSample | undefined;
+  let firstSampleRefusal: ResumeSample | undefined;
+  let terminal: { atMs: number; outcome: sessionLaunch.UrlSessionLaunchOutcome['outcome']; latestSample?: ResumeSample } | undefined;
+  const preparations = new WeakMap<sessionLaunch.UrlSessionPreparation, () => ResumeSample | undefined>();
+
+  function snapshotSample(sample: ResumeSample | undefined): ResumeSample | undefined {
+    return sample === undefined ? undefined : { ...sample, verify: { ...sample.verify },
+      ...(sample.confirm === undefined ? {} : { confirm: { ...sample.confirm } }) };
+  }
+
+  function snapshotConnection(connection: ResumeConnection) {
+    const { open, accept, capture, authorize } = connection.stages;
+    return { ordinal: connection.ordinal, boundMs: connection.boundMs, kind: connection.kind,
+      open: open && { ...open }, accept: accept && { ...accept },
+      capture: capture && { ...capture }, authorize: authorize && { ...authorize },
+      latestSample: snapshotSample(latestSample) };
+  }
+
+  function link(socket: Parameters<typeof machineTransport.openSessionMachineConnection>[0]) {
+    const existing = socketLinks.get(socket);
+    if (existing !== undefined) return existing;
+    const connection: ResumeConnection = { ordinal: ++connectionCount, stages: {} };
+    socketLinks.set(socket, connection);
+    if (connections.length < 12) connections.push(connection);
+    return connection;
+  }
+
+  // Observe the genuine result and return the same promise to its original caller.
+  function observe<T>(call: () => Promise<T>, settled: (value: T) => void, rejected: () => void): Promise<T> {
+    try {
+      const original = call();
+      void original.then(settled, rejected);
+      return original;
+    } catch (error) { rejected(); throw error; }
+  }
+
+  function transport<T>(connection: ResumeConnection, stage: ResumeTransportStage, call: () => Promise<T>,
+    accepted: (value: T) => boolean): Promise<T> {
+    transportCounts[stage]++;
+    const stamp = { startedMs: clock() };
+    connection.stages[stage] = stamp;
+    const settle = (outcome: ResumeObservation) => {
+      Object.assign(stamp, { settledMs: clock(), outcome });
+      if (outcome !== 'accepted') refusals[stage] ??= snapshotConnection(connection);
+    };
+    return observe(call, value => settle(accepted(value) ? 'accepted' : 'refused'), () => settle('rejected'));
+  }
+
+  const open = machineTransport.openSessionMachineConnection;
+  vi.spyOn(machineTransport, 'openSessionMachineConnection').mockImplementation((socket, selected, limits) => {
+    const connection = link(socket);
+    connection.boundMs = limits.milliseconds;
+    return transport(connection, 'open', () => open(socket, selected, limits), value => value !== null);
+  });
+
+  const create = machineTransport.createSessionMachineTransport;
+  vi.spyOn(machineTransport, 'createSessionMachineTransport').mockImplementation(ports => {
+    const { accept, authorize } = ports;
+    const observedAuthorize: typeof authorize = authorize === undefined ? undefined : (peer, stillOpening) => {
+      const connection = peerLinks.get(peer);
+      if (connection === undefined) return authorize(peer, stillOpening);
+      return transport(connection, 'authorize', () => authorize(peer, stillOpening), value => value === true);
+    };
+    return create({ ...ports, accept(socket) {
+      const connection = link(socket);
+      return transport(connection, 'accept', () => accept.call(this, socket), peer => {
+        if (peer !== null) peerLinks.set(peer, connection);
+        return peer !== null;
+      });
+    }, ...(observedAuthorize === undefined ? {} : { authorize: observedAuthorize }) });
+  });
+
+  const capture = machinePeer.captureUrlMachinePeer;
+  vi.spyOn(machinePeer, 'captureUrlMachinePeer').mockImplementation(options => {
+    if (options.context.role !== 'design') return capture(options);
+    const connection = link(options.socket);
+    connection.kind = options.context.kind;
+    return transport(connection, 'capture', () => capture(options), value => value !== null);
+  });
+
+  const prepare = sessionLaunch.prepareRestrictedUrlSession;
+  vi.spyOn(sessionLaunch, 'prepareRestrictedUrlSession').mockImplementation(input => {
+    const authority = input.inspectionAuthority;
+    if (authority === undefined) return prepare(input);
+    let activeSample: ResumeSample | undefined;
+    const verified = (sample: ResumeSample, outcome: ResumeObservation) => {
+      Object.assign(sample.verify, { settledMs: clock(), outcome });
+      if (outcome === 'accepted') samples.verified++;
+      else {
+        if (outcome === 'refused') samples.verifyRefused++;
+        else samples.verifyRejected++;
+        firstSampleRefusal ??= snapshotSample(sample);
+      }
+    };
+    return observe(() => prepare({ ...input, inspectionAuthority: {
+      verify() {
+        const sample = { ordinal: ++samples.started, verify: { startedMs: clock() } };
+        activeSample = sample;
+        latestSample = sample;
+        try {
+          const original = authority.verify();
+          const settle = (value: boolean) => verified(sample, value === true ? 'accepted' : 'refused');
+          if (typeof original === 'boolean') settle(original);
+          else void original.then(settle, () => verified(sample, 'rejected'));
+          return original;
+        } catch (error) { verified(sample, 'rejected'); throw error; }
+      },
+      confirm(value) {
+        const sample = activeSample;
+        const stamp: ResumeStamp = { startedMs: clock() };
+        let outcome: ResumeObservation = 'rejected';
+        try {
+          const original = authority.confirm(value);
+          outcome = original === true ? 'accepted' : 'refused';
+          return original;
+        } finally {
+          Object.assign(stamp, { settledMs: clock(), outcome });
+          if (sample !== undefined) { sample.confirmationInput = value; sample.confirm = stamp; }
+          if (outcome === 'accepted') { samples.confirmed++; lastConfirmed = snapshotSample(sample); }
+          else {
+            if (outcome === 'refused') samples.confirmRefused++;
+            else samples.confirmRejected++;
+            firstSampleRefusal ??= snapshotSample(sample);
+          }
+        }
+      },
+    } }), result => { preparations.set(result, () => snapshotSample(activeSample)); }, () => {});
+  });
+
+  const launch = sessionLaunch.launchRestrictedUrlSession;
+  vi.spyOn(sessionLaunch, 'launchRestrictedUrlSession').mockImplementation(input => {
+    const sampleForPreparation = preparations.get(input.preparation);
+    if (sampleForPreparation === undefined) return launch(input);
+    return observe(() => launch(input), child => {
+      inspectedLaunches++;
+      void child.finished.then(outcome => {
+        terminal = { atMs: clock(), outcome: outcome.outcome, latestSample: sampleForPreparation() };
+      }, () => {});
+    }, () => {});
+  });
+
+  return () => ({ connectionCount, transportCounts, connections, refusals, inspectedLaunches, samples,
+    latestSample: snapshotSample(latestSample), lastConfirmed, firstSampleRefusal, terminal });
+}
+
 type SeenReceipt = { role: string; id: string; digest: string; bytes: number; toolName: string; inputSha256: string; committed: boolean };
 async function start(f: Fixture, failures: string[], onFailure: (reason: string) => void, receipts: SeenReceipt[], stopRequested: () => boolean) {
   const credential = await loadSessionCredential({ environment: { ANTHROPIC_API_KEY: 'OWN_SYNTHETIC_COMPOSED_CREDENTIAL' },
@@ -163,6 +332,7 @@ describe('composed URL run with actual role processes', { timeout: 360_000 }, ()
     const cut = scenario === 'delivery-stop' || scenario === 'stop-resume';
     const stoppingCut = cut || eligibleStop, resumeAfterStop = scenario === 'stop-resume' || eligibleStop;
     const resumeChecks: unknown[] = [];
+    let resumeDiagnostic: ReturnType<typeof observeInterruptedResume> | undefined;
     let releaseFinalResponses!: () => void;
     if (stoppingCut) finalResponseDelivery.wait = new Promise<void>(resolve => { releaseFinalResponses = resolve; });
     const ordinary = ['author', 'inventory', 'fidelity'] as const;
@@ -552,6 +722,7 @@ describe('composed URL run with actual role processes', { timeout: 360_000 }, ()
             resumedControllers.push(runtime);
             return runtime;
           });
+          if (scenario === 'stop-resume') resumeDiagnostic = observeInterruptedResume();
           const exit = await runPolarisCli(['--supervise', '--resume', f.run, '--state-root', stateRoot], f.ports);
           if (exit !== 0) {
             const summary = resumedControllers[0]?.summary();
@@ -593,7 +764,7 @@ describe('composed URL run with actual role processes', { timeout: 360_000 }, ()
             probe: createCredentialProbe(credentialListFromEnv({})), loadScreen: async () => ({ ok: true as const, screen: f.screen }) });
           expect(again).toMatchObject({ ok: false, refusal: { stage: 'closed-already' } });
           expect(await fs.readFile(path.join(f.run, 'record.json'))).toEqual(recordBytes);
-          await writeEvidence({ recordSha256: sha256(recordBytes), state: resumed, events, resumeChecks,
+          await writeEvidence({ recordSha256: sha256(recordBytes), state: resumed, events, resumeChecks, resumeDiagnostic: resumeDiagnostic?.(),
             requestsBeforeResume: forwardsBeforeResume,
             requestsAfterResume: [author.count(), inv.count(), fidelity.count(), design.count()],
             launchesBeforeResume, launchesAfterResume: [...relayRoles],
@@ -625,11 +796,11 @@ describe('composed URL run with actual role processes', { timeout: 360_000 }, ()
         // A failure manifest is separate from any already retained valid cut.
         await fs.writeFile(`${retainedCut}.failure.json`, JSON.stringify({ scenario, run: f.run, root: f.root, hidden: f.hidden,
           failure: error instanceof Error ? error.message : 'Unknown', inputTreeSha256: runtime.inputTreeSha256,
-          profileRegistrySha256: runtime.profileRegistrySha256, stopped, events, failures, resumeChecks }, null, 2));
+          profileRegistrySha256: runtime.profileRegistrySha256, stopped, events, failures, resumeChecks, resumeDiagnostic: resumeDiagnostic?.() }, null, 2));
       }
       throw new Error(JSON.stringify({ failure: error instanceof Error ? error.message : 'Unknown', events, failures,
         roles: controller.summary(), authorForwards: author.count(), inventoryForwards: inv.count(), fidelityForwards: fidelity.count(), designForwards: design.count(),
-        resumeChecks, producerReports: f.producerReports(), reads: f.productReadReports(), relayObservations, receipts }));
+        resumeChecks, resumeDiagnostic: resumeDiagnostic?.(), producerReports: f.producerReports(), reads: f.productReadReports(), relayObservations, receipts }));
     }
   }, scenario === 'stop-resume' ? 540_000 : 360_000);
 });
