@@ -1,0 +1,91 @@
+{
+  "format": "f3-native-composed-evidence/1",
+  "subjectCommit": "22e59be1c6313d2546dbc0c4f47a17bd1c8c0ab2",
+  "tree": "d49689e741634df52f687a010419405c4a9fd21e",
+  "inputTreeSha256": "4076830dffc7a392cfa9bfabafa520d9c2128da5667be9da815f88f19f5a132a",
+  "profileRegistrySha256": "7ce1d696d7f6bd3f97b8234c3350838402a8b2860d2fced0ff1adcce7cd344a1",
+  "command": "npx --no-install vitest run --project integration --maxWorkers=1 packages/polaris-dossier/src/url-run-composed.test.ts -t 'pipeline to eligible-stop-resume$'",
+  "files": [
+    {
+      "path": "packages/polaris-dossier/src/polaris.ts",
+      "sha256": "0aeafeb816d9c04c4728ae835f5add409331a70b6d0cab5b71d5eb4892983cc2"
+    },
+    {
+      "path": "packages/polaris-dossier/src/render.ts",
+      "sha256": "753e1279de1d6c166ee905322839760014190abfc8d87fb371582e3d7325fa13"
+    },
+    {
+      "path": "packages/polaris-dossier/src/url-design-product.ts",
+      "sha256": "25827df699e2060bd16c78f0659c2a0413ba8052cbbb7203aedb9a8030e4e742"
+    },
+    {
+      "path": "packages/polaris-dossier/src/url-launch-history.test.ts",
+      "sha256": "e9609662a9a4964b57d3eaf864ea67aa7c40627f11a57685979efea5bb0c64d5"
+    },
+    {
+      "path": "packages/polaris-dossier/src/url-run-sessions.ts",
+      "sha256": "a09d782c01b7b04a4abf2c265667ebf1f4caae33688f5beb9cf5832e0067b2c7"
+    },
+    {
+      "path": "packages/polaris-dossier/src/url-session-audit.ts",
+      "sha256": "78292e4a0ac1ac6abe235adee9da523eb406258ec6390b5b27109244e0415aee"
+    },
+    {
+      "path": "packages/polaris-dossier/src/url-run-composed.test.ts",
+      "sha256": "96c9f0daa2cafea41dd18d490c6c34f4bacfdd031d252f55ed31896ea38db1b7"
+    },
+    {
+      "path": "packages/polaris-dossier/src/url-run-composed.testkit.ts",
+      "sha256": "748f848bdcf4f8a862266cd8ddfd8db1191ea20d470b0b0334f17b36e1f21fc9"
+    },
+    {
+      "path": "packages/polaris-dossier/src/url-run-ordered-attempt.ts",
+      "sha256": "8edcd9c6d5486b0e38c7241136544fbed20da24a225e6466cbe793f61da47320"
+    }
+  ],
+  "artifacts": [
+    {
+      "path": "vitest.log",
+      "bytes": 1761,
+      "sha256": "bbb37914124b94db207cebc4e052c5817e602401e54b25020ad9b75853cd1dd1"
+    },
+    {
+      "path": "witness.json",
+      "bytes": 5216,
+      "sha256": "d5e734f0c8f1e35ab855eb10c560a5b129bbb1f3d94f91a5d740172163edc6d3"
+    }
+  ],
+  "result": {
+    "testsPassed": 1,
+    "testsSkipped": 3,
+    "testsTotal": 4,
+    "caseMilliseconds": 251713,
+    "totalSeconds": 256.37,
+    "executionRecordSha256": "9babf2f4d54303253a3efda589c2cd076a068ab1066e27e22b220c999bf24f49",
+    "secondCloseStage": "closed-already",
+    "existingRecordLoss": false,
+    "freshContinuations": 2,
+    "restartedRoles": 0,
+    "requestsBeforeResume": [
+      7,
+      6,
+      4,
+      5
+    ],
+    "requestsAfterResume": [
+      7,
+      6,
+      4,
+      5
+    ],
+    "finalSite": {
+      "draftRevision": 0,
+      "packetSha256": "2db40f650c9bf1e5af265f5f20414ec0ac51c338a31614a08316ada76079ab80",
+      "populationSha256": "fc02bb287e490e1d8d28a9af76bb7435ec40c6ba0380641ebdbec94a0a46df66",
+      "site": 2,
+      "verdict": 0,
+      "verdictEventSha256": "ad2eff3ea2efc0df9233e4e80632bc031ee0c20006d5d89f8522d1bb23e0725c"
+    }
+  },
+  "limits": "Initial preparation was fixture-controlled. Cold resume used the public CLI, the owned synthetic repository and provider, and genuine restricted native processes before stop. Provider receipts and uncaptured sends remain Unknown."
+}

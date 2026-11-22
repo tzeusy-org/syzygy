@@ -1,0 +1,20 @@
+
+ RUN  v3.2.7 /home/orca/.tmp/syzygy-beads-looper-20261114-54ebc9f1/d10-f3-final-verification
+
+[2J[Hsyzygy polaris — launched run (prototype)   detach: C-b d   windows: C-b n / C-b p
+──────────────────────────────────────────────────────────────────────────────
+run    run-90ec33819c1943cee45cff5d179d2bc0
+result complete, final site /home/orca/.tmp/url-composed-2xNvKV/runs/run-90ec33819c1943cee45cff5d179d2bc0/site/2, execution record /home/orca/.tmp/url-composed-2xNvKV/runs/run-90ec33819c1943cee45cff5d179d2bc0/record.json
+cleanup owned process groups and pending callbacks confirmed settled
+Provider receipts and uncaptured send completeness remain Unknown.
+A retained tmux view is for inspection.
+──────────────────────────────────────────────────────────────────────────────
+12:42:56  run ended: complete, final site /home/orca/.tmp/url-composed-2xNvKV/runs/run-90ec33819c1943cee45cff5d179d2bc0/site/2, execution record /home/orca/.tmp/url-composed-2xNvKV/runs/run-90ec33819c1943cee45cff5d179d2bc0/record.json
+ ✓ |integration| packages/polaris-dossier/src/url-run-composed.test.ts (4 tests | 3 skipped) 253221ms
+   ✓ composed URL run with actual role processes > runs the genuine production pipeline to eligible-stop-resume  251713ms
+
+ Test Files  1 passed (1)
+      Tests  1 passed | 3 skipped (4)
+   Start at  20:38:40
+   Duration  256.37s (transform 2.12s, setup 10ms, collect 2.84s, tests 253.22s, environment 0ms, prepare 49ms)
+

@@ -1,0 +1,178 @@
+{
+  "scenario": "eligible-stop-resume",
+  "inputTreeSha256": "4076830dffc7a392cfa9bfabafa520d9c2128da5667be9da815f88f19f5a132a",
+  "profileRegistrySha256": "7ce1d696d7f6bd3f97b8234c3350838402a8b2860d2fced0ff1adcce7cd344a1",
+  "profiles": [
+    {
+      "role": "author",
+      "id": "claude-2.1.327-sonnet46/2",
+      "sha256": "93e87d7d86fb22539d525b067836c6427857ad580d7c5b5d5f82b4e1d9cbbfd7"
+    },
+    {
+      "role": "inventory",
+      "id": "claude-2.1.327-sonnet46/2",
+      "sha256": "3d61187c36fc5f5d8cac0aca03db8bdb62683bd17c27bdc96339cce7f940c084"
+    },
+    {
+      "role": "fidelity",
+      "id": "claude-2.1.327-sonnet46/2",
+      "sha256": "b33b6cf4ce6a80f7afa59418c39b858f5a780bbbf13e264739430e6743597dc2"
+    },
+    {
+      "role": "design",
+      "id": "claude-2.1.327-sonnet46/ordered-design-6",
+      "sha256": "f346587e56129c5f9b83635092f5c15a87bf7d5e37f8e080cc07cab8b01f17ef"
+    }
+  ],
+  "recordSha256": "9babf2f4d54303253a3efda589c2cd076a068ab1066e27e22b220c999bf24f49",
+  "state": {
+    "authorSkipPermissions": false,
+    "briefIssuedAt": 1795351129797,
+    "clone": "/home/orca/.tmp/url-composed-2xNvKV/kestrel",
+    "deadlineSeconds": 7200,
+    "declarationSha256": "d482502cc89a3771b2f1425f100ac14a460269d8eb2dc9f077c67d6f9bc5d9af",
+    "designDeliveredFor": [],
+    "done": "2026-11-22T12:42:56.589Z",
+    "fidelityDeliveredFor": [],
+    "fidelityDeliveredPairs": [
+      "0/0"
+    ],
+    "finalSite": {
+      "draftRevision": 0,
+      "packetSha256": "2db40f650c9bf1e5af265f5f20414ec0ac51c338a31614a08316ada76079ab80",
+      "populationSha256": "fc02bb287e490e1d8d28a9af76bb7435ec40c6ba0380641ebdbec94a0a46df66",
+      "site": 2,
+      "verdict": 0,
+      "verdictEventSha256": "ad2eff3ea2efc0df9233e4e80632bc031ee0c20006d5d89f8522d1bb23e0725c"
+    },
+    "format": "polaris-supervisor/2",
+    "launches": [],
+    "mode": "URL-supervised local CLI through checked transport relay",
+    "model": "claude-sonnet-4-6",
+    "notified": [],
+    "run": "/home/orca/.tmp/url-composed-2xNvKV/runs/run-90ec33819c1943cee45cff5d179d2bc0",
+    "runId": "run-90ec33819c1943cee45cff5d179d2bc0",
+    "sessions": [
+      {
+        "allowedTools": null,
+        "directory": "/home/orca/.tmp/url-composed-2xNvKV/runs/run-90ec33819c1943cee45cff5d179d2bc0",
+        "prompt": "",
+        "promptSha256": "d2823bd4553c66c1f220764979c1567b5a9d63406c05bc868f1197f5d4c800e8",
+        "role": "author",
+        "session": 1
+      },
+      {
+        "allowedTools": null,
+        "directory": "/home/orca/.tmp/url-composed-2xNvKV/runs/run-90ec33819c1943cee45cff5d179d2bc0.sessions/session-1",
+        "prompt": "",
+        "promptSha256": "661eaa4ef4a6d1780029126b96ee5490d82c2580afa87db381528d4771572d8b",
+        "role": "inventory",
+        "session": 1
+      },
+      {
+        "allowedTools": null,
+        "directory": "/home/orca/.tmp/url-composed-2xNvKV/runs/run-90ec33819c1943cee45cff5d179d2bc0.sessions/fidelity-1",
+        "prompt": "",
+        "promptSha256": "62e1bacd80039dc2b7511b2888aa72d27b8383c87244e5d8aa407464ddd79e3f",
+        "role": "fidelity",
+        "session": 1
+      },
+      {
+        "allowedTools": null,
+        "directory": "/home/orca/.tmp/url-composed-2xNvKV/runs/run-90ec33819c1943cee45cff5d179d2bc0.sessions/design-1",
+        "prompt": "",
+        "promptSha256": "b8ab5aa0cf2074b83133cfec6c0d1ceb33358bcd6b724507ea543b6a93419828",
+        "role": "design",
+        "session": 1
+      }
+    ],
+    "siteFor": {
+      "0": 0
+    },
+    "stopGeneration": "c06d7044d49954d16645c09ed5c17d5d",
+    "stopped": "2026-11-22T12:42:56.589Z",
+    "tmuxSession": "polaris-owncomposed",
+    "url": "https://example.invalid/own/source"
+  },
+  "events": [
+    "told the inventory session: draft revision 0 is frozen",
+    "delivered the fidelity packet for draft revision 0 and inventory revision 0",
+    "rendering draft revision 0",
+    "prepared design round 1 for the reviewer",
+    "run ended: operator stop requested, checked history retained"
+  ],
+  "resumeChecks": [
+    {
+      "phase": "verify",
+      "ok": true,
+      "nextDesignRound": 2
+    },
+    {
+      "phase": "claim",
+      "exactCut": true,
+      "current": true
+    },
+    {
+      "phase": "resumed-guards",
+      "policyWithdrawal": "refused",
+      "claimWithdrawal": "refused"
+    },
+    {
+      "phase": "machine-claim",
+      "current": true,
+      "claimChecks": 1,
+      "withdrawn": true,
+      "asyncCurrent": true,
+      "asyncWithdrawn": true
+    },
+    {
+      "phase": "cold-final-prepared",
+      "available": true
+    },
+    {
+      "phase": "cold-final-factory",
+      "issued": true
+    },
+    {
+      "phase": "cold-final-prepared",
+      "available": true
+    },
+    {
+      "phase": "cold-final-factory",
+      "issued": true
+    }
+  ],
+  "requestsBeforeResume": [
+    7,
+    6,
+    4,
+    5
+  ],
+  "requestsAfterResume": [
+    7,
+    6,
+    4,
+    5
+  ],
+  "launchesBeforeResume": [
+    "author",
+    "inventory",
+    "fidelity",
+    "design"
+  ],
+  "launchesAfterResume": [
+    "author",
+    "inventory",
+    "fidelity",
+    "design"
+  ],
+  "deliveryReproductions": [
+    [
+      0,
+      0
+    ]
+  ],
+  "finalSiteBeforeStop": 1,
+  "coldFinalContinuations": 2,
+  "orderedBeginsAfterResume": 0
+}
