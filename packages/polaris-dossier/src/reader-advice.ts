@@ -1,5 +1,6 @@
 import { isRecord } from '@syzygy/support';
 import { READER_STANDARDS_VERSION } from './reader-standards.js';
+import { NO_LAYOUT, type FigureFitEntry } from './figure-fit.js';
 
 /** The counted reader standards (`reader-standards.ts`, syzygy-pdja.17): what `syzygy dossier check` can measure of RS-13, RS-14, RS-16,
  * RS-17 (an edge's locality, syzygy-3efd.17) and RS-19 in a draft, reported to the author as advice. Advice is never a finding: it sets no outcome, is on the check's report only
@@ -19,6 +20,31 @@ export interface ReaderAdvice {
   readonly note: string;
   readonly advisories: readonly ReaderAdvisory[];
 }
+
+/** The class of an item of check's advice to the author (REQ-polaris-generation-034 version 2.9, syzygy-3efd.64): `author` where a change to
+ * the draft can clear it; `mechanism` where no change to the content of the draft's figures can, and the remedy lies in Syzygy's renderer,
+ * layout, stylesheet or schema. */
+export type AdviceClass = 'author' | 'mechanism';
+
+/** The rules by which a figure-fit entry is `mechanism`, each at version 1. */
+export const MECHANISM_RULES = [{ id: 'no-figure-layout', version: 1 }, { id: 'graph-without-narrow-form', version: 1 }] as const;
+export type MechanismRuleId = (typeof MECHANISM_RULES)[number]['id'];
+
+/** The width of a drawing the readable layout lays out in two columns: the least it gives a figure with an arrow whose ends lie in two
+ * columns, so no change confined to the figure's graph members draws such a figure in a narrower column. */
+export const TWO_COLUMN_WIDTH_PX = 648;
+
+/** Every reader advisory is `author` at this version: each is cleared by retitling, cutting, drawing, citing or merging in the draft. */
+export const readerAdvisoryClass = (_advisory: ReaderAdvisory): AdviceClass => 'author';
+
+/** The `mechanism` rule a figure-fit entry falls under, or null where it is `author`. A function of the entry alone: only a graph figure's
+ * entry carries numbers, since a figure of the other v7 kinds is drawn at the column's width and never fails. */
+export function mechanismRuleOf(entry: FigureFitEntry): MechanismRuleId | null {
+  if ('unknown' in entry) return entry.unknown === NO_LAYOUT ? 'no-figure-layout' : null;
+  return entry.columnPx < TWO_COLUMN_WIDTH_PX && entry.laidOutPx >= TWO_COLUMN_WIDTH_PX ? 'graph-without-narrow-form' : null;
+}
+
+export const figureFitClass = (entry: FigureFitEntry): AdviceClass => (mechanismRuleOf(entry) === null ? 'author' : 'mechanism');
 
 /** RS-14: at most this many deep dives. */
 export const DEEP_DIVE_LIMIT = 3;
