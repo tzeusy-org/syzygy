@@ -16,7 +16,9 @@ import { bindUrlSourceReader } from './url-source-reader.js';
 import { runStatus } from './status.js';
 import { closeRun } from './close.js';
 import { renderRun, type DossierRenderer, type DossierRendererInput } from './render.js';
-import { FIXTURE_SCREEN, fixtureSources, fullFixtureRun, makeClone, NOW, LATER, policyFixture, REAL_ROOT } from './full-run.testkit.js';
+import { FIXTURE_SCREEN, commitPolicyFixture, fixtureSources, fullFixtureRun, makeClone, NOW, LATER, policyFixture, REAL_ROOT } from './full-run.testkit.js';
+import { readCommittedPolicy } from './policy-snapshot.js';
+import { packageUrlRunModeAuthority, registerUrlRunMode } from './url-mode-registry.js';
 
 const H = 'a'.repeat(64), OTHER = 'b'.repeat(64), PIN = 'c'.repeat(40);
 const RUN = `run-${'d'.repeat(32)}`;
@@ -27,14 +29,14 @@ const config = () => {
   if (!parsed.ok) throw new Error('synthetic configuration refused');
   return parsed.config;
 };
-function ownRun(): string {
+function ownRun(screeningPolicy = policyFixture().binding): string {
   const root = tempDir('effective-run-record-'), run = path.join(root, RUN);
   fs.mkdirSync(run);
   fs.writeFileSync(path.join(run, 'run.json'), encodeRunRecord(config(), {
     repository: { url: 'example.invalid/team/project', repositoryId: 'team-project', role: 'observed-source' },
     clone: { path: path.join(root, 'unused-synthetic-clone'), declaredBy: 'operator', label: 'Inferred', use: 'read' },
     pinnedRevision: { commit: PIN, label: 'synthetic pin selection', pinnedAt: '2026-10-07T12:00:00.000Z' },
-    screeningPolicy: policyFixture().binding, contentClasses: DOSSIER_CONTENT_CLASSES,
+    screeningPolicy, contentClasses: DOSSIER_CONTENT_CLASSES,
     visibility: { value: 'private', source: 'conservative-default', declaredBy: 'synthetic default', label: 'Inferred' },
     governed: { kind: 'unstated', because: ['synthetic fixture has no project declaration'] },
     workItem: { identity: null, reason: NO_WORK_ITEM_REASON },
@@ -71,23 +73,61 @@ function bindUrl(run: string, screenMetadata: (text: string) => boolean = () => 
   if (!encoded.ok) throw new Error('synthetic URL declaration invalid');
   fs.writeFileSync(path.join(run, URL_RUN_SIDECAR), encoded.text);
   const bound = { ...context, expectedSidecarSha256: encoded.sha256 };
+  const createMetadataScreen = () => screenMetadata;
   const authority: EffectiveRunAuthority = (canonical, id) => canonical === run && id === runId
-    ? { kind: 'url', context: bound, screenMetadata } : { kind: 'refused' };
+    ? { kind: 'url', context: bound, createMetadataScreen } : { kind: 'refused' };
   return { ...encoded, authority, context: bound, core: read.record };
 }
 
 describe('effective host run readers', () => {
+  it('keeps the package URL authority current across reads and reopens committed policy for a full metadata check', () => {
+    const recordsRoot = commitPolicyFixture(tempDir('effective-run-observer-'), policyFixture().bytes);
+    const policy = readCommittedPolicy(recordsRoot);
+    if (!policy.ok) throw new Error('synthetic committed policy refused');
+    const policyFile = path.join(recordsRoot, policy.binding.path);
+    const root = tempDir('effective-run-host-');
+    const run = ownRun(policy.binding), authority = packageUrlRunModeAuthority(recordsRoot, root);
+    const url = bindUrl(run);
+    expect(registerUrlRunMode({ root, run, context: url.context })).toBe(true);
+    expect(readEffectiveRunRecord(run, authority)).toMatchObject({ ok: true, effective: { kind: 'url' } });
+    const current = bindCurrentEffectiveUrlRun(run, authority, {
+      baseSha256: sha256(fs.readFileSync(path.join(run, 'run.json'))), sidecarSha256: url.sha256,
+    });
+    expect(current).not.toBeNull();
+    expect(current?.()).toBe(true);
+    expect(current?.()).toBe(true);
+
+    fs.appendFileSync(policyFile, '\n');
+    expect(readEffectiveRunRecord(run, authority)).toMatchObject({ ok: false, code: 'metadata-screen' });
+    expect(readEffectiveRunRecord(ownRun(policy.binding), authority)).toMatchObject({ ok: true, effective: { kind: 'operator' } });
+    fs.writeFileSync(policyFile, policy.bytes);
+    expect(readEffectiveRunRecord(run, authority)).toMatchObject({ ok: true, effective: { kind: 'url' } });
+
+    const sidecar = path.join(run, URL_RUN_SIDECAR);
+    fs.appendFileSync(sidecar, '\n');
+    expect(current?.()).toBe(false);
+    fs.writeFileSync(sidecar, url.text);
+    expect(current?.()).toBe(true);
+    fs.unlinkSync(path.join(root, `${sha256(run)}.json`));
+    expect(current?.()).toBe(false);
+  });
+
   it('rechecks exact admitted files and protected URL authority without repeating the bound screening', () => {
     const run = ownRun(), base = path.join(run, 'run.json'), sidecar = path.join(run, URL_RUN_SIDECAR);
-    let screened = 0, revoked = false, changedContext = false;
+    let opened = 0, screened = 0, revoked = false, changedContext = false, changedScreen = false;
     const screen = () => { screened++; return true; };
+    const createMetadataScreen = () => { opened++; return screen; };
+    const otherMetadataScreen = () => () => true;
     const url = bindUrl(run, screen);
     const authority: EffectiveRunAuthority = () => revoked ? { kind: 'refused' }
-      : { kind: 'url', context: changedContext ? { ...url.context, expectedProfileSha256: OTHER } : url.context, screenMetadata: screen };
+      : { kind: 'url', context: changedContext ? { ...url.context, expectedProfileSha256: OTHER } : url.context,
+        createMetadataScreen: changedScreen ? otherMetadataScreen : createMetadataScreen };
     const expected = { baseSha256: sha256(fs.readFileSync(base)), sidecarSha256: url.sha256 };
     expect(bindCurrentEffectiveUrlRun(run, authority, { ...expected, sidecarSha256: OTHER })).toBeNull();
+    const beforeBinding = opened;
     const current = bindCurrentEffectiveUrlRun(run, authority, expected)!;
     expect(current).not.toBeNull();
+    expect(opened).toBe(beforeBinding + 1);
     const initialChecks = screened;
     expect(initialChecks).toBeGreaterThan(0);
     expect(current()).toBe(true);
@@ -95,6 +135,9 @@ describe('effective host run readers', () => {
     changedContext = true;
     expect(current()).toBe(false);
     changedContext = false;
+    changedScreen = true;
+    expect(current()).toBe(false);
+    changedScreen = false;
     for (const file of [base, sidecar]) {
       const original = fs.readFileSync(file);
       fs.appendFileSync(file, ' ');
@@ -111,6 +154,7 @@ describe('effective host run readers', () => {
     }) as typeof fs.readSync);
     try { expect(current()).toBe(false); } finally { restoreRead(); }
     expect(withdrawnDuringRead).toBe(true);
+    expect(opened).toBe(beforeBinding + 1);
     expect(screened).toBe(initialChecks);
   });
 
@@ -142,17 +186,17 @@ describe('effective host run readers', () => {
     fs.unlinkSync(path.join(run, URL_RUN_SIDECAR));
     expect(readEffectiveRunRecord(run, url.authority)).toMatchObject({ ok: false, code: 'mode-binding' });
     fs.writeFileSync(path.join(run, URL_RUN_SIDECAR), url.text);
-    const wrong: EffectiveRunAuthority = () => ({ kind: 'url', context: { ...url.context, expectedProfileSha256: OTHER }, screenMetadata: () => true });
+    const wrong: EffectiveRunAuthority = () => ({ kind: 'url', context: { ...url.context, expectedProfileSha256: OTHER }, createMetadataScreen: () => () => true });
     expect(readEffectiveRunRecord(run, wrong)).toMatchObject({ ok: false, code: 'invalid-record' });
-    const missing = () => ({ kind: 'url', context: { runId: RUN }, screenMetadata: () => true });
+    const missing = () => ({ kind: 'url', context: { runId: RUN }, createMetadataScreen: () => () => true });
     expect(readEffectiveRunRecord(run, missing as EffectiveRunAuthority)).toMatchObject({ ok: false, code: 'mode-binding' });
     for (const name of ['expectedBasePolicy', 'expectedOriginPolicy', 'expectedSourceTransport', 'expectedProfileSha256']) {
       const context = { ...url.context } as unknown as Record<string, unknown>; delete context[name];
-      const incomplete = () => ({ kind: 'url', context, screenMetadata: () => true });
+      const incomplete = () => ({ kind: 'url', context, createMetadataScreen: () => () => true });
       expect(readEffectiveRunRecord(run, incomplete as unknown as EffectiveRunAuthority)).toMatchObject({ ok: false, code: 'mode-binding' });
     }
     let changed = false;
-    const racing: EffectiveRunAuthority = () => ({ kind: 'url', context: url.context, screenMetadata: () => {
+    const racing: EffectiveRunAuthority = () => ({ kind: 'url', context: url.context, createMetadataScreen: () => () => {
       if (!changed) { changed = true; fs.appendFileSync(path.join(run, 'run.json'), ' '); }
       return true;
     } });
@@ -208,10 +252,10 @@ describe('effective host run readers', () => {
     expect(refused).toMatchObject({ ok: false, code: 'metadata-screen' });
     expect(JSON.stringify(refused)).not.toContain('NONSECRET');
     for (const denied of ['Distinct Git source-transport provider', '"selectionCapturedAt":']) {
-      const composed: EffectiveRunAuthority = () => ({ kind: 'url', context: url.context, screenMetadata: text => !text.includes(denied) });
+      const composed: EffectiveRunAuthority = () => ({ kind: 'url', context: url.context, createMetadataScreen: () => text => !text.includes(denied) });
       expect(readEffectiveRunRecord(run, composed)).toMatchObject({ ok: false, code: 'metadata-screen' });
     }
-    const throwing: EffectiveRunAuthority = () => ({ kind: 'url', context: url.context, screenMetadata: () => { throw new Error('NONSECRET unsafe scanner diagnostic'); } });
+    const throwing: EffectiveRunAuthority = () => ({ kind: 'url', context: url.context, createMetadataScreen: () => { throw new Error('NONSECRET unsafe scanner diagnostic'); } });
     expect(readEffectiveRunRecord(run, throwing)).toMatchObject({ ok: false, code: 'metadata-screen' });
     const corrupted = JSON.parse(url.text); corrupted['NONSECRET-excess'] = 'NONSECRET-diagnostic';
     fs.writeFileSync(path.join(run, URL_RUN_SIDECAR), JSON.stringify(corrupted));

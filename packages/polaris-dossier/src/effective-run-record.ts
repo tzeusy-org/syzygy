@@ -12,9 +12,11 @@ export const URL_RUN_SIDECAR = 'url-declaration.json';
 export const URL_MODE_MARKERS = Object.freeze(['launched.json', 'url-acquisition.json', 'url-supervisor.json', 'url-attempt.json'] as const);
 export type ProtectedUrlRunContext = UrlRunDeclarationContext & Required<Pick<UrlRunDeclarationContext,
   'expectedBasePolicy' | 'expectedOriginPolicy' | 'expectedSourceTransport' | 'expectedProfileSha256'>>;
+/** A stable authority identity that opens a screen for one full record read. */
+export type CreateMetadataScreen = () => ((text: string) => boolean) | null;
 export type EffectiveRunAuthority = (canonicalRun: string, runId: string) =>
   | { readonly kind: 'operator' }
-  | { readonly kind: 'url'; readonly context: ProtectedUrlRunContext; readonly screenMetadata: (text: string) => boolean }
+  | { readonly kind: 'url'; readonly context: ProtectedUrlRunContext; readonly createMetadataScreen: CreateMetadataScreen }
   | { readonly kind: 'refused' };
 export type EffectiveRunReadFailureCode = 'run-unreadable' | 'record-unreadable' | 'invalid-record' | 'mode-binding' | 'metadata-screen';
 export type EffectiveRunReadResult =
@@ -26,7 +28,7 @@ type VerifiedUrlRecord = {
   readonly core: RecordedRunConfig;
   readonly effective: Extract<EffectiveRunDeclaration, { kind: 'url' }>;
   readonly context: string;
-  readonly screen: (text: string) => boolean;
+  readonly createMetadataScreen: CreateMetadataScreen;
   readonly baseSha256: string;
   readonly sidecarSha256: string;
 };
@@ -164,14 +166,15 @@ export function bindCurrentEffectiveUrlRun(runDir: string, authority: EffectiveR
   try {
     const checked: VerifiedUrlRecord = {
       core: first.core, effective: first.effective, context: encodeCanonicalJson(captured.host.context, URL_DECLARATION_LIMITS),
-      screen: captured.host.screenMetadata, baseSha256: expected.baseSha256, sidecarSha256: expected.sidecarSha256,
+      createMetadataScreen: captured.host.createMetadataScreen,
+      baseSha256: expected.baseSha256, sidecarSha256: expected.sidecarSha256,
     };
     return () => readRunRecordFiles(first.run, authority, checked).ok;
   } catch { return null; }
 }
 
 function matchesVerifiedAuthority(host: ReturnType<EffectiveRunAuthority> | undefined, record: VerifiedUrlRecord): boolean {
-  return host?.kind === 'url' && host.screenMetadata === record.screen
+  return host?.kind === 'url' && host.createMetadataScreen === record.createMetadataScreen
     && encodeCanonicalJson(host.context, URL_DECLARATION_LIMITS) === record.context;
 }
 
@@ -195,7 +198,7 @@ function readRunRecordFiles(runDir: string, authority: EffectiveRunAuthority | u
     if (base === null) return refusal('record-unreadable');
     const marker = URL_MODE_MARKERS.some(name => entry(anchor, name) !== null);
     if (host?.kind !== 'url' && (sidecar !== null || marker)) return refusal('mode-binding');
-    if (host?.kind === 'url' && (!RUN_ID.test(runId) || sidecar === null || typeof host.screenMetadata !== 'function'
+    if (host?.kind === 'url' && (!RUN_ID.test(runId) || sidecar === null || typeof host.createMetadataScreen !== 'function'
       || host.context?.runId !== runId || !host.context.expectedBasePolicy || !host.context.expectedOriginPolicy
       || !host.context.expectedSourceTransport || !host.context.expectedProfileSha256)) return refusal('mode-binding');
     let core: RecordedRunConfig, effective: EffectiveRunDeclaration;
@@ -210,8 +213,10 @@ function readRunRecordFiles(runDir: string, authority: EffectiveRunAuthority | u
       const read = readEffectiveRunDeclaration(baseText, sidecar!.bytes, host.context);
       if (!read.ok || read.effective.kind !== 'url') return refusal('invalid-record');
       core = read.core; effective = read.effective;
-      try { if (!screenAll(core, read.effective.declaration, host.screenMetadata)) return refusal('metadata-screen'); }
-      catch { return refusal('metadata-screen'); }
+      try {
+        const screen = host.createMetadataScreen();
+        if (screen === null || !screenAll(core, read.effective.declaration, screen)) return refusal('metadata-screen');
+      } catch { return refusal('metadata-screen'); }
     } else {
       const baseText = new TextDecoder('utf-8', { fatal: true, ignoreBOM: true }).decode(base.bytes);
       const read = readRunRecord(baseText);

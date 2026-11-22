@@ -331,9 +331,9 @@ async function preparedUrlRender() {
       inputOriginId: ledger.metadata(initialReceipts[plan.role]).id, capture: { pid: 'Unknown', startedAt: 'Unknown', finishedAt: 'Unknown', outcome: 'Unknown' } })) }, context);
   if (!declared.ok) throw Error(`URL timing declaration ${declared.code}`); write('url-declaration.json', declared.text);
   const effectiveDeclaration = { declaration: declared.declaration, bytes: Buffer.from(declared.text), context: { ...context, expectedSidecarSha256: declared.sha256 } };
+  const createMetadataScreen = () => (text: string) => loaded.screen.screenSecrets(text) === undefined;
   const urlSources = { ...sources(), declaredPolicy: async () => ({ ok: true as const, bytes: baseBytes, binding: policyBinding }),
-    effectiveRunDeclaration: () => ({ kind: 'url' as const, context: effectiveDeclaration.context,
-      screenMetadata: (text: string) => loaded.screen.screenSecrets(text) === undefined }) };
+    effectiveRunDeclaration: () => ({ kind: 'url' as const, context: effectiveDeclaration.context, createMetadataScreen }) };
   const deps = { sources: urlSources, openReader: bindUrlSourceReader({ clone, revision: commit, store: 'owned-loose', current: () => true }), now: () => LATER, probe: neverProbe, loadScreen: async () => loaded,
     renderer: installed.renderer, urlRenderer: installed };
   const brief = await issueBrief(run, { ...deps, now: () => NOW }); if (!brief.ok) throw Error(`URL timing brief ${brief.refusal.reason}`);

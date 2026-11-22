@@ -25,7 +25,7 @@ import { effectiveUrlProjection } from './effective-run-record.js';
 import { beginRunProductReads } from './url-operation-products.js';
 import { reviewCheck } from './review.js';
 import { readUrlParentAdoption, URL_PARENT_DEFAULT_REF, URL_PARENT_RECORD, URL_PARENT_TAG } from './url-parent-adoption.js';
-import { registerUrlRunMode, urlRunModeAuthority } from './url-mode-registry.js';
+import { packageUrlRunModeAuthority, registerUrlRunMode } from './url-mode-registry.js';
 
 /** The production cold verifier reads actual observing Git objects and refs.
  * This owned repository installs the same reviewed bytes through a real merge,
@@ -175,9 +175,10 @@ export async function prepareComposedRun(runtime: UrlRuntime, recovery?: { reado
     context: { ...context, expectedSidecarSha256: declared.sha256 } };
   if (recovery !== undefined && !registerUrlRunMode({ root: recovery.hostRoot, run, context: effectiveDeclaration.context }))
     throw new Error('owned protected mode registration refused');
-  const urlSources = { ...sources, effectiveRunDeclaration: recovery === undefined ? () => ({ kind: 'url' as const, context: effectiveDeclaration.context,
-    screenMetadata: (value: string) => screen.screenSecrets(value) === undefined })
-    : urlRunModeAuthority(recovery.hostRoot, value => screen.screenSecrets(value) === undefined) };
+  const createMetadataScreen = () => (value: string) => screen.screenSecrets(value) === undefined;
+  const urlSources = { ...sources, effectiveRunDeclaration: recovery !== undefined && observer !== null
+    ? packageUrlRunModeAuthority(observer.root, recovery.hostRoot)
+    : () => ({ kind: 'url' as const, context: effectiveDeclaration.context, createMetadataScreen }) };
   await fs.writeFile(path.join(run, 'url-declaration.json'), declared.text, { mode: 0o600, flag: 'wx' });
   writeLaunchedMarker(run, runId, Date.now());
   const loadScreen = async () => ({ ok: true as const, screen });

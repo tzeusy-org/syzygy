@@ -500,9 +500,10 @@ describe('trusted URL artifact producer bridge', () => {
     const effectiveDeclaration = { declaration: issued.declaration, bytes: Buffer.from(issued.text), context: { ...context, expectedSidecarSha256: issued.sha256 } };
     f.write('run.json', core);
     f.write('url-declaration.json', issued.text);
+    const createMetadataScreen = () => () => true;
     const sources = { ...fixtureSources(f.pin),
       declaredPolicy: async () => ({ ok: true as const, bytes: f.basePolicyBytes, binding: f.options.record.subject.screeningPolicy }),
-      effectiveRunDeclaration: () => ({ kind: 'url' as const, context: effectiveDeclaration.context, screenMetadata: () => true }),
+      effectiveRunDeclaration: () => ({ kind: 'url' as const, context: effectiveDeclaration.context, createMetadataScreen }),
     };
     const openReader = bindUrlSourceReader({ clone: f.options.record.subject.clone.path, revision: f.pin, store: 'owned-loose', current: f.options.current });
     const readAt = Date.parse('2026-11-19T00:00:09.000Z');

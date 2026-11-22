@@ -120,8 +120,9 @@ function bindUrl(run: string, screenMetadata: (text: string) => boolean = () => 
   if (!encoded.ok) throw new Error('synthetic URL declaration invalid');
   fs.writeFileSync(path.join(run, URL_RUN_SIDECAR), encoded.text);
   const bound = { ...context, expectedSidecarSha256: encoded.sha256 };
+  const createMetadataScreen = () => screenMetadata;
   const authority: EffectiveRunAuthority = (canonical, id) => canonical === run && id === runId
-    ? { kind: 'url', context: bound, screenMetadata } : { kind: 'refused' };
+    ? { kind: 'url', context: bound, createMetadataScreen } : { kind: 'refused' };
   return { ...encoded, authority, context: bound, core: read.record };
 }
 

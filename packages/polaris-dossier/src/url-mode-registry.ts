@@ -7,7 +7,7 @@ import { DOSSIER_POLICY_PATH, DOSSIER_POLICY_VERSION, DOSSIER_REACH_POLICY_PATH,
   DOSSIER_PREDECESSOR_POLICY_VERSION, readCommittedPolicy, type PolicyBinding } from './policy-snapshot.js';
 import { buildDossierScreen } from './screen.js';
 import { URL_ORIGIN_POLICY_PATH, urlSourceTransportIdentity, type UrlRunDeclarationContext } from './url-run-record.js';
-import type { EffectiveRunAuthority } from './effective-run-record.js';
+import type { CreateMetadataScreen, EffectiveRunAuthority } from './effective-run-record.js';
 
 /** This host namespace is never mounted into a URL role. Its records describe
  * local declarations, not tamperproof recovery or actual provider outcomes. */
@@ -80,9 +80,13 @@ export function registerUrlRunMode(input: { readonly root: string; readonly run:
   finally { if (fd !== undefined) fs.closeSync(fd); }
 }
 
+export function urlRunModeAuthority(root: string, screenMetadata: (text: string) => boolean): EffectiveRunAuthority {
+  return bindUrlRunModeAuthority(root, () => screenMetadata);
+}
+
 /** A missing protected binding can never downgrade a marked URL run. No
  * sidecar value supplies its own expected digest or trusted metadata gate. */
-export function urlRunModeAuthority(root: string, screenMetadata: (text: string) => boolean): EffectiveRunAuthority {
+function bindUrlRunModeAuthority(root: string, createMetadataScreen: CreateMetadataScreen): EffectiveRunAuthority {
   return (run, runId) => {
     let fd: number | undefined;
     try {
@@ -111,27 +115,19 @@ export function urlRunModeAuthority(root: string, screenMetadata: (text: string)
       const value: unknown = parseBoundedJson(new TextDecoder('utf-8', { fatal: true }).decode(bytes.subarray(0, length)), BOUNDS);
       if (!isRecord(value) || !exact(value, ['format', 'run', 'runId', 'context']) || value.format !== FORMAT
         || value.run !== run || value.runId !== runId || !context(value.context, runId)) return { kind: 'refused' };
-      return { kind: 'url', context: deepFreeze(value.context), screenMetadata };
+      return { kind: 'url', context: deepFreeze(value.context), createMetadataScreen };
     } catch { return { kind: 'refused' }; }
     finally { if (fd !== undefined) fs.closeSync(fd); }
   };
 }
 
-/** Composition-root default. Ordinary operator mode requires no policy read;
- * URL metadata uses the current committed detector scope, without source reads. */
-export function packageUrlRunModeAuthority(recordsRoot: string): EffectiveRunAuthority {
-  return (run, runId) => {
-    let predicate: ((text: string) => boolean) | undefined;
-    const authority = urlRunModeAuthority(URL_HOST_ROOT, text => {
-      if (predicate === undefined) {
-        const snapshot = readCommittedPolicy(recordsRoot);
-        if (!snapshot.ok) return false;
-        const built = buildDossierScreen(snapshot.bytes, true, null, 'private');
-        if (!built.ok) return false;
-        predicate = value => built.screen.screenSecrets(value) === undefined;
-      }
-      return predicate(text);
-    });
-    return authority(run, runId);
-  };
+/** Each full URL metadata read builds one screen from the current committed
+ * policy. Fast bound reads compare the stable factory's identity. */
+export function packageUrlRunModeAuthority(recordsRoot: string, hostRoot = URL_HOST_ROOT): EffectiveRunAuthority {
+  return bindUrlRunModeAuthority(hostRoot, () => {
+    const snapshot = readCommittedPolicy(recordsRoot);
+    if (!snapshot.ok) return null;
+    const built = buildDossierScreen(snapshot.bytes, true, null, 'private');
+    return built.ok ? value => built.screen.screenSecrets(value) === undefined : null;
+  });
 }

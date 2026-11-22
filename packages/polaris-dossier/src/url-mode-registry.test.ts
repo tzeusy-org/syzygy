@@ -51,9 +51,11 @@ describe('persistent host URL mode declaration binding', () => {
     expect(registerUrlRunMode(f)).toBe(false);
     const authority = urlRunModeAuthority(f.root, metadata), result = authority(f.run, f.runId);
     expect(result.kind).toBe('url'); if (result.kind !== 'url') return;
-    expect(result.context).toEqual(f.context); expect(result.screenMetadata).toBe(metadata);
+    expect(result.context).toEqual(f.context);
+    const screenMetadata = result.createMetadataScreen();
+    expect(screenMetadata).toBe(metadata);
     expect(Object.isFrozen(result.context)).toBe(true); expect(Object.isFrozen(result.context.expectedSourceTransport)).toBe(true);
-    expect(result.screenMetadata('own-safe')).toBe(true); expect(result.screenMetadata('different')).toBe(false); expect(calls).toBe(2);
+    expect(screenMetadata?.('own-safe')).toBe(true); expect(screenMetadata?.('different')).toBe(false); expect(calls).toBe(2);
     expect(fs.statSync(f.file).mode & 0o777).toBe(0o600);
     expect(authority(f.run, 'other-run')).toEqual({ kind: 'refused' });
     // Retained declarations keep their exact predecessor pair. Reading them
