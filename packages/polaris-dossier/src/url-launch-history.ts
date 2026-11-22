@@ -24,6 +24,8 @@ interface LaunchCapture { readonly pid: number | 'Unknown'; readonly startedAt: 
 export interface UrlLaunchHistoryOptions {
   readonly run: string; readonly runId: string; readonly plan: UrlRolePlan; readonly compatiblePromptSha256: string;
   readonly capture: LaunchCapture;
+  /** Immutable physical successor slot, selected only by the recovering host. */
+  readonly generation?: string;
   readonly screen: DossierScreen; readonly current: () => boolean | Promise<boolean>;
 }
 export type UrlLaunchHistoryRole = Exclude<UrlRolePlan['role'], 'author'>;
@@ -32,6 +34,19 @@ export const URL_HELPER_LAUNCH_FILES = Object.freeze({
   fidelity: 'reviews/fidelity-session-1.launch.json',
   design: 'reviews/design-session-1.launch.json',
 });
+/** Logical helper prompt/session identities stay fixed; each recovering host
+ * writes a distinct physical history slot and leaves predecessor bytes intact. */
+export function urlHelperLaunchFile(role: UrlLaunchHistoryRole, generation?: string): string {
+  if (!Object.hasOwn(URL_HELPER_LAUNCH_FILES, role) || (generation !== undefined && !hex(generation))) return refuse();
+  const fixed = URL_HELPER_LAUNCH_FILES[role];
+  return generation === undefined ? fixed : `${fixed.slice(0, -'.launch.json'.length)}.${generation}.launch.json`;
+}
+export function isUrlHelperLaunchFile(role: UrlLaunchHistoryRole, file: unknown): file is string {
+  if (!Object.hasOwn(URL_HELPER_LAUNCH_FILES, role) || typeof file !== 'string') return false;
+  const fixed = URL_HELPER_LAUNCH_FILES[role], prefix = `${fixed.slice(0, -'.launch.json'.length)}.`, suffix = '.launch.json';
+  return file === fixed || (file.startsWith(prefix) && file.endsWith(suffix) && hex(file.slice(prefix.length, -suffix.length)));
+}
+
 declare const historyBrand: unique symbol;
 export interface UrlLaunchHistoryCapability { readonly [historyBrand]: true }
 interface UrlLaunchHistoryIdentity {
@@ -164,7 +179,7 @@ export async function writeUrlLaunchHistory(given: UrlLaunchHistoryOptions) {
     if (plan.role === 'author') return { file: null, record, capability: null };
     if (helper === undefined || prompt === undefined || helperInitial === undefined) return refuse();
     const role = plan.role, issuedPrompt = prompt, helperIdentity = helperInitial;
-    const relativeFile = URL_HELPER_LAUNCH_FILES[role], name = path.basename(relativeFile), file = path.join(run, relativeFile);
+    const relativeFile = urlHelperLaunchFile(role, given.generation), name = path.basename(relativeFile), file = path.join(run, relativeFile);
     const helperAnchor = `/proc/self/fd/${helper}`;
     if (!same(helperIdentity, fs.lstatSync(path.join(anchor, child), { bigint: true }))
       || !same(helperIdentity, fs.fstatSync(helper, { bigint: true }))
@@ -265,7 +280,7 @@ export async function verifyRetainedUrlLaunchHistory(given: UrlRetainedLaunchHis
     if (!absolute(run) || path.basename(run) !== runId || !RUN_ID.test(runId) || !Object.hasOwn(URL_HELPER_LAUNCH_FILES, role)
       || !absolute(executable) || !hex(coreSha256) || !hex(declarationSha256) || !hex(policySha256)
       || typeof pin !== 'string' || !/^(?:[a-f0-9]{40}|[a-f0-9]{64})$/u.test(pin)
-      || !fields(expected, EXPECTED_FIELDS) || typeof expected.file !== 'string' || expected.file !== URL_HELPER_LAUNCH_FILES[role]
+      || !fields(expected, EXPECTED_FIELDS) || !isUrlHelperLaunchFile(role, expected.file)
       || !hex(expected.recordSha256) || !positive(expected.recordBytes) || expected.recordBytes > BOUNDS.maxBytes
       || !hex(expected.promptRecordSha256) || !hex(expected.promptSha256) || typeof expected.sessionId !== 'string'
       || [current, screenBody, screenSecrets].some(fn => typeof fn !== 'function')) refuse();
