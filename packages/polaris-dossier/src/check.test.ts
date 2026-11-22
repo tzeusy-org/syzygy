@@ -1841,6 +1841,15 @@ describe('check: subsections (schema v8)', () => {
       { kind: 'path-absent', at: '$.sections[0].subsections[1].paragraphs[0].citations[0].path' }]);
   });
 
+  it('checks a subsection\'s answer and paragraphs as blocks: a quotation the cited file does not carry, and a quotation no citation names', async () => {
+    const result = await findingsOf(drafted(V8, [
+      sub('q1', '', { answer: answer('q1-a', 'The project states: "Kestrel never sleeps."', { quotations: ['c-elsewhere'] }) }),
+      sub('q2', 'Fine.', { paragraphs: [{ id: 'q2p', label: 'inferred', basis: 'source', text: 'The project states: "Each command runs to completion before the next one starts."', citations: [cite('c-q2p', 'src/kestrel.c', 2, 3)], quotations: [], children: [] }] })]));
+    expect(listed(result)).toEqual([
+      { kind: 'quotation-citation', at: '$.sections[0].subsections[0].answer.quotations[0]', detail: 'the quotation names no citation of this block' },
+      { kind: 'quotation-count', at: '$.sections[0].subsections[1].paragraphs[0].quotations', detail: 'the text carries 1 quotation(s) and quotations names 0 citation(s); name one per quotation, in order' }]);
+  });
+
   it('bounds the list at 12 subsections and a subsection at 30 paragraphs, each a schema finding at that list', async () => {
     const many = await findingsOf(drafted(V8, Array.from({ length: 13 }, (_, k) => sub(`q${k}`, 'Fine.'))));
     expect(listed(many)).toEqual([{ kind: 'schema', at: '$.sections[0].subsections', detail: 'must hold 2 to 12 items; holds 13' }]);

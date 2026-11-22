@@ -2464,6 +2464,15 @@ describe('render: subsections (schema v8)', () => {
     expect(page).toContain('<li><a href="#section-core-ideas">Withheld item</a><ol><li><a href="#subsection-q-other">Withheld item</a></li><li><a href="#subsection-q-keys">Withheld item</a></li></ol></li>');
   });
 
+  it('draws a v8 draft\'s sequence figure as a v7 draft\'s, in its two forms', async () => {
+    const el = (id: string, label: string) => ({ id, label, epistemic: 'inferred', citations: [cite(`c-${id}`, 'docs/notes.txt', 2, 2)] });
+    const sequence = { id: 'seq-1', title: 'Handshake', home: { kind: 'section', target: 'core-ideas' }, kind: 'sequence', relationship: 'Who asks whom.', disposition: { kind: 'produced', assetIds: ['seq-1'] },
+      participants: [el('pt1', 'Client'), el('pt2', 'Server')], messages: [{ ...el('msg1', 'asks'), from: 'pt1', to: 'pt2' }, { ...el('msg2', 'answers'), from: 'pt2', to: 'pt1' }] };
+    const index = (await rendered({ ...versioned(V8), diagrams: [sequence] })).get('index.html')!;
+    expect(index).toContain('<ol class="figure-stepper"><li class="inferred"><span class="stepper-head">Client \u2192 Server</span> asks</li><li class="inferred"><span class="stepper-head">Server \u2192 Client</span> answers</li></ol>');
+    expect(index).toContain('data-visual-provenance="curated" data-figure-kind="sequence"');
+  });
+
   it('renders no subsection, list or style for a section that is not produced', async () => {
     const doc = versioned(V8, SUBSECTIONS);
     (doc['sections'] as Doc[])[0]!['disposition'] = { kind: 'omitted', reason: 'Not needed.', citations: [] };
