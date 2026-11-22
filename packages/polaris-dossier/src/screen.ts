@@ -1,4 +1,4 @@
-import { DOSSIER_POLICY_PATH, readCommittedPolicy, restartExplanation, type PolicyBinding } from './policy-snapshot.js';
+import { DOSSIER_POLICY_ID, DOSSIER_POLICY_PATH, DOSSIER_POLICY_VERSION, readCommittedPolicy, restartExplanation, type PolicyBinding } from './policy-snapshot.js';
 import { classDecision, codeContentExempt, compileEveryOffsetMatcher, deniedDirectory, documentationExempt, readCodeContentExemption, readConfigurationDetectors, readGovernanceTextRule, readProjectDocumentationExemption, readProjectDocumentationRule, readScopeDetectors, readSecondStage, readSecretRedaction, readSourceVisibility, redactBody, redactionFor, type ClassDecision, type PlacementSubject, type SourceVisibility, type PublicSourceContentClass, type RedactionDetector } from '@syzygy/polaris-generation-core/live';
 import { compileDetectors, deniedPathReason, detectSecrets, scanActiveContent, type DeniedPathRules, type SecretDetector } from '@syzygy/three-surface-poc-core';
 import { isRecord, sha256 } from '@syzygy/support';
@@ -170,7 +170,8 @@ export function buildDossierScreen(policy: Uint8Array, projectDocumentationEnabl
   const classification = scope['contentClassification'];
   // The two-stage class decision (dossier policy 2.0.0) changes how four other texts are read; each is accepted only beside it.
   const twoStage = isRecord(classification) && Object.hasOwn(classification, 'classDecision');
-  const visibilityRead = readSourceVisibility(scope, twoStage);
+  const dossierV4 = doc['policyId'] === DOSSIER_POLICY_ID && doc['policyVersion'] === DOSSIER_POLICY_VERSION;
+  const visibilityRead = readSourceVisibility(scope, twoStage, dossierV4 ? 'dossier-v4' : undefined);
   if (!visibilityRead.ok) return refuse(visibilityRead.why);
   // No visibility given: a policy without `sourceVisibility` admits public repositories only, so public; a version-8 policy, the
   // stricter private, so a caller that forgets the decision never gets partial redaction or a rendered object id.

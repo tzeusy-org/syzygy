@@ -18,7 +18,7 @@ const DOSSIER_REACH_POLICY_VERSION = 'dossier-declared-source/2.0.0';
 /** "The predecessor" of REQ-polaris-generation-046's text: version 1.0.0, the one-stage screen. */
 export const DOSSIER_PREDECESSOR_POLICY_PATH = '.syzygy/governance/policies/POLARIS-DOSSIER-DECLARED-SOURCE-POLICY-v1.json';
 const DOSSIER_PREDECESSOR_POLICY_VERSION = 'dossier-declared-source/1.0.0';
-const DOSSIER_POLICY_ID = 'polaris-butlers-project-shape-secrets';
+export const DOSSIER_POLICY_ID = 'polaris-butlers-project-shape-secrets';
 const DOSSIER_POLICIES: ReadonlyMap<string, string> = new Map([
   [DOSSIER_POLICY_PATH, DOSSIER_POLICY_VERSION],
   [DOSSIER_READMISSION_POLICY_PATH, DOSSIER_READMISSION_POLICY_VERSION],

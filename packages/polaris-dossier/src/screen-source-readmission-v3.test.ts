@@ -183,6 +183,17 @@ describe('version 2.0.0 outcomes preserved', () => {
 });
 
 describe('version 4.0.0 preserves the checked screening predicates', () => {
+  it('pins the adopted disclosure text to its policy version', () => {
+    const earlier = JSON.parse(V3), current = JSON.parse(V4);
+    const earlierText = earlier.publicSourceScope.sourceVisibility.agentSessions;
+    earlier.publicSourceScope.sourceVisibility.agentSessions = current.publicSourceScope.sourceVisibility.agentSessions;
+    current.publicSourceScope.sourceVisibility.agentSessions = earlierText;
+    for (const mixed of [earlier, current]) {
+      const built = buildDossierScreen(new TextEncoder().encode(JSON.stringify(mixed)), true, SUBJECT, 'private');
+      expect(built).toEqual({ ok: false, why: 'the screening policy cannot be applied: its source visibility agentSessions is not the text this screen implements' });
+    }
+  });
+
   it('changes the version, predecessor entry and only the two raw-activity descriptions', () => {
     const predecessor = JSON.parse(V3), successor = JSON.parse(V4);
     expect(successor.policyVersion).toBe('dossier-declared-source/4.0.0');

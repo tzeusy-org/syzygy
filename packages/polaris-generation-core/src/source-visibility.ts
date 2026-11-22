@@ -30,6 +30,8 @@ const DECLARED_VISIBILITY_TEXTS = {
 } as const;
 /** sha256 of the dossier declared-source policy 2.0.0's `unchanged`: the declared-source text with configurationDetectors named. */
 const UNCHANGED_TWO_STAGE = 'c33ff41059f398812be0f2e226231111ca2cb38ce49dc0890a841c1da2bcafd8';
+/** SHA-256 of sourceVisibility.agentSessions in A-51's dossier policy 4.0.0. */
+const AGENT_SESSIONS_DOSSIER_V4 = '050d78a2d1fdb01b5be4d81b326c52079c9fd656514b48c33c94ed96a1565eca';
 const VISIBILITY_KEYS = ['values', 'admitted', 'rule', 'privateSourceRules', 'unchanged', 'agentSessions', 'consequence', 'consentRecordMetadata'] as const;
 
 /** The two owner-act records whose form states public (`sourceVisibility.rule`), by path. */
@@ -49,8 +51,11 @@ const exactly = (value: unknown, expected: readonly string[]): boolean =>
 
 /** Reads sourceVisibility. Absent means public only. Present must match one complete pinned vocabulary: historical v8 or the
  * declared-source dossier successor. Mixing texts from the two versions refuses. */
-export function readSourceVisibility(scope: unknown, twoStage = false): SourceVisibilityRead {
+export function readSourceVisibility(scope: unknown, twoStage = false, dossierVersion?: 'dossier-v4'): SourceVisibilityRead {
   const refuse = (why: string): SourceVisibilityRead => ({ ok: false, why: `its source visibility ${why}` });
+  if (dossierVersion === 'dossier-v4' && (!twoStage || !isRecord(scope) || !Object.hasOwn(scope, 'sourceVisibility'))) {
+    return refuse('requires the declared two-stage scope for dossier policy 4.0.0');
+  }
   if (!isRecord(scope) || !Object.hasOwn(scope, 'sourceVisibility')) return { ok: true, declared: false, admitsPrivate: false };
   const sv = scope['sourceVisibility'];
   if (!isRecord(sv)) return refuse('is not an object');
@@ -65,7 +70,8 @@ export function readSourceVisibility(scope: unknown, twoStage = false): SourceVi
   const texts = twoStage ? { ...DECLARED_VISIBILITY_TEXTS, unchanged: UNCHANGED_TWO_STAGE } : declared ? DECLARED_VISIBILITY_TEXTS : VISIBILITY_TEXTS;
   for (const key of Object.keys(VISIBILITY_TEXTS) as (keyof typeof VISIBILITY_TEXTS)[]) {
     const value = sv[key];
-    if (typeof value !== 'string' || sha256(value) !== texts[key]) return refuse(`${key} is not the text this screen implements`);
+    const expected = key === 'agentSessions' && dossierVersion === 'dossier-v4' ? AGENT_SESSIONS_DOSSIER_V4 : texts[key];
+    if (typeof value !== 'string' || sha256(value) !== expected) return refuse(`${key} is not the text this screen implements`);
   }
   const rule = sv['rule'] as string;
   if (texts === VISIBILITY_TEXTS && !PUBLIC_BY_FORM_ACTS.every(file => rule.includes(file))) return refuse('rule does not name the acts this screen reads as public by form');
