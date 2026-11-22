@@ -88,6 +88,8 @@ export interface UrlRunSessionsOptions {
   readonly current: () => boolean | Promise<boolean>; readonly now: () => number; readonly deadline: number;
   /** Host operator request. It closes effects while preserving cleanup audit writes. */
   readonly stopRequested?: () => boolean;
+  /** Bound only by the supervisor. Record actual native Author launch. */
+  readonly authorHandoff?: { readonly current: () => boolean; readonly reached: () => boolean };
   readonly credential: SessionCredential;
   readonly resume?: {
     readonly verified: Extract<Awaited<ReturnType<typeof verifyStoppedUrlRun>>, { readonly ok: true }>;
@@ -476,7 +478,7 @@ async function start(options: UrlRunSessionsOptions, ports: typeof native): Prom
         const plan = plans.find(plan => plan.role === role);
         if (plan === undefined || (ordered && role === 'design')) throw new Error('url-run-sessions-unavailable');
         const scope = audit.scope(role);
-        if (!(await current())) throw new Error();
+        if (!(await current()) || (role === 'author' && options.authorHandoff?.current() === false)) throw new Error();
         // Probe before binding the actual host: an empty probe connection to a
         // live relay is deliberately terminal and must never touch that relay.
         const preparation = await ports.prepare({ view: plan.view, profile: plan.profile,
@@ -578,9 +580,13 @@ async function start(options: UrlRunSessionsOptions, ports: typeof native): Prom
           } });
         hosts.set(role, host);
         if (host.healthy !== undefined) hostHealth.set(role, host.healthy);
+        if (role === 'author' && options.authorHandoff?.current() === false) throw new Error('url-run-sessions-unavailable');
         const child = await ports.launch({ preparation, host }); processes.set(role, child);
         const capture = captures.get(role)!;
         rememberTerminal(role, child, () => false);
+        if (role === 'author' && options.authorHandoff?.reached() === false) {
+          fail('provenance-unavailable'); throw new Error('url-run-sessions-unavailable');
+        }
         if (role !== 'author' && launchHistory !== undefined) {
           try {
             if (child.commandSha256 !== plan.declaration.commandSha256 || !(await current())) throw new Error();

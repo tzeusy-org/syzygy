@@ -8,6 +8,7 @@ import { GitObjectReadRefusal, openPinnedObjectReader, type PinnedObjectReader, 
 import { deriveIdentity, normaliseIdentityOption, readLocator } from './launch-identity.js';
 import { governedSubject, type GovernedDecision } from './governed.js';
 import { parseRunConfig, type RunConfigRefusal } from './run-config.js';
+import { initialRawReadDisclosure } from './raw-read-disclosure.js';
 import { DOSSIER_CONTENT_CLASSES, NO_WORK_ITEM_REASON, encodeRunRecord, type RunSubject } from './run-record.js';
 import { createRunDirectory, stateRootViolation, type RunPorts } from './state-directory.js';
 import { isoOf } from './iso-of.js';
@@ -150,7 +151,9 @@ export async function initRun(request: InitRequest, ports: InitPorts): Promise<I
     workItem: { identity: null, reason: NO_WORK_ITEM_REASON },
   };
   const initializedRecordText = encodeRunRecord(config.config, subject);
-  const created = createRunDirectory(request.stateRoot, clonePath, initializedRecordText, ports);
+  const created = createRunDirectory(request.stateRoot, clonePath, initializedRecordText, ports, {
+    rawReadDisclosure: runId => initialRawReadDisclosure(runId, config.config.agentProvider),
+  });
   if (!created.created) return refuse('write', created.detail);
   return { ok: true, initializedRecordText, report: {
     command: 'init', outcome: 'initialized', run: created.runDir, runId: created.runId,

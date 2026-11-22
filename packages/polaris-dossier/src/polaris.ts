@@ -26,6 +26,7 @@ import { resolveCloneHead, type CloneHead } from './clone-head.js';
 import { buildDossierScreen, placementSubjectOf, type DossierScreen } from './screen.js';
 import { readRunRecord, sourceBindingSha256, type RecordedRunConfig, type RunSubject } from './run-record.js';
 import { initRun } from './init.js';
+import { RAW_READ_DISCLOSURE_REFUSAL, readRawReadDisclosure, recordRawReadHandoff } from './raw-read-disclosure.js';
 import { beginRunProductReads, UrlProductReadRefusal, type RunProductReads } from './url-operation-products.js';
 import { describeCheckedUrlDesignProduct, inspectUrlDesignProduct, sameReproducedUrlDesignProduct, validateUrlDesignProduct,
   type UrlDesignProductMetadata, type ValidatedUrlDesignProduct } from './url-design-product.js';
@@ -219,6 +220,7 @@ export async function runPolarisCli(argv: readonly string[], ports: CliPorts = {
     if (state === null) return refuse(`no launched run ${options.run} under ${options.stateRoot}`);
     const verified = await verifyStoppedUrlRun(state, { checkout: CHECKOUT, sources: cliGateSources(ports), now: ports.now ?? Date.now });
     if (!verified.ok) return refuse(`The stopped run could not re-establish its checked recovery boundary (${verified.code}).`);
+    if (readRawReadDisclosure(state.run, verified.record.declared.agentProvider) === null) return refuse(RAW_READ_DISCLOSURE_REFUSAL);
     resumedState = state;
   }
   const tmux = spawnSync('tmux', ['-V'], { encoding: 'utf8' });
@@ -416,6 +418,9 @@ function supervisorArtifacts(run: string, prepared: PreparedUrlRun, ports: CliPo
 async function startPreparedSupervisor(state: SupervisorState, prepared: PreparedUrlRun, artifacts: UrlArtifacts,
   screen: Screen, ports: CliPorts, stop: UrlSupervisorStop): Promise<UrlRunSessions> {
   if (!(await prepared.sessionCurrent())) throw new Error('url-supervisor-unavailable');
+  const provider = prepared.record.declared.agentProvider;
+  const disclosureCurrent = (): boolean => readRawReadDisclosure(state.run, provider) !== null;
+  if (!disclosureCurrent()) throw new Error('url-recovery-raw-read-disclosure');
   const compatible = (role: 'inventory' | 'fidelity' | 'design'): string => {
     const selected = prepared.initial?.sessions.sessions.filter(session => role === 'inventory'
       ? session.role === 'inventory' : session.role === 'review' && session.kind === role);
@@ -436,6 +441,7 @@ async function startPreparedSupervisor(state: SupervisorState, prepared: Prepare
       principal: prepared.record.declared.operator, sessionDirectories: prepared.directories, canaries: prepared.canaries,
       current: prepared.sessionCurrent, now: ports.now ?? Date.now, deadline: state.briefIssuedAt + state.deadlineSeconds * 1000,
       stopRequested: () => stop.status() === 'requested',
+      authorHandoff: { current: disclosureCurrent, reached: () => recordRawReadHandoff(state.run, provider, 'reached') },
       ...(prepared.continuation === undefined ? {} : { resume: { verified: prepared.continuation.verified, claim: prepared.continuation.claim } }),
       credential: loaded.credential, sourceReader: prepared.openReader,
       // The machine independently checks the exact held continuation claim at
@@ -550,6 +556,7 @@ async function prepareStoppedSupervisor(previous: SupervisorState, ports: CliPor
 }> {
   const verified = await verifyStoppedUrlRun(previous, { checkout: CHECKOUT, sources: cliGateSources(ports), now: ports.now ?? Date.now });
   if (!verified.ok) throw new Error(`url-recovery-${verified.code}`);
+  if (readRawReadDisclosure(previous.run, verified.record.declared.agentProvider) === null) throw new Error('url-recovery-raw-read-disclosure');
   const claim = await claimStoppedUrlRun(verified);
   if (claim === null) throw new Error('url-recovery-ownership');
   try {
@@ -645,6 +652,7 @@ async function supervise(options: Options, ports: CliPorts): Promise<number> {
     const runtime = await startPreparedSupervisor(state, prepared, artifacts, screen, ports, stop);
     return await runUrlSupervisorLoop(options.stateRoot, ports, state, screen, { prepared, artifacts, runtime, stop });
   } catch (error) {
+    if (error instanceof Error && error.message === 'url-recovery-raw-read-disclosure') return fail(RAW_READ_DISCLOSURE_REFUSAL);
     const detail = error instanceof Error && /^url-recovery-[a-z-]+$/u.test(error.message) ? ` (${error.message})` : '';
     return fail(`The checked session controller or a supervised stage failed${detail}. Inspect the retained audit for captured outcomes and cleanup.`);
   } finally {

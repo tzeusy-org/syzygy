@@ -22,6 +22,7 @@ import { deriveStructure } from './derive.js';
 import { secretPathOf } from './derived-record.js';
 import { GitObjectReadRefusal, openPinnedObjectReader } from './git-object-reader.js';
 import { placementSubjectOf, screenLoaderOf, type ScreenLoader } from './screen.js';
+import { RAW_READ_DISCLOSURE_REFUSAL, readRawReadDisclosure, recordRawReadHandoff } from './raw-read-disclosure.js';
 import { selectShapePacks, shapePackSha256, type ShapePack } from './shape-packs.js';
 import { RUN_ID, RUN_LAYOUT } from './state-directory.js';
 import { briefCopyLines, type BriefCopy } from './launch-disclosure.js';
@@ -267,7 +268,7 @@ export function renderBrief(input: BriefInput): string {
   ].join('\n');
 }
 
-export type BriefStage = 'run' | 'reverify' | 'issued-already' | 'launch-record' | 'doctrine' | 'write';
+export type BriefStage = 'run' | 'reverify' | 'issued-already' | 'launch-record' | 'doctrine' | 'raw-read-disclosure' | 'write';
 
 export interface BriefRefusal {
   readonly command: 'brief';
@@ -373,6 +374,7 @@ export async function issueBrief(runDir: string, deps: BriefDeps): Promise<Brief
     } };
   }
   const { subject, declared } = checked.record;
+  if (readRawReadDisclosure(run, declared.agentProvider) === null) return refuse('raw-read-disclosure', RAW_READ_DISCLOSURE_REFUSAL);
 
   const issued = [RUN_LAYOUT.brief, RUN_LAYOUT.draftSchema, RUN_LAYOUT.briefRecord].filter((name) => fs.existsSync(path.join(run, name)));
   if (issued.length > 0) return refuse('issued-already', `the run already holds ${issued.join(', ')}: a run is briefed once, and its deadline clock has started`);
@@ -421,12 +423,18 @@ export async function issueBrief(runDir: string, deps: BriefDeps): Promise<Brief
     stageStatement: issuedBriefStatement({ role: 'authoring' }, copy.copy !== null),
     label: 'Inferred',
   };
+  if (readRawReadDisclosure(run, declared.agentProvider) === null) return refuse('raw-read-disclosure', RAW_READ_DISCLOSURE_REFUSAL);
   try {
     fs.writeFileSync(path.join(run, RUN_LAYOUT.brief), briefText, { mode: 0o600, flag: 'wx' });
     fs.writeFileSync(path.join(run, RUN_LAYOUT.draftSchema), schemaText, { mode: 0o600, flag: 'wx' });
     fs.writeFileSync(path.join(run, RUN_LAYOUT.briefRecord), `${JSON.stringify(record, null, 2)}\n`, { mode: 0o600, flag: 'wx' });
   } catch (cause) {
     return refuse('write', `the brief could not be written (${(cause as NodeJS.ErrnoException).code ?? 'unknown-error'}); any file already written stays, and the run cannot be briefed again`);
+  }
+  // The operator can now hand the brief to an external agent. Syzygy cannot
+  // establish whether that session was actually reached.
+  if (checked.effective?.kind !== 'url' && !recordRawReadHandoff(run, declared.agentProvider, 'unknown')) {
+    return refuse('raw-read-disclosure', RAW_READ_DISCLOSURE_REFUSAL);
   }
   return {
     ok: true,
