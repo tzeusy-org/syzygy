@@ -7,6 +7,9 @@ import * as fs from 'node:fs';
 import { urlStructureRecordShape, urlReadingLedgerShape, urlReadingDifferenceShape, urlManifestFactsShape } from './url-check-product-shape.js';
 import type { ManifestFacts } from './manifest-facts.js';
 import type { FigureFit } from './figure-fit.js';
+import { comparedInventoryCoverageAdvice } from './inventory-coverage.js';
+import { secretPathOf } from './derived-record.js';
+import type { DossierScreen } from './screen.js';
 import { figureFitClass } from './reader-advice.js';
 import { SERVER_ENTRY } from './derive-rules.js';
 import path from 'node:path';
@@ -66,6 +69,8 @@ export interface UrlRunArtifactsOptions {
   readonly effectiveDeclaration?: { readonly declaration: UrlRunDeclaration; readonly bytes: Uint8Array;
     readonly context: ProtectedUrlRunContext & { readonly expectedSidecarSha256: string } };
   readonly limits?: Partial<Limits>;
+  /** The actual loaded screen for this core policy, supplied by the host. */
+  readonly screen?: DossierScreen;
 }
 export type UrlProductReadOperation = 'render' | 'review-packet' | 'review-check' | 'inventory-check' | 'author-check';
 /** No object shape authenticates this token; each bridge owns its WeakMap. */
@@ -132,7 +137,7 @@ export function createUrlRunArtifacts(given: UrlRunArtifactsOptions) {
   try { return create(given); } catch { return refuse(); }
 }
 function create(given: UrlRunArtifactsOptions) {
-  if (!keys(given, ['run', 'record', 'origins', 'roles', 'current', 'runDossier', 'helpText'], ['limits', 'statusProjection', 'effectiveDeclaration', 'initializedCoreBytes'])
+  if (!keys(given, ['run', 'record', 'origins', 'roles', 'current', 'runDossier', 'helpText'], ['limits', 'statusProjection', 'effectiveDeclaration', 'initializedCoreBytes', 'screen'])
     || !path.isAbsolute(given.run) || path.resolve(given.run) !== given.run || typeof given.current !== 'function'
     || typeof given.runDossier !== 'function' || !text(given.helpText) || !given.helpText.startsWith('syzygy dossier')
     || (given.limits !== undefined && !isRecord(given.limits))) refuse();
@@ -140,6 +145,7 @@ function create(given: UrlRunArtifactsOptions) {
   if (Object.keys(limits).length !== Object.keys(URL_ARTIFACT_LIMITS).length || Object.entries(limits).some(([k, n]) => !Object.hasOwn(URL_ARTIFACT_LIMITS, k)
     || !Number.isSafeInteger(n) || n < 1 || n > URL_ARTIFACT_LIMITS[k as keyof Limits])) refuse();
   const run = given.run, runId = path.basename(run), config = copy(given.record), pin = config.subject.pinnedRevision.commit;
+  if (given.screen !== undefined && given.screen.policySha256 !== config.subject.screeningPolicy.sha256) refuse();
   const current = given.current, actualRunner = given.runDossier, helpText = given.helpText;
   const statusProjection = given.statusProjection === undefined ? undefined : copy(given.statusProjection);
   if (given.initializedCoreBytes !== undefined && !(given.initializedCoreBytes instanceof Uint8Array)) refuse();
@@ -480,6 +486,12 @@ function create(given: UrlRunArtifactsOptions) {
     screeningPolicy: (v: unknown) => policy(v) && canonical(v) === canonical({ policyId: config.subject.screeningPolicy.policyId,
       policyVersion: config.subject.screeningPolicy.policyVersion, sha256: config.subject.screeningPolicy.sha256 }), credential, label: lit('Inferred') };
   const reportFields = { command: text, run: lit(run), checkFile: text, disclosures: strings };
+  const coverageAdvice = (v: unknown): boolean => shape({ state: lit('unknown'), why: text, note: text })(v)
+    || shape({ state: lit('compared'), rule: shape({ id: lit('overlap-or-path-named'), version: lit(1) }),
+      inventory: shape({ revision: integer, sha256: hex, label: lit('Inferred'), basis: text }), note: text,
+      counts: shape({ entries: integer, covered: integer, omitted: integer, uncovered: integer }),
+      uncovered: array(shape({ entryId: nullable(text), paths: strings, unnamedPaths: integer })),
+      omissions: shape({ rows: integer, recorded: integer, duplicated: strings, unmatched: strings, alsoCovered: strings }) })(v);
   function checkShape(v: unknown, command: 'check' | 'inventory-check', report: boolean): boolean {
     const fields = { ...commonCheck, ...(command === 'check' ? { draft: fileIdentity,
       session: shape({ sessionId: nullable(text), declaredBy: lit('the authoring session'), label: lit('Inferred') }), executionFlags: execution,
@@ -489,7 +501,7 @@ function create(given: UrlRunArtifactsOptions) {
       ...(report ? reportFields : {}) };
     const optional = { ...(command === 'check' ? { figureFit, readingLedger: urlReadingLedgerShape, manifestFacts: urlManifestFactsShape } : {}),
       ...(report && command === 'check' ? { structureRecord: urlStructureRecordShape, readingDifference: urlReadingDifferenceShape,
-        mechanismAdvice: shape({ file: nullable(lit('run-advice.json')), thisRevision: integer, inRun: integer }) } : {}),
+        inventoryCoverageAdvice: coverageAdvice, mechanismAdvice: shape({ file: nullable(lit('run-advice.json')), thisRevision: integer, inRun: integer }) } : {}),
       ...(report ? { screenCensus: census, readerAdvice: advice, reviewReach: reach, reviewVisibility: visibility } : {}) };
     return shape(fields, optional)(v)
       && record(v)['format'] === (command === 'check' ? 'polaris-dossier-check/1' : 'polaris-dossier-inventory-check/1')
@@ -523,7 +535,7 @@ function create(given: UrlRunArtifactsOptions) {
     if (!checkShape(document, 'check', true) || !integer(document['revision']) || document['checkFile'] !== path.join(run, `checks/rev-${document['revision']}.json`)) refuse();
     const stored = read(run, `checks/rev-${document['revision']}.json`), doc = json(stored);
     if (!checkShape(doc, 'check', false)) refuse();
-    const base = { ...document }; for (const k of ['command', 'run', 'checkFile', 'disclosures', 'screenCensus', 'readerAdvice', 'reviewReach', 'reviewVisibility', 'structureRecord', 'readingDifference', 'mechanismAdvice']) delete base[k];
+    const base = { ...document }; for (const k of ['command', 'run', 'checkFile', 'disclosures', 'screenCensus', 'readerAdvice', 'reviewReach', 'reviewVisibility', 'structureRecord', 'readingDifference', 'mechanismAdvice', 'inventoryCoverageAdvice']) delete base[k];
     const projected = { ...doc };
     if (document['mechanismAdvice'] !== undefined) {
       // The report alone drops mechanism advice; its receipt still binds the
@@ -555,20 +567,41 @@ function create(given: UrlRunArtifactsOptions) {
     const subject = record(doc['draft']), report = reports.get(`author:${subject['sha256']}`);
     if (!report || !report.committed || subject['file'] !== `drafts/rev-${document['revision']}.json`) refuse();
     const frozen = read(run, subject['file']); if (sha256(frozen) !== report.digest || frozen.length !== subject['bytes']) refuse();
+    const inventoryParents: UrlOriginReceipt[] = [];
+    const coverage = document['inventoryCoverageAdvice'];
+    if (isRecord(coverage) && coverage['state'] === 'compared') {
+      if (given.screen === undefined) refuse();
+      const latest = stageChecks(['inventory']).inventory;
+      if (latest === null || latest.record['outcome'] !== 'passed') refuse();
+      const binding = record(coverage['inventory']), named = record(latest.record['inventory']);
+      const session = record(latest.record['session']);
+      if (binding['revision'] !== latest.revision || binding['sha256'] !== named['sha256']
+        || session['number'] !== 1 || session['sessionId'] !== plans.get('inventory')!.profile.input.sessionId
+        || session['sessionId'] === record(doc['session'])['sessionId']) refuse();
+      const inventory = packetRecord(`inventory/rev-${latest.revision}.json`), inventoryDoc = json(inventory.bytes);
+      inventoryParents.push(...checkedPacketSubject('inventory', { revision: latest.revision, sha256: named['sha256'], document: inventoryDoc }));
+      // Independence also depends on the genuine prompt and the latest committed launch, never a copied launch form.
+      const prompt = packetRecord('inventory/session-1.json');
+      const launch = packetRecord(launchAliases.get(URL_HELPER_LAUNCH_FILES.inventory) ?? URL_HELPER_LAUNCH_FILES.inventory);
+      inventoryParents.push(prompt.receipt, launch.receipt);
+      const expected = comparedInventoryCoverageAdvice(json(frozen), inventoryDoc,
+        { revision: latest.revision, sha256: String(named['sha256']) }, secretPathOf(given.screen), true);
+      if (canonical(coverage) !== canonical(expected)) refuse();
+    }
     const sources = await sourceParents(doc['citedBlobs'], waitForCapture);
     // The actual checker also derives manifest facts from bodies absent from
     // citedBlobs. Preserve their complete screened source lineage in the reply.
     const manifests = doc['manifestFacts'] as ManifestFacts | undefined;
     const manifestPaths = manifests?.state === 'derived'
       ? [...new Set(manifests.recognizers.flatMap(recognizer => recognizer.files.filter(file => file.epistemic === 'inferred').map(file => file.path)))] : [];
-    if (new Set([...inputParents, report.receipt, ...sources]).size + manifestPaths.length > limits.parents) refuse();
+    if (new Set([...inputParents, report.receipt, ...inventoryParents, ...sources]).size + manifestPaths.length > limits.parents) refuse();
     for (const file of manifestPaths) {
       await waitForCapture();
       sources.push(await ledger.sourceWhole({ path: file }));
       live();
     }
     await waitForCapture();
-    const receipt = compose(stored, [...inputParents, report.receipt, ...sources]);
+    const receipt = compose(stored, [...inputParents, report.receipt, ...inventoryParents, ...sources]);
     const checked: Check = { path: `checks/rev-${document['revision']}.json`, revision: document['revision'], digest: sha256(stored), receipt, token, committed: false };
     // Let the supervisor service resource samples before the paired records
     // are re-read and published together under live authority.

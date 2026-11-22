@@ -378,7 +378,7 @@ async function prepareSupervisorArtifacts(run: string, prepared: PreparedUrlRun,
 }
 function supervisorArtifacts(run: string, prepared: PreparedUrlRun, ports: CliPorts, originalDeadline: number): UrlArtifacts {
   const artifacts: UrlArtifacts = createUrlRunArtifacts({ run, record: prepared.record, origins: prepared.origins,
-    roles: prepared.roles, current: prepared.current, helpText: DOSSIER_USAGE,
+    roles: prepared.roles, current: prepared.current, helpText: DOSSIER_USAGE, screen: prepared.screen,
     statusProjection: effectiveUrlProjection(prepared.record, prepared.effectiveDeclaration.declaration),
     initializedCoreBytes: prepared.initializedCoreBytes,
     effectiveDeclaration: prepared.effectiveDeclaration,

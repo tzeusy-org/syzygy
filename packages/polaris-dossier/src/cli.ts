@@ -350,7 +350,10 @@ export const DOSSIER_COMMANDS: Readonly<Record<string, DossierCommand>> = Object
     args: { kind: 'options', options: ['--draft'], noun: RUN },
     run: async ({ positional: [run], values }, ctx) => {
       const draftFile = values.get('--draft');
-      const result = await checkDraft(run!, draftFile === undefined ? {} : { draftFile }, { ...ctx.deps('probe', 'openReader', 'loadScreen', 'layoutFigure', 'productReads'), inventoryOfRecord });
+      const dependencies = ctx.deps('probe', 'openReader', 'loadScreen', 'layoutFigure', 'productReads');
+      const result = await checkDraft(run!, draftFile === undefined ? {} : { draftFile }, { ...dependencies,
+        inventoryOfRecord: (inventoryRun, recheck) => inventoryOfRecord(inventoryRun, { ...recheck,
+          ...(dependencies.productReads === undefined ? {} : { productReads: dependencies.productReads }) }) });
       if (!result.ok) return ctx.refused(result.refusal);
       // `reviewVisibility`, `screenCensus`, `structureRecord`, `readerAdvice`, `readingDifference`, `reviewReach` and `inventoryCoverageAdvice` are on the report already (`checkSubject`), never in the
       // stored record; `figureFit` and `readingLedger` are in both. The exit code reads the outcome alone.

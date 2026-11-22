@@ -7,6 +7,7 @@ import { DRAFT_JSON_LIMITS, line, list, text } from './check-model.js';
 import { INVENTORY_OMISSIONS_SINCE } from './draft-schema.js';
 import type { GateSources } from './gate-sources.js';
 import type { InventoryOfRecord } from './inventory.js';
+import { protectedProduct, UrlProductReadRefusal, type RunProductReads } from './url-operation-products.js';
 
 /** Which entries of the independent inventory no block of the draft covers, told to the author at check time, before any reviewer is
  * asked (syzygy-5dhm.28, pursuit 2026-11-21b move R4 slice 1; REQ-polaris-generation-034 version 2.12).
@@ -116,7 +117,7 @@ export function compareInventoryCoverage(draft: unknown, inventory: unknown, isS
 
 /** The reader of the inventory of record (`inventoryOfRecord` in `inventory.ts`), passed in by the caller: `inventory.ts` imports the
  * check, so the check takes it as a port and does not import it back. */
-export type InventoryOfRecordReader = (runDir: string, recheck: { readonly sources: GateSources; readonly now: number }) => Promise<InventoryOfRecord>;
+export type InventoryOfRecordReader = (runDir: string, recheck: { readonly sources: GateSources; readonly now: number; readonly productReads?: RunProductReads }) => Promise<InventoryOfRecord>;
 
 export type InventoryCoverageAdvice =
   | { readonly state: 'unknown'; readonly why: string; readonly note: string }
@@ -134,31 +135,48 @@ const BASIS = 'the highest-numbered checked inventory revision in the run direct
 
 const unknown = (why: string): InventoryCoverageAdvice => ({ state: 'unknown', why, note: UNKNOWN_NOTE });
 
+/** The same mechanical projection is independently checked by the protected product bridge. */
+export function comparedInventoryCoverageAdvice(draft: unknown, inventory: unknown,
+  binding: { readonly revision: number; readonly sha256: string }, isSecretPath: (cited: string) => boolean,
+  protectedRead = false): InventoryCoverageAdvice {
+  return { state: 'compared', rule: COVERAGE_RULE,
+    inventory: { ...binding, label: 'Inferred', basis: protectedRead
+      ? 'the highest-numbered authenticated checked inventory revision, its passed check and exact frozen bytes read under the current protected product lease'
+      : BASIS }, ...compareInventoryCoverage(draft, inventory, isSecretPath), note: NOTE };
+}
+
 export interface CoverageAdviceInputs {
   readonly inventoryOfRecord?: InventoryOfRecordReader;
   readonly sources: GateSources;
   readonly now: number;
+  readonly productReads?: RunProductReads;
   readonly isSecretPath: (cited: string) => boolean;
 }
 
-/** The advice for one parsed draft of one run. It never throws: any failure to find, read or compare the inventory is an Unknown advice, so the
- * advice can refuse no check. */
+/** The advice for one parsed draft of one run. Ordinary read failures yield Unknown advice. A protected product refusal propagates so an unavailable authority cannot freeze a new check. */
 export async function inventoryCoverageAdvice(runDir: string, draft: unknown, inputs: CoverageAdviceInputs): Promise<InventoryCoverageAdvice> {
   if (inputs.inventoryOfRecord === undefined) return unknown('this check was given no reader of the inventory of record');
   try {
-    const counted = await inputs.inventoryOfRecord(runDir, { sources: inputs.sources, now: inputs.now });
+    const counted = await inputs.inventoryOfRecord(runDir, { sources: inputs.sources, now: inputs.now, ...(inputs.productReads === undefined ? {} : { productReads: inputs.productReads }) });
     if (!counted.counts) return unknown(`no inventory counts: ${counted.why}`);
-    const bytes = new Uint8Array(fs.readFileSync(path.join(path.resolve(runDir), counted.file)));
-    if (sha256(bytes) !== counted.sha256) return unknown(`the frozen inventory ${counted.file} changed after it was counted`);
+    if (inputs.productReads !== undefined && isRecord(draft) && draft['sessionId'] === counted.sessionId.value)
+      return unknown(`no inventory counts: inventory revision ${counted.revision} declares the authoring session's identifier`);
+    const bytes = inputs.productReads === undefined
+      ? new Uint8Array(fs.readFileSync(path.join(path.resolve(runDir), counted.file)))
+      : protectedProduct(inputs.productReads, runDir, counted.file);
+    if (bytes === null) throw new UrlProductReadRefusal();
+    if (sha256(bytes) !== counted.sha256) {
+      if (inputs.productReads !== undefined) throw new UrlProductReadRefusal();
+      return unknown(`the frozen inventory ${counted.file} changed after it was counted`);
+    }
     const inventory = parseBoundedJson(new TextDecoder('utf-8', { fatal: true }).decode(bytes), DRAFT_JSON_LIMITS);
-    if (!isRecord(inventory)) return unknown(`the frozen inventory ${counted.file} is not one JSON object`);
-    return {
-      state: 'compared', rule: COVERAGE_RULE,
-      inventory: { revision: counted.revision, sha256: counted.sha256, label: 'Inferred', basis: BASIS },
-      ...compareInventoryCoverage(draft, inventory, inputs.isSecretPath),
-      note: NOTE,
-    };
+    if (!isRecord(inventory)) {
+      if (inputs.productReads !== undefined) throw new UrlProductReadRefusal();
+      return unknown(`the frozen inventory ${counted.file} is not one JSON object`);
+    }
+    return comparedInventoryCoverageAdvice(draft, inventory, { revision: counted.revision, sha256: counted.sha256 }, inputs.isSecretPath, inputs.productReads !== undefined);
   } catch (cause) {
+    if (inputs.productReads !== undefined) throw new UrlProductReadRefusal();
     return unknown(`the inventory of record could not be read or compared (${cause instanceof Error ? cause.name : 'unknown-error'})`);
   }
 }
