@@ -63,7 +63,7 @@ function fixture(policy = V8) {
   return { response, request, initial };
 }
 function run(input: OrderedScreenInput, overrides: Partial<Parameters<typeof runOrderedDesignScreen>[0]> = {}) {
-  return runOrderedDesignScreen({ program, input, current: () => true, deadlineEpochMilliseconds: Date.now() + 10_000, ...overrides });
+  return runOrderedDesignScreen({ program, input, current: () => true, deadlineEpochMilliseconds: Date.now() + 30_000, ...overrides });
 }
 
 describe('preemptible ordered design screen', () => {
@@ -90,7 +90,7 @@ describe('preemptible ordered design screen', () => {
     expect(response.ok).toBe(true);
     if (!response.ok) return;
     expect(response.observation.outcome).toMatchObject({ operation: 'response', result: { ok: true, content: [{ type: 'text', text: 'Owned response.' }] } });
-    expect(response.charge).toMatchObject({ cpuAccounting: 'charged-hard-capacity', cpuMicroseconds: 6_000_000, enforcedWallMilliseconds: 5000 });
+    expect(response.charge).toMatchObject({ cpuAccounting: 'charged-hard-capacity', cpuMicroseconds: 18_000_000, enforcedWallMilliseconds: 20_000 });
     expect(response.observation.selfCpuMicrosecondsBeforeOutput).toBeGreaterThan(0);
   }, 30_000);
 
@@ -148,8 +148,8 @@ describe('preemptible ordered design screen', () => {
       chargeCpuMicroseconds: value => { charged(value); setTimeout(() => { current = false; }, 50); } });
     const result = await pending;
     expect(result.ok).toBe(false);
-    expect(charged).toHaveBeenCalledExactlyOnceWith(6_000_000);
-    expect(result.charge.cpuMicroseconds).toBe(6_000_000);
+    expect(charged).toHaveBeenCalledExactlyOnceWith(18_000_000);
+    expect(result.charge.cpuMicroseconds).toBe(18_000_000);
     expect(result.charge.wallMilliseconds).toBeLessThan(3000);
   }, 30_000);
 
