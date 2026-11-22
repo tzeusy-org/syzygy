@@ -407,6 +407,10 @@ async function sealedReads<T extends ReturnType<typeof setup>>(clone: string, re
   return { opened: of(log.opened), examined: of(log.examined), out, s, sealed: seal.sealed.map(fromGitDir) };
 }
 
+/** The one leak check of the user-information tests (syzygy-3efd.78): either credential word anywhere in the JSON of what it is given.
+ * Each word holds a "~", which no mkdtemp suffix ([A-Za-z0-9]{6}) can spell. */
+const leaksCredential = (v: unknown): boolean => /hunter2~p|bob~u/.test(JSON.stringify(v));
+
 describe('REQ-polaris-generation-046 line 17: the remote URL read as a remote locator, against real clones', () => {
   const answersFor = (c: string, id: string) => ['public', 'none', `CONSENT TO OBSERVE ${id} AT ${c.slice(0, 12)}`, `STATE NO KERNEL EVIDENCE DRAWER FOR ${id} AT ${c.slice(0, 12)}`];
 
@@ -420,13 +424,12 @@ describe('REQ-polaris-generation-046 line 17: the remote URL read as a remote lo
     expect(out.kind === 'recorded' && out.output.split('\n')).toContain(said);
     expect(s.terminal.printed).toContain(said);
     const everything = JSON.stringify({ out, printed: s.terminal.printed, prompts: s.terminal.prompts, records: recordsOf(s.home) });
-    expect(everything.includes('hunter2~p') || everything.includes('bob~u')).toBe(false);
+    expect(leaksCredential(everything)).toBe(false);
   });
 
   it('the user-information statement is made once, from the clone step on, whatever then happens to the URL; no credential appears anywhere (R-PDJA-33-SLICE-CD-3 finding 1)', async () => {
     const SINGLE = 'The URL of the clone\'s remote origin carried user information; Syzygy does not print, store or record it, and removes it before deriving anything from that URL.';
     const up = makeUpstream({ 'a.c': 'x\n' });
-    const leaks = (v: unknown) => /hunter2~p|bob~u/.test(JSON.stringify(v));
     // A URL that is no remote locator, by each rule, with credentials: the rule's statement, and the user-information statement before it.
     for (const [url, rule] of [
       ['https://bob~u:hunter2~p@github.com/redis/redis.git?x=1', 'it carries a query or a fragment'],
@@ -441,14 +444,14 @@ describe('REQ-polaris-generation-046 line 17: the remote URL read as a remote lo
       expect(out.refusal.locatorStatements?.[0], rule).toBe(SINGLE);
       expect(out.refusal.locatorStatements?.length, rule).toBe(2);
       expect(out.refusal.locatorStatements?.[1], rule).toContain(rule);
-      expect(leaks({ out, printed: s.terminal.printed }), rule).toBe(false);
+      expect(leaksCredential({ out, printed: s.terminal.printed }), rule).toBe(false);
     }
     // Refused before the identity is proposed: a clone with an alternate.
     const alternate = fullClone(up.dir, 'https://bob~u:hunter2~p@github.com/redis/redis');
     fs.writeFileSync(path.join(alternate, '.git', 'objects', 'info', 'alternates'), `${path.join(up.dir, '.git', 'objects')}\n`);
     const early = await run(alternate, setup([]));
     expect(early).toMatchObject({ kind: 'refused', refusal: { stage: 'clone', locatorStatements: [SINGLE] } });
-    expect(leaks(early)).toBe(false);
+    expect(leaksCredential(early)).toBe(false);
     // A remote with several url lines, one carrying credentials: said once, and the remote has no one URL.
     const several = fullClone(up.dir, URL_RR);
     gitIn(several, 'config', '--add', 'remote.origin.url', 'https://bob~u:hunter2~p@github.com/redis/redis');
@@ -457,7 +460,7 @@ describe('REQ-polaris-generation-046 line 17: the remote URL read as a remote lo
       'A url line of the clone\'s remote origin carried user information; Syzygy does not print, store or record it, and reads none of that remote\'s URLs as a locator.',
       'The clone\'s remote origin has no one URL to read, so it derives nothing: it has 2 url lines, and the rule reads a remote with exactly one non-empty url. Syzygy does not print, store or record its URLs.',
     ] } });
-    expect(leaks(many)).toBe(false);
+    expect(leaksCredential(many)).toBe(false);
     // A run that completes: said once in the question's run-up and in the output.
     const r12 = up.commits[0]!.slice(0, 12);
     const s = setup(['public', 'none', `CONSENT TO OBSERVE repository:redis-redis AT ${r12}`, `STATE NO KERNEL EVIDENCE DRAWER FOR repository:redis-redis AT ${r12}`]);
@@ -465,19 +468,18 @@ describe('REQ-polaris-generation-046 line 17: the remote URL read as a remote lo
     expect(done).toMatchObject({ kind: 'recorded', locatorStatements: [SINGLE] });
     expect(done.kind === 'recorded' && done.output.split('\n').filter(l => l === SINGLE).length).toBe(1);
     expect(s.terminal.printed.filter(l => l === SINGLE).length).toBe(1);
-    expect(leaks({ done, printed: s.terminal.printed, prompts: s.terminal.prompts, records: recordsOf(s.home) })).toBe(false);
+    expect(leaksCredential({ done, printed: s.terminal.printed, prompts: s.terminal.prompts, records: recordsOf(s.home) })).toBe(false);
   }, 20_000);
 
   it('canary: the leak check catches the credential were it printed, and no temporary path can spell it (syzygy-3efd.78)', () => {
     // The checks above read JSON that holds mkdtemp paths, whose six-character suffix is drawn from [A-Za-z0-9]: the credential words
     // each hold a "~", so no suffix can spell them, as a bare "bob" once was spelled.
-    const leaks = (v: unknown) => /hunter2~p|bob~u/.test(JSON.stringify(v));
     for (const printed of ['https://bob~u:hunter2~p@github.com/redis/redis', 'bob~u', 'hunter2~p', 'https://bob~u%41:hunter2~p@git.example.org/a/b.git']) {
-      expect(leaks({ out: { output: `a line\n${printed}\n` } }), printed).toBe(true);
+      expect(leaksCredential({ out: { output: `a line\n${printed}\n` } }), printed).toBe(true);
     }
     const dir = tempDir('bob-hunter2-');
     expect(path.basename(dir)).toMatch(/^bob-hunter2-[A-Za-z0-9]{6}$/u);
-    expect(leaks({ out: { reason: `${dir}/bob/hunter2 cannot be examined` } })).toBe(false);
+    expect(leaksCredential({ out: { reason: `${dir}/bob/hunter2 cannot be examined` } })).toBe(false);
   });
 
   it('the identity remote is the default\'s remote where it is not origin: its user information is said, never origin\'s want of it (R-PDJA-33-SLICE-CD-3 finding 1)', async () => {
@@ -490,7 +492,7 @@ describe('REQ-polaris-generation-046 line 17: the remote URL read as a remote lo
     const out = await run(clone, setup([], { isTTY: false }));
     expect(out).toMatchObject({ kind: 'refused', refusal: { locatorStatements: [
       'The URL of the clone\'s remote up carried user information; Syzygy does not print, store or record it, and removes it before deriving anything from that URL.'] } });
-    expect(/hunter2~p|bob~u/.test(JSON.stringify(out))).toBe(false);
+    expect(leaksCredential(out)).toBe(false);
   });
 
   it('an alternates file that cannot be examined is refused before the configuration is read, so no user-information statement is owed (R-PDJA-33-SLICE-CD-4 finding 1)', async () => {
@@ -504,7 +506,7 @@ describe('REQ-polaris-generation-046 line 17: the remote URL read as a remote lo
     expect(out).toEqual({ kind: 'refused', refusal: expect.objectContaining({ stage: 'clone', reason: `${path.join(fs.realpathSync(clone), '.git', 'objects', 'info', 'alternates')} cannot be examined (EACCES)` }) });
     expect(out.kind === 'refused' && 'locatorStatements' in out.refusal).toBe(false);
     expect(log.opened.some(p => p.endsWith(`${path.sep}config`))).toBe(false);
-    expect(/hunter2~p|bob~u/.test(JSON.stringify(out))).toBe(false);
+    expect(leaksCredential(out)).toBe(false);
   });
 
   it('a refusal after the identity carries the user-information statement too', async () => {
@@ -513,7 +515,7 @@ describe('REQ-polaris-generation-046 line 17: the remote URL read as a remote lo
     const out = await run(clone, setup([], { isTTY: false }));
     expect(out).toMatchObject({ kind: 'refused', refusal: { stage: 'terminal',
       locatorStatements: ['The URL of the clone\'s remote origin carried user information; Syzygy does not print, store or record it, and removes it before deriving anything from that URL.'] } });
-    expect(JSON.stringify(out).includes('hunter2~p')).toBe(false);
+    expect(leaksCredential(out)).toBe(false);
   });
 
   it('an identity refusal after the remote URL is read carries the user-information statement: a one-segment path (R-PDJA-33-SLICE-CD-2 finding 1)', async () => {
@@ -525,7 +527,7 @@ describe('REQ-polaris-generation-046 line 17: the remote URL read as a remote lo
       reason: 'the normalised URL git.example.org/onlyone has fewer than two path segments, so no identity derives from it; give --identity',
       locatorStatements: ['The URL of the clone\'s remote origin carried user information; Syzygy does not print, store or record it, and removes it before deriving anything from that URL.'] } });
     expect(s.terminal.prompts).toEqual([]);
-    expect(JSON.stringify({ out, printed: s.terminal.printed }).includes('hunter2~p') || JSON.stringify(out).includes('bob~u')).toBe(false);
+    expect(leaksCredential({ out, printed: s.terminal.printed })).toBe(false);
   });
 
   it('a remote URL that is no locator: refused before asking, naming the remote and the rule, the URL in no output', async () => {
