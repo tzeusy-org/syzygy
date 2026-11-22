@@ -82,7 +82,7 @@ describe('Trajectory', () => {
     expect(cardIds.sort()).toEqual(served.trajectory.rendered.map((item) => item.id).sort());
     expect(cardIds).not.toContain('bu-current-200');
     expect(cardIds).not.toContain('bu-closed-050');
-    expect(served.trajectory.rendered.filter((item) => item.column === 'Done')).toHaveLength(50);
+    expect(served.trajectory.rendered.filter((item) => item.column === 'Closed')).toHaveLength(50);
     expect(html).toContain('Rendering 250 of 252 observed work items (up to 200 most recently updated non-closed items, plus up to 50 most recently closed items; missing, invalid or timezone-less times last, timestamp ties and card order by ascending item id)');
     expect(html).toContain('data-parity-field="trajectory-excluded-count">2</span> items are outside this selection');
   });
@@ -215,7 +215,24 @@ describe('Trajectory', () => {
     const html = renderTrajectoryPage(model);
     const card = cardBody(html, 'bu-worker-change-1');
     expect(card).toContain('data-parity-field="worker-change-state"');
-    expect(card).toContain('External worker: Changed / merged');
+    expect(card).toContain('External worker: Commit on the default branch');
+
+    // T1 (review R-T1-CLOSURE-WORDING-1 finding 1): each observed state's
+    // label, rendered on the same card, says what git showed and passes the
+    // closure-wording sweep with its worker-label arm non-empty.
+    const observed = model.workerChange;
+    for (const [state, label] of [
+      ['planned', 'No commit observed'],
+      ['active', 'Commit observed, not on the default branch'],
+      ['changed-or-merged', 'Commit on the default branch'],
+    ] as const) {
+      const variant = { ...model, workerChange: { ...observed, state } } as PocModel;
+      const variantHtml = renderTrajectoryPage(variant);
+      expect(cardBody(variantHtml, 'bu-worker-change-1')).toContain(`<span class="worker-change-label">External worker: ${label}</span>`);
+      const labels = [...variantHtml.matchAll(/<span class="worker-change-label">([\s\S]*?)<\/span>/g)];
+      expect(labels).toHaveLength(1);
+      expect(closureWordingPopulation(variantHtml, variant).filter((text) => CLOSURE_AS_COMPLETION.test(text))).toEqual([]);
+    }
     expect(card).toContain('data-parity-field="worker-change-verification"');
     expect(card).toContain('Verification: Not verified');
     expect(card).not.toContain('Verification: Verified');
@@ -540,3 +557,112 @@ describe('Trajectory', () => {
     expect([...kinds].sort()).toEqual(['observed', 'unknown']);
   });
 });
+
+// T1 (syzygy-t3jk.14; RFC8-2(b), RFC8-15, RFC8-30; POC-REQ-043 wording limb):
+// no heading, count label, worker-row label or notice on the page, and no
+// column value on the machine answer, presents tracker closure as completion
+// or a tracker claim as observed activity.
+//
+// Population (stated, and printed): the page h1 and lede; the text of every
+// h2 and every aria-label inside `.board`; every `.worker-change-label`; every
+// `.notice` in the Trajectory body; and, on the machine answer, every
+// `trajectory.rendered[].column` and every STATUS_TO_COLUMN value. The card's
+// own `work-item-status` text and `workerChange.state` are outside the
+// population by rule: they are the tracker's and the observer's identifiers.
+// Predicate: case-folded, word-bounded, exactly this regex.
+const CLOSURE_AS_COMPLETION = /\b(?:done|complete|completed|finished|resolved|satisfied|in[ _-]progress|active)\b/i;
+
+function stripTags(html: string): string {
+  return html.replace(/<[^>]*>/g, ' ').replace(/\s+/g, ' ').trim();
+}
+
+function closureWordingPopulation(html: string, served: PocModel): string[] {
+  const texts: string[] = [];
+  const h1 = /<h1[^>]*>([\s\S]*?)<\/h1>/.exec(html);
+  if (h1?.[1] === undefined) throw new Error('page h1 missing');
+  texts.push(stripTags(h1[1]));
+  const lede = /<p class="lede"[^>]*>([\s\S]*?)<\/p>/.exec(html);
+  if (lede?.[1] === undefined) throw new Error('page lede missing');
+  texts.push(stripTags(lede[1]));
+  const boardStart = html.indexOf('<div class="board"');
+  if (boardStart < 0) throw new Error('board missing');
+  const board = html.slice(boardStart);
+  for (const m of board.matchAll(/<h2>([\s\S]*?)<\/h2>/g)) texts.push(stripTags(m[1]!));
+  for (const m of board.matchAll(/aria-label="([^"]*)"/g)) texts.push(m[1]!);
+  for (const m of html.matchAll(/<span class="worker-change-label">([\s\S]*?)<\/span>/g)) texts.push(stripTags(m[1]!));
+  for (const m of html.matchAll(/<p class="[^"]*\bnotice\b[^"]*"[^>]*>([\s\S]*?)<\/p>/g)) texts.push(stripTags(m[1]!));
+  if (served.trajectory.kind !== 'observed') throw new Error('unreachable');
+  for (const item of served.trajectory.rendered) texts.push(item.column);
+  texts.push(...Object.values(STATUS_TO_COLUMN));
+  return texts;
+}
+
+async function servedAnswer(model: PocModel): Promise<PocModel> {
+  const machineRoute = pocRoutes(() => model).find((route) => route.path === '/api/poc')!;
+  const response = await machineRoute.handle({ request: { method: 'GET', path: '/api/poc', query: new URLSearchParams(), headers: {} } });
+  expect(response.status).toBe(200);
+  return JSON.parse(response.body) as PocModel;
+}
+
+function closureRows() {
+  const instant = '2026-08-01T00:00:00Z';
+  const statuses = ['open', 'in_progress', 'blocked', 'deferred', 'pinned', 'hooked'];
+  return [
+    ...Array.from({ length: 201 }, (_, i) => fixtureWorkItemRow(`bu-current-${String(i).padStart(3, '0')}`, statuses[i % 6]!, instant, instant, null)),
+    ...Array.from({ length: 51 }, (_, i) => fixtureWorkItemRow(`bu-closed-${String(i).padStart(3, '0')}`, 'closed', instant, instant, instant)),
+  ];
+}
+
+describe('Trajectory closure wording (T1)', () => {
+  it.each([
+    ['default fixture', undefined],
+    ['252-row fixture', 'rows'],
+  ] as const)('finds no completion word over the stated population on the %s', async (_name, which) => {
+    const model = buildFixtureModel(cleanups, which === 'rows' ? { workItemRows: closureRows() } : undefined);
+    const html = renderTrajectoryPage(model);
+    const served = await servedAnswer(model);
+    const population = closureWordingPopulation(html, served);
+    console.info(`T1 closure-wording sweep (${_name}): population ${population.length} texts`);
+    expect(population.length).toBeGreaterThan(Object.keys(STATUS_TO_COLUMN).length);
+    expect(population.filter((text) => CLOSURE_AS_COMPLETION.test(text))).toEqual([]);
+
+    // Rule 6: 'Done' restored on the page, and on the answer, each fails.
+    const mutatedPage = html.replace('<h2>Closed ', '<h2>Done ');
+    expect(mutatedPage).not.toBe(html);
+    expect(closureWordingPopulation(mutatedPage, served).some((text) => CLOSURE_AS_COMPLETION.test(text))).toBe(true);
+    if (served.trajectory.kind !== 'observed') throw new Error('unreachable');
+    const closedIndex = served.trajectory.rendered.findIndex((item) => item.column === 'Closed');
+    if (which === 'rows') expect(closedIndex).toBeGreaterThanOrEqual(0);
+    if (closedIndex >= 0) {
+      const mutatedAnswer = structuredClone(served) as PocModel & { trajectory: { rendered: { column: string }[] } };
+      mutatedAnswer.trajectory.rendered[closedIndex]!.column = 'Done';
+      expect(closureWordingPopulation(html, mutatedAnswer).some((text) => CLOSURE_AS_COMPLETION.test(text))).toBe(true);
+    }
+  });
+
+  it('heads the closed and claimed columns Closed and Claimed, page and answer alike', async () => {
+    const model = buildFixtureModel(cleanups, { workItemRows: closureRows() });
+    const html = renderTrajectoryPage(model);
+    const served = await servedAnswer(model);
+    if (served.trajectory.kind !== 'observed') throw new Error('unreachable');
+    expect(html).toContain('<h2>Closed <span class="count">(50)</span></h2>');
+    expect(html).toMatch(/<h2>Claimed <span class="count">\(\d+\)<\/span><\/h2>/);
+    expect(new Set(served.trajectory.rendered.filter((item) => item.status === 'closed').map((item) => item.column))).toEqual(new Set(['Closed']));
+    expect(new Set(served.trajectory.rendered.filter((item) => item.status === 'in_progress').map((item) => item.column))).toEqual(new Set(['Claimed']));
+  });
+
+  it('states once, above the board, how many rendered items are closed and that their verification is Unknown', async () => {
+    const model = buildFixtureModel(cleanups, { workItemRows: closureRows() });
+    const html = renderTrajectoryPage(model);
+    const served = await servedAnswer(model);
+    if (served.trajectory.kind !== 'observed') throw new Error('unreachable');
+    const closed = served.trajectory.rendered.filter((item) => item.status === 'closed');
+    const unverified = closed.filter((item) => item.verification === 'unknown').length;
+    expect(closed).toHaveLength(50);
+    expect(html.match(/data-parity-field="trajectory-closure-notice"/g)).toHaveLength(1);
+    expect(html.indexOf('trajectory-closure-notice')).toBeLessThan(html.indexOf('<div class="board"'));
+    expect(html).toContain(`data-parity-field="trajectory-closed-count">${closed.length}</span> of these items are closed in the tracker. Closed is the tracker's word, not a verification`);
+    expect(html).toContain(`data-parity-field="trajectory-closed-unverified-count">${unverified}</span> of them, because no test or merge evidence is ingested for a work item`);
+  });
+});
+

@@ -388,6 +388,11 @@ DECLARED_SOURCE_SPEC = f"{CHANGES}/{DECLARED_SOURCE_CHANGE}/proposed/polaris-gen
 DECLARED_SOURCE_UNION = f"{CHANGES}/{DECLARED_SOURCE_CHANGE}/GOVERNING-DEPENDENCIES.json"
 AGENT_ADOPTIONS = f"{DECISIONS}/AGENT-ADOPTIONS.md"
 DECLARED_SOURCE_ROW = 'A-4'
+# The closure-wording amendment (syzygy-t3jk.14) adds one POC-REQ-043
+# Scenario. R3 expects it exactly when its adoption row is in the tree, so a
+# tree from before the amendment (the P115 signed selftest's frozen core)
+# keeps its 26 / 34 census.
+CLOSURE_WORDING_TAG = 'three-surface-poc-closure-wording-amendment-v1.0'
 DECLARED_SOURCE_COMMIT = '182a703b2dbae97a16ae7334cd84a32b634cedc0'
 DECLARED_SOURCE_TAG = 'polaris-dossier-declared-source-model-v2.0'
 DECLARED_SOURCE_SUBJECTS = {
@@ -3342,6 +3347,14 @@ def polaris_expected(root, findings):
     return n_req, n_scen, ids
 
 
+def closure_wording_adopted(root):
+    """True when an adoption row names the POC change and the amendment's tag."""
+    text = read_text(root, AGENT_ADOPTIONS) or ""
+    return any(line.startswith("| A-") and CLOSURE_WORDING_TAG in line
+               and "three-surface-poc-experience" in line
+               for line in text.split("\n"))
+
+
 def check_census(root, report):
     pop, findings = census(root)
     examined = 0
@@ -3349,7 +3362,8 @@ def check_census(root, report):
     signed_reference = reference_signed(root)
     totals = dict(EXPECTED_TOTALS, POLARIS=(p_req, p_scen))
     if signed_reference:
-        totals["POC"] = (26, 34)
+        closure_wording = closure_wording_adopted(root)
+        totals["POC"] = (26, 35 if closure_wording else 34)
     for family, (n_req, n_scen) in totals.items():
         reqs = pop.get(family, {})
         got = (len(reqs), sum(len(r["scenarios"]) for r in reqs.values()))
@@ -3359,7 +3373,7 @@ def check_census(root, report):
                             f"scenarios, expected {n_req} / {n_scen}")
         literal = EXPECTED.get(family)
         if family == "POC" and signed_reference:
-            literal = {**literal, "014": 8}
+            literal = {**literal, "014": 8, **({"043": 2} if closure_wording else {})}
         if literal is not None:
             prefix = f"{family}-REQ-"
             have = {k[len(prefix):]: len(v["scenarios"]) for k, v in reqs.items()}
