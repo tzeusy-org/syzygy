@@ -2449,6 +2449,21 @@ describe('render: subsections (schema v8)', () => {
     fragmentsResolve(files);
   });
 
+  it('reads a section\'s title over its subsections\' claims too, and a subsection\'s title over its paragraphs as well as its answer', async () => {
+    fixturePolicy = policy(['.txt']); // src/kestrel.c is withheld
+    const doc = versioned(V8, [SUBSECTIONS[0]!, { ...SUBSECTIONS[1]!, paragraphs: [{ id: 'qp2', label: 'unknown', reason: 'missing-evidence', text: 'No source says which memory.', citations: [], children: [] }] }]);
+    (doc['sections'] as Doc[])[0]!['paragraphs'] = [{ ...(doc['sections'] as Doc[])[0]!['paragraphs'][0], children: [] }]; // only p1, which cites the withheld file
+    const files = await rendered(doc);
+    const index = files.get('index.html')!;
+    expect(index).toContain('<h2>Core ideas</h2>');
+    expect(index).toContain('<section class="subsection" id="subsection-q-keys"><h3>Where are keys kept?</h3>');
+    expect(index).toContain('<li><a href="#subsection-q-keys">Where are keys kept?</a></li>');
+    const alone = versioned(V8, [{ ...SUBSECTIONS[1]!, id: 'q-other', answer: { ...SUBSECTIONS[1]!['answer'], id: 'qa3', citations: [cite('c-qa3', 'src/kestrel.c', 1, 1)] } }, SUBSECTIONS[1]!]);
+    (alone['sections'] as Doc[])[0]!['paragraphs'] = [{ ...(alone['sections'] as Doc[])[0]!['paragraphs'][0], children: [] }];
+    const page = (await rendered(alone)).get('index.html')!;
+    expect(page).toContain('<li><a href="#section-core-ideas">Withheld item</a><ol><li><a href="#subsection-q-other">Withheld item</a></li><li><a href="#subsection-q-keys">Withheld item</a></li></ol></li>');
+  });
+
   it('renders no subsection, list or style for a section that is not produced', async () => {
     const doc = versioned(V8, SUBSECTIONS);
     (doc['sections'] as Doc[])[0]!['disposition'] = { kind: 'omitted', reason: 'Not needed.', citations: [] };

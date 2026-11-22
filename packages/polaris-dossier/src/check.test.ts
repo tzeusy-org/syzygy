@@ -1827,9 +1827,37 @@ describe('check: subsections (schema v8)', () => {
 
   it('reports subsections in a v7 or earlier draft as field-version in place of the schema finding, and reads nothing inside them', async () => {
     for (const version of [V7, 'polaris-dossier-local-draft-v6', 'polaris-dossier-local-draft-v2']) {
-      const result = await findingsOf(drafted(version, [sub('q1', 'One. Two.', { title: 'The `cache`' }), sub('q2', '', { answer: { id: 'q2-a', label: 'non-normative', text: 'Read on.' } })]));
+      const result = await findingsOf(drafted(version, [sub('q1', 'One. Two.', { title: 'The `cache`' }), sub('q2', '', { answer: { id: 'q2-a', label: 'non-normative', text: 'Read on.' } }), { id: 'q3' }]));
       expect(listed(result), version).toEqual([{ kind: 'field-version', at: '$.sections[0].subsections', detail: '`subsections` needs draft schema polaris-dossier-local-draft-v8' }]);
     }
+  });
+
+  it('reads a subsection\'s answer and paragraphs as claims of the section: a citation of an absent file in either is path-absent at its path', async () => {
+    const result = await findingsOf(drafted(V8, [
+      sub('q1', 'The daemon caches reads.', { answer: answer('q1-a', 'The daemon caches reads.', { citations: [cite('c-q1-a', 'docs/absent.txt', 1, 1)] }) }),
+      sub('q2', 'Fine.', { paragraphs: [{ id: 'q2p', label: 'inferred', basis: 'source', text: 'It also writes.', citations: [cite('c-q2p', 'docs/absent.txt', 1, 1)], quotations: [], children: [] }] })]));
+    expect(listed(result).map(({ kind, at }) => ({ kind, at }))).toEqual([
+      { kind: 'path-absent', at: '$.sections[0].subsections[0].answer.citations[0].path' },
+      { kind: 'path-absent', at: '$.sections[0].subsections[1].paragraphs[0].citations[0].path' }]);
+  });
+
+  it('bounds the list at 12 subsections and a subsection at 30 paragraphs, each a schema finding at that list', async () => {
+    const many = await findingsOf(drafted(V8, Array.from({ length: 13 }, (_, k) => sub(`q${k}`, 'Fine.'))));
+    expect(listed(many)).toEqual([{ kind: 'schema', at: '$.sections[0].subsections', detail: 'must hold 2 to 12 items; holds 13' }]);
+    const twelve = await findingsOf(drafted(V8, Array.from({ length: 12 }, (_, k) => sub(`q${k}`, 'Fine.'))));
+    expect(listed(twelve)).toEqual([]);
+    const paragraphs = (n: number) => Array.from({ length: n }, (_, k) => ({ id: `pp${k}`, label: 'non-normative', text: 'W.', children: [] }));
+    const long = await findingsOf(drafted(V8, [sub('q1', 'Fine.', { paragraphs: paragraphs(31) }), sub('q2', 'Fine.')]));
+    expect(listed(long)).toEqual([{ kind: 'schema', at: '$.sections[0].subsections[0].paragraphs', detail: 'must hold 0 to 30 items; holds 31' }]);
+    expect(listed(await findingsOf(drafted(V8, [sub('q1', 'Fine.', { paragraphs: paragraphs(30) }), sub('q2', 'Fine.')])))).toEqual([]);
+  });
+
+  it('passes a v8 draft holding a sequence diagram, and reads its thesis basis, as a v7 draft does', async () => {
+    const el = (id: string, label: string) => ({ id, label, epistemic: 'inferred', citations: [cite(`c-${id}`)] });
+    const sequence = { id: 'seq-1', title: 'Handshake', home: { kind: 'section', target: 'core-ideas' }, kind: 'sequence', relationship: 'Who asks whom.', disposition: { kind: 'produced', assetIds: ['seq-1'] },
+      participants: [el('pt1', 'Client'), el('pt2', 'Server')], messages: [{ ...el('msg1', 'asks'), from: 'pt1', to: 'pt2' }, { ...el('msg2', 'answers'), from: 'pt2', to: 'pt1' }] };
+    const result = await findingsOf(mutate((d) => { d.schemaVersion = V8; d.thesisBasis = 'stated'; d.diagrams.push(sequence); }));
+    expect([result.outcome, listed(result)]).toEqual(['passed', []]);
   });
 
   it('keeps a v6 draft\'s figure-kind field-version naming schema v7', async () => {
@@ -1860,6 +1888,7 @@ describe('rule one-sentence-answer', () => {
     ['The cache is bounded, as The project states: "Entries expire. Then they are fetched again."', true],
     ['It says "one. two" and stops.', true],
     ['It says "one. two and stops.', false],
+    ['It ends." Then more.', true],
     ['It says "x" then "y. z" then ends.', true],
     ['The users\' list.', true],
     ['The users\' list. More.', false],
