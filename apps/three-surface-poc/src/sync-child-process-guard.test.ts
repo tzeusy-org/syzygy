@@ -91,9 +91,6 @@ const NATIVE_SITES = new Map<string, ReadonlyMap<string, string>>([
   [MACHINE_PEER_MODULE, new Map([
     ['a91baeff25ce94e5c56a9306b460dd766124f95c695fd8cc626019e67953e87f', 'prlimit hard CPU 1s, held pinned image, fixed modes, 1s SIGKILL, 64KiB plus 512 output bytes, reserved capacity before exec'],
   ])],
-  [DOSSIER + 'url-ordered-design-screen.ts', new Map([
-    ['49ddffbf2f4a472f8db71aa384da61500ddb6b7e093885a6836564fcb68f29d9', 'one complete screening operation in the pinned sandbox, maximum 5s SIGKILL and 12MiB output'],
-  ])],
   [DOSSIER + 'session-tools.test.ts', new Map([
     ['1e3dffa0ed4e69c22beded3774568d9b6aaae2104390b9624fecd38636978120', 'local Git setup in the owned synthetic source fixture'],
   ])],
