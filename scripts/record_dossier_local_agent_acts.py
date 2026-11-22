@@ -552,10 +552,15 @@ def selftest() -> int:
 
     arg = rsha
     results.append(("exact argument validates", _accepts(act, arg, make())))
-    results.append(("the shipped recorder is unfrozen, or frozen with its files",
+    # The withdrawal notice describes what happened after round 3. Its presence
+    # is still visible to the recorder's live package validation.
+    archived_files = set(frozen_rels(ROOT)) - {PKG / "WITHDRAWN.md"}
+    results.append(("the archived review inventory and digests match the freeze",
                     (FROZEN_SUBJECT is None and not FROZEN_FILE_DIGESTS)
                     or (FROZEN_SUBJECT is not None
-                        and set(FROZEN_FILE_DIGESTS) == set(frozen_rels(ROOT)))))
+                        and set(FROZEN_FILE_DIGESTS) == archived_files
+                        and all(digest((ROOT / rel).read_bytes()) == expected
+                                for rel, expected in FROZEN_FILE_DIGESTS.items()))))
     results.append(("five acts, five distinct labels, subjects and records",
                     len({a.label for a in ACTS}) == len({a.subject for a in ACTS})
                     == len({a.record for a in ACTS}) == 5))
