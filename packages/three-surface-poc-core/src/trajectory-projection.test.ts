@@ -62,7 +62,18 @@ describe('Trajectory projection', () => {
     const second = projectTrajectory(fixture, { nonClosedLimit: 10, recentClosedWindow: 5 });
     expect(second).toEqual(first);
     if (first.kind !== 'observed') throw new Error('unreachable');
-    expect(first.timeRange).toEqual({ earliest: '2026-07-01T00:00:00Z', latest: '2026-08-06T00:00:00Z' });
+    // syzygy-t3jk.17: the measures run to the observation's capture instant,
+    // never a clock; a later wall-clock time changes nothing.
+    vi.useFakeTimers();
+    vi.setSystemTime(new Date('2031-01-01T00:00:00Z'));
+    try {
+      expect(projectTrajectory(fixture, { nonClosedLimit: 10, recentClosedWindow: 5 })).toEqual(first);
+    } finally {
+      vi.useRealTimers();
+    }
+    expect(first.timeMeasures.measuredAt).toBe('2026-08-30T00:00:00Z');
+    expect(first.timeMeasures.age).toEqual({ covered: 2, total: 2, medianHours: 648, p90Hours: 696 });
+    expect('timeRange' in first).toBe(false);
   });
 
   it('answers the five questions over every served item, not the rendered selection (POC-REQ-044)', () => {

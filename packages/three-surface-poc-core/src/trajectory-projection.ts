@@ -1,3 +1,4 @@
+import { recordedInstant, trajectoryTimeMeasures, type TrajectoryTimeMeasures } from './trajectory-time-measures.js';
 import type { WorkItemFact, WorkItemsResult, WorkItemStatus } from './work-items.js';
 
 export const STATUS_TO_COLUMN = {
@@ -107,7 +108,8 @@ interface TrajectoryProjectionObserved {
    * item (no evidence source is ingested); `inside` are rendered, `outside`
    * are served but outside the selection. Both channels read these. */
   readonly verificationUnknown: { readonly served: number; readonly inside: number; readonly outside: number };
-  readonly timeRange: { readonly earliest: string; readonly latest: string } | null;
+  /** POC-REQ-045 (syzygy-t3jk.17): elapsed-time measures over every served item. */
+  readonly timeMeasures: TrajectoryTimeMeasures;
   /** POC-REQ-044: the five answers, in TRAJECTORY_ANSWER_ORDER. */
   readonly answers: readonly TrajectoryAnswer[];
 }
@@ -164,23 +166,6 @@ function byId(a: WorkItemFact, b: WorkItemFact): number {
   return a.id < b.id ? -1 : a.id > b.id ? 1 : 0;
 }
 
-/** Explicit offsets only: the host timezone must never select a different item. */
-function recordedInstant(value: string | null): bigint | null {
-  const match = /^(\d{4})-(\d{2})-(\d{2})T([01]\d|2[0-3]):([0-5]\d):([0-5]\d)(?:\.(\d{1,9}))?(Z|[+-](?:[01]\d|2[0-3]):[0-5]\d)$/.exec(value ?? '');
-  if (match === null) return null;
-  const year = Number(match[1]);
-  const month = Number(match[2]);
-  const day = Number(match[3]);
-  const leap = year % 4 === 0 && (year % 100 !== 0 || year % 400 === 0);
-  const days = [31, leap ? 29 : 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
-  if (month < 1 || month > 12 || day < 1 || day > days[month - 1]!) return null;
-  // Calendar validity is checked before Date.parse, which otherwise rolls
-  // impossible dates forward. Parse whole seconds, retaining up to nine
-  // fractional digits separately so sub-millisecond updates remain ordered.
-  const milliseconds = Date.parse(`${match[1]}-${match[2]}-${match[3]}T${match[4]}:${match[5]}:${match[6]}${match[8]}`);
-  if (!Number.isFinite(milliseconds)) return null;
-  return BigInt(milliseconds) * 1_000_000n + BigInt((match[7] ?? '').padEnd(9, '0'));
-}
 
 /** Missing or invalid recorded times rank last; never substitute another field. */
 function newestFirst(a: string | null, b: string | null): number {
@@ -239,18 +224,6 @@ export function projectTrajectory(
   const renderedIds = new Set<string>([...open.map((item) => item.id), ...closed.map((item) => item.id)]);
   const rendered = sorted.filter((item) => renderedIds.has(item.id)).map(laneItem);
 
-  const instants = rendered.flatMap((item) =>
-    [item.createdAt, item.updatedAt, item.closedAt ?? undefined].filter(
-      (value): value is string => value !== undefined,
-    ),
-  );
-  const timeRange =
-    instants.length === 0
-      ? null
-      : {
-          earliest: instants.reduce((min, value) => (value < min ? value : min)),
-          latest: instants.reduce((max, value) => (value > max ? value : max)),
-        };
 
   return {
     kind: 'observed',
@@ -265,7 +238,7 @@ export function projectTrajectory(
       inside: rendered.filter((item) => item.verification === 'unknown').length,
       outside: workItems.items.length - rendered.filter((item) => item.verification === 'unknown').length,
     },
-    timeRange,
+    timeMeasures: trajectoryTimeMeasures(workItems.items, workItems.capturedAt),
     answers: observedAnswers(workItems, options.reconciliationChain),
   };
 }
