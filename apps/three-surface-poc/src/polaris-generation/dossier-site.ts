@@ -605,7 +605,7 @@ export function renderDossierSite(input: DossierSiteInput & { readonly local?: L
   };
   const topicAttr = (id: string): string => ` data-topics="${escape((topics[id] ?? []).join(' '))}"`;
   const localPages = local?.pages ?? [];
-  const reserved = new Set(['index.html', 'contents.html', 'glossary.html', 'dossier.json', 'size-report.json', 'size-report.html', APPENDIX, LOCAL_MACHINE_VIEW, DERIVED_SITE_FILE, ...COMPUTED_MAPS.map(m => m.path), ...deepPaths.values(), ...sourcePaths.values(),
+  const reserved = new Set(['index.html', 'contents.html', 'glossary.html', 'dossier.json', 'size-report.json', 'size-report.html', APPENDIX, LOCAL_MACHINE_VIEW, DERIVED_SITE_FILE, ...deepPaths.values(), ...sourcePaths.values(),
     ...poles.flatMap(pole => pole.path === null ? [] : [pole.path])]);
   for (const localPage of localPages) {
     if (!isDossierPagePath(localPage.path) || localPage.path.includes('/') || !localPage.path.endsWith('.html') || reserved.has(localPage.path)) throw new DossierRenderError('page-path-collision');
