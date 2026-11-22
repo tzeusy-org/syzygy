@@ -22,7 +22,7 @@ check remain the latest recorded local-agent-mode specification.
 
 ````diff
 diff --git a/openspec/changes/polaris-dossier-local-agent-mode/design.md b/openspec/changes/polaris-dossier-local-agent-mode/design.md
-index be3312e8..bff3ec0f 100644
+index be3312e8..a5691adb 100644
 --- a/openspec/changes/polaris-dossier-local-agent-mode/design.md
 +++ b/openspec/changes/polaris-dossier-local-agent-mode/design.md
 @@ -12,6 +12,11 @@
@@ -31,7 +31,7 @@ index be3312e8..bff3ec0f 100644
 
 +> **Design v1.8.** The v1.6 version statement and owner-sign-off condition
 +> immediately above describe the recorded predecessor. The interactive
-+> handover correction below is an agent adoption under VIS-4 (A-38).
++> handover correction below is an agent adoption under VIS-4 (A-39).
 +> The v1.6 tag retains the recorded specification and predecessor design.
 +
  **The agent writes; Syzygy pins, checks, packages the review and renders.**
@@ -209,7 +209,7 @@ install commit and its rollback command. The tag
 
 The independent review returned **REVISE** against
 `db78a1800fa8c5957e49db7d432b687fbbd1092f`. Its verbatim findings and both
-subject blob IDs are in [the raw review](../../reviews/R-DOSSIER-INTERACTIVE-HANDOVER-1-RAW.md).
+subject blob IDs are in [the raw review](../../reviews/R-POLARIS-DOSSIER-LOCAL-AGENT-INTERACTIVE-HANDOVER-1-RAW.md).
 The disposition follows CC-REV-4.
 
 1. Give the two launch-form signatures and require the corresponding review

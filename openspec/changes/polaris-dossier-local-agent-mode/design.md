@@ -14,7 +14,7 @@
 
 > **Design v1.8.** The v1.6 version statement and owner-sign-off condition
 > immediately above describe the recorded predecessor. The interactive
-> handover correction below is an agent adoption under VIS-4 (A-38).
+> handover correction below is an agent adoption under VIS-4 (A-39).
 > The v1.6 tag retains the recorded specification and predecessor design.
 
 **The agent writes; Syzygy pins, checks, packages the review and renders.**
