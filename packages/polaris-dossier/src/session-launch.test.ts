@@ -834,6 +834,14 @@ describe('prepared private CLI launch',()=>{
       const f=await launchFixture(limits),preparation=await prepareRestrictedUrlSession(f.launch),host=await f.start();
       const child=await launchRestrictedUrlSession({preparation,host});
       cleanup.push(child.stop);
+      if (wanted === 'output-limit') {
+        // Exercise the actual child's output receiver before the unrelated
+        // inspection deadline can mask the output-ceiling case.
+        const native = nativeSpawns.latest();
+        expect(native?.pid).toBe(child.pid);
+        expect(native?.stdout).toBeDefined();
+        native!.stdout!.emit('data', Buffer.from('own output exceeds the one-byte limit'));
+      }
       if(wanted==='storage-limit') await writeFile(path.join(f.launch.view.workDirectory, 'own-storage-control'), 'oversize');
       if(wanted==='stopped'){expect(isUrlSessionProcess(child)).toBe(true);const stopping=child.stop();expect(isUrlSessionProcess(child)).toBe(false);expect(child.stop()).toBe(stopping);}
       const result=await child.finished;
