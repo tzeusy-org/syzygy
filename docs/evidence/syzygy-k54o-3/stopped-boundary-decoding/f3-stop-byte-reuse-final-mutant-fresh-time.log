@@ -1,0 +1,41 @@
+
+ RUN  v3.2.7 /home/orca/.tmp/syzygy-beads-looper-20261114-54ebc9f1/d10-f3-work-budget
+
+ ❯ |unit| packages/polaris-dossier/src/url-stopped-run.test.ts (8 tests | 1 failed) 668ms
+   ✓ retained URL stop expectation > reads the exact private stopped slot before the original deadline 10ms
+   ✓ retained URL stop expectation > refuses an inconsistent subject or spend and an invalid or aliased slot 4ms
+   ✓ retained URL stop expectation > keeps repeat stops in distinct immutable generations and rejects broken links, changed subjects and cycles  629ms
+   ✓ retained URL stop expectation > holds a real protected exclusive recovery lease, consumes once and permits a later generation without replay 5ms
+   ✓ retained URL stop expectation > never steals a stale or replaced lock, and invalidates a holder when its stop bytes change 3ms
+   × retained URL stop expectation > checks the clock and exact stop bytes on every held claim use 8ms
+     → expected true to be false // Object.is equality
+   ✓ retained URL stop expectation > rejects replacement of the named slot during the exact byte comparison 4ms
+   ✓ retained URL stop expectation > requires a complete genuine initial boundary match before issuing a claim 3ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  |unit| packages/polaris-dossier/src/url-stopped-run.test.ts > retained URL stop expectation > checks the clock and exact stop bytes on every held claim use
+AssertionError: expected true to be false // Object.is equality
+
+- Expected
++ Received
+
+- false
++ true
+
+ ❯ packages/polaris-dossier/src/url-stopped-run.test.ts:150:31
+    148|     for (const invalid of [999, 2000.5, Number.NaN, 5000]) {
+    149|       now = invalid;
+    150|       expect(claim.current()).toBe(false);
+       |                               ^
+    151|     }
+    152|     now = 2000;
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 7 passed (8)
+   Start at  17:40:15
+   Duration  1.94s (transform 690ms, setup 23ms, collect 914ms, tests 668ms, environment 0ms, prepare 57ms)
+

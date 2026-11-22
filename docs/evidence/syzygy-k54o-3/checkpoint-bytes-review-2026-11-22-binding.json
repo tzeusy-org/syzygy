@@ -1,0 +1,17 @@
+{
+  "subjectCommit": "483acdd497ecce12c505ca2265600c3aa4f4e9f8",
+  "raw": "checkpoint-bytes-review-2026-11-22-RAW.md",
+  "rawSha256": "a180b627398cd12fcb3f9dea79eb2fd5e9a1af9286f17a40b2cdc4b48eddea58",
+  "verdict": "PASS",
+  "files": {
+    "source": {
+      "path": "packages/polaris-dossier/src/url-stopped-run.ts",
+      "sha256": "aadddea6aa1e05bb2d68e37128b461d96b6c7376ab2aecbd84d5dc03914f3f7d"
+    },
+    "test": {
+      "path": "packages/polaris-dossier/src/url-stopped-run.test.ts",
+      "sha256": "a4caf920d5db8b4cfe7bc302d9732d7972ac676f0c83e9973e6dd85d28c70fcd"
+    }
+  },
+  "limit": "Source-only deterministic-reuse review. Lock/marker/policy checks retain predecessor preflight timing; this claims no atomic combined post-read bracket. Native acceptance remains pending."
+}

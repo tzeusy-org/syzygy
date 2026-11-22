@@ -1,0 +1,40 @@
+{
+  "base": "f39e7ed050fb591c427cb53b88d369e177a04df9",
+  "sourceSha256": "aadddea6aa1e05bb2d68e37128b461d96b6c7376ab2aecbd84d5dc03914f3f7d",
+  "testSha256": "a4caf920d5db8b4cfe7bc302d9732d7972ac676f0c83e9973e6dd85d28c70fcd",
+  "mutants": [
+    {
+      "name": "exact-bytes",
+      "old": "previous.bytes.equals(bytes) && matchesSubject",
+      "new": "matchesSubject",
+      "exit": 1,
+      "log": "/home/orca/.tmp/f3-stop-byte-reuse-final-mutant-exact-bytes.log"
+    },
+    {
+      "name": "fresh-time",
+      "old": "previous.bytes.equals(bytes) && matchesSubject(previous.boundary.record, input.expected, asOf)",
+      "new": "previous.bytes.equals(bytes)",
+      "exit": 1,
+      "log": "/home/orca/.tmp/f3-stop-byte-reuse-final-mutant-fresh-time.log"
+    },
+    {
+      "name": "final-physical-bracket",
+      "old": "if (result === null || !sameSlot(before, fs.fstatSync(fd, { bigint: true })) || !sameSlot(before, fs.lstatSync(slot, { bigint: true }))\n          || !checkedRoot(root, rootFd, rootStat)) return null;",
+      "new": "if (result === null) return null;",
+      "exit": 1,
+      "log": "/home/orca/.tmp/f3-stop-byte-reuse-final-mutant-final-physical-bracket.log"
+    },
+    {
+      "name": "initial-digest",
+      "old": "boundary?.sha256 === input.sha256 ?",
+      "new": "boundary !== null ?",
+      "exit": 1,
+      "log": "/home/orca/.tmp/f3-stop-byte-reuse-final-mutant-initial-digest.log"
+    }
+  ],
+  "exploratorySurvivor": {
+    "manifest": "/home/orca/.tmp/f3-stop-byte-reuse-rule6.json",
+    "explanation": "Removing only named-slot check still rejects rename through independent held-fd ctime check; whole bracket omission fails."
+  },
+  "testedCommit": "2a57680e301563cf6f5e732b23d3f632c017cbaf"
+}

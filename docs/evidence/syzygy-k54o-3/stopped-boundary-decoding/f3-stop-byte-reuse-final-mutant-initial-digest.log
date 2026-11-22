@@ -1,0 +1,45 @@
+
+ RUN  v3.2.7 /home/orca/.tmp/syzygy-beads-looper-20261114-54ebc9f1/d10-f3-work-budget
+
+ ❯ |unit| packages/polaris-dossier/src/url-stopped-run.test.ts (8 tests | 1 failed) 966ms
+   ✓ retained URL stop expectation > reads the exact private stopped slot before the original deadline 10ms
+   ✓ retained URL stop expectation > refuses an inconsistent subject or spend and an invalid or aliased slot 4ms
+   ✓ retained URL stop expectation > keeps repeat stops in distinct immutable generations and rejects broken links, changed subjects and cycles  913ms
+   ✓ retained URL stop expectation > holds a real protected exclusive recovery lease, consumes once and permits a later generation without replay 8ms
+   ✓ retained URL stop expectation > never steals a stale or replaced lock, and invalidates a holder when its stop bytes change 3ms
+   ✓ retained URL stop expectation > checks the clock and exact stop bytes on every held claim use 4ms
+   ✓ retained URL stop expectation > rejects replacement of the named slot during the exact byte comparison 4ms
+   × retained URL stop expectation > requires a complete genuine initial boundary match before issuing a claim 12ms
+     → expected { current: [Function current], …(2) } to be null
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  |unit| packages/polaris-dossier/src/url-stopped-run.test.ts > retained URL stop expectation > requires a complete genuine initial boundary match before issuing a claim
+AssertionError: expected { current: [Function current], …(2) } to be null
+
+- Expected: 
+null
+
++ Received: 
+{
+  "consume": [Function consume],
+  "current": [Function current],
+  "release": [Function release],
+}
+
+ ❯ packages/polaris-dossier/src/url-stopped-run.test.ts:189:75
+    187|     const f = stoppedFixture(); f.write();
+    188|     const input = { root: f.root, expected: f.expected, now: () => 200…
+    189|     expect(acquireUrlRecoveryClaim({ ...input, sha256: 'f'.repeat(64) …
+       |                                                                           ^
+    190|     fs.writeFileSync(f.file, '{"record":{}}\n');
+    191|     expect(acquireUrlRecoveryClaim({ ...input, sha256: sha256(canonica…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 7 passed (8)
+   Start at  17:40:20
+   Duration  2.34s (transform 719ms, setup 27ms, collect 956ms, tests 966ms, environment 0ms, prepare 65ms)
+

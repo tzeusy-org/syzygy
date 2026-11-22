@@ -1,0 +1,127 @@
+{
+  "sourceSubject": "2a57680e301563cf6f5e732b23d3f632c017cbaf",
+  "rootSubject": "483acdd497ecce12c505ca2265600c3aa4f4e9f8",
+  "testedWorkingTreeBase": "f39e7ed050fb591c427cb53b88d369e177a04df9",
+  "overlay": {
+    "path": "tested-source-overlay.patch",
+    "sha256": "4d124a93115bc534fb1394684c10c053778e96e1e74e369c156615bbb3c5ab59"
+  },
+  "files": {
+    "source": {
+      "path": "packages/polaris-dossier/src/url-stopped-run.ts",
+      "sha256": "aadddea6aa1e05bb2d68e37128b461d96b6c7376ab2aecbd84d5dc03914f3f7d"
+    },
+    "test": {
+      "path": "packages/polaris-dossier/src/url-stopped-run.test.ts",
+      "sha256": "a4caf920d5db8b4cfe7bc302d9732d7972ac676f0c83e9973e6dd85d28c70fcd"
+    }
+  },
+  "finalPredicateFaults": [
+    {
+      "name": "exact-bytes",
+      "exit": 1,
+      "baselineSourceSha256": "aadddea6aa1e05bb2d68e37128b461d96b6c7376ab2aecbd84d5dc03914f3f7d",
+      "mutantSourceSha256": "33e1c5f156e98ac5ca48f164ed13f3e14483ec07a5719542366c64ecb068df9e",
+      "rawSha256": "6bcd2c1f6a1defb3d6427014c6c2aedac016a65d9c62085d62e45c5a0843cbff",
+      "log": "f3-stop-byte-reuse-final-mutant-exact-bytes.log"
+    },
+    {
+      "name": "fresh-time",
+      "exit": 1,
+      "baselineSourceSha256": "aadddea6aa1e05bb2d68e37128b461d96b6c7376ab2aecbd84d5dc03914f3f7d",
+      "mutantSourceSha256": "3d0b1310f0ec9b7e988e7a6d99ff5734cf81f7c9aef93a9a4d70a00141b1e99a",
+      "rawSha256": "e14bafa53349971db1867add487c88069515e5197a6e7fd51c7821a8cbd7e9ac",
+      "log": "f3-stop-byte-reuse-final-mutant-fresh-time.log"
+    },
+    {
+      "name": "final-physical-bracket",
+      "exit": 1,
+      "baselineSourceSha256": "aadddea6aa1e05bb2d68e37128b461d96b6c7376ab2aecbd84d5dc03914f3f7d",
+      "mutantSourceSha256": "f707e249394f6c06b9c2ffc807e19eb0e5b0c25f46ec3838fd871ed0e1481685",
+      "rawSha256": "9f1d006c9e45ae9c16608a6206d545549ec4518bbc21e94f74f2b1e115cbb16b",
+      "log": "f3-stop-byte-reuse-final-mutant-final-physical-bracket.log"
+    },
+    {
+      "name": "initial-digest",
+      "exit": 1,
+      "baselineSourceSha256": "aadddea6aa1e05bb2d68e37128b461d96b6c7376ab2aecbd84d5dc03914f3f7d",
+      "mutantSourceSha256": "fae57e3b7fce78c4729a8a91092507539078dd1a94c22e142dabfc5718c29134",
+      "rawSha256": "f14879db4170d175ef1c268f487a732a51289a5831d91c3412bf51e283898f19",
+      "log": "f3-stop-byte-reuse-final-mutant-initial-digest.log"
+    }
+  ],
+  "exploratorySurvivor": "Named-slot-only omission survived because held-fd ctime independently detects rename. Earlier testSHA differs from final fixture; exploratory raw retained, only final four faults bind the committed test bytes.",
+  "componentInput": {
+    "path": "/home/orca/.tmp/url-composed-host-2625643-1795339338094/148de8b425b1f97efe377e4ce362e765f884e17cd049f7c03efab70828a9d02e.cccccccccccccccccccccccccccccccc.stopped.json",
+    "bytes": 97021,
+    "sha256": "941b7a1c8d44f3045330f962d6b7249df6e3bfe090209fbc103f6b156a3ed06b",
+    "status": "Observed retained immutable97,021B slot; ungranted component timing, not a claimed recovery or authority benchmark."
+  },
+  "limit": "Selected source faults and component performance only; public recovery still pending. Original source/test uncommitted overlay is now reconstructible at sourceSubject; base plus exact overlay retained.",
+  "retainedFiles": [
+    {
+      "path": "f3-stop-boundary-read-cost-manifest.json",
+      "sha256": "34a6acee88c6a52949a6b8c5cb5352dfd81677ec98433517f5520021a96d725f"
+    },
+    {
+      "path": "f3-stop-boundary-read-cost-result.json",
+      "sha256": "658ae143f123a8ab6e0b4a3f14023986918be6f667c7884f8f71138596556341"
+    },
+    {
+      "path": "f3-stop-boundary-read-cost-run.mjs",
+      "sha256": "5f684ff9fd4dff65e5c2232e1b69864eaf1fa7dc38237d384775ea022d0b9b00"
+    },
+    {
+      "path": "f3-stop-boundary-read-cost.log",
+      "sha256": "9f8571764842cde6aac2340ce5399c52674591a3e8c92b48cc3e3addeba3417f"
+    },
+    {
+      "path": "f3-stop-boundary-read-cost.mjs",
+      "sha256": "b3f7e9497adb4ba51efd1db6752258f90c0e22c147ca04e039878d969ec11233"
+    },
+    {
+      "path": "f3-stop-boundary-read-cost.ts",
+      "sha256": "071019b2ab1ead50f7e0d3933bdba7955afa109c334564a99dd21014db1f78ed"
+    },
+    {
+      "path": "f3-stop-byte-reuse-final-mutant-exact-bytes.log",
+      "sha256": "6bcd2c1f6a1defb3d6427014c6c2aedac016a65d9c62085d62e45c5a0843cbff"
+    },
+    {
+      "path": "f3-stop-byte-reuse-final-mutant-final-physical-bracket.log",
+      "sha256": "9f1d006c9e45ae9c16608a6206d545549ec4518bbc21e94f74f2b1e115cbb16b"
+    },
+    {
+      "path": "f3-stop-byte-reuse-final-mutant-fresh-time.log",
+      "sha256": "e14bafa53349971db1867add487c88069515e5197a6e7fd51c7821a8cbd7e9ac"
+    },
+    {
+      "path": "f3-stop-byte-reuse-final-mutant-initial-digest.log",
+      "sha256": "f14879db4170d175ef1c268f487a732a51289a5831d91c3412bf51e283898f19"
+    },
+    {
+      "path": "f3-stop-byte-reuse-final-rule6.json",
+      "sha256": "354edafc4211ca50f071516ef0551ccb1d4b117fa6cc0751e55dc43cf66e1fbd"
+    },
+    {
+      "path": "f3-stop-byte-reuse-mutant-named-slot.log",
+      "sha256": "f284ca3f823bea49c85bc79e775ce3a1c45d26f13476ffd5a7005a4f144ea69c"
+    },
+    {
+      "path": "f3-stop-byte-reuse-rule6.json",
+      "sha256": "b613fd0492ea3e2e0fe8197ac150261eddb517bc1277bbfe84bac950c4cd3a35"
+    },
+    {
+      "path": "f3-stop-byte-reuse-typecheck.log",
+      "sha256": "396901319daac4a4413b23478852db3c572014f86c71d148273565f0f3332696"
+    },
+    {
+      "path": "f3-stop-byte-reuse-unit.log",
+      "sha256": "860665c7a51c6f5595bcaaec455061ae38a200f7612c21f54b64e8b3831aab9f"
+    },
+    {
+      "path": "tested-source-overlay.patch",
+      "sha256": "4d124a93115bc534fb1394684c10c053778e96e1e74e369c156615bbb3c5ab59"
+    }
+  ]
+}

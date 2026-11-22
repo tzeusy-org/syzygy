@@ -1,0 +1,43 @@
+{
+  "base": "f39e7ed050fb591c427cb53b88d369e177a04df9",
+  "sourceSha256": "aadddea6aa1e05bb2d68e37128b461d96b6c7376ab2aecbd84d5dc03914f3f7d",
+  "testSha256": "7abdcaf0b25b6e70524c3ff1cbe470b4439adae1a8c0cf5701c45dade41b55d4",
+  "mutants": [
+    {
+      "name": "exact-bytes",
+      "old": "previous.bytes.equals(bytes) && matchesSubject",
+      "new": "matchesSubject",
+      "exit": 1,
+      "log": "/home/orca/.tmp/f3-stop-byte-reuse-mutant-exact-bytes.log"
+    },
+    {
+      "name": "fresh-time",
+      "old": "previous.bytes.equals(bytes) && matchesSubject(previous.boundary.record, input.expected, asOf)",
+      "new": "previous.bytes.equals(bytes)",
+      "exit": 1,
+      "log": "/home/orca/.tmp/f3-stop-byte-reuse-mutant-fresh-time.log"
+    },
+    {
+      "name": "named-slot",
+      "old": " || !sameSlot(before, fs.lstatSync(slot, { bigint: true }))",
+      "new": "",
+      "exit": 0,
+      "log": "/home/orca/.tmp/f3-stop-byte-reuse-mutant-named-slot.log",
+      "interpretation": "Survived: independent held-fd ctime check also rejects rename. Whole final bracket omission checked separately."
+    },
+    {
+      "name": "initial-digest",
+      "old": "boundary?.sha256 === input.sha256 ?",
+      "new": "boundary !== null ?",
+      "exit": 1,
+      "log": "/home/orca/.tmp/f3-stop-byte-reuse-mutant-initial-digest.log"
+    },
+    {
+      "name": "final-physical-bracket",
+      "old": "if (result === null || !sameSlot(before, fs.fstatSync(fd, { bigint: true })) || !sameSlot(before, fs.lstatSync(slot, { bigint: true }))\n          || !checkedRoot(root, rootFd, rootStat)) return null;",
+      "new": "if (result === null) return null;",
+      "exit": 1,
+      "log": "/home/orca/.tmp/f3-stop-byte-reuse-mutant-final-bracket.log"
+    }
+  ]
+}

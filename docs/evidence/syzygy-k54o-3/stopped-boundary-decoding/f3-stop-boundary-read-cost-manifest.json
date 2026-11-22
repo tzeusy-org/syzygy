@@ -1,0 +1,26 @@
+{
+  "subject": "f39e7ed050fb591c427cb53b88d369e177a04df9",
+  "scope": "Ungranted component timing only: full production cold reader versus standalone fresh strict descriptor/exact byte comparator; no held recovery claim or authority result.",
+  "files": [
+    {
+      "path": "/home/orca/.tmp/f3-stop-boundary-read-cost.ts",
+      "sha256": "071019b2ab1ead50f7e0d3933bdba7955afa109c334564a99dd21014db1f78ed"
+    },
+    {
+      "path": "/home/orca/.tmp/f3-stop-boundary-read-cost.mjs",
+      "sha256": "b3f7e9497adb4ba51efd1db6752258f90c0e22c147ca04e039878d969ec11233"
+    },
+    {
+      "path": "/home/orca/.tmp/f3-stop-boundary-read-cost-run.mjs",
+      "sha256": "5f684ff9fd4dff65e5c2232e1b69864eaf1fa7dc38237d384775ea022d0b9b00"
+    },
+    {
+      "path": "/home/orca/.tmp/f3-stop-boundary-read-cost.log",
+      "sha256": "9f8571764842cde6aac2340ce5399c52674591a3e8c92b48cc3e3addeba3417f"
+    },
+    {
+      "path": "/home/orca/.tmp/f3-stop-boundary-read-cost-result.json",
+      "sha256": "658ae143f123a8ab6e0b4a3f14023986918be6f667c7884f8f71138596556341"
+    }
+  ]
+}

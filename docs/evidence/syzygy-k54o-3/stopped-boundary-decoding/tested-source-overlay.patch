@@ -1,0 +1,175 @@
+diff --git a/packages/polaris-dossier/src/url-stopped-run.test.ts b/packages/polaris-dossier/src/url-stopped-run.test.ts
+index f58db151a..605cf2a57 100644
+--- a/packages/polaris-dossier/src/url-stopped-run.test.ts
++++ b/packages/polaris-dossier/src/url-stopped-run.test.ts
+@@ -2,7 +2,7 @@ import * as fs from 'node:fs';
+ import path from 'node:path';
+ import { encodeCanonicalJson } from '@syzygy/polaris-generation-core/live';
+ import { sha256 } from '@syzygy/support';
+-import { describe, expect, it } from 'vitest';
++import { describe, expect, it, vi } from 'vitest';
+ import { tempDir } from '@syzygy/test-kit';
+ import { acquireUrlRecoveryClaim, isUrlRecoveryClaim, readUrlStoppedBoundary, readUrlStoppedBoundaryChain } from './url-stopped-run.js';
+ 
+@@ -136,4 +136,65 @@ describe('retained URL stop expectation', () => {
+     g.write({ ...g.record, stoppedAt: 1100 });
+     expect(other.current()).toBe(false); expect(other.consume()).toBe(false); expect(other.release()).toBe(true);
+   });
++
++  it('checks the clock and exact stop bytes on every held claim use', () => {
++    const f = stoppedFixture(); f.write(); const boundary = f.load()!;
++    let now = 2000;
++    const input = { root: f.root, expected: f.expected, sha256: boundary.sha256,
++      now: () => now, current: () => true };
++    const claim = acquireUrlRecoveryClaim(input)!;
++    expect(claim.consume()).toBe(true);
++    expect(claim.current()).toBe(true);
++    for (const invalid of [999, 2000.5, Number.NaN, 5000]) {
++      now = invalid;
++      expect(claim.current()).toBe(false);
++    }
++    now = 2000;
++    expect(claim.current()).toBe(true);
++    const previousSize = fs.statSync(f.file).size;
++    f.write({ ...f.record, stoppedAt: 1100 });
++    expect(fs.statSync(f.file).size).toBe(previousSize);
++    expect(f.load()?.record.stoppedAt).toBe(1100);
++    expect(claim.current()).toBe(false);
++    expect(claim.release()).toBe(true);
++  });
++
++  it('rejects replacement of the named slot during the exact byte comparison', () => {
++    const f = stoppedFixture(); f.write(); const boundary = f.load()!;
++    const claim = acquireUrlRecoveryClaim({ root: f.root, expected: f.expected, sha256: boundary.sha256,
++      now: () => 2000, current: () => true })!;
++    expect(claim.consume()).toBe(true);
++    const bytes = fs.readFileSync(f.file), equals = Buffer.prototype.equals;
++    let replaced = false;
++    const comparison = vi.spyOn(Buffer.prototype, 'equals').mockImplementation(function (this: unknown, ...args: unknown[]) {
++      if (!Buffer.isBuffer(this) || !(args[0] instanceof Uint8Array)) throw new Error('unexpected byte comparison');
++      const result = equals.call(this, args[0]);
++      if (!replaced && result && this.length === bytes.length) {
++        replaced = true;
++        fs.renameSync(f.file, `${f.file}.old`);
++        fs.writeFileSync(f.file, bytes, { mode: 0o600 });
++      }
++      return result;
++    });
++    try { expect(claim.current()).toBe(false); }
++    finally { comparison.mockRestore(); }
++    expect(replaced).toBe(true);
++    expect(f.load()).toEqual(boundary);
++    expect(claim.release()).toBe(true);
++  });
++
++  it('requires a complete genuine initial boundary match before issuing a claim', () => {
++    const f = stoppedFixture(); f.write();
++    const input = { root: f.root, expected: f.expected, now: () => 2000, current: () => true };
++    expect(acquireUrlRecoveryClaim({ ...input, sha256: 'f'.repeat(64) })).toBeNull();
++    fs.writeFileSync(f.file, '{"record":{}}\n');
++    expect(acquireUrlRecoveryClaim({ ...input, sha256: sha256(canonical(f.record)) })).toBeNull();
++    f.write();
++    const claim = acquireUrlRecoveryClaim({ ...input, sha256: f.load()!.sha256 })!;
++    expect(claim.consume()).toBe(true);
++    expect(claim.current()).toBe(true);
++    expect(claim.release()).toBe(true);
++    expect(claim.current()).toBe(false);
++  });
++
+ });
+diff --git a/packages/polaris-dossier/src/url-stopped-run.ts b/packages/polaris-dossier/src/url-stopped-run.ts
+index 75efa2eca..71d75380a 100644
+--- a/packages/polaris-dossier/src/url-stopped-run.ts
++++ b/packages/polaris-dossier/src/url-stopped-run.ts
+@@ -179,10 +179,9 @@ function matchesSubject(value: unknown, expected: StopExpected, asOf: number): v
+     && (completeUsageReports === 0 ? reportedTokens === 'Unknown' : whole(reportedTokens));
+ }
+ 
+-/** Load only the supervisor-owned expected checkpoint. Audit, machine, source
+- * and product evidence are independently reverified before any new grant. */
+-export function readUrlStoppedBoundary(root: string, expected: StopExpected, asOf: number):
+-  UrlStoppedBoundary | null {
++/** The visitor remains inside the fresh descriptor/name/root bracket. No
++ * caller may substitute a retained stat or authorize from a prior read. */
++function withStoppedBoundaryBytes<T>(root: string, expected: StopExpected, visit: (bytes: Buffer) => T | null): T | null {
+   try {
+     if (!namesBound(root, expected.run, expected.runId) || !SHA_PIN.test(expected.sourcePin) || !GENERATION.test(expected.generation)
+       || !HEX.test(expected.coreSha256) || !HEX.test(expected.declarationSha256)) return null;
+@@ -203,18 +202,28 @@ export function readUrlStoppedBoundary(root: string, expected: StopExpected, asO
+           length += read;
+         }
+         if (length !== Number(before.size) || bytes[length - 1] !== 10) return null;
+-        const text = decodeUtf8(bytes.subarray(0, length - 1));
+-        if (text === undefined) return null;
+-        const value = parseBoundedJson(text, LIMITS);
+-        if (!exact(value, ['record', 'sha256']) || typeof value.sha256 !== 'string' || !matchesSubject(value.record, expected, asOf)
+-          || value.sha256 !== sha256(encodeCanonicalJson(value.record, LIMITS)) || text !== encodeCanonicalJson(value, LIMITS)) return null;
+-        if (!sameSlot(before, fs.fstatSync(fd, { bigint: true })) || !sameSlot(before, fs.lstatSync(slot, { bigint: true }))
++        const result = visit(bytes.subarray(0, length));
++        if (result === null || !sameSlot(before, fs.fstatSync(fd, { bigint: true })) || !sameSlot(before, fs.lstatSync(slot, { bigint: true }))
+           || !checkedRoot(root, rootFd, rootStat)) return null;
+-        return deepFreeze({ record: value.record, sha256: value.sha256 });
++        return result;
+       } finally { fs.closeSync(fd); }
+     } finally { fs.closeSync(rootFd); }
+   } catch { return null; }
+ }
++function decodeStoppedBoundary(bytes: Buffer, expected: StopExpected, asOf: number): UrlStoppedBoundary | null {
++  const text = decodeUtf8(bytes.subarray(0, bytes.length - 1));
++  if (text === undefined) return null;
++  const value = parseBoundedJson(text, LIMITS);
++  if (!exact(value, ['record', 'sha256']) || typeof value.sha256 !== 'string' || !matchesSubject(value.record, expected, asOf)
++    || value.sha256 !== sha256(encodeCanonicalJson(value.record, LIMITS)) || text !== encodeCanonicalJson(value, LIMITS)) return null;
++  return { record: value.record, sha256: value.sha256 };
++}
++/** Load only the supervisor-owned expected checkpoint. Audit, machine, source
++ * and product evidence are independently reverified before any new grant. */
++export function readUrlStoppedBoundary(root: string, expected: StopExpected, asOf: number): UrlStoppedBoundary | null {
++  const result = withStoppedBoundaryBytes(root, expected, bytes => decodeStoppedBoundary(bytes, expected, asOf));
++  return result === null ? null : deepFreeze(result);
++}
+ 
+ /** Chronological immutable observations. This verifies linkage and immutable
+  * subjects only. Every attempt's audit/machine evidence still needs the cold
+@@ -285,6 +294,7 @@ export function acquireUrlRecoveryClaim(input: {
+     lockFd = fs.openSync(lock, DESCRIPTOR);
+     const heldFd = lockFd, lockStat = fs.fstatSync(heldFd, { bigint: true });
+     let released = false, releaseResult = false, consumedStat: fs.BigIntStats | undefined;
++    let retained: { readonly bytes: Buffer; readonly boundary: UrlStoppedBoundary } | undefined;
+     const own = (): boolean => {
+       try { return !released && checkedRoot(input.root, directoryFd, rootStat) && privateDirectory(lockStat)
+         && sameIdentity(lockStat, fs.fstatSync(heldFd, { bigint: true }))
+@@ -300,9 +310,21 @@ export function acquireUrlRecoveryClaim(input: {
+       catch { return false; }
+     };
+     const heldCurrent = (): boolean => {
+-      try { return own() && input.current() && markerCurrent()
+-        && readUrlStoppedBoundary(input.root, input.expected, input.now())?.sha256 === input.sha256; }
+-      catch { return false; }
++      try {
++        if (!own() || !input.current() || !markerCurrent()) return false;
++        const asOf = input.now(), previous = retained;
++        if (previous !== undefined) return withStoppedBoundaryBytes(input.root, input.expected, bytes =>
++          previous.bytes.equals(bytes) && matchesSubject(previous.boundary.record, input.expected, asOf) ? true : null) === true;
++        const first = withStoppedBoundaryBytes(input.root, input.expected, bytes => {
++          const boundary = decodeStoppedBoundary(bytes, input.expected, asOf);
++          return boundary?.sha256 === input.sha256 ? { boundary, bytes: Buffer.from(bytes) } : null;
++        });
++        if (first === null) return false;
++        // Retain only deterministic decoding of these exact bounded bytes.
++        // Every later callback still reads them afresh and checks live authority.
++        retained = { boundary: deepFreeze(first.boundary), bytes: first.bytes };
++        return true;
++      } catch { return false; }
+     };
+     if (!heldCurrent()) {
+       if (own()) { fs.rmdirSync(lock); fs.fsyncSync(directoryFd); }
+@@ -337,7 +359,7 @@ export function acquireUrlRecoveryClaim(input: {
+         finally {
+           // Unknown replacement locks are retained; this holder's fds can
+           // still close without making an inconsistent recovery reusable.
+-          released = true;
++          released = true; retained = undefined;
+           fs.closeSync(heldFd); fs.closeSync(directoryFd);
+         }
+       },
