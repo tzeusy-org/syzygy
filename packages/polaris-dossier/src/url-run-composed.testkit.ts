@@ -13,7 +13,7 @@ import { startSessions } from './session-handover.js';
 import { writeLaunchedMarker } from './launched.js';
 import { readRunRecord } from './run-record.js';
 import { buildDossierScreen } from './screen.js';
-import { DOSSIER_POLICY_PATH, type PolicyBinding } from './policy-snapshot.js';
+import { DOSSIER_POLICY_PATH, readCommittedPolicy, readCommittedUrlOriginPolicy, type PolicyBinding } from './policy-snapshot.js';
 import { bindUrlSourceReader } from './url-source-reader.js';
 import { prepareUrlRolePlans } from './url-role-plan.js';
 import { createUrlRunOrigins } from './url-run-origins.js';
@@ -24,6 +24,48 @@ import { createUrlRunArtifacts } from './url-run-artifacts.js';
 import { effectiveUrlProjection } from './effective-run-record.js';
 import { beginRunProductReads } from './url-operation-products.js';
 import { reviewCheck } from './review.js';
+import { readUrlParentAdoption, URL_PARENT_DEFAULT_REF, URL_PARENT_RECORD, URL_PARENT_TAG } from './url-parent-adoption.js';
+import { registerUrlRunMode, urlRunModeAuthority } from './url-mode-registry.js';
+
+/** The production cold verifier reads actual observing Git objects and refs.
+ * This owned repository installs the same reviewed bytes through a real merge,
+ * version tag and later adoption row; no parent-adoption gate is mocked. */
+export async function createComposedObserver(directory: string) {
+  const observer = path.join(directory, 'observing');
+  await fs.mkdir(observer, { mode: 0o700 });
+  const git = async (...args: string[]) => (await exec('git', ['-C', observer, '-c', 'user.name=Owned Fixture',
+    '-c', 'user.email=owned@example.invalid', ...args], { env: { PATH: '/usr/bin:/bin', LANG: 'C',
+      GIT_CONFIG_GLOBAL: '/dev/null', GIT_CONFIG_NOSYSTEM: '1', GIT_NO_LAZY_FETCH: '1' }, timeout: 10_000, maxBuffer: 65_536 })).stdout.trim();
+  const copy = async (file: string) => { const target = path.join(observer, file); await fs.mkdir(path.dirname(target), { recursive: true });
+    await fs.copyFile(path.join(root, file), target); };
+  const base = 'openspec/changes/dossier-url-declared-source-run/proposed';
+  const subjects = [`${base}/polaris-generation/spec.md`, `${base}/contracts/DOSSIER-URL-LOCAL-MACHINE-CREDENTIAL-AMENDMENT.md`,
+    URL_ORIGIN_POLICY_PATH, '.syzygy/governance/decisions/DOSSIER-URL-RUN-CONTRACT-APPLICABILITY.md'];
+  const header = '# Agent adoptions\n\n| Id | Date | Commit | What changed | Why | Revert | Tag |\n|---|---|---|---|---|---|---|\n';
+  await git('init', '-q', '--initial-branch=main', '--template=');
+  await copy(DOSSIER_POLICY_PATH);
+  await copy('.syzygy/governance/doctrine/security.md');
+  await fs.mkdir(path.dirname(path.join(observer, URL_PARENT_RECORD)), { recursive: true });
+  await fs.writeFile(path.join(observer, URL_PARENT_RECORD), header);
+  await git('add', '.'); await git('commit', '-qm', 'Owned observing predecessor');
+  await git('switch', '-qc', 'reviewed-package');
+  for (const file of [...subjects, '.syzygy/governance/contracts/rfcs/RFC-0003/manifests-and-namespace.md',
+    '.syzygy/governance/contracts/rfcs/RFC-0003/governance-homes-and-owner-acts.md',
+    '.syzygy/governance/contracts/rfcs/RFC-0005/admission-and-boundary.md']) await copy(file);
+  await git('add', '.'); await git('commit', '-qm', 'Owned reviewed package');
+  await git('switch', '-q', 'main'); await git('merge', '-q', '--no-ff', '-m', 'Owned package landing', 'reviewed-package');
+  const landed = await git('rev-parse', 'HEAD');
+  await git('tag', '-am', 'Owned reviewed version', URL_PARENT_TAG, landed);
+  const links = subjects.map(file => `[subject](https://github.com/tzeusy-org/syzygy/blob/${landed}/${file})`).join(' · ');
+  await fs.writeFile(path.join(observer, URL_PARENT_RECORD), `${header}| A-14 | 2026-11-22 | \`${landed}\` | ${links} | Owned fixture adoption | \`git revert -m 1 ${landed}\` | \`${URL_PARENT_TAG}\` |\n`);
+  await git('add', '.'); await git('commit', '-qm', 'Record owned fixture adoption');
+  await git('update-ref', URL_PARENT_DEFAULT_REF, 'HEAD');
+  const policy = own(readCommittedPolicy(observer), 'committed base policy');
+  const origin = own(readCommittedUrlOriginPolicy(observer), 'committed origin policy');
+  const parent = readUrlParentAdoption(observer, origin.binding.sha256);
+  if (parent === null) throw new Error('owned observing adoption refused');
+  return { root: observer, policy, origin, parent };
+}
 
 const root = path.resolve(fileURLToPath(new URL('../../../', import.meta.url)));
 const exec = promisify(execFile);
@@ -43,13 +85,17 @@ export async function buildComposedRuntime(): Promise<UrlRuntime> {
 
 /** Actual initial producers and genuine role/origin capabilities. Provider
  * responses, not these producers, are the composed fixture's synthetic seam. */
-export async function prepareComposedRun(runtime: UrlRuntime) {
+export async function prepareComposedRun(runtime: UrlRuntime, recovery?: { readonly hostRoot: string }) {
   const directory = await fs.mkdtemp(path.join(os.homedir(), '.tmp/url-composed-'));
+  await fs.chmod(directory, 0o700);
+  const observer = recovery === undefined ? null : await createComposedObserver(directory);
   const { clone, commit } = makeClone(directory), state = path.join(directory, 'runs');
   await fs.mkdir(state, { mode: 0o700 });
   let live = true;
   const current = () => live;
   const binding = async (name: string) => {
+    if (observer !== null) { const snapshot = name === DOSSIER_POLICY_PATH ? observer.policy : observer.origin;
+      return { bytes: snapshot.bytes, binding: snapshot.binding }; }
     const bytes = await fs.readFile(path.join(root, name)), document = JSON.parse(bytes.toString()) as { policyId: string; policyVersion: string };
     return { bytes, binding: { path: name, commit: 'a'.repeat(40), policyId: document.policyId,
       policyVersion: document.policyVersion, sha256: sha256(bytes) } satisfies PolicyBinding };
@@ -57,7 +103,7 @@ export async function prepareComposedRun(runtime: UrlRuntime) {
   const policy = await binding(DOSSIER_POLICY_PATH), origin = await binding(URL_ORIGIN_POLICY_PATH);
   const actualScreen = own(buildDossierScreen(policy.bytes, true, null, 'private'), 'screen').screen;
   const screen = actualScreen;
-  const sources = { ...fixtureSources(commit), declaredPolicy: async () => ({ ok: true as const, ...policy }) };
+  const sources = { ...fixtureSources(commit), ...(observer === null ? {} : { recordsRoot: observer.root }), declaredPolicy: async () => ({ ok: true as const, ...policy }) };
   const openReader = bindUrlSourceReader({ clone, revision: commit, store: 'owned-loose', current });
   const initialized = own(await initRun({ clone, revision: commit, url: 'https://example.invalid/own/source', stateRoot: state,
     configText: JSON.stringify({ operator: 'owned-composed', agentTool: 'claude-code', agentToolVersion: URL_CLI_PROGRAM.version,
@@ -68,9 +114,15 @@ export async function prepareComposedRun(runtime: UrlRuntime) {
   const { run, runId } = initialized.report;
   for (const directory of ['drafts', 'inventory', 'reviews', 'checks']) await fs.mkdir(path.join(run, directory), { recursive: true, mode: 0o700 });
   const directories = { author: run, inventory: `${run}.sessions/session-1`, fidelity: `${run}.sessions/fidelity-1`, design: `${run}.sessions/design-1` };
-  const views = path.join(directory, 'views'), hidden = path.join(directory, 'protected');
-  await fs.mkdir(views, { mode: 0o700 }); await fs.mkdir(hidden, { mode: 0o700 });
-  const canaries = ['source', 'authentication', 'audit'].map(name => path.join(hidden, name));
+  const views = path.join(directory, 'views');
+  if (recovery !== undefined) await fs.mkdir(path.join(recovery.hostRoot, 'acquisitions'), { recursive: true, mode: 0o700 });
+  const hidden = recovery === undefined ? path.join(directory, 'protected') : await fs.mkdtemp(path.join(recovery.hostRoot, 'acquisitions/attempt-'));
+  await fs.mkdir(views, { mode: 0o700 }); await fs.mkdir(hidden, { recursive: true, mode: 0o700 });
+  if (recovery !== undefined && ((await fs.stat(hidden)).mode & 0o7777) !== 0o700)
+    throw new Error('owned recovery audit parent mode is not 0700');
+  const canaryDirectory = recovery === undefined ? hidden : path.join(hidden, 'canaries');
+  await fs.mkdir(canaryDirectory, { recursive: true, mode: 0o700 });
+  const canaries = ['source', 'authentication', 'audit'].map(name => path.join(canaryDirectory, name));
   for (const file of canaries) await fs.writeFile(file, 'OWN SYNTHETIC CANARY\n', { mode: 0o600 });
   const plans = own(await prepareUrlRolePlans({ run, record, screen, sessionDirectories: directories, runtime,
     cliExecutable: await fs.realpath(path.join(os.homedir(), '.local/share/claude/versions', URL_CLI_PROGRAM.version)), parent: views,
@@ -96,8 +148,11 @@ export async function prepareComposedRun(runtime: UrlRuntime) {
   }, context), 'declaration');
   const effectiveDeclaration = { declaration: declared.declaration, bytes: Buffer.from(declared.text),
     context: { ...context, expectedSidecarSha256: declared.sha256 } };
-  const urlSources = { ...sources, effectiveRunDeclaration: () => ({ kind: 'url' as const, context: effectiveDeclaration.context,
-    screenMetadata: (value: string) => screen.screenSecrets(value) === undefined }) };
+  if (recovery !== undefined && !registerUrlRunMode({ root: recovery.hostRoot, run, context: effectiveDeclaration.context }))
+    throw new Error('owned protected mode registration refused');
+  const urlSources = { ...sources, effectiveRunDeclaration: recovery === undefined ? () => ({ kind: 'url' as const, context: effectiveDeclaration.context,
+    screenMetadata: (value: string) => screen.screenSecrets(value) === undefined })
+    : urlRunModeAuthority(recovery.hostRoot, value => screen.screenSecrets(value) === undefined) };
   await fs.writeFile(path.join(run, 'url-declaration.json'), declared.text, { mode: 0o600, flag: 'wx' });
   writeLaunchedMarker(run, runId, Date.now());
   const loadScreen = async () => ({ ok: true as const, screen });
@@ -144,9 +199,10 @@ export async function prepareComposedRun(runtime: UrlRuntime) {
     },
   };
   artifacts.registerInitial({ brief: brief.report, sessions: sessions.report });
-  return { root: directory, run, runId, commit, record, screen, policy, origin, runtime, renderer, plans: plans.roles, origins,
+  return { root: directory, observer, machine: observer === null ? null : { governanceRoot: path.join(observer.root, '.syzygy'),
+    protectedRoot: path.join(hidden, 'machine-lifecycle'), parent: observer.parent }, run, runId, commit, record, screen, policy, origin, runtime, renderer, plans: plans.roles, origins,
     artifacts, directories, canaries, hidden, deadline, current, effectiveDeclaration, sources: urlSources, ports, openReader, brief: brief.report, sessions: sessions.report,
     declaration: declared.declaration, producerReports: () => producerReports, productReadReports: () => productReadReports.slice(-16),
-    close: async () => { live = false; await fs.rm(directory, { recursive: true, force: true }); await fs.rm(plans.socketRoot, { recursive: true, force: true }); },
+    close: async () => { live = false; if (recovery !== undefined) await fs.rm(hidden, { recursive: true, force: true }); await fs.rm(directory, { recursive: true, force: true }); await fs.rm(plans.socketRoot, { recursive: true, force: true }); },
   };
 }
