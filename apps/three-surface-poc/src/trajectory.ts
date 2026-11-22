@@ -23,6 +23,7 @@ import { pageShell, type HumanOperabilityStatus } from './page-shell.js';
 import { TAILNET_MOUNT_PREFIX } from './tailnet.js';
 import { epistemicClassName } from './design-tokens.js';
 import { unknownMarker, unknownRoute, unknownSubject } from './unknown-marker.js';
+import { TIME_MEASURES_STYLE, timeMeasuresRegion } from './trajectory-time-chart.js';
 
 export const TRAJECTORY_HUMAN_PATH = '/trajectory' as const;
 export const TRAJECTORY_TAILNET_PATH = `${TAILNET_MOUNT_PREFIX}/trajectory` as const;
@@ -37,33 +38,6 @@ const COLUMN_ORDER: readonly TrajectoryColumn[] = [
   'Closed',
 ];
 
-function timeOffsetPercent(
-  instant: string,
-  range: { readonly earliest: string; readonly latest: string },
-): number {
-  const earliestMs = Date.parse(range.earliest);
-  const latestMs = Date.parse(range.latest);
-  const span = latestMs - earliestMs;
-  if (span <= 0) {
-    return 0;
-  }
-  const clamped = Math.min(Math.max(Date.parse(instant) - earliestMs, 0), span);
-  return (clamped / span) * 100;
-}
-
-function laneBar(
-  item: TrajectoryLaneItem,
-  range: { readonly earliest: string; readonly latest: string } | null,
-): string {
-  if (range === null) {
-    return '';
-  }
-  const start = timeOffsetPercent(item.createdAt, range);
-  const end = timeOffsetPercent(item.closedAt ?? item.updatedAt, range);
-  const left = Math.min(start, end);
-  const width = Math.max(end - start, 0.6);
-  return `<div class="lane-track" aria-hidden="true"><div class="lane-bar" data-parity-field="time-lane" style="--lane-left:${left.toFixed(3)}%;--lane-width:${width.toFixed(3)}%"></div></div>`;
-}
 
 const WORKER_CHANGE_STATE_LABEL = {
   planned: 'No commit observed',
@@ -225,7 +199,11 @@ function answerBody(model: PocModel, answer: TrajectoryAnswer): string {
     }
     case 'changed':
     case 'cost':
-      if (answer.state === 'unknown') return answerDisclosure(model, `answer-${answer.id}`, answer.disclosure, answer.id === 'changed' ? 'What changed' : 'Cost');
+      if (answer.state === 'unknown') {
+        const disclosure = answerDisclosure(model, `answer-${answer.id}`, answer.disclosure, answer.id === 'changed' ? 'What changed' : 'Cost');
+        // syzygy-t3jk.17: elapsed time is measured; the other costs stay Unknown.
+        return answer.id === 'cost' ? `${disclosure} Elapsed time is measured: see <a href="#time-measures">lead time and age</a>.` : disclosure;
+      }
       break;
     case 'intent': {
       if (!('unknownProvenance' in answer)) break;
@@ -315,7 +293,6 @@ function servedGovernedBy(model: PocModel, itemId: string): { readonly label: st
 function itemCard(
   model: PocModel,
   item: TrajectoryLaneItem,
-  range: { readonly earliest: string; readonly latest: string } | null,
   workerChange: WorkerChangeObserved | null,
   testArtifactVerification: TestArtifactVerificationResult,
   governingIntentId: string | null,
@@ -331,7 +308,6 @@ function itemCard(
     ${itemGoverningIntent(governedBy)}
     ${itemVerification()}
     ${workerChangeBadge(model, workerChange, testArtifactVerification, governingIntentId)}
-    ${laneBar(item, range)}
   </li>`;
 }
 
@@ -360,8 +336,6 @@ const TRAJECTORY_STYLE = `
   .wi-title:hover, .wi-title:focus-visible { color: var(--cyan); }
   .wi-id { color: var(--muted); font-size: .7rem; }
   .wi-status { font-family: var(--font-mono); font-size: .7rem; color: var(--muted); text-transform: uppercase; }
-  .lane-track { position: relative; height: .35rem; background: #1a2c30; margin-top: .3rem; }
-  .lane-bar { position: absolute; top: 0; height: 100%; left: var(--lane-left); width: var(--lane-width); background: var(--cyan); }
   .worker-change { display: grid; gap: .2rem; padding-top: .2rem; border-top: 1px dashed var(--line); }
   .worker-change-detail { font-size: .72rem; color: var(--muted); }
   .worker-change-note { font-size: .68rem; color: var(--muted); }
@@ -374,6 +348,7 @@ const TRAJECTORY_STYLE = `
   .narrow-toggle:focus-visible + .narrow-label { outline: 2px solid var(--cyan); outline-offset: 2px; }
   .narrow-toggle:checked ~ .board .wi-card:not([data-governed-by="Unknown"]) { display: none; }
   ${MATERIALIZE_PANEL_STYLE}
+  ${TIME_MEASURES_STYLE}
 `;
 
 export function renderTrajectoryPage(model: PocModel, mountPrefix = '', status?: HumanOperabilityStatus): string {
@@ -404,7 +379,6 @@ export function renderTrajectoryPage(model: PocModel, mountPrefix = '', status?:
             itemCard(
               model,
               item,
-              trajectory.timeRange,
               workerChange !== null && workerChange.beadId === item.id ? workerChange : null,
               model.testArtifactVerification,
               model.governingIntentId,
@@ -424,6 +398,7 @@ export function renderTrajectoryPage(model: PocModel, mountPrefix = '', status?:
 
     body = `
       ${answersRegion(model, trajectory.answers)}
+      ${timeMeasuresRegion(trajectory.timeMeasures)}
       <p class="scope-statement notice" data-parity-field="trajectory-scope">
         Rendering ${trajectory.renderedCount} of ${trajectory.totalCount} observed work items (${trajectory.selectionRule});
         <span data-parity-field="trajectory-excluded-count">${trajectory.excludedCount}</span> items are outside this selection and not shown.

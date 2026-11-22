@@ -275,8 +275,8 @@
       }
     },
     "POC": {
-      "requirements": 27,
-      "scenarios": 40,
+      "requirements": 28,
+      "scenarios": 42,
       "members": {
         "POC-REQ-001": {
           "name": "Code-structure observation is bound to an exact revision",
@@ -408,6 +408,13 @@
             "Five answers before the board",
             "A merged materialized item enters the chain",
             "Work items not observed"
+          ]
+        },
+        "POC-REQ-045": {
+          "name": "Trajectory measures elapsed time over every served item",
+          "scenarios": [
+            "Elapsed time with partial coverage",
+            "No covered item"
           ]
         },
         "POC-REQ-050": {
