@@ -889,8 +889,9 @@ describe('trusted URL artifact producer bridge', () => {
     vi.useFakeTimers(); try {
       const expiring = begin(); f.bridge.readProduct(expiring, 'brief.json'); vi.advanceTimersByTime(4001); expect(() => f.bridge.revalidateRead(expiring)).toThrow();
       const clockOnly = begin(); f.bridge.readProduct(clockOnly, 'brief.json'); vi.setSystemTime(Date.now() + 4001); expect(() => f.bridge.revalidateRead(clockOnly)).toThrow();
+      const now = Date.now();
+      for (const deadline of [NaN, Infinity, now, now + 30_001]) expect(() => f.bridge.beginRead({ operation: 'render', deadline })).toThrow();
     } finally { vi.useRealTimers(); }
-    for (const deadline of [NaN, Infinity, Date.now(), Date.now() + 30_001]) expect(() => f.bridge.beginRead({ operation: 'render', deadline })).toThrow();
     const held = Array.from({ length: 16 }, begin); expect(() => begin()).toThrow(); for (const cap of held) f.bridge.cancelRead(cap);
     const stale = begin(); f.bridge.readProduct(stale, 'brief.json'); await Promise.resolve(); f.stale(); expect(() => f.bridge.revalidateRead(stale)).toThrow();
   });

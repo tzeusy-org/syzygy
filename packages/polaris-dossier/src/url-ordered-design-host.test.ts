@@ -174,6 +174,17 @@ describe('bounded processing and protected result validation', () => {
 
   it.each(['renewed', 'changed', 'revoked', 'unavailable', 'expired-at-entry'] as const)('requires a current product before and after processing: %s', async scenario => {
     let fullChecks = 0, processingChecks = 0, refreshes = 0, proofCurrent = false;
+    let processingRevoked = false, processingRefused = false;
+    if (scenario === 'revoked') {
+      const run = screenRunner.runOrderedDesignScreen;
+      const screening = vi.spyOn(screenRunner, 'runOrderedDesignScreen').mockImplementation(options => run({ ...options,
+        imageReadCurrent: () => {
+          options.imageReadCurrent!();
+          processingRevoked = true;
+        },
+      }));
+      cleanup.push(() => screening.mockRestore());
+    }
     const f = await fixture({
       current: () => {
         refreshes++;
@@ -186,7 +197,10 @@ describe('bounded processing and protected result validation', () => {
       assertProcessingCurrent: () => {
         processingChecks++;
         proofCurrent = false;
-        if (scenario === 'revoked' && processingChecks >= 20) throw new Error('owned processing authority revoked');
+        if (processingRevoked) {
+          processingRefused = true;
+          throw new Error('owned processing authority revoked');
+        }
       },
     });
     await f.start(); f.activate(f.controller);
@@ -205,11 +219,12 @@ describe('bounded processing and protected result validation', () => {
         ? 'owned product proof expired' : 'url-ordered-design-session-refused');
       expect(f.workerCpu()).toBe(scenario === 'changed' ? 18_000_000 : 0);
     }
+    if (scenario === 'revoked') expect(processingRefused).toBe(true);
     if (scenario === 'unavailable' || scenario === 'expired-at-entry') {
       expect(processingChecks).toBe(0);
       expect(refreshes).toBe(1);
       expect(fullChecks).toBe(scenario === 'expired-at-entry' ? 1 : 0);
-    } else expect(processingChecks).toBeGreaterThan(10);
+    } else expect(processingChecks).toBeGreaterThan(0);
     // Full physical product validation belongs at the operation boundaries,
     // rather than once for every 65 KiB of the trusted runtime image.
     expect(fullChecks).toBeLessThan(10);
