@@ -224,7 +224,14 @@ describe('protected URL machine lifecycle files', { timeout: 30_000 }, () => {
   });
 
   it('allocates an unissued slot within the original bound when fresh policy checks have a cost', async () => {
-    const f = await fixture();
+    const f = await fixture(), oldSlot = await f.allocate();
+    expect((await oldSlot.publish()).ok).toBe(true);
+    const revoked = { ...oldSlot.record, revision: 2, revokedAt: new Date(NOW).toISOString() };
+    expect((await oldSlot.publish(revoked, { revision: 1, sha256: sha256(canon(oldSlot.record)) })).ok).toBe(true);
+    const stateFile = path.join(f.options.protectedRoot, 'state.json');
+    const archiveFile = path.join(f.options.protectedRoot, 'canonical-history.json');
+    const previous = JSON.parse(await readFile(stateFile, 'utf8'));
+    const archived = await readFile(archiveFile);
     const realNow = performance.now.bind(performance);
     let measuring = false, elapsed = 0;
     const clock = vi.spyOn(performance, 'now').mockImplementation(() => realNow() + elapsed);
@@ -237,9 +244,10 @@ describe('protected URL machine lifecycle files', { timeout: 30_000 }, () => {
       measuring = true;
       const allocated = await reopened!.allocateClient(f.options.deadline);
       expect(allocated).not.toBeNull();
-      const state = JSON.parse(await readFile(path.join(f.options.protectedRoot, 'state.json'), 'utf8'));
-      expect(state.clients).toEqual([expect.objectContaining({ clientId: allocated!.clientId, audit: [],
-        anchor: expect.objectContaining({ kind: 'never-issued' }) })]);
+      const state = JSON.parse(await readFile(stateFile, 'utf8'));
+      expect(state).toEqual({ ...previous, clients: [...previous.clients, expect.objectContaining({ clientId: allocated!.clientId,
+        audit: [], anchor: expect.objectContaining({ kind: 'never-issued' }) })] });
+      expect(await readFile(archiveFile)).toEqual(archived);
       expect(await readdir(f.options.protectedRoot)).not.toContain('lock');
     } finally { clock.mockRestore(); }
   });
@@ -272,6 +280,63 @@ describe('protected URL machine lifecycle files', { timeout: 30_000 }, () => {
     expect((await readdir(f.options.protectedRoot)).includes('lock')).toBe(phase !== 'before-lock' && phase !== 'after-cleanup');
   });
 
+  it.each(['before-lock', 'after-lock'] as const)('refuses independent synchronous withdrawal during async allocation %s', async phase => {
+    const f = await fixture();
+    let measuring = false, syncAllowed = true, lockSynced = false, stateOpened = false;
+    const reopened = await openUrlMachineStore({ ...f.options, current: () => syncAllowed, currentAsync: async () => {
+      if (measuring && (phase === 'before-lock' || lockSynced)) syncAllowed = false;
+      return true;
+    } }, f.store.identitySha256);
+    expect(reopened).not.toBeNull(); cleanup.push(() => reopened!.close());
+    filesystem.afterOpen = file => { if (path.basename(file) === 'state.json') stateOpened = true; };
+    filesystem.afterSync = file => { if (file === f.options.protectedRoot) lockSynced = true; };
+    measuring = true;
+    expect(await reopened!.allocateClient(f.options.deadline)).toBeNull();
+    expect(syncAllowed).toBe(false);
+    expect(stateOpened).toBe(false);
+    expect((await readdir(f.options.protectedRoot)).includes('lock')).toBe(phase === 'after-lock');
+  });
+
+  it('refuses allocation when the named root is replaced during prepublication authority checking', async () => {
+    const f = await fixture(), root = f.options.protectedRoot, moved = `${root}-old`;
+    const before = await readFile(path.join(root, 'state.json'));
+    let temporarySynced = false, finalAnchorChecked = false, movedRoot = false;
+    const reopened = await openUrlMachineStore({ ...f.options, currentAsync: async () => {
+      if (finalAnchorChecked && !movedRoot) {
+        await rename(root, moved); await mkdir(root, { mode: 0o700 }); movedRoot = true;
+      }
+      return true;
+    } }, f.store.identitySha256);
+    expect(reopened).not.toBeNull(); cleanup.push(() => reopened!.close());
+    filesystem.afterSync = file => { if (path.basename(file).startsWith('state.json.new-')) temporarySynced = true; };
+    filesystem.afterLstat = file => { if (temporarySynced && file === root) finalAnchorChecked = true; };
+    expect(await reopened!.allocateClient(f.options.deadline)).toBeNull();
+    expect(movedRoot).toBe(true);
+    expect(await readFile(path.join(moved, 'state.json'))).toEqual(before);
+    expect(await readdir(root)).toEqual([]);
+  });
+
+  it('refuses a staged retry when contention clears after its original cutoff', async () => {
+    const f = await fixture(), lock = path.join(f.options.protectedRoot, 'lock');
+    const stateFile = path.join(f.options.protectedRoot, 'state.json'), before = await readFile(stateFile);
+    let count = 0, measuring = false, elapsed = 0;
+    const reopened = await openUrlMachineStore({ ...f.options, currentAsync: async () => {
+      if (measuring && ++count === 2) { elapsed = 1_000; await rm(lock, { recursive: true }); }
+      return true;
+    } }, f.store.identitySha256);
+    expect(reopened).not.toBeNull(); cleanup.push(() => reopened!.close());
+    await mkdir(lock, { mode: 0o700 });
+    const realNow = performance.now.bind(performance);
+    const clock = vi.spyOn(performance, 'now').mockImplementation(() => realNow() + elapsed);
+    try {
+      measuring = true;
+      expect(await reopened!.allocateClient(f.options.deadline)).toBeNull();
+      expect(count).toBe(2);
+      expect(await readFile(stateFile)).toEqual(before);
+      expect(await readdir(f.options.protectedRoot)).not.toContain('lock');
+    } finally { clock.mockRestore(); }
+  });
+
   it('withholds the reserved slot when cleanup crosses the allocation deadline', async () => {
     const f = await fixture();
     const reopened = await openUrlMachineStore({ ...f.options, currentAsync: async () => true }, f.store.identitySha256);
@@ -287,6 +352,38 @@ describe('protected URL machine lifecycle files', { timeout: 30_000 }, () => {
       expect(state.clients).toEqual([expect.objectContaining({ audit: [], anchor: expect.objectContaining({ kind: 'never-issued' }) })]);
       expect(await readdir(f.options.protectedRoot)).not.toContain('lock');
     } finally { clock.mockRestore(); }
+  });
+
+  it('returns at the clipped allocation deadline while its late cleanup still owns the descriptor', async () => {
+    const f = await fixture();
+    const reopened = await openUrlMachineStore({ ...f.options, currentAsync: async () => true }, f.store.identitySha256);
+    expect(reopened).not.toBeNull(); cleanup.push(() => reopened!.close());
+    let rootSyncs = 0, closed = false;
+    let cleanupStarted!: () => void, releaseCleanup!: () => void, descriptorClosed!: () => void;
+    const entering = new Promise<void>(resolve => { cleanupStarted = resolve; });
+    const held = new Promise<void>(resolve => { releaseCleanup = resolve; });
+    const closing = new Promise<void>(resolve => { descriptorClosed = resolve; });
+    filesystem.afterSync = file => {
+      if (file !== f.options.protectedRoot || ++rootSyncs !== 3) return;
+      cleanupStarted(); return held;
+    };
+    filesystem.afterClose = file => {
+      if (file !== f.options.protectedRoot) return;
+      closed = true; descriptorClosed();
+    };
+    const allocation = reopened!.allocateClient(NOW + 1_000);
+    let watchdog: ReturnType<typeof setTimeout> | undefined;
+    try {
+      expect(await Promise.race([entering.then(() => 'cleanup'), allocation.then(() => 'returned')])).toBe('cleanup');
+      const outcome = await Promise.race([allocation, new Promise<'still pending'>(resolve => {
+        watchdog = setTimeout(() => resolve('still pending'), 2_000);
+      })]);
+      expect(outcome).toBeNull();
+      await reopened!.close();
+      expect(closed).toBe(false);
+    } finally { releaseCleanup(); clearTimeout(watchdog); await allocation; }
+    await closing;
+    expect(closed).toBe(true);
   });
 
   it('checks authority after protected state I/O before using it to open the client', async () => {

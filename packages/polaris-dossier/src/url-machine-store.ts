@@ -404,7 +404,7 @@ async function openStore(options: UrlMachineStoreOptions, expectedIdentitySha256
     const withLock = async (deadline: number, operation: StoreOperation,
       operationMilliseconds: number = URL_MACHINE_STORE_LIMITS.operationMilliseconds, staging?: StagedBoundary): Promise<boolean> => {
       const began = performance.now();
-      let active = true, held = false, uncertain = false;
+      let active = true, held = false, uncertain = false, contended = false;
       const pending = new Set<Promise<unknown>>();
       const allocation = staging?.allocation === true;
       const checkDeadline = (): number => {
@@ -476,23 +476,37 @@ async function openStore(options: UrlMachineStoreOptions, expectedIdentitySha256
           await unlink(temporary).catch(() => {});
         }
       };
-      let timer: ReturnType<typeof setTimeout> | undefined, completed = false;
+      let timer: ReturnType<typeof setTimeout> | undefined;
       const work = budgets.run({ calls: 0, bytes: 0 }, async () => {
         if (!Number.isSafeInteger(deadline) || deadline > options.deadline || deadline <= live()) throw refused();
         for (;;) {
           check(); await io(verifyAnchors);
-          if (allocation) await reverify();
+          if (allocation) {
+            await reverify(); check(); verifyNamedRoots(); checkDeadline();
+            if (contended && performance.now() - began >= URL_MACHINE_STORE_LIMITS.lockMilliseconds) throw refused();
+          }
           try { await io(() => mkdir(`${base}/lock`, { mode: 0o700 })); held = true; break; }
           catch (error) {
             if ((error as NodeJS.ErrnoException).code !== 'EEXIST' || performance.now() - began >= URL_MACHINE_STORE_LIMITS.lockMilliseconds) throw error;
+            contended = true;
             await new Promise(resolve => setTimeout(resolve, 10));
           }
         }
+        if (allocation) {
+          check();
+          if (contended && performance.now() - began >= URL_MACHINE_STORE_LIMITS.lockMilliseconds) throw refused();
+        }
         await io(() => heldRoot.sync());
-        if (allocation) await reverify();
+        if (allocation) { await reverify(); check(); }
         await io(census);
         await operation({ check, checkWork, reverify, anchored: verifyAnchors, state: () => io(() => readState(stagingClock)), write });
         check();
+        if (allocation) {
+          // The slot is durable. Keep lock cleanup and witness admission
+          // inside the same deadline as the allocation.
+          await rmdir(`${base}/lock`); await heldRoot.sync();
+          await reverify(); check(); verifyNamedRoots(); checkDeadline();
+        }
       });
       activeWork.add(work);
       void work.then(() => activeWork.delete(work), () => activeWork.delete(work));
@@ -502,27 +516,25 @@ async function openStore(options: UrlMachineStoreOptions, expectedIdentitySha256
           timer = setTimeout(() => { uncertain = true; active = false; reject(refused()); },
             Math.max(1, Math.min(operationRemaining, deadline - clock())));
         })]);
-        completed = true;
-      } catch { uncertain = true; }
+        return true;
+      } catch { uncertain = true; return false; }
       finally {
         clearTimeout(timer); active = false;
-        // An unresolved operation leaves a durable lock. No successor steals it.
-        if (held && !uncertain && pending.size === 0) {
+        // An unresolved protected write leaves its lock. No successor steals it.
+        if (!allocation && held && !uncertain && pending.size === 0) {
           await rmdir(`${base}/lock`).catch(() => { uncertain = true; });
-          await heldRoot.sync().catch(() => { if (allocation) uncertain = true; });
+          await heldRoot.sync().catch(() => {});
         }
       }
-      return completed && (!allocation || !uncertain);
     };
     const allocateClient = async (deadline: number) => {
-      const began = performance.now();
       // Allocation creates a never-issued slot. Its full async checks bracket
       // the protected state and the durable write, where no client is yet live.
       const staging: StagedBoundary | undefined = currentAsync === undefined ? undefined : { allocation: true, current: undefined };
       let issued: { readonly clientId: string; readonly witnessSha256: string } | null = null;
       const finished = await withLock(deadline, async ({ check, reverify, state, write }) => {
         const current = await state();
-        if (staging !== undefined) await reverify();
+        if (staging !== undefined) { await reverify(); check(); }
         if (current.clients.length >= URL_MACHINE_STORE_LIMITS.clients) throw refused();
         const clientId = opaque();
         if (current.used.includes(clientId) || current.clients.some(entry => entry.clientId === clientId)) throw refused();
@@ -537,20 +549,7 @@ async function openStore(options: UrlMachineStoreOptions, expectedIdentitySha256
         if (staging !== undefined) await reverify();
         check(); issued = { clientId, witnessSha256 };
       }, URL_MACHINE_STORE_LIMITS.operationMilliseconds, staging);
-      if (!finished || currentAsync === undefined) return finished ? issued : null;
-      // Final admission includes cleanup and uses only the original time left.
-      let timer: ReturnType<typeof setTimeout> | undefined;
-      const until = began + URL_MACHINE_STORE_LIMITS.operationMilliseconds;
-      try {
-        const remaining = Math.min(until - performance.now(), deadline - clock());
-        if (remaining <= 0 || !(await Promise.race([currentAsync(), new Promise<false>(resolve => {
-          timer = setTimeout(() => resolve(false), remaining);
-        })]))) return null;
-        if (performance.now() >= until || clock() >= deadline || live() >= deadline) return null;
-        verifyNamedRoots();
-        return performance.now() < until && clock() < deadline ? issued : null;
-      } catch { return null; }
-      finally { clearTimeout(timer); }
+      return finished ? issued : null;
     };
     const exclusive = async (clientId: string, deadline: number, operation: (lease: UrlMachineLifecycleLease) => Promise<void>,
       effectProfile?: NativeSessionProfile, publication?: StagedBoundary): Promise<boolean> => {
