@@ -87,9 +87,9 @@ async function orderedFixture() {
   if (!compiled.ok) throw new Error('own ordered profile refused');
   const profile = compiled.value.profile;
   const { binding, originPolicySha256, pin, project } = f.options;
-  const canonical = (value: unknown) => encodeCanonicalJson(value, { maxBytes: 65_536, maxNodes: 4096, maxDepth: 12 });
+  const canonical = (value: unknown) => encodeCanonicalJson(value, { maxBytes: 2_097_152, maxNodes: 4096, maxDepth: 12 });
   const identify = (value: string) => ({ sha256: sha256(value), bytes: Buffer.byteLength(value, 'utf8') });
-  const originalText = 'Own ordered audit fixture. '.repeat(1450);
+  const originalText = 'Own ordered audit fixture. '.repeat(25_000);
   const original = identify(originalText);
   const envelope = Buffer.from(canonical({ encoding: 'html-entities-five/1', format: 'polaris-dossier-url-design-inert-view/1',
     originalSha256: original.sha256, originalBytes: original.bytes, payload: originalText,
