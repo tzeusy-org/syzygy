@@ -85,7 +85,7 @@ export async function verifyUrlSessionAuditHistory(given: UrlSessionAuditHistory
     const machineSnapshots = new Map<string, UrlMachinePeerHistorySnapshot>();
     if (machineHistory !== undefined) {
       const { identitySha256, snapshots } = machineHistory;
-      if (!hex(identitySha256) || !Array.isArray(snapshots) || snapshots.length > ROLES.length * 2) fail();
+      if (!hex(identitySha256) || !Array.isArray(snapshots) || snapshots.length > 16) fail();
       for (const snapshot of snapshots) {
         if (!isUrlMachinePeerHistorySnapshot(snapshot) || snapshot.storeIdentitySha256 !== identitySha256
           || machineSnapshots.has(snapshot.clientId)) fail();

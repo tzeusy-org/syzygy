@@ -24,7 +24,7 @@ afterEach(async () => { vi.restoreAllMocks(); for (const fn of cleanup.splice(0)
 /** Exact synthetic expectations retained independently of the actual store.
  * No live peer/capture claim is made; all lifecycle publications and cold reads
  * use real protected files. Serialized close data simulates a cold process. */
-async function fixture(active = false, lateAudit = false) {
+async function fixture(active = false, lateAudit = false, generations = 1) {
   const root = tempDir('machine-cold-'), governanceRoot = path.join(root, 'observing/.syzygy'), protectedRoot = path.join(root, 'protected');
   const canonicalRoot = path.join(governanceRoot, 'governance/policies/dossier-machine-clients'); await mkdir(canonicalRoot, { recursive: true });
   let now = NOW, current = true, nextId = 30;
@@ -34,7 +34,7 @@ async function fixture(active = false, lateAudit = false) {
   const binding = { controllerSha256: id(1), parentBindingSha256: id(2) };
   const clients: { context: UrlMachineClientContext; terminal: UrlRunMachineClosedHistory['clients'][number]['terminal'] }[] = [];
   const issued: { client: typeof clients[number]; first: UrlMachineClientRecord; final: UrlMachineClientRecord; firstHead: Extract<UrlMachineLifecycleResult, { ok: true }>['receipt'] }[] = [];
-  for (const role of URL_ROLES) for (const kind of ['mcp-shim', 'inference-bridge'] as const) {
+  for (let generation = 0; generation < generations; generation++) for (const role of URL_ROLES) for (const kind of ['mcp-shim', 'inference-bridge'] as const) {
     const slot = await store.allocateClient(deadline); if (!slot) throw new Error('owned slot refused');
     const allowedScopes: UrlMachineOperation[] = kind === 'inference-bridge' ? ['inference-forward'] : role === 'author'
       ? ['source_read', 'artifact_read', 'artifact_write', 'dossier_step'] : role === 'inventory'
@@ -101,6 +101,18 @@ describe('cold protected machine reconstruction', () => {
     expect(matched).toMatchObject({ ok: true, authorization: 'none', replay: 'forbidden', effectCompletion: 'Unknown' });
     expect(await Promise.all(f.files.map(file => readFile(file)))).toEqual(before);
     expect((await readdir(f.options.protectedRoot)).includes('lock')).toBe(false);
+  });
+
+  it('verifies both cleanly stopped generations within the same sixteen-client lifetime store', async () => {
+    const f = await fixture(false, false, 2);
+    const history = await reconstructColdUrlRunMachineHistory(f.options);
+    expect(history?.clients).toHaveLength(16);
+    expect(history?.snapshots).toHaveLength(2);
+    const duplicate = clone(f.options.sealed);
+    duplicate.clients[15] = duplicate.clients[0]!;
+    expect(await reconstructColdUrlRunMachineHistory({ ...f.options, sealed: duplicate })).toBeNull();
+    expect(await reconstructColdUrlRunMachineHistory({ ...f.options, sealed: { ...f.options.sealed,
+      clients: [...f.options.sealed.clients, f.options.sealed.clients[0]!] } })).toBeNull();
   });
 
   it.each(['identity', 'controller', 'parent', 'run', 'pin', 'origin', 'profile', 'deadline', 'client-count', 'duplicate', 'role-cli', 'scope', 'witness', 'head', 'future-cut', 'early-cut', 'coherent-identity', 'wrong-slot', 'future-context'] as const)('refuses %s expectation drift', async fault => {
