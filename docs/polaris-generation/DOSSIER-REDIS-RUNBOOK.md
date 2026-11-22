@@ -7,11 +7,16 @@ attends each session. The Redis sitting references below record the
 
 ## Complete the fixture proof first
 
-[Observed] The adopted [local-agent verification tasks](../../openspec/changes/polaris-dossier-local-agent-mode/tasks.md#verification)
-require one attended end-to-end run per tool against a consented fixture
-repository before any real target. `syzygy-qkea.13` tracks the fixture
-admission, the Claude Code and Codex runs, and the remaining execution proof.
-Redis is the real target for the steps on this page.
+[Observed] S12 (`syzygy-qkea.13`) requires one attended end-to-end run
+per tool against a consented fixture repository before any real target.
+The [local-agent checklist](../../openspec/changes/polaris-dossier-local-agent-mode/tasks.md#required-implementation-and-proof-after-applicable-authorization)
+records that prerequisite. S12 tracks the fixture admission, the Claude
+Code and Codex runs, and the applicable permitting run. Redis is the
+real target for the steps on this page.
+
+[Observed, 2026-11-22] The production permitting arm is disabled. Two
+no-execution fixture runs can provide the per-tool evidence. The required
+permitting run would still be pending.
 
 [Observed] The production CLI reads the gate records from its Syzygy
 checkout. The tests using `packages/polaris-dossier/src/full-run.testkit.ts`
@@ -27,13 +32,14 @@ permitting path.
 
 Each item is checked by the command named, never by reading a status word.
 
-### Owner acts
+### Historical owner-act checklist
 
-The sitting the owner holds is put from
+The 2026-10-07 sitting was prepared from
 `.syzygy/governance/contracts/candidates/REDIS-LOCAL-AGENT-SITTING-BRIEF.md`,
-items A to I. Read its sibling `REDIS-LOCAL-AGENT-SITTING-BRIEF-REVIEW-NOTES.md`
-beside it. Items J to M were settled before the sitting and are not asked. The
-item letters and owning packets below are copied from the brief's table "The
+items A to I, and its sibling `REDIS-LOCAL-AGENT-SITTING-BRIEF-REVIEW-NOTES.md`.
+Current gate decisions come from the checked-out records and preflight.
+Items J to M were settled before that sitting. The item letters and owning
+packets below are copied from the brief's table "The
 decisions, in the order you would be asked". The dossier packet is
 `.syzygy/governance/contracts/candidates/dossier-local-agent-acts/OWNER-SITTING-PACKET.md`,
 the package of PR #370.
