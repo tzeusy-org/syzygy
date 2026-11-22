@@ -60,7 +60,7 @@ describe('the successor screen', () => {
     };
     const read = readRunRecord(encodeRunRecord(parsed.config, subject));
     expect(read.ok && [read.record.subject.screeningPolicy.path, read.record.subject.contentClasses]).toEqual([V2_PATH, ['code-content', 'project-documentation', 'governance-text']]);
-    for (const [bound, ok] of [[V1_PATH, true], [V2_PATH, true], ['.syzygy/governance/policies/POLARIS-DOSSIER-DECLARED-SOURCE-POLICY-v3.json', true], ['.syzygy/governance/policies/POLARIS-DOSSIER-DECLARED-SOURCE-POLICY-v4.json', false]] as const) {
+    for (const [bound, ok] of [[V1_PATH, true], [V2_PATH, true], ['.syzygy/governance/policies/POLARIS-DOSSIER-DECLARED-SOURCE-POLICY-v3.json', true], ['.syzygy/governance/policies/POLARIS-DOSSIER-DECLARED-SOURCE-POLICY-v4.json', true], ['.syzygy/governance/policies/POLARIS-DOSSIER-DECLARED-SOURCE-POLICY-v5.json', false]] as const) {
       const text = encodeRunRecord(parsed.config, { ...subject, screeningPolicy: { ...subject.screeningPolicy, path: bound } });
       expect(readRunRecord(text).ok).toBe(ok);
     }

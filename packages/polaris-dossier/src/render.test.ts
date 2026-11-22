@@ -995,7 +995,8 @@ describe('render', () => {
 
   it('refuses a different applied policy instead of upgrading a running render', async () => {
     const run = await prepared(draft(), false);
-    expect(await renderRun(run, renderDeps({ loadScreen: async () => buildDossierScreen(policy(['.c'])) }))).toMatchObject({ ok: false, refusal: { stage: 'screen', reason: 'the applied screen differs from the policy bytes bound to this run' } });
+    expect(await renderRun(run, renderDeps({ loadScreen: async () => buildDossierScreen(policy(['.c'])) }))).toMatchObject({ ok: false,
+      refusal: { stage: 'screen', reason: expect.stringMatching(/the applied screen differs from the policy bytes bound to this run.*start a new run.*dossier-declared-source\/4\.0\.0/) } });
     expect(fs.existsSync(path.join(run, 'site'))).toBe(false);
   });
 
@@ -1160,7 +1161,7 @@ describe('render', () => {
     const result = await renderRun(run, renderDeps({ loadScreen: async (placement) => { seen.push(placement); return SCREEN; } }));
     expect(result).toMatchObject({ ok: true });
     const commit = JSON.parse(fs.readFileSync(path.join(run, 'run.json'), 'utf8')).subject.pinnedRevision.commit as string;
-    expect(seen).toEqual([{ repository: 'repository:redis-redis', commit, visibility: 'public', policySha256: policyFixture(fixturePolicy).binding.sha256, policyPath: '.syzygy/governance/policies/POLARIS-DOSSIER-DECLARED-SOURCE-POLICY-v3.json' }]);
+    expect(seen).toEqual([{ repository: 'repository:redis-redis', commit, visibility: 'public', policySha256: policyFixture(fixturePolicy).binding.sha256, policyPath: '.syzygy/governance/policies/POLARIS-DOSSIER-DECLARED-SOURCE-POLICY-v4.json' }]);
     expect(commit).toMatch(/^[0-9a-f]{40}$/u);
   });
 

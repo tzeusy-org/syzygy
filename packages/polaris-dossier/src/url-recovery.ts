@@ -8,7 +8,7 @@ import type { GateSources } from './gate-sources.js';
 import { reconstructColdUrlRunMachineHistory } from './url-machine-cold-history.js';
 import { URL_HOST_ROOT } from './url-mode-registry.js';
 import { readUrlParentAdoption } from './url-parent-adoption.js';
-import { committedUrlPoliciesCurrent, committedUrlPoliciesCurrentAsync, readCommittedPolicy, readCommittedUrlOriginPolicy, samePolicy } from './policy-snapshot.js';
+import { committedUrlPoliciesCurrent, committedUrlPoliciesCurrentAsync, readCommittedPolicy, readCommittedUrlOriginPolicy, restartExplanation, samePolicy } from './policy-snapshot.js';
 import type { SupervisorState } from './polaris.js';
 import { reverifyPinnedRevision } from './reverify.js';
 import { buildDossierScreen, placementSubjectOf } from './screen.js';
@@ -65,23 +65,29 @@ export async function verifyStoppedUrlRun(state: SupervisorState, input: {
   const run = state.run, { sources, now } = input, root = sources.recordsRoot;
   const deadline = state.briefIssuedAt + state.deadlineSeconds * 1000;
   const stillStopped = (): boolean => now() < deadline && absent(run, RUN_LAYOUT.record) && absent(run, RUN_LAYOUT.executionChoice);
-  const refuse = (code: 'state' | 'policy' | 'runtime' | 'checkpoint' | 'source' | 'machine-history' | 'session-history' | 'budget') => ({ ok: false as const, code });
+  const refuse = (code: 'state' | 'policy' | 'runtime' | 'checkpoint' | 'source' | 'machine-history' | 'session-history' | 'budget',
+    reason?: string) => ({ ok: false as const, code, ...(reason === undefined ? {} : { reason }) });
   try {
     if (state.stopGeneration === undefined || state.declarationSha256 === undefined || state.stopped === undefined || state.done !== undefined
       || !stillStopped() || sources.effectiveRunDeclaration === undefined) return refuse('state');
     const read = readEffectiveRunRecord(run, sources.effectiveRunDeclaration);
-    if (!read.ok || read.effective.kind !== 'url' || read.sidecarSha256 !== state.declarationSha256) return refuse('state');
+    if (!read.ok) return read.code === 'policy-binding' ? refuse('policy', read.reason) : refuse('state');
+    if (read.effective.kind !== 'url' || read.sidecarSha256 !== state.declarationSha256) return refuse('state');
     const { declaration } = read.effective, record = read.core;
     if (declaration.runId !== state.runId || record.declared.deadline.seconds !== state.deadlineSeconds
       || record.subject.pinnedRevision.commit !== declaration.pinnedCommit || record.subject.clone.path !== state.clone
       || declaration.inference.model !== state.model || declaration.sourceTransport.originalLocator !== state.url) return refuse('state');
     const policy = readCommittedPolicy(root, declaration.basePolicy.path), origin = readCommittedUrlOriginPolicy(root);
-    if (!policy.ok || !origin.ok || !samePolicy(policy.binding, declaration.basePolicy)
-      || !samePolicy(origin.binding, declaration.originPolicy)) return refuse('policy');
+    if (!policy.ok || !samePolicy(policy.binding, declaration.basePolicy)) return refuse('policy',
+      restartExplanation('the committed policy identity, version or bytes differ from this run binding', declaration.basePolicy.path));
+    if (!origin.ok || !samePolicy(origin.binding, declaration.originPolicy)) return refuse('policy',
+      restartExplanation('the committed URL overlay identity, version or bytes differ from this run binding', declaration.originPolicy.path));
     const adoption = readUrlParentAdoption(root, origin.binding.sha256);
-    const policyCurrent = (): Promise<boolean> => adoption === null ? Promise.resolve(false)
-      : committedUrlPoliciesCurrentAsync(root, policy.binding, origin.binding, adoption);
-    if (adoption === null || !await policyCurrent()) return refuse('policy');
+    if (adoption === null) return refuse('policy', 'The exact installed A-14 URL dossier adoption cannot be verified against the observed default branch.');
+    const policyCurrent = (): Promise<boolean> => committedUrlPoliciesCurrentAsync(root, policy.binding, origin.binding, adoption);
+    const policyChanged = () => refuse('policy', restartExplanation(
+      `the checked policy pair with ${origin.binding.path} (${origin.binding.policyVersion}) cannot be re-established`, policy.binding.path));
+    if (!await policyCurrent()) return policyChanged();
     const authority = bindCurrentEffectiveUrlRun(run, sources.effectiveRunDeclaration, {
       baseSha256: declaration.baseRunSha256, sidecarSha256: read.sidecarSha256,
     });
@@ -101,7 +107,7 @@ export async function verifyStoppedUrlRun(state: SupervisorState, input: {
     };
     const placement = placementSubjectOf(record.subject);
     const screen = buildDossierScreen(policy.bytes, true, placement, placement.visibility);
-    if (!screen.ok) return refuse('policy');
+    if (!screen.ok) return refuse('policy', restartExplanation(screen.why, declaration.basePolicy.path));
     const runtime = await readUrlRuntime(input.checkout);
     let executable: string;
     try { executable = fs.realpathSync(path.join(os.homedir(), '.local/share/claude/versions', URL_CLI_PROGRAM.version)); }
@@ -111,7 +117,11 @@ export async function verifyStoppedUrlRun(state: SupervisorState, input: {
     const openReader = bindUrlSourceReader({ clone: record.subject.clone.path, revision: declaration.pinnedCommit,
       store: sealed.record.sourceStore, current: clockCurrent });
     const checked = await reverifyPinnedRevision(run, sources, now(), { openReader });
-    if (!checked.ok || checked.revision.commit !== declaration.pinnedCommit || checked.sidecarSha256 !== read.sidecarSha256
+    if (!checked.ok) {
+      const policyRefusal = checked.refusals.find(item => item.code === 'policy' || item.code === 'policy-changed');
+      return policyRefusal === undefined ? refuse('source') : refuse('policy', policyRefusal.reason);
+    }
+    if (checked.revision.commit !== declaration.pinnedCommit || checked.sidecarSha256 !== read.sidecarSha256
       || !current()) return refuse('source');
     const brief = sealed.record.products.records.find(file => file.path === RUN_LAYOUT.briefRecord);
     if (!brief) return refuse('checkpoint');
@@ -164,7 +174,8 @@ export async function verifyStoppedUrlRun(state: SupervisorState, input: {
     const resumeBudget = prepareUrlBudgetResume({ spend: sealed.record.spend, deadline,
       turnBudget: record.declared.agentTurnBudget, tokenBudget: record.declared.agentTokenBudget, observedAt: now() });
     if (!resumeBudget) return refuse('budget');
-    if (!await policyCurrent() || !historyCurrent()
+    if (!await policyCurrent()) return policyChanged();
+    if (!historyCurrent()
       || verifyUrlFrozenProductHistory(run, sealed.record.products, current) === null || !current()) return refuse('checkpoint');
     const products = verifyUrlRecoveryProducts({ hostRoot: URL_HOST_ROOT, expected, boundarySha256: sealed.sha256,
       machine, audits: verifiedAudits, now, current });

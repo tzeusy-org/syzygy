@@ -4,7 +4,7 @@ import { isRecord, sha256 } from '@syzygy/support';
 import { BoundedJsonError, parseBoundedJson } from '@syzygy/polaris-generation-core/live';
 import { NotARegularFileError, readBoundedFile } from './check-record-read.js';
 import type { GateSources } from './gate-sources.js';
-import { isEarlierPolicy, restartExplanation, samePolicy } from './policy-snapshot.js';
+import { restartExplanation, samePolicy } from './policy-snapshot.js';
 import { buildDossierScreen } from './screen.js';
 import { GitObjectReadRefusal, openPinnedObjectReader, type PinnedObjectReader, type PinnedObjectReaderOptions } from './git-object-reader.js';
 import { governedSubject, type GovernedDecision } from './governed.js';
@@ -127,21 +127,19 @@ export async function reverifyPinnedRevision(runDir: string, sources: GateSource
   // The run is screened under the policy file its record binds; one bound to an earlier version is never moved to the current one
   // (REQ-polaris-generation-046 from version 2.13), and refuses with the restart explanation when it can no longer read its binding.
   const bound = subject.screeningPolicy.path;
-  const predecessor = isEarlierPolicy(bound);
-  const snapshot = await sources.declaredPolicy?.(subject.screeningPolicy.path);
+  const snapshot = await sources.declaredPolicy?.(bound);
   if (snapshot === undefined || !snapshot.ok) {
     const why = snapshot === undefined ? 'no committed dossier policy source is available' : snapshot.why;
-    refusals.push({ code: 'policy', reason: predecessor ? restartExplanation(why, bound) : why });
+    refusals.push({ code: 'policy', reason: restartExplanation(why, bound) });
     return refuse();
   }
   if (!samePolicy(snapshot.binding, subject.screeningPolicy)) {
-    refusals.push({ code: 'policy-changed', reason: predecessor ? restartExplanation('the committed policy identity, version or bytes differ from this run binding', bound)
-      : 'the committed dossier policy identity, version or bytes differ from this run binding; start a new run instead of silently upgrading it' });
+    refusals.push({ code: 'policy-changed', reason: restartExplanation('the committed policy identity, version or bytes differ from this run binding', bound) });
     return refuse();
   }
   const screened = buildDossierScreen(snapshot.bytes, true, { repository: `repository:${repositoryId}`, commit }, subject.visibility.value);
   if (!screened.ok || screened.screen.policySha256 !== snapshot.binding.sha256) {
-    refusals.push({ code: 'policy', reason: screened.ok ? 'the policy bytes do not match the committed binding' : screened.why });
+    refusals.push({ code: 'policy', reason: restartExplanation(screened.ok ? 'the policy bytes do not match the committed binding' : screened.why, bound) });
     return refuse();
   }
   if (isRunProductReads(products) && products.run === run && products.waitForSample !== undefined) await products.waitForSample();

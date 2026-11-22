@@ -4,9 +4,10 @@ import path from 'node:path';
 import { execFileSync } from 'node:child_process';
 import { afterEach, describe, expect, it } from 'vitest';
 import { sha256 } from '@syzygy/support';
-import { DOSSIER_POLICY_PATH, DOSSIER_PREDECESSOR_POLICY_PATH, DOSSIER_REACH_POLICY_PATH } from './policy-snapshot.js';
+import { fileURLToPath } from 'node:url';
+import { DOSSIER_POLICY_PATH, DOSSIER_PREDECESSOR_POLICY_PATH, DOSSIER_REACH_POLICY_PATH, DOSSIER_READMISSION_POLICY_PATH, readCommittedPolicy } from './policy-snapshot.js';
 import { URL_ORIGIN_POLICY_PATH, urlSourceTransportIdentity } from './url-run-record.js';
-import { registerUrlRunMode, urlRunModeAuthority } from './url-mode-registry.js';
+import { packageUrlRunModeAuthority, registerUrlRunMode, urlRunModeAuthority } from './url-mode-registry.js';
 
 const roots: string[] = [];
 afterEach(() => { for (const root of roots.splice(0)) fs.rmSync(root, { recursive: true, force: true }); });
@@ -19,7 +20,7 @@ function fixture() {
   const digest = 'a'.repeat(64), commit = 'c'.repeat(40);
   const context = {
     runId,
-    expectedBasePolicy: { path: DOSSIER_POLICY_PATH, policyId: 'polaris-butlers-project-shape-secrets', policyVersion: 'dossier-declared-source/3.0.0', commit, sha256: digest },
+    expectedBasePolicy: { path: DOSSIER_POLICY_PATH, policyId: 'polaris-butlers-project-shape-secrets', policyVersion: 'dossier-declared-source/4.0.0', commit, sha256: digest },
     expectedOriginPolicy: { path: URL_ORIGIN_POLICY_PATH, policyId: 'POLARIS-DOSSIER-URL-ORIGIN-SPECIES-POLICY-v1', policyVersion: '1.0.0', commit, sha256: digest },
     expectedSourceTransport: { originalLocator: identity.originalLocator, destination: identity.destination, providerId: identity.providerId,
       acquisitionId: `acq-${'a'.repeat(32)}`, metadataClasses: ['code-structure'] as const, selectionOrigin: 'validated-destination-before-acquisition' as const,
@@ -52,7 +53,7 @@ describe('persistent host URL mode declaration binding', () => {
     const authority = urlRunModeAuthority(f.root, metadata), result = authority(f.run, f.runId);
     expect(result.kind).toBe('url'); if (result.kind !== 'url') return;
     expect(result.context).toEqual(f.context);
-    const screenMetadata = result.createMetadataScreen();
+    const screenMetadata = result.createMetadataScreen(result.context.expectedBasePolicy);
     expect(screenMetadata).toBe(metadata);
     expect(Object.isFrozen(result.context)).toBe(true); expect(Object.isFrozen(result.context.expectedSourceTransport)).toBe(true);
     expect(screenMetadata?.('own-safe')).toBe(true); expect(screenMetadata?.('different')).toBe(false); expect(calls).toBe(2);
@@ -61,6 +62,7 @@ describe('persistent host URL mode declaration binding', () => {
     // Retained declarations keep their exact predecessor pair. Reading them
     // neither migrates their binding nor permits new predecessor registration.
     for (const [boundPath, version] of [
+      [DOSSIER_READMISSION_POLICY_PATH, 'dossier-declared-source/3.0.0'],
       [DOSSIER_REACH_POLICY_PATH, 'dossier-declared-source/2.0.0'],
       [DOSSIER_PREDECESSOR_POLICY_PATH, 'dossier-declared-source/1.0.0'],
     ] as const) {
@@ -76,6 +78,29 @@ describe('persistent host URL mode declaration binding', () => {
     }
     fs.writeFileSync(path.join(f.run, 'launched.json'), '{}');
     expect(authority(f.run, f.runId)).toEqual({ kind: 'refused' });
+  });
+
+  it('screens retained URL metadata with its exact committed base even when the new default is absent', () => {
+    const f = fixture(), records = path.join(f.temporary, 'records');
+    fs.mkdirSync(records);
+    const historicalPath = '.syzygy/governance/policies/POLARIS-DOSSIER-DECLARED-SOURCE-POLICY-v3.json';
+    const historical = path.join(records, historicalPath);
+    fs.mkdirSync(path.dirname(historical), { recursive: true });
+    fs.copyFileSync(fileURLToPath(new URL(`../../../${historicalPath}`, import.meta.url)), historical);
+    const git = (...args: string[]) => execFileSync('git', ['-C', records, '-c', 'user.name=Fixture', '-c', 'user.email=fixture@example.invalid',
+      ...args], { stdio: ['ignore', 'pipe', 'pipe'] });
+    git('init', '-q', '--template='); git('add', historicalPath); git('commit', '-qm', 'Original policy');
+    const base = readCommittedPolicy(records, historicalPath);
+    if (!base.ok) throw new Error(base.why);
+    const retained = { ...f.context, expectedBasePolicy: base.binding };
+    fs.writeFileSync(f.file, JSON.stringify({ format: 'polaris-url-mode-binding/1', run: f.run, runId: f.runId, context: retained }), { mode: 0o600 });
+    const result = packageUrlRunModeAuthority(records, f.root)(f.run, f.runId);
+    if (result.kind !== 'url') throw new Error('retained binding is unreadable');
+    const open = () => result.createMetadataScreen(result.context.expectedBasePolicy);
+    expect(open()?.('Own fixture metadata')).toBe(true);
+    expect(open()?.('kind: Secret\n')).toBe(false);
+    fs.appendFileSync(historical, ' ');
+    expect(open()).toBeNull();
   });
 
   it('refuses incomplete, changed or unknown host binding fields before creating a registry slot', () => {

@@ -5,7 +5,7 @@ import { dirname, join } from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
 import { afterEach, describe, expect, it } from 'vitest';
 import {
-  committedUrlPoliciesCurrent, committedUrlPoliciesCurrentAsync, DOSSIER_POLICY_PATH,
+  committedUrlPoliciesCurrent, committedUrlPoliciesCurrentAsync, DOSSIER_POLICY_PATH, DOSSIER_READMISSION_POLICY_PATH,
   DOSSIER_URL_ORIGIN_POLICY_PATH, readCommittedPolicy, readCommittedUrlOriginPolicy,
 } from './policy-snapshot.js';
 import { readUrlParentAdoption, URL_PARENT_DEFAULT_REF, URL_PARENT_RECORD, URL_PARENT_TAG } from './url-parent-adoption.js';
@@ -54,6 +54,7 @@ function fixture() {
   const run = (...args: string[]): string => git(root, ...args);
   run('init', '-q', '--initial-branch=main', '--template=');
   copy(root, DOSSIER_POLICY_PATH);
+  copy(root, DOSSIER_READMISSION_POLICY_PATH);
   mkdirSync(dirname(join(root, URL_PARENT_RECORD)), { recursive: true });
   writeFileSync(join(root, URL_PARENT_RECORD), LEDGER_HEADER);
   run('add', '.');
@@ -80,6 +81,21 @@ function fixture() {
 }
 
 describe('URL parent adoption on the observing Git checkout', { timeout: 30_000 }, () => {
+  it('keeps the A-14 overlay over the exact retained or current base', async () => {
+    const { root, binding, base, origin } = fixture();
+    const old = readCommittedPolicy(root, DOSSIER_READMISSION_POLICY_PATH);
+    if (!old.ok) throw new Error(old.why);
+    expect(base.policyVersion).toBe('dossier-declared-source/4.0.0');
+    expect(old.binding.policyVersion).toBe('dossier-declared-source/3.0.0');
+    const current = (bound: typeof base) => committedUrlPoliciesCurrent(root, bound, origin, binding);
+    const currentAsync = (bound: typeof base) => committedUrlPoliciesCurrentAsync(root, bound, origin, binding);
+    expect([current(base), current(old.binding), current({ ...old.binding, sha256: base.sha256 })]).toEqual([true, true, false]);
+    expect(await Promise.all([currentAsync(base), currentAsync(old.binding)])).toEqual([true, true]);
+    appendFileSync(join(root, DOSSIER_READMISSION_POLICY_PATH), ' ');
+    expect([current(base), current(old.binding)]).toEqual([true, false]);
+    expect(await Promise.all([currentAsync(base), currentAsync(old.binding)])).toEqual([true, false]);
+  });
+
   it('requires the actual direct default and version refs at startup and during a run', async () => {
     const { root, run, landed, binding, base, origin } = fixture();
     const current = () => committedUrlPoliciesCurrent(root, base, origin, binding);

@@ -7,6 +7,7 @@ import type { GateSources, GateState } from './gate-sources.js';
 import { GitObjectReadRefusal, openPinnedObjectReader, type PinnedObjectReader, type PinnedObjectReaderOptions } from './git-object-reader.js';
 import { deriveIdentity, normaliseIdentityOption, readLocator } from './launch-identity.js';
 import { governedSubject, type GovernedDecision } from './governed.js';
+import { DOSSIER_POLICY_PATH, isDossierPolicyBinding } from './policy-snapshot.js';
 import { parseRunConfig, type RunConfigRefusal } from './run-config.js';
 import { initialRawReadDisclosure } from './raw-read-disclosure.js';
 import { DOSSIER_CONTENT_CLASSES, NO_WORK_ITEM_REASON, encodeRunRecord, type RunSubject } from './run-record.js';
@@ -116,6 +117,9 @@ export async function initRun(request: InitRequest, ports: InitPorts): Promise<I
   if (visibility !== 'public' && visibility !== 'private') return refuse('visibility', 'visibility must be public or private; an absent declaration gets conservative private treatment');
   const snapshot = await ports.sources.declaredPolicy?.();
   if (snapshot === undefined || !snapshot.ok) return refuse('policy', snapshot === undefined ? 'no committed dossier policy source is available' : snapshot.why);
+  if (snapshot.binding.path !== DOSSIER_POLICY_PATH || !isDossierPolicyBinding(snapshot.binding)) {
+    return refuse('policy', 'a new run requires the current committed dossier policy binding');
+  }
   const head = resolveCloneHead(request.clone);
   if (!head.ok) return refuse('head', head.reason);
   if (request.revision !== undefined && request.revision !== head.commit) return refuse('revision', 'the selected full commit must equal the supplied clone HEAD; acquisition of another revision belongs to the URL/acquisition path');
@@ -124,7 +128,8 @@ export async function initRun(request: InitRequest, ports: InitPorts): Promise<I
   catch { return refuse('head', 'the clone real path cannot be resolved'); }
   const screened = buildDossierScreen(snapshot.bytes, true, { repository: identity, commit: head.commit }, visibility);
   if (!screened.ok) return refuse('policy', screened.why);
-  if (screened.screen.policySha256 !== snapshot.binding.sha256) return refuse('policy', 'the policy bytes do not match their committed binding');
+  if (screened.screen.policySha256 !== snapshot.binding.sha256 || screened.screen.policyId !== snapshot.binding.policyId
+    || screened.screen.policyVersion !== snapshot.binding.policyVersion) return refuse('policy', 'the policy bytes do not match their committed binding');
   const form = cloneGitDirShape(head.gitDir, head.commit, { objectFormatSetting: head.commit.length === 64,
     ...(isBoundUrlSourceReader(ports.openReader) ? { maxEntries: URL_STORE_ENTRY_LIMIT } : {}) });
   if (!form.ok) return refuse('clone-shape', form.reason);

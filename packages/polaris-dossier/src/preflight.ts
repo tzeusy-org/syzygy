@@ -1,6 +1,6 @@
 import type { GateSources } from './gate-sources.js';
 import { deriveIdentity, dossierLocator, readLocator } from './launch-identity.js';
-import type { PolicyBinding } from './policy-snapshot.js';
+import { DOSSIER_POLICY_PATH, isDossierPolicyBinding, type PolicyBinding } from './policy-snapshot.js';
 import { buildDossierScreen, type DossierScreen } from './screen.js';
 
 /** Metadata preparation only (033/046/047, D10). This checks the declared
@@ -26,6 +26,9 @@ export async function preflight(input: string, sources: GateSources, _now: numbe
   const snapshot = await sources.declaredPolicy?.();
   if (snapshot === undefined || !snapshot.ok) return { ok: false, reason: snapshot === undefined
     ? 'no committed dossier policy source is available' : snapshot.why };
+  if (snapshot.binding.path !== DOSSIER_POLICY_PATH || !isDossierPolicyBinding(snapshot.binding)) {
+    return { ok: false, reason: 'preparation for a new run requires the current committed dossier policy binding' };
+  }
   const screened = buildDossierScreen(snapshot.bytes, true, null, 'private');
   if (!screened.ok || screened.screen.policySha256 !== snapshot.binding.sha256
     || screened.screen.policyId !== snapshot.binding.policyId || screened.screen.policyVersion !== snapshot.binding.policyVersion) {

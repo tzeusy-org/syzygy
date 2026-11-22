@@ -189,11 +189,16 @@ const refusal = (result: InitResult) => (result.ok ? null : result.refusal);
 
 describe('init: a declared pinned source', () => {
   it('writes one /2 record without launch records or clone writes', async () => {
-    const { result, clone, stateRoot } = await init({ clone: cloneAt(commits.U) });
+    const { result, clone, stateRoot, root } = await init({ clone: cloneAt(commits.U) });
+    const policyPath = '.syzygy/governance/policies/POLARIS-DOSSIER-DECLARED-SOURCE-POLICY-v4.json';
+    const committed = gitIn(root, 'rev-parse', 'HEAD');
+    const exactBytes = execFileSync('git', ['-C', root, 'show', `${committed}:${policyPath}`], { env: FIXTURE_GIT_ENV });
     expect(result.ok).toBe(true);
     if (!result.ok) return;
     expect(result.report.subject).toMatchObject({ repository: { repositoryId: 'redis-redis', role: 'observed-source' }, pinnedRevision: { commit: commits.U, label: 'detached HEAD' },
-      visibility: { value: 'private', source: 'conservative-default', label: 'Inferred' }, screeningPolicy: { policyVersion: 'dossier-declared-source/3.0.0' } });
+      visibility: { value: 'private', source: 'conservative-default', label: 'Inferred' },
+      screeningPolicy: { path: policyPath, commit: committed, policyId: 'polaris-butlers-project-shape-secrets',
+        policyVersion: 'dossier-declared-source/4.0.0', sha256: createHash('sha256').update(exactBytes).digest('hex') } });
     expect(Object.keys(result.report.subject).filter(key => key.toLowerCase().includes('repository'))).toEqual(['repository']);
     expect(fs.readdirSync(result.report.run)).toEqual(['run.json']);
     expect(fs.readdirSync(stateRoot)).toHaveLength(1);
@@ -694,6 +699,20 @@ describe('declared-source admission and continuation boundaries', () => {
     const root = tempDir('declared-no-policy-'); const out = await init({ root });
     expect(refusal(out.result)).toMatchObject({ stage: 'policy', objectsRead: false }); expect(out.readerOpened).toBe(false); expect(fs.existsSync(out.stateRoot)).toBe(false);
   });
+  it('cannot start or prepare a new run from a retained policy snapshot', async () => {
+    const root = records(), actual = createPackageGateSources({ root, now: () => NOW });
+    const retained = policyFixture(fs.readFileSync(path.join(REAL_ROOT, '.syzygy/governance/policies/POLARIS-DOSSIER-DECLARED-SOURCE-POLICY-v3.json')));
+    const sources = { ...actual, declaredPolicy: async () => ({ ...retained, binding: { ...retained.binding,
+      path: '.syzygy/governance/policies/POLARIS-DOSSIER-DECLARED-SOURCE-POLICY-v3.json' } }) };
+    const stateRoot = path.join(tempDir('declared-old-policy-'), 'runs');
+    const out = await initRun({ clone: cloneAt(commits.A), url: URL_, configText: CONFIG, stateRoot }, { sources, now: () => NOW,
+      openReader: () => { throw new Error('the reader must stay closed'); } });
+    expect(refusal(out)).toMatchObject({ stage: 'policy', objectsRead: false,
+      reason: 'a new run requires the current committed dossier policy binding' });
+    expect(fs.existsSync(stateRoot)).toBe(false);
+    expect(await preflight(URL_, sources, NOW)).toEqual({ ok: false,
+      reason: 'preparation for a new run requires the current committed dossier policy binding' });
+  });
   it('refuses malformed declarations before any object read', async () => {
     const out = await init({ url: 'https://user:fixture@example.invalid/repo' });
     expect(refusal(out.result)).toMatchObject({ stage: 'url', objectsRead: false }); expect(out.readerOpened).toBe(false);
@@ -708,6 +727,29 @@ describe('declared-source admission and continuation boundaries', () => {
     expect(await guard(run, root)).toMatchObject({ ok: false, refusals: [{ code: 'policy' }] });
     gitIn(root, 'add', DOSSIER_POLICY_PATH); gitIn(root, '-c', 'user.name=t', '-c', 'user.email=t@example.invalid', 'commit', '-qm', 'different policy');
     expect(await guard(run, root)).toMatchObject({ ok: false, refusals: [{ code: 'policy-changed' }] });
+  });
+  it('keeps a retained v3 binding even when v4 is missing, and refuses if that v3 binding drifts', async () => {
+    const { run, root } = await started();
+    const policyPath = '.syzygy/governance/policies/POLARIS-DOSSIER-DECLARED-SOURCE-POLICY-v3.json';
+    const file = path.join(root, policyPath), bytes = fs.readFileSync(path.join(REAL_ROOT, policyPath));
+    fs.writeFileSync(file, bytes);
+    gitIn(root, 'add', policyPath);
+    gitIn(root, '-c', 'user.name=Fixture', '-c', 'user.email=fixture@example.invalid', 'commit', '-qm', 'Retained v3');
+    edit(run, record => {
+      record.subject.screeningPolicy = { path: policyPath, commit: gitIn(root, 'rev-parse', 'HEAD'),
+        policyId: 'polaris-butlers-project-shape-secrets', policyVersion: 'dossier-declared-source/3.0.0',
+        sha256: createHash('sha256').update(bytes).digest('hex') };
+    });
+    const record = path.join(run, 'run.json'), before = fs.readFileSync(record);
+    const subject = JSON.parse(before.toString()).subject;
+    fs.unlinkSync(path.join(root, DOSSIER_POLICY_PATH));
+    expect(await guard(run, root)).toMatchObject({ ok: true });
+    expect(await loadDossierScreen(root, NOW, placementSubjectOf(subject))).toMatchObject({ ok: true,
+      screen: { policyVersion: 'dossier-declared-source/3.0.0', policySha256: subject.screeningPolicy.sha256 } });
+    fs.appendFileSync(file, ' ');
+    expect(await guard(run, root)).toMatchObject({ ok: false, refusals: [{ code: 'policy',
+      reason: expect.stringMatching(/v3\.json \(dossier-declared-source\/3\.0\.0\).*start a new run.*v4\.json \(dossier-declared-source\/4\.0\.0\)/) }] });
+    expect(fs.readFileSync(record)).toEqual(before);
   });
   it('loads the URL origin policy independently and refuses absent, dirty or wrong-species bindings', () => {
     const root = records(), base = readCommittedPolicy(root);
@@ -818,7 +860,7 @@ describe('preflight: declared metadata preparation', () => {
       outcome: 'prepared', url: 'github.com/redis/redis', label: 'Inferred',
       repository: { repositoryId: 'redis-redis', identitySource: 'derived' },
       revision: { state: 'Unknown' }, visibility: { default: 'private', label: 'Inferred' },
-      screeningPolicy: { policyVersion: 'dossier-declared-source/3.0.0' },
+      screeningPolicy: { policyVersion: 'dossier-declared-source/4.0.0' },
     } });
     if (!result.ok) return;
     expect(result.report).not.toHaveProperty('consentedRevisions');
@@ -929,7 +971,7 @@ describe('the package gate sources answer whether another act\'s observation con
 describe('the declared-source policy successor 2.0.0 and runs bound to its predecessor', () => {
   const V1 = fs.readFileSync(path.join(REAL_ROOT, DOSSIER_PREDECESSOR_POLICY_PATH));
   const RESTART = (why: string): string => `this run is bound to the screening policy .syzygy/governance/policies/POLARIS-DOSSIER-DECLARED-SOURCE-POLICY-v1.json (dossier-declared-source/1.0.0), which can no longer be read as its binding (${why}); `
-    + 'a run is never re-screened under another version or moved to it, so start a new run, which binds .syzygy/governance/policies/POLARIS-DOSSIER-DECLARED-SOURCE-POLICY-v3.json (dossier-declared-source/3.0.0)';
+    + 'a run is never re-screened under another version or moved to it, so start a new run, which binds .syzygy/governance/policies/POLARIS-DOSSIER-DECLARED-SOURCE-POLICY-v4.json (dossier-declared-source/4.0.0)';
   const commitFile = (root: string, rel: string, bytes: Buffer | null, message: string): void => {
     if (bytes === null) gitIn(root, 'rm', '-q', rel);
     else { fs.mkdirSync(path.dirname(path.join(root, rel)), { recursive: true }); fs.writeFileSync(path.join(root, rel), bytes); gitIn(root, 'add', rel); }
@@ -954,7 +996,7 @@ describe('the declared-source policy successor 2.0.0 and runs bound to its prede
     const out = await init(); if (!out.result.ok) throw new Error(out.result.refusal.reason);
     const subject = out.result.report.subject;
     expect([subject.screeningPolicy.path, subject.screeningPolicy.policyVersion, subject.contentClasses]).toEqual([
-      '.syzygy/governance/policies/POLARIS-DOSSIER-DECLARED-SOURCE-POLICY-v3.json', 'dossier-declared-source/3.0.0', ['code-content', 'project-documentation', 'governance-text']]);
+      '.syzygy/governance/policies/POLARIS-DOSSIER-DECLARED-SOURCE-POLICY-v4.json', 'dossier-declared-source/4.0.0', ['code-content', 'project-documentation', 'governance-text']]);
     const stored = JSON.parse(fs.readFileSync(path.join(out.result.report.run, 'run.json'), 'utf8'));
     expect(stored.subject.contentClasses).toEqual(['code-content', 'project-documentation', 'governance-text']);
     const load = await loadDossierScreen(out.root, NOW, placementSubjectOf(subject));
@@ -1019,13 +1061,11 @@ it('initializes every supported role under the current declared-source policy', 
   }
 });
 
-// syzygy-3efd.69 (REQ-polaris-generation-046 from specification version 2.13): new runs bind 3.0.0; a run bound to 2.0.0 is screened
-// under it, never moved to 3.0.0, and a step of it that can no longer read 2.0.0 refuses with a restart explanation naming 2.0.0 and
-// 3.0.0, changing no file of the run. Expected values are literals.
-describe('the declared-source policy 3.0.0 and runs bound to version 2.0.0', () => {
+// REQ-polaris-generation-046 keeps the exact policy for older runs and names the current policy on refusal.
+describe('the current declared-source policy and runs bound to version 2.0.0', () => {
   const V2 = fs.readFileSync(path.join(REAL_ROOT, DOSSIER_REACH_POLICY_PATH));
   const RESTART = (why: string): string => `this run is bound to the screening policy .syzygy/governance/policies/POLARIS-DOSSIER-DECLARED-SOURCE-POLICY-v2.json (dossier-declared-source/2.0.0), which can no longer be read as its binding (${why}); `
-    + 'a run is never re-screened under another version or moved to it, so start a new run, which binds .syzygy/governance/policies/POLARIS-DOSSIER-DECLARED-SOURCE-POLICY-v3.json (dossier-declared-source/3.0.0)';
+    + 'a run is never re-screened under another version or moved to it, so start a new run, which binds .syzygy/governance/policies/POLARIS-DOSSIER-DECLARED-SOURCE-POLICY-v4.json (dossier-declared-source/4.0.0)';
   const commitFile = (root: string, rel: string, bytes: Buffer | null, message: string): void => {
     if (bytes === null) gitIn(root, 'rm', '-q', rel);
     else { fs.mkdirSync(path.dirname(path.join(root, rel)), { recursive: true }); fs.writeFileSync(path.join(root, rel), bytes); gitIn(root, 'add', rel); }
@@ -1034,7 +1074,7 @@ describe('the declared-source policy 3.0.0 and runs bound to version 2.0.0', () 
   const capture = (dir: string): string => JSON.stringify(fs.readdirSync(dir, { recursive: true }).map(String).sort().map(rel => {
     const file = path.join(dir, rel); return [rel, fs.statSync(file).isFile() ? sha(fs.readFileSync(file, 'utf8')) : 'dir'];
   }));
-  /** A started run whose record binds 2.0.0, in a records root that commits 2.0.0 beside 3.0.0. */
+  /** A started run whose record binds 2.0.0, in a records root that commits 2.0.0 beside 4.0.0. */
   const reachRun = async () => {
     const out = await init(); if (!out.result.ok) throw new Error(out.result.refusal.reason);
     const run = out.result.report.run;
@@ -1046,18 +1086,18 @@ describe('the declared-source policy 3.0.0 and runs bound to version 2.0.0', () 
     return { run, root: out.root, subject: record.subject };
   };
 
-  it('a new run binds 3.0.0, and its screen places a re-admitted format', async () => {
+  it('a new run binds 4.0.0, and its screen places a re-admitted format', async () => {
     const out = await init(); if (!out.result.ok) throw new Error(out.result.refusal.reason);
     const subject = out.result.report.subject;
     expect([subject.screeningPolicy.path, subject.screeningPolicy.policyVersion]).toEqual([
-      '.syzygy/governance/policies/POLARIS-DOSSIER-DECLARED-SOURCE-POLICY-v3.json', 'dossier-declared-source/3.0.0']);
+      '.syzygy/governance/policies/POLARIS-DOSSIER-DECLARED-SOURCE-POLICY-v4.json', 'dossier-declared-source/4.0.0']);
     const load = await loadDossierScreen(out.root, NOW, placementSubjectOf(subject));
     if (!load.ok) throw new Error(load.why);
     expect(['src/app/Main.scala', 'design/storage.adoc', 'src/app/main.vb'].map(p => load.screen.screenPath(p) ?? `${load.screen.contentClass(p)}/${load.screen.stageOf(p)}`))
       .toEqual(['code-content/2', 'governance-text/2', 'unknown-extraction-class']);
   });
 
-  it('a run bound to 2.0.0 continues under it, never under 3.0.0', async () => {
+  it('a run bound to 2.0.0 continues under its exact predecessor binding', async () => {
     const { run, root, subject } = await reachRun();
     expect((await reverifyPinnedRevision(run, createPackageGateSources({ root, now: () => NOW }), NOW)).ok).toBe(true);
     const load = await loadDossierScreen(root, NOW, placementSubjectOf(subject));

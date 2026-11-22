@@ -729,7 +729,7 @@ describe('what the review will not see (syzygy-mea.3)', () => {
     const brief = await buildInventoryBrief(opened, 1, sources(), LATER, { loadScreen: async (subject) => { asked.push(subject); return SCREEN; } });
     if (!brief.ok) throw new Error(brief.reason);
     // The repository id is the bare `redis-redis`; the placement subject is the consent form.
-    expect(asked).toEqual([{ repository: 'repository:redis-redis', commit: opened.subject.pinnedRevision.commit, visibility: 'public', policySha256: policyFixture(fixturePolicy).binding.sha256, policyPath: '.syzygy/governance/policies/POLARIS-DOSSIER-DECLARED-SOURCE-POLICY-v3.json' }]);
+    expect(asked).toEqual([{ repository: 'repository:redis-redis', commit: opened.subject.pinnedRevision.commit, visibility: 'public', policySha256: policyFixture(fixturePolicy).binding.sha256, policyPath: '.syzygy/governance/policies/POLARIS-DOSSIER-DECLARED-SOURCE-POLICY-v4.json' }]);
   });
 
   it('never names a path both a denied-path rule and a secret detector match in the inventory brief (round-2 review finding 1)', async () => {

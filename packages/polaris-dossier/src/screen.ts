@@ -1,4 +1,4 @@
-import { DOSSIER_POLICY_PATH, isEarlierPolicy, readCommittedPolicy, restartExplanation, type PolicyBinding } from './policy-snapshot.js';
+import { DOSSIER_POLICY_PATH, readCommittedPolicy, restartExplanation, type PolicyBinding } from './policy-snapshot.js';
 import { classDecision, codeContentExempt, compileEveryOffsetMatcher, deniedDirectory, documentationExempt, readCodeContentExemption, readConfigurationDetectors, readGovernanceTextRule, readProjectDocumentationExemption, readProjectDocumentationRule, readScopeDetectors, readSecondStage, readSecretRedaction, readSourceVisibility, redactBody, redactionFor, type ClassDecision, type PlacementSubject, type SourceVisibility, type PublicSourceContentClass, type RedactionDetector } from '@syzygy/polaris-generation-core/live';
 import { compileDetectors, deniedPathReason, detectSecrets, scanActiveContent, type DeniedPathRules, type SecretDetector } from '@syzygy/three-surface-poc-core';
 import { isRecord, sha256 } from '@syzygy/support';
@@ -138,7 +138,7 @@ export const screenLoaderOf = (injected: ScreenLoader | undefined, recordsRoot: 
   async subject => {
     const loaded = await (injected === undefined ? loadDossierScreen(recordsRoot, now, subject ?? null) : injected(subject));
     if (loaded.ok && subject?.policySha256 !== undefined && loaded.screen.policySha256 !== subject.policySha256) {
-      return { ok: false, why: subject.policyPath !== undefined && isEarlierPolicy(subject.policyPath) ? restartExplanation('the applied screen differs from the policy bytes bound to this run', subject.policyPath)
+      return { ok: false, why: subject.policyPath !== undefined ? restartExplanation('the applied screen differs from the policy bytes bound to this run', subject.policyPath)
         : 'the applied screen differs from the policy bytes bound to this run' };
     }
     if (loaded.ok && subject?.visibility !== undefined && loaded.screen.visibility !== subject.visibility) {
@@ -293,16 +293,15 @@ export function buildDossierScreen(policy: Uint8Array, projectDocumentationEnabl
 /** Apply committed dossier policy bytes; no classification/policy act or
  * observation-consent visibility carrier is consulted. */
 export async function loadDossierScreen(root: string, _now: number, subject: DossierScreenSubject | null = null): Promise<ScreenLoad> {
-  // A run is screened under the policy file its record binds (REQ-polaris-generation-046 from version 2.13): one bound to an earlier
-  // version stays under it, and refuses with the restart explanation when it can no longer be read as that binding; a new step binds 3.0.0.
+  // A run keeps its policy file and digest even after new runs move to a successor (REQ-polaris-generation-046).
   const bound = subject?.policyPath ?? DOSSIER_POLICY_PATH;
-  const predecessor = isEarlierPolicy(bound);
   const snapshot = readCommittedPolicy(root, bound);
-  if (!snapshot.ok) return predecessor ? { ok: false, why: restartExplanation(snapshot.why, bound) } : snapshot;
+  if (!snapshot.ok) return subject?.policyPath === undefined ? snapshot : { ok: false, why: restartExplanation(snapshot.why, bound) };
   if (subject?.policySha256 !== undefined && snapshot.binding.sha256 !== subject.policySha256) {
-    return { ok: false, why: predecessor ? restartExplanation('the committed policy bytes differ from this run binding', bound) : 'the committed dossier policy changed from this run binding' };
+    return { ok: false, why: restartExplanation('the committed policy bytes differ from this run binding', bound) };
   }
-  return buildDossierScreen(snapshot.bytes, true, subject, subject?.visibility ?? 'private');
+  const screen = buildDossierScreen(snapshot.bytes, true, subject, subject?.visibility ?? 'private');
+  return screen.ok || subject?.policyPath === undefined ? screen : { ok: false, why: restartExplanation(screen.why, bound) };
 }
 
 /** A path a secret detector of the bound screening policy matches, read as a path or as text, whether or not a denied-path rule also

@@ -2,6 +2,7 @@ import * as fs from 'node:fs';
 import * as path from 'node:path';
 import { encodeCanonicalJson, type LocalDisclosureItem } from '@syzygy/polaris-generation-core/live';
 import { sha256 } from '@syzygy/support';
+import { restartExplanation, type PolicyBinding } from './policy-snapshot.js';
 import { readRunRecord, type RecordedRunConfig } from './run-record.js';
 import type { RunConfigRefusal } from './run-config.js';
 import { RUN_ID, RUN_LAYOUT } from './state-directory.js';
@@ -13,12 +14,12 @@ export const URL_MODE_MARKERS = Object.freeze(['launched.json', 'url-acquisition
 export type ProtectedUrlRunContext = UrlRunDeclarationContext & Required<Pick<UrlRunDeclarationContext,
   'expectedBasePolicy' | 'expectedOriginPolicy' | 'expectedSourceTransport' | 'expectedProfileSha256'>>;
 /** A stable authority identity that opens a screen for one full record read. */
-export type CreateMetadataScreen = () => ((text: string) => boolean) | null;
+export type CreateMetadataScreen = (binding: PolicyBinding) => ((text: string) => boolean) | null;
 export type EffectiveRunAuthority = (canonicalRun: string, runId: string) =>
   | { readonly kind: 'operator' }
   | { readonly kind: 'url'; readonly context: ProtectedUrlRunContext; readonly createMetadataScreen: CreateMetadataScreen }
   | { readonly kind: 'refused' };
-export type EffectiveRunReadFailureCode = 'run-unreadable' | 'record-unreadable' | 'invalid-record' | 'mode-binding' | 'metadata-screen';
+export type EffectiveRunReadFailureCode = 'run-unreadable' | 'record-unreadable' | 'invalid-record' | 'mode-binding' | 'metadata-screen' | 'policy-binding';
 export type EffectiveRunReadResult =
   | { readonly ok: true; readonly run: string; readonly runId: string; readonly core: RecordedRunConfig;
     readonly effective: EffectiveRunDeclaration; readonly sidecarSha256: string | null }
@@ -66,7 +67,7 @@ export function effectiveUrlDisclosures(core: Pick<RecordedRunConfig, 'subject'>
 }
 
 const BASE_BYTES = 65_536;
-const refusal = (code: EffectiveRunReadFailureCode): Extract<EffectiveRunReadResult, { ok: false }> => ({ ok: false, code, reason: {
+const refusal = (code: Exclude<EffectiveRunReadFailureCode, 'policy-binding'>): Extract<EffectiveRunReadResult, { ok: false }> => ({ ok: false, code, reason: {
   'run-unreadable': 'The run directory is not a canonical readable directory; preserve it and check its location.',
   'record-unreadable': 'Run metadata is missing, changed, excessive or not a regular non-symlink UTF-8 file; preserve it and check the recorded files.',
   'invalid-record': 'The effective run declaration is invalid; preserve it and check its recorded bindings.',
@@ -214,8 +215,11 @@ function readRunRecordFiles(runDir: string, authority: EffectiveRunAuthority | u
       if (!read.ok || read.effective.kind !== 'url') return refusal('invalid-record');
       core = read.core; effective = read.effective;
       try {
-        const screen = host.createMetadataScreen();
-        if (screen === null || !screenAll(core, read.effective.declaration, screen)) return refusal('metadata-screen');
+        const binding = host.context.expectedBasePolicy;
+        const screen = host.createMetadataScreen(binding);
+        if (screen === null) return { ok: false, code: 'policy-binding',
+          reason: restartExplanation('the protected URL metadata screen cannot verify the bound policy', binding.path) };
+        if (!screenAll(core, read.effective.declaration, screen)) return refusal('metadata-screen');
       } catch { return refusal('metadata-screen'); }
     } else {
       const baseText = new TextDecoder('utf-8', { fatal: true, ignoreBOM: true }).decode(base.bytes);

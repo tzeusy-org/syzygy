@@ -98,7 +98,8 @@ describe('effective host run readers', () => {
     expect(current?.()).toBe(true);
 
     fs.appendFileSync(policyFile, '\n');
-    expect(readEffectiveRunRecord(run, authority)).toMatchObject({ ok: false, code: 'metadata-screen' });
+    expect(readEffectiveRunRecord(run, authority)).toMatchObject({ ok: false, code: 'policy-binding',
+      reason: expect.stringMatching(/v4\.json.*the protected URL metadata screen cannot verify the bound policy.*start a new run/) });
     expect(readEffectiveRunRecord(ownRun(policy.binding), authority)).toMatchObject({ ok: true, effective: { kind: 'operator' } });
     fs.writeFileSync(policyFile, policy.bytes);
     expect(readEffectiveRunRecord(run, authority)).toMatchObject({ ok: true, effective: { kind: 'url' } });

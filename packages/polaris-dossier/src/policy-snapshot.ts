@@ -5,38 +5,37 @@ import * as path from 'node:path';
 import { isRecord, sha256 } from '@syzygy/support';
 import { parseUrlParentRefs, URL_PARENT_REF_ARGS, type UrlParentAdoption } from './url-parent-adoption.js';
 
-/** The dossier successor is versioned separately from the PWB/provider policy.
- * Its screening predicates are preserved; its admission provenance follows D10.
- *
- * From specification version 2.13 (REQ-polaris-generation-046, adoption row A-42) every new run binds version 3.0.0, version 2.0.0 with
- * the Stage-2 entries a census re-admitted. Versions 1.0.0 and 2.0.0 stay committed and unedited, and each stays the binding of every run
- * whose record names it: such a run is screened under it, never re-screened under another version, and a step of it that can no longer
- * read it as its binding refuses with `restartExplanation`. */
-export const DOSSIER_POLICY_PATH = '.syzygy/governance/policies/POLARIS-DOSSIER-DECLARED-SOURCE-POLICY-v3.json';
-export const DOSSIER_POLICY_VERSION = 'dossier-declared-source/3.0.0';
+/** REQ-polaris-generation-046 (A-51) binds v4 for new runs. Its screening
+ * predicates match v3. A retained run keeps the exact policy it recorded. */
+export const DOSSIER_POLICY_PATH = '.syzygy/governance/policies/POLARIS-DOSSIER-DECLARED-SOURCE-POLICY-v4.json';
+export const DOSSIER_POLICY_VERSION = 'dossier-declared-source/4.0.0';
+/** Version 2.13's binding, 3.0.0: the Stage-2 readmission. */
+export const DOSSIER_READMISSION_POLICY_PATH = '.syzygy/governance/policies/POLARIS-DOSSIER-DECLARED-SOURCE-POLICY-v3.json';
+const DOSSIER_READMISSION_POLICY_VERSION = 'dossier-declared-source/3.0.0';
 /** Version 2.6's binding, 2.0.0: the two-stage class decision before the re-admission. */
 export const DOSSIER_REACH_POLICY_PATH = '.syzygy/governance/policies/POLARIS-DOSSIER-DECLARED-SOURCE-POLICY-v2.json';
-export const DOSSIER_REACH_POLICY_VERSION = 'dossier-declared-source/2.0.0';
+const DOSSIER_REACH_POLICY_VERSION = 'dossier-declared-source/2.0.0';
 /** "The predecessor" of REQ-polaris-generation-046's text: version 1.0.0, the one-stage screen. */
 export const DOSSIER_PREDECESSOR_POLICY_PATH = '.syzygy/governance/policies/POLARIS-DOSSIER-DECLARED-SOURCE-POLICY-v1.json';
-export const DOSSIER_PREDECESSOR_POLICY_VERSION = 'dossier-declared-source/1.0.0';
-/** Each earlier policy a run record may still bind, by path, with its version. */
-const EARLIER_POLICIES: ReadonlyMap<string, string> = new Map([
+const DOSSIER_PREDECESSOR_POLICY_VERSION = 'dossier-declared-source/1.0.0';
+const DOSSIER_POLICY_ID = 'polaris-butlers-project-shape-secrets';
+const DOSSIER_POLICIES: ReadonlyMap<string, string> = new Map([
+  [DOSSIER_POLICY_PATH, DOSSIER_POLICY_VERSION],
+  [DOSSIER_READMISSION_POLICY_PATH, DOSSIER_READMISSION_POLICY_VERSION],
   [DOSSIER_REACH_POLICY_PATH, DOSSIER_REACH_POLICY_VERSION],
   [DOSSIER_PREDECESSOR_POLICY_PATH, DOSSIER_PREDECESSOR_POLICY_VERSION],
 ]);
-/** The policy files a run record may bind: the one new runs bind, and each earlier one earlier runs bound. */
-export const DOSSIER_POLICY_PATHS: readonly string[] = Object.freeze([DOSSIER_POLICY_PATH, ...EARLIER_POLICIES.keys()]);
 
-/** Whether `boundPath` is an earlier policy than the one new runs bind: a run bound to it is never moved to the current one. */
-export const isEarlierPolicy = (boundPath: string): boolean => EARLIER_POLICIES.has(boundPath);
-
-/** Why a step of a run bound to an earlier policy refuses when it can no longer read that policy as its binding: the run's version and
- * the current one named, the run never moved to the current one. */
-export const restartExplanation = (why: string, boundPath: string): string =>
-  `this run is bound to the screening policy ${boundPath} (${EARLIER_POLICIES.get(boundPath) ?? 'an unknown version'}), which can no longer be read as its binding (${why}); `
-  + `a run is never re-screened under another version or moved to it, so start a new run, which binds ${DOSSIER_POLICY_PATH} (${DOSSIER_POLICY_VERSION})`;
+export const DOSSIER_POLICY_PATHS: readonly string[] = Object.freeze([...DOSSIER_POLICIES.keys()]);
 export const DOSSIER_URL_ORIGIN_POLICY_PATH = '.syzygy/governance/policies/POLARIS-DOSSIER-URL-ORIGIN-SPECIES-POLICY-v1.json';
+
+/** Name the run's binding and the policy a fresh run would bind (REQ-polaris-generation-046). */
+export function restartExplanation(why: string, boundPath: string): string {
+  const version = boundPath === DOSSIER_URL_ORIGIN_POLICY_PATH ? '1.0.0' : DOSSIER_POLICIES.get(boundPath);
+  const binding = version === undefined ? 'an unsupported path and version' : `${boundPath} (${version})`;
+  return `this run is bound to the screening policy ${binding}, which can no longer be read as its binding (${why}); `
+    + `a run is never re-screened under another version or moved to it, so start a new run, which binds ${DOSSIER_POLICY_PATH} (${DOSSIER_POLICY_VERSION})`;
+}
 const MAX_POLICY_BYTES = 2_097_152;
 
 export interface PolicyBinding {
@@ -45,6 +44,15 @@ export interface PolicyBinding {
   readonly policyId: string;
   readonly policyVersion: string;
   readonly sha256: string;
+}
+
+export function isDossierPolicyBinding(value: unknown): value is PolicyBinding {
+  if (!isRecord(value) || Object.keys(value).length !== 5
+    || !['path', 'commit', 'policyId', 'policyVersion', 'sha256'].every(key => Object.hasOwn(value, key))) return false;
+  return typeof value['path'] === 'string' && typeof value['policyVersion'] === 'string'
+    && DOSSIER_POLICIES.get(value['path']) === value['policyVersion'] && value['policyId'] === DOSSIER_POLICY_ID
+    && typeof value['commit'] === 'string' && /^(?:[0-9a-f]{40}|[0-9a-f]{64})$/u.test(value['commit'])
+    && typeof value['sha256'] === 'string' && /^[0-9a-f]{64}$/u.test(value['sha256']);
 }
 
 export type PolicySnapshot =
@@ -89,10 +97,13 @@ export function readCommittedBytes(root: string, relativePath: string): { readon
   }
 }
 
-/** Both screening policies are read from the committed observing checkout. */
+/** Read the exact named policy from the committed observing checkout. */
 export function readCommittedPolicy(root: string, relativePath: string = DOSSIER_POLICY_PATH): PolicySnapshot {
-  if (!DOSSIER_POLICY_PATHS.includes(relativePath)) return { ok: false, why: 'the dossier policy path is not one a run may bind' };
-  return committedPolicy(root, relativePath);
+  if (!DOSSIER_POLICIES.has(relativePath)) return { ok: false, why: 'the dossier policy path is not one a run may bind' };
+  const snapshot = committedPolicy(root, relativePath);
+  return snapshot.ok && !isDossierPolicyBinding(snapshot.binding)
+    ? { ok: false, why: 'the committed dossier screening policy has an unsupported identity or version for its path' }
+    : snapshot;
 }
 
 /** The URL origin policy has its own committed identity. */
@@ -171,8 +182,7 @@ export async function committedUrlPoliciesCurrentAsync(root: string, base: Polic
 }
 
 function currentPolicyProbe(root: string, base: PolicyBinding, origin: PolicyBinding, parent: UrlParentAdoption | undefined) {
-  if (base.path !== DOSSIER_POLICY_PATH || origin.path !== DOSSIER_URL_ORIGIN_POLICY_PATH
-    || !/^(?:[a-f0-9]{40}|[a-f0-9]{64})$/u.test(base.commit)) throw new Error('current policy binding');
+  if (!isDossierPolicyBinding(base) || origin.path !== DOSSIER_URL_ORIGIN_POLICY_PATH) throw new Error('current policy binding');
   const subjects = new Map([[base.path, base.sha256], [origin.path, origin.sha256]]);
   for (const subject of parent?.subjects ?? []) {
     const previous = subjects.get(subject.path);
