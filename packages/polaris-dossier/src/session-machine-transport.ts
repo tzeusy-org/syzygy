@@ -29,9 +29,29 @@ interface ConnectionState {
   boundary: (() => boolean) | null;
   ingressComplete: boolean;
   readonly ingressDrained: Promise<void>;
+  replyWrite: { readonly bytes: Buffer; readonly check: () => void; checked: boolean } | null;
 }
 const contexts = new WeakMap<SessionMachineEffectContext, ConnectionState>();
 const connections = new WeakMap<Duplex, SessionMachineEffectContext>();
+
+/** One exact broker reply. The budget check follows the native authority guard
+ * inside write(), and must run synchronously before this call returns. A queued
+ * write receives no deferred grant: destroy it before it can emit any bytes. */
+export function endSessionMachineReply(stream: Duplex, frame: string, finalToolBudgetCheck: () => void): void {
+  const context = connections.get(stream), state = context === undefined ? undefined : contexts.get(context);
+  if (!state || state.stream !== stream || state.replyWrite !== null || stream.destroyed || stream.writableEnded
+    || stream.writableLength !== 0) throw new Error('session-machine-transport-unavailable');
+  const pending = { bytes: Buffer.from(frame), check: finalToolBudgetCheck, checked: false };
+  state.replyWrite = pending;
+  try {
+    stream.end(pending.bytes);
+    if (!pending.checked) throw new Error('session-machine-transport-unavailable');
+  } catch {
+    state.replyWrite = null;
+    stream.destroy();
+    throw new Error('session-machine-transport-unavailable');
+  }
+}
 const effects = new AsyncLocalStorage<{ readonly boundary: () => boolean; active: boolean }>();
 /** Undefined means no mediated effect is active in this async chain. An expired
  * descendant retains a revoked scope instead of inheriting a later effect. */
@@ -127,6 +147,15 @@ export async function openSessionMachineConnection(raw: Socket, transport: Sessi
       // HTTP completion can write no bytes after the bridge consumed its full
       // response. Keep the guard, but perform no needless write to that peer.
       if (chunk.length === 0) { done(); return; }
+      const pending = state.replyWrite;
+      if (pending !== null) {
+        state.replyWrite = null;
+        try {
+          if (!chunk.equals(pending.bytes)) throw new Error();
+          if (pending.check() !== undefined) throw new Error();
+          pending.checked = true;
+        } catch { done(new Error('session-machine-transport-unavailable')); return; }
+      }
       raw.write(chunk, error => done(error ? new Error('session-machine-transport-unavailable') : undefined));
     },
     final(done) { raw.end(done); },
@@ -134,7 +163,7 @@ export async function openSessionMachineConnection(raw: Socket, transport: Sessi
       ended = true; resume?.(); resume = null; settleIngress(); clearTimeout(lifetime); closeUrlMachinePeer(selected); raw.destroy(); done(error ? new Error('session-machine-transport-unavailable') : undefined);
     },
   });
-  state = { raw, peer: selected, stream, deadline, boundary: null, ingressComplete: false, ingressDrained };
+  state = { raw, peer: selected, stream, deadline, boundary: null, ingressComplete: false, ingressDrained, replyWrite: null };
   const context: SessionMachineEffectContext = Object.freeze({ peer: selected,
     async mediate<T>(this: SessionMachineEffectContext, operation: UrlMachineOperation,
       effect: (current: () => boolean) => T | Promise<T>): Promise<{ readonly ok: true; readonly value: T } | { readonly ok: false }> {

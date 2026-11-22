@@ -2,7 +2,7 @@ import * as fs from 'node:fs';
 import * as net from 'node:net';
 import path from 'node:path';
 import type { Duplex } from 'node:stream';
-import { isSessionMachineTransport, openSessionMachineConnection, prepareSessionMachineTransport, sessionMachineEffectContext,
+import { endSessionMachineReply, isSessionMachineTransport, openSessionMachineConnection, prepareSessionMachineTransport, sessionMachineEffectContext,
   type SessionMachineTransport, type SessionMachineEffectContext } from './session-machine-transport.js';
 import { encodeCanonicalJson, parseBoundedJson } from '@syzygy/polaris-generation-core/live';
 
@@ -18,7 +18,7 @@ export interface SessionBroker {
   close(): Promise<{ readonly pendingInvocations: number; readonly termination: 'settled' | 'Unknown' }>;
 }
 const FAILURE = '{"ok":false,"reason":"session-broker-unavailable"}\n';
-export type ReleaseReply = (reply: unknown, revalidate?: () => void) => void;
+export type ReleaseReply = (reply: unknown, revalidate?: () => void, finalToolBudgetCheck?: () => void) => void;
 
 /** Fixed-role host endpoint, mounted only into that role. Kernel sender identity
  * and independently scoped mediation are required; no role or execution authority is read
@@ -64,20 +64,29 @@ async function start(socket: string, invoke: Invoke, onFault: () => void, limits
     const chunks: Buffer[] = [];
     let size = 0, completed = false;
     const deadline = performance.now() + bounded.milliseconds;
-    const finish = (reply: string): void => {
+    const finish = (reply: string, finalToolBudgetCheck?: () => void): void => {
       if (completed) return;
       completed = true;
-      if (!connection.destroyed) connection.end(reply);
+      if (!connection.destroyed) {
+        if (finalToolBudgetCheck !== undefined) endSessionMachineReply(connection, reply, finalToolBudgetCheck);
+        else connection.end(reply);
+      }
     };
     // Guard the actual write after serialization. A lease can expire while a
     // large reply is being encoded, before a timer can run.
-    const release: ReleaseReply = (reply, revalidate) => {
+    const release: ReleaseReply = (reply, revalidate, finalToolBudgetCheck) => {
       if (completed || poisoned || closing || connection.destroyed) throw new Error('session-broker-unavailable');
       const frame = encodeCanonicalJson(reply, bounded) + '\n';
       revalidate?.();
       if (completed || poisoned || closing || connection.destroyed || performance.now() >= deadline)
         throw new Error('session-broker-unavailable');
-      finish(frame);
+      // Authority and encoding can consume the active ordered tool's allowance.
+      // Keep its final budget check separate, after those guards and before bytes.
+      if (fixture) {
+        if (finalToolBudgetCheck?.() !== undefined) throw new Error('session-broker-unavailable');
+        finish(frame);
+      }
+      else finish(frame, finalToolBudgetCheck);
     };
     // This deadline also bounds flushing the reply to a non-reading peer.
     // The invocation retains its slot until its own promise actually settles.

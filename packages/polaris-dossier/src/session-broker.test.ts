@@ -5,6 +5,9 @@ import { afterEach, describe, expect, it } from 'vitest';
 import { tempDir } from '@syzygy/test-kit';
 import { createSessionBrokerInvocation } from './session-mcp.js';
 import { SESSION_BROKER_LIMITS, sessionBrokerTestPort, type SessionBroker } from './session-broker.js';
+import { createOrderedDesignWorkBudget, reserveOrderedDesignWork } from './url-ordered-design-work-budget.js';
+import type { OrderedDesignTransferBounds } from './url-ordered-design-bounds.js';
+import { createUrlRunCpuBudget } from './url-run-cpu-budget.js';
 
 const cleanup: (() => void | Promise<unknown>)[] = [];
 afterEach(async () => { for (const close of cleanup.splice(0).reverse()) await close(); });
@@ -27,6 +30,30 @@ function connect(broker: SessionBroker) {
   return { socket, done };
 }
 const invocation = { tool: 'artifact_read', input: { path: 'status.json' } } as const;
+
+function orderedTool() {
+  const bytes = { bytes: 100, nodes: 10, depth: 3 };
+  const turn = { received: bytes, receivedCanonical: bytes, prepared: bytes, logicalReceived: bytes, logicalPrepared: bytes,
+    history: { ...bytes, messages: 4 }, nativeWrapper: bytes, brokerRequest: bytes, brokerReply: bytes,
+    mcpRequest: bytes, mcpReply: bytes, responseWire: { ...bytes, frames: 6 }, responseContent: bytes };
+  const shape: OrderedDesignTransferBounds = { profileSha256: 'a'.repeat(64), manifestSha256: 'b'.repeat(64),
+    retainedMessagesSha256: 'c'.repeat(64), totals: turn,
+    turns: (['prepared', 'part', 'part', 'verdict-acknowledgment'] as const).map(kind => ({ ...turn, kind })) };
+  const envelope = { cpuMicroseconds: 10, wallMilliseconds: 30_000, auditReadBytes: 100, inputCodeUnits: 8_388_608,
+    secretCodeUnits: 103_000_000, secretCalls: 524_361, activeCodeUnits: 16_777_216, activeCalls: 32 };
+  const enforcement = { runtimeSha256: 'd'.repeat(64), workerSha256: 'e'.repeat(64),
+    operations: { request: envelope, response: envelope, tool: envelope, audit: envelope, terminal: envelope },
+    relayMilliseconds: 20, brokerMilliseconds: 30 };
+  let wall = 1, monotonic = 1, cpu = 0;
+  const pool = createUrlRunCpuBudget(1000, () => cpu), held = pool.holdOrdered(390)!;
+  const clocks = { now: () => wall, monotonicMilliseconds: () => monotonic, cpuMicroseconds: held.cpuMicroseconds };
+  const reserved = reserveOrderedDesignWork({ shape, view: { envelopeBytes: 80, originalBytes: 50 }, enforcement,
+    expectedRuntimeSha256: enforcement.runtimeSha256, expectedWorkerSha256: enforcement.workerSha256,
+    deadline: 2_000_000, now: 1 }, held.reserveRemainingOnce, clocks)!;
+  const budget = createOrderedDesignWorkBudget(reserved.plan, clocks, reserved.start);
+  const ticket = budget.begin('tool', 0)!;
+  return { budget, ticket, advance: (elapsed: number, measuredCpu: number) => { wall = 1 + elapsed; monotonic = 1 + elapsed; cpu = measuredCpu; } };
+}
 
 describe('complete bounded host broker frames', () => {
   it('interoperates with the actual half-closing MCP client and allows a repairable tool refusal', async () => {
@@ -121,6 +148,56 @@ describe('complete bounded host broker frames', () => {
       const client = connect(f.broker); client.socket.end('{}\n');
       expect(JSON.parse(await client.done)).toEqual(expected);
       expect(checked).toBe(checks);
+    }
+  });
+
+  it.each([
+    { elapsed: 0, cpu: 10, reason: null },
+    { elapsed: 0, cpu: 11, reason: 'operation-cpu-limit' },
+    { elapsed: 29_999, cpu: 0, reason: null },
+    { elapsed: 30_000, cpu: 0, reason: 'operation-wall-limit' },
+  ] as const)('checks the ordered tool after the final authority guard: $elapsed ms, $cpu CPU', async ({ elapsed, cpu, reason }) => {
+    const tool = orderedTool(), order: string[] = [], reply = { ok: true, text: 'NONSECRET-protected-prepared-reply' };
+    expect(tool.budget.current()).toBe(true);
+    const f = await fixture(async (_input, release) => {
+      release(reply, () => {
+        order.push('authority');
+        // Nothing crosses the cap until this last synchronous authority check.
+        expect(tool.budget.current()).toBe(true);
+        tool.advance(elapsed, cpu);
+      }, () => {
+        order.push('tool-budget');
+        if (!tool.budget.current()) throw new Error('ordered tool expired');
+      });
+      // A successfully consumed release cannot write a second reply.
+      expect(() => release({ text: 'NONSECRET-second-reply' })).toThrow('session-broker-unavailable');
+      return { text: 'NONSECRET-implicit-second-reply' };
+    });
+    const client = connect(f.broker); client.socket.end('{}\n');
+    const wire = await client.done;
+    expect(order).toEqual(['authority', 'tool-budget']);
+    expect(JSON.parse(wire)).toEqual(reason === null ? reply : { ok: false, reason: 'session-broker-unavailable' });
+    expect(tool.budget.snapshot().reason).toBe(reason);
+    if (reason !== null) {
+      expect(wire).not.toContain(reply.text);
+      expect(f.faults()).toBeGreaterThan(0);
+    } else {
+      expect(f.faults()).toBe(0);
+      expect(tool.budget.finish(tool.ticket)).toBe(true);
+    }
+  });
+
+  it('does not replace authority or encoding refusal with an ordered budget grant', async () => {
+    for (const maxBytes of [16, 128]) {
+      const order: string[] = [];
+      const f = await fixture(async (_input, release) => {
+        release({ ok: true, text: 'NONSECRET-protected-prepared-reply' }, () => {
+          order.push('authority'); throw new Error('revoked');
+        }, () => { order.push('tool-budget'); });
+      }, { maxBytes });
+      const client = connect(f.broker); client.socket.end('{}\n');
+      expect(await client.done).toBe('{"ok":false,"reason":"session-broker-unavailable"}\n');
+      expect(order).toEqual(maxBytes === 16 ? [] : ['authority']);
     }
   });
 

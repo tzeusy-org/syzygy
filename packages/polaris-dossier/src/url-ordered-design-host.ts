@@ -132,14 +132,14 @@ async function start(input: OrderedDesignHostOptions, startRelay: typeof startSe
       const call = issuedCall, operation = value.tool;
       const result = await context.mediate(operation, async boundary => {
         if (!boundary()) throw refused();
-        await selectedController().issueReply(value, (reply, revalidate) => {
+        await selectedController().issueReply(value, (reply, revalidate, finalToolBudgetCheck) => {
           const text = canonical(reply), identity = { digest: sha256(text), bytes: Buffer.byteLength(text) };
           const receipt: ReplyIdentity = Object.freeze({ ...identity, toolUseId: call.id,
             id: `tool-${sha256(canonical({ call, reply: identity }))}` });
           if (replies.has(call.id)) throw refused();
           revalidate?.();
           if (!boundary()) throw refused();
-          release(reply, () => { revalidate?.(); if (!boundary()) throw refused(); });
+          release(reply, () => { revalidate?.(); if (!boundary()) throw refused(); }, finalToolBudgetCheck);
           replies.set(call.id, receipt);
           issuedCall = null;
         });

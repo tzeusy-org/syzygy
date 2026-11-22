@@ -517,7 +517,7 @@ export function createOrderedDesignSession(options: Options) {
         submission = Object.freeze({ argv: Object.freeze([...verdictArgv]), stdin });
       }
       await requireCurrent();
-      release(parseBoundedJson(reply, transcript.requestLimits), requireNextSend);
+      release(parseBoundedJson(reply, transcript.requestLimits), requireNextSend, tool.check);
       receipts.push({ ...issued, receipt, reply: identify(reply) });
     }); } finally { tool.finish(); }
   });
