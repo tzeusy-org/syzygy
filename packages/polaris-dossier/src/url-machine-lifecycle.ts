@@ -106,7 +106,8 @@ const equal = (left: unknown, right: unknown): boolean => metadata(left) === met
 const digest = (value: unknown): value is string => typeof value === 'string' && /^[a-f0-9]{64}$/u.test(value) && value.length === 64;
 const refuse = (code: Failure): UrlMachineLifecycleResult => ({ ok: false, code });
 
-function identify(record: UrlMachineClientRecord, sha: string): RecordIdentity {
+/** Exact nonsecret identity only; calculating it issues no lifecycle grant. */
+export function identifyUrlMachineLifecycleRecord(record: UrlMachineClientRecord, sha: string): RecordIdentity {
   return Object.freeze({
     clientId: record.clientId, issuanceId: record.issuanceId, revision: record.revision, sha256: sha,
     generation: record.instances.at(-1)!.generation,
@@ -149,7 +150,7 @@ async function publish(lease: UrlMachineLifecycleLease, input: UrlMachineLifecyc
   } else if (anchor.kind === 'committed' && previousBytes !== null && digest(anchor.head.auditSha256)) {
     const prior = readUrlMachineClient(previousBytes, context);
     if (!prior.ok) return refuse('state');
-    const record = identify(prior.record, prior.sha256);
+    const record = identifyUrlMachineLifecycleRecord(prior.record, prior.sha256);
     previous = deepFreeze({ record, binding: input.binding, auditSha256: anchor.head.auditSha256 });
     if (!equal(anchor.head, previous) || !equal(before.projection, record) || !equal(before.audit, previous)) return refuse('state');
   } else return refuse('state');
@@ -161,7 +162,7 @@ async function publish(lease: UrlMachineLifecycleLease, input: UrlMachineLifecyc
   const validated = checkUrlMachineClientTransition(transition, context);
   if (!validated.ok) return refuse('transition');
   const record = validated.record;
-  const next = identify(record, validated.sha256);
+  const next = identifyUrlMachineLifecycleRecord(record, validated.sha256);
   const event: LifecycleAudit = deepFreeze({ format: 'url-machine-lifecycle-audit/1', at: context.now, binding: input.binding,
     projectId: record.projectId, policySha256: record.policySha256, profileSha256: context.profileSha256, sourcePin: record.sourcePin,
     runId: record.runId, role: record.role, kind: record.kind, scopes: record.scopes, previous, neverIssuedSha256, next });

@@ -4,7 +4,7 @@ import { randomBytes } from 'node:crypto';
 import { AsyncLocalStorage } from 'node:async_hooks';
 import path from 'node:path';
 import { encodeCanonicalJson, parseBoundedJson } from '@syzygy/polaris-generation-core/live';
-import { isRecord, sha256 } from '@syzygy/support';
+import { deepFreeze, isRecord, sha256 } from '@syzygy/support';
 import type { UrlMachineLifecycleAdapter, UrlMachineLifecycleLease, UrlMachineLifecycleSnapshot, UrlMachineLifecycleStep } from './url-machine-lifecycle.js';
 import { URL_MACHINE_CLIENT_LIMITS } from './url-machine-instance.js';
 
@@ -65,6 +65,22 @@ export interface UrlMachineStore extends UrlMachineLifecycleAdapter {
   /** Allocate a new slot durably. Absence alone never produces a witness. */
   allocateClient(deadline: number): Promise<{ readonly clientId: string; readonly witnessSha256: string } | null>;
   close(): Promise<void>;
+}
+export interface UrlMachineStoreHistory {
+  readonly identitySha256: string;
+  readonly observedAt: number;
+  readonly canonical: Uint8Array;
+  readonly head: Head;
+  readonly events: readonly AuditStep['event'][];
+}
+const historyReaders = new WeakMap<UrlMachineStore, (clientId: string, expected: Head, deadline: number) => Promise<UrlMachineStoreHistory | null>>();
+/** A genuine retained/reopened adapter supplies history under the existing
+ * bounded cross-process lock. No canonical, projection or anchor is updated.
+ * The expected root identity and head must come from an independent source.
+ * A store-shaped object cannot substitute a serialized or fabricated history.
+ */
+export async function readUrlMachineStoreHistory(store: UrlMachineStore, clientId: string, expected: Head, deadline: number): Promise<UrlMachineStoreHistory | null> {
+  try { return await historyReaders.get(store)?.(clientId, expected, deadline) ?? null; } catch { return null; }
 }
 
 function projection(value: unknown): value is Projection {
@@ -463,7 +479,7 @@ async function openStore(options: UrlMachineStoreOptions, expectedIdentitySha256
         if (phase !== 0 && phase !== 5) throw refused();
       });
     };
-    return Object.freeze({ identitySha256: expectedIdentitySha256, protection: 'role-namespace-exclusion-required; privileged-store-rollback-Unknown' as const,
+    const adapter = Object.freeze({ identitySha256: expectedIdentitySha256, protection: 'role-namespace-exclusion-required; privileged-store-rollback-Unknown' as const,
       allocateClient, exclusive, close: async () => {
         if (closed) return;
         closed = true;
@@ -473,5 +489,26 @@ async function openStore(options: UrlMachineStoreOptions, expectedIdentitySha256
         if (activeWork.size === 0) await closeHandles();
         else void Promise.allSettled([...activeWork]).then(closeHandles).catch(() => {});
       } });
+    historyReaders.set(adapter, async (clientId, expected, deadline) => {
+      let result: UrlMachineStoreHistory | null = null;
+      if (!head(expected) || expected.record.clientId !== clientId) return null;
+      // Copy before waiting on the lock; a caller cannot change the expected
+      // predecessor while this operation is queued behind another adapter.
+      const heldExpected = decode(Buffer.from(canonical(expected))) as Head;
+      const completed = await exclusive(clientId, deadline, async lease => {
+        const first = await lease.read();
+        if (!lease.current() || first?.anchor.kind !== 'committed' || first.canonical === null
+          || !equal(first.anchor.head, heldExpected)) return;
+        const state = await readState(), entry = state.clients.find(value => value.clientId === clientId);
+        if (!lease.current() || entry?.anchor.kind !== 'committed' || !equal(entry.anchor.head, heldExpected)) return;
+        const last = await lease.read();
+        if (!lease.current() || last?.anchor.kind !== 'committed' || last.canonical === null
+          || !equal(last.anchor.head, heldExpected) || !Buffer.from(last.canonical).equals(Buffer.from(first.canonical))) return;
+        result = Object.freeze({ identitySha256: expectedIdentitySha256, observedAt: lease.now(), canonical: Uint8Array.from(last.canonical),
+          head: deepFreeze(entry.anchor.head), events: deepFreeze(entry.audit) });
+      });
+      return completed ? result : null;
+    });
+    return adapter;
   } catch { await canonicalHome?.close().catch(() => {}); await root?.close().catch(() => {}); return null; }
 }
