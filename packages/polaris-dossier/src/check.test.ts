@@ -1576,6 +1576,8 @@ describe('check: the record within its read bound (version 2.10)', () => {
       // The advice it computes from the draft itself is unchanged, and the derived record is written as before.
       expect(result.report).toHaveProperty('readerAdvice');
       expect(result.report).toHaveProperty('structureRecord');
+      // The difference is computed as for a check whose record carries no ledger: the spec's one set of words for that case.
+      expect(result.report.readingDifference).toEqual({ state: 'unknown', why: 'this draft does not parse, so it has no reading ledger', unreadableRuns: 0, unreadableCheckRecords: 0 });
       expect(fs.existsSync(path.join(run, 'derived', 'rev-0.json'))).toBe(true);
       // The step log counts the one finding the bounded form holds; the run file counts the bounded form as read.
       expect(read(run, 'steps.jsonl').trim().split('\n').map((entry) => JSON.parse(entry)).at(-1)).toEqual(

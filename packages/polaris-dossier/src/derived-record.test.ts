@@ -7,6 +7,7 @@ import { describe, expect, it } from 'vitest';
 import { GIT_ENV, tempDir } from '@syzygy/test-kit';
 import { deriveTreeFacts } from './derive.js';
 import { currencyPolicyOf, derivedStructureAt, encodeDerivedRecord, readCurrencyPolicy, readDerivedRecord } from './derived-record.js';
+import { patchFs } from './fs-patch.testkit.js';
 import { GitObjectReadRefusal } from './git-object-reader.js';
 
 // syzygy-3efd.27: the derived-structure record and its currency (REQ-polaris-generation-034 version 2.3). Expected facts are literals
@@ -315,6 +316,36 @@ describe('the record', () => {
       expect(await at2(() => {}), 'no directory').toEqual(MISSING);
       expect(await at2((dir) => { fs.mkdirSync(dir); }), 'no entry').toEqual(MISSING);
       expect(await at2((dir) => { fs.writeFileSync(dir, 'a file\n'); }), 'a parent that is a file').toEqual(MISSING);
+    });
+
+    it('refuses a derived record past its 4,194,304-byte bound from its size alone, reading no byte of it (version 2.10)', async () => {
+      const run = tempDir('derived-record-run-');
+      fs.mkdirSync(path.join(run, 'derived'));
+      const file = path.join(run, 'derived', 'rev-0.json');
+      fs.writeFileSync(file, kept());
+      // A sparse file of 64 MiB: its descriptor's size refuses it.
+      fs.truncateSync(file, 67_108_864);
+      const fds = new Set<number>();
+      let bytes = 0;
+      const restoreOpen = patchFs('openSync', (original) => ((target: fs.PathLike, ...rest: unknown[]) => {
+        const fd = (original as (...args: unknown[]) => number)(target, ...rest);
+        fds.delete(fd);
+        if (target === file) fds.add(fd);
+        return fd;
+      }) as typeof original);
+      const restoreRead = patchFs('readSync', (original) => ((fd: number, ...rest: unknown[]) => {
+        const read = (original as (...args: unknown[]) => number)(fd, ...rest);
+        if (fds.has(fd)) bytes += read;
+        return read;
+      }) as typeof original);
+      let structure;
+      try {
+        expect(readDerivedRecord(run, 0, EXPECT)).toBeUndefined();
+        structure = await derivedStructureAt({ run, revision: 0, pinned: REV, repositoryId: 'kestrel', reader: reader(), isSecretPath: isSecret, policy });
+      } finally { restoreRead(); restoreOpen(); }
+      expect(fds.size).toBe(1);
+      expect(bytes).toBe(0);
+      expect(structure).toEqual({ state: 'unusable', revision: REV, unknownReason: 'missing-evidence' });
     });
   });
 });

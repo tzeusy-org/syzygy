@@ -190,4 +190,18 @@ describe('the check-record reader rule (version 2.10)', () => {
     expect(reads).toEqual([16_777_217, 0, 0]);
     expect(seen).toEqual(UNREADABLE);
   });
+
+  it('refuses, by its own byte bound, a file grown past the bound after its size was taken, before any parse', () => {
+    const { subject } = plantAt((file) => fs.writeFileSync(file, 'x'.repeat(16)));
+    const restore = patchFs('fstatSync', (original) => ((fd: number, ...rest: unknown[]) => {
+      const stats = (original as (...args: unknown[]) => fs.Stats)(fd, ...rest);
+      fs.appendFileSync(subject, 'x');
+      return stats;
+    }) as typeof original);
+    let reads: number[];
+    try {
+      reads = bytesReadFrom(subject, () => expect(() => readBoundedFile(subject, 16)).toThrow(expect.objectContaining({ name: 'BoundedJsonError', code: 'byte-limit' })));
+    } finally { restore(); }
+    expect(reads).toEqual([17]);
+  });
 });
