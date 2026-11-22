@@ -4,7 +4,7 @@ import {
   DOSSIER_FORMAT, OWNER_TOPICS, PAGE_SINK_CONTRACT, checkDraftQuotes, diagramToMermaid, figureToMermaid, isDossierPagePath, parseDossierManifest, readerCost, reviewVerdict, scanDossierPage, sourceTextById, withoutReviewStatusRegion,
   generationSpanRange, validateGenerationSources,
   type DossierDraft, type DossierManifest, type DraftBlock, type DraftDiagram, type DraftElement, type DraftFigure, type DraftFigureElement, type DraftParagraph, type EpistemicMarking, type GenerationSource, type LocalPageItem,
-  type LocalBlock, type LocalDerivedFact, type LocalDerivedStructure, type LocalRenderInput, type LocalSegment, type OwnerTopic, type QuoteFinding, type WithheldNote,
+  type LocalBlock, type LocalDerivedFact, type LocalDerivedStructure, type LocalManifestFact, type LocalManifestFacts, type LocalManifestFileEntry, type LocalManifestRecognizerEntry, type LocalRenderInput, type LocalSegment, type OwnerTopic, type QuoteFinding, type WithheldNote,
 } from '@syzygy/polaris-generation-core/live';
 import { sha256 } from '@syzygy/support';
 import { READABLE_SPACING, layoutDiagram, layoutSequence, layoutSwimlane, renderDiagramSvg, renderSequenceSvg, renderSwimlaneSvg } from './diagram-layout.js';
@@ -202,9 +202,9 @@ export const DOSSIER_THEME_CSS = ':root{--void:#262624;--panel:#30302e;--panel-r
 /** What an operator-agent run adds to every page: its notice, the run disclosure, attributes on `main` and the review-status region. */
 interface PageChrome { readonly notice: string; readonly disclosure: (path: string) => string; readonly mainAttributes: string; readonly region: string }
 
-function page(title: string, path: string, nav: string, main: string, chrome?: PageChrome, figureKinds = false): string {
+function page(title: string, path: string, nav: string, main: string, chrome?: PageChrome, figureKinds = false, mapCss = ''): string {
   return `<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">${DRAFT_PREVIEW_CSP_META}<title>${escape(title)}</title><style>${DESIGN_TOKENS_CSS}
-${DRAFT_PREVIEW_CSS}${DOSSIER_CSS}${chrome === undefined ? '' : `${LOCAL_CSS}${DOSSIER_THEME_CSS}`}${figureKinds ? FIGURE_KINDS_CSS : ''}
+${DRAFT_PREVIEW_CSS}${DOSSIER_CSS}${chrome === undefined ? '' : `${LOCAL_CSS}${DOSSIER_THEME_CSS}`}${figureKinds ? FIGURE_KINDS_CSS : ''}${mapCss}
 </style></head><body><a class="skip" href="#content">Skip to content</a><div class="pipeline-notice">${chrome?.notice ?? 'Generated dossier draft — not reviewed or adopted'}</div>${chrome?.disclosure(path) ?? ''}<div class="layout">${chrome === undefined ? `<nav class="contents desktop-contents" aria-label="Dossier">${nav}</nav>` : `<details class="contents desktop-contents nav-panel" open><summary>Contents</summary><nav aria-label="Dossier">${nav}</nav></details>`}<details class="contents mobile-contents"><summary>In this dossier</summary><nav aria-label="Dossier">${nav}</nav></details><main id="content" data-page="${escape(path)}"${chrome?.mainAttributes ?? ''}>${main}${chrome?.region ?? ''}</main></div></body></html>`;
 }
 
@@ -605,7 +605,7 @@ export function renderDossierSite(input: DossierSiteInput & { readonly local?: L
   };
   const topicAttr = (id: string): string => ` data-topics="${escape((topics[id] ?? []).join(' '))}"`;
   const localPages = local?.pages ?? [];
-  const reserved = new Set(['index.html', 'contents.html', 'glossary.html', 'dossier.json', 'size-report.json', 'size-report.html', APPENDIX, LOCAL_MACHINE_VIEW, DERIVED_SITE_FILE, ...deepPaths.values(), ...sourcePaths.values(),
+  const reserved = new Set(['index.html', 'contents.html', 'glossary.html', 'dossier.json', 'size-report.json', 'size-report.html', APPENDIX, LOCAL_MACHINE_VIEW, DERIVED_SITE_FILE, ...COMPUTED_MAPS.map(m => m.path), ...deepPaths.values(), ...sourcePaths.values(),
     ...poles.flatMap(pole => pole.path === null ? [] : [pole.path])]);
   for (const localPage of localPages) {
     if (!isDossierPagePath(localPage.path) || localPage.path.includes('/') || !localPage.path.endsWith('.html') || reserved.has(localPage.path)) throw new DossierRenderError('page-path-collision');
@@ -646,9 +646,9 @@ export function renderDossierSite(input: DossierSiteInput & { readonly local?: L
   const legended = (path: string, main: string): string => narrative(path) ? `${READING_LEGEND}${main}`
     : local !== undefined && main.includes('class="redaction-mark"')
     ? `${main}<p class="redaction-legend"><span aria-hidden="true">†N</span> on a citation: N lines of that file are withheld by screening. Its source page marks where.</p>` : main;
-  const add = (path: string, depth: number, pageTitle: string, main: string): void => {
+  const add = (path: string, depth: number, pageTitle: string, main: string, mapCss = ''): void => {
     pageTitles.set(path, pageTitle);
-    files.set(path, page(`${pageTitle} — ${title}`, path, nav(path), legended(path, main), chrome, figurePages.has(path)));
+    files.set(path, page(`${pageTitle} — ${title}`, path, nav(path), legended(path, main), chrome, figurePages.has(path), mapCss));
     pages.push({ path, depth });
     claimsByPage.push(...pending.splice(0).map(entry => ({ page: path, ...entry })));
   };
@@ -656,7 +656,10 @@ export function renderDossierSite(input: DossierSiteInput & { readonly local?: L
   // --- entry page
   const from = 'index.html';
   // The structure Syzygy derived from the pinned tree (version 2.3), in its own region at the end of the landing page's main content.
-  const derivedRegion = local?.derivedStructure === undefined ? '' : renderDerivedRegion(local.derivedStructure);
+  // The computed map pages (version 2.9): only for an operator-agent render that carries both the derived structure and the manifest facts
+  // it derived itself, as `syzygy dossier render` always does; the region then ends with the line linking them.
+  const maps = local?.derivedStructure !== undefined && local.manifestFacts !== undefined ? { derived: local.derivedStructure, manifests: local.manifestFacts } : undefined;
+  const derivedRegion = local?.derivedStructure === undefined ? '' : renderDerivedRegion(local.derivedStructure, maps !== undefined);
   // The open questions: on the overview for a provider run; for an operator-agent run, on the appendix (v1.5), drawn there.
   const openQuestionClaims = (at: string): string => withheld ? '' : draft.unresolved.map((item, index) => claim('aside', `unresolved/${index + 1}`, 'unknown',
     `<strong>${escape(item.question)}</strong>: ${escape(item.reason)} ${marking('unknown')} <span class="asset-references">(${assetReferences(at, item.references)})</span>`)).join('');
@@ -735,7 +738,7 @@ export function renderDossierSite(input: DossierSiteInput & { readonly local?: L
 
   // --- contents
   const contents = `<ol>${(withheld ? [] : draft.sections).map(section => `<li><a href="${escape(sectionHref('contents.html', section.id))}">${escape(section.title)}</a>${draft.deepDives.some(dive => dive.sectionId === section.id && deepPaths.has(dive.id))
-    ? `<ol>${draft.deepDives.filter(dive => dive.sectionId === section.id && deepPaths.has(dive.id)).map(dive => `<li><a href="${escape(href('contents.html', deepPaths.get(dive.id)!))}">${escape(dive.title)}</a></li>`).join('')}</ol>` : ''}</li>`).join('')}<li><a href="glossary.html">Glossary</a></li><li><a href="sources/index.html">Sources</a></li>${local === undefined ? `${reportItems('contents.html')}</ol>` : `</ol><h2 id="review-report">Review report</h2><p>How this dossier was made, apart from what it says about the project.</p><ol>${reportItems('contents.html')}</ol>`}`;
+    ? `<ol>${draft.deepDives.filter(dive => dive.sectionId === section.id && deepPaths.has(dive.id)).map(dive => `<li><a href="${escape(href('contents.html', deepPaths.get(dive.id)!))}">${escape(dive.title)}</a></li>`).join('')}</ol>` : ''}</li>`).join('')}<li><a href="glossary.html">Glossary</a></li><li><a href="sources/index.html">Sources</a></li>${maps === undefined ? '' : COMPUTED_MAPS.map(m => `<li><a href="${m.path}">${m.title}</a></li>`).join('')}${local === undefined ? `${reportItems('contents.html')}</ol>` : `</ol><h2 id="review-report">Review report</h2><p>How this dossier was made, apart from what it says about the project.</p><ol>${reportItems('contents.html')}</ol>`}`;
   add('contents.html', 1, 'Contents', `<section id="contents"><h1>Contents</h1>${contents}</section>`);
 
   // --- glossary: inventory terms, each an Inferred claim; for an operator-agent run, the understanding record's terminology
@@ -805,6 +808,18 @@ export function renderDossierSite(input: DossierSiteInput & { readonly local?: L
     add(path, 2, source.path, `<section id="exact-text" data-reading-level="3"><h1 class="source-path">${escape(source.path)}</h1><p class="source-anchor">${anchor === undefined ? `${escape(source.sourceId)} · ` : ''}${extent}${identity}${exact}${read}</section>`);
   }
 
+  // --- the computed map pages (version 2.9), after the sources and before the run's own pages: each its own style rules, which no other page
+  // carries, with one container query for each width its figures take.
+  let mapFigures: { readonly directories: number; readonly units: number; readonly ci: number } | undefined;
+  if (maps !== undefined) {
+    const drawn = { directories: directoryMap(maps.derived), units: unitMap(maps.manifests, maps.derived), ci: ciMap(maps.manifests, maps.derived) };
+    for (const m of COMPUTED_MAPS) {
+      const map = drawn[m.map];
+      add(m.path, 1, m.title, map.main, map.figures === 0 ? '' : `${MAP_FORMS_CSS}${[...new Set(map.widths)].sort((a, b) => a - b).map(mapWidthQuery).join('')}`);
+    }
+    mapFigures = { directories: drawn.directories.figures, units: drawn.units.figures, ci: drawn.ci.figures };
+  }
+
   // --- the operator-agent run's own pages: understanding, discovery, clarifications, executions, review
   for (const localPage of localPages) {
     const groups = localPage.groups.map(group => `<section id="${escape(group.id)}" data-reading-level="1" data-topics=""><h2>${escape(group.heading)}</h2><p class="group-note">${escape(group.note)}</p>${group.items.length === 0 ? `<p>${escape(group.empty)}</p>` : `<ul class="local-items">${group.items.map(entry => item(localPage.path, 'li', entry)).join('')}</ul>`}</section>`).join('');
@@ -861,6 +876,7 @@ export function renderDossierSite(input: DossierSiteInput & { readonly local?: L
       reviewStatus: local.reviewStatus,
       ...(local.thesisBasis === undefined ? {} : { thesisBasis: { value: local.thesisBasis.value, declaredBy: 'the authoring session', label: 'Inferred', lineRendered: local.thesisBasis.lineRendered } }),
       ...(local.derivedStructure === undefined ? {} : { derivedStructure: derivedMachine(local.derivedStructure) }),
+      ...(maps === undefined || mapFigures === undefined ? {} : { computedMaps: computedMapsMachine(maps.derived, maps.manifests, mapFigures) }),
       // Present only for a render holding a sequence or swimlane figure (version 2.5), so every other machine view keeps its bytes.
       ...(figureStructures.length === 0 ? {} : { figureStructures: [...figureStructures].sort((a, b) => a.index - b.index).map(({ entry }) => entry) }),
       pages: [...pages.map(p => p.path), 'size-report.html'],
@@ -1002,11 +1018,11 @@ const unknownWords: Readonly<Record<'missing-evidence' | 'source-uncaptured-or-u
 /** The derived-structure region (REQ-polaris-generation-034 version 2.3): the figure Syzygy computes from the kept record, never from the
  * draft, with its caption, note, drawing, legend and tally, and every fact in a collapsed list; or, with no record in force, the heading
  * and the Unknown sentence alone. Every value here is Syzygy's; every path is escaped text. */
-export function renderDerivedRegion(derived: LocalDerivedStructure): string {
+export function renderDerivedRegion(derived: LocalDerivedStructure, mapsLine = false): string {
   const head = '<section id="derived-structure" data-reading-level="1" data-topics=""><h2>Derived by Syzygy: top-level directories</h2>';
-  if (derived.state !== 'derived') {
-    return `${head}<p class="derived-unknown" data-epistemic="unknown" data-unknown-reason="${derived.unknownReason}"><span class="not-established">Not established.</span> The top-level directories of the tree at revision ${escape(derived.revision)} are Unknown at this render: ${unknownWords[derived.unknownReason]}.</p></section>`;
-  }
+  // Version 2.9: the region ends, inside it, with the line linking the computed maps wherever the render draws them.
+  const end = `${mapsLine ? DERIVED_MAPS_LINE : ''}</section>`;
+  if (derived.state !== 'derived') return `${head}${derivedUnknownSentence(derived)}${end}`;
   const record = `sha256:${derived.sha256}`;
   const files = (n: number): string => counted(n, 'file', 'files');
   const units = derived.facts.filter(fact => fact.fact === 'top-level-unit');
@@ -1022,17 +1038,8 @@ export function renderDerivedRegion(derived: LocalDerivedStructure): string {
   const notes = `${notDrawn === 0 ? '' : `<p class="derived-more">${notDrawn === 1 ? '1 more top-level directory is' : `${notDrawn} more top-level directories are`} listed below and not drawn.</p>`}`
     + `${derived.unitsNotListed === 0 ? '' : `<p class="derived-more">${derived.unitsNotListed === 1 ? '1 more top-level directory is' : `${derived.unitsNotListed} more top-level directories are`} counted and not listed.</p>`}`;
   const legend = figureLegend([...nodes, ...edges].map(element => element.epistemic), nodes.length, edges.length, 'derived by Syzygy');
-  const said = (fact: LocalDerivedFact): string => fact.fact === 'tree-root' ? `Repository root: ${files(fact.count ?? 0)} at the root.`
-    : fact.fact === 'top-level-unit' ? `${fact.path}/: ${files(fact.count ?? 0)}.` : `Repository root contains ${fact.path}/.`;
-  const evidence = (fact: LocalDerivedFact): string => fact.epistemic === 'observed'
-    ? `Evidence: label Observed; derived by Syzygy by rule ${fact.rule} version ${fact.ruleVersion}; source path ${fact.path}; record ${record}; current for revision ${derived.recordRevision}.`
-    : `Evidence: label Unknown; reason ${fact.unknownReason}; derived by Syzygy by rule ${fact.rule} version ${fact.ruleVersion}; source path ${fact.path}; record ${record}.`;
-  const entries = derived.facts.map(fact => `<li data-derived-id="${escape(fact.id)}" data-derived-fact="${fact.fact}" data-epistemic="${fact.epistemic}"${fact.unknownReason === null ? '' : ` data-unknown-reason="${fact.unknownReason}"`}`
-    + ` data-derived-rule="${escape(fact.rule)}" data-derived-rule-version="${fact.ruleVersion}" data-derived-path="${escape(fact.path)}" data-derived-record="${record}" data-derived-revision="${escape(derived.recordRevision)}">`
-    + `${escape(said(fact))} <span class="derived-mark">Derived by Syzygy</span><span class="visually-hidden ev"> ${escape(evidence(fact))}</span></li>`).join('');
   return `${head}<figure class="derived-figure" data-visual-provenance="computed" data-derived-record="${record}"><figcaption>Derived by Syzygy from the pinned tree</figcaption>`
-    + `<p class="derived-note">Derived by Syzygy from the paths and modes of the tree at revision ${escape(derived.recordRevision)}, listed at ${escape(derived.capturedAt)}, by rule top-level-unit version 1. No file body, size or object id was read. Current for that revision only.</p>`
-    + `<div class="diagram-scroll">${svg}</div>${notes}${legend}<details><summary>Read every derived fact</summary><ul class="derived-facts">${entries}</ul></details></figure></section>`;
+    + `${derivedNote(derived)}<div class="diagram-scroll">${svg}</div>${notes}${legend}<details><summary>Read every derived fact</summary><ul class="derived-facts">${derivedEntries(derived)}</ul></details></figure>${end}`;
 }
 
 /** The machine view's `derivedStructure` member: beside and outside `reviewStatus`. */
@@ -1041,5 +1048,276 @@ function derivedMachine(derived: LocalDerivedStructure): unknown {
   return {
     file: DERIVED_SITE_FILE, sha256: derived.sha256, revision: derived.revision, state: derived.state, currencyPolicy: derived.currencyPolicy,
     facts: derived.facts.map(fact => ({ id: fact.id, fact: fact.fact, epistemic: fact.epistemic, unknownReason: fact.unknownReason, rule: fact.rule, ruleVersion: fact.ruleVersion, path: fact.path })),
+  };
+}
+
+// --- Computed map pages (REQ-polaris-generation-034 version 2.9, syzygy-3efd.36) ---------------------------------------------------------
+//
+// Three pages Syzygy computes from the pinned tree alone: the directory map from the derived structure the region states, and the unit map
+// and the CI pipeline map from the manifest facts the render derived itself. No draft member reaches them. Every map figure is laid out by
+// the readable layout at most two columns wide and holds at most 25 boxes, so a large map is several figures, never one shrunk drawing; each
+// has a drawing and a text form, of which a container size query on its `map-forms` box shows one, with no script.
+
+/** The three map pages, their titles and their `data-map` names, in the order the region's line and the contents page link them. */
+export const COMPUTED_MAPS: readonly { readonly map: 'directories' | 'units' | 'ci'; readonly path: string; readonly title: string }[] = [
+  { map: 'directories', path: 'maps/directories.html', title: 'Directory map' },
+  { map: 'units', path: 'maps/units.html', title: 'Unit map' },
+  { map: 'ci', path: 'maps/ci.html', title: 'CI pipeline map' },
+];
+
+/** The region's closing line: it links each map by its title. */
+export const DERIVED_MAPS_LINE = `<p class="derived-maps">Computed maps: ${COMPUTED_MAPS.map(m => `<a href="${m.path}">${m.title}</a>`).join(' · ')}.</p>`;
+
+/** The readable spacing, never laid out in three columns. */
+export const MAP_SPACING = { ...READABLE_SPACING, maxColumns: 2 } as const;
+/** How many boxes a map drawing may hold, and how many directories, packages or modules one figure takes beside its place's box. */
+export const MAP_MAX_BOXES = 25;
+const MAP_CHUNK = 12;
+const MAP_MAX_JOBS = 24;
+
+/** The two forms' style rules, which only a map page carries; a page adds one container query for each W its figures take. */
+export const MAP_FORMS_CSS = '.map-forms{container-type:inline-size}.map-list{display:none;margin:.5rem 0;padding-left:2rem;font:13px/1.5 var(--font-mono);overflow-wrap:anywhere}'
+  + '.map-list>li{border-left:3px solid var(--accent);padding:.15rem 0 .15rem .6rem;margin:0 0 .4rem}.map-list>li.inferred{border-left-style:dashed}.map-list>li.unknown{border-left-style:dotted}'
+  + '.map-head{font-weight:600}.map-coverage{font-size:.92rem}';
+export const mapWidthQuery = (width: number): string => `@container (width < ${width}px){.map-forms[data-figure-width="${width}"]>.map-drawing{display:none}.map-forms[data-figure-width="${width}"]>.map-list{display:block}}`;
+
+type MapMarking = 'observed' | 'inferred' | 'unknown';
+interface MapBox { readonly id: string; readonly label: string; readonly epistemic: MapMarking; readonly attributes: string }
+interface MapArrow extends MapBox { readonly from: string; readonly to: string }
+
+/** One map figure: caption, the two forms, legend and tally. Throws where it would hold more than `MAP_MAX_BOXES` boxes or is not inert. */
+function mapFigure(map: string, index: string, caption: string, boxes: readonly MapBox[], arrows: readonly MapArrow[]): { readonly html: string; readonly width: number } {
+  if (boxes.length === 0 || boxes.length > MAP_MAX_BOXES) throw new DossierRenderError('not-renderable');
+  const attributes = new Map([...boxes, ...arrows].map(element => [element.id, element.attributes]));
+  const diagram = { nodes: boxes, edges: arrows };
+  const svg = renderDiagramSvg(diagram, index, escape, MAP_SPACING, id => attributes.get(id) ?? '');
+  assertInertSvg(svg);
+  const width = layoutDiagram(boxes, arrows, MAP_SPACING).width;
+  const shown = (element: MapBox): string => escape(`${element.label}${element.epistemic === 'unknown' ? ' ?' : ''}`);
+  const byId = new Map(boxes.map(box => [box.id, box]));
+  const touched = new Set(arrows.flatMap(arrow => [arrow.from, arrow.to]));
+  const items = arrows.map(arrow => `<li class="${arrow.epistemic}"><span class="map-head">${shown(byId.get(arrow.from)!)}</span> ${shown(arrow)} ${shown(byId.get(arrow.to)!)}</li>`).join('')
+    + boxes.filter(box => !touched.has(box.id)).map(box => `<li class="${box.epistemic}"><span class="map-head">${shown(box)}</span></li>`).join('');
+  const legend = figureLegend([...boxes, ...arrows].map(element => element.epistemic), boxes.length, arrows.length, 'derived by Syzygy');
+  return {
+    width,
+    html: `<figure class="computed-map" data-visual-provenance="computed" data-map="${map}"><figcaption>${escape(caption)}</figcaption>`
+      + `<div class="map-forms" data-figure-width="${width}"><div class="diagram-scroll map-drawing">${svg}</div><ol class="map-list">${items}</ol></div>${legend}</figure>`,
+  };
+}
+
+const chunks = <T>(items: readonly T[], size: number): T[][] => {
+  const out: T[][] = [];
+  for (let i = 0; i < items.length; i += size) out.push(items.slice(i, i + size));
+  return out;
+};
+const byCodeUnit = (a: string, b: string): number => (a < b ? -1 : a > b ? 1 : 0);
+
+/** The sentence the region and the directory map state where no derived record is in force. */
+function derivedUnknownSentence(derived: Extract<LocalDerivedStructure, { state: 'missing' | 'unknown' }>): string {
+  return `<p class="derived-unknown" data-epistemic="unknown" data-unknown-reason="${derived.unknownReason}"><span class="not-established">Not established.</span> The top-level directories of the tree at revision ${escape(derived.revision)} are Unknown at this render: ${unknownWords[derived.unknownReason]}.</p>`;
+}
+const derivedNote = (derived: Extract<LocalDerivedStructure, { state: 'derived' }>): string =>
+  `<p class="derived-note">Derived by Syzygy from the paths and modes of the tree at revision ${escape(derived.recordRevision)}, listed at ${escape(derived.capturedAt)}, by rule top-level-unit version 1. No file body, size or object id was read. Current for that revision only.</p>`;
+/** Each fact's entry, as the region's list and the directory map's list both hold it. */
+function derivedEntries(derived: Extract<LocalDerivedStructure, { state: 'derived' }>): string {
+  const record = `sha256:${derived.sha256}`;
+  const files = (n: number): string => counted(n, 'file', 'files');
+  const said = (fact: LocalDerivedFact): string => fact.fact === 'tree-root' ? `Repository root: ${files(fact.count ?? 0)} at the root.`
+    : fact.fact === 'top-level-unit' ? `${fact.path}/: ${files(fact.count ?? 0)}.` : `Repository root contains ${fact.path}/.`;
+  const evidence = (fact: LocalDerivedFact): string => fact.epistemic === 'observed'
+    ? `Evidence: label Observed; derived by Syzygy by rule ${fact.rule} version ${fact.ruleVersion}; source path ${fact.path}; record ${record}; current for revision ${derived.recordRevision}.`
+    : `Evidence: label Unknown; reason ${fact.unknownReason}; derived by Syzygy by rule ${fact.rule} version ${fact.ruleVersion}; source path ${fact.path}; record ${record}.`;
+  return derived.facts.map(fact => `<li data-derived-id="${escape(fact.id)}" data-derived-fact="${fact.fact}" data-epistemic="${fact.epistemic}"${fact.unknownReason === null ? '' : ` data-unknown-reason="${fact.unknownReason}"`}`
+    + ` data-derived-rule="${escape(fact.rule)}" data-derived-rule-version="${fact.ruleVersion}" data-derived-path="${escape(fact.path)}" data-derived-record="${record}" data-derived-revision="${escape(derived.recordRevision)}">`
+    + `${escape(said(fact))} <span class="derived-mark">Derived by Syzygy</span><span class="visually-hidden ev"> ${escape(evidence(fact))}</span></li>`).join('');
+}
+
+const derivedIdAttributes = (fact: LocalDerivedFact): string => ` data-derived-id="${escape(fact.id)}"${fact.unknownReason === null ? '' : ` data-unknown-reason="${fact.unknownReason}"`}`;
+
+/** What one map page holds: its main content, the widths its figures take, and how many figures it has. */
+interface MapPage { readonly main: string; readonly widths: readonly number[]; readonly figures: number }
+const mapSection = (map: string, title: string, body: string): string => `<section id="computed-map" data-map="${map}" data-reading-level="1" data-topics=""><h1>${escape(title)}</h1>${body}</section>`;
+
+/** The directory map: the derived structure the region states, with the coverage the render re-derives from the tree. */
+export function directoryMap(derived: LocalDerivedStructure): MapPage {
+  if (derived.state !== 'derived') return { main: mapSection('directories', 'Directory map', derivedUnknownSentence(derived)), widths: [], figures: 0 };
+  const t = derived.tree;
+  const root = derived.facts.find(fact => fact.fact === 'tree-root')!;
+  const notListedFiles = t.files - t.rootFiles - t.unitFiles - t.secretPathsLeftOut;
+  const mark = derived.countsMatch
+    ? ` data-epistemic="${root.epistemic}"${root.unknownReason === null ? '' : ` data-unknown-reason="${root.unknownReason}"`}`
+    : ' data-epistemic="unknown" data-unknown-reason="stale-beyond-currency-bound"';
+  const coverage = `<p class="map-coverage"${mark}>Coverage: ${counted(t.files, 'file', 'files')} in the tree at that revision: ${t.rootFiles} at the root; `
+    + `${t.unitFiles} under the ${counted(t.unitsListed, 'top-level directory', 'top-level directories')} listed here; `
+    + `${notListedFiles} under ${counted(t.unitsNotListed, 'more top-level directory', 'more top-level directories')} counted and not listed; `
+    + `${t.secretPathsLeftOut} left out and not named, because a secret detector matches their path; and ${counted(t.submodules, 'submodule', 'submodules')}, not followed. `
+    + 'Directories below the top level are not mapped: no rule of this version derives them.'
+    + `${derived.countsMatch ? '' : ' The derived record\'s counts differ from the tree\'s at this revision.'}</p>`;
+  const units = derived.facts.filter(fact => fact.fact === 'top-level-unit');
+  const contains = new Map(derived.facts.filter(fact => fact.fact === 'contains' && fact.to !== null).map(fact => [fact.to!, fact]));
+  const rootBox: MapBox = { id: root.id, label: 'Repository root', epistemic: root.epistemic, attributes: derivedIdAttributes(root) };
+  const figures = chunks(units, MAP_CHUNK).map((chunk, k) => {
+    const boxes: MapBox[] = [rootBox, ...chunk.map(fact => ({ id: fact.id, label: `${fact.path}/ (${counted(fact.count ?? 0, 'file', 'files')})`, epistemic: fact.epistemic, attributes: derivedIdAttributes(fact) }))];
+    const arrows: MapArrow[] = chunk.flatMap(fact => {
+      const arrow = contains.get(fact.id);
+      return arrow === undefined ? [] : [{ id: arrow.id, from: root.id, to: fact.id, label: 'contains', epistemic: arrow.epistemic, attributes: derivedIdAttributes(arrow) }];
+    });
+    return mapFigure('directories', `map-directories-${k + 1}`, `Top-level directories ${k * MAP_CHUNK + 1} to ${k * MAP_CHUNK + chunk.length} of ${units.length}, by path`, boxes, arrows);
+  });
+  return {
+    main: mapSection('directories', 'Directory map', `${derivedNote(derived)}${coverage}${figures.map(f => f.html).join('')}<h2>Every derived fact</h2><ul class="derived-facts">${derivedEntries(derived)}</ul>`),
+    widths: figures.map(f => f.width), figures: figures.length,
+  };
+}
+
+/** The four package recognizers the unit map reads, and the one the CI pipeline map reads. */
+export const UNIT_MAP_RULES: readonly string[] = ['npm-package-manifest', 'cargo-manifest', 'python-project-manifest', 'go-module-manifest'];
+export const CI_MAP_RULES: readonly string[] = ['github-actions-workflow'];
+
+/** RFC2-24's reason for each file `unknownReason`. */
+const MANIFEST_UNKNOWN_REASON: Readonly<Record<string, string>> = {
+  'denied-path': 'excluded-content', 'unknown-extraction-class': 'excluded-content', 'not-utf8-text': 'excluded-content', 'secret-detector-match': 'excluded-content',
+  'active-content': 'excluded-content', 'redacted-body': 'excluded-content', 'class-not-consented': 'unconsented-source-or-provider',
+  'object-read-refused': 'source-uncaptured-or-unreachable', 'path-not-citable': 'mapping-coverage-absent', 'symbolic-link': 'mapping-coverage-absent',
+  'over-read-limit': 'mapping-coverage-absent', 'too-large': 'mapping-coverage-absent', unparsed: 'mapping-coverage-absent',
+};
+
+const value = (fact: LocalManifestFact, member: string): string => { const v = fact[member]; return typeof v === 'string' ? v : ''; };
+/** A fact in Syzygy's words. */
+function factWords(fact: LocalManifestFact, jobs?: ReadonlySet<string>): string {
+  switch (fact.fact) {
+    case 'package': return `Package ${value(fact, 'name')}.`;
+    case 'module': return `Module ${value(fact, 'name')}.`;
+    case 'workspace-member': return `Workspace member pattern ${value(fact, 'pattern')}.`;
+    case 'dependency': return `Declares a dependency named ${value(fact, 'name')} in ${value(fact, 'section')}${typeof fact['group'] === 'string' ? ` (${fact['group']})` : ''}.`;
+    case 'workflow': return typeof fact['name'] === 'string' ? `Workflow ${fact['name']}.` : 'Workflow with no name.';
+    case 'workflow-trigger': return `Triggered by ${value(fact, 'event')}.`;
+    case 'job': return `Job ${value(fact, 'job')}.`;
+    case 'job-needs': return jobs !== undefined && !jobs.has(value(fact, 'to'))
+      ? `Job ${value(fact, 'from')} needs ${value(fact, 'to')}, which names no job of this file.` : `Job ${value(fact, 'from')} needs ${value(fact, 'to')}.`;
+    default: throw new DossierRenderError('not-renderable');
+  }
+}
+
+/** A declared fact's list entry: its words, `Derived by Syzygy`, and its evidence in the DOM text, clipped in the reading view. */
+function factEntry(fact: LocalManifestFact, revision: string, jobs?: ReadonlySet<string>): string {
+  const [first, last] = fact.lines;
+  return `<li data-manifest-id="${escape(fact.id)}" data-manifest-fact="${escape(fact.fact)}" data-epistemic="inferred" data-manifest-rule="${escape(fact.rule)}" data-manifest-rule-version="${fact.ruleVersion}" data-manifest-path="${escape(fact.path)}" data-manifest-lines="${first}-${last}">`
+    + `${escape(factWords(fact, jobs))} <span class="derived-mark">Derived by Syzygy</span><span class="visually-hidden ev"> ${escape(`Evidence: label Inferred; declared in ${fact.path}, lines ${first} to ${last}; read by Syzygy by rule ${fact.rule} version ${fact.ruleVersion} at revision ${revision}.`)}</span></li>`;
+}
+
+const manifestUnknown = (revision: string): string => `<p class="derived-unknown" data-epistemic="unknown" data-unknown-reason="source-uncaptured-or-unreachable"><span class="not-established">Not established.</span> What the manifest files at revision ${escape(revision)} declare is Unknown at this render: the pinned tree could not be listed.</p>`;
+
+type DerivedManifests = Extract<LocalManifestFacts, { state: 'derived' }>;
+const recognizersOf = (member: DerivedManifests, rules: readonly string[]): readonly LocalManifestRecognizerEntry[] => member.recognizers.filter(r => rules.includes(r.rule));
+
+/** A manifest map's note, coverage line (with `ending` appended) and closing list of Unknown files, around its own body. */
+function manifestPage(map: 'units' | 'ci', title: string, member: DerivedManifests, revision: string, rules: readonly string[], ruleWords: string, ending: string, body: string): string {
+  const recognizers = recognizersOf(member, rules);
+  const note = `<p class="map-note">Computed by Syzygy at this render from the manifest files of the tree at revision ${escape(revision)} that the bound screening policy ${escape(member.screeningPolicy.policyId)} ${escape(member.screeningPolicy.policyVersion)} admits, read by rule ${ruleWords}, each at version 1. That revision fixes every input, so the map holds as of that revision at any instant. What a file declares, never what runs.</p>`;
+  const clauses = [
+    ...recognizers.map(r => `${r.rule}: ${counted(r.candidates, 'candidate file', 'candidate files')}; ${r.inferred} read for facts, ${r.unknown} Unknown with no facts taken; ${r.secretPathsLeftOut} left out and not named, because a secret detector matches their path; ${r.setApart} set apart as vendored, generated or test paths; ${counted(r.valuesLeftOut, 'value', 'values')} left out by the value checks; ${counted(r.facts, 'fact', 'facts')}.`),
+    ...recognizers.filter(r => r.filesNotListed !== 0).map(r => r.filesNotListed === 1 ? `1 file of ${r.rule} is counted and not listed.` : `${r.filesNotListed} files of ${r.rule} are counted and not listed.`),
+    ...(member.factsNotListed === 0 ? [] : [member.factsNotListed === 1 ? '1 fact of the manifest files is counted and not listed, so a figure or list may lack it.' : `${member.factsNotListed} facts of the manifest files are counted and not listed, so a figure or list may lack them.`]),
+    ...(ending === '' ? [] : [ending]),
+  ];
+  const coverage = `<p class="map-coverage" data-epistemic="inferred">${escape(clauses.join(' '))}</p>`;
+  const unknownFiles = recognizers.flatMap(r => r.files.filter(file => file.epistemic === 'unknown'));
+  const word = (file: LocalManifestFileEntry): string => `${file.unknownReason ?? ''}${file.unknownReason === 'unparsed' && file.parseFault !== null ? `, ${file.parseFault}` : ''}`;
+  const unknownList = unknownFiles.length > 0
+    ? unknownFiles.map(file => `<li data-epistemic="unknown" data-unknown-reason="${MANIFEST_UNKNOWN_REASON[file.unknownReason ?? ''] ?? 'mapping-coverage-absent'}" data-manifest-path="${escape(file.path)}" data-manifest-file-reason="${escape(word(file))}">${escape(`${file.path}: Unknown, no facts taken (${word(file)}).`)}</li>`).join('')
+    : `<li>${recognizers.every(r => r.candidates === 0) ? 'No candidate file.' : 'Every candidate file not left out or set apart was read for facts.'}</li>`;
+  return mapSection(map, title, `${note}${coverage}${body}<h2>Files whose facts are Unknown</h2><ul class="map-unknown-files">${unknownList}</ul>`);
+}
+
+const PLACES_SENTENCE = 'Places are path-derived: each package or module sits under the top-level directory its manifest\'s path begins with, and may move on refactor. Arrows between packages are not drawn: no rule of this version states that a dependency names a package of this tree.';
+
+/** The unit map: each listed `package` and `module` fact placed in the root or the top-level directory its path begins with. */
+export function unitMap(member: LocalManifestFacts, derived: LocalDerivedStructure): MapPage {
+  const revision = derived.revision;
+  if (member.state !== 'derived') return { main: mapSection('units', 'Unit map', manifestUnknown(revision)), widths: [], figures: 0 };
+  const facts = member.facts.filter(fact => UNIT_MAP_RULES.includes(fact.rule));
+  const placed = facts.filter(fact => fact.fact === 'package' || fact.fact === 'module');
+  const placeOf = (fact: LocalManifestFact): string => (fact.path.includes('/') ? fact.path.slice(0, fact.path.indexOf('/')) : '');
+  const places = [...new Set(placed.map(placeOf))].sort((a, b) => (a === '' ? -1 : b === '' ? 1 : byCodeUnit(a, b)));
+  const figures = places.flatMap((place, p) => {
+    const here = placed.filter(fact => placeOf(fact) === place);
+    const name = place === '' ? 'Repository root' : `${place}/`;
+    const derivedFact = derived.state !== 'derived' ? undefined
+      : derived.facts.find(fact => (place === '' ? fact.fact === 'tree-root' : fact.fact === 'top-level-unit' && fact.path === place));
+    const placeBox: MapBox = derivedFact === undefined
+      ? { id: 'map-place', label: name, epistemic: 'unknown', attributes: ' data-unknown-reason="missing-evidence"' }
+      : { id: derivedFact.id, label: name, epistemic: derivedFact.epistemic, attributes: derivedIdAttributes(derivedFact) };
+    return chunks(here, MAP_CHUNK).map((chunk, k) => mapFigure('units', `map-units-${p + 1}-${k + 1}`,
+      `${name}: packages and modules ${k * MAP_CHUNK + 1} to ${k * MAP_CHUNK + chunk.length} of ${here.length}, as their manifests declare, placed by path`,
+      [placeBox, ...chunk.map(fact => ({ id: fact.id, label: value(fact, 'name'), epistemic: 'inferred' as const, attributes: ` data-manifest-id="${escape(fact.id)}"` }))],
+      chunk.map(fact => ({ id: `${fact.id}/declares`, from: placeBox.id, to: fact.id, label: 'declares', epistemic: 'inferred' as const, attributes: ` data-manifest-id="${escape(fact.id)}"` }))));
+  });
+  const files = recognizersOf(member, UNIT_MAP_RULES).flatMap(r => r.files.filter(file => file.epistemic === 'inferred').map(file => ({ rule: r.rule, file })));
+  const list = files.map(({ rule, file }) => {
+    const own = facts.filter(fact => fact.rule === rule && fact.path === file.path);
+    return file.facts === 0
+      ? `<li data-manifest-path="${escape(file.path)}" data-epistemic="inferred">${escape(`${file.path}: no fact of the fields read.`)}</li>`
+      : `<li data-manifest-path="${escape(file.path)}" data-epistemic="inferred">${escape(`${file.path}: ${counted(file.facts ?? 0, 'fact', 'facts')}.`)}<ul>${own.map(fact => factEntry(fact, revision)).join('')}</ul></li>`;
+  }).join('');
+  const body = `${figures.map(f => f.html).join('')}<h2>Every declared fact</h2><ul class="map-facts">${list}</ul>`;
+  return {
+    main: manifestPage('units', 'Unit map', member, revision, UNIT_MAP_RULES, 'npm-package-manifest, cargo-manifest, python-project-manifest and go-module-manifest', PLACES_SENTENCE, body),
+    widths: figures.map(f => f.width), figures: figures.length,
+  };
+}
+
+/** The CI pipeline map: for each workflow file read for facts, its name and triggers, a figure of its jobs and what each needs, and its list. */
+export function ciMap(member: LocalManifestFacts, derived: LocalDerivedStructure): MapPage {
+  const revision = derived.revision;
+  if (member.state !== 'derived') return { main: mapSection('ci', 'CI pipeline map', manifestUnknown(revision)), widths: [], figures: 0 };
+  const facts = member.facts.filter(fact => CI_MAP_RULES.includes(fact.rule));
+  const widths: number[] = [];
+  const files = recognizersOf(member, CI_MAP_RULES).flatMap(r => r.files.filter(file => file.epistemic === 'inferred').map(file => ({ rule: r.rule, file })));
+  const body = files.map(({ rule, file }, w) => {
+    const own = facts.filter(fact => fact.rule === rule && fact.path === file.path);
+    const workflow = own.filter(fact => fact.fact === 'workflow');
+    const triggers = own.filter(fact => fact.fact === 'workflow-trigger');
+    const jobs = own.filter(fact => fact.fact === 'job');
+    const jobNames = new Set(jobs.map(fact => value(fact, 'job')));
+    const listed = own.filter(fact => fact.fact === 'job' || fact.fact === 'job-needs');
+    const head = `<h2>${escape(file.path)}</h2><ul class="map-workflow">${workflow.map(fact => factEntry(fact, revision)).join('')}${triggers.length === 0 ? '<li>No trigger is declared.</li>' : triggers.map(fact => factEntry(fact, revision)).join('')}</ul>`;
+    let figure = '';
+    if (jobs.length > MAP_MAX_JOBS) figure = `<p class="map-note">${jobs.length} jobs are declared: too many to draw in one figure, so they are listed below.</p>`;
+    else if (jobs.length > 0) {
+      const boxOf = new Map<string, string>();
+      for (const job of jobs) if (!boxOf.has(value(job, 'job'))) boxOf.set(value(job, 'job'), job.id);
+      const arrows: MapArrow[] = own.filter(fact => fact.fact === 'job-needs' && boxOf.has(value(fact, 'to')) && boxOf.has(value(fact, 'from')))
+        .map(fact => ({ id: fact.id, from: boxOf.get(value(fact, 'from'))!, to: boxOf.get(value(fact, 'to'))!, label: 'needs', epistemic: 'inferred', attributes: ` data-manifest-id="${escape(fact.id)}"` }));
+      const drawn = mapFigure('ci', `map-ci-${w + 1}`, `${file.path}: jobs and what each needs, as declared`,
+        jobs.map(job => ({ id: job.id, label: value(job, 'job'), epistemic: 'inferred', attributes: ` data-manifest-id="${escape(job.id)}"` })), arrows);
+      widths.push(drawn.width);
+      figure = drawn.html;
+    }
+    const list = listed.length === 0 ? '' : `<ul class="map-facts">${listed.map(fact => factEntry(fact, revision, jobNames)).join('')}</ul>`;
+    return `${head}${figure}${list}`;
+  }).join('');
+  return { main: manifestPage('ci', 'CI pipeline map', member, revision, CI_MAP_RULES, 'github-actions-workflow', '', body), widths, figures: widths.length };
+}
+
+/** `machine.json`'s `computedMaps` member: beside `derivedStructure` and outside `reviewStatus`. */
+export function computedMapsMachine(derived: LocalDerivedStructure, member: LocalManifestFacts, figures: { readonly directories: number; readonly units: number; readonly ci: number }): unknown {
+  const derivedMember = member.state === 'derived' ? member : undefined;
+  const of = (rules: readonly string[]): unknown => ({
+    facts: derivedMember === undefined ? [] : derivedMember.facts.filter(fact => rules.includes(fact.rule)),
+    files: derivedMember === undefined ? [] : recognizersOf(derivedMember, rules).flatMap(r => r.files),
+  });
+  return {
+    pages: COMPUTED_MAPS.map(m => m.path),
+    directories: { state: derived.state, figures: figures.directories },
+    manifests: {
+      state: member.state,
+      screeningPolicy: derivedMember === undefined ? null : derivedMember.screeningPolicy,
+      recognizers: derivedMember === undefined ? [] : derivedMember.recognizers.map(({ files: _files, ...rest }) => rest),
+      factsNotListed: derivedMember === undefined ? null : derivedMember.factsNotListed,
+    },
+    units: { figures: figures.units, ...(of(UNIT_MAP_RULES) as object) },
+    ci: { figures: figures.ci, ...(of(CI_MAP_RULES) as object) },
   };
 }

@@ -14,7 +14,8 @@ import { LOCAL_DRAFT_SCHEMA_VERSION, UNDERSTANDING_ITEMS, hasThesisBasisForm } f
 import { EXECUTION_FLAGS_BASIS, executionFlags, type ExecutionFlags } from './execution-flags.js';
 import type { CredentialProbe } from './execution-rule.js';
 import { RECORDS_WITHIN_REACH } from './gate-sources.js';
-import { GitObjectReadRefusal, openPinnedObjectReader } from './git-object-reader.js';
+import { GitObjectReadRefusal, openPinnedObjectReader, type TreeEntry } from './git-object-reader.js';
+import { MANIFEST_BLOB_LIMIT, deriveManifestFacts, manifestFactsUnknown, type ManifestFacts } from './manifest-facts.js';
 import { errno, latestInventorySession, logStep, openRun, promptRecordName, readRecord, type OpenedRun } from './inventory.js';
 import { briefStandardsOf, buildDesignPacket, standardsInput } from './design-review.js';
 import { derivedStructureAt, readCurrencyPolicy, secretPathOf, type CurrencyPolicy } from './derived-record.js';
@@ -192,7 +193,11 @@ export async function renderRun(runDir: string, deps: RenderDeps): Promise<Rende
     run, revision: draftRev.revision, pinned, repositoryId: subject.repository.repositoryId, reader, isSecretPath: secretPathOf(screen),
     policy: (deps.currencyPolicy ?? (() => readCurrencyPolicy(deps.sources.recordsRoot)))(),
   });
-  const built = { ...input, local: { ...input.local, derivedStructure } };
+  // The declared manifest facts (version 2.9, syzygy-3efd.36): derived here by the rules of version 2.7, from the tree this render lists, the
+  // blobs a pinned reader whose object bound is 1 MiB reads one call per file, the bound screen and the run's content classes, as check
+  // derives its member. Never read from a stored check record, which lies within the agent sessions' write reach.
+  const manifestFacts = await renderManifestFacts(subject.clone.path, pinned, deps, screen, opened.contentClasses, reader);
+  const built = { ...input, local: { ...input.local, derivedStructure, manifestFacts } };
 
   const renderer = deps.renderer;
   const draw = (local: LocalRenderInput): ReadonlyMap<string, string> | string => {
@@ -261,6 +266,21 @@ export async function renderRun(runDir: string, deps: RenderDeps): Promise<Rende
   };
   logStep(run, 'render', now, { outcome: 'rendered', site: path.relative(run, site), draftRevision: draftRev.revision, draftLayer: report.draftLayer.state });
   return { ok: true, report };
+}
+
+/** The render's own manifest-facts member (version 2.9): the tree listed by `reader`, each manifest read alone through a second pinned
+ * reader on the same clone whose object bound is `MANIFEST_BLOB_LIMIT`; `unknown` where the tree cannot be listed. */
+export async function renderManifestFacts(clonePath: string, pinned: string, deps: Pick<RenderDeps, 'openReader'>, screen: DossierScreen,
+  consented: readonly string[] | null, reader: { readonly listTree: () => Promise<readonly TreeEntry[]> }): Promise<ManifestFacts> {
+  let entries: readonly TreeEntry[];
+  try {
+    entries = await reader.listTree();
+  } catch (cause) {
+    if (!(cause instanceof GitObjectReadRefusal)) throw cause;
+    return manifestFactsUnknown(cause.reason);
+  }
+  const manifestReader = (deps.openReader ?? openPinnedObjectReader)({ gitDir: path.join(clonePath, '.git'), revision: pinned, maxObjectBytes: MANIFEST_BLOB_LIMIT });
+  return deriveManifestFacts({ entries, screen, consented, read: async (manifestPath) => (await manifestReader.readBlobs([manifestPath]))[0]! });
 }
 
 /** Write the site into a new numbered directory under `site/`, through a staging directory renamed into place only when every file is

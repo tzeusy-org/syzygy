@@ -167,12 +167,73 @@ export type LocalDerivedStructure =
     readonly currencyPolicy: { readonly policyId: string; readonly policyVersion: string; readonly sha256: string } | null;
     readonly facts: readonly LocalDerivedFact[];
     readonly unitsNotListed: number;
+    /** The render's own re-derivation of the tree (version 2.9), never the record's counts: what the directory map's coverage line counts. */
+    readonly tree: LocalTreeCounts;
+    /** Whether the record's `files`, `secretPathsLeftOut` and `submodules` each equal the re-derivation's (version 2.9). */
+    readonly countsMatch: boolean;
   }
   | {
     readonly state: 'missing' | 'unknown';
     readonly revision: string;
     readonly unknownReason: 'missing-evidence' | 'source-uncaptured-or-unreachable';
   };
+
+/** The counts a render re-derives from the tree it lists (version 2.9): blob entries (`files`), files at the root, the listed top-level
+ * directories and the files under them, the directories counted and not listed, secret-matching paths and submodules. */
+export interface LocalTreeCounts {
+  readonly files: number;
+  readonly rootFiles: number;
+  readonly unitsListed: number;
+  readonly unitFiles: number;
+  readonly unitsNotListed: number;
+  readonly secretPathsLeftOut: number;
+  readonly submodules: number;
+}
+
+/** The declared manifest facts a render derives itself (REQ-polaris-generation-034 versions 2.7 and 2.9), in the shape
+ * `packages/polaris-dossier`'s `deriveManifestFacts` gives them; never read from a stored check record. */
+export interface LocalManifestFileEntry {
+  readonly path: string;
+  readonly epistemic: 'inferred' | 'unknown';
+  readonly unknownReason: string | null;
+  readonly parseFault: string | null;
+  readonly facts: number | null;
+  readonly valuesLeftOut: number | null;
+}
+export interface LocalManifestRecognizerEntry {
+  readonly rule: string;
+  readonly ruleVersion: number;
+  readonly label: 'inferred';
+  readonly candidates: number;
+  readonly secretPathsLeftOut: number;
+  readonly setApart: number;
+  readonly inferred: number;
+  readonly unknown: number;
+  readonly valuesLeftOut: number;
+  readonly facts: number;
+  readonly files: readonly LocalManifestFileEntry[];
+  readonly filesNotListed: number;
+}
+export interface LocalManifestFact {
+  readonly id: string;
+  readonly fact: string;
+  readonly rule: string;
+  readonly ruleVersion: number;
+  readonly path: string;
+  readonly lines: readonly [number, number];
+  readonly epistemic: 'inferred';
+  readonly [member: string]: unknown;
+}
+export type LocalManifestFacts =
+  | {
+    readonly format: string;
+    readonly state: 'derived';
+    readonly screeningPolicy: { readonly policyId: string; readonly policyVersion: string; readonly sha256: string };
+    readonly recognizers: readonly LocalManifestRecognizerEntry[];
+    readonly facts: readonly LocalManifestFact[];
+    readonly factsNotListed: number;
+  }
+  | { readonly format: string; readonly state: 'unknown'; readonly why: string };
 
 export interface LocalRenderInput {
   /** The checked draft in the renderer's shape. `sourceIds` name only sources Syzygy read and screening admitted, and may be empty. No
@@ -209,6 +270,9 @@ export interface LocalRenderInput {
    * as `derived-structure.json` and named in the machine view. Absent only for an input built by hand; `syzygy dossier render` always
    * supplies it. */
   readonly derivedStructure?: LocalDerivedStructure;
+  /** The declared manifest facts this render derived itself (version 2.9), from which the unit map and the CI pipeline map are drawn. The
+   * three computed map pages render only where this and `derivedStructure` are both present; `syzygy dossier render` always supplies both. */
+  readonly manifestFacts?: LocalManifestFacts;
   /** A schema-v6 draft's `thesisBasis` (REQ-polaris-generation-034 version 2.4): what the authoring session says its introduction rests
    * on, and whether the code-reading line renders before it. Absent for every earlier draft, so its pages and machine view keep their
    * bytes. */
