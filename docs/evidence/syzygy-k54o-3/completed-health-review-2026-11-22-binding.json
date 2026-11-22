@@ -1,0 +1,17 @@
+{
+  "subjectCommit": "3f1bf04d1a6eeed5e0fe52a03fd8ac4a3f8b52d9",
+  "raw": "completed-health-review-2026-11-22-RAW.md",
+  "rawSha256": "b36c45c56f98030bbd7319f25903e029876cf29e5f4575f3f1486ad5b9a93bad",
+  "verdict": "REVISE",
+  "files": [
+    {
+      "path": "packages/polaris-dossier/src/url-run-sessions.ts",
+      "sha256": "ef4edafa3c81fec0f5cb9516e136e8833a50823d7c3f1c909c622b965633771d"
+    },
+    {
+      "path": "packages/polaris-dossier/src/url-run-sessions-completion.test.ts",
+      "sha256": "80514c21de626663dbdb8c2f8c563f911cd44ac442e72650d86750e4f8d26eb7"
+    }
+  ],
+  "limitation": "Source-only review. Normal native acceptance is retained separately at 0ad506f1f; this review identifies an unexercised policy-drift race during bounded cleanup."
+}

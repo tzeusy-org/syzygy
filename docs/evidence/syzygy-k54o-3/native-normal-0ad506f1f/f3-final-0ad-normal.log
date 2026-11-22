@@ -1,0 +1,11 @@
+
+ RUN  v3.2.7 /home/orca/.tmp/syzygy-beads-looper-20261114-54ebc9f1/d10-f3-work-budget
+
+ ✓ |integration| packages/polaris-dossier/src/url-run-composed.test.ts (4 tests | 3 skipped) 122735ms
+   ✓ composed URL run with actual role processes > runs the genuine production pipeline to complete  120724ms
+
+ Test Files  1 passed (1)
+      Tests  1 passed | 3 skipped (4)
+   Start at  16:58:08
+   Duration  125.86s (transform 2.02s, setup 9ms, collect 2.70s, tests 122.74s, environment 0ms, prepare 67ms)
+

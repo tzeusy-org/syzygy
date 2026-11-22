@@ -1,0 +1,224 @@
+{
+  "scenario": "complete",
+  "inputTreeSha256": "2bb753329f326a40881022d6819d688f66a6c738bd52a1f918adc13ac8d65575",
+  "profileRegistrySha256": "10279771877040a0160f877e5f035bbc28eec1d8d7743f52a408871b9ee0b04e",
+  "profiles": [
+    {
+      "role": "author",
+      "id": "claude-2.1.327-sonnet46/2",
+      "sha256": "90254970277704cd964d00d56f48ea2b345ed4c9b1e45d6596fb24c8ab314823"
+    },
+    {
+      "role": "inventory",
+      "id": "claude-2.1.327-sonnet46/2",
+      "sha256": "ae651127951e1170d5b92662e1bf51a58b1187effcbdeb750b1713313bc42ecf"
+    },
+    {
+      "role": "fidelity",
+      "id": "claude-2.1.327-sonnet46/2",
+      "sha256": "0adb493717fd584ef4655031270b8b5f6f36a3e5d59b12dc696ae504af93bd0c"
+    },
+    {
+      "role": "design",
+      "id": "claude-2.1.327-sonnet46/ordered-design-6",
+      "sha256": "40ccab30e6dd1413f04b0921a2437185ac513945ea0177401e9949ddeca22e3b"
+    }
+  ],
+  "recordSha256": "644b0b6df6b910f00f643551d52216d7e7983f1b5b94dd44de489b6a721517fd",
+  "state": {
+    "format": "polaris-supervisor/2",
+    "mode": "URL-supervised local CLI through checked transport relay",
+    "declarationSha256": "a23d08796ffdf1d460967376a229b6948e421e1ad4fc123420f788fbb9f5196f",
+    "run": "/home/orca/.tmp/url-composed-wREFvl/runs/run-536c95358a4b36a7468f38ec0bf1346e",
+    "runId": "run-536c95358a4b36a7468f38ec0bf1346e",
+    "tmuxSession": "polaris-owncomposed",
+    "clone": "/home/orca/.tmp/url-composed-wREFvl/kestrel",
+    "url": "https://example.invalid/own/source",
+    "model": "claude-sonnet-4-6",
+    "authorSkipPermissions": false,
+    "briefIssuedAt": 1795337898631,
+    "deadlineSeconds": 7200,
+    "sessions": [
+      {
+        "role": "author",
+        "session": 1,
+        "directory": "/home/orca/.tmp/url-composed-wREFvl/runs/run-536c95358a4b36a7468f38ec0bf1346e",
+        "prompt": "",
+        "promptSha256": "038a931fa30e6e26116572976774790def1b2d0f0a9520e86842621a6734f819",
+        "allowedTools": null
+      },
+      {
+        "role": "inventory",
+        "session": 1,
+        "directory": "/home/orca/.tmp/url-composed-wREFvl/runs/run-536c95358a4b36a7468f38ec0bf1346e.sessions/session-1",
+        "prompt": "",
+        "promptSha256": "0ab979f2a65a8888e041ae721c6de96c12ade0d349661bb6126cd8d65d8666af",
+        "allowedTools": null
+      },
+      {
+        "role": "fidelity",
+        "session": 1,
+        "directory": "/home/orca/.tmp/url-composed-wREFvl/runs/run-536c95358a4b36a7468f38ec0bf1346e.sessions/fidelity-1",
+        "prompt": "",
+        "promptSha256": "760c78d4932edaf8dfdc6bd2c376f199e98b24b372e58462cee66808ca5c80ba",
+        "allowedTools": null
+      },
+      {
+        "role": "design",
+        "session": 1,
+        "directory": "/home/orca/.tmp/url-composed-wREFvl/runs/run-536c95358a4b36a7468f38ec0bf1346e.sessions/design-1",
+        "prompt": "",
+        "promptSha256": "4967f473269203fe83b7f765968adb7df2c2af2cb634835025aec9ecb86358e1",
+        "allowedTools": null
+      }
+    ],
+    "fidelityDeliveredFor": [
+      0
+    ],
+    "designDeliveredFor": [],
+    "fidelityDeliveredPairs": [
+      "0/0"
+    ],
+    "notified": [
+      "inventory-draft-0"
+    ],
+    "siteFor": {
+      "0": 0
+    },
+    "launches": [],
+    "stopGeneration": "cccccccccccccccccccccccccccccccc",
+    "stopped": "2026-11-22T09:00:13.746Z",
+    "finalSite": {
+      "site": 1,
+      "draftRevision": 0,
+      "verdict": 0,
+      "packetSha256": "97fe1a3c767ded1d127b037d42096a875aa1b199905fe78d2a9d17928d4511d1",
+      "verdictEventSha256": "8811e9db3c1b095c98fdcd3d44569dd0494a94deca4b1ed87728f135c1ee6a8a",
+      "populationSha256": "d04b0134711a6d5cb167f69398b7bd5671bb491fd68c8eece19acb4be069613e"
+    },
+    "done": "2026-11-22T09:00:13.746Z"
+  },
+  "events": [
+    "told the inventory session: draft revision 0 is frozen",
+    "delivered the fidelity packet for draft revision 0 and inventory revision 0",
+    "rendering draft revision 0",
+    "prepared design round 1 for the reviewer",
+    "run ended: complete, final site /home/orca/.tmp/url-composed-wREFvl/runs/run-536c95358a4b36a7468f38ec0bf1346e/site/1, execution record /home/orca/.tmp/url-composed-wREFvl/runs/run-536c95358a4b36a7468f38ec0bf1346e/record.json"
+  ],
+  "roles": [
+    {
+      "role": "author",
+      "pid": 2313449,
+      "startedAt": 1795337900942,
+      "finishedAt": 1795338012889,
+      "outcome": {
+        "outcome": "stopped",
+        "exitCode": null,
+        "signal": "SIGTERM",
+        "viewTermination": "view-exited",
+        "groupTermination": "confirmed",
+        "toolTermination": "settled",
+        "pendingInvocations": 0,
+        "stdout": {
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "stderr": {
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "sampledStorageBytes": 4125,
+        "peakProcesses": 5,
+        "aggregateEnforcement": "sampled-stop-only",
+        "betweenSamples": "Unknown"
+      }
+    },
+    {
+      "role": "inventory",
+      "pid": 2315506,
+      "startedAt": 1795337903848,
+      "finishedAt": 1795338012881,
+      "outcome": {
+        "outcome": "stopped",
+        "exitCode": null,
+        "signal": "SIGTERM",
+        "viewTermination": "view-exited",
+        "groupTermination": "confirmed",
+        "toolTermination": "settled",
+        "pendingInvocations": 0,
+        "stdout": {
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "stderr": {
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "sampledStorageBytes": 3807,
+        "peakProcesses": 5,
+        "aggregateEnforcement": "sampled-stop-only",
+        "betweenSamples": "Unknown"
+      }
+    },
+    {
+      "role": "fidelity",
+      "pid": 2317342,
+      "startedAt": 1795337906619,
+      "finishedAt": 1795338012891,
+      "outcome": {
+        "outcome": "stopped",
+        "exitCode": null,
+        "signal": "SIGTERM",
+        "viewTermination": "view-exited",
+        "groupTermination": "confirmed",
+        "toolTermination": "settled",
+        "pendingInvocations": 0,
+        "stdout": {
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "stderr": {
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "sampledStorageBytes": 3181,
+        "peakProcesses": 5,
+        "aggregateEnforcement": "sampled-stop-only",
+        "betweenSamples": "Unknown"
+      }
+    },
+    {
+      "role": "design",
+      "pid": 2342135,
+      "startedAt": 1795337950358,
+      "finishedAt": 1795338008010,
+      "outcome": {
+        "outcome": "exited",
+        "exitCode": 0,
+        "signal": null,
+        "viewTermination": "view-exited",
+        "groupTermination": "confirmed",
+        "toolTermination": "settled",
+        "pendingInvocations": 0,
+        "stdout": {
+          "bytes": 1690,
+          "sha256": "50481e780499fc81c637d286cb06a553952728759a83ca7e138b550caf3b6891"
+        },
+        "stderr": {
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "sampledStorageBytes": 3486,
+        "peakProcesses": 5,
+        "aggregateEnforcement": "sampled-stop-only",
+        "betweenSamples": "Unknown"
+      }
+    }
+  ],
+  "requests": {
+    "author": 7,
+    "inventory": 6,
+    "fidelity": 4,
+    "design": 5
+  }
+}

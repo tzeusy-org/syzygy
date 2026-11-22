@@ -1,0 +1,67 @@
+{
+  "format": "f3-native-composed-evidence/1",
+  "subjectCommit": "0ad506f1f7c5261d29e8ef0cf6dc8495e2b5a01c",
+  "inputTreeSha256": "2bb753329f326a40881022d6819d688f66a6c738bd52a1f918adc13ac8d65575",
+  "profileRegistrySha256": "10279771877040a0160f877e5f035bbc28eec1d8d7743f52a408871b9ee0b04e",
+  "command": "SYZYGY_F3_NATIVE_EVIDENCE_FILE=/home/orca/.tmp/f3-final-0ad-normal-evidence.json npx --no-install vitest run --project integration packages/polaris-dossier/src/url-run-composed.test.ts -t 'pipeline to complete'",
+  "files": [
+    {
+      "path": "packages/polaris-dossier/src/url-run-composed.test.ts",
+      "sha256": "4691a617a9cca6ee1f4e950d969f034e9a560eb13f4844be9b7df37e33e37806"
+    },
+    {
+      "path": "packages/polaris-dossier/src/url-run-composed.testkit.ts",
+      "sha256": "a5f2fd9e220252673562e463c1d9a52e193216444ed5770d27ccc81e35ba984f"
+    },
+    {
+      "path": "packages/polaris-dossier/src/url-run-sessions.ts",
+      "sha256": "ef4edafa3c81fec0f5cb9516e136e8833a50823d7c3f1c909c622b965633771d"
+    }
+  ],
+  "log": {
+    "path": "/home/orca/.tmp/f3-final-0ad-normal.log",
+    "sha256": "7ee0e2f122bf8d72b55a844c292a474ee27518cc620b1a65fad879e1896e8615"
+  },
+  "evidence": {
+    "path": "/home/orca/.tmp/f3-final-0ad-normal-evidence.json",
+    "sha256": "7c1fd01072ac5f28548cbc6fda7d359710adc54a13d5580810df56fd281be17b"
+  },
+  "result": {
+    "testsPassed": 1,
+    "testsSkipped": 3,
+    "testsTotal": 4,
+    "caseMilliseconds": 120724,
+    "totalSeconds": 125.86,
+    "executionRecordSha256": "644b0b6df6b910f00f643551d52216d7e7983f1b5b94dd44de489b6a721517fd",
+    "finalSite": {
+      "site": 1,
+      "draftRevision": 0,
+      "verdict": 0,
+      "packetSha256": "97fe1a3c767ded1d127b037d42096a875aa1b199905fe78d2a9d17928d4511d1",
+      "verdictEventSha256": "8811e9db3c1b095c98fdcd3d44569dd0494a94deca4b1ed87728f135c1ee6a8a",
+      "populationSha256": "d04b0134711a6d5cb167f69398b7bd5671bb491fd68c8eece19acb4be069613e"
+    },
+    "requests": {
+      "author": 7,
+      "inventory": 6,
+      "fidelity": 4,
+      "design": 5
+    }
+  },
+  "assertions": [
+    "production runUrlSupervisorLoop returns 0",
+    "state.done exists",
+    "final site greater than reviewed site",
+    "all four captured process IDs are known",
+    "failure list empty",
+    "actual execution record format polaris-dossier-execution-record/2 has four role captures",
+    "second close refuses closed-already",
+    "execution record bytes identical after second close"
+  ],
+  "limits": [
+    "synthetic provider only; actual pinned CLI, kernel sandbox, native transport, product producers and renderer",
+    "fixture deadline PT2H; ordinary PT1H admission was not established",
+    "resume scenarios run separately; skipped here",
+    "resource accounting remains sampled-stop-only and betweenSamples Unknown"
+  ]
+}
