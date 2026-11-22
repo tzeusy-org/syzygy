@@ -2,7 +2,7 @@
 
 ## Patterns
 
-- `F3-(STAGED-MACHINE-PUBLICATION-SUCCESSOR|ORDERED-SCREEN-ENTRY|POST-AUDIT-PEER-DRAIN|RENEWAL-SOURCE-SAMPLES|STAGED-ALLOCATION|STAGED-ALLOCATION-INITIAL|PRIVATE-AUDIT-SETUP|PRIVATE-AUDIT-SETUP-INITIAL|CONCURRENT-INSPECTION|SCREEN-IMAGE-BRACKETING|CURRENT-COVERAGE-RULE|CPU-RESERVATION-INITIAL)-REVIEW-RAW\.md`
+- `F3-(STAGED-MACHINE-PUBLICATION-SUCCESSOR|ORDERED-SCREEN-ENTRY|POST-AUDIT-PEER-DRAIN|RENEWAL-SOURCE-SAMPLES|STAGED-ALLOCATION|STAGED-ALLOCATION-INITIAL|PRIVATE-AUDIT-SETUP|PRIVATE-AUDIT-SETUP-INITIAL|CONCURRENT-INSPECTION|SCREEN-IMAGE-BRACKETING|CURRENT-COVERAGE-RULE|CPU-RESERVATION-INITIAL|CPU-RESERVATION-HANDOFF)-REVIEW-RAW\.md`
 
 ## What was under review
 
@@ -23,3 +23,5 @@
 [Observed] The current coverage rule review records `PASS` (`F3-CURRENT-COVERAGE-RULE-REVIEW-RAW.md:1`) for source `30f160ec4`. The protected report verifier uses the producer's exact adopted rule ID and version and separately recomputes the comparison from authenticated inputs. A-95 records the adoption.
 
 [Observed] The initial CPU reservation review records `BLOCKING FINDINGS` (`F3-CPU-RESERVATION-INITIAL-REVIEW-RAW.md:1`) for source `a9c6a1849`. The review found that the hold and the continuation ledger sampled CPU on opposite sides of planning. The successor must charge admission work from the reservation's CPU sample before first release.
+
+[Observed] The CPU handoff review records `BLOCKING FINDINGS` (`F3-CPU-RESERVATION-HANDOFF-REVIEW-RAW.md:1`) for source `7d564721`. The start uses the same reservation sample in the pool and the first tool. Final authority revalidation could still cross the operation limit before the socket write. The reply needs a final live operation-budget check at that boundary.
