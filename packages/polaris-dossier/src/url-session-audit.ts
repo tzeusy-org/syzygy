@@ -385,6 +385,7 @@ export type UrlSessionAuditResult = { readonly ok: true; readonly scope: (role: 
 export async function createUrlSessionAudit(given: UrlSessionAuditOptions): Promise<UrlSessionAuditResult> {
   let poisoned = false, closing = false, pending = 0, filesystem = 0, callbacks = 0, records = 0, durableBytes = 0, declarations = 0;
   let tip: string | null = null, limits: Limits = URL_SESSION_AUDIT_LIMITS;
+  let setupWallDeadline: number | undefined;
   const relayEvents = Object.fromEntries(SESSION_RELAY_EVENTS.map(event => [event, 0])) as Record<SessionAuditEvent['event'], number>;
   const captured = zeroKinds(), totals = Object.fromEntries(ROLES.map(role => [role, { records: 0, bytes: 0, tipSha256: null, usageReports: 0, usage: zeroUsage() }])) as Record<ViewRole, Totals>;
   const handles = new Set<FileHandle>(), shutting = new Map<FileHandle, Promise<void>>();
@@ -395,7 +396,9 @@ export async function createUrlSessionAudit(given: UrlSessionAuditOptions): Prom
     termination: closing ? (handles.size || filesystem || callbacks || pending ? 'Unknown' : 'closed') : 'open',
     providerReceipts: 'Unknown', nativeSendCensus: 'Unknown', completeness: 'Unknown', hostileSameUidIsolation: 'Unknown', limits });
   function poison(): never { poisoned = true; throw refused(); }
-  const guard = (deadline: number): void => { if (poisoned || closing || performance.now() >= deadline) poison(); };
+  const remaining = (deadline: number): number => Math.min(deadline - performance.now(),
+    setupWallDeadline === undefined ? Infinity : setupWallDeadline - Date.now());
+  const guard = (deadline: number): void => { if (poisoned || closing || remaining(deadline) <= 0) poison(); };
   const track = <T>(kind: 'filesystem' | 'callback', fn: () => Promise<T> | T): Promise<T> => {
     if (kind === 'filesystem') filesystem++; else callbacks++;
     return Promise.resolve().then(fn).finally(() => { if (kind === 'filesystem') filesystem--; else callbacks--; });
@@ -403,7 +406,7 @@ export async function createUrlSessionAudit(given: UrlSessionAuditOptions): Prom
   const wait = async <T>(operation: Promise<T>, deadline: number): Promise<T> => {
     let timer: ReturnType<typeof setTimeout> | undefined;
     try { return await Promise.race([operation, new Promise<never>((_, reject) => {
-      timer = setTimeout(() => { poisoned = true; reject(refused()); }, Math.max(1, deadline - performance.now()));
+      timer = setTimeout(() => { poisoned = true; reject(refused()); }, Math.max(1, remaining(deadline)));
     })]); } finally { clearTimeout(timer); }
   };
   const shut = (handle: FileHandle): Promise<void> => {
@@ -486,17 +489,14 @@ export async function createUrlSessionAudit(given: UrlSessionAuditOptions): Prom
       else if (poisoned || performance.now() >= deadline) poison();
       return result;
     };
+    setupWallDeadline = input.deadline;
     const setupDeadline = performance.now() + limits.milliseconds;
-    const checkSetup = (): void => {
-      guard(setupDeadline);
-      if (input.deadline !== undefined && Date.now() >= input.deadline) poison();
-    };
     // Bracket preparation of the empty, host-only segments with fresh authority.
     // Each private IO step still shares the original setup deadline.
     const setupIo = async <T>(fn: () => Promise<T>): Promise<T> => {
-      checkSetup();
+      guard(setupDeadline);
       const result = await wait(track('filesystem', fn), setupDeadline);
-      checkSetup();
+      guard(setupDeadline);
       return result;
     };
     const acquire = (fn: () => Promise<FileHandle>): Promise<FileHandle> => setupIo(async () => {
@@ -556,7 +556,6 @@ export async function createUrlSessionAudit(given: UrlSessionAuditOptions): Prom
     await setupIo(() => directory.sync());
     await setupIo(() => inspectIdentities(setupDeadline));
     await checkCurrent(setupDeadline);
-    checkSetup();
     verifyOnClose = deadline => io(deadline, () => inspectIdentities(deadline, undefined, true), true);
     const classes = (v: unknown): void => {
       if (!Array.isArray(v) || v.length === 0 || v.length > SESSION_CONTENT_CLASSES.length || new Set(v).size !== v.length
@@ -777,6 +776,8 @@ export async function createUrlSessionAudit(given: UrlSessionAuditOptions): Prom
         profile: roleProfiles.get(role)!.id, limits, capture: 'host-callbacks-only', providerReceipts: 'Unknown', nativeSendCensus: 'Unknown' },
     }])) as UrlSessionAuditHistoryExpected['declarations'];
     for (const role of ROLES) await commit({ kind: 'declaration', role, ...declarationsByRole[role] }, role, setupDeadline, true);
+    guard(setupDeadline);
+    setupWallDeadline = undefined;
     const unstartedOrdered = new Map<string, UrlOrderedDesignHistoryExpected>();
     const stoppedOrderedHistory: (() => UrlOrderedDesignHistoryExpected | null)[] = [];
     const closedHistory = (): UrlSessionAuditHistoryExpected | null => {
@@ -1321,6 +1322,7 @@ export async function createUrlSessionAudit(given: UrlSessionAuditOptions): Prom
       commitDesignArtifactRead, readDesignReviewProof, readOrderedDesignReviewProof, commitOrderedDesignVerdict, commitDesignVerdict,
       readDesignRenderContinuation, prepareDesignRenderContinuation, close, closedHistory, summary });
   } catch {
+    setupWallDeadline = undefined;
     poisoned = true; await close(); return Object.freeze({ ok: false as const, code: 'url-session-audit-unavailable' as const, summary });
   }
 }

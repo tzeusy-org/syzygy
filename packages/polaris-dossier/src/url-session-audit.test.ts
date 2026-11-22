@@ -559,10 +559,47 @@ describe('protected URL session audit', () => {
     } finally { vi.useRealTimers(); }
   });
 
+  it('does not open private audit files after initial authority refusal', async () => {
+    const f = fixture();
+    const result = await createUrlSessionAudit({ ...f.options, current: () => false });
+    expect(result.ok).toBe(false);
+    expect(fs.existsSync(f.file('author'))).toBe(false);
+    expect(result.summary()).toMatchObject({ closed: true, poisoned: true, durableRecords: 0, declarations: 0 });
+  });
+
+  it.each(['empty setup', 'first declaration sync'] as const)('applies the original wall deadline during %s', async phase => {
+    const f = fixture(), p = await prototype(), statFile = p.stat, sync = p.sync;
+    let wall = Date.now(), expired = false;
+    const deadline = wall + 60_000;
+    vi.spyOn(Date, 'now').mockImplementation(() => wall);
+    const expire = () => { wall = deadline; expired = true; };
+    if (phase === 'empty setup') {
+      vi.spyOn(p, 'stat').mockImplementation(async function(this: FileHandle, ...args: unknown[]) {
+        const stat = await statFile.apply(this, args);
+        if (stat.isFile() && !expired) expire();
+        return stat;
+      });
+    } else {
+      vi.spyOn(p, 'sync').mockImplementation(async function(this: FileHandle) {
+        await sync.call(this);
+        if (fs.fstatSync(this.fd).isFile() && !expired) expire();
+      });
+    }
+    const write = vi.spyOn(p, 'write');
+    const result = await createUrlSessionAudit({ ...f.options, deadline, current: () => true });
+    if (result.ok) writers.push(result);
+    expect(expired).toBe(true);
+    expect(result.ok).toBe(false);
+    expect(write).toHaveBeenCalledTimes(phase === 'empty setup' ? 0 : 1);
+    expect(result.summary()).toMatchObject({ closed: true, poisoned: true, durableRecords: 0, declarations: 0 });
+    if (phase === 'empty setup') expect(fs.existsSync(f.file('inventory'))).toBe(false);
+    else expect(fs.statSync(f.file('inventory')).size).toBe(0);
+  });
+
   it('writes no declaration when authority is withdrawn during empty setup', async () => {
     const f = fixture(), p = await prototype(), statFile = p.stat;
     let withdrawn = false;
-    vi.spyOn(p, 'stat').mockImplementation(async function(this: FileHandle, ...args: Parameters<FileHandle['stat']>) {
+    vi.spyOn(p, 'stat').mockImplementation(async function(this: FileHandle, ...args: unknown[]) {
       const stat = await statFile.apply(this, args);
       if (stat.isFile() && !withdrawn) { withdrawn = true; f.revoke(); }
       return stat;
@@ -587,7 +624,7 @@ describe('protected URL session audit', () => {
       fs.renameSync(target, displaced);
       fs.writeFileSync(target, '', { flag: 'wx', mode: 0o600 });
       // Isolate the named check from the old descriptor's rename ctime.
-      vi.spyOn(p, 'stat').mockImplementation(async function(this: FileHandle, ...args: Parameters<FileHandle['stat']>) {
+      vi.spyOn(p, 'stat').mockImplementation(async function(this: FileHandle, ...args: unknown[]) {
         const stat = await statFile.apply(this, args);
         return stat.dev === original.dev && stat.ino === original.ino ? original : stat;
       });
