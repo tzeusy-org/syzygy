@@ -632,7 +632,16 @@ async function start(options: UrlRunSessionsOptions, ports: typeof native): Prom
               rememberTerminal('design', child, terminalConsumed);
             },
             compatiblePromptSha256: launchHistory.promptDigests.design, firstLaunch: designLaunch,
-            ...(resume === undefined ? {} : { generation: resume.verified.boundary.sha256 }),
+            ...(resume === undefined ? {} : {
+              generation: resume.verified.boundary.sha256,
+              inspectionAuthority: {
+                verify: options.current,
+                confirm: verified => {
+                  if (!verified) { fail('binding-changed'); return false; }
+                  return effectCurrent();
+                },
+              },
+            }),
             registerLaunch: async committed => { await launchHistory.register(committed, waitForSamples); designLaunch = committed; },
             expectedProduct, sitePath, round, reproduce: artifact.reproduce, work: { ...work, observeProtectedRead } });
           launchedAttempt = orderedAttempt;

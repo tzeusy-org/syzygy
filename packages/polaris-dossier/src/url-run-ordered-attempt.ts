@@ -6,7 +6,7 @@ import { readSessionRelayAuditEvidence } from './session-relay.js';
 import type { SessionCredential } from './session-credential.js';
 import type { SessionAdmission, SessionContentClass } from './session-egress-policy.js';
 import { isOrderedDesignSessionProfile } from './session-profile.js';
-import { isUrlSessionProcess, launchRestrictedUrlSession, prepareRestrictedUrlSession, urlSessionStoppedCleanly, type UrlSessionProcess } from './session-launch.js';
+import { isUrlSessionProcess, launchRestrictedUrlSession, prepareRestrictedUrlSession, urlSessionStoppedCleanly, type UrlSessionLaunchOptions, type UrlSessionProcess } from './session-launch.js';
 import { planOrderedDesignBytes, orderedDesignPlanInputForDelivery } from './url-design-delivery.js';
 import { assertUrlDesignDeliveryViewCurrent, type UrlSessionAuditResult, type UrlCommittedLaunchHistory,
   type UrlDesignDeliveryView } from './url-session-audit.js';
@@ -50,6 +50,7 @@ export interface UrlOrderedAttemptOptions {
   readonly deadline: number;
   readonly now: () => number;
   readonly current: () => Promise<boolean>;
+  readonly inspectionAuthority?: NonNullable<UrlSessionLaunchOptions['inspectionAuthority']>;
   readonly waitForSamples: () => Promise<boolean>;
   readonly launched: (child: UrlSessionProcess, host: OrderedDesignHost) => void;
   readonly compatiblePromptSha256: string;
@@ -189,6 +190,7 @@ export async function startUrlOrderedAttempt(input: UrlOrderedAttemptOptions) {
     const preparation = await prepareRestrictedUrlSession({ view: input.plan.view, profile,
       expected: { nodeSha256: input.runtime.worker.nodeSha256, supportSha256: profile.transcript.supportSha256 },
       current: input.current, audit: payload => input.audit.append({ kind: 'launch-attempt', role: 'design', scope, payload }),
+      ...(input.inspectionAuthority === undefined ? {} : { inspectionAuthority: input.inspectionAuthority }),
       canaries: input.canaries, hostLoopbackPort: input.probePort });
     if (preparation.commandSha256 !== input.plan.declaration.commandSha256
       || preparation.viewSha256 !== input.plan.declaration.viewSha256) throw refused();

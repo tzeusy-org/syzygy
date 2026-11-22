@@ -54,6 +54,10 @@ export interface UrlSessionLaunchOptions {
   readonly profile: NativeSessionProfile;
   readonly expected: { readonly nodeSha256: string; readonly supportSha256: Readonly<Record<'session-bridge.js' | 'session-mcp.js', string>> };
   readonly current: () => boolean | Promise<boolean>;
+  readonly inspectionAuthority?: {
+    readonly verify: () => boolean | Promise<boolean>;
+    readonly confirm: (verified: boolean) => boolean;
+  };
   readonly audit: (event: { readonly event: 'session-launch-attempt'; readonly profileSha256: string;
     readonly commandSha256: string; readonly viewSha256: string; readonly limits: UrlLaunchLimits }) => void | Promise<void>;
   readonly limits?: Partial<UrlLaunchLimits>;
@@ -68,6 +72,7 @@ interface Prepared {
   readonly view: ReturnType<typeof urlSessionViewFor>; readonly profile: NativeSessionProfile;
   readonly expected: UrlSessionLaunchOptions['expected']; readonly limits: UrlLaunchLimits;
   readonly current: UrlSessionLaunchOptions['current']; readonly audit: UrlSessionLaunchOptions['audit'];
+  readonly inspectionAuthority: UrlSessionLaunchOptions['inspectionAuthority'];
   readonly args: readonly string[]; readonly expires: number; readonly directories: readonly string[];
 }
 const preparations = new WeakMap<UrlSessionPreparation, Prepared>();
@@ -178,7 +183,9 @@ export async function prepareRestrictedUrlSession(input: UrlSessionLaunchOptions
   const check = (): void => { if (!live || performance.now() - began >= limits.setupMilliseconds) throw refused(); };
   const servers: Server[] = [], sockets = new Set<Socket>();
   let ids: readonly string[] | undefined;
-  const state = { view, expected, limits, profile, current, audit, args, expires: began + limits.setupMilliseconds };
+  const authority = input.inspectionAuthority;
+  const inspectionAuthority = authority === undefined ? undefined : { verify: authority.verify, confirm: authority.confirm };
+  const state = { view, expected, limits, profile, current, audit, inspectionAuthority, args, expires: began + limits.setupMilliseconds };
   try {
     await bounded(async () => {
       await directories(view); check();
@@ -403,6 +410,11 @@ export async function launchRestrictedUrlSession(input: { readonly preparation: 
       // The walks share a deadline. Keep storage's earlier refusal and
       // publication order even if the process walk completes first.
       const processCount = child.pid === undefined ? undefined : descendants(child.pid, limits.processes, checkSample).catch(() => null);
+      const authority = state.inspectionAuthority;
+      // Verification reads authority only. Census refusal takes precedence and
+      // the exact live guard runs when both the census and verification settle.
+      const verification = authority === undefined ? undefined
+        : Promise.resolve().then(authority.verify).then(result => result === true, () => false);
       const storageBytes = await storage([view.inputs.homeDirectory, view.inputs.workDirectory], limits, checkSample);
       checkSample();
       sampledStorageBytes = storageBytes;
@@ -414,8 +426,12 @@ export async function launchRestrictedUrlSession(input: { readonly preparation: 
         peakProcesses = Math.max(peakProcesses ?? 0, count);
         if (count > limits.processes) { stop('process-limit'); return; }
       }
-      const stillCurrent = await state.current();
+      let stillCurrent = await (verification ?? state.current());
       checkSample();
+      if (authority !== undefined) {
+        stillCurrent = authority.confirm(stillCurrent === true);
+        checkSample();
+      }
       if (stillCurrent !== true) stop('inspection-failed');
     }, limits.inspectionMilliseconds).catch(() => { if (!exited && !finishedCapture) stop('inspection-failed'); })
       .finally(() => { sampleActive = false; pendingSample = undefined; });

@@ -933,6 +933,66 @@ describe('prepared private CLI launch',()=>{
     }
   }, 15000);
 
+  it.each(['current', 'withdrawn', 'timed-out'] as const)(
+    'joins independent inspection authority with the live census when %s', async disposition => {
+      const f = await launchFixture();
+      let releaseCensus!: () => void, startedCensus!: (value: true) => void;
+      let resolveVerification!: (value: true) => void, startedVerification!: (value: true) => void;
+      let releaseTool!: () => void;
+      const heldCensus = new Promise<void>(resolve => { releaseCensus = resolve; });
+      const enteredCensus = new Promise<true>(resolve => { startedCensus = resolve; });
+      const verified = new Promise<true>(resolve => { resolveVerification = resolve; });
+      const enteredVerification = new Promise<true>(resolve => { startedVerification = resolve; });
+      const heldTool = new Promise<void>(resolve => { releaseTool = resolve; });
+      let authorityCurrent = true;
+      const confirm = vi.fn((accepted: boolean) => accepted && authorityCurrent);
+      const preparation = await prepareRestrictedUrlSession({ ...f.launch, inspectionAuthority: {
+        verify: () => { startedVerification(true); return verified; }, confirm,
+      } });
+      const host = await f.start({ beforeTool: () => heldTool });
+      filesystem.beforeOpen = async file => {
+        if (file !== f.launch.view.workDirectory) return;
+        startedCensus(true);
+        await heldCensus;
+      };
+      try {
+        const child = await launchRestrictedUrlSession({ preparation, host: {
+          ...host, close: () => { releaseTool(); return host.close(); },
+        } });
+        cleanup.push(child.stop);
+        const ended = child.finished.then(() => false);
+        expect(await Promise.race([enteredCensus, ended])).toBe(true);
+        expect(await Promise.race([enteredVerification, ended])).toBe(true);
+        const sample = child.waitForSample();
+        expect(confirm).not.toHaveBeenCalled();
+        if (disposition === 'timed-out') {
+          releaseCensus();
+          expect(await sample).toBe(false);
+          expect(await child.finished).toMatchObject({ outcome: 'inspection-failed', groupTermination: 'confirmed' });
+          resolveVerification(true);
+          await new Promise<void>(resolve => setImmediate(resolve));
+          expect(confirm).not.toHaveBeenCalled();
+        } else {
+          resolveVerification(true);
+          await verified;
+          expect(confirm).not.toHaveBeenCalled();
+          authorityCurrent = disposition === 'current';
+          releaseCensus();
+          expect(await sample).toBe(authorityCurrent);
+          expect(confirm.mock.calls).toEqual([[true]]);
+          releaseTool();
+          expect(await child.finished).toMatchObject({
+            outcome: authorityCurrent ? 'exited' : 'inspection-failed', groupTermination: 'confirmed',
+          });
+        }
+      } finally {
+        releaseCensus();
+        resolveVerification(true);
+        releaseTool();
+      }
+    }, 15000,
+  );
+
   it.each([
     { disappearingEntries: 1, expected: 'exited' },
     { disappearingEntries: 2, expected: 'inspection-failed' },
