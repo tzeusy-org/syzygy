@@ -124,11 +124,23 @@ describe('the run limits of a launched run (syzygy-1z8m.7)', () => {
     const stateRoot = tempDir('polaris-audience-');
     const stderr = vi.spyOn(process.stderr, 'write').mockImplementation(() => true);
     try {
-      for (const flags of [[], ['--audience', '  \n\t'], ['--resume', 'run-missing']]) {
+      for (const flags of [[], ['--audience', '  \n\t']]) {
         expect(await runPolarisCli(['https://example.invalid/o/r', '--supervise', '--state-root', stateRoot, ...flags])).toBe(1);
         expect(stderr).toHaveBeenLastCalledWith('syzygy polaris: refused: --audience is required for a new launched run\n');
         expect(fs.readdirSync(stateRoot)).toEqual([]);
       }
+    } finally { stderr.mockRestore(); }
+  });
+
+  it('refuses missing resume state before selecting or initializing a new run', async () => {
+    const stateRoot = tempDir('polaris-missing-resume-');
+    const stderr = vi.spyOn(process.stderr, 'write').mockImplementation(() => true);
+    const sources = new Proxy({} as GateSources, { get() { throw new Error('source port accessed'); } });
+    try {
+      expect(await runPolarisCli(['https://example.invalid/o/r', '--supervise', '--resume', 'run-missing',
+        '--state-root', stateRoot, '--audience', 'Project readers'], { sources })).toBe(1);
+      expect(stderr.mock.calls.flat().join('')).toContain('no launched run run-missing');
+      expect(fs.readdirSync(stateRoot)).toEqual([]);
     } finally { stderr.mockRestore(); }
   });
 

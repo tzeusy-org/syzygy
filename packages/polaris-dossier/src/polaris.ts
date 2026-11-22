@@ -519,6 +519,7 @@ class Screen {
 
 async function supervise(options: Options, ports: CliPorts): Promise<number> {
   const previous = options.run === undefined ? null : readState(options.stateRoot, options.run);
+  if (options.run !== undefined && previous === null) return refuse(`no launched run ${options.run} under ${options.stateRoot}`);
   if (previous === null && (options.audience === undefined || options.audience.trim() === '')) return refuse('--audience is required for a new launched run');
   const screen = new Screen('syzygy polaris — launched run (prototype)   detach: C-b d   windows: C-b n / C-b p');
   const fail = async (reason: string): Promise<number> => {
