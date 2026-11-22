@@ -67,6 +67,15 @@
 - [Unknown] Whether authoring sessions will use subsections without a reader advisory asking for them; the next pursuit run measures it.
 - [Inferred] Counter-incentive (review finding 10): RS-19's about-300-word limit counts a section's subsections with it, so a section using subsections will often draw the advisory that tells the author to move prose out of the structure this version asks for. Left for the depth slice (syzygy-3efd.51) or the next pursuit to measure and decide; RS-19's text is not changed here.
 
+## Carried corrections to version 2.14's design notes
+
+[Observed] Version 2.14's `design.md` (section "The reader rule for four more files (syzygy-3efd.76)") lists `close.ts` 243 among "further same-class reads that the bead does not name; listed so that the remainder has a denominator, none specified here", glossing it as "site files". That classification is wrong, and this note corrects it here without editing 2.14's package (its spec bytes are digest-bound by row A-46; its design notes are not, but the correction belongs with the next version's notes).
+
+- [Observed] `close.ts` 243 is in `storedFiles` (from line 232), which walks every regular file under the run directory and reads each whole (`fs.readFileSync`) to take its size and SHA-256. That population includes `brief.json`, every frozen draft revision `drafts/rev-<n>.json` and `run-advice.json`.
+- [Observed] The 2.14 text, carried unchanged into 2.15, binds every reader of those three: "every reader of one SHALL read it by the same rule under that bound: review, render and close taking the latest passed draft revision, ..." (frozen revisions); "Every reader of the brief record, `brief.json`, SHALL read it by the same rule under 262,144 bytes"; and "Syzygy's reader of `run-advice.json` SHALL read it by the same rule under the check record's bound of 16,777,216 bytes".
+- [Inferred] So `storedFiles`' reads of those three files are in scope of REQ-034 as 2.14 states it, not part of the unspecified remainder. The corrected remainder list is 2.14's less `close.ts` 243; `close.ts` 210 (the step log) and 225 (credential breaches) stay in the remainder, and `storedFiles`' reads of every other run file stay outside REQ-034's text as before.
+- [Observed] Per the lead (2026-11-22), the syzygy-3efd.76 code change is bounding those reads in `storedFiles`. No byte of this version's spec changes for this correction: the binding sentences are already in the text.
+
 ## Review
 
 [Observed] One fresh-context review, `docs/reviews/syzygy-3efd-50/R-PAGE-SUBSECTIONS-SPEC-1-RAW.md`, over the spec at sha256 `428f3c6f75cb42bd1ca8c01e3591fd15db9fdf346f3bf793247fec3c501b161c`: "Verdict: REVISE" (line 3), eleven findings, one blocking. Every finding is repaired below; the repaired spec is sha256 `521e039cf6deabce5893c502e0850678b949346c8dffccbd39c512f77c088f83`, rebuilt from the 2.14 bytes by the same anchored script, and `SEMANTIC-DELTA.md` is regenerated from the bytes. One round (D10): no confirmation round follows.
