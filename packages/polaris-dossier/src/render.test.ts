@@ -1290,9 +1290,9 @@ describe('rendered-design review (S9b)', () => {
     const briefPath = path.join(run, 'brief.json');
     const brief = JSON.parse(fs.readFileSync(briefPath, 'utf8'));
     fs.writeFileSync(briefPath, `${JSON.stringify({ ...brief, readerStandards: { ...brief.readerStandards, packs: ['default@1', 'server@9'] } }, null, 2)}\n`);
-    expect(await renderRun(run, renderDeps())).toMatchObject({ ok: false, refusal: { stage: 'render', reason: 'the design packet is not built: the reader standards the brief carried cannot be recomposed (server@9 is not shipped)' } });
+    expect(await renderRun(run, renderDeps())).toMatchObject({ ok: false, refusal: { stage: 'render', reason: 'the rendered pages cannot be compared outside the review-status region: the reader standards the brief carried cannot be recomposed (server@9 is not shipped)' } });
     fs.writeFileSync(briefPath, `${JSON.stringify({ ...brief, readerStandards: 'polaris-reader-standards-v1' }, null, 2)}\n`);
-    expect(await renderRun(run, renderDeps())).toMatchObject({ ok: false, refusal: { stage: 'render', reason: 'the design packet is not built: the reader standards the brief carried cannot be recomposed (brief.json has a readerStandards member that is not an object)' } });
+    expect(await renderRun(run, renderDeps())).toMatchObject({ ok: false, refusal: { stage: 'render', reason: 'the rendered pages cannot be compared outside the review-status region: the reader standards the brief carried cannot be recomposed (brief.json has a readerStandards member that is not an object)' } });
     expect(fs.existsSync(path.join(run, 'site'))).toBe(false);
     // The stored site's packet is refused the same way once the brief record no longer reads (never version 1's text).
     fs.writeFileSync(briefPath, `${JSON.stringify(brief, null, 2)}\n`);
