@@ -1,3 +1,18 @@
+import { bindUrlSourceReader } from './url-source-reader.js';
+import { sha256 } from '@syzygy/support';
+import { encodeCanonicalJson } from '@syzygy/polaris-generation-core/live';
+import { recordRunConfig, sourceBindingSha256 } from './run-record.js';
+import { createSessionProfile } from './session-profile.js';
+import { createUrlOriginLedger } from './url-origin-ledger.js';
+import { createUrlRunArtifacts } from './url-run-artifacts.js';
+import { beginRunProductReads } from './url-operation-products.js';
+import { createUrlRunDeclaration, URL_PROFILE_ID, URL_ORIGIN_POLICY_PATH, urlSourceTransportIdentity } from './url-run-record.js';
+import { loadUrlDossierRenderer, type UrlLoadedRenderer } from './url-runtime.js';
+import { buildComposedRuntime } from './url-run-composed.testkit.js';
+import { DOSSIER_POLICY_PATH } from './policy-snapshot.js';
+import { checkDraftShape, draftSchemaDocument, inventorySchemaDocument, verdictSchemaDocument, localDraftSchema } from './draft-schema.js';
+import type { SessionToolsReceipt } from './session-tools.js';
+import type { StartSessionsReport } from './session-handover.js';
 import { declaredSubjectFixture, policyFixture, predecessorPolicyBytes } from './full-run.testkit.js';
 import { execFileSync } from 'node:child_process';
 import { createHash } from 'node:crypto';
@@ -246,6 +261,116 @@ async function handedPacket(run: string, editInventory?: (inv: Doc) => void) {
   return { packet, review };
 }
 
+/** Real URL mode, origin receipts and protected reads, with no native role
+ * preparation or provider. Fixed session/root metadata supplies the trusted
+ * host composition inputs. The actual verifier loads the built renderer, and
+ * the real draft producer supplies the authenticated records used by render. */
+let timingRenderer: Promise<UrlLoadedRenderer> | undefined;
+async function preparedUrlRender() {
+  const installed = await (timingRenderer ??= (async () => {
+    const value = await loadUrlDossierRenderer(await buildComposedRuntime());
+    if (value === null) throw new Error('URL timing renderer refused');
+    return value;
+  })());
+  const clone = path.join(tempDir('url-render-timing-source-'), 'kestrel');
+  execFileSync('git', ['clone', '-q', '--no-hardlinks', origin, clone], { env: GIT_ENV });
+  const run = path.join(tempDir('url-render-timing-'), RUN_ID); fs.mkdirSync(run);
+  const bytes = (value: unknown) => Buffer.from(encodeCanonicalJson(value, { maxBytes: 2_097_152, maxNodes: 65_536, maxDepth: 32 }));
+  const write = (file: string, body: string | Uint8Array) => {
+    const target = path.join(run, file); fs.mkdirSync(path.dirname(target), { recursive: true }); fs.writeFileSync(target, body);
+  };
+  const baseBytes = fs.readFileSync(path.join(REAL_ROOT, DOSSIER_POLICY_PATH)), baseDoc = JSON.parse(baseBytes.toString());
+  const loaded = buildDossierScreen(baseBytes, true, null, 'private'); if (!loaded.ok) throw Error(loaded.why);
+  const policyBinding = { path: DOSSIER_POLICY_PATH, commit: 'a'.repeat(40), policyId: baseDoc.policyId,
+    policyVersion: baseDoc.policyVersion, sha256: sha256(baseBytes) };
+  const originBytes = fs.readFileSync(path.join(REAL_ROOT, URL_ORIGIN_POLICY_PATH)), originDoc = JSON.parse(originBytes.toString());
+  const originPolicy = { binding: { path: URL_ORIGIN_POLICY_PATH, commit: 'a'.repeat(40), policyId: originDoc.policyId,
+    policyVersion: originDoc.policyVersion, sha256: sha256(originBytes) }, bytes: originBytes };
+  const config = parseRunConfig(JSON.stringify({ operator: 'owned timer fixture', agentTool: 'claude-code', agentToolVersion: '2.1.327',
+    agentProvider: 'anthropic', model: 'claude-sonnet-4-6', deadline: 'PT1H', agentTokenBudget: 100_000,
+    maxRepairCycles: 3, maxQuestions: 1, audience: 'owned readers', operatorIsOwner: false }));
+  if (!config.ok) throw Error('URL timing configuration refused');
+  const record = recordRunConfig(config.config, { ...subject(clone), screeningPolicy: policyBinding,
+    visibility: { value: 'private', source: 'declaration', declaredBy: 'owned timer fixture', label: 'Inferred' } });
+  const core = encodeRunRecord(record.declared, record.subject); write('run.json', core);
+  const roles = ['author', 'inventory', 'fidelity', 'design'] as const;
+  const fixed = [{ id: 'origin:policy', kind: 'policy', bytes: bytes({ policy: policyBinding }) },
+    { id: 'origin:control', kind: 'run-control', bytes: bytes({ run: RUN_ID }) },
+    { id: 'origin:structure', kind: 'structure', bytes: bytes({ role: roles }) }] as const;
+  const schemaDocuments = { draft: bytes(draftSchemaDocument({ pinnedRevision: commit, maxQuestions: 1 })),
+    inventory: bytes(inventorySchemaDocument({ pinnedRevision: commit })), fidelity: bytes(verdictSchemaDocument({ pinnedRevision: commit })),
+    design: bytes(designVerdictSchemaDocument({ pinnedRevision: commit })) };
+  const ledger = createUrlOriginLedger({ runId: RUN_ID, record, screen: loaded.screen, basePolicyBytes: baseBytes, originPolicy,
+    current: () => true, fixed, schemas: { draft: value => checkDraftShape(localDraftSchema({ pinnedRevision: commit, maxQuestions: 1 }, 'home', 'absent'), value).length === 0 } });
+  const [rolePolicy, runControl, toolMetadata] = fixed.map(value => ledger.fixed(value.id, value.bytes));
+  const roots = { rolePolicy: rolePolicy!, runControl: runControl!, toolMetadata: toolMetadata! };
+  const plans = roles.map((role, index) => {
+    const profile = createSessionProfile({ binding: { run: RUN_ID, role, sourceBinding: sourceBindingSha256(record.subject),
+      policy: policyBinding.sha256, provider: 'anthropic', model: 'claude-sonnet-4-6' },
+      sessionId: `00000000-0000-4000-8000-${String(index + 1).padStart(12, '0')}`, systemPrompt: `Owned ${role} policy.`,
+      initialPrompt: `Owned ${role} prompt.`, utcDate: '2026-10-07', kernelRelease: 'own-linux' });
+    if (!profile.ok) throw Error('URL timing profile refused'); return { role, profile: profile.value.profile };
+  });
+  const initialReceipts = Object.fromEntries(plans.map(plan => [plan.role, ledger.compose(Buffer.from(plan.profile.input.initialPrompt), Object.values(roots))])) as Record<typeof roles[number], ReturnType<typeof ledger.compose>>;
+  const transport = urlSourceTransportIdentity('https://github.com/redis/redis'); if (!transport.ok) throw Error('URL timing transport refused');
+  const H = 'e'.repeat(64), sourceTransport = { originalLocator: transport.originalLocator, destination: transport.destination, providerId: transport.providerId,
+    acquisitionId: 'acq-0123456789abcdef0123456789abcdef', metadataClasses: ['code-structure'] as const,
+    selectionOrigin: 'validated-destination-before-acquisition' as const, commandSha256: H, protocolSha256: H, configurationSha256: H,
+    executableSha256: H, environmentSha256: H };
+  const context = { runId: RUN_ID, expectedBasePolicy: policyBinding, expectedOriginPolicy: originPolicy.binding, expectedSourceTransport: sourceTransport,
+    expectedProfileSha256: installed.identity.profileRegistrySha256 };
+  const declared = createUrlRunDeclaration(core, { runId: RUN_ID, originPolicy: originPolicy.binding, sourceTransport,
+    inference: { provider: 'anthropic', tool: 'claude-code', toolVersion: '2.1.327', model: 'claude-sonnet-4-6', modelSelection: 'supported-default',
+      profile: { id: URL_PROFILE_ID, sha256: installed.identity.profileRegistrySha256 } }, protectedAudit: `url-audit:${RUN_ID}`,
+    plannedOrigins: ledger.plannedOrigins(), roles: plans.map(plan => ({ role: plan.role, sessionId: plan.profile.input.sessionId, profileId: URL_PROFILE_ID,
+      compiledProfileSha256: plan.profile.digest, commandSha256: H, instructionSha256: sha256(plan.profile.input.systemPrompt), viewSha256: H,
+      scaffoldSha256: H, mcpSha256: H, configurationSha256: H, executableSha256: H, inputPacketSha256: sha256(plan.profile.input.initialPrompt),
+      inputOriginId: ledger.metadata(initialReceipts[plan.role]).id, capture: { pid: 'Unknown', startedAt: 'Unknown', finishedAt: 'Unknown', outcome: 'Unknown' } })) }, context);
+  if (!declared.ok) throw Error(`URL timing declaration ${declared.code}`); write('url-declaration.json', declared.text);
+  const effectiveDeclaration = { declaration: declared.declaration, bytes: Buffer.from(declared.text), context: { ...context, expectedSidecarSha256: declared.sha256 } };
+  const urlSources = { ...sources(), declaredPolicy: async () => ({ ok: true as const, bytes: baseBytes, binding: policyBinding }),
+    effectiveRunDeclaration: () => ({ kind: 'url' as const, context: effectiveDeclaration.context,
+      screenMetadata: (text: string) => loaded.screen.screenSecrets(text) === undefined }) };
+  const deps = { sources: urlSources, openReader: bindUrlSourceReader({ clone, revision: commit, store: 'owned-loose', current: () => true }), now: () => LATER, probe: neverProbe, loadScreen: async () => loaded,
+    renderer: installed.renderer, urlRenderer: installed };
+  const brief = await issueBrief(run, { ...deps, now: () => NOW }); if (!brief.ok) throw Error(`URL timing brief ${brief.refusal.reason}`);
+  const sessions = plans.slice(1).map(plan => {
+    const inventory = plan.role === 'inventory', directory = `${run}.sessions/${inventory ? 'session' : plan.role}-1`;
+    fs.mkdirSync(directory, { recursive: true });
+    const prompt = plan.profile.input.initialPrompt, promptSha256 = sha256(prompt);
+    const item = { role: inventory ? 'inventory' : 'review', ...(inventory ? {} : { kind: plan.role }), session: 1, directory, prompt, promptSha256,
+      commands: { terminal: 'Owned timer fixture', bang: null, note: 'Owned timer fixture' } };
+    const inventoryBrief = 'Owned inventory scope.\n'; if (inventory) fs.writeFileSync(path.join(directory, 'inventory-brief.md'), inventoryBrief);
+    write(inventory ? 'inventory/session-1.json' : `reviews/${plan.role}-session-1.json`, bytes({ format: 'polaris-dossier-session-prompt/2',
+      role: item.role, ...(inventory ? { brief: { name: 'inventory-brief.md', sha256: sha256(inventoryBrief) } } : { kind: plan.role }),
+      runId: RUN_ID, pinnedRevision: commit, session: 1, directory: path.relative(path.dirname(run), directory),
+      context: { agentTool: record.declared.agentTool, provider: record.declared.agentProvider }, prompt, promptSha256 })); return item;
+  });
+  const artifacts = createUrlRunArtifacts({ run, record, screen: loaded.screen, current: () => true, roles: plans,
+    origins: { ledger, roots, initialReceipts, schemaDocuments }, initializedCoreBytes: Buffer.from(core), effectiveDeclaration, helpText: 'syzygy dossier owned help.',
+    runDossier: () => async argv => {
+      const products = beginRunProductReads(run, artifacts, 'author-check', Date.now() + 5000);
+      try { let stdout = ''; const exit = await runDossierCli(argv.slice(1), { stdout: text => { stdout += text; }, stderr: () => {} }, { ...deps, productReads: products });
+        return { stdout, stderr: '', exit }; } finally { products.close(); }
+    } });
+  artifacts.registerInitial({ brief: brief.report, sessions: { command: 'session-prompt', outcome: 'issued', role: 'all', run, sessions } as unknown as StartSessionsReport });
+  const authored = { ...draft(), sessionId: plans[0]!.profile.input.sessionId };
+  const body = bytes(authored), binding = plans[0]!.profile.input.binding;
+  const receipt = (toolName: SessionToolsReceipt['toolName'], toolInput: Record<string, unknown>, reply: unknown): SessionToolsReceipt => {
+    const canonicalText = bytes(reply).toString(); return { binding, id: `tool-${sha256(canonicalText)}`, kind: 'tool-result', toolName, toolInput,
+      canonicalText, digest: sha256(canonicalText), bytes: Buffer.byteLength(canonicalText), classes: [], originIds: [] };
+  };
+  const admission = { digest: H, bytes: 1, classes: ledger.metadata(initialReceipts.author).classes, originIds: ['owned-request-admission'] };
+  write('drafts/next.json', body);
+  const written = receipt('mcp__syzygy__artifact_write', { path: 'drafts/next.json', content: body.toString() }, { ok: true, kind: 'artifact-written', path: 'drafts/next.json', sha256: sha256(body) });
+  await artifacts.toolReceipt('author', written, admission); artifacts.committed('author', written.id);
+  const argv = ['dossier', 'check', run], checked = await artifacts.runDossier('author')(argv, null);
+  if (checked.exit !== 0) throw Error(`URL timing check ${checked.stdout}`);
+  const checkReceipt = receipt('mcp__syzygy__dossier_step', { argv }, { ok: true, kind: 'dossier-result', ...checked });
+  await artifacts.toolReceipt('author', checkReceipt, admission); artifacts.committed('author', checkReceipt.id);
+  return { run, deps, artifacts };
+}
+
 /** The renderer, recording what it was given. */
 function capturing(): { renderer: DossierRenderer; inputs: DossierRendererInput[] } {
   const inputs: DossierRendererInput[] = [];
@@ -271,6 +396,51 @@ const marked = (page: string, id: string): { epistemic: string; reason: string |
 const html = (files:ReadonlyMap<string, string>): [string, string][] => [...files].filter(([file]) => file.endsWith('.html'));
 
 describe('render', () => {
+  it('lets an actual URL producer finish after six seconds within its original thirty-second context', async () => {
+    const f = await preparedUrlRender();
+    vi.useFakeTimers({ toFake: ['Date', 'setTimeout', 'clearTimeout'] });
+    vi.setSystemTime(LATER);
+    const reads = beginRunProductReads(f.run, f.artifacts, 'render', LATER + 60_000);
+    let admit!: (value: boolean) => void, entered!: () => void, signal: AbortSignal | undefined;
+    const held = new Promise<boolean>(resolve => { admit = resolve; }), reached = new Promise<void>(resolve => { entered = resolve; });
+    const rendered = renderRun(f.run, { ...f.deps, productReads: reads, admitProducedSite: input => {
+      signal = input.signal; entered(); return held;
+    } });
+    try {
+      await Promise.race([reached, rendered.then(result => { throw Error(`URL producer never reached: ${JSON.stringify(result)}`); })]);
+      await vi.advanceTimersByTimeAsync(6000);
+      expect(signal?.aborted).toBe(false);
+      expect(reads.isLeaseOpen()).toBe(true);
+      expect(fs.existsSync(path.join(f.run, 'site'))).toBe(false);
+      admit(true);
+      expect(await rendered).toMatchObject({ ok: true });
+    } finally { admit(false); await rendered; reads.close(); vi.useRealTimers(); }
+  }, 60_000);
+
+  it('aborts an actual URL producer at the remaining shared deadline after initial rendering has consumed time', async () => {
+    const f = await preparedUrlRender();
+    vi.useFakeTimers({ toFake: ['Date', 'setTimeout', 'clearTimeout'] });
+    vi.setSystemTime(LATER);
+    const originalDeadline = LATER + 8000, reads = beginRunProductReads(f.run, f.artifacts, 'render', originalDeadline);
+    let initial = true, admit!: (value: boolean) => void, entered!: () => void, signal: AbortSignal | undefined;
+    const held = new Promise<boolean>(resolve => { admit = resolve; }), reached = new Promise<void>(resolve => { entered = resolve; });
+    const rendered = renderRun(f.run, { ...f.deps, productReads: reads, loadScreen: async () => {
+      if (initial) { initial = false; vi.advanceTimersByTime(6000); }
+      return f.deps.loadScreen();
+    }, admitProducedSite: input => { signal = input.signal; entered(); return held; } });
+    try {
+      await Promise.race([reached, rendered.then(result => { throw Error(`URL producer never reached: ${JSON.stringify(result)}`); })]);
+      expect(Date.now()).toBe(LATER + 6000);
+      expect(reads.deadline).toBe(originalDeadline);
+      await vi.advanceTimersByTimeAsync(1999);
+      expect(signal?.aborted).toBe(false);
+      await vi.advanceTimersByTimeAsync(1);
+      expect(signal?.aborted).toBe(true);
+      expect(await rendered).toMatchObject({ ok: false, refusal: { stage: 'render' } });
+      expect(fs.existsSync(path.join(f.run, 'site'))).toBe(false);
+    } finally { admit(false); await rendered; reads.close(); vi.useRealTimers(); }
+  }, 60_000);
+
   it('awaits actual producer admission before storing a site, and withholds it on a failed producer', async () => {
     const run = await prepared(); let calls = 0;
     const result = await renderRun(run, renderDeps({ admitProducedSite: async input => {
