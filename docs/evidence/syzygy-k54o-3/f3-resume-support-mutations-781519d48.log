@@ -1,0 +1,10 @@
+resume-request-lifetime-reset killed 1
+resume-token-lifetime-reset killed 1
+resume-budget-token-reuse killed 1
+resume-deadline-renewal killed 1
+stopped-slot-generation-omitted killed 4
+stopped-chain-limit-bypass killed 1
+stopped-attempt-reuse killed 1
+recovery-before-durable-consumption killed 1
+recovery-consumed-generation-replay killed 1
+recovery-replaced-lock killed 1
