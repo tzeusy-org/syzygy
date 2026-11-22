@@ -209,6 +209,30 @@ describe('protected URL session audit', () => {
     expect(writer.summary().providerReceipts).toBe('Unknown');
   });
 
+  it('retains count evidence on its own route with no usage report or inference tool result', async () => {
+    const f = fixture(), writer = await f.create();
+    const relay = f.event(writer, 'relay');
+    if (relay.kind !== 'relay') throw new Error('own relay fixture refused');
+    const payload = { ...relay.payload, route: '/v1/messages/count_tokens?beta=true' } as const;
+    await writer.append({ ...relay, payload });
+    await writer.append({ ...relay, payload: { ...payload, event: 'send-attempt', outcome: 'attempted' } });
+    await writer.append({ ...relay, payload: { ...payload, event: 'send-outcome', outcome: 'local-request-flushed' } });
+    const response = { content: 'count-tokens-json', bytes: 19, digest: 'f'.repeat(64), estimatedInputTokens: 10 } as const;
+    await writer.append({ ...relay, payload: { ...payload, event: 'response-admitted', response, outcome: 'response-admitted', status: 200 } });
+    expect(lines(f).at(-1)?.event.payload).toMatchObject({ route: '/v1/messages/count_tokens?beta=true', response, consumedToolResults: [] });
+    expect(writer.summary()).toMatchObject({ usageReports: 0, providerReceipts: 'Unknown', relayEvents: { 'response-admitted': 1 } });
+  });
+
+  it('refuses count evidence relabeled as an inference response', async () => {
+    const f = fixture(), writer = await f.create();
+    const [admission, send, flush, response] = relayTrace(f, writer);
+    for (const event of [admission, send, flush]) await writer.append(event);
+    await expect(writer.append({ ...response, payload: { ...response.payload,
+      response: { content: 'count-tokens-json', bytes: 19, digest: 'f'.repeat(64), estimatedInputTokens: 10 } } }))
+      .rejects.toThrow('url-session-audit-refused');
+    expect(writer.summary()).toMatchObject({ relayEvents: { 'response-admitted': 0 } });
+  });
+
   it.each(['missing flush', 'changed request', 'duplicate response'] as const)('refuses a response trace with %s', async fault => {
     const f = fixture(), writer = await f.create();
     const [admission, send, flush, response] = relayTrace(f, writer);

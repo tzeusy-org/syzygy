@@ -9,7 +9,8 @@ import { isNativeSessionProfile, isOrderedDesignSessionProfile, type NativeSessi
 import type { DossierScreen } from './screen.js';
 import type { UrlSessionControlAudit } from './session-control.js';
 import type { UrlLaunchLimits, UrlSessionLaunchOptions, UrlSessionLaunchOutcome } from './session-launch.js';
-import { SESSION_RELAY_EVENTS, type SessionAuditEvent } from './session-relay.js';
+import { isSessionTokenCount, SESSION_COUNT_RESPONSE_MAX_BYTES, SESSION_COUNT_TOKENS_PATH, SESSION_RELAY_EVENTS,
+  type SessionAuditEvent } from './session-relay.js';
 import type { SessionResponseUsage } from './session-response.js';
 import type { ViewRole } from './session-view.js';
 import { inspectUrlDesignProduct, isUrlDesignProductLeaseOpen, readInertUrlDesignProduct, recheckUrlDesignProductInputs, sameReproducedUrlDesignProduct,
@@ -472,10 +473,12 @@ export async function createUrlSessionAudit(given: UrlSessionAuditOptions): Prom
             || typeof p.at !== 'string' || !/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{3}Z$/u.test(p.at) || new Date(p.at).toISOString() !== p.at
             || p.credentialIdentity !== 'Unknown' || p.exposureMode !== 'private-local-cli' || p.governingRule !== 'GOVERNANCE-SIMPLIFICATION-D10'
             || (p.status !== null && (!count(p.status, 599) || p.status < 100))
-            || (p.route !== null && !one(p.route, ['messages', 'count-tokens']))) poison();
+            || (p.route !== null && !one(p.route, ['messages', SESSION_COUNT_TOKENS_PATH]))) poison();
           if (p.admission !== null) admission(p.admission);
           if (p.received !== null && (!exact(p.received, ['digest', 'bytes']) || !hex(p.received.digest) || !count(p.received.bytes, 2_097_152))) poison();
-          if (!Array.isArray(p.consumedToolResults) || p.consumedToolResults.length > 1) poison();
+          const tokenCount = p.route === SESSION_COUNT_TOKENS_PATH;
+          if (!Array.isArray(p.consumedToolResults) || p.consumedToolResults.length > (tokenCount ? 0 : 1)) poison();
+          if (tokenCount && role === 'design' && orderedDesignProfile !== null && p.event !== 'attempt-refused' && p.event !== 'transport-failed') poison();
           for (const result of p.consumedToolResults as unknown[]) {
             if (!exact(result, ['receiptId', 'toolUseId', 'digest', 'bytes']) || typeof result.receiptId !== 'string' || !/^tool-[0-9a-f]{64}$/u.test(result.receiptId)
               || !providerToolId(result.toolUseId) || !hex(result.digest) || !count(result.bytes, 2_097_152) || result.bytes === 0
@@ -489,7 +492,14 @@ export async function createUrlSessionAudit(given: UrlSessionAuditOptions): Prom
             || p.event !== 'response-admitted' && p.response !== null) poison();
           if (p.event === 'response-admitted') {
             const response = p.response;
-            if (p.status !== 200 || !exact(response, ['digest', 'bytes', 'content', 'stopReason', 'textBlocks', 'tool'])
+            if (p.status !== 200) poison();
+            if (tokenCount) {
+              if (!exact(response, ['digest', 'bytes', 'content', 'estimatedInputTokens']) || !hex(response.digest)
+                || !count(response.bytes, SESSION_COUNT_RESPONSE_MAX_BYTES) || response.bytes === 0
+                || response.content !== 'count-tokens-json' || !isSessionTokenCount(response.estimatedInputTokens)) poison();
+              break;
+            }
+            if (!exact(response, ['digest', 'bytes', 'content', 'stopReason', 'textBlocks', 'tool'])
               || !hex(response.digest) || !count(response.bytes, 8_388_608) || response.bytes === 0
               || !one(response.content, ['messages-json', 'messages-event-stream'])
               || !one(response.stopReason, ['end_turn', 'tool_use', 'max_tokens', 'stop_sequence'])

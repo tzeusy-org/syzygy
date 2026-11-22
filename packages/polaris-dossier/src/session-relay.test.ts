@@ -5,7 +5,7 @@ import path from 'node:path';
 import { createHash } from 'node:crypto';
 import { afterEach, describe, expect, it } from 'vitest';
 import { tempDir } from '@syzygy/test-kit';
-import { createSessionAuditSegment, readSessionRelayAuditEvidence, sessionRelayTestPort, SESSION_RELAY_LIMITS, type SessionAuditEvent,
+import { createSessionAuditSegment, decodeSessionCountResponse, readSessionRelayAuditEvidence, sessionRelayTestPort, SESSION_COUNT_TOKENS_PATH, SESSION_RELAY_LIMITS, type SessionAuditEvent,
   type SessionRelay, type SessionRelayPorts, type SessionRelaySubject } from './session-relay.js';
 
 const BODY = '{"messages":[{"role":"user","content":"NONSECRET-admitted"}]}';
@@ -18,9 +18,9 @@ const ADMISSION = { digest: createHash('sha256').update(BODY).digest('hex'), byt
 const ACCEPTED = { ok: true, observation: { stopReason: 'end_turn', textBlocks: 1, tool: null } } as const;
 const close: (() => void | Promise<void>)[] = [];
 afterEach(async () => { for (const stop of close.splice(0).reverse()) await stop(); });
-function request(relay: SessionRelay, body = BODY): Promise<{ status: number; body: string }> {
+function request(relay: SessionRelay, body = BODY, route = '/v1/messages?beta=true'): Promise<{ status: number; body: string }> {
   return new Promise((resolve, reject) => {
-    const incoming = http.request({ socketPath: relay.socket, path: '/v1/messages?beta=true', method: 'POST', agent: false,
+    const incoming = http.request({ socketPath: relay.socket, path: route, method: 'POST', agent: false,
       headers: { 'content-type': 'application/json', authorization: 'Bearer NONSECRET-fixture', 'content-length': Buffer.byteLength(body) },
     }, response => {
       const chunks: Buffer[] = [];
@@ -31,15 +31,19 @@ function request(relay: SessionRelay, body = BODY): Promise<{ status: number; bo
     incoming.on('error', reject); incoming.end(body);
   });
 }
-async function fixture(overrides: Partial<SessionRelayPorts> = {}, options: { response?: string; hang?: boolean; flushed?: boolean; milliseconds?: number; expectedAuthorization?: string; expectedBody?: string; observe?: (server: http.Server) => void } = {}) {
+async function fixture(overrides: Partial<SessionRelayPorts> = {}, options: { response?: string; responseType?: string; countResponse?: string; expectedRoute?: string; hang?: boolean; flushed?: boolean; milliseconds?: number; expectedAuthorization?: string; expectedBody?: string; observe?: (server: http.Server) => void } = {}) {
   const calls: string[] = [], audit: SessionAuditEvent[] = [];
   let forwarded = 0;
   const start = sessionRelayTestPort(async input => {
     calls.push('forward'); forwarded++;
     expect(Buffer.from(input.body).toString('utf8')).toBe(options.expectedBody ?? BODY);
     expect(input.headers.authorization).toBe(options.expectedAuthorization ?? 'Bearer NONSECRET-fixture');
+    if (options.expectedRoute !== undefined) expect(input.route).toBe(options.expectedRoute);
     if (options.hang) return new Promise(() => undefined);
-    return { status: 200, contentType: 'text/event-stream', body: Buffer.from(options.response ?? RESPONSE), requestFlushed: options.flushed ?? true };
+    if (input.route === SESSION_COUNT_TOKENS_PATH && options.countResponse !== undefined) {
+      return { status: 200, contentType: 'application/json', body: Buffer.from(options.countResponse), requestFlushed: true };
+    }
+    return { status: 200, contentType: options.responseType ?? 'text/event-stream', body: Buffer.from(options.response ?? RESPONSE), requestFlushed: options.flushed ?? true };
   }, options.observe);
   const ports: SessionRelayPorts = {
     current: () => { calls.push('current'); return true; },
@@ -78,6 +82,76 @@ describe('session relay choke point ordering', () => {
     expect(readSessionRelayAuditEvidence({ ...own.relay }, response)).toBeNull();
     expect(readSessionRelayAuditEvidence(other.relay, response)).toBeNull();
     expect(readSessionRelayAuditEvidence(own.relay, other.audit[0]!)).toBeNull();
+  });
+
+  it('audits the exact count route and releases a screened estimate without inference usage or tool authorization', async () => {
+    const response = '{"input_tokens":123}';
+    const seenRoutes: string[] = [];
+    const f = await fixture({
+      request: (bytes, _context, route) => {
+        seenRoutes.push(route);
+        return { ok: true, body: bytes, admission: ADMISSION, consumedToolResults: [] };
+      },
+      providerHeaders: (headers, _context, route) => { seenRoutes.push(route); return headers; },
+      response: (bytes, contentType, _context, route) => {
+        seenRoutes.push(route);
+        return decodeSessionCountResponse(bytes, contentType, () => false);
+      },
+    }, { response, responseType: 'application/json', expectedRoute: SESSION_COUNT_TOKENS_PATH });
+    expect(await request(f.relay, BODY, SESSION_COUNT_TOKENS_PATH)).toEqual({ status: 200, body: response });
+    expect(f.forwarded()).toBe(1);
+    expect(seenRoutes).toEqual(Array<string>(4).fill('/v1/messages/count_tokens?beta=true'));
+    expect(f.audit.map(event => event.event)).toEqual(['attempt-allowed', 'send-attempt', 'send-outcome', 'response-admitted']);
+    expect(f.audit.map(event => event.route)).toEqual(seenRoutes);
+    const admitted = f.audit.at(-1)!;
+    expect(admitted.response).toEqual({ content: 'count-tokens-json', bytes: Buffer.byteLength(response),
+      digest: createHash('sha256').update(response).digest('hex'), estimatedInputTokens: 123 });
+    expect(readSessionRelayAuditEvidence(f.relay, admitted)).toEqual({ usage: null });
+    expect(f.relay.responseFlushed()).toBe(false);
+  });
+
+  it('preserves the preceding Messages completion during and after a count exchange', async () => {
+    const countResponse = '{"input_tokens":1}';
+    const f = await fixture({
+      response: (bytes, type, _context, route) => {
+        if (route !== SESSION_COUNT_TOKENS_PATH) return ACCEPTED;
+        expect(f.relay.responseFlushed()).toBe(true);
+        return decodeSessionCountResponse(bytes, type, () => false);
+      },
+    }, { countResponse });
+    expect(await request(f.relay)).toEqual({ status: 200, body: RESPONSE });
+    expect(f.relay.responseFlushed()).toBe(true);
+    expect(await request(f.relay, BODY, '/v1/messages/count_tokens?beta=true')).toEqual({ status: 200, body: countResponse });
+    expect(f.relay.responseFlushed()).toBe(true);
+  });
+
+  it.each(['/v1/messages/count_tokens', '/v1/messages/count_tokens?beta=false', '/v1/messages/count_tokens?beta=true&extra=1',
+    '/v1/messages/count%5ftokens?beta=true'])('refuses unpinned count route %s before inference admission', async alternateRoute => {
+    const alternate = await fixture();
+    expect((await request(alternate.relay, BODY, alternateRoute)).status).toBe(400);
+    expect(alternate.forwarded()).toBe(0);
+    expect(alternate.calls).toEqual(['audit:attempt-refused']);
+  });
+
+  it('refuses a Messages-shaped response decision for the exact count route', async () => {
+    const wrongResponse = await fixture({}, { response: '{"input_tokens":2}', responseType: 'application/json',
+      expectedRoute: SESSION_COUNT_TOKENS_PATH });
+    expect((await request(wrongResponse.relay, BODY, SESSION_COUNT_TOKENS_PATH)).status).toBe(502);
+    expect(wrongResponse.audit.at(-1)).toMatchObject({ event: 'response-refused', response: null });
+  });
+
+  it('accepts only complete bounded UTF-8 token count objects that pass secret screening', () => {
+    const decode = (body: string | Uint8Array, type = 'application/json', scan = (_value: string) => false) =>
+      decodeSessionCountResponse(typeof body === 'string' ? Buffer.from(body) : body, type, scan);
+    expect(decode('{"input_tokens":0}', 'application/json; charset=utf-8')).toEqual({ ok: true, kind: 'token-count', estimatedInputTokens: 0 });
+    expect(decode('{"input_tokens":15000000}')).toMatchObject({ ok: true, estimatedInputTokens: 15_000_000 });
+    const refused = ['{"input_tokens":15000001}', '{"input_tokens":9007199254740992}', '{"input_tokens":-1}', '{"input_tokens":1.5}',
+      '{"input_tokens":1.0000000000000001}', '{"input_tokens":1e0}', '{"input_tokens":"1"}', '{"input_tokens":1,"input_tokens":2}', '{"input_tokens":1,"context_management":null}', '{}',
+      '{"input_tokens":1} extra', '{"input_tokens":1}' + ' '.repeat(1024)];
+    for (const body of refused) expect(decode(body), body).toEqual({ ok: false });
+    expect(decode(Uint8Array.of(0xff))).toEqual({ ok: false });
+    expect(decode('{"input_tokens":0}', 'text/event-stream')).toEqual({ ok: false });
+    expect(decode('{ "input_tokens": 0 }', 'application/json', text => text === '{"input_tokens":0}')).toEqual({ ok: false });
   });
 
   it('rejects missing, expanded or nonfinite limits before opening the endpoint', async () => {

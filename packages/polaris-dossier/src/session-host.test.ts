@@ -15,12 +15,13 @@ import { SESSION_CONTENT_CLASSES } from './session-egress-policy.js';
 import { sessionHostTestPort, type SessionHost, type SessionHostOptions } from './session-host.js';
 import { createSessionProfile, DEFAULT_SESSION_MODEL, SESSION_PROFILE_BETA, SESSION_PROFILE_SYNTHETIC_AUTHORIZATION,
   sessionProfileReminderText } from './session-profile.js';
-import { sessionRelayTestPort } from './session-relay.js';
+import { SESSION_COUNT_TOKENS_PATH, sessionRelayTestPort } from './session-relay.js';
 
 const cleanup: (() => Promise<unknown> | void)[] = [];
 afterEach(async () => { for (const stop of cleanup.splice(0).reverse()) await stop(); });
 const call = { type: 'tool_use', id: 'toolu_own_artifact', name: 'mcp__syzygy__artifact_read', input: { path: 'brief.md' } };
 const body = 'Own synthetic brief.\n';
+const COUNT_BETA = 'claude-code-20250219,oauth-2025-04-20,interleaved-thinking-2025-05-14,context-management-2025-06-27,token-counting-2024-11-01';
 async function fixture() {
   const root = await mkdtemp(path.join(os.tmpdir(), 'session-host-'));
   cleanup.push(() => rm(root, { force: true, recursive: true }));
@@ -81,6 +82,10 @@ async function fixture() {
   const relay = sessionRelayTestPort(async input => {
     forwards++; events.push('forward'); expect(events.at(-2)).toBe('audit:attempt-allowed');
     expect(input.headers.authorization).toBe('Bearer NONSECRET-own-host-token');
+    if (input.route === SESSION_COUNT_TOKENS_PATH) {
+      expect(input.headers['anthropic-beta']).toBe(COUNT_BETA);
+      return { status: 200, contentType: 'application/json', requestFlushed: true, body: Buffer.from('{"input_tokens":23}') };
+    }
     expect(JSON.parse(Buffer.from(input.body).toString()).metadata.user_id).toBe(`syzygy:own-run:author/${profile.input.sessionId}`);
     return { status: 200, contentType: 'application/json', requestFlushed: true, body: response(forwards === 1 ? [call] : [{ type: 'text', text: 'Own fixture complete.' }]) };
   }, server => {
@@ -99,10 +104,11 @@ async function fixture() {
   return { root, options, profile, events, exchanges, request, start, actualRelayClose, failRelayServer: () => failRelayServer(), setCurrent: (value: boolean) => { current = value; },
     counts: () => ({ artifactReads, forwards, responses, reservations }) };
 }
-async function send(host: SessionHost, body: string, signal?: AbortSignal): Promise<{ status: number; body: string }> {
+async function send(host: SessionHost, body: string, signal?: AbortSignal, requestPath = '/v1/messages?beta=true',
+  beta = SESSION_PROFILE_BETA): Promise<{ status: number; body: string }> {
   return new Promise((resolve, reject) => {
-    const request = http.request({ socketPath: host.relaySocket, path: '/v1/messages?beta=true', method: 'POST', agent: false, signal,
-      headers: { authorization: SESSION_PROFILE_SYNTHETIC_AUTHORIZATION, 'anthropic-version': '2023-06-01', 'anthropic-beta': SESSION_PROFILE_BETA,
+    const request = http.request({ socketPath: host.relaySocket, path: requestPath, method: 'POST', agent: false, signal,
+      headers: { authorization: SESSION_PROFILE_SYNTHETIC_AUTHORIZATION, 'anthropic-version': '2023-06-01', 'anthropic-beta': beta,
         'content-type': 'application/json', 'user-agent': 'claude-cli/2.1.327 (external, sdk-cli)', 'x-app': 'cli' } }, response => {
       const chunks: Buffer[] = []; response.on('data', (chunk: Buffer) => chunks.push(chunk));
       response.on('end', () => resolve({ status: response.statusCode!, body: Buffer.concat(chunks).toString() })); response.on('error', reject);
@@ -124,6 +130,46 @@ describe('actual composed host controller, broker and checked relay', () => {
     expect(f.counts().forwards).toBe(0);
     expect(f.exchanges).toEqual([]);
     expect((await send(host, f.request())).status).toBe(503);
+  });
+
+  it('reserves a checked tool reply count separately while preserving the exact Messages continuation', async () => {
+    const f = await fixture();
+    let countBody = '', reserved = 0, settled = 0;
+    const host = await f.start({
+      reserveCountRequest: admission => {
+        expect(admission).toMatchObject({ digest: sha256(countBody), bytes: Buffer.byteLength(countBody) });
+        reserved++; return true;
+      },
+      observeCountResponse: () => { settled++; return true; },
+    });
+    expect((await send(host, f.request())).status).toBe(200);
+    const reply = await invoke(host, { tool: 'artifact_read', input: call.input });
+    countBody = JSON.stringify({ model: DEFAULT_SESSION_MODEL, tools: [],
+      messages: [{ role: 'user', content: [{ type: 'text', text: JSON.stringify(reply) }] }] });
+    expect(await send(host, countBody, undefined, SESSION_COUNT_TOKENS_PATH, COUNT_BETA)).toEqual({ status: 200, body: '{"input_tokens":23}' });
+    expect({ reserved, settled, ...f.counts() }).toEqual({ reserved: 1, settled: 1, artifactReads: 1, forwards: 2, responses: 1, reservations: 1 });
+    expect(f.exchanges.at(-1)).toMatchObject({ route: '/v1/messages/count_tokens?beta=true', consumedToolResults: [],
+      response: { content: 'count-tokens-json', estimatedInputTokens: 23 } });
+    const messages = [f.profile.historicalInitialMessage, { role: 'assistant', content: [call] }, { role: 'user', content: [{ type: 'tool_result',
+      tool_use_id: call.id, content: [{ type: 'text', text: JSON.stringify(reply) + '\n' }, { type: 'text', text: sessionProfileReminderText(14_999_992) }],
+      cache_control: { type: 'ephemeral', ttl: '1h' } }] }];
+    expect((await send(host, f.request(messages))).status).toBe(200);
+    expect(f.counts()).toEqual({ artifactReads: 1, forwards: 3, responses: 2, reservations: 2 });
+    expect(f.exchanges.at(-1)).toMatchObject({ route: 'messages', consumedToolResults: [{ toolUseId: call.id }],
+      response: { content: 'messages-json', stopReason: 'end_turn' } });
+  });
+
+  it('refuses a count before forwarding when its separate settlement port is absent', async () => {
+    const f = await fixture();
+    let reserved = 0;
+    const host = await f.start({ reserveCountRequest: () => { reserved++; return true; } });
+    expect((await send(host, f.request())).status).toBe(200);
+    const reply = await invoke(host, { tool: 'artifact_read', input: call.input });
+    const countBody = JSON.stringify({ model: DEFAULT_SESSION_MODEL, tools: [],
+      messages: [{ role: 'user', content: [{ type: 'text', text: JSON.stringify(reply) }] }] });
+    expect((await send(host, countBody, undefined, SESSION_COUNT_TOKENS_PATH, COUNT_BETA)).status).toBe(403);
+    expect({ reserved, ...f.counts() }).toEqual({ reserved: 0, artifactReads: 1, forwards: 1, responses: 1, reservations: 1 });
+    expect(f.exchanges.at(-1)).toMatchObject({ event: 'attempt-refused', route: '/v1/messages/count_tokens?beta=true', response: null });
   });
 
   it('delivers an issued tool once, audits before effect/release and admits only its exact canonical continuation', async () => {

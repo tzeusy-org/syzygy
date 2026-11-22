@@ -4,7 +4,7 @@ import type { ReleaseReply } from './session-broker.js';
 import { screenOrderedDesignInitialRequest, screenOrderedDesignRequest, type OrderedDesignRequestChecks } from './session-egress-policy.js';
 import { isOrderedDesignSessionProfile, matchesOrderedDesignContinuationResponse, matchesOrderedDesignTerminalResponse,
   sessionProfileRemainingTokens, type OrderedDesignSessionProfile } from './session-profile.js';
-import { readSessionRelayAuditEvidence, type SessionAuditEvent, type SessionRelay, type SessionRelayPorts,
+import { readSessionRelayAuditEvidence, type SessionAuditEvent, type SessionRelay, type SessionMessageResponseDecision,
   type SessionResponseObservation } from './session-relay.js';
 import { decodeSessionResponse, type SessionResponseUsage } from './session-response.js';
 import { isOrderedDesignPlanFor, materializeOrderedDesignPart, type OrderedDesignPlan } from './url-design-delivery.js';
@@ -299,7 +299,7 @@ export function createOrderedDesignSession(options: Options) {
     } finally { busy = false; }
   };
 
-  const checkResponse = async (bytes: Uint8Array, contentType: string): Promise<Awaited<ReturnType<SessionRelayPorts['response']>>> => {
+  const checkResponse = async (bytes: Uint8Array, contentType: string): Promise<SessionMessageResponseDecision> => {
     let held = false;
     try {
       requireLive();

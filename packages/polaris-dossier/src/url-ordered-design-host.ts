@@ -7,7 +7,8 @@ import type { SessionHost } from './session-host.js';
 import type { SessionMachineTransport } from './session-machine-transport.js';
 import { isOrderedDesignSessionProfile, projectSessionProfileMetadata, sessionProfileProviderHeaders,
   type OrderedDesignSessionProfile } from './session-profile.js';
-import { startSessionRelay, type SessionAuditEvent, type SessionRelay, type SessionRelaySubject } from './session-relay.js';
+import { SESSION_COUNT_TOKENS_PATH, startSessionRelay, type SessionAuditEvent, type SessionRelay, type SessionRelaySubject,
+  type SessionResponseObservation } from './session-relay.js';
 import { createOrderedDesignSession, isProductionOrderedDesignSession } from './url-ordered-design-session.js';
 
 type Controller = ReturnType<typeof createOrderedDesignSession>;
@@ -54,7 +55,7 @@ async function start(input: OrderedDesignHostOptions, startRelay: typeof startSe
   let controller: Controller | undefined;
   const replies = new Map<string, ReplyIdentity>();
   let broker: SessionBroker | undefined, relay: SessionRelay | undefined;
-  let closing = false, failed = false, started = false, issuedCall: NonNullable<SessionAuditEvent['response']>['tool'] = null;
+  let closing = false, failed = false, started = false, issuedCall: SessionResponseObservation['tool'] = null;
   let closingPromise: ReturnType<SessionHost['close']> | undefined;
   const poison = (): void => { failed = true; void controller?.retire('refused').catch(() => {}); };
   let cancelActivation!: () => void;
@@ -86,8 +87,9 @@ async function start(input: OrderedDesignHostOptions, startRelay: typeof startSe
     if (await Promise.race([Promise.resolve(input.current()), cancelled]) !== true || closing || failed) throw refused();
     relay = await startRelay(input.relaySocket, input.subject, {
       current,
-      request: async bytes => {
+      request: async (bytes, _context, route) => {
         try {
+          if (route === SESSION_COUNT_TOKENS_PATH) throw refused();
           const checked = await selectedController().checkRequest(bytes);
           if (!checked.ok) throw refused();
           const parsed = parseBoundedJson(new TextDecoder('utf-8', { fatal: true }).decode(bytes), SESSION_POLICY_LIMITS);
@@ -111,7 +113,8 @@ async function start(input: OrderedDesignHostOptions, startRelay: typeof startSe
         const projected = sessionProfileProviderHeaders(profile, incoming);
         return projected.ok ? input.credential.headers(projected.value.headers) : null;
       },
-      response: (bytes, contentType) => selectedController().checkResponse(bytes, contentType),
+      response: (bytes, contentType, _context, route) => route === SESSION_COUNT_TOKENS_PATH
+        ? { ok: false } : selectedController().checkResponse(bytes, contentType),
       audit: async event => {
         try {
           if (!(await current())) throw refused();

@@ -9,6 +9,7 @@ import { SESSION_CONTENT_CLASSES, type SessionAdmission, type SessionBinding, ty
 import { isSessionMachineTransport, openSessionMachineConnection, prepareSessionMachineTransport, sessionMachineEffectContext, stopSessionMachineIngress,
   type SessionMachineTransport, type SessionMachineEffectContext } from './session-machine-transport.js';
 import type { SessionResponseStopReason, SessionResponseUsage } from './session-response.js';
+import { SESSION_PROFILE_TOKEN_BUDGET } from './session-profile.js';
 
 export interface SessionRelayLimits {
   readonly requestBytes: number; readonly responseBytes: number;
@@ -28,6 +29,17 @@ export interface SessionResponseObservation {
   readonly textBlocks: number;
   readonly tool: { readonly id: string; readonly name: SessionTool; readonly inputSha256: string } | null;
 }
+export const SESSION_COUNT_TOKENS_PATH = '/v1/messages/count_tokens?beta=true';
+const ROUTES = ['/v1/messages', '/v1/messages?beta=true', SESSION_COUNT_TOKENS_PATH] as const;
+type SessionRelayPath = typeof ROUTES[number];
+export const SESSION_COUNT_RESPONSE_MAX_BYTES = 1024;
+interface SessionResponseIdentity { readonly digest: string; readonly bytes: number }
+type SessionAuditedResponse = (SessionResponseIdentity & SessionResponseObservation & {
+  readonly content: 'messages-json' | 'messages-event-stream';
+}) | (SessionResponseIdentity & {
+  readonly content: 'count-tokens-json'; readonly estimatedInputTokens: number;
+  readonly stopReason?: never; readonly textBlocks?: never; readonly tool?: never;
+});
 export interface SessionAuditEvent {
   readonly event: typeof SESSION_RELAY_EVENTS[number];
   readonly subject: SessionRelaySubject;
@@ -37,31 +49,53 @@ export interface SessionAuditEvent {
   readonly admission: SessionAdmission | null;
   /** Identity of received bytes before the explicit protocol metadata projection. */
   readonly received: { readonly digest: string; readonly bytes: number } | null;
-  readonly route: 'messages' | 'count-tokens' | null;
+  readonly route: 'messages' | typeof SESSION_COUNT_TOKENS_PATH | null;
   readonly consumedToolResults: readonly SessionConsumedToolResult[];
-  readonly response: (SessionResponseObservation & { readonly digest: string; readonly bytes: number;
-    readonly content: 'messages-json' | 'messages-event-stream' }) | null;
+  readonly response: SessionAuditedResponse | null;
   readonly outcome: 'allowed' | 'refused' | 'attempted' | 'local-request-flushed' | 'Unknown' | 'response-admitted';
   readonly status: number | null;
 }
 export type SessionRequestDecision = { readonly ok: true; readonly body: Uint8Array; readonly admission: SessionAdmission;
   readonly consumedToolResults: readonly SessionConsumedToolResult[] } | { readonly ok: false };
-export type SessionResponseDecision = { readonly ok: true; readonly observation: SessionResponseObservation;
+type SessionCountResponseDecision = { readonly ok: true; readonly kind: 'token-count'; readonly estimatedInputTokens: number }
+  | { readonly ok: false };
+export type SessionMessageResponseDecision = { readonly ok: true; readonly kind?: never; readonly observation: SessionResponseObservation;
   readonly usage?: SessionResponseUsage } | { readonly ok: false };
+export type SessionResponseDecision = SessionMessageResponseDecision | SessionCountResponseDecision;
+
+export function isSessionTokenCount(value: unknown): value is number {
+  return typeof value === 'number' && Number.isSafeInteger(value) && value >= 0 && value <= SESSION_PROFILE_TOKEN_BUDGET;
+}
+
+/** Parse the pinned count-only response without advancing the Messages cursor. */
+export function decodeSessionCountResponse(bytes: Uint8Array, contentType: string, scanSecrets: (text: string) => boolean): SessionCountResponseDecision {
+  try {
+    if (!(bytes instanceof Uint8Array) || bytes.byteLength === 0 || bytes.byteLength > SESSION_COUNT_RESPONSE_MAX_BYTES
+      || !JSON_CONTENT_TYPE.test(contentType)) return { ok: false };
+    const text = new TextDecoder('utf-8', { fatal: true, ignoreBOM: true }).decode(bytes);
+    if (scanSecrets(text)) return { ok: false };
+    // One literal JSON key with a decimal integer. Validate the spelling before
+    // conversion so a fractional or overflowing number cannot round into range.
+    const value = /^[\t\r\n ]*\{[\t\r\n ]*"input_tokens"[\t\r\n ]*:[\t\r\n ]*(0|[1-9][0-9]*)[\t\r\n ]*\}[\t\r\n ]*$/u.exec(text)?.[1];
+    const estimated = Number(value);
+    if (!isSessionTokenCount(estimated) || scanSecrets('input_tokens') || scanSecrets(JSON.stringify({ input_tokens: estimated }))) return { ok: false };
+    return { ok: true, kind: 'token-count', estimatedInputTokens: estimated };
+  } catch { return { ok: false }; }
+}
 export interface SessionRelayPorts {
   /** Must revalidate the run/pin/policy/provider binding, not consult consent records. */
   readonly current: () => boolean | Promise<boolean>;
   /** Host commits the new opaque policy state before returning success. */
-  readonly request: (bytes: Uint8Array, context: SessionMachineEffectContext | null) => SessionRequestDecision | Promise<SessionRequestDecision>;
+  readonly request: (bytes: Uint8Array, context: SessionMachineEffectContext | null, route: SessionRelayPath) => SessionRequestDecision | Promise<SessionRequestDecision>;
   /** Independently pinned protocol headers and host-owned credentials only.
    * Incoming CLI values must not become an unchecked content/credential channel.
    * The host may validate a fixed synthetic CLI marker and substitute its own
    * credential here, without giving the role the credential or its source file.
    */
-  readonly providerHeaders: (incoming: Readonly<Record<string, string>>, context: SessionMachineEffectContext | null) => Readonly<Record<string, string>> | null;
+  readonly providerHeaders: (incoming: Readonly<Record<string, string>>, context: SessionMachineEffectContext | null, route: SessionRelayPath) => Readonly<Record<string, string>> | null;
   /** Complete buffered response ingest, including SSE reconstruction and screening,
    * must succeed before any response body is released to the CLI. */
-  readonly response: (bytes: Uint8Array, contentType: string, context: SessionMachineEffectContext | null) => SessionResponseDecision | Promise<SessionResponseDecision>;
+  readonly response: (bytes: Uint8Array, contentType: string, context: SessionMachineEffectContext | null, route: SessionRelayPath) => SessionResponseDecision | Promise<SessionResponseDecision>;
   readonly audit: (event: SessionAuditEvent, context: SessionMachineEffectContext | null) => void | Promise<void>;
 }
 export interface SessionRelay {
@@ -91,10 +125,10 @@ interface ProviderResponse {
   readonly requestFlushed: boolean;
 }
 type Forward = (input: {
-  readonly route: string; readonly headers: Readonly<Record<string, string>>;
+  readonly route: SessionRelayPath; readonly headers: Readonly<Record<string, string>>;
   readonly body: Uint8Array; readonly signal: AbortSignal; readonly limits: SessionRelayLimits;
 }) => Promise<ProviderResponse>;
-const ROUTES = new Set(['/v1/messages', '/v1/messages?beta=true', '/v1/messages/count_tokens', '/v1/messages/count_tokens?beta=true']);
+const JSON_CONTENT_TYPE = /^application\/json(?:\s*;\s*charset=utf-8)?$/iu;
 const HEADER_NAMES = ['authorization', 'x-api-key', 'anthropic-version', 'anthropic-beta', 'content-type', 'user-agent', 'x-app'];
 const SAFE_FAILURE = '{"type":"error","error":{"type":"invalid_request_error","message":"The session policy or bounded provider transport refused this operation."}}';
 
@@ -107,8 +141,11 @@ const forwardToAnthropic: Forward = input => new Promise((resolve, reject) => {
   }, response => {
     const status = response.statusCode ?? 502;
     const contentType = response.headers['content-type'];
+    const responseBytes = input.route === SESSION_COUNT_TOKENS_PATH
+      ? Math.min(input.limits.responseBytes, SESSION_COUNT_RESPONSE_MAX_BYTES) : input.limits.responseBytes;
     if (status !== 200 || typeof contentType !== 'string'
-      || !/^(?:application\/json|text\/event-stream)(?:\s*;\s*charset=utf-8)?$/iu.test(contentType)
+      || !(input.route === SESSION_COUNT_TOKENS_PATH ? JSON_CONTENT_TYPE
+        : /^(?:application\/json|text\/event-stream)(?:\s*;\s*charset=utf-8)?$/iu).test(contentType)
       || (response.headers['content-encoding'] !== undefined && response.headers['content-encoding'] !== 'identity')) {
       response.destroy(); reject(new Error('provider-response-refused')); return;
     }
@@ -116,7 +153,7 @@ const forwardToAnthropic: Forward = input => new Promise((resolve, reject) => {
     let bytes = 0;
     response.on('data', (chunk: Buffer) => {
       bytes += chunk.length;
-      if (bytes > input.limits.responseBytes) { response.destroy(); reject(new Error('provider-response-limit')); return; }
+      if (bytes > responseBytes) { response.destroy(); reject(new Error('provider-response-limit')); return; }
       chunks.push(chunk);
     });
     response.on('error', () => reject(new Error('provider-response-incomplete')));
@@ -156,8 +193,10 @@ async function start(socket: string, subject: SessionRelaySubject, ports: Sessio
       if (!fixture) { poisoned = true; incoming.socket.destroy(); return; }
       outgoing.writeHead(503, { 'content-type': 'application/json', connection: 'close' }); outgoing.end(SAFE_FAILURE); incoming.resume(); return;
     }
+    const route = ROUTES.find(candidate => candidate === incoming.url);
+    const tokenCount = route === SESSION_COUNT_TOKENS_PATH;
     pending = true;
-    responseFlushed = false;
+    if (!tokenCount) responseFlushed = false;
     const controller = new AbortController(); controllers.add(controller);
     const requestId = randomUUID();
     const effect = async <T>(act: (boundary: () => boolean) => T | Promise<T>): Promise<T> => {
@@ -183,7 +222,7 @@ async function start(socket: string, subject: SessionRelaySubject, ports: Sessio
       const row = deepFreeze({
         event: kind, subject, requestId, at: new Date().toISOString(), credentialIdentity: 'Unknown', exposureMode: 'private-local-cli',
         governingRule: 'GOVERNANCE-SIMPLIFICATION-D10', admission, received,
-        route: ROUTES.has(incoming.url ?? '') ? incoming.url!.includes('/count_tokens') ? 'count-tokens' : 'messages' : null,
+        route: route === undefined ? null : tokenCount ? SESSION_COUNT_TOKENS_PATH : 'messages',
         consumedToolResults, response: kind === 'response-admitted' ? observedResponse : null, outcome, status,
       } satisfies SessionAuditEvent);
       evidence.set(row, Object.freeze({ usage: kind === 'response-admitted' ? observedUsage : null }));
@@ -215,8 +254,8 @@ async function start(socket: string, subject: SessionRelaySubject, ports: Sessio
     outgoing.on('close', () => { if (!terminal) { poisoned = true; controller.abort(); finish(); } });
     outgoing.on('error', () => { poisoned = true; controller.abort(); outgoing.destroy(); finish(); });
     incoming.on('error', () => refuse(400));
-    if (incoming.method !== 'POST' || !ROUTES.has(incoming.url ?? '')
-      || !/^application\/json(?:\s*;\s*charset=utf-8)?$/iu.test(incoming.headers['content-type'] ?? '')
+    if (incoming.method !== 'POST' || route === undefined
+      || !JSON_CONTENT_TYPE.test(incoming.headers['content-type'] ?? '')
       || (incoming.headers['content-encoding'] !== undefined && incoming.headers['content-encoding'] !== 'identity')) {
       void auditRefusal(400); return;
     }
@@ -250,9 +289,9 @@ async function start(socket: string, subject: SessionRelaySubject, ports: Sessio
         received = { digest: sha256(body), bytes: body.byteLength };
         const decision = await effect(boundary => {
           if (!boundary()) throw new Error('session-machine-transport-unavailable');
-          return ports.request(body, context);
+          return ports.request(body, context, route);
         });
-        if (!decision.ok) { await auditRefusal(403); return; }
+        if (!decision.ok || (tokenCount && decision.consumedToolResults.length !== 0)) { await auditRefusal(403); return; }
         if (!(decision.body instanceof Uint8Array) || decision.body.byteLength > limits.requestBytes) { await auditRefusal(403); return; }
         const forwardingBody = Buffer.from(decision.body);
         if (decision.admission.digest !== sha256(forwardingBody) || decision.admission.bytes !== forwardingBody.byteLength) { await auditRefusal(403); return; }
@@ -260,7 +299,7 @@ async function start(socket: string, subject: SessionRelaySubject, ports: Sessio
           originIds: [...decision.admission.originIds], classes: [...decision.admission.classes] };
         consumedToolResults = Object.freeze(decision.consumedToolResults.map(result => Object.freeze({ ...result })));
         const admittedHeaders = (): Readonly<Record<string, string>> | null => {
-          const projected = ports.providerHeaders(Object.freeze({ ...headers }), context);
+          const projected = ports.providerHeaders(Object.freeze({ ...headers }), context, route);
           if (projected === null || Object.entries(projected).some(([name, value]) => !HEADER_NAMES.includes(name)
           || typeof value !== 'string' || value.length > 8192 || /[\0\r\n]/u.test(value))
             || (projected['authorization'] === undefined) === (projected['x-api-key'] === undefined)) return null;
@@ -277,7 +316,7 @@ async function start(socket: string, subject: SessionRelaySubject, ports: Sessio
           const forwardingHeaders = admittedHeaders();
           if (forwardingHeaders === null) return null;
           if (!boundary()) throw new Error('session-machine-transport-unavailable');
-          return { exchange: forward({ route: incoming.url!, headers: forwardingHeaders, body: forwardingBody, signal: controller.signal, limits }) };
+          return { exchange: forward({ route, headers: forwardingHeaders, body: forwardingBody, signal: controller.signal, limits }) };
         });
         if (sending === null) { await auditRefusal(403); return; }
         const exchange = sending.exchange;
@@ -289,7 +328,8 @@ async function start(socket: string, subject: SessionRelaySubject, ports: Sessio
         if (!response.requestFlushed) throw new Error('provider-send-unconfirmed');
         await audit(event('send-outcome', 'local-request-flushed', null));
         if (terminal) return;
-        if (!(response.body instanceof Uint8Array) || response.body.byteLength > limits.responseBytes) {
+        if (!(response.body instanceof Uint8Array) || response.body.byteLength > limits.responseBytes
+          || (tokenCount && response.body.byteLength > SESSION_COUNT_RESPONSE_MAX_BYTES)) {
           await audit(event('response-refused', 'refused', response.status)); refuse(502); return;
         }
         const responseBody = Buffer.from(response.body), responseStatus = response.status, responseType = response.contentType;
@@ -297,23 +337,32 @@ async function start(socket: string, subject: SessionRelaySubject, ports: Sessio
           if (!terminal) { await audit(event('response-refused', 'refused', responseStatus)); refuse(409); } return;
         }
         const checkingBody = Buffer.from(responseBody), responseDigest = sha256(responseBody);
-        const content = /^text\/event-stream(?:\s*;\s*charset=utf-8)?$/iu.test(responseType) ? 'messages-event-stream'
-          : /^application\/json(?:\s*;\s*charset=utf-8)?$/iu.test(responseType) ? 'messages-json' : null;
+        const content = JSON_CONTENT_TYPE.test(responseType) ? (tokenCount ? 'count-tokens-json' : 'messages-json')
+          : !tokenCount && /^text\/event-stream(?:\s*;\s*charset=utf-8)?$/iu.test(responseType) ? 'messages-event-stream' : null;
         const accepted = responseStatus === 200 && content !== null ? await effect(boundary => {
           if (!boundary()) throw new Error('session-machine-transport-unavailable');
-          return ports.response(checkingBody, responseType, context);
+          return ports.response(checkingBody, responseType, context, route);
         }) : { ok: false } as const;
-        if (!content || !accepted.ok || sha256(checkingBody) !== responseDigest) {
+        if (!content || !accepted.ok || sha256(checkingBody) !== responseDigest
+          || (accepted.kind === 'token-count') !== (content === 'count-tokens-json')) {
           await audit(event('response-refused', 'refused', responseStatus)); refuse(502); return;
         }
-        const { stopReason, textBlocks, tool } = accepted.observation;
-        const usage = accepted.usage;
-        if (usage !== undefined) {
-          const { inputTokens, outputTokens, cacheCreationInputTokens, cacheReadInputTokens } = usage;
-          observedUsage = Object.freeze({ inputTokens, outputTokens, cacheCreationInputTokens, cacheReadInputTokens });
+        const identity = { digest: responseDigest, bytes: responseBody.byteLength };
+        if (accepted.kind === 'token-count') {
+          if (!isSessionTokenCount(accepted.estimatedInputTokens)) {
+            await audit(event('response-refused', 'refused', responseStatus)); refuse(502); return;
+          }
+          observedResponse = Object.freeze({ ...identity, content: 'count-tokens-json', estimatedInputTokens: accepted.estimatedInputTokens });
+        } else if (content !== 'count-tokens-json') {
+          const { stopReason, textBlocks, tool } = accepted.observation;
+          const usage = accepted.usage;
+          if (usage !== undefined) {
+            const { inputTokens, outputTokens, cacheCreationInputTokens, cacheReadInputTokens } = usage;
+            observedUsage = Object.freeze({ inputTokens, outputTokens, cacheCreationInputTokens, cacheReadInputTokens });
+          }
+          observedResponse = Object.freeze({ ...identity, content, stopReason, textBlocks,
+            tool: tool === null ? null : Object.freeze({ id: tool.id, name: tool.name, inputSha256: tool.inputSha256 }) });
         }
-        observedResponse = Object.freeze({ digest: responseDigest, bytes: responseBody.byteLength, content, stopReason, textBlocks,
-          tool: tool === null ? null : Object.freeze({ id: tool.id, name: tool.name, inputSha256: tool.inputSha256 }) });
         await audit(event('response-admitted', 'response-admitted', responseStatus));
         if (terminal) return;
         if (!(await ports.current()) || terminal) {
@@ -325,7 +374,7 @@ async function start(socket: string, subject: SessionRelaySubject, ports: Sessio
           outgoing.once('error', () => reject(new Error('session-machine-transport-unavailable')));
           outgoing.once('close', () => { if (!outgoing.writableFinished) reject(new Error('session-machine-transport-unavailable')); });
           outgoing.writeHead(responseStatus, { 'content-type': responseType, 'content-length': responseBody.byteLength, connection: 'close' });
-          writingAdmittedResponse = true;
+          writingAdmittedResponse = !tokenCount;
           outgoing.end(responseBody);
         }));
       } catch {

@@ -10,8 +10,8 @@ import { isSessionMachineTransport, type SessionMachineTransport } from './sessi
 import type { UrlMachineOperation } from './url-machine-instance.js';
 import { SESSION_POLICY_LIMITS, SESSION_TOOLS, type SessionAdmission, type SessionContentClass, type SessionOrigin } from './session-egress-policy.js';
 import { isSessionProfile, sessionProfileProviderHeaders, type NativeSessionProfile } from './session-profile.js';
-import { readSessionRelayAuditEvidence, startSessionRelay, type SessionAuditEvent, type SessionRelay, type SessionRelayLimits, type SessionRelayPorts,
-  type SessionRelaySubject } from './session-relay.js';
+import { decodeSessionCountResponse, readSessionRelayAuditEvidence, SESSION_COUNT_TOKENS_PATH, startSessionRelay, type SessionAuditEvent,
+  type SessionRelay, type SessionRelayLimits, type SessionRelayPorts, type SessionRelaySubject } from './session-relay.js';
 import { decodeSessionResponse, type SessionResponseUsage } from './session-response.js';
 import { createSessionTools, type SessionToolsOptions, type SessionToolsReceipt } from './session-tools.js';
 
@@ -39,6 +39,9 @@ export interface SessionHostOptions {
    * never rolled back or blindly retried as an unobserved request. */
   readonly reserveRequest: (admission: SessionAdmission) => boolean;
   readonly observeUsage: (usage: SessionResponseUsage) => boolean;
+  /** The pinned count request consumes its own slot and settles without reporting usage. */
+  readonly reserveCountRequest?: (admission: SessionAdmission) => boolean;
+  readonly observeCountResponse?: () => boolean;
   readonly relayLimits?: SessionRelayLimits;
   readonly brokerLimits?: SessionBrokerLimits;
   readonly machine?: { readonly broker: SessionMachineTransport; readonly relay: SessionMachineTransport };
@@ -69,7 +72,8 @@ async function start(input: SessionHostOptions, relayStart: RelayStart, fixture:
     || ['current', 'audit', 'beforeTool', 'toolReceipt', 'reserveRequest', 'observeUsage'].some(key => typeof input[key as keyof SessionHostOptions] !== 'function')
     || !(await input.current())) throw new Error('session-host-unavailable');
   const ports = Object.freeze({ current: input.current, audit: input.audit, beforeTool: input.beforeTool,
-    toolReceipt: input.toolReceipt, reserveRequest: input.reserveRequest, observeUsage: input.observeUsage });
+    toolReceipt: input.toolReceipt, reserveRequest: input.reserveRequest, observeUsage: input.observeUsage,
+    reserveCountRequest: input.reserveCountRequest, observeCountResponse: input.observeCountResponse });
   const scanSecrets = (text: string): boolean => input.tools.screen.screenSecrets(text) !== undefined;
   let tools: ReturnType<typeof createSessionTools> | undefined;
   const controller = createSessionController({ profile, initialOrigin: input.initialOrigin,
@@ -103,17 +107,28 @@ async function start(input: SessionHostOptions, relayStart: RelayStart, fixture:
     } });
   const relayPorts: SessionRelayPorts = {
     current,
-    request: bytes => {
-      const result = controller.request(bytes);
+    request: (bytes, _context, route) => {
+      const tokenCount = route === SESSION_COUNT_TOKENS_PATH;
+      const reserve = tokenCount ? ports.reserveCountRequest : ports.reserveRequest;
+      if (reserve === undefined || (tokenCount && ports.observeCountResponse === undefined)) {
+        poison(); return { ok: false };
+      }
+      const result = tokenCount ? controller.requestCountTokens(bytes) : controller.request(bytes);
       if (!result.ok) { poison(); return result; }
-      try { if (ports.reserveRequest(result.admission)) return result; } catch { /* Fail closed below. */ }
+      try { if (reserve(result.admission)) return result; } catch { /* Fail closed below. */ }
       poison(); return { ok: false };
     },
-    providerHeaders: incoming => {
-      const projected = sessionProfileProviderHeaders(profile, incoming);
+    providerHeaders: (incoming, _context, route) => {
+      const projected = sessionProfileProviderHeaders(profile, incoming, route);
       return projected.ok ? input.credential.headers(projected.value.headers) : null;
     },
-    response: (bytes, contentType) => {
+    response: (bytes, contentType, _context, route) => {
+      if (route === SESSION_COUNT_TOKENS_PATH) {
+        const estimated = decodeSessionCountResponse(bytes, contentType, scanSecrets);
+        try { if (estimated.ok && ports.observeCountResponse?.() === true) return estimated; }
+        catch { /* Fail closed below. */ }
+        poison(); return { ok: false };
+      }
       const accepted = controller.response(bytes, contentType);
       if (!accepted.ok) { poison(); return accepted; }
       const decoded = decodeSessionResponse(bytes, contentType, binding.model, scanSecrets);
