@@ -95,7 +95,7 @@ async function fixture() {
     pinnedRevision: { commit: 'a'.repeat(40), label: 'own fixture', pinnedAt: '2026-11-19T00:00:00.000Z' }, screeningPolicy: snapshot.binding,
     contentClasses: DOSSIER_CONTENT_CLASSES, visibility: { value: 'private', source: 'conservative-default', declaredBy: 'conservative default', label: 'Inferred' },
     governed: { kind: 'unstated', because: ['own fixture'] }, workItem: { identity: null, reason: NO_WORK_ITEM_REASON } });
-  let now = Date.now(), current = true, launch: UrlSessionProcess | undefined, auditing = 0, nativeCapacity = 0;
+  let now = Date.now(), current = true, effectsCurrent = true, launch: UrlSessionProcess | undefined, auditing = 0, nativeCapacity = 0;
   let block: Promise<void> | undefined, reached: (() => void) | undefined;
   // The existing historical fixture port permits an owned synthetic bridge;
   // production ordered profiles bind the real bridge's fixed transcript hash.
@@ -108,7 +108,7 @@ async function fixture() {
   const options: UrlRunMachineOptions = { governanceRoot: path.join(root, 'observing/.syzygy'), protectedRoot: path.join(hidden, 'store'),
     parent: { rowId: 'A-1', landedCommit: 'a'.repeat(40), defaultCommit: 'a'.repeat(40), tagObject: 'b'.repeat(40), subjects: [{ path: URL_ORIGIN_POLICY_PATH, sha256: 'c'.repeat(64) }] },
     originPolicySha256: 'c'.repeat(64), pin: 'a'.repeat(40), runId, runtime, plans: plans.roles, deadline: now + 60_000, now: () => now,
-    current: () => current, reverify: async () => { if (block) { reached?.(); await block; } return current && (launch === undefined || await launch.waitForSample()); },
+    current: () => current, effectCurrent: () => effectsCurrent, reverify: async () => { if (block) { reached?.(); await block; } return current && (launch === undefined || await launch.waitForSample()); },
     launch: role => role === 'author' ? launch : undefined, audit: () => { auditing++; }, chargeNativeCpuMicroseconds: capacity => { nativeCapacity += capacity; } };
   const machine = await createUrlRunMachine(options); cleanup.push(() => machine.close());
   const canonicalRoot = path.join(options.governanceRoot, 'governance/policies/dossier-machine-clients');
@@ -144,13 +144,14 @@ async function fixture() {
     expect(accepted.length).toBeGreaterThan(index); return accepted[index]!;
   };
   return { root, options, machine, start, connection, records, auditCount: () => auditing, nativeCapacity: () => nativeCapacity,
+    withdrawEffects: () => { effectsCurrent = false; },
     expire: () => { now = options.deadline; }, revoke: () => { current = false; },
     blockAdmission: () => { let release!: () => void; block = new Promise<void>(resolve => { release = resolve; });
       const entered = new Promise<void>(resolve => { reached = resolve; }); return { entered, release }; } };
 }
 
 describe('production URL run machine provisioner', { timeout: 60_000 }, () => {
-  it('issues only after actual peer capture, rotates one endpoint, defeats its old peer and durably retires on close', async () => {
+  it.each(['close', 'withdraw-effects'] as const)('issues and rotates only actual peers; %s defeats awaited effects and permits durable retirement', async mode => {
     const f = await fixture(); expect(await f.records()).toEqual([]);
     await f.start(); const first = await f.connection(0); expect(first).not.toBeNull(); if (!first) return;
     expect(await request(first)).toEqual(Buffer.from('OWN_FRAME\n'));
@@ -172,21 +173,35 @@ describe('production URL run machine provisioner', { timeout: 60_000 }, () => {
     expect(f.auditCount()).toBe(3);
     let entered!: () => void, release!: () => void;
     const pending = new Promise<void>(resolve => { entered = resolve; }), released = new Promise<void>(resolve => { release = resolve; });
+    const effectFile = path.join(f.root, 'withdrawn-effect');
     const effect = sessionMachineEffectContext(second)!.mediate('artifact_read', async boundary => {
-      entered(); await released; if (boundary()) effects++;
+      entered(); await released;
+      if (boundary()) { await fs.writeFile(effectFile, 'OWN EFFECT'); effects++; }
     });
-    await pending; const closing = f.machine.close(); release();
+    await pending;
+    const closing = mode === 'close' ? f.machine.close() : undefined;
+    if (mode === 'withdraw-effects') f.withdrawEffects();
+    release();
     expect(await effect).toEqual({ ok: false }); expect(effects).toBe(1);
-    expect(await closing).toEqual({ lifecycle: 'retired' });
+    await expect(fs.stat(effectFile)).rejects.toMatchObject({ code: 'ENOENT' });
+    expect(f.machine.current()).toBe(false);
+    if (mode === 'withdraw-effects') {
+      expect((await f.records())[0]!.revision).toBe(2);
+      expect(() => f.machine.transport('author', 'mcp-shim')).toThrow('url-run-machine-unavailable');
+    }
+    if (closing !== undefined) expect(await closing).toEqual({ lifecycle: 'retired' });
     expect(await f.machine.close()).toEqual({ lifecycle: 'retired' });
     const retired = (await f.records())[0]!; expect(retired.revision).toBe(3); expect(retired.revokedAt).not.toBeNull();
     expect(await sessionMachineEffectContext(second)!.mediate('artifact_read', () => ++effects)).toEqual({ ok: false }); expect(effects).toBe(1);
   });
 
-  it('closes admission while a genuine launched socket is awaiting parent revalidation', async () => {
+  it.each(['close', 'withdraw-effects'] as const)('%s closes admission while a genuine socket awaits parent revalidation', async mode => {
     const f = await fixture(), barrier = f.blockAdmission(); await f.start(); await barrier.entered;
-    expect(await f.machine.close()).toEqual({ lifecycle: 'retired' }); barrier.release();
+    if (mode === 'close') expect(await f.machine.close()).toEqual({ lifecycle: 'retired' });
+    else f.withdrawEffects();
+    barrier.release();
     expect(await f.connection(0)).toBeNull(); expect(await f.records()).toEqual([]); expect(f.machine.current()).toBe(false);
+    expect(await f.machine.close()).toEqual({ lifecycle: 'retired' });
   });
 
   it('refuses copied capabilities before creating a store and reports expired retirement as Unknown', async () => {

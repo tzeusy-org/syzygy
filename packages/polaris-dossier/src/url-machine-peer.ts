@@ -47,6 +47,8 @@ export interface UrlMachinePeerOptions {
   readonly now: () => number;
   /** Current adopted parents, fixed policy/profile/controller, run and view. */
   readonly current: () => boolean | Promise<boolean>;
+  /** Synchronous supervisor health/budget authority at every actual effect. */
+  readonly effectCurrent?: () => boolean;
   readonly audit: (event: UrlMachinePeerAudit) => void | Promise<void>;
   /** Trusted monotonic capacity reservation; throwing refuses before exec.
    * Each helper reserves its CPU hard limit plus accounting granularity. */
@@ -230,7 +232,8 @@ function closeState(state: PeerState): void {
 }
 function check(state: PeerState): number {
   const { options } = state, now = options.now();
-  if (state.closed || state.finished || !isUrlSessionProcess(options.launch) || !isNativeSessionProfile(options.profile)
+  if (state.closed || state.finished || (options.effectCurrent !== undefined && options.effectCurrent() !== true)
+    || !isUrlSessionProcess(options.launch) || !isNativeSessionProfile(options.profile)
     || !Number.isSafeInteger(now) || now < state.lastNow || now >= options.context.deadline
     || !listenerCurrent(options) || options.socket.destroyed || !options.socket.isPaused() || options.socket.readableLength !== 0) throw refused();
   state.lastNow = now;
@@ -260,9 +263,11 @@ function check(state: PeerState): number {
 async function parentCurrent(options: UrlMachinePeerOptions): Promise<boolean> {
   let timer: ReturnType<typeof setTimeout> | undefined;
   try {
-    return await Promise.race([Promise.resolve().then(options.current), new Promise<false>(resolve => {
+    if (options.effectCurrent !== undefined && options.effectCurrent() !== true) return false;
+    const valid = await Promise.race([Promise.resolve().then(options.current), new Promise<false>(resolve => {
       timer = setTimeout(() => resolve(false), Math.max(1, Math.min(URL_MACHINE_PEER_LIMITS.setupMilliseconds, options.context.deadline - options.now())));
     })]);
+    return valid === true && (options.effectCurrent === undefined || options.effectCurrent() === true);
   } finally { clearTimeout(timer); }
 }
 async function current(state: PeerState): Promise<number> {
@@ -287,7 +292,8 @@ export async function captureUrlMachinePeer(options: UrlMachinePeerOptions): Pro
   const held: HeldProcess[] = []; let state: PeerState | undefined;
   const began = performance.now();
   try {
-    if (!(options.socket instanceof Socket) || claimed.has(options.socket) || !listenerCurrent(options) || !isUrlSessionProcess(options.launch)
+    if ((options.effectCurrent !== undefined && options.effectCurrent() !== true)
+      || !(options.socket instanceof Socket) || claimed.has(options.socket) || !listenerCurrent(options) || !isUrlSessionProcess(options.launch)
       || !isNativeSessionProfile(options.profile) || options.profile.digest !== options.context.profileSha256
       || options.profile.input.binding.run !== options.context.runId || options.profile.input.binding.role !== options.context.role
       || !digest(options.binding.parentBindingSha256) || !digest(options.binding.controllerSha256)
@@ -324,7 +330,8 @@ export async function captureUrlMachinePeer(options: UrlMachinePeerOptions): Pro
     const executable = await pinnedExecutable(selected.installed.executable, selected.installed.sha256,
       context.kind === 'role-cli' ? URL_CLI_PROGRAM.bytes : 134_217_728, () => {
         const now = selected.now();
-        if (!isUrlSessionProcess(selected.launch) || !Number.isSafeInteger(now) || now < pinNow || now >= context.deadline
+        if ((selected.effectCurrent !== undefined && selected.effectCurrent() !== true)
+          || !isUrlSessionProcess(selected.launch) || !Number.isSafeInteger(now) || now < pinNow || now >= context.deadline
           || performance.now() - began >= URL_MACHINE_PEER_LIMITS.setupMilliseconds) throw refused();
         pinNow = now;
       });

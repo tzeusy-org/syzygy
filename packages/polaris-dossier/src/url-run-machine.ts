@@ -42,6 +42,8 @@ export interface UrlRunMachineOptions {
   readonly deadline: number;
   readonly now: () => number;
   readonly current: () => boolean;
+  /** Live effect authority; parent authority remains separate for retirement. */
+  readonly effectCurrent?: () => boolean;
   readonly reverify: () => boolean | Promise<boolean>;
   readonly launch: (role: ViewRole) => UrlSessionProcess | undefined;
   readonly audit: (event: UrlMachinePeerAudit) => void | Promise<void>;
@@ -58,7 +60,9 @@ export async function createUrlRunMachine(input: UrlRunMachineOptions) {
     || input.plans.some((plan, index) => !isPreparedUrlRolePlan(plan) || plan.role !== URL_ROLES[index]
       || plan.profile.input.binding.run !== input.runId || plan.profile.input.binding.role !== plan.role)
     || input.parent.subjects.find(subject => subject.path === URL_ORIGIN_POLICY_PATH)?.sha256 !== input.originPolicySha256
-    || !input.current() || !(await input.reverify())) throw refuse();
+    || !input.current() || (input.effectCurrent !== undefined && input.effectCurrent() !== true)
+    || !(await input.reverify()) || !input.current()
+    || (input.effectCurrent !== undefined && input.effectCurrent() !== true)) throw refuse();
   const canonicalRoot = path.join(input.governanceRoot, 'governance/policies/dossier-machine-clients');
   // Preserve the shared checkout's reviewer access. Namespace exclusion, not
   // tightening the governance directory's ACL, protects it from role clients.
@@ -78,7 +82,8 @@ export async function createUrlRunMachine(input: UrlRunMachineOptions) {
     mutations = result.catch(() => undefined);
     return result;
   };
-  const current = (): boolean => !stopped && !closing && input.current() && input.now() < input.deadline;
+  const current = (): boolean => !stopped && !closing && input.current()
+    && (input.effectCurrent === undefined || input.effectCurrent() === true) && input.now() < input.deadline;
   let closed: Promise<{ readonly lifecycle: 'retired' | 'Unknown' }> | undefined;
   const close = (): Promise<{ readonly lifecycle: 'retired' | 'Unknown' }> => {
     if (closed !== undefined) return closed;
@@ -119,12 +124,12 @@ export async function createUrlRunMachine(input: UrlRunMachineOptions) {
       clients.set(key, client);
       let listener: ReturnType<typeof prepareUrlMachineListener> = null;
       const transport = createSessionMachineTransport({
-        prepare: server => { listener = prepareUrlMachineListener(server, reader, input.chargeNativeCpuMicroseconds); return listener !== null; },
+        prepare: server => { if (!current()) return false; listener = prepareUrlMachineListener(server, reader, input.chargeNativeCpuMicroseconds); return listener !== null; },
         accept: async socket => {
           const until = Math.min(input.deadline, input.now() + 5000);
           let launch = input.launch(plan.role);
           while (launch === undefined && current() && input.now() < until) { await yieldToPoll(); launch = input.launch(plan.role); }
-          if (launch === undefined || listener === null || !current() || !(await input.reverify())) return null;
+          if (launch === undefined || listener === null || !current() || !(await input.reverify()) || !current()) return null;
           const support = isOrderedDesignSessionProfile(plan.profile) ? plan.profile.transcript.supportSha256 : input.runtime.supportSha256;
           const name = kind === 'mcp-shim' ? 'session-mcp.js' : 'session-bridge.js';
           const peer = await captureUrlMachinePeer({ socket, listener, launch, profile: plan.profile, context,
@@ -132,7 +137,8 @@ export async function createUrlRunMachine(input: UrlRunMachineOptions) {
             installed: { executable: input.runtime.worker.node, sha256: input.runtime.worker.nodeSha256,
               script: path.join(plan.view.supportDirectory, name), scriptSha256: support[name] },
             protectedPaths: [...plan.view.protectedPaths, input.governanceRoot, input.protectedRoot], now: input.now,
-            current: async () => current() && await input.reverify() === true && current(), audit: input.audit,
+            current: async () => current() && await input.reverify() === true && current(),
+            effectCurrent: current, audit: input.audit,
             chargeNativeCpuMicroseconds: input.chargeNativeCpuMicroseconds });
           if (peer === null) return null;
           peers.add(peer);
