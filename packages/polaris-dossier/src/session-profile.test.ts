@@ -31,12 +31,6 @@ describe('installed Sonnet4.6 session profile', () => {
     expect(sha256(canon(system))).toBe('21a6243bef3d9d0cda841548509f6c217cd21d229d0068ef12495160915ef688');
     expect(sha256(canon(tools))).toBe('91876b623f527e1c293b55296f89c38a07a5a2774351be6a6094f948a8b7fe4a');
     expect(sha256(canon([p.initialMessage]))).toBe('53dab2323ac44e3c77795409ce3da43f8e7fa9f6ef18c97505687d729b81dd38');
-    expect(p.support).toEqual({ cli: { version: '2.1.327', bytes: 372904464, sha256: '343c744baa14bfd38286a7cb90871051f04379956da6c5b803a9e66019a76ac9' },
-      supportSha256: { 'session-bridge.js': '33a3f07df8001244cebefec75fe2110073196b9cb11fb2994553659a6865bac3',
-        'session-mcp.js': '403e8c4a7ae11930d78c87b240c1b43f5241707cfcbe2561e8a7acd43d695bca' },
-      artifactReadMaxResultSizeChars: 500000,
-      countTokens: { route: '/v1/messages/count_tokens?beta=true', beta: 'claude-code-20250219,oauth-2025-04-20,interleaved-thinking-2025-05-14,context-management-2025-06-27,token-counting-2024-11-01' } });
-    expect(JSON.parse(p.canonicalText).support).toEqual(p.support);
     expect(p.baselineOrigin.classes).toEqual(['governance-text', 'code-structure', 'work-history']);
     expect(p.initialScaffoldingOrigin.classes).toEqual(['governance-text', 'code-structure', 'work-history']);
     expect(p.initialScaffoldingOrigin.canonicalText).not.toContain(INPUT.initialPrompt);

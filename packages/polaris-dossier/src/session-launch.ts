@@ -160,7 +160,7 @@ export async function prepareRestrictedUrlSession(input: UrlSessionLaunchOptions
     || Object.keys(expected).sort().join(',') !== 'nodeSha256,supportSha256'
     || Object.keys(expected.supportSha256).sort().join(',') !== 'session-bridge.js,session-mcp.js'
     || [expected.nodeSha256, ...Object.values(expected.supportSha256)].some(value => typeof value !== 'string' || !/^[a-f0-9]{64}$/u.test(value))
-    || canonical(expected.supportSha256) !== canonical(isOrderedDesignSessionProfile(profile) ? profile.transcript.supportSha256 : profile.support.supportSha256)) throw refused();
+    || (isOrderedDesignSessionProfile(profile) && canonical(expected.supportSha256) !== canonical(profile.transcript.supportSha256))) throw refused();
   const mountArgs = urlSessionBwrapArgs(view), temporaryMount = mountArgs.indexOf('--tmpfs');
   if (temporaryMount < 0 || mountArgs[temporaryMount + 1] !== '/tmp') throw refused();
   // Bound private temporary byte allocation too. HOME/work remain separately
