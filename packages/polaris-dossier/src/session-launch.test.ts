@@ -799,7 +799,7 @@ describe('prepared private CLI launch',()=>{
     (f.launch.limits as { outputBytes: number }).outputBytes = 8192;
     const host = await f.start(), before = nativeSpawns.calls().length;
     await expect(launchRestrictedUrlSession({ preparation, host })).rejects.toThrow('url-session-launch-refused');
-    expect(captured?.limits).toMatchObject({ milliseconds: 8000, outputBytes: 4096, sampleMilliseconds: 100 });
+    expect(captured?.limits).toMatchObject({ milliseconds: 8000, outputBytes: 4096, sampleMilliseconds: 100, inspectionMilliseconds: 1000 });
     expect(nativeSpawns.calls()).toHaveLength(before); expect(f.counts().forwards).toBe(0);
     expect(await host.close()).toMatchObject({ termination: 'settled' });
   }, 20_000);
@@ -852,7 +852,7 @@ describe('prepared private CLI launch',()=>{
     expect(await stoppedAtExit).toMatchObject({ outcome: 'exited', signal: 'SIGKILL', groupTermination: 'confirmed' });
   }, 15000);
 
-  it('bounds concurrent process and storage reads and withholds both samples on timeout', async () => {
+  it('keeps the 200ms cadence, bounds one pending inspection to 1000ms and withholds both samples on timeout', async () => {
     const f = await launchFixture();
     const preparation = await prepareRestrictedUrlSession(f.launch);
     let releaseReads!: () => void;
@@ -878,6 +878,7 @@ describe('prepared private CLI launch',()=>{
       if (!completedHold) storageReadsBeforeTimeout++;
       await readsHeld;
     };
+    const intervals = vi.spyOn(globalThis, 'setInterval');
     const child = await launchRestrictedUrlSession({ preparation, host: {
       ...host,
       close: async () => {
@@ -903,7 +904,7 @@ describe('prepared private CLI launch',()=>{
     let enteredSample!: () => void;
     const startedSample = new Promise<void>(resolve => { enteredSample = resolve; });
     const timer = vi.spyOn(globalThis, 'setTimeout').mockImplementation((callback, delay, ...args) => {
-      if (delay !== 200 || scheduledAt !== undefined) return schedule(callback, delay, ...args);
+      if (delay !== 1000 || scheduledAt !== undefined) return schedule(callback, delay, ...args);
       scheduledAt = performance.now();
       enteredSample();
       return schedule(() => { earlyCallbackAt = performance.now(); callback(...args); }, 20);
@@ -916,12 +917,14 @@ describe('prepared private CLI launch',()=>{
       expect(settled).toBe(false);
       expect(await sample).toBe(false);
       const outcome = await child.finished;
+      expect(intervals.mock.calls.map(call => call[1])).toContain(200);
       expect(storageReadsBeforeTimeout).toBe(4);
       expect(processReadsBeforeTimeout).toBe(4);
       expect(outcome).toMatchObject({ outcome: 'inspection-failed', sampledStorageBytes: null, peakProcesses: null, groupTermination: 'confirmed' });
       expect(earlyCallbackAt! - scheduledAt!).toBeLessThan(100);
-      expect(stoppingAt! - scheduledAt!).toBeGreaterThanOrEqual(199);
+      expect(stoppingAt! - scheduledAt!).toBeGreaterThanOrEqual(999);
     } finally {
+      intervals.mockRestore();
       timer.mockRestore();
       signal.mockRestore();
     }
