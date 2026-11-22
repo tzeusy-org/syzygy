@@ -942,7 +942,9 @@ instants, each equal to the machine answer's value for that item
   mapping applied to the status read directly from Dolt at the served
   revision, and the priority and instants shown equal the machine
   answer's for that item; equality decides.
-- **Oracle independence**: expected statuses are direct database reads.
+- **Oracle independence**: expected statuses, priorities and instants
+  are direct database reads (in a fixture, the checker's own rows), never
+  the renderer's model.
 - **Falsifier**: an item rendered in a column that contradicts its
   observed status, a column outside the declared mapping, or a card whose
   priority or recorded instant differs from the machine answer's or is
@@ -1093,8 +1095,11 @@ notice; the reason sentence and route are not repeated per item.
   over the wording population finds nothing, and the notice's closed count
   equals the machine answer's rendered items with status closed. For the
   board-level count, the notice's served, inside and outside figures equal
-  `trajectory.verificationUnknown`, and every rendered item carries exactly
-  one verification mark whose reference resolves to that notice.
+  `trajectory.verificationUnknown`; every rendered item carries exactly
+  one verification mark whose reference resolves to that notice (the mark
+  names the notice's subject and links to its element); and no rendered
+  item's card contains the reason sentence or the route literal, each of
+  which occurs once on the page.
 - **Oracle independence**: the relationship state comes from the
   machine answer; the checker induced the mismatch.
 - **Falsifier**: a closed or merged item rendered with a verified,
@@ -1102,8 +1107,9 @@ notice; the reason sentence and route are not repeated per item.
   heading, label, sentence or served column value in the wording
   population that names closure as done, complete, finished or resolved,
   or a claim as in progress or active; or a verification notice whose
-  counts differ from the machine answer's, or a rendered item with no
-  verification mark or a mark referring to no notice.
+  counts differ from the machine answer's, a rendered item with no
+  verification mark or a mark referring to no notice, or a card that
+  repeats the reason sentence or route.
 
 #### Scenario: Closed but unverified
 

@@ -3357,7 +3357,7 @@ def poc_scenarios_added(root):
             if line.startswith("| A-") and "three-surface-poc-experience" in line]
     added = {}
     for tag, scenarios in POC_SCENARIO_AMENDMENTS:
-        if any(tag in line for line in rows):
+        if any(f"`{tag}`" in line for line in rows):
             for req, count in scenarios.items():
                 added[req] = added.get(req, 0) + count
     return added

@@ -106,13 +106,13 @@ describe('Trajectory', () => {
       expect(marks, id).toBe(1);
       // syzygy-t3jk.15: the card's mark refers to the board's one disclosure
       // and carries no route of its own.
-      expect(card).toContain('<span class="epistemic epistemic-unknown" data-parity-field="work-item-title" data-unknown-ref="region:work-item-titles" data-unknown-reason="excluded-content">Title: withheld (SEC-5) <a class="mark-ref" href="#notice-work-item-titles">reason and route</a></span>');
+      expect(card).toContain('<span class="epistemic epistemic-unknown" data-parity-field="work-item-title" data-unknown-ref="region:work-item-titles" data-unknown-reason="excluded-content">Title: withheld (SEC-5) <a class="mark-ref" href="#n-titles" aria-describedby="n-titles">reason and route</a></span>');
       expect(card).not.toContain(route);
     }
     expect(html.split(route).length - 1).toBe(1);
-    const notice = /<p class="titles-withheld notice" id="notice-work-item-titles" data-parity-field="work-item-titles-withheld" data-unknown-disclosure="region:work-item-titles" data-unknown-reason="excluded-content">([\s\S]*?)<\/p>/.exec(html)?.[1] ?? '';
+    const notice = /<p class="titles-withheld notice" id="n-titles" data-parity-field="work-item-titles-withheld" data-unknown-disclosure="region:work-item-titles" data-unknown-reason="excluded-content">([\s\S]*?)<\/p>/.exec(html)?.[1] ?? '';
     const words = notice.replace(/<[^>]+>/g, '').replace(/\s+/g, ' ').trim();
-    expect(words).toBe('Titles: Unknown for every observed work item. Work-item titles are withheld under SEC-5: a title is free text, the only declared secret-classification policy covers declared-project-shape-text and none covers work-item titles, so the observation never reads them. Each item is named by its identifier. Reason: excluded-content. Route: Policy change by the owner, or accept the exclusion.');
+    expect(words).toBe('Titles: Unknown for 5 of 5 observed work items (every one). Work-item titles are withheld under SEC-5: a title is free text, the only declared secret-classification policy covers declared-project-shape-text and none covers work-item titles, so the observation never reads them. Each item is named by its identifier. Reason: excluded-content. Route: Policy change by the owner, or accept the exclusion.');
     expect(html).not.toContain('fixture item');
     expect(model.unknownSubjects.find((subject) => subject.id === 'region:work-item-titles')?.epistemic).toEqual({
       label: 'Unknown',
@@ -684,6 +684,7 @@ describe('Trajectory board-level Unknowns and card facts (T2)', () => {
   const BASES = [
     'Work-item titles are withheld under SEC-5',
     'Activity is not verification: no test evidence has been ingested for any work item.',
+    'No governing intent was captured for any work item: the observation reads no link from an item to the intent that warrants it, and none is taken from its title.',
   ];
 
   it('states each route and basis sentence once on the 252-row board, never on a card', () => {
@@ -712,7 +713,7 @@ describe('Trajectory board-level Unknowns and card facts (T2)', () => {
     if (served.trajectory.kind !== 'observed' || served.workItems.kind !== 'observed') throw new Error('unreachable');
     expect(served.trajectory.verificationUnknown).toEqual({ served: 252, inside: 250, outside: 2 });
     expect(served.workItems.items).toHaveLength(252);
-    const notice = /<p class="verification-count notice" id="notice-work-item-verification" data-parity-field="work-item-verification-count" data-unknown-disclosure="region:work-item-verification" data-unknown-reason="missing-evidence">([\s\S]*?)<\/p>/.exec(html)?.[1] ?? '';
+    const notice = /<p class="verification-count notice" id="n-verification" data-parity-field="work-item-verification-count" data-unknown-disclosure="region:work-item-verification" data-unknown-reason="missing-evidence">([\s\S]*?)<\/p>/.exec(html)?.[1] ?? '';
     expect(notice).toContain('data-parity-field="verification-unknown-count">252</span> of 252 observed work items');
     expect(notice).toContain('data-parity-field="verification-unknown-inside">250</span> are in this selection');
     expect(notice).toContain('data-parity-field="verification-unknown-outside">2</span> are outside it');

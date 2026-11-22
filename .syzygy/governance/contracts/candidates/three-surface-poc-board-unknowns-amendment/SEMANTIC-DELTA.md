@@ -62,6 +62,10 @@ existed for the default selection only, one per rendered card); it gains
 `region:work-item-verification`. `trajectory` gains `verificationUnknown`
 and each `trajectory.rendered[]` gains `priority`. `unknownSubjects` still
 holds one entry per disclosure a surface renders.
+Two basis sentences now read for the board rather than one item:
+verification "... ingested for any work item." (was "for this item")
+and governing intent "No governing intent was captured for any work item:
+..." (was "for this work item").
 
 ## Warrant
 
@@ -86,8 +90,8 @@ row.
 
 ## Evidence or decision basis
 
-- Bytes on the 252-row fixture: 511,127 at base `291bafa19`, 445,382 at
-  the head, although each card gained priority and up to three instants.
+- Bytes on the 252-row fixture: 511,127 at base `291bafa19`, 454,357 at
+  the head (445,382 before the review repairs added link descriptions), although each card gained priority and up to three instants.
 - `trajectory.test.ts`: each route literal and basis sentence occurs once
   on that page and on no card; the notice counts equal the answer (252,
   250, 2); card facts equal the answer.
@@ -126,7 +130,7 @@ request.
 
 ````diff
 diff --git a/openspec/changes/three-surface-poc-experience/CONTRACT-COVERAGE.md b/openspec/changes/three-surface-poc-experience/CONTRACT-COVERAGE.md
-index 3b44e0f2f..24a202684 100644
+index 3b44e0f2f..2d7b74082 100644
 --- a/openspec/changes/three-surface-poc-experience/CONTRACT-COVERAGE.md
 +++ b/openspec/changes/three-surface-poc-experience/CONTRACT-COVERAGE.md
 @@ -151,5 +151,5 @@ exhausted — a reviewer who finds an unlisted limb has found a real gap.
@@ -136,18 +140,20 @@ index 3b44e0f2f..24a202684 100644
 +| RFC6-17 | An aggregate discloses its membership count/composition rather than a bare total | covered — Fold: only basic count-disclosure limb; full RFC6-22-tuple composition (tier/sibling/challenge/chain-state counts) not built. POC-REQ-043's verification notice discloses its served, inside and outside counts | POC-REQ-042, POC-REQ-043, POC-REQ-051 |
  | RFC6-18 | Two surfaces must not differ in which facts/labels exist for one underlying selection — divergence is a model defect, not UI variance | covered — Fold: the dedicated "evidence drawer" container / "Why this answer?" naming is not built; only the general non-divergence principle applies | POC-REQ-020, POC-REQ-060 |
  | RFC6-19 | Evidence content travels as resolvable links carrying source/provenance | covered — Fold to class 3/4 (evidence+provenance) only; classes 1,2,5,6,7,8 (lifecycle, warrant, challenge, policy/consent, work-state) explicitly Unknown/out of scope this slice | POC-REQ-031 |
-@@ -193,5 +193,5 @@ exhausted — a reviewer who finds an unlisted limb has found a real gap.
+@@ -192,6 +192,6 @@ exhausted — a reviewer who finds an unlisted limb has found a real gap.
+ | RFC8-23 | Unknown-provenance never absorbs orphaned work: where an item is both, the orphaned-work Contradiction governs | **Unknown** — Amendment row; the POC detects no orphaned work, and POC-REQ-014's Scope leaves this limb to the amendment that specifies orphaned-work detection, so no requirement observes the Contradiction governing | — |
  | RFC8-24 | Trajectory renders `source-uncaptured-or-unreachable` on a claim with its route visible | covered — Amendment row; the governing-intent claim on every work item | POC-REQ-014 |
- | RFC8-24 | The other reasons Trajectory renders (`missing-evidence`, `no-currency-bound-declared`, `stale-beyond-currency-bound`, `missing-declaration`), and a retention loss rendered citing the retention event | **Unknown** — Amendment row; no requirement observes them on Trajectory's claims | — |
+-| RFC8-24 | The other reasons Trajectory renders (`missing-evidence`, `no-currency-bound-declared`, `stale-beyond-currency-bound`, `missing-declaration`), and a retention loss rendered citing the retention event | **Unknown** — Amendment row; no requirement observes them on Trajectory's claims | — |
 -| RFC8-24 | Unknown aggregation follows RFC2-24's rendering rule: the governing-intent Unknowns aggregate to one count, disclose their reason count, and expand to their members within Trajectory's rendered selection | covered — Amendment row; one reason, so the served count is that reason's count; the narrowed board is the expansion over the rendered selection | POC-REQ-014 |
++| RFC8-24 | The other reasons Trajectory renders (`missing-evidence`, `no-currency-bound-declared`, `stale-beyond-currency-bound`, `missing-declaration`), and a retention loss rendered citing the retention event | **Unknown** — Amendment row; since syzygy-t3jk.15 POC-REQ-043's oracle observes `missing-evidence` on the work-item verification notice and marks; no requirement observes the other three reasons or a retention loss on Trajectory's claims | POC-REQ-043 (`missing-evidence` only) |
 +| RFC8-24 | Unknown aggregation follows RFC2-24's rendering rule: the governing-intent Unknowns aggregate to one count, disclose their reason count, and expand to their members within Trajectory's rendered selection | covered — Amendment row; one reason, so the served count is that reason's count; the narrowed board is the expansion over the rendered selection. Since syzygy-t3jk.15 the verification Unknowns aggregate the same way, to one board notice with served, inside and outside counts, its reason and route, each card keeping a mark that refers to it | POC-REQ-014, POC-REQ-043 |
  | RFC8-24 | The rest of the aggregation rule: expansion to members outside Trajectory's rendered selection, and the full RFC6-17 disclosure the rendering rule cites (per-label, per-tier, per-freshness counts, the equivalence tuple) for this aggregate | **Unknown** — Amendment row; no requirement observes either for the governing-intent count | — |
  | RFC8-24 | These are claim reasons only: the normalized state's four absence values take no reason, are counted separately, and are never absorbed by an aggregate of Unknowns | **Unknown** — Amendment row; Trajectory renders no RFC8-12 normalized state with absence values, so no requirement observes the separation | — |
 diff --git a/openspec/changes/three-surface-poc-experience/specs/three-surface-poc-experience/spec.md b/openspec/changes/three-surface-poc-experience/specs/three-surface-poc-experience/spec.md
-index 68b2599be..39259f70f 100644
+index 68b2599be..037001aa9 100644
 --- a/openspec/changes/three-surface-poc-experience/specs/three-surface-poc-experience/spec.md
 +++ b/openspec/changes/three-surface-poc-experience/specs/three-surface-poc-experience/spec.md
-@@ -930,16 +930,22 @@ Group: Trajectory. Form: **state projection/query**.
+@@ -930,16 +930,24 @@ Group: Trajectory. Form: **state projection/query**.
  items onto board columns drawn from a declared closed mapping of the Beads
  status vocabulary, with every rendered item placed by its observed status and
 -carrying its identifier.
@@ -165,9 +171,12 @@ index 68b2599be..39259f70f 100644
  - **Oracle**: per sampled item, the rendered column equals the declared
    mapping applied to the status read directly from Dolt at the served
 -  revision; equality decides.
+-- **Oracle independence**: expected statuses are direct database reads.
 +  revision, and the priority and instants shown equal the machine
 +  answer's for that item; equality decides.
- - **Oracle independence**: expected statuses are direct database reads.
++- **Oracle independence**: expected statuses, priorities and instants
++  are direct database reads (in a fixture, the checker's own rows), never
++  the renderer's model.
  - **Falsifier**: an item rendered in a column that contradicts its
 -  observed status, or a column outside the declared mapping.
 +  observed status, a column outside the declared mapping, or a card whose
@@ -175,7 +184,7 @@ index 68b2599be..39259f70f 100644
 +  missing.
  
  #### Scenario: Items placed by observed status
-@@ -950,4 +956,11 @@ carrying its identifier.
+@@ -950,4 +958,11 @@ carrying its identifier.
    column the declared mapping assigns to `in_progress`
  
 +#### Scenario: A card shows its own facts
@@ -187,7 +196,7 @@ index 68b2599be..39259f70f 100644
 +
  ```yaml
  warrants:
-@@ -1053,5 +1066,11 @@ column "Claimed", and the worker-change state label says only what git
+@@ -1053,5 +1068,11 @@ column "Claimed", and the worker-change state label says only what git
  showed on the bounded seam. One notice above the board SHALL state how many
  rendered items are closed and that verification is Unknown for each of
 -them, with its reason.
@@ -200,26 +209,30 @@ index 68b2599be..39259f70f 100644
 +notice; the reason sentence and route are not repeated per item.
  
  - **Scope.** every satisfaction/verification encoding on the surface, and
-@@ -1073,5 +1092,8 @@ them, with its reason.
+@@ -1073,5 +1094,11 @@ them, with its reason.
    `done|complete|completed|finished|resolved|satisfied|in[ _-]progress|active`
    over the wording population finds nothing, and the notice's closed count
 -  equals the machine answer's rendered items with status closed.
 +  equals the machine answer's rendered items with status closed. For the
 +  board-level count, the notice's served, inside and outside figures equal
-+  `trajectory.verificationUnknown`, and every rendered item carries exactly
-+  one verification mark whose reference resolves to that notice.
++  `trajectory.verificationUnknown`; every rendered item carries exactly
++  one verification mark whose reference resolves to that notice (the mark
++  names the notice's subject and links to its element); and no rendered
++  item's card contains the reason sentence or the route literal, each of
++  which occurs once on the page.
  - **Oracle independence**: the relationship state comes from the
    machine answer; the checker induced the mismatch.
-@@ -1080,5 +1102,7 @@ them, with its reason.
+@@ -1080,5 +1107,8 @@ them, with its reason.
    heading, label, sentence or served column value in the wording
    population that names closure as done, complete, finished or resolved,
 -  or a claim as in progress or active.
 +  or a claim as in progress or active; or a verification notice whose
-+  counts differ from the machine answer's, or a rendered item with no
-+  verification mark or a mark referring to no notice.
++  counts differ from the machine answer's, a rendered item with no
++  verification mark or a mark referring to no notice, or a card that
++  repeats the reason sentence or route.
  
  #### Scenario: Closed but unverified
-@@ -1098,9 +1122,17 @@ them, with its reason.
+@@ -1098,9 +1128,17 @@ them, with its reason.
    verification is Unknown for each of them
  
 +#### Scenario: Verification is Unknown once per board, with its count
@@ -239,3 +252,49 @@ index 68b2599be..39259f70f 100644
    policies: []
    decisions: [POC-DIR-2026-08-29, POC-DIR-2026-08-30]
 ````
+
+## Dispositions
+
+Review `docs/reviews/R-T2-BOARD-UNKNOWNS-1-RAW.md`, verdict
+`CONFIRM WITH EXCEPTIONS`, over commit `0cec8ef7c`. The exact text above is
+regenerated after the repairs; the review is bound to the earlier bytes
+(rule 10).
+
+1. The RFC8-24 "other reasons" row stayed fully Unknown — accepted; it now
+   names POC-REQ-043 for `missing-evidence` only and keeps the other
+   three reasons and the retention limb Unknown.
+2. The titles notice had no count — accepted; it now reads "Unknown for N
+   of N observed work items (every one)", N being the served item count.
+3. 750 identical "reason and route" links — accepted in part. Each link is
+   now `aria-describedby` its notice, so focusing it reads the notice's
+   count, reason and route with no activation; the link stays because the
+   bead asks for the notice to be one activation away, and its name is
+   determined in context by the mark it sits in (WCAG 2.4.4). A distinct
+   `aria-label` per link was tried and dropped: it made the 252-row page
+   larger than the base (523,177 bytes), which the acceptance forbids.
+   Notice ids were shortened (`n-titles`, `n-intent`, `n-verification`)
+   for the same reason. Tab stops stay at four per card; reducing them is
+   left to `syzygy-t3jk.18`, which decides the board's paging.
+4. "Not repeated per item" was decided by no clause — accepted; the Oracle
+   now says no card contains the reason sentence or the route literal and
+   each occurs once on the page, and the Falsifier names a card that
+   repeats either. "Resolves" is defined there: the mark names the
+   notice's subject and links to its element.
+5. POC-REQ-040's oracle independence covered statuses only — accepted; it
+   now names priorities and instants as direct reads (the checker's own
+   fixture rows), never the renderer's model. The test compares typed
+   literals as well as the answer.
+6. The governing-intent reason sentence appeared nowhere on the page —
+   accepted; the governing-intent notice now states it, and the test
+   asserts it occurs once. Both basis sentences reworded for a board are
+   listed under "Machine-answer change".
+7. Notes: the stale `closureNotice` comment is corrected and the closure
+   notice links the verification notice; the unused
+   `governingIntentDisclosure` is removed; R3 now matches an amendment's
+   tag only as a whole backticked token; the mark's link inherits the
+   mark's colour. Noted without change: per-item verification is served
+   for rendered items only and `served` equals the item count by
+   construction (every served item's verification is Unknown); the
+   reference rule does not check `<details>` (no notice sits in one); the
+   byte and before-layout figures are the author's, re-measured after the
+   repairs.

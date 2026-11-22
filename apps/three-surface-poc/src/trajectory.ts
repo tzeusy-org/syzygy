@@ -128,21 +128,22 @@ function workerChangeBadge(
  * One standing sentence, derived from the rendered items (never a constant),
  * says how many are closed and that verification is Unknown for each of them
  * (machine twin: trajectory.rendered[] status 'closed' and verification). It
- * is not a new Unknown disclosure: each card keeps its own. */
+ * is not a new Unknown disclosure: the verification notice is, and each
+ * card's verification mark refers to it. */
 function closureNotice(rendered: readonly TrajectoryLaneItem[]): string {
   const closed = rendered.filter((item) => item.status === 'closed');
   const unverified = closed.filter((item) => item.verification === 'unknown').length;
   return `<p class="closure-notice notice" data-parity-field="trajectory-closure-notice">
         <span data-parity-field="trajectory-closed-count">${closed.length}</span> of these items are closed in the tracker. Closed is the tracker's word, not a verification:
-        verification is Unknown for <span data-parity-field="trajectory-closed-unverified-count">${unverified}</span> of them, because no test or merge evidence is ingested for a work item; the verification notice gives the reason and route.
+        verification is Unknown for <span data-parity-field="trajectory-closed-unverified-count">${unverified}</span> of them, because no test or merge evidence is ingested for a work item; the <a href="#n-verification">verification notice</a> gives the reason and route.
       </p>`;
 }
 
 /** The element id of each board-level disclosure a card mark refers to. */
 const NOTICE_ELEMENT_ID = {
-  [WORK_ITEM_TITLES_REGION_ID]: 'notice-work-item-titles',
-  [WORK_ITEM_GOVERNING_INTENT_REGION_ID]: 'notice-work-item-governing-intent',
-  [WORK_ITEM_VERIFICATION_REGION_ID]: 'notice-work-item-verification',
+  [WORK_ITEM_TITLES_REGION_ID]: 'n-titles',
+  [WORK_ITEM_GOVERNING_INTENT_REGION_ID]: 'n-intent',
+  [WORK_ITEM_VERIFICATION_REGION_ID]: 'n-verification',
 } as const;
 
 type BoardDisclosureId = keyof typeof NOTICE_ELEMENT_ID;
@@ -154,7 +155,8 @@ type BoardDisclosureId = keyof typeof NOTICE_ELEMENT_ID;
  * nothing per item from `model.unknownSubjects`, so it renders for any
  * served item. */
 function cardMark(field: string, ref: BoardDisclosureId, className: string, reason: string, label: string): string {
-  return `<span class="epistemic ${className}" data-parity-field="${field}" data-unknown-ref="${ref}" data-unknown-reason="${escapeHtml(reason)}">${escapeHtml(label)} <a class="mark-ref" href="#${NOTICE_ELEMENT_ID[ref]}">reason and route</a></span>`;
+  const notice = NOTICE_ELEMENT_ID[ref];
+  return `<span class="epistemic ${className}" data-parity-field="${field}" data-unknown-ref="${ref}" data-unknown-reason="${escapeHtml(reason)}">${escapeHtml(label)} <a class="mark-ref" href="#${notice}" aria-describedby="${notice}">reason and route</a></span>`;
 }
 
 /** POC-REQ-043: the item's own verification, which is always Unknown. */
@@ -206,7 +208,7 @@ function governingIntentRegion(model: PocModel, rendered: readonly TrajectoryLan
   return `<p class="governing-intent-count notice" id="${NOTICE_ELEMENT_ID[WORK_ITEM_GOVERNING_INTENT_REGION_ID]}" data-parity-field="work-item-governed-by-count"${unknownMarker(WORK_ITEM_GOVERNING_INTENT_REGION_ID, unknown)}>
         Governing intent: Unknown for <span data-parity-field="governed-by-unknown-count">${count}</span> of ${model.workItems.items.length} observed work items;
         <span data-parity-field="governed-by-unknown-inside">${inside}</span> are in this selection and <span data-parity-field="governed-by-unknown-outside">${count - inside}</span> are outside it.
-        Reason: <code>${escapeHtml(unknown.closedReason)}</code>. ${unknownRoute(unknown)}
+        ${escapeHtml(unknown.reason)} Reason: <code>${escapeHtml(unknown.closedReason)}</code>. ${unknownRoute(unknown)}
         Supplying an item's warrant resolves its governing intent.
       </p>
       <input type="checkbox" class="narrow-toggle" id="narrow-governing-intent-unknown">
@@ -225,7 +227,7 @@ function titlesWithheldRegion(model: PocModel): string {
   if (model.workItems.kind !== 'observed') return '';
   const unknown = unknownSubject(model, WORK_ITEM_TITLES_REGION_ID);
   return `<p class="titles-withheld notice" id="${NOTICE_ELEMENT_ID[WORK_ITEM_TITLES_REGION_ID]}" data-parity-field="work-item-titles-withheld"${unknownMarker(WORK_ITEM_TITLES_REGION_ID, unknown)}>
-        Titles: ${escapeHtml(unknown.label)} for every observed work item. ${escapeHtml(unknown.reason)}
+        Titles: ${escapeHtml(unknown.label)} for <span data-parity-field="titles-unknown-count">${model.workItems.items.length}</span> of ${model.workItems.items.length} observed work items (every one). ${escapeHtml(unknown.reason)}
         Reason: <code>${escapeHtml(unknown.closedReason)}</code>. ${unknownRoute(unknown)}
       </p>`;
 }
@@ -267,7 +269,7 @@ const TRAJECTORY_STYLE = `
   code { overflow-wrap: anywhere; }
   .board { display: grid; grid-template-columns: repeat(7, minmax(10rem, 1fr)); gap: .75rem; padding: 1.5rem 0 3rem; overflow-x: auto; }
   .wi-facts { font-family: var(--font-mono); font-size: .68rem; color: var(--muted); overflow-wrap: anywhere; }
-  .mark-ref { font-size: .68rem; }
+  .mark-ref { font-size: .68rem; color: inherit; }
   .board-column { background: linear-gradient(145deg, #102126, var(--panel)); border: 1px solid var(--line); padding: 1rem; min-width: 0; }
   .board-column h2 { font-size: 1.1rem; margin: 0 0 .8rem; }
   .board-column .count { color: var(--muted); font-family: var(--font-mono); font-size: .78rem; }

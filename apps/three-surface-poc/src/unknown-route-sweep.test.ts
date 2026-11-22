@@ -299,7 +299,7 @@ describe('every surface Unknown carries a closed reason and a route (M4 slice 1,
       ['dropped route', trajectory, trajectory.replace(/Route: <span data-unknown-route[^>]*>[^<]*<\/span>\./, '')],
       ['dangling card reference', trajectory, trajectory.replace('data-unknown-ref="region:work-item-verification"', 'data-unknown-ref="region:work-item-nowhere"')],
       ['card reason differing from its disclosure', trajectory, trajectory.replace(/(data-unknown-ref="region:work-item-verification" data-unknown-reason=")missing-evidence"/, '$1excluded-content"')],
-      ['card link missing its disclosure', trajectory, trajectory.replace('href="#notice-work-item-verification"', 'href="#notice-elsewhere"')],
+      ['card link missing its disclosure', trajectory, trajectory.replace('class="mark-ref" href="#n-verification"', 'class="mark-ref" href="#notice-elsewhere"')],
       ['bare provenance-none', orrery, orrery.replace(/<span class="provenance-none" data-unknown-disclosure="[^"]*" data-unknown-reason="[^"]*">/, '<span class="provenance-none">')],
     ];
     for (const [label, original, mutated] of mutants) {
