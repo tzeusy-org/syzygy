@@ -1,0 +1,44 @@
+
+ RUN  v3.2.7 /home/orca/.tmp/syzygy-beads-looper-20261114-54ebc9f1/d10-f3-final-verification
+
+ ❯ |integration| packages/polaris-dossier/src/url-ordered-design-screen.test.ts (11 tests | 1 failed | 10 skipped) 733ms
+   ↓ preemptible ordered design screen > reissues the exact profile and plan and returns request identities and response observations over a private pipe
+   ↓ preemptible ordered design screen > keeps private no-path secret screening and refuses changed policy, profile, manifest, image and currentness
+   ↓ preemptible ordered design screen > kills a pathological unchanged detector, enforces output and address limits, and returns no private diagnostic
+   ↓ preemptible ordered design screen > hashes trusted images under the private guard and retains full authority checks for the worker
+   ↓ preemptible ordered design screen > refuses authority withdrawn during held image hashing before charging
+   ↓ preemptible ordered design screen > refuses private-guard withdrawn during held image hashing before charging
+   ↓ preemptible ordered design screen > rechecks worker held-bytes after hashing Node and before charging
+   × preemptible ordered design screen > rechecks worker named-identity after hashing Node and before charging 317ms
+     → expected 18000000 to be +0 // Object.is equality
+   ↓ preemptible ordered design screen > rechecks full authority after charging before scheduling the worker
+   ↓ preemptible ordered design screen > stops an asynchronous worker when live authority is revoked and retains its charged capacity
+   ↓ preemptible ordered design screen > has no inherited canary, host-home access, child spawning or provider network route
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  |integration| packages/polaris-dossier/src/url-ordered-design-screen.test.ts > preemptible ordered design screen > rechecks worker named-identity after hashing Node and before charging
+AssertionError: expected 18000000 to be +0 // Object.is equality
+
+- Expected
++ Received
+
+- 0
++ 18000000
+
+ ❯ packages/polaris-dossier/src/url-ordered-design-screen.test.ts:218:43
+    216|     }
+    217|     expect(result.ok).toBe(false);
+    218|     expect(result.charge.cpuMicroseconds).toBe(0);
+       |                                           ^
+    219|     expect(charged).not.toHaveBeenCalled();
+    220|   });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 10 skipped (11)
+   Start at  23:06:20
+   Duration  1.83s (transform 556ms, setup 9ms, collect 762ms, tests 733ms, environment 0ms, prepare 60ms)
+

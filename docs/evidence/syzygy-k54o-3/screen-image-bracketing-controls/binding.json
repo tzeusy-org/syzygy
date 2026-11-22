@@ -1,0 +1,84 @@
+{
+  "commit": "9eb31ba04eb3164b269727fc57417e7117528efc",
+  "source": "packages/polaris-dossier/src/url-ordered-design-screen.ts",
+  "sourceSha256": "b20bfae804f552fa65f44cfe910054865b1f1cfde528b0944295d82e3df90c12",
+  "baselineLogSha256": "3007155ee3bcfa3842b90abd7a1c2d17ee490ef2851d68292baee41d1825e53f",
+  "results": [
+    {
+      "id": "repeat-full-guard",
+      "old": "    const readCurrent = options.imageReadCurrent ?? options.current;",
+      "new": "    const readCurrent = options.current;",
+      "exit": 1,
+      "command": [
+        "npx",
+        "--no-install",
+        "vitest",
+        "run",
+        "--project",
+        "integration",
+        "--maxWorkers=1",
+        "packages/polaris-dossier/src/url-ordered-design-screen.test.ts",
+        "-t",
+        "hashes trusted images under the private guard"
+      ],
+      "logSha256": "add7b072e61ff7e52017c84851d4db722c75a577c705e9969478c99d24026f16"
+    },
+    {
+      "id": "ignore-private-refusal",
+      "old": "    const imageReadCurrent = (): void => { if (!readCurrent() || Date.now() >= options.deadlineEpochMilliseconds) refuse(); };",
+      "new": "    const imageReadCurrent = (): void => { readCurrent(); if (Date.now() >= options.deadlineEpochMilliseconds) refuse(); };",
+      "exit": 1,
+      "command": [
+        "npx",
+        "--no-install",
+        "vitest",
+        "run",
+        "--project",
+        "integration",
+        "--maxWorkers=1",
+        "packages/polaris-dossier/src/url-ordered-design-screen.test.ts",
+        "-t",
+        "refuses private-guard withdrawn"
+      ],
+      "logSha256": "6615a21f3fd58b7e695c10c717033e10f726c15938fc85d5e305c88570821a5b"
+    },
+    {
+      "id": "omit-held-name",
+      "old": "  return same(held.stat, fs.fstatSync(held.fd, { bigint: true })) && same(held.stat, fs.lstatSync(held.file.path, { bigint: true }));",
+      "new": "  return same(held.stat, fs.fstatSync(held.fd, { bigint: true }));",
+      "exit": 1,
+      "command": [
+        "npx",
+        "--no-install",
+        "vitest",
+        "run",
+        "--project",
+        "integration",
+        "--maxWorkers=1",
+        "packages/polaris-dossier/src/url-ordered-design-screen.test.ts",
+        "-t",
+        "rechecks worker named-identity"
+      ],
+      "logSha256": "b10d78855e84a8210312816af2bf965f8fcfdbf0c7738241d6c4cc0a096f65bf"
+    },
+    {
+      "id": "omit-final-authority",
+      "old": "    options.chargeCpuMicroseconds?.(cpuMicroseconds);\n    current();",
+      "new": "    options.chargeCpuMicroseconds?.(cpuMicroseconds);",
+      "exit": 1,
+      "command": [
+        "npx",
+        "--no-install",
+        "vitest",
+        "run",
+        "--project",
+        "integration",
+        "--maxWorkers=1",
+        "packages/polaris-dossier/src/url-ordered-design-screen.test.ts",
+        "-t",
+        "rechecks full authority after charging"
+      ],
+      "logSha256": "393aa1f65bfaecc3a3f998bf4e10253ba8c4269a4c91c148900a44aa1af2cc97"
+    }
+  ]
+}

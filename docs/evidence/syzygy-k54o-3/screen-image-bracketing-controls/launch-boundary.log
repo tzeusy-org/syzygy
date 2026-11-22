@@ -1,0 +1,11 @@
+
+ RUN  v3.2.7 /home/orca/.tmp/syzygy-beads-looper-20261114-54ebc9f1/d10-f3-final-verification
+
+ ✓ |integration| packages/polaris-dossier/src/session-launch.test.ts (29 tests | 28 skipped) 9685ms
+   ✓ prepared private CLI launch > enforces output, storage, wall and explicit stop boundaries on the actual CLI  9600ms
+
+ Test Files  1 passed (1)
+      Tests  1 passed | 28 skipped (29)
+   Start at  23:06:25
+   Duration  13.32s (transform 2.44s, setup 11ms, collect 3.28s, tests 9.68s, environment 0ms, prepare 74ms)
+
