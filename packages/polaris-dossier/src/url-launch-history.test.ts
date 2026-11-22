@@ -296,7 +296,10 @@ describe('protected URL design delivery audit', () => {
     const renderer = { format: 'polaris-url-installed-renderer/1', sourceEntry: 'first-party-renderer',
       programSha256: '1'.repeat(64), programBytes: 42, inputTreeSha256: '2'.repeat(64),
       manifestSha256: '3'.repeat(64), profileRegistrySha256: planning.options.runtime.profileRegistrySha256 } as const;
-    const originalText = 'Own bounded design packet. '.repeat(1600);
+    const profile = plans.find(plan => plan.role === 'design')?.profile;
+    const originalText = isOrderedDesignSessionProfile(profile)
+      ? 'Own bounded design packet.'.padEnd(profile.transcript.partition.partBytes + 1)
+      : '';
     const view = Uint8Array.from(Buffer.from(mode.startsWith('ordered') ? encodeCanonicalJson({ format: URL_DESIGN_VIEW_FORMAT, encoding: URL_DESIGN_VIEW_ENCODING,
       originalSha256: sha256(originalText), originalBytes: Buffer.byteLength(originalText), payload: originalText, payloadSha256: sha256(originalText), payloadBytes: Buffer.byteLength(originalText) }, { maxBytes: 2_097_152, maxNodes: 65_536, maxDepth: 32 }) : 'OWN INERT VIEW'));
     const parent = mode.startsWith('ordered') ? ledger.compose(Buffer.from('Own checked design input.'), [artifactOptions.origins.roots.rolePolicy]) : Object.freeze({}) as UrlOriginReceipt;
@@ -381,7 +384,6 @@ describe('protected URL design delivery audit', () => {
         expect(sampledDurability).toEqual([0, 0, 1, 1, 1]);
         const sealed = delivered.receipt;
         if (mode.startsWith('ordered')) {
-          const profile = plans.find(plan => plan.role === 'design')!.profile;
           if (!isOrderedDesignSessionProfile(profile)) throw Error('own ordered profile missing');
           const plan = planOrderedDesignBytes({ envelope: view, envelopeSha256: sha256(view), original: metadata.original,
             fileCount: 1, pageCount: 1, instructionProfileSha256: sha256(profile.input.systemPrompt), limits: { partBytes: profile.transcript.partition.partBytes, partCount: profile.transcript.partition.partCount, replyBytes: profile.transcript.partition.replyBytes, preparedBytes: profile.transcript.partition.preparedBytes },
@@ -390,6 +392,9 @@ describe('protected URL design delivery audit', () => {
               originPolicySha256: originPolicy.sha256, originalReceiptSha256: sealed.eventSha256, pin: pinnedRevision,
               producerSha256: metadata.renderer.programSha256, profileSha256: profile.digest, project: 'project:syzygy', provider: 'anthropic', role: 'design',
               round: 1, run: runId, session: profile.input.sessionId, transferEpoch: 1 } });
+          expect(plan.manifest.parts.map(part => part.bytes)).toEqual([
+            profile.transcript.partition.partBytes, view.byteLength - profile.transcript.partition.partBytes,
+          ]);
           let observedReadBytes = 0;
           const writer = audit.beginOrderedDesignAudit(plan, () => true, bytes => { observedReadBytes += bytes; }), otherWriter = other.audit.beginOrderedDesignAudit(plan, () => true);
           const protocol = await orderedDeliveryPrefix(writer, plan, profile, runId);
