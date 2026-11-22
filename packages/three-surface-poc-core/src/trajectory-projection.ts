@@ -1,3 +1,4 @@
+import { recordedInstant, trajectoryTimeMeasures, type TrajectoryTimeMeasures } from './trajectory-time-measures.js';
 import type { WorkItemFact, WorkItemsResult, WorkItemStatus } from './work-items.js';
 
 export const STATUS_TO_COLUMN = {
@@ -107,9 +108,130 @@ interface TrajectoryProjectionObserved {
    * item (no evidence source is ingested); `inside` are rendered, `outside`
    * are served but outside the selection. Both channels read these. */
   readonly verificationUnknown: { readonly served: number; readonly inside: number; readonly outside: number };
-  readonly timeRange: { readonly earliest: string; readonly latest: string } | null;
+  /** POC-REQ-045 (syzygy-t3jk.17): elapsed-time measures over every served item. */
+  readonly timeMeasures: TrajectoryTimeMeasures;
   /** POC-REQ-044: the five answers, in TRAJECTORY_ANSWER_ORDER. */
   readonly answers: readonly TrajectoryAnswer[];
+  /** POC-REQ-042 (syzygy-t3jk.18): the declared narrowing and paging, and
+   * the view this projection renders (null: the default selection). */
+  readonly narrowing: TrajectoryNarrowing;
+}
+
+/** The closed query parameter set of GET /trajectory (POC-REQ-042). */
+export const TRAJECTORY_VIEW_PARAMETERS = ['status', 'governing-intent', 'page'] as const;
+export type TrajectoryViewParameter = (typeof TRAJECTORY_VIEW_PARAMETERS)[number];
+/** Items per page of a narrowed or paged view, in ascending item id. */
+export const TRAJECTORY_PAGE_SIZE = 250;
+
+export interface TrajectoryViewRequest {
+  readonly status: WorkItemStatus | null;
+  readonly governingIntent: 'unknown' | null;
+  readonly page: number;
+}
+
+export interface TrajectoryNarrowing {
+  readonly parameters: {
+    readonly status: readonly WorkItemStatus[];
+    readonly 'governing-intent': readonly ['unknown'];
+    readonly page: 'positive integer';
+  };
+  readonly pageSize: number;
+  readonly order: 'ascending item id';
+  readonly view: (TrajectoryViewRequest & { readonly matching: number; readonly pageCount: number }) | null;
+}
+
+export interface TrajectoryViewRefusal {
+  readonly refused: 'trajectory-view-parameter';
+  readonly parameter: string;
+  readonly reason: 'unknown-parameter' | 'repeated-parameter' | 'unknown-value' | 'not-a-positive-integer' | 'page-past-end';
+  readonly allowed: readonly string[];
+}
+
+function narrowingDeclaration(view: TrajectoryNarrowing['view']): TrajectoryNarrowing {
+  return {
+    parameters: { status: Object.keys(STATUS_TO_COLUMN) as WorkItemStatus[], 'governing-intent': ['unknown'], page: 'positive integer' },
+    pageSize: TRAJECTORY_PAGE_SIZE,
+    order: 'ascending item id',
+    view,
+  };
+}
+
+/**
+ * Read the closed parameter set from a query (POC-REQ-042). No parameter →
+ * null (the default selection). Any other name, a repeated name, a value
+ * outside its set or a page that is not a positive integer is refused with
+ * its reason, never ignored.
+ */
+export function parseTrajectoryView(query: URLSearchParams): TrajectoryViewRequest | TrajectoryViewRefusal | null {
+  const names = [...query.keys()];
+  if (names.length === 0) return null;
+  const seen = new Set<string>();
+  for (const name of names) {
+    if (!(TRAJECTORY_VIEW_PARAMETERS as readonly string[]).includes(name)) {
+      return { refused: 'trajectory-view-parameter', parameter: name, reason: 'unknown-parameter', allowed: TRAJECTORY_VIEW_PARAMETERS };
+    }
+    if (seen.has(name)) return { refused: 'trajectory-view-parameter', parameter: name, reason: 'repeated-parameter', allowed: TRAJECTORY_VIEW_PARAMETERS };
+    seen.add(name);
+  }
+  const statuses = Object.keys(STATUS_TO_COLUMN);
+  const status = query.get('status');
+  if (status !== null && !statuses.includes(status)) {
+    return { refused: 'trajectory-view-parameter', parameter: 'status', reason: 'unknown-value', allowed: statuses };
+  }
+  const intent = query.get('governing-intent');
+  if (intent !== null && intent !== 'unknown') {
+    return { refused: 'trajectory-view-parameter', parameter: 'governing-intent', reason: 'unknown-value', allowed: ['unknown'] };
+  }
+  const page = query.get('page');
+  if (page !== null && !/^[1-9][0-9]*$/.test(page)) {
+    return { refused: 'trajectory-view-parameter', parameter: 'page', reason: 'not-a-positive-integer', allowed: ['positive integer'] };
+  }
+  return { status: status as WorkItemStatus | null, governingIntent: intent === null ? null : 'unknown', page: page === null ? 1 : Number(page) };
+}
+
+/** Does an item carry the governing-intent Unknown POC-REQ-014 counts? */
+function carriesGoverningIntentUnknown(item: WorkItemFact): boolean {
+  return item.governedBy.label === 'Unknown' && item.governedBy.closedReason === 'source-uncaptured-or-unreachable';
+}
+
+/**
+ * One narrowed or paged view, computed per request from every served item
+ * (never cached): the items matching the request in ascending id, one page
+ * of `TRAJECTORY_PAGE_SIZE`. The answers and measures stay over every served
+ * item; the counts say what this page renders and what it leaves out. A page
+ * past the last is refused; a view with no match renders page 1 empty.
+ * Over an Unknown population a well-formed view renders the Unknown board:
+ * with no served item there is no view to page and no last page to pass.
+ */
+export function projectTrajectoryView(
+  base: TrajectoryProjection,
+  workItems: WorkItemsResult,
+  request: TrajectoryViewRequest,
+): TrajectoryProjection | TrajectoryViewRefusal {
+  if (base.kind === 'unknown' || workItems.kind === 'unknown') return base;
+  const matching = [...workItems.items]
+    .filter((item) => (request.status === null || item.status === request.status) && (request.governingIntent === null || carriesGoverningIntentUnknown(item)))
+    .sort(byId);
+  const pageCount = Math.max(1, Math.ceil(matching.length / TRAJECTORY_PAGE_SIZE));
+  if (request.page > pageCount) {
+    return { refused: 'trajectory-view-parameter', parameter: 'page', reason: 'page-past-end', allowed: [`1 to ${pageCount}`] };
+  }
+  const rendered = matching.slice((request.page - 1) * TRAJECTORY_PAGE_SIZE, request.page * TRAJECTORY_PAGE_SIZE).map(laneItem);
+  const narrowed = [
+    request.status === null ? null : `status ${request.status}`,
+    request.governingIntent === null ? null : 'governing intent Unknown',
+  ].filter((part): part is string => part !== null);
+  const scope = narrowed.length === 0 ? `all ${workItems.items.length} observed items` : `the ${matching.length} observed items with ${narrowed.join(' and ')}`;
+  return {
+    ...base,
+    selectionRule: `page ${request.page} of ${pageCount} of ${scope}, ${TRAJECTORY_PAGE_SIZE} per page by ascending item id`,
+    rendered,
+    renderedCount: rendered.length,
+    excludedCount: workItems.items.length - rendered.length,
+    totalCount: workItems.items.length,
+    verificationUnknown: { served: workItems.items.length, inside: rendered.length, outside: workItems.items.length - rendered.length },
+    narrowing: narrowingDeclaration({ ...request, matching: matching.length, pageCount }),
+  };
 }
 
 export interface TrajectoryProjectionUnknown {
@@ -164,23 +286,6 @@ function byId(a: WorkItemFact, b: WorkItemFact): number {
   return a.id < b.id ? -1 : a.id > b.id ? 1 : 0;
 }
 
-/** Explicit offsets only: the host timezone must never select a different item. */
-function recordedInstant(value: string | null): bigint | null {
-  const match = /^(\d{4})-(\d{2})-(\d{2})T([01]\d|2[0-3]):([0-5]\d):([0-5]\d)(?:\.(\d{1,9}))?(Z|[+-](?:[01]\d|2[0-3]):[0-5]\d)$/.exec(value ?? '');
-  if (match === null) return null;
-  const year = Number(match[1]);
-  const month = Number(match[2]);
-  const day = Number(match[3]);
-  const leap = year % 4 === 0 && (year % 100 !== 0 || year % 400 === 0);
-  const days = [31, leap ? 29 : 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
-  if (month < 1 || month > 12 || day < 1 || day > days[month - 1]!) return null;
-  // Calendar validity is checked before Date.parse, which otherwise rolls
-  // impossible dates forward. Parse whole seconds, retaining up to nine
-  // fractional digits separately so sub-millisecond updates remain ordered.
-  const milliseconds = Date.parse(`${match[1]}-${match[2]}-${match[3]}T${match[4]}:${match[5]}:${match[6]}${match[8]}`);
-  if (!Number.isFinite(milliseconds)) return null;
-  return BigInt(milliseconds) * 1_000_000n + BigInt((match[7] ?? '').padEnd(9, '0'));
-}
 
 /** Missing or invalid recorded times rank last; never substitute another field. */
 function newestFirst(a: string | null, b: string | null): number {
@@ -239,18 +344,6 @@ export function projectTrajectory(
   const renderedIds = new Set<string>([...open.map((item) => item.id), ...closed.map((item) => item.id)]);
   const rendered = sorted.filter((item) => renderedIds.has(item.id)).map(laneItem);
 
-  const instants = rendered.flatMap((item) =>
-    [item.createdAt, item.updatedAt, item.closedAt ?? undefined].filter(
-      (value): value is string => value !== undefined,
-    ),
-  );
-  const timeRange =
-    instants.length === 0
-      ? null
-      : {
-          earliest: instants.reduce((min, value) => (value < min ? value : min)),
-          latest: instants.reduce((max, value) => (value > max ? value : max)),
-        };
 
   return {
     kind: 'observed',
@@ -265,7 +358,8 @@ export function projectTrajectory(
       inside: rendered.filter((item) => item.verification === 'unknown').length,
       outside: workItems.items.length - rendered.filter((item) => item.verification === 'unknown').length,
     },
-    timeRange,
+    timeMeasures: trajectoryTimeMeasures(workItems.items, workItems.capturedAt),
     answers: observedAnswers(workItems, options.reconciliationChain),
+    narrowing: narrowingDeclaration(null),
   };
 }

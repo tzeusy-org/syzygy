@@ -29,7 +29,7 @@ Reader notes, binding on how this file is read:
   named in each requirement's `Group` line: *Code-structure
   observation* (001–004), *Work-item observation* (010–014), *Client
   rendering and parity* (020–022), *Polaris* (030–032), *Trajectory*
-  (040–044), *Orrery* (050–053), *Cross-cutting experience* (055, 060–061).
+  (040–045), *Orrery* (050–053), *Cross-cutting experience* (055, 060–061).
   Identifiers are stable and literal: minted once, amended in place,
   retired rather than reused, never renumbered (CC-SPEC-3). Gaps in the
   numbering are deliberate.
@@ -981,10 +981,13 @@ Group: Trajectory. Form: **invariant**.
 
 **Required behavior.** Every temporal position, duration, or ordering
 Trajectory renders SHALL derive from instants recorded in the observed
-work-item facts (created, updated, closed), never from render-time clocks or
-inferred ordering.
+work-item facts (created, updated, closed), or from the work-item
+observation's own capture instant (`workItems.capturedAt`, the instant an
+age runs to, POC-REQ-045), never from render-time clocks or inferred
+ordering.
 
-- **Scope.** all temporal encodings on the surface.
+- **Scope.** all temporal encodings on the surface: each card's recorded
+  instants and the elapsed-time charts and tables of POC-REQ-045.
 
 - **Case (sweep)**: a checker enumerates Trajectory's temporal markers
   — the denominator is the marker population — and recomputes each
@@ -1023,19 +1026,53 @@ Group: Trajectory. Form: **invariant**.
 **Required behavior.** Trajectory SHALL visibly declare which work-item
 population it renders (its selection rule) and the counts inside and outside
 that selection, so an excluded-item population is never silently invisible.
+Every served item SHALL be reachable: the route SHALL accept a closed
+parameter set, `status` (one of the seven tracker statuses of POC-REQ-040),
+`governing-intent=unknown` (the items carrying POC-REQ-014's governing-intent
+Unknown) and `page` (a positive integer), and any of them SHALL give a view
+of the matching items in ascending item id, one page of a declared fixed
+size, whose scope statement names the page, the page count and the matching
+count. No parameter SHALL give the default selection. Any other name, a
+repeated name, a value outside its set, a page that is not a positive
+integer, or a page past the last SHALL be refused with HTTP 400 naming the
+parameter, the reason and the allowed set, never ignored. When the
+work-item population is Unknown, a well-formed view SHALL render the
+Unknown board, since no served item gives a view or a last page. Every page SHALL
+link, by real anchors outside any collapsed element and reachable by
+keyboard, to the default selection, every item by id, each status and the
+governing-intent Unknown with their whole-population counts, and the
+current view's previous and next page. The machine answer SHALL take no
+parameter and SHALL declare the parameter set, the page size and the order
+(`trajectory.narrowing`), so any page is recomputable from
+`workItems.items`.
 
-- **Scope.** the rendered scope statement against the full observed item set.
+- **Scope.** the rendered scope statement against the full observed item
+  set; the route's parameters, refusals and view links.
 
 - **Case**: a checker loads Trajectory over a database whose total item
-  count exceeds the rendered selection.
+  count exceeds the rendered selection; then, over 640 items (three pages),
+  loads every page of the unnarrowed view, every status view and the
+  governing-intent view, a page recomputed from the machine answer, five
+  refused requests, and the view links on the direct and the tailnet path.
 - **Observable**: the surface states the selection rule, the rendered
-  count, and the excluded count.
+  count, and the excluded count; each view's cards and counts; each
+  refusal's status and reason; the links and their keyboard reach.
 - **Oracle**: rendered count + excluded count equals the total count
-  read directly from Dolt at the served revision; arithmetic decides.
+  read directly from Dolt at the served revision; every served item appears
+  on exactly one page of the unnarrowed view and of its status view, and the
+  governing-intent pages hold exactly the items carrying that Unknown; a
+  page's cards and counts equal the checker's own slice of
+  `workItems.items` (filter, ascending id, page size); `type=bug`,
+  `status=done`, `page=0`, `page=1.5` and a page past the last each return
+  400 with that reason; the links equal the expected list on both paths and
+  Tab reaches each. Arithmetic and equality decide.
 - **Oracle independence**: the total comes from a direct database
-  count.
+  count; expected pages are the checker's own slices of the machine answer.
 - **Falsifier**: a board whose counts do not reconcile with the
-  database total, or no visible scope statement.
+  database total, or no visible scope statement; a served item on no page
+  or on two; a parameter outside the set ignored rather than refused; a
+  view link missing, inside a collapsed element or unreachable by keyboard;
+  or a page the machine answer cannot reproduce.
 
 #### Scenario: Bounded board over a large history
 
@@ -1044,11 +1081,18 @@ that selection, so an excluded-item population is never silently invisible.
 - **THEN** the surface states the selection rule and that 6,772 items
   are outside it, and the three numbers reconcile
 
+#### Scenario: Every item reachable by state and page
+
+- **WHEN** 640 items are served and the reader follows the view links
+- **THEN** each item appears on exactly one page of the unnarrowed view
+  and of its status view, every page states its scope and counts, and a
+  parameter outside the declared set is refused with 400 and its reason
+
 ```yaml
 warrants:
   primary: VIS-2
   doctrine: [VIS-1, VIS-2, VIS-3]
-  contracts: [RFC2-6, RFC6-14, RFC6-16, RFC6-17, RFC6-22, RFC6-23]
+  contracts: [RFC2-6, RFC6-14, RFC6-16, RFC6-17, RFC6-22, RFC6-23, RFC8-23]
   policies: []
   decisions: [POC-DIR-2026-08-30]
   topology: []
@@ -1259,6 +1303,99 @@ warrants:
   decisions: []
   topology: []
   parent_requirements: []
+```
+
+### Requirement: POC-REQ-045 — Trajectory measures elapsed time over every served item
+
+Group: Trajectory. Form: **state projection/query**.
+
+**Required behavior.** Trajectory SHALL measure elapsed time over every
+served work item, never the rendered selection (POC-REQ-042), as four
+independent measures, each with its coverage, "n of m" items, stated beside
+it: (1) lead time, closed items from created to closed instant; (2) age,
+non-closed items from created instant to the observation's capture instant
+(`workItems.capturedAt`), never a render-time clock (POC-REQ-041); (3)
+arrivals per ISO 8601 week in UTC, by created instant; and (4) closures per
+ISO 8601 week in UTC, by closed instant. Lead time and age SHALL be the
+median and the 90th percentile by nearest rank, in whole hours rounded
+down; with no item covered each SHALL be stated Unknown with its "0 of m"
+coverage, never 0 (RFC8-19). An item whose needed instant is missing,
+invalid, written without a timezone, after the capture instant, or
+reversed (a closed instant before its created instant) SHALL be counted in
+the denominator and not covered by any measure, never dropped. The weekly
+series SHALL list every week from the first to the last covered event, at
+most the last 104 of them, and state how many covered arrivals and
+closures fall in earlier weeks; its chart and table SHALL state the
+coverage they are counted over, so a week's 0 is read over the covered
+items only.
+The measures SHALL declare their source (the tracker's recorded instants)
+and evidence class (observed), and no element SHALL combine two measures
+into one number (RFC8-18). The page SHALL draw them as charts, one unit per
+axis (counts per week; hours), each with a title, labelled axes and a text
+alternative, using no script, and SHALL give every number a chart draws in
+a table, each cell equal to the machine answer
+(`trajectory.timeMeasures`). The cost answer (POC-REQ-044) SHALL stay
+Unknown for every other cost and point at these measures.
+
+- **Scope.** the elapsed-time region of Trajectory and
+  `trajectory.timeMeasures`. Effort, compute, token, money and
+  blocked-time costs, cycle time and any history of status changes are
+  outside it.
+
+- **Case**: a checker serves closed items with a 48-hour and a 12-hour
+  lead time, a closed item with a timezone-less created instant, a closed
+  item closed before it was created, and two open items 48 and 12 hours
+  old at the capture instant, spanning ISO weeks 31 to 35 of 2026; it
+  renders the page at two wall-clock times; separately it serves a closed
+  item with no usable instants, and measures weeks across a year change and
+  over a span longer than 104 weeks.
+- **Observable**: the four measures, each with its covered and total
+  counts; the weekly rows and the earlier-week counts; the two charts'
+  titles, axis labels, text alternatives and marks; both renders' bytes.
+- **Oracle**: lead time 2 of 4 covered, median 12 and p90 48 hours; age 2
+  of 2, median 12 and p90 48; arrivals 5 of 6; closures 2 of 4; five weekly
+  rows W31 to W35 with W33 and W34 at 0; each table cell, each bar's value
+  and each week's hover title equals the machine answer, each line's point
+  heights order as its weekly values, and a mutated cell or mark is named;
+  with no usable instant, lead time renders "Unknown: 0 of 1 covered" and no
+  0; the two renders are byte-equal; ISO week names equal the checker's own
+  calendar (2027-01-01 is 2026-W53); a longer span lists 104 weeks and
+  counts the earlier events. Equality decides.
+- **Oracle independence**: expected values are computed by hand from the
+  checker's fixture instants, and ISO weeks by an independent calendar,
+  never by the module under test.
+- **Falsifier**: a measure without its coverage; an uncovered item dropped
+  from a denominator or counted as 0 hours; a measure with no covered item
+  rendered as 0; an instant after the capture instant counted; an age
+  measured to a render-time clock; a week missing between covered events,
+  or an earlier event dropped; two units on one axis; a chart number absent
+  from the tables or unequal to the machine answer; a composite of two
+  measures; or cost rendered as known.
+
+#### Scenario: Elapsed time with partial coverage
+
+- **WHEN** four closed items are served, two with valid instants (48 and 12
+  hours), one with a timezone-less created instant and one closed before it
+  was created, and two open items 48 and 12 hours old at the capture instant
+- **THEN** lead time is covered for 2 of 4, median 12 and p90 48 hours; age
+  for 2 of 2, median 12 and p90 48 hours; and the tables equal the machine
+  answer
+
+#### Scenario: No covered item
+
+- **WHEN** no closed item has valid created and closed instants
+- **THEN** lead time is stated Unknown with 0 of its total covered, never
+  0 hours
+
+```yaml
+warrants:
+  primary: VIS-2
+  doctrine: [VIS-2, VIS-6]
+  contracts: [RFC8-18, RFC8-19, RFC2-3, RFC6-22]
+  policies: []
+  decisions: []
+  topology: []
+  parent_requirements: [POC-REQ-041, POC-REQ-044]
 ```
 
 ### Requirement: POC-REQ-050 — Orrery projects declared mappings deterministically

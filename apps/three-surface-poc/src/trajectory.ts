@@ -5,7 +5,12 @@ import {
   WORK_ITEM_VERIFICATION_REGION_ID,
   WORK_ITEMS_REGION_ID,
   STATUS_TO_COLUMN,
+  parseTrajectoryView,
+  projectTrajectoryView,
   workerChangeVerificationId,
+  type TrajectoryNarrowing,
+  type TrajectoryViewRefusal,
+  type TrajectoryViewRequest,
   type PocModel,
   type PocUnknown,
   type WorkerChangeObserved,
@@ -20,9 +25,10 @@ import {
 } from './materialize-action.js';
 import { substrateEvaluationFooter } from './evaluation-footer.js';
 import { pageShell, type HumanOperabilityStatus } from './page-shell.js';
-import { TAILNET_MOUNT_PREFIX } from './tailnet.js';
+import { TAILNET_MOUNT_PREFIX, withMountPrefix } from './tailnet.js';
 import { epistemicClassName } from './design-tokens.js';
 import { unknownMarker, unknownRoute, unknownSubject } from './unknown-marker.js';
+import { TIME_MEASURES_STYLE, timeMeasuresRegion } from './trajectory-time-chart.js';
 
 export const TRAJECTORY_HUMAN_PATH = '/trajectory' as const;
 export const TRAJECTORY_TAILNET_PATH = `${TAILNET_MOUNT_PREFIX}/trajectory` as const;
@@ -37,33 +43,6 @@ const COLUMN_ORDER: readonly TrajectoryColumn[] = [
   'Closed',
 ];
 
-function timeOffsetPercent(
-  instant: string,
-  range: { readonly earliest: string; readonly latest: string },
-): number {
-  const earliestMs = Date.parse(range.earliest);
-  const latestMs = Date.parse(range.latest);
-  const span = latestMs - earliestMs;
-  if (span <= 0) {
-    return 0;
-  }
-  const clamped = Math.min(Math.max(Date.parse(instant) - earliestMs, 0), span);
-  return (clamped / span) * 100;
-}
-
-function laneBar(
-  item: TrajectoryLaneItem,
-  range: { readonly earliest: string; readonly latest: string } | null,
-): string {
-  if (range === null) {
-    return '';
-  }
-  const start = timeOffsetPercent(item.createdAt, range);
-  const end = timeOffsetPercent(item.closedAt ?? item.updatedAt, range);
-  const left = Math.min(start, end);
-  const width = Math.max(end - start, 0.6);
-  return `<div class="lane-track" aria-hidden="true"><div class="lane-bar" data-parity-field="time-lane" style="--lane-left:${left.toFixed(3)}%;--lane-width:${width.toFixed(3)}%"></div></div>`;
-}
 
 const WORKER_CHANGE_STATE_LABEL = {
   planned: 'No commit observed',
@@ -225,7 +204,11 @@ function answerBody(model: PocModel, answer: TrajectoryAnswer): string {
     }
     case 'changed':
     case 'cost':
-      if (answer.state === 'unknown') return answerDisclosure(model, `answer-${answer.id}`, answer.disclosure, answer.id === 'changed' ? 'What changed' : 'Cost');
+      if (answer.state === 'unknown') {
+        const disclosure = answerDisclosure(model, `answer-${answer.id}`, answer.disclosure, answer.id === 'changed' ? 'What changed' : 'Cost');
+        // syzygy-t3jk.17: elapsed time is measured; the other costs stay Unknown.
+        return answer.id === 'cost' ? `${disclosure} Elapsed time is measured: see <a href="#time-measures">lead time and age</a>.` : disclosure;
+      }
       break;
     case 'intent': {
       if (!('unknownProvenance' in answer)) break;
@@ -315,7 +298,6 @@ function servedGovernedBy(model: PocModel, itemId: string): { readonly label: st
 function itemCard(
   model: PocModel,
   item: TrajectoryLaneItem,
-  range: { readonly earliest: string; readonly latest: string } | null,
   workerChange: WorkerChangeObserved | null,
   testArtifactVerification: TestArtifactVerificationResult,
   governingIntentId: string | null,
@@ -331,7 +313,6 @@ function itemCard(
     ${itemGoverningIntent(governedBy)}
     ${itemVerification()}
     ${workerChangeBadge(model, workerChange, testArtifactVerification, governingIntentId)}
-    ${laneBar(item, range)}
   </li>`;
 }
 
@@ -360,8 +341,6 @@ const TRAJECTORY_STYLE = `
   .wi-title:hover, .wi-title:focus-visible { color: var(--cyan); }
   .wi-id { color: var(--muted); font-size: .7rem; }
   .wi-status { font-family: var(--font-mono); font-size: .7rem; color: var(--muted); text-transform: uppercase; }
-  .lane-track { position: relative; height: .35rem; background: #1a2c30; margin-top: .3rem; }
-  .lane-bar { position: absolute; top: 0; height: 100%; left: var(--lane-left); width: var(--lane-width); background: var(--cyan); }
   .worker-change { display: grid; gap: .2rem; padding-top: .2rem; border-top: 1px dashed var(--line); }
   .worker-change-detail { font-size: .72rem; color: var(--muted); }
   .worker-change-note { font-size: .68rem; color: var(--muted); }
@@ -374,7 +353,68 @@ const TRAJECTORY_STYLE = `
   .narrow-toggle:focus-visible + .narrow-label { outline: 2px solid var(--cyan); outline-offset: 2px; }
   .narrow-toggle:checked ~ .board .wi-card:not([data-governed-by="Unknown"]) { display: none; }
   ${MATERIALIZE_PANEL_STYLE}
+  ${TIME_MEASURES_STYLE}
+  .view-nav { margin: 0 0 1rem; }
+  .view-links { display: flex; flex-wrap: wrap; gap: .3rem 1rem; list-style: none; padding: 0; margin: .3rem 0; }
+  .view-links a[aria-current="page"] { font-weight: 600; text-decoration-thickness: 2px; }
+  .view-nav a:focus-visible { outline: 2px solid var(--focus); outline-offset: 2px; }
+  .view-note, .view-pages { color: var(--muted); }
 `;
+
+/** A view's query string, parameters in their declared order. */
+function viewHref(mountPrefix: string, view: Partial<TrajectoryViewRequest> | null): string {
+  const query = new URLSearchParams();
+  if (view?.status) query.set('status', view.status);
+  if (view?.governingIntent) query.set('governing-intent', view.governingIntent);
+  if (view?.page !== undefined) query.set('page', String(view.page));
+  const text = query.toString();
+  return escapeHtml(withMountPrefix(mountPrefix, TRAJECTORY_HUMAN_PATH) + (text === '' ? '' : `?${text}`));
+}
+
+/**
+ * POC-REQ-042 (syzygy-t3jk.18): every served item is reachable. Real links,
+ * never inside a details element and needing no script: the default
+ * selection, every item by id, each status and the governing-intent Unknown
+ * with their whole-population counts, and the current view's neighbours.
+ */
+function viewNavigation(model: PocModel, narrowing: TrajectoryNarrowing, answers: readonly TrajectoryAnswer[], mountPrefix: string): string {
+  if (model.workItems.kind !== 'observed') return '';
+  const remains = answers.find((answer) => answer.id === 'remains');
+  const byStatus = remains !== undefined && remains.state === 'observed' && 'byStatus' in remains ? remains.byStatus : null;
+  const view = narrowing.view;
+  const link = (href: string, text: string, current: boolean): string =>
+    `<li><a href="${href}"${current ? ' aria-current="page"' : ''}>${text}</a></li>`;
+  const isView = (status: string | null, intent: string | null): boolean =>
+    view !== null && view.status === status && view.governingIntent === intent;
+  const statuses = byStatus === null ? '' : (Object.keys(byStatus) as WorkItemStatus[])
+    .map((status) => link(viewHref(mountPrefix, { status, page: 1 }), `<code>${escapeHtml(status)}</code> <span data-parity-field="trajectory-view-status-count" data-status="${escapeHtml(status)}">${byStatus[status]}</span>`, isView(status, null)))
+    .join('');
+  const pages = view === null ? '' : `<p class="view-pages" data-parity-field="trajectory-view-page">Page <span data-parity-field="trajectory-view-page-number">${view.page}</span> of <span data-parity-field="trajectory-view-page-count">${view.pageCount}</span>, over <span data-parity-field="trajectory-view-matching">${view.matching}</span> matching items.
+        ${view.page > 1 ? `<a rel="prev" href="${viewHref(mountPrefix, { ...view, page: view.page - 1 })}">Previous page</a>` : ''}
+        ${view.page < view.pageCount ? `<a rel="next" href="${viewHref(mountPrefix, { ...view, page: view.page + 1 })}">Next page</a>` : ''}</p>`;
+  return `<nav class="view-nav" aria-labelledby="view-nav-heading" data-parity-field="trajectory-view-navigation">
+      <h2 id="view-nav-heading" class="answers-heading">Reach every work item</h2>
+      <ul class="view-links">
+        ${link(viewHref(mountPrefix, null), 'Default selection', view === null)}
+        ${link(viewHref(mountPrefix, { page: 1 }), `All items by id <span data-parity-field="trajectory-view-all-count">${model.workItems.items.length}</span>`, isView(null, null))}
+        ${statuses}
+        ${link(viewHref(mountPrefix, { governingIntent: 'unknown', page: 1 }), `Governing intent Unknown <span data-parity-field="trajectory-view-intent-count">${model.workItems.governedByUnknownCount}</span>`, isView(null, 'unknown'))}
+      </ul>
+      <p class="view-note">${narrowing.pageSize} items per page, by ascending item id.</p>
+      ${pages}
+    </nav>`;
+}
+
+/** The Trajectory route: the default selection, or one declared view, or
+ * the refusal of a parameter outside the declared set (POC-REQ-042). */
+export function renderTrajectoryRoute(model: PocModel, mountPrefix: string, status: HumanOperabilityStatus | undefined, query: URLSearchParams): string | TrajectoryViewRefusal {
+  const request = parseTrajectoryView(query);
+  if (request === null) return renderTrajectoryPage(model, mountPrefix, status);
+  if ('refused' in request) return request;
+  const view = projectTrajectoryView(model.trajectory, model.workItems, request);
+  if ('refused' in view) return view;
+  return renderTrajectoryPage({ ...model, trajectory: view }, mountPrefix, status);
+}
 
 export function renderTrajectoryPage(model: PocModel, mountPrefix = '', status?: HumanOperabilityStatus): string {
   const trajectory = model.trajectory;
@@ -404,7 +444,6 @@ export function renderTrajectoryPage(model: PocModel, mountPrefix = '', status?:
             itemCard(
               model,
               item,
-              trajectory.timeRange,
               workerChange !== null && workerChange.beadId === item.id ? workerChange : null,
               model.testArtifactVerification,
               model.governingIntentId,
@@ -424,10 +463,12 @@ export function renderTrajectoryPage(model: PocModel, mountPrefix = '', status?:
 
     body = `
       ${answersRegion(model, trajectory.answers)}
+      ${timeMeasuresRegion(trajectory.timeMeasures)}
       <p class="scope-statement notice" data-parity-field="trajectory-scope">
         Rendering ${trajectory.renderedCount} of ${trajectory.totalCount} observed work items (${trajectory.selectionRule});
         <span data-parity-field="trajectory-excluded-count">${trajectory.excludedCount}</span> items are outside this selection and not shown.
       </p>
+      ${viewNavigation(model, trajectory.narrowing, trajectory.answers, mountPrefix)}
       ${closureNotice(trajectory.rendered)}
       ${governingIntentRegion(model, trajectory.rendered)}
       ${titlesWithheldRegion(model)}

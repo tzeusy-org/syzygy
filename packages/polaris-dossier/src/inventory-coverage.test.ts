@@ -115,6 +115,17 @@ describe('inventory coverage: the overlap-or-path-named rule', () => {
     expect(listed(d, inv)).toEqual([{ entryId: 'e-far', paths: ['src/code.c'], unnamedPaths: 0 }]);
   });
 
+  // Rule version 2 (syzygy-5dhm.71): a task route's step is shown to the reader and reviewed as any claim block is.
+  it('counts a task route\'s step as reading content: its citation covers by overlap and its text by a named path', () => {
+    const step = (id: string, text: string, citations: unknown[]) => ({ id, label: 'inferred', basis: 'source', text, citations, quotations: [] });
+    const routed = draft({ taskRoutes: [{ id: 'route-1', task: 'Add a command', steps: [step('r1s1', 'Register it in the table.', [cite('c-r1', 'src/commands.c', 40, 60)]), step('r1s2', 'Then document it in docs/commands.md.', [cite('c-r2', 'src/help.c', 5, 5)])] }] });
+    const entries = inventory([entry('e-route-cited', [cite('x', 'src/commands.c', 60, 90)]), entry('e-route-named', [cite('y', 'docs/commands.md', 1, 3)]), entry('e-route-disjoint', [cite('z', 'src/commands.c', 61, 90)])]);
+    expect(listed(routed, entries)).toEqual([{ entryId: 'e-route-disjoint', paths: ['src/commands.c'], unnamedPaths: 0 }]);
+    expect(compareInventoryCoverage(routed, entries, never).counts).toEqual({ entries: 3, covered: 2, omitted: 0, uncovered: 1 });
+    // Without the routes no block cites or names either file: all three are listed.
+    expect(listed(draft(), entries).map((row) => row.entryId)).toEqual(['e-route-cited', 'e-route-named', 'e-route-disjoint']);
+  });
+
   it('lists an entry that cites nothing, with no path', () => {
     const unknownEntry = { id: 'e-unknown', kind: 'other', label: 'unknown', reason: 'missing-evidence', statement: 'Nothing says.', citations: [] };
     expect(listed(draft(), inventory([unknownEntry]))).toEqual([{ entryId: 'e-unknown', paths: [], unnamedPaths: 0 }]);
@@ -175,7 +186,7 @@ describe('inventory coverage: the advice at one check', () => {
     const advice = await inventoryCoverageAdvice(run, draft(), { inventoryOfRecord: reader, sources, now: 0, isSecretPath: never });
     expect(advice).toEqual({
       state: 'compared',
-      rule: { id: 'overlap-or-path-named', version: 1 },
+      rule: { id: 'overlap-or-path-named', version: 2 },
       inventory: { revision: 2, sha256: digest, label: 'Inferred', basis: 'the highest-numbered checked inventory revision in the run directory, its check passed and its frozen bytes equal to the digest its check recorded; the run directory is within the agent sessions\' write reach' },
       counts: { entries: 2, covered: 1, omitted: 0, uncovered: 1 },
       uncovered: [{ entryId: 'e-missed', paths: ['src/cluster.c'], unnamedPaths: 0 }],

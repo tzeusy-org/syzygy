@@ -276,7 +276,7 @@ const WORK_ITEM_VERIFICATION_BASIS =
 
 /** POC-REQ-044 basis sentences for the five answers' Unknown parts. */
 const CHANGED_BASIS = 'No movement source is read: the observation holds each work item\'s current status and recorded instants, not its history of changes.';
-const COST_BASIS = 'No cost record is read: no effort, compute, token or blocked-time measure is captured for any work item, and lead time, derivable from recorded instants, is not yet measured, so what the work cost is Unknown, never zero.';
+const COST_BASIS = 'No cost record is read: no effort, compute, token, money or blocked-time measure is captured for any work item, so those costs are Unknown, never zero; elapsed time alone is measured, as lead time and age.';
 const ORPHANED_WORK_BASIS = 'No orphaned-work check is implemented, and the observation does not read who created each tracker item, which that check would compare with materialization records, so how many items are orphaned is Unknown, never 0.';
 
 export const WORK_ITEM_VERIFICATION_REGION_ID = 'region:work-item-verification' as const;
@@ -346,7 +346,10 @@ function deriveUnknownSubjects(input: UnknownSubjectInputs): readonly PocUnknown
       }
     }
     const change = input.workerChange;
-    if (change.kind === 'observed' && input.trajectory.rendered.some((item) => item.id === change.beadId)) {
+    // syzygy-t3jk.18: a card renders on the default selection or on the
+    // view page that holds it (POC-REQ-042), so the twin exists whenever
+    // the bead is a served item, not only when the default selection holds it.
+    if (change.kind === 'observed' && input.workItems.kind === 'observed' && input.workItems.items.some((item) => item.id === change.beadId)) {
       const verification = input.testArtifactVerification;
       if (verification.kind === 'unknown') add(workerChangeVerificationId(change.beadId), verification.reason, PRODUCER_UNKNOWN_REASONS.testArtifact);
       else if (verification.kind === 'reported' && input.governingIntentId !== null) {

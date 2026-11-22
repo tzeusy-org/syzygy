@@ -67,6 +67,17 @@ export interface LocalBlock {
   readonly withheld?: WithheldNote;
   /** A block citing both admitted and withheld spans, not a withheld item: how many of its cited spans are withheld. */
   readonly withheldSpans?: number;
+  /** A secret detector matches the block's own text (the index-and-task-routes change): its segments are Syzygy's words, it names
+   * nothing in the generated index, and a route step that is one shows no file and no dossier link. */
+  readonly secretMatched?: true;
+}
+
+/** The spans a text writes between two backticks on one line, in order: the one pairing rule the generated index and its secret
+ * screening share. Callers pass one prose segment at a time, so a backtick never pairs across a quotation. */
+export function backtickSpans(text: string): string[] {
+  const out: string[] = [];
+  for (const match of text.matchAll(/`([^`\n]+)`/gu)) out.push(match[1]!);
+  return out;
 }
 
 /** What Syzygy says of a withheld item: how many withheld sources it rests on, and those it may name. A path a secret detector matches is
@@ -291,4 +302,19 @@ export interface LocalRenderInput {
    * on, and whether the code-reading line renders before it. Absent for every earlier draft, so its pages and machine view keep their
    * bytes. */
   readonly thesisBasis?: { readonly value: 'stated' | 'code-reading' | 'none'; readonly lineRendered: boolean };
+  /** The draft's task routes (the index-and-task-routes change): reader tasks, each a short label and its steps in order. Every step is a claim block of
+   * `blocks`, checked and reviewed as any block is. Absent when the draft declares none: the find-by-task page then says so and shows
+   * no route. */
+  readonly taskRoutes?: readonly LocalTaskRoute[];
+  /** Backticked spans of the blocks' own text that the path secret detector matches (the index-and-task-routes change). The generated index lists none of
+   * them as an identifier. Absent or empty when no block writes one. */
+  readonly unindexedNames?: readonly string[];
+}
+
+/** One task route: a reader's task as a short label, and the cited steps that answer it. A step may name, in `see`, the section or deep
+ * dive of the dossier that explains it. */
+export interface LocalTaskRoute {
+  readonly id: string;
+  readonly task: string;
+  readonly steps: readonly { readonly paragraph: { readonly id: string; readonly text: string; readonly sourceIds: string[] }; readonly see?: { readonly kind: 'section' | 'deep-dive'; readonly id: string } }[];
 }

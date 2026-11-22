@@ -50,9 +50,9 @@ Every clause was judged exactly once and lands in exactly one part:
 | RFC5 | 27 | 1 | 15 | 11 |
 | RFC6 | 28 | 10 | 1 | 17 |
 | RFC7 | 41 | 12 | 4 | 25 |
-| RFC8 | 32 | 13 | 2 | 17 |
+| RFC8 | 32 | 14 | 1 | 17 |
 | RFC9 | 60 | 17 | 2 | 41 |
-| **Total** | **324** | **85** | **29** | **210** |
+| **Total** | **324** | **86** | **28** | **210** |
 
 The Part A clause set is exactly the `contracts[]` union in the
 generated `GOVERNING-DEPENDENCIES.md` (verified below).
@@ -185,7 +185,7 @@ exhausted — a reviewer who finds an unlisted limb has found a real gap.
 | RFC8-22 | A join is never reconstructed by similarity, interpolation or inference | covered — Amendment row; the fixture-title counterexample observes the title case | POC-REQ-014 |
 | RFC8-22 | Everything downstream of a broken link renders with provenance degraded accordingly | **Unknown** — Amendment row; the POC renders no link downstream of the work item, and no requirement observes degraded downstream provenance | — |
 | RFC8-23 | A work item with no traceable warrant renders Unknown-provenance: counted over the served set, filterable within Trajectory's rendered selection, never green, its route resolvable by supplying a warrant stated beside the count | covered — Amendment row; the oracle decides the count, the narrowed board over the rendered selection, the Unknown encoding against POC-REQ-060's table, and the resolution statement by literal match; POC-REQ-044's fifth answer states the same count, n of N served | POC-REQ-014, POC-REQ-044 |
-| RFC8-23 | Unknown-provenance items outside Trajectory's rendered selection are filterable | **Unknown** — Amendment row; POC-REQ-042 lets Trajectory render a selection, so items outside it are counted on Trajectory but not rendered, and no requirement observes filtering them | — |
+| RFC8-23 | Unknown-provenance items outside Trajectory's rendered selection are filterable | covered — Amendment row (views); `governing-intent=unknown` pages every item carrying the Unknown in ascending id, each page linked with its count, and the oracle checks the pages hold exactly those items. Was Unknown | POC-REQ-042 |
 | RFC8-23 | Unknown-provenance work is never silently pooled into warranted work | **Unknown** — Amendment row; no served item is warranted, so the oracle has no warranted population to keep it apart from | — |
 | RFC8-23 | Unknown-provenance is never an ingest rejection | **Unknown** — Amendment row; POC-REQ-014's denominator is the served set, so an item dropped before serving is invisible to its oracle | — |
 | RFC8-23 | A substrate-side warrant-field edit is an annotation, not a competing warrant | **Unknown** — Amendment row; the POC reads no warrant field | — |
@@ -240,11 +240,13 @@ exhausted — a reviewer who finds an unlisted limb has found a real gap.
 | RFC8-16 | Until a staleness bound is declared, claimed items render `activity-undetermined`, state-local, never the reason `no-currency-bound-declared` and never counted among Unknown reasons | covered — Amendment row (five answers); stated once for the claimed count, not on each card. Moved from Part B2 | POC-REQ-044 |
 | RFC8-16 | `active` and `stale-or-dead` against a declared bound with an effective owner act; worker liveness between signals; inadmissible liveness signals | **Unknown** — Amendment row (five answers); no bound is declared and no progress signal is read | — |
 | RFC8-19 | Absent cost renders Unknown, never zero | covered — Amendment row (five answers). Moved from Part B2 | POC-REQ-044 |
-| RFC8-19 | Every aggregate over partially known measures discloses its coverage and never renders as a complete total | **Unknown** — Amendment row (five answers); no cost measure is read, so no aggregate exists to disclose coverage | — |
+| RFC8-19 | Every aggregate over partially known measures discloses its coverage and never renders as a complete total | covered — Amendment row (elapsed time); lead time, age, arrivals and closures each state "n of m" items covered, and an uncovered item stays in the denominator. Was Unknown (five answers) | POC-REQ-045 |
+| RFC8-18 | Lead time renders as an independent measure with its declared source and evidence class, never combined into a composite | covered — Amendment row (elapsed time); the measures declare `tracker-recorded-instants` and `observed`, and no element combines two. Moved from Part B1 | POC-REQ-045 |
+| RFC8-18 | The rest of the V1 measure set (effort and complexity tier, active compute time, blocked time, tokens, API cost, attempts, review rounds, CI time, rework, touched components) renders, each with its source and evidence class | **Unknown** — Amendment row (elapsed time); none is read, and the cost answer states them Unknown | — |
 
 Part A totals `[Observed, computed by the sweep in "Verifying this
-table"]`: **169 consequence rows over 85 clauses — 120 covered,
-49 Unknown.**
+table"]`: **171 consequence rows over 86 clauses — 123 covered,
+48 Unknown.**
 
 **Amendment disclosure — the RFC1-26 closure row (ruling P-75 Q3).**
 The signed RFC1-26 row whose consequence reads "Relations outside the closed
@@ -303,7 +305,6 @@ direct requirement additions.
 
 | Clause | Observable consequence (row label) | Disposition | Requirements |
 |---|---|---|---|
-| RFC8-18 | Cost renders as independent measures with declared source and evidence class, never a composite | **Unknown** — Amendment row (five answers); the cost answer is Unknown because no measure is read, so no requirement observes a measure or the independence rule. Moved from Part B2 | — |
 | RFC1-3 | Observed-source repository is read-only; no writes emitted to Butlers | **Unknown** — Borderline: out-of-scope bars "writes to the observed project," matching RFC1-3's read-only default, but no POC-REQ's oracle tests absence of writes; consent-record specifics have no matching requirement | — |
 | RFC1-6 | VCS objects (git revision) not reified as first-class nodes, enter only as identifier/evidence | **Unknown** — POC stamps facts with "exact git revision"; no requirement's oracle checks it isn't reified as a separate Commit node | — |
 | RFC1-17 | Multi-capability code-element mapping counted identity-based, once per query subject | **Unknown** — Orrery's reconciling-counts req (051) doesn't explicitly test non-duplication under multi-capability mapping | — |
@@ -561,15 +562,15 @@ are listed so the owner can review or contest each one directly.
 | RFC9-51 | Illumination/highlight as non-truth-bearing interaction state; no highlighting feature established in POC scope |
 | RFC9-52 | The RFC-prose-to-OpenSpec authority boundary and coverage-matrix obligation; this non-binding sweep doesn't cite RFC9 as binding authority for the POC spec |
 
-Part B2 total `[Observed, computed]`: **218 clauses.**
+Part B2 total `[Observed, computed]`: **210 clauses.** *(Corrected 2026-11-22, `syzygy-t3jk.17`: this line read 218 while the table held 210 rows over 210 clauses; the family table and the verifying line already said 210.)*
 
 ## Verifying this table
 
 - Denominator: re-run the two counting methods named above; both must
-  return 324 for RFC1–9, and 85 + 29 + 210 = 324.
+  return 324 for RFC1–9, and 86 + 28 + 210 = 324.
 - Mapped set: `python3 scripts/build_three_surface_poc_spec_dependencies.py
   --check` — Part A's clause column must equal the generated
-  `contracts[]` union (85 identifiers).
+  `contracts[]` union (86 identifiers).
 - Totals: count rows and dispositions in this file's tables (e.g.
   Python over the `| RFC` rows); the printed totals must match the
   count — they were computed that way, not transcribed.
