@@ -818,7 +818,7 @@ describe('preflight: declared metadata preparation', () => {
       outcome: 'prepared', url: 'github.com/redis/redis', label: 'Inferred',
       repository: { repositoryId: 'redis-redis', identitySource: 'derived' },
       revision: { state: 'Unknown' }, visibility: { default: 'private', label: 'Inferred' },
-      screeningPolicy: { policyVersion: 'dossier-declared-source/1.0.0' },
+      screeningPolicy: { policyVersion: 'dossier-declared-source/2.0.0' },
     } });
     if (!result.ok) return;
     expect(result.report).not.toHaveProperty('consentedRevisions');
