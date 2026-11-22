@@ -1,0 +1,69 @@
+
+ RUN  v3.2.7 /home/orca/.tmp/syzygy-beads-looper-20261114-54ebc9f1/d10-f3-final-verification
+
+ ❯ |integration| packages/polaris-dossier/src/url-ordered-design-host.test.ts (17 tests | 1 failed | 16 skipped) 1471ms
+   ↓ bounded processing and protected result validation > rechecks continuous authority after the full currentness port awaits
+   ↓ bounded processing and protected result validation > requires a current product before and after processing: renewed
+   ↓ bounded processing and protected result validation > requires a current product before and after processing: changed
+   ↓ bounded processing and protected result validation > requires a current product before and after processing: revoked
+   ↓ bounded processing and protected result validation > requires a current product before and after processing: unavailable
+   × bounded processing and protected result validation > requires a current product before and after processing: expired-at-entry 515ms
+     → promise resolved "{ ok: true, value: { …(5) } }" instead of rejecting
+   ↓ production ordered host activation > binds native prepared listeners before activation and gates terminal access until the genuine bounded controller arrives
+   ↓ production ordered host activation > closes both endpoints on deadline without granting a callback
+   ↓ production ordered host activation > closes both endpoints on rejection without granting a callback
+   ↓ production ordered host activation > closes both endpoints on copied-controller without granting a callback
+   ↓ production ordered host activation > closes both endpoints on foreign-profile without granting a callback
+   ↓ production ordered host activation > bounds startup currentness by the original activation deadline
+   ↓ production ordered host activation > refuses same-UID raw broker and HTTP connections without authenticated peer authority
+   ↓ native authenticated ordered host > transfers both sealed parts, validates and stages the verdict, consumes the acknowledgment and reaches eligible
+   ↓ native authenticated ordered host > revokes actual peer authority after the pre-send audit and forwards no provider bytes
+   ↓ native authenticated ordered host > refuses the protected write and acknowledgment after the stage await: stage
+   ↓ native authenticated ordered host > refuses the protected write and acknowledgment after the stage await: proof-expiry
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  |integration| packages/polaris-dossier/src/url-ordered-design-host.test.ts > bounded processing and protected result validation > requires a current product before and after processing: expired-at-entry
+AssertionError: promise resolved "{ ok: true, value: { …(5) } }" instead of rejecting
+
+- Expected
++ Received
+
+- Error {
+-   "message": "rejected promise",
++ {
++   "ok": true,
++   "value": {
++     "forwarded": {
++       "bytes": 3171,
++       "sha256": "7fdd9368729bd37218c7b5bfa917554c48a617eca6fec6ebc385ad51ddad5f1c",
++     },
++     "logical": {
++       "bytes": 3171,
++       "sha256": "7fdd9368729bd37218c7b5bfa917554c48a617eca6fec6ebc385ad51ddad5f1c",
++     },
++     "received": {
++       "bytes": 3183,
++       "sha256": "78645bc7a7a161997cbbddc6f021ded6a63097b38971a47e7c00b82b701f405e",
++     },
++     "resultWrappers": [],
++     "transcriptSha256": "4acb6a3ea70f8b85b4e070c22a9f684ac0211b23165bdb0023bf01765e1b1d3c",
++   },
+  }
+
+ ❯ packages/polaris-dossier/src/url-ordered-design-host.test.ts:204:27
+    202|       expect(f.workerCpu()).toBe(18_000_000);
+    203|     } else {
+    204|       await expect(checked).rejects.toThrow(scenario === 'expired-at-e…
+       |                           ^
+    205|         ? 'owned product proof expired' : 'url-ordered-design-session-…
+    206|       expect(f.workerCpu()).toBe(scenario === 'changed' ? 18_000_000 :…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 16 skipped (17)
+   Start at  21:13:39
+   Duration  3.68s (transform 1.41s, setup 9ms, collect 1.89s, tests 1.47s, environment 0ms, prepare 55ms)
+

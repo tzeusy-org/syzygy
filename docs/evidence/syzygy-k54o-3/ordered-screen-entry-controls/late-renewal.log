@@ -1,0 +1,46 @@
+
+ RUN  v3.2.7 /home/orca/.tmp/syzygy-beads-looper-20261114-54ebc9f1/d10-f3-final-verification
+
+ ❯ |integration| packages/polaris-dossier/src/url-ordered-design-host.test.ts (17 tests | 1 failed | 16 skipped) 1184ms
+   ↓ bounded processing and protected result validation > rechecks continuous authority after the full currentness port awaits
+   × bounded processing and protected result validation > requires a current product before and after processing: renewed 274ms
+     → owned product proof expired
+   ↓ bounded processing and protected result validation > requires a current product before and after processing: changed
+   ↓ bounded processing and protected result validation > requires a current product before and after processing: revoked
+   ↓ bounded processing and protected result validation > requires a current product before and after processing: unavailable
+   ↓ bounded processing and protected result validation > requires a current product before and after processing: expired-at-entry
+   ↓ production ordered host activation > binds native prepared listeners before activation and gates terminal access until the genuine bounded controller arrives
+   ↓ production ordered host activation > closes both endpoints on deadline without granting a callback
+   ↓ production ordered host activation > closes both endpoints on rejection without granting a callback
+   ↓ production ordered host activation > closes both endpoints on copied-controller without granting a callback
+   ↓ production ordered host activation > closes both endpoints on foreign-profile without granting a callback
+   ↓ production ordered host activation > bounds startup currentness by the original activation deadline
+   ↓ production ordered host activation > refuses same-UID raw broker and HTTP connections without authenticated peer authority
+   ↓ native authenticated ordered host > transfers both sealed parts, validates and stages the verdict, consumes the acknowledgment and reaches eligible
+   ↓ native authenticated ordered host > revokes actual peer authority after the pre-send audit and forwards no provider bytes
+   ↓ native authenticated ordered host > refuses the protected write and acknowledgment after the stage await: stage
+   ↓ native authenticated ordered host > refuses the protected write and acknowledgment after the stage await: proof-expiry
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  |integration| packages/polaris-dossier/src/url-ordered-design-host.test.ts > bounded processing and protected result validation > requires a current product before and after processing: renewed
+Error: owned product proof expired
+ ❯ assertCurrent packages/polaris-dossier/src/url-ordered-design-host.test.ts:185:69
+    183|         return true;
+    184|       },
+    185|       assertCurrent: () => { fullChecks++; if (!proofCurrent) throw ne…
+       |                                                                     ^
+    186|       assertProcessingCurrent: () => {
+    187|         processingChecks++;
+ ❯ requireLive packages/polaris-dossier/src/url-ordered-design-session.ts:134:57
+ ❯ Object.checkRequest packages/polaris-dossier/src/url-ordered-design-session.ts:280:5
+ ❯ packages/polaris-dossier/src/url-ordered-design-host.test.ts:197:34
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 16 skipped (17)
+   Start at  21:13:35
+   Duration  3.27s (transform 1.31s, setup 9ms, collect 1.79s, tests 1.18s, environment 0ms, prepare 51ms)
+

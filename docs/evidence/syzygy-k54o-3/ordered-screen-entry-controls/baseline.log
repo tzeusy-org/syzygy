@@ -1,0 +1,12 @@
+
+ RUN  v3.2.7 /home/orca/.tmp/syzygy-beads-looper-20261114-54ebc9f1/d10-f3-runtime-current
+
+ ✓ |integration| packages/polaris-dossier/src/url-ordered-design-host.test.ts (17 tests | 11 skipped) 2673ms
+   ✓ bounded processing and protected result validation > requires a current product before and after processing: renewed  484ms
+   ✓ bounded processing and protected result validation > requires a current product before and after processing: changed  458ms
+
+ Test Files  1 passed (1)
+      Tests  6 passed | 11 skipped (17)
+   Start at  21:08:17
+   Duration  4.71s (transform 1.30s, setup 11ms, collect 1.74s, tests 2.67s, environment 0ms, prepare 51ms)
+

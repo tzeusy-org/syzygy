@@ -1,0 +1,14 @@
+
+ RUN  v3.2.7 /home/orca/.tmp/syzygy-beads-looper-20261114-54ebc9f1/d10-f3-runtime-current
+
+stdout | packages/polaris-dossier/src/url-ordered-design-host.test.ts > native authenticated ordered host > transfers both sealed parts, validates and stages the verdict, consumes the acknowledgment and reaches eligible
+{"observation":"owned-ordered-native-composition","providerActualReceipt":"Unknown","subject":"packages/polaris-dossier/src/url-ordered-design-host.test.ts","subjectSha256":"697ec12b92b4c152501fc8e2905e86311739e21476eae3d484e103f7096426cc","runtimeSha256":"052a6652578849624273eae6391abb6afc355bb293a0fa942daf3964534a51a7","workerSha256":"5e24ee9286a53b6c6261a0bf04b7ca609e83b23a47414a198255d94bd3f56121","packetSha256":"dba6409ff4f10905b630d1d7c7618fb8a4e8122ddadffbbb6ad9cc6deaba1ce2","receivedEnvelopeSha256":"b00e5e558f26e5dca41fabc8be4b1c28608bbd7e60c4b1023e5c89b9f9792cd1","checkedStageSha256":"34e0dc306297b9c6a6e89daca4a37bdc212d341ac9ac16289dd20bea7a40266a","forwards":5,"authenticatedConnections":9,"durableNativeEffectAudits":49,"nativeAttestations":253,"stagedVerdicts":1,"partReceipts":2,"acknowledgmentReceipts":1,"terminal":"eligible","chargedWorkerCpuMicroseconds":180000000,"chargedNativeCpuMicroseconds":616000000,"runCpuBoundMicroseconds":3599808000}
+
+ ✓ |integration| packages/polaris-dossier/src/url-ordered-design-host.test.ts (17 tests | 16 skipped) 22186ms
+   ✓ native authenticated ordered host > transfers both sealed parts, validates and stages the verdict, consumes the acknowledgment and reaches eligible  21244ms
+
+ Test Files  1 passed (1)
+      Tests  1 passed | 16 skipped (17)
+   Start at  21:08:23
+   Duration  24.47s (transform 1.44s, setup 11ms, collect 1.94s, tests 22.19s, environment 0ms, prepare 59ms)
+

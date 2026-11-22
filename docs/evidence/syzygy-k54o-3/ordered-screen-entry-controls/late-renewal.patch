@@ -1,0 +1,14 @@
+diff --git a/packages/polaris-dossier/src/url-ordered-design-session.ts b/packages/polaris-dossier/src/url-ordered-design-session.ts
+index ccc55c7b8..c7f264520 100644
+--- a/packages/polaris-dossier/src/url-ordered-design-session.ts
++++ b/packages/polaris-dossier/src/url-ordered-design-session.ts
+@@ -277,8 +277,8 @@ export function createOrderedDesignSession(options: Options) {
+     try {
+     // Peer mediation can outlast the product held at relay preflight. Check
+     // and renew it within this effect before reading the screening input.
+-    await requireCurrent();
+     requireLive();
++    await requireCurrent();
+     if (initial) {
+       if (admittedInitial || receipts.length !== 0) throw refused();
+       const observed = await screenOperation({ ...common(bytes), operation: 'initial' });

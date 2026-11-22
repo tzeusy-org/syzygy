@@ -1,0 +1,96 @@
+{
+  "commit": "6d7441b33c1c500874cd17f8fda687ac676cc914",
+  "subjects": [
+    {
+      "path": "packages/polaris-dossier/src/url-ordered-design-session.ts",
+      "bytes": 36692,
+      "sha256": "a8066c130215e1036de08b711b0fd70107174bc5763a0548949c5c4d37573f06"
+    },
+    {
+      "path": "packages/polaris-dossier/src/url-ordered-design-host.test.ts",
+      "bytes": 38579,
+      "sha256": "697ec12b92b4c152501fc8e2905e86311739e21476eae3d484e103f7096426cc"
+    },
+    {
+      "path": "packages/polaris-dossier/src/url-machine-peer.ts",
+      "bytes": 33696,
+      "sha256": "4579210c3643213b7b2f1344e64b1f7d991866f4d3cb3848668490f65166927e"
+    }
+  ],
+  "artifacts": [
+    {
+      "path": "baseline.log",
+      "bytes": 663,
+      "sha256": "635246c4ec765150a856cab3e6d6ce4a6807903a913696a5ded676e9d555211f"
+    },
+    {
+      "path": "native-response-baseline.log",
+      "bytes": 1759,
+      "sha256": "9e005525135c3e4a0bb795ce840e686b0267b4c910f919cbde777a6df61b78ff"
+    },
+    {
+      "path": "late-renewal.log",
+      "bytes": 3598,
+      "sha256": "190ff6985f1c58dd94614a4fa3d6ca38355f7184cf0332cd21b4469adfde5d09"
+    },
+    {
+      "path": "late-renewal.patch",
+      "bytes": 804,
+      "sha256": "05469d463472f0d3fa70262b693fc5bd364f24115d4aaaba10422e3d04807743"
+    },
+    {
+      "path": "omitted-sync-guard.log",
+      "bytes": 4164,
+      "sha256": "8aa29ffc8cf6dd31c4952021e9c316e29438b9fb5890f87f11eeab3c5ffa4f0c"
+    },
+    {
+      "path": "omitted-sync-guard.patch",
+      "bytes": 764,
+      "sha256": "439144b14bceb8fb5705d2046beed3c80809bd92be6528b5351e6c365dff6ba7"
+    },
+    {
+      "path": "typecheck.log",
+      "bytes": 37,
+      "sha256": "396901319daac4a4413b23478852db3c572014f86c71d148273565f0f3332696"
+    }
+  ],
+  "checks": [
+    {
+      "command": "npm run typecheck",
+      "code": 0,
+      "log": "typecheck.log"
+    },
+    {
+      "command": "npx --no-install vitest run --project integration --maxWorkers=1 packages/polaris-dossier/src/url-ordered-design-host.test.ts -t 'bounded processing and protected result validation'",
+      "code": 0,
+      "passed": 6,
+      "skipped": 11,
+      "log": "baseline.log"
+    },
+    {
+      "command": "npx --no-install vitest run --project integration --maxWorkers=1 packages/polaris-dossier/src/url-ordered-design-host.test.ts -t 'transfers both sealed parts'",
+      "code": 0,
+      "passed": 1,
+      "skipped": 16,
+      "log": "native-response-baseline.log"
+    },
+    {
+      "command": "npx --no-install vitest run --project integration --maxWorkers=1 packages/polaris-dossier/src/url-ordered-design-host.test.ts -t 'current product before and after processing: renewed'",
+      "code": 1,
+      "failed": 1,
+      "skipped": 16,
+      "log": "late-renewal.log",
+      "mutation": "late-renewal.patch",
+      "observed": "The expired product guarded screening before the awaited renewal could run."
+    },
+    {
+      "command": "npx --no-install vitest run --project integration --maxWorkers=1 packages/polaris-dossier/src/url-ordered-design-host.test.ts -t 'current product before and after processing: expired-at-entry'",
+      "code": 1,
+      "failed": 1,
+      "skipped": 16,
+      "log": "omitted-sync-guard.log",
+      "mutation": "omitted-sync-guard.patch",
+      "observed": "An expired proof admitted the request when the synchronous assertion was removed."
+    }
+  ]
+}
