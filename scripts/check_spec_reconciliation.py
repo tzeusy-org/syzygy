@@ -5025,6 +5025,7 @@ def declared_source_historical_cases(tmp, base, clean, witnesses, failures):
     had_infra = any(is_infra_row(line) for line in original.splitlines())
     had_findpages = any(is_findpages_row(line) for line in original.splitlines())
     had_readmit = any(is_readmit_row(line) for line in original.splitlines())
+    had_verify = any(is_verify_row(line) for line in original.splitlines())
     absent_ledger = "".join(line for line in original.splitlines(keepends=True)
                             if line.rstrip("\n") != row and not is_url_source_row(line)
                             and not is_figure_row(line) and not is_derived_row(line)
@@ -5047,7 +5048,7 @@ def declared_source_historical_cases(tmp, base, clean, witnesses, failures):
             and declared_source_binding(tree) == (None, [], [])
             and not report.failed
             and examined(report, "R1") == examined(clean, "R1") - 1 - had_url_source - had_figure - had_derived - had_ledger - had_kinds - had_manifests
-            - had_reach - had_repairs - had_maps - had_bounds - had_corr - had_coverage - had_readmit - had_infra - had_findpages
+            - had_reach - had_repairs - had_maps - had_bounds - had_corr - had_coverage - had_readmit - had_infra - had_findpages - had_verify
             and examined(report, "R2") == examined(clean, "R2") - 3
             - (URL_SOURCE_BOUND_PARTS if had_url_source else 0)
             - (FIGURE_BOUND_PARTS if had_figure else 0)
@@ -5063,7 +5064,8 @@ def declared_source_historical_cases(tmp, base, clean, witnesses, failures):
             - (COVERAGE_BOUND_PARTS if had_coverage else 0)
             - (READMIT_BOUND_PARTS if had_readmit else 0)
             - (INFRA_BOUND_PARTS if had_infra else 0)
-            - (FINDPAGES_BOUND_PARTS if had_findpages else 0))
+            - (FINDPAGES_BOUND_PARTS if had_findpages else 0)
+            - (VERIFY_BOUND_PARTS if had_verify else 0))
     witnesses.append({"mutant": "declared-historical-control", "path": change,
                       "old": "<no amendment, row, subjects or D10 act>",
                       "new": "<unchanged>", "expected": "inactive; no phantom R1/R2 subjects",
