@@ -1,3 +1,8 @@
+import type { UrlVerifiedRecoveryProducts } from './url-recovery-products.js';
+import { URL_ARTIFACT_LIMITS, launchFiles, selectors, knownRecord, FROZEN_DRAFT_PATH, AUTHOR_FEEDBACK, PACKET_PATH,
+  productPopulation, type UrlProductSelector, type UrlFrozenProductHistory, type FrozenProductIdentity } from './url-frozen-product-history.js';
+export { URL_ARTIFACT_LIMITS, verifyUrlFrozenProductHistory } from './url-frozen-product-history.js';
+export type { UrlProductSelector, UrlFrozenProductHistory } from './url-frozen-product-history.js';
 import * as fs from 'node:fs';
 import { urlStructureRecordShape, urlReadingLedgerShape, urlReadingDifferenceShape, urlManifestFactsShape } from './url-check-product-shape.js';
 import type { ManifestFacts } from './manifest-facts.js';
@@ -9,19 +14,17 @@ import { setImmediate as yieldToPoll } from 'node:timers/promises';
 import { encodeCanonicalJson, parseBoundedJson } from '@syzygy/polaris-generation-core/live';
 import { deepFreeze, isRecord, sha256 } from '@syzygy/support';
 import type { BrokerResponse } from './broker.js';
-import type { BriefReport } from './brief.js';
 import type { SessionAdmission, SessionContentClass } from './session-egress-policy.js';
 import { isDesignRoundPrepared } from './session-control.js';
-import type { StartSessionsReport } from './session-handover.js';
 import type { SessionDesignArtifactRead, SessionToolsReceipt, SessionToolOrigins } from './session-tools.js';
 import type { UrlOriginReceipt } from './url-origin-ledger.js';
 import type { UrlRolePlan } from './url-role-plan.js';
-import { URL_HELPER_LAUNCH_FILES } from './url-launch-history.js';
 import type { OrderedDesignTerminalEvidence } from './url-ordered-design-audit.js';
 import { assertUrlOrderedDesignVerdictTerminal, orderedUrlDesignReviewParents, assertUrlDesignDeliveryViewCurrent, assertUrlDesignReviewProofCurrent, inspectCommittedUrlLaunchHistory,
   isIssuedUrlDesignDeliveryView, type UrlCommittedLaunchHistory,
   type UrlCheckedDesignVerdict, type UrlDesignDeliveryView, type UrlDesignReviewProof } from './url-session-audit.js';
 import type { UrlRunDossier } from './url-run-sessions.js';
+import { URL_HELPER_LAUNCH_FILES } from './url-launch-history.js';
 import { URL_DESIGN_VIEW_ARTIFACT } from './url-design-view.js';
 import type { createUrlRunOrigins } from './url-run-origins.js';
 import type { RecordedRunConfig } from './run-record.js';
@@ -34,31 +37,17 @@ import type { ProtectedUrlRunContext } from './effective-run-record.js';
 import { assertProductFileUnchanged, snapshotProductFile, snapshotProductNames, sameProductFile, sameProductPath, type ProductFileSnapshot, type ProductNameSnapshot } from './url-product-reads.js';
 
 type Role = 'author' | 'inventory' | 'fidelity' | 'design';
+interface InitialProductIdentities {
+  readonly brief: { readonly command: string; readonly outcome: string; readonly run: string; readonly pinnedRevision: string;
+    readonly brief: string; readonly draftSchema: string; readonly issuedAt: string; readonly executionRule: { readonly arm: string } };
+  readonly sessions: { readonly command: string; readonly outcome: string; readonly role: string; readonly run: string;
+    readonly sessions: readonly { readonly role: string; readonly kind?: string; readonly session: number; readonly directory: string;
+      readonly prompt: string; readonly promptSha256: string }[] };
+}
+
 type Origins = Pick<Awaited<ReturnType<typeof createUrlRunOrigins>>, 'ledger' | 'roots' | 'initialReceipts' | 'schemaDocuments'>;
 const ROLES: readonly Role[] = ['author', 'inventory', 'fidelity', 'design'];
-const launchFiles: readonly string[] = Object.values(URL_HELPER_LAUNCH_FILES);
-const selectors: Readonly<Record<UrlProductSelector, { readonly directory: string; readonly pattern: RegExp }>> = Object.freeze({
-  'author-checks': { directory: 'checks', pattern: /^rev-(0|[1-9][0-9]*)\.json$/u },
-  'author-drafts': { directory: 'drafts', pattern: /^rev-(0|[1-9][0-9]*)\.json$/u },
-  'inventory-checks': { directory: 'inventory/checks', pattern: /^rev-(0|[1-9][0-9]*)\.json$/u },
-  'inventory-revisions': { directory: 'inventory', pattern: /^rev-(0|[1-9][0-9]*)\.json$/u },
-  'fidelity-verdicts': { directory: 'reviews', pattern: /^fidelity-verdict-(0|[1-9][0-9]*)\.json$/u },
-  'design-verdicts': { directory: 'reviews', pattern: /^design-verdict-(0|[1-9][0-9]*)\.json$/u },
-  'fidelity-checks': { directory: 'reviews/checks', pattern: /^fidelity-verdict-(0|[1-9][0-9]*)\.json$/u },
-  'design-checks': { directory: 'reviews/checks', pattern: /^design-verdict-(0|[1-9][0-9]*)\.json$/u },
-  'fidelity-deliveries': { directory: 'reviews', pattern: /^fidelity-session-1\.delivery-([1-9][0-9]*)\.json$/u },
-  'design-deliveries': { directory: 'reviews', pattern: /^design-session-1\.delivery-([1-9][0-9]*)\.json$/u },
-});
-const knownRecord = (file: string): boolean => {
-  if (['run.json', 'url-declaration.json', 'brief.json', 'brief.md', 'draft.schema.json',
-    'inventory/session-1.json', 'reviews/fidelity-session-1.json', 'reviews/design-session-1.json', ...launchFiles].includes(file)) return true;
-  const match = /^(?:checks|drafts|inventory|inventory\/checks)\/rev-(0|[1-9][0-9]*)\.json$/u.exec(file)
-    ?? /^reviews\/(?:checks\/)?(?:fidelity|design)-verdict-(0|[1-9][0-9]*)\.json$/u.exec(file)
-    ?? /^reviews\/(?:fidelity|design)-session-1\.delivery-([1-9][0-9]*)\.json$/u.exec(file);
-  return match !== null && integer(Number(match[1]));
-};
 const JSON_LIMITS = { maxBytes: 2_097_152, maxNodes: 65_536, maxDepth: 32 } as const;
-export const URL_ARTIFACT_LIMITS = Object.freeze({ itemBytes: 1_048_576, readBytes: 8_388_608, registrations: 1024, parents: 128 });
 type Limits = { readonly [K in keyof typeof URL_ARTIFACT_LIMITS]: number };
 export interface UrlRunArtifactsOptions {
   readonly run: string; readonly record: RecordedRunConfig; readonly origins: Origins; readonly roles: readonly Pick<UrlRolePlan, 'role' | 'profile'>[];
@@ -79,8 +68,6 @@ export interface UrlRunArtifactsOptions {
   readonly limits?: Partial<Limits>;
 }
 export type UrlProductReadOperation = 'render' | 'review-packet' | 'review-check' | 'inventory-check' | 'author-check';
-export type UrlProductSelector = 'author-checks' | 'author-drafts' | 'inventory-checks' | 'inventory-revisions'
-  | 'fidelity-verdicts' | 'design-verdicts' | 'fidelity-checks' | 'design-checks' | 'fidelity-deliveries' | 'design-deliveries';
 /** No object shape authenticates this token; each bridge owns its WeakMap. */
 export interface UrlProductReadContext { readonly kind: 'url-product-read-context'; }
 export interface UrlAuthenticatedProductRead {
@@ -95,16 +82,13 @@ export interface UrlProducedArtifact {
   readonly role: Role; readonly path: string; readonly sha256: string; readonly bytes: number;
   readonly originId: string; readonly classes: readonly SessionContentClass[];
 }
+export interface UrlRestoredFrozenProducts {
+  readonly artifacts: readonly UrlProducedArtifact[];
+  readonly initial: { readonly briefIssuedAt: string; readonly deadline: number;
+    readonly helperPromptDigests: Readonly<Record<Exclude<Role, 'author'>, string>> };
+}
 export interface UrlOrderedDesignVerdictStage { readonly checked: UrlCheckedDesignVerdict; readonly sha256: string; }
 
-interface FrozenProductIdentity {
-  readonly path: string; readonly bytes: number; readonly sha256: string;
-}
-export interface UrlFrozenProductHistory {
-  readonly format: 'polaris-url-frozen-products/1';
-  readonly runId: string; readonly coreSha256: string; readonly declarationSha256: string;
-  readonly records: readonly FrozenProductIdentity[];
-}
 interface Report {
   readonly role: Role; readonly digest: string; readonly projection: string; readonly receipt: UrlOriginReceipt;
   readonly packet: string | null; readonly token: string; committed: boolean;
@@ -139,88 +123,6 @@ const sameStat = (a: fs.Stats, b: fs.Stats): boolean => a.dev === b.dev && a.ino
   && a.size === b.size && a.mtimeMs === b.mtimeMs && a.ctimeMs === b.ctimeMs;
 
 type FidelityPacketRegistration = { readonly kind: 'fidelity'; readonly round: number; readonly packetSha256: string };
-
-const FROZEN_DRAFT_PATH = 'drafts/next.json';
-const AUTHOR_FEEDBACK = /^feedback\/(?:fidelity|design)-verdict-(?:0|[1-9][0-9]*)\.json$/u;
-const PACKET_DIRECTORY = /^fidelity-packet-[a-f0-9]{64}$/u;
-const PACKET_PATH = /^reviews\/(fidelity-packet-[a-f0-9]{64})\/(packet\.json|packet\.sha256)$/u;
-
-function productPopulation(run: string, expected: readonly string[], check: () => void): void {
-  const directories = new Map<string, ProductNameSnapshot>();
-  const names = (directory: string): readonly string[] => {
-    let snapshot = directories.get(directory);
-    if (snapshot === undefined) {
-      snapshot = snapshotProductNames(run, directory, 4096, check);
-      directories.set(directory, snapshot);
-    }
-    return snapshot.names;
-  };
-  for (const { directory, pattern } of Object.values(selectors)) {
-    const prefix = `${directory}/`, files = names(directory).filter(name => pattern.test(name)).map(name => prefix + name);
-    const known = expected.filter(file => file.startsWith(prefix) && pattern.test(file.slice(prefix.length)));
-    if (files.length !== known.length || known.some(file => !files.includes(file))) refuse();
-  }
-  for (const file of [...launchFiles, FROZEN_DRAFT_PATH]) {
-    if (names(path.dirname(file)).includes(path.basename(file)) !== expected.includes(file)) refuse();
-  }
-  const feedback = names('feedback').map(name => `feedback/${name}`).filter(file => AUTHOR_FEEDBACK.test(file));
-  const expectedFeedback = expected.filter(file => AUTHOR_FEEDBACK.test(file));
-  if (feedback.length !== expectedFeedback.length || expectedFeedback.some(file => !feedback.includes(file))) refuse();
-  const packets = new Set(expected.flatMap(file => {
-    const match = PACKET_PATH.exec(file); return match === null ? [] : [match[1]!];
-  }));
-  const observed = names('reviews').filter(name => PACKET_DIRECTORY.test(name));
-  if (observed.length !== packets.size || observed.some(name => !packets.has(name))) refuse();
-  for (const packet of packets) {
-    const directory = `reviews/${packet}`;
-    const packetFiles = ['packet.json', 'packet.sha256'];
-    const actual = names(directory);
-    if (actual.length !== packetFiles.length || packetFiles.some(name => !actual.includes(name) || !expected.includes(`${directory}/${name}`))) refuse();
-  }
-}
-
-/** Recheck an independent snapshot of the frozen run files, including the
- * complete stage filename populations. The caller supplies the protected
- * expectation; a digest learned from the file under test is insufficient. */
-export function verifyUrlFrozenProductHistory(run: string, given: UrlFrozenProductHistory, current: () => boolean):
-  { readonly kind: 'verified-frozen-products'; readonly authorization: 'none'; readonly records: number } | null {
-  try {
-    const deadline = performance.now() + 5000;
-    const check = (): void => { if (performance.now() >= deadline) refuse(); };
-    if (current() !== true) refuse();
-    const expected = copy(given);
-    if (!keys(expected, ['format', 'runId', 'coreSha256', 'declarationSha256', 'records'])
-      || expected.format !== 'polaris-url-frozen-products/1' || expected.runId !== path.basename(run)
-      || !hex(expected.coreSha256) || !hex(expected.declarationSha256) || !Array.isArray(expected.records)
-      || expected.records.length > URL_ARTIFACT_LIMITS.registrations) refuse();
-    const paths: string[] = []; let totalBytes = 0;
-    for (const record of expected.records) {
-      if (!keys(record, ['path', 'bytes', 'sha256']) || !relative(record.path)
-        || (record.path !== FROZEN_DRAFT_PATH && !knownRecord(record.path) && !PACKET_PATH.test(record.path) && !AUTHOR_FEEDBACK.test(record.path)) || !hex(record.sha256)
-        || typeof record.bytes !== 'number' || !Number.isSafeInteger(record.bytes) || record.bytes < 1 || record.bytes > URL_ARTIFACT_LIMITS.itemBytes
-        || (paths.length > 0 && paths.at(-1)! >= record.path)) refuse();
-      totalBytes += record.bytes;
-      if (totalBytes > URL_ARTIFACT_LIMITS.readBytes) refuse();
-      paths.push(record.path);
-    }
-    if (!['run.json', 'url-declaration.json', 'brief.json', 'brief.md', 'draft.schema.json', 'inventory/session-1.json',
-      'reviews/fidelity-session-1.json', 'reviews/design-session-1.json'].every(file => paths.includes(file))
-      || expected.records.find(record => record.path === 'run.json')?.sha256 !== expected.coreSha256
-      || expected.records.find(record => record.path === 'url-declaration.json')?.sha256 !== expected.declarationSha256) refuse();
-    productPopulation(run, paths, check);
-    const snapshots = new Map<string, ProductFileSnapshot>();
-    for (const expectedFile of expected.records) {
-      const observed = snapshotProductFile(run, expectedFile.path, expectedFile.bytes, check);
-      if (observed.bytes === null || observed.bytes.length !== expectedFile.bytes || sha256(observed.bytes) !== expectedFile.sha256) refuse();
-      snapshots.set(expectedFile.path, observed);
-    }
-    productPopulation(run, paths, check);
-    for (const [file, observed] of snapshots) assertProductFileUnchanged(run, file, observed, check);
-    if (current() !== true) refuse();
-    check();
-    return Object.freeze({ kind: 'verified-frozen-products', authorization: 'none', records: paths.length });
-  } catch { return null; }
-}
 
 /** Trusted producer bridge. It reads fixed products and keeps opaque receipts plus metadata in
  * working memory; it writes nothing. A self-consistent stored hash is never producer authentication.
@@ -260,7 +162,8 @@ function create(given: UrlRunArtifactsOptions) {
     sidecarBytes = Uint8Array.from(supplied.bytes);
     retainedDeclaration = copy(checked.effective.declaration);
   }
-  const origins = given.origins, ledger = origins.ledger, live = (): void => { if (current() !== true) refuse(); };
+  let recoveryFailed = false;
+  const origins = given.origins, ledger = origins.ledger, live = (): void => { if (recoveryFailed || current() !== true) refuse(); };
   const schemaDocuments = Object.fromEntries(Object.entries(origins.schemaDocuments).map(([key, value]) => [key, Uint8Array.from(value)])) as Origins['schemaDocuments'];
   live();
   if (!Array.isArray(given.roles) || given.roles.length !== 4 || given.roles.some((p, i) => p.role !== ROLES[i] || !isNativeSessionProfile(p.profile) || p.profile.input.binding.run !== runId)) refuse();
@@ -433,7 +336,7 @@ function create(given: UrlRunArtifactsOptions) {
     // are controller-issued metadata, not forgeable ledger capabilities; no payload tag is authority.
     if (admission.classes.some(c => !actual.has(c))) refuse(); return receipts;
   }
-  function initialProducts(input: { readonly brief: BriefReport; readonly sessions: StartSessionsReport }): readonly UrlProducedArtifact[] {
+  function initialProducts(input: InitialProductIdentities): readonly UrlProducedArtifact[] {
     live(); if (initial || !keys(input, ['brief', 'sessions'])) refuse();
     const { brief, sessions } = input;
     if (brief.command !== 'brief' || brief.outcome !== 'issued' || brief.run !== run || brief.pinnedRevision !== pin || brief.executionRule.arm !== 'sec-3'
@@ -1395,7 +1298,8 @@ function create(given: UrlRunArtifactsOptions) {
     return snapshotWithAuthority(check => {
       if (!initial || sidecarBytes === null || producersInFlight || activeReads.size || pending.size || uncommitted.size || questions.size
         || orderedPendingFiles.size || activeDesign !== undefined) refuse();
-      const records = new Map<string, FrozenProductIdentity>();
+      const records = new Map<string, Omit<FrozenProductIdentity, 'origin'>>();
+      const recordReceipts = new Map<string, UrlOriginReceipt>();
       const observed = new Map<string, ProductFileSnapshot>();
       let totalBytes = 0;
       const readFrozen = (file: string): ProductFileSnapshot & { bytes: Uint8Array } => {
@@ -1405,6 +1309,16 @@ function create(given: UrlRunArtifactsOptions) {
         totalBytes += actual.bytes.length;
         observed.set(file, actual);
         records.set(file, { path: file, bytes: actual.bytes.length, sha256: sha256(actual.bytes) });
+        let receipt = authenticatedRecords.get(file)?.receipt;
+        if (receipt === undefined && (file === 'run.json' || file === 'url-declaration.json')) receipt = compose(actual.bytes, rootParents);
+        const packet = PACKET_PATH.exec(file);
+        if (receipt === undefined && packet !== null) {
+          const packetReceipt = packetReceipts.get(`fidelity:${packet[1]!.slice('fidelity-packet-'.length)}`);
+          if (!packetReceipt) refuse();
+          receipt = packet[2] === 'packet.json' ? packetReceipt : compose(actual.bytes, [packetReceipt]);
+        }
+        receipt ??= ledger.boundArtifact('author', file, actual.bytes);
+        ledger.origins(receipt, actual.bytes); recordReceipts.set(file, receipt);
         return { ...actual, bytes: actual.bytes };
       };
       for (const [file, expected] of authenticatedRecords) {
@@ -1442,11 +1356,134 @@ function create(given: UrlRunArtifactsOptions) {
       if (files.length > limits.registrations) refuse();
       productPopulation(run, files, check);
       for (const [file, snapshot] of observed) assertProductFileUnchanged(run, file, snapshot, check);
-      return copy({ format: 'polaris-url-frozen-products/1', runId, coreSha256: sha256(coreBytes),
-        declarationSha256: sha256(sidecarBytes), records: files.map(file => records.get(file)!) });
+      const artifacts = ledger.captureArtifactBindings().map(binding => {
+        const directory = directories.get(binding.role)!;
+        const snapshot = snapshotProductFile(directory, binding.path, Math.min(limits.itemBytes, limits.readBytes - totalBytes), check);
+        if (snapshot.bytes === null) refuse(); totalBytes += snapshot.bytes.length;
+        ledger.origins(binding.receipt, snapshot.bytes);
+        return { ...binding, snapshot };
+      });
+      const provenance = ledger.captureProvenance([...files.map(file => recordReceipts.get(file)!), ...artifacts.map(binding => binding.receipt)]);
+      for (const artifact of artifacts) assertProductFileUnchanged(directories.get(artifact.role)!, artifact.path, artifact.snapshot, check);
+      return copy({ format: 'polaris-url-frozen-products/2', runId, coreSha256: sha256(coreBytes),
+        declarationSha256: sha256(sidecarBytes), records: files.map((file, index) => ({ ...records.get(file)!, origin: provenance.keys[index]! })),
+        artifacts: artifacts.map((artifact, index) => ({ role: artifact.role, path: artifact.path, sha256: sha256(artifact.snapshot.bytes!),
+          bytes: artifact.snapshot.bytes!.length, origin: provenance.keys[files.length + index]! })), provenance: provenance.graph });
     });
   }
+  /** Re-establish only authenticated historical product provenance. This
+   * creates fresh ledger receipts and no launch, peer, provider or live proof. */
+  async function restoreFrozenProducts(capability: UrlVerifiedRecoveryProducts, waitForSamples: () => Promise<boolean> = async () => true): Promise<UrlRestoredFrozenProducts> {
+    live();
+    if (initial || sidecarBytes === null || authenticatedRecords.size || pending.size || producersInFlight || activeReads.size) refuse();
+    try {
+      const recovered = await ledger.restoreFrozenOrigins(capability, { run, coreSha256: sha256(coreBytes), declarationSha256: sha256(sidecarBytes) }, waitForSamples);
+      const saved = new Map<string, { bytes: Uint8Array; receipt: UrlOriginReceipt; snapshot: ProductFileSnapshot }>();
+      for (const product of recovered.history.records) {
+        if (!(await waitForSamples())) refuse(); live();
+        const snapshot = snapshotRecord(run, product.path, product.bytes);
+        if (snapshot.bytes === null || snapshot.bytes.length !== product.bytes || sha256(snapshot.bytes) !== product.sha256) refuse();
+        saved.set(product.path, { bytes: snapshot.bytes, receipt: recovered.receipt(product.path, snapshot.bytes), snapshot });
+      }
+      const artifactBindings: ArtifactBinding[] = [];
+      for (const product of recovered.history.artifacts) {
+        if (!(await waitForSamples())) refuse(); live();
+        const snapshot = snapshotRecord(directories.get(product.role)!, product.path, product.bytes);
+        if (snapshot.bytes === null || snapshot.bytes.length !== product.bytes || sha256(snapshot.bytes) !== product.sha256) refuse();
+        artifactBindings.push({ role: product.role, path: product.path, bytes: snapshot.bytes,
+          receipt: recovered.receipt(product.path, snapshot.bytes, product.role) });
+      }
+      const stored = (file: string) => { const value = saved.get(file); if (!value) refuse(); return value; };
+      const stagedReports = new Map<string, Report>();
+      const stageReport = (role: Role, file: string): void => {
+        const { bytes, receipt } = stored(file), value = json(bytes);
+        const kind = role === 'author' ? 'draft' : role === 'inventory' ? 'inventory' : `${role}-verdict` as const;
+        ledger.validateReport(role, kind, bytes);
+        const projection = { ...value }; if (role === 'author') delete projection['discovery'];
+        const digest = sha256(bytes), prior = stagedReports.get(`${role}:${digest}`);
+        if (prior && prior.receipt !== receipt) refuse();
+        stagedReports.set(`${role}:${digest}`, { role, digest, projection: sha256(canonical(projection)), receipt,
+          packet: typeof value['packetSha256'] === 'string' ? value['packetSha256'] : null, token: 'recovered-frozen-product', committed: true });
+      };
+      for (const file of saved.keys()) {
+        if (/^drafts\/rev-[0-9]+\.json$/u.test(file) || file === FROZEN_DRAFT_PATH) stageReport('author', file);
+        else if (/^inventory\/rev-[0-9]+\.json$/u.test(file)) stageReport('inventory', file);
+        else {
+          const match = /^reviews\/(fidelity|design)-verdict-[0-9]+\.json$/u.exec(file);
+          if (match) stageReport(match[1] as 'fidelity' | 'design', file);
+        }
+      }
+      const stagedChecks: { role: Role; file: string; product: Check | Product }[] = [];
+      for (const [file, value] of saved) {
+        const author = /^checks\/rev-([0-9]+)\.json$/u.exec(file), inventory = /^inventory\/checks\/rev-([0-9]+)\.json$/u.exec(file);
+        const review = /^reviews\/checks\/(fidelity|design)-verdict-([0-9]+)\.json$/u.exec(file);
+        if (!author && !inventory && !review) continue;
+        const role: Role = author ? 'author' : inventory ? 'inventory' : review![1] as 'fidelity' | 'design';
+        const doc = json(value.bytes), number = Number(author?.[1] ?? inventory?.[1] ?? review![2]);
+        if (!integer(number) || (role === 'author' || role === 'inventory' ? !checkShape(doc, role === 'author' ? 'check' : 'inventory-check', false)
+          || doc['revision'] !== number : !reviewShape(doc, role, false) || doc['number'] !== number)) refuse();
+        const subject = record(doc[author ? 'draft' : inventory ? 'inventory' : 'verdict']);
+        const expectedFile = author ? `drafts/rev-${number}.json` : inventory ? `inventory/rev-${number}.json` : `reviews/${role}-verdict-${number}.json`;
+        const report = stored(expectedFile), submitted = stagedReports.get(`${role}:${sha256(report.bytes)}`);
+        if (!submitted || subject['file'] !== expectedFile || subject['sha256'] !== submitted.digest || subject['bytes'] !== report.bytes.length
+          || submitted.receipt !== report.receipt || (review && (subject['packetSha256Named'] !== submitted.packet
+            || (doc['outcome'] === 'validated' && record(doc['session'])['sessionId'] !== plans.get(role)!.profile.input.sessionId)))) refuse();
+        const product = { path: file, digest: sha256(value.bytes), receipt: value.receipt, committed: true,
+          ...(author ? { revision: number, token: 'recovered-frozen-product' } : {}) };
+        stagedChecks.push({ role, file, product });
+      }
+      const briefRecord = json(stored('brief.json').bytes);
+      const sessions = (['inventory', 'fidelity', 'design'] as const).map(role => {
+        const file = role === 'inventory' ? 'inventory/session-1.json' : `reviews/${role}-session-1.json`, prompt = json(stored(file).bytes);
+        if (!text(prompt['prompt']) || !hex(prompt['promptSha256'])) refuse();
+        return { role: role === 'inventory' ? 'inventory' : 'review', ...(role === 'inventory' ? {} : { kind: role }),
+          session: 1, directory: directories.get(role)!, prompt: prompt['prompt'], promptSha256: prompt['promptSha256'] };
+      });
+      // Reconstruct only the producer reports' exact identity fields from the
+      // authenticated records. No producer-success JSON is accepted as proof.
+      if (!text(briefRecord['issuedAt'])) refuse();
+      initialProducts({ brief: { command: 'brief', outcome: 'issued', run, pinnedRevision: pin,
+        brief: path.join(run, 'brief.md'), draftSchema: path.join(run, 'draft.schema.json'), issuedAt: briefRecord['issuedAt'],
+        executionRule: { arm: 'sec-3' } },
+        sessions: { command: 'session-prompt', outcome: 'issued', role: 'all', run, sessions } });
+      for (const [key, value] of stagedReports) reports.set(key, value);
+      for (const [file, value] of saved) {
+        if (knownRecord(file)) authenticatedRecords.set(file, prepareRecord(file, value.bytes, value.receipt, () => initial, value.snapshot));
+        const packet = PACKET_PATH.exec(file);
+        if (packet?.[2] === 'packet.json') {
+          const digest = packet[1]!.slice('fidelity-packet-'.length);
+          if (sha256(value.bytes) !== digest) refuse(); packetReceipts.set(`fidelity:${digest}`, value.receipt);
+        }
+      }
+      for (const item of stagedChecks) {
+        checkedProducts.set(`${item.file}:${item.product.digest}`, item.product);
+        if (item.role === 'author') checks.set((item.product as Check).revision, item.product as Check);
+      }
+      bindAll(artifactBindings);
+      const draft = saved.get(FROZEN_DRAFT_PATH); lastCommittedDraft = draft === undefined ? null : sha256(draft.bytes);
+      // Reuse the packet validator with the exact retained role files, checked
+      // subjects and freshly re-observed source spans. No delivery is started.
+      for (const file of saved.keys()) {
+        const match = /^reviews\/fidelity-session-1\.delivery-([0-9]+)\.json$/u.exec(file);
+        if (match) {
+          const delivery = json(stored(file).bytes), digest = delivery['packetSha256']; if (!hex(digest)) refuse();
+          await packet({ kind: 'fidelity', round: Number(match[1]), packetSha256: digest }, waitForSamples);
+        }
+      }
+      // Every sealed subject has been restored explicitly, including design
+      // check/verdict pairs whose old terminal was verified by the caller's
+      // cold audit. No old ordered review proof is issued here.
+      latestStageChecksAfterRestore();
+      for (const [file, value] of saved) assertProductFileUnchanged(run, file, value.snapshot, live);
+      if (!(await waitForSamples())) refuse(); live();
+      recovered.revalidate();
+      return copy({ artifacts: products, initial: { briefIssuedAt: briefRecord['issuedAt'], deadline: recovered.deadline,
+        helperPromptDigests: { inventory: sessions[0]!.promptSha256, fidelity: sessions[1]!.promptSha256, design: sessions[2]!.promptSha256 } } });
+    } catch { recoveryFailed = true; return refuse(); }
+  }
+  function latestStageChecksAfterRestore(): void { stageChecks(ROLES); }
   return Object.freeze({
+    restoreFrozenProducts,
     beginRead, readProduct, readProducts, selectProducts, selectProductGroups, revalidateRead, openDesignArtifact, captureFrozenHistory,
     latestStageCheck: (role: Role) => stageChecks([role])[role],
     latestStageChecks: () => stageChecks(ROLES),

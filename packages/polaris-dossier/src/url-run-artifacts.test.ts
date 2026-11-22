@@ -1,3 +1,7 @@
+import { initializeUrlMachineStore } from './url-machine-store.js';
+import { reconstructColdUrlRunMachineHistory } from './url-machine-cold-history.js';
+import { verifyUrlRecoveryProducts, type UrlVerifiedRecoveryProducts } from './url-recovery-products.js';
+import type { UrlRunMachineClosedHistory } from './url-run-machine.js';
 import * as fs from 'node:fs';
 import path from 'node:path';
 import { createHash } from 'node:crypto';
@@ -40,7 +44,7 @@ const canonical = (v: unknown): string => encodeCanonicalJson(v, { maxBytes: 2_0
 const b = (v: unknown): Buffer => Buffer.from(canonical(v));
 const roles = ['author', 'inventory', 'fidelity', 'design'] as const;
 type Role = typeof roles[number];
-function fixture(source = 'Own pinned source.\n', extraFiles: Readonly<Record<string, string>> = {}, policyVersion: 'v1' | 'v2' = 'v1') {
+function fixture(source = 'Own pinned source.\n', extraFiles: Readonly<Record<string, string>> = {}, policyVersion: 'v1' | 'v2' = 'v1', retainedUrl = false) {
   const root = tempDir('url-artifacts-'), runId = `run-${'c'.repeat(32)}`, run = path.join(root, runId), clone = path.join(root, 'own-source');
   fs.mkdirSync(run); const object = (kind: string, bytes: Buffer): string => {
     const raw = Buffer.concat([Buffer.from(`${kind} ${bytes.length}\0`), bytes]), id = createHash('sha1').update(raw).digest('hex');
@@ -70,18 +74,19 @@ function fixture(source = 'Own pinned source.\n', extraFiles: Readonly<Record<st
   const validate = (schema: ReturnType<typeof localDraftSchema>, role: Role, v: unknown): boolean => !!v && typeof v === 'object' && !Array.isArray(v)
     && (v as Record<string, unknown>)['sessionId'] === sessionId(role) && checkDraftShape(schema, v).length === 0;
   const verifyCurrent = vi.fn(() => current);
-  const ledger = createUrlOriginLedger({ runId, record, screen: loaded.screen, basePolicyBytes,
+  const ledgerOptions: Parameters<typeof createUrlOriginLedger>[0] = { runId, record, screen: loaded.screen, basePolicyBytes,
     originPolicy: { binding: { path: '.syzygy/governance/policies/POLARIS-DOSSIER-URL-ORIGIN-SPECIES-POLICY-v1.json', commit: 'a'.repeat(40), policyId: 'POLARIS-DOSSIER-URL-ORIGIN-SPECIES-POLICY-v1', policyVersion: '1.0.0', sha256: sha256(originBytes) }, bytes: originBytes },
     current: verifyCurrent, fixed, schemas: { draft: v => validate(localDraftSchema({ pinnedRevision: pin, maxQuestions: 1 }, 'home', 'absent'), 'author', v),
       inventory: v => validate(localInventorySchema({ pinnedRevision: pin }), 'inventory', v), 'fidelity-verdict': v => validate(localVerdictSchema({ pinnedRevision: pin }), 'fidelity', v),
-      'design-verdict': v => validate(localDesignVerdictSchema({ pinnedRevision: pin }), 'design', v) } });
+      'design-verdict': v => validate(localDesignVerdictSchema({ pinnedRevision: pin }), 'design', v) } };
+  const ledger = createUrlOriginLedger(ledgerOptions);
   const [rolePolicy, runControl, toolMetadata] = fixed.map(f => ledger.fixed(f.id, f.bytes)), parents = [rolePolicy!, runControl!, toolMetadata!];
   const initialReceipts = Object.fromEntries(roles.map(role => [role, ledger.compose(Buffer.from(`Own ${role} initial prompt.`), parents)])) as Record<Role, ReturnType<typeof ledger.compose>>;
   const plans = roles.map(role => { const p = createSessionProfile({ binding: { run: runId, role, sourceBinding: sourceBindingSha256(record.subject), policy: policy.sha256, provider: 'anthropic', model: 'claude-sonnet-4-6' },
     sessionId: sessionId(role), systemPrompt: `Own ${role} system policy.`, initialPrompt: `Own ${role} initial prompt.`, utcDate: '2026-11-19', kernelRelease: 'own-linux' }); if (!p.ok) throw Error('profile'); return { role, profile: p.value.profile }; });
   const origins = { ledger, roots: { rolePolicy, runControl, toolMetadata }, initialReceipts, schemaDocuments } as UrlRunArtifactsOptions['origins'];
   const replyQueue: BrokerResponse[] = [], calls: string[][] = [];
-  const options: UrlRunArtifactsOptions = { run, record, origins, roles: plans, current: verifyCurrent, helpText: 'syzygy dossier own fixed help\n',
+  let options: UrlRunArtifactsOptions = { run, record, origins, roles: plans, current: verifyCurrent, helpText: 'syzygy dossier own fixed help\n',
     runDossier: () => async argv => { calls.push([...argv]); const next = replyQueue.shift(); if (!next) throw Error('no own response'); return next; } };
   const write = (relative: string, bytes: string | Uint8Array): void => { const file = path.join(run, relative); fs.mkdirSync(path.dirname(file), { recursive: true }); fs.writeFileSync(file, bytes); };
   const dir = (role: Role): string => role === 'author' ? run : `${run}.sessions/${role === 'inventory' ? 'session' : role}-1`;
@@ -107,6 +112,33 @@ function fixture(source = 'Own pinned source.\n', extraFiles: Readonly<Record<st
     });
     return { brief, sessions: { command: 'session-prompt', outcome: 'issued', role: 'all', run, sessions } as unknown as StartSessionsReport };
   };
+  const freshOrigins = (): UrlRunArtifactsOptions['origins'] => {
+    const next = createUrlOriginLedger(ledgerOptions);
+    const [rolePolicy, runControl, toolMetadata] = fixed.map(f => next.fixed(f.id, f.bytes));
+    const roots = { rolePolicy: rolePolicy!, runControl: runControl!, toolMetadata: toolMetadata! };
+    const initialReceipts = Object.fromEntries(roles.map(role => [role,
+      next.compose(Buffer.from(`Own ${role} initial prompt.`), [roots.rolePolicy, roots.runControl, roots.toolMetadata])])) as Record<Role, ReturnType<typeof next.compose>>;
+    return { ledger: next, roots, initialReceipts, schemaDocuments };
+  };
+  if (retainedUrl) {
+    const H = 'e'.repeat(64), core = encodeRunRecord(record.declared, record.subject);
+    const identity = urlSourceTransportIdentity('https://own.example.invalid/source'); if (!identity.ok) throw Error('own transport');
+    const sourceTransport = { originalLocator: identity.originalLocator, destination: identity.destination, providerId: identity.providerId,
+      acquisitionId: 'acq-0123456789abcdef0123456789abcdef', metadataClasses: ['code-structure'] as const, selectionOrigin: 'validated-destination-before-acquisition' as const,
+      commandSha256: H, protocolSha256: H, configurationSha256: H, executableSha256: H, environmentSha256: H };
+    const originPolicy = ledgerOptions.originPolicy.binding;
+    const context = { runId, expectedBasePolicy: record.subject.screeningPolicy, expectedOriginPolicy: originPolicy, expectedSourceTransport: sourceTransport, expectedProfileSha256: H };
+    const issued = createUrlRunDeclaration(core, { runId, originPolicy, sourceTransport, protectedAudit: `url-audit:${runId}`,
+      inference: { provider: 'anthropic', tool: 'claude-code', toolVersion: '2.1.327', model: 'claude-sonnet-4-6', modelSelection: 'supported-default', profile: { id: URL_PROFILE_ID, sha256: H } },
+      plannedOrigins: ledger.plannedOrigins(), roles: plans.map(p => ({ role: p.role, sessionId: p.profile.input.sessionId, profileId: URL_PROFILE_ID,
+        compiledProfileSha256: p.profile.digest, commandSha256: H, instructionSha256: sha256(p.profile.input.systemPrompt), viewSha256: H,
+        scaffoldSha256: H, mcpSha256: H, configurationSha256: H, executableSha256: H, inputPacketSha256: sha256(p.profile.input.initialPrompt),
+        inputOriginId: ledger.metadata(initialReceipts[p.role]).id, capture: { pid: 'Unknown', startedAt: 'Unknown', finishedAt: 'Unknown', outcome: 'Unknown' } })) }, context);
+    if (!issued.ok) throw Error(`own declaration ${issued.code}`);
+    write('run.json', core); write('url-declaration.json', issued.text);
+    options = { ...options, initializedCoreBytes: Buffer.from(core), effectiveDeclaration: { declaration: issued.declaration, bytes: Buffer.from(issued.text),
+      context: { ...context, expectedSidecarSha256: issued.sha256 } } };
+  }
   const bridge = createUrlRunArtifacts(options), initialize = () => bridge.registerInitial(produceInitial());
   const admission = (role: Role, classes = ledger.metadata(initialReceipts[role]).classes): SessionAdmission => ({ digest: 'd'.repeat(64), bytes: 10, classes, originIds: [...ledger.metadata(initialReceipts[role]).originIds, 'provider-response:1'] });
   const receipt = (role: Role, toolName: SessionToolsReceipt['toolName'], toolInput: Record<string, unknown>, reply: unknown): SessionToolsReceipt => {
@@ -190,10 +222,111 @@ function fixture(source = 'Own pinned source.\n', extraFiles: Readonly<Record<st
     return prepared;
   };
   return { root, run, runId, pin, blob, source, sourceObjects, options, bridge, initialize, produceInitial, write, dir, ledger, admission, receipt, draft, inventory, writeDraft, checkDoc, replyQueue, calls, screen: loaded.screen, basePolicyBytes,
-    commitInventory, commitCheck, producePacket, prepareFidelity, submitFidelity, verifyCurrent, stale: () => { current = false; } };
+    commitInventory, commitCheck, producePacket, prepareFidelity, submitFidelity, freshOrigins, verifyCurrent, stale: () => { current = false; } };
+}
+
+/** Real protected files and genuinely cold-verified never-issued machine
+ * anchors. The synthetic stop seal is independent fixture input, never a live
+ * process/launch/provider claim. No native helper or CLI is invoked. */
+async function recoveryFixture() {
+  const f = fixture(undefined, {}, 'v1', true); f.initialize();
+  await f.commitCheck(); await f.commitInventory();
+  const packet = f.producePacket(b(f.draft), b(f.inventory));
+  await f.bridge.registerPacket({ kind: 'fidelity', round: 1, packetSha256: packet.digest });
+  const submitted = await f.submitFidelity(packet); f.bridge.committed('fidelity', submitted.raw.id);
+  // These inputs are materialized by actual await --submit --stdin. The fixture
+  // substitutes its runner, so it writes the independently known bytes here.
+  fs.writeFileSync(path.join(f.dir('inventory'), 'inventory.json'), b(f.inventory));
+  fs.writeFileSync(path.join(f.dir('fidelity'), 'round-1/verdict.json'), submitted.bytes);
+  f.write(`reviews/fidelity-packet-${packet.digest}/packet.json`, packet.bytes);
+  f.write(`reviews/fidelity-packet-${packet.digest}/packet.sha256`, `${packet.digest}  packet.json\n`);
+  const frozen = f.bridge.captureFrozenHistory();
+  const now = Date.parse('2026-11-19T00:00:10.000Z'), deadline = now + 60_000;
+  const governanceRoot = path.join(f.root, 'observing/.syzygy'), protectedRoot = path.join(f.root, 'machine-protected');
+  fs.mkdirSync(path.join(governanceRoot, 'governance/policies/dossier-machine-clients'), { recursive: true });
+  const store = await initializeUrlMachineStore({ governanceRoot, protectedRoot, deadline, now: () => now, current: f.options.current });
+  if (!store) throw Error('own machine store');
+  const binding = { controllerSha256: 'a'.repeat(64), parentBindingSha256: 'b'.repeat(64) };
+  const clients: UrlRunMachineClosedHistory['clients'][number][] = [];
+  for (const plan of f.options.roles) for (const kind of ['mcp-shim', 'inference-bridge'] as const) {
+    const slot = await store.allocateClient(deadline); if (!slot) throw Error('own machine slot');
+    clients.push({ context: { clientId: slot.clientId, policySha256: f.options.effectiveDeclaration!.declaration.originPolicy.sha256,
+      sourcePin: f.pin, runId: f.runId, role: plan.role, kind, profileSha256: plan.profile.digest, now, deadline,
+      allowedScopes: kind === 'inference-bridge' ? ['inference-forward'] : plan.role === 'author' ? ['source_read', 'artifact_read', 'artifact_write', 'dossier_step']
+        : plan.role === 'inventory' ? ['source_read', 'artifact_read', 'dossier_step'] : ['artifact_read', 'dossier_step'] },
+      terminal: { kind: 'never-issued', ...slot } });
+  }
+  const sealed: UrlRunMachineClosedHistory = { kind: 'closed-url-run-machine-history', authorization: 'none', replay: 'forbidden',
+    identitySha256: store.identitySha256, binding, clients, observedAt: now };
+  await store.close();
+  const machine = await reconstructColdUrlRunMachineHistory({ governanceRoot, protectedRoot, sealed,
+    expected: { identitySha256: sealed.identitySha256, binding, runId: f.runId, sourcePin: f.pin,
+      originPolicySha256: f.options.effectiveDeclaration!.declaration.originPolicy.sha256,
+      profiles: Object.fromEntries(f.options.roles.map(plan => [plan.role, plan.profile.digest])) as Record<Role, string>, deadline }, now: () => now, current: f.options.current });
+  if (!machine) throw Error('own cold machine');
+  const hostRoot = path.join(f.root, 'host'); fs.mkdirSync(hostRoot, { mode: 0o700 });
+  const expected = { run: f.run, runId: f.runId, generation: 'c'.repeat(32), coreSha256: frozen.coreSha256,
+    declarationSha256: frozen.declarationSha256, sourcePin: f.pin, deadline };
+  const record = { ...expected, format: 'polaris-url-stopped-boundary/2', sourceStore: 'owned-loose',
+    attempt: 'attempt-own111', machineAttempt: 'attempt-own111', predecessor: null, roles: [{}, {}, {}, {}],
+    stoppedAt: now, audit: {}, machine: sealed, products: frozen, spend: { requestReservations: 0, completeUsageReports: 0, reportedTokens: 'Unknown' } };
+  const canon = (value: unknown) => encodeCanonicalJson(value, { maxBytes: 4_194_304, maxNodes: 131_072, maxDepth: 40 });
+  const boundarySha256 = sha256(canon(record)), boundaryFile = path.join(hostRoot, `${sha256(f.run)}.${expected.generation}.stopped.json`);
+  fs.writeFileSync(boundaryFile, `${canon({ record, sha256: boundarySha256 })}\n`, { mode: 0o600 });
+  const issue = () => verifyUrlRecoveryProducts({ hostRoot, expected, boundarySha256, machine, now: () => now, current: f.options.current });
+  const capability = issue(); if (!capability) throw Error('own product capability');
+  const fresh = () => { const origins = f.freshOrigins(); return { origins, bridge: createUrlRunArtifacts({ ...f.options, origins }) }; };
+  return { ...f, frozen, boundaryFile, capability, issue, fresh };
 }
 
 describe('trusted URL artifact producer bridge', () => {
+  it('restores sealed product provenance into a genuinely fresh ledger and can freeze another stop', async () => {
+    const f = await recoveryFixture(), next = f.fresh();
+    await expect(next.bridge.restoreFrozenProducts(f.capability)).resolves.toMatchObject({ artifacts: expect.arrayContaining([
+      expect.objectContaining({ role: 'author', path: 'brief.md' }), expect.objectContaining({ role: 'inventory', path: 'inventory-brief.md' }),
+      expect.objectContaining({ role: 'fidelity', path: 'round-1/packet.json' }),
+    ]), initial: { briefIssuedAt: '2026-11-19T00:00:00.000Z', helperPromptDigests: expect.objectContaining({ inventory: expect.any(String) }) } });
+    expect(next.bridge.latestStageChecks()).toMatchObject({ author: { revision: 0 }, inventory: { revision: 0 }, fidelity: { revision: 0 }, design: null });
+    expect(next.bridge.hasCommittedReport('author', sha256(b(f.draft)))).toBe(true);
+    const previous = f.bridge.checkReceipt(0), restored = next.bridge.checkReceipt(0);
+    expect(restored).not.toBe(previous); expect(() => next.origins.ledger.metadata(previous)).toThrow('url-origin-refused');
+    expect(next.origins.ledger.metadata(restored).classes).toEqual(f.ledger.metadata(previous).classes);
+    const reads = next.bridge.beginRead({ operation: 'render', deadline: Date.now() + 4000 });
+    expect(Buffer.from(next.bridge.readProduct(reads, 'drafts/rev-0.json').bytes!)).toEqual(b(f.draft)); next.bridge.cancelRead(reads);
+    const frozen = next.bridge.captureFrozenHistory();
+    expect(verifyUrlFrozenProductHistory(f.run, frozen, f.options.current)).toEqual({ kind: 'verified-frozen-products', authorization: 'none', records: frozen.records.length });
+    expect(frozen.records.map(({ path, bytes, sha256 }) => ({ path, bytes, sha256 }))).toEqual(f.frozen.records.map(({ path, bytes, sha256 }) => ({ path, bytes, sha256 })));
+    expect(frozen.artifacts.some(product => product.role === 'fidelity' && product.path === 'round-1/packet.json')).toBe(true);
+    const third = f.fresh(); await expect(third.bridge.restoreFrozenProducts(f.capability)).rejects.toThrow('url-run-artifacts-unavailable');
+  });
+  it('takes a recovery capability before the first await so two fresh ledgers cannot race its transfer', async () => {
+    const f = await recoveryFixture(), first = f.fresh(), second = f.fresh();
+    let release = () => {}, arrived = () => {};
+    const waiting = new Promise<void>(resolve => { arrived = resolve; }), hold = new Promise<void>(resolve => { release = resolve; });
+    let once = false;
+    const work = first.bridge.restoreFrozenProducts(f.capability, async () => { if (!once) { once = true; arrived(); await hold; } return true; });
+    await waiting;
+    try { await expect(second.bridge.restoreFrozenProducts(f.capability)).rejects.toThrow('url-run-artifacts-unavailable'); }
+    finally { release(); }
+    await expect(work).resolves.toMatchObject({ initial: { deadline: expect.any(Number) } });
+  });
+  it('withdraws recovery on claim loss after an awaited resource check', async () => {
+    const f = await recoveryFixture(), next = f.fresh(); let waits = 0;
+    await expect(next.bridge.restoreFrozenProducts(f.capability, async () => { if (++waits === 2) f.stale(); return true; }))
+      .rejects.toThrow('url-run-artifacts-unavailable');
+    expect(waits).toBe(2); expect(() => next.bridge.latestStageChecks()).toThrow('url-run-artifacts-unavailable');
+  });
+  it.each(['copy', 'json', 'file', 'boundary', 'claim', 'source'] as const)('refuses %s drift during nominal product recovery', async fault => {
+    const f = await recoveryFixture(), next = f.fresh(); let capability = f.capability;
+    if (fault === 'copy') capability = { ...capability } as UrlVerifiedRecoveryProducts;
+    if (fault === 'json') capability = JSON.parse(JSON.stringify(capability));
+    if (fault === 'file') fs.appendFileSync(path.join(f.run, 'checks/rev-0.json'), ' ');
+    if (fault === 'boundary') fs.appendFileSync(f.boundaryFile, ' ');
+    if (fault === 'claim') f.stale();
+    if (fault === 'source') fs.writeFileSync(path.join(f.options.record.subject.clone.path, '.git/objects', f.blob.slice(0, 2), f.blob.slice(2)), 'corrupt');
+    await expect(next.bridge.restoreFrozenProducts(capability)).rejects.toThrow('url-run-artifacts-unavailable');
+    expect(() => next.bridge.latestStageChecks()).toThrow('url-run-artifacts-unavailable');
+  });
   it('binds the broker one-minute helper default while refusing changed arguments or output', async () => {
     for (const explicit of [false, true]) {
       const f = fixture(); f.initialize();

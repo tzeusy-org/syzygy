@@ -1,3 +1,5 @@
+import { takeUrlRecoveryProducts, type UrlVerifiedRecoveryProducts } from './url-recovery-products.js';
+import type { UrlOriginDerivation, UrlOriginProvenance, UrlOriginProvenanceNode, UrlOriginMetadata, UrlReportKind } from './url-origin-provenance.js';
 import path from 'node:path';
 import { setImmediate as yieldToPoll } from 'node:timers/promises';
 import { encodeCanonicalJson, PAGE_SINK_CONTRACT, parseBoundedJson } from '@syzygy/polaris-generation-core/live';
@@ -17,7 +19,7 @@ export const URL_ORIGIN_LEDGER_LIMITS = Object.freeze({ receipts: 1024, bytes: 8
 type Limits = { readonly [K in keyof typeof URL_ORIGIN_LEDGER_LIMITS]: number };
 type Role = 'author' | 'inventory' | 'fidelity' | 'design';
 export type UrlRootOriginKind = 'policy' | 'schema' | 'structure' | 'run-control';
-export type UrlReportKind = 'draft' | 'inventory' | 'fidelity-verdict' | 'design-verdict' | 'check';
+export type { UrlOriginMetadata, UrlReportKind } from './url-origin-provenance.js';
 declare const receiptBrand: unique symbol;
 /** An in-memory capability, never a serialized provenance assertion. */
 export interface UrlOriginReceipt { readonly [receiptBrand]: true }
@@ -30,10 +32,6 @@ export interface UrlWholeSourceBodyMetadata {
   readonly policies: { readonly baseSha256: string; readonly originSha256: string };
   readonly range: { readonly start: 0; readonly end: number };
   readonly digest: string; readonly bytes: number; readonly classes: readonly SessionContentClass[];
-}
-export interface UrlOriginMetadata {
-  readonly id: string; readonly digest: string; readonly bytes: number;
-  readonly classes: readonly SessionContentClass[]; readonly originIds: readonly string[];
 }
 export interface UrlOriginLedgerOptions {
   readonly runId: string; readonly record: RecordedRunConfig; readonly screen: DossierScreen;
@@ -104,7 +102,9 @@ function create(given: UrlOriginLedgerOptions) {
   const classification = policy['classification'];
   const entries = new WeakMap<UrlOriginReceipt, Entry>(), artifacts = new Map<string, Entry>(), plans: UrlPlannedOrigin[] = [];
   const wholeBodies = new WeakMap<UrlWholeSourceBody, UrlWholeSourceBodyMetadata>(), wholeIdentities = new Map<string, UrlWholeSourceBody>();
+  const issuedById = new Map<string, UrlOriginReceipt>();
   const registry = new Map<string, { readonly kind: UrlRootOriginKind; readonly digest: string; readonly bytes: number }>();
+  const lineage = new WeakMap<UrlOriginReceipt, { key: string; parents: readonly UrlOriginReceipt[]; derivation: UrlOriginDerivation | null; historical?: { readonly graph: UrlOriginProvenance; readonly key: string } }>();
   let count = 0, storedBytes = 0;
   const live = (): void => { if (current() !== true) fail(); };
   function snapshot(bytes: Uint8Array, maximum = limits.itemBytes): Uint8Array {
@@ -133,7 +133,8 @@ function create(given: UrlOriginLedgerOptions) {
     // private entries and again at issuance after screening and validation.
     return receipts.map(lookup);
   }
-  function issue(bytes: Uint8Array, classes: readonly SessionContentClass[], originIds: readonly string[], plan?: { readonly id: string; readonly species: UrlPlannedOrigin['species'] }): UrlOriginReceipt {
+  function issue(bytes: Uint8Array, classes: readonly SessionContentClass[], originIds: readonly string[], plan?: { readonly id: string; readonly species: UrlPlannedOrigin['species'] },
+    provenance?: { readonly parents: readonly UrlOriginReceipt[]; readonly derivation: UrlOriginDerivation }): UrlOriginReceipt {
     live(); if (bytes.length > limits.itemBytes) fail(); if (++count > limits.receipts || (storedBytes += bytes.length) > limits.bytes) fail();
     const receipt = Object.freeze({}) as UrlOriginReceipt;
     const receiptId = plan?.id ?? `origin:item-${sha256(canonical([runId, count, sha256(bytes)])).slice(0, 32)}`;
@@ -144,7 +145,9 @@ function create(given: UrlOriginLedgerOptions) {
       if (existing && canonical(existing) !== canonical(declaration)) fail();
       if (!existing) plans.push(declaration);
     }
-    entries.set(receipt, value); return receipt;
+    entries.set(receipt, value); issuedById.set(value.id, receipt);
+    lineage.set(receipt, { key: `node-${count}`, parents: provenance?.parents ?? [], derivation: provenance?.derivation ?? null });
+    return receipt;
   }
   const references = (value: Entry): readonly string[] => plans.some(plan => plan.id === value.id) ? [value.id] : value.originIds;
   function inheritedOrigins(inherited: readonly Entry[], reportKind?: UrlReportKind): Pick<SessionToolOrigins, 'classes' | 'originIds'> {
@@ -159,7 +162,8 @@ function create(given: UrlOriginLedgerOptions) {
     }
     const { classes, originIds } = inheritedOrigins(inherited, reportKind);
     const nextId = `origin:item-${sha256(canonical([runId, count + 1, sha256(b)])).slice(0, 32)}`;
-    return issue(b, classes, originIds, declaration && originIds.every(parent => plans.some(plan => plan.id === parent)) ? { id: nextId, species: reportKind === undefined || reportKind === 'draft' ? 'composed-role-input-or-broker-result' : 'role-report-or-verdict' } : undefined);
+    return issue(b, classes, originIds, declaration && originIds.every(parent => plans.some(plan => plan.id === parent)) ? { id: nextId, species: reportKind === undefined || reportKind === 'draft' ? 'composed-role-input-or-broker-result' : 'role-report-or-verdict' } : undefined, { parents: givenParents,
+      derivation: reportKind === undefined ? { kind: 'composition' } : { kind: 'report', report: reportKind, role: role! } });
   }
   const fixedReceipts = new Map<string, UrlOriginReceipt>();
   for (const fixed of given.fixed) {
@@ -167,7 +171,7 @@ function create(given: UrlOriginLedgerOptions) {
     const bytes = snapshot(fixed.bytes as Uint8Array); safe(bytes); const kind = fixed.kind as UrlRootOriginKind;
     registry.set(fixed.id, { kind, digest: sha256(bytes), bytes: bytes.length });
     // Root entries have no parents; their own id is returned by origins(), not a self-edge in plannedOrigins.
-    fixedReceipts.set(fixed.id, issue(bytes, [ROOTS[kind][1]], [], { id: fixed.id, species: ROOTS[kind][0] }));
+    fixedReceipts.set(fixed.id, issue(bytes, [ROOTS[kind][1]], [], { id: fixed.id, species: ROOTS[kind][0] }, { parents: [], derivation: { kind: 'fixed', id: fixed.id } }));
   }
   async function planRendererScaffold(renderer: UrlLoadedRenderer): Promise<UrlOriginReceipt> {
     const species = 'authenticated-local-renderer-design-product-and-inert-view';
@@ -179,7 +183,7 @@ function create(given: UrlOriginLedgerOptions) {
     const bytes = Buffer.from(canonical({ format: 'polaris-url-renderer-scaffold/1', renderer: renderer.identity,
       sink: PAGE_SINK_CONTRACT }));
     safe(bytes);
-    return issue(bytes, ['code-content'], [], { id: 'origin:renderer-scaffold', species });
+    return issue(bytes, ['code-content'], [], { id: 'origin:renderer-scaffold', species }, { parents: [], derivation: { kind: 'renderer' } });
   }
   const screenedMetadata = new WeakMap<Entry, UrlOriginMetadata>();
   const metadataOf = (entry: Entry): UrlOriginMetadata => {
@@ -295,7 +299,8 @@ function create(given: UrlOriginLedgerOptions) {
     const structureId = `origin:whole-structure-${sha256(structuralBytes).slice(0, 32)}`;
     issue(body.bytes, [body.contentClass], [], { id: bodyId, species: 'pinned-repository-body' }); check();
     issue(structuralBytes, ['code-structure'], [], { id: structureId, species: 'structural-source-and-tool-metadata' }); check();
-    const receipt = issue(body.bytes, [body.contentClass, 'code-structure'], [bodyId, structureId]);
+    const receipt = issue(body.bytes, [body.contentClass, 'code-structure'], [bodyId, structureId], undefined,
+      { parents: [], derivation: { kind: 'source-whole', path: file, objectId } });
     const metadata: UrlWholeSourceBodyMetadata = deepFreeze({ origin: receipt, runId, sourceBindingSha256: sourceBindingSha256(record.subject),
       path: file, objectId, pinnedCommit: record.subject.pinnedRevision.commit, policies: { baseSha256: screen.policySha256, originSha256: origin.sha256 },
       range: { start: 0, end: body.bytes.length }, digest, bytes: body.bytes.length, classes: entry(receipt).classes });
@@ -333,7 +338,8 @@ function create(given: UrlOriginLedgerOptions) {
         issue(bytes, [contentClass], [], { id: bodyId, species: 'pinned-repository-body' });
         issue(structureBytes, ['code-structure'], [], { id: structureId, species: 'structural-source-and-tool-metadata' });
       }
-      return { receipt: issue(bytes, [contentClass, 'code-structure'], [bodyId, structureId]), reply: { ok: true, kind: 'source-span', path: file, text: Buffer.from(bytes).toString('utf8'), offset,
+      return { receipt: issue(bytes, [contentClass, 'code-structure'], [bodyId, structureId], undefined,
+        { parents: [], derivation: { kind: 'source-span', path: file, objectId, offset, limit } }), reply: { ok: true, kind: 'source-span', path: file, text: Buffer.from(bytes).toString('utf8'), offset,
         nextOffset: offset + limit < lines.length ? offset + limit : null, contentClass, redacted: false, provenance: { commit: record.subject.pinnedRevision.commit, objectId } } };
     } catch { return fail(); }
   }
@@ -363,7 +369,7 @@ function create(given: UrlOriginLedgerOptions) {
           if (role !== 'author' && role !== 'inventory') fail();
           const verified = await verifiedSpan(receipt.toolInput as { path: string; offset?: number; limit?: number });
           if (canonical(verified.reply) !== receipt.canonicalText) fail();
-          safeSourceReply(bytes); const parent = entry(verified.receipt); result = issue(bytes, parent.classes, parent.originIds);
+          safeSourceReply(bytes); const parent = entry(verified.receipt); result = issue(bytes, parent.classes, parent.originIds, undefined, { parents: [verified.receipt], derivation: { kind: 'source-reply' } });
         } else if (receipt.toolName === 'mcp__syzygy__source_read' && reply['kind'] === 'source-paths') {
           const request = receipt.toolInput, offset = request['offset'] ?? 0, limit = request['limit'] ?? 200;
           if ((role !== 'author' && role !== 'inventory') || !isRecord(request) || Object.keys(request).some(key => !['path', 'offset', 'limit'].includes(key))
@@ -375,7 +381,8 @@ function create(given: UrlOriginLedgerOptions) {
           const selected = paths.slice(Number(offset), Number(offset) + Number(limit));
           if (canonical({ ok: true, kind: 'source-paths', paths: selected, offset, nextOffset: Number(offset) + selected.length < paths.length ? Number(offset) + selected.length : null,
             scope: 'path-classification-only; bodies may still be excluded', provenance: { commit: record.subject.pinnedRevision.commit, tree } }) !== receipt.canonicalText) fail();
-          safe(bytes); result = issue(bytes, ['code-structure'], [], { id: `origin:tree-${sha256(bytes).slice(0, 32)}`, species: 'structural-source-and-tool-metadata' });
+          safe(bytes); result = issue(bytes, ['code-structure'], [], { id: `origin:tree-${sha256(bytes).slice(0, 32)}`, species: 'structural-source-and-tool-metadata' },
+            { parents: [], derivation: { kind: 'source-tree', offset: Number(offset), limit: Number(limit) } });
         } else if (receipt.toolName === 'mcp__syzygy__artifact_read' && reply['kind'] === 'artifact') {
           if (!exact(receipt.toolInput, ['path']) || !exact(reply, ['ok', 'kind', 'path', 'text', 'sha256']) || typeof reply['text'] !== 'string' || typeof reply['path'] !== 'string'
             || reply['path'] !== receipt.toolInput['path']) fail();
@@ -411,7 +418,8 @@ function create(given: UrlOriginLedgerOptions) {
               : role === 'fidelity' && /^round-[1-9][0-9]{0,5}\/verdict\.json$/u.test(file) ? 'fidelity-verdict'
                 : role === 'design' && /^round-[1-9][0-9]{0,5}\/verdict\.json$/u.test(file) ? 'design-verdict' : fail();
           }
-          const provider = issue(payloadBytes, union([admission.classes, ['derived-composites']]), admission.originIds);
+          const provider = issue(payloadBytes, union([admission.classes, ['derived-composites']]), admission.originIds, undefined,
+            { parents: [], derivation: { kind: 'authenticated-provider-output' } });
           const output = derived(payloadBytes, [provider], kind, role, false);
           result = derived(bytes, [output], undefined, undefined, false);
           bindArtifact({ role, path: file, bytes: payloadBytes, receipt: output });
@@ -421,8 +429,106 @@ function create(given: UrlOriginLedgerOptions) {
     };
     return Object.freeze({ onToolReceipt, artifactOrigins: (file: string, bytes: Uint8Array) => artifactOrigins(role, file, bytes) });
   }
+  function captureProvenance(receipts: readonly UrlOriginReceipt[]): { readonly graph: UrlOriginProvenance; readonly keys: readonly string[] } {
+    live();
+    const nodes: UrlOriginProvenanceNode[] = [], seen = new Map<string | UrlOriginReceipt, string>();
+    const historicalGraphs = new Map<UrlOriginProvenance, Map<string, string>>();
+    const append = (metadata: UrlOriginMetadata, parents: readonly string[], derivation: UrlOriginDerivation): string => {
+      if (nodes.length >= limits.receipts) fail();
+      const key = `node-${nodes.length + 1}`; nodes.push({ key, metadata, parents, derivation }); return key;
+    };
+    const historical = (graph: UrlOriginProvenance, key: string): string => {
+      let aliases = historicalGraphs.get(graph);
+      if (!aliases) { aliases = new Map(); historicalGraphs.set(graph, aliases); }
+      const prior = aliases.get(key); if (prior) return prior;
+      const node = graph.nodes.find(value => value.key === key); if (!node) fail();
+      const result = append(node.metadata, node.parents.map(parent => historical(graph, parent)), node.derivation);
+      aliases.set(key, result); return result;
+    };
+    const visit = (receipt: UrlOriginReceipt): string => {
+      const value = entry(receipt), provenance = lineage.get(receipt);
+      if (!provenance) fail();
+      const prior = seen.get(receipt); if (prior) return prior;
+      const key = provenance.historical !== undefined ? historical(provenance.historical.graph, provenance.historical.key)
+        : provenance.derivation === null ? fail() : append(metadataOf(value), provenance.parents.map(visit), provenance.derivation);
+      seen.set(receipt, key); return key;
+    };
+    const keys = receipts.map(visit);
+    live(); return copy({ graph: { format: 'polaris-url-origin-provenance/1', nodes }, keys });
+  }
+  async function restoreFrozenOrigins(capability: UrlVerifiedRecoveryProducts, expected: {
+    readonly run: string; readonly coreSha256: string; readonly declarationSha256: string;
+  }, waitForSamples: () => Promise<boolean>) {
+    const transfer = takeUrlRecoveryProducts(capability, { ...expected, current });
+    const history = transfer.history, graph = history.provenance;
+    const sameSubject = (receipt: UrlOriginReceipt, metadata: UrlOriginMetadata): void => {
+      const value = entry(receipt);
+      if (value.digest !== metadata.digest || value.bytes !== metadata.bytes
+        || canonical(value.classes) !== canonical(metadata.classes) || canonical(value.originIds) !== canonical(metadata.originIds)) fail();
+    };
+    for (const node of graph.nodes) {
+      const d = node.derivation;
+      if (!(await waitForSamples())) fail(); live();
+      if (d.kind === 'fixed' || d.kind === 'renderer') {
+        const receipt = d.kind === 'fixed' ? fixedReceipts.get(d.id) : issuedById.get('origin:renderer-scaffold');
+        if (!receipt) fail(); sameSubject(receipt, node.metadata);
+      } else if (d.kind === 'source-span') {
+        const result = await verifiedSpan({ path: d.path, expectedObjectId: d.objectId, offset: d.offset, limit: d.limit });
+        sameSubject(result.receipt, node.metadata);
+      } else if (d.kind === 'source-whole') {
+        const body = await sourceOperation(check => verifiedSource(d.path, check));
+        if (body.objectId !== d.objectId) fail();
+        const checked = await verifyWholeSourceBody({ path: d.path, objectId: d.objectId, bytes: body.bytes });
+        sameSubject(inspectWholeSourceBody(checked).origin, node.metadata);
+      } else if (d.kind === 'source-tree') {
+        const result = await sourceOperation(async check => {
+          const reader = openReader(), tree = await reader.tree(); check();
+          const listed = await reader.listTree(); check();
+          const paths = listed.filter(item => ['100644', '100755'].includes(item.mode) && relative(item.path)
+            && screen.screenBody(item.path) === undefined && screen.screenPath(item.path) === undefined
+            && screen.contentClass(item.path) !== undefined).map(item => item.path).sort();
+          const selected = paths.slice(d.offset, d.offset + d.limit);
+          return Buffer.from(canonical({ ok: true, kind: 'source-paths', paths: selected, offset: d.offset,
+            nextOffset: d.offset + selected.length < paths.length ? d.offset + selected.length : null,
+            scope: 'path-classification-only; bodies may still be excluded', provenance: { commit: record.subject.pinnedRevision.commit, tree } }));
+        });
+        safe(result);
+        if (sha256(result) !== node.metadata.digest || result.length !== node.metadata.bytes || canonical(node.metadata.classes) !== canonical(['code-structure'])) fail();
+      }
+      // Composition/report/provider nodes are protected historical derivation
+      // metadata. Their old capabilities are never recreated or exposed.
+    }
+    if (!(await waitForSamples())) fail(); transfer.revalidate();
+    const restored = new Map<string, UrlOriginReceipt>();
+    return Object.freeze({ history, deadline: transfer.deadline, revalidate: transfer.revalidate,
+      receipt: (file: string, bytes: Uint8Array, role?: Role): UrlOriginReceipt => guarded(() => {
+        live(); const subject = role === undefined ? history.records.find(record => record.path === file)
+          : history.artifacts.find(record => record.role === role && record.path === file);
+        if (!subject || bytes.length !== subject.bytes || sha256(bytes) !== subject.sha256) fail();
+        const prior = restored.get(subject.origin); if (prior) { assertSubject(entry(prior), bytes); return prior; }
+        const node = graph.nodes.find(value => value.key === subject.origin); if (!node) fail();
+        safe(snapshot(bytes));
+        const receipt = issue(bytes, node.metadata.classes, node.metadata.originIds);
+        const p = lineage.get(receipt)!;
+        lineage.set(receipt, { ...p, historical: { graph, key: node.key } }); restored.set(subject.origin, receipt);
+        return receipt;
+      }),
+    });
+  }
   live();
   return Object.freeze({
+    captureProvenance, restoreFrozenOrigins,
+    captureArtifactBindings: () => guarded(() => { live(); return Object.freeze([...artifacts].map(([key, value]) => {
+      const colon = key.indexOf(':');
+      return Object.freeze({ role: key.slice(0, colon) as Role, path: key.slice(colon + 1), receipt: value.receipt });
+    })); }),
+    validateReport: (role: Role, kind: UrlReportKind, bytes: Uint8Array): void => guarded(() => {
+      live(); const text = safe(snapshot(bytes));
+      if (role !== REPORT_ROLES[kind] || schemas[kind]?.(parseBoundedJson(text, JSON_LIMITS), role) !== true) fail();
+    }),
+    boundArtifact: (role: Role, file: string, bytes: Uint8Array): UrlOriginReceipt => guarded(() => {
+      live(); const value = artifacts.get(`${role}:${file}`); if (!value) fail(); assertSubject(value, bytes); return value.receipt;
+    }),
     fixed: (name: string, bytes: Uint8Array): UrlOriginReceipt => guarded(() => { live(); const registered = registry.get(name), receipt = fixedReceipts.get(name); if (!registered || !receipt) return fail(); origins(receipt, bytes); return receipt; }),
     planRendererScaffold,
     sourceSpan: async (input: Parameters<typeof verifiedSpan>[0]): Promise<UrlOriginReceipt> => (await verifiedSpan(input)).receipt,
