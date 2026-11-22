@@ -57,6 +57,7 @@ export interface UrlVerifiedAuditLaunches {
   readonly runId: string; readonly sourceBindingSha256: string; readonly basePolicySha256: string;
   readonly originPolicySha256: string; readonly pin: string; readonly principal: string;
   readonly helperLaunchFiles: Readonly<Partial<Record<UrlLaunchHistoryRole, string>>>;
+  readonly ordered: readonly UrlOrderedDesignHistoryExpected[];
 }
 const verifiedHistories = new WeakMap<VerifiedUrlSessionAuditHistory, UrlVerifiedAuditLaunches>();
 /** Metadata only from the exact completed protected cold read, never a copied
@@ -218,7 +219,7 @@ export async function verifyUrlSessionAuditHistory(given: UrlSessionAuditHistory
       records: rows.length, bytes: expected.durableBytes, tipSha256: expected.tipSha256, ...counts });
     verifiedHistories.set(result, deepFreeze({ runId: reference.scope.binding.run, sourceBindingSha256: reference.scope.binding.sourceBinding,
       basePolicySha256: reference.scope.binding.policy, originPolicySha256: reference.scope.originPolicySha256,
-      pin: reference.payload.pin, principal: reference.payload.principal, helperLaunchFiles }));
+      pin: reference.payload.pin, principal: reference.payload.principal, helperLaunchFiles, ordered: expected.ordered ?? [] }));
     return result;
   };
   try {

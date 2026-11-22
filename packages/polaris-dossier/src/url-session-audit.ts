@@ -3,12 +3,15 @@ import { lstat, open, realpath, type FileHandle } from 'node:fs/promises';
 import path from 'node:path';
 import { encodeCanonicalJson, parseBoundedJson } from '@syzygy/polaris-generation-core/live';
 import { deepFreeze, isRecord, sha256 } from '@syzygy/support';
+import { RUN_LAYOUT } from './state-directory.js';
 import { CLARIFICATION_ANSWER_KINDS } from './draft-schema.js';
 import { SESSION_CONTENT_CLASSES, SESSION_TOOLS, type SessionAdmission, type SessionBinding, type SessionContentClass } from './session-egress-policy.js';
 import { isNativeSessionProfile, isOrderedDesignSessionProfile, type NativeSessionProfile } from './session-profile.js';
 import type { DossierScreen } from './screen.js';
 import type { UrlSessionControlAudit } from './session-control.js';
-import type { UrlSessionAuditHistoryExpected } from './url-session-audit-history.js';
+import { readVerifiedUrlAuditLaunches, type UrlSessionAuditHistoryExpected } from './url-session-audit-history.js';
+import { isClaimedStoppedUrlRun, type verifyStoppedUrlRun } from './url-recovery.js';
+import { snapshotProductFile } from './url-product-reads.js';
 import type { UrlLaunchLimits, UrlSessionLaunchOptions, UrlSessionLaunchOutcome } from './session-launch.js';
 import { isSessionTokenCount, SESSION_COUNT_RESPONSE_MAX_BYTES, SESSION_COUNT_TOKENS_PATH, SESSION_RELAY_EVENTS,
   type SessionAuditEvent } from './session-relay.js';
@@ -172,6 +175,67 @@ export function assertUrlDesignRenderContinuationCurrent(continuation: UrlDesign
   const current = designRenderContinuations.get(continuation);
   if (!current) throw refused();
   current();
+}
+
+/** A genuine consumed stop claim plus its independently checked cold audit
+ * may continue only the final render. Fresh product inspection and physical
+ * site/report checks replace expired process/transport capabilities. No old
+ * receipt is entered in the live delivery or ordered-writer registries. */
+export async function recoverUrlDesignRenderContinuation(input: {
+  readonly verified: Extract<Awaited<ReturnType<typeof verifyStoppedUrlRun>>, { ok: true }>;
+  readonly claim: unknown; readonly product: ValidatedUrlDesignProduct;
+  readonly number: number; readonly site: number;
+}): Promise<UrlDesignRenderContinuation | null> {
+  try {
+    const { verified, claim, product, number, site } = input;
+    if (!isClaimedStoppedUrlRun(verified, claim)) return null;
+    const context = verified.checkedContext;
+    const binding = { run: verified.boundary.record.run, runId: verified.boundary.record.runId,
+      pinnedRevision: verified.boundary.record.sourcePin };
+    const histories = verified.verifiedAudits.map(readVerifiedUrlAuditLaunches);
+    if (histories.some(history => history === null)) return null;
+    const attempts = histories.flatMap(history => history!.ordered);
+    const last = attempts.at(-1);
+    if (!last || last.disposition.kind !== 'eligible' || last.disposition.checked.number !== number
+      || last.receipt.identity.site !== site) return null;
+    const disposition = last.disposition, receipt = last.receipt;
+    const original = await inspectUrlDesignProduct(product, binding);
+    if (!original || !isClaimedStoppedUrlRun(verified, claim) || !isUrlDesignProductLeaseOpen(product)) return null;
+    const identity = receipt.identity;
+    const { deadline: _oldDeadline, ...inputs } = original.products;
+    const same = (left: unknown, right: unknown): boolean => designIdentityDigest(left) === designIdentityDigest(right);
+    if (original.products.operation !== 'render' || original.rawActive.status !== 'failed'
+      || original.draftRevision !== identity.draftRevision || !same(original.original, identity.original)
+      || !same(original.payload, identity.payload) || !same(original.view, identity.view)
+      || original.output.files !== identity.files || original.output.pages !== identity.pages
+      || designIdentityDigest(original.renderer) !== identity.rendererSha256
+      || original.basePolicy.sha256 !== identity.basePolicySha256 || original.originPolicy.sha256 !== identity.originPolicySha256
+      || original.profile.sha256 !== identity.registryProfileSha256
+      || designIdentityDigest([original.basePolicy, original.originPolicy]) !== identity.policyBindingsSha256
+      || original.parents.length !== identity.parentCount || designIdentityDigest(original.parents) !== identity.parentsSha256
+      || designIdentityDigest(inputs) !== identity.inputsSha256 || designIdentityDigest(original.output) !== identity.storedPopulationSha256) return null;
+    const deadline = Math.min(context.deadline, original.products.deadline, Date.now() + URL_SESSION_AUDIT_LIMITS.milliseconds);
+    const current = (): boolean => Date.now() < deadline && isClaimedStoppedUrlRun(verified, claim)
+      && context.current();
+    const check = (): void => {
+      if (!current()) throw refused();
+      const checked = disposition.checked;
+      for (const [file, digest] of [[`reviews/checks/design-verdict-${number}.json`, checked.checkSha256],
+        [`reviews/design-verdict-${number}.json`, checked.verdictSha256]] as const) {
+        const snapshot = snapshotProductFile(binding.run, file, 2_097_152, () => { if (!current()) throw refused(); });
+        if (snapshot.bytes === null || sha256(snapshot.bytes) !== digest) throw refused();
+      }
+      if (checkStoredUrlRender(binding.run, path.join(binding.run, RUN_LAYOUT.site, String(site)), original.output, current) !== site
+        || !current()) throw refused();
+    };
+    check();
+    const result: UrlDesignRenderContinuation = deepFreeze({ binding, checked: disposition.checked,
+      delivery: receipt as UrlDesignDeliveryAuditRecord, verdictEventSha256: disposition.verdictEventSha256,
+      original, earlierRounds: attempts.filter(attempt => attempt.receipt.identity.round < identity.round)
+        .map(attempt => attempt.receipt.identity.round), deadline });
+    designRenderContinuations.set(result, check);
+    return result;
+  } catch { return null; }
 }
 
 /** A final render adds its checked design records to the already reviewed
