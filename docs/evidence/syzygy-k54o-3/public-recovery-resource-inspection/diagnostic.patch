@@ -1,0 +1,199 @@
+diff --git a/packages/polaris-dossier/src/session-launch.ts b/packages/polaris-dossier/src/session-launch.ts
+index 8ed992cac..84dd07c5b 100644
+--- a/packages/polaris-dossier/src/session-launch.ts
++++ b/packages/polaris-dossier/src/session-launch.ts
+@@ -1,9 +1,10 @@
+ import { spawn } from 'node:child_process';
+ import { createHash } from 'node:crypto';
+-import { constants, type Stats } from 'node:fs';
++import { appendFileSync, constants, type Stats } from 'node:fs';
+ import { chmod, lstat, open, opendir, readdir, realpath } from 'node:fs/promises';
+ import { createServer, type Server, type Socket } from 'node:net';
+ import path from 'node:path';
++import { monitorEventLoopDelay } from 'node:perf_hooks';
+ import { setImmediate as yieldToPoll } from 'node:timers/promises';
+ import { encodeCanonicalJson } from '@syzygy/polaris-generation-core/live';
+ import { deepFreeze, sha256 } from '@syzygy/support';
+@@ -21,16 +22,31 @@ export type UrlLaunchLimits = { readonly [K in keyof typeof URL_LAUNCH_LIMITS]:
+ const canonical = (value: unknown): string => encodeCanonicalJson(value, { maxBytes: 2_097_152, maxNodes: 65_536, maxDepth: 32 });
+ const TOOLS = ['source_read', 'artifact_read', 'artifact_write', 'dossier_step'] as const;
+ const refused = (): Error => new Error('url-session-launch-refused');
++const traceFile = process.env['SYZYGY_COMPOSED_INSPECTION_TRACE'];
++const eventDelay = traceFile ? monitorEventLoopDelay({ resolution: 10 }) : undefined;
++eventDelay?.enable();
++let launchTraceSequence = 0;
++const traceTime = (ms: number): number => Math.round(ms * 10) / 10;
++function writeInspectionTrace(role: Prepared['view']['role'], launch: number, event: string,
++  values: Readonly<Record<string, string | number | boolean | null>> = {}): void {
++  if (!traceFile) return;
++  try { appendFileSync(traceFile, JSON.stringify({ role, launch, event, at: traceTime(performance.now()), ...values }) + '\n', { mode: 0o600 }); } catch {}
++}
++function inspectionErrno(error: unknown): string {
++  const code = (error as NodeJS.ErrnoException | undefined)?.code;
++  return code === 'ENOENT' || code === 'ENOTDIR' || code === 'EACCES' || code === 'EPERM' || code === 'ELOOP'
++    || code === 'EBADF' || code === 'EMFILE' || code === 'ENFILE' || code === 'ESRCH' ? code : 'other';
++}
+ const delay = (ms: number): Promise<void> => new Promise(resolve => setTimeout(resolve, ms));
+ /** Bounds waiting, not cancellation of an arbitrary caller-owned callback. */
+-async function bounded<T>(operation: () => T | Promise<T>, milliseconds: number): Promise<T> {
++async function bounded<T>(operation: () => T | Promise<T>, milliseconds: number, onExpire?: () => void): Promise<T> {
+   const deadline = performance.now() + Math.max(1, milliseconds);
+   let timer: ReturnType<typeof setTimeout> | undefined;
+   const timeout = new Promise<never>((_resolve, reject) => {
+     const expire = (): void => {
+       // A timer callback can arrive early when its clock rounds the delay.
+       const remaining = deadline - performance.now();
+-      if (remaining <= 0) reject(refused());
++      if (remaining <= 0) { onExpire?.(); reject(refused()); }
+       else timer = setTimeout(expire, Math.ceil(remaining));
+     };
+     expire();
+@@ -213,15 +229,18 @@ export async function prepareRestrictedUrlSession(input: UrlSessionLaunchOptions
+ const STORAGE_STAT_BATCH = 4;
+ /** Descriptor-anchored, entry/depth/time bounded logical-file census. Symlink,
+  * special and multiply linked entries fail closed; it is sampled, not a quota. */
+-async function storage(roots: readonly string[], limits: UrlLaunchLimits, check: () => void): Promise<number> {
++type StorageDetail = 'depth-entries' | 'child-disappeared-open' | 'child-disappeared-stat' | 'multiple-disappearances'
++  | 'type-or-link' | 'entries' | 'retry';
++async function storage(roots: readonly string[], limits: UrlLaunchLimits, check: () => void,
++  detail: (reason: StorageDetail, entries: number, bytes: number) => void): Promise<number> {
+   let bytes = 0, entries = 0;
+   const entryDisappeared = Symbol();
+   const walk = async (file: string, depth: number): Promise<void> => {
+-    check(); if (depth > 32 || ++entries > limits.entries) throw refused();
++    check(); if (depth > 32 || ++entries > limits.entries) { detail('depth-entries', entries, bytes); throw refused(); }
+     const handle = await open(file, constants.O_RDONLY | constants.O_DIRECTORY | constants.O_NOFOLLOW).catch((error: NodeJS.ErrnoException) => {
+       // An enumerated child can disappear between lstat and open. Roots
+       // must remain available, and other open errors still stop inspection.
+-      if (depth > 0 && error.code === 'ENOENT') throw entryDisappeared;
++      if (depth > 0 && error.code === 'ENOENT') { detail('child-disappeared-open', entries, bytes); throw entryDisappeared; }
+       throw error;
+     });
+     try {
+@@ -240,13 +259,13 @@ async function storage(roots: readonly string[], limits: UrlLaunchLimits, check:
+             if (!disappeared(sample)) throw sample.reason;
+             // A second observed disappearance exhausts the retry even if
+             // both names vanished from the same batch.
+-            if (samples.slice(index + 1).some(disappeared)) throw refused();
+-            throw entryDisappeared;
++            if (samples.slice(index + 1).some(disappeared)) { detail('multiple-disappearances', entries, bytes); throw refused(); }
++            detail('child-disappeared-stat', entries, bytes); throw entryDisappeared;
+           }
+           const stat = sample.value;
+           if (stat.isDirectory()) await walk(batch[index]!, depth + 1);
+           else if (stat.isFile() && stat.nlink === 1) bytes += stat.size;
+-          else throw refused();
++          else { detail('type-or-link', entries, bytes); throw refused(); }
+           if (!Number.isSafeInteger(bytes) || bytes > limits.storageBytes) return;
+         }
+         batch.length = 0;
+@@ -259,7 +278,7 @@ async function storage(roots: readonly string[], limits: UrlLaunchLimits, check:
+           await inspect();
+           if (bytes > limits.storageBytes) return;
+         }
+-        if (++entries > limits.entries) throw refused();
++        if (++entries > limits.entries) { detail('entries', entries, bytes); throw refused(); }
+         batch.push(path.join(base, item.name));
+         if (!item.isFile() || batch.length === STORAGE_STAT_BATCH || entries === limits.entries) {
+           await inspect();
+@@ -280,6 +299,7 @@ async function storage(roots: readonly string[], limits: UrlLaunchLimits, check:
+   catch (error) {
+     if (error !== entryDisappeared) throw error;
+     // Discard the partial count. Both walks share the original time and entry budgets.
++    detail('retry', entries, bytes);
+     bytes = 0;
+     return measure();
+   }
+@@ -368,6 +388,10 @@ export async function launchRestrictedUrlSession(input: { readonly preparation:
+   let reason: UrlSessionLaunchOutcome['outcome'] = 'exited', finishedCapture = false, exited = false, closed = false;
+   let exitCode: number | null = null, signalName: string | null = null, sampledStorageBytes: number | null = null, peakProcesses: number | null = null;
+   let wake!: () => void; const terminal = new Promise<void>(resolve => { wake = resolve; });
++  const launchTrace = ++launchTraceSequence;
++  const trace = (event: string, values?: Readonly<Record<string, string | number | boolean | null>>): void =>
++    writeInspectionTrace(view.role, launchTrace, event, values);
++  trace('spawn', { inspectionBound: limits.inspectionMilliseconds, cadence: limits.sampleMilliseconds });
+   let killTimer: ReturnType<typeof setTimeout> | undefined, endTimer: ReturnType<typeof setTimeout> | undefined;
+   const signal = (name: NodeJS.Signals): void => { try { if (child.pid !== undefined) process.kill(-child.pid, name); } catch { /* Independent verification below. */ } };
+   const stop = (why: UrlSessionLaunchOutcome['outcome']): void => {
+@@ -376,6 +400,7 @@ export async function launchRestrictedUrlSession(input: { readonly preparation:
+     // are still closing. A cleanup request must preserve that terminal result.
+     if (why !== 'stopped' || !exited) reason = why;
+     if (endTimer !== undefined) return;
++    trace('first-terminal', { reason, requested: why, exited, finishedCapture });
+     signal('SIGTERM');
+     killTimer = setTimeout(() => signal('SIGKILL'), Math.min(250, limits.cleanupMilliseconds));
+     endTimer = setTimeout(wake, limits.cleanupMilliseconds);
+@@ -386,27 +411,48 @@ export async function launchRestrictedUrlSession(input: { readonly preparation:
+     if (outBytes + errBytes > limits.outputBytes) stop('output-limit');
+   };
+   child.stdout!.on('data', (bytes: Buffer) => capture(bytes, true)); child.stderr!.on('data', (bytes: Buffer) => capture(bytes, false));
+-  child.once('error', () => { reason = 'launch-refused'; wake(); });
+-  child.once('exit', (code, sig) => { exited = true; exitCode = code; signalName = sig; });
++  child.once('error', () => { reason = 'launch-refused'; trace('child-error'); wake(); });
++  child.once('exit', (code, sig) => { exited = true; exitCode = code; signalName = sig; trace('child-exit', { reason, code, signal: sig === 'SIGTERM' || sig === 'SIGKILL' ? sig : sig === null ? null : 'other' }); });
+   child.once('close', () => { closed = true; wake(); });
+   let pendingSample: Promise<void> | undefined;
++  let sampleSequence = 0, previousSampleAt = performance.now();
+   const sample = setInterval(() => {
+     if (exited || finishedCapture || pendingSample !== undefined || reason !== 'exited') return;
+     let sampleActive = true;
+-    const sampleBegan = performance.now();
++    const sampleBegan = performance.now(), id = ++sampleSequence;
++    const gap = traceTime(sampleBegan - previousSampleAt); previousSampleAt = sampleBegan;
++    const periodic = id === 1 || id % 10 === 0;
++    const elapsed = (): number => traceTime(performance.now() - sampleBegan);
++    let stage = 'storage', firstCheck: string | null = null, timerExpired = false;
++    let storageMillis: number | null = null, processMillis: number | null = null, currentBegin: number | null = null;
++    let currentSyncMillis: number | null = null, currentMillis: number | null = null;
++    let processError: string | null = null, storageDetail: StorageDetail | null = null, storageEntries: number | null = null, storageBytesSeen: number | null = null;
++    const snapshot = (event: string, extra: Readonly<Record<string, string | number | boolean | null>> = {}): void =>
++      trace(event, { id, began: traceTime(sampleBegan), gap, elapsed: elapsed(), bound: limits.inspectionMilliseconds,
++        stage, firstCheck, timerExpired, sampleActive, exited, finishedCapture, reason, storageMillis, processMillis, currentBegin,
++        currentSyncMillis, currentMillis, processError, storageDetail, storageEntries, storageBytesSeen,
++        eventLoopMax: traceTime((eventDelay?.max ?? 0) / 1e6), ...extra });
++    if (periodic) snapshot('sample-start');
+     const checkSample = (): void => {
+-      if (!sampleActive || exited || finishedCapture || reason !== 'exited' || performance.now() - sampleBegan >= limits.inspectionMilliseconds) throw refused();
++      if (!sampleActive || exited || finishedCapture || reason !== 'exited' || performance.now() - sampleBegan >= limits.inspectionMilliseconds) {
++        firstCheck ??= !sampleActive ? 'inactive' : exited ? 'child-exited' : finishedCapture ? 'capture-finished' : reason !== 'exited' ? 'stopping' : 'deadline';
++        throw refused();
++      }
+     };
+     // Cadence and completion are separate finite limits. Other native roles
+     // and the shared host may delay descriptor IO; admit no partial census.
+     pendingSample = bounded(async () => {
+       // The walks share a deadline. Keep storage's earlier refusal and
+       // publication order even if the process walk completes first.
+-      const processCount = child.pid === undefined ? undefined : descendants(child.pid, limits.processes, checkSample).catch(() => null);
+-      const storageBytes = await storage([view.inputs.homeDirectory, view.inputs.workDirectory], limits, checkSample);
++      const processCount = child.pid === undefined ? undefined : descendants(child.pid, limits.processes, checkSample)
++        .then(count => { processMillis = elapsed(); return count; }, error => { processMillis = elapsed(); processError = inspectionErrno(error); return null; });
++      const storageBytes = await storage([view.inputs.homeDirectory, view.inputs.workDirectory], limits, checkSample,
++        (detail, entries, bytes) => { storageDetail = detail; storageEntries = entries; storageBytesSeen = bytes; });
++      storageMillis = elapsed();
+       checkSample();
+       sampledStorageBytes = storageBytes;
+       if (sampledStorageBytes > limits.storageBytes) { stop('storage-limit'); return; }
++      stage = 'process';
+       if (processCount !== undefined) {
+         const count = await processCount;
+         checkSample();
+@@ -414,10 +460,15 @@ export async function launchRestrictedUrlSession(input: { readonly preparation:
+         peakProcesses = Math.max(peakProcesses ?? 0, count);
+         if (count > limits.processes) { stop('process-limit'); return; }
+       }
+-      const stillCurrent = await state.current();
++      stage = 'current';
++      const currentAt = performance.now(); currentBegin = elapsed();
++      const currentValue = state.current(); currentSyncMillis = traceTime(performance.now() - currentAt);
++      const stillCurrent = await currentValue; currentMillis = traceTime(performance.now() - currentAt);
+       checkSample();
+-      if (stillCurrent !== true) stop('inspection-failed');
+-    }, limits.inspectionMilliseconds).catch(() => { if (!exited && !finishedCapture) stop('inspection-failed'); })
++      if (stillCurrent !== true) { snapshot('current-false'); stop('inspection-failed'); }
++      else if (periodic || elapsed() >= limits.inspectionMilliseconds / 2 || storageDetail !== null) snapshot('sample-success');
++    }, limits.inspectionMilliseconds, () => { timerExpired = true; snapshot('timer-expired'); })
++      .catch(error => { snapshot('sample-refused', { errno: inspectionErrno(error) }); if (!exited && !finishedCapture) stop('inspection-failed'); })
+       .finally(() => { sampleActive = false; pendingSample = undefined; });
+   }, limits.sampleMilliseconds);
+   const wall = setTimeout(() => stop('wall-limit'), limits.milliseconds);

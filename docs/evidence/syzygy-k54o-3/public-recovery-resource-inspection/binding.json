@@ -1,0 +1,211 @@
+{
+  "subject": "be75f5a91dadb1b188561bc7600c45d61a1def9a",
+  "tree": "404958ee77c5d6585441246b961bfbe30f02bbea",
+  "source": {
+    "path": "packages/polaris-dossier/src/session-launch.ts",
+    "baseSha256": "f867296c11e4501220dafcfebc57374a65b93608d1cab4604d7125f16ad492a9",
+    "instrumentedSha256": "6e1d10169d9ff3d252492ec0341943b4587f06d404cad5052904eb14afefd535"
+  },
+  "artifacts": [
+    {
+      "path": "diagnostic.patch",
+      "bytes": 14470,
+      "sha256": "8c5ff015f6dace5669cdb491714939b55a22610cb3effde150e93c0fbb2590d5"
+    },
+    {
+      "path": "trace.jsonl",
+      "bytes": 93271,
+      "sha256": "879a61cb12fe9637037022e4f23f4b786b1f1993fa0eb40ec144e70984c2478c"
+    }
+  ],
+  "rawLogSha256": "ec680d621656cc36c3d6d670eba8e7bfa233129521161d2ab66afc31ef9532e2",
+  "invocation": "npx --no-install vitest run --project integration --maxWorkers=1 packages/polaris-dossier/src/render.test.ts packages/polaris-dossier/src/url-run-composed.test.ts -t \"actual URL produc|pipeline to stop-resume$\"",
+  "testResult": [
+    "Test Files  1 failed | 1 passed (2)",
+    "Tests  1 failed | 3 passed | 119 skipped (123)",
+    "Duration  234.93s (transform 3.77s, setup 18ms, collect 5.18s, tests 228.91s, environment 0ms, prepare 256ms)"
+  ],
+  "launch": {
+    "role": "design",
+    "launch": 5,
+    "event": "spawn",
+    "at": 201970.8,
+    "inspectionBound": 1000,
+    "cadence": 200
+  },
+  "samples": [
+    {
+      "role": "design",
+      "launch": 5,
+      "event": "sample-success",
+      "at": 203612.3,
+      "id": 1,
+      "began": 202752.7,
+      "gap": 781.7,
+      "elapsed": 859.5,
+      "bound": 1000,
+      "stage": "current",
+      "firstCheck": null,
+      "timerExpired": false,
+      "sampleActive": true,
+      "exited": false,
+      "finishedCapture": false,
+      "reason": "exited",
+      "storageMillis": 686.3,
+      "processMillis": 685.2,
+      "currentBegin": 686.3,
+      "currentSyncMillis": 0,
+      "currentMillis": 173.2,
+      "processError": null,
+      "storageDetail": "retry",
+      "storageEntries": 16,
+      "storageBytesSeen": 1475,
+      "eventLoopMax": 16718.5
+    },
+    {
+      "role": "design",
+      "launch": 5,
+      "event": "sample-success",
+      "at": 204617.1,
+      "id": 2,
+      "began": 203842.9,
+      "gap": 1090.2,
+      "elapsed": 774.2,
+      "bound": 1000,
+      "stage": "current",
+      "firstCheck": null,
+      "timerExpired": false,
+      "sampleActive": true,
+      "exited": false,
+      "finishedCapture": false,
+      "reason": "exited",
+      "storageMillis": 590,
+      "processMillis": 588,
+      "currentBegin": 590,
+      "currentSyncMillis": 0,
+      "currentMillis": 184.3,
+      "processError": null,
+      "storageDetail": null,
+      "storageEntries": null,
+      "storageBytesSeen": null,
+      "eventLoopMax": 16718.5
+    },
+    {
+      "role": "design",
+      "launch": 5,
+      "event": "timer-expired",
+      "at": 206396.4,
+      "id": 3,
+      "began": 205361.1,
+      "gap": 1518.2,
+      "elapsed": 1035.3,
+      "bound": 1000,
+      "stage": "storage",
+      "firstCheck": null,
+      "timerExpired": true,
+      "sampleActive": true,
+      "exited": false,
+      "finishedCapture": false,
+      "reason": "exited",
+      "storageMillis": null,
+      "processMillis": null,
+      "currentBegin": null,
+      "currentSyncMillis": null,
+      "currentMillis": null,
+      "processError": null,
+      "storageDetail": null,
+      "storageEntries": null,
+      "storageBytesSeen": null,
+      "eventLoopMax": 16718.5
+    }
+  ],
+  "terminal": [
+    {
+      "role": "design",
+      "launch": 5,
+      "event": "first-terminal",
+      "at": 206396.9,
+      "reason": "inspection-failed",
+      "requested": "inspection-failed",
+      "exited": false,
+      "finishedCapture": false
+    },
+    {
+      "role": "design",
+      "launch": 5,
+      "event": "child-exit",
+      "at": 206485.9,
+      "reason": "inspection-failed",
+      "code": null,
+      "signal": "SIGTERM"
+    }
+  ],
+  "resumeChecks": [
+    {
+      "phase": "verify",
+      "ok": true,
+      "nextDesignRound": 2
+    },
+    {
+      "phase": "claim",
+      "exactCut": true,
+      "current": true
+    },
+    {
+      "phase": "resumed-guards",
+      "policyWithdrawal": "refused",
+      "claimWithdrawal": "refused"
+    }
+  ],
+  "designAudits": [
+    {
+      "artifact": {
+        "file": "/home/orca/.tmp/url-composed-host-3730941-1795342765011/acquisitions/attempt-KKVjjA/sessions-design.jsonl",
+        "bytes": 7548,
+        "sha256": "76e897679b4c843f93c9ec2dda20d2810f0ef779788e343ea6000fa5366819bb",
+        "mtimeUtc": "2026-11-22T10:20:41.841848+00:00"
+      },
+      "kinds": [
+        "declaration",
+        "launch-attempt",
+        "launch-history",
+        "design-delivery",
+        "launch-terminal"
+      ],
+      "terminal": {
+        "outcome": "stopped",
+        "signal": "SIGTERM",
+        "viewTermination": "view-exited",
+        "groupTermination": "confirmed",
+        "toolTermination": "settled",
+        "pendingInvocations": 0,
+        "sampledStorageBytes": 2192,
+        "peakProcesses": 5
+      }
+    },
+    {
+      "artifact": {
+        "file": "/home/orca/.tmp/url-composed-host-3730941-1795342765011/acquisitions/attempt-vu0Lg9/sessions-design.jsonl",
+        "bytes": 5275,
+        "sha256": "dd9c1d988a6f31f56cf6623a681113a619643c3226763dcdbeb3656bc63cf0c2",
+        "mtimeUtc": "2026-11-22T10:22:51.663596+00:00"
+      },
+      "kinds": [
+        "declaration",
+        "launch-attempt",
+        "launch-history",
+        "launch-terminal"
+      ],
+      "terminal": {
+        "outcome": "inspection-failed",
+        "signal": "SIGTERM",
+        "viewTermination": "view-exited",
+        "groupTermination": "confirmed",
+        "toolTermination": "settled",
+        "pendingInvocations": 0,
+        "sampledStorageBytes": 2192,
+        "peakProcesses": 5
+      }
+    }
+  ]
+}
