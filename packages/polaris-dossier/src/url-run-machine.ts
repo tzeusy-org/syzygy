@@ -45,6 +45,7 @@ export interface UrlRunMachineOptions {
   readonly reverify: () => boolean | Promise<boolean>;
   readonly launch: (role: ViewRole) => UrlSessionProcess | undefined;
   readonly audit: (event: UrlMachinePeerAudit) => void | Promise<void>;
+  readonly chargeNativeCpuMicroseconds?: (capacity: number) => void;
 }
 
 /** The supervisor allocates endpoint identities before launch. The first actual
@@ -118,7 +119,7 @@ export async function createUrlRunMachine(input: UrlRunMachineOptions) {
       clients.set(key, client);
       let listener: ReturnType<typeof prepareUrlMachineListener> = null;
       const transport = createSessionMachineTransport({
-        prepare: server => { listener = prepareUrlMachineListener(server, reader); return listener !== null; },
+        prepare: server => { listener = prepareUrlMachineListener(server, reader, input.chargeNativeCpuMicroseconds); return listener !== null; },
         accept: async socket => {
           const until = Math.min(input.deadline, input.now() + 5000);
           let launch = input.launch(plan.role);
@@ -131,7 +132,8 @@ export async function createUrlRunMachine(input: UrlRunMachineOptions) {
             installed: { executable: input.runtime.worker.node, sha256: input.runtime.worker.nodeSha256,
               script: path.join(plan.view.supportDirectory, name), scriptSha256: support[name] },
             protectedPaths: [...plan.view.protectedPaths, input.governanceRoot, input.protectedRoot], now: input.now,
-            current: async () => current() && await input.reverify() === true && current(), audit: input.audit });
+            current: async () => current() && await input.reverify() === true && current(), audit: input.audit,
+            chargeNativeCpuMicroseconds: input.chargeNativeCpuMicroseconds });
           if (peer === null) return null;
           peers.add(peer);
           let permitted = false;

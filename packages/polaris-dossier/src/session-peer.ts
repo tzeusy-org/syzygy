@@ -24,7 +24,8 @@ const same = (a: fs.BigIntStats, b: fs.BigIntStats): boolean =>
  * socket into the child. The helper never reads or writes its protocol bytes.
  * The fixed native operation has a one-second SIGKILL timeout. Local kernel IO
  * and hostile same-UID mutation are not claimed to have general isolation. */
-export function captureKernelUnixPeer(socket: Socket, program: KernelPeerProgram): KernelUnixPeer | null {
+export function captureKernelUnixPeer(socket: Socket, program: KernelPeerProgram,
+  chargeNativeCpuMicroseconds?: (capacity: number) => void): KernelUnixPeer | null {
   let descriptor: number | undefined;
   try {
     if (!(socket instanceof Socket) || socket.destroyed || !path.isAbsolute(program.executable)
@@ -50,7 +51,10 @@ export function captureKernelUnixPeer(socket: Socket, program: KernelPeerProgram
       || !same(before, fs.lstatSync(program.executable, { bigint: true }))) return null;
     // fd 4 names the held verified image, so a pathname replacement cannot
     // select a different executable between the hash check and exec.
-    const result = spawnSync('/proc/self/fd/4', [], {
+    // Reserve the hard one-second CPU limit plus one second of accounting
+    // granularity before execution. This is capacity, never measured rusage.
+    chargeNativeCpuMicroseconds?.(2_000_000);
+    const result = spawnSync('/usr/bin/prlimit', ['--cpu=1:1', '--', '/proc/self/fd/4'], {
       stdio: ['ignore', 'pipe', 'pipe', socketFd, descriptor], env: { LANG: 'C' },
       timeout: 1000, killSignal: 'SIGKILL', maxBuffer: 128, encoding: 'utf8',
     });

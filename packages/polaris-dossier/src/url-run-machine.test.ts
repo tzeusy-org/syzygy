@@ -95,7 +95,7 @@ async function fixture() {
     pinnedRevision: { commit: 'a'.repeat(40), label: 'own fixture', pinnedAt: '2026-11-19T00:00:00.000Z' }, screeningPolicy: snapshot.binding,
     contentClasses: DOSSIER_CONTENT_CLASSES, visibility: { value: 'private', source: 'conservative-default', declaredBy: 'conservative default', label: 'Inferred' },
     governed: { kind: 'unstated', because: ['own fixture'] }, workItem: { identity: null, reason: NO_WORK_ITEM_REASON } });
-  let now = Date.now(), current = true, launch: UrlSessionProcess | undefined, auditing = 0;
+  let now = Date.now(), current = true, launch: UrlSessionProcess | undefined, auditing = 0, nativeCapacity = 0;
   let block: Promise<void> | undefined, reached: (() => void) | undefined;
   // The existing historical fixture port permits an owned synthetic bridge;
   // production ordered profiles bind the real bridge's fixed transcript hash.
@@ -109,7 +109,7 @@ async function fixture() {
     parent: { rowId: 'A-1', landedCommit: 'a'.repeat(40), defaultCommit: 'a'.repeat(40), tagObject: 'b'.repeat(40), subjects: [{ path: URL_ORIGIN_POLICY_PATH, sha256: 'c'.repeat(64) }] },
     originPolicySha256: 'c'.repeat(64), pin: 'a'.repeat(40), runId, runtime, plans: plans.roles, deadline: now + 60_000, now: () => now,
     current: () => current, reverify: async () => { if (block) { reached?.(); await block; } return current && (launch === undefined || await launch.waitForSample()); },
-    launch: role => role === 'author' ? launch : undefined, audit: () => { auditing++; } };
+    launch: role => role === 'author' ? launch : undefined, audit: () => { auditing++; }, chargeNativeCpuMicroseconds: capacity => { nativeCapacity += capacity; } };
   const machine = await createUrlRunMachine(options); cleanup.push(() => machine.close());
   const canonicalRoot = path.join(options.governanceRoot, 'governance/policies/dossier-machine-clients');
   const records = async (): Promise<UrlMachineClientRecord[]> => Promise.all((await fs.readdir(canonicalRoot)).filter(name => name.endsWith('.json'))
@@ -143,7 +143,7 @@ async function fixture() {
     while (accepted.length <= index && performance.now() < until) await new Promise(resolve => setTimeout(resolve, 5));
     expect(accepted.length).toBeGreaterThan(index); return accepted[index]!;
   };
-  return { root, options, machine, start, connection, records, auditCount: () => auditing,
+  return { root, options, machine, start, connection, records, auditCount: () => auditing, nativeCapacity: () => nativeCapacity,
     expire: () => { now = options.deadline; }, revoke: () => { current = false; },
     blockAdmission: () => { let release!: () => void; block = new Promise<void>(resolve => { release = resolve; });
       const entered = new Promise<void>(resolve => { reached = resolve; }); return { entered, release }; } };
@@ -158,7 +158,9 @@ describe('production URL run machine provisioner', { timeout: 60_000 }, () => {
     const initial = (await f.records())[0]!; expect(initial).toMatchObject({ revision: 1, role: 'author', kind: 'mcp-shim', scopes: ['source_read', 'artifact_read', 'artifact_write', 'dossier_step'] });
     expect(initial.instances).toHaveLength(1);
     expect(await firstContext.mediate('inference-forward', () => 'forbidden')).toEqual({ ok: false });
+    const capacity = f.nativeCapacity();
     expect(await firstContext.mediate('artifact_read', boundary => { expect(boundary()).toBe(true); return 'owned'; })).toEqual({ ok: true, value: 'owned' });
+    expect(f.nativeCapacity()).toBeGreaterThan(capacity);
     expect(await firstContext.mediate('artifact_read', () => new Promise<void>((resolve, reject) => first.write('rotate\n', error => error ? reject(error) : resolve())))).toEqual({ ok: true, value: undefined });
     const second = await f.connection(1); expect(second).not.toBeNull(); if (!second) return;
     expect(await request(second)).toEqual(Buffer.from('OWN_FRAME\n'));

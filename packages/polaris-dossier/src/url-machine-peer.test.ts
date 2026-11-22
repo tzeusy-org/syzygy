@@ -6,7 +6,7 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { promisify } from 'node:util';
 import { randomBytes } from 'node:crypto';
-import { afterEach, afterAll, beforeAll, describe, expect, it } from 'vitest';
+import { afterEach, afterAll, beforeAll, describe, expect, it, vi } from 'vitest';
 import { encodeCanonicalJson } from '@syzygy/polaris-generation-core/live';
 import { sha256 } from '@syzygy/support';
 import { createSessionProfile, DEFAULT_SESSION_MODEL } from './session-profile.js';
@@ -15,6 +15,16 @@ import { captureUrlMachinePeer, isUrlMachinePeerFor, prepareUrlMachineListener, 
 import { initializeUrlMachineStore } from './url-machine-store.js';
 import { publishUrlMachineLifecycle } from './url-machine-lifecycle.js';
 import { URL_MACHINE_CLIENT_LIMITS, type UrlMachineClientContext, type UrlMachineClientRecord } from './url-machine-instance.js';
+import { captureKernelUnixPeer } from './session-peer.js';
+
+const nativeObservations = vi.hoisted(() => ({ calls: (): readonly (readonly unknown[])[] => [] }));
+vi.mock('node:child_process', async importOriginal => {
+  const actual = await importOriginal<typeof import('node:child_process')>();
+  // Observe real helper execution at the OS boundary; keep its actual result.
+  const observed = vi.fn(actual.spawnSync);
+  nativeObservations.calls = () => observed.mock.calls;
+  return { ...actual, spawnSync: observed };
+});
 
 const exec = promisify(execFile), id = () => randomBytes(32).toString('hex');
 const canonical = (value: unknown) => Buffer.from(encodeCanonicalJson(value, URL_MACHINE_CLIENT_LIMITS));
@@ -32,7 +42,7 @@ beforeAll(async () => {
     reader: { executable: path.join(root, 'url-machine-peer'), sha256: sha256(await fs.readFile(path.join(root, 'url-machine-peer'))) } };
 });
 
-async function fixture(scenario: 'live' | 'inherited' | 'mixed' | 'exit' = 'live') {
+async function fixture(scenario: 'live' | 'inherited' | 'mixed' | 'exit' = 'live', chargeNativeCpuMicroseconds?: (capacity: number) => void) {
   const root = await fs.mkdtemp(path.join(os.tmpdir(), 'mp-'));
   cleanup.push(() => fs.rm(root, { recursive: true, force: true }));
   for (const name of ['support', 'home', 'work', 'broker', 'relay', 'hidden']) await fs.mkdir(path.join(root, name), { mode: 0o700 });
@@ -91,7 +101,7 @@ async function fixture(scenario: 'live' | 'inherited' | 'mixed' | 'exit' = 'live
   for (const endpoint of [brokerSocket, relaySocket]) {
     const server = createServer({ pauseOnConnect: true, allowHalfOpen: true }, socket => { sockets.add(socket); socket.on('error', () => {}); if (endpoint === brokerSocket) accept(socket); });
     await new Promise<void>(resolve => server.listen(endpoint, resolve)); servers.push(server);
-    const preparedListener = prepareUrlMachineListener(server, programs.reader);
+    const preparedListener = prepareUrlMachineListener(server, programs.reader, chargeNativeCpuMicroseconds);
     expect(preparedListener).not.toBeNull();
     if (endpoint === brokerSocket) listener = preparedListener;
   }
@@ -110,7 +120,7 @@ async function fixture(scenario: 'live' | 'inherited' | 'mixed' | 'exit' = 'live
   const options: UrlMachinePeerOptions = { socket, listener: listener!, launch, profile, context, store, binding, programs,
     installed: { executable: nodeExecutable, sha256: nodeSha256, script: mcpPath, scriptSha256: sha256(mcp) },
     protectedPaths: [path.join(root, 'hidden'), governanceRoot], now: () => now, current: () => current,
-    audit: () => { audited++; if (expireDuringAudit) now = deadline; if (failAudit) throw new Error('owned audit failure'); } };
+    audit: () => { audited++; if (expireDuringAudit) now = deadline; if (failAudit) throw new Error('owned audit failure'); }, chargeNativeCpuMicroseconds };
   const peer = await captureUrlMachinePeer(options);
   if (peer) cleanup.push(() => closeUrlMachinePeer(peer));
   const record = (credential: UrlMachinePeer): UrlMachineClientRecord => ({ format: 'polaris-dossier-local-machine-client/1', clientId: slot.clientId, issuanceId: id(),
@@ -133,6 +143,30 @@ async function fixture(scenario: 'live' | 'inherited' | 'mixed' | 'exit' = 'live
 }
 
 describe('live URL machine peer binding', { timeout: 60_000 }, () => {
+  it('reserves hard CPU capacity before every actual helper and executes none when its retained reservation refuses', async () => {
+    const calls = nativeObservations.calls, before = calls().length, charges: number[] = [];
+    let denied = false;
+    const charge = (capacity: number) => { charges.push(capacity); if (denied) throw new Error('owned capacity exhausted'); };
+    const f = await fixture('live', charge); expect(f.peer).not.toBeNull(); if (!f.peer) return;
+    expect((await f.publish(f.record(f.peer))).ok).toBe(true);
+    expect(await f.read()).toEqual({ kind: 'data', bytes: Buffer.from('OWN_FRAME\n') });
+    expect(await mediateUrlMachinePeer(f.peer, 'artifact_read', () => 'owned')).toEqual({ ok: true, value: 'owned' });
+    expect(charges.length).toBeGreaterThan(5); expect(charges.every(value => value === 2_000_000)).toBe(true);
+    expect(calls().length - before).toBe(charges.length);
+    for (const call of calls().slice(before)) {
+      const args: unknown = call[1];
+      expect(call[0]).toBe('/usr/bin/prlimit'); expect(Array.isArray(args)).toBe(true);
+      if (Array.isArray(args)) expect(args.slice(0, 3)).toEqual(['--cpu=1:1', '--', '/proc/self/fd/4']);
+    }
+    expect(await f.launch.waitForSample()).toBe(true);
+    denied = true; const invoked = calls().length, reserved = charges.length;
+    const server = (f.socket as Socket & { readonly server: Server }).server;
+    expect(prepareUrlMachineListener(server, programs.reader, charge)).toBeNull();
+    expect(captureKernelUnixPeer(f.socket, programs.peer, charge)).toBeNull();
+    expect(await f.read()).toBeNull();
+    expect(charges).toHaveLength(reserved + 3); expect(calls()).toHaveLength(invoked);
+  });
+
   it('captures a genuine isolated descendant and authorizes its scoped effect against actual protected lifecycle files', async () => {
     const f = await fixture(); expect(f.peer).not.toBeNull();
     expect(isUrlMachinePeerFor(f.peer!, f.socket)).toBe(true);

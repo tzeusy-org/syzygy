@@ -46,6 +46,9 @@ export interface UrlMachinePeerOptions {
   /** Current adopted parents, fixed policy/profile/controller, run and view. */
   readonly current: () => boolean | Promise<boolean>;
   readonly audit: (event: UrlMachinePeerAudit) => void | Promise<void>;
+  /** Trusted monotonic capacity reservation; throwing refuses before exec.
+   * Each helper reserves its CPU hard limit plus accounting granularity. */
+  readonly chargeNativeCpuMicroseconds?: (capacity: number) => void;
 }
 /** Local object capability. Copied metadata cannot create a registered peer. */
 export interface UrlMachinePeer { readonly verifier: UrlMachineVerifier }
@@ -122,13 +125,17 @@ function names(fd: number): Record<typeof NAMESPACES[number], string> {
   }
   return value;
 }
-function runNative(program: KernelPeerProgram, descriptor: number, mode: 'listener' | 'prepare' | 'read') {
+function runNative(program: KernelPeerProgram, descriptor: number, mode: 'listener' | 'prepare' | 'read',
+  chargeNativeCpuMicroseconds?: (capacity: number) => void) {
   const identity = pinnedFile(program.executable, program.sha256, URL_MACHINE_PEER_LIMITS.programBytes);
   if ((identity.mode & 0o111n) === 0n || identity.uid !== BigInt(process.getuid!())) throw refused();
   const image = fs.openSync(program.executable, fs.constants.O_RDONLY | fs.constants.O_NOFOLLOW);
   try {
     if (!sameFile(identity, fs.fstatSync(image, { bigint: true }))) throw refused();
-    const result = spawnSync('/proc/self/fd/4', [mode], { stdio: ['ignore', 'pipe', 'pipe', descriptor, image],
+    // This reserves capacity, not sampled child CPU. RLIMIT_CPU applies across
+    // prlimit's exec into the held image; the extra second covers granularity.
+    chargeNativeCpuMicroseconds?.(2_000_000);
+    const result = spawnSync('/usr/bin/prlimit', ['--cpu=1:1', '--', '/proc/self/fd/4', mode], { stdio: ['ignore', 'pipe', 'pipe', descriptor, image],
       env: { LANG: 'C' }, timeout: 1000, killSignal: 'SIGKILL', maxBuffer: URL_MACHINE_PEER_LIMITS.chunkBytes + 512 });
     if (result.error || result.signal !== null || result.stderr.length !== 0
       || !sameFile(identity, fs.fstatSync(image, { bigint: true })) || !sameFile(identity, fs.lstatSync(program.executable, { bigint: true }))) throw refused();
@@ -144,12 +151,13 @@ function serverIdentity(server: Server): string {
 }
 /** Configure the real listener before launching any writer. Accepted sockets
  * inherit sender metadata even when the client writes immediately on connect. */
-export function prepareUrlMachineListener(server: Server, program: KernelPeerProgram): UrlMachineListener | null {
+export function prepareUrlMachineListener(server: Server, program: KernelPeerProgram,
+  chargeNativeCpuMicroseconds?: (capacity: number) => void): UrlMachineListener | null {
   try {
     if (!(server instanceof Server)) return null;
     const identity = serverIdentity(server);
     const descriptor = (server as Server & { readonly _handle: { readonly fd: number } })._handle.fd;
-    const result = runNative(program, descriptor, 'listener');
+    const result = runNative(program, descriptor, 'listener', chargeNativeCpuMicroseconds);
     const fields = /^L ([0-9]{1,20}) ([0-9]{1,20})\n$/u.exec(result.stdout.toString('ascii'));
     if (result.status !== 0 || !fields || `${fields[1]}:${fields[2]}` !== identity || serverIdentity(server) !== identity) return null;
     const capability: UrlMachineListener = Object.freeze({ transport: 'kernel-sender-stream/1' });
@@ -163,12 +171,13 @@ function listenerCurrent(options: UrlMachinePeerOptions): boolean {
     && (options.socket as Socket & { readonly server?: Server }).server === selected.server
     && serverIdentity(selected.server) === selected.identity;
 }
-function native(socket: Socket, program: KernelPeerProgram, mode: 'prepare' | 'read'): { readonly identity: NativeIdentity | null; readonly chunk: UrlMachinePeerChunk | null } {
+function native(socket: Socket, program: KernelPeerProgram, mode: 'prepare' | 'read',
+  chargeNativeCpuMicroseconds?: (capacity: number) => void): { readonly identity: NativeIdentity | null; readonly chunk: UrlMachinePeerChunk | null } {
   const handle = (socket as Socket & { readonly _handle?: { readonly fd?: unknown } })._handle;
   const descriptor = handle?.fd;
   if (socket.destroyed || !socket.isPaused() || socket.readableLength !== 0 || socket.listenerCount('data') !== 0
     || socket.listenerCount('readable') !== 0 || typeof descriptor !== 'number' || !Number.isSafeInteger(descriptor) || descriptor < 0) throw refused();
-  const result = runNative(program, descriptor, mode);
+  const result = runNative(program, descriptor, mode, chargeNativeCpuMicroseconds);
   if (socket.destroyed || (socket as Socket & { readonly _handle?: unknown })._handle !== handle) throw refused();
   if (mode === 'read' && result.status === 75 && result.stdout.length === 0) return { identity: null, chunk: { kind: 'pending' } };
   if (result.status !== 0) throw refused();
@@ -208,7 +217,7 @@ function check(state: PeerState): number {
     || !bytesAt(`${base}/cmdline`, URL_MACHINE_PEER_LIMITS.procBytes).equals(state.command)
     || !sameFile(state.executable, fs.statSync(`${base}/exe`, { bigint: true }))) throw refused();
   if (state.script !== null && !sameFile(state.script, fs.statSync(`${base}/root/tool/support/${path.basename(options.installed.script!)}`, { bigint: true }))) throw refused();
-  const peerNow = captureKernelUnixPeer(options.socket, options.programs.peer);
+  const peerNow = captureKernelUnixPeer(options.socket, options.programs.peer, options.chargeNativeCpuMicroseconds);
   if (!peerNow || peerNow.pid !== state.native.pid || peerNow.uid !== state.native.uid || peerNow.gid !== state.native.gid) throw refused();
   return now;
 }
@@ -247,8 +256,8 @@ export async function captureUrlMachinePeer(options: UrlMachinePeerOptions): Pro
     const selected = Object.freeze({ ...options, context, installed: Object.freeze({ ...options.installed }),
       binding: Object.freeze({ ...options.binding }), programs: Object.freeze({ peer: Object.freeze({ ...options.programs.peer }), reader: Object.freeze({ ...options.programs.reader }) }),
       protectedPaths: Object.freeze([...options.protectedPaths]) });
-    const kernel = captureKernelUnixPeer(options.socket, selected.programs.peer);
-    const prepared = native(options.socket, selected.programs.reader, 'prepare');
+    const kernel = captureKernelUnixPeer(options.socket, selected.programs.peer, selected.chargeNativeCpuMicroseconds);
+    const prepared = native(options.socket, selected.programs.reader, 'prepare', selected.chargeNativeCpuMicroseconds);
     if (!kernel || !prepared.identity || kernel.pid !== prepared.identity.pid || kernel.uid !== prepared.identity.uid || kernel.gid !== prepared.identity.gid) throw refused();
     const observed = prepared.identity;
     if (observed.uid !== process.getuid!() || observed.gid !== process.getgid!() || observed.pid === selected.launch.pid) throw refused();
@@ -307,7 +316,7 @@ export async function readUrlMachinePeer(peer: UrlMachinePeer): Promise<UrlMachi
   try {
     await current(state);
     if (++state.chunks > URL_MACHINE_PEER_LIMITS.chunks) throw refused();
-    const result = native(state.options.socket, state.options.programs.reader, 'read');
+    const result = native(state.options.socket, state.options.programs.reader, 'read', state.options.chargeNativeCpuMicroseconds);
     if (result.identity !== null && !equal(result.identity, state.native)) throw refused();
     if (result.chunk?.kind === 'data' && (state.bytes += result.chunk.bytes.length) > URL_MACHINE_PEER_LIMITS.bytes) throw refused();
     await current(state);

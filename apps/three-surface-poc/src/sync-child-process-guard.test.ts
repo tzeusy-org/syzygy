@@ -86,10 +86,10 @@ const NATIVE_SITES = new Map<string, ReadonlyMap<string, string>>([
     ['d5dea8e4382174a6f337c42849dc31649a3d82814b30e06ba72e8368a32329e2', 'make one FIFO in the malformed helper fixture'],
   ])],
   [PEER_MODULE, new Map([
-    ['9d5395660d3f137ce72e2cdf199f9cf29f9c4857a215a40f8e96b8258af86a0c', 'execute the verified helper on fd 4 with no args, 1s SIGKILL and 128 output bytes'],
+    ['d386763019be3da14cc3355f44f4cb440547291c7846ec5f2cfd49a86eaeb6e4', 'prlimit hard CPU 1s, held helper on fd4, 1s SIGKILL, 128 output bytes, reserved capacity before exec'],
   ])],
   [MACHINE_PEER_MODULE, new Map([
-    ['93d667e17a18698591d2e7abd0d883da65ad31c293109b5bd76132e372e6187c', 'held pinned native image, fixed listener/prepare/read modes, 1s SIGKILL and 64KiB plus 512 output bytes'],
+    ['a91baeff25ce94e5c56a9306b460dd766124f95c695fd8cc626019e67953e87f', 'prlimit hard CPU 1s, held pinned image, fixed modes, 1s SIGKILL, 64KiB plus 512 output bytes, reserved capacity before exec'],
   ])],
   [DOSSIER + 'url-ordered-design-screen.ts', new Map([
     ['49ddffbf2f4a472f8db71aa384da61500ddb6b7e093885a6836564fcb68f29d9', 'one complete screening operation in the pinned sandbox, maximum 5s SIGKILL and 12MiB output'],
@@ -109,10 +109,10 @@ const EMBEDDED_FIXTURE = DOSSIER + 'acquisition-process.test.ts';
 const EMBEDDED_CALL = '496476a19a8b66906bd56990727e80e227041208e23bd8af1b01026751afd69b';
 // Bind the child-file writer and the production fd verification to the admitted calls.
 const FIXTURE_WRITER = 'e49f3dc7ce221b2a257bcbc95f0ad98201ddcf5f433fd6e8f44ba7e71e852cb7';
-const PEER_CAPTURE = '0c99049517dab56bc93566dc9614d17b08f1231cd2dbc1f1bdeb93f220382045';
+const PEER_CAPTURE = 'd86d226376e181d0a60e72a76d777b39486dcbbf4e8c8f5b664b8a66ac823f81';
 // The call's limits and image verifier are shared helpers/constants. Bind that
 // complete context as well as the one admitted call; another call still fails.
-const MACHINE_PEER_SOURCE = '57eb68ad4ee9810658c38ea2a8bb49b295b4c4c6ab4ba334c7c93bb87a4d770f';
+const MACHINE_PEER_SOURCE = '677b35f4dad71b830dcb1d2901865d57c1bb7517aa99e721d6054ffb6b105c18';
 const SELF = 'apps/three-surface-poc/src/sync-child-process-guard.test.ts';
 const SYNC_FUNCTIONS = ['execFileSync', 'execSync', 'spawnSync'];
 const MODULE_SPECIFIER = /(?:\bfrom|\bimport)\s*\(?\s*['"]([^'"]+)['"]/g;
@@ -377,13 +377,18 @@ describe('suite child processes and the vitest worker RPC', () => {
     const sshFile = DOSSIER + 'git-memory-ssh.test.ts';
     expect(commands(sshFile, change(fixture(sshFile), "['-t', '-f', config]", "['-D', '-f', config]"))).toEqual(["'/usr/sbin/sshd'"]);
     const peer = fixture(PEER_MODULE);
-    expect(commands(PEER_MODULE, change(peer, 'timeout: 1000', 'timeout: 60_000'))).toEqual(["'/proc/self/fd/4'"]);
-    expect(commands(PEER_MODULE, change(peer, '!== program.sha256', '!== otherDigest'))).toEqual(["'/proc/self/fd/4'"]);
+    expect(commands(PEER_MODULE, change(peer, 'timeout: 1000', 'timeout: 60_000'))).toEqual(["'/usr/bin/prlimit'"]);
+    expect(commands(PEER_MODULE, change(peer, '!== program.sha256', '!== otherDigest'))).toEqual(["'/usr/bin/prlimit'"]);
 
     const machine = fixture(MACHINE_PEER_MODULE);
-    expect(commands(MACHINE_PEER_MODULE, change(machine, 'timeout: 1000', 'timeout: 60_000'))).toEqual(["'/proc/self/fd/4'"]);
-    expect(commands(MACHINE_PEER_MODULE, change(machine, '!== expected', '!== otherDigest'))).toEqual(["'/proc/self/fd/4'"]);
-    expect(commands(MACHINE_PEER_MODULE, change(machine, 'chunkBytes: 65_536', 'chunkBytes: 65_536_000'))).toEqual(["'/proc/self/fd/4'"]);
+    expect(commands(MACHINE_PEER_MODULE, change(machine, 'timeout: 1000', 'timeout: 60_000'))).toEqual(["'/usr/bin/prlimit'"]);
+    expect(commands(MACHINE_PEER_MODULE, change(machine, '!== expected', '!== otherDigest'))).toEqual(["'/usr/bin/prlimit'"]);
+    expect(commands(MACHINE_PEER_MODULE, change(machine, 'chunkBytes: 65_536', 'chunkBytes: 65_536_000'))).toEqual(["'/usr/bin/prlimit'"]);
+    for (const [module, source] of [[PEER_MODULE, peer], [MACHINE_PEER_MODULE, machine]]) {
+      expect(commands(module!, change(source!, '--cpu=1:1', '--cpu=2:2'))).toEqual(["'/usr/bin/prlimit'"]);
+      expect(commands(module!, change(source!, 'chargeNativeCpuMicroseconds?.(2_000_000);', ''))).toEqual(["'/usr/bin/prlimit'"]);
+      expect(commands(module!, change(source!, '2_000_000', '1_000_000'))).toEqual(["'/usr/bin/prlimit'"]);
+    }
 
     const acquisition = fixture(EMBEDDED_FIXTURE);
     for (const changed of [
