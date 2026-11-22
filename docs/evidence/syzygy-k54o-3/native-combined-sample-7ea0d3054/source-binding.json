@@ -1,0 +1,56 @@
+{
+  "subjectCommit": "7ea0d30543207d07f5d14641ce8164f3da57958c",
+  "subjectTree": "981ac5a4193032c043bfd7b233883e5726eba35d",
+  "beforeSourceSha256": {
+    "packages/polaris-dossier/src/session-broker.ts": "79a30d748606c2b621209a77a6cbb37716cdfb0531c551a603bef9a78c88bbbd",
+    "packages/polaris-dossier/src/session-launch.ts": "f867296c11e4501220dafcfebc57374a65b93608d1cab4604d7125f16ad492a9",
+    "packages/polaris-dossier/src/session-machine-transport.ts": "6e97c572d7cfda33b2a46c466e3be65232611cdb5b066922cbb29740e4c9165c",
+    "packages/polaris-dossier/src/session-relay.ts": "c7ab6f4f29cc7df6db88fc6189d2ff27313cbf8926893f7df703fa8118ec41a2",
+    "packages/polaris-dossier/src/url-machine-store.ts": "0b34b3989c5055f4d401dca8945f504f410c94003935adafb5c836ad79d13983",
+    "packages/polaris-dossier/src/url-ordered-design-host.ts": "c0a49ed4238823d5ea600e417255362c0942844aa9d43f8426752e7332de533e",
+    "packages/polaris-dossier/src/url-run-artifacts.ts": "d48dab193902acf6208cf089f38eb31ec36e8ddcd07db2eaa9a643bc01cfba16",
+    "packages/polaris-dossier/src/url-run-composed.test.ts": "f999e7d0183f2187db676805d1978681d822198620e10938d7ebec229989f24e",
+    "packages/polaris-dossier/src/url-run-machine.ts": "62b517503741a70eaa24195d9a3f3a7d15ebed5680aa84f7de0c40d166f5c835",
+    "packages/polaris-dossier/src/url-run-ordered-attempt.ts": "8edcd9c6d5486b0e38c7241136544fbed20da24a225e6466cbe793f61da47320",
+    "packages/polaris-dossier/src/url-run-sessions.ts": "a09d782c01b7b04a4abf2c265667ebf1f4caae33688f5beb9cf5832e0067b2c7",
+    "packages/polaris-dossier/src/url-session-audit.ts": "145c864cb8114e832b5cdd8aecf139dd80d3933475a6eb2258290d0f0287e03a"
+  },
+  "afterSourceSha256": {
+    "packages/polaris-dossier/src/session-broker.ts": "30b3b8bfd1d3d19381e1c3a4b233e37ef59d4af2635bd952a717d0ce17e4c762",
+    "packages/polaris-dossier/src/session-launch.ts": "02379799932ab08426398f3f19bbd2af218b4a3b26eea50802c18b974f831e9a",
+    "packages/polaris-dossier/src/session-machine-transport.ts": "869610068ebdad200c0ca1d09dd2eb0bcc7f53d3a4e1cda11e50900c311324f1",
+    "packages/polaris-dossier/src/session-relay.ts": "af78d453ecac41739faca2b5c4d03e95dada12eb19f292588b5f97ac7642158b",
+    "packages/polaris-dossier/src/url-machine-store.ts": "83e7701f4ca35bc667076528ae210764f3a7df48c7c24c2ae58e315557f4f8ec",
+    "packages/polaris-dossier/src/url-ordered-design-host.ts": "795c3d4e177f4ab4a36b3e4b6ad6f8b5485496289d991638f831978f02dcd489",
+    "packages/polaris-dossier/src/url-run-artifacts.ts": "64e6f7b29dcac09ab9b47ff481cb449f4d339906a386dddd757165558f378268",
+    "packages/polaris-dossier/src/url-run-composed.test.ts": "a75e731ea58d364d2490e0c6a268f2e81204e314685a4d61b7840f94fe99d583",
+    "packages/polaris-dossier/src/url-run-machine.ts": "43ca090f325d92642e2059b06666b170ab640035e76bab50c7fc547548b7a9a6",
+    "packages/polaris-dossier/src/url-run-ordered-attempt.ts": "5af3f9b5c5d5248e6e98068549adf68e7f13501ba5351da6b3366852e10ec946",
+    "packages/polaris-dossier/src/url-run-sessions.ts": "28c18313e262f40f89e6eb6192873494445305f2d4fb9075837d66041172275c",
+    "packages/polaris-dossier/src/url-session-audit.ts": "b6fafa491e4b74bb946623af66f004fc92edbf035484ed85659d5dcea36e1b4f"
+  },
+  "portableArtifactsSha256": {
+    "overlay.patch": "7c46dd87cacff8a06a3b637b19bce5bd246305603e807edb2563d2b6c339f2b9",
+    "project.py": "f38a12b2b3a724fd5224d7bcd14e900d6a16388bdc3e685456a10d6fa31967ad",
+    "bootstrap_schema.py": "59264f0eaf90c73472335f848756ce2b83f810944026eb298a6b8a6baba0de67",
+    "transport_schema.py": "06c0bac1d78512210c72344f20f3b2f3733b2847919eba0da8e8228290e45646"
+  },
+  "previousRunBindingsSha256": {
+    "bootstrap": "76f5a7c9d5a045728a26b7f7a5c8c62c678772c73d23c87b5505c7f7e4fb1273",
+    "transport": "fcf90dfcb2dc149c9c6453dceec75f0f9c3e850a880e2d8fb0dc31a97c4e2060"
+  },
+  "fixture": {
+    "file": "packages/polaris-dossier/src/url-run-composed.test.ts",
+    "selectedTest": "runs the genuine production pipeline to stop-resume",
+    "boundsMs": {
+      "test": 540000,
+      "sampleCadence": 200,
+      "inspection": 1000,
+      "capture": 5000,
+      "activation": 20000,
+      "lifecyclePublication": 5000,
+      "relay": 180000,
+      "broker": 85000
+    }
+  }
+}

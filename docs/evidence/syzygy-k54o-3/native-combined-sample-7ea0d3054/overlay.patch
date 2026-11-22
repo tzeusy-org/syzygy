@@ -1,0 +1,1307 @@
+diff --git a/packages/polaris-dossier/src/session-broker.ts b/packages/polaris-dossier/src/session-broker.ts
+index 3e1bf67b3..63f122ef5 100644
+--- a/packages/polaris-dossier/src/session-broker.ts
++++ b/packages/polaris-dossier/src/session-broker.ts
+@@ -1,3 +1,4 @@
++import { channel } from 'node:diagnostics_channel';
+ import * as fs from 'node:fs';
+ import * as net from 'node:net';
+ import path from 'node:path';
+@@ -17,6 +18,9 @@ export interface SessionBroker {
+   readonly socket: string;
+   close(): Promise<{ readonly pendingInvocations: number; readonly termination: 'settled' | 'Unknown' }>;
+ }
++const transportTrace = channel('owned-f3-combined');
++let transportBrokerOrdinal = 0;
++
+ const FAILURE = '{"ok":false,"reason":"session-broker-unavailable"}\n';
+ export type ReleaseReply = (reply: unknown, revalidate?: () => void) => void;
+ 
+@@ -47,20 +51,28 @@ async function start(socket: string, invoke: Invoke, onFault: () => void, limits
+   const bounded = Object.freeze({ ...limits });
+   const sockets = new Set<net.Socket>();
+   let pending = 0, poisoned = false, closing = false;
+-  const poison = (): void => { poisoned = true; try { onFault(); } catch { /* Safe fixed transport outcome only. */ } };
++  const broker = ++transportBrokerOrdinal;
++  const note = (stage: string, event: string): void => {
++    if (transportTrace.hasSubscribers) transportTrace.publish({ component: 'broker', broker, stage, event, at: performance.now() });
++  };
++  const poison = (stage: string): void => {
++    if (!poisoned) note(stage, 'poison');
++    poisoned = true; try { onFault(); } catch { /* Safe fixed transport outcome only. */ }
++  };
+   const server = net.createServer({ allowHalfOpen: true, pauseOnConnect: !fixture }, raw => { void (async () => {
++    note('raw', 'begin');
+     sockets.add(raw);
+     // Install handlers even for refused connections: a peer reset must never
+     // escape as a platform diagnostic or retain a connection slot.
+-    raw.on('error', () => undefined);
+-    raw.once('close', () => { sockets.delete(raw); });
++    raw.on('error', () => note('raw', 'refused'));
++    raw.once('close', () => { sockets.delete(raw); note('raw', 'closed'); });
+     if (closing || poisoned || sockets.size > bounded.connections || pending >= bounded.invocations) {
+-      raw.destroy(); return;
++      note('raw-limit', 'refused'); raw.destroy(); return;
+     }
+-    const connection: Duplex | null = fixture ? raw : await openSessionMachineConnection(raw, machine!, { bytes: bounded.maxBytes, milliseconds: bounded.milliseconds });
+-    if (connection === null) { poison(); raw.destroy(); return; }
++    const connection: Duplex | null = fixture ? raw : await openSessionMachineConnection(raw, machine!, { bytes: bounded.maxBytes, milliseconds: bounded.milliseconds }, 'broker');
++    if (connection === null) { poison('raw-open'); raw.destroy(); return; }
+     const context = fixture ? null : sessionMachineEffectContext(connection);
+-    if (!fixture && context === null) { poison(); connection.destroy(); return; }
++    if (!fixture && context === null) { poison('context'); connection.destroy(); return; }
+     const chunks: Buffer[] = [];
+     let size = 0, completed = false;
+     const deadline = performance.now() + bounded.milliseconds;
+@@ -81,13 +93,13 @@ async function start(socket: string, invoke: Invoke, onFault: () => void, limits
+     };
+     // This deadline also bounds flushing the reply to a non-reading peer.
+     // The invocation retains its slot until its own promise actually settles.
+-    const timer = setTimeout(() => { poison(); completed = true; connection.destroy(); }, bounded.milliseconds);
+-    connection.on('error', () => { poison(); clearTimeout(timer); completed = true; });
++    const timer = setTimeout(() => { poison('frame-deadline'); completed = true; connection.destroy(); }, bounded.milliseconds);
++    connection.on('error', () => { poison('stream-error'); clearTimeout(timer); completed = true; });
+     connection.on('close', () => { sockets.delete(raw); clearTimeout(timer); completed = true; });
+     connection.on('data', (chunk: Buffer) => {
+       if (completed) return;
+       size += chunk.length;
+-      if (size > bounded.maxBytes) { poison(); finish(FAILURE); connection.destroy(); return; }
++      if (size > bounded.maxBytes) { poison('frame-size'); finish(FAILURE); connection.destroy(); return; }
+       chunks.push(chunk);
+     });
+     connection.once('end', () => { void (async () => {
+@@ -97,7 +109,7 @@ async function start(socket: string, invoke: Invoke, onFault: () => void, limits
+         const bytes = Buffer.concat(chunks, size);
+         if (bytes.length === 0 || bytes.at(-1) !== 10 || bytes.indexOf(10) !== bytes.length - 1) throw new Error();
+         value = parseBoundedJson(new TextDecoder('utf-8', { fatal: true, ignoreBOM: true }).decode(bytes.subarray(0, -1)), bounded);
+-      } catch { poison(); finish(FAILURE); return; }
++      } catch { poison('frame-parse'); finish(FAILURE); return; }
+       // Recheck after the complete frame: simultaneous open connections may
+       // all have arrived before any invocation consumed a slot.
+       if (closing || poisoned || pending >= bounded.invocations) { finish(FAILURE); return; }
+@@ -105,10 +117,10 @@ async function start(socket: string, invoke: Invoke, onFault: () => void, limits
+       try {
+         const reply = await invoke(value, release, context);
+         if (!completed) release(reply);
+-      } catch { poison(); finish(FAILURE); }
++      } catch { poison('invocation'); finish(FAILURE); }
+       finally { pending--; }
+     })(); });
+-  })().catch(() => { poison(); raw.destroy(); }); });
++  })().catch(() => { poison('raw-exception'); raw.destroy(); }); });
+   // Extra connections receive no authority; the callback's lower bound also
+   // covers environments where maxConnections is handled differently.
+   server.maxConnections = bounded.connections;
+@@ -119,7 +131,7 @@ async function start(socket: string, invoke: Invoke, onFault: () => void, limits
+       server.listen(socket, () => { server.off('error', failed); resolve(); });
+     });
+     if (!fixture && !(await prepareSessionMachineTransport(machine!, server))) throw new Error('session-broker-start-failed');
+-    server.on('error', poison);
++    server.on('error', () => poison('listener-error'));
+     fs.chmodSync(socket, 0o600);
+   } catch {
+     server.close(); throw new Error('session-broker-start-failed');
+diff --git a/packages/polaris-dossier/src/session-launch.ts b/packages/polaris-dossier/src/session-launch.ts
+index 8ed992cac..ac8cc35bc 100644
+--- a/packages/polaris-dossier/src/session-launch.ts
++++ b/packages/polaris-dossier/src/session-launch.ts
+@@ -1,5 +1,6 @@
+ import { spawn } from 'node:child_process';
+ import { createHash } from 'node:crypto';
++import { channel } from 'node:diagnostics_channel';
+ import { constants, type Stats } from 'node:fs';
+ import { chmod, lstat, open, opendir, readdir, realpath } from 'node:fs/promises';
+ import { createServer, type Server, type Socket } from 'node:net';
+@@ -21,16 +22,18 @@ export type UrlLaunchLimits = { readonly [K in keyof typeof URL_LAUNCH_LIMITS]:
+ const canonical = (value: unknown): string => encodeCanonicalJson(value, { maxBytes: 2_097_152, maxNodes: 65_536, maxDepth: 32 });
+ const TOOLS = ['source_read', 'artifact_read', 'artifact_write', 'dossier_step'] as const;
+ const refused = (): Error => new Error('url-session-launch-refused');
++const bootstrapTrace = channel('owned-f3-combined');
++let designLaunchOrdinal = 0;
+ const delay = (ms: number): Promise<void> => new Promise(resolve => setTimeout(resolve, ms));
+ /** Bounds waiting, not cancellation of an arbitrary caller-owned callback. */
+-async function bounded<T>(operation: () => T | Promise<T>, milliseconds: number): Promise<T> {
++async function bounded<T>(operation: () => T | Promise<T>, milliseconds: number, onTimeout?: () => void): Promise<T> {
+   const deadline = performance.now() + Math.max(1, milliseconds);
+   let timer: ReturnType<typeof setTimeout> | undefined;
+   const timeout = new Promise<never>((_resolve, reject) => {
+     const expire = (): void => {
+       // A timer callback can arrive early when its clock rounds the delay.
+       const remaining = deadline - performance.now();
+-      if (remaining <= 0) reject(refused());
++      if (remaining <= 0) { onTimeout?.(); reject(refused()); }
+       else timer = setTimeout(expire, Math.ceil(remaining));
+     };
+     expire();
+@@ -364,6 +367,15 @@ export async function launchRestrictedUrlSession(input: { readonly preparation:
+   try { child = spawn('/usr/bin/prlimit', processArgs(state.args, limits),
+     { env: { PATH: '/usr/bin:/bin', LANG: 'C.UTF-8' }, stdio: ['ignore', 'pipe', 'pipe'], detached: true });
+   } catch { await bounded(closeHost, limits.cleanupMilliseconds).catch(() => {}); throw refused(); }
++  const launch = state.profile.input.binding.role === 'design' ? ++designLaunchOrdinal : 0;
++  let sampleOrdinal = 0;
++  const trace = (stage: string, event: string, detail = 'none', elapsed = 0): void => {
++    if (launch !== 0 && bootstrapTrace.hasSubscribers) {
++      bootstrapTrace.publish({ component: 'sampler', stage, event, detail, elapsed, launch,
++        sample: sampleOrdinal, at: performance.now() });
++    }
++  };
++  trace('child', 'spawn');
+   const stdout = createHash('sha256'), stderr = createHash('sha256'); let outBytes = 0, errBytes = 0;
+   let reason: UrlSessionLaunchOutcome['outcome'] = 'exited', finishedCapture = false, exited = false, closed = false;
+   let exitCode: number | null = null, signalName: string | null = null, sampledStorageBytes: number | null = null, peakProcesses: number | null = null;
+@@ -376,6 +388,7 @@ export async function launchRestrictedUrlSession(input: { readonly preparation:
+     // are still closing. A cleanup request must preserve that terminal result.
+     if (why !== 'stopped' || !exited) reason = why;
+     if (endTimer !== undefined) return;
++    trace('child', 'stop', why);
+     signal('SIGTERM');
+     killTimer = setTimeout(() => signal('SIGKILL'), Math.min(250, limits.cleanupMilliseconds));
+     endTimer = setTimeout(wake, limits.cleanupMilliseconds);
+@@ -387,38 +400,68 @@ export async function launchRestrictedUrlSession(input: { readonly preparation:
+   };
+   child.stdout!.on('data', (bytes: Buffer) => capture(bytes, true)); child.stderr!.on('data', (bytes: Buffer) => capture(bytes, false));
+   child.once('error', () => { reason = 'launch-refused'; wake(); });
+-  child.once('exit', (code, sig) => { exited = true; exitCode = code; signalName = sig; });
++  child.once('exit', (code, sig) => { exited = true; exitCode = code; signalName = sig; trace('child', 'exit'); });
+   child.once('close', () => { closed = true; wake(); });
+   let pendingSample: Promise<void> | undefined;
++  let priorSampleBegan: number | undefined;
+   const sample = setInterval(() => {
+     if (exited || finishedCapture || pendingSample !== undefined || reason !== 'exited') return;
+     let sampleActive = true;
+     const sampleBegan = performance.now();
+-    const checkSample = (): void => {
+-      if (!sampleActive || exited || finishedCapture || reason !== 'exited' || performance.now() - sampleBegan >= limits.inspectionMilliseconds) throw refused();
++    sampleOrdinal += 1;
++    trace('census', 'begin', 'cadence', priorSampleBegan === undefined ? 0 : sampleBegan - priorSampleBegan);
++    priorSampleBegan = sampleBegan;
++    let phase = 'storage';
++    let firstRefusal = true;
++    const mark = (stage: string, event: string, detail?: string): void =>
++      trace(stage, event, detail, performance.now() - sampleBegan);
++    const checkSample = (source: string): void => {
++      const refusal = !sampleActive ? 'inactive' : exited ? 'exited' : finishedCapture ? 'capture-finished'
++        : reason !== 'exited' ? 'stopping'
++          : performance.now() - sampleBegan >= limits.inspectionMilliseconds ? 'deadline' : null;
++      if (refusal !== null) {
++        if (firstRefusal) { firstRefusal = false; mark(source, 'guard-refused', refusal); }
++        throw refused();
++      }
+     };
+     // Cadence and completion are separate finite limits. Other native roles
+     // and the shared host may delay descriptor IO; admit no partial census.
+     pendingSample = bounded(async () => {
+       // The walks share a deadline. Keep storage's earlier refusal and
+       // publication order even if the process walk completes first.
+-      const processCount = child.pid === undefined ? undefined : descendants(child.pid, limits.processes, checkSample).catch(() => null);
+-      const storageBytes = await storage([view.inputs.homeDirectory, view.inputs.workDirectory], limits, checkSample);
+-      checkSample();
++      const processCount = child.pid === undefined ? undefined
++        : descendants(child.pid, limits.processes, () => checkSample('process-walk')).catch(() => {
++          mark('process-walk', 'rejected'); return null;
++        });
++      mark('storage', 'begin');
++      const storageBytes = await storage([view.inputs.homeDirectory, view.inputs.workDirectory], limits, () => checkSample('storage-walk'));
++      mark('storage', 'return');
++      checkSample('storage-return');
+       sampledStorageBytes = storageBytes;
+       if (sampledStorageBytes > limits.storageBytes) { stop('storage-limit'); return; }
+       if (processCount !== undefined) {
++        phase = 'process';
++        mark('process', 'begin');
+         const count = await processCount;
+-        checkSample();
++        mark('process', 'return', count === null ? 'unavailable' : 'counted');
++        checkSample('process-return');
+         if (count === null) throw refused();
+         peakProcesses = Math.max(peakProcesses ?? 0, count);
+         if (count > limits.processes) { stop('process-limit'); return; }
+       }
++      phase = 'current';
++      mark('current', 'begin');
+       const stillCurrent = await state.current();
+-      checkSample();
++      mark('current', 'return', stillCurrent === true ? 'true' : 'false');
++      checkSample('current-return');
+       if (stillCurrent !== true) stop('inspection-failed');
+-    }, limits.inspectionMilliseconds).catch(() => { if (!exited && !finishedCapture) stop('inspection-failed'); })
+-      .finally(() => { sampleActive = false; pendingSample = undefined; });
++    }, limits.inspectionMilliseconds, () => mark(phase, 'timer', 'deadline')).catch(() => {
++      mark(phase, 'rejected');
++      if (!exited && !finishedCapture) stop('inspection-failed');
++    }).finally(() => {
++      mark(phase, 'settled');
++      sampleActive = false; pendingSample = undefined;
++    });
+   }, limits.sampleMilliseconds);
+   const wall = setTimeout(() => stop('wall-limit'), limits.milliseconds);
+   const finished = (async (): Promise<UrlSessionLaunchOutcome> => {
+@@ -441,8 +484,11 @@ export async function launchRestrictedUrlSession(input: { readonly preparation:
+   if (child.pid === undefined) { await finished; throw refused(); }
+   const launched: UrlSessionProcess = Object.freeze({ pid: child.pid, commandSha256: input.preparation.commandSha256, finished,
+     waitForSample: async () => {
++      trace('wait', 'begin', pendingSample === undefined ? 'idle' : 'pending');
+       await pendingSample;
+-      return !exited && !finishedCapture && reason === 'exited';
++      const current = !exited && !finishedCapture && reason === 'exited';
++      trace('wait', 'return', current ? 'true' : 'false');
++      return current;
+     },
+     stop: () => { stop('stopped'); return finished; } });
+   launchedProcesses.set(launched, () => reason === 'exited' && !exited && !closed && !finishedCapture && child.exitCode === null && child.signalCode === null);
+diff --git a/packages/polaris-dossier/src/session-machine-transport.ts b/packages/polaris-dossier/src/session-machine-transport.ts
+index 5b4ca56bd..94c437cd3 100644
+--- a/packages/polaris-dossier/src/session-machine-transport.ts
++++ b/packages/polaris-dossier/src/session-machine-transport.ts
+@@ -1,3 +1,4 @@
++import { channel } from 'node:diagnostics_channel';
+ import { Socket, Server } from 'node:net';
+ import { AsyncLocalStorage } from 'node:async_hooks';
+ import { Duplex } from 'node:stream';
+@@ -22,6 +23,9 @@ interface TransportPorts {
+   /** Complete protected issuance while the captured raw socket remains paused. */
+   readonly authorize?: (peer: UrlMachinePeer, stillOpening: () => boolean) => Promise<boolean>;
+ }
++let transportOrdinal = 0;
++const transportTrace = channel('owned-f3-combined');
++
+ const transports = new WeakMap<SessionMachineTransport, TransportPorts>();
+ interface ConnectionState {
+   readonly raw: Socket; readonly peer: UrlMachinePeer; readonly stream: Duplex;
+@@ -75,43 +79,66 @@ export function stopSessionMachineIngress(stream: Duplex): boolean {
+  * its sole reader; only checked chunks enter this bounded parser-facing stream.
+  * Native writes require the active effect's immediate boundary guard. */
+ export async function openSessionMachineConnection(raw: Socket, transport: SessionMachineTransport,
+-  limits: { readonly bytes: number; readonly milliseconds: number }): Promise<Duplex | null> {
++  limits: { readonly bytes: number; readonly milliseconds: number }, traceEdge: 'relay' | 'broker' | 'other' = 'other'): Promise<Duplex | null> {
+   const ports = transports.get(transport), began = performance.now();
+   const deadline = began + limits.milliseconds, captureDeadline = Math.min(deadline, began + 5000);
++  const connection = ++transportOrdinal;
++  const note = (stage: string, event: string, detail = 'none', bound = 0): void => {
++    if (transportTrace.hasSubscribers) transportTrace.publish({ component: 'connection', edge: traceEdge, connection,
++      stage, event, detail, bound, at: performance.now() });
++  };
+   if (!ports || !(raw instanceof Socket) || !raw.isPaused() || raw.readableLength !== 0
+     || raw.listenerCount('data') !== 0 || raw.listenerCount('readable') !== 0
+     || !Number.isSafeInteger(limits.bytes) || limits.bytes <= 0 || limits.bytes > 8_388_608
+-    || !Number.isSafeInteger(limits.milliseconds) || limits.milliseconds <= 0 || limits.milliseconds > 180_000) return null;
++    || !Number.isSafeInteger(limits.milliseconds) || limits.milliseconds <= 0 || limits.milliseconds > 180_000) {
++    note('open', 'refused', 'initial'); return null;
++  }
++  note('open', 'begin', 'none', limits.milliseconds);
+   let expired = false;
+-  const before = async <T>(until: number, work: () => Promise<T>): Promise<T | null> => {
++  const before = async <T>(stage: 'capture' | 'authorize', until: number, work: () => Promise<T>): Promise<T | null> => {
+     let timer: ReturnType<typeof setTimeout> | undefined;
+     try {
+       return await Promise.race([new Promise<null>(resolve => {
+-        timer = setTimeout(() => { expired = true; resolve(null); }, Math.max(1, until - performance.now()));
++        timer = setTimeout(() => { expired = true; note(stage, 'timer', 'deadline'); resolve(null); }, Math.max(1, until - performance.now()));
+       }), work()]);
+     } finally { clearTimeout(timer); }
+   };
+   let peer: UrlMachinePeer | null = null;
+   try {
+-    peer = await before(captureDeadline, async () => {
++    note('capture', 'begin', 'none', captureDeadline - began);
++    peer = await before('capture', captureDeadline, async () => {
+       const captured = await ports.accept(raw);
++      note('capture-port', 'return', captured === null ? 'refused' : 'accepted');
+       if (captured !== null && (expired || performance.now() >= captureDeadline)) {
++        note('capture', 'refused', 'late');
+         closeUrlMachinePeer(captured);
+         return null;
+       }
+       return captured;
+     });
++    note('capture', 'return', peer === null ? 'refused' : 'accepted');
+     if (peer === null) return null;
+     const captured = peer;
+     const stillOpening = (): boolean => !expired && performance.now() < deadline
+       && !raw.destroyed && raw.isPaused() && raw.readableLength === 0 && isUrlMachinePeerFor(captured, raw);
+     const authorize = ports.authorize;
+-    if (!stillOpening() || (authorize !== undefined
+-      && (await before(deadline, () => authorize(captured, stillOpening)) !== true || !stillOpening()))) {
++    if (!stillOpening()) {
++      note('authorize', 'refused', 'before');
+       closeUrlMachinePeer(captured);
+       return null;
+     }
++    if (authorize !== undefined) {
++      note('authorize', 'begin', 'none', Math.max(0, deadline - performance.now()));
++      const authorized = await before('authorize', deadline, () => authorize(captured, stillOpening));
++      note('authorize', 'return', authorized === true ? 'accepted' : authorized === false ? 'refused' : 'deadline');
++      if (authorized !== true || !stillOpening()) {
++        if (authorized === true) note('authorize', 'refused', 'after');
++        closeUrlMachinePeer(captured);
++        return null;
++      }
++    }
+   } catch {
++    note('open', 'refused', 'exception');
+     if (peer !== null) closeUrlMachinePeer(peer);
+     return null;
+   }
+@@ -123,7 +150,9 @@ export async function openSessionMachineConnection(raw: Socket, transport: Sessi
+   const stream = new Duplex({ allowHalfOpen: true, autoDestroy: false, readableHighWaterMark: 65_536, writableHighWaterMark: 65_536,
+     read() { resume?.(); resume = null; },
+     write(chunk: Buffer, _encoding, done) {
+-      if (!state.boundary?.() || raw.destroyed || performance.now() >= deadline) { done(new Error('session-machine-transport-unavailable')); return; }
++      if (!state.boundary?.() || raw.destroyed || performance.now() >= deadline) {
++        note('stream-write', 'refused', 'boundary'); done(new Error('session-machine-transport-unavailable')); return;
++      }
+       // HTTP completion can write no bytes after the bridge consumed its full
+       // response. Keep the guard, but perform no needless write to that peer.
+       if (chunk.length === 0) { done(); return; }
+@@ -156,8 +185,11 @@ export async function openSessionMachineConnection(raw: Socket, transport: Sessi
+     },
+   });
+   contexts.set(context, state); connections.set(stream, context);
+-  const lifetime = setTimeout(() => stream.destroy(new Error('session-machine-transport-unavailable')), Math.max(1, deadline - performance.now()));
+-  raw.once('close', () => stream.destroy()); raw.on('error', () => stream.destroy());
++  const lifetime = setTimeout(() => {
++    note('stream', 'timer', 'deadline'); stream.destroy(new Error('session-machine-transport-unavailable'));
++  }, Math.max(1, deadline - performance.now()));
++  raw.once('close', () => { note('stream', 'closed', 'raw'); stream.destroy(); });
++  raw.on('error', () => { note('stream', 'refused', 'raw'); stream.destroy(); });
+   stream.on('error', () => undefined);
+   stream.once('finish', () => { setImmediate(() => stream.destroy()); });
+   const pump = async (): Promise<void> => {
+@@ -166,7 +198,10 @@ export async function openSessionMachineConnection(raw: Socket, transport: Sessi
+     try {
+       while (!ended && !stream.destroyed && !state.ingressComplete && performance.now() < deadline) {
+         const chunk = await readUrlMachinePeer(selected);
+-        if (!chunk || ended || stream.destroyed || performance.now() >= deadline) throw new Error();
++        if (!chunk || ended || stream.destroyed || performance.now() >= deadline) {
++          note('stream-read', 'refused', chunk === null ? 'native-null' : ended || stream.destroyed ? 'closed' : 'deadline');
++          throw new Error();
++        }
+         if (state.ingressComplete) {
+           if (chunk.kind === 'data') throw new Error();
+           return;
+@@ -179,10 +214,11 @@ export async function openSessionMachineConnection(raw: Socket, transport: Sessi
+         if (!stream.push(Buffer.from(chunk.bytes)) && !ended && !stream.destroyed) await new Promise<void>(resolve => { resume = resolve; });
+       }
+       if (!ended && !state.ingressComplete) stream.destroy(new Error('session-machine-transport-unavailable'));
+-    } catch { stream.destroy(new Error('session-machine-transport-unavailable')); }
++    } catch { note('stream-read', 'refused', 'pump'); stream.destroy(new Error('session-machine-transport-unavailable')); }
+     finally { reading = false; settleIngress(); }
+   };
+   // Let the caller attach its bounded parser before the first checked chunk.
+   setImmediate(() => { void pump(); });
++  note('open', 'return', 'accepted');
+   return stream;
+ }
+diff --git a/packages/polaris-dossier/src/session-relay.ts b/packages/polaris-dossier/src/session-relay.ts
+index 5782bfe9a..fa9286da9 100644
+--- a/packages/polaris-dossier/src/session-relay.ts
++++ b/packages/polaris-dossier/src/session-relay.ts
+@@ -1,3 +1,4 @@
++import { channel } from 'node:diagnostics_channel';
+ import * as fs from 'node:fs';
+ import * as http from 'node:http';
+ import * as net from 'node:net';
+@@ -30,6 +31,9 @@ export interface SessionResponseObservation {
+   readonly tool: { readonly id: string; readonly name: SessionTool; readonly inputSha256: string } | null;
+ }
+ export const SESSION_COUNT_TOKENS_PATH = '/v1/messages/count_tokens?beta=true';
++const transportTrace = channel('owned-f3-combined');
++let transportRelayOrdinal = 0;
++
+ const ROUTES = ['/v1/messages', '/v1/messages?beta=true', SESSION_COUNT_TOKENS_PATH] as const;
+ type SessionRelayPath = typeof ROUTES[number];
+ export const SESSION_COUNT_RESPONSE_MAX_BYTES = 1024;
+@@ -187,12 +191,21 @@ async function start(socket: string, subject: SessionRelaySubject, ports: Sessio
+   const controllers = new Set<AbortController>();
+   const evidence = new WeakMap<SessionAuditEvent, SessionRelayAuditEvidence>();
+   let pending = false, poisoned = false, closing = false, responseFlushed = false;
++  const relayOrdinal = ++transportRelayOrdinal;
++  const note = (stage: string, event: string): void => {
++    if (transportTrace.hasSubscribers) transportTrace.publish({ component: 'relay', role: subject.binding.role,
++      relay: relayOrdinal, stage, event, at: performance.now() });
++  };
++  const poison = (stage: string): void => {
++    if (!poisoned) { poisoned = true; note(stage, 'poison'); }
++  };
+   const server = http.createServer({ maxHeaderSize: 16_384, requestTimeout: limits.milliseconds, headersTimeout: Math.min(limits.milliseconds, 10_000) }, (incoming, outgoing) => {
+     const context = fixture ? null : sessionMachineEffectContext(incoming.socket);
+     if ((!fixture && context === null) || pending || poisoned || closing) {
+-      if (!fixture) { poisoned = true; incoming.socket.destroy(); return; }
++      if (!fixture) { poison('http-entry'); incoming.socket.destroy(); return; }
+       outgoing.writeHead(503, { 'content-type': 'application/json', connection: 'close' }); outgoing.end(SAFE_FAILURE); incoming.resume(); return;
+     }
++    note('http-entry', 'begin');
+     const route = ROUTES.find(candidate => candidate === incoming.url);
+     const tokenCount = route === SESSION_COUNT_TOKENS_PATH;
+     pending = true;
+@@ -230,7 +243,7 @@ async function start(socket: string, subject: SessionRelaySubject, ports: Sessio
+     };
+     const refuse = (status: number): void => {
+       if (terminal) return;
+-      poisoned = true; refusing = true; controller.abort(); incoming.resume();
++      poison('http-refusal'); refusing = true; controller.abort(); incoming.resume();
+       if (!outgoing.headersSent && !outgoing.destroyed) {
+         outgoing.writeHead(status, { 'content-type': 'application/json', connection: 'close' }); outgoing.end(SAFE_FAILURE);
+       } else outgoing.destroy();
+@@ -245,14 +258,14 @@ async function start(socket: string, subject: SessionRelaySubject, ports: Sessio
+       void Promise.resolve().then(() => audit(event('transport-failed', 'Unknown', null))).catch(() => undefined);
+       // An absolute transport deadline includes output backpressure. Destroy
+       // immediately; a complete HTTP error cannot be promised to a stalled peer.
+-      poisoned = true; refusing = true; controller.abort(); incoming.destroy(); outgoing.destroy(); finish();
++      poison('http-deadline'); refusing = true; controller.abort(); incoming.destroy(); outgoing.destroy(); finish();
+     }, limits.milliseconds);
+     outgoing.once('finish', () => {
+       if (writingAdmittedResponse && !terminal && !refusing) responseFlushed = true;
+       finish();
+     });
+-    outgoing.on('close', () => { if (!terminal) { poisoned = true; controller.abort(); finish(); } });
+-    outgoing.on('error', () => { poisoned = true; controller.abort(); outgoing.destroy(); finish(); });
++    outgoing.on('close', () => { if (!terminal) { poison('response-close'); controller.abort(); finish(); } });
++    outgoing.on('error', () => { poison('response-error'); controller.abort(); outgoing.destroy(); finish(); });
+     incoming.on('error', () => refuse(400));
+     if (incoming.method !== 'POST' || route === undefined
+       || !JSON_CONTENT_TYPE.test(incoming.headers['content-type'] ?? '')
+@@ -284,7 +297,9 @@ async function start(socket: string, subject: SessionRelaySubject, ports: Sessio
+       if (terminal || refusing) return;
+       try {
+         if (!fixture && !stopSessionMachineIngress(incoming.socket)) throw new Error('session-machine-transport-unavailable');
+-        if (!(await ports.current()) || terminal) { await auditRefusal(409); return; }
++        note('first-current', 'begin');
++        if (!(await ports.current()) || terminal) { note('first-current', 'refused'); await auditRefusal(409); return; }
++        note('first-current', 'return');
+         const body = Buffer.concat(chunks, size);
+         received = { digest: sha256(body), bytes: body.byteLength };
+         const decision = await effect(boundary => {
+@@ -385,13 +400,16 @@ async function start(socket: string, subject: SessionRelaySubject, ports: Sessio
+   });
+   const rawSockets = new Set<net.Socket>();
+   const listener = fixture ? server : net.createServer({ allowHalfOpen: true, pauseOnConnect: true }, raw => {
+-    rawSockets.add(raw); raw.on('error', () => undefined); raw.once('close', () => rawSockets.delete(raw));
+-    if (closing || poisoned || rawSockets.size > limits.connections) { raw.destroy(); return; }
+-    void openSessionMachineConnection(raw, machine!, { bytes: limits.requestBytes + 16_384, milliseconds: limits.milliseconds }).then(stream => {
+-      if (!stream || closing || poisoned) { poisoned = true; stream?.destroy(); raw.destroy(); return; }
+-      stream.once('error', () => { poisoned = true; for (const controller of controllers) controller.abort(); });
++    note('raw', 'begin');
++    rawSockets.add(raw); raw.on('error', () => note('raw', 'refused'));
++    raw.once('close', () => { rawSockets.delete(raw); note('raw', 'closed'); });
++    if (closing || poisoned || rawSockets.size > limits.connections) { note('raw-limit', 'refused'); raw.destroy(); return; }
++    void openSessionMachineConnection(raw, machine!, { bytes: limits.requestBytes + 16_384, milliseconds: limits.milliseconds }, 'relay').then(stream => {
++      if (!stream || closing || poisoned) { poison('raw-open'); stream?.destroy(); raw.destroy(); return; }
++      stream.once('error', () => { poison('stream-error'); for (const controller of controllers) controller.abort(); });
++      note('raw-open', 'return');
+       server.emit('connection', stream);
+-    }, () => { poisoned = true; raw.destroy(); });
++    }, () => { poison('raw-exception'); raw.destroy(); });
+   });
+   listener.maxConnections = limits.connections;
+   observe?.(server);
+@@ -401,13 +419,13 @@ async function start(socket: string, subject: SessionRelaySubject, ports: Sessio
+       listener.once('error', failed); listener.listen(socket, () => { listener.off('error', failed); resolve(); });
+     });
+     if (!fixture && !(await prepareSessionMachineTransport(machine!, listener))) throw new Error('session-relay-start-failed');
+-    listener.on('error', () => { poisoned = true; for (const controller of controllers) controller.abort(); server.closeAllConnections();
++    listener.on('error', () => { poison('listener-error'); for (const controller of controllers) controller.abort(); server.closeAllConnections();
+       for (const raw of rawSockets) raw.destroy(); });
+     fs.chmodSync(socket, 0o600);
+   }
+   catch { listener.close(); throw new Error('session-relay-start-failed'); }
+   const relay = Object.freeze({ socket, healthy: () => !poisoned && !closing, responseFlushed: () => responseFlushed && !poisoned && !closing, close: async () => {
+-    closing = true; poisoned = true;
++    closing = true; poison('close');
+     for (const controller of controllers) controller.abort();
+     server.closeAllConnections();
+     for (const raw of rawSockets) raw.destroy();
+diff --git a/packages/polaris-dossier/src/url-machine-store.ts b/packages/polaris-dossier/src/url-machine-store.ts
+index 4f777272c..24034103b 100644
+--- a/packages/polaris-dossier/src/url-machine-store.ts
++++ b/packages/polaris-dossier/src/url-machine-store.ts
+@@ -1,3 +1,4 @@
++import { channel } from 'node:diagnostics_channel';
+ import { constants, lstatSync, realpathSync, renameSync, type Stats } from 'node:fs';
+ import { mkdir, open, realpath, lstat, rmdir, unlink, opendir, type FileHandle } from 'node:fs/promises';
+ import { randomBytes } from 'node:crypto';
+@@ -40,6 +41,8 @@ interface StoreIdentity {
+ // A crash retains the lock, so temporary files cannot accumulate across runs.
+ export const URL_MACHINE_STORE_LIMITS = Object.freeze({ bytes: 8_388_608, nodes: 524_288, depth: 32,
+   clients: 256, identities: 16_896, events: 4096, ioOperations: 512, operationBytes: 268_435_456, aggregateBytes: 50_331_648, operationMilliseconds: 5000, lockMilliseconds: 1000 });
++const combinedTrace = channel('owned-f3-combined');
++let combinedPublicationOrdinal = 0;
+ const JSON_LIMITS = { maxBytes: URL_MACHINE_STORE_LIMITS.bytes, maxNodes: URL_MACHINE_STORE_LIMITS.nodes, maxDepth: URL_MACHINE_STORE_LIMITS.depth };
+ const canonical = (value: unknown): string => encodeCanonicalJson(value, JSON_LIMITS);
+ const equal = (left: unknown, right: unknown): boolean => canonical(left) === canonical(right);
+@@ -261,7 +264,13 @@ async function openStore(options: UrlMachineStoreOptions, expectedIdentitySha256
+     const base = `/proc/self/fd/${heldRoot.fd}`, home = `/proc/self/fd/${heldHome.fd}`;
+     let closed = false, lastNow = 0;
+     const activeWork = new Set<Promise<unknown>>();
+-    const budgets = new AsyncLocalStorage<{ calls: number; bytes: number }>();
++    const budgets = new AsyncLocalStorage<{ calls: number; bytes: number; publication: number }>();
++    const note = (stage: string, event: string, elapsed = 0): void => {
++      const publication = budgets.getStore()?.publication ?? 0;
++      if (publication !== 0 && combinedTrace.hasSubscribers) {
++        combinedTrace.publish({ component: 'store', publication, stage, event, elapsed, at: performance.now() });
++      }
++    };
+     const charge = (bytes = 0): void => {
+       const budget = budgets.getStore();
+       if (budget && (++budget.calls > URL_MACHINE_STORE_LIMITS.ioOperations
+@@ -275,13 +284,25 @@ async function openStore(options: UrlMachineStoreOptions, expectedIdentitySha256
+     };
+     const live = (): number => {
+       clock();
+-      if (options.current() !== true) throw refused();
++      const began = performance.now();
++      let outcome = 'exception';
++      note('current-sync', 'begin');
++      try {
++        if (options.current() !== true) { outcome = 'refused'; throw refused(); }
++        outcome = 'return';
++      } finally { note('current-sync', outcome, performance.now() - began); }
+       return clock();
+     };
+     const currentAsync = options.currentAsync;
+     const liveAsync = async (authorize: () => Promise<boolean>): Promise<void> => {
+       clock();
+-      if (await authorize() !== true) throw refused();
++      const began = performance.now();
++      let outcome = 'exception';
++      note('current-async', 'begin');
++      try {
++        if (await authorize() !== true) { outcome = 'refused'; throw refused(); }
++        outcome = 'return';
++      } finally { note('current-async', outcome, performance.now() - began); }
+       clock();
+     };
+     const verifyRootIdentity = (actualRoot: Stats, actualHome: Stats): void => {
+@@ -343,7 +364,9 @@ async function openStore(options: UrlMachineStoreOptions, expectedIdentitySha256
+     let validatedState: { sha256: string; value: StoreState } | undefined;
+     const archiveKeys = new WeakMap<StoreState, string>();
+     const readArchive = async (state: StoreState): Promise<{ bytes: Buffer | null; value: UrlMachineArchive | null }> => {
++      note('archive-read', 'begin');
+       const bytes = await readFile(`${base}/canonical-history.json`, URL_MACHINE_ARCHIVE_LIMITS.bytes, true);
++      note('archive-read', 'return');
+       if (state.format === 'url-machine-store-state/1') {
+         if (bytes !== null) throw refused();
+         return { bytes: null, value: null };
+@@ -358,8 +381,10 @@ async function openStore(options: UrlMachineStoreOptions, expectedIdentitySha256
+         archiveKeys.set(state, key);
+       }
+       if (validatedArchive?.key === key) return { bytes, value: validatedArchive.value };
++      note('archive-decode', 'begin');
+       const value = readUrlMachineArchive(bytes, state.archive, rootId, state.clients, live());
+       if (value === null) throw refused();
++      note('archive-decode', 'return');
+       validatedArchive = { key, value };
+       return { bytes, value };
+     };
+@@ -373,6 +398,7 @@ async function openStore(options: UrlMachineStoreOptions, expectedIdentitySha256
+       }
+     };
+     const readState = async (publicationClock?: () => number): Promise<StoreState> => {
++      note('state-read', 'begin');
+       await anchored(publicationClock);
+       const id = await readFile(`${base}/identity.json`, 16_384);
+       if (id === null || sha256(id) !== expectedIdentitySha256) throw refused();
+@@ -386,6 +412,7 @@ async function openStore(options: UrlMachineStoreOptions, expectedIdentitySha256
+       }
+       const state = validatedState.value;
+       await readArchive(state);
++      note('state-read', 'return');
+       return state;
+     };
+     await census();
+@@ -407,10 +434,14 @@ async function openStore(options: UrlMachineStoreOptions, expectedIdentitySha256
+       let active = true, held = false, uncertain = false, contended = false;
+       const pending = new Set<Promise<unknown>>();
+       const allocation = staging?.allocation === true;
++      const publication = !allocation && staging?.current !== undefined && currentAsync !== undefined
++        ? ++combinedPublicationOrdinal : 0;
+       const checkDeadline = (): number => {
+-        if (!active || (staging?.current !== undefined && staging.current() !== true)) throw refused();
++        if (!active || (staging?.current !== undefined && staging.current() !== true)) {
++          note('publication-boundary', 'refused'); throw refused();
++        }
+         const now = clock();
+-        if (now >= deadline || performance.now() - began >= operationMilliseconds) throw refused();
++        if (now >= deadline || performance.now() - began >= operationMilliseconds) { note('publication-deadline', 'refused'); throw refused(); }
+         return now;
+       };
+       const check = (): number => {
+@@ -448,13 +479,16 @@ async function openStore(options: UrlMachineStoreOptions, expectedIdentitySha256
+       };
+       const write = async (file: string, bytes: Uint8Array, predecessor?: Uint8Array | null): Promise<void> => {
+         charge(bytes.byteLength);
++        note('write', 'begin');
+         checkWork(); await io(verifyAnchors);
+         const parent = path.dirname(file), temporary = `${file}.new-${opaque()}`;
+         let handle: FileHandle | undefined;
+         try {
+           await io(async () => { handle = await open(temporary, constants.O_WRONLY | constants.O_CREAT | constants.O_EXCL | constants.O_NOFOLLOW, 0o600); });
+           const held = handle!;
++          note('write-temp', 'begin');
+           await io(() => held.writeFile(bytes)); await io(() => held.sync());
++          note('write-temp', 'return');
+           checkWork(); await io(verifyAnchors);
+           if (predecessor !== undefined) {
+             const actual = await io(() => readFile(file, Math.max(bytes.byteLength, predecessor?.byteLength ?? 0), true));
+@@ -466,28 +500,40 @@ async function openStore(options: UrlMachineStoreOptions, expectedIdentitySha256
+           // No asynchronous scheduling gap between currentness and publication.
+           // POSIX cannot predicate rename on expiry or preempt a stalled syscall.
+           // A failed post-boundary check leaves a pending, non-authorizing anchor.
++          note('write-rename', 'begin');
+           renameSync(temporary, file);
++          note('write-rename', 'return');
+           await io(() => (parent === home ? heldHome : heldRoot).sync());
+           const readback = await io(() => readFile(file, bytes.byteLength));
+           if (readback === null || !readback.equals(Buffer.from(bytes))) throw refused();
+           checkWork();
++          note('write', 'return');
+         } finally {
+           await handle?.close().catch(() => {});
+           await unlink(temporary).catch(() => {});
+         }
+       };
+       let timer: ReturnType<typeof setTimeout> | undefined;
+-      const work = budgets.run({ calls: 0, bytes: 0 }, async () => {
++      const work = budgets.run({ calls: 0, bytes: 0, publication }, async () => {
++        note('publication', 'begin');
+         if (!Number.isSafeInteger(deadline) || deadline > options.deadline || deadline <= live()) throw refused();
+         for (;;) {
++          note('lock-anchors', 'begin');
+           check(); await io(verifyAnchors);
++          note('lock-anchors', 'return');
+           if (allocation) {
+             await reverify(); check(); verifyNamedRoots(); checkDeadline();
+             if (contended && performance.now() - began >= URL_MACHINE_STORE_LIMITS.lockMilliseconds) throw refused();
+           }
+-          try { await io(() => mkdir(`${base}/lock`, { mode: 0o700 })); held = true; break; }
+-          catch (error) {
+-            if ((error as NodeJS.ErrnoException).code !== 'EEXIST' || performance.now() - began >= URL_MACHINE_STORE_LIMITS.lockMilliseconds) throw error;
++          note('lock-mkdir', 'begin');
++          try {
++            await io(() => mkdir(`${base}/lock`, { mode: 0o700 }));
++            held = true; note('lock-mkdir', 'return'); break;
++          } catch (error) {
++            if ((error as NodeJS.ErrnoException).code !== 'EEXIST' || performance.now() - began >= URL_MACHINE_STORE_LIMITS.lockMilliseconds) {
++              note('lock-mkdir', 'refused'); throw error;
++            }
++            note('lock-mkdir', 'contended');
+             contended = true;
+             await new Promise(resolve => setTimeout(resolve, 10));
+           }
+@@ -496,11 +542,18 @@ async function openStore(options: UrlMachineStoreOptions, expectedIdentitySha256
+           check();
+           if (contended && performance.now() - began >= URL_MACHINE_STORE_LIMITS.lockMilliseconds) throw refused();
+         }
++        note('root-sync', 'begin');
+         await io(() => heldRoot.sync());
++        note('root-sync', 'return');
+         if (allocation) { await reverify(); check(); }
++        note('census', 'begin');
+         await io(census);
++        note('census', 'return');
++        note('lease-operation', 'begin');
+         await operation({ check, checkWork, reverify, anchored: verifyAnchors, state: () => io(() => readState(stagingClock)), write });
++        note('lease-operation', 'return');
+         check();
++        note('publication', 'return');
+         if (allocation) {
+           // The slot is durable. Keep lock cleanup and witness admission
+           // inside the same deadline as the allocation.
+@@ -567,6 +620,7 @@ async function openStore(options: UrlMachineStoreOptions, expectedIdentitySha256
+         const order = ['reserve', 'publish', 'synchronize', 'audit', 'commit'];
+         let prepared: { canonical: Buffer; head: Head; runId: string; newIdentities: readonly string[]; archive: Buffer; predecessor: Buffer | null; pointer: UrlMachineArchivePointer } | null = null;
+         const preflightCanonical: NonNullable<UrlMachineLifecycleLease['preflightCanonical']> = async (candidate, proposedHead) => {
++          note('preflight', 'begin');
+           checkWork();
+           if (phase !== 0 || prepared !== null || !head(proposedHead) || proposedHead.record.clientId !== clientId) return false;
+           const bytes = Buffer.from(candidate), current = await state(), entry = current.clients.find(item => item.clientId === clientId);
+@@ -595,9 +649,10 @@ async function openStore(options: UrlMachineStoreOptions, expectedIdentitySha256
+             newIdentities: entry.anchor.kind === 'never-issued' ? [clientId, checked.record.issuanceId, checked.record.instances[0]!.instanceId]
+               : checked.record.instances.slice(entry.anchor.head.record.generation).map(value => value.instanceId), archive, predecessor: prior.bytes,
+             pointer: { sha256: sha256(archive), bytes: archive.length, records: entries.length, legacy } };
+-          checkWork(); return true;
++          checkWork(); note('preflight', 'return'); return true;
+         };
+         const read = async (): Promise<UrlMachineLifecycleSnapshot | null> => {
++          note('lease-read', 'begin');
+           checkWork();
+           const current = await state(), entry = current.clients.find(client => client.clientId === clientId);
+           if (!entry || (entry.anchor.kind === 'pending' && phase === 0)) return null;
+@@ -613,9 +668,11 @@ async function openStore(options: UrlMachineStoreOptions, expectedIdentitySha256
+             ? canonicalBytes === null || projected === null || sha256(canonicalBytes) !== entry.anchor.head.record.sha256
+               || !equal(projected, entry.anchor.head.record) || !equal(audited, entry.anchor.head)
+             : canonicalBytes !== null || projected !== null || audited !== null)) return null;
++          note('lease-read', 'return');
+           return { canonical: canonicalBytes, projection: projected, anchor: entry.anchor, audit: audited };
+         };
+         const advance: UrlMachineLifecycleLease['advance'] = async (expected, step) => {
++          note(step.kind, 'begin');
+           checkWork();
+           if (step.kind !== order[phase] || prepared === null) return false;
+           const before = await read();
+@@ -664,6 +721,7 @@ async function openStore(options: UrlMachineStoreOptions, expectedIdentitySha256
+             validatedState = { sha256: sha256(bytes), value: nextState };
+           }
+           checkWork(); phase++;
++          note(step.kind, 'return');
+           return true;
+         };
+         const sampleCurrent = (): number | null => { try { return check(); } catch { return null; } };
+diff --git a/packages/polaris-dossier/src/url-ordered-design-host.ts b/packages/polaris-dossier/src/url-ordered-design-host.ts
+index 8b9edf38f..97dc0f9c7 100644
+--- a/packages/polaris-dossier/src/url-ordered-design-host.ts
++++ b/packages/polaris-dossier/src/url-ordered-design-host.ts
+@@ -1,3 +1,4 @@
++import { channel } from 'node:diagnostics_channel';
+ import { encodeCanonicalJson, parseBoundedJson } from '@syzygy/polaris-generation-core/live';
+ import { isRecord, sha256 } from '@syzygy/support';
+ import { startSessionBroker, type SessionBroker } from './session-broker.js';
+@@ -33,6 +34,9 @@ export interface OrderedDesignHost extends SessionHost {
+   readonly relay: SessionRelay;
+   readTerminal(): ReturnType<Controller['readTerminal']>;
+ }
++const transportTrace = channel('owned-f3-combined');
++let transportHostOrdinal = 0;
++
+ const hosts = new WeakMap<OrderedDesignHost, { readonly profile: OrderedDesignSessionProfile; readonly current: () => boolean }>();
+ export const isOrderedDesignHostFor = (host: unknown, profile: OrderedDesignSessionProfile): boolean => {
+   const selected = host !== null && typeof host === 'object' ? hosts.get(host as OrderedDesignHost) : undefined;
+@@ -57,25 +61,37 @@ async function start(input: OrderedDesignHostOptions, startRelay: typeof startSe
+   let broker: SessionBroker | undefined, relay: SessionRelay | undefined;
+   let closing = false, failed = false, started = false, issuedCall: SessionResponseObservation['tool'] = null;
+   let closingPromise: ReturnType<SessionHost['close']> | undefined;
+-  const poison = (): void => { failed = true; void controller?.retire('refused').catch(() => {}); };
++  const hostOrdinal = ++transportHostOrdinal;
++  const note = (stage: string, event: string): void => {
++    if (transportTrace.hasSubscribers) transportTrace.publish({ component: 'host', host: hostOrdinal, stage, event, at: performance.now() });
++  };
++  const poison = (stage: string): void => {
++    if (!failed) note(stage, 'poison');
++    failed = true; void controller?.retire('refused').catch(() => {});
++  };
+   let cancelActivation!: () => void;
+   const cancelled = new Promise<false>(resolve => { cancelActivation = () => resolve(false); });
+   const active = Promise.race([Promise.resolve(input.controller).then(async selected => {
++    note('activation', 'begin');
+     if (!isProductionOrderedDesignSession(selected, profile) || closing || failed || Date.now() >= input.activationDeadline
+       || !(await input.current()) || closing || failed || Date.now() >= input.activationDeadline) {
++      note('activation', 'refused');
+       if (isProductionOrderedDesignSession(selected)) await selected.retire('interrupted').catch(() => {});
+       throw refused();
+     }
+     controller = selected;
+     if (started) clearTimeout(activationTimer);
++    note('activation', 'return');
+     return true;
+-  }), cancelled]).catch(() => { poison(); cancelActivation(); if (started) void close(); return false; });
++  }), cancelled]).catch(() => { poison('activation-rejected'); cancelActivation(); if (started) void close(); return false; });
+   const current = async (): Promise<boolean> => await active && !closing && !failed
+     && await input.current() === true && !closing && !failed;
+   const selectedController = (): Controller => { if (!controller || closing || failed) throw refused(); return controller; };
+-  const activationTimer = setTimeout(() => { poison(); cancelActivation(); if (started) void close(); }, Math.max(1, input.activationDeadline - Date.now()));
++  note('activation-cutoff', 'scheduled');
++  const activationTimer = setTimeout(() => { note('activation-cutoff', 'timer'); poison('activation-cutoff'); cancelActivation(); if (started) void close(); }, Math.max(1, input.activationDeadline - Date.now()));
+   const close: SessionHost['close'] = () => closingPromise ??= (async () => {
+     closing = true;
++    note('close', 'begin');
+     cancelActivation();
+     clearTimeout(activationTimer);
+     await controller?.retire('interrupted').catch(() => { failed = true; });
+@@ -106,7 +122,7 @@ async function start(input: OrderedDesignHostOptions, startRelay: typeof startSe
+             || (result !== undefined && !admission.originIds.includes(result.id))) throw refused();
+           return { ok: true, body, admission, consumedToolResults: result === undefined ? []
+             : [{ receiptId: result.id, toolUseId: result.toolUseId, digest: result.digest, bytes: result.bytes }] };
+-        } catch { poison(); return { ok: false }; }
++        } catch { poison('request'); return { ok: false }; }
+       },
+       providerHeaders: incoming => {
+         selectedController();
+@@ -121,8 +137,8 @@ async function start(input: OrderedDesignHostOptions, startRelay: typeof startSe
+           await selectedController().observe(event);
+           await input.audit(event);
+           if (event.event === 'response-admitted') issuedCall = event.response?.tool ?? null;
+-          if (['attempt-refused', 'transport-failed', 'response-refused'].includes(event.event)) poison();
+-        } catch { poison(); throw refused(); }
++          if (['attempt-refused', 'transport-failed', 'response-refused'].includes(event.event)) poison('relay-audit-outcome');
++        } catch { poison('relay-audit-exception'); throw refused(); }
+       },
+     }, undefined, input.relayMachine);
+     if (closing || failed) throw refused();
+@@ -144,13 +160,19 @@ async function start(input: OrderedDesignHostOptions, startRelay: typeof startSe
+           issuedCall = null;
+         });
+       });
+-      if (!result.ok) { poison(); throw refused(); }
+-    }, poison, undefined, input.brokerMachine);
++      if (!result.ok) { poison('broker-effect'); throw refused(); }
++    }, () => poison('broker-fault'), undefined, input.brokerMachine);
+     if (closing || failed || await Promise.race([Promise.resolve(input.current()), cancelled]) !== true) throw refused();
+     started = true;
+     if (controller) clearTimeout(activationTimer);
++    note('ready', 'return');
++    let healthStamped = false;
+     const host = Object.freeze({ brokerSocket: input.brokerSocket, relaySocket: input.relaySocket, relay, close,
+-      healthy: () => !closing && !failed && relay!.healthy(),
++      healthy: () => {
++        const failure = closing ? 'health-closing' : failed ? 'health-poisoned' : !relay!.healthy() ? 'health-relay' : null;
++        if (failure !== null && !healthStamped) { healthStamped = true; note(failure, 'refused'); }
++        return failure === null;
++      },
+       readTerminal: async () => { if (!(await current())) throw refused(); return selectedController().readTerminal(); } });
+     hosts.set(host, { profile, current: () => !closing && !failed && started && relay!.healthy() });
+     return host;
+diff --git a/packages/polaris-dossier/src/url-run-artifacts.ts b/packages/polaris-dossier/src/url-run-artifacts.ts
+index 1ca1dcd1c..9e4d7a381 100644
+--- a/packages/polaris-dossier/src/url-run-artifacts.ts
++++ b/packages/polaris-dossier/src/url-run-artifacts.ts
+@@ -1,7 +1,11 @@
++import { channel } from 'node:diagnostics_channel';
+ import { URL_PRODUCT_READ_MILLISECONDS } from './url-product-read-limits.js';
+ import type { UrlVerifiedRecoveryProducts } from './url-recovery-products.js';
+ import { URL_ARTIFACT_LIMITS, selectors, knownRecord, FROZEN_DRAFT_PATH, AUTHOR_FEEDBACK, PACKET_PATH,
+   productPopulation, verifyFrozenOriginProvenance, type UrlProductSelector, type UrlFrozenProductHistory, type FrozenProductIdentity } from './url-frozen-product-history.js';
++const bootstrapTrace = channel('owned-f3-combined');
++let bootstrapRegistrationOrdinal = 0;
++
+ export { URL_ARTIFACT_LIMITS, verifyUrlFrozenProductHistory } from './url-frozen-product-history.js';
+ export type { UrlProductSelector, UrlFrozenProductHistory } from './url-frozen-product-history.js';
+ import * as fs from 'node:fs';
+@@ -400,10 +404,17 @@ function create(given: UrlRunArtifactsOptions) {
+     return copy(products);
+   }
+   async function registerLaunchHistory(committed: UrlCommittedLaunchHistory, waitForSamples?: () => Promise<boolean>): Promise<void> {
++    const registration = ++bootstrapRegistrationOrdinal;
++    const trace = (stage: string, event: string): void => {
++      if (bootstrapTrace.hasSubscribers) bootstrapTrace.publish({ component: 'registration', stage, event, registration, at: performance.now() });
++    };
++    trace('first-drain', 'begin');
+     if (waitForSamples !== undefined) {
+       await yieldToPoll();
+       if (!(await waitForSamples())) refuse();
+     }
++    trace('first-drain', 'return');
++    trace('initial-inspect', 'begin');
+     live();
+     const { history, scope, project, eventSha256 } = inspectCommittedUrlLaunchHistory(committed);
+     const { role, file, bytes } = history, prompt = authenticatedRecords.get(history.promptFile);
+@@ -434,21 +445,34 @@ function create(given: UrlRunArtifactsOptions) {
+     };
+     // The initial inspection has already checked the exact durable audit
+     // and issued files. Match the bridge's prompt snapshot before staging.
++    trace('initial-inspect', 'return');
++    trace('prompt-and-audit', 'begin');
+     if (!promptCurrent()) refuse();
+     const audit = compose(asBytes({ format: 'url-session-audit-launch-history-binding/1',
+       runId, role, file, recordSha256: history.sha256, eventSha256 }), [origins.roots.runControl]);
++    trace('prompt-and-audit', 'return');
++    trace('second-drain', 'begin');
+     // The private audit receipt has no product binding. Recheck the live
+     // prompt, history and durable audit before publishing the product.
+     await yieldToPoll();
+     if (waitForSamples !== undefined && !(await waitForSamples())) refuse();
++    trace('second-drain', 'return');
++    trace('snapshot-authority', 'begin');
+     const { receipt, snapshot } = snapshotWithAuthority(check => {
++      trace('committed-recheck', 'begin');
+       if (authenticatedRecords.has(file) || !stillCommitted(check)) refuse();
++      trace('committed-recheck', 'return');
++      trace('compose-and-snapshot', 'begin');
+       const receipt = compose(bytes, [...rootParents, prompt.receipt, origins.initialReceipts[role], audit]);
+       const snapshot = snapshotProductFile(run, file, limits.itemBytes, check);
++      trace('compose-and-snapshot', 'return');
+       return { receipt, snapshot };
+     });
++    trace('snapshot-authority', 'return');
++    trace('retention', 'begin');
+     retainRecord(file, bytes, receipt, stillCommitted, snapshot);
+     launchAliases.set(URL_HELPER_LAUNCH_FILES[role], file);
++    trace('retention', 'return');
+   }
+   type Predicate = (v: unknown) => boolean;
+   const lit = (...values: readonly unknown[]): Predicate => v => values.includes(v);
+diff --git a/packages/polaris-dossier/src/url-run-composed.test.ts b/packages/polaris-dossier/src/url-run-composed.test.ts
+index 74e313a8c..8b189b545 100644
+--- a/packages/polaris-dossier/src/url-run-composed.test.ts
++++ b/packages/polaris-dossier/src/url-run-composed.test.ts
+@@ -1,3 +1,4 @@
++import { channel } from 'node:diagnostics_channel';
+ import * as fs from 'node:fs/promises';
+ import path from 'node:path';
+ import { afterAll, afterEach, beforeAll, describe, expect, it, vi } from 'vitest';
+@@ -112,8 +113,35 @@ function scripted(role: string, calls: readonly (ScriptCall | (() => ScriptCall
+ 
+ let runtime: UrlRuntime;
+ const cleanup: (() => Promise<unknown>)[] = [];
+-beforeAll(async () => { await fs.mkdir(recoveryHost.root, { mode: 0o700 }); await fs.chmod(recoveryHost.root, 0o700); runtime = await buildComposedRuntime(); }, 60_000);
+-afterAll(async () => { if (process.env['SYZYGY_COMPOSED_RETAIN'] === undefined) await fs.rm(recoveryHost.root, { recursive: true, force: true }); });
++const ownedBootstrapChannel = channel('owned-f3-combined');
++const ownedBootstrapRows: unknown[] = [];
++let ownedBootstrapFile: fs.FileHandle | undefined;
++let ownedBootstrapDropped = 0;
++const collectBootstrap = (row: unknown): void => {
++  if (ownedBootstrapRows.length < 65_536) ownedBootstrapRows.push(row);
++  else ownedBootstrapDropped++;
++};
++beforeAll(async () => {
++  const traceFile = process.env['SYZYGY_COMPOSED_COMBINED_TRACE'];
++  if (traceFile !== undefined) {
++    ownedBootstrapFile = await fs.open(traceFile, 'wx', 0o600);
++    ownedBootstrapChannel.subscribe(collectBootstrap);
++  }
++  await fs.mkdir(recoveryHost.root, { mode: 0o700 }); await fs.chmod(recoveryHost.root, 0o700);
++  runtime = await buildComposedRuntime();
++}, 60_000);
++afterAll(async () => {
++  try {
++    if (ownedBootstrapFile !== undefined) {
++      ownedBootstrapChannel.unsubscribe(collectBootstrap);
++      const rows = [...ownedBootstrapRows, { component: 'collector', dropped: ownedBootstrapDropped }];
++      try { await ownedBootstrapFile.writeFile(rows.map(row => JSON.stringify(row) + '\n').join('')); }
++      finally { await ownedBootstrapFile.close(); }
++    }
++  } finally {
++    if (process.env['SYZYGY_COMPOSED_RETAIN'] === undefined) await fs.rm(recoveryHost.root, { recursive: true, force: true });
++  }
++});
+ afterEach(async () => { for (const close of cleanup.splice(0).reverse()) await close(); provider.clear(); relayRoles.length = 0; relayObservations.length = 0; settledProviderRoles.clear(); finalResponseDelivery.wait = null; vi.restoreAllMocks(); vi.unstubAllEnvs(); });
+ 
+ type SeenReceipt = { role: string; id: string; digest: string; bytes: number; toolName: string; inputSha256: string; committed: boolean };
+diff --git a/packages/polaris-dossier/src/url-run-machine.ts b/packages/polaris-dossier/src/url-run-machine.ts
+index 8c7efaecb..8f67a9b7f 100644
+--- a/packages/polaris-dossier/src/url-run-machine.ts
++++ b/packages/polaris-dossier/src/url-run-machine.ts
+@@ -1,3 +1,4 @@
++import { channel } from 'node:diagnostics_channel';
+ import { randomBytes } from 'node:crypto';
+ import { mkdir, realpath } from 'node:fs/promises';
+ import path from 'node:path';
+@@ -19,6 +20,8 @@ import { urlMachineReaderProgram, type UrlRuntime } from './url-runtime.js';
+ import type { ViewRole } from './session-view.js';
+ import { URL_ORIGIN_POLICY_PATH, URL_ROLES } from './url-run-record.js';
+ 
++const transportTrace = channel('owned-f3-combined');
++
+ const BOUNDS = { maxBytes: 65_536, maxNodes: 4096, maxDepth: 16 };
+ const canonical = (value: unknown): Buffer => Buffer.from(encodeCanonicalJson(value, BOUNDS));
+ const opaque = (): string => randomBytes(32).toString('hex');
+@@ -241,6 +244,11 @@ export async function createUrlRunMachine(input: UrlRunMachineOptions) {
+       if (clients.has(key)) throw refuse();
+       clients.set(key, client);
+       let listener: Awaited<ReturnType<typeof prepareUrlMachineListenerAsync>> = null;
++      const note = (stage: string, event: string): void => {
++        if (plan.role === 'design' && transportTrace.hasSubscribers) transportTrace.publish({
++          component: 'machine', edge: kind, stage, event, at: performance.now(),
++        });
++      };
+       const transport = createSessionMachineTransport({
+         prepare: async server => {
+           if (!current()) return false;
+@@ -248,10 +256,14 @@ export async function createUrlRunMachine(input: UrlRunMachineOptions) {
+           return listener !== null && current();
+         },
+         accept: async socket => {
++          note('accept', 'begin');
+           const until = Math.min(input.deadline, input.now() + 5000);
+           let launch = input.launch(plan.role);
+           while (launch === undefined && current() && input.now() < until) { await yieldToPoll(); launch = input.launch(plan.role); }
+-          if (launch === undefined || listener === null || !current() || !(await input.reverify()) || !current()) return null;
++          if (launch === undefined || listener === null || !current() || !(await input.reverify()) || !current()) {
++            note('accept-authority', 'refused'); return null;
++          }
++          note('native-capture', 'begin');
+           const support = isOrderedDesignSessionProfile(plan.profile) ? plan.profile.transcript.supportSha256 : input.runtime.supportSha256;
+           const name = kind === 'mcp-shim' ? 'session-mcp.js' : 'session-bridge.js';
+           const selectedLaunch = launch;
+@@ -266,13 +278,14 @@ export async function createUrlRunMachine(input: UrlRunMachineOptions) {
+             chargeNativeCpuMicroseconds: input.chargeNativeCpuMicroseconds });
+         },
+         authorize: async (peer, stillOpening) => {
++          note('authorize', 'begin');
+           const authority = (): boolean => !stopped && !closing && stillOpening() && effectCurrent();
+-          if (!authority()) return false;
++          if (!authority()) { note('authorize-authority', 'refused'); return false; }
+           peers.add(peer);
+           let permitted = false;
+           try {
+             permitted = await serialize(async () => {
+-              if (!authority() || !current()) return false;
++              if (!authority() || !current()) { note('authorize-slot', 'refused'); return false; }
+               const now = input.now(), old = client.record, stamp = new Date(now).toISOString();
+               const instance = { instanceId: opaque(), generation: (old?.instances.length ?? 0) + 1, issuedAt: stamp,
+                 expiresAt: new Date(input.deadline).toISOString(), retiredAt: null, revokedAt: null, verifier: peer.verifier };
+@@ -283,8 +296,10 @@ export async function createUrlRunMachine(input: UrlRunMachineOptions) {
+                   expiresAt: new Date(input.deadline).toISOString(), revokedAt: null, instances: [instance] }
+                 : { ...old, revision: old.revision + 1,
+                   instances: [...old.instances.map((value, index) => index === old.instances.length - 1 ? { ...value, retiredAt: stamp } : value), instance] };
++              note('authorize-publish', 'begin');
+               const published = await store.publish({ context: { ...context, now }, binding,
+                 expected: old === null ? null : { revision: old.revision, sha256: client.head!.record.sha256 }, next: canonical(next) }, authority);
++              note('authorize-publish', published.ok ? 'return' : 'refused');
+               if (!published.ok) return false;
+               client.record = next; client.head = published.receipt;
+               return authority() && current();
+diff --git a/packages/polaris-dossier/src/url-run-ordered-attempt.ts b/packages/polaris-dossier/src/url-run-ordered-attempt.ts
+index 79e82f923..586fa26dd 100644
+--- a/packages/polaris-dossier/src/url-run-ordered-attempt.ts
++++ b/packages/polaris-dossier/src/url-run-ordered-attempt.ts
+@@ -1,3 +1,4 @@
++import { channel } from 'node:diagnostics_channel';
+ import path from 'node:path';
+ import { setImmediate as yieldToPoll } from 'node:timers/promises';
+ import { encodeCanonicalJson } from '@syzygy/polaris-generation-core/live';
+@@ -29,6 +30,7 @@ type Artifacts = ReturnType<typeof createUrlRunArtifacts>;
+ type Stage = Awaited<ReturnType<Artifacts['stageOrderedDesignVerdict']>>;
+ const canonical = (value: unknown): string => encodeCanonicalJson(value, { maxBytes: 2_097_152, maxNodes: 65_536, maxDepth: 32 });
+ const refused = (): Error => new Error('url-ordered-attempt-unavailable');
++const bootstrapTrace = channel('owned-f3-combined');
+ 
+ export interface UrlOrderedAttemptOptions {
+   readonly run: string;
+@@ -89,6 +91,11 @@ export async function checkUrlOrderedProductCurrent(input: {
+  * not activate the controller: actual launch history and a freshly reproduced
+  * checked delivery are committed before the one-use activation resolves. */
+ export async function startUrlOrderedAttempt(input: UrlOrderedAttemptOptions) {
++  let bootstrapStage = 'entry';
++  const traceBootstrap = (stage: string, event: string): void => {
++    bootstrapStage = stage;
++    if (bootstrapTrace.hasSubscribers) bootstrapTrace.publish({ component: 'ordered', stage, event, round: input.round, at: performance.now() });
++  };
+   const profile = input.plan.profile, program = urlOrderedScreenProgram(input.runtime);
+   if (!isOrderedDesignSessionProfile(profile) || program === null || input.plan.role !== 'design'
+     || input.round < 1 || !Number.isSafeInteger(input.round) || !(await input.current())) throw refused();
+@@ -220,22 +227,39 @@ export async function startUrlOrderedAttempt(input: UrlOrderedAttemptOptions) {
+         if (event.event === 'response-admitted' && event.response?.stopReason === 'end_turn' && !(await consumeTerminal())) throw refused();
+       },
+     });
++    traceBootstrap('native-launch', 'begin');
+     child = await launchRestrictedUrlSession({ preparation, host });
+     input.launched(child, host);
++    traceBootstrap('native-launch', 'return');
+     let launch = input.firstLaunch;
+     if (launch === null) {
++      traceBootstrap('history-write', 'begin');
+       const written = await writeUrlLaunchHistory({ run: input.run, runId: path.basename(input.run), plan: input.plan,
+         screen: input.screen, current: input.current, compatiblePromptSha256: input.compatiblePromptSha256,
+         ...(input.generation === undefined ? {} : { generation: input.generation }),
+         capture: { pid: child.pid, startedAt: input.now() } });
+       if (written.capability === null) throw refused();
++      traceBootstrap('history-write', 'return');
++      traceBootstrap('history-commit', 'begin');
+       launch = await input.audit.commitLaunchHistory(written.capability);
++      traceBootstrap('history-commit', 'return');
++      traceBootstrap('history-register', 'begin');
+       await input.registerLaunch(launch);
++      traceBootstrap('history-register', 'return');
+     }
+-    if (!(await input.current()) || !(await input.waitForSamples())) throw refused();
++    traceBootstrap('runtime-current', 'begin');
++    if (!(await input.current())) throw refused();
++    traceBootstrap('runtime-current', 'return');
++    traceBootstrap('sample-drain', 'begin');
++    if (!(await input.waitForSamples())) throw refused();
++    traceBootstrap('sample-drain', 'return');
++    traceBootstrap('delivery-commit', 'begin');
+     delivery = await input.audit.commitDesignDelivery({ product: render.product, expectedProduct: input.expectedProduct, launch,
+       sitePath: input.sitePath, round: input.round, run: input.run, runId: path.basename(input.run), pinnedRevision: input.pin }, input.waitForSamples);
++    traceBootstrap('delivery-commit', 'return');
++    traceBootstrap('delivery-read', 'begin');
+     delivery = await input.audit.readDesignDeliveryView(delivery.receipt, render.product, observeRead);
++    traceBootstrap('delivery-read', 'return');
+     const planInput = orderedDesignPlanInputForDelivery(profile, delivery.receipt, input.expectedProduct, input.pin, input.deadline);
+     const plan = planOrderedDesignBytes({ ...planInput, envelope: delivery.view });
+     const envelope = { cpuMicroseconds: 64_000_000, wallMilliseconds: 30_000, auditReadBytes: 500_000_000,
+@@ -271,15 +295,19 @@ export async function startUrlOrderedAttempt(input: UrlOrderedAttemptOptions) {
+         } finally { fresh.close(); }
+       },
+     });
++    traceBootstrap('activation-current', 'begin');
+     if (!(await current())) throw refused();
++    traceBootstrap('activation-current', 'return');
++    traceBootstrap('activation-drain', 'begin');
+     // The host independently rechecks the delivery when activation resolves.
+     // Let any sampler started during the bootstrap check finish first.
+     await yieldToPoll();
+     if (!(await input.waitForSamples())) throw refused();
+     assertProcessingCurrent(); activate(controller);
++    traceBootstrap('activation-drain', 'return');
+     return Object.freeze({ delivery, launch, host, child, close,
+       consumeTerminal,
+       get terminalConsumed() { return consumedTerminal; },
+     });
+-  } catch { await close(); throw refused(); }
++  } catch { traceBootstrap(bootstrapStage, 'refused'); await close(); throw refused(); }
+ }
+diff --git a/packages/polaris-dossier/src/url-run-sessions.ts b/packages/polaris-dossier/src/url-run-sessions.ts
+index 128693d5d..e8839b4bc 100644
+--- a/packages/polaris-dossier/src/url-run-sessions.ts
++++ b/packages/polaris-dossier/src/url-run-sessions.ts
+@@ -1,3 +1,4 @@
++import { channel } from 'node:diagnostics_channel';
+ import { createServer } from 'node:net';
+ import { setImmediate as yieldToPoll } from 'node:timers/promises';
+ import path from 'node:path';
+@@ -35,6 +36,9 @@ import { isClaimedStoppedUrlRun, isClaimedStoppedUrlRunAsync, type verifyStopped
+ import type { UrlRecoveryClaim } from './url-stopped-run.js';
+ import { URL_HOST_ROOT } from './url-mode-registry.js';
+ 
++const bootstrapTrace = channel('owned-f3-combined');
++let bootstrapCurrentOrdinal = 0;
++
+ const canonical = (value: unknown): string => encodeCanonicalJson(value, { maxBytes: 2_097_152, maxNodes: 65_536, maxDepth: 32 });
+ /** A semantic terminal permits cleanup; only the actual successful launch
+  * outcome permits retiring its transport health check. */
+@@ -51,15 +55,36 @@ export async function checkUrlSessionCurrent(input: {
+   readonly current: () => boolean | Promise<boolean>;
+   readonly bindingChanged: () => void;
+ }): Promise<boolean> {
+-  if (await input.settleCompletedDesign() === 'refused' || !input.effectCurrent()) return false;
++  const check = ++bootstrapCurrentOrdinal;
++  const trace = (stage: string, event: string): void => {
++    if (bootstrapTrace.hasSubscribers) bootstrapTrace.publish({ component: 'authority', stage, event, check, at: performance.now() });
++  };
++  trace('first-settlement', 'begin');
++  if (await input.settleCompletedDesign() === 'refused') { trace('first-settlement', 'refused'); return false; }
++  trace('first-settlement', 'return');
++  trace('first-effect', 'begin');
++  if (!input.effectCurrent()) { trace('first-effect', 'refused'); return false; }
++  trace('first-effect', 'return');
+   try {
+-    if (await input.current() !== true) { input.bindingChanged(); return false; }
++    trace('independent', 'begin');
++    if (await input.current() !== true) { trace('independent', 'refused'); input.bindingChanged(); return false; }
++    trace('independent', 'return');
++    trace('second-settlement', 'begin');
+     const settlement = await input.settleCompletedDesign();
+-    if (settlement === 'refused' || !input.effectCurrent()) return false;
++    if (settlement === 'refused') { trace('second-settlement', 'refused'); return false; }
++    trace('second-settlement', 'return');
++    trace('second-effect', 'begin');
++    if (!input.effectCurrent()) { trace('second-effect', 'refused'); return false; }
++    trace('second-effect', 'return');
+     if (settlement === 'current') return true;
+-    if (await input.current() !== true) { input.bindingChanged(); return false; }
+-    return input.effectCurrent();
+-  } catch { input.bindingChanged(); return false; }
++    trace('settled-independent', 'begin');
++    if (await input.current() !== true) { trace('settled-independent', 'refused'); input.bindingChanged(); return false; }
++    trace('settled-independent', 'return');
++    trace('settled-effect', 'begin');
++    const current = input.effectCurrent();
++    trace('settled-effect', current ? 'return' : 'refused');
++    return current;
++  } catch { trace('exception', 'refused'); input.bindingChanged(); return false; }
+ }
+ type Failure = 'binding-changed' | 'launch-unavailable' | 'audit-unavailable' | 'control-unavailable' | 'role-ended'
+   | 'transport-unavailable' | 'provenance-unavailable' | 'cleanup-unconfirmed' | 'cpu-budget';
+@@ -256,9 +281,13 @@ async function start(options: UrlRunSessionsOptions, ports: typeof native): Prom
+   let preparedDesign: PreparedDesign | null = null;
+   let activeDesignView: UrlDesignDeliveryView | null = null;
+   let pendingDesignReview: PendingDesignReview | null = null;
++  const note = (stage: string, event: string): void => {
++    if (bootstrapTrace.hasSubscribers) bootstrapTrace.publish({ component: 'supervisor', stage, event, resumed: resume !== undefined, at: performance.now() });
++  };
+   const fail = (reason: Failure): void => {
+     if (failure !== null || stopping) return;
+     failure = reason;
++    note('failure', reason);
+     try { options.onFailure(reason); } catch { /* Failure never reopens the host. */ }
+   };
+   const settleCompletedDesign = async (): Promise<CompletedDesignSettlement> => {
+@@ -285,15 +314,15 @@ async function start(options: UrlRunSessionsOptions, ports: typeof native): Prom
+   };
+   const effectBudgetCurrent = (): boolean => !stopping && failure === null && budget.current();
+   const effectEnvironmentCurrent = (): boolean => {
+-    try { if (options.stopRequested?.() === true) return false; }
+-    catch { fail('control-unavailable'); return false; }
+-    if (!withinCpuBudget()) { fail('cpu-budget'); return false; }
+-    if ([...hostHealth.values()].some(healthy => !healthy())) { fail('transport-unavailable'); return false; }
++    try { if (options.stopRequested?.() === true) { note('effect-stop', 'refused'); return false; } }
++    catch { note('effect-control', 'refused'); fail('control-unavailable'); return false; }
++    if (!withinCpuBudget()) { note('effect-cpu', 'refused'); fail('cpu-budget'); return false; }
++    if ([...hostHealth.values()].some(healthy => !healthy())) { note('effect-health', 'refused'); fail('transport-unavailable'); return false; }
+     return true;
+   };
+   const effectCurrent = (): boolean => {
+-    if (!effectBudgetCurrent()) return false;
+-    if (resume !== undefined && !isClaimedStoppedUrlRun(resume.verified, resume.claim)) { fail('binding-changed'); return false; }
++    if (!effectBudgetCurrent()) { note('effect-budget', 'refused'); return false; }
++    if (resume !== undefined && !isClaimedStoppedUrlRun(resume.verified, resume.claim)) { note('effect-claim', 'refused'); fail('binding-changed'); return false; }
+     return effectEnvironmentCurrent();
+   };
+   const current = (): Promise<boolean> => checkUrlSessionCurrent({ settleCompletedDesign, effectCurrent,
+diff --git a/packages/polaris-dossier/src/url-session-audit.ts b/packages/polaris-dossier/src/url-session-audit.ts
+index 9a977ca47..478a793a6 100644
+--- a/packages/polaris-dossier/src/url-session-audit.ts
++++ b/packages/polaris-dossier/src/url-session-audit.ts
+@@ -1,3 +1,4 @@
++import { channel } from 'node:diagnostics_channel';
+ import { closeSync, constants, fstatSync, lstatSync, openSync, readSync, realpathSync } from 'node:fs';
+ import { lstat, open, realpath, type FileHandle } from 'node:fs/promises';
+ import path from 'node:path';
+@@ -111,6 +112,8 @@ export interface UrlDesignDeliveryView {
+   readonly view: Uint8Array;
+   readonly parents: UrlInertDesignProduct['parents'];
+ }
++const bootstrapTrace = channel('owned-f3-combined');
++
+ const authenticatedDesignViews = new WeakMap<UrlDesignDeliveryView, {
+   readonly current: () => void; readonly product: WeakRef<ValidatedUrlDesignProduct>;
+ }>();
+@@ -1204,14 +1207,20 @@ export async function createUrlSessionAudit(given: UrlSessionAuditOptions): Prom
+     /** Record identities only. A checked append can be cited by a later delivery
+      * verifier independently reproducing the subject under its own live read. */
+     const commitDesignDelivery: Extract<UrlSessionAuditResult, { ok: true }>['commitDesignDelivery'] = async (request, waitForSample) => {
++      const trace = (stage: string, event: string): void => {
++        if (bootstrapTrace.hasSubscribers) bootstrapTrace.publish({ component: 'delivery', stage, event, round: nextDesignRound, at: performance.now() });
++      };
++      trace('entry', 'begin');
+       if (poisoned || closing || designPending || designRetired
+         || !exact(request, ['product', 'expectedProduct', 'launch', 'run', 'runId', 'pinnedRevision', 'sitePath', 'round'])
+         || !count(request.round, 999_999) || request.round !== nextDesignRound
+         || !ownLaunches.has(request.launch) || request.runId !== input.binding.run || request.pinnedRevision !== input.pin) throw refused();
+       const { product, expectedProduct, launch, round, sitePath, run, runId, pinnedRevision } = request;
+       const binding = { run, runId, pinnedRevision }, scope = scopes.get('design')!;
++      trace('launch-inspect', 'begin');
+       const attempt = inspectCommittedUrlLaunchHistory(launch);
+       if (attempt.history.role !== 'design' || attempt.history.run !== run || !equal(scope, attempt.scope)) throw refused();
++      trace('launch-inspect', 'return');
+ 
+       function capture(productIdentity: UrlDesignProductMetadata | null): { identity: DesignDeliveryIdentity; deadline: number; output: UrlDesignProductMetadata['output'] } {
+         if (!productIdentity || productIdentity.products.operation !== 'render' || productIdentity.rawActive.status !== 'failed'
+@@ -1243,14 +1252,24 @@ export async function createUrlSessionAudit(given: UrlSessionAuditOptions): Prom
+       designPending = true;
+       let appended = false;
+       try {
++        trace('first-drain', 'begin');
+         await checkSample();
++        trace('first-drain', 'return');
++        trace('product-inspect', 'begin');
+         const reproduced = await inspectUrlDesignProduct(product, binding);
+         if (!reproduced || !sameReproducedUrlDesignProduct(expectedProduct, reproduced)) throw refused();
++        trace('product-inspect', 'return');
++        trace('second-drain', 'begin');
+         await checkSample();
++        trace('second-drain', 'return');
++        trace('site-capture', 'begin');
+         const before = capture(reproduced);
+         if (Date.now() >= before.deadline) throw refused();
++        trace('site-capture', 'return');
++        trace('audit-append', 'begin');
+         const event = await enqueue({ kind: 'design-delivery', role: 'design', scope, payload: before.identity }, 'design-delivery');
+         appended = true;
++        trace('audit-append', 'return');
+         await checkSample();
+         const material = await readInertUrlDesignProduct(product, binding);
+         if (!material) throw refused();
+@@ -1304,9 +1323,11 @@ export async function createUrlSessionAudit(given: UrlSessionAuditOptions): Prom
+           unstartedOrdered.set(result.eventSha256, copy({ profileInput: orderedDesignProfile.input, plan, principal: input.principal,
+             scope, receipt: result, disposition: { kind: 'stopped' as const, tip: null } }));
+         }
++        trace('entry', 'return');
+         nextDesignRound++;
+         return delivery;
+       } catch {
++        trace('entry', 'refused');
+         // A durable unconfirmed event must remain visible and block continuation.
+         if (appended) designRetired = true;
+         throw refused();

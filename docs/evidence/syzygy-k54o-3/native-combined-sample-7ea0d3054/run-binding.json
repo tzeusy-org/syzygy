@@ -1,0 +1,210 @@
+{
+  "subjectCommit": "7ea0d30543207d07f5d14641ce8164f3da57958c",
+  "subjectTree": "981ac5a4193032c043bfd7b233883e5726eba35d",
+  "fixture": {
+    "exitCode": 1,
+    "selectedElapsedMilliseconds": 212799,
+    "suiteTestsElapsedMilliseconds": 214460,
+    "totalElapsedMilliseconds": 217720,
+    "watchdogMilliseconds": 540000,
+    "initialCutRetained": true,
+    "resumeChecks": [
+      {
+        "phase": "verify",
+        "ok": true,
+        "nextDesignRound": 2
+      },
+      {
+        "phase": "claim",
+        "exactCut": true,
+        "current": true
+      },
+      {
+        "phase": "resumed-guards",
+        "policyWithdrawal": "refused",
+        "claimWithdrawal": "refused"
+      },
+      {
+        "phase": "machine-claim",
+        "current": true,
+        "claimChecks": 1,
+        "withdrawn": true,
+        "asyncCurrent": true,
+        "asyncWithdrawn": true
+      }
+    ],
+    "designForwardsTotal": 0,
+    "executionRecord": false
+  },
+  "auditPopulations": [
+    {
+      "author": {
+        "records": 118,
+        "kinds": {
+          "declaration": 1,
+          "launch-attempt": 1,
+          "machine-peer": 68,
+          "relay": 28,
+          "usage": 7,
+          "other": 12,
+          "launch-terminal": 1
+        },
+        "terminal": {
+          "outcome": "stopped",
+          "signal": "SIGTERM",
+          "viewTermination": "view-exited",
+          "groupTermination": "confirmed",
+          "toolTermination": "settled",
+          "pendingInvocations": 0
+        },
+        "sha256": "fbe48ab1abea29f09c6ba17650101aca993b831c00a1b526d661a8ae902bc860",
+        "bytes": 202048
+      },
+      "inventory": {
+        "records": 103,
+        "kinds": {
+          "declaration": 1,
+          "launch-attempt": 1,
+          "launch-history": 1,
+          "machine-peer": 58,
+          "relay": 24,
+          "other": 11,
+          "usage": 6,
+          "launch-terminal": 1
+        },
+        "terminal": {
+          "outcome": "stopped",
+          "signal": "SIGTERM",
+          "viewTermination": "view-exited",
+          "groupTermination": "confirmed",
+          "toolTermination": "settled",
+          "pendingInvocations": 0
+        },
+        "sha256": "33d8feee7dcebb8e9787ea3cad89e0556201c4b2158c9d58af685d287efbd9c3",
+        "bytes": 171864
+      },
+      "fidelity": {
+        "records": 68,
+        "kinds": {
+          "declaration": 1,
+          "launch-attempt": 1,
+          "launch-history": 1,
+          "machine-peer": 38,
+          "relay": 16,
+          "usage": 4,
+          "other": 6,
+          "launch-terminal": 1
+        },
+        "terminal": {
+          "outcome": "stopped",
+          "signal": "SIGTERM",
+          "viewTermination": "view-exited",
+          "groupTermination": "confirmed",
+          "toolTermination": "settled",
+          "pendingInvocations": 0
+        },
+        "sha256": "4a9a591aa8886df11a6236a1bab7e6d6150a1cad3de52693c96d06134e58a2f7",
+        "bytes": 138343
+      },
+      "design": {
+        "records": 5,
+        "kinds": {
+          "declaration": 1,
+          "launch-attempt": 1,
+          "launch-history": 1,
+          "design-delivery": 1,
+          "launch-terminal": 1
+        },
+        "terminal": {
+          "outcome": "stopped",
+          "signal": "SIGTERM",
+          "viewTermination": "view-exited",
+          "groupTermination": "confirmed",
+          "toolTermination": "settled",
+          "pendingInvocations": 0
+        },
+        "sha256": "69fdbee6e373aa277dbe6fb8d30bc19b3dd3d21a6406cdef4060eba4358d729b",
+        "bytes": 7548
+      }
+    },
+    {
+      "author": {
+        "records": 1,
+        "kinds": {
+          "declaration": 1
+        },
+        "sha256": "d7c57e4e7f60587b667e41c3830d5f9f995ef5e24a293b368882f601f338af09",
+        "bytes": 1185
+      },
+      "inventory": {
+        "records": 1,
+        "kinds": {
+          "declaration": 1
+        },
+        "sha256": "54a0c673e7d7e988c1ddf6a611ae12abab6114bec6bfb19bc5cb63c6acb0a076",
+        "bytes": 1253
+      },
+      "fidelity": {
+        "records": 1,
+        "kinds": {
+          "declaration": 1
+        },
+        "sha256": "f73db7d5935fe8dc184d8e0c5c516197a5911df24e6438e28518f632d6dd79c5",
+        "bytes": 1251
+      },
+      "design": {
+        "records": 6,
+        "kinds": {
+          "declaration": 1,
+          "launch-attempt": 1,
+          "launch-history": 1,
+          "design-delivery": 1,
+          "machine-peer": 1,
+          "launch-terminal": 1
+        },
+        "terminal": {
+          "outcome": "inspection-failed",
+          "signal": "SIGTERM",
+          "viewTermination": "view-exited",
+          "groupTermination": "confirmed",
+          "toolTermination": "settled",
+          "pendingInvocations": 0
+        },
+        "sha256": "ccc718f7316e24d42566083ee75446515b3d9856a845fb80b8d1f624773a0101",
+        "bytes": 8947
+      }
+    }
+  ],
+  "retainedStore": {
+    "initialTerminalClientPopulation": {
+      "revoked": 7,
+      "never-issued": 1
+    },
+    "anchorsAtEnd": {
+      "committed": 8,
+      "never-issued": 8
+    },
+    "archiveEntries": 41,
+    "stateSha256": "1083cb93e9437aeb75a4e2a7c2017d15b4ba53696a7e714a083c29161366add2",
+    "archiveSha256": "585ddf3b7db8a1cb0dbb61072ebe720948e9f8a434f3cf663f6ed035a25aa312",
+    "stateLastModifiedNs": 1795358065145605426,
+    "archiveLastModifiedNs": 1795358064844599671,
+    "retainedLockDirectories": 0,
+    "lockLastModifiedNs": null
+  },
+  "retainedOriginalArtifactsByDigest": {
+    "cut": "dc5371ec921663b0370a78e75ed7617ef4c8c49e921b0ed60d488212d434dc26",
+    "failureManifest": "c2f3deaa1a0014310589831cc3fae08f359bf47112470d72d95a48a865ca9d60",
+    "nativeLog": "034489822ab43b7ba8efecb89ef54b1cd119e1f29a40edfa5eefca6cad4023b0",
+    "trace": "526ca7aed68b42e7bf05dd6ecb08802b20a5e8535879d82704f94882f84fdf45"
+  },
+  "portableArtifactsByDigest": {
+    "overlay.patch": "7c46dd87cacff8a06a3b637b19bce5bd246305603e807edb2563d2b6c339f2b9",
+    "source-binding.json": "8be43abdbb8226cb1b75bfa5e71b4344cd64ada17e009b9865b3ca512206f89f",
+    "project.py": "f38a12b2b3a724fd5224d7bcd14e900d6a16388bdc3e685456a10d6fa31967ad",
+    "bootstrap_schema.py": "59264f0eaf90c73472335f848756ce2b83f810944026eb298a6b8a6baba0de67",
+    "transport_schema.py": "06c0bac1d78512210c72344f20f3b2f3733b2847919eba0da8e8228290e45646",
+    "trace.jsonl": "526ca7aed68b42e7bf05dd6ecb08802b20a5e8535879d82704f94882f84fdf45",
+    "projection.json": "9a1a040d9819fb08dfba52c65cc502d0807cae0af9eb5a7ee51f7afb1479cb79"
+  }
+}
