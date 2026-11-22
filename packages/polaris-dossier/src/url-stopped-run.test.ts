@@ -6,6 +6,8 @@ import { describe, expect, it } from 'vitest';
 import { tempDir } from '@syzygy/test-kit';
 import { readUrlStoppedBoundary } from './url-stopped-run.js';
 
+const canonical = (value: unknown) => encodeCanonicalJson(value, { maxBytes: 262_144, maxNodes: 32_768, maxDepth: 16 });
+
 const stoppedFixture = () => {
   const parent = tempDir('url-stopped-boundary-');
   const root = path.join(parent, 'host');
@@ -20,7 +22,7 @@ const stoppedFixture = () => {
     spend: { requestReservations: 2, completeUsageReports: 1, reportedTokens: 15 } };
   const file = path.join(root, `${sha256(run)}.stopped.json`);
   const write = (value: typeof record = record) => fs.writeFileSync(file,
-    `${encodeCanonicalJson({ record: value, sha256: sha256(encodeCanonicalJson(value)) })}\n`, { mode: 0o600 });
+    `${canonical({ record: value, sha256: sha256(canonical(value)) })}\n`, { mode: 0o600 });
   return { root, run, expected, record, file, write, load: () => readUrlStoppedBoundary(root, expected, 2000) };
 };
 
@@ -30,7 +32,7 @@ describe('retained URL stop expectation', () => {
     expect(f.load()).toBeNull();
     f.write();
     const result = f.load();
-    expect(result).toEqual({ record: f.record, sha256: sha256(encodeCanonicalJson(f.record)) });
+    expect(result).toEqual({ record: f.record, sha256: sha256(canonical(f.record)) });
     expect(Object.isFrozen(result?.record)).toBe(true);
     expect(readUrlStoppedBoundary(f.root, { ...f.expected, generation: '2'.repeat(32) }, 2000)).toBeNull();
     expect(readUrlStoppedBoundary(f.root, f.expected, 999)).toBeNull();

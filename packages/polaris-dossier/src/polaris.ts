@@ -57,6 +57,7 @@ import type { BriefReport } from './brief.js';
 import type { StartSessionsReport } from './session-handover.js';
 import { createUrlRunArtifacts } from './url-run-artifacts.js';
 import { startUrlRunSessions, type UrlDesignReproduction, type UrlRunSessions, type UrlRunSessionsSummary } from './url-run-sessions.js';
+import { verifyStoppedUrlRun } from './url-recovery.js';
 import { retainUrlStoppedBoundary } from './url-stopped-run.js';
 import { isUrlRunMachineClosedHistory } from './url-run-machine.js';
 import { loadSessionCredential } from './session-credential.js';
@@ -210,18 +211,15 @@ export async function runPolarisCli(argv: readonly string[], ports: CliPorts = {
   if (options.model !== DEFAULT_SESSION_MODEL) return refuse('This URL session model has no supported restricted profile. Use --model claude-sonnet-4-6 or omit --model; no model was substituted.');
   if (options.authorSkipPermissions) return refuse('URL sessions require their fixed restricted tools. Omit --author-skip-permissions.');
   if (options.mode === 'supervise') return supervise(options, ports);
-  // start or resume: check the host, then hand over to a supervisor inside tmux.
+  if (options.mode === 'resume') {
+    const state = readState(options.stateRoot, options.run!);
+    if (state === null) return refuse(`no launched run ${options.run} under ${options.stateRoot}`);
+    return refuse(await stoppedRunRefusal(state, ports));
+  }
   const tmux = spawnSync('tmux', ['-V'], { encoding: 'utf8' });
   if (tmux.status !== 0) return refuse('tmux is required for the attended view; install it, or use `syzygy dossier init` for an operator-started run');
   const view = viewProbeRefusal();
   if (view !== null) return refuse(`${view}. A launched run needs session views (REQ-042).`);
-  if (options.mode === 'resume') {
-    const state = readState(options.stateRoot, options.run!);
-    if (state === null) return refuse(`no launched run ${options.run} under ${options.stateRoot}`);
-    if (state.done) return refuse(`run ${state.runId} is closed`);
-    if (Date.now() >= state.briefIssuedAt + state.deadlineSeconds * 1000) return refuse(`run ${state.runId} is past its deadline`);
-    if (tmuxHas(state.tmuxSession)) return refuse(`run ${state.runId} still has a supervisor view. Inspect it with syzygy polaris --attach ${state.runId}.`);
-  }
   let limits: string[] = [];
   if (options.mode === 'start' && options.missingLimits.length > 0) {
     if (!process.stdin.isTTY) return refuse(`run limits are required when there is no terminal to ask: give ${options.missingLimits.join(' ')}`);
@@ -239,7 +237,7 @@ export async function runPolarisCli(argv: readonly string[], ports: CliPorts = {
     const prepared = await preparePolarisStart({ ...options, ...(audience === undefined ? {} : { audience }) }, ports);
     if (!prepared.ok) return refuse(prepared.reason);
   }
-  const name = options.mode === 'resume' ? readState(options.stateRoot, options.run!)!.tmuxSession : `polaris-${Date.now().toString(36)}`;
+  const name = `polaris-${Date.now().toString(36)}`;
   const forward = [...argv.filter((arg) => arg !== '--no-attach'), ...limits, ...(audience !== undefined && options.audience === undefined ? ['--audience', audience] : []), '--supervise', '--tmux-session', name];
   // Only fixed host metadata crosses tmux's explicit environment boundary.
   // Authentication remains in the host credential adapter; never place a
@@ -520,6 +518,15 @@ class Screen {
   }
 }
 
+async function stoppedRunRefusal(state: SupervisorState, ports: CliPorts): Promise<string> {
+  const now = ports.now ?? Date.now;
+  if (state.done !== undefined) return `run ${state.runId} is closed`;
+  if (now() >= state.briefIssuedAt + state.deadlineSeconds * 1000) return `run ${state.runId} is past its deadline`;
+  const verified = await verifyStoppedUrlRun(state, { checkout: CHECKOUT, sources: cliGateSources(ports), now });
+  return verified.ok ? 'The retained stop boundary was reverified. The checked role continuation is unavailable.'
+    : `The retained run has no re-established checked recovery boundary (${verified.code}). Preserve its original pin and records.`;
+}
+
 async function supervise(options: Options, ports: CliPorts): Promise<number> {
   const previous = options.run === undefined ? null : readState(options.stateRoot, options.run);
   if (options.run !== undefined && previous === null) return refuse(`no launched run ${options.run} under ${options.stateRoot}`);
@@ -532,7 +539,7 @@ async function supervise(options: Options, ports: CliPorts): Promise<number> {
   };
   let state: SupervisorState;
   if (previous !== null) {
-    return fail('The retained run has no re-established checked recovery boundary. Preserve its original pin and records; no role or uncertain request was replayed.');
+    return fail(await stoppedRunRefusal(previous, ports));
   } else {
     if (options.missingLimits.length > 0) return fail(`run limits not declared: ${options.missingLimits.join(' ')}; start the run with syzygy polaris, which asks for them`);
     const set = await setUp(options, ports, screen);
