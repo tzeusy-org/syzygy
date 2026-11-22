@@ -399,6 +399,26 @@ const marked = (page: string, id: string): { epistemic: string; reason: string |
 const html = (files:ReadonlyMap<string, string>): [string, string][] => [...files].filter(([file]) => file.endsWith('.html'));
 
 describe('render', () => {
+  it('requests the final proof after reading the draft and refuses an unavailable proof before producer or storage', async () => {
+    const f = await preparedUrlRender();
+    const reads = beginRunProductReads(f.run, f.artifacts, 'render', Date.now() + 30_000);
+    const prepare = vi.fn(async (deadline: number) => {
+      expect(deadline).toBe(reads.deadline);
+      expect(reads.revalidate().metadata.records.map(record => record.path)).toEqual(expect.arrayContaining([
+        'brief.json', 'checks/rev-0.json', 'drafts/rev-0.json',
+      ]));
+      return null;
+    });
+    const admitProducedSite = vi.fn(async () => true);
+    try {
+      expect(await renderRun(f.run, { ...f.deps, productReads: reads, admitProducedSite }, prepare))
+        .toMatchObject({ ok: false, refusal: { stage: 'reverify' } });
+      expect(prepare).toHaveBeenCalledTimes(1);
+      expect(admitProducedSite).not.toHaveBeenCalled();
+      expect(fs.existsSync(path.join(f.run, 'site'))).toBe(false);
+    } finally { reads.close(); }
+  }, 60_000);
+
   it('lets an actual URL producer finish after six seconds within its original thirty-second context', async () => {
     const f = await preparedUrlRender();
     vi.useFakeTimers({ toFake: ['Date', 'setTimeout', 'clearTimeout'] });

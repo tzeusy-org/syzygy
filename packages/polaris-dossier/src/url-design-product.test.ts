@@ -366,6 +366,23 @@ describe('active URL design product capability', () => {
     expect(await inspectUrlDesignProduct(stale.capability, binding)).toBeNull();
     expect(urlDesignProductLeaseState(stale.capability).state).toBe('retired');
   });
+  it('clips final validation and inspection to the continuation before the underlying render lease ends', async () => {
+    vi.useFakeTimers({ toFake: ['Date'] });
+    try {
+      const f = fixture(30_000), start = Date.now(), continuationDeadline = start + 5_000;
+      const options = { ...f.options, continuationDeadline };
+      const product = await validateUrlDesignProduct(f.input, options);
+      expect(product).not.toBeNull();
+      vi.setSystemTime(continuationDeadline);
+      expect(await inspectUrlDesignProduct(product!, binding)).toBeNull();
+      expect(f.reads.leaseState()).toBe('open');
+
+      vi.setSystemTime(start);
+      gates.currentRenderer.mockImplementationOnce(async () => { vi.setSystemTime(continuationDeadline); return true; });
+      expect(await validateUrlDesignProduct(f.input, options)).toBeNull();
+      expect(f.reads.leaseState()).toBe('open');
+    } finally { vi.useRealTimers(); }
+  });
   it.each([
     ['full output', (f: Awaited<ReturnType<typeof validatedFixture>>) => f.files.set('index.html', f.files.get('index.html')! + 'changed')],
     ['nested Map', (f: Awaited<ReturnType<typeof validatedFixture>>) => (f.input.input.local.citationLines!.get('intro')! as Map<string, string>).set('own', 'line 2')],

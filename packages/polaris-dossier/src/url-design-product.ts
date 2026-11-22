@@ -26,6 +26,7 @@ export interface DesignProductOptions {
   readonly scaffold: UrlOriginReceipt;
   readonly products: RunProductReads;
   readonly current: () => boolean;
+  readonly continuationDeadline?: number;
 }
 
 declare const productBrand: unique symbol;
@@ -125,10 +126,11 @@ export async function admitUrlDesignProduct(input: ProducedSiteInput, options: D
  * Renewal requires a new genuine operation proving the exact consumed population;
  * writable saved records cannot revive it. No durable handoff is implemented. */
 export async function validateUrlDesignProduct(input: ProducedSiteInput, options: DesignProductOptions): Promise<ValidatedUrlDesignProduct | null> {
-  const { run, record, declaration, screen, renderer, ledger, scaffold, products, current } = options;
+  const { run, record, declaration, screen, renderer, ledger, scaffold, products, current, continuationDeadline } = options;
   const signal = input.signal;
   const waitForValidation = (): Promise<void> => products.waitForSample?.() ?? yieldToPoll();
-  const live = (): boolean => input.signal === signal && !signal.aborted && current();
+  const live = (): boolean => input.signal === signal && !signal.aborted
+    && (continuationDeadline === undefined || Date.now() < continuationDeadline) && current();
   try {
     if (!live() || !isRunProductReads(products) || products.run !== run || input.run !== run || input.runId !== declaration.runId
       || input.runId !== path.basename(run) || input.pinnedRevision !== declaration.pinnedCommit
@@ -138,7 +140,7 @@ export async function validateUrlDesignProduct(input: ProducedSiteInput, options
     if (products.waitForSample !== undefined) await products.waitForSample();
     const initial = products.revalidate();
     if (!sameProducts(input.products, initial)) return null;
-    const deadline = initial.metadata.deadline;
+    const deadline = Math.min(initial.metadata.deadline, continuationDeadline ?? Infinity);
     if (!Number.isSafeInteger(deadline)) return null;
     // A backend timer cannot interrupt synchronous comparison/copy work. Keep
     // the original lease deadline and signal available for cheap final samples.

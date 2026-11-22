@@ -153,7 +153,9 @@ const EXCLUSION_REASON: Readonly<Record<ScreenExclusion, GenerationExclusionReas
   'not-utf8-text': 'not-utf-8', 'active-content': 'active-content',
 };
 
-export async function renderRun(runDir: string, deps: RenderDeps, designContinuation?: UrlDesignRenderContinuation): Promise<RenderResult> {
+type DesignContinuationSource = UrlDesignRenderContinuation | ((deadline: number) => Promise<UrlDesignRenderContinuation | null>);
+
+export async function renderRun(runDir: string, deps: RenderDeps, designContinuation?: DesignContinuationSource): Promise<RenderResult> {
   try { return await render(runDir, deps, undefined, designContinuation); }
   catch (cause) {
     if (!(cause instanceof UrlProductReadRefusal)) throw cause;
@@ -166,7 +168,7 @@ type StoredUrlRender = { readonly path: string; readonly output: Parameters<type
 /** Host-only fresh reconstruction. Compare with the exact stored site without
  * allocating a site number or writing a render step, including on refusal. */
 export async function reproduceUrlRender(runDir: string, deps: RenderDeps, site: StoredUrlRender,
-  designContinuation?: UrlDesignRenderContinuation): Promise<boolean> {
+  designContinuation?: DesignContinuationSource): Promise<boolean> {
   try { return (await render(runDir, deps, structuredClone(site), designContinuation)).ok; }
   catch (cause) {
     if (cause instanceof UrlProductReadRefusal) return false;
@@ -175,7 +177,7 @@ export async function reproduceUrlRender(runDir: string, deps: RenderDeps, site:
 }
 
 async function render(runDir: string, deps: RenderDeps, storedSite?: StoredUrlRender,
-  checkedDesign?: UrlDesignRenderContinuation): Promise<RenderResult> {
+  continuationSource?: DesignContinuationSource): Promise<RenderResult> {
   const now = deps.now();
   let logRun: string | undefined;
   const refuse = (stage: RenderStage, reason: string, extra: Partial<RenderRefusal> = {}): RenderResult => {
@@ -195,7 +197,7 @@ async function render(runDir: string, deps: RenderDeps, storedSite?: StoredUrlRe
   if (!opened.ok) return refuse(opened.stage, opened.reason, { ...(opened.reasons ? { reasons: opened.reasons } : {}), ...(opened.refusals ? { refusals: opened.refusals } : {}) });
   const { run, runId, subject, declared } = opened;
   const urlMode = opened.effective?.kind === 'url';
-  if (checkedDesign !== undefined && !urlMode) return refuse('reverify', 'The protected design continuation requires a URL run.');
+  if (continuationSource !== undefined && !urlMode) return refuse('reverify', 'The protected design continuation requires a URL run.');
   if (storedSite !== undefined && !urlMode) return refuse('reverify', 'Stored site reproduction requires a protected URL run.');
   const products = deps.productReads;
   if (urlMode && !isRunProductReads(products)) return refuse('reverify', 'A URL render requires authenticated product reads.');
@@ -281,6 +283,15 @@ async function render(runDir: string, deps: RenderDeps, storedSite?: StoredUrlRe
   const standards = urlMode ? briefStandardsFromRecord(briefRecord) : briefStandardsOf(run);
   const reviewed = buildDesignPacket({ run, runId, pinnedRevision: pinned, audience: declared.audience, files: pending, ...standardsInput(standards) });
   if (!reviewed.ok) return refuse('render', `the rendered pages cannot be compared outside the review-status region: ${reviewed.reason}`);
+  // Opening the run and rebuilding the pending packet use the original product
+  // read lease. Obtain the short-lived verdict proof where it is first needed.
+  let checkedDesign: UrlDesignRenderContinuation | undefined;
+  if (typeof continuationSource === 'function') {
+    if (!products!.isLeaseOpen()) throw new UrlProductReadRefusal();
+    const proof = await continuationSource(products!.deadline);
+    if (proof === null || !products!.isLeaseOpen() || Date.now() >= proof.deadline) throw new UrlProductReadRefusal();
+    checkedDesign = proof;
+  } else checkedDesign = continuationSource;
   const design = await designReviewOfRecord(opened, reviewed, { sources: deps.sources, now: () => now, productReads: products }, checkedDesign);
   if (checkedDesign !== undefined && (!review.counts || review.verdict.blocking || review.verdict.readiness !== 'ready' || !design.counts))
     return refuse('reverify', 'The current fidelity and design reviews are required for the protected final render.');
@@ -370,14 +381,15 @@ async function render(runDir: string, deps: RenderDeps, storedSite?: StoredUrlRe
     };
     // URL reproduction shares the already-issued read deadline: it receives no
     // fresh allowance after the initial draw, and cannot outlive the run.
+    const producerDeadline = urlMode ? Math.min(products!.deadline, checkedDesign?.deadline ?? Infinity) : Infinity;
     const producerMilliseconds = urlMode
-      ? Math.max(0, Math.min(URL_PRODUCT_READ_MILLISECONDS.render, products!.deadline - Date.now()))
+      ? Math.max(0, Math.min(URL_PRODUCT_READ_MILLISECONDS.render, producerDeadline - Date.now()))
       : RENDER_PRODUCER_MILLISECONDS;
     if (producerMilliseconds === 0) return refuse('render', 'The rendered products were not admitted by the checked producer before storage.');
     const abort = new AbortController();
     const expires = performance.now() + producerMilliseconds;
     const expired = (): boolean => abort.signal.aborted || performance.now() >= expires
-      || (urlMode && (Date.now() >= products!.deadline || !products!.isLeaseOpen()));
+      || (urlMode && (Date.now() >= producerDeadline || !products!.isLeaseOpen()));
     let timer: ReturnType<typeof setTimeout> | undefined, completed = false;
     try {
       const admitted = await Promise.race([
