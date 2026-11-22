@@ -1,6 +1,7 @@
 import { isRecord } from '@syzygy/support';
 import { READER_STANDARDS_VERSION } from './reader-standards.js';
 import { NO_LAYOUT, type FigureFitEntry } from './figure-fit.js';
+import { hasFigureKindForm, hasSubsectionForm } from './draft-schema.js';
 
 /** The counted reader standards (`reader-standards.ts`, syzygy-pdja.17): what `syzygy dossier check` can measure of RS-13, RS-14, RS-16,
  * RS-17 (an edge's locality, syzygy-3efd.17) and RS-19 in a draft, reported to the author as advice. Advice is never a finding: it sets no outcome, is on the check's report only
@@ -132,6 +133,15 @@ export function codeSymbolInTitle(title: string): string | undefined {
 
 /** The words of an entry's own prose: a plain block's text and its children's; a presentation element (an entry with a `kind`) counts
  * none, since RS-19 counts prose outside the elements. */
+/** A section's or deep dive's own prose words, as RS-19 counts them: its paragraphs and, in a schema-v8 draft only, each of a section's
+ * subsections' answer and plain blocks (version 2.16). The reading ledger counts a container by the same words. */
+export function containerProseWords(doc: Readonly<Record<string, unknown>>, container: Readonly<Record<string, unknown>>, part: 'sections' | 'deepDives'): number {
+  const own = list(container['paragraphs']).reduce<number>((sum, entry) => sum + proseWords(entry), 0);
+  if (part !== 'sections' || !hasSubsectionForm(doc['schemaVersion'])) return own;
+  return list(container['subsections']).reduce<number>((sum, subsection) => (isRecord(subsection)
+    ? sum + proseWords(subsection['answer']) + list(subsection['paragraphs']).reduce<number>((inner, entry) => inner + proseWords(entry), 0) : sum), own);
+}
+
 export function proseWords(entry: unknown): number {
   if (!isRecord(entry) || entry['kind'] !== undefined) return 0;
   const words = (value: unknown): number => (text(value)?.split(/\s+/u).filter((word) => word !== '').length ?? 0);
@@ -151,7 +161,7 @@ export function readerAdvice(doc: unknown): ReaderAdvice {
         const title = text(container['title']);
         const why = title === undefined ? undefined : codeSymbolInTitle(title);
         if (why !== undefined) add('RS-13', `${at}.title`, `the title may name a code symbol (${why}); title it by what it explains to the reader, unless the word is a product or proper name`);
-        const words = list(container['paragraphs']).reduce<number>((sum, entry) => sum + proseWords(entry), 0);
+        const words = containerProseWords(doc, container, part);
         if (words > SECTION_WORD_LIMIT) {
           add('RS-19', `${at}.paragraphs`, `${words} words of its own prose, past about ${SECTION_WORD_LIMIT}: move enumerations, comparisons and steps into elements or a diagram, depth a newcomer may skip into details, and cut the rest`);
         }
@@ -182,7 +192,7 @@ export function readerAdvice(doc: unknown): ReaderAdvice {
         add('RS-17', `$.diagrams[${i}].edges[${j}]`, `the edge ${JSON.stringify(text(edge['id']) ?? '')} cites no file that its node ${JSON.stringify(text(edge['from']))} or its node ${JSON.stringify(text(edge['to']))} cites: cite where the source shows these two connect, or check that the edge joins the right nodes (polaris-reader-standards-v1 does not yet mark RS-17 counted; this is its locality alone)`);
       });
       // A v7 sequence's message takes an edge's rule, its sender and receiver a node's (version 2.5).
-      if (diagram['kind'] !== 'sequence' || doc['schemaVersion'] !== 'polaris-dossier-local-draft-v7') return;
+      if (diagram['kind'] !== 'sequence' || !hasFigureKindForm(doc['schemaVersion'])) return;
       const participants = new Map(list(diagram['participants']).flatMap((node) => (isRecord(node) && text(node['id']) !== undefined ? [[text(node['id'])!, citedPaths(node)] as const] : [])));
       list(diagram['messages']).forEach((message, j) => {
         if (!isRecord(message)) return;

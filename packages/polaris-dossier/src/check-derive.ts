@@ -2,7 +2,7 @@ import * as path from 'node:path';
 import { UNKNOWN_REASONS } from '@syzygy/cap1-core';
 import { checkShape, handle, leadInQuotations, lineCount, locateQuote, normaliseTracked, retainedWithMarkers, spanTouchesWithheld, verifiedRedactedBody, type VerifiedRedactedBody, type TrackedText, type Schema } from '@syzygy/polaris-generation-core/live';
 import { isRecord } from '@syzygy/support';
-import { FIGURE_MEMBERS, LOCAL_DRAFT_SCHEMA_VERSION, LOCAL_DRAFT_SCHEMA_VERSION_V4, LOCAL_DRAFT_SCHEMA_VERSION_V5, LOCAL_DRAFT_SCHEMA_VERSION_V6, INVENTORY_OMISSIONS_SINCE, PRE_V5_SCHEMA_VERSIONS, TASK_ROUTE_FIELD, UNDERSTANDING_ITEMS, V4_FIELDS, V7_FIGURE_MEMBERS, hasHomeForm, hasThesisBasisForm, hasV4Forms, checkDraftShape, localDraftSchema, membersOfKind, type DraftSchemaWithDefs } from './draft-schema.js';
+import { FIGURE_MEMBERS, LOCAL_DRAFT_SCHEMA_VERSION, LOCAL_DRAFT_SCHEMA_VERSION_V4, LOCAL_DRAFT_SCHEMA_VERSION_V5, LOCAL_DRAFT_SCHEMA_VERSION_V6, LOCAL_DRAFT_SCHEMA_VERSION_V7, INVENTORY_OMISSIONS_SINCE, PRE_V5_SCHEMA_VERSIONS, SUBSECTIONS_FIELD, TASK_ROUTE_FIELD, UNDERSTANDING_ITEMS, V4_FIELDS, V7_FIGURE_MEMBERS, hasFigureKindForm, hasHomeForm, hasSubsectionForm, hasThesisBasisForm, hasV4Forms, checkDraftShape, localDraftSchema, membersOfKind, type DraftSchemaWithDefs } from './draft-schema.js';
 import { isEntryPoint } from './derive.js';
 import { BLOB_MODES, type PinnedObjectReader, type TreeEntry } from './git-object-reader.js';
 import { secretPathOf, type DossierScreen, type ScreenExclusion } from './screen.js';
@@ -44,6 +44,8 @@ export function elementLabels(doc: Readonly<Record<string, unknown>>): { at: str
   list(doc['poles']).forEach((pole, i) => { if (isRecord(pole) && typeof pole['label'] === 'string') out.push({ at: `$.poles[${i}].label`, value: pole['label'] }); });
   // So does a task route's task (the index-and-task-routes change): a short label that claims nothing; the claims are its steps.
   list(doc[TASK_ROUTE_FIELD]).forEach((route, i) => { if (isRecord(route) && typeof route['task'] === 'string') out.push({ at: `$.${TASK_ROUTE_FIELD}[${i}].task`, value: route['task'] }); });
+  // And so does a v8 subsection's title (version 2.16); in an earlier draft the member is field-version and nothing in it is read.
+  subsectionsOf(doc, (subsection, at) => { if (typeof subsection['title'] === 'string') out.push({ at: `${at}.title`, value: subsection['title'] }); });
   return out;
 }
 
@@ -439,13 +441,13 @@ const DIAGRAM_GRAPH_KINDS: ReadonlySet<string> = new Set(['flow', 'lifecycle', '
  * diagram; and `figure-unused` for a participant no message names or a lane no step names, which would draw an empty column. In an
  * earlier draft: `field-version` for a v7 kind and for each v7 member, in place of the schema finding at that path. */
 function figureStructure(doc: Readonly<Record<string, unknown>>, add: (finding: CheckFinding) => void): void {
-  if (doc['schemaVersion'] !== LOCAL_DRAFT_SCHEMA_VERSION) {
+  if (!hasFigureKindForm(doc['schemaVersion'])) {
     list(doc['diagrams']).forEach((diagram, i) => {
       if (!isRecord(diagram)) return;
       const name = diagramName(diagram, i);
-      if (diagram['kind'] === 'sequence' || diagram['kind'] === 'swimlane') add({ kind: 'field-version', at: `$.diagrams[${i}].kind`, detail: `${name}: the kind \`${diagram['kind']}\` needs draft schema ${LOCAL_DRAFT_SCHEMA_VERSION}` });
+      if (diagram['kind'] === 'sequence' || diagram['kind'] === 'swimlane') add({ kind: 'field-version', at: `$.diagrams[${i}].kind`, detail: `${name}: the kind \`${diagram['kind']}\` needs draft schema ${LOCAL_DRAFT_SCHEMA_VERSION_V7}` });
       for (const member of V7_FIGURE_MEMBERS) {
-        if (Object.hasOwn(diagram, member)) add({ kind: 'field-version', at: `$.diagrams[${i}].${member}`, detail: `${name}: \`${member}\` needs draft schema ${LOCAL_DRAFT_SCHEMA_VERSION}` });
+        if (Object.hasOwn(diagram, member)) add({ kind: 'field-version', at: `$.diagrams[${i}].${member}`, detail: `${name}: \`${member}\` needs draft schema ${LOCAL_DRAFT_SCHEMA_VERSION_V7}` });
       }
     });
     return;
@@ -483,15 +485,84 @@ function figureStructure(doc: Readonly<Record<string, unknown>>, add: (finding: 
 
 const CLAIM_UNQUOTABLE = 'only an inferred claim block carries quotations; give this one its own inferred block with a citation';
 
+/** Each subsection of one section of a v8 draft (version 2.16), with its JSON path; none in an earlier draft. */
+function subsectionsOfSection(doc: Readonly<Record<string, unknown>>, section: Readonly<Record<string, unknown>>, at: string,
+  visit: (subsection: Readonly<Record<string, unknown>>, at: string) => void): void {
+  if (!hasSubsectionForm(doc['schemaVersion'])) return;
+  list(section[SUBSECTIONS_FIELD]).forEach((subsection, j) => { if (isRecord(subsection)) visit(subsection, `${at}.${SUBSECTIONS_FIELD}[${j}]`); });
+}
+
+/** Every subsection of a v8 draft, in draft order, with its JSON path. */
+export function subsectionsOf(doc: Readonly<Record<string, unknown>>, visit: (subsection: Readonly<Record<string, unknown>>, at: string) => void): void {
+  list(doc['sections']).forEach((section, i) => { if (isRecord(section)) subsectionsOfSection(doc, section, `$.sections[${i}]`, visit); });
+}
+
+/** The paths at which a draft of schema v7 or earlier carries `subsections`, each a field-version finding (version 2.16). */
+function subsectionFieldVersionPaths(doc: Readonly<Record<string, unknown>>): string[] {
+  if (hasSubsectionForm(doc['schemaVersion'])) return [];
+  return list(doc['sections']).flatMap((section, i) => (isRecord(section) && Object.hasOwn(section, SUBSECTIONS_FIELD) ? [`$.sections[${i}].${SUBSECTIONS_FIELD}`] : []));
+}
+
+/** Rule `one-sentence-answer`, version 1 (REQ-polaris-generation-034 version 2.16): whether a subsection answer's text is one sentence. It
+ * reads the text alone. A terminator is U+002E, U+003F or U+0021; a closer U+0029, U+005D, U+0027 or U+2019; a quote U+0022; white space
+ * the class `\s` of an ECMAScript regular expression with the `u` flag (the RS-19 word split). The characters between the first and second
+ * quote, the third and fourth and so on are removed, the quotes kept and an unpaired last quote and what follows it left in place; leading
+ * and trailing white space is removed. What remains is one sentence when it ends with a terminator and zero or more closers, or with a quote
+ * that closes a pair, and holds no terminator that zero or more closers and then a white-space character follow. */
+export function oneSentenceAnswer(value: string): boolean {
+  const chars = [...value];
+  const quotes = chars.flatMap((ch, i) => (ch === '"' ? [i] : []));
+  const paired = quotes.length - (quotes.length % 2);
+  const closing = new Set<number>();
+  const removed = new Set<number>();
+  for (let k = 0; k < paired; k += 2) {
+    closing.add(quotes[k + 1]!);
+    for (let i = quotes[k]! + 1; i < quotes[k + 1]!; i++) removed.add(i);
+  }
+  const kept = chars.flatMap((ch, i) => (removed.has(i) ? [] : [{ ch, closes: closing.has(i) }]));
+  const white = /^\s$/u;
+  while (kept.length > 0 && white.test(kept[0]!.ch)) kept.shift();
+  while (kept.length > 0 && white.test(kept[kept.length - 1]!.ch)) kept.pop();
+  const stripped = kept.map((entry) => entry.ch).join('');
+  if (/[.?!][)\]'\u2019]*\s/u.test(stripped)) return false;
+  return /[.?!][)\]'\u2019]*$/u.test(stripped) || (kept.length > 0 && kept[kept.length - 1]!.closes);
+}
+
+/** A subsection as a finding names it (version 2.16): by its identity, or by its path where it has no well-formed one. */
+function subsectionName(subsection: Readonly<Record<string, unknown>>, at: string): string {
+  const id = subsection['id'];
+  return typeof id === 'string' && checkShape({ root: handle, defs: {} }, id).length === 0 ? `the subsection ${JSON.stringify(id)}` : `the subsection ${at}`;
+}
+
+/** Subsections (REQ-polaris-generation-034 version 2.16). In a v8 draft: `subsection-answer` at a subsection's `answer` that is
+ * non-normative or whose `text` is not one sentence by rule `one-sentence-answer` version 1. In an earlier draft: `field-version` at a
+ * section's `subsections`, in place of the schema finding at that path. */
+function subsectionStructure(doc: Readonly<Record<string, unknown>>, add: (finding: CheckFinding) => void): void {
+  for (const at of subsectionFieldVersionPaths(doc)) {
+    add({ kind: 'field-version', at, detail: `\`${SUBSECTIONS_FIELD}\` needs draft schema ${LOCAL_DRAFT_SCHEMA_VERSION}` });
+  }
+  subsectionsOf(doc, (subsection, at) => {
+    const answer = subsection['answer'];
+    if (!isRecord(answer)) return;
+    const name = subsectionName(subsection, at);
+    if (answer['label'] === 'non-normative') {
+      add({ kind: 'subsection-answer', at: `${at}.answer`, detail: `${name}: an answer is an inferred or unknown claim that answers the subsection's question, never non-normative` });
+    } else if (typeof answer['text'] === 'string' && !oneSentenceAnswer(answer['text'])) {
+      add({ kind: 'subsection-answer', at: `${at}.answer`, detail: `${name}: an answer is one sentence (rule one-sentence-answer version 1): it ends with a full stop, question mark or exclamation mark, and no such mark followed by a space stands inside it outside a quotation; write "for example", not "e.g."` });
+    }
+  });
+}
+
 /** The authoring draft's rules: its schema and question limit, references, understanding record, blocks and discovery account. */
 export function draftRules(pinned: string, maxQuestions: number, poleLimit: number = DEFAULT_POLE_LIMIT): SubjectRules {
   const parameters = { pinnedRevision: pinned, maxQuestions };
   const current = localDraftSchema(parameters);
-  const v6 = localDraftSchema(parameters, 'home', 'required', 'absent');
+  const v7 = localDraftSchema(parameters, 'home', 'required', 'taken', 'absent');
+  const v6 = localDraftSchema(parameters, 'home', 'required', 'absent', 'absent');
   const unnamedRoot = localDraftSchema(parameters, 'home', 'required', 'unnamed').root;
   const unnamed = { root: (unnamedRoot as { properties: Record<string, { items: Schema }> }).properties['diagrams']!.items, defs: current.defs };
-  const v5 = localDraftSchema(parameters, 'home', 'absent', 'absent');
-  const v4 = localDraftSchema(parameters, 'sectionId', 'absent', 'absent');
+  const v5 = localDraftSchema(parameters, 'home', 'absent', 'absent', 'absent');
+  const v4 = localDraftSchema(parameters, 'sectionId', 'absent', 'absent', 'absent');
   const v5Reported = /^\$\.thesisBasis$/u, v4Reported = /^\$\.(?:diagrams\[\d+\]\.home|thesisBasis)$/u;
   return {
     noun: 'draft',
@@ -502,7 +573,9 @@ export function draftRules(pinned: string, maxQuestions: number, poleLimit: numb
     earlier: (subject) => {
       const version = isRecord(subject) ? subject['schemaVersion'] : undefined;
       const doc = isRecord(subject) ? subject : {};
-      if (version === LOCAL_DRAFT_SCHEMA_VERSION) {
+      // A section's `subsections` in a v7 or earlier draft: a field-version finding in place of the schema finding at that path (version 2.16).
+      const subsectionPaths = new Set(subsectionFieldVersionPaths(doc));
+      if (hasFigureKindForm(version)) {
         const standing = new Set(figureKindFindings(doc).map((finding) => finding.member));
         // A diagram naming none of the eight kinds matches none of v7's forms, which would report one fault for all of it: its faults are
         // read against the graph form with every kind permitted instead, each at its own path, as v6 reports them.
@@ -514,14 +587,14 @@ export function draftRules(pinned: string, maxQuestions: number, poleLimit: numb
           if (isRecord(diagram) && membersOfKind(diagram['kind']) !== undefined) return undefined;
           return checkShape(unnamed, diagram).map((fault) => ({ path: `${error.path}${fault.path.slice(1)}`, detail: fault.detail }));
         };
-        return { schema: current, reported: { test: (path) => standing.has(path) }, replaced };
+        return { schema: version === LOCAL_DRAFT_SCHEMA_VERSION ? current : v7, reported: { test: (path) => standing.has(path) || subsectionPaths.has(path) }, replaced };
       }
       const fieldVersion = new Set(figureFieldVersionPaths(doc));
       const [schema, also] = version === LOCAL_DRAFT_SCHEMA_VERSION_V6 ? [v6, null] : version === LOCAL_DRAFT_SCHEMA_VERSION_V5 ? [v5, v5Reported] : [v4, v4Reported];
-      return { schema, reported: { test: (path) => fieldVersion.has(path) || (also !== null && also.test(path)) } };
+      return { schema, reported: { test: (path) => fieldVersion.has(path) || subsectionPaths.has(path) || (also !== null && also.test(path)) } };
     },
     maxQuestions,
-    structural: (doc, add) => { draftStructure(doc, add, poleLimit); thesisStructure(doc, add); figureStructure(doc, add); },
+    structural: (doc, add) => { draftStructure(doc, add, poleLimit); thesisStructure(doc, add); figureStructure(doc, add); subsectionStructure(doc, add); },
     blocks: collectBlocks,
     account: { key: 'discovery', parts: ['selected', 'excluded', 'unresolved', 'deferred'] },
   };
@@ -734,6 +807,12 @@ export function collectBlocks(doc: Readonly<Record<string, unknown>>): Block[] {
     list(doc[part]).forEach((container, i) => {
       if (!isRecord(container)) return;
       list(container['paragraphs']).forEach((entry, j) => contentClaims(`$.${part}[${i}].paragraphs[${j}]`, entry, (at, value) => out.push(claim(at, value))));
+      // A v8 section's subsections follow its own paragraphs (version 2.16): each answer, then that subsection's paragraphs. Their claims
+      // are the section's for every rule; in an earlier draft the member is field-version and none of it is a block.
+      if (part === 'sections') subsectionsOfSection(doc, container, `$.sections[${i}]`, (subsection, at) => {
+        if (isRecord(subsection['answer'])) out.push(claim(`${at}.answer`, subsection['answer']));
+        list(subsection['paragraphs']).forEach((entry, k) => contentClaims(`${at}.paragraphs[${k}]`, entry, (inner, value) => out.push(claim(inner, value))));
+      });
     });
   }
   // A route step is a claim block and only ever Inferred: an unknown or non-normative step would send a reader nowhere.

@@ -72,6 +72,17 @@ describe('reader advice: the counted standards', () => {
     ]);
   });
 
+  it('RS-19: counts a v8 section\'s subsection answers and paragraphs as its own prose, and an earlier draft\'s subsections never (version 2.16)', () => {
+    const w = (n: number) => Array.from({ length: n }, () => 'w').join(' ');
+    const sub = (answer: number, paragraph: number) => ({ id: 'q', title: 'Q', answer: { text: w(answer) }, paragraphs: [{ text: w(paragraph), children: [{ text: 'w' }] }, { kind: 'table', rows: [] }] });
+    const doc = (schemaVersion: string) => ({ schemaVersion, sections: [{ ...section('a', 100), subsections: [sub(50, 49), sub(50, 50)] }],
+      deepDives: [{ ...section('dd', 10), sectionId: 'a', subsections: [sub(400, 0), sub(0, 0)] }], diagrams: [diagram('a')] });
+    expect(readerAdvice(doc('polaris-dossier-local-draft-v8')).advisories).toEqual([
+      { standard: 'RS-19', at: '$.sections[0].paragraphs', detail: expect.stringMatching(/^301 words of its own prose, past about 300:/u) },
+    ]);
+    for (const version of ['polaris-dossier-local-draft-v7', 'polaris-dossier-local-draft-v2', undefined]) expect(readerAdvice(doc(version as string)).advisories, String(version)).toEqual([]);
+  });
+
   it('RS-14: more than three deep dives, at the list', () => {
     const dives = (n: number) => Array.from({ length: n }, (_, i) => ({ ...section(`d${i}`, 5), sectionId: 'a' }));
     expect(readerAdvice({ sections: [section('a', 5)], diagrams: [diagram('a')], deepDives: dives(3) }).advisories).toEqual([]);
