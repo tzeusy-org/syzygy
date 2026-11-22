@@ -1,0 +1,34 @@
+{
+  "subject": "a1f348d48144b8e8fdc486155f4f49669fec2551",
+  "files": [
+    {
+      "path": "packages/polaris-dossier/src/url-mode-registry.ts",
+      "sha256": "9ecd069ae4963dc5b8290503530cfffe2ffec43238fc8114abbe0ba388fd0832"
+    },
+    {
+      "path": "packages/polaris-dossier/src/url-mode-registry.test.ts",
+      "sha256": "a007ab72ef0ebbbd640d927eaaded172f7f40133727752887d00bb6037c59b3d"
+    }
+  ],
+  "mutants": [
+    {
+      "name": "drop-retained-v2",
+      "file": "packages/polaris-dossier/src/url-mode-registry.ts",
+      "old": "      || policy(value.expectedBasePolicy, DOSSIER_REACH_POLICY_PATH, 'polaris-butlers-project-shape-secrets', DOSSIER_REACH_POLICY_VERSION)\n",
+      "new": "",
+      "exit": 1,
+      "log": "/home/orca/.tmp/f3-policy3-registry-mutant-drop-retained-v2.log",
+      "logSha256": "9b160bdb319564ef2675e2e93a41eb0773abb6776385c48eff17a98b48e30c26"
+    },
+    {
+      "name": "allow-new-earlier",
+      "file": "packages/polaris-dossier/src/url-mode-registry.ts",
+      "old": "!policy(input.context.expectedBasePolicy, DOSSIER_POLICY_PATH, 'polaris-butlers-project-shape-secrets', DOSSIER_POLICY_VERSION)",
+      "new": "false",
+      "exit": 1,
+      "log": "/home/orca/.tmp/f3-policy3-registry-mutant-allow-new-earlier.log",
+      "logSha256": "9d37bbb3dba6abbb22507dfa0d9f89faf76738c979321ac0ee82aa302fe1e2f2"
+    }
+  ],
+  "restoredExit": 0
+}

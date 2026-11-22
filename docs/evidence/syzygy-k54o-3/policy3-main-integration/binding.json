@@ -1,0 +1,58 @@
+{
+  "subject": "a1f348d48144b8e8fdc486155f4f49669fec2551",
+  "main": "499fc07debd11df37729b5c88a956a28d1effa28",
+  "files": [
+    {
+      "path": "packages/polaris-dossier/src/url-mode-registry.ts",
+      "sha256": "9ecd069ae4963dc5b8290503530cfffe2ffec43238fc8114abbe0ba388fd0832"
+    },
+    {
+      "path": "packages/polaris-dossier/src/url-mode-registry.test.ts",
+      "sha256": "a007ab72ef0ebbbd640d927eaaded172f7f40133727752887d00bb6037c59b3d"
+    }
+  ],
+  "artifacts": [
+    {
+      "path": "f3-policy3-registry-rule6.json",
+      "bytes": 1385,
+      "sha256": "5bc97da7de9d1742171fa5700fca1b0d1fa72f368149e360d7bbd677b939fa06"
+    },
+    {
+      "path": "f3-policy3-registry-regression.log",
+      "bytes": 2177,
+      "sha256": "d7f93f79054da6e3f1ad807f45f60f39a29e5133dd4bbafb28edd03056c1c8c5"
+    },
+    {
+      "path": "f3-policy3-registry-after-fixed-fixture.log",
+      "bytes": 363,
+      "sha256": "607e04df3f7846708a1c8dcbe50b9102d55c2cd2beecd8977dcda27f4b2cdfb0"
+    },
+    {
+      "path": "f3-policy3-registry-restored.log",
+      "bytes": 365,
+      "sha256": "473870e3fcd442f48e723c44add02fc633d6b4017518aa5d03e0cfe612f95da4"
+    },
+    {
+      "path": "f3-policy3-registry-mutant-drop-retained-v2.log",
+      "bytes": 2178,
+      "sha256": "9b160bdb319564ef2675e2e93a41eb0773abb6776385c48eff17a98b48e30c26"
+    },
+    {
+      "path": "f3-policy3-registry-mutant-allow-new-earlier.log",
+      "bytes": 3020,
+      "sha256": "9d37bbb3dba6abbb22507dfa0d9f89faf76738c979321ac0ee82aa302fe1e2f2"
+    },
+    {
+      "path": "f3-main-499-url-timers.log",
+      "bytes": 635,
+      "sha256": "37fc7bf916e17e8c81eed802799387bd5590db9c5df86c9150c009eda8784756"
+    },
+    {
+      "path": "f3-main-499-assembled-typecheck-final.log",
+      "bytes": 37,
+      "sha256": "396901319daac4a4413b23478852db3c572014f86c71d148273565f0f3332696"
+    }
+  ],
+  "scope": "Main merge d5e5fd860 preserves main adoption rows A-1..A-44 byte-for-byte and shifts unlanded F3 rows to A-45..A-66. Policy3 new URL declarations bind actual current policy. Retained mode records keep exact earlier 2/1 policy pairs; registering a new earlier-policy URL run remains refused. No runtime migration, freshness-gate broadening or permission to resume a source-mismatched cut.",
+  "checks": "Corrected retained-binding regression failed before the missing reach-policy predicate, then 5/5 controls passed. Two exact selected source faults detected; restored 5/5. Genuine URL producer tests 2 passed/116 skipped on merged118-case file. Typecheck passed at subject. First recreated-slot test used default0644 and failed safely; mode0600 fixture correction included in afe7facae. Earlier unit-project attempts selected no files and are not passing evidence. Fresh independent source review pending."
+}

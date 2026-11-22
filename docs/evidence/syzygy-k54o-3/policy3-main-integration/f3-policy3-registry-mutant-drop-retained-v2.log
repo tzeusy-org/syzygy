@@ -1,0 +1,35 @@
+
+ RUN  v3.2.7 /home/orca/.tmp/syzygy-beads-looper-20261114-54ebc9f1/d10-f3-runtime-current
+
+ ❯ |integration| packages/polaris-dossier/src/url-mode-registry.test.ts (5 tests | 1 failed) 50ms
+   ✓ persistent host URL mode declaration binding > preserves ordinary operator runs and refuses missing bindings for every URL marker including dangling links 9ms
+   × persistent host URL mode declaration binding > retains exact independently supplied bindings exclusively and returns the host metadata predicate 18ms
+     → expected 'refused' to be 'url' // Object.is equality
+   ✓ persistent host URL mode declaration binding > refuses incomplete, changed or unknown host binding fields before creating a registry slot 5ms
+   ✓ persistent host URL mode declaration binding > bounds and validates regular protected files without following links, hardlinks, FIFOs or unsafe permissions 14ms
+   ✓ persistent host URL mode declaration binding > requires canonical separate registry/run roots and never edits or repairs a supplied directory 2ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  |integration| packages/polaris-dossier/src/url-mode-registry.test.ts > persistent host URL mode declaration binding > retains exact independently supplied bindings exclusively and returns the host metadata predicate
+AssertionError: expected 'refused' to be 'url' // Object.is equality
+
+Expected: "url"
+Received: "refused"
+
+ ❯ packages/polaris-dossier/src/url-mode-registry.test.ts:68:29
+     66|       fs.writeFileSync(f.file, JSON.stringify({ format: 'polaris-url-m…
+     67|       const retained = authority(f.run, f.runId);
+     68|       expect(retained.kind).toBe('url');
+       |                             ^
+     69|       if (retained.kind === 'url') expect(retained.context.expectedBas…
+     70|       // Retaining an earlier exact binding never admits a new run und…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 4 passed (5)
+   Start at  18:03:16
+   Duration  3.19s (transform 1.75s, setup 20ms, collect 2.36s, tests 50ms, environment 0ms, prepare 240ms)
+

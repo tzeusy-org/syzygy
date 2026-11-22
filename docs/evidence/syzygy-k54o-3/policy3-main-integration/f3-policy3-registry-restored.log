@@ -1,0 +1,10 @@
+
+ RUN  v3.2.7 /home/orca/.tmp/syzygy-beads-looper-20261114-54ebc9f1/d10-f3-runtime-current
+
+ ✓ |integration| packages/polaris-dossier/src/url-mode-registry.test.ts (5 tests) 36ms
+
+ Test Files  1 passed (1)
+      Tests  5 passed (5)
+   Start at  18:03:24
+   Duration  2.62s (transform 1.32s, setup 18ms, collect 1.87s, tests 36ms, environment 0ms, prepare 128ms)
+
