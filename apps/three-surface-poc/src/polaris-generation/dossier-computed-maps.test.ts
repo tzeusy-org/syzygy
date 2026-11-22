@@ -90,19 +90,19 @@ describe('the directory map', () => {
     expect(main.startsWith('<section id="computed-map" data-map="directories" data-reading-level="1" data-topics=""><h1>Directory map</h1>'
       + `<p class="derived-note">Derived by Syzygy from the paths and modes of the tree at revision ${REV}, listed at ${AT}, by rule top-level-unit version 1. No file body, size or object id was read. Current for that revision only.</p>`
       + '<p class="map-coverage" data-epistemic="observed">Coverage: 65 files in the tree at that revision: 3 at the root; 60 under the 30 top-level directories listed here; 0 under 0 more top-level directories counted and not listed; 2 left out and not named, because a secret detector matches their path; and 1 submodule, not followed. Directories below the top level are not mapped: no rule of this version derives them.</p>'
-      + '<figure class="computed-map" data-visual-provenance="computed" data-map="directories"><figcaption>Top-level directories 1 to 12 of 30, by path</figcaption><div class="map-forms" data-figure-width="648"><div class="diagram-scroll map-drawing"><svg ')).toBe(true);
+      + '<figure class="computed-map" data-visual-provenance="computed" data-map="directories"><figcaption id="diagram-title-map-directories-1">Top-level directories 1 to 12 of 30, by path</figcaption><div class="map-forms" data-figure-width="648"><div class="diagram-scroll map-drawing"><svg ')).toBe(true);
     const figures = figuresOf(page);
-    expect(figures.map((f) => /<figcaption>([^<]*)<\/figcaption>/u.exec(f)![1])).toEqual(['Top-level directories 1 to 12 of 30, by path', 'Top-level directories 13 to 24 of 30, by path', 'Top-level directories 25 to 30 of 30, by path']);
+    expect(figures.map((f) => /<figcaption id="[^"]*">([^<]*)<\/figcaption>/u.exec(f)![1])).toEqual(['Top-level directories 1 to 12 of 30, by path', 'Top-level directories 13 to 24 of 30, by path', 'Top-level directories 25 to 30 of 30, by path']);
     expect(drawn(figures[2]!).filter((g) => !g.startsWith('edge-text'))).toEqual([
       ...[25, 26, 27, 28, 29, 30].map((k) => `edge observed data-derived-id="_tree-contains-${k}"`),
       'node observed data-derived-id="_tree-root"', ...[25, 26, 27, 28, 29, 30].map((k) => `node observed data-derived-id="_tree-unit-${k}"`),
     ]);
     // The text form: one item per arrow, in the drawing's order, each label whole.
-    expect(figures[2]).toContain('<ol class="map-list"><li class="observed"><span class="map-head">Repository root</span> contains d25/ (2 files)</li><li class="observed"><span class="map-head">Repository root</span> contains d26/ (2 files)</li>');
+    expect(figures[2]).toContain('<ol class="map-list" id="diagram-text-map-directories-3"><li class="observed"><span class="map-head">Repository root</span> contains d25/ (2 files)</li><li class="observed"><span class="map-head">Repository root</span> contains d26/ (2 files)</li>');
     expect(figures[2]).toContain('</ol></div><ul class="diagram-legend" aria-label="Line styles"><li><span class="legend-line observed" aria-hidden="true"></span>Solid: observed</li></ul><p class="diagram-tally">7 boxes and 6 arrows, derived by Syzygy: 13 observed, 0 inferred, 0 unknown.</p></figure>');
     // The list: each entry exactly the region's entry for that fact.
     const index = files.get('index.html')!;
-    const regionList = /<ul class="derived-facts">([^]*?)<\/ul>/u.exec(index)![1];
+    const regionList = /<ul class="derived-facts" id="diagram-text-derived">([^]*?)<\/ul>/u.exec(index)![1];
     expect(main).toContain(`<h2>Every derived fact</h2><ul class="derived-facts">${regionList}</ul></section>`);
     expect(main.match(/<li data-derived-id=/gu)).toHaveLength(61);
     // The region ends with the line linking the three maps, and the contents page lists them after Sources.
@@ -161,6 +161,14 @@ describe('the directory map', () => {
     ]);
     expect(units).toContain('<li class="inferred"><span class="map-head">Repository root ?</span> declares root</li>');
   });
+
+  it('states the words and state of an entry that is no readable record on the directory map and in computedMaps (version 2.10)', () => {
+    const files = site({ state: 'unusable', revision: REV, unknownReason: 'missing-evidence' }, workspaceMember());
+    expect(sectionOf(files.get('maps/directories.html')!)).toBe('<section id="computed-map" data-map="directories" data-reading-level="1" data-topics=""><h1>Directory map</h1>'
+      + `<p class="derived-unknown" data-epistemic="unknown" data-unknown-reason="missing-evidence"><span class="not-established">Not established.</span> The top-level directories of the tree at revision ${REV} are Unknown at this render: this draft revision's derived-record path holds something this render cannot use or cannot examine; Syzygy or its screen may have changed since the revision was checked, or the path may have been altered.</p></section>`);
+    expect(JSON.parse(files.get('machine.json')!).computedMaps.directories.state).toBe('unusable');
+    expect(JSON.parse(site({ state: 'missing', revision: REV, unknownReason: 'missing-evidence' }, workspaceMember()).get('machine.json')!).computedMaps.directories.state).toBe('missing');
+  });
 });
 
 describe('the unit map', () => {
@@ -176,7 +184,7 @@ describe('the unit map', () => {
       + 'go-module-manifest: 0 candidate files; 0 read for facts, 0 Unknown with no facts taken; 0 left out and not named, because a secret detector matches their path; 0 set apart as vendored, generated or test paths; 0 values left out by the value checks; 0 facts. '
       + 'Places are path-derived: each package or module sits under the top-level directory its manifest&#39;s path begins with, and may move on refactor. Arrows between packages are not drawn: no rule of this version states that a dependency names a package of this tree.</p>')).toBe(true);
     const figures = figuresOf(page);
-    expect(figures.map((f) => /<figcaption>([^<]*)<\/figcaption>/u.exec(f)![1])).toEqual([
+    expect(figures.map((f) => /<figcaption id="[^"]*">([^<]*)<\/figcaption>/u.exec(f)![1])).toEqual([
       'Repository root: packages and modules 1 to 1 of 1, as their manifests declare, placed by path',
       'packages/: packages and modules 1 to 2 of 2, as their manifests declare, placed by path',
     ]);
@@ -188,7 +196,7 @@ describe('the unit map', () => {
     // No arrow between two packages: every arrow is a `declares` from a place.
     expect(page.match(/<title>declares \(inferred\)<\/title>/gu)).toHaveLength(6);
     expect(page).not.toMatch(/<title>(?!declares)[^<]* \(inferred\)<\/title><path d/u);
-    expect(figures[1]).toContain('<ol class="map-list"><li class="inferred"><span class="map-head">packages/</span> declares a</li><li class="inferred"><span class="map-head">packages/</span> declares b</li></ol>');
+    expect(figures[1]).toContain('<ol class="map-list" id="diagram-text-map-units-2-1"><li class="inferred"><span class="map-head">packages/</span> declares a</li><li class="inferred"><span class="map-head">packages/</span> declares b</li></ol>');
     expect(figures[1]).toContain('<li><span class="legend-line observed" aria-hidden="true"></span>Solid: observed</li><li><span class="legend-line inferred" aria-hidden="true"></span>Dashed: inferred</li></ul><p class="diagram-tally">3 boxes and 2 arrows, derived by Syzygy: 1 observed, 4 inferred, 0 unknown.</p>');
     expect(main).toContain('<h2>Every declared fact</h2><ul class="map-facts"><li data-manifest-path="package.json" data-epistemic="inferred">package.json: 3 facts.<ul>');
     expect(main).toContain('<li data-manifest-path="packages/a/package.json" data-epistemic="inferred">packages/a/package.json: 2 facts.<ul><li data-manifest-id="_manifest-13" data-manifest-fact="package" data-epistemic="inferred" data-manifest-rule="npm-package-manifest" data-manifest-rule-version="1" data-manifest-path="packages/a/package.json" data-manifest-lines="2-2">Package a. <span class="derived-mark">Derived by Syzygy</span>'
@@ -265,12 +273,14 @@ describe('the CI pipeline map', () => {
     expect(main).toContain('>Triggered by pull_request. <span');
     const [figure] = figuresOf(page);
     expect(figuresOf(page)).toHaveLength(1);
-    expect(figure).toContain('<figcaption>.github/workflows/ci.yml: jobs and what each needs, as declared</figcaption>');
+    expect(figure).toContain('<figcaption id="diagram-title-map-ci-1">.github/workflows/ci.yml: jobs and what each needs, as declared</figcaption>');
+    // A plain chain of three jobs is stacked, one column wide, in place of continuing on a band below (syzygy-3efd.66).
+    expect(widthOf(figure!)).toBe(248);
     expect(drawn(figure!).filter((g) => !g.startsWith('edge-text'))).toEqual([
       'edge inferred data-manifest-id="_manifest-6"', 'edge inferred data-manifest-id="_manifest-8"',
       'node inferred data-manifest-id="_manifest-4"', 'node inferred data-manifest-id="_manifest-5"', 'node inferred data-manifest-id="_manifest-7"',
     ]);
-    expect(figure).toContain('<ol class="map-list"><li class="inferred"><span class="map-head">test</span> needs build</li><li class="inferred"><span class="map-head">deploy</span> needs test</li></ol>');
+    expect(figure).toContain('<ol class="map-list" id="diagram-text-map-ci-1"><li class="inferred"><span class="map-head">test</span> needs build</li><li class="inferred"><span class="map-head">deploy</span> needs test</li></ol>');
     expect(figure).toContain('<p class="diagram-tally">3 boxes and 2 arrows, derived by Syzygy: 0 observed, 5 inferred, 0 unknown.</p>');
     expect(main).toContain('>Job deploy needs release, which names no job of this file. <span');
     expect(main).toContain('>Job test needs build. <span');

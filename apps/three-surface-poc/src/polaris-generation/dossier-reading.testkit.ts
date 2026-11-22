@@ -1,5 +1,6 @@
 // Test support: only the dossier reading tests import this.
 import { generationAnchorId, gitBlobObjectId, type EvidenceAnchor, type GenerationSource, type LocalRenderInput } from '@syzygy/polaris-generation-core';
+import type { LocalDerivedStructure, LocalManifestFact, LocalManifestRecognizerEntry } from '@syzygy/polaris-generation-core/live';
 
 const REVISION = 'c'.repeat(40);
 const anchor = (source: GenerationSource): EvidenceAnchor => ({ targetClass: 'evidence-artifact-identifier-with-integrity-digest',
@@ -118,4 +119,44 @@ export function figureKindsInput(): { readonly local: LocalRenderInput; readonly
       steps: [{ ...el('s1', 'writes the change'), lane: 'dev' }, { ...el('s2', 'opens a pull request'), lane: 'dev' }, { ...el('s3', 'runs the tests'), lane: 'ci' },
         { ...el('s4', 'tags a release', 'unknown'), lane: 'ops' }, { ...el('s5', 'watches the rollout'), lane: 'ops' }] },
   }] } as unknown as LocalRenderInput['draft'] } };
+}
+
+/** The computed map pages (REQ-polaris-generation-034 version 2.9, syzygy-3efd.70): the reading dossier with a derived structure of one
+ * top-level directory and manifest facts of one package and one workflow, so `maps/directories.html`, `maps/units.html` and `maps/ci.html`
+ * each draw one figure (the CI map: `test` needs `build`). */
+export function computedMapsInput(): { readonly local: LocalRenderInput; readonly sources: readonly GenerationSource[] } {
+  const { local, sources } = readingInput();
+  const revision = 'e'.repeat(40);
+  const base = { rule: 'top-level-unit', ruleVersion: 1, epistemic: 'observed', unknownReason: null } as const;
+  const derivedStructure: LocalDerivedStructure = {
+    state: 'derived', revision, recordRevision: revision, capturedAt: '2026-11-22T08:00:00.000Z', recordText: '{}\n', sha256: 'f'.repeat(64), currencyPolicy: null, unitsNotListed: 0,
+    facts: [
+      { id: '_tree-root', fact: 'tree-root', ...base, path: '.', count: 2, to: null },
+      { id: '_tree-unit-1', fact: 'top-level-unit', ...base, path: 'src', count: 9, to: null },
+      { id: '_tree-contains-1', fact: 'contains', ...base, path: 'src', count: null, to: '_tree-unit-1' },
+    ],
+    tree: { files: 11, rootFiles: 2, unitsListed: 1, unitFiles: 9, unitsNotListed: 0, secretPathsLeftOut: 0, submodules: 0 }, countsMatch: true,
+  };
+  const WF = 'github-actions-workflow', NPM = 'npm-package-manifest';
+  const recognizer = (rule: string, counts: Partial<LocalManifestRecognizerEntry> = {}): LocalManifestRecognizerEntry => ({
+    rule, ruleVersion: 1, label: 'inferred', candidates: 0, secretPathsLeftOut: 0, setApart: 0, inferred: 0, unknown: 0, valuesLeftOut: 0, facts: 0, files: [], filesNotListed: 0, ...counts,
+  });
+  const fact = (k: number, kind: string, rule: string, path: string, members: Record<string, string | null>): LocalManifestFact => ({
+    id: `_manifest-${k}`, fact: kind, rule, ruleVersion: 1, path, lines: [k, k], ...members, epistemic: 'inferred',
+  });
+  const file = (path: string, facts: number) => ({ path, epistemic: 'inferred' as const, unknownReason: null, parseFault: null, facts, valuesLeftOut: 0 });
+  const ci = '.github/workflows/ci.yml';
+  const manifestFacts: LocalRenderInput['manifestFacts'] = {
+    format: 'polaris-dossier-manifest-facts/1', state: 'derived', screeningPolicy: { policyId: 'POLARIS-DOSSIER-SCREENING-POLICY', policyVersion: '2.0.0', sha256: 'a'.repeat(64) }, factsNotListed: 0,
+    facts: [
+      fact(1, 'workflow', WF, ci, { name: 'CI' }), fact(2, 'job', WF, ci, { job: 'build' }), fact(3, 'job', WF, ci, { job: 'test' }),
+      fact(4, 'job-needs', WF, ci, { from: 'test', to: 'build' }), fact(5, 'package', NPM, 'src/package.json', { name: 'app' }),
+    ],
+    recognizers: [
+      recognizer(NPM, { candidates: 1, inferred: 1, facts: 1, files: [file('src/package.json', 1)] }),
+      recognizer('cargo-manifest'), recognizer('python-project-manifest'), recognizer('go-module-manifest'),
+      recognizer(WF, { candidates: 1, inferred: 1, facts: 4, files: [file(ci, 4)] }),
+    ],
+  };
+  return { sources, local: { ...local, derivedStructure, manifestFacts } };
 }

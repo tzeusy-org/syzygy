@@ -6,6 +6,7 @@ import { parseBoundedJson } from '@syzygy/polaris-generation-core/live';
 import { isRecord, sha256 } from '@syzygy/support';
 import { QUOTATION_RULE } from './brief.js';
 import { censusSection, loadCensus, type CensusDeps, type CensusLoad } from './census.js';
+import { readCheckRecord } from './check-record-read.js';
 import { checkSubject, declaredSessionId, type CheckDeps, type CheckFinding, type CheckRecord, type CheckRefusal, type CheckedRevision, type ExcludedQuotation, type CitedBlob, type SubjectBlock, type SubjectPlan, type SubjectReport, type SubjectRules, type VerifiedQuotation } from './check.js';
 import { readSec3 } from './doctrine-quote.js';
 import { INVENTORY_ENTRY_KINDS, INVENTORY_QUOTATION_FORM, LOCAL_INVENTORY_SCHEMA_VERSION, SESSION_ID_RULE, inventorySchemaDocument, localInventorySchema } from './draft-schema.js';
@@ -394,7 +395,14 @@ export async function inventoryOfRecord(runDir: string, recheck: { readonly sour
     if (revisions.length === 0) return no('no inventory revision has been checked');
     revision = Math.max(...revisions);
   }
-  const check = productRecord(path.join(INVENTORY_CHECKS, `rev-${revision}.json`));
+  const checkFile = path.join(INVENTORY_CHECKS, `rev-${revision}.json`);
+  let check: Readonly<Record<string, unknown>> | undefined;
+  if (products === undefined) {
+    try {
+      const read = readCheckRecord(path.join(run, checkFile));
+      check = isRecord(read) ? read : undefined;
+    } catch { check = undefined; }
+  } else check = protectedProductRecord(products, run, checkFile);
   if (check === undefined || check['format'] !== INVENTORY_CHECK_FORMAT || check['revision'] !== revision) return no(`the result of inventory revision ${revision} cannot be read`);
   if (check['outcome'] !== 'passed') return no(`inventory revision ${revision} has open findings`);
   const inventory = isRecord(check['inventory']) ? check['inventory'] : {};

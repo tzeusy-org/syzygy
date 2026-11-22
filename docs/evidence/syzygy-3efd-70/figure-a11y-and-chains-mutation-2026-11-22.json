@@ -1,0 +1,609 @@
+{
+  "format": "mutation-run/1",
+  "ranAt": "2026-11-22T02:54:07.055Z",
+  "commit": "c22f3dd5bea6d2f5b9f669599039cf84f9766bec",
+  "subject": {
+    "apps/three-surface-poc/src/polaris-generation/diagram-layout.ts": "d11b68c194c877161d0dec7798517ed0e6a120de27dd04d31d191e4cebf5d1cf",
+    "apps/three-surface-poc/src/polaris-generation/dossier-site.ts": "780a5ca79e179ab9d2753d19218e925c6af1d7efba07215c3329d2ceb6980d73"
+  },
+  "command": "SYZYGY_POC_BROWSER=<chrome-headless-shell 158.0.8127.36> npx vitest run <the mutant's `tests`> --reporter=json --outputFile=<tmp>",
+  "method": "Each mutant replaces one fragment (`old`, occurring exactly once in `file`) with `new`, runs its listed test files with vitest, counts the mutant killed when the run exits non-zero, records the failed tests, and restores the file byte for byte in a `finally` block (checked against `subject` after each mutant). The unmutated run of each test group passed first. A run with no result within 300 s is stopped (its whole process group) and counted killed by timeout. Rule 6, AGENTS.md. Run after merging origin/main (computed maps 2.9) into the branch; the earlier session's run of A1-S7 was interrupted and is superseded by this one.",
+  "beads": [
+    "syzygy-3efd.70",
+    "syzygy-3efd.66"
+  ],
+  "testsByGroup": {
+    "aria": [
+      "apps/three-surface-poc/src/polaris-generation/figure-aria.test.ts",
+      "apps/three-surface-poc/src/polaris-generation/figure-aria.browser.test.ts",
+      "apps/three-surface-poc/src/polaris-generation/dossier-render-provider-golden.test.ts"
+    ],
+    "maps": [
+      "apps/three-surface-poc/src/polaris-generation/figure-aria.test.ts",
+      "apps/three-surface-poc/src/polaris-generation/figure-aria.browser.test.ts",
+      "apps/three-surface-poc/src/polaris-generation/dossier-computed-maps.test.ts",
+      "apps/three-surface-poc/src/polaris-generation/computed-maps.browser.test.ts"
+    ],
+    "fit": [
+      "apps/three-surface-poc/src/polaris-generation/diagram-layout.test.ts",
+      "packages/polaris-dossier/src/synthetic-shapes.test.ts",
+      "apps/three-surface-poc/src/polaris-generation/dossier-reading.browser.test.ts",
+      "apps/three-surface-poc/src/polaris-generation/dossier-render-provider-golden.test.ts"
+    ]
+  },
+  "mutants": [
+    {
+      "id": "A1",
+      "file": "apps/three-surface-poc/src/polaris-generation/dossier-site.ts",
+      "old": "    : { title: ` id=\"diagram-title-${index}\"`, text: ` id=\"diagram-text-${index}\"` };",
+      "new": "    : { title: '', text: ` id=\"diagram-text-${index}\"` };",
+      "tests": [
+        "apps/three-surface-poc/src/polaris-generation/figure-aria.test.ts",
+        "apps/three-surface-poc/src/polaris-generation/figure-aria.browser.test.ts",
+        "apps/three-surface-poc/src/polaris-generation/dossier-render-provider-golden.test.ts"
+      ],
+      "killed": true,
+      "killedBy": [
+        "apps/three-surface-poc/src/polaris-generation/figure-aria.test.ts",
+        "apps/three-surface-poc/src/polaris-generation/figure-aria.browser.test.ts"
+      ],
+      "failedTests": [
+        "apps/three-surface-poc/src/polaris-generation/figure-aria.test.ts > figure accessible names: every aria reference resolves (syzygy-3efd.70) graph figures: each reference names exactly one element on its page, a caption or the figure's list",
+        "apps/three-surface-poc/src/polaris-generation/figure-aria.test.ts > figure accessible names: every aria reference resolves (syzygy-3efd.70) graph figures on Pole pages: each reference names exactly one element on its page, a caption or the figure's list",
+        "apps/three-surface-poc/src/polaris-generation/figure-aria.test.ts > figure accessible names: every aria reference resolves (syzygy-3efd.70) sequence and swimlane figures: each reference names exactly one element on its page, a caption or the figure's list",
+        "apps/three-surface-poc/src/polaris-generation/figure-aria.test.ts > figure accessible names: every aria reference resolves (syzygy-3efd.70) the derived figure: each reference names exactly one element on its page, a caption or the figure's list",
+        "apps/three-surface-poc/src/polaris-generation/figure-aria.test.ts > figure accessible names: every aria reference resolves (syzygy-3efd.70) the computed map figures: each reference names exactly one element on its page, a caption or the figure's list",
+        "apps/three-surface-poc/src/polaris-generation/figure-aria.test.ts > figure accessible names: every aria reference resolves (syzygy-3efd.70) names the drawing by its caption and describes it by its list, inside the one figure",
+        "apps/three-surface-poc/src/polaris-generation/figure-aria.browser.test.ts > names each drawing by its caption in the browser's accessibility tree, graph, sequence, swimlane and computed map"
+      ]
+    },
+    {
+      "id": "A2",
+      "file": "apps/three-surface-poc/src/polaris-generation/dossier-site.ts",
+      "old": "    : { title: ` id=\"diagram-title-${index}\"`, text: ` id=\"diagram-text-${index}\"` };",
+      "new": "    : { title: ` id=\"diagram-title-${index}\"`, text: '' };",
+      "tests": [
+        "apps/three-surface-poc/src/polaris-generation/figure-aria.test.ts",
+        "apps/three-surface-poc/src/polaris-generation/figure-aria.browser.test.ts",
+        "apps/three-surface-poc/src/polaris-generation/dossier-render-provider-golden.test.ts"
+      ],
+      "killed": true,
+      "killedBy": [
+        "apps/three-surface-poc/src/polaris-generation/figure-aria.test.ts",
+        "apps/three-surface-poc/src/polaris-generation/figure-aria.browser.test.ts"
+      ],
+      "failedTests": [
+        "apps/three-surface-poc/src/polaris-generation/figure-aria.test.ts > figure accessible names: every aria reference resolves (syzygy-3efd.70) graph figures: each reference names exactly one element on its page, a caption or the figure's list",
+        "apps/three-surface-poc/src/polaris-generation/figure-aria.test.ts > figure accessible names: every aria reference resolves (syzygy-3efd.70) graph figures on Pole pages: each reference names exactly one element on its page, a caption or the figure's list",
+        "apps/three-surface-poc/src/polaris-generation/figure-aria.test.ts > figure accessible names: every aria reference resolves (syzygy-3efd.70) sequence and swimlane figures: each reference names exactly one element on its page, a caption or the figure's list",
+        "apps/three-surface-poc/src/polaris-generation/figure-aria.test.ts > figure accessible names: every aria reference resolves (syzygy-3efd.70) the derived figure: each reference names exactly one element on its page, a caption or the figure's list",
+        "apps/three-surface-poc/src/polaris-generation/figure-aria.test.ts > figure accessible names: every aria reference resolves (syzygy-3efd.70) the computed map figures: each reference names exactly one element on its page, a caption or the figure's list",
+        "apps/three-surface-poc/src/polaris-generation/figure-aria.test.ts > figure accessible names: every aria reference resolves (syzygy-3efd.70) names the drawing by its caption and describes it by its list, inside the one figure",
+        "apps/three-surface-poc/src/polaris-generation/figure-aria.browser.test.ts > names each drawing by its caption in the browser's accessibility tree, graph, sequence, swimlane and computed map"
+      ]
+    },
+    {
+      "id": "A3",
+      "file": "apps/three-surface-poc/src/polaris-generation/dossier-site.ts",
+      "old": "    : { title: ` id=\"diagram-title-${index}\"`, text: ` id=\"diagram-text-${index}\"` };",
+      "new": "    : { title: ` id=\"diagram-title-${index + 1}\"`, text: ` id=\"diagram-text-${index}\"` };",
+      "tests": [
+        "apps/three-surface-poc/src/polaris-generation/figure-aria.test.ts",
+        "apps/three-surface-poc/src/polaris-generation/figure-aria.browser.test.ts",
+        "apps/three-surface-poc/src/polaris-generation/dossier-render-provider-golden.test.ts"
+      ],
+      "killed": true,
+      "killedBy": [
+        "apps/three-surface-poc/src/polaris-generation/figure-aria.test.ts",
+        "apps/three-surface-poc/src/polaris-generation/figure-aria.browser.test.ts"
+      ],
+      "failedTests": [
+        "apps/three-surface-poc/src/polaris-generation/figure-aria.test.ts > figure accessible names: every aria reference resolves (syzygy-3efd.70) graph figures: each reference names exactly one element on its page, a caption or the figure's list",
+        "apps/three-surface-poc/src/polaris-generation/figure-aria.test.ts > figure accessible names: every aria reference resolves (syzygy-3efd.70) graph figures on Pole pages: each reference names exactly one element on its page, a caption or the figure's list",
+        "apps/three-surface-poc/src/polaris-generation/figure-aria.test.ts > figure accessible names: every aria reference resolves (syzygy-3efd.70) sequence and swimlane figures: each reference names exactly one element on its page, a caption or the figure's list",
+        "apps/three-surface-poc/src/polaris-generation/figure-aria.test.ts > figure accessible names: every aria reference resolves (syzygy-3efd.70) the derived figure: each reference names exactly one element on its page, a caption or the figure's list",
+        "apps/three-surface-poc/src/polaris-generation/figure-aria.test.ts > figure accessible names: every aria reference resolves (syzygy-3efd.70) the computed map figures: each reference names exactly one element on its page, a caption or the figure's list",
+        "apps/three-surface-poc/src/polaris-generation/figure-aria.test.ts > figure accessible names: every aria reference resolves (syzygy-3efd.70) names the drawing by its caption and describes it by its list, inside the one figure",
+        "apps/three-surface-poc/src/polaris-generation/figure-aria.browser.test.ts > names each drawing by its caption in the browser's accessibility tree, graph, sequence, swimlane and computed map"
+      ]
+    },
+    {
+      "id": "A4",
+      "file": "apps/three-surface-poc/src/polaris-generation/dossier-site.ts",
+      "old": "    : { title: ` id=\"diagram-title-${index}\"`, text: ` id=\"diagram-text-${index}\"` };",
+      "new": "    : { title: ` id=\"diagram-text-${index}\"`, text: ` id=\"diagram-title-${index}\"` };",
+      "tests": [
+        "apps/three-surface-poc/src/polaris-generation/figure-aria.test.ts",
+        "apps/three-surface-poc/src/polaris-generation/figure-aria.browser.test.ts",
+        "apps/three-surface-poc/src/polaris-generation/dossier-render-provider-golden.test.ts"
+      ],
+      "killed": true,
+      "killedBy": [
+        "apps/three-surface-poc/src/polaris-generation/figure-aria.test.ts",
+        "apps/three-surface-poc/src/polaris-generation/figure-aria.browser.test.ts"
+      ],
+      "failedTests": [
+        "apps/three-surface-poc/src/polaris-generation/figure-aria.test.ts > figure accessible names: every aria reference resolves (syzygy-3efd.70) graph figures: each reference names exactly one element on its page, a caption or the figure's list",
+        "apps/three-surface-poc/src/polaris-generation/figure-aria.test.ts > figure accessible names: every aria reference resolves (syzygy-3efd.70) graph figures on Pole pages: each reference names exactly one element on its page, a caption or the figure's list",
+        "apps/three-surface-poc/src/polaris-generation/figure-aria.test.ts > figure accessible names: every aria reference resolves (syzygy-3efd.70) sequence and swimlane figures: each reference names exactly one element on its page, a caption or the figure's list",
+        "apps/three-surface-poc/src/polaris-generation/figure-aria.test.ts > figure accessible names: every aria reference resolves (syzygy-3efd.70) the derived figure: each reference names exactly one element on its page, a caption or the figure's list",
+        "apps/three-surface-poc/src/polaris-generation/figure-aria.test.ts > figure accessible names: every aria reference resolves (syzygy-3efd.70) the computed map figures: each reference names exactly one element on its page, a caption or the figure's list",
+        "apps/three-surface-poc/src/polaris-generation/figure-aria.test.ts > figure accessible names: every aria reference resolves (syzygy-3efd.70) names the drawing by its caption and describes it by its list, inside the one figure",
+        "apps/three-surface-poc/src/polaris-generation/figure-aria.browser.test.ts > names each drawing by its caption in the browser's accessibility tree, graph, sequence, swimlane and computed map"
+      ]
+    },
+    {
+      "id": "A5",
+      "file": "apps/three-surface-poc/src/polaris-generation/dossier-site.ts",
+      "old": "const figureIds = (index: number): { readonly title: string; readonly text: string } => local === undefined ? { title: '', text: '' }",
+      "new": "const figureIds = (index: number): { readonly title: string; readonly text: string } => false ? { title: '', text: '' }",
+      "tests": [
+        "apps/three-surface-poc/src/polaris-generation/figure-aria.test.ts",
+        "apps/three-surface-poc/src/polaris-generation/figure-aria.browser.test.ts",
+        "apps/three-surface-poc/src/polaris-generation/dossier-render-provider-golden.test.ts"
+      ],
+      "killed": true,
+      "killedBy": [
+        "apps/three-surface-poc/src/polaris-generation/dossier-render-provider-golden.test.ts"
+      ],
+      "failedTests": [
+        "apps/three-surface-poc/src/polaris-generation/dossier-render-provider-golden.test.ts > provider-mode render output is unchanged by the operator-agent inputs renders every fixture run to the captured bytes, file by file"
+      ]
+    },
+    {
+      "id": "A6",
+      "file": "apps/three-surface-poc/src/polaris-generation/dossier-site.ts",
+      "old": "${curated}><figcaption${ids.title}>${escape(d.title)}</figcaption><p class=\"diagram-relationship\"><span class=\"eyebrow\">${escape(d.kind)}",
+      "new": "${curated}><figcaption>${escape(d.title)}</figcaption><p class=\"diagram-relationship\"><span class=\"eyebrow\">${escape(d.kind)}",
+      "tests": [
+        "apps/three-surface-poc/src/polaris-generation/figure-aria.test.ts",
+        "apps/three-surface-poc/src/polaris-generation/figure-aria.browser.test.ts",
+        "apps/three-surface-poc/src/polaris-generation/dossier-render-provider-golden.test.ts"
+      ],
+      "killed": true,
+      "killedBy": [
+        "apps/three-surface-poc/src/polaris-generation/figure-aria.test.ts",
+        "apps/three-surface-poc/src/polaris-generation/figure-aria.browser.test.ts"
+      ],
+      "failedTests": [
+        "apps/three-surface-poc/src/polaris-generation/figure-aria.test.ts > figure accessible names: every aria reference resolves (syzygy-3efd.70) graph figures: each reference names exactly one element on its page, a caption or the figure's list",
+        "apps/three-surface-poc/src/polaris-generation/figure-aria.test.ts > figure accessible names: every aria reference resolves (syzygy-3efd.70) graph figures on Pole pages: each reference names exactly one element on its page, a caption or the figure's list",
+        "apps/three-surface-poc/src/polaris-generation/figure-aria.test.ts > figure accessible names: every aria reference resolves (syzygy-3efd.70) the derived figure: each reference names exactly one element on its page, a caption or the figure's list",
+        "apps/three-surface-poc/src/polaris-generation/figure-aria.test.ts > figure accessible names: every aria reference resolves (syzygy-3efd.70) the computed map figures: each reference names exactly one element on its page, a caption or the figure's list",
+        "apps/three-surface-poc/src/polaris-generation/figure-aria.browser.test.ts > names each drawing by its caption in the browser's accessibility tree, graph, sequence, swimlane and computed map"
+      ]
+    },
+    {
+      "id": "A7",
+      "file": "apps/three-surface-poc/src/polaris-generation/dossier-site.ts",
+      "old": "${legend}<details${ids.text}><summary>",
+      "new": "${legend}<details><summary>",
+      "tests": [
+        "apps/three-surface-poc/src/polaris-generation/figure-aria.test.ts",
+        "apps/three-surface-poc/src/polaris-generation/figure-aria.browser.test.ts",
+        "apps/three-surface-poc/src/polaris-generation/dossier-render-provider-golden.test.ts"
+      ],
+      "killed": true,
+      "killedBy": [
+        "apps/three-surface-poc/src/polaris-generation/figure-aria.test.ts",
+        "apps/three-surface-poc/src/polaris-generation/figure-aria.browser.test.ts"
+      ],
+      "failedTests": [
+        "apps/three-surface-poc/src/polaris-generation/figure-aria.test.ts > figure accessible names: every aria reference resolves (syzygy-3efd.70) graph figures: each reference names exactly one element on its page, a caption or the figure's list",
+        "apps/three-surface-poc/src/polaris-generation/figure-aria.test.ts > figure accessible names: every aria reference resolves (syzygy-3efd.70) graph figures on Pole pages: each reference names exactly one element on its page, a caption or the figure's list",
+        "apps/three-surface-poc/src/polaris-generation/figure-aria.test.ts > figure accessible names: every aria reference resolves (syzygy-3efd.70) the derived figure: each reference names exactly one element on its page, a caption or the figure's list",
+        "apps/three-surface-poc/src/polaris-generation/figure-aria.test.ts > figure accessible names: every aria reference resolves (syzygy-3efd.70) the computed map figures: each reference names exactly one element on its page, a caption or the figure's list",
+        "apps/three-surface-poc/src/polaris-generation/figure-aria.browser.test.ts > names each drawing by its caption in the browser's accessibility tree, graph, sequence, swimlane and computed map"
+      ]
+    },
+    {
+      "id": "A8",
+      "file": "apps/three-surface-poc/src/polaris-generation/dossier-site.ts",
+      "old": "data-figure-kind=\"${figure.kind}\"><figcaption${ids.title}>",
+      "new": "data-figure-kind=\"${figure.kind}\"><figcaption>",
+      "tests": [
+        "apps/three-surface-poc/src/polaris-generation/figure-aria.test.ts",
+        "apps/three-surface-poc/src/polaris-generation/figure-aria.browser.test.ts",
+        "apps/three-surface-poc/src/polaris-generation/dossier-render-provider-golden.test.ts"
+      ],
+      "killed": true,
+      "killedBy": [
+        "apps/three-surface-poc/src/polaris-generation/figure-aria.test.ts",
+        "apps/three-surface-poc/src/polaris-generation/figure-aria.browser.test.ts"
+      ],
+      "failedTests": [
+        "apps/three-surface-poc/src/polaris-generation/figure-aria.test.ts > figure accessible names: every aria reference resolves (syzygy-3efd.70) sequence and swimlane figures: each reference names exactly one element on its page, a caption or the figure's list",
+        "apps/three-surface-poc/src/polaris-generation/figure-aria.test.ts > figure accessible names: every aria reference resolves (syzygy-3efd.70) names the drawing by its caption and describes it by its list, inside the one figure",
+        "apps/three-surface-poc/src/polaris-generation/figure-aria.browser.test.ts > names each drawing by its caption in the browser's accessibility tree, graph, sequence, swimlane and computed map"
+      ]
+    },
+    {
+      "id": "A9",
+      "file": "apps/three-surface-poc/src/polaris-generation/dossier-site.ts",
+      "old": "'swimlane')}<details${ids.text}><summary>",
+      "new": "'swimlane')}<details><summary>",
+      "tests": [
+        "apps/three-surface-poc/src/polaris-generation/figure-aria.test.ts",
+        "apps/three-surface-poc/src/polaris-generation/figure-aria.browser.test.ts",
+        "apps/three-surface-poc/src/polaris-generation/dossier-render-provider-golden.test.ts"
+      ],
+      "killed": true,
+      "killedBy": [
+        "apps/three-surface-poc/src/polaris-generation/figure-aria.test.ts",
+        "apps/three-surface-poc/src/polaris-generation/figure-aria.browser.test.ts"
+      ],
+      "failedTests": [
+        "apps/three-surface-poc/src/polaris-generation/figure-aria.test.ts > figure accessible names: every aria reference resolves (syzygy-3efd.70) sequence and swimlane figures: each reference names exactly one element on its page, a caption or the figure's list",
+        "apps/three-surface-poc/src/polaris-generation/figure-aria.test.ts > figure accessible names: every aria reference resolves (syzygy-3efd.70) names the drawing by its caption and describes it by its list, inside the one figure",
+        "apps/three-surface-poc/src/polaris-generation/figure-aria.browser.test.ts > names each drawing by its caption in the browser's accessibility tree, graph, sequence, swimlane and computed map"
+      ]
+    },
+    {
+      "id": "A10",
+      "file": "apps/three-surface-poc/src/polaris-generation/dossier-site.ts",
+      "old": "<figcaption id=\"diagram-title-derived\">",
+      "new": "<figcaption>",
+      "tests": [
+        "apps/three-surface-poc/src/polaris-generation/figure-aria.test.ts",
+        "apps/three-surface-poc/src/polaris-generation/figure-aria.browser.test.ts",
+        "apps/three-surface-poc/src/polaris-generation/dossier-render-provider-golden.test.ts"
+      ],
+      "killed": true,
+      "killedBy": [
+        "apps/three-surface-poc/src/polaris-generation/figure-aria.test.ts"
+      ],
+      "failedTests": [
+        "apps/three-surface-poc/src/polaris-generation/figure-aria.test.ts > figure accessible names: every aria reference resolves (syzygy-3efd.70) the derived figure: each reference names exactly one element on its page, a caption or the figure's list",
+        "apps/three-surface-poc/src/polaris-generation/figure-aria.test.ts > figure accessible names: every aria reference resolves (syzygy-3efd.70) the computed map figures: each reference names exactly one element on its page, a caption or the figure's list"
+      ]
+    },
+    {
+      "id": "A11",
+      "file": "apps/three-surface-poc/src/polaris-generation/dossier-site.ts",
+      "old": "<details id=\"diagram-text-derived\">",
+      "new": "<details>",
+      "tests": [
+        "apps/three-surface-poc/src/polaris-generation/figure-aria.test.ts",
+        "apps/three-surface-poc/src/polaris-generation/figure-aria.browser.test.ts",
+        "apps/three-surface-poc/src/polaris-generation/dossier-render-provider-golden.test.ts"
+      ],
+      "killed": true,
+      "killedBy": [
+        "apps/three-surface-poc/src/polaris-generation/figure-aria.test.ts"
+      ],
+      "failedTests": [
+        "apps/three-surface-poc/src/polaris-generation/figure-aria.test.ts > figure accessible names: every aria reference resolves (syzygy-3efd.70) the derived figure: each reference names exactly one element on its page, a caption or the figure's list",
+        "apps/three-surface-poc/src/polaris-generation/figure-aria.test.ts > figure accessible names: every aria reference resolves (syzygy-3efd.70) the computed map figures: each reference names exactly one element on its page, a caption or the figure's list"
+      ]
+    },
+    {
+      "id": "M1",
+      "file": "apps/three-surface-poc/src/polaris-generation/dossier-site.ts",
+      "old": "<figcaption id=\"diagram-title-${index}\">${escape(caption)}</figcaption>",
+      "new": "<figcaption>${escape(caption)}</figcaption>",
+      "tests": [
+        "apps/three-surface-poc/src/polaris-generation/figure-aria.test.ts",
+        "apps/three-surface-poc/src/polaris-generation/figure-aria.browser.test.ts",
+        "apps/three-surface-poc/src/polaris-generation/dossier-computed-maps.test.ts",
+        "apps/three-surface-poc/src/polaris-generation/computed-maps.browser.test.ts"
+      ],
+      "killed": true,
+      "killedBy": [
+        "apps/three-surface-poc/src/polaris-generation/dossier-computed-maps.test.ts",
+        "apps/three-surface-poc/src/polaris-generation/figure-aria.test.ts",
+        "apps/three-surface-poc/src/polaris-generation/figure-aria.browser.test.ts"
+      ],
+      "failedTests": [
+        "apps/three-surface-poc/src/polaris-generation/dossier-computed-maps.test.ts > the directory map holds the region's note, a coverage line that partitions the files, three figures of at most twelve directories and the list of every fact",
+        "apps/three-surface-poc/src/polaris-generation/dossier-computed-maps.test.ts > the unit map places each package in its root or top-level directory, draws no arrow between packages and lists every declared fact",
+        "apps/three-surface-poc/src/polaris-generation/dossier-computed-maps.test.ts > the CI pipeline map states the workflow and its triggers, draws its jobs and the needs that name a job of the file, and lists the rest",
+        "apps/three-surface-poc/src/polaris-generation/figure-aria.test.ts > figure accessible names: every aria reference resolves (syzygy-3efd.70) the computed map figures: each reference names exactly one element on its page, a caption or the figure's list",
+        "apps/three-surface-poc/src/polaris-generation/figure-aria.browser.test.ts > names each drawing by its caption in the browser's accessibility tree, graph, sequence, swimlane and computed map"
+      ]
+    },
+    {
+      "id": "M2",
+      "file": "apps/three-surface-poc/src/polaris-generation/dossier-site.ts",
+      "old": "<ol class=\"map-list\" id=\"diagram-text-${index}\">",
+      "new": "<ol class=\"map-list\">",
+      "tests": [
+        "apps/three-surface-poc/src/polaris-generation/figure-aria.test.ts",
+        "apps/three-surface-poc/src/polaris-generation/figure-aria.browser.test.ts",
+        "apps/three-surface-poc/src/polaris-generation/dossier-computed-maps.test.ts",
+        "apps/three-surface-poc/src/polaris-generation/computed-maps.browser.test.ts"
+      ],
+      "killed": true,
+      "killedBy": [
+        "apps/three-surface-poc/src/polaris-generation/dossier-computed-maps.test.ts",
+        "apps/three-surface-poc/src/polaris-generation/figure-aria.test.ts",
+        "apps/three-surface-poc/src/polaris-generation/figure-aria.browser.test.ts"
+      ],
+      "failedTests": [
+        "apps/three-surface-poc/src/polaris-generation/dossier-computed-maps.test.ts > the directory map holds the region's note, a coverage line that partitions the files, three figures of at most twelve directories and the list of every fact",
+        "apps/three-surface-poc/src/polaris-generation/dossier-computed-maps.test.ts > the unit map places each package in its root or top-level directory, draws no arrow between packages and lists every declared fact",
+        "apps/three-surface-poc/src/polaris-generation/dossier-computed-maps.test.ts > the CI pipeline map states the workflow and its triggers, draws its jobs and the needs that name a job of the file, and lists the rest",
+        "apps/three-surface-poc/src/polaris-generation/figure-aria.test.ts > figure accessible names: every aria reference resolves (syzygy-3efd.70) the computed map figures: each reference names exactly one element on its page, a caption or the figure's list",
+        "apps/three-surface-poc/src/polaris-generation/figure-aria.browser.test.ts > names each drawing by its caption in the browser's accessibility tree, graph, sequence, swimlane and computed map"
+      ]
+    },
+    {
+      "id": "M3",
+      "file": "apps/three-surface-poc/src/polaris-generation/dossier-site.ts",
+      "old": "<figcaption id=\"diagram-title-${index}\">${escape(caption)}</figcaption>",
+      "new": "<figcaption id=\"diagram-title-${index}-map\">${escape(caption)}</figcaption>",
+      "tests": [
+        "apps/three-surface-poc/src/polaris-generation/figure-aria.test.ts",
+        "apps/three-surface-poc/src/polaris-generation/figure-aria.browser.test.ts",
+        "apps/three-surface-poc/src/polaris-generation/dossier-computed-maps.test.ts",
+        "apps/three-surface-poc/src/polaris-generation/computed-maps.browser.test.ts"
+      ],
+      "killed": true,
+      "killedBy": [
+        "apps/three-surface-poc/src/polaris-generation/dossier-computed-maps.test.ts",
+        "apps/three-surface-poc/src/polaris-generation/figure-aria.test.ts",
+        "apps/three-surface-poc/src/polaris-generation/figure-aria.browser.test.ts"
+      ],
+      "failedTests": [
+        "apps/three-surface-poc/src/polaris-generation/dossier-computed-maps.test.ts > the directory map holds the region's note, a coverage line that partitions the files, three figures of at most twelve directories and the list of every fact",
+        "apps/three-surface-poc/src/polaris-generation/dossier-computed-maps.test.ts > the CI pipeline map states the workflow and its triggers, draws its jobs and the needs that name a job of the file, and lists the rest",
+        "apps/three-surface-poc/src/polaris-generation/figure-aria.test.ts > figure accessible names: every aria reference resolves (syzygy-3efd.70) the computed map figures: each reference names exactly one element on its page, a caption or the figure's list",
+        "apps/three-surface-poc/src/polaris-generation/figure-aria.browser.test.ts > names each drawing by its caption in the browser's accessibility tree, graph, sequence, swimlane and computed map"
+      ]
+    },
+    {
+      "id": "M4",
+      "file": "apps/three-surface-poc/src/polaris-generation/dossier-site.ts",
+      "old": "export const MAP_SPACING = { ...READABLE_SPACING, stackWiderThan: 648 } as const;",
+      "new": "export const MAP_SPACING = { ...READABLE_SPACING } as const;",
+      "tests": [
+        "apps/three-surface-poc/src/polaris-generation/figure-aria.test.ts",
+        "apps/three-surface-poc/src/polaris-generation/figure-aria.browser.test.ts",
+        "apps/three-surface-poc/src/polaris-generation/dossier-computed-maps.test.ts",
+        "apps/three-surface-poc/src/polaris-generation/computed-maps.browser.test.ts"
+      ],
+      "killed": true,
+      "killedBy": [
+        "apps/three-surface-poc/src/polaris-generation/dossier-computed-maps.test.ts",
+        "apps/three-surface-poc/src/polaris-generation/computed-maps.browser.test.ts"
+      ],
+      "failedTests": [
+        "apps/three-surface-poc/src/polaris-generation/dossier-computed-maps.test.ts > the directory map holds the region's note, a coverage line that partitions the files, three figures of at most twelve directories and the list of every fact",
+        "apps/three-surface-poc/src/polaris-generation/dossier-computed-maps.test.ts > the directory map draws 300 directories as 21 figures of at most 13 boxes, each fitting at 1440 and at 390, with a query for its width",
+        "apps/three-surface-poc/src/polaris-generation/computed-maps.browser.test.ts > switches each map figure to its text form below its laid-out width, never scaling the drawing"
+      ]
+    },
+    {
+      "id": "M5",
+      "file": "apps/three-surface-poc/src/polaris-generation/dossier-site.ts",
+      "old": "export const MAP_SPACING = { ...READABLE_SPACING, stackWiderThan: 648 } as const;",
+      "new": "export const MAP_SPACING = { ...READABLE_SPACING, stackWiderThan: 1048 } as const;",
+      "tests": [
+        "apps/three-surface-poc/src/polaris-generation/figure-aria.test.ts",
+        "apps/three-surface-poc/src/polaris-generation/figure-aria.browser.test.ts",
+        "apps/three-surface-poc/src/polaris-generation/dossier-computed-maps.test.ts",
+        "apps/three-surface-poc/src/polaris-generation/computed-maps.browser.test.ts"
+      ],
+      "killed": true,
+      "killedBy": [
+        "apps/three-surface-poc/src/polaris-generation/dossier-computed-maps.test.ts",
+        "apps/three-surface-poc/src/polaris-generation/computed-maps.browser.test.ts"
+      ],
+      "failedTests": [
+        "apps/three-surface-poc/src/polaris-generation/dossier-computed-maps.test.ts > the CI pipeline map states the workflow and its triggers, draws its jobs and the needs that name a job of the file, and lists the rest",
+        "apps/three-surface-poc/src/polaris-generation/dossier-computed-maps.test.ts > the CI pipeline map stacks a job graph that is not a plain chain, with a query for its own width, and lists 25 jobs undrawn",
+        "apps/three-surface-poc/src/polaris-generation/computed-maps.browser.test.ts > switches each map figure to its text form below its laid-out width, never scaling the drawing"
+      ]
+    },
+    {
+      "id": "M6",
+      "file": "apps/three-surface-poc/src/polaris-generation/dossier-site.ts",
+      "old": "export const MAP_SPACING = { ...READABLE_SPACING, stackWiderThan: 648 } as const;",
+      "new": "export const MAP_SPACING = { ...READABLE_SPACING, stackWiderThan: 647 } as const;",
+      "tests": [
+        "apps/three-surface-poc/src/polaris-generation/figure-aria.test.ts",
+        "apps/three-surface-poc/src/polaris-generation/figure-aria.browser.test.ts",
+        "apps/three-surface-poc/src/polaris-generation/dossier-computed-maps.test.ts",
+        "apps/three-surface-poc/src/polaris-generation/computed-maps.browser.test.ts"
+      ],
+      "killed": true,
+      "killedBy": [
+        "apps/three-surface-poc/src/polaris-generation/dossier-computed-maps.test.ts",
+        "apps/three-surface-poc/src/polaris-generation/computed-maps.browser.test.ts"
+      ],
+      "failedTests": [
+        "apps/three-surface-poc/src/polaris-generation/dossier-computed-maps.test.ts > the directory map holds the region's note, a coverage line that partitions the files, three figures of at most twelve directories and the list of every fact",
+        "apps/three-surface-poc/src/polaris-generation/dossier-computed-maps.test.ts > the directory map draws 300 directories as 21 figures of at most 13 boxes, each fitting at 1440 and at 390, with a query for its width",
+        "apps/three-surface-poc/src/polaris-generation/computed-maps.browser.test.ts > switches each map figure to its text form below its laid-out width, never scaling the drawing"
+      ]
+    },
+    {
+      "id": "S1",
+      "file": "apps/three-surface-poc/src/polaris-generation/diagram-layout.ts",
+      "old": "  if (width > spacing.stackWiderThan) return stackDiagram(",
+      "new": "  if (width > spacing.stackWiderThan + 400) return stackDiagram(",
+      "tests": [
+        "apps/three-surface-poc/src/polaris-generation/diagram-layout.test.ts",
+        "packages/polaris-dossier/src/synthetic-shapes.test.ts",
+        "apps/three-surface-poc/src/polaris-generation/dossier-reading.browser.test.ts",
+        "apps/three-surface-poc/src/polaris-generation/dossier-render-provider-golden.test.ts"
+      ],
+      "killed": true,
+      "killedBy": [
+        "packages/polaris-dossier/src/synthetic-shapes.test.ts",
+        "apps/three-surface-poc/src/polaris-generation/diagram-layout.test.ts",
+        "apps/three-surface-poc/src/polaris-generation/dossier-reading.browser.test.ts"
+      ],
+      "failedTests": [
+        "packages/polaris-dossier/src/synthetic-shapes.test.ts > nine synthetic shapes through derive and render (syzygy-3efd.23, syzygy-3efd.56) fits a plain three-node chain and a one-to-three fan-out at 1440 and 390 px",
+        "apps/three-surface-poc/src/polaris-generation/diagram-layout.test.ts > layered left-to-right diagram layout readable spacing stacks a chain of two and a small fan-out, and lays a single layer out as one column",
+        "apps/three-surface-poc/src/polaris-generation/diagram-layout.test.ts > layered left-to-right diagram layout the widest readable edge label fits its gap, draws over the nodes and stays inert",
+        "apps/three-surface-poc/src/polaris-generation/diagram-layout.test.ts > layered left-to-right diagram layout a readable diagram of two or more layers stacks top to bottom (syzygy-3efd.19, syzygy-3efd.66) fits the narrow column at any density: nodes narrow past the lanes the least step holds, and lane labels slide to find a leader (syzygy-3efd.58)",
+        "apps/three-surface-poc/src/polaris-generation/diagram-layout.test.ts > layered left-to-right diagram layout readable spacing keeps every edge label off every node small fan",
+        "apps/three-surface-poc/src/polaris-generation/diagram-layout.test.ts > layered left-to-right diagram layout readable spacing keeps every edge label off every node crossing edges",
+        "apps/three-surface-poc/src/polaris-generation/diagram-layout.test.ts > layered left-to-right diagram layout readable spacing keeps every edge label off every node parallel edges",
+        "apps/three-surface-poc/src/polaris-generation/diagram-layout.test.ts > figureLaidOutWidth (the layout check is handed) equals the readable SVG's width attribute for a chain of 2 nodes (248 px)",
+        "apps/three-surface-poc/src/polaris-generation/dossier-reading.browser.test.ts > folds the navigation, keeps diagram labels clear of boxes and shows a glossary entry on focus, with no script"
+      ]
+    },
+    {
+      "id": "S2",
+      "file": "apps/three-surface-poc/src/polaris-generation/diagram-layout.ts",
+      "old": "  if (width > spacing.stackWiderThan) return stackDiagram(",
+      "new": "  if (width > spacing.stackWiderThan + 800) return stackDiagram(",
+      "tests": [
+        "apps/three-surface-poc/src/polaris-generation/diagram-layout.test.ts",
+        "packages/polaris-dossier/src/synthetic-shapes.test.ts",
+        "apps/three-surface-poc/src/polaris-generation/dossier-reading.browser.test.ts",
+        "apps/three-surface-poc/src/polaris-generation/dossier-render-provider-golden.test.ts"
+      ],
+      "killed": true,
+      "killedBy": [
+        "packages/polaris-dossier/src/synthetic-shapes.test.ts",
+        "apps/three-surface-poc/src/polaris-generation/diagram-layout.test.ts",
+        "apps/three-surface-poc/src/polaris-generation/dossier-reading.browser.test.ts"
+      ],
+      "failedTests": [
+        "packages/polaris-dossier/src/synthetic-shapes.test.ts > nine synthetic shapes through derive and render (syzygy-3efd.23, syzygy-3efd.56) fits a plain three-node chain and a one-to-three fan-out at 1440 and 390 px",
+        "apps/three-surface-poc/src/polaris-generation/diagram-layout.test.ts > layered left-to-right diagram layout readable spacing stacks a chain of two and a small fan-out, and lays a single layer out as one column",
+        "apps/three-surface-poc/src/polaris-generation/diagram-layout.test.ts > layered left-to-right diagram layout the widest readable edge label fits its gap, draws over the nodes and stays inert",
+        "apps/three-surface-poc/src/polaris-generation/diagram-layout.test.ts > layered left-to-right diagram layout a readable diagram of two or more layers stacks top to bottom (syzygy-3efd.19, syzygy-3efd.66) fits the narrow column at any density: nodes narrow past the lanes the least step holds, and lane labels slide to find a leader (syzygy-3efd.58)",
+        "apps/three-surface-poc/src/polaris-generation/diagram-layout.test.ts > layered left-to-right diagram layout readable spacing keeps every edge label off every node loop over a tall middle layer",
+        "apps/three-surface-poc/src/polaris-generation/diagram-layout.test.ts > layered left-to-right diagram layout readable spacing keeps every edge label off every node small fan",
+        "apps/three-surface-poc/src/polaris-generation/diagram-layout.test.ts > layered left-to-right diagram layout readable spacing keeps every edge label off every node fan plus a skip",
+        "apps/three-surface-poc/src/polaris-generation/diagram-layout.test.ts > layered left-to-right diagram layout readable spacing keeps every edge label off every node crossing edges",
+        "apps/three-surface-poc/src/polaris-generation/diagram-layout.test.ts > layered left-to-right diagram layout readable spacing keeps every edge label off every node parallel edges",
+        "apps/three-surface-poc/src/polaris-generation/diagram-layout.test.ts > figureLaidOutWidth (the layout check is handed) equals the readable SVG's width attribute for a chain of 2 nodes (248 px)",
+        "apps/three-surface-poc/src/polaris-generation/diagram-layout.test.ts > figureLaidOutWidth (the layout check is handed) equals the readable SVG's width attribute for a chain of 3 nodes (248 px)",
+        "apps/three-surface-poc/src/polaris-generation/diagram-layout.test.ts > figureLaidOutWidth (the layout check is handed) pins those two widths",
+        "apps/three-surface-poc/src/polaris-generation/dossier-reading.browser.test.ts > folds the navigation, keeps diagram labels clear of boxes and shows a glossary entry on focus, with no script"
+      ]
+    },
+    {
+      "id": "S3",
+      "file": "apps/three-surface-poc/src/polaris-generation/diagram-layout.ts",
+      "old": "stackWiderThan: STACK_COLUMN, edgeChars",
+      "new": "stackWiderThan: 1048, edgeChars",
+      "tests": [
+        "apps/three-surface-poc/src/polaris-generation/diagram-layout.test.ts",
+        "packages/polaris-dossier/src/synthetic-shapes.test.ts",
+        "apps/three-surface-poc/src/polaris-generation/dossier-reading.browser.test.ts",
+        "apps/three-surface-poc/src/polaris-generation/dossier-render-provider-golden.test.ts"
+      ],
+      "killed": true,
+      "killedBy": [
+        "packages/polaris-dossier/src/synthetic-shapes.test.ts",
+        "apps/three-surface-poc/src/polaris-generation/diagram-layout.test.ts",
+        "apps/three-surface-poc/src/polaris-generation/dossier-reading.browser.test.ts"
+      ],
+      "failedTests": [
+        "packages/polaris-dossier/src/synthetic-shapes.test.ts > nine synthetic shapes through derive and render (syzygy-3efd.23, syzygy-3efd.56) fits a plain three-node chain and a one-to-three fan-out at 1440 and 390 px",
+        "apps/three-surface-poc/src/polaris-generation/diagram-layout.test.ts > layered left-to-right diagram layout readable spacing stacks a chain of two and a small fan-out, and lays a single layer out as one column",
+        "apps/three-surface-poc/src/polaris-generation/diagram-layout.test.ts > layered left-to-right diagram layout the widest readable edge label fits its gap, draws over the nodes and stays inert",
+        "apps/three-surface-poc/src/polaris-generation/diagram-layout.test.ts > layered left-to-right diagram layout a readable diagram of two or more layers stacks top to bottom (syzygy-3efd.19, syzygy-3efd.66) fits the narrow column at any density: nodes narrow past the lanes the least step holds, and lane labels slide to find a leader (syzygy-3efd.58)",
+        "apps/three-surface-poc/src/polaris-generation/diagram-layout.test.ts > layered left-to-right diagram layout readable spacing keeps every edge label off every node loop over a tall middle layer",
+        "apps/three-surface-poc/src/polaris-generation/diagram-layout.test.ts > layered left-to-right diagram layout readable spacing keeps every edge label off every node small fan",
+        "apps/three-surface-poc/src/polaris-generation/diagram-layout.test.ts > layered left-to-right diagram layout readable spacing keeps every edge label off every node fan plus a skip",
+        "apps/three-surface-poc/src/polaris-generation/diagram-layout.test.ts > layered left-to-right diagram layout readable spacing keeps every edge label off every node crossing edges",
+        "apps/three-surface-poc/src/polaris-generation/diagram-layout.test.ts > layered left-to-right diagram layout readable spacing keeps every edge label off every node parallel edges",
+        "apps/three-surface-poc/src/polaris-generation/diagram-layout.test.ts > figureLaidOutWidth (the layout check is handed) equals the readable SVG's width attribute for a chain of 2 nodes (248 px)",
+        "apps/three-surface-poc/src/polaris-generation/diagram-layout.test.ts > figureLaidOutWidth (the layout check is handed) equals the readable SVG's width attribute for a chain of 3 nodes (248 px)",
+        "apps/three-surface-poc/src/polaris-generation/diagram-layout.test.ts > figureLaidOutWidth (the layout check is handed) pins those two widths",
+        "apps/three-surface-poc/src/polaris-generation/dossier-reading.browser.test.ts > folds the navigation, keeps diagram labels clear of boxes and shows a glossary entry on focus, with no script"
+      ]
+    },
+    {
+      "id": "S4",
+      "file": "apps/three-surface-poc/src/polaris-generation/diagram-layout.ts",
+      "old": "stackWiderThan: Number.POSITIVE_INFINITY, edgeChars: 18",
+      "new": "stackWiderThan: STACK_COLUMN, edgeChars: 18",
+      "tests": [
+        "apps/three-surface-poc/src/polaris-generation/diagram-layout.test.ts",
+        "packages/polaris-dossier/src/synthetic-shapes.test.ts",
+        "apps/three-surface-poc/src/polaris-generation/dossier-reading.browser.test.ts",
+        "apps/three-surface-poc/src/polaris-generation/dossier-render-provider-golden.test.ts"
+      ],
+      "killed": true,
+      "killedBy": [
+        "apps/three-surface-poc/src/polaris-generation/diagram-layout.test.ts",
+        "apps/three-surface-poc/src/polaris-generation/dossier-render-provider-golden.test.ts"
+      ],
+      "failedTests": [
+        "apps/three-surface-poc/src/polaris-generation/diagram-layout.test.ts > layered left-to-right diagram layout lays a chain out one layer per node with horizontal cubic edges",
+        "apps/three-surface-poc/src/polaris-generation/diagram-layout.test.ts > layered left-to-right diagram layout fans out into one centred layer, keeping input order",
+        "apps/three-surface-poc/src/polaris-generation/diagram-layout.test.ts > layered left-to-right diagram layout breaks a cycle at the DFS back edge and draws it as a curve below the layers",
+        "apps/three-surface-poc/src/polaris-generation/diagram-layout.test.ts > layered left-to-right diagram layout draws a self-loop and a second back edge lower than the first",
+        "apps/three-surface-poc/src/polaris-generation/diagram-layout.test.ts > layered left-to-right diagram layout a readable diagram of two or more layers stacks top to bottom (syzygy-3efd.19, syzygy-3efd.66) keeps the default spacing as it was, and stacks a plain chain on the readable one",
+        "apps/three-surface-poc/src/polaris-generation/diagram-layout.test.ts > layered left-to-right diagram layout readable spacing keeps every edge label off every node never searches off the canvas across, and the provider form never moves a label",
+        "apps/three-surface-poc/src/polaris-generation/dossier-render-provider-golden.test.ts > provider-mode render output is unchanged by the operator-agent inputs renders every fixture run to the captured bytes, file by file"
+      ]
+    },
+    {
+      "id": "S5",
+      "file": "apps/three-surface-poc/src/polaris-generation/diagram-layout.ts",
+      "old": "  const contentHeight = Math.max(...members.map(m => columnHeight(m.length)));",
+      "new": "  const contentHeight = Math.min(...members.map(m => columnHeight(m.length)));",
+      "tests": [
+        "apps/three-surface-poc/src/polaris-generation/diagram-layout.test.ts",
+        "packages/polaris-dossier/src/synthetic-shapes.test.ts",
+        "apps/three-surface-poc/src/polaris-generation/dossier-reading.browser.test.ts",
+        "apps/three-surface-poc/src/polaris-generation/dossier-render-provider-golden.test.ts"
+      ],
+      "killed": true,
+      "killedBy": [
+        "apps/three-surface-poc/src/polaris-generation/diagram-layout.test.ts"
+      ],
+      "failedTests": [
+        "apps/three-surface-poc/src/polaris-generation/diagram-layout.test.ts > layered left-to-right diagram layout fans out into one centred layer, keeping input order",
+        "apps/three-surface-poc/src/polaris-generation/diagram-layout.test.ts > layered left-to-right diagram layout readable spacing keeps every edge label off every node runs each leader from its own label to its own line, in plain sight of every other label and node",
+        "apps/three-surface-poc/src/polaris-generation/diagram-layout.test.ts > layered left-to-right diagram layout readable spacing keeps every edge label off every node runs a leader the shortest way from its label's edge to a point of its own line that no other line runs through"
+      ]
+    },
+    {
+      "id": "S6",
+      "file": "apps/three-surface-poc/src/polaris-generation/diagram-layout.ts",
+      "old": "  const width = MARGIN * 2 + layerCount * NODE_WIDTH + (layerCount - 1) * gapX;",
+      "new": "  const width = MARGIN * 2 + layerCount * NODE_WIDTH + (layerCount - 2) * gapX;",
+      "tests": [
+        "apps/three-surface-poc/src/polaris-generation/diagram-layout.test.ts",
+        "packages/polaris-dossier/src/synthetic-shapes.test.ts",
+        "apps/three-surface-poc/src/polaris-generation/dossier-reading.browser.test.ts",
+        "apps/three-surface-poc/src/polaris-generation/dossier-render-provider-golden.test.ts"
+      ],
+      "killed": true,
+      "killedBy": [
+        "(timeout)"
+      ],
+      "failedTests": [
+        "(no result within 300 s: the run was stopped)"
+      ]
+    },
+    {
+      "id": "S7",
+      "file": "apps/three-surface-poc/src/polaris-generation/diagram-layout.ts",
+      "old": "x: MARGIN + layer[i]! * (NODE_WIDTH + gapX), y: MARGIN + offset",
+      "new": "x: MARGIN + layer[i]! * (NODE_WIDTH + gapX), y: offset",
+      "tests": [
+        "apps/three-surface-poc/src/polaris-generation/diagram-layout.test.ts",
+        "packages/polaris-dossier/src/synthetic-shapes.test.ts",
+        "apps/three-surface-poc/src/polaris-generation/dossier-reading.browser.test.ts",
+        "apps/three-surface-poc/src/polaris-generation/dossier-render-provider-golden.test.ts"
+      ],
+      "killed": true,
+      "killedBy": [
+        "apps/three-surface-poc/src/polaris-generation/diagram-layout.test.ts",
+        "apps/three-surface-poc/src/polaris-generation/dossier-render-provider-golden.test.ts"
+      ],
+      "failedTests": [
+        "apps/three-surface-poc/src/polaris-generation/diagram-layout.test.ts > layered left-to-right diagram layout lays a chain out one layer per node with horizontal cubic edges",
+        "apps/three-surface-poc/src/polaris-generation/diagram-layout.test.ts > layered left-to-right diagram layout fans out into one centred layer, keeping input order",
+        "apps/three-surface-poc/src/polaris-generation/diagram-layout.test.ts > layered left-to-right diagram layout breaks a cycle at the DFS back edge and draws it as a curve below the layers",
+        "apps/three-surface-poc/src/polaris-generation/diagram-layout.test.ts > layered left-to-right diagram layout draws a self-loop and a second back edge lower than the first",
+        "apps/three-surface-poc/src/polaris-generation/diagram-layout.test.ts > layered left-to-right diagram layout readable spacing keeps every edge label off every node holds over dense random graphs: no label on a node, on another label, or off the canvas",
+        "apps/three-surface-poc/src/polaris-generation/diagram-layout.test.ts > layered left-to-right diagram layout readable spacing keeps every edge label off every node runs a leader the shortest way from its label's edge to a point of its own line that no other line runs through",
+        "apps/three-surface-poc/src/polaris-generation/dossier-render-provider-golden.test.ts > provider-mode render output is unchanged by the operator-agent inputs renders every fixture run to the captured bytes, file by file"
+      ]
+    }
+  ],
+  "killed": 24,
+  "total": 24
+}

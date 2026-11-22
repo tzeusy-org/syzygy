@@ -973,7 +973,7 @@ export function endScreen(runId: string, run: string, phase: string, closed: boo
 
 /** The latest check record of the draft and of the inventory in a run directory (either null when none was written). */
 export function latestChecks(run: string): { readonly draft: CheckRecord; readonly inventory: CheckRecord } {
-  // The draft's record is read under the one check-record bound (version 2.8); one past it reads as no record, never passed or refused.
+  // Draft and inventory display checks use the shared check-record bound. The URL supervisor uses authenticated stage products.
   return { draft: latestRecord(path.join(run, RUN_LAYOUT.checks), REVISION_FILE, readCheckRecord), inventory: latestRecord(path.join(run, INVENTORY_CHECKS), REVISION_FILE, readCheckRecord) };
 }
 

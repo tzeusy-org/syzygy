@@ -2,6 +2,7 @@ import * as fs from 'node:fs';
 import * as path from 'node:path';
 import { parseBoundedJson, type LocalDerivedFact, type LocalDerivedStructure, type LocalTreeCounts } from '@syzygy/polaris-generation-core/live';
 import { isRecord, sha256 } from '@syzygy/support';
+import { readBoundedFile } from './check-record-read.js';
 import { TOP_LEVEL_UNIT } from './derive-rules.js';
 import { deriveTreeFacts, type TreeFact, type TreeFacts } from './derive.js';
 import { GitObjectReadRefusal, type TreeEntry } from './git-object-reader.js';
@@ -105,7 +106,9 @@ export interface RecordExpectations {
  * test matches. Anything else is no record: nothing of it is drawn, listed or published. */
 export function readDerivedRecord(run: string, revision: number, expected: RecordExpectations): KeptRecord | undefined {
   let bytes: Buffer;
-  try { bytes = fs.readFileSync(derivedRecordFile(run, revision)); } catch { return undefined; }
+  // Version 2.10: read by the check-record readers' rule under this record's own bound, so a FIFO, a device or a directory at the path, or
+  // a file grown past the bound, is no record, and the render neither blocks nor reads more than one byte past the bound.
+  try { bytes = readBoundedFile(derivedRecordFile(run, revision), RECORD_LIMITS.maxBytes); } catch { return undefined; }
   try {
     // A byte-order mark is kept, never stripped, so it fails the parse: the text published is always the kept bytes exactly.
     const text = new TextDecoder('utf-8', { fatal: true, ignoreBOM: true }).decode(bytes);
@@ -163,6 +166,18 @@ export function currencyPolicyOf(bytes: Uint8Array): CurrencyPolicy | null {
 
 const sameFacts = (a: readonly TreeFact[], b: readonly TreeFact[]): boolean => JSON.stringify(a) === JSON.stringify(b);
 
+/** Whether examining `file` without following a link reports that nothing is there: no such entry, or a parent that is not a directory
+ * (version 2.10). Any other answer, an entry of any kind or an error that leaves it unknown, is not "nothing there". */
+export function holdsNoEntry(file: string): boolean {
+  try {
+    fs.lstatSync(file);
+    return false;
+  } catch (cause) {
+    const code = (cause as NodeJS.ErrnoException).code;
+    return code === 'ENOENT' || code === 'ENOTDIR';
+  }
+}
+
 /** What the region states at this render: the record of draft revision `revision`, compared with the facts this render re-derives from
  * the tree its reader lists, under the currency policy. */
 export async function derivedStructureAt(inputs: {
@@ -177,8 +192,11 @@ export async function derivedStructureAt(inputs: {
   readonly policy: CurrencyPolicy | null;
 }): Promise<LocalDerivedStructure> {
   const { run, revision, pinned, repositoryId, reader, isSecretPath, policy } = inputs;
+  // Version 2.10 (syzygy-3efd.73 (b)): "no derived record was kept" only where nothing stands at the path; anything else that is no
+  // readable record, or a path that cannot be examined, is `unusable`, with the same reason and its own words.
+  if (holdsNoEntry(derivedRecordFile(run, revision))) return { state: 'missing', revision: pinned, unknownReason: 'missing-evidence' };
   const record = readDerivedRecord(run, revision, { repositoryId, isSecretPath });
-  if (record === undefined) return { state: 'missing', revision: pinned, unknownReason: 'missing-evidence' };
+  if (record === undefined) return { state: 'unusable', revision: pinned, unknownReason: 'missing-evidence' };
   if (record.state === 'unknown') return { state: 'unknown', revision: pinned, unknownReason: 'source-uncaptured-or-unreachable' };
   let entries: readonly Pick<TreeEntry, 'path' | 'mode'>[];
   try {
@@ -194,7 +212,7 @@ export async function derivedStructureAt(inputs: {
   // of it is drawn, listed, carried in `machine.json` or published, so no name or rule reaches the region that the render did not derive.
   const derivedUnits = new Set(now.facts.filter((fact) => fact.fact === 'top-level-unit').map((fact) => fact.path));
   const foreign = (fact: TreeFact): boolean => fact.rule !== TOP_LEVEL_UNIT.id || fact.ruleVersion !== TOP_LEVEL_UNIT.version || (fact.fact !== 'tree-root' && !derivedUnits.has(fact.path));
-  if (record.facts.some(foreign)) return { state: 'missing', revision: pinned, unknownReason: 'missing-evidence' };
+  if (record.facts.some(foreign)) return { state: 'unusable', revision: pinned, unknownReason: 'missing-evidence' };
   // `pinned-revision`: current exactly when the record names this render's revision and this render re-derives the same facts.
   const current = record.revision === pinned && sameFacts(record.facts, now.facts) && record.unitsNotListed === now.unitsNotListed;
   const facts: LocalDerivedFact[] = record.facts.map((fact) => {

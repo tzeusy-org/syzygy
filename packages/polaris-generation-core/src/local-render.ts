@@ -173,7 +173,9 @@ export type LocalDerivedStructure =
     readonly countsMatch: boolean;
   }
   | {
-    readonly state: 'missing' | 'unknown';
+    /** `missing`: nothing stands at the draft revision's derived-record path; `unusable` (version 2.10): something does that is no
+     * readable record, or the path cannot be examined; `unknown`: the record states it, or the render cannot list the tree. */
+    readonly state: 'missing' | 'unusable' | 'unknown';
     readonly revision: string;
     readonly unknownReason: 'missing-evidence' | 'source-uncaptured-or-unreachable';
   };

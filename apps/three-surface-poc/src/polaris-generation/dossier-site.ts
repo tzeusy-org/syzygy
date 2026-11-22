@@ -162,8 +162,11 @@ export const DOSSIER_THEME_CSS = ':root{--void:#262624;--panel:#30302e;--panel-r
   + '.cited-on,.selected-why{display:block;font-size:.88rem;color:var(--muted)}'
   + '.review-report{margin-top:1rem;border-top:1px solid var(--line);padding-top:.5rem}.review-report>summary{cursor:pointer;color:var(--muted);font-weight:600}.review-report>summary:focus-visible{outline:2px solid var(--focus);outline-offset:2px}'
   + '.nav-panel>summary{cursor:pointer;font-weight:600;color:var(--muted)}.layout:has(>.nav-panel:not([open])){grid-template-columns:auto minmax(0,1fr)}.nav-panel>summary:focus-visible,.mobile-contents>summary:focus-visible{outline-offset:-3px}'
-  // A three-column diagram, the widest a plain chain reaches, may shrink to fit its column (text no smaller than 10.7px); any wider one
-  // keeps its size and scrolls. The element under the pointer stands out.
+  // A three-column diagram (1048 px) may shrink to fit its column (text no smaller than 10.7px); any wider one keeps its size and scrolls.
+  // Since syzygy-3efd.66 the readable layout stacks every diagram of two or more layers, so no operator-agent figure is 1048 px wide and
+  // the rule matches none of them. A provider-mode graph is laid out on the default spacing, 320 px a layer (248, 568, 888, 1208 px ...),
+  // so it is never 1048 px wide either, nor is a sequence or swimlane (40 px and 184 px a participant or lane): today the rule matches
+  // no figure. It stays because REQ-polaris-generation-034 (2.2) states it. The element under the pointer stands out.
   + '.diagram-scroll svg[width="1048"]{max-width:max(100%,860px)}.diagram-scroll g.node:hover rect{stroke-width:3}.diagram-scroll g.edge:hover path{stroke-width:3}.diagram-scroll g.edge-text:hover rect.edge-label{stroke:var(--cyan);stroke-width:1.5}.diagram-scroll path.edge-leader{stroke-width:1;fill:none}.diagram-scroll path.edge-echo{display:none;fill:none;stroke:var(--cyan);stroke-width:3;pointer-events:none}.diagram-scroll g.edge-text:hover path.edge-echo{display:inline}'
   // A marker standing where withheld lines were, on a source page: present, and out of the reading.
   + 'pre.redaction-note{margin:.25rem 0;padding:.1rem .75rem;border-left:4px solid var(--line);color:var(--muted);font:.8rem/1.5 var(--font-mono);white-space:pre-wrap}'
@@ -286,6 +289,13 @@ export function renderDossierSite(input: DossierSiteInput & { readonly local?: L
   const hueAttr = (hue: number): string => local === undefined ? '' : ` data-hue="${hue}"`;
   // Every operator-agent figure drawn from the draft says it is curated (RFC7-28, version 2.3); the provider mode's bytes are pinned.
   const curated = local === undefined ? '' : ' data-visual-provenance="curated"';
+  // The drawing is `role="img"`, named by its caption and described by its lists (`aria-labelledby="diagram-title-N"`,
+  // `aria-describedby="diagram-text-N"`): an operator-agent figure carries the caption's id, and a `<div>` with the other id wraps its
+  // two lists alone, so the description holds neither the summary nor the Mermaid source (syzygy-3efd.70). The provider mode's bytes
+  // are pinned, so its figures keep the references without the ids or the wrapper, as they always have.
+  const figureIds = (index: number): { readonly title: string; readonly textOpen: string; readonly textClose: string } => local === undefined
+    ? { title: '', textOpen: '', textClose: '' }
+    : { title: ` id="diagram-title-${index}"`, textOpen: `<div id="diagram-text-${index}">`, textClose: '</div>' };
   if (poleSpec !== undefined) {
     const homes = draft.sections.map(section => poles.filter(pole => pole.sections.includes(section.id)).length);
     if (poles.length === 0 || homes.some(count => count !== 1) || poles.some(pole => pole.sections.length === 0 || pole.sections.some(id => !draft.sections.some(section => section.id === id)))
@@ -558,7 +568,8 @@ export function renderDossierSite(input: DossierSiteInput & { readonly local?: L
     // The provider mode keeps its fixed legend (its bytes are pinned); an operator-agent figure legends only the styles it draws, with a
     // tally of its boxes and arrows by marking (syzygy-3efd.17): no figure element is observed there, so "Solid: observed" was false.
     const legend = local === undefined ? FIXED_DIAGRAM_LEGEND : figureLegend([...d.nodes, ...d.edges].map(element => element.epistemic), d.nodes.length, d.edges.length);
-    return `<figure${from.startsWith('poles/') ? '' : hueAttr(index % HUES + 1)}${curated}><figcaption>${escape(d.title)}</figcaption><p class="diagram-relationship"><span class="eyebrow">${escape(d.kind)}</span> ${escape(d.relationship)}</p><div class="diagram-scroll">${svg}</div>${legend}<details><summary>Read every component and relationship</summary><ul>${nodeList}</ul><ol>${edgeList}</ol><details class="diagram-source"><summary>Declarative source (Mermaid)</summary><pre>${escape(diagramToMermaid(d))}</pre></details></details></figure>`;
+    const ids = figureIds(index);
+    return `<figure${from.startsWith('poles/') ? '' : hueAttr(index % HUES + 1)}${curated}><figcaption${ids.title}>${escape(d.title)}</figcaption><p class="diagram-relationship"><span class="eyebrow">${escape(d.kind)}</span> ${escape(d.relationship)}</p><div class="diagram-scroll">${svg}</div>${legend}<details><summary>Read every component and relationship</summary>${ids.textOpen}<ul>${nodeList}</ul><ol>${edgeList}</ol>${ids.textClose}<details class="diagram-source"><summary>Declarative source (Mermaid)</summary><pre>${escape(diagramToMermaid(d))}</pre></details></details></figure>`;
   };
   // A v7 sequence or swimlane (REQ-polaris-generation-034 version 2.5): the figure a graph figure with its home takes, holding its drawing and
   // its phone form, of which the stylesheet displays one by the width of the `figure-forms` box. Each participant, lane and step is a claim
@@ -599,9 +610,10 @@ export function renderDossierSite(input: DossierSiteInput & { readonly local?: L
     figureStructures.push({ index, entry: figure.kind === 'sequence'
       ? { diagram: d.id, kind: 'sequence', page: from, laidOutPx: width, participants: figure.participants.map(p => p.id), messages: figure.messages.map(m => ({ id: m.id, from: m.from, to: m.to })) }
       : { diagram: d.id, kind: 'swimlane', page: from, laidOutPx: width, lanes: figure.lanes.map(l => l.id), steps: figure.steps.map(st => ({ id: st.id, lane: st.lane })) } });
-    return `<figure${from.startsWith('poles/') ? '' : hueAttr(index % HUES + 1)}${curated} data-figure-kind="${figure.kind}"><figcaption>${escape(d.title)}</figcaption><p class="diagram-relationship"><span class="eyebrow">${figure.kind}</span> ${escape(d.relationship)}</p>`
+    const ids = figureIds(index);
+    return `<figure${from.startsWith('poles/') ? '' : hueAttr(index % HUES + 1)}${curated} data-figure-kind="${figure.kind}"><figcaption${ids.title}>${escape(d.title)}</figcaption><p class="diagram-relationship"><span class="eyebrow">${figure.kind}</span> ${escape(d.relationship)}</p>`
       + `<div class="figure-forms" data-figure-width="${width}"><div class="diagram-scroll figure-drawing">${svg}</div><ol class="figure-stepper">${stepper}</ol></div>`
-      + `${figureLegend(all.map(element => element.epistemic), 0, 0, 'as marked', tallyHead, figure.kind === 'swimlane')}<details><summary>Read every component and relationship</summary><ul>${ownerList}</ul><ol>${useList}</ol><details class="diagram-source"><summary>Declarative source (Mermaid)</summary><pre>${escape(figureToMermaid(figure))}</pre></details></details></figure>`;
+      + `${figureLegend(all.map(element => element.epistemic), 0, 0, 'as marked', tallyHead, figure.kind === 'swimlane')}<details><summary>Read every component and relationship</summary>${ids.textOpen}<ul>${ownerList}</ul><ol>${useList}</ol>${ids.textClose}<details class="diagram-source"><summary>Declarative source (Mermaid)</summary><pre>${escape(figureToMermaid(figure))}</pre></details></details></figure>`;
   };
   const topicAttr = (id: string): string => ` data-topics="${escape((topics[id] ?? []).join(' '))}"`;
   const localPages = local?.pages ?? [];
@@ -1018,9 +1030,12 @@ const DERIVED_SITE_FILE = 'derived-structure.json';
 /** How many top-level directories the derived figure draws; the list holds every listed one. */
 const DERIVED_DRAWN = 12;
 
-const unknownWords: Readonly<Record<'missing-evidence' | 'source-uncaptured-or-unreachable', string>> = {
-  'missing-evidence': 'no derived record was kept when this draft revision was checked',
-  'source-uncaptured-or-unreachable': 'the pinned tree could not be listed',
+/** The region's words, chosen by state (version 2.10): the reason stays `missing-evidence` for both `missing` and `unusable`, and only the
+ * words and the machine view's `state` tell nothing kept apart from something kept that this render cannot use or cannot examine. */
+const unknownWords: Readonly<Record<'missing' | 'unusable' | 'unknown', string>> = {
+  missing: 'no derived record was kept when this draft revision was checked',
+  unusable: 'this draft revision\'s derived-record path holds something this render cannot use or cannot examine; Syzygy or its screen may have changed since the revision was checked, or the path may have been altered',
+  unknown: 'the pinned tree could not be listed',
 };
 
 /** The derived-structure region (REQ-polaris-generation-034 version 2.3): the figure Syzygy computes from the kept record, never from the
@@ -1046,8 +1061,8 @@ export function renderDerivedRegion(derived: LocalDerivedStructure, mapsLine = f
   const notes = `${notDrawn === 0 ? '' : `<p class="derived-more">${notDrawn === 1 ? '1 more top-level directory is' : `${notDrawn} more top-level directories are`} listed below and not drawn.</p>`}`
     + `${derived.unitsNotListed === 0 ? '' : `<p class="derived-more">${derived.unitsNotListed === 1 ? '1 more top-level directory is' : `${derived.unitsNotListed} more top-level directories are`} counted and not listed.</p>`}`;
   const legend = figureLegend([...nodes, ...edges].map(element => element.epistemic), nodes.length, edges.length, 'derived by Syzygy');
-  return `${head}<figure class="derived-figure" data-visual-provenance="computed" data-derived-record="${record}"><figcaption>Derived by Syzygy from the pinned tree</figcaption>`
-    + `${derivedNote(derived)}<div class="diagram-scroll">${svg}</div>${notes}${legend}<details><summary>Read every derived fact</summary><ul class="derived-facts">${derivedEntries(derived)}</ul></details></figure>${end}`;
+  return `${head}<figure class="derived-figure" data-visual-provenance="computed" data-derived-record="${record}"><figcaption id="diagram-title-derived">Derived by Syzygy from the pinned tree</figcaption>`
+    + `${derivedNote(derived)}<div class="diagram-scroll">${svg}</div>${notes}${legend}<details><summary>Read every derived fact</summary><ul class="derived-facts" id="diagram-text-derived">${derivedEntries(derived)}</ul></details></figure>${end}`;
 }
 
 /** The machine view's `derivedStructure` member: beside and outside `reviewStatus`. */
@@ -1084,8 +1099,9 @@ export const MAP_READING_LEGEND = '<aside class="reading-legend" aria-label="How
   + '</ul></aside>';
 export const DERIVED_MAPS_LINE = `<p class="derived-maps">Computed maps: ${COMPUTED_MAPS.map(m => `<a href="${m.path}">${m.title}</a>`).join(' · ')}.</p>`;
 
-/** The readable spacing, never laid out in three columns. */
-export const MAP_SPACING = { ...READABLE_SPACING, maxColumns: 2 } as const;
+/** The readable spacing, never laid out in three columns: two lay out 648 px wide (two 24 px margins, two 200 px nodes, one 200 px gap),
+ * and a map whose layers would lay out wider is stacked, a plain chain of three or more among them since syzygy-3efd.66. */
+export const MAP_SPACING = { ...READABLE_SPACING, stackWiderThan: 648 } as const;
 /** How many boxes a map drawing may hold, and how many directories, packages or modules one figure takes beside its place's box. */
 export const MAP_MAX_BOXES = 25;
 const MAP_CHUNK = 12;
@@ -1117,8 +1133,8 @@ export function mapFigure(map: string, index: string, caption: string, boxes: re
   const legend = figureLegend([...boxes, ...arrows].map(element => element.epistemic), boxes.length, arrows.length, 'derived by Syzygy');
   return {
     width,
-    html: `<figure class="computed-map" data-visual-provenance="computed" data-map="${map}"><figcaption>${escape(caption)}</figcaption>`
-      + `<div class="map-forms" data-figure-width="${width}"><div class="diagram-scroll map-drawing">${svg}</div><ol class="map-list">${items}</ol></div>${legend}</figure>`,
+    html: `<figure class="computed-map" data-visual-provenance="computed" data-map="${map}"><figcaption id="diagram-title-${index}">${escape(caption)}</figcaption>`
+      + `<div class="map-forms" data-figure-width="${width}"><div class="diagram-scroll map-drawing">${svg}</div><ol class="map-list" id="diagram-text-${index}">${items}</ol></div>${legend}</figure>`,
   };
 }
 
@@ -1130,8 +1146,8 @@ const chunks = <T>(items: readonly T[], size: number): T[][] => {
 const byCodeUnit = (a: string, b: string): number => (a < b ? -1 : a > b ? 1 : 0);
 
 /** The sentence the region and the directory map state where no derived record is in force. */
-function derivedUnknownSentence(derived: Extract<LocalDerivedStructure, { state: 'missing' | 'unknown' }>): string {
-  return `<p class="derived-unknown" data-epistemic="unknown" data-unknown-reason="${derived.unknownReason}"><span class="not-established">Not established.</span> The top-level directories of the tree at revision ${escape(derived.revision)} are Unknown at this render: ${unknownWords[derived.unknownReason]}.</p>`;
+function derivedUnknownSentence(derived: Extract<LocalDerivedStructure, { state: 'missing' | 'unusable' | 'unknown' }>): string {
+  return `<p class="derived-unknown" data-epistemic="unknown" data-unknown-reason="${derived.unknownReason}"><span class="not-established">Not established.</span> The top-level directories of the tree at revision ${escape(derived.revision)} are Unknown at this render: ${unknownWords[derived.state]}.</p>`;
 }
 const derivedNote = (derived: Extract<LocalDerivedStructure, { state: 'derived' }>): string =>
   `<p class="derived-note">Derived by Syzygy from the paths and modes of the tree at revision ${escape(derived.recordRevision)}, listed at ${escape(derived.capturedAt)}, by rule top-level-unit version 1. No file body, size or object id was read. Current for that revision only.</p>`;

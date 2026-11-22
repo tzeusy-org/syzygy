@@ -41,7 +41,9 @@ export type CheckFindingKind =
   // Version 2.4 (schema v6): a `thesisBasis` its introduction does not fit.
   | 'thesis-basis'
   // Version 2.5 (schema v7): members that do not fit a diagram's kind, and a participant or lane nothing names.
-  | 'figure-kind' | 'figure-unused';
+  | 'figure-kind' | 'figure-unused'
+  // Version 2.10: the check record would be past the read bound, so its bounded form is written.
+  | 'check-record-bound';
 
 /** A repair finding: the kind of failure, where to repair it (a JSON path into the draft), and the block and citation it concerns. It
  * never carries quoted text or any byte of a blob. */
@@ -180,7 +182,10 @@ export interface CheckRecord {
   readonly label: 'Inferred';
 }
 
-export interface CheckReport extends CheckRecord {
+/** Check's report: the record it wrote, full or bounded (version 2.10), and the advice beside it. */
+export type CheckReport = (CheckRecord | BoundedCheckRecord<CheckRecord>) & CheckReportMembers;
+
+export interface CheckReportMembers {
   readonly command: 'check';
   readonly run: string;
   readonly checkFile: string;
@@ -211,6 +216,8 @@ export interface CheckReport extends CheckRecord {
   /** Version 2.9 (syzygy-3efd.64): how many `mechanism`-class figure-fit entries this revision's record holds, which the report's
    * `figureFit` leaves out, and how many the run file counts (`run-advice.ts`); on the report, never the record. */
   readonly mechanismAdvice?: MechanismAdvice;
+  /** Version 2.10: where the record written is the bounded form, every finding the full record would have held; written to no file. */
+  readonly findingsLeftOut?: readonly CheckFinding[];
 }
 
 /** `file` is null where the run file could not be written, `inRun` then the count this check computed for it. */
@@ -233,7 +240,19 @@ export interface CheckDeps {
   readonly openReader?: (options: PinnedObjectReaderOptions) => PinnedObjectReader;
   /** The renderer's figure layout, which figure fit measures (syzygy-3efd.20); without it each produced figure's fit is Unknown. */
   readonly layoutFigure?: FigureLayout;
+  /** How a check record's encoded text is measured against the read bound (version 2.10); `measureCheckRecord` by default. Injected only
+   * by tests, to reach the value and depth arms, which no subject within its own bounds is shown to reach. */
+  readonly measureRecord?: (text: string) => RecordMeasure;
 }
+
+/** A check record's size as a reader measures it (version 2.10): UTF-8 bytes, values (the root and every value below it, never a key) and
+ * the deepest level below the root (the root at depth 0), as `parseBoundedJson` counts them. */
+export interface RecordMeasure { readonly bytes: number; readonly values: number; readonly depth: number }
+
+/** The members a bounded check record leaves out (version 2.10): those whose size grows with the subject. */
+export type BoundedRecordOmits = 'executionFlags' | 'quotations' | 'excludedContent' | 'citedBlobs' | 'figureFit' | 'readingLedger' | 'manifestFacts';
+/** A check record's bounded form: the full record's other members in its order, `outcome` `findings`, and one `check-record-bound` finding. */
+export type BoundedCheckRecord<R> = Omit<R, BoundedRecordOmits | 'outcome'> & { readonly outcome: 'findings' };
 
 export const DISCLOSURES = [
   RECORDS_WITHIN_REACH,
