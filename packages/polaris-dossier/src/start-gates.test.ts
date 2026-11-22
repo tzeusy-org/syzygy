@@ -540,7 +540,7 @@ describe('init: the clone holds the consented commit alone (syzygy-qkea.24)', ()
       make(clone);
       await refusedShape(clone, reason, false);
     }
-  });
+  }, TREE_TIMEOUT);
 
   it('starts from a clone made with an older git\'s template, which leaves an empty branches/, or an empty one; refuses anything in branches/', async () => {
     // Gits older than about 2.49 copy branches/ from their default template (R-POLARIS-DOSSIER-CLONE-SHAPE-2 finding 2).

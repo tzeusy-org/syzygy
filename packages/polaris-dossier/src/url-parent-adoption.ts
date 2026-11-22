@@ -118,10 +118,21 @@ function urlParentRetired(rows: readonly string[][], authority: { readonly id: s
     if (row[0] === authority.id && row[6] === TAG_CELL) continue;
     const action = /^(?:veto(?:es|ed)?|revert(?:s|ed)?|retire(?:s|d)?|reversion of|retirement of|supersede(?:s|d)?|amend(?:s|ed)?|replace(?:s|d)?|withdraw(?:s|n)?|revoke(?:s|d)?)\s+(?:of\s+)?(?:the\s+)?(?:adoption\s+)?(?:row\s+)?(.+)$/iu.exec(row[3] ?? '')?.[1];
     if (action === undefined) continue;
-    const target = /^(?:`([^`]+)`|\[.+?\]\(https:\/\/github\.com\/tzeusy-org\/syzygy\/blob\/[0-9a-f]{40}\/(.+?)\)|([^\s,;]+))/u.exec(action);
-    const subject = target?.[1] ?? target?.[2] ?? target?.[3];
-    if (adoption.test(action) || (subject !== undefined && /^[a-f0-9]{7,64}$/u.test(subject) && authority.commit.startsWith(subject))
-      || subject === URL_PARENT_TAG || REVIEWED_SUBJECTS.some(([file]) => subject === file)) return true;
+    // A withdrawal can name several targets. Read only the leading target
+    // list, leaving explanatory references to other adoptions out of it.
+    let remaining = action;
+    for (;;) {
+      const target = /^(?:`([^`]+)`|\[.+?\]\(https:\/\/github\.com\/tzeusy-org\/syzygy\/blob\/[0-9a-f]{40}\/(.+?)\)|([^\s,;]+))/u.exec(remaining);
+      if (target === null) break;
+      const subject = target[1] ?? target[2] ?? target[3]!;
+      const subjects = /^A-[1-9][0-9]*(?:\/A-[1-9][0-9]*)+$/u.test(subject) ? subject.split('/') : [subject];
+      if (subjects.some(value => adoption.test(value) || (/^[a-f0-9]{7,64}$/u.test(value) && authority.commit.startsWith(value))
+        || value === URL_PARENT_TAG || REVIEWED_SUBJECTS.some(([file]) => value === file))) return true;
+      remaining = remaining.slice(target[0].length);
+      const separator = /^\s*(?:,\s*(?:(?:and|or)\s+)?|(?:and|or|&)\s+|\/\s*)(?:the\s+)?(?:adoption\s+)?(?:row\s+)?/iu.exec(remaining);
+      if (separator === null) break;
+      remaining = remaining.slice(separator[0].length);
+    }
   }
   return false;
 }

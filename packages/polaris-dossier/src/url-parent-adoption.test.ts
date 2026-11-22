@@ -39,6 +39,9 @@ describe('URL parent adoption record', () => {
     expect(findUrlParentAdoption(later('Veto A-15 at the owner’s direction'))).toBeNull();
     expect(findUrlParentAdoption(ledger(`${entry('Veto A-15 at the owner’s direction')}\n${row}`))).toBeNull();
     expect(findUrlParentAdoption(later('Retire \`aaaaaaa\`'))).toBeNull();
+    for (const action of ['Withdraw A-1 and A-15', 'Withdraw A-1, A-15', 'Withdraw A-1, and `A-15`',
+      'Withdraw A-1/A-15', 'Withdraw A-1 and adoption row A-15', `Retire A-1 and \`${URL_PARENT_TAG}\``,
+      'Retire A-1 and `aaaaaaa`']) expect(findUrlParentAdoption(later(action)), action).toBeNull();
     expect(findUrlParentAdoption(later(`Revert ${subjects[2][1]}`))).toBeNull();
     expect(findUrlParentAdoption(later('Document the results observed after A-15'))).toEqual({ id: 'A-15', commit });
     expect(findUrlParentAdoption(later('Revert A-150'))).toEqual({ id: 'A-15', commit });
