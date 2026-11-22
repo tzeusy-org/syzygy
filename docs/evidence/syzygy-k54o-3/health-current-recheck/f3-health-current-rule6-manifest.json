@@ -1,0 +1,12 @@
+{
+  "subjectCommit": "1f293e13c451ffc64e15573376500751a2a1a6d1",
+  "source": "packages/polaris-dossier/src/url-run-sessions.ts",
+  "sourceSha256": "43f338b5470e83561451c59e4e127206176c6122d5dc3e638ebc2eb80c69eda8",
+  "test": "packages/polaris-dossier/src/url-run-sessions-completion.test.ts",
+  "testSha256": "6fc96733786497948fdfad5fef8d69c6c5b79395fe18a7005db4175d8737f4a2",
+  "old": "    if (settlement === 'settled' && await input.current() !== true) { input.bindingChanged(); return false; }\n",
+  "new": "",
+  "predicate": "independent policy withdrawn during cleanup must refuse after genuine completed exit",
+  "log": "/home/orca/.tmp/f3-health-current-rule6.log",
+  "exitCode": 1
+}

@@ -1,0 +1,51 @@
+
+ RUN  v3.2.7 /home/orca/.tmp/syzygy-beads-looper-20261114-54ebc9f1/d10-f3-work-budget
+
+ ❯ |unit| packages/polaris-dossier/src/url-run-sessions-completion.test.ts (5 tests | 2 failed | 3 skipped) 19ms
+   ↓ completed design launch health > accepts only a successful exit with independently settled process and tool cleanup
+   ↓ current policy across completed design cleanup > checks the independent policy once when neither settlement waits for cleanup
+   × current policy across completed design cleanup > rechecks policy after deferred child cleanup (policy remains current: true) 11ms
+     → expected "spy" to be called 2 times, but got 1 times
+   × current policy across completed design cleanup > rechecks policy after deferred child cleanup (policy remains current: false) 6ms
+     → expected true to be false // Object.is equality
+   ↓ current policy across completed design cleanup > retains cheap authority checks after the final independent verifier await
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  |unit| packages/polaris-dossier/src/url-run-sessions-completion.test.ts > current policy across completed design cleanup > rechecks policy after deferred child cleanup (policy remains current: true)
+AssertionError: expected "spy" to be called 2 times, but got 1 times
+ ❯ packages/polaris-dossier/src/url-run-sessions-completion.test.ts:59:21
+     57|     finished.resolve(complete);
+     58|     expect(await checking).toBe(valid);
+     59|     expect(current).toHaveBeenCalledTimes(2);
+       |                     ^
+     60|     expect(changed).toHaveBeenCalledTimes(valid ? 0 : 1);
+     61|   });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+
+ FAIL  |unit| packages/polaris-dossier/src/url-run-sessions-completion.test.ts > current policy across completed design cleanup > rechecks policy after deferred child cleanup (policy remains current: false)
+AssertionError: expected true to be false // Object.is equality
+
+- Expected
++ Received
+
+- false
++ true
+
+ ❯ packages/polaris-dossier/src/url-run-sessions-completion.test.ts:58:28
+     56|     policy = valid;
+     57|     finished.resolve(complete);
+     58|     expect(await checking).toBe(valid);
+       |                            ^
+     59|     expect(current).toHaveBeenCalledTimes(2);
+     60|     expect(changed).toHaveBeenCalledTimes(valid ? 0 : 1);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/2]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  2 failed | 3 skipped (5)
+   Start at  17:04:18
+   Duration  2.49s (transform 1.55s, setup 27ms, collect 2.08s, tests 19ms, environment 0ms, prepare 56ms)
+

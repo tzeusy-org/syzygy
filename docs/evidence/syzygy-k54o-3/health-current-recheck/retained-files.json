@@ -1,0 +1,23 @@
+{
+  "rootSubject": "6ffe9ee4a",
+  "workerSubject": "1f293e13c451ffc64e15573376500751a2a1a6d1",
+  "files": [
+    {
+      "path": "f3-health-current-rule6-manifest.json",
+      "sha256": "d2d93f5ff88edb19596c9ca3989bd9e329ca3dce6c160ed8e57b4230f00d9069"
+    },
+    {
+      "path": "f3-health-current-rule6.log",
+      "sha256": "423edcf789049556b8325080189a755759373cf0c122e03012749bbffa5d101f"
+    },
+    {
+      "path": "f3-health-current-typecheck.log",
+      "sha256": "396901319daac4a4413b23478852db3c572014f86c71d148273565f0f3332696"
+    },
+    {
+      "path": "f3-health-current-unit.log",
+      "sha256": "1af52811907393ff2e38356db524951c1dd2237ebfe2c6c54500123b020ad468"
+    }
+  ],
+  "limit": "Focused ordering regression and one selected source fault, not native acceptance or a whole-suite mutation score."
+}
