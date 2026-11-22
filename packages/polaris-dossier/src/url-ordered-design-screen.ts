@@ -42,13 +42,17 @@ async function hold(file: OrderedScreenProgramFile, executable: boolean, current
     if (!stat.isFile() || stat.nlink !== 1n || stat.size !== BigInt(file.bytes) || (stat.mode & 0o022n) !== 0n
       || (executable && (stat.mode & 0o111n) === 0n)
       || (stat.uid !== 0n && stat.uid !== BigInt(process.getuid!()))) refuse();
-    const hash = createHash('sha256'), buffer = Buffer.alloc(65_536);
+    // These are trusted held runtime images, not native peer input. Bound each
+    // read and yield between chunks without repeating the native effect's full
+    // process attestation for every 64 KiB of a large executable.
+    const hash = createHash('sha256'), buffer = Buffer.alloc(1_048_576);
     let offset = 0;
     while (offset < file.bytes) {
       current();
       const { bytesRead: count } = await handle.read(buffer, 0, Math.min(buffer.length, file.bytes - offset), offset);
       if (count === 0) refuse();
       hash.update(buffer.subarray(0, count)); offset += count;
+      await new Promise<void>(resolve => setImmediate(resolve));
     }
     if (hash.digest('hex') !== file.sha256 || !same(stat, await handle.stat({ bigint: true }))
       || !same(stat, await fs.promises.lstat(file.path, { bigint: true }))) refuse();
