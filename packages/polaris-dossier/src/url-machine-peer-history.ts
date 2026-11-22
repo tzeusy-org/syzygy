@@ -14,9 +14,9 @@ export interface UrlMachinePeerHistoryOptions {
   /** Already integrity-verified audit payload, supplied independently. Matching
    * nonsecret fingerprints alone never establishes that this row was captured. */
   readonly row: UrlMachinePeerAudit;
-  /** Old canonical bytes are not archived by the store. A supplied candidate
-   * is accepted only if it matches that exact revision's protected audit hash.
-   * Omitting them is supported only for the latest canonical revision. */
+  /** Optional legacy candidate, checked against the exact protected revision
+   * hash. New stores supply archived bytes; old unarchived prefixes remain
+   * unavailable unless the independently retained exact candidate is supplied. */
   readonly revisionBytes?: Uint8Array;
 }
 export type UrlMachinePeerHistoryResult = {
@@ -54,7 +54,7 @@ export async function verifyUrlMachinePeerHistory(given: UrlMachinePeerHistoryOp
     const event = history.events.find(value => value.next.revision === row.revision);
     const next = history.events.find(value => value.next.revision === row.revision + 1);
     if (event === undefined) return refused('revision');
-    const bytes = candidate ?? (row.revision === history.head.record.revision ? history.canonical : undefined);
+    const bytes = candidate ?? history.revisions.find(value => value.revision === row.revision)?.canonical ?? (row.revision === history.head.record.revision ? history.canonical : undefined);
     if (bytes === undefined) return refused('revision-bytes-unavailable');
     const atRead = { ...context, now: history.observedAt };
     const decoded = readUrlMachineClient(bytes, atRead);

@@ -1,12 +1,13 @@
-import { mkdir, readFile, readdir, writeFile } from 'node:fs/promises';
+import { mkdir, readFile, readdir, writeFile, unlink, link } from 'node:fs/promises';
 import path from 'node:path';
 import { randomBytes } from 'node:crypto';
 import { afterEach, describe, expect, it } from 'vitest';
 import { tempDir } from '@syzygy/test-kit';
 import { sha256 } from '@syzygy/support';
 import { encodeCanonicalJson } from '@syzygy/polaris-generation-core/live';
-import { publishUrlMachineLifecycle } from './url-machine-lifecycle.js';
+import { identifyUrlMachineLifecycleRecord, publishUrlMachineLifecycle } from './url-machine-lifecycle.js';
 import { initializeUrlMachineStore, openUrlMachineStore, readUrlMachineStoreHistory, type UrlMachineStore } from './url-machine-store.js';
+import { encodeUrlMachineArchive, urlMachineArchiveCapacity, URL_MACHINE_ARCHIVE_LIMITS } from './url-machine-archive.js';
 import { URL_MACHINE_CLIENT_LIMITS, type UrlMachineClientContext, type UrlMachineClientRecord } from './url-machine-instance.js';
 import { verifyUrlMachinePeerHistory, type UrlMachinePeerHistoryOptions } from './url-machine-peer-history.js';
 
@@ -54,7 +55,7 @@ async function fixture(revoke = true) {
       runId: record.runId, role: record.role, operation: 'artifact_read', processIdentitySha256: record.instances[0]!.verifier.processIdentitySha256,
       channelIdentitySha256: record.instances[0]!.verifier.channelIdentitySha256, at: NOW + 500 }, revisionBytes: canon(record) };
   const files = [path.join(storeOptions.protectedRoot, 'identity.json'), path.join(storeOptions.protectedRoot, 'state.json'),
-    path.join(storeOptions.protectedRoot, `projection-${record.clientId}.json`), path.join(canonicalRoot, `${record.clientId}.json`)];
+    path.join(storeOptions.protectedRoot, `projection-${record.clientId}.json`), path.join(canonicalRoot, `${record.clientId}.json`), path.join(storeOptions.protectedRoot, 'canonical-history.json')];
   return { options, storeOptions, record, rotated, revoked, firstHead, files, withdraw: () => { current = false; } };
 }
 
@@ -69,11 +70,103 @@ describe('cold historical machine-peer joins', () => {
       effectCompletion: 'Unknown', replay: 'forbidden', revision: 1, recordSha256: sha256(canon(f.record)) });
     expect(await Promise.all(f.files.map(file => readFile(file)))).toEqual(before);
     expect(JSON.parse((await readFile(f.files[3]!)).toString()).revokedAt).toBe(f.revoked.revokedAt);
-    expect((await readdir(f.storeOptions.protectedRoot)).sort()).toEqual(['identity.json', `projection-${f.record.clientId}.json`, 'state.json'].sort());
+    expect((await readdir(f.storeOptions.protectedRoot)).sort()).toEqual(['identity.json', `projection-${f.record.clientId}.json`, 'state.json', 'canonical-history.json'].sort());
   });
 
-  it('explicitly refuses absent old revision bytes rather than deriving them from final lifecycle values', async () => {
-    const f = await fixture(); expect(await verifyUrlMachinePeerHistory({ ...f.options, revisionBytes: undefined })).toEqual({ ok: false, code: 'revision-bytes-unavailable' });
+  it('joins exact archived old bytes after cold reopen without caller-supplied canonical text', async () => {
+    const f = await fixture(); expect(await verifyUrlMachinePeerHistory({ ...f.options, revisionBytes: undefined })).toMatchObject({ ok: true, revision: 1, replay: 'forbidden' });
+  });
+
+  it('keeps historical legacy bytes explicitly unavailable and archives only the next real publication', async () => {
+    const f = await fixture(false); await f.options.store.close();
+    const state = JSON.parse((await readFile(f.files[1]!)).toString());
+    state.format = 'url-machine-store-state/1'; delete state.archive;
+    await writeFile(f.files[1]!, encodeCanonicalJson(state, { maxBytes: 8_388_608, maxNodes: 524_288, maxDepth: 32 })); await unlink(f.files[4]!);
+    const store = await openUrlMachineStore(f.storeOptions, f.options.expectedIdentitySha256); if (!store) throw new Error('legacy reopen refused'); close.push(() => store.close());
+    expect(await verifyUrlMachinePeerHistory({ ...f.options, store, revisionBytes: undefined })).toEqual({ ok: false, code: 'revision-bytes-unavailable' });
+    const next = { ...f.rotated, revision: 3, revokedAt: new Date(NOW + 3000).toISOString() };
+    const publication = await publishUrlMachineLifecycle({ context: { ...f.options.context, now: NOW + 3000 }, binding: f.options.expectedHead.binding,
+      next: canon(next), expected: { revision: 2, sha256: sha256(canon(f.rotated)) } }, store);
+    expect(publication.ok).toBe(true);
+    if (!publication.ok) return;
+    const history = await readUrlMachineStoreHistory(store, f.record.clientId, publication.receipt, f.options.context.deadline);
+    expect(history?.revisions.map(value => value.revision)).toEqual([3]);
+    expect(await verifyUrlMachinePeerHistory({ ...f.options, store, expectedHead: publication.receipt, revisionBytes: undefined })).toEqual({ ok: false, code: 'revision-bytes-unavailable' });
+  });
+
+  it.each(['missing', 'mutated', 'extra-entry', 'orphan-file', 'relinked', 'interrupted-pack', 'coherent-drop', 'coherent-extra', 'coherent-mutation', 'reordered'] as const)('refuses %s archive without repair on reopen', async fault => {
+    const f = await fixture(); await f.options.store.close();
+    const archive = f.files[4]!, original = await readFile(archive);
+    if (fault === 'missing') await unlink(archive);
+    if (fault === 'mutated') await writeFile(archive, Buffer.concat([original.subarray(0, original.length - 1), Buffer.from(' ')]));
+    if (fault === 'extra-entry') {
+      const pack = JSON.parse(original.toString()); pack.entries.push(pack.entries[0]);
+      await writeFile(archive, JSON.stringify(pack));
+    }
+    if (fault === 'reordered') { const pack = JSON.parse(original.toString()); pack.entries.reverse(); await writeFile(archive, encodeUrlMachineArchive(pack)); }
+    if (fault === 'orphan-file') await writeFile(`${archive}.new-orphan`, original);
+    if (fault === 'relinked') await link(archive, path.join(f.storeOptions.protectedRoot, 'alias'));
+    if (fault === 'interrupted-pack') {
+      // A durable new pack without its state-pointer publication cannot open.
+      const pack = JSON.parse(original.toString()); pack.entries.pop();
+      await writeFile(archive, JSON.stringify(pack));
+    }
+    if (fault.startsWith('coherent-')) {
+      const pack = JSON.parse(original.toString());
+      if (fault === 'coherent-drop') pack.entries.shift();
+      if (fault === 'coherent-extra') pack.entries.push(pack.entries[0]);
+      if (fault === 'coherent-mutation') pack.entries[0].record.instances[0].verifier.processIdentitySha256 = id();
+      const bytes = encodeUrlMachineArchive(pack), state = JSON.parse(await readFile(f.files[1]!, 'utf8'));
+      state.archive = { ...state.archive, sha256: sha256(bytes), bytes: bytes.length, records: pack.entries.length };
+      await writeFile(archive, bytes);
+      await writeFile(f.files[1]!, encodeCanonicalJson(state, { maxBytes: 8_388_608, maxNodes: 524_288, maxDepth: 32 }));
+    }
+    expect(await openUrlMachineStore(f.storeOptions, f.options.expectedIdentitySha256)).toBeNull();
+    if (fault !== 'missing') expect(await readFile(archive)).not.toHaveLength(0);
+  });
+
+  it('refuses capacity before reservation while retaining room for client-wide terminal cleanup', async () => {
+    const f = await fixture(false); await f.options.store.close();
+    const state = JSON.parse((await readFile(f.files[1]!)).toString());
+    const pack = JSON.parse((await readFile(f.files[4]!)).toString());
+    const template = state.clients[0].audit[0];
+    let active = 1;
+    // Owned synthetic persisted state uses the actual writer schema and exact
+    // record encoder. Fill to the real byte/reservation boundary without
+    // repeatedly executing hundreds of unrelated setup transactions.
+    for (let ordinal = 1; ordinal < 256; ordinal++) {
+      const record: UrlMachineClientRecord = { ...f.record, clientId: id(), issuanceId: id(), runId: `run-${ordinal.toString(16).padStart(32, '0')}`,
+        instances: [{ ...f.record.instances[0]!, instanceId: id() }] };
+      const bytes = canon(record), next = identifyUrlMachineLifecycleRecord(record, sha256(bytes));
+      const witnessSha256 = id(), event = { ...template, runId: record.runId, next, neverIssuedSha256: witnessSha256 };
+      const head = { record: next, binding: event.binding, auditSha256: sha256(canon(event)) };
+      const entry = { clientId: record.clientId, revision: 1, sha256: next.sha256, record };
+      const proposed = encodeUrlMachineArchive({ ...pack, entries: [...pack.entries, entry] });
+      if (proposed.length + (active + 1) * 66_000 > 10_000_000 || pack.entries.length + active + 2 > 4096) break;
+      active++; pack.entries.push(entry);
+      state.clients.push({ clientId: record.clientId, witnessSha256, anchor: { kind: 'committed', head }, audit: [event] });
+      state.used.push(record.clientId, record.issuanceId, record.instances[0]!.instanceId);
+      state.runs.push({ runId: record.runId, clients: [record.clientId] });
+      await writeFile(path.join(path.dirname(f.files[3]!), `${record.clientId}.json`), bytes);
+      await writeFile(path.join(f.storeOptions.protectedRoot, `projection-${record.clientId}.json`), canon(next));
+    }
+    const archive = encodeUrlMachineArchive(pack);
+    expect(active).toBeGreaterThan(100); expect(archive.length + active * URL_MACHINE_ARCHIVE_LIMITS.terminalBytes).toBeLessThanOrEqual(URL_MACHINE_ARCHIVE_LIMITS.bytes);
+    state.archive = { ...state.archive, sha256: sha256(archive), bytes: archive.length, records: pack.entries.length };
+    await writeFile(f.files[4]!, archive);
+    await writeFile(f.files[1]!, encodeCanonicalJson(state, { maxBytes: 8_388_608, maxNodes: 524_288, maxDepth: 32 }));
+    const store = await openUrlMachineStore(f.storeOptions, f.options.expectedIdentitySha256); if (!store) throw new Error('capacity fixture refused'); close.push(() => store.close());
+    const slot = await store.allocateClient(f.options.context.deadline); if (!slot) throw new Error('capacity slot refused');
+    const context = { ...f.options.context, clientId: slot.clientId, runId: `run-${'e'.repeat(32)}`, now: NOW + 3000 };
+    const record: UrlMachineClientRecord = { ...f.record, clientId: slot.clientId, issuanceId: id(), runId: context.runId,
+      instances: [{ ...f.record.instances[0]!, instanceId: id() }] };
+    const before = await readFile(f.files[1]!);
+    expect((await publishUrlMachineLifecycle({ context, binding: f.options.expectedHead.binding, next: canon(record), expected: null }, store)).ok).toBe(false);
+    expect(await readFile(f.files[1]!)).toEqual(before);
+    expect((await readdir(f.storeOptions.protectedRoot)).includes('lock')).toBe(false);
+    const revoked = { ...f.rotated, revision: 3, revokedAt: new Date(NOW + 3000).toISOString() };
+    expect((await publishUrlMachineLifecycle({ context: { ...f.options.context, now: NOW + 3000 }, binding: f.options.expectedHead.binding,
+      next: canon(revoked), expected: { revision: 2, sha256: sha256(canon(f.rotated)) } }, store)).ok).toBe(true);
   });
 
   it('uses only the exact current canonical bytes when the requested revision is still the latest', async () => {

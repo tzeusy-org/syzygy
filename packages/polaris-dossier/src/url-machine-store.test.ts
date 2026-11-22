@@ -55,7 +55,7 @@ async function fixture(duration = 60_000) {
     const binding = { parentBindingSha256: id(), controllerSha256: id() };
     const publish = (next = record, expected: { revision: number; sha256: string } | null = null, adapter: UrlMachineStore = store!) =>
       publishUrlMachineLifecycle({ context: { ...context, now }, binding, next: canon(next), expected }, adapter);
-    return { allocated, context, record, publish, file: path.join(canonicalRoot, `${context.clientId}.json`),
+    return { allocated, context, record, binding, publish, file: path.join(canonicalRoot, `${context.clientId}.json`),
       projection: path.join(options.protectedRoot, `projection-${context.clientId}.json`) };
   };
   return { root, options, canonicalRoot, store: store!, allocate, tick: (instant: number) => { now = instant; }, revoke: () => { valid = false; } };
@@ -160,19 +160,56 @@ describe('protected URL machine lifecycle files', { timeout: 30_000 }, () => {
 
   it('preserves pending evidence and the unstealable lock after an interrupted transaction', async () => {
     const f = await fixture(), slot = await f.allocate();
-    const result = await f.store.exclusive(slot.context.clientId, f.options.deadline, async lease => {
-      const snapshot = await lease.read();
-      if (!snapshot) throw new Error('owned snapshot missing');
-      const expected = { canonicalSha256: null, projection: null, anchor: snapshot.anchor, audit: null };
-      expect(await lease.advance(expected, { kind: 'reserve', anchor: { kind: 'pending', clientId: slot.context.clientId, intentSha256: id() },
-        newIdentities: [slot.context.clientId, slot.record.issuanceId, slot.record.instances[0]!.instanceId],
-        newClient: { runId: slot.context.runId, limit: 16 } })).toBe(true);
-    });
-    expect(result).toBe(false);
+    const wrapped = { ...f.store, exclusive: (clientId, deadline, operation) => f.store.exclusive(clientId, deadline, lease => operation({ ...lease,
+      advance: async (expected, step) => {
+        const result = await lease.advance(expected, step);
+        if (step.kind === 'reserve' && result) throw new Error('owned simulated interruption');
+        return result;
+      },
+    })) } satisfies UrlMachineStore;
+    const result = await slot.publish(slot.record, null, wrapped);
+    expect(result.ok).toBe(false);
     expect((JSON.parse(await readFile(path.join(f.options.protectedRoot, 'state.json'), 'utf8')) as { used: string[] }).used)
       .toContain(slot.context.clientId);
     expect(await readdir(path.join(f.options.protectedRoot, 'lock'))).toEqual([]);
     expect(await openUrlMachineStore(f.options, f.store.identitySha256)).toBeNull();
+  });
+
+  it.each(['omitted-preflight', 'changed-intent', 'changed-bytes', 'changed-id-reservation', 'changed-run'] as const)('cannot bypass archive preflight with %s', async fault => {
+    const f = await fixture(), slot = await f.allocate();
+    const wrapped = { ...f.store, exclusive: (clientId, deadline, operation) => f.store.exclusive(clientId, deadline, lease => operation({ ...lease,
+      preflightCanonical: fault === 'omitted-preflight' ? undefined : lease.preflightCanonical,
+      advance: async (expected, step) => lease.advance(expected,
+        fault === 'changed-intent' && step.kind === 'reserve' ? { ...step, anchor: { ...step.anchor, intentSha256: id() } }
+        : fault === 'changed-id-reservation' && step.kind === 'reserve' ? { ...step, newIdentities: [slot.context.clientId, id(), id()] }
+        : fault === 'changed-run' && step.kind === 'reserve' && step.newClient !== null ? { ...step, newClient: { ...step.newClient, runId: `run-${'e'.repeat(32)}` } }
+        : fault === 'changed-bytes' && step.kind === 'publish' ? { ...step, canonical: canon({ ...slot.record, issuanceId: id() }) } : step),
+    })) } satisfies UrlMachineStore;
+    expect((await slot.publish(slot.record, null, wrapped)).ok).toBe(false);
+    await expect(readFile(slot.file)).rejects.toMatchObject({ code: 'ENOENT' });
+    const state = JSON.parse(await readFile(path.join(f.options.protectedRoot, 'state.json'), 'utf8'));
+    if (fault === 'changed-bytes') {
+      expect(state.used).toContain(slot.context.clientId); expect(state.clients[0].anchor.kind).toBe('pending');
+      expect(await openUrlMachineStore(f.options, f.store.identitySha256)).toBeNull();
+    } else {
+      expect(state.used).toEqual([]); expect(state.clients[0].anchor.kind).toBe('never-issued');
+      expect((await slot.publish()).ok).toBe(true);
+    }
+  });
+
+  it('retains pending evidence when the new pack reached disk but its state pointer did not', async () => {
+    const f = await fixture(), slot = await f.allocate();
+    const pack = path.join(f.options.protectedRoot, 'canonical-history.json');
+    const original = await readFile(pack);
+    filesystem.afterSync = async file => {
+      if (file === f.options.protectedRoot && !(await readFile(pack)).equals(original)) throw new Error('owned archive/state interruption');
+    };
+    expect((await slot.publish()).ok).toBe(false); filesystem.afterSync = undefined;
+    const state = JSON.parse(await readFile(path.join(f.options.protectedRoot, 'state.json'), 'utf8'));
+    expect(state.clients[0].anchor.kind).toBe('pending'); expect(state.clients[0].audit).toEqual([]);
+    expect(JSON.parse(await readFile(pack, 'utf8')).entries).toHaveLength(1);
+    expect(await openUrlMachineStore(f.options, f.store.identitySha256)).toBeNull();
+    expect(state.used).toContain(slot.context.clientId);
   });
 
   it('keeps globally consumed identifiers and the sixteen-client run cap across new adapters', async () => {
