@@ -12,6 +12,17 @@
 > cells — are preserved verbatim in git history at commit `9c43fc5`
 > (`git show 9c43fc5:.syzygy/governance/decisions/PENDING-OWNER-DECISIONS.md`).
 
+## Resolved on 2026-11-21 (P-119 — doctrine amendment D11 adopted)
+
+The owner adopted D11 in the Claude Code CLI on 2026-11-21, in the owner's
+words: "Adopt D11". The five edits are applied to `doctrine/security.md`;
+the record is row D11 of [`DOCTRINE-AMENDMENT-LOG.md`](DOCTRINE-AMENDMENT-LOG.md).
+The row as it stood in the register:
+
+| # | Decision | Class | Owning record |
+|---|---|---|---|
+| P-119 | Doctrine amendment **D11**: an agent session's own raw reads may reach the run's declared provider unscreened, disclosed on every run page; everything Syzygy itself sends, keeps or renders stays screened. It writes the owner's 2026-11-21 answer A on `secrets-raw-clone-to-provider` into SEC-2 and SEC-5. Adopt, amend or decline; until adopted, SEC-2 and SEC-5 stand as written | doctrine; secrets | `../contracts/candidates/doctrine-amendment-session-raw-reads-d11/PROPOSAL.md`; [`OWNER-DIRECTION-QUESTIONNAIRE-ANSWERS-2026-11-21.md`](OWNER-DIRECTION-QUESTIONNAIRE-ANSWERS-2026-11-21.md) |
+
 ## Triaged on 2026-11-21 (D10 FOLLOW-ON F-10: all 34 rows leave the owner register)
 
 Under doctrine VIS-4 as amended by D10 the owner decides four classes only.
