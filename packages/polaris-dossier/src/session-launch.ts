@@ -367,7 +367,12 @@ export async function launchRestrictedUrlSession(input: { readonly preparation: 
   let killTimer: ReturnType<typeof setTimeout> | undefined, endTimer: ReturnType<typeof setTimeout> | undefined;
   const signal = (name: NodeJS.Signals): void => { try { if (child.pid !== undefined) process.kill(-child.pid, name); } catch { /* Independent verification below. */ } };
   const stop = (why: UrlSessionLaunchOutcome['outcome']): void => {
-    if (finishedCapture || reason !== 'exited') return; reason = why; signal('SIGTERM');
+    if (finishedCapture || reason !== 'exited') return;
+    // Exit may already be known while the child's streams and process group
+    // are still closing. A cleanup request must preserve that terminal result.
+    if (why !== 'stopped' || !exited) reason = why;
+    if (endTimer !== undefined) return;
+    signal('SIGTERM');
     killTimer = setTimeout(() => signal('SIGKILL'), Math.min(250, limits.cleanupMilliseconds));
     endTimer = setTimeout(wake, limits.cleanupMilliseconds);
   };
@@ -382,11 +387,11 @@ export async function launchRestrictedUrlSession(input: { readonly preparation: 
   child.once('close', () => { closed = true; wake(); });
   let pendingSample: Promise<void> | undefined;
   const sample = setInterval(() => {
-    if (finishedCapture || pendingSample !== undefined || reason !== 'exited') return;
+    if (exited || finishedCapture || pendingSample !== undefined || reason !== 'exited') return;
     let sampleActive = true;
     const sampleBegan = performance.now();
     const checkSample = (): void => {
-      if (!sampleActive || finishedCapture || reason !== 'exited' || performance.now() - sampleBegan >= limits.sampleMilliseconds) throw refused();
+      if (!sampleActive || exited || finishedCapture || reason !== 'exited' || performance.now() - sampleBegan >= limits.sampleMilliseconds) throw refused();
     };
     pendingSample = bounded(async () => {
       // The walks share a deadline. Keep storage's earlier refusal and
@@ -404,7 +409,7 @@ export async function launchRestrictedUrlSession(input: { readonly preparation: 
         if (count > limits.processes) { stop('process-limit'); return; }
       }
       if (await state.current() !== true) stop('inspection-failed'); checkSample();
-    }, limits.sampleMilliseconds).catch(() => { if (!finishedCapture) stop('inspection-failed'); })
+    }, limits.sampleMilliseconds).catch(() => { if (!exited && !finishedCapture) stop('inspection-failed'); })
       .finally(() => { sampleActive = false; pendingSample = undefined; });
   }, limits.sampleMilliseconds);
   const wall = setTimeout(() => stop('wall-limit'), limits.milliseconds);

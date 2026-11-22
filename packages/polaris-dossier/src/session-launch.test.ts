@@ -31,10 +31,14 @@ import { urlSessionMcpSupportPath } from './url-runtime.js';
 import { URL_CLI_PROGRAM, URL_LAUNCH_LIMITS, launchRestrictedUrlSession, isUrlSessionProcess, prepareRestrictedUrlSession, restrictedSessionCliArgs, verifySupportedUrlCli, type UrlSessionLaunchOptions } from './session-launch.js';
 import { URL_SESSION_BWRAP, urlSessionBwrapArgs, urlSessionCommand, urlSessionViewFor } from './session-url-view.js';
 
-const nativeSpawns = vi.hoisted(() => ({ calls: (): readonly (readonly unknown[])[] => [] }));
+const nativeSpawns = vi.hoisted(() => ({
+  calls: (): readonly (readonly unknown[])[] => [],
+  latest: (): ReturnType<typeof spawn> | undefined => undefined,
+}));
 vi.mock('node:child_process', async importOriginal => {
   const actual = await importOriginal<typeof import('node:child_process')>();
   const observed = vi.fn(actual.spawn); nativeSpawns.calls = () => observed.mock.calls;
+  nativeSpawns.latest = () => observed.mock.results.at(-1)?.value as ReturnType<typeof spawn> | undefined;
   return { ...actual, spawn: observed };
 });
 
@@ -833,6 +837,20 @@ describe('prepared private CLI launch',()=>{
     expect(result).toMatchObject({outcome:'process-limit',toolTermination:'Unknown',pendingInvocations:null,betweenSamples:'Unknown'});
     expect(result.peakProcesses).toBeGreaterThan(1);await host.close();
   },15000);
+
+  it('preserves an observed failed exit when supervisor stop arrives before the pipes close', async () => {
+    const f = await launchFixture();
+    const preparation = await prepareRestrictedUrlSession(f.launch), host = await f.start();
+    const child = await launchRestrictedUrlSession({ preparation, host });
+    cleanup.push(child.stop);
+    const native = nativeSpawns.latest();
+    expect(native?.pid).toBe(child.pid);
+    const stoppedAtExit = new Promise<Awaited<typeof child.finished>>(resolve => {
+      native!.once('exit', () => resolve(child.stop()));
+    });
+    process.kill(-child.pid, 'SIGKILL');
+    expect(await stoppedAtExit).toMatchObject({ outcome: 'exited', signal: 'SIGKILL', groupTermination: 'confirmed' });
+  }, 15000);
 
   it('bounds concurrent process and storage reads and withholds both samples on timeout', async () => {
     const f = await launchFixture();
