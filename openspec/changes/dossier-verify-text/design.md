@@ -73,5 +73,5 @@ The reviewer also found no retained record for the "66 references missing" figur
 - **L3** A table's header row, the row above its separator, is not a claim; it is counted with the skipped lines.
 - **L4** A straight-quoted span inside a curly quotation is part of it. Backslash escapes are not interpreted; the disclosures say so.
 - **L6** The operator script refuses a text that is not a regular file, is over the command's bound or is not strict UTF-8, and a manifest whose policy blob id is not 40 hexadecimal characters.
-- **L7** The mutation record is re-run at `7107dc97b`, a commit on the branch, with a mutant for each corrected predicate.
+- **L7** The mutation record is re-run at `396a90b66`, a commit on the branch: 46 mutants, one for each corrected predicate among them, all killed. The earlier record attributed the linked-`--out` mutant to an unrelated test because the script left the last `verify-text.ts` mutant in place while it mutated `verify-text-run.ts`; the script now restores it first, and the mutant fails only its own test.
 - **L8** The annotated copy keeps each line's own terminator (LF, CRLF or CR) and closes in the text's first one.
