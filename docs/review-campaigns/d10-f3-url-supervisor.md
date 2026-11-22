@@ -2,7 +2,7 @@
 
 ## Patterns
 
-- `F3-(STAGED-MACHINE-PUBLICATION-SUCCESSOR|ORDERED-SCREEN-ENTRY|POST-AUDIT-PEER-DRAIN|RENEWAL-SOURCE-SAMPLES|STAGED-ALLOCATION|STAGED-ALLOCATION-INITIAL|PRIVATE-AUDIT-SETUP|PRIVATE-AUDIT-SETUP-INITIAL|CONCURRENT-INSPECTION|SCREEN-IMAGE-BRACKETING)-REVIEW-RAW\.md`
+- `F3-(STAGED-MACHINE-PUBLICATION-SUCCESSOR|ORDERED-SCREEN-ENTRY|POST-AUDIT-PEER-DRAIN|RENEWAL-SOURCE-SAMPLES|STAGED-ALLOCATION|STAGED-ALLOCATION-INITIAL|PRIVATE-AUDIT-SETUP|PRIVATE-AUDIT-SETUP-INITIAL|CONCURRENT-INSPECTION|SCREEN-IMAGE-BRACKETING|CURRENT-COVERAGE-RULE)-REVIEW-RAW\.md`
 
 ## What was under review
 
@@ -19,3 +19,5 @@
 [Observed] The resumed design inspection overlap source review records `PASS` (`F3-CONCURRENT-INSPECTION-REVIEW-RAW.md:1`) for the source at `27e83c50b`. The one-second sample and exact final authority recheck remain in force. A-91 records the adoption. Native acceptance was outside the source review.
 
 [Observed] The ordered screening image review records `PASS` (`F3-SCREEN-IMAGE-BRACKETING-REVIEW-RAW.md:1`) at `0a9680f98`. The held and named file checks remain in full before the worker starts. The test-only successor `9eb31ba04` preserves the old held inode while replacing the named path, isolating the recorded coverage residual. A-92 records the adoption.
+
+[Observed] The current coverage rule review records `PASS` (`F3-CURRENT-COVERAGE-RULE-REVIEW-RAW.md:1`) for source `30f160ec4`. The protected report verifier uses the producer's exact adopted rule ID and version and separately recomputes the comparison from authenticated inputs. A-95 records the adoption.
