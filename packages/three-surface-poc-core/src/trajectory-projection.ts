@@ -183,7 +183,7 @@ export function parseTrajectoryView(query: URLSearchParams): TrajectoryViewReque
     return { refused: 'trajectory-view-parameter', parameter: 'governing-intent', reason: 'unknown-value', allowed: ['unknown'] };
   }
   const page = query.get('page');
-  if (page !== null && !/^[1-9][0-9]{0,8}$/.test(page)) {
+  if (page !== null && !/^[1-9][0-9]*$/.test(page)) {
     return { refused: 'trajectory-view-parameter', parameter: 'page', reason: 'not-a-positive-integer', allowed: ['positive integer'] };
   }
   return { status: status as WorkItemStatus | null, governingIntent: intent === null ? null : 'unknown', page: page === null ? 1 : Number(page) };
@@ -200,6 +200,8 @@ function carriesGoverningIntentUnknown(item: WorkItemFact): boolean {
  * of `TRAJECTORY_PAGE_SIZE`. The answers and measures stay over every served
  * item; the counts say what this page renders and what it leaves out. A page
  * past the last is refused; a view with no match renders page 1 empty.
+ * Over an Unknown population a well-formed view renders the Unknown board:
+ * with no served item there is no view to page and no last page to pass.
  */
 export function projectTrajectoryView(
   base: TrajectoryProjection,

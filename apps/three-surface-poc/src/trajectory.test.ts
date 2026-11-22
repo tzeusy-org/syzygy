@@ -5,7 +5,7 @@ import { afterEach, describe, expect, it, vi } from 'vitest';
 
 import { BUTLERS_POC_SEEDS, buildPocModel, STATUS_TO_COLUMN, UNMARKED_RECORD_REASON, workerChangeVerificationId, type PocModel, type TestArtifactRecord } from '@syzygy/three-surface-poc-core';
 
-import { renderTrajectoryPage, TRAJECTORY_HUMAN_PATH, TRAJECTORY_TAILNET_PATH } from './trajectory.js';
+import { renderTrajectoryPage, renderTrajectoryRoute, TRAJECTORY_HUMAN_PATH, TRAJECTORY_TAILNET_PATH } from './trajectory.js';
 import { pocRoutes } from './routes.js';
 import { buildFixtureModel, fixtureRepoWithGit, fixtureWorkItemRow } from './test-model-fixture.js';
 
@@ -362,6 +362,27 @@ describe('Trajectory', () => {
     expect(reportedCard).toContain('That the tests ran, at this commit, on a clean working tree, with exit status 0, is the operator&#39;s report');
     expect(reportedCard).not.toContain('Verification: Verified');
     expect(reportedCard).not.toContain('epistemic-observed" data-parity-field="worker-change-verification"');
+
+    // syzygy-t3jk.18 review finding 1: with 210 newer non-closed items the
+    // worker-change bead leaves the default selection; the view page that
+    // holds it renders its card, badge and disclosure route, on both paths.
+    const crowded = [...rows, ...Array.from({ length: 210 }, (_, i) => ({ ...rows[0]!, id: `bu-newer-${String(i).padStart(3, '0')}`, updated_at: '2026-08-31T00:00:00Z' }))];
+    const crowdedModel = buildPocModel({
+      seeds: alternateSeeds, repoRoot, repositoryRevision: changedRevision, observerRevision: revision,
+      evaluation: { snapshot: 'butlers@verified', asOf: evaluationAsOf }, materializationRecord,
+      runWorkItemQuery: (_repoRoot, sql) => sql.includes('WHERE id LIKE') ? JSON.stringify(crowded) : JSON.stringify([{ revision: 'dolt-rev-2' }]),
+      testArtifactRecord: reported,
+    });
+    if (crowdedModel.trajectory.kind !== 'observed') throw new Error('unreachable');
+    expect(crowdedModel.trajectory.rendered.some((item) => item.id === 'bu-verified-1')).toBe(false);
+    for (const prefix of ['', '/butlers-syzygy']) {
+      const html = renderTrajectoryRoute(crowdedModel, prefix, undefined, new URLSearchParams('status=in_progress&page=1'));
+      if (typeof html !== 'string') throw new Error('refused');
+      const card = cardBody(html, 'bu-verified-1');
+      expect(card).toContain('Verification: Not verified by Syzygy — operator-reported (report-fact)');
+      expect(card).toContain(`data-unknown-disclosure="${workerChangeVerificationId('bu-verified-1')}" data-unknown-reason="execution-blocked"`);
+      expect(card).toContain('data-unknown-route="');
+    }
     },
   );
 
@@ -1171,6 +1192,7 @@ describe('Trajectory views: every served item reachable, by state and page (T8, 
     const model = buildFixtureModel(cleanups, { workItemRows: viewRows() });
     const cases: readonly (readonly [string, string, string])[] = [
       ['type=bug', 'type', 'unknown-parameter'],
+      ['status=open&status=closed', 'status', 'repeated-parameter'],
       ['status=done', 'status', 'unknown-value'],
       ['page=0', 'page', 'not-a-positive-integer'],
       ['page=1.5', 'page', 'not-a-positive-integer'],

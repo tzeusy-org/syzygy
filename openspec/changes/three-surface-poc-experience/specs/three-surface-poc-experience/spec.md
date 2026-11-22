@@ -1035,7 +1035,9 @@ size, whose scope statement names the page, the page count and the matching
 count. No parameter SHALL give the default selection. Any other name, a
 repeated name, a value outside its set, a page that is not a positive
 integer, or a page past the last SHALL be refused with HTTP 400 naming the
-parameter, the reason and the allowed set, never ignored. Every page SHALL
+parameter, the reason and the allowed set, never ignored. When the
+work-item population is Unknown, a well-formed view SHALL render the
+Unknown board, since no served item gives a view or a last page. Every page SHALL
 link, by real anchors outside any collapsed element and reachable by
 keyboard, to the default selection, every item by id, each status and the
 governing-intent Unknown with their whole-population counts, and the

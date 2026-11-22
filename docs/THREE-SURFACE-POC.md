@@ -241,9 +241,11 @@ set. Every page carries real links to the default selection, every item by
 id, each status and the governing-intent Unknown with their whole-population
 counts, and the previous and next page. The machine answer takes no
 parameter: `trajectory.narrowing` declares the parameter set, page size and
-order, so a checker recomputes any page from `workItems.items`. The largest
-fixture page (250 cards) measured 426,747 bytes, about 1,535 bytes per card,
-under half the 2 MB human ceiling.
+order, so a checker recomputes any page from `workItems.items`. When the
+work-item population is Unknown, a well-formed view renders the Unknown
+board. The largest page of the 640-item test fixture (250 fixture cards,
+none with a worker-change badge) measured about 427 KB, about 1.5 KB per
+card, under half the 2 MB human ceiling.
 
 **Steps.**
 

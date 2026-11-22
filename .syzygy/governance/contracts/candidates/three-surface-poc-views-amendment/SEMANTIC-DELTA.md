@@ -52,9 +52,12 @@ order (`trajectory.narrowing`).
   every page.
 - `GET /api/poc` takes no parameter: its response identity and ETag are
   unchanged in form.
-- No new Unknown subject: cards outside the default selection carry the
-  card-mark reference form `syzygy-t3jk.15` settled, which needs no
-  per-item machine twin; the unknown-route sweep gains no rule.
+- No new kind of Unknown subject: the governing-intent and verification
+  card marks keep the board-level reference form `syzygy-t3jk.15`
+  settled. The one per-item twin that remains, the worker-change
+  verification disclosure, now exists whenever its bead is a served item
+  (it used to need the default selection to hold it), since a view page
+  may render that card.
 - RFC8-23's other rows (pooling, ingest rejection, warrant edits,
   orphaned work) stay Unknown.
 
@@ -66,15 +69,19 @@ order (`trajectory.narrowing`).
   so a checker recomputes any page with its own formula (the form
   POC-REQ-041's oracle uses). Parameterizing `/api/poc` would have to vary
   its response identity and ETag per view.
-- **Decision 2, per-item Unknown twins.** None are added for cards
-  outside the default selection; the card mark refers to the one
-  board-level disclosure, which exists on every view.
+- **Decision 2, per-item Unknown twins.** None are added for the card
+  marks outside the default selection; each refers to its one
+  board-level disclosure, which exists on every view. The worker-change
+  verification twin is the exception: it is derived over served items,
+  not the default selection, so its card renders on any view page.
 - **Ascending id, not recency,** orders a view: stable across
   observations of one population and recomputable without the selection's
   time ranking.
-- **Page size 250** keeps the largest fixture page at 426,747 bytes
-  (about 1,535 bytes per card), under half of the 2,097,152-byte human
-  ceiling.
+- **Page size 250** keeps the largest page of the 640-item test fixture
+  at about 427 KB (about 1.5 KB per fixture card, none with a
+  worker-change badge), under half of the 2,097,152-byte human ceiling.
+- **An Unknown population** renders the Unknown board for a well-formed
+  view: with no served item there is no view and no last page to refuse.
 - **The cross-surface link census** in `surface-routes.test.ts` excludes
   `.view-nav` as it excludes `.site-nav`: its links go to the same surface.
 - **Combined parameters** intersect (`status` with `governing-intent`);
@@ -85,7 +92,9 @@ order (`trajectory.narrowing`).
 `trajectory.narrowing` on the observed projection: `parameters`
 (`status`, `governing-intent`, `page`), `pageSize`, `order`, `view` (null
 on the served default; a view's request, `matching` and `pageCount` on a
-rendered view).
+rendered view). `unknownSubjects` carries the worker-change verification
+twin whenever its bead is a served item, also when the default selection
+leaves it out.
 
 ## Warrant
 
@@ -159,10 +168,10 @@ index 24c246f1f..8cb59387b 100644
  
  **Amendment disclosure — the RFC1-26 closure row (ruling P-75 Q3).**
 diff --git a/openspec/changes/three-surface-poc-experience/specs/three-surface-poc-experience/spec.md b/openspec/changes/three-surface-poc-experience/specs/three-surface-poc-experience/spec.md
-index 653563bd5..9eaf3e8a9 100644
+index 653563bd5..18df480f2 100644
 --- a/openspec/changes/three-surface-poc-experience/specs/three-surface-poc-experience/spec.md
 +++ b/openspec/changes/three-surface-poc-experience/specs/three-surface-poc-experience/spec.md
-@@ -1027,17 +1027,49 @@ Group: Trajectory. Form: **invariant**.
+@@ -1027,17 +1027,51 @@ Group: Trajectory. Form: **invariant**.
  population it renders (its selection rule) and the counts inside and outside
  that selection, so an excluded-item population is never silently invisible.
 -
@@ -176,7 +185,9 @@ index 653563bd5..9eaf3e8a9 100644
 +count. No parameter SHALL give the default selection. Any other name, a
 +repeated name, a value outside its set, a page that is not a positive
 +integer, or a page past the last SHALL be refused with HTTP 400 naming the
-+parameter, the reason and the allowed set, never ignored. Every page SHALL
++parameter, the reason and the allowed set, never ignored. When the
++work-item population is Unknown, a well-formed view SHALL render the
++Unknown board, since no served item gives a view or a last page. Every page SHALL
 +link, by real anchors outside any collapsed element and reachable by
 +keyboard, to the default selection, every item by id, each status and the
 +governing-intent Unknown with their whole-population counts, and the
@@ -219,7 +230,7 @@ index 653563bd5..9eaf3e8a9 100644
 +  or a page the machine answer cannot reproduce.
  
  #### Scenario: Bounded board over a large history
-@@ -1048,9 +1080,16 @@ that selection, so an excluded-item population is never silently invisible.
+@@ -1048,9 +1082,16 @@ that selection, so an excluded-item population is never silently invisible.
    are outside it, and the three numbers reconcile
  
 +#### Scenario: Every item reachable by state and page
@@ -238,3 +249,35 @@ index 653563bd5..9eaf3e8a9 100644
    policies: []
    decisions: [POC-DIR-2026-08-30]
 ````
+
+## Dispositions
+
+Review R-T8-VIEWS-1 (`docs/reviews/R-T8-VIEWS-1-RAW.md`), verdict
+`REVISE` over commit `c5e0a0dcd`. One round, not gating (D13); each
+finding repaired once in the commit after it.
+
+1. **Blocking: a view page holding the worker-change item threw.**
+   Taken. `deriveUnknownSubjects` now derives the worker-change
+   verification twin whenever the bead is a served item, not only when
+   the default selection holds it. Decision 2 and "What explicitly does
+   NOT change" reworded. New test: 210 newer items push the worker-change
+   bead out of the default selection, and its `status=in_progress` page
+   renders the card, badge, disclosure and route on the direct and the
+   tailnet path. The old condition fails that test (2 failed).
+2. **Should-fix: views over an Unknown population were silently
+   ignored.** Taken as a declared rule: POC-REQ-042 now says a
+   well-formed view over an Unknown population renders the Unknown
+   board. Core test added.
+3. **Note: a page of ten or more digits got the wrong reason.** Taken.
+   The page grammar accepts any length, and `page=99999999999` is
+   refused as `page-past-end` (core test).
+4. **Note: the size figure drifts and was measured on fixture cards.**
+   Taken. The docs and the delta now say about 427 KB on the 640-item
+   fixture's cards, none with a worker-change badge.
+5. **Note: the `.view-nav` census exclusion is broader than needed.**
+   No change. The route test already pins the nav's whole href list on
+   both paths, so a cross-surface link added there fails it.
+6. **Note: keyboard reach on the direct path only; route refusals omit
+   the repeated name.** Taken. The browser test runs on both mount
+   prefixes, and the route cases include `status=open&status=closed`.
+7. **Note: parity holds.** No change needed.

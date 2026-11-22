@@ -72,8 +72,15 @@ describe('Trajectory views: narrowing by state, with paging (POC-REQ-042)', () =
     for (const page of ['0', '-1', '1.5', '01', 'two', '', '1e3']) {
       expect(refusal(`page=${page}`), page).toEqual({ refused: 'trajectory-view-parameter', parameter: 'page', reason: 'not-a-positive-integer', allowed: ['positive integer'] });
     }
+    // A positive integer of any length is a page; past the last it is refused as such.
+    expect(view(fixture(), 'page=99999999999')).toEqual({ refused: 'trajectory-view-parameter', parameter: 'page', reason: 'page-past-end', allowed: ['1 to 3'] });
     expect(view(fixture(), 'page=4')).toEqual({ refused: 'trajectory-view-parameter', parameter: 'page', reason: 'page-past-end', allowed: ['1 to 3'] });
     expect(view(fixture(), 'status=open&page=2')).toEqual({ refused: 'trajectory-view-parameter', parameter: 'page', reason: 'page-past-end', allowed: ['1 to 1'] });
+  });
+
+  it('renders the Unknown board for a well-formed view over an Unknown population', () => {
+    const unknownBase = projectTrajectory({ kind: 'unknown', reason: 'db unreachable' }, { nonClosedLimit: 200, recentClosedWindow: 50 });
+    expect(projectTrajectoryView(unknownBase, { kind: 'unknown', reason: 'db unreachable' }, { status: 'open', governingIntent: null, page: 7 })).toBe(unknownBase);
   });
 
   it('puts every served item on exactly one page of the unnarrowed view, in ascending id (640 items, 3 pages)', () => {

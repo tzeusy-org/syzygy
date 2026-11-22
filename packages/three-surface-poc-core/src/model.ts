@@ -346,7 +346,10 @@ function deriveUnknownSubjects(input: UnknownSubjectInputs): readonly PocUnknown
       }
     }
     const change = input.workerChange;
-    if (change.kind === 'observed' && input.trajectory.rendered.some((item) => item.id === change.beadId)) {
+    // syzygy-t3jk.18: a card renders on the default selection or on the
+    // view page that holds it (POC-REQ-042), so the twin exists whenever
+    // the bead is a served item, not only when the default selection holds it.
+    if (change.kind === 'observed' && input.workItems.kind === 'observed' && input.workItems.items.some((item) => item.id === change.beadId)) {
       const verification = input.testArtifactVerification;
       if (verification.kind === 'unknown') add(workerChangeVerificationId(change.beadId), verification.reason, PRODUCER_UNKNOWN_REASONS.testArtifact);
       else if (verification.kind === 'reported' && input.governingIntentId !== null) {
