@@ -1,0 +1,37 @@
+{
+  "subjectCommit": "0d5afdc66ddff9ed6fd2b6f21ca2f06766d76aa1",
+  "cleanClone": "/home/orca/.tmp/syzygy-beads-looper-20261114-54ebc9f1/d10-f3-final-verification",
+  "commands": [
+    {
+      "command": "npm run check",
+      "exit": 0,
+      "observed": "Typecheck passed; 242 unit files passed, 5887 cases passed, 1 skipped / 5888 total; unit duration 43.25s."
+    },
+    {
+      "command": "python3 scripts/check_governance.py",
+      "exit": 0,
+      "observed": "22 OK, 16 WARN, 0 FAIL / 38 checks; warnings retained verbatim."
+    },
+    {
+      "command": "npm run test:tiers",
+      "exit": 0,
+      "observed": "unit242 integration136 e2e29 live3 =410; runner census399 root +11 system =410."
+    }
+  ],
+  "testDeltaBase": "25b192bc0",
+  "files": [
+    {
+      "path": "f3-check-0d5afdc66.log",
+      "sha256": "f9fc6e447bb3b30cf316599b5db2312867fc30390e664f77f9da18a6d8a6d2b5"
+    },
+    {
+      "path": "f3-governance-0d5afdc66.log",
+      "sha256": "e80525c59732c10913864822cfea7e3d6311d882a0028e49a6121c6a5ed9122e"
+    },
+    {
+      "path": "f3-test-delta-0d5afdc66.json",
+      "sha256": "69a039252d585ad30c617594624559d51b4a084b5f82bd250dcb87e74409080e"
+    }
+  ],
+  "limit": "Checkpoint validation; final check:all and exact canonical battery still pending. Native recovery is not covered by this unit pass."
+}
