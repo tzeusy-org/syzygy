@@ -6,6 +6,7 @@ import { sha256 } from '@syzygy/support';
 import { buildComposedRuntime, prepareComposedRun } from './url-run-composed.testkit.js';
 import { draft, inventory, fidelityVerdict, designVerdict } from './full-run.testkit.js';
 import { closeRun } from './close.js';
+import { RUN_LAYOUT } from './state-directory.js';
 import { createCredentialProbe, credentialListFromEnv } from './credential-probe.js';
 import { runPolarisCli, runUrlSupervisorLoop, type SupervisorState } from './polaris.js';
 import { openUrlSupervisorStop, readUrlSupervisorState, requestUrlSupervisorStop, writeUrlSupervisorState } from './url-supervisor-state.js';
@@ -49,7 +50,7 @@ vi.mock('./session-relay.js', async importOriginal => {
     const ports = args[2];
     return actual.sessionRelayTestPort(selected)(args[0], args[1], { ...ports,
       current: async () => {
-        const barrier = settledProviderRoles.has(args[1].binding.role) ? finalResponseDelivery.wait : null;
+        const barrier = args[1].binding.role !== 'design' && settledProviderRoles.has(args[1].binding.role) ? finalResponseDelivery.wait : null;
         if (barrier === null) return ports.current();
         if (!(await ports.current())) return false;
         // This post-audit guard is outside machine-store mediation. Holding an
@@ -148,22 +149,53 @@ async function start(f: Fixture, failures: string[], onFailure: (reason: string)
 describe('composed URL run with actual role processes', { timeout: 360_000 }, () => {
   // The stop variant controls callback scheduling at one captured cut; it does
   // not claim that arbitrary practical stops have complete provider exchanges.
-  it.each(['complete', 'delivery-stop', 'stop-resume'] as const)('runs the genuine production pipeline to %s', async scenario => {
-    const cut = scenario !== 'complete', resumeAfterStop = scenario === 'stop-resume';
+  it.each(['complete', 'delivery-stop', 'stop-resume', 'eligible-stop-resume'] as const)('runs the genuine production pipeline to %s', async scenario => {
+    const eligibleStop = scenario === 'eligible-stop-resume';
+    const cut = scenario === 'delivery-stop' || scenario === 'stop-resume';
+    const stoppingCut = cut || eligibleStop, resumeAfterStop = scenario === 'stop-resume' || eligibleStop;
     const resumeChecks: unknown[] = [];
     let releaseFinalResponses!: () => void;
-    if (cut) finalResponseDelivery.wait = new Promise<void>(resolve => { releaseFinalResponses = resolve; });
+    if (stoppingCut) finalResponseDelivery.wait = new Promise<void>(resolve => { releaseFinalResponses = resolve; });
     let finishProviders!: () => void;
     const providerFinish = new Promise<void>(resolve => { finishProviders = resolve; });
-    const finalResponse: (() => Promise<ScriptCall>)[] = cut ? [async () => {
-      await providerFinish; return { type: 'text', text: 'OWN ROLE COMPLETE AT CONFIRMED DELIVERY STOP' };
+    const finalResponse: (() => Promise<ScriptCall>)[] = stoppingCut ? [async () => {
+      await providerFinish; return { type: 'text', text: 'OWN ROLE COMPLETE AT CONTROLLED STOP' };
     }] : [];
+    const settleOrdinaryResponses = async () => {
+      finishProviders();
+      const ordinary = ['author', 'fidelity', 'inventory'];
+      const until = performance.now() + 5_000;
+      while (!ordinary.every(role => settledProviderRoles.has(role)) && performance.now() < until)
+        await new Promise(resolve => setTimeout(resolve, 5));
+      expect(ordinary.filter(role => settledProviderRoles.has(role))).toEqual(ordinary);
+    };
+    const liveFinals: sessionAudit.UrlDesignRenderContinuation[] = [], coldFinals: sessionAudit.UrlDesignRenderContinuation[] = [];
+    let finalProductAssertions = 0, finalSiteBeforeStop = -1;
+    if (eligibleStop) {
+      const assertFinal = sessionAudit.assertUrlFinalDesignProduct;
+      vi.spyOn(sessionAudit, 'assertUrlFinalDesignProduct').mockImplementation((...args) => { assertFinal(...args); finalProductAssertions++; });
+      const recoverFinal = sessionAudit.recoverUrlDesignRenderContinuation;
+      vi.spyOn(sessionAudit, 'recoverUrlDesignRenderContinuation').mockImplementation(async input => {
+        const result = await recoverFinal(input);
+        resumeChecks.push({ phase: 'cold-final-factory', issued: result !== null });
+        expect(result).not.toBeNull();
+        sessionAudit.assertUrlDesignRenderContinuationCurrent(result!);
+        expect(() => sessionAudit.assertUrlDesignRenderContinuationCurrent({ ...result! })).toThrow();
+        const priorIds = new Set(liveFinals[0]!.original.parents.map(parent => parent.id));
+        const freshIds = result!.original.parents.filter(parent => !priorIds.has(parent.id));
+        expect(freshIds.length).toBeGreaterThan(0);
+        expect(result!.original.semanticParentsSha256).toBe(liveFinals[0]!.original.semanticParentsSha256);
+        expect(result!.original.semanticInputsSha256).toBe(liveFinals[0]!.original.semanticInputsSha256);
+        coldFinals.push(result!);
+        return result;
+      });
+    }
     let delivered: sessionAudit.UrlDesignDeliveryView | undefined;
     let expectedPlan: OrderedDesignPlan | undefined;
-    const beginOrdered = vi.fn();
+    const beginOrdered = vi.fn(), resumedBegins = vi.fn();
     const createAudit = sessionAudit.createUrlSessionAudit;
     let cutTaken = false, resumeGuardsChecked = false;
-    if (cut) vi.spyOn(sessionAudit, 'createUrlSessionAudit').mockImplementation(async options => {
+    if (stoppingCut) vi.spyOn(sessionAudit, 'createUrlSessionAudit').mockImplementation(async options => {
       if (cutTaken && resumeAfterStop && !resumeGuardsChecked) {
         // Exercise the exact callback supplied by the public resumed producer,
         // while its genuine consumed claim is held and before any audit write.
@@ -183,36 +215,38 @@ describe('composed URL run with actual role processes', { timeout: 360_000 }, ()
         resumeGuardsChecked = true;
         resumeChecks.push({ phase: 'resumed-guards', policyWithdrawal: 'refused', claimWithdrawal: 'refused' });
       }
+      const resumedAudit = cutTaken;
       const actual = await createAudit(options);
-      if (!actual.ok || cutTaken) return actual;
+      if (!actual.ok) return actual;
       return { ...actual,
-        beginOrderedDesignAudit: (...args) => { beginOrdered(); return actual.beginOrderedDesignAudit(...args); },
+        beginOrderedDesignAudit: (...args) => { (resumedAudit ? resumedBegins : beginOrdered)(); return actual.beginOrderedDesignAudit(...args); },
         commitDesignDelivery: async (...args) => {
           // The actual issuer confirms the delivery before this interruption.
           // No writer, lease, receipt or history is synthesized by the test.
           const view = await actual.commitDesignDelivery(...args);
+          if (resumedAudit) return view;
           const profile = f.plans.find(plan => plan.role === 'design')!.profile;
           if (!isOrderedDesignSessionProfile(profile)) throw new Error('owned ordered profile absent');
           expectedPlan = planOrderedDesignBytes({ ...orderedDesignPlanInputForDelivery(profile, view.receipt,
             args[0].expectedProduct, f.commit, f.deadline), envelope: view.view });
-          delivered = view; cutTaken = true;
-          // Finish the provider exchanges already in flight before closing their
-          // native roles. An incomplete exchange must remain a cold refusal.
-          finishProviders();
-          try {
-            const until = performance.now() + 5_000;
-            while (settledProviderRoles.size < 3 && performance.now() < until) await new Promise(resolve => setTimeout(resolve, 5));
-            expect([...settledProviderRoles].sort()).toEqual(['author', 'fidelity', 'inventory']);
-            // Begin the actual stop before releasing the guard callbacks. They
-            // must observe its revoked authority rather than forward afterward.
-            if (resumeAfterStop) requestUrlSupervisorStop(stateRoot, state);
-            void controller.stop().catch(() => {});
-          } finally { releaseFinalResponses(); }
+          delivered = view;
+          if (!cut) return view;
+          cutTaken = true;
+          // Complete the already observed ordinary exchanges, then begin the
+          // real stop before allowing their final delivery guards to recheck.
+          await settleOrdinaryResponses();
+          void beginOwnedStop().catch(() => {});
           throw new Error('owned interruption after confirmed design delivery');
         },
       };
     });
     const f = await prepareComposedRun(runtime, resumeAfterStop ? { hostRoot: recoveryHost.root } : undefined); cleanup.push(f.close);
+    const writeEvidence = async (result: Record<string, unknown>) => {
+      const file = process.env['SYZYGY_F3_NATIVE_EVIDENCE_FILE'];
+      if (file !== undefined) await fs.writeFile(file, JSON.stringify({ scenario, inputTreeSha256: runtime.inputTreeSha256,
+        profileRegistrySha256: runtime.profileRegistrySha256,
+        profiles: f.plans.map(plan => ({ role: plan.role, id: plan.profile.id, sha256: plan.profile.digest })), ...result }, null, 2));
+    };
     const session = (role: string) => f.plans.find(plan => plan.role === role)!.profile.input.sessionId;
     const sourceReads = (role: string) => ['src/kestrel.c', 'docs/notes.txt'].map((file, index) => tool(`source_${role === 'author' ? 1 : 2}_${index}`, 'source_read', { path: file }));
     const author = scripted('author', [tool('brief', 'artifact_read', { path: 'brief.md' }), tool('schema', 'artifact_read', { path: 'draft.schema.json' }),
@@ -278,10 +312,37 @@ describe('composed URL run with actual role processes', { timeout: 360_000 }, ()
       }
       throw new Error(JSON.stringify({ ownStartFailure: failures, relayRoles, audit }));
     }); cleanup.push(controller.stop);
+    function beginOwnedStop() {
+      try {
+        if (resumeAfterStop) requestUrlSupervisorStop(stateRoot, state);
+        return controller.stop();
+      } finally { releaseFinalResponses(); }
+    }
+    const observedRuntime: UrlRunSessions = !eligibleStop ? controller : { ...controller,
+      prepareFinalRender: async (...args) => {
+        const proof = await controller.prepareFinalRender(...args);
+        if (proof !== null) liveFinals.push(proof);
+        return proof;
+      },
+      stop: async () => {
+        if (cutTaken) return controller.stop();
+        // This is the production cleanup entry after final render/reproduction,
+        // before its stop decision and write-once execution record.
+        expect(liveFinals).toHaveLength(2);
+        expect(finalProductAssertions).toBe(3);
+        expect(await fs.stat(path.join(f.run, RUN_LAYOUT.record)).then(() => true, () => false)).toBe(false);
+        for (const entry of await fs.readdir(path.join(f.run, RUN_LAYOUT.site)))
+          if (/^(?:0|[1-9][0-9]*)$/u.test(entry)) finalSiteBeforeStop = Math.max(finalSiteBeforeStop, Number(entry));
+        expect(finalSiteBeforeStop).toBeGreaterThan(state.siteFor['0']!);
+        await settleOrdinaryResponses();
+        cutTaken = true;
+        return beginOwnedStop();
+      },
+    };
     const loop = runUrlSupervisorLoop(stateRoot, f.ports, state, { event: message => events.push(message), draw: lines => draws.push([...lines]) }, {
       prepared: { record: f.record, roles: f.plans, effectiveDeclaration: f.effectiveDeclaration, screen: f.screen, renderer: f.renderer, origins: f.origins,
         current: f.current, openReader: f.openReader, directories: f.directories, auditDirectory: f.hidden, sourceStore: 'owned-loose' },
-      artifacts: f.artifacts, runtime: controller, stop,
+      artifacts: f.artifacts, runtime: observedRuntime, stop,
     });
     author.allow();
     try {
@@ -298,19 +359,26 @@ describe('composed URL run with actual role processes', { timeout: 360_000 }, ()
       while (!state.fidelityDeliveredPairs?.includes('0/0') && failures.length === 0 && state.stopped === undefined && performance.now() < packetUntil)
         await new Promise(resolve => setTimeout(resolve, 250));
       fidelity.allow();
-      if (cut) {
+      if (stoppingCut) {
         expect(await loop).toBe(1);
         const stopped = await controller.stop();
         expect(delivered).toBeDefined();
         expect(expectedPlan).toBeDefined();
-        expect(beginOrdered).not.toHaveBeenCalled();
-        expect(stopped.audit).toMatchObject({ closed: true, poisoned: false, captured: { 'design-delivery': 1, 'design-ordered': 0 } });
-        expect(stopped.closedAuditHistory?.ordered).toEqual([{
-          profileInput: f.plans.find(plan => plan.role === 'design')!.profile.input,
-          plan: expectedPlan, principal: f.record.declared.operator,
-          scope: stopped.closedAuditHistory!.declarations.design.scope,
-          receipt: delivered!.receipt, disposition: { kind: 'stopped', tip: null },
-        }]);
+        if (cut) {
+          expect(beginOrdered).not.toHaveBeenCalled();
+          expect(stopped.audit).toMatchObject({ closed: true, poisoned: false, captured: { 'design-delivery': 1, 'design-ordered': 0 } });
+          expect(stopped.closedAuditHistory?.ordered).toEqual([{
+            profileInput: f.plans.find(plan => plan.role === 'design')!.profile.input,
+            plan: expectedPlan, principal: f.record.declared.operator,
+            scope: stopped.closedAuditHistory!.declarations.design.scope,
+            receipt: delivered!.receipt, disposition: { kind: 'stopped', tip: null },
+          }]);
+        } else {
+          expect(beginOrdered).toHaveBeenCalledTimes(1);
+          expect(stopped.audit).toMatchObject({ closed: true, poisoned: false, captured: { 'design-delivery': 1, 'ordered-design-verdict': 1 } });
+          expect(stopped.closedAuditHistory?.ordered).toHaveLength(1);
+          expect(stopped.closedAuditHistory!.ordered![0]).toMatchObject({ plan: expectedPlan, receipt: delivered!.receipt, disposition: { kind: 'eligible' } });
+        }
         expect(stopped.closedMachineHistory).toBeDefined();
         const sealed = stopped.closedMachineHistory!;
         const machine = await reconstructColdUrlRunMachineHistory({
@@ -342,23 +410,25 @@ describe('composed URL run with actual role processes', { timeout: 360_000 }, ()
         const verified = await verifyUrlSessionAuditHistory(options);
         expect(verified, 'the closed full audit must accept the confirmed stopped delivery').toMatchObject({ authorization: 'none', replay: 'forbidden', completeness: 'Unknown', capturedHelperLaunches: 3 });
         expect(readVerifiedUrlAuditLaunches(verified)?.ordered).toEqual(stopped.closedAuditHistory!.ordered);
-        expect(readVerifiedUrlAuditLaunches(verified)?.ordered[0]!.disposition).toEqual({ kind: 'stopped', tip: null });
+        if (cut) expect(readVerifiedUrlAuditLaunches(verified)?.ordered[0]!.disposition).toEqual({ kind: 'stopped', tip: null });
         const rows = (await fs.readFile(path.join(f.hidden, 'sessions-design.jsonl'), 'utf8')).trim().split('\n')
           .map(line => JSON.parse(line)).filter(row => ['design-delivery', 'design-ordered', 'ordered-design-verdict'].includes(row.event.kind));
-        expect(rows.map(row => row.event.kind)).toEqual(['design-delivery']);
+        if (cut) expect(rows.map(row => row.event.kind)).toEqual(['design-delivery']);
         const coldOrdered = verifyColdOrderedDesignAuditHistory({ rows, attempts: stopped.closedAuditHistory!.ordered!,
           profileSha256: f.plans.find(plan => plan.role === 'design')!.profile.digest, firstEpoch: 1,
           subject: { project: 'project:syzygy', pin: f.commit, principal: f.record.declared.operator,
             deadline: new Date(f.deadline).toISOString() }, asOf: Date.now() });
-        expect(coldOrdered, 'a delivery without an ordered prefix must remain stopped and noncounting').toMatchObject({ authorization: 'none', replay: 'forbidden',
-          attempts: [{ epoch: 1, disposition: 'stopped', recordCount: 0 }] });
+        expect(coldOrdered).toMatchObject({ authorization: 'none', replay: 'forbidden',
+          attempts: [{ epoch: 1, disposition: eligibleStop ? 'eligible' : 'stopped', ...(cut ? { recordCount: 0 } : {}) }] });
         expect(await verifyUrlSessionAuditHistory({ ...options, deadline: f.deadline + 1 })).toBeNull();
         expect(await verifyUrlSessionAuditHistory({ ...options, deadline: undefined })).toBeNull();
         if (resumeAfterStop) {
           expect(events.at(-1)).toBe('run ended: operator stop requested, checked history retained');
           expect(stopped.failure).toBeNull();
           expect(stopped.budget.pendingRoles).toEqual([]);
-          expect(design.count()).toBe(0);
+          if (cut) expect(design.count()).toBe(0);
+          const launchesBeforeResume = [...relayRoles];
+          const forwardsBeforeResume = [author.count(), inv.count(), fidelity.count(), design.count()];
           const oldDesignPid = stopped.roles.find(role => role.role === 'design')!.pid;
           const verifiedCuts: Awaited<ReturnType<typeof recovery.verifyStoppedUrlRun>>[] = [];
           const verify = recovery.verifyStoppedUrlRun, claim = recovery.claimStoppedUrlRun;
@@ -375,7 +445,7 @@ describe('composed URL run with actual role processes', { timeout: 360_000 }, ()
             resumeChecks.push({ phase: 'claim', exactCut: claimedExactCut, current: result?.current() });
             return result;
           });
-          designRound = 2;
+          if (cut) designRound = 2;
           vi.stubEnv('CLAUDE_CODE_OAUTH_TOKEN', undefined);
           vi.stubEnv('ANTHROPIC_API_KEY', 'OWN_SYNTHETIC_COMPOSED_CREDENTIAL');
           const exit = await runPolarisCli(['--supervise', '--resume', f.run, '--state-root', stateRoot], f.ports);
@@ -392,13 +462,30 @@ describe('composed URL run with actual role processes', { timeout: 360_000 }, ()
             roles: { role: string; pid: number | 'Unknown' }[]; historical: unknown } };
           expect(execution.format).toBe('polaris-dossier-execution-record/2');
           expect(execution.supervisorCapture.historical).toBeDefined();
-          const fresh = execution.supervisorCapture.roles.find(role => role.role === 'design')!;
-          expect(typeof fresh.pid).toBe('number'); expect(fresh.pid).not.toBe(oldDesignPid);
-          expect(execution.supervisorCapture.roles.filter(role => role.role !== 'design').every(role => role.pid === 'Unknown')).toBe(true);
+          if (eligibleStop) {
+            expect(relayRoles).toEqual(launchesBeforeResume);
+            expect(resumed!.launches).toEqual([]);
+            expect([author.count(), inv.count(), fidelity.count(), design.count()]).toEqual(forwardsBeforeResume);
+            expect(resumedBegins).not.toHaveBeenCalled();
+            expect(coldFinals).toHaveLength(2);
+            expect(coldFinals[0]).not.toBe(coldFinals[1]);
+            expect(resumed!.finalSite!.site).toBeGreaterThan(finalSiteBeforeStop);
+            expect(execution.supervisorCapture.roles.every(role => role.pid === 'Unknown')).toBe(true);
+            expect(() => sessionAudit.assertUrlDesignRenderContinuationCurrent(coldFinals[0]!)).toThrow();
+          } else {
+            const fresh = execution.supervisorCapture.roles.find(role => role.role === 'design')!;
+            expect(typeof fresh.pid).toBe('number'); expect(fresh.pid).not.toBe(oldDesignPid);
+            expect(execution.supervisorCapture.roles.filter(role => role.role !== 'design').every(role => role.pid === 'Unknown')).toBe(true);
+          }
           const again = await closeRun(f.run, {}, { sources: f.sources, now: Date.now, openReader: f.openReader,
             probe: createCredentialProbe(credentialListFromEnv({})), loadScreen: async () => ({ ok: true as const, screen: f.screen }) });
           expect(again).toMatchObject({ ok: false, refusal: { stage: 'closed-already' } });
           expect(await fs.readFile(path.join(f.run, 'record.json'))).toEqual(recordBytes);
+          await writeEvidence({ recordSha256: sha256(recordBytes), state: resumed, events, resumeChecks,
+            requestsBeforeResume: forwardsBeforeResume,
+            requestsAfterResume: [author.count(), inv.count(), fidelity.count(), design.count()],
+            launchesBeforeResume, launchesAfterResume: [...relayRoles],
+            finalSiteBeforeStop, coldFinalContinuations: coldFinals.length, orderedBeginsAfterResume: resumedBegins.mock.calls.length });
         }
         return;
       }
@@ -414,10 +501,8 @@ describe('composed URL run with actual role processes', { timeout: 360_000 }, ()
         probe: createCredentialProbe(credentialListFromEnv({})), loadScreen: async () => ({ ok: true as const, screen: f.screen }) });
       expect(again).toMatchObject({ ok: false, refusal: { stage: 'closed-already' } });
       expect(await fs.readFile(recordFile)).toEqual(recordBytes);
-      const evidenceFile = process.env['SYZYGY_F3_NATIVE_EVIDENCE_FILE'];
-      if (evidenceFile !== undefined) await fs.writeFile(evidenceFile, JSON.stringify({ inputTreeSha256: runtime.inputTreeSha256,
-        profileRegistrySha256: runtime.profileRegistrySha256, profiles: f.plans.map(plan => ({ role: plan.role, id: plan.profile.id, sha256: plan.profile.digest })),
-        recordSha256: sha256(recordBytes), state, events, roles: controller.summary().roles, requests: { author: author.count(), inventory: inv.count(), fidelity: fidelity.count(), design: design.count() } }, null, 2));
+      await writeEvidence({ recordSha256: sha256(recordBytes), state, events, roles: controller.summary().roles,
+        requests: { author: author.count(), inventory: inv.count(), fidelity: fidelity.count(), design: design.count() } });
     } catch (error) {
       await controller.stop(); await loop.catch(() => {});
       throw new Error(JSON.stringify({ failure: error instanceof Error ? error.message : 'Unknown', events, failures,
