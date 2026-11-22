@@ -29,6 +29,7 @@ export interface ColdUrlRunMachineOptions {
 export interface ColdUrlRunMachineHistory {
   readonly kind: 'verified-cold-url-machine-history'; readonly authorization: 'none'; readonly replay: 'forbidden';
   readonly observation: 'per-client-protected-cuts'; readonly identitySha256: string;
+  readonly binding: ColdUrlRunMachineExpected['binding'];
   readonly closedAt: number; readonly observedAt: number;
   readonly clients: UrlRunMachineClosedHistory['clients'];
   readonly snapshots: readonly UrlMachinePeerHistorySnapshot[];
@@ -128,7 +129,7 @@ export async function reconstructColdUrlRunMachineHistory(given: ColdUrlRunMachi
       }
     } finally { await store?.close(); }
     const result: ColdUrlRunMachineHistory = Object.freeze({ kind: 'verified-cold-url-machine-history', authorization: 'none', replay: 'forbidden',
-      observation: 'per-client-protected-cuts', identitySha256: expected.identitySha256, closedAt: sealed.observedAt, observedAt: check(),
+      observation: 'per-client-protected-cuts', identitySha256: expected.identitySha256, binding: expected.binding, closedAt: sealed.observedAt, observedAt: check(),
       clients: sealed.clients, snapshots: Object.freeze(snapshots) });
     issued.add(result); return result;
   })();

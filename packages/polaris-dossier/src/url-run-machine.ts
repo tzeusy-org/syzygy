@@ -207,7 +207,8 @@ export async function createUrlRunMachine(input: UrlRunMachineOptions) {
   };
   try {
     if (resumed !== undefined) {
-      if (!current() || store.identitySha256 !== resumed.identitySha256 || retained.length > 16
+      if (!current() || store.identitySha256 !== resumed.identitySha256
+        || !canonical(resumed.history.binding).equals(canonical(binding)) || retained.length > 16
         || retained.length + requiredRoles.length * 2 > 16) throw refuse();
       const ids = new Set<string>();
       for (const { context, terminal } of retained) {
