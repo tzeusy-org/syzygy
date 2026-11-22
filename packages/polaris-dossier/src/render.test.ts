@@ -2368,6 +2368,104 @@ describe('render: figure kinds (schema v7)', () => {
   });
 });
 
+// REQ-polaris-generation-034 version 2.16 (syzygy-3efd.50): schema v8's subsections through the render command, the contents list on a page
+// that renders one, and a v8 draft without subsections rendering as a v7 draft does. Literals throughout.
+describe('render: subsections (schema v8)', () => {
+  const V7 = 'polaris-dossier-local-draft-v7', V8 = 'polaris-dossier-local-draft-v8';
+  const SUBSECTIONS = [
+    { id: 'q-run', title: 'How does a command run?', answer: { id: 'qa1', label: 'inferred', basis: 'source', text: 'One command runs at a time.', citations: [cite('c-qa1', 'docs/notes.txt', 2, 2)], quotations: [] },
+      paragraphs: [{ id: 'qp1', label: 'unknown', reason: 'missing-evidence', text: 'No source says how long one takes.', citations: [], children: [] }] },
+    { id: 'q-keys', title: 'Where are keys kept?', answer: { id: 'qa2', label: 'inferred', basis: 'source', text: 'Keys are kept in memory.', citations: [cite('c-qa2', 'src/kestrel.c', 1, 1)], quotations: [] }, paragraphs: [] },
+  ];
+  const versioned = (version: string, subsections?: readonly Doc[], poles = false): Doc => {
+    const doc: Doc = { ...draft(), schemaVersion: version, thesisBasis: 'stated' };
+    if (subsections !== undefined) (doc['sections'] as Doc[])[0]!['subsections'] = structuredClone(subsections);
+    if (poles) {
+      (doc['sections'] as Doc[]).unshift({ id: 'why', title: 'Why Kestrel exists', paragraphs: [{ id: 'w1', label: 'non-normative', text: 'Framing for the why.', children: [] }], disposition: { kind: 'produced', assetIds: ['why'] } });
+      (doc['sections'] as Doc[]).push({ id: 'later', title: 'Later', paragraphs: [{ id: 'l1', label: 'non-normative', text: 'Later words.', children: [] }], disposition: { kind: 'produced', assetIds: ['later'] } });
+      doc['poles'] = [{ label: 'How it works', sections: ['why', 'core-ideas', 'later'] }];
+      doc['whySection'] = 'why';
+    }
+    return doc;
+  };
+  const rendered = async (doc: Doc): Promise<ReadonlyMap<string, string>> => {
+    const run = await prepared(doc, false);
+    const result = await renderRun(run, renderDeps());
+    if (!result.ok) throw new Error(result.refusal.reason);
+    return readSite(result.report.site);
+  };
+
+  const NAV = '<nav class="page-contents" aria-label="On this page"><p class="page-contents-title">On this page</p><ol>';
+  const CORE_ITEM = '<li><a href="#section-core-ideas">Core ideas</a><ol><li><a href="#subsection-q-run">How does a command run?</a></li><li><a href="#subsection-q-keys">Withheld item</a></li></ol></li>';
+  const fragmentsResolve = (files: ReadonlyMap<string, string>): void => {
+    for (const [file, html] of files) {
+      if (!file.endsWith('.html')) continue;
+      expect(html.toLowerCase(), file).not.toContain('<script');
+      const nav = html.match(/<nav class="page-contents"[^]*?<\/nav>/u)?.[0];
+      if (nav === undefined) continue;
+      for (const [, fragment] of nav.matchAll(/href="#([^"]*)"/gu)) {
+        expect(html, `${file}#${fragment}`).toContain(` id="${fragment}"`);
+        const at = html.indexOf(` id="${fragment}"`);
+        const before = html.slice(0, at);
+        expect(before.split('<details').length, `${file}#${fragment} inside a details`).toBe(before.split('</details>').length);
+      }
+    }
+  };
+
+  it('renders each subsection after its section\'s paragraphs under an h3, its answer first, and the contents list before the first section of index.html', async () => {
+    fixturePolicy = policy(['.txt']); // the second answer cites a .c file, outside the class gate, so it is withheld and its title is Syzygy's words
+    const files = await rendered(versioned(V8, SUBSECTIONS));
+    const index = files.get('index.html')!;
+    expect(index).toContain(`${NAV}${CORE_ITEM}</ol></nav><section id="section-core-ideas" data-reading-level="1" data-topics="core-ideas"><span class="eyebrow">01</span><h2>Core ideas</h2>`);
+    expect(index.match(/<nav class="page-contents"/gu)).toHaveLength(1);
+    expect(index).toContain('</p><section class="subsection" id="subsection-q-run"><h3>How does a command run?</h3><div class="subsection-answer"><p data-unknown-reason="missing-evidence" data-claim-kind="anchored" data-claim-id="qa1" data-epistemic="unknown" id="block-qa1"><span class="not-established">Not established.</span> One command runs at a time. ');
+    expect(index).toContain('</p></div><p data-unknown-reason="missing-evidence" data-claim-kind="labeled" data-claim-id="qp1" data-epistemic="unknown" id="block-qp1"><span class="not-established">Not established.</span> No source says how long one takes. ');
+    expect(index).toContain('</p></section><section class="subsection" id="subsection-q-keys"><h3>Withheld item</h3><div class="subsection-answer"><p data-unknown-reason="excluded-content" data-claim-kind="labeled" data-withheld-sources="1" data-claim-id="qa2" data-epistemic="unknown" id="block-qa2"><span class="not-established">Not established.</span> Withheld from this dossier: it rests on 1 source file(s) that screening withholds (src/kestrel.c), so its text is not shown. ');
+    expect(index).not.toContain('Keys are kept in memory.');
+    expect(index).not.toContain('Where are keys kept?');
+    expect(index.indexOf('id="block-p2"')).toBeLessThan(index.indexOf('id="subsection-q-run"'));
+    expect(index.indexOf('id="subsection-q-run"')).toBeLessThan(index.indexOf('id="subsection-q-keys"'));
+    expect(index).not.toMatch(/<(?:section class="subsection"|nav class="page-contents")[^>]*data-(?:reading-level|topics)/u);
+    expect([...files].filter(([, page]) => page.includes('.subsection{') || page.includes('.page-contents{')).map(([file]) => file)).toEqual(['index.html']);
+    const claims = (JSON.parse(files.get('machine.json')!) as { claims: { id: string; page: string; epistemic: string }[] }).claims;
+    expect(claims.filter((claim) => ['qa1', 'qp1', 'qa2'].includes(claim.id)).map((claim) => [claim.id, claim.page, claim.epistemic])).toEqual([['qa1', 'index.html', 'unknown'], ['qp1', 'index.html', 'unknown'], ['qa2', 'index.html', 'unknown']]);
+    fragmentsResolve(files);
+  });
+
+  it('puts the contents list on a Pole page after its heading, with no item for the why back-link, no list in a section that renders no content, and subsections before deep-dive links', async () => {
+    const doc = versioned(V8, SUBSECTIONS, true);
+    (doc['sections'] as Doc[]).push({ id: 'gone', title: 'Gone', paragraphs: [{ id: 'g1', label: 'non-normative', text: 'Gone words.', children: [] }], subsections: ['g-q1', 'g-q2'].map((id) => ({ id, title: `Gone ${id}`, answer: { id: `${id}-a`, label: 'unknown', reason: 'missing-evidence', text: 'Not known.', citations: [] }, paragraphs: [] })), disposition: { kind: 'omitted', reason: 'Not needed.', citations: [] } });
+    (doc['poles'] as Doc[])[0]!['sections'] = ['why', 'core-ideas', 'later', 'gone'];
+    doc['deepDives'] = [{ id: 'dive-1', title: 'A closer look', sectionId: 'core-ideas', paragraphs: [{ id: 'dv1', label: 'non-normative', text: 'Deeper.', children: [] }], disposition: { kind: 'produced', assetIds: ['dive-1'] } }];
+    const files = await rendered(doc);
+    const pole = files.get('poles/1.html')!;
+    expect(pole).toContain(`<h1>How it works</h1>${NAV}${CORE_ITEM.replace('Withheld item', 'Where are keys kept?')}<li><a href="#section-later">Later</a></li><li><a href="#section-gone">Gone</a></li></ol></nav><p class="pole-why"><a href="../index.html#section-why">Why Kestrel exists</a> is on the overview.</p>`);
+    expect(pole).not.toContain('<li><a href="#section-why">');
+    const core = pole.slice(pole.indexOf('<section id="section-core-ideas"'), pole.indexOf('<section id="section-later"'));
+    expect(core.indexOf('id="subsection-q-keys"')).toBeGreaterThan(0);
+    expect(core.indexOf('deep-dives/dive-1.html')).toBeGreaterThan(core.indexOf('id="subsection-q-keys"'));
+    expect(files.get('index.html')!).not.toContain('page-contents');
+    expect([...files].filter(([, page]) => page.includes('.subsection{') || page.includes('.page-contents{')).map(([file]) => file)).toEqual(['poles/1.html']);
+    fragmentsResolve(files);
+  });
+
+  it('renders no subsection, list or style for a section that is not produced', async () => {
+    const doc = versioned(V8, SUBSECTIONS);
+    (doc['sections'] as Doc[])[0]!['disposition'] = { kind: 'omitted', reason: 'Not needed.', citations: [] };
+    const files = await rendered(doc);
+    expect([...files].filter(([, page]) => page.includes('subsection') || page.includes('page-contents')).map(([file]) => file)).toEqual([]);
+  });
+
+  it('renders a v8 draft without subsections byte for byte as the same v7 draft, on every page, with no subsection style or contents list', async () => {
+    const v7 = await rendered(versioned(V7));
+    const v8 = await rendered(versioned(V8));
+    expect([...v8.keys()]).toEqual([...v7.keys()]);
+    const differing = [...v7].filter(([file, bytes]) => v8.get(file) !== bytes).map(([file]) => file);
+    for (const file of differing) expect(v8.get(file)!.replaceAll(V8, V7), file).toBe(v7.get(file));
+    expect([...v8.values()].some((page) => page.includes('subsection') || page.includes('page-contents'))).toBe(false);
+  });
+});
+
 // syzygy-5dhm.70 and syzygy-5dhm.71: the find-by-task page and the generated index through the whole chain (the index-and-task-routes change).
 describe('render: task routes and the generated index', () => {
   const step = (id: string, over: Doc = {}): Doc => ({ id, label: 'inferred', basis: 'source', text: `Add the handler beside main zq-${id}.`, citations: [cite(`c-${id}`, 'src/kestrel.c', 4, 4)], quotations: [], ...over });

@@ -208,9 +208,9 @@ export const DOSSIER_THEME_CSS = ':root{--void:#262624;--panel:#30302e;--panel-r
 /** What an operator-agent run adds to every page: its notice, the run disclosure, attributes on `main` and the review-status region. */
 interface PageChrome { readonly notice: string; readonly disclosure: (path: string) => string; readonly mainAttributes: string; readonly region: string }
 
-function page(title: string, path: string, nav: string, main: string, chrome?: PageChrome, figureKinds = false, mapCss = ''): string {
+function page(title: string, path: string, nav: string, main: string, chrome?: PageChrome, figureKinds = false, mapCss = '', subsections = false): string {
   return `<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">${DRAFT_PREVIEW_CSP_META}<title>${escape(title)}</title><style>${DESIGN_TOKENS_CSS}
-${DRAFT_PREVIEW_CSS}${DOSSIER_CSS}${chrome === undefined ? '' : `${LOCAL_CSS}${DOSSIER_THEME_CSS}${path === FIND_BY_TASK_PAGE || path === NAME_INDEX_PAGE ? FINDING_CSS : ''}`}${figureKinds ? FIGURE_KINDS_CSS : ''}${mapCss}
+${DRAFT_PREVIEW_CSS}${DOSSIER_CSS}${chrome === undefined ? '' : `${LOCAL_CSS}${DOSSIER_THEME_CSS}${path === FIND_BY_TASK_PAGE || path === NAME_INDEX_PAGE ? FINDING_CSS : ''}`}${figureKinds ? FIGURE_KINDS_CSS : ''}${subsections ? SUBSECTION_CSS : ''}${mapCss}
 </style></head><body><a class="skip" href="#content">Skip to content</a><div class="pipeline-notice">${chrome?.notice ?? 'Generated dossier draft — not reviewed or adopted'}</div>${chrome?.disclosure(path) ?? ''}<div class="layout">${chrome === undefined ? `<nav class="contents desktop-contents" aria-label="Dossier">${nav}</nav>` : `<details class="contents desktop-contents nav-panel" open><summary>Contents</summary><nav aria-label="Dossier">${nav}</nav></details>`}<details class="contents mobile-contents"><summary>In this dossier</summary><nav aria-label="Dossier">${nav}</nav></details><main id="content" data-page="${escape(path)}"${chrome?.mainAttributes ?? ''}>${main}${chrome?.region ?? ''}</main></div></body></html>`;
 }
 
@@ -605,6 +605,8 @@ export function renderDossierSite(input: DossierSiteInput & { readonly local?: L
   // its phone form, of which the stylesheet displays one by the width of the `figure-forms` box. Each participant, lane and step is a claim
   // as a node is, and each message as an edge is, listed once; the phone form carries no identity, citation, anchor or label token.
   const figurePages = new Set<string>();
+  // The pages that render a subsection (version 2.16), which alone carry the subsection and contents-list style rules.
+  const subsectionPages = new Set<string>();
   const figureStructures: { readonly index: number; readonly entry: Record<string, unknown> }[] = [];
   const kindedFigure = (from: string, d: DraftDiagram, figure: DraftFigure, index: number): string => {
     const held = (id: string): WithheldNote | undefined => local?.withheldElements?.get(id);
@@ -693,7 +695,7 @@ export function renderDossierSite(input: DossierSiteInput & { readonly local?: L
     ? `${main}<p class="redaction-legend"><span aria-hidden="true">†N</span> on a citation: N lines of that file are withheld by screening. Its source page marks where.</p>` : main;
   const add = (path: string, depth: number, pageTitle: string, main: string, mapCss = ''): void => {
     pageTitles.set(path, pageTitle);
-    files.set(path, page(`${pageTitle} — ${title}`, path, nav(path), legended(path, main), chrome, figurePages.has(path), mapCss));
+    files.set(path, page(`${pageTitle} — ${title}`, path, nav(path), legended(path, main), chrome, figurePages.has(path), mapCss, subsectionPages.has(path)));
     pages.push({ path, depth });
     claimsByPage.push(...pending.splice(0).map(entry => ({ page: path, ...entry })));
   };
@@ -725,10 +727,21 @@ export function renderDossierSite(input: DossierSiteInput & { readonly local?: L
       ? `<li><a href="${escape(href(from, deepPaths.get(dive.id)!))}">Explore: ${escape(dive.title)}</a></li>` : `<li>${notice(from, dive.id, dive.disposition)}</li>`).join('');
     // An operator-agent section leads with its diagrams (syzygy-mea.10.4); the provider mode's bytes are pinned, so its figures follow.
     const body = section.paragraphs.map(b => block(from, b)).join('');
-    return `<section id="section-${escape(section.id)}" data-reading-level="1"${topicAttr(section.id)}>${head}${local === undefined ? `${body}${figures}` : `${figures}${body}`}${dives ? `<ul class="deep-links">${dives}</ul>` : ''}</section>`;
+    // A v8 section's subsections follow its own paragraphs and precede its deep-dive links (version 2.16): each its title as an `h3`, its
+    // answer first, rendered as the introduction's block is, then its paragraphs as the section's own are.
+    const subsections = (section.subsections ?? []).map(sub => `<section class="subsection" id="subsection-${escape(sub.id)}"><h3>${escape(sub.title)}</h3><div class="subsection-answer">${paragraph(from, sub.answer, 'p')}</div>${sub.paragraphs.map(b => block(from, b)).join('')}</section>`).join('');
+    if (subsections !== '') subsectionPages.add(from);
+    return `<section id="section-${escape(section.id)}" data-reading-level="1"${topicAttr(section.id)}>${head}${local === undefined ? `${body}${figures}` : `${figures}${body}`}${subsections}${dives ? `<ul class="deep-links">${dives}</ul>` : ''}</section>`;
   };
+  // The on-page contents list (version 2.16): on a page that renders at least one subsection, one item per section the page renders, in
+  // page order, each holding its rendered subsections. A section that renders no content of the draft renders no subsection.
+  const rendersSubsections = (section: DossierDraft['sections'][number]): boolean =>
+    !view.deferredSections.has(section.id) && section.disposition.kind === 'produced' && (section.subsections ?? []).length > 0;
+  const pageContents = (shown: readonly DossierDraft['sections'][number][]): string => !shown.some(rendersSubsections) ? ''
+    : `<nav class="page-contents" aria-label="On this page"><p class="page-contents-title">On this page</p><ol>${shown.map(section => `<li><a href="#section-${escape(section.id)}">${escape(section.title)}</a>${rendersSubsections(section)
+      ? `<ol>${section.subsections!.map(sub => `<li><a href="#subsection-${escape(sub.id)}">${escape(sub.title)}</a></li>`).join('')}</ol>` : ''}</li>`).join('')}</ol></nav>`;
   const onLanding = poleSpec === undefined ? draft.sections : draft.sections.filter(section => section.id === poleSpec.whySection);
-  const sections = withheld ? '' : onLanding.map(section => sectionMarkup(from, section, draft.sections.indexOf(section))).join('');
+  const sections = withheld ? '' : `${pageContents(onLanding)}${onLanding.map(section => sectionMarkup(from, section, draft.sections.indexOf(section))).join('')}`;
   // The map of the Poles: each Pole's label linking to its page (the why section's Pole to the section here), with its sections.
   const poleMap = poles.length === 0 ? '' : `<nav class="pole-map" aria-label="The parts of this dossier"><h2>The parts of this dossier</h2><ol>${poles.map(pole => {
     const target = pole.path === null ? href(from, 'index.html', `section-${poleSpec!.whySection}`) : href(from, pole.path);
@@ -810,13 +823,14 @@ export function renderDossierSite(input: DossierSiteInput & { readonly local?: L
   for (const pole of poles) {
     if (pole.path === null) continue;
     const at = pole.path;
+    const rendered = pole.sections.filter(id => id !== poleSpec!.whySection).map(id => draft.sections.find(candidate => candidate.id === id)!);
     const body = pole.sections.map(id => {
       const section = draft.sections.find(candidate => candidate.id === id)!;
       return id === poleSpec!.whySection
         ? `<p class="pole-why"><a href="${escape(href(at, 'index.html', `section-${id}`))}">${escape(section.title)}</a> is on the overview.</p>`
         : sectionMarkup(at, section, draft.sections.indexOf(section));
     }).join('');
-    add(at, 1, pole.label, `<section id="pole" data-reading-level="1" data-pole="${escape(at)}"${hueAttr(pole.hue)}><span class="eyebrow">Part of <a href="${escape(href(at, 'index.html'))}">${escape(draft.title)}</a></span><h1>${escape(pole.label)}</h1>${bannerFor(`run-stopped/pole/${at}`)}${body}</section>`);
+    add(at, 1, pole.label, `<section id="pole" data-reading-level="1" data-pole="${escape(at)}"${hueAttr(pole.hue)}><span class="eyebrow">Part of <a href="${escape(href(at, 'index.html'))}">${escape(draft.title)}</a></span><h1>${escape(pole.label)}</h1>${bannerFor(`run-stopped/pole/${at}`)}${pageContents(rendered)}${body}</section>`);
   }
 
   // --- deep dives
@@ -1094,6 +1108,11 @@ const figureElements = (d: DraftDiagram): readonly DraftFigureElement[] => d.fig
  * its bytes. The `figure-forms` box is a size container; it displays its drawing while it is at least the drawing's laid-out width W wide
  * and its phone form, a numbered list, while it is narrower, with no script. The list's text is the 13 px figure text, wrapped within the
  * box; each item's left border is solid, dashed or dotted by its mark, as the legend's line styles are. */
+/** The subsection and on-page contents-list rules (version 2.16), carried only by a page that renders a subsection. Never sticky: sticky
+ * styling stays scoped to the site navigation. */
+export const SUBSECTION_CSS = '.subsection{margin:1.5rem 0 0}.subsection>h3{margin:0 0 .5rem;font-size:1.1rem}.subsection-answer{font-weight:600;margin:0 0 .75rem}'
+  + '.page-contents{border:1px solid var(--line);border-radius:10px;padding:.5rem 1rem;margin:0 0 1.5rem;font-size:.9rem}.page-contents-title{margin:0 0 .25rem;font-weight:600}.page-contents ol{margin:.25rem 0;padding-left:1.2rem}';
+
 export const FIGURE_KINDS_CSS = '.figure-forms{container-type:inline-size}.figure-stepper{display:none;margin:.5rem 0;padding-left:2rem;font:13px/1.5 var(--font-mono);overflow-wrap:anywhere}'
   + '.figure-stepper>li{border-left:3px solid var(--accent);padding:.15rem 0 .15rem .6rem;margin:0 0 .4rem}.figure-stepper>li.inferred{border-left-style:dashed}.figure-stepper>li.unknown{border-left-style:dotted}'
   + '.stepper-head{display:block;font-weight:600}.figure-drawing rect.lane-band{fill:none;stroke:var(--line);stroke-dasharray:none}.figure-drawing path.step-order{stroke:var(--muted);stroke-width:1;stroke-dasharray:none}.figure-drawing marker.order-head path{fill:var(--muted)}'
