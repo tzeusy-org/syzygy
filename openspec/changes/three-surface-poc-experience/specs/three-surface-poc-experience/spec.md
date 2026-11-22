@@ -929,18 +929,26 @@ Group: Trajectory. Form: **state projection/query**.
 **Required behavior.** WHEN Trajectory is read, it SHALL project observed work
 items onto board columns drawn from a declared closed mapping of the Beads
 status vocabulary, with every rendered item placed by its observed status and
-carrying its identifier.
+carrying its identifier. Each rendered item SHALL also show, as text, its
+tracker priority and its recorded created, updated and (when present) closed
+instants, each equal to the machine answer's value for that item
+(`trajectory.rendered[]`).
 
 - **Case**: a checker loads Trajectory at a known Dolt revision with
-  known item statuses.
+  known item statuses, priorities and recorded instants.
 - **Observable**: each rendered item sits in the column its observed
-  status maps to.
+  status maps to, and its card shows its priority and recorded instants.
 - **Oracle**: per sampled item, the rendered column equals the declared
   mapping applied to the status read directly from Dolt at the served
-  revision; equality decides.
-- **Oracle independence**: expected statuses are direct database reads.
+  revision, and the priority and instants shown equal the machine
+  answer's for that item; equality decides.
+- **Oracle independence**: expected statuses, priorities and instants
+  are direct database reads (in a fixture, the checker's own rows), never
+  the renderer's model.
 - **Falsifier**: an item rendered in a column that contradicts its
-  observed status, or a column outside the declared mapping.
+  observed status, a column outside the declared mapping, or a card whose
+  priority or recorded instant differs from the machine answer's or is
+  missing.
 
 #### Scenario: Items placed by observed status
 
@@ -948,6 +956,13 @@ carrying its identifier.
   `in_progress`
 - **THEN** Trajectory at the observation of D renders that item in the
   column the declared mapping assigns to `in_progress`
+
+#### Scenario: A card shows its own facts
+
+- **WHEN** an item at revision D has priority 3 and recorded created,
+  updated and closed instants
+- **THEN** its card shows priority 3 and those three instants as text,
+  each equal to the machine answer's value for that item
 
 ```yaml
 warrants:
@@ -1052,7 +1067,13 @@ progress or active: the closed column is headed "Closed" and the claimed
 column "Claimed", and the worker-change state label says only what git
 showed on the bounded seam. One notice above the board SHALL state how many
 rendered items are closed and that verification is Unknown for each of
-them, with its reason.
+them, with its reason. Trajectory SHALL state the verification Unknown once
+per board: one notice giving how many served items it holds for, how many of
+those the selection renders and how many it leaves outside, each equal to
+the machine answer (`trajectory.verificationUnknown`), with the reason
+sentence and its route. Each rendered item SHALL keep its own verification
+mark, carrying the Unknown encoding and closed reason and referring to that
+notice; the reason sentence and route are not repeated per item.
 
 - **Scope.** every satisfaction/verification encoding on the surface, and
   the wording population: the page heading and lede, every board heading
@@ -1072,14 +1093,23 @@ them, with its reason.
   decides. For wording, a case-folded, word-bounded match of
   `done|complete|completed|finished|resolved|satisfied|in[ _-]progress|active`
   over the wording population finds nothing, and the notice's closed count
-  equals the machine answer's rendered items with status closed.
+  equals the machine answer's rendered items with status closed. For the
+  board-level count, the notice's served, inside and outside figures equal
+  `trajectory.verificationUnknown`; every rendered item carries exactly
+  one verification mark whose reference resolves to that notice (the mark
+  names the notice's subject and links to its element); and no rendered
+  item's card contains the reason sentence or the route literal, each of
+  which occurs once on the page.
 - **Oracle independence**: the relationship state comes from the
   machine answer; the checker induced the mismatch.
 - **Falsifier**: a closed or merged item rendered with a verified,
   satisfied, or green encoding while its relationship lacks evidence; or a
   heading, label, sentence or served column value in the wording
   population that names closure as done, complete, finished or resolved,
-  or a claim as in progress or active.
+  or a claim as in progress or active; or a verification notice whose
+  counts differ from the machine answer's, a rendered item with no
+  verification mark or a mark referring to no notice, or a card that
+  repeats the reason sentence or route.
 
 #### Scenario: Closed but unverified
 
@@ -1097,11 +1127,19 @@ them, with its reason.
   notice above the board states the rendered closed count and that
   verification is Unknown for each of them
 
+#### Scenario: Verification is Unknown once per board, with its count
+
+- **WHEN** 252 items are served and the selection renders 250
+- **THEN** one notice says verification is Unknown for 252 served items,
+  250 in the selection and 2 outside it, with the reason and route, and
+  each of the 250 cards carries one verification mark that refers to it
+  and repeats neither the reason sentence nor the route
+
 ```yaml
 warrants:
   primary: VIS-2
   doctrine: [VIS-1, VIS-2]
-  contracts: [RFC1-19, RFC1-22, RFC1-23, RFC1-24, RFC2-20, RFC8-2, RFC8-15, RFC8-30]
+  contracts: [RFC1-19, RFC1-22, RFC1-23, RFC1-24, RFC2-20, RFC6-17, RFC8-2, RFC8-15, RFC8-24, RFC8-30]
   policies: []
   decisions: [POC-DIR-2026-08-29, POC-DIR-2026-08-30]
   topology: []

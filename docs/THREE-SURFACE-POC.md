@@ -254,6 +254,15 @@ selected item's text. The size-only comparison and choice rationale are in
      "Claimed". One notice above the board says how many rendered
      items are closed and that closed is not verified: verification is
      Unknown for each of them (`trajectory-closure-notice`).
+   - Each card shows the item's own facts as text (identifier, tracker
+     status, priority, and its created, updated and closed instants) and
+     one short mark per Unknown: title withheld, governing intent and
+     verification. Each mark keeps the Unknown encoding and its reason and
+     links to the board notice that states that Unknown once, with its
+     count, reason and route; the verification notice gives served, inside
+     and outside counts (`trajectory.verificationUnknown` on the machine
+     answer). The seven columns stay one row; narrower than that, the board
+     scrolls inside itself.
    - An ingested, operator-reported test-run artifact (see below) for the
      governing seam renders as "Verification: Not verified by Syzygy —
      operator-reported (report-fact): …", never as Verified (RFC5-19); absent
