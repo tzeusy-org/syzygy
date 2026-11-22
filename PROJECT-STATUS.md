@@ -170,7 +170,7 @@ authority and no model yet called on the current path.
     its code change (bind 3.0.0 for new runs) is not yet landed, and until it lands runs stay on the policy they bound.
     *(2026-11-22: the predecessor figure "430 scenarios" is superseded by that
     amendment; all 39 identities remain.)*
-    [Index and task routes amendment 2.14](openspec/changes/dossier-index-and-task-routes) is agent-adopted in A-45.
+    [Index and task routes amendment 2.14](openspec/changes/dossier-index-and-task-routes) is agent-adopted in A-46.
     It replaces REQ-polaris-generation-034 again (117 to 135 scenarios: a generated index and a find-by-task
     page on every operator-agent dossier, and task routes in the draft); its implementation (syzygy-5dhm.70,
     syzygy-5dhm.71) lands with it.

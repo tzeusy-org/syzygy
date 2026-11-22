@@ -275,8 +275,8 @@
       }
     },
     "POC": {
-      "requirements": 26,
-      "scenarios": 37,
+      "requirements": 27,
+      "scenarios": 40,
       "members": {
         "POC-REQ-001": {
           "name": "Code-structure observation is bound to an exact revision",
@@ -400,6 +400,14 @@
             "Closed but unverified",
             "Closed is the tracker's word, not done",
             "Verification is Unknown once per board, with its count"
+          ]
+        },
+        "POC-REQ-044": {
+          "name": "Trajectory opens with its five answers",
+          "scenarios": [
+            "Five answers before the board",
+            "A merged materialized item enters the chain",
+            "Work items not observed"
           ]
         },
         "POC-REQ-050": {

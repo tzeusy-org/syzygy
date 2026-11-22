@@ -223,7 +223,11 @@ export function buildTrajectorySlice(input: BuildPocModelInput, seed: SeedObserv
     materialization,
     workerChange,
     testArtifactVerification,
-    trajectory: projectTrajectory(workItems, { nonClosedLimit: NON_CLOSED_LIMIT, recentClosedWindow: RECENT_CLOSED_WINDOW }),
+    trajectory: projectTrajectory(workItems, {
+      nonClosedLimit: NON_CLOSED_LIMIT,
+      recentClosedWindow: RECENT_CLOSED_WINDOW,
+      reconciliationChain: { materializedBeadId: materialization.beadId, workerChange },
+    }),
     dispatch: dispatch === null ? null : deepFreeze(dispatch),
   };
 }

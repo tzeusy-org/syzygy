@@ -389,12 +389,15 @@ DECLARED_SOURCE_UNION = f"{CHANGES}/{DECLARED_SOURCE_CHANGE}/GOVERNING-DEPENDENC
 AGENT_ADOPTIONS = f"{DECISIONS}/AGENT-ADOPTIONS.md"
 DECLARED_SOURCE_ROW = 'A-4'
 # POC amendments adopted since D10 that add Scenarios, each by its version
-# tag and the Scenarios it adds per requirement. R3 expects an amendment's
-# Scenarios exactly when its adoption row is in the tree, so a tree from
-# before it (the P115 signed selftest's frozen core) keeps its 26 / 34 census.
+# tag and the Scenarios it adds per requirement; a requirement the literal
+# does not hold is a new one with that many Scenarios. R3 expects an
+# amendment's requirements and Scenarios exactly when its adoption row is in
+# the tree, so a tree from before it (the P115 signed selftest's frozen
+# core) keeps its 26 / 34 census.
 POC_SCENARIO_AMENDMENTS = (
     ('three-surface-poc-closure-wording-amendment-v1.0', {"043": 1}),  # syzygy-t3jk.14
     ('three-surface-poc-board-unknowns-amendment-v1.0', {"040": 1, "043": 1}),  # syzygy-t3jk.15
+    ('three-surface-poc-five-answers-amendment-v1.0', {"044": 3}),  # syzygy-t3jk.16, new POC-REQ-044
 )
 DECLARED_SOURCE_COMMIT = '182a703b2dbae97a16ae7334cd84a32b634cedc0'
 DECLARED_SOURCE_TAG = 'polaris-dossier-declared-source-model-v2.0'
@@ -3597,7 +3600,11 @@ def check_census(root, report):
     totals = dict(EXPECTED_TOTALS, POLARIS=(p_req, p_scen))
     if signed_reference:
         poc_added = poc_scenarios_added(root)
-        totals["POC"] = (26, 34 + sum(poc_added.values()))
+        poc_literal = {**EXPECTED["POC"], "014": 8}
+        if (len(poc_literal), sum(poc_literal.values())) != (26, 34):
+            findings.append("POC: the signed literal is no longer 26 / 34 before amendments")
+        poc_literal = {**poc_literal, **{req: poc_literal.get(req, 0) + count for req, count in poc_added.items()}}
+        totals["POC"] = (len(poc_literal), sum(poc_literal.values()))
     for family, (n_req, n_scen) in totals.items():
         reqs = pop.get(family, {})
         got = (len(reqs), sum(len(r["scenarios"]) for r in reqs.values()))
@@ -3607,8 +3614,7 @@ def check_census(root, report):
                             f"scenarios, expected {n_req} / {n_scen}")
         literal = EXPECTED.get(family)
         if family == "POC" and signed_reference:
-            literal = {**literal, "014": 8}
-            literal = {**literal, **{req: literal.get(req, 0) + count for req, count in poc_added.items()}}
+            literal = poc_literal
         if literal is not None:
             prefix = f"{family}-REQ-"
             have = {k[len(prefix):]: len(v["scenarios"]) for k, v in reqs.items()}
