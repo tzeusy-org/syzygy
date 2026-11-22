@@ -77,7 +77,7 @@ describe('supervisor verification of stored URL renders', () => {
 describe('read-only recovery of stored URL render metadata', () => {
   it('returns exact immutable nested UTF-8 metadata in validator code-unit order', () => {
     const f = fixture();
-    const added = new Map([['z.html', '<p>last</p>'], ['A.json', '{"first":true}'], ['nested.html/page.json', '{}']]);
+    const added = new Map([['Z.html', '<p>second</p>'], ['A.json', '{"first":true}'], ['nested.html/page.json', '{}']]);
     for (const [file, body] of added) {
       const target = path.join(f.site, file);
       fs.mkdirSync(path.dirname(target), { recursive: true });
@@ -89,7 +89,7 @@ describe('read-only recovery of stored URL render metadata', () => {
     const expected = { files: 5, pages: 2, bytes: population.reduce((sum, file) => sum + file.bytes, 0), population };
     const result = readStoredUrlRenderOutput(f.run, 2, outputDigest(expected), () => true);
     expect(result).toEqual(expected);
-    expect(result?.population.map(file => file.path)).toEqual(['A.json', 'index.html', 'linked/own.json', 'nested.html/page.json', 'z.html']);
+    expect(result?.population.map(file => file.path)).toEqual(['A.json', 'Z.html', 'index.html', 'linked/own.json', 'nested.html/page.json']);
     expect(Object.isFrozen(result)).toBe(true);
     expect(Object.isFrozen(result?.population[0])).toBe(true);
     expect(checkStoredUrlRender(f.run, f.site, result!, () => true)).toBe(2);
