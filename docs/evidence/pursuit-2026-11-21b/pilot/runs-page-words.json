@@ -1,0 +1,118 @@
+{
+ "format": "polaris-dossier-pilot-page-words/2",
+ "wordCount": "whitespace-separated tokens of the converted <main> text (scripts/dossier_site_to_text.py)",
+ "siteDigest": "SHA-256 of one line per kept page in path order: the SHA-256 of the page's bytes, two spaces, its site-relative path, a line feed",
+ "runs": {
+  "2ecdcab0": {
+   "runId": "2ecdcab0c77e228f6ad9d3e0acfa1414",
+   "site": "site/0",
+   "siteDigest": "9d364b7782bf6e0e29905c84a2c83fb37346abaf11dfb1f6f699452cf3ed7fff",
+   "sourcesPagesExcluded": 29,
+   "perPageWords": {
+    "appendix.html": 795,
+    "clarifications.html": 88,
+    "contents.html": 85,
+    "deep-dives/mechanism-deep-dive.html": 663,
+    "discovery.html": 1033,
+    "executions.html": 186,
+    "glossary.html": 147,
+    "index.html": 1291,
+    "poles/1.html": 1874,
+    "poles/2.html": 3860,
+    "poles/3.html": 3028,
+    "review.html": 438,
+    "size-report.html": 508,
+    "sources/index.html": 136,
+    "understanding.html": 1149
+   }
+  },
+  "36df95fa": {
+   "runId": "36df95faf04a4c98eabbb32a18a4e833",
+   "site": null
+  },
+  "4465d22f": {
+   "runId": "4465d22f5ce1829ca49059a5b8451bb0",
+   "site": "site/0",
+   "siteDigest": "3c093a02f23ea89a8d81c943fb09018f2c1b8e8127eb70fd3fa89ce9493157ba",
+   "sourcesPagesExcluded": 32,
+   "perPageWords": {
+    "clarifications.html": 88,
+    "contents.html": 84,
+    "deep-dives/mechanism-deep-dive.html": 246,
+    "discovery.html": 971,
+    "executions.html": 181,
+    "glossary.html": 190,
+    "index.html": 3870,
+    "review.html": 439,
+    "size-report.html": 496,
+    "sources/index.html": 167,
+    "understanding.html": 1151
+   }
+  },
+  "658f2f90": {
+   "runId": "658f2f90470f73eea1dc1d90209c5ef7",
+   "site": "site/1",
+   "siteDigest": "517ccb51731b9cf2bf8cd6db3c8ccd787833a2061a43188bf949bde995488020",
+   "sourcesPagesExcluded": 27,
+   "perPageWords": {
+    "appendix.html": 1024,
+    "clarifications.html": 107,
+    "contents.html": 144,
+    "deep-dives/mechanism-deep-dive.html": 696,
+    "discovery.html": 945,
+    "executions.html": 198,
+    "glossary.html": 451,
+    "index.html": 1563,
+    "poles/1.html": 1172,
+    "poles/2.html": 1298,
+    "poles/3.html": 2015,
+    "review.html": 460,
+    "size-report.html": 511,
+    "sources/index.html": 777,
+    "understanding.html": 1213
+   }
+  },
+  "d9411d26": {
+   "runId": "d9411d26ca55ebe0250e2e9b94dc0e32",
+   "site": "site/1",
+   "siteDigest": "5b71a08f708a98dfb0c87dc56210c5552befb2e46103212660710caf637e132c",
+   "sourcesPagesExcluded": 51,
+   "perPageWords": {
+    "clarifications.html": 110,
+    "contents.html": 116,
+    "deep-dives/mechanism-deep-dive.html": 851,
+    "discovery.html": 1536,
+    "executions.html": 252,
+    "glossary.html": 683,
+    "index.html": 9338,
+    "review.html": 466,
+    "size-report.html": 670,
+    "sources/index.html": 298,
+    "understanding.html": 1577
+   }
+  },
+  "ffe579c7": {
+   "runId": "ffe579c77dc21d9f6dd87ca6e2bc9301",
+   "site": "site/0",
+   "siteDigest": "277985f62793973d2f3dd54faf6ab30dc6356f6c4248f6a82b7c83664456fef6",
+   "sourcesPagesExcluded": 30,
+   "perPageWords": {
+    "appendix.html": 848,
+    "clarifications.html": 88,
+    "contents.html": 151,
+    "deep-dives/mechanism-deep-dive.html": 657,
+    "discovery.html": 1049,
+    "executions.html": 339,
+    "glossary.html": 116,
+    "index.html": 1642,
+    "poles/1.html": 1652,
+    "poles/2.html": 1848,
+    "poles/3.html": 3087,
+    "review.html": 444,
+    "size-report.html": 516,
+    "sources/index.html": 865,
+    "understanding.html": 925
+   }
+  }
+ }
+}
