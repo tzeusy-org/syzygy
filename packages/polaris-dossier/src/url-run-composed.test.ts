@@ -12,7 +12,8 @@ import { createCredentialProbe, credentialListFromEnv } from './credential-probe
 import { runPolarisCli, runUrlSupervisorLoop, type SupervisorState } from './polaris.js';
 import { openUrlSupervisorStop, readUrlSupervisorState, requestUrlSupervisorStop, writeUrlSupervisorState } from './url-supervisor-state.js';
 import { loadSessionCredential } from './session-credential.js';
-import { startUrlRunSessions, type UrlRunSessions } from './url-run-sessions.js';
+import * as runSessions from './url-run-sessions.js';
+import type { UrlRunSessions } from './url-run-sessions.js';
 import { sessionRelayTestPort } from './session-relay.js';
 import type { UrlRuntime } from './url-runtime.js';
 import * as sessionAudit from './url-session-audit.js';
@@ -128,7 +129,7 @@ async function start(f: Fixture, failures: string[], onFailure: (reason: string)
     if (!session) throw new Error('owned composed helper prompt absent');
     return session.promptSha256;
   };
-  return startUrlRunSessions({ run: f.run, record: f.record, screen: f.screen, plans: f.plans, runtime,
+  return runSessions.startUrlRunSessions({ run: f.run, record: f.record, screen: f.screen, plans: f.plans, runtime,
     declaredClasses: f.declaration.plannedClasses, originPolicySha256: f.origin.binding.sha256,
     auditParent: f.hidden, auditName: 'sessions', principal: f.record.declared.operator,
     sessionDirectories: f.directories, canaries: f.canaries, current: f.current, now: Date.now, deadline: f.deadline,
@@ -544,7 +545,20 @@ describe('composed URL run with actual role processes', { timeout: 360_000 }, ()
           if (cut) designRound = 2;
           vi.stubEnv('CLAUDE_CODE_OAUTH_TOKEN', undefined);
           vi.stubEnv('ANTHROPIC_API_KEY', 'OWN_SYNTHETIC_COMPOSED_CREDENTIAL');
+          const resumedControllers: UrlRunSessions[] = [];
+          const startResumed = runSessions.startUrlRunSessions;
+          vi.spyOn(runSessions, 'startUrlRunSessions').mockImplementationOnce(async (...args) => {
+            const runtime = await startResumed(...args);
+            resumedControllers.push(runtime);
+            return runtime;
+          });
           const exit = await runPolarisCli(['--supervise', '--resume', f.run, '--state-root', stateRoot], f.ports);
+          if (exit !== 0) {
+            const summary = resumedControllers[0]?.summary();
+            resumeChecks.push({ phase: 'resumed-exit', exit, failure: summary?.failure ?? 'Unknown',
+              roles: summary?.roles.map(({ role, outcome }) => outcome === 'Unknown' ? { role, outcome }
+                : { role, outcome: outcome.outcome, exitCode: outcome.exitCode, signal: outcome.signal }) ?? [] });
+          }
           expect(machineChecks).toEqual([{ current: true, claimChecks: 1, withdrawn: true, asyncCurrent: true, asyncWithdrawn: true }]);
           expect(exit).toBe(0);
           expect(verifiedCuts).toHaveLength(1);

@@ -179,8 +179,9 @@ describe('bounded processing and protected result validation', () => {
       const run = screenRunner.runOrderedDesignScreen;
       const screening = vi.spyOn(screenRunner, 'runOrderedDesignScreen').mockImplementation(options => run({ ...options,
         imageReadCurrent: () => {
-          options.imageReadCurrent!();
-          processingRevoked = true;
+          const current = options.imageReadCurrent?.() === true;
+          if (current) processingRevoked = true;
+          return current;
         },
       }));
       cleanup.push(() => screening.mockRestore());
