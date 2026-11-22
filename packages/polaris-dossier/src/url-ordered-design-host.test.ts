@@ -218,7 +218,9 @@ async function nativeExchange(revoke: false | 'send' | 'stage' = false) {
   const bridge = support.get('support/session-bridge.js')!, mcp = support.get('design-support/session-mcp.js')!;
   const bridgePath = path.join(root, 'support/session-bridge.js'), mcpPath = path.join(root, 'support/session-mcp.js');
   await writeFile(bridgePath, bridge); await writeFile(mcpPath, mcp);
-  const node = await realpath(process.execPath), nodeSha256 = sha256(await readFile(node));
+  // The selected runtime already holds this observed identity. Preparation
+  // and each peer capture still re-hash the actual installed Node image.
+  const node = program.node.path, nodeSha256 = program.node.sha256;
   const governanceRoot = path.join(root, 'observing/.syzygy');
   await mkdir(path.join(governanceRoot, 'governance/policies/dossier-machine-clients'), { recursive: true });
   let current = true, launch: UrlSessionProcess | undefined, ready!: () => void, machineAudits = 0, captures = 0;
