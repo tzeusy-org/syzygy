@@ -5,6 +5,7 @@ import { tempDir } from '@syzygy/test-kit';
 import { sha256 } from '@syzygy/support';
 import { encodeCanonicalJson } from '@syzygy/polaris-generation-core/live';
 import { createUrlRunMachine, isUrlRunMachineClosedHistory, readUrlRunMachineClosedHistory, type UrlRunMachineOptions } from './url-run-machine.js';
+import { reconstructColdUrlRunMachineHistory } from './url-machine-cold-history.js';
 import { openUrlMachineStore } from './url-machine-store.js';
 import { publishUrlMachineLifecycle } from './url-machine-lifecycle.js';
 import { URL_MACHINE_CLIENT_LIMITS, type UrlMachineClientContext, type UrlMachineClientRecord } from './url-machine-instance.js';
@@ -26,7 +27,7 @@ const NOW = Date.parse('2026-11-22T01:00:00.000Z');
 const id = (n: number) => n.toString(16).padStart(64, '0');
 const canon = (value: unknown) => Buffer.from(encodeCanonicalJson(value, URL_MACHINE_CLIENT_LIMITS));
 const cleanup: (() => Promise<unknown>)[] = [];
-afterEach(async () => { for (const close of cleanup.splice(0).reverse()) await close(); });
+afterEach(async () => { vi.restoreAllMocks(); for (const close of cleanup.splice(0).reverse()) await close(); });
 
 async function fixture() {
   const root = tempDir('machine-close-'), runId = `run-${'b'.repeat(32)}`;
@@ -101,5 +102,128 @@ describe('retained production machine closure evidence', () => {
     const result = await f.machine.close(); expect(result).toEqual({ lifecycle: 'Unknown' }); expect(readUrlRunMachineClosedHistory(result)).toBeNull();
     const canonical = path.join(f.options.governanceRoot, 'governance/policies/dossier-machine-clients', `${clientId}.json`);
     expect(sha256(await readFile(canonical))).toBe(sha256(canon(record)));
+  });
+});
+
+
+/** Reopen uses real cold verification and protected files. Only upstream
+ * runtime/plan admission remains the same explicit unit substitution above. */
+describe('same-store machine continuation seam', () => {
+  async function closedFixture(issued = false) {
+    const f = await fixture(), result = await f.machine.close();
+    let sealed = readUrlRunMachineClosedHistory(result); if (!sealed) throw new Error('owned close refused');
+    if (issued) {
+      // Independently retained synthetic sealed terminal over actual lifecycle
+      // writes; this is historical data, never a captured peer/credential.
+      const context = sealed.clients[0]!.context;
+      const store = await openUrlMachineStore(f.options, f.machine.identitySha256); if (!store) throw new Error('owned reopen refused');
+      const first: UrlMachineClientRecord = { format: 'polaris-dossier-local-machine-client/1', clientId: context.clientId,
+        issuanceId: id(30), revision: 1, projectId: 'project:syzygy', policySha256: context.policySha256, sourcePin: context.sourcePin,
+        runId: context.runId, role: context.role, kind: context.kind, scopes: context.allowedScopes,
+        issuedAt: new Date(NOW - 1).toISOString(), expiresAt: new Date(context.deadline).toISOString(), revokedAt: null,
+        instances: [{ instanceId: id(31), generation: 1, issuedAt: new Date(NOW - 1).toISOString(), expiresAt: new Date(context.deadline).toISOString(),
+          retiredAt: null, revokedAt: null, verifier: { mechanism: 'rfc5-7d', profileSha256: context.profileSha256,
+            processIdentitySha256: id(32), channelIdentitySha256: id(33) } }] };
+      const publication = await publishUrlMachineLifecycle({ context, binding: sealed.binding, expected: null, next: canon(first) }, store);
+      const next = { ...first, revision: 2, revokedAt: new Date(NOW).toISOString() };
+      const revoked = await publishUrlMachineLifecycle({ context, binding: sealed.binding,
+        expected: { revision: 1, sha256: sha256(canon(first)) }, next: canon(next) }, store);
+      if (!publication.ok || !revoked.ok) throw new Error('owned historical publication refused');
+      await store.close();
+      sealed = { ...sealed, clients: [{ context, terminal: { kind: 'revoked', head: revoked.receipt } }, ...sealed.clients.slice(1)] };
+    }
+    const history = await reconstructColdUrlRunMachineHistory({ governanceRoot: f.options.governanceRoot, protectedRoot: f.options.protectedRoot,
+      sealed, expected: { identitySha256: f.machine.identitySha256, binding: sealed.binding, runId: f.options.runId, sourcePin: f.options.pin,
+        originPolicySha256: f.options.originPolicySha256,
+        profiles: Object.fromEntries(f.options.plans.map(plan => [plan.role, plan.profile.digest])) as Record<typeof URL_ROLES[number], string>,
+        deadline: f.options.deadline }, now: f.options.now, current: f.options.current });
+    if (!history) throw new Error('owned cold history refused');
+    let claim = true;
+    const options: UrlRunMachineOptions = { ...f.options,
+      resume: { history, identitySha256: f.machine.identitySha256, current: () => claim } };
+    return { ...f, history, options, withdrawClaim: () => { claim = false; } };
+  }
+
+  it.each([0, 1, 4])('retains exact old anchors and allocates only %i freshly prepared roles in the same store', async count => {
+    const f = await closedFixture(), stateFile = path.join(f.options.protectedRoot, 'state.json'), before = JSON.parse(await readFile(stateFile, 'utf8'));
+    const requiredRoles = URL_ROLES.slice(0, count), plans = f.options.plans.slice(0, count);
+    const resumed = await createUrlRunMachine({ ...f.options, plans, requiredRoles }); cleanup.push(() => resumed.close());
+    expect(resumed.identitySha256).toBe(f.machine.identitySha256); expect(resumed.current()).toBe(true);
+    const during = JSON.parse(await readFile(stateFile, 'utf8'));
+    expect(during.clients).toHaveLength(8 + 2 * count); expect(during.clients.slice(0, 8)).toEqual(before.clients);
+    expect(during.used).toEqual(before.used); expect(during.runs).toEqual(before.runs);
+    if (count < 4) expect(() => resumed.transport(URL_ROLES[count]!, 'mcp-shim')).toThrow('url-run-machine-unavailable');
+    const result = await resumed.close(); expect(result).toEqual({ lifecycle: 'retired' });
+    const evidence = readUrlRunMachineClosedHistory(result)!; expect(evidence.clients).toHaveLength(8 + 2 * count);
+    expect(evidence.clients.slice(0, 8)).toEqual(f.history.clients); expect(evidence.identitySha256).toBe(f.machine.identitySha256);
+    expect(evidence.clients.every(client => client.context.deadline === f.options.deadline)).toBe(true);
+    expect(evidence.clients.slice(8).map(client => client.context.role)).toEqual(requiredRoles.flatMap(role => [role, role]));
+    expect(new Set(evidence.clients.map(client => client.context.clientId)).size).toBe(8 + 2 * count);
+  });
+
+  it.each(['copy', 'identity', 'deadline', 'run', 'pin', 'origin', 'profile', 'missing-store', 'clock', 'claim', 'unprepared', 'extra-plan', 'duplicate-role', 'role-order'] as const)('refuses %s drift without allocating fresh endpoints', async fault => {
+    const f = await closedFixture(), stateFile = path.join(f.options.protectedRoot, 'state.json'), before = await readFile(stateFile);
+    let options = f.options;
+    if (fault === 'copy') options = { ...options, resume: { ...options.resume!, history: { ...f.history } } };
+    if (fault === 'identity') options = { ...options, resume: { ...options.resume!, identitySha256: id(99) } };
+    if (fault === 'deadline') options = { ...options, deadline: options.deadline + 1 };
+    if (fault === 'run') options = { ...options, runId: `run-${'c'.repeat(32)}`, plans: [], requiredRoles: [] };
+    if (fault === 'pin') options = { ...options, pin: 'c'.repeat(40) };
+    if (fault === 'origin') options = { ...options, originPolicySha256: id(99), parent: { ...options.parent,
+      subjects: [{ path: URL_ORIGIN_POLICY_PATH, sha256: id(99) }] } };
+    if (fault === 'profile') {
+      const plan = { ...options.plans[0]!, profile: { ...options.plans[0]!.profile, digest: id(99) } } as UrlRolePlan;
+      admission.plans.add(plan); options = { ...options, plans: [plan, ...options.plans.slice(1)] };
+    }
+    if (fault === 'missing-store') options = { ...options, protectedRoot: path.join(f.root, 'alternate-store') };
+    if (fault === 'clock') options = { ...options, now: () => NOW - 1 };
+    if (fault === 'claim') f.withdrawClaim();
+    if (fault === 'unprepared') options = { ...options, plans: [{ ...options.plans[0]! }, ...options.plans.slice(1)] };
+    if (fault === 'extra-plan') options = { ...options, requiredRoles: ['author'] };
+    if (fault === 'duplicate-role') options = { ...options, requiredRoles: ['author', 'author'], plans: [options.plans[0]!, options.plans[0]!] };
+    if (fault === 'role-order') options = { ...options, requiredRoles: ['inventory', 'author'], plans: [options.plans[1]!, options.plans[0]!] };
+    await expect(createUrlRunMachine(options)).rejects.toThrow('url-run-machine-unavailable');
+    expect(await readFile(stateFile)).toEqual(before);
+    expect((await readdir(f.root)).includes('alternate-store')).toBe(false);
+  });
+
+  it('preserves an actually revoked old head through a fresh same-role allocation and close', async () => {
+    const f = await closedFixture(true), stateFile = path.join(f.options.protectedRoot, 'state.json'), before = JSON.parse(await readFile(stateFile, 'utf8'));
+    const old = f.history.clients[0]!, canonicalFile = path.join(f.options.governanceRoot, 'governance/policies/dossier-machine-clients', `${old.context.clientId}.json`);
+    const canonicalBefore = await readFile(canonicalFile);
+    const resumed = await createUrlRunMachine({ ...f.options, requiredRoles: ['author'], plans: f.options.plans.slice(0, 1) }); cleanup.push(() => resumed.close());
+    const result = await resumed.close(), evidence = readUrlRunMachineClosedHistory(result)!;
+    expect(result).toEqual({ lifecycle: 'retired' }); expect(evidence.clients[0]).toEqual(old); expect(evidence.clients).toHaveLength(10);
+    const after = JSON.parse(await readFile(stateFile, 'utf8')); expect(after.runs).toEqual(before.runs); expect(after.used).toEqual(before.used);
+    expect(after.clients.slice(0, 8)).toEqual(before.clients); expect(await readFile(canonicalFile)).toEqual(canonicalBefore);
+  });
+
+  it('refuses a changed protected retired head after genuine cold capture and never allocates around it', async () => {
+    const f = await closedFixture(true), old = f.history.clients[0]!, store = await openUrlMachineStore(f.options, f.machine.identitySha256);
+    if (!store || old.terminal.kind !== 'revoked') throw new Error('owned historical reopen refused');
+    const canonicalFile = path.join(f.options.governanceRoot, 'governance/policies/dossier-machine-clients', `${old.context.clientId}.json`);
+    const prior = JSON.parse(await readFile(canonicalFile, 'utf8')) as UrlMachineClientRecord;
+    const next = { ...prior, revision: 3, instances: prior.instances.map(instance => ({ ...instance, revokedAt: new Date(NOW).toISOString() })) };
+    const advanced = await publishUrlMachineLifecycle({ context: old.context, binding: old.terminal.head.binding,
+      expected: { revision: 2, sha256: sha256(canon(prior)) }, next: canon(next) }, store);
+    expect(advanced.ok).toBe(true); await store.close();
+    const stateFile = path.join(f.options.protectedRoot, 'state.json'), before = await readFile(stateFile);
+    await expect(createUrlRunMachine(f.options)).rejects.toThrow('url-run-machine-unavailable');
+    expect(await readFile(stateFile)).toEqual(before); expect(await readFile(canonicalFile)).toEqual(canon(next));
+  });
+
+  it('withdraws both live currentness and retirement when the independently held claim is lost', async () => {
+    const f = await closedFixture();
+    const resumed = await createUrlRunMachine({ ...f.options, requiredRoles: [], plans: [] }); cleanup.push(() => resumed.close());
+    expect(resumed.current()).toBe(true); f.withdrawClaim(); expect(resumed.current()).toBe(false);
+    const result = await resumed.close(); expect(result).toEqual({ lifecycle: 'Unknown' }); expect(readUrlRunMachineClosedHistory(result)).toBeNull();
+  });
+
+  it('refuses claim withdrawal after awaited revalidation before any fresh allocation', async () => {
+    const f = await closedFixture(), stateFile = path.join(f.options.protectedRoot, 'state.json'), before = await readFile(stateFile);
+    let count = 0;
+    await expect(createUrlRunMachine({ ...f.options, reverify: async () => { if (++count === 2) f.withdrawClaim(); return true; } }))
+      .rejects.toThrow('url-run-machine-unavailable');
+    expect(await readFile(stateFile)).toEqual(before);
   });
 });
