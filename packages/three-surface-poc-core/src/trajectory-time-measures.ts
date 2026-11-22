@@ -38,13 +38,17 @@ export interface TrajectoryTimeMeasures {
   readonly leadTime: DurationMeasure;
   /** Non-closed items, created to `measuredAt`. */
   readonly age: DurationMeasure;
-  /** Arrivals: every served item with a valid created instant. */
+  /** Arrivals: every served item with a valid created instant not after `measuredAt`. */
   readonly arrivals: { readonly covered: number; readonly total: number };
-  /** Closures: closed items whose closed instant is valid and not before a valid created instant. */
+  /** Closures: closed items whose closed instant is valid, not after `measuredAt`, and not before a covered created instant. */
   readonly closures: { readonly covered: number; readonly total: number };
-  /** Every ISO week from the first to the last covered event, in order;
-   * a week with no event between them is an observed zero. */
+  /** Every ISO week from the first to the last covered event (at most
+   * `WEEK_LIMIT`), in order; a week between them with no covered event counts
+   * 0 over the covered items, which `arrivals` and `closures` disclose. */
   readonly weeks: readonly WeeklyCount[];
+  /** Covered arrivals and closures in weeks before the listed ones (the
+   * series lists at most `WEEK_LIMIT` weeks, ending at the last covered event). */
+  readonly earlier: { readonly arrivals: number; readonly closures: number };
 }
 
 /** Recorded instants, parsed (shared with the selection ranking).
@@ -68,6 +72,9 @@ export function recordedInstant(value: string | null): bigint | null {
 
 const NS_PER_HOUR = 3_600_000_000_000n;
 const NS_PER_MS = 1_000_000n;
+const WEEK_MS = 7 * 86_400_000;
+/** The weekly series lists at most this many ISO weeks (two years). */
+export const WEEK_LIMIT = 104;
 
 /** Nearest rank: the smallest value with at least p of the values at or below it. */
 function nearestRank(sorted: readonly bigint[], p: number): number | null {
@@ -81,23 +88,30 @@ function duration(durations: bigint[], total: number): DurationMeasure {
   return { covered: sorted.length, total, medianHours: nearestRank(sorted, 0.5), p90Hours: nearestRank(sorted, 0.9) };
 }
 
+/** Midnight UTC of a calendar day in ms; `Date.UTC` maps years 0-99 to 1900-1999, this does not. */
+function utcDay(year: number, month: number, day: number): number {
+  const date = new Date(0);
+  date.setUTCFullYear(year, month, day);
+  return date.getTime();
+}
+
 /** ISO 8601 week of a UTC instant, as `YYYY-Www`. */
 export function isoWeek(instantNs: bigint): string {
   const ms = Number(instantNs / NS_PER_MS);
   const day = new Date(ms);
-  const date = Date.UTC(day.getUTCFullYear(), day.getUTCMonth(), day.getUTCDate());
+  const date = utcDay(day.getUTCFullYear(), day.getUTCMonth(), day.getUTCDate());
   const weekday = (new Date(date).getUTCDay() + 6) % 7; // Monday 0
   const thursday = new Date(date + (3 - weekday) * 86_400_000);
   const year = thursday.getUTCFullYear();
-  const week = 1 + Math.floor((thursday.getTime() - Date.UTC(year, 0, 1)) / (7 * 86_400_000));
-  return `${year}-W${String(week).padStart(2, '0')}`;
+  const week = 1 + Math.floor((thursday.getTime() - utcDay(year, 0, 1)) / (7 * 86_400_000));
+  return `${String(year).padStart(4, '0')}-W${String(week).padStart(2, '0')}`;
 }
 
 /** The Monday (UTC, ms) of the ISO week an instant falls in. */
 function weekStartMs(instantNs: bigint): number {
   const ms = Number(instantNs / NS_PER_MS);
   const day = new Date(ms);
-  const date = Date.UTC(day.getUTCFullYear(), day.getUTCMonth(), day.getUTCDate());
+  const date = utcDay(day.getUTCFullYear(), day.getUTCMonth(), day.getUTCDate());
   return date - ((new Date(date).getUTCDay() + 6) % 7) * 86_400_000;
 }
 
@@ -112,7 +126,10 @@ export function trajectoryTimeMeasures(items: readonly WorkItemFact[], measuredA
   let closedTotal = 0;
   let openTotal = 0;
   for (const item of items) {
-    const created = recordedInstant(item.createdAt);
+    // An instant after the capture instant is not a fact of this observation:
+    // not covered by any measure (fail closed when the capture is invalid).
+    const createdRaw = recordedInstant(item.createdAt);
+    const created = createdRaw !== null && measuredNs !== null && createdRaw <= measuredNs ? createdRaw : null;
     if (created !== null) {
       arrivals += 1;
       const week = weekStartMs(created);
@@ -120,7 +137,8 @@ export function trajectoryTimeMeasures(items: readonly WorkItemFact[], measuredA
     }
     if (item.status === 'closed') {
       closedTotal += 1;
-      const closed = recordedInstant(item.closedAt);
+      const closedRaw = recordedInstant(item.closedAt);
+      const closed = closedRaw !== null && measuredNs !== null && closedRaw <= measuredNs ? closedRaw : null;
       if (created !== null && closed !== null && closed >= created) {
         closures += 1;
         lead.push(closed - created);
@@ -129,11 +147,13 @@ export function trajectoryTimeMeasures(items: readonly WorkItemFact[], measuredA
       }
     } else {
       openTotal += 1;
-      if (created !== null && measuredNs !== null && measuredNs >= created) ages.push(measuredNs - created);
+      if (created !== null && measuredNs !== null) ages.push(measuredNs - created);
     }
   }
   const starts = [...arrivalWeeks.keys(), ...closureWeeks.keys()];
   const weeks: WeeklyCount[] = [];
+  let earlierArrivals = 0;
+  let earlierClosures = 0;
   if (starts.length > 0) {
     let low = starts[0]!;
     let high = starts[0]!;
@@ -141,7 +161,12 @@ export function trajectoryTimeMeasures(items: readonly WorkItemFact[], measuredA
       if (start < low) low = start;
       if (start > high) high = start;
     }
-    for (let start = low; start <= high; start += 7 * 86_400_000) {
+    // At most WEEK_LIMIT weeks, ending at the last covered event; covered
+    // events before them are counted, never dropped.
+    low = Math.max(low, high - (WEEK_LIMIT - 1) * WEEK_MS);
+    for (const [start, count] of arrivalWeeks) if (start < low) earlierArrivals += count;
+    for (const [start, count] of closureWeeks) if (start < low) earlierClosures += count;
+    for (let start = low; start <= high; start += WEEK_MS) {
       weeks.push({ week: isoWeek(BigInt(start) * NS_PER_MS), arrivals: arrivalWeeks.get(start) ?? 0, closures: closureWeeks.get(start) ?? 0 });
     }
   }
@@ -154,5 +179,6 @@ export function trajectoryTimeMeasures(items: readonly WorkItemFact[], measuredA
     arrivals: { covered: arrivals, total: items.length },
     closures: { covered: closures, total: closedTotal },
     weeks,
+    earlier: { arrivals: earlierArrivals, closures: earlierClosures },
   };
 }

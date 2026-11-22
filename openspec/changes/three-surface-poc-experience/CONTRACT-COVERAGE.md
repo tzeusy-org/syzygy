@@ -562,7 +562,7 @@ are listed so the owner can review or contest each one directly.
 | RFC9-51 | Illumination/highlight as non-truth-bearing interaction state; no highlighting feature established in POC scope |
 | RFC9-52 | The RFC-prose-to-OpenSpec authority boundary and coverage-matrix obligation; this non-binding sweep doesn't cite RFC9 as binding authority for the POC spec |
 
-Part B2 total `[Observed, computed]`: **218 clauses.**
+Part B2 total `[Observed, computed]`: **210 clauses.** *(Corrected 2026-11-22, `syzygy-t3jk.17`: this line read 218 while the table held 210 rows over 210 clauses; the family table and the verifying line already said 210.)*
 
 ## Verifying this table
 

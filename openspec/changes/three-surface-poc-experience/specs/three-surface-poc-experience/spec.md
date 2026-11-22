@@ -1277,12 +1277,16 @@ non-closed items from created instant to the observation's capture instant
 arrivals per ISO 8601 week in UTC, by created instant; and (4) closures per
 ISO 8601 week in UTC, by closed instant. Lead time and age SHALL be the
 median and the 90th percentile by nearest rank, in whole hours rounded
-down; with no item covered each SHALL be stated not measurable, never 0.
-An item whose needed instant is missing, invalid, written without a
-timezone, or reversed (a closed instant before its created instant, or a
-created instant after the capture instant) SHALL be counted in the
-denominator and not covered, never dropped. Every week from the first to
-the last covered event SHALL be listed, a week with none an observed 0.
+down; with no item covered each SHALL be stated Unknown with its "0 of m"
+coverage, never 0 (RFC8-19). An item whose needed instant is missing,
+invalid, written without a timezone, after the capture instant, or
+reversed (a closed instant before its created instant) SHALL be counted in
+the denominator and not covered by any measure, never dropped. The weekly
+series SHALL list every week from the first to the last covered event, at
+most the last 104 of them, and state how many covered arrivals and
+closures fall in earlier weeks; its chart and table SHALL state the
+coverage they are counted over, so a week's 0 is read over the covered
+items only.
 The measures SHALL declare their source (the tracker's recorded instants)
 and evidence class (observed), and no element SHALL combine two measures
 into one number (RFC8-18). The page SHALL draw them as charts, one unit per
@@ -1301,25 +1305,31 @@ Unknown for every other cost and point at these measures.
   lead time, a closed item with a timezone-less created instant, a closed
   item closed before it was created, and two open items 48 and 12 hours
   old at the capture instant, spanning ISO weeks 31 to 35 of 2026; it
-  renders the page at two wall-clock times; separately it measures weeks
-  across a year change.
+  renders the page at two wall-clock times; separately it serves a closed
+  item with no usable instants, and measures weeks across a year change and
+  over a span longer than 104 weeks.
 - **Observable**: the four measures, each with its covered and total
-  counts; the weekly rows; the two charts' titles, axis labels and text
-  alternatives; both renders' bytes.
+  counts; the weekly rows and the earlier-week counts; the two charts'
+  titles, axis labels, text alternatives and marks; both renders' bytes.
 - **Oracle**: lead time 2 of 4 covered, median 12 and p90 48 hours; age 2
   of 2, median 12 and p90 48; arrivals 5 of 6; closures 2 of 4; five weekly
-  rows W31 to W35 with W33 and W34 at 0; each table cell equals the machine
-  answer, and a mutated cell is named; the two renders are byte-equal; ISO
-  week names equal the checker's own calendar (2027-01-01 is 2026-W53).
-  Equality decides.
+  rows W31 to W35 with W33 and W34 at 0; each table cell, each bar's value
+  and each week's hover title equals the machine answer, each line's point
+  heights order as its weekly values, and a mutated cell or mark is named;
+  with no usable instant, lead time renders "Unknown: 0 of 1 covered" and no
+  0; the two renders are byte-equal; ISO week names equal the checker's own
+  calendar (2027-01-01 is 2026-W53); a longer span lists 104 weeks and
+  counts the earlier events. Equality decides.
 - **Oracle independence**: expected values are computed by hand from the
   checker's fixture instants, and ISO weeks by an independent calendar,
   never by the module under test.
 - **Falsifier**: a measure without its coverage; an uncovered item dropped
-  from a denominator or counted as 0 hours; an age measured to a render-time
-  clock; a week missing between covered events; two units on one axis; a
-  chart number absent from the tables or unequal to the machine answer; a
-  composite of two measures; or cost rendered as known.
+  from a denominator or counted as 0 hours; a measure with no covered item
+  rendered as 0; an instant after the capture instant counted; an age
+  measured to a render-time clock; a week missing between covered events,
+  or an earlier event dropped; two units on one axis; a chart number absent
+  from the tables or unequal to the machine answer; a composite of two
+  measures; or cost rendered as known.
 
 #### Scenario: Elapsed time with partial coverage
 
@@ -1333,8 +1343,8 @@ Unknown for every other cost and point at these measures.
 #### Scenario: No covered item
 
 - **WHEN** no closed item has valid created and closed instants
-- **THEN** lead time is stated not measurable with 0 of its total covered,
-  never 0 hours
+- **THEN** lead time is stated Unknown with 0 of its total covered, never
+  0 hours
 
 ```yaml
 warrants:

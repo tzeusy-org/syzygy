@@ -57,8 +57,11 @@ function weeklyChart(measures: TrajectoryTimeMeasures): string {
     .map((t) => `<line class="tc-grid" x1="${left}" x2="${left + plotW}" y1="${fixed(y(t))}" y2="${fixed(y(t))}"/><text class="tc-tick" x="${left - 6}" y="${fixed(y(t) + 4)}" text-anchor="end">${t}</text>`)
     .join('');
   const labelEvery = Math.max(1, Math.ceil(weeks.length / 6));
+  const lastIndex = weeks.length - 1;
+  // The last week is labelled too, unless that would crowd the previous label.
+  const labelled = (i: number): boolean => i % labelEvery === 0 || (i === lastIndex && lastIndex % labelEvery >= labelEvery / 2);
   const xTicks = weeks
-    .map((week, i) => (i % labelEvery === 0 || i === weeks.length - 1 ? `<text class="tc-tick" x="${fixed(x(i))}" y="${top + plotH + 18}" text-anchor="middle">${escapeHtml(week.week)}</text>` : ''))
+    .map((week, i) => (labelled(i) ? `<text class="tc-tick" x="${fixed(x(i))}" y="${top + plotH + 18}" text-anchor="middle">${escapeHtml(week.week)}</text>` : ''))
     .join('');
   const line = (key: 'arrivals' | 'closures', colour: string): string =>
     `<polyline class="tc-line" data-parity-field="trajectory-time-chart-${key}" fill="none" stroke="${colour}" stroke-width="2" stroke-linejoin="round" points="${weeks.map((week, i) => `${fixed(x(i))},${fixed(y(week[key]))}`).join(' ')}"/>`;
@@ -75,7 +78,7 @@ function weeklyChart(measures: TrajectoryTimeMeasures): string {
     .join('');
   return `<svg class="time-chart" viewBox="0 0 ${width} ${height}" role="img" aria-labelledby="tc-weekly-title tc-weekly-desc">
       <title id="tc-weekly-title">Work items arriving and closing per ISO week (UTC)</title>
-      <desc id="tc-weekly-desc">${weeks.length} weeks from ${escapeHtml(weeks[0]!.week)} to ${escapeHtml(last.week)}; the weekly table below gives every value.</desc>
+      <desc id="tc-weekly-desc">${weeks.length} weeks from ${escapeHtml(weeks[0]!.week)} to ${escapeHtml(last.week)}, counted over ${measures.arrivals.covered} of ${measures.arrivals.total} items with a usable created instant and ${measures.closures.covered} of ${measures.closures.total} closed items with a usable closed instant; the weekly table below gives every value.</desc>
       ${grid}
       <line class="tc-axis" x1="${left}" x2="${left + plotW}" y1="${top + plotH}" y2="${top + plotH}"/>
       ${xTicks}
@@ -119,7 +122,7 @@ function hoursChart(measures: TrajectoryTimeMeasures): string {
     const value = values[i]!;
     const cy = top + i * rowH + rowH / 2;
     const name = `<text class="tc-tick" x="${left - 8}" y="${fixed(cy + 4)}" text-anchor="end">${escapeHtml(label)}</text>`;
-    if (value === null) return `${name}<text class="tc-label" x="${left + 6}" y="${fixed(cy + 4)}">not measurable (0 covered)</text>`;
+    if (value === null) return `${name}<text class="tc-label" x="${left + 6}" y="${fixed(cy + 4)}">Unknown: 0 of ${measures[key].total} covered</text>`;
     const w = Math.max(x(value) - left, 1);
     return `${name}<rect class="tc-bar" data-parity-field="trajectory-time-chart-${key}-${which}" x="${left}" y="${fixed(cy - 7)}" width="${fixed(w)}" height="14" rx="2"><title>${escapeHtml(label)}: ${value} hours</title></rect><text class="tc-label" x="${fixed(left + w + 6)}" y="${fixed(cy + 4)}">${value} h</text>`;
   }).join('');
@@ -133,12 +136,13 @@ function hoursChart(measures: TrajectoryTimeMeasures): string {
     </svg>`;
 }
 
-function hoursCell(field: string, value: number | null): string {
-  return value === null ? `<td data-parity-field="${field}">not measurable</td>` : `<td data-parity-field="${field}">${value}</td>`;
+/** RFC8-19: a measure with no covered item is Unknown, never 0. */
+function hoursCell(field: string, value: number | null, total: number): string {
+  return value === null ? `<td data-parity-field="${field}">Unknown: 0 of ${total} covered</td>` : `<td data-parity-field="${field}">${value}</td>`;
 }
 
 function durationRow(field: 'lead' | 'age', label: string, measure: DurationMeasure): string {
-  return `<tr><th scope="row">${label}</th><td><span data-parity-field="time-${field}-covered">${measure.covered}</span> of <span data-parity-field="time-${field}-total">${measure.total}</span></td>${hoursCell(`time-${field}-median`, measure.medianHours)}${hoursCell(`time-${field}-p90`, measure.p90Hours)}</tr>`;
+  return `<tr><th scope="row">${label}</th><td><span data-parity-field="time-${field}-covered">${measure.covered}</span> of <span data-parity-field="time-${field}-total">${measure.total}</span></td>${hoursCell(`time-${field}-median`, measure.medianHours, measure.total)}${hoursCell(`time-${field}-p90`, measure.p90Hours, measure.total)}</tr>`;
 }
 
 /** The region: two charts, the measures table and the weekly table. */
@@ -157,9 +161,9 @@ export function timeMeasuresRegion(measures: TrajectoryTimeMeasures): string {
         <thead><tr><th scope="col">Measure</th><th scope="col">Items covered</th><th scope="col">Median</th><th scope="col">90th percentile</th></tr></thead>
         <tbody>${durationRow('lead', 'Lead time (closed items, created to closed)', measures.leadTime)}${durationRow('age', 'Age (open items, created to capture)', measures.age)}</tbody>
       </table>
-      <p class="time-note">Arrivals: <span data-parity-field="time-arrivals-covered">${measures.arrivals.covered}</span> of <span data-parity-field="time-arrivals-total">${measures.arrivals.total}</span> served items have a valid created instant. Closures: <span data-parity-field="time-closures-covered">${measures.closures.covered}</span> of <span data-parity-field="time-closures-total">${measures.closures.total}</span> closed items have a valid closed instant not before their created instant.</p>
+      <p class="time-note">Arrivals: <span data-parity-field="time-arrivals-covered">${measures.arrivals.covered}</span> of <span data-parity-field="time-arrivals-total">${measures.arrivals.total}</span> served items have a valid created instant. Closures: <span data-parity-field="time-closures-covered">${measures.closures.covered}</span> of <span data-parity-field="time-closures-total">${measures.closures.total}</span> closed items have a valid closed instant, not after the capture instant and not before their created instant. Instants after the capture instant are not covered. The weekly series lists at most 104 weeks, ending at the last covered event; earlier weeks hold <span data-parity-field="time-earlier-arrivals">${measures.earlier.arrivals}</span> covered arrivals and <span data-parity-field="time-earlier-closures">${measures.earlier.closures}</span> covered closures.</p>
       <details class="time-weeks"><summary>Weekly arrivals and closures, ${measures.weeks.length} weeks</summary>
-        <table class="time-table"><thead><tr><th scope="col">ISO week (UTC)</th><th scope="col">Arrivals</th><th scope="col">Closures</th></tr></thead><tbody>${weeklyRows}</tbody></table>
+        <table class="time-table"><caption>Counted over ${measures.arrivals.covered} of ${measures.arrivals.total} items with a usable created instant and ${measures.closures.covered} of ${measures.closures.total} closed items with a usable closed instant</caption><thead><tr><th scope="col">ISO week (UTC)</th><th scope="col">Arrivals</th><th scope="col">Closures</th></tr></thead><tbody>${weeklyRows}</tbody></table>
       </details>
     </section>`;
 }
