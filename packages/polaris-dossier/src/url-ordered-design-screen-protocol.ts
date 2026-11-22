@@ -9,7 +9,7 @@ export const ORDERED_SCREEN_FORMAT = 'ordered-design-screen/1';
 export const ORDERED_SCREEN_INPUT_LIMITS = Object.freeze({ maxBytes: 16_777_216, maxNodes: 131_072, maxDepth: 48 });
 export const ORDERED_SCREEN_OUTPUT_LIMITS = Object.freeze({ maxBytes: 12_582_912, maxNodes: 131_072, maxDepth: 48 });
 export const ORDERED_SCREEN_LIMITS = Object.freeze({
-  wallMilliseconds: 5000, cpuSeconds: 2, addressBytes: 2_147_483_648,
+  wallMilliseconds: 20_000, cpuSeconds: 8, addressBytes: 2_147_483_648,
   detectorCalls: 1_048_576, detectorCodeUnits: 1_073_741_824,
 });
 export interface OrderedScreenLimits {

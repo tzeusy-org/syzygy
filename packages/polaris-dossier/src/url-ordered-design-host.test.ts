@@ -107,7 +107,7 @@ async function fixture() {
       return () => readFileSync(file);
     },
   }, bytes => controller.chargeAuditRead(bytes));
-  const operation = { cpuMicroseconds: 10_000_000, wallMilliseconds: 10_000, auditReadBytes: 500_000_000,
+  const operation = { cpuMicroseconds: 32_000_000, wallMilliseconds: 30_000, auditReadBytes: 500_000_000,
     inputCodeUnits: 8_388_608, secretCodeUnits: 103_000_000, secretCalls: 524_361, activeCodeUnits: 16_777_216, activeCalls: 32 };
   controller = createOrderedDesignSession({ profile, plan, principal: 'owned-operator', writer,
     budget: createUrlSessionBudget({ deadline, now: Date.now, turnBudget: 5, tokenBudget: null }),

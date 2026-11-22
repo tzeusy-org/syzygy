@@ -352,7 +352,7 @@ async function runNativeOrderedFixture(scenario: OrderedScenario) {
   const budget = createUrlSessionBudget({ deadline: Date.parse(plan.manifest.binding.deadline), now: Date.now,
     turnBudget: scenario === 'insufficient-turns' ? 4 : 5, tokenBudget: null });
   let relay: SessionRelay;
-  const operationEnvelope = { cpuMicroseconds: 10_000_000, wallMilliseconds: 10_000, auditReadBytes: 500_000_000,
+  const operationEnvelope = { cpuMicroseconds: 32_000_000, wallMilliseconds: 30_000, auditReadBytes: 500_000_000,
     inputCodeUnits: 8_388_608, secretCodeUnits: 103_000_000, secretCalls: 524_361, activeCodeUnits: 16_777_216, activeCalls: 32 };
   let workerCpu = 0;
   const cpuMicroseconds = () => { const usage = process.cpuUsage(); return usage.user + usage.system + workerCpu; };
@@ -372,7 +372,7 @@ async function runNativeOrderedFixture(scenario: OrderedScenario) {
   orderedSession = createOrderedDesignSession({ profile, plan, principal, writer, budget, screening,
     work: { runtimeSha256: sha256('owned runtime'), enforcement: { runtimeSha256: sha256('owned runtime'), workerSha256: screening.kind === 'bounded-worker' ? screening.program.worker.sha256 : sha256('owned test adapter'),
       operations: { request: operationEnvelope, response: operationEnvelope, tool: operationEnvelope, audit: operationEnvelope, terminal: operationEnvelope },
-      relayMilliseconds: 180_000, brokerMilliseconds: 85_000 }, remainingRunCpuMicroseconds: () => (scenario === 'insufficient-work' && responseUsage.length > 0 ? 10_000_000 : 1_000_000_000) - workerCpu,
+      relayMilliseconds: 180_000, brokerMilliseconds: 85_000 }, remainingRunCpuMicroseconds: () => (scenario === 'insufficient-work' && responseUsage.length > 0 ? 10_000_000 : 3_000_000_000) - workerCpu,
       cpuMicroseconds, chargeScreenCpuMicroseconds: value => { workerCpu += value; } },
     ...(scenario === 'insufficient-shape' ? { requestMaxBytes: 16_384 } : {}), relay: () => relay, envelope: () => view.bytes,
     current: () => true, assertCurrent: () => {}, stageVerdict: async ({ stdin, assertCurrent }) => {
