@@ -1059,6 +1059,41 @@ describe('check: a quotation from an excluded file', () => {
     expect(result.findings).toEqual([{ kind: 'discovery-path-absent', at: '$.discovery.inspected[2]', detail: 'the cited path names no file at the pinned revision' }]);
     expect(read(run, 'checks/rev-0.json')).not.toContain('k'.repeat(24));
   });
+
+  // syzygy-8hm6: `screenPath` answers `denied-path` before it tries a detector, so a path both a denied-path rule and a secret detector
+  // match is not `secret-detector-match` to it. `.env` is a denied basename and the directory is a token format, built from parts.
+  it('names a path both denied and matched by a secret detector nowhere: not in citedBlobs, a finding, the review note or the stored record', async () => {
+    const token = `${['gh', 'p_'].join('')}${'z'.repeat(24)}`, gone = `${['gh', 'p_'].join('')}${'w'.repeat(24)}`;
+    const both = `conf/${token}/.env`, absent = `gone/${gone}/.env`;
+    expect([both, absent].map((p) => SCREEN_OK.screenPath(p))).toEqual(['denied-path', 'denied-path']);
+    // The pinned tree lists the first path (a path screening denies is never read); the second names no file.
+    const withBoth = (options: PinnedObjectReaderOptions): PinnedObjectReader => {
+      const real = openPinnedObjectReader(options);
+      return { ...real, algorithm: real.algorithm, readBlobs: (paths) => real.readBlobs(paths),
+        listTree: async () => [...await real.listTree(), { path: both, mode: '100644', id: 'f'.repeat(40) }] } as PinnedObjectReader;
+    };
+    const run = await briefedRun();
+    writeDraft(run, mutate((d) => {
+      d.unresolved = [{ id: 'q0', question: 'Why?', reason: 'Not stated.', citations: [cite('c-q0', both, 1, 1), cite('c-q1', absent, 1, 1), cite('c-q2', '.env', 1, 1)] }];
+      d.discovery.inspected.push(absent);
+    }));
+    const result = report(await checkDraft(run, {}, deps({ openReader: withBoth })));
+    expect(result.citedBlobs.slice(-2)).toEqual([
+      { path: null, objectId: null, read: false, outcome: 'denied-path' },
+      { path: '.env', objectId: expect.stringMatching(/^[0-9a-f]{40}$/u), read: false, outcome: 'denied-path' },
+    ]);
+    expect(result.findings).toEqual([
+      { kind: 'path-absent', at: '$.unresolved[0].citations[1].path', citationId: 'c-q1', detail: `the cited path names no file at the pinned revision ${commit}` },
+      { kind: 'discovery-path-absent', at: '$.discovery.inspected[2]', detail: 'the cited path names no file at the pinned revision' },
+    ]);
+    expect(reviewVisibility(result.citedBlobs, SCREEN_OK.contentClass, null)?.withheld.slice(-2)).toEqual([
+      { path: '(a path a secret detector matches)', outcome: 'denied-path' }, { path: '.env', outcome: 'denied-path' },
+    ]);
+    // Booleans, so a failure prints neither string.
+    const carries = (text: string): boolean[] => [text.includes('z'.repeat(24)), text.includes('w'.repeat(24))];
+    expect(carries(JSON.stringify(result))).toEqual([false, false]);
+    expect(carries(read(run, 'checks/rev-0.json'))).toEqual([false, false]);
+  });
 });
 
 describe('check: limits Syzygy enforces', () => {

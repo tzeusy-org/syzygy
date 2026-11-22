@@ -52,7 +52,10 @@ const MARKUP = 'if (a < b && c > d) return;\n#define LT "&lt;"\n#define AMP &amp
 const TAGGED = 'const end = "</pre>";\n';
 /** A path the credential-assignment detector matches: counted wherever cited, and never named (dossier spec v1.5). */
 const SECRET_PATH = 'conf/token=abcdefghijk';
-const FILES: Record<string, string> = { 'src/kestrel.c': KESTREL, 'src/markup.c': MARKUP, 'src/tagged.c': TAGGED, 'docs/notes.txt': NOTES, 'README.md': '# Kestrel\n', '.env': 'X=1\n', 'docs/deploy.md': SECRETS, [SECRET_PATH]: 'x\n' };
+/** A path both a denied-path rule (`.env` is a denied basename) and a secret detector (the directory is a token format, built from parts)
+ * match: path screening answers `denied-path` for it before it tries a detector (syzygy-8hm6). */
+const BOTH_PATH = `conf/${['gh', 'p_'].join('')}${'y'.repeat(24)}/.env`;
+const FILES: Record<string, string> = { 'src/kestrel.c': KESTREL, 'src/markup.c': MARKUP, 'src/tagged.c': TAGGED, 'docs/notes.txt': NOTES, 'README.md': '# Kestrel\n', '.env': 'X=1\n', 'docs/deploy.md': SECRETS, [SECRET_PATH]: 'x\n', [BOTH_PATH]: 'Y=2\n' };
 const LIVE_POLICY = JSON.parse(fs.readFileSync(path.join(REAL_ROOT, '.syzygy/governance/policies/POLARIS-BUTLERS-SECRET-CLASSIFICATION-POLICY-CANDIDATE.json'), 'utf8'));
 const policy = (extensions: string[]): Uint8Array => new TextEncoder().encode(JSON.stringify({
   policyId: 'fixture-public-source', policyVersion: '1', detectors: LIVE_POLICY.detectors, sourceAdmission: LIVE_POLICY.sourceAdmission,
@@ -564,6 +567,23 @@ describe('render', () => {
     expect(files.get('discovery.html')).toContain('zq-why-secret.');
     expect(files.get('sources/index.html')).not.toContain('zq-why-secret');
     expect(list.split('class="selected-why"').length - 1).toBe(2);
+  });
+
+  it('names a path both denied and matched by a secret detector on no page, counting it as not named (syzygy-8hm6)', async () => {
+    const doc = draft();
+    doc['schemaVersion'] = 'polaris-dossier-local-draft-v4';
+    (doc['sections'] as Doc[])[0]!['paragraphs'].push({ id: 'p7', label: 'inferred', basis: 'source', text: 'zq-both paragraph.', citations: [cite('c-p7', '.env', 1, 1), cite('c-p7b', BOTH_PATH, 1, 1)], quotations: [], children: [] });
+    (doc['discovery'] as Doc)['selected'] = [{ path: BOTH_PATH, reason: 'zq-why-both.' }];
+    expect(buildDossierScreen(fixturePolicy, true, null, fixtureVisibility)).toMatchObject({ ok: true });
+    const result = await renderRun(await prepared(doc, false), renderDeps());
+    if (!result.ok) throw new Error(result.refusal.reason);
+    const files = readSite(result.report.site);
+    // Booleans, so a failure prints no page.
+    expect([...files].filter(([, page]) => page.includes('y'.repeat(24))).map(([file]) => file)).toEqual([]);
+    expect(files.get('index.html')).toContain('Withheld from this dossier: it rests on 2 source file(s) that screening withholds (.env; 1 not named, because a secret detector matches the path), so its text is not shown.');
+    const discovery = files.get('discovery.html')!;
+    expect(discovery.includes('zq-why-both.')).toBe(true);
+    expect(discovery.split('a path a secret detector matches (not shown)').length - 1).toBe(2);
   });
 
   it('says on the sources list which pages cite each source and how often (syzygy-pdja.15)', async () => {
@@ -1701,7 +1721,7 @@ describe('render: derived structure (version 2.3)', () => {
     expect(record).toEqual({
       format: 'polaris-dossier-derived-structure/1', repositoryId: 'redis-redis', revision: commit, capturedAt: '2026-10-07T12:01:00.000Z',
       scope: 'tree-metadata: the paths and modes of the pinned tree\'s entries; no file body, size or object id', producer: 'syzygy dossier check',
-      rules: [{ id: 'top-level-unit', version: 1 }], state: 'derived', files: 8, secretPathsLeftOut: 1, submodules: 0, facts: FACTS, unitsNotListed: 0,
+      rules: [{ id: 'top-level-unit', version: 1 }], state: 'derived', files: 9, secretPathsLeftOut: 2, submodules: 0, facts: FACTS, unitsNotListed: 0,
     });
     expect(kept.toString('utf8')).toBe(`${JSON.stringify(record, null, 2)}\n`);
     // An inventory check keeps none.
@@ -1818,14 +1838,14 @@ describe('render: derived structure (version 2.3)', () => {
     // The denied `.env`, the active-content `src/tagged.c`, the unknown-class `docs/notes.txt` and the secret path: no object id of any.
     for (const [file, id] of Object.entries(objectIds)) expect(derivedText, file).not.toContain(id);
     for (const name of ['conf', 'token=', 'abcdefghijk']) for (const [file, text] of files) expect(text, `${file} ${name}`).not.toContain(name);
-    expect(JSON.parse(record)).toMatchObject({ files: 8, secretPathsLeftOut: 1, facts: FACTS });
+    expect(JSON.parse(record)).toMatchObject({ files: 9, secretPathsLeftOut: 2, facts: FACTS });
     for (const fact of JSON.parse(record).facts as Record<string, unknown>[]) expect(Object.keys(fact).filter((key) => /size|bytes|object|blob|sha|id$/iu.test(key) && key !== 'id')).toEqual([]);
   });
 
-  // Version 2.9 (syzygy-3efd.36): the directory map counts what the render re-derives from the tree: FILES holds 8 blob entries, 2 at the
-  // root, 5 under docs/ and src/, and 1 a secret detector matches.
+  // Version 2.9 (syzygy-3efd.36): the directory map counts what the render re-derives from the tree: FILES holds 9 blob entries, 2 at the
+  // root, 5 under docs/ and src/, and 2 a secret detector matches (one of them also a denied path, syzygy-8hm6).
   it('counts the directory map from the tree, never the record, and marks its line Unknown where the record\'s files alone was edited', async () => {
-    const coverage = (mark: string, ending = ''): string => `<p class="map-coverage" ${mark}>Coverage: 8 files in the tree at that revision: 2 at the root; 5 under the 2 top-level directories listed here; 0 under 0 more top-level directories counted and not listed; 1 left out and not named, because a secret detector matches their path; and 0 submodules, not followed. Directories below the top level are not mapped: no rule of this version derives them.${ending}</p>`;
+    const coverage = (mark: string, ending = ''): string => `<p class="map-coverage" ${mark}>Coverage: 9 files in the tree at that revision: 2 at the root; 5 under the 2 top-level directories listed here; 0 under 0 more top-level directories counted and not listed; 2 left out and not named, because a secret detector matches their path; and 0 submodules, not followed. Directories below the top level are not mapped: no rule of this version derives them.${ending}</p>`;
     const run = await prepared(draft(), false);
     const current = await rendered(run);
     expect(current.files.get('maps/directories.html')).toContain(coverage('data-epistemic="observed"'));

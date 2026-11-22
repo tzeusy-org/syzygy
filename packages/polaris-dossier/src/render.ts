@@ -352,7 +352,8 @@ export function buildLocalInput(inputs: BuildInputs): Built {
   const { run, runId, subject, declared } = opened;
   const pinned = subject.pinnedRevision.commit;
   const clean = (value: string): string => (screen.screenBody(value) === 'secret-detector-match' ? WITHHELD_TEXT : value);
-  const shownPath = (repositoryPath: string): string => (screen.screenPath(repositoryPath) === 'secret-detector-match' ? SECRET_PATH : repositoryPath);
+  const isSecretPath = secretPathOf(screen);
+  const shownPath = (repositoryPath: string): string => (isSecretPath(repositoryPath) ? SECRET_PATH : repositoryPath);
 
   // The class gate (`class-gate.ts`): the design packet carries these pages to a review session, so a blob screening admitted under a
   // class the run does not declare is neither quoted nor put on a source page; it is a counted row naming the class.
@@ -396,7 +397,7 @@ export function buildLocalInput(inputs: BuildInputs): Built {
     const { cited, quoted } = citationIdsOf(value);
     const ids = new Set([...cited, ...quoted].filter((id) => standing(id) === 'withheld'));
     const files = new Set(list(value['citations']).filter(isRecord).flatMap((citation) => (ids.has(text(citation['id']) ?? '') && text(citation['path']) !== undefined ? [text(citation['path'])!] : [])));
-    const named = [...files].filter((file) => screen.screenPath(file) !== 'secret-detector-match').sort();
+    const named = [...files].filter((file) => !isSecretPath(file)).sort();
     return { sources: files.size, named };
   };
   const withheldSpanCount = (value: Readonly<Record<string, unknown>>): number => {

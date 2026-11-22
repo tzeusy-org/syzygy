@@ -5,7 +5,7 @@ import { isRecord } from '@syzygy/support';
 import { FIGURE_MEMBERS, LOCAL_DRAFT_SCHEMA_VERSION, LOCAL_DRAFT_SCHEMA_VERSION_V4, LOCAL_DRAFT_SCHEMA_VERSION_V5, LOCAL_DRAFT_SCHEMA_VERSION_V6, INVENTORY_OMISSIONS_SINCE, PRE_V5_SCHEMA_VERSIONS, UNDERSTANDING_ITEMS, V4_FIELDS, V7_FIGURE_MEMBERS, hasHomeForm, hasThesisBasisForm, hasV4Forms, checkDraftShape, localDraftSchema, membersOfKind, type DraftSchemaWithDefs } from './draft-schema.js';
 import { isEntryPoint } from './derive.js';
 import { BLOB_MODES, type PinnedObjectReader, type TreeEntry } from './git-object-reader.js';
-import { type DossierScreen, type ScreenExclusion } from './screen.js';
+import { secretPathOf, type DossierScreen, type ScreenExclusion } from './screen.js';
 import { DEFAULT_POLE_LIMIT } from './run-config.js';
 import { type CheckFinding, type CitedBlob, type ExcludedQuotation, type VerifiedQuotation, blobRedaction, line, list, text } from './check-model.js';
 
@@ -266,16 +266,18 @@ export async function deriveFindings(subject: unknown, inputs: DeriveInputs, rul
         : { state: 'admitted', entry: blob, raw, lines: lineCount(raw), tracked: null });
   }
   const firstCited = [...new Set(citations.flatMap(({ value }) => (text(value['path']) === undefined ? [] : [text(value['path'])!])))];
+  const isSecretPath = secretPathOf(inputs.screen);
   const citedBlobs: CitedBlob[] = firstCited.map((cited) => [cited, blobs.get(cited)!] as const).flatMap(([cited, state]): CitedBlob[] => {
     if (state.state === 'absent') return [];
     if (state.state === 'admitted') {
       return [{ path: cited, objectId: state.entry.id, read: true, outcome: 'admitted', ...(state.withheld === undefined ? {} : { redaction: blobRedaction(state.withheld, state.detectorIds!) }) }];
     }
-    const pathSecret = state.outcome === 'secret-detector-match' && inputs.screen.screenPath(cited) === 'secret-detector-match';
+    // The outcome stays what screening gave (`denied-path` for a path a denied-path rule also names); only the name is withheld.
+    const pathSecret = isSecretPath(cited);
     return [{ path: pathSecret ? null : cited, objectId: pathSecret ? null : tree.get(cited)!.id, read: toRead.some((entry) => entry.path === cited), outcome: state.outcome }];
   });
 
-  const pathLabel = (cited: string): string => (inputs.screen.screenPath(cited) === 'secret-detector-match' ? 'the cited path' : JSON.stringify(cited));
+  const pathLabel = (cited: string): string => (isSecretPath(cited) ? 'the cited path' : JSON.stringify(cited));
   const rangeOk = new Set<Citation['value']>();
   for (const citation of citations) {
     const { value, at } = citation;
