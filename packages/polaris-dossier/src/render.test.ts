@@ -1709,7 +1709,7 @@ describe('render: derived structure (version 2.3)', () => {
     const region = regionOfIndex(index);
     expect(region).toContain(`<figure class="derived-figure" data-visual-provenance="computed" data-derived-record="sha256:${digest}">`);
     expect(index.indexOf('<section id="derived-structure"')).toBeGreaterThan(index.indexOf('<section id="section-core-ideas"'));
-    expect(region.endsWith('</figure></section>')).toBe(true);
+    expect(region.endsWith('</figure><p class="derived-maps">Computed maps: <a href="maps/directories.html">Directory map</a> · <a href="maps/units.html">Unit map</a> · <a href="maps/ci.html">CI pipeline map</a>.</p></section>')).toBe(true);
     expect(drawnGroups(region).sort()).toEqual(['edge observed _tree-contains-1', 'edge observed _tree-contains-2', 'node observed _tree-root', 'node observed _tree-unit-1', 'node observed _tree-unit-2']);
     expect(region).toContain('<p class="diagram-tally">3 boxes and 2 arrows, derived by Syzygy: 5 observed, 0 inferred, 0 unknown.</p>');
     for (const fact of FACTS) {
@@ -1767,7 +1767,7 @@ describe('render: derived structure (version 2.3)', () => {
   });
 
   it('states Not established with no figure, list or published record where no record was kept, the record is Unknown, or the render cannot list the tree', async () => {
-    const sentence = (reason: string, words: string): string => `<section id="derived-structure" data-reading-level="1" data-topics=""><h2>Derived by Syzygy: top-level directories</h2><p class="derived-unknown" data-epistemic="unknown" data-unknown-reason="${reason}"><span class="not-established">Not established.</span> The top-level directories of the tree at revision ${commit} are Unknown at this render: ${words}.</p></section>`;
+    const sentence = (reason: string, words: string): string => `<section id="derived-structure" data-reading-level="1" data-topics=""><h2>Derived by Syzygy: top-level directories</h2><p class="derived-unknown" data-epistemic="unknown" data-unknown-reason="${reason}"><span class="not-established">Not established.</span> The top-level directories of the tree at revision ${commit} are Unknown at this render: ${words}.</p><p class="derived-maps">Computed maps: <a href="maps/directories.html">Directory map</a> · <a href="maps/units.html">Unit map</a> · <a href="maps/ci.html">CI pipeline map</a>.</p></section>`;
     const expectNotEstablished = (out: Awaited<ReturnType<typeof rendered>>, reason: string, words: string, state: string): void => {
       expect(regionOfIndex(out.index)).toBe(sentence(reason, words));
       expect(out.files.has('derived-structure.json')).toBe(false);
@@ -1832,7 +1832,8 @@ describe('render: derived structure (version 2.3)', () => {
     expect(authored).not.toContain('Solid: observed');
     expect(authored).not.toContain('data-derived-id');
     expect(drawnGroups(regionOfIndex(index)).every((g) => g.split(' ')[1] === 'observed')).toBe(true);
-    expect([...files.values()].join('').split('data-visual-provenance="computed"').length - 1).toBe(1);
+    // One computed figure outside the map pages (version 2.9 adds the map pages' own).
+    expect([...files].filter(([file]) => !file.startsWith('maps/')).map(([, text]) => text).join('').split('data-visual-provenance="computed"').length - 1).toBe(1);
 
     // A draft element labelled Observed, and a draft member naming the derived figure, are findings: the draft does not proceed.
     const observed = structuredClone(doc);
