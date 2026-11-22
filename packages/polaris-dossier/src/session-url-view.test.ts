@@ -61,7 +61,14 @@ describe('private URL role views', () => {
       expect(view.env).toEqual({ PATH: '/usr/bin:/bin', LANG: 'C.UTF-8', SHELL: '/usr/bin/zsh', TZ: 'UTC', HOME: '/home/synthetic', CLAUDE_CONFIG_DIR: '/home/synthetic/.claude',
         SYZYGY_SESSION_MCP_SOCKET: '/sockets/broker/b.sock', CLAUDE_CODE_OAUTH_TOKEN: 'NONSECRET-SYNTHETIC-OAUTH-TOKEN-ONLY',
   MAX_THINKING_TOKENS: '0', CLAUDE_CODE_DISABLE_ADAPTIVE_THINKING: '1', ENABLE_TOOL_SEARCH: 'false',
-  CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC: '1', DISABLE_TELEMETRY: '1', DISABLE_ERROR_REPORTING: '1' });
+  CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC: '1', DISABLE_TELEMETRY: '1', DISABLE_ERROR_REPORTING: '1',
+        ...(role === 'design' ? { MAX_MCP_OUTPUT_TOKENS: '490000' } : {}) });
+      const forgedEnvironment = { ...view, env: { ...view.env, MAX_MCP_OUTPUT_TOKENS: '1' } };
+      expect(urlSessionBwrapArgs(forgedEnvironment)).toEqual(args);
+      if (role === 'design') {
+        const at = args.indexOf('MAX_MCP_OUTPUT_TOKENS');
+        expect(args[at - 1]).toBe('--setenv'); expect(args[at + 1]).toBe('490000');
+      } else expect(args).not.toContain('MAX_MCP_OUTPUT_TOKENS');
       expect(Object.isFrozen(view.inputs.protectedPaths)).toBe(true);
     }
     expect(urlSessionCommand(['--print', 'fixed screened prompt'])).toEqual(['/tool/node', '/tool/support/session-bridge.js', '--socket', '/sockets/relay/r.sock', '--', '/tool/claude', '--print', 'fixed screened prompt']);

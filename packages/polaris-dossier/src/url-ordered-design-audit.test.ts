@@ -57,7 +57,7 @@ function archive(mutate?: (event: Event, occurrence: number, index: number) => v
   }));
   const plan = planOrderedDesignBytes({ envelope, envelopeSha256: sha256(envelope), original: packet,
     fileCount: 1, pageCount: 1, parents: product.parents.map(digest), instructionProfileSha256: sha256(input.systemPrompt),
-    limits: { partBytes: 524288, partCount: 2, replyBytes: 786432, preparedBytes: 4096 },
+    limits: { partBytes: 400000, partCount: 2, replyBytes: 490000, preparedBytes: 4096 },
     binding: { basePolicySha256: input.binding.policy, deadline, encoding: 'html-entities-five/1', originPolicySha256: sha256('own origin policy'),
       originalReceiptSha256: sha256(`own original receipt ${epoch}`), pin: 'c'.repeat(40), producerSha256: sha256('own producer'),
       profileSha256: profile.digest, project: 'own-project', provider: 'anthropic', role: 'design', round: epoch, run: input.binding.run,

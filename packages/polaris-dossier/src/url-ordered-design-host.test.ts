@@ -67,7 +67,7 @@ beforeAll(async () => {
 });
 
 async function fixture() {
-  const suffix = ++sequence, deadline = Date.now() + 1_800_000;
+  const suffix = ++sequence, deadline = Date.now() + 3_600_000;
   const compiled = createOrderedDesignSessionProfile({ binding: { run: RUN, role: 'design', sourceBinding: sha256(`owned source ${suffix}`),
     policy: sha256(V8), provider: 'anthropic', model: DEFAULT_SESSION_MODEL }, sessionId: '12345678-1234-4234-8234-123456789012',
     systemPrompt: 'Review owned material.', initialPrompt: 'Inspect every ordered part.', utcDate: new Date().toISOString().slice(0, 10), kernelRelease: os.release() });

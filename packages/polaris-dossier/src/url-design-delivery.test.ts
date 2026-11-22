@@ -177,14 +177,15 @@ describe('ordered URL design byte plan', () => {
   it('carries a complete production-sized view in two bounded parts and refuses capacity and reply breaches', () => {
     const { bindings, planInput } = requestProjectionFixture(0);
     const plan = bindings.plan;
+    expect(bindings.profile.transcript.nativeMcpOutputTokens).toBe(490_000);
     expect(plan.manifest.envelopeBytes).toBeGreaterThan(656_000);
-    expect(plan.manifest.parts.map(part => part.bytes)).toEqual([524_288, bindings.envelope.length - 524_288]);
+    expect(plan.manifest.parts.map(part => part.bytes)).toEqual([400_000, bindings.envelope.length - 400_000]);
     const replies = plan.manifest.parts.map(part => JSON.parse(materializeOrderedDesignPart(plan, bindings.envelope, part.path)) as { text: string });
     expect(Buffer.from(replies.map(reply => reply.text).join(''))).toEqual(bindings.envelope);
     expect(() => planOrderedDesignBytes({ ...planInput, limits: { ...planInput.limits, partBytes: 32_768 } })).toThrow(REFUSAL);
     const firstReplyBytes = Buffer.byteLength(materializeOrderedDesignPart(plan, bindings.envelope, plan.manifest.parts[0]!.path));
     expect(() => planOrderedDesignBytes({ ...planInput, limits: { ...planInput.limits, replyBytes: firstReplyBytes - 1 } })).toThrow(REFUSAL);
-    const payload = 'x'.repeat(1_048_576), original = { bytes: payload.length, sha256: sha256(payload) };
+    const payload = 'x'.repeat(800_000), original = { bytes: payload.length, sha256: sha256(payload) };
     const envelope = Buffer.from(JSON.stringify({ encoding: 'html-entities-five/1', format: 'polaris-dossier-url-design-inert-view/1',
       originalBytes: original.bytes, originalSha256: original.sha256, payload, payloadBytes: payload.length, payloadSha256: original.sha256 }));
     expect(() => planOrderedDesignBytes({ ...planInput, envelope, envelopeSha256: sha256(envelope), original })).toThrow(REFUSAL);
@@ -221,7 +222,7 @@ describe('ordered URL design byte plan', () => {
     changed[changed.length - 10] = 0x20;
     expect(() => projectOrderedDesignRequest(actual, { ...bindings, envelope: changed })).toThrow(REFUSAL);
     expect(() => projectOrderedDesignRequest(actual, { ...bindings, plan: { ...bindings.plan } })).toThrow(PROJECT_REFUSAL);
-    const repartitioned = planOrderedDesignBytes({ ...planInput, limits: { ...planInput.limits, partBytes: 400_000 } });
+    const repartitioned = planOrderedDesignBytes({ ...planInput, limits: { ...planInput.limits, partBytes: 350_000 } });
     expect(() => projectOrderedDesignRequest(actual, { ...bindings, plan: repartitioned })).toThrow(PROJECT_REFUSAL);
     expect(() => projectOrderedDesignRequest(actual, { ...bindings, parts: [] })).toThrow(PROJECT_REFUSAL);
     for (const messageAt of [2, 3, 4]) {

@@ -1,11 +1,12 @@
 import { encodeCanonicalJson, parseBoundedJson } from '@syzygy/polaris-generation-core/live';
 import { deepFreeze, isRecord, sha256 } from '@syzygy/support';
+import { URL_DESIGN_MCP_OUTPUT_TOKENS } from './session-url-view.js';
 import { SESSION_MCP_TOOLS } from './session-mcp.js';
 import type { SessionBinding, SessionOrigin } from './session-egress-policy.js';
 
 /** Deliberately versioned offline-supported profile. There is no model fallback. */
 export const SESSION_PROFILE_ID = 'claude-2.1.327-sonnet46/2' as const;
-export const ORDERED_DESIGN_SESSION_PROFILE_ID = 'claude-2.1.327-sonnet46/ordered-design-4' as const;
+export const ORDERED_DESIGN_SESSION_PROFILE_ID = 'claude-2.1.327-sonnet46/ordered-design-5' as const;
 export const DEFAULT_SESSION_MODEL = 'claude-sonnet-4-6' as const;
 /** Independently pinned installed CLI shared by the profile and launcher. */
 export const URL_CLI_PROGRAM = Object.freeze({ version: '2.1.327', bytes: 372_904_464,
@@ -27,8 +28,10 @@ const SCAFFOLD_CLASSES = ['governance-text', 'code-structure', 'work-history'] a
 const ORDERED_DESIGN_TRANSCRIPT = deepFreeze({
   cli: URL_CLI_PROGRAM,
   supportSha256: { 'session-bridge.js': '33a3f07df8001244cebefec75fe2110073196b9cb11fb2994553659a6865bac3',
-    'session-mcp.js': '293e1179dc421cd036e3bab100034507431c39e1ce6e6247efcbf1f57e8b22a7' },
-  partition: { algorithm: 'maximal-utf8-scalar-prefix', partBytes: 524_288, partCount: 2, replyBytes: 786_432, preparedBytes: 4096 },
+    'session-mcp.js': '7180ebcf6d6561cb09dc12e19837aeb4ad6bdd10c16805b164acce4a92891883' },
+  partition: { algorithm: 'maximal-utf8-scalar-prefix', partBytes: 400_000, partCount: 2, replyBytes: 490_000, preparedBytes: 4096 },
+  nativeMcpOutputTokens: URL_DESIGN_MCP_OUTPUT_TOKENS,
+  nativeResultPersistenceCharacters: 500_000,
   requestLimits: LIMITS,
   maxVerdictBytes: 32_768,
   maxAcknowledgmentBytes: 4096,

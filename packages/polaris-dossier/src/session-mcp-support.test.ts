@@ -61,7 +61,7 @@ describe('compiled ordered design MCP ingress', () => {
   it('declares an inline catalogue allowance covering the complete bounded part reply', async () => {
     const result = await design.handleSessionMcpRequest({ jsonrpc: '2.0', id: 'catalogue', method: 'tools/list' }, async () => ({}));
     expect(result).toMatchObject({ result: { tools: expect.arrayContaining([
-      expect.objectContaining({ name: 'artifact_read', _meta: { 'anthropic/maxResultSizeChars': 1_048_576 } }),
+      expect.objectContaining({ name: 'artifact_read', _meta: { 'anthropic/maxResultSizeChars': 500_000 } }),
     ]) } });
   });
 
@@ -70,8 +70,8 @@ describe('compiled ordered design MCP ingress', () => {
     const frame = line(request(id));
     expect(frame.length).toBeGreaterThan(REQUEST_BYTES - 6);
     expect(frame.length).toBeLessThanOrEqual(REQUEST_BYTES);
-    const reply = { kind: 'design-view-part', ok: true, text: '"'.repeat(380_000) };
-    expect(Buffer.byteLength(JSON.stringify(reply))).toBeLessThanOrEqual(786_432);
+    const reply = { kind: 'design-view-part', ok: true, text: '"'.repeat(240_000) };
+    expect(Buffer.byteLength(JSON.stringify(reply))).toBeLessThanOrEqual(490_000);
     const invoke = vi.fn(async () => reply);
     const output: string[] = [];
     await design.serveSessionMcp(chunks(frame), async text => { output.push(text); }, invoke);
