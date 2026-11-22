@@ -6,6 +6,7 @@ import { sha256 } from '@syzygy/support';
 import { buildComposedRuntime, prepareComposedRun } from './url-run-composed.testkit.js';
 import { draft, inventory, fidelityVerdict, designVerdict } from './full-run.testkit.js';
 import { closeRun } from './close.js';
+import * as rendering from './render.js';
 import { RUN_LAYOUT } from './state-directory.js';
 import { createCredentialProbe, credentialListFromEnv } from './credential-probe.js';
 import { runPolarisCli, runUrlSupervisorLoop, type SupervisorState } from './polaris.js';
@@ -190,6 +191,16 @@ describe('composed URL run with actual role processes', { timeout: 360_000 }, ()
         return result;
       });
     }
+    const reproducedAtDesignHostCount: number[] = [];
+    const deliveryReproductions: number[][] = [];
+    if (stoppingCut) {
+      const reproduce = rendering.reproduceUrlRender;
+      vi.spyOn(rendering, 'reproduceUrlRender').mockImplementation(async (...args) => {
+        const result = await reproduce(...args);
+        if (result) reproducedAtDesignHostCount.push(relayRoles.filter(role => role === 'design').length);
+        return result;
+      });
+    }
     let delivered: sessionAudit.UrlDesignDeliveryView | undefined;
     let expectedPlan: OrderedDesignPlan | undefined;
     const beginOrdered = vi.fn(), resumedBegins = vi.fn();
@@ -224,6 +235,7 @@ describe('composed URL run with actual role processes', { timeout: 360_000 }, ()
           // The actual issuer confirms the delivery before this interruption.
           // No writer, lease, receipt or history is synthesized by the test.
           const view = await actual.commitDesignDelivery(...args);
+          deliveryReproductions.push(reproducedAtDesignHostCount.slice(-2));
           if (resumedAudit) return view;
           const profile = f.plans.find(plan => plan.role === 'design')!.profile;
           if (!isOrderedDesignSessionProfile(profile)) throw new Error('owned ordered profile absent');
@@ -364,6 +376,7 @@ describe('composed URL run with actual role processes', { timeout: 360_000 }, ()
         const stopped = await controller.stop();
         expect(delivered).toBeDefined();
         expect(expectedPlan).toBeDefined();
+        expect(deliveryReproductions).toEqual([[0, 0]]);
         if (cut) {
           expect(beginOrdered).not.toHaveBeenCalled();
           expect(stopped.audit).toMatchObject({ closed: true, poisoned: false, captured: { 'design-delivery': 1, 'design-ordered': 0 } });
@@ -473,6 +486,7 @@ describe('composed URL run with actual role processes', { timeout: 360_000 }, ()
             expect(execution.supervisorCapture.roles.every(role => role.pid === 'Unknown')).toBe(true);
             expect(() => sessionAudit.assertUrlDesignRenderContinuationCurrent(coldFinals[0]!)).toThrow();
           } else {
+            expect(deliveryReproductions).toEqual([[0, 0], [1, 1]]);
             const fresh = execution.supervisorCapture.roles.find(role => role.role === 'design')!;
             expect(typeof fresh.pid).toBe('number'); expect(fresh.pid).not.toBe(oldDesignPid);
             expect(execution.supervisorCapture.roles.filter(role => role.role !== 'design').every(role => role.pid === 'Unknown')).toBe(true);
@@ -485,7 +499,7 @@ describe('composed URL run with actual role processes', { timeout: 360_000 }, ()
             requestsBeforeResume: forwardsBeforeResume,
             requestsAfterResume: [author.count(), inv.count(), fidelity.count(), design.count()],
             launchesBeforeResume, launchesAfterResume: [...relayRoles],
-            finalSiteBeforeStop, coldFinalContinuations: coldFinals.length, orderedBeginsAfterResume: resumedBegins.mock.calls.length });
+            deliveryReproductions, finalSiteBeforeStop, coldFinalContinuations: coldFinals.length, orderedBeginsAfterResume: resumedBegins.mock.calls.length });
         }
         return;
       }

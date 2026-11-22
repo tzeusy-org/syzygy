@@ -174,6 +174,11 @@ export async function startUrlOrderedAttempt(input: UrlOrderedAttemptOptions) {
       && hostResult.status === 'fulfilled' && hostResult.value?.termination === 'settled' && hostResult.value.pendingInvocations === 0;
   })();
   try {
+    // The private render may perform synchronous policy and product checks.
+    // Complete it before starting the design process and its resource sampler.
+    // Delivery below still rechecks the live product and the actual launch.
+    render = await input.reproduce();
+    if (render === null || !(await input.current())) throw refused();
     const preparation = await prepareRestrictedUrlSession({ view: input.plan.view, profile,
       expected: { nodeSha256: input.runtime.worker.nodeSha256, supportSha256: profile.transcript.supportSha256 },
       current: input.current, audit: payload => input.audit.append({ kind: 'launch-attempt', role: 'design', scope, payload }),
@@ -220,8 +225,7 @@ export async function startUrlOrderedAttempt(input: UrlOrderedAttemptOptions) {
       launch = await input.audit.commitLaunchHistory(written.capability);
       await input.registerLaunch(launch);
     }
-    render = await input.reproduce();
-    if (render === null || !(await input.current()) || !(await input.waitForSamples())) throw refused();
+    if (!(await input.current()) || !(await input.waitForSamples())) throw refused();
     delivery = await input.audit.commitDesignDelivery({ product: render.product, expectedProduct: input.expectedProduct, launch,
       sitePath: input.sitePath, round: input.round, run: input.run, runId: path.basename(input.run), pinnedRevision: input.pin }, input.waitForSamples);
     delivery = await input.audit.readDesignDeliveryView(delivery.receipt, render.product, observeRead);
