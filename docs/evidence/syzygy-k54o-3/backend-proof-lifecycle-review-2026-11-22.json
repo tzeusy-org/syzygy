@@ -1,0 +1,42 @@
+{
+  "format": "syzygy-f3-review-binding/1",
+  "subjectCommit": "8d45b8671d38570f6057d8e23891f4b4a4040b8d",
+  "raw": "docs/evidence/syzygy-k54o-3/backend-proof-lifecycle-review-2026-11-22-RAW.md",
+  "rawSha256": "c1fe7c967f9c345fb8a8cf1b3332648399bfa98ff7c67bf5b3973ebaaa060e40",
+  "verdict": "PASS",
+  "scope": "Net backend/product proof lifecycle source only; final-render health and native acceptance remain separate. No tests or mutations run by reviewer.",
+  "subjectFiles": [
+    {
+      "path": "packages/polaris-dossier/src/url-run-artifacts.ts",
+      "sha256": "97f1601a2f40de2e6fa2ece0347cb221927987c7065e9300ce38cd90e57f9da3"
+    },
+    {
+      "path": "packages/polaris-dossier/src/url-run-artifacts.test.ts",
+      "sha256": "ec02426e622154c9260a332adaf0517158729325658ded67254ccae95079d7cb"
+    },
+    {
+      "path": "packages/polaris-dossier/src/url-operation-products.ts",
+      "sha256": "3b42f3f5a2eb956e0f4abd45d113abad959ecce9f4e286206ae8edc412331435"
+    },
+    {
+      "path": "packages/polaris-dossier/src/url-design-product.ts",
+      "sha256": "87159be0ae8d2151d5736fe9c6b15f9dacaea84154c67797f377a8192ffb6dd6"
+    },
+    {
+      "path": "packages/polaris-dossier/src/url-design-product.test.ts",
+      "sha256": "99fe9ac691713b361e582af403c13c85367b6c42efa35911271718ff60aa9d12"
+    },
+    {
+      "path": "packages/polaris-dossier/src/url-run-ordered-attempt.ts",
+      "sha256": "687ae525a0714181cdcc625a046750005be2a9bbc20c71bc49cbb2556f32d793"
+    },
+    {
+      "path": "packages/polaris-dossier/src/url-ordered-design-session.ts",
+      "sha256": "4e0f06575064ab36a0ad83d46131c6375e5191c372ff1704fc809358f3795011"
+    },
+    {
+      "path": "packages/polaris-dossier/src/url-ordered-design-host.test.ts",
+      "sha256": "a5f0fecf632c774dd932723061e02a4fa77369bfa53e4d776bc3a060d9aa128c"
+    }
+  ]
+}
