@@ -11,7 +11,7 @@
     "sha256": "5a2c0eaa164e85dc78e4c58b313839efa7956311629568991de6c47ae5a2e2bb",
     "command": "npx vitest run packages/polaris-dossier/src/inventory-coverage.test.ts"
   },
-  "commit": "326c84148af858d05489daf832f9d390c968e098",
+  "commit": "396c2adc2584330844875ce8ee04089021001ce4",
   "worktreeClean": true,
   "baseline": {
     "exit": 0,

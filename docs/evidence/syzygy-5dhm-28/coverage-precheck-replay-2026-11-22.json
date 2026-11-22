@@ -4,7 +4,7 @@
   "label": "Observed",
   "subject": "the stored operator-agent dossier runs under the state root, read only",
   "stateRoot": "/home/orca/.local/state/syzygy-dossier",
-  "capturedAt": "2026-11-22T06:43:47.927Z",
+  "capturedAt": "2026-11-22T06:50:15.449Z",
   "rule": {
     "id": "overlap-or-path-named",
     "version": 1
@@ -12,7 +12,7 @@
   "ruleModule": {
     "path": "packages/polaris-dossier/src/inventory-coverage.ts",
     "sha256": "0c7817ce753f6954d7ffcb2aa5016611e6d8c4a8f55a505a9483b575ab025b92",
-    "commit": "326c84148af858d05489daf832f9d390c968e098",
+    "commit": "396c2adc2584330844875ce8ee04089021001ce4",
     "worktreeClean": true
   },
   "predicates": {
