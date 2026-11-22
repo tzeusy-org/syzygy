@@ -136,6 +136,49 @@ export function isOrderedDesignPlanFor(plan: OrderedDesignPlan, limits: PlanInpu
     && issued.replyBytes === limits.replyBytes && issued.preparedBytes === limits.preparedBytes;
 }
 
+/** Check only a protected historical plan's metadata. This creates no issued
+ * plan, body receipt or release capability. The caller supplies its independent
+ * protected expectation and later rereads the exact audit chain. */
+export function verifyHistoricalOrderedDesignPlanMetadata(plan: OrderedDesignPlan, limits: PlanInput['limits']): boolean {
+  try {
+    if (!exactKeys(plan, ['manifest', 'manifestText', 'manifestSha256', 'prepared', 'preparedText', 'replies'])) return false;
+    const { manifest, prepared } = plan;
+    if (!exactKeys(manifest, ['binding', 'envelopeBytes', 'envelopeSha256', 'format', 'originalBytes', 'originalSha256', 'partCount', 'parts'])
+      || manifest.format !== FORMAT || plan.manifestText !== canonical(manifest) || plan.manifestSha256 !== sha256(plan.manifestText)
+      || !positive(manifest.envelopeBytes, MAX_BYTES) || !positive(manifest.originalBytes, MAX_BYTES)
+      || !hash(manifest.envelopeSha256) || !hash(manifest.originalSha256)
+      || !positive(manifest.partCount, limits.partCount) || !Array.isArray(manifest.parts) || manifest.parts.length !== manifest.partCount
+      || !Array.isArray(plan.replies) || plan.replies.length !== manifest.partCount) return false;
+    const { binding } = manifest;
+    if (!exactKeys(binding, ['basePolicySha256', 'deadline', 'encoding', 'originPolicySha256', 'originalReceiptSha256', 'parentSetSha256',
+      'pin', 'producerSha256', 'profileSha256', 'project', 'provider', 'role', 'round', 'run', 'session', 'transferEpoch'])
+      || ![binding.basePolicySha256, binding.originPolicySha256, binding.originalReceiptSha256, binding.parentSetSha256,
+        binding.producerSha256, binding.profileSha256].every(hash)
+      || ![binding.project, binding.provider, binding.run, binding.session].every(identifier) || !matches(PIN, binding.pin)
+      || !utc(binding.deadline) || binding.encoding !== URL_DESIGN_VIEW_ENCODING || binding.role !== 'design'
+      || !positive(binding.round, 999_999) || !positive(binding.transferEpoch)) return false;
+    if (!exactKeys(prepared, ['encoding', 'envelopeBytes', 'envelopeSha256', 'fileCount', 'format', 'instructionProfileSha256',
+      'manifestSha256', 'originalBytes', 'originalSha256', 'pageCount', 'partCount', 'round'])
+      || prepared.format !== PREPARED_FORMAT || prepared.encoding !== URL_DESIGN_VIEW_ENCODING
+      || prepared.envelopeBytes !== manifest.envelopeBytes || prepared.envelopeSha256 !== manifest.envelopeSha256
+      || prepared.originalBytes !== manifest.originalBytes || prepared.originalSha256 !== manifest.originalSha256
+      || prepared.manifestSha256 !== plan.manifestSha256 || prepared.partCount !== manifest.partCount
+      || prepared.round !== manifest.binding.round || !positive(prepared.fileCount, 4096) || !positive(prepared.pageCount, prepared.fileCount)
+      || !hash(prepared.instructionProfileSha256) || plan.preparedText !== canonical(prepared, limits.preparedBytes)) return false;
+    let offset = 0;
+    for (const [index, part] of manifest.parts.entries()) {
+      const reply = plan.replies[index]!;
+      if (!exactKeys(part, ['bytes', 'offset', 'ordinal', 'path', 'sha256']) || part.offset !== offset || part.ordinal !== index + 1
+        || part.path !== `round-${manifest.binding.round}/design-view-part-${part.ordinal}.json`
+        || !isOrderedDesignPartPath(part.path) || !positive(part.bytes, limits.partBytes) || !hash(part.sha256)
+        || !exactKeys(reply, ['manifestSha256', 'ordinal', 'bytes', 'sha256']) || reply.manifestSha256 !== plan.manifestSha256
+        || reply.ordinal !== part.ordinal || !positive(reply.bytes, limits.replyBytes) || !hash(reply.sha256)) return false;
+      offset += part.bytes;
+    }
+    return offset === manifest.envelopeBytes;
+  } catch { return false; }
+}
+
 /**
  * Compile the exact host-private byte/receipt plan. This is a necessary
  * preflight only. It issues no role-release capability: native wrappers,

@@ -11,6 +11,7 @@ import { isUrlMachinePeerHistoryMatch, isUrlMachinePeerHistorySnapshot, isUrlMac
 import type { UrlMachinePeerAudit } from './url-machine-peer.js';
 import { isVerifiedRetainedUrlLaunchHistory, URL_HELPER_LAUNCH_FILES, verifyRetainedUrlLaunchHistory,
   type UrlLaunchHistoryRole, type UrlRetainedLaunchHistoryExpected, type UrlRetainedLaunchHistoryOptions } from './url-launch-history.js';
+import { verifyColdOrderedDesignAuditHistory, type UrlOrderedDesignHistoryExpected } from './url-ordered-design-audit-history.js';
 import { URL_SESSION_AUDIT_FORMAT, URL_SESSION_AUDIT_LIMITS, type UrlSessionAuditScope } from './url-session-audit.js';
 
 const ROLES = ['author', 'inventory', 'fidelity', 'design'] as const;
@@ -25,6 +26,7 @@ interface Declaration {
   };
 }
 export interface UrlSessionAuditHistoryExpected {
+  readonly ordered?: readonly UrlOrderedDesignHistoryExpected[];
   readonly durableRecords: number; readonly durableBytes: number; readonly tipSha256: string;
   readonly roles: Readonly<Record<ViewRole, { readonly records: number; readonly bytes: number; readonly tipSha256: string }>>;
   /** Supplied from independent protected expectations, never learned from these files. */
@@ -46,6 +48,7 @@ export interface VerifiedUrlSessionAuditHistory {
   readonly capturedLaunchTerminals: number; readonly capturedCompleteExchanges: number;
   readonly capturedCountExchanges: number; readonly capturedHelperLaunches: number; readonly capturedMachineEffects: number;
   readonly capturedReportedTokens: number | 'Unknown';
+  readonly capturedQuestions: number;
 }
 function fail(): never { throw new Error('url-session-audit-history-unavailable'); }
 const hex = (v: unknown): v is string => typeof v === 'string' && /^[a-f0-9]{64}$/u.test(v);
@@ -101,10 +104,10 @@ export async function verifyUrlSessionAuditHistory(given: UrlSessionAuditHistory
         { maxBytes: 65_536, maxNodes: 4096, maxDepth: 12 })) as unknown as RetainedLaunchSubject['roleDeclaration'];
       retainedLaunches[role as UrlLaunchHistoryRole] = { ...subject, screen: { ...subject.screen }, roleDeclaration };
     }
-    const expected = deepFreeze(parseBoundedJson(canonical(given.expected, 262_144), { maxBytes: 262_144, maxNodes: 32_768, maxDepth: 16 })) as unknown as UrlSessionAuditHistoryExpected;
+    const expected = deepFreeze(parseBoundedJson(canonical(given.expected, 4_194_304), { maxBytes: 4_194_304, maxNodes: 131_072, maxDepth: 32 })) as unknown as UrlSessionAuditHistoryExpected;
     check();
     if (!path.isAbsolute(parent) || path.resolve(parent) !== parent || !/^[a-zA-Z0-9][a-zA-Z0-9_-]{0,63}$/u.test(name)
-      || !exact(expected, ['durableRecords', 'durableBytes', 'tipSha256', 'roles', 'declarations'])
+      || !exact(expected, ['durableRecords', 'durableBytes', 'tipSha256', 'roles', 'declarations', ...(expected.ordered === undefined ? [] : ['ordered'])])
       || !count(expected.durableRecords, URL_SESSION_AUDIT_LIMITS.events + 4) || expected.durableRecords < 4
       || !count(expected.durableBytes, URL_SESSION_AUDIT_LIMITS.bytes) || !hex(expected.tipSha256)
       || !exact(expected.roles, ROLES) || !exact(expected.declarations, ROLES)) fail();
@@ -180,6 +183,15 @@ export async function verifyUrlSessionAuditHistory(given: UrlSessionAuditHistory
       if (row.sequence !== index + 1 || row.previousSha256 !== previous) fail(); previous = row.sha256;
     }
     if (previous !== expected.tipSha256) fail();
+    const orderedRows = rows.filter(row => ['design-delivery', 'design-ordered', 'ordered-design-verdict'].includes(String(row.event.kind)));
+    if (orderedRows.length > 0 || expected.ordered !== undefined) {
+      if (!Array.isArray(expected.ordered) || expected.ordered.length === 0 || expected.ordered.length > 64) fail();
+      const declaration = expected.declarations.design;
+      if (verifyColdOrderedDesignAuditHistory({ rows: orderedRows, attempts: expected.ordered,
+        profileSha256: declaration.scope.profileSha256,
+        subject: { project: declaration.payload.project, pin: declaration.payload.pin, principal: declaration.payload.principal,
+          deadline: expected.ordered[0]!.plan.manifest.binding.deadline }, asOf: Date.now() }) === null) fail();
+    }
     const captured = await verifyCapturedBoundary(rows, expected, retainedLaunches, machineSnapshots, check);
     await rootCurrent();
     for (const { file, name, stat } of files) if (!same(stat, await file.stat({ bigint: true })) || !same(stat, await lstat(name, { bigint: true }))) fail();
@@ -201,10 +213,10 @@ export async function verifyUrlSessionAuditHistory(given: UrlSessionAuditHistory
 async function verifyCapturedBoundary(rows: readonly Row[], expected: UrlSessionAuditHistoryExpected,
   retainedLaunches: RetainedLaunchSubjects, machineSnapshots: ReadonlyMap<string, UrlMachinePeerHistorySnapshot>, check: () => void) {
   let capturedLaunchTerminals = 0, capturedCompleteExchanges = 0, capturedCountExchanges = 0;
-  let capturedHelperLaunches = 0, capturedMachineEffects = 0, capturedReportedTokens = 0;
+  let capturedHelperLaunches = 0, capturedMachineEffects = 0, capturedReportedTokens = 0, capturedQuestions = 0;
   for (const role of ROLES) {
     let attempt: { commandSha256: string; viewSha256: string } | null = null;
-    let launchHistoryMatched = false;
+    let launchHistoryMatched = false, launched = false;
     let exchange: { id: string; stage: string; digest: string; usage: number | null; identity: string; count: boolean } | null = null;
     let tool: { id: string; name: string; inputSha256: string; executing: boolean; counted: boolean;
       receipt?: { receiptId: string; toolUseId: string; digest: string; bytes: number } } | null = null;
@@ -219,7 +231,7 @@ async function verifyCapturedBoundary(rows: readonly Row[], expected: UrlSession
         case 'launch-attempt':
           if (attempt !== null || p.event !== 'session-launch-attempt' || p.profileSha256 !== expected.declarations[role].scope.profileSha256
             || !hex(p.commandSha256) || !hex(p.viewSha256)) fail();
-          attempt = { commandSha256: p.commandSha256, viewSha256: p.viewSha256 }; break;
+          attempt = { commandSha256: p.commandSha256, viewSha256: p.viewSha256 }; launched = true; break;
         case 'launch-history': {
           if (role === 'author' || attempt === null || launchHistoryMatched) fail();
           const subject = retainedLaunches[role], file = URL_HELPER_LAUNCH_FILES[role];
@@ -329,8 +341,25 @@ async function verifyCapturedBoundary(rows: readonly Row[], expected: UrlSession
           }
           break;
         }
+        case 'design-delivery':
+        case 'ordered-design-verdict':
+          if (role !== 'design' || expected.ordered === undefined || attempt === null) fail();
+          break;
+        case 'design-ordered': {
+          if (role !== 'design' || expected.ordered === undefined || attempt === null || !isRecord(p.payload)) fail();
+          if (['prepared', 'part-receipt', 'acknowledgment-receipt'].includes(String(p.kind))) {
+            const { call, reply } = p.payload;
+            if (tool === null || tool.receipt !== undefined || !isRecord(call) || !isRecord(reply)
+              || call.id !== tool.id || call.name !== tool.name || call.inputSha256 !== tool.inputSha256
+              || !hex(reply.sha256) || !count(reply.bytes) || reply.bytes === 0) fail();
+            const identity = { digest: reply.sha256, bytes: reply.bytes };
+            tool.receipt = { receiptId: `tool-${sha256(canonical({ call, reply: identity }))}`,
+              toolUseId: tool.id, ...identity };
+          }
+          break;
+        }
         case 'control':
-          if (p.event === 'clarification-question' && question === null && hex(p.nonceSha256)) question = p.nonceSha256;
+          if (p.event === 'clarification-question' && question === null && hex(p.nonceSha256)) { question = p.nonceSha256; capturedQuestions++; }
           else if (p.event === 'clarification-answer' && question !== null && p.nonceSha256 === question) question = null;
           else if (p.event !== 'control-published') fail(); break;
         // Ordered/product provenance needs independent sealed subjects and a
@@ -339,9 +368,9 @@ async function verifyCapturedBoundary(rows: readonly Row[], expected: UrlSession
         default: fail();
       }
     }
-    if (attempt !== null || exchange !== null || tool !== null || question !== null
-      || (role !== 'author' && retainedLaunches[role] !== undefined && !launchHistoryMatched)) fail();
+    if (attempt !== null || exchange !== null || (tool !== null && !(role === 'design' && expected.ordered?.at(-1)?.disposition.kind === 'stopped')) || question !== null
+      || (role !== 'author' && launched && retainedLaunches[role] !== undefined && !launchHistoryMatched)) fail();
   }
-  return { capturedLaunchTerminals, capturedCompleteExchanges, capturedCountExchanges, capturedHelperLaunches, capturedMachineEffects,
+  return { capturedLaunchTerminals, capturedCompleteExchanges, capturedCountExchanges, capturedHelperLaunches, capturedMachineEffects, capturedQuestions,
     capturedReportedTokens: capturedCompleteExchanges === 0 ? 'Unknown' as const : capturedReportedTokens };
 }

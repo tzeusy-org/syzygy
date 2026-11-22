@@ -21,6 +21,7 @@ import { inspectUrlLaunchHistory, URL_HELPER_LAUNCH_FILES, type UrlLaunchHistory
 import { isOrderedDesignPlanFor, type OrderedDesignPlan } from './url-design-delivery.js';
 import type { UrlMachinePeerAudit } from './url-machine-peer.js';
 import { verifyOrderedDesignAuditPrefix, verifyOrderedDesignTerminalEvidence, type OrderedDesignAuditReference, type OrderedDesignAuditEvent, type OrderedDesignTerminalEvidence } from './url-ordered-design-audit.js';
+import type { UrlOrderedDesignHistoryExpected } from './url-ordered-design-audit-history.js';
 import { hasReadOrderedDesignTerminal, isIssuedOrderedDesignTerminal, createOrderedDesignAuditWriter, type OrderedDesignAuditWriter, type OrderedDesignStoredRecord } from './url-ordered-design-writer.js';
 
 export const URL_SESSION_AUDIT_FORMAT = 'url-session-audit/2' as const;
@@ -665,6 +666,7 @@ export async function createUrlSessionAudit(given: UrlSessionAuditOptions): Prom
         profile: roleProfiles.get(role)!.id, limits, capture: 'host-callbacks-only', providerReceipts: 'Unknown', nativeSendCensus: 'Unknown' },
     }])) as UrlSessionAuditHistoryExpected['declarations'];
     for (const role of ROLES) await commit({ kind: 'declaration', role, ...declarationsByRole[role] }, role, began, true);
+    const stoppedOrderedHistory: (() => UrlOrderedDesignHistoryExpected | null)[] = [];
     const closedHistory = (): UrlSessionAuditHistoryExpected | null => {
       const captured = summary();
       if (!captured.closed || captured.poisoned || captured.tail !== 'durable-prefix' || captured.tipSha256 === null
@@ -673,8 +675,15 @@ export async function createUrlSessionAudit(given: UrlSessionAuditOptions): Prom
         const { records, bytes, tipSha256 } = captured.roles[role];
         return [role, { records, bytes, tipSha256: tipSha256! }];
       })) as UrlSessionAuditHistoryExpected['roles'];
+      const ordered: UrlOrderedDesignHistoryExpected[] = [];
+      for (const read of stoppedOrderedHistory) {
+        const item = read();
+        if (item === null) return null;
+        ordered.push(item);
+      }
+      ordered.sort((left, right) => left.plan.manifest.binding.transferEpoch - right.plan.manifest.binding.transferEpoch);
       return deepFreeze({ durableRecords: captured.durableRecords, durableBytes: captured.durableBytes, tipSha256: captured.tipSha256,
-        roles, declarations: declarationsByRole });
+        roles, declarations: declarationsByRole, ...(ordered.length === 0 ? {} : { ordered }) });
     };
     const enqueue = (event: CapturedAuditEvent, privateKind: PrivateEventKind | null, checkEffectCurrent = checkCurrent) => {
       const deadline = performance.now() + limits.milliseconds;
@@ -750,6 +759,8 @@ export async function createUrlSessionAudit(given: UrlSessionAuditOptions): Prom
     // provider call is replayed and no durable cursor is reopened after loss.
     let nextOrderedEpoch = 1;
     let previousOrdered: OrderedDesignAuditWriter | undefined;
+    const capturedDeliveries = new Map<string, UrlDesignDeliveryAuditRecord>();
+    const eligibleOrdered = new WeakMap<OrderedDesignAuditWriter, UrlOrderedDesignHistoryExpected>();
     const orderedWriters = new WeakMap<OrderedDesignAuditWriter, { plan: OrderedDesignPlan; records: Array<{ record: OrderedDesignStoredRecord; read: (charge?: boolean) => Uint8Array }>; observeRead?: (bytes: number) => void }>();
     const beginOrderedDesignAudit: Extract<UrlSessionAuditResult, { ok: true }>['beginOrderedDesignAudit'] = (plan, attemptCurrent, observeRead) => {
       if (poisoned || closing || orderedDesignProfile === null || typeof attemptCurrent !== 'function'
@@ -790,6 +801,17 @@ export async function createUrlSessionAudit(given: UrlSessionAuditOptions): Prom
         },
       }, observeRead);
       orderedWriters.set(writer, { plan, records: held, observeRead });
+      stoppedOrderedHistory.push(() => {
+        const eligible = eligibleOrdered.get(writer);
+        if (eligible) return eligible;
+        const receipt = capturedDeliveries.get(binding.originalReceiptSha256);
+        if (!receipt) return null;
+        const last = held.at(-1)?.record;
+        const tip = last === undefined ? null : { id: last.id, sha256: sha256(canonical(last, limits.eventBytes)) };
+        return copy({ profileInput: orderedDesignProfile.input, plan, principal: input.principal, scope, receipt,
+          disposition: last?.kind === 'retired' && tip !== null ? { kind: 'retired' as const, terminal: tip }
+            : { kind: 'stopped' as const, tip } });
+      });
       previousOrdered = writer; nextOrderedEpoch++;
       return writer;
     };
@@ -989,6 +1011,10 @@ export async function createUrlSessionAudit(given: UrlSessionAuditOptions): Prom
           verifyDurableEvent('design', event);
         };
         designVerdicts.set(delivery, { checked: frozen, eventSha256: event.digest, verify });
+        eligibleOrdered.set(orderedDesignReviewInputs.get(proof)!.writer, copy({ profileInput: orderedDesignProfile!.input,
+          plan: held.plan, principal: input.principal, scope: scopes.get('design')!, receipt: delivery,
+          disposition: { kind: 'eligible' as const, terminal, verdictEventSha256: event.digest, checked: frozen,
+            verdictCall: { id: proof.verdictCallId, name: orderedDesignProfile!.transcript.verdict.tool, inputSha256: proof.verdictInputSha256 } } }));
         if (!firstDesignReads.has(delivery.identity.round)) firstDesignReads.set(delivery.identity.round, event);
       } finally { pendingDesignVerdicts.delete(delivery); }
     };
@@ -1146,6 +1172,7 @@ export async function createUrlSessionAudit(given: UrlSessionAuditOptions): Prom
           return checkDelivery(checked, candidate, observeRead);
         } });
         authenticatedDesignViews.set(delivery, { current: checkDelivery(after, product), product: preparedProduct });
+        capturedDeliveries.set(result.eventSha256, result);
         nextDesignRound++;
         return delivery;
       } catch {
