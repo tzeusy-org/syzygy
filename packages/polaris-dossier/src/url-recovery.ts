@@ -27,13 +27,22 @@ import { verifyUrlRecoveryProducts } from './url-recovery-products.js';
 
 const CANONICAL_LIMITS = { maxBytes: 65_536, maxNodes: 4096, maxDepth: 16 };
 const verifiedRuns = new WeakMap<object, () => Promise<UrlRecoveryClaim | null>>();
+const claimedRuns = new WeakMap<object, UrlRecoveryClaim>();
+/** A live, consumed claim belongs to this exact independently verified cut. */
+export function isClaimedStoppedUrlRun(value: unknown, claim: unknown): claim is UrlRecoveryClaim {
+  return isRecord(value) && claimedRuns.get(value) === claim && claim !== undefined
+    && (claim as UrlRecoveryClaim).current() === true;
+}
 
 /** Only an exact successful cold-verifier result can request exclusive
  * recovery. Saved/copied results never issue a claim. A successful call
  * durably consumes the boundary before returning active ownership; the caller
  * holds that claim through cleanup/next stop. */
 export async function claimStoppedUrlRun(value: unknown): Promise<UrlRecoveryClaim | null> {
-  return isRecord(value) ? await verifiedRuns.get(value)?.() ?? null : null;
+  if (!isRecord(value)) return null;
+  const claim = await verifiedRuns.get(value)?.() ?? null;
+  if (claim !== null) claimedRuns.set(value, claim);
+  return claim;
 }
 
 function absent(run: string, file: string): boolean {
@@ -119,20 +128,26 @@ export async function verifyStoppedUrlRun(state: SupervisorState, input: {
         roleDeclaration: role, executable, screen: screen.screen }]));
     let machine: Awaited<ReturnType<typeof reconstructColdUrlRunMachineHistory>> = null;
     let audit: Awaited<ReturnType<typeof verifyUrlSessionAuditHistory>> = null;
-    let requests = 0, responses = 0, tokens = 0;
+    const historicallySettledRoles = new Set<ViewRole>();
+    const verifiedAudits: NonNullable<Awaited<ReturnType<typeof verifyUrlSessionAuditHistory>>>[] = [];
+    let requests = 0, responses = 0, tokens = 0, cumulativeQuestionCount = 0;
     for (const boundary of history) {
       machine = await reconstructColdUrlRunMachineHistory({ governanceRoot, protectedRoot, sealed: boundary.record.machine,
         expected: { identitySha256: sealed.record.machine.identitySha256, binding, runId: expected.runId,
           sourcePin: expected.sourcePin, originPolicySha256: origin.binding.sha256, profiles, deadline }, now, current });
       if (!machine || !current()) return refuse('machine-history');
       audit = await verifyUrlSessionAuditHistory({ parent: path.join(URL_HOST_ROOT, 'acquisitions', boundary.record.attempt),
-        name: 'sessions', expected: boundary.record.audit, retainedLaunches, machineHistory: machine, current });
+        name: 'sessions', expected: boundary.record.audit, retainedLaunches, machineHistory: machine, current, deadline });
       if (!audit || !current()) return refuse('session-history');
+      verifiedAudits.push(audit);
+      for (const role of audit.capturedSettledRoles) historicallySettledRoles.add(role);
       requests += audit.capturedCompleteExchanges + audit.capturedCountExchanges;
       responses += audit.capturedCompleteExchanges;
       tokens += audit.capturedReportedTokens === 'Unknown' ? 0 : audit.capturedReportedTokens;
+      cumulativeQuestionCount += audit.capturedQuestions;
       const spend = boundary.record.spend;
-      if (![requests, responses, tokens].every(Number.isSafeInteger)
+      if (![requests, responses, tokens, cumulativeQuestionCount].every(Number.isSafeInteger)
+        || cumulativeQuestionCount > record.declared.maxQuestions
         || spend.requestReservations !== requests || spend.completeUsageReports !== responses
         || spend.reportedTokens !== (responses === 0 ? 'Unknown' : tokens)) return refuse('budget');
     }
@@ -143,10 +158,11 @@ export async function verifyStoppedUrlRun(state: SupervisorState, input: {
     if (!await policyCurrent() || !historyCurrent()
       || verifyUrlFrozenProductHistory(run, sealed.record.products, current) === null || !current()) return refuse('checkpoint');
     const products = verifyUrlRecoveryProducts({ hostRoot: URL_HOST_ROOT, expected, boundarySha256: sealed.sha256,
-      machine, now, current });
+      machine, audits: verifiedAudits, now, current });
     if (!products || !current()) return refuse('checkpoint');
     const verified = Object.freeze({ ok: true as const, machine, record, audit, boundary: sealed, history,
-      resumeBudget, products, checkedContext: Object.freeze({ runtime: runtime.runtime, executable,
+      verifiedAudits: Object.freeze(verifiedAudits), historicallySettledRoles: Object.freeze([...historicallySettledRoles]),
+      resumeBudget, products, cumulativeQuestionCount, checkedContext: Object.freeze({ runtime: runtime.runtime, executable,
         screen: screen.screen, policy, origin, adoption, openReader, authority, current, policyCurrent,
         effective: read.effective, sourceStore: sealed.record.sourceStore, deadline }) });
     verifiedRuns.set(verified, async () => {
