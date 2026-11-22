@@ -645,6 +645,33 @@ describe('URL stored launch history', () => {
     expect(() => inspectUrlLaunchHistory(capability!)).toThrow('url-launch-history-unavailable');
   });
 
+  it('resolves a logical helper launch through its newly audited immutable physical generation', async () => {
+    const fixture = productFixture(), oldAudit = await auditFixture(fixture.originPolicy.sha256, 'alias-original');
+    const newAudit = await auditFixture(fixture.originPolicy.sha256, 'alias-continuation');
+    const role = 'inventory', logical = URL_HELPER_LAUNCH_FILES[role], generation = '2'.repeat(64), physical = urlHelperLaunchFile(role, generation);
+    fs.rmSync(path.join(planning.options.run, physical), { force: true });
+    try {
+      const original = await writeUrlLaunchHistory(options(role)); await oldAudit.attempt(role);
+      await fixture.bridge.registerLaunchHistory(await oldAudit.audit.commitLaunchHistory(original.capability!));
+      const bytes = fs.readFileSync(original.file!);
+      const stale = fixture.bridge.beginRead({ operation: 'inventory-check', deadline: Date.now() + 2000 });
+      expect(Buffer.from(fixture.bridge.readProduct(stale, logical).bytes!)).toEqual(bytes);
+      const successor = await writeUrlLaunchHistory({ ...options(role), generation }); await newAudit.attempt(role);
+      const committed = await newAudit.audit.commitLaunchHistory(successor.capability!);
+      await fixture.bridge.registerLaunchHistory(committed);
+      expect(fs.readFileSync(original.file!)).toEqual(bytes);
+      expect(() => fixture.bridge.revalidateRead(stale)).toThrow('url-run-artifacts-unavailable');
+      const read = fixture.bridge.beginRead({ operation: 'inventory-check', deadline: Date.now() + 2000 });
+      const logicalRead = fixture.bridge.readProduct(read, logical), physicalRead = fixture.bridge.readProduct(read, physical);
+      expect(logicalRead.receipt).toBe(physicalRead.receipt);
+      expect(Buffer.from(logicalRead.bytes!)).toEqual(fs.readFileSync(successor.file!));
+      expect(fixture.bridge.revalidateRead(read).metadata.records).toEqual(expect.arrayContaining([
+        expect.objectContaining({ path: logical, physicalPath: physical }),
+      ]));
+      fixture.bridge.cancelRead(read);
+    } finally { await oldAudit.audit.close(); await newAudit.audit.close(); fs.rmSync(path.join(planning.options.run, physical), { force: true }); }
+  });
+
   it('authenticates each exact helper history in product contexts after its own durable host audit', async () => {
     const fixture = productFixture(), { bridge, ledger } = fixture;
     const { audit, attempt, segment } = await auditFixture(fixture.originPolicy.sha256, 'history-products');

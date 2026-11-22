@@ -2,7 +2,7 @@ import type { UrlOriginProvenance } from './url-origin-provenance.js';
 import path from 'node:path';
 import { encodeCanonicalJson, parseBoundedJson } from '@syzygy/polaris-generation-core/live';
 import { deepFreeze, isRecord, sha256 } from '@syzygy/support';
-import { URL_HELPER_LAUNCH_FILES } from './url-launch-history.js';
+import { URL_HELPER_LAUNCH_FILES, isUrlHelperLaunchFile } from './url-launch-history.js';
 import { assertProductFileUnchanged, snapshotProductFile, snapshotProductNames, type ProductFileSnapshot, type ProductNameSnapshot } from './url-product-reads.js';
 
 const JSON_LIMITS = { maxBytes: 2_097_152, maxNodes: 65_536, maxDepth: 32 } as const;
@@ -29,7 +29,7 @@ export interface UrlFrozenProductHistory {
   readonly provenance: UrlOriginProvenance;
   readonly artifacts: readonly (FrozenProductIdentity & { readonly role: 'author' | 'inventory' | 'fidelity' | 'design' })[];
 }
-export const launchFiles: readonly string[] = Object.values(URL_HELPER_LAUNCH_FILES);
+const launchFiles: readonly string[] = Object.values(URL_HELPER_LAUNCH_FILES);
 export const selectors: Readonly<Record<UrlProductSelector, { readonly directory: string; readonly pattern: RegExp }>> = Object.freeze({
   'author-checks': { directory: 'checks', pattern: /^rev-(0|[1-9][0-9]*)\.json$/u },
   'author-drafts': { directory: 'drafts', pattern: /^rev-(0|[1-9][0-9]*)\.json$/u },
@@ -43,6 +43,7 @@ export const selectors: Readonly<Record<UrlProductSelector, { readonly directory
   'design-deliveries': { directory: 'reviews', pattern: /^design-session-1\.delivery-([1-9][0-9]*)\.json$/u },
 });
 export const knownRecord = (file: string): boolean => {
+  if ((Object.keys(URL_HELPER_LAUNCH_FILES) as (keyof typeof URL_HELPER_LAUNCH_FILES)[]).some(role => isUrlHelperLaunchFile(role, file))) return true;
   if (['run.json', 'url-declaration.json', 'brief.json', 'brief.md', 'draft.schema.json',
     'inventory/session-1.json', 'reviews/fidelity-session-1.json', 'reviews/design-session-1.json', ...launchFiles].includes(file)) return true;
   const match = /^(?:checks|drafts|inventory|inventory\/checks)\/rev-(0|[1-9][0-9]*)\.json$/u.exec(file)
@@ -74,8 +75,14 @@ export function productPopulation(run: string, expected: readonly string[], chec
     const known = expected.filter(file => file.startsWith(prefix) && pattern.test(file.slice(prefix.length)));
     if (files.length !== known.length || known.some(file => !files.includes(file))) refuse();
   }
-  for (const file of [...launchFiles, FROZEN_DRAFT_PATH]) {
+  for (const file of [FROZEN_DRAFT_PATH]) {
     if (names(path.dirname(file)).includes(path.basename(file)) !== expected.includes(file)) refuse();
+  }
+  for (const role of Object.keys(URL_HELPER_LAUNCH_FILES) as (keyof typeof URL_HELPER_LAUNCH_FILES)[]) {
+    const directory = path.dirname(URL_HELPER_LAUNCH_FILES[role]);
+    const actual = names(directory).map(name => `${directory}/${name}`).filter(file => isUrlHelperLaunchFile(role, file));
+    const retained = expected.filter(file => isUrlHelperLaunchFile(role, file));
+    if (actual.length !== retained.length || retained.some(file => !actual.includes(file))) refuse();
   }
   const feedback = names('feedback').map(name => `feedback/${name}`).filter(file => AUTHOR_FEEDBACK.test(file));
   const expectedFeedback = expected.filter(file => AUTHOR_FEEDBACK.test(file));

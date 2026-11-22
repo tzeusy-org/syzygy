@@ -459,7 +459,7 @@ function create(given: UrlOriginLedgerOptions) {
   async function restoreFrozenOrigins(capability: UrlVerifiedRecoveryProducts, expected: {
     readonly run: string; readonly coreSha256: string; readonly declarationSha256: string;
   }, waitForSamples: () => Promise<boolean>) {
-    const transfer = takeUrlRecoveryProducts(capability, { ...expected, current });
+    const transfer = takeUrlRecoveryProducts(capability, { ...expected, runId, sourcePin: record.subject.pinnedRevision.commit, originPolicySha256: origin.sha256, sourceBindingSha256: sourceBindingSha256(record.subject), basePolicySha256: screen.policySha256, current });
     const history = transfer.history, graph = history.provenance;
     const sameSubject = (receipt: UrlOriginReceipt, metadata: UrlOriginMetadata): void => {
       const value = entry(receipt);
@@ -500,7 +500,7 @@ function create(given: UrlOriginLedgerOptions) {
     }
     if (!(await waitForSamples())) fail(); transfer.revalidate();
     const restored = new Map<string, UrlOriginReceipt>();
-    return Object.freeze({ history, deadline: transfer.deadline, revalidate: transfer.revalidate,
+    return Object.freeze({ history, launches: transfer.launches, deadline: transfer.deadline, revalidate: transfer.revalidate,
       receipt: (file: string, bytes: Uint8Array, role?: Role): UrlOriginReceipt => guarded(() => {
         live(); const subject = role === undefined ? history.records.find(record => record.path === file)
           : history.artifacts.find(record => record.role === role && record.path === file);
