@@ -5,46 +5,146 @@
     "syzygy-3efd.64"
   ],
   "requirement": "REQ-polaris-generation-034 version 2.9 (row A-30, tag polaris-dossier-computed-maps-v2.9)",
-  "ranAt": "2026-11-22T00:22:16.279Z",
-  "commit": "124d831c90730def996f6f5705884ddcfe1e2d67",
+  "ranAt": "2026-11-22T00:52:46.708Z",
+  "commit": "75b08e0e186c7b735381c12d530b1fdfe9542eb0",
   "subject": {
-    "apps/three-surface-poc/src/polaris-generation/dossier-site.ts": "0b3a5b67611641cc0fb9fa12f4e14d28daea12f1f329e40c92a4890ecc242c72",
+    "apps/three-surface-poc/src/polaris-generation/dossier-site.ts": "91e84e649f396102146aa758bc8c83fd84c6dc88e725fa5707acd2f672fe9ff2",
     "apps/three-surface-poc/src/polaris-generation/svg-inert.ts": "5a2ef622a50d7eec6e2f2acad7440237f20da93b21ee0803f6443af5facc2234",
     "packages/polaris-dossier/src/check.ts": "7e0b63f00eb966571dc4cc1665300e20250efa624c1cc8542135c34dbea10f07",
     "packages/polaris-dossier/src/derived-record.ts": "0283add16d6782cbfc4abaf4fb05eee0acd71df2d65a8aeb917bff86f2fdc6c2",
     "packages/polaris-dossier/src/reader-advice.ts": "9004f74d95b3de55d2bbd70770417e9be86876926c5a010889573ede158bb9d0",
     "packages/polaris-dossier/src/render.ts": "abab5eebbd8acae7244329023e31ac1e87b6bc59570a930b42cb2d28c656f76b",
-    "packages/polaris-dossier/src/run-advice.ts": "69083cfe3afacf5766c4b3e87539a606f407e07f34f44b28e9fe9e3ed0365789"
+    "packages/polaris-dossier/src/run-advice.ts": "b7c037317508d6a9075ce2e3fae2ff695438decd8a1663dd65580d3128f2a905"
   },
-  "command": "npx vitest run apps/three-surface-poc/src/polaris-generation/dossier-computed-maps.test.ts packages/polaris-dossier/src/run-advice.test.ts packages/polaris-dossier/src/check.test.ts packages/polaris-dossier/src/render.test.ts apps/three-surface-poc/src/polaris-generation/svg-inert.test.ts -t computed|directory map|unit map|CI pipeline|map figure|advice|run file|figure fit|derived structure|allow-list --reporter=json --outputFile=<report>",
+  "command": "npx vitest run apps/three-surface-poc/src/polaris-generation/dossier-computed-maps.test.ts packages/polaris-dossier/src/run-advice.test.ts packages/polaris-dossier/src/check.test.ts packages/polaris-dossier/src/render.test.ts apps/three-surface-poc/src/polaris-generation/svg-inert.test.ts -t computed|directory map|unit map|CI pipeline|map figure|evidence view|advice|run file|figure fit|derived structure|allow-list --reporter=json --outputFile=<report>",
   "method": "Each mutant replaces one fragment of a subject file that occurs exactly once (asserted), runs the command over the named test files, and restores the original bytes (sha256 re-checked at the end). A mutant is killed when the run exits non-zero; killedBy names the test files with a failing test, failedTests each failing test. The unmutated baseline passed first.",
   "baseline": {
     "exit": 0
   },
   "totals": {
-    "mutants": 52,
-    "killed": 52,
+    "mutants": 59,
+    "killed": 59,
     "survived": 0
   },
-  "follows": {
-    "ranAt": "2026-11-22T00:10:37.194Z",
-    "commit": "a09d6be66042e8c67f281217a11d3b9ffa535c85",
-    "totals": {
-      "mutants": 52,
-      "killed": 45,
-      "survived": 7
+  "follows": [
+    {
+      "run": 1,
+      "ranAt": "2026-11-22T00:10:37.194Z",
+      "commit": "a09d6be66042e8c67f281217a11d3b9ffa535c85",
+      "subject": {
+        "apps/three-surface-poc/src/polaris-generation/dossier-site.ts": "54c158ced34aff9dc0e1a4456a317abe0aac3f9f78dd7f05b739633285f49926",
+        "apps/three-surface-poc/src/polaris-generation/svg-inert.ts": "5a2ef622a50d7eec6e2f2acad7440237f20da93b21ee0803f6443af5facc2234",
+        "packages/polaris-dossier/src/check.ts": "7e0b63f00eb966571dc4cc1665300e20250efa624c1cc8542135c34dbea10f07",
+        "packages/polaris-dossier/src/derived-record.ts": "0283add16d6782cbfc4abaf4fb05eee0acd71df2d65a8aeb917bff86f2fdc6c2",
+        "packages/polaris-dossier/src/reader-advice.ts": "9004f74d95b3de55d2bbd70770417e9be86876926c5a010889573ede158bb9d0",
+        "packages/polaris-dossier/src/render.ts": "abab5eebbd8acae7244329023e31ac1e87b6bc59570a930b42cb2d28c656f76b",
+        "packages/polaris-dossier/src/run-advice.ts": "69083cfe3afacf5766c4b3e87539a606f407e07f34f44b28e9fe9e3ed0365789"
+      },
+      "command": "npx vitest run apps/three-surface-poc/src/polaris-generation/dossier-computed-maps.test.ts packages/polaris-dossier/src/run-advice.test.ts packages/polaris-dossier/src/check.test.ts packages/polaris-dossier/src/render.test.ts -t computed|directory map|unit map|CI pipeline|advice|run file|figure fit|derived structure --reporter=json --outputFile=<report>",
+      "totals": {
+        "mutants": 52,
+        "killed": 45,
+        "survived": 7
+      },
+      "survived": [
+        "36-max-boxes-up",
+        "36-box-bound-removed",
+        "36-untouched-boxes-dropped",
+        "36-map-paths-not-reserved",
+        "36-inert-allows-script",
+        "64-revisions-lexical",
+        "64-temp-left"
+      ],
+      "repairs": "commit f83bcc6f80076b3c6a689832d2114149ee12abec: mapFigure exported and pinned at 25, 26 and 0 boxes and an untouched box (36-max-boxes-up, 36-box-bound-removed, 36-untouched-boxes-dropped); revision 10 of the run-file fixture given a mechanism entry (64-revisions-lexical); a failed rename leaving no temporary file (64-temp-left); a draft page at a map path tested in a render with no maps; svg-inert.test.ts added to the command."
     },
-    "survived": [
-      "36-max-boxes-up",
-      "36-box-bound-removed",
-      "36-untouched-boxes-dropped",
-      "36-map-paths-not-reserved",
-      "36-inert-allows-script",
-      "64-revisions-lexical",
-      "64-temp-left"
-    ],
-    "why": "The first run (52 mutants, without svg-inert.test.ts) left seven survivors. Five were repaired by tests: mapFigure exported and pinned at 25, 26 and 0 boxes and an untouched box (36-max-boxes-up, 36-box-bound-removed, 36-untouched-boxes-dropped); revision 10 of the run-file fixture given a mechanism entry (64-revisions-lexical); a failed rename leaving no temporary file (64-temp-left). Two were equivalent and are replaced: 36-inert-allows-script (assertAttribute refuses every on* name before the allow-list; replaced by removing each new allow-list entry) and 36-map-paths-not-reserved (a draft page path containing / is already refused, so the map paths were removed from the reserved set and the mutant dropped; the test of the refusal stays). A second run with those repairs left exactly those two. Neither earlier record is kept."
-  },
+    {
+      "run": 2,
+      "ranAt": null,
+      "ranAtNote": "not recorded: the run wrote only its per-mutant lines; its record was overwritten by run 3",
+      "commit": "f83bcc6f80076b3c6a689832d2114149ee12abec",
+      "totals": {
+        "mutants": 52,
+        "killed": 50,
+        "survived": 2
+      },
+      "survived": [
+        "36-inert-allows-script",
+        "36-map-paths-not-reserved"
+      ],
+      "repairs": "Both survivors were equivalent and were dropped from the set. 36-inert-allows-script: assertAttribute refuses every on* name before the allow-list, so adding onload to the list changes no outcome; replaced by 36-inert-no-unknown-reason and 36-inert-no-manifest-id. 36-map-paths-not-reserved: a draft page path containing / is refused before the reserved set is consulted, so commit 124d831c removed the map paths from the set; the refusal test stays.",
+      "mutantsDropped": [
+        {
+          "id": "36-map-paths-not-reserved",
+          "file": "apps/three-surface-poc/src/polaris-generation/dossier-site.ts",
+          "old": "DERIVED_SITE_FILE, ...COMPUTED_MAPS",
+          "new": "DERIVED_SITE_FILE, ...[]",
+          "killed": false,
+          "killedBy": [],
+          "failedTests": [],
+          "ranAt": [
+            "a09d6be66042e8c67f281217a11d3b9ffa535c85",
+            "f83bcc6f80076b3c6a689832d2114149ee12abec"
+          ]
+        },
+        {
+          "id": "36-inert-allows-script",
+          "file": "apps/three-surface-poc/src/polaris-generation/svg-inert.ts",
+          "old": "'data-manifest-id', 'data-unknown-reason'",
+          "new": "'data-manifest-id', 'data-unknown-reason', 'onload'",
+          "killed": false,
+          "killedBy": [],
+          "failedTests": [],
+          "ranAt": [
+            "a09d6be66042e8c67f281217a11d3b9ffa535c85",
+            "f83bcc6f80076b3c6a689832d2114149ee12abec"
+          ]
+        }
+      ]
+    },
+    {
+      "run": 3,
+      "ranAt": "2026-11-22T00:22:16.279Z",
+      "commit": "124d831c90730def996f6f5705884ddcfe1e2d67",
+      "subject": {
+        "apps/three-surface-poc/src/polaris-generation/dossier-site.ts": "0b3a5b67611641cc0fb9fa12f4e14d28daea12f1f329e40c92a4890ecc242c72",
+        "apps/three-surface-poc/src/polaris-generation/svg-inert.ts": "5a2ef622a50d7eec6e2f2acad7440237f20da93b21ee0803f6443af5facc2234",
+        "packages/polaris-dossier/src/check.ts": "7e0b63f00eb966571dc4cc1665300e20250efa624c1cc8542135c34dbea10f07",
+        "packages/polaris-dossier/src/derived-record.ts": "0283add16d6782cbfc4abaf4fb05eee0acd71df2d65a8aeb917bff86f2fdc6c2",
+        "packages/polaris-dossier/src/reader-advice.ts": "9004f74d95b3de55d2bbd70770417e9be86876926c5a010889573ede158bb9d0",
+        "packages/polaris-dossier/src/render.ts": "abab5eebbd8acae7244329023e31ac1e87b6bc59570a930b42cb2d28c656f76b",
+        "packages/polaris-dossier/src/run-advice.ts": "69083cfe3afacf5766c4b3e87539a606f407e07f34f44b28e9fe9e3ed0365789"
+      },
+      "totals": {
+        "mutants": 52,
+        "killed": 52,
+        "survived": 0
+      },
+      "repairs": "review CORRECTIONS 1, 8 and 9 (commit 5cee63ae, and 432b25d5 for the narrative legend test): the map pages carry the view switch, its evidence-view target and a reading legend; an Unknown file reason this version does not name refuses the render; readRunAdvice reads under the check record bound. Seven mutants added for them in run 4."
+    },
+    {
+      "run": 4,
+      "ranAt": "2026-11-22T00:45:35.198Z",
+      "commit": "432b25d5c4950c6b2ae4499fc2a4d5c11922c147",
+      "subject": {
+        "apps/three-surface-poc/src/polaris-generation/dossier-site.ts": "91e84e649f396102146aa758bc8c83fd84c6dc88e725fa5707acd2f672fe9ff2",
+        "apps/three-surface-poc/src/polaris-generation/svg-inert.ts": "5a2ef622a50d7eec6e2f2acad7440237f20da93b21ee0803f6443af5facc2234",
+        "packages/polaris-dossier/src/check.ts": "7e0b63f00eb966571dc4cc1665300e20250efa624c1cc8542135c34dbea10f07",
+        "packages/polaris-dossier/src/derived-record.ts": "0283add16d6782cbfc4abaf4fb05eee0acd71df2d65a8aeb917bff86f2fdc6c2",
+        "packages/polaris-dossier/src/reader-advice.ts": "9004f74d95b3de55d2bbd70770417e9be86876926c5a010889573ede158bb9d0",
+        "packages/polaris-dossier/src/render.ts": "abab5eebbd8acae7244329023e31ac1e87b6bc59570a930b42cb2d28c656f76b",
+        "packages/polaris-dossier/src/run-advice.ts": "b7c037317508d6a9075ce2e3fae2ff695438decd8a1663dd65580d3128f2a905"
+      },
+      "totals": {
+        "mutants": 59,
+        "killed": 58,
+        "survived": 1
+      },
+      "survived": [
+        "64-read-no-size-check"
+      ],
+      "repairs": "commit 75b08e0e: the bound test counts readFileSync calls on the run file, one at the bound and none past it, so the size check is pinned apart from the bounded parse."
+    }
+  ],
   "mutants": [
     {
       "id": "36-max-boxes-up",
@@ -287,6 +387,7 @@
         "apps/three-surface-poc/src/polaris-generation/dossier-computed-maps.test.ts > the unit map places each package in its root or top-level directory, draws no arrow between packages and lists every declared fact",
         "apps/three-surface-poc/src/polaris-generation/dossier-computed-maps.test.ts > the unit map names each Unknown file with its word and RFC2-24 reason, and counts unlisted files and facts in the coverage line",
         "apps/three-surface-poc/src/polaris-generation/dossier-computed-maps.test.ts > the CI pipeline map states the workflow and its triggers, draws its jobs and the needs that name a job of the file, and lists the rest",
+        "apps/three-surface-poc/src/polaris-generation/dossier-computed-maps.test.ts > the evidence view on a map page opens each map page with the view switch and its target, outside any details, and a legend naming the labels",
         "apps/three-surface-poc/src/polaris-generation/dossier-computed-maps.test.ts > computed maps on the site carries computedMaps in the machine view beside derivedStructure, each member as the render derived it",
         "apps/three-surface-poc/src/polaris-generation/dossier-computed-maps.test.ts > computed maps on the site gives every drawn element its fact's identity, every figure computed provenance, no script, and the map rules to map pages alone"
       ]
@@ -430,6 +531,75 @@
       ]
     },
     {
+      "id": "36-map-legend-dropped",
+      "file": "apps/three-surface-poc/src/polaris-generation/dossier-site.ts",
+      "old": "    : MAP_PATHS.has(path) ? `${MAP_READING_LEGEND}${main}`\n",
+      "new": "",
+      "killed": true,
+      "killedBy": [
+        "apps/three-surface-poc/src/polaris-generation/dossier-computed-maps.test.ts",
+        "packages/polaris-dossier/src/render.test.ts"
+      ],
+      "failedTests": [
+        "apps/three-surface-poc/src/polaris-generation/dossier-computed-maps.test.ts > the evidence view on a map page opens each map page with the view switch and its target, outside any details, and a legend naming the labels",
+        "packages/polaris-dossier/src/render.test.ts > render the reading view and the evidence view (dossier spec v1.5) carries the legend and the evidence-view target once per narrative page and map page, and the redaction legend elsewhere"
+      ]
+    },
+    {
+      "id": "36-map-legend-no-target",
+      "file": "apps/three-surface-poc/src/polaris-generation/dossier-site.ts",
+      "old": "<a href=\"#content\">Back to the reading view</a></p><span id=\"evidence-view\"></span><ul>'\n  + '<li><span class=\"derived-mark\">",
+      "new": "<a href=\"#content\">Back to the reading view</a></p><ul>'\n  + '<li><span class=\"derived-mark\">",
+      "killed": true,
+      "killedBy": [
+        "apps/three-surface-poc/src/polaris-generation/dossier-computed-maps.test.ts",
+        "packages/polaris-dossier/src/render.test.ts"
+      ],
+      "failedTests": [
+        "apps/three-surface-poc/src/polaris-generation/dossier-computed-maps.test.ts > the evidence view on a map page opens each map page with the view switch and its target, outside any details, and a legend naming the labels",
+        "packages/polaris-dossier/src/render.test.ts > render the reading view and the evidence view (dossier spec v1.5) carries the legend and the evidence-view target once per narrative page and map page, and the redaction legend elsewhere"
+      ]
+    },
+    {
+      "id": "36-map-legend-in-details",
+      "file": "apps/three-surface-poc/src/polaris-generation/dossier-site.ts",
+      "old": "<a href=\"#content\">Back to the reading view</a></p><span id=\"evidence-view\"></span><ul>'\n  + '<li><span class=\"derived-mark\">",
+      "new": "<a href=\"#content\">Back to the reading view</a></p><details><summary>Evidence</summary><span id=\"evidence-view\"></span></details><ul>'\n  + '<li><span class=\"derived-mark\">",
+      "killed": true,
+      "killedBy": [
+        "apps/three-surface-poc/src/polaris-generation/dossier-computed-maps.test.ts"
+      ],
+      "failedTests": [
+        "apps/three-surface-poc/src/polaris-generation/dossier-computed-maps.test.ts > the evidence view on a map page opens each map page with the view switch and its target, outside any details, and a legend naming the labels"
+      ]
+    },
+    {
+      "id": "36-reason-unknown-fallback",
+      "file": "apps/three-surface-poc/src/polaris-generation/dossier-site.ts",
+      "old": "  if (!Object.hasOwn(MANIFEST_UNKNOWN_REASON, key)) throw new DossierRenderError('not-renderable');\n  return MANIFEST_UNKNOWN_REASON[key]!;",
+      "new": "  return MANIFEST_UNKNOWN_REASON[key] ?? 'mapping-coverage-absent';",
+      "killed": true,
+      "killedBy": [
+        "apps/three-surface-poc/src/polaris-generation/dossier-computed-maps.test.ts"
+      ],
+      "failedTests": [
+        "apps/three-surface-poc/src/polaris-generation/dossier-computed-maps.test.ts > the unit map refuses the render for an Unknown file whose reason this version does not name, never taking a reason for it"
+      ]
+    },
+    {
+      "id": "36-reason-prototype-key",
+      "file": "apps/three-surface-poc/src/polaris-generation/dossier-site.ts",
+      "old": "if (!Object.hasOwn(MANIFEST_UNKNOWN_REASON, key)) throw",
+      "new": "if (!(key in MANIFEST_UNKNOWN_REASON)) throw",
+      "killed": true,
+      "killedBy": [
+        "apps/three-surface-poc/src/polaris-generation/dossier-computed-maps.test.ts"
+      ],
+      "failedTests": [
+        "apps/three-surface-poc/src/polaris-generation/dossier-computed-maps.test.ts > the unit map refuses the render for an Unknown file whose reason this version does not name, never taking a reason for it"
+      ]
+    },
+    {
       "id": "36-inert-no-unknown-reason",
       "file": "apps/three-surface-poc/src/polaris-generation/svg-inert.ts",
       "old": "'data-manifest-id', 'data-unknown-reason'",
@@ -445,6 +615,7 @@
         "apps/three-surface-poc/src/polaris-generation/dossier-computed-maps.test.ts > the directory map draws 300 directories as 21 figures of at most 13 boxes, each fitting at 1440 and at 390, with a query for its width",
         "apps/three-surface-poc/src/polaris-generation/dossier-computed-maps.test.ts > the directory map holds its heading and the Not established sentence alone with no readable record, and draws each unit place Unknown",
         "apps/three-surface-poc/src/polaris-generation/dossier-computed-maps.test.ts > the unit map names each Unknown file with its word and RFC2-24 reason, and counts unlisted files and facts in the coverage line",
+        "apps/three-surface-poc/src/polaris-generation/dossier-computed-maps.test.ts > the unit map refuses the render for an Unknown file whose reason this version does not name, never taking a reason for it",
         "apps/three-surface-poc/src/polaris-generation/dossier-computed-maps.test.ts > the CI pipeline map states the workflow and its triggers, draws its jobs and the needs that name a job of the file, and lists the rest",
         "packages/polaris-dossier/src/render.test.ts > render: derived structure (version 2.3) renders every derived element Unknown (no-currency-bound-declared) where no adopted policy applies",
         "packages/polaris-dossier/src/render.test.ts > render: derived structure (version 2.3) renders every derived element Unknown (stale-beyond-currency-bound) for a record of another revision or with facts not re-derived"
@@ -466,8 +637,10 @@
         "apps/three-surface-poc/src/polaris-generation/dossier-computed-maps.test.ts > the directory map holds its heading and the Not established sentence alone with no readable record, and draws each unit place Unknown",
         "apps/three-surface-poc/src/polaris-generation/dossier-computed-maps.test.ts > the unit map places each package in its root or top-level directory, draws no arrow between packages and lists every declared fact",
         "apps/three-surface-poc/src/polaris-generation/dossier-computed-maps.test.ts > the unit map names each Unknown file with its word and RFC2-24 reason, and counts unlisted files and facts in the coverage line",
+        "apps/three-surface-poc/src/polaris-generation/dossier-computed-maps.test.ts > the unit map refuses the render for an Unknown file whose reason this version does not name, never taking a reason for it",
         "apps/three-surface-poc/src/polaris-generation/dossier-computed-maps.test.ts > the CI pipeline map states the workflow and its triggers, draws its jobs and the needs that name a job of the file, and lists the rest",
         "apps/three-surface-poc/src/polaris-generation/dossier-computed-maps.test.ts > the CI pipeline map stacks a job graph that is not a plain chain, with a query for its own width, and lists 25 jobs undrawn",
+        "apps/three-surface-poc/src/polaris-generation/dossier-computed-maps.test.ts > the evidence view on a map page opens each map page with the view switch and its target, outside any details, and a legend naming the labels",
         "apps/three-surface-poc/src/polaris-generation/dossier-computed-maps.test.ts > a map figure holds at most 25 boxes, refusing 26 and none, and gives a box no arrow touches its own text-form item",
         "apps/three-surface-poc/src/polaris-generation/dossier-computed-maps.test.ts > computed maps on the site carries computedMaps in the machine view beside derivedStructure, each member as the render derived it",
         "apps/three-surface-poc/src/polaris-generation/dossier-computed-maps.test.ts > computed maps on the site gives every drawn element its fact's identity, every figure computed provenance, no script, and the map rules to map pages alone"
@@ -523,10 +696,10 @@
         "packages/polaris-dossier/src/run-advice.test.ts"
       ],
       "failedTests": [
-        "packages/polaris-dossier/src/check.test.ts > check: figure fit records each produced figure Unknown when the check is given no layout",
-        "packages/polaris-dossier/src/check.test.ts > check: mechanism advice and run-advice.json keeps author-class entries on the report and in no run file, and routes a check given no layout to its run file",
         "packages/polaris-dossier/src/run-advice.test.ts > advice classes classes every reader advisory author, and a figure-fit entry mechanism in exactly the two cases",
-        "packages/polaris-dossier/src/run-advice.test.ts > the run file holds each distinct advisory once, compared as a JSON value, ordered by first revision then by place, with its revisions"
+        "packages/polaris-dossier/src/run-advice.test.ts > the run file holds each distinct advisory once, compared as a JSON value, ordered by first revision then by place, with its revisions",
+        "packages/polaris-dossier/src/check.test.ts > check: figure fit records each produced figure Unknown when the check is given no layout",
+        "packages/polaris-dossier/src/check.test.ts > check: mechanism advice and run-advice.json keeps author-class entries on the report and in no run file, and routes a check given no layout to its run file"
       ]
     },
     {
@@ -706,6 +879,32 @@
       ],
       "failedTests": [
         "packages/polaris-dossier/src/run-advice.test.ts > the run file throws where the file cannot be put in place, leaving no temporary file"
+      ]
+    },
+    {
+      "id": "64-read-no-size-check",
+      "file": "packages/polaris-dossier/src/run-advice.ts",
+      "old": "    if (fs.statSync(file).size > RUN_ADVICE_LIMITS.maxBytes) throw new BoundedJsonError('byte-limit');\n",
+      "new": "",
+      "killed": true,
+      "killedBy": [
+        "packages/polaris-dossier/src/run-advice.test.ts"
+      ],
+      "failedTests": [
+        "packages/polaris-dossier/src/run-advice.test.ts > the run file reads the run file under the check record's bound: one past 16,777,216 bytes from its size alone, or nested past 16 levels, is null"
+      ]
+    },
+    {
+      "id": "64-read-unbounded-parse",
+      "file": "packages/polaris-dossier/src/run-advice.ts",
+      "old": "const doc: unknown = parseBoundedJson(text, RUN_ADVICE_LIMITS);",
+      "new": "const doc: unknown = JSON.parse(text);",
+      "killed": true,
+      "killedBy": [
+        "packages/polaris-dossier/src/run-advice.test.ts"
+      ],
+      "failedTests": [
+        "packages/polaris-dossier/src/run-advice.test.ts > the run file reads the run file under the check record's bound: one past 16,777,216 bytes from its size alone, or nested past 16 levels, is null"
       ]
     },
     {
