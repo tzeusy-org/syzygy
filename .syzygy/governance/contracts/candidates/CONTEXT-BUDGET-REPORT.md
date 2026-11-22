@@ -41,7 +41,7 @@ the *measurement*, never the *selection*.
 | `context-selection-10-trajectory-lifecycle.md` | 12 | 43,645 | 58,921 | **above the proposed trigger** by 194.6% | `f117cd851f00de86…` |
 | `context-selection-2-trajectory-adapter.md` | 8 | 23,496 | 31,720 | **above the proposed trigger** by 58.6% | `56971c0f767fba23…` |
 | `context-selection-3-orrery-lens.md` | 5 | 17,024 | 22,982 | **above the proposed trigger** by 14.9% | `962f42f56516c492…` |
-| `context-selection-4-execution-profile.md` | 6 | 15,066 | 20,339 | **above the proposed trigger** by 1.7% | `368f2745d7f5a9c4…` |
+| `context-selection-4-execution-profile.md` | 6 | 15,145 | 20,446 | **above the proposed trigger** by 2.2% | `2994e9e995c88c9e…` |
 | `context-selection-5-cross-project-mission.md` | 11 | 26,320 | 35,532 | **above the proposed trigger** by 77.7% | `06b28623848bf613…` |
 | `context-selection-6-doctrine-amendment.md` | 6 | 15,239 | 20,573 | **above the proposed trigger** by 2.9% | `733fd2dde0a619a9…` |
 | `context-selection-7-kernel-identity.md` | 5 | 18,867 | 25,470 | **above the proposed trigger** by 27.4% | `b2b03d02242465b2…` |
@@ -112,7 +112,7 @@ printed at the foot of §5.
 
 ### `context-selection-4-execution-profile.md`
 
-- **Measured:** 15,066 words ≈ 20,339 estimated tokens — 1.7% above the proposed trigger.
+- **Measured:** 15,145 words ≈ 20,446 estimated tokens — 2.2% above the proposed trigger.
 - **Reason:** [Unknown] — not declared in the fixture
 - **Scope:** [Unknown] — not declared in the fixture
 - **Reviewer:** [Unknown] — not declared in the fixture
@@ -166,7 +166,7 @@ printed at the foot of §5.
 
 ## 3. Contract modules — the corpus this budget is spent on
 
-**39 modules, 132,097 words.** The ~7,000-word per-module
+**39 modules, 132,306 words.** The ~7,000-word per-module
 ceiling and the 35–50k corpus target band are the compaction charter's,
 recorded in `03-ACTIVE-CONTRACT-COMPACTION-REPORT.md`; both are
 candidate figures under the same non-installed policy as §1's trigger.
@@ -183,7 +183,7 @@ module over it when it counts more than 7,000 words.
 | `rfcs/RFC-0002/snapshot-and-evaluation-core.md` | 2,261 | — |
 | `rfcs/RFC-0003/README.md` | 1,217 | — |
 | `rfcs/RFC-0003/governance-homes-and-owner-acts.md` | 5,957 | — |
-| `rfcs/RFC-0003/manifests-and-namespace.md` | 6,057 | — |
+| `rfcs/RFC-0003/manifests-and-namespace.md` | 6,072 | — |
 | `rfcs/RFC-0004/README.md` | 1,997 | — |
 | `rfcs/RFC-0004/execution-record.md` | 1,958 | — |
 | `rfcs/RFC-0004/fidelity-joins-and-mappings.md` | 2,291 | — |
@@ -191,7 +191,7 @@ module over it when it counts more than 7,000 words.
 | `rfcs/RFC-0004/named-adapters.md` | 3,930 | — |
 | `rfcs/RFC-0005/README.md` | 2,371 | — |
 | `rfcs/RFC-0005/admission-and-boundary.md` | 4,483 | — |
-| `rfcs/RFC-0005/consent-egress-secrets.md` | 2,997 | — |
+| `rfcs/RFC-0005/consent-egress-secrets.md` | 3,191 | — |
 | `rfcs/RFC-0005/execution-profiles.md` | 2,506 | — |
 | `rfcs/RFC-0006-cross-surface-selection-query-drawer.md` | 5,748 | — |
 | `rfcs/RFC-0007/README.md` | 2,669 | — |

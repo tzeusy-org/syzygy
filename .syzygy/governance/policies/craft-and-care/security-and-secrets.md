@@ -57,7 +57,15 @@ retired that consent.)*
   derivations, **prompts included**, from any repository Syzygy reads.
 - **The check is two-part, in code:** the receiving service is declared in
   the run's own record, and the content is determinable and screened. Content
-  the policy matches or cannot classify is never sent, whatever is declared.
+  the policy matches or cannot classify is never sent by Syzygy, whatever is
+  declared.
+- **A dossier session's own reads are disclosed, not checked (D11).** The
+  authoring session of a Polaris dossier run reads the raw clone through its
+  own agent tool, and Syzygy cannot check that session's traffic to its
+  provider. The code checks instead that the provider is declared for the
+  run and that the run records and renders the raw-read disclosure SEC-2
+  requires; everything Syzygy itself builds and sends still takes the
+  two-part check. *(Added 2026-11-22 after D11.)*
 - **With no declared provider**, the dependent feature renders Unknown rather
   than being computed; it does not queue, cache, or "anonymize" its way
   around the check.

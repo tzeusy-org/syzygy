@@ -1,0 +1,87 @@
+{
+  "kind": "syzygy-k54o.5.1 acceptance: POC specification agent amendment under D10",
+  "subject": {
+    "fixCommit": "d01b9313ec833082a184574939a2fe7c8a8872cf",
+    "scripts": {
+      "scripts/d10_supersession.py": "31c304e89012d9d381174f9ca280f5faedaf4f2d184c4a31d0570820b900be61",
+      "scripts/prepare_three_surface_poc_governedby_reference_recording.py": "7331182a17d695924136c5b85a47e8b15a5b817cfdc9cd05d01508f0a6f5849f",
+      "scripts/build_three_surface_poc_readability_successor.py": "1cda4595865b6aa034d75b33eca88fef15f4bbf62ba22d092bbdec3617c35b86",
+      "scripts/check_spec_reconciliation.py": "975446c596f24ba9719bdde8f369dec1b2730d0002a584b4be8747d8275c892f"
+    }
+  },
+  "mutation": {
+    "file": "openspec/changes/three-surface-poc-experience/specs/three-surface-poc-experience/spec.md",
+    "old": " SHALL ",
+    "new": " SHALL, as amended, ",
+    "occurrence": "first",
+    "then": "python3 scripts/build_three_surface_poc_spec_dependencies.py; git commit -am"
+  },
+  "method": "Two fresh clones of the fix commit. Both take the one-word amendment and the regenerated GOVERNING-DEPENDENCIES.md in one commit. 'rowed' then commits one AGENT-ADOPTIONS.md row naming that commit's full hash and runs the whole PROJECT-STATUS.md battery (scripts/run_status_battery.py; transcript beside this file). 'rowless' adds no row. Each arm's four formerly pinning checks are re-run here, output kept verbatim except two SyntaxWarning lines from an unrelated script and the reconciliation's OK lines.",
+  "arms": {
+    "rowed": {
+      "clone": "rowed",
+      "head": "13a8b114f0eabc76bad62ee465e6ddb208cc5873",
+      "amendmentCommit": "b03eba6db0f92bc3d8e611788a4189f0ff12a0c3",
+      "fixCommit": "d01b9313ec833082a184574939a2fe7c8a8872cf",
+      "specSha256Before": "01209cce451cbab62a9f39fce1e6a78d9dcd6b56f3e32e0dc9bf0d5534534c37",
+      "specSha256After": "0d9af8e995b26939fabe450213cb4b5b669487afa29fc39aabb7ef8423e4e166",
+      "dependenciesSha256After": "4278e49251329ebaba57494b3ad090ac7459035e69a28008ef339638a1debc41",
+      "checks": [
+        {
+          "command": "python3 scripts/record_versioned_signoff.py --check three-surface-poc-governedby-reference-amendment --version 1.0",
+          "exit": 0,
+          "output": "SUPERSEDED  record_versioned_signoff.py --check three-surface-poc-governedby-reference-amendment: applied-tree comparison: not run. GOVERNANCE-SIMPLIFICATION-D10 is in effect (its record is present and verifies) and replaced the bytes this check holds a performed act to; the act and its record stay as history (RFC3-16 as amended).\nrecorded three-surface-poc-governedby-reference-amendment v1.0 sign-off regenerates exactly; applied tree verified"
+        },
+        {
+          "command": "python3 scripts/prepare_three_surface_poc_governedby_reference_recording.py --check",
+          "exit": 0,
+          "output": "P115 preparation: performed; six rows verified as D10 found them, each later change adopted by an AGENT-ADOPTIONS.md row; explicit historical builder replay; 58 frozen core files; six subjects; no writes."
+        },
+        {
+          "command": "python3 scripts/build_three_surface_poc_readability_successor.py --check",
+          "exit": 0,
+          "output": "three-surface POC readability successor installed: all 6 signed subjects carried their manifest rows as D10 found them, and every later change to the POC change is adopted by an AGENT-ADOPTIONS.md row"
+        },
+        {
+          "command": "python3 scripts/check_spec_reconciliation.py --check",
+          "exit": 0,
+          "output": "WARN  R6  behaviour-contract pins (report only) \u2014 2 examined, 2 findings \u2014 a stale pin is Unknown, never green; repair needs an owner act this checker never performs\n        `.syzygy/governance/declarations/adapter-registry/POLARIS-BUTLERS-PROJECT-SHAPE-OBSERVER-CANDIDATE.json`: pins sha256:0d50f8f496aada5e89a0ab2d7de29e487fc2d4f4ce66435f7a2abdab7a7a5bc1, current PWB spec.md is sha256:44f4ad77e62525595be5839883ac491d26bdd6859f353f91edc1d48903011ed2 \u2014 Unknown until its own owner act (syzygy-2g0d)\n        `.syzygy/governance/policies/POLARIS-BUTLERS-SECRET-CLASSIFICATION-POLICY-CANDIDATE.json`: pins sha256:0d50f8f496aada5e89a0ab2d7de29e487fc2d4f4ce66435f7a2abdab7a7a5bc1, current PWB spec.md is sha256:44f4ad77e62525595be5839883ac491d26bdd6859f353f91edc1d48903011ed2 \u2014 Unknown until its own owner act (syzygy-2g0d)\n7 of 7 predicates without FAIL; PASS \u2014 counts derived, not asserted"
+        }
+      ],
+      "adoptionRow": [
+        "| A-99 | 2026-11-22 | `b03eba6db0f92bc3d8e611788a4189f0ff12a0c3` | Probe amendment of `openspec/changes/three-surface-poc-experience/specs/three-surface-poc-experience/spec.md` (one word) | k5 acceptance probe | `git revert b03eba6db` | \u2014 |"
+      ]
+    },
+    "rowless": {
+      "clone": "rowless",
+      "head": "64a9522e0cb05a556a1f03bcc174964731b6b2b9",
+      "amendmentCommit": "64a9522e0cb05a556a1f03bcc174964731b6b2b9",
+      "fixCommit": "d01b9313ec833082a184574939a2fe7c8a8872cf",
+      "specSha256Before": "01209cce451cbab62a9f39fce1e6a78d9dcd6b56f3e32e0dc9bf0d5534534c37",
+      "specSha256After": "0d9af8e995b26939fabe450213cb4b5b669487afa29fc39aabb7ef8423e4e166",
+      "dependenciesSha256After": "4278e49251329ebaba57494b3ad090ac7459035e69a28008ef339638a1debc41",
+      "checks": [
+        {
+          "command": "python3 scripts/record_versioned_signoff.py --check three-surface-poc-governedby-reference-amendment --version 1.0",
+          "exit": 1,
+          "output": "FAILED: current P115 governing input differs: openspec/changes/three-surface-poc-experience/specs/three-surface-poc-experience/spec.md | P115 signed six current subjects do not match the frozen manifest | missing adoption row: no `.syzygy/governance/decisions/AGENT-ADOPTIONS.md` row covers commit `64a9522e0cb0`, which changed `openspec/changes/three-surface-poc-experience/` after D10; add one whose Commit cell names it (or a commit it is an ancestor of) and whose text names `three-surface-poc-experience`"
+        },
+        {
+          "command": "python3 scripts/prepare_three_surface_poc_governedby_reference_recording.py --check",
+          "exit": 1,
+          "output": "P115 preparation FAILED: current P115 governing input differs: openspec/changes/three-surface-poc-experience/specs/three-surface-poc-experience/spec.md | P115 signed six current subjects do not match the frozen manifest | missing adoption row: no `.syzygy/governance/decisions/AGENT-ADOPTIONS.md` row covers commit `64a9522e0cb0`, which changed `openspec/changes/three-surface-poc-experience/` after D10; add one whose Commit cell names it (or a commit it is an ancestor of) and whose text names `three-surface-poc-experience`"
+        },
+        {
+          "command": "python3 scripts/build_three_surface_poc_readability_successor.py --check",
+          "exit": 1,
+          "output": "THREE-SURFACE POC READABILITY INSTALLED-ROW FINDINGS:\n  the six POC subjects no longer reach this successor's installed rows\n  missing adoption row: no `.syzygy/governance/decisions/AGENT-ADOPTIONS.md` row covers commit `64a9522e0cb0`, which changed `openspec/changes/three-surface-poc-experience/` after D10; add one whose Commit cell names it (or a commit it is an ancestor of) and whose text names `three-surface-poc-experience`"
+        },
+        {
+          "command": "python3 scripts/check_spec_reconciliation.py --check",
+          "exit": 1,
+          "output": "FAIL  R1  terminal outcome for every child \u2014 37 examined, 1 findings \u2014 5 children and 3 installed Polaris additions; digest acts: phrase = manifest sha256 and in the aggregate; versioned: package/version/tag and one aggregate block; adopted additions: the declared record names the spec; declared-source: one VIS-4 ledger row and verified D10 record when present; URL declared-source: one v2.1 row and verified D10 record; an unrecorded v2.1 transaction stays pending; figure homes and fit: one v2.2 row over effective v2.0, pending until recorded; derived observed facts: one v2.3 row over effective v2.2 naming spec and policy, pending until recorded; ledger, packs and thesis: one v2.4 row over effective v2.3, pending until recorded; figure kinds: one v2.5 row over effective v2.4, pending until recorded; declared-source reach: one v2.6 row over effective v2.0 naming spec and policy, pending until recorded; manifest recognizers: one v2.7 row over effective v2.5, pending until recorded; spec repairs: one v2.8 row over effective v2.7, pending until recorded; computed maps: one v2.9 row over effective v2.8, pending until recorded; record bounds: one v2.10 row over effective v2.9, pending until recorded\n        poc (syzygy-73e.5.2) successor THREE-SURFACE-POC-GOVERNEDBY-REFERENCE-AMENDMENT-SIGNOFF-v1.0.md: incomplete or invalid exact P115 sign-off transaction\nFAIL  R2  reviewed and signed subjects hash to their rows \u2014 89 examined, 16 findings\n        poc (syzygy-73e.5.2) successor THREE-SURFACE-POC-BLOCK-PROVENANCE-AMENDMENT-SIGNOFF-v1.0.md: broken chain \u2014 reversing `.syzygy/governance/contracts/candidates/three-surface-poc-block-provenance-amendment/proposed/GOVERNING-DEPENDENCIES.md.patch` over the successor row of `openspec/changes/three-surface-poc-experience/GOVERNING-DEPENDENCIES.md` does not yield the row the chain reached\n        poc (syzygy-73e.5.2) successor THREE-SURFACE-POC-BLOCK-PROVENANCE-AMENDMENT-SIGNOFF-v1.0.md: broken chain \u2014 reversing `.syzygy/governance/contracts/candidates/three-surface-poc-block-provenance-amendment/proposed/spec.md.patch` over the successor row of `openspec/changes/three-surface-poc-experience/specs/three-surface-poc-experience/spec.md` does not yield the row the chain reached\n        poc (syzygy-73e.5.2) successor THREE-SURFACE-POC-GOVERNING-INTENT-AMENDMENT-SIGNOFF-v1.0.md: broken chain \u2014 reversing `.syzygy/governance/contracts/candidates/three-surface-poc-governing-intent-amendment/proposed/CONTRACT-COVERAGE.md.patch` over the successor row of `openspec/changes/three-surface-poc-experience/CONTRACT-COVERAGE.md` does not yield the row the chain reached\n        poc (syzygy-73e.5.2) successor THREE-SURFACE-POC-GOVERNING-INTENT-AMENDMENT-SIGNOFF-v1.0.md: broken chain \u2014 reversing `.syzygy/governance/contracts/candidates/three-surface-poc-governing-intent-amendment/proposed/GOVERNING-DEPENDENCIES.md.patch` over the successor row of `openspec/changes/three-surface-poc-experience/GOVERNING-DEPENDENCIES.md` does not yield the row the chain reached\n        poc (syzygy-73e.5.2) successor THREE-SURFACE-POC-GOVERNING-INTENT-AMENDMENT-SIGNOFF-v1.0.md: broken chain \u2014 reversing `.syzygy/governance/contracts/candidates/three-surface-poc-governing-intent-amendment/proposed/proposal.md.patch` over the successor row of `openspec/changes/three-surface-poc-experience/proposal.md` does not yield the row the chain reached\n        poc (syzygy-73e.5.2) successor THREE-SURFACE-POC-GOVERNING-INTENT-AMENDMENT-SIGNOFF-v1.0.md: broken chain \u2014 reversing `.syzygy/governance/contracts/candidates/three-surface-poc-governing-intent-amendment/proposed/spec.md.patch` over the successor row of `openspec/changes/three-surface-poc-experience/specs/three-surface-poc-experience/spec.md` does not yield the row the chain reached\n        poc (syzygy-73e.5.2) successor THREE-SURFACE-POC-VOCABULARY-EPISTEMIC-AMENDMENT-SIGNOFF-v1.0.md: broken chain \u2014 reversing `.syzygy/governance/contracts/candidates/three-surface-poc-vocabulary-epistemic-amendment/proposed/CONTRACT-COVERAGE.md.patch` over the successor row of `openspec/changes/three-surface-poc-experience/CONTRACT-COVERAGE.md` does not yield the row the chain reached\n        poc (syzygy-73e.5.2) successor THREE-SURFACE-POC-VOCABULARY-EPISTEMIC-AMENDMENT-SIGNOFF-v1.0.md: broken chain \u2014 reversing `.syzygy/governance/contracts/candidates/three-surface-poc-vocabulary-epistemic-amendment/proposed/GOVERNING-DEPENDENCIES.md.patch` over the successor row of `openspec/changes/three-surface-poc-experience/GOVERNING-DEPENDENCIES.md` does not yield the row the chain reached\n        poc (syzygy-73e.5.2) successor THREE-SURFACE-POC-VOCABULARY-EPISTEMIC-AMENDMENT-SIGNOFF-v1.0.md: broken chain \u2014 reversing `.syzygy/governance/contracts/candidates/three-surface-poc-vocabulary-epistemic-amendment/proposed/proposal.md.patch` over the successor row of `openspec/changes/three-surface-poc-experience/proposal.md` does not yield the row the chain reached\n        poc (syzygy-73e.5.2) successor THREE-SURFACE-POC-VOCABULARY-EPISTEMIC-AMENDMENT-SIGNOFF-v1.0.md: broken chain \u2014 reversing `.syzygy/governance/contracts/candidates/three-surface-poc-vocabulary-epistemic-amendment/proposed/spec.md.patch` over the successor row of `openspec/changes/three-surface-poc-experience/specs/three-surface-poc-experience/spec.md` does not yield the row the chain reached\n        poc (syzygy-73e.5.2): stale digest \u2014 `openspec/changes/three-surface-poc-experience/CONTRACT-COVERAGE.md` no longer hashes to its signed row\n        poc (syzygy-73e.5.2): stale digest \u2014 `openspec/changes/three-surface-poc-experience/GOVERNING-DEPENDENCIES.md` no longer hashes to its signed row\n        poc (syzygy-73e.5.2): stale digest \u2014 `openspec/changes/three-surface-poc-experience/design.md` no longer hashes to its signed row\n        poc (syzygy-73e.5.2): stale digest \u2014 `openspec/changes/three-surface-poc-experience/proposal.md` no longer hashes to its signed row\n        poc (syzygy-73e.5.2): stale digest \u2014 `openspec/changes/three-surface-poc-experience/specs/three-surface-poc-experience/spec.md` no longer hashes to its signed row\n        missing adoption row: no `.syzygy/governance/decisions/AGENT-ADOPTIONS.md` row covers commit `64a9522e0cb0`, which changed `openspec/changes/three-surface-poc-experience/` after D10; add one whose Commit cell names it (or a commit it is an ancestor of) and whose text names `three-surface-poc-experience`\nFAIL  R3  populations agree by two methods and match the census \u2014 124 examined, 2 findings \u2014 requirements examined across CAP1, POC, PWB and Polaris\n        POC: 26 requirements / 34 scenarios, expected 26 / 28\n        POC: per-requirement census differs from the literal at [('014', 2), ('014', 8)]\nWARN  R6  behaviour-contract pins (report only) \u2014 2 examined, 2 findings \u2014 a stale pin is Unknown, never green; repair needs an owner act this checker never performs\n        `.syzygy/governance/declarations/adapter-registry/POLARIS-BUTLERS-PROJECT-SHAPE-OBSERVER-CANDIDATE.json`: pins sha256:0d50f8f496aada5e89a0ab2d7de29e487fc2d4f4ce66435f7a2abdab7a7a5bc1, current PWB spec.md is sha256:44f4ad77e62525595be5839883ac491d26bdd6859f353f91edc1d48903011ed2 \u2014 Unknown until its own owner act (syzygy-2g0d)\n        `.syzygy/governance/policies/POLARIS-BUTLERS-SECRET-CLASSIFICATION-POLICY-CANDIDATE.json`: pins sha256:0d50f8f496aada5e89a0ab2d7de29e487fc2d4f4ce66435f7a2abdab7a7a5bc1, current PWB spec.md is sha256:44f4ad77e62525595be5839883ac491d26bdd6859f353f91edc1d48903011ed2 \u2014 Unknown until its own owner act (syzygy-2g0d)\n4 of 7 predicates without FAIL; FAIL \u2014 counts derived, not asserted"
+        }
+      ]
+    }
+  }
+}
