@@ -49,6 +49,9 @@ const RESPONSE_IDENTITY_EXCLUDES = Object.freeze([
   'projectShape.sources[].claim.evaluationId',
   'projectShape.sources[].stamp.capturedAt',
   'proposedWork.currentAuthority.claim.evaluationId',
+  // syzygy-t3jk.17: age runs to the capture instant, so it varies with it.
+  'trajectory.timeMeasures.age',
+  'trajectory.timeMeasures.measuredAt',
   'walkthroughJudgment.evaluation.evaluationId',
   'walkthroughJudgment.evaluation.evaluationInstant',
   'workItems.capturedAt',

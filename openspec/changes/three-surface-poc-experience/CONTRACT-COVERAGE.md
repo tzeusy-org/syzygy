@@ -50,9 +50,9 @@ Every clause was judged exactly once and lands in exactly one part:
 | RFC5 | 27 | 1 | 15 | 11 |
 | RFC6 | 28 | 10 | 1 | 17 |
 | RFC7 | 41 | 12 | 4 | 25 |
-| RFC8 | 32 | 13 | 2 | 17 |
+| RFC8 | 32 | 14 | 1 | 17 |
 | RFC9 | 60 | 17 | 2 | 41 |
-| **Total** | **324** | **85** | **29** | **210** |
+| **Total** | **324** | **86** | **28** | **210** |
 
 The Part A clause set is exactly the `contracts[]` union in the
 generated `GOVERNING-DEPENDENCIES.md` (verified below).
@@ -240,10 +240,12 @@ exhausted — a reviewer who finds an unlisted limb has found a real gap.
 | RFC8-16 | Until a staleness bound is declared, claimed items render `activity-undetermined`, state-local, never the reason `no-currency-bound-declared` and never counted among Unknown reasons | covered — Amendment row (five answers); stated once for the claimed count, not on each card. Moved from Part B2 | POC-REQ-044 |
 | RFC8-16 | `active` and `stale-or-dead` against a declared bound with an effective owner act; worker liveness between signals; inadmissible liveness signals | **Unknown** — Amendment row (five answers); no bound is declared and no progress signal is read | — |
 | RFC8-19 | Absent cost renders Unknown, never zero | covered — Amendment row (five answers). Moved from Part B2 | POC-REQ-044 |
-| RFC8-19 | Every aggregate over partially known measures discloses its coverage and never renders as a complete total | **Unknown** — Amendment row (five answers); no cost measure is read, so no aggregate exists to disclose coverage | — |
+| RFC8-19 | Every aggregate over partially known measures discloses its coverage and never renders as a complete total | covered — Amendment row (elapsed time); lead time, age, arrivals and closures each state "n of m" items covered, and an uncovered item stays in the denominator. Was Unknown (five answers) | POC-REQ-045 |
+| RFC8-18 | Lead time renders as an independent measure with its declared source and evidence class, never combined into a composite | covered — Amendment row (elapsed time); the measures declare `tracker-recorded-instants` and `observed`, and no element combines two. Moved from Part B1 | POC-REQ-045 |
+| RFC8-18 | The rest of the V1 measure set (effort and complexity tier, active compute time, blocked time, tokens, API cost, attempts, review rounds, CI time, rework, touched components) renders, each with its source and evidence class | **Unknown** — Amendment row (elapsed time); none is read, and the cost answer states them Unknown | — |
 
 Part A totals `[Observed, computed by the sweep in "Verifying this
-table"]`: **169 consequence rows over 85 clauses — 120 covered,
+table"]`: **171 consequence rows over 86 clauses — 122 covered,
 49 Unknown.**
 
 **Amendment disclosure — the RFC1-26 closure row (ruling P-75 Q3).**
@@ -303,7 +305,6 @@ direct requirement additions.
 
 | Clause | Observable consequence (row label) | Disposition | Requirements |
 |---|---|---|---|
-| RFC8-18 | Cost renders as independent measures with declared source and evidence class, never a composite | **Unknown** — Amendment row (five answers); the cost answer is Unknown because no measure is read, so no requirement observes a measure or the independence rule. Moved from Part B2 | — |
 | RFC1-3 | Observed-source repository is read-only; no writes emitted to Butlers | **Unknown** — Borderline: out-of-scope bars "writes to the observed project," matching RFC1-3's read-only default, but no POC-REQ's oracle tests absence of writes; consent-record specifics have no matching requirement | — |
 | RFC1-6 | VCS objects (git revision) not reified as first-class nodes, enter only as identifier/evidence | **Unknown** — POC stamps facts with "exact git revision"; no requirement's oracle checks it isn't reified as a separate Commit node | — |
 | RFC1-17 | Multi-capability code-element mapping counted identity-based, once per query subject | **Unknown** — Orrery's reconciling-counts req (051) doesn't explicitly test non-duplication under multi-capability mapping | — |
@@ -566,10 +567,10 @@ Part B2 total `[Observed, computed]`: **218 clauses.**
 ## Verifying this table
 
 - Denominator: re-run the two counting methods named above; both must
-  return 324 for RFC1–9, and 85 + 29 + 210 = 324.
+  return 324 for RFC1–9, and 86 + 28 + 210 = 324.
 - Mapped set: `python3 scripts/build_three_surface_poc_spec_dependencies.py
   --check` — Part A's clause column must equal the generated
-  `contracts[]` union (85 identifiers).
+  `contracts[]` union (86 identifiers).
 - Totals: count rows and dispositions in this file's tables (e.g.
   Python over the `| RFC` rows); the printed totals must match the
   count — they were computed that way, not transcribed.

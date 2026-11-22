@@ -29,7 +29,7 @@ Reader notes, binding on how this file is read:
   named in each requirement's `Group` line: *Code-structure
   observation* (001–004), *Work-item observation* (010–014), *Client
   rendering and parity* (020–022), *Polaris* (030–032), *Trajectory*
-  (040–044), *Orrery* (050–053), *Cross-cutting experience* (055, 060–061).
+  (040–045), *Orrery* (050–053), *Cross-cutting experience* (055, 060–061).
   Identifiers are stable and literal: minted once, amended in place,
   retired rather than reused, never renumbered (CC-SPEC-3). Gaps in the
   numbering are deliberate.
@@ -981,10 +981,13 @@ Group: Trajectory. Form: **invariant**.
 
 **Required behavior.** Every temporal position, duration, or ordering
 Trajectory renders SHALL derive from instants recorded in the observed
-work-item facts (created, updated, closed), never from render-time clocks or
-inferred ordering.
+work-item facts (created, updated, closed), or from the work-item
+observation's own capture instant (`workItems.capturedAt`, the instant an
+age runs to, POC-REQ-045), never from render-time clocks or inferred
+ordering.
 
-- **Scope.** all temporal encodings on the surface.
+- **Scope.** all temporal encodings on the surface: each card's recorded
+  instants and the elapsed-time charts and tables of POC-REQ-045.
 
 - **Case (sweep)**: a checker enumerates Trajectory's temporal markers
   — the denominator is the marker population — and recomputes each
@@ -1259,6 +1262,89 @@ warrants:
   decisions: []
   topology: []
   parent_requirements: []
+```
+
+### Requirement: POC-REQ-045 — Trajectory measures elapsed time over every served item
+
+Group: Trajectory. Form: **state projection/query**.
+
+**Required behavior.** Trajectory SHALL measure elapsed time over every
+served work item, never the rendered selection (POC-REQ-042), as four
+independent measures, each with its coverage, "n of m" items, stated beside
+it: (1) lead time, closed items from created to closed instant; (2) age,
+non-closed items from created instant to the observation's capture instant
+(`workItems.capturedAt`), never a render-time clock (POC-REQ-041); (3)
+arrivals per ISO 8601 week in UTC, by created instant; and (4) closures per
+ISO 8601 week in UTC, by closed instant. Lead time and age SHALL be the
+median and the 90th percentile by nearest rank, in whole hours rounded
+down; with no item covered each SHALL be stated not measurable, never 0.
+An item whose needed instant is missing, invalid, written without a
+timezone, or reversed (a closed instant before its created instant, or a
+created instant after the capture instant) SHALL be counted in the
+denominator and not covered, never dropped. Every week from the first to
+the last covered event SHALL be listed, a week with none an observed 0.
+The measures SHALL declare their source (the tracker's recorded instants)
+and evidence class (observed), and no element SHALL combine two measures
+into one number (RFC8-18). The page SHALL draw them as charts, one unit per
+axis (counts per week; hours), each with a title, labelled axes and a text
+alternative, using no script, and SHALL give every number a chart draws in
+a table, each cell equal to the machine answer
+(`trajectory.timeMeasures`). The cost answer (POC-REQ-044) SHALL stay
+Unknown for every other cost and point at these measures.
+
+- **Scope.** the elapsed-time region of Trajectory and
+  `trajectory.timeMeasures`. Effort, compute, token, money and
+  blocked-time costs, cycle time and any history of status changes are
+  outside it.
+
+- **Case**: a checker serves closed items with a 48-hour and a 12-hour
+  lead time, a closed item with a timezone-less created instant, a closed
+  item closed before it was created, and two open items 48 and 12 hours
+  old at the capture instant, spanning ISO weeks 31 to 35 of 2026; it
+  renders the page at two wall-clock times; separately it measures weeks
+  across a year change.
+- **Observable**: the four measures, each with its covered and total
+  counts; the weekly rows; the two charts' titles, axis labels and text
+  alternatives; both renders' bytes.
+- **Oracle**: lead time 2 of 4 covered, median 12 and p90 48 hours; age 2
+  of 2, median 12 and p90 48; arrivals 5 of 6; closures 2 of 4; five weekly
+  rows W31 to W35 with W33 and W34 at 0; each table cell equals the machine
+  answer, and a mutated cell is named; the two renders are byte-equal; ISO
+  week names equal the checker's own calendar (2027-01-01 is 2026-W53).
+  Equality decides.
+- **Oracle independence**: expected values are computed by hand from the
+  checker's fixture instants, and ISO weeks by an independent calendar,
+  never by the module under test.
+- **Falsifier**: a measure without its coverage; an uncovered item dropped
+  from a denominator or counted as 0 hours; an age measured to a render-time
+  clock; a week missing between covered events; two units on one axis; a
+  chart number absent from the tables or unequal to the machine answer; a
+  composite of two measures; or cost rendered as known.
+
+#### Scenario: Elapsed time with partial coverage
+
+- **WHEN** four closed items are served, two with valid instants (48 and 12
+  hours), one with a timezone-less created instant and one closed before it
+  was created, and two open items 48 and 12 hours old at the capture instant
+- **THEN** lead time is covered for 2 of 4, median 12 and p90 48 hours; age
+  for 2 of 2, median 12 and p90 48 hours; and the tables equal the machine
+  answer
+
+#### Scenario: No covered item
+
+- **WHEN** no closed item has valid created and closed instants
+- **THEN** lead time is stated not measurable with 0 of its total covered,
+  never 0 hours
+
+```yaml
+warrants:
+  primary: VIS-2
+  doctrine: [VIS-2, VIS-6]
+  contracts: [RFC8-18, RFC8-19, RFC2-3, RFC6-22]
+  policies: []
+  decisions: []
+  topology: []
+  parent_requirements: [POC-REQ-041, POC-REQ-044]
 ```
 
 ### Requirement: POC-REQ-050 — Orrery projects declared mappings deterministically

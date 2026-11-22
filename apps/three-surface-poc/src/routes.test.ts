@@ -472,7 +472,7 @@ describe('three-surface POC routes', () => {
     expect(response.status).toBe(200);
     const served = JSON.parse(await response.text()) as Record<string, unknown>;
     const declared = (served.responseIdentity as { readonly excludes: readonly string[] }).excludes;
-    expect(declared).toHaveLength(25);
+    expect(declared).toHaveLength(27);
     const servedKey = (served.responseIdentity as { readonly contentKey: string }).contentKey;
     expect(independentResponseKey(served)).toBe(servedKey);
     expect(servedKey).not.toBe(model.responseIdentity.contentKey);
