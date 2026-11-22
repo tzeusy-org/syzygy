@@ -60,7 +60,7 @@ beforeAll(async () => {
   prepared = result; cleanup.push(result.socketRoot);
 }, 30_000);
 async function runtimeFixture(failRole?: ViewRole, sampleForRole?: (role: ViewRole) => Promise<boolean>,
-  healthyForRole: (role: ViewRole) => boolean = () => true) {
+  healthyForRole: (role: ViewRole) => boolean = () => true, authorTerminal?: Partial<UrlSessionLaunchOutcome>) {
   const parent = await mkdtemp(path.join(planning.hidden, 'urs-audit-')); cleanup.push(parent);
   const committed: string[] = [];
   const calls: string[] = [], captured = new Map<ViewRole, SessionHostOptions>(), failures: string[] = [];
@@ -91,9 +91,10 @@ async function runtimeFixture(failRole?: ViewRole, sampleForRole?: (role: ViewRo
       calls.push(`launch:${role}`);
       let resolve!: (value: UrlSessionLaunchOutcome) => void;
       const finished = new Promise<UrlSessionLaunchOutcome>(done => { resolve = done; });
+      const terminal = role === 'author' ? { ...outcome, ...authorTerminal } : outcome;
       return { pid: 1000 + URL_ROLES.indexOf(role), commandSha256: plan.declaration.commandSha256, finished,
         waitForSample: async () => sampleForRole === undefined ? true : sampleForRole(role),
-        stop: async () => { calls.push(`stop:${role}`); resolve(outcome); return outcome; } };
+        stop: async () => { calls.push(`stop:${role}`); resolve(terminal); return terminal; } };
     },
   });
   const options: UrlRunSessionsOptions = { run: planning.options.run, record: planning.options.record, screen: planning.options.screen,
@@ -160,6 +161,17 @@ describe('one root lifecycle for four restricted URL roles', () => {
     const logs = await Promise.all((await readdir(f.parent)).map(name => readFile(path.join(f.parent, name), 'utf8')));
     expect(logs.join('')).not.toContain(secretFreeText); expect(await runtime.current()).toBe(false);
     } finally { await runtime.stop(); }
+  });
+  it.each([
+    { outcome: 'storage-limit' },
+    { outcome: 'exited', exitCode: 1, signal: null },
+    { groupTermination: 'Unknown' },
+  ] as const)('retains terminal failure during supervisor stop (%o)', async terminal => {
+    const f = await runtimeFixture(undefined, undefined, undefined, terminal), runtime = await f.start(f.options);
+    const result = await runtime.stop();
+    expect(result.failure).toBe('role-ended');
+    expect(result.roles.find(role => role.role === 'author')?.outcome).toMatchObject(terminal);
+    expect(result.audit).toMatchObject({ poisoned: false, termination: 'closed', captured: { 'launch-terminal': 4 } });
   });
   it.each(['failed sample', 'changed admission'] as const)('keeps receipt provenance and audit untouched after a %s', async condition => {
     let announceWait!: () => void, releaseSample!: (current: boolean) => void;

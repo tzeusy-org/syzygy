@@ -159,8 +159,9 @@ export async function closeRun(runDir: string, request: CloseRequest, deps: Clos
     disclosures: credential.required ? [...DISCLOSURES, CREDENTIAL_CHECK_DISCLOSURE] : DISCLOSURES,
   };
   try {
+    const encoded = `${JSON.stringify(record, null, 2)}\n`;
     if (deps.admitRecord?.() === false) return refuse('write', 'the supervisor could not confirm run completion at close');
-    fs.writeFileSync(recordFile, `${JSON.stringify(record, null, 2)}\n`, { mode: 0o600, flag: 'wx' });
+    fs.writeFileSync(recordFile, encoded, { mode: 0o600, flag: 'wx' });
   } catch (cause) {
     return refuse('write', `the Execution Record could not be written (${errno(cause)})`);
   }

@@ -9,7 +9,7 @@ import type { SessionCredential } from './session-credential.js';
 import type { SessionAdmission, SessionContentClass } from './session-egress-policy.js';
 import { startSessionHost, type SessionHost } from './session-host.js';
 import { isOrderedDesignSessionProfile } from './session-profile.js';
-import { launchRestrictedUrlSession, prepareRestrictedUrlSession, type UrlSessionLaunchOutcome, type UrlSessionProcess } from './session-launch.js';
+import { launchRestrictedUrlSession, prepareRestrictedUrlSession, urlSessionStoppedCleanly, type UrlSessionLaunchOutcome, type UrlSessionProcess } from './session-launch.js';
 import type { SessionDesignArtifactRead, SessionToolsOptions, SessionToolsReceipt } from './session-tools.js';
 import type { ViewRole } from './session-view.js';
 import { sourceBindingSha256, type RecordedRunConfig } from './run-record.js';
@@ -32,7 +32,8 @@ import { createUrlRunCpuBudget } from './url-run-cpu-budget.js';
 import { sessionMachineEffectCurrent } from './session-machine-transport.js';
 
 const canonical = (value: unknown): string => encodeCanonicalJson(value, { maxBytes: 2_097_152, maxNodes: 65_536, maxDepth: 32 });
-type Failure = 'binding-changed' | 'launch-unavailable' | 'audit-unavailable' | 'control-unavailable' | 'role-ended' | 'transport-unavailable' | 'provenance-unavailable';
+type Failure = 'binding-changed' | 'launch-unavailable' | 'audit-unavailable' | 'control-unavailable' | 'role-ended'
+  | 'transport-unavailable' | 'provenance-unavailable' | 'cleanup-unconfirmed';
 interface LaunchHistoryPort {
   readonly promptDigests: Readonly<Record<UrlLaunchHistoryRole, string>>;
   readonly register: (history: UrlCommittedLaunchHistory, waitForSamples: () => Promise<boolean>) => void | Promise<void>;
@@ -257,6 +258,21 @@ async function start(options: UrlRunSessionsOptions, ports: typeof native): Prom
     finishedAt: number | 'Unknown'; outcome: UrlSessionLaunchOutcome | 'Unknown' }>(URL_ROLES.map(role => [role,
     { role, pid: 'Unknown', startedAt: 'Unknown', finishedAt: 'Unknown', outcome: 'Unknown' }]));
   const terminals: Promise<void>[] = [];
+  const rememberTerminal = (role: ViewRole, child: UrlSessionProcess, canExit: () => boolean): void => {
+    const capture = captures.get(role)!;
+    capture.pid = child.pid; capture.startedAt = options.now();
+    capture.outcome = 'Unknown'; capture.finishedAt = 'Unknown';
+    const unexpectedTerminal = (): void => {
+      if (stopping) failure ??= 'role-ended';
+      else fail('role-ended');
+    };
+    terminals.push(child.finished.then(async outcome => {
+      capture.outcome = outcome; capture.finishedAt = options.now();
+      if (!urlSessionStoppedCleanly(outcome) || (!stopping && !canExit())) unexpectedTerminal();
+      try { await audit.append({ kind: 'launch-terminal', role, scope: audit.scope(role), payload: outcome }); }
+      catch { if (stopping) failure ??= 'audit-unavailable'; else fail('audit-unavailable'); }
+    }, unexpectedTerminal));
+  };
   const probe = createServer(socket => socket.destroy()); probe.on('error', () => {});
   let stopped: Promise<UrlRunSessionsSummary> | undefined;
   const summary = (): Omit<UrlRunSessionsSummary, 'control' | 'hosts'> => deepFreeze({ failure, budget: budget.snapshot(),
@@ -277,7 +293,7 @@ async function start(options: UrlRunSessionsOptions, ports: typeof native): Prom
     if (retirement !== undefined) {
       try { machineLifecycle = (await retirement).lifecycle; } catch { machineLifecycle = 'Unknown'; }
     }
-    await orderedAttempt?.close();
+    if (orderedAttempt !== null && !(await orderedAttempt.close())) failure ??= 'cleanup-unconfirmed';
     options.credential.close(); probe.close();
     const auditResult = await audit.close();
     return deepFreeze({ ...summary(), control: control.close(), hosts: hostResults, audit: auditResult });
@@ -397,13 +413,8 @@ async function start(options: UrlRunSessionsOptions, ports: typeof native): Prom
       hosts.set(role, host);
       if (host.healthy !== undefined) hostHealth.set(role, host.healthy);
       const child = await ports.launch({ preparation, host }); processes.set(role, child);
-      const capture = captures.get(role)!; capture.pid = child.pid; capture.startedAt = options.now();
-      terminals.push(child.finished.then(async outcome => {
-        capture.outcome = outcome; capture.finishedAt = options.now();
-        try { await audit.append({ kind: 'launch-terminal', role, scope, payload: outcome }); }
-        catch { fail('audit-unavailable'); }
-        if (!stopping) fail('role-ended');
-      }, () => { fail('role-ended'); }));
+      const capture = captures.get(role)!;
+      rememberTerminal(role, child, () => false);
       if (role !== 'author' && launchHistory !== undefined) {
         try {
           if (child.commandSha256 !== plan.declaration.commandSha256 || !(await current())) throw new Error();
@@ -425,7 +436,7 @@ async function start(options: UrlRunSessionsOptions, ports: typeof native): Prom
         if (orderedAttempt !== null) {
           if (!orderedAttempt.terminalConsumed) return null;
           hostHealth.delete('design');
-          await orderedAttempt.close();
+          if (!(await orderedAttempt.close())) { fail('cleanup-unconfirmed'); return null; }
           orderedAttempt = null;
         }
         const work = cpu!.holdOrdered(39 * 64_000_000);
@@ -442,14 +453,7 @@ async function start(options: UrlRunSessionsOptions, ports: typeof native): Prom
             launched: (child, host) => {
               hosts.set('design', host); processes.set('design', child);
               if (host.healthy !== undefined) hostHealth.set('design', host.healthy);
-              const capture = captures.get('design')!; capture.pid = child.pid; capture.startedAt = options.now();
-              capture.outcome = 'Unknown'; capture.finishedAt = 'Unknown';
-              terminals.push(child.finished.then(async outcome => {
-                capture.outcome = outcome; capture.finishedAt = options.now();
-                try { await audit.append({ kind: 'launch-terminal', role: 'design', scope: audit.scope('design'), payload: outcome }); }
-                catch { fail('audit-unavailable'); }
-                if (!stopping && !orderedAttempt?.terminalConsumed) fail('role-ended');
-              }, () => { fail('role-ended'); }));
+              rememberTerminal('design', child, () => orderedAttempt?.terminalConsumed === true);
             },
             compatiblePromptSha256: launchHistory.promptDigests.design, firstLaunch: designLaunch,
             registerLaunch: async committed => { await launchHistory.register(committed, waitForSamples); designLaunch = committed; },

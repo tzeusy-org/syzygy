@@ -79,6 +79,12 @@ export interface UrlSessionLaunchOutcome {
   readonly sampledStorageBytes: number | null; readonly peakProcesses: number | null;
   readonly aggregateEnforcement: 'sampled-stop-only'; readonly betweenSamples: 'Unknown';
 }
+/** Settled cleanup preserves the outcome. A limit, refusal or failed exit cannot count as completion. */
+export function urlSessionStoppedCleanly(outcome: UrlSessionLaunchOutcome): boolean {
+  return (outcome.outcome === 'stopped' || outcome.outcome === 'exited' && outcome.exitCode === 0 && outcome.signal === null)
+    && outcome.viewTermination === 'view-exited' && outcome.groupTermination === 'confirmed'
+    && outcome.toolTermination === 'settled' && outcome.pendingInvocations === 0;
+}
 export interface UrlSessionProcess {
   readonly pid: number; readonly commandSha256: string; readonly finished: Promise<UrlSessionLaunchOutcome>;
   /** Wait for the sample already in progress. False if shutdown has begun. */

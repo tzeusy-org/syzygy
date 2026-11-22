@@ -4,7 +4,7 @@ import { sha256 } from '@syzygy/support';
 import type { SessionCredential } from './session-credential.js';
 import type { SessionAdmission, SessionContentClass } from './session-egress-policy.js';
 import { isOrderedDesignSessionProfile } from './session-profile.js';
-import { launchRestrictedUrlSession, prepareRestrictedUrlSession, type UrlSessionProcess } from './session-launch.js';
+import { launchRestrictedUrlSession, prepareRestrictedUrlSession, urlSessionStoppedCleanly, type UrlSessionProcess } from './session-launch.js';
 import { planOrderedDesignBytes } from './url-design-delivery.js';
 import { assertUrlDesignDeliveryViewCurrent, type UrlSessionAuditResult, type UrlCommittedLaunchHistory,
   type UrlDesignDeliveryView } from './url-session-audit.js';
@@ -140,15 +140,15 @@ export async function startUrlOrderedAttempt(input: UrlOrderedAttemptOptions) {
     } catch { return false; }
   };
   let writer: ReturnType<Audit['beginOrderedDesignAudit']> | undefined;
-  const close = async (): Promise<void> => {
-    if (closed) return;
+  let closure: Promise<boolean> | undefined;
+  const close = (): Promise<boolean> => closure ??= (async () => {
     closed = true; rejectActivation(refused());
-    await host?.close();
-    await child?.stop();
-    await renewing?.catch(() => false);
+    const [childResult, hostResult] = await Promise.allSettled([child?.stop(), host?.close(), renewing]);
     render?.close(); render = null;
     input.work.release();
-  };
+    return childResult.status === 'fulfilled' && childResult.value !== undefined && urlSessionStoppedCleanly(childResult.value)
+      && hostResult.status === 'fulfilled' && hostResult.value?.termination === 'settled' && hostResult.value.pendingInvocations === 0;
+  })();
   try {
     const preparation = await prepareRestrictedUrlSession({ view: input.plan.view, profile,
       expected: { nodeSha256: input.runtime.worker.nodeSha256, supportSha256: profile.transcript.supportSha256 },
