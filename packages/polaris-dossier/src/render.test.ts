@@ -368,15 +368,16 @@ describe('render', () => {
       }
     });
 
-    it('carries the legend and the evidence-view target once per narrative page, and the redaction legend elsewhere', async () => {
+    it('carries the legend and the evidence-view target once per narrative page and map page, and the redaction legend elsewhere', async () => {
       const run = await prepared();
       const result = await renderRun(run, renderDeps());
       if (!result.ok) throw new Error(result.refusal.reason);
       const files = readSite(result.report.site);
       for (const [file, page] of html(files)) {
-        const narrative = file === 'index.html' || file.startsWith('deep-dives/');
-        expect(page.split('class="reading-legend"').length - 1, file).toBe(narrative ? 1 : 0);
-        expect(page.split('id="evidence-view"').length - 1, file).toBe(narrative ? 1 : 0);
+        // Version 2.9: each computed map page carries its own legend with the same switch and target.
+        const legended = file === 'index.html' || file.startsWith('deep-dives/') || file.startsWith('maps/');
+        expect(page.split('class="reading-legend"').length - 1, file).toBe(legended ? 1 : 0);
+        expect(page.split('id="evidence-view"').length - 1, file).toBe(legended ? 1 : 0);
       }
       const legend = files.get('index.html')!;
       expect(legend).toContain('<a href="#evidence-view">Show the evidence view</a>');
