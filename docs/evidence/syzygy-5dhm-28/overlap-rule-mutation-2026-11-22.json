@@ -1,0 +1,170 @@
+{
+  "format": "syzygy-mutation-run/1",
+  "bead": "syzygy-5dhm.28",
+  "label": "Observed",
+  "subject": {
+    "path": "packages/polaris-dossier/src/inventory-coverage.ts",
+    "sha256": "0c7817ce753f6954d7ffcb2aa5016611e6d8c4a8f55a505a9483b575ab025b92"
+  },
+  "test": {
+    "path": "packages/polaris-dossier/src/inventory-coverage.test.ts",
+    "sha256": "5a2c0eaa164e85dc78e4c58b313839efa7956311629568991de6c47ae5a2e2bb",
+    "command": "npx vitest run packages/polaris-dossier/src/inventory-coverage.test.ts"
+  },
+  "commit": "396c2adc2584330844875ce8ee04089021001ce4",
+  "worktreeClean": true,
+  "baseline": {
+    "exit": 0,
+    "testsFailed": 0,
+    "testsPassed": 20
+  },
+  "method": "each mutant replaces the one occurrence of `old` in the subject by `new`, runs the test command, and restores the subject; killed means a non-zero exit with at least one failed test",
+  "mutants": [
+    {
+      "mutant": "touching-ranges-disjoint",
+      "old": "a.start <= b.end && b.start <= a.end",
+      "new": "a.start < b.end && b.start < a.end",
+      "exit": 1,
+      "testsFailed": 8,
+      "testsPassed": 12,
+      "outcome": "killed"
+    },
+    {
+      "mutant": "one-line-apart-overlaps",
+      "old": "a.start <= b.end && b.start <= a.end",
+      "new": "a.start <= b.end + 1 && b.start <= a.end + 1",
+      "exit": 1,
+      "testsFailed": 3,
+      "testsPassed": 17,
+      "outcome": "killed"
+    },
+    {
+      "mutant": "path-ignored",
+      "old": "a.path === b.path && a.start",
+      "new": "a.start",
+      "exit": 1,
+      "testsFailed": 1,
+      "testsPassed": 19,
+      "outcome": "killed"
+    },
+    {
+      "mutant": "named-path-dropped",
+      "old": " || (mine.path !== '' && prose.includes(mine.path))",
+      "new": "",
+      "exit": 1,
+      "testsFailed": 2,
+      "testsPassed": 18,
+      "outcome": "killed"
+    },
+    {
+      "mutant": "empty-path-named",
+      "old": "(mine.path !== '' && prose.includes(mine.path))",
+      "new": "prose.includes(mine.path)",
+      "exit": 1,
+      "testsFailed": 1,
+      "testsPassed": 19,
+      "outcome": "killed"
+    },
+    {
+      "mutant": "omission-without-reason-honoured",
+      "old": "|| reason === undefined || reason === '') continue;",
+      "new": ") continue;",
+      "exit": 1,
+      "testsFailed": 1,
+      "testsPassed": 19,
+      "outcome": "killed"
+    },
+    {
+      "mutant": "duplicate-omission-hidden",
+      "old": "if (omitted.has(entryId)) duplicated.add(entryId);",
+      "new": "",
+      "exit": 1,
+      "testsFailed": 1,
+      "testsPassed": 19,
+      "outcome": "killed"
+    },
+    {
+      "mutant": "understanding-counts",
+      "old": "introduction|sections|diagrams",
+      "new": "understanding|introduction|sections|diagrams",
+      "exit": 1,
+      "testsFailed": 1,
+      "testsPassed": 19,
+      "outcome": "killed"
+    },
+    {
+      "mutant": "secret-path-named",
+      "old": "distinct.filter((cited_) => !isSecretPath(cited_))",
+      "new": "distinct.filter(() => true)",
+      "exit": 1,
+      "testsFailed": 1,
+      "testsPassed": 19,
+      "outcome": "killed"
+    },
+    {
+      "mutant": "malformed-range-covers-nothing",
+      "old": "{ path: cited, start: 1, end: Number.MAX_SAFE_INTEGER }",
+      "new": "undefined",
+      "exit": 1,
+      "testsFailed": 1,
+      "testsPassed": 19,
+      "outcome": "killed"
+    },
+    {
+      "mutant": "omission-ignored",
+      "old": "const isOmitted = entryId !== null && omitted.has(entryId);",
+      "new": "const isOmitted = entryId !== null && false;",
+      "exit": 1,
+      "testsFailed": 3,
+      "testsPassed": 17,
+      "outcome": "killed"
+    },
+    {
+      "mutant": "entry-statement-leaked",
+      "old": "uncovered.push({ entryId, paths,",
+      "new": "uncovered.push({ entryId, statement: entry['statement'], paths,",
+      "exit": 1,
+      "testsFailed": 10,
+      "testsPassed": 10,
+      "outcome": "killed"
+    },
+    {
+      "mutant": "throwing-reader-rethrown",
+      "old": "return unknown(`the inventory of record could not be read or compared",
+      "new": "throw cause; return unknown(`the inventory of record could not be read or compared",
+      "exit": 1,
+      "testsFailed": 1,
+      "testsPassed": 19,
+      "outcome": "killed"
+    }
+  ],
+  "wiring": {
+    "subject": {
+      "path": "packages/polaris-dossier/src/check.ts",
+      "sha256": "f2943facdd787e17b130ffe666a873881f22ace80859f121ac16a9689ffbdfd0"
+    },
+    "test": {
+      "path": "packages/polaris-dossier/src/check.test.ts",
+      "sha256": "50efd0235a61137e395cffa20cfcb5060fced734d32fd2da88c64a43863d00d4",
+      "command": "npx vitest run packages/polaris-dossier/src/check.test.ts -t 'inventory coverage advice'"
+    },
+    "baseline": {
+      "exit": 0,
+      "testsFailed": 0,
+      "testsPassed": 7
+    },
+    "mutants": [
+      {
+        "mutant": "denied-secret-path-named",
+        "old": "isSecretPath: secretPathOf(screen) })",
+        "new": "isSecretPath: (cited) => screen.screenPath(cited) === 'secret-detector-match' })",
+        "exit": 1,
+        "testsFailed": 1,
+        "testsPassed": 6,
+        "outcome": "killed"
+      }
+    ]
+  },
+  "killed": 14,
+  "total": 14
+}
