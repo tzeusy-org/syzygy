@@ -600,7 +600,7 @@
     },
     "POLARIS": {
       "requirements": 39,
-      "scenarios": 413,
+      "scenarios": 419,
       "members": {
         "REQ-polaris-generation-001": {
           "name": "Admitted project input",
@@ -1077,7 +1077,13 @@
             "Provider mode has no computed maps",
             "Graph figure too wide at 390 routed to the run file",
             "Advice the author can act on stays in the packet",
-            "Unreadable check record in the run file"
+            "Unreadable check record in the run file",
+            "Passed draft whose check record would pass the read bound",
+            "Check record past the bound for a draft with findings",
+            "Inventory too large for its check record",
+            "Inventory check record read under the bound",
+            "Inventory check record past the earlier reader bound counts",
+            "Derived record kept but unusable told apart from none kept"
           ]
         },
         "REQ-polaris-generation-035": {

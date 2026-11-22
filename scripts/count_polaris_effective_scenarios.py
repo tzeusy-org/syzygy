@@ -64,6 +64,9 @@ adoption binding verifies; each parser counts its one replacement (034).
 The computed-maps version2.9 amendment follows version2.8 when its own
 adoption binding verifies; each parser counts its one replacement (034).
 
+The record-bounds version2.10 amendment follows version2.9 when its own
+adoption binding verifies; each parser counts its one replacement (034).
+
 The declared-source reach version2.6 amendment follows version2.0 when its own
 adoption binding verifies; each parser counts its one replacement (046).
 
@@ -520,6 +523,15 @@ def maps_amendment(root: Path) -> str | None:
     return text
 
 
+def bounds_amendment(root: Path) -> str | None:
+    """Verified text, a pending or retired amendment, or a counting refusal."""
+    import check_spec_reconciliation as adoption
+    text, records, subjects = adoption.bounds_binding(root)
+    if records or subjects:
+        raise ScenarioCountError("record bounds adoption findings:\n" + "\n".join(records + subjects))
+    return text
+
+
 def reach_amendment(root: Path) -> str | None:
     """Verified text, a pending or retired amendment, or a counting refusal."""
     import check_spec_reconciliation as adoption
@@ -542,7 +554,8 @@ def build_composition(root: Path) -> CompositionResult:
                         (adoption.REACH_SPEC, reach_amendment(root)),
                         (adoption.MANIFESTS_SPEC, manifests_amendment(root)),
                         (adoption.REPAIRS_SPEC, repairs_amendment(root)),
-                        (adoption.MAPS_SPEC, maps_amendment(root))):
+                        (adoption.MAPS_SPEC, maps_amendment(root)),
+                        (adoption.BOUNDS_SPEC, bounds_amendment(root))):
         if text is not None:
             sources.append((label, text))
 
@@ -585,11 +598,12 @@ def composition_inputs(root: Path) -> list[Path]:
     manifests_amendment(root)
     repairs_amendment(root)
     maps_amendment(root)
+    bounds_amendment(root)
     paths = adoption.declared_source_inputs(root) | {
         adoption.URL_SOURCE_REPLACEMENTS, *adoption.URL_SOURCE_SUBJECTS,
         *adoption.URL_SOURCE_RFC_PATHS, *adoption.FIGURE_SUBJECTS, *adoption.DERIVED_SUBJECTS,
         *adoption.LEDGER_SUBJECTS, *adoption.KINDS_SUBJECTS, *adoption.MANIFESTS_SUBJECTS,
-        *adoption.REPAIRS_SUBJECTS, *adoption.MAPS_SUBJECTS,
+        *adoption.REPAIRS_SUBJECTS, *adoption.MAPS_SUBJECTS, *adoption.BOUNDS_SUBJECTS,
         *adoption.REACH_SUBJECTS,
     }
     files = discover_composition_files(root)
