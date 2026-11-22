@@ -5,7 +5,7 @@ import { afterEach, describe, expect, it, vi } from 'vitest';
 
 import { BUTLERS_POC_SEEDS, buildPocModel, STATUS_TO_COLUMN, UNMARKED_RECORD_REASON, workerChangeVerificationId, type PocModel, type TestArtifactRecord } from '@syzygy/three-surface-poc-core';
 
-import { renderTrajectoryPage } from './trajectory.js';
+import { renderTrajectoryPage, TRAJECTORY_HUMAN_PATH, TRAJECTORY_TAILNET_PATH } from './trajectory.js';
 import { pocRoutes } from './routes.js';
 import { buildFixtureModel, fixtureRepoWithGit, fixtureWorkItemRow } from './test-model-fixture.js';
 
@@ -1103,5 +1103,121 @@ describe('Trajectory elapsed-time measures (T9, POC-REQ-045)', () => {
     } finally {
       vi.useRealTimers();
     }
+  });
+});
+
+describe('Trajectory views: every served item reachable, by state and page (T8, POC-REQ-042)', () => {
+  const STATUSES = ['open', 'in_progress', 'blocked', 'deferred', 'pinned', 'hooked', 'closed'];
+  const ids = Array.from({ length: 640 }, (_, i) => `bu-v${String(i).padStart(4, '0')}`);
+  const viewRows = () => ids.map((id, i) => fixtureWorkItemRow(id, STATUSES[i % 7]!, '2026-08-01T00:00:00Z', '2026-08-01T00:00:00Z', i % 7 === 6 ? '2026-08-02T00:00:00Z' : null));
+  const DIRECT_HOST = '127.0.0.1:7478';
+  const TAILNET_HOST_NAME = 'tzeusy.parrot-hen.ts.net';
+
+  async function get(model: PocModel, path: string, query: string, host = DIRECT_HOST) {
+    const route = pocRoutes(() => model).find((candidate) => candidate.path === path && candidate.method === 'GET')!;
+    return route.handle({ request: { method: 'GET', path, query: new URLSearchParams(query), headers: { host } } });
+  }
+  /** Card ids on a page, sorted (the board groups cards by column). */
+  const cardIds = (html: string): string[] => [...html.matchAll(/<li class="wi-card[^"]*" id="workitem-([^"]+)"/g)].map((m) => m[1]!).sort();
+  const scope = (html: string) => {
+    const m = /Rendering (\d+) of (\d+) observed work items \(([^)]*)\);\s*<span data-parity-field="trajectory-excluded-count">(\d+)<\/span>/.exec(html);
+    return m === null ? null : { rendered: Number(m[1]), total: Number(m[2]), rule: m[3], excluded: Number(m[4]) };
+  };
+
+  it('puts every served item on exactly one page of the unnarrowed view and of its status view (640 items, 3 pages)', async () => {
+    const model = buildFixtureModel(cleanups, { workItemRows: viewRows() });
+    const seen: string[] = [];
+    for (const page of [1, 2, 3]) {
+      const response = await get(model, TRAJECTORY_HUMAN_PATH, `page=${page}`);
+      expect(response.status).toBe(200);
+      const s = scope(response.body)!;
+      expect(s.rendered + s.excluded).toBe(s.total);
+      expect(s.total).toBe(640);
+      seen.push(...cardIds(response.body));
+    }
+    expect(seen).toHaveLength(640);
+    expect([...seen].sort()).toEqual(ids);
+    for (const [index, status] of STATUSES.entries()) {
+      const response = await get(model, TRAJECTORY_HUMAN_PATH, `status=${status}`);
+      expect(response.status).toBe(200);
+      expect(cardIds(response.body), status).toEqual(ids.filter((_, i) => i % 7 === index));
+    }
+    const intent = await get(model, TRAJECTORY_HUMAN_PATH, 'governing-intent=unknown&page=3');
+    expect(intent.status).toBe(200);
+    expect(cardIds(intent.body)).toEqual(ids.slice(500));
+  });
+
+  it('reproduces a narrowed page from the machine answer by the test\'s own formula, item for item and count for count', async () => {
+    const model = buildFixtureModel(cleanups, { workItemRows: viewRows() });
+    const served = await servedAnswer(model);
+    if (served.workItems.kind !== 'observed' || served.trajectory.kind !== 'observed') throw new Error('unreachable');
+    expect(served.trajectory.narrowing).toEqual({
+      parameters: { status: STATUSES, 'governing-intent': ['unknown'], page: 'positive integer' },
+      pageSize: 250,
+      order: 'ascending item id',
+      view: null,
+    });
+    const pageSize = served.trajectory.narrowing.pageSize;
+    for (const [query, filter, page] of [['status=open&page=1', (s: string) => s === 'open', 1], ['page=2', () => true, 2]] as const) {
+      const expected = served.workItems.items.filter((item) => filter(item.status)).map((item) => item.id).sort().slice((page - 1) * pageSize, page * pageSize);
+      const html = (await get(model, TRAJECTORY_HUMAN_PATH, query)).body;
+      expect(cardIds(html), query).toEqual(expected);
+      const s = scope(html)!;
+      expect([s.rendered, s.excluded, s.total], query).toEqual([expected.length, served.workItems.items.length - expected.length, served.workItems.items.length]);
+    }
+  });
+
+  it('refuses a parameter outside the declared set with HTTP 400 and its reason; no parameter gives the default selection', async () => {
+    const model = buildFixtureModel(cleanups, { workItemRows: viewRows() });
+    const cases: readonly (readonly [string, string, string])[] = [
+      ['type=bug', 'type', 'unknown-parameter'],
+      ['status=done', 'status', 'unknown-value'],
+      ['page=0', 'page', 'not-a-positive-integer'],
+      ['page=1.5', 'page', 'not-a-positive-integer'],
+      ['page=4', 'page', 'page-past-end'],
+    ];
+    for (const [query, parameter, reason] of cases) {
+      const response = await get(model, TRAJECTORY_HUMAN_PATH, query);
+      expect(response.status, query).toBe(400);
+      expect(JSON.parse(response.body), query).toMatchObject({ refused: 'trajectory-view-parameter', parameter, reason });
+    }
+    const plain = await get(model, TRAJECTORY_HUMAN_PATH, '');
+    expect(plain.status).toBe(200);
+    expect(plain.body).toContain('<li><a href="/trajectory" aria-current="page">Default selection</a></li>');
+    expect(scope(plain.body)!.rule).toBe('up to 200 most recently updated non-closed items, plus up to 50 most recently closed items; missing, invalid or timezone-less times last, timestamp ties and card order by ascending item id');
+  });
+
+  it('links each view with its count, and the neighbours, on the direct and the tailnet path, outside any details element', async () => {
+    const model = buildFixtureModel(cleanups, { workItemRows: viewRows() });
+    for (const [path, host, prefix] of [[TRAJECTORY_HUMAN_PATH, DIRECT_HOST, ''], [TRAJECTORY_TAILNET_PATH, TAILNET_HOST_NAME, '/butlers-syzygy']] as const) {
+      const page1 = (await get(model, path, 'page=1', host)).body;
+      const nav = /<nav class="view-nav"[\s\S]*?<\/nav>/.exec(page1)![0];
+      const hrefs = [...nav.matchAll(/href="([^"]+)"/g)].map((m) => m[1]!.replaceAll('&amp;', '&'));
+      expect(hrefs).toEqual([
+        `${prefix}/trajectory`,
+        `${prefix}/trajectory?page=1`,
+        ...STATUSES.map((status) => `${prefix}/trajectory?status=${status}&page=1`),
+        `${prefix}/trajectory?governing-intent=unknown&page=1`,
+        `${prefix}/trajectory?page=2`,
+      ]);
+      expect([...nav.matchAll(/data-status="([a-z_]+)">(\d+)</g)].map((m) => `${m[1]}=${m[2]}`)).toEqual(['open=92', 'in_progress=92', 'blocked=92', 'deferred=91', 'pinned=91', 'hooked=91', 'closed=91']);
+      expect(nav).not.toContain('<details');
+      expect(page1.slice(0, page1.indexOf('<nav class="view-nav"')).lastIndexOf('<details')).toBeLessThan(page1.slice(0, page1.indexOf('<nav class="view-nav"')).lastIndexOf('</details>') + 1);
+      // Following the next link serves page 2; page 2 links back and forward.
+      const next = new URL(hrefs.at(-1)!, 'http://x');
+      const page2 = await get(model, path, next.search.slice(1), host);
+      expect(page2.status).toBe(200);
+      expect(page2.body).toContain(`rel="prev" href="${prefix}/trajectory?page=1"`);
+      expect(page2.body).toContain(`rel="next" href="${prefix}/trajectory?page=3"`);
+    }
+  });
+
+  it('keeps the largest page under half the human response ceiling', async () => {
+    const model = buildFixtureModel(cleanups, { workItemRows: viewRows() });
+    const sizes = await Promise.all([1, 2, 3].map(async (page) => Buffer.byteLength((await get(model, TRAJECTORY_HUMAN_PATH, `page=${page}`)).body, 'utf8')));
+    const empty = Buffer.byteLength((await get(model, TRAJECTORY_HUMAN_PATH, 'status=open&governing-intent=unknown&page=1')).body, 'utf8');
+    process.stdout.write(`[T8 page bytes] ${JSON.stringify({ sizes, perCard: Math.round((sizes[0]! - sizes[2]!) / (250 - 140)) })}\n`);
+    expect(Math.max(...sizes)).toBeLessThan(2_097_152 / 2);
+    expect(empty).toBeGreaterThan(0);
   });
 });

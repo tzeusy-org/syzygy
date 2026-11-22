@@ -8,7 +8,7 @@
 > here is overwritten and `--check` fails first. Identifiers only —
 > nothing here quotes or paraphrases any clause.
 >
-> Source: `spec.md` sha256 `a9f9f18d08b5a65058c639089b9871d09c176bc33496ba0ab6eb1aec11eb9d57` — 28 requirement(s), 101 distinct authorities.
+> Source: `spec.md` sha256 `3394801a42445629aa755dc1db260653c0483ea385f4531b986a9a264757114c` — 28 requirement(s), 101 distinct authorities.
 
 ## doctrine (9)
 
@@ -91,7 +91,7 @@
 | `RFC8-18` | POC-REQ-045 |
 | `RFC8-19` | POC-REQ-044, POC-REQ-045 |
 | `RFC8-22` | POC-REQ-014 |
-| `RFC8-23` | POC-REQ-014, POC-REQ-044 |
+| `RFC8-23` | POC-REQ-014, POC-REQ-042, POC-REQ-044 |
 | `RFC8-24` | POC-REQ-014, POC-REQ-043 |
 | `RFC8-28` | POC-REQ-044 |
 | `RFC8-29` | POC-REQ-044 |

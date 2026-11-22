@@ -1026,19 +1026,51 @@ Group: Trajectory. Form: **invariant**.
 **Required behavior.** Trajectory SHALL visibly declare which work-item
 population it renders (its selection rule) and the counts inside and outside
 that selection, so an excluded-item population is never silently invisible.
+Every served item SHALL be reachable: the route SHALL accept a closed
+parameter set, `status` (one of the seven tracker statuses of POC-REQ-040),
+`governing-intent=unknown` (the items carrying POC-REQ-014's governing-intent
+Unknown) and `page` (a positive integer), and any of them SHALL give a view
+of the matching items in ascending item id, one page of a declared fixed
+size, whose scope statement names the page, the page count and the matching
+count. No parameter SHALL give the default selection. Any other name, a
+repeated name, a value outside its set, a page that is not a positive
+integer, or a page past the last SHALL be refused with HTTP 400 naming the
+parameter, the reason and the allowed set, never ignored. Every page SHALL
+link, by real anchors outside any collapsed element and reachable by
+keyboard, to the default selection, every item by id, each status and the
+governing-intent Unknown with their whole-population counts, and the
+current view's previous and next page. The machine answer SHALL take no
+parameter and SHALL declare the parameter set, the page size and the order
+(`trajectory.narrowing`), so any page is recomputable from
+`workItems.items`.
 
-- **Scope.** the rendered scope statement against the full observed item set.
+- **Scope.** the rendered scope statement against the full observed item
+  set; the route's parameters, refusals and view links.
 
 - **Case**: a checker loads Trajectory over a database whose total item
-  count exceeds the rendered selection.
+  count exceeds the rendered selection; then, over 640 items (three pages),
+  loads every page of the unnarrowed view, every status view and the
+  governing-intent view, a page recomputed from the machine answer, five
+  refused requests, and the view links on the direct and the tailnet path.
 - **Observable**: the surface states the selection rule, the rendered
-  count, and the excluded count.
+  count, and the excluded count; each view's cards and counts; each
+  refusal's status and reason; the links and their keyboard reach.
 - **Oracle**: rendered count + excluded count equals the total count
-  read directly from Dolt at the served revision; arithmetic decides.
+  read directly from Dolt at the served revision; every served item appears
+  on exactly one page of the unnarrowed view and of its status view, and the
+  governing-intent pages hold exactly the items carrying that Unknown; a
+  page's cards and counts equal the checker's own slice of
+  `workItems.items` (filter, ascending id, page size); `type=bug`,
+  `status=done`, `page=0`, `page=1.5` and a page past the last each return
+  400 with that reason; the links equal the expected list on both paths and
+  Tab reaches each. Arithmetic and equality decide.
 - **Oracle independence**: the total comes from a direct database
-  count.
+  count; expected pages are the checker's own slices of the machine answer.
 - **Falsifier**: a board whose counts do not reconcile with the
-  database total, or no visible scope statement.
+  database total, or no visible scope statement; a served item on no page
+  or on two; a parameter outside the set ignored rather than refused; a
+  view link missing, inside a collapsed element or unreachable by keyboard;
+  or a page the machine answer cannot reproduce.
 
 #### Scenario: Bounded board over a large history
 
@@ -1047,11 +1079,18 @@ that selection, so an excluded-item population is never silently invisible.
 - **THEN** the surface states the selection rule and that 6,772 items
   are outside it, and the three numbers reconcile
 
+#### Scenario: Every item reachable by state and page
+
+- **WHEN** 640 items are served and the reader follows the view links
+- **THEN** each item appears on exactly one page of the unnarrowed view
+  and of its status view, every page states its scope and counts, and a
+  parameter outside the declared set is refused with 400 and its reason
+
 ```yaml
 warrants:
   primary: VIS-2
   doctrine: [VIS-1, VIS-2, VIS-3]
-  contracts: [RFC2-6, RFC6-14, RFC6-16, RFC6-17, RFC6-22, RFC6-23]
+  contracts: [RFC2-6, RFC6-14, RFC6-16, RFC6-17, RFC6-22, RFC6-23, RFC8-23]
   policies: []
   decisions: [POC-DIR-2026-08-30]
   topology: []

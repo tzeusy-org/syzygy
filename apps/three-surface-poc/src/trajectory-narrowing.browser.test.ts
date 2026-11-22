@@ -14,7 +14,7 @@ import { tempDir } from '@syzygy/test-kit';
 
 import { findBrowserExecutable, launchBrowser, type Browser } from './cdp-browser.js';
 import { buildFixtureModel, fixtureWorkItemRow } from './test-model-fixture.js';
-import { renderTrajectoryPage } from './trajectory.js';
+import { renderTrajectoryPage, renderTrajectoryRoute } from './trajectory.js';
 
 const executable = findBrowserExecutable();
 const cleanups: string[] = [];
@@ -127,6 +127,45 @@ describe.skipIf(executable === undefined)('Trajectory narrowing to the governing
       expect(measured.tops).toHaveLength(7);
       expect(measured.scrollWidth, measured.widest).toBeLessThanOrEqual(measured.viewport);
       if (width === 1440) expect(new Set(measured.tops).size).toBe(1);
+    } finally {
+      await page.close();
+    }
+  });
+
+  // syzygy-t3jk.18 (POC-REQ-042): every view link is reached by Tab alone,
+  // visible, outside any details element, in document order.
+  it('reaches every view and paging link by keyboard', async () => {
+    const statuses = ['open', 'in_progress', 'blocked', 'deferred', 'pinned', 'hooked', 'closed'];
+    const rows = Array.from({ length: 640 }, (_, i) => fixtureWorkItemRow(`bu-v${String(i).padStart(4, '0')}`, statuses[i % 7]!, '2026-08-01T00:00:00Z', '2026-08-01T00:00:00Z', i % 7 === 6 ? '2026-08-02T00:00:00Z' : null));
+    const model = buildFixtureModel(cleanups, { workItemRows: rows });
+    const html = renderTrajectoryRoute(model, '', undefined, new URLSearchParams('page=2'));
+    if (typeof html !== 'string') throw new Error('refused');
+    const directory = tempDir('syzygy-trajectory-views-');
+    const file = join(directory, 'trajectory.html');
+    writeFileSync(file, html);
+    const page = await browser.newPage();
+    try {
+      await page.navigate(pathToFileURL(file).href);
+      const expected = await page.evaluate<readonly string[]>(`Array.from(document.querySelectorAll('nav.view-nav a')).map(a => a.getAttribute('href'))`);
+      expect(expected).toEqual([
+        '/trajectory', '/trajectory?page=1',
+        ...statuses.map((status) => `/trajectory?status=${status}&page=1`),
+        '/trajectory?governing-intent=unknown&page=1', '/trajectory?page=1', '/trajectory?page=3',
+      ]);
+      const reached: string[] = [];
+      for (let press = 0; press < 400 && reached.length < expected.length; press += 1) {
+        await page.press('Tab');
+        const focused = await page.evaluate<{ href: string | null; inNav: boolean; visible: boolean; inDetails: boolean }>(`(() => {
+          const el = document.activeElement;
+          const r = el.getBoundingClientRect();
+          return { href: el.getAttribute('href'), inNav: !!el.closest('nav.view-nav'), visible: r.width > 0 && r.height > 0, inDetails: !!el.closest('details') };
+        })()`);
+        if (!focused.inNav) continue;
+        expect(focused.visible, focused.href ?? '').toBe(true);
+        expect(focused.inDetails, focused.href ?? '').toBe(false);
+        reached.push(focused.href!);
+      }
+      expect(reached).toEqual(expected);
     } finally {
       await page.close();
     }
