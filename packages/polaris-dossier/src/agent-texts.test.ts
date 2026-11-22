@@ -183,7 +183,7 @@ const lint = (text: string): string[] => [
 
 describe('agent texts (S11)', () => {
   it('reads every command synopsis from the usage text', () => {
-    expect([...SYNOPSES.keys()].sort()).toEqual(['allow-execution', 'await', 'brief', 'check', 'close', 'init', 'inventory-brief', 'inventory-check', 'launch-form', 'preflight', 'render', 'review-check', 'review-packet', 'session-prompt', 'status']);
+    expect([...SYNOPSES.keys()].sort()).toEqual(['allow-execution', 'await', 'brief', 'check', 'close', 'init', 'inventory-brief', 'inventory-check', 'launch-form', 'preflight', 'render', 'review-check', 'review-packet', 'session-prompt', 'status', 'verify']);
     expect(SYNOPSES.get('session-prompt')!.positional).toEqual(['<run>', 'inventory|review|all']);
     expect(SYNOPSES.get('await')!.positional).toEqual(['<session-dir>/']);
     expect(SYNOPSES.get('init')).toEqual({ positional: ['<clone>'], required: new Set(['--config']), options: new Map([['--url', null], ['--config', null], ['--state-root', null], ['--revision', null], ['--identity', null], ['--upstream', null], ['--visibility', ['public', 'private']]]) });
@@ -211,7 +211,7 @@ describe('agent texts (S11)', () => {
     const text = fs.readFileSync(path.join(ROOT, TEXTS[0]!), 'utf8');
     const swap = (from: string, to: string): string => { expect(text.includes(from)).toBe(true); return text.replace(from, to); };
     expect(grantingSentences(`${text}\nYou may build and run the project to confirm a claim.\n`)).toEqual(['You may build and run the project to confirm a claim.']);
-    expect(commandFaults(swap('`syzygy dossier check <run>`', '`syzygy dossier verify <run>`'))).toEqual(['syzygy dossier verify <run>: no such command']);
+    expect(commandFaults(swap('`syzygy dossier check <run>`', '`syzygy dossier validate <run>`'))).toEqual(['syzygy dossier validate <run>: no such command']);
     expect(commandFaults(swap('`syzygy dossier check <run>`', '`syzygy dossier check <run> --strict x`'))).toEqual(['syzygy dossier check <run> --strict x: check takes no --strict']);
     expect(commandFaults(swap('`syzygy dossier init <clone> --url <url> --config <file> --state-root <dir>`', '`syzygy dossier init <clone> --url <url>`'))).toEqual(['syzygy dossier init <clone> --url <url>: init requires --config']);
     expect(commandFaults(swap('`syzygy dossier session-prompt <run> inventory`', '`syzygy dossier session-prompt <run> authoring`'))).toEqual(['syzygy dossier session-prompt <run> authoring: authoring is not one of inventory|review|all']);
