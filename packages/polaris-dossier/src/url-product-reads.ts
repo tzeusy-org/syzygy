@@ -62,6 +62,16 @@ export function snapshotProductFile(root: string, file: string, maximum: number,
     } finally { fs.closeSync(fd); }
   }));
 }
+/** Recheck a present file after a multi-file read without rereading its body. */
+export function assertProductFileUnchanged(root: string, file: string, observed: ProductFileSnapshot, check: () => void): void {
+  if (!relative(file) || observed.stat === null || observed.bytes === null) bad();
+  const prior = observed.stat, parts = file.split('/');
+  guarded(() => withDirectory(root, parts.slice(0, -1), check, (parent, chain, missingAt) => {
+    if (parent === null || !sameProductPath(observed, { chain, missingAt })) bad();
+    if (!same(prior, fs.lstatSync(`/proc/self/fd/${parent}/${parts.at(-1)!}`))) bad();
+    check();
+  }));
+}
 export function snapshotProductNames(root: string, directory: string, maximum: number, check: () => void): ProductNameSnapshot {
   if (!relative(directory) || !Number.isSafeInteger(maximum) || maximum < 1 || maximum > 4096) bad();
   return guarded(() => withDirectory(root, directory.split('/'), check, (fd, chain, missingAt) => {

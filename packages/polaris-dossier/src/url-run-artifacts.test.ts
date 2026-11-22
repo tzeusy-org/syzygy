@@ -264,7 +264,15 @@ describe('trusted URL artifact producer bridge', () => {
     const briefing = await issueBrief(f.run, { sources, openReader, now: () => readAt });
     expect(briefing).toMatchObject({ ok: true });
     if (!briefing.ok) throw Error('own URL brief refused');
-    const bridge = createUrlRunArtifacts({ ...f.options, initializedCoreBytes: Buffer.from(core), effectiveDeclaration });
+    let holdProducer: Promise<void> | null = null;
+    const bridge = createUrlRunArtifacts({ ...f.options, initializedCoreBytes: Buffer.from(core), effectiveDeclaration,
+      runDossier: role => {
+        const actual = f.options.runDossier(role);
+        return async (...args) => {
+          if (holdProducer !== null) await holdProducer;
+          return actual(...args);
+        };
+      } });
     const schema = bridge.registerInitial(f.produceInitial(briefing.report)).find(artifact => artifact.path === 'draft.schema.json');
     if (!schema) throw Error('own complete schema missing');
     const schemaText = fs.readFileSync(path.join(f.run, schema.path), 'utf8');
@@ -382,6 +390,12 @@ describe('trusted URL artifact producer bridge', () => {
         expect(bridge.latestStageCheck('author')).toMatchObject({ revision: 0, record: { figureFit: stored.figureFit } });
         expect(f.ledger.origins(bridge.checkReceipt(0), storedBytes)).toBeDefined();
       } finally { authorReads.close(); }
+      let releaseProducer = () => {};
+      holdProducer = new Promise<void>(resolve => { releaseProducer = resolve; });
+      const heldWork = bridge.runDossier('author')(['dossier', 'help'], null);
+      try { expect(() => bridge.captureFrozenHistory()).toThrow('url-run-artifacts-unavailable'); }
+      finally { holdProducer = null; releaseProducer(); }
+      await expect(heldWork).rejects.toThrow('url-run-artifacts-unavailable');
       const history = bridge.captureFrozenHistory();
       expect(history).toMatchObject({ coreSha256: sha256(core), declarationSha256: issued.sha256,
         records: expect.arrayContaining([expect.objectContaining({ path: 'drafts/rev-0.json', sha256: sha256(draft) }),
@@ -396,6 +410,32 @@ describe('trusted URL artifact producer bridge', () => {
         record.path === 'checks/rev-0.json' ? { ...record, sha256: '0'.repeat(64) } : record) };
       expect(verifyUrlFrozenProductHistory(f.run, changed, f.options.current)).toBeNull();
       expect(verifyUrlFrozenProductHistory(f.run, history, () => false)).toBeNull();
+      const nextFile = path.join(f.run, 'drafts/next.json');
+      expect(history.records.find(record => record.path === 'drafts/next.json')?.sha256).toBe(sha256(draft));
+      fs.renameSync(nextFile, nextFile + '.held');
+      try {
+        expect(() => bridge.captureFrozenHistory()).toThrow('url-run-artifacts-unavailable');
+        expect(verify()).toBeNull();
+      } finally { fs.renameSync(nextFile + '.held', nextFile); }
+      const snapshotActual = productReads.snapshotProductFile;
+      const drifting = vi.spyOn(productReads, 'snapshotProductFile').mockImplementation((...args) => {
+        const captured = snapshotActual(...args);
+        if (args[1] === history.records.at(-1)?.path) fs.appendFileSync(nextFile, ' ');
+        return captured;
+      });
+      try { expect(verify()).toBeNull(); }
+      finally { drifting.mockRestore(); fs.writeFileSync(nextFile, draft); }
+      const unidentifiedPacket = `reviews/fidelity-packet-${'0'.repeat(64)}/packet.json`;
+      for (const file of ['feedback/fidelity-verdict-999.json', unidentifiedPacket]) {
+        f.write(file, '{}');
+        try {
+          expect(() => bridge.captureFrozenHistory()).toThrow('url-run-artifacts-unavailable');
+          expect(verify()).toBeNull();
+        } finally {
+          fs.unlinkSync(path.join(f.run, file));
+          if (file === unidentifiedPacket) fs.rmdirSync(path.dirname(path.join(f.run, file)));
+        }
+      }
       fs.rmdirSync(path.join(f.run, 'run-advice.json'));
       for (const revision of [1, 2]) {
         f.draft.title = `Own dossier revision ${revision}`;
