@@ -1,4 +1,4 @@
-# Dossier relation types — version 2.18
+# Dossier relation types — version 2.19
 
 [Inferred] Candidate agent-decided change under VIS-4 as amended by GOVERNANCE-SIMPLIFICATION-D10. It binds only once its row in `AGENT-ADOPTIONS.md` and its version tag exist; no owner adoption is claimed. It decides no owner class: no doctrine edit; no change to secret detection or SEC-5's fail-closed rule; no write to a repository the owner does not own; no network exposure, release or multi-user use.
 
@@ -14,7 +14,7 @@
 [Observed] One MODIFIED requirement, REQ-polaris-generation-034 ("Agent brief and mechanically checked draft"), complete text in `proposed/polaris-generation/spec.md`:
 
 - Draft schema `polaris-dossier-local-draft-v9`: every graph edge carries `relation`, one of eleven types (`contains`, `declares-dependency`, `needs-job`, `depends-on-service`, `calls`, `imports`, `reads`, `writes`, `sends-to`, `starts`, `relates-to`); a graph node may carry `unit`, one of six forms naming a unit of the pinned repository (repository root, top-level directory, package manifest, dependency name, workflow job, Compose service).
-- Rule `relation-witness` version 1: per edge, `witnessed`, `challenged` or `unknown` (with one of eight reasons), decided by fact kind and unit identity, never by label; an eligibility table that at version 1 holds `top-level-unit` version 1 alone.
+- Rule `relation-witness` version 1: per edge, `witnessed`, `challenged` or `unknown` (with one of nine reasons), decided by fact kind and unit identity, never by label; an eligibility table that at version 1 holds `top-level-unit` version 1 alone.
 - Findings: `unit-reference` for a unit naming nothing of its kind; `relation-challenged` where coverage is complete and no fact of the identical kind joins the two units; `schema` and, in schema v8 and earlier, `field-version` for the new members.
 - Rendering: a witnessed arrow drawn solid and Observed in Syzygy's words with its fact's provenance attributes; every v9 arrow carries `data-relation`; `machine.json` carries each v9 edge's `relation` and `witness`.
 - Brief `polaris-dossier-brief-v15`: brief v14 plus one paragraph, issuing schema v9.

@@ -1,10 +1,10 @@
 # Design: typed arrows, witnessed or challenged by derived facts
 
-[Inferred] Version 2.18 of REQ-polaris-generation-034, for syzygy-3efd.28, drafted on `main` at `c900e871` over the adopted version 2.16 text (`dossier-page-subsections`, row A-50). The version 2.16 code (schema v8) is still on another branch at that commit, so `main`'s draft schema is v7 and every code site named in D10 is re-located on the base the implementation starts from.
+[Inferred] Version 2.19 of REQ-polaris-generation-034, for syzygy-3efd.28, drafted on `main` at `c900e871` over the adopted version 2.16 text (`dossier-page-subsections`, row A-50). The version 2.16 code (schema v8) is still on another branch at that commit, so `main`'s draft schema is v7 and every code site named in D10 is re-located on the base the implementation starts from.
 
 ## D1. The version label
 
-[Observed] On `origin/main` at `c900e871` the tags of this line run to `polaris-dossier-raw-read-disclosure-v2.17` (row A-51), which modifies REQ-polaris-generation-033, -036 and -046, not -034; the latest REQ-034 version is 2.16 (A-50). So this is 2.18 over 2.16's REQ-034 text. [Observed] One unmerged branch, `origin/agent/syzygy-5dhm.23` (`dossier-verify-text`, a REQ-033 change), also calls itself 2.17; whichever of it and this package is adopted second renumbers if the label collides. The label is re-checked against the ledger and the tags immediately before the adoption row.
+[Observed] On `origin/main` at `c900e871` the tags of this line run to `polaris-dossier-raw-read-disclosure-v2.17` (row A-51), which modifies REQ-polaris-generation-033, -036 and -046, not -034; the latest REQ-034 version is 2.16 (A-50). Version labels on this line are shared across its requirements, and 2.18 is allocated to a concurrent change of REQ-033, -035 and -048 (syzygy-3efd.80), so this is 2.19, composed over 2.16's REQ-034 text, which no version between changes. It was first installed as 2.18 (`71203211`) and renumbered before review. [Observed] One unmerged branch, `origin/agent/syzygy-5dhm.23` (`dossier-verify-text`, a REQ-033 change), also calls itself 2.17 and will need a free label too. The label is re-checked against the ledger and the tags immediately before the adoption row.
 
 ## D2. Schema v9: a relation on every graph edge, a unit on a node
 
@@ -32,7 +32,7 @@
 ## D4. The witness rule, and the order it decides in
 
 - [Inferred] One fact kind per relation and exact equality of the unit members, nothing case-folded: identity, not resemblance.
-- [Inferred] The order puts every reason the draft or the rule makes undecidable first (`edge-not-inferred`, `no-witness-rule`, `endpoint-without-unit`, `endpoint-kind-mismatch`, `recognizer-not-eligible`), then the derivation's own state (`facts-unknown`), then the search. A found fact witnesses whatever the coverage (a fact found is evidence even where other paths were left out); only absence needs complete coverage.
+- [Inferred] The order puts every reason the draft or the rule makes undecidable first (`edge-not-inferred`, `no-witness-rule`, `endpoint-without-unit`, `endpoint-unit-invalid`, `endpoint-kind-mismatch`, `recognizer-not-eligible`), then the derivation's own state (`facts-unknown`), then the search. A found fact witnesses whatever the coverage (a fact found is evidence even where other paths were left out); only absence needs complete coverage.
 - [Inferred] An edge the draft labels Unknown, or one rendered as a withheld item, is neither upgraded nor challenged: the draft did not assert it, and upgrading a withheld item would put Syzygy's words where screening withheld the agent's.
 - [Inferred] At render the fact must also render Observed there (the currency policy of version 2.3), so a witness is never stronger than its fact (condition 2); otherwise `fact-not-current`. Check reads no currency policy: its job is the challenge, which rests on the derivation's completeness, and a witness check passes leaves nothing on the page that the render has not decided again.
 
@@ -42,7 +42,7 @@
 
 ## D6. Coverage is complete only where nothing could hide the fact
 
-- [Inferred] `contains`: the structure record is `derived`, nothing was left out for a secret detector (a directory all of whose paths match one has no fact, version 2.3), and no directory went past the listing of 250. Both counts are in the record, so the decision needs no new read.
+- [Inferred] `contains`: the structure record is `derived`, nothing was left out for a secret detector (a directory all of whose paths match one has no fact, version 2.3), the tree holds no submodule (`deriveTreeFacts` counts a mode-160000 entry in `submodules` and gives it no fact, so a top-level submodule, or a directory holding only submodules, is in the tree with no `top-level-unit` fact; review finding F1), and no directory went past the listing of 250. Both counts are in the record, so the decision needs no new read.
 - [Inferred] An eligible recognizer's relation (none at version 1): the member is `derived`, no fact went unlisted, and the source unit's file is listed, Inferred and dropped no value, since a dropped value (version 2.7's value checks) could be the missing fact.
 - [Inferred] Everything else is `coverage-partial`, `unknown`, never a finding (the bead's exclusion).
 
@@ -50,7 +50,7 @@
 
 [Observed] Version 2.7's label paragraph already says a recognizer "qualifies for an upgrade only once it has, at a stated commit, golden fixtures ... and a recorded mutation run" naming its rule and version, the commit, the SHA-256 of its source, any parser package, and each mutant's old and new fragment and outcome, and that its label "changes only by a later version of this requirement that names the record". This version keeps that path and adds the witness on top of it: an arrow is witnessed only by a fact that renders Observed, so a recognizer witnesses exactly when a later version makes its facts Observed. State at `c900e871`, measured by script (SHA-256 of each module the record names against the file at that commit):
 
-- [Observed] `top-level-unit` v1: its facts render Observed under `POLARIS-DOSSIER-DERIVED-FACT-CURRENCY-POLICY-v1` (`pinned-revision`) since 2.3, with the mutation record `docs/evidence/syzygy-3efd-27/derived-observed-mutation-rerun-2026-11-21.json` (sha256 `6c1261ae…`). The one eligible row.
+- [Observed] `top-level-unit` v1: its facts render Observed under `POLARIS-DOSSIER-DERIVED-FACT-CURRENCY-POLICY-v1` (`pinned-revision`) since 2.3, with the mutation record `docs/evidence/syzygy-3efd-27/derived-observed-mutation-rerun-2026-11-21.json` (sha256 `6c1261ae…`). The one eligible row. [Observed] Review N3: all six modules that record names (`diagram-layout.ts`, `dossier-site.ts`, `check.ts`, `derive.ts`, `derived-record.ts`, `render.ts`) differ at `c900e871` [Inferred: `deriveTreeFacts` itself is substantively unchanged; the `derive.ts` diff only exports `secretOrUnder`]. So the row is not held to the recognizers' freshness test: the spec states that it names no record and rests on version 2.3's adoption of those facts and their declared currency bound, which is the standard those facts already render Observed under.
 - [Observed] The 2.7 recognizers: `docs/evidence/syzygy-3efd-25/manifest-recognizers-mutation-2026-11-22-repair.json` (sha256 `dbba0e9c…`, ran at `cc0ea279`, 65 of 65 killed) names ten modules; the five recognizer modules and `manifest-json.ts` and `manifest-toml.ts` are unchanged, but `manifest-facts.ts`, `manifest-model.ts` and `manifest-yaml.ts` have changed since (the 2.14 work). Not eligible: a run at the current code is needed.
 - [Observed] `compose-file` (2.14): `docs/evidence/syzygy-3efd-26/infra-recognizers-mutation-2026-11-22.json` (sha256 `f46f5f3b…`, at `1b5c8180`, 74 of 74 killed) still matches `manifest-compose.ts`, `manifest-facts.ts` and `manifest-yaml.ts`, but its members are `format`, `ranAt`, `commit`, `subject`, `command`, `method`, `testFiles`, `baseline`, `mutants` and `summary`: it names no rule and version and no parser package, which the 2.7 paragraph requires. Not eligible as recorded.
 - [Unknown] Whether each fixture the 2.7 and 2.14 paragraphs enumerate exists in `manifest-recognizers.test.ts` and `manifest-infra-recognizers.test.ts` was not swept here; the version that adds a row must sweep it.
@@ -58,6 +58,7 @@
 
 ## D8. Rendering, and the six conditions
 
+- [Inferred] A witnessed edge is a derived fact on the page, not a claim (review F2): no claim anchor (its `data-witness-*` attributes are its provenance, as `data-derived-id` is a derived fact's, which meets RFC7-28's "each named element carries an anchor" the way the derived region does), and none of the draft's counts, so a draft's appendix and per-page counts do not change with whether an arrow is witnessed. The fidelity review reads the draft before any render, so it reviews every edge as the draft's claim and its verdict entry for a later-witnessed edge stays and governs the run as any edge's does.
 - [Inferred] A witnessed arrow is drawn as Syzygy's statement: solid, its label Syzygy's relation words, its list item ending `Witnessed by Syzygy` with the evidence text, its attributes naming the fact, rule and version. The agent's label and citations are not rendered for it, because an Observed mark beside the agent's words would vouch for them. Node labels stay the agent's (no box is upgraded); a node mislabelling its unit is a fidelity-review matter (D11).
 - [Observed] RFC7-28: "Curated diagrams ... must not imitate the computed map; ... curated/computed provenance is a machine-readable attribute on every visual." [Inferred] The figure keeps `data-visual-provenance="curated"`, and the one solid element carries its own provenance (`data-witness-*`), so the figure still never claims to be computed; no box, caption or layout is upgraded.
 - [Inferred] The conditions of the owner's decision: (1) the witness rests on the structure record, an evidence artifact, re-derived at render; (2) only a fact that renders Observed under its declared currency bound witnesses; (3) as above; (4) identical relation type only, by the table, the core of this slice; (5) the arrow's words state only the fact (`contains`, `declares a dependency on`, `needs`, `depends on`); (6) the rule reads no size or object identifier, so a private repository's withheld blobs give nothing.
@@ -80,3 +81,24 @@
 - [Inferred] Only `contains` can be witnessed at this version, and authors rarely draw "the root contains `src`"; the slice's value grows as recognizers become eligible (D7).
 - [Inferred] A node whose label misnames its unit sits next to a solid arrow; the evidence text names the fact, and the fidelity review judges the label.
 - [Unknown] Whether authors type arrows well without examples beyond the brief paragraph.
+- [Inferred] Review N6: any `unitsNotListed` above zero makes every `contains` absence partial, though the absence of a target that sorts before the 250th listed directory is decidable; a possible refinement for a later version, not made here.
+- [Unknown] Review N5: whether a review packet carries a draft's diagram members, `unit` among them, as written; the spec keeps unit values out of every finding, page, `machine.json` and check record or report, and the frozen draft revision holds them as written.
+
+## Renumbered 2.19 (2026-11-23)
+
+[Observed] The package was installed as 2.18 (`71203211`, spec sha256 `5611e27d…`), the bytes the review read. The lead then allocated 2.18 to a concurrent change of REQ-033, -035 and -048 (syzygy-3efd.80), so this package became 2.19, tag `polaris-dossier-relation-types-v2.19`: every "2.18" in the spec, its package files and the checker wiring became "2.19", by the same anchored build script. No rule moves: the predecessor is still 2.16's REQ-034 text, which neither 2.17 nor 2.18 changes. The review raw keeps its 2.18 wording (CC-REV-6).
+
+## Review
+
+[Observed] One fresh-context review, `docs/reviews/syzygy-3efd-28/R-RELATION-TYPES-SPEC-1-RAW.md`, over the spec at sha256 `5611e27d34a4ef406b6907b1f0b38d7f0450087fb4c0b83571a2f897a7a78f28` (commit `71203211`): "Verdict: REVISE" (line 3), two blocking findings and six notes. Every one is repaired or recorded below, in the spec rebuilt from the 2.16 bytes by the same anchored script, with `SEMANTIC-DELTA.md` regenerated from the bytes; the repaired spec's digest is the one the checker pins. One round (D10): no confirmation round follows.
+
+| # | Severity | Disposition |
+|---|---|---|
+| F1 | Blocking | Repaired: `contains` coverage is complete only where `secretPathsLeftOut`, `submodules` and `unitsNotListed` are all zero; the closing sentence names a submodule; the partial-coverage scenario adds a top-level submodule and a directory holding only a submodule; Case and Falsifier name both (D6). |
+| F2 | Blocking | Repaired: a witnessed edge carries no claim anchor, enters none of the draft's counts (page and appendix), is counted by its figure's tally as Syzygy's Observed element, and keeps its fidelity-verdict entry, which governs the run as any edge's does; literals in the first scenario and the Oracle; the Falsifier adds an anchor or a count (D8). |
+| N1 | Note | Repaired: a new reason `endpoint-unit-invalid` (nine reasons in all), decided right after `endpoint-without-unit`, so a unit with a `unit-reference` finding gives no `relation-challenged` finding too; added to the scenario "A unit that names no unit of its kind" and the Falsifier. |
+| N2 | Note | Repaired: `facts-unknown` reads "the record the relation's row reads", and a record the row does not read never decides it. |
+| N3 | Note | Repaired: D7 states the record's six modules have changed; the spec states the `top-level-unit` row names no record and rests on version 2.3's adoption and currency bound, outside the freshness test. |
+| N4 | Note | Repaired: after every 2.16 finding come the `unit-reference` findings in node order, then the `relation-challenged` findings in edge order; the Observable names the order. |
+| N5 | Note | Repaired: a unit at a path a secret detector matches or the screen denies is never tested for a blob and decides `coverage-partial`; no finding, page, `machine.json` or check record or report carries a unit's value; a scenario and the Falsifier pin both. Whether review packets carry units as written is recorded [Unknown] in D11. |
+| N6 | Note | Recorded in D11 as a possible refinement; no spec change. |

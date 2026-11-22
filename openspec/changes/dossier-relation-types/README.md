@@ -1,6 +1,6 @@
 # dossier-relation-types
 
-[Inferred] Candidate version 2.18 of the dossier specification line: one MODIFIED REQ-polaris-generation-034 for bead syzygy-3efd.28. It adds draft schema `polaris-dossier-local-draft-v9`, in which every graph arrow carries a relation type from a closed list of eleven and a node may name the repository unit it stands for; rule `relation-witness` version 1, which draws an arrow solid as Observed only where a derived fact of the identical type joins the same two units, and challenges it where coverage is complete and no such fact exists; and brief `polaris-dossier-brief-v15`. Drafts of schema v8 and earlier, stored drafts and the provider mode keep their bytes.
+[Inferred] Candidate version 2.19 of the dossier specification line: one MODIFIED REQ-polaris-generation-034 for bead syzygy-3efd.28. It adds draft schema `polaris-dossier-local-draft-v9`, in which every graph arrow carries a relation type from a closed list of eleven and a node may name the repository unit it stands for; rule `relation-witness` version 1, which draws an arrow solid as Observed only where a derived fact of the identical type joins the same two units, and challenges it where coverage is complete and no such fact exists; and brief `polaris-dossier-brief-v15`. Drafts of schema v8 and earlier, stored drafts and the provider mode keep their bytes.
 
 | File | What it holds |
 |---|---|

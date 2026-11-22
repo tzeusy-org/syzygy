@@ -646,17 +646,17 @@ SUBSEC_SUBJECTS = {
     SUBSEC_SPEC: "eb02516147a08c2b21a1ddeca4bc1527e9c7f21fb0bcf62bbee35f9b059fcdbc",
 }
 SUBSEC_BOUND_PARTS = len(SUBSEC_SUBJECTS)
-# The v2.18 relation-types amendment (syzygy-3efd.28): one MODIFIED
+# The v2.19 relation-types amendment (syzygy-3efd.28): one MODIFIED
 # REQ-polaris-generation-034 after v2.16, pending until its own VIS-4 ledger
 # row, found by its tag as v2.16's is.
 RELTYPE_CHANGE = "dossier-relation-types"
 RELTYPE_HOME = f"{CHANGES}/{RELTYPE_CHANGE}"
 RELTYPE_SPEC = f"{RELTYPE_HOME}/proposed/polaris-generation/spec.md"
 RELTYPE_UNION = f"{RELTYPE_HOME}/GOVERNING-DEPENDENCIES.json"
-RELTYPE_TAG = "polaris-dossier-relation-types-v2.18"
-RELTYPE_STATUS_PREFIX = f"[Relation types amendment 2.18]({RELTYPE_HOME})"
+RELTYPE_TAG = "polaris-dossier-relation-types-v2.19"
+RELTYPE_STATUS_PREFIX = f"[Relation types amendment 2.19]({RELTYPE_HOME})"
 RELTYPE_SUBJECTS = {
-    RELTYPE_SPEC: "5611e27d34a4ef406b6907b1f0b38d7f0450087fb4c0b83571a2f897a7a78f28",
+    RELTYPE_SPEC: "f6d60b603bd7cc819aca86ae3d1a6de037ecb7717ca1fe214619f646c97afd9c",
 }
 RELTYPE_BOUND_PARTS = len(RELTYPE_SUBJECTS)
 
@@ -1258,7 +1258,7 @@ def subsec_disposition(root, rows):
     return None
 
 def is_reltype_row(line):
-    """A ledger row claiming the v2.18 relation-types amendment, well formed or not."""
+    """A ledger row claiming the v2.19 relation-types amendment, well formed or not."""
     if not line.startswith("|"):
         return False
     cells = [cell.strip() for cell in line.split("|")[1:-1]]
@@ -2243,7 +2243,7 @@ def subsec_binding(root):
     return (None if records or subjects else read_text(root, SUBSEC_SPEC), records, subjects)
 
 def reltype_binding(root):
-    """Read v2.18's published composition: pending until its row, like v2.14.
+    """Read v2.19's published composition: pending until its row, like v2.14.
 
     The row names the installing commit (a plain commit, so its revert may
     omit `-m 1`), the reviewed spec at that commit and the version tag. Its
@@ -2276,7 +2276,7 @@ def reltype_binding(root):
     for rel, digest in RELTYPE_SUBJECTS.items():
         body = read_bytes(root, rel)
         if body is None or sha(body) != digest:
-            subjects.append(f"relation types: `{rel}` differs from the reviewed v2.18 subject")
+            subjects.append(f"relation types: `{rel}` differs from the reviewed v2.19 subject")
     return (None if records or subjects else read_text(root, RELTYPE_SPEC), records, subjects)
 
 
@@ -2915,7 +2915,7 @@ def check_outcomes(root, report):
     if subsec_retired_by:
         retirement += f"; v2.16 inactive by {subsec_retired_by}"
     if reltype_retired_by:
-        retirement += f"; v2.18 inactive by {reltype_retired_by}"
+        retirement += f"; v2.19 inactive by {reltype_retired_by}"
     if readmit_retired_by:
         retirement += f"; v2.13 inactive by {readmit_retired_by}"
     report.add("R1", "terminal outcome for every child", records, r1,
@@ -2946,7 +2946,7 @@ def check_outcomes(root, report):
                "row over effective v2.12, pending until recorded; index and task routes: "
                "one v2.15 row over effective v2.14, pending until recorded; page subsections: "
                "one v2.16 row over effective v2.15, pending until recorded; relation types: "
-               "one v2.18 row over effective v2.16, pending until recorded" + retirement)
+               "one v2.19 row over effective v2.16, pending until recorded" + retirement)
     report.add("R2", "reviewed and signed subjects hash to their rows", subjects_seen, r2)
 
 
@@ -4641,15 +4641,15 @@ def check_routes(root, pop, report):
         examined += 2
         if not any(Path(AGENT_ADOPTIONS).name in line and RELTYPE_TAG in line
                    for line in rows.get(RELTYPE_CHANGE, [])):
-            findings.append(f"`{OPENSPEC_README}` does not route relation types v2.18 "
+            findings.append(f"`{OPENSPEC_README}` does not route relation types v2.19 "
                             f"to `{AGENT_ADOPTIONS}` and its version tag")
         identity = reltype_rows(root)[0][0]
         if AGENT_ADOPTIONS not in status or reltype_fields != [f"{RELTYPE_STATUS_PREFIX} is agent-adopted in {identity}."]:
-            findings.append(f"`{STATUS}` does not route relation types v2.18 and its adoption {identity}")
+            findings.append(f"`{STATUS}` does not route relation types v2.19 and its adoption {identity}")
     elif RELTYPE_CHANGE in changes:
         examined += 2
         if any("is agent-adopted" in field for field in reltype_fields):
-            findings.append(f"`{STATUS}` calls relation types v2.18 adopted while it is not in force")
+            findings.append(f"`{STATUS}` calls relation types v2.19 adopted while it is not in force")
     readmit_amendment, _records, _subjects = readmit_binding(root)
     readmit_fields = [line.strip() for line in visible_route_lines(status)
                       if line.strip().startswith(READMIT_STATUS_PREFIX)]
@@ -7473,7 +7473,7 @@ def subsec_cases(tmp, base, witnesses, failures):
 
 
 def reltype_cases(tmp, base, witnesses, failures):
-    """The v2.18 pending-to-adopted transition over v2.16, its ledger and byte guards, and the predecessor guard."""
+    """The v2.19 pending-to-adopted transition over v2.16, its ledger and byte guards, and the predecessor guard."""
     original = read_text(base, RELTYPE_SPEC)
     if original is None or subsec_binding(base)[0] is None:
         return
@@ -7496,8 +7496,8 @@ def reltype_cases(tmp, base, witnesses, failures):
     ident = FIGURE_REPLACES[0]
     held = (reltype_binding(tree) == (None, [], []) and not pending_findings
             and len(predecessor[ident]["scenarios"]) == 158)
-    record("reltype-pending", AGENT_ADOPTIONS, "<no v2.18 row>", "<unchanged>",
-           "landed package alone keeps v2.18 pending", pending_findings, held, True)
+    record("reltype-pending", AGENT_ADOPTIONS, "<no v2.19 row>", "<unchanged>",
+           "landed package alone keeps v2.19 pending", pending_findings, held, True)
 
     oid = "0123456789abcdef" * 2 + "01234567"
     row = (f"| A-999 | 2026-11-21 | `{oid}` | [spec](https://github.com/tzeusy-org/syzygy/blob/{oid}/{RELTYPE_SPEC}) "
@@ -7510,8 +7510,8 @@ def reltype_cases(tmp, base, witnesses, failures):
             and len(current[ident]["scenarios"]) == 168
             and current[ident]["name"] == predecessor[ident]["name"]
             and all(current[i] == r for i, r in predecessor.items() if i != ident))
-    record("reltype-adopted", AGENT_ADOPTIONS, "<no v2.18 row>", row,
-           "v2.18 replaces exactly 034 (158 to 168 scenarios)", current_findings, held, True)
+    record("reltype-adopted", AGENT_ADOPTIONS, "<no v2.19 row>", row,
+           "v2.19 replaces exactly 034 (158 to 168 scenarios)", current_findings, held, True)
 
     for name, old, new in (("duplicate-row", row, row + row),
                            ("wrong-tag", RELTYPE_TAG, RELTYPE_TAG + "-wrong"),
@@ -7569,7 +7569,7 @@ def reltype_cases(tmp, base, witnesses, failures):
     status.write_text(previous)
     record("reltype-status-route-missing", STATUS, RELTYPE_STATUS_PREFIX, "", "R5 refusal",
            report.findings.get("R5", []),
-           any("relation types v2.18" in f for f in report.findings.get("R5", [])), False)
+           any("relation types v2.19" in f for f in report.findings.get("R5", [])), False)
     ledger.write_text(pending)
     report = Report()
     check_routes(tree, pending_pop, report)
