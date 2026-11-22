@@ -519,10 +519,10 @@ describe('egress version 2 record', () => {
   });
 
   describe('the RFC5-14 class amendment version 2 depends on', () => {
-    it('is required: no record, an edited module, a wrong form, or an amendment later than version 2 all refuse', async () => {
+    it('is required: no record, no module, a wrong form, or an amendment later than version 2 all refuse', async () => {
+      // An edited module or another bound digest no longer refuses: the act's digest is history since D10 (readClassAct).
+      await expect(reader(v2World({ [CLASS_MODULE]: `${moduleText()}\nedited\n` })).read(), 'an edited module').resolves.toBeDefined();
       const cases: Array<[string, Record<string, string>]> = [
-        ['an installed module that no longer matches the act digest', { [CLASS_MODULE]: `${moduleText()}\nedited\n` }],
-        ['a digest of other bytes', { [CLASS_ACT]: classAct({ digest: 'a'.repeat(64) }) }],
         ['an amendment taking effect after version 2', { [CLASS_ACT]: classAct({ date: '2026-10-04', instant: '2026-10-04T09:30:01Z' }) }],
         ['a title that is not the recorder\'s', { [CLASS_ACT]: classAct().replace('# Owner act — RFC5-14', '# Owner act — RFC5-15') }],
         ['another act type', { [CLASS_ACT]: classAct().replace(/^Act type: `[^`]+`/m, 'Act type: `adopt-doctrine`') }],
@@ -987,40 +987,26 @@ describe('strict act reads', () => {
   const moduleText = (): string => readFileSync(path.join(repoRoot, MODULE), 'utf8');
   const CLASS = `${DECISIONS_DIR}/RFC5-PROJECT-DOCUMENTATION-CLASS-AMENDMENT-ACT.md`;
   const classRead = (extra: Record<string, string>, now = AT) => readClassActState({ root: '/r', fs: memoryFs({ [MODULE]: moduleText(), [`${DECISIONS_DIR}/README.md`]: '# decisions\n', ...extra }), now });
-  it('class act: ok with the installed module\'s digest; absent without a record; refused for a mismatch, a bad form, or a file elsewhere naming it', async () => {
+  it('class act: ok with the installed module\'s digest; absent without a record; refused for a bad form, or a file elsewhere naming it', async () => {
     const act = renderClassAct(sha(moduleText()), '2026-10-03', '2026-10-03T09:30:00Z');
     expect(await classRead({ [CLASS]: act })).toMatchObject({ state: 'ok', moduleDigest: sha(moduleText()), act: { identity: 'RFC5-PROJECT-DOCUMENTATION-AMEND-2026-10-03', type: 'contract-amendment', artifact: MODULE, digest: sha(moduleText()), recordedAt: Date.UTC(2026, 9, 3, 9, 30, 0) } });
     expect(await classRead({})).toMatchObject({ state: 'absent' });
-    expect(await classRead({ [CLASS]: renderClassAct('a'.repeat(64), '2026-10-03', '2026-10-03T09:30:00Z') })).toMatchObject({ state: 'refused' });
     expect(await classRead({ [CLASS]: act.replace('Act type: `contract-amendment`', 'Act type: `adopt-doctrine`') })).toMatchObject({ state: 'refused' });
     expect(await classRead({ [CLASS]: `${act}\n<!--\nAct instant: 2026-10-03T00:00:01Z\n-->\n` })).toMatchObject({ state: 'refused' });
     expect(await classRead({ [CLASS]: act, [`${DECISIONS_DIR}/archive/RFC5-CLASS-WITHDRAWN.md`]: 'Revokes RFC5-PROJECT-DOCUMENTATION-AMEND-2026-10-03.' })).toMatchObject({ state: 'refused' });
     expect(await classRead({ [CLASS]: act, [`${DECISIONS_DIR}/sub/x.md`]: `Artifact identity: \`${MODULE}\`\n` })).toMatchObject({ state: 'refused' });
   });
 
-  it('class act: stays ok once D10 replaces the module it bound, and only then (supersededByD10)', async () => {
+  it('class act: stays ok across any later adoption of the module it bound; its digest is history, not a lock (RFC3-16 as amended by D10)', async () => {
     const bound = sha(moduleText()), act = renderClassAct(bound, '2026-10-03', '2026-10-03T09:30:00Z');
-    const replaced = `${moduleText()}\nAmended by D10.\n`;
-    const proposedModule = D10_MANIFEST.replace('MANIFEST.txt', `proposed/${MODULE}.proposed`);
-    const manifest = (baseDigest: string, installed = sha(replaced)): string =>
-      `# D10 MANIFEST\n[package]\n${'b'.repeat(64)}  ${D10_MANIFEST.replace('MANIFEST.txt', 'PROPOSAL.md')}\n${installed}  ${proposedModule}\n[base]\n${baseDigest}  ${MODULE}\n`;
-    const record = (m: string): string => `# Governance simplification D10 — owner act\n\nThe owner performed the act by writing exactly:\n\n\`\`\`text\nADOPT GOVERNANCE SIMPLIFICATION D10: ${sha(m)}\n\`\`\`\n`;
-    const read = (extra: Record<string, string>) => readClassActState({ root: '/r', fs: memoryFs({ [MODULE]: replaced, [`${DECISIONS_DIR}/README.md`]: '# decisions\n', [CLASS]: act, ...extra }), now: AT });
-    const m = manifest(bound);
-    expect(await read({}), 'replaced without D10').toMatchObject({ state: 'refused' });
-    expect(await read({ [D10_MANIFEST]: m, [`${DECISIONS_DIR}/${D10_RECORD}`]: record(m) }), 'D10 recorded over the bound bytes').toMatchObject({ state: 'ok', moduleDigest: sha(replaced) });
-    expect(await read({ [D10_MANIFEST]: m }), 'manifest without the D10 record').toMatchObject({ state: 'refused' });
-    expect(await read({ [D10_MANIFEST]: m, [`${DECISIONS_DIR}/${D10_RECORD}`]: record(`${m}x`) }), 'record binding another manifest').toMatchObject({ state: 'refused' });
-    expect(await read({ [D10_MANIFEST]: m, [`${DECISIONS_DIR}/${D10_RECORD}`]: `${record(m)}${record(m)}` }), 'two binding lines').toMatchObject({ state: 'refused' });
-    const other = manifest('c'.repeat(64));
-    expect(await read({ [D10_MANIFEST]: other, [`${DECISIONS_DIR}/${D10_RECORD}`]: record(other) }), 'D10 replaced other bytes').toMatchObject({ state: 'refused' });
-    const twice = `${m}${'d'.repeat(64)}  ${MODULE}\n`;
-    expect(await read({ [D10_MANIFEST]: twice, [`${DECISIONS_DIR}/${D10_RECORD}`]: record(twice) }), 'two base rows for the module').toMatchObject({ state: 'refused' });
-    const packageOnly = `# D10 MANIFEST\n[package]\n${bound}  ${MODULE}\n[base]\n`;
-    expect(await read({ [D10_MANIFEST]: packageOnly, [`${DECISIONS_DIR}/${D10_RECORD}`]: record(packageOnly) }), 'a package row is not a base row').toMatchObject({ state: 'refused' });
-    const notInstalled = manifest(bound, 'e'.repeat(64));
-    expect(await read({ [D10_MANIFEST]: notInstalled, [`${DECISIONS_DIR}/${D10_RECORD}`]: record(notInstalled) }), 'module bytes are not the ones D10 installed').toMatchObject({ state: 'refused' });
-    expect(await read({ [D10_MANIFEST]: m, [`${DECISIONS_DIR}/${D10_RECORD}`]: record(m), [MODULE]: `${replaced}edited after D10\n` }), 'module edited after D10').toMatchObject({ state: 'refused' });
+    const read = (module: string, extra: Record<string, string> = {}) => readClassActState({ root: '/r', fs: memoryFs({ [MODULE]: module, [`${DECISIONS_DIR}/README.md`]: '# decisions\n', [CLASS]: act, ...extra }), now: AT });
+    for (const [why, module] of [['the bound bytes', moduleText()], ['replaced by D10', `${moduleText()}\nAmended by D10.\n`], ['edited after D10', `${moduleText()}\nAmended by D10.\nedited after D10\n`], ['a digest the act never bound', 'other\n']] as const) {
+      expect(await read(module), why).toMatchObject({ state: 'ok', moduleDigest: sha(module), act: { digest: bound } });
+    }
+    // What still refuses: a missing module, a bad form, a withdrawal.
+    expect(await readClassActState({ root: '/r', fs: memoryFs({ [`${DECISIONS_DIR}/README.md`]: '# decisions\n', [CLASS]: act }), now: AT }), 'module missing').toMatchObject({ state: 'refused' });
+    expect(await read(moduleText(), { [CLASS]: act.replace('Act type: `contract-amendment`', 'Act type: `adopt-doctrine`') }), 'bad form').toMatchObject({ state: 'refused' });
+    expect(await read(moduleText(), { [`${DECISIONS_DIR}/archive/RFC5-CLASS-WITHDRAWN.md`]: 'Revokes RFC5-PROJECT-DOCUMENTATION-AMEND-2026-10-03.' }), 'withdrawn').toMatchObject({ state: 'refused' });
   });
 
   it('egress: returns the in-force record\'s listed content classes, absent before any act and refused when the read is', async () => {

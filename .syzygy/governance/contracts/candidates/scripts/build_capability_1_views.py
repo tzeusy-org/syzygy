@@ -653,6 +653,19 @@ def selftest():
 
     case("a clause claimed by two behaviour rows is refused", duplicate_clause)
 
+    #: Since 2026-11-22 the live register can hold no open row (D11 resolved the
+    #: last one), so both marker fixtures seed one synthetic open row instead of
+    #: naming a live one; each re-anchoring before this broke on an owner ruling.
+    SYN = "P-9999"
+
+    def _seeded():
+        head = "## Open, and only the owner can dispose\n"
+        sep = "|---|---|---|---|\n"
+        j = base_queue.index(sep, base_queue.index(head)) + len(sep)
+        return base_queue[:j] + f"| {SYN} | synthetic open row | test | test |\n" + base_queue[j:]
+
+    seeded = _seeded()
+    assert SYN in open_decisions(seeded), "the synthetic row is not read as open"
     def executed_in_prose():
         """A row that *discusses* the executed marker is still open.
 
@@ -667,14 +680,14 @@ def selftest():
         remains genuinely open, and is the very row whose prose discusses
         the marker. Re-anchored 2026-11-21 from P-43 to P-119: D10 F-10
         decided P-43 and moved every row but the owner-class three out.)"""
-        mutated = base_queue.replace(
-            "| P-119 |", "| P-119 | should an `**Executed.**` marker count? |", 1)
-        if mutated == base_queue:
+        mutated = seeded.replace(
+            f"| {SYN} |", f"| {SYN} | should an `**Executed.**` marker count? |", 1)
+        if mutated == seeded:
             return False, "mutation did not apply"
         ids = open_decisions(mutated)
-        return ("P-119" in ids,
-                "P-119 dropped from the open population by a prose mention"
-                if "P-119" not in ids else "still open, correctly")
+        return (SYN in ids,
+                f"{SYN} dropped from the open population by a prose mention"
+                if SYN not in ids else "still open, correctly")
 
     case("a row mentioning `**Executed.**` in prose stays open",
          executed_in_prose)
@@ -695,21 +708,21 @@ def selftest():
         to P-43 — each predecessor was ruled and left the open table; P-43
         remains genuinely open. Re-anchored 2026-11-21 from P-43 to P-119
         after D10 F-10.)"""
-        lines = base_queue.split("\n")
+        lines = seeded.split("\n")
         for j, line in enumerate(lines):
-            if line.startswith("| P-119 |"):
+            if line.startswith(f"| {SYN} |"):
                 lines[j] = line.rstrip().rstrip("|").rstrip() \
                     + " | **Executed.** synthetic disposition |"
                 break
         else:
-            return False, "no P-119 row to mutate"
+            return False, f"no {SYN} row to mutate"
         mutated = "\n".join(lines)
-        if mutated == base_queue:
+        if mutated == seeded:
             return False, "mutation did not apply"
         ids = open_decisions(mutated)
-        return ("P-119" not in ids,
+        return (SYN not in ids,
                 "an executed disposition in the OPEN section was still "
-                "counted open" if "P-119" in ids else "disqualified, correctly")
+                "counted open" if SYN in ids else "disqualified, correctly")
 
     case("an `**Executed.**` disposition inside the open section disqualifies",
          executed_disposition)

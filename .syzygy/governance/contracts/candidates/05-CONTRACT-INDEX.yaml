@@ -571,7 +571,7 @@ contracts:
 governance_sources:
   - {file: doctrine/README.md, role: doctrine, words: 882, rule_ids: [SEC-1, SEC-2, SEC-4, SEC-5, VIS-1, VIS-4, VIS-5, VIS-7]}
   - {file: doctrine/architecture.md, role: doctrine, words: 2884, rule_ids: [SEC-2, SEC-4, VIS-1, VIS-4, VIS-5, VIS-6, VIS-7]}
-  - {file: doctrine/security.md, role: doctrine, words: 1450, rule_ids: [SEC-1, SEC-2, SEC-3, SEC-4, SEC-5, VIS-4]}
+  - {file: doctrine/security.md, role: doctrine, words: 1752, rule_ids: [SEC-1, SEC-2, SEC-3, SEC-4, SEC-5, VIS-4]}
   - {file: doctrine/trust-and-evidence.md, role: doctrine, words: 1473, rule_ids: [SEC-5, VIS-1, VIS-2, VIS-4, VIS-6, VIS-7]}
   - {file: doctrine/v1.md, role: doctrine, words: 1285, rule_ids: [SEC-1, SEC-2, SEC-3, VIS-2, VIS-4, VIS-5]}
   - {file: doctrine/vision.md, role: doctrine, words: 3014, rule_ids: [SEC-1, SEC-2, SEC-3, SEC-4, SEC-5, VIS-1, VIS-2, VIS-3, VIS-4, VIS-5, VIS-6, VIS-7]}
@@ -583,7 +583,7 @@ governance_sources:
   - {file: craft-and-care/observability-and-operations.md, role: craft-policy, words: 921, rule_ids: [CC-OBS-1, CC-OBS-2, CC-OBS-3, CC-OBS-4, CC-OBS-5, CC-OBS-6, CC-PROV-4, VIS-1, VIS-7]}
   - {file: craft-and-care/performance-and-visual-discipline.md, role: craft-policy, words: 1350, rule_ids: [CC-PERF-1, CC-PERF-2, CC-PERF-3, CC-VIZ-1, CC-VIZ-2, CC-VIZ-3, CC-VIZ-4, CC-VIZ-5, VIS-1, VIS-6, VIS-7]}
   - {file: craft-and-care/review-and-documentation.md, role: craft-policy, words: 1683, rule_ids: [CC-BAR-6, CC-DEP-2, CC-DEP-3, CC-IMPACT-6, CC-REV-1, CC-REV-2, CC-REV-3, CC-REV-4, CC-REV-5, CC-REV-6, CC-REV-7, CC-REV-8, SEC-1, SEC-2, SEC-3, SEC-5, VIS-2, VIS-3, VIS-4, VIS-6, VIS-7]}
-  - {file: craft-and-care/security-and-secrets.md, role: craft-policy, words: 1263, rule_ids: [CC-BAR-5, CC-REV-1, CC-REV-3, CC-SEC-1, CC-SEC-2, CC-SEC-3, CC-SEC-4, CC-SEC-5, CC-SEC-6, SEC-1, SEC-2, SEC-3, SEC-4, SEC-5, VIS-4, VIS-7]}
+  - {file: craft-and-care/security-and-secrets.md, role: craft-policy, words: 1342, rule_ids: [CC-BAR-5, CC-REV-1, CC-REV-3, CC-SEC-1, CC-SEC-2, CC-SEC-3, CC-SEC-4, CC-SEC-5, CC-SEC-6, SEC-1, SEC-2, SEC-3, SEC-4, SEC-5, VIS-4, VIS-7]}
   - {file: craft-and-care/testing-and-verification.md, role: craft-policy, words: 1529, rule_ids: [CC-BAR-1, CC-PROV-1, CC-TEST-1, CC-TEST-2, CC-TEST-3, CC-TEST-4, CC-TEST-5, CC-TEST-6, CC-TEST-7, SEC-5, VIS-2, VIS-7]}
   - {file: topology/01-system-context.md, role: topology, words: 745, rule_ids: [SEC-1, SEC-2, SEC-3, SEC-4, SEC-5, VIS-1, VIS-4, VIS-5]}
   - {file: topology/02-project-workspace-repos.md, role: topology, words: 711, rule_ids: [SEC-4, VIS-6]}
