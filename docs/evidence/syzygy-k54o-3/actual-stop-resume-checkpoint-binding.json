@@ -1,0 +1,8 @@
+{
+  "subjectCommit": "c32879eef3275871b135a0347388764cc656610d",
+  "evidenceRef": "refs/tags/evidence/f3-public-stop-c32879eef",
+  "record": "docs/evidence/syzygy-k54o-3/f3-actual-stop-resume-checkpoint.json",
+  "recordSha256": "d664039fcf907d6aab758068309fecdbab57ce4cd92d8c8cff062dbc1ca6ecd2",
+  "scope": "Historical fixture checkpoint; genuine public verifier and durable claim succeeded, fresh audit bootstrap refused before new role process or final record. Tested fixture/core file digests checked against this exact source checkpoint.",
+  "checkedFiles": 7
+}
