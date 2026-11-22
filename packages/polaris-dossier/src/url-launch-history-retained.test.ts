@@ -8,10 +8,12 @@ import { policyFixture } from './full-run.testkit.js';
 import { parseRunConfig } from './run-config.js';
 import { DOSSIER_CONTENT_CLASSES, encodeRunRecord, NO_WORK_ITEM_REASON } from './run-record.js';
 import { buildDossierScreen } from './screen.js';
-import { URL_CLI_PROGRAM } from './session-launch.js';
+import { URL_CLI_PROGRAM, URL_LAUNCH_LIMITS } from './session-launch.js';
 import { createUrlRunDeclaration, URL_ORIGIN_POLICY_PATH, URL_PROFILE_ID, URL_ROLES, urlSourceTransportIdentity } from './url-run-record.js';
 import { isVerifiedRetainedUrlLaunchHistory, verifyRetainedUrlLaunchHistory,
   type UrlLaunchHistoryRole, type UrlRetainedLaunchHistoryOptions } from './url-launch-history.js';
+import { verifyUrlSessionAuditHistory, type UrlSessionAuditHistoryExpected } from './url-session-audit-history.js';
+import { URL_SESSION_AUDIT_FORMAT, URL_SESSION_AUDIT_LIMITS, type UrlSessionAuditScope } from './url-session-audit.js';
 
 const PROMPT = 'Own previously issued compatible prompt.';
 const PIN = 'c'.repeat(40);
@@ -109,10 +111,62 @@ describe('retained URL helper launch history', () => {
     expect(isVerifiedRetainedUrlLaunchHistory(verified)).toBe(true);
     expect(isVerifiedRetainedUrlLaunchHistory({ ...verified })).toBe(false);
     expect(verified).toEqual({
-      role, sessionId, recordSha256, promptRecordSha256, promptSha256, pin: PIN, authorization: 'none', replay: 'forbidden',
+      role, sessionId, recordSha256, promptRecordSha256, promptSha256, pin: PIN, runId: RUN, authorization: 'none', replay: 'forbidden',
+      sourceBindingSha256: f.launch.binding.sourceBinding, policySha256: f.launch.binding.policy,
     });
     expect(Object.values(f.cores).map(file => fs.readFileSync(file))).toEqual(before);
     expect(fs.existsSync(f.input.executable)).toBe(false);
+  });
+
+  it('joins the exact independently anchored helper row and retained files without granting recovery', async () => {
+    const f = fixture(), { role, run, runId, coreSha256, declarationSha256, roleDeclaration, executable, screen } = f.input;
+    const parent = path.join(path.dirname(run), 'owned-audit');
+    fs.mkdirSync(parent, { mode: 0o700 });
+    let sequence = 0, globalTip: string | null = null, durableBytes = 0;
+    const declarations = {} as Record<typeof URL_ROLES[number], UrlSessionAuditHistoryExpected['declarations']['inventory']>;
+    const roleAnchors = {} as Record<typeof URL_ROLES[number], UrlSessionAuditHistoryExpected['roles']['inventory']>;
+    for (const name of URL_ROLES) {
+      const scope: UrlSessionAuditScope = { binding: { ...f.launch.binding, role: name }, originPolicySha256: '1'.repeat(64),
+        profileSha256: name === role ? roleDeclaration.compiledProfileSha256 : '2'.repeat(64) };
+      const payload = { project: 'project:own', pin: PIN, principal: 'own-operator', declaredClasses: ['code-structure'],
+        profile: 'own-fixture-profile', limits: URL_SESSION_AUDIT_LIMITS, capture: 'host-callbacks-only',
+        providerReceipts: 'Unknown', nativeSendCensus: 'Unknown' } as const;
+      declarations[name] = { scope, payload };
+      const lines: string[] = [];
+      let roleTip: string | null = null;
+      const append = (kind: string, fields: unknown) => {
+        const body = { format: URL_SESSION_AUDIT_FORMAT, sequence: ++sequence, roleSequence: lines.length + 1,
+          previousSha256: globalTip, previousRoleSha256: roleTip, event: { kind, role: name, scope, payload: fields } };
+        const digest = sha256(canonical(body).slice(0, -1));
+        globalTip = roleTip = digest;
+        lines.push(canonical({ ...body, sha256: digest }));
+      };
+      append('declaration', payload);
+      if (name === role) {
+        append('launch-attempt', { event: 'session-launch-attempt', profileSha256: scope.profileSha256,
+          commandSha256: roleDeclaration.commandSha256, viewSha256: roleDeclaration.viewSha256, limits: URL_LAUNCH_LIMITS });
+        append('launch-history', f.input.expected);
+        append('launch-terminal', { outcome: 'stopped', viewTermination: 'view-exited', groupTermination: 'confirmed',
+          toolTermination: 'settled', pendingInvocations: 0 });
+      }
+      const bytes = Buffer.from(lines.join(''));
+      fs.writeFileSync(path.join(parent, `own-${name}.jsonl`), bytes, { mode: 0o600 });
+      if (!roleTip) throw new Error('owned role anchor missing');
+      roleAnchors[name] = { records: lines.length, bytes: bytes.length, tipSha256: roleTip };
+      durableBytes += bytes.length;
+    }
+    if (!globalTip) throw new Error('owned global anchor missing');
+    const expected = { durableRecords: sequence, durableBytes, tipSha256: globalTip, roles: roleAnchors, declarations };
+    const options = { parent, name: 'own', expected, current: () => true };
+    expect(await verifyUrlSessionAuditHistory(options)).toBeNull();
+    const subject = { run, runId, coreSha256, declarationSha256, roleDeclaration, executable, screen };
+    const retainedLaunches = { [role]: subject };
+    expect(await verifyUrlSessionAuditHistory({ ...options, retainedLaunches })).toMatchObject({ capturedHelperLaunches: 1,
+      capturedLaunchTerminals: 1, authorization: 'none', replay: 'forbidden', completeness: 'Unknown' });
+    expect(await verifyUrlSessionAuditHistory({ ...options, retainedLaunches: { [role]: { ...subject,
+      roleDeclaration: { ...roleDeclaration, commandSha256: '0'.repeat(64) } } } })).toBeNull();
+    fs.appendFileSync(f.cores.prompt, ' ');
+    expect(await verifyUrlSessionAuditHistory({ ...options, retainedLaunches })).toBeNull();
   });
 
   it('refuses substituted protected payload fields and independently pinned subjects', async () => {

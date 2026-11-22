@@ -227,6 +227,7 @@ export interface VerifiedRetainedUrlLaunchHistory {
   readonly [retainedHistoryBrand]: true;
   readonly authorization: 'none'; readonly replay: 'forbidden';
   readonly role: UrlLaunchHistoryRole; readonly sessionId: string; readonly pin: string;
+  readonly runId: string; readonly sourceBindingSha256: string; readonly policySha256: string;
   readonly recordSha256: string; readonly promptRecordSha256: string; readonly promptSha256: string;
 }
 const verifiedRetainedHistory = new WeakSet<VerifiedRetainedUrlLaunchHistory>();
@@ -320,8 +321,8 @@ export async function verifyRetainedUrlLaunchHistory(given: UrlRetainedLaunchHis
     checkDirectories();
     if (![core, sidecar, launch, prompt].every((prior, index) => matchesFile(prior, read(files[index]!)))) refuse();
     checkDirectories();
-    const verified = Object.freeze({ authorization: 'none', replay: 'forbidden', role, sessionId: declaration.sessionId, pin,
-      recordSha256: expected.recordSha256, promptRecordSha256: expected.promptRecordSha256,
+    const verified = Object.freeze({ authorization: 'none', replay: 'forbidden', role, sessionId: declaration.sessionId, pin, runId,
+      sourceBindingSha256: subject.sourceBindingSha256, policySha256, recordSha256: expected.recordSha256, promptRecordSha256: expected.promptRecordSha256,
       promptSha256: expected.promptSha256 }) as VerifiedRetainedUrlLaunchHistory;
     verifiedRetainedHistory.add(verified);
     return verified;

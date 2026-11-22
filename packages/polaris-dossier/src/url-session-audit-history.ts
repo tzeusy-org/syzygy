@@ -6,6 +6,8 @@ import { decodeUtf8, deepFreeze, isRecord, sha256 } from '@syzygy/support';
 import { SESSION_TOOLS, type SessionContentClass } from './session-egress-policy.js';
 import { isSessionTokenCount, SESSION_COUNT_RESPONSE_MAX_BYTES, SESSION_COUNT_TOKENS_PATH } from './session-relay.js';
 import type { ViewRole } from './session-view.js';
+import { isVerifiedRetainedUrlLaunchHistory, URL_HELPER_LAUNCH_FILES, verifyRetainedUrlLaunchHistory,
+  type UrlLaunchHistoryRole, type UrlRetainedLaunchHistoryExpected, type UrlRetainedLaunchHistoryOptions } from './url-launch-history.js';
 import { URL_SESSION_AUDIT_FORMAT, URL_SESSION_AUDIT_LIMITS, type UrlSessionAuditScope } from './url-session-audit.js';
 
 const ROLES = ['author', 'inventory', 'fidelity', 'design'] as const;
@@ -25,15 +27,19 @@ export interface UrlSessionAuditHistoryExpected {
   /** Supplied from independent protected expectations, never learned from these files. */
   readonly declarations: Readonly<Record<ViewRole, Declaration>>;
 }
+type RetainedLaunchSubject = Omit<UrlRetainedLaunchHistoryOptions, 'role' | 'pin' | 'expected' | 'current'>;
+type RetainedLaunchSubjects = Readonly<Partial<Record<UrlLaunchHistoryRole, RetainedLaunchSubject>>>;
 export interface UrlSessionAuditHistoryOptions {
   readonly parent: string; readonly name: string; readonly expected: UrlSessionAuditHistoryExpected;
   readonly current: () => boolean;
+  /** Independently pinned input, role and executable identities for any retained helper launch row. */
+  readonly retainedLaunches?: RetainedLaunchSubjects;
 }
 export interface VerifiedUrlSessionAuditHistory {
   readonly kind: 'verified-local-audit-history'; readonly authorization: 'none'; readonly replay: 'forbidden';
   readonly completeness: 'Unknown'; readonly records: number; readonly bytes: number; readonly tipSha256: string;
   readonly capturedLaunchTerminals: number; readonly capturedCompleteExchanges: number;
-  readonly capturedCountExchanges: number;
+  readonly capturedCountExchanges: number; readonly capturedHelperLaunches: number;
 }
 function fail(): never { throw new Error('url-session-audit-history-unavailable'); }
 const hex = (v: unknown): v is string => typeof v === 'string' && /^[a-f0-9]{64}$/u.test(v);
@@ -69,7 +75,16 @@ export async function verifyUrlSessionAuditHistory(given: UrlSessionAuditHistory
   const work = async (): Promise<VerifiedUrlSessionAuditHistory> => {
     // Snapshot trusted metadata before the first await. It is not a persisted
     // checkpoint format and accepting it does not establish its provenance.
-    const parent = given.parent, name = given.name;
+    const { parent, name } = given;
+    const retainedLaunches = { ...given.retainedLaunches };
+    for (const role of Object.keys(retainedLaunches)) {
+      if (!Object.hasOwn(URL_HELPER_LAUNCH_FILES, role)) fail();
+      const subject = retainedLaunches[role as UrlLaunchHistoryRole];
+      if (subject === undefined) fail();
+      const roleDeclaration = deepFreeze(parseBoundedJson(canonical(subject.roleDeclaration),
+        { maxBytes: 65_536, maxNodes: 4096, maxDepth: 12 })) as unknown as RetainedLaunchSubject['roleDeclaration'];
+      retainedLaunches[role as UrlLaunchHistoryRole] = { ...subject, screen: { ...subject.screen }, roleDeclaration };
+    }
     const expected = deepFreeze(parseBoundedJson(canonical(given.expected, 262_144), { maxBytes: 262_144, maxNodes: 32_768, maxDepth: 16 })) as unknown as UrlSessionAuditHistoryExpected;
     check();
     if (!path.isAbsolute(parent) || path.resolve(parent) !== parent || !/^[a-zA-Z0-9][a-zA-Z0-9_-]{0,63}$/u.test(name)
@@ -149,7 +164,7 @@ export async function verifyUrlSessionAuditHistory(given: UrlSessionAuditHistory
       if (row.sequence !== index + 1 || row.previousSha256 !== previous) fail(); previous = row.sha256;
     }
     if (previous !== expected.tipSha256) fail();
-    const captured = verifyCapturedBoundary(rows, expected);
+    const captured = await verifyCapturedBoundary(rows, expected, retainedLaunches, check);
     await rootCurrent();
     for (const { file, name, stat } of files) if (!same(stat, await file.stat({ bigint: true })) || !same(stat, await lstat(name, { bigint: true }))) fail();
     check();
@@ -167,29 +182,54 @@ export async function verifyUrlSessionAuditHistory(given: UrlSessionAuditHistory
   }
 }
 
-function verifyCapturedBoundary(rows: readonly Row[], expected: UrlSessionAuditHistoryExpected) {
-  let capturedLaunchTerminals = 0, capturedCompleteExchanges = 0, capturedCountExchanges = 0;
+async function verifyCapturedBoundary(rows: readonly Row[], expected: UrlSessionAuditHistoryExpected,
+  retainedLaunches: RetainedLaunchSubjects, check: () => void) {
+  let capturedLaunchTerminals = 0, capturedCompleteExchanges = 0, capturedCountExchanges = 0, capturedHelperLaunches = 0;
   for (const role of ROLES) {
-    let launched = false;
+    let attempt: { commandSha256: string; viewSha256: string } | null = null;
+    let launchHistoryMatched = false;
     let exchange: { id: string; stage: string; digest: string; usage: boolean; identity: string; count: boolean } | null = null;
     let tool: { id: string; name: string; inputSha256: string; executing: boolean; counted: boolean;
       receipt?: { receiptId: string; toolUseId: string; digest: string; bytes: number } } | null = null;
     let question: unknown = null;
     const requests = new Set<unknown>();
     for (const row of rows.filter(row => row.event.role === role)) {
+      check();
       const { kind, payload: p } = row.event;
       if (!isRecord(p)) fail();
       switch (kind) {
         case 'declaration': break;
         case 'launch-attempt':
-          if (launched || p.event !== 'session-launch-attempt' || p.profileSha256 !== expected.declarations[role].scope.profileSha256
-            || !hex(p.commandSha256) || !hex(p.viewSha256)) fail(); launched = true; break;
+          if (attempt !== null || p.event !== 'session-launch-attempt' || p.profileSha256 !== expected.declarations[role].scope.profileSha256
+            || !hex(p.commandSha256) || !hex(p.viewSha256)) fail();
+          attempt = { commandSha256: p.commandSha256, viewSha256: p.viewSha256 }; break;
+        case 'launch-history': {
+          if (role === 'author' || attempt === null || launchHistoryMatched) fail();
+          const subject = retainedLaunches[role];
+          const { scope, payload } = expected.declarations[role];
+          if (!subject || subject.runId !== scope.binding.run || subject.roleDeclaration.role !== role
+            || subject.roleDeclaration.compiledProfileSha256 !== scope.profileSha256
+            || subject.roleDeclaration.commandSha256 !== attempt.commandSha256 || subject.roleDeclaration.viewSha256 !== attempt.viewSha256
+            || !exact(p, ['file', 'recordSha256', 'recordBytes', 'promptRecordSha256', 'promptSha256', 'sessionId'])
+            || p.file !== URL_HELPER_LAUNCH_FILES[role] || !hex(p.recordSha256) || !count(p.recordBytes, 2_097_152) || p.recordBytes === 0
+            || !hex(p.promptRecordSha256) || !hex(p.promptSha256) || typeof p.sessionId !== 'string') fail();
+          const history: UrlRetainedLaunchHistoryExpected = { file: p.file, recordSha256: p.recordSha256, recordBytes: p.recordBytes,
+            promptRecordSha256: p.promptRecordSha256, promptSha256: p.promptSha256, sessionId: p.sessionId };
+          check();
+          const result = await verifyRetainedUrlLaunchHistory({ ...subject, role, pin: payload.pin, expected: history, current: () => { check(); return true; } });
+          check();
+          if (!isVerifiedRetainedUrlLaunchHistory(result) || result.role !== role || result.runId !== scope.binding.run
+            || result.sourceBindingSha256 !== scope.binding.sourceBinding || result.policySha256 !== scope.binding.policy || result.pin !== payload.pin
+            || result.sessionId !== p.sessionId || result.recordSha256 !== p.recordSha256
+            || result.promptRecordSha256 !== p.promptRecordSha256 || result.promptSha256 !== p.promptSha256) fail();
+          launchHistoryMatched = true; capturedHelperLaunches++; break;
+        }
         case 'launch-terminal':
-          if (!launched || !['exited', 'stopped'].includes(String(p.outcome)) || p.viewTermination !== 'view-exited'
+          if (attempt === null || !['exited', 'stopped'].includes(String(p.outcome)) || p.viewTermination !== 'view-exited'
             || p.groupTermination !== 'confirmed' || p.toolTermination !== 'settled' || p.pendingInvocations !== 0) fail();
-          launched = false; capturedLaunchTerminals++; break;
+          attempt = null; capturedLaunchTerminals++; break;
         case 'before-tool':
-          if (!launched || exchange !== null || tool === null || tool.executing || tool.receipt !== undefined
+          if (attempt === null || exchange !== null || tool === null || tool.executing || tool.receipt !== undefined
             || !exact(p, ['tool', 'inputSha256']) || `mcp__syzygy__${String(p.tool)}` !== tool.name || p.inputSha256 !== tool.inputSha256) fail();
           tool.executing = true; break;
         case 'tool-receipt':
@@ -208,7 +248,7 @@ function verifyCapturedBoundary(rows: readonly Row[], expected: UrlSessionAuditH
             'route', 'consumedToolResults', 'response', 'outcome', 'status', 'previousExchangeSha256'])
             || !equal(p.subject, { binding: expected.declarations[role].scope.binding, project: expected.declarations[role].payload.project,
               pin: expected.declarations[role].payload.pin, principal: expected.declarations[role].payload.principal })
-            || !launched || typeof p.requestId !== 'string' || (p.route !== 'messages' && p.route !== SESSION_COUNT_TOKENS_PATH)
+            || attempt === null || typeof p.requestId !== 'string' || (p.route !== 'messages' && p.route !== SESSION_COUNT_TOKENS_PATH)
             || !Array.isArray(p.consumedToolResults)) fail();
           const identity = canonical({ admission: p.admission, received: p.received, route: p.route, consumedToolResults: p.consumedToolResults });
           if (p.event === 'attempt-allowed') {
@@ -265,7 +305,8 @@ function verifyCapturedBoundary(rows: readonly Row[], expected: UrlSessionAuditH
         default: fail();
       }
     }
-    if (launched || exchange !== null || tool !== null || question !== null) fail();
+    if (attempt !== null || exchange !== null || tool !== null || question !== null
+      || (role !== 'author' && retainedLaunches[role] !== undefined && !launchHistoryMatched)) fail();
   }
-  return { capturedLaunchTerminals, capturedCompleteExchanges, capturedCountExchanges };
+  return { capturedLaunchTerminals, capturedCompleteExchanges, capturedCountExchanges, capturedHelperLaunches };
 }
