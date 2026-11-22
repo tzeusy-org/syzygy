@@ -1,12 +1,12 @@
 import { encodeCanonicalJson, parseBoundedJson } from '@syzygy/polaris-generation-core/live';
 import { decodeUtf8, deepFreeze, isRecord, sha256 } from '@syzygy/support';
-import { isOrderedDesignSessionProfile, type OrderedDesignSessionProfile } from './session-profile.js';
+import { createOrderedDesignSessionProfile, isOrderedDesignSessionProfile, type SessionProfileInput, type OrderedDesignSessionProfile } from './session-profile.js';
 import { isOrderedDesignPlanFor, type OrderedDesignPlan } from './url-design-delivery.js';
 import type { UrlDesignProductMetadata } from './url-design-product.js';
 import { URL_ARTIFACT_LIMITS } from './url-run-artifacts.js';
 import {
   ORDERED_DESIGN_AUDIT_FORMAT, ORDERED_DESIGN_AUDIT_RECORD_LIMITS, verifyOrderedDesignAuditPrefix,
-  verifyOrderedDesignTerminalEvidence, type OrderedDesignAuditReference, type OrderedDesignTerminalEvidence,
+  verifyOrderedDesignTerminalEvidence, verifyHistoricalOrderedDesignAuditPrefix, verifyHistoricalOrderedDesignTerminalEvidence, type OrderedDesignAuditReference, type OrderedDesignTerminalEvidence,
 } from './url-ordered-design-audit.js';
 import {
   assertUrlDesignDeliveryViewCurrent, assertUrlDesignRenderContinuationCurrent, assertUrlOrderedDesignVerdictTerminal,
@@ -29,6 +29,7 @@ declare const sealBrand: unique symbol;
 export interface SealedOrderedDesignHistoryAttempt { readonly [sealBrand]: true }
 type CheckedDisposition =
   | { readonly kind: 'retired'; readonly terminal: OrderedDesignAuditReference }
+  | { readonly kind: 'stopped'; readonly tip: OrderedDesignAuditReference | null }
   | { readonly kind: 'eligible'; readonly terminal: OrderedDesignTerminalEvidence;
       readonly verdictEventSha256: string; readonly checked: UrlCheckedDesignVerdict;
       readonly verdictCall: { readonly id: string; readonly name: string; readonly inputSha256: string } };
@@ -41,6 +42,19 @@ interface SealedAttempt {
   readonly disposition: CheckedDisposition;
 }
 const seals = new WeakMap<SealedOrderedDesignHistoryAttempt, SealedAttempt>();
+
+/** Plain expected metadata captured by the protected audit producer. It grants
+ * no authority. The outer stop seal must authenticate it independently. */
+export interface UrlOrderedDesignHistoryExpected extends Omit<SealedAttempt, 'profile'> {
+  readonly profileInput: SessionProfileInput;
+}
+export function captureSealedOrderedDesignHistoryAttempt(seal: SealedOrderedDesignHistoryAttempt): UrlOrderedDesignHistoryExpected | null {
+  const found = seals.get(seal);
+  if (!found) return null;
+  const { profile, ...rest } = found;
+  return snapshot({ ...rest, profileInput: profile.input });
+}
+
 
 /** Outer rows in their already verified session-chain order. The caller owns
  * the independent global and per-role seals and supplies the complete ordered
@@ -57,7 +71,7 @@ export interface VerifiedOrderedDesignAuditHistory {
   readonly authorization: 'none';
   readonly replay: 'forbidden';
   readonly attempts: readonly { readonly epoch: number; readonly attemptSha256: string;
-    readonly disposition: 'eligible' | 'retired'; readonly recordCount: number }[];
+    readonly disposition: 'eligible' | 'retired' | 'stopped'; readonly recordCount: number }[];
 }
 
 const PRODUCT_LIMITS = { maxBytes: 2_097_152, maxNodes: 65_536, maxDepth: 32 };
@@ -129,7 +143,7 @@ export function sealOrderedDesignHistoryAttempt(input: SealInput): SealedOrdered
 
 function verifyRetirement(
   last: unknown, terminal: OrderedDesignAuditReference, records: readonly Uint8Array[],
-  context: Omit<Parameters<typeof verifyOrderedDesignAuditPrefix>[0], 'records'>, lastPrefixTime: number,
+  context: Omit<Parameters<typeof verifyOrderedDesignAuditPrefix>[0], 'records'>, lastPrefixTime: number, historical: boolean,
 ): string | null {
   if (!isRecord(last) || !isRecord(last.payload) || typeof last.at !== 'string') return null;
   const { reason } = last.payload;
@@ -137,7 +151,7 @@ function verifyRetirement(
   const at = Date.parse(last.at);
   if (!Number.isSafeInteger(at) || new Date(at).toISOString() !== last.at || at < lastPrefixTime || at > context.asOf
     || at >= Date.parse(context.plan.manifest.binding.deadline) || sha256(recordText(last)) !== terminal.sha256) return null;
-  const prefix = verifyOrderedDesignAuditPrefix({ ...context, records });
+  const prefix = (historical ? verifyHistoricalOrderedDesignAuditPrefix : verifyOrderedDesignAuditPrefix)({ ...context, records });
   if (prefix === null || prefix.next === null || !equal(last, {
     format: ORDERED_DESIGN_AUDIT_FORMAT, kind: 'retired', id: terminal.id, previous: prefix.tip,
     attemptSha256: prefix.attemptSha256, at: last.at, payload: { reason },
@@ -154,12 +168,45 @@ export function verifySealedOrderedDesignAuditHistory(input: {
   readonly subject: { readonly project: string; readonly pin: string; readonly principal: string; readonly deadline: string };
   readonly asOf: number;
 }): VerifiedOrderedDesignAuditHistory | null {
+  const attempts = input.attempts.map(seal => seals.get(seal));
+  if (attempts.some(item => item === undefined)) return null;
+  return verifyHistory({ ...input, attempts: attempts as SealedAttempt[] }, false);
+}
+
+/** Read-only cold verification against independently sealed producer metadata.
+ * Never recreates a live delivery, cursor, grant or eligible product. */
+export function verifyColdOrderedDesignAuditHistory(input: {
+  readonly rows: readonly OrderedDesignHistoryRow[];
+  readonly attempts: readonly UrlOrderedDesignHistoryExpected[];
+  readonly profileSha256: string;
+  readonly subject: { readonly project: string; readonly pin: string; readonly principal: string; readonly deadline: string };
+  readonly asOf: number;
+}): VerifiedOrderedDesignAuditHistory | null {
+  try {
+    const attempts: SealedAttempt[] = input.attempts.map(item => {
+      const retained = snapshot(item);
+      const compiled = createOrderedDesignSessionProfile(retained.profileInput);
+      if (!compiled.ok || compiled.value.profile.digest !== input.profileSha256) throw new Error('ordered-history-profile');
+      const { profileInput: _input, ...rest } = retained;
+      const profile = compiled.value.profile;
+      if (!equal(rest.scope, { binding: profile.input.binding, profileSha256: profile.digest,
+        originPolicySha256: rest.plan.manifest.binding.originPolicySha256 })) throw new Error('ordered-history-scope');
+      return { ...rest, profile };
+    });
+    return verifyHistory({ ...input, attempts }, true);
+  } catch { return null; }
+}
+function verifyHistory(input: {
+  readonly rows: readonly OrderedDesignHistoryRow[]; readonly attempts: readonly SealedAttempt[];
+  readonly subject: { readonly project: string; readonly pin: string; readonly principal: string; readonly deadline: string };
+  readonly asOf: number;
+}, historical: boolean): VerifiedOrderedDesignAuditHistory | null {
   try {
     const { rows, attempts, asOf, subject } = input;
-    if (!Array.isArray(rows) || rows.length < 2 || rows.length > URL_SESSION_AUDIT_LIMITS.events
-      || !Array.isArray(attempts) || attempts.length < 1 || attempts.length * 2 > rows.length
+    if (!Array.isArray(rows) || rows.length < (historical ? 1 : 2) || rows.length > URL_SESSION_AUDIT_LIMITS.events
+      || !Array.isArray(attempts) || attempts.length < 1 || attempts.length * (historical ? 1 : 2) > rows.length
       || !Number.isSafeInteger(asOf)) return null;
-    const first = seals.get(attempts[0]!);
+    const first = attempts[0];
     if (first === undefined) return null;
     const output: VerifiedOrderedDesignAuditHistory['attempts'][number][] = [];
     let cursor = 0, totalBytes = 0;
@@ -172,7 +219,7 @@ export function verifySealedOrderedDesignAuditHistory(input: {
       return row;
     };
     for (const [index, seal] of attempts.entries()) {
-      const expected = seals.get(seal);
+      const expected = seal;
       if (expected === undefined) return null;
       const { plan, principal, profile, receipt, disposition } = expected;
       const binding = plan.manifest.binding;
@@ -192,17 +239,22 @@ export function verifySealedOrderedDesignAuditHistory(input: {
         records.push(encoded);
         events.push(row.event.payload);
       }
-      if (records.length === 0) return null;
+      if (records.length === 0 && disposition.kind !== 'stopped') return null;
       const context = { profile, plan, principal, asOf };
       const last = events.at(-1)!;
       let attemptSha256: string | null;
-      if (disposition.kind === 'retired') {
+      if (disposition.kind === 'stopped') {
+        if (!historical) return null;
+        const prefix = verifyHistoricalOrderedDesignAuditPrefix({ ...context, records });
+        if (prefix === null || prefix.next === null || !equal(prefix.tip, disposition.tip)) return null;
+        attemptSha256 = prefix.attemptSha256;
+      } else if (disposition.kind === 'retired') {
         if (events.slice(0, -1).some(event => event.id === disposition.terminal.id)) return null;
         const before = events.at(-2)?.at;
         attemptSha256 = verifyRetirement(last, disposition.terminal, records.slice(0, -1), context,
-          typeof before === 'string' ? Date.parse(before) : -Infinity);
+          typeof before === 'string' ? Date.parse(before) : -Infinity, historical);
       } else {
-        const terminal = verifyOrderedDesignTerminalEvidence({ ...context, records, terminal: disposition.terminal.terminal });
+        const terminal = (historical ? verifyHistoricalOrderedDesignTerminalEvidence : verifyOrderedDesignTerminalEvidence)({ ...context, records, terminal: disposition.terminal.terminal });
         if (terminal === null || !equal(terminal, disposition.terminal)) return null;
         const stage = events.find(event => event.kind === 'verdict-staged');
         if (!isRecord(stage?.payload) || !equal(stage.payload.verdictCall, disposition.verdictCall)) return null;

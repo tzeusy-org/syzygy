@@ -3,7 +3,7 @@ import { deepFreeze, isRecord, sha256 } from '@syzygy/support';
 import { isOrderedDesignSessionProfile, sessionProfileRemainingTokens, sessionProfileReminderText, type OrderedDesignSessionProfile } from './session-profile.js';
 import type { SessionResponseObservation } from './session-relay.js';
 import type { SessionResponseUsage } from './session-response.js';
-import { isOrderedDesignPlanFor, type OrderedDesignPlan } from './url-design-delivery.js';
+import { isOrderedDesignPlanFor, verifyHistoricalOrderedDesignPlanMetadata, type OrderedDesignPlan } from './url-design-delivery.js';
 
 export const ORDERED_DESIGN_AUDIT_FORMAT = 'url-ordered-design-audit/1';
 export const ORDERED_DESIGN_AUDIT_RECORD_LIMITS = Object.freeze({ maxBytes: 65_536, maxNodes: 4096, maxDepth: 12 });
@@ -135,9 +135,18 @@ class EndOfPrefix {
  * candidate has passed structural checks before the writer's transaction.
  * The writer still authenticates native observations and checks live authority. */
 export function verifyOrderedDesignAuditPrefix(input: OrderedDesignAuditPrefixInput): OrderedDesignAuditPrefix | null {
+  return verifyPrefix(input, false);
+}
+
+/** Historical evidence only. The plan metadata must come from an independent
+ * protected stop seal, never from these rows. No cursor or grant is issued. */
+export function verifyHistoricalOrderedDesignAuditPrefix(input: OrderedDesignAuditPrefixInput): OrderedDesignAuditPrefix | null {
+  return verifyPrefix(input, true);
+}
+function verifyPrefix(input: OrderedDesignAuditPrefixInput, historical: boolean): OrderedDesignAuditPrefix | null {
   try {
     const { profile, plan, principal, asOf, records } = input;
-    if (!isOrderedDesignSessionProfile(profile) || !isOrderedDesignPlanFor(plan, profile.transcript.partition)
+    if (!isOrderedDesignSessionProfile(profile) || !(historical ? verifyHistoricalOrderedDesignPlanMetadata(plan, profile.transcript.partition) : isOrderedDesignPlanFor(plan, profile.transcript.partition))
       || !identifier(principal) || !Number.isSafeInteger(asOf)) return refused();
     const { manifest, manifestText, manifestSha256, prepared, preparedText, replies } = plan;
     const binding = manifest.binding;
@@ -289,10 +298,16 @@ export function verifyOrderedDesignAuditPrefix(input: OrderedDesignAuditPrefixIn
  * disposition. Part bodies stay in protected input, with their independently
  * checked wrapper and actual/logical request identities linked here. */
 export function verifyOrderedDesignTerminalEvidence(input: OrderedDesignAuditInput): OrderedDesignTerminalEvidence | null {
+  return verifyTerminal(input, false);
+}
+export function verifyHistoricalOrderedDesignTerminalEvidence(input: OrderedDesignAuditInput): OrderedDesignTerminalEvidence | null {
+  return verifyTerminal(input, true);
+}
+function verifyTerminal(input: OrderedDesignAuditInput, historical: boolean): OrderedDesignTerminalEvidence | null {
   try {
     const terminal = input.terminal;
     if (!exact(terminal, ['id', 'sha256']) || !identifier(terminal.id) || !digest(terminal.sha256)) return refused();
-    const result = verifyOrderedDesignAuditPrefix(input);
+    const result = verifyPrefix(input, historical);
     if (result === null || result.next !== null || !equal(result.tip, terminal)) return refused();
     return result.terminalCandidate;
   } catch { return null; }
