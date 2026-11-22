@@ -8,6 +8,7 @@ import { SESSION_CONTENT_CLASSES, SESSION_TOOLS, type SessionAdmission, type Ses
 import { isNativeSessionProfile, isOrderedDesignSessionProfile, type NativeSessionProfile } from './session-profile.js';
 import type { DossierScreen } from './screen.js';
 import type { UrlSessionControlAudit } from './session-control.js';
+import type { UrlSessionAuditHistoryExpected } from './url-session-audit-history.js';
 import type { UrlLaunchLimits, UrlSessionLaunchOptions, UrlSessionLaunchOutcome } from './session-launch.js';
 import { isSessionTokenCount, SESSION_COUNT_RESPONSE_MAX_BYTES, SESSION_COUNT_TOKENS_PATH, SESSION_RELAY_EVENTS,
   type SessionAuditEvent } from './session-relay.js';
@@ -283,6 +284,7 @@ export type UrlSessionAuditResult = { readonly ok: true; readonly scope: (role: 
   readonly readDesignRenderContinuation: (record: UrlDesignDeliveryAuditRecord, product: ValidatedUrlDesignProduct,
     number: number) => Promise<UrlDesignRenderContinuation>;
   readonly close: () => Promise<UrlSessionAuditSummary>;
+  readonly closedHistory: () => UrlSessionAuditHistoryExpected | null;
   readonly summary: () => UrlSessionAuditSummary }
   | { readonly ok: false; readonly code: 'url-session-audit-unavailable'; readonly summary: () => UrlSessionAuditSummary };
 
@@ -657,9 +659,23 @@ export async function createUrlSessionAudit(given: UrlSessionAuditOptions): Prom
       relayLatest.set(role, { payload, events: [...earlierEvents, record] });
       return record;
     }
-    for (const role of ROLES) await commit({ kind: 'declaration', role, scope: scopes.get(role), payload: { project: input.project, pin: input.pin,
-      principal: input.principal, declaredClasses: input.declaredClasses, profile: roleProfiles.get(role)!.id, limits,
-      capture: 'host-callbacks-only', providerReceipts: 'Unknown', nativeSendCensus: 'Unknown' } }, role, began, true);
+    const declarationsByRole = Object.fromEntries(ROLES.map(role => [role, {
+      scope: scopes.get(role)!,
+      payload: { project: input.project, pin: input.pin, principal: input.principal, declaredClasses: input.declaredClasses,
+        profile: roleProfiles.get(role)!.id, limits, capture: 'host-callbacks-only', providerReceipts: 'Unknown', nativeSendCensus: 'Unknown' },
+    }])) as UrlSessionAuditHistoryExpected['declarations'];
+    for (const role of ROLES) await commit({ kind: 'declaration', role, ...declarationsByRole[role] }, role, began, true);
+    const closedHistory = (): UrlSessionAuditHistoryExpected | null => {
+      const captured = summary();
+      if (!captured.closed || captured.poisoned || captured.tail !== 'durable-prefix' || captured.tipSha256 === null
+        || captured.declarations !== ROLES.length || ROLES.some(role => captured.roles[role].tipSha256 === null)) return null;
+      const roles = Object.fromEntries(ROLES.map(role => {
+        const { records, bytes, tipSha256 } = captured.roles[role];
+        return [role, { records, bytes, tipSha256: tipSha256! }];
+      })) as UrlSessionAuditHistoryExpected['roles'];
+      return deepFreeze({ durableRecords: captured.durableRecords, durableBytes: captured.durableBytes, tipSha256: captured.tipSha256,
+        roles, declarations: declarationsByRole });
+    };
     const enqueue = (event: CapturedAuditEvent, privateKind: PrivateEventKind | null, checkEffectCurrent = checkCurrent) => {
       const deadline = performance.now() + limits.milliseconds;
       let snapshot: CapturedAuditEvent;
@@ -1145,7 +1161,8 @@ export async function createUrlSessionAudit(given: UrlSessionAuditOptions): Prom
     const append = async (event: UrlSessionAuditEvent): Promise<void> => { await enqueue(event, null); };
     return Object.freeze({ ok: true as const, scope: (role: ViewRole) => { const scope = scopes.get(role); if (!scope) poison(); return scope!; },
       append, appendMachinePeer, beginOrderedDesignAudit, commitLaunchHistory, commitDesignDelivery, revalidateDesignDelivery, readDesignDeliveryView,
-      commitDesignArtifactRead, readDesignReviewProof, readOrderedDesignReviewProof, commitOrderedDesignVerdict, commitDesignVerdict, readDesignRenderContinuation, close, summary });
+      commitDesignArtifactRead, readDesignReviewProof, readOrderedDesignReviewProof, commitOrderedDesignVerdict, commitDesignVerdict,
+      readDesignRenderContinuation, close, closedHistory, summary });
   } catch {
     poisoned = true; await close(); return Object.freeze({ ok: false as const, code: 'url-session-audit-unavailable' as const, summary });
   }

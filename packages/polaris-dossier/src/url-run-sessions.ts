@@ -23,6 +23,7 @@ import { assertUrlDesignRenderContinuationCurrent, createUrlSessionAudit, type U
   type UrlDesignDeliveryAuditRecord, type UrlDesignDeliveryView, type UrlCheckedDesignVerdict,
   type UrlDesignRenderContinuation, type UrlDesignReviewProof, type UrlSessionAuditSummary } from './url-session-audit.js';
 import { createUrlSessionBudget, type UrlBudgetSnapshot } from './url-session-budget.js';
+import type { UrlSessionAuditHistoryExpected } from './url-session-audit-history.js';
 import { URL_DESIGN_VIEW_ARTIFACT } from './url-design-view.js';
 import { createUrlRunMachine } from './url-run-machine.js';
 import { startUrlOrderedAttempt } from './url-run-ordered-attempt.js';
@@ -84,6 +85,7 @@ export interface UrlRunSessionsSummary {
   readonly control: { readonly pendingCallbacks: number; readonly termination: 'settled' | 'Unknown' };
   readonly hosts: readonly { readonly role: ViewRole; readonly pendingInvocations: number | null; readonly termination: 'settled' | 'Unknown' }[];
   readonly audit: UrlSessionAuditSummary;
+  readonly closedAuditHistory: UrlSessionAuditHistoryExpected | null;
   readonly machine?: { readonly identitySha256: string; readonly lifecycle: 'open' | 'retired' | 'Unknown' };
 }
 export interface UrlRunSessions {
@@ -95,7 +97,7 @@ export interface UrlRunSessions {
   withinCpuBudget(): boolean;
   waitForProductSamples(): Promise<boolean>;
   stop(): Promise<UrlRunSessionsSummary>;
-  summary(): Omit<UrlRunSessionsSummary, 'control' | 'hosts'>;
+  summary(): Omit<UrlRunSessionsSummary, 'control' | 'hosts' | 'closedAuditHistory'>;
 }
 
 /** One attended supervisor owns all four processes, the typed operator input,
@@ -282,7 +284,7 @@ async function start(options: UrlRunSessionsOptions, ports: typeof native): Prom
   };
   const probe = createServer(socket => socket.destroy()); probe.on('error', () => {});
   let stopped: Promise<UrlRunSessionsSummary> | undefined;
-  const summary = (): Omit<UrlRunSessionsSummary, 'control' | 'hosts'> => deepFreeze({ failure, budget: budget.snapshot(),
+  const summary = (): Omit<UrlRunSessionsSummary, 'control' | 'hosts' | 'closedAuditHistory'> => deepFreeze({ failure, budget: budget.snapshot(),
     roles: URL_ROLES.map(role => ({ ...captures.get(role)! })), audit: audit.summary(),
     ...(machine === undefined ? {} : { machine: { identitySha256: machine.identitySha256, lifecycle: machineLifecycle } }) });
   const stop = (): Promise<UrlRunSessionsSummary> => stopped ??= (async () => {
@@ -304,7 +306,7 @@ async function start(options: UrlRunSessionsOptions, ports: typeof native): Prom
     options.credential.close(); probe.close();
     const auditResult = await audit.close();
     if (!withinCpuBudget()) failure ??= 'cpu-budget';
-    return deepFreeze({ ...summary(), control: control.close(), hosts: hostResults, audit: auditResult });
+    return deepFreeze({ ...summary(), control: control.close(), hosts: hostResults, audit: auditResult, closedAuditHistory: audit.closedHistory() });
   })();
   try {
     if (ordered) {

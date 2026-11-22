@@ -13,7 +13,7 @@ import { createSessionProfile, DEFAULT_SESSION_MODEL } from './session-profile.j
 import { URL_LAUNCH_LIMITS } from './session-launch.js';
 import { SESSION_COUNT_TOKENS_PATH } from './session-relay.js';
 import { createUrlSessionAudit, URL_SESSION_AUDIT_LIMITS, type UrlSessionAuditEvent } from './url-session-audit.js';
-import { verifyUrlSessionAuditHistory, type UrlSessionAuditHistoryExpected } from './url-session-audit-history.js';
+import { verifyUrlSessionAuditHistory } from './url-session-audit-history.js';
 
 const ROLES = ['author', 'inventory', 'fidelity', 'design'] as const;
 afterEach(() => { vi.restoreAllMocks(); vi.useRealTimers(); });
@@ -35,6 +35,7 @@ async function fixture(fault?: 'incomplete-send' | 'uncertain-send' | 'unknown-c
     screen: loaded.screen, current: () => true };
   const writer = await createUrlSessionAudit(fixed); if (!writer.ok) throw new Error('owned writer unavailable');
   try {
+    expect(writer.closedHistory()).toBeNull();
     for (const role of ROLES) {
       const scope = writer.scope(role);
       await writer.append({ kind: 'launch-attempt', role, scope, payload: { event: 'session-launch-attempt', profileSha256: scope.profileSha256,
@@ -95,12 +96,12 @@ async function fixture(fault?: 'incomplete-send' | 'uncertain-send' | 'unknown-c
     }
     // Expectations come from the genuine retained writer, not a reread of files.
     const closed = await writer.close(); expect(closed).toMatchObject({ closed: true, poisoned: false });
-    const expected: UrlSessionAuditHistoryExpected = { durableRecords: closed.durableRecords, durableBytes: closed.durableBytes, tipSha256: closed.tipSha256!,
-      roles: Object.fromEntries(ROLES.map(role => [role, { records: closed.roles[role].records, bytes: closed.roles[role].bytes,
-        tipSha256: closed.roles[role].tipSha256! }])) as UrlSessionAuditHistoryExpected['roles'],
-      declarations: Object.fromEntries(ROLES.map((role, index) => [role, { scope: writer.scope(role), payload: {
-        project: fixed.project, pin: fixed.pin, principal: fixed.principal, declaredClasses: fixed.declaredClasses, profile: profiles[index]!.id,
-        limits: URL_SESSION_AUDIT_LIMITS, capture: 'host-callbacks-only', providerReceipts: 'Unknown', nativeSendCensus: 'Unknown' } }])) as unknown as UrlSessionAuditHistoryExpected['declarations'] };
+    const expected = writer.closedHistory();
+    if (expected === null) throw new Error('owned history unavailable');
+    expect(expected).toMatchObject({ durableRecords: closed.durableRecords, durableBytes: closed.durableBytes, tipSha256: closed.tipSha256 });
+    expect(expected.declarations.author).toMatchObject({ scope: writer.scope('author'), payload: {
+      project: fixed.project, pin: fixed.pin, principal: fixed.principal, declaredClasses: fixed.declaredClasses, profile: profiles[0]!.id,
+      limits: URL_SESSION_AUDIT_LIMITS, capture: 'host-callbacks-only', providerReceipts: 'Unknown', nativeSendCensus: 'Unknown' } });
     const file = (role: typeof ROLES[number] = 'author') => path.join(parent, `host-${role}.jsonl`);
     return { parent, file, expected, options: { parent, name: 'host', expected, current: () => true } };
   } finally { await writer.close(); }
