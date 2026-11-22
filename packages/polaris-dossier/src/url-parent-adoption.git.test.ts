@@ -1,5 +1,5 @@
 import { execFileSync } from 'node:child_process';
-import { appendFileSync, copyFileSync, mkdirSync, mkdtempSync, rmSync, writeFileSync } from 'node:fs';
+import { appendFileSync, copyFileSync, mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { dirname, join } from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
@@ -79,7 +79,7 @@ function fixture() {
   return { root, run, landed, binding, base: base.binding, origin: origin.binding };
 }
 
-describe('URL parent adoption on the observing Git checkout', () => {
+describe('URL parent adoption on the observing Git checkout', { timeout: 30_000 }, () => {
   it('requires the actual direct default and version refs at startup and during a run', async () => {
     const { root, run, landed, binding, base, origin } = fixture();
     const current = () => committedUrlPoliciesCurrent(root, base, origin, binding);
@@ -144,6 +144,48 @@ describe('URL parent adoption on the observing Git checkout', () => {
     run('commit', '-qm', 'Remove retirement from the current ledger');
     run('update-ref', URL_PARENT_DEFAULT_REF, 'HEAD');
     expect(readUrlParentAdoption(root, origin.sha256, unrelated ?? undefined)).toBeNull();
+    expect(readUrlParentAdoption(root, origin.sha256)).toBeNull();
+  });
+
+  it('accepts edits to another adoption while detecting a changed URL adoption after restoration', () => {
+    const { root, run, origin } = fixture();
+    const record = join(root, URL_PARENT_RECORD);
+    appendFileSync(record, '| A-23 | 2026-11-22 | `bbbbbbbb` | Retire the surface freeze | Follow D12 | — | — |\n');
+    run('commit', '-qam', 'Append unrelated adoption');
+    run('update-ref', URL_PARENT_DEFAULT_REF, 'HEAD');
+    const before = readUrlParentAdoption(root, origin.sha256)!;
+
+    const original = readFileSync(record, 'utf8');
+    const corrected = original.replace('Follow D12', 'Follow D13');
+    expect(corrected).not.toBe(original);
+    writeFileSync(record, corrected);
+    run('commit', '-qam', 'Correct the unrelated doctrine reference');
+    run('update-ref', URL_PARENT_DEFAULT_REF, 'HEAD');
+    const current = run('rev-parse', 'HEAD');
+    expect(readUrlParentAdoption(root, origin.sha256)?.defaultCommit).toBe(current);
+    expect(readUrlParentAdoption(root, origin.sha256, before)?.defaultCommit).toBe(current);
+
+    const changed = corrected.replace('Apply reviewed version', 'Apply revised version');
+    expect(changed).not.toBe(corrected);
+    writeFileSync(record, changed);
+    run('commit', '-qam', 'Edit the governing URL adoption');
+    writeFileSync(record, corrected);
+    run('commit', '-qam', 'Restore the governing URL adoption');
+    run('update-ref', URL_PARENT_DEFAULT_REF, 'HEAD');
+    expect(readUrlParentAdoption(root, origin.sha256)).toBeNull();
+    expect(readUrlParentAdoption(root, origin.sha256, before)).toBeNull();
+  });
+
+  it('honors an explicit withdrawal between landing and recording the adoption', () => {
+    const { root, run, landed, origin } = fixture();
+    const record = join(root, URL_PARENT_RECORD);
+    const adopted = readFileSync(record, 'utf8');
+    run('reset', '--hard', landed);
+    appendFileSync(record, `| A-15 | 2026-11-22 | \`dddddddd\` | Withdraw \`${landed}\` | Test | — | — |\n`);
+    run('commit', '-qam', 'Withdraw the landed version');
+    writeFileSync(record, adopted);
+    run('commit', '-qam', 'Replace the withdrawal with the adoption record');
+    run('update-ref', URL_PARENT_DEFAULT_REF, 'HEAD');
     expect(readUrlParentAdoption(root, origin.sha256)).toBeNull();
   });
 });

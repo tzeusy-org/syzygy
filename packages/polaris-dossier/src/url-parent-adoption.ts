@@ -5,6 +5,7 @@ export const URL_PARENT_DEFAULT_REF = 'refs/remotes/origin/main';
 export const URL_PARENT_TAG = 'polaris-dossier-url-declared-source-run-v2.1';
 export const URL_PARENT_RECORD = '.syzygy/governance/decisions/AGENT-ADOPTIONS.md';
 const TAG_REF = `refs/tags/${URL_PARENT_TAG}`;
+const TAG_CELL = `\`${URL_PARENT_TAG}\``;
 export const URL_PARENT_REF_ARGS = ['for-each-ref', '--format=%(refname)%00%(objectname)%00%(symref)', URL_PARENT_DEFAULT_REF, TAG_REF] as const;
 const PACKAGE = 'openspec/changes/dossier-url-declared-source-run/proposed';
 const GOVERNANCE = '.syzygy/governance';
@@ -91,28 +92,38 @@ function ledgerRows(record: string): string[][] | null {
 export function findUrlParentAdoption(record: string): { readonly id: string; readonly commit: string } | null {
   const rows = ledgerRows(record);
   if (rows === null) return null;
-  const claimants = rows.filter(fields => fields[6] === `\`${URL_PARENT_TAG}\``);
+  const adoption = urlParentRow(rows);
+  return adoption === null || urlParentRetired(rows, adoption) ? null : { id: adoption.id, commit: adoption.commit };
+}
+
+function urlParentRow(rows: readonly string[][]): { readonly id: string; readonly commit: string; readonly fields: readonly string[] } | null {
+  const claimants = rows.filter(fields => fields[6] === TAG_CELL);
   if (claimants.length !== 1) return null;
   const fields = claimants[0]!;
   const [id, date, commitCell, changed, reason, revert, tag] = fields;
   const commit = commitCell?.slice(1, -1) ?? '';
   if (fields.length !== 7 || !/^A-[1-9][0-9]*$/u.test(id ?? '') || !/^\d{4}-\d{2}-\d{2}$/u.test(date ?? '')
-    || !COMMIT.test(commit) || commitCell !== `\`${commit}\`` || !reason || tag !== `\`${URL_PARENT_TAG}\``
+    || !COMMIT.test(commit) || commitCell !== `\`${commit}\`` || !reason || tag !== TAG_CELL
     || revert !== `\`git revert -m 1 ${commit}\``) return null;
   const root = `https://github.com/tzeusy-org/syzygy/blob/${commit}/`;
   if (!REVIEWED_SUBJECTS.every(([file]) => changed?.includes(`](${root}${file})`))) return null;
-  // Later decisions must identify the adoption or the subjects they affect.
-  // A newer, expressly linked decision leaves this exact reviewed version unavailable.
-  const adoption = new RegExp(`^\`?${id}\`?(?![A-Za-z0-9-])`, 'u');
-  for (const later of rows.slice(rows.indexOf(fields) + 1)) {
-    const action = /^(?:veto(?:es|ed)?|revert(?:s|ed)?|retire(?:s|d)?|reversion of|retirement of|supersede(?:s|d)?|amend(?:s|ed)?|replace(?:s|d)?|withdraw(?:s|n)?|revoke(?:s|d)?)\s+(?:of\s+)?(?:the\s+)?(?:adoption\s+)?(?:row\s+)?(.+)$/iu.exec(later[3] ?? '')?.[1];
+  return { id: id!, commit, fields };
+}
+
+function urlParentRetired(rows: readonly string[][], authority: { readonly id: string; readonly commit: string }): boolean {
+  // A decision targeting this exact reviewed version must remain effective
+  // even if the table is reordered.
+  const adoption = new RegExp(`^\`?${authority.id}\`?(?![A-Za-z0-9-])`, 'u');
+  for (const row of rows) {
+    if (row[0] === authority.id && row[6] === TAG_CELL) continue;
+    const action = /^(?:veto(?:es|ed)?|revert(?:s|ed)?|retire(?:s|d)?|reversion of|retirement of|supersede(?:s|d)?|amend(?:s|ed)?|replace(?:s|d)?|withdraw(?:s|n)?|revoke(?:s|d)?)\s+(?:of\s+)?(?:the\s+)?(?:adoption\s+)?(?:row\s+)?(.+)$/iu.exec(row[3] ?? '')?.[1];
     if (action === undefined) continue;
     const target = /^(?:`([^`]+)`|\[.+?\]\(https:\/\/github\.com\/tzeusy-org\/syzygy\/blob\/[0-9a-f]{40}\/(.+?)\)|([^\s,;]+))/u.exec(action);
     const subject = target?.[1] ?? target?.[2] ?? target?.[3];
-    if (adoption.test(action) || (subject !== undefined && /^[a-f0-9]{7,64}$/u.test(subject) && commit.startsWith(subject))
-      || subject === URL_PARENT_TAG || REVIEWED_SUBJECTS.some(([file]) => subject === file)) return null;
+    if (adoption.test(action) || (subject !== undefined && /^[a-f0-9]{7,64}$/u.test(subject) && authority.commit.startsWith(subject))
+      || subject === URL_PARENT_TAG || REVIEWED_SUBJECTS.some(([file]) => subject === file)) return true;
   }
-  return { id: id!, commit };
+  return false;
 }
 
 function installedClausesMatch(reviewed: string, read: (file: string) => string): boolean {
@@ -179,8 +190,11 @@ export function readUrlParentAdoption(
       if (text === undefined) throw new Error('URL parent text');
       return text;
     };
-    const record = show(defaultCommit, URL_PARENT_RECORD), authority = findUrlParentAdoption(utf8(record));
-    if (authority?.commit !== landedCommit || (previous !== undefined && previous.rowId !== authority.id)) return null;
+    const currentRows = ledgerRows(utf8(show(defaultCommit, URL_PARENT_RECORD)));
+    if (currentRows === null) return null;
+    const authority = urlParentRow(currentRows);
+    if (authority?.commit !== landedCommit || urlParentRetired(currentRows, authority)
+      || (previous !== undefined && previous.rowId !== authority.id)) return null;
     const historyStart = previous?.defaultCommit ?? landedCommit;
     const interval = `${historyStart}..${defaultCommit}`;
     const changed = (limit: number, paths: readonly string[]): string[] => {
@@ -191,16 +205,20 @@ export function readUrlParentAdoption(
     };
     if (changed(1, REVIEWED_SUBJECTS.map(([file]) => file)).length !== 0) return null;
     const ledgerRevisions = changed(MAX_PARENT_REVISIONS + 1, [URL_PARENT_RECORD]);
-    let governingRows = ledgerRows(utf8(show(historyStart, URL_PARENT_RECORD)));
-    if (ledgerRevisions.length > MAX_PARENT_REVISIONS || governingRows === null) return null;
-    for (const commit of ledgerRevisions.reverse()) {
-      const document = utf8(show(commit, URL_PARENT_RECORD));
-      const nextRows = ledgerRows(document);
-      if (nextRows === null || governingRows.some((row, index) =>
-        row.some((cell, column) => cell !== nextRows[index]?.[column]))) return null;
-      if (nextRows.some(row => row[6] === `\`${URL_PARENT_TAG}\``) && findUrlParentAdoption(document)?.commit !== landedCommit) return null;
-      governingRows = nextRows;
+    if (ledgerRevisions.length > MAX_PARENT_REVISIONS) return null;
+    let seen = previous !== undefined;
+    for (const commit of [historyStart, ...ledgerRevisions.reverse()]) {
+      const rows = ledgerRows(utf8(show(commit, URL_PARENT_RECORD)));
+      if (rows === null || urlParentRetired(rows, authority)) return null;
+      if (!rows.some(row => row[6] === TAG_CELL)) {
+        if (seen) return null;
+        continue;
+      }
+      const adoption = urlParentRow(rows);
+      if (adoption === null || adoption.fields.some((field, index) => field !== authority.fields[index])) return null;
+      seen = true;
     }
+    if (!seen) return null;
     const subjects: { path: string; sha256: string }[] = [];
     for (const [file, digest] of REVIEWED_SUBJECTS) {
       if (sha256(show(landedCommit, file)) !== digest || sha256(show(defaultCommit, file)) !== digest) return null;

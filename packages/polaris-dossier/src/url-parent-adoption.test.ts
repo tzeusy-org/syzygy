@@ -33,9 +33,11 @@ describe('URL parent adoption record', () => {
     expect(findUrlParentAdoption(`# Agent adoptions\n\n<pre>\n${ledger(row)}</pre>\n`)).toBeNull();
   });
 
-  it('honors a later explicit veto even with the original tagged row and subjects present', () => {
-    const later = (action: string): string => ledger(`${row}\n| A-16 | 2026-11-22 | \`bbb0000\` | ${action} | Test case | — | — |`);
+  it('honors an explicit veto even with the original tagged row and subjects present', () => {
+    const entry = (action: string) => `| A-16 | 2026-11-22 | \`bbb0000\` | ${action} | Test case | — | — |`;
+    const later = (action: string): string => ledger(`${row}\n${entry(action)}`);
     expect(findUrlParentAdoption(later('Veto A-15 at the owner’s direction'))).toBeNull();
+    expect(findUrlParentAdoption(ledger(`${entry('Veto A-15 at the owner’s direction')}\n${row}`))).toBeNull();
     expect(findUrlParentAdoption(later('Retire \`aaaaaaa\`'))).toBeNull();
     expect(findUrlParentAdoption(later(`Revert ${subjects[2][1]}`))).toBeNull();
     expect(findUrlParentAdoption(later('Document the results observed after A-15'))).toEqual({ id: 'A-15', commit });

@@ -862,15 +862,14 @@ describe('prepared private CLI launch',()=>{
     const host = await f.start({ beforeTool: () => heldTool });
     const retained = 'own-retained-dir-entry';
     const enumerated = new Set<string>();
-    let rootOpens = 0, childRemovals = 0, inspectedRetainedAfterRetry = false;
+    let rootOpens = 0, childRemovals = 0;
+    let inspectedRetainedAfterRetry!: (observed: true) => void;
+    const retryObserved = new Promise<true>(resolve => { inspectedRetainedAfterRetry = resolve; });
     filesystem.beforeLstat = async file => {
       if (typeof file !== 'string' || !file.startsWith('/proc/self/fd/')) return;
       const name = path.basename(file);
       if (names.has(name)) enumerated.add(name);
-      if (name === retained && rootOpens > 1) {
-        inspectedRetainedAfterRetry = true;
-        if (outcome === 'exited') releaseTool();
-      }
+      if (name === retained && rootOpens > 1) inspectedRetainedAfterRetry(true);
     };
     filesystem.beforeOpen = async file => {
       if (file === work) {
@@ -892,13 +891,16 @@ describe('prepared private CLI launch',()=>{
       ...host, close: () => { releaseTool(); return host.close(); },
     } });
     cleanup.push(child.stop);
+    if (outcome === 'exited') {
+      expect(await Promise.race([retryObserved, child.finished.then(() => false)])).toBe(true);
+      expect(await child.waitForSample()).toBe(true);
+      releaseTool();
+    }
     const result = await child.finished;
     expect(childRemovals).toBe(removed);
     expect(result).toMatchObject({ outcome, exitCode: outcome === 'exited' ? 0 : null,
       groupTermination: 'confirmed', toolTermination: 'settled' });
-    if (outcome === 'exited') {
-      expect(rootOpens).toBeGreaterThanOrEqual(rootReads);
-      expect(inspectedRetainedAfterRetry).toBe(true);
-    } else expect(rootOpens, JSON.stringify(result)).toBe(rootReads);
+    if (outcome === 'exited') expect(rootOpens).toBeGreaterThanOrEqual(rootReads);
+    else expect(rootOpens, JSON.stringify(result)).toBe(rootReads);
   }, 60_000);
 });
