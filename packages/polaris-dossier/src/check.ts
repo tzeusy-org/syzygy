@@ -13,7 +13,8 @@ import { reverifyPinnedRevision } from './reverify.js';
 import { poleLimitOf, type RunConfig } from './run-config.js';
 import { placementSubjectOf, screenLoaderOf } from './screen.js';
 import { REVISION_FILE, RUN_ID, RUN_LAYOUT } from './state-directory.js';
-import { readerAdvice, type ReaderAdvice } from './reader-advice.js';
+import { figureFitClass, readerAdvice, type ReaderAdvice } from './reader-advice.js';
+import { RUN_ADVICE_FILE, computeRunAdvice, mechanismEntries, writeRunAdvice } from './run-advice.js';
 import { figureFit, type FigureFit } from './figure-fit.js';
 import { readingDifference, readingLedger, type ReadingDifference, type ReadingLedger } from './reading-ledger.js';
 import { reviewReachAdvice, type ReviewReachAdvice } from './review-reach.js';
@@ -21,10 +22,10 @@ import { screenCensusReport, withheldCensus, type ScreenCensusReport } from './c
 import { deriveStructure, deriveTreeFacts, structureUnknown, type StructureRecord } from './derive.js';
 import { derivedRecordFile, encodeDerivedRecord, secretPathOf } from './derived-record.js';
 import { MANIFEST_BLOB_LIMIT, deriveManifestFacts, manifestFactsUnknown, type ManifestFacts } from './manifest-facts.js';
-import { BRIEF_JSON_LIMITS, CHECK_RECORD_FORMAT, type CheckCommand, type CheckDeps, type CheckFinding, type CheckRecord, type CheckRefusal, type CheckRequest, type CheckResult, type CheckStage, type CitedBlob, DEFAULT_DRAFT, DISCLOSURES, DRAFT_JSON_LIMITS, DRAFT_MAX_BYTES, type ExcludedQuotation, type ReviewVisibility, STEP_LOG_FORMAT, type VerifiedQuotation, errno, reviewVisibility, text } from './check-model.js';
+import { BRIEF_JSON_LIMITS, CHECK_RECORD_FORMAT, type CheckCommand, type CheckDeps, type CheckFinding, type CheckRecord, type CheckRefusal, type CheckRequest, type CheckResult, type CheckStage, type CitedBlob, DEFAULT_DRAFT, DISCLOSURES, DRAFT_JSON_LIMITS, DRAFT_MAX_BYTES, type ExcludedQuotation, type MechanismAdvice, type ReviewVisibility, STEP_LOG_FORMAT, type VerifiedQuotation, errno, reviewVisibility, text } from './check-model.js';
 import { type Derived, type SubjectRules, deriveFindings, draftRules } from './check-derive.js';
 export { CHECK_RECORD_FORMAT, STEP_LOG_FORMAT, DEFAULT_DRAFT, DRAFT_MAX_BYTES, reviewVisibility, lineRanges, blobRedaction } from './check-model.js';
-export type { CheckFindingKind, CheckFinding, VerifiedQuotation, ExcludedQuotation, ReviewVisibility, CitedBlob, BlobRedaction, CheckStage, CheckCommand, CheckRefusal, CheckRecord, CheckReport, CheckResult, CheckRequest, CheckDeps } from './check-model.js';
+export type { MechanismAdvice, CheckFindingKind, CheckFinding, VerifiedQuotation, ExcludedQuotation, ReviewVisibility, CitedBlob, BlobRedaction, CheckStage, CheckCommand, CheckRefusal, CheckRecord, CheckReport, CheckResult, CheckRequest, CheckDeps } from './check-model.js';
 export { deriveFindings, draftRules, collectBlocks, collectCitations } from './check-derive.js';
 export type { Derived, DeriveInputs, SubjectBlock, SubjectRules, Citation } from './check-derive.js';
 
@@ -94,7 +95,7 @@ export interface SubjectPlan<R extends object, G> {
 
 /** `screenCensus` (`census.ts`), `structureRecord` (`derive.ts`), `readerAdvice` (`reader-advice.ts`) and `reviewReach` (`review-reach.ts`) are on `check`'s report only: advice to the author, never written
  * to the check record and never a finding. */
-export type SubjectReport<R extends object> = R & { readonly command: CheckCommand; readonly run: string; readonly checkFile: string; readonly disclosures: readonly string[]; readonly screenCensus?: ScreenCensusReport; readonly structureRecord?: StructureRecord; readonly readerAdvice?: ReaderAdvice; readonly figureFit?: FigureFit; readonly readingLedger?: ReadingLedger; readonly readingDifference?: ReadingDifference; readonly reviewReach?: ReviewReachAdvice; readonly reviewVisibility?: ReviewVisibility };
+export type SubjectReport<R extends object> = R & { readonly command: CheckCommand; readonly run: string; readonly checkFile: string; readonly disclosures: readonly string[]; readonly screenCensus?: ScreenCensusReport; readonly structureRecord?: StructureRecord; readonly readerAdvice?: ReaderAdvice; readonly figureFit?: FigureFit; readonly readingLedger?: ReadingLedger; readonly readingDifference?: ReadingDifference; readonly reviewReach?: ReviewReachAdvice; readonly reviewVisibility?: ReviewVisibility; readonly mechanismAdvice?: MechanismAdvice };
 export type SubjectResult<R extends object> = Outcome<SubjectReport<R>, CheckRefusal>;
 
 const DRAFT_PLAN: SubjectPlan<CheckRecord, null> = {
@@ -312,6 +313,17 @@ export async function checkSubject<R extends object, G>(runDir: string, file: st
     return refuse('write', `${noun === 'draft' ? '' : `${noun} `}revision ${revision} was frozen, but its result could not be written to ${path.relative(run, checkFile)} (${errno(cause)})`);
   }
   log({ outcome, revision, findings: findings.length });
+  // Advice no author can act on (version 2.9, syzygy-3efd.64): after its check record, a draft check writes the run file from the run's
+  // check records, in place of any earlier one; a failure to write it changes no outcome and no record. The check record keeps every entry.
+  let mechanismAdvice: MechanismAdvice | undefined;
+  if (plan.command === 'check') {
+    const runAdvice = computeRunAdvice(run, runId);
+    let written = true;
+    try { writeRunAdvice(run, runAdvice); } catch { written = false; }
+    mechanismAdvice = { file: written ? RUN_ADVICE_FILE : null, thisRevision: mechanismEntries(stored).length, inRun: runAdvice.occurrences };
+  }
+  // Check's report carries only `author`-class advice: its `figureFit` leaves out every `mechanism` entry, `examined` unchanged.
+  const reportFit = fit === undefined ? {} : { figureFit: { ...fit, entries: fit.entries.filter((entry) => figureFitClass(entry) === 'author') } };
   const disclosures = credential.required ? [...plan.disclosures, CREDENTIAL_CHECK_DISCLOSURE] : plan.disclosures;
   const visibility = reviewVisibility(citedBlobs, screen.contentClass, checked.contentClasses);
   // The difference from the previous run of this repository: computed now from the state root, never written to any file.
@@ -320,7 +332,7 @@ export async function checkSubject<R extends object, G>(runDir: string, file: st
   const reach = plan.command === 'check' && parseFault === null
     ? reviewReachAdvice(doc, { citedBlobs, admitted, screen, consented: checked.contentClasses }) : undefined;
   return { ok: true, report: {
-    command: plan.command, run, checkFile, ...stored, disclosures, ...(screenCensus === undefined ? {} : { screenCensus }),
+    command: plan.command, run, checkFile, ...stored, ...reportFit, ...(mechanismAdvice === undefined ? {} : { mechanismAdvice }), disclosures, ...(screenCensus === undefined ? {} : { screenCensus }),
     ...(structureRecord === undefined ? {} : { structureRecord }),
     ...(advice === undefined ? {} : { readerAdvice: advice }), ...(difference === undefined ? {} : { readingDifference: difference }), ...(reach === undefined ? {} : { reviewReach: reach }),
     ...(visibility === null ? {} : { reviewVisibility: visibility }),

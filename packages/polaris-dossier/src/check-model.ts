@@ -207,7 +207,13 @@ export interface CheckReport extends CheckRecord {
   readonly reviewReach?: ReviewReachAdvice;
   /** The cited files withheld from the review session, by screening or the class gate (`reviewVisibility`); on the report, never the record. */
   readonly reviewVisibility?: ReviewVisibility;
+  /** Version 2.9 (syzygy-3efd.64): how many `mechanism`-class figure-fit entries this revision's record holds, which the report's
+   * `figureFit` leaves out, and how many the run file counts (`run-advice.ts`); on the report, never the record. */
+  readonly mechanismAdvice?: MechanismAdvice;
 }
+
+/** `file` is null where the run file could not be written, `inRun` then the count this check computed for it. */
+export interface MechanismAdvice { readonly file: 'run-advice.json' | null; readonly thisRevision: number; readonly inRun: number }
 
 export type CheckResult = Outcome<CheckReport, CheckRefusal>;
 
