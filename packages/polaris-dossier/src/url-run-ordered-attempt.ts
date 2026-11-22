@@ -92,10 +92,14 @@ export async function startUrlOrderedAttempt(input: UrlOrderedAttemptOptions) {
     input.work.observeProtectedRead(bytes);
     controller?.reportAuditRead(bytes);
   };
+  const assertProcessingCurrent = (): void => {
+    if (closed || sessionMachineEffectCurrent() === false || delivery === null || render === null
+      || !input.budget.current() || !input.machine.current()) throw refused();
+  };
   const assertCurrent = (): void => {
-    if (closed || sessionMachineEffectCurrent() === false || delivery === null || render === null || !input.budget.current() || !input.machine.current()
-      || !isUrlDesignProductLeaseOpen(render.product)) throw refused();
-    assertUrlDesignDeliveryViewCurrent(delivery);
+    assertProcessingCurrent();
+    if (!isUrlDesignProductLeaseOpen(render!.product)) throw refused();
+    assertUrlDesignDeliveryViewCurrent(delivery!);
   };
   const current = async (): Promise<boolean> => {
     if (closed || !(await input.current()) || sessionMachineEffectCurrent() === false || !input.machine.current()) return false;
@@ -217,7 +221,7 @@ export async function startUrlOrderedAttempt(input: UrlOrderedAttemptOptions) {
       screening: { kind: 'bounded-worker', program, policyBytes: input.policyBytes, planInput },
       work: { runtimeSha256: input.runtime.inputTreeSha256, enforcement, remainingRunCpuMicroseconds: input.work.remainingCpuMicroseconds,
         cpuMicroseconds: input.work.cpuMicroseconds, chargeScreenCpuMicroseconds: input.work.chargeScreenCpuMicroseconds },
-      relay: () => host?.relay, envelope: () => { assertCurrent(); return delivery!.view; }, current, assertCurrent,
+      relay: () => host?.relay, envelope: () => { assertCurrent(); return delivery!.view; }, current, assertCurrent, assertProcessingCurrent,
       stageVerdict: async ({ stdin, completion, assertCurrent: boundary }) => {
         assertSessionMachineEffectCurrent();
         boundary();

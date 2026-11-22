@@ -66,7 +66,7 @@ beforeAll(async () => {
     bridgeSha256: sha256(support.get('support/session-bridge.js')!), mcpSha256: sha256(support.get('design-support/session-mcp.js')!) }));
 });
 
-async function fixture() {
+async function fixture(guards: Partial<Pick<Parameters<typeof createOrderedDesignSession>[0], 'current' | 'assertCurrent' | 'assertProcessingCurrent'>> = {}) {
   const suffix = ++sequence, deadline = Date.now() + 3_600_000;
   const compiled = createOrderedDesignSessionProfile({ binding: { run: RUN, role: 'design', sourceBinding: sha256(`owned source ${suffix}`),
     policy: sha256(V8), provider: 'anthropic', model: DEFAULT_SESSION_MODEL }, sessionId: '12345678-1234-4234-8234-123456789012',
@@ -116,7 +116,7 @@ async function fixture() {
       operations: { request: operation, response: operation, tool: operation, audit: operation, terminal: operation }, relayMilliseconds: 180_000, brokerMilliseconds: 85_000 },
       cpuMicroseconds: workCpu,
       remainingRunCpuMicroseconds: () => cpuBound - chargedCpu(), chargeScreenCpuMicroseconds: value => { if (chargedCpu() + value > cpuBound) throw new Error('owned screen CPU capacity unavailable'); workerCpu += value; } },
-    relay: () => host?.relay, envelope: () => envelope, current: () => true, assertCurrent: () => {}, stageVerdict: async ({ stdin, assertCurrent }) => {
+    relay: () => host?.relay, envelope: () => envelope, current: () => true, assertCurrent: () => {}, ...guards, stageVerdict: async ({ stdin, assertCurrent }) => {
       assertCurrent();
       const verdict = JSON.parse(stdin);
       if (validateDesignVerdict(verdict, packet, 'a'.repeat(40), new Set()).length !== 0) return null;
@@ -157,6 +157,46 @@ async function fixture() {
 }
 
 async function absent(file: string) { await expect.poll(async () => { try { await access(file); return false; } catch { return true; } }, { timeout: 5000 }).toBe(true); }
+describe('bounded processing and protected result validation', () => {
+  it.each(['renewed', 'changed', 'revoked'] as const)('requires a fresh result proof after processing: %s', async scenario => {
+    let fullChecks = 0, processingChecks = 0, refreshes = 0, proofCurrent = true;
+    const f = await fixture({
+      current: () => {
+        refreshes++;
+        if (scenario === 'changed' && processingChecks > 0) return false;
+        proofCurrent = true;
+        return true;
+      },
+      assertCurrent: () => { fullChecks++; if (!proofCurrent) throw new Error('owned product proof expired'); },
+      assertProcessingCurrent: () => {
+        processingChecks++;
+        proofCurrent = false;
+        if (scenario === 'revoked' && processingChecks >= 20) throw new Error('owned processing authority revoked');
+      },
+    });
+    await f.start(); f.activate(f.controller);
+    const { tool_choice: _toolChoice, ...baseline } = f.profile.baseline;
+    const initial = Buffer.from(canonical({ ...baseline,
+      metadata: { user_id: JSON.stringify({ device_id: 'b'.repeat(64), account_uuid: '', session_id: f.profile.input.sessionId }) },
+      messages: [f.profile.initialMessage] }));
+    const checked = f.controller.checkRequest(initial);
+    if (scenario === 'renewed') {
+      expect(await checked).toMatchObject({ ok: true });
+      expect(proofCurrent).toBe(true);
+      expect(refreshes).toBeGreaterThanOrEqual(2);
+      expect(f.workerCpu()).toBe(18_000_000);
+    } else {
+      await expect(checked).rejects.toThrow('url-ordered-design-session-refused');
+      expect(f.workerCpu()).toBe(scenario === 'revoked' ? 0 : 18_000_000);
+    }
+    expect(processingChecks).toBeGreaterThan(10);
+    // Full physical product validation belongs at the operation boundaries,
+    // rather than once for every 65 KiB of the trusted runtime image.
+    expect(fullChecks).toBeLessThan(10);
+    expect(f.callbacks()).toBe(0);
+  });
+});
+
 describe('production ordered host activation', () => {
   it('binds native prepared listeners before activation and gates terminal access until the genuine bounded controller arrives', async () => {
     const f = await fixture(), host = await f.start();

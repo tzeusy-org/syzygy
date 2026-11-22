@@ -59,6 +59,10 @@ interface Options {
   readonly current: () => boolean | Promise<boolean>;
   /** Recheck protected authority and any held input lease at the send/release edge. */
   readonly assertCurrent: () => void;
+  /** Cheap revocation and machine guard while the trusted worker processes held
+   * immutable bytes. Full protected-input validation still gates its entry and
+   * result. Omit to use assertCurrent throughout. */
+  readonly assertProcessingCurrent?: () => void;
   /** Validate and stage this exact submission through the ordinary checked producer. */
   readonly stageVerdict: (input: { readonly stdin: string; readonly call: Call; readonly completion: OrderedDesignAuditReference;
     readonly assertCurrent: () => void }) => Promise<string | null>;
@@ -122,13 +126,19 @@ export function createOrderedDesignSession(options: Options) {
     if (actual === undefined || (selectedRelay !== undefined && actual !== selectedRelay)) throw refused();
     return selectedRelay ??= actual;
   };
-  const requireLive = (): void => {
+  const requireAuthority = (): void => {
     if (stopped || (workBudget !== null && !workBudget.current()) || !selected().healthy() || !(Date.now() < deadline)
       || !(budgetReservation === null ? budget.current() : budgetReservation.current())) throw refused();
-    assertCurrent();
+  };
+  const requireLive = (): void => { requireAuthority(); assertCurrent(); };
+  const requireProcessingCurrent = (): void => {
+    requireAuthority();
+    (options.assertProcessingCurrent ?? assertCurrent)();
   };
   const requireCurrent = async (): Promise<void> => {
-    requireLive();
+    requireAuthority();
+    // The genuine current port may reproduce an expired short-lived product.
+    // No result is released until its replacement passes the full check.
     if (await current() !== true) throw refused();
     requireLive();
   };
@@ -211,7 +221,7 @@ export function createOrderedDesignSession(options: Options) {
     if (screening.kind === 'bounded-worker') {
       if (input.operation === 'request' && !('planInput' in input)) throw refused();
       const result = await runOrderedDesignScreen({ program: screening.program, input, deadlineEpochMilliseconds: boundary.expires,
-        current: () => { try { requireLive(); boundary.check(); return true; } catch { return false; } },
+        current: () => { try { requireProcessingCurrent(); boundary.check(); return true; } catch { return false; } },
         chargeCpuMicroseconds: value => { work.chargeScreenCpuMicroseconds(value); workBudget?.current(); boundary.check(); } });
       workBudget?.current();
       boundary.check();
@@ -234,9 +244,11 @@ export function createOrderedDesignSession(options: Options) {
       counts, branches, inverseInputs, selfCpuMicrosecondsBeforeOutput: 0, outcome };
   };
   const screenOperation = async (input: ScreenInput): Promise<OrderedScreenObservation> => {
+    await requireCurrent();
     const boundary = openOperation(input.operation === 'response' ? 'response' : 'request', Math.max(0, receipts.length - 1));
     try {
       const observed = await screen(input, boundary);
+      await requireCurrent();
       if (observed.outcome.operation !== input.operation || !Array.isArray(observed.inverseInputs) || observed.inverseInputs.length > 2) throw refused();
       if (input.operation === 'request' && observed.outcome.result.ok && observed.inverseInputs.length !== 2) throw refused();
       const cap = work.enforcement.operations[input.operation === 'response' ? 'response' : 'request'];
