@@ -823,14 +823,17 @@ export function renderDossierSite(input: DossierSiteInput & { readonly local?: L
 
   // --- the computed map pages (version 2.9), after the sources and before the run's own pages: each its own style rules, which no other page
   // carries, with one container query for each width its figures take.
-  let mapFigures: { readonly directories: number; readonly units: number; readonly ci: number } | undefined;
+  let mapFigures: { readonly directories: number; readonly units: number; readonly ci: number; readonly infrastructure: number } | undefined;
   if (maps !== undefined) {
-    const drawn = { directories: directoryMap(maps.derived), units: unitMap(maps.manifests, maps.derived), ci: ciMap(maps.manifests, maps.derived) };
+    const drawn = {
+      directories: directoryMap(maps.derived, maps.manifests), units: unitMap(maps.manifests, maps.derived), ci: ciMap(maps.manifests, maps.derived),
+      infrastructure: infrastructureMap(maps.manifests, maps.derived),
+    };
     for (const m of COMPUTED_MAPS) {
       const map = drawn[m.map];
       add(m.path, 1, m.title, map.main, map.figures === 0 ? '' : `${MAP_FORMS_CSS}${[...new Set(map.widths)].sort((a, b) => a - b).map(mapWidthQuery).join('')}`);
     }
-    mapFigures = { directories: drawn.directories.figures, units: drawn.units.figures, ci: drawn.ci.figures };
+    mapFigures = { directories: drawn.directories.figures, units: drawn.units.figures, ci: drawn.ci.figures, infrastructure: drawn.infrastructure.figures };
   }
 
   // --- the operator-agent run's own pages: understanding, discovery, clarifications, executions, review
@@ -1074,11 +1077,13 @@ function derivedMachine(derived: LocalDerivedStructure): unknown {
 // the readable layout at most two columns wide and holds at most 25 boxes, so a large map is several figures, never one shrunk drawing; each
 // has a drawing and a text form, of which a container size query on its `map-forms` box shows one, with no script.
 
-/** The three map pages, their titles and their `data-map` names, in the order the region's line and the contents page link them. */
-export const COMPUTED_MAPS: readonly { readonly map: 'directories' | 'units' | 'ci'; readonly path: string; readonly title: string }[] = [
+/** The four map pages (the fourth since version 2.12), their titles and their `data-map` names, in the order the region's line and the
+ * contents page link them. */
+export const COMPUTED_MAPS: readonly { readonly map: 'directories' | 'units' | 'ci' | 'infrastructure'; readonly path: string; readonly title: string }[] = [
   { map: 'directories', path: 'maps/directories.html', title: 'Directory map' },
   { map: 'units', path: 'maps/units.html', title: 'Unit map' },
   { map: 'ci', path: 'maps/ci.html', title: 'CI pipeline map' },
+  { map: 'infrastructure', path: 'maps/infrastructure.html', title: 'Infrastructure map' },
 ];
 
 /** The region's closing line: it links each map by its title. */
@@ -1164,9 +1169,11 @@ const derivedIdAttributes = (fact: LocalDerivedFact): string => ` data-derived-i
 interface MapPage { readonly main: string; readonly widths: readonly number[]; readonly figures: number }
 const mapSection = (map: string, title: string, body: string): string => `<section id="computed-map" data-map="${map}" data-reading-level="1" data-topics=""><h1>${escape(title)}</h1>${body}</section>`;
 
-/** The directory map: the derived structure the region states, with the coverage the render re-derives from the tree. */
-export function directoryMap(derived: LocalDerivedStructure): MapPage {
-  if (derived.state !== 'derived') return { main: mapSection('directories', 'Directory map', derivedUnknownSentence(derived)), widths: [], figures: 0 };
+/** The directory map: the derived structure the region states, with the coverage the render re-derives from the tree, and after it the
+ * render's member's coverage remainder (version 2.12), which rests on the member alone. */
+export function directoryMap(derived: LocalDerivedStructure, member: LocalManifestFacts): MapPage {
+  const remainder = coverageRemainder(member, derived.revision);
+  if (derived.state !== 'derived') return { main: `${mapSection('directories', 'Directory map', derivedUnknownSentence(derived))}${remainder}`, widths: [], figures: 0 };
   const t = derived.tree;
   const root = derived.facts.find(fact => fact.fact === 'tree-root')!;
   const notListedFiles = t.files - t.rootFiles - t.unitFiles - t.secretPathsLeftOut;
@@ -1191,14 +1198,36 @@ export function directoryMap(derived: LocalDerivedStructure): MapPage {
     return mapFigure('directories', `map-directories-${k + 1}`, `Top-level directories ${k * MAP_CHUNK + 1} to ${k * MAP_CHUNK + chunk.length} of ${units.length}, by path`, boxes, arrows);
   });
   return {
-    main: mapSection('directories', 'Directory map', `${derivedNote(derived)}${coverage}${figures.map(f => f.html).join('')}<h2>Every derived fact</h2><ul class="derived-facts">${derivedEntries(derived)}</ul>`),
+    main: `${mapSection('directories', 'Directory map', `${derivedNote(derived)}${coverage}${figures.map(f => f.html).join('')}<h2>Every derived fact</h2><ul class="derived-facts">${derivedEntries(derived)}</ul>`)}${remainder}`,
     widths: figures.map(f => f.width), figures: figures.length,
   };
 }
 
-/** The four package recognizers the unit map reads, and the one the CI pipeline map reads. */
+/** `<rules>` in words: separated by commas, the last by ` and `. */
+const ruleList = (rules: readonly string[]): string => (rules.length <= 1 ? rules.join('') : `${rules.slice(0, -1).join(', ')} and ${rules[rules.length - 1]}`);
+
+/** The directory map page's `coverage-remainder` section (version 2.12): what no rule read for facts, as the render's member counts it. Its
+ * items carry no epistemic mark: they are Syzygy's counts of what its rules claimed, never claims about the files counted. */
+function coverageRemainder(member: LocalManifestFacts, revision: string): string {
+  const open = '<section id="coverage-remainder" data-reading-level="1" data-topics=""><h2>What no rule read for facts</h2>';
+  if (member.state !== 'derived') {
+    return `${open}<p class="derived-unknown" data-epistemic="unknown" data-unknown-reason="source-uncaptured-or-unreachable"><span class="not-established">Not established.</span> ${escape(`Which files at revision ${revision} no rule read for facts is Unknown at this render: the pinned tree could not be listed.`)}</p></section>`;
+  }
+  const r = member.remainder;
+  const line = `Files in the tree at revision ${revision}: ${r.files}. Candidates of a manifest or infrastructure rule, counted on the unit, CI pipeline and infrastructure maps whether read or not: ${r.candidates}. `
+    + `Left out and not named, because a secret detector matches their path: ${r.secretPathsLeftOut}. Candidates of no rule, from which Syzygy took no declared fact, whatever they hold: ${r.notCandidates}. `
+    + `The rules are ${ruleList(member.recognizers.map(entry => entry.rule))}, each at version 1.`;
+  const items = r.places.map(place => (place.place === null
+    ? `<li data-remainder-place=".">${escape(`Repository root: files ${place.files}; candidates of no rule ${place.notCandidates}.`)}</li>`
+    : `<li data-remainder-place="${escape(place.place)}">${escape(`${place.place}/: files ${place.files}; candidates of no rule ${place.notCandidates}.`)}</li>`)).join('')
+    + (r.placesNotListed === 0 ? '' : `<li>${escape(`More top-level directories, counted and not listed: ${r.placesNotListed}; their files ${r.filesInPlacesNotListed}; candidates of no rule among them ${r.notCandidatesInPlacesNotListed}.`)}</li>`);
+  return `${open}<p class="map-coverage" data-epistemic="inferred">${escape(line)}</p><ul class="map-remainder">${items}</ul></section>`;
+}
+
+/** The four package recognizers the unit map reads, the one the CI pipeline map reads, and the five the infrastructure map reads. */
 export const UNIT_MAP_RULES: readonly string[] = ['npm-package-manifest', 'cargo-manifest', 'python-project-manifest', 'go-module-manifest'];
 export const CI_MAP_RULES: readonly string[] = ['github-actions-workflow'];
+export const INFRA_MAP_RULES: readonly string[] = ['compose-file', 'kubernetes-manifest', 'terraform-configuration', 'makefile', 'cmake-lists'];
 
 /** RFC2-24's reason for each file `unknownReason`. */
 const MANIFEST_UNKNOWN_REASON: Readonly<Record<string, string>> = {
@@ -1228,6 +1257,18 @@ function factWords(fact: LocalManifestFact, jobs?: ReadonlySet<string>): string 
     case 'job': return `Job ${value(fact, 'job')}.`;
     case 'job-needs': return jobs !== undefined && !jobs.has(value(fact, 'to'))
       ? `Job ${value(fact, 'from')} needs ${value(fact, 'to')}, which names no job of this file.` : `Job ${value(fact, 'from')} needs ${value(fact, 'to')}.`;
+    // Version 2.12.
+    case 'service': return `Service ${value(fact, 'service')}.`;
+    case 'service-image': return `Service ${value(fact, 'service')} names image ${value(fact, 'image')}.`;
+    case 'service-port': return `Service ${value(fact, 'service')} declares port ${value(fact, 'port')}.`;
+    case 'service-depends-on': return `Service ${value(fact, 'from')} depends on ${value(fact, 'to')}.`;
+    case 'kubernetes-object': return typeof fact['name'] === 'string'
+      ? `Kubernetes object of kind ${value(fact, 'kind')} named ${fact['name']}.` : `Kubernetes object of kind ${value(fact, 'kind')} with no name.`;
+    case 'terraform-resource': return `Terraform resource ${value(fact, 'type')} named ${value(fact, 'name')}.`;
+    case 'terraform-module': return `Terraform module ${value(fact, 'name')} from source ${value(fact, 'source')}.`;
+    case 'make-target': return `Make target ${value(fact, 'target')}.`;
+    case 'cmake-project': return `CMake project ${value(fact, 'name')}.`;
+    case 'cmake-target': return `CMake ${value(fact, 'targetKind')} target ${value(fact, 'target')}.`;
     default: throw new DossierRenderError('not-renderable');
   }
 }
@@ -1239,15 +1280,16 @@ function factEntry(fact: LocalManifestFact, revision: string, jobs?: ReadonlySet
     + `${escape(factWords(fact, jobs))} <span class="derived-mark">Derived by Syzygy</span><span class="visually-hidden ev"> ${escape(`Evidence: label Inferred; declared in ${fact.path}, lines ${first} to ${last}; read by Syzygy by rule ${fact.rule} version ${fact.ruleVersion} at revision ${revision}.`)}</span></li>`;
 }
 
-const manifestUnknown = (revision: string): string => `<p class="derived-unknown" data-epistemic="unknown" data-unknown-reason="source-uncaptured-or-unreachable"><span class="not-established">Not established.</span> What the manifest files at revision ${escape(revision)} declare is Unknown at this render: the pinned tree could not be listed.</p>`;
+const manifestUnknown = (revision: string, files = 'manifest files'): string => `<p class="derived-unknown" data-epistemic="unknown" data-unknown-reason="source-uncaptured-or-unreachable"><span class="not-established">Not established.</span> What the ${files} at revision ${escape(revision)} declare is Unknown at this render: the pinned tree could not be listed.</p>`;
 
 type DerivedManifests = Extract<LocalManifestFacts, { state: 'derived' }>;
 const recognizersOf = (member: DerivedManifests, rules: readonly string[]): readonly LocalManifestRecognizerEntry[] => member.recognizers.filter(r => rules.includes(r.rule));
 
 /** A manifest map's note, coverage line (with `ending` appended) and closing list of Unknown files, around its own body. */
-function manifestPage(map: 'units' | 'ci', title: string, member: DerivedManifests, revision: string, rules: readonly string[], ruleWords: string, ending: string, body: string): string {
+function manifestPage(map: 'units' | 'ci' | 'infrastructure', title: string, member: DerivedManifests, revision: string, rules: readonly string[], ruleWords: string, ending: string, body: string): string {
   const recognizers = recognizersOf(member, rules);
-  const note = `<p class="map-note">Computed by Syzygy at this render from the manifest files of the tree at revision ${escape(revision)} that the bound screening policy ${escape(member.screeningPolicy.policyId)} ${escape(member.screeningPolicy.policyVersion)} admits, read by rule ${ruleWords}, each at version 1. That revision fixes every input, so the map holds as of that revision at any instant. What a file declares, never what runs.</p>`;
+  const files = map === 'infrastructure' ? 'infrastructure files' : 'manifest files';
+  const note = `<p class="map-note">Computed by Syzygy at this render from the ${files} of the tree at revision ${escape(revision)} that the bound screening policy ${escape(member.screeningPolicy.policyId)} ${escape(member.screeningPolicy.policyVersion)} admits, read by rule ${ruleWords}, each at version 1. That revision fixes every input, so the map holds as of that revision at any instant. What a file declares, never what runs.</p>`;
   const clauses = [
     ...recognizers.map(r => `${r.rule}: ${counted(r.candidates, 'candidate file', 'candidate files')}; ${r.inferred} read for facts, ${r.unknown} Unknown with no facts taken; ${r.secretPathsLeftOut} left out and not named, because a secret detector matches their path; ${r.setApart} set apart as vendored, generated or test paths; ${counted(r.valuesLeftOut, 'value', 'values')} left out by the value checks; ${counted(r.facts, 'fact', 'facts')}.`),
     ...recognizers.filter(r => r.filesNotListed !== 0).map(r => r.filesNotListed === 1 ? `1 file of ${r.rule} is counted and not listed.` : `${r.filesNotListed} files of ${r.rule} are counted and not listed.`),
@@ -1340,8 +1382,28 @@ export function ciMap(member: LocalManifestFacts, derived: LocalDerivedStructure
   return { main: manifestPage('ci', 'CI pipeline map', member, revision, CI_MAP_RULES, 'github-actions-workflow', '', body), widths, figures: widths.length };
 }
 
+/** The infrastructure map (version 2.12): the facts and file entries of the five infrastructure recognizers, rested on the render's member
+ * as the unit map and the CI pipeline map rest on it, with no figure. */
+export function infrastructureMap(member: LocalManifestFacts, derived: LocalDerivedStructure): MapPage {
+  const revision = derived.revision;
+  if (member.state !== 'derived') return { main: mapSection('infrastructure', 'Infrastructure map', manifestUnknown(revision, 'infrastructure files')), widths: [], figures: 0 };
+  const facts = member.facts.filter(fact => INFRA_MAP_RULES.includes(fact.rule));
+  const files = recognizersOf(member, INFRA_MAP_RULES).flatMap(r => r.files.filter(file => file.epistemic === 'inferred').map(file => ({ rule: r.rule, file })));
+  const list = files.map(({ rule, file }) => {
+    const own = facts.filter(fact => fact.rule === rule && fact.path === file.path);
+    return file.facts === 0
+      ? `<li data-manifest-path="${escape(file.path)}" data-epistemic="inferred">${escape(`${file.path}: no fact of the fields read.`)}</li>`
+      : `<li data-manifest-path="${escape(file.path)}" data-epistemic="inferred">${escape(`${file.path}: ${counted(file.facts ?? 0, 'fact', 'facts')}.`)}<ul>${own.map(fact => factEntry(fact, revision)).join('')}</ul></li>`;
+  }).join('');
+  const body = `<h2>Every declared fact</h2><ul class="map-facts">${list}</ul>`;
+  return {
+    main: manifestPage('infrastructure', 'Infrastructure map', member, revision, INFRA_MAP_RULES, ruleList(INFRA_MAP_RULES), 'No figure is drawn: no rule of this version draws one from these facts.', body),
+    widths: [], figures: 0,
+  };
+}
+
 /** `machine.json`'s `computedMaps` member: beside `derivedStructure` and outside `reviewStatus`. */
-export function computedMapsMachine(derived: LocalDerivedStructure, member: LocalManifestFacts, figures: { readonly directories: number; readonly units: number; readonly ci: number }): unknown {
+export function computedMapsMachine(derived: LocalDerivedStructure, member: LocalManifestFacts, figures: { readonly directories: number; readonly units: number; readonly ci: number; readonly infrastructure: number }): unknown {
   const derivedMember = member.state === 'derived' ? member : undefined;
   const of = (rules: readonly string[]): unknown => ({
     facts: derivedMember === undefined ? [] : derivedMember.facts.filter(fact => rules.includes(fact.rule)),
@@ -1355,8 +1417,10 @@ export function computedMapsMachine(derived: LocalDerivedStructure, member: Loca
       screeningPolicy: derivedMember === undefined ? null : derivedMember.screeningPolicy,
       recognizers: derivedMember === undefined ? [] : derivedMember.recognizers.map(({ files: _files, ...rest }) => rest),
       factsNotListed: derivedMember === undefined ? null : derivedMember.factsNotListed,
+      remainder: derivedMember === undefined ? null : derivedMember.remainder,
     },
     units: { figures: figures.units, ...(of(UNIT_MAP_RULES) as object) },
     ci: { figures: figures.ci, ...(of(CI_MAP_RULES) as object) },
+    infrastructure: { figures: figures.infrastructure, ...(of(INFRA_MAP_RULES) as object) },
   };
 }
