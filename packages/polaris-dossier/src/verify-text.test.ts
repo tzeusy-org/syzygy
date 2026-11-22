@@ -137,7 +137,7 @@ describe('extraction', () => {
     ]);
   });
   it('takes no URL, absolute path, glob, bare extension, directory, abbreviation or unknown bare name as a path', () => {
-    expect(referencesIn('see https://example.org/x/y.html, /etc/redis.conf, `*.c`, the `.c` files, `tests/unit`, e.g. this, and obj.encoding')).toEqual([]);
+    expect(referencesIn('see https://example.org/x/y.html, www.example.org/a.html, git@host.example/src/a.c, /etc/redis.conf, `*.c`, `*_test.c`, the `.c` files, `tests/unit`, e.g. this, and obj.encoding')).toEqual([]);
   });
   it('merges repeated mentions of one path', () => {
     expect(referencesIn('`src/a.c:1` and later src/a.c:2 and src/a.c')).toEqual([{ path: 'src/a.c', ranges: [{ start: 1, end: 1 }, { start: 2, end: 2 }] }]);
