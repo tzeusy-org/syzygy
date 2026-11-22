@@ -609,13 +609,21 @@ describe('check: reading ledger', () => {
 });
 
 describe('check: manifest facts (REQ-polaris-generation-034 version 2.7, syzygy-3efd.25)', () => {
-  // The fixture tree declares no manifest, so each of the five recognizers lists no candidate; the member is still written, last.
+  // The fixture tree declares no manifest, so each of the ten recognizers lists no candidate; the member is still written, last, and its
+  // coverage remainder (infrastructure recognizers) counts every blob as no rule's candidate, by place, as the structure record counts them (rootFiles 2,
+  // docs 2 and src 4, one secret path left out).
   const none = (rule: string) => ({ rule, ruleVersion: 1, label: 'inferred', candidates: 0, secretPathsLeftOut: 0, setApart: 0, inferred: 0, unknown: 0, valuesLeftOut: 0, facts: 0, files: [], filesNotListed: 0 });
   const MEMBER = {
-    format: 'polaris-dossier-manifest-facts/1', state: 'derived',
+    format: 'polaris-dossier-manifest-facts/2', state: 'derived',
     screeningPolicy: { policyId: 'fixture-public-source', policyVersion: '1', sha256: createHash('sha256').update(POLICY).digest('hex') },
-    recognizers: ['npm-package-manifest', 'cargo-manifest', 'python-project-manifest', 'go-module-manifest', 'github-actions-workflow'].map(none),
+    recognizers: ['npm-package-manifest', 'cargo-manifest', 'python-project-manifest', 'go-module-manifest', 'github-actions-workflow',
+      'compose-file', 'kubernetes-manifest', 'terraform-configuration', 'makefile', 'cmake-lists'].map(none),
     facts: [], factsNotListed: 0,
+    remainder: {
+      files: 9, secretPathsLeftOut: 1, candidates: 0, notCandidates: 8,
+      places: [{ place: null, files: 2, notCandidates: 2 }, { place: 'docs', files: 2, notCandidates: 2 }, { place: 'src', files: 4, notCandidates: 4 }],
+      placesNotListed: 0, filesInPlacesNotListed: 0, notCandidatesInPlacesNotListed: 0,
+    },
   };
 
   it('writes manifestFacts last in the check record, once on the report, the same bytes for two different drafts and for one that does not parse', async () => {
@@ -1407,7 +1415,7 @@ describe('check: the command', () => {
     expect(unknown.structureRecord).toEqual({ state: 'unknown', why: 'the pinned tree could not be listed (object-missing)', note: expect.stringContaining('is Unknown at this check') });
     // Version 2.7: the manifest facts are kept in their unknown form, with the same reason, and no manifest is read.
     expect(direct.manifestFacts?.state).toBe('derived');
-    expect(unknown.manifestFacts).toEqual({ format: 'polaris-dossier-manifest-facts/1', state: 'unknown', why: 'the pinned tree could not be listed (object-missing)' });
+    expect(unknown.manifestFacts).toEqual({ format: 'polaris-dossier-manifest-facts/2', state: 'unknown', why: 'the pinned tree could not be listed (object-missing)' });
   });
 
   it('exits 0 on a passing draft and 1 on findings, printing the same document with --json', async () => {

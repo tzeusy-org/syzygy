@@ -24,9 +24,12 @@ function input() {
     currencyPolicy: null, facts, unitsNotListed: 0, countsMatch: true, tree: { files: 91, rootFiles: 1, unitsListed: 30, unitFiles: 90, unitsNotListed: 0, secretPathsLeftOut: 0, submodules: 0 } };
   const wf = '.github/workflows/ci.yml';
   const fact = (k: number, kind: string, line: number, members: Record<string, string>) => ({ id: `_manifest-${k}`, fact: kind, rule: 'github-actions-workflow', ruleVersion: 1, path: wf, lines: [line, line] as const, ...members, epistemic: 'inferred' as const });
-  const manifestFacts: LocalManifestFacts = { format: 'polaris-dossier-manifest-facts/1', state: 'derived', screeningPolicy: { policyId: 'P', policyVersion: '2.0.0', sha256: 'a'.repeat(64) }, factsNotListed: 0,
+  const manifestFacts: LocalManifestFacts = { format: 'polaris-dossier-manifest-facts/2', state: 'derived', screeningPolicy: { policyId: 'P', policyVersion: '2.0.0', sha256: 'a'.repeat(64) }, factsNotListed: 0,
     facts: [fact(1, 'workflow', 1, { name: 'CI' }), fact(2, 'job', 3, { job: 'build' }), fact(3, 'job', 5, { job: 'test' }), fact(4, 'job-needs', 6, { from: 'test', to: 'build' }), fact(5, 'job', 8, { job: 'deploy' }), fact(6, 'job-needs', 9, { from: 'deploy', to: 'test' })],
-    recognizers: ['npm-package-manifest', 'cargo-manifest', 'python-project-manifest', 'go-module-manifest', 'github-actions-workflow'].map((rule) => ({ rule, ruleVersion: 1, label: 'inferred' as const,
+    remainder: { files: 91, secretPathsLeftOut: 0, candidates: 0, notCandidates: 91, places: [{ place: null, files: 1, notCandidates: 1 }, ...units.map((place) => ({ place, files: 3, notCandidates: 3 }))],
+      placesNotListed: 0, filesInPlacesNotListed: 0, notCandidatesInPlacesNotListed: 0 },
+    recognizers: ['npm-package-manifest', 'cargo-manifest', 'python-project-manifest', 'go-module-manifest', 'github-actions-workflow',
+      'compose-file', 'kubernetes-manifest', 'terraform-configuration', 'makefile', 'cmake-lists'].map((rule) => ({ rule, ruleVersion: 1, label: 'inferred' as const,
       candidates: rule === 'github-actions-workflow' ? 1 : 0, secretPathsLeftOut: 0, setApart: 0, inferred: rule === 'github-actions-workflow' ? 1 : 0, unknown: 0, valuesLeftOut: 0, facts: rule === 'github-actions-workflow' ? 6 : 0,
       files: rule === 'github-actions-workflow' ? [{ path: wf, epistemic: 'inferred' as const, unknownReason: null, parseFault: null, facts: 6, valuesLeftOut: 0 }] : [], filesNotListed: 0 })) };
   const reading = readingInput();
