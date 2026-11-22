@@ -1042,7 +1042,7 @@ function cleanupConfirmed(summary: UrlRunSessionsSummary, allowUnstartedDesign: 
   const unstartedDesign = allowUnstartedDesign && design?.outcome === 'Unknown' && design.pid === 'Unknown'
     && design.startedAt === 'Unknown' && design.finishedAt === 'Unknown' && audit.roles.design.records === 1
     && designClients.length === 2 && designClients.every(client => client.terminal.kind === 'never-issued');
-  const activeRoles = unstartedDesign ? URL_ROLES.filter(role => role !== 'design') : URL_ROLES;
+  const activeRoles: readonly ViewRole[] = unstartedDesign ? URL_ROLES.filter(role => role !== 'design') : URL_ROLES;
   return summary.hosts.length === activeRoles.length
     && summary.hosts.every(host => activeRoles.includes(host.role) && host.termination === 'settled' && host.pendingInvocations === 0)
     && summary.roles.every((role, index) => role.role === URL_ROLES[index]

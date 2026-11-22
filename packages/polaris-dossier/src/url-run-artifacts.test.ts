@@ -366,7 +366,7 @@ describe('trusted URL artifact producer bridge', () => {
           probe: { probe: async () => { throw Error('own check permits no execution'); } } });
         expect(result).toMatchObject({ ok: true, report: { outcome: 'passed', figureFit: { examined: 1, entries: [] },
           mechanismAdvice: { file: null, thisRevision: 1, inRun: 1 } } });
-        if (!result.ok) throw Error('own protected check');
+        if (!result.ok || result.report.outcome !== 'passed') throw Error('own protected check');
         expect(result.report.citedBlobs.map(blob => blob.path)).toEqual(['README.md']);
         expect(result.report.manifestFacts).toMatchObject({ state: 'derived', facts: expect.arrayContaining([
           expect.objectContaining({ path: 'package.json', fact: 'package', name: 'own-uncited-package' }),
