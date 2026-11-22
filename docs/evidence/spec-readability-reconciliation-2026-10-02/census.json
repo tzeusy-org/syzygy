@@ -600,7 +600,7 @@
     },
     "POLARIS": {
       "requirements": 39,
-      "scenarios": 423,
+      "scenarios": 430,
       "members": {
         "REQ-polaris-generation-001": {
           "name": "Admitted project input",
@@ -1087,7 +1087,14 @@
             "CI pipeline map lists parse as lists",
             "Unknown files counted and not listed on a manifest map",
             "Reading difference of a bounded check record",
-            "Readable layout stacks every graph of two or more layers"
+            "Readable layout stacks every graph of two or more layers",
+            "Uncovered inventory entry listed before review",
+            "Entry covered by overlapping lines or a named path",
+            "Compared advice names its rule, its inventory and its counts",
+            "Justified omission recorded by the author",
+            "No inventory of record gives Unknown coverage",
+            "Omission record in an earlier schema or malformed",
+            "Secret-matching path of an entry not named"
           ]
         },
         "REQ-polaris-generation-035": {
