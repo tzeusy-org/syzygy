@@ -659,6 +659,19 @@ RAW_READ_SUBJECTS = {
     ".syzygy/governance/policies/POLARIS-DOSSIER-DECLARED-SOURCE-POLICY-v4.json":
         "d3abcb31c98bfd303c2bf477cc461787cacf26811cb640d925da1de347246da9",
 }
+# The v2.18 run-tree read-bounds amendment (syzygy-3efd.80): MODIFIED
+# REQ-polaris-generation-033 after v2.17 and -035 and -048 after v2.1, pending
+# until its own VIS-4 ledger row, found by its tag as v2.17's is.
+TREEREAD_CHANGE = "dossier-run-tree-read-bounds"
+TREEREAD_HOME = f"{CHANGES}/{TREEREAD_CHANGE}"
+TREEREAD_SPEC = f"{TREEREAD_HOME}/proposed/polaris-generation/spec.md"
+TREEREAD_UNION = f"{TREEREAD_HOME}/GOVERNING-DEPENDENCIES.json"
+TREEREAD_TAG = "polaris-dossier-run-tree-read-bounds-v2.18"
+TREEREAD_ROUTE = f"[Run-tree read bounds amendment 2.18]({TREEREAD_HOME})"
+TREEREAD_REPLACES = tuple(POLARIS_ID + number for number in ("033", "035", "048"))
+TREEREAD_SUBJECTS = {
+    TREEREAD_SPEC: "a9e859c596cbd4bbda2d9a9259fea0dbbbfa9eb2cc2160fa4754f82643d82d51",
+}
 ADOPTION_LEDGER_TITLE = "# Agent adoptions"
 ADOPTION_TABLE_HEADER = "| Id | Date | Commit | What changed | Why | Revert | Tag |"
 ADOPTION_TABLE_DIVIDER = "|---|---|---|---|---|---|---|"
@@ -2253,6 +2266,58 @@ def raw_read_binding(root):
     return (None if records or subjects else read_text(root, RAW_READ_SPEC), records, subjects)
 
 
+def is_treeread_row(line):
+    """A tag or a link to the subject at this row's own commit claims adoption."""
+    if not line.startswith("|"):
+        return False
+    cells = [cell.strip() for cell in line.split("|")[1:-1]]
+    if f"`{TREEREAD_TAG}`" in cells:
+        return True
+    if len(cells) < 4 or not re.fullmatch(r"`[0-9a-f]{40}`", cells[2]):
+        return False
+    snapshot = f"https://github.com/tzeusy-org/syzygy/blob/{cells[2][1:-1]}/"
+    return f"]({snapshot}{TREEREAD_SPEC})" in cells[3]
+
+
+def treeread_rows(root):
+    return [[cell.strip() for cell in line.split("|")[1:-1]]
+            for line in adoption_table_rows(root) if is_treeread_row(line)]
+
+
+def treeread_binding(root):
+    """The successor composes only with a valid adoption over its reviewed bytes, after
+    the raw-read disclosure v2.17 (033's predecessor) and URL source v2.1 (035's and 048's)."""
+    rows = treeread_rows(root)
+    if not rows:
+        return None, [], []
+    if len(rows) != 1 or len(rows[0]) != 7:
+        return None, ["run-tree read bounds: expected one seven-column adoption row"], []
+    identity, date, commit, changed, reason, revert, tag = rows[0]
+    oid = commit.strip("`")
+    if recorded_disposition(root, identity, oid, TREEREAD_TAG, TREEREAD_SUBJECTS, plain_revert=True):
+        return None, [], []
+    records = []
+    if (not re.fullmatch(r"A-[1-9][0-9]*", identity)
+            or not valid_adoption_date(date)
+            or not re.fullmatch(r"`[0-9a-f]{40}`", commit)
+            or tag != f"`{TREEREAD_TAG}`" or not reason):
+        records.append("run-tree read bounds: malformed adoption identity, date, commit, reason or tag")
+    if revert.split("`")[1:2] not in ([f"git revert {oid}"], [f"git revert -m 1 {oid}"]):
+        records.append("run-tree read bounds: revert does not name its adoption commit")
+    for rel in TREEREAD_SUBJECTS:
+        snapshot = f"https://github.com/tzeusy-org/syzygy/blob/{oid}/{rel}"
+        if f"]({snapshot})" not in changed:
+            records.append(f"run-tree read bounds: adoption row does not name `{rel}`")
+    if url_source_binding(root)[0] is None or raw_read_binding(root)[0] is None:
+        records.append("run-tree read bounds: URL source v2.1 and raw-read disclosure v2.17 must be effective")
+    subjects = []
+    for rel, digest in TREEREAD_SUBJECTS.items():
+        body = read_bytes(root, rel)
+        if body is None or sha(body) != digest:
+            subjects.append(f"run-tree read bounds: `{rel}` differs from the reviewed subject")
+    return (None if records or subjects else read_text(root, TREEREAD_SPEC), records, subjects)
+
+
 def url_source_contract_findings(root):
     """Verify the reviewed amendment in its actual contract homes."""
     body = read_bytes(root, URL_SOURCE_REPLACEMENTS)
@@ -2794,6 +2859,12 @@ def check_outcomes(root, report):
         subjects_seen += len(RAW_READ_SUBJECTS)
     r1 += raw_read_records
     r2 += raw_read_subjects
+    treeread_amendment, treeread_records, treeread_subjects = treeread_binding(root)
+    if treeread_amendment is not None or treeread_records or treeread_subjects:
+        records += 1
+        subjects_seen += len(TREEREAD_SUBJECTS)
+    r1 += treeread_records
+    r2 += treeread_subjects
     retirement = ""
     if declared_retired_by:
         retirement += f"; v2.0 inactive by {declared_retired_by}"
@@ -3687,6 +3758,13 @@ def census(root):
             b, extra_b = compose_figure_by_name(b, raw_read_amendment, RAW_READ_REPLACES)
             pa += extra_a
             pb += extra_b
+        treeread_amendment, treeread_records, treeread_subjects = treeread_binding(root)
+        findings += treeread_records + treeread_subjects
+        if treeread_amendment is not None:
+            a, extra_a = compose_figure_by_id(a, treeread_amendment, TREEREAD_REPLACES)
+            b, extra_b = compose_figure_by_name(b, treeread_amendment, TREEREAD_REPLACES)
+            pa += extra_a
+            pb += extra_b
         findings += [f"POLARIS method A: {p}" for p in pa]
         findings += [f"POLARIS method B: {p}" for p in pb]
         if a != b:
@@ -3902,6 +3980,21 @@ def polaris_expected(root, findings):
                 findings.append(f"POLARIS raw-read disclosure: cannot count predecessor and successor for {ident}")
             else:
                 n_scen += current[ident] - prior[ident]
+    treeread_amendment, _records, _subjects = treeread_binding(root)
+    if treeread_amendment is not None:
+        # Only 033, 035 and 048 move: 033 after the raw-read disclosure v2.17,
+        # 035 and 048 after URL source v2.1.
+        url_text = url_source_binding(root)[0]
+        prior_texts = (raw_read_amendment, url_text, url_text)
+        current = {b["ids"][0]: len(b["scenarios"]) for b in _polaris_blocks_manual(treeread_amendment)
+                   if len(b["ids"]) == 1}
+        for ident, prior_text in zip(TREEREAD_REPLACES, prior_texts, strict=True):
+            prior = {i[0]: len(s) for _kind, i, _name, s in _polaris_blocks_regex(prior_text or "")
+                     if len(i) == 1}
+            if ident not in prior or ident not in current:
+                findings.append(f"POLARIS run-tree read bounds: cannot count predecessor and successor for {ident}")
+            else:
+                n_scen += current[ident] - prior[ident]
     return n_req, n_scen, ids
 
 
@@ -4091,6 +4184,9 @@ def check_generated(root, pop, report):
     raw_read_amendment, _records, _subjects = raw_read_binding(root)
     if raw_read_amendment is not None:
         files += tracked(root, RAW_READ_HOME)
+    treeread_amendment, _records, _subjects = treeread_binding(root)
+    if treeread_amendment is not None:
+        files += tracked(root, TREEREAD_HOME)
     candidate_ref_dirs = addition_dirs + (URL_SOURCE_HOME + "/",)
     files += list(ROUTE_PAGES)
     # An addition may cite a candidate Polaris requirement still under
@@ -4144,7 +4240,8 @@ def check_generated(root, pop, report):
                        (readmit_amendment, READMIT_UNION), (infra_amendment, INFRA_UNION),
                         (findpages_amendment, FINDPAGES_UNION),
                         (subsec_amendment, SUBSEC_UNION),
-                        (raw_read_amendment, RAW_READ_UNION)):
+                        (raw_read_amendment, RAW_READ_UNION),
+                        (treeread_amendment, TREEREAD_UNION)):
         if delta is None:
             continue
         examined += 1
@@ -4522,6 +4619,23 @@ def check_routes(root, pop, report):
             findings.append(f"`{STATUS}` calls raw-read disclosure adopted while it is not in force")
         if any(RAW_READ_TAG in line and "Agent adoption" in line for line in rows.get(RAW_READ_CHANGE, [])):
             findings.append(f"`{OPENSPEC_README}` calls raw-read disclosure adopted while it is not in force")
+    treeread_amendment, _records, _subjects = treeread_binding(root)
+    treeread_fields = [line.strip() for line in visible_route_lines(status)
+                       if line.strip().startswith(TREEREAD_ROUTE)]
+    if treeread_amendment is not None:
+        examined += 2
+        if not any(Path(AGENT_ADOPTIONS).name in line and TREEREAD_TAG in line
+                   for line in rows.get(TREEREAD_CHANGE, [])):
+            findings.append(f"`{OPENSPEC_README}` does not route run-tree read bounds to its adoption and tag")
+        identity = treeread_rows(root)[0][0]
+        if AGENT_ADOPTIONS not in status or treeread_fields != [f"{TREEREAD_ROUTE} is agent-adopted in {identity}."]:
+            findings.append(f"`{STATUS}` does not route run-tree read bounds and its adoption {identity}")
+    elif TREEREAD_CHANGE in changes:
+        examined += 2
+        if any("is agent-adopted" in field for field in treeread_fields):
+            findings.append(f"`{STATUS}` calls run-tree read bounds adopted while it is not in force")
+        if any(TREEREAD_TAG in line and "Agent adoption" in line for line in rows.get(TREEREAD_CHANGE, [])):
+            findings.append(f"`{OPENSPEC_README}` calls run-tree read bounds adopted while it is not in force")
     readmit_amendment, _records, _subjects = readmit_binding(root)
     readmit_fields = [line.strip() for line in visible_route_lines(status)
                       if line.strip().startswith(READMIT_STATUS_PREFIX)]
@@ -4764,6 +4878,7 @@ def inputs(root):
     paths |= {FINDPAGES_UNION, *FINDPAGES_SUBJECTS}
     paths |= {SUBSEC_UNION, *SUBSEC_SUBJECTS}
     paths |= {RAW_READ_UNION, *RAW_READ_SUBJECTS}
+    paths |= {TREEREAD_UNION, *TREEREAD_SUBJECTS}
     paths |= poc_reference().validation_inputs(root)
     return sorted(paths)
 
@@ -5140,6 +5255,7 @@ def declared_source_historical_cases(tmp, base, clean, witnesses, failures):
     had_subsec = any(is_subsec_row(line) for line in original.splitlines())
     had_readmit = any(is_readmit_row(line) for line in original.splitlines())
     had_raw_read = any(is_raw_read_row(line) for line in original.splitlines())
+    had_treeread = any(is_treeread_row(line) for line in original.splitlines())
     absent_ledger = "".join(line for line in original.splitlines(keepends=True)
                             if line.rstrip("\n") != row and not is_url_source_row(line)
                             and not is_figure_row(line) and not is_derived_row(line)
@@ -5147,7 +5263,7 @@ def declared_source_historical_cases(tmp, base, clean, witnesses, failures):
                             and not is_reach_row(line) and not is_manifests_row(line) and not is_repairs_row(line) and not is_maps_row(line)
                             and not is_bounds_row(line)
                       and not is_corr_row(line) and not is_coverage_row(line)
-                      and not is_readmit_row(line) and not is_raw_read_row(line)
+                      and not is_readmit_row(line) and not is_raw_read_row(line) and not is_treeread_row(line)
                       and not is_infra_row(line)
                       and not is_findpages_row(line) and not is_subsec_row(line))
     ledger.write_text(absent_ledger)
@@ -5162,7 +5278,7 @@ def declared_source_historical_cases(tmp, base, clean, witnesses, failures):
             and declared_source_binding(tree) == (None, [], [])
             and not report.failed
             and examined(report, "R1") == examined(clean, "R1") - 1 - had_url_source - had_figure - had_derived - had_ledger - had_kinds - had_manifests
-            - had_reach - had_repairs - had_maps - had_bounds - had_corr - had_coverage - had_readmit - had_infra - had_findpages - had_subsec - had_raw_read
+            - had_reach - had_repairs - had_maps - had_bounds - had_corr - had_coverage - had_readmit - had_infra - had_findpages - had_subsec - had_raw_read - had_treeread
             and examined(report, "R2") == examined(clean, "R2") - 3
             - (URL_SOURCE_BOUND_PARTS if had_url_source else 0)
             - (FIGURE_BOUND_PARTS if had_figure else 0)
@@ -5180,7 +5296,8 @@ def declared_source_historical_cases(tmp, base, clean, witnesses, failures):
             - (INFRA_BOUND_PARTS if had_infra else 0)
             - (FINDPAGES_BOUND_PARTS if had_findpages else 0)
             - (SUBSEC_BOUND_PARTS if had_subsec else 0)
-            - (len(RAW_READ_SUBJECTS) if had_raw_read else 0))
+            - (len(RAW_READ_SUBJECTS) if had_raw_read else 0)
+            - (len(TREEREAD_SUBJECTS) if had_treeread else 0))
     witnesses.append({"mutant": "declared-historical-control", "path": change,
                       "old": "<no amendment, row, subjects or D10 act>",
                       "new": "<unchanged>", "expected": "inactive; no phantom R1/R2 subjects",
@@ -5307,7 +5424,8 @@ def url_source_cases(tmp, base, witnesses, failures):
     shutil.copytree(base, tree)
     ledger = tree / AGENT_ADOPTIONS
     pending = "".join(line for line in ledger.read_text().splitlines(keepends=True)
-                      if not is_url_source_row(line) and not is_raw_read_row(line))
+                      if not is_url_source_row(line) and not is_raw_read_row(line)
+                      and not is_treeread_row(line))
     ledger.write_text(pending)
     pending_pop, pending_findings = census(tree)
     predecessor = pending_pop["POLARIS"]
@@ -7358,7 +7476,8 @@ def reach_cases(tmp, base, witnesses, failures):
     shutil.copytree(base, tree)
     ledger = tree / AGENT_ADOPTIONS
     pending = "".join(line for line in ledger.read_text().splitlines(keepends=True)
-                      if not is_reach_row(line) and not is_readmit_row(line) and not is_raw_read_row(line))
+                      if not is_reach_row(line) and not is_readmit_row(line) and not is_raw_read_row(line)
+                      and not is_treeread_row(line))
     ledger.write_text(pending)
     pending_pop, pending_findings = census(tree)
     predecessor = pending_pop["POLARIS"]
@@ -7477,7 +7596,7 @@ def raw_read_cases(tmp, base, witnesses, failures):
     shutil.copytree(base, tree)
     ledger = tree / AGENT_ADOPTIONS
     pending = "".join(line for line in ledger.read_text().splitlines(keepends=True)
-                      if not is_raw_read_row(line))
+                      if not is_raw_read_row(line) and not is_treeread_row(line))
     ledger.write_text(pending)
     before, findings = census(tree)
     oid = "0123456789abcdef" * 2 + "01234567"
@@ -7535,6 +7654,83 @@ def raw_read_cases(tmp, base, witnesses, failures):
                effective is None and not r1 and len(r2) == 1 and rel in r2[0])
 
 
+TREEREAD_SCENARIOS_ADDED = 6
+
+
+def treeread_cases(tmp, base, witnesses, failures):
+    """The v2.18 pending-to-adopted transition over v2.17 and v2.1, its ledger and byte
+    guards, and the predecessor guard (no raw-read disclosure v2.17, no composition)."""
+    spec = read_text(base, TREEREAD_SPEC)
+    if spec is None or raw_read_binding(base)[0] is None or url_source_binding(base)[0] is None:
+        return
+    tree = Path(tmp) / TREEREAD_CHANGE
+    shutil.copytree(base, tree)
+    ledger = tree / AGENT_ADOPTIONS
+    pending = "".join(line for line in ledger.read_text().splitlines(keepends=True)
+                      if not is_treeread_row(line))
+    ledger.write_text(pending)
+    before, findings = census(tree)
+    oid = "0123456789abcdef" * 2 + "89abcdef"
+    links = " ".join(f"[subject](https://github.com/tzeusy-org/syzygy/blob/{oid}/{rel})"
+                     for rel in TREEREAD_SUBJECTS)
+    row = (f"| A-998 | 2026-11-23 | `{oid}` | {links} | Selftest | "
+           f"`git revert {oid}` | `{TREEREAD_TAG}` |\n")
+
+    def record(case, path, old, new, outcome, observed, passed):
+        witnesses.append({"mutant": "run-tree-read-bounds-" + case, "path": path, "old": old, "new": new,
+                          "expected": outcome, "failed": observed,
+                          "outcome": ("held" if outcome == "PASS" else "killed") if passed else "SURVIVED"})
+        if not passed:
+            failures.append("run-tree-read-bounds-" + case)
+
+    record("pending", AGENT_ADOPTIONS, "<no adoption>", "<unchanged>", "PASS", findings,
+           not findings and treeread_binding(tree) == (None, [], []))
+    ledger.write_text(pending + row)
+    after, findings = census(tree)
+    before, after = before["POLARIS"], after["POLARIS"]
+    changes = {ident for ident in before if before[ident] != after.get(ident)}
+    delta = sum(len(req["scenarios"]) for req in after.values()) - sum(len(req["scenarios"]) for req in before.values())
+    record("adopted", AGENT_ADOPTIONS, "<no adoption>", row, "PASS", findings,
+           not findings and treeread_binding(tree) == (spec, [], [])
+           and set(before) == set(after) and changes == set(TREEREAD_REPLACES)
+           and delta == TREEREAD_SCENARIOS_ADDED)
+
+    later_oid = "3" * 40
+    citation = (f"| A-1001 | 2026-11-23 | `{later_oid}` | {links} | Citation only | "
+                f"`git revert {later_oid}` | — |\n")
+    ledger.write_text(pending + row + citation)
+    record("later-citation", AGENT_ADOPTIONS, row, row + citation, "PASS", [],
+           treeread_binding(tree) == (spec, [], []))
+    veto = citation.replace(links, "Veto A-998 " + links)
+    ledger.write_text(pending + row + veto)
+    record("linked-veto", AGENT_ADOPTIONS, row, row + veto, "PASS", [],
+           treeread_binding(tree) == (None, [], []))
+
+    for case, old, new in (
+            ("duplicate-row", row, row + row),
+            ("wrong-tag", TREEREAD_TAG, TREEREAD_TAG + "-wrong"),
+            ("wrong-revert", f"git revert {oid}", "git revert " + "0" * 40),
+            ("missing-spec-link", links, "")):
+        ledger.write_text(pending + row.replace(old, new, 1))
+        effective, r1, r2 = treeread_binding(tree)
+        record(case, AGENT_ADOPTIONS, old, new, "R1 refuses", r1 + r2,
+               effective is None and bool(r1) and not r2)
+    without_predecessor = "".join(line for line in pending.splitlines(keepends=True) if not is_raw_read_row(line))
+    ledger.write_text(without_predecessor + row)
+    effective, r1, r2 = treeread_binding(tree)
+    record("no-raw-read-predecessor", AGENT_ADOPTIONS, "<raw-read v2.17 row>", "<absent>", "R1 refuses", r1 + r2,
+           effective is None and any("must be effective" in finding for finding in r1))
+    ledger.write_text(pending + row)
+    for rel in TREEREAD_SUBJECTS:
+        path = tree / rel
+        original = path.read_bytes()
+        path.write_bytes(original + b"\n")
+        effective, r1, r2 = treeread_binding(tree)
+        path.write_bytes(original)
+        record("changed-" + Path(rel).name, rel, "<end of file>", "\\n", "R2 refuses", r1 + r2,
+               effective is None and not r1 and len(r2) == 1 and rel in r2[0])
+
+
 def readmit_cases(tmp, base, witnesses, failures):
     """The v2.13 pending-to-adopted transition over v2.6, its ledger and byte guards, and the predecessor guard."""
     original = read_text(base, READMIT_SPEC)
@@ -7552,7 +7748,8 @@ def readmit_cases(tmp, base, witnesses, failures):
     shutil.copytree(base, tree)
     ledger = tree / AGENT_ADOPTIONS
     pending = "".join(line for line in ledger.read_text().splitlines(keepends=True)
-                      if not is_readmit_row(line) and not is_raw_read_row(line))
+                      if not is_readmit_row(line) and not is_raw_read_row(line)
+                      and not is_treeread_row(line))
     ledger.write_text(pending)
     pending_pop, pending_findings = census(tree)
     predecessor = pending_pop["POLARIS"]
@@ -8096,6 +8293,7 @@ def _selftest_cases(tmp, commit, witnesses, failures, witness_path, base, clean,
     reach_cases(tmp, base, witnesses, failures)
     readmit_cases(tmp, base, witnesses, failures)
     raw_read_cases(tmp, base, witnesses, failures)
+    treeread_cases(tmp, base, witnesses, failures)
     # Two cases a one-file mutation cannot express. A second record of the
     # same version fails R1 by its own finding; --regenerate refuses an
     # unsigned addition and writes nothing.
