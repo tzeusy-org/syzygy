@@ -1,6 +1,6 @@
 import type { RawFact, Recognized } from './manifest-model.js';
 
-/** Rule `makefile` version 1 (REQ-polaris-generation-034 version 2.12, syzygy-3efd.26): every blob whose basename is exactly `Makefile`,
+/** Rule `makefile` version 1 (REQ-polaris-generation-034, infrastructure recognizers, syzygy-3efd.26): every blob whose basename is exactly `Makefile`,
  * `makefile` or `GNUmakefile`, read as a makefile in GNU make's syntax, yielding one `make-target` fact for each distinct target an
  * explicit rule names, spanning the physical lines of the first rule's logical line. Make has no grammar in the sense TOML or YAML do:
  * this reader classifies each logical line (physical lines joined by a trailing backslash) and reads no prerequisite and no recipe. Pure.

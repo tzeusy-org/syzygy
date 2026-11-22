@@ -231,7 +231,7 @@ describe('the unit map', () => {
       expect(sectionOf(unknown.get(path)!)).toBe(`<section id="computed-map" data-map="${map}" data-reading-level="1" data-topics=""><h1>${title}</h1>`
         + `<p class="derived-unknown" data-epistemic="unknown" data-unknown-reason="source-uncaptured-or-unreachable"><span class="not-established">Not established.</span> What the manifest files at revision ${REV} declare is Unknown at this render: the pinned tree could not be listed.</p></section>`);
     }
-    // Version 2.12: the infrastructure map says `infrastructure files` where these say `manifest files`.
+    // The infrastructure recognizers: the infrastructure map says `infrastructure files` where these say `manifest files`.
     expect(sectionOf(unknown.get('maps/infrastructure.html')!)).toBe('<section id="computed-map" data-map="infrastructure" data-reading-level="1" data-topics=""><h1>Infrastructure map</h1>'
       + `<p class="derived-unknown" data-epistemic="unknown" data-unknown-reason="source-uncaptured-or-unreachable"><span class="not-established">Not established.</span> What the infrastructure files at revision ${REV} declare is Unknown at this render: the pinned tree could not be listed.</p></section>`);
     expect(JSON.parse(unknown.get('machine.json')!).computedMaps).toEqual({

@@ -1,6 +1,6 @@
 import { lineIndex, type RawFact, type Recognized } from './manifest-model.js';
 
-/** Rule `cmake-lists` version 1 (REQ-polaris-generation-034 version 2.12, syzygy-3efd.26): every blob whose basename is exactly
+/** Rule `cmake-lists` version 1 (REQ-polaris-generation-034, infrastructure recognizers, syzygy-3efd.26): every blob whose basename is exactly
  * `CMakeLists.txt`, read in the CMake language (cmake-language(7)), whose whole grammar this reader reads: command invocations, bracket,
  * quoted and unquoted arguments with nested parentheses, line and bracket comments, and line continuation in a quoted argument. For each
  * invocation named `project` (compared without regard to ASCII case) it yields one `cmake-project` fact, its name the first argument; for

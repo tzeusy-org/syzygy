@@ -7,7 +7,7 @@ import type { VerifiedBlob } from './git-object-reader.js';
 import { deriveManifestFacts, type ManifestFacts } from './manifest-facts.js';
 import { buildDossierScreen, type DossierScreen } from './screen.js';
 
-// syzygy-3efd.26 (REQ-polaris-generation-034 version 2.12): the five infrastructure recognizers in the manifestFacts member, and its
+// syzygy-3efd.26 (REQ-polaris-generation-034, infrastructure recognizers): the five infrastructure recognizers in the manifestFacts member, and its
 // coverage remainder, from a tree listing, the bound policy's screen and a reader double. Expected members, counts, reasons and identities
 // are literals written from the fixture before the driver ran. The screen's outcomes for the fixture paths are fixed by running the bound
 // policy's screen (the committed declared-source policies 1.0.0 and 2.0.0) and asserted as preconditions. The reader double fails the
@@ -62,7 +62,7 @@ beforeAll(() => {
   });
 });
 
-describe('manifestFacts version 2.12: the five infrastructure recognizers under declared-source policy 2.0.0', () => {
+describe('manifestFacts, infrastructure recognizers: the five infrastructure recognizers under declared-source policy 2.0.0', () => {
   it('records Compose services, images, ports and dependencies (scenario "Compose services, images, ports and dependencies")', async () => {
     expect(V2.screenPath('compose.yaml')).toBeUndefined();
     const f = fixture({ 'compose.yaml': T['compose']! }, ['compose.yaml']);
@@ -145,7 +145,7 @@ describe('manifestFacts version 2.12: the five infrastructure recognizers under 
   });
 });
 
-describe('manifestFacts version 2.12: the bound policy', () => {
+describe('manifestFacts, infrastructure recognizers: the bound policy', () => {
   it('names CMake lists and the other makefile names Unknown and unread under 1.0.0 and 2.0.0 (scenario "CMake lists and other makefile names ...")', async () => {
     const tree: Tree = { 'CMakeLists.txt': 'project(a)\n', 'src/CMakeLists.txt': 'add_library(b x.c)\n', GNUmakefile: 'all:\n', 'tools/makefile': 'all:\n' };
     for (const screen of [V1, V2]) {
@@ -171,7 +171,7 @@ describe('manifestFacts version 2.12: the bound policy', () => {
   });
 });
 
-describe('manifestFacts version 2.12: malformed files and the read limit', () => {
+describe('manifestFacts, infrastructure recognizers: malformed files and the read limit', () => {
   it('names each malformed infrastructure file Unknown, unparsed, with its fault, never as declaring nothing (scenario "Malformed infrastructure file ...")', async () => {
     const tree: Tree = {
       'compose.yaml': 'services:\n  - web\n',
@@ -201,7 +201,7 @@ describe('manifestFacts version 2.12: malformed files and the read limit', () =>
     expect([tf.files[0], tf.files[99]]).toEqual([inferredFile('infra/000.tf', 1), inferredFile('infra/099.tf', 1)]);
   });
 
-  it('keeps 250 for the recognizers of version 2.7 beside 100 for those of version 2.12', async () => {
+  it('keeps 250 for the recognizers of version 2.7 beside 100 for the infrastructure recognizers', async () => {
     const tree: Tree = {};
     for (let i = 0; i < 101; i++) { tree[`p/${String(i).padStart(3, '0')}/package.json`] = '{}'; tree[`k8s/${String(i).padStart(3, '0')}.yaml`] = 'a: 1\n'; }
     const all = Object.keys(tree);
@@ -210,7 +210,7 @@ describe('manifestFacts version 2.12: malformed files and the read limit', () =>
   });
 });
 
-describe('manifestFacts version 2.12: the coverage remainder', () => {
+describe('manifestFacts, infrastructure recognizers: the coverage remainder', () => {
   it('sums to the tree: secret paths, candidates and the rest, by place (scenario "Coverage remainder sums to the tree")', async () => {
     const secret = `keys/${SECRET_NAME}`;
     const tree: Tree = {
@@ -244,6 +244,12 @@ describe('manifestFacts version 2.12: the coverage remainder', () => {
     const r = derived(await derive(V2, fixture(tree, []))).remainder;
     expect([r.files, r.candidates, r.notCandidates, r.places.length, r.places[250], r.placesNotListed, r.filesInPlacesNotListed, r.notCandidatesInPlacesNotListed])
       .toEqual([260, 0, 260, 251, { place: 'd249', files: 1, notCandidates: 1 }, 10, 10, 10]);
+  });
+
+  it('orders places by the raw segment in code-unit order, not by the listing\'s order', async () => {
+    // Git lists a tree's entries as if a directory's name ended in '/', so 'a-b/' comes before 'a/'; code-unit order puts 'a' first.
+    const r = derived(await derive(V2, fixture({ 'a-b/x.c': '', 'a/x.c': '', 'Z/x.c': '' }, []))).remainder;
+    expect(r.places.map((p) => p.place)).toEqual([null, 'Z', 'a', 'a-b']);
   });
 
   it('shows a top-level directory that is not citable in the census form', async () => {

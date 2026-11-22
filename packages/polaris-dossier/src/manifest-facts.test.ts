@@ -331,10 +331,10 @@ describe('manifestFacts: values, caps and order', () => {
     expect(npm.files).toEqual([inferredFile(at512, 1), unknownFile(`"${'p'.repeat(500)}/package.jso" (1 more code units)`, 'path-not-citable')]);
   });
 
-  // Review finding 7 (syzygy-3efd.25), version 2.8 (syzygy-3efd.72) and version 2.12 (syzygy-3efd.26): the member has no byte bound of its
-  // own; the spec fixes its caps (1,000 facts listed; 250 files per recognizer of version 2.7 and 100 per recognizer of version 2.12
+  // Review finding 7 (syzygy-3efd.25), version 2.8 (syzygy-3efd.72) and the infrastructure recognizers (syzygy-3efd.26): the member has no byte bound of its
+  // own; the spec fixes its caps (1,000 facts listed; 250 files per recognizer of version 2.7 and 100 per infrastructure recognizer
   // listed; the root and 250 places of the remainder; values to 256 code units, paths to 512) and states that at those caps the member,
-  // encoded as the check record encodes it, takes fewer than 13,000,000 bytes (10,000,000 before version 2.12), under the 16,777,216-byte
+  // encoded as the check record encodes it, takes fewer than 13,000,000 bytes (10,000,000 before the infrastructure recognizers), under the 16,777,216-byte
   // bound every reader of a check record applies. Built here by hand from the stated caps, never from the recognizer: every count a safe
   // integer; every fact a `dependency` whose path is 512 three-byte characters and whose `name` and `group` are 256 lone surrogates (six
   // bytes each once escaped); each file entry in one of three forms, the widest an Unknown `path-not-citable` entry whose census-form path

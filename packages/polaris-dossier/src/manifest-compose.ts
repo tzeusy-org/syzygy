@@ -2,7 +2,7 @@ import { FieldWalk, member, resolveFaults, type MNode, type Recognized } from '.
 import { isWorkflowPath } from './manifest-workflow.js';
 import { readYaml } from './manifest-yaml.js';
 
-/** Rule `compose-file` version 1 (REQ-polaris-generation-034 version 2.12, syzygy-3efd.26): every blob whose basename is exactly one of
+/** Rule `compose-file` version 1 (REQ-polaris-generation-034, infrastructure recognizers, syzygy-3efd.26): every blob whose basename is exactly one of
  * the Compose specification's default file names or their override names, and whose path is not a workflow path, read as YAML 1.2 under
  * the core schema, one document whose root is a mapping, by the reader `github-actions-workflow` uses (`manifest-yaml.ts`, which refuses
  * an anchor, an alias, an explicit tag, a merge key and a second document as beyond it, so a Compose file using `<<: *defaults` is

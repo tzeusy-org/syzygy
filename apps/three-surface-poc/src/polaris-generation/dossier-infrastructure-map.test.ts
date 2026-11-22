@@ -3,7 +3,7 @@ import type { LocalDerivedStructure, LocalManifestFact, LocalManifestFacts, Loca
 import { readingInput } from './dossier-reading.testkit.js';
 import { renderLocalDossier } from './dossier-site.js';
 
-// syzygy-3efd.26: the infrastructure map and the coverage remainder section (REQ-polaris-generation-034 version 2.12). Inputs are built
+// syzygy-3efd.26: the infrastructure map and the coverage remainder section (REQ-polaris-generation-034, infrastructure recognizers). Inputs are built
 // here; every expected string, count and identity is a literal written from the requirement's words before the renderer ran.
 
 const REV = 'c'.repeat(40);
@@ -68,7 +68,7 @@ function scenarioMember(): LocalManifestFacts {
   });
 }
 
-describe('the infrastructure map (version 2.12)', () => {
+describe('the infrastructure map (infrastructure recognizers)', () => {
   it('holds its note, coverage line, no figure, every declared fact in Syzygy\'s words, and its closing list (scenario "Infrastructure map rendered")', () => {
     const files = site(derived(2, []), scenarioMember());
     const page = files.get('maps/infrastructure.html')!;
@@ -107,7 +107,7 @@ describe('the infrastructure map (version 2.12)', () => {
     expect(machine.computedMaps.ci.facts).toEqual([]);
   });
 
-  it('words every kind of version 2.12, a null Kubernetes name and a zero-fact file, and lists an over-read-limit count', () => {
+  it('words every infrastructure fact kind, a null Kubernetes name and a zero-fact file, and lists an over-read-limit count', () => {
     const K = 'kubernetes-manifest', T = 'terraform-configuration', X = 'cmake-lists';
     const files = site(derived(1, []), member([
       fact(1, 'cmake-project', X, 'CMakeLists.txt', [1, 1], { name: 'Kestrel' }),
@@ -138,7 +138,7 @@ describe('the infrastructure map (version 2.12)', () => {
   });
 });
 
-describe('the coverage remainder on the directory map\'s page (version 2.12)', () => {
+describe('the coverage remainder on the directory map\'s page (infrastructure recognizers)', () => {
   const SCENARIO: LocalManifestRemainder = {
     files: 10, secretPathsLeftOut: 1, candidates: 5, notCandidates: 4,
     places: [{ place: null, files: 3, notCandidates: 1 }, { place: '.github', files: 1, notCandidates: 0 }, { place: 'infra', files: 2, notCandidates: 1 }, { place: 'src', files: 3, notCandidates: 2 }],

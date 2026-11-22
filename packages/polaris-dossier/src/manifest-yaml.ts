@@ -23,7 +23,7 @@ const NON_STRING = [
   /^[-+]?(?:\.[0-9]+|[0-9]+(?:\.[0-9]*)?)(?:[eE][-+]?[0-9]+)?$/u, /^[-+]?\.(?:inf|Inf|INF)$/u, /^\.(?:nan|NaN|NAN)$/u,
 ];
 const isString = (plain: string): boolean => !NON_STRING.some((pattern) => pattern.test(plain));
-/** The core schema's integer forms (version 2.12 keeps such a plain scalar's text, which `compose-file` reads as a port). */
+/** The core schema's integer forms (the infrastructure recognizers keep such a plain scalar's text, which `compose-file` reads as a port). */
 const INTEGER = /^(?:[-+]?[0-9]+|0o[0-7]+|0x[0-9a-fA-F]+)$/u;
 /** A plain scalar's node: a string, or another scalar, keeping an integer's text as written. */
 const plainNode = (plain: string, lines: { readonly first: number; readonly last: number }): MNode =>
@@ -34,7 +34,7 @@ const DOUBLE_ESCAPES: Readonly<Record<string, string>> = {
 };
 const FLOW_INDICATOR = /[,[\]{}]/u;
 
-/** `multi` (version 2.12, `kubernetes-manifest` alone): read a stream of several documents, each root in `documents`; otherwise a second
+/** `multi` (infrastructure recognizers, `kubernetes-manifest` alone): read a stream of several documents, each root in `documents`; otherwise a second
  * document is `beyond`, as for a workflow and a Compose file. */
 export function readYaml(text: string, multi = false): Parsed {
   const duplicates: string[][] = [];

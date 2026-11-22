@@ -3,7 +3,7 @@ import { isComposeBasename } from './manifest-compose.js';
 import { isWorkflowPath } from './manifest-workflow.js';
 import { readYaml } from './manifest-yaml.js';
 
-/** Rule `kubernetes-manifest` version 1 (REQ-polaris-generation-034 version 2.12, syzygy-3efd.26): every blob whose basename ends in
+/** Rule `kubernetes-manifest` version 1 (REQ-polaris-generation-034, infrastructure recognizers, syzygy-3efd.26): every blob whose basename ends in
  * `.yaml` or `.yml` after at least one other character, at least one of whose directory segments (never its basename) is one of
  * `KUBERNETES_DIRECTORIES`, none of whose directory segments is `templates` (a Helm chart's templates are Go templates, not YAML), and that
  * is neither a workflow path nor a `compose-file` candidate. It is read as a YAML 1.2 stream of one or more documents under the core

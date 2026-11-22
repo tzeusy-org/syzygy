@@ -609,7 +609,7 @@ describe('check: reading ledger', () => {
 
 describe('check: manifest facts (REQ-polaris-generation-034 version 2.7, syzygy-3efd.25)', () => {
   // The fixture tree declares no manifest, so each of the ten recognizers lists no candidate; the member is still written, last, and its
-  // coverage remainder (version 2.12) counts every blob as no rule's candidate, by place, as the structure record counts them (rootFiles 2,
+  // coverage remainder (infrastructure recognizers) counts every blob as no rule's candidate, by place, as the structure record counts them (rootFiles 2,
   // docs 2 and src 4, one secret path left out).
   const none = (rule: string) => ({ rule, ruleVersion: 1, label: 'inferred', candidates: 0, secretPathsLeftOut: 0, setApart: 0, inferred: 0, unknown: 0, valuesLeftOut: 0, facts: 0, files: [], filesNotListed: 0 });
   const MEMBER = {

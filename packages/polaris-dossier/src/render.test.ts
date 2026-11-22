@@ -1817,7 +1817,7 @@ describe('render: derived structure (version 2.3)', () => {
     const derivedText = [record, JSON.stringify(machine.derivedStructure), regionOfIndex(index)].join('\n');
     // The denied `.env`, the active-content `src/tagged.c`, the unknown-class `docs/notes.txt` and the secret path: no object id of any.
     for (const [file, id] of Object.entries(objectIds)) expect(derivedText, file).not.toContain(id);
-    // The secret path's directory, as a path or a remainder place (version 2.12: the bare word `conf` is in the rule id
+    // The secret path's directory, as a path or a remainder place (infrastructure recognizers: the bare word `conf` is in the rule id
     // `terraform-configuration`, which every map page and machine.json now name).
     for (const name of ['conf/', '"conf"', '>conf', 'token=', 'abcdefghijk']) for (const [file, text] of files) expect(text, `${file} ${name}`).not.toContain(name);
     expect(JSON.parse(record)).toMatchObject({ files: 8, secretPathsLeftOut: 1, facts: FACTS });

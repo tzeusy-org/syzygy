@@ -19,7 +19,7 @@ import { isTerraformPath, recognizeTerraform } from './manifest-terraform.js';
 import { isWorkflowPath, recognizeWorkflow } from './manifest-workflow.js';
 import type { DossierScreen } from './screen.js';
 
-/** Declared manifest facts (REQ-polaris-generation-034 version 2.7, syzygy-3efd.25; version 2.12, syzygy-3efd.26): what ten versioned
+/** Declared manifest facts (REQ-polaris-generation-034 version 2.7, syzygy-3efd.25; the infrastructure recognizers, syzygy-3efd.26): what ten versioned
  * recognizers read in the manifest and infrastructure files of the pinned tree that the bound screening policy admits, stored as the draft
  * check record's last member, `manifestFacts`. A fact states only what one file declares, never what code does or what is deployed, and
  * is Inferred at this version whatever evidence exists: the label is a constant here. They are not derived structural facts: no page but
@@ -27,20 +27,20 @@ import type { DossierScreen } from './screen.js';
  *
  * Each candidate (a blob entry whose path a recognizer's rule names) takes one disposition, in order: a path a secret detector matches, or
  * any of whose directory prefixes it matches, is counted in `secretPathsLeftOut` and named nowhere; for the four package recognizers and
- * the five of version 2.12, a
+ * the five infrastructure recognizers, a
  * vendored, generated or test path is counted in `setApart` and named nowhere; every other candidate is a named file, Unknown and never read
  * where its path is not citable, it is a symbolic link, the screen's path outcome excludes it, the class gate withholds its class, or it is
- * past its recognizer's read limit (250, or 100 for one of version 2.12), which is also how many file entries it lists. Each remaining file is read alone, through the reader `check` opens with its object bound at 1 MiB, then
+ * past its recognizer's read limit (250, or 100 for an infrastructure recognizer), which is also how many file entries it lists. Each remaining file is read alone, through the reader `check` opens with its object bound at 1 MiB, then
  * screened whole (`screenTargetBody`); only a body the screen admits whole is parsed. Every input is the tree listing, the blobs read, the
  * screen and the run's content classes, so two checks in which no read is refused write the same bytes, whatever their drafts.
  *
- * Since version 2.12 the member also states its coverage remainder: every blob entry no recognizer names as a candidate, counted by place
+ * Since the infrastructure recognizers the member also states its coverage remainder: every blob entry no recognizer names as a candidate, counted by place
  * (the root and each top-level directory), with the secret test rule `top-level-unit` applies, so that its counts sum to the tree's. */
 
 export const MANIFEST_FACTS_FORMAT = 'polaris-dossier-manifest-facts/2';
 /** The reader's object bound for a manifest blob: one byte more is refused before it is inflated whole (`too-large`). */
 export const MANIFEST_BLOB_LIMIT = 1_048_576;
-/** How many files a recognizer of version 2.7 reads and lists; a recognizer of version 2.12 reads and lists `INFRA_READ_LIMIT`. */
+/** How many files a recognizer of version 2.7 reads and lists; an infrastructure recognizer reads and lists `INFRA_READ_LIMIT`. */
 export const MANIFEST_READ_LIMIT = 250;
 export const INFRA_READ_LIMIT = 100;
 export const MANIFEST_FACTS_LISTED = 1_000;
@@ -76,7 +76,7 @@ export interface ManifestRecognizerEntry {
 export type ManifestFact = { readonly id: string; readonly fact: FactKind; readonly rule: string; readonly ruleVersion: number; readonly path: string; readonly lines: readonly [number, number] }
   & Readonly<Record<string, string | number | null | readonly [number, number]>> & { readonly epistemic: 'inferred' };
 export interface ManifestRemainderPlace { readonly place: string | null; readonly files: number; readonly notCandidates: number }
-/** The coverage remainder (version 2.12): `files` = `secretPathsLeftOut` + `candidates` + `notCandidates`; the listed places' `files` and
+/** The coverage remainder (infrastructure recognizers): `files` = `secretPathsLeftOut` + `candidates` + `notCandidates`; the listed places' `files` and
  * `filesInPlacesNotListed` sum to `files` less `secretPathsLeftOut`, and their `notCandidates` and `notCandidatesInPlacesNotListed` to
  * `notCandidates`. */
 export interface ManifestRemainder {
@@ -104,7 +104,7 @@ export type ManifestFacts =
 interface Recognizer {
   readonly rule: DeriveRuleId;
   readonly matches: (path: string) => boolean;
-  /** Whether vendored, generated and test paths are set apart (the four package recognizers and the five of version 2.12; never a
+  /** Whether vendored, generated and test paths are set apart (the four package recognizers and the five infrastructure recognizers; never a
    * workflow path). */
   readonly setsApart: boolean;
   /** How many files it reads, and how many file entries it lists. */
@@ -206,7 +206,7 @@ export async function deriveManifestFacts(inputs: ManifestInputs): Promise<Manif
   };
 }
 
-/** The coverage remainder (version 2.12): every blob entry by place, those the secret test leaves in, and those of them that are a
+/** The coverage remainder (infrastructure recognizers): every blob entry by place, those the secret test leaves in, and those of them that are a
  * candidate of no recognizer. A place is the root (null) or a top-level directory's raw first segment, in the census's shown form where
  * it is not citable; the first `CENSUS_LISTED_LIMIT` directories, in code-unit order, are listed and the rest summed. */
 function remainderOf(blobs: readonly Pick<TreeEntry, 'path'>[], isSecretPath: (path: string) => boolean): ManifestRemainder {

@@ -1,6 +1,6 @@
 import { lineIndex, type RawFact, type Recognized } from './manifest-model.js';
 
-/** Rule `terraform-configuration` version 1 (REQ-polaris-generation-034 version 2.12, syzygy-3efd.26): every blob whose basename ends
+/** Rule `terraform-configuration` version 1 (REQ-polaris-generation-034, infrastructure recognizers, syzygy-3efd.26): every blob whose basename ends
  * in `.tf` after at least one other character (never `.tf.json`, `.tfvars`, `.tfstate` or `.terraform.lock.hcl`), read as HCL native
  * syntax by the small lexer below, and only its top-level blocks: each `resource` block (exactly two labels: one `terraform-resource`
  * fact, its type and name) and each `module` block (exactly one label and a body attribute `source` whose expression is one quoted string

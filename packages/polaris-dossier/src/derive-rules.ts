@@ -88,7 +88,7 @@ export const PYTHON_PROJECT_MANIFEST = { id: 'python-project-manifest', version:
 export const GO_MODULE_MANIFEST = { id: 'go-module-manifest', version: 1 } as const;
 export const GITHUB_ACTIONS_WORKFLOW = { id: 'github-actions-workflow', version: 1 } as const;
 
-/** The infrastructure recognizers (REQ-polaris-generation-034 version 2.12, syzygy-3efd.26), each version 1: what one admitted
+/** The infrastructure recognizers (REQ-polaris-generation-034, infrastructure recognizers, syzygy-3efd.26), each version 1: what one admitted
  * Compose file, Kubernetes manifest, Terraform configuration, makefile or CMake list declares, read by `manifest-compose.ts`,
  * `manifest-kubernetes.ts`, `manifest-terraform.ts`, `manifest-make.ts` and `manifest-cmake.ts`. Outside `DERIVE_RULES`, as the five above. */
 export const COMPOSE_FILE = { id: 'compose-file', version: 1 } as const;

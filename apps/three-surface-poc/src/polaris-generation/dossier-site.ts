@@ -1077,7 +1077,7 @@ function derivedMachine(derived: LocalDerivedStructure): unknown {
 // the readable layout at most two columns wide and holds at most 25 boxes, so a large map is several figures, never one shrunk drawing; each
 // has a drawing and a text form, of which a container size query on its `map-forms` box shows one, with no script.
 
-/** The four map pages (the fourth since version 2.12), their titles and their `data-map` names, in the order the region's line and the
+/** The four map pages (the fourth since the infrastructure recognizers), their titles and their `data-map` names, in the order the region's line and the
  * contents page link them. */
 export const COMPUTED_MAPS: readonly { readonly map: 'directories' | 'units' | 'ci' | 'infrastructure'; readonly path: string; readonly title: string }[] = [
   { map: 'directories', path: 'maps/directories.html', title: 'Directory map' },
@@ -1170,7 +1170,7 @@ interface MapPage { readonly main: string; readonly widths: readonly number[]; r
 const mapSection = (map: string, title: string, body: string): string => `<section id="computed-map" data-map="${map}" data-reading-level="1" data-topics=""><h1>${escape(title)}</h1>${body}</section>`;
 
 /** The directory map: the derived structure the region states, with the coverage the render re-derives from the tree, and after it the
- * render's member's coverage remainder (version 2.12), which rests on the member alone. */
+ * render's member's coverage remainder (infrastructure recognizers), which rests on the member alone. */
 export function directoryMap(derived: LocalDerivedStructure, member: LocalManifestFacts): MapPage {
   const remainder = coverageRemainder(member, derived.revision);
   if (derived.state !== 'derived') return { main: `${mapSection('directories', 'Directory map', derivedUnknownSentence(derived))}${remainder}`, widths: [], figures: 0 };
@@ -1206,7 +1206,7 @@ export function directoryMap(derived: LocalDerivedStructure, member: LocalManife
 /** `<rules>` in words: separated by commas, the last by ` and `. */
 const ruleList = (rules: readonly string[]): string => (rules.length <= 1 ? rules.join('') : `${rules.slice(0, -1).join(', ')} and ${rules[rules.length - 1]}`);
 
-/** The directory map page's `coverage-remainder` section (version 2.12): what no rule read for facts, as the render's member counts it. Its
+/** The directory map page's `coverage-remainder` section (infrastructure recognizers): what no rule read for facts, as the render's member counts it. Its
  * items carry no epistemic mark: they are Syzygy's counts of what its rules claimed, never claims about the files counted. */
 function coverageRemainder(member: LocalManifestFacts, revision: string): string {
   const open = '<section id="coverage-remainder" data-reading-level="1" data-topics=""><h2>What no rule read for facts</h2>';
@@ -1257,7 +1257,7 @@ function factWords(fact: LocalManifestFact, jobs?: ReadonlySet<string>): string 
     case 'job': return `Job ${value(fact, 'job')}.`;
     case 'job-needs': return jobs !== undefined && !jobs.has(value(fact, 'to'))
       ? `Job ${value(fact, 'from')} needs ${value(fact, 'to')}, which names no job of this file.` : `Job ${value(fact, 'from')} needs ${value(fact, 'to')}.`;
-    // Version 2.12.
+    // The infrastructure recognizers.
     case 'service': return `Service ${value(fact, 'service')}.`;
     case 'service-image': return `Service ${value(fact, 'service')} names image ${value(fact, 'image')}.`;
     case 'service-port': return `Service ${value(fact, 'service')} declares port ${value(fact, 'port')}.`;
@@ -1382,7 +1382,7 @@ export function ciMap(member: LocalManifestFacts, derived: LocalDerivedStructure
   return { main: manifestPage('ci', 'CI pipeline map', member, revision, CI_MAP_RULES, 'github-actions-workflow', '', body), widths, figures: widths.length };
 }
 
-/** The infrastructure map (version 2.12): the facts and file entries of the five infrastructure recognizers, rested on the render's member
+/** The infrastructure map (infrastructure recognizers): the facts and file entries of the five infrastructure recognizers, rested on the render's member
  * as the unit map and the CI pipeline map rest on it, with no figure. */
 export function infrastructureMap(member: LocalManifestFacts, derived: LocalDerivedStructure): MapPage {
   const revision = derived.revision;

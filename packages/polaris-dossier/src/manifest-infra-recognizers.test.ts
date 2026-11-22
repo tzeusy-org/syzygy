@@ -7,7 +7,7 @@ import type { Recognized } from './manifest-model.js';
 import { isTerraformPath, recognizeTerraform } from './manifest-terraform.js';
 import { recognizeWorkflow } from './manifest-workflow.js';
 
-// syzygy-3efd.26 (REQ-polaris-generation-034 version 2.12): golden fixtures for the five infrastructure recognizers, version 1. Each
+// syzygy-3efd.26 (REQ-polaris-generation-034, infrastructure recognizers): golden fixtures for the five infrastructure recognizers, version 1. Each
 // fixture's expected facts, line spans and parse faults are literals written from the fixture text before the recognizer ran, never read
 // from its code. Per the qualification minimum: for compose-file a file of several services with image, ports in each of its three
 // element forms and depends_on in both forms; for kubernetes-manifest a stream of several documents, one an object with a name, one
@@ -265,6 +265,9 @@ describe('compose-file version 1', () => {
     expect(facts(recognizeCompose(F['composeMergeKey']!))).toBe('beyond-reader');
     expect(facts(recognizeCompose(F['composeSecondDocument']!))).toBe('beyond-reader');
   });
+  it('refuses a repeated key in a depends_on mapping as duplicate-key, a mapping it reads', () => {
+    expect(facts(recognizeCompose('services:\n  web:\n    depends_on:\n      db: {}\n      db: {}\n'))).toBe('duplicate-key');
+  });
   it('leaves a workflow\'s reading unchanged: a second document is still beyond-reader for a workflow', () => {
     expect(facts(recognizeWorkflow('on: push\n---\non: push\n'))).toBe('beyond-reader');
   });
@@ -283,6 +286,9 @@ describe('kubernetes-manifest version 1', () => {
   });
   it('reads a values file of no Kubernetes object as Inferred with zero facts', () => {
     expect(facts(recognizeKubernetes(F['k8sValues']!))).toEqual([]);
+  });
+  it('takes no fact from a document lacking apiVersion, whatever else it holds', () => {
+    expect(facts(recognizeKubernetes('kind: Service\nmetadata:\n  name: api\n'))).toEqual([]);
   });
   it('refuses a wrong-typed kind, metadata or name as field-type', () => {
     expect(facts(recognizeKubernetes(F['k8sKindInteger']!))).toBe('field-type');
@@ -328,6 +334,11 @@ describe('terraform-configuration version 1', () => {
       expect([name, facts(recognizeTerraform(F[name]!))]).toEqual([name, 'field-type']);
     }
   });
+  it('refuses a resource of three labels as field-type, reads past a // comment, and takes field-type before beyond-reader', () => {
+    expect(facts(recognizeTerraform('resource "a" "b" "c" {\n}\n'))).toBe('field-type');
+    expect(facts(recognizeTerraform('// resource "x" "y" {\nresource "a" "b" {}\n'))).toEqual([['terraform-resource', 2, 2, 'a', 'b']]);
+    expect(facts(recognizeTerraform(`resource "r" {\n${'a {\n'.repeat(256)}${'}\n'.repeat(257)}`))).toBe('field-type');
+  });
   it('reads blocks nested 256 deep and refuses 257 as beyond-reader', () => {
     expect(facts(recognizeTerraform(F['tfDepth256']!))).toEqual([['terraform-resource', 1, 512, 'r', 'n']]);
     expect(facts(recognizeTerraform(F['tfDepth257']!))).toBe('beyond-reader');
@@ -350,6 +361,10 @@ describe('makefile version 1', () => {
   });
   it('reads exactly build and test from the scenario fixture', () => {
     expect(facts(recognizeMakefile(F['makeScenario']!))).toEqual([['make-target', 2, 2, 'build'], ['make-target', 4, 4, 'test']]);
+  });
+  it('takes no fact from a target-specific assignment, and no recipe follows one', () => {
+    expect(facts(recognizeMakefile('all: x\nprog: CFLAGS = -O2\n'))).toEqual([['make-target', 1, 1, 'all']]);
+    expect(facts(recognizeMakefile('prog: CFLAGS = -O2\n\techo\n'))).toBe('syntax');
   });
   it('refuses a function call and an assignment to .RECIPEPREFIX as beyond-reader', () => {
     expect(facts(recognizeMakefile(F['makeFunctionCall']!))).toBe('beyond-reader');
@@ -384,6 +399,10 @@ describe('cmake-lists version 1', () => {
     for (const name of ['cmakeUnterminatedQuote', 'cmakeUnterminatedBracket', 'cmakeUnterminatedComment', 'cmakeUnterminatedParen', 'cmakeNoParen', 'cmakeBadEscape', 'cmakeBom']) {
       expect([name, facts(recognizeCMakeLists(F[name]!))]).toEqual([name, 'syntax']);
     }
+  });
+  it('drops a bracket argument\'s first line end, as cmake-language(7) states, keeping its later ones', () => {
+    expect(facts(recognizeCMakeLists('project([[\nKestrel]])\n'))).toEqual([['cmake-project', 1, 2, 'Kestrel']]);
+    expect(facts(recognizeCMakeLists('project([=[\r\n\nK]=])\n'))).toEqual([['cmake-project', 1, 3, '\nK']]);
   });
   it('refuses a target command with no argument as field-type, and reads an empty file as Inferred with zero facts', () => {
     expect(facts(recognizeCMakeLists(F['cmakeNoArgument']!))).toBe('field-type');

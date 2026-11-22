@@ -192,7 +192,7 @@ export interface LocalTreeCounts {
   readonly submodules: number;
 }
 
-/** The declared manifest facts a render derives itself (REQ-polaris-generation-034 versions 2.7, 2.9 and 2.12), in the shape
+/** The declared manifest facts a render derives itself (REQ-polaris-generation-034 versions 2.7 and 2.9 and the infrastructure recognizers), in the shape
  * `packages/polaris-dossier`'s `deriveManifestFacts` gives them; never read from a stored check record. */
 export interface LocalManifestFileEntry {
   readonly path: string;
@@ -226,7 +226,7 @@ export interface LocalManifestFact {
   readonly epistemic: 'inferred';
   readonly [member: string]: unknown;
 }
-/** The member's coverage remainder (version 2.12): the blob entries no recognizer names as a candidate, by place. */
+/** The member's coverage remainder (infrastructure recognizers): the blob entries no recognizer names as a candidate, by place. */
 export interface LocalManifestRemainder {
   readonly files: number;
   readonly secretPathsLeftOut: number;
