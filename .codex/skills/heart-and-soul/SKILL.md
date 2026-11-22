@@ -28,7 +28,7 @@ deliberately has **no `about/` tree** — never scaffold or mirror one.
 | `.syzygy/governance/doctrine/v1.md` | Scoping anything V0/V1; deferral questions | V0 increments, V0/V1 gap boundary, deferrals, platform, success tests |
 | `.syzygy/governance/doctrine/architecture.md` | Namespace/write/authority questions; graph, snapshot, or freshness semantics | Governance-root invariant, two-namespace plane, `.syzygy/` layout + reserved categories, typed authority, closed snapshot + temporal model, kernel + three surfaces, frozen vocabulary |
 | `.syzygy/governance/doctrine/trust-and-evidence.md` | Any status, evidence, label, or link question | Evidence definition, Observed/Inferred/Unknown, gap exits, inference-as-challenge, staleness, trust floor incl. the internal-link rule |
-| `.syzygy/governance/doctrine/security.md` | Auth, exposure, egress, writes, secrets, execution | SEC-1..SEC-5 (browser vs machine clients; egress only to a declared provider; observed code untrusted; writes into others' repositories need the owner's consent; secrets fail closed) |
+| `.syzygy/governance/doctrine/security.md` | Auth, exposure, egress, writes, secrets, execution | SEC-1..SEC-5 (browser vs machine clients; egress only to a declared provider; observed code untrusted; writes into others' repositories need the owner's consent; secrets fail closed, except a dossier session's own raw reads, disclosed (D11)) |
 
 ## Adjacent authoritative layers
 
@@ -48,4 +48,4 @@ deliberately has **no `about/` tree** — never scaffold or mirror one.
 5. VIS-5 direct writes only in `openspec/**` + `.syzygy/**`; adapters elsewhere.
 6. VIS-6 derived with two closed exceptions; dismissals carry reason + expiry.
 7. VIS-7 trustworthy observatory — deterministic identity, faithful legends, resolvable links.
-8. SEC-1..SEC-5 authenticated by default; content leaves only for a declared provider; observed code untrusted (sandboxed); writes attributed and revertable, consented by the owner only for repositories the owner does not own; secrets fail closed.
+8. SEC-1..SEC-5 authenticated by default; content leaves only for a declared provider; observed code untrusted (sandboxed); writes attributed and revertable, consented by the owner only for repositories the owner does not own; secrets fail closed in everything Syzygy sends, keeps or renders (D11: a dossier session's own raw reads may reach the declared provider unscreened, disclosed on every run).
