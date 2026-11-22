@@ -167,6 +167,7 @@ export function verifySealedOrderedDesignAuditHistory(input: {
   /** Expected from the protected run and declaration, independently of rows. */
   readonly subject: { readonly project: string; readonly pin: string; readonly principal: string; readonly deadline: string };
   readonly asOf: number;
+  readonly firstEpoch?: number;
 }): VerifiedOrderedDesignAuditHistory | null {
   const attempts = input.attempts.map(seal => seals.get(seal));
   if (attempts.some(item => item === undefined)) return null;
@@ -181,6 +182,7 @@ export function verifyColdOrderedDesignAuditHistory(input: {
   readonly profileSha256: string;
   readonly subject: { readonly project: string; readonly pin: string; readonly principal: string; readonly deadline: string };
   readonly asOf: number;
+  readonly firstEpoch?: number;
 }): VerifiedOrderedDesignAuditHistory | null {
   try {
     const attempts: SealedAttempt[] = input.attempts.map(item => {
@@ -214,10 +216,12 @@ export function verifyColdOrderedDesignAuditHistory(input: {
 function verifyHistory(input: {
   readonly rows: readonly OrderedDesignHistoryRow[]; readonly attempts: readonly SealedAttempt[];
   readonly subject: { readonly project: string; readonly pin: string; readonly principal: string; readonly deadline: string };
-  readonly asOf: number;
+  readonly asOf: number; readonly firstEpoch?: number;
 }, historical: boolean): VerifiedOrderedDesignAuditHistory | null {
   try {
     const { rows, attempts, asOf, subject } = input;
+    const firstEpoch = input.firstEpoch ?? 1;
+    if (!Number.isSafeInteger(firstEpoch) || firstEpoch < 1 || firstEpoch + attempts.length - 1 > 999_999) return null;
     if (!Array.isArray(rows) || rows.length < (historical ? 1 : 2) || rows.length > URL_SESSION_AUDIT_LIMITS.events
       || !Array.isArray(attempts) || attempts.length < 1 || attempts.length * (historical ? 1 : 2) > rows.length
       || !Number.isSafeInteger(asOf)) return null;
@@ -238,7 +242,7 @@ function verifyHistory(input: {
       if (expected === undefined) return null;
       const { plan, principal, profile, receipt, disposition } = expected;
       const binding = plan.manifest.binding;
-      if (binding.transferEpoch !== index + 1 || principal !== subject.principal
+      if (binding.transferEpoch !== firstEpoch + index || principal !== subject.principal
         || binding.pin !== subject.pin || binding.project !== subject.project || binding.deadline !== subject.deadline
         || !equal(expected.scope, first.scope)) return null;
       const delivery = take('design-delivery');

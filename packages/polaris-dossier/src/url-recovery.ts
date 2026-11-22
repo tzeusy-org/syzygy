@@ -130,7 +130,7 @@ export async function verifyStoppedUrlRun(state: SupervisorState, input: {
     let audit: Awaited<ReturnType<typeof verifyUrlSessionAuditHistory>> = null;
     const historicallySettledRoles = new Set<ViewRole>();
     const verifiedAudits: NonNullable<Awaited<ReturnType<typeof verifyUrlSessionAuditHistory>>>[] = [];
-    let requests = 0, responses = 0, tokens = 0, cumulativeQuestionCount = 0;
+    let requests = 0, responses = 0, tokens = 0, cumulativeQuestionCount = 0, nextDesignRound = 1;
     for (const boundary of history) {
       machine = await reconstructColdUrlRunMachineHistory({ governanceRoot, protectedRoot, sealed: boundary.record.machine,
         expected: { identitySha256: sealed.record.machine.identitySha256, binding, runId: expected.runId,
@@ -139,6 +139,9 @@ export async function verifyStoppedUrlRun(state: SupervisorState, input: {
       audit = await verifyUrlSessionAuditHistory({ parent: path.join(URL_HOST_ROOT, 'acquisitions', boundary.record.attempt),
         name: 'sessions', expected: boundary.record.audit, retainedLaunches, machineHistory: machine, current, deadline });
       if (!audit || !current()) return refuse('session-history');
+      for (const attempt of boundary.record.audit.ordered ?? []) {
+        if (attempt.plan.manifest.binding.transferEpoch !== nextDesignRound++) return refuse('session-history');
+      }
       verifiedAudits.push(audit);
       for (const role of audit.capturedSettledRoles) historicallySettledRoles.add(role);
       requests += audit.capturedCompleteExchanges + audit.capturedCountExchanges;
@@ -162,7 +165,7 @@ export async function verifyStoppedUrlRun(state: SupervisorState, input: {
     if (!products || !current()) return refuse('checkpoint');
     const verified = Object.freeze({ ok: true as const, machine, record, audit, boundary: sealed, history,
       verifiedAudits: Object.freeze(verifiedAudits), historicallySettledRoles: Object.freeze([...historicallySettledRoles]),
-      resumeBudget, products, cumulativeQuestionCount, checkedContext: Object.freeze({ runtime: runtime.runtime, executable,
+      resumeBudget, products, cumulativeQuestionCount, nextDesignRound, checkedContext: Object.freeze({ runtime: runtime.runtime, executable,
         screen: screen.screen, policy, origin, adoption, openReader, authority, current, policyCurrent,
         effective: read.effective, sourceStore: sealed.record.sourceStore, deadline }) });
     verifiedRuns.set(verified, async () => {

@@ -447,6 +447,22 @@ describe('sealed ordered design audit history', () => {
       subject: fixture.subject, asOf: fixture.evidence.asOf })).toBeNull();
   });
 
+  it('checks a newly authorized epoch after a stopped attempt without resetting it to one', () => {
+    const f = sealedFixture(2);
+    f.authenticate();
+    let seal;
+    try { seal = sealOrderedDesignHistoryAttempt(f.eligible); } finally { vi.restoreAllMocks(); }
+    if (seal === null) throw new Error('own successor seal unavailable');
+    const captured = captureSealedOrderedDesignHistoryAttempt(seal);
+    if (captured === null) throw new Error('own successor metadata unavailable');
+    const input = { rows: f.eligibleRows, attempts: [captured], subject: f.subject,
+      profileSha256: f.evidence.profile.digest, asOf: f.evidence.asOf };
+    expect(verifyColdOrderedDesignAuditHistory(input)).toBeNull();
+    expect(verifyColdOrderedDesignAuditHistory({ ...input, firstEpoch: 2 })?.attempts)
+      .toMatchObject([{ epoch: 2, disposition: 'eligible' }]);
+    expect(verifyColdOrderedDesignAuditHistory({ ...input, firstEpoch: 3 })).toBeNull();
+  });
+
   it('treats a protected stop cut as retired work and never upgrades a partial transfer to eligibility', () => {
     const f = sealedFixture();
     f.authenticate();
