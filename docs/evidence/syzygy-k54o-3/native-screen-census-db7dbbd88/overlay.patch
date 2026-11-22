@@ -1,0 +1,558 @@
+diff --git a/packages/polaris-dossier/src/session-launch.ts b/packages/polaris-dossier/src/session-launch.ts
+index 4a10b849f..9486dd900 100644
+--- a/packages/polaris-dossier/src/session-launch.ts
++++ b/packages/polaris-dossier/src/session-launch.ts
+@@ -1,3 +1,4 @@
++import { channel } from 'node:diagnostics_channel';
+ import { spawn } from 'node:child_process';
+ import { createHash } from 'node:crypto';
+ import { constants, type Stats } from 'node:fs';
+@@ -20,17 +21,19 @@ export const URL_LAUNCH_LIMITS = Object.freeze({ milliseconds: 1_800_000, setupM
+ export type UrlLaunchLimits = { readonly [K in keyof typeof URL_LAUNCH_LIMITS]: number };
+ const canonical = (value: unknown): string => encodeCanonicalJson(value, { maxBytes: 2_097_152, maxNodes: 65_536, maxDepth: 32 });
+ const TOOLS = ['source_read', 'artifact_read', 'artifact_write', 'dossier_step'] as const;
++const resumeTrace = channel('owned-f3-db7-screen-census');
++let resumeLaunchOrdinal = 0;
+ const refused = (): Error => new Error('url-session-launch-refused');
+ const delay = (ms: number): Promise<void> => new Promise(resolve => setTimeout(resolve, ms));
+ /** Bounds waiting, not cancellation of an arbitrary caller-owned callback. */
+-async function bounded<T>(operation: () => T | Promise<T>, milliseconds: number): Promise<T> {
++async function bounded<T>(operation: () => T | Promise<T>, milliseconds: number, onTimeout?: () => void): Promise<T> {
+   const deadline = performance.now() + Math.max(1, milliseconds);
+   let timer: ReturnType<typeof setTimeout> | undefined;
+   const timeout = new Promise<never>((_resolve, reject) => {
+     const expire = (): void => {
+       // A timer callback can arrive early when its clock rounds the delay.
+       const remaining = deadline - performance.now();
+-      if (remaining <= 0) reject(refused());
++      if (remaining <= 0) { onTimeout?.(); reject(refused()); }
+       else timer = setTimeout(expire, Math.ceil(remaining));
+     };
+     expire();
+@@ -217,27 +220,42 @@ export async function prepareRestrictedUrlSession(input: UrlSessionLaunchOptions
+   return receipt;
+ }
+ 
++type CensusPhase = 'storage-open' | 'storage-opendir' | 'storage-next' | 'storage-stat-batch' | 'storage-close'
++  | 'process-opendir' | 'process-next' | 'process-task-open' | 'process-task-read' | 'process-task-close';
++interface CensusIo {
++  start(stage: CensusPhase, population?: number): number;
++  end(ordinal: number | undefined): void;
++}
+ const STORAGE_STAT_BATCH = 4;
+ /** Descriptor-anchored, entry/depth/time bounded logical-file census. Symlink,
+  * special and multiply linked entries fail closed; it is sampled, not a quota. */
+-async function storage(roots: readonly string[], limits: UrlLaunchLimits, check: () => void): Promise<number> {
++async function storage(roots: readonly string[], limits: UrlLaunchLimits, check: () => void, io?: CensusIo): Promise<number> {
+   let bytes = 0, entries = 0;
+   const entryDisappeared = Symbol();
+   const walk = async (file: string, depth: number): Promise<void> => {
+     check(); if (depth > 32 || ++entries > limits.entries) throw refused();
++    const opening = io?.start('storage-open');
+     const handle = await open(file, constants.O_RDONLY | constants.O_DIRECTORY | constants.O_NOFOLLOW).catch((error: NodeJS.ErrnoException) => {
++      io?.end(opening);
+       // An enumerated child can disappear between lstat and open. Roots
+       // must remain available, and other open errors still stop inspection.
+       if (depth > 0 && error.code === 'ENOENT') throw entryDisappeared;
+       throw error;
+     });
++    io?.end(opening);
++    let reading: number | undefined;
+     try {
+-      const base = `/proc/self/fd/${handle.fd}`, iterator = await opendir(base);
++      const base = `/proc/self/fd/${handle.fd}`;
++      reading = io?.start('storage-opendir');
++      const iterator = await opendir(base);
++      io?.end(reading);
+       const batch: string[] = [];
+       const inspect = async (): Promise<void> => {
+         if (batch.length === 0) return;
+         check();
++        const stats = io?.start('storage-stat-batch', batch.length);
+         const samples = await Promise.allSettled(batch.map(child => lstat(child)));
++        io?.end(stats);
+         check();
+         const disappeared = (sample: PromiseSettledResult<Stats>): boolean =>
+           sample.status === 'rejected' && (sample.reason as NodeJS.ErrnoException).code === 'ENOENT';
+@@ -258,7 +276,9 @@ async function storage(roots: readonly string[], limits: UrlLaunchLimits, check:
+         }
+         batch.length = 0;
+       };
++      reading = io?.start('storage-next');
+       for await (const item of iterator) {
++        io?.end(reading);
+         check();
+         // Recurse in directory order. Dirent type only schedules reads.
+         // The descriptor-relative lstat still decides the entry's type.
+@@ -272,9 +292,15 @@ async function storage(roots: readonly string[], limits: UrlLaunchLimits, check:
+           await inspect();
+           if (bytes > limits.storageBytes) return;
+         }
++        reading = io?.start('storage-next');
+       }
++      io?.end(reading);
+       if (batch.length !== 0) await inspect();
+-    } finally { await handle.close(); }
++    } finally {
++      io?.end(reading);
++      const closing = io?.start('storage-close');
++      try { await handle.close(); } finally { io?.end(closing); }
++    }
+   };
+   const measure = async (): Promise<number> => {
+     for (const root of roots) {
+@@ -291,29 +317,38 @@ async function storage(roots: readonly string[], limits: UrlLaunchLimits, check:
+     return measure();
+   }
+ }
+-async function taskChildren(task: string, check: () => void): Promise<readonly string[]> {
++async function taskChildren(task: string, check: () => void, io?: CensusIo): Promise<readonly string[]> {
+   check();
++  let reading = io?.start('process-task-open');
+   try {
+     const file = await open(task, constants.O_RDONLY | constants.O_NOFOLLOW);
++    io?.end(reading);
+     try {
+       check();
+-      const bytes = Buffer.alloc(65_537), n = (await file.read(bytes, 0, bytes.length, 0)).bytesRead;
++      const bytes = Buffer.alloc(65_537);
++      reading = io?.start('process-task-read');
++      const n = (await file.read(bytes, 0, bytes.length, 0)).bytesRead;
++      io?.end(reading);
+       check();
+       if (n > 65_536) throw refused();
+       const content = bytes.subarray(0, n).toString('ascii');
+       if (!/^(?:[0-9]+\s*)*$/u.test(content)) throw refused();
+       return content.trim().split(/\s+/u);
+-    } finally { await file.close(); }
++    } finally {
++      io?.end(reading);
++      reading = io?.start('process-task-close');
++      await file.close();
++    }
+   } catch (error) {
+     if ((error as NodeJS.ErrnoException).code !== 'ENOENT') throw error;
+     return [];
+-  }
++  } finally { io?.end(reading); }
+ }
+ const TASK_READ_BATCH = 4;
+-async function descendants(pid: number, maximum: number, check: () => void): Promise<number> {
++async function descendants(pid: number, maximum: number, check: () => void, io?: CensusIo): Promise<number> {
+   const pending = [pid], seen = new Set<number>(); let taskEntries = 0;
+   const collect = async (tasks: readonly string[]): Promise<void> => {
+-    const children = await Promise.all(tasks.map(task => taskChildren(task, check)));
++    const children = await Promise.all(tasks.map(task => taskChildren(task, check, io)));
+     check();
+     for (const group of children) {
+       for (const child of group) if (child) pending.push(Number(child));
+@@ -322,16 +357,22 @@ async function descendants(pid: number, maximum: number, check: () => void): Pro
+   while (pending.length) {
+     check(); const next = pending.pop()!; if (seen.has(next)) continue; seen.add(next); if (seen.size > maximum) return seen.size;
+     const taskRoot = `/proc/${next}/task`, batch: string[] = [];
++    let reading = io?.start('process-opendir');
+     try {
+       const tasks = await opendir(taskRoot);
++      io?.end(reading);
+       // Each thread may own children. Read a bounded group at a time and
+       // apply the results in enumeration order under the same deadline.
++      reading = io?.start('process-next');
+       for await (const task of tasks) {
++        io?.end(reading);
+         check(); if (!/^[0-9]+$/u.test(task.name) || ++taskEntries > 4096) throw refused();
+         batch.push(`${taskRoot}/${task.name}/children`);
+         if (batch.length === TASK_READ_BATCH) { await collect(batch); batch.length = 0; }
++        reading = io?.start('process-next');
+       }
+     } catch (error) { if ((error as NodeJS.ErrnoException).code !== 'ENOENT') throw error; }
++    finally { io?.end(reading); }
+     if (batch.length !== 0) await collect(batch);
+   }
+   return seen.size;
+@@ -371,6 +412,17 @@ export async function launchRestrictedUrlSession(input: { readonly preparation:
+   try { child = spawn('/usr/bin/prlimit', processArgs(state.args, limits),
+     { env: { PATH: '/usr/bin:/bin', LANG: 'C.UTF-8' }, stdio: ['ignore', 'pipe', 'pipe'], detached: true });
+   } catch { await bounded(closeHost, limits.cleanupMilliseconds).catch(() => {}); throw refused(); }
++  const launch = state.profile.input.binding.role === 'design' ? ++resumeLaunchOrdinal : 0;
++  let sampleOrdinal = 0;
++  const note = (stage: string, event: string, detail = 'none', elapsed = 0): void => {
++    if (launch !== 0 && resumeTrace.hasSubscribers) resumeTrace.publish({ component: 'sampler', stage, event, detail,
++      elapsed, launch, sample: sampleOrdinal, at: performance.now() });
++  };
++  const noteTerminal = (event: string, code: number | null, signal: string | null, detail = 'none'): void => {
++    if (launch !== 0 && resumeTrace.hasSubscribers) resumeTrace.publish({ component: 'process', event, code, launch, detail,
++      signal: signal === null || signal === 'SIGTERM' || signal === 'SIGKILL' ? signal : 'other', at: performance.now() });
++  };
++  note('child', 'spawn');
+   const stdout = createHash('sha256'), stderr = createHash('sha256'); let outBytes = 0, errBytes = 0;
+   let reason: UrlSessionLaunchOutcome['outcome'] = 'exited', finishedCapture = false, exited = false, closed = false;
+   let exitCode: number | null = null, signalName: string | null = null, sampledStorageBytes: number | null = null, peakProcesses: number | null = null;
+@@ -383,6 +435,7 @@ export async function launchRestrictedUrlSession(input: { readonly preparation:
+     // are still closing. A cleanup request must preserve that terminal result.
+     if (why !== 'stopped' || !exited) reason = why;
+     if (endTimer !== undefined) return;
++    note('child', 'stop', why);
+     signal('SIGTERM');
+     killTimer = setTimeout(() => signal('SIGKILL'), Math.min(250, limits.cleanupMilliseconds));
+     endTimer = setTimeout(wake, limits.cleanupMilliseconds);
+@@ -393,48 +446,113 @@ export async function launchRestrictedUrlSession(input: { readonly preparation:
+     if (outBytes + errBytes > limits.outputBytes) stop('output-limit');
+   };
+   child.stdout!.on('data', (bytes: Buffer) => capture(bytes, true)); child.stderr!.on('data', (bytes: Buffer) => capture(bytes, false));
+-  child.once('error', () => { reason = 'launch-refused'; wake(); });
+-  child.once('exit', (code, sig) => { exited = true; exitCode = code; signalName = sig; });
+-  child.once('close', () => { closed = true; wake(); });
++  child.once('error', () => { reason = 'launch-refused'; noteTerminal('error', null, null); wake(); });
++  child.once('exit', (code, sig) => { exited = true; exitCode = code; signalName = sig; noteTerminal('exit', code, sig); });
++  child.once('close', () => { closed = true; noteTerminal('close', exitCode, signalName); wake(); });
+   let pendingSample: Promise<void> | undefined;
+   const sample = setInterval(() => {
+     if (exited || finishedCapture || pendingSample !== undefined || reason !== 'exited') return;
+     let sampleActive = true;
+     const sampleBegan = performance.now();
+-    const checkSample = (): void => {
+-      if (!sampleActive || exited || finishedCapture || reason !== 'exited' || performance.now() - sampleBegan >= limits.inspectionMilliseconds) throw refused();
++    const sampleId = ++sampleOrdinal;
++    let phase = 'storage';
++    let firstRefusal = true;
++    const mark = (stage: string, event: string, detail = 'none'): void => {
++      if (launch !== 0 && resumeTrace.hasSubscribers) resumeTrace.publish({ component: 'sampler', stage, event, detail,
++        elapsed: performance.now() - sampleBegan, launch, sample: sampleId, at: performance.now() });
++    };
++    mark('census', 'begin', 'cadence');
++    let ioOrdinal = 0;
++    type PendingIo = { stage: CensusPhase; began: number; population: number };
++    const pendingIo = new Map<number, PendingIo>();
++    const lastIo = new Map<string, { ordinal: number; entry: PendingIo; end: number }>();
++    const io: CensusIo | undefined = launch !== 0 && resumeTrace.hasSubscribers ? {
++      start(stage, population = 1) {
++        const ordinal = ++ioOrdinal;
++        pendingIo.set(ordinal, { stage, began: performance.now(), population });
++        return ordinal;
++      },
++      end(ordinal) {
++        if (ordinal === undefined) return;
++        const entry = pendingIo.get(ordinal);
++        if (entry === undefined) return;
++        pendingIo.delete(ordinal);
++        lastIo.set(entry.stage.startsWith('storage-') ? 'storage' : 'process', { ordinal, entry, end: performance.now() });
++      },
++    } : undefined;
++    let ioReported = false;
++    const reportIo = (boundary: 'timer' | 'guard'): void => {
++      if (io === undefined || ioReported) return;
++      ioReported = true;
++      const at = performance.now();
++      resumeTrace.publish({ component: 'census-io', boundary, launch, sample: sampleId, started: ioOrdinal,
++        pending: [...pendingIo].map(([ordinal, entry]) => ({ stage: entry.stage, ordinal, population: entry.population,
++          elapsed: at - entry.began })),
++        latest: [...lastIo.values()].map(({ ordinal, entry, end }) => ({ stage: entry.stage, ordinal,
++          population: entry.population, elapsed: end - entry.began, endedBeforeSnapshot: at - end })), at });
++    };
++    const checkSample = (source: string): void => {
++      const why = !sampleActive ? 'inactive' : exited ? 'exited' : finishedCapture ? 'capture-finished'
++        : reason !== 'exited' ? 'stopping' : performance.now() - sampleBegan >= limits.inspectionMilliseconds ? 'deadline' : null;
++      if (why !== null) {
++        if (firstRefusal) { firstRefusal = false; mark(source, 'guard-refused', why); reportIo('guard'); }
++        throw refused();
++      }
+     };
+     // Cadence and completion are separate finite limits. Other native roles
+     // and the shared host may delay descriptor IO; admit no partial census.
+     pendingSample = bounded(async () => {
+       // The walks share a deadline. Keep storage's earlier refusal and
+       // publication order even if the process walk completes first.
+-      const processCount = child.pid === undefined ? undefined : descendants(child.pid, limits.processes, checkSample).catch(() => null);
++      const processCount = child.pid === undefined ? undefined
++        : descendants(child.pid, limits.processes, () => checkSample('process-walk'), io).catch(() => {
++          mark('process-walk', 'rejected'); return null;
++        });
+       const authority = state.inspectionAuthority;
+       // Verification reads authority only. Census refusal takes precedence and
+       // the exact live guard runs when both the census and verification settle.
++      const verify = authority?.verify;
+       const verification = authority === undefined ? undefined
+-        : Promise.resolve().then(authority.verify).then(result => result === true, () => false);
+-      const storageBytes = await storage([view.inputs.homeDirectory, view.inputs.workDirectory], limits, checkSample);
+-      checkSample();
++        : Promise.resolve().then(() => { mark('verify', 'begin'); return verify!(); }).then(result => {
++          mark('verify', 'return', result === true ? 'true' : 'false');
++          return result === true;
++        }, () => { mark('verify', 'rejected'); return false; });
++      mark('storage', 'begin');
++      const storageBytes = await storage([view.inputs.homeDirectory, view.inputs.workDirectory], limits, () => checkSample('storage-walk'), io);
++      mark('storage', 'return');
++      checkSample('storage-return');
+       sampledStorageBytes = storageBytes;
+       if (sampledStorageBytes > limits.storageBytes) { stop('storage-limit'); return; }
+       if (processCount !== undefined) {
++        phase = 'process';
++        mark('process', 'begin');
+         const count = await processCount;
+-        checkSample();
++        mark('process', 'return', count === null ? 'unavailable' : 'counted');
++        checkSample('process-return');
+         if (count === null) throw refused();
+         peakProcesses = Math.max(peakProcesses ?? 0, count);
+         if (count > limits.processes) { stop('process-limit'); return; }
+       }
++      phase = 'current';
++      mark('current', 'begin');
+       let stillCurrent = await (verification ?? state.current());
+-      checkSample();
++      mark('current', 'return', stillCurrent === true ? 'true' : 'false');
++      checkSample('current-return');
+       if (authority !== undefined) {
++        phase = 'confirm';
++        mark('confirm', 'begin');
+         stillCurrent = authority.confirm(stillCurrent === true);
+-        checkSample();
++        mark('confirm', 'return', stillCurrent === true ? 'true' : 'false');
++        checkSample('confirm-return');
+       }
+       if (stillCurrent !== true) stop('inspection-failed');
+-    }, limits.inspectionMilliseconds).catch(() => { if (!exited && !finishedCapture) stop('inspection-failed'); })
+-      .finally(() => { sampleActive = false; pendingSample = undefined; });
++    }, limits.inspectionMilliseconds, () => { mark(phase, 'timer', 'deadline'); reportIo('timer'); }).catch(() => {
++      mark(phase, 'rejected');
++      if (!exited && !finishedCapture) stop('inspection-failed');
++    }).finally(() => {
++      mark(phase, 'settled');
++      sampleActive = false; pendingSample = undefined;
++    });
+   }, limits.sampleMilliseconds);
+   const wall = setTimeout(() => stop('wall-limit'), limits.milliseconds);
+   const finished = (async (): Promise<UrlSessionLaunchOutcome> => {
+@@ -449,16 +567,21 @@ export async function launchRestrictedUrlSession(input: { readonly preparation:
+     const tool = candidate && ['settled', 'Unknown'].includes(candidate.termination)
+       && Number.isSafeInteger(candidate.pendingInvocations) && candidate.pendingInvocations >= 0
+       && (candidate.termination !== 'settled' || candidate.pendingInvocations === 0) ? candidate : null;
+-    return deepFreeze({ outcome: reason, exitCode, signal: signalName, viewTermination: exited && closed ? 'view-exited' : 'Unknown',
++    const outcome: UrlSessionLaunchOutcome = deepFreeze({ outcome: reason, exitCode, signal: signalName, viewTermination: exited && closed ? 'view-exited' : 'Unknown',
+       groupTermination: !groupExists() ? 'confirmed' : 'Unknown', toolTermination: tool?.termination ?? 'Unknown', pendingInvocations: tool?.pendingInvocations ?? null,
+       stdout: { bytes: outBytes, sha256: stdout.digest('hex') }, stderr: { bytes: errBytes, sha256: stderr.digest('hex') },
+-      sampledStorageBytes, peakProcesses, aggregateEnforcement: 'sampled-stop-only', betweenSamples: 'Unknown' });
++      sampledStorageBytes, peakProcesses, aggregateEnforcement: 'sampled-stop-only' as const, betweenSamples: 'Unknown' as const });
++    noteTerminal('finished', outcome.exitCode, outcome.signal, outcome.outcome);
++    return outcome;
+   })();
+   if (child.pid === undefined) { await finished; throw refused(); }
+   const launched: UrlSessionProcess = Object.freeze({ pid: child.pid, commandSha256: input.preparation.commandSha256, finished,
+     waitForSample: async () => {
++      note('wait', 'begin', pendingSample === undefined ? 'idle' : 'pending');
+       await pendingSample;
+-      return !exited && !finishedCapture && reason === 'exited';
++      const current = !exited && !finishedCapture && reason === 'exited';
++      note('wait', 'return', current ? 'true' : 'false');
++      return current;
+     },
+     stop: () => { stop('stopped'); return finished; } });
+   launchedProcesses.set(launched, () => reason === 'exited' && !exited && !closed && !finishedCapture && child.exitCode === null && child.signalCode === null);
+diff --git a/packages/polaris-dossier/src/url-ordered-design-screen.ts b/packages/polaris-dossier/src/url-ordered-design-screen.ts
+index 298332ba8..e1680a06c 100644
+--- a/packages/polaris-dossier/src/url-ordered-design-screen.ts
++++ b/packages/polaris-dossier/src/url-ordered-design-screen.ts
+@@ -1,4 +1,5 @@
+ import { spawn } from 'node:child_process';
++import { channel } from 'node:diagnostics_channel';
+ import { createHash } from 'node:crypto';
+ import * as fs from 'node:fs';
+ import path from 'node:path';
+@@ -26,18 +27,27 @@ export type OrderedScreenRun = {
+ } & ({ readonly ok: true; readonly observation: OrderedScreenObservation }
+   | { readonly ok: false; readonly reason: 'ordered-screen-refused' });
+ 
++const screenTrace = channel('owned-f3-db7-screen-census');
++let screenOrdinal = 0;
+ const same = (a: fs.BigIntStats, b: fs.BigIntStats): boolean =>
+   ['dev', 'ino', 'mode', 'nlink', 'size', 'mtimeNs', 'ctimeNs'].every(key => a[key as keyof fs.BigIntStats] === b[key as keyof fs.BigIntStats]);
+ interface Held { readonly handle: FileHandle; readonly fd: number; readonly file: OrderedScreenProgramFile; readonly stat: fs.BigIntStats }
+ function refuse(): never { throw new Error('ordered-screen-refused'); }
+-async function hold(file: OrderedScreenProgramFile, executable: boolean, current: () => void): Promise<Held> {
++type ScreenStage = 'entry' | 'prepare' | 'worker-open' | 'worker-hash' | 'worker-confirm'
++  | 'node-open' | 'node-hash' | 'node-confirm' | 'pre-spawn' | 'spawn' | 'poll' | 'result' | 'finished';
++async function hold(file: OrderedScreenProgramFile, executable: boolean, current: (stage: ScreenStage) => void,
++  note: (stage: ScreenStage, event: 'begin' | 'return' | 'refused') => void): Promise<Held> {
++  const stageOpen = executable ? 'node-open' : 'worker-open';
++  const stageHash = executable ? 'node-hash' : 'worker-hash';
++  const stageConfirm = executable ? 'node-confirm' : 'worker-confirm';
++  note(stageOpen, 'begin');
+   if (!path.isAbsolute(file.path) || path.resolve(file.path) !== file.path || await fs.promises.realpath(file.path) !== file.path
+     || !/^[a-f0-9]{64}$/u.test(file.sha256) || !Number.isSafeInteger(file.bytes)
+     || file.bytes <= 0 || file.bytes > (executable ? 536_870_912 : 8_388_608)) refuse();
+   const handle = await fs.promises.open(file.path, fs.constants.O_RDONLY | fs.constants.O_NOFOLLOW | fs.constants.O_NONBLOCK);
+   const fd = handle.fd;
+   try {
+-    current();
++    current(stageOpen);
+     const stat = await handle.stat({ bigint: true });
+     if (!stat.isFile() || stat.nlink !== 1n || stat.size !== BigInt(file.bytes) || (stat.mode & 0o022n) !== 0n
+       || (executable && (stat.mode & 0o111n) === 0n)
+@@ -45,18 +55,23 @@ async function hold(file: OrderedScreenProgramFile, executable: boolean, current
+     // These are trusted held runtime images, not native peer input. Bound each
+     // read and yield between chunks without repeating the native effect's full
+     // process attestation for every 64 KiB of a large executable.
++    note(stageOpen, 'return');
++    note(stageHash, 'begin');
+     const hash = createHash('sha256'), buffer = Buffer.alloc(1_048_576);
+     let offset = 0;
+     while (offset < file.bytes) {
+-      current();
++      current(stageHash);
+       const { bytesRead: count } = await handle.read(buffer, 0, Math.min(buffer.length, file.bytes - offset), offset);
+       if (count === 0) refuse();
+       hash.update(buffer.subarray(0, count)); offset += count;
+       await new Promise<void>(resolve => setImmediate(resolve));
+     }
++    note(stageHash, 'return');
++    note(stageConfirm, 'begin');
+     if (hash.digest('hex') !== file.sha256 || !same(stat, await handle.stat({ bigint: true }))
+       || !same(stat, await fs.promises.lstat(file.path, { bigint: true }))) refuse();
+-    current();
++    current(stageConfirm);
++    note(stageConfirm, 'return');
+     return { handle, fd, file, stat };
+   } catch { await handle.close(); throw new Error('ordered-screen-refused'); }
+ }
+@@ -81,6 +96,25 @@ export async function runOrderedDesignScreen(options: {
+ }): Promise<OrderedScreenRun> {
+   const started = performance.now(), limits = options.limits ?? ORDERED_SCREEN_LIMITS;
+   const held: Held[] = [];
++  const tracing = screenTrace.hasSubscribers;
++  const screen = tracing ? ++screenOrdinal : 0;
++  let currentOrdinal = 0;
++  const note = (stage: ScreenStage, event: 'begin' | 'return' | 'refused'): void => {
++    if (tracing) screenTrace.publish({ component: 'screen', screen, operation: options.input.operation, stage, event, at: performance.now() });
++  };
++  const checkCurrent = (stage: ScreenStage): boolean => {
++    const began = tracing ? performance.now() : null;
++    let result: boolean | undefined;
++    try { return result = options.current(); }
++    finally {
++      if (began !== null) {
++        const at = performance.now();
++        screenTrace.publish({ component: 'screen-current', screen, operation: options.input.operation, stage,
++          result: result === undefined ? 'exception' : result ? 'true' : 'false', ordinal: ++currentOrdinal, elapsed: at - began, at });
++      }
++    }
++  };
++  note('entry', 'begin');
+   let enforcedWallMilliseconds = 0;
+   // Refusal before starting consumes no child capacity. Once launched, charge
+   // the conservative whole cap even when the worker times out or fails.
+@@ -92,14 +126,16 @@ export async function runOrderedDesignScreen(options: {
+     for (const key of Object.keys(ORDERED_SCREEN_LIMITS) as (keyof OrderedScreenLimits)[]) {
+       if (!Number.isSafeInteger(limits[key]) || limits[key] <= 0 || limits[key] > ORDERED_SCREEN_LIMITS[key]) refuse();
+     }
+-    if (limits.addressBytes < 268_435_456 || !Number.isSafeInteger(options.deadlineEpochMilliseconds) || !options.current()
++    note('prepare', 'begin');
++    if (limits.addressBytes < 268_435_456 || !Number.isSafeInteger(options.deadlineEpochMilliseconds) || !checkCurrent('entry')
+       || options.deadlineEpochMilliseconds <= Date.now()) refuse();
+     const input = Buffer.from(encodeCanonicalJson({ format: ORDERED_SCREEN_FORMAT, input: options.input, limits }, ORDERED_SCREEN_INPUT_LIMITS));
+-    const current = (): void => { if (!options.current() || Date.now() >= options.deadlineEpochMilliseconds) refuse(); };
+-    const worker = await hold(options.program.worker, false, current); held.push(worker);
+-    const node = await hold(options.program.node, true, current); held.push(node);
++    note('prepare', 'return');
++    const current = (stage: ScreenStage): void => { if (!checkCurrent(stage) || Date.now() >= options.deadlineEpochMilliseconds) refuse(); };
++    const worker = await hold(options.program.worker, false, current, note); held.push(worker);
++    const node = await hold(options.program.node, true, current, note); held.push(node);
+     enforcedWallMilliseconds = Math.min(limits.wallMilliseconds, options.deadlineEpochMilliseconds - Date.now());
+-    if (enforcedWallMilliseconds <= 0 || !options.current()) refuse();
++    if (enforcedWallMilliseconds <= 0 || !checkCurrent('pre-spawn')) refuse();
+     // --as-pid-1 removes bwrap's separate PID-1 reaper. There are exactly the
+     // bwrap supervisor and one trusted Node process. Node cannot spawn or load
+     // addons; process/thread CPU is included in each process's RLIMIT_CPU.
+@@ -117,8 +153,10 @@ export async function runOrderedDesignScreen(options: {
+     const result = await new Promise<{ failed: boolean; status: number | null; signal: NodeJS.Signals | null; stdout: Buffer }>(resolve => {
+       // The outer child owns a new session/group. Keep the worker in that
+       // group so a wall timeout kills both supervisor and worker, even idle.
++      note('spawn', 'begin');
+       const child = spawn('/usr/bin/prlimit', argv, { detached: true, stdio: ['pipe', 'pipe', 'pipe', worker.fd, node.fd],
+         env: { LANG: 'C', LC_ALL: 'C', UV_THREADPOOL_SIZE: '1' } });
++      note('spawn', 'return');
+       let failed = false, closed = false, outputBytes = 0;
+       const output: Buffer[] = [];
+       const stop = (): void => {
+@@ -128,7 +166,7 @@ export async function runOrderedDesignScreen(options: {
+       };
+       const timer = setTimeout(stop, enforcedWallMilliseconds);
+       // Revocation and shared budget exhaustion must stop a running child too.
+-      const poll = setInterval(() => { try { current(); } catch { stop(); } }, 20);
++      const poll = setInterval(() => { try { current('poll'); } catch { stop(); } }, 20);
+       child.once('error', stop);
+       child.stdin!.once('error', stop);
+       child.stdout!.once('error', stop);
+@@ -147,8 +185,9 @@ export async function runOrderedDesignScreen(options: {
+       });
+       child.stdin!.end(input);
+     });
++    note('result', 'begin');
+     if (result.failed || result.status !== 0 || result.signal !== null
+-      || !held.every(unchanged) || !options.current() || Date.now() >= options.deadlineEpochMilliseconds) refuse();
++      || !held.every(unchanged) || !checkCurrent('result') || Date.now() >= options.deadlineEpochMilliseconds) refuse();
+     const output = new TextDecoder('utf-8', { fatal: true, ignoreBOM: true }).decode(result.stdout);
+     const observation: unknown = parseBoundedJson(output, ORDERED_SCREEN_OUTPUT_LIMITS);
+     if (encodeCanonicalJson(observation, ORDERED_SCREEN_OUTPUT_LIMITS) !== output || !isRecord(observation)
+@@ -158,7 +197,13 @@ export async function runOrderedDesignScreen(options: {
+       || !Number.isSafeInteger(observation.selfCpuMicrosecondsBeforeOutput)
+       || Number(observation.selfCpuMicrosecondsBeforeOutput) < 0
+       || Object.values(observation.counts).some(value => !Number.isSafeInteger(value) || Number(value) < 0)) refuse();
+-    return { ...finish(), ok: true, observation: observation as unknown as OrderedScreenObservation };
+-  } catch { return { ...finish(), ok: false, reason: 'ordered-screen-refused' }; }
++    const outcome = { ...finish(), ok: true as const, observation: observation as unknown as OrderedScreenObservation };
++    note('finished', 'return');
++    return outcome;
++  } catch {
++    const outcome = { ...finish(), ok: false as const, reason: 'ordered-screen-refused' as const };
++    note('finished', 'refused');
++    return outcome;
++  }
+   finally { for (const entry of held) try { await entry.handle.close(); } catch { /* No result survives a failed scan. */ } }
+ }
+diff --git a/packages/polaris-dossier/src/url-run-composed.test.ts b/packages/polaris-dossier/src/url-run-composed.test.ts
+index 74e313a8c..d699168d0 100644
+--- a/packages/polaris-dossier/src/url-run-composed.test.ts
++++ b/packages/polaris-dossier/src/url-run-composed.test.ts
+@@ -1,3 +1,4 @@
++import { channel } from 'node:diagnostics_channel';
+ import * as fs from 'node:fs/promises';
+ import path from 'node:path';
+ import { afterAll, afterEach, beforeAll, describe, expect, it, vi } from 'vitest';
+@@ -112,8 +113,35 @@ function scripted(role: string, calls: readonly (ScriptCall | (() => ScriptCall
+ 
+ let runtime: UrlRuntime;
+ const cleanup: (() => Promise<unknown>)[] = [];
+-beforeAll(async () => { await fs.mkdir(recoveryHost.root, { mode: 0o700 }); await fs.chmod(recoveryHost.root, 0o700); runtime = await buildComposedRuntime(); }, 60_000);
+-afterAll(async () => { if (process.env['SYZYGY_COMPOSED_RETAIN'] === undefined) await fs.rm(recoveryHost.root, { recursive: true, force: true }); });
++const ownedBootstrapChannel = channel('owned-f3-db7-screen-census');
++const ownedBootstrapRows: unknown[] = [];
++let ownedBootstrapFile: fs.FileHandle | undefined;
++let ownedBootstrapDropped = 0;
++const collectBootstrap = (row: unknown): void => {
++  if (ownedBootstrapRows.length < 65_536) ownedBootstrapRows.push(row);
++  else ownedBootstrapDropped++;
++};
++beforeAll(async () => {
++  const traceFile = process.env['SYZYGY_COMPOSED_DB7_SCREEN_CENSUS_TRACE'];
++  if (traceFile !== undefined) {
++    ownedBootstrapFile = await fs.open(traceFile, 'wx', 0o600);
++    ownedBootstrapChannel.subscribe(collectBootstrap);
++  }
++  await fs.mkdir(recoveryHost.root, { mode: 0o700 }); await fs.chmod(recoveryHost.root, 0o700);
++  runtime = await buildComposedRuntime();
++}, 60_000);
++afterAll(async () => {
++  try {
++    if (ownedBootstrapFile !== undefined) {
++      ownedBootstrapChannel.unsubscribe(collectBootstrap);
++      const rows = [...ownedBootstrapRows, { component: 'collector', dropped: ownedBootstrapDropped }];
++      try { await ownedBootstrapFile.writeFile(rows.map(row => JSON.stringify(row) + '\n').join('')); }
++      finally { await ownedBootstrapFile.close(); }
++    }
++  } finally {
++    if (process.env['SYZYGY_COMPOSED_RETAIN'] === undefined) await fs.rm(recoveryHost.root, { recursive: true, force: true });
++  }
++});
+ afterEach(async () => { for (const close of cleanup.splice(0).reverse()) await close(); provider.clear(); relayRoles.length = 0; relayObservations.length = 0; settledProviderRoles.clear(); finalResponseDelivery.wait = null; vi.restoreAllMocks(); vi.unstubAllEnvs(); });
+ 
+ type SeenReceipt = { role: string; id: string; digest: string; bytes: number; toolName: string; inputSha256: string; committed: boolean };

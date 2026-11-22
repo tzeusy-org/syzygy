@@ -2,7 +2,7 @@
 
 ## Patterns
 
-- `F3-(STAGED-MACHINE-PUBLICATION-SUCCESSOR|ORDERED-SCREEN-ENTRY|POST-AUDIT-PEER-DRAIN|RENEWAL-SOURCE-SAMPLES|STAGED-ALLOCATION|STAGED-ALLOCATION-INITIAL|PRIVATE-AUDIT-SETUP|PRIVATE-AUDIT-SETUP-INITIAL|CONCURRENT-INSPECTION)-REVIEW-RAW\.md`
+- `F3-(STAGED-MACHINE-PUBLICATION-SUCCESSOR|ORDERED-SCREEN-ENTRY|POST-AUDIT-PEER-DRAIN|RENEWAL-SOURCE-SAMPLES|STAGED-ALLOCATION|STAGED-ALLOCATION-INITIAL|PRIVATE-AUDIT-SETUP|PRIVATE-AUDIT-SETUP-INITIAL|CONCURRENT-INSPECTION|SCREEN-IMAGE-BRACKETING)-REVIEW-RAW\.md`
 
 ## What was under review
 
@@ -17,3 +17,5 @@
 [Observed] The private audit setup review records `REVISE` (`F3-PRIVATE-AUDIT-SETUP-INITIAL-REVIEW-RAW.md:1`) at `dbe17dc40`. The successor review records `PASS` (`F3-PRIVATE-AUDIT-SETUP-REVIEW-RAW.md:1`) at `7ea0d3054` after applying the original wall budget through the final declaration. A-89 records the adoption.
 
 [Observed] The resumed design inspection overlap source review records `PASS` (`F3-CONCURRENT-INSPECTION-REVIEW-RAW.md:1`) for the source at `27e83c50b`. The one-second sample and exact final authority recheck remain in force. A-91 records the adoption. Native acceptance was outside the source review.
+
+[Observed] The ordered screening image review records `PASS` (`F3-SCREEN-IMAGE-BRACKETING-REVIEW-RAW.md:1`) at `0a9680f98`. The held and named file checks remain in full before the worker starts. The test-only successor `9eb31ba04` preserves the old held inode while replacing the named path, isolating the recorded coverage residual.

@@ -1,0 +1,214 @@
+{
+  "traceSha256": "cfa3e20327504d2ea8f8b3187bcd5c0126a3827f221523df31832ec1cc4d6f72",
+  "eventCount": 518,
+  "componentCounts": {
+    "process": 6,
+    "sampler": 512
+  },
+  "initialScreens": [],
+  "resumed": {
+    "spawn": {
+      "component": "sampler",
+      "stage": "child",
+      "event": "spawn",
+      "detail": "none",
+      "elapsed": 0,
+      "launch": 2,
+      "sample": 0,
+      "at": 201308.558839
+    },
+    "sampler": {
+      "launch": 2,
+      "spawnAt": 201308.558839,
+      "sampleCount": 27,
+      "stop": {
+        "component": "sampler",
+        "stage": "child",
+        "event": "stop",
+        "detail": "inspection-failed",
+        "elapsed": 0,
+        "launch": 2,
+        "sample": 27,
+        "at": 219481.095886
+      },
+      "exit": null,
+      "inspection": {
+        "first": {
+          "component": "sampler",
+          "stage": "confirm",
+          "event": "return",
+          "detail": "false",
+          "elapsed": 150.41673699999228,
+          "launch": 2,
+          "sample": 27,
+          "at": 219480.921035
+        },
+        "rowsForFailingSample": [
+          {
+            "component": "sampler",
+            "stage": "census",
+            "event": "begin",
+            "detail": "cadence",
+            "elapsed": 0.006232000014279038,
+            "launch": 2,
+            "sample": 27,
+            "at": 219330.510971
+          },
+          {
+            "component": "sampler",
+            "stage": "storage",
+            "event": "begin",
+            "detail": "none",
+            "elapsed": 0.08740600000601262,
+            "launch": 2,
+            "sample": 27,
+            "at": 219330.591704
+          },
+          {
+            "component": "sampler",
+            "stage": "verify",
+            "event": "begin",
+            "detail": "none",
+            "elapsed": 0.12190100000589155,
+            "launch": 2,
+            "sample": 27,
+            "at": 219330.626309
+          },
+          {
+            "component": "sampler",
+            "stage": "verify",
+            "event": "return",
+            "detail": "true",
+            "elapsed": 147.9829369999934,
+            "launch": 2,
+            "sample": 27,
+            "at": 219478.487406
+          },
+          {
+            "component": "sampler",
+            "stage": "storage",
+            "event": "return",
+            "detail": "none",
+            "elapsed": 150.40319199999794,
+            "launch": 2,
+            "sample": 27,
+            "at": 219480.90761
+          },
+          {
+            "component": "sampler",
+            "stage": "process",
+            "event": "begin",
+            "detail": "none",
+            "elapsed": 150.40763000000152,
+            "launch": 2,
+            "sample": 27,
+            "at": 219480.912028
+          },
+          {
+            "component": "sampler",
+            "stage": "process",
+            "event": "return",
+            "detail": "counted",
+            "elapsed": 150.4088519999932,
+            "launch": 2,
+            "sample": 27,
+            "at": 219480.913151
+          },
+          {
+            "component": "sampler",
+            "stage": "current",
+            "event": "begin",
+            "detail": "none",
+            "elapsed": 150.410876000009,
+            "launch": 2,
+            "sample": 27,
+            "at": 219480.915184
+          },
+          {
+            "component": "sampler",
+            "stage": "current",
+            "event": "return",
+            "detail": "true",
+            "elapsed": 150.4116980000108,
+            "launch": 2,
+            "sample": 27,
+            "at": 219480.915986
+          },
+          {
+            "component": "sampler",
+            "stage": "confirm",
+            "event": "begin",
+            "detail": "none",
+            "elapsed": 150.4128700000001,
+            "launch": 2,
+            "sample": 27,
+            "at": 219480.917168
+          },
+          {
+            "component": "sampler",
+            "stage": "confirm",
+            "event": "return",
+            "detail": "false",
+            "elapsed": 150.41673699999228,
+            "launch": 2,
+            "sample": 27,
+            "at": 219480.921035
+          },
+          {
+            "component": "sampler",
+            "stage": "child",
+            "event": "stop",
+            "detail": "inspection-failed",
+            "elapsed": 0,
+            "launch": 2,
+            "sample": 27,
+            "at": 219481.095886
+          },
+          {
+            "component": "sampler",
+            "stage": "confirm",
+            "event": "settled",
+            "detail": "none",
+            "elapsed": 150.74596900001052,
+            "launch": 2,
+            "sample": 27,
+            "at": 219481.250398
+          }
+        ],
+        "overlappingPhases": []
+      }
+    },
+    "confirmedSamples": 26,
+    "firstFailureCensusIo": null,
+    "nativeTerminal": [
+      {
+        "component": "process",
+        "event": "exit",
+        "code": null,
+        "launch": 2,
+        "detail": "none",
+        "signal": "SIGTERM",
+        "at": 219481.618754
+      },
+      {
+        "component": "process",
+        "event": "close",
+        "code": null,
+        "launch": 2,
+        "detail": "none",
+        "signal": "SIGTERM",
+        "at": 219511.840555
+      },
+      {
+        "component": "process",
+        "event": "finished",
+        "code": null,
+        "launch": 2,
+        "detail": "inspection-failed",
+        "signal": "SIGTERM",
+        "at": 219512.162344
+      }
+    ],
+    "screens": []
+  }
+}

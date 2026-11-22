@@ -1,0 +1,41 @@
+{
+  "sourceCommit": "db7dbbd88db2bfc50dd4e8bfd36e4fae5f28de28",
+  "sourceTree": "47a78059cdb43a89784de2c0ebf458267f88641d",
+  "priorUninstrumentedBytesCommit": "27e83c50b66723f2b87c54e7ea254c7f401507a7",
+  "baseDeltaFiles": [
+    "packages/polaris-dossier/src/session-launch.test.ts"
+  ],
+  "overlaySha256": "700b11aa5709bb09fa484b9284337125435210e76ca84d460fcddedced7a0fcd",
+  "changedSourceSha256": {
+    "packages/polaris-dossier/src/session-launch.ts": {
+      "before": "ca6a02828de4d7cd5348f8c7deb8eb32f2a662eca0ef271f3738bbded313ed1e",
+      "after": "08149621a807420ab658f28f49669cbcdb892c76905b42f1cf13fad133b185b2"
+    },
+    "packages/polaris-dossier/src/url-ordered-design-screen.ts": {
+      "before": "8c5968dccd8cdbecc0b4ee9fe21426e1350c4b012454c9c4b0d04465d8ed035f",
+      "after": "0d6891c49bb2f52cfb8ea94b676c0faaec22d1fe340e29d19ab7650f30d031da"
+    },
+    "packages/polaris-dossier/src/url-run-composed.test.ts": {
+      "before": "f999e7d0183f2187db676805d1978681d822198620e10938d7ebec229989f24e",
+      "after": "958f5f75d1c396b79e6f1c31ef0dba8c2a12c6ab8dc8bd2df823d5459d327719"
+    }
+  },
+  "runtime": {
+    "manifestSha256": "e90770a6afc1ed3187e848228d5b349a70797c389d07ba390c2510a37d352827",
+    "manifestTimeUtc": "2026-11-22T15:00:41.163+00:00",
+    "inputTreeSha256": "10eb3d81f2a581b1d9737412239414f3df48f6e5b72cb511a886dc7c9b77e192",
+    "manifestInputs": 380,
+    "inputsMatchingPhysicalBytes": 380,
+    "unmodifiedTrackedInputsMatchingBase": 284,
+    "overlayManifestInputs": [
+      "packages/polaris-dossier/src/session-launch.ts",
+      "packages/polaris-dossier/src/url-ordered-design-screen.ts"
+    ],
+    "overlayFixtureOrUnbundledFiles": [
+      "packages/polaris-dossier/src/url-run-composed.test.ts"
+    ],
+    "installInputsMatchingManifest": 94,
+    "manifestOutputs": 8,
+    "outputsMatchingPhysicalBytes": 8
+  }
+}
