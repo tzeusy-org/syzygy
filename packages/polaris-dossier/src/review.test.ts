@@ -287,7 +287,7 @@ describe('review-packet --kind fidelity', () => {
     if (!result.ok) throw new Error(result.refusal.reason);
     const commit = JSON.parse(fs.readFileSync(path.join(run, 'run.json'), 'utf8')).subject.pinnedRevision.commit as string;
     expect(commit).toMatch(/^[0-9a-f]{40}$/u);
-    expect(seen).toEqual([{ repository: 'repository:redis-redis', commit, visibility: 'public', policySha256: policyFixture(worldPolicy()).binding.sha256, policyPath: '.syzygy/governance/policies/POLARIS-DOSSIER-DECLARED-SOURCE-POLICY-v2.json' }]);
+    expect(seen).toEqual([{ repository: 'repository:redis-redis', commit, visibility: 'public', policySha256: policyFixture(worldPolicy()).binding.sha256, policyPath: '.syzygy/governance/policies/POLARIS-DOSSIER-DECLARED-SOURCE-POLICY-v3.json' }]);
   });
 
   it('carries no authoring exchange, read account or excluded byte', async () => {

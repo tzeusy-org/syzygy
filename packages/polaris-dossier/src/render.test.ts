@@ -807,7 +807,7 @@ describe('render', () => {
     const result = await renderRun(run, renderDeps({ loadScreen: async (placement) => { seen.push(placement); return SCREEN; } }));
     expect(result).toMatchObject({ ok: true });
     const commit = JSON.parse(fs.readFileSync(path.join(run, 'run.json'), 'utf8')).subject.pinnedRevision.commit as string;
-    expect(seen).toEqual([{ repository: 'repository:redis-redis', commit, visibility: 'public', policySha256: policyFixture(fixturePolicy).binding.sha256, policyPath: '.syzygy/governance/policies/POLARIS-DOSSIER-DECLARED-SOURCE-POLICY-v2.json' }]);
+    expect(seen).toEqual([{ repository: 'repository:redis-redis', commit, visibility: 'public', policySha256: policyFixture(fixturePolicy).binding.sha256, policyPath: '.syzygy/governance/policies/POLARIS-DOSSIER-DECLARED-SOURCE-POLICY-v3.json' }]);
     expect(commit).toMatch(/^[0-9a-f]{40}$/u);
   });
 
