@@ -172,13 +172,14 @@ describe('bounded processing and protected result validation', () => {
     expect(f.callbacks()).toBe(0);
   });
 
-  it.each(['renewed', 'changed', 'revoked', 'unavailable'] as const)('requires a current product before and after processing: %s', async scenario => {
+  it.each(['renewed', 'changed', 'revoked', 'unavailable', 'expired-at-entry'] as const)('requires a current product before and after processing: %s', async scenario => {
     let fullChecks = 0, processingChecks = 0, refreshes = 0, proofCurrent = false;
     const f = await fixture({
       current: () => {
         refreshes++;
         if (scenario === 'unavailable' || (scenario === 'changed' && processingChecks > 0)) return false;
-        proofCurrent = true;
+        // The proof can expire between this observation and the caller's guard.
+        proofCurrent = scenario !== 'expired-at-entry';
         return true;
       },
       assertCurrent: () => { fullChecks++; if (!proofCurrent) throw new Error('owned product proof expired'); },
@@ -203,9 +204,10 @@ describe('bounded processing and protected result validation', () => {
       await expect(checked).rejects.toThrow('url-ordered-design-session-refused');
       expect(f.workerCpu()).toBe(scenario === 'changed' ? 18_000_000 : 0);
     }
-    if (scenario === 'unavailable') {
+    if (scenario === 'unavailable' || scenario === 'expired-at-entry') {
       expect(processingChecks).toBe(0);
       expect(refreshes).toBe(1);
+      expect(fullChecks).toBe(scenario === 'expired-at-entry' ? 1 : 0);
     } else expect(processingChecks).toBeGreaterThan(10);
     // Full physical product validation belongs at the operation boundaries,
     // rather than once for every 65 KiB of the trusted runtime image.
