@@ -179,15 +179,37 @@ export function assertUrlDesignRenderContinuationCurrent(continuation: UrlDesign
   current();
 }
 
+export type UrlDesignRenderContinuationFactory = (input: { readonly deadline: number; readonly packetSha256: string }) => UrlDesignRenderContinuation | null;
+
+/** Hold the checked subject without keeping its read context or granting a
+ * continuation. A single later use must recheck the exact durable subject. */
+function makeDesignRenderContinuationFactory(subject: Omit<UrlDesignRenderContinuation, 'deadline'>, readDeadline: number,
+  verify: (deadline: number) => void): UrlDesignRenderContinuationFactory {
+  let used = false;
+  return input => {
+    if (used) return null;
+    used = true;
+    const deadline = Math.min(readDeadline, input.deadline, Date.now() + URL_SESSION_AUDIT_LIMITS.milliseconds);
+    if (!Number.isSafeInteger(deadline) || Date.now() >= deadline || input.packetSha256 !== subject.original.original.sha256) return null;
+    try {
+      const result = deepFreeze({ ...subject, deadline });
+      const current = (): void => verify(deadline);
+      current();
+      designRenderContinuations.set(result, current);
+      return result;
+    } catch { return null; }
+  };
+}
+
 /** A genuine consumed stop claim plus its independently checked cold audit
  * may continue only the final render. Fresh product inspection and physical
  * site/report checks replace expired process/transport capabilities. No old
  * receipt is entered in the live delivery or ordered-writer registries. */
-export async function recoverUrlDesignRenderContinuation(input: {
+export async function prepareRecoveredUrlDesignRenderContinuation(input: {
   readonly verified: Extract<Awaited<ReturnType<typeof verifyStoppedUrlRun>>, { ok: true }>;
   readonly claim: unknown; readonly product: ValidatedUrlDesignProduct;
   readonly number: number; readonly site: number;
-}): Promise<UrlDesignRenderContinuation | null> {
+}): Promise<UrlDesignRenderContinuationFactory | null> {
   try {
     const { verified, claim, product, number, site } = input;
     if (!isClaimedStoppedUrlRun(verified, claim)) return null;
@@ -216,9 +238,8 @@ export async function recoverUrlDesignRenderContinuation(input: {
       || original.parents.length !== identity.parentCount || original.semanticParentsSha256 !== identity.semanticParentsSha256
       || original.semanticInputsSha256 !== identity.semanticInputsSha256
       || designIdentityDigest(original.output) !== identity.storedPopulationSha256) return null;
-    const deadline = Math.min(context.deadline, original.products.deadline, Date.now() + URL_SESSION_AUDIT_LIMITS.milliseconds);
     const current = (): boolean => isClaimedStoppedUrlRun(verified, claim) && context.current();
-    const check = (): void => {
+    const check = (deadline: number): void => {
       const checkedSite = readStoredUrlRenderWithAuthority(deadline, current, withinDeadline => {
         const checked = disposition.checked;
         for (const [file, digest] of [[`reviews/checks/design-verdict-${number}.json`, checked.checkSha256],
@@ -230,13 +251,13 @@ export async function recoverUrlDesignRenderContinuation(input: {
       });
       if (checkedSite !== site) throw refused();
     };
-    const result: UrlDesignRenderContinuation = deepFreeze({ binding, checked: disposition.checked,
+    const subject = deepFreeze({ binding, checked: disposition.checked,
       delivery: receipt as UrlDesignDeliveryAuditRecord, verdictEventSha256: disposition.verdictEventSha256,
       original, earlierRounds: attempts.filter(attempt => attempt.receipt.identity.round < identity.round)
-        .map(attempt => attempt.receipt.identity.round), deadline });
-    check();
-    designRenderContinuations.set(result, check);
-    return result;
+        .map(attempt => attempt.receipt.identity.round) });
+    const deadline = Math.min(context.deadline, original.products.deadline);
+    check(Math.min(deadline, Date.now() + URL_SESSION_AUDIT_LIMITS.milliseconds));
+    return makeDesignRenderContinuationFactory(subject, deadline, check);
   } catch { return null; }
 }
 
@@ -352,6 +373,8 @@ export type UrlSessionAuditResult = { readonly ok: true; readonly scope: (role: 
   readonly commitDesignVerdict: (proof: UrlDesignReviewProof, checked: UrlCheckedDesignVerdict, receipt: UrlSessionToolReceiptMetadata) => Promise<void>;
   readonly readDesignRenderContinuation: (record: UrlDesignDeliveryAuditRecord, product: ValidatedUrlDesignProduct,
     number: number) => Promise<UrlDesignRenderContinuation>;
+  readonly prepareDesignRenderContinuation: (record: UrlDesignDeliveryAuditRecord, product: ValidatedUrlDesignProduct,
+    number: number) => Promise<UrlDesignRenderContinuationFactory>;
   readonly close: () => Promise<UrlSessionAuditSummary>;
   readonly closedHistory: () => UrlSessionAuditHistoryExpected | null;
   readonly summary: () => UrlSessionAuditSummary }
@@ -1122,35 +1145,42 @@ export async function createUrlSessionAudit(given: UrlSessionAuditOptions): Prom
         } });
       } finally { pendingDesignVerdicts.delete(delivery); }
     };
-    const readDesignRenderContinuation: Extract<UrlSessionAuditResult, { ok: true }>['readDesignRenderContinuation'] = async (delivery, product, number) => {
+    const prepareDesignRenderContinuation: Extract<UrlSessionAuditResult, { ok: true }>['prepareDesignRenderContinuation'] = async (delivery, product, number) => {
       const record = currentDesignRecord(delivery), verdict = designVerdicts.get(delivery);
       if (!verdict || verdict.checked.number !== number || product === record.prepared.deref() || usedDesignProducts.has(product)) throw refused();
       const original = await inspectUrlDesignProduct(product, record.binding);
       if (!original) throw refused();
       const revalidate = await record.verify(product, original);
-      const deadline = Date.now() + URL_SESSION_AUDIT_LIMITS.milliseconds;
-      const current = (): boolean => Date.now() < deadline && currentDesignRecord(delivery) === record && designVerdicts.get(delivery) === verdict;
-      const check = (): void => {
-        if (!current()) throw refused();
-        record.verifyStored(current);
+      const readDeadline = Math.min(input.deadline, original.products.deadline);
+      const deadline = Math.min(readDeadline, Date.now() + URL_SESSION_AUDIT_LIMITS.milliseconds);
+      const current = (endsAt: number): boolean => Date.now() < endsAt
+        && currentDesignRecord(delivery) === record && designVerdicts.get(delivery) === verdict;
+      const check = (endsAt: number): void => {
+        if (!current(endsAt)) throw refused();
+        record.verifyStored(() => current(endsAt));
         verdict.verify();
-        if (!current()) throw refused();
+        if (!current(endsAt)) throw refused();
       };
       revalidate();
       verdict.verify();
       const earlierRounds: number[] = [];
       for (const [round, event] of firstDesignReads) {
         if (round >= delivery.identity.round) continue;
-        if (!current()) throw refused();
+        if (!current(deadline)) throw refused();
         verifyDurableEvent('design', event);
         earlierRounds.push(round);
       }
-      if (!current() || usedDesignProducts.has(product) || !isUrlDesignProductLeaseOpen(product)) throw refused();
-      const result = deepFreeze({ binding: record.binding, checked: verdict.checked, delivery,
-        verdictEventSha256: verdict.eventSha256, original, earlierRounds, deadline });
-      designRenderContinuations.set(result, check);
+      if (!current(deadline) || usedDesignProducts.has(product) || !isUrlDesignProductLeaseOpen(product)) throw refused();
+      const subject = deepFreeze({ binding: record.binding, checked: verdict.checked, delivery,
+        verdictEventSha256: verdict.eventSha256, original, earlierRounds });
       usedDesignProducts.add(product);
-      return result;
+      return makeDesignRenderContinuationFactory(subject, readDeadline, check);
+    };
+    const readDesignRenderContinuation: Extract<UrlSessionAuditResult, { ok: true }>['readDesignRenderContinuation'] = async (delivery, product, number) => {
+      const factory = await prepareDesignRenderContinuation(delivery, product, number);
+      const continuation = factory({ deadline: input.deadline, packetSha256: delivery.identity.original.sha256 });
+      if (continuation === null) throw refused();
+      return continuation;
     };
     /** Record identities only. A checked append can be cited by a later delivery
      * verifier independently reproducing the subject under its own live read. */
@@ -1271,7 +1301,7 @@ export async function createUrlSessionAudit(given: UrlSessionAuditOptions): Prom
     return Object.freeze({ ok: true as const, scope: (role: ViewRole) => { const scope = scopes.get(role); if (!scope) poison(); return scope!; },
       append, appendMachinePeer, beginOrderedDesignAudit, commitLaunchHistory, commitDesignDelivery, revalidateDesignDelivery, readDesignDeliveryView,
       commitDesignArtifactRead, readDesignReviewProof, readOrderedDesignReviewProof, commitOrderedDesignVerdict, commitDesignVerdict,
-      readDesignRenderContinuation, close, closedHistory, summary });
+      readDesignRenderContinuation, prepareDesignRenderContinuation, close, closedHistory, summary });
   } catch {
     poisoned = true; await close(); return Object.freeze({ ok: false as const, code: 'url-session-audit-unavailable' as const, summary });
   }

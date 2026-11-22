@@ -19,9 +19,9 @@ import { isPreparedUrlRolePlan, type UrlRolePlan } from './url-role-plan.js';
 import { URL_ROLES } from './url-run-record.js';
 import type { UrlRuntime } from './url-runtime.js';
 import { isUrlDesignProductLeaseOpen, type UrlDesignProductMetadata, type ValidatedUrlDesignProduct } from './url-design-product.js';
-import { assertUrlDesignRenderContinuationCurrent, createUrlSessionAudit, type UrlCommittedLaunchHistory,
+import { createUrlSessionAudit, type UrlCommittedLaunchHistory,
   type UrlDesignDeliveryAuditRecord, type UrlDesignDeliveryView, type UrlCheckedDesignVerdict,
-  type UrlDesignRenderContinuation, type UrlDesignReviewProof, type UrlSessionAuditSummary } from './url-session-audit.js';
+  type UrlDesignRenderContinuationFactory, type UrlDesignReviewProof, type UrlSessionAuditSummary } from './url-session-audit.js';
 import { createUrlSessionBudget, type UrlBudgetSnapshot } from './url-session-budget.js';
 import { readVerifiedUrlAuditLaunches, type UrlSessionAuditHistoryExpected } from './url-session-audit-history.js';
 import { URL_DESIGN_VIEW_ARTIFACT } from './url-design-view.js';
@@ -126,7 +126,7 @@ export interface UrlRunSessions {
   publish(role: ViewRole, event: Exclude<UrlSessionControlEvent, { readonly event: 'design-round-prepared' }>): Promise<boolean>;
   prepareDesignDelivery(product: ValidatedUrlDesignProduct, expectedProduct: UrlDesignProductMetadata,
     sitePath: string, round: number, artifact: DesignArtifactPort): Promise<UrlDesignDeliveryView | null>;
-  prepareFinalRender(number: number, site: number): Promise<UrlDesignRenderContinuation | null>;
+  prepareFinalRender(number: number, site: number): Promise<UrlDesignRenderContinuationFactory | null>;
   current(): Promise<boolean>;
   withinCpuBudget(): boolean;
   waitForProductSamples(): Promise<boolean>;
@@ -670,10 +670,14 @@ async function start(options: UrlRunSessionsOptions, ports: typeof native): Prom
       if (render === null) return null;
       try {
         if (preparedDesign !== prepared || pendingDesignReview !== null || !(await current())) return null;
-        const continuation = await audit.readDesignRenderContinuation(prepared.receipt, render.product, number);
-        if (preparedDesign !== prepared || pendingDesignReview !== null || stopping || failure !== null || !budget.current()) return null;
-        assertUrlDesignRenderContinuationCurrent(continuation);
-        return continuation;
+        const prepare = await audit.prepareDesignRenderContinuation(prepared.receipt, render.product, number);
+        const eligible = (): boolean => preparedDesign === prepared && pendingDesignReview === null && effectCurrent();
+        if (!eligible()) return null;
+        return request => {
+          if (!eligible()) return null;
+          const continuation = prepare(request);
+          return eligible() ? continuation : null;
+        };
       } catch { return null; }
       finally { render.close(); }
     };

@@ -27,10 +27,11 @@ import { buildDossierScreen, placementSubjectOf, type DossierScreen } from './sc
 import { readRunRecord, sourceBindingSha256, type RecordedRunConfig, type RunSubject } from './run-record.js';
 import { initRun } from './init.js';
 import { beginRunProductReads, UrlProductReadRefusal, type RunProductReads } from './url-operation-products.js';
-import { inspectUrlDesignProduct, sameReproducedUrlDesignProduct, validateUrlDesignProduct,
+import { describeCheckedUrlDesignProduct, inspectUrlDesignProduct, sameReproducedUrlDesignProduct, validateUrlDesignProduct,
   type UrlDesignProductMetadata, type ValidatedUrlDesignProduct } from './url-design-product.js';
 import { renderRun, reproduceUrlRender, type ProducedSiteInput } from './render.js';
-import { assertUrlFinalDesignProduct, recoverUrlDesignRenderContinuation, type UrlDesignRenderContinuation } from './url-session-audit.js';
+import { assertUrlFinalDesignProduct, prepareRecoveredUrlDesignRenderContinuation,
+  type UrlDesignRenderContinuation, type UrlDesignRenderContinuationFactory } from './url-session-audit.js';
 import { checkStoredUrlRender, readStoredUrlRenderOutput, readStoredUrlRenderWithAuthority } from './url-stored-render.js';
 import { createCredentialProbe, credentialListFromEnv } from './credential-probe.js';
 import { bindUrlSourceReader, type UrlSourceStore } from './url-source-reader.js';
@@ -1189,10 +1190,12 @@ async function runUrlStages(stateRoot: string, ports: CliPorts, state: Superviso
     renderer: context.prepared.renderer.renderer, urlRenderer: context.prepared.renderer };
   const { record, effectiveDeclaration, screen: runScreen, renderer, origins, current } = context.prepared;
   const scaffold = origins.rendererScaffold;
-  const validate = (reads: RunProductReads, input: ProducedSiteInput, continuationDeadline?: number) => scaffold === null ? Promise.resolve(null)
-    : validateUrlDesignProduct(input, { run, record, declaration: effectiveDeclaration.declaration,
-      screen: runScreen, renderer, ledger: origins.ledger, scaffold, products: reads, current,
-      ...(continuationDeadline === undefined ? {} : { continuationDeadline }) });
+  const productOptions = (products: RunProductReads, rendererScaffold: NonNullable<typeof scaffold>) => ({
+    run, record, declaration: effectiveDeclaration.declaration, screen: runScreen, renderer,
+    ledger: origins.ledger, scaffold: rendererScaffold, products, current,
+  });
+  const validate = (reads: RunProductReads, input: ProducedSiteInput) => scaffold === null ? Promise.resolve(null)
+    : validateUrlDesignProduct(input, productOptions(reads, scaffold));
   const renderDeps = { ...runPorts, sources: cliGateSources(runPorts),
     now: runPorts.now ?? Date.now, probe: createCredentialProbe(credentialListFromEnv({})) };
   const binding = { run, runId: state.runId, pinnedRevision: record.subject.pinnedRevision.commit };
@@ -1200,50 +1203,48 @@ async function runUrlStages(stateRoot: string, ports: CliPorts, state: Superviso
   type FinalRender = { readonly path: string; readonly record: NonNullable<SupervisorState['finalSite']>; readonly output: UrlDesignProductMetadata['output'] };
   let final: FinalRender | null = null;
 
-  async function finalContinuation(number: number, site: number, readDeadline: number) {
+  async function finalContinuation(number: number, site: number) {
     const live = await context.runtime.prepareFinalRender(number, site);
     if (live !== null) return live;
     const recovery = context.prepared.continuation;
     if (recovery === undefined) return null;
     const { verified, claim } = recovery;
     const current = (): boolean => isClaimedStoppedUrlRun(verified, claim) && verified.checkedContext.current();
-    const recoveryDeadline = Math.min(verified.checkedContext.deadline, readDeadline);
-    const output = readStoredUrlRenderWithAuthority(recoveryDeadline, current, withinDeadline => {
+    const output = readStoredUrlRenderWithAuthority(verified.checkedContext.deadline, current, withinDeadline => {
       const attempts = verified.verifiedAudits.flatMap(audit => readVerifiedUrlAuditLaunches(audit)?.ordered ?? []);
       const last = attempts.at(-1);
       if (last?.disposition.kind !== 'eligible' || last.disposition.checked.number !== number || last.receipt.identity.site !== site) return null;
       return readStoredUrlRenderOutput(run, site, last.receipt.identity.storedPopulationSha256, withinDeadline);
     });
     if (output === null) return null;
-    const reads = beginRunProductReads(run, context.artifacts, 'render', recoveryDeadline, context.runtime.waitForProductSamples);
+    const reads = beginRunProductReads(run, context.artifacts, 'render', deadline, context.runtime.waitForProductSamples);
     let product: ValidatedUrlDesignProduct | null = null;
     try {
       const reproduced = await reproduceUrlRender(run, { ...renderDeps, productReads: reads,
         admitProducedSite: async input => { product = await validate(reads, input); return product !== null; } },
       { path: path.join(run, RUN_LAYOUT.site, String(site)), output });
       if (!reproduced || product === null || !reads.isLeaseOpen() || !current()) return null;
-      return await recoverUrlDesignRenderContinuation({ verified, claim, product, number, site });
+      return await prepareRecoveredUrlDesignRenderContinuation({ verified, claim, product, number, site });
     } finally { reads.close(); }
   }
 
   async function finalRender(draft: number, verdict: number, reviewedSite: number): Promise<FinalRender | null> {
-    const capture = (reads: RunProductReads, priorVerdictEvent?: string) => {
+    const capture = (reads: RunProductReads, factory: UrlDesignRenderContinuationFactory, priorVerdictEvent?: string) => {
       let continuation: UrlDesignRenderContinuation | null = null;
       let metadata: UrlDesignProductMetadata | null = null;
       return {
         get continuation() { return continuation; },
         get metadata() { return metadata; },
-        prepare: async (readDeadline: number) => {
-          const proof = await finalContinuation(verdict, reviewedSite, readDeadline);
+        prepare: async ({ deadline, packetSha256 }: { readonly deadline: number; readonly packetSha256: string }) => {
+          const proof = factory({ deadline, packetSha256 });
           if (proof === null || (priorVerdictEvent !== undefined && proof.verdictEventSha256 !== priorVerdictEvent)) return null;
           continuation = proof;
           return proof;
         },
         admit: async (input: ProducedSiteInput) => {
           const proof = continuation;
-          if (proof === null) return false;
-          const product = await validate(reads, input, proof.deadline);
-          const inspected = product === null ? null : await inspectUrlDesignProduct(product, binding);
+          if (proof === null || scaffold === null) return false;
+          const inspected = await describeCheckedUrlDesignProduct(input, { ...productOptions(reads, scaffold), continuationDeadline: proof.deadline });
           if (inspected === null) return false;
           assertUrlFinalDesignProduct(proof, inspected);
           metadata = inspected;
@@ -1251,8 +1252,10 @@ async function runUrlStages(stateRoot: string, ports: CliPorts, state: Superviso
         },
       };
     };
+    const firstFactory = await finalContinuation(verdict, reviewedSite);
+    if (firstFactory === null) return null;
     const firstReads = beginRunProductReads(run, context.artifacts, 'render', deadline);
-    const captured = capture(firstReads);
+    const captured = capture(firstReads, firstFactory);
     let rendered: Awaited<ReturnType<typeof renderRun>>;
     try { rendered = await renderRun(run, { ...renderDeps, productReads: firstReads, admitProducedSite: captured.admit }, captured.prepare); }
     finally { firstReads.close(); }
@@ -1261,9 +1264,11 @@ async function runUrlStages(stateRoot: string, ports: CliPorts, state: Superviso
     const metadata = captured.metadata;
     if (metadata === null || metadata.draftRevision !== draft || rendered.report.draftRevision !== draft
       || !rendered.report.designReview.counts || rendered.report.designReview.packetSha256 !== metadata.original.sha256) return null;
+    const nextFactory = await finalContinuation(verdict, reviewedSite);
+    if (nextFactory === null) return null;
     const reads = beginRunProductReads(run, context.artifacts, 'render', deadline);
     try {
-      const reproduced = capture(reads, first.verdictEventSha256);
+      const reproduced = capture(reads, nextFactory, first.verdictEventSha256);
       const subject = { path: rendered.report.site, output: metadata.output };
       const verified = await reproduceUrlRender(run, { ...renderDeps, productReads: reads, admitProducedSite: reproduced.admit }, subject, reproduced.prepare);
       const next = reproduced.continuation;
@@ -1271,9 +1276,10 @@ async function runUrlStages(stateRoot: string, ports: CliPorts, state: Superviso
       const site = checkStoredUrlRender(run, subject.path, subject.output, () => Date.now() < next.deadline && reads.isLeaseOpen());
       if (site === null || site <= reviewedSite) return null;
       assertUrlFinalDesignProduct(next, reproduced.metadata);
-      return { ...subject, record: { site, draftRevision: draft, verdict, packetSha256: metadata.original.sha256,
+      const verifiedSite = { ...subject, record: { site, draftRevision: draft, verdict, packetSha256: metadata.original.sha256,
         verdictEventSha256: next.verdictEventSha256,
         populationSha256: sha256(encodeCanonicalJson(subject.output, { maxBytes: 2_097_152, maxNodes: 65_536, maxDepth: 32 })) } };
+      return Date.now() < next.deadline && reads.isLeaseOpen() ? verifiedSite : null;
     } finally { reads.close(); }
   }
   let phase = 'drafting';

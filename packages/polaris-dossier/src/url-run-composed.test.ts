@@ -16,6 +16,7 @@ import { startUrlRunSessions, type UrlRunSessions } from './url-run-sessions.js'
 import { sessionRelayTestPort } from './session-relay.js';
 import type { UrlRuntime } from './url-runtime.js';
 import * as sessionAudit from './url-session-audit.js';
+import { isUrlDesignProductLeaseOpen } from './url-design-product.js';
 import { orderedDesignPlanInputForDelivery, planOrderedDesignBytes, type OrderedDesignPlan } from './url-design-delivery.js';
 import { isOrderedDesignSessionProfile } from './session-profile.js';
 import { reconstructColdUrlRunMachineHistory } from './url-machine-cold-history.js';
@@ -185,24 +186,32 @@ describe('composed URL run with actual role processes', { timeout: 360_000 }, ()
     if (eligibleStop) {
       const assertFinal = sessionAudit.assertUrlFinalDesignProduct;
       vi.spyOn(sessionAudit, 'assertUrlFinalDesignProduct').mockImplementation((...args) => { assertFinal(...args); finalProductAssertions++; });
-      const recoverFinal = sessionAudit.recoverUrlDesignRenderContinuation;
-      vi.spyOn(sessionAudit, 'recoverUrlDesignRenderContinuation').mockImplementation(async input => {
-        const result = await recoverFinal(input);
-        resumeChecks.push({ phase: 'cold-final-factory', issued: result !== null });
-        expect(result).not.toBeNull();
-        const checkClaim = vi.spyOn(recovery, 'isClaimedStoppedUrlRun');
-        try {
-          sessionAudit.assertUrlDesignRenderContinuationCurrent(result!);
-          expect(checkClaim.mock.calls).toEqual([[input.verified, input.claim], [input.verified, input.claim]]);
-        } finally { checkClaim.mockRestore(); }
-        expect(() => sessionAudit.assertUrlDesignRenderContinuationCurrent({ ...result! })).toThrow();
-        const priorIds = new Set(liveFinals[0]!.original.parents.map(parent => parent.id));
-        const freshIds = result!.original.parents.filter(parent => !priorIds.has(parent.id));
-        expect(freshIds.length).toBeGreaterThan(0);
-        expect(result!.original.semanticParentsSha256).toBe(liveFinals[0]!.original.semanticParentsSha256);
-        expect(result!.original.semanticInputsSha256).toBe(liveFinals[0]!.original.semanticInputsSha256);
-        coldFinals.push(result!);
-        return result;
+      const recoverFinal = sessionAudit.prepareRecoveredUrlDesignRenderContinuation;
+      vi.spyOn(sessionAudit, 'prepareRecoveredUrlDesignRenderContinuation').mockImplementation(async input => {
+        const prepare = await recoverFinal(input);
+        resumeChecks.push({ phase: 'cold-final-prepared', available: prepare !== null });
+        if (prepare === null) return null;
+        return request => {
+          expect(isUrlDesignProductLeaseOpen(input.product)).toBe(false);
+          const result = prepare(request);
+          resumeChecks.push({ phase: 'cold-final-factory', issued: result !== null });
+          expect(result).not.toBeNull();
+          expect(result!.deadline).toBeLessThanOrEqual(Math.min(request.deadline, result!.original.products.deadline));
+          expect(prepare(request)).toBeNull();
+          const checkClaim = vi.spyOn(recovery, 'isClaimedStoppedUrlRun');
+          try {
+            sessionAudit.assertUrlDesignRenderContinuationCurrent(result!);
+            expect(checkClaim.mock.calls).toEqual([[input.verified, input.claim], [input.verified, input.claim]]);
+          } finally { checkClaim.mockRestore(); }
+          expect(() => sessionAudit.assertUrlDesignRenderContinuationCurrent({ ...result! })).toThrow();
+          const priorIds = new Set(liveFinals[0]!.original.parents.map(parent => parent.id));
+          const freshIds = result!.original.parents.filter(parent => !priorIds.has(parent.id));
+          expect(freshIds.length).toBeGreaterThan(0);
+          expect(result!.original.semanticParentsSha256).toBe(liveFinals[0]!.original.semanticParentsSha256);
+          expect(result!.original.semanticInputsSha256).toBe(liveFinals[0]!.original.semanticInputsSha256);
+          coldFinals.push(result!);
+          return result;
+        };
       });
     }
     const reproducedAtDesignHostCount: number[] = [];
@@ -367,9 +376,16 @@ describe('composed URL run with actual role processes', { timeout: 360_000 }, ()
     }
     const observedRuntime: UrlRunSessions = !eligibleStop ? controller : { ...controller,
       prepareFinalRender: async (...args) => {
-        const proof = await controller.prepareFinalRender(...args);
-        if (proof !== null) liveFinals.push(proof);
-        return proof;
+        const prepare = await controller.prepareFinalRender(...args);
+        if (prepare === null) return null;
+        return request => {
+          const proof = prepare(request);
+          if (proof !== null) {
+            expect(proof.deadline).toBeLessThanOrEqual(Math.min(request.deadline, proof.original.products.deadline));
+            liveFinals.push(proof);
+          }
+          return proof;
+        };
       },
       stop: async () => {
         if (cutTaken || finalProductAssertions !== 3) return controller.stop();

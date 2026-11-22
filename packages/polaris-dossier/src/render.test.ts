@@ -402,8 +402,8 @@ describe('render', () => {
   it('requests the final proof after reading the draft and refuses an unavailable proof before producer or storage', async () => {
     const f = await preparedUrlRender();
     const reads = beginRunProductReads(f.run, f.artifacts, 'render', Date.now() + 30_000);
-    const prepare = vi.fn(async (deadline: number) => {
-      expect(deadline).toBe(reads.deadline);
+    const prepare = vi.fn(async (request: { deadline: number; packetSha256: string }) => {
+      expect(request).toEqual({ deadline: reads.deadline, packetSha256: expect.stringMatching(/^[a-f0-9]{64}$/u) });
       expect(reads.revalidate().metadata.records.map(record => record.path)).toEqual(expect.arrayContaining([
         'brief.json', 'checks/rev-0.json', 'drafts/rev-0.json',
       ]));

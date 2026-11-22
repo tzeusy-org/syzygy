@@ -153,7 +153,8 @@ const EXCLUSION_REASON: Readonly<Record<ScreenExclusion, GenerationExclusionReas
   'not-utf8-text': 'not-utf-8', 'active-content': 'active-content',
 };
 
-type DesignContinuationSource = UrlDesignRenderContinuation | ((deadline: number) => Promise<UrlDesignRenderContinuation | null>);
+type DesignContinuationSource = UrlDesignRenderContinuation
+  | ((input: { readonly deadline: number; readonly packetSha256: string }) => Promise<UrlDesignRenderContinuation | null>);
 
 export async function renderRun(runDir: string, deps: RenderDeps, designContinuation?: DesignContinuationSource): Promise<RenderResult> {
   try { return await render(runDir, deps, undefined, designContinuation); }
@@ -288,7 +289,7 @@ async function render(runDir: string, deps: RenderDeps, storedSite?: StoredUrlRe
   let checkedDesign: UrlDesignRenderContinuation | undefined;
   if (typeof continuationSource === 'function') {
     if (!products!.isLeaseOpen()) throw new UrlProductReadRefusal();
-    const proof = await continuationSource(products!.deadline);
+    const proof = await continuationSource({ deadline: products!.deadline, packetSha256: reviewed.sha256 });
     if (proof === null || !products!.isLeaseOpen() || Date.now() >= proof.deadline) throw new UrlProductReadRefusal();
     checkedDesign = proof;
   } else checkedDesign = continuationSource;

@@ -488,11 +488,18 @@ describe('protected URL design delivery audit', () => {
           expect(stoppedProducts.artifacts.some(artifact => artifact.role === 'design' && artifact.path === submittedPath)).toBe(false);
           expect(() => producer.commitOrderedDesignVerdict(staged, fresh, terminal)).toThrow('url-run-artifacts-unavailable');
           await expect(audit.commitOrderedDesignVerdict(fresh, checked, terminal)).rejects.toThrow('url-session-audit-refused');
-          const continuation = await audit.readDesignRenderContinuation(sealed, reproduced, checked.number);
-          expect(continuation.checked).toEqual(checked);
+          let continuation: sessionAudit.UrlDesignRenderContinuation | null;
+          if (mode === 'ordered-resumed') {
+            const prepare = await audit.prepareDesignRenderContinuation(sealed, reproduced, checked.number);
+            const request = { deadline: Date.now() + 1_000, packetSha256: sealed.identity.original.sha256 };
+            continuation = prepare(request);
+            expect(continuation?.deadline).toBe(request.deadline);
+            expect(prepare(request)).toBeNull();
+          } else continuation = await audit.readDesignRenderContinuation(sealed, reproduced, checked.number);
+          expect(continuation?.checked).toEqual(checked);
           expect(audit.summary()).toMatchObject({ captured: { 'ordered-design-verdict': 1, 'design-ordered': 23, 'tool-receipt': 0 } });
           fs.appendFileSync(segment('design'), '\n');
-          expect(() => sessionAudit.assertUrlDesignRenderContinuationCurrent(continuation)).toThrow('url-session-audit-refused');
+          expect(() => sessionAudit.assertUrlDesignRenderContinuationCurrent(continuation!)).toThrow('url-session-audit-refused');
           return;
         }
 

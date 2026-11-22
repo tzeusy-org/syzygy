@@ -125,7 +125,26 @@ export async function admitUrlDesignProduct(input: ProducedSiteInput, options: D
  * thirty seconds, clipped to the original run deadline).
  * Renewal requires a new genuine operation proving the exact consumed population;
  * writable saved records cannot revive it. No durable handoff is implemented. */
-export async function validateUrlDesignProduct(input: ProducedSiteInput, options: DesignProductOptions): Promise<ValidatedUrlDesignProduct | null> {
+export function validateUrlDesignProduct(input: ProducedSiteInput, options: DesignProductOptions): Promise<ValidatedUrlDesignProduct | null> {
+  const { signal } = input, { current, products } = options;
+  return checkUrlDesignProduct(input, options, (entry, deadline) => {
+    const capability = Object.freeze({}) as ValidatedUrlDesignProduct;
+    const lifetime = { deadline, authorityCurrent: current, backendState: products.leaseState, retired: false };
+    signal.addEventListener('abort', () => { if (Date.now() < deadline) lifetime.retired = true; }, { once: true });
+    lifetimes.set(capability, lifetime);
+    validated.set(capability, entry);
+    return capability;
+  });
+}
+
+/** Final render compares descriptive metadata in the same producer call. It
+ * needs neither a materializing token nor a second inspection of that token. */
+export function describeCheckedUrlDesignProduct(input: ProducedSiteInput, options: DesignProductOptions): Promise<UrlDesignProductMetadata | null> {
+  return checkUrlDesignProduct(input, options, entry => entry.metadata);
+}
+
+async function checkUrlDesignProduct<T>(input: ProducedSiteInput, options: DesignProductOptions,
+  finish: (entry: ProductEntry, deadline: number) => T): Promise<T | null> {
   const { run, record, declaration, screen, renderer, ledger, scaffold, products, current, continuationDeadline } = options;
   const signal = input.signal;
   const waitForValidation = (): Promise<void> => products.waitForSample?.() ?? yieldToPoll();
@@ -217,18 +236,13 @@ export async function validateUrlDesignProduct(input: ProducedSiteInput, options
       parents: parentMetadata, semanticParentsSha256, semanticInputsSha256, products: checked.metadata,
       output: { files: screened.files, pages: screened.pages, bytes: screened.bytes, population }, rawActive: checkedView.rawActive });
     if (!stable()) return null;
-    const capability = Object.freeze({}) as ValidatedUrlDesignProduct;
     const entry: ProductEntry = { metadata, original: Uint8Array.from(original), view: Uint8Array.from(checkedView.bytes),
       parents, rendererCurrent, stable, leaseCurrent,
       ...(products.waitForSample === undefined ? {} : { waitForSample: products.waitForSample }) };
     // Copying can itself cross the deadline. Publish only after a fresh cheap
     // lease sample, with no await between that sample and publication.
     if (!leaseCurrent()) return null;
-    const lifetime = { deadline, authorityCurrent: current, backendState: products.leaseState, retired: false };
-    signal.addEventListener('abort', () => { if (Date.now() < deadline) lifetime.retired = true; }, { once: true });
-    lifetimes.set(capability, lifetime);
-    validated.set(capability, entry);
-    return capability;
+    return finish(entry, deadline);
   } catch { return null; }
 }
 

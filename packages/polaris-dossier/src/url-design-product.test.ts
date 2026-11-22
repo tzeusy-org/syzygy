@@ -10,7 +10,7 @@ import type { ProducedSiteInput, DossierRenderer } from './render.js';
 import type { ProductReadEvidence, RunProductReads } from './url-operation-products.js';
 import type { UrlOriginMetadata, UrlOriginReceipt } from './url-origin-ledger.js';
 import {
-  admitUrlDesignProduct, inspectUrlDesignProduct, readInertUrlDesignProduct, readUrlDesignProduct, recheckUrlDesignProductInputs,
+  admitUrlDesignProduct, describeCheckedUrlDesignProduct, inspectUrlDesignProduct, readInertUrlDesignProduct, readUrlDesignProduct, recheckUrlDesignProductInputs,
   sameReproducedUrlDesignProduct, validateUrlDesignProduct, urlDesignProductLeaseState,
   type DesignProductOptions, type ValidatedUrlDesignProduct,
 } from './url-design-product.js';
@@ -373,13 +373,16 @@ describe('active URL design product capability', () => {
       const options = { ...f.options, continuationDeadline };
       const product = await validateUrlDesignProduct(f.input, options);
       expect(product).not.toBeNull();
+      const expected = await inspectUrlDesignProduct(product!, binding);
+      expect(expected).not.toBeNull();
+      expect(await describeCheckedUrlDesignProduct(f.input, options)).toEqual(expected);
       vi.setSystemTime(continuationDeadline);
       expect(await inspectUrlDesignProduct(product!, binding)).toBeNull();
       expect(f.reads.leaseState()).toBe('open');
 
       vi.setSystemTime(start);
       gates.currentRenderer.mockImplementationOnce(async () => { vi.setSystemTime(continuationDeadline); return true; });
-      expect(await validateUrlDesignProduct(f.input, options)).toBeNull();
+      expect(await describeCheckedUrlDesignProduct(f.input, options)).toBeNull();
       expect(f.reads.leaseState()).toBe('open');
     } finally { vi.useRealTimers(); }
   });
