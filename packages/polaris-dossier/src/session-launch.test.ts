@@ -13,7 +13,7 @@ import { DOSSIER_POLICY_PATH } from './policy-snapshot.js';
 import { buildDossierScreen } from './screen.js';
 import { loadSessionCredential } from './session-credential.js';
 import { screenOrderedDesignRequest, SESSION_CONTENT_CLASSES, SESSION_POLICY_LIMITS } from './session-egress-policy.js';
-import { startSessionBroker } from './session-broker.js';
+import { sessionBrokerTestPort } from './session-broker.js';
 import { sessionHostTestPort, type SessionHost, type SessionHostOptions } from './session-host.js';
 import { createOrderedDesignSessionProfile, createSessionProfile, DEFAULT_SESSION_MODEL, isOrderedDesignSessionProfile, isSessionProfile,
   matchesOrderedDesignContinuationResponse, matchesOrderedDesignResultMessage, matchesOrderedDesignTerminalResponse, projectSessionProfileMetadata, SESSION_PROFILE_BETA,
@@ -515,7 +515,7 @@ async function runNativeOrderedFixture(scenario: OrderedScenario) {
     },
   });
   cleanup.push(relay.close);
-  const broker = await startSessionBroker(path.join(root, 'broker/b.sock'), async (invocation, release) => {
+  const broker = await sessionBrokerTestPort(path.join(root, 'broker/b.sock'), async (invocation, release) => {
     const step = steps[delivered.length];
     if (!relay.responseFlushed() || !step || !sameWireValue(invocation, { tool: step.tool, input: step.input })) throw new Error('own broker order refused');
     await orderedSession.issueReply(invocation, (reply, revalidate) => {
