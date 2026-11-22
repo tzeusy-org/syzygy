@@ -593,6 +593,18 @@ describe('check: reading ledger', () => {
     expect(result.readingDifference).toEqual({ state: 'unknown', why: 'this check\'s record was written in its bounded form, which keeps no reading ledger', unreadableRuns: 0, unreadableCheckRecords: 0 });
     expect(JSON.stringify(result.readingDifference)).not.toContain('this draft does not parse, so it has no reading ledger');
   });
+
+  // Order pinned where a draft does not parse and its record is still written in the bounded form. [Inferred] Unreached with today's caps
+  // (such a record holds at most two findings, no quotation and the capped manifestFacts), so only an injected measure reaches it here;
+  // the bounded form's words win, since that is the record written.
+  it('gives the bounded form\'s words where a draft that does not parse has its record written in the bounded form', async () => {
+    const run = await briefedRun();
+    writeDraft(run, '{ not json');
+    const checked = await checkDraft(run, {}, deps({ measureRecord: (text) => ({ ...measureCheckRecord(text), bytes: 1_000_000_000 }) }));
+    if (!checked.ok) throw new Error(checked.refusal.reason);
+    expect(checked.report).toHaveProperty('findingsLeftOut');
+    expect(checked.report.readingDifference).toEqual({ state: 'unknown', why: 'this check\'s record was written in its bounded form, which keeps no reading ledger', unreadableRuns: 0, unreadableCheckRecords: 0 });
+  });
 });
 
 describe('check: manifest facts (REQ-polaris-generation-034 version 2.7, syzygy-3efd.25)', () => {
