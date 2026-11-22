@@ -173,7 +173,7 @@ authority and no model yet called on the current path.
     its code change (bind 3.0.0 for new runs) is not yet landed, and until it lands runs stay on the policy they bound.
     *(2026-11-22: the predecessor figure "430 scenarios" is superseded by that
     amendment; all 39 identities remain.)*
-    [Infrastructure recognizers amendment 2.14](openspec/changes/dossier-infrastructure-recognizers) is agent-adopted in A-45.
+    [Infrastructure recognizers amendment 2.14](openspec/changes/dossier-infrastructure-recognizers) is agent-adopted in A-46.
     It replaces REQ-polaris-generation-034 again (117 to 130 scenarios: five infrastructure recognizers, a coverage
     remainder, an infrastructure map page, the 2.10 reader rule for the draft, frozen revisions, the brief record and
     `run-advice.json`, and the bounded form's words for a draft that does not parse); its code is not yet landed.
