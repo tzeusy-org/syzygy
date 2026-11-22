@@ -1,0 +1,88 @@
+{
+  "subject": "7ff854f474d2678be24830aa024925b61e665007",
+  "tree": "4846e711375e7eea26a09ee584d9e19344e6f2ab",
+  "workerSubject": "d56d6d3fc883866b377a491a6024b0c26508f7ee",
+  "identicalFullIndexDiffSha256": "6e7aafd3c5ca6f98a3afe964698bcfd63776d2e6d0e09eba2ac4bb4e472cb4c8",
+  "sources": [
+    {
+      "path": "packages/polaris-dossier/src/effective-run-record.test.ts",
+      "sha256": "a72e9612291604e131ca525dca3d899319bca42cfeb6115d401c42cccefc68cf"
+    },
+    {
+      "path": "packages/polaris-dossier/src/effective-run-record.ts",
+      "sha256": "fa6bd42a9854d50450e5391aba49a0a6d7122cd0ec5a68cf705bd02f16e99da9"
+    },
+    {
+      "path": "packages/polaris-dossier/src/render.test.ts",
+      "sha256": "f509e5730c1f9bf5d87f9f462f72ab487be0a9b59c6f4f9b0d25a8c38d4a2153"
+    },
+    {
+      "path": "packages/polaris-dossier/src/url-launch-history.test.ts",
+      "sha256": "24bd36e160b4e8187ce788d804f15a3e6f3e2293f294b7f2666dd2187ece35e7"
+    },
+    {
+      "path": "packages/polaris-dossier/src/url-mode-registry.test.ts",
+      "sha256": "519c9603fcf53a9e39b249e88d45a4588d7ed7d1876da0dca1c6e236f6261c5b"
+    },
+    {
+      "path": "packages/polaris-dossier/src/url-mode-registry.ts",
+      "sha256": "a96886c2339e2b3693a5d73c31156349819d14e1d1b83e559dc35c051b014478"
+    },
+    {
+      "path": "packages/polaris-dossier/src/url-run-artifacts.test.ts",
+      "sha256": "3aeb9bb8a801497e73605a409b9aff7dea4a96aaf095df4ba727ae96c1a3b20e"
+    },
+    {
+      "path": "packages/polaris-dossier/src/url-run-composed.testkit.ts",
+      "sha256": "748f848bdcf4f8a862266cd8ddfd8db1191ea20d470b0b0334f17b36e1f21fc9"
+    }
+  ],
+  "artifacts": [
+    {
+      "path": "source-review-RAW.md",
+      "bytes": 6118,
+      "sha256": "bb820e78d7adf5f6c1b73df741a30773b41c3501c6f4c0f446d71ade8c1e0a02"
+    },
+    {
+      "path": "f3-default-resolver-before.log",
+      "bytes": 2183,
+      "sha256": "8584c2172f111638ceb7bf43f4c98dcdc745ea6729262100d50f621b1af79e70"
+    },
+    {
+      "path": "f3-default-resolver-before-overlay.patch",
+      "bytes": 5364,
+      "sha256": "7bac5b2fb055d4feb7421d43d920d792f910d6020411b380eb569a26be366ede"
+    },
+    {
+      "path": "f3-default-resolver-before-overlay.json",
+      "bytes": 1195,
+      "sha256": "642d780bfb5d0356a8bc6c3ff0eb9882e760c15925d9aaf48316c186ab7a6408"
+    },
+    {
+      "path": "f3-default-resolver-focused.log",
+      "bytes": 486,
+      "sha256": "5d1d8736865d335625b31a6a321b4fd95a6d1b1d5179d26a34285a5b35be1b40"
+    },
+    {
+      "path": "f3-default-resolver-typecheck.log",
+      "bytes": 37,
+      "sha256": "396901319daac4a4413b23478852db3c572014f86c71d148273565f0f3332696"
+    },
+    {
+      "path": "f3-default-resolver-faults.json",
+      "bytes": 2798,
+      "sha256": "1e96ebf77eba79c5e9f4f507e85ea15e01dea6f59a54e50f15cd1ab5c984c2c5"
+    },
+    {
+      "path": "f3-default-resolver-ignore-factory-identity.log",
+      "bytes": 2210,
+      "sha256": "83b350ed2c98d44dac598ee0ae44a18b6aa996429f4a9981da18b0d358bf0e18"
+    },
+    {
+      "path": "f3-default-resolver-reuse-policy-screen.log",
+      "bytes": 2552,
+      "sha256": "a828c4fc640a1432a3795cd87831c2876ce2ae6abf5e99c71b0fe8b143dc07b7"
+    }
+  ],
+  "scope": "Exact default resolver and host registry focused integration tests, worker typecheck, baseline failure and two selected faults, independent source-only review. Native recovery is recorded separately."
+}

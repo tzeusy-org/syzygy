@@ -1,0 +1,49 @@
+{
+  "subject": "cfd31621e45e4f54e445d24342c322b768fe9283",
+  "tree": "0bc07342306224a84b07edd48b76ac50d71040dd",
+  "sources": [
+    {
+      "path": "packages/polaris-dossier/src/polaris.ts",
+      "sha256": "8108ed7afa7b477d38ec1b649f156b64dc891d01b335b1f126fb1bd79ea3be3e"
+    },
+    {
+      "path": "packages/polaris-dossier/src/url-recovery.ts",
+      "sha256": "0af885f068b313bd70895d75492545aab4d3b25b4d0a8db542edbaa5244088d5"
+    },
+    {
+      "path": "packages/polaris-dossier/src/url-run-composed.test.ts",
+      "sha256": "edc01db813e698ffbba741e0306de61ad6fe800f520946d1eead0a54dcd4dc3f"
+    },
+    {
+      "path": "packages/polaris-dossier/src/url-stopped-run.test.ts",
+      "sha256": "c04233f8d1d163f538c80ee995d5bc3eb43c0106435a26eeb68adfcaa01053bb"
+    },
+    {
+      "path": "packages/polaris-dossier/src/url-stopped-run.ts",
+      "sha256": "7d8713e299385d57e4888a6dfeb37fef0146fc39482839e8ed91c604c13fb70e"
+    }
+  ],
+  "artifacts": [
+    {
+      "path": "source-review-RAW.md",
+      "bytes": 4780,
+      "sha256": "7e4ebdda5b701cc3009e14ada27b05ae5e1d3987ad98666f7e8096f9022eebb6"
+    },
+    {
+      "path": "typecheck.log",
+      "bytes": 37,
+      "sha256": "396901319daac4a4413b23478852db3c572014f86c71d148273565f0f3332696"
+    },
+    {
+      "path": "worker-unit.log",
+      "bytes": 588,
+      "sha256": "ddad77c9d1ac3d9359f82c8e63b9f5266b41c6e3024923b74d44f117d584c0ff"
+    },
+    {
+      "path": "worker-typecheck.log",
+      "bytes": 37,
+      "sha256": "396901319daac4a4413b23478852db3c572014f86c71d148273565f0f3332696"
+    }
+  ],
+  "scope": "Source-only independent review and root typecheck. Worker 63f8450def926b704503a5351e083014f01de7cd ran 20 settled-boundary and resume unit cases. Exact public composed results are recorded separately."
+}

@@ -1,0 +1,40 @@
+
+ RUN  v3.2.7 /home/orca/.tmp/syzygy-beads-looper-20261114-54ebc9f1/d10-f3-default-resolver
+
+ ❯ |integration| packages/polaris-dossier/src/effective-run-record.test.ts (7 tests | 1 failed | 6 skipped) 34ms
+   ↓ effective host run readers > keeps the package URL authority current across reads and reopens committed policy for a full metadata check
+   × effective host run readers > rechecks exact admitted files and protected URL authority without repeating the bound screening 33ms
+     → expected true to be false // Object.is equality
+   ↓ effective host run readers > preserves legacy operator projection and refuses every URL marker/sidecar without protected host identity
+   ↓ effective host run readers > requires complete independent URL bindings, rejects deletion/downgrade and rechecks metadata after screening
+   ↓ effective host run readers > refuses symlink, hardlink, directory, FIFO, excessive, malformed UTF8 and replaced metadata without blocking
+   ↓ effective host run readers > screens decoded fields and complete cross-field composition before release, with bounded constant refusals
+   ↓ effective host run readers > uses one effective declaration in brief, status and close, and requires protected URL render inputs
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  |integration| packages/polaris-dossier/src/effective-run-record.test.ts > effective host run readers > rechecks exact admitted files and protected URL authority without repeating the bound screening
+AssertionError: expected true to be false // Object.is equality
+
+- Expected
++ Received
+
+- false
++ true
+
+ ❯ packages/polaris-dossier/src/effective-run-record.test.ts:139:23
+    137|     changedContext = false;
+    138|     changedScreen = true;
+    139|     expect(current()).toBe(false);
+       |                       ^
+    140|     changedScreen = false;
+    141|     for (const file of [base, sidecar]) {
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 6 skipped (7)
+   Start at  18:41:23
+   Duration  2.81s (transform 1.85s, setup 9ms, collect 2.49s, tests 34ms, environment 0ms, prepare 49ms)
+

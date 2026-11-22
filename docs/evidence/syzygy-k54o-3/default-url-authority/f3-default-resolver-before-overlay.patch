@@ -1,0 +1,86 @@
+diff --git a/packages/polaris-dossier/src/url-mode-registry.ts b/packages/polaris-dossier/src/url-mode-registry.ts
+--- a/packages/polaris-dossier/src/url-mode-registry.ts
++++ b/packages/polaris-dossier/src/url-mode-registry.ts
+@@ -119,10 +119,10 @@
+ 
+ /** Composition-root default. Ordinary operator mode requires no policy read;
+  * URL metadata uses the current committed detector scope, without source reads. */
+-export function packageUrlRunModeAuthority(recordsRoot: string): EffectiveRunAuthority {
++export function packageUrlRunModeAuthority(recordsRoot: string, hostRoot = URL_HOST_ROOT): EffectiveRunAuthority {
+   return (run, runId) => {
+     let predicate: ((text: string) => boolean) | undefined;
+-    const authority = urlRunModeAuthority(URL_HOST_ROOT, text => {
++    const authority = urlRunModeAuthority(hostRoot, text => {
+       if (predicate === undefined) {
+         const snapshot = readCommittedPolicy(recordsRoot);
+         if (!snapshot.ok) return false;
+diff --git a/packages/polaris-dossier/src/effective-run-record.test.ts b/packages/polaris-dossier/src/effective-run-record.test.ts
+--- a/packages/polaris-dossier/src/effective-run-record.test.ts
++++ b/packages/polaris-dossier/src/effective-run-record.test.ts
+@@ -16,7 +16,9 @@
+ import { runStatus } from './status.js';
+ import { closeRun } from './close.js';
+ import { renderRun, type DossierRenderer, type DossierRendererInput } from './render.js';
+-import { FIXTURE_SCREEN, fixtureSources, fullFixtureRun, makeClone, NOW, LATER, policyFixture, REAL_ROOT } from './full-run.testkit.js';
++import { FIXTURE_SCREEN, commitPolicyFixture, fixtureSources, fullFixtureRun, makeClone, NOW, LATER, policyFixture, REAL_ROOT } from './full-run.testkit.js';
++import { readCommittedPolicy } from './policy-snapshot.js';
++import { packageUrlRunModeAuthority, registerUrlRunMode } from './url-mode-registry.js';
+ 
+ const H = 'a'.repeat(64), OTHER = 'b'.repeat(64), PIN = 'c'.repeat(40);
+ const RUN = `run-${'d'.repeat(32)}`;
+@@ -27,14 +29,14 @@
+   if (!parsed.ok) throw new Error('synthetic configuration refused');
+   return parsed.config;
+ };
+-function ownRun(): string {
++function ownRun(screeningPolicy = policyFixture().binding): string {
+   const root = tempDir('effective-run-record-'), run = path.join(root, RUN);
+   fs.mkdirSync(run);
+   fs.writeFileSync(path.join(run, 'run.json'), encodeRunRecord(config(), {
+     repository: { url: 'example.invalid/team/project', repositoryId: 'team-project', role: 'observed-source' },
+     clone: { path: path.join(root, 'unused-synthetic-clone'), declaredBy: 'operator', label: 'Inferred', use: 'read' },
+     pinnedRevision: { commit: PIN, label: 'synthetic pin selection', pinnedAt: '2026-10-07T12:00:00.000Z' },
+-    screeningPolicy: policyFixture().binding, contentClasses: DOSSIER_CONTENT_CLASSES,
++    screeningPolicy, contentClasses: DOSSIER_CONTENT_CLASSES,
+     visibility: { value: 'private', source: 'conservative-default', declaredBy: 'synthetic default', label: 'Inferred' },
+     governed: { kind: 'unstated', because: ['synthetic fixture has no project declaration'] },
+     workItem: { identity: null, reason: NO_WORK_ITEM_REASON },
+@@ -77,6 +79,38 @@
+ }
+ 
+ describe('effective host run readers', () => {
++  it('keeps the package URL authority current across reads and reopens committed policy for a full metadata check', () => {
++    const recordsRoot = commitPolicyFixture(tempDir('effective-run-observer-'), policyFixture().bytes);
++    const policy = readCommittedPolicy(recordsRoot);
++    if (!policy.ok) throw new Error('synthetic committed policy refused');
++    const policyFile = path.join(recordsRoot, policy.binding.path);
++    const root = tempDir('effective-run-host-');
++    const run = ownRun(policy.binding), authority = packageUrlRunModeAuthority(recordsRoot, root);
++    const url = bindUrl(run);
++    expect(registerUrlRunMode({ root, run, context: url.context })).toBe(true);
++    expect(readEffectiveRunRecord(run, authority)).toMatchObject({ ok: true, effective: { kind: 'url' } });
++    const current = bindCurrentEffectiveUrlRun(run, authority, {
++      baseSha256: sha256(fs.readFileSync(path.join(run, 'run.json'))), sidecarSha256: url.sha256,
++    });
++    expect(current).not.toBeNull();
++    expect(current?.()).toBe(true);
++    expect(current?.()).toBe(true);
++
++    fs.appendFileSync(policyFile, '\n');
++    expect(readEffectiveRunRecord(run, authority)).toMatchObject({ ok: false, code: 'metadata-screen' });
++    expect(readEffectiveRunRecord(ownRun(policy.binding), authority)).toMatchObject({ ok: true, effective: { kind: 'operator' } });
++    fs.writeFileSync(policyFile, policy.bytes);
++    expect(readEffectiveRunRecord(run, authority)).toMatchObject({ ok: true, effective: { kind: 'url' } });
++
++    const sidecar = path.join(run, URL_RUN_SIDECAR);
++    fs.appendFileSync(sidecar, '\n');
++    expect(current?.()).toBe(false);
++    fs.writeFileSync(sidecar, url.text);
++    expect(current?.()).toBe(true);
++    fs.unlinkSync(path.join(root, `${sha256(run)}.json`));
++    expect(current?.()).toBe(false);
++  });
++
+   it('rechecks exact admitted files and protected URL authority without repeating the bound screening', () => {
+     const run = ownRun(), base = path.join(run, 'run.json'), sidecar = path.join(run, URL_RUN_SIDECAR);
+     let screened = 0, revoked = false, changedContext = false;

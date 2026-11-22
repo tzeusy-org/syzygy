@@ -1,0 +1,27 @@
+{
+  "subject": "ac7b472a3e0771a7a429b48f65c2e9dd18aab7b3",
+  "tree": "f4f3ff411ab1f49894122824428dfd820fa6750d",
+  "sources": [
+    {
+      "path": "packages/polaris-dossier/src/url-run-composed.test.ts",
+      "sha256": "f9f2d19ea7eef94b9a38e82b7edf9606720f3cafb557c7d8e1266556eabf7611"
+    },
+    {
+      "path": "packages/polaris-dossier/src/url-run-ordered-attempt.ts",
+      "sha256": "009b828db3cb2f5c9a527238ca0f3bf864af2d87a706e9753171bfe0a611cef4"
+    }
+  ],
+  "artifacts": [
+    {
+      "path": "source-review-RAW.md",
+      "bytes": 6806,
+      "sha256": "3f0dcb4eebcb3ed1bde6813fe2aeee7cb8ffc1cf9a2d62b1cf12f08add39cce9"
+    },
+    {
+      "path": "typecheck.log",
+      "bytes": 37,
+      "sha256": "396901319daac4a4413b23478852db3c572014f86c71d148273565f0f3332696"
+    }
+  ],
+  "scope": "Independent source-only review and typecheck. Actual tested initial delivery followed both private reproductions; that attempt later failed before its initial stop after a separate author transport failure. The combined successor native run is tracked separately."
+}

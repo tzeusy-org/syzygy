@@ -1,0 +1,11 @@
+
+ RUN  v3.2.7 /home/orca/.tmp/syzygy-beads-looper-20261114-54ebc9f1/d10-f3-default-resolver
+
+ ✓ |integration| packages/polaris-dossier/src/effective-run-record.test.ts (7 tests | 1 skipped) 252ms
+ ✓ |integration| packages/polaris-dossier/src/url-mode-registry.test.ts (5 tests) 24ms
+
+ Test Files  2 passed (2)
+      Tests  11 passed | 1 skipped (12)
+   Start at  18:43:53
+   Duration  3.53s (transform 1.96s, setup 15ms, collect 2.79s, tests 277ms, environment 0ms, prepare 100ms)
+

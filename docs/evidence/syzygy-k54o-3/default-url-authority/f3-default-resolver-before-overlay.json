@@ -1,0 +1,30 @@
+{
+  "base": "7d454d1e483be085d0678449763880e8da60ac2a",
+  "subject": "d56d6d3fc883866b377a491a6024b0c26508f7ee",
+  "beforeOverlay": "f3-default-resolver-before-overlay.patch",
+  "beforeOverlaySha256": "7bac5b2fb055d4feb7421d43d920d792f910d6020411b380eb569a26be366ede",
+  "files": {
+    "packages/polaris-dossier/src/url-mode-registry.ts": {
+      "baseSha256": "9ecd069ae4963dc5b8290503530cfffe2ffec43238fc8114abbe0ba388fd0832",
+      "overlaySha256": "16965ff550184b7301a588cbeab7f4f4362fcde157827a679f765fd7a65fd80b"
+    },
+    "packages/polaris-dossier/src/effective-run-record.test.ts": {
+      "baseSha256": "c03461dd59fdc1155cd529f9e4fc054f6c362e887c8d150a67e5974565e4fde4",
+      "overlaySha256": "e5221acc87cdff11dddaba95ac982214735130b515aa8d1cc92429142cd8e547"
+    }
+  },
+  "beforeCommand": [
+    "node_modules/.bin/vitest",
+    "run",
+    "--project",
+    "integration",
+    "--maxWorkers",
+    "1",
+    "packages/polaris-dossier/src/effective-run-record.test.ts",
+    "-t",
+    "keeps the package URL authority current"
+  ],
+  "beforeExit": 1,
+  "beforeLog": "f3-default-resolver-before.log",
+  "beforeLogSha256": "8584c2172f111638ceb7bf43f4c98dcdc745ea6729262100d50f621b1af79e70"
+}

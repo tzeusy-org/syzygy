@@ -1,0 +1,12 @@
+
+ RUN  v3.2.7 /home/orca/.tmp/syzygy-beads-looper-20261114-54ebc9f1/d10-f3-work-budget
+
+ ✓ |unit| packages/polaris-dossier/src/url-stopped-run.test.ts (15 tests) 655ms
+   ✓ retained URL stop expectation > keeps repeat stops in distinct immutable generations and rejects broken links, changed subjects and cycles  609ms
+ ✓ |unit| packages/polaris-dossier/src/url-run-resume.test.ts (5 tests) 8ms
+
+ Test Files  2 passed (2)
+      Tests  20 passed (20)
+   Start at  18:40:30
+   Duration  3.70s (transform 1.81s, setup 44ms, collect 2.53s, tests 663ms, environment 0ms, prepare 107ms)
+

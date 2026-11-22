@@ -1,0 +1,80 @@
+{
+  "subject": "d56d6d3fc883866b377a491a6024b0c26508f7ee",
+  "base": "7d454d1e483be085d0678449763880e8da60ac2a",
+  "baseline": {
+    "label": "base-ordered-launch",
+    "command": [
+      "node_modules/.bin/vitest",
+      "run",
+      "--project",
+      "integration",
+      "--maxWorkers",
+      "1",
+      "--no-file-parallelism",
+      "packages/polaris-dossier/src/url-launch-history.test.ts",
+      "-t",
+      "after durability \\(ordered"
+    ],
+    "exitCode": 1,
+    "log": "f3-default-resolver-base-ordered-launch.log",
+    "logSha256": "58bd2d54298becc72cbffdd077d72487a37001a7156141ca6142c94d2cb89913"
+  },
+  "faults": [
+    {
+      "label": "ignore-factory-identity",
+      "command": [
+        "node_modules/.bin/vitest",
+        "run",
+        "--project",
+        "integration",
+        "--maxWorkers",
+        "1",
+        "--no-file-parallelism",
+        "packages/polaris-dossier/src/effective-run-record.test.ts",
+        "-t",
+        "rechecks exact admitted files"
+      ],
+      "exitCode": 1,
+      "log": "f3-default-resolver-ignore-factory-identity.log",
+      "logSha256": "83b350ed2c98d44dac598ee0ae44a18b6aa996429f4a9981da18b0d358bf0e18",
+      "file": "packages/polaris-dossier/src/effective-run-record.ts",
+      "changes": [
+        {
+          "old": "host?.kind === 'url' && host.createMetadataScreen === record.createMetadataScreen",
+          "new": "host?.kind === 'url'"
+        }
+      ],
+      "subject": "d56d6d3fc883866b377a491a6024b0c26508f7ee"
+    },
+    {
+      "label": "reuse-policy-screen",
+      "command": [
+        "node_modules/.bin/vitest",
+        "run",
+        "--project",
+        "integration",
+        "--maxWorkers",
+        "1",
+        "--no-file-parallelism",
+        "packages/polaris-dossier/src/effective-run-record.test.ts",
+        "-t",
+        "keeps the package URL authority current"
+      ],
+      "exitCode": 1,
+      "log": "f3-default-resolver-reuse-policy-screen.log",
+      "logSha256": "a828c4fc640a1432a3795cd87831c2876ce2ae6abf5e99c71b0fe8b143dc07b7",
+      "file": "packages/polaris-dossier/src/url-mode-registry.ts",
+      "changes": [
+        {
+          "old": "  return bindUrlRunModeAuthority(hostRoot, () => {\n    const snapshot = readCommittedPolicy(recordsRoot);",
+          "new": "  let cached: ReturnType<CreateMetadataScreen>;\n  return bindUrlRunModeAuthority(hostRoot, () => {\n    if (cached) return cached;\n    const snapshot = readCommittedPolicy(recordsRoot);"
+        },
+        {
+          "old": "    return built.ok ? value => built.screen.screenSecrets(value) === undefined : null;",
+          "new": "    return cached = built.ok ? value => built.screen.screenSecrets(value) === undefined : null;"
+        }
+      ],
+      "subject": "d56d6d3fc883866b377a491a6024b0c26508f7ee"
+    }
+  ]
+}
