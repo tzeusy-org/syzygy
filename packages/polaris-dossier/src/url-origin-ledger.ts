@@ -448,7 +448,9 @@ function create(given: UrlOriginLedgerOptions) {
       aliases.set(key, result); return result;
     };
     const visit = (receipt: UrlOriginReceipt): string => {
-      const value = entry(receipt), provenance = lineage.get(receipt);
+      // The bounded traversal is private and synchronous. Sample authority
+      // at capture and release while still authenticating each receipt.
+      const value = lookup(receipt), provenance = lineage.get(receipt);
       if (!provenance) fail();
       const prior = seen.get(receipt); if (prior) return prior;
       const referenceMode = plans.some(plan => plan.id === value.id) ? 'declared' : 'inherited';
@@ -464,7 +466,9 @@ function create(given: UrlOriginLedgerOptions) {
       seen.set(receipt, key); return key;
     };
     const keys = receipts.map(visit);
-    live(); return copy({ graph: { format: 'polaris-url-origin-provenance/2', nodes }, keys });
+    const captured = copy({ graph: { format: 'polaris-url-origin-provenance/2' as const, nodes }, keys });
+    live();
+    return captured;
   }
   async function restoreFrozenOrigins(capability: UrlVerifiedRecoveryProducts, expected: {
     readonly run: string; readonly coreSha256: string; readonly declarationSha256: string;

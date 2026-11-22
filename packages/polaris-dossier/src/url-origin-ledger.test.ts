@@ -87,6 +87,35 @@ describe('host-owned URL origin ledger', () => {
     expect(() => f.ledger.fixed('origin:unknown', bytes('Own'))).toThrow('url-origin-refused');
     expect(() => createUrlOriginLedger({ ...f.options, fixed: [{ ...f.options.fixed[0]!, kind: 'evidence-content' as never }] })).toThrow('url-origin-refused');
   });
+  it('checks authority at capture and release of a shared provenance graph', () => {
+    const f = fixture(), current = vi.fn(() => true);
+    const ledger = createUrlOriginLedger({ ...f.options, current });
+    const [policy, structure, control] = f.options.fixed.map(value => ledger.fixed(value.id, value.bytes));
+    const first = ledger.compose(bytes('Own first provenance branch.'), [policy!, structure!]);
+    const second = ledger.compose(bytes('Own second provenance branch.'), [policy!, control!]);
+    const receipt = ledger.compose(bytes('Own shared provenance.'), [first, second]);
+    current.mockClear();
+    const captured = ledger.captureProvenance([receipt]);
+    expect(current).toHaveBeenCalledTimes(2);
+    expect(captured.keys).toEqual(['node-6']);
+    expect(captured.graph.nodes.map(node => node.parents)).toEqual([
+      [], [], ['node-1', 'node-2'], [], ['node-1', 'node-4'], ['node-3', 'node-5'],
+    ]);
+
+    current.mockClear();
+    expect(ledger.semanticProvenance([receipt])).toBe(fingerprintUrlOriginProvenance(captured, {
+      runId: f.options.runId, sourceBindingSha256: sourceBindingSha256(f.options.record.subject), sourcePin: f.commit,
+      basePolicySha256: f.options.screen.policySha256, originPolicySha256: f.options.originPolicy.binding.sha256,
+    }));
+    expect(current).toHaveBeenCalledTimes(3);
+
+    current.mockReturnValueOnce(false);
+    expect(() => ledger.captureProvenance([receipt])).toThrow('url-origin-refused');
+    current.mockReturnValueOnce(true).mockReturnValueOnce(false);
+    expect(() => ledger.captureProvenance([receipt])).toThrow('url-origin-refused');
+    current.mockReturnValueOnce(true).mockReturnValueOnce(true).mockReturnValueOnce(false);
+    expect(() => ledger.semanticProvenance([receipt])).toThrow('url-origin-refused');
+  });
   it('returns a read-only receipt batch after exact bytes and final authority are checked', () => {
     const f = fixture(), [policy, structure] = roots(f);
     const subject = f.options.fixed[0]!.bytes;
