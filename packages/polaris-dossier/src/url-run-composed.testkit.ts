@@ -149,7 +149,9 @@ export async function prepareComposedRun(runtime: UrlRuntime, recovery?: { reado
   for (const file of canaries) await fs.writeFile(file, 'OWN SYNTHETIC CANARY\n', { mode: 0o600 });
   const plans = own(await prepareUrlRolePlans({ run, record, screen, sessionDirectories: directories, runtime,
     cliExecutable: await fs.realpath(path.join(os.homedir(), '.local/share/claude/versions', URL_CLI_PROGRAM.version)), parent: views,
-    protectedPaths: [run, `${run}.sessions`, clone, hidden], canaries, current, now: Date.now(),
+    // Production protects the host root, which contains both the first audit
+    // and the fresh sibling audit created by public resume.
+    protectedPaths: [run, `${run}.sessions`, clone, recovery?.hostRoot ?? hidden], canaries, current, now: Date.now(),
     audit: () => { throw new Error('owned preparation must not launch a CLI'); },
   }), 'roles');
   const renderer = await loadUrlDossierRenderer(runtime);
