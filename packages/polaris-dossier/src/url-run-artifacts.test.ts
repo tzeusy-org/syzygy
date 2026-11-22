@@ -1,6 +1,9 @@
 import { initializeUrlMachineStore } from './url-machine-store.js';
 import { reconstructColdUrlRunMachineHistory } from './url-machine-cold-history.js';
 import { verifyUrlRecoveryProducts, type UrlVerifiedRecoveryProducts } from './url-recovery-products.js';
+import { urlHelperLaunchFile } from './url-launch-history.js';
+import type { UrlRolePlan } from './url-role-plan.js';
+import type { inspectCommittedUrlLaunchHistory } from './url-session-audit.js';
 import type { UrlRunMachineClosedHistory } from './url-run-machine.js';
 import * as fs from 'node:fs';
 import path from 'node:path';
@@ -39,6 +42,15 @@ import { reviewOfRecord } from './review.js';
 import { inventoryOfRecord } from './inventory.js';
 import { fixtureSources } from './full-run.testkit.js';
 import { issueBrief, shapePackSelection, type BriefReport } from './brief.js';
+
+// Alias component tests substitute only the upstream audit capability check.
+// Actual protected files, immutable physical records, profile/prompt bindings,
+// receipt isolation and read-context revalidation run. No native process or
+// old process authority is created by this explicit unit substitution.
+const committedLaunches = vi.hoisted(() => new WeakMap<object, unknown>());
+vi.mock('./url-session-audit.js', async original => ({ ...await original<typeof import('./url-session-audit.js')>(),
+  inspectCommittedUrlLaunchHistory: (value: object) => { const found = committedLaunches.get(value); if (!found) throw Error('own unissued audit capability'); return found; },
+}));
 
 const canonical = (v: unknown): string => encodeCanonicalJson(v, { maxBytes: 2_097_152, maxNodes: 65_536, maxDepth: 32 });
 const b = (v: unknown): Buffer => Buffer.from(canonical(v));
@@ -112,8 +124,8 @@ function fixture(source = 'Own pinned source.\n', extraFiles: Readonly<Record<st
     });
     return { brief, sessions: { command: 'session-prompt', outcome: 'issued', role: 'all', run, sessions } as unknown as StartSessionsReport };
   };
-  const freshOrigins = (): UrlRunArtifactsOptions['origins'] => {
-    const next = createUrlOriginLedger(ledgerOptions);
+  const freshOrigins = (ledgerRunId = runId): UrlRunArtifactsOptions['origins'] => {
+    const next = createUrlOriginLedger({ ...ledgerOptions, runId: ledgerRunId });
     const [rolePolicy, runControl, toolMetadata] = fixed.map(f => next.fixed(f.id, f.bytes));
     const roots = { rolePolicy: rolePolicy!, runControl: runControl!, toolMetadata: toolMetadata! };
     const initialReceipts = Object.fromEntries(roles.map(role => [role,
@@ -276,11 +288,49 @@ async function recoveryFixture(withPacket = true) {
   fs.writeFileSync(boundaryFile, `${canon({ record, sha256: boundarySha256 })}\n`, { mode: 0o600 });
   const issue = () => verifyUrlRecoveryProducts({ hostRoot, expected, boundarySha256, machine, now: () => now, current: f.options.current });
   const capability = issue(); if (!capability) throw Error('own product capability');
-  const fresh = () => { const origins = f.freshOrigins(); return { origins, bridge: createUrlRunArtifacts({ ...f.options, origins }) }; };
+  const fresh = (ledgerRunId?: string) => { const origins = f.freshOrigins(ledgerRunId); return { origins, bridge: createUrlRunArtifacts({ ...f.options, origins }) }; };
   return { ...f, frozen, boundaryFile, capability, issue, fresh };
 }
 
 describe('trusted URL artifact producer bridge', () => {
+  it('pins logical launch reads to the latest independently committed physical generation and retains old bytes', async () => {
+    const f = fixture(undefined, {}, 'v1', true); f.initialize();
+    const role = 'inventory', fixed = urlHelperLaunchFile(role), next = urlHelperLaunchFile(role, 'a'.repeat(64));
+    const promptFile = 'inventory/session-1.json', promptBytes = fs.readFileSync(path.join(f.run, promptFile));
+    const prompt = JSON.parse(promptBytes.toString()), stat = fs.statSync(path.join(f.run, promptFile));
+    const plan = f.options.roles.find(value => value.role === role)!;
+    const declaration = f.options.effectiveDeclaration!.declaration;
+    const commit = (file: string, marker: string) => {
+      const bytes = b({ format: 'own-synthetic-history', historicalCapture: marker }); f.write(file, bytes);
+      const capability = Object.freeze({}), identity: ReturnType<typeof inspectCommittedUrlLaunchHistory> = {
+        history: { run: f.run, runId: f.runId, role, file, bytes, sha256: sha256(bytes),
+          plan: { ...plan, declaration: declaration.roles.find(value => value.role === role)! } as UrlRolePlan,
+          pin: f.pin, coreSha256: sha256(f.options.initializedCoreBytes!), promptFile, promptSha256: prompt.promptSha256,
+          promptRecordSha256: sha256(promptBytes), promptIdentity: { device: BigInt(stat.dev), inode: BigInt(stat.ino) } },
+        project: declaration.observingProject, scope: { originPolicySha256: declaration.originPolicy.sha256 } as ReturnType<typeof inspectCommittedUrlLaunchHistory>['scope'],
+        eventSha256: sha256(marker),
+      };
+      committedLaunches.set(capability, identity); return { capability, bytes };
+    };
+    const first = commit(fixed, 'Own historical first process');
+    await f.bridge.registerLaunchHistory(first.capability as never);
+    const oldRead = f.bridge.beginRead({ operation: 'inventory-check', deadline: Date.now() + 4000 });
+    expect(Buffer.from(f.bridge.readProduct(oldRead, fixed).bytes!)).toEqual(first.bytes);
+    const second = commit(next, 'Own historical fresh process');
+    await f.bridge.registerLaunchHistory(second.capability as never);
+    expect(fs.readFileSync(path.join(f.run, fixed))).toEqual(first.bytes);
+    expect(() => f.bridge.revalidateRead(oldRead)).toThrow('url-run-artifacts-unavailable');
+    const read = f.bridge.beginRead({ operation: 'inventory-check', deadline: Date.now() + 4000 });
+    const logical = f.bridge.readProduct(read, fixed), physical = f.bridge.readProduct(read, next);
+    expect(Buffer.from(logical.bytes!)).toEqual(second.bytes); expect(logical.receipt).toBe(physical.receipt);
+    expect(f.bridge.revalidateRead(read).metadata.records).toEqual(expect.arrayContaining([
+      expect.objectContaining({ path: fixed, physicalPath: next, sha256: sha256(second.bytes) }),
+    ]));
+    f.bridge.cancelRead(read);
+    const sealed = f.bridge.captureFrozenHistory(); expect(sealed.records.filter(record => record.path === fixed || record.path === next)).toHaveLength(2);
+    const unknown = urlHelperLaunchFile(role, 'b'.repeat(64)); f.write(unknown, b({ unknown: true }));
+    expect(() => f.bridge.captureFrozenHistory()).toThrow('url-run-artifacts-unavailable');
+  });
   it('restores sealed product provenance into a genuinely fresh ledger and can freeze another stop', async () => {
     const f = await recoveryFixture(), next = f.fresh();
     const composed = f.frozen.provenance.nodes.find(node => node.derivation.kind === 'composition')!;
@@ -326,8 +376,10 @@ describe('trusted URL artifact producer bridge', () => {
       .rejects.toThrow('url-run-artifacts-unavailable');
     expect(waits).toBe(2); expect(() => next.bridge.latestStageChecks()).toThrow('url-run-artifacts-unavailable');
   });
-  it.each(['copy', 'json', 'file', 'boundary', 'claim', 'source'] as const)('refuses %s drift during nominal product recovery', async fault => {
-    const f = await recoveryFixture(fault !== 'source'), next = f.fresh(); let capability = f.capability;
+  it.each(['copy', 'json', 'file', 'boundary', 'claim', 'source', 'ledger-run'] as const)('refuses %s drift during nominal product recovery', async fault => {
+    const f = await recoveryFixture(fault !== 'source');
+    if (fault === 'ledger-run') { expect(() => f.fresh(`run-${'d'.repeat(32)}`)).toThrow('url-run-artifacts-unavailable'); return; }
+    const next = f.fresh(); let capability = f.capability;
     if (fault === 'copy') capability = { ...capability } as UrlVerifiedRecoveryProducts;
     if (fault === 'json') capability = JSON.parse(JSON.stringify(capability));
     if (fault === 'file') fs.appendFileSync(path.join(f.run, 'checks/rev-0.json'), ' ');
