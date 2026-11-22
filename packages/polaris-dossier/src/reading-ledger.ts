@@ -220,6 +220,8 @@ export type ReadingDifference =
 export const NO_EARLIER_LEDGER = 'no earlier run of this repository in the state root holds a reading ledger that could be read';
 export const STATE_ROOT_UNLISTABLE = 'the state root could not be listed';
 export const DRAFT_DOES_NOT_PARSE = 'this draft does not parse, so it has no reading ledger';
+/** Version 2.11: the reason where check wrote the record's bounded form, which keeps no ledger although the draft parsed. */
+export const BOUNDED_FORM_HAS_NO_LEDGER = "this check's record was written in its bounded form, which keeps no reading ledger";
 
 const CHECKED_AT = /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{3}Z$/u;
 const COMMIT = /^(?:[0-9a-f]{40}|[0-9a-f]{64})$/u;
@@ -288,9 +290,12 @@ export function compareLedgers(before: ReadingLedger, after: ReadingLedger): { r
  * run's candidate is the ledger of its highest-numbered check record that parses, carries a ledger of this format and was checked before
  * `checkedAt`; the previous run is the one whose candidate was checked latest, a tie going to the greatest run identity. What cannot be
  * read is counted, never passed over: a check record whose `checkedAt` is malformed, or whose own `revision` is not the one its file name
- * says, is unreadable; one validly checked at or after `checkedAt` is passed over uncounted. Nothing is matched by directory name beyond the run-identity form, or by URL. */
-export function readingDifference(run: string, repositoryId: string, checkedAt: string, ledger: ReadingLedger | undefined): ReadingDifference {
+ * says, is unreadable; one validly checked at or after `checkedAt` is passed over uncounted. Nothing is matched by directory name beyond the run-identity form, or by URL.
+ * `ledger` is `undefined` for a draft that does not parse and `'bounded'` where check wrote the record's bounded form (version 2.11);
+ * either is Unknown with both counts 0, and the state root is not listed. */
+export function readingDifference(run: string, repositoryId: string, checkedAt: string, ledger: ReadingLedger | undefined | 'bounded'): ReadingDifference {
   if (ledger === undefined) return { state: 'unknown', why: DRAFT_DOES_NOT_PARSE, unreadableRuns: 0, unreadableCheckRecords: 0 };
+  if (ledger === 'bounded') return { state: 'unknown', why: BOUNDED_FORM_HAS_NO_LEDGER, unreadableRuns: 0, unreadableCheckRecords: 0 };
   const root = path.dirname(run), self = path.basename(run);
   let names: fs.Dirent[];
   try { names = fs.readdirSync(root, { withFileTypes: true }); } catch { return { state: 'unknown', why: STATE_ROOT_UNLISTABLE, unreadableRuns: 0, unreadableCheckRecords: 0 }; }

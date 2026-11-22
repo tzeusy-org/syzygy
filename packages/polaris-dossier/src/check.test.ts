@@ -572,6 +572,27 @@ describe('check: reading ledger', () => {
     expect(JSON.parse(read(run, 'checks/rev-0.json'))).not.toHaveProperty('readingLedger');
     expect(result.readingDifference).toEqual({ state: 'unknown', why: 'this draft does not parse, so it has no reading ledger', unreadableRuns: 0, unreadableCheckRecords: 0 });
   });
+
+  // Version 2.11, item (8): "Reading difference of a bounded check record".
+  it('says a bounded form keeps no ledger, beside an earlier readable ledger, and never that the draft does not parse', async () => {
+    const root = tempDir('dossier-check-state-');
+    const earlier = await briefedRun({}, cloneOf(), root, `run-${'a'.repeat(32)}`);
+    writeDraft(earlier, valid());
+    report(await checkDraft(earlier, {}, deps()));
+    // The control: the same draft whose full record is within the bound compares against the earlier ledger.
+    const control = await briefedRun({}, cloneOf(), root, `run-${'b'.repeat(32)}`);
+    writeDraft(control, valid());
+    expect(report(await checkDraft(control, {}, deps({ now: () => LATER + 1000 }))).readingDifference).toMatchObject({ state: 'compared', against: { runId: `run-${'a'.repeat(32)}` } });
+    const run = await briefedRun({}, cloneOf(), root, `run-${'c'.repeat(32)}`);
+    writeDraft(run, valid());
+    const checked = await checkDraft(run, {}, deps({ now: () => LATER + 1000, measureRecord: (text) => ({ ...measureCheckRecord(text), bytes: 1_000_000_000 }) }));
+    if (!checked.ok) throw new Error(checked.refusal.reason);
+    const result = checked.report;
+    expect(result).toHaveProperty('findingsLeftOut');
+    expect(Object.keys(JSON.parse(read(run, 'checks/rev-0.json')))).not.toContain('readingLedger');
+    expect(result.readingDifference).toEqual({ state: 'unknown', why: 'this check\'s record was written in its bounded form, which keeps no reading ledger', unreadableRuns: 0, unreadableCheckRecords: 0 });
+    expect(JSON.stringify(result.readingDifference)).not.toContain('this draft does not parse, so it has no reading ledger');
+  });
 });
 
 describe('check: manifest facts (REQ-polaris-generation-034 version 2.7, syzygy-3efd.25)', () => {
@@ -1576,8 +1597,8 @@ describe('check: the record within its read bound (version 2.10)', () => {
       // The advice it computes from the draft itself is unchanged, and the derived record is written as before.
       expect(result.report).toHaveProperty('readerAdvice');
       expect(result.report).toHaveProperty('structureRecord');
-      // The difference is computed as for a check whose record carries no ledger: the spec's one set of words for that case.
-      expect(result.report.readingDifference).toEqual({ state: 'unknown', why: 'this draft does not parse, so it has no reading ledger', unreadableRuns: 0, unreadableCheckRecords: 0 });
+      // The difference is Unknown in the bounded form's own words (version 2.11), never the not-parse words: this draft parsed.
+      expect(result.report.readingDifference).toEqual({ state: 'unknown', why: 'this check\'s record was written in its bounded form, which keeps no reading ledger', unreadableRuns: 0, unreadableCheckRecords: 0 });
       expect(fs.existsSync(path.join(run, 'derived', 'rev-0.json'))).toBe(true);
       // The step log counts the one finding the bounded form holds; the run file counts the bounded form as read.
       expect(read(run, 'steps.jsonl').trim().split('\n').map((entry) => JSON.parse(entry)).at(-1)).toEqual(
