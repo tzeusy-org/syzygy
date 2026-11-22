@@ -1,4 +1,4 @@
-# Dossier raw-read disclosure, version 2.18
+# Dossier raw-read disclosure, version 2.17
 
 [Observed] D11 amended SEC-2 and SEC-5 on 2026-11-21. The dossier authoring session's own tool can read the raw clone unscreened. A secret from that clone may reach the declared provider through the session's traffic. Syzygy still screens the content it builds, handles and sends. RFC5-15, RFC5-14, RFC3-7 and CC-SEC-2 followed in A-33.
 

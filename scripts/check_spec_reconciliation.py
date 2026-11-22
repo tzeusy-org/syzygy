@@ -651,11 +651,11 @@ RAW_READ_CHANGE = "dossier-raw-read-disclosure"
 RAW_READ_HOME = f"{CHANGES}/{RAW_READ_CHANGE}"
 RAW_READ_SPEC = f"{RAW_READ_HOME}/proposed/polaris-generation/spec.md"
 RAW_READ_UNION = f"{RAW_READ_HOME}/GOVERNING-DEPENDENCIES.json"
-RAW_READ_TAG = "polaris-dossier-raw-read-disclosure-v2.18"
-RAW_READ_ROUTE = f"[Raw-read disclosure amendment 2.18]({RAW_READ_HOME})"
+RAW_READ_TAG = "polaris-dossier-raw-read-disclosure-v2.17"
+RAW_READ_ROUTE = f"[Raw-read disclosure amendment 2.17]({RAW_READ_HOME})"
 RAW_READ_REPLACES = tuple(POLARIS_ID + number for number in ("033", "036", "046"))
 RAW_READ_SUBJECTS = {
-    RAW_READ_SPEC: "0459aba9e9f4098d0aa188b0be4acbca27df8dbe1aa6d401b8ca3244832c1712",
+    RAW_READ_SPEC: "d27d44815bb7bf72e54131e6c113143570438ffd70e850f88a23c54f2ed15a27",
     ".syzygy/governance/policies/POLARIS-DOSSIER-DECLARED-SOURCE-POLICY-v4.json":
         "d3abcb31c98bfd303c2bf477cc461787cacf26811cb640d925da1de347246da9",
 }
@@ -2202,15 +2202,22 @@ def subsec_binding(root):
     return (None if records or subjects else read_text(root, SUBSEC_SPEC), records, subjects)
 
 
+def is_raw_read_row(line):
+    """A tag or a link to the subject at this row's own commit claims adoption."""
+    if not line.startswith("|"):
+        return False
+    cells = [cell.strip() for cell in line.split("|")[1:-1]]
+    if f"`{RAW_READ_TAG}`" in cells:
+        return True
+    if len(cells) < 4 or not re.fullmatch(r"`[0-9a-f]{40}`", cells[2]):
+        return False
+    snapshot = f"https://github.com/tzeusy-org/syzygy/blob/{cells[2][1:-1]}/"
+    return f"]({snapshot}{RAW_READ_SPEC})" in cells[3]
+
+
 def raw_read_rows(root):
-    """Locate claimed raw-read adoptions, including malformed matching rows."""
-    matches = []
-    for line in adoption_table_rows(root):
-        cells = [cell.strip() for cell in line.split("|")[1:-1]]
-        if f"`{RAW_READ_TAG}`" in cells or (
-                len(cells) > 3 and f"/{RAW_READ_SPEC})" in cells[3]):
-            matches.append(cells)
-    return matches
+    return [[cell.strip() for cell in line.split("|")[1:-1]]
+            for line in adoption_table_rows(root) if is_raw_read_row(line)]
 
 
 def raw_read_binding(root):
@@ -5132,6 +5139,7 @@ def declared_source_historical_cases(tmp, base, clean, witnesses, failures):
     had_findpages = any(is_findpages_row(line) for line in original.splitlines())
     had_subsec = any(is_subsec_row(line) for line in original.splitlines())
     had_readmit = any(is_readmit_row(line) for line in original.splitlines())
+    had_raw_read = any(is_raw_read_row(line) for line in original.splitlines())
     absent_ledger = "".join(line for line in original.splitlines(keepends=True)
                             if line.rstrip("\n") != row and not is_url_source_row(line)
                             and not is_figure_row(line) and not is_derived_row(line)
@@ -5139,7 +5147,7 @@ def declared_source_historical_cases(tmp, base, clean, witnesses, failures):
                             and not is_reach_row(line) and not is_manifests_row(line) and not is_repairs_row(line) and not is_maps_row(line)
                             and not is_bounds_row(line)
                       and not is_corr_row(line) and not is_coverage_row(line)
-                      and not is_readmit_row(line)
+                      and not is_readmit_row(line) and not is_raw_read_row(line)
                       and not is_infra_row(line)
                       and not is_findpages_row(line) and not is_subsec_row(line))
     ledger.write_text(absent_ledger)
@@ -5154,7 +5162,7 @@ def declared_source_historical_cases(tmp, base, clean, witnesses, failures):
             and declared_source_binding(tree) == (None, [], [])
             and not report.failed
             and examined(report, "R1") == examined(clean, "R1") - 1 - had_url_source - had_figure - had_derived - had_ledger - had_kinds - had_manifests
-            - had_reach - had_repairs - had_maps - had_bounds - had_corr - had_coverage - had_readmit - had_infra - had_findpages - had_subsec
+            - had_reach - had_repairs - had_maps - had_bounds - had_corr - had_coverage - had_readmit - had_infra - had_findpages - had_subsec - had_raw_read
             and examined(report, "R2") == examined(clean, "R2") - 3
             - (URL_SOURCE_BOUND_PARTS if had_url_source else 0)
             - (FIGURE_BOUND_PARTS if had_figure else 0)
@@ -5171,7 +5179,8 @@ def declared_source_historical_cases(tmp, base, clean, witnesses, failures):
             - (READMIT_BOUND_PARTS if had_readmit else 0)
             - (INFRA_BOUND_PARTS if had_infra else 0)
             - (FINDPAGES_BOUND_PARTS if had_findpages else 0)
-            - (SUBSEC_BOUND_PARTS if had_subsec else 0))
+            - (SUBSEC_BOUND_PARTS if had_subsec else 0)
+            - (len(RAW_READ_SUBJECTS) if had_raw_read else 0))
     witnesses.append({"mutant": "declared-historical-control", "path": change,
                       "old": "<no amendment, row, subjects or D10 act>",
                       "new": "<unchanged>", "expected": "inactive; no phantom R1/R2 subjects",
@@ -5298,7 +5307,7 @@ def url_source_cases(tmp, base, witnesses, failures):
     shutil.copytree(base, tree)
     ledger = tree / AGENT_ADOPTIONS
     pending = "".join(line for line in ledger.read_text().splitlines(keepends=True)
-                      if not is_url_source_row(line))
+                      if not is_url_source_row(line) and not is_raw_read_row(line))
     ledger.write_text(pending)
     pending_pop, pending_findings = census(tree)
     predecessor = pending_pop["POLARIS"]
@@ -7349,7 +7358,7 @@ def reach_cases(tmp, base, witnesses, failures):
     shutil.copytree(base, tree)
     ledger = tree / AGENT_ADOPTIONS
     pending = "".join(line for line in ledger.read_text().splitlines(keepends=True)
-                      if not is_reach_row(line) and not is_readmit_row(line))
+                      if not is_reach_row(line) and not is_readmit_row(line) and not is_raw_read_row(line))
     ledger.write_text(pending)
     pending_pop, pending_findings = census(tree)
     predecessor = pending_pop["POLARIS"]
@@ -7467,9 +7476,8 @@ def raw_read_cases(tmp, base, witnesses, failures):
     tree = Path(tmp) / RAW_READ_CHANGE
     shutil.copytree(base, tree)
     ledger = tree / AGENT_ADOPTIONS
-    existing = raw_read_rows(tree)
     pending = "".join(line for line in ledger.read_text().splitlines(keepends=True)
-                      if [cell.strip() for cell in line.split("|")[1:-1]] not in existing)
+                      if not is_raw_read_row(line))
     ledger.write_text(pending)
     before, findings = census(tree)
     oid = "0123456789abcdef" * 2 + "01234567"
@@ -7495,6 +7503,17 @@ def raw_read_cases(tmp, base, witnesses, failures):
     record("adopted", AGENT_ADOPTIONS, "<no adoption>", row, "PASS", findings,
            not findings and raw_read_binding(tree) == (spec, [], [])
            and set(before) == set(after) and changes == set(RAW_READ_REPLACES) and delta == 5)
+
+    later_oid = "2" * 40
+    citation = (f"| A-1000 | 2026-11-23 | `{later_oid}` | {links} | Citation only | "
+                f"`git revert {later_oid}` | — |\n")
+    ledger.write_text(pending + row + citation)
+    record("later-citation", AGENT_ADOPTIONS, row, row + citation, "PASS", [],
+           raw_read_binding(tree) == (spec, [], []))
+    veto = citation.replace(links, "Veto A-999 " + links)
+    ledger.write_text(pending + row + veto)
+    record("linked-veto", AGENT_ADOPTIONS, row, row + veto, "PASS", [],
+           raw_read_binding(tree) == (None, [], []))
 
     for case, old, new in (
             ("duplicate-row", row, row + row),
@@ -7533,7 +7552,7 @@ def readmit_cases(tmp, base, witnesses, failures):
     shutil.copytree(base, tree)
     ledger = tree / AGENT_ADOPTIONS
     pending = "".join(line for line in ledger.read_text().splitlines(keepends=True)
-                      if not is_readmit_row(line))
+                      if not is_readmit_row(line) and not is_raw_read_row(line))
     ledger.write_text(pending)
     pending_pop, pending_findings = census(tree)
     predecessor = pending_pop["POLARIS"]

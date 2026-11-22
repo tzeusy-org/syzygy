@@ -6,6 +6,8 @@
 
 [Inferred] There are three effective requirement homes. REQ-polaris-generation-033 owns the disclosure surfaces and captured relay scope. REQ-polaris-generation-036 applies those disclosures to the two discovery populations and retains screening on writes back into Syzygy. REQ-polaris-generation-046 binds the new policy for future initializations and protects historical bindings. The policy's raw-body and agent-session paragraphs carry the same boundary. Its screening predicates, scope and classified-content handling are carried forward from version 3.0.0.
 
+The run record keeps the exact /2 core and adds one bounded, versioned disclosure companion. It binds to the run and declared provider and records the state of author handoff. The companion holds no source data. Historical reads leave files intact and show missing evidence as Unknown. A compatible resume records the disclosure on an explicit transition before producing new work.
+
 ## Impact and verification
 
 [Observed] The source sweep searched the composed operator-agent specifications for the superseded screening claim, its references to SEC-2 and SEC-5 and the URL qualification of REQ-polaris-generation-036. Matching current requirements and the v3 policy defined the delta. A second sweep for the version 3 policy path and version identified the runtime loader, fixture expectations, the registered reconciliation check and the sampling script. The loader and rendering obligations travel with the runtime follow-on. Sampling remains tied to the historical screening versions it measured.

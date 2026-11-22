@@ -1,16 +1,16 @@
-# Raw-read disclosure 2.18 semantic delta
+# Raw-read disclosure 2.17 semantic delta
 
 [Inferred] Normative corrective change. SEC-2 and SEC-5 as amended by D11 own the raw-read exception. This version applies its required disclosure in the dossier specification and aligns the declared-source policy's description of its boundary.
 
 ## Specification
 
-[Observed] Successor specification SHA-256 is `0459aba9e9f4098d0aa188b0be4acbca27df8dbe1aa6d401b8ca3244832c1712`. The predecessor of each requirement is its effective modification below. The same three requirement identities compose after the preceding dossier versions. The old version's proposed specification, design and delta remain its historical record.
+[Observed] Successor specification SHA-256 is `d27d44815bb7bf72e54131e6c113143570438ffd70e850f88a23c54f2ed15a27`. The predecessor of each requirement is its effective modification below. The same three requirement identities compose after the preceding dossier versions. The old version's proposed specification, design and delta remain its historical record.
 
 ## REQ-polaris-generation-033
 
 [Observed] Version 2.1 from [dossier-url-declared-source-run](../dossier-url-declared-source-run/proposed/polaris-generation/spec.md) has SHA-256 `e30836f902361c74943cc0cf69ae907a3e9d678a542b27676677e47c8a5fa865`. Its scenario count goes from 6 to 9.
 
-### Replace predecessor lines 29–29, successor lines 29–31
+### Replace predecessor lines 29–29, successor lines 29–33
 
 ```json
 {
@@ -20,13 +20,15 @@
   "after": [
     "The run record and the dossier's appendix SHALL disclose in human form, and every rendered page in machine form: the authoring mode; the agent tool, its version, its provider and the model identity and version, with actual operator/agent/default selection attribution and Inferred declaration status; the D11 disclosure that the dossier authoring session read the raw clone unscreened and that a secret in it may have reached the run's declared provider, with operator-started tool transmissions Unknown and URL captured relay attempts/sends/receipts separately scoped and attributed without claiming uncaptured transmission completeness; that the agent's account of what it read is self-reported and Inferred; the execution rule the brief carried, and whether the agent reported building or running the observed project, with every command it reported, labelled Inferred and marked as self-reported; for operator-started runs that Syzygy made no provider call, and for URL-supervised runs that Syzygy launched its declared CLI which generates provider requests forwarded by Syzygy's checked HTTP transport relay, with no provider SDK or independent inference engine; that compatible core declarations/history and any retained operator-started credential-list source are writable history, while URL host receipts/audit have separately enforced write protection; neither stored category by itself is current object verification or proof of a claim; no retired consent, registry act, policy act or statement was verified; the pinned revision; that every rendered quotation was verified by Syzygy against the Git objects at that revision, with their identifiers recomputed; that every value Syzygy shows from its stored records, rather than re-derives, is Inferred; and the counts of uncited judgement blocks and of withheld items, excerpts and inventory entries. Machine form means the page's machine attributes and the machine narrative of REQ-polaris-generation-003, read together; machine view and machine manifest name the same thing. Every rendered page SHALL state in one sentence of human text that it is a draft written by the named agent tool and model with no human review recorded, with the dossier's count of open questions and Unknowns where there are any, and link to that appendix. The appendix is the last page of the reading order, is reachable from every page without a pointing device, and holds the open questions. Wherever this change says a page states, says or discloses a thing this paragraph lists, that page's machine form and its one sentence with the link discharge it, and the appendix carries the human words; an open question or Unknown that affects a passage also stays explicit at that passage (REQ-polaris-generation-004).",
     "",
-    "Syzygy SHALL put the D11 disclosure in the run record even if the run stops, refuses a dependent step or otherwise renders no page. The disclosure SHALL state the channel and its risk without claiming observed completeness, an actual secret transmission or verification of the agent's account. An uncaptured value remains Unknown. A captured relay request remains a Syzygy transmission under REQ-polaris-generation-025 and REQ-polaris-generation-048 and SHALL still pass their checks. The D11 disclosure SHALL also be carried in each projection of the authoring disclosure named by this requirement. Provider-mode rendering has no dossier authoring session and its disclosures retain their existing contract."
+    "Syzygy SHALL put the D11 disclosure in the run record even if the run stops, refuses a dependent step or otherwise renders no page. If the run stops before launching or handing over to the authoring session, its disclosure SHALL describe the channel and risk that apply to such a session and record that the session was not reached. If the run cannot establish whether it reached the session, it SHALL record that status as Unknown and state the same risk. The disclosure SHALL make no claim of observed read completeness, an actual secret transmission or verification of the agent's account. An uncaptured value remains Unknown. A captured relay request remains a Syzygy transmission under REQ-polaris-generation-025 and REQ-polaris-generation-048 and SHALL still pass their checks. The D11 disclosure SHALL also be carried in each projection of the authoring disclosure named by this requirement. Provider-mode rendering has no dossier authoring session and its disclosures retain their existing contract.",
+    "",
+    "The stored operator-agent run record SHALL include a bounded disclosure companion beside its polaris-dossier-run/2 core. Its exact required fields SHALL be schemaVersion with value polaris-dossier-raw-read-disclosure/1, runId and declaredProvider matching the run's validated declarations, and authorHandoff with value not-reached, reached or unknown. The schema version carries the fixed raw-clone risk statement above, with no inspected path, history, credential or secret value. Syzygy SHALL record the companion at initialization and update authorHandoff at an explicit run transition, before rendering. A historical /2 without the companion remains readable under its historical format. Read-only inspection SHALL report the recorded disclosure as Unknown, explain the D11 channel and risk as current policy, and leave the stored bytes intact. A supported resume SHALL establish and record the companion before a new authoring handoff or site render, preserving the original bound policy. Missing, malformed or mismatched disclosure evidence in a run whose record requires it SHALL refuse that dependent operation."
   ]
 }
 ```
 
 
-### Replace predecessor lines 49–49, successor lines 51–51
+### Replace predecessor lines 49–49, successor lines 53–53
 
 ```json
 {
@@ -40,7 +42,7 @@
 ```
 
 
-### Insert predecessor lines 90–89, successor lines 92–109
+### Insert predecessor lines 90–89, successor lines 94–113
 
 ```json
 {
@@ -57,6 +59,8 @@
     "",
     "- **WHEN** an operator-agent run is recorded and stops without rendering a page",
     "- **THEN** the run record still carries the unscreened raw-clone and declared-provider risk disclosure",
+    "- **AND** if the run stopped before author handoff it records that the authoring session was not reached, and if handoff cannot be established it records Unknown, with neither case claiming that an actual read occurred",
+    "- **AND** a historical /2 with no companion preserves its bytes on inspection, and a mismatched run identity or provider in a required companion refuses a new site render",
     "",
     "#### Scenario: Checked relay evidence does not stand for raw-read traffic",
     "",
@@ -69,15 +73,47 @@
 ```
 
 
-### Replace predecessor lines 93–93, successor lines 113–113
+### Replace predecessor lines 92–94, successor lines 116–118
 
 ```json
 {
   "before": [
-    "- **Observable:** Command reports, state-file byte differences, process/network capture, rendered pages and machine disclosures."
+    "- **Case:** Controlled public/private/unstated fixture repositories and bounded configurations, with absent legacy records; independently mutate one object, pin, provider, policy, record field or class at a time. Include regular, symlink and writerless-FIFO policy entries; invalid UTF-8, over-bound JSON/bytes and dirty policy; a policy-byte change versus an unrelated commit with identical bytes; composite origin/class loss; whole versus removed-span versus surviving-span support; provider withdrawal and missing-provider fallback; primary/secondary/aggregate reason and envelope conditional branches. For published change status, vary candidate stamps, missing adoption, actual default-branch commit/row/tag and later semantic edits independently; include an adopted A, later adopted B, and B veto/revert with B history retained, plus a reverted sole adoption, a mismatched record and no predecessor; compare status/adopter/record links with literal expected outcomes without creating a per-repository admission gate.",
+    "- **Observable:** Command reports, state-file byte differences, process/network capture, rendered pages and machine disclosures.",
+    "- **Oracle:** Literal expected pins, refusal codes and redacted/withheld outcomes prepared independently from fixture bytes; independently recompute object identifiers and compare retained legacy files. Use literal expected policy bindings/bounds and child-process timeout capture; independently prepared composite origins, exclusion tuples/counts, Unknown reasons/routes, withdrawal labels, report-fact ceilings and change-status/adopter/adoption-record bindings, independently literal expected predecessor-effective versus Unknown/no-effective-applicability results after veto/revert; do not import policy capture or rendering helpers."
   ],
   "after": [
-    "- **Observable:** Command reports, state-file byte differences, process/network capture, rendered pages and machine disclosures. For D11, read the run record of a run that produced no site as well as the appendix and machine form of every page in a multi-page run, and compare captured relay refusals against an independent fixture."
+    "- **Case:** Controlled public/private/unstated fixture repositories and bounded configurations, with absent legacy records; independently mutate one object, pin, provider, policy, record field or class at a time. Include regular, symlink and writerless-FIFO policy entries; invalid UTF-8, over-bound JSON/bytes and dirty policy; a policy-byte change versus an unrelated commit with identical bytes; composite origin/class loss; whole versus removed-span versus surviving-span support; provider withdrawal and missing-provider fallback; primary/secondary/aggregate reason and envelope conditional branches. For published change status, vary candidate stamps, missing adoption, actual default-branch commit/row/tag and later semantic edits independently; include an adopted A, later adopted B, and B veto/revert with B history retained, plus a reverted sole adoption, a mismatched record and no predecessor; compare status/adopter/record links with literal expected outcomes without creating a per-repository admission gate. Include a no-site refusal before author handoff, an unconfirmed operator-started handoff, a valid historical /2, an invalid disclosure companion, generated pages and a checked relay refusal.",
+    "- **Observable:** Command reports, state-file byte differences, process/network capture, rendered pages and machine disclosures. For D11, read the run record of a run that produced no site as well as the appendix and machine form of every page in a multi-page run, and compare captured relay refusals against an independent fixture.",
+    "- **Oracle:** Literal expected pins, refusal codes and redacted/withheld outcomes prepared independently from fixture bytes; independently recompute object identifiers and compare retained legacy files. Use literal expected policy bindings/bounds and child-process timeout capture; independently prepared composite origins, exclusion tuples/counts, Unknown reasons/routes, withdrawal labels, report-fact ceilings and change-status/adopter/adoption-record bindings, independently literal expected predecessor-effective versus Unknown/no-effective-applicability results after veto/revert; do not import policy capture or rendering helpers. Independently enumerate every render output. Use fixture literals for the declared-provider risk wording, handoff status, binding refusal and expected relay outcome."
+  ]
+}
+```
+
+
+### Replace predecessor lines 96–96, successor lines 120–120
+
+```json
+{
+  "before": [
+    "- **Falsifier:** A retired gate is called, a retired-record terminal question or unauthorized governance write occurs, invalid content is admitted, a private exclusion leaks metadata, a changed packet reuses a verdict, or a stored declaration is presented as observed transmission; a special policy file blocks, invalid policy bytes enter use, unchanged policy bytes are refused only for a different commit, a composite launders origin/class, surviving support is blanket-degraded, a withdrawal is hidden, a reason is invented, or an editorial draft becomes evidence/green; a candidate stamp or unadopted N/A maps as effective, or change-adoption status is mistaken for a per-repository admission prerequisite; a vetoed B stays effective, a reverted sole record still honors an N/A, or the effective predecessor/absence and retained veto provenance are hidden."
+  ],
+  "after": [
+    "- **Falsifier:** A retired gate is called, a retired-record terminal question or unauthorized governance write occurs, invalid content is admitted, a private exclusion leaks metadata, a changed packet reuses a verdict, or a stored declaration is presented as observed transmission; a special policy file blocks, invalid policy bytes enter use, unchanged policy bytes are refused only for a different commit, a composite launders origin/class, surviving support is blanket-degraded, a withdrawal is hidden, a reason is invented, or an editorial draft becomes evidence/green; a candidate stamp or unadopted N/A maps as effective, or change-adoption status is mistaken for a per-repository admission prerequisite; a vetoed B stays effective, a reverted sole record still honors an N/A, or the effective predecessor/absence and retained veto provenance are hidden. A recorded run, appendix or generated machine page lacks the risk disclosure, a refusal before handoff claims a read, a historical read rewrites state, or a disclosure bypasses a checked relay refusal."
+  ]
+}
+```
+
+
+### Replace predecessor lines 106–106, successor lines 130–130
+
+```json
+{
+  "before": [
+    "  parent_requirements: [REQ-polaris-generation-001, REQ-polaris-generation-003, REQ-polaris-generation-004, REQ-polaris-generation-005, REQ-polaris-generation-017, REQ-polaris-generation-018, REQ-polaris-generation-020, REQ-polaris-generation-021, REQ-polaris-generation-022, REQ-polaris-generation-025]"
+  ],
+  "after": [
+    "  parent_requirements: [REQ-polaris-generation-001, REQ-polaris-generation-003, REQ-polaris-generation-004, REQ-polaris-generation-005, REQ-polaris-generation-017, REQ-polaris-generation-018, REQ-polaris-generation-020, REQ-polaris-generation-021, REQ-polaris-generation-022, REQ-polaris-generation-025, REQ-polaris-generation-048]"
   ]
 }
 ```
@@ -130,13 +166,13 @@
     "From version 2.13, initialization SHALL bind, for every run it creates, the committed screening policy `.syzygy/governance/policies/POLARIS-DOSSIER-DECLARED-SOURCE-POLICY-v3.json` (policy identity `polaris-butlers-project-shape-secrets`, version `dossier-declared-source/3.0.0`) under REQ-polaris-generation-033's policy-capture rule: its path, identity, version and the SHA-256 of its exact committed bytes, with any missing, malformed, uncommitted or changed policy refused before content is used. The predecessor `.syzygy/governance/policies/POLARIS-DOSSIER-DECLARED-SOURCE-POLICY-v1.json` (version `dossier-declared-source/1.0.0`) and version 2.6's binding `.syzygy/governance/policies/POLARIS-DOSSIER-DECLARED-SOURCE-POLICY-v2.json` (version `dossier-declared-source/2.0.0`) SHALL stay committed and unedited. Each remains the binding of every run whose record names it: no step SHALL re-screen such a run under another version or silently move it to another version. A step of a run bound to either that can no longer read that policy as its binding SHALL refuse with a restart explanation that names the run's policy version and version 3.0.0, and SHALL change none of the run's files. In this requirement \"the predecessor\" names version 1.0.0, as in version 2.6's text. Version 3.0.0 is version 2.0.0 with entries appended to six second-stage lists (`successor.readmission`) and its version and `successor` record restated; every other field, every rule text, list, detector, denied path and exemption is version 2.0.0's, so what this requirement says of version 2.0.0's rules holds for version 3.0.0 unchanged."
   ],
   "after": [
-    "From version 2.18, initialization SHALL bind, for every run it creates, the committed screening policy `.syzygy/governance/policies/POLARIS-DOSSIER-DECLARED-SOURCE-POLICY-v4.json` (policy identity `polaris-butlers-project-shape-secrets`, version `dossier-declared-source/4.0.0`) under REQ-polaris-generation-033's policy-capture rule. It SHALL bind its path, identity, version and SHA-256 of its exact committed bytes and refuse a missing, malformed or drifted binding. Versions 1.0.0, 2.0.0 and 3.0.0 remain the exact bindings for runs that recorded them. Syzygy SHALL NOT silently re-screen or migrate an existing run. A dependent step that cannot verify its original binding SHALL refuse, name that binding and explain how to start a new run under version 4.0.0. The D11 disclosure in033 applies regardless of the screening policy version recorded for the run."
+    "From version 2.17, initialization SHALL bind, for every run it creates, the committed screening policy `.syzygy/governance/policies/POLARIS-DOSSIER-DECLARED-SOURCE-POLICY-v4.json` (policy identity `polaris-butlers-project-shape-secrets`, version `dossier-declared-source/4.0.0`) under REQ-polaris-generation-033's policy-capture rule. It SHALL bind its path, identity, version and SHA-256 of its exact committed bytes and refuse a missing, malformed or drifted binding. The committed policy bytes of versions 1.0.0, 2.0.0 and 3.0.0 stay unedited and remain the exact bindings for runs that recorded them. Syzygy SHALL NOT silently re-screen or migrate an existing run. A dependent step that cannot verify its original binding SHALL refuse, name that binding and explain how to start a new run under version 4.0.0, without changing the original run's files. The D11 disclosure in033 applies regardless of the screening policy version recorded for the run."
   ]
 }
 ```
 
 
-### Replace predecessor lines 15–15, successor lines 15–15
+### Replace predecessor lines 15–15, successor lines 15–17
 
 ```json
 {
@@ -144,13 +180,15 @@
     "In the URL-supervised form of REQ-polaris-generation-048, the bound URL origin/species policy (`POLARIS-DOSSIER-URL-ORIGIN-SPECIES-POLICY-v1`) SHALL be read over the screening policy this requirement binds as its base. That overlay's `basePolicy.reviewedSha256` names the predecessor bytes it was reviewed with, and its binding text forbids using different detector bytes silently; this paragraph is the explicit statement that the base is version 3.0.0, whose detectors and denied paths are the predecessor's with entries only added and whose admission widens by its second classification stage. URL mode therefore admits a body the second stage places, screened as this requirement states; the overlay's own sentences that no new path, file type or object is admitted are read as describing what the overlay itself adds to its base, which is nothing. Every other overlay rule applies over version 3.0.0 unchanged, and the run record SHALL name both bindings, the base by its own path, version and digest."
   ],
   "after": [
-    "In the URL-supervised form of REQ-polaris-generation-048, the bound URL origin/species policy (`POLARIS-DOSSIER-URL-ORIGIN-SPECIES-POLICY-v1`) SHALL be read over version 4.0.0 for runs that bind it. Version 4.0.0 has the exact classification and screening predicates of version 3.0.0. The overlay's `basePolicy.reviewedSha256` still identifies the predecessor bytes reviewed with the overlay, and this paragraph explicitly states the new base. Its sentences about admitting no new path, type or object describe the overlay's own effect. Every other overlay rule applies unchanged. The run record SHALL name both bindings, including the base's path, version and digest."
+    "In the URL-supervised form of REQ-polaris-generation-048, the bound URL origin/species policy (`POLARIS-DOSSIER-URL-ORIGIN-SPECIES-POLICY-v1`) SHALL be read over version 4.0.0 for runs that bind it. Version 4.0.0 has the exact classification and screening predicates of version 3.0.0. The overlay's `basePolicy.reviewedSha256` still identifies the predecessor bytes reviewed with the overlay, and this paragraph explicitly states the new base. Its sentences about admitting no new path, type or object describe the overlay's own effect. Every other overlay rule applies unchanged. The run record SHALL name both bindings, including the base's path, version and digest. A supported continuation with a previously bound base and overlay SHALL keep both exact bindings.",
+    "",
+    "The admission, classification, exclusion and delivery duties below govern Syzygy, including the source it supplies to a session and checked provider traffic. The separately disclosed raw-clone activity of a dossier authoring session follows REQ-polaris-generation-033 and REQ-polaris-generation-036. REQ-polaris-generation-047 continues to govern Syzygy's owned acquisition, and REQ-polaris-generation-025 and REQ-polaris-generation-048 govern its transport routes."
   ]
 }
 ```
 
 
-### Replace predecessor lines 21–21, successor lines 21–21
+### Replace predecessor lines 21–21, successor lines 23–23
 
 ```json
 {
@@ -164,7 +202,7 @@
 ```
 
 
-### Replace predecessor lines 47–47, successor lines 47–47
+### Replace predecessor lines 47–47, successor lines 49–49
 
 ```json
 {
@@ -178,7 +216,7 @@
 ```
 
 
-### Replace predecessor lines 54–54, successor lines 54–54
+### Replace predecessor lines 54–54, successor lines 56–56
 
 ```json
 {
@@ -192,7 +230,7 @@
 ```
 
 
-### Replace predecessor lines 74–74, successor lines 74–74
+### Replace predecessor lines 74–74, successor lines 76–76
 
 ```json
 {
@@ -206,7 +244,7 @@
 ```
 
 
-### Replace predecessor lines 85–85, successor lines 85–85
+### Replace predecessor lines 85–85, successor lines 87–87
 
 ```json
 {
@@ -220,7 +258,7 @@
 ```
 
 
-### Replace predecessor lines 100–101, successor lines 100–107
+### Replace predecessor lines 100–101, successor lines 102–109
 
 ```json
 {
@@ -237,6 +275,38 @@
     "- **WHEN** one controlled tree, draft and checked relay traffic are screened under versions 3.0.0 and 4.0.0",
     "- **THEN** classifications, denied paths, detector matches, exclusions, redactions and private-metadata restrictions agree",
     "- **AND** a new run binds the exact version 4.0.0 policy bytes and its record carries the D11 disclosure required by REQ-polaris-generation-033"
+  ]
+}
+```
+
+
+### Replace predecessor lines 105–107, successor lines 113–115
+
+```json
+{
+  "before": [
+    "- **Case:** Controlled clones and valid declarations, with non-terminal stdin, missing legacy records, malformed locators and overlapping state roots. Independently vary host/earlier segments, port, case and hyphen collisions with derived and explicit identities; inspect every page and machine form for attributed provenance, write reach and surviving collision disclosures. Include a subject with governance-root material and assert one unchanged repository identity with the declared observed-source role in its run, brief and pages. Under version 2.0.0, vary for each stage-two rule a matching path, a path one word short of it, a path with a word of each token list, a vendored directory at each depth, a path two rules match, each new denied basename, suffix and directory and its letter case, a notebook, a run-on or camel-case name carrying a stem of each stem list, a configuration or code path carrying a refused stem or word, an extensionless root stem below the root, and a path the predecessor already places; plant each configuration detector's form in each configuration format, in a cited span and in agent text, with and without a reference or template value, and time each detector over a long run of its keyword; vary visibility; and continue a run bound to the predecessor. Under version 3.0.0, vary for each re-admitted entry a matching path, the same path with a refused stem or word and below a vendored directory, and for each entry still left out a matching path; plant each configuration detector's form in each re-admitted configuration format (each entry appended to `configurationExtensions`, `sourceFileNames` and `sourceFileNamePrefixes`, and the `.gradle` and `.kts` language extensions); and continue a run bound to version 2.0.0.",
+    "- **Observable:** Human/machine reports, stdin read count, governance/ref writes and before/after file capture. Each path's class or exclusion reason under both policy versions, each body's outcome, every reader and provider request population, the run record's bound policy and classes, and every refusal's reason text.",
+    "- **Oracle:** Independently prepared locator cases and realpath relationships, literal expected identity/pin and read/write counts, plus independently enumerated locator normalization collisions and literal required per-page disclosure fields; a fixture literal observed-source role and one repository identity shared by its ordinary and governance-root material. For version 2.0.0, expected classes and outcomes written as fixture literals from the policy text, path by path, never computed by the screen under test; the predecessor's expected outcomes fixed from a run of the predecessor screen over the same fixture before version 2.0.0 is built. For version 3.0.0, the same, with version 2.0.0's expected outcomes also written as fixture literals from version 2.0.0's text, path by path, and cross-checked against a run of the version-2.0.0 screen before version 3.0.0 is built."
+  ],
+  "after": [
+    "- **Case:** Controlled clones and valid declarations, with non-terminal stdin, missing legacy records, malformed locators and overlapping state roots. Independently vary host/earlier segments, port, case and hyphen collisions with derived and explicit identities; inspect every page and machine form for attributed provenance, write reach and surviving collision disclosures. Include a subject with governance-root material and assert one unchanged repository identity with the declared observed-source role in its run, brief and pages. Under version 2.0.0, vary for each stage-two rule a matching path, a path one word short of it, a path with a word of each token list, a vendored directory at each depth, a path two rules match, each new denied basename, suffix and directory and its letter case, a notebook, a run-on or camel-case name carrying a stem of each stem list, a configuration or code path carrying a refused stem or word, an extensionless root stem below the root, and a path the predecessor already places; plant each configuration detector's form in each configuration format, in a cited span and in agent text, with and without a reference or template value, and time each detector over a long run of its keyword; vary visibility; and continue a run bound to the predecessor. Under version 3.0.0, vary for each re-admitted entry a matching path, the same path with a refused stem or word and below a vendored directory, and for each entry still left out a matching path; plant each configuration detector's form in each re-admitted configuration format (each entry appended to `configurationExtensions`, `sourceFileNames` and `sourceFileNamePrefixes`, and the `.gradle` and `.kts` language extensions); and continue a run bound to version 2.0.0. Compare v3 and v4 on the same synthetic tree, returned artifacts and checked relay payloads, including denied paths, matching and unclassifiable content, and private metadata.",
+    "- **Observable:** Human/machine reports, stdin read count, governance/ref writes and before/after file capture. Each path's class or exclusion reason under both policy versions, each body's outcome, every reader and provider request population, the run record's bound policy and classes, and every refusal's reason text. Capture both policy runs' classifications, refusals, stored and rendered text, and checked delivery outcomes.",
+    "- **Oracle:** Independently prepared locator cases and realpath relationships, literal expected identity/pin and read/write counts, plus independently enumerated locator normalization collisions and literal required per-page disclosure fields; a fixture literal observed-source role and one repository identity shared by its ordinary and governance-root material. For version 2.0.0, expected classes and outcomes written as fixture literals from the policy text, path by path, never computed by the screen under test; the predecessor's expected outcomes fixed from a run of the predecessor screen over the same fixture before version 2.0.0 is built. For version 3.0.0, the same, with version 2.0.0's expected outcomes also written as fixture literals from version 2.0.0's text, path by path, and cross-checked against a run of the version-2.0.0 screen before version 3.0.0 is built. Prepare the expected allowed output and exact refusals from fixture literals before observing either policy run."
+  ]
+}
+```
+
+
+### Replace predecessor lines 109–109, successor lines 117–117
+
+```json
+{
+  "before": [
+    "- **Falsifier:** A consent question or retired record read/write, credential-bearing locator output, unexpected network access or clone mutation; a surviving collision, attribution, configuration write reach or human/machine disclosure is omitted or treated as identity verification; the observed-source role is absent or mislabeled, or governance-root material creates a second repository entity or identity. A path the predecessor places changes class, or a body the predecessor screens changes outcome, other than by a new denied directory, or a path the predecessor leaves indeterminate changes other than by a new denial or the second stage; a stage-two body is retained as `redacted-span`, skips the active-content scan or escapes a detector; a document with a word of `withheldTokens`, a path the stem or evidence lists refuse, a notebook or a vendored path is admitted; a governance-text-by-name document is sent as `project-documentation`; a new denied path is read; a configuration detector match is admitted, quoted or rendered; a run bound to the predecessor is re-screened or migrated without refusal. Under version 3.0.0: a path version 2.0.0 places changes class, stage or outcome, or a path it denies is read; an entry `notAdoptedFromTheOption` names places a path; a re-admitted body skips a detector, the active-content scan or the configuration detectors, or is retained as `redacted-span`; a run bound to version 2.0.0 is re-screened or migrated without refusal."
+  ],
+  "after": [
+    "- **Falsifier:** A consent question or retired record read/write, credential-bearing locator output, unexpected network access or clone mutation; a surviving collision, attribution, configuration write reach or human/machine disclosure is omitted or treated as identity verification; the observed-source role is absent or mislabeled, or governance-root material creates a second repository entity or identity. A path the predecessor places changes class, or a body the predecessor screens changes outcome, other than by a new denied directory, or a path the predecessor leaves indeterminate changes other than by a new denial or the second stage; a stage-two body is retained as `redacted-span`, skips the active-content scan or escapes a detector; a document with a word of `withheldTokens`, a path the stem or evidence lists refuse, a notebook or a vendored path is admitted; a governance-text-by-name document is sent as `project-documentation`; a new denied path is read; a configuration detector match is admitted, quoted or rendered; a run bound to the predecessor is re-screened or migrated without refusal. Under version 3.0.0: a path version 2.0.0 places changes class, stage or outcome, or a path it denies is read; an entry `notAdoptedFromTheOption` names places a path; a re-admitted body skips a detector, the active-content scan or the configuration detectors, or is retained as `redacted-span`; a run bound to version 2.0.0 is re-screened or migrated without refusal. Versions 3.0.0 and 4.0.0 differ in a screening outcome or protected metadata; a missing original policy binding changes a run file; or raw-read disclosure is treated as permission for a separate Syzygy send."
   ]
 }
 ```
