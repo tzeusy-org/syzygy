@@ -1388,7 +1388,9 @@ function create(given: UrlRunArtifactsOptions) {
       readLive(state); return result;
     } catch { closeRead(state); return refuse(); }
   }
-  /** Copy only identities of settled, independently bound producer files. */
+  /** Copy identities of settled, independently bound producer files. The
+   * supervisor calls this only once its owned writers and callbacks are
+   * confirmed stopped. The descriptor walk detects drift during the read. */
   function captureFrozenHistory(): UrlFrozenProductHistory {
     return snapshotWithAuthority(check => {
       if (!initial || sidecarBytes === null || producersInFlight || activeReads.size || pending.size || uncommitted.size || questions.size

@@ -43,7 +43,7 @@ import { readUrlParentAdoption, URL_PARENT_TAG, type UrlParentAdoption } from '.
 import { loadUrlDossierRenderer, readUrlRuntime, type UrlLoadedRenderer, type UrlRuntime } from './url-runtime.js';
 import { verifySupportedUrlCli, URL_CLI_PROGRAM } from './session-launch.js';
 import { URL_HOST_ROOT, registerUrlRunMode, urlRunModeAuthority } from './url-mode-registry.js';
-import { createUrlRunDeclaration, URL_PROFILE_ID, URL_RUN_MODE, urlSourceTransportIdentity } from './url-run-record.js';
+import { createUrlRunDeclaration, URL_PROFILE_ID, URL_ROLES, URL_RUN_MODE, urlSourceTransportIdentity } from './url-run-record.js';
 import { GIT_MEMORY_LIMITS } from './git-memory-transport.js';
 import { GIT_MEMORY_PACK_LIMITS } from './git-memory-pack.js';
 import { GIT_MEMORY_WORKER_LIMITS } from './git-memory-worker.js';
@@ -57,6 +57,7 @@ import type { BriefReport } from './brief.js';
 import type { StartSessionsReport } from './session-handover.js';
 import { createUrlRunArtifacts } from './url-run-artifacts.js';
 import { startUrlRunSessions, type UrlDesignReproduction, type UrlRunSessions, type UrlRunSessionsSummary } from './url-run-sessions.js';
+import { isUrlRunMachineClosedHistory } from './url-run-machine.js';
 import { loadSessionCredential } from './session-credential.js';
 import type { UrlSessionAnswer, UrlSessionQuestionFrame } from './session-control.js';
 import { askUrlSessionQuestion } from './url-question-ui.js';
@@ -1026,14 +1027,26 @@ export function blockingWhy(run: string, kind: 'fidelity' | 'design', n: number)
   return parts.length > 0 ? parts.join('; ') : 'the reviewer declared it not ready';
 }
 
-function cleanupConfirmed(summary: UrlRunSessionsSummary): boolean {
-  return summary.roles.length === 4 && summary.roles.every(role => role.outcome !== 'Unknown'
-    && role.outcome.viewTermination === 'view-exited' && role.outcome.groupTermination === 'confirmed'
-    && role.outcome.toolTermination === 'settled' && role.outcome.pendingInvocations === 0)
-    && summary.hosts.length === 4 && summary.hosts.every(host => host.termination === 'settled' && host.pendingInvocations === 0)
-    && summary.control.termination === 'settled' && summary.control.pendingCallbacks === 0
-    && summary.machine?.lifecycle === 'retired'
-    && !summary.audit.poisoned && summary.audit.tail === 'durable-prefix' && summary.audit.termination === 'closed';
+function cleanupConfirmed(summary: UrlRunSessionsSummary, allowUnstartedDesign: boolean): boolean {
+  const machine = summary.closedMachineHistory;
+  const audit = summary.closedAuditHistory;
+  if (!isUrlRunMachineClosedHistory(machine) || summary.machine?.lifecycle !== 'retired'
+    || summary.machine.identitySha256 !== machine.identitySha256 || !audit
+    || summary.audit.poisoned || summary.audit.tail !== 'durable-prefix' || summary.audit.termination !== 'closed'
+    || summary.control.termination !== 'settled' || summary.control.pendingCallbacks !== 0
+    || summary.roles.length !== URL_ROLES.length || new Set(summary.hosts.map(host => host.role)).size !== summary.hosts.length) return false;
+  const design = summary.roles[URL_ROLES.indexOf('design')];
+  const designClients = machine.clients.filter(client => client.context.role === 'design');
+  const unstartedDesign = allowUnstartedDesign && design?.outcome === 'Unknown' && design.pid === 'Unknown'
+    && design.startedAt === 'Unknown' && design.finishedAt === 'Unknown' && audit.roles.design.records === 1
+    && designClients.length === 2 && designClients.every(client => client.terminal.kind === 'never-issued');
+  const activeRoles = unstartedDesign ? URL_ROLES.filter(role => role !== 'design') : URL_ROLES;
+  return summary.hosts.length === activeRoles.length
+    && summary.hosts.every(host => activeRoles.includes(host.role) && host.termination === 'settled' && host.pendingInvocations === 0)
+    && summary.roles.every((role, index) => role.role === URL_ROLES[index]
+      && (unstartedDesign && role.role === 'design' || role.outcome !== 'Unknown'
+        && role.outcome.viewTermination === 'view-exited' && role.outcome.groupTermination === 'confirmed'
+        && role.outcome.toolTermination === 'settled' && role.outcome.pendingInvocations === 0));
 }
 
 async function deliverFeedback(context: CheckedSupervisor, run: string, review: 'fidelity' | 'design', number: number,
@@ -1317,11 +1330,11 @@ async function runUrlStages(stateRoot: string, ports: CliPorts, state: Superviso
     await new Promise((resolve) => setTimeout(resolve, POLL_MS));
   }
   const stopped = await context.runtime.stop();
-  const cleaned = cleanupConfirmed(stopped);
-  if (cleaned) state.stopped ??= isoOf(Date.now());
   let finalStop: ReturnType<UrlSupervisorStop['close']> | null = null;
   try { finalStop = context.stop.close(); }
   catch { phase = 'stop control unavailable'; }
+  const cleaned = cleanupConfirmed(stopped, finalStop === 'requested');
+  if (cleaned) state.stopped ??= isoOf(Date.now());
   if (finalStop === 'requested') phase = 'operator stop requested';
   if (final !== null && finalStop === 'ready') {
     const result = final;
