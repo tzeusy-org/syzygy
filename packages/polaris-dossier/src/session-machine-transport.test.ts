@@ -129,10 +129,12 @@ describe('verified-chunk session transport adapter', () => {
 
   it.each(['published', 'capture-expired', 'connection-expired', 'publication-refused'] as const)(
     'keeps staged admission paused until protected publication is %s', async outcome => {
-      const original = performance.now.bind(performance);
-      let elapsed = 0, opening: (() => boolean) | undefined, peer: UrlMachinePeer | undefined;
-      const clock = vi.spyOn(performance, 'now').mockImplementation(() => original() + elapsed);
+      vi.useFakeTimers({ toFake: ['setTimeout', 'clearTimeout', 'performance'] });
+      let opening: (() => boolean) | undefined, peer: UrlMachinePeer | undefined;
+      let startCapture!: () => void, finishCapture!: (value: UrlMachinePeer | null) => void;
       let startAuthorization!: () => void, finishAuthorization!: (value: boolean) => void;
+      const capturing = new Promise<void>(resolve => { startCapture = resolve; });
+      const captured = new Promise<UrlMachinePeer | null>(resolve => { finishCapture = resolve; });
       const authorizing = new Promise<void>(resolve => { startAuthorization = resolve; });
       const authorized = new Promise<boolean>(resolve => { finishAuthorization = resolve; });
       const authorize = vi.fn(async (captured: UrlMachinePeer, stillOpening: () => boolean) => {
@@ -144,8 +146,8 @@ describe('verified-chunk session transport adapter', () => {
       const transport = createSessionMachineTransport({ prepare: server => server.listening, authorize, accept: async raw => {
         peer = Object.freeze({ verifier: {} }) as UrlMachinePeer;
         backend.states.set(peer, { socket: raw, chunks: [Buffer.from('checked')], live: true });
-        elapsed = outcome === 'capture-expired' ? 5001 : 4000;
-        return peer;
+        startCapture();
+        return captured;
       } })!;
       let result!: (stream: Duplex | null) => void;
       const connected = new Promise<Duplex | null>(resolve => { result = resolve; });
@@ -160,10 +162,14 @@ describe('verified-chunk session transport adapter', () => {
       cleanup.push(() => new Promise<void>(resolve => server.close(() => resolve())));
       const connection = client(socketPath);
       try {
-        if (outcome !== 'capture-expired') {
+        await capturing;
+        await vi.advanceTimersByTimeAsync(outcome === 'capture-expired' ? 5001 : 4000);
+        finishCapture(peer!);
+        if (outcome === 'capture-expired') await vi.advanceTimersByTimeAsync(0);
+        else {
           await authorizing;
           expect(opening?.()).toBe(true);
-          elapsed = outcome === 'connection-expired' ? 8001 : 6000;
+          await vi.advanceTimersByTimeAsync(outcome === 'connection-expired' ? 4001 : 2000);
           expect(opening?.()).toBe(outcome !== 'connection-expired');
           expect(backend.reads).toBe(0);
           expect(backend.mediations).toBe(0);
@@ -181,7 +187,11 @@ describe('verified-chunk session transport adapter', () => {
         }
         expect(authorize).toHaveBeenCalledTimes(outcome === 'capture-expired' ? 0 : 1);
         await connection.output;
-      } finally { clock.mockRestore(); finishAuthorization(false); }
+      } finally {
+        finishCapture(null);
+        finishAuthorization(false);
+        vi.useRealTimers();
+      }
     },
   );
 
