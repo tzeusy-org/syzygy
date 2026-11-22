@@ -63,7 +63,7 @@ async function create(given: UrlRunOriginsOptions) {
       || binding.provider !== record.declared.agentProvider || binding.model !== record.declared.model || declaration.role !== plan.role
       || declaration.sessionId !== plan.profile.input.sessionId || declaration.compiledProfileSha256 !== plan.profile.digest
       || declaration.instructionSha256 !== sha256(plan.profile.input.systemPrompt) || declaration.inputPacketSha256 !== sha256(plan.profile.input.initialPrompt)
-      || declaration.inputOriginId !== `origin:${plan.role}-initial` || plan.initialOrigin.id !== declaration.inputOriginId
+      || declaration.inputOriginId !== `origin:${plan.role}/initial` || plan.initialOrigin.id !== declaration.inputOriginId
       || plan.initialOrigin.canonicalText !== plan.profile.input.initialPrompt || canonical(plan.initialOrigin.binding) !== canonical(binding)
       || canonical([...plan.initialOrigin.classes].sort()) !== canonical(INITIAL_CLASSES) || canonical([...plan.initialOrigin.originIds].sort()) !== canonical([...ROOT_IDS].sort())) refuse();
   }

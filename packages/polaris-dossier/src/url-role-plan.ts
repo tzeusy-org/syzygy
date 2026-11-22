@@ -165,7 +165,9 @@ async function prepare(input: UrlRolePlanningOptions, designVariant: 'ordinary' 
         compiledProfileSha256: profile.digest, commandSha256: prepared.commandSha256, instructionSha256: sha256(prompts.system), viewSha256: prepared.viewSha256,
         scaffoldSha256: sha256(profile.baselineOrigin.canonicalText), mcpSha256: sha256(canonical(profile.baseline.tools)),
         configurationSha256: runtime.profileRegistrySha256, executableSha256: URL_CLI_PROGRAM.sha256,
-        inputPacketSha256: sha256(prompts.initial), inputOriginId: `origin:${role}-initial`,
+        // A slash keeps the host-owned author ID out of the unchanged credential
+        // grammar when receipt values are screened as one composition.
+        inputPacketSha256: sha256(prompts.initial), inputOriginId: `origin:${role}/initial`,
         capture: { pid: 'Unknown', startedAt: 'Unknown', finishedAt: 'Unknown', outcome: 'Unknown' } };
       roles.push(Object.freeze({ role, profile, view: Object.freeze({ ...view, protectedPaths: Object.freeze([...view.protectedPaths]) }),
         declaration: deepFreeze(declaration), probe: prepared.probe, initialOrigin: deepFreeze({ binding, id: declaration.inputOriginId,

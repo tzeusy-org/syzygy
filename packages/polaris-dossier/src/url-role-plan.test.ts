@@ -7,7 +7,7 @@ import { policyFixture } from './full-run.testkit.js';
 import { parseRunConfig } from './run-config.js';
 import { DOSSIER_CONTENT_CLASSES, NO_WORK_ITEM_REASON, recordRunConfig } from './run-record.js';
 import { buildDossierScreen } from './screen.js';
-import { isOrderedDesignSessionProfile } from './session-profile.js';
+import { createSessionProfile, isOrderedDesignSessionProfile } from './session-profile.js';
 import { screenOrderedDesignInitialRequest } from './session-egress-policy.js';
 import { createSessionController } from './session-controller.js';
 import { URL_CLI_PROGRAM } from './session-launch.js';
@@ -16,11 +16,16 @@ import { isPreparedUrlRolePlan, prepareUrlRolePlans, type UrlRolePlanningOptions
 
 const cleanup: string[] = [];
 afterEach(async () => { for (const root of cleanup.splice(0)) await rm(root, { recursive: true, force: true }); });
-async function fixture() {
+async function fixture(v2 = false) {
   const root = await mkdtemp(path.join(os.tmpdir(), 'urp-')); cleanup.push(root);
   const run = path.join(root, 'own-run'), parent = path.join(root, 'views'), hidden = path.join(root, 'protected'), support = path.join(root, 'support');
   for (const directory of [run, parent, hidden, support]) await mkdir(directory, { mode: 0o700 });
-  const snapshot = policyFixture(), built = buildDossierScreen(snapshot.bytes, true, null, 'private'); if (!built.ok) throw new Error();
+  const predecessor = policyFixture();
+  const policyBytes = v2 ? await readFile(new URL('../../../.syzygy/governance/policies/POLARIS-DOSSIER-DECLARED-SOURCE-POLICY-v2.json', import.meta.url)) : predecessor.bytes;
+  const document = JSON.parse(Buffer.from(policyBytes).toString()) as { policyId: string; policyVersion: string };
+  const snapshot = { bytes: policyBytes, binding: { ...predecessor.binding, path: v2 ? '.syzygy/governance/policies/POLARIS-DOSSIER-DECLARED-SOURCE-POLICY-v2.json' : predecessor.binding.path,
+    policyId: document.policyId, policyVersion: document.policyVersion, sha256: sha256(policyBytes) } };
+  const built = buildDossierScreen(snapshot.bytes, true, null, 'private'); if (!built.ok) throw new Error();
   const config = parseRunConfig(JSON.stringify({ operator: 'own-operator', agentTool: 'claude-code', agentToolVersion: '2.1.327', agentProvider: 'anthropic',
     model: 'claude-sonnet-4-6', deadline: 'PT1H', agentTurnBudget: 20, maxRepairCycles: 2, maxQuestions: 1, audience: 'own readers', operatorIsOwner: false }));
   if (!config.ok) throw new Error();
@@ -52,7 +57,7 @@ async function fixture() {
 
 describe('four restricted URL role plans before the brief', () => {
   it('probes four isolated native views and binds each initial host tool call before any CLI launch', async () => {
-    const f = await fixture(), result = await prepareUrlRolePlans(f.options);
+    const f = await fixture(true), result = await prepareUrlRolePlans(f.options);
     expect(result, JSON.stringify(result)).toMatchObject({ ok: true }); if (!result.ok) return;
     cleanup.push(result.socketRoot);
     expect(result.roles.map(plan => plan.role)).toEqual(['author', 'inventory', 'fidelity', 'design']);
@@ -79,16 +84,32 @@ describe('four restricted URL role plans before the brief', () => {
       for (const directory of [plan.view.homeDirectory, plan.view.workDirectory, plan.view.brokerSocketDirectory, plan.view.relaySocketDirectory]) {
         expect(await readdir(directory)).toEqual([]); expect((await lstat(directory)).mode & 0o777).toBe(0o700);
       }
+      const scanSecrets = (text: string) => f.options.screen.screenSecrets(text) !== undefined;
+      expect(plan.initialOrigin.id).toBe(`origin:${plan.role}/initial`);
+      const ordinary = isOrderedDesignSessionProfile(plan.profile) ? createSessionProfile(plan.profile.input) : { ok: true as const, value: { profile: plan.profile } };
+      if (!ordinary.ok) throw new Error('own ordinary receipt compiler unavailable');
+      const receiptController = () => createSessionController({ profile: ordinary.value.profile, initialOrigin: plan.initialOrigin,
+        declaredClasses: ['governance-text', 'code-structure', 'work-history', 'derived-composites'], scanSecrets, validateToolInput: () => false });
+      expect(receiptController).not.toThrow();
+      if (plan.role === 'author') {
+        expect(() => createSessionController({ profile: ordinary.value.profile, initialOrigin: { ...plan.initialOrigin, id: 'origin:author-initial' },
+          declaredClasses: ['governance-text', 'code-structure', 'work-history', 'derived-composites'], scanSecrets, validateToolInput: () => false })).toThrow('invalid-session-controller');
+      }
+      const excluded = createSessionProfile({ ...plan.profile.input, initialPrompt: 'auth=OWN_SYNTHETIC_CREDENTIAL_123456' });
+      if (!excluded.ok) throw new Error('own excluded prompt compiler unavailable');
+      expect(() => createSessionController({ profile: excluded.value.profile,
+        initialOrigin: { ...plan.initialOrigin, canonicalText: excluded.value.profile.input.initialPrompt },
+        declaredClasses: ['governance-text', 'code-structure', 'work-history', 'derived-composites'], scanSecrets, validateToolInput: () => false })).toThrow('invalid-session-controller');
       const { tool_choice: _projected, ...baseline } = plan.profile.baseline;
       const request = Buffer.from(JSON.stringify({ ...baseline, metadata: { user_id: JSON.stringify({ device_id: '0'.repeat(64), account_uuid: '', session_id: plan.profile.input.sessionId }) }, messages: [plan.profile.initialMessage] }));
       if (isOrderedDesignSessionProfile(plan.profile)) {
         expect(plan.role).toBe('design');
-        expect(screenOrderedDesignInitialRequest(request, plan.profile, { scanSecrets: () => false, scanDesignView: () => false }).ok).toBe(true);
+        expect(screenOrderedDesignInitialRequest(request, plan.profile, { scanSecrets, scanDesignView: text => f.options.screen.screenBody(text) !== undefined }).ok).toBe(true);
         expect(sha256(await readFile(path.join(plan.view.supportDirectory, 'session-mcp.js')))).toBe(plan.profile.transcript.supportSha256['session-mcp.js']);
       } else {
         expect(plan.role).not.toBe('design');
         const controller = createSessionController({ profile: plan.profile, initialOrigin: plan.initialOrigin,
-          declaredClasses: ['governance-text', 'code-structure', 'work-history', 'derived-composites'], scanSecrets: () => false, validateToolInput: () => false });
+          declaredClasses: ['governance-text', 'code-structure', 'work-history', 'derived-composites'], scanSecrets, validateToolInput: () => false });
         expect(controller.request(request).ok).toBe(true);
       }
       for (const other of result.roles.filter(other => other !== plan)) expect(plan.view.protectedPaths).toContain(other.view.workDirectory);
