@@ -1,0 +1,268 @@
+{
+  "subject": {
+    "commit": "8f4c7dc9cfdd2141933d2bbbea05d37a8eb9169b",
+    "tree": "e4cc66934718a89cb9d9110b7090cb2bba8cb62a",
+    "sourceFiles": {
+      "packages/polaris-dossier/src/url-run-composed.test.ts": {
+        "sha256": "96c9f0daa2cafea41dd18d490c6c34f4bacfdd031d252f55ed31896ea38db1b7",
+        "lineAnchors": [
+          153,
+          156,
+          468,
+          534,
+          599,
+          607
+        ]
+      },
+      "packages/polaris-dossier/src/url-run-composed.testkit.ts": {
+        "sha256": "748f848bdcf4f8a862266cd8ddfd8db1191ea20d470b0b0334f17b36e1f21fc9",
+        "lineAnchors": [
+          115,
+          141,
+          185
+        ]
+      },
+      "packages/polaris-dossier/src/polaris.ts": {
+        "sha256": "0aeafeb816d9c04c4728ae835f5add409331a70b6d0cab5b71d5eb4892983cc2",
+        "lineAnchors": [
+          551,
+          552,
+          581,
+          590,
+          597,
+          643,
+          644
+        ]
+      },
+      "packages/polaris-dossier/src/url-run-ordered-attempt.ts": {
+        "sha256": "8edcd9c6d5486b0e38c7241136544fbed20da24a225e6466cbe793f61da47320",
+        "lineAnchors": [
+          232,
+          233,
+          235,
+          236
+        ]
+      },
+      "packages/polaris-dossier/src/url-run-artifacts.ts": {
+        "sha256": "d48dab193902acf6208cf089f38eb31ec36e8ddcd07db2eaa9a643bc01cfba16",
+        "lineAnchors": [
+          402,
+          1428,
+          1432,
+          1533
+        ]
+      },
+      "packages/polaris-dossier/src/url-origin-ledger.ts": {
+        "sha256": "5e798f6f7b7780c0363ef87a9e6284b310ebd040cd554ef417980a9569944d1e",
+        "lineAnchors": [
+          473,
+          485,
+          515
+        ]
+      },
+      "packages/polaris-dossier/src/session-launch.ts": {
+        "sha256": "f867296c11e4501220dafcfebc57374a65b93608d1cab4604d7125f16ad492a9",
+        "lineAnchors": [
+          390,
+          421,
+          443
+        ]
+      },
+      "packages/polaris-dossier/src/url-rendered-source-proof.ts": {
+        "sha256": "b484793eb7e8f8055f35da889372bbb46e23a2850f8a9c855678348e7e9e05b3",
+        "lineAnchors": [
+          38,
+          51
+        ]
+      }
+    }
+  },
+  "scope": "Observed local owned synthetic provider public interrupted recovery",
+  "test": {
+    "project": "integration",
+    "file": "packages/polaris-dossier/src/url-run-composed.test.ts",
+    "selectedCase": "composed URL run with actual role processes > runs the genuine production pipeline to stop-resume",
+    "selector": "to stop-resume$",
+    "outcome": "test-timeout",
+    "configuredTimeoutMilliseconds": 360000,
+    "selectedElapsedMilliseconds": 360183,
+    "suiteElapsedMilliseconds": 363003,
+    "commandElapsedMilliseconds": 367440,
+    "selected": 1,
+    "failed": 1,
+    "skipped": 3
+  },
+  "retainedByDigest": {
+    "timeoutLog": {
+      "bytes": 2043,
+      "sha256": "c31eaff42840d8b143673bb5437fa16ff32c5798f9a8468b3fac4eb2b733bdd4"
+    },
+    "initialCut": {
+      "bytes": 137296,
+      "sha256": "0758891b7111644710896d5a712f3648f21540c34add924ebefc7719e5407d39",
+      "expectedDurableRecords": 294,
+      "expectedDurableBytes": 519803
+    },
+    "freshRoleAudits": {
+      "author": {
+        "bytes": 1185,
+        "sha256": "4f54f3f7d8815482ff526993b3a09bc50b321e715d4156f9bf43fdccb5487d48",
+        "events": [
+          {
+            "roleSequence": 1,
+            "kind": "declaration"
+          }
+        ]
+      },
+      "inventory": {
+        "bytes": 1253,
+        "sha256": "2ddef296753cb8b2258cff89c0fe9e06e96167f119031e34b0ae7aabf0accb10",
+        "events": [
+          {
+            "roleSequence": 1,
+            "kind": "declaration"
+          }
+        ]
+      },
+      "fidelity": {
+        "bytes": 1251,
+        "sha256": "607374de6c8e2592cdafb837a8f29c88d0ee1e9770836e1da8cebcbb4a062956",
+        "events": [
+          {
+            "roleSequence": 1,
+            "kind": "declaration"
+          }
+        ]
+      },
+      "design": {
+        "bytes": 3949,
+        "sha256": "931eb572c30d8c4c93d5bd72fd8f395e4bbd72bd8359f9b9afac97562abd7371",
+        "events": [
+          {
+            "roleSequence": 1,
+            "kind": "declaration"
+          },
+          {
+            "roleSequence": 2,
+            "kind": "launch-attempt"
+          },
+          {
+            "roleSequence": 3,
+            "kind": "launch-history"
+          }
+        ]
+      }
+    },
+    "freshLaunchFile": {
+      "bytes": 1701,
+      "sha256": "676484883964917c90ecebbaa551def16932b8fa0d4679701f9e985ed595e733"
+    },
+    "resumedSupervisorState": {
+      "bytes": 1759,
+      "sha256": "0032c13fc9607e052a61eeed1f007487b1ec734294449c8f5079d0a1bc2d7a88"
+    },
+    "runSteps": {
+      "bytes": 1928,
+      "sha256": "cf3862eaec72e7e826d150eea180ca1e7406af4677d36ec0d621b8f0fdf63e30"
+    }
+  },
+  "utcTimeline": [
+    {
+      "event": "retained-cut-final-write",
+      "timestampBasis": "file-mtime",
+      "utc": "2026-11-22T13:24:43.743397+00:00",
+      "secondsSinceCut": 0.0
+    },
+    {
+      "event": "fresh-acquisition-created",
+      "timestampBasis": "directory-birth",
+      "utc": "2026-11-22T13:25:23.308780+00:00",
+      "secondsSinceCut": 39.565
+    },
+    {
+      "event": "supervisor-state-final-write",
+      "timestampBasis": "file-mtime",
+      "utc": "2026-11-22T13:27:45.061030+00:00",
+      "secondsSinceCut": 181.318
+    },
+    {
+      "event": "stop-control-final-write",
+      "timestampBasis": "file-mtime",
+      "utc": "2026-11-22T13:27:45.072030+00:00",
+      "secondsSinceCut": 181.329
+    },
+    {
+      "event": "fresh-author-declaration-final-write",
+      "timestampBasis": "file-mtime",
+      "utc": "2026-11-22T13:27:48.363113+00:00",
+      "secondsSinceCut": 184.62
+    },
+    {
+      "event": "fresh-inventory-declaration-final-write",
+      "timestampBasis": "file-mtime",
+      "utc": "2026-11-22T13:27:48.920136+00:00",
+      "secondsSinceCut": 185.177
+    },
+    {
+      "event": "fresh-fidelity-declaration-final-write",
+      "timestampBasis": "file-mtime",
+      "utc": "2026-11-22T13:27:49.400139+00:00",
+      "secondsSinceCut": 185.657
+    },
+    {
+      "event": "fresh-site-1-directory-final-write",
+      "timestampBasis": "directory-mtime",
+      "utc": "2026-11-22T13:28:49.672313+00:00",
+      "secondsSinceCut": 245.929
+    },
+    {
+      "event": "fresh-design-launch-captured-start",
+      "timestampBasis": "launch-metadata",
+      "utc": "2026-11-22T13:29:13.320000+00:00",
+      "secondsSinceCut": 269.577
+    },
+    {
+      "event": "fresh-design-launch-file-final-write",
+      "timestampBasis": "file-mtime",
+      "utc": "2026-11-22T13:29:13.787168+00:00",
+      "secondsSinceCut": 270.044
+    },
+    {
+      "event": "fresh-design-launch-history-final-write",
+      "timestampBasis": "file-mtime",
+      "utc": "2026-11-22T13:29:14.943195+00:00",
+      "secondsSinceCut": 271.2
+    },
+    {
+      "event": "timeout-log-final-write",
+      "timestampBasis": "file-mtime",
+      "utc": "2026-11-22T13:29:17.774261+00:00",
+      "secondsSinceCut": 274.031
+    }
+  ],
+  "observedIntervalsSeconds": {
+    "freshAcquisitionCreatedToStateFinalWrite": 141.752,
+    "freshAcquisitionCreatedToFirstRoleDeclarationFinalWrite": 145.054,
+    "launchHistoryToLogFinalWrite": 2.831
+  },
+  "observedRetainedOutputs": {
+    "renderedSites": 2,
+    "freshDurableRoleAuditRows": 6,
+    "freshDesignDeliveryRow": false,
+    "freshDesignTerminalRow": false,
+    "nativeFailureManifest": false,
+    "executionRecord": false
+  },
+  "priorPlaybackComparison": {
+    "subject": "6d7441b33c1c500874cd17f8fda687ac676cc914",
+    "initialCutByDigest": {
+      "bytes": 137296,
+      "sha256": "9584b2852a122a6b493cd17d49903cd029f500fec94a40f0501be755479faba3"
+    },
+    "freshAuthorAuditByDigest": {
+      "bytes": 1185,
+      "sha256": "d2259e8637b30042ff1ce9d96f3c2c1d2a578a73a1e117eb7f99660cbdfd85f4"
+    },
+    "freshAcquisitionCreatedToFirstRoleDeclarationFinalWriteSeconds": 38.4
+  }
+}
