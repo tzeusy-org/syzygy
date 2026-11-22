@@ -95,7 +95,7 @@ authority and no model yet called on the current path.
     [v1.4 sign-off](.syzygy/governance/decisions/POLARIS-DOSSIER-LOCAL-AGENT-MODE-SIGNOFF-v1.4.md);
     [v1.5 sign-off](.syzygy/governance/decisions/POLARIS-DOSSIER-LOCAL-AGENT-MODE-SIGNOFF-v1.5.md);
     [v1.6 sign-off](.syzygy/governance/decisions/POLARIS-DOSSIER-LOCAL-AGENT-MODE-SIGNOFF-v1.6.md)), and
-    39 requirements and 455 scenarios in the effective composition with it and with the signed-off
+    39 requirements and 463 scenarios in the effective composition with it and with the signed-off
     [launch-consent addition](openspec/changes/polaris-dossier-launch-consent/specs/polaris-generation/spec.md)
     ([v1.0 sign-off](.syzygy/governance/decisions/POLARIS-DOSSIER-LAUNCH-CONSENT-SIGNOFF-v1.0.md);
     [v1.1 sign-off](.syzygy/governance/decisions/POLARIS-DOSSIER-LAUNCH-CONSENT-SIGNOFF-v1.1.md);
@@ -179,10 +179,10 @@ authority and no model yet called on the current path.
     `run-advice.json`, and the bounded form's words for a draft that does not parse); its code is not yet landed.
     *(2026-11-22: the predecessor figure "432 scenarios" is superseded by that
     amendment; all 39 identities remain.)*
-    [Page subsections amendment 2.15](openspec/changes/dossier-page-subsections) is agent-adopted in A-48.
-    It replaces REQ-polaris-generation-034 again (130 to 140 scenarios: draft schema v8 with answer-led subsections,
-    rule `one-sentence-answer`, third-level headings and an on-page contents list, brief v13, and the 2.14 makefile
-    recipe-context correction of syzygy-3efd.81); its code is not yet landed.
+    [Index and task routes amendment 2.15](openspec/changes/dossier-index-and-task-routes) is agent-adopted in A-48.
+    It replaces REQ-polaris-generation-034 again (130 to 148 scenarios: a generated index and a find-by-task
+    page on every operator-agent dossier, and task routes in the draft); its implementation (syzygy-5dhm.70,
+    syzygy-5dhm.71) lands with it.
     *(2026-11-22: the predecessor figure "445 scenarios" is superseded by that
     amendment; all 39 identities remain.)*
     *(2026-11-18: the predecessor figure "329 scenarios" is superseded by that

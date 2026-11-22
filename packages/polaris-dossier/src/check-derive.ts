@@ -2,7 +2,7 @@ import * as path from 'node:path';
 import { UNKNOWN_REASONS } from '@syzygy/cap1-core';
 import { checkShape, handle, leadInQuotations, lineCount, locateQuote, normaliseTracked, retainedWithMarkers, spanTouchesWithheld, verifiedRedactedBody, type VerifiedRedactedBody, type TrackedText, type Schema } from '@syzygy/polaris-generation-core/live';
 import { isRecord } from '@syzygy/support';
-import { FIGURE_MEMBERS, LOCAL_DRAFT_SCHEMA_VERSION, LOCAL_DRAFT_SCHEMA_VERSION_V4, LOCAL_DRAFT_SCHEMA_VERSION_V5, LOCAL_DRAFT_SCHEMA_VERSION_V6, INVENTORY_OMISSIONS_SINCE, PRE_V5_SCHEMA_VERSIONS, UNDERSTANDING_ITEMS, V4_FIELDS, V7_FIGURE_MEMBERS, hasHomeForm, hasThesisBasisForm, hasV4Forms, checkDraftShape, localDraftSchema, membersOfKind, type DraftSchemaWithDefs } from './draft-schema.js';
+import { FIGURE_MEMBERS, LOCAL_DRAFT_SCHEMA_VERSION, LOCAL_DRAFT_SCHEMA_VERSION_V4, LOCAL_DRAFT_SCHEMA_VERSION_V5, LOCAL_DRAFT_SCHEMA_VERSION_V6, INVENTORY_OMISSIONS_SINCE, PRE_V5_SCHEMA_VERSIONS, TASK_ROUTE_FIELD, UNDERSTANDING_ITEMS, V4_FIELDS, V7_FIGURE_MEMBERS, hasHomeForm, hasThesisBasisForm, hasV4Forms, checkDraftShape, localDraftSchema, membersOfKind, type DraftSchemaWithDefs } from './draft-schema.js';
 import { isEntryPoint } from './derive.js';
 import { BLOB_MODES, type PinnedObjectReader, type TreeEntry } from './git-object-reader.js';
 import { secretPathOf, type DossierScreen, type ScreenExclusion } from './screen.js';
@@ -42,6 +42,8 @@ export function elementLabels(doc: Readonly<Record<string, unknown>>): { at: str
   });
   // A Pole's label follows the rules for an element's short label (dossier spec v1.5).
   list(doc['poles']).forEach((pole, i) => { if (isRecord(pole) && typeof pole['label'] === 'string') out.push({ at: `$.poles[${i}].label`, value: pole['label'] }); });
+  // So does a task route's task (the index-and-task-routes change): a short label that claims nothing; the claims are its steps.
+  list(doc[TASK_ROUTE_FIELD]).forEach((route, i) => { if (isRecord(route) && typeof route['task'] === 'string') out.push({ at: `$.${TASK_ROUTE_FIELD}[${i}].task`, value: route['task'] }); });
   return out;
 }
 
@@ -654,6 +656,20 @@ function draftStructure(doc: Readonly<Record<string, unknown>>, add: (finding: C
     add({ kind: 'unresolved-reference', at: '$.whySection', detail: `no section has the identity ${JSON.stringify(text(doc['whySection']))}` });
   }
 
+  // Task routes (the index-and-task-routes change): a member of a v5 or later draft. Each step is a claim block (`collectBlocks`), so its citations,
+  // quotations and review entry are checked as any block's are; here only its place in the dossier, which must be one the draft has.
+  if (Object.hasOwn(doc, TASK_ROUTE_FIELD)) {
+    // The first schema that admits the member is v5 by name, whatever the latest schema is: every later one admits it too.
+    if ((PRE_V5_SCHEMA_VERSIONS as readonly unknown[]).includes(doc['schemaVersion'])) add({ kind: 'field-version', at: `$.${TASK_ROUTE_FIELD}`, detail: `\`${TASK_ROUTE_FIELD}\` needs draft schema polaris-dossier-local-draft-v5` });
+    routeSteps(doc, (step, at) => {
+      const see = step['see'];
+      if (!isRecord(see)) return;
+      const kind = text(see['kind']), target = text(see['target']);
+      if (target === undefined || (kind !== 'section' && kind !== 'deep-dive')) return;
+      if (!(kind === 'section' ? sectionIds : diveIds).has(target)) add({ kind: 'unresolved-reference', at: `${at}.see.target`, detail: `no ${kind === 'section' ? 'section' : 'deep dive'} has the identity ${JSON.stringify(target)}` });
+    });
+  }
+
   // The understanding record.
   const understanding = isRecord(doc['understanding']) ? doc['understanding'] : {};
   for (const item of UNDERSTANDING_ITEMS) {
@@ -699,8 +715,16 @@ export function contentClaims(at: string, entry: unknown, visit: (at: string, va
   }
 }
 
-/** The claim blocks (introduction, section and deep-dive paragraphs and their children, and the claim forms of rich elements) and the
- * understanding record's items. */
+/** Every step of every task route, with its JSON path. */
+function routeSteps(doc: Readonly<Record<string, unknown>>, visit: (step: Readonly<Record<string, unknown>>, at: string) => void): void {
+  list(doc[TASK_ROUTE_FIELD]).forEach((route, i) => {
+    if (!isRecord(route)) return;
+    list(route['steps']).forEach((step, k) => { if (isRecord(step)) visit(step, `$.${TASK_ROUTE_FIELD}[${i}].steps[${k}]`); });
+  });
+}
+
+/** The claim blocks (introduction, section and deep-dive paragraphs and their children, the claim forms of rich elements and the steps
+ * of task routes) and the understanding record's items. */
 export function collectBlocks(doc: Readonly<Record<string, unknown>>): Block[] {
   const out: Block[] = [];
   const claim = (at: string, value: Readonly<Record<string, unknown>>): Block =>
@@ -712,6 +736,8 @@ export function collectBlocks(doc: Readonly<Record<string, unknown>>): Block[] {
       list(container['paragraphs']).forEach((entry, j) => contentClaims(`$.${part}[${i}].paragraphs[${j}]`, entry, (at, value) => out.push(claim(at, value))));
     });
   }
+  // A route step is a claim block and only ever Inferred: an unknown or non-normative step would send a reader nowhere.
+  routeSteps(doc, (step, at) => out.push({ ...claim(at, step), allowed: ['inferred'] }));
   const understanding = isRecord(doc['understanding']) ? doc['understanding'] : {};
   for (const item of UNDERSTANDING_ITEMS) {
     list(understanding[item]).forEach((entry, i) => { if (isRecord(entry)) out.push({ at: `$.understanding.${item}[${i}]`, value: entry, textKey: 'statement', allowed: ['inferred', 'unknown'], quotable: null, unquotable: CLAIM_UNQUOTABLE }); });

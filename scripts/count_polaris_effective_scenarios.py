@@ -76,6 +76,9 @@ adoption binding verifies; each parser counts its one replacement (034).
 The infrastructure-recognizers version2.14 amendment follows version2.12 when its
 own adoption binding verifies; each parser counts its one replacement (034).
 
+The index-and-task-routes version2.15 amendment follows version2.14 when its own
+adoption binding verifies; each parser counts its one replacement (034).
+
 The declared-source reach version2.6 amendment follows version2.0 when its own
 adoption binding verifies; each parser counts its one replacement (046).
 
@@ -571,12 +574,12 @@ def infra_amendment(root: Path) -> str | None:
     return text
 
 
-def subsec_amendment(root: Path) -> str | None:
+def findpages_amendment(root: Path) -> str | None:
     """Verified text, a pending or retired amendment, or a counting refusal."""
     import check_spec_reconciliation as adoption
-    text, records, subjects = adoption.subsec_binding(root)
+    text, records, subjects = adoption.findpages_binding(root)
     if records or subjects:
-        raise ScenarioCountError("page subsections adoption findings:\n" + "\n".join(records + subjects))
+        raise ScenarioCountError("index and task routes adoption findings:\n" + "\n".join(records + subjects))
     return text
 
 
@@ -617,7 +620,7 @@ def build_composition(root: Path) -> CompositionResult:
                         (adoption.CORR_SPEC, corr_amendment(root)),
                         (adoption.COVERAGE_SPEC, coverage_amendment(root)),
                         (adoption.INFRA_SPEC, infra_amendment(root)),
-                        (adoption.SUBSEC_SPEC, subsec_amendment(root))):
+                        (adoption.FINDPAGES_SPEC, findpages_amendment(root))):
         if text is not None:
             sources.append((label, text))
 
@@ -665,13 +668,13 @@ def composition_inputs(root: Path) -> list[Path]:
     corr_amendment(root)
     coverage_amendment(root)
     infra_amendment(root)
-    subsec_amendment(root)
+    findpages_amendment(root)
     paths = adoption.declared_source_inputs(root) | {
         adoption.URL_SOURCE_REPLACEMENTS, *adoption.URL_SOURCE_SUBJECTS,
         *adoption.URL_SOURCE_RFC_PATHS, *adoption.FIGURE_SUBJECTS, *adoption.DERIVED_SUBJECTS,
         *adoption.LEDGER_SUBJECTS, *adoption.KINDS_SUBJECTS, *adoption.MANIFESTS_SUBJECTS,
         *adoption.REPAIRS_SUBJECTS, *adoption.MAPS_SUBJECTS, *adoption.BOUNDS_SUBJECTS, *adoption.CORR_SUBJECTS,
-        *adoption.COVERAGE_SUBJECTS, *adoption.INFRA_SUBJECTS, *adoption.SUBSEC_SUBJECTS,
+        *adoption.COVERAGE_SUBJECTS, *adoption.INFRA_SUBJECTS, *adoption.FINDPAGES_SUBJECTS,
         *adoption.REACH_SUBJECTS, *adoption.READMIT_SUBJECTS,
     }
     files = discover_composition_files(root)

@@ -618,7 +618,7 @@
     },
     "POLARIS": {
       "requirements": 39,
-      "scenarios": 455,
+      "scenarios": 463,
       "members": {
         "REQ-polaris-generation-001": {
           "name": "Admitted project input",
@@ -1126,16 +1126,24 @@
             "Provider mode unchanged by infrastructure recognizers",
             "Bounded form of a draft that does not parse",
             "Draft, frozen revisions and run file read under their bounds",
-            "Subsections with answers, headings and a contents list",
-            "An answer of more than one sentence",
-            "Subsections in an earlier schema",
-            "A draft without subsections renders as today",
-            "Subsection titles and withheld subsections",
-            "Makefile recipe inside a conditional",
-            "Makefile tab-led line that is no recipe line",
-            "Makefile continuation lines and define bodies",
-            "Makefile directive lines are never rules",
-            "Brief v13 states subsections"
+            "Task routes checked as claim blocks",
+            "Route step with an unverifiable citation refused",
+            "Route step without a citation or with another label refused",
+            "Route count outside its bounds refused",
+            "Route step naming an unknown section refused",
+            "Task routes in an earlier schema",
+            "Draft without task routes still validates and renders",
+            "Find-by-task page renders the routes",
+            "Withheld route step",
+            "Generated index lists every name",
+            "Every index link resolves",
+            "Index built at render without a model",
+            "Unknown draft layer shows no agent names",
+            "Brief asks for task routes",
+            "Block a secret detector matches names nothing",
+            "Much-cited file listed once with a count",
+            "Route step covers an inventory entry",
+            "Provider mode unchanged by the finding pages"
           ]
         },
         "REQ-polaris-generation-035": {
