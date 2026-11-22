@@ -53,6 +53,17 @@ describe('citationReach: how one cited span reaches the fidelity review', () => 
     expect(citationReach(cite('c', '.env'), absent)).toBe('reaches-review');
   });
 
+  // syzygy-8hm6: check records a path both denied and matched by a secret detector without its path, under the outcome `denied-path`.
+  it('reads a path both denied and secret-matching, recorded without its path, as withheld', () => {
+    const both = '.env.SECRET';
+    const denying: ReachInputs['screen'] = { ...screen, screenPath: (p) => (p === both ? 'denied-path' : screenPath(p)) };
+    const recorded: CitedBlob[] = [...citedBlobs.filter((entry) => entry.path !== null), { path: null, objectId: null, read: false, outcome: 'denied-path' }];
+    expect(denying.screenPath(both)).toBe('denied-path');
+    expect(citationReach(cite('c', both), { ...inputs(), screen: denying, citedBlobs: recorded })).toBe('withheld');
+    // A denied path no detector matches, absent from the record, names no file: unchanged.
+    expect(citationReach(cite('c', '.env'), { ...inputs(), screen: denying, citedBlobs: recorded })).toBe('reaches-review');
+  });
+
   it('applies the class gate as the run\'s consent decides it, before any redaction', () => {
     expect(citationReach(cite('c', 'docs/notes.txt'), inputs(['project-documentation']))).toBe('reaches-review');
     expect(citationReach(cite('c', 'src/a.c'), inputs([]))).toBe('class-gated');

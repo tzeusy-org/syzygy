@@ -10,7 +10,7 @@ import { BLOB_MODES, GitObjectReadRefusal, openPinnedObjectReader, type TreeEntr
 import { INVENTORY_INFERRED, errno, inventoryOfRecord, type OpenedRun } from './inventory.js';
 import { briefStandardsOf, buildDesignPacket, standardsInput, readLatestSite, type DesignPacketBuild } from './design-review.js';
 import { CLASS_NOT_CONSENTED, unconsentedClass } from './class-gate.js';
-import { placementSubjectOf, screenLoaderOf, type ScreenExclusion } from './screen.js';
+import { placementSubjectOf, screenLoaderOf, secretPathOf, type ScreenExclusion } from './screen.js';
 import { RUN_LAYOUT } from './state-directory.js';
 import { FIDELITY_PACKET_FORMAT, PACKET_DIGEST_FILE, PACKET_FILE, type PacketBuild, type PacketSpan, type ReviewDeps, type ReviewKind, SUBJECT_JSON_LIMITS, type SpanCitation, type SpanRedaction, VERDICT_FILE, list, packetDirName, text } from './review-model.js';
 
@@ -149,7 +149,7 @@ export async function buildFidelityPacket(opened: Extract<OpenedRun, { ok: true 
       return { id, path: span.path, startLine: span.startLine, endLine: span.endLine, objectId, outcome: 'admitted', text: spanText, redaction, citedBy: span.citedBy };
     }
     const outcome = raw !== undefined ? 'beyond-blob' : outcomes.get(span.path)!;
-    const secretPath = screen.screenPath(span.path) === 'secret-detector-match';
+    const secretPath = secretPathOf(screen)(span.path);
     return { id, path: secretPath ? null : span.path, startLine: span.startLine, endLine: span.endLine, objectId: secretPath ? null : tree.get(span.path)?.id ?? null, outcome, citedBy: span.citedBy };
   });
 

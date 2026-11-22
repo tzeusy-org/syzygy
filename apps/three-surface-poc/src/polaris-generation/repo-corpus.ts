@@ -201,7 +201,8 @@ export async function readRepoCorpus(repoRoot: string, config: Pick<ReaderConfig
     if (!representablePath(record.path)) {
       unquotablePath++;
       if (ports.screen === undefined) unrepresentable.push({ pathHmac: keyedDigest(runKey, record.path), objectId: record.objectId, reason: 'unquotable-path' });
-      else if (ports.screen.screenPath(record.path) === 'secret-detector-match') unquotablePathSecretMatches++;
+      // The path screen answers `denied-path` before it tries a detector, so the path is also read as text (syzygy-8hm6).
+      else if (ports.screen.screenPath(record.path) === 'secret-detector-match' || ports.screen.screenBody(record.path, record.path) === 'secret-detector-match') unquotablePathSecretMatches++;
       return false;
     }
     return true;
