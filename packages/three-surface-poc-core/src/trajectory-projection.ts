@@ -16,6 +16,8 @@ export interface TrajectoryLaneItem {
   readonly id: string;
   readonly status: WorkItemStatus;
   readonly column: TrajectoryColumn;
+  /** The tracker's own priority, as read (work-items.ts). */
+  readonly priority: number;
   readonly createdAt: string;
   readonly updatedAt: string;
   readonly closedAt: string | null;
@@ -30,6 +32,10 @@ interface TrajectoryProjectionObserved {
   readonly renderedCount: number;
   readonly excludedCount: number;
   readonly totalCount: number;
+  /** POC-REQ-043 (syzygy-t3jk.15): verification is Unknown for every served
+   * item (no evidence source is ingested); `inside` are rendered, `outside`
+   * are served but outside the selection. Both channels read these. */
+  readonly verificationUnknown: { readonly served: number; readonly inside: number; readonly outside: number };
   readonly timeRange: { readonly earliest: string; readonly latest: string } | null;
 }
 
@@ -82,6 +88,7 @@ function laneItem(item: WorkItemFact): TrajectoryLaneItem {
     id: item.id,
     status: item.status,
     column: STATUS_TO_COLUMN[item.status],
+    priority: item.priority,
     createdAt: item.createdAt,
     updatedAt: item.updatedAt,
     closedAt: item.closedAt,
@@ -140,6 +147,11 @@ export function projectTrajectory(
     renderedCount: rendered.length,
     excludedCount: workItems.items.length - rendered.length,
     totalCount: workItems.items.length,
+    verificationUnknown: {
+      served: workItems.items.length,
+      inside: rendered.filter((item) => item.verification === 'unknown').length,
+      outside: workItems.items.length - rendered.filter((item) => item.verification === 'unknown').length,
+    },
     timeRange,
   };
 }

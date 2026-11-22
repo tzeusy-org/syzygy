@@ -1,5 +1,5 @@
 import type { CodeStructureResult } from './code-structure.js';
-import { GOVERNING_INTENT_UNKNOWN_BASIS, governingIntentDisclosure, workItemTitlesDisclosure, type WorkItemsResult } from './work-items.js';
+import { GOVERNING_INTENT_UNKNOWN_BASIS, workItemTitlesDisclosure, type WorkItemsResult } from './work-items.js';
 import type { WorkerChangeResult } from './worker-change-observation.js';
 import type { OrreryProjection } from './orrery-projection.js';
 import type { TrajectoryProjection } from './trajectory-projection.js';
@@ -261,21 +261,17 @@ export interface BuildPocModelInput {
   readonly acceptance?: AcceptanceSliceBuilder | undefined;
 }
 
-/** Exported for the renderers: the work-item verification Unknown every
- * Trajectory card discloses, and the worker-change verification beside it. */
+/** POC-REQ-043: the one board-level disclosure every Trajectory card's
+ * verification mark refers to (syzygy-t3jk.15). Each served item's own
+ * verification stays on its fact (`trajectory.rendered[].verification`). */
 const WORK_ITEM_VERIFICATION_BASIS =
-  'Activity is not verification: no test evidence has been ingested for this item.';
+  'Activity is not verification: no test evidence has been ingested for any work item.';
 
-export function workItemVerificationId(itemId: string): string {
-  return `work-item:${itemId}/verification`;
-}
+export const WORK_ITEM_VERIFICATION_REGION_ID = 'region:work-item-verification' as const;
 
-/** POC-REQ-014: the governing-intent disclosure on a rendered card, and the
- * Trajectory region that counts the served items carrying it. */
-export function workItemGoverningIntentId(itemId: string): string {
-  return `work-item:${itemId}/governed-by`;
-}
-
+/** POC-REQ-014: the Trajectory region that counts the served items whose
+ * governing intent is Unknown; each card's mark refers to it, and each
+ * item's own value is its served `governedBy`. */
 export const WORK_ITEM_GOVERNING_INTENT_REGION_ID = 'region:work-item-governing-intent' as const;
 
 /** SEC-5: the one disclosure every rendered card's withheld title, and the
@@ -317,16 +313,12 @@ function deriveUnknownSubjects(input: UnknownSubjectInputs): readonly PocUnknown
   const lifecycle = input.proposedWork?.lifecycle;
   if (input.proposedWork !== null && lifecycle?.kind === 'unknown') add(`${input.proposedWork.id}/lifecycle`, lifecycle.reason, lifecycle.closedReason);
   if (input.trajectory.kind === 'observed') {
-    for (const item of input.trajectory.rendered) add(workItemVerificationId(item.id), WORK_ITEM_VERIFICATION_BASIS, 'missing-evidence');
     if (input.workItems.kind === 'observed') {
-      // POC-REQ-014: the machine twin of each rendered card's mark is that
-      // item's own `governedBy` with its basis sentence, and the count
-      // region's is the same Unknown.
-      const served = new Map(input.workItems.items.map((item) => [item.id, item.governedBy]));
-      for (const item of input.trajectory.rendered) {
-        const governedBy = served.get(item.id);
-        if (governedBy !== undefined) subjects.push({ id: workItemGoverningIntentId(item.id), epistemic: governingIntentDisclosure(governedBy) });
-      }
+      // syzygy-t3jk.15: each Unknown a card marks is disclosed once, on the
+      // board, with its count (RFC2-24 aggregation). A card's mark refers to
+      // that disclosure; the item's own value is its served fact
+      // (`workItems.items[].governedBy`, `trajectory.rendered[].verification`).
+      add(WORK_ITEM_VERIFICATION_REGION_ID, WORK_ITEM_VERIFICATION_BASIS, 'missing-evidence');
       add(WORK_ITEM_GOVERNING_INTENT_REGION_ID, GOVERNING_INTENT_UNKNOWN_BASIS, 'source-uncaptured-or-unreachable');
       // SEC-5: the machine twin of the board's withheld-title disclosure is
       // the observation's own `titles` with its basis sentence.
