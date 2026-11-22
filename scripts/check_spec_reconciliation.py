@@ -3237,7 +3237,7 @@ def check_census(root, report):
     signed_reference = reference_signed(root)
     totals = dict(EXPECTED_TOTALS, POLARIS=(p_req, p_scen))
     if signed_reference:
-        totals["POC"] = (26, 34)
+        totals["POC"] = (26, 35)  # +1: POC-REQ-043 wording Scenario (syzygy-t3jk.14)
     for family, (n_req, n_scen) in totals.items():
         reqs = pop.get(family, {})
         got = (len(reqs), sum(len(r["scenarios"]) for r in reqs.values()))
@@ -3247,7 +3247,7 @@ def check_census(root, report):
                             f"scenarios, expected {n_req} / {n_scen}")
         literal = EXPECTED.get(family)
         if family == "POC" and signed_reference:
-            literal = {**literal, "014": 8}
+            literal = {**literal, "014": 8, "043": 2}
         if literal is not None:
             prefix = f"{family}-REQ-"
             have = {k[len(prefix):]: len(v["scenarios"]) for k, v in reqs.items()}

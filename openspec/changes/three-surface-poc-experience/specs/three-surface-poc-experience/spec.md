@@ -663,7 +663,9 @@ warranted, green or complete state.
 
 #### Scenario: A title names a requirement
 
-- **WHEN** a served item's title reads "Implement POC-REQ-010"
+- **WHEN** the tracker holds an item whose title reads "Implement
+  POC-REQ-010" (the POC withholds titles, SEC-5, so the title is never read
+  into the model)
 - **THEN** that item's `governedBy` is the same Unknown, and nothing served
   for it names POC-REQ-010 as its governing intent
 
@@ -1043,9 +1045,21 @@ warrants:
 Group: Trajectory. Form: **prohibition**.
 
 **Required behavior.** Trajectory SHALL NOT render work-item activity,
-closure, or merge state as intent satisfaction or verification.
+closure, or merge state as intent satisfaction or verification. No column
+heading, count label, badge, worker-change label or sentence on the surface,
+and no column value on the machine answer, SHALL name tracker closure or a
+tracker claim with a word meaning done, complete, finished, resolved, in
+progress or active: the closed column is headed "Closed" and the claimed
+column "Claimed", and the worker-change row says only what git showed on the
+bounded seam. One notice above the board SHALL state how many rendered items
+are closed and that verification is Unknown for each of them.
 
-- **Scope.** every satisfaction/verification encoding on the surface.
+- **Scope.** every satisfaction/verification encoding on the surface, and
+  the wording population: the page heading and lede, every board heading
+  and label, every worker-change label, every notice, and every
+  `trajectory.rendered[].column` and status-to-column value on the machine
+  answer. The card's own tracker status word and the worker-change state
+  identifier are outside it.
 
 - **Case (counterexample schema + sweep)**: a checker closes an
   observed item whose governing relationship holds no verification
@@ -1055,11 +1069,17 @@ closure, or merge state as intent satisfaction or verification.
   verification relationship stays visibly not-verified/Unknown.
 - **Oracle**: the rendered verification encoding equals the machine
   answer's relationship state (not the item's activity state); equality
-  decides.
+  decides. For wording, a case-folded, word-bounded match of
+  `done|complete|completed|finished|resolved|in progress|active` over the
+  wording population finds nothing, and the notice's closed count equals
+  the machine answer's rendered items with status closed.
 - **Oracle independence**: the relationship state comes from the
   machine answer; the checker induced the mismatch.
 - **Falsifier**: a closed or merged item rendered with a verified,
-  satisfied, or green encoding while its relationship lacks evidence.
+  satisfied, or green encoding while its relationship lacks evidence; or a
+  heading, label, sentence or served column value in the wording
+  population that names closure as done, complete, finished or resolved,
+  or a claim as in progress or active.
 
 #### Scenario: Closed but unverified
 
@@ -1067,6 +1087,15 @@ closure, or merge state as intent satisfaction or verification.
   been ingested
 - **THEN** Trajectory renders the closure as activity and the
   verification state as not verified/Unknown, distinctly encoded
+
+#### Scenario: Closed is the tracker's word, not done
+
+- **WHEN** the board renders closed and claimed items
+- **THEN** their columns read "Closed" and "Claimed" on the page and on the
+  machine answer, no heading, label or notice in the wording population
+  reads done, complete, finished, resolved, in progress or active, and one
+  notice above the board states the rendered closed count and that
+  verification is Unknown for each of them
 
 ```yaml
 warrants:
