@@ -9,6 +9,7 @@ import os from 'node:os';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { compileDossierSessionSupport } from './compile_dossier_session_support.mjs';
+import { compileDossierOrderedScreen, ORDERED_SCREEN_SOURCES } from './compile_dossier_ordered_screen.mjs';
 
 const root = await realpath(fileURLToPath(new URL('..', import.meta.url)));
 const relative = name => name.length > 0 && !path.isAbsolute(name) && !name.includes('\\')
@@ -21,7 +22,7 @@ const profileSources = ['session-profile', 'session-launch', 'session-controller
   'session-control', 'session-peer', 'url-role-plan', 'url-session-budget', 'url-session-audit', 'url-origin-ledger', 'url-run-origins', 'url-source-reader', 'git-object-reader',
   'url-run-sessions', 'url-run-artifacts', 'url-product-reads', 'url-operation-products', 'url-question-ui', 'url-supervisor-state', 'url-launch-history', 'url-design-view',
   'url-design-product', 'url-design-delivery', 'url-ordered-design-request', 'url-ordered-design-audit', 'url-ordered-design-writer',
-  'url-machine-instance', 'url-machine-lifecycle', 'url-machine-store', 'url-ordered-design-bounds', 'url-ordered-design-session', 'url-rendered-site-screen', 'url-rendered-source-proof', 'url-stored-render', 'url-dossier-result', 'url-ordered-render-value',
+  'url-machine-instance', 'url-machine-lifecycle', 'url-machine-store', 'url-ordered-design-bounds', 'url-ordered-design-session', 'url-ordered-design-work-budget', 'url-rendered-site-screen', 'url-rendered-source-proof', 'url-stored-render', 'url-dossier-result', 'url-ordered-render-value',
   'reverify', 'brief', 'inventory', 'review', 'review-packet', 'session-handover', 'session-statement', 'waiting-sessions', 'render', 'check',
   'check-model', 'review-model', 'credential-probe', 'cli', 'url-run-record', 'url-mode-registry', 'url-parent-adoption', 'url-runtime', 'polaris']
   .map(name => `packages/polaris-dossier/src/${name}.ts`);
@@ -88,10 +89,13 @@ const design = await build({ absWorkingDir: root, entryPoints: [renderer], bundl
   write: false, metafile: true, logLevel: 'silent', plugins: [capturePlugin] });
 if (design.outputFiles.length !== 1 || design.outputFiles[0].contents.length > 8_388_608) throw new Error('unexpected renderer build output');
 outputs.set('renderer.mjs', design.outputFiles[0].contents);
-const inputs = new Set([...Object.keys(result.metafile.inputs), ...Object.keys(host.metafile.inputs), ...Object.keys(design.metafile.inputs), ...profileSources,
+const orderedScreen = await compileDossierOrderedScreen(root, [capturePlugin]);
+outputs.set('host/ordered-screen.mjs', orderedScreen.outputFiles[0].contents);
+const inputs = new Set([...Object.keys(result.metafile.inputs), ...Object.keys(host.metafile.inputs), ...Object.keys(design.metafile.inputs),
+  ...Object.keys(orderedScreen.metafile.inputs), ...ORDERED_SCREEN_SOURCES, ...profileSources,
   worker, peerSource, 'scripts/build_dossier_runtime.mjs', 'scripts/compile_dossier_session_support.mjs', 'package-lock.json']);
-for (const name of [...Object.keys(host.metafile.inputs), ...Object.keys(design.metafile.inputs)])
-  if (!captured.has(name)) throw new Error('uncaptured host/renderer compiler input');
+for (const name of [...Object.keys(host.metafile.inputs), ...Object.keys(design.metafile.inputs), ...Object.keys(orderedScreen.metafile.inputs)])
+  if (!captured.has(name)) throw new Error('uncaptured host/renderer/screen compiler input');
 // Resolution metadata belongs to the captured graph even though esbuild does
 // not deliver package.json files through onLoad merely to resolve exports.
 inputs.add('package.json'); inputs.add('packages/polaris-dossier/package.json');
@@ -127,7 +131,7 @@ for (const directory of ['support', 'design-support', 'host']) await mkdir(path.
 const files = [];
 // Keep the manifest order closed and independent of compilation order.
 for (const name of ['worker.mjs', 'renderer.mjs', 'support/session-bridge.js', 'support/session-mcp.js', 'host/session-peer',
-  'design-support/session-mcp.js']) {
+  'design-support/session-mcp.js', 'host/ordered-screen.mjs']) {
   const bytes = outputs.get(name);
   if (bytes === undefined) throw new Error('missing runtime output');
   await writeFile(path.join(destination, name), bytes, { flag: 'wx', mode: name === 'host/session-peer' ? 0o755 : 0o644 });

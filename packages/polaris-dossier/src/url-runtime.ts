@@ -8,20 +8,24 @@ import type { DossierRenderer } from './render.js';
 import type { GitMemoryWorkerProgram } from './git-memory-worker.js';
 import type { KernelPeerProgram } from './session-peer.js';
 import type { UrlSessionViewInputs } from './session-url-view.js';
+import type { OrderedScreenProgram } from './url-ordered-design-screen.js';
 
 const BOUNDS = { maxBytes: 2_097_152, maxNodes: 32_768, maxDepth: 8 };
 const INPUT_READS = 8;
 const NODE_HASH_CHUNK = 1_048_576;
 const ORDINARY_MCP = 'support/session-mcp.js';
 const DESIGN_MCP = 'design-support/session-mcp.js';
-const OUTPUTS = ['worker.mjs', 'renderer.mjs', 'support/session-bridge.js', ORDINARY_MCP, 'host/session-peer', DESIGN_MCP];
+const ORDERED_SCREEN = 'host/ordered-screen.mjs';
+const OUTPUTS = ['worker.mjs', 'renderer.mjs', 'support/session-bridge.js', ORDINARY_MCP, 'host/session-peer', DESIGN_MCP, ORDERED_SCREEN];
 const RENDERER_ENTRY = 'apps/three-surface-poc/src/polaris-generation/dossier-site.ts';
 const PROFILE_SOURCES = ['session-profile', 'session-launch', 'session-controller', 'session-egress-policy', 'session-response',
   'session-tools', 'session-host', 'session-relay', 'session-broker', 'session-url-view', 'session-credential',
   'session-control', 'session-peer', 'url-role-plan', 'url-session-budget', 'url-session-audit', 'url-origin-ledger', 'url-run-origins', 'url-source-reader', 'git-object-reader',
   'url-run-sessions', 'url-run-artifacts', 'url-product-reads', 'url-operation-products', 'url-question-ui', 'url-supervisor-state', 'url-launch-history', 'url-design-view',
   'url-design-product', 'url-design-delivery', 'url-ordered-design-request', 'url-ordered-design-audit', 'url-ordered-design-writer',
-  'url-machine-instance', 'url-machine-lifecycle', 'url-machine-store', 'url-ordered-design-bounds', 'url-ordered-design-session', 'url-rendered-site-screen', 'url-rendered-source-proof', 'url-stored-render', 'url-dossier-result', 'url-ordered-render-value',
+  'url-machine-instance', 'url-machine-lifecycle', 'url-machine-store', 'url-ordered-design-bounds', 'url-ordered-design-session', 'url-ordered-design-work-budget',
+  'url-ordered-design-screen', 'url-ordered-design-screen-worker', 'url-ordered-design-screen-protocol',
+  'url-rendered-site-screen', 'url-rendered-source-proof', 'url-stored-render', 'url-dossier-result', 'url-ordered-render-value',
   'reverify', 'brief', 'inventory', 'review', 'review-packet', 'session-handover', 'session-statement', 'waiting-sessions', 'render', 'check',
   'check-model', 'review-model', 'credential-probe', 'cli', 'url-run-record', 'url-mode-registry', 'url-parent-adoption', 'url-runtime', 'polaris']
   .map(name => `packages/polaris-dossier/src/${name}.ts`);
@@ -104,7 +108,15 @@ export interface UrlRuntime {
   readonly profileRegistrySha256: string;
 }
 
-const installed = new WeakMap<UrlRuntime, { readonly root: string; readonly rendererBytes: Uint8Array; readonly rendererSha256: string }>();
+const installed = new WeakMap<UrlRuntime, { readonly root: string; readonly rendererBytes: Uint8Array; readonly rendererSha256: string;
+  readonly orderedScreenProgram: OrderedScreenProgram }>();
+
+/** Select only the screening images verified with this genuine runtime. The
+ * runner reopens, holds and rehashes both images at invocation; the caller also
+ * supplies protected currentness. A serialized runtime issues no selection. */
+export function urlOrderedScreenProgram(runtime: UrlRuntime): OrderedScreenProgram | null {
+  return installed.get(runtime)?.orderedScreenProgram ?? null;
+}
 
 /** Identify the payload for an explicitly requested support variant. This
  * lookup supplies no launch authorization. */
@@ -141,7 +153,8 @@ export async function readUrlRuntime(root: string): Promise<{ readonly ok: true;
       || files[3]!.sha256 === files[5]!.sha256
       || !['packages/polaris-dossier/src/git-memory-worker.ts', 'packages/polaris-dossier/src/session-bridge.ts',
         'packages/polaris-dossier/src/session-mcp.ts', 'packages/polaris-dossier/src/session-peer.c', RENDERER_ENTRY, 'scripts/build_dossier_runtime.mjs',
-        'scripts/compile_dossier_session_support.mjs', 'package-lock.json', 'package.json', 'packages/polaris-dossier/package.json', ...PROFILE_SOURCES]
+        'scripts/compile_dossier_session_support.mjs', 'scripts/compile_dossier_ordered_screen.mjs',
+        'package-lock.json', 'package.json', 'packages/polaris-dossier/package.json', ...PROFILE_SOURCES]
         .every(file => inputs.some(input => input.path === file))) throw new Error();
     let totalBytes = 0;
     for (const input of inputs) {
@@ -154,7 +167,7 @@ export async function readUrlRuntime(root: string): Promise<{ readonly ok: true;
     if (inputCheck.status !== 'fulfilled' || nodeCheck.status !== 'fulfilled' || nodeCheck.value.digest !== manifest.node.sha256) throw new Error();
     let rendererBytes: Uint8Array | undefined;
     for (const file of files) {
-      if (file.bytes > (file.path === 'worker.mjs' || file.path === 'renderer.mjs' ? 8_388_608 : 262_144)) throw new Error();
+      if (file.bytes > (file.path === 'worker.mjs' || file.path === 'renderer.mjs' || file.path === ORDERED_SCREEN ? 8_388_608 : 262_144)) throw new Error();
       const value = await read(path.join(directory, file.path), file.bytes, root, true);
       if (value.length !== file.bytes || sha256(value) !== file.sha256) throw new Error();
       if (file.path === 'renderer.mjs') rendererBytes = Uint8Array.from(value);
@@ -169,7 +182,9 @@ export async function readUrlRuntime(root: string): Promise<{ readonly ok: true;
       profileRegistrySha256: sha256(JSON.stringify({ format: 'polaris-supported-cli-registry/1', profile: 'claude-2.1.327-sonnet46/2',
         inputs })) });
     if (rendererBytes === undefined) throw new Error();
-    installed.set(runtime, { root, rendererBytes, rendererSha256: files[1]!.sha256 });
+    installed.set(runtime, { root, rendererBytes, rendererSha256: files[1]!.sha256,
+      orderedScreenProgram: deepFreeze({ node: { path: node, bytes: Number(manifest.node.bytes), sha256: manifest.node.sha256 },
+        worker: { path: path.join(directory, ORDERED_SCREEN), bytes: files[6]!.bytes, sha256: files[6]!.sha256 } }) });
     return { ok: true, runtime };
   } catch { return { ok: false, code: 'url-runtime-unavailable' }; }
 }
