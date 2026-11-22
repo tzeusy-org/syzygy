@@ -791,10 +791,47 @@ describe('URL stored launch history', () => {
       await attempt('inventory');
       const history = await writeUrlLaunchHistory(options());
       const committed = await audit.commitLaunchHistory(history.capability!);
-      await expect(bridge.registerLaunchHistory(committed, async () => false)).rejects.toThrow('url-run-artifacts-unavailable');
+      const waitForSamples = vi.fn(async () => false).mockResolvedValueOnce(true);
+      await expect(bridge.registerLaunchHistory(committed, waitForSamples)).rejects.toThrow('url-run-artifacts-unavailable');
+      expect(waitForSamples).toHaveBeenCalledTimes(2);
       expect(inspect).toHaveBeenCalledExactlyOnceWith(committed);
       const context = bridge.beginRead({ operation: 'inventory-check', deadline: Date.now() + 2000 });
       expect(() => bridge.readProduct(context, URL_HELPER_LAUNCH_FILES.inventory)).toThrow('unsupported-launch');
+    } finally { inspect.mockRestore(); await audit.close(); }
+  });
+
+  it('lets a pending sample finish before inspecting or registering launch history', async () => {
+    const { bridge, originPolicy, current } = productFixture();
+    const { audit, attempt } = await auditFixture(originPolicy.sha256, 'history-before-registration-sample');
+    const inspect = vi.spyOn(sessionAudit, 'inspectCommittedUrlLaunchHistory');
+    try {
+      await attempt('inventory');
+      const history = await writeUrlLaunchHistory(options());
+      const committed = await audit.commitLaunchHistory(history.capability!);
+      const file = URL_HELPER_LAUNCH_FILES.inventory;
+      const begin = () => bridge.beginRead({ operation: 'inventory-check', deadline: Date.now() + 2000 });
+      let finishSample!: (current: boolean) => void;
+      let sampleStarted!: () => void;
+      const sample = new Promise<boolean>(resolve => { finishSample = resolve; });
+      const waiting = new Promise<void>(resolve => { sampleStarted = resolve; });
+      inspect.mockClear();
+      const registration = bridge.registerLaunchHistory(committed, () => {
+        sampleStarted();
+        return sample;
+      });
+      const result = expect(registration).rejects.toThrow('url-run-artifacts-unavailable');
+      try {
+        await waiting;
+        expect(inspect).not.toHaveBeenCalled();
+        expect(() => bridge.readProduct(begin(), file)).toThrow('unsupported-launch');
+        current.mockReturnValue(false);
+      } finally {
+        finishSample(true);
+        await result;
+      }
+      expect(inspect).not.toHaveBeenCalled();
+      current.mockReturnValue(true);
+      expect(() => bridge.readProduct(begin(), file)).toThrow('unsupported-launch');
     } finally { inspect.mockRestore(); await audit.close(); }
   });
 

@@ -400,6 +400,10 @@ function create(given: UrlRunArtifactsOptions) {
     return copy(products);
   }
   async function registerLaunchHistory(committed: UrlCommittedLaunchHistory, waitForSamples?: () => Promise<boolean>): Promise<void> {
+    if (waitForSamples !== undefined) {
+      await yieldToPoll();
+      if (!(await waitForSamples())) refuse();
+    }
     live();
     const { history, scope, project, eventSha256 } = inspectCommittedUrlLaunchHistory(committed);
     const { role, file, bytes } = history, prompt = authenticatedRecords.get(history.promptFile);
