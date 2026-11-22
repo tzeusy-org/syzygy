@@ -28,7 +28,8 @@ import { effectiveUrlProjection } from './effective-run-record.js';
  * recorded and that Syzygy cannot observe it. Everything else the record carries from the run directory (the configuration, the brief's
  * execution rule, the agent's reported commands, the step instants, the breach log) is a stored record within the agent sessions' write
  * reach, and Inferred. The record copies no file body: no brief, prompt or transcript body enters it, only each stored file's digest.
- * Syzygy made no provider call for the run, issued no credential for it and wrote none to the state directory. */
+ * For operator-agent runs Syzygy made no provider call and issued no credential. For URL runs, credential issuance cannot be
+ * established from the records this command reads. */
 
 export const EXECUTION_RECORD_FORMAT = 'polaris-dossier-execution-record/2';
 export const USAGE_NOT_RECORDED = 'not recorded: the operator declared no usage figure at close, and Syzygy cannot observe the agent sessions\' usage';
@@ -47,6 +48,8 @@ export interface CloseRequest {
 
 export interface CloseDeps extends ReviewDeps {
   readonly probe: CredentialProbe;
+  /** Recheck the supervisor's completion evidence immediately before writing the record. */
+  readonly admitRecord?: () => boolean;
 }
 
 export type AgentUsage =
@@ -151,11 +154,12 @@ export async function closeRun(runDir: string, request: CloseRequest, deps: Clos
       effectiveRun: effectiveUrlProjection({ subject }, url), urlDeclarationSha256: opened.sidecarSha256,
       providerDispatch: 'The declared local CLI uses the checked transport relay for supported inference requests; Git source transport is separately declared. This stored configuration establishes no completed send, receipt or complete capture.',
     }),
-    credentialsIssued: NO_CREDENTIAL_ISSUED,
+    credentialsIssued: url === undefined ? NO_CREDENTIAL_ISSUED : 'Unknown',
     stored: { label: 'Inferred', basis: 'the digest of each file in the run directory as Syzygy read it at close; no body is copied, so no brief, prompt or transcript body enters this record', ...stored },
     disclosures: credential.required ? [...DISCLOSURES, CREDENTIAL_CHECK_DISCLOSURE] : DISCLOSURES,
   };
   try {
+    if (deps.admitRecord?.() === false) return refuse('write', 'the supervisor could not confirm run completion at close');
     fs.writeFileSync(recordFile, `${JSON.stringify(record, null, 2)}\n`, { mode: 0o600, flag: 'wx' });
   } catch (cause) {
     return refuse('write', `the Execution Record could not be written (${errno(cause)})`);

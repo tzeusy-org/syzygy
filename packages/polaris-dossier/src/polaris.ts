@@ -7,6 +7,7 @@ import { encodeCanonicalJson, parseBoundedJson } from '@syzygy/polaris-generatio
 import { isRecord, sha256 } from '@syzygy/support';
 import { isArgvFault, readArgv } from './argv.js';
 import { cliGateSources, DOSSIER_USAGE, runDossierCli, STATE_ROOT_ENV, type CliPorts } from './cli.js';
+import { closeRun } from './close.js';
 import { INVENTORY_CHECKS, inventoryOfRecord, launchRecordName } from './inventory.js';
 import { writeLaunchedMarker } from './launched.js';
 import { reviewCheck, reviewLaunchRecordName, REVIEW_CHECKS } from './review.js';
@@ -1014,7 +1015,7 @@ function cleanupConfirmed(summary: UrlRunSessionsSummary): boolean {
     && role.outcome.toolTermination === 'settled' && role.outcome.pendingInvocations === 0)
     && summary.hosts.length === 4 && summary.hosts.every(host => host.termination === 'settled' && host.pendingInvocations === 0)
     && summary.control.termination === 'settled' && summary.control.pendingCallbacks === 0
-    && (summary.machine === undefined || summary.machine.lifecycle === 'retired')
+    && summary.machine?.lifecycle === 'retired'
     && !summary.audit.poisoned && summary.audit.tail === 'durable-prefix' && summary.audit.termination === 'closed';
 }
 
@@ -1287,12 +1288,21 @@ async function loop(options: Options, ports: CliPorts, state: SupervisorState, s
   const stopped = await context.runtime.stop();
   state.stopped ??= isoOf(Date.now());
   if (final !== null) {
-    if (stopped.failure === null && cleanupConfirmed(stopped) && current()
-      && checkStoredUrlRender(run, final.path, final.output, () => Date.now() < deadline) === final.record.site && current()) {
-      state.finalSite = final.record;
-      state.done = state.stopped;
-      phase = `complete, final site ${final.path}`;
-    } else phase = 'final render produced, run closure unconfirmed';
+    const result = final;
+    phase = 'final render produced, run closure unconfirmed';
+    if (stopped.failure === null && cleanupConfirmed(stopped) && current() && Date.now() < deadline) {
+      const close = await closeRun(run, {}, {
+        ...renderDeps,
+        admitRecord: () => current()
+          && checkStoredUrlRender(run, result.path, result.output, () => Date.now() < deadline) === result.record.site
+          && current() && Date.now() < deadline,
+      });
+      if (close.ok) {
+        state.finalSite = result.record;
+        state.done = state.stopped;
+        phase = `complete, final site ${result.path}, execution record ${close.report.record}`;
+      }
+    }
   }
   saveState(options.stateRoot, state);
   screen.event(`run ended: ${phase}`);

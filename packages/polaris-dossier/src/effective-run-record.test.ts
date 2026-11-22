@@ -296,12 +296,16 @@ describe('effective host run readers', () => {
       expect(JSON.parse(attribute!.replaceAll('&quot;', '"').replaceAll('&#39;', "'").replaceAll('&amp;', '&')), name)
         .toEqual(effectiveRun);
     }
-    const close = await closeRun(run, {}, deps);
+    const refusedClose = await closeRun(run, {}, { ...deps, admitRecord: () => false });
+    expect(refusedClose).toMatchObject({ ok: false, refusal: { stage: 'write' } });
+    expect(fs.existsSync(path.join(run, 'record.json'))).toBe(false);
+    const close = await closeRun(run, {}, { ...deps, admitRecord: () => true });
     expect(close.ok).toBe(true);
     const record = JSON.parse(fs.readFileSync(path.join(run, 'record.json'), 'utf8'));
     expect(record.mode).toBe(status.report.mode);
     expect(record.effectiveRun).toEqual(status.report.effectiveRun);
     expect(record.noProviderCall).toBeUndefined();
+    expect(record.credentialsIssued).toBe('Unknown');
     expect(record.effectiveRun.capture.actualSends).toBe('Unknown');
     expect(record.effectiveRun.storage.protectedAudit.roleWritable).toBe(false);
     expect(record.effectiveRun.storage.compatibleHistory.roleWritable).toBe(true);
