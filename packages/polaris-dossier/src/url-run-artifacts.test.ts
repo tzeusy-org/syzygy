@@ -228,18 +228,19 @@ function fixture(source = 'Own pinned source.\n', extraFiles: Readonly<Record<st
 /** Real protected files and genuinely cold-verified never-issued machine
  * anchors. The synthetic stop seal is independent fixture input, never a live
  * process/launch/provider claim. No native helper or CLI is invoked. */
-async function recoveryFixture() {
+async function recoveryFixture(withPacket = true) {
   const f = fixture(undefined, {}, 'v1', true); f.initialize();
   await f.commitCheck(); await f.commitInventory();
-  const packet = f.producePacket(b(f.draft), b(f.inventory));
-  await f.bridge.registerPacket({ kind: 'fidelity', round: 1, packetSha256: packet.digest });
-  const submitted = await f.submitFidelity(packet); f.bridge.committed('fidelity', submitted.raw.id);
-  // These inputs are materialized by actual await --submit --stdin. The fixture
-  // substitutes its runner, so it writes the independently known bytes here.
   fs.writeFileSync(path.join(f.dir('inventory'), 'inventory.json'), b(f.inventory));
-  fs.writeFileSync(path.join(f.dir('fidelity'), 'round-1/verdict.json'), submitted.bytes);
-  f.write(`reviews/fidelity-packet-${packet.digest}/packet.json`, packet.bytes);
-  f.write(`reviews/fidelity-packet-${packet.digest}/packet.sha256`, `${packet.digest}  packet.json\n`);
+  if (withPacket) {
+    const packet = f.producePacket(b(f.draft), b(f.inventory));
+    await f.bridge.registerPacket({ kind: 'fidelity', round: 1, packetSha256: packet.digest });
+    const submitted = await f.submitFidelity(packet); f.bridge.committed('fidelity', submitted.raw.id);
+    // Actual await --submit --stdin materializes these independent inputs.
+    fs.writeFileSync(path.join(f.dir('fidelity'), 'round-1/verdict.json'), submitted.bytes);
+    f.write(`reviews/fidelity-packet-${packet.digest}/packet.json`, packet.bytes);
+    f.write(`reviews/fidelity-packet-${packet.digest}/packet.sha256`, `${packet.digest}  packet.json\n`);
+  }
   const frozen = f.bridge.captureFrozenHistory();
   const now = Date.parse('2026-11-19T00:00:10.000Z'), deadline = now + 60_000;
   const governanceRoot = path.join(f.root, 'observing/.syzygy'), protectedRoot = path.join(f.root, 'machine-protected');
@@ -282,6 +283,10 @@ async function recoveryFixture() {
 describe('trusted URL artifact producer bridge', () => {
   it('restores sealed product provenance into a genuinely fresh ledger and can freeze another stop', async () => {
     const f = await recoveryFixture(), next = f.fresh();
+    const composed = f.frozen.provenance.nodes.find(node => node.derivation.kind === 'composition')!;
+    const underclassified = { ...f.frozen, provenance: { ...f.frozen.provenance, nodes: f.frozen.provenance.nodes.map(node => node !== composed ? node
+      : { ...node, metadata: { ...node.metadata, classes: ['work-history'] as const } }) } };
+    expect(verifyUrlFrozenProductHistory(f.run, underclassified, f.options.current)).toBeNull();
     await expect(next.bridge.restoreFrozenProducts(f.capability)).resolves.toMatchObject({ artifacts: expect.arrayContaining([
       expect.objectContaining({ role: 'author', path: 'brief.md' }), expect.objectContaining({ role: 'inventory', path: 'inventory-brief.md' }),
       expect.objectContaining({ role: 'fidelity', path: 'round-1/packet.json' }),
@@ -310,6 +315,11 @@ describe('trusted URL artifact producer bridge', () => {
     finally { release(); }
     await expect(work).resolves.toMatchObject({ initial: { deadline: expect.any(Number) } });
   });
+  it('refuses the first failed resource check before importing historical provenance', async () => {
+    const f = await recoveryFixture(false), next = f.fresh(); let waits = 0;
+    await expect(next.bridge.restoreFrozenProducts(f.capability, async () => ++waits !== 1)).rejects.toThrow('url-run-artifacts-unavailable');
+    expect(waits).toBe(1); expect(() => next.bridge.latestStageChecks()).toThrow('url-run-artifacts-unavailable');
+  });
   it('withdraws recovery on claim loss after an awaited resource check', async () => {
     const f = await recoveryFixture(), next = f.fresh(); let waits = 0;
     await expect(next.bridge.restoreFrozenProducts(f.capability, async () => { if (++waits === 2) f.stale(); return true; }))
@@ -317,11 +327,16 @@ describe('trusted URL artifact producer bridge', () => {
     expect(waits).toBe(2); expect(() => next.bridge.latestStageChecks()).toThrow('url-run-artifacts-unavailable');
   });
   it.each(['copy', 'json', 'file', 'boundary', 'claim', 'source'] as const)('refuses %s drift during nominal product recovery', async fault => {
-    const f = await recoveryFixture(), next = f.fresh(); let capability = f.capability;
+    const f = await recoveryFixture(fault !== 'source'), next = f.fresh(); let capability = f.capability;
     if (fault === 'copy') capability = { ...capability } as UrlVerifiedRecoveryProducts;
     if (fault === 'json') capability = JSON.parse(JSON.stringify(capability));
     if (fault === 'file') fs.appendFileSync(path.join(f.run, 'checks/rev-0.json'), ' ');
-    if (fault === 'boundary') fs.appendFileSync(f.boundaryFile, ' ');
+    if (fault === 'boundary') {
+      const payload = JSON.parse(fs.readFileSync(f.boundaryFile, 'utf8'));
+      payload.record.spend.requestReservations = 1;
+      const canon = (v: unknown) => encodeCanonicalJson(v, { maxBytes: 4_194_304, maxNodes: 131_072, maxDepth: 40 });
+      payload.sha256 = sha256(canon(payload.record)); fs.writeFileSync(f.boundaryFile, `${canon(payload)}\n`);
+    }
     if (fault === 'claim') f.stale();
     if (fault === 'source') fs.writeFileSync(path.join(f.options.record.subject.clone.path, '.git/objects', f.blob.slice(0, 2), f.blob.slice(2)), 'corrupt');
     await expect(next.bridge.restoreFrozenProducts(capability)).rejects.toThrow('url-run-artifacts-unavailable');
