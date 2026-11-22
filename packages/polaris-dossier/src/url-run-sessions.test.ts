@@ -7,7 +7,7 @@ import { policyFixture } from './full-run.testkit.js';
 import { parseRunConfig } from './run-config.js';
 import { DOSSIER_CONTENT_CLASSES, NO_WORK_ITEM_REASON, encodeRunRecord, recordRunConfig } from './run-record.js';
 import { buildDossierScreen } from './screen.js';
-import { URL_CLI_PROGRAM, type UrlSessionLaunchOutcome } from './session-launch.js';
+import { URL_CLI_PROGRAM, URL_LAUNCH_LIMITS, type UrlSessionLaunchOutcome } from './session-launch.js';
 import type { SessionHostOptions } from './session-host.js';
 import type { ViewRole } from './session-view.js';
 import { URL_ROLES } from './url-run-record.js';
@@ -87,7 +87,7 @@ async function runtimeFixture(failRole?: ViewRole, sampleForRole?: (role: ViewRo
       const role = [...captured].find(([, value]) => value.brokerSocket === input.host.brokerSocket)![0];
       const plan = prepared.roles.find(value => value.role === role)!;
       await launchAudits.get(role)!({ event: 'session-launch-attempt', profileSha256: plan.profile.digest,
-        commandSha256: plan.declaration.commandSha256, viewSha256: plan.declaration.viewSha256 });
+        commandSha256: plan.declaration.commandSha256, viewSha256: plan.declaration.viewSha256, limits: URL_LAUNCH_LIMITS });
       calls.push(`launch:${role}`);
       let resolve!: (value: UrlSessionLaunchOutcome) => void;
       const finished = new Promise<UrlSessionLaunchOutcome>(done => { resolve = done; });

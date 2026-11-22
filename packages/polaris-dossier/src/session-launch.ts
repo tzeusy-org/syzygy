@@ -54,7 +54,7 @@ export interface UrlSessionLaunchOptions {
   readonly expected: { readonly nodeSha256: string; readonly supportSha256: Readonly<Record<'session-bridge.js' | 'session-mcp.js', string>> };
   readonly current: () => boolean | Promise<boolean>;
   readonly audit: (event: { readonly event: 'session-launch-attempt'; readonly profileSha256: string;
-    readonly commandSha256: string; readonly viewSha256: string }) => void | Promise<void>;
+    readonly commandSha256: string; readonly viewSha256: string; readonly limits: UrlLaunchLimits }) => void | Promise<void>;
   readonly limits?: Partial<UrlLaunchLimits>;
   readonly canaries: readonly string[];
   readonly hostLoopbackPort: number;
@@ -343,8 +343,8 @@ export async function launchRestrictedUrlSession(input: { readonly preparation: 
   try {
     await bounded(async () => {
       check(); await verify(state, check);
-      await state.audit({ event: 'session-launch-attempt', profileSha256: state.profile.digest,
-        commandSha256: input.preparation.commandSha256, viewSha256: input.preparation.viewSha256 }); check();
+      await state.audit(deepFreeze({ event: 'session-launch-attempt', profileSha256: state.profile.digest,
+        commandSha256: input.preparation.commandSha256, viewSha256: input.preparation.viewSha256, limits })); check();
       await verify(state, check);
     }, Math.min(limits.setupMilliseconds, Math.max(1, state.expires - performance.now())));
     check();
@@ -426,6 +426,6 @@ export async function launchRestrictedUrlSession(input: { readonly preparation: 
       return !exited && !finishedCapture && reason === 'exited';
     },
     stop: () => { stop('stopped'); return finished; } });
-  launchedProcesses.set(launched, () => !exited && !closed && !finishedCapture && child.exitCode === null && child.signalCode === null);
+  launchedProcesses.set(launched, () => reason === 'exited' && !exited && !closed && !finishedCapture && child.exitCode === null && child.signalCode === null);
   return launched;
 }

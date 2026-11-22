@@ -14,7 +14,7 @@ import { policyFixture } from './full-run.testkit.js';
 import { parseRunConfig } from './run-config.js';
 import { DOSSIER_CONTENT_CLASSES, NO_WORK_ITEM_REASON, recordRunConfig, readRunRecord, encodeRunRecord } from './run-record.js';
 import { buildDossierScreen } from './screen.js';
-import { URL_CLI_PROGRAM } from './session-launch.js';
+import { URL_CLI_PROGRAM, URL_LAUNCH_LIMITS } from './session-launch.js';
 import { prepareUrlRolePlans, prepareHistoricalUrlRolePlansTestPort, type UrlRolePlanningOptions, type UrlRolePlan } from './url-role-plan.js';
 import { inspectUrlLaunchHistory, URL_HELPER_LAUNCH_FILES, writeUrlLaunchHistory, type UrlLaunchHistoryRole } from './url-launch-history.js';
 import { assertUrlDesignDeliveryViewCurrent, assertUrlDesignReviewProofCurrent, createUrlSessionAudit,
@@ -222,7 +222,7 @@ async function auditFixture(originPolicySha256: string, name: string, parent = p
   const attempt = async (role: UrlLaunchHistoryRole, changes: { commandSha256?: string; viewSha256?: string } = {}) => {
     const { commandSha256, viewSha256, compiledProfileSha256 } = options(role).plan.declaration;
     await audit.append({ kind: 'launch-attempt', role, scope: audit.scope(role),
-      payload: { event: 'session-launch-attempt', commandSha256, viewSha256, profileSha256: compiledProfileSha256, ...changes } });
+      payload: { event: 'session-launch-attempt', commandSha256, viewSha256, profileSha256: compiledProfileSha256, limits: URL_LAUNCH_LIMITS, ...changes } });
   };
   return { audit, attempt, segment: (role: UrlLaunchHistoryRole) => path.join(parent, `${name}-${role}.jsonl`) };
 }

@@ -31,6 +31,13 @@ import { urlSessionMcpSupportPath } from './url-runtime.js';
 import { URL_CLI_PROGRAM, URL_LAUNCH_LIMITS, launchRestrictedUrlSession, isUrlSessionProcess, prepareRestrictedUrlSession, restrictedSessionCliArgs, verifySupportedUrlCli, type UrlSessionLaunchOptions } from './session-launch.js';
 import { URL_SESSION_BWRAP, urlSessionBwrapArgs, urlSessionCommand, urlSessionViewFor } from './session-url-view.js';
 
+const nativeSpawns = vi.hoisted(() => ({ calls: (): readonly (readonly unknown[])[] => [] }));
+vi.mock('node:child_process', async importOriginal => {
+  const actual = await importOriginal<typeof import('node:child_process')>();
+  const observed = vi.fn(actual.spawn); nativeSpawns.calls = () => observed.mock.calls;
+  return { ...actual, spawn: observed };
+});
+
 const cleanup: (() => Promise<unknown> | void)[] = [];
 const filesystem = vi.hoisted(() => ({
   beforeLstat: undefined as ((file: unknown) => Promise<void>) | undefined,
@@ -775,6 +782,24 @@ describe('prepared private CLI launch',()=>{
     expect(f.counts().forwards).toBe(0);
   },20000);
 
+  it('captures frozen selected launch limits before spawn and starts no child when their protected record fails', async () => {
+    const f = await launchFixture({ outputBytes: 4096, sampleMilliseconds: 100 });
+    let captured: Parameters<UrlSessionLaunchOptions['audit']>[0] | undefined;
+    const preparation = await prepareRestrictedUrlSession({ ...f.launch, audit: event => {
+      captured = event;
+      expect(nativeSpawns.calls()).toHaveLength(before);
+      expect(Object.isFrozen(event)).toBe(true); expect(Object.isFrozen(event.limits)).toBe(true);
+      throw new Error('owned protected record failure');
+    } });
+    // Mutating caller configuration cannot change the retained preparation.
+    (f.launch.limits as { outputBytes: number }).outputBytes = 8192;
+    const host = await f.start(), before = nativeSpawns.calls().length;
+    await expect(launchRestrictedUrlSession({ preparation, host })).rejects.toThrow('url-session-launch-refused');
+    expect(captured?.limits).toMatchObject({ milliseconds: 8000, outputBytes: 4096, sampleMilliseconds: 100 });
+    expect(nativeSpawns.calls()).toHaveLength(before); expect(f.counts().forwards).toBe(0);
+    expect(await host.close()).toMatchObject({ termination: 'settled' });
+  }, 20_000);
+
   it('bounds a stuck launch audit, closes the host and does not launch late when the callback resolves',async()=>{
     const f=await launchFixture({setupMilliseconds:2000,cleanupMilliseconds:100});let release!:()=>void;
     const held=new Promise<void>(resolve=>release=resolve);
@@ -792,7 +817,7 @@ describe('prepared private CLI launch',()=>{
       const child=await launchRestrictedUrlSession({preparation,host});
       cleanup.push(child.stop);
       if(wanted==='storage-limit') await writeFile(path.join(f.launch.view.workDirectory, 'own-storage-control'), 'oversize');
-      if(wanted==='stopped'){const stopping=child.stop();expect(child.stop()).toBe(stopping);}
+      if(wanted==='stopped'){expect(isUrlSessionProcess(child)).toBe(true);const stopping=child.stop();expect(isUrlSessionProcess(child)).toBe(false);expect(child.stop()).toBe(stopping);}
       const result=await child.finished;
       expect(result.outcome,wanted).toBe(wanted);expect(result.betweenSamples).toBe('Unknown');
       if(wanted==='output-limit')expect(result.stdout.bytes+result.stderr.bytes).toBeGreaterThan(1);

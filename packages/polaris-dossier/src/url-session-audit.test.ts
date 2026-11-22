@@ -13,6 +13,7 @@ import { SESSION_CONTENT_CLASSES } from './session-egress-policy.js';
 import { createOrderedDesignSessionProfile, createSessionProfile, DEFAULT_SESSION_MODEL } from './session-profile.js';
 import { createUrlSessionAudit, type UrlSessionAuditEvent, type UrlSessionAuditOptions, type UrlSessionAuditResult } from './url-session-audit.js';
 import { planOrderedDesignBytes } from './url-design-delivery.js';
+import { URL_LAUNCH_LIMITS } from './session-launch.js';
 import type { ViewRole } from './session-view.js';
 
 type Writer = Extract<UrlSessionAuditResult, { ok: true }>;
@@ -49,7 +50,7 @@ function fixture(extraDetector?: { id: string; kind: string; [key: string]: unkn
         governingRule: 'GOVERNANCE-SIMPLIFICATION-D10', admission: { digest: 'd'.repeat(64), bytes: 100, classes: ['project-documentation'], originIds: ['source:own'] },
         received: { digest: 'e'.repeat(64), bytes: 101 }, route: 'messages', consumedToolResults: [], response: null, outcome: 'allowed', status: null },
       control: { event: 'clarification-question', questionSha256: '1'.repeat(64), questionBytes: 100, nonceSha256: '2'.repeat(64), questionNumber: 1 },
-      'launch-attempt': { event: 'session-launch-attempt', profileSha256: scope.profileSha256, commandSha256: '3'.repeat(64), viewSha256: '4'.repeat(64) },
+      'launch-attempt': { event: 'session-launch-attempt', profileSha256: scope.profileSha256, commandSha256: '3'.repeat(64), viewSha256: '4'.repeat(64), limits: URL_LAUNCH_LIMITS },
       'before-tool': { tool: 'source_read', inputSha256: '5'.repeat(64) },
       'tool-receipt': { id: 'tool:own', toolName: 'mcp__syzygy__source_read', inputSha256: '5'.repeat(64), digest: '6'.repeat(64), bytes: 42,
         classes: ['project-documentation', 'work-history'], originIds: ['blob:own', 'provider-response:1'] },
@@ -322,6 +323,29 @@ describe('protected URL session audit', () => {
     await expect(writer.append(event)).rejects.toThrow('url-session-audit-refused');
     expect(writer.summary().durableRecords).toBe(4); expect(ROLES.map(r => fs.readFileSync(f.file(r), 'utf8')).join('')).not.toContain('OWN_RAW_CANARY');
     await expect(writer.append(f.event(writer, 'before-tool', 'design'))).rejects.toThrow();
+  });
+
+  it('records selected finite launch overrides as a durable snapshot without changing historical record format', async () => {
+    const f = fixture(), writer = await f.create(), event = structuredClone(f.event(writer, 'launch-attempt')) as any;
+    event.payload.limits.sampleMilliseconds = 100; event.payload.limits.outputBytes = 4096;
+    const appended = writer.append(event); event.payload.limits.sampleMilliseconds = 50;
+    await appended;
+    expect(lines(f).at(-1)).toMatchObject({ format: 'url-session-audit/2', event: { payload: { limits: {
+      sampleMilliseconds: 100, outputBytes: 4096,
+    } } } });
+  });
+
+  it.each(['historical-no-limits', 'unknown', 'missing', 'zero', 'negative', 'fraction', 'unsafe', 'nan', 'infinity'])('refuses %s launch limits before persisting live evidence', async fault => {
+    const f = fixture(), writer = await f.create(), event = structuredClone(f.event(writer, 'launch-attempt')) as any;
+    if (fault === 'historical-no-limits') delete event.payload.limits;
+    else if (fault === 'unknown') event.payload.limits.unbounded = 1;
+    else if (fault === 'missing') delete event.payload.limits.sampleMilliseconds;
+    else event.payload.limits.sampleMilliseconds = ({ zero: 0, negative: -1, fraction: 0.5, unsafe: Number.MAX_SAFE_INTEGER + 1,
+      nan: Number.NaN, infinity: Number.POSITIVE_INFINITY } as Record<string, number>)[fault];
+    const before = fs.readFileSync(f.file());
+    await expect(writer.append(event)).rejects.toThrow();
+    expect(fs.readFileSync(f.file()).equals(before)).toBe(true);
+    expect(writer.summary()).toMatchObject({ poisoned: true, captured: { 'launch-attempt': 0 } });
   });
 
   it('retains exact launch refusal and Unknown termination fields and accepts only declared content classes', async () => {

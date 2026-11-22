@@ -8,7 +8,7 @@ import { SESSION_CONTENT_CLASSES, SESSION_TOOLS, type SessionAdmission, type Ses
 import { isNativeSessionProfile, isOrderedDesignSessionProfile, type NativeSessionProfile } from './session-profile.js';
 import type { DossierScreen } from './screen.js';
 import type { UrlSessionControlAudit } from './session-control.js';
-import type { UrlSessionLaunchOptions, UrlSessionLaunchOutcome } from './session-launch.js';
+import type { UrlLaunchLimits, UrlSessionLaunchOptions, UrlSessionLaunchOutcome } from './session-launch.js';
 import { SESSION_RELAY_EVENTS, type SessionAuditEvent } from './session-relay.js';
 import type { SessionResponseUsage } from './session-response.js';
 import type { ViewRole } from './session-view.js';
@@ -232,6 +232,10 @@ const RELAY_TRANSITIONS: Readonly<Record<SessionAuditEvent['event'], readonly Se
   'attempt-refused': [], 'response-refused': [], 'transport-failed': [],
 };
 const TOOLS = ['source_read', 'artifact_read', 'artifact_write', 'dossier_step'] as const;
+// Live launch evidence requires the selected values, including overrides. This
+// writer never reopens historical segments or upgrades an old record to a grant.
+const LAUNCH_LIMIT_KEYS = ['milliseconds', 'setupMilliseconds', 'cleanupMilliseconds', 'cpuSeconds', 'addressBytes',
+  'fileBytes', 'storageBytes', 'entries', 'processes', 'outputBytes', 'descriptors', 'sampleMilliseconds'] as const satisfies readonly (keyof UrlLaunchLimits)[];
 const SIGNALS = ['SIGABRT', 'SIGALRM', 'SIGBUS', 'SIGCHLD', 'SIGCONT', 'SIGFPE', 'SIGHUP', 'SIGILL', 'SIGINT', 'SIGIO', 'SIGIOT',
   'SIGKILL', 'SIGPIPE', 'SIGPOLL', 'SIGPROF', 'SIGPWR', 'SIGQUIT', 'SIGSEGV', 'SIGSTKFLT', 'SIGSTOP', 'SIGSYS', 'SIGTERM', 'SIGTRAP',
   'SIGTSTP', 'SIGTTIN', 'SIGTTOU', 'SIGUNUSED', 'SIGURG', 'SIGUSR1', 'SIGUSR2', 'SIGVTALRM', 'SIGWINCH', 'SIGXCPU', 'SIGXFSZ'];
@@ -509,8 +513,9 @@ export async function createUrlSessionAudit(given: UrlSessionAuditOptions): Prom
           } break;
         }
         case 'launch-attempt':
-          if (!exact(p, ['event', 'profileSha256', 'commandSha256', 'viewSha256']) || p.event !== 'session-launch-attempt'
-            || p.profileSha256 !== scopes.get(role)!.profileSha256 || !hex(p.commandSha256) || !hex(p.viewSha256)) poison(); break;
+          if (!exact(p, ['event', 'profileSha256', 'commandSha256', 'viewSha256', 'limits']) || p.event !== 'session-launch-attempt'
+            || p.profileSha256 !== scopes.get(role)!.profileSha256 || !hex(p.commandSha256) || !hex(p.viewSha256)
+            || !exact(p.limits, LAUNCH_LIMIT_KEYS) || Object.values(p.limits).some(value => !count(value) || value === 0)) poison(); break;
         case 'launch-history':
           if (privateKind !== 'launch-history' || role === 'author' || !exact(p, ['file', 'recordSha256', 'recordBytes', 'promptRecordSha256', 'promptSha256', 'sessionId'])
             || p.file !== URL_HELPER_LAUNCH_FILES[role] || !hex(p.recordSha256) || !count(p.recordBytes, 2_097_152) || p.recordBytes === 0
