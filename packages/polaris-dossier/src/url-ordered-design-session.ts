@@ -56,6 +56,7 @@ interface Options {
   readonly budget: Pick<ReturnType<typeof createUrlSessionBudget>, 'current' | 'reserve' | 'observeUsage' | 'uncertainAttempt' | 'holdOrderedDesignTurns'>;
   /** Private exact sealed bytes. This port must revalidate the current input. */
   readonly envelope: () => Uint8Array;
+  /** Fully validate the current protected product, renewing only through genuine reproduction. */
   readonly current: () => boolean | Promise<boolean>;
   /** Recheck protected authority and any held input lease at the send/release edge. */
   readonly assertCurrent: () => void;
@@ -140,7 +141,9 @@ export function createOrderedDesignSession(options: Options) {
     // The genuine current port may reproduce an expired short-lived product.
     // No result is released until its replacement passes the full check.
     if (await current() !== true) throw refused();
-    requireLive();
+    // current() already performed the full protected-product check. Recheck
+    // continuous authority after its await; synchronous release guards stay full.
+    requireAuthority();
   };
   const requireNextSend = (): void => {
     requireLive();

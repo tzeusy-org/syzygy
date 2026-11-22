@@ -66,7 +66,7 @@ beforeAll(async () => {
     bridgeSha256: sha256(support.get('support/session-bridge.js')!), mcpSha256: sha256(support.get('design-support/session-mcp.js')!) }));
 });
 
-async function fixture(guards: Partial<Pick<Parameters<typeof createOrderedDesignSession>[0], 'current' | 'assertCurrent' | 'assertProcessingCurrent'>> = {}) {
+async function fixture(guards: Partial<Pick<Parameters<typeof createOrderedDesignSession>[0], 'current' | 'assertCurrent' | 'assertProcessingCurrent'>> = {}, authority: () => boolean = () => true) {
   const suffix = ++sequence, deadline = Date.now() + 3_600_000;
   const compiled = createOrderedDesignSessionProfile({ binding: { run: RUN, role: 'design', sourceBinding: sha256(`owned source ${suffix}`),
     policy: sha256(V8), provider: 'anthropic', model: DEFAULT_SESSION_MODEL }, sessionId: '12345678-1234-4234-8234-123456789012',
@@ -109,8 +109,9 @@ async function fixture(guards: Partial<Pick<Parameters<typeof createOrderedDesig
   }, bytes => controller.chargeAuditRead(bytes));
   const operation = { cpuMicroseconds: 32_000_000, wallMilliseconds: 30_000, auditReadBytes: 500_000_000,
     inputCodeUnits: 8_388_608, secretCodeUnits: 103_000_000, secretCalls: 524_361, activeCodeUnits: 16_777_216, activeCalls: 32 };
+  const budget = createUrlSessionBudget({ deadline, now: Date.now, turnBudget: 5, tokenBudget: null });
   controller = createOrderedDesignSession({ profile, plan, principal: 'owned-operator', writer,
-    budget: createUrlSessionBudget({ deadline, now: Date.now, turnBudget: 5, tokenBudget: null }),
+    budget: { ...budget, current: () => authority() && budget.current() },
     screening: { kind: 'bounded-worker', program, policyBytes: Buffer.from(V8), planInput },
     work: { runtimeSha256, enforcement: { runtimeSha256, workerSha256: program.worker.sha256,
       operations: { request: operation, response: operation, tool: operation, audit: operation, terminal: operation }, relayMilliseconds: 180_000, brokerMilliseconds: 85_000 },
@@ -158,6 +159,19 @@ async function fixture(guards: Partial<Pick<Parameters<typeof createOrderedDesig
 
 async function absent(file: string) { await expect.poll(async () => { try { await access(file); return false; } catch { return true; } }, { timeout: 5000 }).toBe(true); }
 describe('bounded processing and protected result validation', () => {
+  it('rechecks continuous authority after the full currentness port awaits', async () => {
+    let valid = true;
+    const f = await fixture({ current: async () => { await Promise.resolve(); valid = false; return true; } }, () => valid);
+    await f.start(); f.activate(f.controller);
+    const { tool_choice: _toolChoice, ...baseline } = f.profile.baseline;
+    const initial = Buffer.from(canonical({ ...baseline,
+      metadata: { user_id: JSON.stringify({ device_id: 'b'.repeat(64), account_uuid: '', session_id: f.profile.input.sessionId }) },
+      messages: [f.profile.initialMessage] }));
+    await expect(f.controller.checkRequest(initial)).rejects.toThrow('url-ordered-design-session-refused');
+    expect(f.workerCpu()).toBe(0);
+    expect(f.callbacks()).toBe(0);
+  });
+
   it.each(['renewed', 'changed', 'revoked'] as const)('requires a fresh result proof after processing: %s', async scenario => {
     let fullChecks = 0, processingChecks = 0, refreshes = 0, proofCurrent = true;
     const f = await fixture({
@@ -251,8 +265,9 @@ describe('production ordered host activation', () => {
 /** Provider bytes are owned synthetic input. Launch, fixed bridge/MCP images,
  * accepted sockets, per-chunk sender proofs, lifecycle files and effect leases
  * are the real production components. Provider receipt remains Unknown. */
-async function nativeExchange(revoke: false | 'send' | 'stage' = false) {
-  const f = await fixture(), root = tempDir('ohn-');
+async function nativeExchange(revoke: false | 'send' | 'stage' | 'proof-expiry' = false) {
+  let proofExpired = false;
+  const f = await fixture({ assertCurrent: () => { if (proofExpired) throw new Error('owned proof expired at release'); } }), root = tempDir('ohn-');
   for (const name of ['support', 'home', 'work', 'broker', 'relay', 'hidden']) await mkdir(path.join(root, name), { mode: 0o700 });
   const canary = path.join(root, 'hidden/canary'); await writeFile(canary, 'OWN SYNTHETIC CANARY');
   const bridge = support.get('support/session-bridge.js')!, mcp = support.get('design-support/session-mcp.js')!;
@@ -392,6 +407,7 @@ async function nativeExchange(revoke: false | 'send' | 'stage' = false) {
     } });
   f.setHost(host);
   if (revoke === 'stage') f.setBeforeStageWrite(() => { current = false; });
+  if (revoke === 'proof-expiry') f.setBeforeStageWrite(() => { proofExpired = true; });
   cleanup.push(() => host.close());
   expect(isOrderedDesignHostFor(host, f.profile)).toBe(true);
   eventLoop.enable();
@@ -443,8 +459,8 @@ describe('native authenticated ordered host', { timeout: 180_000 }, () => {
     expect(result.observed.some(row => row.event === 'attempt-allowed')).toBe(true);
     expect(result.machineAudits).toBeGreaterThan(0);
   });
-  it('withdraws the active native effect after the stage await and refuses the protected write and acknowledgment', async () => {
-    const result = await nativeExchange('stage');
+  it.each(['stage', 'proof-expiry'] as const)('refuses the protected write and acknowledgment after the stage await: %s', async boundary => {
+    const result = await nativeExchange(boundary);
     expect(result.forwards, exchangeDiagnostic(result)).toBe(4); expect(result.f.stageWriteReached()).toBe(true);
     expect(await readFile(result.f.stagedFile)).toHaveLength(0);
     expect(result.f.staged()).toBe(0); expect(result.terminal).toBeUndefined();
