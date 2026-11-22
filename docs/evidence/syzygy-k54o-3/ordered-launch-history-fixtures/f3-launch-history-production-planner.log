@@ -1,0 +1,1 @@
+{"limits":{"partBytes":400000,"partCount":2,"replyBytes":490000,"preparedBytes":4096},"before":{"originalBytes":43200,"envelopeBytes":43509,"partBytes":[43509],"replyBytes":[43912]},"after":{"originalBytes":400001,"envelopeBytes":400312,"partBytes":[400000,312],"replyBytes":[400397,701]}}

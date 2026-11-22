@@ -1,0 +1,29 @@
+{
+  "subject": "8dea15f06d761eea28fff63f67be5f189d9c5c14",
+  "source": "packages/polaris-dossier/src/url-launch-history.test.ts",
+  "sourceSha256": "6541cafa04802764d8aef7c55cba1163fa0bec5c50d9dcf1dac36925716bd3c3",
+  "workerSubject": "558697c217384055308e1579e5ad8c2b75ec225a",
+  "artifacts": [
+    {
+      "path": "f3-launch-history-fixture-verification.json",
+      "bytes": 1532,
+      "sha256": "024ead4e35af2fc12a6b6f8c1ec76e13f228319cfa471ab4c3de0970fede366b"
+    },
+    {
+      "path": "f3-launch-history-fixture-focused.log",
+      "bytes": 771,
+      "sha256": "9cf3803756341a7933c33d8b159a8ccf15e25e699531caba6f152bdbc42abc0c"
+    },
+    {
+      "path": "f3-default-resolver-base-ordered-launch.log",
+      "bytes": 6481,
+      "sha256": "58bd2d54298becc72cbffdd077d72487a37001a7156141ca6142c94d2cb89913"
+    },
+    {
+      "path": "f3-launch-history-production-planner.log",
+      "bytes": 290,
+      "sha256": "cdec8411d022b69090c457e1572a7dfef0cc723a5d806acd63c7607595603c54"
+    }
+  ],
+  "scope": "Test-only adjustment for the currently pinned profile. Source-derived planner output has two non-empty bounded parts. The three selected predecessor failures pass on the worker subject with the same file bytes."
+}
