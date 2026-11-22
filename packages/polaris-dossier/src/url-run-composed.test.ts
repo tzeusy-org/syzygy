@@ -144,7 +144,7 @@ type ResumeBrokerStage = 'invoke' | 'host-current' | 'mediate-peer' | 'host-acti
 
 function projectWorkPlanRefusal(
   input: Parameters<typeof orderedWork.reserveOrderedDesignWork>[0],
-  reservation: { requiredCpuMicroseconds: number; reservedCpuMicroseconds: number | null } | undefined,
+  reservation: { requiredCpuMicroseconds: number; reservedCpuMicroseconds: number | null; chargedCpuMicroseconds: number | null } | undefined,
 ) {
   const { shape, view, enforcement } = input;
   const bound = ({ bytes, nodes, depth }: orderedBounds.OrderedDesignJsonBound) => ({ bytes, nodes, depth });
@@ -310,14 +310,15 @@ function observeInterruptedResume() {
   vi.spyOn(orderedBounds, 'boundOrderedDesignTransfer').mockImplementation(input =>
     brokerPhase('transfer-bounds', () => boundTransfer(input), result => result !== null));
   const planWork = orderedWork.reserveOrderedDesignWork;
-  vi.spyOn(orderedWork, 'reserveOrderedDesignWork').mockImplementation((input, reserveRemaining) => {
-    if (firstBrokerInvocation.getStore() !== true) return planWork(input, reserveRemaining);
+  vi.spyOn(orderedWork, 'reserveOrderedDesignWork').mockImplementation((input, reserveRemaining, clocks) => {
+    if (firstBrokerInvocation.getStore() !== true) return planWork(input, reserveRemaining, clocks);
     let reservation: Parameters<typeof projectWorkPlanRefusal>[1];
     const result = brokerPhase('plan-work-hold', () => planWork(input, requiredCpuMicroseconds => {
-      const reservedCpuMicroseconds = reserveRemaining(requiredCpuMicroseconds);
-      reservation = { requiredCpuMicroseconds, reservedCpuMicroseconds };
-      return reservedCpuMicroseconds;
-    }), value => value !== null);
+      const original = reserveRemaining(requiredCpuMicroseconds);
+      reservation = { requiredCpuMicroseconds, reservedCpuMicroseconds: original?.remainingCpuMicroseconds ?? null,
+        chargedCpuMicroseconds: original?.cpuMicroseconds ?? null };
+      return original;
+    }, clocks), value => value !== null);
     if (result === null) workPlanRefusal ??= projectWorkPlanRefusal(input, reservation);
     return result;
   });
