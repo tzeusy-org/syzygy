@@ -31,10 +31,13 @@ POC-REQ-045: four independent measures over every served item, each with
 "n of m" coverage: lead time (closed, created to closed) and age (open,
 created to the observation's capture instant `workItems.capturedAt`, never
 a clock), each the median and nearest-rank 90th percentile in whole hours
-rounded down, "not measurable" (never 0) with no item covered; arrivals and
-closures per ISO 8601 week in UTC, every week between the first and last
-covered event listed. An item whose needed instant is missing, invalid,
-timezone-less or reversed stays in the denominator, not covered. The
+rounded down, Unknown with its "0 of m" coverage (never 0) with no item
+covered; arrivals and closures per ISO 8601 week in UTC, every week
+between the first and last covered event listed (at most the last 104,
+earlier covered events counted), the weekly chart and table stating the
+coverage they count over. An item whose needed instant is missing,
+invalid, timezone-less, after the capture instant or reversed stays in
+the denominator, covered by no measure. The
 measures declare their source (`tracker-recorded-instants`) and evidence
 class (`observed`), and nothing combines two (RFC8-18). The page draws
 them as two script-free SVG charts, one unit per axis (counts per week;
@@ -55,8 +58,10 @@ and tables.
   updated, closed instants and status). No title (SEC-5). No cycle time,
   no status history, no effort, token or money measure, no composite or
   score.
-- No new Unknown and no new route: the unknown-route sweep's denominators
-  are unchanged, so it gains no rule.
+- No new Unknown subject and no new route: a measure with no covered item
+  is stated "Unknown: 0 of m covered" as text, with no encoding class, so
+  the unknown-route sweep's denominators are unchanged and it gains no
+  rule (disposition 1).
 - POC-REQ-041's falsifier and oracle (byte-equal renders at two
   wall-clock times) are unchanged; the lane bar the old sweep counted is
   gone, and the new byte-equality test pins the rule.
@@ -88,7 +93,8 @@ and tables.
 `trajectory.timeMeasures` on the observed projection: `source`,
 `evidenceClass`, `measuredAt`, `leadTime` and `age` (`covered`, `total`,
 `medianHours`, `p90Hours`), `arrivals` and `closures` (`covered`,
-`total`), `weeks[]` (`week`, `arrivals`, `closures`). `timeRange` is
+`total`), `weeks[]` (`week`, `arrivals`, `closures`), `earlier`
+(`arrivals`, `closures`). `timeRange` is
 removed. Response identity: two new excluded paths.
 
 ## Warrant
@@ -130,7 +136,8 @@ replaced); `model.ts` (the cost basis sentence). R3 of
 `scripts/check_spec_reconciliation.py` reads the new requirement from its
 adoption row (POC 27/40 → 28/42); `census.json` regenerated. Retained
 evidence that quotes "25 declared capture-time exclusions" describes its
-own commit and is not edited.
+own commit and is not edited. CONTRACT-COVERAGE's stale Part B2 total
+(218 for 210 rows) is corrected in place with a dated note (disposition 9).
 
 ## Migration / supersession plan
 
@@ -148,7 +155,7 @@ request.
 
 ````diff
 diff --git a/openspec/changes/three-surface-poc-experience/CONTRACT-COVERAGE.md b/openspec/changes/three-surface-poc-experience/CONTRACT-COVERAGE.md
-index 99446d03a..ea2dc2958 100644
+index 99446d03a..24c246f1f 100644
 --- a/openspec/changes/three-surface-poc-experience/CONTRACT-COVERAGE.md
 +++ b/openspec/changes/three-surface-poc-experience/CONTRACT-COVERAGE.md
 @@ -51,7 +51,7 @@ Every clause was judged exactly once and lands in exactly one part:
@@ -180,7 +187,13 @@ index 99446d03a..ea2dc2958 100644
 -| RFC8-18 | Cost renders as independent measures with declared source and evidence class, never a composite | **Unknown** — Amendment row (five answers); the cost answer is Unknown because no measure is read, so no requirement observes a measure or the independence rule. Moved from Part B2 | — |
  | RFC1-3 | Observed-source repository is read-only; no writes emitted to Butlers | **Unknown** — Borderline: out-of-scope bars "writes to the observed project," matching RFC1-3's read-only default, but no POC-REQ's oracle tests absence of writes; consent-record specifics have no matching requirement | — |
  | RFC1-6 | VCS objects (git revision) not reified as first-class nodes, enter only as identifier/evidence | **Unknown** — POC stamps facts with "exact git revision"; no requirement's oracle checks it isn't reified as a separate Commit node | — |
-@@ -567,8 +568,8 @@ Part B2 total `[Observed, computed]`: **218 clauses.**
+@@ -562,13 +563,13 @@ are listed so the owner can review or contest each one directly.
+ | RFC9-52 | The RFC-prose-to-OpenSpec authority boundary and coverage-matrix obligation; this non-binding sweep doesn't cite RFC9 as binding authority for the POC spec |
+ 
+-Part B2 total `[Observed, computed]`: **218 clauses.**
++Part B2 total `[Observed, computed]`: **210 clauses.** *(Corrected 2026-11-22, `syzygy-t3jk.17`: this line read 218 while the table held 210 rows over 210 clauses; the family table and the verifying line already said 210.)*
+ 
+ ## Verifying this table
  
  - Denominator: re-run the two counting methods named above; both must
 -  return 324 for RFC1–9, and 85 + 29 + 210 = 324.
@@ -192,7 +205,7 @@ index 99446d03a..ea2dc2958 100644
  - Totals: count rows and dispositions in this file's tables (e.g.
    Python over the `| RFC` rows); the printed totals must match the
 diff --git a/openspec/changes/three-surface-poc-experience/specs/three-surface-poc-experience/spec.md b/openspec/changes/three-surface-poc-experience/specs/three-surface-poc-experience/spec.md
-index 8757233f7..30b2ae0dd 100644
+index 8757233f7..653563bd5 100644
 --- a/openspec/changes/three-surface-poc-experience/specs/three-surface-poc-experience/spec.md
 +++ b/openspec/changes/three-surface-poc-experience/specs/three-surface-poc-experience/spec.md
 @@ -30,5 +30,5 @@ Reader notes, binding on how this file is read:
@@ -217,7 +230,7 @@ index 8757233f7..30b2ae0dd 100644
 +  instants and the elapsed-time charts and tables of POC-REQ-045.
  
  - **Case (sweep)**: a checker enumerates Trajectory's temporal markers
-@@ -1262,4 +1265,87 @@ warrants:
+@@ -1262,4 +1265,97 @@ warrants:
  ```
  
 +### Requirement: POC-REQ-045 — Trajectory measures elapsed time over every served item
@@ -233,12 +246,16 @@ index 8757233f7..30b2ae0dd 100644
 +arrivals per ISO 8601 week in UTC, by created instant; and (4) closures per
 +ISO 8601 week in UTC, by closed instant. Lead time and age SHALL be the
 +median and the 90th percentile by nearest rank, in whole hours rounded
-+down; with no item covered each SHALL be stated not measurable, never 0.
-+An item whose needed instant is missing, invalid, written without a
-+timezone, or reversed (a closed instant before its created instant, or a
-+created instant after the capture instant) SHALL be counted in the
-+denominator and not covered, never dropped. Every week from the first to
-+the last covered event SHALL be listed, a week with none an observed 0.
++down; with no item covered each SHALL be stated Unknown with its "0 of m"
++coverage, never 0 (RFC8-19). An item whose needed instant is missing,
++invalid, written without a timezone, after the capture instant, or
++reversed (a closed instant before its created instant) SHALL be counted in
++the denominator and not covered by any measure, never dropped. The weekly
++series SHALL list every week from the first to the last covered event, at
++most the last 104 of them, and state how many covered arrivals and
++closures fall in earlier weeks; its chart and table SHALL state the
++coverage they are counted over, so a week's 0 is read over the covered
++items only.
 +The measures SHALL declare their source (the tracker's recorded instants)
 +and evidence class (observed), and no element SHALL combine two measures
 +into one number (RFC8-18). The page SHALL draw them as charts, one unit per
@@ -257,25 +274,31 @@ index 8757233f7..30b2ae0dd 100644
 +  lead time, a closed item with a timezone-less created instant, a closed
 +  item closed before it was created, and two open items 48 and 12 hours
 +  old at the capture instant, spanning ISO weeks 31 to 35 of 2026; it
-+  renders the page at two wall-clock times; separately it measures weeks
-+  across a year change.
++  renders the page at two wall-clock times; separately it serves a closed
++  item with no usable instants, and measures weeks across a year change and
++  over a span longer than 104 weeks.
 +- **Observable**: the four measures, each with its covered and total
-+  counts; the weekly rows; the two charts' titles, axis labels and text
-+  alternatives; both renders' bytes.
++  counts; the weekly rows and the earlier-week counts; the two charts'
++  titles, axis labels, text alternatives and marks; both renders' bytes.
 +- **Oracle**: lead time 2 of 4 covered, median 12 and p90 48 hours; age 2
 +  of 2, median 12 and p90 48; arrivals 5 of 6; closures 2 of 4; five weekly
-+  rows W31 to W35 with W33 and W34 at 0; each table cell equals the machine
-+  answer, and a mutated cell is named; the two renders are byte-equal; ISO
-+  week names equal the checker's own calendar (2027-01-01 is 2026-W53).
-+  Equality decides.
++  rows W31 to W35 with W33 and W34 at 0; each table cell, each bar's value
++  and each week's hover title equals the machine answer, each line's point
++  heights order as its weekly values, and a mutated cell or mark is named;
++  with no usable instant, lead time renders "Unknown: 0 of 1 covered" and no
++  0; the two renders are byte-equal; ISO week names equal the checker's own
++  calendar (2027-01-01 is 2026-W53); a longer span lists 104 weeks and
++  counts the earlier events. Equality decides.
 +- **Oracle independence**: expected values are computed by hand from the
 +  checker's fixture instants, and ISO weeks by an independent calendar,
 +  never by the module under test.
 +- **Falsifier**: a measure without its coverage; an uncovered item dropped
-+  from a denominator or counted as 0 hours; an age measured to a render-time
-+  clock; a week missing between covered events; two units on one axis; a
-+  chart number absent from the tables or unequal to the machine answer; a
-+  composite of two measures; or cost rendered as known.
++  from a denominator or counted as 0 hours; a measure with no covered item
++  rendered as 0; an instant after the capture instant counted; an age
++  measured to a render-time clock; a week missing between covered events,
++  or an earlier event dropped; two units on one axis; a chart number absent
++  from the tables or unequal to the machine answer; a composite of two
++  measures; or cost rendered as known.
 +
 +#### Scenario: Elapsed time with partial coverage
 +
@@ -289,8 +312,8 @@ index 8757233f7..30b2ae0dd 100644
 +#### Scenario: No covered item
 +
 +- **WHEN** no closed item has valid created and closed instants
-+- **THEN** lead time is stated not measurable with 0 of its total covered,
-+  never 0 hours
++- **THEN** lead time is stated Unknown with 0 of its total covered, never
++  0 hours
 +
 +```yaml
 +warrants:
@@ -306,3 +329,42 @@ index 8757233f7..30b2ae0dd 100644
  ### Requirement: POC-REQ-050 — Orrery projects declared mappings deterministically
  
 ````
+
+## Dispositions
+
+Review R-T9-ELAPSED-TIME-1 (`docs/reviews/R-T9-ELAPSED-TIME-1-RAW.md`),
+verdict `CONFIRM WITH EXCEPTIONS` over commit `67a9ee3cf`; five should-fix
+and five notes. Repairs landed in commit `bb86d3b7a`; the reviewer's seven
+mutants (M2, M4, M5 and M7 survived at `67a9ee3cf`) plus three more all
+fail the suite after it.
+
+1. **Accepted.** A null measure renders "Unknown: 0 of m covered" in the
+   table cell and the bar, never 0; the spec says Unknown (RFC8-19), and a
+   page test over a closed item with reversed instants pins the cells and
+   the absence of 0. It carries no Unknown encoding class or reason: the
+   value is not missing evidence about a claim but an empty population, and
+   its coverage is the whole statement; so no machine Unknown subject and
+   no route are added.
+2. **Accepted.** `chartMismatches` compares each bar's title and label,
+   each week's hover title, and each line's point heights (ordered as the
+   machine values) with `trajectory.timeMeasures`; a mutated bar and a line
+   drawn from the other series are named.
+3. **Accepted.** Core fixtures add an item closed when created (0 h,
+   covered) and one created at the capture instant (0 h, covered).
+4. **Accepted.** An instant after the capture instant is covered by no
+   measure (arrivals, closures, lead time, age); the spec says so.
+5. **Accepted.** The weekly series lists at most 104 weeks, ending at the
+   last covered event, and `earlier` counts covered arrivals and closures
+   before them (rendered with parity markers); week names use a UTC day
+   helper that keeps years below 100.
+6. **Accepted.** The weekly chart's text alternative and the weekly
+   table's caption state the coverage they count over.
+7. **Accepted.** The last x label is drawn only when it falls at least
+   half a label step from the previous one.
+8. **Not taken.** Excluding the whole `age` object is kept: its `covered`
+   count varies with the capture instant too, and `total` is derivable from
+   `workItems`; finer paths would add three exclusions for no reader.
+9. **Accepted.** The pre-existing Part B2 total (218 for 210 clauses) is
+   corrected in place with a dated note.
+10. **Noted.** The page now pins the "No covered item" scenario (1). The
+    requirement stays one: measurement and rendering share one oracle.
