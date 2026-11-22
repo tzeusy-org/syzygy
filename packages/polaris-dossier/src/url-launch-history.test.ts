@@ -468,6 +468,15 @@ describe('protected URL design delivery audit', () => {
           await audit.commitOrderedDesignVerdict(fresh, checked, terminal);
           producer.commitOrderedDesignVerdict(staged, fresh, terminal);
           expect(producer.hasCommittedProduct('reviews/checks/design-verdict-0.json', checked.checkSha256)).toBe(true);
+          expect(fs.existsSync(path.join(planning.options.sessionDirectories.design, 'round-1/verdict.json'))).toBe(false);
+          await producer.registerLaunchHistory(launch);
+          fs.writeFileSync(path.join(run, 'url-declaration.json'), artifactOptions.effectiveDeclaration.bytes);
+          const stoppedProducts = producer.captureFrozenHistory();
+          expect(stoppedProducts.records).toEqual(expect.arrayContaining([
+            expect.objectContaining({ path: 'reviews/design-verdict-0.json', sha256: checked.verdictSha256 }),
+            expect.objectContaining({ path: 'reviews/checks/design-verdict-0.json', sha256: checked.checkSha256 }),
+          ]));
+          expect(stoppedProducts.artifacts.some(artifact => artifact.role === 'design' && artifact.path === 'round-1/verdict.json')).toBe(false);
           expect(() => producer.commitOrderedDesignVerdict(staged, fresh, terminal)).toThrow('url-run-artifacts-unavailable');
           await expect(audit.commitOrderedDesignVerdict(fresh, checked, terminal)).rejects.toThrow('url-session-audit-refused');
           const continuation = await audit.readDesignRenderContinuation(sealed, reproduced, checked.number);

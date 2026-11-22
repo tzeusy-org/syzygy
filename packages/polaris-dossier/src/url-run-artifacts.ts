@@ -827,7 +827,8 @@ function create(given: UrlRunArtifactsOptions) {
     }
     assertUrlOrderedDesignVerdictTerminal(proof, stage.checked, terminal);
     issued.consumed = true;
-    bind('design', `round-${proof.round}/verdict.json`, read(run, `reviews/${name}`), captured.payload!.receipt);
+    // Ordered submission consumes stdin and freezes the verdict in reviews/.
+    // The authenticated records already hold its exact producer receipt.
     remember('design', captured.receipt);
     captured.payload!.committed = true;
     for (const product of captured.products) product.committed = true;
