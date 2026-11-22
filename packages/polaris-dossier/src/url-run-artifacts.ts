@@ -8,7 +8,7 @@ import * as fs from 'node:fs';
 import { urlStructureRecordShape, urlReadingLedgerShape, urlReadingDifferenceShape, urlManifestFactsShape } from './url-check-product-shape.js';
 import type { ManifestFacts } from './manifest-facts.js';
 import type { FigureFit } from './figure-fit.js';
-import { comparedInventoryCoverageAdvice } from './inventory-coverage.js';
+import { COVERAGE_RULE, comparedInventoryCoverageAdvice } from './inventory-coverage.js';
 import { secretPathOf } from './derived-record.js';
 import type { DossierScreen } from './screen.js';
 import { figureFitClass } from './reader-advice.js';
@@ -493,7 +493,7 @@ function create(given: UrlRunArtifactsOptions) {
       policyVersion: config.subject.screeningPolicy.policyVersion, sha256: config.subject.screeningPolicy.sha256 }), credential, label: lit('Inferred') };
   const reportFields = { command: text, run: lit(run), checkFile: text, disclosures: strings };
   const coverageAdvice = (v: unknown): boolean => shape({ state: lit('unknown'), why: text, note: text })(v)
-    || shape({ state: lit('compared'), rule: shape({ id: lit('overlap-or-path-named'), version: lit(1) }),
+    || shape({ state: lit('compared'), rule: shape({ id: lit(COVERAGE_RULE.id), version: lit(COVERAGE_RULE.version) }),
       inventory: shape({ revision: integer, sha256: hex, label: lit('Inferred'), basis: text }), note: text,
       counts: shape({ entries: integer, covered: integer, omitted: integer, uncovered: integer }),
       uncovered: array(shape({ entryId: nullable(text), paths: strings, unnamedPaths: integer })),

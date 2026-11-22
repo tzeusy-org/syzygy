@@ -645,7 +645,9 @@ describe('trusted URL artifact producer bridge', () => {
         fs.unlinkSync(path.join(f.run, 'checks/rev-999.json'));
         const coverage = result.report.inventoryCoverageAdvice!;
         if (coverage.state !== 'compared') throw Error('own coverage comparison missing');
+        expect(coverage.rule).toEqual({ id: 'overlap-or-path-named', version: 2 });
         const mutants = [
+          { ...result.report, inventoryCoverageAdvice: { ...coverage, rule: { ...coverage.rule, version: 1 } } },
           { ...result.report, inventoryCoverageAdvice: { ...coverage, extra: true } },
           { ...result.report, inventoryCoverageAdvice: { ...coverage, inventory: { ...coverage.inventory, sha256: '0'.repeat(64) } } },
           { ...result.report, inventoryCoverageAdvice: { ...coverage, inventory: { ...coverage.inventory, revision: 1 } } },
