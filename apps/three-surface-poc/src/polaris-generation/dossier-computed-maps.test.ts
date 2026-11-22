@@ -161,6 +161,14 @@ describe('the directory map', () => {
     ]);
     expect(units).toContain('<li class="inferred"><span class="map-head">Repository root ?</span> declares root</li>');
   });
+
+  it('states the words and state of an entry that is no readable record on the directory map and in computedMaps (version 2.10)', () => {
+    const files = site({ state: 'unusable', revision: REV, unknownReason: 'missing-evidence' }, workspaceMember());
+    expect(sectionOf(files.get('maps/directories.html')!)).toBe('<section id="computed-map" data-map="directories" data-reading-level="1" data-topics=""><h1>Directory map</h1>'
+      + `<p class="derived-unknown" data-epistemic="unknown" data-unknown-reason="missing-evidence"><span class="not-established">Not established.</span> The top-level directories of the tree at revision ${REV} are Unknown at this render: this draft revision's derived-record path holds something this render cannot use or cannot examine; Syzygy or its screen may have changed since the revision was checked, or the path may have been altered.</p></section>`);
+    expect(JSON.parse(files.get('machine.json')!).computedMaps.directories.state).toBe('unusable');
+    expect(JSON.parse(site({ state: 'missing', revision: REV, unknownReason: 'missing-evidence' }, workspaceMember()).get('machine.json')!).computedMaps.directories.state).toBe('missing');
+  });
 });
 
 describe('the unit map', () => {

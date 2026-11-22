@@ -115,6 +115,9 @@ describe('the derived-structure region', () => {
       + `<p class="derived-unknown" data-epistemic="unknown" data-unknown-reason="missing-evidence"><span class="not-established">Not established.</span> The top-level directories of the tree at revision ${REV} are Unknown at this render: no derived record was kept when this draft revision was checked.</p></section>`);
     expect(renderDerivedRegion({ state: 'unknown', revision: REV, unknownReason: 'source-uncaptured-or-unreachable' })).toBe('<section id="derived-structure" data-reading-level="1" data-topics=""><h2>Derived by Syzygy: top-level directories</h2>'
       + `<p class="derived-unknown" data-epistemic="unknown" data-unknown-reason="source-uncaptured-or-unreachable"><span class="not-established">Not established.</span> The top-level directories of the tree at revision ${REV} are Unknown at this render: the pinned tree could not be listed.</p></section>`);
+    // Version 2.10: an entry that is no readable record takes its own words, with the same reason; the words follow the state.
+    expect(renderDerivedRegion({ state: 'unusable', revision: REV, unknownReason: 'missing-evidence' })).toBe('<section id="derived-structure" data-reading-level="1" data-topics=""><h2>Derived by Syzygy: top-level directories</h2>'
+      + `<p class="derived-unknown" data-epistemic="unknown" data-unknown-reason="missing-evidence"><span class="not-established">Not established.</span> The top-level directories of the tree at revision ${REV} are Unknown at this render: this draft revision's derived-record path holds something this render cannot use or cannot examine; Syzygy or its screen may have changed since the revision was checked, or the path may have been altered.</p></section>`);
   });
 });
 
@@ -177,6 +180,9 @@ describe('the derived structure on an operator-agent site', () => {
     const unknown = withDerived({ state: 'unknown', revision: REV, unknownReason: 'source-uncaptured-or-unreachable' });
     expect(JSON.parse(unknown.get('machine.json')!).derivedStructure).toEqual({ file: null, sha256: null, revision: REV, state: 'unknown', currencyPolicy: null, facts: [] });
     expect(unknown.has('derived-structure.json')).toBe(false);
+    const unusable = withDerived({ state: 'unusable', revision: REV, unknownReason: 'missing-evidence' });
+    expect(JSON.parse(unusable.get('machine.json')!).derivedStructure).toEqual({ file: null, sha256: null, revision: REV, state: 'unusable', currencyPolicy: null, facts: [] });
+    expect(unusable.has('derived-structure.json')).toBe(false);
   });
 
   it('refuses a page of the draft that would take the record\'s name', () => {

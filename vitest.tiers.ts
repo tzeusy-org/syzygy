@@ -81,6 +81,7 @@ export const INTEGRATION_TESTS: readonly string[] = [
   'packages/cap1-daemon/src/server.test.ts',
   'packages/polaris-dossier/src/brief.test.ts',
   'packages/polaris-dossier/src/census.test.ts',
+  'packages/polaris-dossier/src/check-record-read.test.ts',
   'packages/polaris-dossier/src/check.test.ts',
   'packages/polaris-dossier/src/close.test.ts',
   'packages/polaris-dossier/src/derived-record.test.ts',

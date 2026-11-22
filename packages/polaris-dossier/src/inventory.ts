@@ -5,6 +5,7 @@ import { parseBoundedJson } from '@syzygy/polaris-generation-core/live';
 import { isRecord, sha256 } from '@syzygy/support';
 import { QUOTATION_RULE } from './brief.js';
 import { censusSection, loadCensus, type CensusDeps, type CensusLoad } from './census.js';
+import { readCheckRecord } from './check-record-read.js';
 import { checkSubject, declaredSessionId, type CheckDeps, type CheckFinding, type CheckRecord, type CheckRefusal, type CheckedRevision, type ExcludedQuotation, type CitedBlob, type SubjectBlock, type SubjectPlan, type SubjectReport, type SubjectRules, type VerifiedQuotation } from './check.js';
 import { readSec3 } from './doctrine-quote.js';
 import { INVENTORY_ENTRY_KINDS, INVENTORY_QUOTATION_FORM, LOCAL_INVENTORY_SCHEMA_VERSION, SESSION_ID_RULE, inventorySchemaDocument, localInventorySchema } from './draft-schema.js';
@@ -362,7 +363,10 @@ export async function inventoryOfRecord(runDir: string, recheck: { readonly sour
   const revisions = names.flatMap((name) => { const match = REVISION_FILE.exec(name); return match === null ? [] : [Number(match[1])]; });
   if (revisions.length === 0) return no('no inventory revision has been checked');
   const revision = Math.max(...revisions);
-  const check = readRecord(path.join(run, INVENTORY_CHECKS, `rev-${revision}.json`));
+  // Version 2.10 (syzygy-3efd.74): read under the one check-record bound, opened once and refused unless a regular file within it; a
+  // record past the bound, or one that does not parse, cannot be read, so the inventory does not count.
+  let check: Readonly<Record<string, unknown>> | undefined;
+  try { const read = readCheckRecord(path.join(run, INVENTORY_CHECKS, `rev-${revision}.json`)); check = isRecord(read) ? read : undefined; } catch { check = undefined; }
   if (check === undefined || check['format'] !== INVENTORY_CHECK_FORMAT || check['revision'] !== revision) return no(`the result of inventory revision ${revision} cannot be read`);
   if (check['outcome'] !== 'passed') return no(`inventory revision ${revision} has open findings`);
   const inventory = isRecord(check['inventory']) ? check['inventory'] : {};

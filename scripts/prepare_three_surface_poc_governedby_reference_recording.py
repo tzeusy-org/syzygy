@@ -472,6 +472,37 @@ def recording_findings(root: Path) -> list[str]:
     return findings
 
 
+POC_SPEC_DIFFERS = f"current P115 governing input differs: {SUBJECTS[-1].as_posix()}"
+SUBJECTS_DIFFER = "P115 signed six current subjects do not match the frozen manifest"
+
+
+def subject_rows_findings(root: Path, files: dict[str, bytes]) -> list[str]:
+    """The two comparisons that pin the six POC subjects to P115's rows, over ``files``."""
+    rows = manifest_rows(root)
+    spec = SUBJECTS[-1].as_posix()
+    body = files.get(spec)
+    findings = []
+    if body is None or digest(body) != next(sha for sha, path in rows if path == spec):
+        findings.append(POC_SPEC_DIFFERS)
+    if not all(files.get(path) is not None and digest(files[path]) == sha for sha, path in rows):
+        findings.append(SUBJECTS_DIFFER)
+    return findings
+
+
+def subject_pin_findings(root: Path, pinned: list[str]) -> list[str]:
+    """``pinned`` (the POC subjects differ from P115's rows), judged under D10.
+
+    Without D10 in effect they stand. With it, the six subjects are an agent's
+    to amend (VIS-4, CC-REV-2): the findings stand, with one naming the missing
+    row, unless every later change to the POC change directory is covered by an
+    AGENT-ADOPTIONS.md row; and the rows are then checked over the subjects as
+    D10 found them, so the performed P115 transaction itself must still verify
+    (``d10_supersession.judge``; its predicate is stated there).
+    """
+    import d10_supersession
+    return d10_supersession.judge(root, pinned, lambda files: subject_rows_findings(root, files))
+
+
 def binding_findings(root: Path) -> list[str]:
     """Canonical record checks plus frozen review binding and exact current rows.
 
@@ -483,14 +514,17 @@ def binding_findings(root: Path) -> list[str]:
         if state != "CANONICAL_POPULATION":
             return findings or ["P115 dedicated sign-off record is absent"]
         findings = core_findings(root)
-        findings.extend(governing_input_findings(root, proposed_poc=True))
+        inputs = governing_input_findings(root, proposed_poc=True)
+        pinned = [f for f in inputs if f == POC_SPEC_DIFFERS]
+        findings.extend(f for f in inputs if f != POC_SPEC_DIFFERS)
         count = consumption_unknowns(root)
         if count:
             findings.append(f"signed recognition remains gated by {count} undecidable requirement-consumption entries")
         if not (root / RECORD).is_file():
-            return findings + ["P115 dedicated sign-off record is absent"]
+            return findings + pinned + ["P115 dedicated sign-off record is absent"]
         if not applied_rows_match(root):
-            findings.append("P115 signed six current subjects do not match the frozen manifest")
+            pinned.append(SUBJECTS_DIFFER)
+        findings.extend(subject_pin_findings(root, pinned))
         if findings:
             return findings
         findings.extend(chain_findings(root))
@@ -599,7 +633,10 @@ def historical_run(root: Path, mode: str) -> tuple[list[str], str]:
 def check_state(root: Path) -> tuple[list[str], str]:
     if transaction_present(root):
         findings, _output = historical_run(root, "--check")
-        state = "performed; current six rows verified; explicit historical builder replay"
+        state = ("performed; current six rows verified; explicit historical builder replay"
+                 if applied_rows_match(root) else
+                 "performed; six rows verified as D10 found them, each later change adopted by "
+                 "an AGENT-ADOPTIONS.md row; explicit historical builder replay")
     else:
         findings = candidate_findings(root)
         state = "candidate; actual current subjects checked; not performed"
@@ -2548,6 +2585,47 @@ exclusion of the acts in force stands.
         sys.modules.pop(old.__name__, None)
 
 
+def d10_adoption_selftest(root: Path) -> list[tuple[str, bool]]:
+    """Both arms of ``subject_pin_findings`` and the adoption predicate itself.
+
+    The predicate runs over throwaway git repositories
+    (``d10_supersession.selftest``). The arms run over this tree's six subjects:
+    the bytes that reach P115's rows are the tree's, or under D10 the subjects
+    as D10 found them; D10's state is injected for the other arms.
+    """
+    import d10_supersession
+    results = [("adoption predicate: " + name, ok) for name, ok in d10_supersession.selftest()]
+    tree = {p.as_posix(): (root / p).read_bytes() for p in SUBJECTS}
+    reached = tree if applied_rows_match(root) else (d10_supersession.amendment(root) or ({}, []))[0]
+    spec = SUBJECTS[-1].as_posix()
+    amended = dict(reached)
+    if spec in amended:
+        amended[spec] = amended[spec].replace(b" SHALL ", b" SHALL, as amended, ", 1)
+    pinned = [POC_SPEC_DIFFERS, SUBJECTS_DIFFER]
+    results.append(("the reached subjects carry P115's six rows", subject_rows_findings(root, reached) == []))
+    results.append(("an amended specification is pinned",
+                    amended != reached and subject_rows_findings(root, amended) == pinned))
+    real = d10_supersession.amendment
+    try:
+        d10_supersession.amendment = lambda *_a, **_k: (_ for _ in ()).throw(AssertionError("consulted"))
+        results.append(("no pinned finding consults nothing", subject_pin_findings(root, []) == []))
+        d10_supersession.amendment = lambda *_a, **_k: None
+        results.append(("without D10 the pinned findings stand", subject_pin_findings(root, pinned) == pinned))
+        d10_supersession.amendment = lambda *_a, **_k: (reached, ["missing adoption row: fixture"])
+        results.append(("D10 with no adoption row fails, naming the missing row",
+                        subject_pin_findings(root, pinned) == pinned + ["missing adoption row: fixture"]))
+        d10_supersession.amendment = lambda *_a, **_k: (reached, [])
+        results.append(("D10 with the row accepts the amendment", subject_pin_findings(root, pinned) == []))
+        d10_supersession.amendment = lambda *_a, **_k: (amended, [])
+        rechecked = subject_pin_findings(root, pinned)
+        results.append(("D10 with the row still fails when the bytes D10 found miss P115's rows",
+                        len(rechecked) == 2 and all(f.startswith(g) and "as D10 found it" in f
+                                                    for f, g in zip(rechecked, pinned))))
+    finally:
+        d10_supersession.amendment = real
+    return results
+
+
 def later_signed_selftest() -> list[tuple[str, bool]]:
     """One fixture per predicate of ``later_signed_input``, over the dossier
     builders' own fixture trees (v1.0 to v1.2 signed, v1.3 applied)."""
@@ -2804,6 +2882,12 @@ def selftest(root: Path) -> int:
             print(f"P115 later-signed selftest: {name}: {'ok' if passed else 'FAILED'}")
         if not all(passed for _name, passed in later):
             print(f"P115 later-signed selftest: {sum(not p for _n, p in later)} of {len(later)} failed")
+            return 1
+        adoption = d10_adoption_selftest(root)
+        for name, passed in adoption:
+            print(f"P115 D10 adoption selftest: {name}: {'ok' if passed else 'FAILED'}")
+        if not all(passed for _name, passed in adoption):
+            print(f"P115 D10 adoption selftest: {sum(not p for _n, p in adoption)} of {len(adoption)} failed")
             return 1
         findings, state = check_state(root)
         if findings:

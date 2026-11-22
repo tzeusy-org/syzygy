@@ -675,13 +675,16 @@ export function endScreen(runId: string, run: string, phase: string, closed: boo
 
 /** The latest check record of the draft and of the inventory in a run directory (either null when none was written). */
 export function latestChecks(run: string): { readonly draft: CheckRecord; readonly inventory: CheckRecord } {
-  // The draft's record is read under the one check-record bound (version 2.8); one past it reads as no record, never passed or refused.
-  return { draft: latestRecord(path.join(run, RUN_LAYOUT.checks), REVISION_FILE, readCheckRecord), inventory: latestRecord(path.join(run, INVENTORY_CHECKS), REVISION_FILE) };
+  // Both records are read under the one check-record bound (the draft's since version 2.8, the inventory's since 2.10, syzygy-3efd.74); one
+  // past it, or no regular file, reads as no checked revision, never passed or refused at the repair-cycle limit.
+  return { draft: latestRecord(path.join(run, RUN_LAYOUT.checks), REVISION_FILE, readCheckRecord), inventory: latestRecord(path.join(run, INVENTORY_CHECKS), REVISION_FILE, readCheckRecord) };
 }
 
-const readUnbounded = (file: string): unknown => JSON.parse(fs.readFileSync(file, 'utf8'));
+/** A review check record as the supervisor reads it today: with no bound. Version 2.10 does not reach it; it is left as it was, and
+ * syzygy-3efd.76 names it among the reads still to bound. */
+const readReviewCheckUnbounded = (file: string): unknown => JSON.parse(fs.readFileSync(file, 'utf8'));
 
-function latestRecord(dir: string, pattern: RegExp, read: (file: string) => unknown = readUnbounded): { n: number; doc: Record<string, unknown> } | null {
+function latestRecord(dir: string, pattern: RegExp, read: (file: string) => unknown): { n: number; doc: Record<string, unknown> } | null {
   let names: string[];
   try { names = fs.readdirSync(dir); } catch { return null; }
   let best: { n: number; name: string } | null = null;
@@ -748,8 +751,8 @@ async function loop(options: Options, ports: CliPorts, state: SupervisorState, s
     if (stop !== null) { phase = stop; break; }
     const passedDraft = draft !== null && draft.doc['outcome'] === 'passed' ? draft.n : null;
     const inventory = await inventoryOfRecord(run, { sources: cliGateSources(ports), now: (ports.now ?? Date.now)() });
-    const fidelity = latestRecord(path.join(run, REVIEW_CHECKS), /^fidelity-verdict-(\d+)\.json$/);
-    const design = latestRecord(path.join(run, REVIEW_CHECKS), /^design-verdict-(\d+)\.json$/);
+    const fidelity = latestRecord(path.join(run, REVIEW_CHECKS), /^fidelity-verdict-(\d+)\.json$/, readReviewCheckUnbounded);
+    const design = latestRecord(path.join(run, REVIEW_CHECKS), /^design-verdict-(\d+)\.json$/, readReviewCheckUnbounded);
     const site = draft !== null && draft.doc['outcome'] === 'passed' ? (state.siteFor[String(draft.n)] ?? null) : null;
     const verdictFor = (rec: typeof fidelity, key: 'draftRevision' | 'site', value: number | null): 'none' | 'blocking' | 'ready' => {
       if (rec === null || value === null || rec.doc['outcome'] !== 'validated') return 'none';
