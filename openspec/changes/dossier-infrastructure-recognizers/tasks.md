@@ -5,7 +5,7 @@
 - [x] Draft the complete MODIFIED REQ-polaris-generation-034 and its semantic delta.
 - [x] Wire the overlay into `scripts/check_spec_reconciliation.py` (pending until its row) and `scripts/count_polaris_effective_scenarios.py`, with selftest cases (`infra_cases`).
 - [x] One independent fresh-reader review (CC-REV-4), raw retained, findings dispositioned (`design.md`, "Review").
-- [ ] Append the agent-adoption row naming the installing commit.
+- [x] Append the agent-adoption row naming the installing commit (A-38).
 - [ ] Create the version tag `polaris-dossier-infrastructure-recognizers-v2.12` at the installing commit once it is on the default branch.
 - [ ] The five recognizers, the YAML reader's multi-document and integer-text readings, the per-recognizer limits, the member's format and `remainder` (`packages/polaris-dossier/src/`), with golden fixtures per format and a recorded mutation run per recognizer.
 - [ ] The infrastructure map, the `coverage-remainder` section and `computedMaps` (`apps/three-surface-poc/src/polaris-generation/dossier-site.ts`), with the provider golden unchanged.

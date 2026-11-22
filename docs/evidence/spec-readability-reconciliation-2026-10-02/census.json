@@ -600,7 +600,7 @@
     },
     "POLARIS": {
       "requirements": 39,
-      "scenarios": 423,
+      "scenarios": 436,
       "members": {
         "REQ-polaris-generation-001": {
           "name": "Admitted project input",
@@ -1087,7 +1087,20 @@
             "CI pipeline map lists parse as lists",
             "Unknown files counted and not listed on a manifest map",
             "Reading difference of a bounded check record",
-            "Readable layout stacks every graph of two or more layers"
+            "Readable layout stacks every graph of two or more layers",
+            "Compose services, images, ports and dependencies",
+            "Kubernetes objects across documents",
+            "Terraform resources and modules, variable and state files never read",
+            "Make targets",
+            "CMake lists and other makefile names Unknown under the bound policy",
+            "Malformed infrastructure file is Unknown, never empty",
+            "Infrastructure files past the read limit",
+            "Coverage remainder sums to the tree",
+            "Coverage remainder on the directory map's page",
+            "Infrastructure map rendered",
+            "Provider mode unchanged by infrastructure recognizers",
+            "Bounded form of a draft that does not parse",
+            "Draft, frozen revisions and run file read under their bounds"
           ]
         },
         "REQ-polaris-generation-035": {

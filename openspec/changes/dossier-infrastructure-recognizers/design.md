@@ -73,7 +73,7 @@ One MODIFIED REQ-polaris-generation-034, version 2.12, for three beads: syzygy-3
 
 [Inferred] Reported, not specified here, because the file read belongs to another requirement (the code change is mechanical and may follow in the same code bead, but no REQ-034 clause states it, and a successor of the owning requirement should):
 
-- `polaris.ts` 236 `readState`: the supervisor's own state, `<state root>/<run>.supervisor.json` — the one-command run, candidate REQ-polaris-generation-040 to 044 (no adopted text).
+- `polaris.ts` 236 `readState`: the supervisor's own state, `<state root>/<run>.supervisor.json` — the one-command run, whose candidate requirements in `openspec/changes/polaris-dossier-one-command-run/` have no adopted text.
 - `polaris.ts` 601 `readVerdict` and 729 `blockingWhy`: `reviews/<kind>-verdict-<n>.json`, review verdicts — REQ-035, read by the candidate supervisor.
 - `polaris.ts` 685, 754–755 `readReviewCheckUnbounded`: review check records under `REVIEW_CHECKS` — REQ-035, read by the candidate supervisor.
 - `polaris.ts` 720 `readMaxRepairCycles`: `run.json` — the run record, REQ-033.
