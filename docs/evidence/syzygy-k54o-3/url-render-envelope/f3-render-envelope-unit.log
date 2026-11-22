@@ -1,0 +1,18 @@
+
+ RUN  v3.2.7 /home/orca/.tmp/syzygy-beads-looper-20261114-54ebc9f1/d10-f3-work-budget
+
+ ✓ |unit| packages/polaris-dossier/src/url-design-product.test.ts (58 tests) 16816ms
+   ✓ active URL design product capability > uses the exact render context deadline for its longer nominal lifetime  337ms
+   ✓ active URL design product capability > recomposes packet criteria from the authenticated brief standards and refuses standards drift  438ms
+   ✓ active URL design product capability > retires an inert-view capability when read sample 2 refuses  338ms
+   ✓ active URL design product capability > binds the exact original, payload, view, complete checked outputs, renderer, policies and actual parents  509ms
+   ✓ active URL design product capability > returns only the inert view and its provenance under an active render lease  3010ms
+   ✓ active URL design product capability > retires a token on wrong run/pin identity and never revives it  675ms
+   ✓ active URL design product capability > expires when the original product operation closes and refuses currentness/renderer failures  564ms
+   ✓ active URL design product capability > issues no token after an abort or subject mutation during awaited verification  478ms
+
+ Test Files  1 passed (1)
+      Tests  58 passed (58)
+   Start at  17:43:23
+   Duration  23.61s (transform 4.33s, setup 73ms, collect 5.77s, tests 16.82s, environment 5ms, prepare 169ms)
+

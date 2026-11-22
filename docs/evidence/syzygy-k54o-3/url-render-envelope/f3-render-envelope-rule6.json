@@ -1,0 +1,75 @@
+{
+  "subject": "d6b200d67e2ee57596eca8f4eed0c2e39027f0c8",
+  "files": [
+    {
+      "path": "packages/polaris-dossier/src/url-product-read-limits.ts",
+      "sha256": "cbdeb9abac5d87fbe7217877e076bfd33b0f6beabeedc0df71a050eff0fd3728"
+    },
+    {
+      "path": "packages/polaris-dossier/src/url-run-artifacts.ts",
+      "sha256": "6a72c3b74211058c77ee06ee0e10493776ee06aef2c158d3718c232cd21ae071"
+    },
+    {
+      "path": "packages/polaris-dossier/src/url-operation-products.ts",
+      "sha256": "953cfca08add8e2c760aa8969b58d6884dd48a8207d064deda0d2a27b040f8fd"
+    },
+    {
+      "path": "packages/polaris-dossier/src/url-runtime.ts",
+      "sha256": "9faf6710e6f0fe71e72446d6cafbb8068df6de859ba2a138b29f65d490e4d64f"
+    },
+    {
+      "path": "packages/polaris-dossier/src/render.ts",
+      "sha256": "4e3d8cb6f23748af6f4195ecba7f9b4ca9b3bed938c2efa8a83da5b5a680942f"
+    },
+    {
+      "path": "packages/polaris-dossier/src/url-run-artifacts.test.ts",
+      "sha256": "609ebde6282d18b0749ba6eef82798f224ee14cee78c369c735f94822dff19fd"
+    },
+    {
+      "path": "packages/polaris-dossier/src/url-run-machine.test.ts",
+      "sha256": "681026543715d35534fb9536ee7baac349c125ac13ab9ca8d971d36e132345ea"
+    }
+  ],
+  "mutants": [
+    {
+      "name": "render-cap",
+      "file": "packages/polaris-dossier/src/url-product-read-limits.ts",
+      "old": "render: 30_000",
+      "new": "render: 5000",
+      "exit": 1,
+      "log": "/home/orca/.tmp/f3-render-envelope-mutant-render-cap.log"
+    },
+    {
+      "name": "other-cap",
+      "file": "packages/polaris-dossier/src/url-product-read-limits.ts",
+      "old": "'review-check': 5000",
+      "new": "'review-check': 6000",
+      "exit": 1,
+      "log": "/home/orca/.tmp/f3-render-envelope-mutant-other-cap.log"
+    },
+    {
+      "name": "backend-bound",
+      "file": "packages/polaris-dossier/src/url-run-artifacts.ts",
+      "old": " || input.deadline > now + URL_PRODUCT_READ_MILLISECONDS[input.operation]",
+      "new": "",
+      "exit": 1,
+      "log": "/home/orca/.tmp/f3-render-envelope-mutant-backend-bound.log"
+    },
+    {
+      "name": "original-deadline",
+      "file": "packages/polaris-dossier/src/url-operation-products.ts",
+      "old": "Math.min(deadline, Date.now() + URL_PRODUCT_READ_MILLISECONDS[operation])",
+      "new": "Date.now() + URL_PRODUCT_READ_MILLISECONDS[operation]",
+      "exit": 1,
+      "log": "/home/orca/.tmp/f3-render-envelope-mutant-original-deadline.log"
+    },
+    {
+      "name": "profile-source-drift",
+      "file": "packages/polaris-dossier/src/url-runtime.ts",
+      "old": "      const value = await read(path.join(root, input.path), input.bytes, root);",
+      "new": "      if (input.path.endsWith('/url-product-read-limits.ts')) return;\n      const value = await read(path.join(root, input.path), input.bytes, root);",
+      "exit": 1,
+      "log": "/home/orca/.tmp/f3-render-envelope-mutant-profile-source-drift.log"
+    }
+  ]
+}

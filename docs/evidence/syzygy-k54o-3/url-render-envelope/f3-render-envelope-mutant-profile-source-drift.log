@@ -1,0 +1,62 @@
+
+ RUN  v3.2.7 /home/orca/.tmp/syzygy-beads-looper-20261114-54ebc9f1/d10-f3-work-budget
+
+ ❯ |integration| packages/polaris-dossier/src/url-run-machine.test.ts (6 tests | 1 failed | 5 skipped) 1155ms
+   × production URL run machine provisioner > refuses changed numeric product limits before selecting a declared runtime 111ms
+     → expected { ok: true, runtime: { …(7) } } to deeply equal { ok: false, …(1) }
+   ↓ production URL run machine provisioner > issues and rotates only actual peers; close defeats awaited effects and permits durable retirement
+   ↓ production URL run machine provisioner > issues and rotates only actual peers; withdraw-effects defeats awaited effects and permits durable retirement
+   ↓ production URL run machine provisioner > close closes admission while a genuine socket awaits parent revalidation
+   ↓ production URL run machine provisioner > withdraw-effects closes admission while a genuine socket awaits parent revalidation
+   ↓ production URL run machine provisioner > refuses copied capabilities before creating a store and reports expired retirement as Unknown
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  |integration| packages/polaris-dossier/src/url-run-machine.test.ts > production URL run machine provisioner > refuses changed numeric product limits before selecting a declared runtime
+AssertionError: expected { ok: true, runtime: { …(7) } } to deeply equal { ok: false, …(1) }
+
+- Expected
++ Received
+
+  {
+-   "code": "url-runtime-unavailable",
+-   "ok": false,
++   "ok": true,
++   "runtime": {
++     "inputTreeSha256": "1b00f879760fd3fb389844eb5938c1eb1afeec121035c5a935e134e7f04c68fa",
++     "manifestSha256": "c5a2a00cf2604d968b689357a0701a8fa72588abdfcc622acd5829fce5069f63",
++     "peerProgram": {
++       "executable": "/tmp/urm-image-TBiqlZ/packages/polaris-dossier/dist/runtime/host/session-peer",
++       "sha256": "1e148836c03dfb4c55229a7304f0a1a269a6d155f5cf8c3fa334a3d918092eec",
++     },
++     "profileRegistrySha256": "b8e3e8fdfd298a4fafabf7417a2c11f01a0098b3f9fcd7e23cee654064d1098d",
++     "supportDirectory": "/tmp/urm-image-TBiqlZ/packages/polaris-dossier/dist/runtime/support",
++     "supportSha256": {
++       "session-bridge.js": "f9ffb9dc290db6e375281a197ae61c1a0c64eb519a353b574fda90749240314f",
++       "session-mcp.js": "c61576ad90835a89563271482aa45965b669c8df9647957f5fb3862201f57328",
++     },
++     "worker": {
++       "bundle": "/tmp/urm-image-TBiqlZ/packages/polaris-dossier/dist/runtime/worker.mjs",
++       "bundleSha256": "9401f0c80d6ee3ebdfd3939d302d776137b2e4042cad32968542045b234adffd",
++       "node": "/home/orca/.nvm/versions/node/v24.6.0/bin/node",
++       "nodeSha256": "e943ee9282bef08233665cb71cc57a9f5794bbe70a4822b38e60e394c15979e2",
++     },
++   },
+  }
+
+ ❯ packages/polaris-dossier/src/url-run-machine.test.ts:160:51
+    158|     try {
+    159|       await fs.writeFile(file, original.replace('render: 30_000', 'ren…
+    160|       expect(await readUrlRuntime(installedRoot)).toEqual({ ok: false,…
+       |                                                   ^
+    161|     } finally { await fs.writeFile(file, original); }
+    162|     const restored = await readUrlRuntime(installedRoot);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 5 skipped (6)
+   Start at  17:47:53
+   Duration  3.99s (transform 1.86s, setup 9ms, collect 2.47s, tests 1.16s, environment 0ms, prepare 62ms)
+

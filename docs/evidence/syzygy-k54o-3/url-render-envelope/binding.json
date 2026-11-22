@@ -1,0 +1,141 @@
+{
+  "subjectCommit": "d6b200d67e2ee57596eca8f4eed0c2e39027f0c8",
+  "rootSubject": "953cd18b3124a06978b51ac9d4988984faadf2ae",
+  "mutants": [
+    {
+      "name": "render-cap",
+      "baselineSha256": "cbdeb9abac5d87fbe7217877e076bfd33b0f6beabeedc0df71a050eff0fd3728",
+      "mutantSha256": "4b8afb216154f278a450583b7073c8d656e6a771f30d54c8627cb5ff96d3f739",
+      "log": "f3-render-envelope-mutant-render-cap.log",
+      "rawSha256": "2378fbe5ef88a34d8d1487c375c63d39e82f03be992a222ea26c2a0ea28b5cf7",
+      "exit": 1
+    },
+    {
+      "name": "other-cap",
+      "baselineSha256": "cbdeb9abac5d87fbe7217877e076bfd33b0f6beabeedc0df71a050eff0fd3728",
+      "mutantSha256": "5af4051ee3a462983d32acd3b41084bb8acd76ef3af4f67ef9bdfc0772771524",
+      "log": "f3-render-envelope-mutant-other-cap.log",
+      "rawSha256": "edfca27daf50e7027ef0077753226868e039e1f3549eb602e007245572fcb804",
+      "exit": 1
+    },
+    {
+      "name": "backend-bound",
+      "baselineSha256": "6a72c3b74211058c77ee06ee0e10493776ee06aef2c158d3718c232cd21ae071",
+      "mutantSha256": "70d1ed9ad3a8b9f35f4e45e9aa7a9d808c2f1def7d807770f16ddf4e00d4cc57",
+      "log": "f3-render-envelope-mutant-backend-bound.log",
+      "rawSha256": "d60b9a36828dcd64cc12995e13bda8570e8d3dd2bb021ef85797ee6046491766",
+      "exit": 1
+    },
+    {
+      "name": "original-deadline",
+      "baselineSha256": "953cfca08add8e2c760aa8969b58d6884dd48a8207d064deda0d2a27b040f8fd",
+      "mutantSha256": "cfd34306e80bee4f552ca1123ba22c333da684466290bb46f118fda9d0667c19",
+      "log": "f3-render-envelope-mutant-original-deadline.log",
+      "rawSha256": "31488162f62403107aa96fa1a93298c2feec01a6e4f0d6fdb754926067a66ffc",
+      "exit": 1
+    },
+    {
+      "name": "profile-source-drift",
+      "baselineSha256": "9faf6710e6f0fe71e72446d6cafbb8068df6de859ba2a138b29f65d490e4d64f",
+      "mutantSha256": "b1b7cea2bbc1b1df62866ca5f8932b5e9a7b5b182c4fa6827f2fe194e7861f59",
+      "log": "f3-render-envelope-mutant-profile-source-drift.log",
+      "rawSha256": "f1f8c49b5ed5dd08d677ca73318885d26508e353ee5aa0ecad6a281f502ac772",
+      "exit": 1
+    }
+  ],
+  "review": {
+    "raw": "render-envelope-review-2026-11-22-RAW.md",
+    "sha256": "2a26c48fb7b540c6c01c827ac1e6cc0a7133b18bdccc42817aeebdcffa45b416",
+    "verdict": "REVISE",
+    "finding": "P2 missing actual URL producer-timer and remaining-deadline regression. No source correctness defect identified; ordinary agent adoption coherent. Supplemental tests in progress."
+  },
+  "reviewedFiles": [
+    {
+      "path": "packages/polaris-dossier/src/render.ts",
+      "sha256": "4e3d8cb6f23748af6f4195ecba7f9b4ca9b3bed938c2efa8a83da5b5a680942f"
+    },
+    {
+      "path": "packages/polaris-dossier/src/url-design-product.test.ts",
+      "sha256": "be9f90323256d0ad5efcaf41577a42faeedb43c00b7ca748f3bcc68bca949a3f"
+    },
+    {
+      "path": "packages/polaris-dossier/src/url-design-product.ts",
+      "sha256": "af45237606eecd398186fd69f6621641c5655ce2d4499967507b8ae853e4926c"
+    },
+    {
+      "path": "packages/polaris-dossier/src/url-operation-products.ts",
+      "sha256": "953cfca08add8e2c760aa8969b58d6884dd48a8207d064deda0d2a27b040f8fd"
+    },
+    {
+      "path": "packages/polaris-dossier/src/url-product-read-limits.ts",
+      "sha256": "cbdeb9abac5d87fbe7217877e076bfd33b0f6beabeedc0df71a050eff0fd3728"
+    },
+    {
+      "path": "packages/polaris-dossier/src/url-run-artifacts.test.ts",
+      "sha256": "609ebde6282d18b0749ba6eef82798f224ee14cee78c369c735f94822dff19fd"
+    },
+    {
+      "path": "packages/polaris-dossier/src/url-run-artifacts.ts",
+      "sha256": "6a72c3b74211058c77ee06ee0e10493776ee06aef2c158d3718c232cd21ae071"
+    },
+    {
+      "path": "packages/polaris-dossier/src/url-run-machine.test.ts",
+      "sha256": "681026543715d35534fb9536ee7baac349c125ac13ab9ca8d971d36e132345ea"
+    },
+    {
+      "path": "packages/polaris-dossier/src/url-runtime.ts",
+      "sha256": "9faf6710e6f0fe71e72446d6cafbb8068df6de859ba2a138b29f65d490e4d64f"
+    },
+    {
+      "path": "scripts/build_dossier_runtime.mjs",
+      "sha256": "b3ce22917a82f107687f98c9f73ecf6fc5e96fa5eb7032184d114bb7ceac4093"
+    }
+  ],
+  "retainedFiles": [
+    {
+      "path": "f3-render-envelope-integration.log",
+      "sha256": "57e13d5120f84ddb87c777252f01f94ac259aa969549c173484f643eba2b6aec"
+    },
+    {
+      "path": "f3-render-envelope-mutant-backend-bound.log",
+      "sha256": "d60b9a36828dcd64cc12995e13bda8570e8d3dd2bb021ef85797ee6046491766"
+    },
+    {
+      "path": "f3-render-envelope-mutant-original-deadline.log",
+      "sha256": "31488162f62403107aa96fa1a93298c2feec01a6e4f0d6fdb754926067a66ffc"
+    },
+    {
+      "path": "f3-render-envelope-mutant-other-cap.log",
+      "sha256": "edfca27daf50e7027ef0077753226868e039e1f3549eb602e007245572fcb804"
+    },
+    {
+      "path": "f3-render-envelope-mutant-profile-source-drift.log",
+      "sha256": "f1f8c49b5ed5dd08d677ca73318885d26508e353ee5aa0ecad6a281f502ac772"
+    },
+    {
+      "path": "f3-render-envelope-mutant-render-cap.log",
+      "sha256": "2378fbe5ef88a34d8d1487c375c63d39e82f03be992a222ea26c2a0ea28b5cf7"
+    },
+    {
+      "path": "f3-render-envelope-profile-binding.log",
+      "sha256": "f0b6fd456613aebeab15a3da09e5d0377631102e3ea9556daa6fab5f9e71b839"
+    },
+    {
+      "path": "f3-render-envelope-restored.log",
+      "sha256": "ce1fe45903a43c555cff18d2b4d4ffaff9474b25b170a42e2e50e21404565d12"
+    },
+    {
+      "path": "f3-render-envelope-rule6.json",
+      "sha256": "04325e918c3886db469f7932f7c284d062db593a204f4a517161e72acf5748da"
+    },
+    {
+      "path": "f3-render-envelope-typecheck.log",
+      "sha256": "396901319daac4a4413b23478852db3c572014f86c71d148273565f0f3332696"
+    },
+    {
+      "path": "f3-render-envelope-unit.log",
+      "sha256": "55e1050f07b7950558095531850bb4fd610b2640c9a3a481bb6a924cc0cc7526"
+    }
+  ],
+  "limit": "Focused bridge/product/profile controls and source review. Producer timer coverage requires successor; assembled native/full gates pending."
+}

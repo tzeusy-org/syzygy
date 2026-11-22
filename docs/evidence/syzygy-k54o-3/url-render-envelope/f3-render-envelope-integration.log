@@ -1,0 +1,54 @@
+
+ RUN  v3.2.7 /home/orca/.tmp/syzygy-beads-looper-20261114-54ebc9f1/d10-f3-work-budget
+
+ ✓ |integration| packages/polaris-dossier/src/url-run-artifacts.test.ts (60 tests) 10655ms
+   ✓ trusted URL artifact producer bridge > restores sealed product provenance into a genuinely fresh ledger and can freeze another stop  764ms
+   ✓ trusted URL artifact producer bridge > takes a recovery capability before the first await so two fresh ledgers cannot race its transfer  598ms
+   ✓ trusted URL artifact producer bridge > refuses the first failed resource check before importing historical provenance  302ms
+   ✓ trusted URL artifact producer bridge > withdraws recovery on claim loss after an awaited resource check  305ms
+   ✓ trusted URL artifact producer bridge > refuses copy drift during nominal product recovery  331ms
+   ✓ trusted URL artifact producer bridge > refuses file drift during nominal product recovery  304ms
+   ✓ trusted URL artifact producer bridge > reverifies the exact retained initialized bytes and sidecar under the protected bindings  589ms
+   ✓ trusted URL artifact producer bridge > refuses changed bytes, hash rewrites, rename replacements and unsafe filesystem identities after an admitted read  493ms
+ ✓ |integration| packages/polaris-dossier/src/render.test.ts (113 tests) 28698ms
+   ✓ render > awaits actual producer admission before storing a site, and withholds it on a failed producer  608ms
+   ✓ render > refuses an admission that consumes the monotonic budget before its timer can run  555ms
+   ✓ render > writes the admitted exact output population despite mutation of the callback map copy  443ms
+   ✓ render > renders every quotation as the bytes Syzygy located in the blob it read now, with an RFC7-10 anchor  364ms
+   ✓ render > labels blocks by the agent's label, the counted review and screening, and keeps the pages and machine view in parity per tuple  371ms
+   ✓ render > the reading view and the evidence view (dossier spec v1.5) > shows no label token in the block text of a narrative page, and keeps every one for the evidence view  353ms
+   ✓ render > renders an exempt body only through a renderer that declares the page-sink contract and pages that carry the CSP  1049ms
+   ✓ render > rescans a redacted exempt body over its complete body where the page sink is unconfirmed, and states no withheld text  434ms
+   ✓ render > refuses when the stored passed draft revision is altered, after the deadline, and when the output lacks the disclosure  437ms
+   ✓ render: figure homes (schema v5) > draws a v5 figure homed on a section exactly as a v4 draft's `sectionId` draws it  356ms
+   ✓ rendered-design review (S9b) > keeps a counted design review through a render that changes only the review-status region  429ms
+   ✓ rendered-design review (S9b) > retires a counted design review when a render changes anything outside the region  731ms
+   ✓ rendered-design review (S9b) > refuses the render where the brief record names a pack this Syzygy does not ship, or its standards cannot be read, and writes no site  516ms
+   ✓ rendered-design review (S9b) > refuses a render whose statement of the design review leaks outside the region, and writes no site  393ms
+   ✓ rendered-design review (S9b) > counts a validated design verdict only once its launch form is recorded  633ms
+   ✓ rendered-design review (S9b) > states a counted review that declares the pages not ready beside its blocking finding  315ms
+   ✓ rendered-design review (S9b) > records and refuses a design verdict with a page without a row, which never counts  318ms
+   ✓ rendered-design review (S9b) > records and refuses a design verdict with a row for a page the packet does not hold, which never counts  324ms
+   ✓ rendered-design review (S9b) > records and refuses a design verdict with two rows for one page, which never counts  344ms
+   ✓ rendered-design review (S9b) > records and refuses a design verdict with a finding on a file the packet does not hold, which never counts  364ms
+   ✓ rendered-design review (S9b) > records and refuses a design verdict with a stale packet digest, which never counts  366ms
+   ✓ rendered-design review (S9b) > records and refuses a design verdict with the authoring session's identifier, which never counts  333ms
+   ✓ rendered-design review (S9b) > records and refuses a design verdict with a quotation in a reason, which never counts  498ms
+   ✓ rendered-design review (S9b) > records and refuses a design verdict with readiness beside a blocking finding, which never counts  524ms
+   ✓ rendered-design review (S9b) > records and refuses a design verdict with readiness beside a deficient page, which never counts  313ms
+   ✓ rendered-design review (S9b) > records and refuses a design verdict with a fidelity verdict's shape, which never counts  303ms
+   ✓ rendered-design review (S9b) > drives the design review through the CLI  368ms
+   ✓ render: derived structure (version 2.3) > states Not established with no figure, list or published record where no record was kept, the record is Unknown, or the render cannot list the tree  333ms
+   ✓ render: derived structure (version 2.3) > tells an entry that is no readable record, or a path that cannot be examined, apart from no entry, in both pages and both states (version 2.10)  844ms
+   ✓ render: derived structure (version 2.3) > publishes and draws nothing of a kept record edited after check: an added member, a secret-matching path or a foreign repository  375ms
+   ✓ render: derived structure (version 2.3) > publishes and draws nothing of a record naming a directory the tree does not hold, or a rule other than top-level-unit version 1 (versions 2.8, 2.10)  360ms
+   ✓ render: derived structure (version 2.3) > draws twelve, lists 250 and counts the rest end to end for a tree of more than 250 top-level directories  514ms
+   ✓ render: derived structure (version 2.3) > is stable across renders of one draft revision, and two checks of the same bytes differ only in capturedAt  313ms
+   ✓ review and render: a passed check record carrying the widest manifest facts (version 2.8) > builds the fidelity packet and renders the whole site on that revision, where version 2.7 refused both  846ms
+   ✓ render: figure kinds (schema v7) > renders a graph diagram of a v7 draft byte for byte as the same diagram of a v6 draft, on every page, with no figure-kind style  304ms
+
+ Test Files  2 passed (2)
+      Tests  173 passed (173)
+   Start at  17:43:44
+   Duration  33.75s (transform 5.25s, setup 39ms, collect 8.50s, tests 39.35s, environment 0ms, prepare 206ms)
+
