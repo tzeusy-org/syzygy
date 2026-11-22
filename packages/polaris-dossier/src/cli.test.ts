@@ -140,7 +140,10 @@ describe('dossier network module boundaries', () => {
       'listener.listen(socket,',
     ] },
     'url-machine-peer.ts': { modules: ['net'], calls: [] },
-    'url-role-plan.ts': { modules: ['net'], calls: ["server.listen(0, '127.0.0.1', resolve)"] },
+    'url-role-plan.ts': { modules: ['net'], calls: [
+      "server.listen(0, '127.0.0.1', resolve)",
+      "server.listen(0, '127.0.0.1', resolve)",
+    ] },
     'url-run-sessions.ts': { modules: ['net'], calls: ["probe.listen(0, '127.0.0.1', resolve)"] },
   };
   const readImports = (text: string): readonly string[] => [...text.matchAll(network)].map(match => (match[1] ?? match[2])!);
