@@ -60,7 +60,7 @@ import { startUrlRunSessions, type UrlDesignReproduction, type UrlRunSessions, t
 import { loadSessionCredential } from './session-credential.js';
 import type { UrlSessionAnswer, UrlSessionQuestionFrame } from './session-control.js';
 import { askUrlSessionQuestion } from './url-question-ui.js';
-import { readUrlSupervisorState, requestUrlSupervisorStop, writeUrlSupervisorState, type UrlSupervisorStop } from './url-supervisor-state.js';
+import { openUrlSupervisorStop, readUrlSupervisorState, requestUrlSupervisorStop, writeUrlSupervisorState, type UrlSupervisorStop } from './url-supervisor-state.js';
 
 /** `syzygy polaris <url>`: the one-command dossier run (candidate REQ-polaris-generation-040 to 044; prototype under owner direction
  * POLARIS-DOSSIER-ONE-COMMAND-RUN-2026-10-14, slices 1 to 5 of the candidate's design).
@@ -538,12 +538,22 @@ async function supervise(options: Options, ports: CliPorts): Promise<number> {
   }
   saveState(options.stateRoot, state);
   const prepared = preparedUrlRuns.get(state.run);
-  if (prepared !== undefined) {
-    try { await prepareSupervisorArtifacts(state.run, prepared, ports); }
-    catch { return fail('The actual issued artifact products could not be bound to their checked producers; no inference role was launched.'); }
-    return fail('The checked stage progression and launch-history composition is not ready; no inference role was launched.');
+  if (prepared === undefined) return fail('This supervisor has no genuine checked URL preparation; no inference role was launched.');
+  preparedUrlRuns.delete(state.run);
+  let artifacts: UrlArtifacts;
+  try { artifacts = await prepareSupervisorArtifacts(state.run, prepared, ports); }
+  catch { return fail('The actual issued artifact products could not be bound to their checked producers; no inference role was launched.'); }
+  let stop: UrlSupervisorStop;
+  try { stop = openUrlSupervisorStop(options.stateRoot, state); }
+  catch { return fail('The owned supervisor stop control could not be opened; no inference role was launched.'); }
+  try {
+    const runtime = await startPreparedSupervisor(state, prepared, artifacts, screen, ports, stop);
+    return await runUrlSupervisorLoop(options.stateRoot, ports, state, screen, { prepared, artifacts, runtime, stop });
+  } catch {
+    return fail('The checked session controller or a supervised stage failed. Inspect the retained audit for captured outcomes and cleanup.');
+  } finally {
+    try { stop.close(); } catch { /* The failed control provides no cleanup evidence. */ }
   }
-  return fail('This supervisor has no genuine checked URL preparation; no inference role was launched.');
 }
 
 export interface SupervisorSourceInput {
