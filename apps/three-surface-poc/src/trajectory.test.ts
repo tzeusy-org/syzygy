@@ -216,6 +216,24 @@ describe('Trajectory', () => {
     if (model.workerChange.kind !== 'observed') throw new Error('unreachable');
     expect(model.workerChange.state).toBe('changed-or-merged');
 
+    // T3 (POC-REQ-044): the merged materialized item is the reconciliation
+    // chain's one member; the Unknown-provenance count is unchanged from the
+    // same rows with nothing materialized.
+    const unmaterialized = buildPocModel({
+      seeds: BUTLERS_POC_SEEDS,
+      repoRoot,
+      repositoryRevision: changedRevision,
+      observerRevision: revision,
+      evaluation: { snapshot: 'butlers@worker-change', asOf: '2026-08-30T12:00:00Z' },
+      runWorkItemQuery: (_repoRoot, sql) =>
+        sql.includes('WHERE id LIKE') ? JSON.stringify(rows) : JSON.stringify([{ revision: 'dolt-rev-2' }]),
+    });
+    const intentOf = (m: PocModel) => m.trajectory.answers.find((answer) => answer.id === 'intent');
+    expect(intentOf(model)).toMatchObject({ unknownProvenance: { count: 1, served: 1 }, reconciliationChain: { members: 1, materialized: 1 } });
+    expect(intentOf(unmaterialized)).toMatchObject({ unknownProvenance: { count: 1, served: 1 }, reconciliationChain: { members: 0, materialized: 0 } });
+    expect(/data-parity-field="answer-intent-chain-members">(\d+)</.exec(renderTrajectoryPage(model))?.[1]).toBe('1');
+    expect(/data-parity-field="answer-intent-unknown-provenance">(\d+)</.exec(renderTrajectoryPage(model))?.[1]).toBe('1');
+
     const html = renderTrajectoryPage(model);
     const card = cardBody(html, 'bu-worker-change-1');
     expect(card).toContain('data-parity-field="worker-change-state"');
@@ -549,7 +567,11 @@ describe('Trajectory', () => {
         });
         kinds.add(model.trajectory.kind);
         if (model.trajectory.kind === 'unknown') {
-          expect(Object.keys(model.trajectory).sort()).toEqual(['kind', 'reason']);
+          expect(Object.keys(model.trajectory).sort()).toEqual(['answers', 'kind', 'reason']);
+          // POC-REQ-044: all five answers still render, each Unknown under
+          // the work-items disclosure, and none carries a count.
+          expect(model.trajectory.answers).toEqual(['remains', 'running', 'changed', 'cost', 'intent'].map((id) => ({ id, state: 'unknown', disclosure: 'region:work-items' })));
+          expect(renderTrajectoryPage(model).match(/data-parity-field="trajectory-answer" data-answer-id="[a-z]+"/g)).toHaveLength(5);
           expect(renderTrajectoryPage(model)).toContain(
             'Independently observed work-item denominator: Unknown (work items were not independently observed).',
           );
@@ -676,11 +698,18 @@ describe('Trajectory closure wording (T1)', () => {
 // its count, reason and route; the card carries a short mark per Unknown
 // and its own facts as text. Literals typed here.
 describe('Trajectory board-level Unknowns and card facts (T2)', () => {
-  const ROUTES = [
-    'Route: <span data-unknown-route="excluded-content" data-route-actor="owner" data-route-verb="decide" data-route-target="policy">Policy change by the owner, or accept the exclusion</span>.',
-    'Route: <span data-unknown-route="source-uncaptured-or-unreachable" data-route-actor="operator" data-route-verb="repair" data-route-target="evaluation">Repair the observer/source; new snapshot</span>.',
-    'Route: <span data-unknown-route="missing-evidence" data-route-actor="operator" data-route-verb="capture" data-route-target="evaluation">Produce or capture evidence</span>.',
+  // Each route occurs once per board disclosure carrying its reason:
+  // excluded-content (titles); source-uncaptured-or-unreachable (governing
+  // intent, and the changed, cost and orphaned-work answer parts,
+  // syzygy-t3jk.16); missing-evidence (verification). The running
+  // answer's liveness is the state-local activity-undetermined (RFC8-16),
+  // which carries no reason and so no route.
+  const ROUTE_COUNTS: readonly (readonly [string, number])[] = [
+    ['Route: <span data-unknown-route="excluded-content" data-route-actor="owner" data-route-verb="decide" data-route-target="policy">Policy change by the owner, or accept the exclusion</span>.', 1],
+    ['Route: <span data-unknown-route="source-uncaptured-or-unreachable" data-route-actor="operator" data-route-verb="repair" data-route-target="evaluation">Repair the observer/source; new snapshot</span>.', 4],
+    ['Route: <span data-unknown-route="missing-evidence" data-route-actor="operator" data-route-verb="capture" data-route-target="evaluation">Produce or capture evidence</span>.', 1],
   ];
+  const ROUTES = ROUTE_COUNTS.map(([literal]) => literal);
   const BASES = [
     'Work-item titles are withheld under SEC-5',
     'Activity is not verification: no test evidence has been ingested for any work item.',
@@ -693,8 +722,8 @@ describe('Trajectory board-level Unknowns and card facts (T2)', () => {
     if (model.trajectory.kind !== 'observed') throw new Error('unreachable');
     const cards = [...html.matchAll(/<li class="wi-card[^"]*"[^>]*>([\s\S]*?)<\/li>/g)].map((m) => m[1]!);
     expect(cards).toHaveLength(250);
-    for (const literal of [...ROUTES, ...BASES]) {
-      expect(html.split(literal).length - 1, literal).toBe(1);
+    for (const [literal, count] of [...ROUTE_COUNTS, ...BASES.map((basis) => [basis, 1] as const)]) {
+      expect(html.split(literal).length - 1, literal).toBe(count);
       expect(cards.filter((card) => card.includes(literal)), literal).toEqual([]);
     }
     for (const card of cards) {
@@ -743,5 +772,159 @@ describe('Trajectory board-level Unknowns and card facts (T2)', () => {
       else expect(card).toContain(`<time data-parity-field="work-item-closed" datetime="${item.closedAt}">${item.closedAt}</time>`);
     }
     expect(cardBody(html, 'bu-facts-closed')).toContain('2026-08-05T09:30:00Z');
+  });
+});
+
+/** The answers region and one answer's `<dd>` body. */
+function answersRegion(html: string): string {
+  return /<section class="answers"[^>]*>([\s\S]*?)<\/section>/.exec(html)?.[1] ?? '';
+}
+function answerBody(html: string, id: string): string {
+  return new RegExp(`data-answer-id="${id}"><dt>[^<]*</dt><dd>([\\s\\S]*?)</dd></div>`).exec(answersRegion(html))?.[1] ?? '';
+}
+
+describe('Trajectory opens with its five answers (T3, POC-REQ-044)', () => {
+  const QUESTIONS = ['What remains?', 'What is running?', 'What changed?', 'What did it cost?', 'Has the result been verified against intent?'];
+
+  it('renders the five answers first, in order, with the machine answer carrying the same five', async () => {
+    const model = buildFixtureModel(cleanups, { workItemRows: closureRows() });
+    const html = renderTrajectoryPage(model);
+    const served = await servedAnswer(model);
+    if (served.trajectory.kind !== 'observed') throw new Error('unreachable');
+    expect([...answersRegion(html).matchAll(/<dt>([^<]*)<\/dt>/g)].map((m) => m[1])).toEqual(QUESTIONS);
+    expect(served.trajectory.answers.map((answer) => answer.id)).toEqual(['remains', 'running', 'changed', 'cost', 'intent']);
+    const order = ['class="answers"', 'data-parity-field="trajectory-scope"', 'data-parity-field="trajectory-closure-notice"', 'class="board"'].map((marker) => html.indexOf(marker));
+    expect(order.every((position) => position >= 0)).toBe(true);
+    expect([...order].sort((a, b) => a - b)).toEqual(order);
+    const main = html.slice(html.indexOf('<main'));
+    expect(main.indexOf('class="answers"')).toBeLessThan(main.indexOf('class="notice') === -1 ? Infinity : main.indexOf('class="notice'));
+  });
+
+  it('counts what remains over every served item: the statuses sum to the total and differ from the rendered columns', async () => {
+    const model = buildFixtureModel(cleanups, { workItemRows: closureRows() });
+    const html = renderTrajectoryPage(model);
+    const served = await servedAnswer(model);
+    const remains = served.trajectory.answers[0]!;
+    // 201 current items cycle over six statuses (34, 34, 34, 33, 33, 33) and 51 are closed.
+    expect(remains).toEqual({ id: 'remains', state: 'observed', served: 252, byStatus: { open: 34, in_progress: 34, blocked: 34, deferred: 33, pinned: 33, hooked: 33, closed: 51 } });
+    const body = answerBody(html, 'remains');
+    const counts = Object.fromEntries([...body.matchAll(/data-parity-field="answer-remains-([a-z_]+)">(\d+)</g)].map((m) => [m[1], Number(m[2])]));
+    expect(counts).toEqual({ served: 252, open: 34, in_progress: 34, blocked: 34, deferred: 33, pinned: 33, hooked: 33, closed: 51 });
+    expect(34 + 34 + 34 + 33 + 33 + 33 + 51).toBe(252);
+    // The board renders 250: its Closed column holds 50, the answer 51.
+    expect(/<h2>Closed <span class="count">\((\d+)\)<\/span>/.exec(html)?.[1]).toBe('50');
+  });
+
+  it('states the running count as a tracker claim with its liveness the state-local activity-undetermined (RFC8-16)', async () => {
+    const model = buildFixtureModel(cleanups, { workItemRows: closureRows() });
+    const served = await servedAnswer(model);
+    expect(served.trajectory.answers[1]).toEqual({ id: 'running', state: 'observed', claimed: 34, served: 252, liveness: 'activity-undetermined' });
+    const body = answerBody(renderTrajectoryPage(model), 'running');
+    const words = body.replace(/<[^>]+>/g, '').replace(/\s+/g, ' ');
+    expect(words).toContain("34 of 252 served work items are claimed in the tracker (status in_progress), which is the tracker's claim.");
+    expect(words).toContain('Liveness: activity-undetermined. No staleness bound is declared for claims, so no claimed item can be shown as active; declaring the bound in quality policy resolves it.');
+    // State-local: no Unknown encoding, no RFC2-24 reason, no machine Unknown.
+    expect(body).not.toContain('data-unknown-');
+    expect(body).not.toContain('epistemic');
+    expect(served.unknownSubjects.some((subject) => subject.id.includes('liveness'))).toBe(false);
+    expect(body).toContain('data-parity-field="answer-running-served">252<');
+  });
+
+  it('renders what changed and what it cost as Unknown with a closed reason and a route', async () => {
+    const model = buildFixtureModel(cleanups, { workItemRows: closureRows() });
+    const html = renderTrajectoryPage(model);
+    const served = await servedAnswer(model);
+    for (const [id, subject] of [['changed', 'region:trajectory-changed'], ['cost', 'region:trajectory-cost']] as const) {
+      const body = answerBody(html, id);
+      expect(body).toContain(`data-unknown-disclosure="${subject}" data-unknown-reason="source-uncaptured-or-unreachable"`);
+      expect(body.replace(/<[^>]+>/g, '')).toContain('Reason: source-uncaptured-or-unreachable. Route: Repair the observer/source; new snapshot.');
+      expect(served.trajectory.answers.find((answer) => answer.id === id)).toEqual({ id, state: 'unknown', disclosure: subject });
+      expect(served.unknownSubjects.some((entry) => entry.id === subject)).toBe(true);
+    }
+    expect(answerBody(html, 'cost')).toContain('never zero');
+  });
+
+  it('answers the fifth question with three labelled counts, never summed, and never names "verified" as a state', async () => {
+    const model = buildFixtureModel(cleanups, { workItemRows: closureRows() });
+    const html = renderTrajectoryPage(model);
+    const served = await servedAnswer(model);
+    if (served.workItems.kind !== 'observed') throw new Error('unreachable');
+    expect(served.trajectory.answers[4]).toEqual({
+      id: 'intent',
+      state: 'observed',
+      unknownProvenance: { count: 252, served: 252, disclosure: 'region:work-item-governing-intent' },
+      reconciliationChain: { members: 0, materialized: 0, memberEvidence: 'reconciliation-evidence-absent' },
+      orphanedWork: { state: 'unknown', disclosure: 'region:trajectory-orphaned-work', served: 252 },
+    });
+    expect(served.workItems.governedByUnknownCount).toBe(252);
+    const body = answerBody(html, 'intent');
+    const words = body.replace(/<[^>]+>/g, '').replace(/\s+/g, ' ');
+    expect(words).toContain('Unknown-provenance: 252 of 252 served work items have no traceable warrant.');
+    expect(body).toContain('data-unknown-ref="region:work-item-governing-intent" data-unknown-reason="source-uncaptured-or-unreachable"');
+    expect(words).toContain('Reconciliation chain: 0 of 0 materialized work items whose change is on the default branch.');
+    // The chain state is a fact of the render, not an RFC2-24 Unknown.
+    const chain = /<span class="chain-state" data-parity-field="answer-intent-chain-evidence">([^<]*)<\/span>/.exec(body);
+    expect(chain?.[1]).toBe('reconciliation evidence absent / Unknown');
+    expect(words).toContain('running a reconciliation evaluation resolves it');
+    expect(words).toContain('Orphaned work, of 252 served work items: not checked. Count: Unknown.');
+    expect(body).toContain('data-unknown-disclosure="region:trajectory-orphaned-work" data-unknown-reason="source-uncaptured-or-unreachable"');
+    expect(words).not.toMatch(/not checked\. Count: 0/);
+    expect(words).toContain('The three counts are separate and never added together.');
+    expect(body).toContain('href="#n-verification"');
+    // No element carries a sum of two counts (252 + 0 = 252 is ambiguous,
+    // so the oracle is structural: exactly three count elements, no total).
+    expect([...body.matchAll(/data-parity-field="answer-intent-[a-z-]+"/g)].map((m) => m[0])).toEqual([
+      'data-parity-field="answer-intent-unknown-provenance"',
+      'data-parity-field="answer-intent-unknown-provenance-served"',
+      'data-parity-field="answer-intent-unknown-provenance-mark"',
+      'data-parity-field="answer-intent-chain-members"',
+      'data-parity-field="answer-intent-chain-materialized"',
+      'data-parity-field="answer-intent-chain-evidence"',
+      'data-parity-field="answer-intent-orphaned-served"',
+      'data-parity-field="answer-intent-orphaned"',
+    ]);
+    // "verified" occurs in the answers only as the question's verb.
+    expect(answersRegion(html).replace(/<[^>]+>/g, '').match(/verified/gi)).toEqual(['verified']);
+  });
+
+  it('every Unknown answer part has its machine twin, and the answers carry no count the page lacks', async () => {
+    const model = buildFixtureModel(cleanups, { workItemRows: closureRows() });
+    const html = renderTrajectoryPage(model);
+    const served = await servedAnswer(model);
+    const disclosed = [...answersRegion(html).matchAll(/data-unknown-disclosure="([^"]*)"/g)].map((m) => m[1]);
+    expect(disclosed).toEqual(['region:trajectory-changed', 'region:trajectory-cost', 'region:trajectory-orphaned-work']);
+    for (const id of disclosed) expect(served.unknownSubjects.some((subject) => subject.id === id), id).toBe(true);
+  });
+
+  it('renders the chain count Unknown, with reason and route, when the materialized item\'s worker change is unobserved', () => {
+    const { repoRoot, revision } = fixtureRepoWithGit(cleanups);
+    const rows = [{ revision: 'dolt-rev-2', id: 'bu-unobserved-1', title: 'Materialized work item', status: 'open', issue_type: 'task', priority: 2, created_at: '2026-08-30T00:00:00Z', updated_at: '2026-08-30T00:00:00Z', closed_at: null }];
+    const model = buildPocModel({
+      seeds: BUTLERS_POC_SEEDS,
+      repoRoot,
+      repositoryRevision: revision,
+      observerRevision: revision,
+      evaluation: { snapshot: 'butlers@chain-unknown', asOf: '2026-08-30T12:00:00Z' },
+      materializationRecord: { beadId: 'bu-unobserved-1', externalRef: 'syzygy-poc:work:whatsapp-single-event-normalization', targetRepoRoot: repoRoot, createdAt: '2026-08-30T00:00:00Z', doltRevisionAtCreation: 'dolt-rev-1', attribution: 'test-actor' },
+      runWorkItemQuery: (_repoRoot, sql) => (sql.includes('WHERE id LIKE') ? JSON.stringify(rows) : JSON.stringify([{ revision: 'dolt-rev-2' }])),
+    });
+    expect(model.workerChange.kind).toBe('unknown');
+    expect(model.trajectory.answers.find((answer) => answer.id === 'intent')).toMatchObject({ reconciliationChain: { members: { state: 'unknown', disclosure: 'region:trajectory-chain-membership' } } });
+    expect(model.unknownSubjects.find((subject) => subject.id === 'region:trajectory-chain-membership')?.epistemic.closedReason).toBe('source-uncaptured-or-unreachable');
+    const body = answerBody(renderTrajectoryPage(model), 'intent');
+    expect(body).toContain('data-parity-field="answer-intent-chain-members" data-unknown-disclosure="region:trajectory-chain-membership" data-unknown-reason="source-uncaptured-or-unreachable"');
+    expect(body.replace(/<[^>]+>/g, '')).toContain('Members: Unknown.');
+    expect(body).not.toMatch(/data-parity-field="answer-intent-chain-members">0</);
+  });
+
+  it('fails the oracles when a count drifts from the answer or an answer is dropped (rule 6)', async () => {
+    const model = buildFixtureModel(cleanups, { workItemRows: closureRows() });
+    const html = renderTrajectoryPage(model);
+    const drifted = html.replace('data-parity-field="answer-remains-closed">51<', 'data-parity-field="answer-remains-closed">50<');
+    expect(drifted).not.toBe(html);
+    expect(Object.fromEntries([...answerBody(drifted, 'remains').matchAll(/data-parity-field="answer-remains-([a-z_]+)">(\d+)</g)].map((m) => [m[1], Number(m[2])])).closed).not.toBe(51);
+    const dropped = html.replace(/<div class="answer" data-parity-field="trajectory-answer" data-answer-id="cost">[\s\S]*?<\/dd><\/div>/, '');
+    expect(dropped).not.toBe(html);
+    expect([...answersRegion(dropped).matchAll(/<dt>([^<]*)<\/dt>/g)].map((m) => m[1])).not.toEqual(QUESTIONS);
   });
 });
