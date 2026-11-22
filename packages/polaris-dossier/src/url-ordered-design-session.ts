@@ -13,7 +13,8 @@ import type { OrderedDesignAuditPayloads, OrderedDesignAuditReference } from './
 import { hasOrderedDesignReadObserver, type OrderedDesignAuditWriter } from './url-ordered-design-writer.js';
 import { runOrderedDesignScreen, type OrderedScreenProgram } from './url-ordered-design-screen.js';
 import { ORDERED_SCREEN_LIMITS, type OrderedScreenInput, type OrderedScreenObservation } from './url-ordered-design-screen-protocol.js';
-import { createOrderedDesignWorkBudget, reserveOrderedDesignWork, type OrderedDesignWorkEnforcement } from './url-ordered-design-work-budget.js';
+import { createOrderedDesignWorkBudget, reserveOrderedDesignWork, type OrderedDesignWorkEnforcement, type OrderedDesignWorkStart } from './url-ordered-design-work-budget.js';
+import type { UrlOrderedCpuReservation } from './url-run-cpu-budget.js';
 import type { createUrlSessionBudget, UrlOrderedDesignTurnReservation } from './url-session-budget.js';
 
 type Call = OrderedDesignAuditPayloads['prepared']['call'];
@@ -36,7 +37,7 @@ export interface OrderedDesignSessionWork {
   readonly enforcement: OrderedDesignWorkEnforcement;
   readonly runtimeSha256: string;
   readonly remainingRunCpuMicroseconds: () => number;
-  readonly reserveRemainingCpuMicroseconds: (required: number) => number | null;
+  readonly reserveRemainingCpuMicroseconds: (required: number) => UrlOrderedCpuReservation | null;
   readonly cpuMicroseconds: () => number;
   readonly chargeScreenCpuMicroseconds: (value: number) => void;
 }
@@ -180,9 +181,10 @@ export function createOrderedDesignSession(options: Options) {
     }
   };
 
-  const openOperation = (operation: 'request' | 'response' | 'tool' | 'audit' | 'terminal', turn: number) => {
-    const cap = work.enforcement.operations[operation], began = performance.now(), cpu = work.cpuMicroseconds();
-    const expires = Math.min(deadline, workBudget?.snapshot().expiresAt ?? deadline, Date.now() + cap.wallMilliseconds);
+  const openOperation = (operation: 'request' | 'response' | 'tool' | 'audit' | 'terminal', turn: number, start?: OrderedDesignWorkStart) => {
+    const cap = work.enforcement.operations[operation];
+    const began = start?.monotonicMilliseconds ?? performance.now(), cpu = start?.cpuMicroseconds ?? work.cpuMicroseconds();
+    const expires = Math.min(deadline, workBudget?.snapshot().expiresAt ?? deadline, (start?.wallMilliseconds ?? Date.now()) + cap.wallMilliseconds);
     const ledger = stopped ? null : workBudget;
     const ticket = ledger?.begin(operation, turn) ?? null;
     const remaining = work.remainingRunCpuMicroseconds();
@@ -461,7 +463,7 @@ export function createOrderedDesignSession(options: Options) {
     const toolInput = invocation.input;
     response = null;
     const ordinal = receipts.length;
-    let reply: string, receipt: OrderedDesignAuditReference;
+    let reply: string, receipt: OrderedDesignAuditReference, firstToolStart: OrderedDesignWorkStart | undefined;
     if (ordinal === 0) {
       if (!admittedInitial || transferBounds !== null) throw refused();
       transferBounds = boundOrderedDesignTransfer({ profile, plan, envelope: envelope(),
@@ -469,16 +471,17 @@ export function createOrderedDesignSession(options: Options) {
           id: issued.call.id, name: issued.call.name, input: pollInput }] }]),
         ...(options.requestMaxBytes === undefined ? {} : { requestMaxBytes: options.requestMaxBytes }) });
       if (transferBounds === null) throw refused();
-      const held = reserveOrderedDesignWork({ shape: transferBounds, view: { envelopeBytes: plan.manifest.envelopeBytes, originalBytes },
+      const reserved = reserveOrderedDesignWork({ shape: transferBounds, view: { envelopeBytes: plan.manifest.envelopeBytes, originalBytes },
         enforcement: work.enforcement, expectedRuntimeSha256: work.runtimeSha256,
         expectedWorkerSha256: screening.kind === 'bounded-worker' ? screening.program.worker.sha256 : work.enforcement.workerSha256,
-        deadline, now: Date.now() }, work.reserveRemainingCpuMicroseconds);
-      if (held === null) throw refused();
-      workBudget = createOrderedDesignWorkBudget(held, { now: Date.now, monotonicMilliseconds: () => performance.now(), cpuMicroseconds: work.cpuMicroseconds });
-      budgetReservation = budget.holdOrderedDesignTurns(transcript.resultTurns.length, held.expiresAt);
+        deadline, now: Date.now() }, work.reserveRemainingCpuMicroseconds, { now: Date.now, monotonicMilliseconds: () => performance.now() });
+      if (reserved === null) throw refused();
+      firstToolStart = reserved.start;
+      workBudget = createOrderedDesignWorkBudget(reserved.plan, { now: Date.now, monotonicMilliseconds: () => performance.now(), cpuMicroseconds: work.cpuMicroseconds }, firstToolStart);
+      budgetReservation = budget.holdOrderedDesignTurns(transcript.resultTurns.length, reserved.plan.expiresAt);
       requireNextSend();
     }
-    const tool = openOperation('tool', ordinal);
+    const tool = openOperation('tool', ordinal, firstToolStart);
     try { await waitOperation(tool, async () => {
       if (ordinal === 0) {
         reply = canonical({ kind: 'session-control', ok: true, state: 'events', events: [{ event: transcript.prepared.event, ...plan.prepared }] });

@@ -19,6 +19,7 @@ import { writeUrlLaunchHistory } from './url-launch-history.js';
 import type { UrlRolePlan } from './url-role-plan.js';
 import { urlOrderedScreenProgram, type UrlRuntime } from './url-runtime.js';
 import type { createUrlRunMachine } from './url-run-machine.js';
+import type { UrlOrderedCpuReservation } from './url-run-cpu-budget.js';
 import type { createUrlSessionBudget } from './url-session-budget.js';
 import type { createUrlRunArtifacts } from './url-run-artifacts.js';
 import type { UrlDesignReproduction } from './url-run-sessions.js';
@@ -63,7 +64,7 @@ export interface UrlOrderedAttemptOptions {
   readonly reproduce: () => Promise<UrlDesignReproduction | null>;
   readonly work: {
     readonly remainingCpuMicroseconds: () => number;
-    readonly reserveRemainingOnce: (required: number) => number | null;
+    readonly reserveRemainingOnce: (required: number) => UrlOrderedCpuReservation | null;
     readonly cpuMicroseconds: () => number;
     readonly chargeScreenCpuMicroseconds: (value: number) => void;
     readonly release: () => void;

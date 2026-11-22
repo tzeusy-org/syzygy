@@ -97,11 +97,11 @@ async function fixture(guards: Partial<Pick<Parameters<typeof createOrderedDesig
   const workCpu = () => { const used = process.cpuUsage(parentCpuStart); return used.user + used.system + workerCpu; };
   const chargedCpu = () => workCpu() + nativeCpu;
   let continuationReserved = false;
-  const reserveRemainingCpuMicroseconds = (required: number): number | null => {
+  const reserveRemainingCpuMicroseconds = (required: number) => {
     if (continuationReserved) return null;
     continuationReserved = true;
-    const remaining = cpuBound - chargedCpu();
-    return required <= remaining ? remaining : null;
+    const cpuMicroseconds = workCpu(), remaining = cpuBound - cpuMicroseconds - nativeCpu;
+    return required <= remaining ? { cpuMicroseconds, remainingCpuMicroseconds: remaining } : null;
   };
   const chargeNative = (capacity: number) => { if (!Number.isSafeInteger(capacity) || capacity <= 0 || chargedCpu() + capacity > cpuBound) throw new Error('owned native CPU capacity unavailable'); nativeCpu += capacity; };
   const writer = createOrderedDesignAuditWriter({ profile, plan, principal: 'owned-operator' }, {

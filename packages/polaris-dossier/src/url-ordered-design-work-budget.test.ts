@@ -27,6 +27,7 @@ const enforcement: OrderedDesignWorkEnforcement = { runtimeSha256: 'd'.repeat(64
 const input = { shape, view: { envelopeBytes: 80, originalBytes: 50 }, enforcement,
   expectedRuntimeSha256: enforcement.runtimeSha256, expectedWorkerSha256: enforcement.workerSha256,
   deadline: 1000, now: 1, remainingRunCpuMicroseconds: 1000 };
+const admissionClocks = { now: () => 1, monotonicMilliseconds: () => 1 };
 
 function fixture(overrides: Partial<typeof input> = {}) {
   const plan = planOrderedDesignWork({ ...input, ...overrides });
@@ -57,14 +58,15 @@ describe('ordered design live work reservation', () => {
         reservations++;
         expect(value).toBe(2_368_000_000);
         return held.reserveRemainingOnce(value);
-      });
+      }, admissionClocks);
       expect(reservations).toBe(1);
       expect(pool.cpuMicroseconds()).toBe(128_000_001);
       if (limit === 2_496_000_000) {
         expect(planned).toBeNull();
         expect(held.remainingCpuMicroseconds()).toBe(before);
       } else {
-        expect(planned).toMatchObject({ cpuMicroseconds: 2_368_000_000, originalDeadline: 1000, expiresAt: 571 });
+        expect(planned).toMatchObject({ plan: { cpuMicroseconds: 2_368_000_000, originalDeadline: 1000, expiresAt: 571 },
+          start: { cpuMicroseconds: 128_000_001, wallMilliseconds: 1, monotonicMilliseconds: 1 } });
         held.chargeScreenCpuMicroseconds(64_000_000);
         expect(pool.cpuMicroseconds()).toBe(192_000_001);
         expect(held.remainingCpuMicroseconds()).toBe(2_304_000_000);
@@ -78,9 +80,72 @@ describe('ordered design live work reservation', () => {
       expect(calculateOrderedDesignCpuRequirement(invalid)).toBeNull();
       expect(planOrderedDesignWork({ ...input, enforcement: invalid })).toBeNull();
       let reservations = 0;
-      expect(reserveOrderedDesignWork({ ...input, enforcement: invalid }, () => { reservations++; return 1000; })).toBeNull();
+      expect(reserveOrderedDesignWork({ ...input, enforcement: invalid }, () => {
+        reservations++; return { cpuMicroseconds: 0, remainingCpuMicroseconds: 1000 };
+      }, admissionClocks)).toBeNull();
       expect(reservations).toBe(0);
     }
+  });
+  it('validates the complete shape, identity, detector and wall plan before touching the one-time hold', () => {
+    for (const mutation of [{ shape: { ...shape, turns: shape.turns.slice(0, 3) } }, { deadline: 571 },
+      { expectedWorkerSha256: 'f'.repeat(64) }, { enforcement: { ...enforcement, operations: { ...enforcement.operations,
+        request: { ...envelope, secretCodeUnits: 1 } } } }]) {
+      let reservations = 0;
+      expect(reserveOrderedDesignWork({ ...input, ...mutation }, () => {
+        reservations++; return { cpuMicroseconds: 0, remainingCpuMicroseconds: 1000 };
+      }, admissionClocks)).toBeNull();
+      expect(reservations).toBe(0);
+    }
+  });
+  it('charges a one-microsecond admission drift to both the lifetime and first-tool baseline without resetting it', () => {
+    let host = 0;
+    const pool = createUrlRunCpuBudget(1000, () => host), held = pool.holdOrdered(390)!;
+    host = 21; // exactly one below the 370 future requirement
+    const reserved = reserveOrderedDesignWork(input, required => {
+      const snapshot = held.reserveRemainingOnce(required);
+      host++; // bookkeeping after the genuine atomic sample
+      return snapshot;
+    }, admissionClocks)!;
+    expect(reserved.start.cpuMicroseconds).toBe(21);
+    expect(held.remainingCpuMicroseconds()).toBe(369);
+    const clocks = { ...admissionClocks, cpuMicroseconds: held.cpuMicroseconds };
+    const budget = createOrderedDesignWorkBudget(reserved.plan, clocks, reserved.start);
+    expect(budget.snapshot()).toMatchObject({ cpuMicroseconds: 1, used: { tool: 1 } });
+    const first = budget.begin('tool', 0)!;
+    expect(first).not.toBeNull();
+    expect(budget.snapshot()).toMatchObject({ cpuMicroseconds: 1, used: { tool: 1 } });
+    host = 31; // ten total first-tool units, including admission bookkeeping
+    expect(budget.current()).toBe(true);
+    host = 32;
+    expect(budget.finish(first)).toBe(false);
+    expect(budget.snapshot()).toMatchObject({ reason: 'operation-cpu-limit', cpuMicroseconds: 11 });
+    expect(pool.cpuMicroseconds()).toBe(32);
+  });
+  it('refuses post-reservation CPU drift crossing the first-tool cap before a ledger can authorize release', () => {
+    let host = 0;
+    const pool = createUrlRunCpuBudget(1000, () => host), held = pool.holdOrdered(390)!;
+    const reserved = reserveOrderedDesignWork(input, required => {
+      const snapshot = held.reserveRemainingOnce(required);
+      host = 11;
+      return snapshot;
+    }, admissionClocks)!;
+    expect(() => createOrderedDesignWorkBudget(reserved.plan, { ...admissionClocks, cpuMicroseconds: held.cpuMicroseconds }, reserved.start)).toThrow();
+    expect(pool.cpuMicroseconds()).toBe(11);
+  });
+  it('keeps the original first-tool wall start and rejects copied, replayed or cross-plan admission starts', () => {
+    let now = 1, mono = 1;
+    const clocks = { now: () => now, monotonicMilliseconds: () => mono, cpuMicroseconds: () => 0 };
+    const reserve = () => ({ cpuMicroseconds: 0, remainingCpuMicroseconds: 370 });
+    const reserved = reserveOrderedDesignWork(input, reserve, clocks)!;
+    const another = reserveOrderedDesignWork(input, reserve, clocks)!;
+    expect(() => createOrderedDesignWorkBudget(reserved.plan, clocks, { ...reserved.start })).toThrow();
+    expect(() => createOrderedDesignWorkBudget(another.plan, clocks, reserved.start)).toThrow();
+    now = 2; mono = 2; // admission bookkeeping may not move the first-tool start
+    const budget = createOrderedDesignWorkBudget(reserved.plan, clocks, reserved.start);
+    expect(() => createOrderedDesignWorkBudget(reserved.plan, clocks, reserved.start)).toThrow();
+    now = 11; mono = 11;
+    expect(budget.begin('tool', 0)).toBeNull();
+    expect(budget.snapshot()).toMatchObject({ reason: 'operation-wall-limit', wallMilliseconds: 10 });
   });
   it('holds the whole path, complete histories and both detector branches before the first operation', () => {
     const { plan } = fixture();

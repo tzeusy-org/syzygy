@@ -1,5 +1,6 @@
 import { deepFreeze } from '@syzygy/support';
 import type { OrderedDesignTransferBounds } from './url-ordered-design-bounds.js';
+import type { UrlOrderedCpuReservation } from './url-run-cpu-budget.js';
 
 const REQUEST_BYTES = 2_097_152;
 const RESPONSE_BYTES = 8_388_608;
@@ -79,6 +80,13 @@ export interface OrderedDesignWorkPlan {
   readonly remainingRunCpuMicroseconds: number;
   readonly auditReadBytes: number;
 }
+
+export interface OrderedDesignWorkStart {
+  readonly wallMilliseconds: number;
+  readonly monotonicMilliseconds: number;
+  readonly cpuMicroseconds: number;
+}
+const admissionStarts = new WeakMap<OrderedDesignWorkStart, { plan: OrderedDesignWorkPlan; consumed: boolean }>();
 
 /** Compile conservative work counts for the fixed four-result profile. Every
  * actual and logical branch keeps its own allowance. Byte maxima also bound
@@ -161,17 +169,27 @@ export function planOrderedDesignWork(input: {
   } catch { return null; }
 }
 
-/** Reserve against the genuine host pool once, using its atomic accounting
- * snapshot for this synchronous plan. Sampling again between reserve and plan
- * would consume host CPU from an exactly sufficient refreshed allowance. */
+/** Complete plan validation before reserving. All subsequent bookkeeping is
+ * charged from the genuine pool's atomic spent/remaining snapshot as first-tool
+ * work. Neither the ledger nor that operation may select a later baseline. */
 export function reserveOrderedDesignWork(
   input: Omit<Parameters<typeof planOrderedDesignWork>[0], 'remainingRunCpuMicroseconds'>,
-  reserveRemaining: (required: number) => number | null,
-): OrderedDesignWorkPlan | null {
+  reserveRemaining: (required: number) => UrlOrderedCpuReservation | null,
+  clocks: { readonly now: () => number; readonly monotonicMilliseconds: () => number },
+): { readonly plan: OrderedDesignWorkPlan; readonly start: OrderedDesignWorkStart } | null {
   const required = calculateOrderedDesignCpuRequirement(input.enforcement);
   if (required === null) return null;
-  const remaining = reserveRemaining(required);
-  return remaining === null ? null : planOrderedDesignWork({ ...input, remainingRunCpuMicroseconds: remaining });
+  const plan = planOrderedDesignWork({ ...input, remainingRunCpuMicroseconds: required });
+  if (plan === null) return null;
+  const wallMilliseconds = clocks.now(), monotonicMilliseconds = clocks.monotonicMilliseconds();
+  if (!nonnegative(wallMilliseconds) || !Number.isFinite(monotonicMilliseconds) || monotonicMilliseconds < 0
+    || wallMilliseconds < plan.startsAt || wallMilliseconds >= plan.expiresAt) return null;
+  const reservation = reserveRemaining(required);
+  if (reservation === null || !nonnegative(reservation.cpuMicroseconds)
+    || !positive(reservation.remainingCpuMicroseconds) || reservation.remainingCpuMicroseconds < required) return null;
+  const start = Object.freeze({ wallMilliseconds, monotonicMilliseconds, cpuMicroseconds: reservation.cpuMicroseconds });
+  admissionStarts.set(start, { plan, consumed: false });
+  return Object.freeze({ plan, start });
 }
 
 interface Ticket { readonly operation: Operation; readonly turn: number }
@@ -188,18 +206,30 @@ export function createOrderedDesignWorkBudget(plan: OrderedDesignWorkPlan, clock
   readonly now: () => number;
   readonly monotonicMilliseconds: () => number;
   readonly cpuMicroseconds: () => number;
-}) {
+}, start?: OrderedDesignWorkStart) {
   if (!plans.has(plan)) throw new Error('ordered-design-work-budget-refused');
+  if (start !== undefined) {
+    const admission = admissionStarts.get(start);
+    if (admission?.plan !== plan || admission.consumed) throw new Error('ordered-design-work-budget-refused');
+    admission.consumed = true;
+  }
   const used = { request: 0, response: 0, tool: 0, audit: 0, terminal: 0 };
   const tickets = new WeakSet<object>();
   const turns = { request: new Set<number>(), response: new Set<number>(), tool: new Set<number>() };
   let state: 'open' | 'stopped' | 'complete' = 'open', active: Ticket | null = null;
   let reason: Failure | null = null;
   let wall = clocks.now(), monotonic = clocks.monotonicMilliseconds(), cpu = clocks.cpuMicroseconds();
-  const cpuStart = cpu, monotonicStart = monotonic;
+  const cpuStart = start?.cpuMicroseconds ?? cpu, monotonicStart = start?.monotonicMilliseconds ?? monotonic;
   if (!nonnegative(wall) || !Number.isFinite(monotonic) || monotonic < 0 || !nonnegative(cpu) || wall < plan.startsAt || wall >= plan.expiresAt)
     throw new Error('ordered-design-work-budget-refused');
-  let operationBegan = monotonic, operationCpu = cpu, inversePasses = 0, inverseCodeUnits = 0, auditBytes = 0;
+  if (cpu < cpuStart || monotonic < monotonicStart || start !== undefined && wall < start.wallMilliseconds)
+    throw new Error('ordered-design-work-budget-refused');
+  let operationBegan = monotonicStart, operationCpu = cpuStart, inversePasses = 0, inverseCodeUnits = 0, auditBytes = 0;
+  let admissionToolPending = start !== undefined;
+  if (admissionToolPending) {
+    active = Object.freeze({ operation: 'tool', turn: 0 });
+    tickets.add(active); turns.tool.add(0); used.tool = 1;
+  }
   let branchSpent = Object.fromEntries(BRANCHES.map(branch => [branch, empty()])) as Record<Branch, Spent>;
   let otherSpent = empty();
   const parents: Array<{ ticket: Ticket; began: number; cpu: number; inversePasses: number; inverseCodeUnits: number;
@@ -243,9 +273,15 @@ export function createOrderedDesignWorkBudget(plan: OrderedDesignWorkPlan, clock
     }
     return current();
   };
+  if (start !== undefined && !current()) throw new Error('ordered-design-work-budget-refused');
   return Object.freeze({
     current,
     begin: (operation: Operation, turn: number): Ticket | null => {
+      if (admissionToolPending) {
+        admissionToolPending = false;
+        if (!current() || operation !== 'tool' || turn !== 0) { stop(); return null; }
+        return active;
+      }
       if (!current() || (active !== null && !(active.operation === 'tool' && operation === 'audit' && parents.length === 0)) || !OPERATIONS.includes(operation) || !nonnegative(turn) || turn >= 4
         || used[operation] >= COUNTS[operation]) { stop(); return null; }
       if ((operation === 'request' || operation === 'response' || operation === 'tool') && turns[operation].has(turn)) { stop(); return null; }

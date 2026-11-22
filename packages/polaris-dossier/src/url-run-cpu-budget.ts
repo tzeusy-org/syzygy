@@ -1,3 +1,8 @@
+export interface UrlOrderedCpuReservation {
+  readonly cpuMicroseconds: number;
+  readonly remainingCpuMicroseconds: number;
+}
+
 /** Shared supervisor CPU capacity. Native children consume their enforced full
  * capacity before spawn; this is not a measurement of those children's usage.
  * The separately kernel-limited role CLIs are outside this population. */
@@ -38,12 +43,12 @@ export function createUrlRunCpuBudget(limit: number, hostCpu: () => number) {
         /** Refresh exactly once before the first continuation release. Previous
          * charges remain spent; only unused capacity in the original pool can
          * cover a missing future allowance. This grants no effect authority. */
-        reserveRemainingOnce: (required: number): number | null => {
+        reserveRemainingOnce: (required: number): UrlOrderedCpuReservation | null => {
           if (!current() || continuationReserved) return null;
           continuationReserved = true;
           if (!Number.isSafeInteger(required) || required <= 0 || required > limit - spent) return null;
           held.remaining = Math.max(held.remaining, required);
-          return held.remaining;
+          return Object.freeze({ cpuMicroseconds: spent, remainingCpuMicroseconds: held.remaining });
         },
         cpuMicroseconds: (): number => { sample(); return spent; },
         chargeScreenCpuMicroseconds: (value: number): void => {

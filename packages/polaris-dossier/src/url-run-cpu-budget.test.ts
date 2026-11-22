@@ -44,7 +44,7 @@ describe('shared URL supervisor CPU capacity', () => {
     pool.charge('machine', 50);
     host = 150;
     expect(held.remainingCpuMicroseconds()).toBe(550);
-    expect(held.reserveRemainingOnce(650)).toBe(650);
+    expect(held.reserveRemainingOnce(650)).toEqual({ cpuMicroseconds: 300, remainingCpuMicroseconds: 650 });
     expect(pool.cpuMicroseconds()).toBe(300);
     expect(held.reserveRemainingOnce(650)).toBeNull();
     expect(held.remainingCpuMicroseconds()).toBe(650);
@@ -69,7 +69,7 @@ describe('shared URL supervisor CPU capacity', () => {
     first.release();
     const second = pool.holdOrdered(900)!;
     expect(first.reserveRemainingOnce(950)).toBeNull();
-    expect(second.reserveRemainingOnce(800)).toBe(900);
+    expect(second.reserveRemainingOnce(800)).toEqual({ cpuMicroseconds: 0, remainingCpuMicroseconds: 900 });
     second.release();
     expect(second.reserveRemainingOnce(900)).toBeNull();
     expect(pool.cpuMicroseconds()).toBe(0);

@@ -371,11 +371,11 @@ async function runNativeOrderedFixture(scenario: OrderedScenario) {
   }
   const remainingWorkCpu = () => (scenario === 'insufficient-work' && responseUsage.length > 0 ? 64_000_000 : 3_000_000_000) - workerCpu;
   let continuationReserved = false;
-  const reserveRemainingCpuMicroseconds = (required: number): number | null => {
+  const reserveRemainingCpuMicroseconds = (required: number) => {
     if (continuationReserved) return null;
     continuationReserved = true;
     const remaining = remainingWorkCpu();
-    return required <= remaining ? remaining : null;
+    return required <= remaining ? { cpuMicroseconds: cpuMicroseconds(), remainingCpuMicroseconds: remaining } : null;
   };
   orderedSession = createOrderedDesignSession({ profile, plan, principal, writer, budget, screening,
     work: { runtimeSha256: sha256('owned runtime'), enforcement: { runtimeSha256: sha256('owned runtime'), workerSha256: screening.kind === 'bounded-worker' ? screening.program.worker.sha256 : sha256('owned test adapter'),
