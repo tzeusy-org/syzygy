@@ -1,4 +1,5 @@
 import { spawnSync } from 'node:child_process';
+import { randomBytes } from 'node:crypto';
 import * as fs from 'node:fs';
 import * as os from 'node:os';
 import * as path from 'node:path';
@@ -59,7 +60,7 @@ import { startUrlRunSessions, type UrlDesignReproduction, type UrlRunSessions, t
 import { loadSessionCredential } from './session-credential.js';
 import type { UrlSessionAnswer, UrlSessionQuestionFrame } from './session-control.js';
 import { askUrlSessionQuestion } from './url-question-ui.js';
-import { readUrlSupervisorState, writeUrlSupervisorState } from './url-supervisor-state.js';
+import { readUrlSupervisorState, requestUrlSupervisorStop, writeUrlSupervisorState, type UrlSupervisorStop } from './url-supervisor-state.js';
 
 /** `syzygy polaris <url>`: the one-command dossier run (candidate REQ-polaris-generation-040 to 044; prototype under owner direction
  * POLARIS-DOSSIER-ONE-COMMAND-RUN-2026-10-14, slices 1 to 5 of the candidate's design).
@@ -190,6 +191,7 @@ export interface SupervisorState {
   launches: { role: ViewRole; pid: number | null; at: string; argvSha256: string; viewSha256: string }[];
   finalSite?: { site: number; draftRevision: number; verdict: number; packetSha256: string;
     verdictEventSha256: string; populationSha256: string };
+  stopGeneration?: string;
   stopped?: string; done?: string;
 }
 
@@ -216,7 +218,7 @@ export async function runPolarisCli(argv: readonly string[], ports: CliPorts = {
     if (state === null) return refuse(`no launched run ${options.run} under ${options.stateRoot}`);
     if (state.done) return refuse(`run ${state.runId} is closed`);
     if (Date.now() >= state.briefIssuedAt + state.deadlineSeconds * 1000) return refuse(`run ${state.runId} is past its deadline`);
-    if (tmuxHas(state.tmuxSession)) return attach({ ...options, run: state.runId });
+    if (tmuxHas(state.tmuxSession)) return refuse(`run ${state.runId} still has a supervisor view. Inspect it with syzygy polaris --attach ${state.runId}.`);
   }
   let limits: string[] = [];
   if (options.mode === 'start' && options.missingLimits.length > 0) {
@@ -246,7 +248,7 @@ export async function runPolarisCli(argv: readonly string[], ports: CliPorts = {
   const started = spawnSync('tmux', ['new-session', '-d', '-s', name, '-n', 'run', '-x', '220', '-y', '50', ...envArgs, '--', process.execPath, MAIN, 'polaris', ...forward], { stdio: 'inherit' });
   if (started.status !== 0) return refuse('tmux could not start the run\'s session');
   spawnSync('tmux', ['set-option', '-t', name, 'remain-on-exit', 'on'], { stdio: 'ignore' });
-  process.stdout.write(`Started the Polaris supervisor in tmux session ${name}. See that session for role startup and run status.\n  attach: tmux attach -t ${name}   (inside tmux: tmux switch-client -t ${name})\n  stop:   syzygy polaris --stop <run>  (or tmux kill-session -t ${name})\n`);
+  process.stdout.write(`Started the Polaris supervisor in tmux session ${name}. See that session for role startup and run status.\n  attach: tmux attach -t ${name}   (inside tmux: tmux switch-client -t ${name})\n  stop:   syzygy polaris --stop <run>\n`);
   if (options.attach && process.stdout.isTTY) return attachTo(name);
   return 0;
 }
@@ -348,7 +350,9 @@ interface PreparedUrlRun {
 const preparedUrlRuns = new Map<string, PreparedUrlRun>();
 type UrlArtifacts = ReturnType<typeof createUrlRunArtifacts>;
 interface CheckedSupervisor {
-  readonly prepared: PreparedUrlRun; readonly artifacts: UrlArtifacts; readonly runtime: UrlRunSessions;
+  readonly prepared: Pick<PreparedUrlRun, 'record' | 'effectiveDeclaration' | 'screen' | 'renderer' | 'origins'
+    | 'current' | 'openReader' | 'directories'>;
+  readonly artifacts: UrlArtifacts; readonly runtime: UrlRunSessions; readonly stop: UrlSupervisorStop;
 }
 async function prepareSupervisorArtifacts(run: string, prepared: PreparedUrlRun, ports: CliPorts): Promise<UrlArtifacts> {
   if (!(await prepared.sessionCurrent())) throw new Error('url-supervisor-unavailable');
@@ -390,7 +394,7 @@ async function prepareSupervisorArtifacts(run: string, prepared: PreparedUrlRun,
 /** Compose only root-created preparation, checked producers and the host-owned
  * credential. Saved supervisor JSON supplies no live adoption or peer grant. */
 async function startPreparedSupervisor(state: SupervisorState, prepared: PreparedUrlRun, artifacts: UrlArtifacts,
-  screen: Screen, ports: CliPorts): Promise<UrlRunSessions> {
+  screen: Screen, ports: CliPorts, stop: UrlSupervisorStop): Promise<UrlRunSessions> {
   if (!(await prepared.sessionCurrent())) throw new Error('url-supervisor-unavailable');
   const compatible = (role: 'inventory' | 'fidelity' | 'design'): string => {
     const selected = prepared.initial.sessions.sessions.filter(session => role === 'inventory'
@@ -410,6 +414,7 @@ async function startPreparedSupervisor(state: SupervisorState, prepared: Prepare
       originPolicySha256: prepared.originPolicySha256, auditParent: prepared.auditDirectory, auditName: 'sessions',
       principal: prepared.record.declared.operator, sessionDirectories: prepared.directories, canaries: prepared.canaries,
       current: prepared.sessionCurrent, now: ports.now ?? Date.now, deadline: state.briefIssuedAt + state.deadlineSeconds * 1000,
+      stopRequested: () => stop.status() === 'requested',
       credential: loaded.credential, sourceReader: prepared.openReader,
       production: { ...prepared.machine, current: prepared.current, policyBytes: prepared.basePolicyBytes, artifacts },
       launchHistory: { promptDigests, register: artifacts.registerLaunchHistory }, runDossier: artifacts.runDossier,
@@ -462,7 +467,7 @@ const tmuxHas = (name: string): boolean => spawnSync('tmux', ['has-session', '-t
 function attach(options: Options): number {
   const state = readState(options.stateRoot, options.run!);
   if (state === null) return refuse(`no launched run ${options.run} under ${options.stateRoot}`);
-  if (!tmuxHas(state.tmuxSession)) return refuse(`run ${state.runId} has no live view; resume it with syzygy polaris --resume ${state.runId}`);
+  if (!tmuxHas(state.tmuxSession)) return refuse(`run ${state.runId} has no retained tmux view`);
   return attachTo(state.tmuxSession);
 }
 
@@ -475,10 +480,10 @@ function attachTo(name: string): number {
 function stop(options: Options): number {
   const state = readState(options.stateRoot, options.run!);
   if (state === null) return refuse(`no launched run ${options.run} under ${options.stateRoot}`);
-  if (tmuxHas(state.tmuxSession)) spawnSync('tmux', ['kill-session', '-t', state.tmuxSession], { stdio: 'ignore' });
-  state.stopped ??= new Date().toISOString();
-  saveState(options.stateRoot, state);
-  process.stdout.write(`Stop requested for run ${state.runId}. Process termination is Unknown until the supervisor records its cleanup outcome.\n  resume: syzygy polaris --resume ${state.runId}\n`);
+  if (state.done !== undefined) return refuse(`run ${state.runId} is closed`);
+  try { requestUrlSupervisorStop(options.stateRoot, state); }
+  catch { return refuse(`run ${state.runId} has no verifiable live stop control. Process termination is Unknown.`); }
+  process.stdout.write(`Stop requested for run ${state.runId}. Process termination is Unknown until the supervisor records its cleanup outcome.\n`);
   return 0;
 }
 
@@ -804,6 +809,7 @@ async function setUp(options: Options, ports: CliPorts, screen: Screen): Promise
   return {
     format: 'polaris-supervisor/2', mode: URL_RUN_MODE, declarationSha256: declaration.sha256, run, runId, tmuxSession: options.tmuxSession!, clone, url, model: options.model, authorSkipPermissions: false,
     briefIssuedAt, deadlineSeconds: seconds, sessions, fidelityDeliveredFor: [], designDeliveredFor: [], notified: [], siteFor: {}, launches: [],
+    stopGeneration: randomBytes(16).toString('hex'),
   };
 }
 
@@ -1038,7 +1044,20 @@ async function deliverFeedback(context: CheckedSupervisor, run: string, review: 
   if (!context.prepared.current() || !(await context.runtime.current())) throw new Error('url-supervisor-unavailable');
 }
 
-async function loop(options: Options, ports: CliPorts, state: SupervisorState, screen: Screen, context: CheckedSupervisor): Promise<number> {
+export async function runUrlSupervisorLoop(stateRoot: string, ports: CliPorts, state: SupervisorState,
+  screen: Pick<Screen, 'event' | 'draw'>, context: CheckedSupervisor): Promise<number> {
+  try {
+    return await runUrlStages(stateRoot, ports, state, screen, context);
+  } finally {
+    try { await context.runtime.stop(); }
+    finally {
+      try { context.stop.close(); } catch { /* Lost stop control supplies no completion evidence. */ }
+    }
+  }
+}
+
+async function runUrlStages(stateRoot: string, ports: CliPorts, state: SupervisorState,
+  screen: Pick<Screen, 'event' | 'draw'>, context: CheckedSupervisor): Promise<number> {
   const run = state.run;
   const runPorts = { ...ports, openReader: context.prepared.openReader,
     renderer: context.prepared.renderer.renderer, urlRenderer: context.prepared.renderer };
@@ -1101,7 +1120,8 @@ async function loop(options: Options, ports: CliPorts, state: SupervisorState, s
   const announcedDesignSites = new Set<number>();
   for (;;) {
     if (!(await context.runtime.current()) || !(await context.runtime.waitForProductSamples())) {
-      phase = 'checked session boundary unavailable';
+      try { phase = context.stop.status() === 'requested' ? 'operator stop requested' : 'checked session boundary unavailable'; }
+      catch { phase = 'stop control unavailable'; }
       break;
     }
     if (Date.now() >= deadline) { phase = 'deadline passed'; break; }
@@ -1139,7 +1159,7 @@ async function loop(options: Options, ports: CliPorts, state: SupervisorState, s
     // draft passes, tell the inventory session once to resubmit.
     if (passedDraft !== null && inventoryRevision === null && !state.notified.includes(`inventory-draft-${passedDraft}`)) {
       if (!(await context.runtime.publish('inventory', { event: 'draft-ready', revision: passedDraft }))) { phase = 'typed control delivery refused'; break; }
-      state.notified.push(`inventory-draft-${passedDraft}`); saveState(options.stateRoot, state);
+      state.notified.push(`inventory-draft-${passedDraft}`); saveState(stateRoot, state);
       screen.event(`told the inventory session: draft revision ${passedDraft} is frozen`);
     }
     if (fidelityDeliveryDue(passedDraft, inventoryRevision, state.pendingRepair, state.fidelityDeliveredPairs ?? [])) {
@@ -1155,7 +1175,7 @@ async function loop(options: Options, ports: CliPorts, state: SupervisorState, s
       try { await context.artifacts.registerPacket({ kind: 'fidelity', round: r.doc['round'] as number, packetSha256: r.doc['packetSha256'] as string },
         context.runtime.waitForProductSamples); }
       catch { phase = 'fidelity packet producer binding refused'; break; }
-      (state.fidelityDeliveredPairs ??= []).push(pair); state.fidelityDeliveredFor.push(passedDraft!); delete state.pendingRepair; saveState(options.stateRoot, state);
+      (state.fidelityDeliveredPairs ??= []).push(pair); state.fidelityDeliveredFor.push(passedDraft!); delete state.pendingRepair; saveState(stateRoot, state);
     }
     const sides = fidelityState === 'blocking' ? repairSides(fidelity!.verdict!) : null;
     const spentSide = sides !== null && draft !== null && inventoryRevision !== null ? fidelityRepairSpent(sides, draft.n, inventoryRevision, maxRepairCycles) : null;
@@ -1177,7 +1197,7 @@ async function loop(options: Options, ports: CliPorts, state: SupervisorState, s
         screen.event(`told the inventory session: ${sides.inventory.length} entr${sides.inventory.length === 1 ? 'y' : 'ies'} not confirmed by fidelity verdict ${fidelity!.n}`);
       }
       state.pendingRepair = { ...(sides.author ? { draftAbove: passedDraft! } : {}), ...(sides.inventory.length > 0 ? { inventoryAbove: inventoryRevision! } : {}) };
-      state.notified.push(`fidelity-${fidelity!.n}`); saveState(options.stateRoot, state);
+      state.notified.push(`fidelity-${fidelity!.n}`); saveState(stateRoot, state);
     }
     if (fidelityState === 'ready' && passedDraft !== null && state.siteFor[String(passedDraft)] === undefined) {
       screen.event(`rendering draft revision ${passedDraft}`);
@@ -1241,7 +1261,7 @@ async function loop(options: Options, ports: CliPorts, state: SupervisorState, s
         const preparedSite = checkedView.receipt.identity.site;
         state.siteFor[String(passedDraft)] = preparedSite;
         announcedDesignSites.add(preparedSite);
-        saveState(options.stateRoot, state);
+        saveState(stateRoot, state);
         screen.event(`prepared design round ${round} for the reviewer`);
       }
       catch (cause) {
@@ -1260,7 +1280,7 @@ async function loop(options: Options, ports: CliPorts, state: SupervisorState, s
       try { await deliverFeedback(context, run, 'design', design!.n, ['author']); }
       catch { phase = 'design feedback producer binding refused'; break; }
       if (!(await context.runtime.publish('author', { event: 'review-blocked', review: 'design', revision: design!.n }))) { phase = 'typed control delivery refused'; break; }
-      state.notified.push(`design-${design!.n}`); saveState(options.stateRoot, state);
+      state.notified.push(`design-${design!.n}`); saveState(stateRoot, state);
       screen.event(`told the author: design verdict ${design!.n} blocks`);
     }
     if (fidelityState === 'ready' && designState === 'ready' && passedDraft !== null && design !== null && site !== null) {
@@ -1286,11 +1306,16 @@ async function loop(options: Options, ports: CliPorts, state: SupervisorState, s
     await new Promise((resolve) => setTimeout(resolve, POLL_MS));
   }
   const stopped = await context.runtime.stop();
-  state.stopped ??= isoOf(Date.now());
-  if (final !== null) {
+  const cleaned = cleanupConfirmed(stopped);
+  if (cleaned) state.stopped ??= isoOf(Date.now());
+  let finalStop: ReturnType<UrlSupervisorStop['close']> | null = null;
+  try { finalStop = context.stop.close(); }
+  catch { phase = 'stop control unavailable'; }
+  if (finalStop === 'requested') phase = 'operator stop requested';
+  if (final !== null && finalStop === 'ready') {
     const result = final;
     phase = 'final render produced, run closure unconfirmed';
-    if (stopped.failure === null && stopped.budget.reason === null && cleanupConfirmed(stopped) && current() && Date.now() < deadline) {
+    if (stopped.failure === null && stopped.budget.reason === null && state.stopped !== undefined && cleaned && current() && Date.now() < deadline) {
       const close = await closeRun(run, {}, {
         ...renderDeps,
         urlSupervisorCapture: stopped,
@@ -1305,9 +1330,9 @@ async function loop(options: Options, ports: CliPorts, state: SupervisorState, s
       }
     }
   }
-  saveState(options.stateRoot, state);
+  saveState(stateRoot, state);
   screen.event(`run ended: ${phase}`);
-  screen.draw([`run    ${state.runId}`, `result ${phase}`, `cleanup ${cleanupConfirmed(stopped) ? 'owned process groups and pending callbacks confirmed settled' : 'Unknown: retain the protected audit and cleanup evidence'}`,
+  screen.draw([`run    ${state.runId}`, `result ${phase}`, `cleanup ${cleaned ? 'owned process groups and pending callbacks confirmed settled' : 'Unknown: retain the protected audit and cleanup evidence'}`,
     'Provider receipts and uncaptured send completeness remain Unknown.', 'A retained tmux view is for inspection.']);
   return state.done === undefined ? 1 : 0;
 }

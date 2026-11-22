@@ -5,14 +5,46 @@ import { describe, expect, it, vi } from 'vitest';
 import {
   AUTHOR_SELF_CHECK, DEFAULT_REPAIR_CYCLES, LAUNCHED_GUIDANCE, RUN_LIMITS, isoSeconds, limitFault, limitsAnswer, limitsQuestion, OWNER_LINE, POLARIS_USAGE, authorPrompt, cycleBreakdown, endScreen,
   runPolarisCli, preparePolarisStart, fidelityDeliveryDue, fidelityRepairSpent, inventoryRepairMessage, readVerdict, latestChecks, limitStop, refusedAtLimit, repairSides, sessionClaudeArgs,
+  type SupervisorState,
 } from './polaris.js';
 import { inventoryPrompt, reviewPrompt, waitingInventoryPrompt, waitingReviewPrompt } from './session-handover.js';
 import { policyFixture } from './full-run.testkit.js';
 import type { GateSources } from './gate-sources.js';
+import { URL_ROLES, URL_RUN_MODE, URL_SUPPORTED_MODEL } from './url-run-record.js';
+import { openUrlSupervisorStop, readUrlSupervisorState, writeUrlSupervisorState } from './url-supervisor-state.js';
 
 // syzygy-1z8m.1 and syzygy-1z8m.2: what the 2026-11-04 Redis run taught the launched run. Expected values are literals.
 
 describe('the run limits of a launched run (syzygy-1z8m.7)', () => {
+  it('requests stop only from the named live supervisor without marking the run stopped', async () => {
+    const root = tempDir('polaris-stop-control-'), runId = `run-${'a'.repeat(32)}`, run = path.join(root, runId);
+    const state: SupervisorState = { format: 'polaris-supervisor/2', mode: URL_RUN_MODE, declarationSha256: 'b'.repeat(64),
+      run, runId, tmuxSession: 'polaris-ownstop',
+      clone: path.join(root, 'own-source'), url: 'https://own.example.invalid/o/r', model: URL_SUPPORTED_MODEL, authorSkipPermissions: false,
+      briefIssuedAt: Date.now(), deadlineSeconds: 3600, stopGeneration: 'c'.repeat(32),
+      sessions: URL_ROLES.map(role => ({ role, session: 1, directory: role === 'author' ? run : `${run}.sessions/${role === 'inventory' ? 'session' : role}-1`,
+        prompt: '', promptSha256: 'd'.repeat(64), allowedTools: null })), fidelityDeliveredFor: [], designDeliveredFor: [], notified: [], siteFor: {}, launches: [] };
+    writeUrlSupervisorState(root, state);
+    const args = ['--stop', runId, '--state-root', root];
+    const stdout = vi.spyOn(process.stdout, 'write').mockImplementation(() => true);
+    const stderr = vi.spyOn(process.stderr, 'write').mockImplementation(() => true);
+    const read = () => readUrlSupervisorState(root, runId);
+    try {
+      expect(await runPolarisCli(args)).toBe(1);
+      expect(stderr.mock.calls.flat().join('')).toContain('no verifiable live stop control');
+      expect(read()).toEqual(state);
+      const live = openUrlSupervisorStop(root, state);
+      try {
+        expect(await runPolarisCli(args)).toBe(0);
+        expect(live.status()).toBe('requested');
+        expect(stdout.mock.calls.flat().join('')).toContain('Process termination is Unknown');
+        expect(read()).toEqual(state);
+      } finally { live.close(); }
+      expect(await runPolarisCli(args)).toBe(1);
+      expect(read()).toEqual(state);
+    } finally { stdout.mockRestore(); stderr.mockRestore(); }
+  });
+
   it('refuses an unsafe locator before source ports, process launches or input-derived output', async () => {
     const stateRoot = tempDir('polaris-unsafe-locator-');
     const stderr = vi.spyOn(process.stderr, 'write').mockImplementation(() => true);
