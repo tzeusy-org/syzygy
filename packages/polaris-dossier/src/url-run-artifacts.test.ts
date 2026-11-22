@@ -40,6 +40,7 @@ import { checkDraft } from './check.js';
 import { buildFidelityPacket } from './review-packet.js';
 import { reviewOfRecord } from './review.js';
 import { inventoryOfRecord } from './inventory.js';
+import { inventoryCoverageAdvice } from './inventory-coverage.js';
 import { fixtureSources } from './full-run.testkit.js';
 import { issueBrief, shapePackSelection, type BriefReport } from './brief.js';
 
@@ -603,6 +604,10 @@ describe('trusted URL artifact producer bridge', () => {
           probe: { probe: async () => { throw Error('own check permits no execution'); } } });
         expect(adviceReached).toBe(true);
         expect(refused).toMatchObject({ ok: false, refusal: { stage: 'reverify' } });
+        // The advice helper must propagate the protected refusal itself; a later
+        // check revalidation refusing too cannot substitute for this boundary.
+        await expect(inventoryCoverageAdvice(f.run, f.draft, { inventoryOfRecord, sources, now: readAt,
+          productReads: withdrawnReads, isSecretPath: () => false })).rejects.toThrow('the authenticated URL products are unavailable or changed');
         expect(fs.existsSync(path.join(f.run, 'drafts/rev-0.json'))).toBe(false);
         expect(fs.existsSync(path.join(f.run, 'checks/rev-0.json'))).toBe(false);
       } finally { withdrawnReads.close(); }
