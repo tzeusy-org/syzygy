@@ -220,6 +220,7 @@ function observeInterruptedResume() {
   let latestSample: ResumeSample | undefined, lastConfirmed: ResumeSample | undefined;
   let firstSampleRefusal: ResumeSample | undefined;
   let terminal: { atMs: number; outcome: sessionLaunch.UrlSessionLaunchOutcome['outcome']; latestSample?: ResumeSample } | undefined;
+  let finishedInspection: NonNullable<ReturnType<typeof sessionLaunch.observeUrlSessionInspectionForTest>> | undefined;
   const preparations = new WeakMap<sessionLaunch.UrlSessionPreparation, () => ResumeSample | undefined>();
 
   function snapshotSample(sample: ResumeSample | undefined): ResumeSample | undefined {
@@ -449,7 +450,10 @@ function observeInterruptedResume() {
           }
         }
       },
-    } }), result => { preparations.set(result, () => snapshotSample(activeSample)); }, () => {});
+    } }), result => {
+      finishedInspection = sessionLaunch.observeUrlSessionInspectionForTest(result) ?? undefined;
+      preparations.set(result, () => snapshotSample(activeSample));
+    }, () => {});
   });
 
   const launch = sessionLaunch.launchRestrictedUrlSession;
@@ -465,7 +469,7 @@ function observeInterruptedResume() {
   });
 
   return () => ({ connectionCount, transportCounts, connections, refusals, inspectedLaunches, samples,
-    latestSample: snapshotSample(latestSample), lastConfirmed, firstSampleRefusal, terminal,
+    latestSample: snapshotSample(latestSample), lastConfirmed, firstSampleRefusal, terminal, launcherInspection: finishedInspection?.(),
     broker: { invocations: brokerInvocations, firstPeerInvocations, faultMs: brokerFaultMs, stages: brokerStages, workPlanRefusal },
     mcpIngress: { counts: mcpReads, startedMs: mcpReadStartedMs, firstDataMs: mcpReadDataMs,
       endMs: mcpReadEndMs, firstRefusalMs: mcpReadRefusedMs } });

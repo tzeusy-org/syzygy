@@ -23,15 +23,18 @@ const TOOLS = ['source_read', 'artifact_read', 'artifact_write', 'dossier_step']
 const refused = (): Error => new Error('url-session-launch-refused');
 const delay = (ms: number): Promise<void> => new Promise(resolve => setTimeout(resolve, ms));
 /** Bounds waiting, not cancellation of an arbitrary caller-owned callback. */
-async function bounded<T>(operation: () => T | Promise<T>, milliseconds: number): Promise<T> {
+async function bounded<T>(operation: () => T | Promise<T>, milliseconds: number, observeTimeout?: (error: Error) => void): Promise<T> {
   const deadline = performance.now() + Math.max(1, milliseconds);
   let timer: ReturnType<typeof setTimeout> | undefined;
   const timeout = new Promise<never>((_resolve, reject) => {
     const expire = (): void => {
       // A timer callback can arrive early when its clock rounds the delay.
       const remaining = deadline - performance.now();
-      if (remaining <= 0) reject(refused());
-      else timer = setTimeout(expire, Math.ceil(remaining));
+      if (remaining <= 0) {
+        const error = refused();
+        observeTimeout?.(error);
+        reject(error);
+      } else timer = setTimeout(expire, Math.ceil(remaining));
     };
     expire();
   });
@@ -76,6 +79,61 @@ interface Prepared {
   readonly args: readonly string[]; readonly expires: number; readonly directories: readonly string[];
 }
 const preparations = new WeakMap<UrlSessionPreparation, Prepared>();
+
+type InspectionPhase = 'storage' | 'process' | 'verify' | 'confirm' | 'current';
+type InspectionPhaseOutcome = 'accepted' | 'refused' | 'rejected';
+type InspectionRefusal = { readonly phase: InspectionPhase; readonly elapsedMs: number; readonly cause:
+  'bounded-timeout' | 'sample-deadline' | 'sample-inactive' | 'operation-rejected' | 'authority-refused' | 'resource-limit' };
+type InspectionSample = { ordinal: number; phases: Partial<Record<InspectionPhase, {
+  startedMs: number; settledMs?: number; outcome?: InspectionPhaseOutcome;
+}>>; refusal?: InspectionRefusal };
+type InspectionTrace = { cadenceMs: number; inspectionMs: number; samples: number;
+  latest?: InspectionSample; firstRefusal?: InspectionSample };
+const inspectionTraces = new WeakMap<UrlSessionPreparation, InspectionTrace>();
+
+/** Internal first-party test observation. The reader holds no launch or effect authority. */
+export function observeUrlSessionInspectionForTest(preparation: UrlSessionPreparation): (() => InspectionTrace) | null {
+  const prepared = preparations.get(preparation);
+  if (prepared === undefined || inspectionTraces.has(preparation)) return null;
+  const trace: InspectionTrace = { cadenceMs: prepared.limits.sampleMilliseconds,
+    inspectionMs: prepared.limits.inspectionMilliseconds, samples: 0 };
+  inspectionTraces.set(preparation, trace);
+  return () => structuredClone(trace);
+}
+
+function beginInspectionTrace(trace: InspectionTrace, began: number) {
+  const sample: InspectionSample = { ordinal: ++trace.samples, phases: {} };
+  trace.latest = sample;
+  const causes = new Map<unknown, InspectionRefusal>();
+  const elapsed = (): number => performance.now() - began;
+  const reason = (phase: InspectionPhase, cause: InspectionRefusal['cause']): InspectionRefusal => ({ phase, cause, elapsedMs: elapsed() });
+  const settle = (phase: InspectionPhase, outcome: InspectionPhaseOutcome): void => {
+    const entry = sample.phases[phase];
+    if (sample.refusal === undefined && entry !== undefined && entry.outcome === undefined) Object.assign(entry, { settledMs: elapsed(), outcome });
+  };
+  const fail = (refusal: InspectionRefusal): void => {
+    sample.refusal = refusal;
+    trace.firstRefusal ??= sample;
+  };
+  return {
+    begin: (phase: InspectionPhase): void => {
+      if (sample.refusal === undefined) sample.phases[phase] = { startedMs: elapsed() };
+    },
+    settle,
+    note: (error: Error, phase: InspectionPhase, cause: InspectionRefusal['cause']): void => { causes.set(error, reason(phase, cause)); },
+    inherit: (error: Error, previous: unknown): void => {
+      const cause = causes.get(previous);
+      if (cause !== undefined) causes.set(error, cause);
+    },
+    refuse: (phase: InspectionPhase, cause: InspectionRefusal['cause']): void => { fail(reason(phase, cause)); },
+    reject: (error: unknown, phase: InspectionPhase): void => {
+      const cause = causes.get(error);
+      if (cause === undefined) settle(phase, 'rejected');
+      fail(cause ?? reason(phase, 'operation-rejected'));
+    },
+  };
+}
+
 export interface UrlSessionLaunchOutcome {
   readonly outcome: 'exited' | 'launch-refused' | 'stopped' | 'wall-limit' | 'output-limit' | 'storage-limit' | 'process-limit' | 'inspection-failed';
   readonly exitCode: number | null; readonly signal: string | null;
@@ -348,6 +406,8 @@ function processArgs(args: readonly string[], limits: UrlLaunchLimits): string[]
 export async function launchRestrictedUrlSession(input: { readonly preparation: UrlSessionPreparation; readonly host: SessionHost }): Promise<UrlSessionProcess> {
   const state = preparations.get(input.preparation), host = input.host;
   if (!state) throw refused(); preparations.delete(input.preparation);
+  const trace = inspectionTraces.get(input.preparation);
+  if (trace !== undefined) inspectionTraces.delete(input.preparation);
   // Ordered launches require this factory's exact selected host. Reject a
   // copied object before inspecting any caller-controlled host properties.
   if (!isSessionProfile(state.profile) && (!isOrderedDesignSessionProfile(state.profile)
@@ -401,39 +461,90 @@ export async function launchRestrictedUrlSession(input: { readonly preparation: 
     if (exited || finishedCapture || pendingSample !== undefined || reason !== 'exited') return;
     let sampleActive = true;
     const sampleBegan = performance.now();
-    const checkSample = (): void => {
-      if (!sampleActive || exited || finishedCapture || reason !== 'exited' || performance.now() - sampleBegan >= limits.inspectionMilliseconds) throw refused();
+    const observation = trace === undefined ? undefined : beginInspectionTrace(trace, sampleBegan);
+    let phase: InspectionPhase = 'storage', processRejection: unknown;
+    const checkSample = (source = phase): void => {
+      const inactive = !sampleActive || exited || finishedCapture || reason !== 'exited';
+      if (inactive || performance.now() - sampleBegan >= limits.inspectionMilliseconds) {
+        const error = refused();
+        observation?.note(error, source, inactive ? 'sample-inactive' : 'sample-deadline');
+        throw error;
+      }
     };
     // Cadence and completion are separate finite limits. Other native roles
     // and the shared host may delay descriptor IO; admit no partial census.
     pendingSample = bounded(async () => {
       // The walks share a deadline. Keep storage's earlier refusal and
       // publication order even if the process walk completes first.
-      const processCount = child.pid === undefined ? undefined : descendants(child.pid, limits.processes, checkSample).catch(() => null);
+      let processCount: Promise<number | null> | undefined;
+      if (child.pid !== undefined) {
+        if (observation === undefined) processCount = descendants(child.pid, limits.processes, checkSample).catch(() => null);
+        else {
+          observation.begin('process');
+          processCount = descendants(child.pid, limits.processes, () => checkSample('process')).then(count => {
+            observation.settle('process', 'accepted');
+            return count;
+          }, error => {
+            processRejection = error;
+            observation.settle('process', 'rejected');
+            return null;
+          });
+        }
+      }
       const authority = state.inspectionAuthority;
       // Verification reads authority only. Census refusal takes precedence and
       // the exact live guard runs when both the census and verification settle.
-      const verification = authority === undefined ? undefined
-        : Promise.resolve().then(authority.verify).then(result => result === true, () => false);
-      const storageBytes = await storage([view.inputs.homeDirectory, view.inputs.workDirectory], limits, checkSample);
+      if (authority !== undefined) observation?.begin('verify');
+      const verification = authority === undefined ? undefined : Promise.resolve().then(authority.verify).then(result => {
+        observation?.settle('verify', result === true ? 'accepted' : 'refused');
+        return result === true;
+      }, () => { observation?.settle('verify', 'rejected'); return false; });
+      observation?.begin('storage');
+      let storageBytes: number;
+      try { storageBytes = await storage([view.inputs.homeDirectory, view.inputs.workDirectory], limits, checkSample); }
+      catch (error) { observation?.settle('storage', 'rejected'); throw error; }
+      observation?.settle('storage', 'accepted');
       checkSample();
       sampledStorageBytes = storageBytes;
-      if (sampledStorageBytes > limits.storageBytes) { stop('storage-limit'); return; }
+      if (sampledStorageBytes > limits.storageBytes) {
+        observation?.refuse('storage', 'resource-limit'); stop('storage-limit'); return;
+      }
       if (processCount !== undefined) {
+        phase = 'process';
         const count = await processCount;
         checkSample();
-        if (count === null) throw refused();
+        if (count === null) {
+          const error = refused();
+          observation?.inherit(error, processRejection);
+          throw error;
+        }
         peakProcesses = Math.max(peakProcesses ?? 0, count);
-        if (count > limits.processes) { stop('process-limit'); return; }
+        if (count > limits.processes) {
+          observation?.refuse('process', 'resource-limit'); stop('process-limit'); return;
+        }
       }
+      phase = verification === undefined ? 'current' : 'verify';
+      if (verification === undefined) observation?.begin('current');
       let stillCurrent = await (verification ?? state.current());
+      if (verification === undefined) observation?.settle('current', stillCurrent === true ? 'accepted' : 'refused');
       checkSample();
       if (authority !== undefined) {
+        phase = 'confirm';
+        observation?.begin('confirm');
         stillCurrent = authority.confirm(stillCurrent === true);
+        observation?.settle('confirm', stillCurrent === true ? 'accepted' : 'refused');
         checkSample();
       }
-      if (stillCurrent !== true) stop('inspection-failed');
-    }, limits.inspectionMilliseconds).catch(() => { if (!exited && !finishedCapture) stop('inspection-failed'); })
+      if (stillCurrent !== true) {
+        observation?.refuse(phase, 'authority-refused'); stop('inspection-failed');
+      }
+    }, limits.inspectionMilliseconds, observation === undefined ? undefined : error => {
+      observation.note(error, phase, 'bounded-timeout');
+    }).catch(error => {
+      if (exited || finishedCapture) return;
+      observation?.reject(error, phase);
+      stop('inspection-failed');
+    })
       .finally(() => { sampleActive = false; pendingSample = undefined; });
   }, limits.sampleMilliseconds);
   const wall = setTimeout(() => stop('wall-limit'), limits.milliseconds);

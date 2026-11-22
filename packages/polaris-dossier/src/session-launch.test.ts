@@ -28,7 +28,8 @@ import { createOrderedDesignSession, isOrderedDesignSession, isProductionOrdered
 import { createUrlSessionBudget } from './url-session-budget.js';
 import { createUrlSessionAudit } from './url-session-audit.js';
 import { urlSessionMcpSupportPath } from './url-runtime.js';
-import { URL_CLI_PROGRAM, URL_LAUNCH_LIMITS, launchRestrictedUrlSession, isUrlSessionProcess, prepareRestrictedUrlSession, restrictedSessionCliArgs, verifySupportedUrlCli, type UrlSessionLaunchOptions } from './session-launch.js';
+import { URL_CLI_PROGRAM, URL_LAUNCH_LIMITS, launchRestrictedUrlSession, isUrlSessionProcess, observeUrlSessionInspectionForTest,
+  prepareRestrictedUrlSession, restrictedSessionCliArgs, verifySupportedUrlCli, type UrlSessionLaunchOptions } from './session-launch.js';
 import { URL_SESSION_BWRAP, urlSessionBwrapArgs, urlSessionCommand, urlSessionViewFor } from './session-url-view.js';
 
 const nativeSpawns = vi.hoisted(() => ({
@@ -960,7 +961,7 @@ describe('prepared private CLI launch',()=>{
     }
   }, 15000);
 
-  it.each(['current', 'withdrawn', 'timed-out', 'confirmation-expired'] as const)(
+  it.each(['current', 'withdrawn', 'timed-out', 'census-timed-out', 'confirmation-expired'] as const)(
     'joins independent inspection authority with the live census when %s', async disposition => {
       const f = await launchFixture();
       let releaseCensus!: () => void, startedCensus!: (value: true) => void;
@@ -983,6 +984,10 @@ describe('prepared private CLI launch',()=>{
       const preparation = await prepareRestrictedUrlSession({ ...f.launch, inspectionAuthority: {
         verify: () => { startedVerification(true); return verified; }, confirm,
       } });
+      expect(observeUrlSessionInspectionForTest({ ...preparation })).toBeNull();
+      const inspect = observeUrlSessionInspectionForTest(preparation)!;
+      expect(inspect()).toEqual({ cadenceMs: 200, inspectionMs: 1000, samples: 0 });
+      expect(observeUrlSessionInspectionForTest(preparation)).toBeNull();
       const host = await f.start({ beforeTool: () => heldTool });
       filesystem.beforeOpen = async file => {
         if (file !== f.launch.view.workDirectory) return;
@@ -1006,6 +1011,18 @@ describe('prepared private CLI launch',()=>{
           resolveVerification(true);
           await new Promise<void>(resolve => setImmediate(resolve));
           expect(confirm).not.toHaveBeenCalled();
+          expect(inspect().firstRefusal?.refusal).toMatchObject({ cause: 'bounded-timeout' });
+        } else if (disposition === 'census-timed-out') {
+          resolveVerification(true);
+          expect(await sample).toBe(false);
+          expect(await child.finished).toMatchObject({ outcome: 'inspection-failed', groupTermination: 'confirmed' });
+          const refusal = inspect().firstRefusal!;
+          expect(refusal).toMatchObject({ ordinal: 1, phases: { verify: { outcome: 'accepted' } },
+            refusal: { phase: 'storage', cause: 'bounded-timeout' } });
+          expect(refusal.refusal!.elapsedMs).toBeGreaterThanOrEqual(1000);
+          expect(refusal.phases.storage?.outcome).toBeUndefined();
+          expect(refusal.phases.confirm).toBeUndefined();
+          expect(confirm).not.toHaveBeenCalled();
         } else {
           resolveVerification(true);
           await verified;
@@ -1014,6 +1031,12 @@ describe('prepared private CLI launch',()=>{
           releaseCensus();
           expect(await sample).toBe(disposition === 'current');
           expect(confirm.mock.calls).toEqual([[true]]);
+          const inspection = inspect();
+          expect(inspection.latest?.phases).toMatchObject({ storage: { outcome: 'accepted' }, process: { outcome: 'accepted' },
+            verify: { outcome: 'accepted' }, confirm: { outcome: disposition === 'withdrawn' ? 'refused' : 'accepted' } });
+          if (disposition === 'current') expect(inspection.firstRefusal).toBeUndefined();
+          else expect(inspection.firstRefusal?.refusal).toMatchObject({ phase: 'confirm',
+            cause: disposition === 'withdrawn' ? 'authority-refused' : 'sample-deadline' });
           releaseTool();
           expect(await child.finished).toMatchObject({
             outcome: disposition === 'current' ? 'exited' : 'inspection-failed', groupTermination: 'confirmed',
@@ -1041,6 +1064,7 @@ describe('prepared private CLI launch',()=>{
       if (rootOpens > 0) completedSamples.push(rootOpens);
       return true;
     } });
+    const inspect = observeUrlSessionInspectionForTest(preparation)!;
     let enterTool!: (entered: true) => void, releaseTool!: () => void;
     const toolEntered = new Promise<true>(resolve => { enterTool = resolve; });
     const heldTool = new Promise<void>(resolve => { releaseTool = resolve; });
@@ -1075,6 +1099,10 @@ describe('prepared private CLI launch',()=>{
         expect(removed).toBe(disappearingEntries);
         expect(retainedOnRetry).toBe(completed);
         expect(completedSamples).toEqual(completed ? [2] : []);
+        const inspection = inspect();
+        expect(inspection.latest).toMatchObject({ ordinal: 1, phases: { storage: { outcome: completed ? 'accepted' : 'rejected' } } });
+        if (completed) expect(inspection.firstRefusal).toBeUndefined();
+        else expect(inspection.firstRefusal?.refusal).toMatchObject({ phase: 'storage', cause: 'operation-rejected' });
         releaseTool();
         expect(await child.finished).toMatchObject({ outcome: expected, exitCode: completed ? 0 : null,
           groupTermination: 'confirmed', toolTermination: 'settled' });
