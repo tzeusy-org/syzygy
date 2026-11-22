@@ -1,0 +1,38 @@
+{
+  "baseCommit": "1de49ab4e616f34359d8fd05dd210a4903834cac",
+  "temporaryPatchSha256": "7afe0fe0e3d445d21d9ff8c8a3fa03b7d900d512c86fc4ac8b320533fe593fa5",
+  "sources": [
+    {
+      "path": "packages/polaris-dossier/src/url-run-ordered-attempt.ts",
+      "sha256": "53b9e2c6623a3be7257f701130fc4dba93262242d1aef48fba4108b352c69d7b"
+    },
+    {
+      "path": "packages/polaris-dossier/src/url-ordered-design-host.ts",
+      "sha256": "ff30ef4451a1733684ec0529c8a5b35ae97b9366e265fb6cd39e2cfeb0f2d276"
+    },
+    {
+      "path": "packages/polaris-dossier/src/url-ordered-design-session.ts",
+      "sha256": "adad3161b26b25d7318059118fa45e5469ceae783bde0954c4bd898ed45c58c8"
+    },
+    {
+      "path": "packages/polaris-dossier/src/url-ordered-design-screen.ts",
+      "sha256": "53d2931944e95a7229cc8cea4bf5ae11605fb100bc8507b65c4c3a5cb3c78fbb"
+    },
+    {
+      "path": "packages/polaris-dossier/src/url-machine-store.ts",
+      "sha256": "503c207de54ddbe7d1e441d21b6ff239018f49afdf05fedb39de5cf893462bb1"
+    },
+    {
+      "path": "packages/polaris-dossier/src/url-machine-peer.ts",
+      "sha256": "a17c9489c26ab5058fdae5e4b5dd4c2d3426ec747ec8cb97b9af6cfc6c5f226c"
+    },
+    {
+      "path": "packages/polaris-dossier/src/session-launch.ts",
+      "sha256": "eb7b4ae248ec463041399585c3da2263a1ffd7d8c2e1000a4c6d40b09deb9b47"
+    },
+    {
+      "path": "packages/polaris-dossier/src/session-broker.ts",
+      "sha256": "ecbc92be435a8e427f9ea9e908efdfec4889473c9da88b7c309091cb63f70945"
+    }
+  ]
+}

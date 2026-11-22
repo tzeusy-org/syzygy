@@ -1,0 +1,26 @@
+{
+  "baseCommit": "1de49ab4e616f34359d8fd05dd210a4903834cac",
+  "scope": "Historical diagnostic run with temporary eight-file instrumentation; not the production source used by later native acceptance. Original subject manifest, chronological projection, patch and raw log retained verbatim.",
+  "artifacts": [
+    {
+      "path": "docs/evidence/syzygy-k54o-3/profile6-combined-diagnostic/f3-profile6-combined-trace-subject.json",
+      "sha256": "af7e0909ac0385a2a3671056cfa55bc74e720a95764314fd85e91c0e6134706f",
+      "bytes": 1502
+    },
+    {
+      "path": "docs/evidence/syzygy-k54o-3/profile6-combined-diagnostic/f3-profile6-combined-trace-chronology.json",
+      "sha256": "21642e870bc04a29d245db09ce6a47e03397951cdd396c7f1776d102cf307a2e",
+      "bytes": 2135
+    },
+    {
+      "path": "docs/evidence/syzygy-k54o-3/profile6-combined-diagnostic/f3-profile6-combined-trace.log",
+      "sha256": "97b04f7c25b0d972bc96e379d65061eb28b0f296e513437401fa0f7a8de2fb6d",
+      "bytes": 52695
+    },
+    {
+      "path": "docs/evidence/syzygy-k54o-3/profile6-combined-diagnostic/f3-profile6-combined-trace.patch",
+      "sha256": "7afe0fe0e3d445d21d9ff8c8a3fa03b7d900d512c86fc4ac8b320533fe593fa5",
+      "bytes": 22974
+    }
+  ]
+}

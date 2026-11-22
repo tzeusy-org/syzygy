@@ -1,0 +1,85 @@
+{
+  "label": "Observed",
+  "baseCommit": "1de49ab4e616f34359d8fd05dd210a4903834cac",
+  "subjectManifest": "/home/orca/.tmp/f3-profile6-combined-trace-subject.json",
+  "subjectManifestSha256": "af7e0909ac0385a2a3671056cfa55bc74e720a95764314fd85e91c0e6134706f",
+  "logSha256": "97b04f7c25b0d972bc96e379d65061eb28b0f296e513437401fa0f7a8de2fb6d",
+  "events": [
+    {
+      "f3Trace": "host-activation-selected",
+      "at": 1795335497918,
+      "started": true
+    },
+    {
+      "f3Trace": "screen-worker-result-initial-false-0-1455",
+      "at": 1795335498957,
+      "failed": false,
+      "status": 0,
+      "signal": null,
+      "bytes": 1455,
+      "elapsed": 742
+    },
+    {
+      "f3Trace": "screen-result-initial-true-6016",
+      "at": 1795335498962,
+      "ok": true,
+      "charge": {
+        "cpuMicroseconds": 18000000,
+        "cpuAccounting": "charged-hard-capacity",
+        "wallMilliseconds": 746,
+        "enforcedWallMilliseconds": 20000
+      }
+    },
+    {
+      "f3Trace": "attempt-proof-expired",
+      "at": 1795335500170
+    },
+    {
+      "f3Trace": "controller-full-assert-refused",
+      "at": 1795335500171
+    },
+    {
+      "f3Trace": "host-audit-refused",
+      "at": 1795335500173,
+      "event": "send-outcome"
+    },
+    {
+      "f3Trace": "host-poison",
+      "at": 1795335500173
+    },
+    {
+      "f3Trace": "peer-effect-refused-inference-forward",
+      "at": 1795335500174,
+      "role": "design",
+      "kind": "inference-bridge"
+    },
+    {
+      "f3Trace": "peer-mediation-refused-inference-forward",
+      "at": 1795335500182,
+      "completed": true,
+      "hasResult": false,
+      "role": "design",
+      "kind": "inference-bridge"
+    },
+    {
+      "f3Trace": "sample-current-refused-author",
+      "at": 1795335500215,
+      "elapsed": 41
+    },
+    {
+      "f3Trace": "sample-current-refused-design",
+      "at": 1795335500215,
+      "elapsed": 41
+    },
+    {
+      "f3Trace": "sample-current-refused-inventory",
+      "at": 1795335500215,
+      "elapsed": 42
+    },
+    {
+      "f3Trace": "sample-current-refused-fidelity",
+      "at": 1795335500215,
+      "elapsed": 42
+    }
+  ]
+}
