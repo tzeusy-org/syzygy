@@ -1,13 +1,10 @@
 # Design: the operator-agent mode and the `syzygy dossier` commands
 
-> **Version 1.6.** Explains the requirements in
-> specs/polaris-generation/spec.md; version 1.0 was signed off by the owner
-> on 2026-10-06, version 1.1 on 2026-10-07 and version 1.2 on 2026-10-14,
-> and this text binds only by the owner's sign-off of version 1.6. It is not an
-> implementation. It contains no code. The command surface below is a design
-> for implementation after the owner's sign-off (direction item 5); the
-> requirements are the controlling text, and doctrine, accepted contracts,
-> the adopted requirements and the owner's rulings
+> **Design v1.8.** The agent adoption records the interactive handover
+> correction. The owner's recorded v1.6 sign-off covers the specification
+> and its predecessor design at the v1.6 tag. This design explains the
+> requirements in `specs/polaris-generation/spec.md`. Doctrine, accepted
+> contracts, the adopted requirements and the owner's rulings
 > (`POLARIS-DOSSIER-LOCAL-AGENT-RULINGS-2026-10-05`,
 > `POLARIS-DOSSIER-LOCAL-AGENT-REVIEW-1-RULINGS-2026-10-05`) remain
 > controlling over both.
@@ -52,20 +49,20 @@ the usage figure at the end.
 14 agent:    reports the site path, `syzygy dossier status <run>` verbatim, and what is still Unknown
 ```
 
-At steps 9, 10 and 12 the authoring session stops and hands over: it runs
-`syzygy dossier session-prompt`, which prints the fixed prompt and a
-ready-to-paste command. The command changes to the role directory and
-starts interactive `claude '<prompt>'` or `codex '<prompt>'`, with the
-fixed prompt as the session's first message.
+For an ordinary hand-over at steps 9, 10 and 12, the authoring session
+runs `syzygy dossier session-prompt` and waits. Issuing a fresh prompt
+prints the fixed prompt and a ready-to-paste command. The command changes
+to the role directory and starts interactive `claude '<prompt>'` or
+`codex '<prompt>'`, with the fixed prompt as the session's first message.
 Its working directory is a session directory Syzygy makes for that role:
 for the inventory, one holding only the inventory brief; for a review, the
 packet directory. It is never the clone, whose project-scoped agent
 configuration and instructions (`.claude/`, `.mcp.json`, `CLAUDE.md`,
 `AGENTS.md`) the tool would otherwise load, and never the state directory,
 which holds the drafts the inventory must not see. The **operator**
-opens a new terminal and starts that session there with the exact prompt
-printed, so it is a separate top-level session the operator starts and the
-authoring session never writes the reviewer's instructions (owner direction
+starts the printed role command. It is a separate top-level session and
+the authoring session never writes the reviewer's instructions (owner
+direction
 `POLARIS-DOSSIER-LOCAL-AGENT-SCOPE-REVIEW-SIGNOFF-2026-10-05`, item 2). A
 subagent of the authoring session does not count. When the session finishes,
 the operator returns to the authoring session, which resumes at the next
@@ -74,14 +71,22 @@ coordinates another.
 
 For an ordinary Claude Code hand-over, the operator may also use the
 printed `!` shell-escape form in the authoring terminal. The same
-interactive role command runs with Syzygy's fixed prompt. For Codex and
-waiting sessions, Syzygy prints the new-terminal form. The operator
-starts each role session (035). Each session writes its own identifier
-into its inventory or verdict. When the operator returns, the authoring
-session asks how the role was started and records the answer with
-`syzygy dossier launch-form <run> <role> terminal|bang`. The identifier
-and launch form are Inferred. An inventory or verdict counts only with
-an eligible recorded launch form.
+interactive role command runs with Syzygy's fixed prompt. For Codex,
+Syzygy prints the new-terminal form. The operator starts each role
+session (035) and reports how it started. The authoring session records
+the report with `syzygy dossier launch-form <run> inventory terminal|bang`
+for inventory or `syzygy dossier launch-form <run> review terminal|bang
+--kind fidelity|design` for a review, using the matching kind. Each
+session declares its identifier in its inventory or verdict. The
+identifier and launch form are Inferred. An inventory or verdict counts
+only with an eligible recorded launch form.
+
+For the waiting flow, `syzygy dossier session-prompt <run> all` prints
+three new-terminal commands. As the operator reports each start, record
+its terminal launch form with the same commands and matching review kind.
+Later `session-prompt <run> review --kind <kind>` delivers the packet to
+the existing waiting reviewer of that kind. Add `--fresh` to issue a new
+review prompt.
 
 At step 3 the skill may offer presets, but the operator selects or types the
 values; Syzygy records them as operator-declared, conveyed by the agent
@@ -625,16 +630,17 @@ With a URL (the author, driving the loop):
    AskUserQuestion; record each with the operator's exact answer.
 7. Write `<run>/drafts/next.json`; `syzygy dossier check <run>`; repair every
    finding and re-run until clean or refused.
-8. For each of inventory, review --kind fidelity, then (after
-   `syzygy dossier render <run>`) review --kind design: run
+8. For ordinary hand-over, start with inventory, then review --kind fidelity,
+   then (after `syzygy dossier render <run>`) review --kind design. Run
    `syzygy dossier session-prompt <run> <role> [--kind <kind>]`, show the
    operator the command it prints, and wait. The operator starts that
    session in a new terminal or uses the printed `!` form for an ordinary
    Claude Code hand-over. Never launch the role yourself or use a subagent
    for it. When the operator returns, ask which launch form they used and
-   run `syzygy dossier launch-form <run> <role> terminal|bang` with their
-   answer. Resume when the operator says the session has finished, and run
-   `syzygy dossier status`.
+   record the answer with `syzygy dossier launch-form <run> inventory
+   terminal|bang` or `syzygy dossier launch-form <run> review terminal|bang
+   --kind fidelity|design`, as appropriate. Resume when the operator says
+   the session has finished, and run `syzygy dossier status`.
 9. On a blocking finding, go back to 7.
 10. Ask the operator for the usage figure their tool shows (or none);
     `syzygy dossier close <run> --usage-…`. Report the site path and
