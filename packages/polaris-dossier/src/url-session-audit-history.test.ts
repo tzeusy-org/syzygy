@@ -13,7 +13,7 @@ import { createSessionProfile, DEFAULT_SESSION_MODEL } from './session-profile.j
 import { URL_LAUNCH_LIMITS } from './session-launch.js';
 import { SESSION_COUNT_TOKENS_PATH } from './session-relay.js';
 import { createUrlSessionAudit, URL_SESSION_AUDIT_LIMITS, type UrlSessionAuditEvent } from './url-session-audit.js';
-import { verifyUrlSessionAuditHistory } from './url-session-audit-history.js';
+import { readVerifiedUrlAuditLaunches, verifyUrlSessionAuditHistory } from './url-session-audit-history.js';
 
 const ROLES = ['author', 'inventory', 'fidelity', 'design'] as const;
 afterEach(() => { vi.restoreAllMocks(); vi.useRealTimers(); });
@@ -111,9 +111,12 @@ async function fixture(fault?: 'incomplete-send' | 'uncertain-send' | 'unknown-c
 describe('read-only protected audit history', () => {
   it('verifies actual closed writer segments against independently retained global and role anchors, without issuing authority', async () => {
     const f = await fixture(), before = ROLES.map(role => fs.readFileSync(f.file(role)));
-    expect(await verifyUrlSessionAuditHistory(f.options)).toEqual({ kind: 'verified-local-audit-history', authorization: 'none', replay: 'forbidden',
+    const verified = await verifyUrlSessionAuditHistory(f.options);
+    expect(readVerifiedUrlAuditLaunches(verified)).toMatchObject({ runId: 'own-run', helperLaunchFiles: {} });
+    expect(readVerifiedUrlAuditLaunches(JSON.parse(JSON.stringify(verified)))).toBeNull();
+    expect(verified).toEqual({ kind: 'verified-local-audit-history', authorization: 'none', replay: 'forbidden',
       completeness: 'Unknown', records: 17, bytes: f.expected.durableBytes, tipSha256: f.expected.tipSha256,
-      capturedLaunchTerminals: 4, capturedCompleteExchanges: 1, capturedCountExchanges: 0, capturedHelperLaunches: 0, capturedMachineEffects: 0, capturedReportedTokens: 3, capturedQuestions: 0 });
+      capturedLaunchTerminals: 4, capturedCompleteExchanges: 1, capturedCountExchanges: 0, capturedHelperLaunches: 0, capturedMachineEffects: 0, capturedReportedTokens: 3, capturedQuestions: 0, capturedSettledRoles: ROLES });
     expect(ROLES.map(role => fs.readFileSync(f.file(role)))).toEqual(before);
   });
 

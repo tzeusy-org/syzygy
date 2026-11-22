@@ -185,6 +185,21 @@ export function verifyColdOrderedDesignAuditHistory(input: {
   try {
     const attempts: SealedAttempt[] = input.attempts.map(item => {
       const retained = snapshot(item);
+      const exact = (value: unknown, keys: readonly string[]): value is Record<string, unknown> => isRecord(value)
+        && Object.keys(value).length === keys.length && keys.every(key => Object.hasOwn(value, key));
+      if (!exact(retained, ['profileInput', 'plan', 'principal', 'scope', 'receipt', 'disposition'])
+        || !exact(retained.receipt, ['eventSha256', 'identity']) || !hex(retained.receipt.eventSha256)
+        || !exact(retained.receipt.identity, ['state', 'site', 'round', 'sessionId', 'draftRevision', 'original', 'payload', 'view',
+          'files', 'pages', 'rendererSha256', 'basePolicySha256', 'originPolicySha256', 'registryProfileSha256',
+          'policyBindingsSha256', 'launchEventSha256', 'parentCount', 'parentsSha256', 'inputsSha256', 'storedPopulationSha256'])) throw new Error('ordered-history-shape');
+      const disposition = retained.disposition;
+      const fields = disposition.kind === 'eligible' ? ['kind', 'terminal', 'verdictEventSha256', 'checked', 'verdictCall']
+        : disposition.kind === 'retired' ? ['kind', 'terminal'] : disposition.kind === 'stopped' ? ['kind', 'tip'] : null;
+      if (fields === null || !exact(disposition, fields)
+        || disposition.kind === 'eligible' && (!exact(disposition.checked, ['number', 'checkSha256', 'verdictSha256'])
+          || !Number.isSafeInteger(disposition.checked.number) || disposition.checked.number < 0
+          || !hex(disposition.checked.checkSha256) || !hex(disposition.checked.verdictSha256)
+          || !exact(disposition.verdictCall, ['id', 'name', 'inputSha256']))) throw new Error('ordered-history-disposition');
       const compiled = createOrderedDesignSessionProfile(retained.profileInput);
       if (!compiled.ok || compiled.value.profile.digest !== input.profileSha256) throw new Error('ordered-history-profile');
       const { profileInput: _input, ...rest } = retained;
@@ -246,7 +261,7 @@ function verifyHistory(input: {
       if (disposition.kind === 'stopped') {
         if (!historical) return null;
         const prefix = verifyHistoricalOrderedDesignAuditPrefix({ ...context, records });
-        if (prefix === null || prefix.next === null || !equal(prefix.tip, disposition.tip)) return null;
+        if (prefix === null || !equal(prefix.tip, disposition.tip)) return null;
         attemptSha256 = prefix.attemptSha256;
       } else if (disposition.kind === 'retired') {
         if (events.slice(0, -1).some(event => event.id === disposition.terminal.id)) return null;

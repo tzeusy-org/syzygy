@@ -6,7 +6,7 @@ import type { SessionCredential } from './session-credential.js';
 import type { SessionAdmission, SessionContentClass } from './session-egress-policy.js';
 import { isOrderedDesignSessionProfile } from './session-profile.js';
 import { launchRestrictedUrlSession, prepareRestrictedUrlSession, urlSessionStoppedCleanly, type UrlSessionProcess } from './session-launch.js';
-import { planOrderedDesignBytes } from './url-design-delivery.js';
+import { planOrderedDesignBytes, orderedDesignPlanInputForDelivery } from './url-design-delivery.js';
 import { assertUrlDesignDeliveryViewCurrent, type UrlSessionAuditResult, type UrlCommittedLaunchHistory,
   type UrlDesignDeliveryView } from './url-session-audit.js';
 import { isUrlDesignProductLeaseOpen, type UrlDesignProductMetadata } from './url-design-product.js';
@@ -201,16 +201,7 @@ export async function startUrlOrderedAttempt(input: UrlOrderedAttemptOptions) {
     delivery = await input.audit.commitDesignDelivery({ product: render.product, expectedProduct: input.expectedProduct, launch,
       sitePath: input.sitePath, round: input.round, run: input.run, runId: path.basename(input.run), pinnedRevision: input.pin }, input.waitForSamples);
     delivery = await input.audit.readDesignDeliveryView(delivery.receipt, render.product, observeRead);
-    const identity = delivery.receipt.identity;
-    const { algorithm: _algorithm, ...partitionLimits } = profile.transcript.partition;
-    const planInput = { envelopeSha256: identity.view.sha256, original: identity.original, fileCount: identity.files, pageCount: identity.pages,
-      binding: { basePolicySha256: profile.input.binding.policy, originPolicySha256: input.originPolicySha256,
-        originalReceiptSha256: delivery.receipt.eventSha256, producerSha256: input.expectedProduct.renderer.programSha256,
-        profileSha256: profile.digest, encoding: identity.view.encoding, project: 'project:syzygy', provider: profile.input.binding.provider,
-        role: 'design' as const, round: input.round, run: profile.input.binding.run, session: profile.input.sessionId,
-        transferEpoch: input.round, pin: input.pin, deadline: new Date(input.deadline).toISOString() },
-      parents: input.expectedProduct.parents.map(parent => sha256(canonical(parent))),
-      instructionProfileSha256: sha256(profile.input.systemPrompt), limits: partitionLimits };
+    const planInput = orderedDesignPlanInputForDelivery(profile, delivery.receipt, input.expectedProduct, input.pin, input.deadline);
     const plan = planOrderedDesignBytes({ ...planInput, envelope: delivery.view });
     const envelope = { cpuMicroseconds: 64_000_000, wallMilliseconds: 10_000, auditReadBytes: 500_000_000,
       inputCodeUnits: 8_388_608, secretCodeUnits: 103_000_000, secretCalls: 524_361, activeCodeUnits: 16_777_216, activeCalls: 32 };
