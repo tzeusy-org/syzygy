@@ -3,12 +3,13 @@ import * as fs from 'node:fs';
 import * as path from 'node:path';
 import { bodyLines, parseBoundedJson, retainedWithMarkers, spanTouchesWithheld } from '@syzygy/polaris-generation-core/live';
 import { isRecord, sha256 } from '@syzygy/support';
-import { CHECK_RECORD_FORMAT, collectCitations, declaredSessionId, nextRevision } from './check.js';
+import { collectCitations, declaredSessionId, nextRevision } from './check.js';
+import { CHECK_RECORD_LIMITS, isCheckRecordOf, readCheckRecord } from './check-record-read.js';
 import { DEFICIENT_SUBJECTS, VERDICT_QUOTATION_FORM, verdictSchemaDocument } from './draft-schema.js';
 import { RECORDS_WITHIN_REACH } from './gate-sources.js';
 import { BLOB_MODES, GitObjectReadRefusal, openPinnedObjectReader, type TreeEntry } from './git-object-reader.js';
 import { INVENTORY_INFERRED, errno, inventoryOfRecord, type OpenedRun } from './inventory.js';
-import { buildDesignPacket, readLatestSite, type DesignPacketBuild } from './design-review.js';
+import { briefStandardsOf, buildDesignPacket, standardsInput, readLatestSite, type DesignPacketBuild } from './design-review.js';
 import { CLASS_NOT_CONSENTED, unconsentedClass } from './class-gate.js';
 import { placementSubjectOf, screenLoaderOf, type ScreenExclusion } from './screen.js';
 import { REVISION_FILE, RUN_LAYOUT } from './state-directory.js';
@@ -41,11 +42,11 @@ export function latestPassedDraft(run: string, products?: RunProductReads): { re
   let check: unknown;
   if (products !== undefined) {
     const bytes = protectedProduct(products, run, checkFile);
-    check = bytes === null ? undefined : parseProductRecord(bytes, SUBJECT_JSON_LIMITS);
+    check = bytes === null ? undefined : parseProductRecord(bytes, CHECK_RECORD_LIMITS);
   } else {
-    try { check = parseBoundedJson(fs.readFileSync(path.join(run, checkFile), 'utf8'), SUBJECT_JSON_LIMITS); } catch { check = undefined; }
+    try { check = readCheckRecord(path.join(run, checkFile)); } catch { check = undefined; }
   }
-  if (!isRecord(check) || check['format'] !== CHECK_RECORD_FORMAT || check['revision'] !== revision) return { ok: false, reason: `the check result of draft revision ${revision} cannot be read` };
+  if (!isCheckRecordOf(check, revision)) return { ok: false, reason: `the check result of draft revision ${revision} cannot be read` };
   if (check['outcome'] !== 'passed') return { ok: false, reason: `draft revision ${revision}, the latest checked, has open findings; only a passed revision is reviewed` };
   const frozen = path.join(RUN_LAYOUT.drafts, `rev-${revision}.json`);
   let bytes: Uint8Array | null;
@@ -162,8 +163,9 @@ export async function buildFidelityPacket(opened: Extract<OpenedRun, { ok: true 
       if (withheld === undefined) return { id, path: span.path, startLine: span.startLine, endLine: span.endLine, objectId, outcome: 'admitted', text: spanText, citedBy: span.citedBy };
       const redaction: SpanRedaction = { redactionClass: 'redacted-span', withheldLines: withheld.length };
       // The citedSpanRule: a span that includes a withheld line is withheld whole; an admitted span's own text is screened by every
-      // detector before it is carried, and a match withholds it.
-      if (spanTouchesWithheld(withheld, span.startLine, span.endLine) || screen.screenBody(spanText) === 'secret-detector-match') {
+      // detector before it is carried, and a match withholds it. Only a Stage-1 body is ever redacted, so the span is screened with its path:
+      // the configuration detectors of the dossier policy 2.0.0 screen Stage-2 bodies and agent text, never a Stage-1 span.
+      if (spanTouchesWithheld(withheld, span.startLine, span.endLine) || screen.screenBody(spanText, span.path) === 'secret-detector-match') {
         return { id, path: span.path, startLine: span.startLine, endLine: span.endLine, objectId, outcome: 'redacted-span', redaction, citedBy: span.citedBy };
       }
       return { id, path: span.path, startLine: span.startLine, endLine: span.endLine, objectId, outcome: 'admitted', text: spanText, redaction, citedBy: span.citedBy };
@@ -228,6 +230,7 @@ export const DESIGN_PACKET_DISCLOSURES = [
 export function buildStoredDesignPacket(opened: Extract<OpenedRun, { ok: true }>): (DesignPacketBuild & { readonly site?: number }) | { readonly ok: false; readonly stage: 'site'; readonly reason: string } {
   const site = readLatestSite(opened.run);
   if (!site.ok) return { ok: false, stage: 'site', reason: site.reason };
-  const built = buildDesignPacket({ run: opened.run, runId: opened.runId, pinnedRevision: opened.subject.pinnedRevision.commit, audience: opened.declared.audience, files: site.files });
+  const standards = briefStandardsOf(opened.run);
+  const built = buildDesignPacket({ run: opened.run, runId: opened.runId, pinnedRevision: opened.subject.pinnedRevision.commit, audience: opened.declared.audience, files: site.files, ...standardsInput(standards) });
   return built.ok ? { ...built, site: site.number } : built;
 }

@@ -1,0 +1,40 @@
+{
+  "format": "polaris-dossier-shape-pack/1",
+  "id": "default",
+  "version": 1,
+  "selectedBy": null,
+  "dimensions": [
+    {
+      "id": "language-and-runtime",
+      "order": 10,
+      "lines": [
+        "  - Language and runtime: languages, runtime or VM, and versions where they",
+        "    matter."
+      ]
+    },
+    {
+      "id": "architecture",
+      "order": 20,
+      "lines": [
+        "  - Architecture: how the product is divided into parts (modules,",
+        "    packages, commands or processes), and which part holds what."
+      ]
+    },
+    {
+      "id": "interfaces",
+      "order": 60,
+      "lines": [
+        "  - Interfaces: how people and programs reach it (CLI, API, SDK, protocol)",
+        "    and which of these are stable."
+      ]
+    },
+    {
+      "id": "platforms-and-dependencies",
+      "order": 70,
+      "lines": [
+        "  - Platforms and dependencies: supported systems and hardware, and the",
+        "    dependencies the design rests on."
+      ]
+    }
+  ]
+}

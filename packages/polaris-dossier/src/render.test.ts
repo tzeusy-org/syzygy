@@ -1,4 +1,4 @@
-import { declaredSubjectFixture, policyFixture } from './full-run.testkit.js';
+import { declaredSubjectFixture, policyFixture, predecessorPolicyBytes } from './full-run.testkit.js';
 import { execFileSync } from 'node:child_process';
 import { createHash } from 'node:crypto';
 import * as fs from 'node:fs';
@@ -11,6 +11,8 @@ import { issueBrief, READABILITY_GUIDANCE, READABILITY_GUIDANCE_VERSION } from '
 import { checkDraft, type CheckDeps } from './check.js';
 import { runDossierCli } from './cli.js';
 import { buildDesignPacket, designCriteria } from './design-review.js';
+import { composeReaderStandards } from './reader-standards.js';
+import { DEFAULT_PACK } from './shape-packs.js';
 import { designVerdictSchemaDocument } from './draft-schema.js';
 import { GitObjectReadRefusal, openPinnedObjectReader, type PinnedObjectReader, type PinnedObjectReaderOptions } from './git-object-reader.js';
 import { NO_PROVIDER_STATEMENTS, type GateSources, type GateState } from './gate-sources.js';
@@ -197,7 +199,7 @@ async function prepared(doc: Doc = draft(), reviewed = true, extraSupport: reado
   }));
   if (!parsed.ok) throw new Error('fixture configuration refused');
   fs.writeFileSync(path.join(run, 'run.json'), encodeRunRecord(parsed.config, subject(clone)));
-  const brief = await issueBrief(run, { sources: sources(), now: () => NOW });
+  const brief = await issueBrief(run, { sources: sources(), now: () => NOW, loadScreen: async () => buildDossierScreen(fixturePolicy, true, null, fixtureVisibility) });
   if (!brief.ok) throw new Error(`fixture brief refused: ${brief.refusal.reason}`);
   fs.mkdirSync(path.join(run, 'drafts'), { recursive: true });
   fs.writeFileSync(path.join(run, 'drafts', 'next.json'), JSON.stringify(doc, null, 2));
@@ -703,7 +705,7 @@ describe('render', () => {
   // Screening scope version 8: a private repository's class-gate-withheld blob keeps its object id off every page and out of the source
   // population; the public counterpart (the test above) keeps it.
   it('suppresses a private unknown-class blob identifier on every page and in the source population', async () => {
-    const raw = JSON.parse(new TextDecoder().decode(policy(['.c']))); raw.publicSourceScope.sourceVisibility = JSON.parse(new TextDecoder().decode(policyFixture().bytes)).publicSourceScope.sourceVisibility;
+    const raw = JSON.parse(new TextDecoder().decode(policy(['.c']))); raw.publicSourceScope.sourceVisibility = JSON.parse(new TextDecoder().decode(predecessorPolicyBytes())).publicSourceScope.sourceVisibility;
     fixturePolicy = new TextEncoder().encode(JSON.stringify(raw)); fixtureVisibility = 'private';
     const run = await prepared(draft(), false); const { renderer, inputs } = capturing();
     const result = await renderRun(run, renderDeps({ renderer })); if (!result.ok) throw new Error(result.refusal.reason);
@@ -741,7 +743,8 @@ describe('render', () => {
     const run = await prepared(draft(), false);
     if (!SCREEN.ok) throw new Error(SCREEN.why);
     const base = SCREEN.screen;
-    const exempt = { ok: true as const, screen: { ...base, codeContentExemption: true, screenBody: (body: string, repositoryPath?: string) => (repositoryPath === undefined && body === KESTREL ? 'active-content' as const : base.screenBody(body, repositoryPath)) } };
+    const exempt = { ok: true as const, screen: { ...base, codeContentExemption: true, screenBody: (body: string, repositoryPath?: string) => (repositoryPath === undefined && body === KESTREL ? 'active-content' as const : base.screenBody(body, repositoryPath)),
+      scannedAsBefore: (body: string, repositoryPath: string) => body === KESTREL || base.scannedAsBefore(body, repositoryPath) } };
     const deps = (renderer: DossierRenderer) => renderDeps({ loadScreen: async () => exempt, renderer });
     const undeclared: DossierRenderer = (input) => renderLocalDossier(input);
     const why = (unconfirmed: string) => `1 cited blob(s) were admitted only under the screening policy's code-content or project-documentation exemption, and these pages cannot be confirmed to meet its render condition (${unconfirmed}); scanned as before for these pages they hold active content, so nothing is rendered`;
@@ -757,6 +760,17 @@ describe('render', () => {
     expect(result.report.outcome).toBe('rendered');
     // Without an exempt body the contract is not needed: the same undeclared renderer renders.
     expect(await renderRun(run, renderDeps({ renderer: undeclared }))).toMatchObject({ ok: true });
+  });
+
+  // syzygy-3efd.24: the rescan reads the body with its path, so a detector that screens only agent text and Stage-2 bodies (dossier policy
+  // 2.0.0's configuration detectors, here one injected on the path-free screen) never asks a Stage-1 body for the render condition.
+  it('rescans a cited body with its path, so a detector of agent text alone asks nothing of a Stage-1 body', async () => {
+    const run = await prepared(draft(), false);
+    if (!SCREEN.ok) throw new Error(SCREEN.why);
+    const base = SCREEN.screen;
+    const agentOnly = { ok: true as const, screen: { ...base, screenBody: (body: string, repositoryPath?: string) => (repositoryPath === undefined && body === KESTREL ? 'secret-detector-match' as const : base.screenBody(body, repositoryPath)) } };
+    const undeclared: DossierRenderer = (input) => renderLocalDossier(input);
+    expect(await renderRun(run, renderDeps({ loadScreen: async () => agentOnly, renderer: undeclared }))).toMatchObject({ ok: true });
   });
 
   it('draws retained spans with original coordinates and markers while withholding only the removed line', async () => {
@@ -835,7 +849,7 @@ describe('render', () => {
     const result = await renderRun(run, renderDeps({ loadScreen: async (placement) => { seen.push(placement); return SCREEN; } }));
     expect(result).toMatchObject({ ok: true });
     const commit = JSON.parse(fs.readFileSync(path.join(run, 'run.json'), 'utf8')).subject.pinnedRevision.commit as string;
-    expect(seen).toEqual([{ repository: 'repository:redis-redis', commit, visibility: 'public', policySha256: policyFixture(fixturePolicy).binding.sha256 }]);
+    expect(seen).toEqual([{ repository: 'repository:redis-redis', commit, visibility: 'public', policySha256: policyFixture(fixturePolicy).binding.sha256, policyPath: '.syzygy/governance/policies/POLARIS-DOSSIER-DECLARED-SOURCE-POLICY-v2.json' }]);
     expect(commit).toMatch(/^[0-9a-f]{40}$/u);
   });
 
@@ -932,7 +946,8 @@ const expectedDesignPacket = (run: string, site: string): string => `${JSON.stri
     excluded: 'the element of every HTML page marked data-review-status-region="review-status", and the reviewStatus member of machine.json: the only part a later render may change without retiring this review',
   },
   files: [...outside(readSite(site))].map(([file, content]) => ({ path: file, sha256: sha(content), content })),
-  criteria: designCriteria(run, 'an operator'),
+  // The fixture tree holds no server entry, so the brief carried the standards composed from the default pack alone (version 2.4).
+  criteria: designCriteria(run, 'an operator', composeReaderStandards([DEFAULT_PACK])),
   verdictSchema: designVerdictSchemaDocument({ pinnedRevision: commit }),
 }, null, 2)}\n`;
 const htmlPages = (site: string): string[] => [...outside(readSite(site)).keys()].filter((file) => file.endsWith('.html'));
@@ -1201,6 +1216,11 @@ describe('rendered-design review (S9b)', () => {
     expect(contents).not.toContain('Rendered-design review: none counts');
     expect(contents).toContain('data-disclosure-id="no-provider-call"');
     expect(JSON.parse(expected).files.map((file: { path: string }) => file.path)).toEqual([...readSite(rendered.report.site).keys()].sort());
+    // The packet judges against the standards the brief carried: the default pack's dimensions, never the server ones (version 2.4).
+    const criteria = (JSON.parse(expected).criteria as string[]).join('\n');
+    expect(criteria).toContain('(polaris-reader-standards-v1, technology dimensions from shape packs default@1, sha256 ');
+    expect(criteria).toContain('  - Architecture: how the product is divided into parts (modules,\n    packages, commands or processes), and which part holds what.');
+    for (const absent of ['Networking:', 'State and persistence:', 'Concurrency:', 'deployed and divided']) expect(criteria).not.toContain(absent);
   });
 
   it('hands a design review session the packet under the sessions root with its own prompt', async () => {
@@ -1260,6 +1280,25 @@ describe('rendered-design review (S9b)', () => {
     // The unaltered renderer again: the pages are the reviewed ones, and it counts again.
     const four = await renderRun(run, renderDeps());
     expect(four.ok && four.report.designReview).toEqual({ counts: true, packetSha256: digest, label: 'Observed' });
+  });
+
+  it('refuses the render where the brief record names a pack this Syzygy does not ship, or its standards cannot be read, and writes no site', async () => {
+    const run = await prepared();
+    const briefPath = path.join(run, 'brief.json');
+    const brief = JSON.parse(fs.readFileSync(briefPath, 'utf8'));
+    fs.writeFileSync(briefPath, `${JSON.stringify({ ...brief, readerStandards: { ...brief.readerStandards, packs: ['default@1', 'server@9'] } }, null, 2)}\n`);
+    expect(await renderRun(run, renderDeps())).toMatchObject({ ok: false, refusal: { stage: 'render', reason: 'the design packet is not built: the reader standards the brief carried cannot be recomposed (server@9 is not shipped)' } });
+    fs.writeFileSync(briefPath, `${JSON.stringify({ ...brief, readerStandards: 'polaris-reader-standards-v1' }, null, 2)}\n`);
+    expect(await renderRun(run, renderDeps())).toMatchObject({ ok: false, refusal: { stage: 'render', reason: 'the design packet is not built: the reader standards the brief carried cannot be recomposed (brief.json has a readerStandards member that is not an object)' } });
+    expect(fs.existsSync(path.join(run, 'site'))).toBe(false);
+    // The stored site's packet is refused the same way once the brief record no longer reads (never version 1's text).
+    fs.writeFileSync(briefPath, `${JSON.stringify(brief, null, 2)}\n`);
+    const rendered = await renderRun(run, renderDeps());
+    if (!rendered.ok) throw new Error(rendered.refusal.reason);
+    fs.writeFileSync(briefPath, `${JSON.stringify({ ...brief, readerStandards: { ...brief.readerStandards, packs: ['server@9'] } }, null, 2)}\n`);
+    expect(await reviewPacket(run, { kind: 'design' }, hand())).toMatchObject({ ok: false, refusal: { stage: 'standards', reason: 'the reader standards the brief carried cannot be recomposed (server@9 is not shipped)' } });
+    fs.writeFileSync(briefPath, `${JSON.stringify({ ...brief, readerStandards: null }, null, 2)}\n`);
+    expect(await reviewPacket(run, { kind: 'design' }, hand())).toMatchObject({ ok: false, refusal: { stage: 'standards', reason: 'the reader standards the brief carried cannot be recomposed (brief.json has a readerStandards member that is not an object)' } });
   });
 
   it('refuses a render whose statement of the design review leaks outside the region, and writes no site', async () => {
@@ -1388,7 +1427,7 @@ describe('rendered-design review (S9b)', () => {
   });
 
   it.each([['public', true], ['private', false]] as const)('version 8, %s: an excluded cited blob\'s object id is on the pages and in the source population: %s', async (visibility, shown) => {
-    const raw = JSON.parse(new TextDecoder().decode(policy(['.c', '.txt']))); raw.publicSourceScope.sourceVisibility = JSON.parse(new TextDecoder().decode(policyFixture().bytes)).publicSourceScope.sourceVisibility; fixturePolicy = new TextEncoder().encode(JSON.stringify(raw)); fixtureVisibility = visibility;
+    const raw = JSON.parse(new TextDecoder().decode(policy(['.c', '.txt']))); raw.publicSourceScope.sourceVisibility = JSON.parse(new TextDecoder().decode(predecessorPolicyBytes())).publicSourceScope.sourceVisibility; fixturePolicy = new TextEncoder().encode(JSON.stringify(raw)); fixtureVisibility = visibility;
     const doc = draft();
     doc.sections[0].paragraphs[1] = { id: 'p2', label: 'inferred', basis: 'source', text: 'The project states: "Deploy notes."', citations: [cite('c-p2', 'docs/deploy.md', 1, 1)], quotations: ['c-p2'], children: [] };
     const run = await prepared(doc, false);
@@ -1814,7 +1853,7 @@ describe('render: derived structure (version 2.3)', () => {
   });
 
   it('derives no size or object id for a private repository, and names no secret-matching path', async () => {
-    const raw = JSON.parse(new TextDecoder().decode(policy(['.c']))); raw.publicSourceScope.sourceVisibility = JSON.parse(new TextDecoder().decode(policyFixture().bytes)).publicSourceScope.sourceVisibility;
+    const raw = JSON.parse(new TextDecoder().decode(policy(['.c']))); raw.publicSourceScope.sourceVisibility = JSON.parse(new TextDecoder().decode(predecessorPolicyBytes())).publicSourceScope.sourceVisibility;
     fixturePolicy = new TextEncoder().encode(JSON.stringify(raw)); fixtureVisibility = 'private';
     const run = await prepared(draft(), false);
     const { files, index, machine } = await rendered(run);
@@ -1877,6 +1916,34 @@ describe('render: derived structure (version 2.3)', () => {
         expect(text, `${what} ${file}`).not.toContain('token=');
         expect(text, `${what} ${file}`).not.toContain('someone-else');
       }
+    }
+  });
+
+  // Version 2.8 (syzygy-3efd.67), the scenario "Derived record naming a directory not in the tree": each planted record below passes every
+  // reading rule of the record itself (exact rebuild, own repository, forms, no secret-matching path); the render refuses it because a
+  // path or rule it names is not one the render's own re-derivation holds.
+  it('publishes and draws nothing of a record naming a directory the tree does not hold, or a rule other than top-level-unit version 1 (version 2.8)', async () => {
+    const sentence = `<section id="derived-structure" data-reading-level="1" data-topics=""><h2>Derived by Syzygy: top-level directories</h2><p class="derived-unknown" data-epistemic="unknown" data-unknown-reason="missing-evidence"><span class="not-established">Not established.</span> The top-level directories of the tree at revision ${commit} are Unknown at this render: no derived record was kept when this draft revision was checked.</p></section>`;
+    const planted: [string, string, (doc: Doc) => void][] = [
+      ['a non-secret directory absent from the tree', 'zqplanteddir', (doc) => { doc.facts[1].path = 'zqplanteddir'; doc.facts[3].path = 'zqplanteddir'; }],
+      ['a rule other than top-level-unit', 'zq-planted-rule', (doc) => { doc.facts[2].rule = 'zq-planted-rule'; }],
+      // A version is a number: a distinctive one, so the sweep below finds it nowhere but in the record itself.
+      ['a version other than 1', '738460193', (doc) => { doc.facts[4].ruleVersion = 738460193; }],
+    ];
+    for (const [what, name, edit] of planted) {
+      const run = await prepared(draft(), false);
+      const doc = JSON.parse(fs.readFileSync(recordPath(run), 'utf8'));
+      edit(doc);
+      const planted = `${JSON.stringify(doc, null, 2)}\n`;
+      fs.writeFileSync(recordPath(run), planted);
+      // The planted text is in the kept record, so its absence from every output below is the render's refusal, not the fixture's.
+      expect(planted, what).toContain(name);
+      const { files, index, machine } = await rendered(run);
+      expect(regionOfIndex(index), what).toBe(sentence);
+      expect(files.has('derived-structure.json'), what).toBe(false);
+      expect(machine.derivedStructure, what).toEqual({ file: null, sha256: null, revision: commit, state: 'missing', currencyPolicy: null, facts: [] });
+      expect([...files.keys()].filter((file) => !file.endsWith('.html')).sort(), what).toEqual(['dossier.json', 'machine.json', 'size-report.json']);
+      for (const [file, text] of files) expect(text, `${what} ${file}`).not.toContain(name);
     }
   });
 
@@ -1956,5 +2023,157 @@ describe('render: derived structure (version 2.3)', () => {
     const a = JSON.parse(fs.readFileSync(recordPath(run, 0), 'utf8')), b = JSON.parse(fs.readFileSync(recordPath(run, later.report.revision), 'utf8'));
     expect(b.capturedAt).toBe('2026-10-07T12:01:05.000Z');
     expect({ ...b, capturedAt: a.capturedAt }).toEqual(a);
+  });
+});
+
+// REQ-polaris-generation-034 version 2.8 (syzygy-3efd.72), the scenario "Largest manifest facts read back with the check": a passed check
+// record carrying the `manifestFacts` member at every listing cap in its widest form (built by hand from the stated caps, as in
+// manifest-facts.test.ts) takes more than 4,194,304 bytes; review, render and close each take that revision as the latest passed draft.
+describe('review and render: a passed check record carrying the widest manifest facts (version 2.8)', () => {
+  const MAX = Number.MAX_SAFE_INTEGER;
+  const CJK = '\u4e00'.repeat(512), LONE = '\ud800'.repeat(256);
+  const census = { path: `${JSON.stringify('\u0001'.repeat(512))} (9007199254740991 more code units)`, epistemic: 'unknown', unknownReason: 'path-not-citable', parseFault: null, facts: null, valuesLeftOut: null };
+  const widest = {
+    format: 'polaris-dossier-manifest-facts/1', state: 'derived',
+    screeningPolicy: { policyId: 'x'.repeat(64), policyVersion: 'x'.repeat(64), sha256: '0'.repeat(64) },
+    recognizers: ['npm-package-manifest', 'cargo-manifest', 'python-project-manifest', 'go-module-manifest', 'github-actions-workflow'].map((rule) => ({
+      rule, ruleVersion: 1, label: 'inferred', candidates: MAX, secretPathsLeftOut: MAX, setApart: MAX, inferred: MAX, unknown: MAX, valuesLeftOut: MAX, facts: MAX,
+      files: Array.from({ length: 250 }, () => census), filesNotListed: MAX,
+    })),
+    facts: Array.from({ length: 1000 }, (_, i) => ({
+      id: `_manifest-${i + 1}`, fact: 'dependency', rule: 'python-project-manifest', ruleVersion: 1, path: CJK, lines: [1_048_577, 1_048_577],
+      name: LONE, section: 'project.optional-dependencies', group: LONE, epistemic: 'inferred',
+    })),
+    factsNotListed: MAX,
+  };
+
+  it('builds the fidelity packet and renders the whole site on that revision, where version 2.7 refused both', async () => {
+    const run = await prepared();
+    const file = path.join(run, 'checks', 'rev-0.json');
+    const stored = JSON.parse(fs.readFileSync(file, 'utf8'));
+    expect(stored.outcome).toBe('passed');
+    const before = await renderRun(run, renderDeps());
+    if (!before.ok) throw new Error(before.refusal.reason);
+    stored.manifestFacts = widest;
+    const text = `${JSON.stringify(stored, null, 2)}\n`;
+    fs.writeFileSync(file, text);
+    const size = Buffer.byteLength(text);
+    expect([size > 4_194_304, size <= 16_777_216]).toEqual([true, true]);
+    const deps = { sources: sources(), now: () => LATER, loadScreen: async () => buildDossierScreen(fixturePolicy, true, null, fixtureVisibility) };
+    const packet = await reviewPacket(run, { kind: 'fidelity' }, deps);
+    expect(packet.ok ? packet.report : packet.refusal).toMatchObject({ outcome: 'built', kind: 'fidelity', draftRevision: 0 });
+    const after = await renderRun(run, renderDeps());
+    if (!after.ok) throw new Error(after.refusal.reason);
+    // The manifest facts reach no page: the site is the one rendered before the record grew, outside the review-status region.
+    const first = readSite(before.report.site), second = readSite(after.report.site);
+    expect([...second.keys()].sort()).toEqual([...first.keys()].sort());
+    for (const [name, bytes] of second) if (name.endsWith('.html')) expect(withoutReviewStatusRegion(bytes), name).toBe(withoutReviewStatusRegion(first.get(name)!));
+    // Review, render and close all take the draft revision through one function, latestPassedDraft (review-packet.ts), which reads the
+    // check record under the one check-record bound. The over-4 MiB record is run end to end here through review's packet and render's
+    // site, and through close in close.test.ts ("takes the passed draft revision from a check record carrying the widest manifest facts"),
+    // whose full fixture run carries the policy binding close re-verifies.
+  });
+});
+
+// REQ-polaris-generation-034 version 2.4 (syzygy-3efd.56): the thesis-basis line and machine.json's `thesisBasis`. Literals throughout.
+describe('render: the thesis basis (schema v6)', () => {
+  const LINE = '<p class="thesis-basis" data-thesis-basis="code-reading">The authoring session found no maintainer statement of purpose, so this summary is Polaris\'s reading of the code, not the maintainers\' words.</p>';
+  const CODE_INTRO = { id: 'intro', label: 'inferred', basis: 'source', text: 'Kestrel is a C server whose commands run one at a time.', citations: [cite('c-a', 'src/kestrel.c', 1, 1), cite('c-b', 'src/markup.c', 1, 1)], quotations: [] };
+  const v6 = (basis: string, introduction?: Doc): Doc => ({ ...draft(), schemaVersion: 'polaris-dossier-local-draft-v6', thesisBasis: basis, ...(introduction === undefined ? {} : { introduction }) });
+  const rendered = async (doc: Doc): Promise<ReadonlyMap<string, string>> => {
+    const run = await prepared(doc, false);
+    const result = await renderRun(run, renderDeps());
+    if (!result.ok) throw new Error(result.refusal.reason);
+    return readSite(result.report.site);
+  };
+  const introTag = (index: string): number => index.search(/<p[^>]*data-claim-id="intro"/u);
+
+  it('renders a code-read thesis under Syzygy\'s line, immediately before the introduction\'s block and outside it, and says so in machine.json', async () => {
+    const files = await rendered(v6('code-reading', CODE_INTRO));
+    const index = files.get('index.html')!;
+    expect(index.split(LINE).length - 1).toBe(1);
+    expect(index.indexOf(LINE) + LINE.length).toBe(introTag(index));
+    expect(index).toContain('Kestrel is a C server whose commands run one at a time.');
+    // Only the landing page carries it, and it carries no label token, citation or anchor.
+    expect([...files].filter(([file, page]) => file !== 'index.html' && page.includes('data-thesis-basis')).map(([file]) => file)).toEqual([]);
+    expect(LINE).not.toMatch(/Inferred|Observed|Unknown|data-claim-id|data-anchor|href=/u);
+    // The evidence view is the same page at its target, so the one line serves both views.
+    expect(index).toContain('id="evidence-view"');
+    const machine = JSON.parse(files.get('machine.json')!);
+    expect(machine.thesisBasis).toEqual({ value: 'code-reading', declaredBy: 'the authoring session', label: 'Inferred', lineRendered: true });
+    expect(Object.keys(machine).indexOf('thesisBasis')).toBe(Object.keys(machine).indexOf('reviewStatus') + 1);
+  });
+
+  it.each(['stated', 'none'])('renders no line for a %s thesis, and machine.json says so', async (basis) => {
+    const files = await rendered(v6(basis, basis === 'none' ? { id: 'intro', label: 'unknown', reason: 'missing-evidence', text: 'No source states what Kestrel is for.', citations: [] } : undefined));
+    expect([...files.values()].some((page) => page.includes('thesis-basis'))).toBe(false);
+    expect(JSON.parse(files.get('machine.json')!).thesisBasis).toEqual({ value: basis, declaredBy: 'the authoring session', label: 'Inferred', lineRendered: false });
+  });
+
+  it('renders no line beside a withheld introduction, and machine.json says the line did not render', async () => {
+    fixturePolicy = policy(['.txt']); // .c files are outside the class gate: every span the introduction cites is withheld
+    const files = await rendered(v6('code-reading', CODE_INTRO));
+    const index = files.get('index.html')!;
+    expect(index).not.toContain('Kestrel is a C server whose commands run one at a time.');
+    expect(marked(index, 'intro')).toEqual({ epistemic: 'unknown', reason: 'excluded-content' });
+    expect([...files.values()].some((page) => page.includes('thesis-basis'))).toBe(false);
+    expect(JSON.parse(files.get('machine.json')!).thesisBasis).toEqual({ value: 'code-reading', declaredBy: 'the authoring session', label: 'Inferred', lineRendered: false });
+  });
+
+  it('a v5 or earlier draft has no thesisBasis member in machine.json and no line', async () => {
+    for (const doc of [draft(), { ...draft(), schemaVersion: 'polaris-dossier-local-draft-v5' }]) {
+      const files = await rendered(doc);
+      expect(Object.hasOwn(JSON.parse(files.get('machine.json')!), 'thesisBasis')).toBe(false);
+      expect([...files.values()].some((page) => page.includes('thesis-basis'))).toBe(false);
+    }
+  });
+});
+
+// REQ-polaris-generation-034 version 2.5 (syzygy-3efd.30): schema v7's sequence and swimlane figures through the render command, and a
+// v6 draft rendering as version 2.4 renders it. Literals throughout.
+describe('render: figure kinds (schema v7)', () => {
+  const V6 = 'polaris-dossier-local-draft-v6', V7 = 'polaris-dossier-local-draft-v7';
+  const home = { kind: 'section', target: 'core-ideas' };
+  const el = (id: string, label: string, file = 'docs/notes.txt') => ({ id, label, epistemic: 'inferred', citations: [cite(`c-${id}`, file, 2, 2)] });
+  const FLOW = { id: 'flow-1', title: 'Flow', home, kind: 'flow', relationship: 'Order.', disposition: { kind: 'produced', assetIds: ['flow-1'] },
+    nodes: [el('n1', 'Client'), el('n2', 'Server')], edges: [{ ...el('x1', 'sends'), from: 'n1', to: 'n2' }] };
+  const SEQUENCE = { id: 'seq-1', title: 'Handshake', home, kind: 'sequence', relationship: 'Who asks whom.', disposition: { kind: 'produced', assetIds: ['seq-1'] },
+    participants: [el('pt1', 'Client'), el('pt2', 'Server')], messages: [{ ...el('msg1', 'asks'), from: 'pt1', to: 'pt2' }, { ...el('msg2', 'answers'), from: 'pt2', to: 'pt1' }] };
+  const SWIMLANE = { id: 'lane-1', title: 'Release', home, kind: 'swimlane', relationship: 'Who does each step.', disposition: { kind: 'produced', assetIds: ['lane-1'] },
+    lanes: [el('ln1', 'Developer'), el('ln2', 'CI')], steps: [{ ...el('stp1', 'pushes'), lane: 'ln1' }, { ...el('stp2', 'tests', 'src/kestrel.c'), lane: 'ln2' }] };
+  const versioned = (version: string, diagrams: readonly Doc[]): Doc => ({ ...draft(), schemaVersion: version, thesisBasis: 'stated', diagrams });
+  const rendered = async (doc: Doc): Promise<ReadonlyMap<string, string>> => {
+    const run = await prepared(doc, false);
+    const result = await renderRun(run, renderDeps());
+    if (!result.ok) throw new Error(result.refusal.reason);
+    return readSite(result.report.site);
+  };
+
+  it('renders a graph diagram of a v7 draft byte for byte as the same diagram of a v6 draft, on every page, with no figure-kind style', async () => {
+    const v6 = await rendered(versioned(V6, [FLOW]));
+    const v7 = await rendered(versioned(V7, [FLOW]));
+    expect([...v7.keys()]).toEqual([...v6.keys()]);
+    const differing = [...v6].filter(([file, bytes]) => v7.get(file) !== bytes).map(([file]) => file);
+    // Only the records that name the draft's schema version differ, and in that alone.
+    for (const file of differing) expect(v7.get(file)!.replaceAll(V7, V6), file).toBe(v6.get(file));
+    expect([...v7.values()].some((page) => page.includes('figure-stepper') || page.includes('figureStructures'))).toBe(false);
+  });
+
+  it('renders a sequence and a swimlane in their two forms, with figureStructures in machine.json and the style on their page alone', async () => {
+    fixturePolicy = policy(['.txt']); // the second step cites a .c file, outside the class gate, so it is withheld: Unknown, its label Syzygy's words
+    const files = await rendered(versioned(V7, [SEQUENCE, SWIMLANE]));
+    const index = files.get('index.html')!;
+    expect(index).toContain('<p class="diagram-relationship"><span class="eyebrow">sequence</span> Who asks whom.</p><div class="figure-forms" data-figure-width="408"><div class="diagram-scroll figure-drawing"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 408 248" width="408" height="248"');
+    expect(index).toContain('<ol class="figure-stepper"><li class="inferred"><span class="stepper-head">Client → Server</span> asks</li><li class="inferred"><span class="stepper-head">Server → Client</span> answers</li></ol>');
+    expect(index).toContain('<ol class="figure-stepper"><li class="inferred"><span class="stepper-head">Developer</span> pushes</li><li class="unknown"><span class="stepper-head">CI</span> Withheld item ?</li></ol>');
+    expect(index).toContain('<p class="diagram-tally">2 participants and 2 messages, as marked: 0 observed, 4 inferred, 0 unknown.</p>');
+    expect(index).toContain('<p class="diagram-tally">2 lanes and 2 steps, as marked: 0 observed, 3 inferred, 1 unknown.</p>');
+    expect(index).toContain('<pre>sequenceDiagram\n  participant p0 as Client\n  participant p1 as Server\n  p0--&gt;&gt;p1: asks\n  p1--&gt;&gt;p0: answers\n</pre>');
+    expect((index.match(/data-visual-provenance="curated" data-figure-kind="(?:sequence|swimlane)"/gu) ?? []).length).toBe(2);
+    expect(index).not.toMatch(/<script/u);
+    expect([...files].filter(([, page]) => page.includes('.figure-stepper{')).map(([file]) => file)).toEqual(['index.html']);
+    expect(JSON.parse(files.get('machine.json')!).figureStructures).toEqual([
+      { diagram: 'seq-1', kind: 'sequence', page: 'index.html', laidOutPx: 408, participants: ['pt1', 'pt2'], messages: [{ id: 'msg1', from: 'pt1', to: 'pt2' }, { id: 'msg2', from: 'pt2', to: 'pt1' }] },
+      { diagram: 'lane-1', kind: 'swimlane', page: 'index.html', laidOutPx: 408, lanes: ['ln1', 'ln2'], steps: [{ id: 'stp1', lane: 'ln1' }, { id: 'stp2', lane: 'ln2' }] }]);
   });
 });

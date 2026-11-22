@@ -58,6 +58,8 @@ async function fixture() {
     contentClass: file => /\.md$/u.test(file) ? 'project-documentation' : /\.ts$/u.test(file) ? 'code-content' : undefined,
     screenSecrets: text => secret(text) ? 'secret-detector-match' : undefined,
     screenBody: text => secret(text) ? 'secret-detector-match' : text.includes('<script') ? 'active-content' : undefined,
+    stageOf: file => screen.screenPath(file) === undefined ? 1 : undefined, twoStage: false, configurationDetectors: 0,
+    scannedAsBefore: text => Boolean(secret(text)) || text.includes('<script'),
     activeContentAsBefore: text => text.includes('<script'),
     screenTargetBody: (text, file) => {
       if (secret(text)) {

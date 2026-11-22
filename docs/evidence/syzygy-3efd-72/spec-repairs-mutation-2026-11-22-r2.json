@@ -1,0 +1,476 @@
+{
+  "format": "mutation-run/1",
+  "bead": [
+    "syzygy-3efd.72",
+    "syzygy-3efd.67",
+    "syzygy-3efd.68"
+  ],
+  "requirement": "REQ-polaris-generation-034 version 2.8 (row A-29, tag polaris-dossier-spec-repairs-v2.8)",
+  "ranAt": "2026-11-21T23:35:57.158Z",
+  "commit": "210b7328b3d88844b50f6850d615ca59583a4159",
+  "subject": {
+    "packages/polaris-dossier/src/check-record-read.ts": "b7badf24093b146cf99ff0ea475152e12cf594f771fc6eb4bfd0358661378b24",
+    "packages/polaris-dossier/src/derived-record.ts": "2b2bf78f54ea63c559856739a5e0b5135b713ef488f50e805ec528d642c38e8a",
+    "packages/polaris-dossier/src/polaris.ts": "9537b77a60840b1128001520c4d8ad90e7c04dec86a498afb10e6e4ddc773352",
+    "packages/polaris-dossier/src/reading-ledger.ts": "5f2eb7458498fd89febfa36082cfd6e29721d500c290b03fc922c902c4fca9fa",
+    "packages/polaris-dossier/src/review-packet.ts": "2b59aefdf36b8afff3f710dad0e309762394b6a77e41ac6af2b07d3adbb279f5"
+  },
+  "command": "npx vitest run packages/polaris-dossier/src/check-record-read.test.ts packages/polaris-dossier/src/reading-ledger.test.ts packages/polaris-dossier/src/polaris-launch-guidance.test.ts packages/polaris-dossier/src/derived-record.test.ts packages/polaris-dossier/src/close.test.ts packages/polaris-dossier/src/render.test.ts packages/polaris-dossier/src/manifest-facts.test.ts --reporter=json --outputFile=<report>",
+  "method": "Each mutant replaces one fragment of a subject file that occurs exactly once (asserted), runs the command over the named test files, and restores the original bytes (sha256 re-checked at the end). A mutant is killed when the run exits non-zero; killedBy names the test files with a failing test, failedTests each failing test. The unmutated baseline passed first.",
+  "baseline": {
+    "exit": 0
+  },
+  "totals": {
+    "mutants": 28,
+    "killed": 28,
+    "survived": 0
+  },
+  "follows": {
+    "record": "docs/evidence/syzygy-3efd-72/spec-repairs-mutation-2026-11-22.json",
+    "sha256": "027690a97960b5337f4d418eb81c9a26032cf8e735d66003279d2aaac1b992ba",
+    "commit": "5d7495e17778976a3094d7d9149e2a7bc1196053",
+    "totals": {
+      "mutants": 23,
+      "killed": 23,
+      "survived": 0
+    },
+    "why": "review notes 1 and 3 (READY WITH NOTES): the end screen counts a record only under latestPassedDraft's format and revision test (isCheckRecordOf), and readCheckRecord refuses a file over the byte bound from its size before reading; the earlier record is kept unchanged",
+    "mutantsAdded": [
+      "72-breakdown-object-only",
+      "72-shared-test-format-unchecked",
+      "72-shared-test-revision-unchecked",
+      "72-stat-removed",
+      "72-stat-at-bound"
+    ],
+    "mutantsReplaced": {
+      "72-breakdown-non-object-refused": "72-breakdown-unreadable-object-refused"
+    }
+  },
+  "mutants": [
+    {
+      "id": "72-bytes-down",
+      "file": "packages/polaris-dossier/src/check-record-read.ts",
+      "old": "maxBytes: 16_777_216",
+      "new": "maxBytes: 16_777_215",
+      "killed": true,
+      "killedBy": [
+        "packages/polaris-dossier/src/check-record-read.test.ts",
+        "packages/polaris-dossier/src/reading-ledger.test.ts"
+      ],
+      "failedTests": [
+        "packages/polaris-dossier/src/check-record-read.test.ts > the check-record read bound (version 2.8) reads a record of 16,777,216 bytes and refuses one of 16,777,217, in every reader",
+        "packages/polaris-dossier/src/check-record-read.test.ts > the check-record read bound (version 2.8) refuses a record over 16,777,216 bytes from its size alone, never reading a byte of it, and reads one at the bound",
+        "packages/polaris-dossier/src/reading-ledger.test.ts > reading difference reads an earlier check record of 16,777,216 bytes and counts one of 16,777,217 unreadable, under the one check-record bound (version 2.8)"
+      ]
+    },
+    {
+      "id": "72-bytes-up",
+      "file": "packages/polaris-dossier/src/check-record-read.ts",
+      "old": "maxBytes: 16_777_216",
+      "new": "maxBytes: 16_777_217",
+      "killed": true,
+      "killedBy": [
+        "packages/polaris-dossier/src/check-record-read.test.ts",
+        "packages/polaris-dossier/src/reading-ledger.test.ts"
+      ],
+      "failedTests": [
+        "packages/polaris-dossier/src/check-record-read.test.ts > the check-record read bound (version 2.8) reads a record of 16,777,216 bytes and refuses one of 16,777,217, in every reader",
+        "packages/polaris-dossier/src/check-record-read.test.ts > the check-record read bound (version 2.8) refuses a record over 16,777,216 bytes from its size alone, never reading a byte of it, and reads one at the bound",
+        "packages/polaris-dossier/src/reading-ledger.test.ts > reading difference reads an earlier check record of 16,777,216 bytes and counts one of 16,777,217 unreadable, under the one check-record bound (version 2.8)"
+      ]
+    },
+    {
+      "id": "72-bytes-4mib",
+      "file": "packages/polaris-dossier/src/check-record-read.ts",
+      "old": "maxBytes: 16_777_216",
+      "new": "maxBytes: 4 * 1024 * 1024",
+      "killed": true,
+      "killedBy": [
+        "packages/polaris-dossier/src/check-record-read.test.ts",
+        "packages/polaris-dossier/src/reading-ledger.test.ts",
+        "packages/polaris-dossier/src/close.test.ts",
+        "packages/polaris-dossier/src/render.test.ts"
+      ],
+      "failedTests": [
+        "packages/polaris-dossier/src/check-record-read.test.ts > the check-record read bound (version 2.8) reads a record of 16,777,216 bytes and refuses one of 16,777,217, in every reader",
+        "packages/polaris-dossier/src/check-record-read.test.ts > the check-record read bound (version 2.8) refuses a record over 16,777,216 bytes from its size alone, never reading a byte of it, and reads one at the bound",
+        "packages/polaris-dossier/src/check-record-read.test.ts > the check-record read bound (version 2.8) reads a passed record over the draft's own 4 MiB bound: review, render and close no longer refuse it",
+        "packages/polaris-dossier/src/reading-ledger.test.ts > reading difference reads an earlier check record of 16,777,216 bytes and counts one of 16,777,217 unreadable, under the one check-record bound (version 2.8)",
+        "packages/polaris-dossier/src/close.test.ts > close (S10) takes the passed draft revision from a check record carrying the widest manifest facts, over 4 MiB (version 2.8)",
+        "packages/polaris-dossier/src/render.test.ts > review and render: a passed check record carrying the widest manifest facts (version 2.8) builds the fidelity packet and renders the whole site on that revision, where version 2.7 refused both"
+      ]
+    },
+    {
+      "id": "72-values-down",
+      "file": "packages/polaris-dossier/src/check-record-read.ts",
+      "old": "maxNodes: 2_000_000",
+      "new": "maxNodes: 1_999_999",
+      "killed": true,
+      "killedBy": [
+        "packages/polaris-dossier/src/check-record-read.test.ts"
+      ],
+      "failedTests": [
+        "packages/polaris-dossier/src/check-record-read.test.ts > the check-record read bound (version 2.8) reads a record of 2,000,000 values and refuses one of 2,000,001, in every reader"
+      ]
+    },
+    {
+      "id": "72-values-up",
+      "file": "packages/polaris-dossier/src/check-record-read.ts",
+      "old": "maxNodes: 2_000_000",
+      "new": "maxNodes: 2_000_001",
+      "killed": true,
+      "killedBy": [
+        "packages/polaris-dossier/src/check-record-read.test.ts"
+      ],
+      "failedTests": [
+        "packages/polaris-dossier/src/check-record-read.test.ts > the check-record read bound (version 2.8) reads a record of 2,000,000 values and refuses one of 2,000,001, in every reader"
+      ]
+    },
+    {
+      "id": "72-depth-down",
+      "file": "packages/polaris-dossier/src/check-record-read.ts",
+      "old": "maxDepth: 16 }",
+      "new": "maxDepth: 15 }",
+      "killed": true,
+      "killedBy": [
+        "packages/polaris-dossier/src/check-record-read.test.ts"
+      ],
+      "failedTests": [
+        "packages/polaris-dossier/src/check-record-read.test.ts > the check-record read bound (version 2.8) reads a record with a value nested 16 levels below the root and refuses one nested 17, in every reader"
+      ]
+    },
+    {
+      "id": "72-depth-up",
+      "file": "packages/polaris-dossier/src/check-record-read.ts",
+      "old": "maxDepth: 16 }",
+      "new": "maxDepth: 17 }",
+      "killed": true,
+      "killedBy": [
+        "packages/polaris-dossier/src/check-record-read.test.ts"
+      ],
+      "failedTests": [
+        "packages/polaris-dossier/src/check-record-read.test.ts > the check-record read bound (version 2.8) reads a record with a value nested 16 levels below the root and refuses one nested 17, in every reader"
+      ]
+    },
+    {
+      "id": "72-latest-passed-subject-limits",
+      "file": "packages/polaris-dossier/src/review-packet.ts",
+      "old": "check = readCheckRecord(path.join(run, RUN_LAYOUT.checks, `rev-${revision}.json`));",
+      "new": "check = parseBoundedJson(fs.readFileSync(path.join(run, RUN_LAYOUT.checks, `rev-${revision}.json`), 'utf8'), SUBJECT_JSON_LIMITS);",
+      "killed": true,
+      "killedBy": [
+        "packages/polaris-dossier/src/check-record-read.test.ts",
+        "packages/polaris-dossier/src/close.test.ts",
+        "packages/polaris-dossier/src/render.test.ts"
+      ],
+      "failedTests": [
+        "packages/polaris-dossier/src/check-record-read.test.ts > the check-record read bound (version 2.8) reads a record of 16,777,216 bytes and refuses one of 16,777,217, in every reader",
+        "packages/polaris-dossier/src/check-record-read.test.ts > the check-record read bound (version 2.8) refuses a record over 16,777,216 bytes from its size alone, never reading a byte of it, and reads one at the bound",
+        "packages/polaris-dossier/src/check-record-read.test.ts > the check-record read bound (version 2.8) reads a record of 2,000,000 values and refuses one of 2,000,001, in every reader",
+        "packages/polaris-dossier/src/check-record-read.test.ts > the check-record read bound (version 2.8) reads a passed record over the draft's own 4 MiB bound: review, render and close no longer refuse it",
+        "packages/polaris-dossier/src/close.test.ts > close (S10) takes the passed draft revision from a check record carrying the widest manifest facts, over 4 MiB (version 2.8)",
+        "packages/polaris-dossier/src/render.test.ts > review and render: a passed check record carrying the widest manifest facts (version 2.8) builds the fidelity packet and renders the whole site on that revision, where version 2.7 refused both"
+      ]
+    },
+    {
+      "id": "72-ledger-unbounded",
+      "file": "packages/polaris-dossier/src/reading-ledger.ts",
+      "old": "record = readCheckRecord(path.join(dir, RUN_LAYOUT.checks, `rev-${revision}.json`));",
+      "new": "record = JSON.parse(fs.readFileSync(path.join(dir, RUN_LAYOUT.checks, `rev-${revision}.json`), 'utf8'));",
+      "killed": true,
+      "killedBy": [
+        "packages/polaris-dossier/src/reading-ledger.test.ts"
+      ],
+      "failedTests": [
+        "packages/polaris-dossier/src/reading-ledger.test.ts > reading difference reads an earlier check record of 16,777,216 bytes and counts one of 16,777,217 unreadable, under the one check-record bound (version 2.8)"
+      ]
+    },
+    {
+      "id": "72-breakdown-unbounded",
+      "file": "packages/polaris-dossier/src/polaris.ts",
+      "old": "try { record = readCheckRecord(path.join(run, RUN_LAYOUT.checks, name)); } catch { continue; }",
+      "new": "try { record = JSON.parse(fs.readFileSync(path.join(run, RUN_LAYOUT.checks, name), 'utf8')); } catch { continue; }",
+      "killed": true,
+      "killedBy": [
+        "packages/polaris-dossier/src/check-record-read.test.ts"
+      ],
+      "failedTests": [
+        "packages/polaris-dossier/src/check-record-read.test.ts > the check-record read bound (version 2.8) reads a record of 16,777,216 bytes and refuses one of 16,777,217, in every reader",
+        "packages/polaris-dossier/src/check-record-read.test.ts > the check-record read bound (version 2.8) refuses a record over 16,777,216 bytes from its size alone, never reading a byte of it, and reads one at the bound",
+        "packages/polaris-dossier/src/check-record-read.test.ts > the check-record read bound (version 2.8) reads a record of 2,000,000 values and refuses one of 2,000,001, in every reader",
+        "packages/polaris-dossier/src/check-record-read.test.ts > the check-record read bound (version 2.8) reads a record with a value nested 16 levels below the root and refuses one nested 17, in every reader"
+      ]
+    },
+    {
+      "id": "72-breakdown-unreadable-refused",
+      "file": "packages/polaris-dossier/src/polaris.ts",
+      "old": "try { record = readCheckRecord(path.join(run, RUN_LAYOUT.checks, name)); } catch { continue; }",
+      "new": "try { record = readCheckRecord(path.join(run, RUN_LAYOUT.checks, name)); } catch { refused += 1; continue; }",
+      "killed": true,
+      "killedBy": [
+        "packages/polaris-dossier/src/check-record-read.test.ts",
+        "packages/polaris-dossier/src/polaris-launch-guidance.test.ts"
+      ],
+      "failedTests": [
+        "packages/polaris-dossier/src/check-record-read.test.ts > the check-record read bound (version 2.8) reads a record of 16,777,216 bytes and refuses one of 16,777,217, in every reader",
+        "packages/polaris-dossier/src/check-record-read.test.ts > the check-record read bound (version 2.8) reads a record of 2,000,000 values and refuses one of 2,000,001, in every reader",
+        "packages/polaris-dossier/src/check-record-read.test.ts > the check-record read bound (version 2.8) reads a record with a value nested 16 levels below the root and refuses one nested 17, in every reader",
+        "packages/polaris-dossier/src/check-record-read.test.ts > the check-record read bound (version 2.8) counts a record that does not parse, or is not one JSON object, in neither figure of the end screen",
+        "packages/polaris-dossier/src/polaris-launch-guidance.test.ts > the run view counts an unreadable check record in neither figure, and says nothing when no repair revision exists"
+      ]
+    },
+    {
+      "id": "72-breakdown-unreadable-object-refused",
+      "file": "packages/polaris-dossier/src/polaris.ts",
+      "old": "    if (!isCheckRecordOf(record, Number(m[1]))) continue;\n",
+      "new": "    if (!isCheckRecordOf(record, Number(m[1]))) { refused += 1; continue; }\n",
+      "killed": true,
+      "killedBy": [
+        "packages/polaris-dossier/src/check-record-read.test.ts",
+        "packages/polaris-dossier/src/polaris-launch-guidance.test.ts"
+      ],
+      "failedTests": [
+        "packages/polaris-dossier/src/check-record-read.test.ts > the check-record read bound (version 2.8) counts a record that does not parse, or is not one JSON object, in neither figure of the end screen",
+        "packages/polaris-dossier/src/polaris-launch-guidance.test.ts > the run view counts an unreadable check record in neither figure, and says nothing when no repair revision exists"
+      ]
+    },
+    {
+      "id": "72-breakdown-object-only",
+      "file": "packages/polaris-dossier/src/polaris.ts",
+      "old": "if (!isCheckRecordOf(record, Number(m[1]))) continue;",
+      "new": "if (!isRecord(record)) continue;",
+      "killed": true,
+      "killedBy": [
+        "packages/polaris-dossier/src/polaris-launch-guidance.test.ts"
+      ],
+      "failedTests": [
+        "packages/polaris-dossier/src/polaris-launch-guidance.test.ts > the run view counts an unreadable check record in neither figure, and says nothing when no repair revision exists"
+      ]
+    },
+    {
+      "id": "72-shared-test-format-unchecked",
+      "file": "packages/polaris-dossier/src/check-record-read.ts",
+      "old": "isRecord(record) && record['format'] === CHECK_RECORD_FORMAT && record['revision'] === revision",
+      "new": "isRecord(record) && record['revision'] === revision",
+      "killed": true,
+      "killedBy": [
+        "packages/polaris-dossier/src/polaris-launch-guidance.test.ts"
+      ],
+      "failedTests": [
+        "packages/polaris-dossier/src/polaris-launch-guidance.test.ts > the run view counts an unreadable check record in neither figure, and says nothing when no repair revision exists"
+      ]
+    },
+    {
+      "id": "72-shared-test-revision-unchecked",
+      "file": "packages/polaris-dossier/src/check-record-read.ts",
+      "old": "isRecord(record) && record['format'] === CHECK_RECORD_FORMAT && record['revision'] === revision",
+      "new": "isRecord(record) && record['format'] === CHECK_RECORD_FORMAT",
+      "killed": true,
+      "killedBy": [
+        "packages/polaris-dossier/src/polaris-launch-guidance.test.ts"
+      ],
+      "failedTests": [
+        "packages/polaris-dossier/src/polaris-launch-guidance.test.ts > the run view counts an unreadable check record in neither figure, and says nothing when no repair revision exists"
+      ]
+    },
+    {
+      "id": "72-stat-removed",
+      "file": "packages/polaris-dossier/src/check-record-read.ts",
+      "old": "  if (fs.statSync(file).size > CHECK_RECORD_LIMITS.maxBytes) throw new BoundedJsonError('byte-limit');\n",
+      "new": "",
+      "killed": true,
+      "killedBy": [
+        "packages/polaris-dossier/src/check-record-read.test.ts"
+      ],
+      "failedTests": [
+        "packages/polaris-dossier/src/check-record-read.test.ts > the check-record read bound (version 2.8) refuses a record over 16,777,216 bytes from its size alone, never reading a byte of it, and reads one at the bound"
+      ]
+    },
+    {
+      "id": "72-stat-at-bound",
+      "file": "packages/polaris-dossier/src/check-record-read.ts",
+      "old": "fs.statSync(file).size > CHECK_RECORD_LIMITS.maxBytes",
+      "new": "fs.statSync(file).size >= CHECK_RECORD_LIMITS.maxBytes",
+      "killed": true,
+      "killedBy": [
+        "packages/polaris-dossier/src/check-record-read.test.ts",
+        "packages/polaris-dossier/src/reading-ledger.test.ts"
+      ],
+      "failedTests": [
+        "packages/polaris-dossier/src/check-record-read.test.ts > the check-record read bound (version 2.8) reads a record of 16,777,216 bytes and refuses one of 16,777,217, in every reader",
+        "packages/polaris-dossier/src/check-record-read.test.ts > the check-record read bound (version 2.8) refuses a record over 16,777,216 bytes from its size alone, never reading a byte of it, and reads one at the bound",
+        "packages/polaris-dossier/src/reading-ledger.test.ts > reading difference reads an earlier check record of 16,777,216 bytes and counts one of 16,777,217 unreadable, under the one check-record bound (version 2.8)"
+      ]
+    },
+    {
+      "id": "72-latest-checks-unbounded",
+      "file": "packages/polaris-dossier/src/polaris.ts",
+      "old": "latestRecord(path.join(run, RUN_LAYOUT.checks), REVISION_FILE, readCheckRecord)",
+      "new": "latestRecord(path.join(run, RUN_LAYOUT.checks), REVISION_FILE)",
+      "killed": true,
+      "killedBy": [
+        "packages/polaris-dossier/src/check-record-read.test.ts"
+      ],
+      "failedTests": [
+        "packages/polaris-dossier/src/check-record-read.test.ts > the check-record read bound (version 2.8) reads a record of 16,777,216 bytes and refuses one of 16,777,217, in every reader",
+        "packages/polaris-dossier/src/check-record-read.test.ts > the check-record read bound (version 2.8) refuses a record over 16,777,216 bytes from its size alone, never reading a byte of it, and reads one at the bound",
+        "packages/polaris-dossier/src/check-record-read.test.ts > the check-record read bound (version 2.8) reads a record of 2,000,000 values and refuses one of 2,000,001, in every reader",
+        "packages/polaris-dossier/src/check-record-read.test.ts > the check-record read bound (version 2.8) reads a record with a value nested 16 levels below the root and refuses one nested 17, in every reader"
+      ]
+    },
+    {
+      "id": "72-latest-record-non-object",
+      "file": "packages/polaris-dossier/src/polaris.ts",
+      "old": "return isRecord(doc) ? { n: best.n, doc: { ...doc } } : null;",
+      "new": "return { n: best.n, doc: { ...(doc as object) } };",
+      "killed": true,
+      "killedBy": [
+        "packages/polaris-dossier/src/check-record-read.test.ts"
+      ],
+      "failedTests": [
+        "packages/polaris-dossier/src/check-record-read.test.ts > the check-record read bound (version 2.8) counts a record that does not parse, or is not one JSON object, in neither figure of the end screen"
+      ]
+    },
+    {
+      "id": "67-guard-removed",
+      "file": "packages/polaris-dossier/src/derived-record.ts",
+      "old": "  if (record.facts.some(foreign)) return { state: 'missing', revision: pinned, unknownReason: 'missing-evidence' };\n",
+      "new": "",
+      "killed": true,
+      "killedBy": [
+        "packages/polaris-dossier/src/derived-record.test.ts",
+        "packages/polaris-dossier/src/render.test.ts"
+      ],
+      "failedTests": [
+        "packages/polaris-dossier/src/derived-record.test.ts > the record at a render states missing for a record naming another rule or version, or a path the render does not re-derive (version 2.8)",
+        "packages/polaris-dossier/src/derived-record.test.ts > the record at a render states missing for a record naming a directory the tree holds past the render's listing of 250, and reads one within it (version 2.8)",
+        "packages/polaris-dossier/src/render.test.ts > render: derived structure (version 2.3) publishes and draws nothing of a record naming a directory the tree does not hold, or a rule other than top-level-unit version 1 (version 2.8)"
+      ]
+    },
+    {
+      "id": "67-rule-unchecked",
+      "file": "packages/polaris-dossier/src/derived-record.ts",
+      "old": "fact.rule !== TOP_LEVEL_UNIT.id || ",
+      "new": "",
+      "killed": true,
+      "killedBy": [
+        "packages/polaris-dossier/src/derived-record.test.ts",
+        "packages/polaris-dossier/src/render.test.ts"
+      ],
+      "failedTests": [
+        "packages/polaris-dossier/src/derived-record.test.ts > the record at a render states missing for a record naming another rule or version, or a path the render does not re-derive (version 2.8)",
+        "packages/polaris-dossier/src/render.test.ts > render: derived structure (version 2.3) publishes and draws nothing of a record naming a directory the tree does not hold, or a rule other than top-level-unit version 1 (version 2.8)"
+      ]
+    },
+    {
+      "id": "67-version-unchecked",
+      "file": "packages/polaris-dossier/src/derived-record.ts",
+      "old": "fact.ruleVersion !== TOP_LEVEL_UNIT.version || ",
+      "new": "",
+      "killed": true,
+      "killedBy": [
+        "packages/polaris-dossier/src/derived-record.test.ts",
+        "packages/polaris-dossier/src/render.test.ts"
+      ],
+      "failedTests": [
+        "packages/polaris-dossier/src/derived-record.test.ts > the record at a render states missing for a record naming another rule or version, or a path the render does not re-derive (version 2.8)",
+        "packages/polaris-dossier/src/render.test.ts > render: derived structure (version 2.3) publishes and draws nothing of a record naming a directory the tree does not hold, or a rule other than top-level-unit version 1 (version 2.8)"
+      ]
+    },
+    {
+      "id": "67-path-unchecked",
+      "file": "packages/polaris-dossier/src/derived-record.ts",
+      "old": " || (fact.fact !== 'tree-root' && !derivedUnits.has(fact.path))",
+      "new": "",
+      "killed": true,
+      "killedBy": [
+        "packages/polaris-dossier/src/derived-record.test.ts",
+        "packages/polaris-dossier/src/render.test.ts"
+      ],
+      "failedTests": [
+        "packages/polaris-dossier/src/derived-record.test.ts > the record at a render states missing for a record naming another rule or version, or a path the render does not re-derive (version 2.8)",
+        "packages/polaris-dossier/src/derived-record.test.ts > the record at a render states missing for a record naming a directory the tree holds past the render's listing of 250, and reads one within it (version 2.8)",
+        "packages/polaris-dossier/src/render.test.ts > render: derived structure (version 2.3) publishes and draws nothing of a record naming a directory the tree does not hold, or a rule other than top-level-unit version 1 (version 2.8)"
+      ]
+    },
+    {
+      "id": "67-root-not-exempt",
+      "file": "packages/polaris-dossier/src/derived-record.ts",
+      "old": "(fact.fact !== 'tree-root' && !derivedUnits.has(fact.path))",
+      "new": "!derivedUnits.has(fact.path)",
+      "killed": true,
+      "killedBy": [
+        "packages/polaris-dossier/src/derived-record.test.ts",
+        "packages/polaris-dossier/src/render.test.ts"
+      ],
+      "failedTests": [
+        "packages/polaris-dossier/src/derived-record.test.ts > the record at a render labels every fact Observed while the adopted bound is declared and the record is current",
+        "packages/polaris-dossier/src/derived-record.test.ts > the record at a render labels every fact Unknown (no-currency-bound-declared) with no policy, and names none",
+        "packages/polaris-dossier/src/derived-record.test.ts > the record at a render states missing for a record naming a directory the tree holds past the render's listing of 250, and reads one within it (version 2.8)",
+        "packages/polaris-dossier/src/derived-record.test.ts > the record at a render still renders stale, with the names this render derived, a record of other facts whose every path the render derives (version 2.8)",
+        "packages/polaris-dossier/src/derived-record.test.ts > the record at a render labels every fact Unknown (stale-beyond-currency-bound) for a record of another revision or with facts the render does not re-derive",
+        "packages/polaris-dossier/src/render.test.ts > render: derived structure (version 2.3) keeps the record at check and draws the figure Observed with rule and version, publishing the record unchanged",
+        "packages/polaris-dossier/src/render.test.ts > render: derived structure (version 2.3) renders every derived element Unknown (no-currency-bound-declared) where no adopted policy applies",
+        "packages/polaris-dossier/src/render.test.ts > render: derived structure (version 2.3) renders every derived element Unknown (stale-beyond-currency-bound) for a record of another revision or with facts not re-derived",
+        "packages/polaris-dossier/src/render.test.ts > render: derived structure (version 2.3) derives no size or object id for a private repository, and names no secret-matching path",
+        "packages/polaris-dossier/src/render.test.ts > render: derived structure (version 2.3) keeps an authored figure matching a derived fact dashed and curated, and a draft cannot set Observed",
+        "packages/polaris-dossier/src/render.test.ts > render: derived structure (version 2.3) draws twelve, lists 250 and counts the rest end to end for a tree of more than 250 top-level directories"
+      ]
+    },
+    {
+      "id": "67-units-from-every-fact",
+      "file": "packages/polaris-dossier/src/derived-record.ts",
+      "old": "now.facts.filter((fact) => fact.fact === 'top-level-unit')",
+      "new": "now.facts",
+      "killed": true,
+      "killedBy": [
+        "packages/polaris-dossier/src/derived-record.test.ts"
+      ],
+      "failedTests": [
+        "packages/polaris-dossier/src/derived-record.test.ts > the record at a render states missing for a record naming another rule or version, or a path the render does not re-derive (version 2.8)"
+      ]
+    },
+    {
+      "id": "67-units-from-record",
+      "file": "packages/polaris-dossier/src/derived-record.ts",
+      "old": "now.facts.filter((fact) => fact.fact === 'top-level-unit')",
+      "new": "record.facts.filter((fact) => fact.fact === 'top-level-unit')",
+      "killed": true,
+      "killedBy": [
+        "packages/polaris-dossier/src/derived-record.test.ts",
+        "packages/polaris-dossier/src/render.test.ts"
+      ],
+      "failedTests": [
+        "packages/polaris-dossier/src/derived-record.test.ts > the record at a render states missing for a record naming another rule or version, or a path the render does not re-derive (version 2.8)",
+        "packages/polaris-dossier/src/derived-record.test.ts > the record at a render states missing for a record naming a directory the tree holds past the render's listing of 250, and reads one within it (version 2.8)",
+        "packages/polaris-dossier/src/render.test.ts > render: derived structure (version 2.3) publishes and draws nothing of a record naming a directory the tree does not hold, or a rule other than top-level-unit version 1 (version 2.8)"
+      ]
+    },
+    {
+      "id": "68-code-unit",
+      "file": "packages/polaris-dossier/src/reading-ledger.ts",
+      "old": "id.replace(/[^A-Za-z0-9_.-]/gu, '_')",
+      "new": "id.replace(/[^A-Za-z0-9_.-]/g, '_')",
+      "killed": true,
+      "killedBy": [
+        "packages/polaris-dossier/src/reading-ledger.test.ts"
+      ],
+      "failedTests": [
+        "packages/polaris-dossier/src/reading-ledger.test.ts > reading ledger names a deep dive's page per code point, as the renderer does: one _ for an astral character and one for a lone surrogate (version 2.8)"
+      ]
+    },
+    {
+      "id": "68-two-per-astral",
+      "file": "packages/polaris-dossier/src/reading-ledger.ts",
+      "old": "id.replace(/[^A-Za-z0-9_.-]/gu, '_')",
+      "new": "id.replace(/[^A-Za-z0-9_.-]/g, '_').replace(/__/g, '_')",
+      "killed": true,
+      "killedBy": [
+        "packages/polaris-dossier/src/reading-ledger.test.ts"
+      ],
+      "failedTests": [
+        "packages/polaris-dossier/src/reading-ledger.test.ts > reading ledger names a deep dive's page per code point, as the renderer does: one _ for an astral character and one for a lone surrogate (version 2.8)"
+      ]
+    }
+  ]
+}

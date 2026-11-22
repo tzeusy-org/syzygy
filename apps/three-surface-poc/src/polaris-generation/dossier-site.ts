@@ -1,13 +1,13 @@
 import { DESIGN_TOKENS_CSS } from '../design-tokens.js';
 
 import {
-  DOSSIER_FORMAT, OWNER_TOPICS, PAGE_SINK_CONTRACT, checkDraftQuotes, diagramToMermaid, isDossierPagePath, parseDossierManifest, readerCost, reviewVerdict, scanDossierPage, sourceTextById, withoutReviewStatusRegion,
+  DOSSIER_FORMAT, OWNER_TOPICS, PAGE_SINK_CONTRACT, checkDraftQuotes, diagramToMermaid, figureToMermaid, isDossierPagePath, parseDossierManifest, readerCost, reviewVerdict, scanDossierPage, sourceTextById, withoutReviewStatusRegion,
   generationSpanRange, validateGenerationSources,
-  type DossierDraft, type DossierManifest, type DraftBlock, type DraftDiagram, type DraftElement, type DraftParagraph, type EpistemicMarking, type GenerationSource, type LocalPageItem,
+  type DossierDraft, type DossierManifest, type DraftBlock, type DraftDiagram, type DraftElement, type DraftFigure, type DraftFigureElement, type DraftParagraph, type EpistemicMarking, type GenerationSource, type LocalPageItem,
   type LocalBlock, type LocalDerivedFact, type LocalDerivedStructure, type LocalRenderInput, type LocalSegment, type OwnerTopic, type QuoteFinding, type WithheldNote,
 } from '@syzygy/polaris-generation-core/live';
 import { sha256 } from '@syzygy/support';
-import { READABLE_SPACING, layoutDiagram, renderDiagramSvg } from './diagram-layout.js';
+import { READABLE_SPACING, layoutDiagram, layoutSequence, layoutSwimlane, renderDiagramSvg, renderSequenceSvg, renderSwimlaneSvg } from './diagram-layout.js';
 import { LOCAL_CSS, LOCAL_MACHINE_VIEW, anchorAttributes, anchorDetails, disclosureList, regionMarkup } from './dossier-render-local.js';
 import { DRAFT_PREVIEW_CSP_META, DRAFT_PREVIEW_CSS, MARKING_LABEL, escapeHtml as escape } from './draft-preview.js';
 import { assertInertSvg } from './svg-inert.js';
@@ -81,6 +81,10 @@ export class DossierRenderError extends Error {
     this.name = 'DossierRenderError';
   }
 }
+
+/** The line a code-read thesis renders under (REQ-polaris-generation-034 version 2.4): Syzygy's words, attributing the absence of a
+ * maintainer statement of purpose to the authoring session. */
+export const THESIS_BASIS_LINE = '<p class="thesis-basis" data-thesis-basis="code-reading">The authoring session found no maintainer statement of purpose, so this summary is Polaris\'s reading of the code, not the maintainers\' words.</p>';
 
 // Test seam: exported for the tests; production code reaches it only inside this file.
 /** The page a quotable source's exact text lives on, from its anchor alone. */
@@ -198,9 +202,9 @@ export const DOSSIER_THEME_CSS = ':root{--void:#262624;--panel:#30302e;--panel-r
 /** What an operator-agent run adds to every page: its notice, the run disclosure, attributes on `main` and the review-status region. */
 interface PageChrome { readonly notice: string; readonly disclosure: (path: string) => string; readonly mainAttributes: string; readonly region: string }
 
-function page(title: string, path: string, nav: string, main: string, chrome?: PageChrome): string {
+function page(title: string, path: string, nav: string, main: string, chrome?: PageChrome, figureKinds = false): string {
   return `<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">${DRAFT_PREVIEW_CSP_META}<title>${escape(title)}</title><style>${DESIGN_TOKENS_CSS}
-${DRAFT_PREVIEW_CSS}${DOSSIER_CSS}${chrome === undefined ? '' : `${LOCAL_CSS}${DOSSIER_THEME_CSS}`}
+${DRAFT_PREVIEW_CSS}${DOSSIER_CSS}${chrome === undefined ? '' : `${LOCAL_CSS}${DOSSIER_THEME_CSS}`}${figureKinds ? FIGURE_KINDS_CSS : ''}
 </style></head><body><a class="skip" href="#content">Skip to content</a><div class="pipeline-notice">${chrome?.notice ?? 'Generated dossier draft — not reviewed or adopted'}</div>${chrome?.disclosure(path) ?? ''}<div class="layout">${chrome === undefined ? `<nav class="contents desktop-contents" aria-label="Dossier">${nav}</nav>` : `<details class="contents desktop-contents nav-panel" open><summary>Contents</summary><nav aria-label="Dossier">${nav}</nav></details>`}<details class="contents mobile-contents"><summary>In this dossier</summary><nav aria-label="Dossier">${nav}</nav></details><main id="content" data-page="${escape(path)}"${chrome?.mainAttributes ?? ''}>${main}${chrome?.region ?? ''}</main></div></body></html>`;
 }
 
@@ -536,6 +540,7 @@ export function renderDossierSite(input: DossierSiteInput & { readonly local?: L
     `<aside class="unresolved-asset" data-asset-disposition="${escape(disposition.kind)}"><strong>${escape(id)}</strong>: ${escape(disposition.reason ?? '')} <span class="asset-references">(${assetReferences(from, disposition.references ?? [])})</span></aside>`;
   const diagram = (from: string, d: DraftDiagram, index: number): string => {
     if (d.disposition.kind !== 'produced') return notice(from, d.id, d.disposition);
+    if (d.figure !== undefined) return kindedFigure(from, d, d.figure, index);
     const nodes = new Map(d.nodes.map(node => [node.id, node]));
     // A withheld node or edge (v1.5) reads `Withheld item` and says, in Syzygy's words, what is withheld, with its count.
     const held = (id: string): WithheldNote | undefined => local?.withheldElements?.get(id);
@@ -554,6 +559,49 @@ export function renderDossierSite(input: DossierSiteInput & { readonly local?: L
     // tally of its boxes and arrows by marking (syzygy-3efd.17): no figure element is observed there, so "Solid: observed" was false.
     const legend = local === undefined ? FIXED_DIAGRAM_LEGEND : figureLegend([...d.nodes, ...d.edges].map(element => element.epistemic), d.nodes.length, d.edges.length);
     return `<figure${from.startsWith('poles/') ? '' : hueAttr(index % HUES + 1)}${curated}><figcaption>${escape(d.title)}</figcaption><p class="diagram-relationship"><span class="eyebrow">${escape(d.kind)}</span> ${escape(d.relationship)}</p><div class="diagram-scroll">${svg}</div>${legend}<details><summary>Read every component and relationship</summary><ul>${nodeList}</ul><ol>${edgeList}</ol><details class="diagram-source"><summary>Declarative source (Mermaid)</summary><pre>${escape(diagramToMermaid(d))}</pre></details></details></figure>`;
+  };
+  // A v7 sequence or swimlane (REQ-polaris-generation-034 version 2.5): the figure a graph figure with its home takes, holding its drawing and
+  // its phone form, of which the stylesheet displays one by the width of the `figure-forms` box. Each participant, lane and step is a claim
+  // as a node is, and each message as an edge is, listed once; the phone form carries no identity, citation, anchor or label token.
+  const figurePages = new Set<string>();
+  const figureStructures: { readonly index: number; readonly entry: Record<string, unknown> }[] = [];
+  const kindedFigure = (from: string, d: DraftDiagram, figure: DraftFigure, index: number): string => {
+    const held = (id: string): WithheldNote | undefined => local?.withheldElements?.get(id);
+    const heldText = (id: string): string => held(id) === undefined ? '' : ` <span class="withheld-note">${escape(withheldWords(held(id)!))}</span>`;
+    const heldAttrs = (id: string): string => held(id) === undefined ? '' : ' data-unknown-reason="excluded-content"';
+    const listed = (element: DraftFigureElement, words: string): string => claim('li', element.id, element.epistemic, `${words}${heldText(element.id)} ${mark(from, element.epistemic)} ${refs(from, element.sourceIds, element.id)}`,
+      heldAttrs(element.id), held(element.id) === undefined ? null : 'excluded-content', held(element.id) === undefined ? undefined : { withheldSources: held(element.id)!.sources });
+    const owners = figure.kind === 'sequence' ? figure.participants : figure.lanes;
+    const uses: readonly DraftFigureElement[] = figure.kind === 'sequence' ? figure.messages : figure.steps;
+    const all = [...owners, ...uses];
+    let svg: string, width: number;
+    try {
+      svg = figure.kind === 'sequence' ? renderSequenceSvg(figure, index, escape) : renderSwimlaneSvg(figure, index, escape);
+      assertInertSvg(svg);
+      width = figure.kind === 'sequence' ? layoutSequence(figure.participants, figure.messages).width : layoutSwimlane(figure.lanes, figure.steps).width;
+    } catch {
+      return notice(from, d.id, { kind: 'unresolved', reason: 'diagram could not be rendered inertly', references: [...new Set(all.flatMap(element => element.sourceIds))] });
+    }
+    const ownerLabel = new Map(owners.map(owner => [owner.id, owner.label]));
+    const shownLabel = (element: DraftFigureElement): string => `${escape(element.label)}${element.epistemic === 'unknown' ? ' ?' : ''}`;
+    const shownOwner = (id: string): string => shownLabel(owners.find(owner => owner.id === id)!);
+    const stepper = figure.kind === 'sequence'
+      ? figure.messages.map(message => `<li class="${message.epistemic}"><span class="stepper-head">${shownOwner(message.from)} → ${shownOwner(message.to)}</span> ${shownLabel(message)}</li>`).join('')
+      : figure.steps.map(step => `<li class="${step.epistemic}"><span class="stepper-head">${shownOwner(step.lane)}</span> ${shownLabel(step)}</li>`).join('');
+    const ownerList = owners.map(owner => listed(owner, escape(owner.label))).join('');
+    const useList = figure.kind === 'sequence'
+      ? figure.messages.map(message => listed(message, `${escape(ownerLabel.get(message.from)!)} → ${escape(ownerLabel.get(message.to)!)}: ${escape(message.label)}`)).join('')
+      : figure.steps.map(step => listed(step, `${escape(ownerLabel.get(step.lane)!)}: ${escape(step.label)}`)).join('');
+    const tallyHead = figure.kind === 'sequence'
+      ? `${counted(figure.participants.length, 'participant', 'participants')} and ${counted(figure.messages.length, 'message', 'messages')}`
+      : `${counted(figure.lanes.length, 'lane', 'lanes')} and ${counted(figure.steps.length, 'step', 'steps')}`;
+    figurePages.add(from);
+    figureStructures.push({ index, entry: figure.kind === 'sequence'
+      ? { diagram: d.id, kind: 'sequence', page: from, laidOutPx: width, participants: figure.participants.map(p => p.id), messages: figure.messages.map(m => ({ id: m.id, from: m.from, to: m.to })) }
+      : { diagram: d.id, kind: 'swimlane', page: from, laidOutPx: width, lanes: figure.lanes.map(l => l.id), steps: figure.steps.map(st => ({ id: st.id, lane: st.lane })) } });
+    return `<figure${from.startsWith('poles/') ? '' : hueAttr(index % HUES + 1)}${curated} data-figure-kind="${figure.kind}"><figcaption>${escape(d.title)}</figcaption><p class="diagram-relationship"><span class="eyebrow">${figure.kind}</span> ${escape(d.relationship)}</p>`
+      + `<div class="figure-forms" data-figure-width="${width}"><div class="diagram-scroll figure-drawing">${svg}</div><ol class="figure-stepper">${stepper}</ol></div>`
+      + `${figureLegend(all.map(element => element.epistemic), 0, 0, 'as marked', tallyHead, figure.kind === 'swimlane')}<details><summary>Read every component and relationship</summary><ul>${ownerList}</ul><ol>${useList}</ol><details class="diagram-source"><summary>Declarative source (Mermaid)</summary><pre>${escape(figureToMermaid(figure))}</pre></details></details></figure>`;
   };
   const topicAttr = (id: string): string => ` data-topics="${escape((topics[id] ?? []).join(' '))}"`;
   const localPages = local?.pages ?? [];
@@ -575,7 +623,7 @@ export function renderDossierSite(input: DossierSiteInput & { readonly local?: L
   // The dossier's open questions and Unknown claims, counted for the one sentence before any page is drawn.
   const openQuestions = withheld ? 0 : draft.unresolved.length;
   const unknownClaims = local === undefined || withheld ? 0 : [...local.blocks.values()].filter(b => b.marking === 'unknown').length
-    + draft.diagrams.filter(d => d.disposition.kind === 'produced').flatMap(d => [...d.nodes, ...d.edges]).filter(element => element.epistemic === 'unknown').length;
+    + draft.diagrams.filter(d => d.disposition.kind === 'produced').flatMap(d => [...d.nodes, ...d.edges, ...figureElements(d)]).filter(element => element.epistemic === 'unknown').length;
   const tally = [openQuestions === 0 ? '' : `${openQuestions} open question(s)`, unknownClaims === 0 ? '' : `${unknownClaims} Unknown claim(s)`].filter(part => part !== '');
   const runSentence = local === undefined ? '' : withheld
     ? local.effectiveRun === undefined
@@ -606,7 +654,7 @@ export function renderDossierSite(input: DossierSiteInput & { readonly local?: L
     ? `${main}<p class="redaction-legend"><span aria-hidden="true">†N</span> on a citation: N lines of that file are withheld by screening. Its source page marks where.</p>` : main;
   const add = (path: string, depth: number, pageTitle: string, main: string): void => {
     pageTitles.set(path, pageTitle);
-    files.set(path, page(`${pageTitle} — ${title}`, path, nav(path), legended(path, main), chrome));
+    files.set(path, page(`${pageTitle} — ${title}`, path, nav(path), legended(path, main), chrome, figurePages.has(path)));
     pages.push({ path, depth });
     claimsByPage.push(...pending.splice(0).map(entry => ({ page: path, ...entry })));
   };
@@ -655,7 +703,10 @@ export function renderDossierSite(input: DossierSiteInput & { readonly local?: L
     add(from, 0, 'Overview', `<header data-reading-level="0"><span class="eyebrow">Polaris · Draft layer Unknown</span><h1>${escape(title)}</h1>${policy}</header>${derivedRegion}`);
   } else {
     termsShown.clear();
-    const introduction = view.drafted ? paragraph(from, draft.introduction, 'p') : '';
+    // A v6 draft whose thesis is a reading of the code (version 2.4): Syzygy's one line, immediately before the introduction's block and
+    // outside it, carrying no label token, citation or anchor; none where the introduction or the draft layer is withheld.
+    const thesisLine = local?.thesisBasis?.lineRendered === true ? THESIS_BASIS_LINE : '';
+    const introduction = view.drafted ? `${thesisLine}${paragraph(from, draft.introduction, 'p')}` : '';
     const missingList = view.notGenerated.length === 0 ? '' : `<section id="not-generated" data-reading-level="1" data-topics=""><h2>Not generated</h2>${view.notGenerated.map(item => notGenerated(item.id, item.kind)).join('')}</section>`;
     // Figures whose home is the overview lead the first page, after its introduction and before its sections, in a region of their own
     // at reading level 1 with no topics; none where the page shows no part of the draft (syzygy-3efd.18).
@@ -815,7 +866,10 @@ export function renderDossierSite(input: DossierSiteInput & { readonly local?: L
       disclosure: local.disclosure,
       ...(local.effectiveRun === undefined ? {} : { effectiveRun: local.effectiveRun }),
       reviewStatus: local.reviewStatus,
+      ...(local.thesisBasis === undefined ? {} : { thesisBasis: { value: local.thesisBasis.value, declaredBy: 'the authoring session', label: 'Inferred', lineRendered: local.thesisBasis.lineRendered } }),
       ...(local.derivedStructure === undefined ? {} : { derivedStructure: derivedMachine(local.derivedStructure) }),
+      // Present only for a render holding a sequence or swimlane figure (version 2.5), so every other machine view keeps its bytes.
+      ...(figureStructures.length === 0 ? {} : { figureStructures: [...figureStructures].sort((a, b) => a.index - b.index).map(({ entry }) => entry) }),
       pages: [...pages.map(p => p.path), 'size-report.html'],
       claims: claimsByPage,
       nonNormative,
@@ -834,10 +888,20 @@ export function renderDossierSite(input: DossierSiteInput & { readonly local?: L
  * check step, which measures figure fit with it (syzygy-3efd.20). The layout reads identities and edges only, never labels, so a
  * withheld element's replaced label at render changes no width, and check's width depends on the draft's bytes alone. It throws for a
  * figure the site would not draw (one that is not inert), whose fit is then Unknown. */
-export function figureLaidOutWidth(figure: Parameters<typeof renderDiagramSvg>[0]): number {
+export function figureLaidOutWidth(figure: Parameters<typeof renderDiagramSvg>[0]
+  | ({ readonly kind: 'sequence' } & Parameters<typeof renderSequenceSvg>[0]) | ({ readonly kind: 'swimlane' } & Parameters<typeof renderSwimlaneSvg>[0])): number {
   // A figure the site cannot draw inertly renders a notice, not a drawing, so it has no width to fit: throwing makes its fit Unknown.
-  assertInertSvg(renderDiagramSvg(figure, 0, escape, READABLE_SPACING));
-  return layoutDiagram(figure.nodes, figure.edges, READABLE_SPACING).width;
+  if ('kind' in figure && figure.kind === 'sequence') {
+    assertInertSvg(renderSequenceSvg(figure, 0, escape));
+    return layoutSequence(figure.participants, figure.messages).width;
+  }
+  if ('kind' in figure && figure.kind === 'swimlane') {
+    assertInertSvg(renderSwimlaneSvg(figure, 0, escape));
+    return layoutSwimlane(figure.lanes, figure.steps).width;
+  }
+  const graph = figure as Parameters<typeof renderDiagramSvg>[0];
+  assertInertSvg(renderDiagramSvg(graph, 0, escape, READABLE_SPACING));
+  return layoutDiagram(graph.nodes, graph.edges, READABLE_SPACING).width;
 }
 
 /** An operator-agent run's site: what the `syzygy` CLI injects into the dossier render step. */
@@ -882,15 +946,33 @@ const FIXED_DIAGRAM_LEGEND = '<ul class="diagram-legend" aria-label="Line styles
 const LEGEND_ENTRIES: readonly (readonly [EpistemicMarking, string])[] = [
   ['observed', 'Solid: observed'], ['inferred', 'Dashed: inferred'], ['unknown', 'Dotted: unknown (label ends “?”)'],
 ];
+const ORDER_LEGEND_ENTRY = '<li><span class="legend-line order" aria-hidden="true"></span>Thin grey arrow: step order, no claim</li>';
 const counted = (n: number, one: string, many: string): string => `${n} ${n === 1 ? one : many}`;
 
 /** An operator-agent figure's legend: an entry for each line style the figure draws, in a fixed order, and never one it does not (RFC7-34
  * legends a used encoding); then one line counting its boxes and arrows by marking. Every count is Syzygy's, from the draft's own marks. */
-export function figureLegend(markings: readonly EpistemicMarking[], boxes: number, arrows: number, how = 'as marked'): string {
+export function figureLegend(markings: readonly EpistemicMarking[], boxes: number, arrows: number, how = 'as marked', head?: string, orderArrows = false): string {
   const count = (m: EpistemicMarking): number => markings.filter(x => x === m).length;
-  const entries = LEGEND_ENTRIES.filter(([m]) => count(m) > 0).map(([m, words]) => `<li><span class="legend-line ${m}" aria-hidden="true"></span>${words}</li>`).join('');
-  return `<ul class="diagram-legend" aria-label="Line styles">${entries}</ul><p class="diagram-tally">${counted(boxes, 'box', 'boxes')} and ${counted(arrows, 'arrow', 'arrows')}, ${how}: ${count('observed')} observed, ${count('inferred')} inferred, ${count('unknown')} unknown.</p>`;
+  const entries = LEGEND_ENTRIES.filter(([m]) => count(m) > 0).map(([m, words]) => `<li><span class="legend-line ${m}" aria-hidden="true"></span>${words}</li>`).join('')
+    // A swimlane draws its step order in thin grey arrows that claim nothing (version 2.5): the legend names them too (RFC7-34).
+    + (orderArrows ? ORDER_LEGEND_ENTRY : '');
+  // A sequence or swimlane (version 2.5) names its own elements: `{P} participants and {M} messages` or `{L} lanes and {S} steps`.
+  return `<ul class="diagram-legend" aria-label="Line styles">${entries}</ul><p class="diagram-tally">${head ?? `${counted(boxes, 'box', 'boxes')} and ${counted(arrows, 'arrow', 'arrows')}`}, ${how}: ${count('observed')} observed, ${count('inferred')} inferred, ${count('unknown')} unknown.</p>`;
 }
+
+/** A v7 figure kind's claims, participants or lanes then messages or steps; none for a graph figure. */
+const figureElements = (d: DraftDiagram): readonly DraftFigureElement[] => d.figure === undefined ? []
+  : d.figure.kind === 'sequence' ? [...d.figure.participants, ...d.figure.messages] : [...d.figure.lanes, ...d.figure.steps];
+
+/** The style rules a page carries only where a sequence or swimlane figure renders its two forms (version 2.5), so every other page keeps
+ * its bytes. The `figure-forms` box is a size container; it displays its drawing while it is at least the drawing's laid-out width W wide
+ * and its phone form, a numbered list, while it is narrower, with no script. The list's text is the 13 px figure text, wrapped within the
+ * box; each item's left border is solid, dashed or dotted by its mark, as the legend's line styles are. */
+export const FIGURE_KINDS_CSS = '.figure-forms{container-type:inline-size}.figure-stepper{display:none;margin:.5rem 0;padding-left:2rem;font:13px/1.5 var(--font-mono);overflow-wrap:anywhere}'
+  + '.figure-stepper>li{border-left:3px solid var(--accent);padding:.15rem 0 .15rem .6rem;margin:0 0 .4rem}.figure-stepper>li.inferred{border-left-style:dashed}.figure-stepper>li.unknown{border-left-style:dotted}'
+  + '.stepper-head{display:block;font-weight:600}.figure-drawing rect.lane-band{fill:none;stroke:var(--line);stroke-dasharray:none}.figure-drawing path.step-order{stroke:var(--muted);stroke-width:1;stroke-dasharray:none}.figure-drawing marker.order-head path{fill:var(--muted)}'
+  + '.legend-line.order{border-top:1px solid var(--muted)}'
+  + [408, 592, 776, 960].map(w => `@container (width < ${w}px){.figure-forms[data-figure-width="${w}"]>.figure-drawing{display:none}.figure-forms[data-figure-width="${w}"]>.figure-stepper{display:block}}`).join('');
 
 /** The legend every narrative page carries once (REQ-polaris-generation-034, v1.5), with the control that opens the evidence view. The
  * control is a fragment link and a CSS rule, so it works with scripts off. */

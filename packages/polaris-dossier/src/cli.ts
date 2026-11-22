@@ -328,7 +328,7 @@ export const DOSSIER_COMMANDS: Readonly<Record<string, DossierCommand>> = Object
     synopsis: 'brief <run>',
     args: { kind: 'one', noun: RUN },
     run: async ({ positional: [run] }, ctx) => {
-      const result = await issueBrief(run!, { ...ctx.deps('openReader'), permitting: {
+      const result = await issueBrief(run!, { ...ctx.deps('openReader', 'loadScreen'), permitting: {
         enabled: PERMITTING_ARM_ENABLED, choices: RUN_DIRECTORY_CHOICES, probe: ctx.probe(),
       } });
       return result.ok ? ctx.report(result.report, EXIT.clean) : ctx.refused(result.refusal);
@@ -352,8 +352,8 @@ export const DOSSIER_COMMANDS: Readonly<Record<string, DossierCommand>> = Object
       const draftFile = values.get('--draft');
       const result = await checkDraft(run!, draftFile === undefined ? {} : { draftFile }, ctx.deps('probe', 'openReader', 'loadScreen', 'layoutFigure', 'productReads'));
       if (!result.ok) return ctx.refused(result.refusal);
-      // `reviewVisibility`, `screenCensus`, `structureRecord`, `readerAdvice` and `reviewReach` are on the report already (`checkSubject`), never in the stored
-      // record, and the exit code reads the outcome alone.
+      // `reviewVisibility`, `screenCensus`, `structureRecord`, `readerAdvice`, `readingDifference` and `reviewReach` are on the report already (`checkSubject`), never in the
+      // stored record; `figureFit` and `readingLedger` are in both. The exit code reads the outcome alone.
       return ctx.report(result.report, result.report.outcome === 'passed' ? EXIT.clean : EXIT.refused);
     },
   },

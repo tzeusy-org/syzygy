@@ -16,10 +16,12 @@ import { placementSubjectOf, screenLoaderOf } from './screen.js';
 import { REVISION_FILE, RUN_ID, RUN_LAYOUT } from './state-directory.js';
 import { readerAdvice, type ReaderAdvice } from './reader-advice.js';
 import { figureFit, type FigureFit } from './figure-fit.js';
+import { readingDifference, readingLedger, type ReadingDifference, type ReadingLedger } from './reading-ledger.js';
 import { reviewReachAdvice, type ReviewReachAdvice } from './review-reach.js';
 import { screenCensusReport, withheldCensus, type ScreenCensusReport } from './census.js';
 import { deriveStructure, deriveTreeFacts, structureUnknown, type StructureRecord } from './derive.js';
 import { derivedRecordFile, encodeDerivedRecord, secretPathOf } from './derived-record.js';
+import { MANIFEST_BLOB_LIMIT, deriveManifestFacts, manifestFactsUnknown, type ManifestFacts } from './manifest-facts.js';
 import { BRIEF_JSON_LIMITS, CHECK_RECORD_FORMAT, type CheckCommand, type CheckDeps, type CheckFinding, type CheckRecord, type CheckRefusal, type CheckRequest, type CheckResult, type CheckStage, type CitedBlob, DEFAULT_DRAFT, DISCLOSURES, DRAFT_JSON_LIMITS, DRAFT_MAX_BYTES, type ExcludedQuotation, type ReviewVisibility, STEP_LOG_FORMAT, type VerifiedQuotation, errno, reviewVisibility, text } from './check-model.js';
 import { type Derived, type SubjectRules, deriveFindings, draftRules } from './check-derive.js';
 export { CHECK_RECORD_FORMAT, STEP_LOG_FORMAT, DEFAULT_DRAFT, DRAFT_MAX_BYTES, reviewVisibility, lineRanges, blobRedaction } from './check-model.js';
@@ -94,7 +96,7 @@ export interface SubjectPlan<R extends object, G> {
 
 /** `screenCensus` (`census.ts`), `structureRecord` (`derive.ts`), `readerAdvice` (`reader-advice.ts`) and `reviewReach` (`review-reach.ts`) are on `check`'s report only: advice to the author, never written
  * to the check record and never a finding. */
-export type SubjectReport<R extends object> = R & { readonly command: CheckCommand; readonly run: string; readonly checkFile: string; readonly disclosures: readonly string[]; readonly screenCensus?: ScreenCensusReport; readonly structureRecord?: StructureRecord; readonly readerAdvice?: ReaderAdvice; readonly figureFit?: FigureFit; readonly reviewReach?: ReviewReachAdvice; readonly reviewVisibility?: ReviewVisibility };
+export type SubjectReport<R extends object> = R & { readonly command: CheckCommand; readonly run: string; readonly checkFile: string; readonly disclosures: readonly string[]; readonly screenCensus?: ScreenCensusReport; readonly structureRecord?: StructureRecord; readonly readerAdvice?: ReaderAdvice; readonly figureFit?: FigureFit; readonly readingLedger?: ReadingLedger; readonly readingDifference?: ReadingDifference; readonly reviewReach?: ReviewReachAdvice; readonly reviewVisibility?: ReviewVisibility };
 export type SubjectResult<R extends object> = Outcome<SubjectReport<R>, CheckRefusal>;
 
 const DRAFT_PLAN: SubjectPlan<CheckRecord, null> = {
@@ -237,13 +239,18 @@ async function checkOpenSubject<R extends object, G>(runDir: string, file: strin
   // The structure record (syzygy-3efd.16) is derived from the same listing: paths and modes alone, a secret path counted and never named.
   // The derived-structure record (REQ-polaris-generation-034 version 2.3) is derived from that listing too, by rule top-level-unit, and
   // kept once beside the check record: what a render publishes unchanged and compares with its own re-derivation.
+  // Declared manifest facts (REQ-polaris-generation-034 version 2.7, syzygy-3efd.25) are read from that listing as well: each admitted
+  // manifest through a second reader on the same clone whose object bound is 1 MiB, one call per file. They are kept in the draft's check
+  // record (`manifestFacts`), never in an inventory check record, and derived whether or not the draft parses.
   let screenCensus: ScreenCensusReport | undefined, structureRecord: StructureRecord | undefined, derivedRecord: string | undefined;
+  let manifestFacts: ManifestFacts | undefined;
   if (plan.command === 'check') {
     // `capturedAt` is the instant this check listed the tree: taken once the listing returns, or once it is refused.
     const source = (): { repositoryId: string; revision: string; capturedAt: string } => ({ repositoryId: subject.repository.repositoryId, revision: pinned, capturedAt: isoOf(deps.now()) });
     const isSecretPath = secretPathOf(screen);
+    let entries: Awaited<ReturnType<typeof reader.listTree>> | undefined;
     try {
-      const entries = await reader.listTree();
+      entries = await reader.listTree();
       const listed = source();
       screenCensus = screenCensusReport({ ok: true, census: withheldCensus(entries, screen, checked.contentClasses) });
       // A URL check needs a producer receipt before it can emit derived paths.
@@ -258,6 +265,14 @@ async function checkOpenSubject<R extends object, G>(runDir: string, file: strin
         structureRecord = structureUnknown(`the pinned tree could not be listed (${cause.reason})`);
         derivedRecord = encodeDerivedRecord(source(), { why: `the pinned tree could not be listed (${cause.reason})` });
       }
+      manifestFacts = manifestFactsUnknown(cause.reason);
+    }
+    if (entries !== undefined) {
+      const manifestReader = (deps.openReader ?? openPinnedObjectReader)({ gitDir: path.join(subject.clone.path, '.git'), revision: pinned, maxObjectBytes: MANIFEST_BLOB_LIMIT });
+      manifestFacts = await deriveManifestFacts({
+        entries, screen, consented: checked.contentClasses,
+        read: async (manifestPath) => (await manifestReader.readBlobs([manifestPath]))[0]!,
+      });
     }
   }
   if (credential.required && !credential.passed) {
@@ -305,7 +320,14 @@ async function checkOpenSubject<R extends object, G>(runDir: string, file: strin
   // Figure fit (syzygy-3efd.20): advice like readerAdvice, but kept in the draft's check record so a later check can be compared with
   // this one; an inventory check record carries none, and a draft that does not parse states nothing about fit.
   const fit = plan.command === 'check' && parseFault === null ? figureFit(doc, deps.layoutFigure) : undefined;
-  const stored = fit === undefined ? record : { ...record, figureFit: fit };
+  // The reading ledger (REQ-polaris-generation-034 version 2.4, syzygy-3efd.21): counts over the draft beside figureFit, from the same
+  // draft bytes, so two checks of one draft write the same member; an inventory check record carries none.
+  const advice = plan.command === 'check' && parseFault === null ? readerAdvice(doc) : undefined;
+  const ledger = fit === undefined || advice === undefined ? undefined : readingLedger(doc, fit, advice);
+  const stored = {
+    ...record, ...(fit === undefined ? {} : { figureFit: fit }), ...(ledger === undefined ? {} : { readingLedger: ledger }),
+    ...(manifestFacts === undefined ? {} : { manifestFacts }),
+  };
   try {
     if (derivedRecord !== undefined) {
       fs.mkdirSync(path.join(run, RUN_LAYOUT.derived), { recursive: true, mode: 0o700 });
@@ -319,14 +341,15 @@ async function checkOpenSubject<R extends object, G>(runDir: string, file: strin
   log({ outcome, revision, findings: findings.length });
   const disclosures = credential.required ? [...plan.disclosures, CREDENTIAL_CHECK_DISCLOSURE] : plan.disclosures;
   const visibility = reviewVisibility(citedBlobs, screen.contentClass, checked.contentClasses);
-  const advice = plan.command === 'check' && parseFault === null ? readerAdvice(doc) : undefined;
+  // The difference from the previous run of this repository: computed now from the state root, never written to any file.
+  const difference = plan.command === 'check' ? readingDifference(run, subject.repository.repositoryId, isoOf(started), ledger) : undefined;
   // The claim blocks no fidelity verdict can confirm (syzygy-pdja.20), read from this derivation's own blobs.
   const reach = plan.command === 'check' && parseFault === null
     ? reviewReachAdvice(doc, { citedBlobs, admitted, screen, consented: checked.contentClasses }) : undefined;
   return { ok: true, report: {
     command: plan.command, run, checkFile, ...stored, disclosures, ...(screenCensus === undefined ? {} : { screenCensus }),
     ...(structureRecord === undefined ? {} : { structureRecord }),
-    ...(advice === undefined ? {} : { readerAdvice: advice }), ...(reach === undefined ? {} : { reviewReach: reach }),
+    ...(advice === undefined ? {} : { readerAdvice: advice }), ...(difference === undefined ? {} : { readingDifference: difference }), ...(reach === undefined ? {} : { reviewReach: reach }),
     ...(visibility === null ? {} : { reviewVisibility: visibility }),
   } };
 }

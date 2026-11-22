@@ -12,6 +12,8 @@ import { GitObjectReadRefusal, openPinnedObjectReader, type PinnedObjectReader, 
 import { parseRunConfig } from './run-config.js';
 import { NO_WORK_ITEM_REASON, encodeRunRecord, type RunSubject } from './run-record.js';
 import { buildDossierScreen } from './screen.js';
+import { deriveManifestFacts } from './manifest-facts.js';
+import { createHash } from 'node:crypto';
 import { GIT_ENV, tempDir } from '@syzygy/test-kit';
 
 // syzygy-qkea.7 (S6): `syzygy dossier check` (REQ-polaris-generation-033, 034, 036). The clone is a real Git repository built here
@@ -120,9 +122,8 @@ const sources = (): GateSources => ({
 afterEach(() => { fixturePolicy = POLICY; consentNames = () => commit; });
 
 /** A briefed run directory, whose run record names a fresh clone. */
-async function briefedRun(over: Record<string, unknown> = {}, clone: string = cloneOf()): Promise<string> {
-  const root = tempDir('dossier-check-state-');
-  const run = path.join(root, RUN_ID);
+async function briefedRun(over: Record<string, unknown> = {}, clone: string = cloneOf(), root: string = tempDir('dossier-check-state-'), runId: string = RUN_ID): Promise<string> {
+  const run = path.join(root, runId);
   fs.mkdirSync(run);
   const parsed = parseRunConfig(JSON.stringify({
     operator: 'Tzeusy', agentTool: 'claude-code', agentToolVersion: '2.1.0', agentProvider: 'anthropic', model: 'claude-opus-5-5',
@@ -224,7 +225,7 @@ describe('check: the screen subject', () => {
     writeDraft(run, JSON.stringify(valid(), null, 2));
     const seen: unknown[] = [];
     report(await checkDraft(run, {}, deps({ loadScreen: async (placement) => { seen.push(placement); return SCREEN; } })));
-    expect(seen).toEqual([{ repository: 'repository:redis-redis', commit, visibility: 'public', policySha256: policyFixture(fixturePolicy).binding.sha256 }]);
+    expect(seen).toEqual([{ repository: 'repository:redis-redis', commit, visibility: 'public', policySha256: policyFixture(fixturePolicy).binding.sha256, policyPath: '.syzygy/governance/policies/POLARIS-DOSSIER-DECLARED-SOURCE-POLICY-v2.json' }]);
   });
 });
 
@@ -354,6 +355,188 @@ describe('check: figure fit', () => {
     if (!result.ok) throw new Error(result.refusal.reason);
     expect(result.report).not.toHaveProperty('figureFit');
     expect(JSON.parse(fs.readFileSync(path.join(run, 'checks', 'rev-0.json'), 'utf8'))).not.toHaveProperty('figureFit');
+  });
+});
+
+// The reading ledger (REQ-polaris-generation-034 version 2.4, syzygy-3efd.21). The numbers are computed by hand from the fixture draft.
+// REQ-polaris-generation-034 version 2.4 (syzygy-3efd.56): schema v6's `thesisBasis` must fit the introduction.
+describe('check: the thesis basis (schema v6)', () => {
+  const CODE_READ = 'a `code-reading` thesis says what the code does: make the introduction an inferred block resting on sources (`basis: source`) that quotes nothing and cites at least two entry points, two different code files outside documentation, test, vendored, generated and example paths;';
+  const STATED = 'a `stated` thesis rests on a statement of the project\'s purpose by its maintainers: make the introduction an inferred block that cites that statement';
+  const NONE = 'a `none` thesis establishes nothing: make the introduction an unknown block, or a non-normative one that makes no claim';
+  const codeIntro = (citations: readonly ReturnType<typeof cite>[], over: Record<string, unknown> = {}) => ({ id: 'intro', label: 'inferred', basis: 'source', text: 'Kestrel is a C server that keeps its keys in memory.', citations, quotations: [], ...over });
+  const TWO = [cite('c-a', 'src/kestrel.c', 1, 1), cite('c-b', 'src/types.ts', 1, 1)];
+  const v6 = (basis: unknown, introduction?: unknown) => mutate((d) => {
+    d.schemaVersion = 'polaris-dossier-local-draft-v6';
+    if (basis !== undefined) d.thesisBasis = basis;
+    if (introduction !== undefined) d.introduction = introduction;
+  });
+  const findingsOf = async (draft: Draft) => {
+    const run = await briefedRun();
+    writeDraft(run, draft);
+    return report(await checkDraft(run, {}, deps()));
+  };
+  const thesis = (result: { findings: readonly { kind: string; at: string; detail: string }[] }) => result.findings.filter((f) => f.kind === 'thesis-basis').map(({ at, detail }) => ({ at, detail }));
+
+  it.each<[string, () => Draft]>([
+    ['a code-reading introduction citing two code files and quoting nothing', () => v6('code-reading', codeIntro(TWO))],
+    ['a code-reading introduction citing a code file whose body screening excludes', () => v6('code-reading', codeIntro([cite('c-a', 'src/kestrel.c', 1, 1), cite('c-b', 'src/config.c', 2, 2)]))],
+    ['a stated introduction citing a statement', () => v6('stated')],
+    ['a none introduction that is Unknown', () => v6('none', { id: 'intro', label: 'unknown', reason: 'missing-evidence', text: 'No source states what Kestrel is for.', citations: [] })],
+    ['a none introduction that is non-normative', () => v6('none', { id: 'intro', label: 'non-normative', text: 'Read on.' })],
+  ])('passes %s', async (_name, build) => {
+    const draft = build();
+    const result = await findingsOf(draft);
+    expect(thesis(result)).toEqual([]);
+    if (!draft.introduction.citations?.some((c: { path: string }) => c.path === 'src/config.c')) expect(result.findings).toEqual([]);
+  });
+
+  it.each<[string, () => Draft, string]>([
+    ['one code file', () => v6('code-reading', codeIntro([cite('c-a', 'src/kestrel.c', 1, 1)])), `${CODE_READ} it cites 1 such file`],
+    ['one code file twice', () => v6('code-reading', codeIntro([cite('c-a', 'src/kestrel.c', 1, 1), cite('c-b', 'src/kestrel.c', 2, 2)])), `${CODE_READ} it cites 1 such file`],
+    ['a code file and a Markdown file', () => v6('code-reading', codeIntro([cite('c-a', 'src/kestrel.c', 1, 1), cite('c-b', 'README.md', 2, 2)])), `${CODE_READ} it cites 1 such file`],
+    ['a code file and a plain-text note', () => v6('code-reading', codeIntro([cite('c-a', 'src/kestrel.c', 1, 1), cite('c-b', 'docs/notes.txt', 2, 2)])), `${CODE_READ} it cites 1 such file`],
+    ['a quotation', () => v6('code-reading', codeIntro(TWO, { text: 'The project states: "Kestrel keeps every key in memory."', quotations: ['c-a'] })), `${CODE_READ} it cites 2 such files and quotes`],
+    ['a lead-in with no quotations list', () => v6('code-reading', codeIntro(TWO, { text: 'The project states: "Kestrel keeps every key in memory."' })), `${CODE_READ} it cites 2 such files and quotes`],
+    ['a block resting on execution', () => v6('code-reading', codeIntro(TWO, { basis: 'execution', executionIds: ['e1'] })), `${CODE_READ} it cites 2 such files`],
+    ['an Unknown block', () => v6('code-reading', { id: 'intro', label: 'unknown', reason: 'missing-evidence', text: 'Unknown.', citations: TWO }), `${CODE_READ} it cites 2 such files`],
+    ['a stated thesis citing nothing', () => v6('stated', { id: 'intro', label: 'inferred', basis: 'source', text: 'Kestrel is a server.', citations: [], quotations: [], judgement: true }), STATED],
+    ['a stated thesis that is Unknown', () => v6('stated', { id: 'intro', label: 'unknown', reason: 'missing-evidence', text: 'Unknown.', citations: [] }), STATED],
+    ['a none thesis that is Inferred', () => v6('none'), NONE],
+  ])('reports thesis-basis at $.thesisBasis for %s', async (_name, build, detail) => {
+    const result = await findingsOf(build());
+    expect(result.outcome).toBe('findings');
+    expect(thesis(result)).toEqual([{ at: '$.thesisBasis', detail }]);
+  });
+
+  it('a v6 draft without thesisBasis fails its schema, and one with another value too', async () => {
+    expect((await findingsOf(v6(undefined))).findings.map(({ kind, at, detail }) => ({ kind, at, detail }))).toEqual([{ kind: 'schema', at: '$.thesisBasis', detail: 'is required' }]);
+    expect((await findingsOf(v6('readme'))).findings.map(({ kind, at, detail }) => ({ kind, at, detail }))).toEqual([{ kind: 'schema', at: '$.thesisBasis', detail: 'must be one of stated, code-reading, none' }]);
+  });
+
+  it.each(['polaris-dossier-local-draft-v2', 'polaris-dossier-local-draft-v4', 'polaris-dossier-local-draft-v5'])('a %s draft carrying thesisBasis has a field-version finding and nothing else', async (version) => {
+    const result = await findingsOf(mutate((d) => { d.schemaVersion = version; d.thesisBasis = 'code-reading'; }));
+    expect(result.findings.map(({ kind, at, detail }) => ({ kind, at, detail }))).toEqual([
+      { kind: 'field-version', at: '$.thesisBasis', detail: '`thesisBasis` needs draft schema polaris-dossier-local-draft-v6' }]);
+  });
+
+  it('a v5 draft without thesisBasis checks as before', async () => {
+    const result = await findingsOf(mutate((d) => { d.schemaVersion = 'polaris-dossier-local-draft-v5'; }));
+    expect([result.outcome, result.findings]).toEqual(['passed', []]);
+  });
+});
+
+describe('check: reading ledger', () => {
+  // `valid()` carries schema v2, no Poles and no diagram: one page. Words, split at white space: the introduction 13; core-ideas p1 13,
+  // its children 6 + 2 + 3, p2 7: 31; 44 in all. The one section has no diagram, so RS-16 counts one advisory, at $.sections[0].
+  const zeros = { 'RS-13': 0, 'RS-14': 0, 'RS-16': 0, 'RS-17': 0, 'RS-19': 0 };
+  const noFit = { notFittingAt1440: 0, notFittingAt390: 0, unknown: 0 };
+  const LEDGER = {
+    format: 'polaris-dossier-reading-ledger/1', wordsPerMinute: 200,
+    pages: [{ page: 'index.html', units: ['introduction', 'section:core-ideas'], proseWords: 44, readingMinutes: 1, figures: 0, advisories: { ...zeros, 'RS-16': 1 }, figureFit: noFit }],
+    draft: { proseWords: 44, readingMinutes: 1, figures: 0, advisories: { ...zeros, 'RS-16': 1 }, figureFit: noFit, unplacedUnits: 0 },
+  };
+
+  it('writes readingLedger into the check record beside figureFit, byte-identical across two checks of the same draft, and on the report', async () => {
+    const run = await briefedRun();
+    const text = JSON.stringify(valid(), null, 2);
+    writeDraft(run, text);
+    const first = report(await checkDraft(run, {}, deps()));
+    writeDraft(run, text);
+    const second = report(await checkDraft(run, {}, deps({ now: () => LATER + 1000 })));
+    const stored = [0, 1].map((n) => JSON.parse(read(run, `checks/rev-${n}.json`)) as Record<string, unknown>);
+    expect(stored[0]!['readingLedger']).toEqual(LEDGER);
+    expect(JSON.stringify(stored[1]!['readingLedger'])).toBe(JSON.stringify(stored[0]!['readingLedger']));
+    expect(Object.keys(stored[0]!).slice(-3)).toEqual(['figureFit', 'readingLedger', 'manifestFacts']);
+    expect(stored[0]!).not.toHaveProperty('readingDifference');
+    expect(first.readingLedger).toEqual(LEDGER);
+    // Advice: no outcome or finding changes; the first run of the repository has no earlier ledger, so its difference is Unknown.
+    expect([first.outcome, second.outcome]).toEqual(['passed', 'passed']);
+    expect(first.readingDifference).toEqual({ state: 'unknown', why: 'no earlier run of this repository in the state root holds a reading ledger that could be read', unreadableRuns: 0, unreadableCheckRecords: 0 });
+    // Its own run's earlier check is never its predecessor: only another run directory is.
+    expect(second.readingDifference).toMatchObject({ state: 'unknown' });
+  });
+
+  it('reports the difference from an earlier run of the same repository in the state root, and writes it nowhere', async () => {
+    const root = tempDir('dossier-check-state-');
+    const earlier = await briefedRun({}, cloneOf(), root, `run-${'a'.repeat(32)}`);
+    writeDraft(earlier, valid());
+    report(await checkDraft(earlier, {}, deps()));
+    const run = await briefedRun({}, cloneOf(), root);
+    writeDraft(run, mutate((d) => { d.sections[0].paragraphs[1].text += ' Four more words here.'; }));
+    const result = report(await checkDraft(run, {}, deps({ now: () => LATER + 1000 })));
+    const before = { proseWords: 44, readingMinutes: 1, figures: 0, advisories: { ...zeros, 'RS-16': 1 }, figureFit: noFit };
+    const after = { ...before, proseWords: 48 };
+    const delta = { proseWords: 4, readingMinutes: 0, figures: 0, advisories: zeros, figureFit: noFit };
+    expect(result.readingDifference).toEqual({
+      state: 'compared', against: { runId: `run-${'a'.repeat(32)}`, revision: 0, pinnedRevision: commit, checkedAt: '2026-10-07T12:01:00.000Z' },
+      pages: [{ page: 'index.html', change: 'changed', before, after, delta }],
+      draft: { before: { ...before, unplacedUnits: 0 }, after: { ...after, unplacedUnits: 0 }, delta: { ...delta, unplacedUnits: 0 } },
+      unreadableRuns: 0, unreadableCheckRecords: 0,
+    });
+    expect(read(run, 'checks/rev-0.json')).not.toContain('readingDifference');
+    expect(fs.readdirSync(run).filter((name) => name.includes('difference'))).toEqual([]);
+  });
+
+  it('writes no ledger for a draft that does not parse, and says so in the difference', async () => {
+    const run = await briefedRun();
+    writeDraft(run, '{ not json');
+    const result = report(await checkDraft(run, {}, deps()));
+    expect(result).not.toHaveProperty('readingLedger');
+    expect(JSON.parse(read(run, 'checks/rev-0.json'))).not.toHaveProperty('readingLedger');
+    expect(result.readingDifference).toEqual({ state: 'unknown', why: 'this draft does not parse, so it has no reading ledger', unreadableRuns: 0, unreadableCheckRecords: 0 });
+  });
+});
+
+describe('check: manifest facts (REQ-polaris-generation-034 version 2.7, syzygy-3efd.25)', () => {
+  // The fixture tree declares no manifest, so each of the five recognizers lists no candidate; the member is still written, last.
+  const none = (rule: string) => ({ rule, ruleVersion: 1, label: 'inferred', candidates: 0, secretPathsLeftOut: 0, setApart: 0, inferred: 0, unknown: 0, valuesLeftOut: 0, facts: 0, files: [], filesNotListed: 0 });
+  const MEMBER = {
+    format: 'polaris-dossier-manifest-facts/1', state: 'derived',
+    screeningPolicy: { policyId: 'fixture-public-source', policyVersion: '1', sha256: createHash('sha256').update(POLICY).digest('hex') },
+    recognizers: ['npm-package-manifest', 'cargo-manifest', 'python-project-manifest', 'go-module-manifest', 'github-actions-workflow'].map(none),
+    facts: [], factsNotListed: 0,
+  };
+
+  it('writes manifestFacts last in the check record, once on the report, the same bytes for two different drafts and for one that does not parse', async () => {
+    const run = await briefedRun();
+    writeDraft(run, valid());
+    const first = report(await checkDraft(run, {}, deps()));
+    writeDraft(run, mutate((d) => { d.title = 'Another title'; }));
+    report(await checkDraft(run, {}, deps({ now: () => LATER + 1000 })));
+    writeDraft(run, '{ "schemaVersion": ');
+    const broken = report(await checkDraft(run, {}, deps({ now: () => LATER + 2000 })));
+    expect(broken.outcome).not.toBe('passed');
+    const texts = [0, 1, 2].map((n) => read(run, `checks/rev-${n}.json`));
+    const stored = texts.map((t) => JSON.parse(t) as Record<string, unknown>);
+    expect(stored[0]!['manifestFacts']).toEqual(MEMBER);
+    for (const s of stored) expect(Object.keys(s).at(-1)).toBe('manifestFacts');
+    expect(JSON.stringify(stored[1]!['manifestFacts'])).toBe(JSON.stringify(stored[0]!['manifestFacts']));
+    expect(JSON.stringify(stored[2]!['manifestFacts'])).toBe(JSON.stringify(stored[0]!['manifestFacts']));
+    expect(first.manifestFacts).toEqual(MEMBER);
+    expect(texts[0]!.split('"manifestFacts"')).toHaveLength(2);
+  });
+
+  it('reads each manifest through the pinned reader bounded at 1 MiB: 1,048,576 bytes read, one byte or more past it too-large', async () => {
+    const repo = tempDir('dossier-manifest-bound-');
+    const git = (...args: string[]): string => execFileSync('git', ['-C', repo, ...args], { encoding: 'utf8', env: GIT_ENV }).trim();
+    git('init', '-q', '-b', 'main');
+    git('config', 'gc.auto', '0');
+    const exact = `{ "name": "exact"${' '.repeat(1_048_576 - 19)}}\n`;
+    for (const [dir, body] of [['a', exact], ['b', `${exact} `], ['c', `${exact}${' '.repeat(4096)}`]] as const) {
+      fs.mkdirSync(path.join(repo, dir));
+      fs.writeFileSync(path.join(repo, dir, 'package.json'), body);
+    }
+    git('add', '-A');
+    git('-c', 'user.name=t', '-c', 'user.email=t@example.invalid', 'commit', '-q', '-m', 'fixture');
+    const v2 = buildDossierScreen(new Uint8Array(fs.readFileSync(path.join(REAL_ROOT, '.syzygy/governance/policies/POLARIS-DOSSIER-DECLARED-SOURCE-POLICY-v2.json'))), true, { repository: 'repository:o-r', commit: 'a'.repeat(40) }, 'public');
+    if (!v2.ok) throw new Error(v2.why);
+    const reader = openPinnedObjectReader({ gitDir: path.join(repo, '.git'), revision: git('rev-parse', 'HEAD'), maxObjectBytes: 1_048_576 });
+    const member = await deriveManifestFacts({ entries: await reader.listTree(), screen: v2.screen, consented: null, read: async (p) => (await reader.readBlobs([p]))[0]! });
+    if (member.state !== 'derived') throw new Error('expected a derived member');
+    expect(member.recognizers[0]!.files.map((f) => [f.path, f.epistemic, f.unknownReason, f.facts])).toEqual([
+      ['a/package.json', 'inferred', null, 1], ['b/package.json', 'unknown', 'too-large', null], ['c/package.json', 'unknown', 'too-large', null],
+    ]);
   });
 });
 
@@ -936,7 +1119,7 @@ describe('check: the command', () => {
     const printed = JSON.parse(a.out.join(''));
     expect(printed.structureRecord).toEqual({
       state: 'derived',
-      rules: ['vendored-path@1', 'generated-path@1', 'language-by-extension@1', 'docs-tree@1', 'tests-path@1', 'manifest-names@1', 'top-level-unit@1'],
+      rules: ['vendored-path@1', 'generated-path@1', 'language-by-extension@1', 'docs-tree@1', 'tests-path@1', 'manifest-names@1', 'top-level-unit@1', 'server-entry@1'],
       files: 9, secretPathsLeftOut: 1, submodules: 0,
       units: [{ unit: '"docs"', files: 2 }, { unit: '"src"', files: 4 }], unitsNotListed: 0, rootFiles: 2,
       vendored: { rule: 'vendored-path@1', files: 0, listed: [], notListed: 0 },
@@ -946,6 +1129,7 @@ describe('check: the command', () => {
         docsTree: { rule: 'docs-tree@1', matched: true, listed: ['"docs"'], notListed: 0 },
         tests: { rule: 'tests-path@1', files: 0 },
         packages: { rule: 'manifest-names@1', shape: 'no-package-manifest', listed: [], notListed: 0 },
+        serverEntry: { rule: 'server-entry@1', holds: false, listed: [], notListed: 0 },
       },
       note: expect.stringContaining('Derived by Syzygy from the paths and modes of the pinned tree alone'),
     });
@@ -963,7 +1147,10 @@ describe('check: the command', () => {
     expect(printed.readerAdvice.standards).toBe('polaris-reader-standards-v1');
     expect(printed.readerAdvice.advisories).toContainEqual({ standard: 'RS-13', at: '$.sections[0].title', detail: expect.stringContaining('camelCase') });
     expect(read(run, 'checks/rev-0.json')).not.toContain('readerAdvice');
-    expect(read(run, 'checks/rev-0.json')).not.toContain('RS-13');
+    // Since version 2.4 the record keeps the advisories' counts in its reading ledger, never an advisory itself: no path or detail of one.
+    expect(read(run, 'checks/rev-0.json')).not.toContain('$.sections[0].title');
+    expect(read(run, 'checks/rev-0.json')).not.toContain('camelCase');
+    expect(JSON.parse(read(run, 'checks/rev-0.json')).readingLedger.draft.advisories['RS-13']).toBe(1);
   });
 
   // syzygy-pdja.20: the claim blocks no fidelity verdict can confirm are advice on the report, never a finding and never in the record.
@@ -1063,6 +1250,9 @@ describe('check: the command', () => {
     const unknown = report(await checkDraft(run, {}, deps({ openReader: flaky })));
     expect(unknown.screenCensus).toMatchObject({ state: 'unknown', why: 'the pinned tree could not be listed (object-missing)' });
     expect(unknown.structureRecord).toEqual({ state: 'unknown', why: 'the pinned tree could not be listed (object-missing)', note: expect.stringContaining('is Unknown at this check') });
+    // Version 2.7: the manifest facts are kept in their unknown form, with the same reason, and no manifest is read.
+    expect(direct.manifestFacts?.state).toBe('derived');
+    expect(unknown.manifestFacts).toEqual({ format: 'polaris-dossier-manifest-facts/1', state: 'unknown', why: 'the pinned tree could not be listed (object-missing)' });
   });
 
   it('exits 0 on a passing draft and 1 on findings, printing the same document with --json', async () => {
@@ -1125,5 +1315,123 @@ describe('redacted-span provenance', () => {
     const redaction = blobRedaction([1, 2, 3, 7, 8, 9], ids);
     expect(redaction).toEqual({ redactionClass: 'redacted-span', withheldLines: 6, detectorIds: ['credential-assignment', 'credential-bearing-url'], withheldLineRanges: [[1, 3], [7, 9]] });
     expect(redaction.detectorIds).not.toBe(ids);
+  });
+});
+
+// REQ-polaris-generation-034 version 2.5 (syzygy-3efd.30): schema v7's `sequence` and `swimlane` diagram kinds and their findings.
+describe('check: figure kinds (schema v7)', () => {
+  const V7 = 'polaris-dossier-local-draft-v7';
+  const el = (id: string, label: string) => ({ id, label, epistemic: 'inferred', citations: [cite(`c-${id}`)] });
+  const head = (id: string, kind: string) => ({ id, title: id, home: { kind: 'section', target: 'core-ideas' }, kind, relationship: 'Order.', disposition: { kind: 'produced', assetIds: [id] } });
+  const sequence = (over: Record<string, unknown> = {}) => ({ ...head('seq-1', 'sequence'), participants: [el('pt1', 'Client'), el('pt2', 'Server')],
+    messages: [{ ...el('msg1', 'asks'), from: 'pt1', to: 'pt2' }, { ...el('msg2', 'answers'), from: 'pt2', to: 'pt1' }], ...over });
+  const swimlane = (over: Record<string, unknown> = {}) => ({ ...head('lane-1', 'swimlane'), lanes: [el('ln1', 'Developer'), el('ln2', 'CI')],
+    steps: [{ ...el('stp1', 'pushes'), lane: 'ln1' }, { ...el('stp2', 'tests'), lane: 'ln2' }], ...over });
+  const drafted = (version: string, ...diagrams: unknown[]) => mutate((d) => { d.schemaVersion = version; if (version === V7 || version.endsWith('-v6')) d.thesisBasis = 'stated'; d.diagrams.push(...diagrams); });
+  const findingsOf = async (draft: Draft) => {
+    const run = await briefedRun();
+    writeDraft(run, draft);
+    return report(await checkDraft(run, {}, deps()));
+  };
+  const listed = (result: { findings: readonly { kind: string; at: string; detail: string }[] }) => result.findings.map(({ kind, at, detail }) => ({ kind, at, detail }));
+
+  it('passes a v7 draft holding a sequence, a swimlane and a graph diagram', async () => {
+    const result = await findingsOf(drafted(V7, sequence(), swimlane(), homed({ kind: 'section', target: 'core-ideas' })));
+    expect([result.outcome, listed(result)]).toEqual(['passed', []]);
+  });
+
+  it('reports a message naming an unknown participant as unresolved-reference, naming the diagram', async () => {
+    const result = await findingsOf(drafted(V7, sequence({ messages: [{ ...el('msg1', 'asks'), from: 'pt9', to: 'pt2' }, { ...el('msg2', 'answers'), from: 'pt2', to: 'pt1' }] })));
+    expect(listed(result)).toEqual([{ kind: 'unresolved-reference', at: '$.diagrams[0].messages[0].from', detail: 'the diagram "seq-1": no participant of this diagram has the identity "pt9"' }]);
+  });
+
+  it('reports a step naming an unknown lane as unresolved-reference, and the lane it left empty as figure-unused', async () => {
+    const result = await findingsOf(drafted(V7, swimlane({ steps: [{ ...el('stp1', 'pushes'), lane: 'ln1' }, { ...el('stp2', 'tests'), lane: 'ln9' }] })));
+    expect(listed(result)).toEqual([
+      { kind: 'unresolved-reference', at: '$.diagrams[0].steps[1].lane', detail: 'the diagram "lane-1": no lane of this diagram has the identity "ln9"' },
+      { kind: 'figure-unused', at: '$.diagrams[0].lanes[1]', detail: 'the diagram "lane-1": no step names the lane "ln2"; every lane holds a step' }]);
+  });
+
+  it('reports a participant no message names as figure-unused', async () => {
+    const result = await findingsOf(drafted(V7, sequence({ participants: [el('pt1', 'Client'), el('pt2', 'Server'), el('pt3', 'Store')] })));
+    expect(listed(result)).toEqual([{ kind: 'figure-unused', at: '$.diagrams[0].participants[2]', detail: 'the diagram "seq-1": no message names the participant "pt3" as its sender or receiver; every participant sends or receives a message' }]);
+  });
+
+  it('reports members that do not fit the kind as figure-kind, with no schema finding at their paths', async () => {
+    const { messages: _messages, ...noMessages } = sequence();
+    const result = await findingsOf(drafted(V7, { ...noMessages, nodes: [] }, { ...homed({ kind: 'section', target: 'core-ideas' }), steps: [] }));
+    expect(listed(result)).toEqual([
+      { kind: 'figure-kind', at: '$.diagrams[0].nodes', detail: 'the diagram "seq-1": a sequence takes `participants` and `messages`, not `nodes`' },
+      { kind: 'figure-kind', at: '$.diagrams[0]', detail: 'the diagram "seq-1": a sequence takes `participants` and `messages`; it lacks `messages`' },
+      { kind: 'figure-kind', at: '$.diagrams[1].steps', detail: 'the diagram "flow-1": a flow diagram takes `nodes` and `edges`, not `steps`' }]);
+  });
+
+  // Version 2.8 (syzygy-3efd.71), the scenario "Graph diagram with a missing or foreign member in schema v7": the byte-identity sentence's
+  // exception. A v7 graph diagram lacking `edges` reports figure-kind at the diagram and no schema finding at `edges`; one carrying `steps`
+  // reports figure-kind at `steps` and no field-version or schema finding there. The same two diagrams in a v6 draft report as v6 does.
+  const graphPair = () => {
+    const { edges: _edges, ...flowNoEdges } = homed({ kind: 'section', target: 'core-ideas' });
+    const dependency = { ...homed({ kind: 'section', target: 'core-ideas' }), id: 'dep-1', title: 'Dependencies', kind: 'dependency', disposition: { kind: 'produced', assetIds: ['dep-1'] },
+      nodes: [{ id: 'm1', label: 'App', epistemic: 'inferred', citations: [cite('c-m1')] }, { id: 'm2', label: 'Library', epistemic: 'inferred', citations: [cite('c-m2')] }],
+      edges: [{ id: 'y1', from: 'm1', to: 'm2', label: 'uses', epistemic: 'inferred', citations: [cite('c-y1')] }], steps: [] };
+    return [flowNoEdges, dependency];
+  };
+  it('reports a v7 graph diagram lacking edges or carrying steps as figure-kind alone, and the same pair in v6 as v6 does (version 2.8)', async () => {
+    expect(listed(await findingsOf(drafted(V7, ...graphPair())))).toEqual([
+      { kind: 'figure-kind', at: '$.diagrams[0]', detail: 'the diagram "flow-1": a flow diagram takes `nodes` and `edges`; it lacks `edges`' },
+      { kind: 'figure-kind', at: '$.diagrams[1].steps', detail: 'the diagram "dep-1": a dependency diagram takes `nodes` and `edges`, not `steps`' }]);
+    expect(listed(await findingsOf(drafted('polaris-dossier-local-draft-v6', ...graphPair())))).toEqual([
+      { kind: 'schema', at: '$.diagrams[0].edges', detail: 'is required' },
+      { kind: 'field-version', at: '$.diagrams[1].steps', detail: 'the diagram "dep-1": `steps` needs draft schema polaris-dossier-local-draft-v7' }]);
+  });
+
+  it('reports a count outside its bounds as a schema finding', async () => {
+    const result = await findingsOf(drafted(V7, sequence({ participants: [el('pt1', 'Client')], messages: [{ ...el('msg1', 'asks'), from: 'pt1', to: 'pt1' }] })));
+    expect(listed(result)).toEqual([{ kind: 'schema', at: '$.diagrams[0].participants', detail: 'must hold 2 to 5 items; holds 1' }]);
+  });
+
+  it('reports a message whose receiver is not a well-formed identity as a schema finding', async () => {
+    const result = await findingsOf(drafted(V7, sequence({ messages: [{ ...el('msg1', 'asks'), from: 'pt1', to: 'Not an id' }, { ...el('msg2', 'answers'), from: 'pt2', to: 'pt1' }] })));
+    expect(listed(result).filter((f) => f.kind === 'schema')).toEqual([{ kind: 'schema', at: '$.diagrams[0].messages[0].to', detail: 'must match ^[A-Za-z0-9][A-Za-z0-9_.:-]*$' }]);
+  });
+
+  it.each(['polaris-dossier-local-draft-v6', 'polaris-dossier-local-draft-v5'])('reports a %s draft carrying a sequence as field-version, keeping the missing nodes and edges', async (version) => {
+    const result = await findingsOf(drafted(version, sequence()));
+    expect(listed(result)).toEqual([
+      { kind: 'schema', at: '$.diagrams[0].nodes', detail: 'is required' },
+      { kind: 'schema', at: '$.diagrams[0].edges', detail: 'is required' },
+      { kind: 'field-version', at: '$.diagrams[0].kind', detail: 'the diagram "seq-1": the kind `sequence` needs draft schema polaris-dossier-local-draft-v7' },
+      { kind: 'field-version', at: '$.diagrams[0].participants', detail: 'the diagram "seq-1": `participants` needs draft schema polaris-dossier-local-draft-v7' },
+      { kind: 'field-version', at: '$.diagrams[0].messages', detail: 'the diagram "seq-1": `messages` needs draft schema polaris-dossier-local-draft-v7' }]);
+  });
+
+  // Review note 1 (syzygy-3efd.30): a diagram naming none of the eight kinds is read against the graph form with every kind permitted,
+  // so each of its faults is reported at its own path, as v6 reports it, and no single fault stands for all of it.
+  const EIGHT = 'must be one of flow, lifecycle, state-machine, boundary, dependency, placement, sequence, swimlane';
+  const flawed = (kind: unknown) => { const { kind: _kind, ...rest } = homed({ kind: 'section', target: 'core-ideas' }); const nodes = [{ ...rest.nodes[0], label: '' }, rest.nodes[1]];
+    return kind === undefined ? { ...rest, nodes } : { ...rest, kind, nodes }; };
+  it.each<[string, unknown, { kind: string; at: string; detail: string }[]]>([
+    ['an unknown kind', 'gantt', [{ kind: 'schema', at: '$.diagrams[0].kind', detail: EIGHT }]],
+    ['a kind in the wrong case', 'Flow', [{ kind: 'schema', at: '$.diagrams[0].kind', detail: EIGHT }]],
+    ['no kind', undefined, [{ kind: 'schema', at: '$.diagrams[0].kind', detail: 'is required' }]],
+  ])('reports a v7 diagram with %s at its kind and each fault inside it, with no single fault for the whole diagram', async (_name, kind, head) => {
+    const result = await findingsOf(drafted(V7, flawed(kind)));
+    expect(listed(result)).toEqual([...head, { kind: 'schema', at: '$.diagrams[0].nodes[0].label', detail: 'must be 1 to 8000 characters; is 0' }]);
+  });
+
+  it('reports a v4 draft carrying a sequence as field-version, keeping the missing nodes and edges', async () => {
+    const { home: _home, ...rest } = sequence();
+    const result = await findingsOf(mutate((d) => { d.schemaVersion = 'polaris-dossier-local-draft-v4'; d.diagrams.push({ ...rest, sectionId: 'core-ideas' }); }));
+    expect(listed(result)).toEqual([
+      { kind: 'schema', at: '$.diagrams[0].nodes', detail: 'is required' },
+      { kind: 'schema', at: '$.diagrams[0].edges', detail: 'is required' },
+      { kind: 'field-version', at: '$.diagrams[0].kind', detail: 'the diagram "seq-1": the kind `sequence` needs draft schema polaris-dossier-local-draft-v7' },
+      { kind: 'field-version', at: '$.diagrams[0].participants', detail: 'the diagram "seq-1": `participants` needs draft schema polaris-dossier-local-draft-v7' },
+      { kind: 'field-version', at: '$.diagrams[0].messages', detail: 'the diagram "seq-1": `messages` needs draft schema polaris-dossier-local-draft-v7' }]);
+  });
+
+  it('checks a v6 draft with a graph diagram exactly as before: no finding', async () => {
+    const result = await findingsOf(drafted('polaris-dossier-local-draft-v6', homed({ kind: 'section', target: 'core-ideas' })));
+    expect([result.outcome, listed(result)]).toEqual(['passed', []]);
   });
 });

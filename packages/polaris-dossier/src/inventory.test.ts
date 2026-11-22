@@ -381,6 +381,12 @@ describe('inventory-check', () => {
     // Figure fit is kept in a draft's check record only (syzygy-3efd.20): an inventory check record carries none.
     expect(report).not.toHaveProperty('figureFit');
     expect(JSON.parse(fs.readFileSync(path.join(run, 'inventory', 'checks', 'rev-0.json'), 'utf8'))).not.toHaveProperty('figureFit');
+    // Nor a reading ledger or its difference (version 2.4): those are the draft's alone.
+    for (const member of ['readingLedger', 'readingDifference']) expect(report).not.toHaveProperty(member);
+    expect(JSON.parse(fs.readFileSync(path.join(run, 'inventory', 'checks', 'rev-0.json'), 'utf8'))).not.toHaveProperty('readingLedger');
+    // Nor manifest facts (version 2.7): a draft's check record alone carries them.
+    expect(report).not.toHaveProperty('manifestFacts');
+    expect(JSON.parse(fs.readFileSync(path.join(run, 'inventory', 'checks', 'rev-0.json'), 'utf8'))).not.toHaveProperty('manifestFacts');
     expect(report).not.toHaveProperty('reviewReach');
   });
 
@@ -622,7 +628,7 @@ describe('what the review will not see (syzygy-mea.3)', () => {
     const brief = await buildInventoryBrief(opened, 1, sources(), LATER, { loadScreen: async (subject) => { asked.push(subject); return SCREEN; } });
     if (!brief.ok) throw new Error(brief.reason);
     // The repository id is the bare `redis-redis`; the placement subject is the consent form.
-    expect(asked).toEqual([{ repository: 'repository:redis-redis', commit: opened.subject.pinnedRevision.commit, visibility: 'public', policySha256: policyFixture(fixturePolicy).binding.sha256 }]);
+    expect(asked).toEqual([{ repository: 'repository:redis-redis', commit: opened.subject.pinnedRevision.commit, visibility: 'public', policySha256: policyFixture(fixturePolicy).binding.sha256, policyPath: '.syzygy/governance/policies/POLARIS-DOSSIER-DECLARED-SOURCE-POLICY-v2.json' }]);
   });
 
   it('never names a path both a denied-path rule and a secret detector match in the inventory brief (round-2 review finding 1)', async () => {

@@ -59,5 +59,34 @@ export const MANIFEST_NAMES = {
  * `top-level-unit` and `contains`, the containment the path itself states. */
 export const TOP_LEVEL_UNIT = { id: 'top-level-unit', version: 1 } as const;
 
-export const DERIVE_RULES: readonly DeriveRuleId[] = [VENDORED_PATH, GENERATED_PATH, LANGUAGE_BY_EXTENSION, DOCS_TREE, TESTS_PATH, MANIFEST_NAMES, TOP_LEVEL_UNIT]
+/** A server entry (REQ-polaris-generation-034 version 2.4, syzygy-3efd.43): a blob whose basename is one of these, compared exactly,
+ * outside vendored, generated and test paths and with no example, sample or demo directory segment. A heuristic over names, like every
+ * rule here: it states what matched, never that the project is a server. It selects the server shape pack. */
+export const SERVER_ENTRY = {
+  id: 'server-entry', version: 1,
+  basenames: ['server.c', 'server.cc', 'server.cpp', 'server.go', 'server.rs', 'server.py', 'server.rb', 'server.js', 'server.mjs', 'server.ts', 'server.java',
+    'server.ex', 'server.php', 'Procfile', 'openapi.json', 'openapi.yaml', 'openapi.yml', 'swagger.json', 'swagger.yaml', 'swagger.yml'],
+  exampleSegments: ['example', 'examples', 'sample', 'samples', 'demo', 'demos'],
+} as const;
+
+/** An entry point, as check can test one for a `code-reading` thesis (REQ-polaris-generation-034 version 2.4, syzygy-3efd.56): a cited path
+ * whose language by extension is none of these, outside vendored, generated, test and docs-tree paths, with no example, sample or demo
+ * directory segment. A heuristic over the path alone: it never says the file is where a user or a program enters the project. */
+export const ENTRY_POINT = {
+  notCode: ['Markdown', 'reStructuredText', 'AsciiDoc', 'Plain text', 'JSON', 'YAML', 'TOML', 'XML', 'INI', 'HTML', 'CSS', 'SCSS', 'C or C++ header', 'SQL',
+    'Protocol Buffers', 'GraphQL'],
+  exampleSegments: ['example', 'examples', 'sample', 'samples', 'demo', 'demos'],
+} as const;
+
+/** The manifest recognizers (REQ-polaris-generation-034 version 2.7, syzygy-3efd.25), each version 1: what one admitted manifest body
+ * declares, read by `manifest-*.ts`. They read bodies, so they are not structure-record rules and are not in `DERIVE_RULES`: the
+ * structure record's `rules` list keeps its bytes. The forms each reader refuses as `beyond-reader` are part of its rule (stated in its
+ * module); a change to that set is a new version. */
+export const NPM_PACKAGE_MANIFEST = { id: 'npm-package-manifest', version: 1 } as const;
+export const CARGO_MANIFEST = { id: 'cargo-manifest', version: 1 } as const;
+export const PYTHON_PROJECT_MANIFEST = { id: 'python-project-manifest', version: 1 } as const;
+export const GO_MODULE_MANIFEST = { id: 'go-module-manifest', version: 1 } as const;
+export const GITHUB_ACTIONS_WORKFLOW = { id: 'github-actions-workflow', version: 1 } as const;
+
+export const DERIVE_RULES: readonly DeriveRuleId[] = [VENDORED_PATH, GENERATED_PATH, LANGUAGE_BY_EXTENSION, DOCS_TREE, TESTS_PATH, MANIFEST_NAMES, TOP_LEVEL_UNIT, SERVER_ENTRY]
   .map(({ id, version }) => ({ id, version }));

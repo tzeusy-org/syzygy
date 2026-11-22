@@ -213,4 +213,8 @@ export interface LocalRenderInput {
    * as `derived-structure.json` and named in the machine view. Absent only for an input built by hand; `syzygy dossier render` always
    * supplies it. */
   readonly derivedStructure?: LocalDerivedStructure;
+  /** A schema-v6 draft's `thesisBasis` (REQ-polaris-generation-034 version 2.4): what the authoring session says its introduction rests
+   * on, and whether the code-reading line renders before it. Absent for every earlier draft, so its pages and machine view keep their
+   * bytes. */
+  readonly thesisBasis?: { readonly value: 'stated' | 'code-reading' | 'none'; readonly lineRendered: boolean };
 }

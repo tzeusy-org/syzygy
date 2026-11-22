@@ -3,6 +3,7 @@ import { isRecord } from '@syzygy/support';
 import { unconsentedClass } from './class-gate.js';
 import type { Derived } from './check-derive.js';
 import { collectBlocks } from './check-derive.js';
+import { LOCAL_DRAFT_SCHEMA_VERSION } from './draft-schema.js';
 import type { CitedBlob } from './check-model.js';
 import type { DossierScreen } from './screen.js';
 import { citationIdsOf, isWithheldItem, type SpanStanding } from './withheld-items.js';
@@ -57,7 +58,7 @@ export function citationReach(citation: Readonly<Record<string, unknown>>, input
   const startLine = citation['startLine'], endLine = citation['endLine'];
   if (typeof startLine !== 'number' || typeof endLine !== 'number') return 'reaches-review';
   if (spanTouchesWithheld(blob.withheld, startLine, endLine)) return 'withheld';
-  return inputs.screen.screenBody(blob.retainedLines.slice(startLine - 1, endLine).join('')) === 'secret-detector-match' ? 'withheld' : 'reaches-review';
+  return inputs.screen.screenBody(blob.retainedLines.slice(startLine - 1, endLine).join(''), cited) === 'secret-detector-match' ? 'withheld' : 'reaches-review';
 }
 
 export type UnseenConsequence = 'withheld-item' | 'unconfirmable';
@@ -149,7 +150,10 @@ export function reviewReachAdvice(doc: unknown, inputs: ReachInputs): ReviewReac
     }
     list(doc['diagrams']).forEach((diagram, i) => {
       if (!isRecord(diagram)) return;
-      for (const [part, kind] of [['nodes', 'diagram-node'], ['edges', 'diagram-edge']] as const) {
+      // A v7 figure kind's participants, lanes and steps take a node's rule, and its messages an edge's (version 2.5).
+      const parts = [['nodes', 'diagram-node'], ['edges', 'diagram-edge'], ...(doc['schemaVersion'] === LOCAL_DRAFT_SCHEMA_VERSION
+        ? [['participants', 'diagram-node'], ['messages', 'diagram-edge'], ['lanes', 'diagram-node'], ['steps', 'diagram-node']] as const : [])] as const;
+      for (const [part, kind] of parts) {
         list(diagram[part]).forEach((value, j) => { if (isRecord(value)) element(`$.diagrams[${i}].${part}[${j}]`, kind, value); });
       }
     });

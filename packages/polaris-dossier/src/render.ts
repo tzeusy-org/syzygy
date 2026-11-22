@@ -6,18 +6,18 @@ import {
   excludedSourceId, spanTouchesWithheld, generationSourcesForBody, generationSourcesForRedactedBody, generationSpanRange, generationSourceTextAt, isDossierPagePath, leadInQuotationSpans, PAGE_SINK_CONTRACT, PAGE_SINK_SCRIPT_CONTRACT, pageSinkCspFinding, pageSinkScriptFinding,
   type EpistemicMarking, type EvidenceAnchor, type GenerationExclusionReason, type GenerationSource, type LocalBlock,
   type LocalDisclosureItem, type LocalDraftLayer, type LocalPage, type LocalPageItem, type LocalRenderInput, type LocalSegment, type WithheldNote,
-  type DossierDraft, type DraftBlock, type DraftDiagramHome, type DraftParagraph,
+  type DossierDraft, type DraftBlock, type DraftDiagramHome, type DraftFigure, type DraftFigureElement, type DraftParagraph,
 } from '@syzygy/polaris-generation-core/live';
 import { isRecord, sha256 } from '@syzygy/support';
 import { collectBlocks, deriveFindings, draftRules, type BlobRedaction, type Derived } from './check.js';
-import { CREDENTIAL_CHECK_DISCLOSURE, credentialStepCheck, type CredentialStepResult } from './credential-probe.js';
-import { UNDERSTANDING_ITEMS } from './draft-schema.js';
+import { CREDENTIAL_CHECK_DISCLOSURE, credentialStepCheck, storedBriefArm, type CredentialStepResult } from './credential-probe.js';
+import { LOCAL_DRAFT_SCHEMA_VERSION, UNDERSTANDING_ITEMS, hasThesisBasisForm } from './draft-schema.js';
 import { EXECUTION_FLAGS_BASIS, executionFlags, type ExecutionFlags } from './execution-flags.js';
 import type { CredentialProbe } from './execution-rule.js';
 import { RECORDS_WITHIN_REACH } from './gate-sources.js';
 import { GitObjectReadRefusal, openPinnedObjectReader } from './git-object-reader.js';
-import { errno, logStep, openRun, readRecord, type OpenedRun } from './inventory.js';
-import { buildDesignPacket } from './design-review.js';
+import { errno, latestInventorySession, logStep, openRun, promptRecordName, readRecord, type OpenedRun } from './inventory.js';
+import { briefStandardsOf, buildDesignPacket, standardsInput } from './design-review.js';
 import { derivedStructureAt, readCurrencyPolicy, secretPathOf, type CurrencyPolicy } from './derived-record.js';
 import type { Outcome } from './outcome.js';
 import { designReviewOfRecord, latestPassedDraft, reviewOfRecord, type DesignReviewOfRecord, type ReviewDeps, type ReviewOfRecord } from './review.js';
@@ -272,7 +272,8 @@ async function render(runDir: string, deps: RenderDeps, storedSite?: StoredUrlRe
   const pendingInput = urlMode ? copyOrderedRenderValue({ local: built.local, sources: built.sources }) : null;
   const pending = draw(built.local);
   if (typeof pending === 'string') return refuse('render', pending);
-  const reviewed = buildDesignPacket({ run, runId, pinnedRevision: pinned, audience: declared.audience, files: pending });
+  const standards = briefStandardsOf(run);
+  const reviewed = buildDesignPacket({ run, runId, pinnedRevision: pinned, audience: declared.audience, files: pending, ...standardsInput(standards) });
   if (!reviewed.ok) return refuse('render', `the rendered pages cannot be compared outside the review-status region: ${reviewed.reason}`);
   const design = await designReviewOfRecord(opened, reviewed, { sources: deps.sources, now: () => now, productReads: products }, checkedDesign);
   if (checkedDesign !== undefined && (!review.counts || review.verdict.blocking || review.verdict.readiness !== 'ready' || !design.counts))
@@ -285,8 +286,8 @@ async function render(runDir: string, deps: RenderDeps, storedSite?: StoredUrlRe
   const drawn = draw(local);
   if (typeof drawn === 'string') return refuse('render', drawn);
   const files = new Map(drawn);
-  const published = buildDesignPacket({ run, runId, pinnedRevision: pinned, audience: declared.audience, files });
-  if (!published.ok || published.bytes !== reviewed.bytes) {
+  const published = buildDesignPacket({ run, runId, pinnedRevision: pinned, audience: declared.audience, files, ...standardsInput(standards) });
+  if (!published.ok || published.sha256 !== reviewed.sha256) {
     return refuse('render', 'stating the rendered-design review in the review-status region changed the pages outside that region, so the review of record cannot be decided from them');
   }
   // The first RFC7-20 condition, checked on the output itself (dossier spec v1.5): every page carries the one sentence and its machine
@@ -301,7 +302,9 @@ async function render(runDir: string, deps: RenderDeps, storedSite?: StoredUrlRe
   // each such body is scanned as before for these pages, and one with a finding is excluded whole here: a quoted or cited body cannot
   // leave the pages it is drawn on, so nothing is rendered. A redacted body is scanned over its complete body, which check kept as the
   // answer alone (`activeContentAsBefore`), so its withheld lines count and no withheld text reaches this step.
-  const scannedAsBefore = [...derived.admitted].filter(([, blob]) => (blob.withheld === undefined ? screen.screenBody(blob.raw) !== undefined : blob.activeContentAsBefore === true))
+  // A whole body is scanned with its path, so its stage's detectors run (dossier policy 2.0.0's configuration detectors never over a body
+  // Stage 1 places), and the active-content scan runs with no exemption.
+  const scannedAsBefore = [...derived.admitted].filter(([cited, blob]) => (blob.withheld === undefined ? screen.scannedAsBefore(blob.raw, cited) : blob.activeContentAsBefore === true))
     .map(([cited]) => cited);
   const unconfirmed = scannedAsBefore.length === 0 ? null : pageSinkUnconfirmed(renderer, files);
   if (unconfirmed !== null) {
@@ -552,7 +555,7 @@ export function buildLocalInput(inputs: BuildInputs): Built {
     if (typeof startLine !== 'number' || typeof endLine !== 'number') return 'other';
     if (blob.withheld === undefined) return 'admitted';
     if (spanTouchesWithheld(blob.withheld, startLine, endLine)) return 'withheld';
-    return screen.screenBody(blob.retainedLines!.slice(startLine - 1, endLine).join('')) === 'secret-detector-match' ? 'withheld' : 'admitted';
+    return screen.screenBody(blob.retainedLines!.slice(startLine - 1, endLine).join(''), cited) === 'secret-detector-match' ? 'withheld' : 'admitted';
   };
   const standingIn = (value: Readonly<Record<string, unknown>>): ((citationId: string) => SpanStanding) => {
     const by = new Map(list(value['citations']).filter(isRecord).flatMap((citation) => (text(citation['id']) === undefined ? [] : [[text(citation['id'])!, spanStanding(citation)] as const])));
@@ -803,8 +806,16 @@ export function buildLocalInput(inputs: BuildInputs): Built {
     if (held !== undefined) withheldElements.set(`${prefix}${text(value['id'])!}`, held);
     return { held };
   };
+  // A v7 sequence or swimlane (version 2.5): its participants, lanes and steps are rendered as nodes are, its messages as edges are.
+  const figureKind = (diagram: Readonly<Record<string, unknown>>): 'sequence' | 'swimlane' | undefined =>
+    (doc['schemaVersion'] === LOCAL_DRAFT_SCHEMA_VERSION && (diagram['kind'] === 'sequence' || diagram['kind'] === 'swimlane') ? diagram['kind'] : undefined);
+  const elementsOf = (diagram: Readonly<Record<string, unknown>>): unknown[] => {
+    const kind = figureKind(diagram);
+    return kind === 'sequence' ? [...list(diagram['participants']), ...list(diagram['messages'])]
+      : kind === 'swimlane' ? [...list(diagram['lanes']), ...list(diagram['steps'])] : [...list(diagram['nodes']), ...list(diagram['edges'])];
+  };
   const diagramHeld = (diagram: Readonly<Record<string, unknown>>): boolean => {
-    const parts = [...list(diagram['nodes']), ...list(diagram['edges'])].filter(isRecord);
+    const parts = elementsOf(diagram).filter(isRecord);
     return parts.length > 0 && parts.every((part) => withheldNote(part) !== undefined);
   };
   // A section's or deep dive's title over paragraphs and diagrams that are all withheld.
@@ -830,6 +841,21 @@ export function buildLocalInput(inputs: BuildInputs): Built {
     sections: list(doc['sections']).filter(isRecord).map((section) => ({ id: text(section['id'])!, title: containerTitle(section, diagramRecords.filter((diagram) => placement(diagram).home === undefined && placement(diagram).sectionId === section['id'])), paragraphs: tree(section['paragraphs']), disposition: disposition(section['disposition']) })),
     diagrams: diagramRecords.map((diagram) => {
       const held = diagramHeld(diagram);
+      const kind = figureKind(diagram);
+      if (kind !== undefined) {
+        const claimOf = (value: Readonly<Record<string, unknown>>): DraftFigureElement => {
+          const { held: gone } = element('', value);
+          return { id: text(value['id'])!, label: gone === undefined ? title(value['label']) : WITHHELD_LABEL, sourceIds: cites(text(value['id'])!, value), epistemic: gone === undefined && value['epistemic'] === 'inferred' ? 'inferred' as const : 'unknown' as const };
+        };
+        const records = (key: string): Readonly<Record<string, unknown>>[] => list(diagram[key]).filter(isRecord);
+        const figure: DraftFigure = kind === 'sequence'
+          ? { kind, participants: records('participants').map(claimOf), messages: records('messages').map((message) => ({ ...claimOf(message), from: text(message['from'])!, to: text(message['to'])! })) }
+          : { kind, lanes: records('lanes').map(claimOf), steps: records('steps').map((step) => ({ ...claimOf(step), lane: text(step['lane'])! })) };
+        return {
+          id: text(diagram['id'])!, title: held ? WITHHELD_LABEL : title(diagram['title']), ...placement(diagram), kind, relationship: held ? WITHHELD_LABEL : title(diagram['relationship']),
+          nodes: [], edges: [], figure, disposition: disposition(diagram['disposition']),
+        };
+      }
       return {
         id: text(diagram['id'])!, title: held ? WITHHELD_LABEL : title(diagram['title']), ...placement(diagram), kind: diagram['kind'] as DossierDraft['diagrams'][number]['kind'], relationship: held ? WITHHELD_LABEL : title(diagram['relationship']),
         nodes: list(diagram['nodes']).filter(isRecord).map((node) => {
@@ -984,6 +1010,11 @@ export function buildLocalInput(inputs: BuildInputs): Built {
       authoring: { tool: declared.agentTool, model: declared.model },
       ...(opened.effective?.kind === 'url' ? { effectiveRun: effectiveUrlProjection({ subject }, opened.effective.declaration) } : {}),
       selectionReasons,
+      // A v6 draft's thesis basis (version 2.4): the code-reading line renders only while the draft layer and the introduction both show.
+      ...(hasThesisBasisForm(doc['schemaVersion']) && (doc['thesisBasis'] === 'stated' || doc['thesisBasis'] === 'code-reading' || doc['thesisBasis'] === 'none') ? { thesisBasis: {
+        value: doc['thesisBasis'],
+        lineRendered: doc['thesisBasis'] === 'code-reading' && editorial && blocks.get(draft.introduction.id)?.withheld === undefined,
+      } } : {}),
       // A checked draft's Poles are whole: every section in one Pole and a named why section (check-derive's Pole findings).
       ...(Array.isArray(doc['poles']) && typeof doc['whySection'] === 'string' ? { poles: {
         whySection: doc['whySection'],

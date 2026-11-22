@@ -1,4 +1,5 @@
 import { sha256 } from '@syzygy/support';
+import { DEFAULT_PACK, SERVER_PACK, composeDimensions, shapePackIdentity, type ShapePack } from './shape-packs.js';
 
 /** The Polaris dossier reader standards (syzygy-pdja.17): one checklist of what a good dossier is, for the authoring session and the
  * rendered-design review, drawn from VIS-1 to VIS-3 and REQ-polaris-generation-002, 004 and 014. Working guidance, never authority and
@@ -194,10 +195,46 @@ export const READER_STANDARDS_SHA256 = sha256(READER_STANDARDS);
 /** The standards as one section of a larger Markdown text: the title becomes a second-level heading naming the version and digest, and
  * every other heading moves one level down, so they nest under the section. The digest is the reference file's, which the heading names,
  * since the carried text is re-levelled and does not hash to it (R-PDJA-17-STANDARDS-1 note 1). */
-export function readerStandardsSection(): string {
-  const [title, ...rest] = READER_STANDARDS.trimEnd().split('\n');
-  const heading = `## ${title!.replace(/^# /u, '')} (\`${READER_STANDARDS_VERSION}\`; sha256 of \`references/reader-standards.md\`: \`${READER_STANDARDS_SHA256}\`)`;
+export function readerStandardsSection(standards: ComposedStandards = composeReaderStandards(V1_SELECTION)): string {
+  const [title, ...rest] = standards.text.trimEnd().split('\n');
+  const heading = standards.packs === null
+    ? `## ${title!.replace(/^# /u, '')} (\`${READER_STANDARDS_VERSION}\`; sha256 of \`references/reader-standards.md\`: \`${READER_STANDARDS_SHA256}\`)`
+    : `## ${title!.replace(/^# /u, '')} (\`${READER_STANDARDS_VERSION}\`${packSuffix(standards.packs)}; sha256 of the composed text: \`${standards.sha256}\`)`;
   // The version line and the blank line after it give way to the heading, which names the version.
   const body = rest.filter((line, i) => !line.startsWith('Version: ') && !(line === '' && rest[i - 1]?.startsWith('Version: ')));
   return [heading, ...body.map((line) => (line.startsWith('## ') ? `#${line}` : line))].join('\n');
+}
+
+// --- Shape packs (REQ-polaris-generation-034 version 2.4, syzygy-3efd.43) -------------------------------------------------------------
+
+/** RS-11's dimension bullets in version 1: the lines from the first dimension up to the line before its check. */
+const DIMENSIONS_FIRST = '  - Language and runtime:';
+const DIMENSIONS_CHECK = '  - Check: every dimension has a row';
+const V1_LINES = READER_STANDARDS.split('\n');
+const FIRST = V1_LINES.findIndex((line) => line.startsWith(DIMENSIONS_FIRST));
+const CHECK = V1_LINES.findIndex((line) => line.startsWith(DIMENSIONS_CHECK));
+if (FIRST < 0 || CHECK <= FIRST) throw new Error('reader-standards: RS-11\'s dimensions are not where the shape packs replace them');
+/** Version 1's own dimension lines. */
+export const V1_DIMENSION_LINES: readonly string[] = V1_LINES.slice(FIRST, CHECK);
+/** The selection whose composition is version 1's text: the default pack and the server pack. */
+export const V1_SELECTION: readonly ShapePack[] = [DEFAULT_PACK, SERVER_PACK];
+
+/** The reader standards a brief carries: version 1's text where the composed dimensions are its own (`packs` null), or that text with
+ * RS-11's dimensions replaced and its version line extended to name the packs. `sha256` is the digest of `text`. */
+export interface ComposedStandards { readonly text: string; readonly sha256: string; readonly packs: readonly string[] | null }
+
+/** The suffix a composed text's version line, the brief's heading and the brief record name: the packs, each in backticks. */
+export const packSuffix = (packs: readonly string[]): string => `, technology dimensions from shape packs ${packs.map((id) => `\`${id}\``).join(', ')}`;
+
+/** The reader standards composed from the selected packs. Pure: the same packs give the same bytes. */
+export function composeReaderStandards(packs: readonly ShapePack[]): ComposedStandards {
+  const lines = composeDimensions(packs).flatMap((dimension) => dimension.lines);
+  if (lines.length === V1_DIMENSION_LINES.length && lines.every((line, i) => line === V1_DIMENSION_LINES[i])) {
+    return { text: READER_STANDARDS, sha256: READER_STANDARDS_SHA256, packs: null };
+  }
+  const identities = packs.map(shapePackIdentity);
+  const version = `Version: \`${READER_STANDARDS_VERSION}\``;
+  const composed = [...V1_LINES.slice(0, FIRST), ...lines, ...V1_LINES.slice(CHECK)].map((line) => (line === version ? `${version}${packSuffix(identities)}` : line));
+  const text = composed.join('\n');
+  return { text, sha256: sha256(text), packs: identities };
 }

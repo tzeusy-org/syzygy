@@ -1,5 +1,5 @@
 import { createHash } from 'node:crypto';
-import { DOSSIER_POLICY_PATH, type PolicySnapshot } from './policy-snapshot.js';
+import { DOSSIER_POLICY_PATH, DOSSIER_PREDECESSOR_POLICY_PATH, type PolicySnapshot } from './policy-snapshot.js';
 import { execFileSync } from 'node:child_process';
 import * as fs from 'node:fs';
 import * as path from 'node:path';
@@ -196,6 +196,8 @@ export interface FullRunOptions {
   readonly permitted?: boolean;
   /** The draft's `executions` in place of the fixture's, given the clone's path. */
   readonly executions?: (clone: string) => readonly Doc[];
+  /** Called with the run directory after the last render and before close, to alter what close reads. */
+  readonly beforeClose?: (run: string) => void;
 }
 
 export interface FullRunStep { readonly argv: readonly string[]; readonly exit: number; readonly stdout: string; readonly stderr: string }
@@ -256,6 +258,7 @@ export async function fullFixtureRun(options: FullRunOptions): Promise<{ readonl
   await cli(['review-check', run, '--kind', 'design']);
   await cli(['launch-form', run, 'review', 'terminal', '--kind', 'design']);
   await cli(['render', run]);
+  options.beforeClose?.(run);
   await cli(['close', run, ...(options.closeArgs ?? [])]);
   await cli(['status', run]);
   return { run, steps };
@@ -263,6 +266,8 @@ export async function fullFixtureRun(options: FullRunOptions): Promise<{ readonl
 
 /** Input fixtures only: source bytes and their transport binding, never expected screening outcomes. */
 const defaultPolicy = (): Uint8Array => new Uint8Array(fs.readFileSync(path.join(REAL_ROOT, DOSSIER_POLICY_PATH)));
+/** The predecessor's bytes (`dossier-declared-source/1.0.0`), for fixtures that exercise the one-stage screen it still binds for earlier runs. */
+export const predecessorPolicyBytes = (): Uint8Array => new Uint8Array(fs.readFileSync(path.join(REAL_ROOT, DOSSIER_PREDECESSOR_POLICY_PATH)));
 export function policyFixture(bytes: Uint8Array = defaultPolicy()): Extract<PolicySnapshot, { ok: true }> {
   const document = JSON.parse(new TextDecoder().decode(bytes)) as { policyId: string; policyVersion: string };
   return { ok: true, bytes, binding: {

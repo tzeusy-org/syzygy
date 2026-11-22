@@ -15,6 +15,8 @@ import type { ReviewReachAdvice } from './review-reach.js';
 import { CLASS_NOT_CONSENTED, unconsentedClass } from './class-gate.js';
 import type { FigureFit, FigureLayout } from './figure-fit.js';
 import type { RunProductReads } from './url-operation-products.js';
+import type { ReadingDifference, ReadingLedger } from './reading-ledger.js';
+import type { ManifestFacts } from './manifest-facts.js';
 
 /** The check's record formats, finding and result types, and the small shared readers; split out of `check.ts` unchanged. */
 
@@ -35,7 +37,11 @@ export type CheckFindingKind =
   // v1.3 presentation elements (syzygy-mea.10.5).
   | 'code-excerpt-too-long' | 'label-markup' | 'label-quotation' | 'element-version'
   // v1.5 (schema v4): a v4 field in an earlier draft, a judgement mark off an Inferred block, a list's repeated diagram not in its section.
-  | 'field-version' | 'judgement-mark' | 'repeats-diagram' | 'pole' | 'diagram-home';
+  | 'field-version' | 'judgement-mark' | 'repeats-diagram' | 'pole' | 'diagram-home'
+  // Version 2.4 (schema v6): a `thesisBasis` its introduction does not fit.
+  | 'thesis-basis'
+  // Version 2.5 (schema v7): members that do not fit a diagram's kind, and a participant or lane nothing names.
+  | 'figure-kind' | 'figure-unused';
 
 /** A repair finding: the kind of failure, where to repair it (a JSON path into the draft), and the block and citation it concerns. It
  * never carries quoted text or any byte of a blob. */
@@ -188,6 +194,15 @@ export interface CheckReport extends CheckRecord {
   /** Whether each produced figure fits the content column (`figure-fit.ts`, syzygy-3efd.20): advice, never a finding, and unlike the
    * advice around it also kept in the draft's check record, so a later check can be compared with this one. */
   readonly figureFit?: FigureFit;
+  /** The reading ledger (`reading-ledger.ts`, version 2.4): counts per narrative page of the draft, kept in the draft's check record beside
+   * `figureFit`; advice, never a finding. */
+  readonly readingLedger?: ReadingLedger;
+  /** Declared manifest facts (`manifest-facts.ts`, version 2.7): the draft check record's last member, from the pinned tree and the blobs
+   * the screen admits, never from the draft; every fact Inferred. Carried once, as part of the check record. */
+  readonly manifestFacts?: ManifestFacts;
+  /** The ledger's difference from the previous run of the same repository in the state root, computed at this check and written to no
+   * file; Unknown, never zero, where there is none. */
+  readonly readingDifference?: ReadingDifference;
   /** The claim blocks the fidelity review can never confirm, and the elements that render with none of their text (`review-reach.ts`); on
    * the report, never the record, and never a finding. */
   readonly reviewReach?: ReviewReachAdvice;

@@ -64,6 +64,10 @@ export class GitObjectReadRefusal extends Error {
     message: string,
     readonly objectId: string | null = null,
     readonly path: string | null = null,
+    /** Whether the object was refused for being larger than `maxObjectBytes` (stored, inflated, declared by a pack entry or produced by a
+     * delta), not for being malformed: the manifest recognizers' `too-large` (REQ-polaris-generation-034 version 2.7). The reason and
+     * message are unchanged by it, and `toJSON` leaves it out. */
+    readonly overBound: boolean = false,
   ) {
     super(message);
     this.name = 'GitObjectReadRefusal';
@@ -75,6 +79,10 @@ export class GitObjectReadRefusal extends Error {
 
 const refuse = (reason: GitObjectReadRefusalReason, message: string, objectId: string | null = null, at: string | null = null): never => {
   throw new GitObjectReadRefusal(reason, message, objectId, at);
+};
+/** A refusal of an object larger than the reader's object bound, as `corrupt-object` with `overBound` set. */
+const refuseOverBound = (message: string, objectId: string, at: string | null): never => {
+  throw new GitObjectReadRefusal('corrupt-object', message, objectId, at, true);
 };
 
 /** The algorithm a consented identifier is written in: lowercase hex, 40 digits SHA-1 or 64 SHA-256. Anything else refuses. */
@@ -638,10 +646,10 @@ class ObjectStore {
     try {
       if (this.boundedLooseReads) {
         const initial = await fh.stat({ bigint: true });
-        if (initial.size > BigInt(storedBound(this.limits.objectBytes))) refuse('corrupt-object', `loose object ${id} is larger stored than any object the reader holds`, id, at);
-        return await readStableFile(fh, initial, () => refuse('corrupt-object', `loose object ${id} changed while being read`, id, at));
+        if (initial.size > BigInt(storedBound(this.limits.objectBytes))) refuseOverBound(`loose object ${id} is larger stored than any object the reader holds`, id, at);
+        return await readStableFile(fh, initial, () => refuseOverBound(`loose object ${id} changed while being read`, id, at));
       }
-      if ((await fh.stat()).size > storedBound(this.limits.objectBytes)) refuse('corrupt-object', `loose object ${id} is larger stored than any object the reader holds`, id, at);
+      if ((await fh.stat()).size > storedBound(this.limits.objectBytes)) refuseOverBound(`loose object ${id} is larger stored than any object the reader holds`, id, at);
       return await fh.readFile();
     } finally { await fh.close(); }
   }
@@ -651,7 +659,11 @@ class ObjectStore {
     let inflated: Buffer, consumed: number;
     try {
       ({ buffer: inflated, engine: { bytesWritten: consumed } } = inflateSync(stored, { maxOutputLength: this.limits.objectBytes + 64, info: true }) as unknown as Inflated);
-    } catch { return refuse('corrupt-object', `loose object ${id} does not inflate`, id, at); }
+    } catch (cause) {
+      // Inflation stops at the bound (`maxOutputLength`): an object past it is refused before it is inflated whole.
+      if ((cause as NodeJS.ErrnoException).code === 'ERR_BUFFER_TOO_LARGE') return refuseOverBound(`loose object ${id} does not inflate`, id, at);
+      return refuse('corrupt-object', `loose object ${id} does not inflate`, id, at);
+    }
     this.charge(stored.length + inflated.length, id, at);
     if (consumed !== stored.length) refuse('corrupt-object', `loose object ${id} has bytes after its zlib stream`, id, at);
     if (stored.length > storedBound(inflated.length)) refuse('corrupt-object', `loose object ${id} is stored in more bytes than git writes for its size`, id, at);
@@ -673,7 +685,7 @@ class ObjectStore {
       if (i >= head.length) refuse('corrupt-object', `${id}: pack entry header too long in ${pack.name}`, id, at);
       c = head[i++]!; size += (c & 0x7f) * 2 ** shift; shift += 7;
     }
-    if (size > this.limits.objectBytes) refuse('corrupt-object', `${id}: pack entry declares ${size} bytes`, id, at);
+    if (size > this.limits.objectBytes) refuseOverBound(`${id}: pack entry declares ${size} bytes`, id, at);
     if (kind in PACK_TYPES) return { type: PACK_TYPES[kind]!, body: await this.inflateAt(fh, end, offset + i, size, id, at) };
     let base: RawObject;
     if (kind === OFS_DELTA) {
@@ -815,7 +827,7 @@ function applyDelta(base: Uint8Array, delta: Buffer, id: string, at: string | nu
   };
   const sourceSize = varint(), targetSize = varint();
   if (sourceSize !== base.length) refuse('corrupt-object', `${id}: delta expects a ${sourceSize}-byte base, got ${base.length}`, id, at);
-  if (targetSize > maxObjectBytes) refuse('corrupt-object', `${id}: delta declares ${targetSize} bytes`, id, at);
+  if (targetSize > maxObjectBytes) refuseOverBound(`${id}: delta declares ${targetSize} bytes`, id, at);
   charge(targetSize);
   const out = Buffer.alloc(targetSize);
   let o = 0;

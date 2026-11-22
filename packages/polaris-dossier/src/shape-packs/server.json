@@ -1,0 +1,44 @@
+{
+  "format": "polaris-dossier-shape-pack/1",
+  "id": "server",
+  "version": 1,
+  "selectedBy": {
+    "trait": "server-entry"
+  },
+  "dimensions": [
+    {
+      "id": "architecture",
+      "order": 20,
+      "lines": [
+        "  - Architecture: how the product is deployed and divided (server and",
+        "    clients, embedded library, single process or distributed cluster), and",
+        "    which part holds what."
+      ]
+    },
+    {
+      "id": "networking",
+      "order": 30,
+      "lines": [
+        "  - Networking: protocols and transports (TCP, UDP, HTTP, gRPC, a custom",
+        "    wire protocol), the wire format, and how peers find each other."
+      ]
+    },
+    {
+      "id": "state-and-persistence",
+      "order": 40,
+      "lines": [
+        "  - State and persistence: where state lives (memory, files, an embedded or",
+        "    external database), how it is made durable, and what consistency it",
+        "    promises."
+      ]
+    },
+    {
+      "id": "concurrency",
+      "order": 50,
+      "lines": [
+        "  - Concurrency: threads, event loop, processes or actors, and what that",
+        "    means for throughput and ordering."
+      ]
+    }
+  ]
+}

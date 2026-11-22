@@ -62,7 +62,9 @@ const sources = (over: Partial<GateSources> = {}): GateSources => ({
 });
 /** The step guard lists the pinned tree; this fixture tree holds no openspec/ or .syzygy/ path, so the subject stays non-governed. */
 const openReader = () => ({ listTree: async () => [{ path: 'src/server.c' }] }) as unknown as PinnedObjectReader;
-const deps = (over: Partial<GateSources> = {}) => ({ sources: sources(over), now: () => NOW, recordId: () => 'choice-0123456789abcdef', openReader });
+// The brief's trait profile (version 2.4) loads the bound screen; this hermetic tier reads no consent record, so it is Unknown here.
+const loadScreen = async () => ({ ok: false as const, why: 'no screening policy in this fixture' });
+const deps = (over: Partial<GateSources> = {}) => ({ sources: sources(over), now: () => NOW, recordId: () => 'choice-0123456789abcdef', openReader, loadScreen });
 const allow = (run: string, revision = REV, declarations = ALL, over: Partial<GateSources> = {}) => allowExecution(run, { revision, declarations }, deps(over));
 
 // syzygy-bpyt.8.11: the launched refusals, as literals, and the disclosures every allow-execution refusal carries.
@@ -111,7 +113,7 @@ describe('allow-execution: recorded', () => {
   it('is what a permitting brief cites, when the arm is switched on and the probe passes', async () => {
     const run = runDirectory();
     await allow(run);
-    const brief = await issueBrief(run, { sources: sources(), openReader, now: () => NOW + 1000, permitting: {
+    const brief = await issueBrief(run, { sources: sources(), openReader, loadScreen, now: () => NOW + 1000, permitting: {
       enabled: true, choices: RUN_DIRECTORY_CHOICES, probe: { probe: async () => ({ passed: true, checked: 1, source: 'fixture' }) },
     } });
     expect(brief).toMatchObject({ ok: true, report: { executionRule: { arm: 'permitting' } } });
@@ -123,7 +125,7 @@ describe('allow-execution: recorded', () => {
     await allow(earlier);
     const run = runDirectory();
     fs.copyFileSync(path.join(earlier, 'execution-choice.json'), path.join(run, 'execution-choice.json'));
-    await issueBrief(run, { sources: sources(), openReader, now: () => NOW + 1000, permitting: {
+    await issueBrief(run, { sources: sources(), openReader, loadScreen, now: () => NOW + 1000, permitting: {
       enabled: true, choices: RUN_DIRECTORY_CHOICES, probe: { probe: async () => ({ passed: true, checked: 1, source: 'fixture' }) },
     } });
     expect(JSON.parse(fs.readFileSync(path.join(run, 'brief.json'), 'utf8')).executionRule).toMatchObject({
@@ -155,7 +157,7 @@ describe('allow-execution: refused', () => {
 
   it('refuses after the brief', async () => {
     const run = runDirectory();
-    await issueBrief(run, { sources: sources(), openReader, now: () => NOW });
+    await issueBrief(run, { sources: sources(), openReader, loadScreen, now: () => NOW });
     expect(await allow(run)).toMatchObject({ ok: false, refusal: { stage: 'briefed', reason: 'the run already holds brief.md, brief.json: the choice must be recorded before the brief is issued' } });
     nothingWritten(run);
   });
@@ -267,7 +269,7 @@ describe('the stored choice is read strictly and never as a consent (R3-F7)', ()
 describe('syzygy dossier allow-execution', () => {
   const cli = async (argv: readonly string[], over: Partial<GateSources> = {}) => {
     let stdout = '', stderr = '';
-    const code = await runDossierCli(argv, { stdout: (t) => { stdout += t; }, stderr: (t) => { stderr += t; } }, { sources: sources(over), now: () => NOW, openReader });
+    const code = await runDossierCli(argv, { stdout: (t) => { stdout += t; }, stderr: (t) => { stderr += t; } }, { sources: sources(over), now: () => NOW, openReader, loadScreen });
     return { code, stdout, stderr };
   };
 

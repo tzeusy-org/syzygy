@@ -479,6 +479,76 @@ KINDS_SUBJECTS = {
     KINDS_SPEC: "a949eebfae9492c70b36e703955449cbef9d4b5e6d65bc6151dbe6716ac37a2c",
 }
 KINDS_BOUND_PARTS = len(KINDS_SUBJECTS)
+# The v2.6 declared-source reach amendment (syzygy-3efd.24): one MODIFIED
+# REQ-polaris-generation-046 over v2.0, with the screening-policy successor
+# it binds; pending until its own VIS-4 ledger row, found by its tag.
+# It replaces a different requirement from the v2.2-v2.4 REQ-034 train, so
+# its only predecessor is declared-source v2.0.
+REACH_CHANGE = "dossier-declared-source-reach"
+REACH_HOME = f"{CHANGES}/{REACH_CHANGE}"
+REACH_SPEC = f"{REACH_HOME}/proposed/polaris-generation/spec.md"
+REACH_UNION = f"{REACH_HOME}/GOVERNING-DEPENDENCIES.json"
+REACH_POLICY = ".syzygy/governance/policies/POLARIS-DOSSIER-DECLARED-SOURCE-POLICY-v2.json"
+REACH_TAG = "polaris-dossier-declared-source-reach-v2.6"
+REACH_STATUS_PREFIX = f"[Declared-source reach amendment 2.6]({REACH_HOME})"
+REACH_REPLACES = (POLARIS_ID + "046",)
+REACH_SUBJECTS = {
+    REACH_SPEC: "73047a45f1ee296e52fcdbe898ef14fb386b78cf13ce5b6c1fc097d1f12b6072",
+    REACH_POLICY: "8c10531f57d129ad5d402e53d7d9fdc741387f6eaab701bbdb46419181b11967",
+}
+REACH_BOUND_PARTS = len(REACH_SUBJECTS)
+# The v2.7 manifest-recognizers amendment (syzygy-3efd.25): one MODIFIED
+# REQ-polaris-generation-034 after v2.5 (v2.6 replaced REQ-046 alone),
+# pending until its own VIS-4 ledger row, found by its tag as v2.5's is.
+MANIFESTS_CHANGE = "dossier-manifest-recognizers"
+MANIFESTS_HOME = f"{CHANGES}/{MANIFESTS_CHANGE}"
+MANIFESTS_SPEC = f"{MANIFESTS_HOME}/proposed/polaris-generation/spec.md"
+MANIFESTS_UNION = f"{MANIFESTS_HOME}/GOVERNING-DEPENDENCIES.json"
+MANIFESTS_TAG = "polaris-dossier-manifest-recognizers-v2.7"
+MANIFESTS_STATUS_PREFIX = f"[Manifest recognizers amendment 2.7]({MANIFESTS_HOME})"
+MANIFESTS_SUBJECTS = {
+    MANIFESTS_SPEC: "55cc14dc4da4ccebaf72f3fa14937be357a2e873ab967a8a8fe79e0db7c3caaa",
+}
+MANIFESTS_BOUND_PARTS = len(MANIFESTS_SUBJECTS)
+# The v2.8 spec-repairs amendment (syzygy-3efd.72, .67, .68, .71): one
+# MODIFIED REQ-polaris-generation-034 after v2.7, pending until its own
+# VIS-4 ledger row, found by its tag as v2.7's is.
+REPAIRS_CHANGE = "dossier-spec-repairs"
+REPAIRS_HOME = f"{CHANGES}/{REPAIRS_CHANGE}"
+REPAIRS_SPEC = f"{REPAIRS_HOME}/proposed/polaris-generation/spec.md"
+REPAIRS_UNION = f"{REPAIRS_HOME}/GOVERNING-DEPENDENCIES.json"
+REPAIRS_TAG = "polaris-dossier-spec-repairs-v2.8"
+REPAIRS_STATUS_PREFIX = f"[Spec repairs amendment 2.8]({REPAIRS_HOME})"
+REPAIRS_SUBJECTS = {
+    REPAIRS_SPEC: "a8e768128d9996be234378eeacf88f3b8dc97577d3031c50b0459f6db24272d4",
+}
+REPAIRS_BOUND_PARTS = len(REPAIRS_SUBJECTS)
+# The v2.9 computed-maps amendment (syzygy-3efd.36, .64): one MODIFIED
+# REQ-polaris-generation-034 after v2.8, pending until its own VIS-4 ledger
+# row, found by its tag as v2.8's is.
+MAPS_CHANGE = "dossier-computed-maps"
+MAPS_HOME = f"{CHANGES}/{MAPS_CHANGE}"
+MAPS_SPEC = f"{MAPS_HOME}/proposed/polaris-generation/spec.md"
+MAPS_UNION = f"{MAPS_HOME}/GOVERNING-DEPENDENCIES.json"
+MAPS_TAG = "polaris-dossier-computed-maps-v2.9"
+MAPS_STATUS_PREFIX = f"[Computed maps amendment 2.9]({MAPS_HOME})"
+MAPS_SUBJECTS = {
+    MAPS_SPEC: "63902cc6f737295f7aac4953b7c950ced6142d5648bdd63abc4996d31a8d0987",
+}
+MAPS_BOUND_PARTS = len(MAPS_SUBJECTS)
+# The v2.10 record-bounds amendment (syzygy-3efd.73, .74): one MODIFIED
+# REQ-polaris-generation-034 after v2.9, pending until its own VIS-4 ledger
+# row, found by its tag as v2.9's is.
+BOUNDS_CHANGE = "dossier-record-bounds"
+BOUNDS_HOME = f"{CHANGES}/{BOUNDS_CHANGE}"
+BOUNDS_SPEC = f"{BOUNDS_HOME}/proposed/polaris-generation/spec.md"
+BOUNDS_UNION = f"{BOUNDS_HOME}/GOVERNING-DEPENDENCIES.json"
+BOUNDS_TAG = "polaris-dossier-record-bounds-v2.10"
+BOUNDS_STATUS_PREFIX = f"[Record bounds amendment 2.10]({BOUNDS_HOME})"
+BOUNDS_SUBJECTS = {
+    BOUNDS_SPEC: "d4da7a60e65c92d01ac87ca25fa59b22b1adf886868023e33ace2c7e64f01afb",
+}
+BOUNDS_BOUND_PARTS = len(BOUNDS_SUBJECTS)
 ADOPTION_LEDGER_TITLE = "# Agent adoptions"
 ADOPTION_TABLE_HEADER = "| Id | Date | Commit | What changed | Why | Revert | Tag |"
 ADOPTION_TABLE_DIVIDER = "|---|---|---|---|---|---|---|"
@@ -740,6 +810,151 @@ def kinds_disposition(root, rows):
         identity, _date, commit, _changed, _why, _revert, _tag = rows[0]
         return recorded_disposition(root, identity, commit.strip("`"), KINDS_TAG,
                                     KINDS_SUBJECTS, plain_revert=True)
+    return None
+
+
+def is_reach_row(line):
+    """A ledger row claiming the v2.6 declared-source reach amendment, well formed or not."""
+    if not line.startswith("|"):
+        return False
+    cells = [cell.strip() for cell in line.split("|")[1:-1]]
+    tag = f"`{REACH_TAG}`"
+    if len(cells) == 7 and cells[6] == tag:
+        return True
+    if len(cells) != 7 and tag in cells:
+        return True
+    if len(cells) < 4 or not re.fullmatch(r"`[0-9a-f]{40}`", cells[2]):
+        return False
+    snapshot = f"https://github.com/tzeusy-org/syzygy/blob/{cells[2][1:-1]}/"
+    return all(f"]({snapshot}{path})" in cells[3] for path in REACH_SUBJECTS)
+
+
+def reach_rows(root):
+    return [[cell.strip() for cell in line.split("|")[1:-1]]
+            for line in adoption_table_rows(root) if is_reach_row(line)]
+
+
+def reach_disposition(root, rows):
+    if len(rows) == 1 and len(rows[0]) == 7:
+        identity, _date, commit, _changed, _why, _revert, _tag = rows[0]
+        return recorded_disposition(root, identity, commit.strip("`"), REACH_TAG,
+                                    REACH_SUBJECTS, plain_revert=True)
+    return None
+
+
+def is_manifests_row(line):
+    """A ledger row claiming the v2.7 manifest-recognizers amendment, well formed or not."""
+    if not line.startswith("|"):
+        return False
+    cells = [cell.strip() for cell in line.split("|")[1:-1]]
+    tag = f"`{MANIFESTS_TAG}`"
+    if len(cells) == 7 and cells[6] == tag:
+        return True
+    if len(cells) != 7 and tag in cells:
+        return True
+    if len(cells) < 4 or not re.fullmatch(r"`[0-9a-f]{40}`", cells[2]):
+        return False
+    snapshot = f"https://github.com/tzeusy-org/syzygy/blob/{cells[2][1:-1]}/"
+    return all(f"]({snapshot}{path})" in cells[3] for path in MANIFESTS_SUBJECTS)
+
+
+def manifests_rows(root):
+    return [[cell.strip() for cell in line.split("|")[1:-1]]
+            for line in adoption_table_rows(root) if is_manifests_row(line)]
+
+
+def manifests_disposition(root, rows):
+    if len(rows) == 1 and len(rows[0]) == 7:
+        identity, _date, commit, _changed, _why, _revert, _tag = rows[0]
+        return recorded_disposition(root, identity, commit.strip("`"), MANIFESTS_TAG,
+                                    MANIFESTS_SUBJECTS, plain_revert=True)
+    return None
+
+
+def is_repairs_row(line):
+    """A ledger row claiming the v2.8 spec-repairs amendment, well formed or not."""
+    if not line.startswith("|"):
+        return False
+    cells = [cell.strip() for cell in line.split("|")[1:-1]]
+    tag = f"`{REPAIRS_TAG}`"
+    if len(cells) == 7 and cells[6] == tag:
+        return True
+    if len(cells) != 7 and tag in cells:
+        return True
+    if len(cells) < 4 or not re.fullmatch(r"`[0-9a-f]{40}`", cells[2]):
+        return False
+    snapshot = f"https://github.com/tzeusy-org/syzygy/blob/{cells[2][1:-1]}/"
+    return all(f"]({snapshot}{path})" in cells[3] for path in REPAIRS_SUBJECTS)
+
+
+def repairs_rows(root):
+    return [[cell.strip() for cell in line.split("|")[1:-1]]
+            for line in adoption_table_rows(root) if is_repairs_row(line)]
+
+
+def repairs_disposition(root, rows):
+    if len(rows) == 1 and len(rows[0]) == 7:
+        identity, _date, commit, _changed, _why, _revert, _tag = rows[0]
+        return recorded_disposition(root, identity, commit.strip("`"), REPAIRS_TAG,
+                                    REPAIRS_SUBJECTS, plain_revert=True)
+    return None
+
+
+def is_maps_row(line):
+    """A ledger row claiming the v2.9 computed-maps amendment, well formed or not."""
+    if not line.startswith("|"):
+        return False
+    cells = [cell.strip() for cell in line.split("|")[1:-1]]
+    tag = f"`{MAPS_TAG}`"
+    if len(cells) == 7 and cells[6] == tag:
+        return True
+    if len(cells) != 7 and tag in cells:
+        return True
+    if len(cells) < 4 or not re.fullmatch(r"`[0-9a-f]{40}`", cells[2]):
+        return False
+    snapshot = f"https://github.com/tzeusy-org/syzygy/blob/{cells[2][1:-1]}/"
+    return all(f"]({snapshot}{path})" in cells[3] for path in MAPS_SUBJECTS)
+
+
+def maps_rows(root):
+    return [[cell.strip() for cell in line.split("|")[1:-1]]
+            for line in adoption_table_rows(root) if is_maps_row(line)]
+
+
+def maps_disposition(root, rows):
+    if len(rows) == 1 and len(rows[0]) == 7:
+        identity, _date, commit, _changed, _why, _revert, _tag = rows[0]
+        return recorded_disposition(root, identity, commit.strip("`"), MAPS_TAG,
+                                    MAPS_SUBJECTS, plain_revert=True)
+    return None
+
+
+def is_bounds_row(line):
+    """A ledger row claiming the v2.10 record-bounds amendment, well formed or not."""
+    if not line.startswith("|"):
+        return False
+    cells = [cell.strip() for cell in line.split("|")[1:-1]]
+    tag = f"`{BOUNDS_TAG}`"
+    if len(cells) == 7 and cells[6] == tag:
+        return True
+    if len(cells) != 7 and tag in cells:
+        return True
+    if len(cells) < 4 or not re.fullmatch(r"`[0-9a-f]{40}`", cells[2]):
+        return False
+    snapshot = f"https://github.com/tzeusy-org/syzygy/blob/{cells[2][1:-1]}/"
+    return all(f"]({snapshot}{path})" in cells[3] for path in BOUNDS_SUBJECTS)
+
+
+def bounds_rows(root):
+    return [[cell.strip() for cell in line.split("|")[1:-1]]
+            for line in adoption_table_rows(root) if is_bounds_row(line)]
+
+
+def bounds_disposition(root, rows):
+    if len(rows) == 1 and len(rows[0]) == 7:
+        identity, _date, commit, _changed, _why, _revert, _tag = rows[0]
+        return recorded_disposition(root, identity, commit.strip("`"), BOUNDS_TAG,
+                                    BOUNDS_SUBJECTS, plain_revert=True)
     return None
 
 
@@ -1269,6 +1484,196 @@ def kinds_binding(root):
     return (None if records or subjects else read_text(root, KINDS_SPEC), records, subjects)
 
 
+def reach_binding(root):
+    """Read v2.6's published composition: pending until its row, like v2.4.
+
+    The row names the installing commit (a plain commit, so its revert may
+    omit `-m 1`), the reviewed spec and the screening-policy successor at
+    that commit, and the version tag. Its predecessor is v2.0's text of
+    REQ-polaris-generation-046, so declared-source v2.0 must be in force.
+    """
+    rows = reach_rows(root)
+    if not rows or reach_disposition(root, rows):
+        return None, [], []
+    records, subjects = [], []
+    if declared_source_binding(root)[0] is None:
+        records.append("declared-source reach: prior v2.0 declared-source adoption is unavailable")
+    if len(rows) != 1 or len(rows[0]) != 7:
+        records.append("declared-source reach: expected one seven-column agent adoption row")
+    else:
+        identity, date, commit, changed, reason, revert, tag = rows[0]
+        landed = re.fullmatch(r"`([0-9a-f]{40})`", commit)
+        if (not re.fullmatch(r"A-[1-9][0-9]*", identity)
+                or not valid_adoption_date(date)
+                or not landed or tag != f"`{REACH_TAG}`" or not reason):
+            records.append("declared-source reach: malformed adoption identity, date, commit, reason or tag")
+        if landed:
+            oid = landed.group(1)
+            if revert.split("`")[1:2] not in ([f"git revert {oid}"], [f"git revert -m 1 {oid}"]):
+                records.append("declared-source reach: revert does not name the landed commit")
+            for rel in REACH_SUBJECTS:
+                snapshot = f"https://github.com/tzeusy-org/syzygy/blob/{oid}/{rel}"
+                if f"]({snapshot})" not in changed:
+                    records.append(f"declared-source reach: adoption row does not name `{rel}`")
+    for rel, digest in REACH_SUBJECTS.items():
+        body = read_bytes(root, rel)
+        if body is None or sha(body) != digest:
+            subjects.append(f"declared-source reach: `{rel}` differs from the reviewed v2.6 subject")
+    return (None if records or subjects else read_text(root, REACH_SPEC), records, subjects)
+
+
+def manifests_binding(root):
+    """Read v2.7's published composition: pending until its row, like v2.5.
+
+    The row names the installing commit (a plain commit, so its revert may
+    omit `-m 1`), the reviewed spec at that commit and the version tag. Its
+    predecessor is v2.5's text of REQ-polaris-generation-034, so v2.5 must
+    itself be in force.
+    """
+    rows = manifests_rows(root)
+    if not rows or manifests_disposition(root, rows):
+        return None, [], []
+    records, subjects = [], []
+    if kinds_binding(root)[0] is None:
+        records.append("manifest recognizers: prior v2.5 figure kinds adoption is unavailable")
+    if len(rows) != 1 or len(rows[0]) != 7:
+        records.append("manifest recognizers: expected one seven-column agent adoption row")
+    else:
+        identity, date, commit, changed, reason, revert, tag = rows[0]
+        landed = re.fullmatch(r"`([0-9a-f]{40})`", commit)
+        if (not re.fullmatch(r"A-[1-9][0-9]*", identity)
+                or not valid_adoption_date(date)
+                or not landed or tag != f"`{MANIFESTS_TAG}`" or not reason):
+            records.append("manifest recognizers: malformed adoption identity, date, commit, reason or tag")
+        if landed:
+            oid = landed.group(1)
+            if revert.split("`")[1:2] not in ([f"git revert {oid}"], [f"git revert -m 1 {oid}"]):
+                records.append("manifest recognizers: revert does not name the landed commit")
+            for rel in MANIFESTS_SUBJECTS:
+                snapshot = f"https://github.com/tzeusy-org/syzygy/blob/{oid}/{rel}"
+                if f"]({snapshot})" not in changed:
+                    records.append(f"manifest recognizers: adoption row does not name `{rel}`")
+    for rel, digest in MANIFESTS_SUBJECTS.items():
+        body = read_bytes(root, rel)
+        if body is None or sha(body) != digest:
+            subjects.append(f"manifest recognizers: `{rel}` differs from the reviewed v2.7 subject")
+    return (None if records or subjects else read_text(root, MANIFESTS_SPEC), records, subjects)
+
+
+def repairs_binding(root):
+    """Read v2.8's published composition: pending until its row, like v2.7.
+
+    The row names the installing commit (a plain commit, so its revert may
+    omit `-m 1`), the reviewed spec at that commit and the version tag. Its
+    predecessor is v2.7's text of REQ-polaris-generation-034, so v2.7 must
+    itself be in force.
+    """
+    rows = repairs_rows(root)
+    if not rows or repairs_disposition(root, rows):
+        return None, [], []
+    records, subjects = [], []
+    if manifests_binding(root)[0] is None:
+        records.append("spec repairs: prior v2.7 manifest recognizers adoption is unavailable")
+    if len(rows) != 1 or len(rows[0]) != 7:
+        records.append("spec repairs: expected one seven-column agent adoption row")
+    else:
+        identity, date, commit, changed, reason, revert, tag = rows[0]
+        landed = re.fullmatch(r"`([0-9a-f]{40})`", commit)
+        if (not re.fullmatch(r"A-[1-9][0-9]*", identity)
+                or not valid_adoption_date(date)
+                or not landed or tag != f"`{REPAIRS_TAG}`" or not reason):
+            records.append("spec repairs: malformed adoption identity, date, commit, reason or tag")
+        if landed:
+            oid = landed.group(1)
+            if revert.split("`")[1:2] not in ([f"git revert {oid}"], [f"git revert -m 1 {oid}"]):
+                records.append("spec repairs: revert does not name the landed commit")
+            for rel in REPAIRS_SUBJECTS:
+                snapshot = f"https://github.com/tzeusy-org/syzygy/blob/{oid}/{rel}"
+                if f"]({snapshot})" not in changed:
+                    records.append(f"spec repairs: adoption row does not name `{rel}`")
+    for rel, digest in REPAIRS_SUBJECTS.items():
+        body = read_bytes(root, rel)
+        if body is None or sha(body) != digest:
+            subjects.append(f"spec repairs: `{rel}` differs from the reviewed v2.8 subject")
+    return (None if records or subjects else read_text(root, REPAIRS_SPEC), records, subjects)
+
+
+def maps_binding(root):
+    """Read v2.9's published composition: pending until its row, like v2.8.
+
+    The row names the installing commit (a plain commit, so its revert may
+    omit `-m 1`), the reviewed spec at that commit and the version tag. Its
+    predecessor is v2.8's text of REQ-polaris-generation-034, so v2.8 must
+    itself be in force.
+    """
+    rows = maps_rows(root)
+    if not rows or maps_disposition(root, rows):
+        return None, [], []
+    records, subjects = [], []
+    if repairs_binding(root)[0] is None:
+        records.append("computed maps: prior v2.8 spec repairs adoption is unavailable")
+    if len(rows) != 1 or len(rows[0]) != 7:
+        records.append("computed maps: expected one seven-column agent adoption row")
+    else:
+        identity, date, commit, changed, reason, revert, tag = rows[0]
+        landed = re.fullmatch(r"`([0-9a-f]{40})`", commit)
+        if (not re.fullmatch(r"A-[1-9][0-9]*", identity)
+                or not valid_adoption_date(date)
+                or not landed or tag != f"`{MAPS_TAG}`" or not reason):
+            records.append("computed maps: malformed adoption identity, date, commit, reason or tag")
+        if landed:
+            oid = landed.group(1)
+            if revert.split("`")[1:2] not in ([f"git revert {oid}"], [f"git revert -m 1 {oid}"]):
+                records.append("computed maps: revert does not name the landed commit")
+            for rel in MAPS_SUBJECTS:
+                snapshot = f"https://github.com/tzeusy-org/syzygy/blob/{oid}/{rel}"
+                if f"]({snapshot})" not in changed:
+                    records.append(f"computed maps: adoption row does not name `{rel}`")
+    for rel, digest in MAPS_SUBJECTS.items():
+        body = read_bytes(root, rel)
+        if body is None or sha(body) != digest:
+            subjects.append(f"computed maps: `{rel}` differs from the reviewed v2.9 subject")
+    return (None if records or subjects else read_text(root, MAPS_SPEC), records, subjects)
+
+
+def bounds_binding(root):
+    """Read v2.10's published composition: pending until its row, like v2.9.
+
+    The row names the installing commit (a plain commit, so its revert may
+    omit `-m 1`), the reviewed spec at that commit and the version tag. Its
+    predecessor is v2.9's text of REQ-polaris-generation-034, so v2.9 must
+    itself be in force.
+    """
+    rows = bounds_rows(root)
+    if not rows or bounds_disposition(root, rows):
+        return None, [], []
+    records, subjects = [], []
+    if maps_binding(root)[0] is None:
+        records.append("record bounds: prior v2.9 computed maps adoption is unavailable")
+    if len(rows) != 1 or len(rows[0]) != 7:
+        records.append("record bounds: expected one seven-column agent adoption row")
+    else:
+        identity, date, commit, changed, reason, revert, tag = rows[0]
+        landed = re.fullmatch(r"`([0-9a-f]{40})`", commit)
+        if (not re.fullmatch(r"A-[1-9][0-9]*", identity)
+                or not valid_adoption_date(date)
+                or not landed or tag != f"`{BOUNDS_TAG}`" or not reason):
+            records.append("record bounds: malformed adoption identity, date, commit, reason or tag")
+        if landed:
+            oid = landed.group(1)
+            if revert.split("`")[1:2] not in ([f"git revert {oid}"], [f"git revert -m 1 {oid}"]):
+                records.append("record bounds: revert does not name the landed commit")
+            for rel in BOUNDS_SUBJECTS:
+                snapshot = f"https://github.com/tzeusy-org/syzygy/blob/{oid}/{rel}"
+                if f"]({snapshot})" not in changed:
+                    records.append(f"record bounds: adoption row does not name `{rel}`")
+    for rel, digest in BOUNDS_SUBJECTS.items():
+        body = read_bytes(root, rel)
+        if body is None or sha(body) != digest:
+            subjects.append(f"record bounds: `{rel}` differs from the reviewed v2.10 subject")
+    return (None if records or subjects else read_text(root, BOUNDS_SPEC), records, subjects)
+
+
 def url_source_contract_findings(root):
     """Verify the reviewed amendment in its actual contract homes."""
     body = read_bytes(root, URL_SOURCE_REPLACEMENTS)
@@ -1667,6 +2072,51 @@ def check_outcomes(root, report):
         subjects_seen += KINDS_BOUND_PARTS
     r1 += kinds_records
     r2 += kinds_subjects
+    reach_retired_by = reach_disposition(root, reach_rows(root))
+    reach_amendment, reach_records, reach_subjects = reach_binding(root)
+    if reach_retired_by:
+        records += 2
+    elif reach_amendment is not None or reach_records or reach_subjects:
+        records += 1
+        subjects_seen += REACH_BOUND_PARTS
+    r1 += reach_records
+    r2 += reach_subjects
+    manifests_retired_by = manifests_disposition(root, manifests_rows(root))
+    manifests_amendment, manifests_records, manifests_subjects = manifests_binding(root)
+    if manifests_retired_by:
+        records += 2
+    elif manifests_amendment is not None or manifests_records or manifests_subjects:
+        records += 1
+        subjects_seen += MANIFESTS_BOUND_PARTS
+    r1 += manifests_records
+    r2 += manifests_subjects
+    repairs_retired_by = repairs_disposition(root, repairs_rows(root))
+    repairs_amendment, repairs_records, repairs_subjects = repairs_binding(root)
+    if repairs_retired_by:
+        records += 2
+    elif repairs_amendment is not None or repairs_records or repairs_subjects:
+        records += 1
+        subjects_seen += REPAIRS_BOUND_PARTS
+    r1 += repairs_records
+    r2 += repairs_subjects
+    maps_retired_by = maps_disposition(root, maps_rows(root))
+    maps_amendment, maps_records, maps_subjects = maps_binding(root)
+    if maps_retired_by:
+        records += 2
+    elif maps_amendment is not None or maps_records or maps_subjects:
+        records += 1
+        subjects_seen += MAPS_BOUND_PARTS
+    r1 += maps_records
+    r2 += maps_subjects
+    bounds_retired_by = bounds_disposition(root, bounds_rows(root))
+    bounds_amendment, bounds_records, bounds_subjects = bounds_binding(root)
+    if bounds_retired_by:
+        records += 2
+    elif bounds_amendment is not None or bounds_records or bounds_subjects:
+        records += 1
+        subjects_seen += BOUNDS_BOUND_PARTS
+    r1 += bounds_records
+    r2 += bounds_subjects
     retirement = ""
     if declared_retired_by:
         retirement += f"; v2.0 inactive by {declared_retired_by}"
@@ -1680,6 +2130,16 @@ def check_outcomes(root, report):
         retirement += f"; v2.4 inactive by {ledger_retired_by}"
     if kinds_retired_by:
         retirement += f"; v2.5 inactive by {kinds_retired_by}"
+    if reach_retired_by:
+        retirement += f"; v2.6 inactive by {reach_retired_by}"
+    if manifests_retired_by:
+        retirement += f"; v2.7 inactive by {manifests_retired_by}"
+    if repairs_retired_by:
+        retirement += f"; v2.8 inactive by {repairs_retired_by}"
+    if maps_retired_by:
+        retirement += f"; v2.9 inactive by {maps_retired_by}"
+    if bounds_retired_by:
+        retirement += f"; v2.10 inactive by {bounds_retired_by}"
     report.add("R1", "terminal outcome for every child", records, r1,
                f"{len(CHILDREN)} children and {len(additions)} installed Polaris "
                "additions; digest acts: phrase = manifest sha256 and in the "
@@ -1693,7 +2153,14 @@ def check_outcomes(root, report):
                "v2.2 naming spec and policy, pending until recorded; ledger, "
                "packs and thesis: one v2.4 row over effective v2.3, pending "
                "until recorded; figure kinds: one v2.5 row over effective "
-               "v2.4, pending until recorded" + retirement)
+               "v2.4, pending until recorded; "
+               "declared-source reach: one v2.6 row over "
+               "effective v2.0 naming spec and policy, pending until recorded; "
+               "manifest recognizers: one v2.7 row over effective v2.5, pending "
+               "until recorded; spec repairs: one v2.8 row over effective v2.7, "
+               "pending until recorded; computed maps: one v2.9 row over effective "
+               "v2.8, pending until recorded; record bounds: one v2.10 row over "
+               "effective v2.9, pending until recorded" + retirement)
     report.add("R2", "reviewed and signed subjects hash to their rows", subjects_seen, r2)
 
 
@@ -2093,8 +2560,8 @@ def compose_url_source_by_name(current, text):
 FIGURE_REPLACES = (POLARIS_ID + "034",)
 
 
-def compose_figure_by_id(current, text):
-    """Replace exactly REQ-polaris-generation-034, keeping its ID and name; refuse partial application."""
+def compose_figure_by_id(current, text, replaces=FIGURE_REPLACES):
+    """Replace exactly `replaces` (REQ-polaris-generation-034 unless named), keeping ID and name; refuse partial application."""
     problems = _header_problems_regex(text)
     foreign = _foreign_headings_regex(text)
     headings = re.findall(r"^[ \t]*##(?!#)[^\n]*$", text, re.M)
@@ -2104,7 +2571,7 @@ def compose_figure_by_id(current, text):
         problems.append("noncanonical line bytes")
     blocks = _polaris_blocks_regex(text)
     operations = tuple((kind, ids[0]) for kind, ids, _name, _scenarios in blocks if len(ids) == 1)
-    if len(operations) != len(blocks) or operations != tuple(("MODIFIED", i) for i in FIGURE_REPLACES):
+    if len(operations) != len(blocks) or operations != tuple(("MODIFIED", i) for i in replaces):
         return dict(current), problems + ["unexpected figure-homes requirement operations"]
     composed = dict(current)
     for _kind, (ident,), name, scenarios in blocks:
@@ -2114,7 +2581,7 @@ def compose_figure_by_id(current, text):
     return (dict(current) if problems else composed), problems
 
 
-def compose_figure_by_name(current, text):
+def compose_figure_by_name(current, text, replaces=FIGURE_REPLACES):
     """Independently match the predecessor by name, then confirm the attached ID."""
     problems = _header_problems_manual(text)
     lines = text.split("\n")
@@ -2127,7 +2594,7 @@ def compose_figure_by_name(current, text):
         problems.append("noncanonical line bytes")
     blocks = _polaris_blocks_manual(text)
     operations = tuple((b["section"], b["ids"][0]) for b in blocks if len(b["ids"]) == 1)
-    if len(operations) != len(blocks) or operations != tuple(("MODIFIED", i) for i in FIGURE_REPLACES):
+    if len(operations) != len(blocks) or operations != tuple(("MODIFIED", i) for i in replaces):
         return dict(current), problems + ["unexpected figure-homes requirement operations"]
 
     def norm(name):
@@ -2391,6 +2858,62 @@ def census(root):
                 b, extra_b = compose_figure_by_name(b, kinds_amendment)
                 pa += extra_a
                 pb += extra_b
+        reach_amendment, reach_records, reach_subjects = reach_binding(root)
+        findings += reach_records + reach_subjects
+        if reach_amendment is not None:
+            if amendment is None:
+                findings.append("POLARIS: declared-source reach requires effective declared-source v2.0")
+            else:
+                a, extra_a = compose_figure_by_id(a, reach_amendment, REACH_REPLACES)
+                b, extra_b = compose_figure_by_name(b, reach_amendment, REACH_REPLACES)
+                pa += extra_a
+                pb += extra_b
+        manifests_amendment, manifests_records, manifests_subjects = manifests_binding(root)
+        findings += manifests_records + manifests_subjects
+        if manifests_amendment is not None:
+            if (kinds_amendment is None or ledger_amendment is None or derived_amendment is None
+                    or figure_amendment is None or amendment is None):
+                findings.append("POLARIS: manifest recognizers requires effective figure kinds v2.5")
+            else:
+                a, extra_a = compose_figure_by_id(a, manifests_amendment)
+                b, extra_b = compose_figure_by_name(b, manifests_amendment)
+                pa += extra_a
+                pb += extra_b
+        repairs_amendment, repairs_records, repairs_subjects = repairs_binding(root)
+        findings += repairs_records + repairs_subjects
+        if repairs_amendment is not None:
+            if (manifests_amendment is None or kinds_amendment is None or ledger_amendment is None
+                    or derived_amendment is None or figure_amendment is None or amendment is None):
+                findings.append("POLARIS: spec repairs requires effective manifest recognizers v2.7")
+            else:
+                a, extra_a = compose_figure_by_id(a, repairs_amendment)
+                b, extra_b = compose_figure_by_name(b, repairs_amendment)
+                pa += extra_a
+                pb += extra_b
+        maps_amendment, maps_records, maps_subjects = maps_binding(root)
+        findings += maps_records + maps_subjects
+        if maps_amendment is not None:
+            if (repairs_amendment is None or manifests_amendment is None or kinds_amendment is None
+                    or ledger_amendment is None or derived_amendment is None or figure_amendment is None
+                    or amendment is None):
+                findings.append("POLARIS: computed maps requires effective spec repairs v2.8")
+            else:
+                a, extra_a = compose_figure_by_id(a, maps_amendment)
+                b, extra_b = compose_figure_by_name(b, maps_amendment)
+                pa += extra_a
+                pb += extra_b
+        bounds_amendment, bounds_records, bounds_subjects = bounds_binding(root)
+        findings += bounds_records + bounds_subjects
+        if bounds_amendment is not None:
+            if (maps_amendment is None or repairs_amendment is None or manifests_amendment is None
+                    or kinds_amendment is None or ledger_amendment is None or derived_amendment is None
+                    or figure_amendment is None or amendment is None):
+                findings.append("POLARIS: record bounds requires effective computed maps v2.9")
+            else:
+                a, extra_a = compose_figure_by_id(a, bounds_amendment)
+                b, extra_b = compose_figure_by_name(b, bounds_amendment)
+                pa += extra_a
+                pb += extra_b
         findings += [f"POLARIS method A: {p}" for p in pa]
         findings += [f"POLARIS method B: {p}" for p in pb]
         if a != b:
@@ -2472,6 +2995,14 @@ def polaris_expected(root, findings):
             n_scen += sum(len(row["scenarios"]) for row in url_a.values()) - sum(
                 len(row["scenarios"]) for row in after_a.values())
             after_a, after_b = url_a, url_b
+        reach_amendment, _records, _subjects = reach_binding(root)
+        if reach_amendment is not None:
+            rea_a, pa = compose_figure_by_id(after_a, reach_amendment, REACH_REPLACES)
+            rea_b, pb = compose_figure_by_name(after_b, reach_amendment, REACH_REPLACES)
+            if pa or pb or rea_a != rea_b or set(rea_a) != set(after_a):
+                findings.append("POLARIS declared-source reach: methods disagree or change identities")
+            n_scen += sum(len(row["scenarios"]) for row in rea_a.values()) - sum(
+                len(row["scenarios"]) for row in after_a.values())
         figure_amendment, _records, _subjects = figure_binding(root)
         if figure_amendment is not None:
             fig_a, pa = compose_figure_by_id(after_a, figure_amendment)
@@ -2504,6 +3035,38 @@ def polaris_expected(root, findings):
                             findings.append("POLARIS figure kinds: methods disagree or change identities")
                         n_scen += sum(len(row["scenarios"]) for row in kin_a.values()) - sum(
                             len(row["scenarios"]) for row in led_a.values())
+                        manifests_amendment, _records, _subjects = manifests_binding(root)
+                        if manifests_amendment is not None:
+                            man_a, pa = compose_figure_by_id(kin_a, manifests_amendment)
+                            man_b, pb = compose_figure_by_name(kin_b, manifests_amendment)
+                            if pa or pb or man_a != man_b or set(man_a) != set(kin_a):
+                                findings.append("POLARIS manifest recognizers: methods disagree or change identities")
+                            n_scen += sum(len(row["scenarios"]) for row in man_a.values()) - sum(
+                                len(row["scenarios"]) for row in kin_a.values())
+                            repairs_amendment, _records, _subjects = repairs_binding(root)
+                            if repairs_amendment is not None:
+                                rep_a, pa = compose_figure_by_id(man_a, repairs_amendment)
+                                rep_b, pb = compose_figure_by_name(man_b, repairs_amendment)
+                                if pa or pb or rep_a != rep_b or set(rep_a) != set(man_a):
+                                    findings.append("POLARIS spec repairs: methods disagree or change identities")
+                                n_scen += sum(len(row["scenarios"]) for row in rep_a.values()) - sum(
+                                    len(row["scenarios"]) for row in man_a.values())
+                                maps_amendment, _records, _subjects = maps_binding(root)
+                                if maps_amendment is not None:
+                                    map_a, pa = compose_figure_by_id(rep_a, maps_amendment)
+                                    map_b, pb = compose_figure_by_name(rep_b, maps_amendment)
+                                    if pa or pb or map_a != map_b or set(map_a) != set(rep_a):
+                                        findings.append("POLARIS computed maps: methods disagree or change identities")
+                                    n_scen += sum(len(row["scenarios"]) for row in map_a.values()) - sum(
+                                        len(row["scenarios"]) for row in rep_a.values())
+                                    bounds_amendment, _records, _subjects = bounds_binding(root)
+                                    if bounds_amendment is not None:
+                                        bnd_a, pa = compose_figure_by_id(map_a, bounds_amendment)
+                                        bnd_b, pb = compose_figure_by_name(map_b, bounds_amendment)
+                                        if pa or pb or bnd_a != bnd_b or set(bnd_a) != set(map_a):
+                                            findings.append("POLARIS record bounds: methods disagree or change identities")
+                                        n_scen += sum(len(row["scenarios"]) for row in bnd_a.values()) - sum(
+                                            len(row["scenarios"]) for row in map_a.values())
     return n_req, n_scen, ids
 
 
@@ -2639,6 +3202,21 @@ def check_generated(root, pop, report):
     kinds_amendment, _records, _subjects = kinds_binding(root)
     if kinds_amendment is not None:
         files += tracked(root, KINDS_HOME)
+    manifests_amendment, _records, _subjects = manifests_binding(root)
+    if manifests_amendment is not None:
+        files += tracked(root, MANIFESTS_HOME)
+    repairs_amendment, _records, _subjects = repairs_binding(root)
+    if repairs_amendment is not None:
+        files += tracked(root, REPAIRS_HOME)
+    maps_amendment, _records, _subjects = maps_binding(root)
+    if maps_amendment is not None:
+        files += tracked(root, MAPS_HOME)
+    bounds_amendment, _records, _subjects = bounds_binding(root)
+    if bounds_amendment is not None:
+        files += tracked(root, BOUNDS_HOME)
+    reach_amendment, _records, _subjects = reach_binding(root)
+    if reach_amendment is not None:
+        files += tracked(root, REACH_HOME)
     candidate_ref_dirs = addition_dirs + (URL_SOURCE_HOME + "/",)
     files += list(ROUTE_PAGES)
     # An addition may cite a candidate Polaris requirement still under
@@ -2684,7 +3262,10 @@ def check_generated(root, pop, report):
                             "`--regenerate`")
     for delta, rel in ((amendment, DECLARED_SOURCE_UNION), (url_amendment, URL_SOURCE_UNION),
                        (figure_amendment, FIGURE_UNION), (derived_amendment, DERIVED_UNION),
-                       (ledger_amendment, LEDGER_UNION), (kinds_amendment, KINDS_UNION)):
+                       (ledger_amendment, LEDGER_UNION), (kinds_amendment, KINDS_UNION),
+                       (reach_amendment, REACH_UNION), (manifests_amendment, MANIFESTS_UNION),
+                       (repairs_amendment, REPAIRS_UNION), (maps_amendment, MAPS_UNION),
+                       (bounds_amendment, BOUNDS_UNION)):
         if delta is None:
             continue
         examined += 1
@@ -2883,6 +3464,96 @@ def check_routes(root, pop, report):
             findings.append(f"`{STATUS}` calls figure kinds v2.5 adopted while it is not in force")
         if any(KINDS_TAG in line and "Agent adoption" in line for line in rows.get(KINDS_CHANGE, [])):
             findings.append(f"`{OPENSPEC_README}` calls figure kinds v2.5 adopted while it is not in force")
+    manifests_amendment, _records, _subjects = manifests_binding(root)
+    manifests_fields = [line.strip() for line in visible_route_lines(status)
+                    if line.strip().startswith(MANIFESTS_STATUS_PREFIX)]
+    if manifests_amendment is not None:
+        examined += 2
+        if not any(Path(AGENT_ADOPTIONS).name in line and MANIFESTS_TAG in line
+                   for line in rows.get(MANIFESTS_CHANGE, [])):
+            findings.append(f"`{OPENSPEC_README}` does not route manifest recognizers v2.7 "
+                            f"to `{AGENT_ADOPTIONS}` and its version tag")
+        identity = manifests_rows(root)[0][0]
+        if AGENT_ADOPTIONS not in status or manifests_fields != [f"{MANIFESTS_STATUS_PREFIX} is agent-adopted in {identity}."]:
+            findings.append(f"`{STATUS}` does not route manifest recognizers v2.7 and its adoption {identity}")
+    elif MANIFESTS_CHANGE in changes:
+        examined += 2
+        if any("is agent-adopted" in field for field in manifests_fields):
+            findings.append(f"`{STATUS}` calls manifest recognizers v2.7 adopted while it is not in force")
+        if any(MANIFESTS_TAG in line and "Agent adoption" in line for line in rows.get(MANIFESTS_CHANGE, [])):
+            findings.append(f"`{OPENSPEC_README}` calls manifest recognizers v2.7 adopted while it is not in force")
+    repairs_amendment, _records, _subjects = repairs_binding(root)
+    repairs_fields = [line.strip() for line in visible_route_lines(status)
+                    if line.strip().startswith(REPAIRS_STATUS_PREFIX)]
+    if repairs_amendment is not None:
+        examined += 2
+        if not any(Path(AGENT_ADOPTIONS).name in line and REPAIRS_TAG in line
+                   for line in rows.get(REPAIRS_CHANGE, [])):
+            findings.append(f"`{OPENSPEC_README}` does not route spec repairs v2.8 "
+                            f"to `{AGENT_ADOPTIONS}` and its version tag")
+        identity = repairs_rows(root)[0][0]
+        if AGENT_ADOPTIONS not in status or repairs_fields != [f"{REPAIRS_STATUS_PREFIX} is agent-adopted in {identity}."]:
+            findings.append(f"`{STATUS}` does not route spec repairs v2.8 and its adoption {identity}")
+    elif REPAIRS_CHANGE in changes:
+        examined += 2
+        if any("is agent-adopted" in field for field in repairs_fields):
+            findings.append(f"`{STATUS}` calls spec repairs v2.8 adopted while it is not in force")
+        if any(REPAIRS_TAG in line and "Agent adoption" in line for line in rows.get(REPAIRS_CHANGE, [])):
+            findings.append(f"`{OPENSPEC_README}` calls spec repairs v2.8 adopted while it is not in force")
+    maps_amendment, _records, _subjects = maps_binding(root)
+    maps_fields = [line.strip() for line in visible_route_lines(status)
+                    if line.strip().startswith(MAPS_STATUS_PREFIX)]
+    if maps_amendment is not None:
+        examined += 2
+        if not any(Path(AGENT_ADOPTIONS).name in line and MAPS_TAG in line
+                   for line in rows.get(MAPS_CHANGE, [])):
+            findings.append(f"`{OPENSPEC_README}` does not route computed maps v2.9 "
+                            f"to `{AGENT_ADOPTIONS}` and its version tag")
+        identity = maps_rows(root)[0][0]
+        if AGENT_ADOPTIONS not in status or maps_fields != [f"{MAPS_STATUS_PREFIX} is agent-adopted in {identity}."]:
+            findings.append(f"`{STATUS}` does not route computed maps v2.9 and its adoption {identity}")
+    elif MAPS_CHANGE in changes:
+        examined += 2
+        if any("is agent-adopted" in field for field in maps_fields):
+            findings.append(f"`{STATUS}` calls computed maps v2.9 adopted while it is not in force")
+        if any(MAPS_TAG in line and "Agent adoption" in line for line in rows.get(MAPS_CHANGE, [])):
+            findings.append(f"`{OPENSPEC_README}` calls computed maps v2.9 adopted while it is not in force")
+    bounds_amendment, _records, _subjects = bounds_binding(root)
+    bounds_fields = [line.strip() for line in visible_route_lines(status)
+                    if line.strip().startswith(BOUNDS_STATUS_PREFIX)]
+    if bounds_amendment is not None:
+        examined += 2
+        if not any(Path(AGENT_ADOPTIONS).name in line and BOUNDS_TAG in line
+                   for line in rows.get(BOUNDS_CHANGE, [])):
+            findings.append(f"`{OPENSPEC_README}` does not route record bounds v2.10 "
+                            f"to `{AGENT_ADOPTIONS}` and its version tag")
+        identity = bounds_rows(root)[0][0]
+        if AGENT_ADOPTIONS not in status or bounds_fields != [f"{BOUNDS_STATUS_PREFIX} is agent-adopted in {identity}."]:
+            findings.append(f"`{STATUS}` does not route record bounds v2.10 and its adoption {identity}")
+    elif BOUNDS_CHANGE in changes:
+        examined += 2
+        if any("is agent-adopted" in field for field in bounds_fields):
+            findings.append(f"`{STATUS}` calls record bounds v2.10 adopted while it is not in force")
+        if any(BOUNDS_TAG in line and "Agent adoption" in line for line in rows.get(BOUNDS_CHANGE, [])):
+            findings.append(f"`{OPENSPEC_README}` calls record bounds v2.10 adopted while it is not in force")
+    reach_amendment, _records, _subjects = reach_binding(root)
+    reach_fields = [line.strip() for line in visible_route_lines(status)
+                    if line.strip().startswith(REACH_STATUS_PREFIX)]
+    if reach_amendment is not None:
+        examined += 2
+        if not any(Path(AGENT_ADOPTIONS).name in line and REACH_TAG in line
+                   for line in rows.get(REACH_CHANGE, [])):
+            findings.append(f"`{OPENSPEC_README}` does not route declared-source reach v2.6 "
+                            f"to `{AGENT_ADOPTIONS}` and its version tag")
+        identity = reach_rows(root)[0][0]
+        if AGENT_ADOPTIONS not in status or reach_fields != [f"{REACH_STATUS_PREFIX} is agent-adopted in {identity}."]:
+            findings.append(f"`{STATUS}` does not route declared-source reach v2.6 and its adoption {identity}")
+    elif REACH_CHANGE in changes:
+        examined += 2
+        if any("is agent-adopted" in field for field in reach_fields):
+            findings.append(f"`{STATUS}` calls declared-source reach v2.6 adopted while it is not in force")
+        if any(REACH_TAG in line and "Agent adoption" in line for line in rows.get(REACH_CHANGE, [])):
+            findings.append(f"`{OPENSPEC_README}` calls declared-source reach v2.6 adopted while it is not in force")
     figures = STATUS_FIGURE.findall(status)
     examined += 1
     reqs = pop.get("POLARIS", {})
@@ -3077,6 +3748,11 @@ def inputs(root):
     paths |= {DERIVED_UNION, *DERIVED_SUBJECTS}
     paths |= {LEDGER_UNION, *LEDGER_SUBJECTS}
     paths |= {KINDS_UNION, *KINDS_SUBJECTS}
+    paths |= {REACH_UNION, *REACH_SUBJECTS}
+    paths |= {MANIFESTS_UNION, *MANIFESTS_SUBJECTS}
+    paths |= {REPAIRS_UNION, *REPAIRS_SUBJECTS}
+    paths |= {MAPS_UNION, *MAPS_SUBJECTS}
+    paths |= {BOUNDS_UNION, *BOUNDS_SUBJECTS}
     paths |= poc_reference().validation_inputs(root)
     return sorted(paths)
 
@@ -3416,10 +4092,17 @@ def declared_source_historical_cases(tmp, base, clean, witnesses, failures):
     had_derived = any(is_derived_row(line) for line in original.splitlines())
     had_ledger = any(is_ledger_row(line) for line in original.splitlines())
     had_kinds = any(is_kinds_row(line) for line in original.splitlines())
+    had_reach = any(is_reach_row(line) for line in original.splitlines())
+    had_manifests = any(is_manifests_row(line) for line in original.splitlines())
+    had_repairs = any(is_repairs_row(line) for line in original.splitlines())
+    had_maps = any(is_maps_row(line) for line in original.splitlines())
+    had_bounds = any(is_bounds_row(line) for line in original.splitlines())
     absent_ledger = "".join(line for line in original.splitlines(keepends=True)
                             if line.rstrip("\n") != row and not is_url_source_row(line)
                             and not is_figure_row(line) and not is_derived_row(line)
-                            and not is_ledger_row(line) and not is_kinds_row(line))
+                            and not is_ledger_row(line) and not is_kinds_row(line)
+                            and not is_reach_row(line) and not is_manifests_row(line) and not is_repairs_row(line) and not is_maps_row(line)
+                            and not is_bounds_row(line))
     ledger.write_text(absent_ledger)
     report = Report()
     check_outcomes(tree, report)
@@ -3431,13 +4114,19 @@ def declared_source_historical_cases(tmp, base, clean, witnesses, failures):
     held = (declared_source_absent(tree)
             and declared_source_binding(tree) == (None, [], [])
             and not report.failed
-            and examined(report, "R1") == examined(clean, "R1") - 1 - had_url_source - had_figure - had_derived - had_ledger - had_kinds
+            and examined(report, "R1") == examined(clean, "R1") - 1 - had_url_source - had_figure - had_derived - had_ledger - had_kinds - had_manifests
+            - had_reach - had_repairs - had_maps - had_bounds
             and examined(report, "R2") == examined(clean, "R2") - 3
             - (URL_SOURCE_BOUND_PARTS if had_url_source else 0)
             - (FIGURE_BOUND_PARTS if had_figure else 0)
             - (DERIVED_BOUND_PARTS if had_derived else 0)
             - (LEDGER_BOUND_PARTS if had_ledger else 0)
-            - (KINDS_BOUND_PARTS if had_kinds else 0))
+            - (KINDS_BOUND_PARTS if had_kinds else 0)
+            - (REACH_BOUND_PARTS if had_reach else 0)
+            - (MANIFESTS_BOUND_PARTS if had_manifests else 0)
+            - (REPAIRS_BOUND_PARTS if had_repairs else 0)
+            - (MAPS_BOUND_PARTS if had_maps else 0)
+            - (BOUNDS_BOUND_PARTS if had_bounds else 0))
     witnesses.append({"mutant": "declared-historical-control", "path": change,
                       "old": "<no amendment, row, subjects or D10 act>",
                       "new": "<unchanged>", "expected": "inactive; no phantom R1/R2 subjects",
@@ -3831,7 +4520,9 @@ def figure_cases(tmp, base, witnesses, failures):
     ledger = tree / AGENT_ADOPTIONS
     pending = "".join(line for line in ledger.read_text().splitlines(keepends=True)
                       if not is_figure_row(line) and not is_derived_row(line)
-                      and not is_ledger_row(line) and not is_kinds_row(line))
+                      and not is_ledger_row(line) and not is_kinds_row(line)
+                      and not is_manifests_row(line) and not is_repairs_row(line) and not is_maps_row(line)
+                      and not is_bounds_row(line))
     ledger.write_text(pending)
     pending_pop, pending_findings = census(tree)
     predecessor = pending_pop["POLARIS"]
@@ -3964,7 +4655,9 @@ def derived_cases(tmp, base, witnesses, failures):
     ledger = tree / AGENT_ADOPTIONS
     pending = "".join(line for line in ledger.read_text().splitlines(keepends=True)
                       if not is_derived_row(line) and not is_ledger_row(line)
-                      and not is_kinds_row(line))
+                      and not is_kinds_row(line)
+                      and not is_manifests_row(line) and not is_repairs_row(line) and not is_maps_row(line)
+                      and not is_bounds_row(line))
     ledger.write_text(pending)
     pending_pop, pending_findings = census(tree)
     predecessor = pending_pop["POLARIS"]
@@ -4092,7 +4785,9 @@ def ledger_cases(tmp, base, witnesses, failures):
     shutil.copytree(base, tree)
     ledger = tree / AGENT_ADOPTIONS
     pending = "".join(line for line in ledger.read_text().splitlines(keepends=True)
-                      if not is_ledger_row(line) and not is_kinds_row(line))
+                      if not is_ledger_row(line) and not is_kinds_row(line)
+                      and not is_manifests_row(line) and not is_repairs_row(line) and not is_maps_row(line)
+                      and not is_bounds_row(line))
     ledger.write_text(pending)
     pending_pop, pending_findings = census(tree)
     predecessor = pending_pop["POLARIS"]
@@ -4219,7 +4914,8 @@ def kinds_cases(tmp, base, witnesses, failures):
     shutil.copytree(base, tree)
     ledger = tree / AGENT_ADOPTIONS
     pending = "".join(line for line in ledger.read_text().splitlines(keepends=True)
-                      if not is_kinds_row(line))
+                      if not is_kinds_row(line) and not is_manifests_row(line) and not is_repairs_row(line) and not is_maps_row(line)
+                      and not is_bounds_row(line))
     ledger.write_text(pending)
     pending_pop, pending_findings = census(tree)
     predecessor = pending_pop["POLARIS"]
@@ -4327,6 +5023,644 @@ def kinds_cases(tmp, base, witnesses, failures):
         record(f"kinds-compose-{name}", KINDS_SPEC, old, new,
                "both parsers refuse without partial application", ida + names,
                bool(ida and names and a == b == led_pop), False)
+
+
+def manifests_cases(tmp, base, witnesses, failures):
+    """The v2.7 pending-to-adopted transition over v2.5, its ledger and byte guards, and the predecessor guard."""
+    original = read_text(base, MANIFESTS_SPEC)
+    if original is None or kinds_binding(base)[0] is None:
+        return
+
+    def record(name, rel, old, new, expect, found, caught, stood):
+        witnesses.append({"mutant": name, "path": rel, "old": old, "new": new,
+                          "expected": expect, "failed": found,
+                          "outcome": ("held" if stood else "killed") if caught else "SURVIVED"})
+        if not caught:
+            failures.append(name)
+
+    tree = Path(tmp) / "manifest-recognizers"
+    shutil.copytree(base, tree)
+    ledger = tree / AGENT_ADOPTIONS
+    pending = "".join(line for line in ledger.read_text().splitlines(keepends=True)
+                      if not is_manifests_row(line) and not is_repairs_row(line) and not is_maps_row(line)
+                      and not is_bounds_row(line))
+    ledger.write_text(pending)
+    pending_pop, pending_findings = census(tree)
+    predecessor = pending_pop["POLARIS"]
+    ident = FIGURE_REPLACES[0]
+    held = (manifests_binding(tree) == (None, [], []) and not pending_findings
+            and len(predecessor[ident]["scenarios"]) == 70)
+    record("manifests-pending", AGENT_ADOPTIONS, "<no v2.7 row>", "<unchanged>",
+           "landed package alone keeps v2.7 pending", pending_findings, held, True)
+
+    oid = "0123456789abcdef" * 2 + "01234567"
+    row = (f"| A-999 | 2026-11-21 | `{oid}` | [spec](https://github.com/tzeusy-org/syzygy/blob/{oid}/{MANIFESTS_SPEC}) "
+           f"| Selftest | `git revert {oid}` | `{MANIFESTS_TAG}` |\n")
+    ledger.write_text(pending + row)
+    current_pop, current_findings = census(tree)
+    current = current_pop["POLARIS"]
+    held = (manifests_binding(tree) == (original, [], []) and not current_findings
+            and set(current) == set(predecessor)
+            and len(current[ident]["scenarios"]) == 82
+            and current[ident]["name"] == predecessor[ident]["name"]
+            and all(current[i] == r for i, r in predecessor.items() if i != ident))
+    record("manifests-adopted", AGENT_ADOPTIONS, "<no v2.7 row>", row,
+           "v2.7 replaces exactly 034 (70 to 82 scenarios)", current_findings, held, True)
+
+    for name, old, new in (("duplicate-row", row, row + row),
+                           ("wrong-tag", MANIFESTS_TAG, MANIFESTS_TAG + "-wrong"),
+                           ("wrong-revert", f"git revert {oid}", "git revert " + "0" * 40),
+                           ("missing-spec-link", f"/blob/{oid}/{MANIFESTS_SPEC})", f"/blob/other/{MANIFESTS_SPEC})"),
+                           ("bad-date", "2026-11-21", "2026-99-21"),
+                           ("no-reason", "| Selftest |", "|  |")):
+        assert old in row
+        ledger.write_text(pending + row.replace(old, new, 1))
+        effective, r1, r2 = manifests_binding(tree)
+        record(f"manifests-{name}", AGENT_ADOPTIONS, old, new,
+               "R1 refusal with no effective amendment", r1 + r2,
+               effective is None and bool(r1) and not r2, False)
+
+    veto = (f"| A-1000 | 2026-11-22 | `8a468bc` | Veto A-999 | Test only | `git revert 8a468bc` | — |\n")
+    ledger.write_text(pending + row + veto)
+    pop, found = census(tree)
+    held = (manifests_disposition(tree, manifests_rows(tree)) == "A-1000" and not found
+            and pop["POLARIS"] == predecessor)
+    record("manifests-vetoed", AGENT_ADOPTIONS, row, veto, "restore the v2.5 034", found, held, True)
+    kinds_row = next((line for line in pending.splitlines(keepends=True) if is_kinds_row(line)), None)
+    if kinds_row is not None:
+        no_kinds = "".join(line for line in pending.splitlines(keepends=True) if not is_kinds_row(line))
+        ledger.write_text(no_kinds + row)
+        effective, r1, r2 = manifests_binding(tree)
+        record("manifests-predecessor-missing", AGENT_ADOPTIONS, kinds_row, "",
+               "R1 refusal while v2.5 is not in force", r1 + r2,
+               effective is None and any("prior v2.5" in f for f in r1), False)
+
+    ledger.write_text(pending + row)
+    for rel in MANIFESTS_SUBJECTS:
+        subject = tree / rel
+        previous = subject.read_bytes()
+        subject.write_bytes(previous + b"\n")
+        effective, r1, r2 = manifests_binding(tree)
+        subject.write_bytes(previous)
+        record(f"manifests-subject-changed-{Path(rel).name}", rel, "<end of file>", "\n",
+               "R2 refusal with no effective amendment", r1 + r2,
+               effective is None and not r1 and bool(r2), False)
+    union = tree / MANIFESTS_UNION
+    previous = union.read_text()
+    assert '"REQ-polaris-generation-014"' in previous
+    union.write_text(previous.replace('"REQ-polaris-generation-014"', '"REQ-polaris-generation-099"', 1))
+    report = Report()
+    check_generated(tree, current_pop, report)
+    union.write_text(previous)
+    record("manifests-union-changed", MANIFESTS_UNION, '"REQ-polaris-generation-014"', '"REQ-polaris-generation-099"', "R4 refusal",
+           report.findings.get("R4", []), any(MANIFESTS_UNION in f for f in report.findings.get("R4", [])), False)
+    status = tree / STATUS
+    previous = status.read_text()
+    status.write_text("\n".join(line for line in previous.split("\n")
+                                if not line.strip().startswith(MANIFESTS_STATUS_PREFIX)))
+    report = Report()
+    check_routes(tree, current_pop, report)
+    status.write_text(previous)
+    record("manifests-status-route-missing", STATUS, MANIFESTS_STATUS_PREFIX, "", "R5 refusal",
+           report.findings.get("R5", []),
+           any("manifest recognizers v2.7" in f for f in report.findings.get("R5", [])), False)
+    ledger.write_text(pending)
+    report = Report()
+    check_routes(tree, pending_pop, report)
+    claims = [f for f in report.findings.get("R5", []) if "while it is not in force" in f]
+    adopted_status = any(line.strip().startswith(MANIFESTS_STATUS_PREFIX) and "is agent-adopted" in line
+                         for line in previous.split("\n"))
+    record("manifests-pending-claims-adoption", AGENT_ADOPTIONS, row, "",
+           "R5 refuses an adopted route while the row is missing", claims,
+           bool(claims) if adopted_status else not claims, not adopted_status)
+    ledger.write_text(pending + row)
+
+    cases = [
+        ("added-section", DECLARED_SOURCE_MODIFIED, ADDED_HEADING),
+        ("wrong-id", "ID: " + ident, "ID: " + POLARIS_ID + "035"),
+        ("renamed", "### Requirement: Agent brief and mechanically checked draft",
+         "### Requirement: Agent brief and manifest recognizers"),
+        ("second-block", "ID: " + ident, "ID: " + ident + "\n\n### Requirement: Extra\n\nID: " + POLARIS_ID + "099"),
+    ]
+    kin_pop = predecessor
+    for name, old, new in cases:
+        assert old in original, name
+        mutant = original.replace(old, new, 1)
+        a, ida = compose_figure_by_id(kin_pop, mutant)
+        b, names = compose_figure_by_name(kin_pop, mutant)
+        record(f"manifests-compose-{name}", MANIFESTS_SPEC, old, new,
+               "both parsers refuse without partial application", ida + names,
+               bool(ida and names and a == b == kin_pop), False)
+
+
+def repairs_cases(tmp, base, witnesses, failures):
+    """The v2.8 pending-to-adopted transition over v2.7, its ledger and byte guards, and the predecessor guard."""
+    original = read_text(base, REPAIRS_SPEC)
+    if original is None or manifests_binding(base)[0] is None:
+        return
+
+    def record(name, rel, old, new, expect, found, caught, stood):
+        witnesses.append({"mutant": name, "path": rel, "old": old, "new": new,
+                          "expected": expect, "failed": found,
+                          "outcome": ("held" if stood else "killed") if caught else "SURVIVED"})
+        if not caught:
+            failures.append(name)
+
+    tree = Path(tmp) / "spec-repairs"
+    shutil.copytree(base, tree)
+    ledger = tree / AGENT_ADOPTIONS
+    pending = "".join(line for line in ledger.read_text().splitlines(keepends=True)
+                      if not is_repairs_row(line) and not is_maps_row(line)
+                      and not is_bounds_row(line))
+    ledger.write_text(pending)
+    pending_pop, pending_findings = census(tree)
+    predecessor = pending_pop["POLARIS"]
+    ident = FIGURE_REPLACES[0]
+    held = (repairs_binding(tree) == (None, [], []) and not pending_findings
+            and len(predecessor[ident]["scenarios"]) == 82)
+    record("repairs-pending", AGENT_ADOPTIONS, "<no v2.8 row>", "<unchanged>",
+           "landed package alone keeps v2.8 pending", pending_findings, held, True)
+
+    oid = "0123456789abcdef" * 2 + "01234567"
+    row = (f"| A-999 | 2026-11-21 | `{oid}` | [spec](https://github.com/tzeusy-org/syzygy/blob/{oid}/{REPAIRS_SPEC}) "
+           f"| Selftest | `git revert {oid}` | `{REPAIRS_TAG}` |\n")
+    ledger.write_text(pending + row)
+    current_pop, current_findings = census(tree)
+    current = current_pop["POLARIS"]
+    held = (repairs_binding(tree) == (original, [], []) and not current_findings
+            and set(current) == set(predecessor)
+            and len(current[ident]["scenarios"]) == 87
+            and current[ident]["name"] == predecessor[ident]["name"]
+            and all(current[i] == r for i, r in predecessor.items() if i != ident))
+    record("repairs-adopted", AGENT_ADOPTIONS, "<no v2.8 row>", row,
+           "v2.8 replaces exactly 034 (82 to 87 scenarios)", current_findings, held, True)
+
+    for name, old, new in (("duplicate-row", row, row + row),
+                           ("wrong-tag", REPAIRS_TAG, REPAIRS_TAG + "-wrong"),
+                           ("wrong-revert", f"git revert {oid}", "git revert " + "0" * 40),
+                           ("missing-spec-link", f"/blob/{oid}/{REPAIRS_SPEC})", f"/blob/other/{REPAIRS_SPEC})"),
+                           ("bad-date", "2026-11-21", "2026-99-21"),
+                           ("no-reason", "| Selftest |", "|  |")):
+        assert old in row
+        ledger.write_text(pending + row.replace(old, new, 1))
+        effective, r1, r2 = repairs_binding(tree)
+        record(f"repairs-{name}", AGENT_ADOPTIONS, old, new,
+               "R1 refusal with no effective amendment", r1 + r2,
+               effective is None and bool(r1) and not r2, False)
+
+    veto = (f"| A-1000 | 2026-11-22 | `8a468bc` | Veto A-999 | Test only | `git revert 8a468bc` | — |\n")
+    ledger.write_text(pending + row + veto)
+    pop, found = census(tree)
+    held = (repairs_disposition(tree, repairs_rows(tree)) == "A-1000" and not found
+            and pop["POLARIS"] == predecessor)
+    record("repairs-vetoed", AGENT_ADOPTIONS, row, veto, "restore the v2.7 034", found, held, True)
+    manifests_row = next((line for line in pending.splitlines(keepends=True) if is_manifests_row(line)), None)
+    if manifests_row is not None:
+        no_manifests = "".join(line for line in pending.splitlines(keepends=True) if not is_manifests_row(line))
+        ledger.write_text(no_manifests + row)
+        effective, r1, r2 = repairs_binding(tree)
+        record("repairs-predecessor-missing", AGENT_ADOPTIONS, manifests_row, "",
+               "R1 refusal while v2.7 is not in force", r1 + r2,
+               effective is None and any("prior v2.7" in f for f in r1), False)
+
+    ledger.write_text(pending + row)
+    for rel in REPAIRS_SUBJECTS:
+        subject = tree / rel
+        previous = subject.read_bytes()
+        subject.write_bytes(previous + b"\n")
+        effective, r1, r2 = repairs_binding(tree)
+        subject.write_bytes(previous)
+        record(f"repairs-subject-changed-{Path(rel).name}", rel, "<end of file>", "\n",
+               "R2 refusal with no effective amendment", r1 + r2,
+               effective is None and not r1 and bool(r2), False)
+    union = tree / REPAIRS_UNION
+    previous = union.read_text()
+    assert '"REQ-polaris-generation-014"' in previous
+    union.write_text(previous.replace('"REQ-polaris-generation-014"', '"REQ-polaris-generation-099"', 1))
+    report = Report()
+    check_generated(tree, current_pop, report)
+    union.write_text(previous)
+    record("repairs-union-changed", REPAIRS_UNION, '"REQ-polaris-generation-014"', '"REQ-polaris-generation-099"', "R4 refusal",
+           report.findings.get("R4", []), any(REPAIRS_UNION in f for f in report.findings.get("R4", [])), False)
+    status = tree / STATUS
+    previous = status.read_text()
+    status.write_text("\n".join(line for line in previous.split("\n")
+                                if not line.strip().startswith(REPAIRS_STATUS_PREFIX)))
+    report = Report()
+    check_routes(tree, current_pop, report)
+    status.write_text(previous)
+    record("repairs-status-route-missing", STATUS, REPAIRS_STATUS_PREFIX, "", "R5 refusal",
+           report.findings.get("R5", []),
+           any("spec repairs v2.8" in f for f in report.findings.get("R5", [])), False)
+    ledger.write_text(pending)
+    report = Report()
+    check_routes(tree, pending_pop, report)
+    claims = [f for f in report.findings.get("R5", []) if "while it is not in force" in f]
+    adopted_status = any(line.strip().startswith(REPAIRS_STATUS_PREFIX) and "is agent-adopted" in line
+                         for line in previous.split("\n"))
+    record("repairs-pending-claims-adoption", AGENT_ADOPTIONS, row, "",
+           "R5 refuses an adopted route while the row is missing", claims,
+           bool(claims) if adopted_status else not claims, not adopted_status)
+    ledger.write_text(pending + row)
+
+    cases = [
+        ("added-section", DECLARED_SOURCE_MODIFIED, ADDED_HEADING),
+        ("wrong-id", "ID: " + ident, "ID: " + POLARIS_ID + "035"),
+        ("renamed", "### Requirement: Agent brief and mechanically checked draft",
+         "### Requirement: Agent brief and spec repairs"),
+        ("second-block", "ID: " + ident, "ID: " + ident + "\n\n### Requirement: Extra\n\nID: " + POLARIS_ID + "099"),
+    ]
+    kin_pop = predecessor
+    for name, old, new in cases:
+        assert old in original, name
+        mutant = original.replace(old, new, 1)
+        a, ida = compose_figure_by_id(kin_pop, mutant)
+        b, names = compose_figure_by_name(kin_pop, mutant)
+        record(f"repairs-compose-{name}", REPAIRS_SPEC, old, new,
+               "both parsers refuse without partial application", ida + names,
+               bool(ida and names and a == b == kin_pop), False)
+
+
+def maps_cases(tmp, base, witnesses, failures):
+    """The v2.9 pending-to-adopted transition over v2.8, its ledger and byte guards, and the predecessor guard."""
+    original = read_text(base, MAPS_SPEC)
+    if original is None or repairs_binding(base)[0] is None:
+        return
+
+    def record(name, rel, old, new, expect, found, caught, stood):
+        witnesses.append({"mutant": name, "path": rel, "old": old, "new": new,
+                          "expected": expect, "failed": found,
+                          "outcome": ("held" if stood else "killed") if caught else "SURVIVED"})
+        if not caught:
+            failures.append(name)
+
+    tree = Path(tmp) / "computed-maps"
+    shutil.copytree(base, tree)
+    ledger = tree / AGENT_ADOPTIONS
+    pending = "".join(line for line in ledger.read_text().splitlines(keepends=True)
+                      if not is_maps_row(line) and not is_bounds_row(line))
+    ledger.write_text(pending)
+    pending_pop, pending_findings = census(tree)
+    predecessor = pending_pop["POLARIS"]
+    ident = FIGURE_REPLACES[0]
+    held = (maps_binding(tree) == (None, [], []) and not pending_findings
+            and len(predecessor[ident]["scenarios"]) == 87)
+    record("maps-pending", AGENT_ADOPTIONS, "<no v2.9 row>", "<unchanged>",
+           "landed package alone keeps v2.9 pending", pending_findings, held, True)
+
+    oid = "0123456789abcdef" * 2 + "01234567"
+    row = (f"| A-999 | 2026-11-21 | `{oid}` | [spec](https://github.com/tzeusy-org/syzygy/blob/{oid}/{MAPS_SPEC}) "
+           f"| Selftest | `git revert {oid}` | `{MAPS_TAG}` |\n")
+    ledger.write_text(pending + row)
+    current_pop, current_findings = census(tree)
+    current = current_pop["POLARIS"]
+    held = (maps_binding(tree) == (original, [], []) and not current_findings
+            and set(current) == set(predecessor)
+            and len(current[ident]["scenarios"]) == 100
+            and current[ident]["name"] == predecessor[ident]["name"]
+            and all(current[i] == r for i, r in predecessor.items() if i != ident))
+    record("maps-adopted", AGENT_ADOPTIONS, "<no v2.9 row>", row,
+           "v2.9 replaces exactly 034 (87 to 100 scenarios)", current_findings, held, True)
+
+    for name, old, new in (("duplicate-row", row, row + row),
+                           ("wrong-tag", MAPS_TAG, MAPS_TAG + "-wrong"),
+                           ("wrong-revert", f"git revert {oid}", "git revert " + "0" * 40),
+                           ("missing-spec-link", f"/blob/{oid}/{MAPS_SPEC})", f"/blob/other/{MAPS_SPEC})"),
+                           ("bad-date", "2026-11-21", "2026-99-21"),
+                           ("no-reason", "| Selftest |", "|  |")):
+        assert old in row
+        ledger.write_text(pending + row.replace(old, new, 1))
+        effective, r1, r2 = maps_binding(tree)
+        record(f"maps-{name}", AGENT_ADOPTIONS, old, new,
+               "R1 refusal with no effective amendment", r1 + r2,
+               effective is None and bool(r1) and not r2, False)
+
+    veto = (f"| A-1000 | 2026-11-22 | `8a468bc` | Veto A-999 | Test only | `git revert 8a468bc` | — |\n")
+    ledger.write_text(pending + row + veto)
+    pop, found = census(tree)
+    held = (maps_disposition(tree, maps_rows(tree)) == "A-1000" and not found
+            and pop["POLARIS"] == predecessor)
+    record("maps-vetoed", AGENT_ADOPTIONS, row, veto, "restore the v2.8 034", found, held, True)
+    repairs_row = next((line for line in pending.splitlines(keepends=True) if is_repairs_row(line)), None)
+    if repairs_row is not None:
+        no_repairs = "".join(line for line in pending.splitlines(keepends=True) if not is_repairs_row(line))
+        ledger.write_text(no_repairs + row)
+        effective, r1, r2 = maps_binding(tree)
+        record("maps-predecessor-missing", AGENT_ADOPTIONS, repairs_row, "",
+               "R1 refusal while v2.8 is not in force", r1 + r2,
+               effective is None and any("prior v2.8" in f for f in r1), False)
+
+    ledger.write_text(pending + row)
+    for rel in MAPS_SUBJECTS:
+        subject = tree / rel
+        previous = subject.read_bytes()
+        subject.write_bytes(previous + b"\n")
+        effective, r1, r2 = maps_binding(tree)
+        subject.write_bytes(previous)
+        record(f"maps-subject-changed-{Path(rel).name}", rel, "<end of file>", "\n",
+               "R2 refusal with no effective amendment", r1 + r2,
+               effective is None and not r1 and bool(r2), False)
+    union = tree / MAPS_UNION
+    previous = union.read_text()
+    assert '"REQ-polaris-generation-014"' in previous
+    union.write_text(previous.replace('"REQ-polaris-generation-014"', '"REQ-polaris-generation-099"', 1))
+    report = Report()
+    check_generated(tree, current_pop, report)
+    union.write_text(previous)
+    record("maps-union-changed", MAPS_UNION, '"REQ-polaris-generation-014"', '"REQ-polaris-generation-099"', "R4 refusal",
+           report.findings.get("R4", []), any(MAPS_UNION in f for f in report.findings.get("R4", [])), False)
+    status = tree / STATUS
+    previous = status.read_text()
+    status.write_text("\n".join(line for line in previous.split("\n")
+                                if not line.strip().startswith(MAPS_STATUS_PREFIX)))
+    report = Report()
+    check_routes(tree, current_pop, report)
+    status.write_text(previous)
+    record("maps-status-route-missing", STATUS, MAPS_STATUS_PREFIX, "", "R5 refusal",
+           report.findings.get("R5", []),
+           any("computed maps v2.9" in f for f in report.findings.get("R5", [])), False)
+    ledger.write_text(pending)
+    report = Report()
+    check_routes(tree, pending_pop, report)
+    claims = [f for f in report.findings.get("R5", []) if "while it is not in force" in f]
+    adopted_status = any(line.strip().startswith(MAPS_STATUS_PREFIX) and "is agent-adopted" in line
+                         for line in previous.split("\n"))
+    record("maps-pending-claims-adoption", AGENT_ADOPTIONS, row, "",
+           "R5 refuses an adopted route while the row is missing", claims,
+           bool(claims) if adopted_status else not claims, not adopted_status)
+    ledger.write_text(pending + row)
+
+    cases = [
+        ("added-section", DECLARED_SOURCE_MODIFIED, ADDED_HEADING),
+        ("wrong-id", "ID: " + ident, "ID: " + POLARIS_ID + "035"),
+        ("renamed", "### Requirement: Agent brief and mechanically checked draft",
+         "### Requirement: Agent brief and computed maps"),
+        ("second-block", "ID: " + ident, "ID: " + ident + "\n\n### Requirement: Extra\n\nID: " + POLARIS_ID + "099"),
+    ]
+    kin_pop = predecessor
+    for name, old, new in cases:
+        assert old in original, name
+        mutant = original.replace(old, new, 1)
+        a, ida = compose_figure_by_id(kin_pop, mutant)
+        b, names = compose_figure_by_name(kin_pop, mutant)
+        record(f"maps-compose-{name}", MAPS_SPEC, old, new,
+               "both parsers refuse without partial application", ida + names,
+               bool(ida and names and a == b == kin_pop), False)
+
+
+def bounds_cases(tmp, base, witnesses, failures):
+    """The v2.10 pending-to-adopted transition over v2.9, its ledger and byte guards, and the predecessor guard."""
+    original = read_text(base, BOUNDS_SPEC)
+    if original is None or maps_binding(base)[0] is None:
+        return
+
+    def record(name, rel, old, new, expect, found, caught, stood):
+        witnesses.append({"mutant": name, "path": rel, "old": old, "new": new,
+                          "expected": expect, "failed": found,
+                          "outcome": ("held" if stood else "killed") if caught else "SURVIVED"})
+        if not caught:
+            failures.append(name)
+
+    tree = Path(tmp) / "record-bounds"
+    shutil.copytree(base, tree)
+    ledger = tree / AGENT_ADOPTIONS
+    pending = "".join(line for line in ledger.read_text().splitlines(keepends=True)
+                      if not is_bounds_row(line))
+    ledger.write_text(pending)
+    pending_pop, pending_findings = census(tree)
+    predecessor = pending_pop["POLARIS"]
+    ident = FIGURE_REPLACES[0]
+    held = (bounds_binding(tree) == (None, [], []) and not pending_findings
+            and len(predecessor[ident]["scenarios"]) == 100)
+    record("bounds-pending", AGENT_ADOPTIONS, "<no v2.10 row>", "<unchanged>",
+           "landed package alone keeps v2.10 pending", pending_findings, held, True)
+
+    oid = "0123456789abcdef" * 2 + "01234567"
+    row = (f"| A-999 | 2026-11-21 | `{oid}` | [spec](https://github.com/tzeusy-org/syzygy/blob/{oid}/{BOUNDS_SPEC}) "
+           f"| Selftest | `git revert {oid}` | `{BOUNDS_TAG}` |\n")
+    ledger.write_text(pending + row)
+    current_pop, current_findings = census(tree)
+    current = current_pop["POLARIS"]
+    held = (bounds_binding(tree) == (original, [], []) and not current_findings
+            and set(current) == set(predecessor)
+            and len(current[ident]["scenarios"]) == 106
+            and current[ident]["name"] == predecessor[ident]["name"]
+            and all(current[i] == r for i, r in predecessor.items() if i != ident))
+    record("bounds-adopted", AGENT_ADOPTIONS, "<no v2.10 row>", row,
+           "v2.10 replaces exactly 034 (100 to 106 scenarios)", current_findings, held, True)
+
+    for name, old, new in (("duplicate-row", row, row + row),
+                           ("wrong-tag", BOUNDS_TAG, BOUNDS_TAG + "-wrong"),
+                           ("wrong-revert", f"git revert {oid}", "git revert " + "0" * 40),
+                           ("missing-spec-link", f"/blob/{oid}/{BOUNDS_SPEC})", f"/blob/other/{BOUNDS_SPEC})"),
+                           ("bad-date", "2026-11-21", "2026-99-21"),
+                           ("no-reason", "| Selftest |", "|  |")):
+        assert old in row
+        ledger.write_text(pending + row.replace(old, new, 1))
+        effective, r1, r2 = bounds_binding(tree)
+        record(f"bounds-{name}", AGENT_ADOPTIONS, old, new,
+               "R1 refusal with no effective amendment", r1 + r2,
+               effective is None and bool(r1) and not r2, False)
+
+    veto = (f"| A-1000 | 2026-11-22 | `8a468bc` | Veto A-999 | Test only | `git revert 8a468bc` | — |\n")
+    ledger.write_text(pending + row + veto)
+    pop, found = census(tree)
+    held = (bounds_disposition(tree, bounds_rows(tree)) == "A-1000" and not found
+            and pop["POLARIS"] == predecessor)
+    record("bounds-vetoed", AGENT_ADOPTIONS, row, veto, "restore the v2.9 034", found, held, True)
+    maps_row = next((line for line in pending.splitlines(keepends=True) if is_maps_row(line)), None)
+    if maps_row is not None:
+        no_maps = "".join(line for line in pending.splitlines(keepends=True) if not is_maps_row(line))
+        ledger.write_text(no_maps + row)
+        effective, r1, r2 = bounds_binding(tree)
+        record("bounds-predecessor-missing", AGENT_ADOPTIONS, maps_row, "",
+               "R1 refusal while v2.9 is not in force", r1 + r2,
+               effective is None and any("prior v2.9" in f for f in r1), False)
+
+    ledger.write_text(pending + row)
+    for rel in BOUNDS_SUBJECTS:
+        subject = tree / rel
+        previous = subject.read_bytes()
+        subject.write_bytes(previous + b"\n")
+        effective, r1, r2 = bounds_binding(tree)
+        subject.write_bytes(previous)
+        record(f"bounds-subject-changed-{Path(rel).name}", rel, "<end of file>", "\n",
+               "R2 refusal with no effective amendment", r1 + r2,
+               effective is None and not r1 and bool(r2), False)
+    union = tree / BOUNDS_UNION
+    previous = union.read_text()
+    assert '"REQ-polaris-generation-014"' in previous
+    union.write_text(previous.replace('"REQ-polaris-generation-014"', '"REQ-polaris-generation-099"', 1))
+    report = Report()
+    check_generated(tree, current_pop, report)
+    union.write_text(previous)
+    record("bounds-union-changed", BOUNDS_UNION, '"REQ-polaris-generation-014"', '"REQ-polaris-generation-099"', "R4 refusal",
+           report.findings.get("R4", []), any(BOUNDS_UNION in f for f in report.findings.get("R4", [])), False)
+    status = tree / STATUS
+    previous = status.read_text()
+    status.write_text("\n".join(line for line in previous.split("\n")
+                                if not line.strip().startswith(BOUNDS_STATUS_PREFIX)))
+    report = Report()
+    check_routes(tree, current_pop, report)
+    status.write_text(previous)
+    record("bounds-status-route-missing", STATUS, BOUNDS_STATUS_PREFIX, "", "R5 refusal",
+           report.findings.get("R5", []),
+           any("record bounds v2.10" in f for f in report.findings.get("R5", [])), False)
+    ledger.write_text(pending)
+    report = Report()
+    check_routes(tree, pending_pop, report)
+    claims = [f for f in report.findings.get("R5", []) if "while it is not in force" in f]
+    adopted_status = any(line.strip().startswith(BOUNDS_STATUS_PREFIX) and "is agent-adopted" in line
+                         for line in previous.split("\n"))
+    record("bounds-pending-claims-adoption", AGENT_ADOPTIONS, row, "",
+           "R5 refuses an adopted route while the row is missing", claims,
+           bool(claims) if adopted_status else not claims, not adopted_status)
+    ledger.write_text(pending + row)
+
+    cases = [
+        ("added-section", DECLARED_SOURCE_MODIFIED, ADDED_HEADING),
+        ("wrong-id", "ID: " + ident, "ID: " + POLARIS_ID + "035"),
+        ("renamed", "### Requirement: Agent brief and mechanically checked draft",
+         "### Requirement: Agent brief and record bounds"),
+        ("second-block", "ID: " + ident, "ID: " + ident + "\n\n### Requirement: Extra\n\nID: " + POLARIS_ID + "099"),
+    ]
+    kin_pop = predecessor
+    for name, old, new in cases:
+        assert old in original, name
+        mutant = original.replace(old, new, 1)
+        a, ida = compose_figure_by_id(kin_pop, mutant)
+        b, names = compose_figure_by_name(kin_pop, mutant)
+        record(f"bounds-compose-{name}", BOUNDS_SPEC, old, new,
+               "both parsers refuse without partial application", ida + names,
+               bool(ida and names and a == b == kin_pop), False)
+
+
+def reach_cases(tmp, base, witnesses, failures):
+    """The v2.6 pending-to-adopted transition over v2.0, its ledger and byte guards, and the predecessor guard."""
+    original = read_text(base, REACH_SPEC)
+    if original is None or declared_source_binding(base)[0] is None:
+        return
+
+    def record(name, rel, old, new, expect, found, caught, stood):
+        witnesses.append({"mutant": name, "path": rel, "old": old, "new": new,
+                          "expected": expect, "failed": found,
+                          "outcome": ("held" if stood else "killed") if caught else "SURVIVED"})
+        if not caught:
+            failures.append(name)
+
+    tree = Path(tmp) / "declared-source-reach"
+    shutil.copytree(base, tree)
+    ledger = tree / AGENT_ADOPTIONS
+    pending = "".join(line for line in ledger.read_text().splitlines(keepends=True)
+                      if not is_reach_row(line))
+    ledger.write_text(pending)
+    pending_pop, pending_findings = census(tree)
+    predecessor = pending_pop["POLARIS"]
+    ident = REACH_REPLACES[0]
+    held = (reach_binding(tree) == (None, [], []) and not pending_findings
+            and len(predecessor[ident]["scenarios"]) == 3)
+    record("reach-pending", AGENT_ADOPTIONS, "<no v2.6 row>", "<unchanged>",
+           "landed package alone keeps v2.6 pending", pending_findings, held, True)
+
+    oid = "0123456789abcdef" * 2 + "01234567"
+    row = (f"| A-999 | 2026-11-22 | `{oid}` | [spec](https://github.com/tzeusy-org/syzygy/blob/{oid}/{REACH_SPEC}) "
+           f"· [policy](https://github.com/tzeusy-org/syzygy/blob/{oid}/{REACH_POLICY}) "
+           f"| Selftest | `git revert {oid}` | `{REACH_TAG}` |\n")
+    ledger.write_text(pending + row)
+    current_pop, current_findings = census(tree)
+    current = current_pop["POLARIS"]
+    held = (reach_binding(tree) == (original, [], []) and not current_findings
+            and set(current) == set(predecessor)
+            and len(current[ident]["scenarios"]) == 11
+            and current[ident]["name"] == predecessor[ident]["name"]
+            and all(current[i] == r for i, r in predecessor.items() if i != ident))
+    record("reach-adopted", AGENT_ADOPTIONS, "<no v2.6 row>", row,
+           "v2.6 replaces exactly 046 (3 to 11 scenarios)", current_findings, held, True)
+
+    for name, old, new in (("duplicate-row", row, row + row),
+                           ("wrong-tag", REACH_TAG, REACH_TAG + "-wrong"),
+                           ("wrong-revert", f"git revert {oid}", "git revert " + "0" * 40),
+                           ("missing-spec-link", f"/blob/{oid}/{REACH_SPEC})", f"/blob/other/{REACH_SPEC})"),
+                           ("missing-policy-link", f"/blob/{oid}/{REACH_POLICY})", f"/blob/other/{REACH_POLICY})"),
+                           ("bad-date", "2026-11-22", "2026-99-22"),
+                           ("no-reason", "| Selftest |", "|  |")):
+        assert old in row
+        ledger.write_text(pending + row.replace(old, new, 1))
+        effective, r1, r2 = reach_binding(tree)
+        record(f"reach-{name}", AGENT_ADOPTIONS, old, new,
+               "R1 refusal with no effective amendment", r1 + r2,
+               effective is None and bool(r1) and not r2, False)
+
+    veto = (f"| A-1000 | 2026-11-23 | `8a468bc` | Veto A-999 | Test only | `git revert 8a468bc` | — |\n")
+    ledger.write_text(pending + row + veto)
+    pop, found = census(tree)
+    held = (reach_disposition(tree, reach_rows(tree)) == "A-1000" and not found
+            and pop["POLARIS"] == predecessor)
+    record("reach-vetoed", AGENT_ADOPTIONS, row, veto, "restore the v2.0 046", found, held, True)
+    declared_row = next((line for line in pending.splitlines(keepends=True)
+                         if line.startswith(f"| {DECLARED_SOURCE_ROW} |")), None)
+    if declared_row is not None:
+        ledger.write_text(pending.replace(declared_row, "", 1) + row)
+        effective, r1, r2 = reach_binding(tree)
+        record("reach-predecessor-missing", AGENT_ADOPTIONS, declared_row, "",
+               "R1 refusal while v2.0 is not in force", r1 + r2,
+               effective is None and any("prior v2.0" in f for f in r1), False)
+
+    ledger.write_text(pending + row)
+    for rel in REACH_SUBJECTS:
+        subject = tree / rel
+        previous = subject.read_bytes()
+        subject.write_bytes(previous + b"\n")
+        effective, r1, r2 = reach_binding(tree)
+        subject.write_bytes(previous)
+        record(f"reach-subject-changed-{Path(rel).name}", rel, "<end of file>", "\n",
+               "R2 refusal with no effective amendment", r1 + r2,
+               effective is None and not r1 and bool(r2), False)
+    union = tree / REACH_UNION
+    previous = union.read_text()
+    assert '"REQ-polaris-generation-048"' in previous
+    union.write_text(previous.replace('"REQ-polaris-generation-048"', '"REQ-polaris-generation-099"', 1))
+    report = Report()
+    check_generated(tree, current_pop, report)
+    union.write_text(previous)
+    record("reach-union-changed", REACH_UNION, '"REQ-polaris-generation-048"', '"REQ-polaris-generation-099"', "R4 refusal",
+           report.findings.get("R4", []), any(REACH_UNION in f for f in report.findings.get("R4", [])), False)
+    status = tree / STATUS
+    previous = status.read_text()
+    status.write_text("\n".join(line for line in previous.split("\n")
+                                if not line.strip().startswith(REACH_STATUS_PREFIX)))
+    report = Report()
+    check_routes(tree, current_pop, report)
+    status.write_text(previous)
+    record("reach-status-route-missing", STATUS, REACH_STATUS_PREFIX, "", "R5 refusal",
+           report.findings.get("R5", []),
+           any("declared-source reach v2.6" in f for f in report.findings.get("R5", [])), False)
+    ledger.write_text(pending)
+    report = Report()
+    check_routes(tree, pending_pop, report)
+    claims = [f for f in report.findings.get("R5", []) if "while it is not in force" in f]
+    adopted_status = any(line.strip().startswith(REACH_STATUS_PREFIX) and "is agent-adopted" in line
+                         for line in previous.split("\n"))
+    record("reach-pending-claims-adoption", AGENT_ADOPTIONS, row, "",
+           "R5 refuses an adopted route while the row is missing", claims,
+           bool(claims) if adopted_status else not claims, not adopted_status)
+    ledger.write_text(pending + row)
+
+    cases = [
+        ("added-section", DECLARED_SOURCE_MODIFIED, ADDED_HEADING),
+        ("wrong-id", "ID: " + ident, "ID: " + POLARIS_ID + "035"),
+        ("renamed", "### Requirement: Declared local-source admission",
+         "### Requirement: Declared source reach"),
+        ("second-block", "ID: " + ident, "ID: " + ident + "\n\n### Requirement: Extra\n\nID: " + POLARIS_ID + "099"),
+    ]
+    for name, old, new in cases:
+        assert old in original, name
+        mutant = original.replace(old, new, 1)
+        a, ida = compose_figure_by_id(predecessor, mutant, REACH_REPLACES)
+        b, names = compose_figure_by_name(predecessor, mutant, REACH_REPLACES)
+        record(f"reach-compose-{name}", REACH_SPEC, old, new,
+               "both parsers refuse without partial application", ida + names,
+               bool(ida and names and a == b == predecessor), False)
 
 
 def cap1_overlay_mutants():
@@ -4749,6 +6083,11 @@ def _selftest_cases(tmp, commit, witnesses, failures, witness_path, base, clean,
     derived_cases(tmp, base, witnesses, failures)
     ledger_cases(tmp, base, witnesses, failures)
     kinds_cases(tmp, base, witnesses, failures)
+    manifests_cases(tmp, base, witnesses, failures)
+    repairs_cases(tmp, base, witnesses, failures)
+    maps_cases(tmp, base, witnesses, failures)
+    bounds_cases(tmp, base, witnesses, failures)
+    reach_cases(tmp, base, witnesses, failures)
     # Two cases a one-file mutation cannot express. A second record of the
     # same version fails R1 by its own finding; --regenerate refuses an
     # unsigned addition and writes nothing.

@@ -13,6 +13,8 @@ const encode = (value: unknown) => encodeCanonicalJson(value, { maxBytes: 65_536
 const scan = (s: string) => /SYNTHETIC_SECRET|CROSSBOUNDARY/u.test(s) ? 'secret-detector-match' as const : undefined;
 const screen: DossierScreen = { policyId: 'own-policy', policyVersion: '8', policySha256: BASE.policy, projectDocumentation: true,
   codeContentExemption: true, governanceText: true, documentationExemption: true, scopeDetectors: 1, secretRedaction: true, visibility: 'private',
+  stageOf: () => 1, twoStage: false, configurationDetectors: 0,
+  scannedAsBefore: s => scan(s) !== undefined || s.includes('<script'),
   screenPath: () => undefined, contentClass: () => 'project-documentation', screenSecrets: scan,
   screenBody: s => scan(s) ?? (s.includes('<script') ? 'active-content' : undefined),
   screenTargetBody: () => ({ kind: 'admitted' }), activeContentAsBefore: s => s.includes('<script') };
