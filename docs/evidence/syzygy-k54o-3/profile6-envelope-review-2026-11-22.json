@@ -26,5 +26,9 @@
       "path": "packages/polaris-dossier/src/url-machine-store.ts",
       "sha256": "b93c94a73fa2a9a13c86ba5384817846d9cca0720199d0a8e6eaebf35c5b0b79"
     }
-  ]
+  ],
+  "executionCheckpoint": {
+    "commit": "1de49ab4e616f34359d8fd05dd210a4903834cac",
+    "scope": "All five reviewed source/test file digests independently match this worker checkpoint; this is file equivalence, not an equivalence claim over unreviewed tree bytes."
+  }
 }
