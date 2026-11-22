@@ -696,7 +696,7 @@ describe('PWB-REQ-020 exhaustive Polaris parity sweep', () => {
     const { machineOnlyReports } = sweep(modelFor('observed', 'lawful-state-2'));
     expect(machineOnlyReports).toEqual([
       { family: 'response-identity:contentKey', human: 0, machine: 1 },
-      { family: 'response-identity:excludes', human: 0, machine: 25 },
+      { family: 'response-identity:excludes', human: 0, machine: 27 },
       { family: 'response-identity:stableAcross', human: 0, machine: 1 },
       { family: 'response-identity:varyingWith', human: 0, machine: 3 },
       { family: 'route-links:poc', human: 0, machine: 15 },
@@ -710,7 +710,7 @@ describe('PWB-REQ-020 exhaustive Polaris parity sweep', () => {
       walkthroughJudgment: walkthroughJudgmentFixture('lawful-state-2'),
     });
     const preimage = responseIdentityPreimage(model);
-    expect(preimage.resolved).toHaveLength(25);
+    expect(preimage.resolved).toHaveLength(27);
     expect(preimage.resolved).toEqual([...model.responseIdentity.excludes]);
   });
 

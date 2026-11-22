@@ -5,6 +5,7 @@ export * from './work-items.js';
 export * from './worker-change-observation.js';
 export * from './orrery-projection.js';
 export * from './trajectory-projection.js';
+export * from './trajectory-time-measures.js';
 export * from './effect-authority.js';
 export * from './materialization.js';
 export * from './test-artifact-verification.js';

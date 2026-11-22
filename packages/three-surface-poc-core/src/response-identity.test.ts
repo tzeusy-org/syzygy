@@ -27,8 +27,8 @@ function declaration(excludes: readonly string[]): ResponseIdentityDeclaration {
 describe('response identity', () => {
   it('declares one unique, lexical exclusion set and freezes the emitted metadata', () => {
     const identity = buildResponseIdentity(model());
-    expect(identity.excludes).toHaveLength(25);
-    expect(new Set(identity.excludes).size).toBe(25);
+    expect(identity.excludes).toHaveLength(27);
+    expect(new Set(identity.excludes).size).toBe(27);
     expect(identity.excludes).toEqual([...identity.excludes].sort());
     expect(Object.isFrozen(identity)).toBe(true);
     expect(Object.isFrozen(identity.excludes)).toBe(true);
