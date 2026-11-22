@@ -10,4 +10,4 @@
 
 ## Last verdict of record, and where the findings landed
 
-`CONFIRM WITH EXCEPTIONS` (`R-SOURCE-REACH-V3-SPEC-1-RAW.md:3`), one round under D10. Twelve findings, none blocking (seven non-blocking, five notes); every one repaired before install, each dispositioned in the package's `design.md` §Review. The repairs changed both subjects, so the installed digests differ from the reviewed ones.
+`CONFIRM WITH EXCEPTIONS` (`syzygy-3efd-69/R-SOURCE-REACH-V3-SPEC-1-RAW.md:3`), one round under D10. Twelve findings, none blocking (seven non-blocking, five notes); every one repaired before install, each dispositioned in the package's `design.md` §Review. The repairs changed both subjects, so the installed digests differ from the reviewed ones.
