@@ -102,7 +102,7 @@ describe('the directory map', () => {
     expect(figures[2]).toContain('</ol></div><ul class="diagram-legend" aria-label="Line styles"><li><span class="legend-line observed" aria-hidden="true"></span>Solid: observed</li></ul><p class="diagram-tally">7 boxes and 6 arrows, derived by Syzygy: 13 observed, 0 inferred, 0 unknown.</p></figure>');
     // The list: each entry exactly the region's entry for that fact.
     const index = files.get('index.html')!;
-    const regionList = /<ul class="derived-facts">([^]*?)<\/ul>/u.exec(index)![1];
+    const regionList = /<ul class="derived-facts" id="diagram-text-derived">([^]*?)<\/ul>/u.exec(index)![1];
     expect(main).toContain(`<h2>Every derived fact</h2><ul class="derived-facts">${regionList}</ul></section>`);
     expect(main.match(/<li data-derived-id=/gu)).toHaveLength(61);
     // The region ends with the line linking the three maps, and the contents page lists them after Sources.

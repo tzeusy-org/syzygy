@@ -163,9 +163,10 @@ export const DOSSIER_THEME_CSS = ':root{--void:#262624;--panel:#30302e;--panel-r
   + '.review-report{margin-top:1rem;border-top:1px solid var(--line);padding-top:.5rem}.review-report>summary{cursor:pointer;color:var(--muted);font-weight:600}.review-report>summary:focus-visible{outline:2px solid var(--focus);outline-offset:2px}'
   + '.nav-panel>summary{cursor:pointer;font-weight:600;color:var(--muted)}.layout:has(>.nav-panel:not([open])){grid-template-columns:auto minmax(0,1fr)}.nav-panel>summary:focus-visible,.mobile-contents>summary:focus-visible{outline-offset:-3px}'
   // A three-column diagram (1048 px) may shrink to fit its column (text no smaller than 10.7px); any wider one keeps its size and scrolls.
-  // Since syzygy-3efd.66 the readable layout stacks every diagram of two or more layers, so no figure it draws is 1048 px wide and the
-  // shrink rule matches nothing; it stays because REQ-polaris-generation-034 (2.2) states it, and removing it is a change to that
-  // requirement. The element under the pointer stands out.
+  // Since syzygy-3efd.66 the readable layout stacks every diagram of two or more layers, so no operator-agent figure is 1048 px wide and
+  // the rule matches none of them. A provider-mode graph is laid out on the default spacing, 320 px a layer (248, 568, 888, 1208 px ...),
+  // so it is never 1048 px wide either, nor is a sequence or swimlane (40 px and 184 px a participant or lane): today the rule matches
+  // no figure. It stays because REQ-polaris-generation-034 (2.2) states it. The element under the pointer stands out.
   + '.diagram-scroll svg[width="1048"]{max-width:max(100%,860px)}.diagram-scroll g.node:hover rect{stroke-width:3}.diagram-scroll g.edge:hover path{stroke-width:3}.diagram-scroll g.edge-text:hover rect.edge-label{stroke:var(--cyan);stroke-width:1.5}.diagram-scroll path.edge-leader{stroke-width:1;fill:none}.diagram-scroll path.edge-echo{display:none;fill:none;stroke:var(--cyan);stroke-width:3;pointer-events:none}.diagram-scroll g.edge-text:hover path.edge-echo{display:inline}'
   // A marker standing where withheld lines were, on a source page: present, and out of the reading.
   + 'pre.redaction-note{margin:.25rem 0;padding:.1rem .75rem;border-left:4px solid var(--line);color:var(--muted);font:.8rem/1.5 var(--font-mono);white-space:pre-wrap}'
@@ -288,11 +289,13 @@ export function renderDossierSite(input: DossierSiteInput & { readonly local?: L
   const hueAttr = (hue: number): string => local === undefined ? '' : ` data-hue="${hue}"`;
   // Every operator-agent figure drawn from the draft says it is curated (RFC7-28, version 2.3); the provider mode's bytes are pinned.
   const curated = local === undefined ? '' : ' data-visual-provenance="curated"';
-  // The drawing is `role="img"`, named by its caption and described by its list (`aria-labelledby="diagram-title-N"`,
-  // `aria-describedby="diagram-text-N"`): an operator-agent figure carries both ids (syzygy-3efd.70). The provider mode's bytes are
-  // pinned, so its figures keep the references without the ids, as they always have.
-  const figureIds = (index: number): { readonly title: string; readonly text: string } => local === undefined ? { title: '', text: '' }
-    : { title: ` id="diagram-title-${index}"`, text: ` id="diagram-text-${index}"` };
+  // The drawing is `role="img"`, named by its caption and described by its lists (`aria-labelledby="diagram-title-N"`,
+  // `aria-describedby="diagram-text-N"`): an operator-agent figure carries the caption's id, and a `<div>` with the other id wraps its
+  // two lists alone, so the description holds neither the summary nor the Mermaid source (syzygy-3efd.70). The provider mode's bytes
+  // are pinned, so its figures keep the references without the ids or the wrapper, as they always have.
+  const figureIds = (index: number): { readonly title: string; readonly textOpen: string; readonly textClose: string } => local === undefined
+    ? { title: '', textOpen: '', textClose: '' }
+    : { title: ` id="diagram-title-${index}"`, textOpen: `<div id="diagram-text-${index}">`, textClose: '</div>' };
   if (poleSpec !== undefined) {
     const homes = draft.sections.map(section => poles.filter(pole => pole.sections.includes(section.id)).length);
     if (poles.length === 0 || homes.some(count => count !== 1) || poles.some(pole => pole.sections.length === 0 || pole.sections.some(id => !draft.sections.some(section => section.id === id)))
@@ -566,7 +569,7 @@ export function renderDossierSite(input: DossierSiteInput & { readonly local?: L
     // tally of its boxes and arrows by marking (syzygy-3efd.17): no figure element is observed there, so "Solid: observed" was false.
     const legend = local === undefined ? FIXED_DIAGRAM_LEGEND : figureLegend([...d.nodes, ...d.edges].map(element => element.epistemic), d.nodes.length, d.edges.length);
     const ids = figureIds(index);
-    return `<figure${from.startsWith('poles/') ? '' : hueAttr(index % HUES + 1)}${curated}><figcaption${ids.title}>${escape(d.title)}</figcaption><p class="diagram-relationship"><span class="eyebrow">${escape(d.kind)}</span> ${escape(d.relationship)}</p><div class="diagram-scroll">${svg}</div>${legend}<details${ids.text}><summary>Read every component and relationship</summary><ul>${nodeList}</ul><ol>${edgeList}</ol><details class="diagram-source"><summary>Declarative source (Mermaid)</summary><pre>${escape(diagramToMermaid(d))}</pre></details></details></figure>`;
+    return `<figure${from.startsWith('poles/') ? '' : hueAttr(index % HUES + 1)}${curated}><figcaption${ids.title}>${escape(d.title)}</figcaption><p class="diagram-relationship"><span class="eyebrow">${escape(d.kind)}</span> ${escape(d.relationship)}</p><div class="diagram-scroll">${svg}</div>${legend}<details><summary>Read every component and relationship</summary>${ids.textOpen}<ul>${nodeList}</ul><ol>${edgeList}</ol>${ids.textClose}<details class="diagram-source"><summary>Declarative source (Mermaid)</summary><pre>${escape(diagramToMermaid(d))}</pre></details></details></figure>`;
   };
   // A v7 sequence or swimlane (REQ-polaris-generation-034 version 2.5): the figure a graph figure with its home takes, holding its drawing and
   // its phone form, of which the stylesheet displays one by the width of the `figure-forms` box. Each participant, lane and step is a claim
@@ -610,7 +613,7 @@ export function renderDossierSite(input: DossierSiteInput & { readonly local?: L
     const ids = figureIds(index);
     return `<figure${from.startsWith('poles/') ? '' : hueAttr(index % HUES + 1)}${curated} data-figure-kind="${figure.kind}"><figcaption${ids.title}>${escape(d.title)}</figcaption><p class="diagram-relationship"><span class="eyebrow">${figure.kind}</span> ${escape(d.relationship)}</p>`
       + `<div class="figure-forms" data-figure-width="${width}"><div class="diagram-scroll figure-drawing">${svg}</div><ol class="figure-stepper">${stepper}</ol></div>`
-      + `${figureLegend(all.map(element => element.epistemic), 0, 0, 'as marked', tallyHead, figure.kind === 'swimlane')}<details${ids.text}><summary>Read every component and relationship</summary><ul>${ownerList}</ul><ol>${useList}</ol><details class="diagram-source"><summary>Declarative source (Mermaid)</summary><pre>${escape(figureToMermaid(figure))}</pre></details></details></figure>`;
+      + `${figureLegend(all.map(element => element.epistemic), 0, 0, 'as marked', tallyHead, figure.kind === 'swimlane')}<details><summary>Read every component and relationship</summary>${ids.textOpen}<ul>${ownerList}</ul><ol>${useList}</ol>${ids.textClose}<details class="diagram-source"><summary>Declarative source (Mermaid)</summary><pre>${escape(figureToMermaid(figure))}</pre></details></details></figure>`;
   };
   const topicAttr = (id: string): string => ` data-topics="${escape((topics[id] ?? []).join(' '))}"`;
   const localPages = local?.pages ?? [];
@@ -1049,7 +1052,7 @@ export function renderDerivedRegion(derived: LocalDerivedStructure, mapsLine = f
     + `${derived.unitsNotListed === 0 ? '' : `<p class="derived-more">${derived.unitsNotListed === 1 ? '1 more top-level directory is' : `${derived.unitsNotListed} more top-level directories are`} counted and not listed.</p>`}`;
   const legend = figureLegend([...nodes, ...edges].map(element => element.epistemic), nodes.length, edges.length, 'derived by Syzygy');
   return `${head}<figure class="derived-figure" data-visual-provenance="computed" data-derived-record="${record}"><figcaption id="diagram-title-derived">Derived by Syzygy from the pinned tree</figcaption>`
-    + `${derivedNote(derived)}<div class="diagram-scroll">${svg}</div>${notes}${legend}<details id="diagram-text-derived"><summary>Read every derived fact</summary><ul class="derived-facts">${derivedEntries(derived)}</ul></details></figure>${end}`;
+    + `${derivedNote(derived)}<div class="diagram-scroll">${svg}</div>${notes}${legend}<details><summary>Read every derived fact</summary><ul class="derived-facts" id="diagram-text-derived">${derivedEntries(derived)}</ul></details></figure>${end}`;
 }
 
 /** The machine view's `derivedStructure` member: beside and outside `reviewStatus`. */

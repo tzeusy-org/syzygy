@@ -39,6 +39,17 @@ function references(html: string): { readonly attribute: string; readonly id: st
     match[2]!.split(/\s+/u).filter(Boolean).map(id => ({ attribute: match[1]!, id, tags: holders.get(id) ?? [] })));
 }
 
+/** What the element carrying `id` holds: from its start tag to the first matching end tag (none of these elements nests its own kind). */
+function described(html: string, id: string, tag: string): string {
+  const start = html.indexOf(`id="${id}"`);
+  const open = html.indexOf('>', start) + 1;
+  return html.slice(open, html.indexOf(`</${tag}>`, open));
+}
+
+/** The element a figure's description names: a `<div>` around a graph, sequence or swimlane figure's two lists, the derived figure's
+ * list of facts (`ul.derived-facts`) and a map figure's text form (`ol.map-list`). */
+const DESCRIBED_TAG = (id: string): string => id.startsWith('diagram-text-map-') ? 'ol' : id === 'diagram-text-derived' ? 'ul' : 'div';
+
 describe('figure accessible names: every aria reference resolves (syzygy-3efd.70)', () => {
   it.each(SITES)('%s: each reference names exactly one element on its page, a caption or the figure\'s list', (_name, render) => {
     let checked = 0;
@@ -48,8 +59,13 @@ describe('figure accessible names: every aria reference resolves (syzygy-3efd.70
         checked += 1;
         const where = `${path} ${ref.attribute}="${ref.id}"`;
         expect(ref.tags, where).toHaveLength(1);
-        // A map figure's text form is its list (`ol.map-list`); every other figure's is its `<details>`.
-        if (ref.id.startsWith('diagram-')) expect(ref.tags, where).toEqual([ref.attribute === 'aria-labelledby' ? 'figcaption' : ref.id.startsWith('diagram-text-map-') ? 'ol' : 'details']);
+        if (!ref.id.startsWith('diagram-')) continue;
+        expect(ref.tags, where).toEqual([ref.attribute === 'aria-labelledby' ? 'figcaption' : DESCRIBED_TAG(ref.id)]);
+        if (ref.attribute !== 'aria-describedby') continue;
+        // The description is the text alternative alone: list items, and never the disclosure's summary or the Mermaid source.
+        const body = described(html, ref.id, DESCRIBED_TAG(ref.id));
+        expect(body, where).toContain('<li');
+        expect(body, where).not.toMatch(/<summary|<pre|<details|Read every|Declarative source|sequenceDiagram|flowchart/u);
       }
     }
     expect(checked).toBeGreaterThan(0);
@@ -66,6 +82,7 @@ describe('figure accessible names: every aria reference resolves (syzygy-3efd.70
     const figure = index.slice(index.indexOf('<figure data-hue="1"'), index.indexOf('</figure>', index.indexOf('<figure data-hue="1"')));
     expect(figure).toContain('<figcaption id="diagram-title-0">Handshake</figcaption>');
     expect(figure).toContain('role="img" aria-labelledby="diagram-title-0" aria-describedby="diagram-text-0"');
-    expect(figure).toContain('<details id="diagram-text-0"><summary>Read every component and relationship</summary>');
+    expect(figure).toContain('<details><summary>Read every component and relationship</summary><div id="diagram-text-0"><ul>');
+    expect(figure).toContain('</ol></div><details class="diagram-source"><summary>Declarative source (Mermaid)</summary>');
   });
 });
