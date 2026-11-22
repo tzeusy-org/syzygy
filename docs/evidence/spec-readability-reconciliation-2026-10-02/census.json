@@ -276,7 +276,7 @@
     },
     "POC": {
       "requirements": 28,
-      "scenarios": 42,
+      "scenarios": 43,
       "members": {
         "POC-REQ-001": {
           "name": "Code-structure observation is bound to an exact revision",
@@ -391,7 +391,8 @@
         "POC-REQ-042": {
           "name": "Trajectory declares its scope and denominator",
           "scenarios": [
-            "Bounded board over a large history"
+            "Bounded board over a large history",
+            "Every item reachable by state and page"
           ]
         },
         "POC-REQ-043": {
