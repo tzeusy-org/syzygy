@@ -295,6 +295,7 @@ describe('the live Node entries and the parked provider island', () => {
     ]));
   });
 
+  // syzygy-8dzi: the import-graph walks measured up to 5.9 s alone on a loaded host.
   it('resolves every workspace import both entries reach, dynamic ones included', () => {
     for (const entry of ENTRIES) {
       const { reachable, unresolved, unsupported } = reach(entry);
@@ -305,7 +306,7 @@ describe('the live Node entries and the parked provider island', () => {
         expect(reachable).toContain('packages/polaris-generation-consent/src/in-force.ts');
       }
     }
-  });
+  }, 30_000);
 
   it('reaches no island module from either live entry', () => {
     for (const entry of ENTRIES) {
@@ -315,7 +316,7 @@ describe('the live Node entries and the parked provider island', () => {
       expect(reachable, `${entry}: consent ports must stay parked`).not.toContain('packages/polaris-generation-consent/src/consent-ports.ts');
       expect(reachable.filter(path => ISLAND.includes(path)), entry).toEqual([]);
     }
-  });
+  }, 30_000);
 
   // .8.19 removed the whole-module exception. This positive control depends
   // on consent-ports still importing the parked core root; a later decoupling
