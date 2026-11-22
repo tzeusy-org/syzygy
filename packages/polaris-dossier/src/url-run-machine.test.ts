@@ -16,7 +16,7 @@ import { buildDossierScreen } from './screen.js';
 import { launchRestrictedUrlSession, prepareRestrictedUrlSession, URL_CLI_PROGRAM, type UrlSessionProcess } from './session-launch.js';
 import { openSessionMachineConnection, prepareSessionMachineTransport, sessionMachineEffectContext, type SessionMachineTransport } from './session-machine-transport.js';
 import { prepareHistoricalUrlRolePlansTestPort } from './url-role-plan.js';
-import { createUrlRunMachine, type UrlRunMachineOptions } from './url-run-machine.js';
+import { createUrlRunMachine, isUrlRunMachineClosedHistory, readUrlRunMachineClosedHistory, type UrlRunMachineOptions } from './url-run-machine.js';
 import { readUrlRuntime, type UrlRuntime } from './url-runtime.js';
 import { URL_ORIGIN_POLICY_PATH } from './url-run-record.js';
 import type { UrlMachineClientRecord } from './url-machine-instance.js';
@@ -192,6 +192,19 @@ describe('production URL run machine provisioner', { timeout: 60_000 }, () => {
     if (closing !== undefined) expect(await closing).toEqual({ lifecycle: 'retired' });
     expect(await f.machine.close()).toEqual({ lifecycle: 'retired' });
     const retired = (await f.records())[0]!; expect(retired.revision).toBe(3); expect(retired.revokedAt).not.toBeNull();
+    const closeResult = await f.machine.close(), evidence = readUrlRunMachineClosedHistory(closeResult);
+    expect(evidence).not.toBeNull(); if (!evidence) return;
+    expect(isUrlRunMachineClosedHistory(evidence)).toBe(true); expect(evidence.clients).toHaveLength(8);
+    expect(readUrlRunMachineClosedHistory({ ...closeResult })).toBeNull();
+    const issued = evidence.clients.filter(client => client.terminal.kind === 'revoked');
+    expect(issued).toHaveLength(1); expect(evidence.clients.filter(client => client.terminal.kind === 'never-issued')).toHaveLength(7);
+    const terminal = issued[0]!.terminal; if (terminal.kind !== 'revoked') throw new Error('owned revoked head absent');
+    const persisted = JSON.parse(await fs.readFile(path.join(f.options.protectedRoot, 'state.json'), 'utf8'));
+    expect(terminal.head).toEqual(persisted.clients.find((client: { clientId: string }) => client.clientId === retired.clientId).anchor.head);
+    const exact = await fs.readFile(path.join(f.options.governanceRoot, 'governance/policies/dossier-machine-clients', `${retired.clientId}.json`));
+    expect(terminal.head.record).toMatchObject({ clientId: retired.clientId, revision: 3, sha256: sha256(exact) });
+    expect(issued[0]!.context).toMatchObject({ policySha256: f.options.originPolicySha256, profileSha256: f.options.plans[0]!.profile.digest,
+      sourcePin: f.options.pin, runId: f.options.runId, role: 'author', kind: 'mcp-shim', deadline: f.options.deadline });
     expect(await sessionMachineEffectContext(second)!.mediate('artifact_read', () => ++effects)).toEqual({ ok: false }); expect(effects).toBe(1);
   });
 
@@ -210,6 +223,7 @@ describe('production URL run machine provisioner', { timeout: 60_000 }, () => {
     await expect(createUrlRunMachine({ ...separate, plans: f.options.plans.map(plan => ({ ...plan })) })).rejects.toThrow('url-run-machine-unavailable');
     await expect(fs.stat(separate.protectedRoot)).rejects.toMatchObject({ code: 'ENOENT' });
     await f.start(); expect(await f.connection(0)).not.toBeNull(); f.expire();
-    expect(await f.machine.close()).toEqual({ lifecycle: 'Unknown' }); expect((await f.records())[0]!.revision).toBe(1);
+    const result = await f.machine.close(); expect(result).toEqual({ lifecycle: 'Unknown' }); expect((await f.records())[0]!.revision).toBe(1);
+    expect(readUrlRunMachineClosedHistory(result)).toBeNull();
   });
 });
