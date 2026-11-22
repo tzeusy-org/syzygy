@@ -33,6 +33,7 @@ import * as policySnapshot from './policy-snapshot.js';
 import * as sessionBroker from './session-broker.js';
 import * as orderedHost from './url-ordered-design-host.js';
 import * as orderedBounds from './url-ordered-design-bounds.js';
+import * as orderedSession from './url-ordered-design-session.js';
 import * as orderedWork from './url-ordered-design-work-budget.js';
 
 const recoveryHost = await vi.hoisted(async () => {
@@ -138,7 +139,8 @@ type ResumeConnection = {
 };
 type ResumeSample = { ordinal: number; verify: ResumeStamp; confirm?: ResumeStamp; confirmationInput?: boolean };
 type ResumeBrokerStage = 'invoke' | 'host-current' | 'mediate-peer' | 'host-action' | 'transfer-bounds'
-  | 'plan-work-hold' | 'create-work-budget' | 'release' | 'release-check';
+  | 'plan-work-hold' | 'create-work-budget' | 'tool-before-plan-current' | 'tool-before-release-current'
+  | 'tool-before-audit-guard' | 'tool-release-guard' | 'release' | 'release-check';
 
 function projectWorkPlanRefusal(
   input: Parameters<typeof orderedWork.reserveOrderedDesignWork>[0],
@@ -288,6 +290,14 @@ function observeInterruptedResume() {
     orderedBrokers.add(input.brokerMachine);
     return startHost({ ...input, current: () => brokerPhase('host-current', () => input.current(), value => value === true) });
   });
+  const createOrderedSession = orderedSession.createOrderedDesignSession;
+  vi.spyOn(orderedSession, 'createOrderedDesignSession').mockImplementation(input => createOrderedSession({
+    ...input,
+    current: () => brokerPhase(brokerStages['tool-before-plan-current'] === undefined
+      ? 'tool-before-plan-current' : 'tool-before-release-current', input.current, value => value === true),
+    assertCurrent: () => brokerPhase(brokerStages['tool-before-audit-guard'] === undefined
+      ? 'tool-before-audit-guard' : 'tool-release-guard', input.assertCurrent, () => true),
+  }));
 
   const mediatePeer = machinePeer.mediateUrlMachinePeer;
   vi.spyOn(machinePeer, 'mediateUrlMachinePeer').mockImplementation((peer, operation, effect) => {
