@@ -35,6 +35,7 @@ import * as orderedHost from './url-ordered-design-host.js';
 import * as orderedBounds from './url-ordered-design-bounds.js';
 import * as orderedSession from './url-ordered-design-session.js';
 import * as orderedWork from './url-ordered-design-work-budget.js';
+import * as orderedWriter from './url-ordered-design-writer.js';
 
 const recoveryHost = await vi.hoisted(async () => {
   const { homedir } = await import('node:os');
@@ -140,7 +141,8 @@ type ResumeConnection = {
 type ResumeSample = { ordinal: number; verify: ResumeStamp; confirm?: ResumeStamp; confirmationInput?: boolean };
 type ResumeBrokerStage = 'invoke' | 'host-current' | 'mediate-peer' | 'host-action' | 'transfer-bounds'
   | 'plan-work-hold' | 'create-work-budget' | 'tool-before-plan-current' | 'tool-before-release-current'
-  | 'tool-before-audit-guard' | 'tool-release-guard' | 'release' | 'release-check';
+  | 'tool-before-audit-guard' | 'prepared-store-append' | 'prepared-store-recheck'
+  | 'tool-release-guard' | 'release' | 'release-check';
 
 function projectWorkPlanRefusal(
   input: Parameters<typeof orderedWork.reserveOrderedDesignWork>[0],
@@ -298,6 +300,17 @@ function observeInterruptedResume() {
     assertCurrent: () => brokerPhase(brokerStages['tool-before-audit-guard'] === undefined
       ? 'tool-before-audit-guard' : 'tool-release-guard', input.assertCurrent, () => true),
   }));
+  const createOrderedWriter = orderedWriter.createOrderedDesignAuditWriter;
+  vi.spyOn(orderedWriter, 'createOrderedDesignAuditWriter').mockImplementation((context, store, observeRead) => {
+    const append = store.append, current = store.current;
+    vi.spyOn(store, 'append').mockImplementation(record => record.kind === 'prepared'
+      ? brokerPhase('prepared-store-append', () => append.call(store, record), reader => typeof reader === 'function')
+      : append.call(store, record));
+    vi.spyOn(store, 'current').mockImplementation(() => brokerStages['prepared-store-append']?.outcome === 'accepted'
+      ? brokerPhase('prepared-store-recheck', () => current.call(store), value => value === true)
+      : current.call(store));
+    return createOrderedWriter(context, store, observeRead);
+  });
 
   const mediatePeer = machinePeer.mediateUrlMachinePeer;
   vi.spyOn(machinePeer, 'mediateUrlMachinePeer').mockImplementation((peer, operation, effect) => {
