@@ -1,10 +1,11 @@
 import { checkedProductPopulation, yieldForProductReads, parseProductRecord, protectedProduct, type RunProductReads } from './url-operation-products.js';
 import * as fs from 'node:fs';
 import * as path from 'node:path';
-import { bodyLines, parseBoundedJson, retainedWithMarkers, spanTouchesWithheld } from '@syzygy/polaris-generation-core/live';
+import { BoundedJsonError, bodyLines, parseBoundedJson, retainedWithMarkers, spanTouchesWithheld } from '@syzygy/polaris-generation-core/live';
 import { isRecord, sha256 } from '@syzygy/support';
 import { collectCitations, declaredSessionId, nextRevision } from './check.js';
-import { CHECK_RECORD_LIMITS, isCheckRecordOf, readCheckRecord } from './check-record-read.js';
+import { CHECK_RECORD_LIMITS, NotARegularFileError, isCheckRecordOf, readBoundedFile, readCheckRecord } from './check-record-read.js';
+import { DRAFT_MAX_BYTES } from './check-model.js';
 import { DEFICIENT_SUBJECTS, VERDICT_QUOTATION_FORM, verdictSchemaDocument } from './draft-schema.js';
 import { RECORDS_WITHIN_REACH } from './gate-sources.js';
 import { BLOB_MODES, GitObjectReadRefusal, openPinnedObjectReader, type TreeEntry } from './git-object-reader.js';
@@ -53,8 +54,13 @@ export function latestPassedDraft(run: string, products?: RunProductReads): { re
   if (products !== undefined) {
     bytes = protectedProduct(products, run, frozen);
     if (bytes === null) return { ok: false, reason: `the frozen draft ${frozen} is absent` };
-  } else {
-    try { bytes = new Uint8Array(fs.readFileSync(path.join(run, frozen))); } catch (cause) { return { ok: false, reason: `the frozen draft ${frozen} cannot be read (${errno(cause)})` }; }
+  } else try {
+    // Read by the reader rule under the draft's 4,194,304 bytes (syzygy-3efd.76): check froze at most that many.
+    bytes = new Uint8Array(readBoundedFile(path.join(run, frozen), DRAFT_MAX_BYTES));
+  } catch (cause) {
+    const why = cause instanceof NotARegularFileError ? 'not a regular file'
+      : cause instanceof BoundedJsonError && cause.code === 'byte-limit' ? `larger than ${DRAFT_MAX_BYTES} bytes` : errno(cause);
+    return { ok: false, reason: `the frozen draft ${frozen} cannot be read (${why})` };
   }
   const draft = isRecord(check['draft']) ? check['draft'] : {};
   if (draft['file'] !== frozen || draft['sha256'] !== sha256(bytes)) return { ok: false, reason: `the frozen draft ${frozen} is not the bytes its check recorded` };

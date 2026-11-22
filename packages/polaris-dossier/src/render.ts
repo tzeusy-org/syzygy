@@ -18,7 +18,7 @@ import type { CredentialProbe } from './execution-rule.js';
 import { RECORDS_WITHIN_REACH } from './gate-sources.js';
 import { GitObjectReadRefusal, openPinnedObjectReader, type TreeEntry } from './git-object-reader.js';
 import { MANIFEST_BLOB_LIMIT, deriveManifestFacts, manifestFactsUnknown, type ManifestFacts } from './manifest-facts.js';
-import { errno, latestInventorySession, logStep, openRun, promptRecordName, readRecord, type OpenedRun } from './inventory.js';
+import { errno, latestInventorySession, logStep, openRun, promptRecordName, type OpenedRun } from './inventory.js';
 import { briefStandardsFromRecord, briefStandardsOf, buildDesignPacket, standardsInput } from './design-review.js';
 import { derivedStructureAt, readCurrencyPolicy, secretPathOf, type CurrencyPolicy } from './derived-record.js';
 import type { Outcome } from './outcome.js';
@@ -27,6 +27,7 @@ import type { ReverifyRefusal } from './reverify.js';
 import { NO_WORK_ITEM_REASON } from './run-record.js';
 import { CLASS_NOT_CONSENTED, unconsentedClass, unconsentedText } from './class-gate.js';
 import { placementSubjectOf, screenLoaderOf, type DossierScreen, type ScreenExclusion } from './screen.js';
+import { readBriefRecord } from './run-dir.js';
 import { RUN_LAYOUT } from './state-directory.js';
 import { continuationOf, type Continuation } from './waiting-sessions.js';
 import { packetSpanStanding } from './review-verdict.js';
@@ -210,7 +211,7 @@ async function render(runDir: string, deps: RenderDeps, storedSite?: StoredUrlRe
   if (storedSite === undefined) logRun = run;
   const pinned = subject.pinnedRevision.commit;
 
-  const briefRecord = products === undefined ? readRecord(path.join(run, RUN_LAYOUT.briefRecord))
+  const briefRecord = products === undefined ? readBriefRecord(run)
     : protectedProductRecord(products, run, RUN_LAYOUT.briefRecord);
   const arm = briefRecord?.['executionRule'];
   if (urlMode && (!isRecord(arm) || arm['arm'] !== 'sec-3')) {

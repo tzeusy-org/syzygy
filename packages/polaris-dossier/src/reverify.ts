@@ -1,7 +1,8 @@
 import * as fs from 'node:fs';
 import * as path from 'node:path';
 import { isRecord, sha256 } from '@syzygy/support';
-import { parseBoundedJson } from '@syzygy/polaris-generation-core/live';
+import { BoundedJsonError, parseBoundedJson } from '@syzygy/polaris-generation-core/live';
+import { NotARegularFileError, readBoundedFile } from './check-record-read.js';
 import type { GateSources } from './gate-sources.js';
 import { isEarlierPolicy, restartExplanation, samePolicy } from './policy-snapshot.js';
 import { buildDossierScreen } from './screen.js';
@@ -71,8 +72,11 @@ function briefDeclaredAgent(run: string, products?: RunProductReads): { readonly
     try { text = new TextDecoder('utf-8', { fatal: true }).decode(bytes); }
     catch { return { state: 'invalid', why: 'it is not valid UTF-8' }; }
   } else try {
-    text = fs.readFileSync(path.join(run, RUN_LAYOUT.briefRecord), 'utf8');
+    // The reader rule under 262,144 bytes (syzygy-3efd.76).
+    text = readBoundedFile(path.join(run, RUN_LAYOUT.briefRecord), BRIEF_RECORD_LIMITS.maxBytes).toString('utf8');
   } catch (cause) {
+    if (cause instanceof NotARegularFileError) return { state: 'invalid', why: 'it cannot be read (not a regular file)' };
+    if (cause instanceof BoundedJsonError && cause.code === 'byte-limit') return { state: 'invalid', why: 'it is not bounded JSON' };
     const code = (cause as NodeJS.ErrnoException).code ?? 'unknown-error';
     return code === 'ENOENT' ? { state: 'unbriefed' } : { state: 'invalid', why: `it cannot be read (${code})` };
   }

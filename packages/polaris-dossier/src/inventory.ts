@@ -6,7 +6,7 @@ import { parseBoundedJson } from '@syzygy/polaris-generation-core/live';
 import { isRecord, sha256 } from '@syzygy/support';
 import { QUOTATION_RULE } from './brief.js';
 import { censusSection, loadCensus, type CensusDeps, type CensusLoad } from './census.js';
-import { readCheckRecord } from './check-record-read.js';
+import { readBoundedFile, readCheckRecord } from './check-record-read.js';
 import { checkSubject, declaredSessionId, type CheckDeps, type CheckFinding, type CheckRecord, type CheckRefusal, type CheckedRevision, type ExcludedQuotation, type CitedBlob, type SubjectBlock, type SubjectPlan, type SubjectReport, type SubjectRules, type VerifiedQuotation } from './check.js';
 import { readSec3 } from './doctrine-quote.js';
 import { INVENTORY_ENTRY_KINDS, INVENTORY_QUOTATION_FORM, LOCAL_INVENTORY_SCHEMA_VERSION, SESSION_ID_RULE, inventorySchemaDocument, localInventorySchema } from './draft-schema.js';
@@ -80,7 +80,9 @@ export function authoringSessionIds(run: string, products?: RunProductReads): { 
     if (!REVISION_FILE.test(name)) continue;
     frozen++;
     try {
-      const draft = parseBoundedJson(fs.readFileSync(path.join(run, RUN_LAYOUT.drafts, name), 'utf8'), DRAFT_JSON_LIMITS);
+      // Read by the reader rule under the draft's 4,194,304 bytes (syzygy-3efd.76): a revision that is not a regular file or
+      // is past the bound is counted as frozen and declares nothing.
+      const draft = parseBoundedJson(readBoundedFile(path.join(run, RUN_LAYOUT.drafts, name), DRAFT_JSON_LIMITS.maxBytes).toString('utf8'), DRAFT_JSON_LIMITS);
       const id = declaredSessionId(draft);
       if (id !== null) ids.add(id);
     } catch { /* an unreadable revision declares nothing */ }

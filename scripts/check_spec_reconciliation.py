@@ -633,6 +633,19 @@ FINDPAGES_SUBJECTS = {
     FINDPAGES_SPEC: "16bf8ff1656501342aafba080db0fdee2c707a633d8d437c518929362ab2b985",
 }
 FINDPAGES_BOUND_PARTS = len(FINDPAGES_SUBJECTS)
+# The v2.16 page-subsections amendment (syzygy-3efd.50, syzygy-3efd.81): one MODIFIED
+# REQ-polaris-generation-034 after v2.15, pending until its own VIS-4 ledger
+# row, found by its tag as v2.15's is.
+SUBSEC_CHANGE = "dossier-page-subsections"
+SUBSEC_HOME = f"{CHANGES}/{SUBSEC_CHANGE}"
+SUBSEC_SPEC = f"{SUBSEC_HOME}/proposed/polaris-generation/spec.md"
+SUBSEC_UNION = f"{SUBSEC_HOME}/GOVERNING-DEPENDENCIES.json"
+SUBSEC_TAG = "polaris-dossier-page-subsections-v2.16"
+SUBSEC_STATUS_PREFIX = f"[Page subsections amendment 2.16]({SUBSEC_HOME})"
+SUBSEC_SUBJECTS = {
+    SUBSEC_SPEC: "eb02516147a08c2b21a1ddeca4bc1527e9c7f21fb0bcf62bbee35f9b059fcdbc",
+}
+SUBSEC_BOUND_PARTS = len(SUBSEC_SUBJECTS)
 ADOPTION_LEDGER_TITLE = "# Agent adoptions"
 ADOPTION_TABLE_HEADER = "| Id | Date | Commit | What changed | Why | Revert | Tag |"
 ADOPTION_TABLE_DIVIDER = "|---|---|---|---|---|---|---|"
@@ -1187,6 +1200,35 @@ def findpages_disposition(root, rows):
         return recorded_disposition(root, identity, commit.strip("`"), FINDPAGES_TAG,
                                     FINDPAGES_SUBJECTS, plain_revert=True,
                                     also_reverts=FINDPAGES_INSTALL)
+    return None
+
+
+def is_subsec_row(line):
+    """A ledger row claiming the v2.16 page-subsections amendment, well formed or not."""
+    if not line.startswith("|"):
+        return False
+    cells = [cell.strip() for cell in line.split("|")[1:-1]]
+    tag = f"`{SUBSEC_TAG}`"
+    if len(cells) == 7 and cells[6] == tag:
+        return True
+    if len(cells) != 7 and tag in cells:
+        return True
+    if len(cells) < 4 or not re.fullmatch(r"`[0-9a-f]{40}`", cells[2]):
+        return False
+    snapshot = f"https://github.com/tzeusy-org/syzygy/blob/{cells[2][1:-1]}/"
+    return all(f"]({snapshot}{path})" in cells[3] for path in SUBSEC_SUBJECTS)
+
+
+def subsec_rows(root):
+    return [[cell.strip() for cell in line.split("|")[1:-1]]
+            for line in adoption_table_rows(root) if is_subsec_row(line)]
+
+
+def subsec_disposition(root, rows):
+    if len(rows) == 1 and len(rows[0]) == 7:
+        identity, _date, commit, _changed, _why, _revert, _tag = rows[0]
+        return recorded_disposition(root, identity, commit.strip("`"), SUBSEC_TAG,
+                                    SUBSEC_SUBJECTS, plain_revert=True)
     return None
 
 
@@ -2109,6 +2151,44 @@ def findpages_binding(root):
     return (None if records or subjects else read_text(root, FINDPAGES_SPEC), records, subjects)
 
 
+def subsec_binding(root):
+    """Read v2.16's published composition: pending until its row, like v2.14.
+
+    The row names the installing commit (a plain commit, so its revert may
+    omit `-m 1`), the reviewed spec at that commit and the version tag. Its
+    predecessor is v2.15's text of REQ-polaris-generation-034, so v2.15 must
+    itself be in force.
+    """
+    rows = subsec_rows(root)
+    if not rows or subsec_disposition(root, rows):
+        return None, [], []
+    records, subjects = [], []
+    if findpages_binding(root)[0] is None:
+        records.append("page subsections: prior v2.15 index and task routes adoption is unavailable")
+    if len(rows) != 1 or len(rows[0]) != 7:
+        records.append("page subsections: expected one seven-column agent adoption row")
+    else:
+        identity, date, commit, changed, reason, revert, tag = rows[0]
+        landed = re.fullmatch(r"`([0-9a-f]{40})`", commit)
+        if (not re.fullmatch(r"A-[1-9][0-9]*", identity)
+                or not valid_adoption_date(date)
+                or not landed or tag != f"`{SUBSEC_TAG}`" or not reason):
+            records.append("page subsections: malformed adoption identity, date, commit, reason or tag")
+        if landed:
+            oid = landed.group(1)
+            if revert.split("`")[1:2] not in ([f"git revert {oid}"], [f"git revert -m 1 {oid}"]):
+                records.append("page subsections: revert does not name the landed commit")
+            for rel in SUBSEC_SUBJECTS:
+                snapshot = f"https://github.com/tzeusy-org/syzygy/blob/{oid}/{rel}"
+                if f"]({snapshot})" not in changed:
+                    records.append(f"page subsections: adoption row does not name `{rel}`")
+    for rel, digest in SUBSEC_SUBJECTS.items():
+        body = read_bytes(root, rel)
+        if body is None or sha(body) != digest:
+            subjects.append(f"page subsections: `{rel}` differs from the reviewed v2.16 subject")
+    return (None if records or subjects else read_text(root, SUBSEC_SPEC), records, subjects)
+
+
 def url_source_contract_findings(root):
     """Verify the reviewed amendment in its actual contract homes."""
     body = read_bytes(root, URL_SOURCE_REPLACEMENTS)
@@ -2626,6 +2706,15 @@ def check_outcomes(root, report):
         subjects_seen += FINDPAGES_BOUND_PARTS
     r1 += findpages_records
     r2 += findpages_subjects
+    subsec_retired_by = subsec_disposition(root, subsec_rows(root))
+    subsec_amendment, subsec_records, subsec_subjects = subsec_binding(root)
+    if subsec_retired_by:
+        records += 2
+    elif subsec_amendment is not None or subsec_records or subsec_subjects:
+        records += 1
+        subjects_seen += SUBSEC_BOUND_PARTS
+    r1 += subsec_records
+    r2 += subsec_subjects
     readmit_retired_by = readmit_disposition(root, readmit_rows(root))
     readmit_amendment, readmit_records, readmit_subjects = readmit_binding(root)
     if readmit_retired_by:
@@ -2666,6 +2755,8 @@ def check_outcomes(root, report):
         retirement += f"; v2.14 inactive by {infra_retired_by}"
     if findpages_retired_by:
         retirement += f"; v2.15 inactive by {findpages_retired_by}"
+    if subsec_retired_by:
+        retirement += f"; v2.16 inactive by {subsec_retired_by}"
     if readmit_retired_by:
         retirement += f"; v2.13 inactive by {readmit_retired_by}"
     report.add("R1", "terminal outcome for every child", records, r1,
@@ -2694,7 +2785,8 @@ def check_outcomes(root, report):
                "re-admission: one v2.13 row over effective v2.6 naming spec and "
                "policy, pending until recorded; infrastructure recognizers: one v2.14 "
                "row over effective v2.12, pending until recorded; index and task routes: "
-               "one v2.15 row over effective v2.14, pending until recorded" + retirement)
+               "one v2.15 row over effective v2.14, pending until recorded; page subsections: "
+               "one v2.16 row over effective v2.15, pending until recorded" + retirement)
     report.add("R2", "reviewed and signed subjects hash to their rows", subjects_seen, r2)
 
 
@@ -3508,6 +3600,16 @@ def census(root):
                 b, extra_b = compose_figure_by_name(b, findpages_amendment)
                 pa += extra_a
                 pb += extra_b
+        subsec_amendment, subsec_records, subsec_subjects = subsec_binding(root)
+        findings += subsec_records + subsec_subjects
+        if subsec_amendment is not None:
+            if findpages_amendment is None:
+                findings.append("POLARIS: page subsections requires effective index and task routes v2.15")
+            else:
+                a, extra_a = compose_figure_by_id(a, subsec_amendment)
+                b, extra_b = compose_figure_by_name(b, subsec_amendment)
+                pa += extra_a
+                pb += extra_b
         findings += [f"POLARIS method A: {p}" for p in pa]
         findings += [f"POLARIS method B: {p}" for p in pb]
         if a != b:
@@ -3701,6 +3803,14 @@ def polaris_expected(root, findings):
                                                             findings.append("POLARIS index and task routes: methods disagree or change identities")
                                                         n_scen += sum(len(row["scenarios"]) for row in fin_a.values()) - sum(
                                                             len(row["scenarios"]) for row in inf_a.values())
+                                                        subsec_amendment, _records, _subjects = subsec_binding(root)
+                                                        if subsec_amendment is not None:
+                                                            sub_a, pa = compose_figure_by_id(fin_a, subsec_amendment)
+                                                            sub_b, pb = compose_figure_by_name(fin_b, subsec_amendment)
+                                                            if pa or pb or sub_a != sub_b or set(sub_a) != set(fin_a):
+                                                                findings.append("POLARIS page subsections: methods disagree or change identities")
+                                                            n_scen += sum(len(row["scenarios"]) for row in sub_a.values()) - sum(
+                                                                len(row["scenarios"]) for row in fin_a.values())
     return n_req, n_scen, ids
 
 
@@ -3878,6 +3988,9 @@ def check_generated(root, pop, report):
     findpages_amendment, _records, _subjects = findpages_binding(root)
     if findpages_amendment is not None:
         files += tracked(root, FINDPAGES_HOME)
+    subsec_amendment, _records, _subjects = subsec_binding(root)
+    if subsec_amendment is not None:
+        files += tracked(root, SUBSEC_HOME)
     reach_amendment, _records, _subjects = reach_binding(root)
     if reach_amendment is not None:
         files += tracked(root, REACH_HOME)
@@ -3935,7 +4048,8 @@ def check_generated(root, pop, report):
                        (bounds_amendment, BOUNDS_UNION), (corr_amendment, CORR_UNION),
                        (coverage_amendment, COVERAGE_UNION),
                        (readmit_amendment, READMIT_UNION), (infra_amendment, INFRA_UNION),
-                        (findpages_amendment, FINDPAGES_UNION)):
+                        (findpages_amendment, FINDPAGES_UNION),
+                        (subsec_amendment, SUBSEC_UNION)):
         if delta is None:
             continue
         examined += 1
@@ -4278,6 +4392,24 @@ def check_routes(root, pop, report):
             findings.append(f"`{STATUS}` calls index and task routes v2.15 adopted while it is not in force")
         if any(FINDPAGES_TAG in line and "Agent adoption" in line for line in rows.get(FINDPAGES_CHANGE, [])):
             findings.append(f"`{OPENSPEC_README}` calls index and task routes v2.15 adopted while it is not in force")
+    subsec_amendment, _records, _subjects = subsec_binding(root)
+    subsec_fields = [line.strip() for line in visible_route_lines(status)
+                    if line.strip().startswith(SUBSEC_STATUS_PREFIX)]
+    if subsec_amendment is not None:
+        examined += 2
+        if not any(Path(AGENT_ADOPTIONS).name in line and SUBSEC_TAG in line
+                   for line in rows.get(SUBSEC_CHANGE, [])):
+            findings.append(f"`{OPENSPEC_README}` does not route page subsections v2.16 "
+                            f"to `{AGENT_ADOPTIONS}` and its version tag")
+        identity = subsec_rows(root)[0][0]
+        if AGENT_ADOPTIONS not in status or subsec_fields != [f"{SUBSEC_STATUS_PREFIX} is agent-adopted in {identity}."]:
+            findings.append(f"`{STATUS}` does not route page subsections v2.16 and its adoption {identity}")
+    elif SUBSEC_CHANGE in changes:
+        examined += 2
+        if any("is agent-adopted" in field for field in subsec_fields):
+            findings.append(f"`{STATUS}` calls page subsections v2.16 adopted while it is not in force")
+        if any(SUBSEC_TAG in line and "Agent adoption" in line for line in rows.get(SUBSEC_CHANGE, [])):
+            findings.append(f"`{OPENSPEC_README}` calls page subsections v2.16 adopted while it is not in force")
     readmit_amendment, _records, _subjects = readmit_binding(root)
     readmit_fields = [line.strip() for line in visible_route_lines(status)
                       if line.strip().startswith(READMIT_STATUS_PREFIX)]
@@ -4518,6 +4650,7 @@ def inputs(root):
     paths |= {COVERAGE_UNION, *COVERAGE_SUBJECTS}
     paths |= {INFRA_UNION, *INFRA_SUBJECTS}
     paths |= {FINDPAGES_UNION, *FINDPAGES_SUBJECTS}
+    paths |= {SUBSEC_UNION, *SUBSEC_SUBJECTS}
     paths |= poc_reference().validation_inputs(root)
     return sorted(paths)
 
@@ -4891,6 +5024,7 @@ def declared_source_historical_cases(tmp, base, clean, witnesses, failures):
     had_coverage = any(is_coverage_row(line) for line in original.splitlines())
     had_infra = any(is_infra_row(line) for line in original.splitlines())
     had_findpages = any(is_findpages_row(line) for line in original.splitlines())
+    had_subsec = any(is_subsec_row(line) for line in original.splitlines())
     had_readmit = any(is_readmit_row(line) for line in original.splitlines())
     absent_ledger = "".join(line for line in original.splitlines(keepends=True)
                             if line.rstrip("\n") != row and not is_url_source_row(line)
@@ -4901,7 +5035,7 @@ def declared_source_historical_cases(tmp, base, clean, witnesses, failures):
                       and not is_corr_row(line) and not is_coverage_row(line)
                       and not is_readmit_row(line)
                       and not is_infra_row(line)
-                      and not is_findpages_row(line))
+                      and not is_findpages_row(line) and not is_subsec_row(line))
     ledger.write_text(absent_ledger)
     report = Report()
     check_outcomes(tree, report)
@@ -4914,7 +5048,7 @@ def declared_source_historical_cases(tmp, base, clean, witnesses, failures):
             and declared_source_binding(tree) == (None, [], [])
             and not report.failed
             and examined(report, "R1") == examined(clean, "R1") - 1 - had_url_source - had_figure - had_derived - had_ledger - had_kinds - had_manifests
-            - had_reach - had_repairs - had_maps - had_bounds - had_corr - had_coverage - had_readmit - had_infra - had_findpages
+            - had_reach - had_repairs - had_maps - had_bounds - had_corr - had_coverage - had_readmit - had_infra - had_findpages - had_subsec
             and examined(report, "R2") == examined(clean, "R2") - 3
             - (URL_SOURCE_BOUND_PARTS if had_url_source else 0)
             - (FIGURE_BOUND_PARTS if had_figure else 0)
@@ -4930,7 +5064,8 @@ def declared_source_historical_cases(tmp, base, clean, witnesses, failures):
             - (COVERAGE_BOUND_PARTS if had_coverage else 0)
             - (READMIT_BOUND_PARTS if had_readmit else 0)
             - (INFRA_BOUND_PARTS if had_infra else 0)
-            - (FINDPAGES_BOUND_PARTS if had_findpages else 0))
+            - (FINDPAGES_BOUND_PARTS if had_findpages else 0)
+            - (SUBSEC_BOUND_PARTS if had_subsec else 0))
     witnesses.append({"mutant": "declared-historical-control", "path": change,
                       "old": "<no amendment, row, subjects or D10 act>",
                       "new": "<unchanged>", "expected": "inactive; no phantom R1/R2 subjects",
@@ -5329,7 +5464,7 @@ def figure_cases(tmp, base, witnesses, failures):
                       and not is_bounds_row(line)
                       and not is_corr_row(line) and not is_coverage_row(line)
                       and not is_infra_row(line)
-                      and not is_findpages_row(line))
+                      and not is_findpages_row(line) and not is_subsec_row(line))
     ledger.write_text(pending)
     pending_pop, pending_findings = census(tree)
     predecessor = pending_pop["POLARIS"]
@@ -5467,7 +5602,7 @@ def derived_cases(tmp, base, witnesses, failures):
                       and not is_bounds_row(line)
                       and not is_corr_row(line) and not is_coverage_row(line)
                       and not is_infra_row(line)
-                      and not is_findpages_row(line))
+                      and not is_findpages_row(line) and not is_subsec_row(line))
     ledger.write_text(pending)
     pending_pop, pending_findings = census(tree)
     predecessor = pending_pop["POLARIS"]
@@ -5600,7 +5735,7 @@ def ledger_cases(tmp, base, witnesses, failures):
                       and not is_bounds_row(line)
                       and not is_corr_row(line) and not is_coverage_row(line)
                       and not is_infra_row(line)
-                      and not is_findpages_row(line))
+                      and not is_findpages_row(line) and not is_subsec_row(line))
     ledger.write_text(pending)
     pending_pop, pending_findings = census(tree)
     predecessor = pending_pop["POLARIS"]
@@ -5731,7 +5866,7 @@ def kinds_cases(tmp, base, witnesses, failures):
                       and not is_bounds_row(line)
                       and not is_corr_row(line) and not is_coverage_row(line)
                       and not is_infra_row(line)
-                      and not is_findpages_row(line))
+                      and not is_findpages_row(line) and not is_subsec_row(line))
     ledger.write_text(pending)
     pending_pop, pending_findings = census(tree)
     predecessor = pending_pop["POLARIS"]
@@ -5862,7 +5997,7 @@ def manifests_cases(tmp, base, witnesses, failures):
                       and not is_bounds_row(line)
                       and not is_corr_row(line) and not is_coverage_row(line)
                       and not is_infra_row(line)
-                      and not is_findpages_row(line))
+                      and not is_findpages_row(line) and not is_subsec_row(line))
     ledger.write_text(pending)
     pending_pop, pending_findings = census(tree)
     predecessor = pending_pop["POLARIS"]
@@ -5993,7 +6128,7 @@ def repairs_cases(tmp, base, witnesses, failures):
                       and not is_bounds_row(line)
                       and not is_corr_row(line) and not is_coverage_row(line)
                       and not is_infra_row(line)
-                      and not is_findpages_row(line))
+                      and not is_findpages_row(line) and not is_subsec_row(line))
     ledger.write_text(pending)
     pending_pop, pending_findings = census(tree)
     predecessor = pending_pop["POLARIS"]
@@ -6123,7 +6258,7 @@ def maps_cases(tmp, base, witnesses, failures):
                       if not is_maps_row(line) and not is_bounds_row(line)
                       and not is_corr_row(line) and not is_coverage_row(line)
                       and not is_infra_row(line)
-                      and not is_findpages_row(line))
+                      and not is_findpages_row(line) and not is_subsec_row(line))
     ledger.write_text(pending)
     pending_pop, pending_findings = census(tree)
     predecessor = pending_pop["POLARIS"]
@@ -6322,7 +6457,7 @@ def bounds_cases(tmp, base, witnesses, failures):
     pending = "".join(line for line in ledger.read_text().splitlines(keepends=True)
                       if not is_bounds_row(line) and not is_corr_row(line) and not is_coverage_row(line)
                       and not is_infra_row(line)
-                      and not is_findpages_row(line))
+                      and not is_findpages_row(line) and not is_subsec_row(line))
     ledger.write_text(pending)
     pending_pop, pending_findings = census(tree)
     predecessor = pending_pop["POLARIS"]
@@ -6451,7 +6586,7 @@ def corr_cases(tmp, base, witnesses, failures):
     pending = "".join(line for line in ledger.read_text().splitlines(keepends=True)
                       if not is_corr_row(line) and not is_coverage_row(line)
                       and not is_infra_row(line)
-                      and not is_findpages_row(line))
+                      and not is_findpages_row(line) and not is_subsec_row(line))
     ledger.write_text(pending)
     pending_pop, pending_findings = census(tree)
     predecessor = pending_pop["POLARIS"]
@@ -6580,7 +6715,7 @@ def coverage_cases(tmp, base, witnesses, failures):
     pending = "".join(line for line in ledger.read_text().splitlines(keepends=True)
                       if not is_coverage_row(line)
                       and not is_infra_row(line)
-                      and not is_findpages_row(line))
+                      and not is_findpages_row(line) and not is_subsec_row(line))
     ledger.write_text(pending)
     pending_pop, pending_findings = census(tree)
     predecessor = pending_pop["POLARIS"]
@@ -6708,7 +6843,7 @@ def infra_cases(tmp, base, witnesses, failures):
     ledger = tree / AGENT_ADOPTIONS
     pending = "".join(line for line in ledger.read_text().splitlines(keepends=True)
                       if not is_infra_row(line)
-                      and not is_findpages_row(line))
+                      and not is_findpages_row(line) and not is_subsec_row(line))
     ledger.write_text(pending)
     pending_pop, pending_findings = census(tree)
     predecessor = pending_pop["POLARIS"]
@@ -6835,7 +6970,7 @@ def findpages_cases(tmp, base, witnesses, failures):
     shutil.copytree(base, tree)
     ledger = tree / AGENT_ADOPTIONS
     pending = "".join(line for line in ledger.read_text().splitlines(keepends=True)
-                      if not is_findpages_row(line))
+                      if not is_findpages_row(line) and not is_subsec_row(line))
     ledger.write_text(pending)
     pending_pop, pending_findings = census(tree)
     predecessor = pending_pop["POLARIS"]
@@ -6960,6 +7095,133 @@ def findpages_cases(tmp, base, witnesses, failures):
         a, ida = compose_figure_by_id(kin_pop, mutant)
         b, names = compose_figure_by_name(kin_pop, mutant)
         record(f"findpages-compose-{name}", FINDPAGES_SPEC, old, new,
+               "both parsers refuse without partial application", ida + names,
+               bool(ida and names and a == b == kin_pop), False)
+
+
+def subsec_cases(tmp, base, witnesses, failures):
+    """The v2.16 pending-to-adopted transition over v2.15, its ledger and byte guards, and the predecessor guard."""
+    original = read_text(base, SUBSEC_SPEC)
+    if original is None or findpages_binding(base)[0] is None:
+        return
+
+    def record(name, rel, old, new, expect, found, caught, stood):
+        witnesses.append({"mutant": name, "path": rel, "old": old, "new": new,
+                          "expected": expect, "failed": found,
+                          "outcome": ("held" if stood else "killed") if caught else "SURVIVED"})
+        if not caught:
+            failures.append(name)
+
+    tree = Path(tmp) / "page-subsections"
+    shutil.copytree(base, tree)
+    ledger = tree / AGENT_ADOPTIONS
+    pending = "".join(line for line in ledger.read_text().splitlines(keepends=True)
+                      if not is_subsec_row(line))
+    ledger.write_text(pending)
+    pending_pop, pending_findings = census(tree)
+    predecessor = pending_pop["POLARIS"]
+    ident = FIGURE_REPLACES[0]
+    held = (subsec_binding(tree) == (None, [], []) and not pending_findings
+            and len(predecessor[ident]["scenarios"]) == 148)
+    record("subsec-pending", AGENT_ADOPTIONS, "<no v2.16 row>", "<unchanged>",
+           "landed package alone keeps v2.16 pending", pending_findings, held, True)
+
+    oid = "0123456789abcdef" * 2 + "01234567"
+    row = (f"| A-999 | 2026-11-21 | `{oid}` | [spec](https://github.com/tzeusy-org/syzygy/blob/{oid}/{SUBSEC_SPEC}) "
+           f"| Selftest | `git revert {oid}` | `{SUBSEC_TAG}` |\n")
+    ledger.write_text(pending + row)
+    current_pop, current_findings = census(tree)
+    current = current_pop["POLARIS"]
+    held = (subsec_binding(tree) == (original, [], []) and not current_findings
+            and set(current) == set(predecessor)
+            and len(current[ident]["scenarios"]) == 158
+            and current[ident]["name"] == predecessor[ident]["name"]
+            and all(current[i] == r for i, r in predecessor.items() if i != ident))
+    record("subsec-adopted", AGENT_ADOPTIONS, "<no v2.16 row>", row,
+           "v2.16 replaces exactly 034 (148 to 158 scenarios)", current_findings, held, True)
+
+    for name, old, new in (("duplicate-row", row, row + row),
+                           ("wrong-tag", SUBSEC_TAG, SUBSEC_TAG + "-wrong"),
+                           ("wrong-revert", f"git revert {oid}", "git revert " + "0" * 40),
+                           ("missing-spec-link", f"/blob/{oid}/{SUBSEC_SPEC})", f"/blob/other/{SUBSEC_SPEC})"),
+                           ("bad-date", "2026-11-21", "2026-99-21"),
+                           ("no-reason", "| Selftest |", "|  |")):
+        assert old in row
+        ledger.write_text(pending + row.replace(old, new, 1))
+        effective, r1, r2 = subsec_binding(tree)
+        record(f"subsec-{name}", AGENT_ADOPTIONS, old, new,
+               "R1 refusal with no effective amendment", r1 + r2,
+               effective is None and bool(r1) and not r2, False)
+
+    veto = (f"| A-1000 | 2026-11-22 | `8a468bc` | Veto A-999 | Test only | `git revert 8a468bc` | — |\n")
+    ledger.write_text(pending + row + veto)
+    pop, found = census(tree)
+    held = (subsec_disposition(tree, subsec_rows(tree)) == "A-1000" and not found
+            and pop["POLARIS"] == predecessor)
+    record("subsec-vetoed", AGENT_ADOPTIONS, row, veto, "restore the v2.15 034", found, held, True)
+    prior_row = next((line for line in pending.splitlines(keepends=True) if is_findpages_row(line)), None)
+    if prior_row is not None:
+        no_prior = "".join(line for line in pending.splitlines(keepends=True) if not is_findpages_row(line))
+        ledger.write_text(no_prior + row)
+        effective, r1, r2 = subsec_binding(tree)
+        record("subsec-predecessor-missing", AGENT_ADOPTIONS, prior_row, "",
+               "R1 refusal while v2.15 is not in force", r1 + r2,
+               effective is None and any("prior v2.15" in f for f in r1), False)
+
+    ledger.write_text(pending + row)
+    for rel in SUBSEC_SUBJECTS:
+        subject = tree / rel
+        previous = subject.read_bytes()
+        subject.write_bytes(previous + b"\n")
+        effective, r1, r2 = subsec_binding(tree)
+        subject.write_bytes(previous)
+        record(f"subsec-subject-changed-{Path(rel).name}", rel, "<end of file>", "\n",
+               "R2 refusal with no effective amendment", r1 + r2,
+               effective is None and not r1 and bool(r2), False)
+    union = tree / SUBSEC_UNION
+    previous = union.read_text()
+    assert '"REQ-polaris-generation-014"' in previous
+    union.write_text(previous.replace('"REQ-polaris-generation-014"', '"REQ-polaris-generation-099"', 1))
+    report = Report()
+    check_generated(tree, current_pop, report)
+    union.write_text(previous)
+    record("subsec-union-changed", SUBSEC_UNION, '"REQ-polaris-generation-014"', '"REQ-polaris-generation-099"', "R4 refusal",
+           report.findings.get("R4", []), any(SUBSEC_UNION in f for f in report.findings.get("R4", [])), False)
+    status = tree / STATUS
+    previous = status.read_text()
+    status.write_text("\n".join(line for line in previous.split("\n")
+                                if not line.strip().startswith(SUBSEC_STATUS_PREFIX)))
+    report = Report()
+    check_routes(tree, current_pop, report)
+    status.write_text(previous)
+    record("subsec-status-route-missing", STATUS, SUBSEC_STATUS_PREFIX, "", "R5 refusal",
+           report.findings.get("R5", []),
+           any("page subsections v2.16" in f for f in report.findings.get("R5", [])), False)
+    ledger.write_text(pending)
+    report = Report()
+    check_routes(tree, pending_pop, report)
+    claims = [f for f in report.findings.get("R5", []) if "while it is not in force" in f]
+    adopted_status = any(line.strip().startswith(SUBSEC_STATUS_PREFIX) and "is agent-adopted" in line
+                         for line in previous.split("\n"))
+    record("subsec-pending-claims-adoption", AGENT_ADOPTIONS, row, "",
+           "R5 refuses an adopted route while the row is missing", claims,
+           bool(claims) if adopted_status else not claims, not adopted_status)
+    ledger.write_text(pending + row)
+
+    cases = [
+        ("added-section", DECLARED_SOURCE_MODIFIED, ADDED_HEADING),
+        ("wrong-id", "ID: " + ident, "ID: " + POLARIS_ID + "035"),
+        ("renamed", "### Requirement: Agent brief and mechanically checked draft",
+         "### Requirement: Agent brief and page subsections"),
+        ("second-block", "ID: " + ident, "ID: " + ident + "\n\n### Requirement: Extra\n\nID: " + POLARIS_ID + "099"),
+    ]
+    kin_pop = predecessor
+    for name, old, new in cases:
+        assert old in original, name
+        mutant = original.replace(old, new, 1)
+        a, ida = compose_figure_by_id(kin_pop, mutant)
+        b, names = compose_figure_by_name(kin_pop, mutant)
+        record(f"subsec-compose-{name}", SUBSEC_SPEC, old, new,
                "both parsers refuse without partial application", ida + names,
                bool(ida and names and a == b == kin_pop), False)
 
@@ -7648,6 +7910,7 @@ def _selftest_cases(tmp, commit, witnesses, failures, witness_path, base, clean,
     coverage_cases(tmp, base, witnesses, failures)
     infra_cases(tmp, base, witnesses, failures)
     findpages_cases(tmp, base, witnesses, failures)
+    subsec_cases(tmp, base, witnesses, failures)
     poc_d10_cases(base, witnesses, failures)
     reach_cases(tmp, base, witnesses, failures)
     readmit_cases(tmp, base, witnesses, failures)

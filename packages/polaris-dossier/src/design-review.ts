@@ -7,7 +7,8 @@ import { declaredSessionId } from './check.js';
 import { DEFICIENT_SUBJECTS, checkDraftShape, designVerdictSchemaDocument, localDesignVerdictSchema } from './draft-schema.js';
 import { errno } from './inventory.js';
 import type { ReviewProblem, ReviewProblemKind } from './review.js';
-import { parseBoundedJson } from '@syzygy/polaris-generation-core/live';
+import { BoundedJsonError, parseBoundedJson } from '@syzygy/polaris-generation-core/live';
+import { NotARegularFileError, readBoundedFile } from './check-record-read.js';
 import { READER_STANDARDS, READER_STANDARDS_SHA256, READER_STANDARDS_VERSION, composeReaderStandards, type ComposedStandards } from './reader-standards.js';
 import { SHIPPED_PACKS, type ShapePack } from './shape-packs.js';
 import { RUN_LAYOUT } from './state-directory.js';
@@ -91,7 +92,13 @@ export type BriefStandardsRead =
 export function briefStandardsOf(run: string): BriefStandardsRead {
   const name = RUN_LAYOUT.briefRecord;
   let text: string;
-  try { text = fs.readFileSync(path.join(run, name), 'utf8'); } catch (cause) { return { ok: false, reason: `${name} cannot be read (${errno(cause)})` }; }
+  // The reader rule under 262,144 bytes (syzygy-3efd.76): a record that is not a regular file, or is past the bound, is one
+  // it cannot read.
+  try { text = readBoundedFile(path.join(run, name), BRIEF_RECORD_LIMITS.maxBytes).toString('utf8'); } catch (cause) {
+    if (cause instanceof NotARegularFileError) return { ok: false, reason: `${name} cannot be read (not a regular file)` };
+    if (cause instanceof BoundedJsonError && cause.code === 'byte-limit') return { ok: false, reason: `${name} is not JSON within its bounds` };
+    return { ok: false, reason: `${name} cannot be read (${errno(cause)})` };
+  }
   let record: unknown;
   try { record = parseBoundedJson(text, BRIEF_RECORD_LIMITS); } catch { return { ok: false, reason: `${name} is not JSON within its bounds` }; }
   return briefStandardsFromRecord(record);
