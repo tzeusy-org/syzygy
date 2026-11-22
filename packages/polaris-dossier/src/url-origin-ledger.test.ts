@@ -15,6 +15,7 @@ import type { SessionToolsReceipt } from './session-tools.js';
 import * as objectReader from './git-object-reader.js';
 import { createUrlOriginLedger, type UrlOriginLedgerOptions, type UrlOriginReceipt, type UrlWholeSourceBody } from './url-origin-ledger.js';
 import { verifyUrlRenderedSources } from './url-rendered-source-proof.js';
+import { fingerprintUrlOriginProvenance } from './url-frozen-product-history.js';
 
 const canonical = (value: unknown): string => encodeCanonicalJson(value, { maxBytes: 2_097_152, maxNodes: 65_536, maxDepth: 32 });
 const bytes = (text: string) => Buffer.from(text);
@@ -47,6 +48,36 @@ function hostReceipt(f: ReturnType<typeof fixture>, role: 'author' | 'inventory'
 }
 
 describe('host-owned URL origin ledger', () => {
+  it('compares complete semantic provenance across fresh allocation counts and binds every subject and edge', async () => {
+    const f = fixture(), other = createUrlOriginLedger(f.options), fixed = roots(f);
+    const otherFixed = f.options.fixed.map(value => other.fixed(value.id, value.bytes));
+    other.compose(bytes('Own unrelated receipt.'), [otherFixed[0]!]);
+    const firstSource = await f.ledger.sourceSpan({ path: f.file, offset: 0, limit: 1 });
+    const secondSource = await other.sourceSpan({ path: f.file, offset: 0, limit: 1 });
+    const first = f.ledger.compose(bytes('Own same frozen input.'), [fixed[0]!, firstSource]);
+    const second = other.compose(bytes('Own same frozen input.'), [otherFixed[0]!, secondSource]);
+    expect(f.ledger.metadata(first).id).not.toBe(other.metadata(second).id);
+    expect(f.ledger.semanticProvenance([first])).toBe(other.semanticProvenance([second]));
+    const captured = f.ledger.captureProvenance([first]);
+    const domain = { runId: f.options.runId, sourceBindingSha256: sourceBindingSha256(f.options.record.subject), sourcePin: f.commit,
+      basePolicySha256: f.options.screen.policySha256, originPolicySha256: f.options.originPolicy.binding.sha256 };
+    const original = fingerprintUrlOriginProvenance(captured, domain);
+    const changed = (mutate: (graph: typeof captured.graph) => void): void => {
+      const graph = structuredClone(captured.graph); mutate(graph);
+      try { expect(fingerprintUrlOriginProvenance({ graph, keys: captured.keys }, domain)).not.toBe(original); }
+      catch (error) { expect((error as Error).message).toBe('url-run-artifacts-unavailable'); }
+    };
+    changed(graph => Object.assign(graph.nodes[0]!.metadata, { digest: '0'.repeat(64) }));
+    changed(graph => Object.assign(graph.nodes[0]!.metadata, { classes: ['work-history'] }));
+    changed(graph => Object.assign(graph.nodes.find(node => node.derivation.kind === 'source-span')!.derivation, { offset: 1 }));
+    changed(graph => Object.assign(graph.nodes.at(-1)!, { parents: [...graph.nodes.at(-1)!.parents].reverse() }));
+    changed(graph => Object.assign(graph.nodes.at(-1)!.metadata, { originIds: ['origin:changed-reference'] }));
+    changed(graph => Object.assign(graph.nodes.find(node => node.derivation.kind === 'source-span')!.derivation, { objectId: 'b'.repeat(40) }));
+    expect(fingerprintUrlOriginProvenance(captured, { ...domain, sourcePin: 'b'.repeat(40) })).not.toBe(original);
+    expect(fingerprintUrlOriginProvenance(captured, { ...domain, runId: 'another-own-run' })).not.toBe(original);
+    expect(fingerprintUrlOriginProvenance(captured, { ...domain, basePolicySha256: 'b'.repeat(64) })).not.toBe(original);
+    expect(() => f.ledger.semanticProvenance([{ ...first }])).toThrow('url-origin-refused');
+  });
   it('issues genuine opaque local receipts and rejects copied, foreign, changed or absent parents', () => {
     const f = fixture(), other = fixture(), receipt = roots(f)[0]!;
     expect(f.ledger.origins(receipt, f.options.fixed[0]!.bytes).classes).toEqual(['governance-text']);

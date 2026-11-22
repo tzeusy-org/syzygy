@@ -1,4 +1,5 @@
 import { takeUrlRecoveryProducts, type UrlVerifiedRecoveryProducts } from './url-recovery-products.js';
+import { fingerprintUrlOriginProvenance } from './url-frozen-product-history.js';
 import type { UrlOriginDerivation, UrlOriginProvenance, UrlOriginProvenanceNode, UrlOriginMetadata, UrlReportKind } from './url-origin-provenance.js';
 import path from 'node:path';
 import { setImmediate as yieldToPoll } from 'node:timers/promises';
@@ -433,28 +434,37 @@ function create(given: UrlOriginLedgerOptions) {
     live();
     const nodes: UrlOriginProvenanceNode[] = [], seen = new Map<string | UrlOriginReceipt, string>();
     const historicalGraphs = new Map<UrlOriginProvenance, Map<string, string>>();
-    const append = (metadata: UrlOriginMetadata, parents: readonly string[], derivation: UrlOriginDerivation): string => {
+    const append = (metadata: UrlOriginMetadata, parents: readonly string[], derivation: UrlOriginDerivation,
+      referenceMode: UrlOriginProvenanceNode['referenceMode']): string => {
       if (nodes.length >= limits.receipts) fail();
-      const key = `node-${nodes.length + 1}`; nodes.push({ key, metadata, parents, derivation }); return key;
+      const key = `node-${nodes.length + 1}`; nodes.push({ key, metadata, parents, derivation, referenceMode }); return key;
     };
     const historical = (graph: UrlOriginProvenance, key: string): string => {
       let aliases = historicalGraphs.get(graph);
       if (!aliases) { aliases = new Map(); historicalGraphs.set(graph, aliases); }
       const prior = aliases.get(key); if (prior) return prior;
       const node = graph.nodes.find(value => value.key === key); if (!node) fail();
-      const result = append(node.metadata, node.parents.map(parent => historical(graph, parent)), node.derivation);
+      const result = append(node.metadata, node.parents.map(parent => historical(graph, parent)), node.derivation, node.referenceMode);
       aliases.set(key, result); return result;
     };
     const visit = (receipt: UrlOriginReceipt): string => {
       const value = entry(receipt), provenance = lineage.get(receipt);
       if (!provenance) fail();
       const prior = seen.get(receipt); if (prior) return prior;
-      const key = provenance.historical !== undefined ? historical(provenance.historical.graph, provenance.historical.key)
-        : provenance.derivation === null ? fail() : append(metadataOf(value), provenance.parents.map(visit), provenance.derivation);
+      const referenceMode = plans.some(plan => plan.id === value.id) ? 'declared' : 'inherited';
+      let key: string;
+      if (provenance.historical !== undefined) {
+        key = historical(provenance.historical.graph, provenance.historical.key);
+        const prior = nodes.find(node => node.key === key)!;
+        // Preserve original internal references while describing the fresh
+        // imported root's current reference encoding. No old plan is registered.
+        if (prior.referenceMode !== referenceMode) key = append(prior.metadata, prior.parents, prior.derivation, referenceMode);
+      } else key = provenance.derivation === null ? fail()
+        : append(metadataOf(value), provenance.parents.map(visit), provenance.derivation, referenceMode);
       seen.set(receipt, key); return key;
     };
     const keys = receipts.map(visit);
-    live(); return copy({ graph: { format: 'polaris-url-origin-provenance/1', nodes }, keys });
+    live(); return copy({ graph: { format: 'polaris-url-origin-provenance/2', nodes }, keys });
   }
   async function restoreFrozenOrigins(capability: UrlVerifiedRecoveryProducts, expected: {
     readonly run: string; readonly coreSha256: string; readonly declarationSha256: string;
@@ -518,6 +528,12 @@ function create(given: UrlOriginLedgerOptions) {
   live();
   return Object.freeze({
     captureProvenance, restoreFrozenOrigins,
+    semanticProvenance: (receipts: readonly UrlOriginReceipt[]): string => guarded(() => {
+      const captured = captureProvenance(receipts);
+      const fingerprint = fingerprintUrlOriginProvenance(captured, { runId, sourceBindingSha256: sourceBindingSha256(record.subject),
+        sourcePin: record.subject.pinnedRevision.commit, basePolicySha256: screen.policySha256, originPolicySha256: origin.sha256 });
+      live(); return fingerprint;
+    }),
     captureArtifactBindings: () => guarded(() => { live(); return Object.freeze([...artifacts].map(([key, value]) => {
       const colon = key.indexOf(':');
       return Object.freeze({ role: key.slice(0, colon) as Role, path: key.slice(colon + 1), receipt: value.receipt });

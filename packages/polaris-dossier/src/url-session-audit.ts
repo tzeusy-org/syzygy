@@ -77,6 +77,8 @@ interface DesignDeliveryIdentity {
   readonly parentCount: number;
   readonly parentsSha256: string;
   readonly inputsSha256: string;
+  readonly semanticParentsSha256: string;
+  readonly semanticInputsSha256: string;
   readonly storedPopulationSha256: string;
 }
 type DesignDeliveryEvent = Envelope<'design-delivery', DesignDeliveryIdentity>;
@@ -202,7 +204,6 @@ export async function recoverUrlDesignRenderContinuation(input: {
     const original = await inspectUrlDesignProduct(product, binding);
     if (!original || !isClaimedStoppedUrlRun(verified, claim) || !isUrlDesignProductLeaseOpen(product)) return null;
     const identity = receipt.identity;
-    const { deadline: _oldDeadline, ...inputs } = original.products;
     const same = (left: unknown, right: unknown): boolean => designIdentityDigest(left) === designIdentityDigest(right);
     if (original.products.operation !== 'render' || original.rawActive.status !== 'failed'
       || original.draftRevision !== identity.draftRevision || !same(original.original, identity.original)
@@ -212,8 +213,9 @@ export async function recoverUrlDesignRenderContinuation(input: {
       || original.basePolicy.sha256 !== identity.basePolicySha256 || original.originPolicy.sha256 !== identity.originPolicySha256
       || original.profile.sha256 !== identity.registryProfileSha256
       || designIdentityDigest([original.basePolicy, original.originPolicy]) !== identity.policyBindingsSha256
-      || original.parents.length !== identity.parentCount || designIdentityDigest(original.parents) !== identity.parentsSha256
-      || designIdentityDigest(inputs) !== identity.inputsSha256 || designIdentityDigest(original.output) !== identity.storedPopulationSha256) return null;
+      || original.parents.length !== identity.parentCount || original.semanticParentsSha256 !== identity.semanticParentsSha256
+      || original.semanticInputsSha256 !== identity.semanticInputsSha256
+      || designIdentityDigest(original.output) !== identity.storedPopulationSha256) return null;
     const deadline = Math.min(context.deadline, original.products.deadline, Date.now() + URL_SESSION_AUDIT_LIMITS.milliseconds);
     const current = (): boolean => Date.now() < deadline && isClaimedStoppedUrlRun(verified, claim)
       && context.current();
@@ -1179,6 +1181,7 @@ export async function createUrlSessionAudit(given: UrlSessionAuditOptions): Prom
           policyBindingsSha256: designIdentityDigest([productIdentity.basePolicy, productIdentity.originPolicy]),
           parentCount: productIdentity.parents.length, parentsSha256: designIdentityDigest(productIdentity.parents),
           inputsSha256: designIdentityDigest(inputs), storedPopulationSha256: designIdentityDigest(productIdentity.output),
+          semanticParentsSha256: productIdentity.semanticParentsSha256, semanticInputsSha256: productIdentity.semanticInputsSha256,
         };
         if (!current()) throw refused();
         return { identity, deadline, output: productIdentity.output };

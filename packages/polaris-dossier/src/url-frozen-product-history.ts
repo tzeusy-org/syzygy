@@ -1,4 +1,4 @@
-import type { UrlOriginProvenance } from './url-origin-provenance.js';
+import type { UrlOriginProvenance, UrlSemanticOriginDomain } from './url-origin-provenance.js';
 import path from 'node:path';
 import { encodeCanonicalJson, parseBoundedJson } from '@syzygy/polaris-generation-core/live';
 import { deepFreeze, isRecord, sha256 } from '@syzygy/support';
@@ -104,14 +104,15 @@ export function productPopulation(run: string, expected: readonly string[], chec
 /** Validate a closed topological graph. Every class came from the protected
  * producer ledger; this parser confers no capability or historical authority. */
 export function verifyFrozenOriginProvenance(graph: UrlOriginProvenance) {
-  if (!keys(graph, ['format', 'nodes']) || graph.format !== 'polaris-url-origin-provenance/1'
+  if (!keys(graph, ['format', 'nodes']) || graph.format !== 'polaris-url-origin-provenance/2'
     || !Array.isArray(graph.nodes) || graph.nodes.length > URL_ARTIFACT_LIMITS.registrations) refuse();
   const nodes = new Map<string, UrlOriginProvenance['nodes'][number]>();
   const classes = ['code-content', 'code-structure', 'derived-composites', 'evidence-content', 'governance-text', 'project-documentation', 'work-history'];
   const strings = (v: unknown): v is string[] => Array.isArray(v) && v.length <= URL_ARTIFACT_LIMITS.parents
     && v.every(item => typeof item === 'string' && item.length > 0 && item.length <= 256) && new Set(v).size === v.length;
   for (const node of graph.nodes) {
-    if (!keys(node, ['key', 'metadata', 'parents', 'derivation']) || typeof node.key !== 'string' || !/^node-[1-9][0-9]*$/u.test(node.key)
+    if (!keys(node, ['key', 'referenceMode', 'metadata', 'parents', 'derivation'])
+      || !['declared', 'inherited'].includes(node.referenceMode) || typeof node.key !== 'string' || !/^node-[1-9][0-9]*$/u.test(node.key)
       || nodes.has(node.key) || !strings(node.parents) || node.parents.some((parent: string) => !nodes.has(parent))
       || !keys(node.metadata, ['id', 'digest', 'bytes', 'classes', 'originIds']) || typeof node.metadata.id !== 'string'
       || !/^origin:[a-z0-9][a-z0-9._-]{0,127}$/u.test(node.metadata.id) || !hex(node.metadata.digest)
@@ -136,10 +137,38 @@ export function verifyFrozenOriginProvenance(graph: UrlOriginProvenance) {
       const inherited = [...new Set(node.parents.flatMap((parent: string) => nodes.get(parent)!.metadata.classes))];
       if (d.kind !== 'source-reply') inherited.push(d.kind === 'report' && d.report !== 'draft' ? 'evidence-content' : 'derived-composites');
       if (canonical([...new Set(inherited)].sort()) !== canonical(node.metadata.classes)) refuse();
+      const references = [...new Set(node.parents.flatMap((parent: string) => {
+        const prior = nodes.get(parent)!;
+        return prior.referenceMode === 'declared' ? [prior.metadata.id] : prior.metadata.originIds;
+      }))].sort();
+      if (canonical(references) !== canonical(node.metadata.originIds)) refuse();
     }
     nodes.set(node.key, node);
   }
   return nodes;
+}
+
+/** Metadata identity only. Each ordered edge retains its complete semantic
+ * parent. Allocation IDs/reference modes disappear only after exact inherited
+ * origin references have been checked against the closed producer graph. */
+export function fingerprintUrlOriginProvenance(
+  captured: { readonly graph: UrlOriginProvenance; readonly keys: readonly string[] }, domain: UrlSemanticOriginDomain,
+): string {
+  const nodes = verifyFrozenOriginProvenance(captured.graph), hashes = new Map<string, string>();
+  if (!keys(domain, ['runId', 'sourceBindingSha256', 'sourcePin', 'basePolicySha256', 'originPolicySha256'])
+    || typeof domain.runId !== 'string' || domain.runId.length < 1 || domain.runId.length > 256
+    || !/^(?:[a-f0-9]{40}|[a-f0-9]{64})$/u.test(domain.sourcePin)
+    || ![domain.sourceBindingSha256, domain.basePolicySha256, domain.originPolicySha256].every(hex)
+    || !Array.isArray(captured.keys) || captured.keys.length > URL_ARTIFACT_LIMITS.parents) refuse();
+  for (const [key, node] of nodes) {
+    const derived = ['composition', 'report', 'source-reply'].includes(node.derivation.kind);
+    const parents = node.parents.map(parent => hashes.get(parent)!);
+    hashes.set(key, sha256(canonical({ digest: node.metadata.digest, bytes: node.metadata.bytes, classes: node.metadata.classes,
+      derivation: node.derivation, parents,
+      originReferences: derived ? { kind: 'checked-parent-references', parents } : { kind: 'leaf-references', ids: node.metadata.originIds } })));
+  }
+  const roots = captured.keys.map(key => { const value = hashes.get(key); if (!value) refuse(); return value; });
+  return sha256(canonical({ format: 'polaris-url-semantic-origin/1', domain, roots }));
 }
 
 /** Recheck an independent snapshot of the frozen run files, including the

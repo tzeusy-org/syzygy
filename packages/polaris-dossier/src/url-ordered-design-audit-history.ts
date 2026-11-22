@@ -193,7 +193,9 @@ export function verifyColdOrderedDesignAuditHistory(input: {
         || !exact(retained.receipt, ['eventSha256', 'identity']) || !hex(retained.receipt.eventSha256)
         || !exact(retained.receipt.identity, ['state', 'site', 'round', 'sessionId', 'draftRevision', 'original', 'payload', 'view',
           'files', 'pages', 'rendererSha256', 'basePolicySha256', 'originPolicySha256', 'registryProfileSha256',
-          'policyBindingsSha256', 'launchEventSha256', 'parentCount', 'parentsSha256', 'inputsSha256', 'storedPopulationSha256'])) throw new Error('ordered-history-shape');
+          'policyBindingsSha256', 'launchEventSha256', 'parentCount', 'parentsSha256', 'inputsSha256', 'storedPopulationSha256',
+          'semanticParentsSha256', 'semanticInputsSha256'])
+        || !hex(retained.receipt.identity.semanticParentsSha256) || !hex(retained.receipt.identity.semanticInputsSha256)) throw new Error('ordered-history-shape');
       const disposition = retained.disposition;
       const fields = disposition.kind === 'eligible' ? ['kind', 'terminal', 'verdictEventSha256', 'checked', 'verdictCall']
         : disposition.kind === 'retired' ? ['kind', 'terminal'] : disposition.kind === 'stopped' ? ['kind', 'tip'] : null;

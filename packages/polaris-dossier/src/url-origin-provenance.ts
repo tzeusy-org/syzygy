@@ -20,11 +20,17 @@ export type UrlOriginDerivation =
   | { readonly kind: 'authenticated-provider-output' };
 export interface UrlOriginProvenanceNode {
   readonly key: string;
+  /** Descriptive reference encoding, never an origin declaration or grant. */
+  readonly referenceMode: 'declared' | 'inherited';
   readonly metadata: UrlOriginMetadata;
   readonly parents: readonly string[];
   readonly derivation: UrlOriginDerivation;
 }
 export interface UrlOriginProvenance {
-  readonly format: 'polaris-url-origin-provenance/1';
+  readonly format: 'polaris-url-origin-provenance/2';
   readonly nodes: readonly UrlOriginProvenanceNode[];
+}
+export interface UrlSemanticOriginDomain {
+  readonly runId: string; readonly sourceBindingSha256: string; readonly sourcePin: string;
+  readonly basePolicySha256: string; readonly originPolicySha256: string;
 }

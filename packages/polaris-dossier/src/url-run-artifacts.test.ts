@@ -333,6 +333,13 @@ describe('trusted URL artifact producer bridge', () => {
   });
   it('restores sealed product provenance into a genuinely fresh ledger and can freeze another stop', async () => {
     const f = await recoveryFixture(), next = f.fresh();
+    for (let i = 0; i < 3; i++) next.origins.ledger.compose(Buffer.from(`Own unrelated receipt ${i}.`), [next.origins.roots.runControl]);
+    const originalRead = f.bridge.beginRead({ operation: 'render', deadline: Date.now() + 4000 });
+    f.bridge.selectProducts(originalRead, 'author-checks');
+    f.bridge.readProduct(originalRead, 'drafts/rev-0.json');
+    const originalEvidence = f.bridge.revalidateRead(originalRead);
+    const originalSemantic = f.ledger.semanticProvenance(originalEvidence.receipts);
+    f.bridge.cancelRead(originalRead);
     const composed = f.frozen.provenance.nodes.find(node => node.derivation.kind === 'composition')!;
     const underclassified = { ...f.frozen, provenance: { ...f.frozen.provenance, nodes: f.frozen.provenance.nodes.map(node => node !== composed ? node
       : { ...node, metadata: { ...node.metadata, classes: ['work-history'] as const } }) } };
@@ -345,9 +352,16 @@ describe('trusted URL artifact producer bridge', () => {
     expect(next.bridge.hasCommittedReport('author', sha256(b(f.draft)))).toBe(true);
     const previous = f.bridge.checkReceipt(0), restored = next.bridge.checkReceipt(0);
     expect(restored).not.toBe(previous); expect(() => next.origins.ledger.metadata(previous)).toThrow('url-origin-refused');
+    expect(next.origins.ledger.metadata(restored).id).not.toBe(f.ledger.metadata(previous).id);
+    expect(next.origins.ledger.semanticProvenance([restored])).toBe(f.ledger.semanticProvenance([previous]));
     expect(next.origins.ledger.metadata(restored).classes).toEqual(f.ledger.metadata(previous).classes);
     const reads = next.bridge.beginRead({ operation: 'render', deadline: Date.now() + 4000 });
-    expect(Buffer.from(next.bridge.readProduct(reads, 'drafts/rev-0.json').bytes!)).toEqual(b(f.draft)); next.bridge.cancelRead(reads);
+    next.bridge.selectProducts(reads, 'author-checks');
+    expect(Buffer.from(next.bridge.readProduct(reads, 'drafts/rev-0.json').bytes!)).toEqual(b(f.draft));
+    const restoredEvidence = next.bridge.revalidateRead(reads);
+    expect(restoredEvidence.metadata.selections[0]!.originId).not.toBe(originalEvidence.metadata.selections[0]!.originId);
+    expect(next.origins.ledger.semanticProvenance(restoredEvidence.receipts)).toBe(originalSemantic);
+    next.bridge.cancelRead(reads);
     const frozen = next.bridge.captureFrozenHistory();
     expect(verifyUrlFrozenProductHistory(f.run, frozen, f.options.current)).toEqual({ kind: 'verified-frozen-products', authorization: 'none', records: frozen.records.length });
     expect(frozen.records.map(({ path, bytes, sha256 }) => ({ path, bytes, sha256 }))).toEqual(f.frozen.records.map(({ path, bytes, sha256 }) => ({ path, bytes, sha256 })));

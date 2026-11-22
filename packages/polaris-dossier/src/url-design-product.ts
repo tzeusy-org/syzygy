@@ -3,6 +3,7 @@ import { setImmediate as yieldToPoll } from 'node:timers/promises';
 import { isDeepStrictEqual } from 'node:util';
 import { copyOrderedRenderValue as copy, equalOrderedRenderValue } from './url-ordered-render-value.js';
 import { sha256 } from '@syzygy/support';
+import { encodeCanonicalJson } from '@syzygy/polaris-generation-core/live';
 import { briefStandardsFromRecord, buildDesignPacket, standardsInput } from './design-review.js';
 import type { ProducedSiteInput } from './render.js';
 import type { RecordedRunConfig } from './run-record.js';
@@ -46,6 +47,8 @@ export interface UrlDesignProductMetadata extends UrlDesignProductBinding {
   readonly originPolicy: UrlRunDeclaration['originPolicy'];
   readonly profile: UrlRunDeclaration['inference']['profile'];
   readonly parents: readonly UrlOriginMetadata[];
+  readonly semanticParentsSha256: string;
+  readonly semanticInputsSha256: string;
   readonly products: NonNullable<ProducedSiteInput['products']>['metadata'];
   readonly output: { readonly files: number; readonly pages: number; readonly bytes: number;
     readonly population: readonly { readonly path: string; readonly sha256: string; readonly bytes: number }[] };
@@ -137,6 +140,15 @@ export async function validateUrlDesignProduct(input: ProducedSiteInput, options
     if (parents.length > URL_ORIGIN_LEDGER_LIMITS.parents) return null;
     const parentSubjects = parents.map(receipt => ({ receipt }));
     const parentMetadata = copy(ledger.inspectMetadata(parentSubjects));
+    const semanticParentsSha256 = ledger.semanticProvenance(parents);
+    const semanticInputsSha256 = sha256(encodeCanonicalJson({ format: 'polaris-url-semantic-design-inputs/1',
+      binding: { run, runId: input.runId, pinnedRevision: input.pinnedRevision, draftRevision: input.draftRevision,
+        basePolicySha256: declaration.basePolicy.sha256, originPolicySha256: declaration.originPolicy.sha256,
+        profileSha256: declaration.inference.profile.sha256 }, parents: semanticParentsSha256,
+      operation: checked.metadata.operation, snapshotBytes: checked.metadata.snapshotBytes,
+      records: checked.metadata.records.map(({ originId: _allocation, ...record }) => record),
+      selections: checked.metadata.selections.map(({ originId: _allocation, ...selection }) => selection),
+    }, { maxBytes: 2_097_152, maxNodes: 65_536, maxDepth: 32 }));
     const classes = new Set(parentMetadata.flatMap(parent => parent.classes));
     classes.add('derived-composites');
     for (const contentClass of classes) if (!declaration.plannedClasses.includes(contentClass)) return null;
@@ -158,7 +170,8 @@ export async function validateUrlDesignProduct(input: ProducedSiteInput, options
         && sameProducts(checked, currentProducts) && input.products !== undefined && sameProducts(input.products, checked)
         && equalOrderedRenderValue(subject, { run: input.run, runId: input.runId, pinnedRevision: input.pinnedRevision, draftRevision: input.draftRevision,
           input: input.input, files: input.files, packet: input.packet, sourceBodies: input.sourceBodies })
-        && isDeepStrictEqual(parentMetadata, ledger.inspectMetadata(parentSubjects)) && leaseCurrent();
+        && isDeepStrictEqual(parentMetadata, ledger.inspectMetadata(parentSubjects))
+        && semanticParentsSha256 === ledger.semanticProvenance(parents) && leaseCurrent();
     };
     const rendererCurrent = (): Promise<boolean> => urlRendererCurrent(renderer);
     if (checkedView.files !== screened.files || checkedView.pages !== screened.pages
@@ -170,7 +183,8 @@ export async function validateUrlDesignProduct(input: ProducedSiteInput, options
       original: { sha256: packet.sha256, bytes: original.length }, payload: { sha256: checkedView.payloadSha256, bytes: checkedView.payloadBytes },
       view: { sha256: checkedView.sha256, bytes: checkedView.byteLength, format: URL_DESIGN_VIEW_FORMAT, encoding: URL_DESIGN_VIEW_ENCODING },
       renderer: renderer.identity, basePolicy: declaration.basePolicy, originPolicy: declaration.originPolicy, profile: declaration.inference.profile,
-      parents: parentMetadata, products: checked.metadata, output: { files: screened.files, pages: screened.pages, bytes: screened.bytes, population }, rawActive: checkedView.rawActive });
+      parents: parentMetadata, semanticParentsSha256, semanticInputsSha256, products: checked.metadata,
+      output: { files: screened.files, pages: screened.pages, bytes: screened.bytes, population }, rawActive: checkedView.rawActive });
     if (!stable()) return null;
     const capability = Object.freeze({}) as ValidatedUrlDesignProduct;
     const entry: ProductEntry = { metadata, original: Uint8Array.from(original), view: Uint8Array.from(checkedView.bytes),
