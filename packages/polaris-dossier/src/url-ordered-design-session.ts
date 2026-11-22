@@ -247,7 +247,6 @@ export function createOrderedDesignSession(options: Options) {
       counts, branches, inverseInputs, selfCpuMicrosecondsBeforeOutput: 0, outcome };
   };
   const screenOperation = async (input: ScreenInput): Promise<OrderedScreenObservation> => {
-    await requireCurrent();
     const boundary = openOperation(input.operation === 'response' ? 'response' : 'request', Math.max(0, receipts.length - 1));
     try {
       const observed = await screen(input, boundary);
@@ -276,6 +275,9 @@ export function createOrderedDesignSession(options: Options) {
     if (stopped || eligible || busy || request !== null || pending !== null) throw refused();
     busy = true;
     try {
+    // Peer mediation can outlast the product held at relay preflight. Check
+    // and renew it within this effect before reading the screening input.
+    await requireCurrent();
     requireLive();
     if (initial) {
       if (admittedInitial || receipts.length !== 0) throw refused();
@@ -317,11 +319,12 @@ export function createOrderedDesignSession(options: Options) {
   const checkResponse = async (bytes: Uint8Array, contentType: string): Promise<SessionMessageResponseDecision> => {
     let held = false;
     try {
-      requireLive();
       if (busy || eligible || checkedResponse !== null || pending?.step !== 'response-admitted'
         || !/^text\/event-stream(?:\s*;\s*charset=utf-8)?$/iu.test(contentType))
         throw refused();
       busy = true; held = true;
+      await requireCurrent();
+      requireLive();
       const observed = await screenOperation({ ...common(bytes), operation: 'response', contentType });
       if (observed.outcome.operation !== 'response') throw refused();
       const decoded = observed.outcome.result;
