@@ -57,6 +57,7 @@ import type { BriefReport } from './brief.js';
 import type { StartSessionsReport } from './session-handover.js';
 import { createUrlRunArtifacts } from './url-run-artifacts.js';
 import { startUrlRunSessions, type UrlDesignReproduction, type UrlRunSessions, type UrlRunSessionsSummary } from './url-run-sessions.js';
+import { retainUrlStoppedBoundary } from './url-stopped-run.js';
 import { isUrlRunMachineClosedHistory } from './url-run-machine.js';
 import { loadSessionCredential } from './session-credential.js';
 import type { UrlSessionAnswer, UrlSessionQuestionFrame } from './session-control.js';
@@ -344,6 +345,7 @@ interface PreparedUrlRun {
   readonly basePolicyBytes: Uint8Array;
   readonly machine: { readonly governanceRoot: string; readonly protectedRoot: string; readonly parent: UrlParentAdoption };
   readonly openReader: ReturnType<typeof bindUrlSourceReader>;
+  readonly sourceStore: UrlSourceStore;
   readonly initializedCoreBytes: Uint8Array;
   readonly effectiveDeclaration: NonNullable<Parameters<typeof createUrlRunArtifacts>[0]['effectiveDeclaration']>;
   readonly initial: { brief: BriefReport; sessions: StartSessionsReport };
@@ -352,7 +354,7 @@ const preparedUrlRuns = new Map<string, PreparedUrlRun>();
 type UrlArtifacts = ReturnType<typeof createUrlRunArtifacts>;
 interface CheckedSupervisor {
   readonly prepared: Pick<PreparedUrlRun, 'record' | 'effectiveDeclaration' | 'screen' | 'renderer' | 'origins'
-    | 'current' | 'openReader' | 'directories'>;
+    | 'current' | 'openReader' | 'directories' | 'auditDirectory' | 'sourceStore'>;
   readonly artifacts: UrlArtifacts; readonly runtime: UrlRunSessions; readonly stop: UrlSupervisorStop;
 }
 async function prepareSupervisorArtifacts(run: string, prepared: PreparedUrlRun, ports: CliPorts): Promise<UrlArtifacts> {
@@ -809,7 +811,7 @@ async function setUp(options: Options, ports: CliPorts, screen: Screen): Promise
     current: currentRun, sessionCurrent, directories, canaries, auditDirectory: attemptDirectory, originPolicySha256: origin.binding.sha256,
     basePolicyBytes: Uint8Array.from(policy.bytes),
     machine: { governanceRoot: path.join(policyRoot, '.syzygy'), protectedRoot: path.join(attemptDirectory, 'machine-lifecycle'), parent: adoption },
-    openReader, initializedCoreBytes: Buffer.from(baseText), effectiveDeclaration: {
+    openReader, sourceStore: store, initializedCoreBytes: Buffer.from(baseText), effectiveDeclaration: {
       declaration: declaration.declaration, bytes: Buffer.from(declaration.text), context,
     }, initial: { brief: brief.doc as unknown as BriefReport, sessions: all.report } });
   // The compatible supervisor record carries identities only. Role prompts
@@ -1335,7 +1337,15 @@ async function runUrlStages(stateRoot: string, ports: CliPorts, state: Superviso
   catch { phase = 'stop control unavailable'; }
   const cleaned = cleanupConfirmed(stopped, finalStop === 'requested');
   if (cleaned) state.stopped ??= isoOf(Date.now());
-  if (finalStop === 'requested') phase = 'operator stop requested';
+  if (finalStop === 'requested') {
+    const retained = cleaned && state.stopGeneration !== undefined && state.declarationSha256 !== undefined
+      && retainUrlStoppedBoundary({ root: URL_HOST_ROOT, auditDirectory: context.prepared.auditDirectory,
+        subject: { run, runId: state.runId, generation: state.stopGeneration, sourceStore: context.prepared.sourceStore,
+          coreSha256: effectiveDeclaration.declaration.baseRunSha256, declarationSha256: state.declarationSha256,
+          sourcePin: record.subject.pinnedRevision.commit, deadline },
+        settled: stopped, now: ports.now ?? Date.now, current, capture: context.artifacts.captureFrozenHistory });
+    phase = retained ? 'operator stop requested, checked history retained' : 'operator stop requested, recovery history unavailable';
+  }
   if (final !== null && finalStop === 'ready') {
     const result = final;
     phase = 'final render produced, run closure unconfirmed';
