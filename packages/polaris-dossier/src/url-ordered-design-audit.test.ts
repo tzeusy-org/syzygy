@@ -2,9 +2,9 @@ import { describe, expect, it, vi } from 'vitest';
 import { encodeCanonicalJson } from '@syzygy/polaris-generation-core/live';
 import { sha256 } from '@syzygy/support';
 import { createOrderedDesignSessionProfile } from './session-profile.js';
-import { planOrderedDesignBytes } from './url-design-delivery.js';
-import { verifyOrderedDesignAuditPrefix, verifyOrderedDesignTerminalEvidence, type OrderedDesignAuditEvent, type OrderedDesignAuditReference } from './url-ordered-design-audit.js';
-import { sealOrderedDesignHistoryAttempt, verifySealedOrderedDesignAuditHistory, type OrderedDesignHistoryRow } from './url-ordered-design-audit-history.js';
+import { planOrderedDesignBytes, isOrderedDesignPlanFor, materializeOrderedDesignPart } from './url-design-delivery.js';
+import { verifyOrderedDesignAuditPrefix, verifyHistoricalOrderedDesignAuditPrefix, verifyOrderedDesignTerminalEvidence, type OrderedDesignAuditEvent, type OrderedDesignAuditReference } from './url-ordered-design-audit.js';
+import { sealOrderedDesignHistoryAttempt, captureSealedOrderedDesignHistoryAttempt, verifyColdOrderedDesignAuditHistory, verifySealedOrderedDesignAuditHistory, type OrderedDesignHistoryRow } from './url-ordered-design-audit-history.js';
 import * as sessionAudit from './url-session-audit.js';
 import type { UrlDesignProductMetadata } from './url-design-product.js';
 import { isIssuedOrderedDesignTerminal, createOrderedDesignAuditWriter } from './url-ordered-design-writer.js';
@@ -353,6 +353,25 @@ function sealedFixture(epoch = 1, nativeStdin = verdictText) {
     eligibleRows: [deliveryRow, ...inner, verdict], retiredRows: [deliveryRow, inner[0]!, retireRow] };
 }
 
+describe('protected historical ordered metadata', () => {
+  it('checks archived plan metadata and the whole transcript without issuing a live plan', () => {
+    const f = archive().evidence;
+    const plan = JSON.parse(JSON.stringify(f.plan)) as typeof f.plan;
+    const input = { profile: f.profile, plan, principal: f.principal, records: f.records, asOf: start + 1000 };
+    expect(isOrderedDesignPlanFor(plan, f.profile.transcript.partition)).toBe(false);
+    expect(verifyOrderedDesignAuditPrefix(input)).toBeNull();
+    expect(verifyHistoricalOrderedDesignAuditPrefix(input)).toMatchObject({ next: null, terminalCandidate: { terminal: f.terminal } });
+    expect(() => materializeOrderedDesignPart(plan, Buffer.from('untrusted bytes'), plan.manifest.parts[0]!.path)).toThrow();
+    for (const field of ['manifestSha256', 'manifestText', 'preparedText'] as const) {
+      expect(verifyHistoricalOrderedDesignAuditPrefix({ ...input, plan: { ...plan, [field]: 'changed' } })).toBeNull();
+    }
+    expect(verifyHistoricalOrderedDesignAuditPrefix({ ...input, records: [...f.records.slice(0, -1), Buffer.from('{}')] })).toBeNull();
+    const displaced = JSON.parse(JSON.stringify(plan)) as typeof plan;
+    (displaced.manifest.parts[0] as { offset: number }).offset = 1;
+    expect(verifyHistoricalOrderedDesignAuditPrefix({ ...input, plan: displaced })).toBeNull();
+  });
+});
+
 describe('sealed ordered design audit history', () => {
   it('requires genuine scoped producers and exact frozen artifact bytes before issuing a seal', () => {
     const fixture = sealedFixture();
@@ -386,6 +405,14 @@ describe('sealed ordered design audit history', () => {
     });
     expect(Object.isFrozen(verified?.attempts[0])).toBe(true);
     expect(verifySealedOrderedDesignAuditHistory({ ...given, attempts: [{ ...seal }] })).toBeNull();
+    const captured = captureSealedOrderedDesignHistoryAttempt(seal);
+    if (captured === null) throw new Error('missing actual captured plan');
+    const retained = JSON.parse(JSON.stringify(captured)) as typeof captured;
+    const cold = { ...given, attempts: [retained], profileSha256: fixture.evidence.profile.digest };
+    expect(verifyColdOrderedDesignAuditHistory(cold)).toEqual(verified);
+    expect(verifyColdOrderedDesignAuditHistory({ ...cold, profileSha256: sha256('other profile') })).toBeNull();
+    expect(verifyColdOrderedDesignAuditHistory({ ...cold, attempts: [{ ...retained, principal: 'other-principal' }] })).toBeNull();
+
     for (const key of ['project', 'pin', 'principal', 'deadline'] as const) {
       expect(verifySealedOrderedDesignAuditHistory({ ...given, subject: { ...given.subject, [key]: 'wrong' } })).toBeNull();
     }
@@ -412,6 +439,24 @@ describe('sealed ordered design audit history', () => {
     if (seal === null) throw new Error('missing fixture seal');
     expect(verifySealedOrderedDesignAuditHistory({ rows: fixture.eligibleRows, attempts: [seal],
       subject: fixture.subject, asOf: fixture.evidence.asOf })).toBeNull();
+  });
+
+  it('treats a protected stop cut as retired work and never upgrades a partial transfer to eligibility', () => {
+    const f = sealedFixture();
+    f.authenticate();
+    let seal;
+    try { seal = sealOrderedDesignHistoryAttempt(f.retired); } finally { vi.restoreAllMocks(); }
+    if (seal === null) throw new Error('own retired seal unavailable');
+    const captured = captureSealedOrderedDesignHistoryAttempt(seal);
+    if (captured === null) throw new Error('own retired metadata unavailable');
+    const rows = f.retiredRows.slice(0, -1);
+    const payload = rows.at(-1)!.event.payload as { id: string };
+    const tip = { id: payload.id, sha256: digest(payload) };
+    const attempts = [{ ...captured, disposition: { kind: 'stopped' as const, tip } }];
+    const cold = { rows, attempts, subject: f.subject, profileSha256: f.evidence.profile.digest, asOf: start + 1000 };
+    expect(verifyColdOrderedDesignAuditHistory(cold)?.attempts).toMatchObject([{ disposition: 'stopped', recordCount: 1 }]);
+    expect(verifyColdOrderedDesignAuditHistory({ ...cold, attempts: [{ ...attempts[0]!, disposition: { kind: 'stopped', tip: changed } }] })).toBeNull();
+    expect(verifyColdOrderedDesignAuditHistory({ ...cold, rows: f.eligibleRows })).toBeNull();
   });
 
   it('retains a properly anchored retirement and refuses pending or ambiguous epochs', () => {

@@ -1,6 +1,7 @@
 import path from 'node:path';
 import { encodeCanonicalJson } from '@syzygy/polaris-generation-core/live';
 import { sha256 } from '@syzygy/support';
+import { readSessionRelayAuditEvidence } from './session-relay.js';
 import type { SessionCredential } from './session-credential.js';
 import type { SessionAdmission, SessionContentClass } from './session-egress-policy.js';
 import { isOrderedDesignSessionProfile } from './session-profile.js';
@@ -176,6 +177,10 @@ export async function startUrlOrderedAttempt(input: UrlOrderedAttemptOptions) {
         return admission;
       },
       audit: async event => {
+        if (!host) throw refused();
+        const observed = readSessionRelayAuditEvidence(host.relay, event);
+        if (observed === null) throw refused();
+        if (observed.usage !== null) await input.audit.append({ kind: 'usage', role: 'design', scope, payload: observed.usage });
         await input.audit.append({ kind: 'relay', role: 'design', scope, payload: event });
         if (event.event === 'response-admitted' && event.response?.stopReason === 'end_turn' && !(await consumeTerminal())) throw refused();
       },

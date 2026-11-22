@@ -11,7 +11,8 @@ import { publishUrlMachineLifecycle, type UrlMachineLifecycleResult, type UrlMac
 import { readUrlMachineClient, type UrlMachineClientContext, type UrlMachineClientKind, type UrlMachineClientRecord, type UrlMachineOperation } from './url-machine-instance.js';
 import { captureUrlMachinePeer, closeUrlMachinePeer, prepareUrlMachineListenerAsync,
   type UrlMachinePeer, type UrlMachinePeerAudit } from './url-machine-peer.js';
-import { initializeUrlMachineStore } from './url-machine-store.js';
+import { initializeUrlMachineStore, openUrlMachineStore } from './url-machine-store.js';
+import { isColdUrlRunMachineHistory, type ColdUrlRunMachineHistory } from './url-machine-cold-history.js';
 import { isPreparedUrlRolePlan, type UrlRolePlan } from './url-role-plan.js';
 import type { UrlParentAdoption } from './url-parent-adoption.js';
 import { urlMachineReaderProgram, type UrlRuntime } from './url-runtime.js';
@@ -43,6 +44,16 @@ export interface UrlRunMachineOptions {
   readonly runId: string;
   readonly runtime: UrlRuntime;
   readonly plans: readonly UrlRolePlan[];
+  /** Ordered unique subset with an exact genuinely prepared plan per role.
+   * An empty subset initializes no fresh endpoint scope. Default: four roles. */
+  readonly requiredRoles?: readonly ViewRole[];
+  /** Independently held exclusive continuation claim. This does not obtain or
+   * persist a claim and never falls back to initialization of another store. */
+  readonly resume?: {
+    readonly history: ColdUrlRunMachineHistory;
+    readonly identitySha256: string;
+    readonly current: () => boolean;
+  };
   readonly deadline: number;
   readonly now: () => number;
   readonly current: () => boolean;
@@ -74,26 +85,38 @@ export function isUrlRunMachineClosedHistory(value: unknown): value is UrlRunMac
  * accepted peer supplies its independently attested verifier; no process tuple
  * from a role, prompt, saved report or socket path can issue an instance. */
 export async function createUrlRunMachine(input: UrlRunMachineOptions) {
-  input = Object.freeze({ ...input, plans: Object.freeze([...input.plans]) });
+  input = Object.freeze({ ...input, plans: Object.freeze([...input.plans]),
+    requiredRoles: Object.freeze([...(input.requiredRoles ?? URL_ROLES)]),
+    ...(input.resume === undefined ? {} : { resume: Object.freeze({ ...input.resume }) }) });
+  const requiredRoles = input.requiredRoles!;
+  const parentCurrent = (): boolean => input.current() && (input.resume === undefined || input.resume.current() === true);
   const reader = urlMachineReaderProgram(input.runtime);
-  if (reader === null || input.plans.length !== URL_ROLES.length
-    || input.plans.some((plan, index) => !isPreparedUrlRolePlan(plan) || plan.role !== URL_ROLES[index]
+  if (reader === null || new Set(requiredRoles).size !== requiredRoles.length
+    || requiredRoles.some((role, index) => !URL_ROLES.includes(role) || (index > 0 && URL_ROLES.indexOf(role) <= URL_ROLES.indexOf(requiredRoles[index - 1]!)))
+    || input.plans.length !== requiredRoles.length
+    || input.plans.some((plan, index) => !isPreparedUrlRolePlan(plan) || plan.role !== requiredRoles[index]
       || plan.profile.input.binding.run !== input.runId || plan.profile.input.binding.role !== plan.role)
     || input.parent.subjects.find(subject => subject.path === URL_ORIGIN_POLICY_PATH)?.sha256 !== input.originPolicySha256
-    || !input.current() || (input.effectCurrent !== undefined && input.effectCurrent() !== true)
-    || !(await input.reverify()) || !input.current()
+    || !parentCurrent() || (input.effectCurrent !== undefined && input.effectCurrent() !== true)
+    || !(await input.reverify()) || !parentCurrent()
     || (input.effectCurrent !== undefined && input.effectCurrent() !== true)) throw refuse();
   const canonicalRoot = path.join(input.governanceRoot, 'governance/policies/dossier-machine-clients');
   // Preserve the shared checkout's reviewer access. Namespace exclusion, not
   // tightening the governance directory's ACL, protects it from role clients.
-  await mkdir(canonicalRoot, { recursive: true, mode: 0o770 });
-  if (await realpath(canonicalRoot) !== canonicalRoot || !input.current()) throw refuse();
-  const store = await initializeUrlMachineStore({ governanceRoot: input.governanceRoot, protectedRoot: input.protectedRoot,
-    deadline: input.deadline, now: input.now, current: input.current });
+  if (input.resume === undefined) await mkdir(canonicalRoot, { recursive: true, mode: 0o770 });
+  if (await realpath(canonicalRoot) !== canonicalRoot || !parentCurrent()) throw refuse();
+  const resumed = input.resume;
+  if (resumed !== undefined && (!isColdUrlRunMachineHistory(resumed.history)
+    || resumed.identitySha256 !== resumed.history.identitySha256 || input.now() < resumed.history.observedAt || !resumed.current())) throw refuse();
+  const storeOptions = { governanceRoot: input.governanceRoot, protectedRoot: input.protectedRoot,
+    deadline: input.deadline, now: input.now, current: parentCurrent };
+  const store = resumed === undefined ? await initializeUrlMachineStore(storeOptions)
+    : await openUrlMachineStore(storeOptions, resumed.identitySha256);
   if (store === null) throw refuse();
   const binding = Object.freeze({ controllerSha256: input.runtime.inputTreeSha256,
     parentBindingSha256: sha256(canonical({ rowId: input.parent.rowId, landedCommit: input.parent.landedCommit,
       tagObject: input.parent.tagObject, subjects: input.parent.subjects })) });
+  const retained = resumed?.history.clients ?? [];
   const clients = new Map<string, Client>(), peers = new Set<UrlMachinePeer>();
   let stopped = false, closing = false;
   let mutations: Promise<unknown> = Promise.resolve();
@@ -102,8 +125,28 @@ export async function createUrlRunMachine(input: UrlRunMachineOptions) {
     mutations = result.catch(() => undefined);
     return result;
   };
-  const current = (): boolean => !stopped && !closing && input.current()
+  const current = (): boolean => !stopped && !closing && parentCurrent()
     && (input.effectCurrent === undefined || input.effectCurrent() === true) && input.now() < input.deadline;
+  const verifyTerminal = async (context: UrlMachineClientContext, terminal: Terminal): Promise<number | null> => {
+    let confirmedAt: number | null = null;
+    const verified = await store.exclusive(context.clientId, input.deadline, async lease => {
+      const snapshot = await lease.read();
+      if (!snapshot || !lease.current()) return;
+      if (terminal.kind === 'never-issued') {
+        if (snapshot.anchor.kind !== 'never-issued' || !canonical(snapshot.anchor).equals(canonical(terminal))
+          || snapshot.canonical !== null || snapshot.projection !== null || snapshot.audit !== null) return;
+      } else {
+        if (snapshot.anchor.kind !== 'committed' || snapshot.canonical === null
+          || !canonical(snapshot.anchor.head).equals(canonical(terminal.head))
+          || !canonical(snapshot.audit).equals(canonical(terminal.head))
+          || !canonical(snapshot.projection).equals(canonical(terminal.head.record))) return;
+        const read = readUrlMachineClient(snapshot.canonical, { ...context, now: lease.now() });
+        if (!read.ok || read.record.revokedAt === null || read.sha256 !== terminal.head.record.sha256) return;
+      }
+      if (lease.current()) confirmedAt = lease.now();
+    });
+    return verified ? confirmedAt : null;
+  };
   let closed: Promise<{ readonly lifecycle: 'retired' | 'Unknown' }> | undefined;
   const close = (): Promise<{ readonly lifecycle: 'retired' | 'Unknown' }> => {
     if (closed !== undefined) return closed;
@@ -112,8 +155,17 @@ export async function createUrlRunMachine(input: UrlRunMachineOptions) {
     // The store's parent authority remains live solely to publish retirement.
     for (const peer of peers) closeUrlMachinePeer(peer);
     return closed = serialize(async () => {
-      let retired = clients.size === URL_ROLES.length * 2, confirmedAt = 0;
+      let retired = clients.size === requiredRoles.length * 2, confirmedAt = 0;
       const history: { readonly context: UrlMachineClientContext; readonly terminal: Terminal }[] = [];
+      // Retained clients are immutable terminal history, never reissued or
+      // silently replaced by the new role allocation set.
+      for (const client of retained) {
+        try {
+          const at = await verifyTerminal(client.context, client.terminal);
+          if (at === null) retired = false;
+          else { confirmedAt = Math.max(confirmedAt, at); history.push(client); }
+        } catch { retired = false; }
+      }
       // The parent authority remains alive for retirement and protected
       // readback. Live effect authority was already withdrawn synchronously.
       for (const client of clients.values()) {
@@ -127,30 +179,13 @@ export async function createUrlRunMachine(input: UrlRunMachineOptions) {
             else { client.record = next; client.head = result.receipt; }
           } catch { retired = false; }
         }
-        let terminal: Terminal | undefined;
+        const terminal: Terminal | undefined = client.record === null
+          ? { kind: 'never-issued', clientId: client.context.clientId, witnessSha256: client.witnessSha256 }
+          : client.head === null ? undefined : { kind: 'revoked', head: client.head };
         try {
-          const verified = await store.exclusive(client.context.clientId, input.deadline, async lease => {
-            const snapshot = await lease.read();
-            if (!snapshot || !lease.current()) return;
-            if (client.record === null) {
-              if (snapshot.anchor.kind !== 'never-issued' || snapshot.anchor.clientId !== client.context.clientId
-                || snapshot.anchor.witnessSha256 !== client.witnessSha256 || snapshot.canonical !== null
-                || snapshot.projection !== null || snapshot.audit !== null) return;
-              terminal = snapshot.anchor;
-            } else {
-              if (client.head === null || snapshot.anchor.kind !== 'committed' || snapshot.canonical === null
-                || !canonical(snapshot.anchor.head).equals(canonical(client.head))
-                || !canonical(snapshot.audit).equals(canonical(client.head))
-                || !canonical(snapshot.projection).equals(canonical(client.head.record))) return;
-              const read = readUrlMachineClient(snapshot.canonical, { ...client.context, now: lease.now() });
-              if (!read.ok || read.record.revokedAt === null || read.sha256 !== client.head.record.sha256) return;
-              terminal = { kind: 'revoked', head: client.head };
-            }
-            if (!lease.current()) { terminal = undefined; return; }
-            confirmedAt = Math.max(confirmedAt, lease.now());
-          });
-          if (!verified || terminal === undefined) retired = false;
-          else history.push({ context: client.context, terminal });
+          const at = terminal === undefined ? null : await verifyTerminal(client.context, terminal);
+          if (at === null || terminal === undefined) retired = false;
+          else { confirmedAt = Math.max(confirmedAt, at); history.push({ context: client.context, terminal }); }
         } catch { retired = false; }
       }
       stopped = true;
@@ -158,9 +193,9 @@ export async function createUrlRunMachine(input: UrlRunMachineOptions) {
       let observedAt = 0;
       try {
         observedAt = input.now();
-        if (!input.current() || !Number.isSafeInteger(observedAt) || observedAt < confirmedAt || observedAt >= input.deadline) retired = false;
+        if (!parentCurrent() || !Number.isSafeInteger(observedAt) || observedAt < confirmedAt || observedAt >= input.deadline) retired = false;
       } catch { retired = false; }
-      if (history.length !== URL_ROLES.length * 2) retired = false;
+      if (history.length !== retained.length + requiredRoles.length * 2) retired = false;
       const result = Object.freeze({ lifecycle: retired ? 'retired' as const : 'Unknown' as const });
       if (retired) {
         const evidence = deepFreeze({ kind: 'closed-url-run-machine-history' as const, authorization: 'none' as const, replay: 'forbidden' as const,
@@ -171,6 +206,24 @@ export async function createUrlRunMachine(input: UrlRunMachineOptions) {
     });
   };
   try {
+    if (resumed !== undefined) {
+      if (!current() || store.identitySha256 !== resumed.identitySha256
+        || !canonical(resumed.history.binding).equals(canonical(binding)) || retained.length > 16
+        || retained.length + requiredRoles.length * 2 > 16) throw refuse();
+      const ids = new Set<string>();
+      for (const { context, terminal } of retained) {
+        const plan = input.plans.find(value => value.role === context.role);
+        if (ids.has(context.clientId) || context.runId !== input.runId || context.sourcePin !== input.pin
+          || context.policySha256 !== input.originPolicySha256 || context.deadline !== input.deadline
+          || (plan !== undefined && context.profileSha256 !== plan.profile.digest)
+          || (terminal.kind === 'revoked' && !canonical(terminal.head.binding).equals(canonical(binding)))
+          || await verifyTerminal(context, terminal) === null || !current()) throw refuse();
+        ids.add(context.clientId);
+      }
+      // No saved context is a plan: only the independently prepared selected
+      // plans below can allocate a fresh role endpoint.
+      if (!(await input.reverify()) || !current()) throw refuse();
+    }
     const transports = new Map<string, SessionMachineTransport>();
     for (const plan of input.plans) for (const kind of ['mcp-shim', 'inference-bridge'] as const) {
       const slot = await store.allocateClient(input.deadline);

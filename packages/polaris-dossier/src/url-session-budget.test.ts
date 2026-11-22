@@ -1,9 +1,44 @@
 import { describe, expect, it } from 'vitest';
-import { createUrlSessionBudget } from './url-session-budget.js';
+import { createUrlSessionBudget, prepareUrlBudgetResume } from './url-session-budget.js';
 
 const admission = { digest: 'a'.repeat(64), bytes: 100, classes: ['governance-text'] as const, originIds: ['own:fixture'] };
 const usage = { inputTokens: 3, outputTokens: 5, cacheCreationInputTokens: 7, cacheReadInputTokens: 11 };
 describe('shared URL host budget capture', () => {
+  it('continues verified lifetime spend once, preserves Unknown counts and never renews the deadline or limits', () => {
+    let now = 5;
+    const limits = { deadline: 100, turnBudget: 4, tokenBudget: 80, now: () => now };
+    const seed = { spend: { requestReservations: 2, completeUsageReports: 1, reportedTokens: 26 },
+      deadline: 100, turnBudget: 4, tokenBudget: 80, observedAt: 5 };
+    const resume = prepareUrlBudgetResume(seed)!;
+    expect(resume).not.toBeNull();
+    expect(() => createUrlSessionBudget({ ...limits, resume: { ...resume } })).toThrow('url-budget-resume-unavailable');
+    expect(() => createUrlSessionBudget({ ...limits, deadline: 101, resume })).toThrow('url-budget-resume-unavailable');
+    expect(() => createUrlSessionBudget({ ...limits, turnBudget: 5, resume })).toThrow('url-budget-resume-unavailable');
+    const b = createUrlSessionBudget({ ...limits, resume });
+    expect(() => createUrlSessionBudget({ ...limits, resume })).toThrow('url-budget-resume-unavailable');
+    expect(b.snapshot()).toMatchObject({ requestReservations: 2, completeUsageReports: 1, reportedTokens: 26, pendingRoles: [], heldDesignTurns: 0 });
+    expect(b.reserve('inventory', admission)).toBe(true); expect(b.observeUsage('inventory', usage)).toBe(true);
+    expect(b.reserveCount('fidelity', admission)).toBe(true); expect(b.observeCount('fidelity')).toBe(true);
+    expect(b.reserve('author', admission)).toBe(false);
+    expect(b.snapshot()).toMatchObject({ requestReservations: 4, completeUsageReports: 2, reportedTokens: 52, reason: 'turn-budget' });
+    const tokenSeed = prepareUrlBudgetResume({ ...seed, turnBudget: null, tokenBudget: 50 })!;
+    const tokenBound = createUrlSessionBudget({ ...limits, turnBudget: null, tokenBudget: 50, resume: tokenSeed });
+    expect(tokenBound.reserve('inventory', admission)).toBe(true); expect(tokenBound.observeUsage('inventory', usage)).toBe(false);
+    expect(tokenBound.snapshot()).toMatchObject({ requestReservations: 3, completeUsageReports: 2, reportedTokens: 52, reason: 'token-budget' });
+    const counts = prepareUrlBudgetResume({ ...seed, spend: { requestReservations: 2, completeUsageReports: 0, reportedTokens: 'Unknown' } })!;
+    const c = createUrlSessionBudget({ ...limits, resume: counts });
+    expect(c.snapshot().reportedTokens).toBe('Unknown');
+    now = 100; expect(c.reserve('inventory', admission)).toBe(false); expect(c.snapshot().reason).toBe('deadline');
+    const rollback = createUrlSessionBudget({ ...limits, now: () => 4, resume: prepareUrlBudgetResume(seed)! });
+    expect(rollback.current()).toBe(false);
+    for (const invalid of [
+      { ...seed, spend: { ...seed.spend, requestReservations: 4 } },
+      { ...seed, spend: { ...seed.spend, reportedTokens: 80 } },
+      { ...seed, spend: { ...seed.spend, completeUsageReports: 3 } },
+      { ...seed, spend: { ...seed.spend, completeUsageReports: 0 } },
+      { ...seed, observedAt: 100 },
+    ]) expect(prepareUrlBudgetResume(invalid)).toBeNull();
+  });
   it('bounds a count exchange without recording its estimate as inference usage', () => {
     const plan = { deadline: 100, turnBudget: 2, tokenBudget: 100, now: () => 1 };
     const budget = createUrlSessionBudget(plan);

@@ -310,6 +310,8 @@ describe('reading difference', () => {
   it('says why where the state root cannot be listed or the draft does not parse', () => {
     expect(readingDifference(path.join(tempDir('reading-difference-'), 'gone', id('c')), 'kestrel', NOW, LATER)).toEqual({ state: 'unknown', why: 'the state root could not be listed', unreadableRuns: 0, unreadableCheckRecords: 0 });
     expect(readingDifference('/nowhere/run', 'kestrel', NOW, undefined)).toEqual({ state: 'unknown', why: 'this draft does not parse, so it has no reading ledger', unreadableRuns: 0, unreadableCheckRecords: 0 });
+    // Version 2.11: a bounded form has its own words, and the state root is not listed for it (an unlistable root changes nothing).
+    expect(readingDifference('/nowhere/run', 'kestrel', NOW, 'bounded')).toEqual({ state: 'unknown', why: 'this check\'s record was written in its bounded form, which keeps no reading ledger', unreadableRuns: 0, unreadableCheckRecords: 0 });
   });
 
   it('compares two ledgers with no page in common', () => {

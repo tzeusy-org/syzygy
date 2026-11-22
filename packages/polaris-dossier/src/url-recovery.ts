@@ -8,7 +8,7 @@ import type { GateSources } from './gate-sources.js';
 import { reconstructColdUrlRunMachineHistory } from './url-machine-cold-history.js';
 import { URL_HOST_ROOT } from './url-mode-registry.js';
 import { readUrlParentAdoption } from './url-parent-adoption.js';
-import { committedUrlPoliciesCurrentAsync, readCommittedPolicy, readCommittedUrlOriginPolicy, samePolicy } from './policy-snapshot.js';
+import { committedUrlPoliciesCurrent, committedUrlPoliciesCurrentAsync, readCommittedPolicy, readCommittedUrlOriginPolicy, samePolicy } from './policy-snapshot.js';
 import type { SupervisorState } from './polaris.js';
 import { reverifyPinnedRevision } from './reverify.js';
 import { buildDossierScreen, placementSubjectOf } from './screen.js';
@@ -16,14 +16,25 @@ import { URL_CLI_PROGRAM, verifySupportedUrlCli } from './session-launch.js';
 import type { ViewRole } from './session-view.js';
 import { RUN_LAYOUT } from './state-directory.js';
 import { URL_HELPER_LAUNCH_FILES } from './url-launch-history.js';
-import { verifyUrlFrozenProductHistory } from './url-run-artifacts.js';
+import { verifyUrlFrozenProductHistory } from './url-frozen-product-history.js';
 import { snapshotProductFile } from './url-product-reads.js';
 import { readUrlRuntime } from './url-runtime.js';
 import { verifyUrlSessionAuditHistory } from './url-session-audit-history.js';
 import { bindUrlSourceReader } from './url-source-reader.js';
-import { readUrlStoppedBoundary } from './url-stopped-run.js';
+import { acquireUrlRecoveryClaim, readUrlStoppedBoundaryChain, type UrlRecoveryClaim } from './url-stopped-run.js';
+import { prepareUrlBudgetResume } from './url-session-budget.js';
+import { verifyUrlRecoveryProducts } from './url-recovery-products.js';
 
 const CANONICAL_LIMITS = { maxBytes: 65_536, maxNodes: 4096, maxDepth: 16 };
+const verifiedRuns = new WeakMap<object, () => Promise<UrlRecoveryClaim | null>>();
+
+/** Only an exact successful cold-verifier result can request exclusive
+ * recovery. Saved/copied results never issue a claim. A successful call
+ * durably consumes the boundary before returning active ownership; the caller
+ * holds that claim through cleanup/next stop. */
+export async function claimStoppedUrlRun(value: unknown): Promise<UrlRecoveryClaim | null> {
+  return isRecord(value) ? await verifiedRuns.get(value)?.() ?? null : null;
+}
 
 function absent(run: string, file: string): boolean {
   try { fs.lstatSync(path.join(run, file)); }
@@ -63,10 +74,16 @@ export async function verifyStoppedUrlRun(state: SupervisorState, input: {
     const clockCurrent = (): boolean => now() < deadline;
     const expected = { run, runId: state.runId, generation: state.stopGeneration, coreSha256: declaration.baseRunSha256,
       declarationSha256: read.sidecarSha256, sourcePin: declaration.pinnedCommit, deadline };
-    const sealed = readUrlStoppedBoundary(URL_HOST_ROOT, expected, now());
-    if (!sealed || !current() || sealed.record.products.coreSha256 !== expected.coreSha256
+    const history = readUrlStoppedBoundaryChain(URL_HOST_ROOT, expected, now());
+    const sealed = history?.at(-1);
+    if (!history || !sealed || !current() || sealed.record.products.coreSha256 !== expected.coreSha256
       || sealed.record.products.declarationSha256 !== expected.declarationSha256
       || verifyUrlFrozenProductHistory(run, sealed.record.products, current) === null) return refuse('checkpoint');
+    const historyCurrent = (): boolean => {
+      const actual = readUrlStoppedBoundaryChain(URL_HOST_ROOT, expected, now());
+      return actual !== null && actual.length === history.length
+        && actual.every((boundary, index) => boundary.sha256 === history[index]!.sha256);
+    };
     const placement = placementSubjectOf(record.subject);
     const screen = buildDossierScreen(policy.bytes, true, placement, placement.visibility);
     if (!screen.ok) return refuse('policy');
@@ -91,30 +108,55 @@ export async function verifyStoppedUrlRun(state: SupervisorState, input: {
     if (briefText === undefined) return refuse('checkpoint');
     const briefRecord = parseBoundedJson(briefText, CANONICAL_LIMITS);
     if (!isRecord(briefRecord) || briefRecord.issuedAt !== new Date(state.briefIssuedAt).toISOString()) return refuse('checkpoint');
-    const auditParent = path.join(URL_HOST_ROOT, 'acquisitions', sealed.record.attempt);
-    const governanceRoot = path.join(root, '.syzygy'), protectedRoot = path.join(auditParent, 'machine-lifecycle');
+    const governanceRoot = path.join(root, '.syzygy');
+    const protectedRoot = path.join(URL_HOST_ROOT, 'acquisitions', sealed.record.machineAttempt, 'machine-lifecycle');
     const binding = { controllerSha256: runtime.runtime.inputTreeSha256,
       parentBindingSha256: sha256(encodeCanonicalJson({ rowId: adoption.rowId, landedCommit: adoption.landedCommit,
         tagObject: adoption.tagObject, subjects: adoption.subjects }, CANONICAL_LIMITS)) };
     const profiles = Object.fromEntries(declaration.roles.map(role => [role.role, role.compiledProfileSha256])) as Readonly<Record<ViewRole, string>>;
-    const machine = await reconstructColdUrlRunMachineHistory({ governanceRoot, protectedRoot, sealed: sealed.record.machine,
-      expected: { identitySha256: sealed.record.machine.identitySha256, binding, runId: expected.runId,
-        sourcePin: expected.sourcePin, originPolicySha256: origin.binding.sha256, profiles, deadline }, now, current: stillStopped });
-    if (!machine || !current()) return refuse('machine-history');
     const retainedLaunches = Object.fromEntries(declaration.roles.filter(role => Object.hasOwn(URL_HELPER_LAUNCH_FILES, role.role))
       .map(role => [role.role, { run, runId: expected.runId, coreSha256: expected.coreSha256, declarationSha256: expected.declarationSha256,
         roleDeclaration: role, executable, screen: screen.screen }]));
-    const audit = await verifyUrlSessionAuditHistory({ parent: auditParent, name: 'sessions', expected: sealed.record.audit,
-      retainedLaunches, machineHistory: machine, current: stillStopped });
-    if (audit === null || !current()) return refuse('session-history');
-    const spend = sealed.record.spend;
-    if (spend.requestReservations !== audit.capturedCompleteExchanges + audit.capturedCountExchanges
-      || spend.completeUsageReports !== audit.capturedCompleteExchanges || spend.reportedTokens !== audit.capturedReportedTokens
-      || (record.declared.agentTurnBudget !== null && spend.requestReservations >= record.declared.agentTurnBudget)
-      || (record.declared.agentTokenBudget !== null && spend.reportedTokens !== 'Unknown' && spend.reportedTokens >= record.declared.agentTokenBudget))
-      return refuse('budget');
-    if (!await policyCurrent() || readUrlStoppedBoundary(URL_HOST_ROOT, expected, now())?.sha256 !== sealed.sha256
+    let machine: Awaited<ReturnType<typeof reconstructColdUrlRunMachineHistory>> = null;
+    let audit: Awaited<ReturnType<typeof verifyUrlSessionAuditHistory>> = null;
+    let requests = 0, responses = 0, tokens = 0;
+    for (const boundary of history) {
+      machine = await reconstructColdUrlRunMachineHistory({ governanceRoot, protectedRoot, sealed: boundary.record.machine,
+        expected: { identitySha256: sealed.record.machine.identitySha256, binding, runId: expected.runId,
+          sourcePin: expected.sourcePin, originPolicySha256: origin.binding.sha256, profiles, deadline }, now, current });
+      if (!machine || !current()) return refuse('machine-history');
+      audit = await verifyUrlSessionAuditHistory({ parent: path.join(URL_HOST_ROOT, 'acquisitions', boundary.record.attempt),
+        name: 'sessions', expected: boundary.record.audit, retainedLaunches, machineHistory: machine, current });
+      if (!audit || !current()) return refuse('session-history');
+      requests += audit.capturedCompleteExchanges + audit.capturedCountExchanges;
+      responses += audit.capturedCompleteExchanges;
+      tokens += audit.capturedReportedTokens === 'Unknown' ? 0 : audit.capturedReportedTokens;
+      const spend = boundary.record.spend;
+      if (![requests, responses, tokens].every(Number.isSafeInteger)
+        || spend.requestReservations !== requests || spend.completeUsageReports !== responses
+        || spend.reportedTokens !== (responses === 0 ? 'Unknown' : tokens)) return refuse('budget');
+    }
+    if (!machine || !audit) return refuse('machine-history');
+    const resumeBudget = prepareUrlBudgetResume({ spend: sealed.record.spend, deadline,
+      turnBudget: record.declared.agentTurnBudget, tokenBudget: record.declared.agentTokenBudget, observedAt: now() });
+    if (!resumeBudget) return refuse('budget');
+    if (!await policyCurrent() || !historyCurrent()
       || verifyUrlFrozenProductHistory(run, sealed.record.products, current) === null || !current()) return refuse('checkpoint');
-    return { ok: true as const, machine, record, audit, boundary: sealed };
+    const products = verifyUrlRecoveryProducts({ hostRoot: URL_HOST_ROOT, expected, boundarySha256: sealed.sha256,
+      machine, now, current });
+    if (!products || !current()) return refuse('checkpoint');
+    const verified = Object.freeze({ ok: true as const, machine, record, audit, boundary: sealed, history,
+      resumeBudget, products, checkedContext: Object.freeze({ runtime: runtime.runtime, executable,
+        screen: screen.screen, policy, origin, adoption, openReader, authority, current, policyCurrent,
+        effective: read.effective, sourceStore: sealed.record.sourceStore, deadline }) });
+    verifiedRuns.set(verified, async () => {
+      if (!await policyCurrent() || !current() || !historyCurrent()) return null;
+      const claim = acquireUrlRecoveryClaim({ root: URL_HOST_ROOT, expected, sha256: sealed.sha256, now,
+        current: () => current() && committedUrlPoliciesCurrent(root, policy.binding, origin.binding, adoption) });
+      if (!claim) return null;
+      if (!await policyCurrent() || !claim.consume() || !claim.current()) { claim.release(); return null; }
+      return claim;
+    });
+    return verified;
   } catch { return refuse('checkpoint'); }
 }

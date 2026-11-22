@@ -1,0 +1,234 @@
+{
+  "format": "mutation-run/1",
+  "ranAt": "2026-11-22T05:11:32.344Z",
+  "commit": "d07a086151d3d691d0a0cdf299f4e8c2c86759a0",
+  "subject": {
+    "apps/three-surface-poc/src/polaris-generation/dossier-site.ts": "e57386f2cd99bd29cda3d8bb29dd878e44ee7927ff0cd92a41a864531f7c2a8a",
+    "packages/polaris-dossier/src/check.ts": "a922aba6ab9dc1b8f167675e0caf54f29216395256d788552aa725e3813dc1cb",
+    "packages/polaris-dossier/src/reading-ledger.ts": "6cf47985d72c8e105fab432a76ab75ebab85e10c079f47b58d69ac9b85381635"
+  },
+  "command": "npx vitest run apps/three-surface-poc/src/polaris-generation/dossier-computed-maps.test.ts packages/polaris-dossier/src/reading-ledger.test.ts packages/polaris-dossier/src/check.test.ts --reporter=json --outputFile=<scratch>/mutation-<id>.json",
+  "method": "Each mutant replaces one fragment (asserted to occur exactly once) in its file, runs the 3 test files above under vitest with the JSON reporter, and restores every source in finally. A mutant is killed when the run exits non-zero (failedTests lists each failing test) or is stopped after 300 s. The unmutated baseline runs first and must pass.",
+  "testFiles": [
+    "apps/three-surface-poc/src/polaris-generation/dossier-computed-maps.test.ts",
+    "packages/polaris-dossier/src/reading-ledger.test.ts",
+    "packages/polaris-dossier/src/check.test.ts"
+  ],
+  "baseline": {
+    "exitCode": 0,
+    "tests": 240,
+    "failedTests": []
+  },
+  "mutants": [
+    {
+      "id": "count-all-unlisted",
+      "file": "apps/three-surface-poc/src/polaris-generation/dossier-site.ts",
+      "old": "sum + r.unknown - r.files.filter(file => file.epistemic === 'unknown').length",
+      "new": "sum + r.filesNotListed",
+      "killed": true,
+      "killedBy": "tests",
+      "failedTests": [
+        "apps/three-surface-poc/src/polaris-generation/dossier-computed-maps.test.ts > the unit map counts the Unknown files its recognizers count and do not list, and claims every file read only where that is true"
+      ],
+      "seconds": 12
+    },
+    {
+      "id": "count-ignores-listed",
+      "file": "apps/three-surface-poc/src/polaris-generation/dossier-site.ts",
+      "old": "sum + r.unknown - r.files.filter(file => file.epistemic === 'unknown').length",
+      "new": "sum + r.unknown",
+      "killed": true,
+      "killedBy": "tests",
+      "failedTests": [
+        "apps/three-surface-poc/src/polaris-generation/dossier-computed-maps.test.ts > the unit map places each package in its root or top-level directory, draws no arrow between packages and lists every declared fact",
+        "apps/three-surface-poc/src/polaris-generation/dossier-computed-maps.test.ts > the unit map counts the Unknown files its recognizers count and do not list, and claims every file read only where that is true"
+      ],
+      "seconds": 12
+    },
+    {
+      "id": "count-every-listed-file",
+      "file": "apps/three-surface-poc/src/polaris-generation/dossier-site.ts",
+      "old": "sum + r.unknown - r.files.filter(file => file.epistemic === 'unknown').length",
+      "new": "sum + r.unknown - r.files.length",
+      "killed": true,
+      "killedBy": "tests",
+      "failedTests": [
+        "apps/three-surface-poc/src/polaris-generation/dossier-computed-maps.test.ts > the unit map counts the Unknown files its recognizers count and do not list, and claims every file read only where that is true"
+      ],
+      "seconds": 12
+    },
+    {
+      "id": "count-item-never",
+      "file": "apps/three-surface-poc/src/polaris-generation/dossier-site.ts",
+      "old": "const remainder = unknownNotListed > 0",
+      "new": "const remainder = false",
+      "killed": true,
+      "killedBy": "tests",
+      "failedTests": [
+        "apps/three-surface-poc/src/polaris-generation/dossier-computed-maps.test.ts > the unit map counts the Unknown files its recognizers count and do not list, and claims every file read only where that is true"
+      ],
+      "seconds": 12
+    },
+    {
+      "id": "count-item-past-one",
+      "file": "apps/three-surface-poc/src/polaris-generation/dossier-site.ts",
+      "old": "const remainder = unknownNotListed > 0",
+      "new": "const remainder = unknownNotListed > 1",
+      "killed": true,
+      "killedBy": "tests",
+      "failedTests": [
+        "apps/three-surface-poc/src/polaris-generation/dossier-computed-maps.test.ts > the unit map counts the Unknown files its recognizers count and do not list, and claims every file read only where that is true"
+      ],
+      "seconds": 12
+    },
+    {
+      "id": "count-singular",
+      "file": "apps/three-surface-poc/src/polaris-generation/dossier-site.ts",
+      "old": "unknownNotListed === 1 ? '1 file whose",
+      "new": "false ? '1 file whose",
+      "killed": true,
+      "killedBy": "tests",
+      "failedTests": [
+        "apps/three-surface-poc/src/polaris-generation/dossier-computed-maps.test.ts > the unit map counts the Unknown files its recognizers count and do not list, and claims every file read only where that is true"
+      ],
+      "seconds": 12
+    },
+    {
+      "id": "count-plural-words",
+      "file": "apps/three-surface-poc/src/polaris-generation/dossier-site.ts",
+      "old": "files whose facts are Unknown are counted and not listed.",
+      "new": "files whose facts are Unknown are not listed.",
+      "killed": true,
+      "killedBy": "tests",
+      "failedTests": [
+        "apps/three-surface-poc/src/polaris-generation/dossier-computed-maps.test.ts > the unit map counts the Unknown files its recognizers count and do not list, and claims every file read only where that is true"
+      ],
+      "seconds": 12
+    },
+    {
+      "id": "count-keeps-every-sentence",
+      "file": "apps/three-surface-poc/src/polaris-generation/dossier-site.ts",
+      "old": "listed !== '' || remainder !== ''",
+      "new": "listed !== ''",
+      "killed": true,
+      "killedBy": "tests",
+      "failedTests": [
+        "apps/three-surface-poc/src/polaris-generation/dossier-computed-maps.test.ts > the unit map counts the Unknown files its recognizers count and do not list, and claims every file read only where that is true"
+      ],
+      "seconds": 12
+    },
+    {
+      "id": "count-before-entries",
+      "file": "apps/three-surface-poc/src/polaris-generation/dossier-site.ts",
+      "old": "`${listed}${remainder}`",
+      "new": "`${remainder}${listed}`",
+      "killed": true,
+      "killedBy": "tests",
+      "failedTests": [
+        "apps/three-surface-poc/src/polaris-generation/dossier-computed-maps.test.ts > the unit map counts the Unknown files its recognizers count and do not list, and claims every file read only where that is true"
+      ],
+      "seconds": 12
+    },
+    {
+      "id": "bounded-arm-removed",
+      "file": "packages/polaris-dossier/src/reading-ledger.ts",
+      "old": "  if (ledger === 'bounded') return { state: 'unknown', why: BOUNDED_FORM_HAS_NO_LEDGER, unreadableRuns: 0, unreadableCheckRecords: 0 };\n",
+      "new": "",
+      "killed": true,
+      "killedBy": "tests",
+      "failedTests": [
+        "packages/polaris-dossier/src/reading-ledger.test.ts > reading difference says why where the state root cannot be listed or the draft does not parse",
+        "packages/polaris-dossier/src/check.test.ts > check: reading ledger says a bounded form keeps no ledger, beside an earlier readable ledger, and never that the draft does not parse",
+        "packages/polaris-dossier/src/check.test.ts > check: the record within its read bound (version 2.10) writes the bounded form one byte, value or level past the bound: outcome findings, one check-record-bound finding, and the draft does not pass"
+      ],
+      "seconds": 12
+    },
+    {
+      "id": "bounded-not-parse-words",
+      "file": "packages/polaris-dossier/src/reading-ledger.ts",
+      "old": "why: BOUNDED_FORM_HAS_NO_LEDGER,",
+      "new": "why: DRAFT_DOES_NOT_PARSE,",
+      "killed": true,
+      "killedBy": "tests",
+      "failedTests": [
+        "packages/polaris-dossier/src/reading-ledger.test.ts > reading difference says why where the state root cannot be listed or the draft does not parse",
+        "packages/polaris-dossier/src/check.test.ts > check: reading ledger says a bounded form keeps no ledger, beside an earlier readable ledger, and never that the draft does not parse",
+        "packages/polaris-dossier/src/check.test.ts > check: the record within its read bound (version 2.10) writes the bounded form one byte, value or level past the bound: outcome findings, one check-record-bound finding, and the draft does not pass"
+      ],
+      "seconds": 12
+    },
+    {
+      "id": "bounded-runs-count",
+      "file": "packages/polaris-dossier/src/reading-ledger.ts",
+      "old": "why: BOUNDED_FORM_HAS_NO_LEDGER, unreadableRuns: 0",
+      "new": "why: BOUNDED_FORM_HAS_NO_LEDGER, unreadableRuns: 1",
+      "killed": true,
+      "killedBy": "tests",
+      "failedTests": [
+        "packages/polaris-dossier/src/reading-ledger.test.ts > reading difference says why where the state root cannot be listed or the draft does not parse",
+        "packages/polaris-dossier/src/check.test.ts > check: reading ledger says a bounded form keeps no ledger, beside an earlier readable ledger, and never that the draft does not parse",
+        "packages/polaris-dossier/src/check.test.ts > check: the record within its read bound (version 2.10) writes the bounded form one byte, value or level past the bound: outcome findings, one check-record-bound finding, and the draft does not pass"
+      ],
+      "seconds": 13
+    },
+    {
+      "id": "bounded-records-count",
+      "file": "packages/polaris-dossier/src/reading-ledger.ts",
+      "old": "why: BOUNDED_FORM_HAS_NO_LEDGER, unreadableRuns: 0, unreadableCheckRecords: 0",
+      "new": "why: BOUNDED_FORM_HAS_NO_LEDGER, unreadableRuns: 0, unreadableCheckRecords: 1",
+      "killed": true,
+      "killedBy": "tests",
+      "failedTests": [
+        "packages/polaris-dossier/src/reading-ledger.test.ts > reading difference says why where the state root cannot be listed or the draft does not parse",
+        "packages/polaris-dossier/src/check.test.ts > check: reading ledger says a bounded form keeps no ledger, beside an earlier readable ledger, and never that the draft does not parse",
+        "packages/polaris-dossier/src/check.test.ts > check: the record within its read bound (version 2.10) writes the bounded form one byte, value or level past the bound: outcome findings, one check-record-bound finding, and the draft does not pass"
+      ],
+      "seconds": 12
+    },
+    {
+      "id": "bounded-words-text",
+      "file": "packages/polaris-dossier/src/reading-ledger.ts",
+      "old": "which keeps no reading ledger\"",
+      "new": "which has no reading ledger\"",
+      "killed": true,
+      "killedBy": "tests",
+      "failedTests": [
+        "packages/polaris-dossier/src/reading-ledger.test.ts > reading difference says why where the state root cannot be listed or the draft does not parse",
+        "packages/polaris-dossier/src/check.test.ts > check: reading ledger says a bounded form keeps no ledger, beside an earlier readable ledger, and never that the draft does not parse",
+        "packages/polaris-dossier/src/check.test.ts > check: the record within its read bound (version 2.10) writes the bounded form one byte, value or level past the bound: outcome findings, one check-record-bound finding, and the draft does not pass"
+      ],
+      "seconds": 13
+    },
+    {
+      "id": "check-passes-undefined",
+      "file": "packages/polaris-dossier/src/check.ts",
+      "old": "full ? ledger : 'bounded'",
+      "new": "full ? ledger : undefined",
+      "killed": true,
+      "killedBy": "tests",
+      "failedTests": [
+        "packages/polaris-dossier/src/check.test.ts > check: reading ledger says a bounded form keeps no ledger, beside an earlier readable ledger, and never that the draft does not parse",
+        "packages/polaris-dossier/src/check.test.ts > check: the record within its read bound (version 2.10) writes the bounded form one byte, value or level past the bound: outcome findings, one check-record-bound finding, and the draft does not pass"
+      ],
+      "seconds": 12
+    },
+    {
+      "id": "check-passes-ledger",
+      "file": "packages/polaris-dossier/src/check.ts",
+      "old": "full ? ledger : 'bounded'",
+      "new": "ledger",
+      "killed": true,
+      "killedBy": "tests",
+      "failedTests": [
+        "packages/polaris-dossier/src/check.test.ts > check: reading ledger says a bounded form keeps no ledger, beside an earlier readable ledger, and never that the draft does not parse",
+        "packages/polaris-dossier/src/check.test.ts > check: the record within its read bound (version 2.10) writes the bounded form one byte, value or level past the bound: outcome findings, one check-record-bound finding, and the draft does not pass"
+      ],
+      "seconds": 14
+    }
+  ],
+  "summary": {
+    "mutants": 16,
+    "killed": 16,
+    "survived": 0
+  }
+}

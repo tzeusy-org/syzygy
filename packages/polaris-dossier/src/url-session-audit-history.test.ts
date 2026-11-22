@@ -20,7 +20,7 @@ afterEach(() => { vi.restoreAllMocks(); vi.useRealTimers(); });
 const canonical = (v: unknown): string => encodeCanonicalJson(v, { maxBytes: 65_536, maxNodes: 4096, maxDepth: 12 });
 type ToolHistory = 'complete-tool' | 'count-without-continuation' | 'count-repeated' | 'count-with-usage' | 'count-wrong-origin' | 'different-consumed-receipt';
 async function fixture(fault?: 'incomplete-send' | 'uncertain-send' | 'unknown-cleanup' | 'missing-usage' | 'missing-terminal' | 'unfinished-tool' | 'unsupported-kind',
-  toolHistory?: ToolHistory) {
+  toolHistory?: ToolHistory, activeRoles: readonly typeof ROLES[number][] = ROLES) {
   const root = tempDir('url-audit-history-'), parent = path.join(root, 'protected'); fs.mkdirSync(parent, { mode: 0o700 });
   const loaded = buildDossierScreen(fs.readFileSync(path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../../..', DOSSIER_POLICY_PATH)), true, null, 'private');
   if (!loaded.ok) throw new Error('owned policy unavailable');
@@ -37,6 +37,7 @@ async function fixture(fault?: 'incomplete-send' | 'uncertain-send' | 'unknown-c
   try {
     expect(writer.closedHistory()).toBeNull();
     for (const role of ROLES) {
+      if (!activeRoles.includes(role)) continue;
       const scope = writer.scope(role);
       await writer.append({ kind: 'launch-attempt', role, scope, payload: { event: 'session-launch-attempt', profileSha256: scope.profileSha256,
         commandSha256: '3'.repeat(64), viewSha256: '4'.repeat(64), limits: URL_LAUNCH_LIMITS } });
@@ -112,8 +113,21 @@ describe('read-only protected audit history', () => {
     const f = await fixture(), before = ROLES.map(role => fs.readFileSync(f.file(role)));
     expect(await verifyUrlSessionAuditHistory(f.options)).toEqual({ kind: 'verified-local-audit-history', authorization: 'none', replay: 'forbidden',
       completeness: 'Unknown', records: 17, bytes: f.expected.durableBytes, tipSha256: f.expected.tipSha256,
-      capturedLaunchTerminals: 4, capturedCompleteExchanges: 1, capturedCountExchanges: 0, capturedHelperLaunches: 0, capturedMachineEffects: 0, capturedReportedTokens: 3 });
+      capturedLaunchTerminals: 4, capturedCompleteExchanges: 1, capturedCountExchanges: 0, capturedHelperLaunches: 0, capturedMachineEffects: 0, capturedReportedTokens: 3, capturedQuestions: 0 });
     expect(ROLES.map(role => fs.readFileSync(f.file(role)))).toEqual(before);
+  });
+
+  it('accepts a declared but unstarted design helper while still requiring proof for a started helper', async () => {
+    const f = await fixture(undefined, undefined, ['author']);
+    const declaration = f.expected.declarations.design;
+    const retainedLaunches = { design: { run: '/owned/run', runId: declaration.scope.binding.run,
+      coreSha256: '1'.repeat(64), declarationSha256: '2'.repeat(64), executable: '/owned/cli',
+      roleDeclaration: { role: 'design', compiledProfileSha256: declaration.scope.profileSha256 } } } as unknown as
+      NonNullable<Parameters<typeof verifyUrlSessionAuditHistory>[0]['retainedLaunches']>;
+    expect(await verifyUrlSessionAuditHistory({ ...f.options, retainedLaunches })).toMatchObject({ capturedLaunchTerminals: 1,
+      capturedHelperLaunches: 0, capturedQuestions: 0 });
+    const started = await fixture();
+    expect(await verifyUrlSessionAuditHistory({ ...started.options, retainedLaunches })).toBeNull();
   });
 
   it('joins a checked count estimate to its completed tool and separately verifies the Messages continuation', async () => {

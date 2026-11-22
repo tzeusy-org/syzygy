@@ -31,6 +31,37 @@ export interface UrlOrderedDesignTurnReservation {
   readonly retire: () => void;
 }
 
+export type UrlBudgetSpend = Pick<UrlBudgetSnapshot, 'requestReservations' | 'completeUsageReports' | 'reportedTokens'>;
+export interface UrlBudgetResume {
+  readonly spend: UrlBudgetSpend;
+  readonly deadline: number;
+  readonly turnBudget: number | null;
+  readonly tokenBudget: number | null;
+  readonly observedAt: number;
+}
+const resumes = new WeakSet<UrlBudgetResume>();
+/** The cold verifier calls this only after comparing every attempt's protected
+ * audit to its cumulative stopped boundary. Saved state and copied tokens are
+ * never accepted by the budget constructor as continuation evidence. */
+export function prepareUrlBudgetResume(input: UrlBudgetResume): UrlBudgetResume | null {
+  try {
+    const { spend, deadline, turnBudget, tokenBudget, observedAt } = input;
+    if (Object.keys(input).sort().join(',') !== 'deadline,observedAt,spend,tokenBudget,turnBudget'
+      || Object.keys(spend).sort().join(',') !== 'completeUsageReports,reportedTokens,requestReservations'
+      || !positive(deadline) || !nonnegative(observedAt) || observedAt >= deadline
+      || (turnBudget !== null && !positive(turnBudget)) || (tokenBudget !== null && !positive(tokenBudget))
+      || (turnBudget === null && tokenBudget === null)
+      || !nonnegative(spend.requestReservations) || !nonnegative(spend.completeUsageReports)
+      || spend.completeUsageReports > spend.requestReservations
+      || (spend.completeUsageReports === 0 ? spend.reportedTokens !== 'Unknown' : !nonnegative(spend.reportedTokens))
+      || (turnBudget !== null && spend.requestReservations >= turnBudget)
+      || (tokenBudget !== null && spend.reportedTokens !== 'Unknown' && spend.reportedTokens >= tokenBudget)) return null;
+    const resume = deepFreeze({ spend: { ...spend }, deadline, turnBudget, tokenBudget, observedAt });
+    resumes.add(resume);
+    return resume;
+  } catch { return null; }
+}
+
 /** One synchronous shared ledger for four independently serialized role hosts.
  * Request reservations are consumed before audit/send, never rolled back after
  * an uncertain attempt. Provider-reported usage is a bounded capture, not a
@@ -40,11 +71,19 @@ export function createUrlSessionBudget(input: {
   readonly turnBudget: number | null;
   readonly tokenBudget: number | null;
   readonly now: () => number;
+  readonly resume?: UrlBudgetResume;
 }) {
   const deadline = input.deadline, turnBudget = input.turnBudget, tokenBudget = input.tokenBudget, now = input.now;
   if (!positive(deadline) || (turnBudget !== null && !positive(turnBudget)) || (tokenBudget !== null && !positive(tokenBudget))
     || (turnBudget === null && tokenBudget === null) || typeof now !== 'function') throw new Error('url-budget-unavailable');
-  let reason: UrlBudgetSnapshot['reason'] = null, requests = 0, responses = 0, tokens = 0, lastInstant = 0;
+  const resume = input.resume;
+  if (resume !== undefined && (!resumes.has(resume) || resume.deadline !== deadline
+    || resume.turnBudget !== turnBudget || resume.tokenBudget !== tokenBudget)) throw new Error('url-budget-resume-unavailable');
+  if (resume !== undefined) resumes.delete(resume);
+  let reason: UrlBudgetSnapshot['reason'] = null, requests = resume?.spend.requestReservations ?? 0,
+    responses = resume?.spend.completeUsageReports ?? 0,
+    tokens = typeof resume?.spend.reportedTokens === 'number' ? resume.spend.reportedTokens : 0,
+    lastInstant = resume?.observedAt ?? 0;
   let designState: 'available' | 'held' | 'complete' | 'retired' = 'available';
   let heldDesignTurns = 0, designGeneration = 0;
   const pending = new Map<ViewRole, 'messages' | 'count-tokens'>();

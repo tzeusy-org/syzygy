@@ -29,13 +29,14 @@ export interface ColdUrlRunMachineOptions {
 export interface ColdUrlRunMachineHistory {
   readonly kind: 'verified-cold-url-machine-history'; readonly authorization: 'none'; readonly replay: 'forbidden';
   readonly observation: 'per-client-protected-cuts'; readonly identitySha256: string;
+  readonly binding: ColdUrlRunMachineExpected['binding'];
   readonly closedAt: number; readonly observedAt: number;
   readonly clients: UrlRunMachineClosedHistory['clients'];
   readonly snapshots: readonly UrlMachinePeerHistorySnapshot[];
 }
-// One open plus at most two protected operations per each of eight clients.
-export const COLD_URL_MACHINE_HISTORY_LIMITS = Object.freeze({ clients: 8, maxBytes: 262_144, maxNodes: 32_768, maxDepth: 24,
-  milliseconds: 17 * URL_MACHINE_STORE_LIMITS.operationMilliseconds });
+// One open plus at most two protected operations per each lifetime client slot.
+export const COLD_URL_MACHINE_HISTORY_LIMITS = Object.freeze({ clients: 16, maxBytes: 262_144, maxNodes: 32_768, maxDepth: 24,
+  milliseconds: 33 * URL_MACHINE_STORE_LIMITS.operationMilliseconds });
 const JSON_LIMITS = { maxBytes: COLD_URL_MACHINE_HISTORY_LIMITS.maxBytes, maxNodes: COLD_URL_MACHINE_HISTORY_LIMITS.maxNodes,
   maxDepth: COLD_URL_MACHINE_HISTORY_LIMITS.maxDepth };
 const encode = (value: unknown) => encodeCanonicalJson(value, JSON_LIMITS);
@@ -76,12 +77,12 @@ export async function reconstructColdUrlRunMachineHistory(given: ColdUrlRunMachi
       || sealed.kind !== 'closed-url-run-machine-history' || sealed.authorization !== 'none' || sealed.replay !== 'forbidden'
       || sealed.identitySha256 !== expected.identitySha256 || !same(sealed.binding, expected.binding)
       || !clock(sealed.observedAt) || sealed.observedAt >= expected.deadline || !Array.isArray(sealed.clients)
-      || sealed.clients.length !== COLD_URL_MACHINE_HISTORY_LIMITS.clients) fail();
+      || sealed.clients.length < URL_ROLES.length * 2 || sealed.clients.length > COLD_URL_MACHINE_HISTORY_LIMITS.clients) fail();
     deadline = expected.deadline;
     if (sealed.observedAt > check()) fail();
     const clients = sealed.clients as UrlRunMachineClosedHistory['clients'];
     const clientIds = new Set<string>(), endpoints = new Set<string>();
-    for (const client of clients) {
+    for (const [index, client] of clients.entries()) {
       if (!exact(client, ['context', 'terminal'])) fail();
       const c = client.context;
       if (!exact(c, ['clientId', 'policySha256', 'sourcePin', 'runId', 'role', 'kind', 'allowedScopes', 'profileSha256', 'now', 'deadline'])
@@ -91,7 +92,7 @@ export async function reconstructColdUrlRunMachineHistory(given: ColdUrlRunMachi
         || !Array.isArray(c.allowedScopes) || c.allowedScopes.length < 1 || c.allowedScopes.length > 4
         || new Set(c.allowedScopes).size !== c.allowedScopes.length || c.allowedScopes.some(scope =>
           !(c.kind === 'inference-bridge' ? ['inference-forward'] : ['source_read', 'artifact_read', 'artifact_write', 'dossier_step']).includes(scope))
-        || endpoints.has(`${c.role}/${c.kind}`)) fail();
+        || (index < URL_ROLES.length * 2 && endpoints.has(`${c.role}/${c.kind}`))) fail();
       if (client.terminal.kind === 'never-issued') {
         if (!exact(client.terminal, ['kind', 'clientId', 'witnessSha256']) || client.terminal.clientId !== c.clientId || !hex(client.terminal.witnessSha256)) fail();
       } else if (client.terminal.kind !== 'revoked' || !exact(client.terminal, ['kind', 'head']) || !same(client.terminal.head.binding, expected.binding)) fail();
@@ -128,7 +129,7 @@ export async function reconstructColdUrlRunMachineHistory(given: ColdUrlRunMachi
       }
     } finally { await store?.close(); }
     const result: ColdUrlRunMachineHistory = Object.freeze({ kind: 'verified-cold-url-machine-history', authorization: 'none', replay: 'forbidden',
-      observation: 'per-client-protected-cuts', identitySha256: expected.identitySha256, closedAt: sealed.observedAt, observedAt: check(),
+      observation: 'per-client-protected-cuts', identitySha256: expected.identitySha256, binding: expected.binding, closedAt: sealed.observedAt, observedAt: check(),
       clients: sealed.clients, snapshots: Object.freeze(snapshots) });
     issued.add(result); return result;
   })();
