@@ -109,6 +109,7 @@ describe('preemptible ordered design screen', () => {
     expect((await run(f.response(), { current: () => false })).ok).toBe(false);
     expect((await run(f.response(), { deadlineEpochMilliseconds: Date.now() - 1 })).ok).toBe(false);
     expect((await run(f.response(), { program: { ...program, worker: { ...program.worker, sha256: '0'.repeat(64) } } })).ok).toBe(false);
+    expect((await run(f.response(), { program: { ...program, node: { ...program.node, sha256: '0'.repeat(64) } } })).ok).toBe(false);
     const changed = join(directory, 'changed.mjs'); await writeFile(changed, workerBytes, { mode: 0o600 });
     const pinned = await selected(changed); await writeFile(changed, Buffer.concat([workerBytes, Buffer.from(' ')]));
     expect((await run(f.response(), { program: { ...program, worker: pinned } })).ok).toBe(false);
@@ -137,6 +138,16 @@ describe('preemptible ordered design screen', () => {
       expect((await run(fixture().response(), { program: { ...program, worker: await selected(worker) } })).ok).toBe(false);
     }
   }, 30_000);
+
+  it('refuses authority revoked during held runtime hashing before charging or spawning a worker', async () => {
+    let checks = 0;
+    const charged = vi.fn();
+    const result = await run(fixture().initial, { current: () => ++checks < 10, chargeCpuMicroseconds: charged });
+    expect(checks).toBe(10);
+    expect(result.ok).toBe(false);
+    expect(result.charge.cpuMicroseconds).toBe(0);
+    expect(charged).not.toHaveBeenCalled();
+  });
 
   it('stops an asynchronous worker when live authority is revoked and retains its charged capacity', async () => {
     const worker = join(directory, 'wait.mjs');
