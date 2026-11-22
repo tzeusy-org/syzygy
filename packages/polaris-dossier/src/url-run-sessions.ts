@@ -57,6 +57,8 @@ export interface UrlRunSessionsOptions {
   /** Policy, immutable run/pin/profile and sidecar verification. The caller's
    * check is independent of this component's lifecycle and shared budgets. */
   readonly current: () => boolean | Promise<boolean>; readonly now: () => number; readonly deadline: number;
+  /** Host operator request. It closes effects while preserving cleanup audit writes. */
+  readonly stopRequested?: () => boolean;
   readonly credential: SessionCredential;
   readonly production?: {
     readonly governanceRoot: string; readonly protectedRoot: string; readonly parent: UrlParentAdoption;
@@ -163,6 +165,8 @@ async function start(options: UrlRunSessionsOptions, ports: typeof native): Prom
   };
   const effectCurrent = (): boolean => {
     if (stopping || failure !== null || !budget.current()) return false;
+    try { if (options.stopRequested?.() === true) return false; }
+    catch { fail('control-unavailable'); return false; }
     if (!withinCpuBudget()) { fail('cpu-budget'); return false; }
     if ([...hostHealth.values()].some(healthy => !healthy())) { fail('transport-unavailable'); return false; }
     return true;
@@ -256,7 +260,7 @@ async function start(options: UrlRunSessionsOptions, ports: typeof native): Prom
       .map(([, child]) => child.waitForSample()));
     return settled.every(Boolean) && !stopping && failure === null;
   };
-  const waitForProductSamples = async (): Promise<boolean> => budget.current() && (await waitForSamples()) && budget.current();
+  const waitForProductSamples = async (): Promise<boolean> => effectCurrent() && (await waitForSamples()) && effectCurrent();
   const captures = new Map<ViewRole, { role: ViewRole; pid: number | 'Unknown'; startedAt: number | 'Unknown';
     finishedAt: number | 'Unknown'; outcome: UrlSessionLaunchOutcome | 'Unknown' }>(URL_ROLES.map(role => [role,
     { role, pid: 'Unknown', startedAt: 'Unknown', finishedAt: 'Unknown', outcome: 'Unknown' }]));
@@ -329,7 +333,7 @@ async function start(options: UrlRunSessionsOptions, ports: typeof native): Prom
       let pendingUsage: Parameters<typeof budget.observeUsage>[1] | null = null;
       const dossier = options.runDossier(role);
       const admissionAfterSamples = async (captured: SessionAdmission | null): Promise<boolean> =>
-        captured !== null && (await waitForSamples()) && budget.current() && admission === captured;
+        captured !== null && (await waitForProductSamples()) && admission === captured;
       const runDossier: UrlRunDossier = (argv, stdin, review) => {
         const admitted = admission;
         return dossier(argv, stdin, review, () => admissionAfterSamples(admitted));

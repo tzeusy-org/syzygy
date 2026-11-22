@@ -127,6 +127,21 @@ describe('one root lifecycle for four restricted URL roles', () => {
     await expect(f.start({ ...f.options, plans: prepared.roles.map(plan => ({ ...plan })) })).rejects.toThrow('url-run-sessions-unavailable');
     expect(f.calls).toEqual([]); expect(await readdir(f.parent)).toEqual([]); expect(f.credentialClosed()).toBe(false);
   });
+  it('withdraws active effects on an operator request while retaining verified terminal audit', async () => {
+    let requested = false;
+    const f = await runtimeFixture(), runtime = await f.start({ ...f.options, stopRequested: () => requested });
+    try {
+      expect(await runtime.current()).toBe(true);
+      requested = true;
+      expect(await runtime.current()).toBe(false);
+      expect(await runtime.waitForProductSamples()).toBe(false);
+      expect(await runtime.publish('inventory', { event: 'draft-ready', revision: 0 })).toBe(false);
+      const stopped = await runtime.stop();
+      expect(stopped.failure).toBeNull();
+      expect(stopped.audit).toMatchObject({ poisoned: false, termination: 'closed', captured: { 'launch-terminal': 4 } });
+      expect(stopped.roles.every(role => role.outcome !== 'Unknown' && role.outcome.groupTermination === 'confirmed')).toBe(true);
+    } finally { await runtime.stop(); }
+  });
   it('prepares before each actual host, captures safe receipts and usage, and closes each owned process before audit', async () => {
     const f = await runtimeFixture(), runtime = await f.start(f.options);
     try {
