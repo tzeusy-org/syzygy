@@ -26,6 +26,7 @@ interface ConnectionState {
   readonly deadline: number;
   boundary: (() => boolean) | null;
   ingressComplete: boolean;
+  readonly ingressDrained: Promise<void>;
 }
 const contexts = new WeakMap<SessionMachineEffectContext, ConnectionState>();
 const connections = new WeakMap<Duplex, SessionMachineEffectContext>();
@@ -93,6 +94,8 @@ export async function openSessionMachineConnection(raw: Socket, transport: Sessi
   const selected = peer;
   let bytes = 0, reading = false, ended = false, resume: (() => void) | null = null;
   let state: ConnectionState;
+  let settleIngress!: () => void;
+  const ingressDrained = new Promise<void>(resolve => { settleIngress = resolve; });
   const stream = new Duplex({ allowHalfOpen: true, autoDestroy: false, readableHighWaterMark: 65_536, writableHighWaterMark: 65_536,
     read() { resume?.(); resume = null; },
     write(chunk: Buffer, _encoding, done) {
@@ -101,15 +104,20 @@ export async function openSessionMachineConnection(raw: Socket, transport: Sessi
     },
     final(done) { raw.end(done); },
     destroy(error, done) {
-      ended = true; resume?.(); resume = null; clearTimeout(lifetime); closeUrlMachinePeer(selected); raw.destroy(); done(error ? new Error('session-machine-transport-unavailable') : undefined);
+      ended = true; resume?.(); resume = null; settleIngress(); clearTimeout(lifetime); closeUrlMachinePeer(selected); raw.destroy(); done(error ? new Error('session-machine-transport-unavailable') : undefined);
     },
   });
-  state = { raw, peer: selected, stream, deadline, boundary: null, ingressComplete: false };
+  state = { raw, peer: selected, stream, deadline, boundary: null, ingressComplete: false, ingressDrained };
   const context: SessionMachineEffectContext = Object.freeze({ peer: selected,
     async mediate<T>(this: SessionMachineEffectContext, operation: UrlMachineOperation,
       effect: (current: () => boolean) => T | Promise<T>): Promise<{ readonly ok: true; readonly value: T } | { readonly ok: false }> {
       const active = contexts.get(this);
       if (!active || active !== state || ended || stream.destroyed || active.boundary !== null) return { ok: false };
+      // The parser can finish the request while its native reader is still
+      // validating a chunk. Settle that read before any protected callback:
+      // trailing data must refuse before an effect, not after its response.
+      if (active.ingressComplete) await active.ingressDrained;
+      if (ended || stream.destroyed || active.boundary !== null || performance.now() >= deadline) return { ok: false };
       return mediateUrlMachinePeer(selected, operation, async current => {
         const boundary = () => !ended && !raw.destroyed && !stream.destroyed && performance.now() < deadline && current();
         if (!boundary()) throw new Error('session-machine-transport-unavailable');
@@ -145,7 +153,7 @@ export async function openSessionMachineConnection(raw: Socket, transport: Sessi
       }
       if (!ended && !state.ingressComplete) stream.destroy(new Error('session-machine-transport-unavailable'));
     } catch { stream.destroy(new Error('session-machine-transport-unavailable')); }
-    finally { reading = false; }
+    finally { reading = false; settleIngress(); }
   };
   // Let the caller attach its bounded parser before the first checked chunk.
   setImmediate(() => { void pump(); });

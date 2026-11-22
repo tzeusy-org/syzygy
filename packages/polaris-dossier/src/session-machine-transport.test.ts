@@ -15,14 +15,14 @@ import type { UrlMachinePeer } from './url-machine-peer.js';
 // Adapter-only fixture backend. These assertions make no kernel identity claim;
 // url-machine-peer.test.ts independently exercises the actual native verifier.
 const backend = vi.hoisted(() => ({ states: new WeakMap<object, { socket: object; chunks: Buffer[]; live: boolean }>(),
-  mediations: 0, reads: 0, readBlock: null as (() => Promise<Buffer>) | null, deny: false }));
+  mediations: 0, reads: 0, readBlock: null as (() => Promise<Buffer | null>) | null, deny: false }));
 vi.mock('./url-machine-peer.js', () => ({
   isUrlMachinePeerFor: (peer: object, socket: object) => backend.states.get(peer)?.socket === socket,
   closeUrlMachinePeer: (peer: object) => { const state = backend.states.get(peer); if (state) state.live = false; },
   readUrlMachinePeer: async (peer: object) => {
     const state = backend.states.get(peer); if (!state?.live) return null;
     backend.reads++;
-    if (backend.readBlock) return { kind: 'data', bytes: await backend.readBlock() };
+    if (backend.readBlock) { const bytes = await backend.readBlock(); return bytes === null ? { kind: 'pending' } : { kind: 'data', bytes }; }
     const bytes = state.chunks.shift(); return bytes ? { kind: 'data', bytes } : { kind: 'pending' };
   },
   mediateUrlMachinePeer: async (peer: object, _operation: string, effect: (current: () => boolean) => unknown) => {
@@ -139,10 +139,10 @@ describe('verified-chunk session transport adapter', () => {
     stream.destroy(); expect(await c.output).toBe('');
   });
 
-  it('refuses an in-flight native data chunk returned after ingress was stopped', async () => {
-    let entered!: () => void, release!: (bytes: Buffer) => void, stream!: Duplex;
+  it.each(['data', 'pending'] as const)('settles an in-flight native %s chunk before any protected effect after ingress stops', async kind => {
+    let entered!: () => void, release!: (bytes: Buffer | null) => void, stream!: Duplex;
     const reading = new Promise<void>(resolve => { entered = resolve; });
-    const chunk = new Promise<Buffer>(resolve => { release = resolve; });
+    const chunk = new Promise<Buffer | null>(resolve => { release = resolve; });
     backend.readBlock = () => { entered(); return chunk; };
     const transport = fixtureTransport([]), socketPath = join(tempDir('machine-inflight-'), 's.sock');
     const server = createServer({ pauseOnConnect: true, allowHalfOpen: true }, raw => { void (async () => {
@@ -154,9 +154,21 @@ describe('verified-chunk session transport adapter', () => {
     cleanup.push(() => new Promise<void>(resolve => server.close(() => resolve())));
     const c = client(socketPath); await reading;
     expect(stopSessionMachineIngress(stream)).toBe(true);
-    release(Buffer.from('late unadmitted pipeline'));
-    expect(await c.output).toBe(''); expect(stream.destroyed).toBe(true);
-    expect(backend.mediations).toBe(0);
+    let effects = 0;
+    const result = sessionMachineEffectContext(stream)!.mediate('inference-forward', () => { effects++; });
+    await new Promise<void>(resolve => setImmediate(resolve));
+    const beforeDrain = effects;
+    release(kind === 'data' ? Buffer.from('late unadmitted pipeline') : null);
+    const outcome = await result;
+    expect(beforeDrain).toBe(0);
+    if (kind === 'data') {
+      expect(outcome).toEqual({ ok: false }); expect(effects).toBe(0);
+      expect(await c.output).toBe(''); expect(stream.destroyed).toBe(true);
+      expect(backend.mediations).toBe(0);
+    } else {
+      expect(outcome).toEqual({ ok: true, value: undefined }); expect(effects).toBe(1);
+      expect(stream.destroyed).toBe(false); stream.destroy(); expect(await c.output).toBe('');
+    }
   });
 
   it('refuses missing transport and peer/socket substitution before broker effects', async () => {
