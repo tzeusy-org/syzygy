@@ -1,0 +1,11 @@
+{
+  "subjectCommit": "6ffe9ee4a8192e1bdf3a56ed12bf3fcc8599289b",
+  "raw": "completed-health-successor-review-2026-11-22-RAW.md",
+  "rawSha256": "d6ee5abede8e6c5c4e018aab798488ea7c5f6f707b5f153179fae05a286477b5",
+  "verdict": "PASS",
+  "files": {
+    "packages/polaris-dossier/src/url-run-sessions.ts": "43f338b5470e83561451c59e4e127206176c6122d5dc3e638ebc2eb80c69eda8",
+    "packages/polaris-dossier/src/url-run-sessions-completion.test.ts": "6fc96733786497948fdfad5fef8d69c6c5b79395fe18a7005db4175d8737f4a2"
+  },
+  "limit": "Fresh source-only successor review. Focused unit/typecheck/mutation evidence retained separately; repeated native acceptance pending."
+}
