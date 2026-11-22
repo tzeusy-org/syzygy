@@ -3,7 +3,7 @@ import * as path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { beforeAll, describe, expect, it } from 'vitest';
 
-import { buildDossierScreen, type DossierScreen } from './screen.js';
+import { buildDossierScreen, screenLoaderOf, type DossierScreen } from './screen.js';
 
 // syzygy-3efd.69: the dossier's screen under the declared-source policy 3.0.0 (REQ-polaris-generation-046 from specification version
 // 2.13, adoption row A-42): version 2.0.0 with 44 Stage-2 entries re-admitted. Expected outcomes are literals written from the policy
@@ -178,5 +178,24 @@ describe('version 2.0.0 outcomes preserved', () => {
     expect(TREE.map(([p]) => [p, outcomeOf(screen, p)])).toEqual(TREE.map(([p, , after]) => [p, after]));
     for (const [p, before, after] of TREE) if (before !== INDETERMINATE) expect([p, after]).toEqual([p, before]);
     expect(BODIES.map(([p, body]) => [p, kindOf(screen, p, body)])).toEqual(BODIES.map(([p, , out]) => [p, out]));
+  });
+});
+
+// A step's screen loader refuses an applied screen whose bytes differ from the run's binding; for a run bound to an earlier version the
+// refusal is the restart explanation naming that version and 3.0.0.
+describe('the step screen loader for a run bound to an earlier version', () => {
+  const RESTART = (bound: string, version: string): string => `this run is bound to the screening policy ${bound} (${version}), which can no longer be read as its binding (the applied screen differs from the policy bytes bound to this run); `
+    + 'a run is never re-screened under another version or moved to it, so start a new run, which binds .syzygy/governance/policies/POLARIS-DOSSIER-DECLARED-SOURCE-POLICY-v3.json (dossier-declared-source/3.0.0)';
+  it.each([
+    ['.syzygy/governance/policies/POLARIS-DOSSIER-DECLARED-SOURCE-POLICY-v2.json', 'dossier-declared-source/2.0.0'],
+    ['.syzygy/governance/policies/POLARIS-DOSSIER-DECLARED-SOURCE-POLICY-v1.json', 'dossier-declared-source/1.0.0'],
+  ])('bound to %s, refuses with the restart explanation', async (bound, version) => {
+    const loader = screenLoaderOf(async () => ({ ok: true, screen: screenOf(V3) }), '/nonexistent', 0);
+    expect(await loader({ ...SUBJECT, policyPath: bound, policySha256: 'f'.repeat(64) })).toEqual({ ok: false, why: RESTART(bound, version) });
+  });
+  it('bound to 3.0.0, refuses with the plain reason', async () => {
+    const loader = screenLoaderOf(async () => ({ ok: true, screen: screenOf(V3) }), '/nonexistent', 0);
+    expect(await loader({ ...SUBJECT, policyPath: '.syzygy/governance/policies/POLARIS-DOSSIER-DECLARED-SOURCE-POLICY-v3.json', policySha256: 'f'.repeat(64) }))
+      .toEqual({ ok: false, why: 'the applied screen differs from the policy bytes bound to this run' });
   });
 });
