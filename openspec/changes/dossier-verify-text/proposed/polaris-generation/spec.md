@@ -1,6 +1,6 @@
 # Dossier verify: a free-form text checked against the pinned revision
 
-Candidate version 2.15; binds nothing until its agent adoption row in AGENT-ADOPTIONS.md and its version tag. One MODIFIED requirement, REQ-polaris-generation-033, whose complete text below replaces the effective text that the URL declared-source run version 2.1 gave it. It adds one paragraph, the `syzygy dossier verify` command, and four scenarios; every other line is carried unchanged.
+Candidate version 2.16; binds nothing until its agent adoption row in AGENT-ADOPTIONS.md and its version tag. One MODIFIED requirement, REQ-polaris-generation-033, whose complete text below replaces the effective text that the URL declared-source run version 2.1 gave it. It adds one paragraph, the `syzygy dossier verify` command, and four scenarios; every other line is carried unchanged.
 
 ## MODIFIED Requirements
 
