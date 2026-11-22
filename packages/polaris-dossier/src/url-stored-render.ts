@@ -9,6 +9,20 @@ const MAX_FILES = 4096;
 const MAX_BYTES = 2_097_152;
 const OUTPUT_JSON_LIMITS = { maxBytes: MAX_BYTES, maxNodes: 65_536, maxDepth: 32 };
 
+/** Check live authority around one bounded synchronous host read. Descriptor
+ * checkpoints sample the same deadline throughout the walk. */
+export function readStoredUrlRenderWithAuthority<T>(
+  deadline: number, authorityCurrent: () => boolean, read: (withinDeadline: () => boolean) => T | null,
+): T | null {
+  const withinDeadline = (): boolean => Date.now() < deadline;
+  try {
+    if (!withinDeadline() || authorityCurrent() !== true || !withinDeadline()) return null;
+    const result = read(withinDeadline);
+    if (result === null || !withinDeadline() || authorityCurrent() !== true || !withinDeadline()) return null;
+    return result;
+  } catch { return null; }
+}
+
 /** Recover descriptive output metadata only. The independently retained digest
  * binds this census; it does not restore a renderer receipt or delivery grant. */
 export function readStoredUrlRenderOutput(

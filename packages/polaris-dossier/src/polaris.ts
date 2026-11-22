@@ -31,7 +31,7 @@ import { inspectUrlDesignProduct, sameReproducedUrlDesignProduct, validateUrlDes
   type UrlDesignProductMetadata, type ValidatedUrlDesignProduct } from './url-design-product.js';
 import { renderRun, reproduceUrlRender, type ProducedSiteInput } from './render.js';
 import { assertUrlFinalDesignProduct, recoverUrlDesignRenderContinuation } from './url-session-audit.js';
-import { checkStoredUrlRender, readStoredUrlRenderOutput } from './url-stored-render.js';
+import { checkStoredUrlRender, readStoredUrlRenderOutput, readStoredUrlRenderWithAuthority } from './url-stored-render.js';
 import { createCredentialProbe, credentialListFromEnv } from './credential-probe.js';
 import { bindUrlSourceReader, type UrlSourceStore } from './url-source-reader.js';
 import type { AcquisitionProcessLimits } from './acquisition-process.js';
@@ -1203,12 +1203,15 @@ async function runUrlStages(stateRoot: string, ports: CliPorts, state: Superviso
     const live = await context.runtime.prepareFinalRender(number, site);
     if (live !== null) return live;
     const recovery = context.prepared.continuation;
-    if (recovery === undefined || !isClaimedStoppedUrlRun(recovery.verified, recovery.claim)) return null;
-    const attempts = recovery.verified.verifiedAudits.flatMap(audit => readVerifiedUrlAuditLaunches(audit)?.ordered ?? []);
-    const last = attempts.at(-1);
-    if (last?.disposition.kind !== 'eligible' || last.disposition.checked.number !== number || last.receipt.identity.site !== site) return null;
-    const current = (): boolean => isClaimedStoppedUrlRun(recovery.verified, recovery.claim) && context.prepared.current();
-    const output = readStoredUrlRenderOutput(run, site, last.receipt.identity.storedPopulationSha256, current);
+    if (recovery === undefined) return null;
+    const { verified, claim } = recovery;
+    const current = (): boolean => isClaimedStoppedUrlRun(verified, claim) && verified.checkedContext.current();
+    const output = readStoredUrlRenderWithAuthority(verified.checkedContext.deadline, current, withinDeadline => {
+      const attempts = verified.verifiedAudits.flatMap(audit => readVerifiedUrlAuditLaunches(audit)?.ordered ?? []);
+      const last = attempts.at(-1);
+      if (last?.disposition.kind !== 'eligible' || last.disposition.checked.number !== number || last.receipt.identity.site !== site) return null;
+      return readStoredUrlRenderOutput(run, site, last.receipt.identity.storedPopulationSha256, withinDeadline);
+    });
     if (output === null) return null;
     const reads = beginRunProductReads(run, context.artifacts, 'render', deadline, context.runtime.waitForProductSamples);
     let product: ValidatedUrlDesignProduct | null = null;
@@ -1217,7 +1220,7 @@ async function runUrlStages(stateRoot: string, ports: CliPorts, state: Superviso
         admitProducedSite: async input => { product = await validate(reads, input); return product !== null; } },
       { path: path.join(run, RUN_LAYOUT.site, String(site)), output });
       if (!reproduced || product === null || !reads.isLeaseOpen() || !current()) return null;
-      return await recoverUrlDesignRenderContinuation({ verified: recovery.verified, claim: recovery.claim, product, number, site });
+      return await recoverUrlDesignRenderContinuation({ verified, claim, product, number, site });
     } finally { reads.close(); }
   }
 

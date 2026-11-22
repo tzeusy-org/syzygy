@@ -19,7 +19,7 @@ import type { SessionResponseUsage } from './session-response.js';
 import type { ViewRole } from './session-view.js';
 import { inspectUrlDesignProduct, isUrlDesignProductLeaseOpen, readInertUrlDesignProduct, recheckUrlDesignProductInputs, sameReproducedUrlDesignProduct,
   type UrlDesignProductBinding, type UrlDesignProductMetadata, type UrlInertDesignProduct, type ValidatedUrlDesignProduct } from './url-design-product.js';
-import { checkStoredUrlRender } from './url-stored-render.js';
+import { checkStoredUrlRender, readStoredUrlRenderWithAuthority } from './url-stored-render.js';
 import { inspectUrlLaunchHistory, isUrlHelperLaunchFile, URL_HELPER_LAUNCH_FILES, type UrlLaunchHistoryCapability, type UrlLaunchHistoryRole } from './url-launch-history.js';
 import { isOrderedDesignPlanFor, orderedDesignPlanInputForDelivery, planOrderedDesignBytes, type OrderedDesignPlan } from './url-design-delivery.js';
 import type { UrlMachinePeerAudit } from './url-machine-peer.js';
@@ -217,24 +217,24 @@ export async function recoverUrlDesignRenderContinuation(input: {
       || original.semanticInputsSha256 !== identity.semanticInputsSha256
       || designIdentityDigest(original.output) !== identity.storedPopulationSha256) return null;
     const deadline = Math.min(context.deadline, original.products.deadline, Date.now() + URL_SESSION_AUDIT_LIMITS.milliseconds);
-    const current = (): boolean => Date.now() < deadline && isClaimedStoppedUrlRun(verified, claim)
-      && context.current();
+    const current = (): boolean => isClaimedStoppedUrlRun(verified, claim) && context.current();
     const check = (): void => {
-      if (!current()) throw refused();
-      const checked = disposition.checked;
-      for (const [file, digest] of [[`reviews/checks/design-verdict-${number}.json`, checked.checkSha256],
-        [`reviews/design-verdict-${number}.json`, checked.verdictSha256]] as const) {
-        const snapshot = snapshotProductFile(binding.run, file, 2_097_152, () => { if (!current()) throw refused(); });
-        if (snapshot.bytes === null || sha256(snapshot.bytes) !== digest) throw refused();
-      }
-      if (checkStoredUrlRender(binding.run, path.join(binding.run, RUN_LAYOUT.site, String(site)), original.output, current) !== site
-        || !current()) throw refused();
+      const checkedSite = readStoredUrlRenderWithAuthority(deadline, current, withinDeadline => {
+        const checked = disposition.checked;
+        for (const [file, digest] of [[`reviews/checks/design-verdict-${number}.json`, checked.checkSha256],
+          [`reviews/design-verdict-${number}.json`, checked.verdictSha256]] as const) {
+          const snapshot = snapshotProductFile(binding.run, file, 2_097_152, () => { if (!withinDeadline()) throw refused(); });
+          if (snapshot.bytes === null || sha256(snapshot.bytes) !== digest) return null;
+        }
+        return checkStoredUrlRender(binding.run, path.join(binding.run, RUN_LAYOUT.site, String(site)), original.output, withinDeadline);
+      });
+      if (checkedSite !== site) throw refused();
     };
-    check();
     const result: UrlDesignRenderContinuation = deepFreeze({ binding, checked: disposition.checked,
       delivery: receipt as UrlDesignDeliveryAuditRecord, verdictEventSha256: disposition.verdictEventSha256,
       original, earlierRounds: attempts.filter(attempt => attempt.receipt.identity.round < identity.round)
         .map(attempt => attempt.receipt.identity.round), deadline });
+    check();
     designRenderContinuations.set(result, check);
     return result;
   } catch { return null; }

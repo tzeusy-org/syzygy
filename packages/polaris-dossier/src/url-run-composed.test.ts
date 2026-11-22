@@ -190,7 +190,11 @@ describe('composed URL run with actual role processes', { timeout: 360_000 }, ()
         const result = await recoverFinal(input);
         resumeChecks.push({ phase: 'cold-final-factory', issued: result !== null });
         expect(result).not.toBeNull();
-        sessionAudit.assertUrlDesignRenderContinuationCurrent(result!);
+        const checkClaim = vi.spyOn(recovery, 'isClaimedStoppedUrlRun');
+        try {
+          sessionAudit.assertUrlDesignRenderContinuationCurrent(result!);
+          expect(checkClaim.mock.calls).toEqual([[input.verified, input.claim], [input.verified, input.claim]]);
+        } finally { checkClaim.mockRestore(); }
         expect(() => sessionAudit.assertUrlDesignRenderContinuationCurrent({ ...result! })).toThrow();
         const priorIds = new Set(liveFinals[0]!.original.parents.map(parent => parent.id));
         const freshIds = result!.original.parents.filter(parent => !priorIds.has(parent.id));

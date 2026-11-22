@@ -6,7 +6,7 @@ import { tempDir } from '@syzygy/test-kit';
 import { describe, expect, it, vi } from 'vitest';
 import { RUN_LAYOUT } from './state-directory.js';
 import * as productReads from './url-product-reads.js';
-import { checkStoredUrlRender, readStoredUrlRenderOutput } from './url-stored-render.js';
+import { checkStoredUrlRender, readStoredUrlRenderOutput, readStoredUrlRenderWithAuthority } from './url-stored-render.js';
 
 const outputDigest = (output: unknown): string => sha256(encodeCanonicalJson(output,
   { maxBytes: 2_097_152, maxNodes: 65_536, maxDepth: 32 }));
@@ -24,6 +24,79 @@ function fixture() {
   const output = { files: 2, pages: 1, bytes: population.reduce((sum, file) => sum + file.bytes, 0), population };
   return { run, site, output, check: () => checkStoredUrlRender(run, site, output, () => true) };
 }
+
+describe('cold stored-render authority', () => {
+  it('checks full authority twice around a complete descriptor census', () => {
+    const f = fixture();
+    const current = vi.fn(() => true);
+    const read = (withinDeadline: () => boolean) => readStoredUrlRenderOutput(f.run, 2, outputDigest(f.output), withinDeadline);
+    expect(readStoredUrlRenderWithAuthority(Date.now() + 5_000, current, read)).toEqual(f.output);
+    expect(current).toHaveBeenCalledTimes(2);
+  });
+
+  it('discards a completed census when its named authority changes during a descriptor read', () => {
+    const f = fixture();
+    const host = tempDir('stored-url-render-authority-');
+    const lock = path.join(host, 'recovery.lock'), withdrawn = path.join(host, 'withdrawn.lock');
+    fs.mkdirSync(lock);
+    const held = fs.lstatSync(lock);
+    const current = vi.fn(() => {
+      try {
+        const actual = fs.lstatSync(lock);
+        return actual.isDirectory() && actual.dev === held.dev && actual.ino === held.ino;
+      } catch { return false; }
+    });
+    const snapshot = productReads.snapshotProductFile;
+    const spy = vi.spyOn(productReads, 'snapshotProductFile').mockImplementationOnce((...args) => {
+      const captured = snapshot(...args);
+      fs.renameSync(lock, withdrawn);
+      return captured;
+    });
+    const read = vi.fn((withinDeadline: () => boolean) => checkStoredUrlRender(f.run, f.site, f.output, withinDeadline));
+    try {
+      expect(readStoredUrlRenderWithAuthority(Date.now() + 5_000, current, read)).toBeNull();
+      expect(read).toHaveReturnedWith(2);
+      expect(current.mock.results.map(result => result.value)).toEqual([true, false]);
+    } finally { spy.mockRestore(); }
+  });
+
+  it.each([1, 2])('refuses when full authority check %i reaches the same deadline', expiredCheck => {
+    const f = fixture();
+    const deadline = 5_000;
+    let now = deadline - 1, checks = 0;
+    const clock = vi.spyOn(Date, 'now').mockImplementation(() => now);
+    const current = vi.fn(() => {
+      if (++checks === expiredCheck) now = deadline;
+      return true;
+    });
+    const read = vi.fn((withinDeadline: () => boolean) => checkStoredUrlRender(f.run, f.site, f.output, withinDeadline));
+    try {
+      expect(readStoredUrlRenderWithAuthority(deadline, current, read)).toBeNull();
+      expect(current).toHaveBeenCalledTimes(expiredCheck);
+      expect(read).toHaveBeenCalledTimes(expiredCheck - 1);
+    } finally { clock.mockRestore(); }
+  });
+
+  it('checks the deadline while walking the protected population', () => {
+    const f = fixture();
+    const deadline = 5_000;
+    let now = deadline - 1;
+    const clock = vi.spyOn(Date, 'now').mockImplementation(() => now);
+    const snapshot = productReads.snapshotProductFile;
+    const spy = vi.spyOn(productReads, 'snapshotProductFile').mockImplementationOnce((...args) => {
+      const captured = snapshot(...args);
+      now = deadline;
+      return captured;
+    });
+    const current = vi.fn(() => true);
+    const read = vi.fn((withinDeadline: () => boolean) => checkStoredUrlRender(f.run, f.site, f.output, withinDeadline));
+    try {
+      expect(readStoredUrlRenderWithAuthority(deadline, current, read)).toBeNull();
+      expect(read).toHaveReturnedWith(null);
+      expect(current).toHaveBeenCalledTimes(1);
+    } finally { spy.mockRestore(); clock.mockRestore(); }
+  });
+});
 
 describe('supervisor verification of stored URL renders', () => {
   it('reports the authenticated directory entry with its exact nested UTF-8 file population', () => {
