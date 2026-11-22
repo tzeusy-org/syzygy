@@ -14,6 +14,8 @@ const ENV = Object.freeze({ PATH: '/usr/bin:/bin', LANG: 'C.UTF-8', SHELL: '/usr
   SYZYGY_SESSION_MCP_SOCKET: '/sockets/broker/b.sock', CLAUDE_CODE_OAUTH_TOKEN: 'NONSECRET-SYNTHETIC-OAUTH-TOKEN-ONLY',
   MAX_THINKING_TOKENS: '0', CLAUDE_CODE_DISABLE_ADAPTIVE_THINKING: '1', ENABLE_TOOL_SEARCH: 'false',
   CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC: '1', DISABLE_TELEMETRY: '1', DISABLE_ERROR_REPORTING: '1' });
+export const URL_DESIGN_MCP_OUTPUT_TOKENS = 490_000;
+const DESIGN_ENV = Object.freeze({ ...ENV, MAX_MCP_OUTPUT_TOKENS: String(URL_DESIGN_MCP_OUTPUT_TOKENS) });
 export interface UrlSessionViewInputs {
   readonly role: ViewRole;
   readonly cliExecutable: string;
@@ -32,7 +34,7 @@ export interface UrlSessionView {
   readonly role: ViewRole;
   readonly mounts: readonly UrlSessionMount[];
   readonly cwd: '/work';
-  readonly env: typeof ENV;
+  readonly env: typeof ENV | typeof DESIGN_ENV;
   readonly claim: 'URL role view; no observed-code execution profile';
 }
 export type UrlSessionViewRefusal = 'invalid-input' | 'unverified-path' | 'unsupported-runtime' | 'support-unavailable'
@@ -81,7 +83,7 @@ export function urlSessionViewFor(input: UrlSessionViewInputs): UrlSessionView {
     { source: input.relaySocketDirectory, target: '/sockets/relay', writable: false },
   ];
   return deepFreeze({ inputs: { ...input, protectedPaths: [...input.protectedPaths] }, role: input.role, mounts,
-    cwd: '/work' as const, env: ENV, claim: 'URL role view; no observed-code execution profile' as const });
+    cwd: '/work' as const, env: input.role === 'design' ? DESIGN_ENV : ENV, claim: 'URL role view; no observed-code execution profile' as const });
 }
 
 /** Setup only, ending before the command. Untrusted values can select no flags, environment or targets. */
@@ -91,7 +93,7 @@ export function urlSessionBwrapArgs(spec: UrlSessionView): string[] {
     '--hostname', 'syzygy-role', '--ro-bind', '/usr', '/usr', '--dev', '/dev', '--proc', '/proc', '--tmpfs', '/tmp',
     '--symlink', 'usr/bin', '/bin', '--symlink', 'usr/sbin', '/sbin', '--symlink', 'usr/lib', '/lib', '--symlink', 'usr/lib64', '/lib64'];
   for (const mount of checked.mounts) args.push(mount.writable ? '--bind' : '--ro-bind', mount.source, mount.target);
-  for (const [key, value] of Object.entries(ENV)) args.push('--setenv', key, value);
+  for (const [key, value] of Object.entries(checked.env)) args.push('--setenv', key, value);
   args.push('--chdir', checked.cwd);
   return args;
 }
