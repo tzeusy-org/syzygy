@@ -276,7 +276,7 @@
     },
     "POC": {
       "requirements": 26,
-      "scenarios": 35,
+      "scenarios": 37,
       "members": {
         "POC-REQ-001": {
           "name": "Code-structure observation is bound to an exact revision",
@@ -378,7 +378,8 @@
         "POC-REQ-040": {
           "name": "Trajectory columns come from the closed status vocabulary",
           "scenarios": [
-            "Items placed by observed status"
+            "Items placed by observed status",
+            "A card shows its own facts"
           ]
         },
         "POC-REQ-041": {
@@ -397,7 +398,8 @@
           "name": "Activity is never rendered as satisfaction",
           "scenarios": [
             "Closed but unverified",
-            "Closed is the tracker's word, not done"
+            "Closed is the tracker's word, not done",
+            "Verification is Unknown once per board, with its count"
           ]
         },
         "POC-REQ-050": {

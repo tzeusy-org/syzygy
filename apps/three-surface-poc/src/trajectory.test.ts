@@ -104,11 +104,15 @@ describe('Trajectory', () => {
       expect(card).toContain(`<a class="wi-title" href="#workitem-${id}" data-parity-field="work-item-id">${id}</a>`);
       const marks = card.split('data-parity-field="work-item-title"').length - 1;
       expect(marks, id).toBe(1);
-      expect(card).toContain(`<span class="epistemic epistemic-unknown" data-parity-field="work-item-title" data-unknown-disclosure="region:work-item-titles" data-unknown-reason="excluded-content">Title: withheld (SEC-5). ${route}</span>`);
+      // syzygy-t3jk.15: the card's mark refers to the board's one disclosure
+      // and carries no route of its own.
+      expect(card).toContain('<span class="epistemic epistemic-unknown" data-parity-field="work-item-title" data-unknown-ref="region:work-item-titles" data-unknown-reason="excluded-content">Title: withheld (SEC-5) <a class="mark-ref" href="#n-titles" aria-describedby="n-titles">reason and route</a></span>');
+      expect(card).not.toContain(route);
     }
-    const notice = /<p class="titles-withheld notice" data-parity-field="work-item-titles-withheld" data-unknown-disclosure="region:work-item-titles" data-unknown-reason="excluded-content">([\s\S]*?)<\/p>/.exec(html)?.[1] ?? '';
+    expect(html.split(route).length - 1).toBe(1);
+    const notice = /<p class="titles-withheld notice" id="n-titles" data-parity-field="work-item-titles-withheld" data-unknown-disclosure="region:work-item-titles" data-unknown-reason="excluded-content">([\s\S]*?)<\/p>/.exec(html)?.[1] ?? '';
     const words = notice.replace(/<[^>]+>/g, '').replace(/\s+/g, ' ').trim();
-    expect(words).toBe('Titles: Unknown for every observed work item. Work-item titles are withheld under SEC-5: a title is free text, the only declared secret-classification policy covers declared-project-shape-text and none covers work-item titles, so the observation never reads them. Each item is named by its identifier. Reason: excluded-content. Route: Policy change by the owner, or accept the exclusion.');
+    expect(words).toBe('Titles: Unknown for 5 of 5 observed work items (every one). Work-item titles are withheld under SEC-5: a title is free text, the only declared secret-classification policy covers declared-project-shape-text and none covers work-item titles, so the observation never reads them. Each item is named by its identifier. Reason: excluded-content. Route: Policy change by the owner, or accept the exclusion.');
     expect(html).not.toContain('fixture item');
     expect(model.unknownSubjects.find((subject) => subject.id === 'region:work-item-titles')?.epistemic).toEqual({
       label: 'Unknown',
@@ -666,3 +670,78 @@ describe('Trajectory closure wording (T1)', () => {
   });
 });
 
+
+// T2 (syzygy-t3jk.15; RFC2-24 aggregation, POC-REQ-014, POC-REQ-040,
+// POC-REQ-043): each Unknown a card marks is stated once per board, with
+// its count, reason and route; the card carries a short mark per Unknown
+// and its own facts as text. Literals typed here.
+describe('Trajectory board-level Unknowns and card facts (T2)', () => {
+  const ROUTES = [
+    'Route: <span data-unknown-route="excluded-content" data-route-actor="owner" data-route-verb="decide" data-route-target="policy">Policy change by the owner, or accept the exclusion</span>.',
+    'Route: <span data-unknown-route="source-uncaptured-or-unreachable" data-route-actor="operator" data-route-verb="repair" data-route-target="evaluation">Repair the observer/source; new snapshot</span>.',
+    'Route: <span data-unknown-route="missing-evidence" data-route-actor="operator" data-route-verb="capture" data-route-target="evaluation">Produce or capture evidence</span>.',
+  ];
+  const BASES = [
+    'Work-item titles are withheld under SEC-5',
+    'Activity is not verification: no test evidence has been ingested for any work item.',
+    'No governing intent was captured for any work item: the observation reads no link from an item to the intent that warrants it, and none is taken from its title.',
+  ];
+
+  it('states each route and basis sentence once on the 252-row board, never on a card', () => {
+    const model = buildFixtureModel(cleanups, { workItemRows: closureRows() });
+    const html = renderTrajectoryPage(model);
+    if (model.trajectory.kind !== 'observed') throw new Error('unreachable');
+    const cards = [...html.matchAll(/<li class="wi-card[^"]*"[^>]*>([\s\S]*?)<\/li>/g)].map((m) => m[1]!);
+    expect(cards).toHaveLength(250);
+    for (const literal of [...ROUTES, ...BASES]) {
+      expect(html.split(literal).length - 1, literal).toBe(1);
+      expect(cards.filter((card) => card.includes(literal)), literal).toEqual([]);
+    }
+    for (const card of cards) {
+      for (const field of ['work-item-title', 'work-item-governed-by', 'work-item-verification']) {
+        expect(card.split(`data-parity-field="${field}"`).length - 1, field).toBe(1);
+      }
+      expect(card).not.toContain('data-unknown-disclosure=');
+      expect(card).not.toContain('Route:');
+    }
+  });
+
+  it('states the verification Unknown once, with served, inside and outside counts equal to the machine answer', async () => {
+    const model = buildFixtureModel(cleanups, { workItemRows: closureRows() });
+    const html = renderTrajectoryPage(model);
+    const served = await servedAnswer(model);
+    if (served.trajectory.kind !== 'observed' || served.workItems.kind !== 'observed') throw new Error('unreachable');
+    expect(served.trajectory.verificationUnknown).toEqual({ served: 252, inside: 250, outside: 2 });
+    expect(served.workItems.items).toHaveLength(252);
+    const notice = /<p class="verification-count notice" id="n-verification" data-parity-field="work-item-verification-count" data-unknown-disclosure="region:work-item-verification" data-unknown-reason="missing-evidence">([\s\S]*?)<\/p>/.exec(html)?.[1] ?? '';
+    expect(notice).toContain('data-parity-field="verification-unknown-count">252</span> of 252 observed work items');
+    expect(notice).toContain('data-parity-field="verification-unknown-inside">250</span> are in this selection');
+    expect(notice).toContain('data-parity-field="verification-unknown-outside">2</span> are outside it');
+    const words = notice.replace(/<[^>]+>/g, '').replace(/\s+/g, ' ');
+    expect(words).toContain('Reason: missing-evidence. Route: Produce or capture evidence.');
+    expect(served.unknownSubjects.find((subject) => subject.id === 'region:work-item-verification')?.epistemic.closedReason).toBe('missing-evidence');
+    expect(served.unknownSubjects.filter((subject) => subject.id.startsWith('work-item:'))).toEqual([]);
+  });
+
+  it('shows each card\'s priority and recorded instants as text, equal to the machine answer', async () => {
+    const instant = (day: number): string => `2026-08-${String(day).padStart(2, '0')}T09:30:00Z`;
+    const rows = [
+      { ...fixtureWorkItemRow('bu-facts-open', 'open', instant(1), instant(2), null), priority: 0 },
+      { ...fixtureWorkItemRow('bu-facts-closed', 'closed', instant(3), instant(4), instant(5)), priority: 3 },
+    ];
+    const model = buildFixtureModel(cleanups, { workItemRows: rows });
+    const html = renderTrajectoryPage(model);
+    const served = await servedAnswer(model);
+    if (served.trajectory.kind !== 'observed') throw new Error('unreachable');
+    expect(served.trajectory.rendered.map((item) => [item.id, item.priority])).toEqual([['bu-facts-closed', 3], ['bu-facts-open', 0]]);
+    for (const item of served.trajectory.rendered) {
+      const card = cardBody(html, item.id);
+      expect(card).toContain(`data-parity-field="work-item-priority">${item.priority}</span>`);
+      expect(card).toContain(`<time data-parity-field="work-item-created" datetime="${item.createdAt}">${item.createdAt}</time>`);
+      expect(card).toContain(`<time data-parity-field="work-item-updated" datetime="${item.updatedAt}">${item.updatedAt}</time>`);
+      if (item.closedAt === null) expect(card).not.toContain('work-item-closed');
+      else expect(card).toContain(`<time data-parity-field="work-item-closed" datetime="${item.closedAt}">${item.closedAt}</time>`);
+    }
+    expect(cardBody(html, 'bu-facts-closed')).toContain('2026-08-05T09:30:00Z');
+  });
+});

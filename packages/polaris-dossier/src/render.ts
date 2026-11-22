@@ -552,7 +552,8 @@ export function buildLocalInput(inputs: BuildInputs): Built {
   const { run, runId, subject, declared } = opened;
   const pinned = subject.pinnedRevision.commit;
   const clean = (value: string): string => (screen.screenBody(value) === 'secret-detector-match' ? WITHHELD_TEXT : value);
-  const shownPath = (repositoryPath: string): string => (screen.screenPath(repositoryPath) === 'secret-detector-match' ? SECRET_PATH : repositoryPath);
+  const isSecretPath = secretPathOf(screen);
+  const shownPath = (repositoryPath: string): string => (isSecretPath(repositoryPath) ? SECRET_PATH : repositoryPath);
 
   // The class gate (`class-gate.ts`): the design packet carries these pages to a review session, so a blob screening admitted under a
   // class the run does not declare is neither quoted nor put on a source page; it is a counted row naming the class.
@@ -570,13 +571,17 @@ export function buildLocalInput(inputs: BuildInputs): Built {
   // withheld when its blob is excluded whole or is not UTF-8, or when its range touches a line screening redacts, or its retained text
   // matches a detector; a span of a blob the class gate keeps from agent-bound artifacts keeps its own treatment.
   const outcomeOf = new Map(derived.citedBlobs.flatMap((cited) => (cited.path === null ? [] : [[cited.path, cited.outcome] as const])));
+  const unnamedBlob = derived.citedBlobs.some((cited) => cited.path === null);
   const spanStanding = (citation: Readonly<Record<string, unknown>>): SpanStanding => {
     const cited = text(citation['path']);
     if (cited === undefined) return 'other';
     const blob = admitted.get(cited);
     // A blob the class gate withholds is not in `admitted` and its screening outcome is `admitted`, so it stands `other`.
     if (blob === undefined) {
-      const outcome = outcomeOf.get(cited) ?? screen.screenPath(cited);
+      // A blob recorded without its path (`path: null`) is one `isSecretPath` answers for, as `review-reach.ts` reads it. The path screen
+      // alone does not: it admits a Stage-2 path whose own text a configuration detector matches, and a span of such a file whose body
+      // screening excluded would stand `other` and its item's text would render (syzygy-8hm6, review 1 of the fix).
+      const outcome = outcomeOf.get(cited) ?? (unnamedBlob && isSecretPath(cited) ? 'secret-detector-match' : screen.screenPath(cited));
       return outcome === undefined || outcome === 'admitted' ? 'other' : packetSpanStanding(outcome);
     }
     const startLine = citation['startLine'], endLine = citation['endLine'];
@@ -596,7 +601,7 @@ export function buildLocalInput(inputs: BuildInputs): Built {
     const { cited, quoted } = citationIdsOf(value);
     const ids = new Set([...cited, ...quoted].filter((id) => standing(id) === 'withheld'));
     const files = new Set(list(value['citations']).filter(isRecord).flatMap((citation) => (ids.has(text(citation['id']) ?? '') && text(citation['path']) !== undefined ? [text(citation['path'])!] : [])));
-    const named = [...files].filter((file) => screen.screenPath(file) !== 'secret-detector-match').sort();
+    const named = [...files].filter((file) => !isSecretPath(file)).sort();
     return { sources: files.size, named };
   };
   const withheldSpanCount = (value: Readonly<Record<string, unknown>>): number => {
