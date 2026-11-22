@@ -8,6 +8,10 @@ import { verifyUrlFrozenProductHistory, type UrlFrozenProductHistory } from './u
 
 const BOUNDS = { maxBytes: 2_097_152, maxNodes: 65_536, maxDepth: 32 };
 const same = (a: unknown, b: unknown): boolean => encodeCanonicalJson(a, BOUNDS) === encodeCanonicalJson(b, BOUNDS);
+const auditSubject = (value: NonNullable<ReturnType<typeof readVerifiedUrlAuditLaunches>>) => ({
+  runId: value.runId, sourceBindingSha256: value.sourceBindingSha256, basePolicySha256: value.basePolicySha256,
+  originPolicySha256: value.originPolicySha256, pin: value.pin, principal: value.principal,
+});
 declare const productBrand: unique symbol;
 /** Fresh proof of independently checked historical products, never a process,
  * provider, machine-client or live-effect grant. No object shape issues one. */
@@ -45,7 +49,7 @@ function auditedLaunches(input: UrlRecoveryProductsOptions, history: UrlFrozenPr
     if (!observed || audit.records !== cut.record.audit.durableRecords || audit.bytes !== cut.record.audit.durableBytes
       || audit.tipSha256 !== cut.record.audit.tipSha256 || observed.runId !== input.expected.runId || observed.pin !== input.expected.sourcePin
       || input.machine.clients.some(client => client.context.policySha256 !== observed.originPolicySha256)
-      || (subject !== null && (!same({ ...subject, helperLaunchFiles: {} }, { ...observed, helperLaunchFiles: {} })))) return null;
+      || (subject !== null && (!same(auditSubject(subject), auditSubject(observed))))) return null;
     subject = observed;
     for (const role of roles) {
       const file = observed.helperLaunchFiles[role];
