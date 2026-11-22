@@ -383,6 +383,17 @@ describe('makefile version 1', () => {
     // A line of white space alone is blank, a tab-led one included.
     expect(facts(recognizeMakefile('A = 1\n\t \nbuild:\n'))).toEqual([['make-target', 3, 3, 'build']]);
   });
+  it('reads the 2.15 scenarios literally: tab-only blank line, continuation lines, a define body, directive lines', () => {
+    expect(facts(recognizeMakefile('A = 1\n\t\nbuild:\n'))).toEqual([['make-target', 3, 3, 'build']]);
+    expect(facts(recognizeMakefile('SRCS = a.c \\\n\tb.c\n'))).toEqual([]);
+    expect(facts(recognizeMakefile('build: a \\\n\tb\n'))).toEqual([['make-target', 1, 2, 'build']]);
+    expect(facts(recognizeMakefile('define compile\n\t$(CC) -c $<\nendef\n'))).toEqual([]);
+    expect(facts(recognizeMakefile('ifeq (x,a:b)\nbuild:\nendif\nvpath %.c src:lib\ninclude C:/rules.mk\n'))).toEqual([['make-target', 2, 2, 'build']]);
+  });
+  it('takes a first word as the first run of characters other than spaces and tabs', () => {
+    expect(facts(recognizeMakefile('vpath: x\n'))).toEqual([['make-target', 1, 1, 'vpath']]);
+    expect(facts(recognizeMakefile('ifeq(a,b)\nendif\n'))).toBe('syntax');
+  });
   it('takes no rule from a conditional-directive line or a directive line, and a separator before an operator after `;` makes a rule', () => {
     expect(facts(recognizeMakefile('ifeq (x,a:b)\nendif\n'))).toEqual([]);
     expect(facts(recognizeMakefile('vpath %.c src:lib\nexport A\ninclude a:b.mk\n'))).toEqual([]);

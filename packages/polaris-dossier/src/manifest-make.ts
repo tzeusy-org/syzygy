@@ -89,7 +89,8 @@ function withoutComment(s: string): string {
   return s;
 }
 
-const firstWord = (s: string): string => /^[^\s(]*/u.exec(s)![0];
+/** A line's first word: its first run of characters other than spaces and tabs, so `vpath:` and `ifeq(a,b)` begin with no directive. */
+const firstWord = (s: string): string => /^[^ \t]*/u.exec(s)![0];
 
 export function recognizeMakefile(text: string): Recognized {
   if (text.charCodeAt(0) === 0xfeff) return { ok: false, parseFault: 'syntax' };
@@ -132,11 +133,11 @@ export function recognizeMakefile(text: string): Recognized {
     for (;;) { const word = firstWord(rest); if (!PREFIXES.includes(word) || rest.length === word.length) break; rest = rest.slice(word.length).replace(/^[ \t]+/u, ''); }
     const word = firstWord(rest);
 
-    if (CONDITIONALS.includes(word) && (rest.length === word.length || /[\s(]/u.test(rest[word.length]!))) { conditionals++; continue; }
+    if (CONDITIONALS.includes(word)) { conditionals++; continue; }
     if (word === 'else') { if (conditionals === 0) syntax = true; continue; }
     if (word === 'endif') { if (conditionals === 0) syntax = true; else conditionals--; continue; }
     if (word === 'endef') { syntax = true; continue; }
-    if (word === 'define' && (rest.length === word.length || /\s/u.test(rest[word.length]!))) {
+    if (word === 'define') {
       if (/^define\s+\.RECIPEPREFIX(?:\s|$)/u.test(rest)) beyond = true;
       // The body, never read, to its matching `endef`; a `define` inside it nests.
       let depth = 1;

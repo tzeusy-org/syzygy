@@ -80,6 +80,7 @@ const MUTANTS = [
   ['cmake-line-end-bracket-comment', X, "if (text[i] === '#' && bracketOpen(i + 1) >= 0) { i++; bracket(); continue; }\n        break;", 'break;'],
   ['cmake-inner-quote-breaks', X, "u === '(' || u === ')' || u === '#') break;", "u === '(' || u === ')' || u === '#' || u === '\"') break;"],
   ['makefile-directive-line-rule', M, 'if (DIRECTIVES.includes(firstWord(content))) continue;\n    if (found.colon >= 0) {', 'if (found.colon >= 0) {'],
+  ['makefile-first-word-paren', M, "/^[^ \\t]*/u.exec(s)", "/^[^\\s(]*/u.exec(s)"],
   ['makefile-assignment-after-colon', M, 'if (found.op >= 0 && found.colon < 0) {', 'if (found.op >= 0) {'],
   ['yaml-second-document', Y, 'if (documents > 1 && !multi) beyond = true;', 'if (documents > 1) beyond = true;'],
   ['yaml-integer-text', Y, "INTEGER.test(plain) ? { kind: 'other', lines, int: plain } : ", ''],
