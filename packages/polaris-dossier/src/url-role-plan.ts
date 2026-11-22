@@ -1,15 +1,15 @@
 import { randomUUID } from 'node:crypto';
-import { lstat, mkdir, mkdtemp, readFile, realpath, rm, writeFile } from 'node:fs/promises';
+import { lstat, mkdir, mkdtemp, readFile, realpath, rename, rm, writeFile } from 'node:fs/promises';
 import { createServer } from 'node:net';
 import os from 'node:os';
 import path from 'node:path';
 import { encodeCanonicalJson, parseBoundedJson } from '@syzygy/polaris-generation-core/live';
 import { deepFreeze, sha256 } from '@syzygy/support';
 import { sourceBindingSha256, type RecordedRunConfig } from './run-record.js';
-import { createOrderedDesignSessionProfile, createSessionProfile, isOrderedDesignSessionProfile, type NativeSessionProfile } from './session-profile.js';
+import { createOrderedDesignSessionProfile, createSessionProfile, isOrderedDesignSessionProfile, type NativeSessionProfile, type SessionProfileInput } from './session-profile.js';
 import type { SessionOrigin } from './session-egress-policy.js';
 import { prepareRestrictedUrlSession, URL_CLI_PROGRAM, type UrlSessionLaunchOptions } from './session-launch.js';
-import type { UrlSessionViewInputs } from './session-url-view.js';
+import { urlSessionViewFor, type UrlSessionViewInputs } from './session-url-view.js';
 import type { ViewRole } from './session-view.js';
 import type { DossierScreen } from './screen.js';
 import { URL_PROFILE_ID, URL_ROLES, type UrlRoleDeclaration } from './url-run-record.js';
@@ -185,4 +185,108 @@ async function prepare(input: UrlRolePlanningOptions, designVariant: 'ordinary' 
     }
     return { ok: false, code: 'url-role-plan-unavailable', stage, cleanup: retained.length === 0 ? 'removed' : 'Unknown', retainedPaths: retained };
   } finally { server.close(); }
+}
+
+export interface UrlRetainedRolePlan {
+  readonly role: ViewRole;
+  readonly input: SessionProfileInput;
+  readonly view: UrlSessionViewInputs;
+  readonly declaration: UrlRoleDeclaration;
+}
+
+/** Persist only the exact root-created public launch inputs. */
+export function captureUrlRolePlans(plans: readonly UrlRolePlan[]): readonly UrlRetainedRolePlan[] {
+  if (plans.length !== URL_ROLES.length || plans.some((plan, index) => !isPreparedUrlRolePlan(plan) || plan.role !== URL_ROLES[index]))
+    throw new Error('url-role-plan-unavailable');
+  return deepFreeze(parseBoundedJson(canonical(plans.map(plan => ({
+    role: plan.role, input: plan.profile.input, view: plan.view, declaration: plan.declaration,
+  }))), { maxBytes: 262_144, maxNodes: 32_768, maxDepth: 16 })) as unknown as readonly UrlRetainedRolePlan[];
+}
+
+/** Recompile the original logical role identities and re-probe fresh writable
+ * views after independent clean-stop verification and exclusive recovery claim.
+ * The saved shapes supply no prepared-plan capability. */
+export async function restoreUrlRolePlans(input: {
+  readonly run: string; readonly record: RecordedRunConfig; readonly screen: DossierScreen;
+  readonly runtime: UrlRuntime; readonly retained: readonly UrlRetainedRolePlan[];
+  readonly declarations: readonly UrlRoleDeclaration[]; readonly generation: string;
+  readonly sessionDirectories: Readonly<Record<ViewRole, string>>; readonly canaries: readonly string[];
+  readonly current: () => boolean | Promise<boolean>;
+}): Promise<readonly UrlRolePlan[] | null> {
+  const server = createServer(socket => socket.destroy());
+  server.on('error', () => {});
+  try {
+    if (!/^[a-f0-9]{32}$/u.test(input.generation) || input.retained.length !== URL_ROLES.length
+      || input.declarations.length !== URL_ROLES.length || !await input.current()) return null;
+    const plans: UrlRolePlan[] = [];
+    for (const [index, saved] of input.retained.entries()) {
+      const role = URL_ROLES[index]!, declaration = input.declarations[index]!;
+      if (saved.role !== role || saved.view.role !== role || declaration.role !== role
+        || canonical(saved.declaration) !== canonical(declaration) || saved.input.sessionId !== declaration.sessionId
+        || declaration.configurationSha256 !== input.runtime.profileRegistrySha256
+        || declaration.executableSha256 !== URL_CLI_PROGRAM.sha256
+        || saved.view.nodeExecutable !== input.runtime.worker.node) return null;
+      urlSessionViewFor(saved.view);
+      const directory = input.sessionDirectories[role];
+      if (!path.isAbsolute(directory) || path.resolve(directory) !== directory) return null;
+      const prompts = instructions(role, input.run, directory, declaration.sessionId, true);
+      const binding = { run: path.basename(input.run), role, sourceBinding: sourceBindingSha256(input.record.subject),
+        policy: input.record.subject.screeningPolicy.sha256, provider: input.record.declared.agentProvider, model: input.record.declared.model };
+      if (canonical(saved.input.binding) !== canonical(binding) || saved.input.systemPrompt !== prompts.system
+        || saved.input.initialPrompt !== prompts.initial) return null;
+      const compiled = (role === 'design' ? createOrderedDesignSessionProfile : createSessionProfile)(saved.input);
+      if (!compiled.ok || compiled.value.profile.digest !== declaration.compiledProfileSha256
+        || sha256(prompts.system) !== declaration.instructionSha256 || sha256(prompts.initial) !== declaration.inputPacketSha256) return null;
+      const profile = compiled.value.profile;
+      const fields = [input.run, directory, ...Object.values(binding), prompts.system, prompts.initial, saved.input.utcDate, saved.input.kernelRelease];
+      if (fields.some(value => input.screen.screenBody(value) !== undefined)
+        || ['', '\n', ' '].some(separator => input.screen.screenBody(fields.join(separator)) !== undefined)) return null;
+      const strings: string[] = [], pending: unknown[] = [profile, saved.view];
+      while (pending.length) {
+        const value = pending.pop();
+        if (typeof value === 'string') strings.push(value);
+        else if (Array.isArray(value)) for (const child of value) pending.push(child);
+        else if (value !== null && typeof value === 'object') for (const [key, child] of Object.entries(value)) { strings.push(key); pending.push(child); }
+      }
+      if (strings.some(value => input.screen.screenSecrets(value) !== undefined)
+        || ['', '\n', ' '].some(separator => input.screen.screenSecrets(strings.join(separator)) !== undefined)) return null;
+      plans.push(Object.freeze({ role, profile, view: deepFreeze({ ...saved.view, protectedPaths: [...saved.view.protectedPaths] }),
+        declaration: deepFreeze({ ...declaration }), probe: 'owned-synthetic-namespace-probe-passed' as const,
+        initialOrigin: deepFreeze({ binding, id: declaration.inputOriginId, kind: 'initial-prompt' as const,
+          canonicalText: prompts.initial, classes: ['governance-text', 'code-structure', 'work-history', 'derived-composites'] as const,
+          originIds: ['origin:role-policy', 'origin:run-control', 'origin:tool-metadata'] }) }));
+    }
+    // Validate the complete set before changing any retained directory. Never
+    // let rename replace an archive from an earlier or interrupted attempt.
+    const rotations = plans.flatMap(plan => [plan.view.homeDirectory, plan.view.workDirectory]);
+    if (new Set(rotations).size !== rotations.length) return null;
+    for (const name of rotations) {
+      await privateDirectory(name);
+      try { await lstat(`${name}.retired-${input.generation}`); return null; }
+      catch (error) { if ((error as NodeJS.ErrnoException).code !== 'ENOENT') throw error; }
+    }
+    for (const name of rotations) {
+      if (!await input.current()) return null;
+      // The exclusive recovery owner retains the original for inspection.
+      // An interrupted rotation grants no prepared role or launch capability.
+      await rename(name, `${name}.retired-${input.generation}`);
+      await mkdir(name, { mode: 0o700 });
+    }
+    await new Promise<void>((resolve, reject) => { server.once('error', reject); server.listen(0, '127.0.0.1', resolve); });
+    const address = server.address();
+    if (address === null || typeof address === 'string') return null;
+    for (const plan of plans) {
+      if (!await input.current()) return null;
+      const supportSha256 = isOrderedDesignSessionProfile(plan.profile) ? plan.profile.transcript.supportSha256 : input.runtime.supportSha256;
+      const actual = await prepareRestrictedUrlSession({ profile: plan.profile, view: plan.view,
+        expected: { nodeSha256: input.runtime.worker.nodeSha256, supportSha256 }, current: input.current,
+        audit: () => { throw new Error('restoring a plan cannot launch a role'); }, canaries: input.canaries, hostLoopbackPort: address.port });
+      if (actual.profileSha256 !== plan.declaration.compiledProfileSha256 || actual.commandSha256 !== plan.declaration.commandSha256
+        || actual.viewSha256 !== plan.declaration.viewSha256) return null;
+    }
+    if (!await input.current()) return null;
+    for (const plan of plans) preparedPlans.add(plan);
+    return Object.freeze(plans);
+  } catch { return null; }
+  finally { server.close(); }
 }

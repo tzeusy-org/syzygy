@@ -13,7 +13,7 @@ import { createSessionController } from './session-controller.js';
 import { URL_CLI_PROGRAM } from './session-launch.js';
 import { URL_ROLES, URL_ORIGIN_POLICY_PATH, URL_PROFILE_ID, createUrlRunDeclaration, urlSourceTransportIdentity } from './url-run-record.js';
 import { createUrlRunOrigins } from './url-run-origins.js';
-import { isPreparedUrlRolePlan, prepareUrlRolePlans, type UrlRolePlanningOptions } from './url-role-plan.js';
+import { captureUrlRolePlans, restoreUrlRolePlans, isPreparedUrlRolePlan, prepareUrlRolePlans, type UrlRolePlanningOptions } from './url-role-plan.js';
 
 const cleanup: string[] = [];
 afterEach(async () => { for (const root of cleanup.splice(0)) await rm(root, { recursive: true, force: true }); });
@@ -134,6 +134,37 @@ describe('four restricted URL role plans before the brief', () => {
     expect(await readdir(result.viewRoot)).toEqual(expect.arrayContaining([...URL_ROLES, 'support']));
     expect(await readdir(f.options.run)).toEqual([]);
   }, 30_000);
+  it('restores exact declared logical profiles in fresh native views without replacing retained bytes', async () => {
+    const f = await fixture(), made = await prepareUrlRolePlans(f.options);
+    if (!made.ok) throw new Error('own role preparation unavailable');
+    cleanup.push(made.socketRoot);
+    const retained = captureUrlRolePlans(made.roles), declarations = made.roles.map(plan => plan.declaration);
+    expect(() => captureUrlRolePlans(made.roles.map(plan => ({ ...plan })))).toThrow('url-role-plan-unavailable');
+    for (const plan of made.roles) await writeFile(path.join(plan.view.homeDirectory, 'retained-marker'), 'original private view');
+    const restore = { run: f.options.run, record: f.options.record, screen: f.options.screen, runtime: f.options.runtime,
+      retained, declarations, generation: 'a'.repeat(32), sessionDirectories: f.options.sessionDirectories,
+      canaries: f.options.canaries, current: () => true };
+    expect(await restoreUrlRolePlans({ ...restore, retained: retained.map((plan, index) => index === 3
+      ? { ...plan, input: { ...plan.input, sessionId: '00000000-0000-4000-8000-000000000000' } } : plan) })).toBeNull();
+    for (const plan of made.roles) expect(await readFile(path.join(plan.view.homeDirectory, 'retained-marker'), 'utf8')).toBe('original private view');
+    // A pre-existing generation target must survive an attempted recovery.
+    const archive = `${made.roles[0]!.view.homeDirectory}.retired-${restore.generation}`;
+    await mkdir(archive, { mode: 0o700 });
+    expect(await restoreUrlRolePlans(restore)).toBeNull();
+    expect(await lstat(archive)).toMatchObject({});
+    await rm(archive, { recursive: true });
+    const restored = await restoreUrlRolePlans(restore);
+    expect(restored?.map(plan => plan.declaration)).toEqual(declarations);
+    for (const [index, plan] of (restored ?? []).entries()) {
+      expect(isPreparedUrlRolePlan(plan)).toBe(true);
+      expect(plan.profile.digest).toBe(made.roles[index]!.profile.digest);
+      expect(plan.profile.input.sessionId).toBe(made.roles[index]!.profile.input.sessionId);
+      expect(await readdir(plan.view.homeDirectory)).toEqual([]);
+      expect(await readFile(path.join(`${plan.view.homeDirectory}.retired-${restore.generation}`, 'retained-marker'), 'utf8')).toBe('original private view');
+    }
+    expect(restored).toHaveLength(4);
+    expect(await restoreUrlRolePlans(restore)).toBeNull();
+  }, 45_000);
   it('refuses withdrawn current binding and excluded metadata with no retained view or role launch', async () => {
     const f = await fixture(); let calls = 0;
     expect(await prepareUrlRolePlans({ ...f.options, current: () => ++calls < 2 }))
