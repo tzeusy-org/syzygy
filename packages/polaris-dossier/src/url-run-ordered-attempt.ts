@@ -11,6 +11,7 @@ import { assertUrlDesignDeliveryViewCurrent, type UrlSessionAuditResult, type Ur
 import { isUrlDesignProductLeaseOpen, type UrlDesignProductMetadata } from './url-design-product.js';
 import { startOrderedDesignHost, type OrderedDesignHost } from './url-ordered-design-host.js';
 import { createOrderedDesignSession } from './url-ordered-design-session.js';
+import { assertSessionMachineEffectCurrent, sessionMachineEffectCurrent } from './session-machine-transport.js';
 import type { OrderedDesignWorkEnforcement } from './url-ordered-design-work-budget.js';
 import { writeUrlLaunchHistory } from './url-launch-history.js';
 import type { UrlRolePlan } from './url-role-plan.js';
@@ -90,12 +91,12 @@ export async function startUrlOrderedAttempt(input: UrlOrderedAttemptOptions) {
     controller?.reportAuditRead(bytes);
   };
   const assertCurrent = (): void => {
-    if (closed || delivery === null || render === null || !input.budget.current() || !input.machine.current()
+    if (closed || sessionMachineEffectCurrent() === false || delivery === null || render === null || !input.budget.current() || !input.machine.current()
       || !isUrlDesignProductLeaseOpen(render.product)) throw refused();
     assertUrlDesignDeliveryViewCurrent(delivery);
   };
   const current = async (): Promise<boolean> => {
-    if (closed || !(await input.current()) || !input.machine.current()) return false;
+    if (closed || !(await input.current()) || sessionMachineEffectCurrent() === false || !input.machine.current()) return false;
     if (delivery !== null && render !== null && isUrlDesignProductLeaseOpen(render.product)) {
       try { assertCurrent(); return true; } catch { return false; }
     }
@@ -106,7 +107,7 @@ export async function startUrlOrderedAttempt(input: UrlOrderedAttemptOptions) {
       if (next === null) return false;
       let adopted = false;
       try {
-        if (closed || !(await input.current())) return false;
+        if (closed || !(await input.current()) || sessionMachineEffectCurrent() === false) return false;
         const checked = await input.audit.readDesignDeliveryView(delivery!.receipt, next.product, observeRead);
         const previous = render; render = next; delivery = checked; adopted = true; previous?.close();
         assertCurrent(); return true;
@@ -117,13 +118,19 @@ export async function startUrlOrderedAttempt(input: UrlOrderedAttemptOptions) {
     if (consumedTerminal) return true;
     if (staged === null || controller === undefined) return false;
     try {
+      assertSessionMachineEffectCurrent();
       await controller.readTerminal(async terminal => {
+        assertSessionMachineEffectCurrent();
         const fresh = await input.reproduce();
         if (fresh === null) throw refused();
         try {
+          assertSessionMachineEffectCurrent();
           if (!(await current()) || staged === null) throw refused();
+          assertSessionMachineEffectCurrent();
           const proof = await input.audit.readOrderedDesignReviewProof(delivery!.receipt, fresh.product, writer!, terminal.completion);
+          assertSessionMachineEffectCurrent();
           await input.audit.commitOrderedDesignVerdict(proof, staged.checked, terminal);
+          assertSessionMachineEffectCurrent();
           input.artifacts.commitOrderedDesignVerdict(staged, proof, terminal);
         } finally { fresh.close(); }
       });
@@ -214,15 +221,20 @@ export async function startUrlOrderedAttempt(input: UrlOrderedAttemptOptions) {
         cpuMicroseconds: input.work.cpuMicroseconds, chargeScreenCpuMicroseconds: input.work.chargeScreenCpuMicroseconds },
       relay: () => host?.relay, envelope: () => { assertCurrent(); return delivery!.view; }, current, assertCurrent,
       stageVerdict: async ({ stdin, completion, assertCurrent: boundary }) => {
+        assertSessionMachineEffectCurrent();
         boundary();
         if (staged !== null || admission === null || !(await current())) throw refused();
+        assertSessionMachineEffectCurrent();
         const fresh = await input.reproduce();
         if (fresh === null) throw refused();
         try {
+          assertSessionMachineEffectCurrent();
           const proof = await input.audit.readOrderedDesignReviewProof(delivery!.receipt, fresh.product, writer!, completion);
+          assertSessionMachineEffectCurrent();
           boundary();
           staged = await input.artifacts.stageOrderedDesignVerdict(['dossier', 'await', '/work', '--submit', `round-${input.round}/verdict.json`, '--stdin'],
-            Buffer.from(stdin), proof, async () => { boundary(); return current(); });
+            Buffer.from(stdin), proof, async () => { assertSessionMachineEffectCurrent(); boundary(); return current(); });
+          assertSessionMachineEffectCurrent();
           boundary();
           return staged.sha256;
         } finally { fresh.close(); }
