@@ -25,7 +25,7 @@ import { assertUrlDesignRenderContinuationCurrent, createUrlSessionAudit, type U
 import { createUrlSessionBudget, type UrlBudgetSnapshot } from './url-session-budget.js';
 import type { UrlSessionAuditHistoryExpected } from './url-session-audit-history.js';
 import { URL_DESIGN_VIEW_ARTIFACT } from './url-design-view.js';
-import { createUrlRunMachine } from './url-run-machine.js';
+import { createUrlRunMachine, readUrlRunMachineClosedHistory, type UrlRunMachineClosedHistory } from './url-run-machine.js';
 import { startUrlOrderedAttempt } from './url-run-ordered-attempt.js';
 import type { UrlParentAdoption } from './url-parent-adoption.js';
 import type { createUrlRunArtifacts } from './url-run-artifacts.js';
@@ -86,6 +86,7 @@ export interface UrlRunSessionsSummary {
   readonly hosts: readonly { readonly role: ViewRole; readonly pendingInvocations: number | null; readonly termination: 'settled' | 'Unknown' }[];
   readonly audit: UrlSessionAuditSummary;
   readonly closedAuditHistory: UrlSessionAuditHistoryExpected | null;
+  readonly closedMachineHistory?: UrlRunMachineClosedHistory;
   readonly machine?: { readonly identitySha256: string; readonly lifecycle: 'open' | 'retired' | 'Unknown' };
 }
 export interface UrlRunSessions {
@@ -97,7 +98,7 @@ export interface UrlRunSessions {
   withinCpuBudget(): boolean;
   waitForProductSamples(): Promise<boolean>;
   stop(): Promise<UrlRunSessionsSummary>;
-  summary(): Omit<UrlRunSessionsSummary, 'control' | 'hosts' | 'closedAuditHistory'>;
+  summary(): Omit<UrlRunSessionsSummary, 'control' | 'hosts' | 'closedAuditHistory' | 'closedMachineHistory'>;
 }
 
 /** One attended supervisor owns all four processes, the typed operator input,
@@ -284,7 +285,7 @@ async function start(options: UrlRunSessionsOptions, ports: typeof native): Prom
   };
   const probe = createServer(socket => socket.destroy()); probe.on('error', () => {});
   let stopped: Promise<UrlRunSessionsSummary> | undefined;
-  const summary = (): Omit<UrlRunSessionsSummary, 'control' | 'hosts' | 'closedAuditHistory'> => deepFreeze({ failure, budget: budget.snapshot(),
+  const summary = (): Omit<UrlRunSessionsSummary, 'control' | 'hosts' | 'closedAuditHistory' | 'closedMachineHistory'> => deepFreeze({ failure, budget: budget.snapshot(),
     roles: URL_ROLES.map(role => ({ ...captures.get(role)! })), audit: audit.summary(),
     ...(machine === undefined ? {} : { machine: { identitySha256: machine.identitySha256, lifecycle: machineLifecycle } }) });
   const stop = (): Promise<UrlRunSessionsSummary> => stopped ??= (async () => {
@@ -299,14 +300,21 @@ async function start(options: UrlRunSessionsOptions, ports: typeof native): Prom
       catch { return { role, pendingInvocations: null, termination: 'Unknown' as const }; }
     }));
     await Promise.allSettled(terminals);
+    let closedMachineHistory: UrlRunMachineClosedHistory | null = null;
     if (retirement !== undefined) {
-      try { machineLifecycle = (await retirement).lifecycle; } catch { machineLifecycle = 'Unknown'; }
+      try {
+        const retired = await retirement;
+        machineLifecycle = retired.lifecycle;
+        closedMachineHistory = readUrlRunMachineClosedHistory(retired);
+        if (machineLifecycle === 'retired' && closedMachineHistory === null) machineLifecycle = 'Unknown';
+      } catch { machineLifecycle = 'Unknown'; }
     }
     if (orderedAttempt !== null && !(await orderedAttempt.close())) failure ??= 'cleanup-unconfirmed';
     options.credential.close(); probe.close();
     const auditResult = await audit.close();
     if (!withinCpuBudget()) failure ??= 'cpu-budget';
-    return deepFreeze({ ...summary(), control: control.close(), hosts: hostResults, audit: auditResult, closedAuditHistory: audit.closedHistory() });
+    return deepFreeze({ ...summary(), control: control.close(), hosts: hostResults, audit: auditResult, closedAuditHistory: audit.closedHistory(),
+      ...(closedMachineHistory === null ? {} : { closedMachineHistory }) });
   })();
   try {
     if (ordered) {
