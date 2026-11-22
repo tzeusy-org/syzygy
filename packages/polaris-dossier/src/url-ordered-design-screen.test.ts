@@ -1,5 +1,5 @@
-import { renameSync, writeFileSync } from 'node:fs';
-import { readFile, writeFile, realpath, stat } from 'node:fs/promises';
+import { renameSync, statSync, writeFileSync } from 'node:fs';
+import { mkdir, readFile, writeFile, realpath, stat } from 'node:fs/promises';
 import { join } from 'node:path';
 import { createServer } from 'node:net';
 import { beforeAll, describe, expect, it, vi } from 'vitest';
@@ -176,11 +176,16 @@ describe('preemptible ordered design screen', () => {
   });
 
   it.each(['held-bytes', 'named-identity'] as const)('rechecks worker %s after hashing Node and before charging', async change => {
-    const worker = join(directory, `private-hash-${change}.mjs`);
-    const replacement = join(directory, `replacement-${change}.mjs`);
+    const folder = join(directory, `private-hash-${change}`);
+    const replacement = join(directory, `replacement-${change}`);
+    const moved = join(directory, `moved-${change}`);
+    const worker = join(folder, 'worker.mjs');
     const original = 'void 0;\n';
+    await mkdir(folder);
+    await mkdir(replacement);
     await writeFile(worker, original, { mode: 0o600 });
-    await writeFile(replacement, original, { mode: 0o600 });
+    await writeFile(join(replacement, 'worker.mjs'), original, { mode: 0o600 });
+    const heldStat = statSync(worker, { bigint: true });
     const pinned = await selected(worker);
     const charged = vi.fn();
     let reads = 0;
@@ -190,13 +195,25 @@ describe('preemptible ordered design screen', () => {
         // The tiny worker was read in one chunk. The second read is in Node.
         if (++reads === 2) {
           if (change === 'held-bytes') writeFileSync(worker, 'void 1;\n');
-          else renameSync(replacement, worker);
+          else {
+            // Replace the parent directory to preserve the held inode's
+            // link count and timestamps while changing what the name resolves.
+            renameSync(folder, moved);
+            renameSync(replacement, folder);
+          }
         }
         return true;
       },
       chargeCpuMicroseconds: charged,
     });
     expect(reads).toBeGreaterThan(1);
+    if (change === 'named-identity') {
+      const prior = statSync(join(moved, 'worker.mjs'), { bigint: true });
+      for (const key of ['dev', 'ino', 'mode', 'nlink', 'size', 'mtimeNs', 'ctimeNs'] as const) {
+        expect(prior[key]).toBe(heldStat[key]);
+      }
+      expect(statSync(worker, { bigint: true }).ino).not.toBe(prior.ino);
+    }
     expect(result.ok).toBe(false);
     expect(result.charge.cpuMicroseconds).toBe(0);
     expect(charged).not.toHaveBeenCalled();
