@@ -45,6 +45,7 @@ export interface VerifiedUrlSessionAuditHistory {
   readonly completeness: 'Unknown'; readonly records: number; readonly bytes: number; readonly tipSha256: string;
   readonly capturedLaunchTerminals: number; readonly capturedCompleteExchanges: number;
   readonly capturedCountExchanges: number; readonly capturedHelperLaunches: number; readonly capturedMachineEffects: number;
+  readonly capturedReportedTokens: number | 'Unknown';
 }
 function fail(): never { throw new Error('url-session-audit-history-unavailable'); }
 const hex = (v: unknown): v is string => typeof v === 'string' && /^[a-f0-9]{64}$/u.test(v);
@@ -84,7 +85,7 @@ export async function verifyUrlSessionAuditHistory(given: UrlSessionAuditHistory
     const machineSnapshots = new Map<string, UrlMachinePeerHistorySnapshot>();
     if (machineHistory !== undefined) {
       const { identitySha256, snapshots } = machineHistory;
-      if (!hex(identitySha256) || !Array.isArray(snapshots) || snapshots.length > 8) fail();
+      if (!hex(identitySha256) || !Array.isArray(snapshots) || snapshots.length > ROLES.length * 2) fail();
       for (const snapshot of snapshots) {
         if (!isUrlMachinePeerHistorySnapshot(snapshot) || snapshot.storeIdentitySha256 !== identitySha256
           || machineSnapshots.has(snapshot.clientId)) fail();
@@ -200,11 +201,11 @@ export async function verifyUrlSessionAuditHistory(given: UrlSessionAuditHistory
 async function verifyCapturedBoundary(rows: readonly Row[], expected: UrlSessionAuditHistoryExpected,
   retainedLaunches: RetainedLaunchSubjects, machineSnapshots: ReadonlyMap<string, UrlMachinePeerHistorySnapshot>, check: () => void) {
   let capturedLaunchTerminals = 0, capturedCompleteExchanges = 0, capturedCountExchanges = 0;
-  let capturedHelperLaunches = 0, capturedMachineEffects = 0;
+  let capturedHelperLaunches = 0, capturedMachineEffects = 0, capturedReportedTokens = 0;
   for (const role of ROLES) {
     let attempt: { commandSha256: string; viewSha256: string } | null = null;
     let launchHistoryMatched = false;
-    let exchange: { id: string; stage: string; digest: string; usage: boolean; identity: string; count: boolean } | null = null;
+    let exchange: { id: string; stage: string; digest: string; usage: number | null; identity: string; count: boolean } | null = null;
     let tool: { id: string; name: string; inputSha256: string; executing: boolean; counted: boolean;
       receipt?: { receiptId: string; toolUseId: string; digest: string; bytes: number } } | null = null;
     let question: unknown = null;
@@ -265,10 +266,15 @@ async function verifyCapturedBoundary(rows: readonly Row[], expected: UrlSession
             || !hex(p.digest) || !count(p.bytes, 2_097_152) || p.bytes === 0) fail();
           tool.executing = false;
           tool.receipt = { receiptId: p.id, toolUseId: tool.id, digest: p.digest, bytes: p.bytes }; break;
-        case 'usage':
-          if (exchange === null || exchange.count || exchange.usage || exchange.stage !== 'send-outcome'
-            || !exact(p, ['inputTokens', 'outputTokens', 'cacheCreationInputTokens', 'cacheReadInputTokens']) || Object.values(p).some(v => !count(v))) fail();
-          exchange.usage = true; break;
+        case 'usage': {
+          if (exchange === null || exchange.count || exchange.usage !== null || exchange.stage !== 'send-outcome'
+            || !exact(p, ['inputTokens', 'outputTokens', 'cacheCreationInputTokens', 'cacheReadInputTokens'])) fail();
+          const values = Object.values(p);
+          if (!values.every(value => count(value))) fail();
+          const total = values.reduce((sum, value) => sum + value, 0);
+          if (!count(total)) fail();
+          exchange.usage = total; break;
+        }
         case 'relay': {
           if (!exact(p, ['event', 'subject', 'requestId', 'at', 'credentialIdentity', 'exposureMode', 'governingRule', 'admission', 'received',
             'route', 'consumedToolResults', 'response', 'outcome', 'status', 'previousExchangeSha256'])
@@ -291,7 +297,7 @@ async function verifyCapturedBoundary(rows: readonly Row[], expected: UrlSession
                 || !equal(p.consumedToolResults, tool?.receipt === undefined ? [] : [tool.receipt])) fail();
               tool = null;
             }
-            requests.add(p.requestId); exchange = { id: p.requestId, stage: 'attempt-allowed', digest: row.sha256, usage: false, identity, count: tokenCount };
+            requests.add(p.requestId); exchange = { id: p.requestId, stage: 'attempt-allowed', digest: row.sha256, usage: null, identity, count: tokenCount };
           } else {
             if (exchange === null || p.requestId !== exchange.id || p.previousExchangeSha256 !== exchange.digest || identity !== exchange.identity) fail();
             if (p.event === 'send-attempt' && exchange.stage === 'attempt-allowed' && p.outcome === 'attempted') exchange.stage = 'send-attempt';
@@ -304,7 +310,7 @@ async function verifyCapturedBoundary(rows: readonly Row[], expected: UrlSession
                   || !isSessionTokenCount(response.estimatedInputTokens)) fail();
                 capturedCountExchanges++;
               } else {
-                if (!exchange.usage || !exact(response, ['digest', 'bytes', 'content', 'stopReason', 'textBlocks', 'tool'])
+                if (exchange.usage === null || !exact(response, ['digest', 'bytes', 'content', 'stopReason', 'textBlocks', 'tool'])
                   || !hex(response.digest) || !count(response.bytes, 8_388_608) || response.bytes === 0
                   || !['messages-json', 'messages-event-stream'].includes(String(response.content))) fail();
                 if (response.stopReason === 'tool_use') {
@@ -313,6 +319,8 @@ async function verifyCapturedBoundary(rows: readonly Row[], expected: UrlSession
                     || typeof call.name !== 'string' || !SESSION_TOOLS.some(name => name === call.name) || !hex(call.inputSha256)) fail();
                   tool = { id: call.id, name: call.name, inputSha256: call.inputSha256, executing: false, counted: false };
                 } else if (response.stopReason !== 'end_turn' || response.tool !== null) fail();
+                capturedReportedTokens += exchange.usage;
+                if (!count(capturedReportedTokens)) fail();
                 capturedCompleteExchanges++;
               }
               exchange = null; break;
@@ -334,5 +342,6 @@ async function verifyCapturedBoundary(rows: readonly Row[], expected: UrlSession
     if (attempt !== null || exchange !== null || tool !== null || question !== null
       || (role !== 'author' && retainedLaunches[role] !== undefined && !launchHistoryMatched)) fail();
   }
-  return { capturedLaunchTerminals, capturedCompleteExchanges, capturedCountExchanges, capturedHelperLaunches, capturedMachineEffects };
+  return { capturedLaunchTerminals, capturedCompleteExchanges, capturedCountExchanges, capturedHelperLaunches, capturedMachineEffects,
+    capturedReportedTokens: capturedCompleteExchanges === 0 ? 'Unknown' as const : capturedReportedTokens };
 }
