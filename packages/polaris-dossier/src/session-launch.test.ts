@@ -369,12 +369,20 @@ async function runNativeOrderedFixture(scenario: OrderedScenario) {
       worker: { path: worker, bytes: bytes.length, sha256: sha256(bytes) } };
     screening = { kind: 'bounded-worker', program, policyBytes: policyFixture().bytes, planInput };
   }
+  const remainingWorkCpu = () => (scenario === 'insufficient-work' && responseUsage.length > 0 ? 64_000_000 : 3_000_000_000) - workerCpu;
+  let continuationReserved = false;
+  const reserveRemainingCpuMicroseconds = (required: number): number | null => {
+    if (continuationReserved) return null;
+    continuationReserved = true;
+    const remaining = remainingWorkCpu();
+    return required <= remaining ? remaining : null;
+  };
   orderedSession = createOrderedDesignSession({ profile, plan, principal, writer, budget, screening,
     work: { runtimeSha256: sha256('owned runtime'), enforcement: { runtimeSha256: sha256('owned runtime'), workerSha256: screening.kind === 'bounded-worker' ? screening.program.worker.sha256 : sha256('owned test adapter'),
       operations: { request: operationEnvelope, response: operationEnvelope, tool: operationEnvelope, audit: operationEnvelope, terminal: operationEnvelope },
       relayMilliseconds: 180_000, brokerMilliseconds: 85_000 },
       // Allow the retirement audit while still refusing the entire transfer.
-      remainingRunCpuMicroseconds: () => (scenario === 'insufficient-work' && responseUsage.length > 0 ? 64_000_000 : 3_000_000_000) - workerCpu,
+      remainingRunCpuMicroseconds: remainingWorkCpu, reserveRemainingCpuMicroseconds,
       cpuMicroseconds, chargeScreenCpuMicroseconds: value => { workerCpu += value; } },
     ...(scenario === 'insufficient-shape' ? { requestMaxBytes: 16_384 } : {}), relay: () => relay, envelope: () => view.bytes,
     current: () => true, assertCurrent: () => {}, stageVerdict: async ({ stdin, assertCurrent }) => {

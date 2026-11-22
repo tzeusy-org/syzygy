@@ -42,6 +42,18 @@ export interface OrderedDesignWorkEnforcement {
   readonly brokerMilliseconds: number;
 }
 
+/** The same finite future CPU requirement drives reservation and planning. */
+export function calculateOrderedDesignCpuRequirement(enforcement: OrderedDesignWorkEnforcement): number | null {
+  let cpu = 0;
+  for (const operation of OPERATIONS) {
+    const capacity = enforcement.operations[operation].cpuMicroseconds;
+    if (!positive(capacity)) return null;
+    cpu += COUNTS[operation] * capacity;
+    if (!positive(cpu)) return null;
+  }
+  return cpu;
+}
+
 interface DetectorBound {
   readonly secretCodeUnits: number;
   readonly secretCalls: number;
@@ -92,14 +104,15 @@ export function planOrderedDesignWork(input: {
       || !positive(deadline) || !nonnegative(now) || deadline <= now || !positive(remainingRunCpuMicroseconds)
       || !positive(enforcement.relayMilliseconds) || enforcement.relayMilliseconds > 180_000
       || !positive(enforcement.brokerMilliseconds) || enforcement.brokerMilliseconds > 85_000) return null;
-    let wall = 4 * (enforcement.relayMilliseconds + enforcement.brokerMilliseconds), cpu = 0, auditReadBytes = 0;
+    const cpu = calculateOrderedDesignCpuRequirement(enforcement);
+    if (cpu === null) return null;
+    let wall = 4 * (enforcement.relayMilliseconds + enforcement.brokerMilliseconds), auditReadBytes = 0;
     for (const operation of OPERATIONS) {
       const envelope = enforcement.operations[operation];
       if (!positive(envelope.cpuMicroseconds) || !positive(envelope.wallMilliseconds)
         || !positive(envelope.inputCodeUnits) || envelope.inputCodeUnits > RESPONSE_BYTES
         || ![envelope.auditReadBytes, envelope.secretCodeUnits, envelope.secretCalls, envelope.activeCodeUnits, envelope.activeCalls].every(nonnegative)) return null;
       wall += COUNTS[operation] * envelope.wallMilliseconds;
-      cpu += COUNTS[operation] * envelope.cpuMicroseconds;
       auditReadBytes += COUNTS[operation] * envelope.auditReadBytes;
     }
     if (![wall, cpu, auditReadBytes, now + wall].every(Number.isSafeInteger)
@@ -146,6 +159,19 @@ export function planOrderedDesignWork(input: {
     plans.add(plan);
     return plan;
   } catch { return null; }
+}
+
+/** Reserve against the genuine host pool once, using its atomic accounting
+ * snapshot for this synchronous plan. Sampling again between reserve and plan
+ * would consume host CPU from an exactly sufficient refreshed allowance. */
+export function reserveOrderedDesignWork(
+  input: Omit<Parameters<typeof planOrderedDesignWork>[0], 'remainingRunCpuMicroseconds'>,
+  reserveRemaining: (required: number) => number | null,
+): OrderedDesignWorkPlan | null {
+  const required = calculateOrderedDesignCpuRequirement(input.enforcement);
+  if (required === null) return null;
+  const remaining = reserveRemaining(required);
+  return remaining === null ? null : planOrderedDesignWork({ ...input, remainingRunCpuMicroseconds: remaining });
 }
 
 interface Ticket { readonly operation: Operation; readonly turn: number }

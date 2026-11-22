@@ -63,6 +63,7 @@ export interface UrlOrderedAttemptOptions {
   readonly reproduce: () => Promise<UrlDesignReproduction | null>;
   readonly work: {
     readonly remainingCpuMicroseconds: () => number;
+    readonly reserveRemainingOnce: (required: number) => number | null;
     readonly cpuMicroseconds: () => number;
     readonly chargeScreenCpuMicroseconds: (value: number) => void;
     readonly release: () => void;
@@ -251,6 +252,7 @@ export async function startUrlOrderedAttempt(input: UrlOrderedAttemptOptions) {
     controller = createOrderedDesignSession({ profile, plan, principal: input.principal, writer, budget: input.budget,
       screening: { kind: 'bounded-worker', program, policyBytes: input.policyBytes, planInput },
       work: { runtimeSha256: input.runtime.inputTreeSha256, enforcement, remainingRunCpuMicroseconds: input.work.remainingCpuMicroseconds,
+        reserveRemainingCpuMicroseconds: input.work.reserveRemainingOnce,
         cpuMicroseconds: input.work.cpuMicroseconds, chargeScreenCpuMicroseconds: input.work.chargeScreenCpuMicroseconds },
       relay: () => host?.relay, envelope: () => { assertCurrent(); return delivery!.view; }, current, assertCurrent, assertProcessingCurrent,
       stageVerdict: async ({ stdin, completion, assertCurrent: boundary }) => {

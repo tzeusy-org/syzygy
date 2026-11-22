@@ -13,7 +13,7 @@ import type { OrderedDesignAuditPayloads, OrderedDesignAuditReference } from './
 import { hasOrderedDesignReadObserver, type OrderedDesignAuditWriter } from './url-ordered-design-writer.js';
 import { runOrderedDesignScreen, type OrderedScreenProgram } from './url-ordered-design-screen.js';
 import { ORDERED_SCREEN_LIMITS, type OrderedScreenInput, type OrderedScreenObservation } from './url-ordered-design-screen-protocol.js';
-import { createOrderedDesignWorkBudget, planOrderedDesignWork, type OrderedDesignWorkEnforcement } from './url-ordered-design-work-budget.js';
+import { createOrderedDesignWorkBudget, reserveOrderedDesignWork, type OrderedDesignWorkEnforcement } from './url-ordered-design-work-budget.js';
 import type { createUrlSessionBudget, UrlOrderedDesignTurnReservation } from './url-session-budget.js';
 
 type Call = OrderedDesignAuditPayloads['prepared']['call'];
@@ -36,6 +36,7 @@ export interface OrderedDesignSessionWork {
   readonly enforcement: OrderedDesignWorkEnforcement;
   readonly runtimeSha256: string;
   readonly remainingRunCpuMicroseconds: () => number;
+  readonly reserveRemainingCpuMicroseconds: (required: number) => number | null;
   readonly cpuMicroseconds: () => number;
   readonly chargeScreenCpuMicroseconds: (value: number) => void;
 }
@@ -468,10 +469,10 @@ export function createOrderedDesignSession(options: Options) {
           id: issued.call.id, name: issued.call.name, input: pollInput }] }]),
         ...(options.requestMaxBytes === undefined ? {} : { requestMaxBytes: options.requestMaxBytes }) });
       if (transferBounds === null) throw refused();
-      const held = planOrderedDesignWork({ shape: transferBounds, view: { envelopeBytes: plan.manifest.envelopeBytes, originalBytes },
+      const held = reserveOrderedDesignWork({ shape: transferBounds, view: { envelopeBytes: plan.manifest.envelopeBytes, originalBytes },
         enforcement: work.enforcement, expectedRuntimeSha256: work.runtimeSha256,
         expectedWorkerSha256: screening.kind === 'bounded-worker' ? screening.program.worker.sha256 : work.enforcement.workerSha256,
-        deadline, now: Date.now(), remainingRunCpuMicroseconds: work.remainingRunCpuMicroseconds() });
+        deadline, now: Date.now() }, work.reserveRemainingCpuMicroseconds);
       if (held === null) throw refused();
       workBudget = createOrderedDesignWorkBudget(held, { now: Date.now, monotonicMilliseconds: () => performance.now(), cpuMicroseconds: work.cpuMicroseconds });
       budgetReservation = budget.holdOrderedDesignTurns(transcript.resultTurns.length, held.expiresAt);

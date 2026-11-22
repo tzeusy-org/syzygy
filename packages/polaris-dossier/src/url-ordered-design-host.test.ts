@@ -96,6 +96,13 @@ async function fixture(guards: Partial<Pick<Parameters<typeof createOrderedDesig
   const cpuBound = (deadline - Date.now()) * 1000, parentCpuStart = process.cpuUsage();
   const workCpu = () => { const used = process.cpuUsage(parentCpuStart); return used.user + used.system + workerCpu; };
   const chargedCpu = () => workCpu() + nativeCpu;
+  let continuationReserved = false;
+  const reserveRemainingCpuMicroseconds = (required: number): number | null => {
+    if (continuationReserved) return null;
+    continuationReserved = true;
+    const remaining = cpuBound - chargedCpu();
+    return required <= remaining ? remaining : null;
+  };
   const chargeNative = (capacity: number) => { if (!Number.isSafeInteger(capacity) || capacity <= 0 || chargedCpu() + capacity > cpuBound) throw new Error('owned native CPU capacity unavailable'); nativeCpu += capacity; };
   const writer = createOrderedDesignAuditWriter({ profile, plan, principal: 'owned-operator' }, {
     current: async () => true,
@@ -116,6 +123,7 @@ async function fixture(guards: Partial<Pick<Parameters<typeof createOrderedDesig
     work: { runtimeSha256, enforcement: { runtimeSha256, workerSha256: program.worker.sha256,
       operations: { request: operation, response: operation, tool: operation, audit: operation, terminal: operation }, relayMilliseconds: 180_000, brokerMilliseconds: 85_000 },
       cpuMicroseconds: workCpu,
+      reserveRemainingCpuMicroseconds,
       remainingRunCpuMicroseconds: () => cpuBound - chargedCpu(), chargeScreenCpuMicroseconds: value => { if (chargedCpu() + value > cpuBound) throw new Error('owned screen CPU capacity unavailable'); workerCpu += value; } },
     relay: () => host?.relay, envelope: () => envelope, current: () => true, assertCurrent: () => {}, ...guards, stageVerdict: async ({ stdin, assertCurrent }) => {
       assertCurrent();

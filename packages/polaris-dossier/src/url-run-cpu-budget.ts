@@ -31,9 +31,20 @@ export function createUrlRunCpuBudget(limit: number, hostCpu: () => number) {
     holdOrdered: (capacity: number) => {
       if (!sample() || active !== null || !Number.isSafeInteger(capacity) || capacity <= 0 || capacity > limit - spent) return null;
       const held = { remaining: capacity, released: false }; active = held;
+      let continuationReserved = false;
       const current = (): boolean => sample() && active === held && !held.released;
       return Object.freeze({
         remainingCpuMicroseconds: (): number => current() ? held.remaining : 0,
+        /** Refresh exactly once before the first continuation release. Previous
+         * charges remain spent; only unused capacity in the original pool can
+         * cover a missing future allowance. This grants no effect authority. */
+        reserveRemainingOnce: (required: number): number | null => {
+          if (!current() || continuationReserved) return null;
+          continuationReserved = true;
+          if (!Number.isSafeInteger(required) || required <= 0 || required > limit - spent) return null;
+          held.remaining = Math.max(held.remaining, required);
+          return held.remaining;
+        },
         cpuMicroseconds: (): number => { sample(); return spent; },
         chargeScreenCpuMicroseconds: (value: number): void => {
           if (!current()) throw new Error('url-run-cpu-budget-unavailable');

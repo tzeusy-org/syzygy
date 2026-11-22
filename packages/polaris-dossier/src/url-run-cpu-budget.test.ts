@@ -37,4 +37,50 @@ describe('shared URL supervisor CPU capacity', () => {
     expect(() => pool.charge('author', 101)).toThrow();
     expect(pool.cpuMicroseconds()).toBe(0);
   });
+  it('refreshes only missing future capacity once and keeps all prior charges spent', () => {
+    let host = 0;
+    const pool = createUrlRunCpuBudget(1000, () => host), held = pool.holdOrdered(800)!;
+    held.chargeScreenCpuMicroseconds(100);
+    pool.charge('machine', 50);
+    host = 150;
+    expect(held.remainingCpuMicroseconds()).toBe(550);
+    expect(held.reserveRemainingOnce(650)).toBe(650);
+    expect(pool.cpuMicroseconds()).toBe(300);
+    expect(held.reserveRemainingOnce(650)).toBeNull();
+    expect(held.remainingCpuMicroseconds()).toBe(650);
+    // Exactly fifty unreserved units remain. The hold protects its full refresh.
+    pool.charge('machine', 50);
+    held.chargeScreenCpuMicroseconds(650);
+    expect(pool.cpuMicroseconds()).toBe(1000);
+    expect(held.remainingCpuMicroseconds()).toBe(0);
+    expect(() => pool.charge('machine', 1)).toThrow();
+  });
+  it('refuses insufficient, invalid, released and stale continuation reservations', () => {
+    for (const required of [701, 0, -1, 1.5, NaN, Infinity]) {
+      let host = 0;
+      const pool = createUrlRunCpuBudget(1000, () => host), held = pool.holdOrdered(800)!;
+      host = 300;
+      expect(held.reserveRemainingOnce(required)).toBeNull();
+      expect(held.remainingCpuMicroseconds()).toBe(500);
+      expect(pool.cpuMicroseconds()).toBe(300);
+      expect(held.reserveRemainingOnce(600)).toBeNull();
+    }
+    const pool = createUrlRunCpuBudget(1000, () => 0), first = pool.holdOrdered(800)!;
+    first.release();
+    const second = pool.holdOrdered(900)!;
+    expect(first.reserveRemainingOnce(950)).toBeNull();
+    expect(second.reserveRemainingOnce(800)).toBe(900);
+    second.release();
+    expect(second.reserveRemainingOnce(900)).toBeNull();
+    expect(pool.cpuMicroseconds()).toBe(0);
+  });
+  it('never takes capacity already spent by competing native work', () => {
+    let host = 0;
+    const pool = createUrlRunCpuBudget(1000, () => host), held = pool.holdOrdered(800)!;
+    pool.charge('machine', 200);
+    host = 100;
+    expect(held.reserveRemainingOnce(701)).toBeNull();
+    expect(held.remainingCpuMicroseconds()).toBe(700);
+    expect(pool.cpuMicroseconds()).toBe(300);
+  });
 });

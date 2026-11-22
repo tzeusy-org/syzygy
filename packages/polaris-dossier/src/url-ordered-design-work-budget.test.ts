@@ -11,7 +11,8 @@ import { createUrlDesignView } from './url-design-view.js';
 import { materializeOrderedDesignPart, planOrderedDesignBytes } from './url-design-delivery.js';
 import { boundOrderedDesignTransfer } from './url-ordered-design-bounds.js';
 import type { OrderedDesignTransferBounds } from './url-ordered-design-bounds.js';
-import { createOrderedDesignWorkBudget, planOrderedDesignWork, type OrderedDesignWorkEnforcement } from './url-ordered-design-work-budget.js';
+import { calculateOrderedDesignCpuRequirement, createOrderedDesignWorkBudget, planOrderedDesignWork, reserveOrderedDesignWork, type OrderedDesignWorkEnforcement } from './url-ordered-design-work-budget.js';
+import { createUrlRunCpuBudget } from './url-run-cpu-budget.js';
 
 const byteShape = { bytes: 100, nodes: 10, depth: 3 };
 const turn = { received: byteShape, receivedCanonical: byteShape, prepared: byteShape, logicalReceived: byteShape,
@@ -36,6 +37,51 @@ function fixture(overrides: Partial<typeof input> = {}) {
 }
 
 describe('ordered design live work reservation', () => {
+  it('reserves the same 37 future envelopes after bootstrap spending within the unchanged global cap', () => {
+    const capacity = { ...envelope, cpuMicroseconds: 64_000_000 };
+    const future = { ...enforcement, operations: { request: capacity, response: capacity, tool: capacity, audit: capacity, terminal: capacity } };
+    const required = calculateOrderedDesignCpuRequirement(future);
+    expect(required).toBe(2_368_000_000);
+    for (const limit of [7_200_000_000, 2_496_000_000]) {
+      let host = 0;
+      const pool = createUrlRunCpuBudget(limit, () => host), held = pool.holdOrdered(2_496_000_000)!;
+      held.chargeScreenCpuMicroseconds(18_000_000);
+      held.chargeScreenCpuMicroseconds(18_000_000);
+      host = 92_000_001;
+      const before = held.remainingCpuMicroseconds();
+      expect(before).toBe(2_367_999_999);
+      expect(planOrderedDesignWork({ ...input, enforcement: future, remainingRunCpuMicroseconds: before })).toBeNull();
+      let reservations = 0;
+      const { remainingRunCpuMicroseconds: _remaining, ...planning } = { ...input, enforcement: future };
+      const planned = reserveOrderedDesignWork(planning, value => {
+        reservations++;
+        expect(value).toBe(2_368_000_000);
+        return held.reserveRemainingOnce(value);
+      });
+      expect(reservations).toBe(1);
+      expect(pool.cpuMicroseconds()).toBe(128_000_001);
+      if (limit === 2_496_000_000) {
+        expect(planned).toBeNull();
+        expect(held.remainingCpuMicroseconds()).toBe(before);
+      } else {
+        expect(planned).toMatchObject({ cpuMicroseconds: 2_368_000_000, originalDeadline: 1000, expiresAt: 571 });
+        held.chargeScreenCpuMicroseconds(64_000_000);
+        expect(pool.cpuMicroseconds()).toBe(192_000_001);
+        expect(held.remainingCpuMicroseconds()).toBe(2_304_000_000);
+        expect(held.reserveRemainingOnce(required!)).toBeNull();
+      }
+    }
+  });
+  it('refuses invalid or overflowing aggregate future CPU before a reservation', () => {
+    for (const cpuMicroseconds of [0, -1, NaN, Infinity, 1.5, Number.MAX_SAFE_INTEGER]) {
+      const invalid = { ...enforcement, operations: { ...enforcement.operations, terminal: { ...envelope, cpuMicroseconds } } };
+      expect(calculateOrderedDesignCpuRequirement(invalid)).toBeNull();
+      expect(planOrderedDesignWork({ ...input, enforcement: invalid })).toBeNull();
+      let reservations = 0;
+      expect(reserveOrderedDesignWork({ ...input, enforcement: invalid }, () => { reservations++; return 1000; })).toBeNull();
+      expect(reservations).toBe(0);
+    }
+  });
   it('holds the whole path, complete histories and both detector branches before the first operation', () => {
     const { plan } = fixture();
     // Four 50ms broker/relay waits and 37 operation envelopes of 10ms.
