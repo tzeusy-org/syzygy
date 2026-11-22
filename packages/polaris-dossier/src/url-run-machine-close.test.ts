@@ -161,11 +161,16 @@ describe('same-store machine continuation seam', () => {
     expect(new Set(evidence.clients.map(client => client.context.clientId)).size).toBe(8 + 2 * count);
   });
 
-  it.each(['copy', 'identity', 'deadline', 'run', 'pin', 'origin', 'profile', 'missing-store', 'clock', 'claim', 'unprepared', 'extra-plan', 'duplicate-role', 'role-order'] as const)('refuses %s drift without allocating fresh endpoints', async fault => {
+  it.each(['copy', 'identity', 'controller', 'parent', 'deadline', 'run', 'pin', 'origin', 'profile', 'missing-store', 'clock', 'claim', 'unprepared', 'extra-plan', 'duplicate-role', 'role-order'] as const)('refuses %s drift without allocating fresh endpoints', async fault => {
     const f = await closedFixture(), stateFile = path.join(f.options.protectedRoot, 'state.json'), before = await readFile(stateFile);
     let options = f.options;
     if (fault === 'copy') options = { ...options, resume: { ...options.resume!, history: { ...f.history } } };
     if (fault === 'identity') options = { ...options, resume: { ...options.resume!, identitySha256: id(99) } };
+    if (fault === 'controller') {
+      const runtime = { ...options.runtime, inputTreeSha256: id(99) } as UrlRuntime;
+      admission.runtimes.add(runtime); options = { ...options, runtime };
+    }
+    if (fault === 'parent') options = { ...options, parent: { ...options.parent, landedCommit: 'c'.repeat(40) } };
     if (fault === 'deadline') options = { ...options, deadline: options.deadline + 1 };
     if (fault === 'run') options = { ...options, runId: `run-${'c'.repeat(32)}`, plans: [], requiredRoles: [] };
     if (fault === 'pin') options = { ...options, pin: 'c'.repeat(40) };
