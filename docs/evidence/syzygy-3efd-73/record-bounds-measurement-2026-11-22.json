@@ -1,0 +1,84 @@
+{
+  "format": "syzygy-evidence/record-bounds-measurement/1",
+  "beads": [
+    "syzygy-3efd.73",
+    "syzygy-3efd.74"
+  ],
+  "measuredOn": "the stated caps of the draft and inventory schemas, the check record's members as packages/polaris-dossier/src/check.ts and check-model.ts write them at 1ca83b45, and the version 2.8 read bound",
+  "label": "Inferred: each figure is built by hand from the caps, not produced by running check",
+  "scripts": [
+    {
+      "file": "docs/evidence/syzygy-3efd-73/measure_record.py",
+      "sha256": "ad60ed1e3d7e7cbabac4670f03707e25c8439706e1a4080c38470aab18c8f6a9"
+    },
+    {
+      "file": "docs/evidence/syzygy-3efd-73/measure_bounded.py",
+      "sha256": "c03f97a9a4afb17d7b71c42f15251231243ac2c675031d7df2eb991cb0934e1d"
+    }
+  ],
+  "fullRecord": {
+    "draft": {
+      "blocks": 2191,
+      "quotations": 43820,
+      "draftBytesCharged": 4193712,
+      "draftNodesCharged": 289021,
+      "record": {
+        "bytes": 19946240,
+        "values": 482069,
+        "depth": 4
+      }
+    },
+    "inventoryAtCaps": {
+      "entries": 2000,
+      "quotations": 40000,
+      "inventoryBytes": 3647664,
+      "record": {
+        "bytes": 16475441,
+        "values": 440049,
+        "depth": 4
+      }
+    },
+    "inventoryAtCapsPath14": {
+      "entries": 2000,
+      "quotations": 40000,
+      "inventoryBytes": 4167664,
+      "withinDraftBound": true,
+      "record": {
+        "bytes": 16995454,
+        "values": 440049,
+        "depth": 4
+      }
+    },
+    "redactedBlob": {
+      "recordBytesPerWithheldRangeAtFourDigitLines": 60.0,
+      "fewestRangesPastReadBound": 263852,
+      "recordBytesAtThatCount": 16777259,
+      "longestWithheldLineThatPassesWithOneBlob": 4068
+    },
+    "inventoryPastToday'sReaderBound": {
+      "quotations": 368,
+      "record": {
+        "bytes": 109399,
+        "values": 4097,
+        "depth": 4
+      }
+    },
+    "readBound": {
+      "bytes": 16777216,
+      "values": 2000000,
+      "depth": 16
+    }
+  },
+  "boundedForm": {
+    "draft": {
+      "bytes": 117082,
+      "values": 48,
+      "depth": 3
+    },
+    "inventory": {
+      "bytes": 121398,
+      "values": 51,
+      "depth": 3
+    }
+  }
+}
