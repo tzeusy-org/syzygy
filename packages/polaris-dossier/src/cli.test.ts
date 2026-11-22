@@ -131,13 +131,15 @@ describe('dossier network module boundaries', () => {
     ] },
     'session-broker.ts': { modules: ['net'], calls: ['server.listen(socket,'] },
     'session-launch.ts': { modules: ['net'], calls: ['server.listen(path.join(dir, name), resolve)'] },
+    'session-machine-transport.ts': { modules: ['net'], calls: [] },
     'session-mcp.ts': { modules: ['net'], calls: ['createConnection({ path: socketPath })'] },
     'session-peer.ts': { modules: ['net'], calls: [] },
-    'session-relay.ts': { modules: ['http', 'https'], calls: [
+    'session-relay.ts': { modules: ['http', 'net', 'https'], calls: [
       "https.request({ hostname: 'api.anthropic.com', servername: 'api.anthropic.com', port: 443,",
-      'ports.request(body)',
-      'server.listen(socket,',
+      'ports.request(body, context, route)',
+      'listener.listen(socket,',
     ] },
+    'url-machine-peer.ts': { modules: ['net'], calls: [] },
     'url-role-plan.ts': { modules: ['net'], calls: ["server.listen(0, '127.0.0.1', resolve)"] },
     'url-run-sessions.ts': { modules: ['net'], calls: ["probe.listen(0, '127.0.0.1', resolve)"] },
   };

@@ -25,7 +25,7 @@ const ofBytes = (bytes: number): string => {
   return JSON.stringify(passed({ pad: 'x'.repeat(bytes - empty.length) }));
 };
 /** Exactly `values` values: the record's seven, the `pad` array and `values - 8` zeros in it. */
-const ofValues = (values: number): string => JSON.stringify(passed({ pad: new Array<number>(values - 8).fill(0) }));
+const ofValues = (values: number): string => `${JSON.stringify(passed({})).slice(0, -1)},"pad":[0${',0'.repeat(values - 9)}]}`;
 /** A value nested `depth` levels below the root: `pad` (depth 1) holds `depth - 2` more arrays, the innermost holding a 0. */
 const ofDepth = (depth: number): string => `${JSON.stringify(passed({})).slice(0, -1)},"pad":${'['.repeat(depth - 1)}0${']'.repeat(depth - 1)}}`;
 
@@ -91,8 +91,20 @@ describe('the check-record read bound (version 2.8)', () => {
 
   it('reads a record of 2,000,000 values and refuses one of 2,000,001, in every reader', () => {
     const at = ofValues(2_000_000), past = ofValues(2_000_001);
-    // Counted outside the reader: every value is a `0` in the pad array, or one of the eight others.
-    expect([at.split(/[,[]0(?=[,\]])/u).length - 1 + 8, past.split(/[,[]0(?=[,\]])/u).length - 1 + 8]).toEqual([2_000_000, 2_000_001]);
+    // Count the emitted zero values independently, without allocating one string per element.
+    const valueCount = (text: string): number => {
+      const padStart = text.indexOf(',"pad":[');
+      if (padStart < 0 || !text.endsWith(']}')) throw new Error('fixture pad missing');
+      let zeros = 0;
+      for (let at = padStart + ',"pad":['.length; at < text.length - 2; at += 1) {
+        const digit = text[at - 1] === '[' || text[at - 1] === ',';
+        if (text[at] !== (digit ? '0' : ',')) throw new Error('fixture pad has a nonzero element or bad separator');
+        if (digit) zeros += 1;
+      }
+      if (text[text.length - 3] !== '0') throw new Error('fixture pad must end with zero');
+      return zeros + 8;
+    };
+    expect([valueCount(at), valueCount(past)]).toEqual([2_000_000, 2_000_001]);
     expect(readers(at)).toEqual(READ);
     expect(readers(past)).toEqual(UNREADABLE);
   });

@@ -18,7 +18,6 @@ import { createUrlRunArtifacts, type UrlRunArtifactsOptions } from './url-run-ar
 import * as productReads from './url-product-reads.js';
 import type { SessionToolsReceipt } from './session-tools.js';
 import type { BrokerResponse } from './broker.js';
-import type { BriefReport } from './brief.js';
 import type { StartSessionsReport } from './session-handover.js';
 import type { SessionAdmission } from './session-egress-policy.js';
 import { runStatus } from './status.js';
@@ -35,7 +34,7 @@ import { buildFidelityPacket } from './review-packet.js';
 import { reviewOfRecord } from './review.js';
 import { inventoryOfRecord } from './inventory.js';
 import { fixtureSources } from './full-run.testkit.js';
-import { shapePackSelection } from './brief.js';
+import { issueBrief, shapePackSelection, type BriefReport } from './brief.js';
 
 const canonical = (v: unknown): string => encodeCanonicalJson(v, { maxBytes: 2_097_152, maxNodes: 65_536, maxDepth: 32 });
 const b = (v: unknown): Buffer => Buffer.from(canonical(v));
@@ -86,7 +85,7 @@ function fixture(source = 'Own pinned source.\n', extraFiles: Readonly<Record<st
     runDossier: () => async argv => { calls.push([...argv]); const next = replyQueue.shift(); if (!next) throw Error('no own response'); return next; } };
   const write = (relative: string, bytes: string | Uint8Array): void => { const file = path.join(run, relative); fs.mkdirSync(path.dirname(file), { recursive: true }); fs.writeFileSync(file, bytes); };
   const dir = (role: Role): string => role === 'author' ? run : `${run}.sessions/${role === 'inventory' ? 'session' : role}-1`;
-  const produceInitial = (): { brief: BriefReport; sessions: StartSessionsReport } => {
+  const produceFixtureBrief = (): BriefReport => {
     const schema = `${JSON.stringify(draftSchemaDocument({ pinnedRevision: pin, maxQuestions: 1 }), null, 2)}\n`, briefText = 'Own actual host-issued no-execution brief.\n';
     write('draft.schema.json', schema); write('brief.md', briefText);
     const briefRecord = { format: 'polaris-dossier-brief/1', role: 'authoring', runId, pinnedRevision: pin, issuedAt: '2026-11-19T00:00:00.000Z',
@@ -94,6 +93,10 @@ function fixture(source = 'Own pinned source.\n', extraFiles: Readonly<Record<st
         serverEntry: { rule: 'server-entry', ruleVersion: 1, holds: false, paths: [], pathsNotListed: 0 } }).record, executionRule: { arm: 'sec-3' },
       agent: { tool: record.declared.agentTool, provider: record.declared.agentProvider },
       files: { brief: { name: 'brief.md', sha256: sha256(briefText) }, draftSchema: { name: 'draft.schema.json', sha256: sha256(schema) } } }; write('brief.json', b(briefRecord));
+    return { command: 'brief', outcome: 'issued', run, brief: path.join(run, 'brief.md'), draftSchema: path.join(run, 'draft.schema.json'), pinnedRevision: pin,
+      issuedAt: briefRecord.issuedAt, deadlineEndsAt: '2026-11-19T01:00:00.000Z', executionRule: { arm: 'sec-3' }, disclosures: [] } as unknown as BriefReport;
+  };
+  const produceInitial = (brief = produceFixtureBrief()): { brief: BriefReport; sessions: StartSessionsReport } => {
     const sessions = roles.filter(role => role !== 'author').map(role => {
       fs.mkdirSync(dir(role), { recursive: true }); const prompt = `Own fixed ${role} waiting prompt.`, promptSha256 = sha256(prompt);
       const item = { role: role === 'inventory' ? 'inventory' : 'review', ...(role === 'inventory' ? {} : { kind: role }), session: 1, directory: dir(role), prompt, promptSha256, commands: { terminal: 'Own', bang: null, note: 'Own' } };
@@ -102,9 +105,7 @@ function fixture(source = 'Own pinned source.\n', extraFiles: Readonly<Record<st
         ...(role === 'inventory' ? { brief: { name: 'inventory-brief.md', sha256: sha256(inventory) } } : { kind: role }), runId, pinnedRevision: pin, session: 1,
         directory: path.relative(path.dirname(run), dir(role)), prompt, promptSha256 })); return item;
     });
-    return { brief: { command: 'brief', outcome: 'issued', run, brief: path.join(run, 'brief.md'), draftSchema: path.join(run, 'draft.schema.json'), pinnedRevision: pin,
-      issuedAt: briefRecord.issuedAt, deadlineEndsAt: '2026-11-19T01:00:00.000Z', executionRule: { arm: 'sec-3' }, disclosures: [] } as unknown as BriefReport,
-    sessions: { command: 'session-prompt', outcome: 'issued', role: 'all', run, sessions } as unknown as StartSessionsReport };
+    return { brief, sessions: { command: 'session-prompt', outcome: 'issued', role: 'all', run, sessions } as unknown as StartSessionsReport };
   };
   const bridge = createUrlRunArtifacts(options), initialize = () => bridge.registerInitial(produceInitial());
   const admission = (role: Role, classes = ledger.metadata(initialReceipts[role]).classes): SessionAdmission => ({ digest: 'd'.repeat(64), bytes: 10, classes, originIds: [...ledger.metadata(initialReceipts[role]).originIds, 'provider-response:1'] });
@@ -252,17 +253,28 @@ describe('trusted URL artifact producer bridge', () => {
         inputOriginId: f.ledger.metadata(f.options.origins.initialReceipts[p.role]).id, capture: { pid: 'Unknown', startedAt: 'Unknown', finishedAt: 'Unknown', outcome: 'Unknown' } })) }, context);
     if (!issued.ok) throw Error(`own declaration ${issued.code}`);
     const effectiveDeclaration = { declaration: issued.declaration, bytes: Buffer.from(issued.text), context: { ...context, expectedSidecarSha256: issued.sha256 } };
-    const bridge = createUrlRunArtifacts({ ...f.options, initializedCoreBytes: Buffer.from(core), effectiveDeclaration }); bridge.registerInitial(f.produceInitial()); f.write('run.json', core); f.write('url-declaration.json', issued.text);
+    f.write('run.json', core);
+    f.write('url-declaration.json', issued.text);
+    const sources = { ...fixtureSources(f.pin),
+      declaredPolicy: async () => ({ ok: true as const, bytes: f.basePolicyBytes, binding: f.options.record.subject.screeningPolicy }),
+      effectiveRunDeclaration: () => ({ kind: 'url' as const, context: effectiveDeclaration.context, screenMetadata: () => true }),
+    };
+    const openReader = bindUrlSourceReader({ clone: f.options.record.subject.clone.path, revision: f.pin, store: 'owned-loose', current: f.options.current });
+    const readAt = Date.parse('2026-11-19T00:00:09.000Z');
+    const briefing = await issueBrief(f.run, { sources, openReader, now: () => readAt });
+    expect(briefing).toMatchObject({ ok: true });
+    if (!briefing.ok) throw Error('own URL brief refused');
+    const bridge = createUrlRunArtifacts({ ...f.options, initializedCoreBytes: Buffer.from(core), effectiveDeclaration });
+    const schema = bridge.registerInitial(f.produceInitial(briefing.report)).find(artifact => artifact.path === 'draft.schema.json');
+    if (!schema) throw Error('own complete schema missing');
+    const schemaText = fs.readFileSync(path.join(f.run, schema.path), 'utf8');
+    expect(JSON.parse(schemaText)).toEqual(draftSchemaDocument({ pinnedRevision: f.pin, maxQuestions: 1 }));
+    const schemaReply = canonical({ ok: true, kind: 'artifact', path: schema.path, text: schemaText, sha256: sha256(schemaText) });
+    expect(schemaReply.length).toBeLessThanOrEqual(50_000);
     const ctx = bridge.beginRead({ operation: 'render', deadline: Date.now() + 4000 });
     expect(bridge.readProduct(ctx, 'url-declaration.json').kind).toBe('present'); expect(bridge.revalidateRead(ctx).metadata.records).toHaveLength(1);
     const products = beginRunProductReads(f.run, bridge, 'render', Date.now() + 4000);
     try {
-      const sources = { ...fixtureSources(f.pin),
-        declaredPolicy: async () => ({ ok: true as const, bytes: f.basePolicyBytes, binding: f.options.record.subject.screeningPolicy }),
-        effectiveRunDeclaration: () => ({ kind: 'url' as const, context: effectiveDeclaration.context, screenMetadata: () => true }),
-      };
-      const openReader = bindUrlSourceReader({ clone: f.options.record.subject.clone.path, revision: f.pin, store: 'owned-loose', current: f.options.current });
-      const readAt = Date.parse('2026-11-19T00:00:09.000Z');
       const snapshots = vi.spyOn(productReads, 'snapshotProductFile');
       try {
         for (const refuseOn of [1, 2]) {
