@@ -1,0 +1,38 @@
+{
+  "format": "syzygy-f3-review-binding/1",
+  "subjectCommit": "781519d484235acb2b81cfcb317c93f7e03cf9b9",
+  "raw": "docs/evidence/syzygy-k54o-3/semantic-recovery-review-2026-11-22-RAW.md",
+  "rawSha256": "08fddeeb373cdd8e698f35da84a12a8bcfce294f09024d28a0f7558c6d2074cc",
+  "verdict": "PASS",
+  "scope": "Stable audit subject and producer-bound semantic provenance for cold final-render continuation; source inspection only. Native claimed-stop/end-to-end acceptance remains Unknown.",
+  "subjectFiles": [
+    {
+      "path": "packages/polaris-dossier/src/url-recovery-products.ts",
+      "sha256": "28914edb1cc8da1fc3f75f97135461c228c984598506f4885852786fcd2715e9"
+    },
+    {
+      "path": "packages/polaris-dossier/src/url-origin-ledger.ts",
+      "sha256": "520e69a813e7da4da048700a8d751da98cb7eef74cc104b129ec62e5ed56209c"
+    },
+    {
+      "path": "packages/polaris-dossier/src/url-origin-provenance.ts",
+      "sha256": "14545c2358601adb5555b457d45bde6c888f6c10c24a1c1829f08cab3ea654c0"
+    },
+    {
+      "path": "packages/polaris-dossier/src/url-frozen-product-history.ts",
+      "sha256": "205957bcbc05625e9733986568fdc3efc9f63434cf6d7728d6a7c6b8172b0708"
+    },
+    {
+      "path": "packages/polaris-dossier/src/url-design-product.ts",
+      "sha256": "de0f230daeca4d23a2588f202d9105f13baf86f7fa80220145c34ac9e231dda1"
+    },
+    {
+      "path": "packages/polaris-dossier/src/url-session-audit.ts",
+      "sha256": "d0a3e3be202e413f1a1873980b9bc9e6d8687575060c5dd3c5029bd7b060218f"
+    },
+    {
+      "path": "packages/polaris-dossier/src/url-ordered-design-audit-history.ts",
+      "sha256": "867b22191aba7e2f943347a7dd9564731bc25eb746a2278969b7d4e5fe11b90b"
+    }
+  ]
+}
