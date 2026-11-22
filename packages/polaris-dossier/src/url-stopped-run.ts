@@ -179,10 +179,9 @@ function matchesSubject(value: unknown, expected: StopExpected, asOf: number): v
     && (completeUsageReports === 0 ? reportedTokens === 'Unknown' : whole(reportedTokens));
 }
 
-/** Load only the supervisor-owned expected checkpoint. Audit, machine, source
- * and product evidence are independently reverified before any new grant. */
-export function readUrlStoppedBoundary(root: string, expected: StopExpected, asOf: number):
-  UrlStoppedBoundary | null {
+/** The visitor remains inside the fresh descriptor/name/root bracket. No
+ * caller may substitute a retained stat or authorize from a prior read. */
+function withStoppedBoundaryBytes<T>(root: string, expected: StopExpected, visit: (bytes: Buffer) => T | null): T | null {
   try {
     if (!namesBound(root, expected.run, expected.runId) || !SHA_PIN.test(expected.sourcePin) || !GENERATION.test(expected.generation)
       || !HEX.test(expected.coreSha256) || !HEX.test(expected.declarationSha256)) return null;
@@ -203,17 +202,27 @@ export function readUrlStoppedBoundary(root: string, expected: StopExpected, asO
           length += read;
         }
         if (length !== Number(before.size) || bytes[length - 1] !== 10) return null;
-        const text = decodeUtf8(bytes.subarray(0, length - 1));
-        if (text === undefined) return null;
-        const value = parseBoundedJson(text, LIMITS);
-        if (!exact(value, ['record', 'sha256']) || typeof value.sha256 !== 'string' || !matchesSubject(value.record, expected, asOf)
-          || value.sha256 !== sha256(encodeCanonicalJson(value.record, LIMITS)) || text !== encodeCanonicalJson(value, LIMITS)) return null;
-        if (!sameSlot(before, fs.fstatSync(fd, { bigint: true })) || !sameSlot(before, fs.lstatSync(slot, { bigint: true }))
+        const result = visit(bytes.subarray(0, length));
+        if (result === null || !sameSlot(before, fs.fstatSync(fd, { bigint: true })) || !sameSlot(before, fs.lstatSync(slot, { bigint: true }))
           || !checkedRoot(root, rootFd, rootStat)) return null;
-        return deepFreeze({ record: value.record, sha256: value.sha256 });
+        return result;
       } finally { fs.closeSync(fd); }
     } finally { fs.closeSync(rootFd); }
   } catch { return null; }
+}
+function decodeStoppedBoundary(bytes: Buffer, expected: StopExpected, asOf: number): UrlStoppedBoundary | null {
+  const text = decodeUtf8(bytes.subarray(0, bytes.length - 1));
+  if (text === undefined) return null;
+  const value = parseBoundedJson(text, LIMITS);
+  if (!exact(value, ['record', 'sha256']) || typeof value.sha256 !== 'string' || !matchesSubject(value.record, expected, asOf)
+    || value.sha256 !== sha256(encodeCanonicalJson(value.record, LIMITS)) || text !== encodeCanonicalJson(value, LIMITS)) return null;
+  return { record: value.record, sha256: value.sha256 };
+}
+/** Load only the supervisor-owned expected checkpoint. Audit, machine, source
+ * and product evidence are independently reverified before any new grant. */
+export function readUrlStoppedBoundary(root: string, expected: StopExpected, asOf: number): UrlStoppedBoundary | null {
+  const result = withStoppedBoundaryBytes(root, expected, bytes => decodeStoppedBoundary(bytes, expected, asOf));
+  return result === null ? null : deepFreeze(result);
 }
 
 /** Chronological immutable observations. This verifies linkage and immutable
@@ -285,6 +294,7 @@ export function acquireUrlRecoveryClaim(input: {
     lockFd = fs.openSync(lock, DESCRIPTOR);
     const heldFd = lockFd, lockStat = fs.fstatSync(heldFd, { bigint: true });
     let released = false, releaseResult = false, consumedStat: fs.BigIntStats | undefined;
+    let retained: { readonly bytes: Buffer; readonly boundary: UrlStoppedBoundary } | undefined;
     const own = (): boolean => {
       try { return !released && checkedRoot(input.root, directoryFd, rootStat) && privateDirectory(lockStat)
         && sameIdentity(lockStat, fs.fstatSync(heldFd, { bigint: true }))
@@ -300,9 +310,21 @@ export function acquireUrlRecoveryClaim(input: {
       catch { return false; }
     };
     const heldCurrent = (): boolean => {
-      try { return own() && input.current() && markerCurrent()
-        && readUrlStoppedBoundary(input.root, input.expected, input.now())?.sha256 === input.sha256; }
-      catch { return false; }
+      try {
+        if (!own() || !input.current() || !markerCurrent()) return false;
+        const asOf = input.now(), previous = retained;
+        if (previous !== undefined) return withStoppedBoundaryBytes(input.root, input.expected, bytes =>
+          previous.bytes.equals(bytes) && matchesSubject(previous.boundary.record, input.expected, asOf) ? true : null) === true;
+        const first = withStoppedBoundaryBytes(input.root, input.expected, bytes => {
+          const boundary = decodeStoppedBoundary(bytes, input.expected, asOf);
+          return boundary?.sha256 === input.sha256 ? { boundary, bytes: Buffer.from(bytes) } : null;
+        });
+        if (first === null) return false;
+        // Retain only deterministic decoding of these exact bounded bytes.
+        // Every later callback still reads them afresh and checks live authority.
+        retained = { boundary: deepFreeze(first.boundary), bytes: first.bytes };
+        return true;
+      } catch { return false; }
     };
     if (!heldCurrent()) {
       if (own()) { fs.rmdirSync(lock); fs.fsyncSync(directoryFd); }
@@ -337,7 +359,7 @@ export function acquireUrlRecoveryClaim(input: {
         finally {
           // Unknown replacement locks are retained; this holder's fds can
           // still close without making an inconsistent recovery reusable.
-          released = true;
+          released = true; retained = undefined;
           fs.closeSync(heldFd); fs.closeSync(directoryFd);
         }
       },
