@@ -260,9 +260,10 @@ describe('parity with the any-repo reader\'s screen (syzygy-qkea.17)', () => {
   });
 
   // R-PR403-SCREEN-DOCS-1 finding 2: each screen decides the class prerequisite from the same records at the same `now`, so a class act
-  // not yet in force, a withdrawn one, or one that binds other module bytes leaves both screens with the class unclassified.
+  // not yet in force or a withdrawn one leaves both screens with the class unclassified; one that binds other module bytes no longer
+  // does (2026-11-22: an act's digest is history, not a lock, RFC3-16 as amended by D10).
   it.each<[string, ClassAct, boolean]>([
-    ['in force', {}, true], ['absent', null, false], ['future', { date: '2026-10-08' }, false], ['withdrawn', { withdrawn: true }, false], ['different module', { argument: sha(`${MODULE_TEXT} `) }, false],
+    ['in force', {}, true], ['absent', null, false], ['future', { date: '2026-10-08' }, false], ['withdrawn', { withdrawn: true }, false], ['different module: classified, its digest is history since D10 (readClassAct)', { argument: sha(`${MODULE_TEXT} `) }, true],
   ])('keeps legacy app class admission separate from the declared dossier policy: %s', async (_name, classAct, classified) => {
     const legacyRoot = recordsRoot(policyOf(DOC_SCOPE), undefined, classAct);
     const dossierRoot = commitPolicyFixture(tempDir('dossier-class-only-'), encode(policyOf(DOC_SCOPE)));

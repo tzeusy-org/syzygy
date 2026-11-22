@@ -289,7 +289,8 @@ declaration. One kind remains:
 Observation consent and egress consent are retired. Reading a repository,
 public or private, needs no record of any kind; content goes only to a
 provider the run declares in its own record, and secrets never leave
-(RFC5-12 and RFC5-14 as amended). Execution is governed by SEC-3 as amended:
+through Syzygy (RFC5-12 and RFC5-14 as amended); a dossier session's own raw
+reads are SEC-2's one disclosed exception (D11; RFC5-15). Execution is governed by SEC-3 as amended:
 the agent decides sandboxed runs and records them in the run's record; a run
 outside a sandbox is the owner's per-run decision.
 
