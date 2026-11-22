@@ -3,6 +3,7 @@ import * as path from 'node:path';
 import { parseBoundedJson } from '@syzygy/polaris-generation-core/live';
 import { isRecord } from '@syzygy/support';
 import { briefIssuedAt } from './check.js';
+import { readBoundedFile } from './check-record-read.js';
 import { type GateSources } from './gate-sources.js';
 import { isoOf } from './iso-of.js';
 import { reverifyPinnedRevision, type ReverifiedRevision, type ReverifyOptions, type ReverifyRefusal } from './reverify.js';
@@ -68,6 +69,19 @@ export function logStep(run: string, step: string, at: number, entry: Record<str
     if (!stored.ok && stored.legacy) return;
     fs.appendFileSync(path.join(run, RUN_LAYOUT.steps), `${JSON.stringify({ format: 'polaris-dossier-step/1', step, at: isoOf(at), ...entry })}\n`, { mode: 0o600 });
   } catch { /* the step log is a convenience within the agent's reach */ }
+}
+
+/** The brief record's read bound (REQ-polaris-generation-034, syzygy-3efd.76): the bound under which its readers parse it. */
+export const BRIEF_RECORD_MAX_BYTES = 262_144;
+
+/** The brief record of `run`, read by the reader rule under `BRIEF_RECORD_MAX_BYTES` and parsed within the record bounds, or undefined:
+ * a FIFO, a device, a directory or a record past the bound is one it cannot read, as one that does not parse. The bounded variant of
+ * `readRecord`, which still serves other requirements' records. */
+export function readBriefRecord(run: string): Readonly<Record<string, unknown>> | undefined {
+  try {
+    const value = parseBoundedJson(readBoundedFile(path.join(run, RUN_LAYOUT.briefRecord), BRIEF_RECORD_MAX_BYTES).toString('utf8'), RECORD_JSON_LIMITS);
+    return isRecord(value) ? value : undefined;
+  } catch { return undefined; }
 }
 
 /** A stored record, parsed within bounds, or undefined. */

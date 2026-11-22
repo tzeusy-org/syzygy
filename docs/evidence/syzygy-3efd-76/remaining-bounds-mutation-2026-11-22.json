@@ -1,0 +1,546 @@
+{
+  "format": "mutation-run/1",
+  "ranAt": "2026-11-22T14:20:26.033Z",
+  "commit": "b87d4d09e47ffc84f1c5df2f759650329213996e",
+  "subject": {
+    "packages/polaris-dossier/src/check-record-read.ts": "ff8794a8fc61eeb874b1758e8df86f4868d33ca62df6d2f5c10d60e71a0ddce1",
+    "packages/polaris-dossier/src/check.ts": "c06fe4fa904577e3dc270615e633bf9748f78aef0df62bae0eaccd69149cb86a",
+    "packages/polaris-dossier/src/close.ts": "449a36e2fe328a47fd06b24e414c2fd10a64c44d837c979daec4c14fde8a6637",
+    "packages/polaris-dossier/src/credential-probe.ts": "51fa13077fc9ff5e672cab03a1fba0fc22f2b3557897afe1a45de2bb2d4fa775",
+    "packages/polaris-dossier/src/design-review.ts": "f5e7a10d1e3a51a208ba5fd8aeb946ac863658b180a66807ecc29905abe49198",
+    "packages/polaris-dossier/src/inventory.ts": "688baadca4f6c214e2ecfd24177833d53bc1c1b349d66c9506259786fee5e472",
+    "packages/polaris-dossier/src/render.ts": "13734988c0735e2a792ff061567b58c2ce6753a401405c7ca28518964056be9c",
+    "packages/polaris-dossier/src/rerender-measure.ts": "b2d06f1af3146b1742af1c0a86f6866c69a14f3933383de5cdf0c4a4156813c4",
+    "packages/polaris-dossier/src/reverify.ts": "e2d91b5f17532347803cbf35c4a94bf474cd01db88465a7e06ae5a76d2dfb345",
+    "packages/polaris-dossier/src/review-packet.ts": "d2f0d12039d7b1274512b327d74d39c13763d565ad7b2dd41ff0110918796ca3",
+    "packages/polaris-dossier/src/run-advice.ts": "7f9d19ef2461ea89a74ed06b469f020e6f78032b7160ffdbad958081b7e09821",
+    "packages/polaris-dossier/src/run-dir.ts": "65dea85b3d2bbc2d11d822c96645802fa0362b7dc240d8a1debc8f3a579ee96d"
+  },
+  "command": "npx vitest run packages/polaris-dossier/src/bounded-readers.test.ts packages/polaris-dossier/src/check.test.ts packages/polaris-dossier/src/inventory.test.ts packages/polaris-dossier/src/run-advice.test.ts packages/polaris-dossier/src/rerender-measure.test.ts packages/polaris-dossier/src/render.test.ts packages/polaris-dossier/src/close.test.ts --reporter=json --outputFile=<scratch>/mutation-<id>.json",
+  "method": "Each mutant replaces one fragment (asserted to occur exactly once) in its file, runs the 7 test files above under vitest with the JSON reporter, and restores every source in finally. A mutant is killed when the run exits non-zero (failedTests lists each failing test) or is stopped after 300 s (killedBy \"timeout\": a reader that blocks on a FIFO cannot be interrupted by vitest's own test timeout). The unmutated baseline runs first and must pass.",
+  "testFiles": [
+    "packages/polaris-dossier/src/bounded-readers.test.ts",
+    "packages/polaris-dossier/src/check.test.ts",
+    "packages/polaris-dossier/src/inventory.test.ts",
+    "packages/polaris-dossier/src/run-advice.test.ts",
+    "packages/polaris-dossier/src/rerender-measure.test.ts",
+    "packages/polaris-dossier/src/render.test.ts",
+    "packages/polaris-dossier/src/close.test.ts"
+  ],
+  "baseline": {
+    "exitCode": 0,
+    "tests": 489,
+    "failedTests": []
+  },
+  "mutants": [
+    {
+      "id": "subject-bound",
+      "file": "packages/polaris-dossier/src/check.ts",
+      "old": "readBoundedFile(file, DRAFT_MAX_BYTES)",
+      "new": "readBoundedFile(file, DRAFT_MAX_BYTES + 1)",
+      "killed": true,
+      "killedBy": "tests",
+      "failedTests": [
+        "packages/polaris-dossier/src/check.test.ts > check: the reader rule for the draft and the brief record (syzygy-3efd.76) refuses a draft of 4,194,305 bytes from its size alone, reading no byte and freezing nothing",
+        "packages/polaris-dossier/src/check.test.ts > check: the reader rule for the draft and the brief record (syzygy-3efd.76) refuses a draft grown past the bound after its size was taken, reading at most one byte past it",
+        "packages/polaris-dossier/src/inventory.test.ts > inventory-check: the reader rule for the submission (syzygy-3efd.76) checks a submission of exactly 4,194,304 bytes and refuses one of 4,194,305 with the inventory words, freezing nothing"
+      ],
+      "seconds": 68
+    },
+    {
+      "id": "subject-old-reader",
+      "file": "packages/polaris-dossier/src/check.ts",
+      "old": "return new Uint8Array(readBoundedFile(file, DRAFT_MAX_BYTES));",
+      "new": "return new Uint8Array(fs.readFileSync(file));",
+      "killed": true,
+      "killedBy": "timeout",
+      "failedTests": [],
+      "seconds": 300
+    },
+    {
+      "id": "subject-not-regular-words",
+      "file": "packages/polaris-dossier/src/check.ts",
+      "old": "if (cause instanceof NotARegularFileError) return `${file} is not a regular file`;",
+      "new": "if (false) return `${file} is not a regular file`;",
+      "killed": true,
+      "killedBy": "tests",
+      "failedTests": [
+        "packages/polaris-dossier/src/check.test.ts > check: the reader rule for the draft and the brief record (syzygy-3efd.76) refuses a FIFO given as the draft, without blocking or reading a byte",
+        "packages/polaris-dossier/src/check.test.ts > check: the reader rule for the draft and the brief record (syzygy-3efd.76) refuses a symbolic link to /dev/zero given as the draft, without blocking or reading a byte",
+        "packages/polaris-dossier/src/check.test.ts > check: the reader rule for the draft and the brief record (syzygy-3efd.76) refuses a directory given as the draft, without blocking or reading a byte",
+        "packages/polaris-dossier/src/inventory.test.ts > inventory-check: the reader rule for the submission (syzygy-3efd.76) refuses a FIFO given as the submission, without blocking",
+        "packages/polaris-dossier/src/inventory.test.ts > inventory-check: the reader rule for the submission (syzygy-3efd.76) refuses a symbolic link to /dev/zero given as the submission, without blocking",
+        "packages/polaris-dossier/src/inventory.test.ts > inventory-check: the reader rule for the submission (syzygy-3efd.76) refuses a directory given as the submission, without blocking"
+      ],
+      "seconds": 37
+    },
+    {
+      "id": "subject-larger-words",
+      "file": "packages/polaris-dossier/src/check.ts",
+      "old": "if (cause instanceof BoundedJsonError && cause.code === 'byte-limit') return `${file} is larger",
+      "new": "if (false) return `${file} is larger",
+      "killed": true,
+      "killedBy": "tests",
+      "failedTests": [
+        "packages/polaris-dossier/src/check.test.ts > check: the reader rule for the draft and the brief record (syzygy-3efd.76) refuses a draft of 4,194,305 bytes from its size alone, reading no byte and freezing nothing",
+        "packages/polaris-dossier/src/check.test.ts > check: the reader rule for the draft and the brief record (syzygy-3efd.76) refuses a draft grown past the bound after its size was taken, reading at most one byte past it",
+        "packages/polaris-dossier/src/inventory.test.ts > inventory-check: the reader rule for the submission (syzygy-3efd.76) checks a submission of exactly 4,194,304 bytes and refuses one of 4,194,305 with the inventory words, freezing nothing"
+      ],
+      "seconds": 34
+    },
+    {
+      "id": "issued-bound",
+      "file": "packages/polaris-dossier/src/check.ts",
+      "old": "RUN_LAYOUT.briefRecord), BRIEF_JSON_LIMITS.maxBytes)",
+      "new": "RUN_LAYOUT.briefRecord), BRIEF_JSON_LIMITS.maxBytes + 1)",
+      "killed": true,
+      "killedBy": "tests",
+      "failedTests": [
+        "packages/polaris-dossier/src/bounded-readers.test.ts > the reader rule (syzygy-3efd.76): 'briefIssuedAt (check)' refuses a file one byte past its bound from its size alone, reading no byte of it",
+        "packages/polaris-dossier/src/bounded-readers.test.ts > the reader rule (syzygy-3efd.76): 'briefIssuedAt (check)' refuses a file grown past its bound after its size was taken, reading at most one byte past the bound"
+      ],
+      "seconds": 36
+    },
+    {
+      "id": "issued-old-reader",
+      "file": "packages/polaris-dossier/src/check.ts",
+      "old": "readBoundedFile(path.join(run, RUN_LAYOUT.briefRecord), BRIEF_JSON_LIMITS.maxBytes).toString('utf8')",
+      "new": "fs.readFileSync(path.join(run, RUN_LAYOUT.briefRecord), 'utf8')",
+      "killed": true,
+      "killedBy": "timeout",
+      "failedTests": [],
+      "seconds": 300
+    },
+    {
+      "id": "frozen-bound",
+      "file": "packages/polaris-dossier/src/review-packet.ts",
+      "old": "readBoundedFile(path.join(run, frozen), DRAFT_MAX_BYTES)",
+      "new": "readBoundedFile(path.join(run, frozen), DRAFT_MAX_BYTES + 1)",
+      "killed": true,
+      "killedBy": "tests",
+      "failedTests": [
+        "packages/polaris-dossier/src/bounded-readers.test.ts > the reader rule (syzygy-3efd.76): 'latestPassedDraft (review, render and…' refuses a file one byte past its bound from its size alone, reading no byte of it",
+        "packages/polaris-dossier/src/bounded-readers.test.ts > the reader rule (syzygy-3efd.76): 'latestPassedDraft (review, render and…' refuses a file grown past its bound after its size was taken, reading at most one byte past the bound"
+      ],
+      "seconds": 23
+    },
+    {
+      "id": "frozen-old-reader",
+      "file": "packages/polaris-dossier/src/review-packet.ts",
+      "old": "readBoundedFile(path.join(run, frozen), DRAFT_MAX_BYTES)",
+      "new": "fs.readFileSync(path.join(run, frozen))",
+      "killed": true,
+      "killedBy": "timeout",
+      "failedTests": [],
+      "seconds": 300
+    },
+    {
+      "id": "frozen-not-regular-words",
+      "file": "packages/polaris-dossier/src/review-packet.ts",
+      "old": "cause instanceof NotARegularFileError ? 'not a regular file'",
+      "new": "false ? 'not a regular file'",
+      "killed": true,
+      "killedBy": "tests",
+      "failedTests": [
+        "packages/polaris-dossier/src/bounded-readers.test.ts > the reader rule (syzygy-3efd.76): 'latestPassedDraft (review, render and…' refuses a FIFO at its path without blocking or reading a byte",
+        "packages/polaris-dossier/src/bounded-readers.test.ts > the reader rule (syzygy-3efd.76): 'latestPassedDraft (review, render and…' refuses a symbolic link to /dev/zero at its path without blocking or reading a byte",
+        "packages/polaris-dossier/src/bounded-readers.test.ts > the reader rule (syzygy-3efd.76): 'latestPassedDraft (review, render and…' refuses a directory at its path without blocking or reading a byte"
+      ],
+      "seconds": 24
+    },
+    {
+      "id": "frozen-larger-words",
+      "file": "packages/polaris-dossier/src/review-packet.ts",
+      "old": "cause instanceof BoundedJsonError && cause.code === 'byte-limit' ? `larger than",
+      "new": "false ? `larger than",
+      "killed": true,
+      "killedBy": "tests",
+      "failedTests": [
+        "packages/polaris-dossier/src/bounded-readers.test.ts > the reader rule (syzygy-3efd.76): 'latestPassedDraft (review, render and…' refuses a file one byte past its bound from its size alone, reading no byte of it",
+        "packages/polaris-dossier/src/bounded-readers.test.ts > the reader rule (syzygy-3efd.76): 'latestPassedDraft (review, render and…' refuses a file grown past its bound after its size was taken, reading at most one byte past the bound"
+      ],
+      "seconds": 37
+    },
+    {
+      "id": "authoring-bound",
+      "file": "packages/polaris-dossier/src/inventory.ts",
+      "old": "RUN_LAYOUT.drafts, name), DRAFT_JSON_LIMITS.maxBytes)",
+      "new": "RUN_LAYOUT.drafts, name), DRAFT_JSON_LIMITS.maxBytes + 1)",
+      "killed": true,
+      "killedBy": "tests",
+      "failedTests": [
+        "packages/polaris-dossier/src/bounded-readers.test.ts > the reader rule (syzygy-3efd.76): 'authoringSessionIds' refuses a file one byte past its bound from its size alone, reading no byte of it",
+        "packages/polaris-dossier/src/bounded-readers.test.ts > the reader rule (syzygy-3efd.76): 'authoringSessionIds' refuses a file grown past its bound after its size was taken, reading at most one byte past the bound"
+      ],
+      "seconds": 44
+    },
+    {
+      "id": "authoring-old-reader",
+      "file": "packages/polaris-dossier/src/inventory.ts",
+      "old": "readBoundedFile(path.join(run, RUN_LAYOUT.drafts, name), DRAFT_JSON_LIMITS.maxBytes).toString('utf8')",
+      "new": "fs.readFileSync(path.join(run, RUN_LAYOUT.drafts, name), 'utf8')",
+      "killed": true,
+      "killedBy": "timeout",
+      "failedTests": [],
+      "seconds": 300
+    },
+    {
+      "id": "measure-bound",
+      "file": "packages/polaris-dossier/src/rerender-measure.ts",
+      "old": "readBoundedFile(path.join(dir, `rev-${revision}.json`), DRAFT_MAX_BYTES)",
+      "new": "readBoundedFile(path.join(dir, `rev-${revision}.json`), DRAFT_MAX_BYTES + 1)",
+      "killed": true,
+      "killedBy": "tests",
+      "failedTests": [
+        "packages/polaris-dossier/src/bounded-readers.test.ts > the reader rule (syzygy-3efd.76): listStoredDrafts (the stored-draft re-render measurement) reads a revision of exactly 4,194,304 bytes and refuses one of 4,194,305 unread",
+        "packages/polaris-dossier/src/bounded-readers.test.ts > the reader rule (syzygy-3efd.76): listStoredDrafts (the stored-draft re-render measurement) refuses a revision grown past the bound after its size was taken, reading at most one byte past it"
+      ],
+      "seconds": 26
+    },
+    {
+      "id": "measure-old-reader",
+      "file": "packages/polaris-dossier/src/rerender-measure.ts",
+      "old": "readBoundedFile(path.join(dir, `rev-${revision}.json`), DRAFT_MAX_BYTES)",
+      "new": "fs.readFileSync(path.join(dir, `rev-${revision}.json`))",
+      "killed": true,
+      "killedBy": "timeout",
+      "failedTests": [],
+      "seconds": 300
+    },
+    {
+      "id": "measure-not-regular-error",
+      "file": "packages/polaris-dossier/src/rerender-measure.ts",
+      "old": "cause instanceof NotARegularFileError ? 'not-a-regular-file' : code(cause)",
+      "new": "code(cause)",
+      "killed": true,
+      "killedBy": "tests",
+      "failedTests": [
+        "packages/polaris-dossier/src/bounded-readers.test.ts > the reader rule (syzygy-3efd.76): listStoredDrafts (the stored-draft re-render measurement) refuses a revision that is a FIFO when opened, though a regular file when listed, reading no byte",
+        "packages/polaris-dossier/src/bounded-readers.test.ts > the reader rule (syzygy-3efd.76): listStoredDrafts (the stored-draft re-render measurement) refuses a revision that is a symbolic link to /dev/zero when opened, though a regular file when listed, reading no byte",
+        "packages/polaris-dossier/src/bounded-readers.test.ts > the reader rule (syzygy-3efd.76): listStoredDrafts (the stored-draft re-render measurement) refuses a revision that is a directory when opened, though a regular file when listed, reading no byte"
+      ],
+      "seconds": 22
+    },
+    {
+      "id": "measure-dirent-filter",
+      "file": "packages/polaris-dossier/src/rerender-measure.ts",
+      "old": "if (match === null || !name.isFile())",
+      "new": "if (match === null)",
+      "killed": true,
+      "killedBy": "tests",
+      "failedTests": [
+        "packages/polaris-dossier/src/rerender-measure.test.ts > a state root listed and recorded counts a refused or unreadable draft, never passing over it, and its counts sum to the drafts found",
+        "packages/polaris-dossier/src/bounded-readers.test.ts > the reader rule (syzygy-3efd.76): listStoredDrafts (the stored-draft re-render measurement) counts a FIFO listed at a revision's name among the other files, never opening it",
+        "packages/polaris-dossier/src/bounded-readers.test.ts > the reader rule (syzygy-3efd.76): listStoredDrafts (the stored-draft re-render measurement) counts a symbolic link to /dev/zero listed at a revision's name among the other files, never opening it",
+        "packages/polaris-dossier/src/bounded-readers.test.ts > the reader rule (syzygy-3efd.76): listStoredDrafts (the stored-draft re-render measurement) counts a directory listed at a revision's name among the other files, never opening it"
+      ],
+      "seconds": 22
+    },
+    {
+      "id": "advice-bound",
+      "file": "packages/polaris-dossier/src/run-advice.ts",
+      "old": "readBoundedFile(file, RUN_ADVICE_LIMITS.maxBytes)",
+      "new": "readBoundedFile(file, RUN_ADVICE_LIMITS.maxBytes + 1)",
+      "killed": true,
+      "killedBy": "tests",
+      "failedTests": [
+        "packages/polaris-dossier/src/run-advice.test.ts > the run file reads the run file under the check record's bound: one past 16,777,216 bytes from its size alone, or nested past 16 levels, is null",
+        "packages/polaris-dossier/src/bounded-readers.test.ts > the reader rule (syzygy-3efd.76): 'readRunAdvice' refuses a file one byte past its bound from its size alone, reading no byte of it",
+        "packages/polaris-dossier/src/bounded-readers.test.ts > the reader rule (syzygy-3efd.76): 'readRunAdvice' refuses a file grown past its bound after its size was taken, reading at most one byte past the bound"
+      ],
+      "seconds": 23
+    },
+    {
+      "id": "advice-old-reader",
+      "file": "packages/polaris-dossier/src/run-advice.ts",
+      "old": "readBoundedFile(file, RUN_ADVICE_LIMITS.maxBytes).toString('utf8')",
+      "new": "fs.readFileSync(file, 'utf8')",
+      "killed": true,
+      "killedBy": "timeout",
+      "failedTests": [],
+      "seconds": 300
+    },
+    {
+      "id": "reverify-bound",
+      "file": "packages/polaris-dossier/src/reverify.ts",
+      "old": "RUN_LAYOUT.briefRecord), BRIEF_RECORD_LIMITS.maxBytes)",
+      "new": "RUN_LAYOUT.briefRecord), BRIEF_RECORD_LIMITS.maxBytes + 1)",
+      "killed": true,
+      "killedBy": "tests",
+      "failedTests": [
+        "packages/polaris-dossier/src/check.test.ts > check: the reader rule for the draft and the brief record (syzygy-3efd.76) reverifies a brief record of exactly 262,144 bytes and refuses one of 262,145 unread, with the bounded-JSON words",
+        "packages/polaris-dossier/src/check.test.ts > check: the reader rule for the draft and the brief record (syzygy-3efd.76) refuses a brief record grown past 262,144 bytes after its size was taken, reading at most one byte past the bound"
+      ],
+      "seconds": 22
+    },
+    {
+      "id": "reverify-old-reader",
+      "file": "packages/polaris-dossier/src/reverify.ts",
+      "old": "readBoundedFile(path.join(run, RUN_LAYOUT.briefRecord), BRIEF_RECORD_LIMITS.maxBytes).toString('utf8')",
+      "new": "fs.readFileSync(path.join(run, RUN_LAYOUT.briefRecord), 'utf8')",
+      "killed": true,
+      "killedBy": "timeout",
+      "failedTests": [],
+      "seconds": 300
+    },
+    {
+      "id": "reverify-not-regular-words",
+      "file": "packages/polaris-dossier/src/reverify.ts",
+      "old": "if (cause instanceof NotARegularFileError) return { state: 'invalid', why: 'it cannot be read (not a regular file)' };",
+      "new": "",
+      "killed": true,
+      "killedBy": "tests",
+      "failedTests": [
+        "packages/polaris-dossier/src/check.test.ts > check: the reader rule for the draft and the brief record (syzygy-3efd.76) refuses a FIFO at the brief record's path in the reverification, without blocking or reading a byte",
+        "packages/polaris-dossier/src/check.test.ts > check: the reader rule for the draft and the brief record (syzygy-3efd.76) refuses a symbolic link to /dev/zero at the brief record's path in the reverification, without blocking or reading a byte",
+        "packages/polaris-dossier/src/check.test.ts > check: the reader rule for the draft and the brief record (syzygy-3efd.76) refuses a directory at the brief record's path in the reverification, without blocking or reading a byte"
+      ],
+      "seconds": 23
+    },
+    {
+      "id": "reverify-bounded-words",
+      "file": "packages/polaris-dossier/src/reverify.ts",
+      "old": "if (cause instanceof BoundedJsonError && cause.code === 'byte-limit') return { state: 'invalid', why: 'it is not bounded JSON' };",
+      "new": "",
+      "killed": true,
+      "killedBy": "tests",
+      "failedTests": [
+        "packages/polaris-dossier/src/check.test.ts > check: the reader rule for the draft and the brief record (syzygy-3efd.76) reverifies a brief record of exactly 262,144 bytes and refuses one of 262,145 unread, with the bounded-JSON words",
+        "packages/polaris-dossier/src/check.test.ts > check: the reader rule for the draft and the brief record (syzygy-3efd.76) refuses a brief record grown past 262,144 bytes after its size was taken, reading at most one byte past the bound"
+      ],
+      "seconds": 23
+    },
+    {
+      "id": "arm-bound",
+      "file": "packages/polaris-dossier/src/credential-probe.ts",
+      "old": "RUN_LAYOUT.briefRecord), 262_144)",
+      "new": "RUN_LAYOUT.briefRecord), 262_145)",
+      "killed": true,
+      "killedBy": "tests",
+      "failedTests": [
+        "packages/polaris-dossier/src/bounded-readers.test.ts > the reader rule (syzygy-3efd.76): 'storedBriefArm (the execution rule)' refuses a file one byte past its bound from its size alone, reading no byte of it",
+        "packages/polaris-dossier/src/bounded-readers.test.ts > the reader rule (syzygy-3efd.76): 'storedBriefArm (the execution rule)' refuses a file grown past its bound after its size was taken, reading at most one byte past the bound"
+      ],
+      "seconds": 23
+    },
+    {
+      "id": "arm-old-reader",
+      "file": "packages/polaris-dossier/src/credential-probe.ts",
+      "old": "readBoundedFile(path.join(run, RUN_LAYOUT.briefRecord), 262_144).toString('utf8')",
+      "new": "fs.readFileSync(path.join(run, RUN_LAYOUT.briefRecord), 'utf8')",
+      "killed": true,
+      "killedBy": "timeout",
+      "failedTests": [],
+      "seconds": 300
+    },
+    {
+      "id": "brief-record-bound",
+      "file": "packages/polaris-dossier/src/run-dir.ts",
+      "old": "export const BRIEF_RECORD_MAX_BYTES = 262_144;",
+      "new": "export const BRIEF_RECORD_MAX_BYTES = 262_145;",
+      "killed": true,
+      "killedBy": "tests",
+      "failedTests": [
+        "packages/polaris-dossier/src/bounded-readers.test.ts > the reader rule (syzygy-3efd.76): 'readBriefRecord (the render\\'s run di…' refuses a file one byte past its bound from its size alone, reading no byte of it",
+        "packages/polaris-dossier/src/bounded-readers.test.ts > the reader rule (syzygy-3efd.76): 'readBriefRecord (the render\\'s run di…' refuses a file grown past its bound after its size was taken, reading at most one byte past the bound"
+      ],
+      "seconds": 22
+    },
+    {
+      "id": "brief-record-old-reader",
+      "file": "packages/polaris-dossier/src/run-dir.ts",
+      "old": "readBoundedFile(path.join(run, RUN_LAYOUT.briefRecord), BRIEF_RECORD_MAX_BYTES).toString('utf8')",
+      "new": "fs.readFileSync(path.join(run, RUN_LAYOUT.briefRecord), 'utf8')",
+      "killed": true,
+      "killedBy": "timeout",
+      "failedTests": [],
+      "seconds": 300
+    },
+    {
+      "id": "render-unbounded-brief",
+      "file": "packages/polaris-dossier/src/render.ts",
+      "old": "const brief = readBriefRecord(run);",
+      "new": "const brief = readRecord(path.join(run, RUN_LAYOUT.briefRecord));",
+      "killed": true,
+      "killedBy": "tests",
+      "failedTests": [
+        "packages/polaris-dossier/src/close.test.ts > the readers of the run files in a full run never read brief.json, a draft or run-advice.json with readFileSync, from check through render and close"
+      ],
+      "seconds": 22
+    },
+    {
+      "id": "close-unbounded-brief",
+      "file": "packages/polaris-dossier/src/close.ts",
+      "old": "const brief = readBriefRecord(run);",
+      "new": "const brief = readRecord(path.join(run, RUN_LAYOUT.briefRecord));",
+      "killed": true,
+      "killedBy": "tests",
+      "failedTests": [
+        "packages/polaris-dossier/src/close.test.ts > the readers of the run files in a full run never read brief.json, a draft or run-advice.json with readFileSync, from check through render and close"
+      ],
+      "seconds": 23
+    },
+    {
+      "id": "stored-old-reader",
+      "file": "packages/polaris-dossier/src/close.ts",
+      "old": "const bytes = bound === undefined ? readFileAsSized(full) : readBoundedFile(full, bound);",
+      "new": "const bytes = fs.readFileSync(full);",
+      "killed": true,
+      "killedBy": "timeout",
+      "failedTests": [],
+      "seconds": 300
+    },
+    {
+      "id": "stored-as-sized-unbounded",
+      "file": "packages/polaris-dossier/src/close.ts",
+      "old": "readFileAsSized(full)",
+      "new": "readBoundedFile(full, Number.MAX_SAFE_INTEGER)",
+      "killed": true,
+      "killedBy": "tests",
+      "failedTests": [
+        "packages/polaris-dossier/src/close.test.ts > the readers of the run files in a full run counts a file no stated bound covers as not listed when it grows after its size was taken"
+      ],
+      "seconds": 22
+    },
+    {
+      "id": "stored-brief-bound",
+      "file": "packages/polaris-dossier/src/close.ts",
+      "old": "if (rel === 'brief.json') return 262_144;",
+      "new": "if (rel === 'brief.json') return 262_145;",
+      "killed": true,
+      "killedBy": "tests",
+      "failedTests": [
+        "packages/polaris-dossier/src/close.test.ts > the readers of the run files in a full run digests a brief record of exactly 262,144 bytes and counts one of 262,145 as not listed"
+      ],
+      "seconds": 22
+    },
+    {
+      "id": "stored-draft-bound",
+      "file": "packages/polaris-dossier/src/close.ts",
+      "old": "if (/^drafts",
+      "new": "if (false && /^drafts",
+      "killed": true,
+      "killedBy": "tests",
+      "failedTests": [
+        "packages/polaris-dossier/src/close.test.ts > the readers of the run files in a full run digests a frozen draft revision of exactly 4,194,304 bytes and counts one of 4,194,305 as not listed"
+      ],
+      "seconds": 22
+    },
+    {
+      "id": "stored-advice-bound",
+      "file": "packages/polaris-dossier/src/close.ts",
+      "old": "if (rel === 'run-advice.json') return 16_777_216;",
+      "new": "if (rel === 'run-advice.json') return 16_777_217;",
+      "killed": true,
+      "killedBy": "tests",
+      "failedTests": [
+        "packages/polaris-dossier/src/close.test.ts > the readers of the run files in a full run digests run-advice.json of exactly 16,777,216 bytes and counts one of 16,777,217 as not listed"
+      ],
+      "seconds": 23
+    },
+    {
+      "id": "stored-check-record-bound",
+      "file": "packages/polaris-dossier/src/close.ts",
+      "old": "if (/^(?:inventory",
+      "new": "if (false && /^(?:inventory",
+      "killed": true,
+      "killedBy": "tests",
+      "failedTests": [
+        "packages/polaris-dossier/src/close.test.ts > the readers of the run files in a full run digests checks/rev-0.json at its bound of 16777216 bytes and counts it one byte past as not listed",
+        "packages/polaris-dossier/src/close.test.ts > the readers of the run files in a full run digests inventory/checks/rev-0.json at its bound of 16777216 bytes and counts it one byte past as not listed"
+      ],
+      "seconds": 23
+    },
+    {
+      "id": "stored-inventory-check-record-bound",
+      "file": "packages/polaris-dossier/src/close.ts",
+      "old": "/^(?:inventory\\/)?checks",
+      "new": "/^checks",
+      "killed": true,
+      "killedBy": "tests",
+      "failedTests": [
+        "packages/polaris-dossier/src/close.test.ts > the readers of the run files in a full run digests inventory/checks/rev-0.json at its bound of 16777216 bytes and counts it one byte past as not listed"
+      ],
+      "seconds": 22
+    },
+    {
+      "id": "stored-derived-bound",
+      "file": "packages/polaris-dossier/src/close.ts",
+      "old": "if (/^derived",
+      "new": "if (false && /^derived",
+      "killed": true,
+      "killedBy": "tests",
+      "failedTests": [
+        "packages/polaris-dossier/src/close.test.ts > the readers of the run files in a full run digests derived/rev-0.json at its bound of 4194304 bytes and counts it one byte past as not listed"
+      ],
+      "seconds": 23
+    },
+    {
+      "id": "as-sized-bound",
+      "file": "packages/polaris-dossier/src/check-record-read.ts",
+      "old": "return readRegularFile(file, (size) => size);",
+      "new": "return readRegularFile(file, (size) => size + 1);",
+      "killed": true,
+      "killedBy": "tests",
+      "failedTests": [
+        "packages/polaris-dossier/src/close.test.ts > the readers of the run files in a full run counts a file no stated bound covers as not listed when it grows after its size was taken"
+      ],
+      "seconds": 22
+    },
+    {
+      "id": "standards-bound",
+      "file": "packages/polaris-dossier/src/design-review.ts",
+      "old": "readBoundedFile(path.join(run, name), BRIEF_RECORD_LIMITS.maxBytes)",
+      "new": "readBoundedFile(path.join(run, name), BRIEF_RECORD_LIMITS.maxBytes + 1)",
+      "killed": true,
+      "killedBy": "tests",
+      "failedTests": [
+        "packages/polaris-dossier/src/bounded-readers.test.ts > the reader rule (syzygy-3efd.76): 'briefStandardsOf (the design packet)' refuses a file one byte past its bound from its size alone, reading no byte of it",
+        "packages/polaris-dossier/src/bounded-readers.test.ts > the reader rule (syzygy-3efd.76): 'briefStandardsOf (the design packet)' refuses a file grown past its bound after its size was taken, reading at most one byte past the bound"
+      ],
+      "seconds": 22
+    },
+    {
+      "id": "standards-old-reader",
+      "file": "packages/polaris-dossier/src/design-review.ts",
+      "old": "readBoundedFile(path.join(run, name), BRIEF_RECORD_LIMITS.maxBytes).toString('utf8')",
+      "new": "fs.readFileSync(path.join(run, name), 'utf8')",
+      "killed": true,
+      "killedBy": "timeout",
+      "failedTests": [],
+      "seconds": 300
+    },
+    {
+      "id": "standards-not-regular-words",
+      "file": "packages/polaris-dossier/src/design-review.ts",
+      "old": "if (cause instanceof NotARegularFileError) return { ok: false, reason: `${name} cannot be read (not a regular file)` };",
+      "new": "",
+      "killed": true,
+      "killedBy": "tests",
+      "failedTests": [
+        "packages/polaris-dossier/src/bounded-readers.test.ts > the reader rule (syzygy-3efd.76): 'briefStandardsOf (the design packet)' refuses a FIFO at its path without blocking or reading a byte",
+        "packages/polaris-dossier/src/bounded-readers.test.ts > the reader rule (syzygy-3efd.76): 'briefStandardsOf (the design packet)' refuses a symbolic link to /dev/zero at its path without blocking or reading a byte",
+        "packages/polaris-dossier/src/bounded-readers.test.ts > the reader rule (syzygy-3efd.76): 'briefStandardsOf (the design packet)' refuses a directory at its path without blocking or reading a byte"
+      ],
+      "seconds": 22
+    },
+    {
+      "id": "standards-bounded-words",
+      "file": "packages/polaris-dossier/src/design-review.ts",
+      "old": "if (cause instanceof BoundedJsonError && cause.code === 'byte-limit') return { ok: false, reason: `${name} is not JSON within its bounds` };",
+      "new": "",
+      "killed": true,
+      "killedBy": "tests",
+      "failedTests": [
+        "packages/polaris-dossier/src/bounded-readers.test.ts > the reader rule (syzygy-3efd.76): 'briefStandardsOf (the design packet)' refuses a file one byte past its bound from its size alone, reading no byte of it",
+        "packages/polaris-dossier/src/bounded-readers.test.ts > the reader rule (syzygy-3efd.76): 'briefStandardsOf (the design packet)' refuses a file grown past its bound after its size was taken, reading at most one byte past the bound"
+      ],
+      "seconds": 21
+    }
+  ],
+  "summary": {
+    "mutants": 41,
+    "killed": 41,
+    "survived": 0
+  }
+}
