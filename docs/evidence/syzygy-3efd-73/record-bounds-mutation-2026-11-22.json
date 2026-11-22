@@ -1,14 +1,14 @@
 {
   "format": "mutation-run/1",
-  "ranAt": "2026-11-22T02:32:12.388Z",
-  "commit": "6396788089f800a3e9363292ae52565b434ad662",
+  "ranAt": "2026-11-22T03:14:39.772Z",
+  "commit": "5cff9352db44ee3f46a6347a18b138081ffb5475",
   "subject": {
     "apps/three-surface-poc/src/polaris-generation/dossier-site.ts": "bce7183623233d1c21fa1afefcbc479348c7c70e974b656b87db2f090755fe43",
-    "packages/polaris-dossier/src/check-record-read.ts": "3ffb534d8f80919b3e94d110f3fc65d40cd18e2f98001cdca4297c0bf1ffa81e",
+    "packages/polaris-dossier/src/check-record-read.ts": "21c0809792dc2f0ae03099b25013b0d5685e05d94e4ba056148c12d9e1bacec4",
     "packages/polaris-dossier/src/check.ts": "6606486a66b41ba3ca6a80d622ae1077dbf860f86171e6e9ad04e54545da55c6",
     "packages/polaris-dossier/src/derived-record.ts": "a1e9f81595b9fb4d68d59541a1a3a8af35511728f4c6fa8c33202b60cf1fa6c7",
     "packages/polaris-dossier/src/inventory.ts": "eb3d2b313128e9a2fb31792e9366f56676e6e1e145c4e59085a4852ae987aa95",
-    "packages/polaris-dossier/src/polaris.ts": "ac44dc0a44f4128a2810aaf0fe03587e347f0d010f46000b2cb0a416ef72ca73"
+    "packages/polaris-dossier/src/polaris.ts": "89d3fe21982e69e0580d514cf2bfd351a20d21870a75e0c3807e07964b980bd7"
   },
   "command": "npx vitest run packages/polaris-dossier/src/check-record-read.test.ts packages/polaris-dossier/src/check.test.ts packages/polaris-dossier/src/inventory.test.ts packages/polaris-dossier/src/derived-record.test.ts packages/polaris-dossier/src/render.test.ts apps/three-surface-poc/src/polaris-generation/dossier-derived-region.test.ts apps/three-surface-poc/src/polaris-generation/dossier-computed-maps.test.ts --reporter=json --outputFile=<scratch>/mutation-<id>.json",
   "method": "Each mutant replaces one fragment (asserted to occur exactly once) in its file, runs the 7 test files above under vitest with the JSON reporter, and restores every source in finally. A mutant is killed when the run exits non-zero (failedTests lists each failing test) or is stopped after 300 s (killedBy \"timeout\": a reader that blocks on a FIFO cannot be interrupted by vitest's own test timeout). The unmutated baseline runs first and must pass.",
@@ -23,7 +23,7 @@
   ],
   "baseline": {
     "exitCode": 0,
-    "tests": 423,
+    "tests": 424,
     "failedTests": []
   },
   "mutants": [
@@ -38,6 +38,18 @@
       "seconds": 300
     },
     {
+      "id": "read-noctty",
+      "file": "packages/polaris-dossier/src/check-record-read.ts",
+      "old": "fs.constants.O_NONBLOCK | fs.constants.O_NOCTTY",
+      "new": "fs.constants.O_NONBLOCK",
+      "killed": true,
+      "killedBy": "tests",
+      "failedTests": [
+        "packages/polaris-dossier/src/check-record-read.test.ts > the check-record reader rule (version 2.10) opens the path read-only, without blocking and never as a controlling terminal"
+      ],
+      "seconds": 19
+    },
+    {
       "id": "read-regular-file",
       "file": "packages/polaris-dossier/src/check-record-read.ts",
       "old": "if (!stats.isFile()) throw new NotARegularFileError();",
@@ -48,7 +60,7 @@
         "packages/polaris-dossier/src/check-record-read.test.ts > the check-record reader rule (version 2.10) refuses a FIFO, a device and a directory at a check record's path in every reader, reading no byte and never blocking",
         "packages/polaris-dossier/src/check-record-read.test.ts > the check-record reader rule (version 2.10) refuses each by its own error before reading a byte, and reads a regular file through a symbolic link"
       ],
-      "seconds": 18
+      "seconds": 19
     },
     {
       "id": "read-size-first",
@@ -63,7 +75,7 @@
         "packages/polaris-dossier/src/check-record-read.test.ts > the check-record reader rule (version 2.10) refuses a record grown past the bound after its size was taken, reading at most one byte past the bound, in every reader",
         "packages/polaris-dossier/src/derived-record.test.ts > the record at a render refuses a derived record past its 4,194,304-byte bound from its size alone, reading no byte of it (version 2.10)"
       ],
-      "seconds": 18
+      "seconds": 21
     },
     {
       "id": "read-limit-plus-one",
@@ -75,7 +87,7 @@
       "failedTests": [
         "packages/polaris-dossier/src/check-record-read.test.ts > the check-record reader rule (version 2.10) refuses a record grown past the bound after its size was taken, reading at most one byte past the bound, in every reader"
       ],
-      "seconds": 18
+      "seconds": 21
     },
     {
       "id": "read-grown-refused",
@@ -87,7 +99,7 @@
       "failedTests": [
         "packages/polaris-dossier/src/check-record-read.test.ts > the check-record reader rule (version 2.10) refuses, by its own byte bound, a file grown past the bound after its size was taken, before any parse"
       ],
-      "seconds": 19
+      "seconds": 22
     },
     {
       "id": "read-check-bound",
@@ -100,7 +112,7 @@
         "packages/polaris-dossier/src/check-record-read.test.ts > the check-record read bound (version 2.8) refuses a record over 16,777,216 bytes from its size alone, never reading a byte of it, and reads one at the bound",
         "packages/polaris-dossier/src/check-record-read.test.ts > the check-record reader rule (version 2.10) refuses a record grown past the bound after its size was taken, reading at most one byte past the bound, in every reader"
       ],
-      "seconds": 20
+      "seconds": 22
     },
     {
       "id": "inventory-old-reader",
@@ -134,7 +146,7 @@
         "packages/polaris-dossier/src/check.test.ts > check: the record within its read bound (version 2.10) lists every finding of a draft with findings in findingsLeftOut, on the report alone",
         "packages/polaris-dossier/src/inventory.test.ts > the inventory check record's read bound (version 2.10) writes an inventory check record past the bound in its bounded form, with counts and completeness, and the inventory does not count"
       ],
-      "seconds": 18
+      "seconds": 32
     },
     {
       "id": "check-bytes-at-bound",
@@ -146,7 +158,7 @@
       "failedTests": [
         "packages/polaris-dossier/src/check.test.ts > check: the record within its read bound (version 2.10) writes a record at exactly the byte, value and depth bounds in full, byte for byte as the unmeasured check writes it, and passes"
       ],
-      "seconds": 18
+      "seconds": 38
     },
     {
       "id": "check-bytes-arm",
@@ -160,7 +172,7 @@
         "packages/polaris-dossier/src/check.test.ts > check: the record within its read bound (version 2.10) lists every finding of a draft with findings in findingsLeftOut, on the report alone",
         "packages/polaris-dossier/src/inventory.test.ts > the inventory check record's read bound (version 2.10) writes an inventory check record past the bound in its bounded form, with counts and completeness, and the inventory does not count"
       ],
-      "seconds": 18
+      "seconds": 37
     },
     {
       "id": "check-values-at-bound",
@@ -172,7 +184,7 @@
       "failedTests": [
         "packages/polaris-dossier/src/check.test.ts > check: the record within its read bound (version 2.10) writes a record at exactly the byte, value and depth bounds in full, byte for byte as the unmeasured check writes it, and passes"
       ],
-      "seconds": 19
+      "seconds": 27
     },
     {
       "id": "check-values-arm",
@@ -184,7 +196,7 @@
       "failedTests": [
         "packages/polaris-dossier/src/check.test.ts > check: the record within its read bound (version 2.10) writes the bounded form one byte, value or level past the bound: outcome findings, one check-record-bound finding, and the draft does not pass"
       ],
-      "seconds": 19
+      "seconds": 33
     },
     {
       "id": "check-depth-at-bound",
@@ -196,7 +208,7 @@
       "failedTests": [
         "packages/polaris-dossier/src/check.test.ts > check: the record within its read bound (version 2.10) writes a record at exactly the byte, value and depth bounds in full, byte for byte as the unmeasured check writes it, and passes"
       ],
-      "seconds": 19
+      "seconds": 39
     },
     {
       "id": "check-depth-arm",
@@ -208,7 +220,7 @@
       "failedTests": [
         "packages/polaris-dossier/src/check.test.ts > check: the record within its read bound (version 2.10) writes the bounded form one byte, value or level past the bound: outcome findings, one check-record-bound finding, and the draft does not pass"
       ],
-      "seconds": 19
+      "seconds": 26
     },
     {
       "id": "check-writes-bounded",
@@ -222,7 +234,7 @@
         "packages/polaris-dossier/src/check.test.ts > check: the record within its read bound (version 2.10) lists every finding of a draft with findings in findingsLeftOut, on the report alone",
         "packages/polaris-dossier/src/inventory.test.ts > the inventory check record's read bound (version 2.10) writes an inventory check record past the bound in its bounded form, with counts and completeness, and the inventory does not count"
       ],
-      "seconds": 18
+      "seconds": 22
     },
     {
       "id": "check-log-outcome",
@@ -234,7 +246,7 @@
       "failedTests": [
         "packages/polaris-dossier/src/check.test.ts > check: the record within its read bound (version 2.10) writes the bounded form one byte, value or level past the bound: outcome findings, one check-record-bound finding, and the draft does not pass"
       ],
-      "seconds": 19
+      "seconds": 22
     },
     {
       "id": "check-log-findings",
@@ -246,7 +258,7 @@
       "failedTests": [
         "packages/polaris-dossier/src/check.test.ts > check: the record within its read bound (version 2.10) writes the bounded form one byte, value or level past the bound: outcome findings, one check-record-bound finding, and the draft does not pass"
       ],
-      "seconds": 19
+      "seconds": 22
     },
     {
       "id": "check-no-mechanism-advice",
@@ -258,7 +270,7 @@
       "failedTests": [
         "packages/polaris-dossier/src/check.test.ts > check: the record within its read bound (version 2.10) writes the bounded form one byte, value or level past the bound: outcome findings, one check-record-bound finding, and the draft does not pass"
       ],
-      "seconds": 20
+      "seconds": 22
     },
     {
       "id": "check-no-report-fit",
@@ -270,7 +282,7 @@
       "failedTests": [
         "packages/polaris-dossier/src/check.test.ts > check: the record within its read bound (version 2.10) writes the bounded form one byte, value or level past the bound: outcome findings, one check-record-bound finding, and the draft does not pass"
       ],
-      "seconds": 19
+      "seconds": 21
     },
     {
       "id": "check-findings-left-out",
@@ -284,7 +296,7 @@
         "packages/polaris-dossier/src/check.test.ts > check: the record within its read bound (version 2.10) lists every finding of a draft with findings in findingsLeftOut, on the report alone",
         "packages/polaris-dossier/src/inventory.test.ts > the inventory check record's read bound (version 2.10) writes an inventory check record past the bound in its bounded form, with counts and completeness, and the inventory does not count"
       ],
-      "seconds": 19
+      "seconds": 21
     },
     {
       "id": "check-difference-no-ledger",
@@ -296,7 +308,7 @@
       "failedTests": [
         "packages/polaris-dossier/src/check.test.ts > check: the record within its read bound (version 2.10) writes the bounded form one byte, value or level past the bound: outcome findings, one check-record-bound finding, and the draft does not pass"
       ],
-      "seconds": 19
+      "seconds": 21
     },
     {
       "id": "measure-values",
@@ -308,7 +320,7 @@
       "failedTests": [
         "packages/polaris-dossier/src/check.test.ts > check: the record within its read bound (version 2.10) measures a record as a reader does: UTF-8 bytes, every value but no key, and the deepest level below the root"
       ],
-      "seconds": 19
+      "seconds": 21
     },
     {
       "id": "measure-array-depth",
@@ -320,7 +332,7 @@
       "failedTests": [
         "packages/polaris-dossier/src/check.test.ts > check: the record within its read bound (version 2.10) measures a record as a reader does: UTF-8 bytes, every value but no key, and the deepest level below the root"
       ],
-      "seconds": 19
+      "seconds": 21
     },
     {
       "id": "measure-object-depth",
@@ -332,7 +344,7 @@
       "failedTests": [
         "packages/polaris-dossier/src/check.test.ts > check: the record within its read bound (version 2.10) measures a record as a reader does: UTF-8 bytes, every value but no key, and the deepest level below the root"
       ],
-      "seconds": 21
+      "seconds": 20
     },
     {
       "id": "measure-utf8-bytes",
@@ -344,7 +356,7 @@
       "failedTests": [
         "packages/polaris-dossier/src/check.test.ts > check: the record within its read bound (version 2.10) measures a record as a reader does: UTF-8 bytes, every value but no key, and the deepest level below the root"
       ],
-      "seconds": 21
+      "seconds": 20
     },
     {
       "id": "bounded-drops-credential",
@@ -357,7 +369,7 @@
         "packages/polaris-dossier/src/check.test.ts > check: the record within its read bound (version 2.10) writes the bounded form one byte, value or level past the bound: outcome findings, one check-record-bound finding, and the draft does not pass",
         "packages/polaris-dossier/src/inventory.test.ts > the inventory check record's read bound (version 2.10) writes an inventory check record past the bound in its bounded form, with counts and completeness, and the inventory does not count"
       ],
-      "seconds": 23
+      "seconds": 20
     },
     {
       "id": "bounded-drops-counts",
@@ -369,7 +381,7 @@
       "failedTests": [
         "packages/polaris-dossier/src/inventory.test.ts > the inventory check record's read bound (version 2.10) writes an inventory check record past the bound in its bounded form, with counts and completeness, and the inventory does not count"
       ],
-      "seconds": 21
+      "seconds": 20
     },
     {
       "id": "bounded-keeps-quotations",
@@ -382,7 +394,7 @@
         "packages/polaris-dossier/src/check.test.ts > check: the record within its read bound (version 2.10) writes the bounded form one byte, value or level past the bound: outcome findings, one check-record-bound finding, and the draft does not pass",
         "packages/polaris-dossier/src/inventory.test.ts > the inventory check record's read bound (version 2.10) writes an inventory check record past the bound in its bounded form, with counts and completeness, and the inventory does not count"
       ],
-      "seconds": 21
+      "seconds": 20
     },
     {
       "id": "bounded-outcome",
@@ -422,7 +434,7 @@
         "packages/polaris-dossier/src/check.test.ts > check: the record within its read bound (version 2.10) writes the bounded form one byte, value or level past the bound: outcome findings, one check-record-bound finding, and the draft does not pass",
         "packages/polaris-dossier/src/inventory.test.ts > the inventory check record's read bound (version 2.10) writes an inventory check record past the bound in its bounded form, with counts and completeness, and the inventory does not count"
       ],
-      "seconds": 21
+      "seconds": 38
     },
     {
       "id": "bound-detail-cited",
@@ -435,7 +447,7 @@
         "packages/polaris-dossier/src/check.test.ts > check: the record within its read bound (version 2.10) writes the bounded form one byte, value or level past the bound: outcome findings, one check-record-bound finding, and the draft does not pass",
         "packages/polaris-dossier/src/inventory.test.ts > the inventory check record's read bound (version 2.10) writes an inventory check record past the bound in its bounded form, with counts and completeness, and the inventory does not count"
       ],
-      "seconds": 22
+      "seconds": 35
     },
     {
       "id": "derived-reader-bound",
@@ -447,7 +459,7 @@
       "failedTests": [
         "packages/polaris-dossier/src/derived-record.test.ts > the record at a render refuses a derived record past its 4,194,304-byte bound from its size alone, reading no byte of it (version 2.10)"
       ],
-      "seconds": 22
+      "seconds": 32
     },
     {
       "id": "no-entry-enotdir",
@@ -460,7 +472,7 @@
         "packages/polaris-dossier/src/derived-record.test.ts > the record at a render states unusable for a record check wrote that a changed screen or Syzygy version cannot use, and missing only where nothing stands (version 2.10)",
         "packages/polaris-dossier/src/render.test.ts > render: derived structure (version 2.3) tells an entry that is no readable record, or a path that cannot be examined, apart from no entry, in both pages and both states (version 2.10)"
       ],
-      "seconds": 22
+      "seconds": 26
     },
     {
       "id": "no-entry-any-error",
@@ -473,7 +485,7 @@
         "packages/polaris-dossier/src/derived-record.test.ts > the record at a render states unusable for a record check wrote that a changed screen or Syzygy version cannot use, and missing only where nothing stands (version 2.10)",
         "packages/polaris-dossier/src/render.test.ts > render: derived structure (version 2.3) tells an entry that is no readable record, or a path that cannot be examined, apart from no entry, in both pages and both states (version 2.10)"
       ],
-      "seconds": 21
+      "seconds": 29
     },
     {
       "id": "no-entry-follows-link",
@@ -486,7 +498,7 @@
         "packages/polaris-dossier/src/derived-record.test.ts > the record at a render states unusable for a record check wrote that a changed screen or Syzygy version cannot use, and missing only where nothing stands (version 2.10)",
         "packages/polaris-dossier/src/render.test.ts > render: derived structure (version 2.3) tells an entry that is no readable record, or a path that cannot be examined, apart from no entry, in both pages and both states (version 2.10)"
       ],
-      "seconds": 21
+      "seconds": 41
     },
     {
       "id": "unusable-unread",
@@ -501,7 +513,7 @@
         "packages/polaris-dossier/src/render.test.ts > render: derived structure (version 2.3) tells an entry that is no readable record, or a path that cannot be examined, apart from no entry, in both pages and both states (version 2.10)",
         "packages/polaris-dossier/src/render.test.ts > render: derived structure (version 2.3) publishes and draws nothing of a kept record edited after check: an added member, a secret-matching path or a foreign repository"
       ],
-      "seconds": 21
+      "seconds": 38
     },
     {
       "id": "unusable-foreign",
@@ -516,7 +528,7 @@
         "packages/polaris-dossier/src/derived-record.test.ts > the record at a render states unusable for a record check wrote that a changed screen or Syzygy version cannot use, and missing only where nothing stands (version 2.10)",
         "packages/polaris-dossier/src/render.test.ts > render: derived structure (version 2.3) publishes and draws nothing of a record naming a directory the tree does not hold, or a rule other than top-level-unit version 1 (versions 2.8, 2.10)"
       ],
-      "seconds": 22
+      "seconds": 27
     },
     {
       "id": "no-entry-skipped",
@@ -531,7 +543,7 @@
         "packages/polaris-dossier/src/render.test.ts > render: derived structure (version 2.3) states Not established with no figure, list or published record where no record was kept, the record is Unknown, or the render cannot list the tree",
         "packages/polaris-dossier/src/render.test.ts > render: derived structure (version 2.3) tells an entry that is no readable record, or a path that cannot be examined, apart from no entry, in both pages and both states (version 2.10)"
       ],
-      "seconds": 22
+      "seconds": 27
     },
     {
       "id": "words-by-reason",
@@ -546,7 +558,7 @@
         "packages/polaris-dossier/src/render.test.ts > render: derived structure (version 2.3) tells an entry that is no readable record, or a path that cannot be examined, apart from no entry, in both pages and both states (version 2.10)",
         "packages/polaris-dossier/src/render.test.ts > render: derived structure (version 2.3) publishes and draws nothing of a record naming a directory the tree does not hold, or a rule other than top-level-unit version 1 (versions 2.8, 2.10)"
       ],
-      "seconds": 21
+      "seconds": 38
     },
     {
       "id": "words-unusable-text",
@@ -561,12 +573,12 @@
         "packages/polaris-dossier/src/render.test.ts > render: derived structure (version 2.3) tells an entry that is no readable record, or a path that cannot be examined, apart from no entry, in both pages and both states (version 2.10)",
         "packages/polaris-dossier/src/render.test.ts > render: derived structure (version 2.3) publishes and draws nothing of a record naming a directory the tree does not hold, or a rule other than top-level-unit version 1 (versions 2.8, 2.10)"
       ],
-      "seconds": 21
+      "seconds": 33
     }
   ],
   "summary": {
-    "mutants": 42,
-    "killed": 42,
+    "mutants": 43,
+    "killed": 43,
     "survived": 0
   }
 }
