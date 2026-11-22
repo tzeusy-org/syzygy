@@ -4,8 +4,8 @@ import { SESSION_MCP_TOOLS } from './session-mcp.js';
 import type { SessionBinding, SessionOrigin } from './session-egress-policy.js';
 
 /** Deliberately versioned offline-supported profile. There is no model fallback. */
-export const SESSION_PROFILE_ID = 'claude-2.1.327-sonnet46/1' as const;
-export const ORDERED_DESIGN_SESSION_PROFILE_ID = 'claude-2.1.327-sonnet46/ordered-design-1' as const;
+export const SESSION_PROFILE_ID = 'claude-2.1.327-sonnet46/2' as const;
+export const ORDERED_DESIGN_SESSION_PROFILE_ID = 'claude-2.1.327-sonnet46/ordered-design-2' as const;
 export const DEFAULT_SESSION_MODEL = 'claude-sonnet-4-6' as const;
 /** Independently pinned installed CLI shared by the profile and launcher. */
 export const URL_CLI_PROGRAM = Object.freeze({ version: '2.1.327', bytes: 372_904_464,
@@ -26,7 +26,7 @@ const SCAFFOLD_CLASSES = ['governance-text', 'code-structure', 'work-history'] a
 const ORDERED_DESIGN_TRANSCRIPT = deepFreeze({
   cli: URL_CLI_PROGRAM,
   supportSha256: { 'session-bridge.js': '33a3f07df8001244cebefec75fe2110073196b9cb11fb2994553659a6865bac3',
-    'session-mcp.js': '403e8c4a7ae11930d78c87b240c1b43f5241707cfcbe2561e8a7acd43d695bca' },
+    'session-mcp.js': '7180ebcf6d6561cb09dc12e19837aeb4ad6bdd10c16805b164acce4a92891883' },
   partition: { algorithm: 'maximal-utf8-scalar-prefix', partBytes: 32_768, partCount: 2, replyBytes: 45_000, preparedBytes: 4096 },
   requestLimits: LIMITS,
   maxVerdictBytes: 32_768,
@@ -143,7 +143,9 @@ export function createSessionProfile(input: SessionProfileInput): SessionProfile
     if (sha256(canonical(tools)) !== TOOL_DESCRIPTOR_DIGEST) refuse('unsupported-session-profile');
     const environment = '<system-reminder>\n# Environment\nYou have been invoked in the following environment: \n - Primary working directory: /work\n - Is a git repository: false\n - Platform: linux\n - Shell: zsh\n - OS Version: Linux ' + v.kernelRelease + '\n' + WARNING + '</system-reminder>';
     const scaffold = [text(environment), text(MODEL_REMINDER), text(sessionProfileReminderText(SESSION_PROFILE_TOKEN_BUDGET)), text(`<system-reminder>\nToday's date is ${v.utcDate}.\n</system-reminder>\n`)];
-    const hostUserId = `syzygy:${v.binding.run}:${v.binding.role}:${v.sessionId}`;
+    // A slash keeps the role/session boundary out of the current policy's
+    // credential-assignment grammar. The complete metadata is still screened.
+    const hostUserId = `syzygy:${v.binding.run}:${v.binding.role}/${v.sessionId}`;
     if (Buffer.byteLength(hostUserId, 'utf8') > 256) refuse('invalid-session-profile');
     const baseline = {
       model: DEFAULT_SESSION_MODEL, stream: true, max_tokens: 32_000, temperature: 1,

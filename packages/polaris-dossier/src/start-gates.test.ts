@@ -1,6 +1,6 @@
 import { commitPolicyFixture, policyFixture } from './full-run.testkit.js';
 import { committedUrlPoliciesCurrent, committedUrlPoliciesCurrentAsync, DOSSIER_POLICY_PATH, DOSSIER_PREDECESSOR_POLICY_PATH, DOSSIER_URL_ORIGIN_POLICY_PATH, readCommittedPolicy, readCommittedUrlOriginPolicy } from './policy-snapshot.js';
-import { loadDossierScreen, placementSubjectOf } from './screen.js';
+import { buildDossierScreen, loadDossierScreen, placementSubjectOf } from './screen.js';
 import { createHash } from 'node:crypto';
 import { buildSync } from 'esbuild';
 import { execFile, execFileSync } from 'node:child_process';
@@ -11,6 +11,9 @@ import { fileURLToPath } from 'node:url';
 import { DECISIONS_DIR, INSTANCES_DIR, LOCAL_AGENT_GIT_SOURCE_SIGNOFF_FORM, POLICY_PATH } from '@syzygy/polaris-generation-consent';
 import { loadRecorderForms, renderDossierLocalAgentAct, renderLocalAgentSignoff, renderPolicyAct, renderRecorderAct } from '@syzygy/polaris-generation-consent/testing';
 import { beforeAll, describe, expect, it } from 'vitest';
+import { createSessionController } from './session-controller.js';
+import { createOrderedDesignSessionProfile, createSessionProfile, DEFAULT_SESSION_MODEL } from './session-profile.js';
+import { SESSION_CONTENT_CLASSES } from './session-egress-policy.js';
 import { runDossierCli } from './cli.js';
 import { consentedClone, GIT_ENV as FIXTURE_GIT_ENV, gitInitFromEmptyTemplate, makeClone } from './full-run.testkit.js';
 import { createPackageGateSources, type ProjectInputSource, type ProviderStatementRecord, type ProviderStatementSource } from './gate-sources.js';
@@ -986,4 +989,32 @@ describe('the declared-source policy successor 2.0.0 and runs bound to its prede
     expect(readCommittedPolicy(records(), '.syzygy/governance/policies/POLARIS-BUTLERS-SECRET-CLASSIFICATION-POLICY-CANDIDATE.json'))
       .toEqual({ ok: false, why: 'the dossier policy path is not one a run may bind' });
   });
+});
+
+// Current policy and every real role share this boundary. Synthetic metadata is
+// tested under the committed policy, without provider access or credentials.
+it('initializes every supported role under the current declared-source policy', () => {
+  const policy = buildDossierScreen(policyFixture().bytes, true, null, 'private');
+  expect(policy.ok).toBe(true); if (!policy.ok) throw new Error(policy.why);
+  const { screen } = policy;
+  const run = 'run-' + 'a'.repeat(32), sessionId = '12345678-1234-4234-8234-123456789012';
+  expect(screen.screenSecrets(`syzygy:${run}:author:${sessionId}`)).toBe('secret-detector-match');
+  for (const role of ['author', 'inventory', 'fidelity', 'design'] as const) {
+    const compiled = createSessionProfile({ binding: { run, role, sourceBinding: sha('owned source'), policy: screen.policySha256,
+      provider: 'anthropic', model: DEFAULT_SESSION_MODEL }, sessionId, systemPrompt: 'Use the owned fixture tools.',
+      initialPrompt: 'Read the owned fixture.', utcDate: '2026-11-22', kernelRelease: '7.0.0-fixture' });
+    expect(compiled.ok).toBe(true); if (!compiled.ok) throw new Error(compiled.reason);
+    const { profile } = compiled.value;
+    expect(() => createSessionController({ profile, declaredClasses: SESSION_CONTENT_CLASSES,
+      initialOrigin: { binding: profile.input.binding, id: 'initial:owned', kind: 'initial-prompt',
+        canonicalText: profile.input.initialPrompt, classes: ['governance-text'], originIds: ['host:owned-fixture'] },
+      scanSecrets: text => screen.screenSecrets(text) !== undefined,
+      validateToolInput: () => false,
+    })).not.toThrow();
+    if (role === 'design') {
+      const ordered = createOrderedDesignSessionProfile(profile.input);
+      expect(ordered.ok).toBe(true); if (!ordered.ok) throw new Error(ordered.reason);
+      expect(screen.screenSecrets(ordered.value.profile.baselineOrigin.canonicalText)).toBeUndefined();
+    }
+  }
 });

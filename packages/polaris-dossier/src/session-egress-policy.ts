@@ -2,7 +2,7 @@ import { setImmediate as yieldToPoll } from 'node:timers/promises';
 import { encodeCanonicalJson, parseBoundedJson } from '@syzygy/polaris-generation-core/live';
 import { deepFreeze, isRecord, sha256 } from '@syzygy/support';
 import {
-  isSessionProfile, projectSessionProfileMetadata, sessionProfileRemainingTokens, sessionProfileReminderText,
+  isNativeSessionProfile, isSessionProfile, projectSessionProfileMetadata, sessionProfileRemainingTokens, sessionProfileReminderText,
   type NativeSessionProfile, type SessionProfile, type SessionProfileUsage,
 } from './session-profile.js';
 import { inspectUrlDesignSecretContribution, URL_DESIGN_VIEW_ARTIFACT } from './url-design-view.js';
@@ -288,8 +288,41 @@ export interface OrderedDesignRequestChecks {
   readonly resultWrappers: ReturnType<typeof projectOrderedDesignRequest>['resultWrappers'];
 }
 
+export type OrderedDesignScreeningBranch = 'raw' | 'received' | 'prepared' | 'logicalReceived' | 'logicalPrepared';
+export type OrderedDesignScreeningDetectors = Pick<ScreeningOptions, 'scanSecrets' | 'scanDesignView'> & {
+  /** First-party accounting only. A thrown observer error refuses the operation. */
+  readonly observeBranch?: (branch: OrderedDesignScreeningBranch) => void;
+};
+
+/** The first ordered request contains only the independently issued initial
+ * message. Its admitted identities bind the later whole-transfer preflight. */
+export function screenOrderedDesignInitialRequest(bytes: Uint8Array, profile: OrderedDesignRequestBindings['profile'],
+  detectors: OrderedDesignScreeningDetectors): SessionPolicyResult<OrderedDesignRequestChecks> {
+  return outcome(() => {
+    const limits = SESSION_POLICY_LIMITS;
+    if (!isNativeSessionProfile(profile) || !(bytes instanceof Uint8Array) || bytes.byteLength > limits.maxBytes) refuse('invalid-input');
+    const raw = new TextDecoder('utf-8', { fatal: true, ignoreBOM: true }).decode(bytes);
+    const received = record(parseBoundedJson(raw, limits));
+    const prepared = projectProfileControls(profile, received);
+    const { messages, ...controls } = prepared;
+    if (!same(controls, profile.baseline, limits) || !same(messages, [profile.initialMessage], limits)) refuse('scaffolding-mismatch');
+    const options = { ...detectors, limits, binding: profile.input.binding };
+    detectors.observeBranch?.('raw');
+    try { if (options.scanSecrets(raw)) refuse('secret-excluded'); }
+    catch (error) { if (error instanceof Refusal) throw error; refuse('detector-failed'); }
+    detectors.observeBranch?.('received');
+    screen(received, options);
+    detectors.observeBranch?.('prepared');
+    screen(prepared, options);
+    const identity = (text: string) => ({ bytes: Buffer.byteLength(text, 'utf8'), sha256: sha256(text) });
+    const forwarded = identity(canonical(prepared, limits));
+    const checks = { received: identity(raw), forwarded, logical: forwarded, resultWrappers: [] };
+    return deepFreeze({ ...checks, transcriptSha256: sha256(canonical({ ...checks, profileSha256: profile.digest }, limits)) });
+  });
+}
+
 export function screenOrderedDesignRequest(bytes: Uint8Array, bindings: OrderedDesignRequestBindings,
-  detectors: Pick<ScreeningOptions, 'scanSecrets' | 'scanDesignView'>): SessionPolicyResult<OrderedDesignRequestChecks> {
+  detectors: OrderedDesignScreeningDetectors): SessionPolicyResult<OrderedDesignRequestChecks> {
   return outcome(() => {
     const { profile } = bindings;
     const limits = SESSION_POLICY_LIMITS;
@@ -301,14 +334,19 @@ export function screenOrderedDesignRequest(bytes: Uint8Array, bindings: OrderedD
     if (!same(controls, profile.baseline, limits) || !Array.isArray(messages) || messages.length > limits.maxHistoryMessages)
       refuse('scaffolding-mismatch');
     const options = { ...detectors, limits, binding: profile.input.binding };
+    detectors.observeBranch?.('raw');
     try { if (options.scanSecrets(raw)) refuse('secret-excluded'); }
     catch (error) { if (error instanceof Refusal) throw error; refuse('detector-failed'); }
+    detectors.observeBranch?.('received');
     screen(received, options);
+    detectors.observeBranch?.('prepared');
     screen(prepared, options);
     const logical = projectOrderedDesignRequest(received, bindings);
     const wholeView = { toolUseId: profile.transcript.logical.toolUseId, canonicalText: logical.wholeReply };
     const logicalPrepared = { ...prepared, messages: logical.request.messages };
+    detectors.observeBranch?.('logicalReceived');
     finish(screenSteps(logical.request, options, [], wholeView));
+    detectors.observeBranch?.('logicalPrepared');
     finish(screenSteps(logicalPrepared, options, [], wholeView));
     const identity = (text: string) => ({ bytes: Buffer.byteLength(text, 'utf8'), sha256: sha256(text) });
     const checks = { received: identity(raw), forwarded: identity(canonical(prepared, limits)), logical: identity(canonical(logicalPrepared, limits)) };

@@ -15,7 +15,7 @@ export const URL_CONTENT_CLASSES = Object.freeze(['code-content', 'code-structur
   'governance-text', 'project-documentation', 'work-history'] as const);
 export type UrlContentClass = typeof URL_CONTENT_CLASSES[number];
 export const URL_ROLES = Object.freeze(['author', 'inventory', 'fidelity', 'design'] as const);
-export const URL_PROFILE_ID = 'claude-2.1.327-sonnet46/1' as const;
+export const URL_PROFILE_ID = 'claude-2.1.327-sonnet46/2' as const;
 export const URL_SUPPORTED_MODEL = 'claude-sonnet-4-6' as const;
 export const URL_ORIGIN_POLICY_PATH = '.syzygy/governance/policies/POLARIS-DOSSIER-URL-ORIGIN-SPECIES-POLICY-v1.json' as const;
 const ORIGIN_POLICY_ID = 'POLARIS-DOSSIER-URL-ORIGIN-SPECIES-POLICY-v1';

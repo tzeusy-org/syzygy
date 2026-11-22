@@ -166,7 +166,7 @@ export async function readUrlRuntime(root: string): Promise<{ readonly ok: true;
       supportDirectory: path.join(directory, 'support'),
       supportSha256: { 'session-bridge.js': files[2]!.sha256, 'session-mcp.js': files[3]!.sha256 },
       manifestSha256, inputTreeSha256: manifest.inputTreeSha256,
-      profileRegistrySha256: sha256(JSON.stringify({ format: 'polaris-supported-cli-registry/1', profile: 'claude-2.1.327-sonnet46/1',
+      profileRegistrySha256: sha256(JSON.stringify({ format: 'polaris-supported-cli-registry/1', profile: 'claude-2.1.327-sonnet46/2',
         inputs })) });
     if (rendererBytes === undefined) throw new Error();
     installed.set(runtime, { root, rendererBytes, rendererSha256: files[1]!.sha256 });

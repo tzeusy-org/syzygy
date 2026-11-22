@@ -24,7 +24,7 @@ describe('installed Sonnet4.6 session profile', () => {
     const p = profile();
     expect(DEFAULT_SESSION_MODEL).toBe('claude-sonnet-4-6');
     const { metadata: ignoredMetadata, system, tools, ...control } = p.baseline;
-    expect(ignoredMetadata).toEqual({ user_id: 'syzygy:NONSECRET_RUN_1907:author:00000000-0000-4000-8000-000000001907' });
+    expect(ignoredMetadata).toEqual({ user_id: 'syzygy:NONSECRET_RUN_1907:author/00000000-0000-4000-8000-000000001907' });
     expect(control).toEqual({ model: 'claude-sonnet-4-6', stream: true, max_tokens: 32000, temperature: 1, thinking: { type: 'disabled' }, output_config: { effort: 'high' }, tool_choice: { type: 'auto', disable_parallel_tool_use: true } });
     // These identities were independently scripted from the complete installed2.1.327
     // synthetic capture, not computed by the profile compiler under test.
