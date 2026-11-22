@@ -74,6 +74,15 @@ export const DIAGRAM_HOME_KINDS = Object.freeze(['section', 'deep-dive', 'overvi
 /** The tones a callout takes; each renders with its visible name. */
 export const CALLOUT_TONES = Object.freeze(['note', 'tip', 'caution', 'important'] as const);
 
+/** Task routes (the index-and-task-routes change): `taskRoutes`, an optional member of a v5 or later draft, holds the reader tasks the dossier
+ * answers by a route. A draft that carries the member carries this many routes, each of this many steps. */
+export const TASK_ROUTE_MIN = 8;
+export const TASK_ROUTE_MAX = 15;
+export const TASK_ROUTE_STEP_MAX = 8;
+/** The pages of the dossier a route step may send its reader to. */
+export const TASK_ROUTE_SEE_KINDS = Object.freeze(['section', 'deep-dive'] as const);
+export const TASK_ROUTE_FIELD = 'taskRoutes';
+
 /** The understanding record's items, in REQ-polaris-generation-002's order. */
 export const UNDERSTANDING_ITEMS = Object.freeze([
   'purpose', 'beneficiary', 'proposition', 'capabilities', 'components', 'choices',
@@ -187,6 +196,12 @@ const DEFS: Readonly<Record<string, DraftSchema>> = Object.freeze({
   disposition,
   understandingItem,
   pathReason,
+  // A route step (the index-and-task-routes change) is the cited Inferred claim form and nothing else: it names the file and lines to read or change, so a
+  // step that cites nothing has no form here. `see` names the section or deep dive that explains the step; like a diagram's home, its
+  // key is `target`, never `id`.
+  routeStep: object({ id: handle, label: one('inferred'), basis: one('source'), text, citations: citations(1), quotations: quotationRefs(QUOTATION_FORM),
+    see: object({ kind: choice(TASK_ROUTE_SEE_KINDS), target: handle }) }, ['see']),
+  taskRoute: object({ id: handle, task: presentationLabel, steps: list(ref('routeStep'), 1, TASK_ROUTE_STEP_MAX) }),
 });
 
 export interface DraftSchemaParameters {
@@ -267,7 +282,10 @@ export function localDraftSchema(parameters: DraftSchemaParameters, diagramForm:
     // The justified-omission record (dossier spec 2.12): identifiers of inventory entries and the author's reasons, never a claim. Not
     // `id`: an `entryId` names an identity of the inventory, not one of this draft.
     inventoryOmissions: { ...list(object({ entryId: handle, reason: text }), 0, 2000), description: INVENTORY_OMISSIONS_DESCRIPTION },
-  }, ['poles', 'whySection', 'inventoryOmissions']) };
+    // Task routes (the index-and-task-routes change): reader tasks, each a short label phrased as the reader's task and a route of cited steps. In a draft
+    // before v5 the member is a field-version finding (check-derive's structure).
+    [TASK_ROUTE_FIELD]: list(ref('taskRoute'), TASK_ROUTE_MIN, TASK_ROUTE_MAX),
+  }, ['poles', 'whySection', 'inventoryOmissions', TASK_ROUTE_FIELD]) };
 }
 
 /** The schema as the JSON Schema document written to `draft.schema.json`. The internal form already uses JSON Schema's keywords. */

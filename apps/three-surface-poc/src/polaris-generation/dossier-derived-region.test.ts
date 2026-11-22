@@ -129,6 +129,14 @@ describe('the derived structure on an operator-agent site', () => {
   const RECORD = '{\n  "format": "polaris-dossier-derived-structure/1"\n}\n';
   const derived = (): LocalDerivedStructure => ({ ...structure(1, [['src', 2]]), recordText: RECORD, currencyPolicy: { policyId: 'P', policyVersion: '1.0.0', sha256: 'e'.repeat(64) } } as LocalDerivedStructure);
 
+  it('lists in the generated index only the top-level directories stated as Observed', () => {
+    const names = (files: ReadonlyMap<string, string>): string[] => (JSON.parse(files.get('machine.json')!) as { nameIndex: { names: { kind: string; name: string }[] } }).nameIndex.names.filter((entry) => entry.kind === 'unit').map((entry) => entry.name);
+    expect(names(withDerived(structure(1, [['docs', 2], ['src', 3]])))).toEqual(['docs/', 'src/']);
+    // docs/ is Unknown (no currency bound declared for it): the index does not list it as a directory Syzygy derived.
+    expect(names(withDerived(structure(1, [['docs', 2], ['src', 3]], (id) => (id === '_tree-unit-1' ? NO_BOUND : OBSERVED))))).toEqual(['src/']);
+    expect(names(withDerived(structure(1, [['docs', 2], ['src', 3]], () => NO_BOUND)))).toEqual([]);
+  });
+
   it('ends the landing page\'s main content with the region, publishes the record unchanged and names it in the machine view', () => {
     const files = withDerived(derived());
     const index = files.get('index.html')!;
@@ -138,7 +146,9 @@ describe('the derived structure on an operator-agent site', () => {
     const after = index.slice(index.indexOf('</figure></section>', at) + '</figure></section>'.length);
     expect(after.startsWith('<aside class="review-status"')).toBe(true);
     expect(after.indexOf('</main>')).toBe(after.indexOf('</aside>') + '</aside>'.length);
-    for (const [file, html] of files) if (file !== 'index.html' && file.endsWith('.html')) expect(html, file).not.toContain('derived-structure');
+    // The generated index (the index-and-task-routes change) links each derived directory back to the region; no other page names it.
+    for (const [file, html] of files) if (file !== 'index.html' && file !== 'name-index.html' && file.endsWith('.html')) expect(html, file).not.toContain('derived-structure');
+    expect(files.get('name-index.html')!.split('derived-structure').length - 1).toBe(files.get('name-index.html')!.split('href="index.html#derived-structure"').length - 1);
     expect(files.get('derived-structure.json')).toBe(RECORD);
     const machine = JSON.parse(files.get('machine.json')!) as Record<string, unknown>;
     const keys = Object.keys(machine);

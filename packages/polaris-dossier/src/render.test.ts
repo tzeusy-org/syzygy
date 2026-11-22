@@ -209,7 +209,7 @@ async function started(doc: Doc): Promise<{ run: string; checked: Awaited<Return
   fs.writeFileSync(path.join(run, 'drafts', 'next.json'), JSON.stringify(doc, null, 2));
   return { run, checked: await checkDraft(run, {}, checkDeps()) };
 }
-async function prepared(doc: Doc = draft(), reviewed = true, extraSupport: readonly Doc[] = [], edit: { readonly inventory?: (inv: Doc) => void; readonly verdict?: (v: Doc) => void } = {}): Promise<string> {
+async function prepared(doc: Doc = draft(), reviewed = true, extraSupport: readonly Doc[] = [], edit: { readonly inventory?: (inv: Doc) => void; readonly verdict?: (v: Doc, spans: readonly { id: string; path: string; startLine: number }[]) => void } = {}): Promise<string> {
   const { run, checked } = await started(doc);
   if (!checked.ok || checked.report.outcome !== 'passed') throw new Error(`fixture draft: ${JSON.stringify(checked.ok ? checked.report.findings : checked.refusal)}`);
   if (!reviewed) return run;
@@ -221,7 +221,7 @@ async function prepared(doc: Doc = draft(), reviewed = true, extraSupport: reado
   v.blockSupport[0].spanIds = v.inventoryAccuracy[0].spanIds;
   v.blockSupport[4].spanIds = v.inventoryAccuracy[1].spanIds;
   v.blockSupport.push(...extraSupport);
-  edit.verdict?.(v);
+  edit.verdict?.(v, spans);
   fs.writeFileSync(path.join(review.report.directory, 'verdict.json'), JSON.stringify(v, null, 2));
   const validated = await reviewCheck(run, {}, { sources: sources(), now: () => LATER, loadScreen: async () => buildDossierScreen(fixturePolicy, true, null, fixtureVisibility) });
   if (!validated.ok || validated.report.outcome !== 'validated') throw new Error(`fixture verdict: ${JSON.stringify(validated.ok ? validated.report.problems : validated.refusal)}`);
@@ -1675,8 +1675,8 @@ describe('readability guidance and diagram-led sections (syzygy-mea.10.4)', () =
     const index = readSite(result.report.site).get('index.html')!;
     const section = index.slice(index.indexOf('<section id="section-core-ideas"'));
     // An operator-agent page gives its first diagram the first hue (syzygy-pdja.14).
-    expect(section.indexOf('<figure data-hue="1" data-visual-provenance="curated">')).toBeGreaterThan(-1);
-    expect(section.indexOf('<figure data-hue="1" data-visual-provenance="curated">')).toBeLessThan(section.indexOf('data-claim-id="p1"'));
+    expect(section.indexOf('<figure data-hue="1" data-visual-provenance="curated" id="figure-d-core">')).toBeGreaterThan(-1);
+    expect(section.indexOf('<figure data-hue="1" data-visual-provenance="curated" id="figure-d-core">')).toBeLessThan(section.indexOf('data-claim-id="p1"'));
   });
 
   it('puts the readability rules in the brief, after the profile guidance, and the newcomer test in the design criteria', () => {
@@ -1753,7 +1753,7 @@ describe('rich presentation elements (syzygy-mea.10.5)', () => {
 
   it('renders a table with a caption, column headers, row headers and an empty cell', () => {
     expect(index).toContain('<div class="table-scroll" id="element-t1" data-element="table"><table><caption>The server&#39;s commands and what they do</caption><thead><tr><th scope="col">Command</th><th scope="col">Effect</th></tr></thead>');
-    expect(index).toContain('<th scope="row" class="non-normative" data-non-normative="t1c1" data-claim-kind="non-normative">The <code>GET</code> command <span class="framing-mark">framing</span><span class="visually-hidden ev"> <span class="marking non-normative">[Non-normative]</span>');
+    expect(index).toContain('<th scope="row" class="non-normative" data-non-normative="t1c1" data-claim-kind="non-normative" id="block-t1c1">The <code>GET</code> command <span class="framing-mark">framing</span><span class="visually-hidden ev"> <span class="marking non-normative">[Non-normative]</span>');
     expect(index).toMatch(/<td[^>]*data-claim-id="t1c2"[^>]*>/u);
     expect(index).toContain('<td class="empty-cell">no entry</td>');
     expect(index).toContain('<code>GET</code>');
@@ -2063,7 +2063,7 @@ describe('render: derived structure (version 2.3)', () => {
     const run = await prepared(doc, false);
     const { files, index } = await rendered(run);
     const authored = index.slice(index.lastIndexOf('<figure', index.indexOf('<figcaption id="diagram-title-0">zq-authored tree</figcaption>')), index.indexOf('</figure>', index.indexOf('zq-authored tree')));
-    expect(authored.startsWith('<figure data-hue="1" data-visual-provenance="curated">')).toBe(true);
+    expect(authored.startsWith('<figure data-hue="1" data-visual-provenance="curated" id="figure-d-tree">')).toBe(true);
     expect([...authored.matchAll(/<g class="(?:node|edge) (\w+)/gu)].map((m) => m[1])).toEqual(['inferred', 'inferred', 'inferred']);
     expect(authored).not.toContain('Solid: observed');
     expect(authored).not.toContain('data-derived-id');
@@ -2365,5 +2365,136 @@ describe('render: figure kinds (schema v7)', () => {
     expect(JSON.parse(files.get('machine.json')!).figureStructures).toEqual([
       { diagram: 'seq-1', kind: 'sequence', page: 'index.html', laidOutPx: 408, participants: ['pt1', 'pt2'], messages: [{ id: 'msg1', from: 'pt1', to: 'pt2' }, { id: 'msg2', from: 'pt2', to: 'pt1' }] },
       { diagram: 'lane-1', kind: 'swimlane', page: 'index.html', laidOutPx: 408, lanes: ['ln1', 'ln2'], steps: [{ id: 'stp1', lane: 'ln1' }, { id: 'stp2', lane: 'ln2' }] }]);
+  });
+});
+
+// syzygy-5dhm.70 and syzygy-5dhm.71: the find-by-task page and the generated index through the whole chain (the index-and-task-routes change).
+describe('render: task routes and the generated index', () => {
+  const step = (id: string, over: Doc = {}): Doc => ({ id, label: 'inferred', basis: 'source', text: `Add the handler beside main zq-${id}.`, citations: [cite(`c-${id}`, 'src/kestrel.c', 4, 4)], quotations: [], ...over });
+  const routedDraft = (change: (doc: Doc) => void = () => {}): Doc => {
+    const doc = draft();
+    doc.schemaVersion = 'polaris-dossier-local-draft-v5';
+    doc.taskRoutes = Array.from({ length: 8 }, (_unused, i) => ({ id: `route-${i + 1}`, task: `Add a command ${i + 1}`, steps: [step(`r${i + 1}s1`)] }));
+    doc.taskRoutes[0].steps = [step('r1s1', { text: 'Start in `main`, in src/kestrel.c.', see: { kind: 'section', target: 'core-ideas' } }), step('r1s2', { text: 'The project states: "Snapshots are written periodically." Keep that true.', citations: [cite('c-r1s2', 'docs/notes.txt', 2, 2)], quotations: ['c-r1s2'] })];
+    change(doc);
+    return doc;
+  };
+  const support = (ids: readonly string[]): Doc[] => ids.map((blockId) => ({ blockId, verdict: 'supported', spanIds: [], reason: 'The span says it.', quotations: [] }));
+  const STEP_IDS = ['r1s1', 'r1s2', 'r2s1', 'r3s1', 'r4s1', 'r5s1', 'r6s1', 'r7s1', 'r8s1'];
+  const main = (html: string): string => html.slice(html.indexOf('<section id="find-by-task"'), html.indexOf('<aside class="review-status"'));
+
+  it('a fidelity verdict with no entry for a route step is not validated: a step is reviewed as any block is', async () => {
+    await expect(prepared(routedDraft(), true, support(STEP_IDS.slice(1)))).rejects.toThrow(/fixture verdict: .*r1s1/u);
+  });
+
+  it('draws the routes after the overview, each step with its label, its source, its file and lines, and indexes what they name', async () => {
+    const run = await prepared(routedDraft(), true, support(STEP_IDS), { verdict: (v, spans) => {
+      for (const row of v.blockSupport) if (STEP_IDS.includes(row.blockId)) row.spanIds = spans.filter((span) => (row.blockId === 'r1s2' ? span.path === 'docs/notes.txt' : span.path === 'src/kestrel.c' && span.startLine === 4)).slice(0, 1).map((span) => span.id);
+    } });
+    const result = await renderRun(run, renderDeps());
+    if (!result.ok) throw new Error(result.refusal.reason);
+    const files = readSite(result.report.site);
+    const page = main(files.get('find-by-task.html')!);
+    expect(page.startsWith('<section id="find-by-task" data-topics="" data-task-route-count="8"><h1>Find by task</h1><p class="route-note">8 tasks a reader may bring to this project, each answered by a short route.')).toBe(true);
+    expect(page.match(/<section id="route-route-\d" class="task-route"/gu)).toHaveLength(8);
+    const kestrel = [...files.keys()].find((file) => file.startsWith('sources/') && files.get(file)!.includes('int main(void)'))!;
+    expect(page).toContain('<section id="route-route-1" class="task-route" data-task-route="route-1"><h2>Add a command 1</h2><ol class="steps route-steps"><li data-claim-id="r1s1" data-epistemic="inferred" id="block-r1s1">Start in <code>main</code>, in src/kestrel.c. <span class="marking inferred">[Inferred]</span> ');
+    expect(page).toContain(`<span class="route-where">Read or change: <a href="${kestrel}#exact-text"><code>src/kestrel.c</code></a>, line 4</span><span class="route-see">In this dossier: <a href="index.html#section-core-ideas">Core ideas</a></span></li>`);
+    // A quotation in a step is the located span, drawn as any quotation is.
+    expect(page).toContain('data-claim-id="r1s2"');
+    expect(page).toContain('<code>docs/notes.txt</code></a>, line 2</span>');
+    expect(page.split('Snapshots are written periodically.').length - 1).toBeGreaterThan(0);
+    const order = (JSON.parse(files.get('dossier.json')!) as { pages: { path: string }[] }).pages.map((entry) => entry.path);
+    expect(order.slice(0, 2)).toEqual(['index.html', 'find-by-task.html']);
+    const machine = JSON.parse(files.get('machine.json')!) as { claims: { id: string; page: string }[]; taskRoutes: { id: string; steps: string[] }[]; nameIndex: { names: { kind: string; name: string; blocks: { page: string; fragment: string }[] }[] } };
+    expect(machine.taskRoutes.map((route) => [route.id, route.steps])).toEqual([['route-1', ['r1s1', 'r1s2']], ['route-2', ['r2s1']], ['route-3', ['r3s1']], ['route-4', ['r4s1']], ['route-5', ['r5s1']], ['route-6', ['r6s1']], ['route-7', ['r7s1']], ['route-8', ['r8s1']]]);
+    expect(machine.claims.filter((claim) => claim.page === 'find-by-task.html').map((claim) => claim.id)).toEqual(STEP_IDS);
+    const names = new Map(machine.nameIndex.names.map((entry) => [`${entry.kind} ${entry.name}`, entry.blocks.map((b) => `${b.page}#${b.fragment}`)]));
+    expect(names.get('identifier main')).toEqual(['find-by-task.html#block-r1s1']);
+    expect(names.get('path src/kestrel.c')).toEqual(['index.html#block-intro', 'index.html#block-p1', 'find-by-task.html#block-r1s1', 'find-by-task.html#block-r2s1', 'find-by-task.html#block-r3s1', 'find-by-task.html#block-r4s1', 'find-by-task.html#block-r5s1', 'find-by-task.html#block-r6s1', 'find-by-task.html#block-r7s1', 'find-by-task.html#block-r8s1']);
+    expect(names.get('path docs/notes.txt')).toEqual(['index.html#block-p2', 'find-by-task.html#block-r1s2']);
+    for (const [file, html] of files) {
+      if (!file.endsWith('.html')) continue;
+      expect(html.toLowerCase(), file).not.toContain('<script');
+      const ids = [...html.matchAll(/ id="([^"]*)"/gu)].map((match) => match[1]!);
+      expect(ids.filter((id, i) => ids.indexOf(id) !== i), file).toEqual([]);
+    }
+  });
+
+  it('sends a step that names a deep dive to that deep dive\'s page', async () => {
+    const run = await prepared(routedDraft((doc) => {
+      doc.deepDives = [{ id: 'dive-1', title: 'A closer look', sectionId: 'core-ideas', paragraphs: [{ id: 'dv1', label: 'non-normative', text: 'zq-dive prose.', children: [] }], disposition: { kind: 'produced', assetIds: ['dive-1'] } }];
+      doc.taskRoutes[1].steps[0] = step('r2s1', { see: { kind: 'deep-dive', target: 'dive-1' } });
+    }), false);
+    const result = await renderRun(run, renderDeps());
+    if (!result.ok) throw new Error(result.refusal.reason);
+    const page = main(readSite(result.report.site).get('find-by-task.html')!);
+    expect(page).toContain('</span><span class="route-see">In this dossier: <a href="deep-dives/dive-1.html">A closer look</a></span></li>');
+    expect(page.split('class="route-see"').length - 1).toBe(2);
+  });
+
+  it('keeps a backticked span the path detector matches out of the index, pairing backticks inside each prose segment', async () => {
+    // A detector that matches only at the start of a line: each span alone matches it as a path, and the prose that holds it does not.
+    const base = JSON.parse(new TextDecoder().decode(policy(['.c', '.txt']))) as Doc;
+    fixturePolicy = new TextEncoder().encode(JSON.stringify({ ...base, detectors: [...LIVE_POLICY.detectors, { id: 'zq-line-start', kind: 'regular-expression', pattern: '(?<![^\\r\\n])zqlinekey-[a-z]{8}', flags: 'g' }] }));
+    const run = await prepared(routedDraft((doc) => {
+      doc.taskRoutes[1].steps[0] = step('r2s1', { text: 'Set `zqlinekey-abcdefgh` beside `zqPlainName`.' });
+      // An odd backtick before the quotation: paired over the whole text it would swallow the span after the quotation.
+      doc.taskRoutes[0].steps[1] = step('r1s2', { text: 'An odd ` tick. The project states: "Snapshots are written periodically." Then `zqlinekey-qrstuvwx` and `zqAfterQuote`.', citations: [cite('c-r1s2', 'docs/notes.txt', 2, 2)], quotations: ['c-r1s2'] });
+    }), false);
+    const result = await renderRun(run, renderDeps());
+    if (!result.ok) throw new Error(result.refusal.reason);
+    const files = readSite(result.report.site);
+    const page = main(files.get('find-by-task.html')!);
+    // Neither step is withheld: no detector matches its text, so both show their file.
+    expect(page).toContain('<code>zqPlainName</code>');
+    expect(page).toContain('<code>zqAfterQuote</code>');
+    const machine = JSON.parse(files.get('machine.json')!) as { nameIndex: { names: { kind: string; name: string }[] } };
+    expect(machine.nameIndex.names.filter((entry) => entry.kind === 'identifier').map((entry) => entry.name)).toEqual(['main', 'zqAfterQuote', 'zqPlainName']);
+    expect(files.get('name-index.html')!).not.toContain('zqlinekey');
+  });
+
+  it('a draft with no routes renders, and its find-by-task page says so', async () => {
+    const run = await prepared();
+    const result = await renderRun(run, renderDeps());
+    if (!result.ok) throw new Error(result.refusal.reason);
+    const files = readSite(result.report.site);
+    expect(main(files.get('find-by-task.html')!)).toBe('<section id="find-by-task" data-topics="" data-task-route-count="0"><h1>Find by task</h1><p class="no-routes" data-task-routes="none">This run&#39;s draft declares no task routes, so this page has none. Syzygy writes no route of its own: a route is the authoring agent&#39;s claim, checked like any other. To find where something is named, use <a href="name-index.html">the index</a>.</p></section>');
+    expect(files.has('name-index.html')).toBe(true);
+  });
+
+  it('withholds a step whose cited file is withheld, and never names a path a secret detector matches on either page', async () => {
+    const run = await prepared(routedDraft((doc) => {
+      doc.taskRoutes[1].steps[0] = step('r2s1', { text: 'Edit the tag zq-tagged-step.', citations: [cite('c-r2s1', 'src/tagged.c', 1, 1)], see: { kind: 'section', target: 'core-ideas' } });
+      // A step that cites an admitted file but writes, in backticks, a path a secret detector matches: its whole text is withheld.
+      doc.taskRoutes[3].steps[0] = step('r4s1', { text: `Keep \`${SECRET_PATH}\` out of \`zqBesideName\`.`, see: { kind: 'section', target: 'core-ideas' } });
+      doc.taskRoutes[2].steps[0] = step('r3s1', { text: 'Edit the token zq-secret-step.', citations: [cite('c-r3s1', SECRET_PATH, 1, 1)] });
+    }), false);
+    const result = await renderRun(run, renderDeps());
+    if (!result.ok) throw new Error(result.refusal.reason);
+    const files = readSite(result.report.site);
+    const pages = `${files.get('find-by-task.html')!}${files.get('name-index.html')!}`;
+    expect(pages).not.toContain('zq-tagged-step');
+    expect(pages).not.toContain('zq-secret-step');
+    expect(pages).not.toContain('abcdefghijk');
+    expect(pages).not.toContain('conf/token');
+    // The withheld steps are still drawn, in Syzygy's words, with no file to read or change beside them.
+    const page = main(files.get('find-by-task.html')!);
+    const tagged = page.slice(page.indexOf('data-claim-id="r2s1"'), page.indexOf('</li>', page.indexOf('data-claim-id="r2s1"')));
+    expect(page.indexOf('data-claim-id="r2s1"')).toBeGreaterThan(-1);
+    expect(tagged).not.toContain('route-where');
+    expect(tagged).not.toContain('route-see');
+    expect(page.indexOf('data-claim-id="r3s1"')).toBeGreaterThan(-1);
+    // The step a secret detector matches cites an admitted file and names a section: it shows neither, and is listed under no name.
+    const matched = page.slice(page.indexOf('data-claim-id="r4s1"'), page.indexOf('</li>', page.indexOf('data-claim-id="r4s1"')));
+    expect(page.indexOf('data-claim-id="r4s1"')).toBeGreaterThan(-1);
+    expect(matched).not.toContain('route-where');
+    expect(matched).not.toContain('route-see');
+    expect(files.get('name-index.html')!).not.toContain('find-by-task.html#block-r4s1');
+    const machine = JSON.parse(files.get('machine.json')!) as { nameIndex: { names: { kind: string; name: string }[] } };
+    // Neither that path nor the name written beside it is an identifier of the index: a withheld item names nothing.
+    expect(machine.nameIndex.names.filter((entry) => entry.kind === 'identifier').map((entry) => entry.name)).toEqual(['main']);
+    expect(pages).not.toContain('zqBesideName');
+    expect(machine.nameIndex.names.filter((entry) => entry.kind === 'path').map((entry) => entry.name)).toEqual(['docs/notes.txt', 'src/kestrel.c']);
   });
 });

@@ -104,6 +104,37 @@ describe('local-agent draft schema', () => {
     expect(checkDraftShape(SCHEMA, mutate(change))).toContainEqual(error);
   });
 
+  // Task routes (the index-and-task-routes change, syzygy-5dhm.71).
+  const routeStep = (id: string) => ({ id, label: 'inferred', basis: 'source', text: 'Register the command in the table.', citations: [cite(`${id}-c`)], quotations: [] });
+  const routes = (n: number) => Array.from({ length: n }, (_unused, i) => ({ id: `route-${i + 1}`, task: `Add a command ${i + 1}`, steps: [routeStep(`route-${i + 1}-s1`)] }));
+  const routedDraft = (change: (draft: Draft) => void = () => {}): Draft => mutate((d) => { d.schemaVersion = 'polaris-dossier-local-draft-v5'; d.taskRoutes = routes(8); change(d); });
+
+  it('admits eight to fifteen task routes, a step naming where the dossier explains it, and a draft with none', () => {
+    expect(checkDraftShape(SCHEMA, routedDraft())).toEqual([]);
+    expect(checkDraftShape(SCHEMA, routedDraft((d) => { d.taskRoutes = routes(15); d.taskRoutes[0].steps[0].see = { kind: 'section', target: 'core-ideas' }; d.taskRoutes[1].steps[0].see = { kind: 'deep-dive', target: 'dive-1' }; }))).toEqual([]);
+    expect(checkDraftShape(SCHEMA, mutate((d) => { d.schemaVersion = 'polaris-dossier-local-draft-v5'; }))).toEqual([]);
+    expect(checkDraftShape(SCHEMA, valid())).toEqual([]);
+  });
+
+  it.each<[string, (draft: Draft) => void, { path: string; detail: string }]>([
+    ['seven routes', (d) => { d.taskRoutes = routes(7); }, { path: '$.taskRoutes', detail: 'must hold 8 to 15 items; holds 7' }],
+    ['sixteen routes', (d) => { d.taskRoutes = routes(16); }, { path: '$.taskRoutes', detail: 'must hold 8 to 15 items; holds 16' }],
+    ['a route with no step', (d) => { d.taskRoutes[0].steps = []; }, { path: '$.taskRoutes[0].steps', detail: 'must hold 1 to 8 items; holds 0' }],
+    ['a route with nine steps', (d) => { d.taskRoutes[0].steps = Array.from({ length: 9 }, (_unused, i) => routeStep(`x${i}`)); }, { path: '$.taskRoutes[0].steps', detail: 'must hold 1 to 8 items; holds 9' }],
+    ['a step with no citation', (d) => { d.taskRoutes[2].steps[0].citations = []; }, { path: '$.taskRoutes[2].steps[0].citations', detail: 'must hold 1 to 50 items; holds 0' }],
+    ['a step labelled Unknown', (d) => { d.taskRoutes[0].steps[0].label = 'unknown'; }, { path: '$.taskRoutes[0].steps[0].label', detail: 'must be one of inferred' }],
+    ['a step labelled non-normative, which would carry no citation', (d) => { d.taskRoutes[0].steps[0] = { id: 'z', label: 'non-normative', text: 'Read on.' }; }, { path: '$.taskRoutes[0].steps[0].citations', detail: 'is required' }],
+    ['a step resting on an execution', (d) => { d.taskRoutes[0].steps[0].basis = 'execution'; }, { path: '$.taskRoutes[0].steps[0].basis', detail: 'must be 1 to 6 characters; is 9' }],
+    ['a step citing by source id', (d) => { d.taskRoutes[0].steps[0].sourceIds = ['s1']; }, { path: '$.taskRoutes[0].steps[0].sourceIds', detail: 'is not a field of this form' }],
+    ['a step with children', (d) => { d.taskRoutes[0].steps[0].children = []; }, { path: '$.taskRoutes[0].steps[0].children', detail: 'is not a field of this form' }],
+    ['a route with no task', (d) => { delete d.taskRoutes[0].task; }, { path: '$.taskRoutes[0].task', detail: 'is required' }],
+    ['a task longer than a label', (d) => { d.taskRoutes[0].task = 'x'.repeat(121); }, { path: '$.taskRoutes[0].task', detail: 'must be 1 to 120 characters; is 121' }],
+    ['a step pointing at the overview', (d) => { d.taskRoutes[0].steps[0].see = { kind: 'overview' }; }, { path: '$.taskRoutes[0].steps[0].see.kind', detail: 'must be one of section, deep-dive' }],
+    ['a step pointing at no target', (d) => { d.taskRoutes[0].steps[0].see = { kind: 'section' }; }, { path: '$.taskRoutes[0].steps[0].see.target', detail: 'is required' }],
+  ])('refuses task routes with %s', (_name, change, error) => {
+    expect(checkDraftShape(SCHEMA, routedDraft(change))).toContainEqual(error);
+  });
+
   it('refuses a proxy and an accessor', () => {
     expect(checkDraftShape(SCHEMA, new Proxy(valid(), {}))).toEqual([{ path: '$', detail: 'must be an object' }]);
     const draft = valid();
@@ -157,7 +188,7 @@ describe('draft.schema.json', () => {
     const defs = Object.keys(document['$defs'] as object).sort();
     const used = [...new Set(refs(document).map((ref) => ref.replace('#/$defs/', '')))].sort();
     expect(used).toEqual(defs);
-    expect(defs).toEqual(['block', 'callout', 'cards', 'citation', 'code', 'content', 'definitions', 'detailContent', 'details', 'disposition', 'paragraph', 'pathReason', 'steps', 'table', 'understandingItem', 'unknownReason']);
+    expect(defs).toEqual(['block', 'callout', 'cards', 'citation', 'code', 'content', 'definitions', 'detailContent', 'details', 'disposition', 'paragraph', 'pathReason', 'routeStep', 'steps', 'table', 'taskRoute', 'understandingItem', 'unknownReason']);
   });
 
   it('nowhere offers an observed label', () => {

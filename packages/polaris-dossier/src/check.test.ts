@@ -1482,7 +1482,7 @@ describe('check: inventory coverage advice and the justified-omission record', (
     expect(result.outcome).toBe('passed');
     expect(result.findings).toEqual([]);
     expect(result.inventoryCoverageAdvice).toMatchObject({
-      state: 'compared', rule: { id: 'overlap-or-path-named', version: 1 },
+      state: 'compared', rule: { id: 'overlap-or-path-named', version: 2 },
       counts: { entries: 3, covered: 1, omitted: 0, uncovered: 2 },
       uncovered: [{ entryId: 'e-types', paths: ['src/types.ts'], unnamedPaths: 0 }, { entryId: 'e-readme', paths: ['README.md'], unnamedPaths: 1 }],
       omissions: { rows: 0, recorded: 0, duplicated: [], unmatched: [], alsoCovered: [] },
@@ -1567,6 +1567,68 @@ describe('check: inventory coverage advice and the justified-omission record', (
     const result = report(await checkDraft(run, {}, deps({ inventoryOfRecord: counted(run) })));
     expect(result.findings.map((f) => f.kind)).toEqual(['not-json']);
     expect(result).not.toHaveProperty('inventoryCoverageAdvice');
+  });
+});
+
+// syzygy-5dhm.71: task routes (the index-and-task-routes change). A route step is a claim block, checked exactly as any cited block is.
+describe('check: task routes', () => {
+  const step = (id: string, over: Record<string, unknown> = {}) => ({ id, label: 'inferred', basis: 'source', text: 'Add the handler beside main.', citations: [cite(`c-${id}`, 'src/kestrel.c', 4, 4)], quotations: [], ...over });
+  const routes = (n = 8) => Array.from({ length: n }, (_unused, i) => ({ id: `route-${i + 1}`, task: `Add a command ${i + 1}`, steps: [step(`r${i + 1}s1`)] }));
+  const routed = (change: (draft: Draft) => void = () => {}): Draft => mutate((d) => { d.schemaVersion = 'polaris-dossier-local-draft-v5'; d.taskRoutes = routes(); change(d); });
+  const findingsOf = async (draft: Draft) => {
+    const run = await briefedRun();
+    writeDraft(run, draft);
+    return report(await checkDraft(run, {}, deps()));
+  };
+
+  it('passes a draft whose every route step cites a real file and range, and verifies a quotation in a step', async () => {
+    const result = await findingsOf(routed((d) => {
+      d.taskRoutes[0].steps[0] = step('r1s1', { text: 'The project states: "Snapshots are written periodically." Change that write.', citations: [cite('c-r1s1', 'docs/notes.txt', 2, 2)], quotations: ['c-r1s1'] });
+      d.taskRoutes[1].steps[0].see = { kind: 'section', target: 'core-ideas' };
+    }));
+    expect(result.findings).toEqual([]);
+    expect(result.outcome).toBe('passed');
+    expect(result.quotations.filter((q) => q.blockId === 'r1s1').map((q) => [q.citationId, q.path, q.byteRange])).toEqual([['c-r1s1', 'docs/notes.txt', bytesOf(NOTES, 'Snapshots are written periodically.')]]);
+  });
+
+  it('still passes a draft with no routes, in the current schema and in an earlier one', async () => {
+    expect((await findingsOf(mutate((d) => { d.schemaVersion = 'polaris-dossier-local-draft-v5'; }))).outcome).toBe('passed');
+    expect((await findingsOf(valid())).outcome).toBe('passed');
+  });
+
+  it.each<[string, (draft: Draft) => void, { kind: string; at: string; citationId?: string; blockId?: string }]>([
+    ['a step citing a path absent at the pinned revision', (d) => { d.taskRoutes[3].steps[0].citations[0].path = 'src/missing.c'; }, { kind: 'path-absent', at: '$.taskRoutes[3].steps[0].citations[0].path', citationId: 'c-r4s1' }],
+    ['a step citing lines beyond the file', (d) => { d.taskRoutes[3].steps[0].citations[0].endLine = 6; }, { kind: 'range-beyond-blob', at: '$.taskRoutes[3].steps[0].citations[0].endLine', citationId: 'c-r4s1' }],
+    ['a step citing a backwards range', (d) => { d.taskRoutes[0].steps[0].citations[0].startLine = 5; }, { kind: 'range-invalid', at: '$.taskRoutes[0].steps[0].citations[0]', citationId: 'c-r1s1' }],
+    ['a step with an altered quotation', (d) => { d.taskRoutes[2].steps[0] = step('r3s1', { text: 'The project states: "Snapshots are never written."', citations: [cite('c-r3s1', 'docs/notes.txt', 2, 2)], quotations: ['c-r3s1'] }); },
+      { kind: 'quotation-not-in-cited-file', at: '$.taskRoutes[2].steps[0].text', blockId: 'r3s1', citationId: 'c-r3s1' }],
+    ['a step with no citation', (d) => { d.taskRoutes[0].steps[0].citations = []; }, { kind: 'citation-by-kind', at: '$.taskRoutes[0].steps[0].citations', blockId: 'r1s1' }],
+    ['a step labelled Unknown', (d) => { d.taskRoutes[0].steps[0] = { id: 'r1s1', label: 'unknown', reason: 'missing-evidence', text: 'Nobody knows.', citations: [] }; }, { kind: 'label', at: '$.taskRoutes[0].steps[0].label', blockId: 'r1s1' }],
+    ['a step labelled Observed', (d) => { d.taskRoutes[0].steps[0].label = 'observed'; }, { kind: 'label', at: '$.taskRoutes[0].steps[0].label', blockId: 'r1s1' }],
+    ['a step pointing at a section the draft does not have', (d) => { d.taskRoutes[0].steps[0].see = { kind: 'section', target: 'nowhere' }; }, { kind: 'unresolved-reference', at: '$.taskRoutes[0].steps[0].see.target' }],
+    ['a step pointing at a deep dive the draft does not have', (d) => { d.taskRoutes[0].steps[0].see = { kind: 'deep-dive', target: 'core-ideas' }; }, { kind: 'unresolved-reference', at: '$.taskRoutes[0].steps[0].see.target' }],
+    ['a step reusing a block identity', (d) => { d.taskRoutes[0].steps[0].id = 'p2'; }, { kind: 'duplicate-id', at: '$.taskRoutes[0].steps[0]' }],
+    ['two routes with one identity', (d) => { d.taskRoutes[1].id = 'route-1'; }, { kind: 'duplicate-id', at: '$.taskRoutes[1]' }],
+    ['a task that carries markup', (d) => { d.taskRoutes[0].task = 'Add a `command`'; }, { kind: 'label-markup', at: '$.taskRoutes[0].task' }],
+    ['a task that carries a quotation', (d) => { d.taskRoutes[0].task = 'Add a "command"'; }, { kind: 'label-quotation', at: '$.taskRoutes[0].task' }],
+    ['seven routes', (d) => { d.taskRoutes.pop(); }, { kind: 'schema', at: '$.taskRoutes' }],
+  ])('refuses %s', async (_name, change, expected) => {
+    const result = await findingsOf(routed(change));
+    expect(result.outcome).toBe('findings');
+    expect(result.findings).toContainEqual(expect.objectContaining(expected));
+  });
+
+  it('names the exact finding for an unverifiable citation, and nothing else', async () => {
+    const result = await findingsOf(routed((d) => { d.taskRoutes[3].steps[0].citations[0].path = 'src/missing.c'; }));
+    expect(result.findings.map(({ kind, at }) => ({ kind, at }))).toEqual([{ kind: 'path-absent', at: '$.taskRoutes[3].steps[0].citations[0].path' }]);
+    const see = await findingsOf(routed((d) => { d.taskRoutes[0].steps[0].see = { kind: 'section', target: 'nowhere' }; }));
+    expect(see.findings.map(({ kind, at, detail }) => ({ kind, at, detail }))).toEqual([{ kind: 'unresolved-reference', at: '$.taskRoutes[0].steps[0].see.target', detail: 'no section has the identity "nowhere"' }]);
+  });
+
+  it.each(['polaris-dossier-local-draft-v2', 'polaris-dossier-local-draft-v3', 'polaris-dossier-local-draft-v4'])('refuses task routes in a draft of the earlier schema %s', async (version) => {
+    const result = await findingsOf(mutate((d) => { d.schemaVersion = version; d.taskRoutes = routes(); }));
+    expect(result.outcome).toBe('findings');
+    expect(result.findings.map(({ kind, at, detail }) => ({ kind, at, detail }))).toEqual([{ kind: 'field-version', at: '$.taskRoutes', detail: '`taskRoutes` needs draft schema polaris-dossier-local-draft-v5' }]);
   });
 });
 
