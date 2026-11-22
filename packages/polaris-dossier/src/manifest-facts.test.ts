@@ -322,33 +322,43 @@ describe('manifestFacts: values, caps and order', () => {
     expect(npm.files).toEqual([inferredFile(at512, 1), unknownFile(`"${'p'.repeat(500)}/package.jso" (1 more code units)`, 'path-not-citable')]);
   });
 
-  // Review finding 7 (syzygy-3efd.25): the member has no byte bound of its own, and the spec fixes its caps (1,000 facts and 250 files per
-  // recognizer listed, values to 256 code units, paths to 512). A value may hold lone surrogates, which the value check admits and
-  // JSON.stringify writes as six-byte escapes; a path may hold three-byte characters. Encoded as the check record encodes it, the worst
-  // case is 7,164,441 bytes, and 5,628,441 with three-byte characters alone: both over the 4 MiB (4,194,304-byte) SUBJECT_JSON_LIMITS
-  // that latestPassedDraft reads a check record with. Reported, not tightened: the spec states the caps exactly.
-  it('measures the worst-case member against the 4 MiB subject limit, and admits a 256-unit value of lone surrogates', async () => {
+  // Review finding 7 (syzygy-3efd.25) and version 2.8 (syzygy-3efd.72): the member has no byte bound of its own; the spec fixes its caps
+  // (1,000 facts and 250 files per recognizer listed, values to 256 code units, paths to 512) and states that at those caps the member,
+  // encoded as the check record encodes it, takes fewer than 10,000,000 bytes, under the 16,777,216-byte bound every reader of a check
+  // record applies. Built here by hand from the stated caps (design.md, section 1), never from the recognizer: every count a safe
+  // integer; every fact a `dependency` whose path is 512 three-byte characters and whose `name` and `group` are 256 lone surrogates (six
+  // bytes each once escaped); and each of the 1,250 file entries in one of three forms, the widest an Unknown `path-not-citable` entry whose
+  // census-form path begins with 512 control characters (`\u0001`, seven bytes once the record escapes the census form's backslash).
+  it('measures the widest member at every cap under 10,000,000 bytes, and admits a 256-unit value of lone surrogates', async () => {
     const lone = derived(await derive(V2, fixture({ 'package.json': `{ "name": "${'\\ud800'.repeat(256)}" }` }, ['package.json'])));
     expect([lone.facts.length, (lone.facts[0]!['name'] as string).length, lone.recognizers[0]!.valuesLeftOut]).toEqual([1, 256, 0]);
-    const worst = (value: string): number => {
-      const P = '\u4e00'.repeat(512);
-      const file = { path: P, epistemic: 'inferred', unknownReason: null, parseFault: null, facts: 1_048_576, valuesLeftOut: 1_048_576 };
-      const member = {
-        format: 'polaris-dossier-manifest-facts/1', state: 'derived',
-        screeningPolicy: { policyId: 'x'.repeat(64), policyVersion: 'x'.repeat(64), sha256: '0'.repeat(64) },
-        recognizers: ['npm-package-manifest', 'cargo-manifest', 'python-project-manifest', 'go-module-manifest', 'github-actions-workflow'].map((rule) => ({
-          rule, ruleVersion: 1, label: 'inferred', candidates: 1e9, secretPathsLeftOut: 1e9, setApart: 1e9, inferred: 1e9, unknown: 1e9, valuesLeftOut: 1e9, facts: 1e9,
-          files: Array.from({ length: 250 }, () => file), filesNotListed: 1e9,
-        })),
-        facts: Array.from({ length: 1000 }, (_, i) => ({
-          id: `_manifest-${i + 1}`, fact: 'dependency', rule: 'python-project-manifest', ruleVersion: 1, path: P, lines: [1_048_577, 1_048_577],
-          name: value, section: 'project.optional-dependencies', group: value, epistemic: 'inferred',
-        })),
-        factsNotListed: 1e9,
-      };
-      return Buffer.byteLength(JSON.stringify({ manifestFacts: member }, null, 2));
+    const MAX = Number.MAX_SAFE_INTEGER;
+    const CJK = '\u4e00'.repeat(512), LONE = '\ud800'.repeat(256);
+    const census = `${JSON.stringify('\u0001'.repeat(512))} (9007199254740991 more code units)`;
+    const FILES = {
+      inferred: { path: CJK, epistemic: 'inferred', unknownReason: null, parseFault: null, facts: MAX, valuesLeftOut: MAX },
+      unparsed: { path: CJK, epistemic: 'unknown', unknownReason: 'unparsed', parseFault: 'beyond-reader', facts: null, valuesLeftOut: null },
+      census: { path: census, epistemic: 'unknown', unknownReason: 'path-not-citable', parseFault: null, facts: null, valuesLeftOut: null },
     };
-    expect([worst('\ud800'.repeat(256)), worst('\u4e00'.repeat(256)), 4 * 1024 * 1024]).toEqual([7_164_441, 5_628_441, 4_194_304]);
+    const widest = (file: Record<string, unknown>) => ({
+      format: 'polaris-dossier-manifest-facts/1', state: 'derived',
+      screeningPolicy: { policyId: 'x'.repeat(64), policyVersion: 'x'.repeat(64), sha256: '0'.repeat(64) },
+      recognizers: ['npm-package-manifest', 'cargo-manifest', 'python-project-manifest', 'go-module-manifest', 'github-actions-workflow'].map((rule) => ({
+        rule, ruleVersion: 1, label: 'inferred', candidates: MAX, secretPathsLeftOut: MAX, setApart: MAX, inferred: MAX, unknown: MAX, valuesLeftOut: MAX, facts: MAX,
+        files: Array.from({ length: 250 }, () => file), filesNotListed: MAX,
+      })),
+      facts: Array.from({ length: 1000 }, (_, i) => ({
+        id: `_manifest-${i + 1}`, fact: 'dependency', rule: 'python-project-manifest', ruleVersion: 1, path: CJK, lines: [1_048_577, 1_048_577],
+        name: LONE, section: 'project.optional-dependencies', group: LONE, epistemic: 'inferred',
+      })),
+      factsNotListed: MAX,
+    });
+    // The member's own bytes in the record: `{"manifestFacts": member}` less `{"manifestFacts": {}}`, each two-space JSON as check writes.
+    const bytes = (member: unknown): number => Buffer.byteLength(JSON.stringify({ manifestFacts: member }, null, 2)) - Buffer.byteLength(JSON.stringify({ manifestFacts: {} }, null, 2));
+    // The census form of a path is the one the recognizer writes: the first 512 code units quoted, then the count of the rest.
+    expect(census.slice(0, 8)).toBe('"\\u0001\\');
+    expect([bytes(widest(FILES.inferred)), bytes(widest(FILES.unparsed)), bytes(widest(FILES.census))]).toEqual([7_187_162, 7_177_162, 9_782_162]);
+    expect(bytes(widest(FILES.census))).toBeLessThan(10_000_000);
   });
 
   it('is deterministic: the same bytes whatever the listing order, and every fact and entry labelled inferred', async () => {

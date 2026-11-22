@@ -188,6 +188,13 @@ export async function derivedStructureAt(inputs: {
     return { state: 'unknown', revision: pinned, unknownReason: 'source-uncaptured-or-unreachable' };
   }
   const now = deriveTreeFacts(entries, isSecretPath);
+  // Version 2.8 (syzygy-3efd.67): the run directory is within the agent sessions' write reach, so a record is readable only where every
+  // fact names this render's own rule and version, and every path its unit and containment facts name is a unit path this render
+  // re-derives (a directory the tree does not hold, or one past the listing of 250, is not). Anything else is no readable record: nothing
+  // of it is drawn, listed, carried in `machine.json` or published, so no name or rule reaches the region that the render did not derive.
+  const derivedUnits = new Set(now.facts.filter((fact) => fact.fact === 'top-level-unit').map((fact) => fact.path));
+  const foreign = (fact: TreeFact): boolean => fact.rule !== TOP_LEVEL_UNIT.id || fact.ruleVersion !== TOP_LEVEL_UNIT.version || (fact.fact !== 'tree-root' && !derivedUnits.has(fact.path));
+  if (record.facts.some(foreign)) return { state: 'missing', revision: pinned, unknownReason: 'missing-evidence' };
   // `pinned-revision`: current exactly when the record names this render's revision and this render re-derives the same facts.
   const current = record.revision === pinned && sameFacts(record.facts, now.facts) && record.unitsNotListed === now.unitsNotListed;
   const facts: LocalDerivedFact[] = record.facts.map((fact) => {

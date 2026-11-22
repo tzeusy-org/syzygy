@@ -1,7 +1,7 @@
 import * as fs from 'node:fs';
 import * as path from 'node:path';
-import { parseBoundedJson } from '@syzygy/polaris-generation-core/live';
 import { isRecord } from '@syzygy/support';
+import { readCheckRecord } from './check-record-read.js';
 import type { FigureFit } from './figure-fit.js';
 import { proseWords, type ReaderAdvice, type ReaderStandardId } from './reader-advice.js';
 import { readRunRecord } from './run-record.js';
@@ -45,8 +45,9 @@ const list = (value: unknown): readonly unknown[] => (Array.isArray(value) ? val
 const text = (value: unknown): string | undefined => (typeof value === 'string' ? value : undefined);
 const produced = (value: unknown): value is Readonly<Record<string, unknown>> => isRecord(value) && isRecord(value['disposition']) && value['disposition']['kind'] === 'produced';
 const minutes = (words: number): number => Math.ceil(words / WORDS_PER_MINUTE);
-/** A deep dive's page: its identity with every code unit outside `A-Z`, `a-z`, `0-9`, `_`, `.` and `-` replaced by `_`. */
-export const deepDivePage = (id: string): string => `deep-dives/${id.replace(/[^A-Za-z0-9_.-]/g, '_')}.html`;
+/** A deep dive's page: its identity with every code point outside `A-Z`, `a-z`, `0-9`, `_`, `.` and `-` replaced by one `_`, the rule
+ * by which the renderer names that page (`deepDivePath`); a surrogate pair is one code point, and so is a lone surrogate (version 2.8). */
+export const deepDivePage = (id: string): string => `deep-dives/${id.replace(/[^A-Za-z0-9_.-]/gu, '_')}.html`;
 /** The draft schemas whose diagrams name a `home` (v5 and later). */
 const HOME_SCHEMAS = new Set(['polaris-dossier-local-draft-v5', 'polaris-dossier-local-draft-v6', 'polaris-dossier-local-draft-v7']);
 
@@ -220,8 +221,6 @@ export const NO_EARLIER_LEDGER = 'no earlier run of this repository in the state
 export const STATE_ROOT_UNLISTABLE = 'the state root could not be listed';
 export const DRAFT_DOES_NOT_PARSE = 'this draft does not parse, so it has no reading ledger';
 
-/** Bounds on a sibling run's check record read back. */
-const CHECK_RECORD_LIMITS = Object.freeze({ maxBytes: 16 * 1024 * 1024, maxNodes: 2_000_000, maxDepth: 16 });
 const CHECKED_AT = /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{3}Z$/u;
 const COMMIT = /^(?:[0-9a-f]{40}|[0-9a-f]{64})$/u;
 const byCodeUnit = (a: string, b: string): number => (a < b ? -1 : a > b ? 1 : 0);
@@ -313,7 +312,7 @@ export function readingDifference(run: string, repositoryId: string, checkedAt: 
     }
     for (const revision of records.sort((a, b) => b - a)) {
       let record: unknown;
-      try { record = parseBoundedJson(fs.readFileSync(path.join(dir, RUN_LAYOUT.checks, `rev-${revision}.json`), 'utf8'), CHECK_RECORD_LIMITS); } catch { unreadableCheckRecords += 1; continue; }
+      try { record = readCheckRecord(path.join(dir, RUN_LAYOUT.checks, `rev-${revision}.json`)); } catch { unreadableCheckRecords += 1; continue; }
       if (!isRecord(record) || !isRecord(record['readingLedger']) || record['readingLedger']['format'] !== READING_LEDGER_FORMAT) continue;
       const at = record['checkedAt'];
       if (typeof at !== 'string' || !CHECKED_AT.test(at)) { unreadableCheckRecords += 1; continue; }

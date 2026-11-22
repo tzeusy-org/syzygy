@@ -1366,6 +1366,25 @@ describe('check: figure kinds (schema v7)', () => {
       { kind: 'figure-kind', at: '$.diagrams[1].steps', detail: 'the diagram "flow-1": a flow diagram takes `nodes` and `edges`, not `steps`' }]);
   });
 
+  // Version 2.8 (syzygy-3efd.71), the scenario "Graph diagram with a missing or foreign member in schema v7": the byte-identity sentence's
+  // exception. A v7 graph diagram lacking `edges` reports figure-kind at the diagram and no schema finding at `edges`; one carrying `steps`
+  // reports figure-kind at `steps` and no field-version or schema finding there. The same two diagrams in a v6 draft report as v6 does.
+  const graphPair = () => {
+    const { edges: _edges, ...flowNoEdges } = homed({ kind: 'section', target: 'core-ideas' });
+    const dependency = { ...homed({ kind: 'section', target: 'core-ideas' }), id: 'dep-1', title: 'Dependencies', kind: 'dependency', disposition: { kind: 'produced', assetIds: ['dep-1'] },
+      nodes: [{ id: 'm1', label: 'App', epistemic: 'inferred', citations: [cite('c-m1')] }, { id: 'm2', label: 'Library', epistemic: 'inferred', citations: [cite('c-m2')] }],
+      edges: [{ id: 'y1', from: 'm1', to: 'm2', label: 'uses', epistemic: 'inferred', citations: [cite('c-y1')] }], steps: [] };
+    return [flowNoEdges, dependency];
+  };
+  it('reports a v7 graph diagram lacking edges or carrying steps as figure-kind alone, and the same pair in v6 as v6 does (version 2.8)', async () => {
+    expect(listed(await findingsOf(drafted(V7, ...graphPair())))).toEqual([
+      { kind: 'figure-kind', at: '$.diagrams[0]', detail: 'the diagram "flow-1": a flow diagram takes `nodes` and `edges`; it lacks `edges`' },
+      { kind: 'figure-kind', at: '$.diagrams[1].steps', detail: 'the diagram "dep-1": a dependency diagram takes `nodes` and `edges`, not `steps`' }]);
+    expect(listed(await findingsOf(drafted('polaris-dossier-local-draft-v6', ...graphPair())))).toEqual([
+      { kind: 'schema', at: '$.diagrams[0].edges', detail: 'is required' },
+      { kind: 'field-version', at: '$.diagrams[1].steps', detail: 'the diagram "dep-1": `steps` needs draft schema polaris-dossier-local-draft-v7' }]);
+  });
+
   it('reports a count outside its bounds as a schema finding', async () => {
     const result = await findingsOf(drafted(V7, sequence({ participants: [el('pt1', 'Client')], messages: [{ ...el('msg1', 'asks'), from: 'pt1', to: 'pt1' }] })));
     expect(listed(result)).toEqual([{ kind: 'schema', at: '$.diagrams[0].participants', detail: 'must hold 2 to 5 items; holds 1' }]);

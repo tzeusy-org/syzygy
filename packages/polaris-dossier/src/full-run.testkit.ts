@@ -196,6 +196,8 @@ export interface FullRunOptions {
   readonly permitted?: boolean;
   /** The draft's `executions` in place of the fixture's, given the clone's path. */
   readonly executions?: (clone: string) => readonly Doc[];
+  /** Called with the run directory after the last render and before close, to alter what close reads. */
+  readonly beforeClose?: (run: string) => void;
 }
 
 export interface FullRunStep { readonly argv: readonly string[]; readonly exit: number; readonly stdout: string; readonly stderr: string }
@@ -256,6 +258,7 @@ export async function fullFixtureRun(options: FullRunOptions): Promise<{ readonl
   await cli(['review-check', run, '--kind', 'design']);
   await cli(['launch-form', run, 'review', 'terminal', '--kind', 'design']);
   await cli(['render', run]);
+  options.beforeClose?.(run);
   await cli(['close', run, ...(options.closeArgs ?? [])]);
   await cli(['status', run]);
   return { run, steps };
