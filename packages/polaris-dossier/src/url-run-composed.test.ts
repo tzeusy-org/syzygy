@@ -140,6 +140,30 @@ type ResumeSample = { ordinal: number; verify: ResumeStamp; confirm?: ResumeStam
 type ResumeBrokerStage = 'invoke' | 'host-current' | 'mediate-peer' | 'host-action' | 'transfer-bounds'
   | 'plan-work-hold' | 'create-work-budget' | 'release' | 'release-check';
 
+function projectWorkPlanRefusal(input: Parameters<typeof orderedWork.planOrderedDesignWork>[0]) {
+  const { shape, view, enforcement } = input;
+  const bound = ({ bytes, nodes, depth }: orderedBounds.OrderedDesignJsonBound) => ({ bytes, nodes, depth });
+  const operations = (['request', 'response', 'tool', 'audit', 'terminal'] as const).map(kind => {
+    const { wallMilliseconds, cpuMicroseconds, auditReadBytes, inputCodeUnits, secretCodeUnits, secretCalls,
+      activeCodeUnits, activeCalls } = enforcement.operations[kind];
+    return [kind, { wallMilliseconds, cpuMicroseconds, auditReadBytes, inputCodeUnits, secretCodeUnits, secretCalls,
+      activeCodeUnits, activeCalls }] as const;
+  });
+  return {
+    envelopeBytes: view.envelopeBytes, originalBytes: view.originalBytes,
+    remainingWallMilliseconds: input.deadline - input.now, remainingRunCpuMicroseconds: input.remainingRunCpuMicroseconds,
+    runtimeMatches: enforcement.runtimeSha256 === input.expectedRuntimeSha256,
+    workerMatches: enforcement.workerSha256 === input.expectedWorkerSha256,
+    relayMilliseconds: enforcement.relayMilliseconds, brokerMilliseconds: enforcement.brokerMilliseconds,
+    operationCaps: Object.fromEntries(operations),
+    turnCount: shape.turns.length,
+    turns: shape.turns.slice(0, 4).map(turn => ({
+      received: bound(turn.received), receivedCanonical: bound(turn.receivedCanonical), prepared: bound(turn.prepared),
+      logicalReceived: bound(turn.logicalReceived), logicalPrepared: bound(turn.logicalPrepared), responseWireBytes: turn.responseWire.bytes,
+    })),
+  };
+}
+
 const observedOrderedKinds = ['prepared', 'part-receipt', 'request-admitted', 'send-attempt', 'send-outcome', 'response-admitted',
   'delivery-completed', 'verdict-staged', 'acknowledgment-receipt', 'eligible', 'retired'];
 
@@ -227,6 +251,7 @@ function observeInterruptedResume() {
   const brokerStages: Partial<Record<ResumeBrokerStage, ResumeStamp>> = {};
   let firstMcpPeer: machinePeer.UrlMachinePeer | undefined;
   let brokerInvocations = 0, firstPeerInvocations = 0, brokerFaultMs: number | undefined;
+  let workPlanRefusal: ReturnType<typeof projectWorkPlanRefusal> | undefined;
 
   function brokerPhase<T>(stage: ResumeBrokerStage, call: () => T, accepted: (value: Awaited<T>) => boolean): T {
     if (firstBrokerInvocation.getStore() !== true || brokerStages[stage] !== undefined) return call();
@@ -272,8 +297,11 @@ function observeInterruptedResume() {
   vi.spyOn(orderedBounds, 'boundOrderedDesignTransfer').mockImplementation(input =>
     brokerPhase('transfer-bounds', () => boundTransfer(input), result => result !== null));
   const planWork = orderedWork.planOrderedDesignWork;
-  vi.spyOn(orderedWork, 'planOrderedDesignWork').mockImplementation(input =>
-    brokerPhase('plan-work-hold', () => planWork(input), result => result !== null));
+  vi.spyOn(orderedWork, 'planOrderedDesignWork').mockImplementation(input => {
+    const result = brokerPhase('plan-work-hold', () => planWork(input), value => value !== null);
+    if (result === null && firstBrokerInvocation.getStore() === true) workPlanRefusal ??= projectWorkPlanRefusal(input);
+    return result;
+  });
   const createWorkBudget = orderedWork.createOrderedDesignWorkBudget;
   vi.spyOn(orderedWork, 'createOrderedDesignWorkBudget').mockImplementation((...args) =>
     brokerPhase('create-work-budget', () => createWorkBudget(...args), () => true));
@@ -403,7 +431,7 @@ function observeInterruptedResume() {
 
   return () => ({ connectionCount, transportCounts, connections, refusals, inspectedLaunches, samples,
     latestSample: snapshotSample(latestSample), lastConfirmed, firstSampleRefusal, terminal,
-    broker: { invocations: brokerInvocations, firstPeerInvocations, faultMs: brokerFaultMs, stages: brokerStages },
+    broker: { invocations: brokerInvocations, firstPeerInvocations, faultMs: brokerFaultMs, stages: brokerStages, workPlanRefusal },
     mcpIngress: { counts: mcpReads, startedMs: mcpReadStartedMs, firstDataMs: mcpReadDataMs,
       endMs: mcpReadEndMs, firstRefusalMs: mcpReadRefusedMs } });
 }
