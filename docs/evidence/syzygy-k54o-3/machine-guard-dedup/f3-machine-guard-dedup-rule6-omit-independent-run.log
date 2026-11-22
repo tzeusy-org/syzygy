@@ -1,0 +1,69 @@
+
+ RUN  v3.2.7 /home/orca/.tmp/syzygy-beads-looper-20261114-54ebc9f1/d10-f3-work-budget
+
+ ❯ |unit| packages/polaris-dossier/src/url-run-machine-close.test.ts (30 tests | 1 failed | 28 skipped) 734ms
+   ↓ retained production machine closure evidence > retains eight actual never-issued anchors and immutable selected contexts from the exact clean result
+   ↓ retained production machine closure evidence > emits no clean evidence after expire
+   ↓ retained production machine closure evidence > emits no clean evidence after withdraw
+   ↓ retained production machine closure evidence > refuses clean closure when actual committed state contradicts in-memory never-issued state
+   ↓ retained production machine closure evidence > refuses clean closure when actual pending state contradicts in-memory never-issued state
+   ↓ same-store machine continuation seam > retains exact old anchors and allocates only 0 freshly prepared roles in the same store
+   ↓ same-store machine continuation seam > retains exact old anchors and allocates only 1 freshly prepared roles in the same store
+   ↓ same-store machine continuation seam > retains exact old anchors and allocates only 4 freshly prepared roles in the same store
+   ↓ same-store machine continuation seam > refuses copy drift without allocating fresh endpoints
+   ↓ same-store machine continuation seam > refuses identity drift without allocating fresh endpoints
+   ↓ same-store machine continuation seam > refuses controller drift without allocating fresh endpoints
+   ↓ same-store machine continuation seam > refuses parent drift without allocating fresh endpoints
+   ↓ same-store machine continuation seam > refuses deadline drift without allocating fresh endpoints
+   ↓ same-store machine continuation seam > refuses run drift without allocating fresh endpoints
+   ↓ same-store machine continuation seam > refuses pin drift without allocating fresh endpoints
+   ↓ same-store machine continuation seam > refuses origin drift without allocating fresh endpoints
+   ↓ same-store machine continuation seam > refuses profile drift without allocating fresh endpoints
+   ↓ same-store machine continuation seam > refuses missing-store drift without allocating fresh endpoints
+   ↓ same-store machine continuation seam > refuses clock drift without allocating fresh endpoints
+   ↓ same-store machine continuation seam > refuses claim drift without allocating fresh endpoints
+   ↓ same-store machine continuation seam > refuses unprepared drift without allocating fresh endpoints
+   ↓ same-store machine continuation seam > refuses extra-plan drift without allocating fresh endpoints
+   ↓ same-store machine continuation seam > refuses duplicate-role drift without allocating fresh endpoints
+   ↓ same-store machine continuation seam > refuses role-order drift without allocating fresh endpoints
+   ↓ same-store machine continuation seam > preserves an actually revoked old head through a fresh same-role allocation and close
+   ↓ same-store machine continuation seam > refuses a changed protected retired head after genuine cold capture and never allocates around it
+   ↓ same-store machine continuation seam > withdraws both live currentness and retirement when run-authority is lost
+   ↓ same-store machine continuation seam > withdraws both live currentness and retirement when claim is lost
+   × same-store machine continuation seam > refuses run-authority withdrawal after awaited revalidation before any fresh allocation 361ms
+     → promise resolved "{ …(4) }" instead of rejecting
+   ✓ same-store machine continuation seam > refuses claim withdrawal after awaited revalidation before any fresh allocation  369ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  |unit| packages/polaris-dossier/src/url-run-machine-close.test.ts > same-store machine continuation seam > refuses run-authority withdrawal after awaited revalidation before any fresh allocation
+AssertionError: promise resolved "{ …(4) }" instead of rejecting
+
+- Expected
++ Received
+
+- Error {
+-   "message": "rejected promise",
++ {
++   "close": [Function close],
++   "current": [Function current],
++   "identitySha256": "8394d188c14550a1ce2d46eeb24767f628687c49dfccc3e4719020d532f597b2",
++   "transport": [Function transport],
+  }
+
+ ❯ packages/polaris-dossier/src/url-run-machine-close.test.ts:235:9
+    233|       if (++count === 2) { if (guard === 'claim') f.withdrawClaim(); e…
+    234|       return true;
+    235|     } }))
+       |         ^
+    236|       .rejects.toThrow('url-run-machine-unavailable');
+    237|     expect(await readFile(stateFile)).toEqual(before);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 1 passed | 28 skipped (30)
+   Start at  17:19:46
+   Duration  4.13s (transform 1.92s, setup 59ms, collect 2.69s, tests 734ms, environment 0ms, prepare 86ms)
+

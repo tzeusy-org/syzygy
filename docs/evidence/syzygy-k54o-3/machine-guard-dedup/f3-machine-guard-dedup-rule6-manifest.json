@@ -1,0 +1,23 @@
+{
+  "subjectCommit": "f39e7ed050fb591c427cb53b88d369e177a04df9",
+  "source": "packages/polaris-dossier/src/url-run-machine.ts",
+  "sourceSha256": "191270378c1803bb127914ab396367c8edefa4f6f9788a03695d8a7f99a014da",
+  "test": "packages/polaris-dossier/src/url-run-machine-close.test.ts",
+  "testSha256": "1b594ccdff9065fcaebe8908aeed210ac25ea269a3391787080a33e502c35614",
+  "mutants": [
+    {
+      "name": "omit-independent-run",
+      "old": "const parentCurrent = (): boolean => input.current() && (input.resume === undefined || input.resume.current() === true);",
+      "new": "const parentCurrent = (): boolean => input.resume === undefined ? input.current() : input.resume.current() === true;",
+      "exitCode": 1,
+      "log": "/home/orca/.tmp/f3-machine-guard-dedup-rule6-omit-independent-run.log"
+    },
+    {
+      "name": "omit-held-claim",
+      "old": "const parentCurrent = (): boolean => input.current() && (input.resume === undefined || input.resume.current() === true);",
+      "new": "const parentCurrent = (): boolean => input.current();",
+      "exitCode": 1,
+      "log": "/home/orca/.tmp/f3-machine-guard-dedup-rule6-omit-held-claim.log"
+    }
+  ]
+}

@@ -1,0 +1,45 @@
+{
+  "subjectCommit": "f39e7ed050fb591c427cb53b88d369e177a04df9",
+  "rootSubject": "236df7ecd",
+  "predicateFaults": [
+    {
+      "name": "omit-independent-run",
+      "baselineSha256": "191270378c1803bb127914ab396367c8edefa4f6f9788a03695d8a7f99a014da",
+      "mutantSha256": "0cbd0f626ea83209b2375cc088c758c9828d74df5c2534f3d290e9f1b2fa80c5",
+      "rawSha256": "cc486c8c386cf67c88442c66494751757c9e80fae9d6b1673ba5eacf9e1094d4",
+      "log": "f3-machine-guard-dedup-rule6-omit-independent-run.log",
+      "exit": 1
+    },
+    {
+      "name": "omit-held-claim",
+      "baselineSha256": "191270378c1803bb127914ab396367c8edefa4f6f9788a03695d8a7f99a014da",
+      "mutantSha256": "fdcad26a3daf09b07a548e47e491c18c58d3db29e506db709eaa8e4be9ca9e02",
+      "rawSha256": "e3af3cd8d2c473aa80b6c164c6c9ea384cc3b706975f7dd3e5394078aab6b6f1",
+      "log": "f3-machine-guard-dedup-rule6-omit-held-claim.log",
+      "exit": 1
+    }
+  ],
+  "files": [
+    {
+      "path": "f3-machine-guard-dedup-rule6-manifest.json",
+      "sha256": "8b2ec6f65be0018f3e615a2fd4b81e2d61566d554a18ca0e49b4317fd5eb4233"
+    },
+    {
+      "path": "f3-machine-guard-dedup-rule6-omit-held-claim.log",
+      "sha256": "e3af3cd8d2c473aa80b6c164c6c9ea384cc3b706975f7dd3e5394078aab6b6f1"
+    },
+    {
+      "path": "f3-machine-guard-dedup-rule6-omit-independent-run.log",
+      "sha256": "cc486c8c386cf67c88442c66494751757c9e80fae9d6b1673ba5eacf9e1094d4"
+    },
+    {
+      "path": "f3-machine-guard-dedup-typecheck.log",
+      "sha256": "396901319daac4a4413b23478852db3c572014f86c71d148273565f0f3332696"
+    },
+    {
+      "path": "f3-machine-guard-dedup-unit.log",
+      "sha256": "1c314c7eddca88d998667d61880e24d05419fb734250f5a8a7766d273cf65a35"
+    }
+  ],
+  "limit": "Mutants protect both separate generic machine predicates; they are not performance tests or public recovery acceptance."
+}

@@ -1,0 +1,10 @@
+
+ RUN  v3.2.7 /home/orca/.tmp/syzygy-beads-looper-20261114-54ebc9f1/d10-f3-work-budget
+
+ ✓ |unit| packages/polaris-dossier/src/url-run-machine-close.test.ts (30 tests) 1967ms
+
+ Test Files  1 passed (1)
+      Tests  30 passed (30)
+   Start at  17:18:44
+   Duration  3.60s (transform 889ms, setup 38ms, collect 1.17s, tests 1.97s, environment 0ms, prepare 80ms)
+
