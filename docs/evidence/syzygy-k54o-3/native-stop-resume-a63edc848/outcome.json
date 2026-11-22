@@ -1,0 +1,225 @@
+{
+  "subject": {
+    "commit": "a63edc8482e123447cb008bd47ec6874001e59f7",
+    "testPath": "packages/polaris-dossier/src/url-run-composed.test.ts",
+    "testSha256": "012df625e1a76cc10ae2bdcc95ff23380fcab14ba1a9088e7d69078f1bc80a25"
+  },
+  "hostedJob": {
+    "completedAt": "2026-11-22T17:22:11Z",
+    "conclusion": "failure",
+    "headSha": "a63edc8482e123447cb008bd47ec6874001e59f7",
+    "jobId": 137287120712,
+    "runId": 45047919621,
+    "startedAt": "2026-11-22T17:12:35Z",
+    "status": "completed",
+    "url": "https://github.com/tzeusy-org/syzygy/actions/runs/45047919621/job/137287120712",
+    "logSha256": "71c51a2986d457ba56fcbb702a5db6075dac86a2058b7fb3ca253c1790182249"
+  },
+  "suite": {
+    "files": 136,
+    "passed": 3764,
+    "failed": 2,
+    "skipped": 3
+  },
+  "cases": [
+    {
+      "name": "complete",
+      "outcome": "passed",
+      "milliseconds": 78479
+    },
+    {
+      "name": "delivery-stop",
+      "outcome": "passed",
+      "milliseconds": 44761
+    },
+    {
+      "name": "stop-resume",
+      "outcome": "failed",
+      "milliseconds": 167700
+    },
+    {
+      "name": "eligible-stop-resume",
+      "outcome": "passed",
+      "milliseconds": 147612
+    }
+  ],
+  "resumeChecks": [
+    {
+      "phase": "verify",
+      "ok": true,
+      "nextDesignRound": 2
+    },
+    {
+      "phase": "claim",
+      "exactCut": true,
+      "current": true
+    },
+    {
+      "phase": "resumed-guards",
+      "policyWithdrawal": "refused",
+      "claimWithdrawal": "refused"
+    },
+    {
+      "phase": "machine-claim",
+      "current": true,
+      "claimChecks": 1,
+      "withdrawn": true,
+      "asyncCurrent": true,
+      "asyncWithdrawn": true
+    },
+    {
+      "phase": "resumed-exit",
+      "exit": 1,
+      "failure": "transport-unavailable",
+      "roles": [
+        {
+          "role": "author",
+          "outcome": "Unknown"
+        },
+        {
+          "role": "inventory",
+          "outcome": "Unknown"
+        },
+        {
+          "role": "fidelity",
+          "outcome": "Unknown"
+        },
+        {
+          "role": "design",
+          "outcome": "inspection-failed",
+          "exitCode": null,
+          "signal": "SIGTERM"
+        }
+      ]
+    }
+  ],
+  "broker": {
+    "invocations": 1,
+    "firstPeerInvocations": 1,
+    "faultMs": 107147.187,
+    "stages": {
+      "invoke": {
+        "startedMs": 93891.917,
+        "settledMs": 107147.156,
+        "outcome": "rejected"
+      },
+      "host-current": {
+        "startedMs": 93891.988,
+        "settledMs": 94245.501,
+        "outcome": "accepted"
+      },
+      "mediate-peer": {
+        "startedMs": 94245.58,
+        "settledMs": 107147.06,
+        "outcome": "refused"
+      },
+      "host-action": {
+        "startedMs": 95741.568,
+        "settledMs": 107101.871,
+        "outcome": "rejected"
+      },
+      "transfer-bounds": {
+        "startedMs": 96563.055,
+        "settledMs": 96675.643,
+        "outcome": "accepted"
+      },
+      "plan-work-hold": {
+        "startedMs": 96675.763,
+        "settledMs": 96676.252,
+        "outcome": "accepted"
+      },
+      "create-work-budget": {
+        "startedMs": 96676.293,
+        "settledMs": 96676.509,
+        "outcome": "accepted"
+      }
+    }
+  },
+  "samples": {
+    "started": 183,
+    "verified": 183,
+    "verifyRefused": 0,
+    "verifyRejected": 0,
+    "confirmed": 182,
+    "confirmRefused": 1,
+    "confirmRejected": 0
+  },
+  "lastConfirmed": {
+    "ordinal": 182,
+    "verify": {
+      "startedMs": 106772.811,
+      "settledMs": 106815.942,
+      "outcome": "accepted"
+    },
+    "confirmationInput": true,
+    "confirm": {
+      "startedMs": 106848.187,
+      "settledMs": 106871.154,
+      "outcome": "accepted"
+    }
+  },
+  "firstSampleRefusal": {
+    "ordinal": 183,
+    "verify": {
+      "startedMs": 107084.036,
+      "settledMs": 107187.652,
+      "outcome": "accepted"
+    },
+    "confirmationInput": true,
+    "confirm": {
+      "startedMs": 107191.029,
+      "settledMs": 107191.034,
+      "outcome": "refused"
+    }
+  },
+  "terminal": {
+    "atMs": 107204.02,
+    "outcome": "inspection-failed",
+    "latestSample": {
+      "ordinal": 183,
+      "verify": {
+        "startedMs": 107084.036,
+        "settledMs": 107187.652,
+        "outcome": "accepted"
+      },
+      "confirmationInput": true,
+      "confirm": {
+        "startedMs": 107191.029,
+        "settledMs": 107191.034,
+        "outcome": "refused"
+      }
+    }
+  },
+  "audit": {
+    "status": "read",
+    "count": 20,
+    "kinds": [
+      "declaration",
+      "launch-attempt",
+      "launch-history",
+      "design-delivery",
+      "machine-peer:inference-forward",
+      "machine-peer:inference-forward",
+      "machine-peer:inference-forward",
+      "relay:attempt-allowed",
+      "machine-peer:inference-forward",
+      "machine-peer:inference-forward",
+      "relay:send-attempt",
+      "machine-peer:inference-forward",
+      "relay:send-outcome",
+      "machine-peer:inference-forward",
+      "machine-peer:inference-forward",
+      "usage",
+      "relay:response-admitted",
+      "machine-peer:inference-forward",
+      "machine-peer:dossier_step",
+      "ordered:prepared"
+    ]
+  },
+  "companionFailure": {
+    "case": "bounds storage census retries with 1 disappearing entries",
+    "rootOpens": 1,
+    "removedEntries": 1,
+    "terminalOutcome": "inspection-failed"
+  }
+}
