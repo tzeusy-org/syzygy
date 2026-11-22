@@ -3691,14 +3691,14 @@ def polaris_expected(root, findings):
                                                         findings.append("POLARIS infrastructure recognizers: methods disagree or change identities")
                                                     n_scen += sum(len(row["scenarios"]) for row in inf_a.values()) - sum(
                                                         len(row["scenarios"]) for row in cov_a.values())
-                                                findpages_amendment, _records, _subjects = findpages_binding(root)
-                                                if findpages_amendment is not None:
-                                                    fin_a, pa = compose_figure_by_id(cov_a, findpages_amendment)
-                                                    fin_b, pb = compose_figure_by_name(cov_b, findpages_amendment)
-                                                    if pa or pb or fin_a != fin_b or set(fin_a) != set(cov_a):
-                                                        findings.append("POLARIS index and task routes: methods disagree or change identities")
-                                                    n_scen += sum(len(row["scenarios"]) for row in fin_a.values()) - sum(
-                                                        len(row["scenarios"]) for row in cov_a.values())
+                                                    findpages_amendment, _records, _subjects = findpages_binding(root)
+                                                    if findpages_amendment is not None:
+                                                        fin_a, pa = compose_figure_by_id(inf_a, findpages_amendment)
+                                                        fin_b, pb = compose_figure_by_name(inf_b, findpages_amendment)
+                                                        if pa or pb or fin_a != fin_b or set(fin_a) != set(inf_a):
+                                                            findings.append("POLARIS index and task routes: methods disagree or change identities")
+                                                        n_scen += sum(len(row["scenarios"]) for row in fin_a.values()) - sum(
+                                                            len(row["scenarios"]) for row in inf_a.values())
     return n_req, n_scen, ids
 
 
