@@ -1,13 +1,21 @@
 # Design: the operator-agent mode and the `syzygy dossier` commands
 
-> **Design v1.8.** The agent adoption records the interactive handover
-> correction. The owner's recorded v1.6 sign-off covers the specification
-> and its predecessor design at the v1.6 tag. This design explains the
-> requirements in `specs/polaris-generation/spec.md`. Doctrine, accepted
-> contracts, the adopted requirements and the owner's rulings
+> **Version 1.6.** Explains the requirements in
+> specs/polaris-generation/spec.md; version 1.0 was signed off by the owner
+> on 2026-10-06, version 1.1 on 2026-10-07 and version 1.2 on 2026-10-14,
+> and this text binds only by the owner's sign-off of version 1.6. It is not an
+> implementation. It contains no code. The command surface below is a design
+> for implementation after the owner's sign-off (direction item 5); the
+> requirements are the controlling text, and doctrine, accepted contracts,
+> the adopted requirements and the owner's rulings
 > (`POLARIS-DOSSIER-LOCAL-AGENT-RULINGS-2026-10-05`,
 > `POLARIS-DOSSIER-LOCAL-AGENT-REVIEW-1-RULINGS-2026-10-05`) remain
 > controlling over both.
+
+> **Design v1.8.** The v1.6 version statement and owner-sign-off condition
+> immediately above describe the recorded predecessor. The interactive
+> handover correction below is an agent adoption under VIS-4 (A-38).
+> The v1.6 tag retains the recorded specification and predecessor design.
 
 **The agent writes; Syzygy pins, checks, packages the review and renders.**
 Every step Syzygy takes is a local command over its state directory for the

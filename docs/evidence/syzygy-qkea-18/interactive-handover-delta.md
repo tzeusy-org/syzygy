@@ -22,29 +22,22 @@ check remain the latest recorded local-agent-mode specification.
 
 ````diff
 diff --git a/openspec/changes/polaris-dossier-local-agent-mode/design.md b/openspec/changes/polaris-dossier-local-agent-mode/design.md
-index be3312e8..a6ca8eeb 100644
+index be3312e8..bff3ec0f 100644
 --- a/openspec/changes/polaris-dossier-local-agent-mode/design.md
 +++ b/openspec/changes/polaris-dossier-local-agent-mode/design.md
-@@ -1,13 +1,10 @@
- # Design: the operator-agent mode and the `syzygy dossier` commands
-
--> **Version 1.6.** Explains the requirements in
--> specs/polaris-generation/spec.md; version 1.0 was signed off by the owner
--> on 2026-10-06, version 1.1 on 2026-10-07 and version 1.2 on 2026-10-14,
--> and this text binds only by the owner's sign-off of version 1.6. It is not an
--> implementation. It contains no code. The command surface below is a design
--> for implementation after the owner's sign-off (direction item 5); the
--> requirements are the controlling text, and doctrine, accepted contracts,
--> the adopted requirements and the owner's rulings
-+> **Design v1.8.** The agent adoption records the interactive handover
-+> correction. The owner's recorded v1.6 sign-off covers the specification
-+> and its predecessor design at the v1.6 tag. This design explains the
-+> requirements in `specs/polaris-generation/spec.md`. Doctrine, accepted
-+> contracts, the adopted requirements and the owner's rulings
- > (`POLARIS-DOSSIER-LOCAL-AGENT-RULINGS-2026-10-05`,
+@@ -12,6 +12,11 @@
  > `POLARIS-DOSSIER-LOCAL-AGENT-REVIEW-1-RULINGS-2026-10-05`) remain
  > controlling over both.
-@@ -52,42 +49,44 @@ the usage figure at the end.
+
++> **Design v1.8.** The v1.6 version statement and owner-sign-off condition
++> immediately above describe the recorded predecessor. The interactive
++> handover correction below is an agent adoption under VIS-4 (A-38).
++> The v1.6 tag retains the recorded specification and predecessor design.
++
+ **The agent writes; Syzygy pins, checks, packages the review and renders.**
+ Every step Syzygy takes is a local command over its state directory for the
+ run and the clone's Git objects. Syzygy holds no model credential and opens no network
+@@ -52,42 +57,44 @@ the usage figure at the end.
  14 agent:    reports the site path, `syzygy dossier status <run>` verbatim, and what is still Unknown
  ```
 
@@ -113,7 +106,7 @@ index be3312e8..a6ca8eeb 100644
 
  At step 3 the skill may offer presets, but the operator selects or types the
  values; Syzygy records them as operator-declared, conveyed by the agent
-@@ -555,10 +554,9 @@ built and measured.
+@@ -555,10 +562,9 @@ built and measured.
    check must carry an index map from normalised to raw offsets. Whether the
    rendered span is the exact raw range or widened to whole lines is a
    rendering choice; the requirement asks only that it be Syzygy's own bytes.
@@ -127,7 +120,7 @@ index be3312e8..a6ca8eeb 100644
  - **Which object reader.** Decision 1 names an in-process reader; whether an
    existing library fits, or a small reader is written, is decided at
    implementation.
-@@ -632,16 +630,17 @@ With a URL (the author, driving the loop):
+@@ -632,16 +638,17 @@ With a URL (the author, driving the loop):
     AskUserQuestion; record each with the operator's exact answer.
  7. Write `<run>/drafts/next.json`; `syzygy dossier check <run>`; repair every
     finding and re-run until clean or refused.
@@ -153,7 +146,7 @@ index be3312e8..a6ca8eeb 100644
  9. On a blocking finding, go back to 7.
  10. Ask the operator for the usage figure their tool shows (or none);
      `syzygy dossier close <run> --usage-…`. Report the site path and
-@@ -700,7 +699,7 @@ verified; quote it exactly, and treat a refusal as a refusal.
+@@ -700,7 +707,7 @@ verified; quote it exactly, and treat a refusal as a refusal.
  ```
 
  [Inferred] Codex reads `AGENTS.md` from its working directory and its home
@@ -197,10 +190,11 @@ and command implementation located the launch examples in the design and
 a source comment recording S7's historical departure. The earlier option
 and rationale remain in the dated blocker packet.
 
-[Observed] The v1.6 record regenerates in both trees and its exact applied tree
-verifies at the predecessor baseline. On the successor design the recorder
-uses the D10 supersession path for the changed design. The proposed v1.7 aggregate
-subject names the earlier design baseline. Applying that proposal to this design would require recomposition
+[Observed] The v1.6 record and applied-tree comparison verify on the
+successor. The historical header bytes remain present for the builders'
+reverse patch checks. The adjacent design v1.8 notice attributes that
+header to the recorded predecessor and identifies the new adoption. The
+proposed v1.7 aggregate subject names the earlier design baseline. Applying that proposal to this design would require recomposition
 and a review decision under CC-REV-1 and CC-REV-4 based on the resulting
 semantic changes. The v1.7 builder verifies the
 unapplied historical candidate at the predecessor baseline
