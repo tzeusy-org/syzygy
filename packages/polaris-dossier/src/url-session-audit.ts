@@ -486,14 +486,27 @@ export async function createUrlSessionAudit(given: UrlSessionAuditOptions): Prom
       else if (poisoned || performance.now() >= deadline) poison();
       return result;
     };
-    const acquire = (deadline: number, fn: () => Promise<FileHandle>): Promise<FileHandle> => io(deadline, async () => {
+    const setupDeadline = performance.now() + limits.milliseconds;
+    const checkSetup = (): void => {
+      guard(setupDeadline);
+      if (input.deadline !== undefined && Date.now() >= input.deadline) poison();
+    };
+    // Bracket preparation of the empty, host-only segments with fresh authority.
+    // Each private IO step still shares the original setup deadline.
+    const setupIo = async <T>(fn: () => Promise<T>): Promise<T> => {
+      checkSetup();
+      const result = await wait(track('filesystem', fn), setupDeadline);
+      checkSetup();
+      return result;
+    };
+    const acquire = (fn: () => Promise<FileHandle>): Promise<FileHandle> => setupIo(async () => {
       const handle = await fn(); handles.add(handle);
       if (poisoned || closing) { void shut(handle); throw refused(); } return handle;
     });
-    const began = performance.now() + limits.milliseconds;
-    await checkCurrent(began); if (await io(began, () => realpath(input.parent)) !== input.parent) poison();
-    const directory = await acquire(began, () => open(input.parent, constants.O_RDONLY | constants.O_DIRECTORY | constants.O_NOFOLLOW));
-    const directoryStat = await io(began, () => directory.stat({ bigint: true }));
+    await checkCurrent(setupDeadline);
+    if (await setupIo(() => realpath(input.parent)) !== input.parent) poison();
+    const directory = await acquire(() => open(input.parent, constants.O_RDONLY | constants.O_DIRECTORY | constants.O_NOFOLLOW));
+    const directoryStat = await setupIo(() => directory.stat({ bigint: true }));
     if (!directoryStat.isDirectory() || directoryStat.uid !== BigInt(process.getuid?.() ?? -1) || (directoryStat.mode & 0o777n) !== 0o700n) poison();
     type Stat = typeof directoryStat;
     interface Segment { readonly file: FileHandle; readonly name: string; readonly initial: Stat; prefix: Buffer; modified: bigint; changed: bigint }
@@ -535,12 +548,15 @@ export async function createUrlSessionAudit(given: UrlSessionAuditOptions): Prom
     };
     for (const role of ROLES) {
       const name = `${input.name}-${role}.jsonl`;
-      const file = await acquire(began, () => open(`/proc/self/fd/${directory.fd}/${name}`, constants.O_RDWR | constants.O_CREAT | constants.O_EXCL | constants.O_NOFOLLOW | constants.O_APPEND, 0o600));
-      const stat = await io(began, () => file.stat({ bigint: true }));
+      const file = await acquire(() => open(`/proc/self/fd/${directory.fd}/${name}`, constants.O_RDWR | constants.O_CREAT | constants.O_EXCL | constants.O_NOFOLLOW | constants.O_APPEND, 0o600));
+      const stat = await setupIo(() => file.stat({ bigint: true }));
       if (!stat.isFile() || stat.uid !== directoryStat.uid || (stat.mode & 0o777n) !== 0o600n || stat.nlink !== 1n || stat.size !== 0n) poison();
       segments.set(role, { file, name, initial: stat, prefix: Buffer.alloc(0), modified: stat.mtimeNs, changed: stat.ctimeNs });
     }
-    await io(began, () => directory.sync()); await io(began, () => inspectIdentities(began));
+    await setupIo(() => directory.sync());
+    await setupIo(() => inspectIdentities(setupDeadline));
+    await checkCurrent(setupDeadline);
+    checkSetup();
     verifyOnClose = deadline => io(deadline, () => inspectIdentities(deadline, undefined, true), true);
     const classes = (v: unknown): void => {
       if (!Array.isArray(v) || v.length === 0 || v.length > SESSION_CONTENT_CLASSES.length || new Set(v).size !== v.length
@@ -760,7 +776,7 @@ export async function createUrlSessionAudit(given: UrlSessionAuditOptions): Prom
       payload: { project: input.project, pin: input.pin, principal: input.principal, declaredClasses: input.declaredClasses,
         profile: roleProfiles.get(role)!.id, limits, capture: 'host-callbacks-only', providerReceipts: 'Unknown', nativeSendCensus: 'Unknown' },
     }])) as UrlSessionAuditHistoryExpected['declarations'];
-    for (const role of ROLES) await commit({ kind: 'declaration', role, ...declarationsByRole[role] }, role, began, true);
+    for (const role of ROLES) await commit({ kind: 'declaration', role, ...declarationsByRole[role] }, role, setupDeadline, true);
     const unstartedOrdered = new Map<string, UrlOrderedDesignHistoryExpected>();
     const stoppedOrderedHistory: (() => UrlOrderedDesignHistoryExpected | null)[] = [];
     const closedHistory = (): UrlSessionAuditHistoryExpected | null => {
