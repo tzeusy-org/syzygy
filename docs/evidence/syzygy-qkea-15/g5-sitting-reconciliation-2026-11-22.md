@@ -14,7 +14,7 @@ bytes identified by the round-3 record and carried four notes.
 | 3. Scope A selection and aggregate scope | [Observed] Round 3 repaired the missing extension and narrowed the aggregate wording. `validate_inputs` still recognizes the extension by substring and the legacy sitting recorder still prints the stale registration instruction. [Inferred] Those are historical recorder residues. New adoptions use VIS-4, with an adoption row and version tag where applicable. |
 | 4. Reader coverage and identity | [Observed] `objectRefused` is under `awaitingGate` and the signed entry distinguishes the staging index from pack indexes. The installed v1.1 entry retains `implementationVersion` 1.0.0 without a reader digest and lacks the three bounds below. Its refusal note gives examples. [Inferred] A successor should state the bounds and the refusal note's scope, and identify the reader version by digest. |
 | 5. Delta count and omitted values | [Observed] The count reproduces as 44 differences using the declared rule below. The three omitted differences are described there. The original delta and both signed versions retain their bytes. |
-| 6. Drawer statement basis | [Observed] Round 3 repaired the archive's basis to offered for observation. D10 later withdrew the unperformed drawer offering. |
+| 6. Drawer statement basis | [Observed] Round 3 repaired the archive's basis to offered for observation. D10 later withdrew the unperformed drawer and OpenAI provider offerings. |
 
 ## Reader identity
 
@@ -24,13 +24,17 @@ stored, inflated and produced delta data per call, and 1,000,000 objects
 plus listed tree entries per call. These defaults are constructor policy
 in [git-object-reader.ts](../../../packages/polaris-dossier/src/git-object-reader.ts).
 The recorded v1.0 selection identifies the reader on main at signing.
-The observed current reader and installed v1.1 entry have these SHA-256
-digests.
+The reader bytes changed across these three commits while the entry
+retained implementation version 1.0.0. The reader hashes below are
+observations of Git blobs. The v1.1 sign-off binds the registry entry's
+bytes.
 
-| Subject | SHA-256 |
-| --- | --- |
-| `packages/polaris-dossier/src/git-object-reader.ts` | `0621536eddd69d2919e90b7ad4642d7dc7da5867eca174e9521a5363f902be90` |
-| [Installed v1.1 entry](../../../.syzygy/governance/declarations/adapter-registry/POLARIS-PUBLIC-GIT-SOURCE-ACQUISITION-LOCAL-AGENT-CANDIDATE.json) | `384f7b603d49ab953a71deb526cdf43e7e65f6e9a7160c3893500b6bd6385f00` |
+| Subject | Commit | SHA-256 |
+| --- | --- | --- |
+| Reader at v1.0 sign-off | `3409ef5a` | `e3a5880323244cc300be77c9a4c4deddf8dced7b6392852e596932946e78984a` |
+| Reader at v1.1 sign-off | `5be0fce2` | `e4c6f51df682bd5eb85d3d3a080b79a149ddc3ec20cf34cee9ac736dde7abb3d` |
+| Reader at reconciliation | `06529d12` | `0621536eddd69d2919e90b7ad4642d7dc7da5867eca174e9521a5363f902be90` |
+| [Installed v1.1 entry](../../../.syzygy/governance/declarations/adapter-registry/POLARIS-PUBLIC-GIT-SOURCE-ACQUISITION-LOCAL-AGENT-CANDIDATE.json) | `06529d12` | `384f7b603d49ab953a71deb526cdf43e7e65f6e9a7160c3893500b6bd6385f00` |
 
 The [v1.0 sign-off](../../../.syzygy/governance/decisions/PUBLIC-GIT-SOURCE-ACQUISITION-LOCAL-AGENT-SIGNOFF-v1.0.md)
 and [v1.1 sign-off](../../../.syzygy/governance/decisions/PUBLIC-GIT-SOURCE-ACQUISITION-LOCAL-AGENT-SIGNOFF-v1.1.md)
