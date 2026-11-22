@@ -408,7 +408,9 @@ export async function launchRestrictedUrlSession(input: { readonly preparation: 
         peakProcesses = Math.max(peakProcesses ?? 0, count);
         if (count > limits.processes) { stop('process-limit'); return; }
       }
-      if (await state.current() !== true) stop('inspection-failed'); checkSample();
+      const stillCurrent = await state.current();
+      checkSample();
+      if (stillCurrent !== true) stop('inspection-failed');
     }, limits.sampleMilliseconds).catch(() => { if (!exited && !finishedCapture) stop('inspection-failed'); })
       .finally(() => { sampleActive = false; pendingSample = undefined; });
   }, limits.sampleMilliseconds);
