@@ -1,3 +1,4 @@
+import { URL_PRODUCT_READ_MILLISECONDS } from './url-product-read-limits.js';
 import { createHash } from 'node:crypto';
 import { constants, type Stats } from 'node:fs';
 import { lstat, open, realpath, type FileHandle } from 'node:fs/promises';
@@ -22,7 +23,7 @@ const RENDERER_ENTRY = 'apps/three-surface-poc/src/polaris-generation/dossier-si
 const PROFILE_SOURCES = ['session-profile', 'session-launch', 'session-controller', 'session-egress-policy', 'session-response',
   'session-tools', 'session-host', 'session-machine-transport', 'session-relay', 'session-broker', 'session-url-view', 'session-credential',
   'session-control', 'session-peer', 'url-role-plan', 'url-session-budget', 'url-session-audit', 'url-session-audit-history', 'url-origin-ledger', 'url-origin-provenance', 'url-frozen-product-history', 'url-recovery-products', 'url-run-origins', 'url-source-reader', 'git-object-reader',
-  'url-run-sessions', 'url-run-machine', 'url-run-ordered-attempt', 'url-run-cpu-budget', 'url-ordered-design-host', 'url-run-artifacts', 'url-check-product-shape', 'url-product-reads', 'url-operation-products', 'url-question-ui', 'url-supervisor-state', 'url-stopped-run', 'url-recovery', 'url-launch-history', 'url-design-view',
+  'url-run-sessions', 'url-run-machine', 'url-run-ordered-attempt', 'url-run-cpu-budget', 'url-ordered-design-host', 'url-run-artifacts', 'url-check-product-shape', 'url-product-reads', 'url-operation-products', 'url-product-read-limits', 'url-question-ui', 'url-supervisor-state', 'url-stopped-run', 'url-recovery', 'url-launch-history', 'url-design-view',
   'url-design-product', 'url-design-delivery', 'url-ordered-design-request', 'url-ordered-design-audit', 'url-ordered-design-writer',
   'url-machine-instance', 'url-machine-lifecycle', 'url-machine-archive', 'url-machine-store', 'url-machine-peer', 'url-machine-peer-history', 'url-machine-cold-history', 'url-ordered-design-bounds', 'url-ordered-design-session', 'url-ordered-design-work-budget',
   'url-ordered-design-screen', 'url-ordered-design-screen-worker', 'url-ordered-design-screen-protocol',
@@ -188,7 +189,7 @@ export async function readUrlRuntime(root: string): Promise<{ readonly ok: true;
       supportSha256: { 'session-bridge.js': files[2]!.sha256, 'session-mcp.js': files[3]!.sha256 },
       manifestSha256, inputTreeSha256: manifest.inputTreeSha256,
       profileRegistrySha256: sha256(JSON.stringify({ format: 'polaris-supported-cli-registry/1', profile: 'claude-2.1.327-sonnet46/2',
-        inputs })) });
+        productReadMilliseconds: URL_PRODUCT_READ_MILLISECONDS, inputs })) });
     if (rendererBytes === undefined) throw new Error();
     installed.set(runtime, { root, rendererBytes, rendererSha256: files[1]!.sha256,
       machineReaderProgram: deepFreeze({ executable: path.join(directory, MACHINE_PEER), sha256: files[7]!.sha256 }),

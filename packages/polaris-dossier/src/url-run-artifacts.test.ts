@@ -34,7 +34,7 @@ import type { FigureLayout } from './figure-fit.js';
 import { generationSourcesForBody } from '@syzygy/polaris-generation-core/live';
 import { createUrlRunDeclaration, urlSourceTransportIdentity, URL_PROFILE_ID } from './url-run-record.js';
 import { bindUrlSourceReader } from './url-source-reader.js';
-import { beginRunProductReads } from './url-operation-products.js';
+import { beginRunProductReads, isRunProductReads } from './url-operation-products.js';
 import { reverifyPinnedRevision } from './reverify.js';
 import { checkDraft } from './check.js';
 import { buildFidelityPacket } from './review-packet.js';
@@ -889,9 +889,51 @@ describe('trusted URL artifact producer bridge', () => {
       const expiring = begin(); f.bridge.readProduct(expiring, 'brief.json'); vi.advanceTimersByTime(4001); expect(() => f.bridge.revalidateRead(expiring)).toThrow();
       const clockOnly = begin(); f.bridge.readProduct(clockOnly, 'brief.json'); vi.setSystemTime(Date.now() + 4001); expect(() => f.bridge.revalidateRead(clockOnly)).toThrow();
     } finally { vi.useRealTimers(); }
-    for (const deadline of [NaN, Infinity, Date.now(), Date.now() + 6000]) expect(() => f.bridge.beginRead({ operation: 'render', deadline })).toThrow();
+    for (const deadline of [NaN, Infinity, Date.now(), Date.now() + 30_001]) expect(() => f.bridge.beginRead({ operation: 'render', deadline })).toThrow();
     const held = Array.from({ length: 16 }, begin); expect(() => begin()).toThrow(); for (const cap of held) f.bridge.cancelRead(cap);
     const stale = begin(); f.bridge.readProduct(stale, 'brief.json'); await Promise.resolve(); f.stale(); expect(() => f.bridge.revalidateRead(stale)).toThrow();
+  });
+  it('uses one fixed render deadline up to thirty seconds and leaves other operations at five seconds', () => {
+    const f = fixture(); f.initialize();
+    vi.useFakeTimers();
+    try {
+      const began = Date.now(), reads = beginRunProductReads(f.run, f.bridge, 'render', began + 60_000);
+      expect(reads.deadline).toBe(began + 30_000);
+      expect(Object.isFrozen(reads)).toBe(true);
+      expect(isRunProductReads({ ...reads })).toBe(false);
+      expect(reads.revalidate().metadata.deadline).toBe(reads.deadline);
+      vi.setSystemTime(began + 6000);
+      expect(reads.read('brief.json')).not.toBeNull();
+      expect(reads.revalidate().metadata.deadline).toBe(began + 30_000);
+      for (const operation of ['review-packet', 'review-check', 'inventory-check', 'author-check'] as const) {
+        expect(() => f.bridge.beginRead({ operation, deadline: Date.now() + 5001 })).toThrow();
+        const short = beginRunProductReads(f.run, f.bridge, operation, began + 60_000);
+        expect(short.deadline).toBe(Date.now() + 5000);
+        short.close();
+      }
+      expect(() => f.bridge.beginRead({ operation: 'render', deadline: Date.now() + 30_001 })).toThrow();
+      vi.setSystemTime(reads.deadline);
+      expect(reads.leaseState()).toBe('expired');
+      expect(() => reads.revalidate()).toThrow();
+      vi.setSystemTime(began + 7000);
+      expect(reads.leaseState()).toBe('expired');
+      reads.close();
+    } finally { vi.useRealTimers(); }
+  });
+  it('clips a render to the original shorter deadline and preserves early retirement', () => {
+    const f = fixture(); f.initialize();
+    vi.useFakeTimers();
+    try {
+      const began = Date.now(), deadline = began + 1000;
+      const reads = beginRunProductReads(f.run, f.bridge, 'render', deadline);
+      expect(reads.deadline).toBe(deadline);
+      expect(reads.revalidate().metadata.deadline).toBe(deadline);
+      reads.close();
+      vi.setSystemTime(began + 40_000);
+      expect(reads.leaseState()).toBe('retired');
+      expect(() => reads.revalidate()).toThrow();
+      expect(() => beginRunProductReads(f.run, f.bridge, 'render', deadline)).toThrow();
+    } finally { vi.useRealTimers(); }
   });
   it.each(['cancel', 'abort', 'drift', 'current', 'timer', 'clock'] as const)('retains the first %s read termination when first inspected after its deadline', kind => {
     const f = fixture(), other = fixture(); f.initialize(); other.initialize();

@@ -43,7 +43,7 @@ beforeAll(async () => {
 });
 beforeEach(() => { gates.currentRenderer.mockReset().mockResolvedValue(true); gates.sources.mockReset().mockResolvedValue([]); });
 
-function fixture() {
+function fixture(lifetimeMilliseconds = 5000) {
   const brief: Record<string, unknown> = {};
   let live = true, readsLive = true;
   const abort = new AbortController();
@@ -68,12 +68,12 @@ function fixture() {
     [scaffold, { id: 'origin:scaffold', digest: 'b'.repeat(64), bytes: 10, classes: ['code-content'], originIds: [] }],
     [product, { id: 'origin:product', digest: 'c'.repeat(64), bytes: 20, classes: ['work-history'], originIds: [] }],
   ]);
-  const metadata = { operation: 'render', deadline: Date.now() + 5000, snapshotBytes: 20,
+  const metadata = { operation: 'render', deadline: Date.now() + lifetimeMilliseconds, snapshotBytes: 20,
     records: ['run.json', 'url-declaration.json', 'brief.json', 'checks/rev-0.json', 'drafts/rev-0.json']
       .map(path => ({ path, state: 'present', sha256: 'c'.repeat(64), originId: 'origin:product' })), selections: [] };
   const evidence = { metadata, receipts: [product] } as unknown as ProductReadEvidence;
   let terminal: 'retired' | 'expired' | undefined;
-  const reads: RunProductReads = { run, read: file => file === 'brief.json' ? Buffer.from(JSON.stringify(brief)) : null, select: () => [],
+  const reads: RunProductReads = { run, deadline: metadata.deadline, read: file => file === 'brief.json' ? Buffer.from(JSON.stringify(brief)) : null, select: () => [],
     readBatch: files => files.map(() => null), selectGroups: selectors => selectors.map(() => []), revalidate: () => {
     if (!readsLive) throw new Error('operation ended');
     return evidence;
@@ -110,6 +110,19 @@ async function validatedFixture() {
 }
 
 describe('active URL design product capability', () => {
+  it('uses the exact render context deadline for its longer nominal lifetime', async () => {
+    const f = fixture(30_000), began = Date.now();
+    const capability = await validateUrlDesignProduct(f.input, f.options);
+    expect(capability).not.toBeNull();
+    const clock = vi.spyOn(Date, 'now').mockReturnValue(began + 6000);
+    try {
+      expect(urlDesignProductLeaseState(capability!).state).toBe('open');
+      expect(await inspectUrlDesignProduct(capability!, binding)).not.toBeNull();
+      clock.mockReturnValue(f.reads.deadline);
+      expect(urlDesignProductLeaseState(capability!).state).toBe('expired');
+      expect(await inspectUrlDesignProduct(capability!, binding)).toBeNull();
+    } finally { clock.mockRestore(); }
+  });
   it('checks the actual open product once without reproduction', async () => {
     const f = await validatedFixture(), refresh = vi.fn(async () => true), assertCurrent = vi.fn(() => {
       if (!recheckUrlDesignProductInputs(f.capability)) throw new Error('owned input refused');
