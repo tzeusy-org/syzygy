@@ -1151,7 +1151,7 @@ export async function createUrlSessionAudit(given: UrlSessionAuditOptions): Prom
       const original = await inspectUrlDesignProduct(product, record.binding);
       if (!original) throw refused();
       const revalidate = await record.verify(product, original);
-      const readDeadline = Math.min(input.deadline, original.products.deadline);
+      const readDeadline = Math.min(input.deadline ?? Number.MAX_SAFE_INTEGER, original.products.deadline);
       const deadline = Math.min(readDeadline, Date.now() + URL_SESSION_AUDIT_LIMITS.milliseconds);
       const current = (endsAt: number): boolean => Date.now() < endsAt
         && currentDesignRecord(delivery) === record && designVerdicts.get(delivery) === verdict;
@@ -1178,7 +1178,7 @@ export async function createUrlSessionAudit(given: UrlSessionAuditOptions): Prom
     };
     const readDesignRenderContinuation: Extract<UrlSessionAuditResult, { ok: true }>['readDesignRenderContinuation'] = async (delivery, product, number) => {
       const factory = await prepareDesignRenderContinuation(delivery, product, number);
-      const continuation = factory({ deadline: input.deadline, packetSha256: delivery.identity.original.sha256 });
+      const continuation = factory({ deadline: input.deadline ?? Number.MAX_SAFE_INTEGER, packetSha256: delivery.identity.original.sha256 });
       if (continuation === null) throw refused();
       return continuation;
     };
