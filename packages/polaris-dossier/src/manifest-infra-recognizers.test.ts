@@ -383,7 +383,7 @@ describe('makefile version 1', () => {
     // A line of white space alone is blank, a tab-led one included.
     expect(facts(recognizeMakefile('A = 1\n\t \nbuild:\n'))).toEqual([['make-target', 3, 3, 'build']]);
   });
-  it('reads the 2.15 scenarios literally: tab-only blank line, continuation lines, a define body, directive lines', () => {
+  it('reads the makefile correction scenarios literally: tab-only blank line, continuation lines, a define body, directive lines', () => {
     expect(facts(recognizeMakefile('A = 1\n\t\nbuild:\n'))).toEqual([['make-target', 3, 3, 'build']]);
     expect(facts(recognizeMakefile('SRCS = a.c \\\n\tb.c\n'))).toEqual([]);
     expect(facts(recognizeMakefile('build: a \\\n\tb\n'))).toEqual([['make-target', 1, 2, 'build']]);
