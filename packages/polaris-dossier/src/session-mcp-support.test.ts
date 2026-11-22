@@ -58,13 +58,20 @@ describe('compiled ordered design MCP ingress', () => {
     expect(invoke).not.toHaveBeenCalled();
   });
 
+  it('declares an inline catalogue allowance covering the complete bounded part reply', async () => {
+    const result = await design.handleSessionMcpRequest({ jsonrpc: '2.0', id: 'catalogue', method: 'tools/list' }, async () => ({}));
+    expect(result).toMatchObject({ result: { tools: expect.arrayContaining([
+      expect.objectContaining({ name: 'artifact_read', _meta: { 'anthropic/maxResultSizeChars': 1_048_576 } }),
+    ]) } });
+  });
+
   it('fits a maximally escaped near-limit echoed ID and a bounded part reply under the response ceiling', async () => {
     const id = '\u0000'.repeat(Math.floor((REQUEST_BYTES - line(request()).length) / 6));
     const frame = line(request(id));
     expect(frame.length).toBeGreaterThan(REQUEST_BYTES - 6);
     expect(frame.length).toBeLessThanOrEqual(REQUEST_BYTES);
-    const reply = { kind: 'design-view-part', ok: true, text: '"'.repeat(20_000) };
-    expect(Buffer.byteLength(JSON.stringify(reply))).toBeLessThanOrEqual(45_000);
+    const reply = { kind: 'design-view-part', ok: true, text: '"'.repeat(380_000) };
+    expect(Buffer.byteLength(JSON.stringify(reply))).toBeLessThanOrEqual(786_432);
     const invoke = vi.fn(async () => reply);
     const output: string[] = [];
     await design.serveSessionMcp(chunks(frame), async text => { output.push(text); }, invoke);

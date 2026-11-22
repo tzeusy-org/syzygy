@@ -57,7 +57,7 @@ function withOrderedDesignLimits(source) {
     factory.createSpreadAssignment(factory.createIdentifier('limits')), factory.createPropertyAssignment('maxBytes', requestBytes()),
   ]);
   const meta = factory.createPropertyAssignment('_meta', factory.createObjectLiteralExpression([
-    factory.createPropertyAssignment(factory.createStringLiteral('anthropic/maxResultSizeChars'), factory.createNumericLiteral(500000)),
+    factory.createPropertyAssignment(factory.createStringLiteral('anthropic/maxResultSizeChars'), factory.createNumericLiteral(1048576)),
   ]));
   const transformed = ts.transform(parsed, [context => file => {
     const visit = node => {

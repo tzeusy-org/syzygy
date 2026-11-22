@@ -9,14 +9,14 @@ import * as sessionAudit from './url-session-audit.js';
 import type { UrlDesignProductMetadata } from './url-design-product.js';
 import { isIssuedOrderedDesignTerminal, createOrderedDesignAuditWriter } from './url-ordered-design-writer.js';
 
-const encode = (value: unknown): string => encodeCanonicalJson(value, { maxBytes: 65_536, maxNodes: 4096, maxDepth: 12 });
+const encode = (value: unknown): string => encodeCanonicalJson(value, { maxBytes: 2_097_152, maxNodes: 4096, maxDepth: 12 });
 const bytes = (value: string) => ({ sha256: sha256(value), bytes: Buffer.byteLength(value, 'utf8') });
 const digest = (value: unknown) => sha256(encode(value));
 const artifact = 'mcp__syzygy__artifact_read';
 const step = 'mcp__syzygy__dossier_step';
 const deadline = '2026-11-22T00:30:00.000Z';
 const start = Date.parse('2026-11-22T00:00:00.000Z');
-const originalText = 'Own audit fixture. '.repeat(2100);
+const originalText = 'Own audit fixture. '.repeat(35_000);
 const packet = bytes(originalText);
 const verdictText = '{"owned":"verdict"}';
 const checkText = '{"owned":"check"}';
@@ -57,7 +57,7 @@ function archive(mutate?: (event: Event, occurrence: number, index: number) => v
   }));
   const plan = planOrderedDesignBytes({ envelope, envelopeSha256: sha256(envelope), original: packet,
     fileCount: 1, pageCount: 1, parents: product.parents.map(digest), instructionProfileSha256: sha256(input.systemPrompt),
-    limits: { partBytes: 32768, partCount: 2, replyBytes: 45000, preparedBytes: 4096 },
+    limits: { partBytes: 524288, partCount: 2, replyBytes: 786432, preparedBytes: 4096 },
     binding: { basePolicySha256: input.binding.policy, deadline, encoding: 'html-entities-five/1', originPolicySha256: sha256('own origin policy'),
       originalReceiptSha256: sha256(`own original receipt ${epoch}`), pin: 'c'.repeat(40), producerSha256: sha256('own producer'),
       profileSha256: profile.digest, project: 'own-project', provider: 'anthropic', role: 'design', round: epoch, run: input.binding.run,

@@ -73,7 +73,7 @@ describe('ordered design live work reservation', () => {
     if (!compiled.ok) throw new Error('owned profile unavailable');
     const { profile } = compiled.value;
     const packet = buildDesignPacket({ run: '/owned/owned-work', runId: run, pinnedRevision: pin, audience: 'Owned fixture readers', files: new Map([
-      ['index.html', `<p>${'Owned review. '.repeat(2500)}</p>${REVIEW_STATUS_REGION_OPEN}Pending</aside>`],
+      ['index.html', `<p>${'Owned review. '.repeat(47_000)}</p>${REVIEW_STATUS_REGION_OPEN}Pending</aside>`],
       ['machine.json', `${JSON.stringify({ reviewStatus: [] }, null, 2)}\n`],
     ]) });
     if (!packet.ok) throw new Error(packet.reason);

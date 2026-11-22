@@ -23,7 +23,7 @@ function fixture() {
   if (!profileResult.ok) throw new Error(profileResult.reason);
   const { profile } = profileResult.value;
   const { algorithm: _algorithm, ...limits } = profile.transcript.partition;
-  const text = `${'a'.repeat(32_500)}🌱${'t'.repeat(3800)}\n"\\<&`;
+  const text = `${'a'.repeat(524_000)}🌱${'t'.repeat(3800)}\n"\\<&`;
   const payload = text.replace(/["<&]/gu, c => ({ '"': '&quot;', '<': '&lt;', '&': '&amp;' })[c]!);
   const original = { bytes: bytes(text), sha256: sha256(text) };
   const encoding = 'html-entities-five/1';

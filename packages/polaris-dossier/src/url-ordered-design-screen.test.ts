@@ -35,7 +35,7 @@ function fixture(policy = V8) {
   const response = (text = 'Owned response.') => ({ ...common, operation: 'response' as const, contentType: 'application/json',
     receivedBase64: Buffer.from(JSON.stringify({ id: 'msg_owned', type: 'message', role: 'assistant', model: DEFAULT_SESSION_MODEL,
       content: [{ type: 'text', text }], stop_reason: 'end_turn', stop_sequence: null, usage: { input_tokens: 1, output_tokens: 1 } })).toString('base64') });
-  const originalText = canonical({ format: 'polaris-dossier-design-packet/1', kind: 'design', runId: profile.input.binding.run, text: 'a'.repeat(33_000) });
+  const originalText = canonical({ format: 'polaris-dossier-design-packet/1', kind: 'design', runId: profile.input.binding.run, text: 'a'.repeat(656_000) });
   const original = { bytes: Buffer.byteLength(originalText), sha256: sha256(originalText) };
   const payload = originalText.replace(/[&<>"']/gu, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c]!);
   const envelopeUtf8 = canonical({ format: 'polaris-dossier-url-design-inert-view/1', encoding: 'html-entities-five/1',

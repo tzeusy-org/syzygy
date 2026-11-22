@@ -270,7 +270,7 @@ async function runNativeOrderedFixture(scenario: OrderedScenario) {
   if (!compiled.ok) throw new Error('own ordered profile unavailable');
   const profile = compiled.value.profile;
   const packet = buildDesignPacket({ run: '/own-fixture/own-ordered-review', runId: run, pinnedRevision: pin, audience: 'Own fixture readers', files: new Map([
-    ['index.html', `<p>Own café &amp; "quotes". ${'Owned review text. '.repeat(1_500)}</p>\n`
+    ['index.html', `<p>Own café &amp; "quotes". ${'Owned review text. '.repeat(34_000)}</p>\n`
       + `${REVIEW_STATUS_REGION_OPEN}Review pending</aside>\n`],
     ['machine.json', `${JSON.stringify({ title: 'Own design review', reviewStatus: [] }, null, 2)}\n`],
   ]) });
@@ -564,7 +564,7 @@ describe('prepared private CLI launch',()=>{
     const base = ordinary.value.profile, profile = ordered.value.profile;
     expect(base).toMatchObject({ id: 'claude-2.1.327-sonnet46/2', bytes: 9299,
       digest: 'a1f5166c9d049c418c8e1fe7dce6bbdf7ee72aaf830e16dcb3cf39dc175a8d11' });
-    expect(profile.id).toBe('claude-2.1.327-sonnet46/ordered-design-3');
+    expect(profile.id).toBe('claude-2.1.327-sonnet46/ordered-design-4');
     expect(profile.baseline).toEqual(base.baseline);
     expect(profile.baselineOrigin.originIds[0]).toBe(profile.id);
     expect(profile.initialScaffoldingOrigin.originIds[0]).toBe(profile.id);

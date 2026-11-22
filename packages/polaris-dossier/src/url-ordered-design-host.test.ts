@@ -74,7 +74,7 @@ async function fixture() {
   if (!compiled.ok) throw new Error('owned profile refused');
   const profile = compiled.value.profile;
   const packet = buildDesignPacket({ run: '/owned/owned-host', runId: RUN, pinnedRevision: 'a'.repeat(40), audience: 'Owned reviewers',
-    files: new Map([['index.html', `<p>${'Owned review text. '.repeat(1900)}</p>\n${REVIEW_STATUS_REGION_OPEN}Review pending</aside>\n`], ['machine.json', `${JSON.stringify({ title: 'Owned review', reviewStatus: [] }, null, 2)}\n`]]) });
+    files: new Map([['index.html', `<p>${'Owned review text. '.repeat(35_000)}</p>\n${REVIEW_STATUS_REGION_OPEN}Review pending</aside>\n`], ['machine.json', `${JSON.stringify({ title: 'Owned review', reviewStatus: [] }, null, 2)}\n`]]) });
   if (!packet.ok) throw new Error('owned packet refused');
   const builtScreen = buildDossierScreen(Buffer.from(V8), true, null, 'private');
   if (!builtScreen.ok) throw new Error('owned screen refused');
