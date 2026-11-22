@@ -1035,25 +1035,19 @@ describe('prepared private CLI launch',()=>{
     const disappearing = Array.from({ length: disappearingEntries }, (_, index) => `own-disappearing-entry-${index}`);
     const retained = 'own-retained-entry';
     const work = f.launch.view.workDirectory;
-    let rootOpens = 0, removed = 0;
+    let rootOpens = 0, removed = 0, retainedOnRetry = false;
     const completedSamples: number[] = [];
     const preparation = await prepareRestrictedUrlSession({ ...f.launch, current: () => {
       if (rootOpens > 0) completedSamples.push(rootOpens);
       return true;
     } });
-    let releaseTool!: () => void;
+    let enterTool!: (entered: true) => void, releaseTool!: () => void;
+    const toolEntered = new Promise<true>(resolve => { enterTool = resolve; });
     const heldTool = new Promise<void>(resolve => { releaseTool = resolve; });
-    const host = await f.start({ beforeTool: () => heldTool });
-    let observeRetry!: (observed: true) => void;
-    const retryObserved = new Promise<true>(resolve => { observeRetry = resolve; });
+    const host = await f.start({ beforeTool: () => { enterTool(true); return heldTool; } });
 
     filesystem.beforeOpen = async file => {
-      if (file !== work) return;
-      rootOpens++;
-      if (rootOpens !== 1) return;
-      // Seed the first eligible census. The held native tool keeps the CLI
-      // alive independently of when this census starts.
-      await Promise.all([...disappearing, retained].map(name => writeFile(path.join(work, name), 'owned')));
+      if (file === work) rootOpens++;
     };
     filesystem.beforeLstat = async file => {
       if (typeof file !== 'string' || !file.startsWith('/proc/self/fd/')) return;
@@ -1061,31 +1055,34 @@ describe('prepared private CLI launch',()=>{
       if (disappearing.includes(name)) {
         await unlink(file);
         removed++;
-      } else if (name === retained && rootOpens === 2) observeRetry(true);
+      } else if (name === retained && rootOpens === 2) retainedOnRetry = true;
     };
+    // Start one real census after the native tool enters and the fixtures are
+    // in place. Its monotonic clock and inspection deadline remain real.
+    vi.useFakeTimers({ toFake: ['setInterval', 'clearInterval'] });
     try {
       const child = await launchRestrictedUrlSession({ preparation, host: {
         ...host, close: () => { releaseTool(); return host.close(); },
       } });
       cleanup.push(child.stop);
-      if (expected === 'exited') {
-        const observed = await Promise.race([retryObserved, child.finished.then(result => result.outcome)]);
-        expect(observed, `work roots opened: ${rootOpens}, entries removed: ${removed}`).toBe(true);
-        expect(await child.waitForSample()).toBe(true);
-        expect(rootOpens).toBe(2);
-        // A subsequent sample cannot stand in for the retry in this one.
-        expect(completedSamples).toEqual([2]);
+      try {
+        expect(await Promise.race([toolEntered, child.finished.then(result => result.outcome)])).toBe(true);
+        await Promise.all([...disappearing, retained].map(name => writeFile(path.join(work, name), 'owned')));
+        vi.advanceTimersByTime(URL_LAUNCH_LIMITS.sampleMilliseconds);
+        const completed = expected === 'exited';
+        expect(await child.waitForSample(), `work roots opened: ${rootOpens}, entries removed: ${removed}`).toBe(completed);
+        expect(rootOpens).toBe(completed ? 2 : 1);
+        expect(removed).toBe(disappearingEntries);
+        expect(retainedOnRetry).toBe(completed);
+        expect(completedSamples).toEqual(completed ? [2] : []);
         releaseTool();
+        expect(await child.finished).toMatchObject({ outcome: expected, exitCode: completed ? 0 : null,
+          groupTermination: 'confirmed', toolTermination: 'settled' });
+      } finally {
+        releaseTool();
+        await child.stop();
       }
-      const outcome = await child.finished;
-      expect(removed).toBe(disappearingEntries);
-      expect(outcome).toMatchObject({ outcome: expected, exitCode: expected === 'exited' ? 0 : null,
-        groupTermination: 'confirmed', toolTermination: 'settled' });
-      if (expected === 'inspection-failed') {
-        expect(rootOpens).toBe(1);
-        expect(completedSamples).toEqual([]);
-      }
-    } finally { releaseTool(); }
+    } finally { vi.useRealTimers(); }
   }, 15000);
 
   it.each([
