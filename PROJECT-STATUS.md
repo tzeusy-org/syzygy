@@ -95,7 +95,7 @@ authority and no model yet called on the current path.
     [v1.4 sign-off](.syzygy/governance/decisions/POLARIS-DOSSIER-LOCAL-AGENT-MODE-SIGNOFF-v1.4.md);
     [v1.5 sign-off](.syzygy/governance/decisions/POLARIS-DOSSIER-LOCAL-AGENT-MODE-SIGNOFF-v1.5.md);
     [v1.6 sign-off](.syzygy/governance/decisions/POLARIS-DOSSIER-LOCAL-AGENT-MODE-SIGNOFF-v1.6.md)), and
-    39 requirements and 432 scenarios in the effective composition with it and with the signed-off
+    39 requirements and 445 scenarios in the effective composition with it and with the signed-off
     [launch-consent addition](openspec/changes/polaris-dossier-launch-consent/specs/polaris-generation/spec.md)
     ([v1.0 sign-off](.syzygy/governance/decisions/POLARIS-DOSSIER-LAUNCH-CONSENT-SIGNOFF-v1.0.md);
     [v1.1 sign-off](.syzygy/governance/decisions/POLARIS-DOSSIER-LAUNCH-CONSENT-SIGNOFF-v1.1.md);
@@ -157,6 +157,9 @@ authority and no model yet called on the current path.
     It replaces REQ-polaris-generation-034 again (106 to 110 scenarios: the text corrected to the code of versions 2.9
     and 2.10 and the layouts that stack every graph of two or more layers); its two code changes (the manifest maps'
     unlisted Unknown files, a bounded record's reading difference) and the layouts (syzygy-3efd.70) are not yet landed.
+    *(Stale 2026-11-22: the sentence above, "its two code changes (the manifest maps' unlisted Unknown files, a
+    bounded record's reading difference) and the layouts (syzygy-3efd.70) are not yet landed", is superseded: the two
+    code changes landed in PR #886, merge commit `06529d12`, and the layouts in PR #883, merge commit `f0da8139`.)*
     *(2026-11-22: the predecessor figure "419 scenarios" is superseded by that
     amendment; all 39 identities remain.)*
     [Coverage pre-check amendment 2.12](openspec/changes/dossier-coverage-precheck) is agent-adopted in A-40.
@@ -169,6 +172,12 @@ authority and no model yet called on the current path.
     `POLARIS-DOSSIER-DECLARED-SOURCE-POLICY-v3.json` (44 Stage-2 entries re-admitted on a thirty-repository census);
     its code change (bind 3.0.0 for new runs) is not yet landed, and until it lands runs stay on the policy they bound.
     *(2026-11-22: the predecessor figure "430 scenarios" is superseded by that
+    amendment; all 39 identities remain.)*
+    [Infrastructure recognizers amendment 2.14](openspec/changes/dossier-infrastructure-recognizers) is agent-adopted in A-46.
+    It replaces REQ-polaris-generation-034 again (117 to 130 scenarios: five infrastructure recognizers, a coverage
+    remainder, an infrastructure map page, the 2.10 reader rule for the draft, frozen revisions, the brief record and
+    `run-advice.json`, and the bounded form's words for a draft that does not parse); its code is not yet landed.
+    *(2026-11-22: the predecessor figure "432 scenarios" is superseded by that
     amendment; all 39 identities remain.)*
     *(2026-11-18: the predecessor figure "329 scenarios" is superseded by that
     overlay; all38 identities remain, and046 is now Declared local-source admission.)*

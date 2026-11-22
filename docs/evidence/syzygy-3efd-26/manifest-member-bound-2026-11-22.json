@@ -1,0 +1,68 @@
+{
+  "format": "syzygy-evidence/manifest-member-bound/1",
+  "bead": "syzygy-3efd.26",
+  "subject": {
+    "path": "docs/evidence/syzygy-3efd-26/manifest_member_bound.mjs",
+    "sha256": "5328e044ae775f6787a31bb43ebce643f832617f0768f732919bbd3e3019f7f3"
+  },
+  "measuredOn": {
+    "commitParent": "06529d12cc78b99efd0950bb0a34544cd5922550",
+    "node": "v24.6.0"
+  },
+  "method": "Builds the widest manifestFacts member the stated caps allow (every count Number.MAX_SAFE_INTEGER; every listed fact a `dependency` with a 512-unit CJK path and 256 lone surrogates in `name` and `group`; every file entry an Unknown `path-not-citable` entry whose census form begins with 512 control characters; every remainder place in that census form; the policy identifier and version 4,096 lone surrogates each) and measures the check record's bytes with and without it, two-space JSON with one trailing newline. argv: recognizers, files listed per new recognizer, facts listed, places listed.",
+  "runs": [
+    {
+      "argv": [
+        "5",
+        "250",
+        "1000",
+        "0"
+      ],
+      "meaning": "the five recognizers of version 2.7 at their 250-file cap, no remainder: the widest member before version 2.12",
+      "output": {
+        "recognizerCount": 5,
+        "filesPerRecognizer": 250,
+        "factsListed": 1000,
+        "placesListed": 0,
+        "memberBytes": 9873408
+      }
+    },
+    {
+      "argv": [
+        "10",
+        "250",
+        "1000",
+        "251"
+      ],
+      "meaning": "rejected: ten recognizers at 250 files each and the root plus 250 places",
+      "output": {
+        "recognizerCount": 10,
+        "filesPerRecognizer": 250,
+        "factsListed": 1000,
+        "placesListed": 251,
+        "memberBytes": 15629421
+      }
+    },
+    {
+      "argv": [
+        "10",
+        "100",
+        "1000",
+        "251"
+      ],
+      "meaning": "adopted: the five of version 2.7 at 250, the five of version 2.12 at 100, the root plus 250 places",
+      "output": {
+        "recognizerCount": 10,
+        "filesPerRecognizer": 100,
+        "factsListed": 1000,
+        "placesListed": 251,
+        "memberBytes": 12741921
+      }
+    }
+  ],
+  "admissionProbe": {
+    "path": "docs/evidence/syzygy-3efd-26/admission-probe-2026-11-22.txt",
+    "sha256": "e20c2f3e3668314e4fb846e5340fd5eecd9531911770f748d38210643b543545",
+    "note": "Output of a throwaway vitest probe, deleted after the run, that built buildDossierScreen over the committed policy bytes (1.0.0 sha256 516cb1f2dba9ceb3e55166077c0800be6022012406b9b9b5f0df25bcb73aa499, 2.0.0 sha256 8c10531f57d129ad5d402e53d7d9fdc741387f6eaab701bbdb46419181b11967) for both visibilities and printed each path's outcome; the probe's source was not kept, so this output is Observed at that run and is re-checkable only by a new probe."
+  }
+}
