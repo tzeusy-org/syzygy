@@ -17,8 +17,8 @@ import type { ViewRole } from './session-view.js';
 import { inspectUrlDesignProduct, isUrlDesignProductLeaseOpen, readInertUrlDesignProduct, recheckUrlDesignProductInputs, sameReproducedUrlDesignProduct,
   type UrlDesignProductBinding, type UrlDesignProductMetadata, type UrlInertDesignProduct, type ValidatedUrlDesignProduct } from './url-design-product.js';
 import { checkStoredUrlRender } from './url-stored-render.js';
-import { inspectUrlLaunchHistory, URL_HELPER_LAUNCH_FILES, type UrlLaunchHistoryCapability, type UrlLaunchHistoryRole } from './url-launch-history.js';
-import { isOrderedDesignPlanFor, type OrderedDesignPlan } from './url-design-delivery.js';
+import { inspectUrlLaunchHistory, isUrlHelperLaunchFile, URL_HELPER_LAUNCH_FILES, type UrlLaunchHistoryCapability, type UrlLaunchHistoryRole } from './url-launch-history.js';
+import { isOrderedDesignPlanFor, orderedDesignPlanInputForDelivery, planOrderedDesignBytes, type OrderedDesignPlan } from './url-design-delivery.js';
 import type { UrlMachinePeerAudit } from './url-machine-peer.js';
 import { verifyOrderedDesignAuditPrefix, verifyOrderedDesignTerminalEvidence, type OrderedDesignAuditReference, type OrderedDesignAuditEvent, type OrderedDesignTerminalEvidence } from './url-ordered-design-audit.js';
 import type { UrlOrderedDesignHistoryExpected } from './url-ordered-design-audit-history.js';
@@ -224,6 +224,7 @@ export interface UrlSessionAuditOptions {
   readonly profiles: readonly NativeSessionProfile[]; readonly declaredClasses: readonly SessionContentClass[];
   readonly screen: DossierScreen; readonly current: () => boolean | Promise<boolean>;
   readonly limits?: Partial<Limits>;
+  readonly deadline?: number;
 }
 const ROLES: readonly ViewRole[] = ['author', 'inventory', 'fidelity', 'design'];
 const KINDS = ['relay', 'control', 'launch-attempt', 'before-tool', 'tool-receipt', 'usage', 'launch-terminal', 'launch-history', 'design-delivery', 'design-verdict', 'design-ordered', 'machine-peer', 'ordered-design-verdict'] as const;
@@ -340,10 +341,12 @@ export async function createUrlSessionAudit(given: UrlSessionAuditOptions): Prom
     if (!Array.isArray(given.profiles) || given.profiles.length !== ROLES.length) poison();
     const profiles = [given.profiles[0]!, given.profiles[1]!, given.profiles[2]!, given.profiles[3]!];
     const input = copy({ parent: given.parent, name: given.name, binding: given.binding, originPolicySha256: given.originPolicySha256,
-      project: given.project, pin: given.pin, principal: given.principal, declaredClasses: given.declaredClasses, limits: given.limits ?? {} });
+      project: given.project, pin: given.pin, principal: given.principal, declaredClasses: given.declaredClasses, limits: given.limits ?? {},
+      ...(given.deadline === undefined ? {} : { deadline: given.deadline }) });
     const current = given.current, screenBody = given.screen.screenBody, screenSecrets = given.screen.screenSecrets, policy = given.screen.policySha256;
-    if (!exact(given, ['parent', 'name', 'binding', 'originPolicySha256', 'project', 'pin', 'principal', 'profiles', 'declaredClasses', 'screen', 'current', ...(given.limits === undefined ? [] : ['limits'])])
+    if (!exact(given, ['parent', 'name', 'binding', 'originPolicySha256', 'project', 'pin', 'principal', 'profiles', 'declaredClasses', 'screen', 'current', ...(given.limits === undefined ? [] : ['limits']), ...(given.deadline === undefined ? [] : ['deadline'])])
       || !exact(input.binding, ['run', 'sourceBinding', 'policy', 'provider', 'model']) || !Object.values(input.binding).every(id)
+      || (input.deadline !== undefined && (!Number.isSafeInteger(input.deadline) || input.deadline <= Date.now()))
       || !hex(input.binding.sourceBinding) || !hex(input.binding.policy) || input.binding.policy !== policy || !hex(input.originPolicySha256)
       || !id(input.project) || !id(input.principal) || typeof input.pin !== 'string' || !/^(?:[a-f0-9]{40}|[a-f0-9]{64})$/u.test(input.pin)
       || typeof input.parent !== 'string' || !path.isAbsolute(input.parent) || path.resolve(input.parent) !== input.parent
@@ -531,7 +534,7 @@ export async function createUrlSessionAudit(given: UrlSessionAuditOptions): Prom
             || !exact(p.limits, LAUNCH_LIMIT_KEYS) || Object.values(p.limits).some(value => !count(value) || value === 0)) poison(); break;
         case 'launch-history':
           if (privateKind !== 'launch-history' || role === 'author' || !exact(p, ['file', 'recordSha256', 'recordBytes', 'promptRecordSha256', 'promptSha256', 'sessionId'])
-            || p.file !== URL_HELPER_LAUNCH_FILES[role] || !hex(p.recordSha256) || !count(p.recordBytes, 2_097_152) || p.recordBytes === 0
+            || !isUrlHelperLaunchFile(role, p.file) || !hex(p.recordSha256) || !count(p.recordBytes, 2_097_152) || p.recordBytes === 0
             || !hex(p.promptRecordSha256) || !hex(p.promptSha256) || !id(p.sessionId)) poison();
           break;
         case 'design-delivery':
@@ -666,6 +669,7 @@ export async function createUrlSessionAudit(given: UrlSessionAuditOptions): Prom
         profile: roleProfiles.get(role)!.id, limits, capture: 'host-callbacks-only', providerReceipts: 'Unknown', nativeSendCensus: 'Unknown' },
     }])) as UrlSessionAuditHistoryExpected['declarations'];
     for (const role of ROLES) await commit({ kind: 'declaration', role, ...declarationsByRole[role] }, role, began, true);
+    const unstartedOrdered = new Map<string, UrlOrderedDesignHistoryExpected>();
     const stoppedOrderedHistory: (() => UrlOrderedDesignHistoryExpected | null)[] = [];
     const closedHistory = (): UrlSessionAuditHistoryExpected | null => {
       const captured = summary();
@@ -675,7 +679,7 @@ export async function createUrlSessionAudit(given: UrlSessionAuditOptions): Prom
         const { records, bytes, tipSha256 } = captured.roles[role];
         return [role, { records, bytes, tipSha256: tipSha256! }];
       })) as UrlSessionAuditHistoryExpected['roles'];
-      const ordered: UrlOrderedDesignHistoryExpected[] = [];
+      const ordered: UrlOrderedDesignHistoryExpected[] = [...unstartedOrdered.values()];
       for (const read of stoppedOrderedHistory) {
         const item = read();
         if (item === null) return null;
@@ -801,6 +805,7 @@ export async function createUrlSessionAudit(given: UrlSessionAuditOptions): Prom
         },
       }, observeRead);
       orderedWriters.set(writer, { plan, records: held, observeRead });
+      unstartedOrdered.delete(binding.originalReceiptSha256);
       stoppedOrderedHistory.push(() => {
         const eligible = eligibleOrdered.get(writer);
         if (eligible) return eligible;
@@ -1173,6 +1178,12 @@ export async function createUrlSessionAudit(given: UrlSessionAuditOptions): Prom
         } });
         authenticatedDesignViews.set(delivery, { current: checkDelivery(after, product), product: preparedProduct });
         capturedDeliveries.set(result.eventSha256, result);
+        if (orderedDesignProfile !== null && input.deadline !== undefined) {
+          const plan = planOrderedDesignBytes({ ...orderedDesignPlanInputForDelivery(orderedDesignProfile, result,
+            material.metadata, input.pin, input.deadline, input.project), envelope: material.view });
+          unstartedOrdered.set(result.eventSha256, copy({ profileInput: orderedDesignProfile.input, plan, principal: input.principal,
+            scope, receipt: result, disposition: { kind: 'stopped' as const, tip: null } }));
+        }
         nextDesignRound++;
         return delivery;
       } catch {

@@ -412,6 +412,12 @@ describe('sealed ordered design audit history', () => {
     expect(verifyColdOrderedDesignAuditHistory(cold)).toEqual(verified);
     expect(verifyColdOrderedDesignAuditHistory({ ...cold, profileSha256: sha256('other profile') })).toBeNull();
     expect(verifyColdOrderedDesignAuditHistory({ ...cold, attempts: [{ ...retained, principal: 'other-principal' }] })).toBeNull();
+    for (const attempts of [[{ ...retained, extra: true }], [{ ...retained, receipt: { ...retained.receipt, extra: true } }],
+      [{ ...retained, disposition: { ...retained.disposition, extra: true } }],
+      [{ ...retained, disposition: { ...retained.disposition, kind: 'unsupported' } }]]) {
+      expect(verifyColdOrderedDesignAuditHistory({ ...cold, attempts: attempts as typeof cold.attempts })).toBeNull();
+    }
+
 
     for (const key of ['project', 'pin', 'principal', 'deadline'] as const) {
       expect(verifySealedOrderedDesignAuditHistory({ ...given, subject: { ...given.subject, [key]: 'wrong' } })).toBeNull();
@@ -455,8 +461,16 @@ describe('sealed ordered design audit history', () => {
     const attempts = [{ ...captured, disposition: { kind: 'stopped' as const, tip } }];
     const cold = { rows, attempts, subject: f.subject, profileSha256: f.evidence.profile.digest, asOf: start + 1000 };
     expect(verifyColdOrderedDesignAuditHistory(cold)?.attempts).toMatchObject([{ disposition: 'stopped', recordCount: 1 }]);
+    expect(verifyColdOrderedDesignAuditHistory({ ...cold, rows: rows.slice(0, 1), attempts: [{ ...captured,
+      disposition: { kind: 'stopped', tip: null } }] })?.attempts).toMatchObject([{ disposition: 'stopped', recordCount: 0 }]);
     expect(verifyColdOrderedDesignAuditHistory({ ...cold, attempts: [{ ...attempts[0]!, disposition: { kind: 'stopped', tip: changed } }] })).toBeNull();
     expect(verifyColdOrderedDesignAuditHistory({ ...cold, rows: f.eligibleRows })).toBeNull();
+    const completeInner = f.eligibleRows.slice(0, -1);
+    const finalPayload = completeInner.at(-1)!.event.payload as { id: string };
+    expect(verifyColdOrderedDesignAuditHistory({ ...cold, rows: completeInner, attempts: [{ ...captured,
+      disposition: { kind: 'stopped', tip: { id: finalPayload.id, sha256: digest(finalPayload) } } }] })?.attempts)
+      .toMatchObject([{ disposition: 'stopped', recordCount: 23 }]);
+
   });
 
   it('retains a properly anchored retirement and refuses pending or ambiguous epochs', () => {

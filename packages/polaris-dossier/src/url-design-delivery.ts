@@ -2,6 +2,10 @@ import { encodeCanonicalJson } from '@syzygy/polaris-generation-core/live';
 import { deepFreeze, sha256 } from '@syzygy/support';
 import { inspectUrlDesignEnvelope, URL_DESIGN_VIEW_ENCODING } from './url-design-view.js';
 
+import type { OrderedDesignSessionProfile } from './session-profile.js';
+import type { UrlDesignDeliveryAuditRecord } from './url-session-audit.js';
+import type { UrlDesignProductMetadata } from './url-design-product.js';
+
 const FORMAT = 'polaris-dossier-url-design-ordered-delivery/1';
 const PREPARED_FORMAT = 'polaris-dossier-url-design-prepared/1';
 const MAX_BYTES = 2_097_152;
@@ -134,6 +138,22 @@ export function isOrderedDesignPlanFor(plan: OrderedDesignPlan, limits: PlanInpu
   const issued = issuedPlans.get(plan);
   return issued !== undefined && issued.partBytes === limits.partBytes && issued.partCount === limits.partCount
     && issued.replyBytes === limits.replyBytes && issued.preparedBytes === limits.preparedBytes;
+}
+
+/** The host uses one exact plan input for a confirmed delivery, including a
+ * stop between that delivery and allocation of its ordered writer. This only
+ * formats checked subjects; planOrderedDesignBytes still authenticates bytes. */
+export function orderedDesignPlanInputForDelivery(profile: OrderedDesignSessionProfile, receipt: UrlDesignDeliveryAuditRecord,
+  product: Pick<UrlDesignProductMetadata, 'renderer' | 'parents'>, pin: string, deadline: number, project = 'project:syzygy'): Omit<PlanInput, 'envelope'> {
+  const identity = receipt.identity;
+  const { algorithm: _algorithm, ...limits } = profile.transcript.partition;
+  return { envelopeSha256: identity.view.sha256, original: identity.original, fileCount: identity.files, pageCount: identity.pages,
+    binding: { basePolicySha256: profile.input.binding.policy, originPolicySha256: identity.originPolicySha256,
+      originalReceiptSha256: receipt.eventSha256, producerSha256: product.renderer.programSha256,
+      profileSha256: profile.digest, encoding: identity.view.encoding, project, provider: profile.input.binding.provider,
+      role: 'design', round: identity.round, run: profile.input.binding.run, session: profile.input.sessionId,
+      transferEpoch: identity.round, pin, deadline: new Date(deadline).toISOString() },
+    parents: product.parents.map(parent => sha256(canonical(parent))), instructionProfileSha256: sha256(profile.input.systemPrompt), limits };
 }
 
 /** Check only a protected historical plan's metadata. This creates no issued
