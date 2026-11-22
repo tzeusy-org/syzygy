@@ -5,7 +5,7 @@ import { AsyncLocalStorage } from 'node:async_hooks';
 import path from 'node:path';
 import { encodeCanonicalJson, parseBoundedJson } from '@syzygy/polaris-generation-core/live';
 import { deepFreeze, isRecord, sha256 } from '@syzygy/support';
-import { identifyUrlMachineLifecycleRecord } from './url-machine-lifecycle.js';
+import { identifyUrlMachineLifecycleRecord, publishUrlMachineLifecycle, type UrlMachineLifecyclePublication, type UrlMachineLifecycleResult } from './url-machine-lifecycle.js';
 import { isNativeSessionProfile, isOrderedDesignSessionProfile, type NativeSessionProfile } from './session-profile.js';
 import { encodeUrlMachineArchive, isUrlMachineArchivePointer, readUrlMachineArchive, urlMachineArchiveCapacity, URL_MACHINE_ARCHIVE_LIMITS, type UrlMachineArchive, type UrlMachineArchivePointer } from './url-machine-archive.js';
 import type { UrlMachineLifecycleAdapter, UrlMachineLifecycleLease, UrlMachineLifecycleSnapshot, UrlMachineLifecycleStep } from './url-machine-lifecycle.js';
@@ -69,6 +69,8 @@ export interface UrlMachineStore extends UrlMachineLifecycleAdapter {
   /** Only a genuine profile matching this client's durable binding may select
    * its declared native effect envelope. Ordinary lifecycle I/O keeps five seconds. */
   exclusive(clientId: string, deadline: number, run: (lease: UrlMachineLifecycleLease) => Promise<void>, effectProfile?: NativeSessionProfile): Promise<boolean>;
+  /** Run only the trusted lifecycle publication protocol inside one held lock. */
+  publish(input: UrlMachineLifecyclePublication, stillOpening?: () => boolean): Promise<UrlMachineLifecycleResult>;
   readonly identitySha256: string;
   readonly protection: 'role-namespace-exclusion-required; privileged-store-rollback-Unknown';
   /** Allocate a new slot durably. Absence alone never produces a witness. */
@@ -282,14 +284,18 @@ async function openStore(options: UrlMachineStoreOptions, expectedIdentitySha256
       if (await authorize() !== true) throw refused();
       clock();
     };
-    const anchored = async (): Promise<void> => {
-      if (currentAsync === undefined) live(); else await liveAsync(currentAsync);
+    const anchored = async (publicationClock?: () => number): Promise<void> => {
+      if (publicationClock !== undefined) publicationClock();
+      else if (currentAsync === undefined) live();
+      else await liveAsync(currentAsync);
       const [actualRoot, actualHome] = await Promise.all([lstat(options.protectedRoot), lstat(canonicalRoot)]);
       if (!actualRoot.isDirectory() || (actualRoot.mode & 0o077) !== 0 || actualRoot.uid !== rootStat.uid
         || !actualHome.isDirectory() || actualRoot.dev !== rootStat.dev || actualRoot.ino !== rootStat.ino
         || actualHome.dev !== homeStat.dev || actualHome.ino !== homeStat.ino
         || await realpath(options.protectedRoot) !== options.protectedRoot || await realpath(canonicalRoot) !== canonicalRoot) throw refused();
-      if (currentAsync === undefined) live(); else await liveAsync(currentAsync);
+      if (publicationClock !== undefined) publicationClock();
+      else if (currentAsync === undefined) live();
+      else await liveAsync(currentAsync);
     };
     const readFile = async (file: string, maximum: number, missing: boolean = false): Promise<Buffer | null> => {
       charge();
@@ -359,8 +365,8 @@ async function openStore(options: UrlMachineStoreOptions, expectedIdentitySha256
         if (++count > URL_MACHINE_STORE_LIMITS.clients + 5 || item.name.startsWith('canonical-history') && item.name !== 'canonical-history.json') throw refused();
       }
     };
-    const readState = async (): Promise<StoreState> => {
-      await anchored();
+    const readState = async (publicationClock?: () => number): Promise<StoreState> => {
+      await anchored(publicationClock);
       const id = await readFile(`${base}/identity.json`, 16_384);
       if (id === null || sha256(id) !== expectedIdentitySha256) throw refused();
       const bytes = await readFile(`${base}/state.json`, URL_MACHINE_STORE_LIMITS.bytes);
@@ -379,45 +385,65 @@ async function openStore(options: UrlMachineStoreOptions, expectedIdentitySha256
     const ready = await readState();
     if (ready.clients.some(entry => entry.anchor.kind === 'pending')) throw refused();
     setupCurrent();
-    const withLock = async (deadline: number, operation: (check: () => void, state: () => Promise<StoreState>, write: (file: string, bytes: Uint8Array, predecessor?: Uint8Array | null) => Promise<void>) => Promise<void>, operationMilliseconds: number = URL_MACHINE_STORE_LIMITS.operationMilliseconds): Promise<boolean> => {
+    type PublishBoundary = { readonly current: (() => boolean) | undefined };
+    type StoreOperation = (lease: {
+      check: () => number;
+      checkWork: () => number;
+      anchored: () => Promise<void>;
+      state: () => Promise<StoreState>;
+      write: (file: string, bytes: Uint8Array, predecessor?: Uint8Array | null) => Promise<void>;
+    }) => Promise<void>;
+    const withLock = async (deadline: number, operation: StoreOperation,
+      operationMilliseconds: number = URL_MACHINE_STORE_LIMITS.operationMilliseconds, publication?: PublishBoundary): Promise<boolean> => {
       const began = performance.now();
       let active = true, held = false, uncertain = false;
       const pending = new Set<Promise<unknown>>();
-      const checkDeadline = (): void => {
-        if (!active || clock() >= deadline || performance.now() - began >= operationMilliseconds) throw refused();
+      const checkDeadline = (): number => {
+        if (!active || (publication?.current !== undefined && publication.current() !== true)) throw refused();
+        const now = clock();
+        if (now >= deadline || performance.now() - began >= operationMilliseconds) throw refused();
+        return now;
       };
-      const check = (): void => {
+      const check = (): number => {
         checkDeadline();
         live();
-        checkDeadline();
+        return checkDeadline();
       };
+      // A publication has only one trusted caller and exposes no intermediate
+      // read or grant. Check its lease during private I/O and require fresh
+      // full authority at each lifecycle checkpoint and each durable rename.
+      const publicationClock = publication === undefined ? undefined : checkDeadline;
+      const checkWork = publicationClock ?? check;
+      const verifyAnchors = () => anchored(publicationClock);
       const checkAsync = async (authorize: () => Promise<boolean>): Promise<void> => {
         checkDeadline();
         await liveAsync(authorize);
         checkDeadline();
       };
       const io = async <T>(start: () => Promise<T>): Promise<T> => {
-        if (currentAsync === undefined) check(); else await checkAsync(currentAsync);
+        if (currentAsync === undefined || publication !== undefined) checkWork();
+        else await checkAsync(currentAsync);
         checkDeadline(); charge();
         const promise = start();
         pending.add(promise);
         try {
           const value = await promise;
-          if (currentAsync === undefined) check(); else await checkAsync(currentAsync);
+          if (currentAsync === undefined || publication !== undefined) checkWork();
+          else await checkAsync(currentAsync);
           checkDeadline();
           return value;
         } finally { pending.delete(promise); }
       };
       const write = async (file: string, bytes: Uint8Array, predecessor?: Uint8Array | null): Promise<void> => {
         charge(bytes.byteLength);
-        check(); await io(anchored);
+        checkWork(); await io(verifyAnchors);
         const parent = path.dirname(file), temporary = `${file}.new-${opaque()}`;
         let handle: FileHandle | undefined;
         try {
           await io(async () => { handle = await open(temporary, constants.O_WRONLY | constants.O_CREAT | constants.O_EXCL | constants.O_NOFOLLOW, 0o600); });
           const held = handle!;
           await io(() => held.writeFile(bytes)); await io(() => held.sync());
-          check(); await io(anchored);
+          checkWork(); await io(verifyAnchors);
           if (predecessor !== undefined) {
             const actual = await io(() => readFile(file, Math.max(bytes.byteLength, predecessor?.byteLength ?? 0), true));
             if (actual === null ? predecessor !== null : predecessor === null || !actual.equals(Buffer.from(predecessor))) throw refused();
@@ -430,7 +456,7 @@ async function openStore(options: UrlMachineStoreOptions, expectedIdentitySha256
           await io(() => (parent === home ? heldHome : heldRoot).sync());
           const readback = await io(() => readFile(file, bytes.byteLength));
           if (readback === null || !readback.equals(Buffer.from(bytes))) throw refused();
-          check();
+          checkWork();
         } finally {
           await handle?.close().catch(() => {});
           await unlink(temporary).catch(() => {});
@@ -440,7 +466,7 @@ async function openStore(options: UrlMachineStoreOptions, expectedIdentitySha256
       const work = budgets.run({ calls: 0, bytes: 0 }, async () => {
         if (!Number.isSafeInteger(deadline) || deadline > options.deadline || deadline <= live()) throw refused();
         for (;;) {
-          check(); await io(anchored);
+          check(); await io(verifyAnchors);
           try { await io(() => mkdir(`${base}/lock`, { mode: 0o700 })); held = true; break; }
           catch (error) {
             if ((error as NodeJS.ErrnoException).code !== 'EEXIST' || performance.now() - began >= URL_MACHINE_STORE_LIMITS.lockMilliseconds) throw error;
@@ -449,7 +475,7 @@ async function openStore(options: UrlMachineStoreOptions, expectedIdentitySha256
         }
         await io(() => heldRoot.sync());
         await io(census);
-        await operation(check, () => io(readState), write);
+        await operation({ check, checkWork, anchored: verifyAnchors, state: () => io(() => readState(publicationClock)), write });
         check();
       });
       activeWork.add(work);
@@ -473,7 +499,7 @@ async function openStore(options: UrlMachineStoreOptions, expectedIdentitySha256
     };
     const allocateClient = async (deadline: number) => {
       let issued: { readonly clientId: string; readonly witnessSha256: string } | null = null;
-      const finished = await withLock(deadline, async (check, state, write) => {
+      const finished = await withLock(deadline, async ({ check, state, write }) => {
         const current = await state();
         if (current.clients.length >= URL_MACHINE_STORE_LIMITS.clients) throw refused();
         const clientId = opaque();
@@ -490,12 +516,13 @@ async function openStore(options: UrlMachineStoreOptions, expectedIdentitySha256
       });
       return finished ? issued : null;
     };
-    const exclusive: UrlMachineStore['exclusive'] = async (clientId, deadline, operation, effectProfile) => {
+    const exclusive = async (clientId: string, deadline: number, operation: (lease: UrlMachineLifecycleLease) => Promise<void>,
+      effectProfile?: NativeSessionProfile, publication?: PublishBoundary): Promise<boolean> => {
       if (!digest(clientId) || (effectProfile !== undefined && !isNativeSessionProfile(effectProfile))) return false;
       const operationMilliseconds = effectProfile !== undefined && isOrderedDesignSessionProfile(effectProfile)
         ? effectProfile.transcript.nativeEffectMilliseconds : URL_MACHINE_STORE_LIMITS.operationMilliseconds;
       if (!positive(operationMilliseconds) || operationMilliseconds > 30_000) return false;
-      return withLock(deadline, async (check, state, write) => {
+      return withLock(deadline, async ({ check, checkWork, anchored, state, write }) => {
         if (effectProfile !== undefined) {
           const audit = (await state()).clients.find(client => client.clientId === clientId)?.audit.at(-1);
           if (!audit || audit.profileSha256 !== effectProfile.digest || audit.role !== effectProfile.input.binding.role
@@ -505,7 +532,7 @@ async function openStore(options: UrlMachineStoreOptions, expectedIdentitySha256
         const order = ['reserve', 'publish', 'synchronize', 'audit', 'commit'];
         let prepared: { canonical: Buffer; head: Head; runId: string; newIdentities: readonly string[]; archive: Buffer; predecessor: Buffer | null; pointer: UrlMachineArchivePointer } | null = null;
         const preflightCanonical: NonNullable<UrlMachineLifecycleLease['preflightCanonical']> = async (candidate, proposedHead) => {
-          check();
+          checkWork();
           if (phase !== 0 || prepared !== null || !head(proposedHead) || proposedHead.record.clientId !== clientId) return false;
           const bytes = Buffer.from(candidate), current = await state(), entry = current.clients.find(item => item.clientId === clientId);
           if (!entry || (entry.anchor.kind !== 'never-issued' && entry.anchor.kind !== 'committed') || sha256(bytes) !== proposedHead.record.sha256) return false;
@@ -514,7 +541,7 @@ async function openStore(options: UrlMachineStoreOptions, expectedIdentitySha256
           if (!isRecord(raw)) return false;
           const last = entry.audit.at(-1);
           const checked = readUrlMachineClient(bytes, { clientId, policySha256: String(raw.policySha256), profileSha256: last?.profileSha256 ?? String((raw.instances as { verifier?: { profileSha256?: string } }[] | undefined)?.[0]?.verifier?.profileSha256),
-            sourcePin: String(raw.sourcePin), runId: String(raw.runId), role: raw.role as UrlMachineClientContext['role'], kind: raw.kind as UrlMachineClientContext['kind'], allowedScopes: raw.scopes as UrlMachineClientContext['allowedScopes'], now: live(), deadline });
+            sourcePin: String(raw.sourcePin), runId: String(raw.runId), role: raw.role as UrlMachineClientContext['role'], kind: raw.kind as UrlMachineClientContext['kind'], allowedScopes: raw.scopes as UrlMachineClientContext['allowedScopes'], now: checkWork(), deadline });
           if (!checked.ok || !equal(identifyUrlMachineLifecycleRecord(checked.record, checked.sha256), proposedHead.record)
             || !Buffer.from(encodeCanonicalJson(checked.record, URL_MACHINE_CLIENT_LIMITS)).equals(bytes)) return false;
           const legacy = current.archive?.legacy ?? current.clients.flatMap(item => {
@@ -533,17 +560,17 @@ async function openStore(options: UrlMachineStoreOptions, expectedIdentitySha256
             newIdentities: entry.anchor.kind === 'never-issued' ? [clientId, checked.record.issuanceId, checked.record.instances[0]!.instanceId]
               : checked.record.instances.slice(entry.anchor.head.record.generation).map(value => value.instanceId), archive, predecessor: prior.bytes,
             pointer: { sha256: sha256(archive), bytes: archive.length, records: entries.length, legacy } };
-          check(); return true;
+          checkWork(); return true;
         };
         const read = async (): Promise<UrlMachineLifecycleSnapshot | null> => {
-          check();
+          checkWork();
           const current = await state(), entry = current.clients.find(client => client.clientId === clientId);
           if (!entry || (entry.anchor.kind === 'pending' && phase === 0)) return null;
           const [canonicalBytes, projectionBytes] = await Promise.all([
             readFile(`${home}/${clientId}.json`, URL_MACHINE_CLIENT_LIMITS.maxBytes, true),
             readFile(`${base}/projection-${clientId}.json`, 16_384, true),
           ]);
-          check(); await anchored(); check();
+          checkWork(); await anchored(); checkWork();
           const projected = projectionBytes === null ? null : decode(projectionBytes);
           if (projected !== null && (!projection(projected) || projected.clientId !== clientId)) return null;
           const audited = entry.audit.length === 0 ? null : auditHead(entry.audit.at(-1)!);
@@ -554,7 +581,7 @@ async function openStore(options: UrlMachineStoreOptions, expectedIdentitySha256
           return { canonical: canonicalBytes, projection: projected, anchor: entry.anchor, audit: audited };
         };
         const advance: UrlMachineLifecycleLease['advance'] = async (expected, step) => {
-          check();
+          checkWork();
           if (step.kind !== order[phase] || prepared === null) return false;
           const before = await read();
           if (before === null || !equal(expected, { canonicalSha256: before.canonical === null ? null : sha256(before.canonical),
@@ -601,15 +628,21 @@ async function openStore(options: UrlMachineStoreOptions, expectedIdentitySha256
             await write(`${base}/state.json`, bytes);
             validatedState = { sha256: sha256(bytes), value: nextState };
           }
-          check(); phase++;
+          checkWork(); phase++;
           return true;
         };
-        await operation(Object.freeze({ now: () => live(), current: () => { try { check(); return true; } catch { return false; } }, read, preflightCanonical, advance }));
+        const sampleCurrent = (): number | null => { try { return check(); } catch { return null; } };
+        await operation(Object.freeze({ now: () => live(), current: () => sampleCurrent() !== null,
+          sampleCurrent, read, preflightCanonical, advance }));
         if (phase !== 0 && phase !== 5) throw refused();
-      }, operationMilliseconds);
+      }, operationMilliseconds, publication);
     };
-    const adapter = Object.freeze({ identitySha256: expectedIdentitySha256, protection: 'role-namespace-exclusion-required; privileged-store-rollback-Unknown' as const,
-      allocateClient, exclusive, close: async () => {
+    const adapter = Object.freeze<UrlMachineStore>({ identitySha256: expectedIdentitySha256, protection: 'role-namespace-exclusion-required; privileged-store-rollback-Unknown' as const,
+      allocateClient, exclusive: (clientId, deadline, operation, effectProfile) => exclusive(clientId, deadline, operation, effectProfile),
+      publish: (input: UrlMachineLifecyclePublication, stillOpening?: () => boolean) => publishUrlMachineLifecycle(input, {
+        exclusive: (clientId, deadline, operation) => exclusive(clientId, deadline, operation, undefined, { current: stillOpening }),
+      }),
+      close: async () => {
         if (closed) return;
         closed = true;
         // An arbitrary controller callback can remain pending. Invalidate it

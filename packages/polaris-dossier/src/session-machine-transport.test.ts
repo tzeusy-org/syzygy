@@ -127,6 +127,64 @@ describe('verified-chunk session transport adapter', () => {
     expect(context).not.toBeNull(); expect(actual?.listenerCount('data')).toBe(0); expect(actual?.listenerCount('readable')).toBe(0);
   });
 
+  it.each(['published', 'capture-expired', 'connection-expired', 'publication-refused'] as const)(
+    'keeps staged admission paused until protected publication is %s', async outcome => {
+      const original = performance.now.bind(performance);
+      let elapsed = 0, opening: (() => boolean) | undefined, peer: UrlMachinePeer | undefined;
+      const clock = vi.spyOn(performance, 'now').mockImplementation(() => original() + elapsed);
+      let startAuthorization!: () => void, finishAuthorization!: (value: boolean) => void;
+      const authorizing = new Promise<void>(resolve => { startAuthorization = resolve; });
+      const authorized = new Promise<boolean>(resolve => { finishAuthorization = resolve; });
+      const authorize = vi.fn(async (captured: UrlMachinePeer, stillOpening: () => boolean) => {
+        expect(captured).toBe(peer);
+        opening = stillOpening;
+        startAuthorization();
+        return authorized;
+      });
+      const transport = createSessionMachineTransport({ prepare: server => server.listening, authorize, accept: async raw => {
+        peer = Object.freeze({ verifier: {} }) as UrlMachinePeer;
+        backend.states.set(peer, { socket: raw, chunks: [Buffer.from('checked')], live: true });
+        elapsed = outcome === 'capture-expired' ? 5001 : 4000;
+        return peer;
+      } })!;
+      let result!: (stream: Duplex | null) => void;
+      const connected = new Promise<Duplex | null>(resolve => { result = resolve; });
+      const socketPath = join(tempDir('machine-staged-'), 's.sock');
+      const server = createServer({ pauseOnConnect: true, allowHalfOpen: true }, raw => {
+        void openSessionMachineConnection(raw, transport, { bytes: 128, milliseconds: 8000 }).then(stream => {
+          if (stream === null) raw.destroy();
+          result(stream);
+        });
+      });
+      server.listen(socketPath); await once(server, 'listening');
+      cleanup.push(() => new Promise<void>(resolve => server.close(() => resolve())));
+      const connection = client(socketPath);
+      try {
+        if (outcome !== 'capture-expired') {
+          await authorizing;
+          expect(opening?.()).toBe(true);
+          elapsed = outcome === 'connection-expired' ? 8001 : 6000;
+          expect(opening?.()).toBe(outcome !== 'connection-expired');
+          expect(backend.reads).toBe(0);
+          expect(backend.mediations).toBe(0);
+          finishAuthorization(outcome !== 'publication-refused');
+        }
+        const stream = await connected;
+        if (outcome === 'published') {
+          expect(stream).not.toBeNull();
+          expect(sessionMachineEffectContext(stream!)?.peer).toBe(peer);
+          stream!.destroy();
+        } else {
+          expect(stream).toBeNull();
+          expect(backend.states.get(peer!)?.live).toBe(false);
+          expect(backend.reads).toBe(0);
+        }
+        expect(authorize).toHaveBeenCalledTimes(outcome === 'capture-expired' ? 0 : 1);
+        await connection.output;
+      } finally { clock.mockRestore(); finishAuthorization(false); }
+    },
+  );
+
   it('retains the exact async effect guard across awaits and revokes escaped descendants', async () => {
     let opened!: (stream: Duplex) => void;
     const accepted = new Promise<Duplex>(resolve => { opened = resolve; });

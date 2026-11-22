@@ -71,6 +71,8 @@ export interface UrlMachineLifecycleLease {
   /** Controller clock and the still-held, bounded exclusive lease. */
   now(): number;
   current(): boolean;
+  /** Sample the clock with the same fresh held-lease authority check. */
+  sampleCurrent?(): number | null;
   read(): Promise<UrlMachineLifecycleSnapshot | null>;
   /** Optional capacity preflight, held under this same exclusive transaction. */
   preflightCanonical?(canonical: Uint8Array, head: CommitIdentity): Promise<boolean>;
@@ -132,8 +134,9 @@ function identity(snapshot: UrlMachineLifecycleSnapshot | null): StateIdentity |
 async function publish(lease: UrlMachineLifecycleLease, input: UrlMachineLifecyclePublication): Promise<UrlMachineLifecycleResult> {
   let lastSample = input.context.now;
   const current = (): UrlMachineClientContext | null => {
-    const now = lease.now();
-    if (lease.current() !== true || !Number.isSafeInteger(now) || now < lastSample || now >= input.context.deadline) return null;
+    const now = lease.sampleCurrent === undefined ? lease.now() : lease.sampleCurrent();
+    if (now === null || (lease.sampleCurrent === undefined && lease.current() !== true)
+      || !Number.isSafeInteger(now) || now < lastSample || now >= input.context.deadline) return null;
     lastSample = now;
     return { ...input.context, now };
   };

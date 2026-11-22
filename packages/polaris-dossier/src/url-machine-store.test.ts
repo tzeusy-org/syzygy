@@ -18,17 +18,26 @@ const NOW = Date.parse('2026-11-22T01:00:00.000Z');
 const id = () => randomBytes(32).toString('hex');
 const canon = (value: unknown) => Buffer.from(encodeCanonicalJson(value, URL_MACHINE_CLIENT_LIMITS));
 const cleanup: (() => Promise<unknown>)[] = [];
-const filesystem = vi.hoisted(() => ({ afterSync: undefined as ((file: string) => Promise<void> | void) | undefined }));
+const filesystem = vi.hoisted(() => ({
+  afterSync: undefined as ((file: string) => Promise<void> | void) | undefined,
+  afterOpen: undefined as ((file: string) => void) | undefined,
+  afterClose: undefined as ((file: string) => void) | undefined,
+}));
 vi.mock('node:fs/promises', async importOriginal => {
   const original = await importOriginal<typeof import('node:fs/promises')>();
   return { ...original, open: async (...args: Parameters<typeof original.open>) => {
-    const handle = await original.open(...args);
-    const sync = handle.sync.bind(handle);
-    handle.sync = async () => { await sync(); await filesystem.afterSync?.(String(args[0])); };
+    const handle = await original.open(...args), file = String(args[0]);
+    filesystem.afterOpen?.(file);
+    const sync = handle.sync.bind(handle), close = handle.close.bind(handle);
+    handle.sync = async () => { await sync(); await filesystem.afterSync?.(file); };
+    handle.close = async () => { await close(); filesystem.afterClose?.(file); };
     return handle;
   } };
 });
-afterEach(async () => { filesystem.afterSync = undefined; for (const clean of cleanup.splice(0).reverse()) await clean(); });
+afterEach(async () => {
+  filesystem.afterSync = filesystem.afterOpen = filesystem.afterClose = undefined;
+  for (const clean of cleanup.splice(0).reverse()) await clean();
+});
 
 async function fixture(duration = 60_000) {
   const root = await mkdtemp(path.join(os.tmpdir(), 'machine-store-'));
@@ -147,6 +156,43 @@ describe('protected URL machine lifecycle files', { timeout: 30_000 }, () => {
     expect(checked).toMatchObject({ anchor: { kind: 'committed', head: { record: { revision: 2 } } } });
   });
 
+  it('publishes through the trusted store with one checked clock at each lifecycle boundary', async () => {
+    const f = await fixture(), slot = await f.allocate();
+    const current = vi.fn(f.options.current);
+    const currentAsync = vi.fn(async () => f.options.current());
+    const reopened = await openUrlMachineStore({ ...f.options, current, currentAsync }, f.store.identitySha256);
+    expect(reopened).not.toBeNull(); cleanup.push(() => reopened!.close());
+    current.mockClear(); currentAsync.mockClear();
+    const result = await reopened!.publish({ context: slot.context, binding: slot.binding, expected: null, next: canon(slot.record) });
+    expect(result.ok).toBe(true);
+    expect(await readFile(slot.file)).toEqual(canon(slot.record));
+    expect(current.mock.calls.length).toBeLessThan(30);
+    expect(currentAsync).not.toHaveBeenCalled();
+    await expect(reopened!.exclusive(slot.context.clientId, f.options.deadline, async lease => {
+      const checks = current.mock.calls.length;
+      expect(lease.sampleCurrent?.()).toBe(NOW);
+      expect(current.mock.calls.length).toBe(checks + 1);
+      expect(await lease.read()).toMatchObject({ anchor: { kind: 'committed' } });
+    })).resolves.toBe(true);
+  });
+
+  it.each(['parent-withdrawn', 'connection-closed'] as const)('prevents the first durable rename when %s during a private write', async fault => {
+    const f = await fixture(), slot = await f.allocate(), stateFile = path.join(f.options.protectedRoot, 'state.json');
+    const before = await readFile(stateFile);
+    let opening = true, synced = false;
+    filesystem.afterSync = file => {
+      if (!path.basename(file).startsWith('state.json.new-')) return;
+      synced = true;
+      if (fault === 'parent-withdrawn') f.revoke();
+      else opening = false;
+    };
+    const result = await f.store.publish({ context: slot.context, binding: slot.binding, expected: null, next: canon(slot.record) }, () => opening);
+    expect(synced).toBe(true);
+    expect(result.ok).toBe(false);
+    expect(await readFile(stateFile)).toEqual(before);
+    await expect(readFile(slot.file)).rejects.toMatchObject({ code: 'ENOENT' });
+  });
+
   it('awaits fresh authority around real protected filesystem work', async () => {
     const f = await fixture(), slot = await f.allocate();
     expect((await slot.publish()).ok).toBe(true);
@@ -170,6 +216,20 @@ describe('protected URL machine lifecycle files', { timeout: 30_000 }, () => {
     expect(run).not.toHaveBeenCalled();
     expect(current()).toBe(true);
     expect(await readFile(slot.file)).toEqual(canon(slot.record));
+  });
+
+  it('checks authority after protected state I/O before using it to open the client', async () => {
+    const f = await fixture(), slot = await f.allocate();
+    expect((await slot.publish()).ok).toBe(true);
+    let current = true, clientOpened = false;
+    const reopened = await openUrlMachineStore({ ...f.options, currentAsync: async () => current }, f.store.identitySha256);
+    expect(reopened).not.toBeNull(); cleanup.push(() => reopened!.close());
+    filesystem.afterClose = file => { if (path.basename(file) === 'canonical-history.json') current = false; };
+    filesystem.afterOpen = file => { if (path.basename(file) === path.basename(slot.file)) clientOpened = true; };
+    const finished = await reopened!.exclusive(slot.context.clientId, f.options.deadline, async lease => { await lease.read(); });
+    expect(finished).toBe(false);
+    expect(current).toBe(false);
+    expect(clientOpened).toBe(false);
   });
 
   it('discards filesystem results when authority outlasts the exclusive deadline', async () => {

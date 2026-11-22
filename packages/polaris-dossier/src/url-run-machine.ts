@@ -7,7 +7,7 @@ import { deepFreeze, isRecord, sha256 } from '@syzygy/support';
 import type { UrlSessionProcess } from './session-launch.js';
 import { createSessionMachineTransport, type SessionMachineTransport } from './session-machine-transport.js';
 import { isOrderedDesignSessionProfile } from './session-profile.js';
-import { publishUrlMachineLifecycle, type UrlMachineLifecycleResult, type UrlMachineLifecycleSnapshot } from './url-machine-lifecycle.js';
+import type { UrlMachineLifecycleResult, UrlMachineLifecycleSnapshot } from './url-machine-lifecycle.js';
 import { readUrlMachineClient, type UrlMachineClientContext, type UrlMachineClientKind, type UrlMachineClientRecord, type UrlMachineOperation } from './url-machine-instance.js';
 import { captureUrlMachinePeer, closeUrlMachinePeer, prepareUrlMachineListenerAsync,
   type UrlMachinePeer, type UrlMachinePeerAudit } from './url-machine-peer.js';
@@ -178,8 +178,8 @@ export async function createUrlRunMachine(input: UrlRunMachineOptions) {
           try {
             const now = input.now(), previous = client.record;
             const next = { ...previous, revision: previous.revision + 1, revokedAt: new Date(now).toISOString() };
-            const result = await publishUrlMachineLifecycle({ context: { ...client.context, now }, binding,
-              expected: { revision: previous.revision, sha256: client.head!.record.sha256 }, next: canonical(next) }, store);
+            const result = await store.publish({ context: { ...client.context, now }, binding,
+              expected: { revision: previous.revision, sha256: client.head!.record.sha256 }, next: canonical(next) });
             if (!result.ok) retired = false;
             else { client.record = next; client.head = result.receipt; }
           } catch { retired = false; }
@@ -255,7 +255,7 @@ export async function createUrlRunMachine(input: UrlRunMachineOptions) {
           const support = isOrderedDesignSessionProfile(plan.profile) ? plan.profile.transcript.supportSha256 : input.runtime.supportSha256;
           const name = kind === 'mcp-shim' ? 'session-mcp.js' : 'session-bridge.js';
           const selectedLaunch = launch;
-          const peer = await captureUrlMachinePeer({ socket, listener, launch: selectedLaunch, profile: plan.profile, context,
+          return captureUrlMachinePeer({ socket, listener, launch: selectedLaunch, profile: plan.profile, context,
             store, binding, programs: { peer: input.runtime.peerProgram, reader },
             installed: { executable: input.runtime.worker.node, sha256: input.runtime.worker.nodeSha256,
               script: path.join(plan.view.supportDirectory, name), scriptSha256: support[name] },
@@ -264,31 +264,35 @@ export async function createUrlRunMachine(input: UrlRunMachineOptions) {
               && await input.reverify() === true && current(),
             effectCurrent: current, readImageCurrent: () => !stopped && !closing && effectCurrent(), audit: input.audit,
             chargeNativeCpuMicroseconds: input.chargeNativeCpuMicroseconds });
-          if (peer === null) return null;
+        },
+        authorize: async (peer, stillOpening) => {
+          const authority = (): boolean => !stopped && !closing && stillOpening() && effectCurrent();
+          if (!authority()) return false;
           peers.add(peer);
           let permitted = false;
-          try { permitted = await serialize(async () => {
-          if (!current()) return false;
-          const now = input.now(), old = client.record, stamp = new Date(now).toISOString();
-          const instance = { instanceId: opaque(), generation: (old?.instances.length ?? 0) + 1, issuedAt: stamp,
-            expiresAt: new Date(input.deadline).toISOString(), retiredAt: null, revokedAt: null, verifier: peer.verifier };
-          const next: UrlMachineClientRecord = old === null
-            ? { format: 'polaris-dossier-local-machine-client/1', clientId: slot.clientId, issuanceId: opaque(),
-              policySha256: context.policySha256, revision: 1, projectId: 'project:syzygy', sourcePin: input.pin,
-              runId: input.runId, role: plan.role, kind, scopes: context.allowedScopes, issuedAt: stamp,
-              expiresAt: new Date(input.deadline).toISOString(), revokedAt: null, instances: [instance] }
-            : { ...old, revision: old.revision + 1,
-              instances: [...old.instances.map((value, index) => index === old.instances.length - 1 ? { ...value, retiredAt: stamp } : value), instance] };
-          const published = await publishUrlMachineLifecycle({ context: { ...context, now }, binding,
-            expected: old === null ? null : { revision: old.revision, sha256: client.head!.record.sha256 }, next: canonical(next) }, store);
-          if (!published.ok) return false;
-          client.record = next; client.head = published.receipt;
-          return current();
-          }); } finally {
+          try {
+            permitted = await serialize(async () => {
+              if (!authority() || !current()) return false;
+              const now = input.now(), old = client.record, stamp = new Date(now).toISOString();
+              const instance = { instanceId: opaque(), generation: (old?.instances.length ?? 0) + 1, issuedAt: stamp,
+                expiresAt: new Date(input.deadline).toISOString(), retiredAt: null, revokedAt: null, verifier: peer.verifier };
+              const next: UrlMachineClientRecord = old === null
+                ? { format: 'polaris-dossier-local-machine-client/1', clientId: slot.clientId, issuanceId: opaque(),
+                  policySha256: context.policySha256, revision: 1, projectId: 'project:syzygy', sourcePin: input.pin,
+                  runId: input.runId, role: plan.role, kind, scopes: context.allowedScopes, issuedAt: stamp,
+                  expiresAt: new Date(input.deadline).toISOString(), revokedAt: null, instances: [instance] }
+                : { ...old, revision: old.revision + 1,
+                  instances: [...old.instances.map((value, index) => index === old.instances.length - 1 ? { ...value, retiredAt: stamp } : value), instance] };
+              const published = await store.publish({ context: { ...context, now }, binding,
+                expected: old === null ? null : { revision: old.revision, sha256: client.head!.record.sha256 }, next: canonical(next) }, authority);
+              if (!published.ok) return false;
+              client.record = next; client.head = published.receipt;
+              return authority() && current();
+            });
+          } finally {
             if (!permitted) { peers.delete(peer); closeUrlMachinePeer(peer); }
           }
-          if (!permitted) return null;
-          return peer;
+          return permitted;
         },
       });
       if (transport === null) throw refuse();

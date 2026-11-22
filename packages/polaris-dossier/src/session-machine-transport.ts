@@ -19,6 +19,8 @@ interface TransportPorts {
   /** The trusted closure selects the genuine launch and captures this exact socket.
    * It may await launch registration within the connection's original deadline. */
   readonly accept: (socket: Socket) => Promise<UrlMachinePeer | null>;
+  /** Complete protected issuance while the captured raw socket remains paused. */
+  readonly authorize?: (peer: UrlMachinePeer, stillOpening: () => boolean) => Promise<boolean>;
 }
 const transports = new WeakMap<SessionMachineTransport, TransportPorts>();
 interface ConnectionState {
@@ -45,9 +47,11 @@ export function assertSessionMachineEffectCurrent(): void {
 /** First-party factory only. Merely returning peer-shaped metadata cannot
  * authenticate: every accepted capability must belong to its exact raw socket. */
 export function createSessionMachineTransport(ports: TransportPorts): SessionMachineTransport | null {
-  if (typeof ports?.prepare !== 'function' || typeof ports.accept !== 'function') return null;
+  if (typeof ports?.prepare !== 'function' || typeof ports.accept !== 'function'
+    || (ports.authorize !== undefined && typeof ports.authorize !== 'function')) return null;
   const transport: SessionMachineTransport = Object.freeze({ authentication: 'url-machine-peer/1' });
-  transports.set(transport, Object.freeze({ prepare: ports.prepare, accept: ports.accept }));
+  const { prepare, accept, authorize } = ports;
+  transports.set(transport, Object.freeze({ prepare, accept, ...(authorize === undefined ? {} : { authorize }) }));
   return transport;
 }
 export const isSessionMachineTransport = (transport: SessionMachineTransport): boolean => transports.has(transport);
@@ -72,23 +76,43 @@ export function stopSessionMachineIngress(stream: Duplex): boolean {
  * Native writes require the active effect's immediate boundary guard. */
 export async function openSessionMachineConnection(raw: Socket, transport: SessionMachineTransport,
   limits: { readonly bytes: number; readonly milliseconds: number }): Promise<Duplex | null> {
-  const ports = transports.get(transport), deadline = performance.now() + limits.milliseconds;
+  const ports = transports.get(transport), began = performance.now();
+  const deadline = began + limits.milliseconds, captureDeadline = Math.min(deadline, began + 5000);
   if (!ports || !(raw instanceof Socket) || !raw.isPaused() || raw.readableLength !== 0
     || raw.listenerCount('data') !== 0 || raw.listenerCount('readable') !== 0
     || !Number.isSafeInteger(limits.bytes) || limits.bytes <= 0 || limits.bytes > 8_388_608
     || !Number.isSafeInteger(limits.milliseconds) || limits.milliseconds <= 0 || limits.milliseconds > 180_000) return null;
-  let peer: UrlMachinePeer | null = null, expired = false;
-  let timer: ReturnType<typeof setTimeout> | undefined;
+  let expired = false;
+  const before = async <T>(until: number, work: () => Promise<T>): Promise<T | null> => {
+    let timer: ReturnType<typeof setTimeout> | undefined;
+    try {
+      return await Promise.race([new Promise<null>(resolve => {
+        timer = setTimeout(() => { expired = true; resolve(null); }, Math.max(1, until - performance.now()));
+      }), work()]);
+    } finally { clearTimeout(timer); }
+  };
+  let peer: UrlMachinePeer | null = null;
   try {
-    const capture = ports.accept(raw);
-    void capture.then(value => { if (expired && value) closeUrlMachinePeer(value); }, () => {});
-    peer = await Promise.race([capture, new Promise<null>(resolve => {
-      timer = setTimeout(() => { expired = true; resolve(null); }, Math.min(5000, limits.milliseconds));
-    })]);
-  } catch { /* Fixed refusal only. */ }
-  finally { clearTimeout(timer); }
-  if (!peer || expired || raw.destroyed || performance.now() >= deadline || !isUrlMachinePeerFor(peer, raw)) {
-    if (peer) closeUrlMachinePeer(peer);
+    peer = await before(captureDeadline, async () => {
+      const captured = await ports.accept(raw);
+      if (captured !== null && (expired || performance.now() >= captureDeadline)) {
+        closeUrlMachinePeer(captured);
+        return null;
+      }
+      return captured;
+    });
+    if (peer === null) return null;
+    const captured = peer;
+    const stillOpening = (): boolean => !expired && performance.now() < deadline
+      && !raw.destroyed && raw.isPaused() && raw.readableLength === 0 && isUrlMachinePeerFor(captured, raw);
+    const authorize = ports.authorize;
+    if (!stillOpening() || (authorize !== undefined
+      && (await before(deadline, () => authorize(captured, stillOpening)) !== true || !stillOpening()))) {
+      closeUrlMachinePeer(captured);
+      return null;
+    }
+  } catch {
+    if (peer !== null) closeUrlMachinePeer(peer);
     return null;
   }
   const selected = peer;
