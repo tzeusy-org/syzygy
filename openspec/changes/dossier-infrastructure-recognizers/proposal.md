@@ -1,4 +1,4 @@
-# Dossier infrastructure recognizers — version 2.12
+# Dossier infrastructure recognizers — version 2.14
 
 [Inferred] Candidate agent-decided change under VIS-4 as amended by GOVERNANCE-SIMPLIFICATION-D10. It binds only once its row in `AGENT-ADOPTIONS.md` and its version tag exist; no owner adoption is claimed. It decides no owner class: no doctrine edit; no change to secret detection or SEC-5's fail-closed rule (every body is screened whole as a cited blob is, a secret-matching path is counted and named nowhere, the value checks run over every string a fact takes, and the screening policy is not changed, so `CMakeLists.txt`, `makefile` and `GNUmakefile` stay unread); no foreign repository; no exposure, release or multi-user use.
 
@@ -21,7 +21,7 @@
 - A fourth computed map page, `maps/infrastructure.html`, listing the new facts with coverage and Unknown files, no figure; a `coverage-remainder` section on `maps/directories.html`; `computedMaps` gains `infrastructure` and `manifests.remainder`.
 - The bounded form's words win over the not-parse words in `readingDifference` (syzygy-3efd.79).
 - The reader rule of version 2.10 for the draft check is given (4,194,304 bytes), every frozen draft revision (4,194,304 bytes), the brief record (262,144 bytes) and `run-advice.json` (16,777,216 bytes), with the words where each outcome is seen (syzygy-3efd.76); reads of other requirements' files are reported in `design.md`, not specified.
-- A paragraph stating the bytes version 2.12 changes; thirteen scenarios added, four amended; the four Form lines extended.
+- A paragraph stating the bytes version 2.14 changes; thirteen scenarios added, four amended; the four Form lines extended.
 
 [Observed] Every other sentence and scenario of REQ-034 is carried unchanged. [Inferred] Provider mode is unaffected.
 
