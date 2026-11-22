@@ -17,6 +17,7 @@ export const COPY_DIRECTORY = 'copies';
  * digest-named files whose forms are fixed here so every later step and `status` agree. */
 export const RUN_LAYOUT = Object.freeze({
   config: 'run.json',
+  rawReadDisclosure: 'raw-read-disclosure.json',
   brief: 'brief.md',
   briefRecord: 'brief.json',
   executionChoice: 'execution-choice.json',
@@ -110,17 +111,21 @@ export type CreateRunResult =
   | { readonly created: true; readonly runId: string; readonly runDir: string }
   | { readonly created: false; readonly detail: string };
 
-/** Make a new, empty run directory under the state root and write its configuration document and, where given, the run record's launch
- * disclosure (`launch-disclosure.ts`).
+/** Make a new, empty run directory and write the declared companions and configuration.
+ * A supplied raw-read disclosure is written before the core record becomes readable.
  * The directory is the operator's alone (mode 0700) and the configuration file 0600. An existing run
  * directory is never reused. Nothing is written anywhere else. */
 export function createRunDirectory(
-  stateRoot: string, clone: string, configJson: string, ports: RunPorts = {}, files: { readonly launchDisclosure?: string } = {},
+  stateRoot: string, clone: string, configJson: string, ports: RunPorts = {},
+  files: { readonly launchDisclosure?: string; readonly rawReadDisclosure?: (runId: string) => string } = {},
 ): CreateRunResult {
   const violation = stateRootViolation(stateRoot, clone);
   if (violation !== null) return { created: false, detail: violation };
   const runId = (ports.runId ?? (() => `run-${randomBytes(16).toString('hex')}`))();
   if (!RUN_ID.test(runId)) return { created: false, detail: `run id ${runId} is not of the form run-<32 hex>` };
+  let disclosure: string | undefined;
+  try { disclosure = files.rawReadDisclosure?.(runId); }
+  catch { return { created: false, detail: 'the required raw-read disclosure could not be encoded' }; }
   fs.mkdirSync(stateRoot, { recursive: true, mode: 0o700 });
   const runDir = path.join(stateRoot, runId);
   try {
@@ -128,9 +133,14 @@ export function createRunDirectory(
   } catch (cause) {
     return { created: false, detail: `run directory ${runDir} could not be created (${(cause as NodeJS.ErrnoException).code ?? 'unknown-error'})` };
   }
-  fs.writeFileSync(path.join(runDir, RUN_LAYOUT.config), configJson, { mode: 0o600, flag: 'wx' });
-  if (files.launchDisclosure !== undefined) {
-    fs.writeFileSync(path.join(runDir, RUN_LAYOUT.launchDisclosure), files.launchDisclosure, { mode: 0o600, flag: 'wx' });
-  }
+  try {
+    if (disclosure !== undefined) {
+      fs.writeFileSync(path.join(runDir, RUN_LAYOUT.rawReadDisclosure), disclosure, { mode: 0o600, flag: 'wx' });
+    }
+    fs.writeFileSync(path.join(runDir, RUN_LAYOUT.config), configJson, { mode: 0o600, flag: 'wx' });
+    if (files.launchDisclosure !== undefined) {
+      fs.writeFileSync(path.join(runDir, RUN_LAYOUT.launchDisclosure), files.launchDisclosure, { mode: 0o600, flag: 'wx' });
+    }
+  } catch { return { created: false, detail: 'the new run records could not be written' }; }
   return { created: true, runId, runDir };
 }
