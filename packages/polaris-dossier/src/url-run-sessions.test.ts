@@ -59,7 +59,8 @@ beforeAll(async () => {
   expect(result.ok).toBe(true); if (!result.ok) throw new Error('own native role planning refused');
   prepared = result; cleanup.push(result.socketRoot);
 }, 30_000);
-async function runtimeFixture(failRole?: ViewRole, sampleForRole?: (role: ViewRole) => Promise<boolean>) {
+async function runtimeFixture(failRole?: ViewRole, sampleForRole?: (role: ViewRole) => Promise<boolean>,
+  healthyForRole: (role: ViewRole) => boolean = () => true) {
   const parent = await mkdtemp(path.join(planning.hidden, 'urs-audit-')); cleanup.push(parent);
   const committed: string[] = [];
   const calls: string[] = [], captured = new Map<ViewRole, SessionHostOptions>(), failures: string[] = [];
@@ -79,7 +80,7 @@ async function runtimeFixture(failRole?: ViewRole, sampleForRole?: (role: ViewRo
     },
     host: async input => {
       const role = input.profile.input.binding.role as ViewRole; calls.push(`host:${role}`); captured.set(role, input);
-      return { brokerSocket: input.brokerSocket, relaySocket: input.relaySocket, close: async () => {
+      return { brokerSocket: input.brokerSocket, relaySocket: input.relaySocket, healthy: () => healthyForRole(role), close: async () => {
         calls.push(`host-close:${role}`); return { pendingInvocations: 0, termination: 'settled' }; } };
     },
     launch: async input => {
@@ -226,6 +227,24 @@ describe('one root lifecycle for four restricted URL roles', () => {
       expect(reads).toBe(0);
     } finally { await runtime.stop(); }
   });
+  it('refuses host health lost while the external authority check is awaiting', async () => {
+    let healthy = true, authority: () => boolean | Promise<boolean> = () => true;
+    const f = await runtimeFixture(undefined, undefined, () => healthy);
+    const runtime = await f.start({ ...f.options, current: () => authority() });
+    let entered!: () => void, release!: (value: boolean) => void;
+    const checking = new Promise<void>(resolve => { entered = resolve; });
+    const held = new Promise<boolean>(resolve => { release = resolve; });
+    try {
+      authority = () => { entered(); return held; };
+      const pending = runtime.current();
+      await checking;
+      healthy = false; release(true);
+      expect(await pending).toBe(false);
+      expect(f.failures).toEqual(['transport-unavailable']);
+      expect(runtime.summary().failure).toBe('transport-unavailable');
+    } finally { release(true); await runtime.stop(); }
+  });
+
   it('consumes one shared request budget across different roles without refunding an uncertain attempt', async () => {
     const f = await runtimeFixture(), runtime = await f.start({ ...f.options, record: { ...f.options.record,
       declared: { ...f.options.record.declared, agentTurnBudget: 1 } } });

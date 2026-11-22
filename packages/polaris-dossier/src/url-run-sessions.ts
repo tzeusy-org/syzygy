@@ -158,13 +158,17 @@ async function start(options: UrlRunSessionsOptions, ports: typeof native): Prom
     failure = reason;
     try { options.onFailure(reason); } catch { /* Failure never reopens the host. */ }
   };
-  const current = async (): Promise<boolean> => {
+  const effectCurrent = (): boolean => {
     if (stopping || failure !== null || !budget.current() || cpu?.current() === false) return false;
     if ([...hostHealth.values()].some(healthy => !healthy())) { fail('transport-unavailable'); return false; }
+    return true;
+  };
+  const current = async (): Promise<boolean> => {
+    if (!effectCurrent()) return false;
     try {
       const valid = await options.current() === true;
       if (!valid) { fail('binding-changed'); return false; }
-      return !stopping && failure === null && budget.current();
+      return effectCurrent();
     }
     catch { fail('binding-changed'); return false; }
   };
@@ -283,7 +287,7 @@ async function start(options: UrlRunSessionsOptions, ports: typeof native): Prom
       const production = options.production!;
       machine = await createUrlRunMachine({ ...production, originPolicySha256: options.originPolicySha256,
         pin: record.subject.pinnedRevision.commit, runId: binding.run, runtime: options.runtime, plans,
-        deadline: options.deadline, now: options.now, current: production.current, reverify: options.current,
+        deadline: options.deadline, now: options.now, current: production.current, effectCurrent, reverify: options.current,
         launch: role => processes.get(role), audit: event => audit.appendMachinePeer(event),
         chargeNativeCpuMicroseconds: capacity => cpu!.charge('machine', capacity) });
     }
