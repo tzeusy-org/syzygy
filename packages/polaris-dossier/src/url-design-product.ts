@@ -120,7 +120,8 @@ export async function admitUrlDesignProduct(input: ProducedSiteInput, options: D
 }
 
 /** Mint only at the end of this actual successful pre-storage check. This token
- * expires with the original authenticated read operation (at most five seconds).
+ * expires with the original authenticated URL render read operation (at most
+ * thirty seconds, clipped to the original run deadline).
  * Renewal requires a new genuine operation proving the exact consumed population;
  * writable saved records cannot revive it. No durable handoff is implemented. */
 export async function validateUrlDesignProduct(input: ProducedSiteInput, options: DesignProductOptions): Promise<ValidatedUrlDesignProduct | null> {

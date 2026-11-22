@@ -1,3 +1,4 @@
+import { URL_PRODUCT_READ_MILLISECONDS } from './url-product-read-limits.js';
 import type { UrlVerifiedRecoveryProducts } from './url-recovery-products.js';
 import { URL_ARTIFACT_LIMITS, selectors, knownRecord, FROZEN_DRAFT_PATH, AUTHOR_FEEDBACK, PACKET_PATH,
   productPopulation, verifyFrozenOriginProvenance, type UrlProductSelector, type UrlFrozenProductHistory, type FrozenProductIdentity } from './url-frozen-product-history.js';
@@ -72,7 +73,7 @@ export interface UrlRunArtifactsOptions {
   /** The actual loaded screen for this core policy, supplied by the host. */
   readonly screen?: DossierScreen;
 }
-export type UrlProductReadOperation = 'render' | 'review-packet' | 'review-check' | 'inventory-check' | 'author-check';
+export type UrlProductReadOperation = keyof typeof URL_PRODUCT_READ_MILLISECONDS;
 export type UrlProductReadLeaseState = 'open' | 'expired' | 'retired' | 'Unknown';
 /** No object shape authenticates this token; each bridge owns its WeakMap. */
 export interface UrlProductReadContext { readonly kind: 'url-product-read-context'; }
@@ -1109,8 +1110,8 @@ function create(given: UrlRunArtifactsOptions) {
   }
   function beginRead(input: { readonly operation: UrlProductReadOperation; readonly deadline: number; readonly signal?: AbortSignal }): UrlProductReadContext {
     live(); const now = Date.now();
-    if (!initial || !keys(input, ['operation', 'deadline'], ['signal']) || !['render', 'review-packet', 'review-check', 'inventory-check', 'author-check'].includes(input.operation)
-      || !Number.isSafeInteger(input.deadline) || input.deadline <= now || input.deadline > now + 5000
+    if (!initial || !keys(input, ['operation', 'deadline'], ['signal']) || !Object.hasOwn(URL_PRODUCT_READ_MILLISECONDS, input.operation)
+      || !Number.isSafeInteger(input.deadline) || input.deadline <= now || input.deadline > now + URL_PRODUCT_READ_MILLISECONDS[input.operation]
       || (input.signal !== undefined && (!(input.signal instanceof AbortSignal) || input.signal.aborted))
       || activeReads.size >= 16 || ++readContextCount > limits.registrations) refuse();
     const context: UrlProductReadContext = Object.freeze({ kind: 'url-product-read-context' });

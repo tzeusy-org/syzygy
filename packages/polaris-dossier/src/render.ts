@@ -1,3 +1,4 @@
+import { URL_PRODUCT_READ_MILLISECONDS } from './url-product-read-limits.js';
 import { isRunProductReads, protectedProductRecord, yieldForProductReads, UrlProductReadRefusal, type ProductReadEvidence } from './url-operation-products.js';
 import { createHash, randomBytes } from 'node:crypto';
 import * as fs from 'node:fs';
@@ -367,9 +368,16 @@ async function render(runDir: string, deps: RenderDeps, storedSite?: StoredUrlRe
       }
       return { input: { local: next, sources: rebuilt.sources }, derived: rederived };
     };
+    // URL reproduction shares the already-issued read deadline: it receives no
+    // fresh allowance after the initial draw, and cannot outlive the run.
+    const producerMilliseconds = urlMode
+      ? Math.max(0, Math.min(URL_PRODUCT_READ_MILLISECONDS.render, products!.deadline - Date.now()))
+      : RENDER_PRODUCER_MILLISECONDS;
+    if (producerMilliseconds === 0) return refuse('render', 'The rendered products were not admitted by the checked producer before storage.');
     const abort = new AbortController();
-    const expires = performance.now() + RENDER_PRODUCER_MILLISECONDS;
-    const expired = (): boolean => abort.signal.aborted || performance.now() >= expires;
+    const expires = performance.now() + producerMilliseconds;
+    const expired = (): boolean => abort.signal.aborted || performance.now() >= expires
+      || (urlMode && (Date.now() >= products!.deadline || !products!.isLeaseOpen()));
     let timer: ReturnType<typeof setTimeout> | undefined, completed = false;
     try {
       const admitted = await Promise.race([
@@ -384,7 +392,7 @@ async function render(runDir: string, deps: RenderDeps, storedSite?: StoredUrlRe
               .map(([repositoryPath, blob]) => ({ path: repositoryPath, objectId: blob.objectId,
                 raw: blob.withheld === undefined ? blob.raw : null, redacted: blob.withheld !== undefined })) });
         }),
-        new Promise<false>(resolve => { timer = setTimeout(() => { abort.abort(); resolve(false); }, RENDER_PRODUCER_MILLISECONDS); }),
+        new Promise<false>(resolve => { timer = setTimeout(() => { abort.abort(); resolve(false); }, producerMilliseconds); }),
       ]);
       if (admitted !== true || expired()) return refuse('render', 'The rendered products were not admitted by the checked producer before storage.');
       completed = true;

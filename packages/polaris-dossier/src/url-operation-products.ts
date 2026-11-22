@@ -1,3 +1,4 @@
+import { URL_PRODUCT_READ_MILLISECONDS } from './url-product-read-limits.js';
 import path from 'node:path';
 import { setImmediate as yieldToPoll } from 'node:timers/promises';
 import { isRecord, sha256 } from '@syzygy/support';
@@ -9,6 +10,7 @@ type ArtifactBridge = ReturnType<typeof createUrlRunArtifacts>;
 export type ProductReadEvidence = ReturnType<ArtifactBridge['revalidateRead']>;
 export interface RunProductReads {
   readonly run: string;
+  readonly deadline: number;
   readonly read: (relativePath: string) => Uint8Array | null;
   readonly readBatch: (relativePaths: readonly string[]) => readonly (Uint8Array | null)[];
   readonly select: (selector: UrlProductSelector) => readonly string[];
@@ -36,9 +38,10 @@ export function isRunProductReads(reads: RunProductReads | undefined): reads is 
 
 export function beginRunProductReads(run: string, artifacts: ArtifactBridge, operation: UrlProductReadOperation, deadline: number,
   awaitProductRead?: () => Promise<boolean>): RunProductReads {
-  const context = guarded(() => artifacts.beginRead({ operation, deadline: Math.min(deadline, Date.now() + 5000) }));
+  const endsAt = Math.min(deadline, Date.now() + URL_PRODUCT_READ_MILLISECONDS[operation]);
+  const context = guarded(() => artifacts.beginRead({ operation, deadline: endsAt }));
   const reads = Object.freeze({
-    run,
+    run, deadline: endsAt,
     read: (file: string) => guarded(() => artifacts.readProduct(context, file).bytes),
     readBatch: (files: readonly string[]) => guarded(() => artifacts.readProducts(context, files).map(product => product.bytes)),
     select: (selector: UrlProductSelector) => guarded(() => artifacts.selectProducts(context, selector)),
