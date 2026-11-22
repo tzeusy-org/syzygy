@@ -1,0 +1,315 @@
+{
+  "subject": {
+    "commit": "ade6d106e6522eadce216cba127627a10280fdfa",
+    "testPath": "packages/polaris-dossier/src/url-run-composed.test.ts",
+    "testSha256": "4eb16079498791d57b46e0de32dd253359fd0dfe02fd04b6d804a2d243191c18"
+  },
+  "hostedJob": {
+    "completedAt": "2026-11-22T17:05:20Z",
+    "conclusion": "failure",
+    "headSha": "ade6d106e6522eadce216cba127627a10280fdfa",
+    "jobId": 137281086491,
+    "runId": 45045884454,
+    "startedAt": "2026-11-22T16:51:29Z",
+    "status": "completed",
+    "url": "https://github.com/tzeusy-org/syzygy/actions/runs/45045884454/job/137281086491",
+    "logSha256": "70342b69fa46093ed9d014e78448bc7c07d48530848216e79b41c2f74ad29d3a"
+  },
+  "suite": {
+    "files": 136,
+    "passed": 3760,
+    "failed": 1,
+    "skipped": 3
+  },
+  "cases": [
+    {
+      "name": "complete",
+      "outcome": "passed",
+      "milliseconds": 106949
+    },
+    {
+      "name": "delivery-stop",
+      "outcome": "passed",
+      "milliseconds": 62349
+    },
+    {
+      "name": "stop-resume",
+      "outcome": "failed",
+      "milliseconds": 306369
+    },
+    {
+      "name": "eligible-stop-resume",
+      "outcome": "passed",
+      "milliseconds": 214084
+    }
+  ],
+  "resumeChecks": [
+    {
+      "phase": "verify",
+      "ok": true,
+      "nextDesignRound": 2
+    },
+    {
+      "phase": "claim",
+      "exactCut": true,
+      "current": true
+    },
+    {
+      "phase": "resumed-guards",
+      "policyWithdrawal": "refused",
+      "claimWithdrawal": "refused"
+    },
+    {
+      "phase": "machine-claim",
+      "current": true,
+      "claimChecks": 1,
+      "withdrawn": true,
+      "asyncCurrent": true,
+      "asyncWithdrawn": true
+    },
+    {
+      "phase": "resumed-exit",
+      "exit": 1,
+      "failure": "transport-unavailable",
+      "roles": [
+        {
+          "role": "author",
+          "outcome": "Unknown"
+        },
+        {
+          "role": "inventory",
+          "outcome": "Unknown"
+        },
+        {
+          "role": "fidelity",
+          "outcome": "Unknown"
+        },
+        {
+          "role": "design",
+          "outcome": "inspection-failed",
+          "exitCode": null,
+          "signal": "SIGTERM"
+        }
+      ]
+    }
+  ],
+  "diagnostic": {
+    "connectionCount": 2,
+    "transportCounts": {
+      "open": 2,
+      "accept": 2,
+      "capture": 2,
+      "authorize": 2
+    },
+    "connections": [
+      {
+        "ordinal": 1,
+        "stages": {
+          "open": {
+            "startedMs": 84368.059,
+            "settledMs": 89818.111,
+            "outcome": "accepted"
+          },
+          "accept": {
+            "startedMs": 84368.178,
+            "settledMs": 87307.841,
+            "outcome": "accepted"
+          },
+          "capture": {
+            "startedMs": 84512.883,
+            "settledMs": 87307.793,
+            "outcome": "accepted"
+          },
+          "authorize": {
+            "startedMs": 87307.998,
+            "settledMs": 89817.963,
+            "outcome": "accepted"
+          }
+        },
+        "boundMs": 180000,
+        "kind": "inference-bridge"
+      },
+      {
+        "ordinal": 2,
+        "stages": {
+          "open": {
+            "startedMs": 194614.425,
+            "settledMs": 197778.281,
+            "outcome": "accepted"
+          },
+          "accept": {
+            "startedMs": 194614.556,
+            "settledMs": 195759.616,
+            "outcome": "accepted"
+          },
+          "capture": {
+            "startedMs": 194726.778,
+            "settledMs": 195759.586,
+            "outcome": "accepted"
+          },
+          "authorize": {
+            "startedMs": 195759.691,
+            "settledMs": 197778.155,
+            "outcome": "accepted"
+          }
+        },
+        "boundMs": 85000,
+        "kind": "mcp-shim"
+      }
+    ],
+    "refusals": {},
+    "inspectedLaunches": 1,
+    "samples": {
+      "started": 284,
+      "verified": 284,
+      "verifyRefused": 0,
+      "verifyRejected": 0,
+      "confirmed": 283,
+      "confirmRefused": 1,
+      "confirmRejected": 0
+    },
+    "latestSample": {
+      "ordinal": 284,
+      "verify": {
+        "startedMs": 222925.751,
+        "settledMs": 223080.811,
+        "outcome": "accepted"
+      },
+      "confirmationInput": true,
+      "confirm": {
+        "startedMs": 223126.115,
+        "settledMs": 223163.933,
+        "outcome": "refused"
+      }
+    },
+    "lastConfirmed": {
+      "ordinal": 283,
+      "verify": {
+        "startedMs": 221985.803,
+        "settledMs": 222171.227,
+        "outcome": "accepted"
+      },
+      "confirmationInput": true,
+      "confirm": {
+        "startedMs": 222172.935,
+        "settledMs": 222204.893,
+        "outcome": "accepted"
+      }
+    },
+    "firstSampleRefusal": {
+      "ordinal": 284,
+      "verify": {
+        "startedMs": 222925.751,
+        "settledMs": 223080.811,
+        "outcome": "accepted"
+      },
+      "confirmationInput": true,
+      "confirm": {
+        "startedMs": 223126.115,
+        "settledMs": 223163.933,
+        "outcome": "refused"
+      }
+    },
+    "terminal": {
+      "atMs": 223178.909,
+      "outcome": "inspection-failed",
+      "latestSample": {
+        "ordinal": 284,
+        "verify": {
+          "startedMs": 222925.751,
+          "settledMs": 223080.811,
+          "outcome": "accepted"
+        },
+        "confirmationInput": true,
+        "confirm": {
+          "startedMs": 223126.115,
+          "settledMs": 223163.933,
+          "outcome": "refused"
+        }
+      }
+    },
+    "broker": {
+      "invocations": 1,
+      "firstPeerInvocations": 1,
+      "faultMs": 223121.054,
+      "stages": {
+        "invoke": {
+          "startedMs": 199637.542,
+          "settledMs": 223121.003,
+          "outcome": "rejected"
+        },
+        "host-current": {
+          "startedMs": 199637.703,
+          "settledMs": 211003.287,
+          "outcome": "accepted"
+        },
+        "mediate-peer": {
+          "startedMs": 211003.52,
+          "settledMs": 223120.764,
+          "outcome": "refused"
+        },
+        "host-action": {
+          "startedMs": 214711.687,
+          "settledMs": 223082.028,
+          "outcome": "rejected"
+        },
+        "transfer-bounds": {
+          "startedMs": 216177.703,
+          "settledMs": 216315.409,
+          "outcome": "accepted"
+        },
+        "plan-work-hold": {
+          "startedMs": 216315.579,
+          "settledMs": 216316.049,
+          "outcome": "refused"
+        }
+      }
+    },
+    "mcpIngress": {
+      "counts": {
+        "started": 2,
+        "data": 1,
+        "end": 1,
+        "pending": 0,
+        "refused": 0,
+        "rejected": 0
+      },
+      "startedMs": 197778.544,
+      "firstDataMs": 198687.084,
+      "endMs": 199637.167
+    },
+    "audit": {
+      "status": "read",
+      "count": 20,
+      "kinds": [
+        "declaration",
+        "launch-attempt",
+        "launch-history",
+        "design-delivery",
+        "machine-peer:inference-forward",
+        "machine-peer:inference-forward",
+        "machine-peer:inference-forward",
+        "relay:attempt-allowed",
+        "machine-peer:inference-forward",
+        "machine-peer:inference-forward",
+        "relay:send-attempt",
+        "machine-peer:inference-forward",
+        "relay:send-outcome",
+        "machine-peer:inference-forward",
+        "machine-peer:inference-forward",
+        "usage",
+        "relay:response-admitted",
+        "machine-peer:inference-forward",
+        "machine-peer:dossier_step",
+        "ordered:retired"
+      ]
+    }
+  },
+  "designProviderForwards": 1,
+  "designRelayEvents": [
+    "attempt-allowed",
+    "send-attempt",
+    "send-outcome",
+    "response-admitted"
+  ]
+}
