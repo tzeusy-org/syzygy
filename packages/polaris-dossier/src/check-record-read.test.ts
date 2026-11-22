@@ -6,6 +6,7 @@ import { tempDir } from '@syzygy/test-kit';
 import { patchFs } from './fs-patch.testkit.js';
 import { cycleBreakdown, latestChecks } from './polaris.js';
 import { latestPassedDraft } from './review.js';
+import { readCheckRecord } from './check-record-read.js';
 
 // REQ-polaris-generation-034 version 2.8 (syzygy-3efd.72): every reader of a draft check record reads it as one JSON document of at most
 // 16,777,216 bytes and 2,000,000 values, no value nested more than 16 levels below the root (the root at depth 0). A record past any bound
@@ -62,21 +63,30 @@ describe('the check-record read bound (version 2.8)', () => {
   });
 
   it('refuses a record over 16,777,216 bytes from its size alone, never reading a byte of it, and reads one at the bound', () => {
-    const readsOf = (record: string): string[] => {
+    const readsOf = (record: string): number[] => {
       const run = runWith(record);
       const subject = path.join(run, 'checks', 'rev-2.json');
-      const reads: string[] = [];
-      const restore = patchFs('readFileSync', (original) => ((file: fs.PathOrFileDescriptor, ...rest: unknown[]) => {
-        if (file === subject) reads.push('rev-2.json');
-        return (original as (...args: unknown[]) => unknown)(file, ...rest);
-      }) as typeof original);
-      try {
-        latestPassedDraft(run); cycleBreakdown(run); latestChecks(run);
-      } finally { restore(); }
+      const reads: number[] = [];
+      for (const reader of [() => latestPassedDraft(run), () => cycleBreakdown(run), () => latestChecks(run)]) {
+        let bytes = 0;
+        const selected = new Set<number>();
+        const restoreOpen = patchFs('openSync', open => ((file: fs.PathLike, ...rest: unknown[]) => {
+          const fd = (open as (...args: unknown[]) => number)(file, ...rest);
+          if (file === subject) selected.add(fd); else selected.delete(fd);
+          return fd;
+        }) as typeof open);
+        const restore = patchFs('readSync', (original) => ((fd: number, ...rest: unknown[]) => {
+          const count = (original as (...args: unknown[]) => number)(fd, ...rest);
+          if (selected.has(fd)) bytes += count;
+          return count;
+        }) as typeof original);
+        try { reader(); } finally { restore(); restoreOpen(); }
+        reads.push(bytes);
+      }
       return reads;
     };
-    expect(readsOf(ofBytes(16_777_217))).toEqual([]);
-    expect(readsOf(ofBytes(16_777_216))).toEqual(['rev-2.json', 'rev-2.json', 'rev-2.json']);
+    expect(readsOf(ofBytes(16_777_217))).toEqual([0, 0, 0]);
+    expect(readsOf(ofBytes(16_777_216))).toEqual([16_777_216, 16_777_216, 16_777_216]);
   });
 
   it('reads a record of 2,000,000 values and refuses one of 2,000,001, in every reader', () => {
@@ -105,4 +115,23 @@ describe('the check-record read bound (version 2.8)', () => {
       expect(readers(record), record).toEqual({ ...UNREADABLE, latest: null });
     }
   });
+});
+
+it('refuses linked, changing and invalid UTF-8 check records at the shared reader', () => {
+  const root = tempDir('check-record-safety-');
+  const original = path.join(root, 'original.json'), linked = path.join(root, 'linked.json');
+  fs.writeFileSync(original, '{}');
+  fs.symlinkSync(original, linked);
+  expect(() => readCheckRecord(linked)).toThrow();
+  fs.unlinkSync(linked); fs.linkSync(original, linked);
+  expect(() => readCheckRecord(linked)).toThrow();
+  fs.unlinkSync(linked);
+  const restore = patchFs('readSync', read => ((fd: number, ...rest: unknown[]) => {
+    const count = (read as (...args: unknown[]) => number)(fd, ...rest);
+    if (count > 0) fs.appendFileSync(original, ' ');
+    return count;
+  }) as typeof read);
+  try { expect(() => readCheckRecord(original)).toThrow(); } finally { restore(); }
+  fs.writeFileSync(original, Buffer.from([0x7b, 0x22, 0x78, 0x22, 0x3a, 0x22, 0xff, 0x22, 0x7d]));
+  expect(() => readCheckRecord(original)).toThrow();
 });

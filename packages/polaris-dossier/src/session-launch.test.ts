@@ -1,9 +1,9 @@
-import { mkdir, mkdtemp, rm, rmdir, unlink, writeFile, readFile, realpath, readdir, access } from 'node:fs/promises';
+import { mkdir, mkdtemp, rm, rmdir, unlink, writeFile, readFile, realpath, readdir, access, copyFile } from 'node:fs/promises';
 import { spawn } from 'node:child_process';
 import * as net from 'node:net';
 import os from 'node:os';
 import path from 'node:path';
-import { afterEach, describe, expect, it, vi } from 'vitest';
+import { afterAll, afterEach, describe, expect, it, vi } from 'vitest';
 import { encodeCanonicalJson, parseBoundedJson, REVIEW_STATUS_REGION_OPEN } from '@syzygy/polaris-generation-core/live';
 import { sha256 } from '@syzygy/support';
 import { policyFixture } from './full-run.testkit.js';
@@ -122,7 +122,7 @@ async function fixture() {
   const relay = sessionRelayTestPort(async input => {
     forwards++; events.push('forward'); expect(events.at(-2)).toBe('audit:attempt-allowed');
     expect(input.headers.authorization).toBe('Bearer NONSECRET-SYNTHETIC-OAUTH-TOKEN-ONLY');
-    expect(JSON.parse(Buffer.from(input.body).toString()).metadata.user_id).toBe(`syzygy:own-run:author:${profile.input.sessionId}`);
+    expect(JSON.parse(Buffer.from(input.body).toString()).metadata.user_id).toBe(`syzygy:own-run:author/${profile.input.sessionId}`);
     return { status: 200, contentType: 'text/event-stream', requestFlushed: true, body: response(forwards === 1) };
   },server=>server.on('request',incoming=>{const chunks:Buffer[]=[];incoming.on('data',chunk=>chunks.push(chunk));incoming.on('end',()=>{try{
     const actual=JSON.parse(Buffer.concat(chunks).toString());actual.metadata=profile.baseline.metadata;actual.tool_choice=profile.baseline.tool_choice;
@@ -157,6 +157,25 @@ async function compiledSessionSupport(): Promise<ReadonlyMap<string, Buffer>> {
   return compileDossierSessionSupport(name => readFile(new URL(name, root)));
 }
 
+// Package-manager cleanup must not unlink the native image midway through
+// this file's cases. Each test process owns one copy and still verifies its
+// fixed release digest at the real launch boundary.
+let nativeImage: Promise<string> | undefined;
+let nativeImageRoot: string | undefined;
+afterAll(async () => {
+  if (nativeImageRoot !== undefined) await rm(nativeImageRoot, { recursive: true, force: true });
+});
+function pinnedNativeImage(): Promise<string> {
+  return nativeImage ??= (async () => {
+    const source = await realpath(path.join(os.homedir(), '.local/share/claude/versions', URL_CLI_PROGRAM.version));
+    nativeImageRoot = await mkdtemp(path.join(os.tmpdir(), 'syzygy-native-image-'));
+    const target = path.join(nativeImageRoot, 'claude');
+    await copyFile(source, target);
+    if (!await verifySupportedUrlCli(target)) throw new Error('owned native image verification refused');
+    return target;
+  })();
+}
+
 async function privateLaunchOptions(root: string, profile: NativeSessionProfile, role: 'author' | 'design',
   audit: UrlSessionLaunchOptions['audit'], limits: UrlSessionLaunchOptions['limits'] = {}, support: 'ordinary' | 'ordered-design' = 'ordinary',
 ): Promise<UrlSessionLaunchOptions> {
@@ -174,7 +193,7 @@ async function privateLaunchOptions(root: string, profile: NativeSessionProfile,
   await new Promise<void>((resolve,reject)=>{listener.once('error',reject);listener.listen(0,'127.0.0.1',resolve)});
   cleanup.push(()=>new Promise<void>(resolve=>listener.close(()=>resolve())));
   const address=listener.address();if(!address||typeof address==='string')throw Error('own listener');
-  return {view:{role,cliExecutable:await realpath(path.join(os.homedir(), '.local/share/claude/versions', URL_CLI_PROGRAM.version)),nodeExecutable,
+  return {view:{role,cliExecutable:await pinnedNativeImage(),nodeExecutable,
     supportDirectory:path.join(root,'support'),homeDirectory:path.join(root,'home'),workDirectory:path.join(root,'work'),
     brokerSocketDirectory:path.join(root,'broker'),relaySocketDirectory:path.join(root,'relay'),protectedPaths:[path.join(root,'hidden')]},
     profile,expected:{nodeSha256:sha256(await readFile(nodeExecutable)),supportSha256},current:()=>true,
@@ -184,7 +203,7 @@ async function privateLaunchOptions(root: string, profile: NativeSessionProfile,
 
 const orderedCanonical = (value: unknown): string => encodeCanonicalJson(value, SESSION_POLICY_LIMITS);
 const sameWireValue = (actual: unknown, expected: unknown): boolean => orderedCanonical(actual) === orderedCanonical(expected);
-type OrderedScenario = 'ready' | 'stale-verdict' | 'out-of-order' | 'truncated-terminal' | 'insufficient-turns' | 'oversized-verdict';
+type OrderedScenario = 'ready' | 'stale-verdict' | 'out-of-order' | 'truncated-terminal' | 'insufficient-turns' | 'oversized-verdict' | 'insufficient-shape';
 
 /** Run only the prepared byte-identical namespace command, with its native
  * resource limits and an independent fixture timeout. The production sampled
@@ -319,7 +338,8 @@ async function runNativeOrderedFixture(scenario: OrderedScenario) {
   const budget = createUrlSessionBudget({ deadline: Date.parse(plan.manifest.binding.deadline), now: Date.now,
     turnBudget: scenario === 'insufficient-turns' ? 4 : 5, tokenBudget: null });
   let relay: SessionRelay;
-  const orderedSession = createOrderedDesignSession({ profile, plan, principal, writer, budget, relay: () => relay, envelope: () => view.bytes,
+  const orderedSession = createOrderedDesignSession({ profile, plan, principal, writer, budget,
+    ...(scenario === 'insufficient-shape' ? { requestMaxBytes: 16_384 } : {}), relay: () => relay, envelope: () => view.bytes,
     current: () => true, assertCurrent: () => {}, stageVerdict: async ({ stdin, assertCurrent }) => {
       await expect(writer.readTerminal()).rejects.toThrow('url-ordered-design-audit-writer-refused');
       assertCurrent();
@@ -389,13 +409,27 @@ async function runNativeOrderedFixture(scenario: OrderedScenario) {
           }
         }
         const body = Buffer.from(orderedCanonical({ ...normalized, messages }));
+        const detectors = { scanSecrets: (text: string) => screen.screenSecrets(text) !== undefined,
+          scanDesignView: (text: string) => screen.screenBody(text) !== undefined };
+        if (checked === 0) {
+          const admission = orderedSession.checkRequest(bytes, detectors);
+          if (!admission.ok || !sameWireValue(admission.value.received, { bytes: bytes.length, sha256: sha256(bytes) })
+            || !sameWireValue(admission.value.forwarded, { bytes: body.length, sha256: sha256(body) })) throw new Error('initial request refused');
+        }
         if (checked > 0) {
           const result = (index: number) => ({ toolUseId: steps[index]!.call.id, usage: responseUsage[index]! });
           const ordered = { profile, plan, envelope: view.bytes, prepared: result(0),
             parts: steps.slice(1, Math.min(checked, 3)).map((_, index) => result(index + 1)),
             ...(checked === steps.length ? { acknowledgment: { ...result(3), input: submit } } : {}) };
-          const detectors = { scanSecrets: (text: string) => screen.screenSecrets(text) !== undefined,
-            scanDesignView: (text: string) => screen.screenBody(text) !== undefined };
+          if (scenario === 'ready' && checked === 1) {
+            for (const unknownHistory of [
+              [{ role: 'user', content: 'Unregistered initial history.' }, ...messages.slice(1)],
+              [...messages, { role: 'user', content: 'Unregistered extra history.' }],
+              [...messages.slice(0, -1), { ...messages.at(-1), content: [...messages.at(-1)!.content,
+                { type: 'text', text: 'Unregistered result suffix.' }] }],
+            ]) expect(() => orderedSession.checkRequest(Buffer.from(orderedCanonical({ ...controls, messages: unknownHistory })), detectors))
+              .toThrow('url-ordered-design-session-refused');
+          }
           const admission = orderedSession.checkRequest(bytes, detectors);
           if (!admission.ok) throw new Error(`ordered detector branches refused (${admission.code})`);
           if (!sameWireValue(admission.value.received, { bytes: bytes.length, sha256: sha256(bytes) })
@@ -483,13 +517,13 @@ const fixedProfileInput = {
 };
 
 describe('prepared private CLI launch',()=>{
-  it('compiles the independently named design profile while preserving exact ordinary profile bytes', () => {
+  it('compiles the independently named design profile with pinned version-two metadata', () => {
     const ordinary = createSessionProfile(fixedProfileInput), ordered = createOrderedDesignSessionProfile(fixedProfileInput);
     if (!ordinary.ok || !ordered.ok) throw new Error('own fixed profile refused');
     const base = ordinary.value.profile, profile = ordered.value.profile;
-    expect(base).toMatchObject({ id: 'claude-2.1.327-sonnet46/1', bytes: 9299,
-      digest: '449669bbb011a9cad8a1b694534fed91fe75aeece278118620f154762ac0cf08' });
-    expect(profile.id).toBe('claude-2.1.327-sonnet46/ordered-design-1');
+    expect(base).toMatchObject({ id: 'claude-2.1.327-sonnet46/2', bytes: 9299,
+      digest: 'a1f5166c9d049c418c8e1fe7dce6bbdf7ee72aaf830e16dcb3cf39dc175a8d11' });
+    expect(profile.id).toBe('claude-2.1.327-sonnet46/ordered-design-2');
     expect(profile.baseline).toEqual(base.baseline);
     expect(profile.baselineOrigin.originIds[0]).toBe(profile.id);
     expect(profile.initialScaffoldingOrigin.originIds[0]).toBe(profile.id);
@@ -595,7 +629,7 @@ describe('prepared private CLI launch',()=>{
       tool.name === 'artifact_read' ? { ...tool, _meta: { 'anthropic/maxResultSizeChars': 500000 } } : tool) } });
   });
 
-  it.each(['ready', 'stale-verdict', 'out-of-order', 'truncated-terminal', 'insufficient-turns', 'oversized-verdict'] as const)('observes the actual ordered design CLI exchange (%s)', async scenario => {
+  it.each(['ready', 'stale-verdict', 'out-of-order', 'truncated-terminal', 'insufficient-turns', 'oversized-verdict', 'insufficient-shape'] as const)('observes the actual ordered design CLI exchange (%s)', async scenario => {
     const observed = await runNativeOrderedFixture(scenario);
     const evidence = JSON.stringify({ faults: observed.faults, checked: observed.checked, delivered: observed.delivered.length,
       audit: observed.audit.map(event => event.event),
@@ -605,11 +639,12 @@ describe('prepared private CLI launch',()=>{
       expect(observed.orderedRecords.map(record => record.kind)).not.toContain('eligible');
       expect(observed.orderedRecords.at(-1)?.kind).toBe('retired');
     }
-    if (scenario === 'insufficient-turns') {
+    if (scenario === 'insufficient-turns' || scenario === 'insufficient-shape') {
       expect(observed.checked, evidence).toBe(1);
       expect(observed.delivered).toEqual([]);
       expect(observed.forwarded).toHaveLength(1);
-      expect(observed.budget).toMatchObject({ reason: 'turn-budget', requestReservations: 1, heldDesignTurns: 0, reportedTokens: 7 });
+      expect(observed.budget).toMatchObject({ reason: scenario === 'insufficient-turns' ? 'turn-budget' : null,
+        requestReservations: 1, heldDesignTurns: 0, reportedTokens: 7 });
       expect(observed.orderedRecords.map(record => record.kind)).toEqual(['retired']);
       return;
     }

@@ -21,7 +21,7 @@ afterEach(async () => { for (const control of controls.splice(0)) control.close(
 const secret = (text: string) => /SYNTHETIC_SECRET|CROSSBOUNDARY/u.test(text);
 const bytes = (text: string) => new TextEncoder().encode(text);
 function validDraft(pin: string) {
-  return { schemaVersion: 'polaris-dossier-local-draft-v4', pinnedRevision: pin, sessionId: 'own-author', title: 'Own fixture',
+  return { schemaVersion: 'polaris-dossier-local-draft-v7', thesisBasis: 'none', pinnedRevision: pin, sessionId: 'own-author', title: 'Own fixture',
     introduction: { id: 'intro', label: 'non-normative', text: 'A reading guide.' },
     understanding: Object.fromEntries(['purpose', 'beneficiary', 'proposition', 'capabilities', 'components', 'choices', 'tradeOffs', 'limits', 'terminology', 'contradictions', 'openQuestions']
       .map(key => [key, [{ id: `u-${key}`, label: 'unknown', reason: 'missing-evidence', statement: 'Not stated.', scope: 'Own fixture.', citations: [] }]])),

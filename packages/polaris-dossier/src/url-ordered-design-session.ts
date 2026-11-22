@@ -1,13 +1,14 @@
 import { encodeCanonicalJson, parseBoundedJson } from '@syzygy/polaris-generation-core/live';
 import { deepFreeze, isRecord, sha256 } from '@syzygy/support';
 import type { ReleaseReply } from './session-broker.js';
-import { screenOrderedDesignRequest, type OrderedDesignRequestChecks } from './session-egress-policy.js';
+import { screenOrderedDesignInitialRequest, screenOrderedDesignRequest, type OrderedDesignRequestChecks } from './session-egress-policy.js';
 import { isOrderedDesignSessionProfile, matchesOrderedDesignContinuationResponse, matchesOrderedDesignTerminalResponse,
   sessionProfileRemainingTokens, type OrderedDesignSessionProfile } from './session-profile.js';
 import { readSessionRelayAuditEvidence, type SessionAuditEvent, type SessionRelay, type SessionRelayPorts,
   type SessionResponseObservation } from './session-relay.js';
 import { decodeSessionResponse, type SessionResponseUsage } from './session-response.js';
 import { isOrderedDesignPlanFor, materializeOrderedDesignPart, type OrderedDesignPlan } from './url-design-delivery.js';
+import { boundOrderedDesignTransfer, type OrderedDesignTransferBounds } from './url-ordered-design-bounds.js';
 import type { OrderedDesignAuditPayloads, OrderedDesignAuditReference } from './url-ordered-design-audit.js';
 import type { OrderedDesignAuditWriter } from './url-ordered-design-writer.js';
 import type { createUrlSessionBudget, UrlOrderedDesignTurnReservation } from './url-session-budget.js';
@@ -32,6 +33,8 @@ interface Options {
   readonly profile: OrderedDesignSessionProfile;
   readonly plan: OrderedDesignPlan;
   readonly principal: string;
+  /** A lower host request cap, when selected before this transfer. */
+  readonly requestMaxBytes?: number;
   readonly relay: () => SessionRelay | undefined;
   readonly writer: OrderedDesignAuditWriter;
   readonly budget: Pick<ReturnType<typeof createUrlSessionBudget>, 'current' | 'reserve' | 'observeUsage' | 'uncertainAttempt' | 'holdOrderedDesignTurns'>;
@@ -76,6 +79,7 @@ export function createOrderedDesignSession(options: Options) {
   const receipts: Receipt[] = [], exchanges: Exchange[] = [];
   let selectedRelay: SessionRelay | undefined;
   let initial = true, stopped = false, busy = false, eligible = false;
+  let admittedInitial = false, transferBounds: OrderedDesignTransferBounds | null = null;
   let initialBudgetPending = false, budgetReservation: UrlOrderedDesignTurnReservation | null = null;
   let request: OrderedDesignRequestChecks | null = null, pending: InFlight | null = null, response: Response | null = null;
   let checkedResponse: { readonly native: NonNullable<SessionAuditEvent['response']>; readonly usage: SessionResponseUsage } | null = null;
@@ -131,8 +135,30 @@ export function createOrderedDesignSession(options: Options) {
   };
 
   const checkRequest = (bytes: Uint8Array, detectors: Parameters<typeof screenOrderedDesignRequest>[2]): ReturnType<typeof screenOrderedDesignRequest> => {
-    if (stopped || eligible || busy || initial || request !== null || pending !== null || receipts.length !== exchanges.length + 1) throw refused();
+    if (stopped || eligible || busy || request !== null || pending !== null) throw refused();
     requireLive();
+    if (initial) {
+      if (admittedInitial || receipts.length !== 0) throw refused();
+      const checks = screenOrderedDesignInitialRequest(bytes, profile, detectors);
+      if (checks.ok) request = checks.value;
+      return checks;
+    }
+    if (transferBounds === null || receipts.length !== exchanges.length + 1) throw refused();
+    // This controller supports exactly the preflighted native history. The
+    // general detector projector may preserve additional registered context;
+    // such context has no capacity reservation in this transfer.
+    const actual = parseBoundedJson(new TextDecoder('utf-8', { fatal: true }).decode(bytes), transcript.requestLimits);
+    const messages = isRecord(actual) ? actual.messages : undefined;
+    if (!Array.isArray(messages) || messages.length !== 1 + 2 * receipts.length
+      || (!equal(messages[0], profile.initialMessage) && !equal(messages[0], profile.historicalInitialMessage))) throw refused();
+    for (const [index, receipt] of receipts.entries()) {
+      const assistant = messages[1 + index * 2], result = messages[2 + index * 2];
+      const block = isRecord(assistant) && Array.isArray(assistant.content) ? assistant.content[0] : null;
+      if (!isRecord(block) || !isRecord(block.input) || sha256(canonical(block.input)) !== receipt.call.inputSha256
+        || !equal(assistant, { role: 'assistant', content: [{ type: 'tool_use', id: receipt.call.id, name: receipt.call.name, input: block.input }] })
+        || !isRecord(result) || Object.keys(result).length !== 2 || result.role !== 'user'
+        || !Array.isArray(result.content) || result.content.length !== 1) throw refused();
+    }
     const prepared = receipts[0]!;
     const asResult = ({ call, usage }: Receipt) => ({ toolUseId: call.id, usage });
     const checks = screenOrderedDesignRequest(bytes, { profile, plan, envelope: envelope(), prepared: asResult(prepared),
@@ -199,7 +225,11 @@ export function createOrderedDesignSession(options: Options) {
       if (event.event === 'attempt-allowed') {
         if (pending !== null || response !== null) throw refused();
         if (initial) {
-          if (event.consumedToolResults.length !== 0 || !budget.reserve('design', event.admission)) throw refused();
+          const checked = request;
+          request = null;
+          if (admittedInitial || checked === null || !equal(checked.received, scope.received) || !equal(checked.forwarded, scope.forwarded)
+            || event.consumedToolResults.length !== 0 || !budget.reserve('design', event.admission)) throw refused();
+          admittedInitial = true;
           initialBudgetPending = true;
           pending = { scope, admission: null, wrapper: null, step: 'send-attempt' };
           return;
@@ -276,6 +306,12 @@ export function createOrderedDesignSession(options: Options) {
     const ordinal = receipts.length;
     let reply: string, receipt: OrderedDesignAuditReference;
     if (ordinal === 0) {
+      if (!admittedInitial || transferBounds !== null) throw refused();
+      transferBounds = boundOrderedDesignTransfer({ profile, plan, envelope: envelope(),
+        retainedMessages: canonical([profile.initialMessage, { role: 'assistant', content: [{ type: 'tool_use',
+          id: issued.call.id, name: issued.call.name, input: pollInput }] }]),
+        ...(options.requestMaxBytes === undefined ? {} : { requestMaxBytes: options.requestMaxBytes }) });
+      if (transferBounds === null) throw refused();
       budgetReservation = budget.holdOrderedDesignTurns(transcript.resultTurns.length, deadline);
       requireNextSend();
       reply = canonical({ kind: 'session-control', ok: true, state: 'events', events: [{ event: transcript.prepared.event, ...plan.prepared }] });

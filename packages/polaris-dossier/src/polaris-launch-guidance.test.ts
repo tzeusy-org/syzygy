@@ -335,7 +335,7 @@ describe('the loop reads each side from its own check directory (syzygy-1z8m.6, 
     if (kind === 'symlink' || kind === 'hardlink') {
       const outside = path.join(run, 'unbound-check.json'); fs.writeFileSync(outside, '{"outcome":"passed"}');
       if (kind === 'symlink') fs.symlinkSync(outside, latest); else fs.linkSync(outside, latest);
-    } else fs.writeFileSync(latest, kind === 'oversized' ? JSON.stringify({ outcome: 'passed', detail: 'x'.repeat(2_097_152) }) : '[]');
+    } else fs.writeFileSync(latest, kind === 'oversized' ? JSON.stringify({ outcome: 'passed', detail: 'x'.repeat(16_777_216) }) : '[]');
     // The preceding passing revision cannot stand in for an unreadable newer one.
     expect(latestChecks(run).draft).toBeNull();
   });

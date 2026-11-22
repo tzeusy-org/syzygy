@@ -12,8 +12,25 @@ export const CHECK_RECORD_LIMITS = Object.freeze({ maxBytes: 16_777_216, maxNode
 /** The draft check record at `file`, parsed under `CHECK_RECORD_LIMITS`; throws where it cannot be read, does not parse or is past a bound.
  * A file larger than the byte bound is refused from its size alone, before any byte of it is read. */
 export function readCheckRecord(file: string): unknown {
-  if (fs.statSync(file).size > CHECK_RECORD_LIMITS.maxBytes) throw new BoundedJsonError('byte-limit');
-  return parseBoundedJson(fs.readFileSync(file, 'utf8'), CHECK_RECORD_LIMITS);
+  const fd = fs.openSync(file, fs.constants.O_RDONLY | fs.constants.O_NOFOLLOW | fs.constants.O_NONBLOCK);
+  try {
+    const before = fs.fstatSync(fd, { bigint: true });
+    if (!before.isFile() || before.nlink !== 1n || before.size > BigInt(CHECK_RECORD_LIMITS.maxBytes)) throw new BoundedJsonError('byte-limit');
+    const buffer = Buffer.alloc(Number(before.size) + 1);
+    let length = 0;
+    while (length < buffer.length) {
+      const count = fs.readSync(fd, buffer, length, buffer.length - length, null);
+      if (count === 0) break;
+      length += count;
+    }
+    const after = fs.fstatSync(fd, { bigint: true }), named = fs.lstatSync(file, { bigint: true });
+    const same = (found: typeof before): boolean => found.isFile() && found.dev === before.dev && found.ino === before.ino
+      && found.nlink === before.nlink && found.uid === before.uid && found.mode === before.mode && found.size === before.size
+      && found.mtimeNs === before.mtimeNs && found.ctimeNs === before.ctimeNs;
+    if (length !== Number(before.size) || !same(after) || !same(named)) throw new BoundedJsonError('byte-limit');
+    const text = new TextDecoder('utf-8', { fatal: true, ignoreBOM: true }).decode(buffer.subarray(0, length));
+    return parseBoundedJson(text, CHECK_RECORD_LIMITS);
+  } finally { fs.closeSync(fd); }
 }
 
 /** Whether a parsed check record reads as the draft check record of `revision`: one object of the check record format, naming the revision
