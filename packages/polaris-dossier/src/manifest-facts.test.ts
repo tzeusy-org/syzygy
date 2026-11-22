@@ -65,11 +65,11 @@ const WORKSPACE: Tree = {
 const WORKSPACE_READ = ['Cargo.toml', 'package.json', 'packages/a/package.json', 'packages/b/package.json'];
 
 describe('manifestFacts: workspace manifests (scenario "Workspace manifests read into the check record")', () => {
-  it('derives the member under policy 2.0.0: the five recognizer entries in order, each file Inferred with its count, the facts in order', async () => {
+  it('derives the member under policy 2.0.0: the ten recognizer entries in order, each file Inferred with its count, the facts in order', async () => {
     const f = fixture(WORKSPACE, WORKSPACE_READ);
     const member = await derive(V2, f);
     expect(member).toEqual({
-      format: 'polaris-dossier-manifest-facts/1', state: 'derived',
+      format: 'polaris-dossier-manifest-facts/2', state: 'derived',
       screeningPolicy: { policyId: 'polaris-butlers-project-shape-secrets', policyVersion: 'dossier-declared-source/2.0.0', sha256: sha256(POLICY.v2) },
       recognizers: [
         { rule: 'npm-package-manifest', ruleVersion: 1, label: 'inferred', candidates: 3, secretPathsLeftOut: 0, setApart: 0, inferred: 3, unknown: 0, valuesLeftOut: 0, facts: 7,
@@ -77,6 +77,7 @@ describe('manifestFacts: workspace manifests (scenario "Workspace manifests read
         { rule: 'cargo-manifest', ruleVersion: 1, label: 'inferred', candidates: 1, secretPathsLeftOut: 0, setApart: 0, inferred: 1, unknown: 0, valuesLeftOut: 0, facts: 2,
           files: [inferredFile('Cargo.toml', 2)], filesNotListed: 0 },
         empty('python-project-manifest'), empty('go-module-manifest'), empty('github-actions-workflow'),
+        empty('compose-file'), empty('kubernetes-manifest'), empty('terraform-configuration'), empty('makefile'), empty('cmake-lists'),
       ],
       facts: [
         { id: '_manifest-1', fact: 'workspace-member', rule: 'cargo-manifest', ruleVersion: 1, path: 'Cargo.toml', lines: [2, 2], pattern: 'crates/core', epistemic: 'inferred' },
@@ -90,6 +91,11 @@ describe('manifestFacts: workspace manifests (scenario "Workspace manifests read
         { id: '_manifest-9', fact: 'dependency', rule: 'npm-package-manifest', ruleVersion: 1, path: 'packages/b/package.json', lines: [4, 4], name: '@k/a', section: 'dependencies', group: null, epistemic: 'inferred' },
       ],
       factsNotListed: 0,
+      remainder: {
+        files: 5, secretPathsLeftOut: 0, candidates: 4, notCandidates: 1,
+        places: [{ place: null, files: 3, notCandidates: 1 }, { place: 'packages', files: 2, notCandidates: 0 }],
+        placesNotListed: 0, filesInPlacesNotListed: 0, notCandidatesInPlacesNotListed: 0,
+      },
     });
     // One read per file, recognizer by recognizer in the stated order, each recognizer's files in path order.
     expect(f.asked).toEqual(['package.json', 'packages/a/package.json', 'packages/b/package.json', 'Cargo.toml']);
@@ -99,7 +105,7 @@ describe('manifestFacts: workspace manifests (scenario "Workspace manifests read
     const none = await derive(V2, fixture(WORKSPACE, WORKSPACE_READ));
     const listing = await derive(V2, fixture(WORKSPACE, WORKSPACE_READ), ['code-content']);
     expect(JSON.stringify(listing)).toBe(JSON.stringify(none));
-    expect(Object.keys(none)).toEqual(['format', 'state', 'screeningPolicy', 'recognizers', 'facts', 'factsNotListed']);
+    expect(Object.keys(none)).toEqual(['format', 'state', 'screeningPolicy', 'recognizers', 'facts', 'factsNotListed', 'remainder']);
     const m = derived(none);
     expect(Object.keys(m.recognizers[0]!)).toEqual(['rule', 'ruleVersion', 'label', 'candidates', 'secretPathsLeftOut', 'setApart', 'inferred', 'unknown', 'valuesLeftOut', 'facts', 'files', 'filesNotListed']);
     expect(Object.keys(m.recognizers[0]!.files[0]!)).toEqual(['path', 'epistemic', 'unknownReason', 'parseFault', 'facts', 'valuesLeftOut']);
@@ -157,6 +163,7 @@ describe('manifestFacts: malformed and empty manifests', () => {
       ['cargo-manifest', 0, 1, 0, [unknownFile('b/Cargo.toml', 'unparsed', 'field-type')]],
       ['python-project-manifest', 0, 0, 0, []], ['go-module-manifest', 0, 0, 0, []],
       ['github-actions-workflow', 0, 1, 0, [unknownFile('.github/workflows/ci.yml', 'unparsed', 'field-type')]],
+      ['compose-file', 0, 0, 0, []], ['kubernetes-manifest', 0, 0, 0, []], ['terraform-configuration', 0, 0, 0, []], ['makefile', 0, 0, 0, []], ['cmake-lists', 0, 0, 0, []],
     ]);
     expect(m.facts).toEqual([]);
   });
@@ -193,8 +200,10 @@ describe('manifestFacts: excluded or withheld blob never read', () => {
       unknownFile('linked/package.json', 'symbolic-link'),
       unknownFile(`"${'x'.repeat(512)}" (21 more code units)`, 'path-not-citable'),
     ]);
-    const text = JSON.stringify(m);
+    // The recognizer entries and facts name no set-apart or secret path; the remainder names top-level places only, never a secret one.
+    const text = JSON.stringify([m.recognizers, m.facts]);
     for (const hidden of [SECRET_DIR, 'node_modules', 'dist/', 'test/fixtures']) expect(text).not.toContain(hidden);
+    expect(JSON.stringify(m)).not.toContain(SECRET_DIR);
     expect(m.recognizers[3]!.files).toEqual([unknownFile('cmd/x/go.mod', 'unknown-extraction-class'), unknownFile('go.mod', 'unknown-extraction-class')]);
   });
 
@@ -257,7 +266,7 @@ describe('manifestFacts: the bound policy', () => {
       expect([go.unknown, go.facts, go.files.map((x) => x.unknownReason)]).toEqual([2, 0, ['unknown-extraction-class', 'unknown-extraction-class']]);
       if (screen === V1) {
         expect(m.screeningPolicy.policyVersion).toBe('dossier-declared-source/1.0.0');
-        expect(m.recognizers.map((r) => r.files.map((x) => x.unknownReason))).toEqual([['unknown-extraction-class'], ['unknown-extraction-class'], ['unknown-extraction-class'], ['unknown-extraction-class', 'unknown-extraction-class'], ['unknown-extraction-class']]);
+        expect(m.recognizers.map((r) => r.files.map((x) => x.unknownReason))).toEqual([['unknown-extraction-class'], ['unknown-extraction-class'], ['unknown-extraction-class'], ['unknown-extraction-class', 'unknown-extraction-class'], ['unknown-extraction-class'], [], [], [], [], []]);
         expect(f.asked).toEqual([]);
       }
     }
@@ -322,43 +331,52 @@ describe('manifestFacts: values, caps and order', () => {
     expect(npm.files).toEqual([inferredFile(at512, 1), unknownFile(`"${'p'.repeat(500)}/package.jso" (1 more code units)`, 'path-not-citable')]);
   });
 
-  // Review finding 7 (syzygy-3efd.25) and version 2.8 (syzygy-3efd.72): the member has no byte bound of its own; the spec fixes its caps
-  // (1,000 facts and 250 files per recognizer listed, values to 256 code units, paths to 512) and states that at those caps the member,
-  // encoded as the check record encodes it, takes fewer than 10,000,000 bytes, under the 16,777,216-byte bound every reader of a check
-  // record applies. Built here by hand from the stated caps (design.md, section 1), never from the recognizer: every count a safe
+  // Review finding 7 (syzygy-3efd.25), version 2.8 (syzygy-3efd.72) and version 2.12 (syzygy-3efd.26): the member has no byte bound of its
+  // own; the spec fixes its caps (1,000 facts listed; 250 files per recognizer of version 2.7 and 100 per recognizer of version 2.12
+  // listed; the root and 250 places of the remainder; values to 256 code units, paths to 512) and states that at those caps the member,
+  // encoded as the check record encodes it, takes fewer than 13,000,000 bytes (10,000,000 before version 2.12), under the 16,777,216-byte
+  // bound every reader of a check record applies. Built here by hand from the stated caps, never from the recognizer: every count a safe
   // integer; every fact a `dependency` whose path is 512 three-byte characters and whose `name` and `group` are 256 lone surrogates (six
-  // bytes each once escaped); and each of the 1,250 file entries in one of three forms, the widest an Unknown `path-not-citable` entry whose
-  // census-form path begins with 512 control characters (`\u0001`, seven bytes once the record escapes the census form's backslash).
-  it('measures the widest member at every cap under 10,000,000 bytes, and admits a 256-unit value of lone surrogates', async () => {
+  // bytes each once escaped); each file entry in one of three forms, the widest an Unknown `path-not-citable` entry whose census-form path
+  // begins with 512 control characters (`\u0001`, seven bytes once the record escapes the census form's backslash); every remainder place
+  // in that census form; and the screening policy's identifier and version 4,096 lone surrogates each.
+  it('measures the widest member at every cap under 13,000,000 bytes, and admits a 256-unit value of lone surrogates', async () => {
     const lone = derived(await derive(V2, fixture({ 'package.json': `{ "name": "${'\\ud800'.repeat(256)}" }` }, ['package.json'])));
     expect([lone.facts.length, (lone.facts[0]!['name'] as string).length, lone.recognizers[0]!.valuesLeftOut]).toEqual([1, 256, 0]);
     const MAX = Number.MAX_SAFE_INTEGER;
-    const CJK = '\u4e00'.repeat(512), LONE = '\ud800'.repeat(256);
+    const CJK = '\u4e00'.repeat(512), LONE = '\ud800'.repeat(256), POLICY_WIDE = '\ud800'.repeat(4096);
     const census = `${JSON.stringify('\u0001'.repeat(512))} (9007199254740991 more code units)`;
     const FILES = {
       inferred: { path: CJK, epistemic: 'inferred', unknownReason: null, parseFault: null, facts: MAX, valuesLeftOut: MAX },
       unparsed: { path: CJK, epistemic: 'unknown', unknownReason: 'unparsed', parseFault: 'beyond-reader', facts: null, valuesLeftOut: null },
       census: { path: census, epistemic: 'unknown', unknownReason: 'path-not-citable', parseFault: null, facts: null, valuesLeftOut: null },
     };
+    const RULES = ['npm-package-manifest', 'cargo-manifest', 'python-project-manifest', 'go-module-manifest', 'github-actions-workflow',
+      'compose-file', 'kubernetes-manifest', 'terraform-configuration', 'makefile', 'cmake-lists'];
     const widest = (file: Record<string, unknown>) => ({
-      format: 'polaris-dossier-manifest-facts/1', state: 'derived',
-      screeningPolicy: { policyId: 'x'.repeat(64), policyVersion: 'x'.repeat(64), sha256: '0'.repeat(64) },
-      recognizers: ['npm-package-manifest', 'cargo-manifest', 'python-project-manifest', 'go-module-manifest', 'github-actions-workflow'].map((rule) => ({
+      format: 'polaris-dossier-manifest-facts/2', state: 'derived',
+      screeningPolicy: { policyId: POLICY_WIDE, policyVersion: POLICY_WIDE, sha256: '0'.repeat(64) },
+      recognizers: RULES.map((rule, i) => ({
         rule, ruleVersion: 1, label: 'inferred', candidates: MAX, secretPathsLeftOut: MAX, setApart: MAX, inferred: MAX, unknown: MAX, valuesLeftOut: MAX, facts: MAX,
-        files: Array.from({ length: 250 }, () => file), filesNotListed: MAX,
+        files: Array.from({ length: i < 5 ? 250 : 100 }, () => file), filesNotListed: MAX,
       })),
       facts: Array.from({ length: 1000 }, (_, i) => ({
         id: `_manifest-${i + 1}`, fact: 'dependency', rule: 'python-project-manifest', ruleVersion: 1, path: CJK, lines: [1_048_577, 1_048_577],
         name: LONE, section: 'project.optional-dependencies', group: LONE, epistemic: 'inferred',
       })),
       factsNotListed: MAX,
+      remainder: {
+        files: MAX, secretPathsLeftOut: MAX, candidates: MAX, notCandidates: MAX,
+        places: Array.from({ length: 251 }, () => ({ place: census, files: MAX, notCandidates: MAX })),
+        placesNotListed: MAX, filesInPlacesNotListed: MAX, notCandidatesInPlacesNotListed: MAX,
+      },
     });
     // The member's own bytes in the record: `{"manifestFacts": member}` less `{"manifestFacts": {}}`, each two-space JSON as check writes.
     const bytes = (member: unknown): number => Buffer.byteLength(JSON.stringify({ manifestFacts: member }, null, 2)) - Buffer.byteLength(JSON.stringify({ manifestFacts: {} }, null, 2));
     // The census form of a path is the one the recognizer writes: the first 512 code units quoted, then the count of the rest.
     expect(census.slice(0, 8)).toBe('"\\u0001\\');
-    expect([bytes(widest(FILES.inferred)), bytes(widest(FILES.unparsed)), bytes(widest(FILES.census))]).toEqual([7_187_162, 7_177_162, 9_782_162]);
-    expect(bytes(widest(FILES.census))).toBeLessThan(10_000_000);
+    expect([bytes(widest(FILES.inferred)), bytes(widest(FILES.unparsed)), bytes(widest(FILES.census))]).toEqual([9_066_582, 9_052_582, 12_699_582]);
+    expect(bytes(widest(FILES.census))).toBeLessThan(13_000_000);
   });
 
   it('is deterministic: the same bytes whatever the listing order, and every fact and entry labelled inferred', async () => {
