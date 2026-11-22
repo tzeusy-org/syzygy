@@ -1,4 +1,4 @@
-# Dossier index and task routes — version 2.14
+# Dossier index and task routes — version 2.15
 
 [Inferred] Candidate agent-decided change under VIS-4 as amended by GOVERNANCE-SIMPLIFICATION-D10. It binds only once its row in `AGENT-ADOPTIONS.md` and its version tag exist; no owner adoption is claimed. It decides no owner class (no doctrine edit, no change to secret detection or SEC-5's fail-closed rule, no foreign repository, no exposure, release or multi-user use).
 

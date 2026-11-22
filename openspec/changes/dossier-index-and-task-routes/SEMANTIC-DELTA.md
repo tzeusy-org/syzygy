@@ -1,16 +1,18 @@
-# Version 2.14 semantic delta
+# Version 2.15 semantic delta
 
 [Inferred] Candidate agent-decided amendment under VIS-4. No adoption is claimed; this file states exactly what changes so the change is reviewable as a delta (`NORMATIVE-CHANGE-WORKFLOW.md`).
 
 ## Composition
 
-[Observed] The effective REQ-polaris-generation-034 is the MODIFIED text in `openspec/changes/dossier-coverage-precheck/proposed/polaris-generation/spec.md` (coverage pre-check version 2.12, row A-40, tag `polaris-dossier-coverage-precheck-v2.12`; that file's SHA-256 is `995c2ec47619567a86a5899eacbe3b1cf96a652686af4bfa7cd51e0ea1841287`, the digest `scripts/check_spec_reconciliation.py` binds as its reviewed subject).
+[Observed] The effective REQ-polaris-generation-034 is the MODIFIED text in `openspec/changes/dossier-infrastructure-recognizers/proposed/polaris-generation/spec.md` (infrastructure recognizers version 2.14, row A-46, tag `polaris-dossier-infrastructure-recognizers-v2.14`; that file's SHA-256 is `1c87f9db33cee275bcc4f93516eed9b74d7345b3b3e8cb21a51303ad7deb42de`, the digest `scripts/check_spec_reconciliation.py` binds as its reviewed subject, `INFRA_SUBJECTS`). It replaced the text of coverage pre-check version 2.12 (`openspec/changes/dossier-coverage-precheck/proposed/polaris-generation/spec.md`, SHA-256 `995c2ec47619567a86a5899eacbe3b1cf96a652686af4bfa7cd51e0ea1841287`), from which this change was first built.
 
-[Inferred] Once adopted, this version's complete MODIFIED REQ-polaris-generation-034 replaces that text, composed after version 2.12 (and therefore after every version of REQ-034 before it that is in force). Its ID, Source line, Scope line and requirement name are unchanged. The requirement goes from 117 to 135 scenarios; no other requirement changes. Its warrants block is unchanged, so its dependency union (`GOVERNING-DEPENDENCIES.json`) is byte for byte version 2.12's. Nothing is installed under `.syzygy/governance/`.
+[Inferred] Once adopted, this version's complete MODIFIED REQ-polaris-generation-034 replaces that text, composed after version 2.14 (and therefore after every version of REQ-034 before it that is in force). Its ID, Source line, Scope line and requirement name are unchanged. The requirement goes from 130 to 148 scenarios; no other requirement changes. Its warrants block is unchanged, so its dependency union (`GOVERNING-DEPENDENCIES.json`) is byte for byte version 2.14's, itself version 2.12's. Nothing is installed under `.syzygy/governance/`.
+
+[Observed] How it was composed. This change was drafted over the version 2.12 text as version 2.14; version 2.14 was then taken by the infrastructure recognizers change, built over the same version 2.12 text. The new text is a three-way line merge (`git merge-file`) of this change's text, every `2.14` renumbered `2.15`, and version 2.14's text over the version 2.12 text. The two changes edit different lines except the file head and the four extended Form lines, which were composed by rule: the file head is this change's, with its preamble naming version 2.14 as the text replaced; the scenarios are version 2.14's thirteen and then this change's eighteen; each of **Case**, **Observable** and **Oracle** is version 2.14's line with this change's appended text after it; **Falsifier** is version 2.14's line with this change's two in-place qualifications below applied and its appended text after it. Each change below is quoted against the version 2.12 text it was written over; a line version 2.14 also amended carries both amendments.
 
 ## Carried unchanged
 
-[Observed] Every other line of the predecessor requirement (its paragraphs, its 117 scenarios, its `Oracle independence` line and its warrants block) appears byte for byte in the new text. The new text was built from the predecessor bytes by a script that replaces or inserts only at anchors it asserts occur exactly once; a line diff against the predecessor shows, besides the file's title and preamble, exactly the changed lines listed below and the two insertions.
+[Observed] Every other line of the predecessor requirement appears byte for byte in the new text. A script check over the non-empty lines from `## MODIFIED Requirements` on found, of version 2.14's 599 lines, 583 byte for byte in the new text and the other 16 changed only by the in-line changes listed below or extended at their end (the four Form lines, and twelve lines carrying one of those changes); all 130 of its scenario headings are present. Of this change's 611 lines (renumbered), 595 are present byte for byte; the other 16 are 12 version 2.12 lines that version 2.14 amended, whose amended form is present, and the four composed Form lines. The new text has 148 distinct scenario headings.
 
 ## Added
 
@@ -26,12 +28,12 @@
   {
     "where": "Schema-v5 paragraph, the byte-identity sentence for schema v4 or earlier",
     "old": "the `derivedStructure` member of `machine.json`, and the size report's measures of the pages so changed; ",
-    "new": "the `derivedStructure` member of `machine.json`, and the size report's measures of the pages so changed; and except for the additions of version 2.14 that the finding-pages paragraphs below state, which every operator-agent rendering likewise carries whatever its draft's schema, and the `field-version` finding they state for a `taskRoutes` member; "
+    "new": "the `derivedStructure` member of `machine.json`, and the size report's measures of the pages so changed; and except for the additions of version 2.15 that the finding-pages paragraphs below state, which every operator-agent rendering likewise carries whatever its draft's schema, and the `field-version` finding they state for a `taskRoutes` member; "
   },
   {
     "where": "Schema-v5 paragraph, the byte-identity sentence for schema v5",
     "old": "except for those same two additions of version 2.4 and that addition of version 2.5, and except that from version 2.12 it MAY carry the `inventoryOmissions` member the omission-record paragraph below states; without that member its findings and rendered bytes are those of version 2.11.",
-    "new": "except for those same two additions of version 2.4, that addition of version 2.5 and those additions of version 2.14, and except that from version 2.12 it MAY carry the `inventoryOmissions` member the omission-record paragraph below states and from version 2.14 `taskRoutes` as the task-routes paragraph below states; without the `inventoryOmissions` member its findings and rendered bytes are those of version 2.11 apart from the additions of version 2.14."
+    "new": "except for those same two additions of version 2.4, that addition of version 2.5 and those additions of version 2.15, and except that from version 2.12 it MAY carry the `inventoryOmissions` member the omission-record paragraph below states and from version 2.15 `taskRoutes` as the task-routes paragraph below states; without the `inventoryOmissions` member its findings and rendered bytes are those of version 2.11 apart from the additions of version 2.15."
   },
   {
     "where": "Coverage-advice paragraph, the rule the advice names",
@@ -46,12 +48,12 @@
   {
     "where": "Coverage-rule paragraph, the reading content",
     "old": "The draft's reading content is every citation under its `introduction`, `sections`, `diagrams`, `deepDives` and `unresolved` members, a code excerpt's one citation among them;",
-    "new": "The draft's reading content is every citation under its `introduction`, `sections`, `diagrams`, `deepDives` and `unresolved` members and, from version 2.14, its `taskRoutes` member, a code excerpt's one citation among them;"
+    "new": "The draft's reading content is every citation under its `introduction`, `sections`, `diagrams`, `deepDives` and `unresolved` members and, from version 2.15, its `taskRoutes` member, a code excerpt's one citation among them;"
   },
   {
     "where": "Coverage-rule paragraph, the claim blocks",
     "old": "and every claim a presentation element carries; an understanding item is not one,",
-    "new": "every claim a presentation element carries and, from version 2.14, every step of a task route; an understanding item is not one,"
+    "new": "every claim a presentation element carries and, from version 2.15, every step of a task route; an understanding item is not one,"
   },
   {
     "where": "Coverage-rule paragraph, its last sentence",
@@ -66,52 +68,52 @@
   {
     "where": "Curated-provenance paragraph, the sentence on what a figure carries",
     "old": "SHALL carry `data-visual-provenance=\"curated\"` on its `<figure>` element, and nothing else in it changes.",
-    "new": "SHALL carry `data-visual-provenance=\"curated\"` on its `<figure>` element, and nothing else in it changes at that version; from version 2.14 it also carries its fragment identity, as the finding-pages paragraphs below state."
+    "new": "SHALL carry `data-visual-provenance=\"curated\"` on its `<figure>` element, and nothing else in it changes at that version; from version 2.15 it also carries its fragment identity, as the finding-pages paragraphs below state."
   },
   {
     "where": "Figure-kinds findings paragraph, the byte-identity sentence for schema v6",
     "old": "the same findings and the same bytes of every page and of `machine.json`, except that those `field-version` findings stand in place of the `schema` findings at their paths; ",
-    "new": "the same findings and the same bytes of every page and of `machine.json`, except that those `field-version` findings stand in place of the `schema` findings at their paths, and except for the additions of version 2.14 below; "
+    "new": "the same findings and the same bytes of every page and of `machine.json`, except that those `field-version` findings stand in place of the `schema` findings at their paths, and except for the additions of version 2.15 below; "
   },
   {
     "where": "Scenario \"Schema-v4 draft unchanged\", its THEN line",
     "old": "which the readable layout stacks, and the size report's measures of the pages holding one\n- **AND** a diagram of such a draft that carries `home`,",
-    "new": "which the readable layout stacks, and the size report's measures of the pages holding one; and the additions of version 2.14: the fragment identities, the two finding pages, the links to them in each page's navigation and on the contents page, their entries in the `pages` lists of `dossier.json` and `machine.json` and in the size report, and the `taskRoutes` and `nameIndex` members of `machine.json`\n- **AND** a diagram of such a draft that carries `home`,"
+    "new": "which the readable layout stacks, and the size report's measures of the pages holding one; and the additions of version 2.15: the fragment identities, the two finding pages, the links to them in each page's navigation and on the contents page, their entries in the `pages` lists of `dossier.json` and `machine.json` and in the size report, and the `taskRoutes` and `nameIndex` members of `machine.json`\n- **AND** a diagram of such a draft that carries `home`,"
   },
   {
     "where": "Scenario on a v5 draft with and without `thesisBasis`, its THEN line",
     "old": "equal those version 2.3 produces for the same draft, and with it, it carries a `field-version` repair finding",
-    "new": "equal those version 2.3 produces for the same draft apart from the additions of version 2.14, and with it, it carries a `field-version` repair finding"
+    "new": "equal those version 2.3 produces for the same draft apart from the additions of version 2.15, and with it, it carries a `field-version` repair finding"
   },
   {
     "where": "Scenario \"Figure kinds in an earlier schema\", its AND line",
     "old": "equal those version 2.4 produces for the same draft\n",
-    "new": "equal those version 2.4 produces for the same draft apart from the additions of version 2.14\n"
+    "new": "equal those version 2.4 produces for the same draft apart from the additions of version 2.15\n"
   },
   {
     "where": "Scenario on the server shape pack, its AND line on the brief",
     "old": "except its version line, its draft-schema line and the one thesis-basis paragraph\n",
-    "new": "except its version line, its draft-schema line, the one thesis-basis paragraph and, from version 2.14, the task-routes section\n"
+    "new": "except its version line, its draft-schema line, the one thesis-basis paragraph and, from version 2.15, the task-routes section\n"
   },
   {
     "where": "Scenario \"Brief v12 states the figure kinds\", its THEN line",
     "old": "- **THEN** the brief is `polaris-dossier-brief-v12`, issuing schema `polaris-dossier-local-draft-v7`, and equals brief v11 for the same run except",
-    "new": "- **THEN** the brief is `polaris-dossier-brief-v12`, from version 2.14 `polaris-dossier-brief-v13` with its task-routes section, issuing schema `polaris-dossier-local-draft-v7`, and, that section and its version line apart, equals brief v11 for the same run except"
+    "new": "- **THEN** the brief is `polaris-dossier-brief-v12`, from version 2.15 `polaris-dossier-brief-v13` with its task-routes section, issuing schema `polaris-dossier-local-draft-v7`, and, that section and its version line apart, equals brief v11 for the same run except"
   },
   {
     "where": "Form line Falsifier, a carried clause on schema v4 or earlier replaced in place",
     "old": "other than the `field-version` findings versions 2.4 and 2.5 state;",
-    "new": "other than the `field-version` findings versions 2.4, 2.5 and 2.14 state and the additions of version 2.14;"
+    "new": "other than the `field-version` findings versions 2.4, 2.5 and 2.15 state and the additions of version 2.15;"
   },
   {
     "where": "Form line Falsifier, a carried clause on figure-kind bytes replaced in place",
     "old": "a graph-kind figure, a page holding no figure of these kinds, a draft of schema v6 or earlier, or its `machine.json` changes a byte;",
-    "new": "a graph-kind figure, a page holding no figure of these kinds, a draft of schema v6 or earlier, or its `machine.json` changes a byte other than by the additions of version 2.14;"
+    "new": "a graph-kind figure, a page holding no figure of these kinds, a draft of schema v6 or earlier, or its `machine.json` changes a byte other than by the additions of version 2.15;"
   },
   {
     "where": "Figure-kinds style-rules sentence, its consequence clause on page bytes",
     "old": "so a page without such a figure keeps its bytes.",
-    "new": "so a page without such a figure keeps its bytes apart from the additions of version 2.14."
+    "new": "so a page without such a figure keeps its bytes apart from the additions of version 2.15."
   },
   {
     "where": "Form line Case: the predecessor line is kept as a prefix and this text appended",
@@ -136,7 +138,7 @@
 ]
 ```
 
-The changes to the schema paragraphs, and the change to the figure-kinds style-rules sentence, qualify the predecessor's byte-identity sentences. Versions 2.2 to 2.12 each promised that an earlier-schema draft renders the same bytes as before, apart from named additions; version 2.14 adds fragment identities and navigation links to every operator-agent page and two members to `machine.json`, so each such sentence, and the three scenario lines that restate one, now names version 2.14's additions as a further exception. The curated-provenance sentence said nothing else in a `<figure>` element changes; it now says that was true at that version and that the figure also carries its fragment identity. The two brief scenario lines say that the brief compared carries the task-routes section and, for brief v12, that from this version the brief issued is v13. One added sentence, after the fragment identities, excepts this version's additions wherever the requirement states that a render, brief or schema equals an earlier version's, as version 2.9's own sentence does for the computed maps; it covers the byte-identity sentences of versions 2.7 to 2.12, which are not rewritten. The two carried Falsifier clauses are qualified in the same way, so they do not count this version's stated additions as a broken promise.
+The changes to the schema paragraphs, and the change to the figure-kinds style-rules sentence, qualify the predecessor's byte-identity sentences. Versions 2.2 to 2.12 each promised that an earlier-schema draft renders the same bytes as before, apart from named additions; version 2.15 adds fragment identities and navigation links to every operator-agent page and two members to `machine.json`, so each such sentence, and the three scenario lines that restate one, now names version 2.15's additions as a further exception. The curated-provenance sentence said nothing else in a `<figure>` element changes; it now says that was true at that version and that the figure also carries its fragment identity. The two brief scenario lines say that the brief compared carries the task-routes section and, for brief v12, that from this version the brief issued is v13. One added sentence, after the fragment identities, excepts this version's additions wherever the requirement states that a render, brief or schema equals an earlier version's, as version 2.9's own sentence does for the computed maps; it covers the byte-identity sentences of versions 2.7 to 2.12, which are not rewritten. The two carried Falsifier clauses are qualified in the same way, so they do not count this version's stated additions as a broken promise.
 
 ## Removed
 

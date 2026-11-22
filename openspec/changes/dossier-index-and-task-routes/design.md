@@ -1,6 +1,6 @@
 # Design: generated index and task routes
 
-One MODIFIED REQ-polaris-generation-034, version 2.14, for beads syzygy-5dhm.70 (the generated index) and syzygy-5dhm.71 (task routes), R15 slices 1 and 2. It composes after coverage pre-check version 2.12 (row A-40). The implementation lands in the same commit as this package.
+One MODIFIED REQ-polaris-generation-034, version 2.15, for beads syzygy-5dhm.70 (the generated index) and syzygy-5dhm.71 (task routes), R15 slices 1 and 2. It composes after infrastructure recognizers version 2.14 (row A-46), itself after coverage pre-check version 2.12 (row A-40). The implementation landed in the installing commit with this package as 2.14; the requirement text was renumbered and recomposed in a later commit ("Recomposed over version 2.14" below).
 
 ## Why no schema version moves, and why the brief's does
 
@@ -85,9 +85,20 @@ Draft member `taskRoutes[] {id, task, steps[] {id, label, basis, text, citations
 - a sequence or swimlane figure carries its fragment identity and is indexed by its title, and a computed map's figure is stated not to be.
 - the inventory-coverage rule that version 2.12 added becomes `overlap-or-path-named` version 2: the citations under `taskRoutes` are reading content and a route step is one of the claim blocks whose text is searched, because a step is shown to the reader and reviewed as any block is, so an inventory entry a route answers is not listed as uncovered. For a draft without `taskRoutes` versions 1 and 2 decide alike. The rule's version moves because the same draft and inventory could otherwise be decided two ways under one version (`inventory-coverage.ts`, `COVERAGE_RULE`).
 
-[Observed] This change is numbered 2.14 although its requirement's predecessor is version 2.12: version 2.13 (declared-source re-admission) was adopted in between and replaces REQ-polaris-generation-046 alone, so the REQ-034 text this change rebuilds is still the version 2.12 text, byte for byte.
+[Observed] This change was first numbered 2.14 although its requirement's predecessor was version 2.12: version 2.13 (declared-source re-admission) was adopted in between and replaces REQ-polaris-generation-046 alone, so the REQ-034 text this change rebuilds is still the version 2.12 text, byte for byte.
 
 [Inferred] These are consequences of the predecessor moving, not new design; under D13 the one review is not repeated for them, and the independent code review of the landing branch reads the rebuilt text.
+
+## Recomposed over version 2.14
+
+[Observed] While this package waited to land, the infrastructure recognizers change (`dossier-infrastructure-recognizers`) was adopted as version 2.14 (row A-46), also replacing REQ-polaris-generation-034 over the version 2.12 text. This change is therefore renumbered 2.15 and its requirement recomposed over version 2.14's text:
+
+- every `2.14` this change wrote became `2.15`, and the preamble names version 2.14 as the text replaced;
+- the requirement is a three-way line merge of this change's text and version 2.14's over the version 2.12 text both were built from: the two changes edit different lines except the file head and the four extended Form lines;
+- the file head is this change's; the scenarios are version 2.14's thirteen, then this change's eighteen; each of the **Case**, **Observable** and **Oracle** lines is version 2.14's line with this change's appended text after it, and the **Falsifier** line is version 2.14's with this change's two in-place qualifications applied and its appended text after it;
+- a script check found every non-empty line of version 2.14's requirement in the new text, either byte for byte or changed only by this change's listed in-line edits and Form-line extensions, and every line of this change's 2.14-numbered text either present or a version 2.12 line that version 2.14 amended (whose amended form is present), or one of the four composed Form lines. The requirement goes from 130 to 148 scenarios.
+
+[Inferred] The additions of version 2.15 are excepted, by the sentence after the fragment identities, from the byte-identity sentences version 2.14 added as from the earlier ones; no sentence of version 2.14 is rewritten for it. The implementation is unchanged by the renumbering. Version 2.14's code had not landed when this change was recomposed, so whichever lands second carries the other's additions in its pages (the fragment identities and navigation links of this version on the infrastructure map's page, for one).
 
 ## Measured on stored drafts
 
