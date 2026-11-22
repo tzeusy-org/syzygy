@@ -1219,7 +1219,17 @@ def sha(data):
     return hashlib.sha256(data).hexdigest()
 
 
+#: (directory, {path: bytes}) while R2 re-checks the POC child over its
+#: subjects as D10 found them (`poc_outcome`); None otherwise.
+_FILES_OVERRIDE = None
+
+
 def read_bytes(root, rel):
+    if _FILES_OVERRIDE is not None:
+        directory, files = _FILES_OVERRIDE
+        key = Path(rel).as_posix()
+        if key.startswith(directory + "/"):
+            return files.get(key)
     path = root / rel
     return path.read_bytes() if path.is_file() else None
 
@@ -1863,103 +1873,141 @@ def compose_versioned(root, later, ltag, rows, r2, after=()):
         rows[path] = succ
 
 
+def child_outcome(root, child, aggregate, r1, r2):
+    """R1 and R2 of one reconciled child and its successors; returns the subjects seen."""
+    subjects_seen = 0
+    tag = f"{child['key']} ({child['bead']})"
+    record = read_text(root, child["record"])
+    manifest_bytes = read_bytes(root, child["manifest"])
+    if record is None:
+        r1.append(f"{tag}: missing child — no terminal record "
+                  f"`{child['record']}`; the outcome is Unknown")
+        return subjects_seen
+    if manifest_bytes is None:
+        r1.append(f"{tag}: package manifest `{child['manifest']}` missing")
+        return subjects_seen
+    rows = {path: digest for digest, path in
+            ROW.findall(manifest_bytes.decode("utf-8"))}
+    if child["kind"] == "digest":
+        if check_digest_act(child, tag, aggregate, record, manifest_bytes,
+                            r1, r2) is None:
+            return subjects_seen
+    else:
+        check_versioned(child, tag, aggregate, record, r1)
+    # Later successors compose in act order over the rows reached so far.
+    reached = ACT_INSTANT.findall(record)
+    position = aggregate_position(child, aggregate, record)
+    # A digest act carries an act instant and no `Date:` line; its date
+    # is the instant's, so a versioned successor can follow it.
+    dates = DATE_LINE.findall(record) or [i[:10] for i in reached]
+    successors = successors_for(root, child)
+    for index, later in enumerate(successors):
+        name = Path(later["record"]).name
+        ltag = f"{tag} successor {name}"
+        ltext = read_text(root, later["record"])
+        lmanifest = read_bytes(root, later["manifest"])
+        if ltext is None:
+            r1.append(f"{ltag}: missing successor — no terminal record "
+                      f"`{later['record']}`; the outcome is Unknown")
+            continue
+        if lmanifest is None:
+            r1.append(f"{ltag}: package manifest `{later['manifest']}` "
+                      "missing")
+            continue
+        if later.get("package") == poc_reference().KEY:
+            expected = [p.as_posix() for p in poc_reference().SUBJECTS]
+            if [p for _sha, p in ROW.findall(lmanifest.decode())] != expected:
+                r2.append(f"{ltag}: manifest is not exactly the six P115 subjects")
+            if not reference_signed(root):
+                r1.append(f"{ltag}: incomplete or invalid exact P115 sign-off transaction")
+                continue
+        if later.get("kind", "digest") == "versioned":
+            # No act instant: order is the append-only aggregate record
+            # (strictly after the act before it) and a date on or after.
+            check_versioned(later, ltag, aggregate, ltext, r1)
+            lpos = aggregate_position(later, aggregate, ltext)
+            ldates = DATE_LINE.findall(ltext)
+            if lpos is None or position is None or not lpos > position:
+                r2.append(f"{ltag}: its aggregate block does not follow "
+                          "the act before it")
+            if (len(ldates) != 1 or len(dates) != 1
+                    or not ldates[0] >= dates[0]):
+                r2.append(f"{ltag}: date {ldates} is not on or after the "
+                          f"act before it {dates}")
+            position, dates = lpos, ldates
+            compose_versioned(root, later, ltag, rows, r2, after=[
+                s for s in successors[index + 1:]
+                if s.get("kind", "digest") == "versioned"])
+            continue
+        table = check_digest_act(later, ltag, aggregate, ltext, lmanifest,
+                                 r1, r2)
+        if table is None:
+            continue
+        instant = ACT_INSTANT.findall(ltext)
+        if (len(instant) != 1 or len(reached) != 1
+                or not instant[0] > reached[0]):
+            r2.append(f"{ltag}: act instant {instant} is not strictly "
+                      f"later than the act before it {reached}")
+        reached = instant
+        position = aggregate_position(later, aggregate, ltext)
+        dates = [i[:10] for i in instant]
+        for path, (pred, succ) in sorted(table.items()):
+            if path not in rows:
+                r2.append(f"{ltag}: `{path}` is not a subject of this "
+                          "child")
+            elif pred != rows[path]:
+                r2.append(f"{ltag}: broken chain — the predecessor of "
+                          f"`{path}` is not the row the chain reached")
+            else:
+                rows[path] = succ
+    for path, digest in sorted(rows.items()):
+        subjects_seen += 1
+        current = read_bytes(root, path)
+        if current is None:
+            r2.append(f"{tag}: signed subject `{path}` missing")
+        elif sha(current) != digest:
+            r2.append(f"{tag}: stale digest — `{path}` no longer hashes "
+                      "to its signed row")
+    return subjects_seen
+
+
+def poc_outcome(root, child, aggregate, r1, r2):
+    """`child_outcome` for the POC child, with its D10 arm.
+
+    The POC child's R2 holds the Three-Surface POC specification's six
+    subjects to the rows its pre-D10 acts recorded. Under D10 that
+    specification is an agent's to amend (VIS-4, CC-REV-2), so a mismatch is
+    judged by `d10_supersession.judge`: without D10 it stands; with D10 it
+    stands, with a finding naming the missing row, unless every later change
+    to the POC change directory is adopted by an AGENT-ADOPTIONS.md row, and
+    then the whole chain is re-checked over the subjects as D10 found them.
+    """
+    sys.path.insert(0, str(Path(__file__).resolve().parent))
+    import d10_supersession
+    found = []
+    seen = child_outcome(root, child, aggregate, r1, found)
+
+    def recheck(files):
+        global _FILES_OVERRIDE
+        again, previous = [], _FILES_OVERRIDE
+        _FILES_OVERRIDE = (d10_supersession.POC_CHANGE, files)
+        try:
+            child_outcome(root, child, aggregate, [], again)
+        finally:
+            _FILES_OVERRIDE = previous
+        return again
+
+    r2.extend(d10_supersession.judge(root, found, recheck))
+    return seen
+
+
 def check_outcomes(root, report):
     aggregate = read_text(root, AGGREGATE) or ""
     r1, r2, subjects_seen, records = [], [], 0, 0
     for child in CHILDREN:
-        tag = f"{child['key']} ({child['bead']})"
         records += 1 + len(successors_for(root, child))
-        record = read_text(root, child["record"])
-        manifest_bytes = read_bytes(root, child["manifest"])
-        if record is None:
-            r1.append(f"{tag}: missing child — no terminal record "
-                      f"`{child['record']}`; the outcome is Unknown")
-            continue
-        if manifest_bytes is None:
-            r1.append(f"{tag}: package manifest `{child['manifest']}` missing")
-            continue
-        rows = {path: digest for digest, path in
-                ROW.findall(manifest_bytes.decode("utf-8"))}
-        if child["kind"] == "digest":
-            if check_digest_act(child, tag, aggregate, record, manifest_bytes,
-                                r1, r2) is None:
-                continue
-        else:
-            check_versioned(child, tag, aggregate, record, r1)
-        # Later successors compose in act order over the rows reached so far.
-        reached = ACT_INSTANT.findall(record)
-        position = aggregate_position(child, aggregate, record)
-        # A digest act carries an act instant and no `Date:` line; its date
-        # is the instant's, so a versioned successor can follow it.
-        dates = DATE_LINE.findall(record) or [i[:10] for i in reached]
-        successors = successors_for(root, child)
-        for index, later in enumerate(successors):
-            name = Path(later["record"]).name
-            ltag = f"{tag} successor {name}"
-            ltext = read_text(root, later["record"])
-            lmanifest = read_bytes(root, later["manifest"])
-            if ltext is None:
-                r1.append(f"{ltag}: missing successor — no terminal record "
-                          f"`{later['record']}`; the outcome is Unknown")
-                continue
-            if lmanifest is None:
-                r1.append(f"{ltag}: package manifest `{later['manifest']}` "
-                          "missing")
-                continue
-            if later.get("package") == poc_reference().KEY:
-                expected = [p.as_posix() for p in poc_reference().SUBJECTS]
-                if [p for _sha, p in ROW.findall(lmanifest.decode())] != expected:
-                    r2.append(f"{ltag}: manifest is not exactly the six P115 subjects")
-                if not reference_signed(root):
-                    r1.append(f"{ltag}: incomplete or invalid exact P115 sign-off transaction")
-                    continue
-            if later.get("kind", "digest") == "versioned":
-                # No act instant: order is the append-only aggregate record
-                # (strictly after the act before it) and a date on or after.
-                check_versioned(later, ltag, aggregate, ltext, r1)
-                lpos = aggregate_position(later, aggregate, ltext)
-                ldates = DATE_LINE.findall(ltext)
-                if lpos is None or position is None or not lpos > position:
-                    r2.append(f"{ltag}: its aggregate block does not follow "
-                              "the act before it")
-                if (len(ldates) != 1 or len(dates) != 1
-                        or not ldates[0] >= dates[0]):
-                    r2.append(f"{ltag}: date {ldates} is not on or after the "
-                              f"act before it {dates}")
-                position, dates = lpos, ldates
-                compose_versioned(root, later, ltag, rows, r2, after=[
-                    s for s in successors[index + 1:]
-                    if s.get("kind", "digest") == "versioned"])
-                continue
-            table = check_digest_act(later, ltag, aggregate, ltext, lmanifest,
-                                     r1, r2)
-            if table is None:
-                continue
-            instant = ACT_INSTANT.findall(ltext)
-            if (len(instant) != 1 or len(reached) != 1
-                    or not instant[0] > reached[0]):
-                r2.append(f"{ltag}: act instant {instant} is not strictly "
-                          f"later than the act before it {reached}")
-            reached = instant
-            position = aggregate_position(later, aggregate, ltext)
-            dates = [i[:10] for i in instant]
-            for path, (pred, succ) in sorted(table.items()):
-                if path not in rows:
-                    r2.append(f"{ltag}: `{path}` is not a subject of this "
-                              "child")
-                elif pred != rows[path]:
-                    r2.append(f"{ltag}: broken chain — the predecessor of "
-                              f"`{path}` is not the row the chain reached")
-                else:
-                    rows[path] = succ
-        for path, digest in sorted(rows.items()):
-            subjects_seen += 1
-            current = read_bytes(root, path)
-            if current is None:
-                r2.append(f"{tag}: signed subject `{path}` missing")
-            elif sha(current) != digest:
-                r2.append(f"{tag}: stale digest — `{path}` no longer hashes "
-                          "to its signed row")
+        outcome = poc_outcome if child["key"] == "poc" else child_outcome
+        subjects_seen += outcome(root, child, aggregate, r1, r2)
     # Signed Polaris additions (reconciled-child hook): each installed
     # addition is a child whose terminal outcome is its versioned sign-off.
     additions = polaris_additions(root)
@@ -4074,12 +4122,37 @@ def declared_source_mutants():
     ]
 
 
+def poc_as_d10_found(tree):
+    """Put the POC change back as D10 found it, in a fixture that removes D10.
+
+    A tree without D10 cannot carry an agent amendment of the POC
+    specification (the pre-D10 acts pin it), so a control that removes the D10
+    act from a tree whose POC change was amended under D10 starts from the
+    bytes D10 found. Without such an amendment this writes nothing.
+    """
+    sys.path.insert(0, str(Path(__file__).resolve().parent))
+    import d10_supersession
+    found = d10_supersession.amendment(tree)
+    if found is None or found[1]:
+        return
+    files = found[0]
+    change = tree / d10_supersession.POC_CHANGE
+    current = d10_supersession.disk_files(tree, d10_supersession.POC_CHANGE) or {}
+    if current == files:
+        return
+    shutil.rmtree(change)
+    for rel, body in files.items():
+        (tree / rel).parent.mkdir(parents=True, exist_ok=True)
+        (tree / rel).write_bytes(body)
+
+
 def declared_source_historical_cases(tmp, base, clean, witnesses, failures):
     """Absent historical amendment is inactive; each partial presence refuses."""
     tree = Path(tmp) / "declared-historical"
     shutil.copytree(base, tree)
     change = f"{CHANGES}/{DECLARED_SOURCE_CHANGE}"
     act = f"{DECISIONS}/GOVERNANCE-SIMPLIFICATION-D10-ACT.md"
+    poc_as_d10_found(tree)
     shutil.rmtree(tree / change)
     for rel in (*DECLARED_SOURCE_SUBJECTS, act):
         (tree / rel).unlink(missing_ok=True)
@@ -5408,6 +5481,76 @@ def maps_cases(tmp, base, witnesses, failures):
                bool(ida and names and a == b == kin_pop), False)
 
 
+def poc_d10_cases(base, witnesses, failures):
+    """Both arms of `poc_outcome` (R2 of the POC child under D10).
+
+    The tree is the clean scratch copy. An amended specification is put in
+    front of R2 through `_FILES_OVERRIDE`; D10's state is injected through
+    `d10_supersession.amendment`. The bytes that reach the act rows are the
+    copy's own, or under D10 the subjects as D10 found them.
+    """
+    sys.path.insert(0, str(Path(__file__).resolve().parent))
+    import d10_supersession
+    child = next(c for c in CHILDREN if c["key"] == "poc")
+    aggregate = read_text(base, AGGREGATE) or ""
+    change = d10_supersession.POC_CHANGE
+    spec = f"{change}/specs/three-surface-poc-experience/spec.md"
+    own = d10_supersession.disk_files(base, change) or {}
+
+    def r2(override=None):
+        # One P115 answer per arm, as within one run() (the injected state
+        # can change it between arms).
+        global _FILES_OVERRIDE, _SIGNED_MEMO
+        found, previous, memo = [], _FILES_OVERRIDE, _SIGNED_MEMO
+        _FILES_OVERRIDE, _SIGNED_MEMO = override, {}
+        try:
+            poc_outcome(base, child, aggregate, [], found)
+        finally:
+            _FILES_OVERRIDE, _SIGNED_MEMO = previous, memo
+        return found
+
+    real = d10_supersession.amendment
+    try:
+        # The copy's own bytes reach the act rows unless an agent amended them
+        # under D10; then the bytes that do are the subjects as D10 found them.
+        d10_supersession.amendment = lambda *_a, **_k: None
+        direct = not r2()
+    finally:
+        d10_supersession.amendment = real
+    reached = own if direct else (real(base) or ({}, []))[0]
+    old, new = " SHALL ", " SHALL, as amended, "
+    amended = dict(reached)
+    amended[spec] = reached.get(spec, b"").replace(old.encode(), new.encode(), 1)
+    front = (change, amended)
+    missing = "missing adoption row: fixture"
+    cases = []
+    try:
+        d10_supersession.amendment = lambda *_a, **_k: (reached, [])
+        cases.append(("poc-d10-reached-clean", r2((change, reached)) == []))
+        d10_supersession.amendment = lambda *_a, **_k: None
+        got = r2(front)
+        cases.append(("poc-d10-absent-pins",
+                      any("stale digest" in f for f in got) and not any(missing in f for f in got)))
+        d10_supersession.amendment = lambda *_a, **_k: (reached, [missing])
+        got = r2(front)
+        cases.append(("poc-d10-no-row-fails",
+                      any("stale digest" in f for f in got) and got[-1] == missing))
+        d10_supersession.amendment = lambda *_a, **_k: (reached, [])
+        cases.append(("poc-d10-row-accepts", r2(front) == []))
+        d10_supersession.amendment = lambda *_a, **_k: (amended, [])
+        got = r2(front)
+        cases.append(("poc-d10-history-still-checked",
+                      bool(got) and all("as D10 found it" in f for f in got)))
+    finally:
+        d10_supersession.amendment = real
+    for name, caught in cases:
+        witnesses.append({"mutant": name, "path": spec, "old": old, "new": new,
+                          "expected": "R2 per arm", "failed": [] if caught else ["R2"],
+                          "outcome": "killed" if caught else "SURVIVED"})
+        if not caught:
+            failures.append(name)
+
+
 def bounds_cases(tmp, base, witnesses, failures):
     """The v2.10 pending-to-adopted transition over v2.9, its ledger and byte guards, and the predecessor guard."""
     original = read_text(base, BOUNDS_SPEC)
@@ -6087,6 +6230,7 @@ def _selftest_cases(tmp, commit, witnesses, failures, witness_path, base, clean,
     repairs_cases(tmp, base, witnesses, failures)
     maps_cases(tmp, base, witnesses, failures)
     bounds_cases(tmp, base, witnesses, failures)
+    poc_d10_cases(base, witnesses, failures)
     reach_cases(tmp, base, witnesses, failures)
     # Two cases a one-file mutation cannot express. A second record of the
     # same version fails R1 by its own finding; --regenerate refuses an
