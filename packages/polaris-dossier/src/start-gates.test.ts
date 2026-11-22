@@ -930,14 +930,14 @@ describe('the declared-source policy successor 2.0.0 and runs bound to its prede
 
   it.each<[string, Buffer | null, string, string]>([
     ['removed', null, 'policy', 'the committed dossier screening policy cannot be read as bounded UTF-8 JSON'],
-    ['changed', Buffer.concat([V1, Buffer.from(' ')]), 'policy-changed', 'the committed predecessor identity, version or bytes differ from this run binding'],
+    ['changed', Buffer.concat([V1, Buffer.from(' ')]), 'policy-changed', 'the committed policy identity, version or bytes differ from this run binding'],
   ])('a step of a run bound to the predecessor, %s, refuses with the restart explanation and changes no file of the run', async (_name, bytes, code, why) => {
     const { run, root, subject } = await predecessorRun();
     commitFile(root, DOSSIER_PREDECESSOR_POLICY_PATH, bytes, 'predecessor gone or changed');
     const before = capture(run);
     expect(await reverifyPinnedRevision(run, createPackageGateSources({ root, now: () => NOW }), NOW)).toMatchObject({ ok: false, refusals: [{ code, reason: RESTART(why) }] });
     const load = await loadDossierScreen(root, NOW, placementSubjectOf(subject));
-    expect(load).toEqual({ ok: false, why: RESTART(bytes === null ? why : 'the committed predecessor bytes differ from this run binding') });
+    expect(load).toEqual({ ok: false, why: RESTART(bytes === null ? why : 'the committed policy bytes differ from this run binding') });
     expect(capture(run)).toBe(before);
   });
 
@@ -996,14 +996,14 @@ describe('the declared-source policy 3.0.0 and runs bound to version 2.0.0', () 
 
   it.each<[string, Buffer | null, string, string]>([
     ['removed', null, 'policy', 'the committed dossier screening policy cannot be read as bounded UTF-8 JSON'],
-    ['changed', Buffer.concat([V2, Buffer.from(' ')]), 'policy-changed', 'the committed predecessor identity, version or bytes differ from this run binding'],
+    ['changed', Buffer.concat([V2, Buffer.from(' ')]), 'policy-changed', 'the committed policy identity, version or bytes differ from this run binding'],
   ])('a step of a run bound to 2.0.0, %s, refuses with the restart explanation and changes no file of the run', async (_name, bytes, code, why) => {
     const { run, root, subject } = await reachRun();
     commitFile(root, DOSSIER_REACH_POLICY_PATH, bytes, 'version 2.0.0 gone or changed');
     const before = capture(run);
     expect(await reverifyPinnedRevision(run, createPackageGateSources({ root, now: () => NOW }), NOW)).toMatchObject({ ok: false, refusals: [{ code, reason: RESTART(why) }] });
     const load = await loadDossierScreen(root, NOW, placementSubjectOf(subject));
-    expect(load).toEqual({ ok: false, why: RESTART(bytes === null ? why : 'the committed predecessor bytes differ from this run binding') });
+    expect(load).toEqual({ ok: false, why: RESTART(bytes === null ? why : 'the committed policy bytes differ from this run binding') });
     expect(capture(run)).toBe(before);
   });
 });

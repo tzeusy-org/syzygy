@@ -199,3 +199,28 @@ describe('the step screen loader for a run bound to an earlier version', () => {
       .toEqual({ ok: false, why: 'the applied screen differs from the policy bytes bound to this run' });
   });
 });
+
+// The scenario "Re-admitted formats placed as code-content and screened", path by path and body by body, and the prefix rule's
+// documentation exclusion (prefixExcludedExtensions): a Containerfile. name ending in a documentation extension is never placed by the
+// prefix, so it is documentation, never code-content.
+describe.each(['public', 'private'] as const)('the re-admission scenario under %s visibility', visibility => {
+  let screen: DossierScreen;
+  beforeAll(() => { screen = screenOf(V3, visibility); });
+  it('the twelve are code-content at Stage 2, and the seven stay indeterminate', () => {
+    const twelve = ['CMakeLists.txt', 'cmake/FindFoo.cmake', 'terragrunt.hcl', 'api/v1/service.proto', 'build.gradle.kts', 'src/main/scala/App.scala',
+      'lib/app.ex', 'R/plot.R', 'src/main.zig', 'erlang.mk', 'Containerfile', 'Containerfile.fedora'];
+    expect(twelve.map(p => [p, outcomeOf(screen, p)])).toEqual(twelve.map(p => [p, 'code-content/2']));
+    const seven = ['build.mak', 'src/App.vb', 'R/plot.r', 'makefile', 'GNUmakefile', 'vendor/x/main.hcl', 'reports/results.scala'];
+    expect(seven.map(p => [p, outcomeOf(screen, p)])).toEqual(seven.map(p => [p, INDETERMINATE]));
+  });
+  it('the HCL variable default and the Gradle key = "value" assignment are excluded whole, never retained as redacted-span', () => {
+    expect(screen.screenTargetBody(`variable "db_${PW}" {\n  default = "${VALUE}"\n}\n`, 'infra/backend.hcl'))
+      .toEqual({ kind: 'excluded', outcome: 'secret-detector-match' });
+    expect(screen.screenTargetBody(`android {\n  ${PW} = "${VALUE}"\n}\n`, 'app/build.gradle')).toEqual({ kind: 'excluded', outcome: 'secret-detector-match' });
+    expect(screen.screenTargetBody('android {\n  namespace = "com.example.app"\n}\n', 'app/build.gradle')).toEqual({ kind: 'admitted' });
+  });
+  it('a Containerfile. name ending in a documentation extension is documentation, never code-content', () => {
+    expect(['Containerfile.md', 'images/Containerfile.adoc', 'Containerfile.dev'].map(p => [p, outcomeOf(screen, p)]))
+      .toEqual([['Containerfile.md', 'project-documentation/2'], ['images/Containerfile.adoc', 'project-documentation/2'], ['Containerfile.dev', 'code-content/2']]);
+  });
+});

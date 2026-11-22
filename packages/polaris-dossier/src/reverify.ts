@@ -108,7 +108,7 @@ export async function reverifyPinnedRevision(runDir: string, sources: GateSource
     return refuse();
   }
   if (!samePolicy(snapshot.binding, subject.screeningPolicy)) {
-    refusals.push({ code: 'policy-changed', reason: predecessor ? restartExplanation('the committed predecessor identity, version or bytes differ from this run binding', bound)
+    refusals.push({ code: 'policy-changed', reason: predecessor ? restartExplanation('the committed policy identity, version or bytes differ from this run binding', bound)
       : 'the committed dossier policy identity, version or bytes differ from this run binding; start a new run instead of silently upgrading it' });
     return refuse();
   }

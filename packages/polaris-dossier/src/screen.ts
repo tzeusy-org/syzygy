@@ -293,7 +293,7 @@ export async function loadDossierScreen(root: string, _now: number, subject: Dos
   const snapshot = readCommittedPolicy(root, bound);
   if (!snapshot.ok) return predecessor ? { ok: false, why: restartExplanation(snapshot.why, bound) } : snapshot;
   if (subject?.policySha256 !== undefined && snapshot.binding.sha256 !== subject.policySha256) {
-    return { ok: false, why: predecessor ? restartExplanation('the committed predecessor bytes differ from this run binding', bound) : 'the committed dossier policy changed from this run binding' };
+    return { ok: false, why: predecessor ? restartExplanation('the committed policy bytes differ from this run binding', bound) : 'the committed dossier policy changed from this run binding' };
   }
   return buildDossierScreen(snapshot.bytes, true, subject, subject?.visibility ?? 'private');
 }

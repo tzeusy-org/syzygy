@@ -32,7 +32,7 @@ export const isEarlierPolicy = (boundPath: string): boolean => EARLIER_POLICIES.
 
 /** Why a step of a run bound to an earlier policy refuses when it can no longer read that policy as its binding: the run's version and
  * the current one named, the run never moved to the current one. */
-export const restartExplanation = (why: string, boundPath: string = DOSSIER_PREDECESSOR_POLICY_PATH): string =>
+export const restartExplanation = (why: string, boundPath: string): string =>
   `this run is bound to the screening policy ${boundPath} (${EARLIER_POLICIES.get(boundPath) ?? 'an unknown version'}), which can no longer be read as its binding (${why}); `
   + `a run is never re-screened under another version or moved to it, so start a new run, which binds ${DOSSIER_POLICY_PATH} (${DOSSIER_POLICY_VERSION})`;
 const MAX_POLICY_BYTES = 2_097_152;
