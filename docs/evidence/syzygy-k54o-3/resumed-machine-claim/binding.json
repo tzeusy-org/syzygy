@@ -1,0 +1,133 @@
+{
+  "subject": "78e9539547f797b70a1f540085236853b8abac49",
+  "tree": "a72693ae435cda5591429628cd61557ff4738dfb",
+  "sources": [
+    {
+      "path": "packages/polaris-dossier/src/url-run-sessions.ts",
+      "sha256": "9701bc52740a41b9ff88ff633fe7e98332e24833dff5c8f2af20a4a9398c5a4a"
+    },
+    {
+      "path": "packages/polaris-dossier/src/url-run-composed.test.ts",
+      "sha256": "95484d941f449496d1873a7526cfb83da2291a557827aff94ee28c20821cdcd4"
+    },
+    {
+      "path": "packages/polaris-dossier/src/url-run-machine.ts",
+      "sha256": "191270378c1803bb127914ab396367c8edefa4f6f9788a03695d8a7f99a014da"
+    },
+    {
+      "path": "packages/polaris-dossier/src/url-run-machine.test.ts",
+      "sha256": "681026543715d35534fb9536ee7baac349c125ac13ab9ca8d971d36e132345ea"
+    },
+    {
+      "path": "packages/polaris-dossier/src/url-run-machine-close.test.ts",
+      "sha256": "1b594ccdff9065fcaebe8908aeed210ac25ea269a3391787080a33e502c35614"
+    }
+  ],
+  "diffSha256": "8d3ddcbd67d86cf6446348742ea83853410641298179f1ab762dfd786ecc7a73",
+  "artifacts": [
+    {
+      "path": "machine-controls.log",
+      "bytes": 1200,
+      "sha256": "91e3175eef246173ff01b52ab6169f0c8410a87ee17645c2b2ff31b638b8af99"
+    },
+    {
+      "path": "native-stop.log",
+      "bytes": 36048,
+      "sha256": "5d709f7b2c7de337f6f8b1b64836fc464bf610bb51092e3d6d8e5039bd7573db"
+    },
+    {
+      "path": "source-review-RAW.md",
+      "bytes": 3930,
+      "sha256": "d898c494ed7fca54273138be1afcde623f45f5d30d05759182fe8840b41c6069"
+    },
+    {
+      "path": "typecheck.log",
+      "bytes": 37,
+      "sha256": "396901319daac4a4413b23478852db3c572014f86c71d148273565f0f3332696"
+    }
+  ],
+  "inputTreeSha256": "d153c86f0f8757051bcede6f2878159b5bf0396def66d542d387b9d573e30277",
+  "profileRegistrySha256": "7866da9a3aa54f951d861f1364297d1613fa3ac04c775434b068abeaa88c02b9",
+  "rawFailureManifestSha256": "00f22f449ebd9e290c54e254638cc02544cfe6c465a08de8ce9d3661c6540871",
+  "resumeChecks": [
+    {
+      "phase": "verify",
+      "ok": true,
+      "nextDesignRound": 2
+    },
+    {
+      "phase": "claim",
+      "exactCut": true,
+      "current": true
+    },
+    {
+      "phase": "resumed-guards",
+      "policyWithdrawal": "refused",
+      "claimWithdrawal": "refused"
+    },
+    {
+      "phase": "machine-claim",
+      "current": true,
+      "claimChecks": 1,
+      "withdrawn": true
+    }
+  ],
+  "designAudits": [
+    {
+      "attempt": "attempt-24wrt0",
+      "sha256": "d28eacded03f4b1e6c051dd8f2018d7e53b0c75289ddb85cab5028985ab968a8",
+      "events": [
+        "declaration",
+        "launch-attempt",
+        "launch-history",
+        "launch-terminal"
+      ],
+      "terminal": {
+        "outcome": "inspection-failed",
+        "signal": "SIGTERM",
+        "groupTermination": "confirmed",
+        "toolTermination": "settled",
+        "pendingInvocations": 0,
+        "sampledStorageBytes": 1475,
+        "peakProcesses": 5,
+        "betweenSamples": "Unknown"
+      }
+    },
+    {
+      "attempt": "attempt-ncWs55",
+      "sha256": "3808eb53a28a15b5753378edf4c802253453c7fc65c66cb172ba69aa97046b04",
+      "events": [
+        "declaration",
+        "launch-attempt",
+        "launch-history",
+        "design-delivery",
+        "launch-terminal"
+      ],
+      "terminal": {
+        "outcome": "stopped",
+        "signal": "SIGTERM",
+        "groupTermination": "confirmed",
+        "toolTermination": "settled",
+        "pendingInvocations": 0,
+        "sampledStorageBytes": 2192,
+        "peakProcesses": 5,
+        "betweenSamples": "Unknown"
+      }
+    }
+  ],
+  "executionRecordPresent": false,
+  "commands": [
+    "npm run typecheck",
+    "npx --no-install vitest run --project unit --project integration --maxWorkers=1 packages/polaris-dossier/src/url-run-machine.test.ts packages/polaris-dossier/src/url-run-machine-close.test.ts",
+    "npx --no-install vitest run --project integration --maxWorkers=1 packages/polaris-dossier/src/url-run-composed.test.ts -t 'pipeline to stop-resume$'"
+  ],
+  "focusedMachineTests": {
+    "passed": 36
+  },
+  "nativeStopResume": {
+    "failed": 1,
+    "skipped": 3,
+    "durationSeconds": 256.9
+  },
+  "scope": "The native fixture uses the real public resume and native launches with owned synthetic source and provider. The held-claim check passed. The fresh design launch stopped before design delivery with inspection-failed and confirmed process and tool cleanup. This run did not identify the failing sampler predicate."
+}

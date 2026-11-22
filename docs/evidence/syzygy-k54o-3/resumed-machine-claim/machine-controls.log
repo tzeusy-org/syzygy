@@ -1,0 +1,16 @@
+
+ RUN  v3.2.7 /home/orca/.tmp/syzygy-beads-looper-20261114-54ebc9f1/d10-f3-runtime-current
+
+ ✓ |integration| packages/polaris-dossier/src/url-run-machine.test.ts (6 tests) 30911ms
+   ✓ production URL run machine provisioner > issues and rotates only actual peers; close defeats awaited effects and permits durable retirement  6695ms
+   ✓ production URL run machine provisioner > issues and rotates only actual peers; withdraw-effects defeats awaited effects and permits durable retirement  6506ms
+   ✓ production URL run machine provisioner > close closes admission while a genuine socket awaits parent revalidation  5356ms
+   ✓ production URL run machine provisioner > withdraw-effects closes admission while a genuine socket awaits parent revalidation  5528ms
+   ✓ production URL run machine provisioner > refuses copied capabilities before creating a store and reports expired retirement as Unknown  5599ms
+ ✓ |unit| packages/polaris-dossier/src/url-run-machine-close.test.ts (30 tests) 1811ms
+
+ Test Files  2 passed (2)
+      Tests  36 passed (36)
+   Start at  18:56:53
+   Duration  36.60s (transform 2.48s, setup 39ms, collect 3.34s, tests 32.72s, environment 0ms, prepare 101ms)
+
