@@ -1,0 +1,315 @@
+{
+  "subject": {
+    "commit": "19ecb0fd21aad670d6128ff1714b2adde94d171f",
+    "hostedMergeTree": "4fdaedf57da777423c6a7eebcb38bcccd0efc07e",
+    "filesSha256": {
+      "packages/polaris-dossier/src/session-launch.ts": "03c3d863298b3e18498ed42d678cfde33342e2a545dbb3ae0b56fb3eefab26f8",
+      "packages/polaris-dossier/src/session-launch.test.ts": "9a3dc33404b08f4071599c8e9835ce36d4d47fc5d6cb11b08a963fec590c0d4a",
+      "packages/polaris-dossier/src/url-run-composed.test.ts": "c29ca3847e2e420bf04349ae05a71c8e502ad58317738c6d9df09fac0a04e811"
+    }
+  },
+  "hostedJob": {
+    "jobId": 137308740751,
+    "runId": 45054497584,
+    "url": "https://github.com/tzeusy-org/syzygy/actions/runs/45054497584/job/137308740751",
+    "startedAt": "2026-11-22T18:29:29Z",
+    "testStepCompletedAt": "2026-11-22T18:41:06Z",
+    "conclusion": "failure",
+    "logSha256": "f24d42f25de9981290e37d23ab9e55a91dd47eacd259bace5e87f0aaf6eab591"
+  },
+  "suite": {
+    "files": 137,
+    "passed": 3854,
+    "failed": 2,
+    "skipped": 3
+  },
+  "cases": [
+    {
+      "name": "complete",
+      "outcome": "passed",
+      "milliseconds": 98922
+    },
+    {
+      "name": "delivery-stop",
+      "outcome": "passed",
+      "milliseconds": 57294
+    },
+    {
+      "name": "stop-resume",
+      "outcome": "failed",
+      "milliseconds": 216716
+    },
+    {
+      "name": "eligible-stop-resume",
+      "outcome": "passed",
+      "milliseconds": 189547
+    }
+  ],
+  "resumeChecks": [
+    {
+      "phase": "verify",
+      "ok": true,
+      "nextDesignRound": 2
+    },
+    {
+      "phase": "claim",
+      "exactCut": true,
+      "current": true
+    },
+    {
+      "phase": "resumed-guards",
+      "policyWithdrawal": "refused",
+      "claimWithdrawal": "refused"
+    },
+    {
+      "phase": "machine-claim",
+      "current": true,
+      "claimChecks": 1,
+      "withdrawn": true,
+      "asyncCurrent": true,
+      "asyncWithdrawn": true
+    },
+    {
+      "phase": "resumed-exit",
+      "exit": 1,
+      "failure": "role-ended",
+      "roles": [
+        {
+          "role": "author",
+          "outcome": "Unknown"
+        },
+        {
+          "role": "inventory",
+          "outcome": "Unknown"
+        },
+        {
+          "role": "fidelity",
+          "outcome": "Unknown"
+        },
+        {
+          "role": "design",
+          "outcome": "inspection-failed",
+          "exitCode": null,
+          "signal": "SIGTERM"
+        }
+      ]
+    }
+  ],
+  "designForwards": 1,
+  "resumedDesign": {
+    "samples": {
+      "started": 232,
+      "verified": 232,
+      "verifyRefused": 0,
+      "verifyRejected": 0,
+      "confirmed": 231,
+      "confirmRefused": 0,
+      "confirmRejected": 0
+    },
+    "lastConfirmed": {
+      "ordinal": 231,
+      "verify": {
+        "startedMs": 141633.633,
+        "settledMs": 141661.133,
+        "outcome": "accepted"
+      },
+      "confirmationInput": true,
+      "confirm": {
+        "startedMs": 141687.322,
+        "settledMs": 141711.279,
+        "outcome": "accepted"
+      }
+    },
+    "terminal": {
+      "atMs": 143131.656,
+      "outcome": "inspection-failed",
+      "latestSample": {
+        "ordinal": 232,
+        "verify": {
+          "startedMs": 141984.262,
+          "settledMs": 142533.351,
+          "outcome": "accepted"
+        }
+      }
+    },
+    "launcherInspection": {
+      "cadenceMs": 200,
+      "inspectionMs": 1000,
+      "samples": 232,
+      "latest": {
+        "ordinal": 232,
+        "phases": {
+          "process": {
+            "startedMs": 0.048236000002361834
+          },
+          "verify": {
+            "startedMs": 0.08421800000360236,
+            "settledMs": 549.2672369999927,
+            "outcome": "accepted"
+          },
+          "storage": {
+            "startedMs": 0.08608599996659905
+          }
+        },
+        "refusal": {
+          "phase": "storage",
+          "cause": "bounded-timeout",
+          "elapsedMs": 1095.5035819999757
+        }
+      },
+      "firstRefusal": {
+        "ordinal": 232,
+        "phases": {
+          "process": {
+            "startedMs": 0.048236000002361834
+          },
+          "verify": {
+            "startedMs": 0.08421800000360236,
+            "settledMs": 549.2672369999927,
+            "outcome": "accepted"
+          },
+          "storage": {
+            "startedMs": 0.08608599996659905
+          }
+        },
+        "refusal": {
+          "phase": "storage",
+          "cause": "bounded-timeout",
+          "elapsedMs": 1095.5035819999757
+        }
+      }
+    },
+    "broker": {
+      "invocations": 1,
+      "firstPeerInvocations": 1,
+      "stages": {
+        "invoke": {
+          "startedMs": 113770.545,
+          "settledMs": 132954.742,
+          "outcome": "accepted"
+        },
+        "host-current": {
+          "startedMs": 113770.688,
+          "settledMs": 121314.08,
+          "outcome": "accepted"
+        },
+        "mediate-peer": {
+          "startedMs": 121314.239,
+          "settledMs": 132954.694,
+          "outcome": "accepted"
+        },
+        "host-action": {
+          "startedMs": 123552.928,
+          "settledMs": 132867.897,
+          "outcome": "accepted"
+        },
+        "tool-before-plan-current": {
+          "startedMs": 123645.674,
+          "settledMs": 124190.546,
+          "outcome": "accepted"
+        },
+        "transfer-bounds": {
+          "startedMs": 124510.562,
+          "settledMs": 124639.843,
+          "outcome": "accepted"
+        },
+        "plan-work-hold": {
+          "startedMs": 124640.079,
+          "settledMs": 124640.803,
+          "outcome": "accepted"
+        },
+        "create-work-budget": {
+          "startedMs": 124640.841,
+          "settledMs": 124641.198,
+          "outcome": "accepted"
+        },
+        "tool-before-audit-guard": {
+          "startedMs": 124641.33,
+          "settledMs": 124956.823,
+          "outcome": "accepted"
+        },
+        "prepared-store-append": {
+          "startedMs": 125736.386,
+          "settledMs": 130604.244,
+          "outcome": "accepted"
+        },
+        "prepared-store-recheck": {
+          "startedMs": 130604.724,
+          "settledMs": 131631.055,
+          "outcome": "accepted"
+        },
+        "tool-before-release-current": {
+          "startedMs": 131631.601,
+          "settledMs": 132146.559,
+          "outcome": "accepted"
+        },
+        "tool-release-guard": {
+          "startedMs": 132146.883,
+          "settledMs": 132462.683,
+          "outcome": "accepted"
+        },
+        "release": {
+          "startedMs": 132502.325,
+          "settledMs": 132867.729,
+          "outcome": "accepted"
+        },
+        "release-check": {
+          "startedMs": 132502.5,
+          "settledMs": 132828.409,
+          "outcome": "accepted"
+        },
+        "release-final-budget": {
+          "startedMs": 132867.585,
+          "settledMs": 132867.659,
+          "outcome": "accepted"
+        }
+      }
+    },
+    "mcpIngress": {
+      "counts": {
+        "started": 2,
+        "data": 1,
+        "end": 1,
+        "pending": 0,
+        "refused": 0,
+        "rejected": 0
+      },
+      "startedMs": 112511.392,
+      "firstDataMs": 113135.332,
+      "endMs": 113769.892
+    },
+    "audit": {
+      "status": "read",
+      "count": 21,
+      "kinds": [
+        "declaration",
+        "launch-attempt",
+        "launch-history",
+        "design-delivery",
+        "machine-peer:inference-forward",
+        "machine-peer:inference-forward",
+        "machine-peer:inference-forward",
+        "relay:attempt-allowed",
+        "machine-peer:inference-forward",
+        "machine-peer:inference-forward",
+        "relay:send-attempt",
+        "machine-peer:inference-forward",
+        "relay:send-outcome",
+        "machine-peer:inference-forward",
+        "machine-peer:inference-forward",
+        "usage",
+        "relay:response-admitted",
+        "machine-peer:inference-forward",
+        "machine-peer:dossier_step",
+        "ordered:prepared",
+        "machine-peer:inference-forward"
+      ]
+    }
+  },
+  "additionalFailure": {
+    "test": "bounds storage census retries with 1 disappearing entries",
+    "workRootsOpened": 1,
+    "entriesRemoved": 1,
+    "sampleAccepted": false
+  }
+}
