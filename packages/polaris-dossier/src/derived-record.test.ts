@@ -221,8 +221,9 @@ describe('the record', () => {
 
     // Version 2.8 (syzygy-3efd.67): until then a fact of another rule version rendered Unknown (no-currency-bound-declared) beside the
     // rest stale; now a record naming a rule or version the render does not use, or a path it does not re-derive, is no readable record.
-    it('states missing for a record naming another rule or version, or a path the render does not re-derive (version 2.8)', async () => {
-      const MISSING = { state: 'missing', revision: REV, unknownReason: 'missing-evidence' };
+    // Version 2.10: such a record is an entry that is no readable record, so the state is `unusable`, never `missing`.
+    it('states unusable for a record naming another rule or version, or a path the render does not re-derive (versions 2.8, 2.10)', async () => {
+      const UNUSABLE = { state: 'unusable', revision: REV, unknownReason: 'missing-evidence' };
       const planted: [string, (doc: Record<string, any>) => void][] = [ // eslint-disable-line @typescript-eslint/no-explicit-any
         ['a unit fact of rule version 2', (doc) => { doc['facts'][1].ruleVersion = 2; }],
         ['the root of rule version 0', (doc) => { doc['facts'][0].ruleVersion = 0; }],
@@ -239,18 +240,18 @@ describe('the record', () => {
         // Each planted record passes every reading rule of the record itself; only the render's own re-derivation refuses it.
         expect(readDerivedRecord(runWith(text), 0, EXPECT), what).toMatchObject({ state: 'derived' });
         const structure = await at(text);
-        expect(structure, what).toEqual(MISSING);
+        expect(structure, what).toEqual(UNUSABLE);
         expect(JSON.stringify(structure), what).not.toContain('zq-planted');
       }
       // Under no policy, and for a record of another revision, the same: the refusal does not wait on currency.
-      expect(await at(kept((doc) => { doc['facts'][1].path = 'zq-planted-dir'; doc['facts'][4].path = 'zq-planted-dir'; }), { policy: null })).toEqual(MISSING);
-      expect(await at(kept((doc) => { doc['revision'] = OTHER; doc['facts'][4].rule = 'zq-planted-rule'; }))).toEqual(MISSING);
+      expect(await at(kept((doc) => { doc['facts'][1].path = 'zq-planted-dir'; doc['facts'][4].path = 'zq-planted-dir'; }), { policy: null })).toEqual(UNUSABLE);
+      expect(await at(kept((doc) => { doc['revision'] = OTHER; doc['facts'][4].rule = 'zq-planted-rule'; }))).toEqual(UNUSABLE);
       // A render that cannot list the tree says so, whatever the record names.
       const refused = { listTree: async () => { throw new GitObjectReadRefusal('object-missing', 'gone'); } };
       expect(await at(kept((doc) => { doc['facts'][4].rule = 'zq-planted-rule'; }), { reader: refused })).toEqual({ state: 'unknown', revision: REV, unknownReason: 'source-uncaptured-or-unreachable' });
     });
 
-    it('states missing for a record naming a directory the tree holds past the render\'s listing of 250, and reads one within it (version 2.8)', async () => {
+    it('states unusable for a record naming a directory the tree holds past the render\'s listing of 250, and reads one within it (versions 2.8, 2.10)', async () => {
       const names = Array.from({ length: 251 }, (_, i) => `d${String(i).padStart(3, '0')}`);
       const wide = names.map((name) => ({ path: `${name}/f`, mode: '100644' }));
       const record = (edit: (doc: Record<string, any>) => void): string => { // eslint-disable-line @typescript-eslint/no-explicit-any
@@ -262,7 +263,7 @@ describe('the record', () => {
       // Facts 250 and 500 are the 250th unit (d249) and its containment; d250 is in the tree but counted, not listed.
       const within = await wideAt(record(() => {}));
       expect(within.state === 'derived' && within.facts.every((fact) => fact.epistemic === 'observed')).toBe(true);
-      expect(await wideAt(record((doc) => { doc['facts'][250].path = 'd250'; doc['facts'][500].path = 'd250'; }))).toEqual({ state: 'missing', revision: REV, unknownReason: 'missing-evidence' });
+      expect(await wideAt(record((doc) => { doc['facts'][250].path = 'd250'; doc['facts'][500].path = 'd250'; }))).toEqual({ state: 'unusable', revision: REV, unknownReason: 'missing-evidence' });
     });
 
     it('still renders stale, with the names this render derived, a record of other facts whose every path the render derives (version 2.8)', async () => {
@@ -289,6 +290,31 @@ describe('the record', () => {
       const refused = { listTree: async () => { throw new GitObjectReadRefusal('object-missing', 'gone'); } };
       expect(await at(kept(), { reader: refused })).toEqual({ state: 'unknown', revision: REV, unknownReason: 'source-uncaptured-or-unreachable' });
       await expect(at(kept(), { reader: { listTree: async () => { throw new Error('a fault, not a refusal'); } } })).rejects.toThrow('a fault, not a refusal');
+    });
+
+    // Version 2.10 (syzygy-3efd.73 (b)): `missing` only where examining the path without following a link reports nothing there.
+    it('states unusable for a record check wrote that a changed screen or Syzygy version cannot use, and missing only where nothing stands (version 2.10)', async () => {
+      const UNUSABLE = { state: 'unusable', revision: REV, unknownReason: 'missing-evidence' };
+      const MISSING = { state: 'missing', revision: REV, unknownReason: 'missing-evidence' };
+      // The record check wrote, read under a screen that now matches one of its directories as a secret path.
+      expect(await at(kept(), { isSecretPath: (p) => isSecret(p) || p === 'lib' })).toEqual(UNUSABLE);
+      // The same record, under a later rule version the render derives other units by: a directory the render no longer derives.
+      expect(await at(kept(), { reader: reader(TREE.filter((entry) => !entry.path.startsWith('Zeta/'))) })).toEqual(UNUSABLE);
+      const at2 = (plant: (dir: string) => void) => {
+        const run = tempDir('derived-record-run-');
+        plant(path.join(run, 'derived'));
+        return derivedStructureAt({ run, revision: 0, pinned: REV, repositoryId: 'kestrel', reader: reader(), isSecretPath: isSecret, policy });
+      };
+      const file = (dir: string): string => path.join(dir, 'rev-0.json');
+      expect(await at2((dir) => { fs.mkdirSync(dir); fs.mkdirSync(file(dir)); }), 'a directory').toEqual(UNUSABLE);
+      expect(await at2((dir) => { fs.mkdirSync(dir); execFileSync('mkfifo', [file(dir)]); }), 'a FIFO').toEqual(UNUSABLE);
+      expect(await at2((dir) => { fs.mkdirSync(dir); fs.symlinkSync('/dev/zero', file(dir)); }), 'a device').toEqual(UNUSABLE);
+      expect(await at2((dir) => { fs.mkdirSync(dir); fs.symlinkSync('nowhere', file(dir)); }), 'a dangling link').toEqual(UNUSABLE);
+      expect(await at2((dir) => { fs.symlinkSync(dir, dir); }), 'a path that cannot be examined').toEqual(UNUSABLE);
+      expect(await at2((dir) => { fs.mkdirSync(dir); fs.writeFileSync(file(dir), `${kept()}${' '.repeat(4_194_304)}`); }), 'past the bound').toEqual(UNUSABLE);
+      expect(await at2(() => {}), 'no directory').toEqual(MISSING);
+      expect(await at2((dir) => { fs.mkdirSync(dir); }), 'no entry').toEqual(MISSING);
+      expect(await at2((dir) => { fs.writeFileSync(dir, 'a file\n'); }), 'a parent that is a file').toEqual(MISSING);
     });
   });
 });
