@@ -157,6 +157,9 @@ authority and no model yet called on the current path.
     It replaces REQ-polaris-generation-034 again (106 to 110 scenarios: the text corrected to the code of versions 2.9
     and 2.10 and the layouts that stack every graph of two or more layers); its two code changes (the manifest maps'
     unlisted Unknown files, a bounded record's reading difference) and the layouts (syzygy-3efd.70) are not yet landed.
+    *(Stale 2026-11-22: the sentence above, "its two code changes (the manifest maps' unlisted Unknown files, a
+    bounded record's reading difference) and the layouts (syzygy-3efd.70) are not yet landed", is superseded: the two
+    code changes landed in PR #886, merge commit `06529d12`, and the layouts in PR #883, merge commit `f0da8139`.)*
     *(2026-11-22: the predecessor figure "419 scenarios" is superseded by that
     amendment; all 39 identities remain.)*
     [Infrastructure recognizers amendment 2.12](openspec/changes/dossier-infrastructure-recognizers) is agent-adopted in A-38.
