@@ -28,11 +28,12 @@ function deferred<T>() {
 }
 
 describe('current policy across completed design cleanup', () => {
-  it('checks the independent policy once when neither settlement waits for cleanup', async () => {
-    const current = vi.fn(async () => true), changed = vi.fn();
+  it('checks policy once and checks effect authority after each settlement', async () => {
+    const current = vi.fn(async () => true), effectCurrent = vi.fn(() => true), changed = vi.fn();
     expect(await checkUrlSessionCurrent({ settleCompletedDesign: async () => 'current',
-      effectCurrent: () => true, current, bindingChanged: changed })).toBe(true);
+      effectCurrent, current, bindingChanged: changed })).toBe(true);
     expect(current).toHaveBeenCalledTimes(1);
+    expect(effectCurrent).toHaveBeenCalledTimes(2);
     expect(changed).not.toHaveBeenCalled();
   });
 

@@ -56,7 +56,8 @@ export async function checkUrlSessionCurrent(input: {
     if (await input.current() !== true) { input.bindingChanged(); return false; }
     const settlement = await input.settleCompletedDesign();
     if (settlement === 'refused' || !input.effectCurrent()) return false;
-    if (settlement === 'settled' && await input.current() !== true) { input.bindingChanged(); return false; }
+    if (settlement === 'current') return true;
+    if (await input.current() !== true) { input.bindingChanged(); return false; }
     return input.effectCurrent();
   } catch { input.bindingChanged(); return false; }
 }
