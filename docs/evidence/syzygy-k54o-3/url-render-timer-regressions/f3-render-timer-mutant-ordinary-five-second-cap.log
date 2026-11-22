@@ -1,0 +1,148 @@
+
+ RUN  v3.2.7 /home/orca/.tmp/syzygy-beads-looper-20261114-54ebc9f1/d10-f3-work-budget
+
+ ❯ |integration| packages/polaris-dossier/src/render.test.ts (115 tests | 1 failed | 114 skipped) 2848ms
+   × render > lets an actual URL producer finish after six seconds within its original thirty-second context 2609ms
+     → expected true to be false // Object.is equality
+   ↓ render > aborts an actual URL producer at the remaining shared deadline after initial rendering has consumed time
+   ↓ render > awaits actual producer admission before storing a site, and withholds it on a failed producer
+   ↓ render > refuses an admission that consumes the monotonic budget before its timer can run
+   ↓ render > writes the admitted exact output population despite mutation of the callback map copy
+   ↓ render > refuses with no renderer wired, before it opens the run, and writes nothing
+   ↓ render > renders every quotation as the bytes Syzygy located in the blob it read now, with an RFC7-10 anchor
+   ↓ render > labels blocks by the agent's label, the counted review and screening, and keeps the pages and machine view in parity per tuple
+   ↓ render > the reading view and the evidence view (dossier spec v1.5) > shows no label token in the block text of a narrative page, and keeps every one for the evidence view
+   ↓ render > the reading view and the evidence view (dossier spec v1.5) > carries the legend and the evidence-view target once per narrative page and map page, and the redaction legend elsewhere
+   ↓ render > the reading view and the evidence view (dossier spec v1.5) > gives each block an evidence note whose values equal its machine attributes
+   ↓ render > the reading view and the evidence view (dossier spec v1.5) > says in each citation pop which lines of which file the mark cites
+   ↓ render > the reading view and the evidence view (dossier spec v1.5) > puts the evidence view in the rendered-design packet: each narrative page holds both views
+   ↓ render > the reading view and the evidence view (dossier spec v1.5) > renders a checked v4 draft's Poles: the why section on the landing page, the other Pole on its own page, in the design packet too
+   ↓ render > the reading view and the evidence view (dossier spec v1.5) > refuses to render a v4 draft over the run's Pole limit, as check reports it
+   ↓ render > the reading view and the evidence view (dossier spec v1.5) > counts in the appendix what the machine view counts
+   ↓ render > discloses declaration and screening evidence without treating historical launch records as authority
+   ↓ render > keeps actual agent transmissions unobserved in the disclosure
+   ↓ render > carries the one sentence and the machine disclosure on every page, the human disclosure in the appendix, and one review-status region per page holding no claim
+   ↓ render > says on the sources list why the agent reports choosing each source, Inferred, never a secret-named path (syzygy-pdja.15)
+   ↓ render > says on the sources list which pages cite each source and how often (syzygy-pdja.15)
+   ↓ render > folds how the dossier was made under one Review report entry, apart from the product, open on the pages it holds (syzygy-pdja.13)
+   ↓ render > renders an attributed editorial draft without an RFC7-20 reading act
+   ↓ render > withholds a quotation from a file screening excludes and renders its block Unknown, with no source page for that file
+   ↓ render > refuses a different applied policy instead of upgrading a running render
+   ↓ render > renders screened documentation without a legacy class grant null
+   ↓ render > renders screened documentation without a legacy class grant "code-content"
+   ↓ render > suppresses a private unknown-class blob identifier on every page and in the source population
+   ↓ render > keeps policy classification independent of a stale provider statement
+   ↓ render > refuses when an object at the pinned revision can no longer be read, and writes nothing
+   ↓ render > renders an exempt body only through a renderer that declares the page-sink contract and pages that carry the CSP
+   ↓ render > rescans a cited body with its path, so a detector of agent text alone asks nothing of a Stage-1 body
+   ↓ render > draws retained spans with original coordinates and markers while withholding only the removed line
+   ↓ render > rescans a redacted exempt body over its complete body where the page sink is unconfirmed, and states no withheld text
+   ↓ render > loads the screen for the run's repository and pinned commit
+   ↓ render > refuses when the stored passed draft revision is altered, after the deadline, and when the output lacks the disclosure
+   ↓ render > writes each render into a new numbered site directory and never over an earlier one
+   ↓ render > labels selection history Inferred and the current pin and policy check Observed
+   ↓ render > refuses before it renders when the policy cannot be read, with the step guard's codes, and writes no site (syzygy-qkea.23)
+   ↓ render > refuses before it renders when the policy binding changes, with the step guard's codes, and writes no site (syzygy-qkea.23)
+   ↓ render > lists the pinned tree with the object reader the CLI is given
+   ↓ render > is the `render` command of the CLI, which refuses when the composition root injects no renderer
+   ↓ render: figure homes (schema v5) > draws each figure once, on its home page: the overview after its introduction, a deep dive and a section ahead of their prose
+   ↓ render: figure homes (schema v5) > draws a figure homed on a deep dive with no page of its own in that deep dive's section
+   ↓ render: figure homes (schema v5) > draws a v5 figure homed on a section exactly as a v4 draft's `sectionId` draws it
+   ↓ render: withheld items and judgements (dossier spec v1.5) > renders each withheld item Unknown in Syzygy's words with its count, and none of the agent's text for it
+   ↓ render: withheld items and judgements (dossier spec v1.5) > keeps a block citing a withheld span beside an admitted one, counting the withheld span
+   ↓ render: withheld items and judgements (dossier spec v1.5) > withholds an item whose span touches a redacted line, and keeps one over surviving lines of the same file
+   ↓ render: withheld items and judgements (dossier spec v1.5) > renders a list repeating a diagram collapsed, with Syzygy's summary and its Unknown count
+   ↓ render: withheld items and judgements (dossier spec v1.5) > renders an uncited judgement Inferred with its mark where the counted review finds it advisory
+   ↓ render: withheld items and judgements (dossier spec v1.5) > keeps an uncited judgement Unknown while no counted review finds it advisory
+   ↓ rendered-design review (S9b) > builds the design packet from the latest site, outside the review-status region, byte for byte, and names its digest at render
+   ↓ rendered-design review (S9b) > hands a design review session the packet under the sessions root with its own prompt
+   ↓ rendered-design review (S9b) > keeps a counted design review through a render that changes only the review-status region
+   ↓ rendered-design review (S9b) > retires a counted design review when a render changes anything outside the region
+   ↓ rendered-design review (S9b) > refuses the render where the brief record names a pack this Syzygy does not ship, or its standards cannot be read, and writes no site
+   ↓ rendered-design review (S9b) > refuses a render whose statement of the design review leaks outside the region, and writes no site
+   ↓ rendered-design review (S9b) > counts a validated design verdict only once its launch form is recorded
+   ↓ rendered-design review (S9b) > states a counted review that declares the pages not ready beside its blocking finding
+   ↓ rendered-design review (S9b) > records and refuses a design verdict with a page without a row, which never counts
+   ↓ rendered-design review (S9b) > records and refuses a design verdict with a row for a page the packet does not hold, which never counts
+   ↓ rendered-design review (S9b) > records and refuses a design verdict with two rows for one page, which never counts
+   ↓ rendered-design review (S9b) > records and refuses a design verdict with a finding on a file the packet does not hold, which never counts
+   ↓ rendered-design review (S9b) > records and refuses a design verdict with a stale packet digest, which never counts
+   ↓ rendered-design review (S9b) > records and refuses a design verdict with the authoring session's identifier, which never counts
+   ↓ rendered-design review (S9b) > records and refuses a design verdict with a quotation in a reason, which never counts
+   ↓ rendered-design review (S9b) > records and refuses a design verdict with readiness beside a blocking finding, which never counts
+   ↓ rendered-design review (S9b) > records and refuses a design verdict with readiness beside a deficient page, which never counts
+   ↓ rendered-design review (S9b) > records and refuses a design verdict with a fidelity verdict's shape, which never counts
+   ↓ rendered-design review (S9b) > records a validated design verdict, with what it observed and what stays Inferred, and a stored site altered since is a stale packet
+   ↓ rendered-design review (S9b) > refuses a design packet from a site holding anything but the renderer's files, and an unknown kind
+   ↓ rendered-design review (S9b) > names an excluded cited file alike in two renders of the same subject
+   ↓ rendered-design review (S9b) > version 8, public: an excluded cited blob's object id is on the pages and in the source population: true
+   ↓ rendered-design review (S9b) > version 8, private: an excluded cited blob's object id is on the pages and in the source population: false
+   ↓ rendered-design review (S9b) > keys an excluded cited file by the run, the pinned revision and its path alone, never its body or object
+   ↓ rendered-design review (S9b) > drives the design review through the CLI
+   ↓ redactionDetails > names the matched detectors and the withheld ranges, a single line as one number and a run with an en dash
+   ↓ redactedExtent > says partially retained while some line is kept, and retained with every line withheld when none is
+   ↓ readable operator-agent pages (syzygy-mea.10.1, syzygy-mea.10.2) > numbers each page's sources [1], [2] in first-cited order, keeping the identifier in data-source-id only
+   ↓ readable operator-agent pages (syzygy-mea.10.1, syzygy-mea.10.2) > draws complete backtick pairs in agent prose as inline code and leaves an unpaired backtick literal
+   ↓ readable operator-agent pages (syzygy-mea.10.1, syzygy-mea.10.2) > carries the soft dark theme with a light variant and tinted callouts
+   ↓ readability guidance and diagram-led sections (syzygy-mea.10.4) > draws a section's diagrams before its blocks on an operator-agent page
+   ↓ readability guidance and diagram-led sections (syzygy-mea.10.4) > puts the readability rules in the brief, after the profile guidance, and the newcomer test in the design criteria
+   ↓ rich presentation elements (syzygy-mea.10.5) > renders a table with a caption, column headers, row headers and an empty cell
+   ↓ rich presentation elements (syzygy-mea.10.5) > numbers a cell's citation as any block's
+   ↓ rich presentation elements (syzygy-mea.10.5) > renders a callout with its visible tone, steps, definitions, cards and details
+   ↓ rich presentation elements (syzygy-mea.10.5) > marks every element claim and carries it into the machine view
+   ↓ rich presentation elements (syzygy-mea.10.5) > renders a code excerpt from Syzygy's read, entity-encoded, Observed, with its language from the path and its anchor
+   ↓ rich presentation elements (syzygy-mea.10.5) > withholds a code excerpt of a file screening excludes, with none of its bytes
+   ↓ rich presentation elements (syzygy-mea.10.5) > withholds a code excerpt whose cited lines carry a raw tag: screening holds the file as active content
+   ↓ rich presentation elements (syzygy-mea.10.5) > puts no fragment target that any page links to inside any details element
+   ↓ rich presentation elements (syzygy-mea.10.5) > adds no script and keeps the content security policy
+   ↓ render: derived structure (version 2.3) > keeps the record at check and draws the figure Observed with rule and version, publishing the record unchanged
+   ↓ render: derived structure (version 2.3) > renders every derived element Unknown (no-currency-bound-declared) where no adopted policy applies
+   ↓ render: derived structure (version 2.3) > renders every derived element Unknown (stale-beyond-currency-bound) for a record of another revision or with facts not re-derived
+   ↓ render: derived structure (version 2.3) > states Not established with no figure, list or published record where no record was kept, the record is Unknown, or the render cannot list the tree
+   ↓ render: derived structure (version 2.3) > derives no size or object id for a private repository, and names no secret-matching path
+   ↓ render: derived structure (version 2.3) > counts the directory map from the tree, never the record, and marks its line Unknown where the record's files alone was edited
+   ↓ render: derived structure (version 2.3) > never takes a manifest fact from the stored check record: a planted manifestFacts member reaches no map or machine view
+   ↓ render: derived structure (version 2.3) > tells an entry that is no readable record, or a path that cannot be examined, apart from no entry, in both pages and both states (version 2.10)
+   ↓ render: derived structure (version 2.3) > keeps an authored figure matching a derived fact dashed and curated, and a draft cannot set Observed
+   ↓ render: derived structure (version 2.3) > publishes and draws nothing of a kept record edited after check: an added member, a secret-matching path or a foreign repository
+   ↓ render: derived structure (version 2.3) > publishes and draws nothing of a record naming a directory the tree does not hold, or a rule other than top-level-unit version 1 (versions 2.8, 2.10)
+   ↓ render: derived structure (version 2.3) > refuses a check before freezing when the revision's derived record already exists, so the revision is not spent
+   ↓ render: derived structure (version 2.3) > takes capturedAt once the check has listed the tree
+   ↓ render: derived structure (version 2.3) > draws twelve, lists 250 and counts the rest end to end for a tree of more than 250 top-level directories
+   ↓ render: derived structure (version 2.3) > is stable across renders of one draft revision, and two checks of the same bytes differ only in capturedAt
+   ↓ review and render: a passed check record carrying the widest manifest facts (version 2.8) > builds the fidelity packet and renders the whole site on that revision, where version 2.7 refused both
+   ↓ render: the thesis basis (schema v6) > renders a code-read thesis under Syzygy's line, immediately before the introduction's block and outside it, and says so in machine.json
+   ↓ render: the thesis basis (schema v6) > renders no line for a stated thesis, and machine.json says so
+   ↓ render: the thesis basis (schema v6) > renders no line for a none thesis, and machine.json says so
+   ↓ render: the thesis basis (schema v6) > renders no line beside a withheld introduction, and machine.json says the line did not render
+   ↓ render: the thesis basis (schema v6) > a v5 or earlier draft has no thesisBasis member in machine.json and no line
+   ↓ render: figure kinds (schema v7) > renders a graph diagram of a v7 draft byte for byte as the same diagram of a v6 draft, on every page, with no figure-kind style
+   ↓ render: figure kinds (schema v7) > renders a sequence and a swimlane in their two forms, with figureStructures in machine.json and the style on their page alone
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  |integration| packages/polaris-dossier/src/render.test.ts > render > lets an actual URL producer finish after six seconds within its original thirty-second context
+AssertionError: expected true to be false // Object.is equality
+
+- Expected
++ Received
+
+- false
++ true
+
+ ❯ packages/polaris-dossier/src/render.test.ts:399:31
+    397|       await Promise.race([reached, rendered.then(result => { throw Err…
+    398|       await vi.advanceTimersByTimeAsync(6000);
+    399|       expect(signal?.aborted).toBe(false);
+       |                               ^
+    400|       expect(reads.isLeaseOpen()).toBe(true);
+    401|       expect(fs.existsSync(path.join(f.run, 'site'))).toBe(false);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 114 skipped (115)
+   Start at  17:57:38
+   Duration  6.04s (transform 2.28s, setup 9ms, collect 2.84s, tests 2.85s, environment 0ms, prepare 61ms)
+

@@ -1,0 +1,154 @@
+{
+  "subject": "e10a56f763c3e1dac7961e59a17d523900b518c1",
+  "inputTreeSha256": "69d6e96f9ab5e23197351b6baad5899fb6fc98746aafa7798fb91f81691dc4cd",
+  "profileRegistrySha256": "39679e7fd9ecd430f74ebf37dd62d67884f6d7fb012c9b52f9519b5c943c2808",
+  "case": "public-stop-resume",
+  "testResult": {
+    "passed": 0,
+    "failed": 1,
+    "skipped": 3,
+    "durationSeconds": 217.41
+  },
+  "resumeChecks": [
+    {
+      "phase": "verify",
+      "ok": true,
+      "nextDesignRound": 2
+    },
+    {
+      "phase": "claim",
+      "exactCut": true,
+      "current": true
+    },
+    {
+      "phase": "resumed-guards",
+      "policyWithdrawal": "refused",
+      "claimWithdrawal": "refused"
+    }
+  ],
+  "audit": {
+    "attempt-5iWu03": {
+      "events": [
+        "declaration",
+        "launch-attempt",
+        "launch-history",
+        "design-delivery",
+        "launch-terminal"
+      ],
+      "sha256": "3ffdfa4d3a62f041bcd94c6eb60e72d6515df3d03343054de5a6bedc77d4d6c8"
+    },
+    "attempt-9xYL33": {
+      "events": [
+        "declaration",
+        "launch-attempt",
+        "launch-terminal"
+      ],
+      "sha256": "3d6a246243b2746a5f66fc3886b6ea96d226cca8f3030906308804874afda945"
+    }
+  },
+  "stoppedBoundary": {
+    "sha256": "24bb8637e41a8f97f275f2b60604e8e30388b82fc3cdd125cd56e378108c1d21",
+    "path": "/home/orca/.tmp/url-composed-host-3638409-1795341960715/e3d01e0a915ce85dedf5f9bcad53d0e5e7f629c964e2d99fe103ac7759397e01.cccccccccccccccccccccccccccccccc.stopped.json",
+    "retainedDesignProtectedPaths": [
+      {
+        "path": "/home/orca/.tmp/url-composed-4YCS86/runs/run-2e25cdba77e469e6566af4a20a720558",
+        "containsRetainedAudit": false,
+        "containsResumedAudit": false
+      },
+      {
+        "path": "/home/orca/.tmp/url-composed-4YCS86/runs/run-2e25cdba77e469e6566af4a20a720558.sessions",
+        "containsRetainedAudit": false,
+        "containsResumedAudit": false
+      },
+      {
+        "path": "/home/orca/.tmp/url-composed-4YCS86/kestrel",
+        "containsRetainedAudit": false,
+        "containsResumedAudit": false
+      },
+      {
+        "path": "/home/orca/.tmp/url-composed-host-3638409-1795341960715/acquisitions/attempt-5iWu03",
+        "containsRetainedAudit": true,
+        "containsResumedAudit": false
+      },
+      {
+        "path": "/home/orca/.tmp/url-composed-4YCS86/views/run-nw1q1h/author/home",
+        "containsRetainedAudit": false,
+        "containsResumedAudit": false
+      },
+      {
+        "path": "/home/orca/.tmp/url-composed-4YCS86/views/run-nw1q1h/author/work",
+        "containsRetainedAudit": false,
+        "containsResumedAudit": false
+      },
+      {
+        "path": "/tmp/syz-url-W7sB79/author/b",
+        "containsRetainedAudit": false,
+        "containsResumedAudit": false
+      },
+      {
+        "path": "/tmp/syz-url-W7sB79/author/r",
+        "containsRetainedAudit": false,
+        "containsResumedAudit": false
+      },
+      {
+        "path": "/home/orca/.tmp/url-composed-4YCS86/views/run-nw1q1h/inventory/home",
+        "containsRetainedAudit": false,
+        "containsResumedAudit": false
+      },
+      {
+        "path": "/home/orca/.tmp/url-composed-4YCS86/views/run-nw1q1h/inventory/work",
+        "containsRetainedAudit": false,
+        "containsResumedAudit": false
+      },
+      {
+        "path": "/tmp/syz-url-W7sB79/inventory/b",
+        "containsRetainedAudit": false,
+        "containsResumedAudit": false
+      },
+      {
+        "path": "/tmp/syz-url-W7sB79/inventory/r",
+        "containsRetainedAudit": false,
+        "containsResumedAudit": false
+      },
+      {
+        "path": "/home/orca/.tmp/url-composed-4YCS86/views/run-nw1q1h/fidelity/home",
+        "containsRetainedAudit": false,
+        "containsResumedAudit": false
+      },
+      {
+        "path": "/home/orca/.tmp/url-composed-4YCS86/views/run-nw1q1h/fidelity/work",
+        "containsRetainedAudit": false,
+        "containsResumedAudit": false
+      },
+      {
+        "path": "/tmp/syz-url-W7sB79/fidelity/b",
+        "containsRetainedAudit": false,
+        "containsResumedAudit": false
+      },
+      {
+        "path": "/tmp/syz-url-W7sB79/fidelity/r",
+        "containsRetainedAudit": false,
+        "containsResumedAudit": false
+      }
+    ]
+  },
+  "resumedLaunch": {
+    "sha256": "30d717d645af47e6b7cad444f94a432238d13003c572bcb8a5661afc8d5671b6",
+    "name": "design-session-1.5927e60c1badd9e230ae9a7c3b99cd5fc0dcba767bf3b2665ac0e0321032bf2e.launch.json",
+    "capturedPid": 3666686,
+    "startedAt": "2026-11-22T10:09:16.262Z",
+    "recordPublishedAt": "2026-11-22T10:09:16.628120+00:00"
+  },
+  "acceptanceGuards": {
+    "anyRetainedDesignProtectionContainsNewAudit": false,
+    "runContainsNewAudit": false,
+    "sessionsContainsNewAudit": false,
+    "actualHostRootContainsNewAudit": true
+  },
+  "source": {
+    "predicate": "packages/polaris-dossier/src/url-session-audit.ts:906",
+    "fixture": "packages/polaris-dossier/src/url-run-composed.testkit.ts:129",
+    "production": "packages/polaris-dossier/src/polaris.ts:839"
+  },
+  "limits": "Retained audit demonstrates the fresh launch record was written and launch history was not accepted. The retained exact view and sibling audit path fail a necessary production predicate. The controlled successor run is needed to establish the repair and any subsequent refusal."
+}

@@ -1,0 +1,49 @@
+{
+  "subject": "d6b200d67e2ee57596eca8f4eed0c2e39027f0c8",
+  "sourceSha256": "4e3d8cb6f23748af6f4195ecba7f9b4ca9b3bed938c2efa8a83da5b5a680942f",
+  "testSha256": "3182bfc0f5a86ba955ebe2487bf7c7f29cd8ff16a9dc39581250ddfa1f60f7e3",
+  "mutants": [
+    {
+      "name": "ordinary-five-second-cap",
+      "file": "packages/polaris-dossier/src/render.ts",
+      "old": "Math.max(0, Math.min(URL_PRODUCT_READ_MILLISECONDS.render, products!.deadline - Date.now()))",
+      "new": "RENDER_PRODUCER_MILLISECONDS",
+      "pattern": "lets an actual URL producer",
+      "exit": 1,
+      "log": "/home/orca/.tmp/f3-render-timer-mutant-ordinary-five-second-cap.log"
+    },
+    {
+      "name": "drop-shared-deadline",
+      "file": "packages/polaris-dossier/src/render.ts",
+      "old": "Math.max(0, Math.min(URL_PRODUCT_READ_MILLISECONDS.render, products!.deadline - Date.now()))",
+      "new": "URL_PRODUCT_READ_MILLISECONDS.render",
+      "pattern": "aborts an actual URL producer",
+      "exit": 1,
+      "log": "/home/orca/.tmp/f3-render-timer-mutant-drop-shared-deadline.log"
+    },
+    {
+      "name": "reset-initial-six-seconds",
+      "file": "packages/polaris-dossier/src/render.ts",
+      "old": "products!.deadline - Date.now()",
+      "new": "products!.deadline - (Date.now() - 6000)",
+      "pattern": "aborts an actual URL producer",
+      "exit": 1,
+      "log": "/home/orca/.tmp/f3-render-timer-mutant-reset-initial-six-seconds.log"
+    }
+  ],
+  "testedCommit": "5b3450f7312f7478591d2179458d2e4a78679c8c",
+  "checks": [
+    {
+      "path": "/home/orca/.tmp/f3-render-timer-tests.log",
+      "sha256": "1a7b848fd8a6f9fdf76fe727f65e5926c05832f350a6c6a4759d6cd7cfdfaf34"
+    },
+    {
+      "path": "/home/orca/.tmp/f3-render-timer-full.log",
+      "sha256": "d34834b5f290cf6f16277d16e285b9c82daf6687163b034bdecfc58c2168fd44"
+    },
+    {
+      "path": "/home/orca/.tmp/f3-render-timer-typecheck.log",
+      "sha256": "396901319daac4a4413b23478852db3c572014f86c71d148273565f0f3332696"
+    }
+  ]
+}

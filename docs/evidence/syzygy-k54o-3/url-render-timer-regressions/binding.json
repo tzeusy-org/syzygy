@@ -1,0 +1,86 @@
+{
+  "subject": "e10a56f763c3e1dac7961e59a17d523900b518c1",
+  "files": [
+    {
+      "path": "packages/polaris-dossier/src/render.ts",
+      "sha256": "53cd99c6cc5613a8739cf48ed64548cbd68c0f3183b88c0f04b9ca669f0b1e1b"
+    },
+    {
+      "path": "packages/polaris-dossier/src/render.test.ts",
+      "sha256": "42f55e9286eb3c09fc51212221601b9528017380e510aac6726546d7a06a8af4"
+    }
+  ],
+  "artifacts": [
+    {
+      "path": "f3-main-499-url-timers-final-three.log",
+      "bytes": 746,
+      "sha256": "611d34d984a0b91b5e8c73e329ced4ba26b07964a7d248d20e158ae22df30bf4"
+    },
+    {
+      "path": "f3-render-timer-full.log",
+      "bytes": 10877,
+      "sha256": "d34834b5f290cf6f16277d16e285b9c82daf6687163b034bdecfc58c2168fd44"
+    },
+    {
+      "path": "f3-render-timer-mutant-drop-shared-deadline.log",
+      "bytes": 17039,
+      "sha256": "6f4fd17b7578ec2c0c52d4c172bfbd11e65448efaad8b595c3fbbee1c889040b"
+    },
+    {
+      "path": "f3-render-timer-mutant-ordinary-five-second-cap.log",
+      "bytes": 17035,
+      "sha256": "7aa2c9a9dac3f705b711cc58b7abe40a801c6945033172ef09de3a63ca6aac70"
+    },
+    {
+      "path": "f3-render-timer-mutant-reset-initial-six-seconds.log",
+      "bytes": 17039,
+      "sha256": "4e95a2349abeb816690bee5a71fdf68d049f39a7731e28c5adff99573fceab24"
+    },
+    {
+      "path": "f3-render-timer-rule6.json",
+      "bytes": 1993,
+      "sha256": "81d2634573d25823c6cd69d5945f64689ac68483e271d37a74e8271798059122"
+    },
+    {
+      "path": "f3-render-timer-sync-mutant-omit-monotonic-sample.log",
+      "bytes": 17342,
+      "sha256": "40c678e658aa103987e8094b63848bf015b7aedd8228bae25333a5602df3ef74"
+    },
+    {
+      "path": "f3-render-timer-sync-mutant-reset-monotonic-to-declared-cap.log",
+      "bytes": 17342,
+      "sha256": "48d272c46668fa3e67f6452084500ac34c2dd0d7258eb3ff9168457844369f70"
+    },
+    {
+      "path": "f3-render-timer-sync-restored.log",
+      "bytes": 745,
+      "sha256": "502578004c12036d7bc86972030b21b6fea1758eea00ebe124e8e9f6599e72ec"
+    },
+    {
+      "path": "f3-render-timer-sync-rule6.json",
+      "bytes": 1561,
+      "sha256": "c99f83d2e5e04debb40257f87d3ae129335f474e4874a96ef2b0cfa76b1c19a9"
+    },
+    {
+      "path": "f3-render-timer-sync-tests.log",
+      "bytes": 741,
+      "sha256": "c5aabd29c88752ac0fa147c2a4a11e050008f1f43a0a473a3f0ea9e1833de545"
+    },
+    {
+      "path": "f3-render-timer-sync-typecheck.log",
+      "bytes": 37,
+      "sha256": "396901319daac4a4413b23478852db3c572014f86c71d148273565f0f3332696"
+    },
+    {
+      "path": "f3-render-timer-tests.log",
+      "bytes": 630,
+      "sha256": "1a7b848fd8a6f9fdf76fe727f65e5926c05832f350a6c6a4759d6cd7cfdfaf34"
+    },
+    {
+      "path": "f3-render-timer-typecheck.log",
+      "bytes": 37,
+      "sha256": "396901319daac4a4413b23478852db3c572014f86c71d148273565f0f3332696"
+    }
+  ],
+  "scope": "Five timer faults tested against the two exact worker commits named by the raw manifests. The merged source adds main secret-path handling elsewhere in render.ts. The three actual URL tests passed again after integration on e10a56f76. Ordinary behavior is covered by the predecessor full render-suite run. No native role or live-provider claim follows from these timer checks."
+}

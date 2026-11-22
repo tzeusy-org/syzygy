@@ -1,0 +1,16 @@
+[
+  {
+    "path": "f3-assembled-timers-review-RAW.md",
+    "sha256": "7077531ab3d1354365fe04da351228bb7304769ad4e8f2eb5c28ead81ac73f19",
+    "subject": "e10a56f763c3e1dac7961e59a17d523900b518c1",
+    "verdict": "REVISE",
+    "checksVerifiedFromManifest": 33
+  },
+  {
+    "path": "f3-fixture-isolation-review-RAW.md",
+    "sha256": "bb0d40bca64643ac8c5495151e4463f4d3acdc54033aa498d2546361898b9c88",
+    "subject": "be75f5a91dadb1b188561bc7600c45d61a1def9a",
+    "verdict": "PASS",
+    "checksVerifiedFromManifest": 16
+  }
+]

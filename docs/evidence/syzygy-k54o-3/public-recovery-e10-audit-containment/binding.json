@@ -1,0 +1,41 @@
+{
+  "subject": "e10a56f763c3e1dac7961e59a17d523900b518c1",
+  "files": [
+    {
+      "path": "packages/polaris-dossier/src/url-run-composed.testkit.ts",
+      "sha256": "a5f2fd9e220252673562e463c1d9a52e193216444ed5770d27ccc81e35ba984f"
+    },
+    {
+      "path": "packages/polaris-dossier/src/url-run-composed.test.ts",
+      "sha256": "2c7f712b30d0f146bf18ba3e31ed964db8446ead8079b91fd58ff75e75560682"
+    },
+    {
+      "path": "packages/polaris-dossier/src/url-session-audit.ts",
+      "sha256": "d0a3e3be202e413f1a1873980b9bc9e6d8687575060c5dd3c5029bd7b060218f"
+    },
+    {
+      "path": "packages/polaris-dossier/src/polaris.ts",
+      "sha256": "2e1de984243f73736efa4b954a26bba541c6a332ca195c2559a3243ccb763e01"
+    }
+  ],
+  "artifacts": [
+    {
+      "path": "f3-e10-stop.log",
+      "sha256": "fc5cdf7daab4ba26f1ea1d2804a69bbb16a603acbeb288c0a96d8df75980f5c0",
+      "bytes": 35899
+    },
+    {
+      "path": "f3-e10-stop-cut.json.failure.json",
+      "sha256": "a621d5e97636b55d8330436ae0795af87c0fa77eeeec10a9b8bcd74c6c7ee0af",
+      "bytes": 40149
+    },
+    {
+      "path": "f3-e10-stop-projection.json",
+      "sha256": "c58b87cb9ef88c75764f9a8f3c2254dc542a87afa8fb3f092b3647363fa23a08",
+      "bytes": 5308
+    }
+  ],
+  "command": "SYZYGY_COMPOSED_RETAIN=/home/orca/.tmp/f3-e10-stop-cut.json SYZYGY_F3_NATIVE_EVIDENCE_FILE=/home/orca/.tmp/f3-e10-stop-evidence.json npx --no-install vitest run --project integration packages/polaris-dossier/src/url-run-composed.test.ts -t 'pipeline to stop-resume$'",
+  "result": "One native failure with three cases skipped. The public resume verified and claimed the exact stopped run, then wrote a new design launch record. Its sibling audit was outside each of the sixteen protected roots in the retained fixture plan, so the required containment cannot hold; the new audit retained launch-attempt and launch-terminal without launch-history. The production initial plan protects the host root. The test fixture correction will be verified in a fresh cut.",
+  "scope": "These artifacts do not claim resumed final record, cold eligible recovery, or successful production CLI initialization."
+}

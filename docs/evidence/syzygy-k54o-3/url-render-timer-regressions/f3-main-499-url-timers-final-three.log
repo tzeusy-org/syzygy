@@ -1,0 +1,13 @@
+
+ RUN  v3.2.7 /home/orca/.tmp/syzygy-beads-looper-20261114-54ebc9f1/d10-f3-runtime-current
+
+ ✓ |integration| packages/polaris-dossier/src/render.test.ts (119 tests | 116 skipped) 4237ms
+   ✓ render > lets an actual URL producer finish after six seconds within its original thirty-second context  3054ms
+   ✓ render > aborts an actual URL producer at the remaining shared deadline after initial rendering has consumed time  517ms
+   ✓ render > refuses actual URL production at the remaining monotonic boundary before its timer runs  459ms
+
+ Test Files  1 passed (1)
+      Tests  3 passed | 116 skipped (119)
+   Start at  18:05:51
+   Duration  7.75s (transform 2.38s, setup 14ms, collect 3.01s, tests 4.24s, environment 0ms, prepare 77ms)
+

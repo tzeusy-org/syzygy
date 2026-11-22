@@ -1,0 +1,127 @@
+{
+  "subject": "be75f5a91dadb1b188561bc7600c45d61a1def9a",
+  "files": [
+    {
+      "path": "packages/polaris-dossier/src/render.test.ts",
+      "sha256": "1e99e7b28e32bd8f129fc056530d98579c5c928b9df284c7225c60e3c68c15cc"
+    },
+    {
+      "path": "packages/polaris-dossier/src/url-run-composed.testkit.ts",
+      "sha256": "d07ae21e3a524ba3a3d728f30cdf026227d38dc653077f47c8fc19eb05e7238d"
+    },
+    {
+      "path": "packages/polaris-dossier/src/url-run-composed.test.ts",
+      "sha256": "2c7f712b30d0f146bf18ba3e31ed964db8446ead8079b91fd58ff75e75560682"
+    },
+    {
+      "path": "packages/polaris-dossier/src/session-launch.ts",
+      "sha256": "f867296c11e4501220dafcfebc57374a65b93608d1cab4604d7125f16ad492a9"
+    },
+    {
+      "path": "packages/polaris-dossier/src/url-session-audit.ts",
+      "sha256": "d0a3e3be202e413f1a1873980b9bc9e6d8687575060c5dd3c5029bd7b060218f"
+    }
+  ],
+  "artifacts": [
+    {
+      "path": "f3-be75-stop.log",
+      "sha256": "b2aecc9b310e1f5a6e011f680fb854a9890406b86de3cf73645902182f1a3a94",
+      "bytes": 36391
+    },
+    {
+      "path": "f3-be75-stop-cut.json.failure.json",
+      "sha256": "ec8c6a2174283ec29c33aa7d59ae4d765d3083d3a4787da471fe02333e2428e5",
+      "bytes": 40149
+    },
+    {
+      "path": "f3-be75-stop-subject.txt",
+      "sha256": "ee5332333d014eb19a466abdc3a2336ddef5444fbadbc94fd22752ac365d5de3",
+      "bytes": 123
+    }
+  ],
+  "inputTreeSha256": "69d6e96f9ab5e23197351b6baad5899fb6fc98746aafa7798fb91f81691dc4cd",
+  "profileRegistrySha256": "39679e7fd9ecd430f74ebf37dd62d67884f6d7fb012c9b52f9519b5c943c2808",
+  "sameRuntimeAsE10": true,
+  "scenario": "stop-resume",
+  "resumeChecks": [
+    {
+      "phase": "verify",
+      "ok": true,
+      "nextDesignRound": 2
+    },
+    {
+      "phase": "claim",
+      "exactCut": true,
+      "current": true
+    },
+    {
+      "phase": "resumed-guards",
+      "policyWithdrawal": "refused",
+      "claimWithdrawal": "refused"
+    }
+  ],
+  "audit": [
+    {
+      "attempt": "attempt-HavE4P",
+      "isResumed": false,
+      "sha256": "1110cf8b50ad62fbca5a29ff7d9aee132730dd6438f072246764b52f758de95f",
+      "events": [
+        "declaration",
+        "launch-attempt",
+        "launch-history",
+        "design-delivery",
+        "launch-terminal"
+      ],
+      "terminal": {
+        "outcome": "stopped",
+        "signal": "SIGTERM",
+        "exitCode": null,
+        "groupTermination": "confirmed",
+        "toolTermination": "settled",
+        "viewTermination": "view-exited",
+        "pendingInvocations": 0,
+        "sampledStorageBytes": 2192,
+        "peakProcesses": 5,
+        "betweenSamples": "Unknown"
+      }
+    },
+    {
+      "attempt": "attempt-mw2TlB",
+      "isResumed": true,
+      "sha256": "bb96d791c850c1d1687bbd3f160c07016dba5ae45a11b811a3777e05bcc9655a",
+      "events": [
+        "declaration",
+        "launch-attempt",
+        "launch-history",
+        "launch-terminal"
+      ],
+      "terminal": {
+        "outcome": "inspection-failed",
+        "signal": "SIGTERM",
+        "exitCode": null,
+        "groupTermination": "confirmed",
+        "toolTermination": "settled",
+        "viewTermination": "view-exited",
+        "pendingInvocations": 0,
+        "sampledStorageBytes": 2192,
+        "peakProcesses": 5,
+        "betweenSamples": "Unknown"
+      }
+    }
+  ],
+  "launch": {
+    "sha256": "64837e3676d36dc6e89d3e1000814a8fa905c5b7d4062f8556a35a70b8418d51",
+    "pid": 3713609,
+    "startedAt": "2026-11-22T10:16:03.955Z",
+    "auditTerminalFileMtimeMinusStartedAtMilliseconds": 5397.881
+  },
+  "testResult": {
+    "timerPass": 3,
+    "nativeFailure": 1,
+    "skipped": 119,
+    "total": 123,
+    "durationSeconds": 259.27
+  },
+  "command": "npx --no-install vitest run --project integration packages/polaris-dossier/src/render.test.ts packages/polaris-dossier/src/url-run-composed.test.ts -t 'actual URL produc|pipeline to stop-resume$'",
+  "scope": "Parallel integration timer tests passed with isolated installation. The fresh public recovery audit accepted launch history after fixture host-root correction. The process reported inspection-failed before design delivery, with view exited, group confirmed, tools settled and no pending invocation. The terminal file mtime difference is not the duration of one inspection. Storage, process-walk and currentness subreason remains Unknown. No Execution Record was written."
+}

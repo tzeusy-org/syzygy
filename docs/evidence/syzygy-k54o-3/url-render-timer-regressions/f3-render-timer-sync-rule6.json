@@ -1,0 +1,38 @@
+{
+  "subject": "5b3450f7312f7478591d2179458d2e4a78679c8c",
+  "sourceSha256": "4e3d8cb6f23748af6f4195ecba7f9b4ca9b3bed938c2efa8a83da5b5a680942f",
+  "testSha256": "7c8e36f418719381ef310421b1d3315873447f829fba2aca2bbab6b75c667a8a",
+  "mutants": [
+    {
+      "name": "reset-monotonic-to-declared-cap",
+      "file": "packages/polaris-dossier/src/render.ts",
+      "old": "const expires = performance.now() + producerMilliseconds;",
+      "new": "const expires = performance.now() + (urlMode ? URL_PRODUCT_READ_MILLISECONDS.render : producerMilliseconds);",
+      "exit": 1,
+      "log": "/home/orca/.tmp/f3-render-timer-sync-mutant-reset-monotonic-to-declared-cap.log"
+    },
+    {
+      "name": "omit-monotonic-sample",
+      "file": "packages/polaris-dossier/src/render.ts",
+      "old": "abort.signal.aborted || performance.now() >= expires",
+      "new": "abort.signal.aborted",
+      "exit": 1,
+      "log": "/home/orca/.tmp/f3-render-timer-sync-mutant-omit-monotonic-sample.log"
+    }
+  ],
+  "testedCommit": "b97d0cc7f9ab3097862b0f94993314f9d05123e1",
+  "checks": [
+    {
+      "path": "/home/orca/.tmp/f3-render-timer-sync-tests.log",
+      "sha256": "c5aabd29c88752ac0fa147c2a4a11e050008f1f43a0a473a3f0ea9e1833de545"
+    },
+    {
+      "path": "/home/orca/.tmp/f3-render-timer-sync-restored.log",
+      "sha256": "502578004c12036d7bc86972030b21b6fea1758eea00ebe124e8e9f6599e72ec"
+    },
+    {
+      "path": "/home/orca/.tmp/f3-render-timer-sync-typecheck.log",
+      "sha256": "396901319daac4a4413b23478852db3c572014f86c71d148273565f0f3332696"
+    }
+  ]
+}
