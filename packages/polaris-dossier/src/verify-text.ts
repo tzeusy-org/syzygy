@@ -26,11 +26,19 @@ export const VERIFY_TEXT_FORMAT = 'polaris-dossier-verify-text-v1';
 export const CLAIM_OUTCOMES = ['quotation-verified', 'reference-unverified', 'path-missing', 'quotation-not-found', 'unanchored', 'withheld'] as const;
 export type ClaimOutcome = typeof CLAIM_OUTCOMES[number];
 
+/** File name extensions a bare name (no directory) must carry to count as a path: a bare `server.c` is a reference, `e.g.` is not. */
+const BARE_EXTENSIONS: ReadonlySet<string> = new Set([
+  'c', 'h', 'cc', 'cpp', 'cxx', 'hpp', 'hh', 'md', 'markdown', 'txt', 'rst', 'conf', 'cfg', 'ini', 'json', 'yaml', 'yml', 'toml', 'xml',
+  'py', 'tcl', 'js', 'mjs', 'cjs', 'ts', 'tsx', 'jsx', 'rs', 'go', 'sh', 'bash', 'lua', 'rb', 'java', 'kt', 'mk', 'cmake', 'html', 'css',
+  'sql', 'proto', 'lock', 'in',
+]);
+
 export const VERIFY_TEXT_DISCLOSURES: readonly string[] = [
   'The checker measures whether a claim can be checked and whether its quotation is real, not whether an unquoted claim is true: a reference that resolves says only that the file and lines exist at the pinned revision.',
   'A claim is a paragraph, a list item or a table row outside fenced code; a reference is a repository path, optionally with lines (path:N, path:N-M, path#LN-LM, "path, lines N-M"); a quotation is a double-quoted span (straight or curly) outside code spans.',
   'A quotation is checked only against the files its own claim names; a quotation in a claim that names no file is counted unanchored, never searched for.',
-  'A path the screen withholds is reported withheld and never read; a quotation resting on withheld lines of a redacted file is withheld too.',
+  'A path the screen withholds is reported withheld and never read; a quotation resting on withheld lines of a redacted file is withheld too, and so is a quotation found in no resolving file of a claim that also names a withheld path.',
+  `Not a reference: an absolute path, a URL, a host, a glob, a name that is only an extension, or a slashed name with neither an extension nor lines. A bare name without a slash is one only with lines, as a dotfile in code marks, or with one of these extensions: ${[...BARE_EXTENSIONS].join(', ')}. A quotation holds at least one letter or digit.`,
 ];
 
 /** A line range, 1-based and inclusive, as written. */
@@ -96,12 +104,6 @@ export interface VerifiedText {
 
 // ---- extraction ----
 
-/** File name extensions a bare name (no directory) must carry to count as a path: a bare `server.c` is a reference, `e.g.` is not. */
-const BARE_EXTENSIONS: ReadonlySet<string> = new Set([
-  'c', 'h', 'cc', 'cpp', 'cxx', 'hpp', 'hh', 'md', 'markdown', 'txt', 'rst', 'conf', 'cfg', 'ini', 'json', 'yaml', 'yml', 'toml', 'xml',
-  'py', 'tcl', 'js', 'mjs', 'cjs', 'ts', 'tsx', 'jsx', 'rs', 'go', 'sh', 'bash', 'lua', 'rb', 'java', 'kt', 'mk', 'cmake', 'html', 'css',
-  'sql', 'proto', 'lock', 'in',
-]);
 const FENCE = /^ {0,3}(`{3,}|~{3,})/u;
 const HEADING = /^ {0,3}#{1,6}(\s|$)/u;
 const LIST_ITEM = /^\s*(?:[-*+]|\d{1,9}[.)])\s+/u;
@@ -336,7 +338,7 @@ export async function verifyClaims(extracted: ExtractedText, inputs: DeriveInput
   const claims = resolvedClaims.map((claim, c): CheckedClaim => {
     const references = claim.references.map((reference, r): CheckedReference => {
       const state = stateOf(reference.path);
-      const named = !(state === 'withheld' && isSecretPath(reference.path));
+      const named = !isSecretPath(reference.path) && !isSecretPath(reference.written);
       const shown = { written: named ? reference.written : null, path: named && state !== 'missing' ? reference.path : null };
       if (state !== 'admitted') return { ...shown, ranges: reference.ranges, state };
       const beyond = reference.ranges.some((_, k) => faultOf.has(`c${c}r${r}k${k}`));

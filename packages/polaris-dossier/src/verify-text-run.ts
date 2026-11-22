@@ -56,13 +56,28 @@ const inside = (parent: string, child: string): boolean => {
   return relative === '' || (!relative.startsWith('..') && !path.isAbsolute(relative));
 };
 
+/** A path with every existing ancestor's symbolic links resolved, so containment is decided on the real location. */
+const realOf = (target: string): string => {
+  const missing: string[] = [];
+  let probe = target;
+  for (;;) {
+    try { return path.join(fs.realpathSync(probe), ...missing.reverse()); } catch { /* not there yet */ }
+    const parent = path.dirname(probe);
+    if (parent === probe) return target;
+    missing.push(path.basename(probe));
+    probe = parent;
+  }
+};
+
 export async function verifyTextInRun(runDir: string, request: VerifyTextRequest, deps: VerifyTextDeps): Promise<VerifyTextResult> {
   const run = path.resolve(runDir);
   const started = deps.now();
   const refuse = (stage: string, reason: string): VerifyTextResult => ({ ok: false, refusal: { command: 'verify', outcome: 'refused', stage, reason, at: isoOf(started) } });
   if (!RUN_ID.test(path.basename(run)) || !fs.existsSync(path.join(run, RUN_LAYOUT.config))) return refuse('run', `${run} is not a run directory`);
   const outFile = request.outFile === undefined ? undefined : path.resolve(request.outFile);
-  if (outFile !== undefined && (inside(run, outFile) || inside(`${run}.agents`, outFile) || inside(`${run}.sessions`, outFile))) {
+  const outReal = outFile === undefined ? undefined : realOf(outFile);
+  const forbidden = [run, `${run}.agents`, `${run}.sessions`].flatMap((dir) => [dir, realOf(dir)]);
+  if (outFile !== undefined && outReal !== undefined && forbidden.some((dir) => inside(dir, outFile) || inside(dir, outReal))) {
     return refuse('out', 'verify writes nothing into a run directory or its session directories; name an --out outside them');
   }
   if (outFile !== undefined && fs.existsSync(outFile)) return refuse('out', `${outFile} already exists; verify writes a new file only`);

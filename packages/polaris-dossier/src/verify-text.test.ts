@@ -99,6 +99,20 @@ describe('verify a free-form text: the six outcomes', () => {
     expect(verified.claims[5]!.references).toEqual([{ written: 'docs/guide.md', path: 'docs/guide.md', ranges: [], state: 'withheld' }]);
   });
 
+  it('withholds, rather than calls not found, a quotation its claim may rest on a withheld path for', async () => {
+    const { verified } = await check('Setup "is not in the source" (`src/kestrel.c:1-3`, `docs/guide.md`).');
+    expect(verified.claims[0]).toMatchObject({ outcome: 'withheld', quotations: ['withheld'] });
+  });
+
+  it('never names a path a secret detector matches, even when no blob has it', async () => {
+    const absent = `docs/${['gh', 'p_'].join('')}${'j'.repeat(24)}.txt`;
+    const { read, verified } = await check(`Also ${absent}:2.`);
+    expect(read).toEqual([]);
+    expect(verified.claims[0]).toMatchObject({ outcome: 'path-missing', references: [{ written: null, path: null, state: 'missing' }] });
+    const annotated = annotateText(`Also ${absent}:2.`, verified, { pinned: PINNED, file: 'answer.md' });
+    expect(annotated.split(absent).length - 1).toBe(1);
+  });
+
   it('flips a verified quotation to not found when one quoted character is mutated', async () => {
     const before = await check('It "keeps every key in memory" (`src/kestrel.c:1`).');
     const after = await check('It "keeps everY key in memory" (`src/kestrel.c:1`).');
@@ -199,6 +213,34 @@ describe('syzygy dossier verify', () => {
     const { io: ports, out } = io();
     expect(await runDossierCli(['verify', run, '--text', '/nowhere.md', '--out', path.join(run, 'annotated.md'), '--json'], ports, { sources: {} as never })).toBe(1);
     expect(JSON.parse(out.join(''))).toMatchObject({ stage: 'out' });
+    expect(fs.readdirSync(run)).toEqual(['run.json']);
+  });
+  it('refuses an --out reached through a symbolic link into the run', async () => {
+    const scratch = tempDir('verify-text-');
+    const run = path.join(scratch, `run-${'d'.repeat(32)}`);
+    fs.mkdirSync(run);
+    fs.writeFileSync(path.join(run, 'run.json'), '{}');
+    fs.symlinkSync(run, path.join(scratch, 'link'));
+    const { io: ports, out } = io();
+    expect(await runDossierCli(['verify', run, '--text', '/nowhere.md', '--out', path.join(scratch, 'link', 'sub', 'a.md'), '--json'], ports, { sources: {} as never })).toBe(1);
+    expect(JSON.parse(out.join(''))).toMatchObject({ stage: 'out' });
+    expect(fs.readdirSync(run)).toEqual(['run.json']);
+  });
+  it('refuses an existing --out, and a run whose record does not re-verify, leaving the run unchanged', async () => {
+    const scratch = tempDir('verify-text-');
+    const run = path.join(scratch, `run-${'c'.repeat(32)}`);
+    fs.mkdirSync(run);
+    fs.writeFileSync(path.join(run, 'run.json'), '{}');
+    const taken = path.join(scratch, 'taken.md');
+    fs.writeFileSync(taken, 'kept');
+    const first = io();
+    expect(await runDossierCli(['verify', run, '--text', taken, '--out', taken, '--json'], first.io, { sources: {} as never })).toBe(1);
+    expect(JSON.parse(first.out.join(''))).toMatchObject({ stage: 'out' });
+    expect(fs.readFileSync(taken, 'utf8')).toBe('kept');
+    const second = io();
+    expect(await runDossierCli(['verify', run, '--text', taken, '--out', path.join(scratch, 'new.md'), '--json'], second.io, { sources: {} as never })).toBe(1);
+    expect(JSON.parse(second.out.join(''))).toMatchObject({ stage: 'reverify' });
+    expect(fs.existsSync(path.join(scratch, 'new.md'))).toBe(false);
     expect(fs.readdirSync(run)).toEqual(['run.json']);
   });
 });
