@@ -1,0 +1,143 @@
+{
+  "subjectCommit": "d5396fbfecfd6e11422f25b8445cc0d9f8fc41ed",
+  "baseline": {
+    "exit": 0,
+    "rawLog": "docs/evidence/syzygy-k54o-3/backend-lease-mutations/baseline.log",
+    "rawSha256": "aba59b95279e155ebd704b1fc9ccd8c22b4eaae00fc6d545572882e2a8ec89d6",
+    "summary": [
+      "Test Files  1 passed (1)",
+      "Tests  7 passed | 51 skipped (58)"
+    ]
+  },
+  "mutations": [
+    {
+      "id": "manual-close-as-expiry",
+      "subjectCommit": "d5396fbfecfd6e11422f25b8445cc0d9f8fc41ed",
+      "path": "packages/polaris-dossier/src/url-run-artifacts.ts",
+      "old": "reason: 'expired' | 'retired' = 'retired'",
+      "new": "reason: 'expired' | 'retired' = 'expired'",
+      "sourceSha256": "97f1601a2f40de2e6fa2ece0347cb221927987c7065e9300ce38cd90e57f9da3",
+      "mutantSha256": "4565eaff396c223da8965af83d4a88f81da5f0c80e16e710ffc39aa8b94eaf1c",
+      "test": "packages/polaris-dossier/src/url-run-artifacts.test.ts",
+      "testSha256": "ec02426e622154c9260a332adaf0517158729325658ded67254ccae95079d7cb",
+      "pattern": "retains the first cancel",
+      "command": [
+        "npx",
+        "--no-install",
+        "vitest",
+        "run",
+        "--project",
+        "integration",
+        "packages/polaris-dossier/src/url-run-artifacts.test.ts",
+        "-t",
+        "retains the first cancel"
+      ],
+      "detectedByAssertion": true,
+      "exit": 1,
+      "rawLog": "docs/evidence/syzygy-k54o-3/backend-lease-mutations/manual-close-as-expiry.log",
+      "rawSha256": "bd6f51abb2932f38dba2bd064b96efe9534e559ccc5dc1b9a3a15ba3fdcab003",
+      "summary": [
+        "\u23af\u23af\u23af\u23af\u23af\u23af\u23af Failed Tests 1 \u23af\u23af\u23af\u23af\u23af\u23af\u23af",
+        "Test Files  1 failed (1)",
+        "Tests  1 failed | 57 skipped (58)"
+      ]
+    },
+    {
+      "id": "replace-first-cause",
+      "subjectCommit": "d5396fbfecfd6e11422f25b8445cc0d9f8fc41ed",
+      "path": "packages/polaris-dossier/src/url-run-artifacts.ts",
+      "old": "if (state.terminal === undefined) { state.terminal = reason; activeReadBytes -= state.bytes; }",
+      "new": "{ state.terminal = reason; activeReadBytes -= state.bytes; }",
+      "sourceSha256": "97f1601a2f40de2e6fa2ece0347cb221927987c7065e9300ce38cd90e57f9da3",
+      "mutantSha256": "c5ef068a3d8198a367a07ada40d49736e8fe115b6faee7d046be160a2894d1a5",
+      "test": "packages/polaris-dossier/src/url-run-artifacts.test.ts",
+      "testSha256": "ec02426e622154c9260a332adaf0517158729325658ded67254ccae95079d7cb",
+      "pattern": "retains the first timer",
+      "command": [
+        "npx",
+        "--no-install",
+        "vitest",
+        "run",
+        "--project",
+        "integration",
+        "packages/polaris-dossier/src/url-run-artifacts.test.ts",
+        "-t",
+        "retains the first timer"
+      ],
+      "detectedByAssertion": true,
+      "exit": 1,
+      "rawLog": "docs/evidence/syzygy-k54o-3/backend-lease-mutations/replace-first-cause.log",
+      "rawSha256": "d2f164263b3581e81d99224b96fc4d7b74bdc9df90e2137b3f7ccb6c1d828467",
+      "summary": [
+        "\u23af\u23af\u23af\u23af\u23af\u23af\u23af Failed Tests 1 \u23af\u23af\u23af\u23af\u23af\u23af\u23af",
+        "Test Files  1 failed (1)",
+        "Tests  1 failed | 57 skipped (58)"
+      ]
+    },
+    {
+      "id": "timer-as-retirement",
+      "subjectCommit": "d5396fbfecfd6e11422f25b8445cc0d9f8fc41ed",
+      "path": "packages/polaris-dossier/src/url-run-artifacts.ts",
+      "old": "state.timer = setTimeout(() => closeRead(state, 'expired'), input.deadline - now)",
+      "new": "state.timer = setTimeout(() => closeRead(state), input.deadline - now)",
+      "sourceSha256": "97f1601a2f40de2e6fa2ece0347cb221927987c7065e9300ce38cd90e57f9da3",
+      "mutantSha256": "c0cd86d11e24717cb474cc38e79f79205ad523769db3057b125ed233c39a05e7",
+      "test": "packages/polaris-dossier/src/url-run-artifacts.test.ts",
+      "testSha256": "ec02426e622154c9260a332adaf0517158729325658ded67254ccae95079d7cb",
+      "pattern": "retains the first timer",
+      "command": [
+        "npx",
+        "--no-install",
+        "vitest",
+        "run",
+        "--project",
+        "integration",
+        "packages/polaris-dossier/src/url-run-artifacts.test.ts",
+        "-t",
+        "retains the first timer"
+      ],
+      "detectedByAssertion": true,
+      "exit": 1,
+      "rawLog": "docs/evidence/syzygy-k54o-3/backend-lease-mutations/timer-as-retirement.log",
+      "rawSha256": "f33e7dd7241341af713c432413b88f8ee1f27e9cc5c9c799325ca99275a9b378",
+      "summary": [
+        "\u23af\u23af\u23af\u23af\u23af\u23af\u23af Failed Tests 1 \u23af\u23af\u23af\u23af\u23af\u23af\u23af",
+        "Test Files  1 failed (1)",
+        "Tests  1 failed | 57 skipped (58)"
+      ]
+    },
+    {
+      "id": "clock-as-retirement",
+      "subjectCommit": "d5396fbfecfd6e11422f25b8445cc0d9f8fc41ed",
+      "path": "packages/polaris-dossier/src/url-run-artifacts.ts",
+      "old": "if (Date.now() >= state.deadline) { closeRead(state, 'expired'); refuse(); }",
+      "new": "if (Date.now() >= state.deadline) { closeRead(state); refuse(); }",
+      "sourceSha256": "97f1601a2f40de2e6fa2ece0347cb221927987c7065e9300ce38cd90e57f9da3",
+      "mutantSha256": "288d1fb6a179d206e25ac3c4ccbe5d5ade9e7f79c4b742a16019664af01bfe07",
+      "test": "packages/polaris-dossier/src/url-run-artifacts.test.ts",
+      "testSha256": "ec02426e622154c9260a332adaf0517158729325658ded67254ccae95079d7cb",
+      "pattern": "retains the first clock",
+      "command": [
+        "npx",
+        "--no-install",
+        "vitest",
+        "run",
+        "--project",
+        "integration",
+        "packages/polaris-dossier/src/url-run-artifacts.test.ts",
+        "-t",
+        "retains the first clock"
+      ],
+      "detectedByAssertion": true,
+      "exit": 1,
+      "rawLog": "docs/evidence/syzygy-k54o-3/backend-lease-mutations/clock-as-retirement.log",
+      "rawSha256": "8f2ae328d3f4f2aac2d9fda697f519ec34c64c1b7a65d2267be390c5477836d2",
+      "summary": [
+        "\u23af\u23af\u23af\u23af\u23af\u23af\u23af Failed Tests 1 \u23af\u23af\u23af\u23af\u23af\u23af\u23af",
+        "Test Files  1 failed (1)",
+        "Tests  1 failed | 57 skipped (58)"
+      ]
+    }
+  ],
+  "scope": "Selected terminal-cause predicates; no native process, complete supervisor or final battery acceptance claim."
+}
