@@ -60,7 +60,7 @@ const BRIEF_RECORD_LIMITS = Object.freeze({ maxBytes: 262_144, maxNodes: 4096, m
 function briefDeclaredAgent(run: string): { readonly state: 'unbriefed' } | { readonly state: 'ok'; readonly tool: string; readonly provider: string; readonly commit: string; readonly sourceBinding: string } | { readonly state: 'invalid'; readonly why: string } {
   let text: string;
   try {
-    // The reader rule under 262,144 bytes (version 2.12, syzygy-3efd.76).
+    // The reader rule under 262,144 bytes (syzygy-3efd.76).
     text = readBoundedFile(path.join(run, RUN_LAYOUT.briefRecord), BRIEF_RECORD_LIMITS.maxBytes).toString('utf8');
   } catch (cause) {
     if (cause instanceof NotARegularFileError) return { state: 'invalid', why: 'it cannot be read (not a regular file)' };

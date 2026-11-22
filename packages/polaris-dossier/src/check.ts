@@ -396,7 +396,7 @@ export function recordBoundFinding(measure: RecordMeasure, counts: { readonly qu
 export function briefIssuedAt(run: string, pinned: string, noun = 'draft'): number | string {
   let record: unknown;
   try {
-    // Read by the reader rule under the brief record's 262,144 bytes (version 2.12, syzygy-3efd.76): a FIFO, a device, a directory or a
+    // Read by the reader rule under the brief record's 262,144 bytes (syzygy-3efd.76): a FIFO, a device, a directory or a
     // record past the bound is one check cannot read.
     record = parseBoundedJson(readBoundedFile(path.join(run, RUN_LAYOUT.briefRecord), BRIEF_JSON_LIMITS.maxBytes).toString('utf8'), BRIEF_JSON_LIMITS);
   } catch {
@@ -416,7 +416,7 @@ export function nextRevision(dir: string): number {
   return numbers.length === 0 ? 0 : Math.max(...numbers) + 1;
 }
 
-/** The draft or inventory check is given, read by the reader rule under the draft's 4,194,304 bytes (version 2.12, syzygy-3efd.76): opened
+/** The draft or inventory check is given, read by the reader rule under the draft's 4,194,304 bytes (syzygy-3efd.76): opened
  * once without blocking, refused before any byte is read where it is not a regular file or its size is past the bound, and refused where
  * more than the bound is read after its size was taken. Check freezes exactly these bytes. */
 function readSubject(file: string, noun: string): Uint8Array | string {

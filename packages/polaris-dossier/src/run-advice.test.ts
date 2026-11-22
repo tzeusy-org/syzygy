@@ -87,7 +87,7 @@ describe('the run file', () => {
     fs.writeFileSync(file, text + ' '.repeat(16_777_216 - Buffer.byteLength(text)));
     expect(fs.statSync(file).size).toBe(16_777_216);
     expect(() => JSON.parse(fs.readFileSync(file, 'utf8'))).not.toThrow();
-    // Refused from its size alone: no byte of the file is read. At the bound it is read whole, from one descriptor (version 2.12's reader
+    // Refused from its size alone: no byte of the file is read. At the bound it is read whole, from one descriptor (the reader
     // rule, syzygy-3efd.76).
     const reads = (): number => {
       let n = 0;

@@ -68,7 +68,7 @@ export function authoringSessionIds(run: string): { readonly frozen: number; rea
     if (!REVISION_FILE.test(name)) continue;
     frozen++;
     try {
-      // Read by the reader rule under the draft's 4,194,304 bytes (version 2.12, syzygy-3efd.76): a revision that is not a regular file or
+      // Read by the reader rule under the draft's 4,194,304 bytes (syzygy-3efd.76): a revision that is not a regular file or
       // is past the bound is counted as frozen and declares nothing.
       const draft = parseBoundedJson(readBoundedFile(path.join(run, RUN_LAYOUT.drafts, name), DRAFT_JSON_LIMITS.maxBytes).toString('utf8'), DRAFT_JSON_LIMITS);
       const id = declaredSessionId(draft);

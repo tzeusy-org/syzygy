@@ -853,10 +853,10 @@ describe('Syzygy starts no session', () => {
   });
 });
 
-// REQ-polaris-generation-034 version 2.12 (syzygy-3efd.76): check reads the inventory submission by the reader rule under the draft's
+// REQ-polaris-generation-034 (syzygy-3efd.76): check reads the inventory submission by the reader rule under the draft's
 // 4,194,304 bytes, with the existing inventory words. A FIFO blocks a reader that opens it without O_NONBLOCK; the mutation runner bounds
 // each run by a process timeout.
-describe('inventory-check: the reader rule for the submission (version 2.12)', () => {
+describe('inventory-check: the reader rule for the submission (syzygy-3efd.76)', () => {
   const padTo = (text: string, bytes: number): string => text + ' '.repeat(bytes - Buffer.byteLength(text));
 
   it('checks a submission of exactly 4,194,304 bytes and refuses one of 4,194,305 with the inventory words, freezing nothing', async () => {

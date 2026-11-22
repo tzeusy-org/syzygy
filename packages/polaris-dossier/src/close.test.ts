@@ -8,6 +8,7 @@ import { beforeAll, describe, expect, it } from 'vitest';
 import { FIXTURE_SCREEN, LATER, NOW, PLANTED_SECRET, REAL_ROOT, fixtureSources, fullFixtureRun, makeClone } from './full-run.testkit.js';
 import type { DossierRenderer } from './render.js';
 import { closeRun, parseUsageFigure } from './close.js';
+import { patchFs } from './fs-patch.testkit.js';
 import { runStatus } from './status.js';
 import { tempDir } from '@syzygy/test-kit';
 
@@ -229,3 +230,24 @@ function walk(dir: string): string[] {
   visit(dir);
   return out.sort();
 }
+
+// REQ-polaris-generation-034 (syzygy-3efd.76): every reader of the brief record reads it by the reader rule under 262,144 bytes. The
+// reverification each step runs refuses an unreadable record before the render's run disclosure or close's execution rule reads it, so
+// those two readers are pinned here by how they read: through one bounded open of a descriptor, never `readFileSync` of the path, which
+// blocks on a FIFO and reads a file of any size.
+describe('the brief record\'s readers in a full run', () => {
+  it('never read brief.json with readFileSync, from check through render and close', async () => {
+    const unbounded: string[] = [];
+    const restore = patchFs('readFileSync', (original) => ((target: fs.PathOrFileDescriptor, ...rest: unknown[]) => {
+      // close's digest of every stored file (storedFiles, Dirent-filtered to regular files) hashes the record's bytes and reads none of
+      // its content; it is the one other read, and is left out here.
+      const stack = new Error().stack ?? '';
+      if (typeof target === 'string' && path.basename(target) === 'brief.json' && !stack.includes('at storedFiles')) unbounded.push(`${target}\n${stack}`);
+      return (original as (...args: unknown[]) => unknown)(target, ...rest);
+    }) as typeof original);
+    let run: string;
+    try { ({ run } = await fullRun()); } finally { restore(); }
+    expect(readJson(path.join(run, 'record.json')).executionRule).toMatchObject({ arm: 'sec-3', label: 'Inferred' });
+    expect(unbounded).toEqual([]);
+  });
+});

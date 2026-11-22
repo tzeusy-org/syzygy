@@ -200,7 +200,7 @@ export async function credentialStepCheck(runDir: string, step: CredentialStep, 
 /** The arm the stored brief record names; null when it cannot be read, which every caller treats as permitting (fail closed). */
 export function storedBriefArm(run: string): 'sec-3' | 'permitting' | null {
   try {
-    // The reader rule under 262,144 bytes (version 2.12, syzygy-3efd.76): a record that is not a regular file or is past it names no arm.
+    // The reader rule under 262,144 bytes (syzygy-3efd.76): a record that is not a regular file or is past it names no arm.
     const record = parseBoundedJson(readBoundedFile(path.join(run, RUN_LAYOUT.briefRecord), 262_144).toString('utf8'), { maxBytes: 262_144, maxNodes: 4096, maxDepth: 8 }) as { executionRule?: { arm?: unknown } };
     const arm = record.executionRule?.arm;
     return arm === 'sec-3' || arm === 'permitting' ? arm : null;

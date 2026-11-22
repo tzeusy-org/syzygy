@@ -78,7 +78,7 @@ export function listStoredDrafts(stateRoot: string): DraftListing {
     }
     for (const revision of revisions.sort((a, b) => a - b)) {
       let bytes: Uint8Array;
-      // The reader rule under the draft's 4,194,304 bytes (version 2.12, syzygy-3efd.76): a revision past it, or one that is not a regular
+      // The reader rule under the draft's 4,194,304 bytes (syzygy-3efd.76): a revision past it, or one that is not a regular
       // file when opened, is a revision this measurement could not read.
       try { bytes = readBoundedFile(path.join(dir, `rev-${revision}.json`), DRAFT_MAX_BYTES); } catch (cause) {
         drafts.push({ run: entry.name, revision, bytes: null, readError: cause instanceof NotARegularFileError ? 'not-a-regular-file' : code(cause) });

@@ -71,7 +71,7 @@ export function logStep(run: string, step: string, at: number, entry: Record<str
   } catch { /* the step log is a convenience within the agent's reach */ }
 }
 
-/** The brief record's read bound (REQ-polaris-generation-034 version 2.12, syzygy-3efd.76): the bound under which its readers parse it. */
+/** The brief record's read bound (REQ-polaris-generation-034, syzygy-3efd.76): the bound under which its readers parse it. */
 export const BRIEF_RECORD_MAX_BYTES = 262_144;
 
 /** The brief record of `run`, read by the reader rule under `BRIEF_RECORD_MAX_BYTES` and parsed within the record bounds, or undefined:

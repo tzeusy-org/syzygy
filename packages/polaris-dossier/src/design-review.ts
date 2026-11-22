@@ -92,7 +92,7 @@ export type BriefStandardsRead =
 export function briefStandardsOf(run: string): BriefStandardsRead {
   const name = RUN_LAYOUT.briefRecord;
   let text: string;
-  // The reader rule under 262,144 bytes (version 2.12, syzygy-3efd.76): a record that is not a regular file, or is past the bound, is one
+  // The reader rule under 262,144 bytes (syzygy-3efd.76): a record that is not a regular file, or is past the bound, is one
   // it cannot read.
   try { text = readBoundedFile(path.join(run, name), BRIEF_RECORD_LIMITS.maxBytes).toString('utf8'); } catch (cause) {
     if (cause instanceof NotARegularFileError) return { ok: false, reason: `${name} cannot be read (not a regular file)` };

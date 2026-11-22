@@ -1641,12 +1641,12 @@ describe('check: the record within its read bound (version 2.10)', () => {
   });
 });
 
-// REQ-polaris-generation-034 version 2.12 (syzygy-3efd.76): check reads the draft it is given, and the reverification each step runs reads
+// REQ-polaris-generation-034 (syzygy-3efd.76): check reads the draft it is given, and the reverification each step runs reads
 // the brief record, by the version 2.10 reader rule: opened once without blocking, refused before any byte is read where it is not a regular
 // file or its size is past the bound, and read to at most one byte past the bound. The bounds (4,194,304 and 262,144 bytes) and the words
 // are the spec's literals. A FIFO blocks a reader that opens it without O_NONBLOCK inside a synchronous call no test timeout interrupts;
 // the mutation runner (docs/evidence/syzygy-3efd-76/) bounds each run by a process timeout.
-describe('check: the reader rule for the draft and the brief record (version 2.12)', () => {
+describe('check: the reader rule for the draft and the brief record (syzygy-3efd.76)', () => {
   const bytesReadFrom = async (subject: string, run: () => Promise<void>): Promise<number[]> => {
     const opened = new Map<number, number>();
     const totals: number[] = [];

@@ -14,7 +14,7 @@ import { latestPassedDraft } from './review.js';
 import { readRunAdvice } from './run-advice.js';
 import { readBriefRecord } from './run-dir.js';
 
-// REQ-polaris-generation-034 version 2.12 (syzygy-3efd.76): the version 2.10 reader rule extended to the frozen draft revisions, the brief
+// REQ-polaris-generation-034 (syzygy-3efd.76): the version 2.10 reader rule extended to the frozen draft revisions, the brief
 // record and the run file `run-advice.json`. Every reader opens the path once without blocking, refuses anything whose descriptor is not a
 // regular file, or gives a size past the bound, before reading a byte, and reads at most one byte past the bound, so a file grown after its
 // size was taken is refused too. The bounds and the words are the spec's literals. (The draft check is given, the inventory submission and
@@ -163,7 +163,7 @@ const READERS: readonly Reader[] = [
   },
 ];
 
-describe.each(READERS)('the reader rule of version 2.12: $name', (reader) => {
+describe.each(READERS)('the reader rule (syzygy-3efd.76): $name', (reader) => {
   it('reads a file of exactly its bound, to its end and no further', () => {
     const { run, subject } = reader.fresh();
     fs.writeFileSync(subject, reader.atBound(run, reader.bound));
@@ -204,7 +204,7 @@ describe.each(READERS)('the reader rule of version 2.12: $name', (reader) => {
 // The stored-draft re-render measurement keeps its listing filter: a directory entry that is not a regular file is counted among the other
 // files of drafts/ and never opened. A revision that is a regular file when listed and something else when opened, or past the bound, is a
 // revision it could not read.
-describe('the reader rule of version 2.12: listStoredDrafts (the stored-draft re-render measurement)', () => {
+describe('the reader rule (syzygy-3efd.76): listStoredDrafts (the stored-draft re-render measurement)', () => {
   const RUN = `run-${'d'.repeat(32)}`;
   const fresh = (): { root: string; subject: string } => {
     const root = tempDir('bounded-rerender-');

@@ -109,7 +109,7 @@ export function readRunAdvice(run: string): RunAdvice | null {
   const file = path.join(run, RUN_ADVICE_FILE);
   let text: string;
   try {
-    // The reader rule (version 2.12, syzygy-3efd.76): a FIFO, a device, a directory or a file past the bound is no run file.
+    // The reader rule (syzygy-3efd.76): a FIFO, a device, a directory or a file past the bound is no run file.
     text = readBoundedFile(file, RUN_ADVICE_LIMITS.maxBytes).toString('utf8');
   } catch { return null; }
   try {
