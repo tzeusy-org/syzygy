@@ -2,7 +2,7 @@ import { createServer } from 'node:net';
 import { setImmediate as yieldToPoll } from 'node:timers/promises';
 import path from 'node:path';
 import { encodeCanonicalJson, parseBoundedJson } from '@syzygy/polaris-generation-core/live';
-import { deepFreeze, sha256 } from '@syzygy/support';
+import { deepFreeze, isRecord, sha256 } from '@syzygy/support';
 import type { BrokerRunner } from './broker.js';
 import { createUrlSessionControl, type UrlSessionControlEvent, type UrlSessionControlOptions } from './session-control.js';
 import type { SessionCredential } from './session-credential.js';
@@ -23,7 +23,7 @@ import { assertUrlDesignRenderContinuationCurrent, createUrlSessionAudit, type U
   type UrlDesignDeliveryAuditRecord, type UrlDesignDeliveryView, type UrlCheckedDesignVerdict,
   type UrlDesignRenderContinuation, type UrlDesignReviewProof, type UrlSessionAuditSummary } from './url-session-audit.js';
 import { createUrlSessionBudget, type UrlBudgetSnapshot } from './url-session-budget.js';
-import type { UrlSessionAuditHistoryExpected } from './url-session-audit-history.js';
+import { readVerifiedUrlAuditLaunches, type UrlSessionAuditHistoryExpected } from './url-session-audit-history.js';
 import { URL_DESIGN_VIEW_ARTIFACT } from './url-design-view.js';
 import { createUrlRunMachine, readUrlRunMachineClosedHistory, type UrlRunMachineClosedHistory } from './url-run-machine.js';
 import { startUrlOrderedAttempt } from './url-run-ordered-attempt.js';
@@ -31,6 +31,9 @@ import type { UrlParentAdoption } from './url-parent-adoption.js';
 import type { createUrlRunArtifacts } from './url-run-artifacts.js';
 import { createUrlRunCpuBudget } from './url-run-cpu-budget.js';
 import { sessionMachineEffectCurrent } from './session-machine-transport.js';
+import { isClaimedStoppedUrlRun, type verifyStoppedUrlRun } from './url-recovery.js';
+import type { UrlRecoveryClaim } from './url-stopped-run.js';
+import { URL_HOST_ROOT } from './url-mode-registry.js';
 
 const canonical = (value: unknown): string => encodeCanonicalJson(value, { maxBytes: 2_097_152, maxNodes: 65_536, maxDepth: 32 });
 type Failure = 'binding-changed' | 'launch-unavailable' | 'audit-unavailable' | 'control-unavailable' | 'role-ended'
@@ -61,10 +64,14 @@ export interface UrlRunSessionsOptions {
   /** Host operator request. It closes effects while preserving cleanup audit writes. */
   readonly stopRequested?: () => boolean;
   readonly credential: SessionCredential;
+  readonly resume?: {
+    readonly verified: Extract<Awaited<ReturnType<typeof verifyStoppedUrlRun>>, { readonly ok: true }>;
+    readonly claim: UrlRecoveryClaim;
+  };
   readonly production?: {
     readonly governanceRoot: string; readonly protectedRoot: string; readonly parent: UrlParentAdoption;
     readonly current: () => boolean; readonly policyBytes: Uint8Array;
-    readonly artifacts: Pick<ReturnType<typeof createUrlRunArtifacts>, 'stageOrderedDesignVerdict' | 'commitOrderedDesignVerdict'>;
+    readonly artifacts: Pick<ReturnType<typeof createUrlRunArtifacts>, 'stageOrderedDesignVerdict' | 'commitOrderedDesignVerdict' | 'latestStageChecks'>;
   };
   readonly sourceReader?: NonNullable<SessionToolsOptions['sourceReader']>;
   readonly launchHistory?: LaunchHistoryPort;
@@ -82,6 +89,7 @@ export interface UrlRunSessionsSummary {
   readonly failure: Failure | null; readonly budget: UrlBudgetSnapshot;
   readonly roles: readonly { readonly role: ViewRole; readonly pid: number | 'Unknown';
     readonly startedAt: number | 'Unknown'; readonly finishedAt: number | 'Unknown'; readonly outcome: UrlSessionLaunchOutcome | 'Unknown' }[];
+  readonly historicallySettledRoles: readonly ViewRole[];
   readonly control: { readonly pendingCallbacks: number; readonly termination: 'settled' | 'Unknown' };
   readonly hosts: readonly { readonly role: ViewRole; readonly pendingInvocations: number | null; readonly termination: 'settled' | 'Unknown' }[];
   readonly audit: UrlSessionAuditSummary;
@@ -101,9 +109,9 @@ export interface UrlRunSessions {
   summary(): Omit<UrlRunSessionsSummary, 'control' | 'hosts' | 'closedAuditHistory' | 'closedMachineHistory'>;
 }
 
-/** One attended supervisor owns all four processes, the typed operator input,
- * shared reservation ledger and safe durable audit. This is not a restart or
- * replay mechanism. Raw CLI streams and tool/question text are never stored. */
+/** One supervisor owns fresh role processes, typed operator input, cumulative
+ * reservation ledger and safe durable audit. Claimed continuation keeps old
+ * captures historical. Raw CLI streams and tool/question text are never stored. */
 const native = { prepare: prepareRestrictedUrlSession, host: startSessionHost, launch: launchRestrictedUrlSession };
 export const startUrlRunSessions = (options: UrlRunSessionsOptions & { readonly launchHistory: LaunchHistoryPort }): Promise<UrlRunSessions> => {
   if (options.launchHistory === undefined) return Promise.reject(new Error('url-run-sessions-unavailable'));
@@ -116,6 +124,21 @@ export const startUrlRunSessions = (options: UrlRunSessionsOptions & { readonly 
 /** Owned component fixtures only; absent from package exports and CLI options. */
 export const urlRunSessionsTestPort = (ports: typeof native) => (options: UrlRunSessionsOptions): Promise<UrlRunSessions> => start(options, ports);
 async function start(options: UrlRunSessionsOptions, ports: typeof native): Promise<UrlRunSessions> {
+  const resume = options.resume;
+  if (resume !== undefined) {
+    if (!isClaimedStoppedUrlRun(resume.verified, resume.claim) || options.production === undefined)
+      throw new Error('url-run-sessions-unavailable');
+    const { verified } = resume, context = verified.checkedContext, declaration = context.effective.declaration;
+    const audit = readVerifiedUrlAuditLaunches(verified.verifiedAudits.at(-1));
+    if (options.run !== verified.boundary.record.run || canonical(options.record) !== canonical(verified.record)
+      || options.deadline !== context.deadline || options.deadline !== verified.boundary.record.deadline
+      || options.runtime !== context.runtime || options.originPolicySha256 !== context.origin.binding.sha256
+      || canonical(options.declaredClasses) !== canonical(declaration.plannedClasses)
+      || canonical(options.plans.map(plan => plan.declaration)) !== canonical(declaration.roles)
+      || options.production.protectedRoot !== path.join(URL_HOST_ROOT, 'acquisitions', verified.boundary.record.machineAttempt, 'machine-lifecycle')
+      || canonical(options.production.parent) !== canonical(context.adoption)
+      || audit === null || options.principal !== audit.principal) throw new Error('url-run-sessions-unavailable');
+  }
   const plans = [...options.plans];
   if (plans.length !== URL_ROLES.length || plans.some((plan, index) => plan.role !== URL_ROLES[index] || !isPreparedUrlRolePlan(plan)))
     throw new Error('url-run-sessions-unavailable');
@@ -127,15 +150,18 @@ async function start(options: UrlRunSessionsOptions, ports: typeof native): Prom
     throw new Error('url-run-sessions-unavailable');
   const clone = <T>(value: T): T => deepFreeze(parseBoundedJson(canonical(value), { maxBytes: 2_097_152, maxNodes: 65_536, maxDepth: 32 })) as T;
   options = Object.freeze({ ...options, plans: Object.freeze(plans), record: clone(options.record), runtime: options.runtime,
+    ...(resume === undefined ? {} : { resume: Object.freeze({ verified: resume.verified, claim: resume.claim }) }),
     declaredClasses: Object.freeze([...options.declaredClasses]), sessionDirectories: Object.freeze({ ...options.sessionDirectories }),
     canaries: Object.freeze([...options.canaries]), screen: Object.freeze({ ...options.screen }) });
   const record = options.record, run = options.run;
   const ordered = plans.some(plan => isOrderedDesignSessionProfile(plan.profile));
-  if (ordered && (ports !== native || options.production === undefined)) throw new Error('url-run-sessions-unavailable');
+  if ((ordered && (ports !== native || options.production === undefined)) || (resume !== undefined && !ordered))
+    throw new Error('url-run-sessions-unavailable');
   const binding = { run: path.basename(run), sourceBinding: sourceBindingSha256(record.subject), policy: record.subject.screeningPolicy.sha256,
     provider: record.declared.agentProvider, model: record.declared.model };
   const budget = createUrlSessionBudget({ deadline: options.deadline, now: options.now,
-    turnBudget: record.declared.agentTurnBudget, tokenBudget: record.declared.agentTokenBudget });
+    turnBudget: record.declared.agentTurnBudget, tokenBudget: record.declared.agentTokenBudget,
+    ...(resume === undefined ? {} : { resume: resume.verified.resumeBudget }) });
   const cpu = ordered ? createUrlRunCpuBudget(Math.max(1, (options.deadline - options.now()) * 1000), () => {
     const usage = process.cpuUsage(); return usage.user + usage.system;
   }) : null;
@@ -148,7 +174,7 @@ async function start(options: UrlRunSessionsOptions, ports: typeof native): Prom
     if (!Number.isSafeInteger(bytes) || bytes < 0 || !Number.isSafeInteger(protectedReadBytes)
       || protectedReadBytes > 4 * 16_777_216 * 4096) throw new Error('url-run-sessions-unavailable');
   };
-  let stopping = false, failure: Failure | null = null, questions = 0;
+  let stopping = false, failure: Failure | null = null, questions = resume?.verified.cumulativeQuestionCount ?? 0;
   const hostHealth = new Map<ViewRole, () => boolean>();
   let designLaunch: UrlCommittedLaunchHistory | null = null;
   type PreparedDesign = { readonly receipt: UrlDesignDeliveryAuditRecord; readonly artifact: DesignArtifactPort };
@@ -168,6 +194,7 @@ async function start(options: UrlRunSessionsOptions, ports: typeof native): Prom
   };
   const effectCurrent = (): boolean => {
     if (stopping || failure !== null || !budget.current()) return false;
+    if (resume !== undefined && !isClaimedStoppedUrlRun(resume.verified, resume.claim)) { fail('binding-changed'); return false; }
     try { if (options.stopRequested?.() === true) return false; }
     catch { fail('control-unavailable'); return false; }
     if (!withinCpuBudget()) { fail('cpu-budget'); return false; }
@@ -187,7 +214,8 @@ async function start(options: UrlRunSessionsOptions, ports: typeof native): Prom
   const audit = await createUrlSessionAudit({ parent: options.auditParent, name: options.auditName, binding,
     originPolicySha256: options.originPolicySha256, project: 'project:syzygy', pin: record.subject.pinnedRevision.commit,
     principal: options.principal, profiles: plans.map(plan => plan.profile), declaredClasses: options.declaredClasses,
-    screen: options.screen, current: async () => sessionMachineEffectCurrent() !== false
+    screen: options.screen, deadline: options.deadline, firstDesignRound: resume?.verified.nextDesignRound ?? 1,
+    current: async () => sessionMachineEffectCurrent() !== false
       && await options.current() === true && sessionMachineEffectCurrent() !== false });
   if (!audit.ok) throw new Error('url-run-sessions-unavailable');
   const designArtifact: NonNullable<SessionToolsOptions['designArtifact']> = async file => {
@@ -255,6 +283,7 @@ async function start(options: UrlRunSessionsOptions, ports: typeof native): Prom
       scope: audit.scope(event.event === 'control-published' ? event.role : 'author'), payload: event }),
     ask: options.ask, onFailure: () => { fail('control-unavailable'); } });
   const hosts = new Map<ViewRole, SessionHost>(), processes = new Map<ViewRole, UrlSessionProcess>();
+  const launches = new Map<ViewRole, Promise<void>>();
   let machine: Awaited<ReturnType<typeof createUrlRunMachine>> | undefined;
   let machineLifecycle: 'open' | 'retired' | 'Unknown' = 'open';
   let orderedAttempt: Awaited<ReturnType<typeof startUrlOrderedAttempt>> | null = null;
@@ -287,6 +316,7 @@ async function start(options: UrlRunSessionsOptions, ports: typeof native): Prom
   let stopped: Promise<UrlRunSessionsSummary> | undefined;
   const summary = (): Omit<UrlRunSessionsSummary, 'control' | 'hosts' | 'closedAuditHistory' | 'closedMachineHistory'> => deepFreeze({ failure, budget: budget.snapshot(),
     roles: URL_ROLES.map(role => ({ ...captures.get(role)! })), audit: audit.summary(),
+    historicallySettledRoles: resume?.verified.historicallySettledRoles ?? [],
     ...(machine === undefined ? {} : { machine: { identitySha256: machine.identitySha256, lifecycle: machineLifecycle } }) });
   const stop = (): Promise<UrlRunSessionsSummary> => stopped ??= (async () => {
     stopping = true;
@@ -294,6 +324,7 @@ async function start(options: UrlRunSessionsOptions, ports: typeof native): Prom
     preparedDesign = null;
     pendingDesignReview = null;
     control.close();
+    await Promise.allSettled([...launches.values()]);
     await Promise.allSettled([...processes.values()].map(process => process.stop()));
     const hostResults = await Promise.all([...hosts].map(async ([role, host]) => {
       try { return { role, ...await host.close() }; }
@@ -323,132 +354,177 @@ async function start(options: UrlRunSessionsOptions, ports: typeof native): Prom
         pin: record.subject.pinnedRevision.commit, runId: binding.run, runtime: options.runtime, plans,
         deadline: options.deadline, now: options.now, current: production.current, effectCurrent, reverify: options.current,
         launch: role => processes.get(role), audit: event => audit.appendMachinePeer(event),
+        ...(resume === undefined ? {} : { resume: { history: resume.verified.machine,
+          identitySha256: resume.verified.machine.identitySha256, current: () => isClaimedStoppedUrlRun(resume.verified, resume.claim) } }),
         chargeNativeCpuMicroseconds: capacity => cpu!.charge('machine', capacity) });
     }
     await new Promise<void>((resolve, reject) => { probe.once('error', reject); probe.listen(0, '127.0.0.1', resolve); });
     const address = probe.address(); if (address === null || typeof address === 'string') throw new Error();
-    for (const plan of plans) {
-      if (ordered && plan.role === 'design') continue;
-      const role = plan.role, scope = audit.scope(role);
-      if (!(await current())) throw new Error();
-      // Probe before binding the actual host: an empty probe connection to a
-      // live relay is deliberately terminal and must never touch that relay.
-      const preparation = await ports.prepare({ view: plan.view, profile: plan.profile,
-        expected: { nodeSha256: options.runtime.worker.nodeSha256, supportSha256: options.runtime.supportSha256 }, current,
-        audit: event => audit.append({ kind: 'launch-attempt', role, scope, payload: event }),
-        canaries: options.canaries, hostLoopbackPort: address.port });
-      if (preparation.profileSha256 !== plan.declaration.compiledProfileSha256 || preparation.commandSha256 !== plan.declaration.commandSha256
-        || preparation.viewSha256 !== plan.declaration.viewSha256) throw new Error();
-      let admission: SessionAdmission | null = null;
-      let pendingUsage: Parameters<typeof budget.observeUsage>[1] | null = null;
-      const dossier = options.runDossier(role);
-      const admissionAfterSamples = async (captured: SessionAdmission | null): Promise<boolean> =>
-        captured !== null && (await waitForProductSamples()) && admission === captured;
-      const runDossier: UrlRunDossier = (argv, stdin, review) => {
-        const admitted = admission;
-        return dossier(argv, stdin, review, () => admissionAfterSamples(admitted));
-      };
-      const runDesign: BrokerRunner = async (argv, stdin) => {
-        if (argv[3] !== '--submit') return runDossier(argv, stdin);
-        const prepared = preparedDesign, admitted = admission;
-        if (!prepared || !admitted || pendingDesignReview || !(stdin instanceof Uint8Array)
-          || argv[4] !== `round-${prepared.receipt.identity.round}/verdict.json` || !(await current())) throw new Error('url-run-sessions-unavailable');
-        const render = await prepared.artifact.reproduce();
-        if (!render) throw new Error('url-run-sessions-unavailable');
-        try {
-          if (preparedDesign !== prepared || admission !== admitted || !(await current())) throw new Error('url-run-sessions-unavailable');
-          const proof = await audit.readDesignReviewProof(prepared.receipt, render.product, admitted);
-          const result = await dossier(argv, stdin, proof, async () =>
-            (await admissionAfterSamples(admitted)) && preparedDesign === prepared);
-          if (preparedDesign !== prepared || admission !== admitted || !(await current())) throw new Error('url-run-sessions-unavailable');
-          pendingDesignReview = { prepared, admission: admitted, proof, validated: result.exit === 0 };
-          return result;
-        } finally { render.close(); }
-      };
-      const host = await ports.host({ profile: plan.profile, initialOrigin: plan.initialOrigin, declaredClasses: options.declaredClasses,
-        ...(machine === undefined ? {} : { machine: { broker: machine.transport(role, 'mcp-shim'), relay: machine.transport(role, 'inference-bridge') } }),
-        current, credential: options.credential, brokerSocket: path.join(plan.view.brokerSocketDirectory, 'b.sock'),
-        relaySocket: path.join(plan.view.relaySocketDirectory, 'r.sock'), subject: { binding: plan.profile.input.binding,
-          project: 'project:syzygy', pin: record.subject.pinnedRevision.commit, principal: options.principal },
-        tools: { role, run, record, screen: options.screen, sessionDir: options.sessionDirectories[role],
-          ...(options.sourceReader === undefined ? {} : { sourceReader: options.sourceReader }),
-          ...(role === 'design' ? { designArtifact } : {}),
-          urlControl: control.forRole(role), runDossier: role === 'design' ? runDesign : runDossier, artifactOrigins: options.artifactOrigins(role),
-          dossierOrigins: options.dossierOrigins(role) },
-        reserveRequest: value => { if (!budget.reserve(role, value)) return false; admission = deepFreeze({ ...value,
-          classes: [...value.classes], originIds: [...value.originIds] }); return true; },
-        reserveCountRequest: (value: SessionAdmission) => budget.reserveCount(role, value),
-        observeCountResponse: () => budget.observeCount(role),
-        observeUsage: value => { pendingUsage = { ...value }; return budget.observeUsage(role, value); },
-        audit: async event => {
+    const launchRole = (role: ViewRole): Promise<void> => {
+      const existing = launches.get(role);
+      if (existing !== undefined) return existing;
+      const pending = (async () => {
+        const plan = plans.find(plan => plan.role === role);
+        if (plan === undefined || (ordered && role === 'design')) throw new Error('url-run-sessions-unavailable');
+        const scope = audit.scope(role);
+        if (!(await current())) throw new Error();
+        // Probe before binding the actual host: an empty probe connection to a
+        // live relay is deliberately terminal and must never touch that relay.
+        const preparation = await ports.prepare({ view: plan.view, profile: plan.profile,
+          expected: { nodeSha256: options.runtime.worker.nodeSha256, supportSha256: options.runtime.supportSha256 }, current,
+          audit: event => audit.append({ kind: 'launch-attempt', role, scope, payload: event }),
+          canaries: options.canaries, hostLoopbackPort: address.port });
+        if (preparation.profileSha256 !== plan.declaration.compiledProfileSha256 || preparation.commandSha256 !== plan.declaration.commandSha256
+          || preparation.viewSha256 !== plan.declaration.viewSha256) throw new Error();
+        let admission: SessionAdmission | null = null;
+        let pendingUsage: Parameters<typeof budget.observeUsage>[1] | null = null;
+        const dossier = options.runDossier(role);
+        const admissionAfterSamples = async (captured: SessionAdmission | null): Promise<boolean> =>
+          captured !== null && (await waitForProductSamples()) && admission === captured;
+        const runDossier: UrlRunDossier = (argv, stdin, review) => {
+          const admitted = admission;
+          return dossier(argv, stdin, review, () => admissionAfterSamples(admitted));
+        };
+        const runDesign: BrokerRunner = async (argv, stdin) => {
+          if (argv[3] !== '--submit') return runDossier(argv, stdin);
+          const prepared = preparedDesign, admitted = admission;
+          if (!prepared || !admitted || pendingDesignReview || !(stdin instanceof Uint8Array)
+            || argv[4] !== `round-${prepared.receipt.identity.round}/verdict.json` || !(await current())) throw new Error('url-run-sessions-unavailable');
+          const render = await prepared.artifact.reproduce();
+          if (!render) throw new Error('url-run-sessions-unavailable');
           try {
-            if (pendingUsage !== null) { const captured = pendingUsage; pendingUsage = null;
-              await audit.append({ kind: 'usage', role, scope, payload: captured }); }
-            await audit.append({ kind: 'relay', role, scope, payload: event });
-            if (['attempt-refused', 'transport-failed', 'response-refused'].includes(event.event)) {
-              budget.uncertainAttempt(role); fail('transport-unavailable');
-            }
-          } catch { fail('audit-unavailable'); throw new Error('url-run-sessions-unavailable'); }
-        },
-        beforeTool: async event => {
-          try { await audit.append({ kind: 'before-tool', role, scope,
-            payload: { tool: event.tool as 'source_read' | 'artifact_read' | 'artifact_write' | 'dossier_step', inputSha256: event.inputSha256 } }); }
-          catch { fail('audit-unavailable'); throw new Error('url-run-sessions-unavailable'); }
-        },
-        toolReceipt: async receipt => {
-          // Persist only closed projection fields. canonicalText/toolInput may
-          // contain an actual question, answer or body and never enter audit.
-          const review = role === 'design' ? pendingDesignReview : null, capturedAdmission = admission;
-          try {
-            if (capturedAdmission === null) { fail('provenance-unavailable'); throw new Error('url-run-sessions-unavailable'); }
-            const reviewCurrent = (): boolean => review === null
-              || (capturedAdmission === review.admission && preparedDesign === review.prepared && pendingDesignReview === review);
-            if (!reviewCurrent()) throw new Error('url-run-sessions-unavailable');
-            const awaitReceiptCurrent = async (): Promise<boolean> => (await admissionAfterSamples(capturedAdmission)) && reviewCurrent();
-            let checked: UrlCheckedDesignVerdict | void;
+            if (preparedDesign !== prepared || admission !== admitted || !(await current())) throw new Error('url-run-sessions-unavailable');
+            const proof = await audit.readDesignReviewProof(prepared.receipt, render.product, admitted);
+            const result = await dossier(argv, stdin, proof, async () =>
+              (await admissionAfterSamples(admitted)) && preparedDesign === prepared);
+            if (preparedDesign !== prepared || admission !== admitted || !(await current())) throw new Error('url-run-sessions-unavailable');
+            pendingDesignReview = { prepared, admission: admitted, proof, validated: result.exit === 0 };
+            return result;
+          } finally { render.close(); }
+        };
+        const host = await ports.host({ profile: plan.profile, initialOrigin: plan.initialOrigin, declaredClasses: options.declaredClasses,
+          ...(machine === undefined ? {} : { machine: { broker: machine.transport(role, 'mcp-shim'), relay: machine.transport(role, 'inference-bridge') } }),
+          current, credential: options.credential, brokerSocket: path.join(plan.view.brokerSocketDirectory, 'b.sock'),
+          relaySocket: path.join(plan.view.relaySocketDirectory, 'r.sock'), subject: { binding: plan.profile.input.binding,
+            project: 'project:syzygy', pin: record.subject.pinnedRevision.commit, principal: options.principal },
+          tools: { role, run, record, screen: options.screen, sessionDir: options.sessionDirectories[role],
+            ...(options.sourceReader === undefined ? {} : { sourceReader: options.sourceReader }),
+            ...(role === 'design' ? { designArtifact } : {}),
+            urlControl: control.forRole(role), runDossier: role === 'design' ? runDesign : runDossier, artifactOrigins: options.artifactOrigins(role),
+            dossierOrigins: options.dossierOrigins(role) },
+          reserveRequest: value => { if (!budget.reserve(role, value)) return false; admission = deepFreeze({ ...value,
+            classes: [...value.classes], originIds: [...value.originIds] }); return true; },
+          reserveCountRequest: (value: SessionAdmission) => budget.reserveCount(role, value),
+          observeCountResponse: () => budget.observeCount(role),
+          observeUsage: value => { pendingUsage = { ...value }; return budget.observeUsage(role, value); },
+          audit: async event => {
             try {
-              if (!(await awaitReceiptCurrent())) throw new Error();
-              checked = await options.toolReceipt(role, receipt, capturedAdmission, awaitReceiptCurrent);
-            } catch { fail('provenance-unavailable'); throw new Error('url-run-sessions-unavailable'); }
-            if ((checked !== undefined) !== (review?.validated === true)) throw new Error('url-run-sessions-unavailable');
-            const payload = { id: receipt.id, toolName: receipt.toolName,
-              inputSha256: sha256(canonical(receipt.toolInput)), digest: receipt.digest, bytes: receipt.bytes,
-              classes: receipt.classes, originIds: receipt.originIds };
-            const file = receipt.toolInput['path'];
-            if (role === 'design' && receipt.toolName === 'mcp__syzygy__artifact_read'
-              && typeof file === 'string' && URL_DESIGN_VIEW_ARTIFACT.test(file)) {
-              if (!activeDesignView) throw new Error('url-run-sessions-unavailable');
-              await audit.commitDesignArtifactRead(activeDesignView, payload);
-            } else if (checked !== undefined) {
-              if (!review) throw new Error('url-run-sessions-unavailable');
-              await commitDesignVerdict(review, checked, payload, () => admission === review.admission);
-              return;
-            } else {
-              await audit.append({ kind: 'tool-receipt', role, scope, payload });
-            }
-            options.toolReceiptCommitted?.(role, receipt.id);
-          } catch { fail('audit-unavailable'); throw new Error('url-run-sessions-unavailable'); }
-          finally { if (review) pendingDesignReview = null; }
-        } });
-      hosts.set(role, host);
-      if (host.healthy !== undefined) hostHealth.set(role, host.healthy);
-      const child = await ports.launch({ preparation, host }); processes.set(role, child);
-      const capture = captures.get(role)!;
-      rememberTerminal(role, child, () => false);
-      if (role !== 'author' && launchHistory !== undefined) {
-        try {
-          if (child.commandSha256 !== plan.declaration.commandSha256 || !(await current())) throw new Error();
-          const written = await writeUrlLaunchHistory({ run, runId: binding.run, plan, screen: options.screen, current,
-            compatiblePromptSha256: launchHistory.promptDigests[role], capture });
-          if (written.capability === null) throw new Error();
-          const committed = await audit.commitLaunchHistory(written.capability);
-          if (!(await waitForSamples()) || !(await current())) throw new Error();
-          await launchHistory.register(committed, waitForSamples);
-          if (!(await current())) throw new Error();
-          if (role === 'design') designLaunch = committed;
-        } catch { fail('provenance-unavailable'); throw new Error('url-run-sessions-unavailable'); }
+              if (pendingUsage !== null) { const captured = pendingUsage; pendingUsage = null;
+                await audit.append({ kind: 'usage', role, scope, payload: captured }); }
+              await audit.append({ kind: 'relay', role, scope, payload: event });
+              if (['attempt-refused', 'transport-failed', 'response-refused'].includes(event.event)) {
+                budget.uncertainAttempt(role); fail('transport-unavailable');
+              }
+            } catch { fail('audit-unavailable'); throw new Error('url-run-sessions-unavailable'); }
+          },
+          beforeTool: async event => {
+            try { await audit.append({ kind: 'before-tool', role, scope,
+              payload: { tool: event.tool as 'source_read' | 'artifact_read' | 'artifact_write' | 'dossier_step', inputSha256: event.inputSha256 } }); }
+            catch { fail('audit-unavailable'); throw new Error('url-run-sessions-unavailable'); }
+          },
+          toolReceipt: async receipt => {
+            // Persist only closed projection fields. canonicalText/toolInput may
+            // contain an actual question, answer or body and never enter audit.
+            const review = role === 'design' ? pendingDesignReview : null, capturedAdmission = admission;
+            try {
+              if (capturedAdmission === null) { fail('provenance-unavailable'); throw new Error('url-run-sessions-unavailable'); }
+              const reviewCurrent = (): boolean => review === null
+                || (capturedAdmission === review.admission && preparedDesign === review.prepared && pendingDesignReview === review);
+              if (!reviewCurrent()) throw new Error('url-run-sessions-unavailable');
+              const awaitReceiptCurrent = async (): Promise<boolean> => (await admissionAfterSamples(capturedAdmission)) && reviewCurrent();
+              let checked: UrlCheckedDesignVerdict | void;
+              try {
+                if (!(await awaitReceiptCurrent())) throw new Error();
+                checked = await options.toolReceipt(role, receipt, capturedAdmission, awaitReceiptCurrent);
+              } catch { fail('provenance-unavailable'); throw new Error('url-run-sessions-unavailable'); }
+              if ((checked !== undefined) !== (review?.validated === true)) throw new Error('url-run-sessions-unavailable');
+              const payload = { id: receipt.id, toolName: receipt.toolName,
+                inputSha256: sha256(canonical(receipt.toolInput)), digest: receipt.digest, bytes: receipt.bytes,
+                classes: receipt.classes, originIds: receipt.originIds };
+              const file = receipt.toolInput['path'];
+              if (role === 'design' && receipt.toolName === 'mcp__syzygy__artifact_read'
+                && typeof file === 'string' && URL_DESIGN_VIEW_ARTIFACT.test(file)) {
+                if (!activeDesignView) throw new Error('url-run-sessions-unavailable');
+                await audit.commitDesignArtifactRead(activeDesignView, payload);
+              } else if (checked !== undefined) {
+                if (!review) throw new Error('url-run-sessions-unavailable');
+                await commitDesignVerdict(review, checked, payload, () => admission === review.admission);
+                return;
+              } else {
+                await audit.append({ kind: 'tool-receipt', role, scope, payload });
+              }
+              options.toolReceiptCommitted?.(role, receipt.id);
+            } catch { fail('audit-unavailable'); throw new Error('url-run-sessions-unavailable'); }
+            finally { if (review) pendingDesignReview = null; }
+          } });
+        hosts.set(role, host);
+        if (host.healthy !== undefined) hostHealth.set(role, host.healthy);
+        const child = await ports.launch({ preparation, host }); processes.set(role, child);
+        const capture = captures.get(role)!;
+        rememberTerminal(role, child, () => false);
+        if (role !== 'author' && launchHistory !== undefined) {
+          try {
+            if (child.commandSha256 !== plan.declaration.commandSha256 || !(await current())) throw new Error();
+            const written = await writeUrlLaunchHistory({ run, runId: binding.run, plan, screen: options.screen, current,
+              compatiblePromptSha256: launchHistory.promptDigests[role], capture,
+              ...(resume === undefined ? {} : { generation: resume.verified.boundary.sha256 }) });
+            if (written.capability === null) throw new Error();
+            const committed = await audit.commitLaunchHistory(written.capability);
+            if (!(await waitForSamples()) || !(await current())) throw new Error();
+            await launchHistory.register(committed, waitForSamples);
+            if (!(await current())) throw new Error();
+            if (role === 'design') designLaunch = committed;
+          } catch { fail('provenance-unavailable'); throw new Error('url-run-sessions-unavailable'); }
+        }
+      })();
+      launches.set(role, pending);
+      return pending;
+    };
+    const resumeRoles = (): readonly ViewRole[] => {
+      if (resume === undefined) return plans.filter(plan => !ordered || plan.role !== 'design').map(plan => plan.role);
+      const checks = options.production!.artifacts.latestStageChecks();
+      const draft = checks.author?.record.outcome === 'passed' ? checks.author.revision : null;
+      const inventory = checks.inventory?.record.outcome === 'passed' ? checks.inventory.revision : null;
+      const packet = checks.fidelity?.record.packet;
+      const currentFidelity = draft !== null && inventory !== null && checks.fidelity?.record.outcome === 'validated'
+        && isRecord(packet) && packet.draftRevision === draft && packet.inventoryRevision === inventory;
+      const roles = new Set<ViewRole>();
+      if (draft === null) roles.add('author');
+      if (inventory === null) roles.add('inventory');
+      if (!currentFidelity) roles.add('fidelity');
+      const readiness = checks.fidelity?.record.readiness;
+      if (currentFidelity && isRecord(readiness) && readiness.blocking === true) {
+        const verdict = checks.fidelity?.verdict;
+        if (verdict === null || verdict === undefined) throw new Error('url-run-sessions-unavailable');
+        const rows = (key: string) => Array.isArray(verdict[key]) ? verdict[key].filter(isRecord) : [];
+        const inventoryRepair = rows('inventoryAccuracy').some(row => row.accuracy !== 'accurate');
+        const authorRepair = rows('findings').some(row => row.severity === 'blocking')
+          || rows('inventoryCoverage').some(row => row.disposition !== 'represented' && row.disposition !== 'justified-omission')
+          || rows('blockSupport').some(row => row.verdict !== 'supported') || !inventoryRepair;
+        if (authorRepair) roles.add('author');
+        if (inventoryRepair) roles.add('inventory');
       }
-    }
+      const designPacket = checks.design?.record.packet, designReadiness = checks.design?.record.readiness;
+      if (draft !== null && checks.design?.record.outcome === 'validated' && isRecord(designPacket)
+        && isRecord(designReadiness) && designReadiness.blocking === true) {
+        const matching = resume.verified.verifiedAudits.some(audit => readVerifiedUrlAuditLaunches(audit)?.ordered.some(attempt =>
+          attempt.receipt.identity.site === designPacket.site && attempt.receipt.identity.draftRevision === draft
+          && attempt.disposition.kind === 'eligible' && attempt.disposition.checked.number === checks.design!.revision));
+        if (matching) roles.add('author');
+      }
+      return URL_ROLES.filter(role => roles.has(role));
+    };
+    for (const role of resumeRoles()) await launchRole(role);
     if (!ordered) probe.close();
     const prepareDesignDelivery: UrlRunSessions['prepareDesignDelivery'] = async (product, expectedProduct, sitePath, round, artifact) => {
       if (ordered) {
@@ -476,6 +552,7 @@ async function start(options: UrlRunSessionsOptions, ports: typeof native): Prom
               rememberTerminal('design', child, () => orderedAttempt?.terminalConsumed === true);
             },
             compatiblePromptSha256: launchHistory.promptDigests.design, firstLaunch: designLaunch,
+            ...(resume === undefined ? {} : { generation: resume.verified.boundary.sha256 }),
             registerLaunch: async committed => { await launchHistory.register(committed, waitForSamples); designLaunch = committed; },
             expectedProduct, sitePath, round, reproduce: artifact.reproduce, work: { ...work, observeProtectedRead } });
           preparedDesign = { receipt: orderedAttempt.delivery.receipt, artifact };
@@ -500,6 +577,9 @@ async function start(options: UrlRunSessionsOptions, ports: typeof native): Prom
     };
     const publish = async (role: ViewRole, event: UrlSessionControlEvent): Promise<boolean> => {
       if (event.event === 'design-round-prepared' || !(await current())) return false;
+      if (resume !== undefined && event.event !== 'run-terminal' && (role === 'author' || role === 'inventory')) {
+        try { await launchRole(role); } catch { fail('launch-unavailable'); return false; }
+      }
       const result = await control.publish(role, event); if (!result) fail('control-unavailable'); return result;
     };
     const prepareFinalRender: UrlRunSessions['prepareFinalRender'] = async (number, site) => {
@@ -516,7 +596,19 @@ async function start(options: UrlRunSessionsOptions, ports: typeof native): Prom
       } catch { return null; }
       finally { render.close(); }
     };
-    return Object.freeze({ current, withinCpuBudget, summary, stop, prepareDesignDelivery, prepareFinalRender, publish,
+    const continueCurrent = async (): Promise<boolean> => {
+      if (!(await current())) return false;
+      if (resume !== undefined) {
+        let roles: readonly ViewRole[];
+        // A producer may have frozen its check immediately before its receipt
+        // commits. Defer activation while that bounded stage read is unavailable.
+        try { roles = resumeRoles(); } catch { return current(); }
+        try { for (const role of roles) await launchRole(role); }
+        catch { fail('launch-unavailable'); return false; }
+      }
+      return current();
+    };
+    return Object.freeze({ current: continueCurrent, withinCpuBudget, summary, stop, prepareDesignDelivery, prepareFinalRender, publish,
       waitForProductSamples,
     });
   } catch {
