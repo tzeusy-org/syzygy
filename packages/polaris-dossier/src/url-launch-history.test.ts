@@ -4,13 +4,18 @@ import os from 'node:os';
 import path from 'node:path';
 import { afterAll, beforeAll, beforeEach, describe, expect, it, vi } from 'vitest';
 import { tempDir } from '@syzygy/test-kit';
+import { encodeCanonicalJson } from '@syzygy/polaris-generation-core/live';
+import { planOrderedDesignBytes, type OrderedDesignPlan } from './url-design-delivery.js';
+import { isOrderedDesignSessionProfile, sessionProfileReminderText } from './session-profile.js';
+import type { OrderedDesignAuditWriter } from './url-ordered-design-writer.js';
+import type { OrderedDesignAuditReference } from './url-ordered-design-audit.js';
 import { sha256 } from '@syzygy/support';
 import { policyFixture } from './full-run.testkit.js';
 import { parseRunConfig } from './run-config.js';
 import { DOSSIER_CONTENT_CLASSES, NO_WORK_ITEM_REASON, recordRunConfig, readRunRecord, encodeRunRecord } from './run-record.js';
 import { buildDossierScreen } from './screen.js';
 import { URL_CLI_PROGRAM } from './session-launch.js';
-import { prepareHistoricalUrlRolePlansTestPort, type UrlRolePlanningOptions, type UrlRolePlan } from './url-role-plan.js';
+import { prepareUrlRolePlans, prepareHistoricalUrlRolePlansTestPort, type UrlRolePlanningOptions, type UrlRolePlan } from './url-role-plan.js';
 import { inspectUrlLaunchHistory, URL_HELPER_LAUNCH_FILES, writeUrlLaunchHistory, type UrlLaunchHistoryRole } from './url-launch-history.js';
 import { assertUrlDesignDeliveryViewCurrent, assertUrlDesignReviewProofCurrent, createUrlSessionAudit,
   inspectCommittedUrlLaunchHistory, isIssuedUrlDesignDeliveryView } from './url-session-audit.js';
@@ -120,16 +125,20 @@ function bindUrl(run: string, screenMetadata: (text: string) => boolean = () => 
   return { ...encoded, authority, context: bound, core: read.record };
 }
 
-let planning: Awaited<ReturnType<typeof planningFixture>>, plans: readonly UrlRolePlan[];
+let planning: Awaited<ReturnType<typeof planningFixture>>, plans: readonly UrlRolePlan[], historicalPlans: readonly UrlRolePlan[], orderedPlans: readonly UrlRolePlan[];
 const promptText = 'Own actual issued compatibility prompt, distinct from the native initial input.';
 const promptPath = (role: string) => path.join(planning.options.run, role === 'inventory' ? 'inventory/session-1.json' : `reviews/${role}-session-1.json`);
 const historyPath = (role: string) => promptPath(role).replace(/\.json$/u, '.launch.json');
 beforeAll(async () => {
   planning = await planningFixture(); const result = await prepareHistoricalUrlRolePlansTestPort(planning.options);
-  expect(result.ok).toBe(true); if (!result.ok) throw Error('own preparation refused'); plans = result.roles; cleanup.push(result.socketRoot);
+  expect(result.ok).toBe(true); if (!result.ok) throw Error('own preparation refused'); plans = result.roles; historicalPlans = plans; cleanup.push(result.socketRoot);
+  const ordered = await prepareUrlRolePlans(planning.options);
+  if (!ordered.ok) throw Error('own ordered preparation refused');
+  orderedPlans = ordered.roles; cleanup.push(ordered.socketRoot);
   for (const child of ['inventory', 'reviews']) fs.mkdirSync(path.join(planning.options.run, child));
-}, 30_000);
+}, 90_000);
 beforeEach(() => {
+  plans = historicalPlans;
   fs.writeFileSync(path.join(planning.options.run, 'run.json'), encodeRunRecord(planning.options.record.declared, planning.options.record.subject));
   for (const role of ['inventory', 'fidelity', 'design']) {
     fs.rmSync(historyPath(role), { force: true });
@@ -145,7 +154,7 @@ const options = (role: string = 'inventory') => ({ run: planning.options.run, ru
 
 const helperRoles = ['inventory', 'fidelity', 'design'] as const;
 
-function productFixture() {
+function productFixture(orderedDesign = false) {
   const { run, record, screen, runtime, sessionDirectories } = planning.options;
   const runId = path.basename(run), pin = record.subject.pinnedRevision.commit;
   const originBytes = fs.readFileSync(new URL(`../../../${URL_ORIGIN_POLICY_PATH}`, import.meta.url));
@@ -156,7 +165,7 @@ function productFixture() {
   const current = vi.fn(() => true);
   const ledger = createUrlOriginLedger({ runId, record, screen, basePolicyBytes: planning.basePolicyBytes,
     originPolicy: { binding: originPolicy, bytes: originBytes }, current, fixed,
-    schemas: { draft: () => false, inventory: () => false, 'fidelity-verdict': () => false, 'design-verdict': () => false } });
+    schemas: { draft: () => false, inventory: () => false, 'fidelity-verdict': () => false, 'design-verdict': value => orderedDesign && typeof value === 'object' && value !== null && (value as Record<string, unknown>)['own'] === 'checked verdict' } });
   const rolePolicy = ledger.fixed(fixed[0].id, fixed[0].bytes), runControl = ledger.fixed(fixed[1].id, fixed[1].bytes);
   const toolMetadata = ledger.fixed(fixed[2].id, fixed[2].bytes);
   const initialReceipts = {} as Record<typeof URL_ROLES[number], ReturnType<typeof ledger.compose>>;
@@ -218,10 +227,63 @@ async function auditFixture(originPolicySha256: string, name: string, parent = p
   return { audit, attempt, segment: (role: UrlLaunchHistoryRole) => path.join(parent, `${name}-${role}.jsonl`) };
 }
 
+async function orderedDeliveryPrefix(writer: OrderedDesignAuditWriter, plan: OrderedDesignPlan,
+  profile: UrlRolePlan['profile'], run: string) {
+  if (!isOrderedDesignSessionProfile(profile)) throw Error('own ordered profile');
+  const encode = (value: unknown) => encodeCanonicalJson(value, { maxBytes: 65_536, maxNodes: 4096, maxDepth: 12 });
+  const identify = (text: string) => ({ bytes: Buffer.byteLength(text), sha256: sha256(text) });
+  const call = (id: string, name: 'mcp__syzygy__dossier_step' | 'mcp__syzygy__artifact_read', args: unknown) => ({ id: `toolu_${id}`, name, inputSha256: sha256(encode(args)) });
+  const step = 'mcp__syzygy__dossier_step', artifact = 'mcp__syzygy__artifact_read';
+  const refs: Array<{ receipt: OrderedDesignAuditReference; wrapper: ReturnType<typeof identify> }> = [];
+  const prepared = await writer.append('prepared', { call: call('poll', step, { argv: ['dossier', 'poll', run] }), prepared: identify(plan.preparedText),
+    reply: identify(encode({ kind: 'session-control', ok: true, state: 'events', events: [{ event: profile.transcript.prepared.event, ...plan.prepared }] })) });
+  refs.push({ receipt: prepared, wrapper: identify('own prepared wrapper') });
+  const usage = { inputTokens: 3, outputTokens: 4, cacheCreationInputTokens: 0, cacheReadInputTokens: 0 };
+  let count = 0;
+  const exchange = async (next: ReturnType<typeof call> | null) => {
+    count++;
+    const request = { requestId: `00000000-0000-4000-8000-${String(count).padStart(12, '0')}`, route: 'messages' as const,
+      received: identify(`own received ${count}`), forwarded: identify(`own forwarded ${count}`) };
+    const admission = await writer.append('request-admitted', { ...request, logical: identify(`own logical ${count}`), results: refs, transcriptSha256: sha256(`own transcript ${count}`) });
+    const sendAttempt = await writer.append('send-attempt', { ...request, admission, outcome: 'attempted' });
+    const sendOutcome = await writer.append('send-outcome', { ...request, admission, sendAttempt, outcome: 'local-request-flushed' });
+    const native = next ? { ...identify(`own SSE ${count}`), content: 'messages-event-stream' as const, stopReason: 'tool_use' as const, textBlocks: 0 as const, tool: next }
+      : { ...identify(`own SSE ${count}`), content: 'messages-event-stream' as const, stopReason: 'end_turn' as const, textBlocks: 1 as const, tool: null };
+    const response = await writer.append('response-admitted', { ...request, admission, sendAttempt, sendOutcome, outcome: 'response-admitted', status: 200, usage, native });
+    return { admission, sendAttempt, sendOutcome, response };
+  };
+  let currentCall = call('part_1', artifact, { path: plan.manifest.parts[0]!.path });
+  const preparedExchange = await exchange(currentCall), parts = [];
+  let previous = preparedExchange;
+  const stdin = encode({ own: 'checked verdict', packetSha256: plan.manifest.originalSha256 });
+  const submit = call('submit', step, { argv: ['dossier', 'await', '/work', '--submit', 'round-1/verdict.json', '--stdin'], stdin });
+  for (const [index, part] of plan.manifest.parts.entries()) {
+    const reply = plan.replies[index]!;
+    const receipt = await writer.append('part-receipt', { ordinal: index + 1, issuedBy: previous.response, call: currentCall, reply: { bytes: reply.bytes, sha256: reply.sha256 } });
+    refs.push({ receipt, wrapper: identify(`own part wrapper ${index}`) });
+    currentCall = index + 1 === plan.manifest.partCount ? submit : call(`part_${index + 2}`, artifact, { path: plan.manifest.parts[index + 1]!.path });
+    previous = await exchange(currentCall); parts.push({ receipt, ...previous });
+  }
+  const completion = await writer.append('delivery-completed', { prepared, preparedExchange, parts,
+    finalAdmission: previous.admission, verdictResponse: previous.response, verdictCall: submit });
+  return { completion, stdin, finish: async (checked: sessionAudit.UrlCheckedDesignVerdict) => {
+    const stage = await writer.append('verdict-staged', { completion, issuedBy: previous.response, verdictCall: submit,
+      packet: { bytes: plan.manifest.originalBytes, sha256: plan.manifest.originalSha256 }, checkedVerdictSha256: sha256(encode(checked)), verdict: identify(stdin) });
+    const text = encode({ kind: 'dossier-result', ok: true, exit: 0, stderr: '', stdout: encode({ outcome: profile.transcript.verdict.stagedOutcome,
+      eligibility: profile.transcript.verdict.eligibility, packetSha256: plan.manifest.originalSha256 }) });
+    const acknowledgment = await writer.append('acknowledgment-receipt', { stage, call: submit, reply: identify(text) });
+    const wrapper = identify(encode({ role: 'user', content: [{ type: 'tool_result', tool_use_id: submit.id, cache_control: { type: 'ephemeral', ttl: '1h' },
+      content: [{ type: 'text', text: text + '\n' }, { type: 'text', text: sessionProfileReminderText(14_999_993) }] }] }));
+    refs.push({ receipt: acknowledgment, wrapper });
+    await writer.append('eligible', { completion, stage, acknowledgment, wrapper, ...await exchange(null) });
+  } };
+}
+
 describe('protected URL design delivery audit', () => {
-  it.each(['valid', 'expiry', 'launch-drift', 'sample-refusal'] as const)(
+  it.each(['valid', 'ordered', 'ordered-mutated', 'ordered-extra', 'expiry', 'launch-drift', 'sample-refusal'] as const)(
     'keeps a metadata-only event and rechecks after durability (%s)', async mode => {
-    const { originPolicy } = productFixture();
+    if (mode.startsWith('ordered')) plans = orderedPlans;
+    const { originPolicy, ledger, artifactOptions, initial } = productFixture(mode.startsWith('ordered'));
     const { audit, attempt, segment } = await auditFixture(originPolicy.sha256, `design-proof-${mode}`);
     const other = await auditFixture(originPolicy.sha256, `other-proof-${mode}`);
     const run = planning.options.run, runId = path.basename(run), pinnedRevision = planning.options.record.subject.pinnedRevision.commit;
@@ -229,21 +291,23 @@ describe('protected URL design delivery audit', () => {
     const content = '<!doctype html><title>OWN UNEXPOSED RENDER</title>';
     fs.mkdirSync(sitePath, { recursive: true });
     fs.writeFileSync(path.join(sitePath, 'index.html'), content);
-    const deadline = Date.now() + 4500;
+    const deadline = Date.now() + (mode.startsWith('ordered') ? 20_000 : 4500);
     const renderer = { format: 'polaris-url-installed-renderer/1', sourceEntry: 'first-party-renderer',
       programSha256: '1'.repeat(64), programBytes: 42, inputTreeSha256: '2'.repeat(64),
       manifestSha256: '3'.repeat(64), profileRegistrySha256: planning.options.runtime.profileRegistrySha256 } as const;
-    const view = Uint8Array.from(Buffer.from('OWN INERT VIEW'));
-    const parent = Object.freeze({}) as UrlOriginReceipt;
+    const originalText = 'Own bounded design packet. '.repeat(1600);
+    const view = Uint8Array.from(Buffer.from(mode.startsWith('ordered') ? encodeCanonicalJson({ format: URL_DESIGN_VIEW_FORMAT, encoding: URL_DESIGN_VIEW_ENCODING,
+      originalSha256: sha256(originalText), originalBytes: Buffer.byteLength(originalText), payload: originalText, payloadSha256: sha256(originalText), payloadBytes: Buffer.byteLength(originalText) }, { maxBytes: 2_097_152, maxNodes: 65_536, maxDepth: 32 }) : 'OWN INERT VIEW'));
+    const parent = mode.startsWith('ordered') ? ledger.compose(Buffer.from('Own checked design input.'), [artifactOptions.origins.roots.rolePolicy]) : Object.freeze({}) as UrlOriginReceipt;
     const metadata: designProduct.UrlDesignProductMetadata = {
       format: 'polaris-url-design-product-validation/1', lifetime: 'active-render-operation-only',
       run, runId, pinnedRevision, draftRevision: 7, renderer,
-      original: { sha256: '4'.repeat(64), bytes: 11 }, payload: { sha256: '5'.repeat(64), bytes: 22 },
+      original: mode.startsWith('ordered') ? { sha256: sha256(originalText), bytes: Buffer.byteLength(originalText) } : { sha256: '4'.repeat(64), bytes: 11 }, payload: { sha256: '5'.repeat(64), bytes: 22 },
       view: { sha256: sha256(view), bytes: view.byteLength, format: URL_DESIGN_VIEW_FORMAT, encoding: URL_DESIGN_VIEW_ENCODING },
       basePolicy: planning.options.record.subject.screeningPolicy, originPolicy,
       profile: { id: URL_PROFILE_ID, sha256: renderer.profileRegistrySha256 },
       products: { operation: 'render', deadline, snapshotBytes: 0, records: [], selections: [] },
-      parents: [{ id: 'origin:OWN_RAW_PARENT_ID', digest: '7'.repeat(64), bytes: 9, classes: ['code-content'], originIds: [] }],
+      parents: mode.startsWith('ordered') ? [JSON.parse(JSON.stringify(ledger.metadata(parent)))] : [{ id: 'origin:OWN_RAW_PARENT_ID', digest: '7'.repeat(64), bytes: 9, classes: ['code-content'], originIds: [] }],
       output: { files: 1, pages: 1, bytes: Buffer.byteLength(content),
         population: [{ path: 'index.html', sha256: sha256(content), bytes: Buffer.byteLength(content) }] },
       rawActive: { status: 'failed', finding: 'active-content' },
@@ -302,7 +366,7 @@ describe('protected URL design delivery audit', () => {
       });
       const duplicate = audit.commitDesignDelivery(request);
       await expect(duplicate).rejects.toThrow('url-session-audit-refused');
-      if (mode !== 'valid') {
+      if (mode !== 'valid' && !mode.startsWith('ordered')) {
         await expect(first).rejects.toThrow('url-session-audit-refused');
         if (mode === 'sample-refusal') {
           expect(sampledDurability).toEqual([0, 0, 1]);
@@ -314,6 +378,99 @@ describe('protected URL design delivery audit', () => {
         const delivered = await first;
         expect(sampledDurability).toEqual([0, 0, 1, 1, 1]);
         const sealed = delivered.receipt;
+        if (mode.startsWith('ordered')) {
+          const profile = plans.find(plan => plan.role === 'design')!.profile;
+          if (!isOrderedDesignSessionProfile(profile)) throw Error('own ordered profile missing');
+          const plan = planOrderedDesignBytes({ envelope: view, envelopeSha256: sha256(view), original: metadata.original,
+            fileCount: 1, pageCount: 1, instructionProfileSha256: sha256(profile.input.systemPrompt), limits: { partBytes: profile.transcript.partition.partBytes, partCount: profile.transcript.partition.partCount, replyBytes: profile.transcript.partition.replyBytes, preparedBytes: profile.transcript.partition.preparedBytes },
+            parents: metadata.parents.map(parent => sha256(encodeCanonicalJson(parent, { maxBytes: 2_097_152, maxNodes: 65_536, maxDepth: 32 }))), binding: {
+              basePolicySha256: metadata.basePolicy.sha256, deadline: new Date(Date.now() + 30_000).toISOString(), encoding: URL_DESIGN_VIEW_ENCODING,
+              originPolicySha256: originPolicy.sha256, originalReceiptSha256: sealed.eventSha256, pin: pinnedRevision,
+              producerSha256: metadata.renderer.programSha256, profileSha256: profile.digest, project: 'project:syzygy', provider: 'anthropic', role: 'design',
+              round: 1, run: runId, session: profile.input.sessionId, transferEpoch: 1 } });
+          let observedReadBytes = 0;
+          const writer = audit.beginOrderedDesignAudit(plan, () => true, bytes => { observedReadBytes += bytes; }), otherWriter = other.audit.beginOrderedDesignAudit(plan, () => true);
+          const protocol = await orderedDeliveryPrefix(writer, plan, profile, runId);
+          const deliveryReads = vi.fn();
+          const refreshedView = await audit.readDesignDeliveryView(sealed, reproduced, deliveryReads);
+          expect(deliveryReads).toHaveBeenCalled();
+          const previousReads = deliveryReads.mock.calls.length;
+          assertUrlDesignDeliveryViewCurrent(refreshedView);
+          expect(deliveryReads.mock.calls.length).toBeGreaterThan(previousReads);
+          await expect(audit.readOrderedDesignReviewProof(sealed, reviewed, { ...writer }, protocol.completion)).rejects.toThrow('url-session-audit-refused');
+          await expect(audit.readOrderedDesignReviewProof(sealed, reviewed, otherWriter, protocol.completion)).rejects.toThrow('url-session-audit-refused');
+          await expect(audit.readOrderedDesignReviewProof(sealed, token, writer, protocol.completion)).rejects.toThrow('url-session-audit-refused');
+          await expect(audit.readOrderedDesignReviewProof(sealed, reviewed, writer, { ...protocol.completion, sha256: '0'.repeat(64) })).rejects.toThrow('url-session-audit-refused');
+          const proof = await audit.readOrderedDesignReviewProof(sealed, reviewed, writer, protocol.completion);
+          expect(proof.artifactReadId).toBeNull();
+          expect(observedReadBytes).toBeGreaterThan(0);
+          expect(sessionAudit.orderedUrlDesignReviewParents(proof)).toEqual([parent]);
+          expect(() => sessionAudit.orderedUrlDesignReviewParents({ ...proof })).toThrow('url-session-audit-refused');
+          const actualRunner = vi.fn(async (argv: readonly string[], bytes: Uint8Array | null) => {
+            expect(argv).toEqual(['dossier', 'await', `${planning.options.sessionDirectories.design}/`, '--submit', 'round-1/verdict.json', '--stdin', '--json']);
+            if (!bytes) throw Error('own missing verdict');
+            const file = 'reviews/design-verdict-0.json', checkFile = 'reviews/checks/design-verdict-0.json';
+            fs.mkdirSync(path.join(run, 'reviews/checks'), { recursive: true });
+            fs.writeFileSync(path.join(run, file), bytes);
+            const check = { format: 'polaris-dossier-review-check/1', runId, kind: 'design', number: 0, checkedAt: new Date().toISOString(), outcome: 'validated',
+              verdict: { file, sha256: sha256(bytes), bytes: bytes.length, packetSha256Named: metadata.original.sha256 },
+              packet: { sha256: metadata.original.sha256, site }, session: { number: 1, sessionId: profile.input.sessionId,
+                declaredBy: 'the review session', label: 'Inferred', distinctFrom: 'own author' }, problems: [],
+              readiness: { declared: 'ready', blocking: false, basis: 'own checked fixture', declaredBy: 'the review session', label: 'Inferred' },
+              counts: 'own fixture', label: 'Inferred' };
+            fs.writeFileSync(path.join(run, checkFile), JSON.stringify(check));
+            const report = { ...check, command: 'review-check', run, checkFile: path.join(run, checkFile), disclosures: [],
+              observed: { packetSha256: metadata.original.sha256, verdictNamesPacket: true, label: 'Observed' }, inferred: { basis: [], label: 'Inferred' } };
+            return { stdout: JSON.stringify({ command: 'await', format: 'polaris-dossier-await/1', outcome: 'submitted', role: 'review', kind: 'design',
+              session: 1, next: 'own checked', disclosures: [], passed: true, check: report }), stderr: '', exit: 0 };
+          });
+          const producer = createUrlRunArtifacts({ ...artifactOptions, runDossier: () => actualRunner });
+          producer.registerInitial(initial);
+          const nativeArgv = ['dossier', 'await', '/work', '--submit', 'round-1/verdict.json', '--stdin'];
+          const staged = await producer.stageOrderedDesignVerdict(nativeArgv, Buffer.from(protocol.stdin), proof);
+          expect(actualRunner).toHaveBeenCalledTimes(1);
+          const checked = staged.checked;
+          expect(producer.hasCommittedProduct('reviews/checks/design-verdict-0.json', checked.checkSha256)).toBe(false);
+          const selection = () => {
+            const context = producer.beginRead({ operation: 'render', deadline: Date.now() + 4000 });
+            try {
+              const result = producer.selectProductGroups(context, ['design-checks', 'design-verdicts']);
+              producer.revalidateRead(context);
+              return result;
+            } finally { producer.cancelRead(context); }
+          };
+          expect(selection()).toEqual([[], []]);
+          expect(producer.latestStageCheck('design')).toBeNull();
+          if (mode === 'ordered-mutated' || mode === 'ordered-extra') {
+            if (mode === 'ordered-mutated') fs.appendFileSync(path.join(run, 'reviews/design-verdict-0.json'), ' ');
+            else fs.writeFileSync(path.join(run, 'reviews/design-verdict-999.json'), '{}');
+            expect(selection).toThrow('url-run-artifacts-unavailable');
+            expect(() => producer.latestStageCheck('design')).toThrow('url-run-artifacts-unavailable');
+            expect(producer.hasCommittedProduct('reviews/checks/design-verdict-0.json', checked.checkSha256)).toBe(false);
+            expect(audit.summary().captured['ordered-design-verdict']).toBe(0);
+            return;
+          }
+          await expect(audit.commitOrderedDesignVerdict(proof, checked, {} as never)).rejects.toThrow('url-session-audit-refused');
+          expect(() => producer.commitOrderedDesignVerdict(staged, proof, {} as never)).toThrow('url-run-artifacts-unavailable');
+          await protocol.finish(checked);
+          const terminal = await writer.readTerminal();
+          const fresh = await audit.readOrderedDesignReviewProof(sealed, reproducedForReceipt, writer, protocol.completion);
+          await expect(audit.commitOrderedDesignVerdict(fresh, checked, { ...terminal })).rejects.toThrow('url-session-audit-refused');
+          await expect(audit.commitOrderedDesignVerdict(fresh, { ...checked, checkSha256: '0'.repeat(64) }, terminal)).rejects.toThrow('url-session-audit-refused');
+          expect(() => producer.commitOrderedDesignVerdict({ ...staged }, fresh, terminal)).toThrow('url-run-artifacts-unavailable');
+          await audit.commitOrderedDesignVerdict(fresh, checked, terminal);
+          producer.commitOrderedDesignVerdict(staged, fresh, terminal);
+          expect(producer.hasCommittedProduct('reviews/checks/design-verdict-0.json', checked.checkSha256)).toBe(true);
+          expect(() => producer.commitOrderedDesignVerdict(staged, fresh, terminal)).toThrow('url-run-artifacts-unavailable');
+          await expect(audit.commitOrderedDesignVerdict(fresh, checked, terminal)).rejects.toThrow('url-session-audit-refused');
+          const continuation = await audit.readDesignRenderContinuation(sealed, reproduced, checked.number);
+          expect(continuation.checked).toEqual(checked);
+          expect(audit.summary()).toMatchObject({ captured: { 'ordered-design-verdict': 1, 'design-ordered': 23, 'tool-receipt': 0 } });
+          fs.appendFileSync(segment('design'), '\n');
+          expect(() => sessionAudit.assertUrlDesignRenderContinuationCurrent(continuation)).toThrow('url-session-audit-refused');
+          return;
+        }
+
         expect(sealed).toMatchObject({ eventSha256: expect.stringMatching(/^[0-9a-f]{64}$/u),
           identity: { state: 'prepared', site, round: 1, draftRevision: 7, sessionId: options('design').plan.declaration.sessionId,
             original: metadata.original, payload: metadata.payload, view: metadata.view, files: 1, pages: 1, parentCount: 1 } });
@@ -442,6 +599,7 @@ describe('protected URL design delivery audit', () => {
       await audit.close();
       await other.audit.close();
       fs.rmSync(sitePath, { recursive: true, force: true });
+      if (mode.startsWith('ordered')) for (const file of ['reviews/checks/design-verdict-0.json', 'reviews/design-verdict-0.json', 'reviews/design-verdict-999.json']) fs.rmSync(path.join(run, file), { force: true });
     }
   });
 });

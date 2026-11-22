@@ -378,6 +378,8 @@ async function runNativeOrderedFixture(scenario: OrderedScenario) {
   expect(isOrderedDesignSession(orderedSession)).toBe(true);
   expect(isOrderedDesignSession({ ...orderedSession })).toBe(false);
   expect(isProductionOrderedDesignSession(orderedSession)).toBe(scenario === 'ready');
+  expect(isProductionOrderedDesignSession(orderedSession, profile)).toBe(scenario === 'ready');
+  expect(isProductionOrderedDesignSession(orderedSession, { ...profile })).toBe(false);
   expect(isProductionOrderedDesignSession({ ...orderedSession })).toBe(false);
   relay = await sessionRelayTestPort(async input => {
     const index = forwarded.length;

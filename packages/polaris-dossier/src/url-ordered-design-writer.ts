@@ -31,6 +31,13 @@ interface OrderedDesignAuditStore {
   current(): Promise<boolean>;
 }
 
+const issuedTerminals = new WeakMap<OrderedDesignTerminalEvidence, { writer: OrderedDesignAuditWriter; current: () => boolean }>();
+const terminalReaders = new WeakSet<OrderedDesignAuditWriter>();
+export const hasReadOrderedDesignTerminal = (writer: OrderedDesignAuditWriter): boolean => terminalReaders.has(writer);
+/** A protected writer issued this exact terminal observation after its checked read. */
+export const isIssuedOrderedDesignTerminal = (writer: OrderedDesignAuditWriter, evidence: OrderedDesignTerminalEvidence): boolean =>
+  issuedTerminals.get(evidence)?.writer === writer && issuedTerminals.get(evidence)!.current();
+
 const observedReaders = new WeakSet<OrderedDesignAuditWriter>();
 export const hasOrderedDesignReadObserver = (writer: OrderedDesignAuditWriter): boolean => observedReaders.has(writer);
 
@@ -121,6 +128,8 @@ export function createOrderedDesignAuditWriter(
       const evidence = verifyOrderedDesignTerminalEvidence({ profile, plan, principal, asOf, records: readRecords(), terminal });
       if (evidence === null || !(Date.now() < deadline)) throw refused();
       disposition = 'eligible';
+      issuedTerminals.set(evidence, { writer, current: () => disposition === 'eligible' && Date.now() < deadline });
+      terminalReaders.add(writer);
       return evidence;
     } finally { busy = false; }
   };

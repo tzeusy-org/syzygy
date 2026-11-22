@@ -4,7 +4,7 @@ import { sha256 } from '@syzygy/support';
 import { createOrderedDesignSessionProfile } from './session-profile.js';
 import { planOrderedDesignBytes } from './url-design-delivery.js';
 import { verifyOrderedDesignAuditPrefix, verifyOrderedDesignTerminalEvidence, type OrderedDesignAuditEvent, type OrderedDesignAuditReference } from './url-ordered-design-audit.js';
-import { createOrderedDesignAuditWriter } from './url-ordered-design-writer.js';
+import { isIssuedOrderedDesignTerminal, createOrderedDesignAuditWriter } from './url-ordered-design-writer.js';
 
 const encode = (value: unknown): string => encodeCanonicalJson(value, { maxBytes: 65_536, maxNodes: 4096, maxDepth: 12 });
 const bytes = (value: string) => ({ sha256: sha256(value), bytes: Buffer.byteLength(value, 'utf8') });
@@ -147,11 +147,16 @@ describe('live ordered design audit writer', () => {
       }
       expect(stored).toHaveLength(23);
       const terminal = refs.get(expected.terminal.id)!;
-      expect(await writer.readTerminal()).toEqual(replaceRefs(expected));
+      const observed = await writer.readTerminal();
+      expect(observed).toEqual(replaceRefs(expected));
+      expect(isIssuedOrderedDesignTerminal(writer, observed)).toBe(true);
+      expect(isIssuedOrderedDesignTerminal(writer, { ...observed })).toBe(false);
+      expect(isIssuedOrderedDesignTerminal({ ...writer }, observed)).toBe(false);
       expect(verifyOrderedDesignTerminalEvidence({ ...evidence, records: stored, terminal })).toEqual(replaceRefs(expected));
       await expect(writer.retire('interrupted')).rejects.toThrow('url-ordered-design-audit-writer-refused');
       current = false;
       await expect(writer.readTerminal()).rejects.toThrow('url-ordered-design-audit-writer-refused');
+      expect(isIssuedOrderedDesignTerminal(writer, observed)).toBe(false);
       current = true;
       await expect(writer.readTerminal()).rejects.toThrow('url-ordered-design-audit-writer-refused');
       expect(stored).toHaveLength(23);

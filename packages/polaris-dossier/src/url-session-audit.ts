@@ -17,7 +17,9 @@ import { inspectUrlDesignProduct, isUrlDesignProductLeaseOpen, readInertUrlDesig
 import { checkStoredUrlRender } from './url-stored-render.js';
 import { inspectUrlLaunchHistory, URL_HELPER_LAUNCH_FILES, type UrlLaunchHistoryCapability, type UrlLaunchHistoryRole } from './url-launch-history.js';
 import { isOrderedDesignPlanFor, type OrderedDesignPlan } from './url-design-delivery.js';
-import { createOrderedDesignAuditWriter, type OrderedDesignAuditWriter, type OrderedDesignStoredRecord } from './url-ordered-design-writer.js';
+import type { UrlMachinePeerAudit } from './url-machine-peer.js';
+import { verifyOrderedDesignAuditPrefix, verifyOrderedDesignTerminalEvidence, type OrderedDesignAuditReference, type OrderedDesignAuditEvent, type OrderedDesignTerminalEvidence } from './url-ordered-design-audit.js';
+import { hasReadOrderedDesignTerminal, isIssuedOrderedDesignTerminal, createOrderedDesignAuditWriter, type OrderedDesignAuditWriter, type OrderedDesignStoredRecord } from './url-ordered-design-writer.js';
 
 export const URL_SESSION_AUDIT_FORMAT = 'url-session-audit/2' as const;
 export const URL_SESSION_AUDIT_LIMITS = Object.freeze({ events: 4096, eventBytes: 65_536, bytes: 16_777_216, pending: 8, milliseconds: 5000 });
@@ -86,8 +88,10 @@ type DesignVerdictEvent = Envelope<'design-verdict', {
   readonly toolReceipt: UrlSessionToolReceiptMetadata;
 }>;
 type OrderedDesignEvent = Envelope<'design-ordered', OrderedDesignStoredRecord>;
-type CapturedAuditEvent = UrlSessionAuditEvent | LaunchHistoryEvent | DesignDeliveryEvent | DesignVerdictEvent | OrderedDesignEvent;
-type PrivateEventKind = LaunchHistoryEvent['kind'] | DesignDeliveryEvent['kind'] | DesignVerdictEvent['kind'] | OrderedDesignEvent['kind'];
+type MachinePeerEvent = Envelope<'machine-peer', UrlMachinePeerAudit>;
+type OrderedDesignVerdictEvent = Envelope<'ordered-design-verdict', { readonly deliverySha256: string; readonly terminal: OrderedDesignTerminalEvidence; readonly checked: UrlCheckedDesignVerdict }>;
+type CapturedAuditEvent = UrlSessionAuditEvent | LaunchHistoryEvent | DesignDeliveryEvent | DesignVerdictEvent | OrderedDesignEvent | MachinePeerEvent | OrderedDesignVerdictEvent;
+type PrivateEventKind = LaunchHistoryEvent['kind'] | DesignDeliveryEvent['kind'] | DesignVerdictEvent['kind'] | OrderedDesignEvent['kind'] | MachinePeerEvent['kind'] | OrderedDesignVerdictEvent['kind'];
 declare const designAuditBrand: unique symbol;
 export interface UrlDesignDeliveryAuditRecord {
   readonly [designAuditBrand]: true;
@@ -125,11 +129,25 @@ export interface UrlDesignReviewProof {
   readonly round: number;
   readonly site: number;
   readonly sessionId: string;
-  readonly artifactReadId: string;
+  readonly artifactReadId: string | null;
+  readonly ordered?: { readonly completion: OrderedDesignAuditReference; readonly manifestSha256: string };
   readonly relayResponseSha256: string;
   readonly verdictCallId: string;
   readonly verdictInputSha256: string;
   readonly packet: { readonly sha256: string; readonly files: readonly string[]; readonly pages: readonly string[] };
+}
+const orderedDesignReviewInputs = new WeakMap<UrlDesignReviewProof, { readonly writer: OrderedDesignAuditWriter; readonly parents: UrlInertDesignProduct['parents']; readonly terminal: (checked: UrlCheckedDesignVerdict, terminal: OrderedDesignTerminalEvidence) => void }>();
+export function orderedUrlDesignReviewParents(proof: UrlDesignReviewProof): UrlInertDesignProduct['parents'] {
+  assertUrlDesignReviewProofCurrent(proof);
+  const issued = orderedDesignReviewInputs.get(proof);
+  if (!issued) throw refused();
+  return issued.parents;
+}
+export function assertUrlOrderedDesignVerdictTerminal(proof: UrlDesignReviewProof, checked: UrlCheckedDesignVerdict, terminal: OrderedDesignTerminalEvidence): void {
+  assertUrlDesignReviewProofCurrent(proof);
+  const issued = orderedDesignReviewInputs.get(proof);
+  if (!issued) throw refused();
+  issued.terminal(checked, terminal);
 }
 const designReviewProofs = new WeakMap<UrlDesignReviewProof, () => void>();
 export function assertUrlDesignReviewProofCurrent(proof: UrlDesignReviewProof): void {
@@ -205,7 +223,7 @@ export interface UrlSessionAuditOptions {
   readonly limits?: Partial<Limits>;
 }
 const ROLES: readonly ViewRole[] = ['author', 'inventory', 'fidelity', 'design'];
-const KINDS = ['relay', 'control', 'launch-attempt', 'before-tool', 'tool-receipt', 'usage', 'launch-terminal', 'launch-history', 'design-delivery', 'design-verdict', 'design-ordered'] as const;
+const KINDS = ['relay', 'control', 'launch-attempt', 'before-tool', 'tool-receipt', 'usage', 'launch-terminal', 'launch-history', 'design-delivery', 'design-verdict', 'design-ordered', 'machine-peer', 'ordered-design-verdict'] as const;
 const RELAY_TRANSITIONS: Readonly<Record<SessionAuditEvent['event'], readonly SessionAuditEvent['event'][]>> = {
   'attempt-allowed': ['send-attempt', 'attempt-refused', 'transport-failed'],
   'send-attempt': ['send-outcome', 'transport-failed'],
@@ -245,14 +263,17 @@ export interface UrlSessionAuditSummary {
 }
 export type UrlSessionAuditResult = { readonly ok: true; readonly scope: (role: ViewRole) => UrlSessionAuditScope;
   readonly append: (event: UrlSessionAuditEvent) => Promise<void>;
+  readonly appendMachinePeer: (event: UrlMachinePeerAudit) => Promise<void>;
   readonly beginOrderedDesignAudit: (plan: OrderedDesignPlan, current: () => boolean | Promise<boolean>, observeRead?: (bytes: number) => void) => OrderedDesignAuditWriter;
   readonly commitLaunchHistory: (history: UrlLaunchHistoryCapability) => Promise<UrlCommittedLaunchHistory>;
   readonly commitDesignDelivery: (input: UrlDesignDeliveryAuditInput, waitForSample?: () => Promise<boolean>) => Promise<UrlDesignDeliveryView>;
   readonly revalidateDesignDelivery: (record: UrlDesignDeliveryAuditRecord, product: ValidatedUrlDesignProduct) => Promise<void>;
-  readonly readDesignDeliveryView: (record: UrlDesignDeliveryAuditRecord, product: ValidatedUrlDesignProduct) => Promise<UrlDesignDeliveryView>;
+  readonly readDesignDeliveryView: (record: UrlDesignDeliveryAuditRecord, product: ValidatedUrlDesignProduct, observeRead?: (bytes: number) => void) => Promise<UrlDesignDeliveryView>;
   readonly commitDesignArtifactRead: (view: UrlDesignDeliveryView, receipt: UrlSessionToolReceiptMetadata) => Promise<void>;
   readonly readDesignReviewProof: (record: UrlDesignDeliveryAuditRecord, product: ValidatedUrlDesignProduct,
     admission: SessionAdmission) => Promise<UrlDesignReviewProof>;
+  readonly readOrderedDesignReviewProof: (record: UrlDesignDeliveryAuditRecord, product: ValidatedUrlDesignProduct, writer: OrderedDesignAuditWriter, completion: OrderedDesignAuditReference) => Promise<UrlDesignReviewProof>;
+  readonly commitOrderedDesignVerdict: (proof: UrlDesignReviewProof, checked: UrlCheckedDesignVerdict, terminal: OrderedDesignTerminalEvidence) => Promise<void>;
   readonly commitDesignVerdict: (proof: UrlDesignReviewProof, checked: UrlCheckedDesignVerdict, receipt: UrlSessionToolReceiptMetadata) => Promise<void>;
   readonly readDesignRenderContinuation: (record: UrlDesignDeliveryAuditRecord, product: ValidatedUrlDesignProduct,
     number: number) => Promise<UrlDesignRenderContinuation>;
@@ -504,6 +525,17 @@ export async function createUrlSessionAudit(given: UrlSessionAuditOptions): Prom
           break;
         case 'before-tool':
           if (!exact(p, ['tool', 'inputSha256']) || !one(p.tool, TOOLS) || !hex(p.inputSha256)) poison(); break;
+        case 'machine-peer':
+          if (privateKind !== 'machine-peer' || !exact(p, ['event', 'clientId', 'instanceId', 'revision', 'runId', 'role', 'operation', 'processIdentitySha256', 'channelIdentitySha256', 'at'])
+            || p.event !== 'machine-peer-effect' || !id(p.clientId) || !id(p.instanceId) || !count(p.revision) || p.revision === 0 || p.runId !== input.binding.run || p.role !== role
+            || !one(p.operation, ['source_read', 'artifact_read', 'artifact_write', 'dossier_step', 'inference-forward'])
+            || !hex(p.processIdentitySha256) || !hex(p.channelIdentitySha256) || !count(p.at) || p.at > Date.now()) poison();
+          break;
+        case 'ordered-design-verdict':
+          if (privateKind !== 'ordered-design-verdict' || role !== 'design' || !exact(p, ['deliverySha256', 'terminal', 'checked'])
+            || !hex(p.deliverySha256) || !isRecord(p.terminal) || !exact(p.checked, ['number', 'checkSha256', 'verdictSha256'])
+            || !count(p.checked.number, 999_999) || !hex(p.checked.checkSha256) || !hex(p.checked.verdictSha256)) poison();
+          break;
         case 'design-verdict':
           if (privateKind !== 'design-verdict' || role !== 'design'
             || !exact(p, ['deliverySha256', 'artifactReadId', 'relayResponseSha256', 'verdictCallId', 'checked', 'toolReceipt'])
@@ -683,15 +715,19 @@ export async function createUrlSessionAudit(given: UrlSessionAuditOptions): Prom
         } finally { closeSync(file); }
       } finally { closeSync(fd); }
     };
-    // A new, exclusive audit segment permits one live first-epoch attempt.
-    // A resumed attempt needs a separate authenticated history reader.
-    let orderedDesignOpened = false;
+    // Fresh repair rounds use distinct monotonic attempt cursors; no uncertain
+    // provider call is replayed and no durable cursor is reopened after loss.
+    let nextOrderedEpoch = 1;
+    let previousOrdered: OrderedDesignAuditWriter | undefined;
+    const orderedWriters = new WeakMap<OrderedDesignAuditWriter, { plan: OrderedDesignPlan; records: Array<{ record: OrderedDesignStoredRecord; read: (charge?: boolean) => Uint8Array }>; observeRead?: (bytes: number) => void }>();
     const beginOrderedDesignAudit: Extract<UrlSessionAuditResult, { ok: true }>['beginOrderedDesignAudit'] = (plan, attemptCurrent, observeRead) => {
-      if (orderedDesignOpened || poisoned || closing || orderedDesignProfile === null || typeof attemptCurrent !== 'function'
+      if (poisoned || closing || orderedDesignProfile === null || typeof attemptCurrent !== 'function'
         || !isOrderedDesignPlanFor(plan, orderedDesignProfile.transcript.partition)) throw refused();
       const { binding } = plan.manifest;
       if (binding.project !== input.project || binding.pin !== input.pin || binding.originPolicySha256 !== input.originPolicySha256
-        || binding.transferEpoch !== 1 || binding.round !== 1) throw refused();
+        || binding.transferEpoch !== nextOrderedEpoch || binding.round !== nextOrderedEpoch
+        || (previousOrdered !== undefined && !(hasReadOrderedDesignTerminal(previousOrdered)
+          || orderedWriters.get(previousOrdered)!.records.at(-1)?.record.kind === 'retired'))) throw refused();
       const scope = scopes.get('design')!;
       const attemptDeadline = Date.parse(binding.deadline);
       const checkAttemptCurrent = async (deadline: number): Promise<void> => {
@@ -701,19 +737,29 @@ export async function createUrlSessionAudit(given: UrlSessionAuditOptions): Prom
         await checkCurrent(deadline);
         if (allowed !== true || !(Date.now() < attemptDeadline)) throw refused();
       };
+      const held: Array<{ record: OrderedDesignStoredRecord; read: (charge?: boolean) => Uint8Array }> = [];
       const writer = createOrderedDesignAuditWriter({ profile: orderedDesignProfile, plan, principal: input.principal }, {
         current: async () => { await checkAttemptCurrent(performance.now() + limits.milliseconds); return true; },
         append: async record => {
           const event = await enqueue({ kind: 'design-ordered', role: 'design', scope, payload: record }, 'design-ordered', checkAttemptCurrent);
-          return () => {
+          const read = () => {
             const bytes = verifyDurableEvent('design', event, observeRead);
             const row = parseBoundedJson(bytes.toString('utf8'), { maxBytes: limits.eventBytes + 1, maxNodes: 4096, maxDepth: 12 });
             if (!isRecord(row) || !isRecord(row.event) || row.event.kind !== 'design-ordered') throw refused();
             return Buffer.from(canonical(row.event.payload, limits.eventBytes));
           };
+          // Keep a separate protected reader for subsequent normal producer/render checks.
+          held.push({ record, read: charge => {
+            const bytes = verifyDurableEvent('design', event, charge ? observeRead : undefined);
+            const row = parseBoundedJson(bytes.toString('utf8'), { maxBytes: limits.eventBytes + 1, maxNodes: 4096, maxDepth: 12 });
+            if (!isRecord(row) || !isRecord(row.event) || row.event.kind !== 'design-ordered') throw refused();
+            return Buffer.from(canonical(row.event.payload, limits.eventBytes));
+          } });
+          return read;
         },
       }, observeRead);
-      orderedDesignOpened = true;
+      orderedWriters.set(writer, { plan, records: held, observeRead });
+      previousOrdered = writer; nextOrderedEpoch++;
       return writer;
     };
     const ownLaunches = new WeakSet<UrlCommittedLaunchHistory>();
@@ -756,8 +802,8 @@ export async function createUrlSessionAudit(given: UrlSessionAuditOptions): Prom
     const designRecords = new WeakMap<UrlDesignDeliveryAuditRecord, {
       readonly binding: UrlDesignProductBinding;
       readonly prepared: WeakRef<ValidatedUrlDesignProduct>;
-      readonly verify: (product: ValidatedUrlDesignProduct, material?: UrlDesignProductMetadata) => Promise<() => void>;
-      readonly verifyStored: (current: () => boolean) => void;
+      readonly verify: (product: ValidatedUrlDesignProduct, material?: UrlDesignProductMetadata, observeRead?: (bytes: number) => void) => Promise<() => void>;
+      readonly verifyStored: (current: () => boolean, observeRead?: (bytes: number) => void) => void;
     }>();
     const designReviewDeliveries = new WeakMap<UrlDesignReviewProof, UrlDesignDeliveryAuditRecord>();
     const committedDesignReviews = new WeakSet<UrlDesignReviewProof>();
@@ -782,12 +828,12 @@ export async function createUrlSessionAudit(given: UrlSessionAuditOptions): Prom
     }
     // Only the host receives the inert bytes and their parent handles. The
     // prepared audit event itself grants no role or outbound request access.
-    const readDesignDeliveryView: Extract<UrlSessionAuditResult, { ok: true }>['readDesignDeliveryView'] = async (receipt, product) => {
+    const readDesignDeliveryView: Extract<UrlSessionAuditResult, { ok: true }>['readDesignDeliveryView'] = async (receipt, product, observeRead) => {
       const record = currentDesignRecord(receipt);
       const material = await readInertUrlDesignProduct(product, record.binding);
       if (!material) throw refused();
       const delivery = deliveryView(receipt, material);
-      const current = await record.verify(product, material.metadata);
+      const current = await record.verify(product, material.metadata, observeRead);
       currentDesignRecord(receipt);
       if (!isUrlDesignProductLeaseOpen(product)) throw refused();
       authenticatedDesignViews.set(delivery, { current, product: new WeakRef(product) });
@@ -847,6 +893,74 @@ export async function createUrlSessionAudit(given: UrlSessionAuditOptions): Prom
       usedDesignProducts.add(product);
       return proof;
     };
+    const readOrderedDesignReviewProof: Extract<UrlSessionAuditResult, { ok: true }>['readOrderedDesignReviewProof'] = async (receipt, product, writer, completion) => {
+      completion = copy(completion);
+      const record = currentDesignRecord(receipt), held = orderedWriters.get(writer);
+      if (!held || orderedDesignProfile === null || product === record.prepared.deref() || usedDesignProducts.has(product)) throw refused();
+      const { manifest } = held.plan, binding = manifest.binding;
+      if (binding.round !== receipt.identity.round || binding.session !== receipt.identity.sessionId
+        || manifest.originalSha256 !== receipt.identity.original.sha256 || manifest.originalBytes !== receipt.identity.original.bytes
+        || manifest.envelopeSha256 !== receipt.identity.view.sha256 || manifest.envelopeBytes !== receipt.identity.view.bytes
+        || held.plan.prepared.fileCount !== receipt.identity.files || held.plan.prepared.pageCount !== receipt.identity.pages) throw refused();
+      const material = await readInertUrlDesignProduct(product, record.binding);
+      if (!material) throw refused();
+      if (binding.originalReceiptSha256 !== receipt.eventSha256 || binding.producerSha256 !== material.metadata.renderer.programSha256
+        || binding.parentSetSha256 !== designIdentityDigest(material.metadata.parents.map(parent => designIdentityDigest(parent)))) throw refused();
+      const validate = await record.verify(product, material.metadata, held.observeRead);
+      const inspect = (charge: boolean) => {
+        const records = held.records.map(item => { const bytes = item.read(charge); if (charge) held.observeRead?.(bytes.byteLength); return bytes; });
+        const prefix = verifyOrderedDesignAuditPrefix({ profile: orderedDesignProfile, plan: held.plan, principal: input.principal, asOf: Date.now(), records });
+        if (!prefix) throw refused();
+        const index = held.records.findIndex(item => item.record.kind === 'delivery-completed');
+        if (index < 0) throw refused();
+        const bytes = records[index]!, event = held.records[index]!.record as OrderedDesignAuditEvent<'delivery-completed'>;
+        if (!equal(completion, { id: event.id, sha256: sha256(bytes) })) throw refused();
+        return { records, event };
+      };
+      const { event } = inspect(true);
+      const check = (): void => { if (!(Date.now() < Date.parse(binding.deadline))) throw refused(); currentDesignRecord(receipt); validate(); inspect(true); };
+      const files = material.metadata.output.population.map(file => file.path), call = event.payload.verdictCall;
+      const proof = deepFreeze({ ...record.binding, round: receipt.identity.round, site: receipt.identity.site,
+        sessionId: receipt.identity.sessionId, artifactReadId: null, ordered: { completion, manifestSha256: held.plan.manifestSha256 },
+        relayResponseSha256: event.payload.verdictResponse.sha256, verdictCallId: call.id, verdictInputSha256: call.inputSha256,
+        packet: { sha256: material.metadata.original.sha256, files, pages: files.filter(file => file.endsWith('.html')) } });
+      check();
+      designReviewProofs.set(proof, check); designReviewDeliveries.set(proof, receipt); usedDesignProducts.add(product);
+      orderedDesignReviewInputs.set(proof, { writer, parents: Object.freeze([...material.parents]), terminal: (checked, terminal) => {
+        check();
+        if (!isIssuedOrderedDesignTerminal(writer, terminal) || !equal(terminal.completion, completion)
+          || terminal.packetSha256 !== proof.packet.sha256 || terminal.verdict.sha256 !== checked.verdictSha256
+          || terminal.checkedVerdictSha256 !== sha256(canonical(checked))) throw refused();
+        const { records } = inspect(true);
+        if (!equal(verifyOrderedDesignTerminalEvidence({ profile: orderedDesignProfile, plan: held.plan, principal: input.principal,
+          asOf: Date.now(), records, terminal: terminal.terminal }), terminal)) throw refused();
+      } });
+      return proof;
+    };
+    const commitOrderedDesignVerdict: Extract<UrlSessionAuditResult, { ok: true }>['commitOrderedDesignVerdict'] = async (proof, checked, terminal) => {
+      const delivery = designReviewDeliveries.get(proof);
+      if (!delivery || !proof.ordered || committedDesignReviews.has(proof) || pendingDesignVerdicts.has(delivery)) throw refused();
+      const frozen = copy(checked);
+      const held = orderedWriters.get(orderedDesignReviewInputs.get(proof)!.writer)!;
+      assertUrlOrderedDesignVerdictTerminal(proof, frozen, terminal);
+      const previous = designVerdicts.get(delivery);
+      if (previous && frozen.number <= previous.checked.number) throw refused();
+      committedDesignReviews.add(proof); pendingDesignVerdicts.add(delivery); designVerdicts.delete(delivery);
+      try {
+        const event = await enqueue({ kind: 'ordered-design-verdict', role: 'design', scope: scopes.get('design')!,
+          payload: { deliverySha256: delivery.eventSha256, terminal, checked: frozen } }, 'ordered-design-verdict');
+        assertUrlOrderedDesignVerdictTerminal(proof, frozen, terminal);
+        verifyDurableEvent('design', event, held.observeRead);
+        const verify = (): void => {
+          const records = held.records.map(item => item.read());
+          if (!equal(verifyOrderedDesignTerminalEvidence({ profile: orderedDesignProfile!, plan: held.plan, principal: input.principal,
+            asOf: Date.now(), records, terminal: terminal.terminal }), terminal)) throw refused();
+          verifyDurableEvent('design', event);
+        };
+        designVerdicts.set(delivery, { checked: frozen, eventSha256: event.digest, verify });
+        if (!firstDesignReads.has(delivery.identity.round)) firstDesignReads.set(delivery.identity.round, event);
+      } finally { pendingDesignVerdicts.delete(delivery); }
+    };
     const commitDesignVerdict: Extract<UrlSessionAuditResult, { ok: true }>['commitDesignVerdict'] = async (proof, checked, receipt) => {
       const delivery = designReviewDeliveries.get(proof);
       if (delivery === undefined || pendingDesignVerdicts.has(delivery) || committedDesignReviews.has(proof)
@@ -855,7 +969,7 @@ export async function createUrlSessionAudit(given: UrlSessionAuditOptions): Prom
       const read = designReads.get(delivery), previous = designVerdicts.get(delivery);
       const frozen = copy(checked);
       const relay = relayLatest.get('design');
-      if (read?.receipt.id !== proof.artifactReadId || !relay || relay.events.at(-1)?.digest !== proof.relayResponseSha256
+      if (proof.ordered !== undefined || read?.receipt.id !== proof.artifactReadId || !relay || relay.events.at(-1)?.digest !== proof.relayResponseSha256
         || receipt.inputSha256 !== proof.verdictInputSha256 || (previous && frozen.number <= previous.checked.number)) throw refused();
       committedDesignReviews.add(proof);
       // Stop issuing continuations while a successor is becoming durable.
@@ -909,7 +1023,7 @@ export async function createUrlSessionAudit(given: UrlSessionAuditOptions): Prom
     /** Record identities only. A checked append can be cited by a later delivery
      * verifier independently reproducing the subject under its own live read. */
     const commitDesignDelivery: Extract<UrlSessionAuditResult, { ok: true }>['commitDesignDelivery'] = async (request, waitForSample) => {
-      if (poisoned || closing || orderedDesignProfile !== null || designPending || designRetired
+      if (poisoned || closing || designPending || designRetired
         || !exact(request, ['product', 'expectedProduct', 'launch', 'run', 'runId', 'pinnedRevision', 'sitePath', 'round'])
         || !count(request.round, 999_999) || request.round !== nextDesignRound
         || !ownLaunches.has(request.launch) || request.runId !== input.binding.run || request.pinnedRevision !== input.pin) throw refused();
@@ -963,33 +1077,33 @@ export async function createUrlSessionAudit(given: UrlSessionAuditOptions): Prom
         if (before.deadline !== after.deadline || !equal(before.identity, after.identity)) throw refused();
         const result = copy({ eventSha256: event.digest, identity: after.identity }) as UrlDesignDeliveryAuditRecord;
         const delivery = deliveryView(result, material);
-        const verifyStored = (current: () => boolean): void => {
+        const verifyStored = (current: () => boolean, observeRead?: (bytes: number) => void): void => {
           if (!current()) throw refused();
           try {
             if (inspectCommittedUrlLaunchHistory(launch).eventSha256 !== attempt.eventSha256
               || checkStoredUrlRender(run, sitePath, after.output, current) !== after.identity.site) throw refused();
-            verifyDurableEvent('design', event);
+            verifyDurableEvent('design', event, observeRead);
           } catch {
             if (current()) designRetired = true;
             throw refused();
           }
           if (!current()) throw refused();
         };
-        const verify = (checked: typeof after, candidate: ValidatedUrlDesignProduct): void =>
-          verifyStored(() => !poisoned && !closing && !designRetired && Date.now() < checked.deadline && isUrlDesignProductLeaseOpen(candidate));
+        const verify = (checked: typeof after, candidate: ValidatedUrlDesignProduct, observeRead?: (bytes: number) => void): void =>
+          verifyStored(() => !poisoned && !closing && !designRetired && Date.now() < checked.deadline && isUrlDesignProductLeaseOpen(candidate), observeRead);
         await checkSample();
         verify(after, product);
         const preparedProduct = new WeakRef(product);
-        function checkDelivery(checked: typeof after, candidate: ValidatedUrlDesignProduct): () => void {
+        function checkDelivery(checked: typeof after, candidate: ValidatedUrlDesignProduct, observeRead?: (bytes: number) => void): () => void {
           const ref = new WeakRef(candidate);
           return () => {
             currentDesignRecord(result);
             const active = ref.deref();
             if (!active) throw refused();
-            verify(checked, active);
+            verify(checked, active, observeRead);
           };
         }
-        designRecords.set(result, { binding, prepared: preparedProduct, verifyStored, verify: async (candidate, material) => {
+        designRecords.set(result, { binding, prepared: preparedProduct, verifyStored, verify: async (candidate, material, observeRead) => {
           // The receipt survives its operation lease. A later act needs a newly
           // validated product whose full identity still matches the recorded one.
           const currentMaterial = material ?? (candidate === preparedProduct.deref()
@@ -997,8 +1111,8 @@ export async function createUrlSessionAudit(given: UrlSessionAuditOptions): Prom
           const checked = currentMaterial === undefined ? after : capture(currentMaterial);
           currentDesignRecord(result);
           if (!equal(after.identity, checked.identity)) { designRetired = true; throw refused(); }
-          verify(checked, candidate);
-          return checkDelivery(checked, candidate);
+          verify(checked, candidate, observeRead);
+          return checkDelivery(checked, candidate, observeRead);
         } });
         authenticatedDesignViews.set(delivery, { current: checkDelivery(after, product), product: preparedProduct });
         nextDesignRound++;
@@ -1009,10 +1123,14 @@ export async function createUrlSessionAudit(given: UrlSessionAuditOptions): Prom
         throw refused();
       } finally { designPending = false; }
     };
+    const appendMachinePeer = async (event: UrlMachinePeerAudit): Promise<void> => {
+      if (!ROLES.includes(event.role)) throw refused();
+      await enqueue({ kind: 'machine-peer', role: event.role, scope: scopes.get(event.role)!, payload: event }, 'machine-peer');
+    };
     const append = async (event: UrlSessionAuditEvent): Promise<void> => { await enqueue(event, null); };
     return Object.freeze({ ok: true as const, scope: (role: ViewRole) => { const scope = scopes.get(role); if (!scope) poison(); return scope!; },
-      append, beginOrderedDesignAudit, commitLaunchHistory, commitDesignDelivery, revalidateDesignDelivery, readDesignDeliveryView,
-      commitDesignArtifactRead, readDesignReviewProof, commitDesignVerdict, readDesignRenderContinuation, close, summary });
+      append, appendMachinePeer, beginOrderedDesignAudit, commitLaunchHistory, commitDesignDelivery, revalidateDesignDelivery, readDesignDeliveryView,
+      commitDesignArtifactRead, readDesignReviewProof, readOrderedDesignReviewProof, commitOrderedDesignVerdict, commitDesignVerdict, readDesignRenderContinuation, close, summary });
   } catch {
     poisoned = true; await close(); return Object.freeze({ ok: false as const, code: 'url-session-audit-unavailable' as const, summary });
   }

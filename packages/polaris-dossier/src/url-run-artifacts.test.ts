@@ -67,7 +67,7 @@ function fixture(source = 'Own pinned source.\n') {
   const verifyCurrent = vi.fn(() => current);
   const ledger = createUrlOriginLedger({ runId, record, screen: loaded.screen, basePolicyBytes,
     originPolicy: { binding: { path: '.syzygy/governance/policies/POLARIS-DOSSIER-URL-ORIGIN-SPECIES-POLICY-v1.json', commit: 'a'.repeat(40), policyId: 'POLARIS-DOSSIER-URL-ORIGIN-SPECIES-POLICY-v1', policyVersion: '1.0.0', sha256: sha256(originBytes) }, bytes: originBytes },
-    current: verifyCurrent, fixed, schemas: { draft: v => validate(localDraftSchema({ pinnedRevision: pin, maxQuestions: 1 }), 'author', v),
+    current: verifyCurrent, fixed, schemas: { draft: v => validate(localDraftSchema({ pinnedRevision: pin, maxQuestions: 1 }, 'home', 'absent'), 'author', v),
       inventory: v => validate(localInventorySchema({ pinnedRevision: pin }), 'inventory', v), 'fidelity-verdict': v => validate(localVerdictSchema({ pinnedRevision: pin }), 'fidelity', v),
       'design-verdict': v => validate(localDesignVerdictSchema({ pinnedRevision: pin }), 'design', v) } });
   const [rolePolicy, runControl, toolMetadata] = fixed.map(f => ledger.fixed(f.id, f.bytes)), parents = [rolePolicy!, runControl!, toolMetadata!];
@@ -112,7 +112,7 @@ function fixture(source = 'Own pinned source.\n') {
   const inventory = { schemaVersion: 'polaris-dossier-local-inventory-v1', pinnedRevision: pin, sessionId: sessionId('inventory'),
     entries: [{ id: 'own-purpose', kind: 'purpose', label: 'inferred', statement: 'Own purpose.', citations: [{ id: 'own-cite', path: 'own.ts', startLine: 1, endLine: 1 }], quotations: [] }],
     coverage: { inspected: ['own.ts'], excluded: [], deferred: [], stoppingReason: 'Own scope.' } };
-  const writeDraft = async () => { expect(checkDraftShape(localDraftSchema({ pinnedRevision: pin, maxQuestions: 1 }), draft)).toEqual([]); const bytes = b(draft); write('drafts/next.json', bytes); const raw = receipt('author', 'mcp__syzygy__artifact_write', { path: 'drafts/next.json', content: bytes.toString() },
+  const writeDraft = async () => { expect(checkDraftShape(localDraftSchema({ pinnedRevision: pin, maxQuestions: 1 }, 'home', 'absent'), draft)).toEqual([]); const bytes = b(draft); write('drafts/next.json', bytes); const raw = receipt('author', 'mcp__syzygy__artifact_write', { path: 'drafts/next.json', content: bytes.toString() },
     { ok: true, kind: 'artifact-written', path: 'drafts/next.json', sha256: sha256(bytes) }); await bridge.toolReceipt('author', raw, admission('author')); return { raw, bytes }; };
   const checkDoc = (draftBytes: Uint8Array) => ({ format: 'polaris-dossier-check/1', runId, revision: 0, supersedes: null, pinnedRevision: pin, checkedAt: '2026-11-19T00:00:01.000Z', outcome: 'passed',
     draft: { file: 'drafts/rev-0.json', sha256: sha256(draftBytes), bytes: draftBytes.length }, session: { sessionId: sessionId('author'), declaredBy: 'the authoring session', label: 'Inferred' }, findings: [],

@@ -79,11 +79,11 @@ function nativeResponse(native: NonNullable<SessionAuditEvent['response']>): Ord
   throw refused();
 }
 
-const issuedSessions = new WeakSet<object>(), productionSessions = new WeakSet<object>();
+const issuedSessions = new WeakSet<object>(), productionSessions = new WeakMap<object, OrderedDesignSessionProfile>();
 export const isOrderedDesignSession = (value: unknown): boolean =>
   value !== null && typeof value === 'object' && issuedSessions.has(value);
-export const isProductionOrderedDesignSession = (value: unknown): boolean =>
-  value !== null && typeof value === 'object' && productionSessions.has(value);
+export const isProductionOrderedDesignSession = (value: unknown, expectedProfile?: OrderedDesignSessionProfile): boolean =>
+  value !== null && typeof value === 'object' && productionSessions.has(value) && (expectedProfile === undefined || productionSessions.get(value) === expectedProfile);
 
 /** Host-only cursor for one exact sealed transfer. A role supplies an invocation,
  * and only the selected relay contributes admitted request/response evidence. */
@@ -182,12 +182,15 @@ export function createOrderedDesignSession(options: Options) {
         || actualCpu - cpu > cap.cpuMicroseconds
         || (ledger !== null && !ledger.current())) throw refused();
     };
-    return { ticket, expires, check, read: (bytes: number): void => {
+    const priorRead = activeRead;
+    const boundary = { ticket, expires, check, read: (bytes: number): void => {
       reads += bytes;
       if (!Number.isSafeInteger(bytes) || bytes < 0 || !Number.isSafeInteger(reads) || reads > cap.auditReadBytes
         || (ticket !== null && ledger?.auditRead(ticket, bytes) !== true)) throw refused();
       check();
-    }, finish: (): void => { check(); if (ticket !== null && ledger?.finish(ticket) !== true) throw refused(); } };
+    }, finish: (): void => { try { check(); if (ticket !== null && ledger?.finish(ticket) !== true) throw refused(); } finally { activeRead = priorRead; } } };
+    activeRead = boundary.read;
+    return boundary;
   };
   const waitOperation = async <T>(boundary: ReturnType<typeof openOperation>, operation: () => Promise<T>): Promise<T> => {
     let timer: ReturnType<typeof setTimeout> | undefined;
@@ -199,9 +202,8 @@ export function createOrderedDesignSession(options: Options) {
   };
   const auditOperation = async <T>(kind: 'audit' | 'terminal', operation: () => Promise<T>): Promise<T> => {
     const boundary = openOperation(kind, Math.max(0, receipts.length - 1));
-    const priorRead = activeRead; activeRead = boundary.read;
     try { return await waitOperation(boundary, operation); }
-    finally { activeRead = priorRead; boundary.finish(); }
+    finally { boundary.finish(); }
   };
   const append: OrderedDesignAuditWriter['append'] = (kind, payload) => auditOperation('audit', () => writer.append(kind, payload));
   type ScreenInput = OrderedScreenInput | Omit<Extract<OrderedScreenInput, { operation: 'request' }>, 'planInput'>;
@@ -468,15 +470,17 @@ export function createOrderedDesignSession(options: Options) {
           || Buffer.byteLength(toolInput.stdin) > transcript.maxVerdictBytes
           || !equal(toolInput, { argv: verdictArgv, stdin: toolInput.stdin })) throw refused();
         const stdin = toolInput.stdin;
-        completion = await append('delivery-completed', { prepared: receipts[0]!.receipt, preparedExchange: exchanges[0]!,
-          parts: receipts.slice(1).map(({ receipt }, index) => ({ receipt, ...exchanges[index + 1]! })),
-          finalAdmission: prior.admission, verdictResponse: prior.response, verdictCall: issued.call });
-        await requireCurrent();
-        requireNextSend();
-        const checkedVerdictSha256 = await stageVerdict({ stdin, call: issued.call, completion, assertCurrent: requireNextSend });
+        const checkedVerdictSha256 = await auditOperation('audit', async () => {
+          completion = await writer.append('delivery-completed', { prepared: receipts[0]!.receipt, preparedExchange: exchanges[0]!,
+            parts: receipts.slice(1).map(({ receipt }, index) => ({ receipt, ...exchanges[index + 1]! })),
+            finalAdmission: prior.admission, verdictResponse: prior.response, verdictCall: issued.call });
+          await requireCurrent();
+          requireNextSend();
+          return stageVerdict({ stdin, call: issued.call, completion, assertCurrent: requireNextSend });
+        });
         if (checkedVerdictSha256 === null) throw refused();
         await requireCurrent();
-        stage = await append('verdict-staged', { completion, issuedBy: prior.response, verdictCall: issued.call,
+        stage = await append('verdict-staged', { completion: completion!, issuedBy: prior.response, verdictCall: issued.call,
           packet: { bytes: originalBytes, sha256: originalSha256 }, checkedVerdictSha256, verdict: identify(stdin) });
         reply = canonical({ kind: 'dossier-result', ok: true, exit: 0, stderr: '',
           stdout: canonical({ outcome: transcript.verdict.stagedOutcome, eligibility: transcript.verdict.eligibility, packetSha256: originalSha256 }) });
@@ -488,12 +492,16 @@ export function createOrderedDesignSession(options: Options) {
       receipts.push({ ...issued, receipt, reply: identify(reply) });
     }); } finally { tool.finish(); }
   });
-  const readTerminal = async () => {
+  const readTerminal = async (consume?: (evidence: import('./url-ordered-design-audit.js').OrderedDesignTerminalEvidence) => Promise<void>) => {
     if (!eligible || stopped || busy) throw refused();
     busy = true;
     try {
       await requireCurrent();
-      const terminal = await auditOperation('terminal', () => writer.readTerminal());
+      const terminal = await auditOperation('terminal', async () => {
+        const evidence = await writer.readTerminal();
+        if (consume !== undefined) await consume(evidence);
+        return evidence;
+      });
       await requireCurrent();
       if (workBudget?.complete() !== true) throw refused();
       return terminal;
@@ -503,9 +511,10 @@ export function createOrderedDesignSession(options: Options) {
     } finally { busy = false; }
   };
   const session = Object.freeze({ checkRequest, checkResponse, observe, issueReply, retire, readTerminal,
+    reportAuditRead: (bytes: number): boolean => { if (activeRead === null) return false; activeRead(bytes); return true; },
     chargeAuditRead: (bytes: number): void => { if (activeRead === null) throw refused(); activeRead(bytes); },
     workSnapshot: () => workBudget?.snapshot() ?? null });
   issuedSessions.add(session);
-  if (screening.kind === 'bounded-worker') productionSessions.add(session);
+  if (screening.kind === 'bounded-worker') productionSessions.set(session, profile);
   return session;
 }

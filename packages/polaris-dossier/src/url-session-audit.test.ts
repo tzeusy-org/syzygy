@@ -110,6 +110,36 @@ async function orderedFixture() {
 }
 
 describe('protected URL session audit', () => {
+  it('durably captures only the independently scoped machine peer effect metadata', async () => {
+    const f = fixture(), audit = await f.create();
+    const effect = { event: 'machine-peer-effect', clientId: 'own-client', instanceId: 'own-instance', revision: 1,
+      runId: f.options.binding.run, role: 'design', operation: 'inference-forward', processIdentitySha256: '1'.repeat(64),
+      channelIdentitySha256: '2'.repeat(64), at: Date.now() } as const;
+    await audit.appendMachinePeer(effect);
+    expect(lines(f, 'design').at(-1)!.event).toEqual({ kind: 'machine-peer', role: 'design', scope: audit.scope('design'), payload: effect });
+    expect(audit.summary().captured['machine-peer']).toBe(1);
+    f.revoke();
+    await expect(audit.appendMachinePeer(effect)).rejects.toThrow('url-session-audit-refused');
+    expect(audit.summary().captured['machine-peer']).toBe(1);
+  });
+  it.each(['foreign-run', 'unknown-role', 'unknown-operation', 'raw-extension', 'future', 'bad-digest', 'zero-revision'])(
+    'refuses machine peer effect %s without persisting it', async fault => {
+    const f = fixture(), audit = await f.create();
+    const effect: Record<string, unknown> = { event: 'machine-peer-effect', clientId: 'own-client', instanceId: 'own-instance', revision: 1,
+      runId: f.options.binding.run, role: 'design', operation: 'inference-forward', processIdentitySha256: '1'.repeat(64),
+      channelIdentitySha256: '2'.repeat(64), at: Date.now() };
+    if (fault === 'foreign-run') effect.runId = 'other-run';
+    if (fault === 'unknown-role') effect.role = 'other';
+    if (fault === 'unknown-operation') effect.operation = 'other';
+    if (fault === 'raw-extension') effect.command = 'RAW UNEXPECTED COMMAND';
+    if (fault === 'future') effect.at = Date.now() + 60_000;
+    if (fault === 'bad-digest') effect.processIdentitySha256 = 'unknown';
+    if (fault === 'zero-revision') effect.revision = 0;
+    const before = fs.readFileSync(f.file('design'));
+    await expect(audit.appendMachinePeer(effect as never)).rejects.toThrow('url-session-audit-refused');
+    expect(fs.readFileSync(f.file('design'))).toEqual(before);
+    expect(audit.summary().captured['machine-peer']).toBe(0);
+  });
   it('records first-epoch ordered evidence and one retirement in the protected design segment', async () => {
     const { f, profile, host, plan, prepared, canonical } = await orderedFixture();
     expect(() => host.beginOrderedDesignAudit(structuredClone(plan), () => true)).toThrow('url-session-audit-refused');
