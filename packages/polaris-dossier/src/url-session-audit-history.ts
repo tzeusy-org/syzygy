@@ -6,6 +6,9 @@ import { decodeUtf8, deepFreeze, isRecord, sha256 } from '@syzygy/support';
 import { SESSION_TOOLS, type SessionContentClass } from './session-egress-policy.js';
 import { isSessionTokenCount, SESSION_COUNT_RESPONSE_MAX_BYTES, SESSION_COUNT_TOKENS_PATH } from './session-relay.js';
 import type { ViewRole } from './session-view.js';
+import { isUrlMachinePeerHistoryMatch, isUrlMachinePeerHistorySnapshot, isUrlMachinePeerHistorySnapshotFor,
+  verifyUrlMachinePeerHistoryRow, type UrlMachinePeerHistorySnapshot } from './url-machine-peer-history.js';
+import type { UrlMachinePeerAudit } from './url-machine-peer.js';
 import { isVerifiedRetainedUrlLaunchHistory, URL_HELPER_LAUNCH_FILES, verifyRetainedUrlLaunchHistory,
   type UrlLaunchHistoryRole, type UrlRetainedLaunchHistoryExpected, type UrlRetainedLaunchHistoryOptions } from './url-launch-history.js';
 import { URL_SESSION_AUDIT_FORMAT, URL_SESSION_AUDIT_LIMITS, type UrlSessionAuditScope } from './url-session-audit.js';
@@ -34,12 +37,14 @@ export interface UrlSessionAuditHistoryOptions {
   readonly current: () => boolean;
   /** Independently pinned input, role and executable identities for any retained helper launch row. */
   readonly retainedLaunches?: RetainedLaunchSubjects;
+  /** Genuine snapshots made against independently retained store identity and client heads. */
+  readonly machineHistory?: { readonly identitySha256: string; readonly snapshots: readonly UrlMachinePeerHistorySnapshot[] };
 }
 export interface VerifiedUrlSessionAuditHistory {
   readonly kind: 'verified-local-audit-history'; readonly authorization: 'none'; readonly replay: 'forbidden';
   readonly completeness: 'Unknown'; readonly records: number; readonly bytes: number; readonly tipSha256: string;
   readonly capturedLaunchTerminals: number; readonly capturedCompleteExchanges: number;
-  readonly capturedCountExchanges: number; readonly capturedHelperLaunches: number;
+  readonly capturedCountExchanges: number; readonly capturedHelperLaunches: number; readonly capturedMachineEffects: number;
 }
 function fail(): never { throw new Error('url-session-audit-history-unavailable'); }
 const hex = (v: unknown): v is string => typeof v === 'string' && /^[a-f0-9]{64}$/u.test(v);
@@ -75,7 +80,17 @@ export async function verifyUrlSessionAuditHistory(given: UrlSessionAuditHistory
   const work = async (): Promise<VerifiedUrlSessionAuditHistory> => {
     // Snapshot trusted metadata before the first await. It is not a persisted
     // checkpoint format and accepting it does not establish its provenance.
-    const { parent, name } = given;
+    const { parent, name, machineHistory } = given;
+    const machineSnapshots = new Map<string, UrlMachinePeerHistorySnapshot>();
+    if (machineHistory !== undefined) {
+      const { identitySha256, snapshots } = machineHistory;
+      if (!hex(identitySha256) || !Array.isArray(snapshots) || snapshots.length > 8) fail();
+      for (const snapshot of snapshots) {
+        if (!isUrlMachinePeerHistorySnapshot(snapshot) || snapshot.storeIdentitySha256 !== identitySha256
+          || machineSnapshots.has(snapshot.clientId)) fail();
+        machineSnapshots.set(snapshot.clientId, snapshot);
+      }
+    }
     const retainedLaunches = { ...given.retainedLaunches };
     for (const role of Object.keys(retainedLaunches)) {
       if (!Object.hasOwn(URL_HELPER_LAUNCH_FILES, role)) fail();
@@ -164,7 +179,7 @@ export async function verifyUrlSessionAuditHistory(given: UrlSessionAuditHistory
       if (row.sequence !== index + 1 || row.previousSha256 !== previous) fail(); previous = row.sha256;
     }
     if (previous !== expected.tipSha256) fail();
-    const captured = await verifyCapturedBoundary(rows, expected, retainedLaunches, check);
+    const captured = await verifyCapturedBoundary(rows, expected, retainedLaunches, machineSnapshots, check);
     await rootCurrent();
     for (const { file, name, stat } of files) if (!same(stat, await file.stat({ bigint: true })) || !same(stat, await lstat(name, { bigint: true }))) fail();
     check();
@@ -183,8 +198,9 @@ export async function verifyUrlSessionAuditHistory(given: UrlSessionAuditHistory
 }
 
 async function verifyCapturedBoundary(rows: readonly Row[], expected: UrlSessionAuditHistoryExpected,
-  retainedLaunches: RetainedLaunchSubjects, check: () => void) {
-  let capturedLaunchTerminals = 0, capturedCompleteExchanges = 0, capturedCountExchanges = 0, capturedHelperLaunches = 0;
+  retainedLaunches: RetainedLaunchSubjects, machineSnapshots: ReadonlyMap<string, UrlMachinePeerHistorySnapshot>, check: () => void) {
+  let capturedLaunchTerminals = 0, capturedCompleteExchanges = 0, capturedCountExchanges = 0;
+  let capturedHelperLaunches = 0, capturedMachineEffects = 0;
   for (const role of ROLES) {
     let attempt: { commandSha256: string; viewSha256: string } | null = null;
     let launchHistoryMatched = false;
@@ -205,15 +221,15 @@ async function verifyCapturedBoundary(rows: readonly Row[], expected: UrlSession
           attempt = { commandSha256: p.commandSha256, viewSha256: p.viewSha256 }; break;
         case 'launch-history': {
           if (role === 'author' || attempt === null || launchHistoryMatched) fail();
-          const subject = retainedLaunches[role];
+          const subject = retainedLaunches[role], file = URL_HELPER_LAUNCH_FILES[role];
           const { scope, payload } = expected.declarations[role];
           if (!subject || subject.runId !== scope.binding.run || subject.roleDeclaration.role !== role
             || subject.roleDeclaration.compiledProfileSha256 !== scope.profileSha256
             || subject.roleDeclaration.commandSha256 !== attempt.commandSha256 || subject.roleDeclaration.viewSha256 !== attempt.viewSha256
             || !exact(p, ['file', 'recordSha256', 'recordBytes', 'promptRecordSha256', 'promptSha256', 'sessionId'])
-            || p.file !== URL_HELPER_LAUNCH_FILES[role] || !hex(p.recordSha256) || !count(p.recordBytes, 2_097_152) || p.recordBytes === 0
+            || p.file !== file || !hex(p.recordSha256) || !count(p.recordBytes, 2_097_152) || p.recordBytes === 0
             || !hex(p.promptRecordSha256) || !hex(p.promptSha256) || typeof p.sessionId !== 'string') fail();
-          const history: UrlRetainedLaunchHistoryExpected = { file: p.file, recordSha256: p.recordSha256, recordBytes: p.recordBytes,
+          const history: UrlRetainedLaunchHistoryExpected = { file, recordSha256: p.recordSha256, recordBytes: p.recordBytes,
             promptRecordSha256: p.promptRecordSha256, promptSha256: p.promptSha256, sessionId: p.sessionId };
           check();
           const result = await verifyRetainedUrlLaunchHistory({ ...subject, role, pin: payload.pin, expected: history, current: () => { check(); return true; } });
@@ -228,6 +244,16 @@ async function verifyCapturedBoundary(rows: readonly Row[], expected: UrlSession
           if (attempt === null || !['exited', 'stopped'].includes(String(p.outcome)) || p.viewTermination !== 'view-exited'
             || p.groupTermination !== 'confirmed' || p.toolTermination !== 'settled' || p.pendingInvocations !== 0) fail();
           attempt = null; capturedLaunchTerminals++; break;
+        case 'machine-peer': {
+          if (attempt === null || !hex(p.clientId)) fail();
+          const snapshot = machineSnapshots.get(p.clientId);
+          const { scope, payload } = expected.declarations[role];
+          if (!isUrlMachinePeerHistorySnapshotFor(snapshot, { projectId: payload.project, policySha256: scope.originPolicySha256,
+            profileSha256: scope.profileSha256, sourcePin: payload.pin, runId: scope.binding.run, role })) fail();
+          const matched = verifyUrlMachinePeerHistoryRow(snapshot, p as unknown as UrlMachinePeerAudit);
+          if (!isUrlMachinePeerHistoryMatch(matched, p)) fail();
+          capturedMachineEffects++; break;
+        }
         case 'before-tool':
           if (attempt === null || exchange !== null || tool === null || tool.executing || tool.receipt !== undefined
             || !exact(p, ['tool', 'inputSha256']) || `mcp__syzygy__${String(p.tool)}` !== tool.name || p.inputSha256 !== tool.inputSha256) fail();
@@ -308,5 +334,5 @@ async function verifyCapturedBoundary(rows: readonly Row[], expected: UrlSession
     if (attempt !== null || exchange !== null || tool !== null || question !== null
       || (role !== 'author' && retainedLaunches[role] !== undefined && !launchHistoryMatched)) fail();
   }
-  return { capturedLaunchTerminals, capturedCompleteExchanges, capturedCountExchanges, capturedHelperLaunches };
+  return { capturedLaunchTerminals, capturedCompleteExchanges, capturedCountExchanges, capturedHelperLaunches, capturedMachineEffects };
 }

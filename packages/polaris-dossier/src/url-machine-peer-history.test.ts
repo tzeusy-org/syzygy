@@ -10,6 +10,13 @@ import * as machineStore from './url-machine-store.js';
 import { initializeUrlMachineStore, openUrlMachineStore, readUrlMachineStoreHistory, type UrlMachineStore } from './url-machine-store.js';
 import { encodeUrlMachineArchive, urlMachineArchiveCapacity, URL_MACHINE_ARCHIVE_LIMITS } from './url-machine-archive.js';
 import { URL_MACHINE_CLIENT_LIMITS, type UrlMachineClientContext, type UrlMachineClientRecord } from './url-machine-instance.js';
+import { buildDossierScreen } from './screen.js';
+import { policyFixture } from './full-run.testkit.js';
+import { createSessionProfile, DEFAULT_SESSION_MODEL } from './session-profile.js';
+import { URL_LAUNCH_LIMITS } from './session-launch.js';
+import { URL_ROLES } from './url-run-record.js';
+import { createUrlSessionAudit } from './url-session-audit.js';
+import { verifyUrlSessionAuditHistory } from './url-session-audit-history.js';
 import { captureUrlMachinePeerHistory, isUrlMachinePeerHistoryMatch, isUrlMachinePeerHistorySnapshot, isUrlMachinePeerHistorySnapshotFor, verifyUrlMachinePeerHistoryRow, verifyUrlMachinePeerHistory, type UrlMachinePeerHistoryOptions } from './url-machine-peer-history.js';
 
 const NOW = Date.parse('2026-11-22T01:00:00.000Z');
@@ -18,7 +25,7 @@ const canon = (v: unknown) => Buffer.from(encodeCanonicalJson(v, URL_MACHINE_CLI
 const close: (() => Promise<unknown>)[] = [];
 afterEach(async () => { vi.restoreAllMocks(); for (const fn of close.splice(0).reverse()) await fn(); });
 
-async function fixture(revoke = true) {
+async function fixture(revoke = true, subject?: Pick<UrlMachineClientContext, 'policySha256' | 'profileSha256'>) {
   const root = tempDir('url-peer-history-'), governanceRoot = path.join(root, 'observing/.syzygy');
   const canonicalRoot = path.join(governanceRoot, 'governance/policies/dossier-machine-clients'); await mkdir(canonicalRoot, { recursive: true });
   let now = NOW, current = true;
@@ -26,7 +33,8 @@ async function fixture(revoke = true) {
     now: () => now, current: () => current };
   const writer = await initializeUrlMachineStore(storeOptions); if (!writer) throw new Error('owned store refused'); close.push(() => writer.close());
   const slot = await writer.allocateClient(storeOptions.deadline); if (!slot) throw new Error('owned slot refused');
-  const context: UrlMachineClientContext = { clientId: slot.clientId, policySha256: id(), profileSha256: id(), sourcePin: 'a'.repeat(40),
+  const context: UrlMachineClientContext = { clientId: slot.clientId, policySha256: subject?.policySha256 ?? id(),
+    profileSha256: subject?.profileSha256 ?? id(), sourcePin: 'a'.repeat(40),
     runId: `run-${'b'.repeat(32)}`, role: 'design', kind: 'mcp-shim', allowedScopes: ['artifact_read', 'dossier_step'], now: NOW, deadline: storeOptions.deadline };
   const record: UrlMachineClientRecord = { format: 'polaris-dossier-local-machine-client/1', clientId: context.clientId, issuanceId: id(),
     revision: 1, projectId: 'project:syzygy', policySha256: context.policySha256, sourcePin: context.sourcePin, runId: context.runId,
@@ -61,6 +69,50 @@ async function fixture(revoke = true) {
 }
 
 describe('cold historical machine-peer joins', () => {
+  it('joins actual protected machine and audit cuts under their distinct policy bindings', async () => {
+    const policy = policyFixture(), loaded = buildDossierScreen(policy.bytes, true, null, 'private');
+    if (!loaded.ok) throw new Error('owned audit screen refused');
+    const originPolicySha256 = id();
+    const binding = { run: `run-${'b'.repeat(32)}`, sourceBinding: id(), policy: loaded.screen.policySha256,
+      provider: 'anthropic', model: DEFAULT_SESSION_MODEL };
+    const profiles = URL_ROLES.map((role, index) => {
+      const compiled = createSessionProfile({ binding: { ...binding, role },
+        sessionId: `00000000-0000-4000-8000-00000000000${index}`, utcDate: '2026-11-22',
+        systemPrompt: 'Use the four own tools.', initialPrompt: 'Read the owned fixture.', kernelRelease: '6.0.0-own' });
+      if (!compiled.ok) throw new Error('owned role profile refused');
+      return compiled.value.profile;
+    });
+    const f = await fixture(true, { policySha256: originPolicySha256, profileSha256: profiles[3]!.digest });
+    const parent = path.join(tempDir('url-peer-audit-'), 'protected');
+    await mkdir(parent, { mode: 0o700 });
+    const writer = await createUrlSessionAudit({ parent, name: 'own', binding, originPolicySha256, pin: f.record.sourcePin,
+      project: f.record.projectId, principal: 'own-operator', profiles,
+      declaredClasses: ['project-documentation'], screen: loaded.screen, current: () => true });
+    if (!writer.ok) throw new Error('owned audit refused');
+    const role = 'design', scope = writer.scope(role);
+    try {
+      await writer.append({ kind: 'launch-attempt', role, scope, payload: { event: 'session-launch-attempt',
+        profileSha256: scope.profileSha256, commandSha256: id(), viewSha256: id(), limits: URL_LAUNCH_LIMITS } });
+      await writer.appendMachinePeer(f.options.row);
+      await writer.append({ kind: 'launch-terminal', role, scope, payload: {
+        outcome: 'stopped', exitCode: null, signal: 'SIGTERM', viewTermination: 'view-exited', groupTermination: 'confirmed',
+        toolTermination: 'settled', pendingInvocations: 0, stdout: { bytes: 0, sha256: sha256('') }, stderr: { bytes: 0, sha256: sha256('') },
+        sampledStorageBytes: 0, peakProcesses: 1, aggregateEnforcement: 'sampled-stop-only', betweenSamples: 'Unknown' } });
+    } finally { await writer.close(); }
+    const expected = writer.closedHistory(), captured = await captureUrlMachinePeerHistory(f.options);
+    if (expected === null || !captured.ok) throw new Error('owned cold anchors unavailable');
+    const options = { parent, name: 'own', expected, current: () => true };
+    const machineHistory = { identitySha256: f.options.expectedIdentitySha256, snapshots: [captured.snapshot] };
+    expect(await verifyUrlSessionAuditHistory({ ...options, machineHistory })).toMatchObject({
+      capturedMachineEffects: 1, authorization: 'none', replay: 'forbidden', completeness: 'Unknown' });
+    expect(await verifyUrlSessionAuditHistory(options)).toBeNull();
+    for (const changed of [{ ...machineHistory, identitySha256: id() },
+      { ...machineHistory, snapshots: [{ ...captured.snapshot }] },
+      { ...machineHistory, snapshots: [captured.snapshot, captured.snapshot] }]) {
+      expect(await verifyUrlSessionAuditHistory({ ...options, machineHistory: changed })).toBeNull();
+    }
+  });
+
   it('checks 220 exact captured rows using one genuine protected read and no per-row filesystem work', async () => {
     const f = await fixture(), before = await Promise.all(f.files.map(file => readFile(file)));
     const read = vi.spyOn(machineStore, 'readUrlMachineStoreHistory');

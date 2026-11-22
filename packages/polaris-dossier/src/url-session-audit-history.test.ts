@@ -112,7 +112,7 @@ describe('read-only protected audit history', () => {
     const f = await fixture(), before = ROLES.map(role => fs.readFileSync(f.file(role)));
     expect(await verifyUrlSessionAuditHistory(f.options)).toEqual({ kind: 'verified-local-audit-history', authorization: 'none', replay: 'forbidden',
       completeness: 'Unknown', records: 17, bytes: f.expected.durableBytes, tipSha256: f.expected.tipSha256,
-      capturedLaunchTerminals: 4, capturedCompleteExchanges: 1, capturedCountExchanges: 0, capturedHelperLaunches: 0 });
+      capturedLaunchTerminals: 4, capturedCompleteExchanges: 1, capturedCountExchanges: 0, capturedHelperLaunches: 0, capturedMachineEffects: 0 });
     expect(ROLES.map(role => fs.readFileSync(f.file(role)))).toEqual(before);
   });
 
