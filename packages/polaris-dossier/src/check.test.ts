@@ -8,6 +8,7 @@ import { issueBrief } from './brief.js';
 import { blobRedaction, checkDraft, deriveFindings, draftRules, lineRanges, measureCheckRecord, reviewVisibility, type CheckDeps, type CheckResult } from './check.js';
 import { latestPassedDraft } from './review.js';
 import { oneSentenceAnswer } from './check-derive.js';
+import { patchFs } from './fs-patch.testkit.js';
 import { runDossierCli } from './cli.js';
 import { NO_PROVIDER_STATEMENTS, type GateSources, type GateState } from './gate-sources.js';
 import { GitObjectReadRefusal, openPinnedObjectReader, type PinnedObjectReader, type PinnedObjectReaderOptions } from './git-object-reader.js';
@@ -1984,5 +1985,132 @@ describe('check: the record within its read bound (version 2.10)', () => {
     expect(record.findings[0].detail).toContain(' and 1 other findings, which this record leaves out');
     expect(JSON.stringify(record)).not.toContain('path-absent');
     expect(fs.readdirSync(run).filter((name) => name.includes('left'))).toEqual([]);
+  });
+});
+
+// REQ-polaris-generation-034 (syzygy-3efd.76): check reads the draft it is given, and the reverification each step runs reads
+// the brief record, by the version 2.10 reader rule: opened once without blocking, refused before any byte is read where it is not a regular
+// file or its size is past the bound, and read to at most one byte past the bound. The bounds (4,194,304 and 262,144 bytes) and the words
+// are the spec's literals. A FIFO blocks a reader that opens it without O_NONBLOCK inside a synchronous call no test timeout interrupts;
+// the mutation runner (docs/evidence/syzygy-3efd-76/) bounds each run by a process timeout.
+describe('check: the reader rule for the draft and the brief record (syzygy-3efd.76)', () => {
+  const bytesReadFrom = async (subject: string, run: () => Promise<void>): Promise<number[]> => {
+    const opened = new Map<number, number>();
+    const totals: number[] = [];
+    const restoreOpen = patchFs('openSync', (original) => ((file: fs.PathLike, ...rest: unknown[]) => {
+      const fd = (original as (...args: unknown[]) => number)(file, ...rest);
+      opened.delete(fd);
+      if (file === subject) { opened.set(fd, totals.length); totals.push(0); }
+      return fd;
+    }) as typeof original);
+    const restoreRead = patchFs('readSync', (original) => ((fd: number, ...rest: unknown[]) => {
+      const read = (original as (...args: unknown[]) => number)(fd, ...rest);
+      const index = opened.get(fd);
+      if (index !== undefined) totals[index]! += read;
+      return read;
+    }) as typeof original);
+    try { await run(); } finally { restoreRead(); restoreOpen(); }
+    return totals;
+  };
+  const growOnce = (subject: string, bound: number): (() => void) => {
+    let grown = false;
+    return patchFs('fstatSync', (original) => ((fd: number, ...rest: unknown[]) => {
+      const stats = (original as (...args: unknown[]) => fs.Stats)(fd, ...rest);
+      if (!grown && stats.isFile() && stats.size === bound) { grown = true; fs.appendFileSync(subject, ' '.repeat(1_048_576)); }
+      return stats;
+    }) as typeof original);
+  };
+  const padTo = (text: string, bytes: number): string => text + ' '.repeat(bytes - Buffer.byteLength(text));
+  const plants: [string, (file: string) => void][] = [
+    ['a FIFO', (file) => execFileSync('mkfifo', [file])],
+    ['a symbolic link to /dev/zero', (file) => fs.symlinkSync('/dev/zero', file)],
+    ['a directory', (file) => fs.mkdirSync(file)],
+  ];
+  const nothingFrozen = (run: string): void => {
+    expect(fs.readdirSync(path.join(run, 'drafts')).filter((name) => name !== 'next.json')).toEqual([]);
+    expect(fs.existsSync(path.join(run, 'checks')) ? fs.readdirSync(path.join(run, 'checks')) : []).toEqual([]);
+  };
+
+  it('checks a draft of exactly 4,194,304 bytes, reading it to its end, and freezes exactly those bytes', async () => {
+    const run = await briefedRun();
+    const file = writeDraft(run, padTo(JSON.stringify(valid(), null, 2), 4_194_304));
+    expect(fs.statSync(file).size).toBe(4_194_304);
+    let result: CheckResult | undefined;
+    expect(await bytesReadFrom(file, async () => { result = await checkDraft(run, {}, deps()); })).toEqual([4_194_304]);
+    report(result!);
+    expect(fs.statSync(path.join(run, 'drafts', 'rev-0.json')).size).toBe(4_194_304);
+  });
+
+  it('refuses a draft of 4,194,305 bytes from its size alone, reading no byte and freezing nothing', async () => {
+    const run = await briefedRun();
+    const file = writeDraft(run, padTo(JSON.stringify(valid(), null, 2), 4_194_305));
+    let result: CheckResult | undefined;
+    expect(await bytesReadFrom(file, async () => { result = await checkDraft(run, {}, deps()); })).toEqual([0]);
+    expect(result).toMatchObject({ ok: false, refusal: { stage: 'draft', reason: `${file} is larger than the 4194304-byte draft bound` } });
+    nothingFrozen(run);
+  });
+
+  it('refuses a draft grown past the bound after its size was taken, reading at most one byte past it', async () => {
+    const run = await briefedRun();
+    const file = writeDraft(run, padTo(JSON.stringify(valid(), null, 2), 4_194_304));
+    const restore = growOnce(file, 4_194_304);
+    let result: CheckResult | undefined, reads: number[] = [];
+    try { reads = await bytesReadFrom(file, async () => { result = await checkDraft(run, {}, deps()); }); } finally { restore(); }
+    expect(reads).toEqual([4_194_305]);
+    expect(result).toMatchObject({ ok: false, refusal: { stage: 'draft', reason: `${file} is larger than the 4194304-byte draft bound` } });
+    nothingFrozen(run);
+  });
+
+  it.each(plants)('refuses %s given as the draft, without blocking or reading a byte', async (_what, plant) => {
+    const run = await briefedRun();
+    const file = path.join(run, 'drafts', 'next.json');
+    fs.mkdirSync(path.join(run, 'drafts'), { recursive: true });
+    plant(file);
+    let result: CheckResult | undefined;
+    expect(await bytesReadFrom(file, async () => { result = await checkDraft(run, {}, deps()); })).toEqual([0]);
+    expect(result).toMatchObject({ ok: false, refusal: { stage: 'draft', reason: `${file} is not a regular file` } });
+    expect(fs.readdirSync(path.join(run, 'drafts'))).toEqual(['next.json']);
+  });
+
+  const REVERIFY = 'the pinned revision could not be verified again, so the draft is not checked';
+  const NOT_REGULAR = 'the brief record exists but it cannot be read (not a regular file); the declared provider binding cannot be checked';
+  const NOT_BOUNDED = 'the brief record exists but it is not bounded JSON; the declared provider binding cannot be checked';
+
+  it('reverifies a brief record of exactly 262,144 bytes and refuses one of 262,145 unread, with the bounded-JSON words', async () => {
+    const run = await briefedRun();
+    writeDraft(run, valid());
+    const brief = path.join(run, 'brief.json');
+    const text = fs.readFileSync(brief, 'utf8');
+    fs.writeFileSync(brief, padTo(text, 262_144));
+    report(await checkDraft(run, {}, deps()));
+    fs.writeFileSync(brief, padTo(text, 262_145));
+    let result: CheckResult | undefined;
+    expect(await bytesReadFrom(brief, async () => { result = await checkDraft(run, {}, deps()); })).toEqual([0]);
+    expect(result).toMatchObject({ ok: false, refusal: { stage: 'reverify', reason: REVERIFY, reasons: [NOT_BOUNDED] } });
+  });
+
+  it('refuses a brief record grown past 262,144 bytes after its size was taken, reading at most one byte past the bound', async () => {
+    const run = await briefedRun();
+    writeDraft(run, valid());
+    const brief = path.join(run, 'brief.json');
+    fs.writeFileSync(brief, padTo(fs.readFileSync(brief, 'utf8'), 262_144));
+    const restore = growOnce(brief, 262_144);
+    let result: CheckResult | undefined, reads: number[] = [];
+    try { reads = await bytesReadFrom(brief, async () => { result = await checkDraft(run, {}, deps()); }); } finally { restore(); }
+    // The reverification reads first and refuses; nothing after it reads the brief record.
+    expect(reads).toEqual([262_145]);
+    expect(result).toMatchObject({ ok: false, refusal: { stage: 'reverify', reason: REVERIFY, reasons: [NOT_BOUNDED] } });
+  });
+
+  it.each(plants)('refuses %s at the brief record\'s path in the reverification, without blocking or reading a byte', async (_what, plant) => {
+    const run = await briefedRun();
+    writeDraft(run, valid());
+    const brief = path.join(run, 'brief.json');
+    fs.rmSync(brief);
+    plant(brief);
+    let result: CheckResult | undefined;
+    expect(await bytesReadFrom(brief, async () => { result = await checkDraft(run, {}, deps()); })).toEqual([0]);
+    expect(result).toMatchObject({ ok: false, refusal: { stage: 'reverify', reason: REVERIFY, reasons: [NOT_REGULAR] } });
+    nothingFrozen(run);
   });
 });

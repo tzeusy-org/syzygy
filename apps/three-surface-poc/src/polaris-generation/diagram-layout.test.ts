@@ -353,6 +353,8 @@ describe('layered left-to-right diagram layout', () => {
       edges: edges.map(e => ({ ...e, label, epistemic: 'inferred' as const })),
     });
 
+    // syzygy-8dzi: 400 seeded graphs measured 5.2-6.0 s alone on a loaded 12-core host (load 27), past the 5 s default; the
+    // explicit budget matches the other population tests in this file (30_000, 120_000). The population and seed are unchanged.
     it('holds over dense random graphs: no label on a node, on another label, or off the canvas', () => {
       let seed = 20261107;
       const next = (bound: number): number => { seed = (seed * 1103515245 + 12345) % 2147483648; return Math.floor(seed / 65536) % bound; };
@@ -374,7 +376,7 @@ describe('layered left-to-right diagram layout', () => {
       }
       // The population reaches the pass: some graphs had to grow the canvas.
       expect(grown).toBeGreaterThan(0);
-    });
+    }, 30_000);
 
     it('searches on an eight-pixel step, up before down, straight before diagonal before sideways at one count of steps, right before left', () => {
       const place1 = (label: { x: number; y: number; width: number; height: number }, walls: readonly { left: number; top: number; right: number; bottom: number }[]) =>
@@ -512,7 +514,7 @@ describe('layered left-to-right diagram layout', () => {
       expect(onSide, 'leaders starting on a label\'s left or right side').toBeGreaterThan(0);
       expect(offHalves, 'leaders starting off a side\'s corners and middle').toBeGreaterThan(0);
       expect(ownHead, 'leaders ending in their own line\'s arrowhead').toBeGreaterThan(0);
-    });
+    }, 30_000);
 
     it('runs a leader the shortest way from its label\'s edge to a point of its own line that no other line runs through', () => {
       // `a` fans to `b` and `c`; the second parallel edge's label is pushed clear of the first's. Its leader's ends are literals.

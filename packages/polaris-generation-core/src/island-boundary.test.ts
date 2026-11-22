@@ -166,6 +166,7 @@ describe('the live Node entries and the parked provider island', () => {
     expect(ISLAND.filter(path => !isFile(path))).toEqual([]);
   });
 
+  // syzygy-8dzi: the three import-graph walks below measured up to 5.9 s alone on a loaded host, past the 5 s default.
   it('admits transitive island ingress only from the island and exact parked remainder', () => {
     const population = productionModules();
     const allowed = new Set([...ISLAND, ...PARKED_REMAINDER]);
@@ -203,7 +204,7 @@ describe('the live Node entries and the parked provider island', () => {
     expect([...new Set(unsupported)], `${population.length} production sources: unsupported loaders`).toEqual([]);
     expect([...new Set(unresolved)], `${population.length} production sources: unresolved workspace edges`).toEqual([]);
     expect(violations, `${population.length} production sources: unlisted transitive ingress\n${violations.join('\n')}`).toEqual([]);
-  });
+  }, 30_000);
 
   it('resolves every workspace import both entries reach, dynamic ones included', () => {
     for (const entry of ENTRIES) {
@@ -215,7 +216,7 @@ describe('the live Node entries and the parked provider island', () => {
         expect(reachable).toContain('packages/polaris-generation-consent/src/in-force.ts');
       }
     }
-  });
+  }, 30_000);
 
   it('reaches no island module from either live entry', () => {
     for (const entry of ENTRIES) {
@@ -225,7 +226,7 @@ describe('the live Node entries and the parked provider island', () => {
       expect(reachable, `${entry}: consent ports must stay parked`).not.toContain('packages/polaris-generation-consent/src/consent-ports.ts');
       expect(reachable.filter(path => ISLAND.includes(path)), entry).toEqual([]);
     }
-  });
+  }, 30_000);
 
   // .8.19 removed the whole-module exception. This positive control depends
   // on consent-ports still importing the parked core root; a later decoupling

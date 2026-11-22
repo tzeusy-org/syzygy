@@ -26,6 +26,7 @@ import { readRunRecord } from './run-record.js';
 import { NO_WORK_ITEM_REASON } from './run-record.js';
 import { CLASS_NOT_CONSENTED, unconsentedClass, unconsentedText } from './class-gate.js';
 import { placementSubjectOf, screenLoaderOf, type DossierScreen, type ScreenExclusion } from './screen.js';
+import { readBriefRecord } from './run-dir.js';
 import { RUN_LAYOUT } from './state-directory.js';
 import { continuationOf } from './waiting-sessions.js';
 import { packetSpanStanding } from './review-verdict.js';
@@ -920,7 +921,7 @@ function disclosureItems(inputs: {
 }): LocalDisclosureItem[] {
   const { opened, draftLayer, executionList, flags, quotationCount, credential, clean, run } = inputs;
   const { subject, declared } = opened;
-  const brief = readRecord(path.join(run, RUN_LAYOUT.briefRecord));
+  const brief = readBriefRecord(run);
   const rule = isRecord(brief) && isRecord(brief['executionRule']) ? brief['executionRule'] : {};
   const commands = executionList.map((entry) => clean(text(entry['command']) ?? ''));
   const items: LocalDisclosureItem[] = [
