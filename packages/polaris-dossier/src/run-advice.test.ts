@@ -2,6 +2,7 @@ import * as fs from 'node:fs';
 import * as path from 'node:path';
 import { describe, expect, it } from 'vitest';
 import { tempDir } from '@syzygy/test-kit';
+import { patchFs } from './fs-patch.testkit.js';
 import { computeRunAdvice, readRunAdvice, writeRunAdvice } from './run-advice.js';
 import { figureFitClass, mechanismRuleOf, readerAdvisoryClass } from './reader-advice.js';
 
@@ -86,8 +87,20 @@ describe('the run file', () => {
     fs.writeFileSync(file, text + ' '.repeat(16_777_216 - Buffer.byteLength(text)));
     expect(fs.statSync(file).size).toBe(16_777_216);
     expect(() => JSON.parse(fs.readFileSync(file, 'utf8'))).not.toThrow();
+    // Refused from its size alone: no byte of the file is read.
+    const reads = (): number => {
+      let n = 0;
+      const restore = patchFs('readFileSync', (original) => ((target: fs.PathOrFileDescriptor, ...rest: unknown[]) => {
+        if (target === file) n += 1;
+        return (original as (...args: unknown[]) => unknown)(target, ...rest);
+      }) as typeof original);
+      try { readRunAdvice(run); } finally { restore(); }
+      return n;
+    };
+    expect(reads()).toBe(1);
     fs.truncateSync(file, 16_777_217);
     expect(readRunAdvice(run)).toBeNull();
+    expect(reads()).toBe(0);
     // Seventeen levels of nesting below the root: past the depth bound.
     fs.writeFileSync(file, `${JSON.stringify({ ...advice, rules: [[[[[[[[[[[[[[[[[0]]]]]]]]]]]]]]]]] }, null, 2)}\n`);
     expect(readRunAdvice(run)).toBeNull();
