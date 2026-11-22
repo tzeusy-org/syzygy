@@ -611,7 +611,7 @@
     },
     "POLARIS": {
       "requirements": 39,
-      "scenarios": 445,
+      "scenarios": 451,
       "members": {
         "REQ-polaris-generation-001": {
           "name": "Admitted project input",
@@ -1118,7 +1118,13 @@
             "Infrastructure map rendered",
             "Provider mode unchanged by infrastructure recognizers",
             "Bounded form of a draft that does not parse",
-            "Draft, frozen revisions and run file read under their bounds"
+            "Draft, frozen revisions and run file read under their bounds",
+            "Subsections with answers, headings and a contents list",
+            "An answer of more than one sentence",
+            "Subsections in an earlier schema",
+            "A draft without subsections renders as today",
+            "Subsection titles and withheld subsections",
+            "Brief v13 states subsections"
           ]
         },
         "REQ-polaris-generation-035": {
